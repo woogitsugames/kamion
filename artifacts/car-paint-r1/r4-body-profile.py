@@ -13,10 +13,10 @@ manifest=json.loads((ROOT/'Data/Regions/bialystok-industrial-c/generated/world_m
 cars=[i for c in manifest['chunks'] for i in json.loads((ROOT/c['instances']['file']).read_text())['instances'] if i['p'].startswith(('car_','van_'))]
 levels,phase=model.film_hash(np.array([[c['e'],c['n']] for c in cars]),[-1024,-1024])
 def matrix(d):return np.array([[d[f'e{i}{j}'] for j in range(4)] for i in range(4)])
-def packet(camera):return json.loads((ART/'r4-before/High-overcast/poses'/f'{camera}-begin.json').read_text())
+def packet(camera,path=None):return json.loads((ART/'r4-before/High-overcast/poses'/f'{camera}-begin.json' if path is None else path).read_text())
 
-def caster(camera):
-    p=packet(camera);vp=matrix(p['projection'])@matrix(p['view']);inv=np.linalg.inv(vp)
+def caster(camera,posepath=None):
+    p=packet(camera,posepath);vp=matrix(p['projection'])@matrix(p['view']);inv=np.linalg.inv(vp)
     region=matrix(p['regionRoots'][0]['localToWorld']);origin=np.array(list(p['cameraParents'][0]['worldPosition'].values()))
     prepared=[]
     for j,c in enumerate(cars):

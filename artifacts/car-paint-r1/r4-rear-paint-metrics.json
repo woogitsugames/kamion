@@ -1,0 +1,4549 @@
+{
+  "method": "Actual native LOD0 CPU ray/material selection in the supplemental frame; 5x5 native-pixel means, no image alignment",
+  "target": "car_hatch_black actualGPUlevel3/nativeIndex8908",
+  "paint_samples": 146,
+  "lower_samples": 68,
+  "visible_rear_paint_height_m": [
+    0.31497836180804506,
+    1.0841015339653963
+  ],
+  "lower_paint_height_m": [
+    0.31497836180804506,
+    0.6474547261902951
+  ],
+  "note": "Paint-only, excludes trim/plate. Geometry may have no rear paint at sill height .19; does not claim dirt on plastic.",
+  "conditions": [
+    {
+      "condition": "Low-clear",
+      "values": [
+        {
+          "mode": "off",
+          "lower_paint_luma_mean": 49.06592611764706,
+          "lower_paint_luma_range": [
+            39.293632,
+            88.295512
+          ]
+        },
+        {
+          "mode": "level0",
+          "lower_paint_luma_mean": 49.364928117647054,
+          "lower_paint_luma_range": [
+            39.378672,
+            88.48627200000001
+          ]
+        },
+        {
+          "mode": "level1",
+          "lower_paint_luma_mean": 50.76289976470588,
+          "lower_paint_luma_range": [
+            40.40448799999999,
+            90.06358399999999
+          ]
+        },
+        {
+          "mode": "level2",
+          "lower_paint_luma_mean": 52.556516705882345,
+          "lower_paint_luma_range": [
+            41.30202399999999,
+            92.09711999999998
+          ]
+        },
+        {
+          "mode": "level3",
+          "lower_paint_luma_mean": 54.4015794117647,
+          "lower_paint_luma_range": [
+            42.21792000000001,
+            94.72219999999999
+          ]
+        }
+      ]
+    },
+    {
+      "condition": "Low-overcast",
+      "values": [
+        {
+          "mode": "off",
+          "lower_paint_luma_mean": 31.942425529411768,
+          "lower_paint_luma_range": [
+            21.044728,
+            65.62421599999999
+          ]
+        },
+        {
+          "mode": "level0",
+          "lower_paint_luma_mean": 32.20137423529411,
+          "lower_paint_luma_range": [
+            21.478424000000004,
+            66.066896
+          ]
+        },
+        {
+          "mode": "level1",
+          "lower_paint_luma_mean": 33.5960674117647,
+          "lower_paint_luma_range": [
+            22.718152,
+            67.34703999999999
+          ]
+        },
+        {
+          "mode": "level2",
+          "lower_paint_luma_mean": 35.33813388235294,
+          "lower_paint_luma_range": [
+            24.272008,
+            69.341264
+          ]
+        },
+        {
+          "mode": "level3",
+          "lower_paint_luma_mean": 37.18340388235295,
+          "lower_paint_luma_range": [
+            25.392584000000003,
+            71.169024
+          ]
+        }
+      ]
+    },
+    {
+      "condition": "High-clear",
+      "values": [
+        {
+          "mode": "off",
+          "lower_paint_luma_mean": 54.54354894117647,
+          "lower_paint_luma_range": [
+            43.82213600000001,
+            94.89865600000002
+          ]
+        },
+        {
+          "mode": "level0",
+          "lower_paint_luma_mean": 54.89352847058823,
+          "lower_paint_luma_range": [
+            43.91352800000001,
+            94.97823999999999
+          ]
+        },
+        {
+          "mode": "level1",
+          "lower_paint_luma_mean": 56.37585094117647,
+          "lower_paint_luma_range": [
+            45.02213600000001,
+            96.68652799999998
+          ]
+        },
+        {
+          "mode": "level2",
+          "lower_paint_luma_mean": 58.20667223529412,
+          "lower_paint_luma_range": [
+            45.95672,
+            98.94016799999997
+          ]
+        },
+        {
+          "mode": "level3",
+          "lower_paint_luma_mean": 60.0865405882353,
+          "lower_paint_luma_range": [
+            46.416104000000004,
+            101.55942399999999
+          ]
+        }
+      ]
+    },
+    {
+      "condition": "High-overcast",
+      "values": [
+        {
+          "mode": "off",
+          "lower_paint_luma_mean": 36.19821423529411,
+          "lower_paint_luma_range": [
+            24.658896,
+            74.06410399999999
+          ]
+        },
+        {
+          "mode": "level0",
+          "lower_paint_luma_mean": 36.52042623529411,
+          "lower_paint_luma_range": [
+            25.170392000000003,
+            74.012712
+          ]
+        },
+        {
+          "mode": "level1",
+          "lower_paint_luma_mean": 38.07388494117646,
+          "lower_paint_luma_range": [
+            26.458896,
+            75.02100800000001
+          ]
+        },
+        {
+          "mode": "level2",
+          "lower_paint_luma_mean": 39.967311411764705,
+          "lower_paint_luma_range": [
+            27.826455999999997,
+            77.01539199999999
+          ]
+        },
+        {
+          "mode": "level3",
+          "lower_paint_luma_mean": 41.88759470588235,
+          "lower_paint_luma_range": [
+            29.063824000000004,
+            79.676312
+          ]
+        }
+      ]
+    }
+  ],
+  "points": [
+    {
+      "pixel": [
+        1040,
+        400
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 5.3838144183598855,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -1.969489042035999,
+          1.0447699160066712
+        ],
+        "height_m": 1.044976870604332,
+        "height_above_sill_m": 0.8549768706043321,
+        "native_payload": [
+          0.8548385977469881,
+          -0.22886440972074756
+        ],
+        "cpu_expected_opacity": 0.0071355477540517576,
+        "keep_upper": 0.22878621164429816
+      }
+    },
+    {
+      "pixel": [
+        1060,
+        400
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 5.307855710411117,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -1.975497375397004,
+          1.0479065074902045
+        ],
+        "height_m": 1.0482280946684956,
+        "height_above_sill_m": 0.8582280946684957,
+        "native_payload": [
+          0.8581228804208613,
+          -0.2311568583985315
+        ],
+        "cpu_expected_opacity": 0.007335048714793273,
+        "keep_upper": 0.19324791846397926
+      }
+    },
+    {
+      "pixel": [
+        1080,
+        400
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 5.2353249256785634,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -1.98090381884786,
+          1.05118244405422
+        ],
+        "height_m": 1.0513826037894534,
+        "height_above_sill_m": 0.8613826037894534,
+        "native_payload": [
+          0.8614440851184219,
+          -0.2332673496709312
+        ],
+        "cpu_expected_opacity": 0.007499933279528423,
+        "keep_upper": 0.16059472392364643
+      }
+    },
+    {
+      "pixel": [
+        1100,
+        400
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 5.165903841094902,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -1.9859974027373442,
+          1.0544641942039892
+        ],
+        "height_m": 1.0544532089457472,
+        "height_above_sill_m": 0.8644532089457473,
+        "native_payload": [
+          0.8647307349895579,
+          -0.23527625563933807
+        ],
+        "cpu_expected_opacity": 0.00763505682921325,
+        "keep_upper": 0.13066202398064458
+      }
+    },
+    {
+      "pixel": [
+        1120,
+        400
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 5.102921984166948,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -1.9883496235732185,
+          1.0573478674941625
+        ],
+        "height_m": 1.0572793330349337,
+        "height_above_sill_m": 0.8672793330349338,
+        "native_payload": [
+          0.8675443628147144,
+          -0.23621068182559887
+        ],
+        "cpu_expected_opacity": 0.007548980321544561,
+        "keep_upper": 0.12848922632377355
+      }
+    },
+    {
+      "pixel": [
+        1140,
+        400
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 5.044789707303331,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -1.9889807752557451,
+          1.0599644247946554
+        ],
+        "height_m": 1.0599342686383142,
+        "height_above_sill_m": 0.8699342686383142,
+        "native_payload": [
+          0.8700447318202928,
+          -0.23647044900014666
+        ],
+        "cpu_expected_opacity": 0.007336927356106259,
+        "keep_upper": 0.14303947152707341
+      }
+    },
+    {
+      "pixel": [
+        1160,
+        400
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.989259925852629,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -1.9898058295476058,
+          1.0625191278800348
+        ],
+        "height_m": 1.0625229652510397,
+        "height_above_sill_m": 0.8725229652510398,
+        "native_payload": [
+          0.8724890556847709,
+          -0.2367121000934619
+        ],
+        "cpu_expected_opacity": 0.00711344194487201,
+        "keep_upper": 0.15963275581945763
+      }
+    },
+    {
+      "pixel": [
+        1180,
+        400
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.936105510985103,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -1.9906612501752083,
+          1.0650181358456352
+        ],
+        "height_m": 1.0650544204210226,
+        "height_above_sill_m": 0.8750544204210227,
+        "native_payload": [
+          0.8748807999221384,
+          -0.23694571004026227
+        ],
+        "cpu_expected_opacity": 0.006891292610983241,
+        "keep_upper": 0.17676264954557472
+      }
+    },
+    {
+      "pixel": [
+        1200,
+        400
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.88868407718051,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -1.988296962056915,
+          1.0673261054526055
+        ],
+        "height_m": 1.067367088318904,
+        "height_above_sill_m": 0.877367088318904,
+        "native_payload": [
+          0.8772576530929033,
+          -0.2360178426389122
+        ],
+        "cpu_expected_opacity": 0.0065148770494009535,
+        "keep_upper": 0.21409206461119096
+      }
+    },
+    {
+      "pixel": [
+        1220,
+        400
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.844816618674865,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -1.9845792347380797,
+          1.0695293515592128
+        ],
+        "height_m": 1.0695631180702072,
+        "height_above_sill_m": 0.8795631180702073,
+        "native_payload": [
+          0.879604431234698,
+          -0.2346024835244977
+        ],
+        "cpu_expected_opacity": 0.0060648584488159326,
+        "keep_upper": 0.26170185219930586
+      }
+    },
+    {
+      "pixel": [
+        1240,
+        400
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.802883027629096,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -1.980931039167288,
+          1.071691390890805
+        ],
+        "height_m": 1.0717180760122298,
+        "height_above_sill_m": 0.8817180760122298,
+        "native_payload": [
+          0.881907318156802,
+          -0.2332135955266805
+        ],
+        "cpu_expected_opacity": 0.005616636062665226,
+        "keep_upper": 0.3101410325875108
+      }
+    },
+    {
+      "pixel": [
+        1260,
+        400
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.7627331810948474,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -1.9772334879138838,
+          1.0738159017269022
+        ],
+        "height_m": 1.073837569925377,
+        "height_above_sill_m": 0.8838375699253771,
+        "native_payload": [
+          0.8841684001005355,
+          -0.2318563854827317
+        ],
+        "cpu_expected_opacity": 0.005213722812296414,
+        "keep_upper": 0.3539907722482624
+      }
+    },
+    {
+      "pixel": [
+        1280,
+        400
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.725822793191552,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -1.9724237974878596,
+          1.075845887245774
+        ],
+        "height_m": 1.075851039170706,
+        "height_above_sill_m": 0.885851039170706,
+        "native_payload": [
+          0.8862682534568951,
+          -0.2300745032347232
+        ],
+        "cpu_expected_opacity": 0.004763428207009885,
+        "keep_upper": 0.40530417961556187
+      }
+    },
+    {
+      "pixel": [
+        1300,
+        400
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.693649334577784,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -1.9654167556737745,
+          1.0777238468567498
+        ],
+        "height_m": 1.0776863570784256,
+        "height_above_sill_m": 0.8876863570784257,
+        "native_payload": [
+          0.8880848072178787,
+          -0.22738868581324356
+        ],
+        "cpu_expected_opacity": 0.004159550965906648,
+        "keep_upper": 0.47794832669517145
+      }
+    },
+    {
+      "pixel": [
+        1320,
+        400
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.663060537318421,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -1.9585235254154032,
+          1.0795713037947752
+        ],
+        "height_m": 1.0794918649191063,
+        "height_above_sill_m": 0.8894918649191064,
+        "native_payload": [
+          0.8898718556876175,
+          -0.22474649265821073
+        ],
+        "cpu_expected_opacity": 0.003585809739060485,
+        "keep_upper": 0.5476104204313221
+      }
+    },
+    {
+      "pixel": [
+        1380,
+        400
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.593884723544814,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -1.9254623244706415,
+          1.0844607128048993
+        ],
+        "height_m": 1.0841015339653963,
+        "height_above_sill_m": 0.8941015339653964,
+        "native_payload": [
+          0.8945570234200488,
+          -0.21206280384526888
+        ],
+        "cpu_expected_opacity": 0.003210821181273244,
+        "keep_upper": 0.5919178989586742
+      }
+    },
+    {
+      "pixel": [
+        1040,
+        420
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 5.341258512474611,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.006504125478389,
+          0.9662963715329824
+        ],
+        "height_m": 0.9663749404258377,
+        "height_above_sill_m": 0.7763749404258378,
+        "native_payload": [
+          0.7763549652829825,
+          -0.2426115240242364
+        ],
+        "cpu_expected_opacity": 0.013016913706963036,
+        "keep_upper": 0.0
+      }
+    },
+    {
+      "pixel": [
+        1060,
+        420
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 5.266580900516343,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.0117135443328147,
+          0.9706115328556513
+        ],
+        "height_m": 0.9705842791590824,
+        "height_above_sill_m": 0.7805842791590825,
+        "native_payload": [
+          0.7806701266056513,
+          -0.24468075306594675
+        ],
+        "cpu_expected_opacity": 0.012734319294993543,
+        "keep_upper": 0.0
+      }
+    },
+    {
+      "pixel": [
+        1080,
+        420
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 5.194961179269993,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.0167931491481568,
+          0.9748191642337631
+        ],
+        "height_m": 0.9746887249516554,
+        "height_above_sill_m": 0.7846887249516554,
+        "native_payload": [
+          0.7848777579837631,
+          -0.24669841877838777
+        ],
+        "cpu_expected_opacity": 0.012464610036134598,
+        "keep_upper": 0.0
+      }
+    },
+    {
+      "pixel": [
+        1100,
+        420
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 5.126290556032912,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.0217477324853066,
+          0.9789232355291819
+        ],
+        "height_m": 0.9786921503107604,
+        "height_above_sill_m": 0.7886921503107605,
+        "native_payload": [
+          0.788981829279182,
+          -0.24866642481078682
+        ],
+        "cpu_expected_opacity": 0.012206981786446776,
+        "keep_upper": 0.0
+      }
+    },
+    {
+      "pixel": [
+        1120,
+        420
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 5.0654987243207215,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.0229952789579206,
+          0.9824976768030272
+        ],
+        "height_m": 0.9822824921585251,
+        "height_above_sill_m": 0.7922824921585252,
+        "native_payload": [
+          0.7924602032803596,
+          -0.24910227321543826
+        ],
+        "cpu_expected_opacity": 0.012009555444850379,
+        "keep_upper": 0.0
+      }
+    },
+    {
+      "pixel": [
+        1140,
+        420
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 5.0074555222116475,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.023576940323685,
+          0.9859791059759346
+        ],
+        "height_m": 0.9857784681581334,
+        "height_above_sill_m": 0.7957784681581335,
+        "native_payload": [
+          0.7959191663344674,
+          -0.2494156724222457
+        ],
+        "cpu_expected_opacity": 0.011818005109521452,
+        "keep_upper": 0.0
+      }
+    },
+    {
+      "pixel": [
+        1160,
+        420
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.951830484868485,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.0241459407225646,
+          0.9893847552160382
+        ],
+        "height_m": 0.9891983475855648,
+        "height_above_sill_m": 0.7991983475855648,
+        "native_payload": [
+          0.799302838473611,
+          -0.2497222498987321
+        ],
+        "cpu_expected_opacity": 0.011633579314922232,
+        "keep_upper": 0.0
+      }
+    },
+    {
+      "pixel": [
+        1180,
+        420
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.89854628808054,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.024702689089107,
+          0.99271707212647
+        ],
+        "height_m": 0.9925445882710329,
+        "height_above_sill_m": 0.8025445882710329,
+        "native_payload": [
+          0.8026136515062187,
+          -0.2500222259788641
+        ],
+        "cpu_expected_opacity": 0.011455909412002249,
+        "keep_upper": 0.0
+      }
+    },
+    {
+      "pixel": [
+        1200,
+        420
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.851460285104361,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.021849745973001,
+          0.9957622178444157
+        ],
+        "height_m": 0.9955727961946268,
+        "height_above_sill_m": 0.8055727961946269,
+        "native_payload": [
+          0.8057387308362816,
+          -0.2490032343841575
+        ],
+        "cpu_expected_opacity": 0.011307408172253662,
+        "keep_upper": 0.0
+      }
+    },
+    {
+      "pixel": [
+        1220,
+        420
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.806606512267677,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.018891278259476,
+          0.9987371989426981
+        ],
+        "height_m": 0.9985297805498693,
+        "height_above_sill_m": 0.8085297805498692,
+        "native_payload": [
+          0.808795792692698,
+          -0.2479395018450346
+        ],
+        "cpu_expected_opacity": 0.011164834444045181,
+        "keep_upper": 0.0
+      }
+    },
+    {
+      "pixel": [
+        1240,
+        420
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.763764680174437,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.0164458999324286,
+          1.0016445337774953
+        ],
+        "height_m": 1.0014272852036528,
+        "height_above_sill_m": 0.8114272852036528,
+        "native_payload": [
+          0.8117031275274953,
+          -0.24692666344930875
+        ],
+        "cpu_expected_opacity": 0.011030911900713416,
+        "keep_upper": 0.0
+      }
+    },
+    {
+      "pixel": [
+        1260,
+        420
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.722833340764591,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.01404707947842,
+          1.0044965154898717
+        ],
+        "height_m": 1.0042696238930988,
+        "height_above_sill_m": 0.8142696238930989,
+        "native_payload": [
+          0.8145551092398717,
+          -0.24593310861429896
+        ],
+        "cpu_expected_opacity": 0.010901086131066873,
+        "keep_upper": 0.0
+      }
+    },
+    {
+      "pixel": [
+        1280,
+        420
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.685750505414555,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.0099884029261905,
+          1.0070811091056941
+        ],
+        "height_m": 1.0069335729708722,
+        "height_above_sill_m": 0.8169335729708722,
+        "native_payload": [
+          0.8171397028556941,
+          -0.244335015581833
+        ],
+        "cpu_expected_opacity": 0.01079324316822142,
+        "keep_upper": 0.0
+      }
+    },
+    {
+      "pixel": [
+        1300,
+        420
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.65225113968637,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.0044050471742336,
+          1.0094206877779373
+        ],
+        "height_m": 1.0094342321449812,
+        "height_above_sill_m": 0.8194342321449812,
+        "native_payload": [
+          0.8194792815279373,
+          -0.24218159518116456
+        ],
+        "cpu_expected_opacity": 0.010705036406101806,
+        "keep_upper": 0.0
+      }
+    },
+    {
+      "pixel": [
+        1320,
+        420
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.620374084237813,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -1.99891616600942,
+          1.011720679015871
+        ],
+        "height_m": 1.0118925782812926,
+        "height_above_sill_m": 0.8218925782812927,
+        "native_payload": [
+          0.8217792727658708,
+          -0.240064612276572
+        ],
+        "cpu_expected_opacity": 0.010618963971487694,
+        "keep_upper": 0.0
+      }
+    },
+    {
+      "pixel": [
+        1340,
+        420
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.590073432778042,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -1.9935193816763286,
+          1.0139820791639753
+        ],
+        "height_m": 1.0143096763228245,
+        "height_above_sill_m": 0.8243096763228246,
+        "native_payload": [
+          0.8240406729139751,
+          -0.2379831498018206
+        ],
+        "cpu_expected_opacity": 0.010534952368898188,
+        "keep_upper": 0.0
+      }
+    },
+    {
+      "pixel": [
+        1360,
+        420
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.561276521871597,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -1.9882034313192116,
+          1.0162231450848336
+        ],
+        "height_m": 1.016688271223327,
+        "height_above_sill_m": 0.826688271223327,
+        "native_payload": [
+          0.8262817388348335,
+          -0.23593258122519115
+        ],
+        "cpu_expected_opacity": 0.010452153409797844,
+        "keep_upper": 0.0
+      }
+    },
+    {
+      "pixel": [
+        1380,
+        420
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.543270572083867,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -1.9737018220089417,
+          1.018031503149394
+        ],
+        "height_m": 1.0184510613979776,
+        "height_above_sill_m": 0.8284510613979776,
+        "native_payload": [
+          0.8280900968993941,
+          -0.2306110058802937
+        ],
+        "cpu_expected_opacity": 0.01031108355287951,
+        "keep_upper": 0.011239636651534095
+      }
+    },
+    {
+      "pixel": [
+        1100,
+        440
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 5.11306500491679,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.0368097817070696,
+          0.9021032337128148
+        ],
+        "height_m": 0.9019358514355367,
+        "height_above_sill_m": 0.7119358514355367,
+        "native_payload": [
+          0.7121161961807997,
+          -0.2544276275084727
+        ],
+        "cpu_expected_opacity": 0.01719878811402331,
+        "keep_upper": 0.0
+      }
+    },
+    {
+      "pixel": [
+        1120,
+        440
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 5.052143272179733,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.037658392374987,
+          0.906564886576678
+        ],
+        "height_m": 0.9064055057601279,
+        "height_above_sill_m": 0.716405505760128,
+        "native_payload": [
+          0.716580536940873,
+          -0.2548640602309793
+        ],
+        "cpu_expected_opacity": 0.01684489910045852,
+        "keep_upper": 0.0
+      }
+    },
+    {
+      "pixel": [
+        1140,
+        440
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.993740061700813,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.0384881577164684,
+          0.9109274583095937
+        ],
+        "height_m": 0.9107759012631709,
+        "height_above_sill_m": 0.7207759012631709,
+        "native_payload": [
+          0.7209457368791611,
+          -0.25529080097407186
+        ],
+        "cpu_expected_opacity": 0.016505907097438034,
+        "keep_upper": 0.0
+      }
+    },
+    {
+      "pixel": [
+        1160,
+        440
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.937773997966682,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.0392996985925023,
+          0.9151942131488351
+        ],
+        "height_m": 0.9150503080359733,
+        "height_above_sill_m": 0.7250503080359734,
+        "native_payload": [
+          0.7252150621994577,
+          -0.25570816904089677
+        ],
+        "cpu_expected_opacity": 0.016180956637649645,
+        "keep_upper": 0.0
+      }
+    },
+    {
+      "pixel": [
+        1180,
+        440
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.884218032885379,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.040512947057799,
+          0.9194262997308031
+        ],
+        "height_m": 0.919227832051993,
+        "height_above_sill_m": 0.7292278320519929,
+        "native_payload": [
+          0.7294494130438445,
+          -0.2561150142264364
+        ],
+        "cpu_expected_opacity": 0.015865112799760613,
+        "keep_upper": 0.0
+      }
+    },
+    {
+      "pixel": [
+        1200,
+        440
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.8369772904976,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.0383934773174532,
+          0.9232099541496158
+        ],
+        "height_m": 0.9230011681518919,
+        "height_above_sill_m": 0.733001168151892,
+        "native_payload": [
+          0.7332359718250969,
+          -0.25521039093156495
+        ],
+        "cpu_expected_opacity": 0.015610527767681506,
+        "keep_upper": 0.0
+      }
+    },
+    {
+      "pixel": [
+        1220,
+        440
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.791783047514089,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.036315601345331,
+          0.9269193558240045
+        ],
+        "height_m": 0.9267004540003567,
+        "height_above_sill_m": 0.7367004540003568,
+        "native_payload": [
+          0.7369482208649438,
+          -0.2543235205165483
+        ],
+        "cpu_expected_opacity": 0.01536488915062266,
+        "keep_upper": 0.0
+      }
+    },
+    {
+      "pixel": [
+        1240,
+        440
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.748574073976573,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.034278106646432,
+          0.9305566692868956
+        ],
+        "height_m": 0.9303278482274643,
+        "height_above_sill_m": 0.7403278482274642,
+        "native_payload": [
+          0.7405883263578237,
+          -0.253453885469293
+        ],
+        "cpu_expected_opacity": 0.015127762859026003,
+        "keep_upper": 0.0
+      }
+    },
+    {
+      "pixel": [
+        1260,
+        440
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.707313876530122,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.0322206442298265,
+          0.9341165385714315
+        ],
+        "height_m": 0.9338836264509531,
+        "height_above_sill_m": 0.7438836264509532,
+        "native_payload": [
+          0.7441509603161748,
+          -0.2525920051306478
+        ],
+        "cpu_expected_opacity": 0.014899395638062649,
+        "keep_upper": 0.0
+      }
+    },
+    {
+      "pixel": [
+        1400,
+        440
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.5701624867080675,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -1.924368164923,
+          0.9493805747670043
+        ],
+        "height_m": 0.9491115738518514,
+        "height_above_sill_m": 0.7591115738518515,
+        "native_payload": [
+          0.7594391685170043,
+          -0.21144270743040047
+        ],
+        "cpu_expected_opacity": 0.01455101827474638,
+        "keep_upper": 0.0
+      }
+    },
+    {
+      "pixel": [
+        1100,
+        460
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 5.103153019242171,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.0499143889969402,
+          0.8252709182329343
+        ],
+        "height_m": 0.8251849815062104,
+        "height_above_sill_m": 0.6351849815062105,
+        "native_payload": [
+          0.6352316505221607,
+          -0.25951117269159696
+        ],
+        "cpu_expected_opacity": 0.024251809479736396,
+        "keep_upper": 0.0
+      }
+    },
+    {
+      "pixel": [
+        1260,
+        460
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.698944951605267,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.0439194059229,
+          0.8633746633682496
+        ],
+        "height_m": 0.8632231007503319,
+        "height_above_sill_m": 0.673223100750332,
+        "native_payload": [
+          0.6733611019035087,
+          -0.25713304410695315
+        ],
+        "cpu_expected_opacity": 0.02044838221944131,
+        "keep_upper": 0.0
+      }
+    },
+    {
+      "pixel": [
+        1020,
+        480
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 5.398883824988582,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.033098448536397,
+          0.7181725687948938
+        ],
+        "height_m": 0.7185927884206449,
+        "height_above_sill_m": 0.5285927884206449,
+        "native_payload": [
+          0.5282311625448937,
+          -0.25328622442681026
+        ],
+        "cpu_expected_opacity": 0.03972507975528017,
+        "keep_upper": 0.0
+      }
+    },
+    {
+      "pixel": [
+        1040,
+        480
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 5.3118790931317985,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.0453846844865082,
+          0.7267711850996803
+        ],
+        "height_m": 0.7270352254189895,
+        "height_above_sill_m": 0.5370352254189894,
+        "native_payload": [
+          0.5368297788496803,
+          -0.25803553678180685
+        ],
+        "cpu_expected_opacity": 0.03799544180681595,
+        "keep_upper": 0.0
+      }
+    },
+    {
+      "pixel": [
+        1060,
+        480
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 5.236309935128697,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.0512373605977468,
+          0.7343503852604777
+        ],
+        "height_m": 0.7344000312588588,
+        "height_above_sill_m": 0.5444000312588588,
+        "native_payload": [
+          0.5444089790104777,
+          -0.2603743482806651
+        ],
+        "cpu_expected_opacity": 0.03661029390196166,
+        "keep_upper": 0.0
+      }
+    },
+    {
+      "pixel": [
+        1080,
+        480
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 5.1630332265642584,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.0575517078654593,
+          0.7417157106944765
+        ],
+        "height_m": 0.7416668903547878,
+        "height_above_sill_m": 0.5516668903547879,
+        "native_payload": [
+          0.5517324123879731,
+          -0.2627928279495473
+        ],
+        "cpu_expected_opacity": 0.03531317733036043,
+        "keep_upper": 0.0
+      }
+    },
+    {
+      "pixel": [
+        1100,
+        480
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 5.094446434646231,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.062995565475498,
+          0.748575977605093
+        ],
+        "height_m": 0.7485713408056869,
+        "height_above_sill_m": 0.5585713408056869,
+        "native_payload": [
+          0.5584845731022177,
+          -0.26458562858380685
+        ],
+        "cpu_expected_opacity": 0.034175023981700706,
+        "keep_upper": 0.0
+      }
+    },
+    {
+      "pixel": [
+        1240,
+        480
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.732390693413597,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.058715472969169,
+          0.7879263144137645
+        ],
+        "height_m": 0.7877820823222222,
+        "height_above_sill_m": 0.5977820823222222,
+        "native_payload": [
+          0.5978607844176694,
+          -0.2627420812798437
+        ],
+        "cpu_expected_opacity": 0.028635302020151996,
+        "keep_upper": 0.0
+      }
+    },
+    {
+      "pixel": [
+        1260,
+        480
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.691679979163912,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.0556009605502092,
+          0.7927368385022253
+        ],
+        "height_m": 0.7926665057343554,
+        "height_above_sill_m": 0.6026665057343554,
+        "native_payload": [
+          0.6026753644038665,
+          -0.2616674039185444
+        ],
+        "cpu_expected_opacity": 0.028050157277521973,
+        "keep_upper": 0.0
+      }
+    },
+    {
+      "pixel": [
+        1280,
+        480
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.6556770913658605,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.049594963732971,
+          0.7971901973996656
+        ],
+        "height_m": 0.7971499947767571,
+        "height_above_sill_m": 0.6071499947767571,
+        "native_payload": [
+          0.6072228821788583,
+          -0.2597297657791207
+        ],
+        "cpu_expected_opacity": 0.027537608858701268,
+        "keep_upper": 0.0
+      }
+    },
+    {
+      "pixel": [
+        1300,
+        480
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.6223093017945,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.0437944671272876,
+          0.8013604971148094
+        ],
+        "height_m": 0.8014539904326963,
+        "height_above_sill_m": 0.6114539904326963,
+        "native_payload": [
+          0.6114052245040105,
+          -0.25745532905487895
+        ],
+        "cpu_expected_opacity": 0.027089659665847348,
+        "keep_upper": 0.0
+      }
+    },
+    {
+      "pixel": [
+        1320,
+        480
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.590562998254275,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.038092421957709,
+          0.8054600146153121
+        ],
+        "height_m": 0.8056849346618439,
+        "height_above_sill_m": 0.6156849346618438,
+        "native_payload": [
+          0.6155165802161173,
+          -0.2552194961911432
+        ],
+        "cpu_expected_opacity": 0.026656239838547313,
+        "keep_upper": 0.0
+      }
+    },
+    {
+      "pixel": [
+        1020,
+        500
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 5.388627774601792,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.049126252848934,
+          0.6378130207067497
+        ],
+        "height_m": 0.6382455001315355,
+        "height_above_sill_m": 0.44824550013153547,
+        "native_payload": [
+          0.4478716144567497,
+          -0.25943336375891207
+        ],
+        "cpu_expected_opacity": 0.056838682115195924,
+        "keep_upper": 0.0
+      },
+      "expected_opacities": [
+        0.0021192684741569577,
+        0.013980021520813447,
+        0.032149430006482044,
+        0.056838682115195924
+      ]
+    },
+    {
+      "pixel": [
+        1040,
+        500
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 5.305029479088754,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.058547549014784,
+          0.6473100314325755
+        ],
+        "height_m": 0.6474547261902951,
+        "height_above_sill_m": 0.4574547261902951,
+        "native_payload": [
+          0.45736198681312984,
+          -0.26316626838054424
+        ],
+        "cpu_expected_opacity": 0.05420547621400727,
+        "keep_upper": 0.0
+      },
+      "expected_opacities": [
+        0.0019886559779280794,
+        0.013205162679119272,
+        0.030528044081976454,
+        0.05420547621400727
+      ]
+    },
+    {
+      "pixel": [
+        1060,
+        500
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 5.228284889527641,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.0651863256863985,
+          0.6558922094609153
+        ],
+        "height_m": 0.6559981929914186,
+        "height_above_sill_m": 0.4659981929914186,
+        "native_payload": [
+          0.465878269550294,
+          -0.2656558096323993
+        ],
+        "cpu_expected_opacity": 0.05216141031753059,
+        "keep_upper": 0.0
+      }
+    },
+    {
+      "pixel": [
+        1080,
+        500
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 5.154720359392163,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.071653513715507,
+          0.664252568869582
+        ],
+        "height_m": 0.664320841719695,
+        "height_above_sill_m": 0.47432084171969496,
+        "native_payload": [
+          0.4741744368254777,
+          -0.26808100514331523
+        ],
+        "cpu_expected_opacity": 0.050545749103865854,
+        "keep_upper": 0.0
+      }
+    },
+    {
+      "pixel": [
+        1100,
+        500
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 5.086944918838422,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.076053373927479,
+          0.6720180437223096
+        ],
+        "height_m": 0.6720945616171953,
+        "height_above_sill_m": 0.48209456161719527,
+        "native_payload": [
+          0.48187459556375245,
+          -0.26965101954058496
+        ],
+        "cpu_expected_opacity": 0.04900394344675676,
+        "keep_upper": 0.0
+      }
+    },
+    {
+      "pixel": [
+        1120,
+        500
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 5.02616459397362,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.0771721734867086,
+          0.6791495851441939
+        ],
+        "height_m": 0.6791638107223364,
+        "height_above_sill_m": 0.48916381072233645,
+        "native_payload": [
+          0.48901026284097326,
+          -0.27002482910747344
+        ],
+        "cpu_expected_opacity": 0.04748535304977764,
+        "keep_upper": 0.0
+      }
+    },
+    {
+      "pixel": [
+        1140,
+        500
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.967761846666733,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.078600177984394,
+          0.6861714620790887
+        ],
+        "height_m": 0.6860930823836985,
+        "height_above_sill_m": 0.4960930823836985,
+        "native_payload": [
+          0.4960360297923732,
+          -0.2704414723678574
+        ],
+        "cpu_expected_opacity": 0.04604180493805781,
+        "keep_upper": 0.0
+      }
+    },
+    {
+      "pixel": [
+        1240,
+        500
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.726137841542379,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.0704897634988484,
+          0.716717315565241
+        ],
+        "height_m": 0.7166550290784393,
+        "height_above_sill_m": 0.5266550290784393,
+        "native_payload": [
+          0.5266034861046844,
+          -0.2673125374546963
+        ],
+        "cpu_expected_opacity": 0.039749216720970926,
+        "keep_upper": 0.0
+      }
+    },
+    {
+      "pixel": [
+        1260,
+        500
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.685519183942784,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.067265346047291,
+          0.7222028345789402
+        ],
+        "height_m": 0.7222136122723958,
+        "height_above_sill_m": 0.5322136122723957,
+        "native_payload": [
+          0.5320935182672346,
+          -0.26619509929063384
+        ],
+        "cpu_expected_opacity": 0.03865811834681481,
+        "keep_upper": 0.0
+      }
+    },
+    {
+      "pixel": [
+        1280,
+        500
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.650026586784644,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.0611560707697927,
+          0.7271818116073892
+        ],
+        "height_m": 0.727263459676143,
+        "height_above_sill_m": 0.537263459676143,
+        "native_payload": [
+          0.5371358469758404,
+          -0.2640553408330319
+        ],
+        "cpu_expected_opacity": 0.03768067313370873,
+        "keep_upper": 0.0
+      }
+    },
+    {
+      "pixel": [
+        1300,
+        500
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.616731930372377,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.055260345684615,
+          0.7319483093736744
+        ],
+        "height_m": 0.7321625267090444,
+        "height_above_sill_m": 0.5421625267090444,
+        "native_payload": [
+          0.5419150524932591,
+          -0.261745340253268
+        ],
+        "cpu_expected_opacity": 0.03696929521563814,
+        "keep_upper": 0.0
+      }
+    },
+    {
+      "pixel": [
+        1320,
+        500
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.58505709973925,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.049464625706767,
+          0.7366339563347367
+        ],
+        "height_m": 0.736978494255934,
+        "height_above_sill_m": 0.5469784942559339,
+        "native_payload": [
+          0.5466131916526608,
+          -0.259474522615818
+        ],
+        "cpu_expected_opacity": 0.03628282539027368,
+        "keep_upper": 0.0
+      }
+    },
+    {
+      "pixel": [
+        1340,
+        500
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.555171146429697,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.0435854243492795,
+          0.7412507150010146
+        ],
+        "height_m": 0.7416871030588889,
+        "height_above_sill_m": 0.5516871030588888,
+        "native_payload": [
+          0.5512557841050795,
+          -0.25720347141491784
+        ],
+        "cpu_expected_opacity": 0.035617861446752434,
+        "keep_upper": 0.0
+      }
+    },
+    {
+      "pixel": [
+        1360,
+        500
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.527145688201701,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.0375170727785985,
+          0.7458069282323443
+        ],
+        "height_m": 0.746276266142377,
+        "height_above_sill_m": 0.556276266142377,
+        "native_payload": [
+          0.5558588398972649,
+          -0.25490914074401083
+        ],
+        "cpu_expected_opacity": 0.03497206222942997,
+        "keep_upper": 0.0
+      }
+    },
+    {
+      "pixel": [
+        1380,
+        500
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.517895900221595,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.015664623043515,
+          0.7484844470081674
+        ],
+        "height_m": 0.74867864751339,
+        "height_above_sill_m": 0.55867864751339,
+        "native_payload": [
+          0.5585430407581674,
+          -0.24669554191832604
+        ],
+        "cpu_expected_opacity": 0.03487223063814555,
+        "keep_upper": 0.0
+      }
+    },
+    {
+      "pixel": [
+        1400,
+        500
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.565831191961538,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -1.9444995553625364,
+          0.7444349608988828
+        ],
+        "height_m": 0.7442314569931128,
+        "height_above_sill_m": 0.5542314569931128,
+        "native_payload": [
+          0.5544935546488827,
+          -0.21925217330563904
+        ],
+        "cpu_expected_opacity": 0.03662363115659026,
+        "keep_upper": 0.0
+      }
+    },
+    {
+      "pixel": [
+        1020,
+        520
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 5.34040742781339,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.094152673008286,
+          0.5637584692274142
+        ],
+        "height_m": 0.563522485724471,
+        "height_above_sill_m": 0.37352248572447094,
+        "native_payload": [
+          0.3738170629774142,
+          -0.2764994284082747
+        ],
+        "cpu_expected_opacity": 0.08148601002460648,
+        "keep_upper": 0.0
+      },
+      "expected_opacities": [
+        0.003447035366604745,
+        0.02159897983293138,
+        0.047668467110404324,
+        0.08148601002460648
+      ]
+    },
+    {
+      "pixel": [
+        1040,
+        520
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 5.258939498969396,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.1025987037547935,
+          0.5735752548601858
+        ],
+        "height_m": 0.5735798309391471,
+        "height_above_sill_m": 0.3835798309391471,
+        "native_payload": [
+          0.3836338486101858,
+          -0.2796790762452104
+        ],
+        "cpu_expected_opacity": 0.07855259128295405,
+        "keep_upper": 0.0
+      },
+      "expected_opacities": [
+        0.003267804636592351,
+        0.020615993180479512,
+        0.04574785663021225,
+        0.07855259128295405
+      ]
+    },
+    {
+      "pixel": [
+        1060,
+        520
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 5.185244140951289,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.107383944495009,
+          0.5825615865952948
+        ],
+        "height_m": 0.5827602560296846,
+        "height_above_sill_m": 0.3927602560296846,
+        "native_payload": [
+          0.3925982097141848,
+          -0.2814799166856283
+        ],
+        "cpu_expected_opacity": 0.07575472953325504,
+        "keep_upper": 0.0
+      },
+      "expected_opacities": [
+        0.0031036249260820298,
+        0.01970248476545742,
+        0.043939019708706374,
+        0.07575472953325504
+      ]
+    },
+    {
+      "pixel": [
+        1080,
+        520
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 5.119311366130941,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.108291645729314,
+          0.5907115115603461
+        ],
+        "height_m": 0.5910557863758923,
+        "height_above_sill_m": 0.4010557863758923,
+        "native_payload": [
+          0.400702615300577,
+          -0.2818203046484927
+        ],
+        "cpu_expected_opacity": 0.07307652229068894,
+        "keep_upper": 0.0
+      },
+      "expected_opacities": [
+        0.002952826054015544,
+        0.01885097721380006,
+        0.04222976062105831,
+        0.07307652229068894
+      ]
+    },
+    {
+      "pixel": [
+        1100,
+        520
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 5.061206780393685,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.1053274218925133,
+          0.5981541540096939
+        ],
+        "height_m": 0.5984490183237154,
+        "height_above_sill_m": 0.40844901832371544,
+        "native_payload": [
+          0.4080934597255486,
+          -0.28063816326922175
+        ],
+        "cpu_expected_opacity": 0.07045516485124048,
+        "keep_upper": 0.0
+      },
+      "expected_opacities": [
+        0.0028112636269035916,
+        0.01803958771075139,
+        0.04057836858329165,
+        0.07045516485124048
+      ]
+    },
+    {
+      "pixel": [
+        1120,
+        520
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 5.009124609390579,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.0996566382248,
+          0.605074400785452
+        ],
+        "height_m": 0.6051831840803815,
+        "height_above_sill_m": 0.4151831840803815,
+        "native_payload": [
+          0.4149576843038014,
+          -0.2783917987551747
+        ],
+        "cpu_expected_opacity": 0.06778272551337251,
+        "keep_upper": 0.0018637027789003612
+      },
+      "expected_opacities": [
+        0.002673168619541257,
+        0.017235408971424823,
+        0.03891757148289248,
+        0.06778272551337251
+      ]
+    },
+    {
+      "pixel": [
+        1140,
+        520
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.959196814257017,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.0940936859217416,
+          0.611863057344209
+        ],
+        "height_m": 0.6117892979969959,
+        "height_above_sill_m": 0.4217892979969959,
+        "native_payload": [
+          0.42169138394109923,
+          -0.2761881494221765
+        ],
+        "cpu_expected_opacity": 0.06484797893362407,
+        "keep_upper": 0.009942745841107914
+      },
+      "expected_opacities": [
+        0.0025282439968646354,
+        0.016377404012686374,
+        0.037118795319510865,
+        0.06484797893362407
+      ]
+    },
+    {
+      "pixel": [
+        1160,
+        520
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.905437918917175,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.0936123998294223,
+          0.6192804421913863
+        ],
+        "height_m": 0.6190935817057313,
+        "height_above_sill_m": 0.42909358170573125,
+        "native_payload": [
+          0.42909813631316485,
+          -0.27589230228386513
+        ],
+        "cpu_expected_opacity": 0.06328364144705638,
+        "keep_upper": 0.0
+      },
+      "expected_opacities": [
+        0.002436301146123286,
+        0.01586320274916969,
+        0.036101624703136714,
+        0.06328364144705638
+      ]
+    },
+    {
+      "pixel": [
+        1180,
+        520
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.854262543602088,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.0926446072028684,
+          0.6264068163422439
+        ],
+        "height_m": 0.6262010797006087,
+        "height_above_sill_m": 0.4362010797006087,
+        "native_payload": [
+          0.4362292616496181,
+          -0.27549423023236946
+        ],
+        "cpu_expected_opacity": 0.06120386057403267,
+        "keep_upper": 0.0
+      },
+      "expected_opacities": [
+        0.0023277660724682044,
+        0.015231754795189978,
+        0.0348021738382616,
+        0.06120386057403267
+      ]
+    },
+    {
+      "pixel": [
+        1200,
+        520
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.807841588664681,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.0891106576770038,
+          0.6329346875718901
+        ],
+        "height_m": 0.6328055143944784,
+        "height_above_sill_m": 0.4428055143944784,
+        "native_payload": [
+          0.44276239994185373,
+          -0.274264583872586
+        ],
+        "cpu_expected_opacity": 0.05922900845252208,
+        "keep_upper": 0.0
+      },
+      "expected_opacities": [
+        0.0022277100408187906,
+        0.014643322232365676,
+        0.033579353667846076,
+        0.05922900845252208
+      ]
+    },
+    {
+      "pixel": [
+        1220,
+        520
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.763440828302778,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.085645313148885,
+          0.6393358324327282
+        ],
+        "height_m": 0.6392817363835718,
+        "height_above_sill_m": 0.4492817363835718,
+        "native_payload": [
+          0.449168709615146,
+          -0.273058808789153
+        ],
+        "cpu_expected_opacity": 0.05735384815732726,
+        "keep_upper": 0.0
+      },
+      "expected_opacities": [
+        0.0021337539278276146,
+        0.014088261076571629,
+        0.03242170015217523,
+        0.05735384815732726
+      ]
+    },
+    {
+      "pixel": [
+        1240,
+        520
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.72100041951564,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.0822465950673337,
+          0.6456139056818727
+        ],
+        "height_m": 0.6456334432905654,
+        "height_above_sill_m": 0.4556334432905654,
+        "native_payload": [
+          0.45545184837547803,
+          -0.2718762165403611
+        ],
+        "cpu_expected_opacity": 0.05557191361110777,
+        "keep_upper": 0.0
+      },
+      "expected_opacities": [
+        0.002045435903503062,
+        0.013564190655223745,
+        0.03132479530534352,
+        0.05557191361110777
+      ]
+    },
+    {
+      "pixel": [
+        1260,
+        520
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.68046203211373,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.078912600238294,
+          0.6517724228779223
+        ],
+        "height_m": 0.6518641919069967,
+        "height_above_sill_m": 0.46186419190699673,
+        "native_payload": [
+          0.46161533461800364,
+          -0.2707161449051926
+        ],
+        "cpu_expected_opacity": 0.053877242396582765,
+        "keep_upper": 0.0
+      }
+    },
+    {
+      "pixel": [
+        1280,
+        520
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.645467136912923,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.072702464579948,
+          0.6572625218900952
+        ],
+        "height_m": 0.657465865577394,
+        "height_above_sill_m": 0.46746586557739395,
+        "native_payload": [
+          0.4671380079408681,
+          -0.2683754109499164
+        ],
+        "cpu_expected_opacity": 0.05222796959701686,
+        "keep_upper": 0.0
+      }
+    },
+    {
+      "pixel": [
+        1300,
+        520
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.612626231673698,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.066388285423745,
+          0.6626348734279369
+        ],
+        "height_m": 0.6629044125436717,
+        "height_above_sill_m": 0.4729044125436717,
+        "native_payload": [
+          0.47254809145589455,
+          -0.2659615810234566
+        ],
+        "cpu_expected_opacity": 0.05064371858904244,
+        "keep_upper": 0.0
+      }
+    },
+    {
+      "pixel": [
+        1320,
+        520
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.581571559822547,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.060030120175489,
+          0.6679224215378142
+        ],
+        "height_m": 0.6682268436461504,
+        "height_above_sill_m": 0.47822684364615037,
+        "native_payload": [
+          0.4778840160950171,
+          -0.2635565345833799
+        ],
+        "cpu_expected_opacity": 0.04935552278297865,
+        "keep_upper": 0.0
+      }
+    },
+    {
+      "pixel": [
+        1340,
+        520
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.552072589263165,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.0537773087078426,
+          0.6731223558216867
+        ],
+        "height_m": 0.6734610829170189,
+        "height_above_sill_m": 0.4834610829170189,
+        "native_payload": [
+          0.4831315253167872,
+          -0.2611913393779145
+        ],
+        "cpu_expected_opacity": 0.0483237622386514,
+        "keep_upper": 0.0
+      }
+    },
+    {
+      "pixel": [
+        1360,
+        520
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.524085226702517,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.0476272539943436,
+          0.678236836007087
+        ],
+        "height_m": 0.6786093043319551,
+        "height_above_sill_m": 0.4886093043319551,
+        "native_payload": [
+          0.4882927986083885,
+          -0.25886501305303045
+        ],
+        "cpu_expected_opacity": 0.04732965740767002,
+        "keep_upper": 0.0
+      }
+    },
+    {
+      "pixel": [
+        1380,
+        520
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.518455265904378,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.023043662217411,
+          0.6804136456957546
+        ],
+        "height_m": 0.6808110351083229,
+        "height_above_sill_m": 0.49081103510832286,
+        "native_payload": [
+          0.4904722394457545,
+          -0.24940225445582528
+        ],
+        "cpu_expected_opacity": 0.047372152004745795,
+        "keep_upper": 0.0
+      }
+    },
+    {
+      "pixel": [
+        1400,
+        520
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.565466914907539,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -1.9521322220980413,
+          0.6762690418718752
+        ],
+        "height_m": 0.6759445286481022,
+        "height_above_sill_m": 0.48594452864810217,
+        "native_payload": [
+          0.48632763562187514,
+          -0.22217802888758248
+        ],
+        "cpu_expected_opacity": 0.04976545220653994,
+        "keep_upper": 0.0
+      }
+    },
+    {
+      "pixel": [
+        1020,
+        540
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 5.359174789407074,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.0904879111578407,
+          0.48032095602240044
+        ],
+        "height_m": 0.4801410830227436,
+        "height_above_sill_m": 0.2901410830227436,
+        "native_payload": [
+          0.29037844613010355,
+          -0.2749488527699304
+        ],
+        "cpu_expected_opacity": 0.11860439504751953,
+        "keep_upper": 0.0
+      },
+      "expected_opacities": [
+        0.005784035675982709,
+        0.034202191009743664,
+        0.07206431250878396,
+        0.11860439504751953
+      ]
+    },
+    {
+      "pixel": [
+        1040,
+        540
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 5.277014100346885,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.0991269472211096,
+          0.49133526289981017
+        ],
+        "height_m": 0.49139906967429736,
+        "height_above_sill_m": 0.30139906967429736,
+        "native_payload": [
+          0.3013938566498102,
+          -0.27820345346363073
+        ],
+        "cpu_expected_opacity": 0.11373837267787519,
+        "keep_upper": 0.0
+      },
+      "expected_opacities": [
+        0.005443556830015705,
+        0.03243604551896247,
+        0.06876254796517271,
+        0.11373837267787519
+      ]
+    },
+    {
+      "pixel": [
+        1060,
+        540
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 5.198419770490909,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.1074211091902404,
+          0.5020327890131608
+        ],
+        "height_m": 0.5023306923030436,
+        "height_above_sill_m": 0.3123306923030436,
+        "native_payload": [
+          0.3120913827631608,
+          -0.2813282074135587
+        ],
+        "cpu_expected_opacity": 0.10918725941059483,
+        "keep_upper": 0.0
+      },
+      "expected_opacities": [
+        0.005131314208238783,
+        0.030803499044008253,
+        0.06569089123301428,
+        0.10918725941059483
+      ]
+    },
+    {
+      "pixel": [
+        1080,
+        540
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 5.123044820365028,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.1153550027055448,
+          0.5125778812813834
+        ],
+        "height_m": 0.5129810635088317,
+        "height_above_sill_m": 0.32298106350883166,
+        "native_payload": [
+          0.32261399471583113,
+          -0.2843693761883321
+        ],
+        "cpu_expected_opacity": 0.10487370827617162,
+        "keep_upper": 0.0
+      },
+      "expected_opacities": [
+        0.004840983976176752,
+        0.029273768783330135,
+        0.06279464079964424,
+        0.10487370827617162
+      ]
+    },
+    {
+      "pixel": [
+        1100,
+        540
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 5.054782745984866,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.120171816517846,
+          0.5223710905990602
+        ],
+        "height_m": 0.5227437075108002,
+        "height_above_sill_m": 0.33274370751080024,
+        "native_payload": [
+          0.33239822689018267,
+          -0.2861725871957361
+        ],
+        "cpu_expected_opacity": 0.10075752024856839,
+        "keep_upper": 0.0
+      },
+      "expected_opacities": [
+        0.004574055940872801,
+        0.02784821252077163,
+        0.06006229940190186,
+        0.10075752024856839
+      ]
+    },
+    {
+      "pixel": [
+        1120,
+        540
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.991845515243972,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.123057645912482,
+          0.5316016512968771
+        ],
+        "height_m": 0.5318849360286294,
+        "height_above_sill_m": 0.3418849360286294,
+        "native_payload": [
+          0.34163276948432003,
+          -0.2871985550691404
+        ],
+        "cpu_expected_opacity": 0.0968589283931952,
+        "keep_upper": 0.0
+      },
+      "expected_opacities": [
+        0.004328401742552211,
+        0.026522135710466407,
+        0.057496470333028224,
+        0.0968589283931952
+      ]
+    },
+    {
+      "pixel": [
+        1140,
+        540
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.93152924567633,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.125876384996215,
+          0.5406176181630844
+        ],
+        "height_m": 0.5408136475263678,
+        "height_above_sill_m": 0.35081364752636784,
+        "native_payload": [
+          0.35065262567496436,
+          -0.28820067104619473
+        ],
+        "cpu_expected_opacity": 0.09319607650024074,
+        "keep_upper": 0.0
+      },
+      "expected_opacities": [
+        0.004101175568272564,
+        0.025287716860829236,
+        0.05509581032483264,
+        0.09319607650024074
+      ]
+    },
+    {
+      "pixel": [
+        1160,
+        540
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.873698536328977,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.1284827058606233,
+          0.549446582372944
+        ],
+        "height_m": 0.5495443506582648,
+        "height_above_sill_m": 0.3595443506582648,
+        "native_payload": [
+          0.35948567144620536,
+          -0.2891943165189091
+        ],
+        "cpu_expected_opacity": 0.08974552792888346,
+        "keep_upper": 0.0
+      },
+      "expected_opacities": [
+        0.003890314115504328,
+        0.024135145192277302,
+        0.05284331582082604,
+        0.08974552792888346
+      ]
+    },
+    {
+      "pixel": [
+        1180,
+        540
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.82223944682334,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.127677701358795,
+          0.5573199637078253
+        ],
+        "height_m": 0.5574724906434069,
+        "height_above_sill_m": 0.36747249064340687,
+        "native_payload": [
+          0.3673632622821299,
+          -0.28894994900669085
+        ],
+        "cpu_expected_opacity": 0.08653731226767501,
+        "keep_upper": 0.0
+      },
+      "expected_opacities": [
+        0.003701209548304543,
+        0.023087916866191768,
+        0.050772150480352274,
+        0.08653731226767501
+      ]
+    },
+    {
+      "pixel": [
+        1200,
+        540
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.774330787728385,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.1258033220833465,
+          0.5647632775963602
+        ],
+        "height_m": 0.5650267880484477,
+        "height_above_sill_m": 0.37502678804844775,
+        "native_payload": [
+          0.37481065270773806,
+          -0.2882873938009667
+        ],
+        "cpu_expected_opacity": 0.08352183548195759,
+        "keep_upper": 0.0
+      },
+      "expected_opacities": [
+        0.0035271764553062627,
+        0.0221163954432955,
+        0.04883734232535098,
+        0.08352183548195759
+      ]
+    },
+    {
+      "pixel": [
+        1220,
+        540
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.728498183918736,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.1239666973738753,
+          0.5720566650058004
+        ],
+        "height_m": 0.5724289234959339,
+        "height_above_sill_m": 0.3824289234959339,
+        "native_payload": [
+          0.38210803454286146,
+          -0.2876381840715587
+        ],
+        "cpu_expected_opacity": 0.08066884095974121,
+        "keep_upper": 0.0
+      },
+      "expected_opacities": [
+        0.0033645803729826576,
+        0.02120405436237542,
+        0.047012923448017774,
+        0.08066884095974121
+      ]
+    },
+    {
+      "pixel": [
+        1240,
+        540
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.684677965966985,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.122166697900564,
+          0.5792046105974263
+        ],
+        "height_m": 0.5796834485156799,
+        "height_above_sill_m": 0.3896834485156799,
+        "native_payload": [
+          0.3892598949049294,
+          -0.2870019206231926
+        ],
+        "cpu_expected_opacity": 0.07796712960290399,
+        "keep_upper": 0.0
+      },
+      "expected_opacities": [
+        0.003212493775146236,
+        0.02034638463884503,
+        0.04529092207518399,
+        0.07796712960290399
+      ]
+    },
+    {
+      "pixel": [
+        1260,
+        540
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.646410541865704,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.1173596113556443,
+          0.5857188446303492
+        ],
+        "height_m": 0.5862413591564083,
+        "height_above_sill_m": 0.3962413591564083,
+        "native_payload": [
+          0.3957774383803492,
+          -0.2852207917583667
+        ],
+        "cpu_expected_opacity": 0.07536113405333829,
+        "keep_upper": 0.0
+      },
+      "expected_opacities": [
+        0.0030708132224964465,
+        0.019537275718274197,
+        0.043647606773829596,
+        0.07536113405333829
+      ]
+    },
+    {
+      "pixel": [
+        1280,
+        540
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.622543370805189,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.101674841290377,
+          0.5903146399181243
+        ],
+        "height_m": 0.5907420464610849,
+        "height_above_sill_m": 0.40074204646108486,
+        "native_payload": [
+          0.4003457828264057,
+          -0.27933900298389125
+        ],
+        "cpu_expected_opacity": 0.07274475614074777,
+        "keep_upper": 0.0
+      },
+      "expected_opacities": [
+        0.002941208683151669,
+        0.018772159060911946,
+        0.04204485721549624,
+        0.07274475614074777
+      ]
+    },
+    {
+      "pixel": [
+        1300,
+        540
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.60002669680009,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.086186743869027,
+          0.5948677530186822
+        ],
+        "height_m": 0.5951885211536327,
+        "height_above_sill_m": 0.40518852115363274,
+        "native_payload": [
+          0.4048686217741997,
+          -0.2735309664508851
+        ],
+        "cpu_expected_opacity": 0.07023172585637749,
+        "keep_upper": 0.0
+      },
+      "expected_opacities": [
+        0.0028177946797071592,
+        0.018041049125235513,
+        0.04050901584364786,
+        0.07023172585637749
+      ]
+    },
+    {
+      "pixel": [
+        1320,
+        540
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.578845172705861,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.0708916307014658,
+          0.5993641335774796
+        ],
+        "height_m": 0.599579592036609,
+        "height_above_sill_m": 0.40957959203660904,
+        "native_payload": [
+          0.4093351054011801,
+          -0.2677952990130496
+        ],
+        "cpu_expected_opacity": 0.06782082512920345,
+        "keep_upper": 0.0
+      },
+      "expected_opacities": [
+        0.002700428287015368,
+        0.017343316704222404,
+        0.039039091952239646,
+        0.06782082512920345
+      ]
+    },
+    {
+      "pixel": [
+        1340,
+        540
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.5500285835888,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.063962279508189,
+          0.6050402108015647
+        ],
+        "height_m": 0.6052813431816472,
+        "height_above_sill_m": 0.41528134318164717,
+        "native_payload": [
+          0.41505347790624497,
+          -0.26517650221236677
+        ],
+        "cpu_expected_opacity": 0.06563609094168113,
+        "keep_upper": 0.0
+      },
+      "expected_opacities": [
+        0.0025880884888657882,
+        0.01668796001981707,
+        0.03768343658650202,
+        0.06563609094168113
+      ]
+    },
+    {
+      "pixel": [
+        1360,
+        540
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.522478815312009,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.0573287977800225,
+          0.6106701147899399
+        ],
+        "height_m": 0.6109253413158696,
+        "height_above_sill_m": 0.4209253413158696,
+        "native_payload": [
+          0.42072870853994,
+          -0.2626766042404703
+        ],
+        "cpu_expected_opacity": 0.06406265351915176,
+        "keep_upper": 0.0
+      },
+      "expected_opacities": [
+        0.0025017281023198717,
+        0.016194809679475567,
+        0.03668532656993202,
+        0.06406265351915176
+      ]
+    },
+    {
+      "pixel": [
+        1380,
+        540
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.519939493419696,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.0300908846893164,
+          0.6124702533733437
+        ],
+        "height_m": 0.612897709127156,
+        "height_above_sill_m": 0.422897709127156,
+        "native_payload": [
+          0.4225288471233437,
+          -0.25204906733868954
+        ],
+        "cpu_expected_opacity": 0.06431918230388861,
+        "keep_upper": 0.0
+      },
+      "expected_opacities": [
+        0.0025040506036991504,
+        0.016230120810024225,
+        0.03680210171876607,
+        0.06431918230388861
+      ]
+    },
+    {
+      "pixel": [
+        1400,
+        540
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.572756306876382,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -1.9538360849669216,
+          0.6065913975494132
+        ],
+        "height_m": 0.6066199039815793,
+        "height_above_sill_m": 0.4166199039815793,
+        "native_payload": [
+          0.41664999129941316,
+          -0.22283117632065325
+        ],
+        "cpu_expected_opacity": 0.0682595835997175,
+        "keep_upper": 0.0
+      },
+      "expected_opacities": [
+        0.0026842205027590924,
+        0.0173270176047618,
+        0.039161224799828094,
+        0.0682595835997175
+      ]
+    },
+    {
+      "pixel": [
+        1020,
+        560
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 5.382976874640682,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.083976797952786,
+          0.3957390156444808
+        ],
+        "height_m": 0.39553989497281306,
+        "height_above_sill_m": 0.20553989497281305,
+        "native_payload": [
+          0.20576821133581163,
+          -0.2723265960736968
+        ],
+        "cpu_expected_opacity": 0.1730789717004245,
+        "keep_upper": 0.0
+      },
+      "expected_opacities": [
+        0.009750105158787816,
+        0.054364372301663785,
+        0.10928646747783922,
+        0.1730789717004245
+      ]
+    },
+    {
+      "pixel": [
+        1040,
+        560
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 5.296450243572182,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.095627866572945,
+          0.4085121353408716
+        ],
+        "height_m": 0.4086332969798526,
+        "height_above_sill_m": 0.21863329697985262,
+        "native_payload": [
+          0.21857030767761812,
+          -0.27671732004992
+        ],
+        "cpu_expected_opacity": 0.16511559668115347,
+        "keep_upper": 0.0
+      },
+      "expected_opacities": [
+        0.009100725688676417,
+        0.0511967190376061,
+        0.10365325918834523,
+        0.16511559668115347
+      ]
+    },
+    {
+      "pixel": [
+        1060,
+        560
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 5.217224448456115,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.1038116294979554,
+          0.42055154584823107
+        ],
+        "height_m": 0.42074177303916305,
+        "height_above_sill_m": 0.23074177303916305,
+        "native_payload": [
+          0.23057944788779677,
+          -0.27987298758992984
+        ],
+        "cpu_expected_opacity": 0.15758318502182278,
+        "keep_upper": 0.0
+      },
+      "expected_opacities": [
+        0.008509572401494355,
+        0.04827204755384085,
+        0.09838617003683602,
+        0.15758318502182278
+      ]
+    },
+    {
+      "pixel": [
+        1080,
+        560
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 5.141316390308816,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.111776034437028,
+          0.4322682514012849
+        ],
+        "height_m": 0.43252569290769904,
+        "height_above_sill_m": 0.24252569290769904,
+        "native_payload": [
+          0.24226669451021146,
+          -0.2829440704612234
+        ],
+        "cpu_expected_opacity": 0.15057379594067646,
+        "keep_upper": 0.0
+      },
+      "expected_opacities": [
+        0.007970682135000823,
+        0.045583563092229586,
+        0.09351180508116275,
+        0.15057379594067646
+      ]
+    },
+    {
+      "pixel": [
+        1100,
+        560
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 5.072237595135852,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.1169112173826505,
+          0.4431463296896616
+        ],
+        "height_m": 0.4433833564054849,
+        "height_above_sill_m": 0.25338335640548487,
+        "native_payload": [
+          0.2531344310955941,
+          -0.28487523795765757
+        ],
+        "cpu_expected_opacity": 0.14400079872034566,
+        "keep_upper": 0.0
+      },
+      "expected_opacities": [
+        0.007482830056558988,
+        0.043117770701235174,
+        0.08898905187209938,
+        0.14400079872034566
+      ]
+    },
+    {
+      "pixel": [
+        1120,
+        560
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 5.008887759083546,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.1198450152742465,
+          0.45334207364728246
+        ],
+        "height_m": 0.4534910741556746,
+        "height_above_sill_m": 0.2634910741556746,
+        "native_payload": [
+          0.26333463064302737,
+          -0.28591988957896597
+        ],
+        "cpu_expected_opacity": 0.13783014780672131,
+        "keep_upper": 0.0
+      },
+      "expected_opacities": [
+        0.00703872914583275,
+        0.04084707689353703,
+        0.08478173777211549,
+        0.13783014780672131
+      ]
+    },
+    {
+      "pixel": [
+        1140,
+        560
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.948089900654992,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.1224393137676594,
+          0.46333861884667216
+        ],
+        "height_m": 0.4633777495060395,
+        "height_above_sill_m": 0.2733777495060395,
+        "native_payload": [
+          0.2733360455037236,
+          -0.28696695664033717
+        ],
+        "cpu_expected_opacity": 0.13204308705392181,
+        "keep_upper": 0.0
+      },
+      "expected_opacities": [
+        0.006629211986278779,
+        0.03873869591869419,
+        0.08085361018633114,
+        0.13204308705392181
+      ]
+    },
+    {
+      "pixel": [
+        1160,
+        560
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.88982348596356,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.124904678450355,
+          0.47311414120384726
+        ],
+        "height_m": 0.4730398544437201,
+        "height_above_sill_m": 0.2830398544437201,
+        "native_payload": [
+          0.2831164569622525,
+          -0.28799666267547674
+        ],
+        "cpu_expected_opacity": 0.12661994537555174,
+        "keep_upper": 0.0
+      },
+      "expected_opacities": [
+        0.00625184451906508,
+        0.03678247647844002,
+        0.07718895321982777,
+        0.12661994537555174
+      ]
+    },
+    {
+      "pixel": [
+        1180,
+        560
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.8379045905063505,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.1242356345458746,
+          0.481848016758387
+        ],
+        "height_m": 0.4818251820206252,
+        "height_above_sill_m": 0.2918251820206252,
+        "native_payload": [
+          0.2918549502122254,
+          -0.2878034098149146
+        ],
+        "cpu_expected_opacity": 0.12163168455980293,
+        "keep_upper": 0.0
+      },
+      "expected_opacities": [
+        0.0059167590453256215,
+        0.03502290388566495,
+        0.07385411785989829,
+        0.12163168455980293
+      ]
+    },
+    {
+      "pixel": [
+        1200,
+        560
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.789687756496165,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.1223905851598452,
+          0.4900845526796761
+        ],
+        "height_m": 0.4901748342885337,
+        "height_above_sill_m": 0.3001748342885337,
+        "native_payload": [
+          0.30009594638939074,
+          -0.2871505061204025
+        ],
+        "cpu_expected_opacity": 0.11697283358273498,
+        "keep_upper": 0.0
+      },
+      "expected_opacities": [
+        0.005610758442176461,
+        0.03340221525231386,
+        0.07075973164302062,
+        0.11697283358273498
+      ]
+    },
+    {
+      "pixel": [
+        1220,
+        560
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.743559422492951,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.120582813339807,
+          0.4981546767891093
+        ],
+        "height_m": 0.4983557893303815,
+        "height_above_sill_m": 0.3083557893303815,
+        "native_payload": [
+          0.3081704406392354,
+          -0.2865107937587307
+        ],
+        "cpu_expected_opacity": 0.11258095281546474,
+        "keep_upper": 0.0
+      },
+      "expected_opacities": [
+        0.0053262817678902796,
+        0.0318869551073595,
+        0.06785348033076759,
+        0.11258095281546474
+      ]
+    },
+    {
+      "pixel": [
+        1240,
+        560
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.699534533435037,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.119082097327638,
+          0.5060264324160263
+        ],
+        "height_m": 0.5063597368279108,
+        "height_above_sill_m": 0.3163597368279108,
+        "native_payload": [
+          0.31604596597453827,
+          -0.28585817628030574
+        ],
+        "cpu_expected_opacity": 0.108448307470301,
+        "keep_upper": 0.0
+      },
+      "expected_opacities": [
+        0.0050623473902262385,
+        0.0304730597571762,
+        0.06512913442181734,
+        0.108448307470301
+      ]
+    },
+    {
+      "pixel": [
+        1260,
+        560
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.659007320631296,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.1162208807220018,
+          0.5135833866983628
+        ],
+        "height_m": 0.5139458060849182,
+        "height_above_sill_m": 0.32394580608491824,
+        "native_payload": [
+          0.3236070375436846,
+          -0.2847238819613943
+        ],
+        "cpu_expected_opacity": 0.1044925981015309,
+        "keep_upper": 0.0
+      },
+      "expected_opacities": [
+        0.004815234296392685,
+        0.029138145786983958,
+        0.06253821053992971,
+        0.1044925981015309
+      ]
+    },
+    {
+      "pixel": [
+        1280,
+        560
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.6229920220847545,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.1109191692576537,
+          0.5207283203083487
+        ],
+        "height_m": 0.52093843241498,
+        "height_above_sill_m": 0.33093843241497994,
+        "native_payload": [
+          0.33075684748653444,
+          -0.28274549282799144
+        ],
+        "cpu_expected_opacity": 0.10065855533932977,
+        "keep_upper": 0.0
+      },
+      "expected_opacities": [
+        0.004582365915065174,
+        0.027867023867055682,
+        0.060048089753193166,
+        0.10065855533932977
+      ]
+    },
+    {
+      "pixel": [
+        1300,
+        560
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.5886746384032095,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.1057109519190265,
+          0.5277472551109688
+        ],
+        "height_m": 0.5278077458318586,
+        "height_above_sill_m": 0.33780774583185863,
+        "native_payload": [
+          0.3377805726293194,
+          -0.28080199200633604
+        ],
+        "cpu_expected_opacity": 0.09702687041101132,
+        "keep_upper": 0.0
+      },
+      "expected_opacities": [
+        0.004364470984010759,
+        0.02667170280075818,
+        0.0576971016084249,
+        0.09702687041101132
+      ]
+    },
+    {
+      "pixel": [
+        1320,
+        560
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.556006216838917,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.1005937772099337,
+          0.5346434949031624
+        ],
+        "height_m": 0.5345569797060432,
+        "height_above_sill_m": 0.3445569797060432,
+        "native_payload": [
+          0.3446815190237813,
+          -0.278892464694963
+        ],
+        "cpu_expected_opacity": 0.09358418147297567,
+        "keep_upper": 0.0
+      },
+      "expected_opacities": [
+        0.004160384191229321,
+        0.025546643639891956,
+        0.0554756152640405,
+        0.09358418147297567
+      ]
+    },
+    {
+      "pixel": [
+        1340,
+        560
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.524944079020392,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.0955792935970377,
+          0.5414073807756478
+        ],
+        "height_m": 0.5411883718829651,
+        "height_above_sill_m": 0.3511883718829651,
+        "native_payload": [
+          0.3514522217488307,
+          -0.27701622290371614
+        ],
+        "cpu_expected_opacity": 0.09032258922673934,
+        "keep_upper": 0.0
+      },
+      "expected_opacities": [
+        0.003969311572720551,
+        0.024488241633257742,
+        0.053377653594833055,
+        0.09032258922673934
+      ]
+    },
+    {
+      "pixel": [
+        1360,
+        560
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.5022174330026274,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.0849379958104164,
+          0.5466355889648674
+        ],
+        "height_m": 0.5465709659296887,
+        "height_above_sill_m": 0.3565709659296887,
+        "native_payload": [
+          0.35669418271486747,
+          -0.27276360094923635
+        ],
+        "cpu_expected_opacity": 0.0872545819282221,
+        "keep_upper": 0.0
+      },
+      "expected_opacities": [
+        0.0038003759640820997,
+        0.02353151642336645,
+        0.05144184595419918,
+        0.0872545819282221
+      ]
+    },
+    {
+      "pixel": [
+        1380,
+        560
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.512813473733248,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.0458830766086633,
+          0.5467713734450446
+        ],
+        "height_m": 0.5465359068560047,
+        "height_above_sill_m": 0.3565359068560047,
+        "native_payload": [
+          0.35682631691600186,
+          -0.2577548517960064
+        ],
+        "cpu_expected_opacity": 0.08614100778182347,
+        "keep_upper": 0.0
+      },
+      "expected_opacities": [
+        0.0037510292735724194,
+        0.02322809836878156,
+        0.05078227661260358,
+        0.08614100778182347
+      ]
+    },
+    {
+      "pixel": [
+        1220,
+        580
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.759958636043673,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.1176102184487773,
+          0.4237376527438778
+        ],
+        "height_m": 0.4238041703293335,
+        "height_above_sill_m": 0.23380417032933348,
+        "native_payload": [
+          0.23371677281391115,
+          -0.2853354697362402
+        ],
+        "cpu_expected_opacity": 0.157466543576447,
+        "keep_upper": 0.0
+      },
+      "expected_opacities": [
+        0.00845792201037264,
+        0.048083697425955696,
+        0.09817324512013487,
+        0.157466543576447
+      ]
+    },
+    {
+      "pixel": [
+        1240,
+        580
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.715641554214097,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.116162820353604,
+          0.43237486370545697
+        ],
+        "height_m": 0.43257777680220455,
+        "height_above_sill_m": 0.24257777680220455,
+        "native_payload": [
+          0.24235807864764825,
+          -0.2846899484531278
+        ],
+        "cpu_expected_opacity": 0.15116109526753888,
+        "keep_upper": 0.0
+      },
+      "expected_opacities": [
+        0.008000524725959229,
+        0.0457571337050462,
+        0.09387263994328444,
+        0.15116109526753888
+      ]
+    },
+    {
+      "pixel": [
+        1260,
+        580
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.6748772825475555,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.113281996596584,
+          0.440656005875999
+        ],
+        "height_m": 0.440886550828259,
+        "height_above_sill_m": 0.250886550828259,
+        "native_payload": [
+          0.250643711515818,
+          -0.28354991000335694
+        ],
+        "cpu_expected_opacity": 0.14516529420961496,
+        "keep_upper": 0.0
+      },
+      "expected_opacities": [
+        0.007575435351214669,
+        0.043575946427371504,
+        0.0898103030227837,
+        0.14516529420961496
+      ]
+    },
+    {
+      "pixel": [
+        1280,
+        580
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.638609638822477,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.1079904915020053,
+          0.4484732306635779
+        ],
+        "height_m": 0.4485521848916393,
+        "height_above_sill_m": 0.2585521848916393,
+        "native_payload": [
+          0.25846614809452184,
+          -0.2815760191751401
+        ],
+        "cpu_expected_opacity": 0.139411577028114,
+        "keep_upper": 0.0
+      },
+      "expected_opacities": [
+        0.0071788170566852005,
+        0.04151942335701399,
+        0.08594448284339513,
+        0.139411577028114
+      ]
+    },
+    {
+      "pixel": [
+        1300,
+        580
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.604049083227112,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.1027925799529115,
+          0.45615218821509057
+        ],
+        "height_m": 0.45608223298129547,
+        "height_above_sill_m": 0.26608223298129546,
+        "native_payload": [
+          0.2661502252535556,
+          -0.27963704155927205
+        ],
+        "cpu_expected_opacity": 0.13397858929109588,
+        "keep_upper": 0.0
+      },
+      "expected_opacities": [
+        0.006809278842030503,
+        0.0395928726500618,
+        0.08230717123077988,
+        0.13397858929109588
+      ]
+    },
+    {
+      "pixel": [
+        1320,
+        580
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.571191228259756,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.0978041849506845,
+          0.46358724116218014
+        ],
+        "height_m": 0.46347203545820914,
+        "height_above_sill_m": 0.27347203545820914,
+        "native_payload": [
+          0.2736088185827239,
+          -0.2777337137919062
+        ],
+        "cpu_expected_opacity": 0.12889786370393042,
+        "keep_upper": 0.0
+      },
+      "expected_opacities": [
+        0.006468298153742516,
+        0.03780553486043998,
+        0.0789179180492694,
+        0.12889786370393042
+      ]
+    },
+    {
+      "pixel": [
+        1340,
+        580
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.539944908332502,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.0929116272301735,
+          0.4708846933184258
+        ],
+        "height_m": 0.47073290772549614,
+        "height_above_sill_m": 0.28073290772549614,
+        "native_payload": [
+          0.2809308468746851,
+          -0.27586355728205325
+        ],
+        "cpu_expected_opacity": 0.12409435172614015,
+        "keep_upper": 0.0
+      },
+      "expected_opacities": [
+        0.006150012709893504,
+        0.03612847622844335,
+        0.07572451456995455,
+        0.12409435172614015
+      ]
+    },
+    {
+      "pixel": [
+        1380,
+        580
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.5305247308800585,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.040234660513146,
+          0.4763657039631344
+        ],
+        "height_m": 0.47607418146923164,
+        "height_above_sill_m": 0.28607418146923164,
+        "native_payload": [
+          0.286399210796042,
+          -0.25561668715161434
+        ],
+        "cpu_expected_opacity": 0.1189326200131251,
+        "keep_upper": 0.0
+      },
+      "expected_opacities": [
+        0.005839516550426474,
+        0.03443497306866196,
+        0.07239456761642475,
+        0.1189326200131251
+      ]
+    },
+    {
+      "pixel": [
+        1400,
+        580
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.611172234590934,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -1.938846030760263,
+          0.4635258487417446
+        ],
+        "height_m": 0.46351813789865604,
+        "height_above_sill_m": 0.27351813789865603,
+        "native_payload": [
+          0.2735844424917446,
+          -0.21708498887476746
+        ],
+        "cpu_expected_opacity": 0.13162144950528928,
+        "keep_upper": 0.0
+      },
+      "expected_opacities": [
+        0.00660524642936823,
+        0.03860530870937351,
+        0.08058633059807122,
+        0.13162144950528928
+      ]
+    },
+    {
+      "pixel": [
+        1320,
+        600
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.587573114286435,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.0951117646300217,
+          0.39200075599854445
+        ],
+        "height_m": 0.391953876382825,
+        "height_above_sill_m": 0.20195387638282497,
+        "native_payload": [
+          0.2020235917586941,
+          -0.27656962163728105
+        ],
+        "cpu_expected_opacity": 0.1779472437835111,
+        "keep_upper": 0.0
+      },
+      "expected_opacities": [
+        0.010088539670672324,
+        0.05610531846076301,
+        0.1125518298610279,
+        0.1779472437835111
+      ]
+    },
+    {
+      "pixel": [
+        1340,
+        600
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.556086434952575,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.0902281140613965,
+          0.39994307826106246
+        ],
+        "height_m": 0.3998589152960552,
+        "height_above_sill_m": 0.20985891529605522,
+        "native_payload": [
+          0.2099905521975659,
+          -0.27470404445339935
+        ],
+        "cpu_expected_opacity": 0.17081400016139117,
+        "keep_upper": 0.0
+      },
+      "expected_opacities": [
+        0.009553505648475189,
+        0.053424599235121016,
+        0.10764950256066153,
+        0.17081400016139117
+      ]
+    },
+    {
+      "pixel": [
+        1360,
+        600
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.5345529987185555,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.077868753670655,
+          0.4061463799656
+        ],
+        "height_m": 0.40597444822423634,
+        "height_above_sill_m": 0.21597444822423634,
+        "native_payload": [
+          0.21615916377928973,
+          -0.2699234388764955
+        ],
+        "cpu_expected_opacity": 0.16408662616536437,
+        "keep_upper": 0.0
+      },
+      "expected_opacities": [
+        0.009081258122422163,
+        0.05100173387314508,
+        0.10312026610576908,
+        0.16408662616536437
+      ]
+    },
+    {
+      "pixel": [
+        1380,
+        600
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.5488111436235386,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -2.0350490779363417,
+          0.4052702094686199
+        ],
+        "height_m": 0.40522362730488726,
+        "height_above_sill_m": 0.21522362730488726,
+        "native_payload": [
+          0.21531493046293512,
+          -0.2536496653624978
+        ],
+        "cpu_expected_opacity": 0.16466523829731816,
+        "keep_upper": 0.0
+      },
+      "expected_opacities": [
+        0.009126404763014576,
+        0.05122524351978654,
+        0.10352361377061034,
+        0.16466523829731816
+      ]
+    },
+    {
+      "pixel": [
+        1400,
+        600
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.638031979470516,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -1.9260602997796012,
+          0.3900742475445074
+        ],
+        "height_m": 0.38996691648687376,
+        "height_above_sill_m": 0.19996691648687376,
+        "native_payload": [
+          0.20013284129450742,
+          -0.21218379199884724
+        ],
+        "cpu_expected_opacity": 0.18477803122580697,
+        "keep_upper": 0.0
+      },
+      "expected_opacities": [
+        0.010509620900945506,
+        0.058370382401258,
+        0.11697279750409176,
+        0.18477803122580697
+      ]
+    },
+    {
+      "pixel": [
+        1400,
+        620
+      ],
+      "hit": {
+        "prototype": "car_hatch_black",
+        "source": "life:parking:kwadrat-park-units-forecourt#0",
+        "instance": 895,
+        "level": 3,
+        "phase": 0.646484375,
+        "distance": 4.669370413433529,
+        "material": "M_car_paint_black",
+        "native_uv0": [
+          -1.910589452176901,
+          0.31518096886011177
+        ],
+        "height_m": 0.31497836180804506,
+        "height_above_sill_m": 0.12497836180804506,
+        "native_payload": [
+          0.12523600638012597,
+          -0.20624008376996184
+        ],
+        "cpu_expected_opacity": 0.2613996515249066,
+        "keep_upper": 0.0
+      },
+      "expected_opacities": [
+        0.01689218965309383,
+        0.08906417448920968,
+        0.17120824409207874,
+        0.2613996515249066
+      ]
+    }
+  ]
+}
