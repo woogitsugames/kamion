@@ -95,3 +95,6 @@
 
 - Step32 READ-ONLY D review atROOTrequest: read D92bc26af plan/bothinactivepatches, originalS10D/source and all6reference photos; wrote D-SCOPE-REVIEW.md in OWN G artifacts only. Compact source/tier/candidate/proof table covers7wear requirements. Found authoredmark x=.5 ->wheelmask0 (inclauthoredline default), and no dedicatedbusstopoil rule; not actualabsence/visualclaim. Dproduction/cache/patches untouched; Gimplementation/REPORT/validation unchanged. No Unity.
 - NEXT COMMAND: send review toF/ROOT, docs-onlyWIPcommit/copy; standbyCPU.0108/0109 remain queued AFTER D/E, no newsource/Unity untildispatch.
+
+- Step33 READONLY C13 preflight atROOTrequest: read latest0088/0098critic +0108feedback, historicalCnoise/floor/shadow/AO andcurrentmainf8586261 owners/source/installedURP. Viewedthreeexistingfloor/shadow sheets. Wrote C13-PREFLIGHT.md inOWN artifacts only: concrete .25/.5/.75 native/trueFSR gates, wallnormal/albedo diagnosis, shadowwave/haze/AO/whitecarclip andminimumactualcontrols. Explicit oldRT/bilinearproxy and currentURPRCASkeyword gate, no newvalidation claim. Mainserialization dirt observed notmodified. No source/newbranch/Unity/D/Ewrite or Gimplementation/report change.
+- NEXT COMMAND: docs-onlyWIPcommit/copy/sendROOT, standbyuntilD/Eclose andexplicit0108freshcurrentmain dispatch;0109after0108. No automaticUnity.
