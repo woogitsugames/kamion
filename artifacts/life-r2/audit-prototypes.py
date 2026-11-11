@@ -4,8 +4,13 @@ from pathlib import Path
 import numpy as np
 root=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(root/'tools/worldgen'))
-from streetscape import life_props as LP
 stage=sys.argv[1] if len(sys.argv)>1 else 'baseline'
+if stage=='baseline':
+    import importlib.util
+    spec=importlib.util.spec_from_file_location('streetscape._life_props_baseline',Path(__file__).with_name('baseline-life_props.py'))
+    LP=importlib.util.module_from_spec(spec); spec.loader.exec_module(LP)
+else:
+    from streetscape import life_props as LP
 result={}
 for name,meshes in LP.build_all().items():
     if not name.startswith(('trailer_','tractor_')): continue
