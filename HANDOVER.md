@@ -1,6 +1,7 @@
 # HANDOVER — kamion, sesja 9 (start 2026-11-11 00:30 lokalnie / 23:30 UTC; limit 5 h reset 04:30 UTC)
 
 ## Najpierw
+- **05:40 lokalnie: limit odnowiony (0 %).** Start: krytyk 0092+0093, integracja Unity (worktree integration-s9), 0094 zabudowa r4. Telefon (A16 Low) dopiero gdy żaden Unity nie działa — APK z integracji.
 - 04:22: limit 97 %, nic w toku (Argon/GPT bez zmian); jednorazowa pobudka 05:35 lokalnie na start pracy po resecie.
 - **03:22 lokalnie: limit 96 %** — stop nowych agentów do resetu 04:30 UTC (05:30 lokalnie). main ZIELONY po 0093: pytest gis 345 ✓ / 0 ✗ (regeneracja zacommitowana). Uruchamiacz `uv run pytest` bywa zepsuty („trampoline failed”) — używaj `python -m pytest`.
 - ~03:05: 0093 scalony; żaden agent Claude nie działa. Po resecie (04:30 UTC = 05:30 lokalnie): krytyk 0092 + 0093, potem 0094 / 0090, integracja Unity (import-region, BuildBatch, testy), APK, telefon.
@@ -21,6 +22,9 @@
 | zabudowa r3 | 0091 | usunięty | artifacts/buildings-r11 | SCALONE `9f9a34c5` (recenzja `REVIEW-2026-11-11-s9-0091.md`: PASS warunkowy; draws Low +3–5 % na 4 kamerach → rozstrzyga A16, ew. cofnąć `plinth_grey`); po regeneracji pytest gis 334 ✓ / 2 ✗ (te same 2 z 0077 → 0093) |
 | geometria i oznakowanie węzłów | 0093 | usunięty | artifacts/junctions-r1 | SCALONE `42d5c368` (w gałęzi pytest gis 337/0; kerb_on_carriageway 28→0, linie przez 59 łat, P-21 tylko z ortofoto, s610 od nowa, latarnie z wąskich wysepek, 34 kamery węzłów w `junctions_cameras.json`). Otwarte: s1440 wysepka 373 m², krawężnik E −782 N 77,5 bez P-21, latarnia E −774 → pas dzielący, mediana n10015785253 i zatoka s1060 (zmienna szerokość), MA-010 strzałki/stop, U-25/P-8/P-13. **visual-critic po resecie**; po regeneracji main pytest gis 345 ✓ / 0 ✗ |
 | Kwadrat Park r12 | 0092 | usunięty | artifacts/kwadrat-r12 | SCALONE `8cbc9264` (firanka matowa R−B +15→−6, brama domknięta — płot/słupki WORKING_VALUE, `_PANELTONE`, ślady par bieżników; budżet Low +0,5 % draws; pytest 251/0, PlayMode 4/4). **visual-critic odłożony po resecie limitu**; po regeneracji pytest gis 336 ✓ / 2 ✗ (znane → 0093) |
+| integracja Unity stanu main (build_all, build_world, import, Truck BuildBatch/InstallBatch, EditMode/PlayMode, render połączony, APK Low) | — | integration-s9 (z fa83f577) | artifacts/integration-s9 | s9: agent build-qa Fable start 05:40 |
+| zabudowa r4 (P1 z recenzji 0091) | 0094 | buildings-r12 (z fa83f577) | artifacts/buildings-r12 | s9: agent Fable start 05:40 |
+| recenzja 0092 + 0093 | — | — | docs/reports/visual/ | s9: visual-critic start 05:40 |
 | import Megascans R1 | 0084 | gpt-megascans (NIE usuwać — Codex wciąż aktywny) | artifacts/megascans-r1/REPORT.md | SCALONE `98e54e47` (REPORT: lokalnie PASS, skok sceny FAIL, Low lokalnie +4 draw/+4k tris; normal mapy Fab wyłączone; High 1024 i telefon UNVERIFIED); konflikt stage.py = unia (yard wear 0071 + FD.apply); regeneracja main w tle `artifacts/logs/s9-main-regen-0084.log`; GPT następnie Q1 0086 / Q2 0088 |
 | tło za krawędzią | 0085 | argon-edge | artifacts/edge-far-r1/REPORT.md | REPORT 01:38; stan zacommitowany przez lidera (Argon bezczynny od 01:46). NIEscalone: `edge-south` — budynek regionu zastąpiony/zdublowany halą far-field (podejrzenie: budynki przecinające granicę w far-field) → uwagi w `docs/owner/ARGON-TASK-01-WORLD-EDGE.md` „UWAGI LIDERA s9” |
 
