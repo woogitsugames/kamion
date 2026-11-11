@@ -40,3 +40,4 @@ Inspections captured: High overcast seat-entry/grain. NEXT COMMAND: pwsh scripts
 Inspections captured: High clear seat-entry/grain. NEXT COMMAND: pwsh scripts/test.ps1 -Platform EditMode (after detail matrix ends)
 Full EditMode PASS 230/230 including trailer-side presentation and housing channel/budget guards. Retarget grain-only QA camera from measured generator pad coordinates (first frame overshot pad); nine comparison cameras unchanged. NEXT COMMAND: rebuild/install then pwsh artifacts/cab-r1/validate.ps1
 Final BuildBatch OK; wrapper stopped on its own Select-String argument binding (not a Unity failure). Corrected explicit -Path and rerun final rebuild/details/tests. NEXT COMMAND: pwsh -NoProfile -File artifacts/cab-r1/rebuild-final.ps1
+Inspections captured: Low overcast seat-entry/grain. NEXT COMMAND: pwsh scripts/test.ps1 -Platform EditMode (after detail matrix ends)
