@@ -33,3 +33,7 @@ Następny krok: pwsh -NoProfile -File artifacts/sbs-r1/import-and-baseline.ps1
 ## Generacja świata zakończona
 build_world zakończył się kodem 0 po 918,0 s; wyeksportowano 64 GLB. W logu brak wystąpień fallback=True. Budowa PBR jest na końcowych warstwach. Pełne GIS nadal działa i ma niepowodzenia wymagające odczytania po zakończeniu.
 Następny krok: pwsh -NoProfile -File artifacts/sbs-r1/import-and-baseline.ps1
+## Ponowne kontrole po generacji
+18 testów zaliczonych: wcześniej niespójne far field, kotwice wiaduktu, prototypy instancji i cały aktualny zestaw SBS. Pierwszy GLB ma SHA zgodne z aktualnym manifestem i zapisaną migawką. Odtworzono brakującą warstwę asfaltu z istniejącego w main publicznego zdjęcia (build_all --only asphalt_detail_photo, kod 0). Import nadal czeka na slot; Unity jeszcze nie wystartowało.
+Metadane renderu rozróżniają bazę main faktycznie zawartą w gałęzi i obserwowany bieżący tip main; zapisują też SHA manifestu świata i specyfikacji materiałów.
+Następny krok: Get-Content artifacts/sbs-r1/import-baseline.log -Tail 20

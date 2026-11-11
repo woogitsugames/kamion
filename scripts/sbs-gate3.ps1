@@ -50,7 +50,10 @@ try {
                     $capture = [ordered]@{
                         captured_at_utc = [DateTime]::UtcNow.ToString('o')
                         git_sha = (& git rev-parse HEAD).Trim()
-                        main_sha = (& git rev-parse main).Trim()
+                        main_sha = (& git merge-base HEAD main).Trim()
+                        main_tip_sha = (& git rev-parse main).Trim()
+                        world_manifest_sha256 = (Get-FileHash -LiteralPath (Join-Path $taskRoot 'Data/Regions/bialystok-industrial-c/generated/world_manifest.json') -Algorithm SHA256).Hash.ToLowerInvariant()
+                        materials_spec_sha256 = (Get-FileHash -LiteralPath (Join-Path $taskRoot 'art-source/world/materials/materials_spec.json') -Algorithm SHA256).Hash.ToLowerInvariant()
                         cameras_sha256 = (Get-FileHash -LiteralPath $cameraFile -Algorithm SHA256).Hash.ToLowerInvariant()
                         references_sha256 = (Get-FileHash -LiteralPath (Join-Path $taskRoot 'Data/Regions/bialystok-industrial-c/sbs_references.json') -Algorithm SHA256).Hash.ToLowerInvariant()
                         tier = $tier; lighting = $light; width = $width; height = $height
