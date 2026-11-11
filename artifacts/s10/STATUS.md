@@ -1034,3 +1034,10 @@ AFTER +fullGIS/EditMode +fullPBRparity/memory/ADR/REPORT under existing G releas
 PHONE/HOLD absent20:33:28; each actual Unity launch still needs immediate guard.
 No fixture reinstall, remerge or further tuning. C13 source waits G closure.
 NEXT COMMAND: Get-Content C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-car-paint/artifacts/car-paint-r1/STATUS.md -Tail 8
+
+Step 96: Prepared size-only final-route review sheet generator with strict
+92 camera IDs per condition and before/after SHA/size manifest. It does not
+align or alter originals. ROOT will review Low184; E High184 after each full
+condition is complete. Full PBR/368 validation currently in progress; no final
+quality verdict yet. NEXT COMMAND:
+Get-Content C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-car-paint/artifacts/car-paint-r1/STATUS.md -Tail 8
