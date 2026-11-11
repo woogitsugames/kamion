@@ -939,3 +939,11 @@ Source semantic44 pass; native unreadable-buffer regression/compile and real
 shader/budget checks remain pending. CPU world export continues; E reviews
 pinned ced3d5a1. No full AFTER or fixture rebuild authorized before focus review.
 NEXT COMMAND: Get-Content C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-car-paint/artifacts/car-paint-r1/STATUS.md -Tail 8
+
+Step 85: Read E final source review 8c45d46c of immutable ced3d5a1.
+Native-buffer, GI-strength and external-float issues are addressed in source;
+no new concrete issue found in that bounded follow-up. Original Lit fragment,
+auxiliary passes and CBUFFER retained. Accepted progression to guarded native
+compile/import and four-car focus; runtime/SRP/hash/rebase/budget still pending.
+Full review is main artifacts/firestation-r10/G-PLATE-DRAFT-REVIEW.md with pins.
+NEXT COMMAND: Get-Content C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-car-paint/artifacts/car-paint-r1/STATUS.md -Tail 8
