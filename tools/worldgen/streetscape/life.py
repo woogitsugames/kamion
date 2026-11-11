@@ -758,6 +758,9 @@ def place(pl, docks, paved, blds, roads_poly, bpoly, route_P, report, buf=None, 
     if buf is not None and zsurf is not None:
         yard_markings(buf, stalls, zsurf, rep)
         yard_drains(buf, paved, bpoly, zsurf, rep)
+    if buf is not None:
+        from .bus_stop_wear import emit as bus_stop_oil
+        bus_stop_oil(buf, report.get("bus_stop_wear_candidates", []), rep)
     rep["start_view_vehicles_skipped"] = sp.start_cleared
     report["life"] = rep
     return rep

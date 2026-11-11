@@ -82,3 +82,7 @@
 
 - Step33 blockerfocusedtests14/14PASS0skip. Initial Pythonnativeageproof rejected hash mismatch: first corrected documentedGLB Vflip1f-y, then one UnityHalf roundingdifference remains at4_5marking; no false agePASS. Switching independent native audit sourceY comparator to SAME UnityFloatToHalf decoder usedbybake, fromoriginalrawGLB withGlbReader convention, to prove preservation exactly without NumPyHalf ties mismatch.
 - NEXT COMMAND: blockerfinalimport, then sourceY/nativeaudit+actualpositiveglyph/unknownnegative; do notclaimprior16component coverage finaluntilnewactualproof.
+
+- Step34 blockerfinalnativeaudit COMPLETE:154nativegeometry/normals/indices/UV0/counts EXACTbefore;150UV1.y hashes EXACToriginalrawGlbReader+UnityHalf,4absent.10UV1bufferschange (4road+6marking), nogeometry/newchannels. Actualfinalimportcoverage separatelypinned lane-final-import-proof.json.
+- Step35 source-supportedONEbusstop module+source selector+JSONmetadata furniture/life hook prepared;8meaningfulGISpass. Actualraw4_5 fullfanpreflight accepts10verts/9tris atref464, exactdrivableheight+3.5mm, nopaint/gap/multilevel/crosschunk, existingoilgroup0new. Oilradius.22m/noengineoffset isWORKINGrule, photoverifiesbayonly. Other19stopnodes unreviewedreject. No worldregen/actualbusstain/runtimePASS yet.
+- NEXT COMMAND: actual-lane-components readonlyaudit then BEFOREnewbuscam/positiveglyph/unknownnegative x4 oncurrentlane-final/busabsent/broadinactive. Onlyafterthese fixedframes canonicalfreshworld+expectedrawdelta/broadseparately.
