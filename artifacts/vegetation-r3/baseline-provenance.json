@@ -1,0 +1,18 @@
+{
+  "prior_round": "gpt-vegetation-r1",
+  "prior_candidate": "B",
+  "prior_source_commit": "51bd2559",
+  "merge_commit": "4cc183a030d37d59bfcd954b5e4d4a54c332708d",
+  "reused_control_frames": 268,
+  "exact_source_hashes": {
+    "tools/worldgen/streetscape/vegetation.py": "884bcf23f746ac6e257fd983e109f2cdb4e3d866a2bb6ff477ac07c9b931aa66",
+    "tools/worldgen/streetscape/plantings.py": "9a07be754a0e15bea87f3de3a1d0b3152838825385db0fd01413f0fa8c4019c1",
+    "game/Assets/_Project/Rendering/Shaders/VegetationGround.hlsl": "823d34d99e2632bb43b9da72b5c6ff8d6acf450e2de438015580caf7afa80841",
+    "game/Assets/_Project/Environment/Shaders/WorldPBR.shader": "2f1360241d64df147f951d5e335928e9ec5a26fbd4c3f889c9c208287a500c72",
+    "game/Assets/_Project/Rendering/Shaders/WorldSurface.shader": "ee59f6aed44a1f6602d8d272ac8aca838adc21f3343ae5573f885a56ded75f5c",
+    "game/Assets/_Project/Rendering/Shaders/Vegetation.shader": "180fd275283a51540cacb29430ead5c45a012e63d9ec1901094aedaf3b386884",
+    "Data/Regions/bialystok-industrial-c/buildings_r10_cameras.json": "33b5a28a2be921aac04d06b040c2d09615922ce17d18b44012db9b4280aa3218"
+  },
+  "verified_raw_glbs": 130,
+  "note": "World sources/assets unchanged by merge. SBS metadata changed; photo cameras will be captured afresh. No fresh rendering claim for reused controls."
+}
