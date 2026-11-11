@@ -882,3 +882,17 @@ ScopednonregressionPASS/appearancePARTIAL, GIS388+1xfail/EditMode240, no mainmer
 G stillactive20reardiagnostic; E nowuniquereadonlyplateUV/material/atlaspreflight
 whileGfocusesrear. Do not startC13beforecurrentGclosure. NEXT COMMAND:
 Get-Content C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-car-paint/artifacts/car-paint-r1/STATUS.md -Tail 10
+
+Step 79: G R4 P0 accepted only as a bounded fix for floating door blobs and
+functional four-level deposition; dust realism remains PARTIAL. All 40 focus
+poses matched BEFORE. Valid supplemental rear v2 has 20 matching pose packets;
+first 20 controls were invalid and are retained as such. Paint-only lower rear
+luma rises OFF -> 0 -> 1 -> 2 -> 3 in all four conditions (Low clear 49.07 ->
+54.40; Low overcast 31.94 -> 37.18; High clear 54.54 -> 60.09; High overcast
+36.20 -> 41.89). Visible rear paint starts at .315 m; no bumper/plastic claim.
+E independently reviews valid v2 controls and flags. P2 plate implementation
+is authorized using E preflight fc91b7eb: plate-only URP Lit wrapper, existing
+atlas and UV1 local corners, no additional stride/draws/textures. Four-car
+focus and ROOT review must precede full 368 AFTER and final tests. D remains
+closed; C13 waits for G. No main merge or push.
+NEXT COMMAND: Get-Content C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-car-paint/artifacts/car-paint-r1/STATUS.md -Tail 12
