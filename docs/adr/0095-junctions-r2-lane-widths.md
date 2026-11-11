@@ -109,6 +109,7 @@ Tabela liczb: sekcja „Liczby” niżej (uzupełniana z `roads_qa.json`, `fidel
 | `pytest tests/gis` | 345 passed, 2 xfailed | **356 passed, 1 xfailed** (+11 testów `test_lane_edges.py`; BASELINE fidelity: edge 2,31, islands 0) |
 | swept path G3-A (Bieżeństwa) wide / lane, min. prześwit opon | −1,92 / −2,94 m (integracja s9) | **−0,10 / −1,12 m** (jak baza 10.11: −0,10 / −1,10) |
 | swept path G3-B (Putry) wide / lane | −0,63 / −0,98 m | **−0,14 / −0,14 m** (w tolerancji testu 0,15 m; minimum przy krawężniku łącznicy E −338,8 N −137,1, obejście ronda czyste po `JOINT_PULL`) |
+| `pytest tests/physics tests/gate3` | 40 passed, 8 failed (integracja s9) | 47 passed, 1 failed (`test_generator_reproduces_committed_scenarios`, znana z 0082) |
 | PlayMode `WorldCRouteTests|WorldCBarrierTests` | 3/3 (0093) | 3/3: 40 t max \|dv\|/krok 0,135 m/s (s = 361 m), solo 0,080 m/s, max odchyłka 0,88 m |
 | EditMode | 209/212 (0093) | 209/212 (3 × `TruckDoorGlassTests`: brak materiałów ciężarówki w `_Generated/Truck` worktree) |
 | import-region | Low 110,0 / High 237,9 MB (integracja) | Low 110,0 / High 237,9 MB |
