@@ -552,3 +552,11 @@ PASSb5cdunknownblockerfix (oldcopiedartifact11superseded). ProofSHA/casecounts
 saved. EcorrectedR1importactive; Dfinalblockerimportactive, actualcoverage/age
 pending. NEXT COMMAND: Dnativeage originalGlbReader/Unityhalf+glyphcontrols; E
 Lowabeam/Highbinding16R1/fourconditionmetrics thenfullvalidation. Bothguards.
+
+Step44: Independently verified D final transfer: all 154 meshes preserve geometry,
+normals, indices, UV0 and counts; 150 UV1.y source-contract hashes match, 4 channels
+are absent. Exactly 10 UV1 buffers changed, no new channels. Paint age is preserved;
+road y5 is the intentional sentinel. ONE ref464 bus stain candidate has source
+preflight/8GIS tests, but needs matched BEFORE and actual generated-product proof.
+NEXT COMMAND: review E runtime R1 frames/bindings and D glyph/unknown/bus BEFORE;
+then bounded wear candidate, final matrices, GIS/EditMode and honest reports.

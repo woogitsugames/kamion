@@ -114,3 +114,10 @@ import/currentcoveragepending; prior16component result remains provisional. Age
 comparison firstrejected PythonrawUV orientation, then NumPyvsUnity halfrounding;
 verifyuploaded age against originalGlbReader plus UnityFloatToHalf before PASS.
 Generator flips both UVsets onexport and GlbReader unflips; no newUVconvention.
+
+Root independently checked finalblocked transfer native data:154meshes invariant
+positions/normals/index/UV0/vertex/submesh counts;150UV1.y hashes match original
+GlbReader+Unityhalf sourcecontract,4channels absent. RoadmissingUVy5 is intentional
+sentinel policy; paint/decal age is original. Exactly10UV1buffers changed:4road
+sentinel+6marking buffers in3chunks,0newchannels. Final logged counts16accepted/
+502rejected/406verts/59.519m2 pertier. No fullwear visual/budgetPASS from this.
