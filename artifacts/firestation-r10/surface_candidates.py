@@ -10,9 +10,9 @@ SRC=ROOT/'art-source/world/materials/_src/sets_fire_station.py';text=SRC.read_te
 import pbrkit as K
 cases={
  'current':text,
- 'glass_clinker':text.replace('"clinker_linear": [0.47, 0.29, 0.115]','"clinker_linear": [0.27, 0.135, 0.060]').replace('hall_glass = np.array([0.170, 0.180, 0.195]','hall_glass = np.array([0.068, 0.072, 0.078]').replace('if glass is not None:                      # big hall glazing','if glass is not None:\n            sky = (0.75 + 0.50 * np.clip(gv / max(gmax, 1e-3), 0, 1) ** 1.3)[..., None]\n            # big hall glazing'),
+ 'glass_clinker':text.replace('"clinker_linear": [0.47, 0.29, 0.115]','"clinker_linear": [0.27, 0.135, 0.060]').replace('hall_glass = np.array([0.170, 0.180, 0.195]','hall_glass = np.array([0.102, 0.108, 0.117]').replace('if glass is not None:                      # big hall glazing','if glass is not None:\n            sky = (0.90 + 0.06 * np.clip(gv / max(gmax, 1e-3), 0, 1) ** 1.3)[..., None]\n            # big hall glazing'),
 }
-fields={};proof={'status':'ARTIFACT_ONLY_NO_RUNTIME_ACCEPTANCE','source_sha256':pin,'parameters':{'hall_glass_linear':[.068,.072,.078],'hall_only_gradient':[.75,.5,1.3],'clinker_linear':[.27,.135,.060]},'preserved':{}}
+fields={};proof={'status':'ARTIFACT_ONLY_NO_RUNTIME_ACCEPTANCE','source_sha256':pin,'parameters':{'hall_glass_linear':[.102,.108,.117],'hall_only_gradient':[.90,.06,1.3],'clinker_linear':[.27,.135,.060]},'preserved':{}}
 for name,code in cases.items():
  ns={'__file__':str(SRC),'__name__':'artifact_fire_station'};exec(compile(code,str(SRC),'exec'),ns)
  fields[name]=ns['fire_station'](1024)
