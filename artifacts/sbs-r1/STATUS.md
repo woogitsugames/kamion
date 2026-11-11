@@ -61,3 +61,7 @@ Następny krok: Get-Content artifacts/sbs-r1/import-baseline.log -Tail 20
 ## Import Unity rozpoczęty
 Uzyskano slot gpt-sbs; import wystartował około 22:25. Kontrola CC0: 13 zasobów, 65 plików, 0 problemów. Zaktualizowano ADR i poprawiono kodowanie polskich znaków w dokumentacji. Nie uruchomiono dodatkowych ciężkich procesów Pythona.
 Następny krok: Get-Content artifacts/sbs-r1/import-baseline.log -Tail 20
+## Import i dodatkowe hipotezy pozy
+Import zakończony poprawnie: 64 chunki, Low+High; EditMode wystartował po oddzielnym Acquire. Dla J1 zapisano rozbieżności oryginalnego kompasu i SfM (około 50 stopni w dwóch kadrach), alternatywne pozycje GPS oraz roboczy horyzont 326454 równy około 0,891. Nie zmieniono przyjętych kamer.
+Odtwarzalne sondy obejmują teraz J2, sześć J1 i dwa kadry Commons, po maksymalnie dziewięć wariantów na zdjęcie. Generowanie samych danych prób to lekkie przeliczenie JSON, bez regeneracji świata ani testów GIS.
+Następny krok po baseline: pwsh -NoProfile -File artifacts/sbs-r1/render-pose-probes.ps1
