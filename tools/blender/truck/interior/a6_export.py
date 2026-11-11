@@ -1022,6 +1022,10 @@ def build_textures(out_dir):
     os.makedirs(dd, exist_ok=True)
     for f in ("display_cluster.png", "display_infotainment.png", "display_din.png"):
         shutil.copy(os.path.join(M.TEX, f), os.path.join(dd, "T_" + f.replace("display_", "Display_")))
+    # ADR 0112 r2: optional scan keeps this export's sizes, alpha and material slots.
+    # Enabled-but-missing sources fail explicitly; there is no synthetic fallback.
+    import cc0_leather
+    cc0_leather.apply_runtime_maps(out_dir)
     return written
 
 

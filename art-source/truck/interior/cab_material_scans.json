@@ -1,0 +1,40 @@
+﻿{
+    "schema":  1,
+    "leather":  {
+                    "enabled":  false,
+                    "provider":  "Poly Haven",
+                    "asset":  "brown_leather",
+                    "author":  "Rob Tuytel",
+                    "source_page":  "https://polyhaven.com/a/brown_leather",
+                    "license":  "CC0-1.0",
+                    "license_url":  "https://polyhaven.com/license",
+                    "source_metres":  0.4,
+                    "tile_metres":  0.12,
+                    "maps":  {
+                                 "diffuse":  {
+                                                 "file":  "brown_leather_albedo_2k.jpg",
+                                                 "url":  "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/brown_leather/brown_leather_albedo_2k.jpg",
+                                                 "md5":  "1bd381c43817743a2affdd1ce2d193c7",
+                                                 "bytes":  2137518
+                                             },
+                                 "normal":  {
+                                                "file":  "brown_leather_nor_gl_2k.png",
+                                                "url":  "https://dl.polyhaven.org/file/ph-assets/Textures/png/2k/brown_leather/brown_leather_nor_gl_2k.png",
+                                                "md5":  "79e5a78506947a412d2b739a4bec34b4",
+                                                "bytes":  7284076
+                                            },
+                                 "roughness":  {
+                                                   "file":  "brown_leather_rough_2k.jpg",
+                                                   "url":  "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/brown_leather/brown_leather_rough_2k.jpg",
+                                                   "md5":  "95b48a5c95b02d87dadee46c26f1cfb5",
+                                                   "bytes":  2801956
+                                               },
+                                 "ao":  {
+                                            "file":  "brown_leather_ao_2k.jpg",
+                                            "url":  "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/brown_leather/brown_leather_ao_2k.jpg",
+                                            "md5":  "4ff0006acb807b9ddccd387a093d89b8",
+                                            "bytes":  1541878
+                                        }
+                             }
+                }
+}
