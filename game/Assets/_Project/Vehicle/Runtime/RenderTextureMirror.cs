@@ -106,6 +106,8 @@ namespace Game.Vehicle.Runtime
         public int phase;
         /// <summary>Main mirror (class II): HUD inset, full far clip. Convex mirrors (classes IV-VI): false.</summary>
         public bool main = true;
+        /// <summary>Legacy graybox UVs need a flip. TRAKT quads already map the reflected-eye camera correctly (ADR 0104).</summary>
+        public bool flipHorizontally = true;
         /// <summary>Share of the shared round-robin budget (main 1, convex 0.5).</summary>
         public float weight = 1f;
         /// <summary>Camera aspect (tan of the horizontal / vertical half field) for convex mirrors; 0 = render-texture aspect.</summary>
@@ -243,8 +245,8 @@ namespace Game.Vehicle.Runtime
                     glass.sharedMaterial = m_Mat;
                 }
                 m_Mat.SetTexture("_BaseMap", m_Rt);
-                m_Mat.SetTextureScale("_BaseMap", new Vector2(-1f, 1f));   // mirror image
-                m_Mat.SetTextureOffset("_BaseMap", new Vector2(1f, 0f));
+                m_Mat.SetTextureScale("_BaseMap", new Vector2(flipHorizontally ? -1f : 1f, 1f));
+                m_Mat.SetTextureOffset("_BaseMap", new Vector2(flipHorizontally ? 1f : 0f, 0f));
                 m_Mat.SetColor("_BaseColor", new Color(0.92f, 0.93f, 0.95f, 1f)); // glass loses a little light
             }
         }

@@ -594,6 +594,9 @@ namespace Game.Editor.Setup
                     }
                 }
 
+                // ADR 0104: only the detailed housing embeds the adjusted glass; Low/Medium body meshes stay unchanged.
+                RecessMirrorBacking(root.transform, exteriorLods[0].FirstOrDefault(r => r.name.StartsWith("CAB_Body", StringComparison.Ordinal)), mirrorInfo);
+
                 // ---- cab glazing seen from the eye (ADR 0045): the exterior FBX glass is a single outward-facing sheet, so with
                 // Kamion/Truck Glass (Cull Back) the driver looked through no glass at all on every tier (no tint, no dash
                 // reflection, no road film). Kamion/Truck Glass expects an inside face (normal towards the cab), so add one
@@ -767,6 +770,7 @@ namespace Game.Editor.Setup
                     Debug.Log($"[TRUCK] {role}: axis {view.forward:F3}, field {2f * view.HalfHDeg:F1} x {2f * view.HalfVDeg:F1} deg");
                     var mir = camT.gameObject.AddComponent<RenderTextureMirror>();
                     mir.glass = r;
+                    mir.flipHorizontally = false; // reflected-eye camera + exported UV basis already produce a mirror image
                     mir.aspect = gw / gh;
                     mir.fovAspect = view.tanHalfH / view.tanHalfV;
                     mir.main = main;
@@ -1094,6 +1098,12 @@ namespace Game.Editor.Setup
             Vector3 materialView = eye + new Vector3(0.35f, -0.12f, 0.16f);
             Q("cab-materials", materialView, Quaternion.LookRotation(eye + new Vector3(0.48f, -0.50f, 0.85f) - materialView, Vector3.up),
                 45f, "0104: dash moulded plastic grain, panel join and seam; detail view, not ocular point.");
+            Vector3 entryView = eye + new Vector3(-0.40f, 0.05f, 0.50f);
+            Q("cab-seat-entry", entryView, Quaternion.LookRotation(hip + new Vector3(-0.20f, 0.02f, 0.12f) - entryView, Vector3.up),
+                48f, "0104: entry-side cushion bolster and stitching; separate inspection camera, not a matched driving view.");
+            Vector3 grainView = eye + new Vector3(0.65f, -0.10f, 0.55f);
+            Q("cab-grain", grainView, Quaternion.LookRotation(eye + new Vector3(0.75f, -0.35f, 0.90f) - grainView, Vector3.up),
+                30f, "0104: close inspection of existing moulded grain; not the driver's-eye legibility gate.");
             // Mirror checks (review r6 C-N8, ADR 0042 addendum): from the eye, narrow field onto the glass of each side and the
             // front mirror, so the image in every class II / IV / V / VI glass is readable in the control frame.
             void QMirrors(string id, string note, params string[] glass)
