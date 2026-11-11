@@ -13,3 +13,4 @@ Wywołania Acquire ustawiają StaleHours 1000000, aby skrypt nie sprzątał cudz
 Przygotowano wyłącznie syntetyczną hipotezę masek ground_candidate.py: osobno jawny trawnik, pobocze i teren niekoszony. To nie render ani dowód poprawy. Następny krok: obejrzeć ground-mask-hypothesis.jpg i ocenić kandydat na końcu before.
 Obejrzano syntetyczny podgląd maski i zapisano GROUND-CANDIDATE.md. Potwierdzono 15 zasobów Megascans ready. To nie dowód renderu; czekamy na bazę. Następny krok: zakończenie baseline-pipeline, potem wdrożenie i A/B.
 Testy bazowe roślinności zakończone kodem 0. Następny krok: Get-Content artifacts/vegetation-r1/pytest-baseline-vegetation.log; po baseline wykonać poprawki i pełny GIS.
+Przygotowano snapshot dziennych dopasowań fotograficznych i konfiguracje kamer w artifacts, bez edycji wspólnych plików SBS. Odrzucono błędne pozy z recenzji i zachody słońca. Pozy nadal UNVERIFIED. Następny krok: render grup proporcji po bazowej macierzy.
