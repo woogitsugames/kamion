@@ -676,3 +676,18 @@ release D only; review G bounded source/UV dirt plan before actual candidate.
 Step 57: REPORT and G review explicitly withdraw aggregate G acceptance after
 independent P0 finding. NEXT COMMAND: G causal source plan, D16frames after
 actual whole run5 END and fresh release; no Unity during PHONE/HOLD.
+
+Step 58: G R4 source audit e756be53 reviewed. All81 source paint LOD rows have
+UV0=(longitudinal,height), noUV1; merged selectedGLB72paintprimitives also absent.
+Shared material cannot know each class sill/axles. Approved bounded car-only UV1
+height/deposition adapter after crease-normal processing, no geometry/UV0 change.
+Real native stride increase expected4B/vertex including shared nonpaint vertices;
+measure after import, not zero-buffer claim. Largest triangles4.926m mean broad
+wheel/rear envelope only, no detailed-fan claim. Optional clean car_grime variant
+may remove ONLY lower film for7 activepaint materials; green/beige legacy consumers
+must remain unchanged. No extra texture sampling; resident-set cost still pending.
+G snapshots old maps/scenes/192raw/473native-material hashes and builds canonical
+merged-source R3 baseline on CPU before candidate. Existing mainGLB cannot serve
+as stale BEFORE against regenerated81paint AFTER. Source plan is not quality PASS.
+NEXT COMMAND: whole run5 END/PHONE absence ->fresh D release/16frames. G CPU
+baseline finishes separately, no Unity until a G-specific release; P0 first.
