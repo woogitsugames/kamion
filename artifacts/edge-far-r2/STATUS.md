@@ -6,3 +6,7 @@
 - NEXT: uv run --project tools/worldgen python -m streetscape.far_field --region bialystok-industrial-c (after boundary regression tests).
 - Boundary regression: 10 synthetic tests passed (four sides, touching, MultiPolygon and concave source; Low/High emit guard). Before generator source saved.
 - NEXT: finish merged build baseline, regenerate far field, pytest GIS, wait for PHONE_RUN before Unity.
+- Audit of Argon cache: 17/8470 generated building rectangles intersect the region; source audit saved in boundary-before-audit.json. 11 targeted tests now pass including BDOT extraction regression.
+- Explicit export/export cleanup: both original paths absent; 204580041 bytes retained in artifacts/edge-far-r2/quarantine (reversible; recursive deletion was blocked by automatic policy).
+- Baseline world generation still running; driver run-evidence.ps1 waits for it then for PHONE_RUN at every Unity start. Main material source accidentally included by cache copy restored to branch HEAD.
+- NEXT: Get-Content artifacts/edge-far-r2/run-evidence.log -Tail 20

@@ -1,0 +1,38 @@
+{
+  "cameras": [
+    {
+      "id": "edge-pietrasze-horizon",
+      "kind": "driver_eye",
+      "seat": "road",
+      "pos": [
+        -828,
+        905,
+        149.74032959487297
+      ],
+      "look_at": [
+        -852,
+        1019,
+        149.24032959487297
+      ],
+      "fov_deg": 45,
+      "note": "ADR0085 r2: authored road eye on DK8/DK19 exit near north edge; shows horizon beyond road closure."
+    },
+    {
+      "id": "edge-pietrasze-overview",
+      "kind": "rondo_above",
+      "seat": "file",
+      "pos": [
+        -828,
+        905,
+        165.44032959487296
+      ],
+      "look_at": [
+        -855,
+        1190,
+        159.24032959487297
+      ],
+      "fov_deg": 45,
+      "note": "ADR0085 r2: diagnostic overview 18.2m above NMT near DK8/DK19 exit, not a driving camera."
+    }
+  ]
+}
