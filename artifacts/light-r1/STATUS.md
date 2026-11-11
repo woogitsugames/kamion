@@ -75,3 +75,4 @@ Batch światła zakończony: artifacts/light-r1/cloud-smoke.json; log C:\Users\m
 EditMode zakończony bez błędów. Następny krok: obejrzeć wszystkie PNG smoke, porównać niebo ze zdjęciami i wybrać dalszą poprawkę.
 
 Krok 23: import zakończony, smoke 5 zadań / 15 PNG wykonany, EditMode 262/262. Uzupełniono brakującą lokalną kopię Data/photos/nowe/Worn_cracked_asphalt_pavement.jpg; importer wcześniej zachował istniejącą specyfikację oraz wszystkie cztery PNG detalu asfaltu (potwierdzono pliki). Nie zmieniano generatora ani materiału asfaltu. Dodano analizę obrazów do run-heavy.ps1, aby także większe analizy PNG respektowały limit. Następny krok: smoke-review.py i oględziny trzech kontaktówek.
+Zadanie heavy Analyze zakończone kodem 0. Log: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-light\artifacts\light-r1\heavy-Analyze-20261111-224605.log. Następny krok: odczytać wynik i wykonać tylko uzasadnioną następną operację.
