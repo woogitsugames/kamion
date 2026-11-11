@@ -10,7 +10,7 @@ Gałąź: `gpt-furniture-r1`; SHA zweryfikowanego kodu: `b087967ceafd5a1222c1f7e
 - Pamięć siatek Low 111,3→112,3 MB; High 239,7→240,7 MB. Low betonowej lampy 105→91 tris, stalowej 53→53; sloty istniejących modeli bez wzrostu.
 - 806 prymitywów dróg/mostów/barier/krawężników/kolizji/oznakowania identycznych bajtowo (`protected-geometry.json`); w generacji 0 `fallback=True`.
 - PNG przed/po: `before/{Low,High}-{overcast,clear}/`, `after/{Low,High}-{overcast,clear}/` — po 36; obejrzano 8 arkuszy `compare/`. `after-r1/` jest odrzuconą rundą.
-- Samokrytyka: `docs/reports/visual/REVIEW-2026-11-11-s10-0102-self.md`; ADR: `docs/adr/0102-street-furniture-r1.md`; logi Unity: `unity-logs/`.
+- Samokrytyka: `SELF_REVIEW.md`; ADR: `ADR-0102.md` (kanoniczne pliki w `docs/` ga??zi); logi Unity: `unity-logs/`.
 - Otwarte: niezależna recenzja/telefon lidera; dokładne przypisanie rodzin do ulic, zmienna metaliczność rdzy, różnorodność papieru, ciężka podmurówka na skarpach. U: 0 instancji w danych regionu.
 - Przewidywane konflikty: addytywne `materials.py`, `export.py`, props GLB/metadata, generated QA/manifest, `LICENSES.md`; po integracji regeneracja produktów.
 - Dla lidera: `git merge gpt-furniture-r1`, następnie `uv run --project tools/worldgen python tools/worldgen/roads/build_world.py --region bialystok-industrial-c` i `pwsh scripts/import-region.ps1 -Region bialystok-industrial-c` po sprawdzeniu PHONE_RUN.
