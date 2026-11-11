@@ -116,3 +116,6 @@
 
 - Step39 docs-only reference wording correction: changed own English review from real CC0 photo7197 to reference photo7197, without asserting the building reference license. Needle-map CC0 and other results remain separate; no web/code/test/Unity action.
 - NEXT COMMAND: WIP commit/copy and send final review hash to E/ROOT, then standby0108.
+
+- Step40 READONLY C13 preflight update for current main cd5b2ed8 / ADR0106: checked authored profile, actual serialized URP, per-field override application, adaptive .70 policy, QA local scaling, and installed URP resolution/upscaler source. Added concrete buffer/pass trace points and the possible double-scale caveat; independently read E Low .75 / High1 headers. Added canonicalBuild/Install -> final normalImport -> BEFORE and per-frame runtime camera/vehicle pose packets. No production/cache/Unity edits or new technical validation claim.
+- NEXT COMMAND: docs-only WIP commit and copy C13-PREFLIGHT.md/STATUS.md to main evidence, notify ROOT, then standby until D/E closure and explicit 0108 dispatch.
