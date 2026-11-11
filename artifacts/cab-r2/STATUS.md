@@ -5,3 +5,4 @@ Zapisano baseline Low overcast, siedem kamer i sześć natywnych RT z identyfika
 Dodano cc0_leather.py i cab_material_scans.json z flagą enabled=false oraz hashami czterech map Brown Leather. Eksporter ma opcjonalny hook: zachowuje rozmiary, alfa i sloty; brak źródła przy enabled=true kończy błędem zamiast fallback. Pliki raw są ignorowane. Następny krok: konwersja kandydata pod heavy, bez zapisu do gry i bez zmiany trwającego baseline.
 Zapisano baseline High clear, siedem kamer i sześć natywnych RT z identyfikatorem wnętrza. Następny krok: kontynuować macierz lub porównać PNG.
 Zapisano baseline High overcast, siedem kamer i sześć natywnych RT z identyfikatorem wnętrza. Następny krok: kontynuować macierz lub porównać PNG.
+Zapisano baseline: pełna macierz Low overcast z kamerami Gate3, osobne draws instancji w stats.txt. Następny krok: porównać pełne stats baseline/result-0112 i obejrzeć arkusze.
