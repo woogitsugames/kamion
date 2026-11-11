@@ -479,3 +479,11 @@ Eactualglass2 accepted82eca72c, notifiedworker; ONEguardedHighleafQA underway,
 no automaticproductionpromotion. Bothsharedguardsabsent at14:42.
 NEXT COMMAND: review Eactualleaf2frame/restoreproof, Dsourcefieldcontrols and
 UVonlycausalpair; then fixedcandidates/fullvalidation. Keep main unmerged byus.
+
+Step34 14:49: independent D372PNGhashes checked,0mismatches;93uniqueIDs each4
+conditions identical. SavedD-before-independent-check.json. EONEleafQA actual
+High2 done/exactrestore/784pins: medianHigh/Low.782->1.088; rootviewednative+full
+pairs, retainboundedHigh-onlyheroalias persistentopt-in for final160. Lowunchanged;
+Highdepthpass/costunverified, no drawestimate=GPUclaim. Glass60-75PASS.
+NEXT COMMAND: Efixedcandidate160/fullGIS/EditMode; DisolatedUVcausal+actual
+sourcefieldfeaturecontrols; monitorbothguards. C13source waitsD/Eclosure.
