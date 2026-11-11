@@ -1,0 +1,462 @@
+{
+ "schema": "truck-sim-pl/gate3-cameras/1",
+ "region": "bialystok-industrial-c",
+ "car": {
+  "e": 728.369,
+  "n": -385.583,
+  "p": "car_suv_blue",
+  "src": "life:parking:bdot:d08cb805-66c9-4991-893e-4eeb53d2776e:0#0~p0~d1",
+  "yaw": -2.0802,
+  "z": 141.635
+ },
+ "cameras": [
+  {
+   "id": "glass_side_00",
+   "type": "persp",
+   "kind": "photo_match",
+   "fov_deg": 50.0,
+   "pos": [
+    724.727628296399,
+    -391.48683876102774,
+    143.33499999999998
+   ],
+   "look_at": [
+    727.668198313051,
+    -386.22243490330874,
+    142.785
+   ],
+   "note": "car glass QA, side glass at ~0 deg"
+  },
+  {
+   "id": "glass_side_25",
+   "type": "persp",
+   "kind": "photo_match",
+   "fov_deg": 50.0,
+   "pos": [
+    727.2155305050397,
+    -392.2326148223231,
+    143.33499999999998
+   ],
+   "look_at": [
+    727.668198313051,
+    -386.22243490330874,
+    142.785
+   ],
+   "note": "car glass QA, side glass at ~25 deg"
+  },
+  {
+   "id": "glass_side_40",
+   "type": "persp",
+   "kind": "photo_match",
+   "fov_deg": 50.0,
+   "pos": [
+    728.7792265729374,
+    -392.14208795101825,
+    143.33499999999998
+   ],
+   "look_at": [
+    727.668198313051,
+    -386.22243490330874,
+    142.785
+   ],
+   "note": "car glass QA, side glass at ~40 deg"
+  },
+  {
+   "id": "glass_side_70",
+   "type": "persp",
+   "kind": "photo_match",
+   "fov_deg": 50.0,
+   "pos": [
+    732.5555428395613,
+    -391.9249494840605,
+    143.33499999999998
+   ],
+   "look_at": [
+    727.668198313051,
+    -386.22243490330874,
+    142.785
+   ],
+   "note": "car glass QA, side glass at ~70 deg"
+  },
+  {
+   "id": "glass_side_78",
+   "type": "persp",
+   "kind": "photo_match",
+   "fov_deg": 50.0,
+   "pos": [
+    733.2978287092262,
+    -391.18748493964557,
+    143.33499999999998
+   ],
+   "look_at": [
+    727.668198313051,
+    -386.22243490330874,
+    142.785
+   ],
+   "note": "car glass QA, side glass at ~78 deg"
+  },
+  {
+   "id": "glass_front",
+   "type": "persp",
+   "kind": "photo_match",
+   "fov_deg": 50.0,
+   "pos": [
+    734.4802482593753,
+    -388.9965970342562,
+    143.33499999999998
+   ],
+   "look_at": [
+    728.8928212793751,
+    -385.8755940315077,
+    142.785
+   ],
+   "note": "car glass QA, windscreen"
+  },
+  {
+   "id": "glass_front_low",
+   "type": "persp",
+   "kind": "photo_match",
+   "fov_deg": 50.0,
+   "pos": [
+    736.2263191906254,
+    -389.9719104726151,
+    143.33499999999998
+   ],
+   "look_at": [
+    728.8928212793751,
+    -385.8755940315077,
+    142.785
+   ],
+   "note": "car glass QA, windscreen"
+  },
+  {
+   "id": "car_lod_08",
+   "type": "persp",
+   "kind": "photo_match",
+   "fov_deg": 40.0,
+   "pos": [
+    730.5490313994948,
+    -393.2802373678624,
+    143.33499999999998
+   ],
+   "look_at": [
+    728.369,
+    -385.583,
+    142.435
+   ],
+   "note": "car LOD QA, front 3/4 at 8 m"
+  },
+  {
+   "id": "car_lod_12",
+   "type": "persp",
+   "kind": "photo_match",
+   "fov_deg": 40.0,
+   "pos": [
+    731.6390470992421,
+    -397.1288560517936,
+    143.33499999999998
+   ],
+   "look_at": [
+    728.369,
+    -385.583,
+    142.435
+   ],
+   "note": "car LOD QA, front 3/4 at 12 m"
+  },
+  {
+   "id": "car_lod_15",
+   "type": "persp",
+   "kind": "photo_match",
+   "fov_deg": 40.0,
+   "pos": [
+    732.4565588740527,
+    -400.015320064742,
+    143.33499999999998
+   ],
+   "look_at": [
+    728.369,
+    -385.583,
+    142.435
+   ],
+   "note": "car LOD QA, front 3/4 at 15 m"
+  },
+  {
+   "id": "car_lod_25",
+   "type": "persp",
+   "kind": "photo_match",
+   "fov_deg": 40.0,
+   "pos": [
+    735.1815981234212,
+    -409.63686677456997,
+    143.33499999999998
+   ],
+   "look_at": [
+    728.369,
+    -385.583,
+    142.435
+   ],
+   "note": "car LOD QA, front 3/4 at 25 m"
+  },
+  {
+   "id": "r10_front_04",
+   "type": "persp",
+   "kind": "photo_match",
+   "fov_deg": 40.0,
+   "pos": [
+    729.5026163277373,
+    -389.58556343128845,
+    142.903
+   ],
+   "look_at": [
+    728.369,
+    -385.583,
+    142.435
+   ],
+   "note": "r10 detail: lamps / grille / plate at ~4 m"
+  },
+  {
+   "id": "r10_rear_04",
+   "type": "persp",
+   "kind": "photo_match",
+   "fov_deg": 40.0,
+   "pos": [
+    727.169982730278,
+    -381.34951944767573,
+    142.92999999999998
+   ],
+   "look_at": [
+    728.369,
+    -385.583,
+    142.435
+   ],
+   "note": "r10 detail: tail lamps / plate at ~4 m"
+  },
+  {
+   "id": "r10_wheel_02",
+   "type": "persp",
+   "kind": "photo_match",
+   "fov_deg": 35.0,
+   "pos": [
+    729.0230094198484,
+    -387.89217121035875,
+    141.95499999999998
+   ],
+   "look_at": [
+    728.369,
+    -385.583,
+    142.185
+   ],
+   "note": "r10 detail: tyre / rim / arch"
+  },
+  {
+   "id": "r10b_black_05",
+   "type": "persp",
+   "kind": "photo_match",
+   "fov_deg": 40.0,
+   "pos": [
+    717.9332444465844,
+    -451.5457140987371,
+    143.47899999999998
+   ],
+   "look_at": [
+    716.35,
+    -446.803,
+    142.579
+   ],
+   "note": "r10b dark paint QA: car_hatch_black front 3/4 at 5 m"
+  },
+  {
+   "id": "r10b_black_20",
+   "type": "persp",
+   "kind": "photo_match",
+   "fov_deg": 40.0,
+   "pos": [
+    722.6829777863375,
+    -465.77385639494844,
+    143.47899999999998
+   ],
+   "look_at": [
+    716.35,
+    -446.803,
+    142.579
+   ],
+   "note": "r10b dark paint QA: car_hatch_black front 3/4 at 20 m"
+  },
+  {
+   "id": "r10b_black_45",
+   "type": "persp",
+   "kind": "photo_match",
+   "fov_deg": 40.0,
+   "pos": [
+    730.5992000192592,
+    -489.48742688863405,
+    143.47899999999998
+   ],
+   "look_at": [
+    716.35,
+    -446.803,
+    142.579
+   ],
+   "note": "r10b dark paint QA: car_hatch_black front 3/4 at 45 m"
+  },
+  {
+   "id": "r10b_grey_05",
+   "type": "persp",
+   "kind": "photo_match",
+   "fov_deg": 40.0,
+   "pos": [
+    698.68635800163,
+    -486.8344745365916,
+    143.201
+   ],
+   "look_at": [
+    697.173,
+    -482.069,
+    142.30100000000002
+   ],
+   "note": "r10b dark paint QA: car_hatch_grey front 3/4 at 5 m"
+  },
+  {
+   "id": "r10b_grey_20",
+   "type": "persp",
+   "kind": "photo_match",
+   "fov_deg": 40.0,
+   "pos": [
+    703.22643200652,
+    -501.13089814636623,
+    143.201
+   ],
+   "look_at": [
+    697.173,
+    -482.069,
+    142.30100000000002
+   ],
+   "note": "r10b dark paint QA: car_hatch_grey front 3/4 at 20 m"
+  },
+  {
+   "id": "r10b_grey_45",
+   "type": "persp",
+   "kind": "photo_match",
+   "fov_deg": 40.0,
+   "pos": [
+    710.7932220146699,
+    -524.958270829324,
+    143.201
+   ],
+   "look_at": [
+    697.173,
+    -482.069,
+    142.30100000000002
+   ],
+   "note": "r10b dark paint QA: car_hatch_grey front 3/4 at 45 m"
+  },
+  {
+   "id": "r10b_blue_05",
+   "type": "persp",
+   "kind": "photo_match",
+   "fov_deg": 40.0,
+   "pos": [
+    694.8794775543552,
+    -493.2564452006878,
+    143.20299999999997
+   ],
+   "look_at": [
+    693.642,
+    -488.412,
+    142.303
+   ],
+   "note": "r10b dark paint QA: car_hatch_blue front 3/4 at 5 m"
+  },
+  {
+   "id": "r10b_blue_20",
+   "type": "persp",
+   "kind": "photo_match",
+   "fov_deg": 40.0,
+   "pos": [
+    698.5919102174205,
+    -507.7897808027513,
+    143.20299999999997
+   ],
+   "look_at": [
+    693.642,
+    -488.412,
+    142.303
+   ],
+   "note": "r10b dark paint QA: car_hatch_blue front 3/4 at 20 m"
+  },
+  {
+   "id": "r10b_blue_45",
+   "type": "persp",
+   "kind": "photo_match",
+   "fov_deg": 40.0,
+   "pos": [
+    704.7792979891959,
+    -532.0120068061905,
+    143.20299999999997
+   ],
+   "look_at": [
+    693.642,
+    -488.412,
+    142.303
+   ],
+   "note": "r10b dark paint QA: car_hatch_blue front 3/4 at 45 m"
+  },
+  {
+   "id": "r10b_silver_05",
+   "type": "persp",
+   "kind": "photo_match",
+   "fov_deg": 40.0,
+   "pos": [
+    731.5990069296871,
+    -388.4236805233337,
+    143.30499999999998
+   ],
+   "look_at": [
+    730.049,
+    -383.67,
+    142.405
+   ],
+   "note": "r10b dark paint QA: car_suv_silver front 3/4 at 5 m"
+  },
+  {
+   "id": "r10b_silver_20",
+   "type": "persp",
+   "kind": "photo_match",
+   "fov_deg": 40.0,
+   "pos": [
+    736.2490277187485,
+    -402.6847220933347,
+    143.30499999999998
+   ],
+   "look_at": [
+    730.049,
+    -383.67,
+    142.405
+   ],
+   "note": "r10b dark paint QA: car_suv_silver front 3/4 at 20 m"
+  },
+  {
+   "id": "r10b_silver_45",
+   "type": "persp",
+   "kind": "photo_match",
+   "fov_deg": 40.0,
+   "pos": [
+    743.9990623671841,
+    -426.453124710003,
+    143.30499999999998
+   ],
+   "look_at": [
+    730.049,
+    -383.67,
+    142.405
+   ],
+   "note": "r10b dark paint QA: car_suv_silver front 3/4 at 45 m"
+  }
+ ],
+ "dark_cars": {
+  "black": "car_hatch_black",
+  "grey": "car_hatch_grey",
+  "blue": "car_hatch_blue",
+  "silver": "car_suv_silver"
+ }
+}
