@@ -8,11 +8,15 @@ try:
     font = ImageFont.truetype('C:/Windows/Fonts/arial.ttf', 16)
 except OSError:
     font = ImageFont.load_default()
-boxes = {'truck-front': (650, 90, 1720, 600), 'cab-driver': None, 'truck-34': (800, 230, 1380, 700)}
+boxes = {'truck-front': (650, 90, 1720, 600), 'cab-driver': None, 'truck-34': (800, 230, 1380, 700),
+         'lamps-front': (650, 600, 1720, 820), 'lamp-left': (660, 620, 900, 780)}
 for condition in sorted((ROOT / stage).iterdir()):
     if not condition.is_dir() or not (condition / 'complete.ok').exists():
         continue
-    for camera, box in boxes.items():
+    for label, box in boxes.items():
+        camera = 'truck-front' if label in ('lamps-front', 'lamp-left') else label
+        if not (condition / (camera + '.png')).exists():
+            continue
         left = Image.open(ROOT / 'before' / condition.name / (camera + '.png')).convert('RGB')
         right = Image.open(condition / (camera + '.png')).convert('RGB')
         if left.size != right.size:
@@ -26,6 +30,6 @@ for condition in sorted((ROOT / stage).iterdir()):
         draw = ImageDraw.Draw(sheet)
         draw.text((8, 8), 'PRZED | ' + condition.name, font=font, fill='white')
         draw.text((488, 8), 'PO | ' + stage, font=font, fill='white')
-        output = condition / ('review-' + camera + '.jpg')
+        output = condition / ('review-' + label + '.jpg')
         sheet.save(output, quality=94)
         print(output.relative_to(ROOT))
