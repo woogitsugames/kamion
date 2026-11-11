@@ -1,12 +1,12 @@
-﻿# Aktualny stan R2 — 12.11.2026, 00:44 Europe/Warsaw
+﻿# Aktualny stan R2 — 12.11.2026, 00:55 Europe/Warsaw
 
 Gałąź gpt-sbs-r2, wyłącznie domena SBS. Runda jeszcze niezakończona.
 
-Gotowe: świat kod 0 (457 s, bez fallback=True), 64 GLB o SHA identycznych z r1; import Low+High; EditMode 261/261; 168 nowych renderów z jednego HEAD b9b5574e; 168 wierszy liczników, wszystkie delty Low geometrii/instancji/tris = 0. SHA 143/168 PNG identyczne z r1. Test raportu po rzeczywistej poprawce HTML: 25/25; test zgodności SBS: 40/40. Własny i niezależny przegląd sześciu zmienionych B zapisany. Formalna recenzja D51 pozostaje r1 FAIL 12/11/2, klasy 25 B / 17 C / brak A bez zmian.
+Gotowe: świat kod 0 (457 s, bez fallback=True), 64 GLB o SHA identycznych z r1; import Low+High; EditMode 261/261; 168 nowych renderów z jednego HEAD b9b5574e; 168 wierszy liczników, wszystkie delty Low geometrii/instancji/tris = 0. SHA 143/168 PNG identyczne z r1. Test raportu po rzeczywistej poprawce HTML: 25/25; test zgodności SBS: 40/40, fotometria: 13/13, fidelity: kod 0. Własny i niezależny przegląd sześciu zmienionych B zapisany. Formalna recenzja D51 pozostaje r1 FAIL 12/11/2, klasy 25 B / 17 C / brak A bez zmian.
 
-W toku: żywy post-world (sesja 79348, PID 84752) oczekuje na heavy dla pojedynczego test_sbs_photometry.py. Potem ma wykonać fidelity i historyczne metryki r1. Żywa sesja 44605 czeka na sukces PID 84752, następnie wykona ComposeOnly r2, audyt przez heavy i raport artifacts/sbs-gate3/latest. Nie uruchamiać drugiego ciężkiego zadania z tym samym właścicielem. Obserwację wznawiać przez te uchwyty, nie restartować generatora ani renderów.
+W toku: żywy post-world (sesja 79348, PID 84752) czeka na heavy dla historycznych kompozycji r1. Testy raportu, zgodności i fotometrii oraz fidelity zakończone poprawnie. Sesja 44605 czeka na sukces PID 84752, następnie wykona ComposeOnly r2, audyt przez heavy i raport artifacts/sbs-gate3/latest. Nie uruchamiać drugiego ciężkiego zadania z tym samym właścicielem ani nie powtarzać generatora i renderów.
 
-Do zakończenia: fotometria, fidelity, historyczne i aktualne kompozycje, audyt oraz przegląd 28 stron A/B i raportu HTML; niezależny przegląd narzędzia/pakietu; pełny GIS dopiero na końcu; finalny ADR/REPORT; robocopy r2 i latest do main bez commitowania na main; zaraz potem nowa gałąź rundy i merge main. Produkty generatorów spoza SBS nie będą commitowane i zostaną przywrócone po zachowaniu dowodów. Nowe pełne capture wykonano około 00:20; następny odczyt aktualnego main najpóźniej około 06:20.
+Do zakończenia: historyczne i aktualne kompozycje, audyt oraz przegląd 28 stron A/B i raportu HTML; niezależny przegląd narzędzia/pakietu; pełny GIS dopiero na końcu; finalny ADR/REPORT; robocopy r2 i latest do main bez commitowania na main; zaraz potem nowa gałąź rundy i merge main. Produkty generatorów spoza SBS nie będą commitowane i zostaną przywrócone po zachowaniu dowodów. Nowe pełne capture wykonano około 00:20; następny odczyt aktualnego main najpóźniej około 06:20.
 
 Cały cel trwa do około 12.11.2026, 21:31 Europe/Warsaw. Nie pushować, nie scalać do main, nie używać telefonów. Unity: owner gpt-sbs. Heavy: owner bieżącej gałęzi. Cudzych slotów i PHONE_RUN nie zmieniać.
 
@@ -114,3 +114,7 @@ O 00:42–00:43 sprawdzono procesy systemowe bez ujawniania pełnych command lin
 ## Fotometria i plan topologii
 Test_sbs_photometry: 13/13, przez heavy; fidelity rozpoczęte i potwierdzone w logu. Łącznie pojedyncze pliki SBS: 25 + 40 + 13 = 78 testów, bez pełnego GIS w trakcie.
 Przygotowano i obejrzano mały wykres pose-topology/putry-camera-topology.png oraz SVG z istniejącego grafu 0,55 MB, bez regeneracji geometrii. Pokazuje osie źródłowe, trasę, pozy 182 (C) i 494 (B) oraz oryginalny GPS. Wektor od pozy 182 do oryginalnego GPS wynosi -2,027 m E i -13,802 m N. To schemat osi, nie dowód położenia na wygenerowanej jezdni ani powód do zmiany wysokości. Nie zmieniono kamer, klasy ani świata. Materiał służy dalszej kalibracji po ukończeniu bieżącego pakietu.
+
+
+## Fidelity zakończone
+Fidelity: kod 0, własny slot heavy zwolniony. Pomiar osi względem OSM: p95 0,04 m; krawędzi względem orto: p95 2,304 m, dane z fidelity_summary.json. To wyniki narzędzia geometrycznego, nie zaliczenie D51 ani pomiar poprawności pozy kamer. Nadal 4 odcinki pasów mają stan unverified, a rozpoznawalność obiektów pozostaje odrębnym problemem. Historyczna kompozycja r1 jest teraz oczekującą fazą aktywnego post-world.
