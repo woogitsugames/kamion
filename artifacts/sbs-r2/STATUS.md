@@ -49,3 +49,6 @@ Ponownie obejrzano kadr 182011943700132. Zdjęcie nie potwierdza jazdy na pomoś
 
 ## Przygotowanie zgodnego punktu odniesienia trendu
 Przygotowano recompose-history.ps1 do ponownego obliczenia metryk v2 dla renderów r1. Pobiera oryginalne bajty wejść z inputs.zip i używa jawnego trybu historical, nie modyfikując r1. Kompozycje A/B i C będą sekwencyjne w jednym slocie heavy, zapis do history/sbs-r1. Przygotowanie skryptu nie jest potwierdzeniem wykonania; uruchomienie dopiero po zakończeniu generatora naszej gałęzi.
+
+## Generator rozpoczął pracę
+Około północy po oczekiwaniu uzyskano heavy gpt-sbs-r2 (3/3). Log potwierdza rozpoczęcie pass 1 i przetworzenie węzłów pomostów. Proces nadal trwa; nie uruchamiamy jednocześnie innego ciężkiego zadania tej gałęzi. Wynik generatora nie jest jeszcze zatwierdzony.
