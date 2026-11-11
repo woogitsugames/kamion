@@ -32,7 +32,7 @@ RAY_UP = 10.0
 # authored view angles (deg off the route side) for buildings whose default view is blocked by things the generator
 # does not know (r10_hall_1: a parked trailer at the docks, since ADR 0071)
 ANGLES = (25, -25, 50, -50, 0, 75, -75, 110, -110, 150, -150, 180)
-ANGLES_FOR = {"bdot:7abd670e-1a55-4ccb-9da0-9a2ad052ff32": (-50, 50, -25, 75, -75, 0)}
+ANGLES_FOR = {"bdot:7abd670e-1a55-4ccb-9da0-9a2ad052ff32": (50, 75, -75, 0, 110, -110)}
 
 
 def main():

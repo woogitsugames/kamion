@@ -49,23 +49,21 @@ M = {
     "plaster_cream": {"color": [0.55, 0.48, 0.33], "rough": 0.9, "texture_set": "plaster"},
     "plaster_pastel_blue": {"color": [0.36, 0.42, 0.47], "rough": 0.9, "texture_set": "plaster"},
     # set_tile (ADR 0067): the NF brick set is 1.506 m, at the shader default 4 m a course read as 20 cm (r10 r1 render)
-    # ADR 0091: saturation -20 % (linear chroma about the luminance: [0.26, 0.10, 0.07] -> below), `macro` =
+    # ADR 0091: saturation -28 % (linear chroma about the luminance: [0.26, 0.10, 0.07] -> below; on screen -20 %), `macro` =
     # [size m, strength] of the macro tone drift (importer default for modulation sets 64 m / 0.06): lots of brick
     # from different firings differ every few metres
-    "brick_red": {"color": [0.235, 0.107, 0.083], "rough": 0.9, "texture_set": "brick", "set_tile": True,
+    "brick_red": {"color": [0.224, 0.109, 0.087], "rough": 0.9, "texture_set": "brick", "set_tile": True,
                   "macro": [48.0, 0.18]},
-    # plinths (cokół): render in three tones, `splash_h` = splash / soil zone height (m) of Kamion/World PBR _SPLASH
+    # plinths (cokół): render in two tones, `splash_h` = splash / soil zone height (m) of Kamion/World PBR _SPLASH
     # (the plinth covers the zone the plaster_* walls had it in, so r10 showed no splash at all)
     "plinth_dark": {"color": [0.16, 0.16, 0.16], "rough": 0.9, "texture_set": "plaster", "splash_h": 0.5},
     "plinth_grey": {"color": [0.25, 0.25, 0.24], "rough": 0.9, "texture_set": "plaster", "splash_h": 0.5},
-    "plinth_brown": {"color": [0.17, 0.125, 0.10], "rough": 0.9, "texture_set": "plaster", "splash_h": 0.5},
     # pitched roofs (ADR 0091): one modulation set `roof_tiles` (S-profile tile courses) for ceramic tile and pressed
     # metal tile sheet, set_tile = real course size
     "roof_tiles_red": {"color": [0.20, 0.075, 0.05], "rough": 0.75, "texture_set": "roof_tiles", "set_tile": True},
     "roof_tiles_brown": {"color": [0.11, 0.065, 0.045], "rough": 0.75, "texture_set": "roof_tiles", "set_tile": True},
     "roof_metal_graphite": {"color": [0.055, 0.057, 0.06], "rough": 0.5, "texture_set": "roof_tiles", "set_tile": True},
-    "roof_metal_brick": {"color": [0.17, 0.065, 0.045], "rough": 0.5, "texture_set": "roof_tiles", "set_tile": True},
-    "roof_fascia": {"color": [0.09, 0.065, 0.045], "rough": 0.8},      # stained timber fascia / soffit boards
+
     "glass": {"color": [0.03, 0.035, 0.04], "rough": 0.05},
     "window_frame": {"color": [0.6, 0.6, 0.58], "rough": 0.5},
     "window_sill": {"color": [0.45, 0.45, 0.45], "rough": 0.4, "metal": 0.6},

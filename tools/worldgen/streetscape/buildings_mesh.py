@@ -53,8 +53,7 @@ BLOCK_WALLS = ["plaster_cream", "plaster_grey", "plaster_pastel_blue", "plaster_
 HOUSE_WALLS = ["plaster_light", "plaster_beige", "plaster_cream", "plaster_grey"]
 # pitched roofs: ceramic / concrete tile and pressed metal tile sheet (blachodachowka, the commonest re-roofing in
 # Podlasie); shares WORKING_VALUE
-ROOFS_PITCHED = ["roof_tiles_red", "roof_metal_graphite", "roof_tiles_brown", "roof_metal_brick", "roof_metal_graphite",
-                 "roof_tiles_red", "roof_metal_brick"]
+ROOFS_PITCHED = ["roof_tiles_red", "roof_metal_graphite", "roof_tiles_brown", "roof_metal_graphite", "roof_tiles_red"]
 STOREY_H = {"office": 3.5, "block": 2.8, "house": 2.9}
 # window reveal depth of rendered walls, m: the frame sits in the old wall plane, the thermal insulation (12-15 cm of
 # EPS + render) is added in front of it (WORKING_VALUE; r10 had 0.14 and the opening read flat from the street)
@@ -64,7 +63,7 @@ BALCONY_SUN = np.array([-0.5, -0.866])       # towards SSW (E, N)
 # plinth (cokół) height above the reference ground by typology, m (ADR 0091; WORKING_VALUE within the 0.6-1.2 m the
 # review asked for): blocks = the raised ground floor over the basement, offices 0.6, houses 0.45-0.6, sheds 0.3
 PLINTH_H = {"block": None, "office": 0.6, "house": 0.45, "shed": 0.3}
-PLINTHS = ["plinth_dark", "plinth_grey", "plinth_brown"]
+PLINTHS = ["plinth_dark", "plinth_grey"]      # two tones: every material is a draw per chunk on both LODs
 
 
 def storey_plan(typ, h, p):
@@ -274,7 +273,7 @@ def wall_with_openings(acc, layer, mat, p0, d, nout, L, zb, zt, openings, u0=0.0
             # sheet sill over the whole reveal bottom with a 5 cm drip nose (r11: was a 10 cm strip at the wall face)
             c = np.array(P(0.5 * (ua + ub), va)) + n3 * (0.025 - depth / 2)
             acc.box(layer, "hall_flashing" if mat.startswith("hall") else "window_sill", c, d3 * (w / 2 + 0.04),
-                    n3 * (depth / 2 + 0.025), [0, 0, 0.02], skip=(0, 2))    # underside / wall-side face never seen
+                    n3 * (depth / 2 + 0.025), [0, 0, 0.02], skip=(0, 2, 4, 5))   # top + nose only (Low budget)
 
 
 def ring_edges(ring):
@@ -407,7 +406,7 @@ def attic_window(prof, zmin, zref, zbase, sh, storeys, key):
     if len(prof) != 3 or abs(prof[0][1] - prof[2][1]) > 0.3 or prof[1][1] - zmin < 1.9:
         return None
     um, zm = prof[1]
-    ns = sum(1 for s_ in range(storeys) if zref + zbase + s_ * sh + 2.3 <= zmin - 0.3)
+    ns = sum(1 for s_ in range(storeys) if min(zref + zbase + s_ * sh + 2.3, zmin - 0.22) - (zref + zbase + s_ * sh) >= 1.5)
     attic = storeys > ns
     if not attic and (zm - zmin < 2.3 or FA.hint(key, "loft") % 5 >= 3):
         return None
@@ -478,7 +477,9 @@ def facade_openings(typ, L, zref, ztop, storeys, key, is_main, docks_here, varia
     if typ == "house":
         for s in range(storeys):
             z0 = zref + zbase + s * sh
-            if z0 + 0.9 + 1.4 > ztop - 0.3:
+            head = min(z0 + 2.3, ztop - 0.22)       # low eaves: the window head goes right under the wall plate
+            sill = max(z0 + 0.9 - max(0.0, 1.15 - (head - z0 - 0.9)), z0 + 0.6)
+            if head - sill < 0.9:
                 break
             for i in range(n):
                 um = um0 + i * pitch
@@ -487,7 +488,7 @@ def facade_openings(typ, L, zref, ztop, storeys, key, is_main, docks_here, varia
                     continue
                 if not is_main and n > 1 and hv("hx", s, i) % 5 == 0:     # blank bay (side / north walls), 1 in 5
                     continue
-                ops.append((um - 0.6, um + 0.6, z0 + 0.9, z0 + 2.3, REVEAL_ETICS, "window", cells("house", hv("hw", s, i))))
+                ops.append((um - 0.6, um + 0.6, sill, head, REVEAL_ETICS, "window", cells("house", hv("hw", s, i))))
         return ops
     k = sh / FA.FAR_ROW_H
     if typ == "block" and variant.get("basement") and zbase >= 0.8:   # basement windows in the high plinth
@@ -849,7 +850,7 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
         if typ == "block" and storeys >= 3 and lens:
             rn = np.array([rect_along[1], -rect_along[0]])
             sun = rn if float(rn @ BALCONY_SUN) >= 0 else -rn
-            both = FK.hfloat(key, "bal2") < 0.35
+            both = FK.hfloat(key, "bal2") < 0.25
             for i, (ea_, ec_) in enumerate(edges):
                 if lens[i] < 5.5:
                     continue

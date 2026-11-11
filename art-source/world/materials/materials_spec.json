@@ -888,7 +888,7 @@
           ],
           "texel_mm": 1.47,
           "dir": "brick/High",
-          "png_bytes": 5805607,
+          "png_bytes": 5803235,
           "files": [
             "T_brick_BaseColor.png",
             "T_brick_MaskMap.png",
@@ -911,7 +911,7 @@
           ],
           "texel_mm": 2.94,
           "dir": "brick/Medium",
-          "png_bytes": 1654291,
+          "png_bytes": 1652866,
           "files": [
             "T_brick_BaseColor.png",
             "T_brick_MaskMap.png",
@@ -934,7 +934,7 @@
           ],
           "texel_mm": 5.88,
           "dir": "brick/Low",
-          "png_bytes": 446456,
+          "png_bytes": 445791,
           "files": [
             "T_brick_BaseColor.png",
             "T_brick_MaskMap.png",
@@ -957,15 +957,15 @@
       ],
       "albedo": {
         "mean_lum_linear": 0.4999,
-        "p05": 0.2737,
-        "p95": 0.6696,
+        "p05": 0.3062,
+        "p95": 0.6534,
         "mean_rgb_linear": [
           0.4998,
-          0.5,
-          0.4999
+          0.4999,
+          0.4998
         ]
       },
-      "hf_ratio_albedo": 0.0147,
+      "hf_ratio_albedo": 0.0215,
       "ao_mean": 0.916
     },
     "car_grime": {
@@ -3219,7 +3219,7 @@
           ],
           "texel_mm": 1.95,
           "dir": "plaster/High",
-          "png_bytes": 5079657,
+          "png_bytes": 4815456,
           "files": [
             "T_plaster_BaseColor.png",
             "T_plaster_MaskMap.png",
@@ -3242,7 +3242,7 @@
           ],
           "texel_mm": 3.91,
           "dir": "plaster/Medium",
-          "png_bytes": 1350311,
+          "png_bytes": 1278810,
           "files": [
             "T_plaster_BaseColor.png",
             "T_plaster_MaskMap.png",
@@ -3265,7 +3265,7 @@
           ],
           "texel_mm": 7.81,
           "dir": "plaster/Low",
-          "png_bytes": 332489,
+          "png_bytes": 316110,
           "files": [
             "T_plaster_BaseColor.png",
             "T_plaster_MaskMap.png",
@@ -3283,21 +3283,21 @@
         }
       },
       "height_range_m": [
-        -0.00199,
-        0.00195
+        -0.00101,
+        0.00097
       ],
       "albedo": {
         "mean_lum_linear": 0.5,
-        "p05": 0.463,
-        "p95": 0.538,
+        "p05": 0.4639,
+        "p95": 0.5367,
         "mean_rgb_linear": [
           0.5001,
-          0.5,
+          0.5001,
           0.5001
         ]
       },
-      "hf_ratio_albedo": 0.0697,
-      "ao_mean": 0.984
+      "hf_ratio_albedo": 0.0737,
+      "ao_mean": 0.987
     },
     "roof_tiles": {
       "tile_m": [

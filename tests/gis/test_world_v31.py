@@ -297,7 +297,7 @@ def test_house_roof_mesh_covers_footprint_with_overhang():
     for layer in ("buildings", "buildings_low"):
         assert area(layer, "roof_tiles_red") == pytest.approx(want, rel=0.01)
     assert area("collision", "collision_building") == pytest.approx(want, rel=0.01)
-    assert ("buildings", "roof_fascia") in acc.d and ("buildings_low", "roof_fascia") not in acc.d
+    assert ("buildings", "hall_flashing") in acc.d and ("buildings_low", "hall_flashing") not in acc.d
     V = np.concatenate([it[0] for it in acc.d[("buildings", "roof_tiles_red")]])
     assert V[:, 2].max() == pytest.approx(107.0 + RF.T_TOP, abs=0.01)
     uv = np.concatenate([it[2] for it in acc.d[("buildings", "roof_tiles_red")]])
@@ -318,14 +318,14 @@ def test_attic_window_sits_in_the_gable():
 
 
 def test_block_balconies_face_the_sun_and_have_a_rail():
-    """Balcony rail geometry (ADR 0091): 18 triangles of handrail on top of the balustrade card."""
+    """Balcony rail geometry (ADR 0091): 12 triangles of handrail on top of the balustrade card."""
     import numpy as np
     from streetscape import buildings_mesh as B
     from streetscape import facade_kit as FK
     acc = B.Acc()
     FK.balcony(acc, np.array([0.0, 0.0]), np.array([1.0, 0.0]), np.array([0.0, -1.0]), 5.0, 2.4, 103.0, key="glz-free-1")
     rail = sum(len(it[1]) for it in acc.d[("buildings", "downpipe")])
-    assert rail >= 18
+    assert rail >= 12
     z = np.concatenate([it[0][:, 2] for it in acc.d[("buildings", "downpipe")]])
     assert z.max() >= 103.0 + 1.09 - 0.01                                        # handrail top (a dish bracket may sit higher)
     assert float(B.BALCONY_SUN[1]) < 0 and float(B.BALCONY_SUN[0]) < 0          # south-south-west
@@ -335,9 +335,9 @@ def test_r3_materials():
     """Plinth variants carry the splash zone, pitched roofs the roof_tiles set at its own tile, brick the macro drift;
     tint_linear stays scoped to the building envelope (ADR 0086 is a separate task)."""
     from streetscape.materials import M
-    for k in ("plinth_dark", "plinth_grey", "plinth_brown"):
+    for k in ("plinth_dark", "plinth_grey"):
         assert M[k]["splash_h"] == 0.5 and M[k]["tint_linear"] and "runoff" not in M[k]
-    for k in ("roof_tiles_red", "roof_tiles_brown", "roof_metal_graphite", "roof_metal_brick"):
+    for k in ("roof_tiles_red", "roof_tiles_brown", "roof_metal_graphite"):
         assert M[k]["texture_set"] == "roof_tiles" and M[k]["set_tile"]
     assert M["brick_red"]["macro"][1] > 0.06
     r, g, b = M["brick_red"]["color"]

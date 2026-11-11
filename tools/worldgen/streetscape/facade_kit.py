@@ -253,14 +253,14 @@ def balcony(acc, a, d, nout, u, w, zf, depth=1.15, variant=0, key=""):
     balustrade, 18 % with a satellite dish, 30 % with a laundry line (shares WORKING_VALUE)."""
     d3, n3 = np.append(d, 0.0), np.append(nout, 0.0)
     p = a + d * u + nout * (depth / 2)
-    acc.box(L0, "balcony_slab", v3(p, zf - 0.09), d3 * (w / 2 + 0.1), n3 * (depth / 2), [0, 0, 0.09])
+    acc.box(L0, "balcony_slab", v3(p, zf - 0.09), d3 * (w / 2 + 0.1), n3 * (depth / 2), [0, 0, 0.09], skip=(2,))
     f = v3(a + d * u + nout * (depth - 0.03), zf)
     hw = w / 2 + 0.1
     up = np.array([0, 0, 1.05])
     _aq(acc, f - d3 * hw, f + d3 * hw, f + d3 * hw + up, f - d3 * hw + up, FA.uv_rect("balf", variant))
     _aq(acc, f + d3 * hw - n3 * 0.04, f - d3 * hw - n3 * 0.04, f - d3 * hw - n3 * 0.04 + up, f + d3 * hw - n3 * 0.04 + up,
         FA.uv_rect("balf", variant, flip=True))
-    su = FA.swatch_uv("steel_grey")
+    su = FA.swatch_uv(hpick(["galv", "concrete", "steel_grey"], variant, "side"))   # r11: was always dark steel
     w0 = v3(a + d * u, zf)
     for sg in (-1, 1):
         s0, s1 = w0 + d3 * sg * hw, w0 + d3 * sg * hw + n3 * (depth - 0.03)
@@ -269,12 +269,12 @@ def balcony(acc, a, d, nout, u, w, zf, depth=1.15, variant=0, key=""):
         _aq(acc, s0, s1, s1 + up, s0 + up, su)
         _aq(acc, s1, s0, s0 + up, s1 + up, su)
     # ADR 0091: the balustrade is geometry, not a card - a 5 x 4 cm handrail on the three open sides, 3 cm proud of
-    # the infill (LOD0, 18 triangles: no undersides / end caps; LOD1 shows the balustrade from the facade_far rows)
+    # the infill (LOD0, 12 triangles: top and outer faces only; LOD1 shows the balustrade from the facade_far rows)
     rail = np.array([0, 0, 1.07])
-    acc.box(L0, "downpipe", f + n3 * 0.01 + rail, d3 * (hw + 0.03), n3 * 0.025, [0, 0, 0.02], skip=(0, 4, 5))
+    acc.box(L0, "downpipe", f + n3 * 0.01 + rail, d3 * (hw + 0.03), n3 * 0.025, [0, 0, 0.02], skip=(0, 2, 4, 5))
     for sg in (-1, 1):
         acc.box(L0, "downpipe", w0 + d3 * sg * hw + n3 * (depth - 0.03) / 2 + rail, d3 * 0.025, n3 * (depth - 0.03) / 2,
-                [0, 0, 0.02], skip=(0, 2, 3))
+                [0, 0, 0.02], skip=(0, 2, 3, 4 if sg > 0 else 5))
     if hfloat(key, "glz") < 0.14:               # zabudowa balkonu: glazing above the balustrade, front + sides
         gv = int(hfloat(key, "glzv") * 97)
         g0 = f + up

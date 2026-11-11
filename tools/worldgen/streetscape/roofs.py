@@ -188,7 +188,7 @@ def _polys(g):
     return [x for x in getattr(g, "geoms", [g]) if x.geom_type == "Polygon" and x.area > 1e-4]
 
 
-def build(acc, roof, poly, mat, fascia_mat="roof_fascia", ov=OVERHANG, low_layer="buildings_low"):
+def build(acc, roof, poly, mat, fascia_mat="hall_flashing", ov=OVERHANG, low_layer="buildings_low"):
     """Roof covering (LOD0, LOD1, collision), soffit and fascia (LOD0). Returns the horizontal eave edges
     [(a, b, z_top)] of the covering (outward normal = right of a -> b) for the gutters."""
     exp = poly.buffer(ov, join_style="mitre", mitre_limit=2.5)
