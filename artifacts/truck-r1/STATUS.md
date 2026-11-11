@@ -81,3 +81,5 @@ Zapisano hdr-shoulder-080 Low overcast, kod wejściowy zgodny z fingerprintem. N
 Zapisano hdr-shoulder-080 Low clear, kod wejściowy zgodny z fingerprintem. Następny krok: pomiary i oględziny par przed/po.
 Zapisano hdr-shoulder-080 High overcast, kod wejściowy zgodny z fingerprintem. Następny krok: pomiary i oględziny par przed/po.
 Zapisano hdr-shoulder-080 High clear, kod wejściowy zgodny z fingerprintem. Następny krok: pomiary i oględziny par przed/po.
+
+Krok 28: HDR shoulder 0,8: clipping w stałym ROI 0 we wszystkich czterech warunkach. High-overcast p99 ROI 96,44%, Low 89,18%; ROI zawiera otoczenie. Niezależna ocena: zachować do walidacji, DRL czytelny także w clear, bez widocznych zmian reflektorów/kierunkowskazu/obudowy; gradient w overcast nadal subtelny. Nie ma PASS całości truck ani pomiaru GPU telefonu. Następny krok: 11 testów TruckLampEncodingTests pod slotem Unity, następnie kanoniczna regeneracja truck/trailer i końcowe kamery.
