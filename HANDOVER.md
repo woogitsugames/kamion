@@ -2,6 +2,7 @@
 
 ## Najpierw (dla następnej sesji)
 - **Tempo (właściciel, s10):** dalej max 3 agentów naraz. Limit tygodniowy Fable zresetował się (0 % o 10:05, reset 15.11); 5 h reset 15:00 lokalnie.
+- Trigger 11:21: limit 5 h 20 %, tydzień 4 %. Claude: 0097/0100/0101 w toku (WIP). GPT: C 0098 REPORT „zakończone” (czeka na B wg kolejności), B 0088 REPORT bez EditMode (czeka na zwolnienie PHONE_RUN), nowe sesje S10-B (edge-r2, furniture-r1, sbs-gate3, cab-r1, viaduct-r1) wystartowały. A16 gate3 G3-A Low: 29,7 fps, p95 33,5 / p99 50 ms (OVER), GPU p50 30,7 ms, CPU 22,5 ms, PSS 826 MB — budżet GPU na granicy; G3-B w toku.
 - Trigger 10:21: limit 5 h 8 %, tydzień 2 %; 3 agentów w toku, GPT B/C bez REPORT; regeneracja 0086 ZIELONA (gis 370/0), zacommitowana.
 - Trigger godzinny w sesji (CronCreate, :17) — ginie z sesją.
 - Regeneracja main po 0095: zielona (gis+physics+gate3 413/1 — znana `test_generator_reproduces_committed_scenarios` z 0082) → `48ac6b75`.
