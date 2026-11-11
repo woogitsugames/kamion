@@ -31,3 +31,6 @@ Obejrzano wszystkie trzy nakładki próbek: fiolet oznacza wolne niebo, zielony 
 
 ## ADR r2
 Uzupełniono ADR 0111 o zmienione kryterium D51, wynik FAIL, ograniczenia metryk, warunki trendu i kontrolę integralności raportu. Zapis jest jawnie roboczy, przed końcową generacją i testami r2.
+
+## Samoczynne migawki dowodów
+Skrypt SBS po ukończeniu żądanych stanów sprawdza wspólny commit i zgodność SHA kamer, referencji, świata oraz materiałów ze wszystkimi capture. Dopiero wtedy kopiuje dokładne bajty wejść i tworzy inputs.zip. Migawka nie może zatwierdzić mieszanej lub zmienionej epoki. Dołączane są także autorskie poprawki, intrinsics i rejestry adnotacji. Następny krok: kontrola parsera PowerShell i próba w serii r2.

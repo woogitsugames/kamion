@@ -33,6 +33,38 @@ function Get-AspectKey($width, $height) {
 function Restore-UnitySideEffects {
     & git -C $taskRoot restore -- game/Assets/_Project/Rendering/Settings game/ProjectSettings
 }
+function Save-EvidenceInputs {
+    # A single byte-exact input epoch is required for every requested state.
+    $sourceMap=[ordered]@{
+        'sbs_cameras.json'=$cameraFile
+        'sbs_references.json'=(Join-Path $taskRoot 'Data/Regions/bialystok-industrial-c/sbs_references.json')
+        'world_manifest.json'=(Join-Path $taskRoot 'Data/Regions/bialystok-industrial-c/generated/world_manifest.json')
+        'materials_spec.json'=(Join-Path $taskRoot 'art-source/world/materials/materials_spec.json')
+    }
+    $expected=@{'sbs_cameras.json'='cameras_sha256';'sbs_references.json'='references_sha256';'world_manifest.json'='world_manifest_sha256';'materials_spec.json'='materials_spec_sha256'}
+    $captureRows=@()
+    foreach($tier in $Tiers){foreach($light in $Lighting){
+        $files=@(Get-ChildItem -LiteralPath (Join-Path $output "renders/$tier-$light") -Filter 'capture-*.json')
+        if(!$files.Count){throw 'Cannot snapshot evidence without render captures'}
+        foreach($file in $files){$captureRows+=Get-Content -LiteralPath $file.FullName -Raw | ConvertFrom-Json}
+    }}
+    foreach($key in $sourceMap.Keys){
+        $actual=(Get-FileHash -LiteralPath $sourceMap[$key] -Algorithm SHA256).Hash.ToLowerInvariant()
+        foreach($capture in $captureRows){
+            if($capture.status -ne 'OK' -or $capture.($expected[$key]) -ne $actual){throw "Cannot snapshot mixed or stale evidence: $key"}
+        }
+    }
+    if(@($captureRows.git_sha | Select-Object -Unique).Count -ne 1){throw 'Cannot snapshot mixed code epochs'}
+    foreach($name in @('sbs_authored_overrides.json','sbs_extra_references.json','sbs_intrinsics.json','sbs_landmarks.json','sbs_photometry.json','sbs_recognition.json')){
+        $source=Join-Path $taskRoot ('Data/Regions/bialystok-industrial-c/'+$name)
+        if(Test-Path -LiteralPath $source){$sourceMap[$name]=$source}
+    }
+    if($Photometry){$sourceMap['sbs_photometry.json']=[IO.Path]::GetFullPath($Photometry,$taskRoot)}
+    $snapshot=Join-Path $output 'inputs'
+    New-Item -ItemType Directory -Force $snapshot | Out-Null
+    foreach($key in $sourceMap.Keys){Copy-Item -LiteralPath $sourceMap[$key] -Destination (Join-Path $snapshot $key)}
+    Compress-Archive -LiteralPath @($sourceMap.Keys | ForEach-Object {Join-Path $snapshot $_}) -DestinationPath (Join-Path $output 'inputs.zip') -Force
+}
 Push-Location $taskRoot
 try {
     if ($EditMode -and !$ComposeOnly) {
@@ -122,4 +154,5 @@ try {
             } finally { & pwsh -NoProfile -File $slotScript -Release -Pool heavy -Owner $heavyOwner }
         }
     }
+    Save-EvidenceInputs
 } finally { Pop-Location }
