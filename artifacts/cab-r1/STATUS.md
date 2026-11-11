@@ -30,3 +30,4 @@ Rendered before High overcast plus native mirror evidence. NEXT: continue matrix
 Rendered before High clear plus native mirror evidence. NEXT: continue matrix / inspect artifacts/cab-r1/before
 Inspected all36 baseline frames + native High mirrors. Found TRAKT double horizontal flip: own vehicle at outer edges. Enabled art-only flip fix (graybox default retained), LOD0 backing recess, and separate entry/grain inspection cameras. NEXT COMMAND: pwsh -NoProfile -File artifacts/cab-r1/render-matrix.ps1 -Stage after
 Rendered after Low overcast plus native mirror evidence. NEXT: continue matrix / inspect artifacts/cab-r1/after
+Candidate rebuild succeeded: LOD0 backing moved107 vertices; vertex28500/index110904 counts unchanged. Updated audit comment for authored UV contract; budget TSV comparison ignores explanatory comment lines only. NEXT COMMAND: Get-Content artifacts/cab-r1/after-WorldTruckInstaller.log -Tail 8

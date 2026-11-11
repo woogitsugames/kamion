@@ -37,7 +37,7 @@ namespace Game.Editor.VisualQA
                     .First(c => c.id == "cab-driver").GetComponent<Camera>();
                 foreach (var fill in UnityEngine.Object.FindObjectsByType<CabInteriorLighting>(FindObjectsSortMode.None)) fill.Refresh(eye);
                 var report = new StringBuilder();
-                report.AppendLine("# Editor mirror audit; cadence is configured, not measured phone Hz. Native RT pixels are unflipped; glass flips horizontally.");
+                report.AppendLine("# Editor mirror audit; cadence is configured, not measured phone Hz. Native RT pixels are unflipped; surface mapping follows the prefab UV/flip contract.");
                 report.AppendLine("mirror\tclass\twidth\theight\tfovV\taspect\tnear\tfar\tlodScale\tcap\tintervalDrivingFrames\tintervalStandingFrames");
                 var previous = RenderTexture.active;
                 var mirrors = UnityEngine.Object.FindObjectsByType<RenderTextureMirror>(FindObjectsSortMode.None).OrderBy(m => m.phase).ToArray();

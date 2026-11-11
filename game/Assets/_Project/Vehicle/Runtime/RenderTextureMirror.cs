@@ -80,7 +80,7 @@ namespace Game.Vehicle.Runtime
 
     /// <summary>
     /// Rear-view / convex mirror: a camera at the mirror image of the design eye point looking along the reflected line
-    /// of sight, rendering a low-resolution render texture shown (horizontally flipped) on the glass quad. Convex
+    /// of sight, rendering a low-resolution texture mapped by the authored glass UVs (legacy flip is configurable). Convex
     /// mirrors (UN R46 classes IV-VI) get the wider field of view of their radius of curvature (computed by the
     /// builder). Static geometry, not a per-frame reflection of the head position. All mirrors share one per-frame
     /// render budget (VehicleCameraBudget.MirrorsPerFrame; ADR 0042 weighted round-robin, ADR 0068 due-based on High).

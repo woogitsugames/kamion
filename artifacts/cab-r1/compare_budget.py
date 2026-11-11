@@ -26,7 +26,9 @@ for tier in ("Low", "High"):
         after = ROOT / "after" / key
         a, b = scene_stats(before / "stats.txt"), scene_stats(after / "stats.txt")
         delta = {name: {field: b[name][field] - value for field, value in values.items()} for name, values in a.items()}
-        mirror_equal = (before / "native-mirrors/configuration.tsv").read_bytes() == (after / "native-mirrors/configuration.tsv").read_bytes()
+        def configuration(folder):
+            return [line for line in (folder / "native-mirrors/configuration.tsv").read_text().splitlines() if not line.startswith("#")]
+        mirror_equal = configuration(before) == configuration(after)
         result["configurations"][key] = dict(before=a, after=b, delta=delta, mirror_configuration_identical=mirror_equal)
         if not mirror_equal:
             failed.append(key + ": mirror configuration changed")
