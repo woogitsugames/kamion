@@ -11,3 +11,17 @@ Najpierw odtwarzamy baseline Low/High w clear/overcast. Maska B opisuje stan kos
 Budżet Low: brak dodatkowych draw calls, trójkąty do +2 procent względem tej samej kamery. Zmiany podłoża wykorzystają istniejące maski i próbki tekstur. Szybka ścieżka lasu pozostaje aktywna. Wartości artystyczne są WORKING_VALUE; wyniki telefonu są UNVERIFIED, ponieważ telefony należą do lidera.
 
 Dowody i kolejne kroki: artifacts/vegetation-r1/STATUS.md. Raport rundy powstanie po kontroli obrazów i testach.
+
+### Doprecyzowanie po baseline r1
+
+Baseline z własnej regeneracji main 4c9905b1 obejmuje 268 obrazów kontrolnych (67 kamer razy Low/High i clear/overcast) oraz 54 kadry fotograficzne. Zdjęcia zachowują proporcje, źródło i licencję. Pozy pozostają UNVERIFIED.
+
+W B rozdzielono jawne trawniki OSM od poboczy; pole 8 m i 2,5 m opisuje wyłącznie roboczą suchość i koszenie. Sucha materia w VegetationGround.hlsl korzysta z istniejących sampli i jest dodana za istniejącymi flagami gruntu w WorldPBR oraz WorldSurface. W WorldPBR obie gałęzie mieszania otrzymują liniowe _Tint i _AlbedoScale dokładnie raz. Parametry suchego pigmentu i amplitudy pozostają WORKING_VALUE do obejrzenia after.
+
+Lokalna wysokość pokrywy i rdzenia jest włączona flagą danych wyłącznie dla aktywnych berberysów rond. Inne prototypy żywopłotu zachowują wcześniejsze wzory. Syntetyczne narożniki ligustru i tui ujawniły osobne defekty; nie deklarujemy ich naprawy. Liczba trójkątów czterech aktywnych żywopłotów: 18402 przed i po generacji.
+
+Samocień kart liściastych w Vegetation.shader wzmacnia istniejące _CrownShade powyżej polityki sosny 0,25. Nie zmienia impostorów, HLOD, hero z wartością 0 ani sosnowych kart. Kod jest wspólny dla VEG_FAST i pełnej ścieżki. Ocena wymaga aktualnych obrazów; koszt GPU A16 pozostaje UNVERIFIED.
+
+Stary ROI koron Putry zawierał również zielony słup i fasadę. Nowy stały ROI to (0.80,0.32,0.96,0.42); baseline p50 wynosi Low 58,106 i High 76,567. Obszar trawy pomiędzy chodnikiem a jezdnią opisuje stały wielokąt w review_images.py; Low-overcast ma odchylenie średnich pełnych bloków 32 px 3,614 (18 bloków). Starszy mieszany ROI zostaje w danych audytowych, bez utożsamiania go z samą trawą.
+
+Zgodnie z pilną aktualizacją właściciela wszystkie dalsze ciężkie generacje i testy Pythona wymagają puli heavy (3 zadania), a pełny GIS uruchamia się dopiero na końcu rundy. import-safe.ps1 blokuje niegotowe wejścia, aby importer nie uruchamiał ukrytego build_all poza tą pulą.
