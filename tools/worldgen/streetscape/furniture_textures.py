@@ -23,6 +23,10 @@ def pole_texture(kind):
         lum = photo.mean(axis=2)
         # Remove large lighting / corrugation: the pole must not acquire sheet-metal ribs.
         ratio = np.clip(lum / np.maximum(gaussian_filter(lum, 12), 1), 0.8, 1.2)
+        if not concrete:
+            # Corrugation survives a spatial high-pass. Remove its persistent column profile too; a round pole
+            # must keep the scan grain without acquiring the source sheet's vertical ribs (close-up review r1).
+            ratio = np.clip(ratio / np.maximum(np.median(ratio, axis=0, keepdims=True), 0.01), 0.8, 1.2)
     else:
         warnings.warn(f"ADR0102 scan missing: {aid}; flat furniture texture fallback", stacklevel=2)
         ratio = np.ones((h, w))

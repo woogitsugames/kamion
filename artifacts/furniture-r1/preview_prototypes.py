@@ -57,5 +57,10 @@ camera.data.type='ORTHO'; camera.data.ortho_scale=25
 scene.camera=camera; scene.render.resolution_x=960; scene.render.resolution_y=720; scene.render.resolution_percentage=100
 scene.view_settings.view_transform='AgX'; scene.render.image_settings.file_format='PNG'
 scene.render.filepath=str(OUT/'blender-prototypes.png'); bpy.ops.render.render(write_still=True)
+for label,pos,target,size in [('sign-back',(5,5,3.1),(3,0,2.5),1.8),
+                              ('old-steel-foot',(-3,2,1),(-1,0,.55),1.8)]:
+    camera.location=pos; camera.rotation_euler=(Vector(target)-camera.location).to_track_quat('-Z','Y').to_euler()
+    camera.data.ortho_scale=size
+    scene.render.filepath=str(OUT/f'blender-{label}.png'); bpy.ops.render.render(write_still=True)
 (OUT/'blender-prototype-bounds.json').write_text(json.dumps(bounds,indent=2)+'\n')
 print('FURNITURE_PREVIEW_OK')

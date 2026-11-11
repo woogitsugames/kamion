@@ -41,3 +41,6 @@ Blokada telefonu zwolniona; import bazowy w toku (przebudowa lokalnych PBR). Obe
 NASTĘPNY KROK: obserwować validation.log/import-before.log; obejrzeć before/ po pojawieniu PNG.
 
 Rozszerzony audyt produktów obejmuje też curb_/kerb_ i collision_asphalt/curb/paving/grass: 806/806 prymitywów identycznych bajtowo. Import before nadal generuje PBR; PHONE_RUN nie istnieje. NASTĘPNY KROK: Get-Content artifacts/furniture-r1/import-before.log -Tail 8
+
+Samokrytyka zbliżenia Blendera: usunięto pionowy profil przetłoczeń skanu metalu z atlasu. Obejrzano poprawiony blender-old-steel-foot.png i szary tył z dwiema obejmami blender-sign-back.png. Cache after odświeżony wyłącznie w 5 obrazach GLB; no-op pack identyczny bajtowo, 7252 widoki accessorów geometrii bez zmian. Nowy pełny GIS zostanie wykonany po renderach; 7 regresji nadal zielonych. Baza before nietknięta.
+NASTĘPNY KROK: pipeline import/audyt/rendery, potem GIS po poprawce atlasu.
