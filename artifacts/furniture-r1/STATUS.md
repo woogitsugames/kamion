@@ -54,3 +54,6 @@ NASTĘPNY KROK: pwsh artifacts/furniture-r1/run-validation.ps1 (resume using com
 
 Ground/UV/material audit before complete.
 NASTĘPNY KROK: pwsh artifacts/furniture-r1/run-validation.ps1 (resume using completed evidence directories; do not overwrite baseline)
+
+Render before Low overcast complete: artifacts/furniture-r1/before/Low-overcast
+NASTĘPNY KROK: pwsh artifacts/furniture-r1/run-validation.ps1 (resume using completed evidence directories; do not overwrite baseline)
