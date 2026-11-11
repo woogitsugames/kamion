@@ -221,3 +221,5 @@ Final selected shader: 1dc7db4ea4ec839f4dc8fbd301ba5aedd38a12c3fff892e66818841d1
 - NEXT COMMAND: commit these own artifact documents, copy and SHA-verify them to main, report findings to ROOT and remain standby. D stays closed/PARTIAL; C13 source waits explicit dispatch after G closure.
 
 - Post-closure preflight 96: API verification and concise report committed as e42160b2. Only own artifact files changed; D runtime and selected shipping source remain untouched. Copying four text/JSON documents to main and verifying SHA256. No Unity process or launch was started. NEXT: send final documentation SHA and remain standby for ROOT; no autonomous C13 source work.
+
+- Post-closure preflight 97: Applied ROOT wording correction: a version-pinned deeper diagnostic needs internal ROOT review, not a new user approval gate for authorized reversible QA. Only this sentence and artifact status changed. No Unity or runtime work. NEXT: commit, copy both documents with SHA receipt and remain standby.
