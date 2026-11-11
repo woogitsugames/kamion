@@ -414,4 +414,6 @@ def build_all(sign_codes, boards):
     from . import life_props as LP
     P.update(LP.build_all())
     P.update(LP.build_registered())
+    from . import plots as PLT                   # ADR 0107: house plot kit (fence bays, gates, driveway tiles, thuja)
+    P.update(PLT.protos())
     return P

@@ -658,7 +658,7 @@ def facade_far(nx=2048):
                 # slab edge + its shadow line
                 r0 = ny - int(round((vf + 0.02) / px))
                 ca, cb = int(round((xc - 1.35) / px)), int(round((xc + 1.35) / px))
-                alb[r0:r0 + max(2, int(0.16 / px)), ca:cb] = 0.30 * k_alb
+                alb[r0:r0 + max(2, int(0.16 / px)), ca:cb] = 0.50 * k_alb     # ADR 0107: slab edge = balcony_slab 0.52 (was 0.30)
             elif kind == "rib":
                 p = paint_cell("off", var, px)
                 # ribbon: office panes side by side across the whole bay

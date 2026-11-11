@@ -77,8 +77,9 @@ BALCONY_SUN = np.array([-0.5, -0.866])       # towards SSW (E, N)
 PLINTH_H = {"block": None, "office": 0.6, "house": 0.45, "shed": 0.3}
 PLINTHS = ["plinth_dark"]
 BAL_EXCEPT_PCT = 12            # ADR 0097: share of balconies with another balustrade than the building's (WORKING_VALUE)
-BAL_EXCEPT = (4, 5, 0)         # balf variants of the exceptions: bars + flowers, reed mat, perforated (r1 also brown /
-                               # green plastic: the brown read orange on r10_block_3)
+BAL_EXCEPT = (4, 7, 0)         # balf variants of the exceptions: bars + flowers, faded grey-green plastic, perforated
+                               # (r1 also brown: read orange on r10_block_3; ADR 0107, review 0097 P2-i: the reed
+                               # mat (5) read yellow / ochre from 60 m - exceptions stay near-neutral)
 ESTATE_M = 250.0               # ADR 0097: estate cell for the balustrade types (<= 2 types per cell), m (WORKING_VALUE)
 # ADR 0097 r2: the paved apron round blocks is OFF - draped on the height field it sank under the terrain mesh along
 # most of the wall and showed as loose light patches where the slope dips (r2 r10_block_5); needs the terrain mesh's
