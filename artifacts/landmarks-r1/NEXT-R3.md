@@ -19,8 +19,14 @@ tego nie odwzorowuje. Nie oceniać detalu z samej miniatury 960x540.
 Najpierw jednak potwierdzić tożsamość: overrides podają w628899553 i w628899554
 (120 m, średnice przy podstawie z OSM), a ich notatka wspomina inne zdjęcie
 CC BY-SA EC_Białystok z szachownicą na jednym zwieńczeniu. Na 073128 szachownicy
-nie widać. Mogą to być inne widoczne kominy zakładu albo inny stan malowania;
-nie wolno automatycznie przenieść głowic i procentu malowania z nieprzypisanego kadru.
+nie widać. Odszukano oryginalną referencję Hiuppo (podgląd EC-Bialystok-Hiuppo-reference.jpg,
+licencja CC BY-SA 2.5, source JSON z atrybucją). Jej EXIF DateTime (306) podaje
+2007:03:06 09:06:38. Zdjęcie pokazuje szachownicę na lewej głowicy i gęstsze pasy
+tylko u góry prawego. W CC0 z 2020 obie głowice mają pasy na większym WIDOCZNYM
+odcinku, lewa trzy wyloty i prawa jeden. Porównanie sugeruje zmianę malowania
+tych samych kominów, lecz wymaga przypisania przestrzennego. Nie przenosić stanu
+szachownicy z 2007 bez sprawdzenia aktualniejszych referencji ani nie zgadywać
+procentu wysokości na podstawie zasłoniętego dołu.
 
 Własność: `landmarks.py` rejestruje nazwy i wymiary w LP.LANDMARKS. Sam builder
 `chimney()` znajduje się w cudzym life_props.py; jego pliku nie edytować.
