@@ -5,6 +5,7 @@ Pairs are 960px wide. Photometry uses the existing SBS heuristic and is explicit
 WORKING_VALUE, never a gate result. Rejected poses/sunsets are excluded from summary.
 """
 import hashlib
+import html
 import importlib.util
 import json
 from pathlib import Path
@@ -65,6 +66,21 @@ for phase in ('before', 'after'):
     (OUT/'sbs'/phase/'light-metrics.json').write_text(json.dumps(dict(
         status='WORKING_VALUE; heuristic masks, poses unverified; full-frame histograms not scored',
         pairs=metrics), indent=2), encoding='utf-8')
+    page = ['<!doctype html><meta charset="utf-8"><title>Światło r1 — SBS '+phase+'</title>',
+            '<style>body{background:#202020;color:#eee;font:16px sans-serif;max-width:1000px;margin:auto}img{max-width:100%;height:auto}a{color:#8cf}figure{margin:18px 0}summary{padding:12px;cursor:pointer}</style>',
+            '<h1>Światło r1 — '+phase+'</h1><p>40 póz × Low/High × clear/overcast. Pozy WORKING_VALUE; to nie jest wynik PASS bramki. 27 dziennych póz dopuszczono do ostrożnego porównania ROI. Metryki masek heurystycznych nie są pomiarem semantycznym.</p>']
+    for tier in ('Low', 'High'):
+        for light in ('clear', 'overcast'):
+            page.append('<details><summary>'+tier+' / '+light+' — 40 par</summary>')
+            for entry in metrics:
+                if entry['tier'] != tier or entry['lighting'] != light:
+                    continue
+                label = entry['camera']+(' — ROI dopuszczone' if entry['eligible'] else ' — poza oceną: poza lub zachód słońca')
+                filename = f"{tier}-{light}-{entry['camera']}.jpg"
+                page.append('<figure><figcaption>'+html.escape(label)+'</figcaption><a href="pairs/'+filename+'"><img loading="lazy" src="pairs/'+filename+'" alt="'+html.escape(label)+'"></a></figure>')
+            page.append('</details>')
+    page.append('<p><a href="light-metrics.json">Metryki i hashe zdjęć oraz renderów</a></p>')
+    (OUT/'sbs'/phase/'index.html').write_text('\n'.join(page), encoding='utf-8')
     print(phase, len(metrics), 'pairs')
 if not budgets:
     raise ValueError('No SceneStats budget files found')
