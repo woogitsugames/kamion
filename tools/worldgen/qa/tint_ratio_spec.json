@@ -212,6 +212,89 @@
      "note": "band in the viaduct's shadow (clear/overcast 0.99); plinth also under the deck, so the open-wall photo ratio does not apply: sanity range only"
     }
    ]
+  },
+  "bridge_concrete": {
+   "calibrated": true,
+   "checks": [
+    {
+     "id": "putry_girder",
+     "camera": "route-putry-entry-signs",
+     "side": "shaded",
+     "roi": [
+      28,
+      155,
+      88,
+      161
+     ],
+     "ref": "asphalt",
+     "ref_roi": [
+      440,
+      330,
+      560,
+      400
+     ],
+     "limits": {
+      "overcast": {
+       "ratio_level": [
+        0.85,
+        1.1
+       ]
+      }
+     },
+     "note": "generic viaduct girder face (100 % on M_bridge_concrete mask); sun-averted in clear (girder/asphalt clear < overcast)"
+    },
+    {
+     "id": "g3b_girder",
+     "camera": "g3b-rondo-putry-approach",
+     "side": "shaded",
+     "roi": [
+      24,
+      170,
+      84,
+      177
+     ],
+     "ref": "asphalt",
+     "ref_roi": [
+      180,
+      330,
+      330,
+      380
+     ],
+     "limits": {
+      "overcast": {
+       "ratio_level": [
+        0.85,
+        1.1
+       ]
+      }
+     },
+     "note": "same viaduct, other station (100 % on mask)"
+    },
+    {
+     "id": "biez_above_cornice",
+     "camera": "biezenstwa-above",
+     "side": "lit",
+     "roi": [
+      32,
+      308,
+      52,
+      311
+     ],
+     "ref": "asphalt",
+     "ref_roi": [
+      330,
+      330,
+      420,
+      345
+     ],
+     "limits": {
+      "clear": {
+       "clip_max": 0.0
+      }
+     },
+     "note": "cornice seen from above (High mask masks-WorldC_High; Low draws an HLOD here): no photo ratio, guard against white/clip only"
+    }
+   ]
   }
  },
  "photo_refs": [
@@ -235,6 +318,7 @@
   }
  ],
  "photo_notes": {
-  "noise_panel_dark": "ADR 0069: Mapillary p40 (2024-07-26) cassettes 36-40 sRGB next to plinth 105 sRGB on the same vertical face -> 0.34-0.38 (full-resolution Mapillary frames, not stored in the repo)"
+  "noise_panel_dark": "ADR 0069: Mapillary p40 (2024-07-26) cassettes 36-40 sRGB next to plinth 105 sRGB on the same vertical face -> 0.34-0.38 (full-resolution Mapillary frames, not stored in the repo)",
+  "bridge_concrete": "CC0 Rakoon 20201102_152339 (overcast, wet road): lit pier / road 0.95-1.02 (pier ROIs 208-222 and 568-580 x 205-262, road 560-800 x 390-440, 960 view), deck underside / road 0.52; wet asphalt biases the ratio upwards, so the range is an upper guide"
  }
 }

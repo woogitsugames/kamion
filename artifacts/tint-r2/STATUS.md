@@ -18,3 +18,10 @@ pwsh scripts/import-region.ps1 -Region bialystok-industrial-c ; pwsh artifacts/t
 - Waited ~70 min on PHONE_RUN + GPT_UNITY_HOLD (respected both).
 ## Next
 masks -> import r1 -> round r1 running (chain in background): see artifacts/tint-r2/masks.log, import-r1.log, round-r1.log
+## Step 4 (done) — r1 measured; masks
+- r1 (kp_wall .37/.38/.38, noise .039/.041/.040): gate hall/sky ov 0.72 High / 0.78 Low (was 0.94/0.97), High-clear 217 sRGB clip 0.001 (was 250, 0.815); docks 0.45/0.47; hall4 0.47/0.52.
+- screens cassette/plinth ov on 3 lit cams 0.32-0.37 (was 0.26-0.31). Shaded under-deck band 0.42-0.44 (sanity).
+- Masks: kp_wall/container/thuja/bed_soil have no renderer slot (instanced/hero) -> change mask. bed_soil unused in the world (no chunk lists it).
+- bridge: Low biezenstwa-above draws HLOD; High mask: bridge_concrete = cornices 110->205 sRGB under 0086. Girder/asphalt 1.26-1.36 vs photo pier/road 0.95-1.02.
+## Step 5 (running) — r2 adds bridge_concrete .26/.26/.25 (build_world.py)
+Next: wait round-r2; uv run --project tools/worldgen python tools/worldgen/qa/tint_ratio.py --round artifacts/tint-r2/r2 --before artifacts/tint-r2/baseline --masks artifacts/tint-r2/masks
