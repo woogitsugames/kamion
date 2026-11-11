@@ -82,11 +82,33 @@ def rounded_rect(hw, zb, zt, r=0.08, rb=0.05):
 
 def wheel(m, c, r, w, seg, axis=(1, 0, 0), tyre="tyre", rim="rim", rim_r=0.62, out_sign=1, simple=False):
     """Tyre (tread tube + outer sidewall ring) and a flat rim disc on the outer side (out_sign = side of the
-    vehicle the wheel is on; the inner side is never visible). simple=True: an octagonal box-like prism."""
+    vehicle the wheel is on; the inner side is never visible). simple=True: six-sided tread and outer discs."""
     c = np.asarray(c, float)
     ax = np.asarray(axis, float)
     if simple:
-        m.tube(tyre, c - ax * w / 2, c + ax * w / 2, r, r, 6, cap=False)
+        # ADR 0122: retain separate axles and ground contact in the distant LOD.
+        # One ring vertex points down; the former open tube lost its outer face.
+        n = 6
+        u = np.array([0., 0., 1.])
+        if abs(np.dot(ax, u)) > 0.9:
+            u = np.array([0., 1., 0.])
+        u -= ax * np.dot(ax, u)
+        u /= np.linalg.norm(u)
+        v = np.cross(ax, u)
+        ring = np.array([math.cos(t) * u + math.sin(t) * v for t in np.arange(n) * 2 * math.pi / n])
+        V = np.concatenate([c - ax * w / 2 + r * ring, c + ax * w / 2 + r * ring])
+        T = []
+        for i in range(n):
+            j = (i + 1) % n
+            T += [(i, j, n + j), (i, n + j, n + i)]
+        m.add(tyre, V, T)
+        sgn = 1 if out_sign >= 0 else -1
+        cc = c + ax * sgn * w / 2
+        cap = [(0, i, i + 1) for i in range(1, n - 1)]
+        if sgn < 0:
+            cap = [(a, d, b) for a, b, d in cap]
+        m.add(tyre, cc + r * ring, cap)
+        m.add(rim, cc + ax * sgn * 0.006 + r * rim_r * ring, cap)
         return
     m.tube(tyre, c - ax * w / 2, c + ax * w / 2, r, r, seg, cap=False)
     sgn = 1 if out_sign >= 0 else -1
@@ -128,8 +150,14 @@ def trailer(kind, colour):
             for sx in (-1, 1):
                 x = sx * hw
                 q = [[x, 0.05, zb + 0.10], [x, L - 0.05, zb + 0.10], [x, L - 0.05, H - 0.12], [x, 0.05, H - 0.12]]
+                # Metre UVs, below the 2.7 m tile edge: no lower grime wrapped
+                # onto the top rail. Existing fleet colours also vary wear phase.
+                phase = 0.61 * CURTAIN_COLOURS.index(colour) + (0.37 if sx < 0 else 0.0)
+                u0, u1 = phase, phase + L - 0.10
+                v0, v1 = 0.02, 0.02 + H - 0.12 - (zb + 0.10)
+                uv = [[u0, v0], [u1, v0], [u1, v1], [u0, v1]]
                 m.add(side, q if sx > 0 else q[::-1], [(0, 1, 2), (0, 2, 3)],
-                      [[0, 0], [L, 0], [L, H - zb], [0, H - zb]] if sx > 0 else [[0, H - zb], [L, H - zb], [L, 0], [0, 0]])
+                      uv if sx > 0 else uv[::-1])
             bx(m, "trailer_alu", -hw - 0.02, hw + 0.02, 0.0, L, H - 0.12, H)               # roof + top rail
             bx(m, "trailer_chassis", -hw + 0.02, hw - 0.02, 0.0, L, zf - 0.14, zf)          # floor
             bx(m, "trailer_alu", -hw - 0.02, hw + 0.02, 0.0, L, zf, zb + 0.10)              # bottom rail (0.15 m)
@@ -260,15 +288,8 @@ def trailer(kind, colour):
         bx(m, "trailer_chassis", -hw + 0.1, hw - 0.1, 2.3, 6.4, zf - 0.30, zf - 0.05)         # axle bed
         for ya in TRAILER_AXLES:
             for sx in (-1, 1):
-                if lod == 0:
-                    wheel(m, [sx * (hw - 0.27), ya, 0.535], 0.535, 0.385, 10, out_sign=sx)
-        if lod > 0:                              # LOD1: one prism per side spanning the axle group
-            for sx in (-1, 1):
-                m.tube("tyre", [sx * (hw - 0.27), TRAILER_AXLES[0] - 0.5, 0.5], [sx * (hw - 0.27), TRAILER_AXLES[-1] + 0.5, 0.5],
-                       0.38, None, 4)
-            if lod == 0:
-                for sx in (-1, 1):               # mudflaps
-                    bx(m, "trailer_chassis", sx * (hw - 0.27) - 0.2, sx * (hw - 0.27) + 0.2, 2.28, 2.3, 0.18, 0.80)
+                wheel(m, [sx * (hw - 0.27), ya, 0.535], 0.535, 0.385, 10, out_sign=sx,
+                      simple=lod > 0, rim="rim" if lod == 0 else "trailer_alu")
         out.append(m)
     col = Mesh()
     col.box("collision_vehicle", [0, L / 2, (H + 0.2) / 2], hw, L / 2, (H - 0.2) / 2 + 0.1)
