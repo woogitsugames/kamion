@@ -110,3 +110,7 @@ Krytyk obejrzał sześć zmienionych par Low-overcast, pozostałe 19 przyjął j
 ## Potwierdzenie rzeczywistej kolejki heavy
 O 00:42–00:43 sprawdzono procesy systemowe bez ujawniania pełnych command line. Trzy sloty odpowiadały trzem aktywnym zadaniom: dwa build_world oraz jeden pytest, rozpoczęte 00:36–00:41. Nie stwierdzono podstaw do traktowania slotów jako porzuconych. Nie zmieniano cudzych blokad ani PHONE_RUN. Własny post-world pozostaje potwierdzonym żywym procesem oczekującym na test fotometrii; dalsza sekwencja czeka na jego kod zakończenia.
 
+
+## Fotometria i plan topologii
+Test_sbs_photometry: 13/13, przez heavy; fidelity rozpoczęte i potwierdzone w logu. Łącznie pojedyncze pliki SBS: 25 + 40 + 13 = 78 testów, bez pełnego GIS w trakcie.
+Przygotowano i obejrzano mały wykres pose-topology/putry-camera-topology.png oraz SVG z istniejącego grafu 0,55 MB, bez regeneracji geometrii. Pokazuje osie źródłowe, trasę, pozy 182 (C) i 494 (B) oraz oryginalny GPS. Wektor od pozy 182 do oryginalnego GPS wynosi -2,027 m E i -13,802 m N. To schemat osi, nie dowód położenia na wygenerowanej jezdni ani powód do zmiany wysokości. Nie zmieniono kamer, klasy ani świata. Materiał służy dalszej kalibracji po ukończeniu bieżącego pakietu.
