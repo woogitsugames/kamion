@@ -33,3 +33,4 @@ Krok 10: preset LP_Clear zapisany z pokryciem 0,42 zgodnie z fabryką. Dodano Li
 Krok 11: dodano rq_clearcover do izolowania pokrycia chmur bez edycji assetów i ruszania pozostałych dziedzin. Parse bez argumentu przywraca preset. Następny krok: smoke batch pokrycia 0 / 0,42 i ditheringu w jednym procesie Unity po zakończeniu ablacji.
 
 Krok 12: build_world baseline zakończony (log: [world 1089.0s] done); uruchomiono wymagane python -m pytest tests/gis -q. Przygotowano cloud-smoke.json (5 zadań / 15 PNG) i run-light-batch.ps1 z Acquire/Release i przywracaniem efektów ubocznych. Następny krok: po zakończeniu rcas-ablation.ps1 uruchomić pwsh artifacts/light-r1/run-light-batch.ps1 -Jobs artifacts/light-r1/cloud-smoke.json; po GIS wykonać import aktualnych wygenerowanych danych.
+Render ablacji zakończony: artifacts/light-r1/rcas/High-overcast-0.25. PNG wymagają obejrzenia i pomiarów. Następny krok: kolejny wariant w artifacts/light-r1/rcas-ablation.ps1, potem analiza.
