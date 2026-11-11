@@ -12,12 +12,12 @@ and this coordination worktree start at 4f7da66c.
 | Stream | Agent | Branch / worktree | Status | State |
 |---|---|---|---|---|
 | A 0086 tint gamma | fab_processor | gpt-tint-gamma | artifacts/tint-gamma-r1/STATUS.md | contract PASS; calibration FAIL, leader ADR0101; docs1317afba |
-| B 0088 vegetation | tree_surfaces | gpt-vegetation-r2 | artifacts/vegetation-r2/STATUS.md | running: real CC0 pine-needle quality pass |
-| C 0098 light/post | world_integration | gpt-light-r12 | artifacts/light-r12/STATUS.md | visual PASS, EditMode221/221; ADR/report finishing |
+| B 0088 vegetation | tree_surfaces | gpt-vegetation-r2 | artifacts/vegetation-r2/STATUS.md | visual bounded PASS; final GIS/EditMode running |
+| C 0098 light/post | world_integration | gpt-light-r12 | artifacts/light-r12/STATUS.md | COMPLETE clean5db77e9d; visual PASS; EditMode221/221 |
 | D 0099 surface wear | pending | gpt-surface-wear | artifacts/surface-wear-r1/STATUS.md | dependency satisfied by 471438fb; after G/E |
 | E 0090 fire station r7 | pending | gpt-firestation-r7 | artifacts/firestation-r10/STATUS.md | queued after G |
 | F 0087 truck paint | fab_processor | gpt-truck-paint | artifacts/truck-paint-r1/STATUS.md | running merged db1432c5: locked102frames, GPUlight Infinityproof |
-| G 0089 car paint | pending | gpt-car-paint | artifacts/car-paint-r1/STATUS.md | NEXT free worker |
+| G 0089 car paint | world_integration | gpt-car-paint | artifacts/car-paint-r1/STATUS.md | starting fresh main after C |
 
 A owns importer tint/calibration; B vegetation geometry, leaf ambient and grass;
 C lighting/post/atmosphere/shadow policy. Shared shader edits must be additive
@@ -138,3 +138,13 @@ finalEditMode, softness tradeoff and precisegable240.836/redp95241. Lowstats
 byteidentical118rows; pixelidentity is not claimed. C missing ignored interiorFBX
 fixture was real BuildBatch failure, nowonefilecopied/retryingbuilders, no matrix rerun.
 NEXT COMMAND: verify C finalEditMode/REPORT then dispatch G on freeworker; review B final matched236matrix/tests.
+
+## Step10 - C delivered, G started, B independent visualreview
+C clean5db77e9d, engine9e7e0b45; canonicalmanifest committed fromverifiedfresh
+192hash products, expectedgeneratedconflict leaderregenerate. Artifacts copied
+tomain; rootverifiedXML221/221 and all236CPUstatsbyteidentical. Workerreused
+forGfreshcurrentmain, preservingCworktree, queueEthenD.
+B all20finalaftersheets plus960focalpairedframes reviewed; REVIEW-B-0088.md
+records boundedvisualPASS pendingfinaltests. Putryp50 increases~13percent
+explicitlynoted; DK8blackcrownfixandsilhouette improved, style/temporalP2remain.
+NEXT COMMAND: verifyGbootstrap/currentmain and BfinalGIS/EditMode+REPORT; thenassignE on nextfreeworker.
