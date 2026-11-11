@@ -179,3 +179,15 @@ def test_capture_hashes_bind_the_actual_render_pixels(tmp_path,monkeypatch):
     Image.new('RGB',(40,30),'white').save(render)
     with pytest.raises(ValueError,match='render hash/provenance mismatch'):
         sbs.compose(renders,tmp_path/'out')
+
+
+def test_early_route_commons_candidates_keep_licenses_and_uncertainty():
+    refs=sbs.read(sbs.REGION/'sbs_references.json')['references']
+    extras=[r for r in refs if r['source_id'] in ('cm109685822','cm92458760')]
+    assert len(extras)==2
+    assert {r['license'] for r in extras}=={'CC0','CC BY 3.0'}
+    for r in extras:
+        assert 0<r['segment_station_m']<300 and r['route_distance_m']<15
+        assert r['pose_confidence']=='C' and not r['photometric_use']
+        assert len(r['source_manifest_sha256'])==64
+        assert 'no EXIF' in r['assumptions']

@@ -11,6 +11,7 @@ $ErrorActionPreference = 'Stop'
 $taskRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
 $mainRoot = (& git -C $taskRoot rev-parse --path-format=absolute --git-common-dir).Trim()
 $mainRoot = Split-Path $mainRoot -Parent
+$slotScript = Join-Path $mainRoot 'scripts/unity-slot.ps1'
 $phoneLock = Join-Path $mainRoot 'artifacts/locks/PHONE_RUN'
 $cameraFile = Join-Path $taskRoot 'Data/Regions/bialystok-industrial-c/sbs_cameras.json'
 $references = (Get-Content (Join-Path $taskRoot 'Data/Regions/bialystok-industrial-c/sbs_references.json') -Raw | ConvertFrom-Json).references
@@ -32,12 +33,12 @@ function Restore-UnitySideEffects {
 Push-Location $taskRoot
 try {
     if ($EditMode -and !$ComposeOnly) {
-        & pwsh -NoProfile -File scripts/unity-slot.ps1 -Acquire -Owner $SlotOwner
+        & pwsh -NoProfile -File $slotScript -Acquire -Owner $SlotOwner
         if ($LASTEXITCODE -ne 0) { throw 'Unity slot acquisition failed' }
         try {
             & pwsh -NoProfile -File scripts/test.ps1 -Platform EditMode
             if ($LASTEXITCODE -ne 0) { throw 'EditMode failed; inspect artifacts/tests and artifacts/logs.' }
-        } finally { Restore-UnitySideEffects; & pwsh -NoProfile -File scripts/unity-slot.ps1 -Release -Owner $SlotOwner }
+        } finally { Restore-UnitySideEffects; & pwsh -NoProfile -File $slotScript -Release -Owner $SlotOwner }
     }
     foreach ($tier in $Tiers) {
         if ($tier -notin @('Low','Medium','High','Ultra')) { throw "Invalid tier: $tier" }
@@ -67,7 +68,7 @@ try {
                     }
                     $captureFile = Join-Path $renderDir "capture-$($group.Name).json"
 
-                    & pwsh -NoProfile -File scripts/unity-slot.ps1 -Acquire -Owner $SlotOwner
+                    & pwsh -NoProfile -File $slotScript -Acquire -Owner $SlotOwner
                     if ($LASTEXITCODE -ne 0) { throw 'Unity slot acquisition failed' }
                     try {
                         $capture.captured_at_utc = [DateTime]::UtcNow.ToString('o')
@@ -83,7 +84,7 @@ try {
                         $capture | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath $captureFile -Encoding utf8
                         # visual-qa stats.txt is overwritten per invocation; preserve every aspect group.
                         Copy-Item -LiteralPath (Join-Path $renderDir 'stats.txt') -Destination (Join-Path $renderDir "stats-$($group.Name).txt")
-                    } finally { Restore-UnitySideEffects; & pwsh -NoProfile -File scripts/unity-slot.ps1 -Release -Owner $SlotOwner }
+                    } finally { Restore-UnitySideEffects; & pwsh -NoProfile -File $slotScript -Release -Owner $SlotOwner }
                 }
             }
             & uv run --project tools/refs python tools/refs/sbs_gate3.py compose --renders $renderDir --output (Join-Path $output "sheets/$tier-$light")

@@ -8,7 +8,7 @@ try {
         $renderDir='artifacts/sbs-r1/pose-renders'
         $first=$group.Group[0]; $height=[int](1280*$first.height/$first.width)
         $ids=$group.Group.probe -join ','
-        pwsh -NoProfile -File scripts/unity-slot.ps1 -Acquire -Owner gpt-sbs
+        pwsh -NoProfile -File C:/Users/matma/Documents/Claude/kamion/scripts/unity-slot.ps1 -Acquire -Owner gpt-sbs
         if($LASTEXITCODE -ne 0){throw 'Brak slotu Unity'}
         try {
             pwsh -NoProfile -File scripts/visual-qa.ps1 -Scene WorldC -Tier Low -Lighting overcast -Width 1280 -Height $height -Gate3 $probeFile -Cameras $ids -OutputDir $renderDir
@@ -17,7 +17,7 @@ try {
             [ordered]@{git_sha=(& git rev-parse HEAD).Trim();cameras_sha256=(Get-FileHash $probeFile -Algorithm SHA256).Hash;probes=@($group.Group.probe);tier='Low';lighting='overcast';captured_at_utc=[DateTime]::UtcNow.ToString('o')} | ConvertTo-Json -Depth 6 | Set-Content (Join-Path $renderDir "capture-$($group.Name).json")
         } finally {
             git restore -- game/Assets/_Project/Rendering/Settings game/ProjectSettings
-            pwsh -NoProfile -File scripts/unity-slot.ps1 -Release -Owner gpt-sbs
+            pwsh -NoProfile -File C:/Users/matma/Documents/Claude/kamion/scripts/unity-slot.ps1 -Release -Owner gpt-sbs
         }
     }
     uv run --project tools/refs python artifacts/sbs-r1/compose_pose_probes.py
