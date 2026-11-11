@@ -584,13 +584,17 @@ def paved_items(rp, roads_poly, bpoly, paved):
         hard = []
         plot["drive"] = plot["path"] = plot["lawn"] = None
         inner = plot["poly"].buffer(-0.25)
-        if lay["gate"] is not None and plot.get("access") is not None:
+        if lay["gate"] is not None:
             g = lay["gate"]
             ax = _drive_axis(plot)
             drive = ax.buffer(DRIVE_W_M / 2, cap_style="flat", join_style="mitre").intersection(inner.union(
                 LineString([g["m"] - g["n"] * 0.5, g["m"] + g["n"] * 0.5]).buffer(g["w"] / 2, cap_style="flat")))
-            apron = LineString([g["m"] - g["n"] * 0.3, g["m"] + g["n"] * (plot["access"]["d_cw"] + 0.5)]).buffer(
-                g["w"] / 2, cap_style="flat")
+            if plot.get("access") is not None:
+                d_out = plot["access"]["d_cw"] + 0.5
+            else:                                            # no carriageway in reach: out to the road footprint (a yard, a path)
+                hit = LineString([g["m"], g["m"] + g["n"] * 8.0]).intersection(roads_poly)
+                d_out = float(Point(*g["m"]).distance(hit)) + 0.3 if not hit.is_empty else 0.6
+            apron = LineString([g["m"] - g["n"] * 0.3, g["m"] + g["n"] * d_out]).buffer(g["w"] / 2, cap_style="flat")
             plot["drive"] = shapely.unary_union([drive, apron]).buffer(0.01).difference(others[i])
             hard.append(plot["drive"])
         for wk in ([lay["wicket"]] if lay["wicket"] is not None else []) + lay["wickets"]:
@@ -1059,6 +1063,14 @@ def build(buf, rp, zf, surf_top, report):
         for a, b, z0, z1 in col:
             V = np.array([[*a, z0], [*b, z0], [*b, z1], [*a, z1]])
             buf.add("collision", "collision_fence", V, V[:, :2], [(0, 1, 2), (0, 2, 3), (0, 2, 1), (0, 3, 2)], src=src_id)
+    rep["list"] = [{"id": p["id"], "age": p["age"], "front": p["front_style"], "side": p["side_style"],
+                    "c": [round(float(v), 1) for v in p["poly"].centroid.coords[0]],
+                    "gate": None if p["lay"]["gate"] is None else {
+                        "m": [round(float(v), 2) for v in p["lay"]["gate"]["m"]],
+                        "n": [round(float(v), 3) for v in p["lay"]["gate"]["n"]], "kind": p["lay"]["gate"]["kind"]},
+                    "access": None if p.get("access") is None else {"d_cw": round(p["access"]["d_cw"], 2),
+                                                                    "walk": p["access"]["walk"], "chain": p["access"]["chain"]}}
+                   for p in plots]
     rep["fence_m"] = {k: round(v) for k, v in sorted(rep["fence_m"].items())}
     rep["plot_m2_median"] = round(float(np.median([p["poly"].area for p in plots])), 1) if plots else 0.0
     report["plots"] = rep

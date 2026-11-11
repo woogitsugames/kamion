@@ -230,7 +230,7 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     def zplot(q):
         return float(np.asarray(zsurf(np.array([q[0]]), np.array([q[1]]))).ravel()[0])
     plots = PLT.build(w.buf, plot_plan, zplot, FU.SurfaceTop([p_ for p_ in w.buf.parts if p_.layer == "road"]), rep)
-    log("plots", {k: v for k, v in rep["plots"].items()})
+    log("plots", {k: v for k, v in rep["plots"].items() if k != "list"})
 
     # vegetation
     blocked = ndimage.binary_dilation(mask | bmask, iterations=3)
