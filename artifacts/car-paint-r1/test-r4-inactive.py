@@ -2,6 +2,7 @@
 from pathlib import Path
 import importlib.util
 import json
+import re
 import sys
 import numpy as np
 
@@ -22,6 +23,20 @@ def load(name,path):
 model=load('r4_model',ART/'r4-model.py')
 draft=load('streetscape.r4_life_cars',ART/'r4-inactive-source/tools/worldgen/streetscape/life_cars.py')
 facade=load('r4_facade',ART/'r4-inactive-source/art-source/world/materials/_src/sets_facade.py')
+shader=(ART/'r4-inactive-source/game/Assets/_Project/Environment/Shaders/WorldPBR.shader').read_text()
+compact=re.sub(r'\s+','',shader)
+for expression in (
+    'halfamount=0.08h+0.92h*i.carFilm.x;',
+    'halffalloff=0.16h+0.06h*i.carFilm.x;',
+    'halfvertical=exp2(-max(i.uv.z,0.0)/falloff*1.442695h);',
+    'halffrontTrail=saturate(1.0h-abs(i.uv.w-0.87h)/0.28h);',
+    'halfrearTrail=saturate(1.0h-abs(i.uv.w+0.13h)/0.28h);',
+    'halfrearFace=saturate((-i.uv.w-0.20h)*8.0h);',
+    'carFilmOpacity=0.5h*amount*vertical*(0.72h+0.28h*deposition)*(1.0h-keepUpper);',
+    'uintlevel=h<429496730u?0u:(h<1932735283u?1u:(h<3435973837u?2u:3u));',
+):
+    assert expression in compact,expression
+assert 'legacyFilm/expectedFilm' not in compact
 
 old=original.car_grime(n=1024)
 legacy=facade.car_grime(n=1024)
@@ -116,6 +131,8 @@ for shift in ([1024,0],[-1024,1024],[4096,-4096],[-4096,4096],[512.25,-2048.75])
 assert not any(c['mismatches'] for c in shift_cases)
 
 out=dict(status='CPU-only inactive model PASS; compile/GPU/appearance UNVERIFIED',
+         candidate_source_expression_contract=True,
+         gpu_binding_uv_v_conversion_and_keep_upper='UNVERIFIED: actual opacity/UV readback required after import',
          legacy_fields_exact=legacy_equal,upper_albedo_roughness_exact=True,peel_height_exact=True,
          source_lod_rows=len(rows),geometry_uv0_indices_normals_materials_exact=True,
          barycentric_height_and_monotonic_bound=True,
