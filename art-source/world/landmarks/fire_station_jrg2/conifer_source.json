@@ -1,0 +1,40 @@
+{
+ "schema": "kamion.hero.conifer-source/1",
+ "id": "fir_tree_01",
+ "page": "https://polyhaven.com/a/fir_tree_01",
+ "api": "https://api.polyhaven.com/files/fir_tree_01",
+ "license": "CC0 1.0 Universal",
+ "license_page": "https://polyhaven.com/license",
+ "authors": {
+  "Rob Tuytel": "Photography",
+  "Rico Cilliers": "Modeling"
+ },
+ "checked_utc": "2026-11-11",
+ "species_status": "short-needle fir/conifer, NOT verified Picea",
+ "raw_dir": "art-source/world/cc0/_raw/fir_tree_01",
+ "crop_xyxy": [
+  295,
+  400,
+  650,
+  805
+ ],
+ "processing": "paired alpha R, threshold32 largestconnectedcomponent+dilate1, RGB calibrated to hero-local intended linear foliage palette; stem-centred; atlas16px gutter. Never use trunk/UV strips.",
+ "files": [
+  {
+   "map": "diff",
+   "file": "twig_diff.png",
+   "sha256": "76f6d0c0044d76bac08fbbd3d2ac1c9b66bb046de7d0b1a22aa9b319308f3833",
+   "md5_api": "3791a2e595b63410ed0bd054633373de",
+   "bytes": 3411459,
+   "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/1k/fir_tree_01/fir_tree_01_twig_diff_1k.png"
+  },
+  {
+   "map": "alpha",
+   "file": "twig_alpha.png",
+   "sha256": "3f399629337e7ac3af27a01b08ffb9c0d60224a9dd374a1427761a5c2eea9d6e",
+   "md5_api": "02ab808c8b2ff77ad9fdb2f92892db80",
+   "bytes": 371026,
+   "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/1k/fir_tree_01/fir_tree_01_twig_alpha_1k.png"
+  }
+ ]
+}

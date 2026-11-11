@@ -1,7 +1,10 @@
 param(
     [ValidateSet('Import','Vehicle','Capture')][string]$Stage,
-    [ValidateSet('before','round1','round2')][string]$Phase='before',
-    [switch]$OnlyHero
+    [ValidateSet('before','probe','round1','round2')][string]$Phase='before',
+    [switch]$OnlyHero,
+    [string]$CameraIds='',
+    [ValidateSet('','Low','High')][string]$OnlyTier='',
+    [ValidateSet('','clear','overcast')][string]$OnlyLight=''
 )
 $ErrorActionPreference='Stop'
 $taskRoot=$PSScriptRoot
@@ -18,7 +21,8 @@ function Assert-EUnityRelease {
     if(Test-UnityProjectLocked) {throw 'E game project is already open in Unity'}
 }
 function Invoke-EStage([string]$Name,[string[]]$UnityArguments,[string]$Marker) {
-    $log="$taskRoot/baseline-$Name.log"
+    $prefix=if($Phase -eq 'before') {'baseline'} else {$Phase}
+    $log="$taskRoot/$prefix-$Name.log"
     Assert-EUnityRelease
     $code=Invoke-UnityBatch -LogFile $log -Arguments $UnityArguments
     if($code -ne 0 -or -not(Select-String -Path $log -SimpleMatch $Marker -Quiet)) {
@@ -47,11 +51,14 @@ assert files, 'Canonical vehicle fixture missing'
 elseif($Stage -eq 'Capture') {
     if(-not(Test-Path "$taskRoot/baseline-vehicle-sha256.json")) {throw 'Canonical vehicle must precede matched baseline'}
     foreach($tier in @('Low','High')) {
+        if($OnlyTier -and $tier -ne $OnlyTier) {continue}
         $scene=if($tier -eq 'High') {'WorldC_High'} else {'WorldC'}
         foreach($light in @('clear','overcast')) {
+            if($OnlyLight -and $light -ne $OnlyLight) {continue}
             Assert-EUnityRelease
             $captureArgs=@()
             if($OnlyHero) {$captureArgs=@('-Cameras','fire-station-route,fire-station-abeam,fire-station-ref7197,fire-station-above')}
+            if($CameraIds) {$captureArgs=@('-Cameras',$CameraIds)}
             $output="$taskRoot/$Phase/$tier-$light"
             if(Test-Path "$output/stats.txt") {throw "Completed evidence already exists: $output; preserve it"}
             # Standard route cameras include all four fire_station_* hero cameras.

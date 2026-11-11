@@ -46,6 +46,7 @@ _lay = json.loads((OUT / "atlas_layout.json").read_text(encoding="utf-8"))
 LAY, ALAY = _lay["atlas"], _lay["alpha"]
 D = SPEC["dims"]
 MAT, ALPHA, HEDGE, SHELL = "fire_station", "fire_station_alpha", "hedge_thuja", "hedge_shell_thuja"
+HERO_SHELL = "fire_station_thuja_shell"
 ANCHOR = np.array(SPEC["anchor"], float)
 AX_O = np.array(D["axis"]["origin_en"], float)
 AX_U = np.array(D["axis"]["u"], float)
@@ -207,16 +208,23 @@ def material(name):
             sep = nt.nodes.new("ShaderNodeSeparateColor")
             nt.links.new(tm.outputs["Color"], sep.inputs["Color"])
             nt.links.new(sep.outputs["Red"], bsdf.inputs["Metallic"])
-        elif name in (ALPHA, SHELL):
+        elif name in (ALPHA, SHELL, HERO_SHELL):
             t = nt.nodes.new("ShaderNodeTexImage")
-            t.image = bpy.data.images.load(str(REPO / "art-source" / "world" / "textures" / (name + ".png")))
-            nt.links.new(t.outputs["Color"], bsdf.inputs["Base Color"])
+            texture_name = SHELL if name == HERO_SHELL else name
+            t.image = bpy.data.images.load(str(REPO / "art-source" / "world" / "textures" / (texture_name + ".png")))
+            if name == HERO_SHELL:
+                mix = nt.nodes.new("ShaderNodeMixRGB"); mix.blend_type = "MULTIPLY"
+                mix.inputs[0].default_value = 1
+                mix.inputs[2].default_value = (*LAY["thuja_shell_tint_linear"], 1)
+                nt.links.new(t.outputs["Color"], mix.inputs[1]); nt.links.new(mix.outputs[0], bsdf.inputs["Base Color"])
+            else:
+                nt.links.new(t.outputs["Color"], bsdf.inputs["Base Color"])
             gt = nt.nodes.new("ShaderNodeMath")
             gt.operation = "GREATER_THAN"
             gt.inputs[1].default_value = 0.5
             nt.links.new(t.outputs["Alpha"], gt.inputs[0])
             nt.links.new(gt.outputs[0], bsdf.inputs["Alpha"])
-            bsdf.inputs["Roughness"].default_value = 0.6
+            bsdf.inputs["Roughness"].default_value = 0.97 if name == HERO_SHELL else 0.6
             m.blend_method = "CLIP" if hasattr(m, "blend_method") else m.blend_method
         else:
             n = nt.nodes.new("ShaderNodeTexNoise")
@@ -994,6 +1002,92 @@ def build_outbuilding(mb, lod):
     downpipe(mb, q(La - 0.4, 0), -b, PL_H, ze - 0.4, lod)
 
 
+THUJA_HABITS = (
+    ((0,.50),(.08,.90),(.35,1),(.72,.91),(.90,.65),(.975,.29),(1,.06)),
+    ((0,.80),(.10,1),(.32,.83),(.56,.58),(.79,.34),(.96,.15),(1,.03)),
+    ((0,.38),(.12,.74),(.40,1),(.66,.91),(.84,.64),(.96,.29),(1,.07)),
+)
+
+
+def foliage_uv(key=0, level=0):
+    """Own atlas leaf palette for BOTH runtime geometry LODs, with a safe gutter."""
+    r = LAY["thuja_far"]
+    u = r["u"][0] + .08 + (key % 3) * .30
+    v = r["v"][0] + .08 + (level % 3) * .20
+    return [(u,v),(u+.48,v),(u+.48,v+.38),(u,v+.38)]
+
+
+def build_thuja(mb, c, height, radius, key, lod):
+    habit = key % 3
+    profile = THUJA_HABITS[habit]
+    if lod:
+        profile = (profile[0],profile[2],profile[3],profile[-1])
+        if habit == 1:
+            profile = (profile[0],profile[1],profile[-1])
+    sides = 8 if lod == 0 else 4
+    lean = np.array([h01(key,"lx")-.5,h01(key,"ly")-.5]) * .3
+    for layer,grow,mat in ((0,0,MAT),(1,.07,HERO_SHELL)):
+        if layer and lod:
+            continue
+        rings = []
+        for j,(f,rr) in enumerate(profile):
+            ring = []
+            for i in range(sides):
+                angle = i*2*math.pi/sides + key + .24*math.sin(j)
+                rad = radius*rr*(.86+.28*h01(key,j,i)) + grow
+                ring.append(c + np.r_[lean*f*f + np.array([math.cos(angle),math.sin(angle)])*rad,
+                                      height*f + (grow if j == len(profile)-1 else 0)])
+            rings.append(ring)
+        for j in range(1 if layer else 0,len(rings)-1):
+            for i in range(sides):
+                ii = (i+1)%sides
+                uv = foliage_uv(key+i,j)
+                if layer:
+                    per = 2*math.pi*radius/sides/.6
+                    u0,u1 = (i*per+key*.37),(i+1)*per+key*.37
+                    v0,v1 = profile[j][0]*height/.6,profile[j+1][0]*height/.6
+                    uv = [(u0,v0),(u1,v0),(u1,v1),(u0,v1)]
+                mb.face([rings[j][i],rings[j][ii],rings[j+1][ii],rings[j+1][i]],uv,mat,
+                        np.append((rings[j][i]+rings[j][ii])[:2]/2-c[:2],.15))
+
+
+def build_conifer(mb, c, height, radius, key, lod):
+    """Root-attached short-needle boughs; Low36cards fits the original whole-plant budget.
+
+    The scan is fir/conifer, NOT a verified Picea. Existing fire_station_alpha is already
+    CullOff: one quad per bough, no mirrored duplicate and no extra Low material/batch.
+    """
+    u0,v0,u1,v1 = ALAY["conifer_bough"]["inner_uv"]
+    for j,base_f in enumerate((.08,.17,.27,.36,.45,.55,.65,.76,.87)):
+        count = 6 if lod == 0 else 4
+        for i in range(count):
+            angle = key*.63+j*1.69+i*2*math.pi/count+.35*(h01(key,j,i,"azimuth")-.5)
+            f = base_f+.04*(h01(key,j,i,"level")-.5)
+            direction = np.array([math.cos(angle),math.sin(angle)])
+            root = c + np.array([0,0,height*f])
+            length = radius*(1-f)**.7*(1.03+.30*h01(key,j,i))
+            tip = c + np.r_[direction*length,height*(f-.04)]
+            roll = .50*(h01(key,j,i,"roll")-.5)
+            side = (UP*math.cos(roll)+np.r_[-direction[1],direction[0],0]*math.sin(roll))*min(length*.65,height*f*.90)
+            mb.face([root-side,root+side,tip+side,tip-side],[(u0,v0),(u1,v0),(u1,v1),(u0,v1)],ALPHA)
+    # Overlapping opaque bough cores connect through the trunk; gaps/silhouette remain in the clipped outer sprays.
+    for f in (.12,.36,.61,.85):
+        cc = c + np.array([0,0,height*f]); rr = radius*.58*(1-f)**.72
+        half_h = min(height*.13,height*f*.95)
+        for j in range(4):
+            a,b = j*math.pi/2,(j+1)*math.pi/2
+            p = cc+np.array([math.cos(a)*rr,math.sin(a)*rr,0])
+            q = cc+np.array([math.cos(b)*rr,math.sin(b)*rr,0])
+            uv = foliage_uv(key,j)
+            mb.face([cc+[0,0,half_h],p,q],uv[:3],MAT)
+            mb.face([cc-[0,0,half_h],q,p],uv[:3],MAT)
+    # A plain dark atlas swatch is a WORKING_VALUE trunk colour, not a claimed bark scan.
+    r = LAY["dark"]; uv = [((r["u"][0]+r["u"][1])/2,(r["v"][0]+r["v"][1])/2)]*3
+    pts = [c+[-.045,-.045,0],c+[.045,-.045,0],c+[0,.045,0],c+[0,0,height]]
+    for face in ((0,2,1),(0,1,3),(0,3,2),(1,2,3)):
+        mb.face([pts[i] for i in face],uv,MAT)
+
+
 def build_site(mb, lod):
     """Fence with posts and concrete footing, parked sliding gate, thuja row, flag poles (all on the spec ground)."""
     if lod >= 2:
@@ -1045,53 +1139,11 @@ def build_site(mb, lod):
             bay(p, q, ALAY["gate_bay"], y_off=-ph + 0.12, foot=False)
         for p in (G["gate"][0], G["gate"][-1]):
             post([p[0], p[1], p[2] - ph + 0.1], fh + 0.15, w=0.05)
-    # thujas: lumpy columns = opaque dark core + alpha leaf shell 7 cm outside (LOD0), as the generated hedges
-    # r6 (review P1 #6): three thuja habits (column / cone / egg) picked per plant + spruces (broad tiered cone)
-    PROFS = [[(0.0, 0.50), (0.07, 0.90), (0.30, 1.0), (0.58, 0.88), (0.80, 0.62), (0.93, 0.32), (1.0, 0.05)],
-             [(0.0, 0.60), (0.06, 1.0), (0.25, 0.92), (0.50, 0.66), (0.75, 0.40), (0.92, 0.18), (1.0, 0.04)],
-             [(0.0, 0.40), (0.10, 0.80), (0.38, 1.0), (0.62, 0.95), (0.82, 0.70), (0.94, 0.38), (1.0, 0.06)]]
-    # r6b: the first spruce (10 sides, radial jitter +-35 %, hard tiers) rendered as a faceted paper cone; now a
-    # smooth 12-sided cone with shallow tiers and +-10 % jitter
-    SPRUCE = [(0.0, 0.30), (0.05, 0.95), (0.14, 1.0), (0.30, 0.80), (0.46, 0.62), (0.62, 0.44), (0.78, 0.27), (0.91, 0.12), (1.0, 0.02)]
-    plants = [(t, False) for t in G["thuja"]] + [(t, True) for t in G.get("spruce", [])]
-    for (e, n, z, hh, r, k), spruce in plants:
-        k = k + (1000 if spruce else 0)
-        if lod == 0:
-            sides, prof = (12, SPRUCE) if spruce else (8, PROFS[int(h01(k, "habit") * 2.999)])
-        elif spruce:
-            sides, prof = 6, [(0.0, 0.5), (0.08, 1.0), (0.55, 0.5), (1.0, 0.03)]
-        else:
-            sides, prof = 5, [(0.0, 0.6), (0.2, 1.0), (0.7, 0.72), (1.0, 0.05)]
-        c = en_to_uvz([e, n, z])
-        lean = np.array([h01(k, "lx") - 0.5, h01(k, "ly") - 0.5]) * 0.3
-        for layer, grow, mat, tile in ((0, 0.0, HEDGE, 1.0), (1, 0.07, SHELL, 0.6)):
-            if layer == 1 and lod > 0:
-                continue
-            rings = []
-            for j, (f, rr) in enumerate(prof):
-                ring = []
-                for i in range(sides):
-                    ang = 2 * math.pi * (i + 0.5 * (j % 2)) / sides + k
-                    rad = r * rr * ((0.90 + 0.20 * h01(k, i, j)) if spruce else (0.80 + 0.40 * h01(k, i, j))) + grow
-                    ring.append(P3(c[:2] + lean * f * f + np.array([math.cos(ang), math.sin(ang)]) * rad,
-                                   c[2] - 0.05 + hh * f + (grow if j == len(prof) - 1 else 0.0) + 0.12 * hh * (h01(k, i, j, "z") - 0.5) * (0 < j < len(prof) - 1) / len(prof)))
-                rings.append(ring)
-            for j in range(1 if layer else 0, len(rings) - 1):
-                for i in range(sides):
-                    a0, a1, b0, b1 = rings[j][i], rings[j][(i + 1) % sides], rings[j + 1][i], rings[j + 1][(i + 1) % sides]
-                    per = 2 * math.pi * r / sides
-                    u_a, u_b = (i * per + k * 0.37) / tile, ((i + 1) * per + k * 0.37) / tile
-                    v_a, v_b = prof[j][0] * hh / tile, prof[j + 1][0] * hh / tile
-                    quv = [(u_a, v_a), (u_b, v_a), (u_b, v_b), (u_a, v_b)]
-                    if lod > 0:                 # r4: no leaf shell on LOD1/2 -> leaf-green atlas swatch instead of the
-                        tf = LAY["thuja_far"]    # near-black core (black cones on the Low tier, r3 frames)
-                        fv = tf["v"][1] - tf["v"][0] - 0.1
-                        ya, yb = min(v_a * 0.25, fv), min(v_b * 0.25, fv)
-                        xa = tf["u"][0] + 0.05 + (i % 2) * 0.8
-                        quv = [(xa, tf["v"][0] + 0.05 + ya), (xa + 0.8, tf["v"][0] + 0.05 + ya),
-                               (xa + 0.8, tf["v"][0] + 0.05 + yb), (xa, tf["v"][0] + 0.05 + yb)]
-                    mb.face([a0, a1, b1, b0], quv, mat if lod == 0 else MAT,
-                            np.append((a0 + a1 + b0 + b1)[:2] / 4 - c[:2] - lean * prof[j][0] ** 2, 0.15))
+    # r7: all plants remain inside this existing hero node/LOD/material batching contract.
+    for e,n,z,height,radius,key in G["thuja"]:
+        build_thuja(mb,en_to_uvz([e,n,z])-[0,0,.05],height,radius,key,lod)
+    for e,n,z,height,radius,key in G.get("spruce",[]):
+        build_conifer(mb,en_to_uvz([e,n,z]),height,radius,key,lod)
     # flag poles with the national flag
     sg, fl = LAY["steel_galv"], LAY["flag"]
     for i, p in enumerate(G["flagpoles"]):
@@ -1145,8 +1197,9 @@ def main():
         "schema": "truck-sim-pl/hero-building-asset/1", "asset": ASSET, "prototype": name,
         "spec": SPEC_PATH.relative_to(REPO).as_posix(), "spec_sha256": sha(SPEC),
         "glb_sha256": hashlib.sha256(glb.read_bytes()).hexdigest(), "blender": bpy.app.version_string,
-        "materials": [MAT, ALPHA, HEDGE, SHELL], "anchor": SPEC["anchor"], "tris": tris,
+        "materials": [MAT, ALPHA, HERO_SHELL], "anchor": SPEC["anchor"], "tris": tris,
         "lod_ends_m": SPEC.get("lod_ends_m"),
+        "conifer_foliage": json.loads((OUT / "conifer_foliage_meta.json").read_text()) if (OUT / "conifer_foliage_meta.json").exists() else {"applied": False},
         "axes": "glTF (x, y, z) = (-dE, dU, dN) relative to the anchor (local E, N, U)",
     }
     (OUT / f"{ASSET}_meta.json").write_text(json.dumps(meta, indent=1, sort_keys=True) + "\n", encoding="utf-8", newline="\n")

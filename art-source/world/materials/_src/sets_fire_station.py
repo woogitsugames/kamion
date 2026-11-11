@@ -29,6 +29,7 @@ import urllib.request
 from pathlib import Path
 
 import numpy as np
+from scipy import ndimage
 from PIL import Image, ImageDraw, ImageFont
 
 HERE = Path(__file__).resolve().parent
@@ -92,6 +93,9 @@ LAYOUT = {
     "roof_blue_linear": [0.024, 0.085, 0.235],        # r6: B -35 % linear (review P1 #3)
     "trim_blue_linear": [0.022, 0.060, 0.22],
     "clinker_linear": [0.47, 0.29, 0.115],
+    # Hero-local intended leaf palette, shared by opaque cores/far foliage and clipped boughs.
+    # Retains the previous far-LOD starting palette; lit Low/High calibration remains WORKING_VALUE.
+    "foliage_linear": [0.040, 0.068, 0.030],
 }
 
 
@@ -502,7 +506,7 @@ def fire_station(nx=2048):
     # hedge_thuja note 'core ~0.4 x leaf'), mottled so the cone is not a flat colour
     Tf = L["thuja_far"]
     in_tf = _gut(X, v, Tf)
-    tcol = np.array([0.040, 0.068, 0.030], np.float32) * (1 + 0.30 * n_mid + 0.15 * n_big + 0.25 * n_fine).clip(0.4, 1.8)[..., None]
+    tcol = np.array(L["foliage_linear"], np.float32) * (1 + 0.30 * n_mid + 0.15 * n_big + 0.25 * n_fine).clip(0.4, 1.8)[..., None]
     alb = np.where(in_tf[..., None], tcol, alb)
     rough = np.where(in_tf, 0.9, rough)
     h = np.where(in_tf, 0.004 * n_mid, h)
@@ -530,7 +534,74 @@ ALPHA_LAYOUT = {
     "swatch_blue": {"u": [0.64, 0.70], "v": [0.55, 0.95]},
     "lettering": {"u": [0.0, 1.0], "v": [0.27, 0.48], "size_m": [7.6, 0.80]},
     "number": {"u": [0.0, 0.24], "v": [0.02, 0.25], "size_m": [1.7, 0.80]},     # r4: digits 0.6 m (photo 7197)
+    # r7: disjoint from ALL baseline LOD alpha UVs (548/98/0 triangles); same existing material slot.
+    "conifer_bough": {"u": [0.30, 0.43], "v": [0.025, 0.24], "gutter_px": 16},
 }
+_cb = ALPHA_LAYOUT["conifer_bough"]
+_aw, _ah = ALPHA_LAYOUT["size_px"]
+_gp = _cb["gutter_px"]
+_cb["inner_uv"] = [(int(_cb["u"][0] * _aw) + _gp) / _aw,
+                   (int(_cb["v"][0] * _ah) + _gp) / _ah,
+                   (int(_cb["u"][1] * _aw) - _gp) / _aw,
+                   (int(_cb["v"][1] * _ah) - _gp) / _ah]
+
+
+def _conifer_sprite(log=print):
+    """Hash-pinned CC0 short-needle conifer (not verified Picea), with a procedural clean-clone fallback."""
+    manifest = json.loads((LANDMARK / "conifer_source.json").read_text(encoding="utf-8"))
+    images = {}
+    try:
+        for source in manifest["files"]:
+            path = REPO / manifest["raw_dir"] / source["file"]
+            if not path.exists():
+                path.parent.mkdir(parents=True, exist_ok=True)
+                request = urllib.request.Request(source["url"], headers={"User-Agent": "kamion-CC0-asset-fetch/1.0"})
+                data = urllib.request.urlopen(request, timeout=90).read()
+                if hashlib.sha256(data).hexdigest() != source["sha256"]:
+                    raise ValueError("conifer source download SHA256 mismatch")
+                path.write_bytes(data)
+            if hashlib.sha256(path.read_bytes()).hexdigest() != source["sha256"]:
+                raise ValueError("conifer source cache SHA256 mismatch")
+            images[source["map"]] = Image.open(path).copy()
+        crop = tuple(manifest["crop_xyxy"])
+        rgb = np.array(images["diff"].convert("RGB").crop(crop))
+        alpha = np.array(images["alpha"].convert("RGB").getchannel("R").crop(crop))
+        labels, count = ndimage.label(alpha > 32)
+        sizes = np.bincount(labels.ravel()); sizes[0] = 0
+        if not count or sizes.max() < 100:
+            raise ValueError("empty conifer twig component")
+        keep = ndimage.binary_dilation(labels == sizes.argmax(), iterations=1)
+        alpha = np.where(keep, alpha, 0).astype(np.uint8)
+        applied = True
+    except (OSError, ValueError, KeyError) as error:
+        log(f"  fire_station: CC0 conifer unavailable ({error}); deterministic short-needle fallback")
+        # Fallback is explicitly procedural, not mislabelled as the scan. No global RNG is consumed.
+        im = Image.new("L", (256, 320)); draw = ImageDraw.Draw(im)
+        draw.line((128, 319, 128, 8), fill=255, width=4)
+        for j in range(8):
+            y = 42 + j * 31
+            for side in (-1, 1):
+                tip = (128 + side * (22 + j * 9), y - 24)
+                draw.line((128, y + 10, *tip), fill=255, width=3)
+                for k in range(1, 7):
+                    t = k / 7; x = 128 + (tip[0] - 128) * t; yy = y + 10 + (tip[1] - y - 10) * t
+                    draw.line((x, yy, x + side * 10, yy - 13), fill=255, width=2)
+        alpha = np.array(im); rgb = np.full((*alpha.shape, 3), 128, np.uint8); applied = False
+    covered = alpha >= 128
+    linear = _lin(rgb.astype(np.float32) / 255)
+    linear *= np.array(LAYOUT["foliage_linear"], np.float32) / np.maximum(linear[covered].mean(0, dtype=np.float64), 1e-6)
+    rgb = np.clip(np.rint(K.srgb_encode(np.clip(linear, 0, 1)) * 255), 0, 255).astype(np.uint8)
+    rgba = np.dstack([rgb, alpha]); yy, xx = np.where(alpha > 32)
+    rgba = rgba[yy.min():yy.max() + 1, xx.min():xx.max() + 1]
+    root_x = float(np.median(np.where(rgba[-3:, :, 3] > 32)[1]))
+    half = int(np.ceil(max(root_x, rgba.shape[1] - root_x)))
+    centred = Image.new("RGBA", (half * 2, rgba.shape[0]))
+    centred.alpha_composite(Image.fromarray(rgba), (round(half - root_x), 0))
+    status = {"id": manifest["id"], "applied": applied, "species_status": manifest["species_status"],
+              "source_sha256": {f["map"]: f["sha256"] for f in manifest["files"]},
+              "intended_mean_rgb_linear_WORKING_VALUE": LAYOUT["foliage_linear"]}
+    (LANDMARK / "conifer_foliage_meta.json").write_text(json.dumps(status, indent=1) + "\n", encoding="utf-8")
+    return centred
 
 
 def alpha_texture(path: Path | None = None):
@@ -600,6 +671,20 @@ def alpha_texture(path: Path | None = None):
         m1 = m4.reshape(y1 - y0, 4, x1 - x0, 4).mean((1, 3))
         a[y0:y1, x0:x1] = m1
         rgb[y0:y1, x0:x1] = red * (1 + 0.10 * n[y0:y1, x0:x1, None])
+    # Append only AFTER every legacy draw/noise operation: no RNG advancement or old pixel changes.
+    r = ALPHA_LAYOUT["conifer_bough"]
+    x0, x1 = int(r["u"][0] * W), int(r["u"][1] * W)
+    y0, y1 = H - int(r["v"][1] * H), H - int(r["v"][0] * H)
+    gap = r["gutter_px"]
+    sprite = _conifer_sprite()
+    sprite.thumbnail((x1 - x0 - gap * 2, y1 - y0 - gap * 2), Image.Resampling.LANCZOS)
+    patch = Image.new("RGBA", (x1 - x0, y1 - y0))
+    patch.alpha_composite(sprite, ((patch.width - sprite.width) // 2, patch.height - gap - sprite.height))
+    pa = np.array(patch); empty = pa[..., 3] == 0
+    nearest = ndimage.distance_transform_edt(empty, return_distances=False, return_indices=True)
+    pa[..., :3][empty] = pa[nearest[0][empty], nearest[1][empty], :3]
+    rgb[y0:y1, x0:x1] = _lin(pa[..., :3].astype(np.float32) / 255)
+    a[y0:y1, x0:x1] = pa[..., 3].astype(np.float32) / 255
     img = np.dstack([K.srgb_encode(np.clip(rgb, 0, 1)), a])
     path = path or (REPO / "art-source" / "world" / "textures" / "fire_station_alpha.png")
     K.save_png(path, img, "RGBA")
@@ -609,6 +694,15 @@ def alpha_texture(path: Path | None = None):
 def write_layout():
     LANDMARK.mkdir(parents=True, exist_ok=True)
     p = LANDMARK / "atlas_layout.json"
+    # Hero-only shell alias: keep the route's procedural texture/palette untouched.
+    # The alias receives an A-correct linear multiplier, retaining the same .97 roughness and alpha settings.
+    worldgen = str(REPO / "tools" / "worldgen")
+    if worldgen not in sys.path:
+        sys.path.insert(0, worldgen)
+    from streetscape.hedge_textures import shell
+    thuja = np.array(shell("thuja"))
+    shell_mean = _lin(thuja[..., :3].astype(np.float32) / 255)[thuja[..., 3] >= 128].mean(0, dtype=np.float64)
+    LAYOUT["thuja_shell_tint_linear"] = (np.array(LAYOUT["foliage_linear"]) / np.maximum(shell_mean, 1e-6)).tolist()
     text = json.dumps({"atlas": LAYOUT, "alpha": {k: v for k, v in ALPHA_LAYOUT.items()}}, indent=1, sort_keys=True) + "\n"
     if not p.exists() or p.read_text(encoding="utf-8") != text:
         p.write_text(text, encoding="utf-8", newline="\n")

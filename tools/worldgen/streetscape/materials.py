@@ -19,6 +19,17 @@ def _set_mean(name, default):
         return default
 
 
+def _hero_thuja_shell_tint():
+    """ADR0070 r7: hero-only alias; all global route hedge colours stay unchanged."""
+    import json
+    from pathlib import Path
+    p = Path(__file__).resolve().parents[3] / "art-source/world/landmarks/fire_station_jrg2/atlas_layout.json"
+    try:
+        return json.loads(p.read_text(encoding="utf-8"))["atlas"]["thuja_shell_tint_linear"]
+    except (OSError, KeyError, ValueError):
+        return [1.76558, 1.55454, 2.45559]  # default shared leaf palette / procedural covered-shell mean
+
+
 M = {
     # paved areas
     "yard_paving": {"color": [0.26, 0.255, 0.245], "rough": 0.85, "surface": "paving_stones", "texture_set": "paving_20x10_grey"},
@@ -346,6 +357,8 @@ M = {
                      "surface": "concrete", "texture_set": "fire_station"},
     "fire_station_alpha": {"color": [1.0, 1.0, 1.0], "rough": 0.6, "texture": "fire_station_alpha",
                            "alpha_cutoff": 0.5},
+    "fire_station_thuja_shell": {"color": _hero_thuja_shell_tint(), "rough": 0.97,
+                                 "texture": "hedge_shell_thuja", "alpha_cutoff": 0.5},
     # landmarks
     "chimney_concrete": {"color": [0.40, 0.40, 0.38], "rough": 0.9},
     "chimney_red": {"color": [0.35, 0.05, 0.04], "rough": 0.85},

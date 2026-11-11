@@ -173,7 +173,8 @@ def test_asset_matches_spec_and_budget():
     t = meta["tris"]
     assert t[0] <= 15000 and t[1] <= 0.5 * t[0] and t[2] <= 400, t
     assert meta["prototype"] == "landmark_fire_station_jrg2"
-    assert set(meta["materials"]) == {"fire_station", "fire_station_alpha", "hedge_thuja", "hedge_shell_thuja"}
+    assert set(meta["materials"]) == {"fire_station", "fire_station_alpha", "fire_station_thuja_shell"}
+    assert t[1] <= 2828, "r7 must retain the original Low geometry budget"
 
 
 def test_world_uses_the_asset():
