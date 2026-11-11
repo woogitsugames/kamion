@@ -45,6 +45,9 @@ namespace Game.Tests.EditMode
             {
                 float actual=TruckDoorCrownProbe.Gradient("float3(length("+GradientAt(p)+"),0,0)",pose);
                 Assert.That(actual,Is.EqualTo(closed).Within(0.00005f));
+                string g=GradientAt(local);
+                float directionError=TruckDoorCrownProbe.Gradient("float3(length(TransformWorldToObjectDir(TransformObjectToWorldDir("+g+",false),false)-"+g+"),0,0)",pose);
+                Assert.That(directionError,Is.LessThan(0.00001f),"Object-local gradient rotates with the actual model matrices");
             }
         }
         static MeshRenderer[] ActualDoors()
