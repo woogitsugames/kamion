@@ -22,3 +22,6 @@ Obejrzano trzy pary Low-clear (281855, 397016, 149248). Zapisano małe maski czy
 
 ## Kontrola przeglądarkowa podglądu
 Wygenerowano lekki raport z istniejących metryk r1 (bez obliczeń obrazów i bez nowego renderu). Obejrzano zrzuty 1280×960 oraz 390×844 w izolowanej przeglądarce. Działa wybór stanu i przełącznik diagnostyki C, wynik D51 i zakres starej recenzji są widoczne; brak nowych metryk v2 jest jawny. Jedyny wpis konsoli: brak favicon, bez błędu skryptu. Przeglądarkę zamknięto. Podgląd nie jest finalnym raportem r2 ani nowym dowodem świata.
+
+## Domknięcie identyfikacji pary
+Drugi przegląd potwierdził zamknięcie trzech blockerów, wskazując dodatkowo potrzebę sprawdzania SHA zdjęcia przy przenoszeniu recenzji oraz obecności wymiaru gradientu. Poprawiono oba przypadki i dodano regresje. Kontrola składni trzech modułów przechodzi. Przygotowano trzy małe nakładki masek do wizualnej kontroli.

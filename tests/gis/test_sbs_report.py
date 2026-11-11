@@ -51,7 +51,7 @@ def fixture_run(tmp_path):
 
 def test_report_exports_offline_frames_and_escapes_embedded_json(tmp_path):
     run=fixture_run(tmp_path);out=tmp_path/'latest'
-    review=tmp_path/'recognition.json';review.write_text(json.dumps({'gate_result':'FAIL','assessments':[{'camera':'sbs-test','result':'PARTIAL','render_sha256':'b'*64}]}))
+    review=tmp_path/'recognition.json';review.write_text(json.dumps({'gate_result':'FAIL','assessments':[{'camera':'sbs-test','result':'PARTIAL','render_sha256':'b'*64,'comparison_sha256':'a'*64}]}))
     data=report.build_report([run],out,review)
     assert (out/'frames/sbs-r2/Low-clear/sbs-test.png').read_bytes()==b'image-fixture'
     assert data['runs'][0]['states']['Low-clear']['excluded']==1
@@ -109,3 +109,16 @@ def test_diagnostic_requires_same_capture_epoch(tmp_path):
     (diag/'metrics.json').write_text(json.dumps(metrics))
     with pytest.raises(ValueError,match='diagnostic provenance differs'):
         report.build_report([run],tmp_path/'out')
+
+
+def test_changed_photo_does_not_inherit_review_of_same_render(tmp_path):
+    run=fixture_run(tmp_path);review=tmp_path/'review.json'
+    review.write_text(json.dumps({'assessments':[{'camera':'sbs-test','render_sha256':'b'*64,'comparison_sha256':'f'*64}]}))
+    data=report.build_report([run],tmp_path/'out',review)
+    assert not data['runs'][0]['states']['Low-clear']['pairs'][0]['review_matches_current_pixels']
+
+
+def test_gradient_resolution_must_be_known():
+    a=pair();b=pair()
+    del a['photo']['gradient_width_px'];del b['photo']['gradient_width_px']
+    assert report.compatibility(a,b)=='MISSING_RESOLUTION'

@@ -29,7 +29,9 @@ def compatibility(before,after):
             values=[row.get(panel,{}).get(key) for row in (before,after)]
             if any(not isinstance(v,list) or len(v)!=2 or any(isinstance(x,bool) or not isinstance(x,int) or x<=0 for x in v) for v in values):return 'MISSING_RESOLUTION'
             if values[0]!=values[1]:return 'RESOLUTION_CHANGED'
-        if any(row.get(panel,{}).get('gradient_width_px')!=before.get(panel,{}).get('gradient_width_px') for row in (before,after)):return 'RESOLUTION_CHANGED'
+        gradients=[row.get(panel,{}).get('gradient_width_px') for row in (before,after)]
+        if any(isinstance(x,bool) or not isinstance(x,int) or x<=0 for x in gradients):return 'MISSING_RESOLUTION'
+        if gradients[0]!=gradients[1]:return 'RESOLUTION_CHANGED'
     if not all(row.get('photometric_use') is True and row.get('photometry',{}).get('status')=='REVIEWED_SAMPLES' for row in (before,after)):return 'UNQUALIFIED_SAMPLES'
     if not all(valid_sha(row.get('mask_signature')) for row in (before,after)):return 'MISSING_MASK_IDENTITY'
     if before['mask_signature']!=after['mask_signature']:return 'MASK_CHANGED'
@@ -143,7 +145,7 @@ def build_report(run_paths,outdir,recognition_file=None):
             for pair in state['pairs']:
                 review=review_by_camera.get(pair['camera'])
                 pair['last_recognition_review']=review
-                pair['review_matches_current_pixels']=bool(review and valid_sha(pair.get('render_sha256')) and review.get('render_sha256')==pair.get('render_sha256'))
+                pair['review_matches_current_pixels']=bool(review and all(valid_sha(pair.get(key)) and valid_sha(review.get(key)) and review[key]==pair[key] for key in ('render_sha256','comparison_sha256')))
     trends=[]
     for first,last in zip(runs,runs[1:]):
         for state in STATES:
