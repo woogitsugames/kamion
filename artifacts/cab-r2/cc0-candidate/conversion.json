@@ -1,0 +1,61 @@
+{
+  "status": "candidate; inspect before integration",
+  "source_metres": 0.4,
+  "requested_tile_metres": 0.12,
+  "actual_crop_metres": 0.11992187500000001,
+  "crop_pixels": 614,
+  "source_pixels": [
+    2048,
+    2048
+  ],
+  "crop_box": [
+    717,
+    717,
+    1331,
+    1331
+  ],
+  "edge_crossfade_fraction": 0.06,
+  "scan_roughness_median": 0.6627451181411743,
+  "mapping_limits": "12 cm upholstery crop. Authored wheel UV uses 5 cm; requires the flagged Unity rim UV correction, verified separately in builder logs. Source-only previews retain the authored wheel scale. No claim of a scanned dashboard plastic.",
+  "required_unity_rim_uv_scale": 0.4166666666666667,
+  "perforation_alpha_source": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-cab\\art-source\\truck\\interior\\export\\textures\\High\\T_Cab_Leather_Detail.png",
+  "perforation_alpha_source_sha256": "da7bfa9abb5d5aa4df9e1292b292154f6f27c1033d3821ed686c475ec881d8b3",
+  "sources": {
+    "diffuse": {
+      "file": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-cab\\art-source\\truck\\interior\\cc0\\_raw\\brown_leather\\brown_leather_albedo_2k.jpg",
+      "sha256": "b0de2403a31efa31e501b0028c0bd8e504d5bd6318f4a5ce90c550c3067f96d8"
+    },
+    "normal": {
+      "file": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-cab\\art-source\\truck\\interior\\cc0\\_raw\\brown_leather\\brown_leather_nor_gl_2k.png",
+      "sha256": "a9a3f2bf3d04c0ffefc97fbe6aa7b9ed56992359a9a97e37571faa6a15aeefd3"
+    },
+    "roughness": {
+      "file": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-cab\\art-source\\truck\\interior\\cc0\\_raw\\brown_leather\\brown_leather_rough_2k.jpg",
+      "sha256": "8a47afca2630310849034fe40ca9497db0956c67c0d933e6efd49d3cd2befe83"
+    },
+    "ao": {
+      "file": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-cab\\art-source\\truck\\interior\\cc0\\_raw\\brown_leather\\brown_leather_ao_2k.jpg",
+      "sha256": "0f1f8753775779d4e25512f4d08aec1e7dbb73b1d0dc98df66af2071fe8bfa77"
+    }
+  },
+  "outputs": [
+    {
+      "tier": "High",
+      "pixels": 1024,
+      "detail": "artifacts\\cab-r2\\cc0-candidate\\High\\T_Cab_Leather_Detail.png",
+      "normal": "artifacts\\cab-r2\\cc0-candidate\\High\\T_Cab_Leather_Normal.png"
+    },
+    {
+      "tier": "Medium",
+      "pixels": 512,
+      "detail": "artifacts\\cab-r2\\cc0-candidate\\Medium\\T_Cab_Leather_Detail.png",
+      "normal": "artifacts\\cab-r2\\cc0-candidate\\Medium\\T_Cab_Leather_Normal.png"
+    },
+    {
+      "tier": "Low",
+      "pixels": 256,
+      "detail": "artifacts\\cab-r2\\cc0-candidate\\Low\\T_Cab_Leather_Detail.png",
+      "normal": "artifacts\\cab-r2\\cc0-candidate\\Low\\T_Cab_Leather_Normal.png"
+    }
+  ]
+}
