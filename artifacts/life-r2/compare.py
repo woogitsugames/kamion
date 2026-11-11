@@ -35,7 +35,7 @@ for condition in ('Low-clear','Low-overcast','High-clear','High-overcast'):
     out.mkdir(parents=True,exist_ok=True)
     for row in rows:
         camera=row['camera']
-        if not camera.startswith(('r10b_','g_dirt_','g_current_','g_r4_','r10_wheel','r10_front','r10_rear')):
+        if not camera.startswith(('yard_','r10b_','g_dirt_','g_current_','g_r4_','r10_wheel','r10_front','r10_rear')):
             continue
         canvas=Image.new('RGB',(960,250),'#252525')
         draw=ImageDraw.Draw(canvas)
@@ -51,7 +51,7 @@ for condition in ('Low-clear','Low-overcast','High-clear','High-overcast'):
     pairs=sorted(out.glob('*.jpg'))
     for start in range(0,len(pairs),3):
         page=Image.new('RGB',(960,780),'#252525')
-        ImageDraw.Draw(page).text((5,5),f'{condition} | Main 5f2aa277 before / R4 after',fill='white')
+        ImageDraw.Draw(page).text((5,5),f'{condition} | life r2 baseline / candidate',fill='white')
         for index,pair in enumerate(pairs[start:start+3]):
             with Image.open(pair) as frame:page.paste(frame,(0,30+index*250))
         page.save(out/f'page-{start//3:02d}.png')

@@ -37,6 +37,9 @@ def main():
         'art-source/world/props/street_props.glb',
         'art-source/world/props/props_meta.json',
         'tools/worldgen/streetscape/life_cars.py',
+        'tools/worldgen/streetscape/life_props.py',
+        'tools/worldgen/streetscape/life.py',
+        'tools/worldgen/streetscape/depot_yard.py',
         'tools/worldgen/streetscape/materials.py',
         'game/Assets/_Project/Environment/Shaders/WorldPBR.shader')}
     mode_path=Path(__file__).with_name('SOURCE-MODE.json')
