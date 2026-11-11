@@ -33,3 +33,7 @@ scripts = narzędzia r2 + zones_plan.py; logs). „Przed” = main b12 z ADR 009
   `src`, trójkąt przecinany na obrysie części przenoszony w całości; testy `test_aprons.py` 2/2). PHONE_RUN aktywny — Unity czeka.
   W toku: swept b3, `pytest tests/physics tests/gate3`.
   NASTĘPNY KROK: `bash artifacts/junctions-r3/scripts/fast.sh b4`, potem (bez PHONE_RUN) `pwsh scripts/import-region.ps1 -Region bialystok-industrial-c`
+- b3/b4: swept b3 G3-A wide −0,10 / lane −1,12, G3-B −0,14 / −0,14, RING-B +1,61 (= r2 b12, bez pogorszenia). b4 fast: build OK,
+  testy kluczowe 51/51, plany `plan_b4/` (s610 gęste P-21, zatoka: kostka na obu „uszach”). W toku: test_world_roads + physics/gate3
+  na b4 (`logs/b4_*.log`). Unity czeka na zdjęcie PHONE_RUN (lider s10 gate3 A16).
+  NASTĘPNY KROK: (bez PHONE_RUN) `pwsh scripts/import-region.ps1 -Region bialystok-industrial-c` → `pwsh scripts/visual-qa.ps1 -Scene WorldC -Tier High -Lighting overcast -Gate3 Data/Regions/bialystok-industrial-c/junctions_cameras.json -OutputDir artifacts/junctions-r3/renders_b4`
