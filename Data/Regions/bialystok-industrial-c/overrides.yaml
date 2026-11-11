@@ -1140,6 +1140,20 @@ overrides:
   # ---------------------------------------------------------------- ADR 0100 (REVIEW s10-0095 P0-2): Putry N and MA-010
   # Lines join the ends of the generated lines at the patch borders (artifacts/junctions-r3/scripts/mk_near.py on the
   # plan cache) along the topology of the 0.08 m orthophoto (artifacts/junctions-r3/plan1/putry_n.jpg, trace/putry_n.jpg).
+  - id: putry-n-median-nose
+    kind: traffic_island
+    surface: apron_sett
+    polygon_en: [[-555.55, 130.3], [-555.5, 129.4], [-555.0, 128.75], [-554.2, 128.35], [-553.0, 128.2], [-551.8, 128.35],
+                 [-551.0, 128.75], [-550.55, 129.4], [-550.5, 130.3]]
+    reason: >-
+      ADR 0110 (REVIEW s10-0100 P1-1a): the north median of the Putry N arm ended square at the crossover plate (open
+      kerb end and a blunt face at N 129.6-130, the first thing the driver sees in eye_putry_n). The 0.08 m orthophoto
+      (artifacts/junctions-r4/trace/putry_n_nose.jpg) has a rounded nose with a paved collar about 1.5 m wide. Here a
+      kerbed sett nose closes the square end on the plate. The real nose tip sits at N 131.7 (the generated median
+      reaches 1.7 m further south than the real one - geometry of the plate not rebuilt), so the nose protrudes only
+      1.8 m to keep the crossover open.
+    confidence: medium
+    verify: owner drive
   - id: putry-n-sb-lane-1
     kind: painted_line
     line: P-1

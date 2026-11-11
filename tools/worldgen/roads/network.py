@@ -1019,8 +1019,16 @@ def assign_sides(net: Network, footways: list, built_up: bool = True, walkways: 
                 w[flush] = np.clip(gap[flush], 0.0, FLUSH_FILL_MAX_M)
                 c.meta.setdefault("tight_m", {})[side] = round(float(tight.sum() * DENSE), 1)
                 c.meta.setdefault("flush_m", {})[side] = round(float(flush.sum() * DENSE), 1)
+            # ADR 0110 (REVIEW s10-0100 P1-1): grass behind a kerb that has no sidewalk, at the kerb crown. The kerb
+            # used to end in its 0.5 m buried flange and the 1 m terrain grid lay 0.03-0.4 m lower behind it: from the
+            # other carriageway the flange read as a concrete wall and every median as a trough. Width: VERGE_W, in a
+            # median up to MEDIAN_VERGE_MAX, never past the middle of the gap to a parallel carriageway.
+            gapm = _side_gap(c, sgn, idx, all_tree, all_chains, trims)
+            verge = np.where(med_d, S.MEDIAN_VERGE_MAX, S.VERGE_W)
+            verge = np.minimum(verge, np.maximum((gapm - 2 * S.KERB_TOP_W) / 2, 0.0))
+            verge[(kind != URBAN) | (w > 0.05) | (mat != 0) | (h < 0.05) | c.bridge] = 0.0
             c.side[side] = {"kind": kind, "walk": walk_d, "median": med_d, "raw": {"h": h, "w": w, "depth": depth},
-                            "mat": mat}
+                            "mat": mat, "verge": verge}
         structure_sides(c, c.bridge)
 
 
@@ -1070,6 +1078,40 @@ def _tight_side(c, sgn, idx, kind, h, w, depth, mat, tree, chains, trims=False):
     return (np.interp(np.arange(n), idx, hs.astype(float)) > 0.0,
             np.interp(np.arange(n), idx, ts.astype(float)) > 0.0,
             np.interp(np.arange(n), np.asarray(idx)[hit], gapv[hit]) if hit.any() else np.zeros(n))
+
+
+def _side_gap(c, sgn, idx, tree, chains, trims=False, reach=2 * 3.0 + 1.0):
+    """Clear distance [m] per dense station from this edge (gutter) to the gutter of the nearest roughly parallel
+    carriageway lying on this side within `reach` (inf where there is none); checked at `idx`, the minimum of the
+    neighbouring checks is held in between (ADR 0110, as _tight_side without the profile-extent test)."""
+    n = len(c.line.s)
+    gapv = np.full(len(idx), np.inf)
+    nodes = {c.node_a: 0.0, c.node_b: c.length}
+    skip = {c.node_a: (c.t_a + 1.0) if trims else S.ADJ_NODE_SKIP_M, c.node_b: (c.t_b + 1.0) if trims else S.ADJ_NODE_SKIP_M}
+    for j, i in enumerate(idx):
+        p, nrm, t = c.line.p[i], c.line.n[i] * sgn, c.line.t[i]
+        e = p + nrm * c.hw[i]
+        for k in tree.query(Point(*(e + nrm * reach * 0.5)).buffer(reach * 0.5 + 6.0)):
+            oc = chains[int(k)]
+            if oc is c or oc.meta.get("absorbed"):
+                continue
+            if any(abs(c.line.s[i] - nodes[nd]) < skip[nd] for nd in {oc.node_a, oc.node_b} & set(nodes)):
+                continue
+            s_o, lat_o = oc.line.project(e)
+            if s_o <= 0.0 or s_o >= oc.length:
+                continue
+            io = oc.idx(s_o)
+            if abs(float(np.dot(oc.line.t[io], t))) < 0.7:
+                continue
+            if float(np.dot(oc.line.point(s_o) - p, nrm)) <= 0.0:       # other road on the far side
+                continue
+            gapv[j] = min(gapv[j], max(float(abs(lat_o) - oc.hw_at(s_o)), 0.0))
+    g = np.array([gapv[max(0, j - 1):j + 2].min() for j in range(len(idx))])
+    out = np.full(n, np.inf)
+    ia = np.asarray(idx)
+    for a, b, ga, gb in zip(ia[:-1], ia[1:], g[:-1], g[1:]):
+        out[a:b + 1] = np.minimum(out[a:b + 1], min(ga, gb))
+    return out
 
 
 def structure_sides(c: Chain, mask: np.ndarray):

@@ -273,7 +273,9 @@ def build_cell(mb, deck, di, c0, c1, lod, colmb):
                 if k == 0 and lod == 0:
                     hint = (0, 0, 1)
                 mb.quad([p0, q0, q1, p1], uv, CONC, hint)
-            # ---- railing on the cap edge
+            # ---- railing on the cap edge (ADR 0110: rail_h_m 0 = none, the world generator builds the barrier-railing)
+            if PRM["rail_h_m"] < 0.05:
+                continue
             xr = sgn * (a.hb - PRM["rail_inset_m"])
             H = PRM["rail_h_m"]
             bay = (PRM["rail_post_m"], PRM["rail_post_m"], 8.0)[lod]

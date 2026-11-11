@@ -61,7 +61,9 @@ DEFAULTS = {
     "col_chamfer_m": 0.12,
     "bearing_gap_m": 0.22,       # plinth + elastomeric bearing between column head and girder
     "abutment_t_m": 1.00,
-    "rail_h_m": S.BRIDGE_PARAPET_H,
+    # ADR 0110: 0 = no picket railing in the asset. The decks carry the generated steel barrier-railing
+    # (streetscape.furniture.guardrails, horizontal rails as on Mapillary 454716650857984 / 500263111404933).
+    "rail_h_m": 0.0,
     "rail_inset_m": 0.15,
     "rail_post_m": 2.0,
     "pipe_d_m": 0.20,            # deck drainage collector under the low cantilever
@@ -604,7 +606,11 @@ def apply(w, heroes, instances: list, log=lambda *a: None) -> dict:
             for p in w.buf.parts:
                 if p.src.startswith(c.id + ":") and p.src.rsplit(":", 1)[-1] in removed:
                     removed[p.src.rsplit(":", 1)[-1]] += len(p.T)
-            w.buf.parts = [p for p in w.buf.parts if not (p.src == c.id or p.src.startswith(c.id + ":"))]
+            # ADR 0110: the barriers of the chain (streetscape.furniture.guardrails, src "<chain>:<side>:<rule>") stay:
+            # they were dropped with the ribbons, so the hero decks had no road barrier at all (gate-3 sbs #4a)
+            rails = ("bridge", "median", "embankment", "structure")
+            w.buf.parts = [p for p in w.buf.parts if not (p.src == c.id or p.src.startswith(c.id + ":"))
+                           or (p.layer in ("furniture", "collision") and p.src.rsplit(":", 1)[-1] in rails)]
             c.meta["hero"] = o["id"]
             br = c.bridge
             for side in ("L", "R"):
