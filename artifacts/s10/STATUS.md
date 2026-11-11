@@ -14,10 +14,10 @@ and this coordination worktree start at 4f7da66c.
 | A 0086 tint gamma | fab_processor | gpt-tint-gamma | artifacts/tint-gamma-r1/STATUS.md | contract PASS; calibration FAIL, leader ADR0101; docs1317afba |
 | B 0088 vegetation | tree_surfaces | gpt-vegetation-r2 | artifacts/vegetation-r2/STATUS.md | GIS364/2xfail; root owns EditMode retry after test assertion fix |
 | C 0098 light/post | world_integration | gpt-light-r12 | artifacts/light-r12/STATUS.md | COMPLETE clean5db77e9d; visual PASS; EditMode221/221 |
-| D 0099 surface wear | world_integration | gpt-surface-wear | artifacts/surface-wear-r1/STATUS.md | baseline CPU prep only while G is parked; no production edits |
-| E 0090 fire station r7 | tree_surfaces | gpt-firestation-r7 | artifacts/firestation-r10/STATUS.md | CPU preparation from main901c427f; Unity held |
+| D 0099 surface wear | world_integration | gpt-surface-wear | artifacts/surface-wear-r1/STATUS.md | CPU baseline READY d00807ed; no production edits |
+| E 0090 fire station r7 | tree_surfaces | gpt-firestation-r7 | artifacts/firestation-r10/STATUS.md | CPU baseline READY; artifact-only shape/color audit; Unity held |
 | F 0087 truck paint | fab_processor | gpt-truck-paint | artifacts/truck-paint-r1/STATUS.md | running merged db1432c5: locked102frames, GPUlight Infinityproof |
-| G 0089 car paint | world_integration | gpt-car-paint | artifacts/car-paint-r1/STATUS.md | parked clean e6d4b436 behind phone/Unity hold |
+| G 0089 car paint | world_integration | gpt-car-paint | artifacts/car-paint-r1/STATUS.md | parked clean0f5f7b1c; baseline import first after hold |
 
 A owns importer tint/calibration; B vegetation geometry, leaf ambient and grass;
 C lighting/post/atmosphere/shadow policy. Shared shader edits must be additive
@@ -183,3 +183,24 @@ vertices,100percentnewroad.171vertices omitUV1 and importdefaults0; scopedmask
 contract issue, not broadmissingwear allegation. PREFLIGHT-D-0099.md records
 limits; helper changes nothing outside coord artifacts.
 NEXT COMMAND: monitor actual leader gate3 A/B completion and PHONE_RUN; after stableend retryB EditMode, explicitlyrelease F/G/E Unity, then continue G before D implementation.
+
+## Step14 - all independent CPU baselines ready; E source causes isolated
+F cleanba61eec7, immutable102before and source/geometry proofs durable onmain;
+await candidate102, actualGPUlamp tests and finalreport. G parked0f5f7b1c,
+192hash/Fab15/PBRdone,11cartests pass, no production edits. D CPU-only ready
+d00807ed,192hash/Fab15/PBR560s,3Fabguards pass,128GLB UVproof; no visuals,
+implementation or GPU claims. E ready4fe03533+artifactaudit6b8caaa5;192hash
+and canonicalheroproof, no production edits.
+Existing Commons asphalt source e26237d8 was pinned/verified; all4 rebuiltmaps
+byteidentical main/F/G/E/D, no lockedbaseline material change.
+E source audit found Lowthuja_far luminance.064226 versusHighcore.024306
+(2.642x), shell.036983 and87.48percentcoverage. This is sourcealbedo diagnosis,
+not renderedlighting proof. Hero-local sharedpalette will be chosen afterbaseline;
+B/globalhedge values remainfrozen. Sourceprojection+4u on2spruces clearsright
+archHEAD100percent; left~97-99percent. Wholeopening fractions keptseparate.
+Sparse/floating spruce candidates rejected; currentartifactvolumes stillrequire
+actualLow/Highmaterials. No productionpromotion or visualPASS.
+Phone workflow nowsegmentB; allourUnity stopped and bothguards honored. F/G
+workers maypark withoutpolling; rootwill explicitlyresume afterrealphoneend,
+nottransientlockgaps. Root ownsB test-onlyfixf37499de andpendingfullretry.
+NEXT COMMAND: `Get-Content C:/Users/matma/Documents/Claude/kamion/artifacts/integration-s10/gate3.log -Tail 8`; require G3B completion plusstablePHONE_RUN absence, then B EditMode and F/G/E release; G firstbeforeD implementation.
