@@ -392,11 +392,18 @@
   },
   "bollard": {
    "materials": [
-    "paint_white_reflective",
-    "steel_painted"
+    "furniture_bollard",
+    "paint_white_reflective"
    ],
    "tris_lod0": 50,
    "tris_lod1": 50
+  },
+  "bollard_hoop": {
+   "materials": [
+    "furniture_bollard"
+   ],
+   "tris_lod0": 128,
+   "tris_lod1": 40
   },
   "bus_shelter": {
    "materials": [
@@ -1140,82 +1147,82 @@
   },
   "lamp_10m": {
    "materials": [
-    "concrete_base",
+    "furniture_footing",
+    "furniture_galv",
     "lamp_glass",
-    "luminaire_housing",
-    "steel_galv"
+    "luminaire_housing"
    ],
    "tris_lod0": 80,
    "tris_lod1": 53
   },
   "lamp_12m": {
    "materials": [
-    "concrete_base",
+    "furniture_footing",
+    "furniture_galv",
     "lamp_glass",
-    "luminaire_housing",
-    "steel_galv"
+    "luminaire_housing"
    ],
    "tris_lod0": 80,
    "tris_lod1": 53
   },
   "lamp_8m": {
    "materials": [
-    "concrete_base",
+    "furniture_footing",
+    "furniture_galv",
     "lamp_glass",
-    "luminaire_housing",
-    "steel_galv"
+    "luminaire_housing"
    ],
    "tris_lod0": 80,
    "tris_lod1": 53
   },
   "lamp_9m": {
    "materials": [
-    "concrete_base",
+    "furniture_footing",
+    "furniture_galv",
     "lamp_glass",
-    "luminaire_housing",
-    "steel_galv"
+    "luminaire_housing"
    ],
    "tris_lod0": 80,
    "tris_lod1": 53
   },
   "lamp_arc_9m": {
    "materials": [
-    "concrete_base",
+    "furniture_footing",
+    "furniture_galv",
     "lamp_glass_sodium",
-    "luminaire_old",
-    "steel_galv"
+    "luminaire_old"
    ],
    "tris_lod0": 208,
    "tris_lod1": 88
   },
   "lamp_arc_9m_double": {
    "materials": [
-    "concrete_base",
+    "furniture_footing",
+    "furniture_galv",
     "lamp_glass_sodium",
-    "luminaire_old",
-    "steel_galv"
+    "luminaire_old"
    ],
    "tris_lod0": 302,
    "tris_lod1": 134
   },
   "lamp_old_concrete_9m": {
    "materials": [
-    "concrete_pole",
+    "furniture_concrete",
+    "furniture_grey",
     "lamp_glass_sodium",
-    "luminaire_old",
-    "steel_painted_grey"
+    "luminaire_old"
    ],
-   "tris_lod0": 154,
-   "tris_lod1": 105
+   "tris_lod0": 174,
+   "tris_lod1": 91
   },
   "lamp_old_steel_8m": {
    "materials": [
-    "concrete_base",
+    "furniture_footing",
+    "furniture_grey",
     "lamp_glass_sodium",
-    "luminaire_old",
-    "steel_painted_grey"
+    "luminaire_old"
    ],
-   "tris_lod0": 71,
+   "tris_lod0": 83,
    "tris_lod1": 53
   },
   "landmark_chimney_120_75": {

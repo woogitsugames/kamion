@@ -28,3 +28,6 @@ NASTĘPNY KROK: po build-after: python artifacts/furniture-r1/products.py save a
 
 Build po zmianach 307.2 s, bez wzrostu błędów spójności dróg (65, identyczne kategorie jak baza). QA stopni 147→135, maksimum 1.087→0.517 m (najgorszy teraz sign_post). 100 lokalnych korekt podpór lamp; najgorsza pozostała rozbieżność w korektach 0.167 m. To relief podparcia, nie pomiar liczby wiszących obiektów. Produkty after zachowane poza gitem.
 NASTĘPNY KROK: uv run --project tools/worldgen python -m pytest tests/gis -q
+
+Audyt produktów: 388/388 chronionych prymitywów road_/bridge_/barrier_/marking identycznych bajtowo (POSITION/NORMAL/UV/COLOR/index), protected-geometry.json. Estymator 23 kamer: Low tris -0.3421%…-0.0047%, liczba materiałów bez zmian; to nie draws z Unity. GIS po zmianach trwa; nie uruchamiać drugiej kopii.
+NASTĘPNY KROK: Get-Content artifacts/furniture-r1/pytest-after.log -Tail 10; po pytest-after.done uruchomić pwsh artifacts/furniture-r1/run-validation.ps1
