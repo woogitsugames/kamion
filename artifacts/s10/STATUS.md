@@ -979,3 +979,12 @@ only expected shader/localkeyword/version differ. Native parity report covers
 plate submeshes and stride24->24 (zero extra vertex bytes for P2). This is read
 of author's native proof, not ROOT re-decoding. GPU/focus remains next gate.
 NEXT COMMAND: Get-Content C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-car-paint/artifacts/car-paint-r1/STATUS.md -Tail 8
+
+Step 90: First plate GPU probe invalidated: temporary material was created
+before shader import/scene unload and destroyed, causing MissingReference and
+zero UV output. Log retained as invalid-lifetime; no shipping hash/atlas
+retuning. ROOT identified the creation-before-Build evaluation ordering; G
+moved import before transient creation and pins live assets. Corrected probe
+is running. No GPU acceptance from failed output. C13 preflight wording was
+also corrected04068bbe to internal ROOT review rather than new user approval.
+NEXT COMMAND: Get-Content C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-car-paint/artifacts/car-paint-r1/r4-plate-gpu.log -Tail 8
