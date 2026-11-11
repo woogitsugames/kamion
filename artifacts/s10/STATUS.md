@@ -896,3 +896,10 @@ atlas and UV1 local corners, no additional stride/draws/textures. Four-car
 focus and ROOT review must precede full 368 AFTER and final tests. D remains
 closed; C13 waits for G. No main merge or push.
 NEXT COMMAND: Get-Content C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-car-paint/artifacts/car-paint-r1/STATUS.md -Tail 12
+
+Step 80: ROOT independently read all 20 valid rear-v2 control-state packets.
+OFF has forceLevel -1 and opacityOff true; levels 0..3 have the corresponding
+forceLevel and opacityOff false in every condition. Natural target level is 3;
+all source SHA packets agree. Controller records complement, not replace,
+the author's actual GPU target and pose proofs. Saved independent JSON.
+NEXT COMMAND: Get-Content C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-car-paint/artifacts/car-paint-r1/STATUS.md -Tail 12
