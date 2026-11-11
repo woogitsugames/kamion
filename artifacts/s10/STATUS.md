@@ -389,3 +389,26 @@ Rootviewedexternal0101r2hall/bridgepairs; actualXML223/226 fails missingDoorGlas
 fixture onalltiers, not provenpreexisting. REVIEW-A recordsscopedavailablecalibfix
 andmandatorycanonicalretry/integration, notoriginalAcalibapproval.
 NEXT COMMAND: monitor perf-low-r1/diag4.log finalbatchEND; promptnewrelease for Ffinalcanonical102/EditMode, GfocusedR2, EmeaningfulMip/nextfoliageprobe. Dawaitsfirstworkerclosure, pristineinactivepatch preserved.
+## Step29 - final F238/102 validated; GfullR3; Epartialmorphology; newfeedbackqueue
+ReadfinalF XML238/238 passed0failed0skip. Rootviewed12finalsheets(all102frames),
+no newscopedcab/glass/lamps/chase/rearregression. FinalownerHighOVdoor2.77 (focus2.73
+stochasticdifference), Low3.32; clearroof2.59 stillfails. Coat-onlyOFF control means
++1.28Low/+1.66High; profileON3.32/2.77 vsOFF2.21/1.52, notsameasfullnormaldelta.
+All102statsidentical,0mesh/161posechanges,192rawvalid. Ffinaldocs/cleancopy then
+sameworkerownsDfull; DpristinebaselineFIRST,92bcinactiveUV+broadwearpatch preserved.
+GfullR3324complete, common236route budgetnonincrease(-23..0drawLow,-42..0High);
+door39.840High/35.226Low, bonnet78.697/71.638unchangedR1. R2camoblocks/door46.618
+Highrejected; R3softthreshold/height/grit acceptedfocused4conditions. FullEditMode
+blockedbeforelaunchbynewPHONEdiag5created13:51:24; no queuedUnity.
+Ebundle4actualdone13:50:45, rootviewedbothnativeold-detailboards: no visibleletter/
+998/windowframe/flag/fenceregression; actualASTC1024x512/11mip0-3exact,coarsecutoff
+deltasexplicit. Retainbundle2boundedimprovement, remainingnarrowphoto-envelope
+limitation; stopcanopytuning/proceedseparatefasadecandidate, notfullvisualPASS.
+RootrenewedownedHOLDdiag5, prior13:44release invalid; E/G/F noneUnityactive.
+Newleader GPT-FEEDBACK-S10.md inspected: afterCURRENT F/G/E/D then0108Cr13(P0
+RCASrestore), then0109Br3. ExternalreviewB/C mergePASS/conditional butQUALITYFAIL;
+rootwithdrawsRCASsoftnessacceptance. Docs-onlyB63fa644f/C77b718c4 updateownREPORT/
+REVIEW/ADR/status, copiedartifacts; runtime/testevidenceunchanged. No mainmerge.
+Acalib0101 externallymerged4c63f4c4 andcriticclosesP0hall/screens; hallmaterial
+ribbing outsideTintstillFAIL, canonicalfixture3testretry requiredatleaderintegration.
+NEXT COMMAND: reviewG28finalcontacts/fixture+budget andEfasadeproof; monitor perf-low-r1/diag5.log actualEND, promptnewrelease GfullEditMode/GPU, Dpristinebaseline, Eactualfasadeprobe. Onlyafterallcurrent finishqueue0108then0109.
