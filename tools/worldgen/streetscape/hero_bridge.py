@@ -342,6 +342,7 @@ def plan(w, region_id, overrides, zground, blocked, log=lambda *a: None) -> list
                 # Ground samples are authored into the spec, so stairs cannot float
                 # above an imagined planar embankment. Never write to raw junctions.
                 spec["stairs"] = []
+                spec["self_seeded_grass"] = []
                 dk = spec["decks"][0]
                 for k, end in enumerate(dk["s_open"]):
                     st = min(dk["stations"], key=lambda st: abs(st["s"] - end))
@@ -362,6 +363,10 @@ def plan(w, region_id, overrides, zground, blocked, log=lambda *a: None) -> list
                             break
                         steps.append([_r(xy[0]), _r(xy[1]), _r(z)])
                     spec["stairs"].append(steps)
+                    for side, distance in ((-1, .8), (1, 1.7), (-1, 2.6)):
+                        xy = mid[:2] + n * side * (hw + 1.2) + back * distance
+                        if not blocked(xy):
+                            spec["self_seeded_grass"].append([_r(xy[0]), _r(xy[1]), _r(zground(*xy))])
                 out.append({"underdeck": True, "spec": spec, "chains": [c], "override": cfg})
         sp = spec_path(region_id, cfg["asset"])
         sp.parent.mkdir(parents=True, exist_ok=True)
@@ -422,7 +427,7 @@ def _pipe(buf, a, b, radius, src):
         _quad(buf, [a + ring[i], a + ring[j], b + ring[j], b + ring[i]], "bridge_soffit", src, ring[i] + ring[j])
 
 
-def _apply_underdeck(w, hero):
+def _apply_underdeck(w, hero, instances=None):
     """DK8 Putry: chunk-batched structure only. No instance/material/draw group is added.
 
     Girder bottom stays at the old 1.20 m deck envelope. Reuse the two original
@@ -557,12 +562,21 @@ def _apply_underdeck(w, hero):
                 M.box(buf, "bridge", "bridge_concrete", [x, y], t, prm["stairs_tread_m"] / 2,
                       prm["stairs_width_m"] / 2, z - .25, z + .10, src + ":stairs")
     after = sum(len(p.T) for p in buf.parts if p.layer == "bridge")
+    vegetation = 0
+    # Reuse a Fab prototype already present in this region, never generate a
+    # procedural shrub or introduce a new mesh/material family for this task.
+    if instances is not None and any(it["p"] == "fab_grass_clumps" for it in instances):
+        for j, (e, n, z) in enumerate(spec.get("self_seeded_grass", [])):
+            instances.append({"p": "fab_grass_clumps", "e": e, "n": n, "z": z,
+                              "yaw": _r((j * 2.399963 + .73) % (2 * math.pi), 4),
+                              "src": src + ":Megascans:WORKING_VALUE"})
+            vegetation += 1
     w.stats["hero_bridges"].setdefault("underdeck", []).append({
         "id": hero["override"]["id"], "chain": c.id, "spec_sha256": _sha(spec),
         "removed_soffit_tris": removed, "added_net_tris": after - before,
         "pier_lines": len(dk["piers"]), "structure": "WORKING_VALUE",
         "deck_before_sha256": original_deck, "deck_after_sha256": deck_hash(),
-        "deck_barriers_unchanged": original_deck == deck_hash(), "new_materials": [], "vegetation_added": 0})
+        "deck_barriers_unchanged": original_deck == deck_hash(), "new_materials": [], "vegetation_added": vegetation})
 
 
 def apply(w, heroes, instances: list, log=lambda *a: None) -> dict:
@@ -571,7 +585,7 @@ def apply(w, heroes, instances: list, log=lambda *a: None) -> dict:
     tris = {}
     for h in heroes:
         if h.get("underdeck"):
-            _apply_underdeck(w, h)
+            _apply_underdeck(w, h, instances)
             continue
         o, spec, meta = h["override"], h["spec"], h["meta"]
         prm = spec["params"]

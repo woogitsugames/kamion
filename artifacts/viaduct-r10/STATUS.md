@@ -16,3 +16,7 @@
 - Bazowy GIS: 369 PASS / 1 XFAIL / 1 FAIL (test_export_is_deterministic). Test porównał manifest sprzed zmian z generacją nowej konstrukcji — konieczny ponowny pełny przebieg na ustabilizowanym stanie.
 - QA r1 ujawniło 3 nowe klasyfikacje bridge_kerb: kolektor był traktowany jak nawierzchnia w oknie wysokości ±0.8 m. Rury przypisane do istniejącego bridge_soffit (konstrukcja poniżej jezdni), bez zmiany indeksu QA i bez nowych materiałów.
 - NASTĘPNY KROK: uv run --project tools/worldgen python -u tools/worldgen/roads/build_world.py --region bialystok-industrial-c
+- Dodano samosiejną trawę wyłącznie przez istniejący prototyp Fab grass-clumps, bez zmiany 0088; testy lokalne 5/5 PASS. Pozycje próbkowane z terenu i sprawdzane względem maski dróg.
+- Audyt referencji: obejrzano ortofoto/plan Putry; 33 pliki GML LoD2 nie zawierają namespace Bridge, więc nie są źródłem geometrii spodu (lod2-audit.json).
+- Właściciel potwierdził: pomiar telefonu nadal trwa, czekamy. ADR 0105 i dopisek licencyjny przygotowane; brak startu Unity.
+- NASTĘPNY KROK: Get-Content artifacts/viaduct-r10/build-r2.log -Tail 10
