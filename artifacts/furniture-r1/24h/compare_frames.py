@@ -1,5 +1,6 @@
 """All-camera CPU estimates, preserving mesh and instance counters separately."""
 import csv
+import argparse
 import json
 import re
 import sys
@@ -9,6 +10,12 @@ from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 
 ROOT = Path(__file__).resolve().parent
+parser = argparse.ArgumentParser()
+parser.add_argument('--metrics-only',action='store_true')
+parser.add_argument('--label',default='after3')
+args = parser.parse_args()
+if not re.fullmatch(r'[A-Za-z0-9_-]+',args.label):
+    parser.error('label must be a simple artifact name')
 
 
 def read_stats(path):
@@ -44,14 +51,14 @@ for tier in ('Low', 'High'):
             denominator = old['total_tris_k']*1000
             delta_upper = (100*((new['total_tris_k']*1000+new['quantisation_upper'])/denominator-1)
                            if denominator else None)
-            records.append(dict(tier=tier, lighting=light, camera=camera, before=old, after=new,
+            records.append(dict(phase=args.label, tier=tier, lighting=light, camera=camera, before=old, after=new,
                                 mesh_draw_delta=new['mesh_draws']-old['mesh_draws'],
                                 instance_draw_delta=new.get('instance_draws',0)-old.get('instance_draws',0),
                                 total_draw_delta=new['total_draws']-old['total_draws'],
                                 tris_delta_upper_percent=delta_upper))
         names = {p.name for p in before.glob('*.png')}
         assert names == {p.name for p in after.glob('*.png')}, f'Missing PNG: {key}'
-        if '--metrics-only' in sys.argv:
+        if args.metrics_only:
             continue
         # Each sheet is at most 960 px wide. All cameras are included, in groups of six.
         names = sorted(n for n in names if not n.endswith(('_mask.png','_envcube.png')))
@@ -69,13 +76,13 @@ for tier in ('Low', 'High'):
             sheet.save(out/f'{key}-{page//6+1:02}.jpg', quality=92)
 (ROOT/'frame-budget.json').write_text(json.dumps(records,indent=2)+'\n')
 with (ROOT/'frame-budget.csv').open('w',newline='',encoding='utf-8-sig') as handle:
-    fields = ['tier','lighting','camera','mesh_draw_delta','instance_draw_delta','total_draw_delta',
+    fields = ['phase','tier','lighting','camera','mesh_draw_delta','instance_draw_delta','total_draw_delta',
               'tris_delta_upper_percent']
     writer = csv.DictWriter(handle, fieldnames=fields, extrasaction='ignore')
     writer.writeheader(); writer.writerows(records)
 print(f'Compared {len(records)} camera/tier/lighting combinations; CPU estimates, not GPU measurements.')
 
-if '--metrics-only' not in sys.argv:
+if not args.metrics_only:
     font = ImageFont.truetype('C:/Windows/Fonts/segoeui.ttf', 12)
     details = ['furniture-fence', 'furniture-concrete-foot-close', 'furniture-concrete-collars',
                'furniture-footing-slope', 'furniture-sign-back']
@@ -87,7 +94,7 @@ if '--metrics-only' not in sys.argv:
             with Image.open(ROOT/phase/'High-overcast'/f'{camera}.png') as raw:
                 thumb = raw.convert('RGB'); thumb.thumbnail((480,222))
                 sheet.paste(thumb,(col*480,row*250+25))
-    sheet.save(ROOT/'after3-detail.jpg',quality=92)
+    sheet.save(ROOT/f'{args.label}-detail.jpg',quality=92)
     sheet = Image.new('RGB',(960,440),'#202020')
     draw = ImageDraw.Draw(sheet)
     draw.text((6,4),'Mapillary: zsolt, CC BY-SA 4.0 | Referencja / render; odziedziczona poza WORKING_VALUE',
