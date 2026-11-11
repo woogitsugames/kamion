@@ -230,3 +230,12 @@ and derived-output provenance hashes. No Fab assets or textures enter tracked ar
 Prepared normal maps remain disabled pending a tangent-capable reviewed mesh
 path. Existing tree leaves remain. Missing licensed files preserve procedural/CC0
 fallback; no licensed download is attempted by the public-clone build.
+# ADR 0102 — dodatkowe użycie istniejących skanów CC0 (2026-11-11)
+
+`streetscape/furniture_textures.py` wykorzystuje mikrostrukturę istniejących, lokalnych map Diffuse
+`brushed_concrete` (Dario Barresi / Dimitrios Savva) i `corrugated_iron_03` (Charlotte Baglioni),
+Poly Haven, CC0 1.0, opisanych wraz z hashami w tabeli ADR 0063 oraz `cc0_manifest.json`.
+Wynik: tekstury `furniture_{galv,grey,concrete,bollard}` — filtr usuwa szerokie oświetlenie/przetłoczenia,
+warstwy zużycia są własne. Mapillary p12/p15/p20/p26/p30 tylko jako referencja proporcji i rodzin;
+żaden piksel Mapillary nie trafia do atlasów ani do builda.
+
