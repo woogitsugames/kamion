@@ -173,3 +173,5 @@ NASTĘPNY KROK: uv run --project tools/worldgen tools/worldgen/roads/build_world
 2026-11-12T00:49:39.1766440+01:00: hashe kolizji obejmują także typ/liczbę/składowe i normalizację accessorów; odczyt sprawdza pełną długość danych. NASTĘPNY KROK: sprawdzić zakończenie idempotentnego Acquire i wyniki compare/testów after4.
 
 2026-11-12T00:50:32.5291621+01:00: heavy compare after3; sukces=True; slot gpt-furniture-r1 zwolniony. NASTĘPNY KROK: sprawdzić log i kontynuować walidację rundy.
+
+2026-11-12T00:50:33.1115855+01:00: pełne obrazy/arkusze iteracji3 zachowano w after-iteration3, after-sbs-iteration3 i iteration3/compare. Rozpoczyna się walidacja iteracji4, bez równoległego heavy tego samego właściciela. NASTĘPNY KROK: pojedyncze testy i generator after4.
