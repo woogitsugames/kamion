@@ -130,6 +130,7 @@ class Placer:
         self.zsurf = zsurf
         self.reseated = 0
         self.seat_log = []
+        self.support_moves = []
         self.pts = {}
 
     def seat(self, proto, p):
@@ -155,6 +156,37 @@ class Placer:
                 return True
         return False
 
+    def lamp_support(self, proto, p):
+        """Move a lamp at most 1.05 m off a sharp edge, never shorten it by burying its shaft.
+
+        Deterministic local search; carriageway and deck keep-outs still run after placement. Collision is only a
+        suitability check, not the visible seating height. Maximum shift/relief are WORKING_VALUE (ADR 0102).
+        """
+        p = np.asarray(p, float)
+
+        def score(q):
+            z, relief = self.seat(proto, q)
+            c = self.col.top(float(q[0]), float(q[1]), below=z + 0.05) if self.col is not None else z
+            mismatch = abs(z - c) if math.isfinite(c) else 0.0
+            return max(relief, mismatch)
+
+        before = score(p)
+        if before <= 0.15:
+            return p
+        best, best_score = p, before
+        for radius in (0.35, 0.70, 1.05):
+            for a in np.arange(16) * math.pi / 8:
+                q = p + radius * np.array([math.cos(a), math.sin(a)])
+                s = score(q)
+                if s < best_score - 1e-6:
+                    best, best_score = q, s
+            if best_score <= 0.15:
+                break
+        if not np.array_equal(best, p):
+            self.support_moves.append({"p": proto, "from": p.tolist(), "to": best.tolist(),
+                                       "before_m": round(before, 3), "after_m": round(best_score, 3)})
+        return best
+
     def ground_min(self, p, r=None, on_verge=True):
         """lowest surface under a pole footing: centre + 4 points at r (the bilinear surface at a kerb / footway edge
         mixes the footway top with the terrain beside it, which left poles 0.2-0.44 m in the air, gate 3 audit)"""
@@ -167,6 +199,8 @@ class Placer:
         return float(z)
 
     def add(self, proto, p, yaw, z=None, sz=1.0, src="", group=None):
+        if proto.startswith("lamp_") and z is None and self.surf is not None:
+            p = self.lamp_support(proto, p)
         if proto.startswith(SEATED_POLES):
             if self.surf is not None:
                 zg, step = self.seat(proto, p)
@@ -426,6 +460,7 @@ def lamps(pl, net, osm_nodes, origin, report):
                        group="lamp")
                 n += 1
     report["lamps"] = {"osm": n0, "rule": n,
+                       "support_adjustments": pl.support_moves,
                        "by_family": {k: sum(1 for it in pl.items if it["p"] == k) for k in
                                      sorted({it["p"] for it in pl.items if it["p"].startswith("lamp_")})}}
 

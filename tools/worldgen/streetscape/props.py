@@ -87,7 +87,7 @@ def lamp(h, bracket, double=False):
     m.pole_height = l1.pole_height = h
     for mm, seg in ((m, 12), (l1, 6)):
         # ADR 0102: buried footing, 8 cm cap above the local surface. Same primitive/material budget.
-        mm.box("concrete_base", [0, 0, -0.585], 0.25, 0.25, 0.665)
+        mm.box("concrete_base", [0, 0, -0.185], 0.25, 0.25, 0.265)
         mm.tube("steel_galv", [0, 0, 0.06], [0, 0, h - 0.3], 0.085, 0.040, seg)
         for sgn in ((1, -1) if double else (1,)):
             top = np.array([0, 0, h - 0.4])
@@ -110,7 +110,7 @@ def lamp_old(h, kind):
     m.pole_height = l1.pole_height = h
     for mm, seg in ((m, 10), (l1, 5)):
         if kind == "concrete":
-            mm.tube("concrete_pole", [0, 0, -1.25], [0, 0, 0], 0.12, 0.12, seg, cap=False)
+            mm.tube("concrete_pole", [0, 0, -0.3], [0, 0, 0], 0.12, 0.12, seg, cap=False)
             mm.tube("concrete_pole", [0, 0, 0], [0, 0, h], 0.12, 0.07, seg)
             pts = [np.array([0.0, 0.05, h - 1.4])]
             bends = 6 if seg > 5 else 3
@@ -128,7 +128,7 @@ def lamp_old(h, kind):
             mm.quad("lamp_glass_sodium", e + [-0.12, 0.02, -0.065], e + [0.12, 0.02, -0.065],
                     e + [0.12, 0.66, -0.065], e + [-0.12, 0.66, -0.065])
         else:
-            mm.box("concrete_base", [0, 0, -0.585], 0.2, 0.2, 0.665)
+            mm.box("concrete_base", [0, 0, -0.185], 0.2, 0.2, 0.265)
             mm.tube("steel_painted_grey", [0, 0, 0.06], [0, 0, h - 0.2], 0.075, 0.05, seg)
             if seg > 5:
                 mm.box("steel_painted_grey", [0, -0.073, 0.55], 0.033, 0.005, 0.13)  # flush service hatch
@@ -150,7 +150,7 @@ def lamp_arc(h=9.0, reach=2.2, double=False):
     m, l1, col = Mesh(), Mesh(), Mesh()
     m.pole_height = l1.pole_height = h
     for mm, seg in ((m, 10), (l1, 5)):
-        mm.box("concrete_base", [0, 0, -0.585], 0.28, 0.28, 0.665)
+        mm.box("concrete_base", [0, 0, -0.185], 0.28, 0.28, 0.265)
         mm.tube("steel_galv", [0, 0, 0.08], [0, 0, 1.1], 0.095, 0.085, seg)             # base section with the hatch
         mm.tube("steel_galv", [0, 0, 1.1], [0, 0, h - 1.6], 0.075, 0.045, seg)
         if seg > 5:
@@ -176,8 +176,8 @@ def sign_post():
     m, l1, col = Mesh(), Mesh(), Mesh()
     # embed 0.1 of the unit post: the instance scales z by its height (sz up to ~5), a -0.3 embed became 1.1-1.5 m
     # below the base and the gate 3 audit read the posts as buried 0.85 m (Rondo Bieżeństwa / Putry approaches)
-    m.tube("steel_galv", [0, 0, -0.4], [0, 0, 1.0], S.SIGN_POST_D / 2, None, 10)
-    l1.tube("steel_galv", [0, 0, -0.4], [0, 0, 1.0], S.SIGN_POST_D / 2, None, 4)
+    m.tube("steel_galv", [0, 0, -0.1], [0, 0, 1.0], S.SIGN_POST_D / 2, None, 10)
+    l1.tube("steel_galv", [0, 0, -0.1], [0, 0, 1.0], S.SIGN_POST_D / 2, None, 4)
     col.tube("collision_steel", [0, 0, 0], [0, 0, 1.0], 0.05, None, 4)
     return m, l1, col
 
@@ -285,9 +285,9 @@ def signal_pole(h=S.SIGNAL_POLE_H, arm=0.0):
     za = h - 0.4                                        # arm axis height
     for mm, seg, nb in ((m, 10, 6), (l1, 5, 2)):
         if not arm:
-            mm.tube("steel_galv", [0, 0, -1.25], [0, 0, h], 0.07, 0.06, seg)
+            mm.tube("steel_galv", [0, 0, -0.2], [0, 0, h], 0.07, 0.06, seg)
             continue
-        mm.tube("steel_galv", [0, 0, -1.25], [0, 0, za - R], 0.13, 0.11, seg, cap=False)
+        mm.tube("steel_galv", [0, 0, -0.2], [0, 0, za - R], 0.13, 0.11, seg, cap=False)
         prev, r_prev = np.array([0.0, 0.0, za - R]), 0.11
         for k in range(1, nb + 1):                      # quarter bend: centre (0, R, za - R)
             a = 0.5 * math.pi * k / nb

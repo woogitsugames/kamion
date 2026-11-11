@@ -19,10 +19,22 @@ def test_visible_axis_contact_is_independent_of_low_collision():
     pl = F.Placer(flat, flat, Top(lambda e, n: 1.087 if e >= 0 else 0), Top(lambda e, n: 0))
     z, step = pl.seat("lamp_12m", (0, 0))
     assert z == 1.087 and step == 1.087
-    # The 1.25 m embedded block still reaches the low side; cap remains visible above axis ground.
+    # Do not bury a metre of visible shaft: shift locally to stable ground, then use a shallow footing.
+    pl.add("lamp_12m", (0, 0), 0)
+    it = pl.items[-1]
+    assert np.hypot(it["e"], it["n"]) <= 1.051
+    assert it["e"] < -0.25 and it["z"] == 0
     m = P.lamp(12, 2)[0].out()
-    v = next(p["V"] for p in m if p["mat"] == "concrete_base")[:, 2] + z
-    assert v.min() < 0 and v.max() > z
+    v = next(p["V"] for p in m if p["mat"] == "concrete_base")[:, 2]
+    assert -0.6 < v.min() < 0 and v.max() > 0
+
+
+def test_explicit_bridge_lamp_position_and_height_are_preserved():
+    flat = lambda e, n: np.zeros_like(e, dtype=float)
+    pl = F.Placer(flat, flat, Top(lambda e, n: 1.087 if e >= 0 else 0))
+    pl.add("lamp_12m", (0, 0), 0, z=8)
+    assert pl.items[-1]["e"] == 0 and pl.items[-1]["z"] == 8
+    assert not pl.support_moves
 
 
 def test_sign_assembly_keeps_legal_clearance_on_kerb():
