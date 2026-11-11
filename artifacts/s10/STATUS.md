@@ -672,3 +672,7 @@ generated conflicts main+canonical regeneration. CPU only while PHONE run5 held;
 D gets first Unity release/16frames. C13 follows current D/G closure, then B3.
 B3 readonly preflight closed0a49e84f, no source. NEXT COMMAND: monitor run5 END,
 release D only; review G bounded source/UV dirt plan before actual candidate.
+
+Step 57: REPORT and G review explicitly withdraw aggregate G acceptance after
+independent P0 finding. NEXT COMMAND: G causal source plan, D16frames after
+actual whole run5 END and fresh release; no Unity during PHONE/HOLD.
