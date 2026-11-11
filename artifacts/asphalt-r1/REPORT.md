@@ -14,7 +14,7 @@ Liczba napraw nie została zwiększona. Licznik producenta podaje 316 prób. Inw
 
 Pomiar jednego zdjęcia Mapillary 150280503737744 dał medianę luminancji obrazu 58,89 i 59,03 dla śladów wobec 88,07 pomiędzy nimi, czyli proporcje 0,669 i 0,670. Autor: picturehoover, CC BY-SA 4.0, zdjęcie 2020-06-27. To wartości obrazu z konkretnych pól zaznaczonych w `references/wheel-contrast-boxes.jpg`; nie są fizycznym albedo. Pomiar renderu z rzeczywistych macierzy i UV Half jest w wheel-contrast-candidate2.json/csv. Obejrzano cztery kolorowe maski na czystej jezdni. W Low overcast kontrast ślad/środek pasa wynosi przed 1,045 / 1,033, po 0,970 / 0,972. Low clear: 1,023 / 1,013 → 0,977 / 0,969. High overcast: 1,030 / 1,034 → 0,968 / 0,973. High clear: 1,015 / 1,014 → 0,969 / 0,969. Są to mediany proporcji w odpowiadających sobie wierszach, nie proporcje globalnych median. Zmiana odwróciła zbyt jasne ślady, ale nie osiągnęła kontrastu wybranej fotografii około 0,67. Warunki i widoki nie są identyczne, więc to dowód kierunku zmiany i jej ograniczeń, nie zgodności fotometrycznej.
 
-Wariant r1a miał identyczne liczniki we wszystkich 312 porównaniach kamer: zmiana obiektów, estymowanych draws, shadow draws, trisK, draws instancji, liczby instancji i instance trisK wynosiła zero. Końcowe porównanie candidate2 jest jeszcze oczekiwane. Raporty importera baseline i candidate2 mają identyczne bajty geometrii we wszystkich 22 kategoriach, tekstury ASTC 40 667 737 bajtów, 126 992 instancje i 2674 kolidery propsów. Szczegóły są w import-budget-comparison.json. To dowód rozmiaru alokacji, nie identyczności danych wierzchołków ani czasów GPU. Liczniki CPU oraz zaokrąglone tysiące trójkątów nie dowodzą kosztu GPU. Low dostaje dodatkowe próbki istniejących tekstur, więc A16 pozostaje UNVERIFIED mimo braku nowego przebiegu. Telefon jest poza zakresem sesji.
+Wariant r1a miał identyczne liczniki we wszystkich 312 porównaniach kamer: zmiana obiektów, estymowanych draws, shadow draws, trisK, draws instancji, liczby instancji i instance trisK wynosiła zero. Końcowe porównanie candidate2 również obejmuje 312 wierszy, 78 kamer i cztery warunki: wszystkie wymienione liczniki mają delta 0. Dane są w counters-candidate2.csv i comparison-candidate2.json. Obejrzano wszystkie 28 contact sheets tego porównania; szczegółowa ocena małych faktur pochodzi z większych wybranych par i wycinków natywnych. Raporty importera baseline i candidate2 mają identyczne bajty geometrii we wszystkich 22 kategoriach, tekstury ASTC 40 667 737 bajtów, 126 992 instancje i 2674 kolidery propsów. Szczegóły są w import-budget-comparison.json. To dowód rozmiaru alokacji, nie identyczności danych wierzchołków ani czasów GPU. Liczniki CPU oraz zaokrąglone tysiące trójkątów nie dowodzą kosztu GPU. Low dostaje dodatkowe próbki istniejących tekstur, więc A16 pozostaje UNVERIFIED mimo braku nowego przebiegu. Telefon jest poza zakresem sesji.
 
 Testy kierunkowe: 4 testy UV napraw, 8 testów yard_wear i 6 testów klasyfikacji farby/oleju przeszły pod heavy. EditMode: 275 total, 275 passed, 0 failed, 0 skipped. Audyt po drugim producencie sprawdził 196 odwołań plik/SHA, bez rozbieżności. Pełny GIS przed wprowadzeniem nowej zasady heavy dał 506 passed, 5 failed, 1 xfailed, ale był uruchomiony współbieżnie z producentem i nie stanowi końcowego wyniku. Końcowy GIS będzie uruchomiony osobno, z odtworzeniem metadanych producenta po skutkach fixture.
 
@@ -26,4 +26,12 @@ Zmiany wspólne są sterowane dodatkowymi danymi `_AsphaltWear`, `_PatchSeam`, `
 
 Na tym etapie nie zgłaszamy gotowości do bezwarunkowej integracji. Po końcowych wynikach raport i artefakty zostaną skopiowane robocopy do main, po czym sesja przejdzie bez oczekiwania do r2: materiał krawężników i kostki.
 
+
+
+
+![Zdjęcie Mapillary i render Low, stary asfalt](review-candidate2-960/Low-ref-150280503737744.jpg)
+
+![Zdjęcie Mapillary i render Low, wiadukt](review-candidate2-960/Low-ref-303305168125936.jpg)
+
+![Zdjęcie Mapillary i render Low, druga poza wiaduktu](review-candidate2-960/Low-ref-454716650857984.jpg)
 

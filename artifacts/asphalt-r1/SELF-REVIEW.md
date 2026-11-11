@@ -12,3 +12,5 @@ Przy prawym krawężniku starej drogi pozostaje drobny falisty wzór. Próby wy�
 
 Wynik: poprawa czytelności części materiałów, ale jeszcze nie pełny wizualny PASS. Niezależna recenzja, pomiary z masek, pełna kontrola kamer i końcowe testy są w toku. Koszt A16 UNVERIFIED, bez telefonu.
 
+
+Obejrzano wszystkie 28 contact sheets comparison-candidate2-960: po 7 stron dla Low/High i overcast/clear. Obejmują 312 par obrazów ze wszystkich 78 kamer. Na małych miniaturach nie widać przesunięcia geometrii, zmian kadru ani rozległych usterek poza opisanymi materiałami. W clear różnica asfaltu jest mniej kontrastowa niż w overcast; w ujęciach pod wiaduktem ślady są mocno podłużne. W kamerach kabiny i pojazdów nawierzchnia zajmuje niewielką część obrazu, więc ten przegląd wykrywa tylko duże regresje; nie potwierdza jakości drobnej faktury. Drobny wzór przy krawężniku oceniono osobno w natywnych wycinkach. Wszystkie liczniki candidate2 mają delta 0, ale budżet GPU nadal UNVERIFIED.
