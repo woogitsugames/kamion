@@ -1,4 +1,4 @@
-Runda r1: remiza JRG2. Gałąź gpt-landmarks-r1, stan źródeł i walidacji 1a799092, baza main 5f2aa277. Ocena fotograficzna: PARTIAL.
+﻿Runda r1: remiza JRG2. Gałąź gpt-landmarks-r1, stan źródeł i walidacji 1a799092, baza main 5f2aa277. Ocena fotograficzna: PARTIAL.
 Wygładzono normalne 26 tui Low bez zwiększenia ich 552 trójkątów. Iglaki mają ciemniejszą paletę CC0 i szersze rdzenie; ich sylwetka nadal wygląda proceduralnie i wymaga kolejnej rundy po backlogu.
 Szkło hali ma ciemniejszy dół. Low overcast: lewa góra/dół Y 64,72/66,93 → 59,93/48,86, prawa 68,65/67,72 → 62,65/48,86. High overcast końcowo 66,65/54,86 i 68,72/54,86; pozostaje trochę za jasny względem orientacyjnego celu fotografii.
 Zacieki zaczynają się pod zakrzywioną obróbką. Pigment tynku D48 zachowano. Plama przy maszcie jest cieniem flagi: High ROI Y 114,83 → 131,12 po wyłączeniu cieni, sąsiedni tynk 131,19; promień CPU potwierdził flagę jako przeszkodę.
@@ -13,4 +13,5 @@ Pary mają szerokość 960 px. Źródło remizy: Commons 7197, Rakoon, CC0; szcz
 ![Zdjęcie i końcowy High overcast](review/after-budget/High-overcast-photo.jpg)
 Nie zmieniano shaderów, globalnego światła ani źródeł innych dziedzin i Claude. Materials_spec ma zmianę wyłącznie we wpisie fire_station. Wspólne agregaty generatora odświeżają też zastane dane main; te różnice istniały już w świeżym baseline, nie są zmianami geometrii innych dziedzin tej rundy.
 Przewidywane konflikty: materials_spec, spec/GLB/meta remizy i wspólne generated. Dla generated stosować wersję main i regenerację, dla źródeł unię. Lider może integrować `git merge --no-ff gpt-landmarks-r1`, po czym odtworzyć materiały fire_station i świat pod heavy oraz importować pod slotem Unity. Autor nie scala do main i nie pushuje.
-Artefakty zostaną skopiowane robocopy do głównego artifacts/landmarks-r1 wraz z raportem. Od razu następna gałąź gpt-landmarks-r2: niepotwierdzone schody i powierzchnie filarów DK8. Analiza natywnej referencji 7204 oraz ograniczenia zdjęć kominów są zachowane w NEXT-R2.md i NEXT-R3.md.
+Artefakty skopiowano robocopy do głównego artifacts/landmarks-r1 wraz z raportem. Od razu następna gałąź gpt-landmarks-r2: niepotwierdzone schody i powierzchnie filarów DK8. Analiza natywnej referencji 7204 oraz ograniczenia zdjęć kominów są zachowane w NEXT-R2.md i NEXT-R3.md.
+
