@@ -179,6 +179,9 @@ def build_side_strip(buf, c, st, side, sgn, P, N, hw, br, coarse):
             vw[c.interp(wl.astype(float), st) > 0.01] = 0.0
         _emit_verge(buf, G, N * sgn, zg, np.array([p[1] for p in params]), vw, kap, hw, side == "R",
                     f"{c.id}:{side}:vg")
+        nofl = vw > 0.05
+    else:
+        nofl = None
     kl = [(p[0], p[4] == MAT_FLUSH_ROAD) for p in params]
     if len(set(kl)) > 1 and (len(kinds - {URBAN, ISLAND}) > 0 or any(k[1] for k in kl)):
         # rural/urban mix (e.g. a bridge on a rural road): one strip per run of the same profile family,
@@ -198,10 +201,11 @@ def build_side_strip(buf, c, st, side, sgn, P, N, hw, br, coarse):
                 # where the hidden kerb starts). The borrowed station continues this run's own height instead.
                 prm[0] = (kr, prm[1][1], *prm[0][2:])
             _emit_strip(buf, G[sl], (N * sgn)[sl], zg[sl], prm, kap[sl], hw[sl], side == "R",
-                        br[sl] if br is not None else None, coarse, f"{c.id}:{side}:{r}")
+                        br[sl] if br is not None else None, coarse, f"{c.id}:{side}:{r}",
+                        noflange=None if nofl is None else nofl[sl])
         return
     _emit_strip(buf, G, N * sgn, zg, params, kap, hw, side == "R",
-                br, coarse, c.id + ":" + side)
+                br, coarse, c.id + ":" + side, noflange=nofl)
 
 
 def _emit_verge(buf, G, OUT, zg, H, VW, kap_toward, hw, flip, src):
@@ -220,7 +224,7 @@ def _emit_verge(buf, G, OUT, zg, H, VW, kap_toward, hw, flip, src):
     zero = np.where(VW <= 0.0)[0]
     dist = np.full(n, 1e9) if not len(zero) else np.abs(along[:, None] - along[zero][None, :]).min(1)
     VW = np.minimum(VW, 0.5 * dist)
-    depth = np.minimum(S.FLANGE_DEPTH, 0.25 * dist)
+    depth = np.minimum(S.FLANGE_DEPTH, 0.06 * dist)
     tw = S.KERB_TOP_W
     scale = np.ones(n)
     inside = kap_toward > 1e-6
@@ -240,9 +244,9 @@ def _emit_verge(buf, G, OUT, zg, H, VW, kap_toward, hw, flip, src):
     P1 = np.column_stack([G + OUT * u1[:, None], z1])
     P2 = np.column_stack([G + OUT * u2[:, None], z2])
     # straights: one quad per run (Douglas-Peucker on the three edge lines, 1-2 cm; the kerb beside it keeps every
-    # station, the hairline between them is under the tolerance)
+    # station, the hairline between them is under the tolerance, 2.5 cm)
     from .geom import dp_keep
-    kp = dp_keep(P0, 0.01) | dp_keep(P1, 0.015) | dp_keep(P2, 0.02)
+    kp = dp_keep(P0, 0.025) | dp_keep(P1, 0.025) | dp_keep(P2, 0.03)
     P0, P1, P2, u0, u1, u2, along = P0[kp], P1[kp], P2[kp], u0[kp], u1[kp], u2[kp], along[kp]
     n = len(P0)
     T = grid_tris(n, 2, flip=flip)
@@ -258,7 +262,7 @@ def _emit_verge(buf, G, OUT, zg, H, VW, kap_toward, hw, flip, src):
 KERB_TOP_UV_MAX_W = 0.4
 
 
-def _emit_strip(buf, G, OUT, zg, params, kap_toward, hw, flip, br, coarse, src):
+def _emit_strip(buf, G, OUT, zg, params, kap_toward, hw, flip, br, coarse, src, noflange=None):
     """G: gutter points (n,2), OUT: unit outward vectors (n,2) (may be miter-scaled), zg gutter z,
     params: per-point side params, kap_toward: curvature toward this side (>0 = side is inside)."""
     n = len(G)
@@ -331,6 +335,11 @@ def _emit_strip(buf, G, OUT, zg, params, kap_toward, hw, flip, br, coarse, src):
         T = grid_tris(n, 2, flip=flip)
         vertical = rw < 1e-6
         is_flange = vertical and k == nseg - 1 and not coarse
+        if is_flange and noflange is not None and len(T):
+            # ADR 0110: behind a verge strip (meshing._emit_verge) the buried flange is never seen - not meshed
+            # (about half of all kerb triangles of the region were flanges of kerbs without a sidewalk)
+            ts = np.minimum(T.min(1) // 2, n - 2)
+            T = T[~(noflange[ts] & noflange[ts + 1])]
         cmat = ("collision_" + ("curb" if mat == "curb_concrete" else "asphalt" if mat.startswith("road_") else
                                 "paving" if mat in ("sidewalk_paving", "apron_sett", "bridge_concrete") else
                                 "grass")) if coarse else mat
@@ -1071,6 +1080,18 @@ def build_corner_strips(buf, net, j, bnd, zb, coarse, outline=None):
                   ((p[0], 0.0, p[2], p[3], p[4]) if (p[0] == URBAN and p[4] == MAT_FLUSH_ROAD) else p)
                   for p, g, r in zip(params, gaps, rise)]
         fl = [p[0] == URBAN and p[4] == MAT_FLUSH_ROAD for p in params]
+        nofl = None
+        if cv is not None and not _patch_on_bridge(j):
+            # ADR 0110: the grass behind the kerb runs round the corner / median nose too
+            vw = np.array([v if (q[0] == URBAN and q[2] < 0.05 and q[4] == 0 and q[1] > 0.05) else 0.0
+                           for v, q in zip(cv, params)])
+            # a corner whose kerb line jumps in height (plates of two levels meeting: j:n2591872092, +-1 m between
+            # stations) gets no grass - the strip would repeat the jumps as 1-2 m grass faces
+            dsz = np.maximum(np.hypot(*np.diff(G, axis=0).T), 0.25)
+            if len(Z) > 1 and float(np.max(np.abs(np.diff(Z)) / dsz)) > 0.15:
+                vw[:] = 0.0
+            _emit_verge(buf, G, OUT, Z, np.array([q[1] for q in params]), vw, kap, hwz, True, j.id + f":corner{i}:vg")
+            nofl = vw > 0.05
         # the corner polyline runs CCW around the patch, outward = right of travel -> mirrored strip
         if len(set(fl)) > 1:
             # one strip per run of flush / kerbed stations sharing the boundary station (as build_side_strip): the
@@ -1086,19 +1107,9 @@ def build_corner_strips(buf, net, j, bnd, zb, coarse, outline=None):
                         ((q[0], 0.0, 0.0, q[3], 0) if q[4] == MAT_FLUSH_ROAD else q))
                        if q[0] == URBAN else q for q in params[lo:b_]]
                 _emit_strip(buf, G[sl], OUT[sl], Z[sl], prm, kap[sl], hwz[sl], True, None, coarse,
-                            j.id + f":corner{i}" + (f":{r}" if r else ""))
+                            j.id + f":corner{i}" + (f":{r}" if r else ""), noflange=None if nofl is None else nofl[sl])
         else:
-            _emit_strip(buf, G, OUT, Z, params, kap, hwz, True, None, coarse, j.id + f":corner{i}")
-        if cv is not None and not _patch_on_bridge(j):
-            # ADR 0110: the grass behind the kerb runs round the corner / median nose too
-            vw = np.array([v if (q[0] == URBAN and q[2] < 0.05 and q[4] == 0 and q[1] > 0.05) else 0.0
-                           for v, q in zip(cv, params)])
-            # a corner whose kerb line jumps in height (plates of two levels meeting: j:n2591872092, +-1 m between
-            # stations) gets no grass - the strip would repeat the jumps as 1-2 m grass faces
-            dsz = np.maximum(np.hypot(*np.diff(G, axis=0).T), 0.25)
-            if len(Z) > 1 and float(np.max(np.abs(np.diff(Z)) / dsz)) > 0.15:
-                vw[:] = 0.0
-            _emit_verge(buf, G, OUT, Z, np.array([q[1] for q in params]), vw, kap, hwz, True, j.id + f":corner{i}:vg")
+            _emit_strip(buf, G, OUT, Z, params, kap, hwz, True, None, coarse, j.id + f":corner{i}", noflange=nofl)
 
 
 CORNER_FILL_DZ_M = 0.15      # the neighbour's edge must be this close in height to the corner (WORKING_VALUE)
