@@ -114,8 +114,8 @@ def _is_beam(p):
 
 
 def _is_posts(p):
-    """C posts: three thin plates per post drawn from both sides = 24 vertices / 12 triangles (ADR 0117)."""
-    return p.mat == "barrier_steel" and len(p.V) % 24 == 0 and len(p.T) == len(p.V) // 2 and not _is_beam(p) \
+    """C posts: the web of each post drawn from both sides = 8 vertices / 4 triangles (ADR 0117; flanges: a single-sided part)."""
+    return p.mat == "barrier_steel" and len(p.V) % 8 == 0 and len(p.T) == len(p.V) // 2 and not _is_beam(p) \
         and float(np.ptp(p.V[:, 2])) > 0.6          # (the spacer blocks are 0.16 m high)
 
 
@@ -136,7 +136,7 @@ def test_guardrail_free_ends_are_turned_down_and_the_beam_is_decimated():
     assert posts.V[:, 0].min() >= S.GUARDRAIL_TERMINAL_M - 0.2        # no post standing above the turned-down end
     # ground posts every GUARDRAIL_POST_SPACING_GROUND, top just below the top edge of the beam (the beam hangs on
     # the face of the post)
-    assert len(posts.V) // 24 == round((79 - 2 * S.GUARDRAIL_TERMINAL_M) / S.GUARDRAIL_POST_SPACING_GROUND) + 1
+    assert len(posts.V) // 8 == round((79 - 2 * S.GUARDRAIL_TERMINAL_M) / S.GUARDRAIL_POST_SPACING_GROUND) + 1
     assert np.isclose(posts.V[:, 2].max() - 10.0, S.GUARDRAIL_H - 0.03)
 
 
@@ -170,12 +170,13 @@ def test_deck_barrier_has_heavy_posts_on_foot_plates_and_an_upper_beam():
     assert not [p for p in parts if p.layer == "furniture"]          # a deck run lives in the bridge mesh
     assert {p.mat for p in parts if p.layer == "bridge"} == {"barrier_steel"}      # one draw call
     deck_posts = [p for p in posts if np.isclose(p.V[:, 2].max() - 10.0, S.BRIDGE_BARRIER_H)][0]
-    assert len(deck_posts.V) // 24 == round(39 / S.GUARDRAIL_POST_SPACING) + 1
+    assert len(deck_posts.V) // 8 == round(39 / S.GUARDRAIL_POST_SPACING) + 1
     assert np.isclose(deck_posts.V[:, 2].min(), 10.0)                # stands on the cap (foot plate), not driven in
     steel = [p for p in parts if p.layer == "bridge" and not _is_posts(p)]
     zmax = max(float(p.V[:, 2].max()) for p in steel) - 10.0
     assert np.isclose(zmax, S.BRIDGE_BARRIER_H)                       # upper box beam; no handrail above it
-    upper = [p for p in steel if np.isclose(p.V[:, 2].max() - 10.0, S.BRIDGE_BARRIER_H) and not _is_beam(p)]
+    upper = [p for p in steel if np.isclose(p.V[:, 2].max() - 10.0, S.BRIDGE_BARRIER_H) and not _is_beam(p)
+             and float(np.ptp(p.V[:, 2])) < 0.5]            # (not the flanges of the posts)
     assert upper and all(p.V[:, 0].min() >= 20.0 - 1e-6 and p.V[:, 0].max() <= 59.0 + 1e-6 for p in upper)
     # where the W-beam carries on along the ground the upper beam comes down to it instead of ending in the air
     lo = min(float(p.V[p.V[:, 0] < 20.5][:, 2].max()) for p in upper if (p.V[:, 0] < 20.5).any()) - 10.0

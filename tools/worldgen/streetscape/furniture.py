@@ -1039,6 +1039,7 @@ POST_C_DECK = (0.12, 0.064)  # deck post (heavier section on a foot plate, Mapil
 # UV0 of the `barrier_galv` set (4.0 x 0.5 m tile, u along the beam, v = unrolled metres across the profile from the
 # bottom edge): posts / spacers / plates sample the plain sheet between the splices
 POST_U0 = 1.3
+RAIL_DP_M = 0.02            # Douglas-Peucker tolerance of the beams (ADR 0110: 0.01; 0117: 6 facets instead of 4 strips)
 
 
 def _w_unrolled():
@@ -1069,7 +1070,7 @@ def _quads(lin, layer, mat, quads, src, both=True):
 def _rail_posts(lin, Q, Zq, Tq, top, deck, key):
     """C posts at Q (n, 2) with the open side downstream, a spacer block between post and beam, and on a deck a foot
     plate. `top` = top of the W-beam above Zq per post; deck posts carry on to BRIDGE_BARRIER_H (upper beam)."""
-    quads = []
+    quads, flanges = [], []
     dep, fl = POST_C_DECK if deck else POST_C
     f, bk = POST_FRONT, POST_FRONT - dep
 
@@ -1087,20 +1088,19 @@ def _rail_posts(lin, Q, Zq, Tq, top, deck, key):
         z1 = z + (S.BRIDGE_BARRIER_H if deck else tp - 0.03)
         h = z1 - z0
         # road-side flange, web, back flange (thin sheet, drawn from both sides)
-        quads.append(([P3(f, fl / 2, z0), P3(f, -fl / 2, z0), P3(f, -fl / 2, z1), P3(f, fl / 2, z1)], uv(0.0, fl, h)))
+        # web from both sides; the flanges only from outside (ADR 0117 budget: 8 triangles per post)
         quads.append(([P3(f, -fl / 2, z0), P3(bk, -fl / 2, z0), P3(bk, -fl / 2, z1), P3(f, -fl / 2, z1)],
                       uv(0.1, 0.1 + dep, h)))
-        quads.append(([P3(bk, -fl / 2, z0), P3(bk, fl / 2, z0), P3(bk, fl / 2, z1), P3(bk, -fl / 2, z1)],
-                      uv(0.3, 0.3 + fl, h)))
+        flanges.append(([P3(f, fl / 2, z0), P3(f, -fl / 2, z0), P3(f, -fl / 2, z1), P3(f, fl / 2, z1)], uv(0.0, fl, h)))
+        flanges.append(([P3(bk, -fl / 2, z0), P3(bk, fl / 2, z0), P3(bk, fl / 2, z1), P3(bk, -fl / 2, z1)],
+                        uv(0.3, 0.3 + fl, h)))
     _quads(lin, "furniture", POST_MAT, quads, key, both=True)
-    solid = []
+    solid = flanges
     u = POST_U0 + 0.5
     for q, z, t, tp in zip(Q, Zq, Tq, top):
         P3 = frame(q, t)
         # spacer ("przekladka"): block between the post flange and the valley of the beam; top + the two sides
         a_, zs0, zs1 = 0.045, z + tp - 0.235, z + tp - 0.075
-        solid.append(([P3(POST_FRONT, a_, zs1), P3(W_BACK, a_, zs1), P3(W_BACK, -a_, zs1), P3(POST_FRONT, -a_, zs1)],
-                      ((u, 0.30), (u + 0.1, 0.30), (u + 0.1, 0.39), (u, 0.39))))
         for sg in (1.0, -1.0):
             pts = [P3(POST_FRONT, sg * a_, zs0), P3(W_BACK, sg * a_, zs0), P3(W_BACK, sg * a_, zs1),
                    P3(POST_FRONT, sg * a_, zs1)]
@@ -1110,8 +1110,6 @@ def _rail_posts(lin, Q, Zq, Tq, top, deck, key):
             f0, f1, a_, th = POST_FRONT + 0.05, POST_FRONT - dep - 0.05, 0.11, 0.02
             solid.append(([P3(f1, a_, z + th), P3(f0, a_, z + th), P3(f0, -a_, z + th), P3(f1, -a_, z + th)],
                           ((u + 0.2, 0.05), (u + 0.42, 0.05), (u + 0.42, 0.27), (u + 0.2, 0.27))))
-            solid.append(([P3(f0, a_, z), P3(f0, -a_, z), P3(f0, -a_, z + th), P3(f0, a_, z + th)],
-                          ((u + 0.2, 0.0), (u + 0.42, 0.0), (u + 0.42, 0.02), (u + 0.2, 0.02))))
     _quads(lin, "furniture", POST_MAT, solid, key, both=False)
 
 
@@ -1179,11 +1177,11 @@ def guardrail(lin, P, Z, key, tall=None, term=(False, False)):
                 if kk - k >= 6:                       # every end (also a run end: no beam stopping in the air)
                     zt[:3] = np.linspace(S.GUARDRAIL_H - 0.02, S.BRIDGE_BARRIER_H, 3)
                     zt[-3:] = np.linspace(S.BRIDGE_BARRIER_H, S.GUARDRAIL_H - 0.02, 3)
-                kp = dp_keep(np.column_stack([P[k:kk + 1], Z[k:kk + 1] + zt]), 0.01)
+                kp = dp_keep(np.column_stack([P[k:kk + 1], Z[k:kk + 1] + zt]), RAIL_DP_M)
                 Pt, zz, nt, st = P[k:kk + 1][kp], (Z[k:kk + 1] + zt)[kp], nrm[k:kk + 1][kp], s_all[k:kk + 1][kp]
                 box = ((POST_FRONT, 0.0), (POST_FRONT + 0.08, 0.0), (POST_FRONT + 0.08, -0.10), (POST_FRONT, -0.10))
                 uvv = (0.40, 0.46, 0.34, 0.42)
-                for (o0, z0), (o1, z1), v0 in zip(box, box[1:] + box[:1], uvv):
+                for (o0, z0), (o1, z1), v0 in list(zip(box, box[1:] + box[:1], uvv))[:2] + [(box[3], box[0], uvv[3])]:
                     A = np.column_stack([Pt + nt * o0, zz + z0])
                     B = np.column_stack([Pt + nt * o1, zz + z1])
                     m_ = len(Pt)
@@ -1194,7 +1192,7 @@ def guardrail(lin, P, Z, key, tall=None, term=(False, False)):
         k = kk + 1
     # ADR 0110: the beam keeps only the points a 1 cm Douglas-Peucker needs (it was meshed every metre: 16 triangles
     # per metre also on straights; the posts above keep their spacing)
-    kp = dp_keep(np.column_stack([P, Z + top]), 0.01)
+    kp = dp_keep(np.column_stack([P, Z + top]), RAIL_DP_M)
     P, Z, top, nrm, s = P[kp], Z[kp], top[kp], nrm[kp], s_all[kp]
     n = len(P)
     vv = _w_unrolled()
@@ -1211,7 +1209,15 @@ def guardrail(lin, P, Z, key, tall=None, term=(False, False)):
         T += [(a + k, a + k + 1, b + k + 1) for k in range(n - 1)] + [(a + k, b + k + 1, b + k) for k in range(n - 1)]
     T = np.array(T)
     lin.buf.add("furniture", "barrier_steel", V, UV, T, src=key)
-    lin.buf.add("furniture", "barrier_steel", V, UV, T[:, [0, 2, 1]], src=key)
+    # back of the sheet: two facets (top edge - valley - bottom edge); the folds are a road-side thing (budget)
+    bi = [0, 5, 6, 11]
+    Vb = np.concatenate([rows[i] for i in bi])
+    UVb = np.column_stack([np.tile(s, 4), np.repeat([uvr[i] for i in bi], n)])
+    Tb = []
+    for r in (0, 2):
+        a, b = r * n, (r + 1) * n
+        Tb += [(a + k, b + k + 1, a + k + 1) for k in range(n - 1)] + [(a + k, b + k, b + k + 1) for k in range(n - 1)]
+    lin.buf.add("furniture", "barrier_steel", Vb, UVb, np.array(Tb), src=key)
     if tall.any() or key.endswith(":structure"):
         # ADR 0110: a run on a deck, and a run beside a viaduct, belong to the bridge mesh of their chunk (drawn with
         # the deck; one barrier_steel primitive for both), not to the furniture mesh (fences, hedges: its bounds grew
