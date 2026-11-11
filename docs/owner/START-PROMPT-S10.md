@@ -1,0 +1,17 @@
+Kontynuujesz projekt Kamion (realistyczny mobilny symulator ciężarówki, Unity 6000.3.28f1 URP, Białystok 1:1) w C:\Users\matma\Documents\Claude\kamion. Przejmujesz pracę po sesji 9 (zamknięta przy końcu limitu 5 h).
+
+Najpierw przeczytaj: HANDOVER.md (górna sekcja „sesja 9” — prawda o stanie) → CLAUDE.md → docs/owner/AGENT-RULES.md → docs/11_DECYZJE_WLASCICIELA.md → recenzje docs/reports/visual/REVIEW-2026-11-11-s9*.md → pamięć C:\Users\matma\.claude\projects\C--Users-matma-Documents-Claude-kamion\memory\MEMORY.md z plikami.
+
+Na starcie:
+1. `get_usage`. **Zapytaj właściciela (klikalnie) o tempo wobec tygodniowego limitu Fable** (51 % zużyte 11.11 rano, reset 17.11): max 2 agentów / Sonnet do lżejszych zadań / dalej 3.
+2. Sprawdź agenta 0095 (worktree `.claude/worktrees/junctions-r2`, `artifacts/junctions-r2/STATUS.md`): jeśli nie działa — dokończ nowym agentem Fable w tym worktree albo scal, jeśli STATUS mówi KONIEC.
+3. Sprawdź `artifacts/logs/s9-main-regen-0096.log` (regeneracja main po 0096) i zacommituj wynik, jeśli zielony.
+4. Ustaw zewnętrzny trigger co godzinę (CronCreate w tej sesji, minuta nie :00/:30), który budzi sesję: limit, stan agentów, scal gotowe, uruchom kolejne z „Następne kroki”, HANDOVER, push.
+
+Zasady (jak w s9): max 3 agentów naraz (chyba że właściciel zdecyduje inaczej), każdy w swoim worktree z main; brief zaczyna się od docs/owner/AGENT-RULES.md i STATUS.md. Nowe worktree: Data/raw/derived, Data/raw/cc0, art-source/world/cc0/_raw i **art-source/world/megascans** jako KOPIA (robocopy); gugik/osm/refs/mapillary/fab jako junctiony; `game/Assets/_Generated` skopiować. Limit: od 85 % nowy agent tylko gdy działa < 2; od 95 % żadnych — WIP, HANDOVER, push. Każdy agent commituje WIP + STATUS.md po każdym kroku (limit może ubić w każdej chwili). Lider = jedyny integrator (merge --no-ff na main); po każdym scaleniu: regeneracja + `uv run --project tools/worldgen python -m pytest tests/gis -q` (nie `uv run pytest`) + HANDOVER + push na https://github.com/woogitsugames/kamion. Visual-critic po każdej rundzie wizualnej (zapis do docs/reports/visual/). Przed usunięciem worktree: artifacts → main, odepnij junctiony (cmd /c rmdir), unlock, remove --force --force, sprawdź `du -sh Data/raw/*`. Konflikty: generated/*.json → --ours + regeneracja; kod → unia z myślą (np. `_Tile` = `set_tile || elementScan || atlas`, zacieki `weather`‖`runoff`). Decyzje dla właściciela klikalne (AskUserQuestion), po polsku. Zakaz Google Maps/Street View/Earth/3D Tiles. Fab/Megascans nigdy do gita (D45).
+
+Telefony: zawsze -Serial, jeden agent telefonowy naraz, pomiar tylko gdy żaden Unity.exe nie działa (artifacts/locks/PHONE_RUN). S24+ (RZCX60VE8ZY): bateria nigdy < 20 %, pomiar przy ≥ 40 % i < 36 °C, potem am force-stop. A16 (RFGL34SJYDZ) bez ograniczeń. Nigdy nie usypiaj/blokuj telefonu, nie wpisuj PIN-u.
+
+Inni wykonawcy (wznawia właściciel): GPT/Codex (docs/owner/GPT-TASK-01-MEGASCANS.md, kolejka Q1 0086, Q2 0088) i Antigravity Argon (docs/owner/ARGON-TASK-01-WORLD-EDGE.md — najpierw „UWAGI LIDERA s9”, potem Q1 0087, Q2 0089). Nie ruszaj ich worktree; scal po ich REPORT.md; trzymaj im w kolejce 1–2 zadania.
+
+Zadania: wg „Następne kroki” w HANDOVER.md (0095 → integracja na main z Megascans → telefon A16 → 0097 zabudowa r5 → 0090 remiza r7 → raport bramki 3). Ostatni przydzielony ADR: 0097.
