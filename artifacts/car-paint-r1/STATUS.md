@@ -8,3 +8,6 @@
 
 - Step3: fresh main43bc world complete (341 s); proof verifies192 raw hashes, zero mismatches, Fab15/fallbackFalse. PBR regeneration running separately. Main PHONE_RUN active: zero G Unity launches. Guarded baseline.ps1 prepared for import, canonical vehicle fixtures and matched four-condition matrix. qa-cameras combines unchanged19 building/route and14 selected car cameras with registered controls.
 - NEXT COMMAND: finish baseline-pbr.log; after MAIN PHONE_RUN removal, pwsh -ExecutionPolicy Bypass -File artifacts/car-paint-r1/baseline.ps1 -Phase Import.
+
+- Step4: artifact-only pearl Color-property GPU diagnostic prepared from the actual WorldPBR shader contract (no production edits). Probe attempt stopped by PHONE_RUN guard before Unity launched. Root now also requires GPT_UNITY_HOLD plus explicit ROOT release; both wrappers enforce both locks. Found floating-origin caveat: per-instance dirt seed must be relative to existing GI region corner, not raw world origin. PBR still regenerating.
+- NEXT COMMAND: finish baseline-pbr.log; wait explicit ROOT Unity release, then baseline.ps1 -Phase Import.
