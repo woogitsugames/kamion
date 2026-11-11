@@ -921,3 +921,12 @@ default parity and capture actual passes with input/output dimensions. No C13
 source work or Unity launch yet. D runtime stays closed. Review lives at main
 artifacts/surface-wear-r1/C13-URP-API-VERIFICATION.md with pinned source lines.
 NEXT COMMAND: Get-Content C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-car-paint/artifacts/car-paint-r1/STATUS.md -Tail 12
+
+Step 83: ROOT reviewed P2 draft and identified two gaps before Unity: native
+eligibility checked only UV1 format (fresh GLB corners did not validate stale
+native buffers), and a material uniform outside Lit UnityPerMaterial risked
+SRP Batcher compatibility. G is replacing the gate with a default-OFF local
+vertex keyword and validating actual 54 native plate submesh UV0/UV1 values.
+Reset on rejected repeated Configure is required. Draft semantic pytest44
+passed; no runtime/budget/SRP claim yet. E independently reviews same draft.
+NEXT COMMAND: Get-Content C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-car-paint/artifacts/car-paint-r1/STATUS.md -Tail 12
