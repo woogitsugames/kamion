@@ -80,6 +80,7 @@ def test_new_geometry_keeps_two_low_slots_and_original_plant_budget(monkeypatch)
         namespace["build_conifer"](mb,namespace["en_to_uvz"]([e,n,z]),height,radius,key,1)
     assert set(mb.M) == {"fire_station", "fire_station_alpha"}
     assert sum(len(face)-2 for face in mb.F) <= 888
+    assert len(mb.core_normals) == 216, "radial normals belong only to3 connected low canopy cores"
     r = namespace["ALAY"]["conifer_bough"]; u0,v0,u1,v1 = r["inner_uv"]
     for material, uv in zip(mb.M, mb.UV):
         if material == "fire_station_alpha":

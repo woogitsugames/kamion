@@ -90,8 +90,9 @@ class MB:
 
     def __init__(self):
         self.V, self.F, self.UV, self.M = [], [], [], []
+        self.core_normals = {}
 
-    def face(self, P, UV, mat, hint=None, two_sided=False):
+    def face(self, P, UV, mat, hint=None, two_sided=False, normals=None):
         P = [np.asarray(p, float) for p in P]
         UV = [tuple(map(float, u)) for u in UV]
         if hint is not None and len(P) >= 3:
@@ -100,13 +101,19 @@ class MB:
                 n += np.cross(P[i] - P[0], P[i + 1] - P[0])
             if float(np.dot(n, hint)) < 0:
                 P, UV = P[::-1], UV[::-1]
+                if normals is not None:
+                    normals = normals[::-1]
         b = len(self.V)
         self.V += P
         self.F.append(tuple(range(b, b + len(P))))
         self.UV.append(UV)
         self.M.append(mat)
+        if normals is not None:
+            for i, normal in enumerate(normals):
+                self.core_normals[b+i] = np.asarray(normal, float)
         if two_sided:
-            self.face(P[::-1], UV[::-1], mat)
+            self.face(P[::-1], UV[::-1], mat,
+                      normals=None if normals is None else [-np.asarray(n) for n in normals[::-1]])
 
     def box(self, c, ax, hx, hy, z0, z1, mat, uvr, top=True, bottom=False):
         """Vertical box at c (u, v); ax = unit 2D axis; every side mapped to the rect uvr = ((u0, v0), (u1, v1))."""
@@ -162,6 +169,18 @@ class MB:
             p.use_smooth = True
         me.set_sharp_from_angle(angle=math.radians(smooth_angle))
         me.update()
+        if self.core_normals:
+            # Blender's documented ZERO vector keeps the automatic normal. Only canopy-core
+            # loops receive radial normals; building/roof/trim/cards retain their original auto normals.
+            custom = np.zeros((len(me.loops), 3), dtype=float)
+            for loop in me.loops:
+                normal = self.core_normals.get(loop.vertex_index)
+                if normal is None:
+                    continue
+                en = normal[0]*AX_U + normal[1]*AX_V
+                nb = np.array([-en[0], -en[1], normal[2]])
+                custom[loop.index] = nb / np.linalg.norm(nb)
+            me.normals_split_custom_set(custom.tolist())
         ob = bpy.data.objects.new(name, me)
         bpy.context.scene.collection.objects.link(ob)
         me.calc_loop_triangles()
@@ -1070,17 +1089,29 @@ def build_conifer(mb, c, height, radius, key, lod):
             roll = .50*(h01(key,j,i,"roll")-.5)
             side = (UP*math.cos(roll)+np.r_[-direction[1],direction[0],0]*math.sin(roll))*min(length*.65,height*f*.90)
             mb.face([root-side,root+side,tip+side,tip-side],[(u0,v0),(u1,v0),(u1,v1),(u0,v1)],ALPHA)
-    # Overlapping opaque bough cores connect through the trunk; gaps/silhouette remain in the clipped outer sprays.
-    for f in (.12,.36,.61,.85):
-        cc = c + np.array([0,0,height*f]); rr = radius*.58*(1-f)**.72
-        half_h = min(height*.13,height*f*.95)
-        for j in range(4):
-            a,b = j*math.pi/2,(j+1)*math.pi/2
-            p = cc+np.array([math.cos(a)*rr,math.sin(a)*rr,0])
-            q = cc+np.array([math.cos(b)*rr,math.sin(b)*rr,0])
-            uv = foliage_uv(key,j)
-            mb.face([cc+[0,0,half_h],p,q],uv[:3],MAT)
-            mb.face([cc-[0,0,half_h],q,p],uv[:3],MAT)
+    # Continuous inner mass instead of four isolated diamonds. The broader lower third
+    # and asymmetric radii carry the envelope; clipped outer sprays keep branch gaps.
+    fill = D["spruce"].get("inner_core_fill_r_WORKING_VALUE", .55)
+    profile = ((.055,.42),(.27,1.0),(.60,.58),(.975,.03))
+    sides = 8 if lod == 0 else 6
+    rings, normals = [], []
+    for j,(f,shape) in enumerate(profile):
+        ring, nr = [], []
+        lo, hi = max(0,j-1), min(len(profile)-1,j+1)
+        slope = -radius*fill*(profile[hi][1]-profile[lo][1])/(height*(profile[hi][0]-profile[lo][0]))
+        for i in range(sides):
+            angle = i*2*math.pi/sides+key*.63+.12*math.sin(j*1.4+key)
+            rr = max(radius*.025,radius*fill*shape*(.86+.28*h01(key,j,i,"inner")))
+            level = f+.014*(h01(key,j,i,"z")-.5)*(j<len(profile)-1)
+            ring.append(c+np.array([math.cos(angle)*rr,math.sin(angle)*rr,height*level]))
+            nr.append(np.array([math.cos(angle),math.sin(angle),slope]))
+        rings.append(ring); normals.append(nr)
+    for j in range(len(rings)-1):
+        for i in range(sides):
+            ii = (i+1)%sides
+            mb.face([rings[j][i],rings[j][ii],rings[j+1][ii],rings[j+1][i]],foliage_uv(key+i,j),MAT,
+                    np.r_[(rings[j][i]+rings[j][ii])[:2]/2-c[:2],.15],
+                    normals=[normals[j][i],normals[j][ii],normals[j+1][ii],normals[j+1][i]])
     # A plain dark atlas swatch is a WORKING_VALUE trunk colour, not a claimed bark scan.
     r = LAY["dark"]; uv = [((r["u"][0]+r["u"][1])/2,(r["v"][0]+r["v"][1])/2)]*3
     pts = [c+[-.045,-.045,0],c+[.045,-.045,0],c+[0,.045,0],c+[0,0,height]]
