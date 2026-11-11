@@ -34,7 +34,7 @@ namespace Game.Rendering
             UnityEngine.Object.DontDestroyOnLoad(go);
             var r = go.AddComponent<Runner>();
             float.TryParse(arg("pso_trace"), NumberStyles.Float, CultureInfo.InvariantCulture, out r.traceS);
-            r.tag = string.IsNullOrEmpty(arg("pso_tag")) ? "run" : arg("pso_tag");
+            r.traceTag = string.IsNullOrEmpty(arg("pso_tag")) ? "run" : arg("pso_tag");
             r.warm = arg("pso_warm") != "0" && r.traceS <= 0f;
             r.spikes = arg("spike_probe") == "1";
         }
@@ -42,7 +42,7 @@ namespace Game.Rendering
         sealed class Runner : MonoBehaviour
         {
             public float traceS;
-            public string tag;
+            public string traceTag;
             public bool warm, spikes;
             GraphicsStateCollection m_Trace;
             readonly List<(GraphicsStateCollection c, JobHandle h, float t0)> m_Warm = new List<(GraphicsStateCollection, JobHandle, float)>();
@@ -60,7 +60,7 @@ namespace Game.Rendering
                 {
                     m_Trace = new GraphicsStateCollection();
                     m_Trace.BeginTrace();
-                    Debug.Log($"[PSO] trace start ({traceS:F0} s) api={SystemInfo.graphicsDeviceType} quality={q} tag={tag}");
+                    Debug.Log($"[PSO] trace start ({traceS:F0} s) api={SystemInfo.graphicsDeviceType} quality={q} tag={traceTag}");
                 }
                 if (warm)
                 {
@@ -98,7 +98,7 @@ namespace Game.Rendering
                 {
                     m_Trace.EndTrace();
                     string q = QualitySettings.names[QualitySettings.GetQualityLevel()];
-                    string path = System.IO.Path.Combine(Application.persistentDataPath, $"pso_{SystemInfo.graphicsDeviceType}_{q}_{tag}.graphicsstate");
+                    string path = System.IO.Path.Combine(Application.persistentDataPath, $"pso_{SystemInfo.graphicsDeviceType}_{q}_{traceTag}.graphicsstate");
                     bool ok = m_Trace.SaveToFile(path);
                     Debug.Log($"[PSO] trace saved={ok} {path} variants={m_Trace.variantCount} states={m_Trace.totalGraphicsStateCount} t={now:F1}");
                     m_Trace = null;
@@ -126,7 +126,7 @@ namespace Game.Rendering
                 var sb = new System.Text.StringBuilder(512);
                 for (int j = 0; j < m_Top.Count && j < 24; j++)
                     sb.Append(' ').Append(m_RecName[m_Top[j].i]).Append('=').Append((m_Top[j].ns * 1e-6).ToString("F1", CultureInfo.InvariantCulture));
-                var cam = Camera.main;
+                var cam = ViewCameraResolver.Resolve(null);
                 Vector3 p = cam != null ? cam.transform.position : Vector3.zero;
                 Debug.Log(string.Format(CultureInfo.InvariantCulture, "[SPIKE] t={0:F2} frame={1} dt={2:F1} gc={3} pos=({4:F0},{5:F0},{6:F0}) markers:{7}",
                     now, Time.frameCount, dt, gcHit ? 1 : 0, p.x, p.y, p.z, sb));
