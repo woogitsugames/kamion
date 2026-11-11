@@ -81,3 +81,6 @@ Przygotowano proces oczekujący na cały własny post-world (PID 105616). Dopier
 ## Pierwszy test raportu — wykryty błąd HTML
 Pierwsze uruchomienie test_sbs_report: 24 passed, 1 failed. Test z nieufnym autorem zawierającym zamknięcie script wykrył rzeczywisty błąd: literał Unicode był interpretowany przez Pythona jako znak < zamiast sześciu znaków ucieczki JSON. Poprawiono na jawny surowy literał i dodatkowo sprawdzono AST (sześć znaków, pierwszy backslash). Nie osłabiono testu. Stary log zachowano osobno. Dalsza sekwencja zatrzymała się poprawnie; nie wykonano jeszcze kompozycji ani audytu.
 Zapisano potwierdzenie ukończonego świata (kod 0, SHA logu i manifestu), aby ponowna walidacja nie wymagała powtarzania generatora. Wszystkie surowe capture pozostają zachowane na HEAD b9b5574e; poprawka raportu nie zmienia renderów, kamer ani świata.
+
+## Poprawiony raport i zgodność SBS — wynik
+Ponowne test_sbs_report: 25/25 po poprawce surowego literału JSON; regresja z nieufnym autorem przechodzi bez zmiany testu. Test_sbs_gate3: 40/40. Logi zachowano. Test fotometrii jest kolejnym pojedynczym plikiem i oczekuje na heavy; fidelity oraz kompozycje nadal nie zostały zaliczone. Bramka świata pozostaje według recenzji r1 FAIL, bez nowej automatycznej oceny.
