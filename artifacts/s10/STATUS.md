@@ -587,3 +587,14 @@ P8 wearOFF visibly reconnects the arrow: mask causes the break. One .425 materia
 diagnostic approved with age/dirt unchanged. E160 captured; full GIS running.
 NEXT COMMAND: review P8/P10 diagnostic and bus-only renders; E full test results
 and160 budget/contacts; bounded gate/wear candidates then final D validation.
+
+Step48: PHONE_RUN returned15:43:31 (leader run4 Gate3); all next Unity launches
+stopped. Owned hold diag8 created15:44, old14:31 release removed/suspended. Wait
+actual run4 END and PHONE absence, then new explicit release; no arbitrary delay.
+E160 reviewed jointly: root80Low/G80High. Independently parsed160rawstats, no
+draw/triK increase; fullGIS375/1xfail. Vehicle framing causality is a documented
+gap, not inferred E regression; fixedworld/hero proof separate. D serialized
+scene/camera poses equal in private snapshots, runtimehistoricparity not claimed.
+NEXT COMMAND: on true phone END release E fullEditMode and D pending HighOV2,
+then narrowpaint8/gateBEFORE. Meanwhile D CPU gate build may use cached bus-only
+Generated for later BEFORE, with explicit pins and no Unity.

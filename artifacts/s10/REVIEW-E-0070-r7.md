@@ -84,3 +84,22 @@ copy with gamma/texture/coverage/.25/0 preserved. SourceJSON exact recorded.
 R1summary Low8views maxdraw/triKdelta0 peak501->501; Highmaxdraw-1/triK<=0.
 These are pre-SRP estimates, not physical shaderpass/GPUtime. Full160 allowed,
 no more tuning; keep clearglass/canopy/runoff/cost limitations explicit.
+
+## Final independent review / explicit capture limits
+Root viewed all10Low final sheets (80frames), G all10High sheets(80) plushero
+pairs/photo7197. No demonstrated new fixed-route E regression. Low36nonhero
+fixedworld frames have maxwholeframeMAE.003304LSB; not a zero-pixel claim.
+Vehicle34Lowframes include large differences: trailer34OVMAE3.179/626425pixels,
+truckrearOV2.938. GHigh has similar trailer34OV4.253. Root nativebeforeafter
+pairs show framing/pose differences; canonical564assetbytes alone do not prove
+past scene/runtimepose parity. E audit documents import->canonicalInstaller->
+BEFORE versus later normalimports; Installer preserved previous roots. Exact
+old scene/runtime poses absent, so mechanism remains unproven. Do not attribute
+truck/trailer appearance changes to E or call all160causallyisolated comparisons.
+Fixedhero views/semanticROIs and observational counters may be reported separately.
+Root independently parsed all160rawstats: Low80 drawdelta-1..0/trisK0, peaks
+968/487k unchanged; High80-1..0/-1..0, peaks1778/2476k unchanged. These are before
+SRP estimates/roundedK; extraHighdepthpass/devicecost remains UNVERIFIED.
+FullGIS375/1xfail517.58s complete. FullEditMode pending PHONEhold after15:43:31.
+G review copied asREVIEW-E-INDEPENDENT-HIGH.md from789edebd, validASCII; noCC0
+license claim on buildingphoto7197 (CC0 applies only to fir maps).
