@@ -357,7 +357,7 @@ def _spruce(rng, h, w):
     (the trunk side), ragged tips below."""
     im = _pil(h, w)
     d = ImageDraw.Draw(im)
-    pal = [(28, 42, 40), (48, 70, 68), (70, 96, 92), (98, 124, 118)]
+    pal = [(18, 28, 27), (30, 46, 45), (44, 64, 62), (62, 84, 80)]
     d.rectangle([0, 0, w, int(h * 0.34)], fill=pal[0] + (255,))
     n = 3000
     ppm_x, ppm_y = w / KIT_M, h / ROW_H_M["spruce"]

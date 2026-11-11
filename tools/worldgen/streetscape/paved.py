@@ -260,7 +260,7 @@ def build_meshes(buf, paved, zgrid, hf, walls=None, roads_poly=None):
 def _edges(buf, item, zgrid, hf, roads_poly=None):
     """Outer edge: concrete edging strip (paving blocks) or flush flange (concrete / asphalt)."""
     poly, mat = item["poly"], item["mat"]
-    edged = mat in EDGED
+    edged = mat in EDGED and item.get("edging", True)      # ADR 0114: plot driveways end flush (no extra material)
     for ring in [poly.exterior, *poly.interiors]:
         c = np.asarray(ring.coords)
         if len(c) < 3:

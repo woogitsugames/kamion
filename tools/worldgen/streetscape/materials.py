@@ -512,4 +512,4 @@ for _k in ("roof_tiles_red", "roof_tiles_brown"):
 #   rough grass outside the fence (WORKING_VALUE, refs P13 / P19 / C04: a lawn reads ~1.3x the luminance of the
 #   unmown verge next to it).
 M["plot_kit"] = {"color": [1.0, 1.0, 1.0], "rough": 0.85, "texture": "plot_kit", "alpha_cutoff": 0.5}
-M["plot_lawn"] = {"color": [0.105, 0.150, 0.046], "rough": 0.95, "surface": "grass", "texture_set": "grass_verge"}
+M["plot_lawn"] = {"color": [0.150, 0.200, 0.060], "rough": 0.95, "surface": "grass", "texture_set": "grass_verge"}

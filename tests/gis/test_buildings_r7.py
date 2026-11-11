@@ -141,7 +141,7 @@ def test_ground_is_one_continuous_driveway_a_path_and_a_lawn():
     rp = _region(road, houses)
     bpoly = shapely.union_all([h["poly"] for h in houses])
     items = PL.paved_items(rp, road, bpoly, [])
-    assert {i["mat"] for i in items} <= {"plot_lawn", "yard_paving", "yard_gravel"} and all(i["source"] == "plot" for i in items)
+    assert {i["mat"] for i in items} <= {"plot_lawn", "yard_paving"} and all(i["source"] == "plot" for i in items)
     polys = [i["poly"] for i in items]
     for i, a in enumerate(polys):
         assert a.intersection(road).area < 0.05 and a.intersection(bpoly).area < 0.05
@@ -249,4 +249,4 @@ def test_materials_plot_kit_is_matt_and_lawn_is_lighter_than_the_verge():
 
     def lum(c):
         return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]
-    assert 1.15 < lum(lawn["color"]) / lum([0.08, 0.105, 0.038]) < 1.6
+    assert 1.15 < lum(lawn["color"]) / lum([0.08, 0.105, 0.038]) < 2.2

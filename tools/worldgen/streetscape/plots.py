@@ -67,6 +67,9 @@ WICKET_W_M = 1.0
 SLIDE_SHARE = 0.18            # sliding gates are the rarer kind (no frame of one in the reference set)
 TERRACE_MIN = 3               # houses in one group from which the row is a terrace (wicket per house, no gate / drive)
 DRIVE_W_M = 3.0
+# One driveway material for every plot (budget, ADR 0114): gravel driveways (ref P20) and the concrete edging strip
+# each added a submesh to the chunk's paved mesh (+5 / +3 chunks); block paving is the common case.
+DRIVE_MAT = "yard_paving"
 PATH_W_M = 1.1
 DROP_H_M = 0.03               # lowered kerb at a driveway, m above the gutter (WORKING_VALUE: 2-4 cm in practice)
 DROP_RAMP_M = 1.0             # kerb ramps down over this length on either side of the driveway
@@ -611,9 +614,9 @@ def paved_items(rp, roads_poly, bpoly, paved):
         plot["hard"] = shapely.unary_union(hard) if hard else Polygon()
     for plot in plots:
         hard_u = plot["hard"]
-        surf = "yard_paving" if plot["surface"] == "paving" else "yard_gravel"
         for k, q in enumerate(_polys(hard_u.difference(taken), 1.0)):
-            out.append({"id": f"plot:{plot['id']}:drive{k}", "poly": q, "mat": surf, "source": "plot", "parking": False})
+            out.append({"id": f"plot:{plot['id']}:drive{k}", "poly": q, "mat": DRIVE_MAT, "source": "plot", "parking": False,
+                        "edging": False})
         lawn = plot["poly"].difference(taken).difference(hard_u.buffer(0.02))
         lawns = _polys(lawn, 6.0)
         plot["lawn"] = shapely.unary_union(lawns) if lawns else None
@@ -1110,8 +1113,7 @@ def _verge_overlay(buf, plot, surf_top, src_id):
     T = np.asarray(T)
     nrm = np.cross(V[T[:, 1]] - V[T[:, 0]], V[T[:, 2]] - V[T[:, 0]])
     T[nrm[:, 2] < 0] = T[nrm[:, 2] < 0][:, [0, 2, 1]]
-    mat = "yard_paving" if plot["surface"] == "paving" else "yard_gravel"
-    buf.add("paved", mat, V, np.asarray(UV), T, src=src_id + ":verge",
+    buf.add("paved", DRIVE_MAT, V, np.asarray(UV), T, src=src_id + ":verge",
             UV1=np.tile([25.0, 25.0], (len(V), 1)))
     return 1
 
