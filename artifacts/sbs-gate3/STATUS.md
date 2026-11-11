@@ -34,3 +34,6 @@ NEXT: pwsh scripts/sbs-gate3.ps1
 
 Step 12: R1 matrix complete (160/160); inspected representative corrected sheets. Two remaining fixes authored: source 454716650857984 moved 2.95m laterally from rail into lane; source 494288258686575 raised to measured road asphalt U 140.188 + eye 1.7. Exact pose diff asserts only these 2 of 40 changed, so 38 per state are retained; R1 originals for the 2 preserved. R2 rerenders 2 cameras x 4 states, no world changes.
 NEXT: pwsh artifacts/sbs-gate3/rerender-r2.ps1
+
+Step 13: R2 complete, all 160 PNGs loaded/hashed and metrics consistent; stats Low regular drawsEst 188–486 / trisK 155–556 (CPU estimates, no world changes). Full contact review found 3 more sunset deck photos with NMT-level cameras, plus one wrong SfM heading; R3 authoring raises them to existing deck + eye and selects original compass for 1406533339711789. Exact pose diff limited to these 3; default metrics now include separate sky/asphalt area AND brightness ratios. PNG/JSON writes atomic to avoid reading partial outputs. Focused tests 10/10.
+NEXT: pwsh artifacts/sbs-gate3/rerender-r3.ps1

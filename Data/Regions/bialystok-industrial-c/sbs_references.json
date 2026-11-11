@@ -246,8 +246,8 @@
         "computed_altitude": 6.4443097161129
       },
       "rectified_focal": 0.941154215279635,
-      "heading_grid_deg": 184.50800376426488,
-      "heading_true_deg": 187.84528608516,
+      "heading_grid_deg": 297.4272383339709,
+      "heading_true_deg": 300.76452636719,
       "route_distance_m": 26.161,
       "heading_original_deg": 300.76452636719,
       "segment_station_m": 343.026,
@@ -257,7 +257,12 @@
       "authored_overrides": {
         "horizon_y_fraction": 0.66,
         "pose_status": "WORKING_VALUE",
-        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R3 full-sheet review: sunset photo visibly on deck, not underneath it; original GPS, existing deck center altitude 145.819m + eye 1.7m, axis offset 0.90m (c:w177895177:1883101822-1883062831); camera only. Exact road/camera height remains WORKING_VALUE. SfM heading 187.8deg conflicts with original 300.8deg and forward road/sunset framing; retain original compass for this frame.",
+        "east_delta_m": -1.2699,
+        "north_delta_m": 0.774,
+        "absolute_u_m": 147.5188,
+        "eye_height_m": 1.7,
+        "heading_source": "original"
       }
     },
     {
@@ -446,7 +451,11 @@
       "authored_overrides": {
         "horizon_y_fraction": 0.59,
         "pose_status": "WORKING_VALUE",
-        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R3 full-sheet review: sunset photo visibly on deck, not underneath it; original GPS, existing deck center altitude 145.829m + eye 1.7m, axis offset 3.11m (c:w177895177:1883101822-1883062831); camera only. Exact road/camera height remains WORKING_VALUE.",
+        "east_delta_m": 1.0208,
+        "north_delta_m": -1.668,
+        "absolute_u_m": 147.5288,
+        "eye_height_m": 1.7
       }
     },
     {
@@ -507,7 +516,11 @@
       "authored_overrides": {
         "horizon_y_fraction": 0.59,
         "pose_status": "WORKING_VALUE",
-        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose."
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R3 full-sheet review: sunset photo visibly on deck, not underneath it; original GPS, existing deck center altitude 145.834m + eye 1.7m, axis offset 3.14m (c:w177895177:1883101822-1883062831); camera only. Exact road/camera height remains WORKING_VALUE.",
+        "east_delta_m": -0.1508,
+        "north_delta_m": -1.3252,
+        "absolute_u_m": 147.5342,
+        "eye_height_m": 1.7
       }
     },
     {

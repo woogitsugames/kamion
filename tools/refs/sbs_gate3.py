@@ -29,7 +29,15 @@ def read(path):
 
 def write(path, data):
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+    temporary=path.with_name(path.name+'.tmp')
+    temporary.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+    temporary.replace(path)
+
+
+def save_png(im,path):
+    temporary=path.with_name(path.name+'.tmp')
+    im.save(temporary,format='PNG')
+    temporary.replace(path)
 
 
 def vfov(horizontal, aspect):
@@ -130,7 +138,7 @@ def rectify(photo,metadata,destination):
     out=(source[y0,x0]*(1-fx)*(1-fy)+source[y0,x0+1]*fx*(1-fy)
          +source[y0+1,x0]*(1-fx)*fy+source[y0+1,x0+1]*fx*fy)
     destination.parent.mkdir(parents=True,exist_ok=True)
-    Image.fromarray(np.rint(out).clip(0,255).astype('uint8')).save(destination)
+    save_png(Image.fromarray(np.rint(out).clip(0,255).astype('uint8')),destination)
     return focal,width,height
 
 
@@ -319,10 +327,16 @@ def measurements(im, horizon, authored_masks=None):
         if np.any(sky & asphalt): raise ValueError('sky/asphalt masks overlap')
         method='authored normalized polygons; see sbs_authored_overrides.json'
     hist=np.histogram(luma,bins=32,range=(0,256))[0]
+    sky_luma=float(luma[sky].mean()) if sky.any() else None
+    asphalt_luma=float(luma[asphalt].mean()) if asphalt.any() else None
     return {'luma_mean_srgb': round(float(luma.mean()),3), 'histogram_32':hist.tolist(),
             'sky_fraction_estimate':round(float(sky.mean()),5),
             'asphalt_fraction_estimate':round(float(asphalt.mean()),5),
             'sky_asphalt_ratio_estimate':round(float(sky.sum()/asphalt.sum()),5) if asphalt.any() else None,
+            'sky_asphalt_area_ratio_estimate':round(float(sky.sum()/asphalt.sum()),5) if asphalt.any() else None,
+            'sky_luma_mean_srgb_estimate':round(sky_luma,3) if sky_luma is not None else None,
+            'asphalt_luma_mean_srgb_estimate':round(asphalt_luma,3) if asphalt_luma is not None else None,
+            'sky_asphalt_luma_ratio_estimate':round(sky_luma/asphalt_luma,5) if sky_luma is not None and asphalt_luma else None,
             'mask_method':method}
 
 
@@ -373,7 +387,7 @@ def compose(render_dir, outdir, strict=True):
             points=[(24+i*28,height+178-float(value)/peak*65) for i,value in enumerate(hist)]
             d.line(points,fill=color,width=2)
         d.text((24,height+99),'sRGB luma histogram: blue PHOTO / orange RENDER (32 bins, normalized)',fill='white')
-        sheet.save(outdir/(r['camera']+'.png'))
+        save_png(sheet,outdir/(r['camera']+'.png'))
     write(outdir/'metrics.json',{'pairs':metrics,'missing_renders':missing,'gate_status':'UNVERIFIED',
           'cameras_sha256':hashlib.sha256((REGION/'sbs_cameras.json').read_bytes()).hexdigest()
               if (REGION/'sbs_cameras.json').exists() else None})

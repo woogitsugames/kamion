@@ -99,6 +99,15 @@ def test_perspective_rectification_rays_and_fisheye_center():
     assert 0<fx[50,100]<x[50,100]
 
 
+def test_sky_asphalt_brightness_ratio_is_separate_from_area():
+    a=np.full((100,100,3),50,dtype='uint8');a[:50]=200
+    m=sbs.measurements(Image.fromarray(a),0.5)
+    assert m['sky_luma_mean_srgb_estimate']==200
+    assert m['asphalt_luma_mean_srgb_estimate']==50
+    assert m['sky_asphalt_luma_ratio_estimate']==4
+    assert m['sky_asphalt_area_ratio_estimate']!=4
+
+
 def test_rectification_does_not_fill_missing_pixels(tmp_path):
     a=np.zeros((60,80,3),dtype='uint8');a[:,:,0]=np.arange(80)
     source=tmp_path/'photo.png';Image.fromarray(a).save(source)
