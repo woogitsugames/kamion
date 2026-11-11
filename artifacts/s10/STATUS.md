@@ -130,3 +130,11 @@ floor, windowgradient-15percent, cabcontrast128to126 remains readable. Accept
 bounded tradeoff, explicitly not lossless/device proof. Final1.2shoulder ROI
 and canonicalfixture EditMode remain outstanding.
 NEXT COMMAND: inspect final C metrics/matrix and B final matrices/tests; reuse first free worker for G from then-current main, followed by E,D.
+
+## Step 9 - C complete visual/source independent review
+Reviewed all236finalafter frames through20sheets, focalnative/floor crops and
+actualsource/defaultassets. REVIEW-C-0098.md records scoped visualPASS pending
+finalEditMode, softness tradeoff and precisegable240.836/redp95241. Lowstats
+byteidentical118rows; pixelidentity is not claimed. C missing ignored interiorFBX
+fixture was real BuildBatch failure, nowonefilecopied/retryingbuilders, no matrix rerun.
+NEXT COMMAND: verify C finalEditMode/REPORT then dispatch G on freeworker; review B final matched236matrix/tests.
