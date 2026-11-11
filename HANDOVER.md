@@ -1,6 +1,7 @@
 # HANDOVER — kamion, sesja 9 (start 2026-11-11 00:30 lokalnie / 23:30 UTC; limit 5 h reset 04:30 UTC)
 
 ## Najpierw
+- 02:45: limit 88 % — 0092 scalony bez krytyka (po resecie); działa tylko 0093.
 - Trigger 02:20: limit 82 %; 0092 i 0093 w toku; Argon 0085 — uwagi przed scaleniem.
 - **Limit 74 % o ~02:05 lokalnie** (reset 04:30 UTC): nowe agenty wstrzymane, dopóki działają 0092 i 0093; 0094 czeka.
 - 0084 po regeneracji: pytest gis 323 ✓ / 0 ✗.
@@ -16,12 +17,12 @@
 | wysepki z OSM | 0077 | usunięty | artifacts/islands-r10 | SCALONE `0f6a5cee` (konflikty kodu z 0076: pipeline.py — stats 0076 + GO.build przed cull_sides; meshing.py — flaga flush 0076 + stacja 0077; BASELINE fidelity z 0077); po regeneracji main `8cc25713`: pytest gis 328 ✓ / **2 ✗** (kerb_on_carriageway 28 > 0 = zatopione krawężniki pod klinami; skirt:yard_concrete 4 > 3) → krok 0 zadania 0093 |
 | zabudowa r3 | 0091 | usunięty | artifacts/buildings-r11 | SCALONE `9f9a34c5` (recenzja `REVIEW-2026-11-11-s9-0091.md`: PASS warunkowy; draws Low +3–5 % na 4 kamerach → rozstrzyga A16, ew. cofnąć `plinth_grey`); po regeneracji pytest gis 334 ✓ / 2 ✗ (te same 2 z 0077 → 0093) |
 | geometria i oznakowanie węzłów + 2 czerwone testy main | 0093 | junctions-r1 (z 8cc25713) | artifacts/junctions-r1 | s9: agent Fable start ~02:30 |
-| Kwadrat Park r12 (firanka matowa, szlaban domknięty, dryf do paneli) | 0092 | kwadrat-r12 (z d8e929ca) | artifacts/kwadrat-r12 | s9: agent Fable start ~01:35 |
+| Kwadrat Park r12 | 0092 | usunięty | artifacts/kwadrat-r12 | SCALONE `8cbc9264` (firanka matowa R−B +15→−6, brama domknięta — płot/słupki WORKING_VALUE, `_PANELTONE`, ślady par bieżników; budżet Low +0,5 % draws; pytest 251/0, PlayMode 4/4). **visual-critic odłożony po resecie limitu**; regeneracja main w tle `artifacts/logs/s9-main-regen-0092.log` |
 | import Megascans R1 | 0084 | gpt-megascans (NIE usuwać — Codex wciąż aktywny) | artifacts/megascans-r1/REPORT.md | SCALONE `98e54e47` (REPORT: lokalnie PASS, skok sceny FAIL, Low lokalnie +4 draw/+4k tris; normal mapy Fab wyłączone; High 1024 i telefon UNVERIFIED); konflikt stage.py = unia (yard wear 0071 + FD.apply); regeneracja main w tle `artifacts/logs/s9-main-regen-0084.log`; GPT następnie Q1 0086 / Q2 0088 |
 | tło za krawędzią | 0085 | argon-edge | artifacts/edge-far-r1/REPORT.md | REPORT 01:38; stan zacommitowany przez lidera (Argon bezczynny od 01:46). NIEscalone: `edge-south` — budynek regionu zastąpiony/zdublowany halą far-field (podejrzenie: budynki przecinające granicę w far-field) → uwagi w `docs/owner/ARGON-TASK-01-WORLD-EDGE.md` „UWAGI LIDERA s9” |
 
 ## Następne kroki
-1. Scal 0076 → 0077 (gdy skończą); na main: build_all → build_world → pytest gis → import-region → Truck/Trailer BuildBatch + InstallBatch → EditMode/PlayMode (`WorldCBarrierTests|DepotBarrierTests|WorldCRouteTests|WorldEdgeRecoveryTests`).
+1. Scal 0076 → 0077 (gdy skończą); na main: build_all → build_world → pytest gis → import-region → Truck/Trailer BuildBatch + InstallBatch → EditMode/PlayMode (UWAGA: EditMode `TruckDoorGlassTests` ×3 czerwone — brak `MI_Ext_DoorGlassL` w `_Generated/Truck` także na main → TruckAssetBuilder.BuildBatch; `WorldCBarrierTests|DepotBarrierTests|WorldCRouteTests|WorldEdgeRecoveryTests`).
 2. Render stanu połączonego (wymóg recenzji): High+Low overcast `fire-station-ref7197`, `stretch-05-docks`, `kwadrat-park-gate`, `truck-at-gate`, `r10_block_2`, `r10b_black_05` + zrzuty z telefonu → ponowny pomiar tynku remizy.
 3. Nowe zadania z recenzji s9 (agenci po zwolnieniu miejsc): **0090** remiza r7 (świerki piętrowe, tuje 3 kształty + Low, szkło 60–75, zacieki). **0089** czarny lakier aut → Argon Q2 (dopisane).
 3a. **0094** zabudowa r4 (z recenzji 0091: P1-1 daszek przebija połać, P1-2 łaty jasnego tynku — osłabić warstwę niskoczęst., P1-3 balkony na obu długich stronach, P1-4 czarna podbitka nad skrzydłem L ≥ 90, P1-5 balkony z płytą 0,15–0,2 m i jaśniejszą balustradą; P2 kolory dachów/tynków, gąsior, pieprz High w shaderze). **0090** remiza r7.
