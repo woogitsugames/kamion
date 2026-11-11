@@ -91,3 +91,4 @@ Zapisano pary foto after High-clear-photo-1280x720. Następny krok: porównać z
 Zapisano pary foto after High-clear-photo-2048x1152. Następny krok: porównać z photo-references.json.
 Zapisano pary foto after High-clear-photo-2048x1536. Następny krok: porównać z photo-references.json.
 EditMode koniec rundy: kod 0. Szczegóły editmode-final.log i NUnit XML. Następny krok: raport i dalsza runda.
+Obejrzano 24/24 arkusze kontrolne B i 18/18 foto-review (54 porównania). Niezależny krytyk obejrzał 24 arkusze, 32 focusy i 27 unikalnych zdjęć: PASS ograniczonej korekty edytorowej, ogólny realizm FAIL; szczegóły docs/reports/visual/2026-11-11-vegetation-0109-r1.md. Wszystkie 322 kamery porównane: draws delta 0, triangles delta 0, instancje osobno w all-camera-costs.csv. EditMode 261/261. GIS uzyskał heavy i trwa. Następny krok: zakończenie GIS, REPORT, kopia do main i kolejna runda.
