@@ -8,3 +8,5 @@ Wyniki wizualne i wydajności na tej gałęzi: UNVERIFIED. Telefonów nie używa
 Krok 2: skopiowano wymagane dane, Megascans i _Generated; junctiony istnieją, git lfs checkout zakończony. Kopiowane są też PNG materiałów i cache Library. Następny krok: baseline przez scripts/visual-qa.ps1 z blokadą gpt-light.
 
 Krok 3: kopia Library zakończona (kod robocopy 1 = skopiowane pliki). Ruszyła ablacja RCAS, każdy render bierze i zwalnia slot gpt-light. Generator baseline działa równolegle. Stwierdzono w Sky.shader: chmury mnożone przez overcast, więc clear=0 wyłącza całą strukturę. Następny krok: pomiary PNG i poprawka nieba clear w istniejącym przebiegu.
+
+Krok 4: zapisano ADR 0108 z kryteriami r1, granicami własności i oknem pracy do 12.11.2026 21:30 Europe/Warsaw. Następny krok: zakończyć ablacjas RCAS, obejrzeć i zmierzyć PNG.
