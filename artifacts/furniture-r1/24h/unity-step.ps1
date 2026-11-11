@@ -19,7 +19,7 @@ try {
         }
         'render' {
             $scene=if ($Tier -eq 'High') { 'WorldC_High' } else { 'WorldC' }
-            & pwsh scripts/visual-qa.ps1 -Scene $scene -Tier $Tier -Lighting $Lighting -Gate3 Data/Regions/bialystok-industrial-c/furniture_cameras.json -OutputDir "$ev/$Phase/$Tier-$Lighting" *> "$ev/render-$Phase-$Tier-$Lighting.log"
+            & pwsh scripts/visual-qa.ps1 -Scene $scene -Tier $Tier -Lighting $Lighting -Gate3 "$ev/cameras.json" -OutputDir "$ev/$Phase/$Tier-$Lighting" *> "$ev/render-$Phase-$Tier-$Lighting.log"
         }
         'editmode' {
             & pwsh scripts/test.ps1 -Platform EditMode *> "$ev/editmode.log"
