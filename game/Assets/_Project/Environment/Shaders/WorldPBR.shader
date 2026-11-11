@@ -56,13 +56,14 @@ Shader "Kamion/World PBR"
         _MacroWear ("Macro wear-patch strength (B)", Range(0, 1)) = 0.15
         _CrackStrength ("Crack layer strength", Range(0, 1)) = 0.8
         _DetailFade ("Photo detail fade distance (m)", Float) = 25
-        _AsphaltWear ("Asphalt: tone, wheel darkening, Low cracks, reserved (ADR0118)", Vector) = (1, 0, 0, 0)
+        _AsphaltWear ("Asphalt: tone, wheel darkening, Low cracks, Low photo detail (ADR0118)", Vector) = (1, 0, 0, 0)
         _WheelPolish ("Wheel-path polish (_ROADWEAR)", Range(0, 1)) = 0.5
         _GutterDirt ("Gutter grime (_ROADWEAR)", Range(0, 1)) = 0.5
         _DripBand ("Lane-centre oil / soot drip band between the wheel paths (_ROADWEAR)", Range(0, 1)) = 0
         _Grime ("Ground grime (_GRIME): x damp darkening, y damp threshold (macro pool), z joint dirt, w damp gloss", Vector) = (0.45, 0.62, 0.3, 0.5)
         _SkyOcc ("Sky occlusion: x down-facing ambient, y horizon reflection (0 = off; ADR 0060)", Vector) = (0, 0, 0, 0)
         _AgeTint ("Patch age target / base albedo ratio", Float) = 2.0
+        _PatchSeam ("Repair: seam width m, darkening, fresh tone, aged tone (ADR0118)", Vector) = (0, 0, 1, 1)
         _DecalAlpha ("Decal opacity", Range(0, 1)) = 1
         _SplashHeight ("Splash zone height (m)", Float) = 0.6
         _RunoffMap ("Parapet run-off (R soot, G rust; _RUNOFF)", 2D) = "black" {}
@@ -106,6 +107,7 @@ Shader "Kamion/World PBR"
             float4 _GrassFill;
             float4 _PaintColor, _PaintWear;
             float4 _AsphaltWear;
+            float4 _PatchSeam;
             float4 _Grime, _SkyOcc;
             float _DripBand;
             float4 _CarPaint, _CarFlake, _PearlTint;
@@ -397,17 +399,25 @@ Shader "Kamion/World PBR"
             #endif
 
                 // ---- close-range photo detail (asphalt), fades out by _DetailFade
-            #if defined(_PHOTO_DETAIL) && defined(_KAMION_WORLD_DETAIL)
+            #if defined(_PHOTO_DETAIL)
+            #if !defined(_KAMION_WORLD_DETAIL)
+                if (_AsphaltWear.w > 0.001) // explicit Low albedo-only detail; keep the expensive normal on High
+            #endif
                 {
                     float dist = length(GetCameraPositionWS() - pw);
                     half f = saturate(1.0 - dist / _DetailFade) * mask.b;
+                #if !defined(_KAMION_WORLD_DETAIL)
+                    f *= _AsphaltWear.w;
+                #endif
                     if (f > 0.001)
                     {
                         float2 ud = pw.xz / _Tile.w;
                         half d = SAMPLE_TEXTURE2D(_DetailAlbedo, sampler_DetailAlbedo, ud).r;
                         albedo *= lerp(1.0, d * 4.594794, f);          // unity_ColorSpaceDouble (linear)
+                    #if defined(_KAMION_WORLD_DETAIL)
                         half3 dn = UnpackNormalScale(SAMPLE_TEXTURE2D(_DetailNormal, sampler_DetailAlbedo, ud), f);
                         tn = normalize(half3(tn.xy + dn.xy, tn.z * dn.z));
+                    #endif
                     }
                 }
             #endif
@@ -465,6 +475,23 @@ Shader "Kamion/World PBR"
                     half age = saturate(i.uv.z);
                     albedo = lerp(albedo, albedo * _AgeTint, age * 0.85);
                     smooth *= 1.0 - 0.45 * age;
+                    if (_PatchSeam.x > 0.0)
+                    {
+                        // UV0 is normalised once per complete repair before chunk clipping (yard_wear.py).
+                        // Recover metres from the surface Jacobian: seal width stays physical on every patch size.
+                        float2 ux = ddx(i.uv.xy), uy = ddy(i.uv.xy);
+                        float3 px = ddx(pw), py = ddy(pw);
+                        float det = ux.x * uy.y - ux.y * uy.x;
+                        float inv = (det < 0.0 ? -1.0 : 1.0) / max(abs(det), 1e-10);
+                        float2 sizeM = float2(length((px * uy.y - py * ux.y) * inv),
+                                              length((py * ux.x - px * uy.x) * inv));
+                        float2 borderM = min(i.uv.xy, 1.0 - i.uv.xy) * sizeM;
+                        float edgeM = min(borderM.x, borderM.y);
+                        float aa = max(fwidth(edgeM), 0.002);
+                        half seam = 1.0 - smoothstep(_PatchSeam.x - aa, _PatchSeam.x + aa, edgeM);
+                        albedo *= lerp(_PatchSeam.z, _PatchSeam.w, age) * (1.0 - seam * _PatchSeam.y);
+                        smooth = lerp(smooth, 0.42, seam);
+                    }
                 }
             #endif
             #if defined(_DECAL_ALPHA)

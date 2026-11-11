@@ -520,7 +520,13 @@ M["plot_lawn"] = {"color": [0.150, 0.200, 0.060], "rough": 0.95, "surface": "gra
 # No road generator/geometry change; fresh SMA deliberately has no old-road damage opt-in.
 M["road_asphalt"] = {"color": [0.081, 0.08, 0.079], "rough": 0.9, "surface": "asphalt",
                      "texture_set": "asphalt_worn",
-                     "asphalt_wear": {"tone": 0.90, "wheel_darkening": 0.45, "low_cracks": 1.0}}
+                     "asphalt_wear": {"tone": 0.90, "wheel_darkening": 0.45, "low_cracks": 1.0,
+                                      "low_photo_detail": 0.75}}
+# WORKING_VALUE: a 25 mm bituminous saw-cut seal, fresh darker fill and aged lighter aggregate.
+# UV0 is normalised by yard_wear before chunking; base/normal textures still use world metres.
+M["decal_patch"]["asphalt_patch_seam"] = {"width_m": 0.025, "darkening": 0.65,
+                                         "fresh_tone": 0.88, "aged_tone": 1.08}
+M["decal_patch"]["asphalt_wear"] = {"low_photo_detail": 0.75}
 # Restore authored wheel wear (0099 halved it in C#). Keep all coefficients visible here.
 # Glyphs share the transverse encoding: their readability is an explicit visual control, not a claimed fix.
 from roads.standards import MARKING_LIFT as _ASPHALT_PAINT_LIFT

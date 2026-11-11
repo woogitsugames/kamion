@@ -246,7 +246,14 @@ namespace Game.World.Import
             {
                 float A(string key, float fallback) => aw.Get(key) != null ? (float)Num(aw.Get(key)) : fallback;
                 mat.SetVector("_AsphaltWear", new Vector4(A("tone", 1f), A("wheel_darkening", 0f),
-                    A("low_cracks", 0f), 0f));
+                    A("low_cracks", 0f), A("low_photo_detail", 0f)));
+            }
+            mat.SetVector("_PatchSeam", new Vector4(0f, 0f, 1f, 1f));
+            if (id == "decal_patch" && def.Get("asphalt_patch_seam") is Dictionary<string, object> ps)
+            {
+                float P(string key, float fallback) => ps.Get(key) != null ? (float)Num(ps.Get(key)) : fallback;
+                mat.SetVector("_PatchSeam", new Vector4(P("width_m", 0f), P("darkening", 0f),
+                    P("fresh_tone", 1f), P("aged_tone", 1f)));
             }
             bool asphalt = setName == "asphalt_worn" || setName == "asphalt_sma_fresh" || setName == "asphalt_patch";
             if (id == "road_asphalt" || id == "road_asphalt_new")

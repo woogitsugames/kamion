@@ -146,6 +146,35 @@ def _quad_grid(buf, mat, c, ax, L, W, zsurf, lift, src, inside=None):
     return True
 
 
+def normalize_asphalt_patch_uvs(buf, style=None):
+    """ADR0118: normalise only decorative asphalt repairs, before chunk clipping.
+
+    Positions, indices, normals, paint and yard wear are untouched. Complete-patch UVs survive clipping so a chunk
+    border cannot become a false repair seam. The opt-in material block also enables the matching shader branch.
+    """
+    if style is None:
+        from .materials import M
+        style = M.get("decal_patch", {}).get("asphalt_patch_seam", {})
+    counts = {"normalised": 0, "invalid_uv": 0}
+    if not style or float(style.get("width_m", 0)) <= 0:
+        return counts
+    for part in buf.parts:
+        if part.layer != "markings" or part.mat != "decal_patch":
+            continue
+        uv = part.UV
+        if uv.ndim != 2 or uv.shape[1] != 2 or not len(uv) or not np.isfinite(uv).all():
+            counts["invalid_uv"] += 1
+            continue
+        lo, hi = uv.min(axis=0), uv.max(axis=0)
+        span = hi - lo
+        if np.any(span < 1e-6):
+            counts["invalid_uv"] += 1
+            continue
+        part.UV = (uv - lo) / span
+        counts["normalised"] += 1
+    return counts
+
+
 def apply(buf, overrides, origin, docks, paved, roads_poly, zsurf, report):
     rep = {"applied": [], "stale": []}
     o_ = np.asarray(origin, float)
@@ -297,5 +326,8 @@ def apply(buf, overrides, origin, docks, paved, roads_poly, zsurf, report):
                                 cnt["grime_bands"] += 1
                             s0 += seg
         rep["applied"].append(cnt)
+    patch_uv = normalize_asphalt_patch_uvs(buf)
+    if patch_uv["normalised"] or patch_uv["invalid_uv"]:
+        rep["asphalt_patch_uv"] = patch_uv
     report["yard_wear"] = rep
     return rep
