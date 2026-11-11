@@ -51,12 +51,15 @@ głowice, łożyska, rury, skrzydła, schody, zacieki i położenie plam farby s
 
 - Testy `tests/gis/test_viaduct_underdeck.py`: niezmienność pomostu, prześwit,
   normalne, kontakt z gruntem, brak proceduralnego zamiennika roślin Fab.
-- Pierwsza generacja: dwa łańcuchy, 7 + 5 linii podpór, identyczne SHA pomostów.
-  Generator Low: maks. +0,650% trójkątów; delta liczby materiałów 0.
+- Generacja r3: dwa łańcuchy, 7 + 5 linii podpór, identyczne SHA pomostów.
+  Generator Low: maks. +0,628% trójkątów; delta liczby materiałów 0.
+  64/64 bazowych chunków Low zweryfikowano po SHA; delta grup siatka/materiał 0.
   Szacunek CPU, **nie** pomiar draw calls ani GPU. Wyniki końcowe w REPORT.
-- Pierwszy przebieg GIS wystartował przed zmianami i wykrył różnicę manifestu
-  w teście deterministycznego eksportu (369 PASS / 1 XFAIL / 1 FAIL).
-  Wymagany ponowny pełny przebieg po stabilizacji generatora.
+- Testy lokalne 6/6 PASS, w tym obniżanie stopni co 0,18 m i podparcie końca biegu.
+  Obejrzany podgląd geometrii Blendera (porównanie trzech kamer): głowice i łożyska
+  są rozdzielone, bieg schodów dochodzi do gruntu. Płaskie materiały podglądu i
+  gruby LOD terenu nie pozwalają ocenić końcowego materiału ani kontaktu w Unity.
+  Pełny GIS na ustabilizowanej generacji r3 w toku.
 - Unity czeka na blokadę `artifacts/locks/PHONE_RUN` w main. Właściciel potwierdził,
   że pomiar telefonu nadal trwa. Nie uruchamiamy Unity ani adb podczas blokady.
 

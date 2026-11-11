@@ -28,3 +28,6 @@
 - Przerwany własny pełny GIS jako nieaktualny po korekcie geometrii; inne sesje nietknięte. NASTĘPNY KROK: uv run --project tools/worldgen python -u tools/worldgen/roads/build_world.py --region bialystok-industrial-c
 - Dodana kamera przyczółka i przygotowana kolejka validate-after.ps1: po baseline oraz zielonym GIS import, 20 renderów after, EditMode; przed każdym startem kontrola PHONE_RUN, potem cofnięcie efektów ubocznych Unity.
 - NASTĘPNY KROK: Get-Content artifacts/viaduct-r10/build-r3.log -Tail 10; Get-Content artifacts/viaduct-r10/unity-queue.log -Tail 1
+- Regeneracja r3 PASS (305.1 s), maks. Low +0.6276% tris, grupy GLB Low delta 0, QA drogi 65 jak baza. Lokalne testy 6/6 PASS, w tym równe risery i podparcie końca biegu.
+- Obejrzano geometry-preview/compare-r3.jpg (lewo before / prawo after, 3 kadry). Schody mają rzeczywisty bieg do gruntu; głowice/łożyska rozdzielone. Płaskie materiały oraz gruby teren podglądu nie rozstrzygają finalnego kontaktu/AO — ocena Unity pozostaje otwarta.
+- NASTĘPNY KROK: Get-Content artifacts/viaduct-r10/final-gis-r3.log -Tail 6; Get-Content artifacts/viaduct-r10/unity-queue.log -Tail 1
