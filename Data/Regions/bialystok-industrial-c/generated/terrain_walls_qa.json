@@ -1,24 +1,13 @@
 {
  "by_source": {
   "skirt:yard_asphalt": 1,
-  "skirt:yard_concrete": 4,
+  "skirt:yard_concrete": 2,
   "skirt:yard_slabs": 1
  },
- "count": 6,
+ "count": 4,
  "max_m": 0.345,
- "p99_m": 0.343,
+ "p99_m": 0.344,
  "skirt_area": [
-  {
-   "e": -256.3,
-   "exposed_m2": 0.091,
-   "mat": "yard_concrete",
-   "max_h": 0.314,
-   "n": -575.8,
-   "points": 2,
-   "run_m": 0.889,
-   "src": "bdot:2BE4B432-FD5C-1BF0-E053-CC2BA8C0D140:0#0:edge",
-   "visible": true
-  },
   {
    "e": 486.1,
    "exposed_m2": 0.083,
@@ -65,7 +54,7 @@
   }
  ],
  "sliver_m2": 0.02,
- "thin_steep_faces_skipped": 184,
+ "thin_steep_faces_skipped": 183,
  "thresh_m": 0.15,
  "worst": [
   {
@@ -85,28 +74,12 @@
    "src": "bdot:2BE4B432-6E64-1BF0-E053-CC2BA8C0D140:0#0:edge"
   },
   {
-   "e": -255.5,
-   "h": 0.314,
-   "kind": "skirt",
-   "mat": "yard_concrete",
-   "n": -575.7,
-   "src": "bdot:2BE4B432-FD5C-1BF0-E053-CC2BA8C0D140:0#0:edge"
-  },
-  {
    "e": 18.6,
    "h": 0.307,
    "kind": "skirt",
    "mat": "yard_slabs",
    "n": -624.8,
    "src": "bdot:2BE4B432-6FB5-1BF0-E053-CC2BA8C0D140:0#0:edge"
-  },
-  {
-   "e": -256.3,
-   "h": 0.303,
-   "kind": "skirt",
-   "mat": "yard_concrete",
-   "n": -575.8,
-   "src": "bdot:2BE4B432-FD5C-1BF0-E053-CC2BA8C0D140:0#0:edge"
   },
   {
    "e": 31.9,

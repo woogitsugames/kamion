@@ -1230,25 +1230,26 @@
   "osm_drivable_ways_in_tile": 553
  },
  "inputs_sha256": {
-  "overrides.yaml": "46ac55b5dc231fe4da88a5c5b2477a7e9205d23294785042b96ca7f491731773",
+  "overrides.yaml": "f2798cab42274cf8dab0b983023c9a0ae025d84d1aa9ebc7aa0f6c4480e2a5d3",
   "roads.graph.json": "0bd625e041a6a2ca90a74f1652336c731182c234985352de4d377110f1d42cf6",
   "route_start.json": "44e6bbecec84bed57e6409b742b678e8710250d2e2d068d86a7df3577e299b12",
   "tools/worldgen/roads/__init__.py": "328cd6e70845296ce7e67aee4b775c310c3fb318b638111b8ea4d4ad9ca0157b",
-  "tools/worldgen/roads/build_world.py": "5b000c91acff1a80646ccafd8287a2e00dcd5a1d42beca0938bac3ad27f2d91f",
-  "tools/worldgen/roads/consistency.py": "261dfc86f23cc885f759139379211beb3b34542466ee937908b9d92698e78303",
+  "tools/worldgen/roads/build_world.py": "9937cd3d3e40f6ae0bb11e11b8aca037c58cce86c9e452add043158d09bafd9f",
+  "tools/worldgen/roads/consistency.py": "206777d1ac93e7ed8795eada9d4eec59f886eb47d3649c6566f0f7a1e800ba34",
   "tools/worldgen/roads/context.py": "c89b7fe82daaebd9d0c85bca4049fa33f1c38e250a74e7fcd043765a55d8a78c",
   "tools/worldgen/roads/decals.py": "5c63f4a5bf69b6a6e801e18a27f8b1569b6f1a773f4ce54627642c39590b4a6f",
   "tools/worldgen/roads/geom.py": "935f99c1c31659d12d501fef46b3b65dd818d9dcefe5b5748bb3a25803e2a65e",
-  "tools/worldgen/roads/gores.py": "0eccb79f9d7e080131dac77a0e463f1b3cca3d1f77f6eed587448f48941416f7",
+  "tools/worldgen/roads/gores.py": "d1a3d7a8c80f8101781919927b89986b4e5e9c9b6a943882152b4fa0c8b80646",
   "tools/worldgen/roads/junctions.py": "23dc440847724cd418eaa1e31e02839a8501d551e0ae1163183025c7b4c55bf9",
-  "tools/worldgen/roads/markings.py": "d2287ad99bca65cf92213fafd25c86fefb3610215cf4e0110c8bdab2a408da36",
-  "tools/worldgen/roads/meshing.py": "8be91b4b334103d9e9629c5512f9f1b06921de655674ea85af80fcff430419e3",
+  "tools/worldgen/roads/markings.py": "9a220f0940cb70f4aca7a243628dc60bdf12a7455cc64cc7b2c960653a3e6060",
+  "tools/worldgen/roads/meshing.py": "1237f84c614c998c76505f3287cb773594587751bdad23791d5e61c42faf04cf",
   "tools/worldgen/roads/network.py": "e37af6356643382fd395a3a7cefb334ae30b724a27b678becfc83f2fc8cf537e",
-  "tools/worldgen/roads/pipeline.py": "b35bcbc3acc74a7584a82ae0971231547b0ea4450c5b5ee1feb131d748cb6c76",
+  "tools/worldgen/roads/pipeline.py": "73625cd8915e2176056bb2f1ddcad5e9525fb78896ecae6f21d819c5847b415a",
   "tools/worldgen/roads/profile.py": "3cf48fe7f086318416351e6b603398025a783fe455b80278c86d1fd3e13f7003",
   "tools/worldgen/roads/qa_ortho.py": "3173a1dcac1107bcb905bc6062460818ab03e8286c9de397aa0c5ed3835a9d8d",
   "tools/worldgen/roads/route.py": "b9190806a65a6bd5bbd93aa5cf2d4a3e116713d8b3d4baaefba86cf4223f6211",
-  "tools/worldgen/roads/standards.py": "1714965313c64b4ae050899e1cd6b186bd9d0eb2d8a11c5972394db29a9ec8a9"
+  "tools/worldgen/roads/standards.py": "31e78a090dc8e56d5380753247882e96a123281b4c273773dbe18781cf2c23aa",
+  "tools/worldgen/roads/through_lines.py": "1a4ca4c3b5678c0bc1bae29ffc4318cd652a9d0c22fea3eee7b8db72f5d5705d"
  },
  "lane_into_island": [
   {
@@ -1389,6 +1390,26 @@
    "xy": [
     -212.09,
     -992.53
+   ]
+  },
+  {
+   "chain": "c:w176241140:1867860776-2859604545",
+   "dist_m": 11.0,
+   "junction": "j:n2840742178",
+   "lane_index_from_left": 0,
+   "lane_start_xy": [
+    329.42,
+    -536.05
+   ],
+   "on_route": false,
+   "ortho_green_frac": 0.0,
+   "ortho_road_frac": 0.512,
+   "ortho_src": "wms_hr_0.08",
+   "turn": null,
+   "verdict": "ambiguous",
+   "xy": [
+    339.08,
+    -541.32
    ]
   },
   {
@@ -4731,7 +4752,7 @@
    "name": "Brama Kwadrat Park (start)",
    "ortho_islands_missing_in_gen": [],
    "ortho_src": "wms_hr_0.08",
-   "overlay": "artifacts/fidelity-r9/overlays/01_gate.jpg",
+   "overlay": "artifacts/junctions-r1/fidelity/overlays/01_gate.jpg",
    "stop_lines": []
   },
   {
@@ -4908,7 +4929,7 @@
     }
    ],
    "ortho_src": "wms_hr_0.08",
-   "overlay": "artifacts/fidelity-r9/overlays/02_s230_approach.jpg",
+   "overlay": "artifacts/junctions-r1/fidelity/overlays/02_s230_approach.jpg",
    "stop_lines": []
   },
   {
@@ -5343,20 +5364,20 @@
     }
    ],
    "ortho_src": "wms_hr_0.08",
-   "overlay": "artifacts/fidelity-r9/overlays/03_rondo_biezenstwa.jpg",
+   "overlay": "artifacts/junctions-r1/fidelity/overlays/03_rondo_biezenstwa.jpg",
    "stop_lines": [
     {
      "chain": "c:w177903962:1883043012-1882953792",
      "kind": "P-13",
      "ortho": {
-      "band_frac": 0.344,
-      "offset_m": 5.3,
+      "band_frac": 0.367,
+      "offset_m": 5.4,
       "present": true
      },
-     "s": 16.86,
+     "s": 16.77,
      "xy": [
-      538.164,
-      -752.503
+      538.209,
+      -752.426
      ]
     },
     {
@@ -5392,99 +5413,99 @@
   {
    "area_diffs_top": [
     {
-     "area_m2": 259.3,
+     "area_m2": 261.3,
      "kind": "gen_only",
      "xy": [
-      332.03,
-      -615.11
+      332.104,
+      -615.141
      ]
     },
     {
-     "area_m2": 203.7,
+     "area_m2": 184.0,
      "kind": "ortho_only",
      "xy": [
-      347.346,
-      -618.139
+      345.343,
+      -617.006
      ]
     },
     {
-     "area_m2": 199.7,
+     "area_m2": 146.7,
      "kind": "gen_only",
      "xy": [
-      350.693,
-      -534.892
+      277.294,
+      -576.754
      ]
     },
     {
-     "area_m2": 166.9,
-     "kind": "ortho_only",
-     "xy": [
-      361.645,
-      -545.055
-     ]
-    },
-    {
-     "area_m2": 146.4,
+     "area_m2": 105.5,
      "kind": "gen_only",
      "xy": [
-      277.286,
-      -576.752
+      298.214,
+      -578.628
      ]
     },
     {
-     "area_m2": 124.2,
+     "area_m2": 100.9,
      "kind": "ortho_only",
      "xy": [
-      296.132,
-      -559.384
+      356.837,
+      -566.987
      ]
     },
     {
-     "area_m2": 106.2,
+     "area_m2": 62.7,
      "kind": "ortho_only",
      "xy": [
-      362.049,
-      -590.436
+      378.178,
+      -561.396
      ]
     },
     {
-     "area_m2": 103.9,
+     "area_m2": 58.0,
+     "kind": "ortho_only",
+     "xy": [
+      309.695,
+      -567.201
+     ]
+    },
+    {
+     "area_m2": 50.4,
+     "kind": "ortho_only",
+     "xy": [
+      279.136,
+      -550.001
+     ]
+    },
+    {
+     "area_m2": 40.1,
      "kind": "gen_only",
      "xy": [
-      298.114,
-      -578.561
+      375.166,
+      -606.238
      ]
     },
     {
-     "area_m2": 73.0,
+     "area_m2": 39.8,
      "kind": "ortho_only",
      "xy": [
-      328.612,
-      -561.401
+      360.065,
+      -557.697
      ]
     },
     {
-     "area_m2": 72.3,
+     "area_m2": 33.5,
      "kind": "ortho_only",
      "xy": [
-      378.431,
-      -560.271
+      309.506,
+      -581.043
      ]
     },
     {
-     "area_m2": 71.3,
+     "area_m2": 27.8,
      "kind": "ortho_only",
      "xy": [
-      358.356,
-      -568.4
-     ]
-    },
-    {
-     "area_m2": 33.1,
-     "kind": "ortho_only",
-     "xy": [
-      309.462,
-      -581.013
+      359.106,
+      -590.912
      ]
     }
    ],
@@ -5626,52 +5647,6 @@
       272.467,
       -570.704
      ]
-    },
-    {
-     "chain": "c:w266084694:1852155191-1882690750",
-     "heading": [
-      0.888,
-      -0.46
-     ],
-     "lat": -3.5,
-     "ortho": {
-      "best_frac": 1.0,
-      "best_offset_m": -6.5,
-      "paint_here": 0.346,
-      "present": true
-     },
-     "s": 260.144,
-     "trav": 1.0,
-     "turns": [
-      "slight_right"
-     ],
-     "xy": [
-      284.179,
-      -580.708
-     ]
-    },
-    {
-     "chain": "c:w266084694:1852155191-1882690750",
-     "heading": [
-      0.888,
-      -0.46
-     ],
-     "lat": -3.5,
-     "ortho": {
-      "best_frac": 1.0,
-      "best_offset_m": 8.5,
-      "paint_here": 0.456,
-      "present": true
-     },
-     "s": 245.144,
-     "trav": 1.0,
-     "turns": [
-      "slight_right"
-     ],
-     "xy": [
-      270.858,
-      -573.812
-     ]
     }
    ],
    "center_en": [
@@ -5680,10 +5655,22 @@
    ],
    "gen_islands": [
     {
+     "area_m2": 365.4,
+     "half_width_m": 5.47,
+     "ortho_green_frac": 0.231,
+     "ortho_road_frac": 0.0,
+     "route_dist_m": 49.1,
+     "verdict": "present",
+     "xy": [
+      348.486,
+      -536.801
+     ]
+    },
+    {
      "area_m2": 412.2,
      "half_width_m": 2.11,
      "ortho_green_frac": 0.579,
-     "ortho_road_frac": 0.211,
+     "ortho_road_frac": 0.2,
      "route_dist_m": 10.2,
      "verdict": "present",
      "xy": [
@@ -5692,10 +5679,22 @@
      ]
     },
     {
+     "area_m2": 32.8,
+     "half_width_m": 2.33,
+     "ortho_green_frac": 0.0,
+     "ortho_road_frac": 1.0,
+     "route_dist_m": 27.0,
+     "verdict": "outline_notch",
+     "xy": [
+      353.166,
+      -563.547
+     ]
+    },
+    {
      "area_m2": 272.6,
      "half_width_m": 2.24,
      "ortho_green_frac": 0.06,
-     "ortho_road_frac": 0.833,
+     "ortho_road_frac": 0.764,
      "route_dist_m": 26.3,
      "verdict": "absent_on_ortho",
      "xy": [
@@ -5707,11 +5706,31 @@
    "half_m": 60,
    "id": "04_s610_ramps",
    "iou": {
-    "gen_m2": 5619.0,
-    "iou": 0.714,
-    "ortho_m2": 5611.2
+    "gen_m2": 5281.6,
+    "iou": 0.739,
+    "ortho_m2": 5201.2
    },
    "lane_into_island": [
+    {
+     "chain": "c:w176241140:1867860776-2859604545",
+     "dist_m": 11.0,
+     "junction": "j:n2840742178",
+     "lane_index_from_left": 0,
+     "lane_start_xy": [
+      329.42,
+      -536.05
+     ],
+     "on_route": false,
+     "ortho_green_frac": 0.0,
+     "ortho_road_frac": 0.512,
+     "ortho_src": "wms_hr_0.08",
+     "turn": null,
+     "verdict": "ambiguous",
+     "xy": [
+      339.08,
+      -541.32
+     ]
+    },
     {
      "chain": "c:w1363872157:2868238044-3890727434",
      "dist_m": 11.5,
@@ -5736,58 +5755,58 @@
    "name": "Andersa: łącznice przy s 610",
    "ortho_islands_missing_in_gen": [
     {
-     "area_m2": 223.2,
-     "green_frac": 0.381,
+     "area_m2": 72.2,
+     "green_frac": 0.0,
      "on_gen_carriageway": 1.0,
-     "route_dist_m": 51.8,
+     "route_dist_m": 18.1,
      "xy": [
-      350.417,
-      -534.724
+      282.875,
+      -577.613
      ]
     },
     {
-     "area_m2": 68.0,
+     "area_m2": 29.1,
      "green_frac": 0.0,
-     "on_gen_carriageway": 1.0,
-     "route_dist_m": 17.9,
+     "on_gen_carriageway": 0.834,
+     "route_dist_m": 6.9,
      "xy": [
-      282.929,
-      -577.432
+      347.506,
+      -583.242
      ]
     },
     {
-     "area_m2": 46.9,
+     "area_m2": 46.7,
      "green_frac": 0.0,
-     "on_gen_carriageway": 0.631,
+     "on_gen_carriageway": 0.629,
      "route_dist_m": 20.7,
      "xy": [
-      321.704,
-      -601.435
+      321.715,
+      -601.439
      ]
     },
     {
-     "area_m2": 16.5,
-     "green_frac": 0.594,
+     "area_m2": 48.2,
+     "green_frac": 0.204,
      "on_gen_carriageway": 1.0,
-     "route_dist_m": 4.7,
+     "route_dist_m": 4.9,
      "xy": [
-      377.382,
-      -606.966
+      373.34,
+      -605.449
      ]
     },
     {
-     "area_m2": 6.1,
-     "green_frac": 0.758,
+     "area_m2": 7.7,
+     "green_frac": 0.586,
      "on_gen_carriageway": 1.0,
-     "route_dist_m": 30.6,
+     "route_dist_m": 30.2,
      "xy": [
-      345.305,
-      -622.501
+      344.741,
+      -621.9
      ]
     }
    ],
    "ortho_src": "wms_hr_0.08",
-   "overlay": "artifacts/fidelity-r9/overlays/04_s610_ramps.jpg",
+   "overlay": "artifacts/junctions-r1/fidelity/overlays/04_s610_ramps.jpg",
    "stop_lines": [
     {
      "chain": "c:w177861600:1882953899-4391371827",
@@ -6330,7 +6349,7 @@
    "name": "Andersa s 900 (n1881569071)",
    "ortho_islands_missing_in_gen": [],
    "ortho_src": "sheet_0.25_2024-05-27",
-   "overlay": "artifacts/fidelity-r9/overlays/05_s900.jpg",
+   "overlay": "artifacts/junctions-r1/fidelity/overlays/05_s900.jpg",
    "stop_lines": []
   },
   {
@@ -6761,7 +6780,7 @@
     }
    ],
    "ortho_src": "sheet_0.25_2024-05-27",
-   "overlay": "artifacts/fidelity-r9/overlays/06_s1060_merge.jpg",
+   "overlay": "artifacts/junctions-r1/fidelity/overlays/06_s1060_merge.jpg",
    "stop_lines": []
   },
   {
@@ -7055,7 +7074,7 @@
     }
    ],
    "ortho_src": "wms_hr_0.08",
-   "overlay": "artifacts/fidelity-r9/overlays/07_s1270.jpg",
+   "overlay": "artifacts/junctions-r1/fidelity/overlays/07_s1270.jpg",
    "stop_lines": []
   },
   {
@@ -7249,52 +7268,6 @@
       -311.749,
       -170.728
      ]
-    },
-    {
-     "chain": "c:w266084693:12620261934-2840742308",
-     "heading": [
-      -0.79,
-      0.613
-     ],
-     "lat": -3.25,
-     "ortho": {
-      "best_frac": 0.386,
-      "best_offset_m": 1.5,
-      "paint_here": 0.368,
-      "present": true
-     },
-     "s": 39.278,
-     "trav": 1.0,
-     "turns": [
-      "slight_right"
-     ],
-     "xy": [
-      -321.603,
-      -158.96
-     ]
-    },
-    {
-     "chain": "c:w266084693:12620261934-2840742308",
-     "heading": [
-      -0.79,
-      0.613
-     ],
-     "lat": -3.25,
-     "ortho": {
-      "best_frac": 0.292,
-      "best_offset_m": 7.5,
-      "paint_here": 0.25,
-      "present": true
-     },
-     "s": 24.278,
-     "trav": 1.0,
-     "turns": [
-      "slight_right"
-     ],
-     "xy": [
-      -309.756,
-      -168.161
-     ]
     }
    ],
    "center_en": [
@@ -7342,7 +7315,7 @@
      "area_m2": 29.1,
      "half_width_m": 2.12,
      "ortho_green_frac": 0.0,
-     "ortho_road_frac": 0.865,
+     "ortho_road_frac": 0.87,
      "route_dist_m": 35.8,
      "verdict": "absent_on_ortho",
      "xy": [
@@ -7379,8 +7352,8 @@
    "id": "08_signals",
    "iou": {
     "gen_m2": 5600.4,
-    "iou": 0.772,
-    "ortho_m2": 5984.2
+    "iou": 0.774,
+    "ortho_m2": 5973.5
    },
    "lane_into_island": [],
    "name": "Skrzyżowanie z sygnalizacją s 1355-1415",
@@ -7397,7 +7370,7 @@
     }
    ],
    "ortho_src": "sheet_0.25_2024-05-27",
-   "overlay": "artifacts/fidelity-r9/overlays/08_signals.jpg",
+   "overlay": "artifacts/junctions-r1/fidelity/overlays/08_signals.jpg",
    "stop_lines": []
   },
   {
@@ -7620,7 +7593,7 @@
     }
    ],
    "ortho_src": "wms_hr_0.08",
-   "overlay": "artifacts/fidelity-r9/overlays/09_s1600.jpg",
+   "overlay": "artifacts/junctions-r1/fidelity/overlays/09_s1600.jpg",
    "stop_lines": [
     {
      "chain": "c:w174538883:1852129070-1852128980",
@@ -7753,54 +7726,6 @@
    ],
    "arrows": [
     {
-     "chain": "c:w173956079:1832975577-2256069814",
-     "heading": [
-      0.923,
-      -0.384
-     ],
-     "lat": -0.0,
-     "ortho": {
-      "best_frac": 0.04,
-      "best_offset_m": 3.5,
-      "paint_here": 0.0,
-      "present": false
-     },
-     "s": 286.208,
-     "trav": 1.0,
-     "turns": [
-      "through",
-      "left"
-     ],
-     "xy": [
-      -609.438,
-      18.784
-     ]
-    },
-    {
-     "chain": "c:w173956079:1832975577-2256069814",
-     "heading": [
-      0.96,
-      -0.281
-     ],
-     "lat": -0.0,
-     "ortho": {
-      "best_frac": 0.318,
-      "best_offset_m": -10.0,
-      "paint_here": 0.0,
-      "present": true
-     },
-     "s": 271.208,
-     "trav": 1.0,
-     "turns": [
-      "through",
-      "left"
-     ],
-     "xy": [
-      -623.488,
-      24.011
-     ]
-    },
-    {
      "chain": "c:w173956081:1847044943-1847044945",
      "heading": [
       0.989,
@@ -7844,30 +7769,6 @@
      "xy": [
       -577.844,
       41.568
-     ]
-    },
-    {
-     "chain": "c:w257367428:4075461271-2629251371",
-     "heading": [
-      0.018,
-      1.0
-     ],
-     "lat": -0.0,
-     "ortho": {
-      "best_frac": 0.124,
-      "best_offset_m": 11.0,
-      "paint_here": 0.002,
-      "present": false
-     },
-     "s": 43.128,
-     "trav": -1.0,
-     "turns": [
-      "left",
-      "through"
-     ],
-     "xy": [
-      -534.163,
-      5.325
      ]
     },
     {
@@ -8317,7 +8218,7 @@
     }
    ],
    "ortho_src": "wms_hr_0.08",
-   "overlay": "artifacts/fidelity-r9/overlays/10_rondo_putry.jpg",
+   "overlay": "artifacts/junctions-r1/fidelity/overlays/10_rondo_putry.jpg",
    "stop_lines": [
     {
      "chain": "c:w174538883:1852129070-1852128980",
@@ -8393,14 +8294,14 @@
      "chain": "c:w173956083:1852129066-2629251371",
      "kind": "P-14",
      "ortho": {
-      "band_frac": 0.111,
-      "offset_m": -9.0,
+      "band_frac": 0.122,
+      "offset_m": 5.8,
       "present": false
      },
-     "s": 72.81,
+     "s": 72.52,
      "xy": [
-      -519.003,
-      36.628
+      -518.788,
+      36.43
      ]
     },
     {
@@ -8635,7 +8536,7 @@
     }
    ],
    "ortho_src": "sheet_0.25_2024-05-27",
-   "overlay": "artifacts/fidelity-r9/overlays/11_dk8.jpg",
+   "overlay": "artifacts/junctions-r1/fidelity/overlays/11_dk8.jpg",
    "stop_lines": []
   }
  ],
@@ -8643,8 +8544,8 @@
   "osm_sha256": "0ff26cd42f175a5711c69b6d3087a9dcd3bb93367eda16809c75a11ce6c3869d",
   "osm_snapshot": "261108",
   "route": {
-   "arrows_checked": 37,
-   "arrows_not_on_ortho": 28,
+   "arrows_checked": 30,
+   "arrows_not_on_ortho": 26,
    "axis_vs_osm_m": {
     "max": 3.25,
     "n": 2419,
@@ -8684,16 +8585,16 @@
     ],
     "verified": 25
    },
-   "ortho_islands_missing_in_gen": 17,
+   "ortho_islands_missing_in_gen": 18,
    "sites_iou": {
     "01_gate": 0.717,
     "02_s230_approach": 0.782,
     "03_rondo_biezenstwa": 0.766,
-    "04_s610_ramps": 0.714,
+    "04_s610_ramps": 0.739,
     "05_s900": 0.728,
     "06_s1060_merge": 0.722,
     "07_s1270": 0.741,
-    "08_signals": 0.772,
+    "08_signals": 0.774,
     "09_s1600": 0.73,
     "10_rondo_putry": 0.699,
     "11_dk8": 0.666
@@ -8711,18 +8612,18 @@
    "edge_vs_ortho_m": {
     "all_sides": {
      "max": 7.375,
-     "n": 4274,
+     "n": 4289,
      "p50": 0.84,
-     "p95": 3.4
+     "p95": 3.391
     },
-    "detected_sides": 4274,
+    "detected_sides": 4289,
     "max": 4.92,
-    "n": 803,
+    "n": 802,
     "p50": 0.76,
-    "p95": 2.118,
+    "p95": 2.1,
     "signed_p50": 0.12,
-    "stations": 2478,
-    "valid_sides": 803
+    "stations": 2477,
+    "valid_sides": 802
    },
    "graph_vs_fresh_osm_max_m": {
     "max": 0.001,
@@ -8737,7 +8638,7 @@
     "p95": 0.774
    },
    "junction_windows": 76,
-   "lane_into_island": 32,
+   "lane_into_island": 33,
    "lane_issue_counts": {
     "lane_tags_ignored_by_generator": 3,
     "lanes_default": 454,
@@ -8760,7 +8661,7 @@
    },
    "junction": "j:n2441891791",
    "ortho_islands_missing": 1,
-   "overlay": "artifacts/fidelity-r9/overlays/tile_01_j_n2441891791.jpg",
+   "overlay": "artifacts/junctions-r1/fidelity/overlays/tile_01_j_n2441891791.jpg",
    "roundabout": false,
    "signalized": false
   },
@@ -8777,7 +8678,7 @@
    },
    "junction": "j:n1166108049",
    "ortho_islands_missing": 0,
-   "overlay": "artifacts/fidelity-r9/overlays/tile_02_j_n1166108049.jpg",
+   "overlay": "artifacts/junctions-r1/fidelity/overlays/tile_02_j_n1166108049.jpg",
    "roundabout": false,
    "signalized": false
   },
@@ -8794,7 +8695,7 @@
    },
    "junction": "j:n2274001289",
    "ortho_islands_missing": 0,
-   "overlay": "artifacts/fidelity-r9/overlays/tile_03_j_n2274001289.jpg",
+   "overlay": "artifacts/junctions-r1/fidelity/overlays/tile_03_j_n2274001289.jpg",
    "roundabout": false,
    "signalized": false
   },
@@ -8811,7 +8712,7 @@
    },
    "junction": "j:n2284431990",
    "ortho_islands_missing": 0,
-   "overlay": "artifacts/fidelity-r9/overlays/tile_04_j_n2284431990.jpg",
+   "overlay": "artifacts/junctions-r1/fidelity/overlays/tile_04_j_n2284431990.jpg",
    "roundabout": false,
    "signalized": false
   },
@@ -8828,7 +8729,7 @@
    },
    "junction": "j:n3664178904",
    "ortho_islands_missing": 1,
-   "overlay": "artifacts/fidelity-r9/overlays/tile_05_j_n3664178904.jpg",
+   "overlay": "artifacts/junctions-r1/fidelity/overlays/tile_05_j_n3664178904.jpg",
    "roundabout": false,
    "signalized": false
   },
@@ -8845,7 +8746,7 @@
    },
    "junction": "j:n4009843113",
    "ortho_islands_missing": 1,
-   "overlay": "artifacts/fidelity-r9/overlays/tile_06_j_n4009843113.jpg",
+   "overlay": "artifacts/junctions-r1/fidelity/overlays/tile_06_j_n4009843113.jpg",
    "roundabout": false,
    "signalized": false
   },
@@ -9928,12 +9829,12 @@
    ],
    "gen_islands_absent_on_ortho": 0,
    "iou": {
-    "gen_m2": 1267.9,
-    "iou": 0.781,
-    "ortho_m2": 1085.6
+    "gen_m2": 1150.7,
+    "iou": 0.793,
+    "ortho_m2": 950.8
    },
    "junction": "j:n1867860753",
-   "ortho_islands_missing": 1,
+   "ortho_islands_missing": 0,
    "roundabout": false,
    "signalized": false
   },
