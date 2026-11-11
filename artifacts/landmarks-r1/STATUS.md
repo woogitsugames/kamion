@@ -98,3 +98,5 @@ Krok 30: pojedynczy test remizy po końcowej korekcie zakończony exit 0 pod hea
 Krok 31: cztery końcowe rendery szkła zakończone poprawnie. Low overcast: lewa góra/dół Y 59,93/48,86, prawa 62,65/48,86; High overcast 66,65/54,86 i 68,72/54,86. Gradient jest poprawny, High pozostaje nieco jaśniejszy od celu fotografii. Korony nadal proceduralne i wymagają następnej rundy po backlogu. Rozpoczynam pełne 192 kadry oraz końcowy GIS pod osobnymi pulami.
 
 Krok 32: pełne 192 rendery końcowe zapisane (48 kamer x 4 warunki), 112 plików pikselowo identycznych. Budżet wszystkich 96 warunków Low: delta draws siatek 0, instancji 0, maksymalna delta trójkątów 0,0% przy kwantyzacji statystyk do tysiąca. Model: 9344/2828/164 -> 9584/2860/164. Wszystkie 64 wpisy chunków i roads_qa identyczne względem świeżego baseline, brak fallback=True. EditMode 261/261. Trwa pełny GIS.
+
+Krok 33: obejrzano wszystkie 24 arkusze przed/po (192 pary). Wcześniej podejrzane cienie na dachach High-above mają ten sam wzór w pełnym przebiegu baseline i after. ADR opisuje końcowego kandydata jako PARTIAL: iglaki nadal proceduralne, High szkło trochę za jasne. Pełny GIS na 14%, brak końcowego wyniku.
