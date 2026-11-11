@@ -17,6 +17,7 @@ namespace Game.Rendering
         static readonly int k_ClearCoatOff = Shader.PropertyToID("_KamionClearCoatOff");
         static readonly int k_GrimeDetailOff = Shader.PropertyToID("_KamionGrimeDetailOff");
         static readonly int k_SkyDitherOff = Shader.PropertyToID("_KamionSkyDitherOff");
+        static readonly int k_GlassShadowBias = Shader.PropertyToID("_KamionGlassShadowBias");
 
         public Camera targetCamera;
         public Volume volume;
@@ -118,6 +119,13 @@ namespace Game.Rendering
             }
             if (t.worldDetail) Shader.EnableKeyword(WorldDetailKeyword); else Shader.DisableKeyword(WorldDetailKeyword);
             Shader.SetGlobalFloat(k_SkyDitherOff, RenderOverrides.SkyDither == false ? 1f : 0f);
+            Shader.SetGlobalFloat(k_GlassShadowBias, Mathf.Clamp(RenderOverrides.GlassShadowBias ?? 0f, 0f, 0.08f));
+#if UNITY_EDITOR
+            if (RenderOverrides.Any) Debug.Log($"[RQ_CAMERA] skyDitherOff={Shader.GetGlobalFloat(k_SkyDitherOff)} glassShadowBias={Shader.GetGlobalFloat(k_GlassShadowBias)}");
+            if (RenderOverrides.GlassShadowBias.HasValue)
+                foreach (var m in Resources.FindObjectsOfTypeAll<Material>())
+                    if (m.name == "M_kp_glass_block") Debug.Log($"[RQ_GLASS] name={m.name} shader={m.shader.name} flag={m.GetFloat("_ArchitecturalGlass")} receive={m.GetFloat("_ReceiveShadows")}");
+#endif
             // A8: truck paint clear coat switch (Kamion/Truck Exterior reads 0 = on, so an unset global keeps it on).
             Shader.SetGlobalFloat(k_ClearCoatOff, t.clearCoat ? 0f : 1f);
             Shader.SetGlobalFloat(k_GrimeDetailOff, t.vehicleGrimeDetail ? 0f : 1f);   // ADR 0038

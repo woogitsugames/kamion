@@ -45,6 +45,7 @@ Shader "Kamion/World Surface"
         _WindowGrid ("Far facade pane rect in a bay (u0, u1, v0, v1)", Vector) = (0.25, 0.75, 0.3, 0.8)
         _GlassColor ("Far facade glass albedo (linear)", Color) = (0.03, 0.035, 0.04, 1)
         _SkyOcc ("Sky occlusion: x down-facing ambient, y horizon reflection (0 = off; ADR 0060)", Vector) = (0, 0, 0, 0)
+        _ArchitecturalGlass ("Architectural glass shadow receiver (ADR0098)", Float) = 0
         _Emission ("Emission luminance (cd/m2, linear; street lamp glass)", Color) = (0, 0, 0, 0)
         [Enum(UnityEngine.Rendering.CullMode)] _Cull ("Cull (lamp glass: Off - the generator's glass quad faces up)", Float) = 2
         [Toggle] _GroundMasks ("Terrain ground masks from COLOR_0 (R road distance/20 m, G forest floor, B unmown, A bare soil)", Float) = 0
@@ -69,8 +70,10 @@ Shader "Kamion/World Surface"
             float4 _GlassColor;
             float4 _Emission;
             float4 _SkyOcc;
+            float _ArchitecturalGlass;
         CBUFFER_END
         float _KamionStreetLamps, _KamionLampLights, _KamionExposure;
+        float _KamionGlassShadowBias;
         #include "KamionLampPools.hlsl"
         ENDHLSL
 
@@ -226,7 +229,12 @@ Shader "Kamion/World Surface"
                 const half3 specColor = half3(0.04, 0.04, 0.04);
 
                 // Sun
-                float4 shadowCoord = TransformWorldToShadowCoord(i.positionWS);
+                float3 shadowReceiver = i.positionWS;
+                // ADR0098: explicit imported glazing semantic, not a roughness heuristic.
+                // Small receiver-depth offset retains cast/frame shadows and does not move geometry.
+                if (_KamionGlassShadowBias > 0.0 && _ArchitecturalGlass > 0.5)
+                    shadowReceiver += n * _KamionGlassShadowBias;
+                float4 shadowCoord = TransformWorldToShadowCoord(shadowReceiver);
                 Light L = GetMainLight(shadowCoord, i.positionWS, half4(1, 1, 1, 1));
                 half giK, giSun;
                 KamionWorldGI(i.positionWS, n, giK, giSun);
