@@ -26,3 +26,6 @@
 
 - Step9: explicit ROOT Unity release11:56:56 received; both guards absent before fresh import11:57:24. Own import completed OK64chunks41corridorLow+High; source compiler clean, CC0 verifier13assets65files0problems. No production edits. Reported world mesh memory111.3MB Low/239.7MB High is importer accounting, not GPU/device measurement. Owned settings/sky side effects restored.
 - NEXT COMMAND: pwsh -ExecutionPolicy Bypass -File artifacts/car-paint-r1/baseline.ps1 -Phase Fixtures; then pearl-probe.ps1 and baseline.ps1 -Phase Capture.
+
+- Step10: canonical TruckAssetBuilder, TrailerAssetBuilder and WorldTruckInstaller completed with explicitRESULT OK under per-launch guards. Raw192SHA/Fab15/no fallback still verified;90 generated vehicle material/prefab/FBX fixture hashes recorded BEFORE all matched baseline images. No production edits, owned settings side effects restored.
+- NEXT COMMAND: pwsh -ExecutionPolicy Bypass -File artifacts/car-paint-r1/pearl-probe.ps1; then baseline.ps1 -Phase Capture and inspect actual black-door/hood ROIs.
