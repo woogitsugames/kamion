@@ -93,7 +93,10 @@ def test_yard_wear_synthetic():
         assert (np.cross(b - a, cc - a)[:, 2] > 0).all(), p.src
         if p.mat == "decal_tyre":            # band contract of Kamion/World PBR _DECAL_TYRE
             assert p.UV1 is not None and np.ptp(p.UV1[:, 0]) < 1e-9 and p.UV[:, 0].max() == pytest.approx(p.UV1[0, 0])
-            assert set(np.round(p.UV[:, 1], 6)) == {0.0, 1.0} and 0.3 <= p.UV1[0, 1] <= 1.5
+            # across coordinate on the two edges: 0 / 1 = soft band (soil), TWIN_V = a tread with a hard edge (ADR 0092)
+            assert set(np.round(p.UV[:, 1], 6)) in ({0.0, 1.0}, set(YW.TWIN_V)) and 0.3 <= p.UV1[0, 1] <= 1.5
+            if ":track" in p.src:
+                assert set(np.round(p.UV[:, 1], 6)) == set(YW.TWIN_V), p.src
     # deterministic
     buf2 = MeshBuf()
     YW.apply(buf2, [_wear()], (0.0, 0.0), docks, paved, Polygon(), zsurf, {})
