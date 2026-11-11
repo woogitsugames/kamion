@@ -26,8 +26,11 @@ def world(tmp_path_factory):
         pytest.skip("heightmap not built")
     from roads import build_world
     out = tmp_path_factory.mktemp("world")
+    # build() rewrites generated/*.json: keep the manifest of the earlier CLI run for test_export_is_deterministic
+    mp = REGION_DIR / "generated" / "world_manifest.json"
+    before = json.loads(mp.read_text(encoding="utf-8")) if mp.exists() else None
     w, manifest, qa = build_world.build(REGION_ID, out_root=out, verbose=False)
-    return {"w": w, "manifest": manifest, "qa": qa, "out": out}
+    return {"w": w, "manifest": manifest, "qa": qa, "out": out, "manifest_before": before}
 
 
 def q(p):
@@ -192,8 +195,11 @@ def test_terrain_stays_below_road(world):
 @needs_heightmap
 def test_export_is_deterministic(world):
     """Same inputs -> byte-identical GLBs: the in-process build equals the committed manifest (written
-    by an earlier CLI run, different process / hash seed)."""
-    committed = json.loads((REGION_DIR / "generated" / "world_manifest.json").read_text(encoding="utf-8"))
+    by an earlier CLI run, different process / hash seed). The manifest is read BEFORE the in-process build, which
+    rewrites it (reading it afterwards compared the build with itself and hid the hash-seed dependence, ADR 0096).
+    A failure after a generator change means: regenerate the region (build_world.py), then run the tests."""
+    committed = world["manifest_before"]
+    assert committed is not None, "generated/world_manifest.json missing: run build_world.py first"
     built = world["manifest"]
     assert [c["id"] for c in committed["chunks"]] == [c["id"] for c in built["chunks"]]
     for a, b in zip(committed["chunks"], built["chunks"]):

@@ -20,3 +20,18 @@
 
 NASTĘPNY KROK: sprawdzenie izolacji Fab (robocopy megascans z main, build z Fab vs fallback), potem
 `uv run --project tools/worldgen python -m pytest tests/gis -q`
+
+## Krok 4 — izolacja Fab (polecenie lidera)
+- Produkty Fab skopiowane z main (ignorowane, niecommitowane). Build z Fab vs fallback, seed 4: roads/consistency/walls/cameras 0 różnic;
+  streetscape_qa 34 liście = 32 pod `furniture/megascans` + 2 `mesh_budget`; stanowiska 1526, auta 908, yard_drains 188 bez zmian
+  (`fab_isolation.txt`). Fab nie zmienia liczb niezwiązanych z Fab.
+- Zacommitowane generated/*.json = build z aktywnym Fab (jak main).
+
+## Krok 5 — testy
+- `test_export_is_deterministic` porównywał build z samym sobą (manifest czytany po nadpisaniu) — teraz czyta manifest sprzed buildu.
+- `pytest tests/gis -q`: 347 passed, 2 xfailed, 1 failed (`test_report_not_stale`: fidelity_qa nieaktualny po zmianie meshing/consistency)
+  -> `fidelity/run.py` uruchomiony ponownie -> `test_road_fidelity.py` + `test_determinism.py`: 11 passed, 2 xfailed (`pytest_gis.log`).
+- ADR: `docs/adr/0096-worldgen-determinism.md`.
+
+NASTĘPNY KROK (lider, po scaleniu na main): regeneracja i testy
+`uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c; uv run --project tools/worldgen tools/worldgen/fidelity/run.py --region bialystok-industrial-c; uv run --project tools/worldgen python -m pytest tests/gis -q`
