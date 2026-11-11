@@ -25,3 +25,11 @@ masks -> import r1 -> round r1 running (chain in background): see artifacts/tint
 - bridge: Low biezenstwa-above draws HLOD; High mask: bridge_concrete = cornices 110->205 sRGB under 0086. Girder/asphalt 1.26-1.36 vs photo pier/road 0.95-1.02.
 ## Step 5 (running) — r2 adds bridge_concrete .26/.26/.25 (build_world.py)
 Next: wait round-r2; uv run --project tools/worldgen python tools/worldgen/qa/tint_ratio.py --round artifacts/tint-r2/r2 --before artifacts/tint-r2/baseline --masks artifacts/tint-r2/masks
+## Step 6 (done) — r2 final
+- r2 = kp_wall .37/.38/.38, noise .039/.041/.040, bridge_concrete .26/.26/.25. tint_ratio.py on r2: ALL CHECKS PASS, ROI PLACEMENT ok.
+- Gate High-clear 250->217 sRGB (ROI clip 82%->0.1%); hall/sky ov 0.72 High / 0.78 Low; screens 0.32-0.37 (3 lit cams); girder/asphalt 0.95-1.02; cornice from above 221->164.
+- stats.txt identical baseline<->r2 (4 conditions); world memory 111.3/239.7 MB unchanged.
+- GIS 374 pass + fidelity hash refreshed (file 9 pass); EditMode 223/226 (3 = TruckDoorGlass fixture, pre-existing), 14/14 WorldPbrTint.
+- ADR 0101 + 0086 correction note. REPORT.md: harness refused a report file -> report is in the agent's final message.
+## Next (lead)
+merge tint-r2; rerun build_world + fidelity/run.py + import-region; tint_ratio.py --round <round> --masks artifacts/tint-r2/masks; visual-critic.
