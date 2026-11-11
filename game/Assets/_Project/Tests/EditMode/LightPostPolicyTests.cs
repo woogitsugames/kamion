@@ -10,6 +10,26 @@ namespace Game.Tests
     public class LightPostPolicyTests
     {
         [Test]
+        public void PhotographicSkyAlignsSunWithoutAzimuthInducedHorizonRoll()
+        {
+            var preset = LightingPreset.CreateClear();
+            try
+            {
+                Vector3 sun = preset.CreateModel().SunDirection;
+                for (int azimuth = 0; azimuth < 360; azimuth += 30)
+                {
+                    float a = azimuth * Mathf.Deg2Rad, elevation = 48f * Mathf.Deg2Rad;
+                    var sourceSun = new Vector3(Mathf.Sin(a)*Mathf.Cos(elevation), Mathf.Sin(elevation), Mathf.Cos(a)*Mathf.Cos(elevation));
+                    var rotation = PhotographicClouds.SourceRotation(sun, sourceSun);
+                    Assert.Less(Vector3.Angle(rotation*sun, sourceSun), 0.03f, "source sun alignment");
+                    Assert.LessOrEqual(Vector3.Angle(rotation*Vector3.up, Vector3.up), 6.03f,
+                        "changing azimuth must not roll the horizon; only the 42 to 48 degree elevation difference remains");
+                }
+            }
+            finally { Object.DestroyImmediate(preset); }
+        }
+
+        [Test]
         public void HighRcasRestoresLegacyZeroButHonoursExplicitZeroAndOtherTiers()
         {
             var saved = RenderOverrides.FsrSharpness;

@@ -119,7 +119,7 @@ namespace Game.Rendering
             {
                 Shader.SetGlobalTexture(k_ClearCloudTex, texture);
                 Vector3 sun = env.Model != null ? env.Model.SunDirection : Vector3.up;
-                Shader.SetGlobalMatrix(k_ClearCloudRotation, Matrix4x4.Rotate(Quaternion.FromToRotation(sun, sourceSun)));
+                Shader.SetGlobalMatrix(k_ClearCloudRotation, Matrix4x4.Rotate(PhotographicClouds.SourceRotation(sun, sourceSun)));
             }
             Shader.SetGlobalVector(k_Cloud, new Vector4(contrast, Mathf.Max(q, 0), p.cloudScale, 5f));
             if (contrast > 0f || (clearCover > 0f && !photo))
@@ -145,6 +145,16 @@ namespace Game.Rendering
         static Vector3 s_Sun;
 
         public static void ResetCache() { s_Loaded = false; s_Texture = null; }
+
+        /// <summary>Align azimuth first, then elevation. A single minimum-angle rotation between suns can roll
+        /// the entire sky by tens of degrees when their azimuths differ, despite similar sun altitudes.</summary>
+        public static Quaternion SourceRotation(Vector3 sun, Vector3 sourceSun)
+        {
+            float azimuth = Mathf.Atan2(sun.x, sun.z) * Mathf.Rad2Deg;
+            float sourceAzimuth = Mathf.Atan2(sourceSun.x, sourceSun.z) * Mathf.Rad2Deg;
+            var yaw = Quaternion.AngleAxis(sourceAzimuth - azimuth, Vector3.up);
+            return Quaternion.FromToRotation(yaw * sun, sourceSun) * yaw;
+        }
 
         public static bool TryGet(out Texture2D texture, out Vector3 sunDirection)
         {
