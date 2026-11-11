@@ -10,3 +10,6 @@ Pierwszy test zgodności wykrył niemodyfikowalną tablicę maski PIL; poprawion
 
 ## Raport i wynik testów
 Zgodność dotychczasowej kompozycji: 40/40, testy fotometrii: 13/13. Dodano raport HTML działający lokalnie oraz bazę 25 ocen D51, związaną z SHA renderów r1. Wynik świata pozostaje FAIL; nowe obrazy nie dziedziczą automatycznie dawnych ocen. Trend odrzuca zmianę pozy, źródła, masek, definicji metryk, tieru lub światła oraz próbki bez ręcznej kwalifikacji. Następny krok: testy raportu i odtworzenie świata przed nowym importem.
+
+## Odświeżenie świata i testy raportu
+Uruchomiono regenerację świata z właścicielem heavy gpt-sbs-r2. Testy raportu sprawdzają odrzucanie niezgodnych kohort, liczenie zmiany błędu, nieprzenoszenie recenzji na inne piksele, brak cichego pomijania arkuszy i bezpieczne osadzenie danych w HTML. Wykonanie pojedynczego pliku testowego nastąpi po zwolnieniu naszego slotu przez generator, aby nie współdzielić jednej dzierżawy między zadaniami.
