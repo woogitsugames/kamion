@@ -7,3 +7,5 @@ Sama różnica hashów nie rozstrzyga, które dane są przyczyną (geometria, ma
 Ten zestaw dokumentuje zastany cache. Nie służy do przypisania kosztu ani wyglądu zmianom osobówek R4. Właściwe porównanie r1 będzie korzystać z kanonicznych katalogów before i after, utworzonych po regeneracji i imporcie obu stanów z tej samej bazy 5f2aa277. Wstępne miniatury baseline-*.jpg w katalogu rundy również pochodzą ze skopiowanego cache.
 
 Dane rozbieżności: raw-vs-main-base.json. Pełny manifest bazy: canonical-main-manifest.json odczytany przez git cat-file; częściowy main-base-manifest.json ze zbytecznego odczytu git show nie jest używany.
+
+Weryfikacja po regeneracji Main: 192/192 produkty zgadzają się z jego nowym manifestem; 159 różni się od manifestu zapisanego w 5f2aa277. Jednocześnie wszystkie 192 hashe są identyczne z pierwszą regeneracją kandydata R4 (canonical-main-vs-first-candidate.json). Te różnice nie wynikają ze zmian life. Nie ustala to samodzielnie wersji skopiowanych wcześniej scen Unity; właściwy before pochodzi z nowego, udokumentowanego importu Main.
