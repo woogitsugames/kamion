@@ -18,3 +18,15 @@ KP clear ROI diagnostycznie RGB≥250 1.68→0%; nie zastępuje kalibracji mater
 UNVERIFIED: telefon GPU/termika/deviceEASU; liczby CPU i proxy nie są pomiarem GPU; wymagany końcowy wspólny test integracji A/B/F/lidera.
 Konflikty addytywne: `WorldSurface.shader`, setter `RegionImporter`, migracja98, profile/overrides; zachowano tile/weather/runoff/macro/panel/splash. Generated `world_manifest.json`: lider regeneruje przy integracji.
 Dowody skopiowane do main `artifacts/light-r12/` przez robocopy `/E /XJ`, bez `/MIR`; canonical `world_manifest.json` z odświeżonymi SHA zapisany w commicie, worktree czysty.
+
+## Uzupełnienie po niezależnej recenzji s10 (2026-11-11)
+Scalenie ocenione warunkowo PASS, jakość całego celu0098 — FAIL.
+Recenzja: docs/reports/visual/REVIEW-2026-11-11-s10-0088-0098.md na main.
+P0: RCAS=0 rozmywa asfalt przed kabiną; wcześniejsza akceptacja tego kompromisu
+jest wycofana. Zysk nieba pochodzi głównie z wyłączenia ditheru przed LUT.
+Pozostały pieprz ścian, falisty brzeg cienia przy lowsun; mgiełka i AO były
+udokumentowanym stanem istniejącym, nie nową realizacją tych celów.
+Testy355 passed/2xfailed i EditMode221/221 oraz identyczne stats pozostają
+potwierdzeniem poprzedniego kodu, nie akceptacją jakości ani wydajności GPU.
+Lider przydzielił0108 / gpt-light-r13 w GPT-FEEDBACK-S10.md: po bieżących
+F/G/E/D, przed roślinnością0109. Ten zapis nie zmienia kodu i nie scala main.

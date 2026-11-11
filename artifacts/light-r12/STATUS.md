@@ -53,3 +53,5 @@
 
 - Step17: perrootrequest committed untouchedgenerator-producedcanonical world_manifest (192verifiedrawSHA; onlyrefreshedserializationbytes/hashes, no manualgeometry/dataediting). Expectedgeneratedmetadata conflict isleader-regenerate, documentedREPORT. Cworktreeclean; allsource/settings/fixture checks complete, independentPASS.
 - NEXT COMMAND: retainCworktree; startG freshcurrentmain worktree gpt-car-paint pernew scopeddispatch.
+
+Krok: recenzja zewnętrzna ujawnia P0 rozmycia asfaltu i jakośćFAIL. Wcześniejsza akceptacja kompromisu RCAS0 wycofana; REPORT/ADR uzupełnione, bez zmiany kodu. NASTĘPNY KROK: po F/G/E/D wykonaj docs/owner/GPT-FEEDBACK-S10.md sekcja0108 na świeżym main; potem0109.
