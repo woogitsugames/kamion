@@ -542,6 +542,42 @@
                         "fov_deg":  39.99889,
                         "segment":  "G3-B",
                         "note":  "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+                    },
+                    {
+                        "id":  "asphalt_patch_fresh_fill_close",
+                        "fov_deg":  55,
+                        "pos":  [
+                                    -284.54016714393927322288904246,
+                                    -211.12271623785190864395923553,
+                                    131.87411024305554
+                                ],
+                        "type":  "persp",
+                        "kind":  "material_probe",
+                        "look_at":  [
+                                        -280.54244656032984,
+                                        -215.59688991970486,
+                                        130.07411024305554
+                                    ],
+                        "seat":  "file",
+                        "note":  "Existing generated patch material probe; age=0.08219999819993973; WORKING_VALUE camera; not a photo pose."
+                    },
+                    {
+                        "id":  "asphalt_patch_aged_fill_close",
+                        "fov_deg":  55,
+                        "pos":  [
+                                    -836.0812554139310273740267886,
+                                    76.434462300336850541678007946,
+                                    140.7901247024536
+                                ],
+                        "type":  "persp",
+                        "kind":  "material_probe",
+                        "look_at":  [
+                                        -841.7902488708496,
+                                        78.2803750038147,
+                                        138.9901247024536
+                                    ],
+                        "seat":  "file",
+                        "note":  "Existing generated patch material probe; age=0.9351000189781189; WORKING_VALUE camera; not a photo pose."
                     }
                 ]
 }
