@@ -77,6 +77,7 @@ try {
     git restore -- game/Assets/_Project/Rendering/Settings game/ProjectSettings
     & pwsh $slotScript -Release -Owner gpt-furniture
     Add-Content "$ev/STATUS.md" "`n$(Get-Date -Format o): Unity $Step $Phase $Tier $Lighting; sukces=$ok. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG."
-    git add -f "$ev/STATUS.md" "$ev/unity-step.ps1"
+    Copy-Item "$ev/STATUS.md" artifacts/furniture-r1/STATUS.md
+    git add -f "$ev/STATUS.md" "$ev/unity-step.ps1" artifacts/furniture-r1/STATUS.md
     git commit -m "wip(furniture): checkpoint Unity $Step $Phase $Tier $Lighting"
 }

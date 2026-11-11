@@ -64,3 +64,38 @@ Cztery dzienne źródła i atrybucje są w `24h/reference-selection.json`.
 Zdjęcie SBS 297817221966185 nie pokazuje czytelnej rdzy; wzór zużycia w modelu
 pozostaje propozycją do oceny, nie pomiarem tego konkretnego znaku.
 Brak pewnego zbliżenia dokładnie tej okrągłej betonowej latarni nadal pozostaje luką.
+
+## r1 — Detal podmurówki bez dodatkowego materiału
+
+Obejrzany baseline potwierdził płaskie deski. Rozważono osobny materiał PBR
+z połączeniem materiałów słupków i siatki. Niezależny recenzent wskazał jednak
+chunk z bramą: stary materiał pozostałby potrzebny, a nowy zwiększyłby draws.
+Tego wariantu nie zastosowano.
+
+Podmurówki z `panel_fence` zachowują nazwę `concrete_plinth` i dostają dane
+`COLOR_0`: B=64/255, A=128/255 to zastrzeżony znacznik; R jest fazą detalu,
+G to wysokość wierzchołka ponad lokalnym gruntem +0,25 m. Ten kontrakt przetrwa
+pakowanie UNorm8. Bramy i ekrany nie dostają tych danych; helpery `Lin`
+i ich geometria pozostają bez zmian. Wariant z dużą ujemną współrzędną UV
+odrzucono, ponieważ importer pakuje UV do Float16.
+
+Addytywna flaga `furniture_plinth_detail` w `materials.py` uruchamia ograniczoną
+ścieżkę w `WorldPbrMaterials.cs`. Używa ona tej samej fabryki World Surface,
+tych samych pigmentów i tożsamości materiału; jawnie zachowuje `_GroundMasks=0`.
+`Has` oraz reguły `_Tile` i `_Tint` pozostają bez zmian. Lokalny keyword
+`_FURNITURE_PLINTH` w WorldSurface modyfikuje wyłącznie oznaczone fragmenty,
+korzystając z istniejącego interpolatora masek. Brak nowego pasa renderowania.
+Materiał z keywordem jest zapisywany w wygenerowanej scenie; test edytorowy
+nie jest jednak dowodem działania na urządzeniu ani wyniku strippingu gotowego APK.
+
+Mikrostruktura pochodzi z istniejącego `brushed_concrete` (CC0, Dario Barresi /
+Dimitrios Savva; źródło i hash w LICENSES/manifest). Nowy PNG ma 256×256 i 52 958 bajtów.
+Jest to modulacja o średniej 0,5 liniowo, zakodowana do sRGB; pigment mnożony raz.
+Rozmiar przetworzonego kafla 1 m, pas brudu 0,25 m i siła 0,55 to WORKING_VALUE,
+a nie pomiar deski ze zdjęcia. Oryginalny skan opisano w LICENSES jako 2,5×2,5 m.
+
+Test GPU/fabryki: 7/7 passed, bez pominięć. Porównano keyword off/on na
+nieoznaczonym betonie, mnożenie detalu w przestrzeni liniowej, zanik brudu,
+zachowanie kanałów i czyszczenie keywordu/samplera po usunięciu flagi danych.
+Koszt GPU i ocena materiału pozostają do kontroli w renderach i późniejszym
+pomiarze lidera na urządzeniu. Same identyczne próbki nie dowodzą zerowego kosztu.

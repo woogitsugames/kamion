@@ -30,7 +30,8 @@ try {
 } finally {
     & pwsh $slotScript -Release -Pool heavy -Owner $owner
     Add-Content "$ev/STATUS.md" "`n$(Get-Date -Format o): heavy $Step $Phase; sukces=$ok; slot $owner zwolniony. NASTĘPNY KROK: sprawdzić log i kontynuować walidację rundy."
-    git add -f "$ev/STATUS.md" "$ev/heavy-step.ps1"
+    Copy-Item "$ev/STATUS.md" artifacts/furniture-r1/STATUS.md
+    git add -f "$ev/STATUS.md" "$ev/heavy-step.ps1" artifacts/furniture-r1/STATUS.md
     git commit -m "wip(furniture): checkpoint heavy $Step $Phase"
 }
 if (!$ok) { throw "Heavy $Step failed ($code); inspect evidence log" }
