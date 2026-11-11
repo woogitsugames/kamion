@@ -1290,6 +1290,22 @@ overrides:
     reason: The through line drawn diagonally across the plate (TL-P-7b@j:n1832975577, E -859.6 N 61.6 -> E -780.4 N 53.9) is not on the orthophoto.
     confidence: high
     verify: owner drive
+  - id: dk8-e-split-main-lane-clear
+    kind: paint_clear
+    polygon_en: [[-890.0, 56.8], [-875.0, 58.2], [-860.0, 59.8], [-845.0, 60.2], [-829.0, 60.75], [-812.0, 60.25], [-796.0, 59.75], [-786.0, 59.5], [-770.0, 57.85], [-756.0, 56.8], [-756.0, 55.6], [-770.0, 56.65], [-786.0, 58.3], [-796.0, 58.55], [-812.0, 59.05], [-829.0, 59.55], [-845.0, 59.0], [-860.0, 58.6], [-875.0, 57.0], [-890.0, 55.6]]
+    reason: >-
+      ADR 0110: the generated line on the lane boundary of the main carriageway (0.35 m left of the OSM way after
+      dk8-e-split-main-geometry) comes out solid on the junction plate (render b4 r3_e_split_top); cleared +-0.6 m and
+      repainted broken (next override).
+    confidence: high
+    verify: owner drive
+  - id: dk8-e-split-main-lane
+    kind: painted_line
+    line: P-1
+    polyline_en: [[-890.0, 56.2], [-875.0, 57.6], [-860.0, 59.2], [-845.0, 59.6], [-829.0, 60.15], [-812.0, 59.65], [-796.0, 59.15], [-786.0, 58.9], [-770.0, 57.25], [-756.0, 56.2]]
+    reason: Broken lane line of the main carriageway E -890...-756 (orthophoto N 59.75 at E -815, plan_b2/east_split.jpg).
+    confidence: medium
+    verify: owner drive
   - id: dk8-e-split-line-solid
     kind: painted_line
     line: P-2b
