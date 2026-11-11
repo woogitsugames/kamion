@@ -11,3 +11,6 @@ Następny krok: pwsh scripts/sbs-gate3.ps1 -EditMode
 ## Pokrycie początku trasy
 Przeszukano lokalny manifest; brak kandydatów z pierwszych 300 m G3-A w promieniu 100 m. Próba pobrania dodatkowych zdjęć: błąd DNS graph.mapillary.com. Przygotowano 40 prób pozy bocznej dla ośmiu par J2 (−6, −3, 0, +3, +6 m). Nie zmieniono geometrii świata.
 Następny krok: Get-Content artifacts/sbs-r1/render-validation.log -Tail 20
+## Weryfikacja świeżości importu
+Skopiowane sceny _Generated są z 17:11, a bieżąca regeneracja main zakończyła eksport GLB około 21:35. Przerwano oczekujące uruchomienie SBS przed uzyskaniem slotu; nie wystartowało Unity. Konieczna własna regeneracja i import, aby nie prezentować starych scen jako aktualnych.
+Następny krok: uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c
