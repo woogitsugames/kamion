@@ -6,3 +6,4 @@ Odziedziczono gałąź gpt-surface-wear zgodnie z r1. Dwa konflikty generated ro
 Przygotowanie: skopiowano derived, cc0, _raw, megascans, _Generated, wygenerowane materiały i cache Library (bez Bee). Junctiony referencji są tylko do odczytu w tej sesji. git lfs checkout zakończony.
 
 2026-11-11T21:36:23.0278826+01:00: Start baseline build_world i build_all. Po ukończeniu: import z unity-slot gpt-asphalt, cztery serie baseline, następnie wariant materiałowy. ADR 0118 zapisany jako WIP.
+Przygotowano powtarzalny runner: każda operacja Unity bierze i zwalnia slot gpt-asphalt w finally; po wyjściu cofane są ustawienia edytora. Fixture kamer obejmuje stare/nowe nawierzchnie, przejście i wybrane pary sbs oraz kamery domyślne.
