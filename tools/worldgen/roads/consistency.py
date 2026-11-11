@@ -271,7 +271,7 @@ def check(w, instances, region_id, pipeline, report_extra=None):
             cases.add("obstacle_in_lane", P[b], {"what": str(lab[b]), "lane": li, "s": round(float(s), 1)},
                       chain=c.id, osm_ways=_osm_ways(c))
         # lane band polygons for furniture / prop checks
-        for li_key in {(m[1], m[2]) for m in meta}:
+        for li_key in sorted({(m[1], m[2]) for m in meta}):      # fixed order (ADR 0096)
             pts_l, pts_r = [], []
             for s in ss:
                 for li, trav, lat, hb, tl in _lane_bands(c, secs, s):
@@ -317,7 +317,7 @@ def check(w, instances, region_id, pipeline, report_extra=None):
                 stats["approach_lanes"] += 1
                 turns = _turns(tl)
                 p0 = c.line.offset_point(s_end, lat)
-                for tn in turns & set(has):
+                for tn in sorted(turns & set(has)):      # fixed order (ADR 0096)
                     if not has[tn] and tl and not passes:
                         cases.add("arrow_no_exit", p0, {"what": tn, "lane": li, "turn_lanes": tl}, chain=c.id,
                                   junction=j.id, osm_ways=_osm_ways(c))
