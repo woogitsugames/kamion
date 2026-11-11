@@ -288,7 +288,10 @@ def clear_under_decks(pl, parts, report):
     on the same base (ADR 0076, owner 2026-11-10: "a lamp stands in the middle of the lane" on the Andersa
     viaduct - a 12 m lamp of the road below came up through the deck). Lamps along a road that passes under a
     viaduct are placed by the same rule as anywhere else; under the deck there is no room for the column."""
-    deck = SurfaceTop(parts, layers=("bridge",))
+    # ADR 0117 (REVIEW s10-0110 P1-4): the deck barriers live in the `bridge` layer since ADR 0110 - their rails
+    # 0.7-1.1 m above the cap read as "a deck above the pole" and every lamp on the caps of the DK8 Putry decks was
+    # removed (p0_lamp_putry_eye). Only the structure counts, not the steel on it.
+    deck = SurfaceTop([p for p in parts if p.mat != "barrier_steel"], layers=("bridge",))
     groups = {}
     for it in pl.items:
         groups.setdefault((round(it["e"], 2), round(it["n"], 2)), []).append(it)
@@ -1173,9 +1176,8 @@ def guardrail(lin, P, Z, key, tall=None, term=(False, False)):
                 # upper box beam (100 x 80) on the road face of the posts; at an end where the W-beam carries on
                 # along the ground it slopes down behind the W-beam over 2 m instead of stopping in the air
                 zt = np.full(kk - k + 1, S.BRIDGE_BARRIER_H)
-                if k > lo and kk - k >= 4:
+                if kk - k >= 6:                       # every end (also a run end: no beam stopping in the air)
                     zt[:3] = np.linspace(S.GUARDRAIL_H - 0.02, S.BRIDGE_BARRIER_H, 3)
-                if kk + 1 < hi and kk - k >= 4:
                     zt[-3:] = np.linspace(S.BRIDGE_BARRIER_H, S.GUARDRAIL_H - 0.02, 3)
                 kp = dp_keep(np.column_stack([P[k:kk + 1], Z[k:kk + 1] + zt]), 0.01)
                 Pt, zz, nt, st = P[k:kk + 1][kp], (Z[k:kk + 1] + zt)[kp], nrm[k:kk + 1][kp], s_all[k:kk + 1][kp]
@@ -1237,18 +1239,54 @@ GUARDRAIL_DEDUP_GROUND_M = 2.5   # ADR 0110 (REVIEW s10-0100 P1-6): ground runs 
 GUARDRAIL_MIN_RUN = 8       # points (1 m apart) of a run left after the dedup; shorter leftovers are dropped
 
 
+GUARDRAIL_JOIN_M = 4.0      # ADR 0117: a run cut by the dedup is led onto the rail that cut it when that is this close
+GUARDRAIL_JOIN_BLEND = 8    # points (1 m) over which the cut end swings onto the other rail
+
+
 def _dedup_guardrail(lin, P, Z, key, built, m, tall=None, term=(True, True)):
     """Build the parts of run P that are not within the dedup distance of a rail built before (two chains / a chain
-    and an authored rail on the same separator crossed and overlapped at E -782 and on the viaduct approaches)."""
+    and an authored rail on the same separator crossed and overlapped at E -782 and on the viaduct approaches).
+
+    ADR 0117 (REVIEW s10-0110 P1-6, p0_kerb_merge_eye): a cut end used to stop in the air beside the other rail,
+    which itself dived into the ground 2 m further (two runs at two angles, two posts side by side). Now the cut
+    end swings onto the nearest point of the rail that cut it (GUARDRAIL_JOIN_M) and, when runs are queued
+    (`lin.rail_queue`, guardrails()), the end of that rail it lands on loses its turned-down terminal: one rail."""
     from shapely.geometry import LineString, Point
+    from shapely.ops import nearest_points
+    P = np.array(P, float)
     keep = np.ones(len(P), bool)
     tall = np.zeros(len(P), bool) if tall is None else np.asarray(tall, bool)
+    allb = None
     if built:
         near = shapely.union_all([b.buffer(GUARDRAIL_DEDUP_M) for b in built])
         far = shapely.union_all([b.buffer(GUARDRAIL_DEDUP_GROUND_M) for b in built])
+        allb = shapely.union_all(built)
         shapely.prepare(near)
         shapely.prepare(far)
         keep = ~np.where(tall, shapely.contains_xy(near, P[:, 0], P[:, 1]), shapely.contains_xy(far, P[:, 0], P[:, 1]))
+    queue = getattr(lin, "rail_queue", None)
+
+    def join(Ps, end):
+        """Swing end `end` (0 / -1) of segment Ps onto the rail that cut it; True when joined."""
+        q = nearest_points(allb, Point(Ps[end]))[0]
+        q = np.array([q.x, q.y])
+        dv = q - Ps[end]
+        if float(np.hypot(*dv)) > GUARDRAIL_JOIN_M or len(Ps) < GUARDRAIL_JOIN_BLEND + 2:
+            return False
+        u = np.linspace(1.0, 0.0, GUARDRAIL_JOIN_BLEND + 1)[:-1]
+        w = u * u * (3 - 2 * u)
+        idx = np.arange(GUARDRAIL_JOIN_BLEND) if end == 0 else len(Ps) - 1 - np.arange(GUARDRAIL_JOIN_BLEND)
+        Ps[idx] += dv[None, :] * w[:, None]
+        m["joined_ends"] = m.get("joined_ends", 0) + 1
+        if queue:
+            for it in queue:                       # the rail it lands on: no turned-down terminal at that end
+                for e_ in (0, -1):
+                    if float(np.hypot(*(it["P"][e_] - q))) < 6.0:
+                        t_ = list(it["term"])
+                        t_[e_] = False
+                        it["term"] = tuple(t_)
+        return True
+
     k = 0
     while k < len(P):
         if not keep[k]:
@@ -1258,14 +1296,30 @@ def _dedup_guardrail(lin, P, Z, key, built, m, tall=None, term=(True, True)):
         while kk + 1 < len(P) and keep[kk + 1]:
             kk += 1
         if kk - k + 1 >= GUARDRAIL_MIN_RUN:
+            Ps = P[k:kk + 1].copy()
             # a cut made by the dedup is not a free end (the other rail carries on there)
-            guardrail(lin, P[k:kk + 1], Z[k:kk + 1], key, tall[k:kk + 1],
-                      (term[0] and k == 0, term[1] and kk == len(P) - 1))
-            built.append(LineString(P[k:kk + 1]))
+            t0, t1 = term[0] and k == 0, term[1] and kk == len(P) - 1
+            if allb is not None:
+                if k > 0:
+                    join(Ps, 0)
+                if kk < len(P) - 1:
+                    join(Ps, -1)
+            it = {"P": Ps, "Z": Z[k:kk + 1], "key": key, "tall": tall[k:kk + 1], "term": (t0, t1)}
+            if queue is not None:
+                queue.append(it)
+            else:
+                guardrail(lin, it["P"], it["Z"], key, it["tall"], it["term"])
+            built.append(LineString(Ps))
         else:
             m["dedup_dropped_pts"] = m.get("dedup_dropped_pts", 0) + (kk - k + 1)
         k = kk + 1
     m["dedup_skipped_pts"] = m.get("dedup_skipped_pts", 0) + int((~keep).sum())
+
+
+def _flush_rails(lin):
+    for it in getattr(lin, "rail_queue", None) or []:
+        guardrail(lin, it["P"], it["Z"], it["key"], it["tall"], it["term"])
+    lin.rail_queue = None
 
 
 STRUCT_GUARD_GAP_M = 8.0     # WORKING_VALUE (ADR 0110): a ground carriageway edge this close to a viaduct / walled ramp
@@ -1327,6 +1381,29 @@ def guardrails(lin, net, zground, report):
     built = []
     drops, runs = [], []
     structs = _structures(net)
+    # ADR 0117: authored rails are built FIRST (they are traced; the rule runs give way and join them); runs are
+    # queued so that a later join can still cancel the turned-down terminal of the rail it lands on
+    lin.rail_queue = []
+    # ADR 0100: authored guardrails on kerbed separators traced on the orthophoto (`kind: guardrail`, polyline_en in
+    # region-local E/N, drawn with the road on the RIGHT of the drawing direction = the face of the W-beam)
+    m["authored"] = 0.0
+    for o in getattr(net, "authored", None) or []:
+        if o.get("kind") != "guardrail":
+            continue
+        Q = np.asarray(o.get("polyline_en") or [], float)
+        if Q.ndim != 2 or len(Q) < 2:
+            net.overrides_stale.append(o["id"])
+            continue
+        sq = np.concatenate([[0.0], np.cumsum(np.hypot(*np.diff(Q, axis=0).T))])
+        u = np.linspace(0.0, sq[-1], max(2, int(np.ceil(sq[-1])) + 1))
+        P = np.column_stack([np.interp(u, sq, Q[:, 0]), np.interp(u, sq, Q[:, 1])])
+        Z = lin.z(P)
+        if not np.isfinite(Z).all():
+            net.overrides_stale.append(o["id"])
+            continue
+        _dedup_guardrail(lin, P, Z, f"authored:{o['id']}", built, m)
+        net.overrides_applied.append({"id": o["id"], "targets": [f"guardrail@{P[0][0]:.0f},{P[0][1]:.0f}"]})
+        m["authored"] += float(sq[-1])
     for c in net.chains:
         if c.meta.get("absorbed"):
             continue
@@ -1421,26 +1498,7 @@ def guardrails(lin, net, zground, report):
                     for q in (1, 2, 3, 4):
                         m[names[q]] += float((want[sl] == q).sum())
                 k = kk + 1
-    # ADR 0100: authored guardrails on kerbed separators traced on the orthophoto (`kind: guardrail`, polyline_en in
-    # region-local E/N, drawn with the road on the RIGHT of the drawing direction = the face of the W-beam)
-    m["authored"] = 0.0
-    for o in getattr(net, "authored", None) or []:
-        if o.get("kind") != "guardrail":
-            continue
-        Q = np.asarray(o.get("polyline_en") or [], float)
-        if Q.ndim != 2 or len(Q) < 2:
-            net.overrides_stale.append(o["id"])
-            continue
-        sq = np.concatenate([[0.0], np.cumsum(np.hypot(*np.diff(Q, axis=0).T))])
-        u = np.linspace(0.0, sq[-1], max(2, int(np.ceil(sq[-1])) + 1))
-        P = np.column_stack([np.interp(u, sq, Q[:, 0]), np.interp(u, sq, Q[:, 1])])
-        Z = lin.z(P)
-        if not np.isfinite(Z).all():
-            net.overrides_stale.append(o["id"])
-            continue
-        _dedup_guardrail(lin, P, Z, f"authored:{o['id']}", built, m)
-        net.overrides_applied.append({"id": o["id"], "targets": [f"guardrail@{P[0][0]:.0f},{P[0][1]:.0f}"]})
-        m["authored"] += float(sq[-1])
+    _flush_rails(lin)
     report["guardrails_m"] = {k: round(v) for k, v in m.items()}
     net.guardrail_built = built                # pier_guardrails (after the bridge supports exist) dedups against these
     d = np.array(drops) if drops else np.zeros(1)
