@@ -85,8 +85,7 @@ matchedbudgetneeded. Source+photo/ortho verification or precisehandoff required.
 
 Full raw-source read contains20explicit bus=yes/public_transport=stop_position
 inside2048x2048mregion, pinnedPBF SHA0ff26cd42f175a5711c69b6d3087a9dcd3bb93367eda16809c75a11ce6c3869d.
-Root read exacttags/IDs/coordinates and sourcebbox. Earlieragent10count was
-preliminary; rootcountassert rejected it before publishing proof. Extracted-source
+Root read exacttags/IDs/coordinates and sourcebbox. Earlieragent10count was incorrect from truncatedstdout; rootcountassert rejected it before publishing proof. Extracted-source
 absence was selectoromission, not rawabsence. Buspose/stain attribution still
 requires actualroad containment/height/direction and sourcephotozone proof.
 Targeted field+sentinel10/10pass (fullsuite pending). Wholecomponent source reviewed:
@@ -94,3 +93,15 @@ realroadonly, overlap/height/7sample gates, clonedUV1.x, age/geometry untouched.
 Rootflagged indexed vscoincidentvertex closure; actual3350->3343components proves
 7metadata unionsneeded. Agent will union exactposition+sameage forGROUPING only
 and test splitvertexunknown closure; no geometricwelding. Initialimport not final.
+
+Corrected grouping actualimport exit0:16accepted/502rejected components,406changed
+vertices,59.519m2/tier (3decimal logged).11targetedtestsPASS. Nativeage hash
+proof pending. Source-level review flags skippedunknownroadtriangles: knownroad
+overlap with sameheightunknownjunction could still sample validfield. Retain
+unknowntriangles as rejecting blockers or prove no actualoverlap; regressioncase
+required before claiming fullunknownjunctionreject. No broad shader activation.
+Root viewed busphoto1170695487387705: realrightpavedbusbay/rectangular repair edge
+and curb/shelterzone. A bounded stain may use verifiedactualstopzone as explicit
+WORKING_VALUE trafficwear, not claim photographed/measured engineoil coordinates.
+Fullpolygon must fit generateddriveablebay/height/chunk with matchedcost; no
+shelter projection/all20 placement or invented roadgeometry.

@@ -538,3 +538,11 @@ read/pinned/current2kmregion; earlierpreliminary10assertrejectedbeforeproofwrite
 Selectoromissionnotrawabsence. E6e1c30f9 checkpointR1LODscopefailcommitted.
 NEXT COMMAND: Dactualgroupedtransfer/native+glyphcontrols, verifiedbuscandidate;
 EtrueHighruntimepolicy/LowHighLowtests+R1bindings/metricsbeforefull160.
+
+Step42: Dactualgroupedimport16accepted/502rejected,406verts/59.519m2 pertier,
+11targettestsPASS. Rootflaggedsameheightunknown-road overlap blocker missing
+fromsampler; audit/fixbeforefinalPASS. Busref464actualphoto independentlyviewed,
+verifiedbayzone allowsboundedWORKINGstainifactualdriveablefootprintsupports.
+Eruntimepolicy17lines+1NUnit(tworeimports/tierroundtrip) sourcescopeapproved;
+actualtest/importpending, askedconcretecheckpoint. NEXT COMMAND: Dnativeageproof/
+unknownblocker+glyphcontrols; Eactualtest/runtimeR1?160; guardsbeforeeachlaunch.

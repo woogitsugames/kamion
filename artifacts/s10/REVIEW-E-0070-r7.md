@@ -61,3 +61,8 @@ when simpleFoliage stays equal; Low->High->Low meaningfultest and realLowabeam/
 Highbindingproof. Preserve approved gammaColor/texture/Cutoff/A2C/.25/0 onHigh;
 no asset mutation/globalfoliage/materialslot changes. Importerhook superseded by
 this narrow runtime policy; full160 waits corrected4conditionR1 review.
+
+Root source-reviewed17line runtimepolicy/cache diff and oneNUnitcase with two
+actualLitfactory reimports/LowHighLow. Exactheroalias only, source gamma/texture
+UV/Cutoff/A2C preserved, .25/0High, unrelatedmaterials and sourceJSON unchanged
+in test. Actual execution/Lowabeam+Highbindings pending; importerhook removed.
