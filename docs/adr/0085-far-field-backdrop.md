@@ -58,3 +58,16 @@ We adopt **Option 3**:
 - **Total High far-field triangles (all 4 sectors combined):** `118,902` (`far_north: 19,350`, `far_east: 35,030`, `far_south: 47,581`, `far_west: 16,941`).
 - **New texture memory:** `0 B` (reuses `M_forest_edge_mixed` and procedural `M_far_field_buildings`).
 - **Colliders / Shadow Casters:** `0` colliders, `ShadowCastingMode.Off`, `receiveShadows = false`.
+
+## Revision r2 (stream H, 2026-11-11; validation in progress)
+
+The r1 centroid-only building selection duplicated boundary-crossing buildings. Its cached rectangles contain 17 intersections with the region, including the long hall covering the cream office in edge-south. Region geometry owns a whole building when any source component touches/intersects the tile. The extractor now rejects such BDOT/OSM footprints before selecting the largest component, and separately rejects rounded minimum rectangles overlapping the tile. The mesh builder repeats the guard before and after distance compression. Cache schema /8 also keys the origin, half-size and ring extent.
+
+Regressions cover all four edges, boundary contact, a MultiPolygon whose small component crosses the tile, and a concave building outside the NE corner whose rectangular LoD would enter it. Both tiers must emit no geometry for a crossing hall, while a fully external hall remains. Real-data QA checks every cached rectangle.
+
+Atmosphere integration with ADR 0098: r2 adds no fog constants, keywords or private colour blends. Far facades use WorldSurface/KamionFogTau + KamionMixFog; forest silhouettes use the existing vegetation atmosphere. The lighting owner can adjust the common atmosphere without an edge-specific competing preset. Optical depth still uses compressed render distance (inherited limitation); physical-distance haze is UNVERIFIED and must not be claimed from editor triangle counts.
+
+Supplementary edge-pietrasze-horizon (road-seated driver eye) and edge-pietrasze-overview (18.2 m above NMT, diagnostic only) accompany the unchanged dk8-dk19-exit camera. Existing NMT inside the tile supplies the border elevation; the exterior apron remains the smoothed-border approximation, not a measured full-ring NMT surface.
+
+Performance baseline for r2 is argon-edge + main 9e6e9fde on the same imported world. The original r1 addition relative to main without a backdrop cost +2..4 estimated draws; r2 does not erase that inherited cost. Render comparisons and current test results belong in artifacts/edge-far-r2/REPORT.md; old r1 claims above are historical, not revalidation of this revision.
+

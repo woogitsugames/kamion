@@ -10,3 +10,6 @@
 - Explicit export/export cleanup: both original paths absent; 204580041 bytes retained in artifacts/edge-far-r2/quarantine (reversible; recursive deletion was blocked by automatic policy).
 - Baseline world generation still running; driver run-evidence.ps1 waits for it then for PHONE_RUN at every Unity start. Main material source accidentally included by cache copy restored to branch HEAD.
 - NEXT: Get-Content artifacts/edge-far-r2/run-evidence.log -Tail 20
+- Merged-world build complete: 64 chunks, High 405 MiB / Low 92 MiB; no fallback=True in build log. Patched far-field build yielded Low 24584 vs 24826 tris, High 118612 vs 118902; final metadata will be regenerated after baseline captures.
+- ADR r2 records ownership boundary guards, atmosphere contract with 0098, NMT apron approximation and honest inherited +2..4 draw cost relative to no-backdrop main.
+- NEXT: Get-Content artifacts/edge-far-r2/run-evidence.log -Tail 20 (PHONE_RUN still active).
