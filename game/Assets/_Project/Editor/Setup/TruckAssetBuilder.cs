@@ -797,6 +797,8 @@ namespace Game.Editor.Setup
                     mir.phase = phase++;
                 }
 
+                FrameMirrorGlass(root.transform, exteriorLods, mirrorGlass, eyeLocal);
+
                 // ---- LOD groups, tier binding, lamps, cab light ----
                 var group = root.AddComponent<LODGroup>();
                 group.fadeMode = LODFadeMode.None;
@@ -952,6 +954,52 @@ namespace Game.Editor.Setup
             if (old != null) { EditorUtility.CopySerialized(m, old); UnityEngine.Object.DestroyImmediate(m); EditorUtility.SetDirty(old); return old; }
             AssetDatabase.CreateAsset(m, path);
             return m;
+        }
+
+        static void FrameMirrorGlass(Transform root, List<Renderer>[] bodyLods, Dictionary<string, Renderer> glass, Vector3 eye)
+        {
+            var data = Json.Obj(Json.Parse(File.ReadAllText(Path.Combine(EditorTools.RepoRoot, "art-source/truck/interior/cab_mirror_supports.json"))));
+            if (!data.TryGetValue("mirror_frames_enabled", out var flag) || !(flag is bool enabled) || !enabled) return;
+            var openings = new List<MirrorGlassBezel.Opening>();
+            foreach (string role in new[] { "MIRROR_MainL", "MIRROR_MainR", "MIRROR_WideL", "MIRROR_WideR" })
+            {
+                var renderer = glass[role];
+                var mesh = renderer.GetComponent<MeshFilter>().sharedMesh;
+                var uv = mesh.uv; var vertices = mesh.vertices;
+                Vector3 Corner(float u, float v)
+                {
+                    int i = Array.FindIndex(uv, p => Mathf.Abs(p.x - u) < .001f && Mathf.Abs(p.y - v) < .001f);
+                    if (i < 0) throw new InvalidOperationException("Unexpected mirror quad UVs: " + role);
+                    return root.InverseTransformPoint(renderer.transform.TransformPoint(vertices[i]));
+                }
+                Vector3 a = Corner(0, 0), b = Corner(1, 0), c = Corner(0, 1), d = Corner(1, 1);
+                Vector3 centre = (a + b + c + d) * .25f, right = (b - a).normalized, up = (c - a).normalized;
+                Vector3 normal = Vector3.Cross(right, up).normalized;
+                if (Vector3.Dot(normal, eye - centre) < 0f) normal = -normal;
+                openings.Add(new MirrorGlassBezel.Opening { centre = centre, right = right, up = up, normal = normal,
+                    width = Vector3.Distance(a, b), height = Vector3.Distance(a, c) });
+            }
+            var support = Json.Obj(Json.Arr(data["supports"])[0]);
+            Vector3 sample = (V3(support["start"]) + V3(support["end"]) + V3(support["shift"])) * .5f;
+            foreach (var lod in bodyLods)
+            {
+                var body = lod.First(r => r.name.StartsWith("CAB_Body", StringComparison.Ordinal));
+                int trim = Array.FindIndex(body.sharedMaterials, m => m != null && m.name.Contains("MI_Ext_Trim"));
+                var filter = body.GetComponent<MeshFilter>(); var source = filter.sharedMesh;
+                var mesh = MirrorGlassBezel.Apply(source, root.worldToLocalMatrix * body.transform.localToWorldMatrix, openings, trim, sample, out int triangles);
+                string dir = Root + "/Meshes";
+                Directory.CreateDirectory(Path.Combine(EditorTools.ProjectRoot, dir));
+                string path = $"{dir}/{mesh.name}.asset";
+                var old = AssetDatabase.LoadAssetAtPath<Mesh>(path);
+                if (old != null)
+                {
+                    EditorUtility.CopySerialized(mesh, old); UnityEngine.Object.DestroyImmediate(mesh);
+                    EditorUtility.SetDirty(old); mesh = old;
+                }
+                else AssetDatabase.CreateAsset(mesh, path);
+                filter.sharedMesh = mesh;
+                Debug.Log($"[TRUCK] Mirror bezel {body.name}: addedTris={triangles} slots={source.subMeshCount}->{mesh.subMeshCount} centreDelta={(source.bounds.center - mesh.bounds.center).magnitude:F7} sizeDelta={(source.bounds.size - mesh.bounds.size).magnitude:F7}");
+            }
         }
 
         static void ClearMirrorSupports(Transform root, Renderer body)
