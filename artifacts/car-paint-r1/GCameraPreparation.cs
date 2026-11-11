@@ -19,9 +19,10 @@ namespace Game.Editor.VisualQA
         [Serializable] public class Output { public string schema="truck-sim-pl/gate3-cameras/1",region="bialystok-industrial-c",note; public Instance source_instance; public Entry[] cameras; public int testedDirections; public float[] rayLengthsM; }
         struct Proxy { public Matrix4x4 inverse; public Bounds bounds; }
 
-        static Proxy[] VehicleProxies(Vector3 target)
+        static Proxy[] VehicleProxies(Vector3 target,out Vector3[] targetSamples)
         {
             var result=new System.Collections.Generic.List<Proxy>();
+            var samples=new System.Collections.Generic.List<Vector3>{target};
             foreach(var renderer in UnityEngine.Object.FindObjectsByType<WorldInstances>(FindObjectsInactive.Include,FindObjectsSortMode.None))
             {
                 var set=renderer.set;
@@ -35,13 +36,20 @@ namespace Game.Editor.VisualQA
                         var matrix=set.LocalMatrix(run.start+j);
                         Vector3 shift=renderer.transform.position;
                         matrix.m03+=shift.x;matrix.m13+=shift.y;matrix.m23+=shift.z;
-                        if(Vector2.Distance(new Vector2(matrix.m03,matrix.m23),new Vector2(target.x,target.z))<.1f)continue;
                         var bounds=prototype.lods[0].bounds;bounds.Expand(.1f);
+                        if(Vector2.Distance(new Vector2(matrix.m03,matrix.m23),new Vector2(target.x,target.z))<.1f)
+                        {
+                            foreach(float x in new[]{-.7f,.7f})foreach(float z in new[]{-.85f,.85f})foreach(float y in new[]{.35f,.8f})
+                                samples.Add(matrix.MultiplyPoint3x4(new Vector3(bounds.center.x+x*bounds.extents.x,
+                                    bounds.min.y+y*bounds.size.y,bounds.center.z+z*bounds.extents.z)));
+                            continue;
+                        }
                         result.Add(new Proxy{inverse=matrix.inverse,bounds=bounds});
                     }
                 }
             }
-            return result.ToArray();
+            if(samples.Count==1)throw new InvalidOperationException("Target actual instanced bounds missing");
+            targetSamples=samples.ToArray();return result.ToArray();
         }
 
         static bool CrossesVehicle(Proxy[] proxies,Vector3 from,Vector3 to)
@@ -75,7 +83,7 @@ namespace Game.Editor.VisualQA
             if(root==null)throw new InvalidOperationException("Region root missing");
             var item=input.source_instance;
             Vector3 target=root.LocalToUnity(item.e,item.n,item.z+.8f);
-            var vehicleProxies=VehicleProxies(target);
+            var vehicleProxies=VehicleProxies(target,out var targetSamples);
             Vector3 prior=root.LocalToUnity(old.pos[0],old.pos[1],old.pos[2]);
             float initial=Mathf.Atan2(prior.z-target.z,prior.x-target.x),chosen=0;
             bool found=false;int tested=0;
@@ -87,11 +95,15 @@ namespace Game.Editor.VisualQA
                 foreach(float radius in radii)
                 {
                     Vector3 eye=target+new Vector3(Mathf.Cos(angle)*radius,1.5f,Mathf.Sin(angle)*radius);
-                    Vector3 ray=eye-target;
-                    // Starts inside the target vehicle: its own collider is ignored by PhysX. Reject all intervening colliders.
-                    if(Physics.Raycast(target,ray.normalized,out _,ray.magnitude+.2f,~0,QueryTriggerInteraction.Ignore)
-                        ||CrossesVehicle(vehicleProxies,target,eye)
-                        ||Physics.CheckSphere(eye,.2f,~0,QueryTriggerInteraction.Ignore)){clear=false;break;}
+                    if(Physics.CheckSphere(eye,.2f,~0,QueryTriggerInteraction.Ignore)){clear=false;break;}
+                    foreach(var sample in targetSamples)
+                    {
+                        Vector3 ray=eye-sample;
+                        // Full rays from the centre and eight real target-body samples reject partial occlusion too.
+                        if(Physics.Raycast(sample,ray.normalized,out _,ray.magnitude+.2f,~0,QueryTriggerInteraction.Ignore)
+                            ||CrossesVehicle(vehicleProxies,sample,eye)){clear=false;break;}
+                    }
+                    if(!clear)break;
                 }
                 if(clear){chosen=angle;found=true;break;}
             }
@@ -104,7 +116,7 @@ namespace Game.Editor.VisualQA
                     pos=Local(root,eye),look_at=Local(root,target),note="WORKING_VALUE QA camera at "+radius+"m; actual source "+item.src+". Cooked scene full rays plus actual instanced vehicle OBBs tested; world placements unchanged."});
             }
             var output=new Output{source_instance=item,cameras=entries.ToArray(),testedDirections=tested,rayLengthsM=radii,
-                note="Actual own generated scene full cooked-collision rays plus instanced vehicle OBBs (including omitted car colliders), all5/20/45m rays share a clear direction. QA cameras only; not surveyed positions. Target source and wheel camera preserved. Visual occlusion must still be inspected."};
+                note="Actual own scene full cooked-collision rays plus instanced vehicle OBBs, centre and eight target-body samples, all5/20/45m share a clear direction. QA cameras only; not surveyed. Target/wheel camera preserved. Visual occlusion must still be inspected; diagnostic not yet executed under current phone hold."};
             File.WriteAllText(Path.Combine(folder,"pearl-cameras.json"),JsonUtility.ToJson(output,true));
             Debug.Log("G_CAMERA_PREP_RESULT: OK tested="+tested);
         }

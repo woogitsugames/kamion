@@ -1,0 +1,775 @@
+{
+  "note": "Pristine D private CPU cache independently verified against ALL192 original G baseline hashes before comparison. Read-only cache use; D unchanged. All128 world GLB BIN chunks byte-identical, so vertex/index/normal/embedded binary data unchanged. All64 instance JSON files byte-identical. Current main was rejected as a geometry reference because it no longer matches recorded G baseline hashes.",
+  "world_binary_count": 128,
+  "instance_files_unchanged": 64,
+  "world_binary": [
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_0_0.glb",
+      "binary_sha256": "9932268141587b59001a3122ee622d523e3026117e5d72c245f7b4128fa0f693",
+      "baseline_binary_sha256": "9932268141587b59001a3122ee622d523e3026117e5d72c245f7b4128fa0f693",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_0_0.low.glb",
+      "binary_sha256": "a97edc6081d7ba31304c7b71b54da46617d005f52bee0c1a235742f2421b0770",
+      "baseline_binary_sha256": "a97edc6081d7ba31304c7b71b54da46617d005f52bee0c1a235742f2421b0770",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_0_1.glb",
+      "binary_sha256": "86ca4e943874c9e58ace53a9d0d15f9c2c7e0e517ea0475f1bfca6bd9e69d8f9",
+      "baseline_binary_sha256": "86ca4e943874c9e58ace53a9d0d15f9c2c7e0e517ea0475f1bfca6bd9e69d8f9",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_0_1.low.glb",
+      "binary_sha256": "effb4e95185e3a6d7409d3c13abe0834be6bc32a2b9e1a6a78bc23f5224c448d",
+      "baseline_binary_sha256": "effb4e95185e3a6d7409d3c13abe0834be6bc32a2b9e1a6a78bc23f5224c448d",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_0_2.glb",
+      "binary_sha256": "cbfc518ff3b403c7a9102cc918dcb37fff8c8a7c91d0e9d955bc9546e7c27903",
+      "baseline_binary_sha256": "cbfc518ff3b403c7a9102cc918dcb37fff8c8a7c91d0e9d955bc9546e7c27903",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_0_2.low.glb",
+      "binary_sha256": "be6fd2b84ddd939d9f2f412ecb2eeb3aa68b195567ea220e2ee4be063ff51908",
+      "baseline_binary_sha256": "be6fd2b84ddd939d9f2f412ecb2eeb3aa68b195567ea220e2ee4be063ff51908",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_0_3.glb",
+      "binary_sha256": "c50f293e9d83ad488f124cabeeadf2476bee78ac2af4f1a286bac18e40d1c4a9",
+      "baseline_binary_sha256": "c50f293e9d83ad488f124cabeeadf2476bee78ac2af4f1a286bac18e40d1c4a9",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_0_3.low.glb",
+      "binary_sha256": "974583a73bb83a4f5f976d38920b8a91dad1a57c797ec4db71fe5e49d8250a3a",
+      "baseline_binary_sha256": "974583a73bb83a4f5f976d38920b8a91dad1a57c797ec4db71fe5e49d8250a3a",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_0_4.glb",
+      "binary_sha256": "058607d228f8aa1bba29eb1560e6336ba8f41b308dbdae2ea851a9613bad4db8",
+      "baseline_binary_sha256": "058607d228f8aa1bba29eb1560e6336ba8f41b308dbdae2ea851a9613bad4db8",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_0_4.low.glb",
+      "binary_sha256": "d42f18df65c71103a8238283ad9bffa2cea72afa98d0eadb2d1178cc52abeb5d",
+      "baseline_binary_sha256": "d42f18df65c71103a8238283ad9bffa2cea72afa98d0eadb2d1178cc52abeb5d",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_0_5.glb",
+      "binary_sha256": "221918217f68b009d1608be43c11323fc363dc8b0bba26013eca58c680f08a0e",
+      "baseline_binary_sha256": "221918217f68b009d1608be43c11323fc363dc8b0bba26013eca58c680f08a0e",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_0_5.low.glb",
+      "binary_sha256": "c50c98178d8f8580dc3f13c31be90fc8580a04d6193ce997777a8faa7e6d670a",
+      "baseline_binary_sha256": "c50c98178d8f8580dc3f13c31be90fc8580a04d6193ce997777a8faa7e6d670a",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_0_6.glb",
+      "binary_sha256": "c0ca093a5dc4a89df8133ab6a8e3c811e4d5e0686d0a12beb5e550976612488a",
+      "baseline_binary_sha256": "c0ca093a5dc4a89df8133ab6a8e3c811e4d5e0686d0a12beb5e550976612488a",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_0_6.low.glb",
+      "binary_sha256": "94555948ffaf3244c6510b6d416ef716a59a85831cabb73ae2c426851f771eac",
+      "baseline_binary_sha256": "94555948ffaf3244c6510b6d416ef716a59a85831cabb73ae2c426851f771eac",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_0_7.glb",
+      "binary_sha256": "39e1e4e1f285764c6198d4bc0d4d9e904ffe9d252e265f73ab470024bb17ac85",
+      "baseline_binary_sha256": "39e1e4e1f285764c6198d4bc0d4d9e904ffe9d252e265f73ab470024bb17ac85",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_0_7.low.glb",
+      "binary_sha256": "59557da313251cf89aff3a6b6d61a41c6455bed8d13bff00e2f7ef23a95f637f",
+      "baseline_binary_sha256": "59557da313251cf89aff3a6b6d61a41c6455bed8d13bff00e2f7ef23a95f637f",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_1_0.glb",
+      "binary_sha256": "a93ee2e642a2057db20626a9b4e12be87cc1603a0b85221ae51120b738f4e7ba",
+      "baseline_binary_sha256": "a93ee2e642a2057db20626a9b4e12be87cc1603a0b85221ae51120b738f4e7ba",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_1_0.low.glb",
+      "binary_sha256": "09365851956bf003a73085a5fbd36746de9d574f7506f984599a1ad2c89ab780",
+      "baseline_binary_sha256": "09365851956bf003a73085a5fbd36746de9d574f7506f984599a1ad2c89ab780",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_1_1.glb",
+      "binary_sha256": "886d80f1700d18b4524fafed962b413a4c044695a2e4bc2470f952ab50d26d56",
+      "baseline_binary_sha256": "886d80f1700d18b4524fafed962b413a4c044695a2e4bc2470f952ab50d26d56",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_1_1.low.glb",
+      "binary_sha256": "c5a98000a82cf361bb7a1c077cc70b95056c283feb09304170cdde5812a40120",
+      "baseline_binary_sha256": "c5a98000a82cf361bb7a1c077cc70b95056c283feb09304170cdde5812a40120",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_1_2.glb",
+      "binary_sha256": "ccad14222fcd0c4b7063954f8d0a5dafee7a9f6d8130afd3ad19a727d7291472",
+      "baseline_binary_sha256": "ccad14222fcd0c4b7063954f8d0a5dafee7a9f6d8130afd3ad19a727d7291472",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_1_2.low.glb",
+      "binary_sha256": "8bedc8454855a775b82811301c608cc072b5401ff316c46666a6e4c78052645b",
+      "baseline_binary_sha256": "8bedc8454855a775b82811301c608cc072b5401ff316c46666a6e4c78052645b",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_1_3.glb",
+      "binary_sha256": "fb497a238d811c139a1f4d12da75a81876b0bb6f61f046ed6758c6edaa6bb94f",
+      "baseline_binary_sha256": "fb497a238d811c139a1f4d12da75a81876b0bb6f61f046ed6758c6edaa6bb94f",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_1_3.low.glb",
+      "binary_sha256": "e0096ae9dd0a3f045c4a842cd6b3d2d853dfa7fb432688eedf4ff8900468a1e3",
+      "baseline_binary_sha256": "e0096ae9dd0a3f045c4a842cd6b3d2d853dfa7fb432688eedf4ff8900468a1e3",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_1_4.glb",
+      "binary_sha256": "145e98f8492b3d17af0bc817e7858d75a795403e49a8a2e7c3dbe16151169a2d",
+      "baseline_binary_sha256": "145e98f8492b3d17af0bc817e7858d75a795403e49a8a2e7c3dbe16151169a2d",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_1_4.low.glb",
+      "binary_sha256": "d5c10693613705e4bc06aee6f2deef713fb0ec1460c62e9020eacbecf979f039",
+      "baseline_binary_sha256": "d5c10693613705e4bc06aee6f2deef713fb0ec1460c62e9020eacbecf979f039",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_1_5.glb",
+      "binary_sha256": "6030f3a7bd19cbd177d82afab46ab81d059274c11827f18fdb0a2571e5b79cfa",
+      "baseline_binary_sha256": "6030f3a7bd19cbd177d82afab46ab81d059274c11827f18fdb0a2571e5b79cfa",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_1_5.low.glb",
+      "binary_sha256": "e86a047a5947fb8ae4e19c5cc4a7ea9eaf730d69582eb4501a6f0f72b464f485",
+      "baseline_binary_sha256": "e86a047a5947fb8ae4e19c5cc4a7ea9eaf730d69582eb4501a6f0f72b464f485",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_1_6.glb",
+      "binary_sha256": "6e125035cf095898e4435b3da6a2975c4051e0b0ae50763e36d906d893edd2dd",
+      "baseline_binary_sha256": "6e125035cf095898e4435b3da6a2975c4051e0b0ae50763e36d906d893edd2dd",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_1_6.low.glb",
+      "binary_sha256": "cd3055e5d9fc8790bc069023cd85bd6d1adc2198bd437ed866aac8e5a5c137b8",
+      "baseline_binary_sha256": "cd3055e5d9fc8790bc069023cd85bd6d1adc2198bd437ed866aac8e5a5c137b8",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_1_7.glb",
+      "binary_sha256": "4a058c6e93fe958c45777cc8f6c20d038a9606ecd67d973aeda2b1f5fb627b13",
+      "baseline_binary_sha256": "4a058c6e93fe958c45777cc8f6c20d038a9606ecd67d973aeda2b1f5fb627b13",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_1_7.low.glb",
+      "binary_sha256": "b15aabc3a996c1de6ef4305f32c9b70d794c3a347a668e19a84cfe655881dc30",
+      "baseline_binary_sha256": "b15aabc3a996c1de6ef4305f32c9b70d794c3a347a668e19a84cfe655881dc30",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_2_0.glb",
+      "binary_sha256": "5fda11a784fc8263635941fb8f7229fb3c5e5514ea10d2e1526b865fa21ac644",
+      "baseline_binary_sha256": "5fda11a784fc8263635941fb8f7229fb3c5e5514ea10d2e1526b865fa21ac644",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_2_0.low.glb",
+      "binary_sha256": "9ef9f6d6fa8a4052bfdbd18a23f9387f5d6790b541affce8b813537e502a16e4",
+      "baseline_binary_sha256": "9ef9f6d6fa8a4052bfdbd18a23f9387f5d6790b541affce8b813537e502a16e4",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_2_1.glb",
+      "binary_sha256": "6772a5db965761255665d532f6c0510a0097fd9eb22830289ae0100e61439a69",
+      "baseline_binary_sha256": "6772a5db965761255665d532f6c0510a0097fd9eb22830289ae0100e61439a69",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_2_1.low.glb",
+      "binary_sha256": "976877b74d54641336a2d5b881cee8b539170b245b39dd334ab0cdfa8fc5383a",
+      "baseline_binary_sha256": "976877b74d54641336a2d5b881cee8b539170b245b39dd334ab0cdfa8fc5383a",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_2_2.glb",
+      "binary_sha256": "9ac1b09f41dae9d8e0683fdc2b626434794bdd19ef3965ebb5842b55c9a146a3",
+      "baseline_binary_sha256": "9ac1b09f41dae9d8e0683fdc2b626434794bdd19ef3965ebb5842b55c9a146a3",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_2_2.low.glb",
+      "binary_sha256": "4973a4e45920be4f1527673e455a7ea6a88974a04c03dff2d6c06f4ba1248be4",
+      "baseline_binary_sha256": "4973a4e45920be4f1527673e455a7ea6a88974a04c03dff2d6c06f4ba1248be4",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_2_3.glb",
+      "binary_sha256": "16cd2f40c01c3e06d3ac8243f8a3aed5aaf7de31dcc0dc2a7079a87da0588630",
+      "baseline_binary_sha256": "16cd2f40c01c3e06d3ac8243f8a3aed5aaf7de31dcc0dc2a7079a87da0588630",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_2_3.low.glb",
+      "binary_sha256": "2b8cc5edc7d70592e4798ac556ff521be93ddc1e5bfaa9a3f9bb3a233e3780dc",
+      "baseline_binary_sha256": "2b8cc5edc7d70592e4798ac556ff521be93ddc1e5bfaa9a3f9bb3a233e3780dc",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_2_4.glb",
+      "binary_sha256": "09affe22594e8486cb698086cafa7cde6ff3eee25fca2ac4ce45dcfd32e8c04f",
+      "baseline_binary_sha256": "09affe22594e8486cb698086cafa7cde6ff3eee25fca2ac4ce45dcfd32e8c04f",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_2_4.low.glb",
+      "binary_sha256": "7364348314b6f46f38ebc662674db74bb7ebe36ae06bf3576527836f8b372e16",
+      "baseline_binary_sha256": "7364348314b6f46f38ebc662674db74bb7ebe36ae06bf3576527836f8b372e16",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_2_5.glb",
+      "binary_sha256": "e280669468112f84db2de44e2b32893cb530cc99c04551f4926c4cb804004656",
+      "baseline_binary_sha256": "e280669468112f84db2de44e2b32893cb530cc99c04551f4926c4cb804004656",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_2_5.low.glb",
+      "binary_sha256": "896cd1c8fe84386567cbe32b69fd2a7ac892ee37b05fb282732c8cb43906a43e",
+      "baseline_binary_sha256": "896cd1c8fe84386567cbe32b69fd2a7ac892ee37b05fb282732c8cb43906a43e",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_2_6.glb",
+      "binary_sha256": "d57ab40b6bee790f167ef5c190ffff57b5dd0ec9aefcd0a3148b1a084017d68f",
+      "baseline_binary_sha256": "d57ab40b6bee790f167ef5c190ffff57b5dd0ec9aefcd0a3148b1a084017d68f",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_2_6.low.glb",
+      "binary_sha256": "214bb1dab4f9bb4c3920b2bd698f59cab820088831d256455d716c9afe5b0cc1",
+      "baseline_binary_sha256": "214bb1dab4f9bb4c3920b2bd698f59cab820088831d256455d716c9afe5b0cc1",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_2_7.glb",
+      "binary_sha256": "698c2e28297413bd62006a433f872f9991c63db1633725035d6be2449802e273",
+      "baseline_binary_sha256": "698c2e28297413bd62006a433f872f9991c63db1633725035d6be2449802e273",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_2_7.low.glb",
+      "binary_sha256": "7a0e7cb740a8a3791f0282c964b66f642f986560dfe7d4f2499b5992af97d9ff",
+      "baseline_binary_sha256": "7a0e7cb740a8a3791f0282c964b66f642f986560dfe7d4f2499b5992af97d9ff",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_3_0.glb",
+      "binary_sha256": "1babff35b27a30941ddb25695d4e67310c0eef4ea34c60db875ffbde9469b47b",
+      "baseline_binary_sha256": "1babff35b27a30941ddb25695d4e67310c0eef4ea34c60db875ffbde9469b47b",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_3_0.low.glb",
+      "binary_sha256": "868a041061b4875c7adfb9b31c91fb846b4d66fa25653d585e2375a611c732af",
+      "baseline_binary_sha256": "868a041061b4875c7adfb9b31c91fb846b4d66fa25653d585e2375a611c732af",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_3_1.glb",
+      "binary_sha256": "d7c3918a446b00e34625ce6909507db168fdf9d2102b7250cf3ee8581d0867ce",
+      "baseline_binary_sha256": "d7c3918a446b00e34625ce6909507db168fdf9d2102b7250cf3ee8581d0867ce",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_3_1.low.glb",
+      "binary_sha256": "2e6a95c33e924b375d9b78c18bf2bc03a8b801dc65181a372dfe1822d6a306f4",
+      "baseline_binary_sha256": "2e6a95c33e924b375d9b78c18bf2bc03a8b801dc65181a372dfe1822d6a306f4",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_3_2.glb",
+      "binary_sha256": "c941a8abb114ebb62f49a3a268a166b02c756260d60e5bda8678761137d2c024",
+      "baseline_binary_sha256": "c941a8abb114ebb62f49a3a268a166b02c756260d60e5bda8678761137d2c024",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_3_2.low.glb",
+      "binary_sha256": "f5191c3ac5974641d5a63243cf5bfcd261f65c7b674622d48db79f92d3f855d5",
+      "baseline_binary_sha256": "f5191c3ac5974641d5a63243cf5bfcd261f65c7b674622d48db79f92d3f855d5",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_3_3.glb",
+      "binary_sha256": "88432a4ace180f843192146edc78b084d5dc1f64fd3486876cb68303cfcfc2b8",
+      "baseline_binary_sha256": "88432a4ace180f843192146edc78b084d5dc1f64fd3486876cb68303cfcfc2b8",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_3_3.low.glb",
+      "binary_sha256": "1d246429905b60407a68be41136bd23e506002c159deebdc4091f92c5c22fe19",
+      "baseline_binary_sha256": "1d246429905b60407a68be41136bd23e506002c159deebdc4091f92c5c22fe19",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_3_4.glb",
+      "binary_sha256": "1b17d0b403f82e6ef9a0a26da9c2bac41094ad09e95a3cee302c8da1037865c0",
+      "baseline_binary_sha256": "1b17d0b403f82e6ef9a0a26da9c2bac41094ad09e95a3cee302c8da1037865c0",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_3_4.low.glb",
+      "binary_sha256": "911b032fce5b6a0883d89bd7475094f31b8d4a5c8e6789e1d17867aaccf969d7",
+      "baseline_binary_sha256": "911b032fce5b6a0883d89bd7475094f31b8d4a5c8e6789e1d17867aaccf969d7",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_3_5.glb",
+      "binary_sha256": "61ae7565685a87a721b7f710ec95c40b9887bb38bcca28e709c03a1b9b89d895",
+      "baseline_binary_sha256": "61ae7565685a87a721b7f710ec95c40b9887bb38bcca28e709c03a1b9b89d895",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_3_5.low.glb",
+      "binary_sha256": "dcb1e524baf07897843f61dfa47dc156aa5582b421093b08150dbeb38dd46d2a",
+      "baseline_binary_sha256": "dcb1e524baf07897843f61dfa47dc156aa5582b421093b08150dbeb38dd46d2a",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_3_6.glb",
+      "binary_sha256": "78bcc79ea8c04dbcc68f1273195c5d7c2cc6fb0534aac93a527f6aef41fe41e3",
+      "baseline_binary_sha256": "78bcc79ea8c04dbcc68f1273195c5d7c2cc6fb0534aac93a527f6aef41fe41e3",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_3_6.low.glb",
+      "binary_sha256": "8419ebb1f4a4f41c5d015bc603c7c18e6f563805ac0f05cf91bd27e86551d6df",
+      "baseline_binary_sha256": "8419ebb1f4a4f41c5d015bc603c7c18e6f563805ac0f05cf91bd27e86551d6df",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_3_7.glb",
+      "binary_sha256": "e3839b0a792b77013e58b5cdc5352fbfc4f39a8a8526d04e121da18d7802c359",
+      "baseline_binary_sha256": "e3839b0a792b77013e58b5cdc5352fbfc4f39a8a8526d04e121da18d7802c359",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_3_7.low.glb",
+      "binary_sha256": "782d34fd530f03de8577ba9df3b21055d1853b29930ee9b591be71e04825bbaa",
+      "baseline_binary_sha256": "782d34fd530f03de8577ba9df3b21055d1853b29930ee9b591be71e04825bbaa",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_4_0.glb",
+      "binary_sha256": "c7035763bf3dfd2a210a4885a0310873a951132b422ae875e64bb84e3f07b69e",
+      "baseline_binary_sha256": "c7035763bf3dfd2a210a4885a0310873a951132b422ae875e64bb84e3f07b69e",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_4_0.low.glb",
+      "binary_sha256": "3d2626f75a2d343bb63d9eb01b0f79753f7ad83153ea79e11bdbb46c018c182b",
+      "baseline_binary_sha256": "3d2626f75a2d343bb63d9eb01b0f79753f7ad83153ea79e11bdbb46c018c182b",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_4_1.glb",
+      "binary_sha256": "a3a90e3cfa11902aa03bdc3a0693093e4ef771ead1e5e5d4acfb59e54dbe16eb",
+      "baseline_binary_sha256": "a3a90e3cfa11902aa03bdc3a0693093e4ef771ead1e5e5d4acfb59e54dbe16eb",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_4_1.low.glb",
+      "binary_sha256": "b6538d319e28b44bfad1b07a46a25537cc3a64142cc1c71af2a059ad34ccde67",
+      "baseline_binary_sha256": "b6538d319e28b44bfad1b07a46a25537cc3a64142cc1c71af2a059ad34ccde67",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_4_2.glb",
+      "binary_sha256": "f3e2df292f5b088e58c829b63405d4bbddf0727810e6bd569a21ea0e98351fe2",
+      "baseline_binary_sha256": "f3e2df292f5b088e58c829b63405d4bbddf0727810e6bd569a21ea0e98351fe2",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_4_2.low.glb",
+      "binary_sha256": "4e18471f2b8b6901e30ac67c2b4e666e6ac1cb869ba41fa712d43ffffe529eeb",
+      "baseline_binary_sha256": "4e18471f2b8b6901e30ac67c2b4e666e6ac1cb869ba41fa712d43ffffe529eeb",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_4_3.glb",
+      "binary_sha256": "7724ae68abfdf70063e294e6f8ab316d65ef9d833adf2bd817008cb8fe61b227",
+      "baseline_binary_sha256": "7724ae68abfdf70063e294e6f8ab316d65ef9d833adf2bd817008cb8fe61b227",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_4_3.low.glb",
+      "binary_sha256": "ce23866dcb19a9d5a4079172130356c6628b4549819b7aeb17b5d331050d4836",
+      "baseline_binary_sha256": "ce23866dcb19a9d5a4079172130356c6628b4549819b7aeb17b5d331050d4836",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_4_4.glb",
+      "binary_sha256": "6e210e8c797bf69c217f7630db21cadc5164ca995676e0762d0ddc1fd727631c",
+      "baseline_binary_sha256": "6e210e8c797bf69c217f7630db21cadc5164ca995676e0762d0ddc1fd727631c",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_4_4.low.glb",
+      "binary_sha256": "fd5fd3923c1464dfc5806d83e25b825eec606d6e25602c10845a3822a7974cf5",
+      "baseline_binary_sha256": "fd5fd3923c1464dfc5806d83e25b825eec606d6e25602c10845a3822a7974cf5",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_4_5.glb",
+      "binary_sha256": "a8675b82d5674dd81429407538cb2d955cef87cf6b942e84df1e1640ece8ee53",
+      "baseline_binary_sha256": "a8675b82d5674dd81429407538cb2d955cef87cf6b942e84df1e1640ece8ee53",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_4_5.low.glb",
+      "binary_sha256": "8763253de98dd79022388c351217735d293bf5a497bfb67211b11344fe9fb42a",
+      "baseline_binary_sha256": "8763253de98dd79022388c351217735d293bf5a497bfb67211b11344fe9fb42a",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_4_6.glb",
+      "binary_sha256": "71e703c360c89f16a3e4b58110a0c39fd453ffe2b98e74db2f8e0afd0e0b2a6f",
+      "baseline_binary_sha256": "71e703c360c89f16a3e4b58110a0c39fd453ffe2b98e74db2f8e0afd0e0b2a6f",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_4_6.low.glb",
+      "binary_sha256": "209b3a68eee2a183e9444cfce2f8ab28ed946b91329e1e398cc332a3a0503f3f",
+      "baseline_binary_sha256": "209b3a68eee2a183e9444cfce2f8ab28ed946b91329e1e398cc332a3a0503f3f",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_4_7.glb",
+      "binary_sha256": "4ff55ca916558872d8fb256451ec1dd1b94227895b018eefaba95cc285bb7d7e",
+      "baseline_binary_sha256": "4ff55ca916558872d8fb256451ec1dd1b94227895b018eefaba95cc285bb7d7e",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_4_7.low.glb",
+      "binary_sha256": "3b6631d4ad3904f4bba7da932d13de8635e7361191805f6028ec4993649489e0",
+      "baseline_binary_sha256": "3b6631d4ad3904f4bba7da932d13de8635e7361191805f6028ec4993649489e0",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_5_0.glb",
+      "binary_sha256": "830eca1e667c647a6c7d20ea0ae4a1a9fd9e85b3e65332b1cfa91acafa14e12b",
+      "baseline_binary_sha256": "830eca1e667c647a6c7d20ea0ae4a1a9fd9e85b3e65332b1cfa91acafa14e12b",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_5_0.low.glb",
+      "binary_sha256": "4bf1f45a49e13c87113dcf888dcfb38cf9b59c105e6c8b66ec5393bbeb6b395f",
+      "baseline_binary_sha256": "4bf1f45a49e13c87113dcf888dcfb38cf9b59c105e6c8b66ec5393bbeb6b395f",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_5_1.glb",
+      "binary_sha256": "8bea38c2cb5fd5ec180fb58530ff3e0dad40ca05a94445248dd3f891fdf11de0",
+      "baseline_binary_sha256": "8bea38c2cb5fd5ec180fb58530ff3e0dad40ca05a94445248dd3f891fdf11de0",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_5_1.low.glb",
+      "binary_sha256": "325203489dd74205f3474e66e4102203ca8db4b80c8eb9e953dbc379ceecc870",
+      "baseline_binary_sha256": "325203489dd74205f3474e66e4102203ca8db4b80c8eb9e953dbc379ceecc870",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_5_2.glb",
+      "binary_sha256": "79cd908d8de797df2a7d8b6704fb57230361ab434d6ee060476b8885faa68f2a",
+      "baseline_binary_sha256": "79cd908d8de797df2a7d8b6704fb57230361ab434d6ee060476b8885faa68f2a",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_5_2.low.glb",
+      "binary_sha256": "b99d23b99eb7e15bef46f7f232ba3fe0d7e7680085d94ece3827fb8972934137",
+      "baseline_binary_sha256": "b99d23b99eb7e15bef46f7f232ba3fe0d7e7680085d94ece3827fb8972934137",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_5_3.glb",
+      "binary_sha256": "fd913b0c85806e11d3b334e9c302c4658460b336f4caee91e644b3f87be02828",
+      "baseline_binary_sha256": "fd913b0c85806e11d3b334e9c302c4658460b336f4caee91e644b3f87be02828",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_5_3.low.glb",
+      "binary_sha256": "fd2b9a8b3b37314674b53340bfc26caea1a2ad88c7ba857b9f5f0274fca8bd8c",
+      "baseline_binary_sha256": "fd2b9a8b3b37314674b53340bfc26caea1a2ad88c7ba857b9f5f0274fca8bd8c",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_5_4.glb",
+      "binary_sha256": "88d37260ac41d0f378bbe85d59c0a32850a798cbd9d968065440bfb4e3e022f7",
+      "baseline_binary_sha256": "88d37260ac41d0f378bbe85d59c0a32850a798cbd9d968065440bfb4e3e022f7",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_5_4.low.glb",
+      "binary_sha256": "4eac22ddcff5049820516eb1c7d2e757e81ef3c73e739dae8a1c15c9aade3d25",
+      "baseline_binary_sha256": "4eac22ddcff5049820516eb1c7d2e757e81ef3c73e739dae8a1c15c9aade3d25",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_5_5.glb",
+      "binary_sha256": "cdec320138f3d7f1a0242172f0aabfeb20e80f19861a674b3c0a910f8dc548fc",
+      "baseline_binary_sha256": "cdec320138f3d7f1a0242172f0aabfeb20e80f19861a674b3c0a910f8dc548fc",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_5_5.low.glb",
+      "binary_sha256": "77afd2ca3e2ab647efd8a617e0110eee4202052dc5c6d38085eabf2108f286e7",
+      "baseline_binary_sha256": "77afd2ca3e2ab647efd8a617e0110eee4202052dc5c6d38085eabf2108f286e7",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_5_6.glb",
+      "binary_sha256": "ac1dccfaf60d9f7b02173af4067782739af70b80723285a7962c3ce21e49ebca",
+      "baseline_binary_sha256": "ac1dccfaf60d9f7b02173af4067782739af70b80723285a7962c3ce21e49ebca",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_5_6.low.glb",
+      "binary_sha256": "c5183fd917a0b098c9ef75dbdeff540436fe19d86702092a1e0569ff36fda6ab",
+      "baseline_binary_sha256": "c5183fd917a0b098c9ef75dbdeff540436fe19d86702092a1e0569ff36fda6ab",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_5_7.glb",
+      "binary_sha256": "54ea13d13c5b64fbbb1f0a73fb72fc6eb0980034020d1d1bc317f75188b0faf9",
+      "baseline_binary_sha256": "54ea13d13c5b64fbbb1f0a73fb72fc6eb0980034020d1d1bc317f75188b0faf9",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_5_7.low.glb",
+      "binary_sha256": "787fab70bce4bc3218aa15869311e39d4fb07cea877a9c9432078dda3bbd69b9",
+      "baseline_binary_sha256": "787fab70bce4bc3218aa15869311e39d4fb07cea877a9c9432078dda3bbd69b9",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_6_0.glb",
+      "binary_sha256": "56d4bcdc2492d7ee8ca02c7a01c733a41d84ee64ff06a4d7d54e71adc545efc6",
+      "baseline_binary_sha256": "56d4bcdc2492d7ee8ca02c7a01c733a41d84ee64ff06a4d7d54e71adc545efc6",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_6_0.low.glb",
+      "binary_sha256": "1823c7123c3622db7498acafeb2b7f285543401ab06c23cc1106c642901c2058",
+      "baseline_binary_sha256": "1823c7123c3622db7498acafeb2b7f285543401ab06c23cc1106c642901c2058",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_6_1.glb",
+      "binary_sha256": "bb1187c504103f8aebb64746d819604b6569df39f77e320c80200920a3e10a96",
+      "baseline_binary_sha256": "bb1187c504103f8aebb64746d819604b6569df39f77e320c80200920a3e10a96",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_6_1.low.glb",
+      "binary_sha256": "593565c0e4441ba401b1dd26c3e809005949cbec72784d0d3591990f44cf0656",
+      "baseline_binary_sha256": "593565c0e4441ba401b1dd26c3e809005949cbec72784d0d3591990f44cf0656",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_6_2.glb",
+      "binary_sha256": "bf964eafa4e3af70ca132bbbd1e377c4bdfff964dcab87d4c5f9f55dfbda79e7",
+      "baseline_binary_sha256": "bf964eafa4e3af70ca132bbbd1e377c4bdfff964dcab87d4c5f9f55dfbda79e7",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_6_2.low.glb",
+      "binary_sha256": "d221f300cb97b3ba5bf8921dc9f92ec8775d7944640cbb33956b2cd7fcd419d5",
+      "baseline_binary_sha256": "d221f300cb97b3ba5bf8921dc9f92ec8775d7944640cbb33956b2cd7fcd419d5",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_6_3.glb",
+      "binary_sha256": "bc712ba999ebbe52c335b991a3817bcd079c888990853b0121930620fcac9e05",
+      "baseline_binary_sha256": "bc712ba999ebbe52c335b991a3817bcd079c888990853b0121930620fcac9e05",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_6_3.low.glb",
+      "binary_sha256": "053cae523da92e69791ed4a7413c7e85e1243838cecd27171cd255c9db6d0fe2",
+      "baseline_binary_sha256": "053cae523da92e69791ed4a7413c7e85e1243838cecd27171cd255c9db6d0fe2",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_6_4.glb",
+      "binary_sha256": "c21e0ffc25fb607711eeccb18d872b2652d6530d351478b216f96ecfce93bb7c",
+      "baseline_binary_sha256": "c21e0ffc25fb607711eeccb18d872b2652d6530d351478b216f96ecfce93bb7c",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_6_4.low.glb",
+      "binary_sha256": "66253111a099b0affc7147d9aa4b46b37a363d7d7e1d68f90d06af715041f721",
+      "baseline_binary_sha256": "66253111a099b0affc7147d9aa4b46b37a363d7d7e1d68f90d06af715041f721",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_6_5.glb",
+      "binary_sha256": "6e914db829732339072faa850562e35578dc23164687de1bbb4a8e0664f1f1f9",
+      "baseline_binary_sha256": "6e914db829732339072faa850562e35578dc23164687de1bbb4a8e0664f1f1f9",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_6_5.low.glb",
+      "binary_sha256": "661135546f9db588e9de3364467a199cc850469033af155d1c908bd0339c40fa",
+      "baseline_binary_sha256": "661135546f9db588e9de3364467a199cc850469033af155d1c908bd0339c40fa",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_6_6.glb",
+      "binary_sha256": "8947a4943c08c9dd2b49632a9900677d43ddd87344a039f1fa5ceb7a886893f4",
+      "baseline_binary_sha256": "8947a4943c08c9dd2b49632a9900677d43ddd87344a039f1fa5ceb7a886893f4",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_6_6.low.glb",
+      "binary_sha256": "81ae5e3c361d5aaebbb2cbebcb1a1d5f064c323f2c8734273579b26f7f3e5125",
+      "baseline_binary_sha256": "81ae5e3c361d5aaebbb2cbebcb1a1d5f064c323f2c8734273579b26f7f3e5125",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_6_7.glb",
+      "binary_sha256": "81e360bfa53c786f5e31cedcf76e1c7997c0eccc2b3ef194da8f61d544d47489",
+      "baseline_binary_sha256": "81e360bfa53c786f5e31cedcf76e1c7997c0eccc2b3ef194da8f61d544d47489",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_6_7.low.glb",
+      "binary_sha256": "d9b7a11d8416d818c82f712c0c7f087980e9f4427cfa939851aa0ab3e856c791",
+      "baseline_binary_sha256": "d9b7a11d8416d818c82f712c0c7f087980e9f4427cfa939851aa0ab3e856c791",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_7_0.glb",
+      "binary_sha256": "ca07fa7c077b924cc8419b8e38a989502022f998bc33ae9d7a38e39b53a9485f",
+      "baseline_binary_sha256": "ca07fa7c077b924cc8419b8e38a989502022f998bc33ae9d7a38e39b53a9485f",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_7_0.low.glb",
+      "binary_sha256": "28ce153d29442f4b6b88bc79ecb6259a204b082e77da71937731868701b20be5",
+      "baseline_binary_sha256": "28ce153d29442f4b6b88bc79ecb6259a204b082e77da71937731868701b20be5",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_7_1.glb",
+      "binary_sha256": "2b86d86f48cd4351d7c8e6dda754a1b230e2e3215b0bdd70941fefbc8e9224db",
+      "baseline_binary_sha256": "2b86d86f48cd4351d7c8e6dda754a1b230e2e3215b0bdd70941fefbc8e9224db",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_7_1.low.glb",
+      "binary_sha256": "d9a0d1a51d890d19a9afa9b59c2a0183d0b90ff0de0daebd791cf89e8c3591e8",
+      "baseline_binary_sha256": "d9a0d1a51d890d19a9afa9b59c2a0183d0b90ff0de0daebd791cf89e8c3591e8",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_7_2.glb",
+      "binary_sha256": "95080067315d0367ad68350179115cca905b3934cd5322f908f7416ca71a9ed8",
+      "baseline_binary_sha256": "95080067315d0367ad68350179115cca905b3934cd5322f908f7416ca71a9ed8",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_7_2.low.glb",
+      "binary_sha256": "598fcf9d5c48646adfa6e41542d7da77d67a5768b9220c19490123967ec56142",
+      "baseline_binary_sha256": "598fcf9d5c48646adfa6e41542d7da77d67a5768b9220c19490123967ec56142",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_7_3.glb",
+      "binary_sha256": "60bad912ee350b47e8317e19bf132d1f2750e50809e48c0978e8910faa4bedb1",
+      "baseline_binary_sha256": "60bad912ee350b47e8317e19bf132d1f2750e50809e48c0978e8910faa4bedb1",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_7_3.low.glb",
+      "binary_sha256": "fe0c2ebf8e66b9dc99ec264f6d4c1f203e7edd810981baab65dc09bb2b3b10d4",
+      "baseline_binary_sha256": "fe0c2ebf8e66b9dc99ec264f6d4c1f203e7edd810981baab65dc09bb2b3b10d4",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_7_4.glb",
+      "binary_sha256": "875268879a01f37ab0e20d049b6a3e23d39d0b229a95608c007257f24f5f83de",
+      "baseline_binary_sha256": "875268879a01f37ab0e20d049b6a3e23d39d0b229a95608c007257f24f5f83de",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_7_4.low.glb",
+      "binary_sha256": "43617151e5fd5a51068e85025983caff3f90bee2cd257e4a9c698a0ffde52442",
+      "baseline_binary_sha256": "43617151e5fd5a51068e85025983caff3f90bee2cd257e4a9c698a0ffde52442",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_7_5.glb",
+      "binary_sha256": "3456244b99e3d3dcd979c9aae2e0d0cbf1d7f68c4ab3e7dd969ab9478147375e",
+      "baseline_binary_sha256": "3456244b99e3d3dcd979c9aae2e0d0cbf1d7f68c4ab3e7dd969ab9478147375e",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_7_5.low.glb",
+      "binary_sha256": "7fb2fef2eabe7eb6e97529bcd88214a7403da6a15676af88085482a034d44761",
+      "baseline_binary_sha256": "7fb2fef2eabe7eb6e97529bcd88214a7403da6a15676af88085482a034d44761",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_7_6.glb",
+      "binary_sha256": "3d4aee38a4e577aab6bad6cbb820e776fc64b52a7633c008a48db48644218b83",
+      "baseline_binary_sha256": "3d4aee38a4e577aab6bad6cbb820e776fc64b52a7633c008a48db48644218b83",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_7_6.low.glb",
+      "binary_sha256": "c2d7e0109a446738a2ee9a5ab046807fb83f0912036c21ccfcd8987a62de15ac",
+      "baseline_binary_sha256": "c2d7e0109a446738a2ee9a5ab046807fb83f0912036c21ccfcd8987a62de15ac",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_7_7.glb",
+      "binary_sha256": "4ec279b0734f1ac59d5f1a2fef79ff15c80b81b6862973f9ec1297eb4b067240",
+      "baseline_binary_sha256": "4ec279b0734f1ac59d5f1a2fef79ff15c80b81b6862973f9ec1297eb4b067240",
+      "unchanged": true
+    },
+    {
+      "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_7_7.low.glb",
+      "binary_sha256": "ce1f995caaa6aeeb5d3d8fa23f767b88553694daea48fba9206b6033717fdd33",
+      "baseline_binary_sha256": "ce1f995caaa6aeeb5d3d8fa23f767b88553694daea48fba9206b6033717fdd33",
+      "unchanged": true
+    }
+  ]
+}

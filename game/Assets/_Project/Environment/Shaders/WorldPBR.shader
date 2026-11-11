@@ -284,7 +284,7 @@ Shader "Kamion/World PBR"
                     half removedFilm = legacyFilm * (1.0h - keepUpper);
                     base.rgb /= max((1.0h - 0.30h * removedFilm) * half3(1.0h, 1.0h - 0.08h * removedFilm, 1.0h - 0.22h * removedFilm), 0.2h);
                     mask.a = saturate(mask.a + 0.35h * removedFilm);
-                    // WORKING_VALUE road-grit deposition: bounded sill height/opacity, existing scan/modulation
+                    // WORKING_VALUE road-grit deposition: bounded sill height/opacity, existing modulation
                     // pattern with a per-instance phase. Bonnet/roof detail remains independent of road spray.
                     half top = lerp(0.32h, 0.62h, i.carFilm.x);
                     carFilmOpacity = legacyFilm * i.carFilm.x * (1.0h - smoothstep(top - 0.08h, top + 0.08h, um.y)) * 0.65h;
