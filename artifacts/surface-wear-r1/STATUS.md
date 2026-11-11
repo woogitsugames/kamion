@@ -79,3 +79,6 @@
 
 - Step32 ROOT source review caught unknown-overlap gap before anytransferPASS: now retain null/sentinel asphalt triangles as explicit ambiguityblockers atmatchingheight. Added3meaningful cases coplanarnull/sentinelreject anddifferentlevelunknownnonveto. Originalknown/height/wholecomponent contracts unchanged; broadshaderinactive. Currentafteraudit exists for prior16componentcandidate, notfinalblockercandidate.
 - NEXT COMMAND: guarded14focusedtests then correctedblockerimport/nativeaudit; allcoverage provisionaluntilactualpositiveglyph/unknownnegative andexactageproof.
+
+- Step33 blockerfocusedtests14/14PASS0skip. Initial Pythonnativeageproof rejected hash mismatch: first corrected documentedGLB Vflip1f-y, then one UnityHalf roundingdifference remains at4_5marking; no false agePASS. Switching independent native audit sourceY comparator to SAME UnityFloatToHalf decoder usedbybake, fromoriginalrawGLB withGlbReader convention, to prove preservation exactly without NumPyHalf ties mismatch.
+- NEXT COMMAND: blockerfinalimport, then sourceY/nativeaudit+actualpositiveglyph/unknownnegative; do notclaimprior16component coverage finaluntilnewactualproof.
