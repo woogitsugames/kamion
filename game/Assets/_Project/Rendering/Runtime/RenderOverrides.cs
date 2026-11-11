@@ -53,6 +53,7 @@ namespace Game.Rendering
         public static float? EnvCaptureLod;
         public static int? ShadowCascades;
         public static int? ShadowResolution;
+        public static float? ShadowDepthBias, ShadowNormalBias, ShadowSplit1, ShadowSplit2;
         public static int? Clouds;       // ADR 0080: rq_clouds -1 flat dome, 0..2 quality
         public static bool? GroundHaze;  // rq_haze
         public static bool? Ssao;        // rq_ssao
@@ -66,7 +67,7 @@ namespace Game.Rendering
                                   TreeCull.HasValue || TreeThin.HasValue || SimpleFoliage.HasValue || ForestHlod.HasValue ||
                                   VehicleLook.HasValue || EnvCapture.HasValue || ScaleMin.HasValue || Upscale != null ||
                                   FsrSharpness.HasValue || Pacing.HasValue || LampPools.HasValue || EnvCaptureInterval.HasValue ||
-                                  EnvCaptureLod.HasValue || ShadowCascades.HasValue || ShadowResolution.HasValue || Ab != null ||
+                                  EnvCaptureLod.HasValue || ShadowCascades.HasValue || ShadowResolution.HasValue || ShadowDepthBias.HasValue || ShadowNormalBias.HasValue || ShadowSplit1.HasValue || ShadowSplit2.HasValue || Ab != null ||
                                   Game.Core.MirrorOverrides.Any ||
                                   WorldGi.HasValue || WorldSun.HasValue ||
                                   Clouds.HasValue || GroundHaze.HasValue || Ssao.HasValue || Look || CabToe.HasValue;
@@ -84,6 +85,8 @@ namespace Game.Rendering
             ScaleMin = F(arg("rq_scalemin")); FsrSharpness = F(arg("rq_fsrsharp")); Pacing = B(arg("rq_pacing")); LampPools = I(arg("rq_lamppools"));
             EnvCaptureInterval = I(arg("rq_envcap_iv")); EnvCaptureLod = F(arg("rq_envcap_lod"));
             ShadowCascades = I(arg("rq_shadowcasc")); ShadowResolution = I(arg("rq_shadowres"));
+            ShadowDepthBias = F(arg("rq_shadowbias")); ShadowNormalBias = F(arg("rq_shadownormal"));
+            ShadowSplit1 = F(arg("rq_shadowsplit")); ShadowSplit2 = F(arg("rq_shadowsplit2"));
             // ADR 0080: sky / atmosphere switches and the owner A/B look overrides (rq_look 0|1|2 contrast variant A|B|C,
             // rq_ev exposure bias in stops, rq_wet wetness 0..1, rq_grassvar lawn variation 0..1).
             Clouds = I(arg("rq_clouds")); GroundHaze = B(arg("rq_haze")); Ssao = B(arg("rq_ssao"));
@@ -148,6 +151,10 @@ namespace Game.Rendering
             if (EnvCaptureInterval.HasValue) t.envCaptureInterval = Math.Max(1, EnvCaptureInterval.Value);
             if (ShadowCascades.HasValue) t.shadowCascades = Math.Max(1, Math.Min(4, ShadowCascades.Value));
             if (ShadowResolution.HasValue) t.shadowResolution = ShadowResolution.Value;
+            if (ShadowDepthBias.HasValue) t.shadowDepthBias = ShadowDepthBias.Value;
+            if (ShadowNormalBias.HasValue) t.shadowNormalBias = ShadowNormalBias.Value;
+            if (ShadowSplit1.HasValue) { t.cascade2Split = ShadowSplit1.Value; t.cascade4Split.x = ShadowSplit1.Value; }
+            if (ShadowSplit2.HasValue) t.cascade4Split.y = ShadowSplit2.Value;
             if (Upscale != null)
             {
                 switch (Upscale)

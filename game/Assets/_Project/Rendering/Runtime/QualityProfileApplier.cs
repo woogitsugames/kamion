@@ -67,6 +67,14 @@ namespace Game.Rendering
             if (RenderOverrides.ShadowDistance.HasValue) urp.shadowDistance = t.shadowDistance;
             if (RenderOverrides.ShadowCascades.HasValue) urp.shadowCascadeCount = t.shadowCascades;   // ADR 0068 A/B
             if (RenderOverrides.ShadowResolution.HasValue) urp.mainLightShadowmapResolution = t.shadowResolution;
+            if (RenderOverrides.ShadowDepthBias.HasValue) urp.shadowDepthBias = t.shadowDepthBias;
+            if (RenderOverrides.ShadowNormalBias.HasValue) urp.shadowNormalBias = t.shadowNormalBias;
+            if (RenderOverrides.ShadowSplit1.HasValue || RenderOverrides.ShadowSplit2.HasValue)
+            {
+                urp.cascade2Split = t.cascade2Split;
+                urp.cascade3Split = new Vector2(t.cascade4Split.x, t.cascade4Split.y);
+                urp.cascade4Split = t.cascade4Split;
+            }
             if (RenderOverrides.Hdr.HasValue) urp.supportsHDR = t.hdr;
             if (RenderOverrides.Upscale != null) urp.upscalingFilter = t.upscalingFilter;   // ADR 0062 A/B
             if (RenderOverrides.FsrSharpness.HasValue) { urp.fsrOverrideSharpness = true; urp.fsrSharpness = t.fsrSharpness; }
@@ -83,7 +91,7 @@ namespace Game.Rendering
             if (RenderOverrides.Any) ApplyPipelineOverrides(t);
 #if UNITY_EDITOR
             if (RenderOverrides.Any && GraphicsSettings.currentRenderPipeline is UniversalRenderPipelineAsset pipeline)
-                Debug.Log($"[RQ_PIPELINE] scale={pipeline.renderScale} fsrSharpness={pipeline.fsrSharpness} fsrOverride={pipeline.fsrOverrideSharpness} cascades={pipeline.shadowCascadeCount} shadowResolution={pipeline.mainLightShadowmapResolution} shadowDistance={pipeline.shadowDistance}");
+                Debug.Log($"[RQ_PIPELINE] scale={pipeline.renderScale} fsrSharpness={pipeline.fsrSharpness} fsrOverride={pipeline.fsrOverrideSharpness} cascades={pipeline.shadowCascadeCount} shadowResolution={pipeline.mainLightShadowmapResolution} shadowDistance={pipeline.shadowDistance} bias={pipeline.shadowDepthBias}/{pipeline.shadowNormalBias} splits={pipeline.cascade3Split}");
 #endif
             Current = t;
             HasCurrent = true;

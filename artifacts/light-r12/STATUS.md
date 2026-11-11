@@ -26,3 +26,6 @@
 
 - Step8: diagnostic emptyRq parity meanabs0.34LSB/max2 (only stochastic dither); root reviewed hook/noop. Six controlled noise variants: sky hf3px1.831 -> skyOff0.518 -> skyOff+sharp0withcameraDither0.482. Both-dithers-off0.222 visibly bands; rejected. Installed URP1767 skips RCAS keyword at exact0, actual0/overrideTrue logged. Keep final dither; measure edge/cab legibility before policy decision. All standard236 and selected22beforeframes viewed via22sheets. FullGIS running.
 - NEXT COMMAND: inspect noise/legibility-zero road/window/cab edge crops; then implement clear-only shoulder and bounded shadow ablations.
+
+- Step9: fullGIS355pass/2xfail; verified192canonical rawSHA after tests, saved manifest snapshot. High shadow2x2factor capture: same2048px/3cascades, combined .4/.3 bias +.2/.55 splits reduces broad trailer stairs with contacts kept (root viewed). Medium bias-only cleaner than .55split: reject Medium split change. Glass triangles persist in candidate; rendering shadow-off diagnostic before assigning cause. RCAS0 legibility: paintcontrast81->78, edge1.673->1.658px; cabnumeral149->148, gradient-4.6pct, windowcontrast29 preserved butmicrogradient-22pct. No no-loss claim.
+- NEXT COMMAND: inspect Medium-no-shadow glass crop, implement actual default pipeline/sky/clear shoulder policy, verify emptyRq.
