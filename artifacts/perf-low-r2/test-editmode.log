@@ -1,0 +1,7 @@
+unity: C:\Program Files\Unity\Hub\Editor\6000.3.28f1\Editor\Unity.exe -batchmode -projectPath C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\perf-low-r2\game -logFile C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\perf-low-r2\artifacts\logs\test-editmode-20261111-161450.log -buildTarget Android -runTests -testPlatform EditMode -testResults C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\perf-low-r2\artifacts\tests\editmode-20261111-161450.xml
+VBCSCompilerServerWatchdog: watching VBCSCompiler (PID 91736)
+EditMode: 248 total, 247 passed, 1 failed, 0 skipped (Failed(Child)) -> C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\perf-low-r2\artifacts\tests\editmode-20261111-161450.xml
+  FAILED Game.Tests.EditMode.CabViewCameraTests.RenderingRuntime_DoesNotUseCameraMainDirectly:   PsoWarmup.cs:129 uses Camera.main; use ViewCameraResolver.Resolve (ADR 0044 r9)
+  Expected: False
+  But was:  True
+

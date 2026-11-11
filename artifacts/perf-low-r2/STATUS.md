@@ -11,3 +11,8 @@
   `spike_probe 1` → `[SPIKE]` (markery profilera w buildzie Development).
 - NASTĘPNY KROK: (po zwolnieniu PHONE_RUN) `pwsh scripts/test.ps1 -Platform EditMode` (kompilacja), potem
   `pwsh scripts/build-android.ps1 -Tier Low` → `pwsh -NoProfile -File artifacts/perf-low-r2/phone-diag.ps1 -Apk <apk> -OutTag diag1 -Segment B -Uncapped -Runs "ab_forest=rq_ab=forestfast;ab_veg=rq_ab=vegfast;ab_1pass=rq_ab=hlod1pass;ab_canopy=rq_ab=canopyfast;ab_aniso=rq_ab=veganiso"`
+
+## 16:20 — krok 2: build diag1 + pomiar w toku
+- EditMode 247/248 → poprawione (PsoWarmup: ViewCameraResolver zamiast Camera.main); APK diag `kamion-0.1.0-c0a20185ec.apk` (SHA256 b5062b2d…6af3, 191,3 MB).
+- Uruchomione `artifacts/perf-low-r2/run-diag1.ps1` (A/B lasu G3-B bez limitu; trace PSO G3-B/G3-A; spike probe G3-A; adb pull *.graphicsstate → artifacts/perf-low-r2/pso/).
+- NASTĘPNY KROK: po `artifacts/perf-low-r2/diag1.done`: `python artifacts/perf-low-r2/summarize.py "artifacts/perf-low-r2/diag1/*"`; grep `[PSO]`/`[SPIKE]` w diag1/*/logcat.txt; skopiować *.graphicsstate do game/Assets/_Project/Rendering/Resources/Pso/.
