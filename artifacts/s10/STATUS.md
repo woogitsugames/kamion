@@ -14,10 +14,10 @@ and this coordination worktree start at 4f7da66c.
 | A 0086 tint gamma | fab_processor | gpt-tint-gamma | artifacts/tint-gamma-r1/STATUS.md | contract PASS; calibration FAIL, leader ADR0101; docs1317afba |
 | B 0088 vegetation | tree_surfaces | gpt-vegetation-r2 | artifacts/vegetation-r2/STATUS.md | GIS364/2xfail; root owns EditMode retry after test assertion fix |
 | C 0098 light/post | world_integration | gpt-light-r12 | artifacts/light-r12/STATUS.md | COMPLETE clean5db77e9d; visual PASS; EditMode221/221 |
-| D 0099 surface wear | pending | gpt-surface-wear | artifacts/surface-wear-r1/STATUS.md | dependency satisfied by 471438fb; after G/E |
+| D 0099 surface wear | world_integration | gpt-surface-wear | artifacts/surface-wear-r1/STATUS.md | baseline CPU prep only while G is parked; no production edits |
 | E 0090 fire station r7 | tree_surfaces | gpt-firestation-r7 | artifacts/firestation-r10/STATUS.md | CPU preparation from main901c427f; Unity held |
 | F 0087 truck paint | fab_processor | gpt-truck-paint | artifacts/truck-paint-r1/STATUS.md | running merged db1432c5: locked102frames, GPUlight Infinityproof |
-| G 0089 car paint | world_integration | gpt-car-paint | artifacts/car-paint-r1/STATUS.md | starting fresh main after C |
+| G 0089 car paint | world_integration | gpt-car-paint | artifacts/car-paint-r1/STATUS.md | parked clean e6d4b436 behind phone/Unity hold |
 
 A owns importer tint/calibration; B vegetation geometry, leaf ambient and grass;
 C lighting/post/atmosphere/shadow policy. Shared shader edits must be additive
@@ -171,3 +171,15 @@ bothguards and await explicitrelease, CPU workcontinues. B oldrunner finished,
 no hidden automaticlaunch remains. Phone measurements overlapping those windows
 need leader review/repetition; root didnotuseADB or touchthephone.
 NEXT COMMAND: `Test-Path C:/Users/matma/Documents/Claude/kamion/artifacts/locks/PHONE_RUN`; read leader phone completion evidence before releasing; rerun B EditMode once, then finalize report/copy.
+
+## Step13 - D baseline preparation during the external gate
+G has completed all independent CPU preparation atclean e6d4b436; actual paint
+choices stillneedfreshUnitybefore. Reused samefreeworker for D BASELINE-ONLY
+bootstrap/current-main Pythonproducts; no D production edits/Unity queued, no
+newworker. On release it resumes G first; D implementation/visuals later.
+Root read-only Dpreflight proves existing ROADWEAR/paint/decal features and
+Lowcrack-layer gating.128GLBs matchmanifest; validlaneUV62.443percentoldroad
+vertices,100percentnewroad.171vertices omitUV1 and importdefaults0; scopedmask
+contract issue, not broadmissingwear allegation. PREFLIGHT-D-0099.md records
+limits; helper changes nothing outside coord artifacts.
+NEXT COMMAND: monitor actual leader gate3 A/B completion and PHONE_RUN; after stableend retryB EditMode, explicitlyrelease F/G/E Unity, then continue G before D implementation.
