@@ -1033,7 +1033,8 @@ def cull_sides_on_carriageway(buf: MeshBuf) -> dict:
     keep_parts = []
     for p in buf.parts:
         kerb, side = p.mat in CULL_KERB, p.mat in CULL_SIDE
-        if p.layer not in ("road", "bridge", "collision") or not (kerb or side) or len(p.T) == 0:
+        if (p.layer not in ("road", "bridge", "collision") or not (kerb or side) or len(p.T) == 0
+                or p.src.startswith("island:")):       # authored islands lie on a carriageway by design (ADR 0077/0093)
             keep_parts.append(p)
             continue
         tri = p.V[p.T]

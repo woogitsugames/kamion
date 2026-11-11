@@ -457,57 +457,24 @@ overrides:
   # cells in Data/raw/refs/gugik-ortho-hr; sheet 0.25 m 2024-05-27) shows as continuous asphalt or as a painted
   # exclusion zone are listed here. at_en = region-local E/N of a point inside the generated gap; the gap component
   # within radius_m of it is paved. hatch: true = P-21 paint only (no kerb, no collision obstacle).
-  - id: gore-s610-hatch-north
-    kind: paved_gore
-    at_en: [344.0, -546.0]
-    radius_m: 8.0
-    close_m: 7.0
-    hatch: true
-    reason: >-
-      Junction of the Andersa ramps with the service road at s 610 (j:n1882887385): the orthophoto shows white P-21
-      chevrons on asphalt between the two carriageways, no kerb. Overlay artifacts/islands-r10/before/ramps610.jpg.
-    confidence: high
-    verify: Mapillary / owner drive (paint layout is WORKING_VALUE, 0.5 m stripes, 1.0 m gaps, 45 deg)
   - id: gore-s610-centre-hatch
     kind: paved_gore
     at_en: [346.9, -557.5]
     radius_m: 7.0
     close_m: 7.0
-    hatch: true
-    # listed before gore-s610-north-carriageway (radius 45 m): the first override that claims a gap keeps its paint
     reason: >-
       Same junction, 32 m2 triangle left between the junction patches in its centre: on the orthophoto the tip of the
       painted P-21 zone (with U-25 separators), no kerb. Overlay artifacts/islands-r10/after4/ramps610.jpg.
     confidence: high
-    verify: Mapillary / owner drive
-  - id: gore-s610-north-carriageway
-    kind: paved_gore
-    at_en: [348.5, -539.8]
-    radius_m: 45.0
-    close_m: 7.0
-    reason: >-
-      Same junction, north arm: OSM draws two one-way ways, the orthophoto shows one continuous asphalt surface with
-      cars across the generated 436 m2 island (road fraction 0.77-1.0).
-    confidence: medium
     verify: Mapillary / owner drive
   - id: gore-s610-hatch-south
     kind: paved_gore
     at_en: [337.5, -574.2]
     radius_m: 30.0
     close_m: 7.0
-    hatch: true
     reason: >-
       Same junction, south side: the 191 m2 triangle is a painted P-21 exclusion zone on the orthophoto (chevrons,
       zebra crossing through it), not a kerbed island.
-    confidence: high
-    verify: Mapillary / owner drive
-  - id: gore-s610-corners
-    kind: paved_gore
-    at_en: [353.2, -563.5]
-    radius_m: 8.0
-    close_m: 7.0
-    reason: >-
-      Same junction: 33 m2 leftover between the junction patches, asphalt with a zebra crossing on the orthophoto.
     confidence: high
     verify: Mapillary / owner drive
   - id: gore-s610-corner-e
@@ -545,6 +512,104 @@ overrides:
       2026-11-11), so the gap is plain asphalt without hatching.
     confidence: high
     verify: Mapillary / owner drive
+  # ---------------------------------------------------------------- ADR 0093: junction geometry / paint from the orthophoto
+  # painted_zone = P-21 exclusion zone, paint only. polygon_en = region-local E/N traced on the GUGiK 0.08 m
+  # orthophoto with artifacts/junctions-r1/scripts/planview.py (5 m grid crops in artifacts/junctions-r1/trace/).
+  # stripe_az_deg = direction of the stripes (0 = east, counter-clockwise); chevron_axis = two points, stripes mirrored
+  # about that axis. Self-intersecting polygons are rejected (overrides_stale, tests/gis/test_junction_paint.py).
+  # No P-21 is painted anywhere without such a polygon. traffic_island with polygon_en = kerbed paved island.
+  - id: s1440-merge-separator-strip
+    kind: traffic_island
+    surface: sidewalk_paving
+    polygon_en: [[-389.0, -135.1], [-373.9, -145.2], [-365.7, -151.5], [-362.2, -155.9],
+                 [-366.6, -152.8], [-375.3, -147.4], [-390.4, -137.3]]
+    reason: >-
+      Merge of the Rondo Putry ramp into Andersa (j:n1847044938, MA-012, s 1380-1440): the kerbed paved separator
+      with a barrier between the ramp and the main carriageway runs 30 m further than the generated nose
+      (generated nose E -388 N -138, orthophoto nose E -362 N -156). Crop artifacts/junctions-r1/trace/z_ma012_o.jpg.
+    confidence: high
+    verify: owner drive
+  - id: s1440-merge-p21-ramp
+    kind: painted_zone
+    stripe_az_deg: 62
+    polygon_en: [[-407.4, -124.7], [-391.5, -136.6], [-375.3, -147.4], [-362.2, -155.9], [-354.5, -162.5],
+                 [-365.6, -157.1], [-381.8, -147.4], [-396.3, -136.6]]
+    reason: >-
+      Same merge: P-21 on the left lane of the ramp beside the separator strip (painted lane drop), 2.9 m wide,
+      55 m long, tip E -354.5 N -162.5. Crop artifacts/junctions-r1/trace/z_ma012_o.jpg.
+    confidence: high
+    verify: owner drive
+  - id: s1440-diverge-p21
+    kind: painted_zone
+    stripe_az_deg: 70
+    polygon_en: [[-352.5, -127.5], [-338.0, -144.3], [-335.5, -147.5], [-343.4, -140.5], [-349.3, -135.7],
+                 [-354.2, -130.8]]
+    reason: >-
+      Diverge Andersa / ramp to Rondo Putry (s 1432-1480): SE end of the P-21 zone in front of the separator nose
+      (nose E -349.3 N -135.7, tip E -335.5 N -147.5). On the orthophoto the zone continues NW to E -386.6 N -98.1 as a
+      3.6 m band on the ramp carriageway beside a paved strip with a barrier (full outline: [-386.6,-98.1],
+      [-370.4,-109.2], [-358.5,-120.0], [-349.3,-130.8], ..., [-363.9,-120.0], [-376.3,-109.2]); the generated ramp
+      is narrower there and the main carriageway is higher (ramp wall), so that part is NOT built - open in ADR 0093.
+      Crop artifacts/junctions-r1/trace/z_s1440_o.jpg.
+    confidence: high
+    verify: owner drive
+  - id: s610-north-arm-width
+    target: {edge: "w537184112:1882887385-2840742181"}
+    reason: >-
+      North arm of the s 610 junction (j:n1882887385): OSM lanes=2 gave 5.5 m. On the 0.08 m orthophoto the
+      carriageway is 10.7 m kerb to kerb at N -537.6 and N -548.2 (one lane each way + a 2.2 m painted P-21 median),
+      about 7.5 m at the zebra at N -525; the OSM way lies 0.2 m from the measured centre. One width per edge:
+      9.0 m (WORKING_VALUE between the two measurements). Replaces the 436 m2 paved gore of ADR 0077, which paved
+      the sidewalk, lawn and barrier between this road and the car-park road (REVIEW 0077 #2).
+      Crop artifacts/junctions-r1/trace/z_s610_n_o.jpg.
+    confidence: medium
+    verify: owner drive
+    set: {width: 9.0}
+  - id: s610-north-arm-p21-median
+    kind: painted_zone
+    stripe_az_deg: -15
+    polygon_en: [[362.8, -529.0], [363.4, -529.5], [358.8, -539.4], [354.4, -549.0], [352.5, -553.1],
+                 [351.6, -548.2], [356.2, -539.4], [360.8, -531.4]]
+    reason: s 610 north arm, painted median between the two directions (crop artifacts/junctions-r1/trace/z_s610_n_o.jpg).
+    confidence: high
+    verify: owner drive
+  - id: s610-p21-centre
+    kind: painted_zone
+    stripe_az_deg: 30
+    polygon_en: [[347.0, -555.9], [350.0, -559.6], [347.0, -567.5], [346.2, -572.4], [345.1, -575.0],
+                 [341.1, -574.0], [342.0, -570.6], [343.2, -568.4], [342.6, -567.7], [341.3, -568.0],
+                 [340.2, -570.6], [338.7, -572.4], [335.6, -570.8]]
+    reason: >-
+      s 610, the large P-21 zone in the middle of the junction (carries six U-25 separators on the line
+      E 347.3 N -558.7 -> E 343.3 N -566.4; separators not built), bounded by the refuge island and the two zebras.
+      Crop artifacts/junctions-r1/trace/z_s610_s_o.jpg.
+    confidence: high
+    verify: owner drive
+  - id: s610-p21-west
+    kind: painted_zone
+    stripe_az_deg: 15
+    polygon_en: [[321.3, -575.7], [332.5, -573.7], [335.6, -575.7], [329.7, -578.5], [328.6, -579.0]]
+    reason: s 610, P-21 between the west zebra and the Andersa ramp (crop artifacts/junctions-r1/trace/z_s610_s_o.jpg).
+    confidence: high
+    verify: owner drive
+  - id: s610-p21-south
+    kind: painted_zone
+    stripe_az_deg: 20
+    polygon_en: [[340.7, -579.0], [344.8, -579.6], [347.0, -584.7], [349.9, -589.7], [342.1, -584.6], [340.7, -582.0]]
+    reason: s 610, P-21 south of the east zebra down to the tip E 349.9 N -589.7 (crop z_s610_s_o.jpg).
+    confidence: high
+    verify: owner drive
+  - id: s610-refuge-island
+    kind: traffic_island
+    surface: sidewalk_paving
+    polygon_en: [[341.3, -568.0], [342.6, -567.7], [343.2, -568.4], [342.0, -570.6], [341.1, -574.1], [340.4, -578.5],
+                 [340.7, -582.0], [342.1, -584.6], [339.1, -583.4], [334.7, -581.2], [329.7, -578.6], [331.2, -578.1],
+                 [335.6, -576.3], [338.7, -573.7], [340.2, -570.6]]
+    reason: >-
+      s 610: kerbed paved refuge island with a nose at E 342 N -568 between the two zebras (REVIEW 0077 #4:
+      "bright paved surface with a nose, two crossings"). Crop artifacts/junctions-r1/trace/z_s610_s_o.jpg.
+    confidence: high
+    verify: owner drive
   # island_confirmed: generated islands checked by eye on the 0.08 m orthophoto that the fidelity colour classifier
   # takes for road (grey paving / gravel). Read only by tools/worldgen/fidelity (verdict present_authored).
   - id: island-biezenstwa-splitter-confirmed

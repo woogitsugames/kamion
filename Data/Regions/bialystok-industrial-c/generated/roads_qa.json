@@ -7561,15 +7561,17 @@
     2
    ],
    "length_m": 75.6,
-   "max_grade": 0.0144,
-   "overrides": [],
-   "profile_rms_vs_nmt_m": 0.007,
-   "sidewalk_frac": 0.0,
+   "max_grade": 0.0125,
+   "overrides": [
+    "s610-north-arm-width"
+   ],
+   "profile_rms_vs_nmt_m": 0.008,
+   "sidewalk_frac": 1.0,
    "width_m": [
-    5.5
+    9.0
    ],
    "width_src": [
-    "PTB2022 §17 ust.1 standard"
+    "authored_override:s610-north-arm-width"
    ]
   },
   {
@@ -10127,22 +10129,22 @@
    1166108041,
    8473985999,
    1883043030,
-   1852129061,
    2881403132,
+   1852129061,
    1882953932,
    5645859049,
    5312688314,
-   2882674819,
    2882674820,
+   2882674819,
    3097201643,
    1882953931,
    3021817550,
    3021817549,
    1883043010,
-   1882953782,
    3563106549,
-   1882953779,
+   1882953782,
    3563106547,
+   1882953779,
    1883483225,
    1882953780,
    2441701386,
@@ -10156,10 +10158,10 @@
    2882674807,
    2882674810,
    3954799611,
-   1859438371,
    2881403139,
-   1883463881,
+   1859438371,
    3563106530,
+   1883463881,
    11499806841,
    3032448286,
    5645777751,
@@ -10171,10 +10173,12 @@
    9224916298,
    2641555452
   ],
+  "crossings_merged": 0,
+  "crossings_p11": 7,
   "crossings_skipped": [],
   "crossings_snapped": 71,
   "decals": {
-   "gullies": 763,
+   "gullies": 766,
    "oil": 286,
    "patches": 302
   },
@@ -10183,7 +10187,7 @@
    "j:n1847044938",
    "j:n2840742308"
   ],
-  "footprint_nodes": 505280,
+  "footprint_nodes": 505400,
   "fork_abreast": [
    {
     "beside": "c:w173956078:1847263293-5749429982",
@@ -11003,69 +11007,25 @@
   "gores": {
    "gores": [
     {
-     "area_m2": 165.4,
+     "area_m2": 32.0,
      "built": true,
-     "hatch": true,
-     "note": "P-21 hatch, 1 paint parts",
-     "why": "override:gore-s610-hatch-north",
-     "xy": [
-      344.4,
-      -545.8
-     ]
-    },
-    {
-     "area_m2": 47.5,
-     "built": true,
-     "hatch": true,
-     "note": "P-21 hatch, 1 paint parts",
+     "hatch": false,
+     "note": "",
      "why": "override:gore-s610-centre-hatch",
      "xy": [
-      345.7,
-      -556.7
-     ]
-    },
-    {
-     "area_m2": 4.0,
-     "built": true,
-     "hatch": false,
-     "note": "",
-     "why": "override:gore-s610-north-carriageway",
-     "xy": [
-      339.8,
-      -553.9
-     ]
-    },
-    {
-     "area_m2": 481.0,
-     "built": true,
-     "hatch": false,
-     "note": "",
-     "why": "override:gore-s610-north-carriageway",
-     "xy": [
-      358.0,
-      -520.3
+      346.9,
+      -557.5
      ]
     },
     {
      "area_m2": 191.1,
      "built": true,
-     "hatch": true,
-     "note": "P-21 hatch, 1 paint parts",
+     "hatch": false,
+     "note": "",
      "why": "override:gore-s610-hatch-south",
      "xy": [
       337.5,
       -574.2
-     ]
-    },
-    {
-     "area_m2": 31.9,
-     "built": true,
-     "hatch": false,
-     "note": "",
-     "why": "override:gore-s610-corners",
-     "xy": [
-      353.1,
-      -563.5
      ]
     },
     {
@@ -11080,18 +11040,18 @@
      ]
     },
     {
-     "area_m2": 10.8,
+     "area_m2": 10.5,
      "built": true,
      "hatch": false,
      "note": "",
      "why": "override:gore-s610-corner-n",
      "xy": [
-      353.9,
-      -555.7
+      355.3,
+      -556.4
      ]
     },
     {
-     "area_m2": 13.6,
+     "area_m2": 13.5,
      "built": true,
      "hatch": false,
      "note": "",
@@ -11115,8 +11075,8 @@
     {
      "area_m2": 72.2,
      "built": true,
-     "hatch": true,
-     "note": "P-21 hatch, 1 paint parts",
+     "hatch": false,
+     "note": "",
      "why": "merge",
      "xy": [
       772.7,
@@ -11126,8 +11086,8 @@
     {
      "area_m2": 50.9,
      "built": true,
-     "hatch": true,
-     "note": "P-21 hatch, 2 paint parts",
+     "hatch": false,
+     "note": "",
      "why": "merge",
      "xy": [
       313.3,
@@ -11137,8 +11097,8 @@
     {
      "area_m2": 35.5,
      "built": true,
-     "hatch": true,
-     "note": "P-21 hatch, 1 paint parts",
+     "hatch": false,
+     "note": "",
      "why": "merge",
      "xy": [
       791.7,
@@ -11148,8 +11108,8 @@
     {
      "area_m2": 13.1,
      "built": true,
-     "hatch": true,
-     "note": "P-21 hatch, 1 paint parts",
+     "hatch": false,
+     "note": "",
      "why": "merge",
      "xy": [
       -227.6,
@@ -11366,16 +11326,32 @@
      ]
     }
    ],
-   "islands": [],
-   "kerb_dropped_m": 691.0,
+   "islands": [
+    {
+     "area_m2": 73.1,
+     "built": true,
+     "id": "s1440-merge-separator-strip",
+     "note": "z 131.55",
+     "surface": "sidewalk_paving"
+    },
+    {
+     "area_m2": 71.7,
+     "built": true,
+     "id": "s610-refuge-island",
+     "note": "z 141.10",
+     "surface": "sidewalk_paving"
+    }
+   ],
+   "kerb_dropped_m": 552.5,
+   "kerb_tris_in_fill": 0,
    "paved": {
     "merge": {
      "area_m2": 180.7,
      "count": 5
     },
     "override": {
-     "area_m2": 1083.4,
-     "count": 10
+     "area_m2": 385.2,
+     "count": 6
     },
     "sliver": {
      "area_m2": 100.9,
@@ -11560,16 +11536,19 @@
   "markings": {
    "P-1 centre line": 4,
    "P-1 lane line": 173,
-   "P-10 crossing": 71,
-   "P-10 crossing in junction": 46,
+   "P-10 crossing": 65,
+   "P-10 crossing in junction": 40,
+   "P-11 cycle crossing": 6,
+   "P-11 cycle crossing in junction": 6,
    "P-13": 15,
    "P-14": 27,
    "P-7b edge line": 156,
-   "P-8 arrow": 98,
+   "P-8 arrow": 79,
+   "P-8 skipped (lane too narrow)": 19,
    "P-8 skipped (lanes continue)": 10,
    "P-8 skipped (off carriageway)": 62
   },
-  "markings_overlap_removed_tris": 123,
+  "markings_overlap_removed_tris": 108,
   "nmt_nodes_replaced_under_decks": 2225,
   "overrides_applied": [
    {
@@ -11590,6 +11569,12 @@
     "id": "kwadrat-park-access-junction-radius",
     "targets": [
      "n1882887381"
+    ]
+   },
+   {
+    "id": "s610-north-arm-width",
+    "targets": [
+     "w537184112:1882887385-2840742181"
     ]
    },
    {
@@ -11657,33 +11642,15 @@
     ]
    },
    {
-    "id": "gore-s610-hatch-north",
-    "targets": [
-     "gap@344,-546"
-    ]
-   },
-   {
     "id": "gore-s610-centre-hatch",
     "targets": [
      "gap@347,-558"
     ]
    },
    {
-    "id": "gore-s610-north-carriageway",
-    "targets": [
-     "gap@348,-540"
-    ]
-   },
-   {
     "id": "gore-s610-hatch-south",
     "targets": [
      "gap@338,-574"
-    ]
-   },
-   {
-    "id": "gore-s610-corners",
-    "targets": [
-     "gap@353,-564"
     ]
    },
    {
@@ -11711,6 +11678,54 @@
     ]
    },
    {
+    "id": "s1440-merge-separator-strip",
+    "targets": [
+     "island"
+    ]
+   },
+   {
+    "id": "s610-refuge-island",
+    "targets": [
+     "island"
+    ]
+   },
+   {
+    "id": "s1440-merge-p21-ramp",
+    "targets": [
+     "zone@-381,-145"
+    ]
+   },
+   {
+    "id": "s1440-diverge-p21",
+    "targets": [
+     "zone@-347,-136"
+    ]
+   },
+   {
+    "id": "s610-north-arm-p21-median",
+    "targets": [
+     "zone@357,-541"
+    ]
+   },
+   {
+    "id": "s610-p21-centre",
+    "targets": [
+     "zone@344,-566"
+    ]
+   },
+   {
+    "id": "s610-p21-west",
+    "targets": [
+     "zone@329,-576"
+    ]
+   },
+   {
+    "id": "s610-p21-south",
+    "targets": [
+     "zone@344,-583"
+    ]
+   },
+   {
     "id": "kwadrat-park-hero",
     "targets": [
      "bdot:9962cca0-95de-4200-a0c4-3922b8e40d9c"
@@ -11725,13 +11740,93 @@
    }
   ],
   "overrides_stale": [],
+  "paint_erased_in_zones_tris": 92,
+  "painted_zones": [
+   {
+    "area_m2": 159.3,
+    "built": true,
+    "id": "s1440-merge-p21-ramp",
+    "tris": 305,
+    "tris_off_carriageway": 101,
+    "xy": [
+     -380.8,
+     -145.4
+    ]
+   },
+   {
+    "area_m2": 50.5,
+    "built": true,
+    "id": "s1440-diverge-p21",
+    "tris": 83,
+    "tris_off_carriageway": 61,
+    "xy": [
+     -347.2,
+     -135.5
+    ]
+   },
+   {
+    "area_m2": 53.3,
+    "built": true,
+    "id": "s610-north-arm-p21-median",
+    "tris": 167,
+    "tris_off_carriageway": 0,
+    "xy": [
+     356.7,
+     -541.4
+    ]
+   },
+   {
+    "area_m2": 116.2,
+    "built": true,
+    "id": "s610-p21-centre",
+    "tris": 250,
+    "tris_off_carriageway": 0,
+    "xy": [
+     343.9,
+     -566.1
+    ]
+   },
+   {
+    "area_m2": 38.0,
+    "built": true,
+    "id": "s610-p21-west",
+    "tris": 84,
+    "tris_off_carriageway": 0,
+    "xy": [
+     329.0,
+     -576.1
+    ]
+   },
+   {
+    "area_m2": 37.7,
+    "built": true,
+    "id": "s610-p21-south",
+    "tris": 96,
+    "tris_off_carriageway": 0,
+    "xy": [
+     344.4,
+     -583.4
+    ]
+   }
+  ],
   "roundabout_junctions": 12,
   "sides_on_carriageway_culled": {
-   "kerb_tris": 5086,
-   "parts": 465,
-   "side_tris": 107
+   "kerb_tris": 4276,
+   "parts": 439,
+   "side_tris": 111
   },
   "signalised_junctions": 11,
+  "through_lines": {
+   "crossing_pairs_skipped": 86,
+   "junctions": 59,
+   "lines": {
+    "P-7a": 12,
+    "P-7b": 31,
+    "lane": 105
+   },
+   "pairs": 239,
+   "unmatched": 60
+  },
   "walled_ramps": [
    {
     "chain": "c:w1101181473:10076968415-1847263305",

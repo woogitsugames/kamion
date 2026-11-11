@@ -255,7 +255,9 @@ def plan(net, juncs, overrides, origin) -> GorePlan:
         if surf.same_direction(pg):
             # owner reference 2026-11-10 (docs/refs/owner-aerials-2026-11-10.md) + orthophoto (s 1440): the surface
             # in front of a channelising island nose is a painted P-21 exclusion zone across the whole nose width
-            cand.append(Gore(pg, "merge", hatch=pg.area >= GORE_HATCH_MIN_M2))
+            # ADR 0093: no paint from this rule. The P-21 ladders it used to draw (>= GORE_HATCH_MIN_M2) did not match
+            # the orthophoto anywhere they were checked; exclusion zones come only from `painted_zone` overrides.
+            cand.append(Gore(pg, "merge"))
     for body in _parts(U):
         for ring in body.interiors:
             hole = Polygon(ring)
@@ -279,7 +281,7 @@ def plan(net, juncs, overrides, origin) -> GorePlan:
             for g in hit:
                 for pg in _parts(g.intersection(pt.buffer(rad))):
                     if pg.area >= GORE_SLIVER_MIN_M2:
-                        cand.append(Gore(pg, "override:" + o["id"], hatch=bool(o.get("hatch"))))
+                        cand.append(Gore(pg, "override:" + o["id"]))
             gp.overrides_applied.append({"id": o["id"], "targets": [f"gap@{o['at_en'][0]:.0f},{o['at_en'][1]:.0f}"]})
     # one polygon per place (an override gap swallows the slivers inside it)
     # authored overrides first, in file order (a small hatched zone listed before the larger plain gap keeps its
@@ -311,8 +313,9 @@ def plan(net, juncs, overrides, origin) -> GorePlan:
     for o in overrides:
         if o.get("kind") != "traffic_island":
             continue
-        pg = Polygon(np.array(o["polygon_epsg2180"]) - np.array(origin))
-        if not pg.is_valid or not pg.intersects(U):
+        pg = (Polygon(np.array(o["polygon_en"], float)) if o.get("polygon_en")       # region-local E/N (ADR 0093)
+              else Polygon(np.array(o["polygon_epsg2180"]) - np.array(origin)))
+        if not pg.is_valid or not pg.intersects(U.buffer(8.0)):
             gp.overrides_stale.append(o["id"])
             continue
         gp.islands.append(Island(o["id"], pg, o.get("surface", "sidewalk_paving")))
@@ -433,47 +436,8 @@ def build(buf, net, gp: GorePlan):
         buf.add("road", g.mat, V3, V.copy(), T, footprint=True, src="gore:" + g.why)
         buf.add("collision", "collision_asphalt", np.column_stack([V, Z]), V.copy(), T, src="gore:" + g.why)
         g.built = True
-        if g.hatch:
-            _hatch(buf, g, V, Z)
     for isl in gp.islands:
         _build_island(buf, isl, ms, cs)
-
-
-def _hatch(buf, g: Gore, V, Z):
-    """P-21 exclusion zone: border line + oblique stripes, paint only (markings decal layer)."""
-    from scipy.interpolate import LinearNDInterpolator, NearestNDInterpolator
-    from shapely import affinity
-    lin, near = LinearNDInterpolator(V, Z), NearestNDInterpolator(V, Z)
-    inner = g.poly.buffer(-P21_EDGE_INSET_M)
-    if inner.is_empty:
-        return
-    rect = np.asarray(g.poly.minimum_rotated_rectangle.exterior.coords)
-    e0, e1 = rect[1] - rect[0], rect[2] - rect[1]
-    ax = e0 if np.hypot(*e0) >= np.hypot(*e1) else e1
-    ang = math.degrees(math.atan2(ax[1], ax[0])) + 45.0
-    c = inner.centroid
-    R = float(np.hypot(*(np.asarray(inner.bounds[2:]) - np.asarray(inner.bounds[:2])))) / 2 + 2.0
-    stripes = []
-    y = -R
-    while y < R:
-        stripes.append(shapely.box(c.x - R, c.y + y, c.x + R, c.y + y + P21_STRIPE_W_M))
-        y += P21_STRIPE_W_M + P21_STRIPE_GAP_M
-    paint = affinity.rotate(shapely.union_all(stripes), ang, origin=c).intersection(inner.buffer(-S.LINE_W_WIDE))
-    paint = paint.union(inner.difference(inner.buffer(-S.LINE_W_WIDE)))
-    n = 0
-    for part in _parts(paint):
-        Vp, Tp = _triangulate(part, 2.0)
-        if Vp is None:
-            continue
-        z = lin(Vp)
-        bad = np.isnan(z)
-        if bad.any():
-            z[bad] = near(Vp[bad])
-        UV1 = np.column_stack([np.full(len(Vp), 0.5), np.full(len(Vp), 0.35)])
-        buf.add("markings", "marking_white", np.column_stack([Vp, z + S.MARKING_LIFT]), Vp.copy(), Tp,
-                src="P-21@gore:" + g.why, UV1=UV1)
-        n += 1
-    g.note = f"P-21 hatch, {n} paint parts"
 
 
 def _build_island(buf, isl: Island, ms, cs):
@@ -525,6 +489,51 @@ def _build_island(buf, isl: Island, ms, cs):
             top(part, isl.surface, "collision_grass" if grass else "collision_paving", 0.0)
     isl.built = True
     isl.note = f"z {zmean:.2f}"
+
+
+def drop_kerbs_in_fills(buf, gp: GorePlan) -> int:
+    """Remove the kerbs (render + collision, top and face) lying inside a built paved gore. plan() sinks them 6 cm so
+    that the ribbon edge has no ridge; the sunk strip must not stay in the mesh (REVIEW 0077 #1). Returns triangles
+    removed. meshing.cull_sides_on_carriageway only takes kerbs with carriageway all around at 0.30 m."""
+    built = [g.poly.buffer(-0.10) for g in gp.gores if g.built]
+    built = [b for b in built if not b.is_empty]
+    if not built:
+        return 0
+    zone = shapely.union_all(built)
+    shapely.prepare(zone)
+    n = 0
+    keep = []
+    for p in buf.parts:
+        if (p.layer in ("road", "bridge", "collision") and p.mat in ("curb_concrete", "collision_curb") and len(p.T)
+                and not p.src.startswith("island:")):
+            cen = p.V[p.T].mean(1)
+            drop = shapely.contains_xy(zone, cen[:, 0], cen[:, 1])
+            if drop.any():
+                n += int(drop.sum())
+                p.T = p.T[~drop]
+        if len(p.T):
+            keep.append(p)
+    buf.parts[:] = keep
+    return n
+
+
+def kerbs_in_fills(buf, gp: GorePlan) -> int:
+    """Kerb triangles (render, top or face) whose centre lies inside a built paved gore, within 0.5 m of its height.
+    Must be 0 (ADR 0093): a kerb hidden under a fill is removed from the mesh, not sunk (REVIEW 0077 #1: sunk kerbs
+    showed as grey strips on the lane wherever the fill did not cover them)."""
+    built = [g.poly.buffer(-0.10) for g in gp.gores if g.built]
+    built = [b for b in built if not b.is_empty]
+    if not built:
+        return 0
+    zone = shapely.union_all(built)
+    shapely.prepare(zone)
+    n = 0
+    for p in buf.parts:
+        if p.layer not in ("road", "bridge") or p.mat != "curb_concrete" or len(p.T) == 0 or p.src.startswith("island:"):
+            continue
+        cen = p.V[p.T].mean(1)
+        n += int(shapely.contains_xy(zone, cen[:, 0], cen[:, 1]).sum())
+    return n
 
 
 def report(gp: GorePlan) -> dict:

@@ -301,6 +301,87 @@ def clear_level_carriageways(pl, parts, report):
     report["props_on_level_carriageway"] = {"removed": len(removed), "items": removed[:40]}
 
 
+NARROW_ISLAND_R = 1.0      # WORKING_VALUE: carriageway within this distance on two opposite sides = separation < ~2 m
+
+
+def clear_narrow_islands(pl, parts, net, report):
+    """No lamp on a separation narrower than ~2 m (ADR 0093, REVIEW 0076 #7: a lamp on the needle tip of an island
+    at E -774.5 N 77.5, luminaire over the lane). A rule-placed lamp with carriageway within NARROW_ISLAND_R on two
+    opposite sides is moved to the other edge of its own carriageway (the outer side of a ramp) when that spot is
+    clear, otherwise removed with everything stacked on it."""
+    from roads import consistency as CQ
+    idx = CQ.SurfaceIndex(parts)
+    ang = np.arange(8) * (math.pi / 4)
+    ring = np.column_stack([np.cos(ang), np.sin(ang)]) * NARROW_ISLAND_R
+    chains = {c.id: c for c in net.chains}
+
+    def narrow(e, n, z):
+        lab = idx.classify(np.array([[e + dx, n + dy, z] for dx, dy in ring]))
+        return any(lab[k] == "carriageway" and lab[k + 4] == "carriageway" for k in range(4))
+
+    groups = {}
+    for it in pl.items:
+        groups.setdefault((round(it["e"], 2), round(it["n"], 2)), []).append(it)
+    drop, moved, removed, add = set(), [], [], []
+    for (e, n), items in groups.items():
+        base = [it for it in items if it["p"].startswith("lamp_")]
+        if not base:
+            continue
+        b = min(base, key=lambda it: it["z"])
+        if not narrow(e, n, b["z"]):
+            continue
+        drop.update(id(it) for it in items)
+        c = chains.get(b.get("src", "")[5:]) if b.get("src", "").startswith("rule:") else None
+        q = None
+        # first choice: the outer edge of the carriageway on the far side of the island (a ramp beside the main
+        # carriageway keeps its lamps on its outer edge), then the other edge of the lamp's own carriageway
+        tries = []
+        if c is not None:
+            s_own, lat_own = c.line.project(np.array([e, n]))
+            best = None
+            for c2 in net.chains:
+                if c2 is c or c2.meta.get("absorbed") or c2.roundabout:
+                    continue
+                lo, hi = c2.line.p.min(0) - 12, c2.line.p.max(0) + 12
+                if not (lo[0] <= e <= hi[0] and lo[1] <= n <= hi[1]):
+                    continue
+                s2, lat2 = c2.line.project(np.array([e, n]))
+                if not (0.0 < s2 < c2.length):
+                    continue
+                gap = abs(lat2) - float(c2.hw_at(s2))
+                if -0.2 < gap < 2 * NARROW_ISLAND_R and (best is None or gap < best[0]):
+                    best = (gap, c2, float(s2), -1.0 if lat2 > 0 else 1.0)
+            if best is not None:
+                tries.append(best[1:])
+            tries.append((c, float(np.clip(s_own, 0.0, c.length)), -1.0 if lat_own > 0 else 1.0))
+        for c, s, sgn in tries:
+            if q is not None:
+                break
+            if not bool(c.bridge[c.idx(s)]):
+                kind, h, w, ext = side_surface_offset(c, "L" if sgn > 0 else "R", s)
+                if kind != MEDIAN_RURAL:
+                    hw = float(c.hw_at(s))
+                    off = hw + (S.KERB_TOP_W + S.LAMP_OFFSET if kind == URBAN else ext + 0.8)
+                    q = np.asarray(c.line.offset_point(s, sgn * off), float).reshape(-1)[:2]
+                    zq = float(c.crossfall_z(s, sgn * hw))
+                    lab = idx.classify(np.array([[q[0], q[1], zq]] + [[q[0] + dx * 0.25, q[1] + dy * 0.25, zq]
+                                                                    for dx, dy in ring[::2]]))
+                    if any(x == "carriageway" for x in lab) or narrow(q[0], q[1], zq) or pl.near("lamp", q, 8.0):
+                        q = None
+                    else:
+                        t, nn = c.line.frame(s)
+                        add.append((b["p"], q, yaw_of(-np.asarray(nn) * sgn), b.get("src", "")))
+        (moved if q is not None else removed).append({"p": b["p"], "from": [round(e, 1), round(n, 1)],
+                                                      "to": None if q is None else [round(float(q[0]), 1), round(float(q[1]), 1)],
+                                                      "src": b.get("src", "")})
+    if drop:
+        pl.items[:] = [it for it in pl.items if id(it) not in drop]
+    for proto, q, yaw, src in add:
+        pl.add(proto, q, yaw, src=src, group="lamp")
+    report["lamps_on_narrow_islands"] = {"moved": len(moved), "removed": len(removed), "radius_m": NARROW_ISLAND_R,
+                                         "items": (moved + removed)[:60]}
+
+
 # ------------------------------------------------------------------------------------------- lamps
 def lamps(pl, net, osm_nodes, origin, report):
     n0 = 0

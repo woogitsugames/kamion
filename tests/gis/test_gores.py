@@ -49,12 +49,11 @@ def test_authored_gores_applied(qa, overrides):
     assert not missing, f"authored paved gores without a fill (rejected for height?): {sorted(missing)}"
 
 
-def test_hatched_gores_are_paint_only(qa, overrides):
-    """Owner 2026-11-10: a painted island is paint only. hatch: true -> P-21 decal parts, never an island."""
-    hatch = {o["id"] for o in overrides if o.get("kind") == "paved_gore" and o.get("hatch")}
-    for x in qa["summary"]["gores"]["gores"]:
-        if x["why"].startswith("override:") and x["why"].split(":", 1)[1] in hatch:
-            assert x["hatch"] and "P-21" in x["note"], x
+def test_no_paint_from_the_gore_rule(qa, overrides):
+    """ADR 0093: P-21 comes only from painted_zone polygons traced on the orthophoto; the gore stage paints nothing
+    (the rule-based ladders of ADR 0077 did not match the photo) and `hatch:` on a paved_gore is gone."""
+    assert not any(o.get("kind") == "paved_gore" and "hatch" in o for o in overrides)
+    assert not any(x["hatch"] or "P-21" in x["note"] for x in qa["summary"]["gores"]["gores"])
 
 
 def test_slivers_obey_rule(qa):
@@ -80,3 +79,11 @@ def test_generated_axis_still_on_osm(qa, pytestconfig):
     """Authored placement is excluded from the deviation; everything else stays where it was (fork shifts, smoothing)."""
     d = qa["summary"]["axis_smoothing_deviation_m"]
     assert d["p95"] <= 0.5, d
+
+
+def test_no_kerb_under_a_fill(qa):
+    """ADR 0093 (REVIEW 0077 #1): kerbs hidden by a paved gore are removed from the mesh, not sunk under it - zero
+    kerb-material triangles inside a built fill (the hero-viaduct re-mesh used to bring 28 of them back)."""
+    g = qa["summary"]["gores"]
+    assert "kerb_tris_in_fill" in g, "old roads_qa.json: rebuild the region"
+    assert g["kerb_tris_in_fill"] == 0
