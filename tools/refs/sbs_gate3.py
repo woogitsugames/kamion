@@ -416,7 +416,7 @@ def compose(render_dir, outdir, strict=True, include_rejected=False):
         m['histogram_l1_distance']=round(float(np.abs(ph-rh).sum()),5)
         metrics.append(m)
         height=round(470*r['height']/r['width'])
-        sheet=Image.new('RGB',(960,height+190),'#202020')
+        sheet=Image.new('RGB',(960,height+210),'#202020')
         d=ImageDraw.Draw(sheet)
         d.text((8,4),r['camera']+' | '+r.get('pose_confidence','C')+' | '+r['pose_status'],fill='white')
         for x,im,label in [(0,left,'PHOTO'),(490,right,'RENDER')]:
@@ -427,15 +427,22 @@ def compose(render_dir, outdir, strict=True, include_rejected=False):
             hy=24+height*r['horizon_y_fraction']
             d.line((x,hy,x+470,hy),fill='#ff5050',width=2)
             d.text((x+4,28),label,fill='#ff5050')
+        lines=r.get('authored_overrides',{}).get('vanishing_lines')
+        if lines:
+            for line in lines:
+                d.line([(470*px,24+height*py) for px,py in line],fill='#00ffff',width=2)
+            vx,vy=vanishing_horizon(lines);vx*=470;vy=24+height*vy
+            d.ellipse((vx-4,vy-4,vx+4,vy+4),outline='#00ffff',width=2)
         for j,text in enumerate([f"Photo: {r['author']} | {r['license']} | {r['captured_at']}",r['page_url'],
                                   'Grid: 25%; red: authored horizon. Photo rectified/cropped if intrinsics cached.',
-                                  'Histogram and sky/asphalt estimates: metrics.json; no gate PASS inferred.']):
+                                  'Histogram and sky/asphalt estimates: metrics.json; no gate PASS inferred.',
+                                  f"Photometric use: {r.get('photometric_use',False)} | {r.get('photo_vs_data_age','Data epoch UNVERIFIED')}"]):
             d.text((6,height+29+j*17),text,fill='white')
         peak=max(float(ph.max()),float(rh.max()),1e-9)
         for hist,color in [(ph,'#55bbff'),(rh,'#ffaa44')]:
-            points=[(24+i*28,height+178-float(value)/peak*65) for i,value in enumerate(hist)]
+            points=[(24+i*28,height+198-float(value)/peak*65) for i,value in enumerate(hist)]
             d.line(points,fill=color,width=2)
-        d.text((24,height+99),'sRGB luma histogram: blue PHOTO / orange RENDER (32 bins, normalized)',fill='white')
+        d.text((24,height+119),'sRGB luma histogram: blue PHOTO / orange RENDER (32 bins, normalized)',fill='white')
         save_png(sheet,outdir/(r['camera']+'.png'))
     write(outdir/'metrics.json',{'pairs':metrics,'missing_renders':missing,'rejected_poses':rejected,'render_captures':captures,'provenance_status':'RECORDED' if captures else 'UNVERIFIED','gate_status':'UNVERIFIED',
           'cameras_sha256':hashlib.sha256((REGION/'sbs_cameras.json').read_bytes()).hexdigest()

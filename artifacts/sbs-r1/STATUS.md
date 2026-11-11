@@ -21,3 +21,6 @@ Następny krok: Get-Content artifacts/sbs-r1/build-world.log -Tail 20
 ## Walidacja metadanych
 14/14 testów SBS zaliczone; parser PowerShell sprawdzony bez uruchamiania Unity. Zapisano ADR 0111 i migawkę danych wejściowych. Horyzont 2948 po przecięciu wybranych linii: 0,5249381; status nadal roboczy.
 Następny krok: Get-Content artifacts/sbs-r1/build-world.log -Tail 20
+## Czytelność arkuszy
+15/15 testów SBS zaliczone. Arkusze pokazują flagę użycia fotometrii i wiek zdjęcia; 2948 ma nakładkę dwóch wybranych krawędzi oraz ich punktu zbiegu. Test integralności wykrywa podmianę pikseli renderu po zapisaniu metadanych.
+Generacja PBR trwa niezależnie od generacji geometrii. Następny krok: Get-Content artifacts/sbs-r1/build-materials.log -Tail 20

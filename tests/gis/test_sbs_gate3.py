@@ -155,3 +155,27 @@ def test_compose_rejects_capture_from_different_camera_snapshot(tmp_path,monkeyp
     sbs.write(render/'capture-test.json',{'status':'OK','cameras_sha256':'stale'})
     with pytest.raises(ValueError,match='stale render capture'):
         sbs.compose(render,tmp_path/'out')
+
+
+def test_capture_hashes_bind_the_actual_render_pixels(tmp_path,monkeypatch):
+    import hashlib
+    monkeypatch.setattr(sbs,'REGION',tmp_path)
+    monkeypatch.setattr(sbs,'ROOT',tmp_path)
+    renders=tmp_path/'renders';renders.mkdir()
+    photo=tmp_path/'photo.png';Image.new('RGB',(40,30),'gray').save(photo)
+    render=renders/'sbs-test.png';Image.new('RGB',(40,30),'gray').save(render)
+    ref={'camera':'sbs-test','pose_confidence':'B','photo':'photo.png','horizon_y_fraction':0.5,
+         'pose_status':'WORKING_VALUE','width':40,'height':30,'author':'Example','license':'CC BY-SA 4.0',
+         'captured_at':'2020','page_url':'https://www.mapillary.com/'}
+    sbs.write(tmp_path/'sbs_cameras.json',{'cameras':[]})
+    sbs.write(tmp_path/'sbs_references.json',{'references':[ref]})
+    digest=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+    sbs.write(renders/'capture-test.json',{'status':'OK','cameras':['sbs-test'],
+        'cameras_sha256':digest(tmp_path/'sbs_cameras.json'),
+        'references_sha256':digest(tmp_path/'sbs_references.json'),
+        'render_sha256':{'sbs-test':digest(render)}})
+    sbs.compose(renders,tmp_path/'out')
+    assert sbs.read(tmp_path/'out/metrics.json')['provenance_status']=='RECORDED'
+    Image.new('RGB',(40,30),'white').save(render)
+    with pytest.raises(ValueError,match='render hash/provenance mismatch'):
+        sbs.compose(renders,tmp_path/'out')
