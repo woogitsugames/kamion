@@ -28,7 +28,8 @@ def payloads(phase):
                 continue
             for pi, p in enumerate(doc['meshes'][node['mesh']]['primitives']):
                 mat = doc['materials'][p['material']]['name']
-                if not mat.startswith(('road_', 'bridge_', 'barrier_', 'marking')):
+                if not mat.startswith(('road_', 'bridge_', 'barrier_', 'marking', 'curb_', 'kerb_',
+                                       'collision_asphalt', 'collision_curb', 'collision_paving', 'collision_grass')):
                     continue
                 h = hashlib.sha256()
                 for name, idx in sorted(p['attributes'].items()):
@@ -42,7 +43,7 @@ def payloads(phase):
 b, a = payloads('before'), payloads('after')
 diff = [k for k in sorted(b.keys() | a.keys()) if b.get(k) != a.get(k)]
 out = {'protected_primitives_before': len(b), 'protected_primitives_after': len(a), 'different': diff,
-       'contract': 'Raw POSITION/NORMAL/UV/COLOR/index accessor payloads of road_, bridge_, barrier_, marking materials'}
+       'contract': 'Raw POSITION/NORMAL/UV/COLOR/index payloads: road_, bridge_, barrier_, marking, curb_/kerb_, road collision materials'}
 Path('artifacts/furniture-r1/protected-geometry.json').write_text(json.dumps(out, indent=2)+'\n')
 print(json.dumps(out))
 if diff:
