@@ -2,7 +2,7 @@
   "routeNative": 24,
   "routeGateAdditional": 26,
   "wearAdditional": 8,
-  "expectedCamerasPerCondition": 58,
+  "expectedCamerasPerCondition": 57,
   "uvMissingActualGeometryTargets": [
     {
       "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_2_3.glb",
@@ -49,5 +49,9 @@
     ]
   },
   "limits": "Source-target proof only, noactualvisibilityclaim; inspectbeforeactivation. AllNoDataarea isgeometryarea, notscreenpixelcoverage.",
-  "frameConversion": "Manifest states glTF(x,y,z)=(-E,U,N), camera pos=(E,N,U). CorrectedbeforeANYimage, noinvalidframesgenerated."
+  "frameConversion": "Manifest states glTF(x,y,z)=(-E,U,N), camera pos=(E,N,U). CorrectedbeforeANYimage, noinvalidframesgenerated.",
+  "originalRequestedCount": 58,
+  "unavailableRequested": [
+    "ortho_putry"
+  ]
 }

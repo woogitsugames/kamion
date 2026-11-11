@@ -12216,7 +12216,12 @@
     "art-source/world/materials/materials_spec.json": "3df3e43f8b41e44ba3f3690a102ea75954398d2a47f11efaa67bc68efa422e7a"
   },
   "qaCameraSHA256": "81f306f845cb5acb9cdcf193945433bfe871e3d4d86271abc640c73298f48914",
-  "cameraCountPerCondition": 58,
+  "cameraCountPerCondition": 57,
   "actualBeforeImages": 0,
-  "backup": "baseline-canonical/ ignoredprivatebytecopy"
+  "backup": "baseline-canonical/ ignoredprivatebytecopy",
+  "originalRequestedCameraCount": 58,
+  "supplementaryLegacyCameraCount": 36,
+  "originalRequestedFilterSHA256": "2a9c4de3d3060ace1bba38f6c878e085e609753bf91ef174c1900010e5a198ed",
+  "actualPrimaryFilterSHA256": "f23b796fe68f567e9b2243c3dedaf82053084d09b4bde076473fa068e59073fc",
+  "filterCorrectionNote": "Onlyunregisteredortho_putryremovedafterall4actual57renders; NOpose/pixel/camera definition changed."
 }
