@@ -3531,7 +3531,7 @@
     "z_max_evrf2007": 154.43,
     "z_min_evrf2007": 123.95
    },
-   "bytes": 8949484,
+   "bytes": 8949492,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_2_4.glb",
    "forest_cells": [
     {
@@ -3650,9 +3650,9 @@
     "sha256": "302b0652d50babc33fc61e04e6c24d63bd753b5192704500f2a4ce76715511f0"
    },
    "low": {
-    "bytes": 3650264,
+    "bytes": 3650268,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_2_4.low.glb",
-    "sha256": "e03c5950175d401b83e5bb3ef2c5294e5f15ff00580a6d122285c14618fcdd0d"
+    "sha256": "1615242dc2553e2b8232207a7cf27940f5a7f4841895f90f6e221b2c7212a2b1"
    },
    "materials": [
     "balcony_slab",
@@ -3728,7 +3728,7 @@
     "yard_behaton",
     "yard_concrete"
    ],
-   "sha256": "7ffd5a1ca4b70f045249a2ccf90a84ad613a9388f7d2e9ded3c7379b434c3825",
+   "sha256": "4e5b5c8f5a80da35820b298bd5b01bf00bad9d88bc7b245214d1dce5a95b1cc5",
    "triangles": {
     "bridge": 19547,
     "buildings": 9119,
@@ -5146,7 +5146,7 @@
     "z_max_evrf2007": 162.43,
     "z_min_evrf2007": 128.39
    },
-   "bytes": 7056652,
+   "bytes": 7032992,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_3_5.glb",
    "forest_cells": [
     {
@@ -5181,9 +5181,9 @@
     "sha256": "d551cf75d99bb9a7ff78d7bcbe6288463a9d37b0c940d48a1c3df68c121574bd"
    },
    "low": {
-    "bytes": 2136440,
+    "bytes": 2116848,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_3_5.low.glb",
-    "sha256": "05ef775dfa5af602c081483be28afcf884522c1b9f88423d4c563e9ea9e797af"
+    "sha256": "f5ae923ba49a683516819aabe61f63af23a2cf02a10850e0a50a47b85e7dc01f"
    },
    "materials": [
     "balcony_slab",
@@ -5245,13 +5245,13 @@
     "yard_concrete",
     "yard_paving"
    ],
-   "sha256": "ba852b3328fae6c886a140a65e935e8745f00870c644adcea3bc5a31f4ed89f1",
+   "sha256": "5f22a1a44e11f9c7183afdaf9f83ee45be877e3874f421436b2d49a144616937",
    "triangles": {
     "buildings": 8670,
     "buildings_lod1": 775,
     "forest_hlod": 249,
     "furniture": 8533,
-    "markings": 3205,
+    "markings": 2655,
     "paved": 4290,
     "road": 19068,
     "road_collision": 9817,
@@ -14808,6 +14808,12 @@
    ]
   },
   {
+   "id": "gore-andersa-merge-s1060-plain",
+   "targets": [
+    "gap@-84,-343"
+   ]
+  },
+  {
    "id": "andersa-viaduct-biezenstwa-hero",
    "targets": [
     "w175157461",
@@ -14821,7 +14827,7 @@
  "sources_sha256": {
   "generated/osm_context.json": "27b824f9303be887c054d527e1e9e80a423cd3ecf719c628ff51b775ee6b672b",
   "heightmap.r16 (Data/raw)": "37b2d3c033a215e4ba17361ffe571088f8181feef6078ac316e75d683bcca091",
-  "overrides.yaml": "2aca9e2f80dd6236b1a9414e6ed83a160eaf1a1c56e426275d99966a8852330a",
+  "overrides.yaml": "2693adbe2d22226343feb2ccd4050940399b9aece6de2d70cb128e1020cc1b90",
   "roads.graph.json": "0bd625e041a6a2ca90a74f1652336c731182c234985352de4d377110f1d42cf6",
   "terrain.json": "52ee459e40fa0aaf59ac6d53223d604c3a01dbeb7099e84c77e02d27dbb1f234"
  },

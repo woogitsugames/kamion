@@ -80,3 +80,12 @@ Gałąź: worktree-agent-a2afb96d89584cca6 (worktree .claude/worktrees/agent-a2a
   test_start_route_is_consistent — latarnia na pomoście); hero_bridge zielone.
 - NASTĘPNY KROK: `pwsh scripts/import-region.ps1 -Region bialystok-industrial-c` →
   `pwsh scripts/visual-qa.ps1 -Scene WorldC -Tier Medium -Lighting overcast -Gate3 artifacts/islands-r10/cameras.json -Cameras au_f_s0580,au_f_s0600,au_f_s0620,au_f_s1040,au_f_s1060,au_f_s1080,au_r_s1140,au_r_s1160,au_r_s1180,top_s610,top_merge,top_ma010,top_putry_n -OutputDir artifacts/islands-r10/renders`
+- 2026-11-11 (nr 3) Import + 13 kamer WorldC Medium overcast obejrzane vs after5/*_ortho.jpg. Runda 2: klin s 1060 miał
+  drabinkę P-21 127 m² z reguły, ortofoto = jedna linia ciągła → override gore-andersa-merge-s1060-plain; po reimporcie
+  render zgodny. Stan końcowy: terrain_walls 9 (steep_grass 4), obstacle_in_lane 27, fidelity bez zmian (wysepki 1,
+  krawędź p50 0,46 / p95 2,52); pytest gis 212 zielonych / 3 czerwone (zakres 0076); EditMode 176: 164 zielone,
+  0 czerwonych, 7 pominiętych, 5 inconclusive (brak prefabu TRAKT w tym worktree). ADR 0077 uzupełniony.
+  Efekty uboczne Unity cofnięte (M_Sky.mat, QualitySettings). Dowody skopiowane do main artifacts/islands-r10.
+- NASTĘPNY KROK (lider): scalić 0076, potem tę gałąź; po scaleniu
+  `uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c` →
+  `uv run --project tools/worldgen pytest tests/gis -q`; ocena `visual-critic` renderów artifacts/islands-r10/renders.

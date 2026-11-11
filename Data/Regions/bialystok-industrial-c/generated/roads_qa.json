@@ -11048,9 +11048,9 @@
     {
      "area_m2": 127.3,
      "built": true,
-     "hatch": true,
-     "note": "P-21 hatch, 1 paint parts",
-     "why": "merge",
+     "hatch": false,
+     "note": "",
+     "why": "override:gore-andersa-merge-s1060-plain",
      "xy": [
       -83.7,
       -342.7
@@ -11325,12 +11325,12 @@
    "kerb_dropped_m": 725.0,
    "paved": {
     "merge": {
-     "area_m2": 308.0,
-     "count": 6
+     "area_m2": 180.7,
+     "count": 5
     },
     "override": {
-     "area_m2": 956.1,
-     "count": 9
+     "area_m2": 1083.4,
+     "count": 10
     },
     "sliver": {
      "area_m2": 115.5,
@@ -11647,6 +11647,12 @@
     "id": "gore-s610-corner-w",
     "targets": [
      "gap@336,-563"
+    ]
+   },
+   {
+    "id": "gore-andersa-merge-s1060-plain",
+    "targets": [
+     "gap@-84,-343"
     ]
    },
    {

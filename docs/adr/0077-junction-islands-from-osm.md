@@ -68,9 +68,11 @@ Pomiar: `tools/worldgen/fidelity/run.py`, trasa startowa, ortofoto GUGiK 0,08 m;
 | krawędź, wszystkie strony p50 / p95 | 0,70 / 4,25 m | 0,50 / 4,12 m | — |
 | oś vs OSM p95 / max | 0,129 / 3,25 m | 0,13 / 3,25 m | ≤ 1,0 — tak |
 | IoU jezdni, średnia z 11 okien | 0,723 | 0,731 | — |
-| spójność dróg (kafel): obstacle_in_lane / marking_off_carriageway | 58 / 17 | 28 / 13 | 0 |
+| spójność dróg (kafel): obstacle_in_lane / marking_off_carriageway | 58 / 17 | 27 / 13 | 0 |
+| strome ścianki terenu > 0,15 m (kafel; steep_grass) | 9 (4) | 9 (4) | 0 |
 
-- Wypełnienia: 34 (9 z override 956 m², 6 klinów włączeń 308 m² z P-21, 19 pasków 116 m²), 12 odrzuconych (różne
+- Wypełnienia: 34 (10 z override 1083 m², w tym klin s 1060 bez P-21; 5 klinów włączeń 181 m², 4 z P-21; 19 pasków
+  116 m²), 12 odrzuconych (różne
   wysokości jezdni), krawężnik schowany na 725 m.
 - Jedyna pozostała „wysepka bez pokrycia" na trasie: E −366 N −119 (373 m², s ≈ 1440) — na ortofoto P-21 + bariera;
   to korytarz ADR 0076 (s 1432–1480), tu nie ruszany.
@@ -96,14 +98,26 @@ Pomiar: `tools/worldgen/fidelity/run.py`, trasa startowa, ortofoto GUGiK 0,08 m;
   `roads_qa.json → overrides_stale`. Raport etapu: `roads_qa.json → summary.gores` (lista wypełnień, odrzucone z powodem).
 - Farba P-21 jest generowana tylko z override (ortofoto); układ pasów to WORKING_VALUE.
 - Otwarte: (1) Krawędź p95 2,52 m (cel 0,75) — wymaga zmiennej szerokości jezdni / pasów dodatkowych (lista wyżej).
-  (2) Wysepka P-21 przy s 1440 (E −366 N −119) i E −395 N −132 — po scaleniu ADR 0076. (3) Koszt uboczny klinów:
-  12 nowych stromych ścianek trawy 0,5–0,7 m w 3 miejscach na końcach wypełnień przy nasypach ramp (E 786 N −831,
-  E 321 N −603, E 48 N −460; `terrain_walls_qa.json` steep_grass 4 → 16, ratchet 8 — test czerwony, limitu nie
-  podniesiono). Próba „chowaj tylko strony z krawężnikiem" usuwała 8 z nich, ale przywracała 33 przypadki pobocza /
-  trawy w pasie (obstacle_in_lane 28 → 61), więc cofnięta. (4) Skrajnia pod wiaduktem Putry: pierścień przesunięty
+  (2) Wysepka P-21 przy s 1440 (E −366 N −119) i E −395 N −132 — po scaleniu ADR 0076. (3) ZAMKNIĘTE 2026-11-11: strome ścianki trawy 0,5–0,7 m na końcach wypełnień (E 786 N −831, E 321 N −603,
+  E 48 N −460; steep_grass 4 → 16). Przyczyna: pas pobocza RURAL pożycza stację graniczną od sąsiedniego pasa URBAN
+  (`meshing.build_side_strip`); przy klinie niosła ona h = −0,06 (schowany krawężnik), co `side_profile` czyta jako
+  „rów domyślny 0,6 m", więc rów 0,2 m skakał do 0,6 m na jednej stacji (2 m). Teraz przy `gore_flush` pożyczona
+  stacja kontynuuje wysokość własnego pasa: steep_grass 16 → 4, ścianki 21 → 9 (poziom bazy), obstacle_in_lane 27.
+  (4) Skrajnia pod wiaduktem Putry: pierścień przesunięty
   o 2,9 m leży pod pomostem na 113 zamiast 81 stacjach, margines −0,154 m względem wymagania z zapasem 0,30 m
   (prześwit 4,65 m ≥ 4,50 m PTB2022 § 80); wyjątek z uzasadnieniem w `test_grade_separation_clearance`. (5) Latarnia
   lamp_12m na pomoście wiaduktu Bieżeństwa (E 525,3 N −711,5): w bazie ta sama reguła stawiała ją 4,8 m dalej i
   `props_off_carriageway` ją usuwał; logika w `streetscape/furniture.py` (ADR 0076). (6) Układ pasów P-21 i progi
   2,0 / 4,0 / 60 / 90 m = WORKING_VALUE. (7) 16 „brakujących" wysepek z ortofoto: głównie pojazdy / cienie; realne
   dłuższe nosy median (brama Kwadrat Park E 619 N −599, wyjazd straży) nie zrobione.
+  (8) Farba P-21 z reguły klinów włączeń (≥ 12 m², bez override) nie jest sprawdzona na ortofoto dla E 773 N −847,
+  E 792 N −836, E 313 N −597, E −228 N −1006; przy s 1060 (E −84 N −343) reguła malowała drabinkę 127 m² tam, gdzie
+  ortofoto pokazuje jedną linię ciągłą — poprawione override `gore-andersa-merge-s1060-plain`.
+
+## Kontrola wizualna (2026-11-11, WorldC, Medium, overcast)
+13 kamer (`artifacts/islands-r10/renders/`, lista w `artifacts/islands-r10/cameras.json`) obejrzanych z
+`after5/*_ortho.jpg`: s 610 — pola P-21 jako sama farba, bez krawężników na środku jezdni (układ pasów farby
+przybliżony, 3 pola zamiast układu z ortofoto, brak separatorów U-25); włączenie s 1060 — po rundzie 2 jedna linia
+ciągła jak na ortofoto; MA-010 — pierścień pod krawędzią wiaduktu, bez trawy w pasie; Putry N — jedna powierzchnia
+asfaltu w miejscu dawnej wysepki. Nie oceniane przez `visual-critic` (agent bez prawa tworzenia subagentów) — dla lidera.
+
