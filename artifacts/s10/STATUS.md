@@ -268,3 +268,14 @@ Phone diag0 nineablations active; allF/G/E noUnity/queuedlaunch confirmed. G fir
 finishesCPU/GIS/probe prep; optional D artifactpatch only ifGparked, nofourthworker
 or Dbaseline mutation. Shared ownhold remains until realphonebatchEND+release.
 NEXT COMMAND: monitor perf-low-r1/diag0.log for final batch completion; review actual CPU/GIS checkpoints and then explicitly release guarded F/G/E captures.
+## Step20 - leader merged B/C; missing ignored inputs safely restored
+External leader mergedB6b8f9123 thenCbfdde95f; our session made no merge.
+Read-only prerequisite check found main missing both newCC0 pine maps while leader
+s10-regen-BC still ran build_all materials, before tree generation. Ran the packaged
+safe restore helper AFTER source manifest merge: manifest exactmatch, sourceSHA
+verified, destination missing, no overwrite, no code/history change. Both copies
+PINNED_CC0_INPUTS_READY. Proof B-main-input-restore.json. This prevents fallback
+on main regeneration and closes the previously documented local-input prerequisite.
+No main generated/source edits or commits. Our F/G/E fixedbaselines unchanged.
+PHONE perfdiag0 remains active; ownhold and noUnitylaunch rule remain.
+NEXT COMMAND: after leader regeneration inspect pine source/fallback log and main generated needle hashes; meanwhile monitor actual phonebatchEND before any explicit F/G/E release.

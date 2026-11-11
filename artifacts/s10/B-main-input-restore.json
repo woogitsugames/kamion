@@ -1,0 +1,14 @@
+{
+  "time_local": "2026-11-11T12:35:00+01:00",
+  "action": "restore missing ignored B source inputs after external B merge",
+  "main_merge": "6b8f9123",
+  "command": "uv run --project tools/worldgen python artifacts/vegetation-r2/restore_cc0_inputs.py --root .",
+  "status": "PINNED_CC0_INPUTS_READY",
+  "inputs": [
+    {"file": "art-source/world/cc0/_raw/pine_tree_01/twig_diff.png", "sha256": "d02c031de64b8ad671f3dd0da19870fa4783d912ae6674aeab0702871deeaeaa", "copied": true},
+    {"file": "art-source/world/cc0/_raw/pine_tree_01/twig_alpha.png", "sha256": "6f91aa99f2c27108d6f817f874954aa7df8bfbb4dea2673e9322555a6ae79d99", "copied": true}
+  ],
+  "source_or_history_change": false,
+  "overwrites": false,
+  "regeneration_observed": "leader s10-regen-BC build_all still material phase; tree generator not yet started"
+}
