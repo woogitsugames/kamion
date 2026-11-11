@@ -1,6 +1,6 @@
 param(
     [ValidateSet('Import','Vehicle','Capture')][string]$Stage,
-    [ValidateSet('before','probe','core-probe','bundle-probe','facade-probe','glass2-probe','leaf-probe','round1','round2')][string]$Phase='before',
+    [ValidateSet('before','probe','core-probe','bundle-probe','facade-probe','glass2-probe','leaf-probe','round1','round1-runtime','round2')][string]$Phase='before',
     [switch]$OnlyHero,
     [string]$CameraIds='',
     [ValidateSet('','Low','High')][string]$OnlyTier='',

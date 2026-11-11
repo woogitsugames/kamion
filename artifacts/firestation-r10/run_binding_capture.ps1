@@ -1,3 +1,4 @@
+param([ValidateSet('Low','High')][string]$Tier='High',[string]$Phase='round1-runtime')
 $ErrorActionPreference='Stop';$taskRoot=$PSScriptRoot;$workRoot=[IO.Path]::GetFullPath((Join-Path $taskRoot '../..'));Set-Location $workRoot
 . "$workRoot/scripts/env.ps1"
 function Assert-BindingGate {
@@ -9,14 +10,14 @@ Assert-BindingGate
 $generated=[IO.Path]::GetFullPath((Join-Path $workRoot 'game/Assets/_Generated'));$qa=[IO.Path]::GetFullPath((Join-Path $generated 'FireStationR7BindingQA'))
 if(-not $qa.StartsWith($generated+[IO.Path]::DirectorySeparatorChar)){throw 'QApathoutsideownedgeneratedroot'}
 if(Test-Path $qa){throw 'InspectexistingQApath'}
-if(Test-Path "$taskRoot/round1/High-overcast/stats.txt"){throw 'Preservecompletedevidence'}
+if(Test-Path "$taskRoot/$Phase/$Tier-overcast/stats.txt"){throw 'Preservecompletedevidence'}
 try {
  New-Item -ItemType Directory -Path (Join-Path $qa 'Editor') -Force | Out-Null
  'E_QA_OWNED' | Set-Content (Join-Path $qa '.e-qa-owned')
  Copy-Item -LiteralPath "$taskRoot/BindingCapture.cs" -Destination (Join-Path $qa 'Editor/BindingCapture.cs')
  Assert-BindingGate
- $code=Invoke-UnityBatch -LogFile "$taskRoot/round1-binding.log" -Arguments @('-executeMethod','FireStationR7BindingCapture.Run')
- if($code -ne 0 -or -not(Select-String -Path "$taskRoot/round1-binding.log" -SimpleMatch 'E_FINAL_BINDING_RESULT: OK' -Quiet)){throw "Finalbindingcapturefailedexit$code"}
+ $code=Invoke-UnityBatch -LogFile "$taskRoot/$Phase-$Tier-binding.log" -Arguments @('-executeMethod','FireStationR7BindingCapture.Run','-eTier',$Tier,'-ePhase',$Phase)
+ if($code -ne 0 -or -not(Select-String -Path "$taskRoot/$Phase-$Tier-binding.log" -SimpleMatch 'E_FINAL_BINDING_RESULT: OK' -Quiet)){throw "Finalbindingcapturefailedexit$code"}
 }
 finally {
  if(Test-Path -LiteralPath $qa){

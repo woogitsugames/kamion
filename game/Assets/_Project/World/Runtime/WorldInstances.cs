@@ -127,7 +127,10 @@ namespace Game.World
             Shader.SetGlobalFloat(k_ImpostorBlend, TierLodBias >= 0.75f ? 1f : 0f);
             bool a2c = !ok || t.leafAlphaToCoverage;
             bool simple = ok && t.simpleFoliage;
-            if (m_Mats == null || simple != m_SimpleFoliage) BuildMaterials(simple);
+            // Hero LOD0 can also be selected close to the site on Low. Gate thin-leaf lighting by the actual
+            // active quality profile, never by LOD distance (including temporary mirror/extra-view bias).
+            bool heroLeafHigh = QualityProfileApplier.HasCurrent && t.name == "High";
+            if (m_Mats == null || simple != m_SimpleFoliage || heroLeafHigh != m_HeroLeafHigh) BuildMaterials(simple);
             if (a2c != m_LeafA2C || !Mathf.Approximately(cull, m_TreeCull))
             {
                 m_LeafA2C = a2c;
@@ -151,6 +154,7 @@ namespace Game.World
         // tiers with simpleFoliage). The generated asset is never modified.
         Material[] m_Mats;
         bool m_SimpleFoliage;
+        bool m_HeroLeafHigh;
         Shader m_FoliageShader;
 
         /// <summary>A leaf card or impostor material: alpha-clipped and double sided (InstanceImporter.ProtoMaterial).</summary>
@@ -162,6 +166,7 @@ namespace Game.World
         {
             ReleaseMaterials();
             m_SimpleFoliage = simple;
+            m_HeroLeafHigh = QualityProfileApplier.HasCurrent && QualityProfileApplier.Current.name == "High";
             var src = set != null ? set.materials : null;
             if (src == null) { m_Mats = Array.Empty<Material>(); return; }
             m_Mats = (Material[])src.Clone();
@@ -187,7 +192,10 @@ namespace Game.World
             for (int i = 0; i < m_Mats.Length; i++)
             {
                 var m = m_Mats[i];
-                if (!IsFoliage(m) && !(m != null && m.shader == m_FoliageShader)) continue;
+                // ADR0070 r7: a runtime copy for this one hero shell only. Source assets remain URP Lit so Low
+                // keeps its original shader/cost even when a near camera selects the shared LOD0 mesh.
+                bool heroLeaf = m_HeroLeafHigh && m != null && m.name == "M_fire_station_thuja_shell";
+                if (!IsFoliage(m) && !(m != null && m.shader == m_FoliageShader) && !heroLeaf) continue;
                 if (!copies.TryGetValue(m, out var c) && m.shader == m_FoliageShader)
                 {
                     // Generated on Kamion/Vegetation already (impostors, HLOD edge walls; ADR 0023): copy as is.
@@ -206,6 +214,11 @@ namespace Game.World
                     c.SetFloat("_Cull", 0f);
                     c.SetFloat("_AlphaToMask", m_LeafA2C ? 1f : 0f);
                     copies[m] = c;
+                }
+                if (heroLeaf)
+                {
+                    c.SetFloat("_Transmission", 0.25f);
+                    c.SetFloat("_CrownShade", 0f);
                 }
                 m_Mats[i] = c;
             }
