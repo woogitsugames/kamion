@@ -4,3 +4,5 @@ Gałąź gpt-light-r1 utworzona z main 4c9905b1. Start 2026-11-11; koniec okna p
 Następny krok: przygotować kopie danych i junctiony według protokołu, git lfs checkout, potem baseline High/Low i ablacja RCAS.
 Geometria komina poza własnością light: przekazanie w REPORT, bez zmian instancji.
 Wyniki wizualne i wydajności na tej gałęzi: UNVERIFIED. Telefonów nie używam.
+
+Krok 2: skopiowano wymagane dane, Megascans i _Generated; junctiony istnieją, git lfs checkout zakończony. Kopiowane są też PNG materiałów i cache Library. Następny krok: baseline przez scripts/visual-qa.ps1 z blokadą gpt-light.
