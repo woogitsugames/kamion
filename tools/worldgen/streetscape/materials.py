@@ -244,6 +244,10 @@ M = {
     "barrier_housing": {"color": [0.55, 0.40, 0.03], "rough": 0.5, "metal": 0.3},
     # facade kit (streetscape.buildings_mesh)
     "downpipe": {"color": [0.30, 0.31, 0.31], "rough": 0.45, "metal": 0.7},
+    # ADR 0094: soffit boarding under the eaves and verges of houses (white-grey PVC / painted boards). sky_occ x = 0:
+    # the ambient of a face that looks down is not halved (ADR 0060) - with the halving a white soffit read 72 sRGB
+    # under an overcast sky next to a wall of 140, a graphite one 24 ("black sail", review s9 P1-4)
+    "soffit_boards": {"color": [0.55, 0.54, 0.51], "rough": 0.85, "sky_occ": [0.0, 0.0]},
     "gutter": {"color": [0.30, 0.31, 0.31], "rough": 0.45, "metal": 0.7},
     "hall_wall_graphite": {"color": [0.08, 0.085, 0.09], "rough": 0.5, "metal": 0.3, "texture_set": "trapezoid_sheet"},
     "hall_wall_accent_blue": {"color": [0.06, 0.12, 0.20], "rough": 0.5, "metal": 0.3, "texture_set": "trapezoid_sheet"},

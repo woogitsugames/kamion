@@ -1141,14 +1141,15 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
                 uh += L
         if pitched:
             rmat = hpick(key, ROOFS_PITCHED, "roof")
-            # ADR 0094 (review s9 P1-4): the soffit is grey boarding (`plinth_dark`, albedo 0.20: drawn by every
-            # house chunk already, no new draw call), not the graphite flashing (0.045) - under an overcast sky it read
-            # 24-52 sRGB next to a wall of 186. r1 / r2 of this ADR tried white `reveal_plaster` and the wall material:
-            # the engine lights a face that looks down about as much as a wall, so both came out LIGHTER than the wall
-            # (225 vs 204) and the corner of the overhang read as a white wedge on the gable.
+            # ADR 0094 (review s9 P1-4): the soffit is light boarding (`soffit_boards`), not the graphite flashing
+            # (0.045) that read 24-26 sRGB under the verge of r10_house_2 next to a wall of 140. Measured there
+            # (High overcast): white `reveal_plaster` 72, the wall material 70-73, `plinth_dark` (0.20) 38 - the engine
+            # halves the ambient of faces that look down (sky_occ), so no existing material reaches the 90 the review
+            # asked for; `soffit_boards` is exempt from that halving. Its draw call is paid for by the eaves gutters,
+            # which now share the downpipe material (same colour) on LOD0 as they already did on LOD1.
             # fascia / verge board: white boards with a tile roof, sheet flashing in the roof tone with a metal roof
             # (review s9 P2-3 "thick black verge board")
-            eaves = RF.build(acc, roof, poly, rmat, soffit_mat="plinth_dark",
+            eaves = RF.build(acc, roof, poly, rmat, soffit_mat="soffit_boards",
                              fascia_mat="hall_flashing" if rmat.startswith("roof_metal") else "reveal_plaster")
             eaves.sort(key=lambda e_: -float(np.hypot(*(e_[1] - e_[0]))))
             for k_, (ea, eb, ze) in enumerate(eaves):             # eaves gutters; downpipes on the two longest

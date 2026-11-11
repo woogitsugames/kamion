@@ -144,7 +144,7 @@ def downpipe(acc, a, d, nout, u, z0, z1, hopper=True, mat="downpipe"):
             skip=(0, 1, 2))
 
 
-def gutter(acc, a, c, nout, z, mat="gutter", proud=0.12):
+def gutter(acc, a, c, nout, z, mat="downpipe", proud=0.12):      # ADR 0094: one material with the downpipes
     d = c - a
     L = float(np.hypot(*d))
     d = d / L

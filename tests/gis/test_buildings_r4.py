@@ -62,24 +62,36 @@ def test_dishes_look_at_the_satellite():
     assert _tris(north, "downpipe") == 20                              # no dish on a balcony that faces north
 
 
-def test_roof_covering_is_short_in_re_entrant_corners():
-    """P1-4: full overhang round the convex outline, OVERHANG_NOTCH inside the notch of an L plan; the soffit takes
-    the material the caller names (light boarding), not the graphite flashing."""
+def test_roof_covering_is_short_where_a_wall_faces_up_the_roof():
+    """P1-4: full overhang at eaves and verges (also the verge next to a re-entrant corner), OVERHANG_NOTCH along a
+    wall the roof rises away from (the wing wall that faces the ridge); the soffit takes the material the caller
+    names (light boarding, exempt from the sky occlusion of down-facing faces), not the graphite flashing."""
     from streetscape import buildings_mesh as B
     from streetscape import roofs as RF
+    from streetscape.materials import M
+    kf = lambda s: 0.3
+    props = {"roof_type_lod2": "1030", "height_lod2_2017_m": 8.0, "lod2_eave_rel_m": 3.0}
     rect = box(0, 0, 12, 8)
-    assert RF.covering(rect).area == pytest.approx(rect.buffer(RF.OVERHANG, join_style="mitre").area, rel=1e-6)
-    ell = Polygon([(0, 0), (12, 0), (12, 5), (7, 5), (7, 10), (0, 10)])
-    cov = RF.covering(ell)
-    full = ell.buffer(RF.OVERHANG, join_style="mitre")
-    assert cov.area < full.area - 2.0 and cov.contains(ell.buffer(RF.OVERHANG_NOTCH - 0.01, join_style="mitre"))
-    assert not cov.contains(box(7.3, 5.3, 7.45, 5.45)) and RF.OVERHANG_NOTCH < 0.5 * RF.OVERHANG
-    r = RF.plan(ell, {"roof_type_lod2": "1030", "height_lod2_2017_m": 8.0, "lod2_eave_rel_m": 3.0}, 6.0, 100.0, lambda s: 0.3)
+    r0 = RF.plan(rect, props, 6.0, 100.0, kf)
+    assert RF.covering(rect, r0).area == pytest.approx(rect.buffer(RF.OVERHANG, join_style="mitre").area, rel=1e-6)
+    # 12 x 10 plan, ridge along x at y = 5, the corner x > 7, y > 3 cut out: a low wing (x 7..12, y 0..3) in front of
+    # the ridge. Its wall y = 3 looks at the ridge - the roof rises away from it (the "sail" of r10_house_2); the wall
+    # x = 7 next to it is a verge (the field does not change along x)
+    wing = Polygon([(0, 0), (12, 0), (12, 3), (7, 3), (7, 10), (0, 10)])
+    rw = RF.plan(wing, props, 6.0, 100.0, kf)
+    assert rw.kind == "gable" and abs(float(rw.ev[1])) > 0.99 and float(rw.c[1]) == pytest.approx(5.0)
+    assert float(rw.z(np.array([9.5, 3.5]))) > float(rw.z(np.array([9.5, 3.0])))        # rises away from the wall
+    covw = RF.covering(wing, rw)
+    fullw = wing.buffer(RF.OVERHANG, join_style="mitre")
+    assert covw.area == pytest.approx(fullw.area - 5.0 * (RF.OVERHANG - RF.OVERHANG_NOTCH), abs=0.4)
+    assert not covw.contains(box(8.0, 3.2, 11.0, 3.45)) and covw.contains(box(8.0, 3.0, 11.0, 3.1))
+    assert covw.contains(box(7.1, 4.0, 7.4, 9.0))                       # verge of the re-entrant corner: full
+    assert covw.contains(box(12.1, 0.5, 12.4, 2.5)) and covw.contains(box(1.0, -0.4, 11.0, -0.1))   # verge, eave: full
+    assert RF.OVERHANG_NOTCH < 0.5 * RF.OVERHANG
     acc = B.Acc()
-    RF.build(acc, r, ell, "roof_tiles_red", soffit_mat="plinth_dark", fascia_mat="reveal_plaster")
-    assert _tris(acc, "plinth_dark") > 0 and _tris(acc, "reveal_plaster") > 0 and _tris(acc, "hall_flashing") == 0
-    suv = np.concatenate([it[2] for it in acc.d[("buildings", "plinth_dark")]])
-    assert suv[:, 1].min() >= 3.0                                      # above the splash zone of the wall materials
+    RF.build(acc, rw, wing, "roof_tiles_red", soffit_mat="soffit_boards", fascia_mat="reveal_plaster")
+    assert _tris(acc, "soffit_boards") > 0 and _tris(acc, "reveal_plaster") > 0 and _tris(acc, "hall_flashing") == 0
+    assert M["soffit_boards"]["sky_occ"] == [0.0, 0.0] and M["soffit_boards"]["color"][0] >= 0.5
 
 
 def test_chimney_flashing_follows_the_slope():
@@ -104,6 +116,9 @@ def test_r4_palettes_add_no_material():
     for k in ("plaster_grey", "plaster_white", "plaster_cream", "plaster_accent_ochre"):
         assert M[k]["splash_h"] == 1.2 and M[k]["runoff"] and M[k]["set_tile"]
     assert "splash_h" not in M["plaster_grey__far_block"]
+    import inspect
+    from streetscape import facade_kit as FK
+    assert inspect.signature(FK.gutter).parameters["mat"].default == "downpipe"     # pays for `soffit_boards`
 
 
 def test_plaster_set_is_one_tone():

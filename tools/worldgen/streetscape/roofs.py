@@ -30,9 +30,9 @@ OVERHANG = 0.5                  # eaves / verge overhang, m (WORKING_VALUE: 0.4-
 T_TOP = 0.14                    # covering + battens above the structural plane (= wall top), m
 T_SOFFIT = 0.04                 # soffit below the structural plane, m -> fascia board 0.18 m
 EAVE_MIN = 2.5                  # lowest eave above the ground, m
-# ADR 0094: overhang inside the re-entrant corners of an L / T plan, m. The roof is one height field over the whole
-# plan, so the walls of a notch rise high under it and a full 0.5 m overhang there hung over the lower wing like a
-# dark sail (review s9 P1-4); 0.15 m = a verge flashing, not an eave
+# ADR 0094: overhang of a wall that faces UP the roof, m. The roof is one height field over the whole plan, so in the
+# re-entrant corner of an L / T plan a wall can face the ridge: the field rises away from it and a full 0.5 m overhang
+# there stuck out above the lower wing like a dark sail (review s9 P1-4); 0.15 m = a flashing, not an eave
 OVERHANG_NOTCH = 0.15
 
 
@@ -192,14 +192,24 @@ def _polys(g):
     return [x for x in getattr(g, "geoms", [g]) if x.geom_type == "Polygon" and x.area > 1e-4]
 
 
-def covering(poly, ov=OVERHANG):
-    """Plan outline of the roof covering: the footprint grown by the overhang, by OVERHANG_NOTCH only inside the
-    re-entrant corners (convex hull minus footprint)."""
+def covering(poly, roof, ov=OVERHANG):
+    """Plan outline of the roof covering: the footprint grown by the overhang; along the walls that face up the
+    roof (the height field rises away from the wall) only by OVERHANG_NOTCH. Eaves and verges - also those of a
+    re-entrant corner - keep the full overhang (r1-r3 of ADR 0094 cut everything inside the convex hull's notches and
+    left a wedge of the verge standing at the hull line)."""
     exp = poly.buffer(ov, join_style="mitre", mitre_limit=2.5)
-    notch = poly.convex_hull.difference(poly.buffer(OVERHANG_NOTCH, join_style="mitre", mitre_limit=2.5))
-    if not notch.is_empty and notch.area > 0.05:
-        cut = exp.difference(notch)
-        parts = _polys(cut)
+    c = np.asarray(shapely.geometry.polygon.orient(poly).exterior.coords)
+    cut = []
+    for a, b in zip(c, c[1:]):
+        L = float(np.hypot(*(b - a)))
+        if L < 0.3:
+            continue
+        n = np.array([b[1] - a[1], a[0] - b[0]]) / L                # outward (CCW ring)
+        m = 0.5 * (a + b)
+        if float(roof.z(m + n * ov)) - float(roof.z(m)) > 0.1 * ov:
+            cut.append(Polygon([a + n * OVERHANG_NOTCH, b + n * OVERHANG_NOTCH, b + n * (ov + 0.2), a + n * (ov + 0.2)]))
+    if cut:
+        parts = _polys(exp.difference(shapely.unary_union(cut)))
         if parts:
             exp = max(parts, key=lambda g: g.area)
     return exp
@@ -209,7 +219,7 @@ def build(acc, roof, poly, mat, fascia_mat="hall_flashing", ov=OVERHANG, low_lay
     """Roof covering (LOD0, LOD1, collision), soffit and fascia (LOD0). Returns the horizontal eave edges
     [(a, b, z_top)] of the covering (outward normal = right of a -> b) for the gutters.
     soffit_mat: material of the soffit under the overhang (default = fascia_mat)."""
-    exp = covering(poly, ov)
+    exp = covering(poly, roof, ov)
     soffit_mat = soffit_mat or fascia_mat
     eaves = []
     for face, e, d0 in roof.faces(ov + 0.05):
