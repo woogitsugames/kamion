@@ -20,6 +20,7 @@ namespace Game.Rendering
         public static int? CloudOverride;
         /// <summary>rq_clearcover: clear cloud coverage ablation (null = preset).</summary>
         public static float? ClearCloudCoverOverride;
+        public static bool? HeadlampsOverride;
         /// <summary>rq_haze: false = uniform fog only (null = the tier's).</summary>
         public static bool? HazeOverride;
         /// <summary>rq_grassvar: lawn variation strength 0..1 (null = the preset's).</summary>
@@ -86,6 +87,7 @@ namespace Game.Rendering
             if (p == null) return;
             bool hasTier = QualityProfileApplier.HasCurrent;
             var t = hasTier ? QualityProfileApplier.Current : default;
+            KamionHeadlamps.Push(env.Model, HeadlampsOverride ?? p.projectedHeadlamps, p.projectedHeadlampPeakCd);
 
             // ---- haze
             bool layer = HazeOverride ?? !(hasTier && t.groundHazeOff);

@@ -18,6 +18,9 @@ namespace Game.Rendering.Editor
             public int pools, enabledPointLights;
             public Vector4[] headsAndWeights;
             public Vector4 exposedPoolColor;
+            public bool projectedHeadlamps;
+            public string headlampDiagnostics;
+            public Vector4 headlampLeft, headlampRight, exposedHeadlampColor;
         }
         [Serializable] sealed class Document
         {
@@ -41,6 +44,10 @@ namespace Game.Rendering.Editor
                 sunElevation = model.TrueSunElevationDeg, skyHorizontalLux = model.HorizontalIlluminanceLux,
                 exposure = model.Exposure, lampsOn = StreetLamps.On,
                 pools = count, headsAndWeights = positions,
+                projectedHeadlamps = KamionHeadlamps.Enabled, headlampDiagnostics = KamionHeadlamps.Diagnostics,
+                headlampLeft = Shader.GetGlobalVector("_KamionHeadlampLeft"),
+                headlampRight = Shader.GetGlobalVector("_KamionHeadlampRight"),
+                exposedHeadlampColor = Shader.GetGlobalVector("_KamionHeadlampColor"),
                 exposedPoolColor = Shader.GetGlobalVector("_KamionLampColor"),
                 enabledPointLights = environment.GetComponentsInChildren<Light>()
                     .Count(l => l.enabled && l.type == LightType.Point && l.name.StartsWith("StreetLampLight "))
