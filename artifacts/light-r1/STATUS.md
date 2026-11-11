@@ -1,4 +1,4 @@
-﻿## Stan bieżący po zmianie limitów — 11 listopada, około 22:28
+## Stan bieżący po zmianie limitów — 11 listopada, około 22:28
 Gałąź gpt-light-r1; własny worktree gpt-light. Okno pracy do 12 listopada 21:30, Europe/Warsaw.
 Ciężki Python wyłącznie przez run-heavy.ps1 i aktualny helper slotów z main: pula heavy, właściciel gpt-light-r1, max 3. Pełny GIS tylko na końcu rundy (-Task GisFinal -RoundEnd).
 40/40 PNG ablacji RCAS gotowych. Poprawiony kontroler PID 60592 rozpoczął import w slotach heavy (gpt-light-r1) i Unity (gpt-light); przebudowa PBR build_all jest objęta heavy. Nie uruchamiać równolegle drugiego własnego heavy z tym samym właścicielem.
@@ -132,4 +132,5 @@ Batch światła zakończony: artifacts/light-r1/sbs-after.json; log C:\Users\mat
 Batch światła zakończony: artifacts/light-r1/cloud-photo-v4.json; log C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-light\artifacts\light-r1\cloud-photo-v4.20261112-000508.log. Następny krok: obejrzeć PNG i policzyć metryki, nie deklarować PASS z samego kodu wyjścia.
 Krok 46: obejrzano czysty błękit block3 (350,40)–(530,130), bez chmur; dodano osobne ROI i przeniesiono tam natywną diagnostykę bandingu. Dawne ROI zachowane jako osobna seria, nie utożsamiane z nową. Następny krok: po uzyskaniu heavy obejrzeć nakładki 10 m oraz diagnostykę v4; sbs-final-ready potwierdza nowy komplet160.
 Końcowe EditMode: kod 0; szczegóły final-editmode.log i XML artifacts/tests. Następny krok: odczytać liczbę testów i ewentualne porażki.
-Krok 47: obejrzano wszystkie15 PNG v4 na trzech kontaktówkach. High iLow mają te same struktury chmur; Low pozostaje miększy zgodnie z własnym tierem, bez nowego efektu. Wersja chroma2 nie wprowadza widocznego szwu w sprawdzonych kadrach. Po niej pełne EditMode264/264, XML editmode-20261112-000534.xml. Następny krok: analiza6009, pełnyGISpojejzakończeniu, bez dalszego rozszerzania produkcji tej rundy.
+Krok 47: obejrzano wszystkie 15 PNG v4 na trzech kontaktówkach. High i Low mają te same struktury chmur; Low pozostaje miększy zgodnie z własnym tierem, bez nowego efektu. Wersja chroma 2 nie wprowadza widocznego szwu w sprawdzonych kadrach. Po niej pełne EditMode 264/264, XML editmode-20261112-000534.xml. Następny krok: analiza (handle 6009), pełny GIS po jej zakończeniu, bez dalszego rozszerzania produkcji tej rundy.
+
