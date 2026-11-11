@@ -92,3 +92,6 @@
 
 - After59 WorldC_High High-overcast: rzeczywista scena profilu,59 identycznych kamer. NASTĘPNY KROK: porównanie stats i ROI, następnie pozostałe warunki / końcowy GIS+EditMode.
 
+
+- After59 WorldC_High High-clear: rzeczywista scena profilu,59 identycznych kamer. NASTĘPNY KROK: porównanie stats i ROI, następnie pozostałe warunki / końcowy GIS+EditMode.
+
