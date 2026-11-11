@@ -12,7 +12,7 @@ namespace SurfaceWearQA
  public static class SurfaceWearAudit
  {
   [Serializable] public sealed class MeshRow { public string scene,path,positions,normals,indices,uv0,uv1,uv1y,uv1ySource;public int vertices,submeshes;public bool hasUv1;public List<SubRow> parts=new List<SubRow>(); }
-  [Serializable] public sealed class SubRow { public string material,keywords;public int triangles,constantHalfTriangles;public double area,constantHalfArea; }
+  [Serializable] public sealed class SubRow { public string material,keywords;public int triangles,constantHalfTriangles,shortApproachVertices;public double area,constantHalfArea;public float minimumTyreLength; }
   [Serializable] public sealed class MatRow { public string path,shader,keywords;public List<string> fields=new List<string>(); }
   [Serializable] public sealed class Packet { public string note;public List<MeshRow> meshes=new List<MeshRow>();public List<MatRow> materials=new List<MatRow>(); }
   static string Arg(string key,string fallback){var a=Environment.GetCommandLineArgs();int i=Array.IndexOf(a,key);return i>=0&&i+1<a.Length?a[i+1]:fallback;}
@@ -48,6 +48,12 @@ namespace SurfaceWearQA
        d.GetIndices(index,si);writer.Write(si);writer.Write(index.Length);foreach(int k in index)writer.Write(k);
        Material mat=si<mats.Length?mats[si]:null;var part=new SubRow{material=mat==null?"MISSING":mat.name,keywords=mat==null?"":string.Join(",",mat.shaderKeywords)};
        for(int j=0;j+2<index.Length;j+=3){int a=index[j],b=index[j+1],c=index[j+2];double ar=Vector3.Cross(v[b]-v[a],v[c]-v[a]).magnitude*.5;part.area+=ar;part.triangles++;if(row.hasUv1&&Mathf.Abs(u1[a].x-.5f)<.00001f&&Mathf.Abs(u1[b].x-.5f)<.00001f&&Mathf.Abs(u1[c].x-.5f)<.00001f){part.constantHalfTriangles++;part.constantHalfArea+=ar;}}
+       if(row.hasUv1&&part.material=="M_decal_tyre")
+       {
+        var tyreVertices=new HashSet<int>();foreach(int k in index)tyreVertices.Add(k);
+        part.minimumTyreLength=float.PositiveInfinity;
+        foreach(int k in tyreVertices){part.minimumTyreLength=Mathf.Min(part.minimumTyreLength,u1[k].x);if(u1[k].x<0)part.shortApproachVertices++;}
+       }
        row.parts.Add(part);
        if(mat!=null&&seenMats.Add(AssetDatabase.GetAssetPath(mat))){var mr=new MatRow{path=AssetDatabase.GetAssetPath(mat),shader=mat.shader.name,keywords=string.Join(",",mat.shaderKeywords)};foreach(string prop in new[]{"_WheelPolish","_GutterDirt","_DripBand","_CrackStrength","_DecalAlpha","_PaintWear","_Tint","_Tile","_Grime"})if(mat.HasProperty(prop))mr.fields.Add(prop+"="+(prop=="_PaintWear"||prop=="_Tint"||prop=="_Tile"||prop=="_Grime"?mat.GetVector(prop).ToString("R"):mat.GetFloat(prop).ToString("R",System.Globalization.CultureInfo.InvariantCulture)));foreach(string prop in new[]{"_BaseMap","_VarMap","_MacroMap","_CrackMap","_CrackNormal"})if(mat.HasProperty(prop))mr.fields.Add(prop+"="+AssetDatabase.GetAssetPath(mat.GetTexture(prop)));packet.materials.Add(mr);}
       }
