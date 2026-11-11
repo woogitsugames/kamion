@@ -1,4 +1,4 @@
-﻿# Oględziny autora — life r1
+# Oględziny autora — life r1
 
 Obejrzano 28 plansz before/after: 19 wybranych kamer osobówek w czterech warunkach, w tym zbliżenia kół, biały kombi, czarny hatchback, cztery odziedziczone kontrole rozkładu brudu, tył auta i widoki rzędów. Plansze mają maksymalnie 960×780 px. To ocena autora; nowa niezależna recenzja tej rundy pozostaje po stronie integratora.
 
@@ -12,6 +12,6 @@ Low: łączna delta draws od -24 do 0, delta łącznych trisK od -2 do 0. High: 
 
 Pary refs/photo-render-black.jpg i photo-render-white.jpg służą porównaniu materiału i kierunku obserwacji; pokazują inną lokalizację i pogodę, nie geodezyjne dopasowanie kadru 1:1 ani kalibrację albedo. Źródła istniejących zdjęć i SHA wskazuje refs/provenance.json. Arkusz refs/r4-reference-review.jpg zawiera szerszy kontekst.
 
-EditMode: 274/274, 0 błędów i 0 pominiętych. Końcowe pełne GIS jest jeszcze do wykonania pod heavy. Nie wykonano pomiaru A16 ani nowego niezależnego odbioru wizualnego.
+EditMode: 274/274, 0 błędów i 0 pominiętych. Końcowe pełne GIS pod heavy: 543 passed, 1 xfailed w 718,81 s; exit 0, manifest przed i po identyczny. Nie wykonano pomiaru A16 ani nowego niezależnego odbioru wizualnego.
 
 Obejrzano też obie pary materiałowe photo-render-black.jpg i photo-render-white.jpg. Czarny samochód na zdjęciu ma mocniejsze kontrasty odbić i ciemniejsze opony; render w clear jest szarawy z płaską felgą. Biały kombi na renderze ma mało modulacji jasnych paneli względem zdjęcia. Różne pogoda, położenie i model auta wykluczają traktowanie tych porównań jako pomiaru albedo. Te dwa odstępstwa pozostają otwarte.
