@@ -7,10 +7,11 @@
 |---|---|---|---|---|
 | węzły r6 bariery — dokończenie b3 (Fable) | 0123 | `.claude/worktrees/junctions-r6` / `junctions-r6` | `artifacts/junctions-r6/STATUS.md` | w toku od 23:08 (post.sh b3 full → EditMode/PlayMode → pairs → poprawki → ADR) |
 | zabudowa r8 — runda r2 (Fable) | 0124 | `.claude/worktrees/buildings-r8` / `buildings-r8` | `artifacts/buildings-r16/STATUS.md` | w toku od 23:08 (pytest/fidelity → EditMode → r2 → ADR) |
-| visual-critic D51 na świeżym sbs-r1 GPT (168 renderów, 100 arkuszy B) | — | czyta `.claude/worktrees/gpt-sbs/artifacts/sbs-r1/evidence/sheets` | wynik → `docs/reports/visual/REVIEW-2026-11-11-s11-sbs-r1-D51.md` | w toku od 23:10 → lista blokerów rozpoznawalności |
+| G3-B bramownice, znaki, ekrany akustyczne, linia WN (Fable) | 0125 | `.claude/worktrees/gate3-signs` / `gate3-signs` | `artifacts/gate3-signs/STATUS.md` | start ~23:20 (blokery 1,3,4,5 z recenzji D51) |
+- **Recenzja D51 sbs-r1 (`docs/reports/visual/REVIEW-2026-11-11-s11-sbs-r1-D51.md`): bramka 3 FAIL** — 25 kadrów B Low-overcast: 12 rozpoznawalnych / 11 częściowo / 2 nie; G3-A 11/15 OK warunkowo, G3-B 1/10. Blokery: 1 bramownice G3-B, 2 brak filarów s≈351–359, 3 ekrany akustyczne (strona), 4 słup WN, 5 znaki pionowe, 6 pierzeja handlowa G3-B, 7 pod wiaduktem (bariera łuku, nasyp), 8 drzewa w pasie dzielącym, 9 bloki na horyzoncie. B2+B7 dopisane do 0123; B1,3,4,5 → 0125; B6 → zabudowa po 0124; B8 → GPT vegetation, B9 → GPT edge.
 - GPT 24 h: wszystkie 10 rund w toku, żadna nie gotowa do scalenia (cab-r1, furniture-r1 REPORT = „w toku”).
 - Następne: po krytyku D51 → agenci na blokery (Fable geometria) → krytyk 0123/0124 → scalenie → jedna regeneracja → integracja Unity + czysty APK Low → gate3 A16 A+B.
-- Ostatni przydzielony ADR: 0124.
+- Ostatni przydzielony ADR: 0125.
 
 ---
 # HANDOVER — kamion, ZAMKNIĘCIE sesji 10 (2026-11-11 ~22:50; właściciel zmienia konto → limity od zera)
