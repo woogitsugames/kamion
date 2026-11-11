@@ -3,3 +3,6 @@
 - Kopie derived/cc0/Megascans/_Generated gotowe; junctiony gugik/osm/refs/mapillary/fab tylko do odczytu; git lfs checkout zakończony.
 - PHONE_RUN obecny: bez Unity/adb. Zakres: tylko konstrukcja poniżej pomostu; bez _Tint bridge_concrete i bez dróg/barier.
 - NASTĘPNY KROK: uv run --project tools/worldgen python -m pytest tests/gis -q
+- Implementacja r1: osobny viaduct_underdeck.json (bez edycji overrides.yaml), konstrukcja w hero_bridge.py, stare materiały i chunk batching; pomost/ekrany/barierki pozostają nietknięte.
+- Podpory, głowice, łożyska, dźwigar/kroplowniki, rury, ściany skrzydłowe i schody wymagają testów i przeglądu; wymiary WORKING_VALUE.
+- NASTĘPNY KROK: uv run --project tools/worldgen python tools/worldgen/roads/build_world.py --region bialystok-industrial-c

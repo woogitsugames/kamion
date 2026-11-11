@@ -1,0 +1,29 @@
+{
+ "id": "dk8-putry-underdeck-0105",
+ "asset": "viaduct_putry_underdeck",
+ "target": {"osm_way": [1101181473, 173956078, 284022563, 606396460]},
+ "set": {
+  "girder_depth_m": 1.2,
+  "station_step_m": 8.0,
+  "col_offset_m": 2.0,
+  "col_len_m": 1.0,
+  "col_wid_m": 1.2,
+  "col_chamfer_m": 0.25,
+  "bearing_gap_m": 0.22,
+  "span_target_m": 25.0,
+  "cap_h_m": 0.30,
+  "wing_len_m": 3.0,
+  "stairs_width_m": 0.85,
+  "stairs_rise_m": 0.18,
+  "stairs_tread_m": 0.32,
+  "slab_depth_m": 0.62,
+  "drip_depth_m": 0.035,
+  "paint_blobs": true
+ },
+ "confidence": "WORKING_VALUE: structural dimensions and paint blobs; not a survey",
+ "references": [
+  "docs/REFERENCES.md: 7204_May_2021_in_Białystok.jpg (Rakoon, CC0)",
+  "docs/reports/visual/REFS-MAPILLARY-FINDINGS-2026-11-10.md: p42/p45/p47 (reference only)",
+  "OSM axis + conformed GUGiK NMT: generated position and ground height"
+ ]
+}
