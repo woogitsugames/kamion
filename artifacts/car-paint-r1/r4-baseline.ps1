@@ -1,5 +1,5 @@
 param(
- [Parameter(Mandatory=$true)][ValidateSet('Fixtures','Import','Capture')][string]$Phase,
+ [Parameter(Mandatory=$true)][ValidateSet('Fixtures','PrepareImport','Import','Capture')][string]$Phase,
  [Parameter(Mandatory=$true)][string]$RootRelease,
  [string]$Cameras=''
 )
@@ -8,8 +8,16 @@ Set-Location ([IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..')))
 . scripts/env.ps1
 function Assert-Slot {
  if([string]::IsNullOrWhiteSpace($RootRelease)){throw 'An explicit current ROOT release is required'}
+ $invalid='artifacts/car-paint-r1/r4-release-invalidated.json'
+ if(Test-Path $invalid) {
+  $record=Get-Content $invalid -Raw | ConvertFrom-Json
+  if($record.root_release-eq$RootRelease){throw 'This ROOT release was invalidated; marker disappearance is not permission to resume'}
+ }
  foreach($name in @('PHONE_RUN','GPT_UNITY_HOLD')) {
-  if(Test-Path "C:/Users/matma/Documents/Claude/kamion/artifacts/locks/$name"){throw "$name active; ROOT release invalidated. No wait or automatic queued launch."}
+  if(Test-Path "C:/Users/matma/Documents/Claude/kamion/artifacts/locks/$name"){
+   @{root_release=$RootRelease;markers=@($name)} | ConvertTo-Json | Set-Content $invalid -Encoding utf8
+   throw "$name active; ROOT release invalidated. No wait or automatic queued launch."
+  }
  }
 }
 function Restore-OwnedSideEffects {
@@ -32,15 +40,46 @@ if($Phase-eq'Fixtures') {
  }
  Write-Output 'Fixtures complete. NEXT: r4-baseline.ps1 -Phase Import with a still-valid explicit ROOT release.'
 }
+if($Phase-eq'PrepareImport') {
+ # Execute only the canonical CPU preparation prefix. It has NO Unity call,
+ # so a long PBR regeneration cannot turn into an unguarded automatic launch.
+ $sourcePath=[IO.Path]::GetFullPath('scripts/import-region.ps1')
+ $text=[IO.File]::ReadAllText($sourcePath)
+ $anchor='$log = Join-Path $LogsDir "import-region-$Region-$(Get-Timestamp).log"'
+ $cut=$text.IndexOf($anchor)
+ if($cut-lt0){throw 'Canonical import CPU/Unity boundary changed'}
+ $cpu=$text.Substring(0,$cut).Replace('. "$PSScriptRoot/env.ps1"',(". '"+[IO.Path]::GetFullPath('scripts/env.ps1')+"'"))
+ $cpu+="`nWrite-Output 'R4_IMPORT_CPU_READY'`nexit 0`n"
+ $copy=[IO.Path]::GetFullPath('artifacts/car-paint-r1/r4-import-cpu-only.ps1')
+ [IO.File]::WriteAllText($copy,$cpu,[Text.UTF8Encoding]::new($false))
+ if($cpu-match 'Invoke-UnityBatch'){throw 'CPU copy unexpectedly contains a Unity launcher'}
+ $stop=[IO.Path]::GetFullPath("artifacts/car-paint-r1/r4-watch-stop-$PID.txt")
+ $watch=Start-Process -FilePath (Get-Command python).Source -ArgumentList @([IO.Path]::GetFullPath('artifacts/car-paint-r1/r4-release-monitor.py'),$stop,$RootRelease) -WindowStyle Hidden -PassThru
+ try {
+  & pwsh -NoProfile -ExecutionPolicy Bypass -File $copy -Region bialystok-industrial-c
+  if($LASTEXITCODE-ne0){throw 'R4 CPU preparation failed'}
+ } finally {
+  [IO.File]::WriteAllText($stop,'stop')
+  $null=$watch.WaitForExit(2000)
+ }
+ [IO.File]::WriteAllText([IO.Path]::GetFullPath('artifacts/car-paint-r1/r4-import-cpu-ready.txt'),(Get-FileHash $sourcePath).Hash,[Text.UTF8Encoding]::new($false))
+ Write-Output 'CPU only complete. STOPPED: launch Import separately after a fresh release/guard check.'
+}
 if($Phase-eq'Import') {
+ $ready='artifacts/car-paint-r1/r4-import-cpu-ready.txt'
+ if(-not(Test-Path $ready)){throw 'Run PrepareImport first; CPU and Unity are deliberately separate commands'}
+ if([IO.File]::ReadAllText([IO.Path]::GetFullPath($ready))-ne(Get-FileHash scripts/import-region.ps1).Hash){throw 'Canonical import source changed after CPU preparation'}
  Assert-Slot
  # Install only our artifact observer into ignored editor output; no production QA source edits.
  $observer='game/Assets/_Generated/Editor/R4PosePacket.cs'
  New-Item -ItemType Directory -Force (Split-Path $observer) | Out-Null
  Copy-Item -LiteralPath artifacts/car-paint-r1/R4PosePacket.cs -Destination $observer
  try {
-  & pwsh -NoProfile -ExecutionPolicy Bypass -File scripts/import-region.ps1 -Region bialystok-industrial-c
-  if($LASTEXITCODE-ne0){throw 'R4 final normal import failed'}
+  $log=[IO.Path]::GetFullPath('artifacts/car-paint-r1/r4-final-normal-import.log')
+  Assert-Slot # Immediately adjacent to the actual launch, after all CPU work.
+  $code=Invoke-UnityBatch -LogFile $log -Arguments @('-executeMethod','Game.World.Import.RegionImporter.ImportBatch','-region','bialystok-industrial-c','-tiers','Low,High','-materialTier','Medium')
+  $ok=Select-String -Path $log -Pattern 'IMPORT_RESULT: OK' -Quiet
+  if($code-ne0 -or -not$ok){throw "R4 final normal import failed exit=$code; inspect log"}
  } finally {Restore-OwnedSideEffects}
  & python artifacts/car-paint-r1/proof.py r4-before-imported
  if($LASTEXITCODE-ne0){throw 'R4 imported baseline source proof failed'}
