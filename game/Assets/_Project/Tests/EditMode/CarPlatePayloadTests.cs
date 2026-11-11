@@ -1,6 +1,7 @@
 using System;
 using NUnit.Framework;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace Game.Tests
 {
@@ -44,6 +45,43 @@ namespace Game.Tests
         }
 
         [Test]
+        public void NativeValidationRejectsZeroFilledPayloadDespiteIdenticalDescriptor()
+        {
+            Mesh Build(bool valid)
+            {
+                var mesh = new Mesh();
+                mesh.SetVertexBufferParams(8, new VertexAttributeDescriptor(VertexAttribute.Position, VertexAttributeFormat.Float32, 3),
+                    new VertexAttributeDescriptor(VertexAttribute.Normal, VertexAttributeFormat.SNorm8, 4),
+                    new VertexAttributeDescriptor(VertexAttribute.TexCoord0, VertexAttributeFormat.Float16, 2),
+                    new VertexAttributeDescriptor(VertexAttribute.TexCoord1, VertexAttributeFormat.Float16, 2));
+                var bytes = new byte[8 * 24];
+                var local = Corners();
+                void Half(int offset, float value) => Array.Copy(BitConverter.GetBytes(Mathf.FloatToHalf(value)), 0, bytes, offset, 2);
+                for (int i = 0; i < 8; i++)
+                {
+                    Half(i * 24 + 16, .25f + local[i].x * .2421875f);
+                    Half(i * 24 + 18, .5f + local[i].y * .10546875f);
+                    Half(i * 24 + 20, valid ? local[i].x : 0);
+                    Half(i * 24 + 22, valid ? local[i].y : 0);
+                }
+                mesh.SetVertexBufferData(bytes, 0, 0, bytes.Length);
+                mesh.SetIndices(new[] { 0, 1, 2, 0, 2, 3, 4, 5, 6, 4, 6, 7 }, MeshTopology.Triangles, 0);
+                mesh.UploadMeshData(true);
+                return mesh;
+            }
+            var good = Build(true);
+            var stale = Build(false);
+            try
+            {
+                Assert.False(good.isReadable);
+                Assert.That(good.GetVertexBufferStride(0), Is.EqualTo(stale.GetVertexBufferStride(0)));
+                Assert.True(Invoke("ValidNativePlate", good, 0));
+                Assert.False(Invoke("ValidNativePlate", stale, 0));
+            }
+            finally { UnityEngine.Object.DestroyImmediate(good); UnityEngine.Object.DestroyImmediate(stale); }
+        }
+
+        [Test]
         public void OwnedPlateShaderDefaultsToLegacyUv0AndPreservesOpaquePasses()
         {
             var shader = Shader.Find("Kamion/World Car Plate");
@@ -52,6 +90,7 @@ namespace Game.Tests
             try
             {
                 Assert.That(material.GetFloat("_PlatePayloadVersion"), Is.Zero);
+                Assert.False(material.IsKeywordEnabled("_PLATE_LOCAL_CORNERS"));
                 foreach (string pass in new[] { "ForwardLit", "ShadowCaster", "DepthOnly", "DepthNormals", "GBuffer" })
                     Assert.That(material.FindPass(pass), Is.GreaterThanOrEqualTo(0), pass);
             }

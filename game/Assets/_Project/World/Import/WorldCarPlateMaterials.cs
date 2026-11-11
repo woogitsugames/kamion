@@ -15,6 +15,7 @@ namespace Game.World.Import
     public static class WorldCarPlateMaterials
     {
         public const string ShaderName = "Kamion/World Car Plate";
+        public const string Keyword = "_PLATE_LOCAL_CORNERS";
         static readonly Regex Vehicle = new Regex(@"^(car_(hatch|sedan|estate|suv)_(silver|grey|black|white|blue|red)|van_(white|silver|white2))(\.lod[12])?$", RegexOptions.CultureInvariant);
 
         public static bool ValidCorners(Vector2[] uv0, Vector2[] local)
@@ -61,6 +62,65 @@ namespace Game.World.Import
             return true;
         }
 
+        public static bool ValidNativePlate(Mesh mesh, int submesh)
+        {
+            if (mesh == null || !mesh.HasVertexAttribute(VertexAttribute.TexCoord0) ||
+                !mesh.HasVertexAttribute(VertexAttribute.TexCoord1)) return false;
+            foreach (var channel in new[] { VertexAttribute.TexCoord0, VertexAttribute.TexCoord1 })
+                if (mesh.GetVertexAttributeStream(channel) != 0 || mesh.GetVertexAttributeDimension(channel) != 2 ||
+                    mesh.GetVertexAttributeFormat(channel) != VertexAttributeFormat.Float16) return false;
+            var sub = mesh.GetSubMesh(submesh);
+            if (sub.indexCount != 12) return false;
+            // Editor API intentionally supports UploadMeshData(true): validate the ACTUAL
+            // native buffers, not merely the fresh GLB or a matching vertex descriptor.
+            using (var snapshot = MeshUtility.AcquireReadOnlyMeshData(mesh))
+            {
+                var data = snapshot[0];
+                var selected = new SortedSet<int>();
+                if (mesh.indexFormat == IndexFormat.UInt16)
+                {
+                    var indices = data.GetIndexData<ushort>();
+                    for (int i = 0; i < sub.indexCount; i++) selected.Add(indices[sub.indexStart + i] + sub.baseVertex);
+                }
+                else
+                {
+                    var indices = data.GetIndexData<int>();
+                    for (int i = 0; i < sub.indexCount; i++) selected.Add(indices[sub.indexStart + i] + sub.baseVertex);
+                }
+                if (selected.Count != 8) return false;
+                byte[] bytes = data.GetVertexData<byte>(0).ToArray();
+                int stride = mesh.GetVertexBufferStride(0), offset0 = mesh.GetVertexAttributeOffset(VertexAttribute.TexCoord0),
+                    offset1 = mesh.GetVertexAttributeOffset(VertexAttribute.TexCoord1);
+                Vector2 Read(int i, int offset) => new Vector2(Mathf.HalfToFloat(BitConverter.ToUInt16(bytes, i * stride + offset)),
+                    Mathf.HalfToFloat(BitConverter.ToUInt16(bytes, i * stride + offset + 2)));
+                return ValidCorners(selected.Select(i => Read(i, offset0)).ToArray(), selected.Select(i => Read(i, offset1)).ToArray());
+            }
+        }
+
+        public static bool ValidNativeLibrary(WorldInstanceSet set, Material plate)
+        {
+            var native = set.prototypes.Where(p => Vehicle.IsMatch(p.name)).ToArray();
+            if (native.Length != 27) return false;
+            int count = 0;
+            foreach (var prototype in native)
+            {
+                if (prototype.lods.Length != 3) return false;
+                for (int lod = 0; lod < prototype.lods.Length; lod++)
+                {
+                    var mesh = prototype.lods[lod];
+                    int seen = 0;
+                    for (int sub = 0; sub < mesh.subMeshCount; sub++)
+                        if (set.materials[prototype.materialStart[lod] + sub] == plate)
+                        {
+                            if (!ValidNativePlate(mesh, sub)) return false;
+                            seen++; count++;
+                        }
+                    if (seen != (lod == 2 ? 0 : 1)) return false;
+                }
+            }
+            return count == 54;
+        }
+
         public static bool EligibleMaterial(string id, Material material)
         {
             return id == "car_plate" && material != null && material.HasProperty("_BaseMap") &&
@@ -75,6 +135,8 @@ namespace Game.World.Import
             // A repeat import starts from ordinary Lit; rejection must never preserve a stale enabled flag.
             var original = Shader.Find("Universal Render Pipeline/Lit");
             if (original == null) return;
+            plate.DisableKeyword(Keyword);
+            if (plate.HasProperty("_PlatePayloadVersion")) plate.SetFloat("_PlatePayloadVersion", 0f);
             plate.shader = original;
             bool eligible = EligibleMaterial("car_plate", plate) && ForwardOnly(GraphicsSettings.defaultRenderPipeline);
             for (int i = 0; eligible && i < QualitySettings.names.Length; i++)
@@ -86,14 +148,12 @@ namespace Game.World.Import
             eligible &= shader != null;
             if (eligible)
                 eligible = ValidLibrary(GlbReader.Load(Path.Combine(EditorTools.RepoRoot, "art-source", "world", "props", "street_props.glb")));
-            var native = region.Instances.prototypes.Where(p => Vehicle.IsMatch(p.name)).ToArray();
-            eligible &= native.Length == 27 && native.All(p => p.lods.Length == 3 && p.lods.All(m =>
-                m.HasVertexAttribute(VertexAttribute.TexCoord1) && m.GetVertexAttributeDimension(VertexAttribute.TexCoord1) == 2 &&
-                m.GetVertexAttributeFormat(VertexAttribute.TexCoord1) == VertexAttributeFormat.Float16));
+            if (eligible) eligible = ValidNativeLibrary(region.Instances, plate);
             if (eligible)
             {
                 plate.shader = shader;
                 plate.SetFloat("_PlatePayloadVersion", 1f);
+                plate.EnableKeyword(Keyword);
             }
             EditorUtility.SetDirty(plate);
             Debug.Log($"[IMPORT] car_plate local-corner remap: {(eligible ? "enabled (54 plates, Forward only)" : "UV0 fallback (eligibility failed)")}");

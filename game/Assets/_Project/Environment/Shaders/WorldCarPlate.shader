@@ -120,6 +120,7 @@ Shader "Kamion/World Car Plate"
             // -------------------------------------
             // Shader Stages
             #pragma vertex PlatePassVertex
+            #pragma shader_feature_local_vertex _PLATE_LOCAL_CORNERS
             #pragma fragment LitPassFragment
 
             // -------------------------------------
@@ -185,7 +186,6 @@ Shader "Kamion/World Car Plate"
             #define LitPassVertex OriginalLitPassVertex
             #include "Packages/com.unity.render-pipelines.universal/Shaders/LitForwardPass.hlsl"
             #undef LitPassVertex
-            float _PlatePayloadVersion;
             float4 _KamionGIRect;
             float4 _KamionGIHeight;
 
@@ -205,10 +205,10 @@ Shader "Kamion/World Car Plate"
                 UNITY_SETUP_INSTANCE_ID(input);
                 // Payload is enabled only after full-library import validation. Old/mixed
                 // payload, missing GI, lightmaps and deferred auxiliary passes retain UV0.
-                #if !defined(LIGHTMAP_ON) && !defined(DYNAMICLIGHTMAP_ON)
+                #if defined(_PLATE_LOCAL_CORNERS) && !defined(LIGHTMAP_ON) && !defined(DYNAMICLIGHTMAP_ON)
                 float2 originXZ = GetObjectToWorldMatrix()._m03_m23;
                 float2 regionUV = (originXZ - _KamionGIRect.xy) * _KamionGIRect.zw;
-                if (_PlatePayloadVersion == 1.0 && _KamionGIHeight.w > 0.0 &&
+                if (_KamionGIHeight.z > 0.0 &&
                     all(_KamionGIRect.zw > 0.0) && all(regionUV >= 0.0) && all(regionUV <= 1.0))
                     input.texcoord = PlateInstanceUV(input.staticLightmapUV, originXZ);
                 #endif
