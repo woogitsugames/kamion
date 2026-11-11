@@ -594,6 +594,9 @@ namespace Game.Editor.Setup
                     }
                 }
 
+                // ADR 0104: only the detailed housing embeds the adjusted glass; Low/Medium body meshes stay unchanged.
+                RecessMirrorBacking(root.transform, exteriorLods[0].FirstOrDefault(r => r.name.StartsWith("CAB_Body", StringComparison.Ordinal)), mirrorInfo);
+
                 // ---- cab glazing seen from the eye (ADR 0045): the exterior FBX glass is a single outward-facing sheet, so with
                 // Kamion/Truck Glass (Cull Back) the driver looked through no glass at all on every tier (no tint, no dash
                 // reflection, no road film). Kamion/Truck Glass expects an inside face (normal towards the cab), so add one
@@ -767,6 +770,7 @@ namespace Game.Editor.Setup
                     Debug.Log($"[TRUCK] {role}: axis {view.forward:F3}, field {2f * view.HalfHDeg:F1} x {2f * view.HalfVDeg:F1} deg");
                     var mir = camT.gameObject.AddComponent<RenderTextureMirror>();
                     mir.glass = r;
+                    mir.flipHorizontally = false; // reflected-eye camera + exported UV basis already produce a mirror image
                     mir.aspect = gw / gh;
                     mir.fovAspect = view.tanHalfH / view.tanHalfV;
                     mir.main = main;
@@ -933,6 +937,48 @@ namespace Game.Editor.Setup
             return m;
         }
 
+        // ADR 0104: called only for the detailed exterior body after inspecting the baseline. Low/Medium retain their
+        // original body meshes; all tiers retain the exact mirror glass transforms and camera optics.
+        static void RecessMirrorBacking(Transform root, Renderer body, Dictionary<string, Dictionary<string, object>> mirrors)
+        {
+            var filter = body != null ? body.GetComponent<MeshFilter>() : null;
+            if (filter == null || filter.sharedMesh == null) return;
+            var openings = new List<MirrorHousingRecess.Opening>(2);
+            foreach (string side in new[] { "L", "R" })
+            {
+                if (!mirrors.TryGetValue("MIRROR_Main" + side, out var main) ||
+                    !mirrors.TryGetValue("MIRROR_Wide" + side, out var wide)) continue;
+                var axes = Json.Obj(main["axes_unity_vehicle"]);
+                Vector3 centre = V3(main["pivot_unity_vehicle"]), up = V3(axes["Y"]).normalized;
+                var size = Json.Arr(main["size_m"]);
+                var wideSize = Json.Arr(wide["size_m"]);
+                openings.Add(new MirrorHousingRecess.Opening {
+                    centre = centre, right = V3(axes["X"]).normalized, up = up,
+                    normal = V3(main["normal_unity_vehicle"]).normalized,
+                    halfWidth = (float)Json.Num(size[0]) * 0.5f,
+                    bottom = Vector3.Dot(V3(wide["pivot_unity_vehicle"]) - centre, up) - (float)Json.Num(wideSize[1]) * 0.5f,
+                    top = (float)Json.Num(size[1]) * 0.5f,
+                });
+            }
+            var source = filter.sharedMesh;
+            var mesh = MirrorHousingRecess.Apply(source, root.worldToLocalMatrix * body.transform.localToWorldMatrix, openings, out int moved);
+            if (mesh == null) { Debug.Log("[TRUCK] Mirror housing recess: no backing vertices need moving"); return; }
+            string dir = Root + "/Meshes";
+            Directory.CreateDirectory(Path.Combine(EditorTools.ProjectRoot, dir));
+            string path = $"{dir}/{mesh.name}.asset";
+            var old = AssetDatabase.LoadAssetAtPath<Mesh>(path);
+            if (old != null)
+            {
+                EditorUtility.CopySerialized(mesh, old);
+                UnityEngine.Object.DestroyImmediate(mesh);
+                EditorUtility.SetDirty(old);
+                mesh = old;
+            }
+            else AssetDatabase.CreateAsset(mesh, path);
+            filter.sharedMesh = mesh;
+            Debug.Log($"[TRUCK] Mirror housing recess {body.name}: moved={moved} vertices={source.vertexCount}->{mesh.vertexCount} indices={source.triangles.Length}->{mesh.triangles.Length}; optics unchanged");
+        }
+
         /// <summary>
         /// ADR 0045: returns a copy of a single-sided glass sheet with an inside face (reversed winding, flipped normals and
         /// tangents) saved under Assets/_Generated/Truck/Meshes, or null when the mesh already has normals facing
@@ -1042,6 +1088,22 @@ namespace Game.Editor.Setup
             Q("cab-dash", eye, Quaternion.Euler(24f, 12f, 0f), 62f, "A7: cluster, steering wheel, centre stack, lower dash (low-sun black-cab check: lower dash > 8 %).");
             Q("cab-left", eye, Quaternion.Euler(4f, -68f, 0f), 62f, "A7: driver door card, door glass and the main/wide mirrors on the left.");
             Q("cab-right", eye, Quaternion.Euler(8f, 58f, 0f), 62f, "A7: passenger seat, passenger door card, right mirrors through the glass.");
+            // ADR 0104: the driving views cannot expose the driver's bolster or resolve moulded grain.
+            // Separate detail views are evidence only; they never replace the driver's-eye acceptance frames.
+            var hPoint = FindDeep(truck, "DriverHPoint");
+            Vector3 hip = hPoint != null ? truck.InverseTransformPoint(hPoint.position) : eye - Vector3.up * 0.635f;
+            Vector3 seatView = eye + new Vector3(0.92f, -0.10f, 0.12f);
+            Q("cab-seat", seatView, Quaternion.LookRotation(hip + new Vector3(-0.08f, 0.15f, -0.18f) - seatView, Vector3.up),
+                52f, "0104: driver seat cloth, door-side leather bolster and seams; detail view, not ocular point.");
+            Vector3 materialView = eye + new Vector3(0.35f, -0.12f, 0.16f);
+            Q("cab-materials", materialView, Quaternion.LookRotation(eye + new Vector3(0.48f, -0.50f, 0.85f) - materialView, Vector3.up),
+                45f, "0104: dash moulded plastic grain, panel join and seam; detail view, not ocular point.");
+            Vector3 entryView = eye + new Vector3(-0.40f, 0.05f, 0.50f);
+            Q("cab-seat-entry", entryView, Quaternion.LookRotation(hip + new Vector3(-0.20f, 0.02f, 0.12f) - entryView, Vector3.up),
+                48f, "0104: entry-side cushion bolster and stitching; separate inspection camera, not a matched driving view.");
+            Vector3 grainView = eye + new Vector3(0.75f, -0.05f, 0.10f);
+            Q("cab-grain", grainView, Quaternion.LookRotation(eye + new Vector3(0.80f, -0.384f, 0.67f) - grainView, Vector3.up),
+                25f, "0104: close inspection of existing moulded grain; not the driver's-eye legibility gate.");
             // Mirror checks (review r6 C-N8, ADR 0042 addendum): from the eye, narrow field onto the glass of each side and the
             // front mirror, so the image in every class II / IV / V / VI glass is readable in the control frame.
             void QMirrors(string id, string note, params string[] glass)
