@@ -157,6 +157,11 @@ for arch_index,center in enumerate(hall['arch_windows_u']):
     for x in np.linspace(w/2,-w/2,33):
         pts.append(P3((center+x,-.20),sill+spring+rise*math.sqrt(max(0,1-(2*x/w)**2))))
     building.face(pts,[(0,0)]*len(pts),marker)
+    head_marker='arch_head_'+str(arch_index);COLORS[head_marker]=(200+arch_index*20,80,180)
+    head=[P3((center-w/2,-.205),sill+spring),P3((center+w/2,-.205),sill+spring)]
+    for x in np.linspace(w/2,-w/2,33):
+        head.append(P3((center+x,-.205),sill+spring+rise*math.sqrt(max(0,1-(2*x/w)**2))))
+    building.face(head,[(0,0)]*len(head),head_marker)
 sheet=Image.new('RGB',(960,720),'white');d=ImageDraw.Draw(sheet)
 d.text((10,8),'CPU SOURCE-MESH PROJECTION ONLY / unlit, no Unity material or lighting proof',fill='black')
 counts={};arch_visibility={}
@@ -168,13 +173,24 @@ for row,lod in enumerate((1,0)):
         frame_np=np.array(frame)
         arch_visibility[f'{label}_lod{lod}']={}
         for arch_index in range(2):
-            color=COLORS['arch_marker_'+str(arch_index)]
-            base_pixels=int(np.sum(np.all(base_projection==color,axis=2)))
-            visible=int(np.sum(np.all(frame_np==color,axis=2)))
-            arch_visibility[f'{label}_lod{lod}'][str(arch_index)]={'unoccluded_pixels':base_pixels,'visible_pixels':visible,'visible_fraction':visible/base_pixels}
+            color=COLORS['arch_marker_'+str(arch_index)];head_color=COLORS['arch_head_'+str(arch_index)]
+            base_whole=np.all(base_projection==color,axis=2)|np.all(base_projection==head_color,axis=2)
+            visible_whole=np.all(frame_np==color,axis=2)|np.all(frame_np==head_color,axis=2)
+            base_head=np.all(base_projection==head_color,axis=2)
+            visible_head=np.all(frame_np==head_color,axis=2)
+            arch_visibility[f'{label}_lod{lod}'][str(arch_index)]={
+                'whole_arched_opening':{'unoccluded_pixels':int(base_whole.sum()),'visible_pixels':int(visible_whole.sum()),'visible_fraction':float(visible_whole.sum()/base_whole.sum())},
+                'upper_arch_head_above_spring':{'unoccluded_pixels':int(base_head.sum()),'visible_pixels':int(visible_head.sum()),'visible_fraction':float(visible_head.sum()/base_head.sum())}}
+            frame_np[np.all(frame_np==head_color,axis=2)]=color
+        sheet.paste(Image.fromarray(frame_np),(10+480*col,48+330*row))
         d.text((10+480*col,30+330*row),f'{label} LOD{lod}; plant triangles={tri_count(plant)}',fill='black')
         counts[f'{label}_lod{lod}']=tri_count(plant)
 sheet.save(OUT/'layout.jpg',quality=93)
+roi=Image.fromarray(base_projection).resize((920,600),Image.Resampling.NEAREST)
+rdr=ImageDraw.Draw(roi)
+rdr.text((12,12),'Projected opening masks: blue = lower region; pink = upper arch head above spring.',fill='black')
+rdr.text((12,28),'Whole metric = blue + pink, including mullion areas; NOT a measured glass-pane/albedo ROI.',fill='black')
+roi.save(OUT/'arch-rois.jpg',quality=95)
 
 # Same dimensions distinguish habit independently of size/spacing.
 gallery=Image.new('RGB',(960,420),'white');dg=ImageDraw.Draw(gallery)
@@ -199,5 +215,5 @@ for p,digest in snapshot.items(): assert hashlib.sha256(Path(p).read_bytes()).he
 raw_manifest=json.loads((OUT.parent/'baseline-raw-sha256.json').read_text())
 for name,digest in raw_manifest.items():
     assert hashlib.sha256((ROOT/'Data/raw/derived/bialystok-industrial-c/world'/name).read_bytes()).hexdigest()==digest
-(OUT/'proof.json').write_text(json.dumps({'status':'ARTIFACT_ONLY_UNLIT_SOURCE_MODEL_NOT_RUNTIME_ACCEPTANCE','source_sha256':snapshot,'plant_triangles':counts,'arch_visibility':arch_visibility,'spacing':spacing,'spruce_shift_m':4,'spruce_shift_ids':[0,1],'wing_conifer_id2':'unchanged; moving +u would place it into left arch','ground_height':'baseline heights retained for projection only; production must resample terrain through planner'},indent=2))
-print(json.dumps({'plant_triangles':counts,'arch_visibility':arch_visibility,'spacing':spacing},indent=2))
+(OUT/'proof.json').write_text(json.dumps({'status':'ARTIFACT_ONLY_UNLIT_SOURCE_MODEL_NOT_RUNTIME_ACCEPTANCE','source_sha256':snapshot,'plant_triangles':counts,'arch_visibility_definition':{'whole':'projected full arched opening silhouette from sill to curved top, including mullion/trim areas; NOT actual glass-pane pixels','head':'subset above sill+spring (4.2m floor-relative), the circular upper cap up to5.5m; excludes lower rectangular area','method':'CPU opaque source-mesh depth test against fixed fire_station_ref7197 camera at460x300; baseline ground/thuja positions retained','roi_proof':'arch-rois.jpg blue+pink=whole, pink=head'},'arch_visibility':arch_visibility,'spacing':spacing,'spruce_shift_m':4,'spruce_shift_ids':[0,1],'wing_conifer_id2':'unchanged; moving +u would place it into left arch','ground_height':'baseline heights retained for projection only; production must resample terrain through planner'},indent=2))
+print(json.dumps({'plant_triangles':counts,'arch_visibility_definition':{'whole':'projected full arched opening silhouette from sill to curved top, including mullion/trim areas; NOT actual glass-pane pixels','head':'subset above sill+spring (4.2m floor-relative), the circular upper cap up to5.5m; excludes lower rectangular area','method':'CPU opaque source-mesh depth test against fixed fire_station_ref7197 camera at460x300; baseline ground/thuja positions retained','roi_proof':'arch-rois.jpg blue+pink=whole, pink=head'},'arch_visibility':arch_visibility,'spacing':spacing},indent=2))

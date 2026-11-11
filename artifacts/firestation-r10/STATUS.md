@@ -24,3 +24,6 @@ Krok4: istniejący asphalt_detail_photo odtworzony bitowo identycznie z main/F/G
 
 Krok5: wyłącznie artifact-only CPU rzuty sylwetek/layoutu i sprawdzenie kontraktu materiałów. Low używa opaque atlasu (brak alpha); High opaque core + osobna shell alpha0.5. Odrzucono cienkie/odłączone Low gałęzie i hourglass; bieżący wolumen nadal stylizowany, brak visualPASS. +4u m tylko dwóch świerków odsłania łuki; trzeci bez przesunięcia. Jitter .25: nominal2.692m, actual2.369..3.217m, max19.50%. Wszystkie192raw i4źródła/produkty bez zmian. NASTĘPNA KOMENDA: obejrzeć shape-candidates/layout.jpg; Unity nadal WYŁĄCZNIE po explicit ROOT release i sprawdzeniu obu blokad, następnie unity-baseline.ps1 -Stage Import.
 
+
+Krok6: źródłowy audyt koloru (nie Unity visualmatch): coreY=.024306, farY=.064226 (2.642x), coveredShellY=.036983 (far1.737x), alpha tilecoverage87.48%. A-correct expectedGPUtint zgodny z kopiowanym cache, lecz to nieGPUreadback. Rozdzielono metrykę otworu od górnej czapy łuku: prawe archheadLow61.97→100%,High54.99→100%; lewy ~97–99% bez istotnego skoku. arch-rois.jpg pokazuje definicję masek. Bieżący CPU Low jest pełniejszy, nadal stylizowany; final visualPASS PENDING. NASTĘPNA KOMENDA: po explicit ROOT release i obu blokadach absent: pwsh artifacts/firestation-r10/unity-baseline.ps1 -Stage Import; produkcja i192raw nadal zamrożone.
+
