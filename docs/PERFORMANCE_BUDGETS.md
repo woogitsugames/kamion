@@ -135,6 +135,14 @@ Galaxy A16, Low, cab view, 40 t, 30 km/h, uncapped (GPU-bound, governor at max),
 ADR 0106 ships the Truck Glass fast path on Low/Medium: -0.9 ms GPU p50, image unchanged (PSNR 62-82 dB). Gate runs
 with the clean APK: see ADR 0106 "Wynik".
 
+ADR 0113 (r2, same method, `artifacts/perf-low-r2/diag1..2`): forest fast path on Low (`QualityProfile.forestFast`) -0.68 ms
+GPU p50 (HLOD canopy on Kamion/Forest Canopy -0.30, HLOD edge walls one-pass -0.28, `_KAMION_VEG_FAST` ~0, vegetation aniso
+2 -> 1 ~0, near-to-far cell order +0.1..+0.6 = rejected). The forest cost on the G57 is coverage/raster of large alpha-to-coverage
+surfaces, not fragment ALU or texture filtering. PSO warm-up (GraphicsStateCollection, 140 + 134 Vulkan states, 3.5-5.3 s during
+load): frames > 40 ms in the first 5 s of G3-A 17 -> 3, the Bieżeństwa roundabout burst is gone. Gate result (clean APK
+6b6c1d8003): G3-A p99 33.6 ms without the capture window (official 49.9: `device-metrics.ps1` screencap + meminfo add ~12
+frames > 40 ms at the end of every run), G3-B p99 33.6, GPU p95 31.7 / 32.2 ms. ADR 0113 "Wynik".
+
 ## World content v2 (ADR 0012) — build and memory, 2026-11-09
 Sources: `artifacts/world/bialystok-industrial-c-import.json` (bake), `BUILD_CONTENT` lines of the build logs (Unity build
 report, sizes before LZ4HC), APK file sizes. Tile C = 4 km², 64 chunks, ≈ 110 800 instances (2 300 props + 108 500 trees).
