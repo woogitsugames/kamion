@@ -66,17 +66,19 @@ Image.fromarray(new).save(OUT/'fire_station_alpha-fir-proxy.png')
 inner=[(x0+px)/ww,1-(y0+py+twig.height)/hh,(x0+px+twig.width)/ww,1-(y0+py)/hh]
 
 def alpha_spruce(mb,c,height,radius,key):
-    #24 root-connected radial twig cards, no new runtime material name or node.
+    #36 root-connected radial twig cards, no new runtime material name or node.
     # Existing alpha material is CullOff; no duplicate reverse-face geometry.
     uu0,vv0,uu1,vv1=inner
-    for j,f in enumerate((.10,.25,.40,.55,.70,.85)):
+    for j,base_f in enumerate((.08,.17,.27,.36,.45,.55,.65,.76,.87)):
         for i in range(4):
-            a=key*.63+j*1.69+i*math.pi/2
+            a=key*.63+j*1.69+i*math.pi/2+.35*(d['h'](key,j,i,'azimuth')-.5)
+            f=base_f+.04*(d['h'](key,j,i,'level')-.5)
             direction=np.array([math.cos(a),math.sin(a)])
             root=c+np.array([0,0,height*f])
-            length=radius*(1-f)**.7*(.9+.3*d['h'](key,j,i))
+            length=radius*(1-f)**.7*(1.03+.30*d['h'](key,j,i))
             tip=c+np.r_[direction*length,height*(f-.04)]
-            side=np.array([0,0,1.0])*min(length*.65,height*f*.90)
+            roll=.50*(d['h'](key,j,i,'roll')-.5)
+            side=(np.array([0,0,1.0])*math.cos(roll)+np.r_[-direction[1],direction[0],0]*math.sin(roll))*min(length*.65,height*f*.90)
             mb.face([root-side,root+side,tip+side,tip-side],
                     [(uu0,vv0),(uu1,vv0),(uu1,vv1),(uu0,vv1)],g['ALPHA'])
     # Four overlapping opaque branch-core volumes, rooted around the trunk.

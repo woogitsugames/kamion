@@ -44,7 +44,7 @@ for label,path in [('baseline',baseline),('proxy',proxy)]:
 for name,record in audit['baseline'].items():
     assert audit['proxy'][name]['material_names']==record['material_names']
     assert audit['proxy'][name]['primitive_count']==record['primitive_count']
-assert [audit['proxy'][n]['triangles'] for n in audit['proxy']]==[9944,2744,164]
+assert [audit['proxy'][n]['triangles'] for n in audit['proxy']]==[9944,2816,164]
 proof=json.loads((OUT/'fir-alpha-proxy-proof.json').read_text())
 proof['actual_GLBS']=audit;proof['actual_baseline_GLTF_alpha_UV_triangles']=uvs
 proof['actual_GLBS_sha256']={label:hashlib.sha256(path.read_bytes()).hexdigest() for label,path in [('baseline',baseline),('proxy',proxy)]}
