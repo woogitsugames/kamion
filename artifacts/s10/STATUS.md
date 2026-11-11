@@ -1023,3 +1023,14 @@ No new mirror/collapse/bleed or body change observed. No far/uniqueness/device
 claim. Known old MotionVectors=true focus metadata remains a separate gate;
 new persisted-load+Low/High replay is running. Dust realism stays PARTIAL.
 NEXT COMMAND: Get-Content C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-car-paint/artifacts/car-paint-r1/r4-plate-pass-replay.log -Tail 8
+
+Step 95: ROOT SELECTS P2 for final validation. Read corrected persisted-load
+replay: Low/High MotionVectors false in both spellings, localkeyword/version1,
+identityST, effectiveOpaque/queue2000. Viewed native replay crop pairs: no new
+visual defect. Independently parsed latest filtered XML8/8/0skip, including
+persisted material reimport regression. HLSL programs unchanged; serialized
+redundantRenderType override differs, effective state same. Authorized final368
+AFTER +fullGIS/EditMode +fullPBRparity/memory/ADR/REPORT under existing G release.
+PHONE/HOLD absent20:33:28; each actual Unity launch still needs immediate guard.
+No fixture reinstall, remerge or further tuning. C13 source waits G closure.
+NEXT COMMAND: Get-Content C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-car-paint/artifacts/car-paint-r1/STATUS.md -Tail 8
