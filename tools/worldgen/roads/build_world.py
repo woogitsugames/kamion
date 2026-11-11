@@ -82,8 +82,13 @@ MATERIALS = {
     # ADR0101 (r2): 0.42 was tuned under the old gamma upload (GPU ~0.15); under the linear _Tint (0086) the girder
     # faces read 1.10-1.38 x the asphalt of the same frame, the Bieżeństwa photo has lit pier / road 0.95-1.02, and
     # from above the cornices read near-white. 0.26/0.26/0.25 (WORKING_VALUE) targets that ratio (tint_ratio.py).
+    # ADR 0123 (REVIEW s10-0117 P1-3, "kapa = jasny chodnik"): vertex_grime = [linear albedo of the road film, roughness
+    # gain] applied where the mesh carries COLOR_0.r (cap tops, roads.meshing._emit_strip). Target: cap / asphalt sRGB
+    # luminance 1.2-1.5 (Mapillary 454716650857984 overcast 1.48, 2948595898752384 sunny 1.43-1.56; it was 1.65 Low
+    # clear / 1.96 High overcast). WORKING_VALUE, matched in the frames r4_deck_bz_eye / _eye2.
     "bridge_concrete": {"color": [0.26, 0.26, 0.25], "rough": 0.85, "surface": "concrete",
-                        "texture_set": "concrete_precast", "uv": "planar", "sky_occ": [0.5, 0.0]},
+                        "texture_set": "concrete_precast", "uv": "planar", "sky_occ": [0.5, 0.0],
+                        "vertex_grime": [0.135, 0.128, 0.115, 0.3]},
     "bridge_soffit": {"color": [0.15, 0.15, 0.145], "rough": 0.9, "surface": "concrete",
                       "texture_set": "concrete_precast", "uv": "planar", "sky_occ": [0.6, 0.0]},
     # ADR 0117 (REVIEW s10-0110 P1-2, "bialy plotek"): weathered hot-dip zinc is a dull grey patina, not a mirror -
@@ -92,8 +97,13 @@ MATERIALS = {
     # from Mapillary 454716650857984 (overcast): beam / asphalt luminance 1.3-2.4, beam / cap 0.7-1.2 against the
     # generated asphalt 0.08 and cap 0.26, vertical faces seeing about half the sky. Set barrier_galv: UV0 metres
     # (u along the beam, v unrolled across the profile), 4.0 x 0.5 m tile.
-    "barrier_steel": {"color": [0.13, 0.132, 0.135], "rough": 0.65, "metal": 0.0, "surface": "steel",
-                      "texture_set": "barrier_galv", "set_tile": True},
+    # ADR 0123 (REVIEW s10-0117 P1-2): 0.13 / metal 0 was a dark paint - right on the overcast deck, 2 x too dark in the
+    # sun from below. Zinc as a metal: albedo (= specular colour) 0.50, set_metal scales the metal mask of the set
+    # (bare zinc 1, road film / rust 0), roughness 0.56 from the set. WORKING_VALUE, matched in the same frames on an
+    # overcast photo (454716650857984: beam / asphalt 1.4-1.5) and sunny ones (2948595898752384: sunlit beam 1.5 x
+    # asphalt, shaded 0.6 x; 500263111404933 from below: beam / grass 3-4).
+    "barrier_steel": {"color": [0.50, 0.505, 0.51], "rough": 0.56, "metal": 1.0, "surface": "steel",
+                      "texture_set": "barrier_galv", "set_tile": True, "set_metal": 0.9},
     "verge_grass": {"color": [0.08, 0.105, 0.038], "rough": 0.95, "surface": "grass", "texture_set": "grass_verge"},
     "shoulder_gravel": {"color": [0.20, 0.19, 0.17], "rough": 0.95, "surface": "gravel", "texture_set": "gravel_compacted"},
     "terrain_grass": {"color": [0.08, 0.105, 0.038], "rough": 0.95, "surface": "grass", "texture_set": "grass_verge"},

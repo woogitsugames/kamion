@@ -249,7 +249,14 @@ overrides:
   - id: andersa-viaduct-biezenstwa-style
     kind: bridge_style
     target: {osm_way: [175157461, 177895177]}
-    set: {fascia: red, pier_mat: bridge_concrete, noise_screen: null, cap_w: 1.0}
+    set:
+      fascia: red
+      pier_mat: bridge_concrete
+      noise_screen: null
+      cap_w: 1.0
+      # ADR 0123: twin-arm lamps between the decks (orthophoto 0.08 m: column at E 554.5 N -715.5, next ones ~32 m
+      # apart along the gap), none on the outer caps
+      lamps: {side: median, spacing_m: 32.0, anchor_en: [554.5, -715.5]}
     reason: >-
       Andersa viaduct over Rondo Pamięci Bieżeństwa 1915 r.: red-painted deck edge, plain grey cylindrical
       concrete piers, steel railing, no noise screen (CC0 photo 20201102_152339, Rakoon, docs/REFERENCES.md).
@@ -264,7 +271,19 @@ overrides:
     kind: hero_bridge
     target: {osm_way: [175157461, 177895177]}
     asset: viaduct_biezenstwa
-    set: {rail_h_m: 1.10, rail_inset_m: 0.08}   # ADR 0117: deck-edge railing with horizontal bars in the asset
+    set:
+      rail_h_m: 1.10          # ADR 0117: deck-edge railing with horizontal bars in the asset
+      rail_inset_m: 0.08
+      # ADR 0123 (REVIEW s10-0117 P1-5): pier rows by measurement instead of the 25 m span rule. Mapillary
+      # 177786140912399 (richlv, CC BY-SA 4.0, reference only; taken on the ring at its east point): a pier stands on
+      # the centre island right behind its kerb, with a W-beam between it and the ring, and the next row is ~35 m
+      # further (ratio of the pier heights in the frame ~8) - i.e. a row at each edge of the island (kerb radius
+      # 17.3 m on the 0.08 m orthophoto at E 558 N -734) and no row in the middle of the island (the rule had one at
+      # the centre and rows 31-33 m out, on the far side of the ring carriageway). Rows 2 and 5 below are those two
+      # (14 m either side of the ring centre along the viaduct: columns 2 m inside the island kerb, WORKING_VALUE
+      # +-2 m); rows 1, 2 from each end keep the stations the rule gave (not measured: no photo shows them usably).
+      pier_lines_en: [[487.5, -688.05], [509.0, -699.85], [540.3, -716.9], [564.8, -730.3], [595.15, -746.85],
+                      [616.65, -758.65]]
     reason: >-
       Landmark object of route G3-A (ADR 0067): the Andersa viaduct over Rondo Pamięci Bieżeństwa 1915 r. gets an
       authored Blender asset (art-source/world/landmarks/viaduct_biezenstwa, tools/blender/world/landmarks/
@@ -1150,9 +1169,15 @@ overrides:
     surface: sidewalk_paving
     # ADR 0117 (REVIEW s10-0110 P1-9, "placek-cokol"): smooth half ellipse (12 segments, was a half octagon), grey
     # setts as on the orthophoto (was beige apron_sett), tip N 128.8 (was 128.2)
-    polygon_en: [[-555.6, 130.7], [-555.56, 130.21], [-555.3, 129.75], [-554.89, 129.36], [-554.35, 129.05],
-                 [-553.72, 128.86], [-553.05, 128.8], [-552.38, 128.86], [-551.75, 129.05], [-551.21, 129.36],
-                 [-550.8, 129.75], [-550.54, 130.21], [-550.5, 130.7]]
+    # ADR 0123 (REVIEW s10-0117 P2-6, "cokol z czarna szczelina"): the half ellipse sat on the square end of the
+    # median like a plinth and the ground behind it lay bare (plan probe artifacts/junctions-r6: no surface at
+    # E -556...-553.5 N 130-133.5 - the kerbed west strip and the low east shoulder of the median do not meet there;
+    # terrain 0.15-0.2 m below the kerb top = the black slot). The paved collar now covers the whole end of the
+    # median up to N 134 (orthophoto artifacts/junctions-r6/ortho/putry_nose.jpg: sett collar around the planted
+    # bed, bed ends at N 133.6), full median width, rounded tip as before (N 128.35).
+    polygon_en: [[-555.75, 134.0], [-556.1, 133.0], [-556.5, 131.0], [-556.6, 130.0], [-556.3, 129.3],
+                 [-555.5, 128.75], [-554.5, 128.45], [-553.4, 128.35], [-552.3, 128.45], [-551.3, 128.75],
+                 [-550.6, 129.3], [-550.3, 130.0], [-550.3, 134.0]]
     reason: >-
       ADR 0110 (REVIEW s10-0100 P1-1a): the north median of the Putry N arm ended square at the crossover plate (open
       kerb end and a blunt face at N 129.6-130, the first thing the driver sees in eye_putry_n). The 0.08 m orthophoto
@@ -1395,6 +1420,18 @@ overrides:
     reason: >-
       Steel barrier on the westbound separator dk8-ramp-split-island (REVIEW s10-0095 P1-3: "na wyspie brak bariery";
       artifacts/junctions-r2/xsec/km_sheet.png, dk8_front.jpg x 960-1000 y 490-530: barrier end at the nose ~E -781, along the island centre).
+    confidence: medium
+    verify: owner drive
+  - id: dk8-ramp-split-barrier-n
+    kind: guardrail
+    polyline_en: [[-750.0, 77.4], [-755.0, 77.1], [-765.0, 76.85], [-775.0, 76.7], [-778.5, 76.7]]
+    reason: >-
+      ADR 0123 (REVIEW s10-0117 P1-4, p0_kerb_merge_eye): second rail of the separator dk8-ramp-split-island, on its
+      ramp side. The 0.08 m orthophoto (artifacts/junctions-r6/ortho/kerb_merge.jpg, kerb_merge_e.jpg) has two rails
+      from the nose at E -779.5 N 76.4: the north one at N 76.6-76.9 running into the barrier of the ramp deck
+      (expansion joint at E -752), the south one at N 75.0-74.5 into the barrier of the DK8 deck (that is
+      dk8-ramp-split-barrier). Drawn east to west (ramp carriageway on the right); starts where the generated barrier
+      of the ramp deck begins (E -750.0 N 77.45, c:w240542867 R) and meets the south rail before the nose.
     confidence: medium
     verify: owner drive
   - id: dk8-e-split-p21-side

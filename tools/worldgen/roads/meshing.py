@@ -342,17 +342,37 @@ def _emit_strip(buf, G, OUT, zg, params, kap_toward, hw, flip, br, coarse, src, 
             # ADR 0110: behind a verge strip (meshing._emit_verge) the buried flange is never seen - not meshed
             # (about half of all kerb triangles of the region were flanges of kerbs without a sidewalk)
             ts = np.minimum(T.min(1) // 2, n - 2)
-            T = T[~(noflange[ts] & noflange[ts + 1])]
+            both = noflange[ts] & noflange[ts + 1]
+            # ADR 0123 (REVIEW s10-0117 P1-6, the lone wall of r2_fork_link_eye, third round): where a verge strip
+            # starts or ends (one station with the strip, the next without: a change of profile family, a dropped
+            # kerb) the 0.5 m concrete flange stood bare above the lower ground beside the road (DK8 0.5-0.7 m above
+            # the link to Rondo Putry at E -353 N -134). There the flange becomes a grass batter
+            # (1 : VERGE_SKIRT_SLOPE), like the skirt of the verge strip it joins.
+            one = noflange[ts] ^ noflange[ts + 1]
+            if one.any():
+                Vg = V.copy()
+                dep = np.abs(Vg[0::2, 2] - Vg[1::2, 2])
+                Vg[1::2, :2] += np.asarray(OUT, float) * (dep * S.VERGE_SKIRT_SLOPE)[:, None]
+                buf.add("road", "verge_grass", Vg, Vg[:, :2].copy(), T[one], footprint=False, src=src + ":vg")     # ":vg" = merged into the terrain mesh
+            T = T[~(both | one)]
         cmat = ("collision_" + ("curb" if mat == "curb_concrete" else "asphalt" if mat.startswith("road_") else
                                 "paving" if mat in ("sidewalk_paving", "apron_sett", "bridge_concrete") else
                                 "grass")) if coarse else mat
+        # ADR 0123 (REVIEW s10-0117 P1-3): the top of a bridge cap (kapa: the concrete strip behind the kerb of a deck
+        # or a walled ramp) carries road film in COLOR_0.r (Kamion/World PBR _VERTEX_GRIME, manifest `vertex_grime` of
+        # bridge_concrete): heaviest at the kerb, where spray and grit land - same material, no extra draw call
+        COL = None
+        if not coarse and not vertical and mat == "bridge_concrete":
+            COL = np.zeros((2 * n, 4))
+            COL[0::2, 0], COL[1::2, 0] = S.CAP_GRIME[0], S.CAP_GRIME[1]
         if br is not None and np.any(br):
             tri_st = np.minimum(T.min(1) // 2, n - 2)
             onb = br[tri_st] | br[np.minimum(tri_st + 1, n - 1)]
-            buf.add(layer, cmat, V, UV, T[~onb], footprint=(not coarse and not vertical), src=src, UV1=UV1)
-            buf.add("collision" if coarse else "bridge", cmat, V, UV, T[onb], footprint=False, src=src, UV1=UV1)
+            buf.add(layer, cmat, V, UV, T[~onb], footprint=(not coarse and not vertical), src=src, UV1=UV1, COL=COL)
+            buf.add("collision" if coarse else "bridge", cmat, V, UV, T[onb], footprint=False, src=src, UV1=UV1, COL=COL)
         else:
-            buf.add(layer, cmat, V, UV, T, footprint=(not coarse and not vertical and not is_flange), src=src, UV1=UV1)
+            buf.add(layer, cmat, V, UV, T, footprint=(not coarse and not vertical and not is_flange), src=src, UV1=UV1,
+                    COL=COL)
 
 
 # Per-bridge look from authored overrides `kind: bridge_style` (keyed by OSM way id, set by roads.pipeline):

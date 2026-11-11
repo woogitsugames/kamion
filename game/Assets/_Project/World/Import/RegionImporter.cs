@@ -295,6 +295,33 @@ namespace Game.World.Import
                 mat.SetVector("_SkyOcc", new Vector4((float)Num(so[0]), (float)Num(so[1]), 0f, 0f));
                 EditorUtility.SetDirty(mat);
             }
+            // ADR 0123: manifest "cast_shadows": false = the material is left out of the shadow pass (alpha-tested railing
+            // bars of the hero viaduct drew a checkerboard on the cap at the Low shadow resolution, REVIEW s10-0117 P1-1).
+            // Always written, so a reimport at the same asset path restores the pass when the key is gone.
+            if (mat != null)
+            {
+                mat.SetShaderPassEnabled("ShadowCaster", !(m.Get("cast_shadows") is bool cs && !cs));
+                EditorUtility.SetDirty(mat);
+            }
+            // ADR 0123: manifest "vertex_grime": [r, g, b, roughness gain] = road film where the mesh carries COLOR_0.r
+            // (Kamion/World PBR _VERTEX_GRIME; bridge caps). Linear albedo, a Vector property (no sRGB conversion).
+            if (mat != null && mat.HasProperty("_VertexGrime"))
+            {
+                if (m.Get("vertex_grime") is List<object> vgr && vgr.Count >= 4)
+                {
+                    mat.EnableKeyword("_VERTEX_GRIME");
+                    mat.SetVector("_VertexGrime", new Vector4((float)Num(vgr[0]), (float)Num(vgr[1]), (float)Num(vgr[2]), (float)Num(vgr[3])));
+                }
+                else mat.DisableKeyword("_VERTEX_GRIME");
+                EditorUtility.SetDirty(mat);
+            }
+            // ADR 0123: manifest "set_metal" (0..1) = metallic scale of a generated PBR set whose MaskMap.r carries a
+            // metal mask (galvanised barrier: bare zinc 1, dirt / rust 0). Sets without the key keep metallic 0.
+            if (mat != null && mat.HasProperty("_MetallicScale") && m.Get("set_metal") != null)
+            {
+                mat.SetFloat("_MetallicScale", Mathf.Clamp01((float)Num(m.Get("set_metal"))));
+                EditorUtility.SetDirty(mat);
+            }
             return mat;
         }
 

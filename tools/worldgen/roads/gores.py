@@ -492,6 +492,51 @@ def _build_island(buf, isl: Island, ms, cs):
     isl.note = f"z {zmean:.2f}"
 
 
+def _clip_tris(p, idx, zone):
+    """Parts of the triangles p.T[idx] outside `zone`, re-triangulated; new vertices (position, UV, UV1, COL
+    interpolated in the plane of their triangle) are appended to the part. Returns the new triangle rows."""
+    out = []
+    V, UV, UV1, COL = [p.V], [p.UV], [p.UV1], [p.COL]
+    nv = len(p.V)
+    for i in idx:
+        t = p.T[i]
+        A = p.V[t]
+        rest = Polygon(A[:, :2]).difference(zone)
+        if rest.is_empty or rest.area < 1e-4:
+            continue
+        M = np.column_stack([A[:, :2], np.ones(3)])
+        try:
+            Mi = np.linalg.inv(M)
+        except np.linalg.LinAlgError:
+            continue
+        ccw = Polygon(A[:, :2]).exterior.is_ccw
+        for piece in _parts(rest):
+            if piece.area < 1e-4:
+                continue
+            for tri in shapely.get_parts(shapely.delaunay_triangles(piece)):
+                if not piece.contains(tri.representative_point()) or tri.area < 1e-6:
+                    continue
+                q = np.asarray(tri.exterior.coords)[:3]
+                if Polygon(q).exterior.is_ccw != ccw:
+                    q = q[::-1]
+                W = np.column_stack([q, np.ones(3)]) @ Mi           # barycentric weights of the 3 new vertices
+                V.append(W @ A)
+                UV.append(W @ p.UV[t])
+                if p.UV1 is not None:
+                    UV1.append(W @ p.UV1[t])
+                if p.COL is not None:
+                    COL.append(W @ p.COL[t])
+                out.append((nv, nv + 1, nv + 2))
+                nv += 3
+    if out:
+        p.V, p.UV = np.concatenate(V), np.concatenate(UV)
+        if p.UV1 is not None:
+            p.UV1 = np.concatenate(UV1)
+        if p.COL is not None:
+            p.COL = np.concatenate(COL)
+    return np.array(out, dtype=p.T.dtype).reshape(-1, 3)
+
+
 def _drop_verge_in_islands(buf, gp: GorePlan) -> int:
     """ADR 0110: the grass strips behind kerbs (meshing._emit_verge, src "...:vg") do not run under an authored
     traffic island or a paved gore fill (dk8-ramp-split-island: paving with grass strips showing through it)."""
@@ -514,7 +559,12 @@ def _drop_verge_in_islands(buf, gp: GorePlan) -> int:
                     drop |= shapely.contains_xy(zone, tri[:, k, 0], tri[:, k, 1])
                 if drop.any():
                     n += int(drop.sum())
-                    p.T = p.T[~drop]
+                    # ADR 0123 (REVIEW s10-0117 P2-6, the black slot behind the nose of the Putry N median): a strip
+                    # triangle that only touches the zone is CUT at its outline, not dropped whole - the straights
+                    # of a strip are one quad per run (Douglas-Peucker), so dropping it bared the ground for metres
+                    # beside the island (terrain 0.15-0.2 m below the kerb top, in shadow)
+                    newT = _clip_tris(p, np.where(drop)[0], zone)
+                    p.T = np.concatenate([p.T[~drop], newT]) if len(newT) else p.T[~drop]
         if len(p.T):
             keep.append(p)
     buf.parts[:] = keep

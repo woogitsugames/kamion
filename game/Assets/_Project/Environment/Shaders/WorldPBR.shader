@@ -61,6 +61,7 @@ Shader "Kamion/World PBR"
         _DripBand ("Lane-centre oil / soot drip band between the wheel paths (_ROADWEAR)", Range(0, 1)) = 0
         _Grime ("Ground grime (_GRIME): x damp darkening, y damp threshold (macro pool), z joint dirt, w damp gloss", Vector) = (0.45, 0.62, 0.3, 0.5)
         _SkyOcc ("Sky occlusion: x down-facing ambient, y horizon reflection (0 = off; ADR 0060)", Vector) = (0, 0, 0, 0)
+        _VertexGrime ("Vertex grime (_VERTEX_GRIME, COLOR_0.r): rgb grime albedo (linear), w roughness gain (ADR 0123)", Vector) = (0.1, 0.1, 0.09, 0.3)
         _AgeTint ("Patch age target / base albedo ratio", Float) = 2.0
         _DecalAlpha ("Decal opacity", Range(0, 1)) = 1
         _SplashHeight ("Splash zone height (m)", Float) = 0.6
@@ -105,6 +106,7 @@ Shader "Kamion/World PBR"
             float4 _GrassFill;
             float4 _PaintColor, _PaintWear;
             float4 _Grime, _SkyOcc;
+            float4 _VertexGrime;
             float _DripBand;
             float4 _CarPaint, _CarFlake, _PearlTint;
             float _OffsetFactor, _OffsetUnits, _SrcBlend, _DstBlend, _ZWrite, _Cull, _ReceiveShadows;
@@ -141,6 +143,7 @@ Shader "Kamion/World PBR"
             #pragma shader_feature_local _RUNOFF
             #pragma shader_feature_local _STRIPES
             #pragma shader_feature_local _GRIME
+            #pragma shader_feature_local _VERTEX_GRIME
             #pragma shader_feature_local _CARPAINT
             #pragma shader_feature_local _PANELTONE
 
@@ -649,6 +652,17 @@ Shader "Kamion/World PBR"
                 KamionWetSurface(n, 0.0, 0.0, 0.15, albedo, smooth, tn);
             #else
                 KamionWetSurface(n, macro.b * 0.6 + macro.a * 0.4, step(0.95, n.y), 1.0, albedo, smooth, tn);
+            #endif
+            #if defined(_VERTEX_GRIME)
+                {
+                    // ADR 0123: road film on authored parts of a mesh (COLOR_0.r, 0 where the generator wrote none): bridge
+                    // caps behind the barrier read as a clean bright footway (REVIEW s10-0117 P1-3). The grime keeps 40 %
+                    // of the set's own mottling, so panel joints fade with it instead of printing through.
+                    half vg = i.masks.r;
+                    half tone = 0.6 + 0.8 * dot(base.rgb, half3(0.3333, 0.3333, 0.3333));
+                    albedo = lerp(albedo, _VertexGrime.rgb * tone, vg);
+                    smooth *= 1.0 - _VertexGrime.w * vg;
+                }
             #endif
                 albedo = saturate(albedo);
                 smooth = saturate(smooth);

@@ -87,6 +87,7 @@ namespace Game.World.Import
             if (def.Get("paint") is Dictionary<string, object>) uv1 = true;              // _DECAL_PAINT wear data (ADR 0049)
             if (def.Get("procedural") as string == "grate" || Stripes(def) != null) uv0 = true;
             if (id == "terrain_grass") colors = true;
+            if (def.Get("vertex_grime") != null) colors = true;                          // _VERTEX_GRIME (ADR 0123)
         }
 
         /// <summary>ADR 0071 r11: manifest "weather": true = wall material of an authored asset that carries the splash
