@@ -6,11 +6,7 @@
   "deadline_at": "2026-11-12T21:30:50+01:00",
   "base_sha": "4c9905b1",
   "owner": "gpt-vegetation",
-  "phase": "after_import_running",
-  "baseline_exec_session_id": 54359,
-  "baseline_pipeline_exec_session_id": 89787,
-  "next_after_baseline": "pwsh artifacts/vegetation-r1/render-photos.ps1 -Stage before",
-  "next_implementation": "GROUND-CANDIDATE.md and ground_candidate.py; apply only after baseline images are complete",
+  "phase": "candidate_b_full_matrix_running",
   "branch_collision": "gpt-vegetation-r2 belongs to the previous vegetation worktree; preserve it; choose next unused round branch when needed",
   "restrictions": [
     "no_push",
@@ -23,8 +19,9 @@
   "baseline_frames": 322,
   "world_after_complete": true,
   "focused_tests": "12 passed",
-  "active_import_session_id": 38832,
   "heavy_slot_owner": "gpt-vegetation-r1",
   "slot_script": "C:/Users/matma/Documents/Claude/kamion/scripts/unity-slot.ps1",
-  "next_after_import": "pwsh artifacts/vegetation-r1/render-matrix.ps1 -Stage after"
+  "candidate": "B",
+  "probe_b_grass_std": 5.17,
+  "next_step": "complete full matrix B then photo renders, final tests and independent critic"
 }
