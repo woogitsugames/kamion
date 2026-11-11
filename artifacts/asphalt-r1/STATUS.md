@@ -41,3 +41,4 @@ Przygotowano porównanie wszystkich kamer: mesh draws, shadow draws oraz draws/t
 2026-11-11T22:52:46.5455607+01:00: zapisano artifacts/asphalt-r1/candidate/Low-clear. Następny krok: pozostałe serie lub porównanie wariantu.
 2026-11-11T22:53:29.2765278+01:00: zapisano artifacts/asphalt-r1/candidate/High-overcast. Następny krok: pozostałe serie lub porównanie wariantu.
 2026-11-11T22:54:03.3459347+01:00: zapisano artifacts/asphalt-r1/candidate/High-clear. Następny krok: pozostałe serie lub porównanie wariantu.
+2026-11-11T22:56:33.8439254+01:00: heavy Compare owner=gpt-asphalt-r1 exit=0; log artifacts/asphalt-r1/candidate-Compare.log. Slot zwolniony po zakończeniu procesu.
