@@ -59,3 +59,5 @@ Krok 21: Compare zakończone: 364 pary kamer, 182 Low bez naruszeń budżetu; 10
 Krok 23: wszystkie 182 Low mają dokładnie deltę draws 0 oraz zaokrąglonych tris od −1k do 0k. SHA apron i zamknięć identyczne z bazą. Obejrzano finalną parę B 150280503737744 i las Low-overcast; zgodność całej panoramy nadal częściowa. ADR zawiera te ograniczenia.
 Diagnostyka r3: 5676 punktów, różnica Python−Unity −0,3726…+1,4267 m, p95 abs 0,1717 m; 40 punktów >0,8 m, skupienie przy narożniku NW. Pełny GIS trwa (80%); nie zmieniamy produkcji r2.
 Następny krok: wynik GIS, REPORT i kopia artifacts do main, następnie r3.
+Krok 24: przygotowano dowód aktualności raportu fidelity względem źródeł: obecny raport jest nieaktualny dla siedmiu plików roads/overrides, które wraz z samym fidelity_qa pozostają bez zmian od bazy 54bb70ca. Nie uruchamiano regeneracji fidelity ani nie zmieniano dziedziny Claude. Pełny GIS nadal trwa; ten audyt nie zastępuje końcowego wyniku testów.
+Następny krok: końcowy wynik gis-final.log, potem REPORT i robocopy.
