@@ -123,6 +123,10 @@ namespace Game.Rendering
             "trees" => "no instanced trees / forest HLOD",
             "truck" => "main camera without the Vehicle layer (own truck, cab)",
             "hud" => "no screen-space canvases",
+            "glass" => "no Kamion/Truck Glass renderers",
+            "cabint" => "no Kamion/Cab Interior renderers",
+            "truckext" => "no Kamion/Truck Exterior renderers",
+            "cabdisp" => "no Kamion/Cab Display renderers",
             _ => "unknown key (no change)",
         };
 
@@ -244,6 +248,19 @@ namespace Game.Rendering
                 if (c != null && c.isRootCanvas && c.renderMode == RenderMode.ScreenSpaceOverlay) c.enabled = visible;
         }
 
+        /// <summary>ADR 0106: disables (B) / re-enables (A) the enabled renderers whose first material uses the shader (GPU A/B
+        /// per vehicle shader). Renderer.enabled, not forceRenderingOff: the mirrors toggle the latter on the cab interior.</summary>
+        readonly System.Collections.Generic.List<Renderer> m_AbOff = new System.Collections.Generic.List<Renderer>();
+        void SetShaderRenderers(string shader, bool off)
+        {
+            if (!off) { foreach (var r in m_AbOff) if (r != null) r.enabled = true; m_AbOff.Clear(); return; }
+            foreach (var r in FindObjectsByType<Renderer>(FindObjectsInactive.Exclude, FindObjectsSortMode.None))
+            {
+                var m = r.sharedMaterial;
+                if (r.enabled && m != null && m.shader != null && m.shader.name == shader) { r.enabled = false; m_AbOff.Add(r); }
+            }
+        }
+
         static readonly float[] s_Tmp = new float[2048];
 
         static float P(float[] a, int n, float q)
@@ -292,6 +309,10 @@ namespace Game.Rendering
                 case "props": RenderOverrides.AbPropsOff = b; break;
                 case "trees": RenderOverrides.AbTreesOff = b; break;
                 case "hud": SetHud(!b); break;
+                case "glass": SetShaderRenderers("Kamion/Truck Glass", b); break;
+                case "cabint": SetShaderRenderers("Kamion/Cab Interior", b); break;
+                case "truckext": SetShaderRenderers("Kamion/Truck Exterior", b); break;
+                case "cabdisp": SetShaderRenderers("Kamion/Cab Display", b); break;
                 case "shadowcasc":
                     if (urp == null) break;
                     if (b) { m_SavedCascades = urp.shadowCascadeCount; urp.shadowCascadeCount = Mathf.Max(1, m_SavedCascades - 1); }

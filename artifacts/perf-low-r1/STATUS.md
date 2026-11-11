@@ -16,3 +16,8 @@
 - Wniosek: ~11 ms niezależnych od rozdzielczości i niewyjaśnionych → geometria/draws świata, ciężarówka, HUD, blit.
 - Dodane przełączniki diagnostyczne rq_lod/far/mask/props/hud i rq_ab lod|scale|far|props|trees|truck|hud (ab18bf1b); build w toku.
 - NASTĘPNY KROK: `pwsh -NoProfile -File artifacts/perf-low-r1/phone-diag.ps1 -Apk <apk ab18bf1b> -OutTag diag1 -Segment B -Uncapped -Runs "ab_lod=rq_ab=lod;ab_props=rq_ab=props;ab_truck=rq_ab=truck;ab_hud=rq_ab=hud;ab_far=rq_ab=far;ab_trees=rq_ab=trees;ab_scale=rq_ab=scale"`
+
+## 13:05 — krok 1b: A/B na A16 (APK ab18bf1bac, G3-B Low uncapped, rq_ab, okna 4 s) — `diag1/summary.txt`
+- GPU p50 A−B: **ciężarówka (warstwa Vehicle w kamerze głównej) +4,7…5,4 ms**, drzewa +3,0, skala −0,1 +3,3, far ×0,5 +1,4,
+  LOD ×0,6 +1,4, propsy +0,3 (liczba draws to nie problem), HUD +0,3.
+- Następnie: rozbicie ciężarówki na shadery (glass / cabint / truckext / cabdisp) — nowe klucze rq_ab.

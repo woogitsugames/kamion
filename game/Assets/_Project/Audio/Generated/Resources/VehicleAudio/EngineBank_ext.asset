@@ -1,0 +1,135 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4595eb7b062092e4cb9aab41a7156859, type: 3}
+  m_Name: EngineBank_ext
+  m_EditorClassIdentifier: Game.Audio::TruckSim.Audio.EngineSoundBank
+  rpmPoints:
+  - 600
+  - 700
+  - 800
+  - 900
+  - 1000
+  - 1100
+  - 1200
+  - 1300
+  - 1400
+  - 1500
+  - 1600
+  - 1700
+  - 1800
+  - 1900
+  - 2000
+  - 2100
+  loadPoints:
+  - 0
+  - 0.4
+  - 1
+  clips:
+  - {fileID: 8300000, guid: 31aa6e6b3eb65c74db233db32474020d, type: 3}
+  - {fileID: 8300000, guid: 98245dc6b111b6a41958c1dc4fdeb8f4, type: 3}
+  - {fileID: 8300000, guid: 0bf52e81c7b62424381f6b038f9471c1, type: 3}
+  - {fileID: 8300000, guid: 40de86d6f0b0a2348a7a781973b4e754, type: 3}
+  - {fileID: 8300000, guid: 9695617090d8e104482db9ef45a7aa60, type: 3}
+  - {fileID: 8300000, guid: 7afe78a798d208e40bd1ea9e1a7d42f0, type: 3}
+  - {fileID: 8300000, guid: 6f88ed29a996f9546b25104d8b007729, type: 3}
+  - {fileID: 8300000, guid: 3709c0dc487f48c45b13b410ea03fed7, type: 3}
+  - {fileID: 8300000, guid: 52601166beda3e740ab5910ac22bf515, type: 3}
+  - {fileID: 8300000, guid: 1052fce525ce2a1418172d9d0e232ac7, type: 3}
+  - {fileID: 8300000, guid: b9d9a9bfc7f15e3488adac6d1fd20293, type: 3}
+  - {fileID: 8300000, guid: 1322f2b38bee80a408c2eff521ab2a76, type: 3}
+  - {fileID: 8300000, guid: 1857eef3cbde98742bc3d044c6c11d58, type: 3}
+  - {fileID: 8300000, guid: 76cd22a352c8fc448a013fd3d0c49fe1, type: 3}
+  - {fileID: 8300000, guid: 6bb371cbf67637e44a29e861451d2b67, type: 3}
+  - {fileID: 8300000, guid: 378535766c0dab54ba9ff924e6df5abd, type: 3}
+  - {fileID: 8300000, guid: 81a06f7d6719a374aa7b103e00231bb1, type: 3}
+  - {fileID: 8300000, guid: d8b2ebc2b260c5348bf9b2b75ffbc786, type: 3}
+  - {fileID: 8300000, guid: e6bd6b9c1caa1944fb80509326a2d265, type: 3}
+  - {fileID: 8300000, guid: 92405ae9e44c4a44c9bbd1dd1f590b64, type: 3}
+  - {fileID: 8300000, guid: 4e7c206e761734e4cbc440b9f09b083c, type: 3}
+  - {fileID: 8300000, guid: dd145d05858feec4f85e99594f1f261b, type: 3}
+  - {fileID: 8300000, guid: b15e3fd2d30753b4f9e4715214a247d6, type: 3}
+  - {fileID: 8300000, guid: d778924d25bc8cc4abf118e9a66516d2, type: 3}
+  - {fileID: 8300000, guid: 349930c870db2a542b0b2554d0ab0ef6, type: 3}
+  - {fileID: 8300000, guid: f1fee0f48318a274e85d400649701ab1, type: 3}
+  - {fileID: 8300000, guid: 6c8255a9964f3e849b17e88a54f9040a, type: 3}
+  - {fileID: 8300000, guid: fc12bfef3ca755247b249e661c34c06c, type: 3}
+  - {fileID: 8300000, guid: 95a3f6a2523a92b46aa4a010325eec8f, type: 3}
+  - {fileID: 8300000, guid: baeece0b4038e5a4bb35b0e991cf22a3, type: 3}
+  - {fileID: 8300000, guid: 176160a3f0ff17c4ba70fa30a906684b, type: 3}
+  - {fileID: 8300000, guid: e17691590435f5144a812e199751cd90, type: 3}
+  - {fileID: 8300000, guid: e60ffb2f4e9040f458442207fa7cae36, type: 3}
+  - {fileID: 8300000, guid: 855bed7f367351343bf6c7cb3d9d12a4, type: 3}
+  - {fileID: 8300000, guid: 6a7b0b87d37fea24c817f90bc25ed2d4, type: 3}
+  - {fileID: 8300000, guid: ef5cf04d5e169a845b8f6dd83d6670d7, type: 3}
+  - {fileID: 8300000, guid: e30bb800369d6b74aa2c06c1c398cf29, type: 3}
+  - {fileID: 8300000, guid: 5bfa82804b5b7e54da0f089cee2fa7e8, type: 3}
+  - {fileID: 8300000, guid: 9c4bf0e61ae5eac46bf4dca47c46d361, type: 3}
+  - {fileID: 8300000, guid: eaf0571ea5d67174eb2b9587c08767f7, type: 3}
+  - {fileID: 8300000, guid: e43a87c96a4408c489f020151cf423da, type: 3}
+  - {fileID: 8300000, guid: 5cea90caf7ec99744aad1c9e293f6574, type: 3}
+  - {fileID: 8300000, guid: deb1071509484b84cb595904ad6b147d, type: 3}
+  - {fileID: 8300000, guid: 94bbe736f43511648836d0e93ea6fcff, type: 3}
+  - {fileID: 8300000, guid: fc1c685fc546fc24b94758525d3a9cf0, type: 3}
+  - {fileID: 8300000, guid: 75035b63bfa74154191a1273df462c4a, type: 3}
+  - {fileID: 8300000, guid: fb16ee15aefed764ea1082b8f12c6232, type: 3}
+  - {fileID: 8300000, guid: 1f264c1f055c9cb4ea790fb1e6578c9e, type: 3}
+  clipRpmExact:
+  - 600
+  - 700.00055
+  - 800
+  - 900
+  - 1000
+  - 1100.0026
+  - 1200
+  - 1300.0005
+  - 1400.003
+  - 1500
+  - 1600
+  - 1700.0037
+  - 1800
+  - 1900.0048
+  - 2000
+  - 2100
+  - 600
+  - 700.00055
+  - 800
+  - 900
+  - 1000
+  - 1100.0026
+  - 1200
+  - 1300.0005
+  - 1400.003
+  - 1500
+  - 1600
+  - 1700.0037
+  - 1800
+  - 1900.0048
+  - 2000
+  - 2100
+  - 600
+  - 700.00055
+  - 800
+  - 900
+  - 1000
+  - 1100.0026
+  - 1200
+  - 1300.0005
+  - 1400.003
+  - 1500
+  - 1600
+  - 1700.0037
+  - 1800
+  - 1900.0048
+  - 2000
+  - 2100
+  clipCycles: 14000000170000001b0000001e0000002100000025000000280000002b0000002f0000003200000035000000390000003c0000003f000000430000004600000014000000170000001b0000001e0000002100000025000000280000002b0000002f0000003200000035000000390000003c0000003f000000430000004600000014000000170000001b0000001e0000002100000025000000280000002b0000002f0000003200000035000000390000003c0000003f0000004300000046000000
+  spatialBlend: 1
