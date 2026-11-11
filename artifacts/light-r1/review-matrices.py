@@ -56,7 +56,7 @@ for variant, cameras in results["shoulder"].items():
                 print(variant, camera, label, rois[label]["rgb_p95"], "clip%", rois[label]["clip_ge250_percent"])
 if (ROOT / "cloud-photo/Low-clear-clouds/r10_house_2.png").exists():
     runpy.run_path(str(ROOT / "photo-review.py"), run_name="__main__")
-if len(list((ROOT / "sbs/after/renders").glob("*/*/*.png"))) == 160:
+if (ROOT / "sbs-final-ready.json").exists() and len(list((ROOT / "sbs/after/renders").glob("*/*/*.png"))) == 160:
     runpy.run_path(str(ROOT / "finalize-sbs.py"), run_name="__main__")
 if (ROOT / "shadow-metric-v2/policy/shadow-wall-10m.json").exists():
     runpy.run_path(str(ROOT / "measure-shadow.py"), run_name="__main__")

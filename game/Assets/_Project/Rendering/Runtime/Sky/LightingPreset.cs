@@ -122,6 +122,7 @@ namespace Game.Rendering
             p.lookWhiteClip = 1.8f;
             // ADR 0108 r1 WORKING_VALUE: the route reference photos show scattered cumulus in blue sky.
             p.clearCloudCover = 1f;
+            p.clearSkySaturation = 2f; // ADR 0108: 1/2/3/4 ablation against the daytime reference skies.
             return p;
         }
 
