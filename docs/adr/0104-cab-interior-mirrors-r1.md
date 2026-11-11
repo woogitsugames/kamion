@@ -10,8 +10,10 @@ Gate 3 requires a final cab fragment and usable mirrors. The current TRAKT expor
 - the detailed aero housing was a solid rounded box. Adjusting its glass embedded part of the wide-angle quad in the
   backing. In a 315-point grid per glass, High WideL/WideR were only 84.1% / 74.9% visible from the design eye.
 
-Historic front/kerb visibility findings did not reproduce: both glasses were fully clear in the source ray audit and
-showed the road in fresh editor frames. The interior instrument/head-box sightline test passes.
+Correction (ADR 0112, 2026-11-11): the source ray audit established visibility of the glass only, not correct reflected
+content. Independent review K1 found seats and other interior geometry in the front/kerb RTs, even though road pixels
+were also present. The former claim that these views were correct is withdrawn. The interior instrument/head-box
+sightline test passes; it is a separate check.
 
 ## Decisions
 
