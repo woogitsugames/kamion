@@ -87,3 +87,6 @@ Ponowne test_sbs_report: 25/25 po poprawce surowego literału JSON; regresja z n
 
 ## Powiązanie D51 z nową serią
 Manifest review-pair-manifest.json obejmuje wszystkie 25 B w Low-overcast. Dokładnie 19 par ma te same SHA zdjęcia i renderu co recenzja D51 r1. Sześć zmienionych renderów: 320215796381417, 2279538078845158, 837235577143499, 275528677534382, 150280503737744, 1801374876712141. Raport nie przeniesie na nie oceny starych pikseli. Zbiorczy wynik 12/11/2 jest nadal wyraźnie wynikiem ostatniej recenzji r1, a nie nowym pomiarem r2.
+
+## Własny przegląd sześciu nowych obrazów
+Obejrzano sześć natywnych renderów Low-overcast R2 obok fotografii w arkuszach r1. Zapisano VISUAL-REVIEW-CHANGED.md. Nadal widoczne główne braki: U-3, bliska kratownicowa bramownica, pierzeja handlowa i proporcje/przezroczystość ekranu. W dwóch rozpoznawalnych kadrach zachowany główny układ drogi. Nie zmieniono formalnego rejestru ocen, klas pozy ani nie podano nowego automatycznego wyniku 12/11/2. Następne wymagane materiały: końcowe kompozycje, przegląd niezależny, pełny GIS.
