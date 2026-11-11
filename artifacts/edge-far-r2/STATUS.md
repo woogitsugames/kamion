@@ -61,3 +61,5 @@
 - verify_final.py confirms final Python/C#/regression source AND both GLBs match tested c05e8f06 after rejecting canopy experiment. Skyline source identity verified; 40m diagnostic discloses inherited cards, not phone/driver-eye proof. Known final skyline shutdown issue accepted by project wrapper only after complete frame.
 - REPORT/ADR/SELF-REVIEW finalized. Open only leader independent/device review and stated inherited approximations; original export/export paths absent, backups in quarantine, no disk space reclaimed after deletion-policy rejection.
 - NEXT: robocopy artifacts/edge-far-r2 C:\Users\matma\Documents\Claude\kamion\artifacts\edge-far-r2 /E /XJ /XD offline; verify report/validation hashes; no main merge/push.
+- DELIVERED: main artifacts/edge-far-r2 contains 64 final PNGs plus logs/tests/VALIDATION/report; REPORT, VALIDATION, STATUS and skyline comparison SHA256 matched source copy. Quarantine backup verified 204580041 bytes; original duplicate directories absent.
+- Branch source/worktree clean; no main merge/push. NEXT (leader): review REPORT.md, independent visual-critic/device gate, then merge and regenerate integrated world as documented.
