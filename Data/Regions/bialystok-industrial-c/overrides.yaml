@@ -368,6 +368,20 @@ overrides:
       facade; no emblem.
     confidence: medium
     verify: yard-side facades, fence line and gate position, thuja count from a site visit
+  # ---------------------------------------------------------------- ADR 0123 b4 (REVIEW s11 SBS r1 D51, blocker 7)
+  - id: biezenstwa-ring-no-apron
+    target: {osm_way: [177895161, 536419678, 536419680, 536419699, 552161978, 553285004, 553285005]}
+    reason: >-
+      Rondo Pamieci Biezenstwa 1915 r. has no mountable sett apron: on the 0.08 m orthophoto
+      (artifacts/junctions-r6/plan_b3/ringb.jpg) and Mapillary 1398898753813071, 201270605169291, 2818555625124739
+      (richlv, CC BY-SA 4.0, reference only) the two-lane ring carriageway (BDOT10k width 8.0 m) runs to the kerb of
+      the gravel centre island (kerb radius ~17.3 m), with the W-beam about 1 m behind the kerb. The generated ring is
+      6.75 m of asphalt + the rule's 2.0 m sett apron (island kerb radius 17.75 m): the apron strip becomes asphalt
+      flush with the ring (same footprint and kerb), so the frames under the viaduct no longer show flat setts where
+      the photos have asphalt up to the gravel island. Lane layout not rebuilt (WORKING_VALUE).
+    confidence: medium
+    verify: owner drive
+    set: {apron: asphalt}
   # ---------------------------------------------------------------- plantings (streetscape.plantings, review r6 W-N12)
   - id: biezenstwa-plantings
     kind: plantings
@@ -1424,7 +1438,10 @@ overrides:
     verify: owner drive
   - id: dk8-ramp-split-barrier-n
     kind: guardrail
-    polyline_en: [[-756.0, 77.05], [-765.0, 76.85], [-775.0, 76.7], [-778.5, 76.7]]
+    # b4: carried on to the ramp deck along N 76.65 (orthophoto: rail at N 76.6-76.9). The generated island narrows to
+    # N 76.8 at E -755...-753 (xsec_glb.py, build b3), so the b2 line at N 77.05 left it at E -756 and dived; at N 76.65
+    # it stays on the paving up to E -753 and the free end swings onto the start of the deck barrier (_join_free_ends).
+    polyline_en: [[-752.9, 76.62], [-757.0, 76.68], [-765.0, 76.8], [-775.0, 76.7], [-778.5, 76.7]]
     reason: >-
       ADR 0123 (REVIEW s10-0117 P1-4, p0_kerb_merge_eye): second rail of the separator dk8-ramp-split-island, on its
       ramp side. The 0.08 m orthophoto (artifacts/junctions-r6/ortho/kerb_merge.jpg, kerb_merge_e.jpg) has two rails

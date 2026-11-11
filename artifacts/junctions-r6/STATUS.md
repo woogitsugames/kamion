@@ -97,3 +97,14 @@ Uwaga: pełny pytest uruchomiony bez `KAMION_BLENDER` nadpisuje `generated/world
 2. `pwsh C:\Users\matma\Documents\Claude\kamion\scripts\unity-slot.ps1 -Acquire -Owner claude-junctions-r6; pwsh scripts/test.ps1 -Platform EditMode; pwsh scripts/test.ps1 -Platform PlayMode -Filter "WorldCRouteTests|WorldCBarrierTests"; pwsh C:\Users\matma\Documents\Claude\kamion\scripts\unity-slot.ps1 -Release -Owner claude-junctions-r6; git checkout -- game/Assets/_Project/Rendering/Settings game/ProjectSettings`
 3. `bash artifacts/junctions-r6/scripts/pairs.sh b3` → obejrzeć `pairs_b3/photo_*`, `ba_*` (zwł. `r4_putry_nose_eye`, `r4_pier_bz`, `r2_fork_link_eye`, `p0_lamp_putry_eye`)
 4. uzupełnić „Wynik” w `docs/adr/0123-junctions-r6-barriers.md`, `robocopy artifacts\junctions-r6 C:\Users\matma\Documents\Claude\kamion\artifacts\junctions-r6 /E /XF *.pkl`, potem `visual-critic`.
+
+## Sesja 11 (kontynuacja)
+- s11 krok 1 (23:31): `post.sh b3 full` — fidelity p50 0,36 / p95 2,304 (= main); swept b3 = m0 poza RING-B prop 1,31 → 1,88 (v15) /
+  1,79 → 2,28 (v25), opony bez zmian (G3-A lane −1,12, wide −0,10; G3-B −0,14; RING-B +1,75 / +1,61); pytest gis+physics+gate3:
+  539 passed, 1 xfailed, 2 failed — `test_report_not_stale` (własna edycja `network.py` w trakcie biegu; powtórzyć po b4) i
+  `tests/physics/test_scenario_strictness` (`top_speed_flat_comb.json`, fizyka — gałąź nie dotyka tests/physics; do sprawdzenia na main).
+- s11 krok 3a: `pairs.sh b3` (24 pary), arkusze 102 kamer `sheets_b3_960/`, kamery SBS G3-A na b3 (`renders_b3sbs_low_overcast`,
+  `pairs_b3sbs/`): B2 recenzji D51 (brak filarów s 351–359) w b3 już jest — rząd filarów przy krawędzi wyspy + bariera w kadrach
+  201270 / 1398898 (recenzja oglądała main). B7: fartuch z kostki 2 m wokół wyspy, którego w rzeczywistości nie ma (ortofoto
+  `plan_b3/ringb.jpg`) → b4: `apron: asphalt` (override `biezenstwa-ring-no-apron`) + szyna N separatora DK8 do pomostu (N 76,65).
+  NASTĘPNY KROK: `bash artifacts/junctions-r6/scripts/build.sh b4 && bash artifacts/junctions-r6/scripts/imp.sh b4 && bash artifacts/junctions-r6/scripts/post.sh b4 full`
