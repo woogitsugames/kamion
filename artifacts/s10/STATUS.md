@@ -249,3 +249,11 @@ Main advanced independently through0097 merge and0106 perf work; our fixed
 comparison bases are preserved. No merge/push-main byGPT. Shared phone gate
 released, both guards must still be checked before every Unity launch.
 NEXT COMMAND: inspect F physical sampling controls and first G/E actual production captures; review protected budgets, then finish F/G/E and dispatch D when a slot frees.
+## Step18 - renewed phone window; all F/G/E Unity held
+Main PHONE_RUN now perf-low-r1 diag0, created12:27:10. E stopped correctly at
+prelaunch guard; no E Unity launched. F confirms no Unity active. Root renewed
+explicit hold and created ownedGPT_UNITY_HOLD12:31 so transient phone-lock gaps
+cannot restart our chains. Old release invalid; E suspends own marker. CPU/source
+work continues, D remains frozen. Need actual perf-run completion, not a lock gap,
+then stableabsence and fresh explicit release. No phone/ADB actions byGPT.
+NEXT COMMAND: inspect artifacts/perf-low-r1/STATUS.md and actual phone-run log for END; keep own hold until completion, continue independent CPU review meanwhile.
