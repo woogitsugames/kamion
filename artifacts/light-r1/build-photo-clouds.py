@@ -80,7 +80,7 @@ mock = np.array([0.18, 0.32, 0.55])[None, None, :]*(1-alpha[..., None]) + (0.35+
 sheet = Image.new("RGB", (960, 1000), "#202020")
 draw = ImageDraw.Draw(sheet)
 for i, (label, array) in enumerate((("CC0 HDRI / preview only", preview), ("Extracted photographic clouds / preview", mock))):
-    im = Image.fromarray(np.uint8(np.round(np.clip(array, 0, 1)*255))))
+    im = Image.fromarray(np.uint8(np.round(np.clip(array, 0, 1)*255)))
     im.thumbnail((960, 480))
     sheet.paste(im, (0, i*500+20))
     draw.text((4, i*500+4), label, fill="white")

@@ -82,3 +82,5 @@ Batch światła zakończony: artifacts/light-r1/white-shoulder-ablation.json; lo
 
 Krok 25: po obejrzeniu 15 PNG odrzucono proceduralne chmury (duże białe płaskie płaty, rozmycie Low). Zweryfikowano oficjalną stronę i CC0 Poly Haven; pobrano Kloofendal 48d Partly Cloudy Pure Sky 4K HDR (20 674 857 B), rozmiar/MD5 zgodne z publicznym API, SHA256 3061c00a16ecae748e84fd6c44c04804f539c118bb66325db858bad87b11bf88. Przygotowano pochodną fotograficzną maskę chmur i luminancji. Następny krok: wykonać build-photo-clouds.py w heavy, obejrzeć podgląd, potem podłączyć do istniejącego przebiegu nieba.
 Zadanie heavy Analyze zakończone kodem 1. Log: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-light\artifacts\light-r1\heavy-Analyze-20261111-230224.log. Następny krok: odczytać wynik i wykonać tylko uzasadnioną następną operację.
+
+Krok 26: poprawiono pojedynczy nadmiarowy nawias w skrypcie podglądu; poprzedni start zakończył się błędem składni i zwolnił heavy, bez przetworzenia HDRI. Następny krok: ponownie wykonać skrypt w heavy.
