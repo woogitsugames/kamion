@@ -11,3 +11,6 @@
 
 - Step4: ROOT requested existing Commons asphalt detail input skipped by nested-photo /XJ bootstrap; copied one ignored file, verifiedSHA256 e26237d85c097af9560537c60e6ed6f67ed0090e284398a5d7a7a2bf41889135,1644231bytes and pinnedSHA1. All4 cached detail maps currently byte-identical to main/E/G, no map change; own fullPBR generation still running and will be checked again. No production/Unity change.
 - NEXT COMMAND: after both Python sessions finish, verify.py baseline and road-wear-uv-preflight.py; recheck detail-map parity then freezeD (G Unity baseline first when released).
+
+- Step5: fresh D world complete398.3s; verified192/192 rawSHA, zero mismatches, Fab15/fallbackFalse. Own128GLB UV preflight reproduces62.443percent valid-lane vertices on oldroad,100percent newroad; missingUV1 9+162verts per tier. Counts are vertices, not area/pixels or visual quality. PBR still generating; no D production change. props_meta line-ending rewrite normalized, no content delta.
+- NEXT COMMAND: finish baseline-pbr.log, verify.py baseline and final4-map parity; commit preparation proof then freezeD, resumeG FIRST only after explicit ROOT release.
