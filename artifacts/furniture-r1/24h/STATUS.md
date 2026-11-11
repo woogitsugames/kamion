@@ -141,3 +141,5 @@ NASTĘPNY KROK: uv run --project tools/worldgen tools/worldgen/roads/build_world
 2026-11-12T00:23:23.3267923+01:00: potwierdzono dostępność wszystkich czterech zdjęć wybranych do porównań. Końcowy skrypt porównań odtworzy także arkusz referencji z poprawnym polskim fontem i opisami; stare dowody pozostają zachowane. Kontrola geometrii nadal czeka na heavy w aktywnej sekwencji. NASTĘPNY KROK: odczytać wyniki kontroli i obejrzeć nowe PNG.
 
 2026-11-12T00:25:25.9140048+01:00: heavy geometry after; sukces=True; slot gpt-furniture-r1 zwolniony. NASTĘPNY KROK: sprawdzić log i kontynuować walidację rundy.
+
+2026-11-12T00:26:01.2477491+01:00: porównano metadane trójkątów warstwy furniture: baseline 259970, iteracja1 292938, iteracja2 272986, iteracja3 296198 (wszystkie chunki High, bez instancji; nie budżet kamery). Zapisano kandydat optymalizacji ukrytej części siatki, bez zmiany obecnych źródeł/eksportu. NASTĘPNY KROK: finalne rendery rozstrzygną potrzebę kolejnej iteracji.
