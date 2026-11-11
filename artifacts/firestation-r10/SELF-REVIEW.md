@@ -1,4 +1,4 @@
-# E r7 self-review — final160, EditMode pending
+# E r7 self-review — final160, technical suites passed
 
 Inspected all20 contact sheets covering160 final full frames, the16 true-runtime gate frames, actual2340×1080 native details, semantic ROI overlays and physical photo7197. The baseline has the same40cameraIDs, canonical vehicle assets and locked901c source; scene-pose parity is limited for17vehicle views; final geometry uses current own products. No exposure matching. ROOT independently reviewed each bounded candidate and true-runtime gate; final80Low/80High independent review is in progress.
 
@@ -15,7 +15,7 @@ Inspected all20 contact sheets covering160 final full frames, the16 true-runtime
 
 Arch whole-opening and head metrics are distinct color classifiers, not depth visibility. Right head improves~63→99%Low/~54→98%High, while lower glass still has thuja occlusion. Photo provenance/exposure and the fir/conifer source identity are explicit; no verified Picea scan claim.
 
-Latest-product GIS375passed/1xfail;784product pins unchanged including192raw+canonicalvehicle. Actual targeted NUnit1/1 passes two factory imports and Low→High→Low. FullEditMode remains PENDING explicit release after PHONE hold. Technical validation is incomplete until it finishes; overall appearance goals are NOT all PASS because clear glass and canopy photo-match remain open. Main C13/other-stream integrations were not silently absorbed into matched901c proof.
+Latest-product GIS375passed/1xfail;784product pins unchanged including192raw+canonicalvehicle. Actual targeted NUnit1/1 passes two factory imports and Low→High→Low. Full EditMode227/227PASS,0failed/0skipped/0inconclusive,exit0; final784pins unchanged after suite, no tracked serialization side effects. Technical test gates pass; overall appearance goals are NOT all PASS because clear glass and canopy photo-match remain open. Main C13/other-stream integrations were not silently absorbed into matched901c proof.
 
 Final capture limitation: ROOT/G independent review found vehicle-relative camera framing shifts in trailer-34/truck-rear34/truck-side, including static background. Canonical asset pins match but baseline scene poses were not saved. Baseline import preceded canonical installer rebuild; installer preserved old scene root poses, whereas later imports instantiate canonical prefabs directly. Plausible confound, exactcause unproven. Full160 is not a wholly isolated vehicle visual comparison; fixed world-space hero cameras/ROIs remain relevant. See VEHICLE-CAMERA-AUDIT.md. Measured draw estimates are reported as observations, not causal GPU proof.
 

@@ -5,7 +5,7 @@
 - Brown clinker, sparse flashing runoff; existing splash/vents/flag retained. Protected source-atlas texels (D48 plaster/roof/trim/office/flag) and nine auxiliary PBR maps preserved; not all scene pixels.
 - 80 Low and 80 High matched stats: maximum per-view delta 0 drawEst / 0 ktri. Peaks unchanged: Low 968 / 487k, High 1778 / 2476k. Extra High depth-pass GPU/timing cost UNVERIFIED.
 - Latest-product GIS: 375 passed, 1 xfail (517.58s); all 784 pins unchanged, including 192 raw files and canonical vehicle. Target NUnit: 1/1 PASS (two factory imports, Low→High→Low).
-- Full EditMode PENDING renewed explicit ROOT release after PHONE hold; no Unity queued. Technical DoD remains incomplete.
+- Full EditMode 227/227 PASS, zero failures/skips/inconclusive, exit0; final784 pins verified again, clean worktree, no own Unity active.
 
 # Appearance goals and limits
 - Glass overcast mean Y: Low 63.42–66.81 / High 70.12–73.24, PASS 60–75. Clear: 81.83–96.76 (round pane ~98), FAIL; no collective appearance PASS.
