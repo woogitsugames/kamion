@@ -17,3 +17,6 @@
 - Fresh offline GIS extraction: 8453 buildings; zero raw-rectangle and compressed-rectangle intersections. Exclusion counters include wholly inside buildings, so 589 BDOT source rejections must NOT be called 589 removed duplicates; actual delta is 17 (2 blocks, 13 halls, 2 offices).
 - Baseline GIS: 4 failures, 370 passed, 1 skipped, 1 xfailed; stale generated r4/depot/fidelity/determinism inputs. Regenerated world, refresh fidelity, then fresh full GIS sequentially (no writer race).
 - NEXT: Get-Content artifacts/edge-far-r2/gis-after.log -Tail 30
+- Deeper source-plan review found 2 more rectangles beyond the tile intersecting full regional building continuations. Extended exclusion to tile union complete region building outlines; cache /9 pins region buildings.geojson SHA256. New synthetic test changes that file and verifies cache invalidation.
+- Targeted extraction/geometry regression remains green (11 passing before local-data check); new full generation and GIS refresh underway. PHONE_RUN respected per owner reply.
+- NEXT: Get-Content artifacts/edge-far-r2/gis-after.log -Tail 30

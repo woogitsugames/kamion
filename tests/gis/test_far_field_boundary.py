@@ -64,6 +64,16 @@ def test_bdot_extraction_excludes_crossing_source_and_lod_rectangle(tmp_path, mo
     assert [b["id"] for b in gis["buildings"]] == ["external-hall"]
     assert gis["boundary_exclusions"]["bdot_source"] == 2
     assert gis["boundary_exclusions"]["bdot_rectangle"] == 1
+    # A regional building continues past the boundary; an alternate source rectangle
+    # can overlap that continuation without intersecting the tile itself.
+    region_file = tmp_path / "Data/Regions/fixture/buildings.geojson"
+    region_file.parent.mkdir(parents=True)
+    region_file.write_text(json.dumps({"features": [{
+        "geometry": box(-230, -1270, -190, -1000).__geo_interface__,
+        "properties": {},
+    }]}), encoding="utf-8")
+    refreshed = FF.extract_ring_gis("fixture", 0, 0)
+    assert not refreshed["buildings"], "regional footprint change must invalidate the cache"
 
 
 @pytest.mark.parametrize("tier", ["Low", "High"])
@@ -86,7 +96,7 @@ def test_regenerated_building_rectangles_do_not_intersect_region():
         pytest.skip("far-field raw extraction cache unavailable")
     gis = json.loads(path.read_text(encoding="utf-8"))
     assert gis["schema"] == FF.GIS_CACHE_SCHEMA
-    tile = box(-gis["half_m"], -gis["half_m"], gis["half_m"], gis["half_m"])
+    tile = FF.region_building_exclusion(REGION_ID, *gis["origin_epsg2180"], gis["half_m"])
     for building in gis["buildings"]:
         rect = np.asarray(building["rect"])
         assert not Polygon(rect).intersects(tile), building["id"]
