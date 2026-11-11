@@ -27,3 +27,9 @@ scripts = narzędzia r2 + zones_plan.py; logs). „Przed” = main b12 z ADR 009
   rozdział wsch. jodełka/wyspa/linie, n100 SE strzałki), poprawki: zatoka (współrzędne z planu 8,75 px/m), ukośna linia, ostrze pola.
   W toku: `loop.sh b3` (pełny: pytest gis + swept), potem import Unity + rendery.
   NASTĘPNY KROK: `cat artifacts/junctions-r3/logs/b3_loop.out`; `pwsh scripts/import-region.ps1 -Region bialystok-industrial-c`
+- krok 4 (sha 558e4a88, 6bd07032): s610 — 4 pola P-21 przemierzone (kąt środka 19°, ramienia płn. 20° zamiast −15°, gęste
+  0,28/0,28 m). b3 (pełny): fidelity edge p50 0,36 / p95 2,304 (jak przed), pytest gis 387 passed / 1 failed
+  (`test_junction_seams_are_watertight`: aprony zatoki zmieniały `src` i dzieliły krawędź szwu łata/taśma → naprawione: ten sam
+  `src`, trójkąt przecinany na obrysie części przenoszony w całości; testy `test_aprons.py` 2/2). PHONE_RUN aktywny — Unity czeka.
+  W toku: swept b3, `pytest tests/physics tests/gate3`.
+  NASTĘPNY KROK: `bash artifacts/junctions-r3/scripts/fast.sh b4`, potem (bez PHONE_RUN) `pwsh scripts/import-region.ps1 -Region bialystok-industrial-c`
