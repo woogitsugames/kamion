@@ -22,3 +22,5 @@ Krok 9: testy GIS bazowego worktree wykazały już niepowodzenia przed jakąkolw
 
 Krok 10: dodano atrybucję i licencje obu pomniejszonych zdjęć Commons. Jawnie opisano, że są odniesieniem do materiałów, nie tym samym pojazdem i kadrem. Pierwszy render nadal odtwarza cache/kompiluje skrypty. Następny krok: obejrzeć wynik Low-overcast.
 Baseline Low overcast zapisany. Następny krok: obejrzeć PNG i zmierzyć lakier, szybę oraz DRL.
+
+Krok 11: GIS zakończone: 488 passed, 5 failed, 1 xfailed w 1297,55 s. Błędy bazowe: far-field SHA, wiadukt różnica 3 mm przy tolerancji 2 mm, przeterminowany fidelity, brak prototypu plot_drive_gravel, deterministyczność chunk 0_0. Zapisano JSON-owy patch efektów ubocznych testów i przywrócono sześć wygenerowanych plików innych dziedzin. Obejrzano arkusz Low-overcast oraz ROI: górna szyba 21,46%, dolna 19,13%, profil drzwi 3,49 punktu. Następny krok: dokończyć baseline i uruchomić kontrole pigmentu.
