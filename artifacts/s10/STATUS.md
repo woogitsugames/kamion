@@ -691,3 +691,8 @@ merged-source R3 baseline on CPU before candidate. Existing mainGLB cannot serve
 as stale BEFORE against regenerated81paint AFTER. Source plan is not quality PASS.
 NEXT COMMAND: whole run5 END/PHONE absence ->fresh D release/16frames. G CPU
 baseline finishes separately, no Unity until a G-specific release; P0 first.
+Step 59: Corrected G audit: source81 versus GLB72 was a name-filter omission
+of9van paint rows, not evidence of stale generated data. Corrected count81/81,
+UV1 absent in both. Canonical baseline build still runs. Inactive patch prepared;
+production maps/source remain R3. NEXT COMMAND: Get-Content C:/Users/matma/Documents/Claude/kamion/artifacts/integration-s10/run5.log -Tail 10
+Then release D only after actual END and PHONE absence; keep own diag12 held.
