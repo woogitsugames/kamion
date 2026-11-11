@@ -19,10 +19,33 @@ def pole_texture(kind):
     raw = ROOT / "art-source/world/cc0/_raw" / aid / f"{aid}_diff_2k.jpg"
     w, h = 256, 512
     if raw.exists():
-        photo = np.asarray(Image.open(raw).convert("RGB").resize((w, h), Image.Resampling.LANCZOS), float)
+        with Image.open(raw) as original:
+            if kind == "concrete":
+                # The CC0 tile covers 2.5 m, whereas this atlas spans a complete 9 m shaft.
+                # Stretching the full square scan over it turned concrete into long wood-like fibres.
+                # Crop/repeat at metric scale; circumference is the mean of our working pole taper.
+                circumference_m = np.pi * (.15 + .07)
+                tile = original.convert("RGB").resize((512, 512), Image.Resampling.LANCZOS)
+                tile_height = int(np.ceil(9 / 2.5 * 512))
+                repeated = Image.new("RGB", (512, int(np.ceil(tile_height / 512)) * 512))
+                for row in range(0, repeated.height, 512):
+                    repeated.paste(tile, (0, row))
+                metric = repeated.crop((0, 0, int(round(circumference_m / 2.5 * 512)), tile_height))
+                photo = np.asarray(metric.resize((w, h), Image.Resampling.LANCZOS), float)
+            else:
+                photo = np.asarray(original.convert("RGB").resize((w, h), Image.Resampling.LANCZOS), float)
         lum = photo.mean(axis=2)
         # Remove large lighting / corrugation: the pole must not acquire sheet-metal ribs.
-        ratio = np.clip(lum / np.maximum(gaussian_filter(lum, 12), 1), 0.8, 1.2)
+        sigma = (.04 * h / 9, .04 * w / circumference_m) if kind == "concrete" else 12
+        ratio = np.clip(lum / np.maximum(gaussian_filter(lum, sigma), 1), 0.8, 1.2)
+        if kind == "concrete":
+            # Close the cropped cylindrical seam over a small sector, retaining the scan grain.
+            for edge in range(8):
+                left, right = ratio[:, edge].copy(), ratio[:, -1-edge].copy()
+                blend = 1-edge/8
+                mean = (left+right)/2
+                ratio[:, edge] = left*(1-blend)+mean*blend
+                ratio[:, -1-edge] = right*(1-blend)+mean*blend
         if not concrete:
             # Corrugation survives a spatial high-pass. Remove its persistent column profile too; a round pole
             # must keep the scan grain without acquiring the source sheet's vertical ribs (close-up review r1).
@@ -31,7 +54,7 @@ def pole_texture(kind):
         warnings.warn(f"ADR0102 scan missing: {aid}; flat furniture texture fallback", stacklevel=2)
         ratio = np.ones((h, w))
     # ADR0120: retain concrete scan relief instead of compressing it to nearly white.
-    level, grain = (228, 1.05) if kind == "concrete" else ((245, 1.05) if kind == "footing" else (245, 0.3))
+    level, grain = (228, 0.65) if kind == "concrete" else ((245, 1.05) if kind == "footing" else (245, 0.3))
     rgb = np.repeat((level * (1 + grain * (ratio - 1)))[..., None], 3, axis=2)
     z = (1 - (np.arange(h) + 0.5) / h)[:, None]
     u = (np.arange(w) + 0.5)[None, :] / w
@@ -45,6 +68,8 @@ def pole_texture(kind):
         dirt = np.array([162, 157, 140])
     islands = np.clip((ratio - 0.94) * 8, 0, 1) if not concrete else np.ones((h, w))
     mask = foot * (0.35 + 0.65 * islands)
+    if kind == "concrete":
+        mask *= .5           # translucent road film, avoiding an almost black band around the shaft
     if kind == "footing":
         # A shallow concrete cap is not the salt-soaked bottom of a nine-metre pole (review I3).
         mask *= 0.12

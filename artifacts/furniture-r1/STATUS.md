@@ -157,3 +157,5 @@ NASTĘPNY KROK: uv run --project tools/worldgen tools/worldgen/roads/build_world
 2026-11-12T00:28:41.9069071+01:00: Unity render after High clear; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
 
 2026-11-12T00:29:01.0884380+01:00: Unity sbs-sign after High overcast; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
+
+2026-11-12T00:35:09.4944463+01:00: iteracja3: 220/220 delta draws mesh=0 i instancje=0; konserwatywna granica tris >2% na driver i kadrach remizy, więc budżet niepotwierdzony. Niezależny przegląd potwierdził naprawę słupków i regresję włóknistego betonu. Przygotowano iterację4: metryczna skala skanu (CC0 2,5m -> atlas trzonu9m), łagodniejszy brud, siatka uproszczona tylko wizualnie; kolizja zachowuje stacje, teren próbkowany także po nowym wygięciu, bez pogłębiania poza beton. Dodano test ciągłości kolizji/kontaktu. Wyniki iteracji3 zachowano osobno. NASTĘPNY KROK: poczekać na koniec porównań iteracji3, zarchiwizować obrazy, potem pojedyncze testy i generator after4 przez heavy.

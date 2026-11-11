@@ -1002,11 +1002,13 @@ def panel_fence(lin, line, col, key, flexible=False):
         boards = np.asarray(boards)
         ground = lin.z(boards)
         levels = np.maximum(ground[:-1], ground[1:]) + S.FENCE_PLINTH_H
+        lowest_concrete = float('inf')
         for j, level in enumerate(levels):
             segment = boards[j:j+2]
             inset = min(0.008, np.linalg.norm(segment[1]-segment[0])*.1)
             board = segment + np.array([direction*inset, -direction*inset])
             low = lin.z(board)-.2
+            lowest_concrete = min(lowest_concrete, float(np.min(low)))
             top = np.full(2, level)
             detail = PanelPlinthDetail(lin, (_h(f"{key}:concrete:{i}:{j}") % 256)/255)
             Lin(detail, lin.zsurf).slab("concrete_plinth", board, low, top, .05, key)
@@ -1041,11 +1043,29 @@ def panel_fence(lin, line, col, key, flexible=False):
         # Horizontal wires retain their physical height; the ground does not shear the texture grid.
         UV = np.column_stack([np.tile(s,2),V[:,2]-math.floor(Z[i])])
         T = np.array([(k,k+1,n+k+1) for k in range(n-1)]+[(k,n+k+1,n+k) for k in range(n-1)])
-        lin.buf.add("furniture",f"{col}_mesh",V,UV,T,src=key)
-        lin.buf.add("furniture",f"{col}_mesh",V,UV,T[:,[0,2,1]],src=key)
+        # Collision retains every original station, independently of render simplification.
         collision = V.copy()
         collision[:n,2] = lin.z(Q)-.1
         lin.buf.add("collision","collision_fence",collision,UV,np.concatenate([T,T[:,[0,2,1]]]),src=key)
+        # The concrete/terrain hides the wire's lower boundary. Avoid tessellating the visible
+        # wire at every short concrete step, while keeping its world-height UV pattern.
+        # Preserve the detailed shape on unusual cross-slopes where this would deepen the bounds.
+        indices = ([0,int(np.flatnonzero(np.isclose(stations,.5))[0]),len(Q)-1]
+                   if flexible or seed % 4 == 0 else [0,len(Q)-1])
+        probe_s = np.linspace(0,1,max(2,int(math.ceil(length/.25))+1))
+        probe_q = np.column_stack([np.interp(probe_s,stations[indices],Q[indices,axis]) for axis in (0,1)])
+        render_floor = float(min(np.min(ground),np.min(lin.z(probe_q))))-.1
+        if len(Q) > len(indices) and render_floor >= lowest_concrete:
+            reduced_q, reduced_top = Q[indices], upper[indices]
+            count = len(reduced_q)
+            V = np.concatenate([np.column_stack([reduced_q,np.full(count,render_floor)]),
+                                np.column_stack([reduced_q,reduced_top])])
+            s = np.r_[0,np.cumsum(np.linalg.norm(np.diff(reduced_q,axis=0),axis=1))]
+            UV = np.column_stack([np.tile(s,2),V[:,2]-math.floor(Z[i])])
+            T = np.array([(k,k+1,count+k+1) for k in range(count-1)]+
+                         [(k,count+k+1,count+k) for k in range(count-1)])
+        lin.buf.add("furniture",f"{col}_mesh",V,UV,T,src=key)
+        lin.buf.add("furniture",f"{col}_mesh",V,UV,T[:,[0,2,1]],src=key)
     lin.posts(col,P,None,.06,.04,S.FENCE_H+.05,zb=Z,src=key,ground_feet=True)
 
 

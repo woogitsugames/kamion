@@ -100,6 +100,22 @@ def test_sloping_mesh_preserves_horizontal_wire_phase_between_bays():
     assert phases and np.allclose(np.asarray(phases)-phases[0],np.round(np.asarray(phases)-phases[0]))
 
 
+def test_hidden_wire_simplification_keeps_detailed_collision_and_closed_ground_contact():
+    buf = Buffer()
+    F.panel_fence(F.Lin(buf,lambda e,n:.4*e),LineString([(0,0),(2.5,0)]),
+                  'fence_green','wire-collision',flexible=True)
+    mesh = next(v for layer,mat,v,t in buf.parts if mat=='fence_green_mesh')
+    collision = next(v for layer,mat,v,t in buf.parts if mat=='collision_fence')
+    assert len(collision) > len(mesh)
+    lower = collision[:len(collision)//2]
+    assert np.allclose(lower[:,2],.4*lower[:,0]-.1)
+    assert np.allclose(lower[[0,-1],0],[0,2.5])
+    mesh_lower = mesh[:len(mesh)//2]
+    assert np.all(mesh_lower[:,2] <= .4*mesh_lower[:,0]-.09)
+    concrete = np.concatenate([v for layer,mat,v,t in buf.parts if mat=='concrete_plinth'])
+    assert mesh_lower[:,2].min() >= concrete[:,2].min()
+
+
 @pytest.mark.parametrize('code', ['A-7', 'C-12', 'B-20', 'D-1', 'D-6'])
 def test_sign_back_and_folded_rim_never_wrap_the_wear_atlas(code):
     for mesh in P.plate(code)[:2]:
