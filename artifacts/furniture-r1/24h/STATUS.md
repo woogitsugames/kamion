@@ -19,3 +19,5 @@ NASTĘPNY KROK: uv run --project tools/worldgen tools/worldgen/roads/build_world
 2026-11-11T21:40:32.2821582+01:00: kandydat tekstur zachowuje skan CC0, wzmacnia jego kontrast tylko na betonie i lokalizuje zacieki pod obejmami. Tył aluminiowego znaku otrzyma ślady od stalowych mocowań. NASTĘPNY KROK: zastosować apply_r1.py dopiero po baseline i zachowaniu produktów A/B.
 
 2026-11-11T21:41:57.1901850+01:00: proponowane moduły przeszły kompilację i uruchomienie generatorów tekstur w izolowanej kopii; obejrzano wear-candidate.jpg. Dodano dwie kamery diagnostyczne w pliku dowodów (stopa betonu i obejmy), bez zmiany scen. NASTĘPNY KROK: import baseline, następnie pełne rendery A/B.
+
+2026-11-11T21:42:55.8726766+01:00: odróżniono raporty ADR 0102 od nowej rundy. Raport nadrzędny oznaczony W TOKU, stary zachowany w legacy-0102. NASTĘPNY KROK: import baseline po zakończeniu generatora.
