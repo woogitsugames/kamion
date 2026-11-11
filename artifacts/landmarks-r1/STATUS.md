@@ -49,3 +49,6 @@ NASTĘPNA KOMENDA: pwsh artifacts/landmarks-r1/heavy-step.ps1 -Step Materials -L
 Krok 15: przygotowano pierwszy pełny kandydat remizy. Iglaki: szersze dwie korony, rdzeń 0,95 R zamiast 0,55 R, ciemniejsza lokalna paleta w wolnej komórce tego samego atlasu; liczby kart i materiałów bez zmian. Zacieki szczytu przeniesiono na pas podążający za łukowym dachem zamiast poziomej linii korony; pigment tynku D48 bez zmiany. Dodano kontrolę kotwienia pasa do krzywizny i braku dodatkowego materiału. Python/JSON syntax OK, wyniki wyglądu i budżetu po zmianie jeszcze niezweryfikowane.
 Zachowano świeże JSON baseline do oddzielenia zmian tej sesji od wcześniejszego dryfu produktów wygenerowanych na main. Następny etap kolejno przez heavy: Materials, World, pojedynczy test_fire_station_r7.py; potem import i 16 fokusowych renderów przez unity.
 NASTĘPNA KOMENDA: pwsh artifacts/landmarks-r1/round1-build.ps1
+
+Krok 16: Materials ukończone pod heavy, exit 0, 32 s. Slot heavy zwolniony i osobno ponownie zajęty przez World. Rzeczywista mapa alfa ma identyczny kanał A na każdym pikselu i identyczne RGBA poza komórką igliwia; pozostałe napisy, płot i brama nie otrzymały zmian alfa. World w toku; test pojedynczego pliku nastąpi po nim.
+NASTĘPNA KOMENDA: Get-Content artifacts/landmarks-r1/round1-world.log -Tail 10
