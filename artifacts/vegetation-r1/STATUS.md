@@ -9,3 +9,4 @@ Dodatkowo skopiowano Library i lokalne pochodne materiałów, aby zachować baz�
 Przygotowano review_images.py: wszystkie kamery, draws statyczne i instancje osobno, stałe ROI i odchylenie średnich bloków 32 px. Brak jeszcze nowych pomiarów. Następny krok: uv run --project tools/worldgen python artifacts/vegetation-r1/review_images.py
 Zapisano PLAN.md z hipotezami trawy, pokrywy żywopłotu i koron. Regeneracja bazowa działa. Następny krok: kontrola logu, import bazowy i before. Pliki generatorów Blender pozostają poza edycją (własność).
 Przygotowano sekwencyjną kolejkę: czeka na koniec generatora, odrzuca fallback, pobiera slot, importuje i renderuje bazę. Następny krok: pwsh artifacts/vegetation-r1/baseline-pipeline.ps1
+Wywołania Acquire ustawiają StaleHours 1000000, aby skrypt nie sprzątał cudzych slotów. Owner pozostaje gpt-vegetation. Następny krok: dokończyć sekwencyjny baseline; nie zmieniać shaderów przed końcem before.

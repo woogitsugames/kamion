@@ -3,7 +3,7 @@ $ErrorActionPreference='Stop'
 Set-Location 'C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-vegetation'
 foreach($tier in @('Low','High')) { foreach($lighting in @('overcast','clear')) {
   $scene=if($tier -eq 'High') {'WorldC_High'} else {'WorldC'}
-  pwsh scripts/unity-slot.ps1 -Acquire -Owner gpt-vegetation
+  pwsh scripts/unity-slot.ps1 -Acquire -Owner gpt-vegetation -StaleHours 1000000
   if($LASTEXITCODE -ne 0) { throw 'Unity slot acquisition failed' }
   try {
     pwsh scripts/visual-qa.ps1 -Scene $scene -Tier $tier -Lighting $lighting -Gate3 Data/Regions/bialystok-industrial-c/buildings_r10_cameras.json -OutputDir "artifacts/vegetation-r1/$Stage/$tier-$lighting" *> "artifacts/vegetation-r1/$Stage-$tier-$lighting.log"
@@ -17,3 +17,4 @@ foreach($tier in @('Low','High')) { foreach($lighting in @('overcast','clear')) 
   git commit -m "wip(vegetation): render $Stage $tier $lighting"
 } }
 "Macierz $Stage zakończona" | Set-Content "artifacts/vegetation-r1/$Stage-done.txt"
+
