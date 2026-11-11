@@ -34,7 +34,8 @@
        "clip_max": 0.01,
        "spread_min": 6.0
       }
-     }
+     },
+     "note": "sunlit facade at the start gate (critic P0-1); ROI on the change mask baseline->r1 (instanced hero: no renderer mask)"
     },
     {
      "id": "docks_shaded",
@@ -56,24 +57,25 @@
      "limits": {
       "overcast": {
        "ratio_level": [
-        0.45,
+        0.4,
         0.88
        ]
       },
       "clear": {
        "clip_max": 0.01
       }
-     }
+     },
+     "note": "dock facade upper band, sun-averted in clear; sky ROI is a bright cloud area, hence the lower overcast ratio"
     },
     {
-     "id": "hall4_far",
+     "id": "hall4_right_of_portal",
      "camera": "r10_hall_4",
      "side": "lit",
      "roi": [
-      445,
-      200,
-      590,
-      232
+      180,
+      196,
+      315,
+      218
      ],
      "ref": "sky",
      "ref_roi": [
@@ -83,10 +85,17 @@
       140
      ],
      "limits": {
+      "overcast": {
+       "ratio_level": [
+        0.45,
+        0.88
+       ]
+      },
       "clear": {
        "clip_max": 0.01
       }
-     }
+     },
+     "note": "third orientation; ROI on the change mask baseline->r1"
     }
    ]
   },
@@ -96,9 +105,9 @@
     {
      "id": "putry_entry_right",
      "camera": "route-putry-entry-signs",
-     "side": "shaded",
+     "side": "lit",
      "roi": [
-      830,
+      840,
       165,
       915,
       205
@@ -117,24 +126,25 @@
         0.41
        ]
       }
-     }
+     },
+     "note": "solid wall, open sky; ROI 100 % on M_noise_panel_dark mask, plinth 0 %; clear/overcast of the cassette 2.0 (sunlit)"
     },
     {
-     "id": "approach_viaduct_left",
-     "camera": "route-putry-approach",
+     "id": "g3b_right_band",
+     "camera": "g3b-rondo-putry-approach",
      "side": "lit",
      "roi": [
-      10,
-      170,
-      200,
-      250
+      685,
+      240,
+      790,
+      285
      ],
      "ref": "plinth",
      "ref_roi": [
-      10,
-      255,
-      200,
-      270
+      690,
+      315,
+      790,
+      330
      ],
      "limits": {
       "overcast": {
@@ -143,7 +153,63 @@
         0.41
        ]
       }
-     }
+     },
+     "note": "glazed style, dark band; ROI 100 % mask, plinth 0.7 %"
+    },
+    {
+     "id": "house1_band",
+     "camera": "r10_house_1",
+     "side": "lit",
+     "roi": [
+      660,
+      268,
+      840,
+      284
+     ],
+     "ref": "plinth",
+     "ref_roi": [
+      660,
+      298,
+      840,
+      312
+     ],
+     "limits": {
+      "overcast": {
+       "ratio_level": [
+        0.31,
+        0.41
+       ]
+      }
+     },
+     "note": "glazed band, other orientation; ROI 95 % mask (posts), plinth 0 %"
+    },
+    {
+     "id": "g3b_left_under_deck",
+     "camera": "g3b-rondo-putry-approach",
+     "side": "shaded",
+     "roi": [
+      100,
+      237,
+      142,
+      249
+     ],
+     "ref": "plinth",
+     "ref_roi": [
+      100,
+      253,
+      142,
+      257
+     ],
+     "limits": {
+      "overcast": {
+       "ratio_level": [
+        0.3,
+        0.6
+       ]
+      }
+     },
+     "gate": true,
+     "note": "band in the viaduct's shadow (clear/overcast 0.99); plinth also under the deck, so the open-wall photo ratio does not apply: sanity range only"
     }
    ]
   }
