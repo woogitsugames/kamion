@@ -76,3 +76,4 @@ Przygotowano porównanie wszystkich kamer: mesh draws, shadow draws oraz draws/t
 2026-11-12T00:05:29.4291081+01:00: heavy WheelMetrics owner=gpt-asphalt-r1 exit=0; log artifacts/asphalt-r1/candidate2-WheelMetrics.log. Slot zwolniony po zakończeniu procesu.
 2026-11-12T00:05:37.9791926+01:00: REPORT uzupełniony rzeczywistym porównaniem pamięci importera: wszystkie kategorie geometrii delta 0 bajtów. Kolejka pomiarów 41250 potwierdzona aktywna, nadal czeka na heavy. Pozostałe kroki bez zmian, cel 24 h aktywny.
 2026-11-12T00:06:36.6349073+01:00: WheelMetrics zakończone pod heavy, wszystkie cztery maski obejrzane. Kontrast ślad/środek obecnie około 0,968..0,977 wobec baseline 1,013..1,045; nadal znacznie słabszy niż 0,67 w wybranym zdjęciu. Wyniki wpisano do REPORT. Compare nadal aktywne w sekwencji 41250.
+2026-11-12T00:07:05.8307609+01:00: heavy Compare owner=gpt-asphalt-r1 exit=0; log artifacts/asphalt-r1/candidate2-Compare.log. Slot zwolniony po zakończeniu procesu.
