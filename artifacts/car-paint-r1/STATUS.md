@@ -23,3 +23,6 @@
 
 - Step8: ROOT requested restore of existing ignored Commons asphalt detail input skipped by nested-photo /XJ bootstrap. Copied only Worn_cracked_asphalt_pavement.jpg; verifiedSHA256 e26237d85c097af9560537c60e6ed6f67ed0090e284398a5d7a7a2bf41889135,1644231bytes and pinnedSHA1. All4 existing detail maps byte-identical to main/E proof; no map or production change, G baseline remains frozen.
 - NEXT COMMAND: await explicit ROOT Unity release and both locks absent; baseline.ps1 -Phase Import (G FIRST; D implementation stays queued).
+
+- Step9: explicit ROOT Unity release11:56:56 received; both guards absent before fresh import11:57:24. Own import completed OK64chunks41corridorLow+High; source compiler clean, CC0 verifier13assets65files0problems. No production edits. Reported world mesh memory111.3MB Low/239.7MB High is importer accounting, not GPU/device measurement. Owned settings/sky side effects restored.
+- NEXT COMMAND: pwsh -ExecutionPolicy Bypass -File artifacts/car-paint-r1/baseline.ps1 -Phase Fixtures; then pearl-probe.ps1 and baseline.ps1 -Phase Capture.
