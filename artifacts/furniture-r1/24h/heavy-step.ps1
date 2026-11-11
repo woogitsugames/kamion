@@ -17,9 +17,13 @@ $ok=$false
 try {
     switch ($Step) {
         'world' {
-            if ($Phase -eq 'after4') {
+            if ($Phase -eq 'after4' -and !(Test-Path "$ev/fence-collision-before4.json")) {
                 & uv run --project tools/worldgen python "$ev/snapshot_fence_collision.py" before4 *> "$ev/fence-collision-before4.log"
                 if ($LASTEXITCODE -ne 0) { throw 'Could not capture pre-optimization collision' }
+                Add-Content "$ev/STATUS.md" "`n$(Get-Date -Format o): zachowano niezmienny punkt odniesienia kolizji GLB przed generatorem after4. NASTĘPNY KROK: generator, następnie porównanie pełnych payloadów."
+                Copy-Item "$ev/STATUS.md" artifacts/furniture-r1/STATUS.md
+                git add -f "$ev/fence-collision-before4.json" "$ev/fence-collision-before4.log" "$ev/STATUS.md" artifacts/furniture-r1/STATUS.md
+                git commit -m 'wip(furniture): preserve immutable pre-optimization collision evidence'
             }
             [pscustomobject]@{phase=$Phase;branch=$owner;head=(& git rev-parse HEAD);started_at=Get-Date -Format o;pool='heavy'} |
                 ConvertTo-Json | Set-Content "$ev/world-context-$Phase.json" -Encoding UTF8

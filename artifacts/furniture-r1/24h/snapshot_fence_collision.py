@@ -11,6 +11,8 @@ parser = argparse.ArgumentParser()
 parser.add_argument('phase',choices=['before4','after4'])
 parser.add_argument('--compare',choices=['before4'])
 args = parser.parse_args()
+if args.phase == 'before4' and (HERE/'fence-collision-before4.json').exists():
+    raise SystemExit('Pre-optimization collision baseline already exists; preserve it instead of replacing it')
 result = {}
 components = {'SCALAR':1,'VEC2':2,'VEC3':3,'VEC4':4,'MAT4':16}
 sizes = {5120:1,5121:1,5122:2,5123:2,5125:4,5126:4}

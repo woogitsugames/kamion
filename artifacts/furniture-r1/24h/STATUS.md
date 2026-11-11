@@ -179,3 +179,5 @@ NASTĘPNY KROK: uv run --project tools/worldgen tools/worldgen/roads/build_world
 2026-11-12T00:50:36.0492830+01:00: heavy focused after4; sukces=True; slot gpt-furniture-r1 zwolniony. NASTĘPNY KROK: sprawdzić log i kontynuować walidację rundy.
 
 2026-11-12T00:50:38.3812557+01:00: heavy focused after4; sukces=True; slot gpt-furniture-r1 zwolniony. NASTĘPNY KROK: sprawdzić log i kontynuować walidację rundy.
+
+2026-11-12T00:53:27.5049815+01:00: potwierdzono gotowe 40 arkuszy iteracji3, parę referencja/render i arkusz referencji. Wewnętrzny compare zakończył się sukcesem; nadrzędna sesja zgłosiła kod1 przy RemoteException od ostrzeżenia Git na stderr, bez błędu w porównaniach i bez brakujących produktów. Nie powtarzano zadania. Testy after4: 17/17 oraz 9/9 passed. Zabezpieczono baseline kolizji przed nadpisaniem przy ewentualnym ponowieniu generatora. NASTĘPNY KROK: istniejąca sekwencja after4 oczekuje na heavy world; sprawdzić jej log i baseline kolizji.
