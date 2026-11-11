@@ -41,8 +41,15 @@ if ($Stage -eq 'Import') {
     foreach ($tier in @('Low','High')) {
         foreach ($lighting in @('overcast','clear')) {
             $out = "artifacts/asphalt-r1/$Label/$tier-$lighting"
-            Invoke-Slotted {
-                & pwsh scripts/visual-qa.ps1 -Scene WorldC -Tier $tier -Lighting $lighting -Gate3 artifacts/asphalt-r1/cameras.json -OutputDir $out
+            $env:KAMION_ASPHALT_QA_STATE = '1'
+            $env:KAMION_ASPHALT_QA_DIRECTORY = [IO.Path]::GetFullPath($out, $repo)
+            try {
+                Invoke-Slotted {
+                    & pwsh scripts/visual-qa.ps1 -Scene WorldC -Tier $tier -Lighting $lighting -Gate3 artifacts/asphalt-r1/cameras.json -OutputDir $out
+                }
+            } finally {
+                $env:KAMION_ASPHALT_QA_STATE = $null
+                $env:KAMION_ASPHALT_QA_DIRECTORY = $null
             }
             Add-Content artifacts/asphalt-r1/STATUS.md "$(Get-Date -Format o): zapisano $out. Następny krok: pozostałe serie lub porównanie wariantu."
             git add -f artifacts/asphalt-r1/STATUS.md
