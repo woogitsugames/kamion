@@ -1,0 +1,616 @@
+{
+  "scope": "only valid r4-rear-controls-v2; no source/Unity changes",
+  "method": "read actual20 control JSON and PNG; independently recompute 68 supplied ray-selected 5x5 sample luma means, not independent re-raycast",
+  "lower_paint_samples": 68,
+  "lower_paint_height_m": [
+    0.31497836180804506,
+    0.6474547261902951
+  ],
+  "strictly_increasing_all_four_conditions": true,
+  "rows": [
+    {
+      "condition": "Low-clear",
+      "mode": "off",
+      "control": {
+        "mode": "off",
+        "forceLevel": -1,
+        "opacityOff": true,
+        "target": [
+          674.796,
+          -523.807
+        ],
+        "naturalLevel": 3,
+        "shaderSourceSha256": "2e8dcafc4ede149747826d8d0753904937d3371a7194d7c28930aaf26b9d9a3a",
+        "note": "QA-only same-frame control, not historical R3 BEFORE; phase, upper-role and non-target cars unchanged"
+      },
+      "png_sha256": "07e70a465750123c232862faa59047ecb8f112550b42abe163d8ef17cd0409e5",
+      "independent_lower_paint_luma": 49.06592611764706
+    },
+    {
+      "condition": "Low-clear",
+      "mode": "level0",
+      "control": {
+        "mode": "level0",
+        "forceLevel": 0,
+        "opacityOff": false,
+        "target": [
+          674.796,
+          -523.807
+        ],
+        "naturalLevel": 3,
+        "shaderSourceSha256": "2e8dcafc4ede149747826d8d0753904937d3371a7194d7c28930aaf26b9d9a3a",
+        "note": "QA-only same-frame control, not historical R3 BEFORE; phase, upper-role and non-target cars unchanged"
+      },
+      "png_sha256": "4bb2bba0e9041baf2e488a90d5e49397e386a55e72f640d846a5f15f27d1fc41",
+      "independent_lower_paint_luma": 49.364928117647054
+    },
+    {
+      "condition": "Low-clear",
+      "mode": "level1",
+      "control": {
+        "mode": "level1",
+        "forceLevel": 1,
+        "opacityOff": false,
+        "target": [
+          674.796,
+          -523.807
+        ],
+        "naturalLevel": 3,
+        "shaderSourceSha256": "2e8dcafc4ede149747826d8d0753904937d3371a7194d7c28930aaf26b9d9a3a",
+        "note": "QA-only same-frame control, not historical R3 BEFORE; phase, upper-role and non-target cars unchanged"
+      },
+      "png_sha256": "ef27e33d512b469de60a27cb974666f65825ba780d66fdf3997bee1dcdaf0be9",
+      "independent_lower_paint_luma": 50.76289976470588
+    },
+    {
+      "condition": "Low-clear",
+      "mode": "level2",
+      "control": {
+        "mode": "level2",
+        "forceLevel": 2,
+        "opacityOff": false,
+        "target": [
+          674.796,
+          -523.807
+        ],
+        "naturalLevel": 3,
+        "shaderSourceSha256": "2e8dcafc4ede149747826d8d0753904937d3371a7194d7c28930aaf26b9d9a3a",
+        "note": "QA-only same-frame control, not historical R3 BEFORE; phase, upper-role and non-target cars unchanged"
+      },
+      "png_sha256": "b1331e4e052f97586c7a57fa0a3069d0487991d012988ef4eb10972d5e323f79",
+      "independent_lower_paint_luma": 52.556516705882345
+    },
+    {
+      "condition": "Low-clear",
+      "mode": "level3",
+      "control": {
+        "mode": "level3",
+        "forceLevel": 3,
+        "opacityOff": false,
+        "target": [
+          674.796,
+          -523.807
+        ],
+        "naturalLevel": 3,
+        "shaderSourceSha256": "2e8dcafc4ede149747826d8d0753904937d3371a7194d7c28930aaf26b9d9a3a",
+        "note": "QA-only same-frame control, not historical R3 BEFORE; phase, upper-role and non-target cars unchanged"
+      },
+      "png_sha256": "a41881875cd2fa086fb2b0fbb1b726466d095969da1b6bec4917f9ba4154fb8c",
+      "independent_lower_paint_luma": 54.4015794117647
+    },
+    {
+      "condition": "Low-overcast",
+      "mode": "off",
+      "control": {
+        "mode": "off",
+        "forceLevel": -1,
+        "opacityOff": true,
+        "target": [
+          674.796,
+          -523.807
+        ],
+        "naturalLevel": 3,
+        "shaderSourceSha256": "2e8dcafc4ede149747826d8d0753904937d3371a7194d7c28930aaf26b9d9a3a",
+        "note": "QA-only same-frame control, not historical R3 BEFORE; phase, upper-role and non-target cars unchanged"
+      },
+      "png_sha256": "58748b53bc0bf3569de31b0417574f3643fbf1bb733af372cc46098aba82622b",
+      "independent_lower_paint_luma": 31.942425529411768
+    },
+    {
+      "condition": "Low-overcast",
+      "mode": "level0",
+      "control": {
+        "mode": "level0",
+        "forceLevel": 0,
+        "opacityOff": false,
+        "target": [
+          674.796,
+          -523.807
+        ],
+        "naturalLevel": 3,
+        "shaderSourceSha256": "2e8dcafc4ede149747826d8d0753904937d3371a7194d7c28930aaf26b9d9a3a",
+        "note": "QA-only same-frame control, not historical R3 BEFORE; phase, upper-role and non-target cars unchanged"
+      },
+      "png_sha256": "e79e7fb3f536610f476021e04efedca52635e11db0dc9147e6326d0bb500f8be",
+      "independent_lower_paint_luma": 32.20137423529411
+    },
+    {
+      "condition": "Low-overcast",
+      "mode": "level1",
+      "control": {
+        "mode": "level1",
+        "forceLevel": 1,
+        "opacityOff": false,
+        "target": [
+          674.796,
+          -523.807
+        ],
+        "naturalLevel": 3,
+        "shaderSourceSha256": "2e8dcafc4ede149747826d8d0753904937d3371a7194d7c28930aaf26b9d9a3a",
+        "note": "QA-only same-frame control, not historical R3 BEFORE; phase, upper-role and non-target cars unchanged"
+      },
+      "png_sha256": "5e7f29fb09f6ca1190f9b509ff3ed50265d8723c4462d2fa39635db70a9e68f9",
+      "independent_lower_paint_luma": 33.5960674117647
+    },
+    {
+      "condition": "Low-overcast",
+      "mode": "level2",
+      "control": {
+        "mode": "level2",
+        "forceLevel": 2,
+        "opacityOff": false,
+        "target": [
+          674.796,
+          -523.807
+        ],
+        "naturalLevel": 3,
+        "shaderSourceSha256": "2e8dcafc4ede149747826d8d0753904937d3371a7194d7c28930aaf26b9d9a3a",
+        "note": "QA-only same-frame control, not historical R3 BEFORE; phase, upper-role and non-target cars unchanged"
+      },
+      "png_sha256": "4ef066122c27548be248e5e206124e9ce40c3c7998ea27dbcc3d9090a1202093",
+      "independent_lower_paint_luma": 35.33813388235294
+    },
+    {
+      "condition": "Low-overcast",
+      "mode": "level3",
+      "control": {
+        "mode": "level3",
+        "forceLevel": 3,
+        "opacityOff": false,
+        "target": [
+          674.796,
+          -523.807
+        ],
+        "naturalLevel": 3,
+        "shaderSourceSha256": "2e8dcafc4ede149747826d8d0753904937d3371a7194d7c28930aaf26b9d9a3a",
+        "note": "QA-only same-frame control, not historical R3 BEFORE; phase, upper-role and non-target cars unchanged"
+      },
+      "png_sha256": "f246e587c78bbabfa04d773b95cec7eb6938594f13eda4fa96b900e3c06e1160",
+      "independent_lower_paint_luma": 37.18340388235295
+    },
+    {
+      "condition": "High-clear",
+      "mode": "off",
+      "control": {
+        "mode": "off",
+        "forceLevel": -1,
+        "opacityOff": true,
+        "target": [
+          674.796,
+          -523.807
+        ],
+        "naturalLevel": 3,
+        "shaderSourceSha256": "2e8dcafc4ede149747826d8d0753904937d3371a7194d7c28930aaf26b9d9a3a",
+        "note": "QA-only same-frame control, not historical R3 BEFORE; phase, upper-role and non-target cars unchanged"
+      },
+      "png_sha256": "abc788ee4e0405a4f417a982a6dc16f386e3f59bd50386eb93e3856b20c823f3",
+      "independent_lower_paint_luma": 54.54354894117647
+    },
+    {
+      "condition": "High-clear",
+      "mode": "level0",
+      "control": {
+        "mode": "level0",
+        "forceLevel": 0,
+        "opacityOff": false,
+        "target": [
+          674.796,
+          -523.807
+        ],
+        "naturalLevel": 3,
+        "shaderSourceSha256": "2e8dcafc4ede149747826d8d0753904937d3371a7194d7c28930aaf26b9d9a3a",
+        "note": "QA-only same-frame control, not historical R3 BEFORE; phase, upper-role and non-target cars unchanged"
+      },
+      "png_sha256": "730d36779b2e755cfb1e4e95427c8f5aa02893d33fc9e3b6ebb60b38f95274a5",
+      "independent_lower_paint_luma": 54.89352847058823
+    },
+    {
+      "condition": "High-clear",
+      "mode": "level1",
+      "control": {
+        "mode": "level1",
+        "forceLevel": 1,
+        "opacityOff": false,
+        "target": [
+          674.796,
+          -523.807
+        ],
+        "naturalLevel": 3,
+        "shaderSourceSha256": "2e8dcafc4ede149747826d8d0753904937d3371a7194d7c28930aaf26b9d9a3a",
+        "note": "QA-only same-frame control, not historical R3 BEFORE; phase, upper-role and non-target cars unchanged"
+      },
+      "png_sha256": "60c762902234f9d62f8e6c33d6afe2fc5ae704b3ae1f8fc7a2d2c137e94b3c4b",
+      "independent_lower_paint_luma": 56.37585094117647
+    },
+    {
+      "condition": "High-clear",
+      "mode": "level2",
+      "control": {
+        "mode": "level2",
+        "forceLevel": 2,
+        "opacityOff": false,
+        "target": [
+          674.796,
+          -523.807
+        ],
+        "naturalLevel": 3,
+        "shaderSourceSha256": "2e8dcafc4ede149747826d8d0753904937d3371a7194d7c28930aaf26b9d9a3a",
+        "note": "QA-only same-frame control, not historical R3 BEFORE; phase, upper-role and non-target cars unchanged"
+      },
+      "png_sha256": "bad6f4e178bca91d1234e32d22941f33a4fee118d0f2f1c1f9ac78da760138d9",
+      "independent_lower_paint_luma": 58.20667223529412
+    },
+    {
+      "condition": "High-clear",
+      "mode": "level3",
+      "control": {
+        "mode": "level3",
+        "forceLevel": 3,
+        "opacityOff": false,
+        "target": [
+          674.796,
+          -523.807
+        ],
+        "naturalLevel": 3,
+        "shaderSourceSha256": "2e8dcafc4ede149747826d8d0753904937d3371a7194d7c28930aaf26b9d9a3a",
+        "note": "QA-only same-frame control, not historical R3 BEFORE; phase, upper-role and non-target cars unchanged"
+      },
+      "png_sha256": "62b91d386846dbf98f821e6601c0fdbd30c88e8c3631c3ba885845d44e8d8e8c",
+      "independent_lower_paint_luma": 60.0865405882353
+    },
+    {
+      "condition": "High-overcast",
+      "mode": "off",
+      "control": {
+        "mode": "off",
+        "forceLevel": -1,
+        "opacityOff": true,
+        "target": [
+          674.796,
+          -523.807
+        ],
+        "naturalLevel": 3,
+        "shaderSourceSha256": "2e8dcafc4ede149747826d8d0753904937d3371a7194d7c28930aaf26b9d9a3a",
+        "note": "QA-only same-frame control, not historical R3 BEFORE; phase, upper-role and non-target cars unchanged"
+      },
+      "png_sha256": "d3997d83e9f45a862cf6d610e074b2acdaf40194a82b2ad8e7ff91d5cc79ac3b",
+      "independent_lower_paint_luma": 36.19821423529411
+    },
+    {
+      "condition": "High-overcast",
+      "mode": "level0",
+      "control": {
+        "mode": "level0",
+        "forceLevel": 0,
+        "opacityOff": false,
+        "target": [
+          674.796,
+          -523.807
+        ],
+        "naturalLevel": 3,
+        "shaderSourceSha256": "2e8dcafc4ede149747826d8d0753904937d3371a7194d7c28930aaf26b9d9a3a",
+        "note": "QA-only same-frame control, not historical R3 BEFORE; phase, upper-role and non-target cars unchanged"
+      },
+      "png_sha256": "e30cc4c0effa29241bd98e08cf4c06cbc1fac784ab6da4f142922a428a95a48d",
+      "independent_lower_paint_luma": 36.52042623529411
+    },
+    {
+      "condition": "High-overcast",
+      "mode": "level1",
+      "control": {
+        "mode": "level1",
+        "forceLevel": 1,
+        "opacityOff": false,
+        "target": [
+          674.796,
+          -523.807
+        ],
+        "naturalLevel": 3,
+        "shaderSourceSha256": "2e8dcafc4ede149747826d8d0753904937d3371a7194d7c28930aaf26b9d9a3a",
+        "note": "QA-only same-frame control, not historical R3 BEFORE; phase, upper-role and non-target cars unchanged"
+      },
+      "png_sha256": "e3fd18991c2fda20a456d1466f4cf96b56b1d8e664b9afda241be2d6e71174fa",
+      "independent_lower_paint_luma": 38.07388494117646
+    },
+    {
+      "condition": "High-overcast",
+      "mode": "level2",
+      "control": {
+        "mode": "level2",
+        "forceLevel": 2,
+        "opacityOff": false,
+        "target": [
+          674.796,
+          -523.807
+        ],
+        "naturalLevel": 3,
+        "shaderSourceSha256": "2e8dcafc4ede149747826d8d0753904937d3371a7194d7c28930aaf26b9d9a3a",
+        "note": "QA-only same-frame control, not historical R3 BEFORE; phase, upper-role and non-target cars unchanged"
+      },
+      "png_sha256": "fa86a82f4445e0591990cb305a7e515704b1db503e9bbfcb15603bf86ec3c5a0",
+      "independent_lower_paint_luma": 39.967311411764705
+    },
+    {
+      "condition": "High-overcast",
+      "mode": "level3",
+      "control": {
+        "mode": "level3",
+        "forceLevel": 3,
+        "opacityOff": false,
+        "target": [
+          674.796,
+          -523.807
+        ],
+        "naturalLevel": 3,
+        "shaderSourceSha256": "2e8dcafc4ede149747826d8d0753904937d3371a7194d7c28930aaf26b9d9a3a",
+        "note": "QA-only same-frame control, not historical R3 BEFORE; phase, upper-role and non-target cars unchanged"
+      },
+      "png_sha256": "ce7d44c9f50fe67a4725134e455a26836a25f097e25720a3ed47e3a9b61eb781",
+      "independent_lower_paint_luma": 41.88759470588235
+    }
+  ],
+  "all20_mode_flags_verified": true,
+  "pose_scope": "Compare begin/end actual selected camera/hierarchy/region keys against OFF begin in same condition",
+  "pose_checks": [
+    {
+      "condition": "Low-clear",
+      "mode": "off",
+      "phase": "begin",
+      "different_fields": []
+    },
+    {
+      "condition": "Low-clear",
+      "mode": "off",
+      "phase": "end",
+      "different_fields": []
+    },
+    {
+      "condition": "Low-clear",
+      "mode": "level0",
+      "phase": "begin",
+      "different_fields": []
+    },
+    {
+      "condition": "Low-clear",
+      "mode": "level0",
+      "phase": "end",
+      "different_fields": []
+    },
+    {
+      "condition": "Low-clear",
+      "mode": "level1",
+      "phase": "begin",
+      "different_fields": []
+    },
+    {
+      "condition": "Low-clear",
+      "mode": "level1",
+      "phase": "end",
+      "different_fields": []
+    },
+    {
+      "condition": "Low-clear",
+      "mode": "level2",
+      "phase": "begin",
+      "different_fields": []
+    },
+    {
+      "condition": "Low-clear",
+      "mode": "level2",
+      "phase": "end",
+      "different_fields": []
+    },
+    {
+      "condition": "Low-clear",
+      "mode": "level3",
+      "phase": "begin",
+      "different_fields": []
+    },
+    {
+      "condition": "Low-clear",
+      "mode": "level3",
+      "phase": "end",
+      "different_fields": []
+    },
+    {
+      "condition": "Low-overcast",
+      "mode": "off",
+      "phase": "begin",
+      "different_fields": []
+    },
+    {
+      "condition": "Low-overcast",
+      "mode": "off",
+      "phase": "end",
+      "different_fields": []
+    },
+    {
+      "condition": "Low-overcast",
+      "mode": "level0",
+      "phase": "begin",
+      "different_fields": []
+    },
+    {
+      "condition": "Low-overcast",
+      "mode": "level0",
+      "phase": "end",
+      "different_fields": []
+    },
+    {
+      "condition": "Low-overcast",
+      "mode": "level1",
+      "phase": "begin",
+      "different_fields": []
+    },
+    {
+      "condition": "Low-overcast",
+      "mode": "level1",
+      "phase": "end",
+      "different_fields": []
+    },
+    {
+      "condition": "Low-overcast",
+      "mode": "level2",
+      "phase": "begin",
+      "different_fields": []
+    },
+    {
+      "condition": "Low-overcast",
+      "mode": "level2",
+      "phase": "end",
+      "different_fields": []
+    },
+    {
+      "condition": "Low-overcast",
+      "mode": "level3",
+      "phase": "begin",
+      "different_fields": []
+    },
+    {
+      "condition": "Low-overcast",
+      "mode": "level3",
+      "phase": "end",
+      "different_fields": []
+    },
+    {
+      "condition": "High-clear",
+      "mode": "off",
+      "phase": "begin",
+      "different_fields": []
+    },
+    {
+      "condition": "High-clear",
+      "mode": "off",
+      "phase": "end",
+      "different_fields": []
+    },
+    {
+      "condition": "High-clear",
+      "mode": "level0",
+      "phase": "begin",
+      "different_fields": []
+    },
+    {
+      "condition": "High-clear",
+      "mode": "level0",
+      "phase": "end",
+      "different_fields": []
+    },
+    {
+      "condition": "High-clear",
+      "mode": "level1",
+      "phase": "begin",
+      "different_fields": []
+    },
+    {
+      "condition": "High-clear",
+      "mode": "level1",
+      "phase": "end",
+      "different_fields": []
+    },
+    {
+      "condition": "High-clear",
+      "mode": "level2",
+      "phase": "begin",
+      "different_fields": []
+    },
+    {
+      "condition": "High-clear",
+      "mode": "level2",
+      "phase": "end",
+      "different_fields": []
+    },
+    {
+      "condition": "High-clear",
+      "mode": "level3",
+      "phase": "begin",
+      "different_fields": []
+    },
+    {
+      "condition": "High-clear",
+      "mode": "level3",
+      "phase": "end",
+      "different_fields": []
+    },
+    {
+      "condition": "High-overcast",
+      "mode": "off",
+      "phase": "begin",
+      "different_fields": []
+    },
+    {
+      "condition": "High-overcast",
+      "mode": "off",
+      "phase": "end",
+      "different_fields": []
+    },
+    {
+      "condition": "High-overcast",
+      "mode": "level0",
+      "phase": "begin",
+      "different_fields": []
+    },
+    {
+      "condition": "High-overcast",
+      "mode": "level0",
+      "phase": "end",
+      "different_fields": []
+    },
+    {
+      "condition": "High-overcast",
+      "mode": "level1",
+      "phase": "begin",
+      "different_fields": []
+    },
+    {
+      "condition": "High-overcast",
+      "mode": "level1",
+      "phase": "end",
+      "different_fields": []
+    },
+    {
+      "condition": "High-overcast",
+      "mode": "level2",
+      "phase": "begin",
+      "different_fields": []
+    },
+    {
+      "condition": "High-overcast",
+      "mode": "level2",
+      "phase": "end",
+      "different_fields": []
+    },
+    {
+      "condition": "High-overcast",
+      "mode": "level3",
+      "phase": "begin",
+      "different_fields": []
+    },
+    {
+      "condition": "High-overcast",
+      "mode": "level3",
+      "phase": "end",
+      "different_fields": []
+    }
+  ]
+}

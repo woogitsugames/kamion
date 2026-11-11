@@ -3,7 +3,7 @@
   "mode": "robocopy /E /XJ /R:1 /W:1; no MIR",
   "selected_sha256": {
     "REPORT.md": "3712e1997179a96c82d6e49bdf03cff67ef8a864d6170ccdb05a2e477adc3f07",
-    "STATUS.md": "761362df5ce9b499eba76f6e52dd79c9a3f34a922bd6400b90755acfdf899809",
+    "STATUS.md": "4e70723ad5221aee4679c2fb42029b1069784c4e303af3841149e57341cf9612",
     "REVIEW.md": "0da78a8c72f09bd33e5dd132d4f67df7e3ccc0a156d9239b96adfe8f945d1cc2",
     "SELF-REVIEW.md": "70ec35b251f58e32fcb7fc8fb57aa3e3a342fbbc7e2132474cb155bd9018fbd1",
     "editmode-final.xml": "d616a08cb84e178ba26ce93921d1310c1ebf93305f0e8ab4f1a393195b12a6c0",
@@ -33,7 +33,9 @@
     "D-FINAL-HIGH-REVIEW.md": "73673e68de23f8e3abc6ba8699428c69ab02b976ff308f6ffd97f009e459c3ea",
     "D-final-high-inputs.json": "4d288cd1772113e8bff455e8f5c49ca9a10b9ae9a88fce1593d526f9a9428225",
     "G-PLATE-R4-PREFLIGHT.md": "b6558299e49f41c7f1aaa9902831202bff60ed2cb253cbd8363273c274cc7253",
-    "G-plate-native-uv-proof.json": "f20d3064fab45e226f45528e554140f58256acf19b809c157cac3fdb0876b8f8"
+    "G-plate-native-uv-proof.json": "f20d3064fab45e226f45528e554140f58256acf19b809c157cac3fdb0876b8f8",
+    "G-REAR-V2-REVIEW.md": "fcd4afca112c05321765c4257e041df218c1ee8dfdc3d493bdafcf5417fb9ef5",
+    "G-rear-v2-independent/independent-check.json": "0d5f4409e705336ed973c11a87657aca50d257263d5d3788d190778da350cb83"
   },
   "png_inventory": {
     "before": 160,
@@ -50,5 +52,5 @@
       "not_overwritten": true
     }
   },
-  "doc_extension": "Step63: G R4 P2 plate binding/native UV preflight; explicit UV1 plan only, no source activation."
+  "doc_extension": "Step64: valid rear-v2 independent controller-state/pose/PNG response review; no new GPU state capture."
 }
