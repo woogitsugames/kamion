@@ -66,3 +66,6 @@ Krok18: po freshROOTrelease13:13 import i4core-probe actualPNG13:16DONE, obieUni
 
 Krok19: ROOT obejrzałcore4actual+nativecrops; nadalREJECT/PENDING—masa wypełniona, lecz3fir za wąskie/kolumnowe względem7197. Niewłączaćfullmatrix ani niepodnosićcoredo.70. PonownyHOLDdiag3,release13:13suspended; zeroUnityactive/queued. ROOT wymaga pomiaru packedSPRITEbbox/coverage versusactualinner_uv, zachowaniaRoot/outergutter16px; potem artifact-only2–3spraybundle ewentualnieUVcontentfix. CurrentGLB/raw/sourcefrozen,PP/palette/globalhedgesbez zmian. NASTĘPNA KOMENDA: packed-conifer-audit.py (CPU); ROOTreviewartifactów, dopiero potem wybranyfix; UnitytylkopoFreshExplicitRelease+bothguardsabsent.
 
+
+Krok20: actualpackedinner234×188, alpha128bbox[31,3,193,188]: Uoccupied69.23%,V98.40%,coverage13.98%; alpha32U70.51%,V100%. V=radialRoot→Tip,U=hlavněverticalspray,więcsidepaddingrealnyale nie duże skrócenie gałęzi. RootcentredUVcrop i2/3rootedspraybundle wyłącznieartifact. ROOTrelease13:25 dotarł,lecz próba actualmipQA FirstGuard ZABLOKOWANA przez ponownyPHONE; żadnychQAAssets/C#niezainstalowano iUnitynieruszona. Release13:25suspended,czekaFreshRelease. CurrentGLB/raw/sourcefrozen. NASTĘPNA KOMENDA: packed_bundle_candidates.py CPU→ROOTreview; actualmips przez run_alpha_mips.ps1 tylkopoFreshRelease+obu guardsabsent.
+
