@@ -90,3 +90,4 @@ Krok 27: podłączono fotograficzną mapę chmur CC0 w istniejącym skyboxie (1 
 
 Krok 28: obejrzano podgląd źródła i wyodrębnionej maski; widoczne osobne cumulusy i samocieniowanie. Pochodna 4096×2048 ma 3 162 892 B PNG. Skrypt prepare-photo-sky.ps1 skonfiguruje tylko własną teksturę i po osobnym Acquire uruchomi 15 porównań fotograficznego nieba. Następny krok: uruchomić i obejrzeć cloud-photo.
 Import fotograficznej mapy nieba zakończony: linear, mipmapy, ASTC 6x6, oś źródłowego słońca zweryfikowana. Następny krok: cloud-photo.json i oględziny.
+Batch światła zakończony: artifacts/light-r1/cloud-photo.json; log C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-light\artifacts\light-r1\cloud-photo.20261111-230639.log. Następny krok: obejrzeć PNG i policzyć metryki, nie deklarować PASS z samego kodu wyjścia.
