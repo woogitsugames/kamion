@@ -1,39 +1,21 @@
 # S10 — raport koordynatora (WIP)
 
-Stan: 2026-11-11, 13:54 CET. Pakiet nie jest jeszcze zamknięty.
-Repozytorium: `C:/Users/matma/Documents/Claude/kamion`.
-Koordynacja: `.claude/worktrees/gpt-s10-coordination`, `codex/s10-coordination`.
-Nie scalano ani nie pushowano main z tej sesji. Integrację prowadzi lider Claude.
-Maksymalnie trzech wykonawców pracuje równolegle, każdy we własnym worktree.
+Stan 2026-11-11 14:25:07 CET. Pakiet nadal w toku. Nie scalano ani nie pushowano main z tej sesji; scalenia A/B/C i0101 wykonał lider Claude. Maksymalnie trzech wykonawców, każdy we własnym worktree. Każdy strumień ma osobny STATUS i raport z dowodami.
 
-| Strumień | Gałąź / ostatni zweryfikowany punkt | Wynik i pozostałe prace |
+| Strumień | Zweryfikowany stan | Testy i ograniczenia |
 |---|---|---|
-| A / 0086 | gpt-tint-gamma / 1317afba | Kontrakt koloru i test GPU potwierdzone. GIS 359 passed, 2 xfailed; EditMode 226/226. Krytyk wykrył błędną kalibrację hali i ekranów; wcześniejsze zatwierdzenie wyglądu wycofane. Korektę prowadzi lider w tint-r2 / ADR 0101. |
-| B / 0088 | gpt-vegetation-r2 / 4db366ad | Scalony przez lidera; niezależny krytyk: jakość FAIL, kontynuacja0109. GIS 364 passed, 2 xfailed; EditMode 218/218. Wszystkie 236 porównań: delta draws 0, Low tris -8..0k. Ograniczenia stylu i brak pomiaru GPU na telefonie zapisane w raporcie. |
-| C / 0098 | gpt-light-r12 / 5db77e9d | Scalony przez lidera; jakość FAIL, P0 rozmycia asfaltu do0108. GIS 355 passed, 2 xfailed; EditMode 221/221. 236 wierszy stats identycznych bajtowo. Jawnie opisano kompromis ostrości przy skalowaniu i brak pomiaru urządzenia. |
-| F / 0087 | gpt-truck-paint / 4559296e | Pierwszy kandydat: naprawione przepełnienie RGBAHalf lamp, rzeczywisty odczyt GPU poprawny. Połysk drzwi i mediana szkła nadal poniżej progów. Trwa diagnoza odbicia; brak akceptacji wyglądu. |
-| G / 0089 | gpt-car-paint / a1853369 | Świeża baza już spełnia cel czarnych drzwi. Osobno zmierzona poprawka Pearl; trwają koła, neutralna opona i cztery poziomy brudu per instancja. |
-| E / remiza r7 | gpt-firestation-r7 / 75a729f5 | 160 obrazów bazowych. Produkcyjny kandydat roślin w przebudowie; właściwe kadry i kalibracja pozostałych elementów jeszcze przed nami. |
-| D / 0099 | gpt-surface-wear / d00807ed | Bramka 0095 potwierdzona na main. Przygotowano świeży świat, źródła i audyt UV; implementacja czeka na wolne miejsce. |
+| A /0086, gpt-tint-gamma | Kontrakt koloru1317afba; błędną kalibrację hali/ekranów naprawił lider w0101, scalonym4c63f4c4 | A: GIS359/2xfail, EditMode226/226. Krytyk0101 zamknął P0 pigmentów; brak żeberek hali jest poza tintem. Trzy braki wygenerowanych materiałów w zewnętrznym teście0101 wymagają kanonicznego retry lidera. |
+| B /0088, gpt-vegetation-r2 | Scalone przez lidera; dokumentacja63fa644f uwzględnia jakość FAIL | GIS364/2xfail, EditMode218/218. Korony DK8 i obwódka poprawione, ale żywopłoty, pokrój/impostory sosny, zdrowe korony i trawa wymagają0109. |
+| C /0098, gpt-light-r12 | Scalone przez lidera; dokumentacja77b718c4 wycofuje akceptację miękkości High | GIS355/2xfail, EditMode221/221. Niebo/biel poprawione, P0 RCAS0 rozmywa asfalt; pozostały ściany/cienie i brak nowych zmian mgły/AO. Kontynuacja0108. |
+| F /0087, gpt-truck-paint | Zakończone wdrożenie2086e780, jakość właścicielska CZĘŚCIOWA/FAIL | GIS370/1xfail, EditMode238/238, końcowe102 kadry, budżet bez wzrostu. Naprawione przepełnienie lamp; fizyczne próbkowanie odbić i ograniczona krzywizna normalnych3,6mm. Drzwi overcast3,32Low/2,77High nadal poniżej4; inne niespełnione wiersze jawnie w REPORT. |
+| G /0089, gpt-car-paint | SCOPED PASS; wdrożenie aa1af012, późniejsze2f7e64f1/7ababc29 tylko przeglądy D/C13 | GIS375/1xfail, EditMode231/231. GPU1007 instancji i18 przypadkówLOD/origin PASS.324 kadry obejrzane przez autora i root. Drzwi HighOV39,840; maska nie rozjaśniona.236 porównań trasy bez wzrostu. |
+| E /remiza r7, gpt-firestation-r7 | W toku: rośliny i pozycje poprawione z ujawnioną wąskością koron; trwa druga kalibracja szkła | Docelowy tynk już spełniony i zachowany. Cztery kadry pierwszej elewacji zbyt jasne High79–85 zamiast60–75. ASTC1024×512 zmierzone: stare detale zgodne mip0–3, dalsze mipy mają pojedyncze różnice. Pełne testy/budżety po finalnych produktach. |
+| D /0099, gpt-surface-wear | Przejęte przez F; przygotowana niezmieniona baza i patche nieaktywne92bc26af/58b6e8b9 | Import i kanoniczne pojazdy gotowe, kadry BEFORE jeszcze0. Brak UV dla części dróg i stałe UV oznakowania to osobne ograniczenia; małe patche nie zamykają całego zużycia nawierzchni. |
 
-## Wyniki wymagające zachowania przy integracji
+Po zakończeniu F/G/E/D:0108 światło r13, następnie0109 roślinność r3 według docs/owner/GPT-FEEDBACK-S10.md. Preflight0108 jest gotowy, kod nie został zmieniony.
 
-- B: surowe, przypięte hashem mapy CC0 sosny nie są w Git. Po scaleniu B, PRZED generacją, należy uruchomić `uv run --project tools/worldgen python artifacts/vegetation-r2/restore_cc0_inputs.py --root .`. Pakiet i bezpieczny skrypt są skopiowane do głównego `artifacts/vegetation-r2`. Po scaleniu B przez lidera koordynator wykonał ten krok: obie brakujące mapy odtworzone bez nadpisywania, zgodność manifestu i hashy potwierdzona (B-main-input-restore.json).
-- E: analogiczny pakiet CC0 fir_tree_01 jest przygotowany w prywatnym worktree. Taksonomia źródła nie potwierdza Picea; nie jest opisywany jako zweryfikowany skan świerka. Ostateczna instrukcja odtwarzania trafi do raportu E.
-- A: kontrakt `_Tint` i kalibracja wyglądu są oceniane oddzielnie. Wykrycie przepalonej hali oraz za ciemnych ekranów jest jawne w REVIEW-A-0086.md. Pomiary z jednego zacienionego fragmentu nie wystarczają do zamknięcia kalibracji.
-- Każdy zamknięty strumień ma własny REPORT, ADR, wyniki i ograniczenia. Pary porównawcze używają niezmiennej bazy; późniejsza kanoniczna przebudowa ciężarówki jest opisana osobno.
-- Nie mierzono czasu GPU na urządzeniu ani nie używano telefonu/ADB. Stats z edytora nie są dowodem wydajności GPU telefonu.
+Budżety dotyczą estymat edytora i zaokrąglonych tysięcy trójkątów. Nie są pomiarem czasu GPU telefonu. Nie używano telefonu ani ADB; testy telefonu prowadzi zewnętrzny agent wydajności. Nasze kolejne uruchomienia Unity zatrzymują obie blokady, a po rzeczywistym końcu przebiegu wymagają jawnego wznowienia. PHONE-RACE.md opisuje wcześniejszą lukę blokady i wdrożone zatrzymanie.
 
-## Współbieżność i okno telefonu
+Po scaleniu B odtworzono wyłącznie dwa brakujące, ignorowane wejścia CC0 z przypiętego pakietu, bez nadpisania plików lub kodu main. Manifest/hashes sprawdzone, wynikowy PNG sosny po regeneracji lidera identyczny bajtowo z zaakceptowanym B. Regeneracja lidera14790c48:389passed/1xfail. E ma własny pakiet CC0 fir_tree_01 i instrukcję odtworzenia; taksonomia Picea nie jest potwierdzona.
 
-PHONE-RACE.md dokumentuje krótkie nakładanie uruchomień w przerwach zmiennej blokady lidera. Wprowadzona własna blokada zatrzymała nasze Unity do rzeczywistego końca gate3B o 11:54:10. Po stabilnym braku blokady wykonano kontrolowany pełny retry B i dopiero o 11:56:56 jawnie wznowiono F/G/E. Każdy kolejny start sprawdza obie wspólne blokady. Nie dotykano telefonu ani procesów innych wykonawców.
-
-## Następny etap
-
-Dokończyć i niezależnie obejrzeć F/G/E, uruchomić D po zwolnieniu miejsca, zebrać pełne testy i budżety oraz zastąpić ten raport końcowym zestawieniem rzeczywistych wyników i otwartych ograniczeń. Zachować zakaz scalania do main.
-
-Aktualizacja: lider zewnętrzny scalił B (6b8f9123) i C (bfdde95f); trwa jego regeneracja. Ponowne okno telefonu perf-low-r1 od 12:27:10 wstrzymuje nasze Unity. Pełne GIS F i G działają podczas tej blokady.
-
-Stan uzupełniający: G 375 passed / 1 xfailed, zapisany czysty 75082bd1; D nieaktywny patch dba4855d, bez zmiany bazy. Lider zregenerował B+C na main14790c48: 389 passed / 1 xfailed. E pierwszy wariant koron odrzucony jako zbyt rzadki, następny .55R w przygotowaniu. F następna próba obejmuje uzasadnioną źródłowo krzywiznę normalnych drzwi; nadal brak akceptacji. Nowe okno telefonu diag2 blokuje Unity; próba wznowienia została poprawnie zatrzymana przez powrót PHONE_RUN.
-
-Najnowszy stan: F finalne238/238 EditMode i102 kadry zweryfikowane, jakość właścicielska częściowa; G pełne324R3 gotowe, EditMode zatrzymała blokada telefonu; E przyjęta ograniczona poprawa koron z ujawnioną wąskością, dalsza kalibracja elewacji przed nami. D nieaktywne patche92bc26af, produkcja i baza nienaruszone. Kolejka po F/G/E/D:0108 światło r13, następnie0109 roślinność r3 według GPT-FEEDBACK-S10.md. B/C historyczne testy i scalenia nie oznaczają pełnego zaliczenia jakości.
+Każda para przed/po zachowuje własną bazę. Nowe kamery diagnostyczne G są AFTER-only, a historyczne nieprawidłowe/zasłonięte widoki nie są dowodem LOD. Wspólna integracja wszystkich gałęzi pozostaje pracą lidera. Nie nadano zbiorczego PASS jakości na podstawie samych testów.

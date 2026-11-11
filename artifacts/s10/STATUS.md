@@ -427,3 +427,24 @@ ensures nearunitTint1.000743 (notbitexact1), actual4probe pendingworld/phone.
 Feedbackqueue0108then0109 remains AFTER current F/G/E/D. B/C qualityFAIL notclosed
 byoldtestpasses; A0101externalcalibfix independentlycriticvalidatedP0closed.
 NEXT COMMAND: monitor perf-low-r1/diag6.log actualEND; promptfreshrelease Dpristineimport/fixtures/before236 andEactualfasade4, Gfinalreviewcommit/copy CPUonly. Then completeD/E before0108/0109.
+## Step31 - Dcanonicalready/Eglass2; actualfinal-phone hold
+Root explicitrelease14:12:28 after actualdiag6END14:09:32. Dpristineimport exit0
+(64chunks/41corridor, importmemory111.3/239.7MB estimates), canonicalTruck/Trailer/
+Install exit0 by14:16; noBEFOREframesyet, preparing58route+targetcamera/pins.
+RawglTF(-E,U,N)→ENU mapping corrected BEFOREframes, no patchactivated. Fowner
+willquantifyauthoredUVx=.5 wheelmaskgap andbusstopoilcoverage, no forbiddenroads
+edit. Evidence-backedimportmasktransfer fromexistingroadUVfield maybeinvestigate
+onlyifrobust(data/transforms/lanewrap), no inventedcoordinates/geometrychange.
+E actualfirstfacade4 rootviewed: paintmedians exactD48/wingtowertargetalready
+preserved; glassHigh79-85 stillfails60-75. Approvedhallonly.60scalar secondstep
+[.0612,.0648,.0702], samegradient, empiricalworkingmodelnotPASS. Clinker/drips
+retained, oldglyph/fence/flag nativeparity no obviousregression; nearunitTint1.000743
+reportedcorrectly. ActualaliasURPLitbindingssameoldbehavior; hero-onlyleaflighting
+QApossibleafterglass4, samecolor/Lowunchanged, extraHighdepthcostunverified.
+PHONE returned14:18:40, content 'perf-low-r1 final' (NOTdiag7); ownholdmarkerIDdiag7
+created. E/DnoneUnityactive/queued, old14:12releaseinvalid; actualfinal.log isnow
+multi-tiergate3 (LowA/Bcompleted,Mediuminprogress), requiretruefinalbatchEND.
+Gtechnicalclosureaa1af012; docs-onlyDscope/C13preflight2f7e64f1/7ababc29 doNOT
+changeGimplementation/validation. OwnREADONLYpreflightC13saved; no0108source/
+branch/Unity untilD/Eclosed. C13firstthen0109 perleaderfeedback.
+NEXT COMMAND: Get-Content ../perf-low-r1/artifacts/perf-low-r1/final.log -Tail 8; afteractualfinalEND+PHONEabsence removeONLYownedholdprefixdiag7 andexplicitrelease D CAPTURE(no repeatimport/fixtures), Eglass2Import+4. Monitoractualcounts/ROIbeforeanymaskpatch orfullmatrix.
