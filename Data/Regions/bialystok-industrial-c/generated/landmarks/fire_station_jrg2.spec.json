@@ -1,0 +1,913 @@
+{
+ "anchor": [
+  -262.92,
+  -142.67,
+  131.256
+ ],
+ "asset": "fire_station_jrg2",
+ "buildings": [
+  "bdot:2BE4B431-C784-1BF0-E053-CC2BA8C0D140",
+  "bdot:2BE4B431-C7B4-1BF0-E053-CC2BA8C0D140"
+ ],
+ "confidence": {
+  "facades": "by eye from CC0 / CC BY-SA photos (pattern only): medium for the street side, low (WORKING_VALUE) for the yard sides",
+  "plan_and_heights": "BDOT10k footprint + GUGiK LoD2 roof planes: medium-high"
+ },
+ "dims": {
+  "asset": "fire_station_jrg2",
+  "axis": {
+   "note": "u along the SW (street) facade towards SE, v = left normal (towards NE, away from Andersa); origin = W corner of the BDOT footprint",
+   "origin_en": [
+    -262.92,
+    -142.67
+   ],
+   "u": [
+    0.7912,
+    -0.6115
+   ]
+  },
+  "canopy": {
+   "u": [
+    18.9,
+    34.0
+   ],
+   "v": [
+    24.8,
+    26.4
+   ],
+   "z": [
+    4.2,
+    4.7
+   ]
+  },
+  "fence": {
+   "bay": 2.5,
+   "gate_parked_uv": [
+    [
+     5.3,
+     -27.2
+    ],
+    [
+     17.8,
+     -27.3
+    ]
+   ],
+   "h": 1.6,
+   "lines_uv": [
+    [
+     [
+      -28.4,
+      -27.4
+     ],
+     [
+      -5.0,
+      -27.57
+     ]
+    ],
+    [
+     [
+      5.0,
+      -27.64
+     ],
+     [
+      82.3,
+      -28.2
+     ]
+    ]
+   ],
+   "opening_uv": [
+    [
+     -5.0,
+     -27.57
+    ],
+    [
+     5.0,
+     -27.64
+    ]
+   ],
+   "plinth_h": 0.25,
+   "source": "front run of OSM way 258562003 (barrier=fence) between its vertices (-28.4, -27.4) and (82.3, -28.2) in the building frame; the generic panel fence of that way is cut along these lines (hero_building.fence_cut). Gate position and the blue steel type: WORKING_VALUE from Mapillary 767523907280643 (pattern only)"
+  },
+  "flagpoles": {
+   "h": 8.0,
+   "uv": [
+    [
+     33.2,
+     -3.2
+    ],
+    [
+     34.6,
+     -3.4
+    ]
+   ]
+  },
+  "floor_above_ground_m": 0.12,
+  "garage": {
+   "door_h": 4.0,
+   "door_w": 3.6,
+   "doors": 4,
+   "eave_z": 6.05,
+   "pier_proud": 0.07,
+   "rear_doors": 4,
+   "ridge_u": 9.25,
+   "ridge_z": 6.96,
+   "u": [
+    0.0,
+    18.5
+   ],
+   "v": [
+    0.0,
+    30.5
+   ]
+  },
+  "hall": {
+   "arch_window_sill_z": 0.9,
+   "arch_windows_u": [
+    39.45,
+    45.35
+   ],
+   "crown_z": 12.27,
+   "eave_z": 10.72,
+   "lettering": {
+    "u": [
+     37.9,
+     46.55
+    ],
+    "z": [
+     9.2,
+     10.0
+    ]
+   },
+   "number": {
+    "u": [
+     38.6,
+     40.3
+    ],
+    "z": [
+     8.05,
+     8.85
+    ]
+   },
+   "openings_note": "r3: measured on the CC0 photo 7197 (gable 12 m = 325 px): arched windows 4.7 x 4.6 m (size in atlas_layout.json 'arch'), 1.2 m apart; round window d 3.4 m, centre 4.5 m below the crown; lettering centre 2.1 m and '998' 3.3 m below the crown. WORKING_VALUE +-0.2 m (sill hidden by the thujas). r4 (same photo, 67 px/m at full size): arched windows have 3 lights; round window = one wide blue post + thin white transom; lettering spans 1.5-10.15 m and the digits '998' 2.27-3.84 m from the W corner, 0.6 m tall (the handset roundel left of them, 1.57-2.05 m, is not reproduced: no pictograms, ADR 0070); four ochre vent squares ~0.2 m at 1.37 / 4.22 / 7.22 / 10.3 m, 0.9 m above the lettering centre",
+   "round_window": {
+    "d": 3.4,
+    "u": 42.4,
+    "z": 7.25
+   },
+   "u": [
+    36.4,
+    48.4
+   ],
+   "v": [
+    0.0,
+    24.5
+   ],
+   "vents": {
+    "size": 0.2,
+    "u": [
+     37.77,
+     40.62,
+     43.62,
+     46.7
+    ],
+    "z": 10.5
+   }
+  },
+  "link": {
+   "ridge_v": 10.8,
+   "ridge_z": 9.2,
+   "u": [
+    31.4,
+    36.4
+   ]
+  },
+  "lod2_zmin_evrf2007": 130.73,
+  "lod2_zmin_note": "lowest LoD2 vertex of the main building 130.56 m (PL-KRON86-NH) + 0.17 m to PL-EVRF2007-NH (WORKING_VALUE datum shift for Bialystok); LoD2-relative heights (eave_z, ridge_z ...) are converted to heights above the floor with it",
+  "middle": {
+   "eave_ne_z": 6.57,
+   "eave_sw_z": 7.35,
+   "storey_h": 3.3,
+   "u": [
+    18.5,
+    36.4
+   ],
+   "u_step": 27.85,
+   "v_ne": 24.8,
+   "v_sw": 0.2,
+   "v_sw_recess": 1.75
+  },
+  "object": "Jednostka Ratowniczo-Gaśnicza nr 2 PSP, ul. Gen. Andersa 46, Białystok (OSM way 211035271)",
+  "outbuilding": {
+   "eave_z": 9.0,
+   "lod2_zmin_offset_m": -0.07,
+   "ridge_z": 10.55,
+   "ring_uv": [
+    [
+     58.86,
+     27.65
+    ],
+    [
+     77.77,
+     26.32
+    ],
+    [
+     78.67,
+     39.22
+    ],
+    [
+     59.76,
+     40.56
+    ]
+   ],
+   "turret_along": [
+    0.0,
+    6.1
+   ],
+   "turret_apex_z": 13.04,
+   "turret_eave_z": 12.05
+  },
+  "plinth_h_m": 0.45,
+  "schema": "truck-sim-pl/hero-building-dims/1",
+  "sources": {
+   "facades": "by eye from CC0 photos (Wikimedia Commons, Rakoon: '7197 May 2021 in Białystok', '20240626 103137 June 2024 in Białystok') and CC BY-SA 4.0 street-level frames used as pattern only (Mapillary 767523907280643, 171742518208129 richlv; 471355742447021 strudel; 2934972690092373 grobin; KartaView kv993066550): WORKING_VALUE unless a LoD2 / BDOT source is named",
+   "heights": "GUGiK LoD2 2017 roof planes (lod2_roofs.json, CC BY 4.0), relative to the lowest LoD2 vertex of each building",
+   "plan": "BDOT10k footprints bdot:2BE4B431-C784-1BF0-E053-CC2BA8C0D140 (1317.7 m2) and bdot:2BE4B431-C7B4-1BF0-E053-CC2BA8C0D140 (245.2 m2); GUGiK orthophoto 0.25 m (2024)",
+   "unverified": "NE and NW facades, garage rear doors, hall SE wall, outbuilding facades, gate position, thuja count: not visible in any open photo - WORKING_VALUE"
+  },
+  "spruce": {
+   "items": [
+    [
+     47.6,
+     -21.0,
+     7.6,
+     1.5
+    ],
+    [
+     50.4,
+     -19.5,
+     6.2,
+     1.25
+    ],
+    [
+     31.0,
+     -19.0,
+     4.8,
+     1.5
+    ]
+   ],
+   "note": "u, v, height, radius. r6: CC0 photo 7197 shows two spruces in front of the right arched window, taller than the window heads, and a broad dark conifer in front of the wing. Positions and sizes read off that one photo: WORKING_VALUE +-3 m"
+  },
+  "thuja": {
+   "count": 26,
+   "h": [
+    2.2,
+    5.4
+   ],
+   "jitter": 0.5,
+   "note": "r6: wider size / spacing spread (review P1 #6); WORKING_VALUE",
+   "r": [
+    0.34,
+    0.74
+   ],
+   "row_uv": [
+    [
+     9.0,
+     -25.9
+    ],
+    [
+     79.0,
+     -26.4
+    ]
+   ]
+  },
+  "tower": {
+   "apex_uv": [
+    24.6,
+    11.0
+   ],
+   "apex_z": 12.42,
+   "eave_z": 10.5,
+   "mast_h": 7.5,
+   "roof_foot_ne_z": 8.3,
+   "roof_foot_sw_z": 8.35,
+   "u": [
+    18.6,
+    31.4
+   ],
+   "v": [
+    6.0,
+    15.8
+   ]
+  }
+ },
+ "footprints": {
+  "bdot:2BE4B431-C784-1BF0-E053-CC2BA8C0D140": [
+   [
+    -262.92,
+    -142.67
+   ],
+   [
+    -248.56,
+    -154.39
+   ],
+   [
+    -248.18,
+    -153.91
+   ],
+   [
+    -240.74,
+    -159.51
+   ],
+   [
+    -239.85,
+    -158.33
+   ],
+   [
+    -237.42,
+    -160.1
+   ],
+   [
+    -233.51,
+    -165.5
+   ],
+   [
+    -224.75,
+    -172.17
+   ],
+   [
+    -209.53,
+    -153.03
+   ],
+   [
+    -220.88,
+    -143.87
+   ],
+   [
+    -219.95,
+    -142.68
+   ],
+   [
+    -231.72,
+    -133.16
+   ],
+   [
+    -229.42,
+    -130.09
+   ],
+   [
+    -235.82,
+    -125.08
+   ],
+   [
+    -243.99,
+    -118.69
+   ],
+   [
+    -262.92,
+    -142.67
+   ]
+  ],
+  "bdot:2BE4B431-C7B4-1BF0-E053-CC2BA8C0D140": [
+   [
+    -199.44,
+    -156.78
+   ],
+   [
+    -185.29,
+    -169.4
+   ],
+   [
+    -176.69,
+    -159.75
+   ],
+   [
+    -190.83,
+    -147.12
+   ],
+   [
+    -199.44,
+    -156.78
+   ]
+  ]
+ },
+ "frame": "local E, N (EPSG:2180 minus region origin), U absolute EVRF2007; metres; dims in the building frame (u, v, z above the floor) of dims.axis",
+ "ground": {
+  "fence": [
+   [
+    [
+     -302.147,
+     -146.982,
+     130.036
+    ],
+    [
+     -300.305,
+     -148.427,
+     130.232
+    ],
+    [
+     -298.464,
+     -149.871,
+     130.314
+    ],
+    [
+     -296.623,
+     -151.316,
+     130.359
+    ],
+    [
+     -294.782,
+     -152.76,
+     130.394
+    ],
+    [
+     -292.941,
+     -154.204,
+     130.417
+    ],
+    [
+     -291.1,
+     -155.649,
+     130.428
+    ],
+    [
+     -289.259,
+     -157.093,
+     130.426
+    ],
+    [
+     -287.418,
+     -158.538,
+     130.411
+    ],
+    [
+     -285.577,
+     -159.982,
+     130.377
+    ],
+    [
+     -283.736,
+     -161.427,
+     130.326
+    ]
+   ],
+   [
+    [
+     -275.866,
+     -167.597,
+     130.178
+    ],
+    [
+     -273.904,
+     -169.136,
+     130.194
+    ],
+    [
+     -271.942,
+     -170.675,
+     130.227
+    ],
+    [
+     -269.981,
+     -172.215,
+     130.26
+    ],
+    [
+     -268.019,
+     -173.754,
+     130.278
+    ],
+    [
+     -266.057,
+     -175.293,
+     130.285
+    ],
+    [
+     -264.095,
+     -176.832,
+     130.289
+    ],
+    [
+     -262.133,
+     -178.371,
+     130.293
+    ],
+    [
+     -260.171,
+     -179.91,
+     130.296
+    ],
+    [
+     -258.209,
+     -181.45,
+     130.298
+    ],
+    [
+     -256.247,
+     -182.989,
+     130.302
+    ],
+    [
+     -254.285,
+     -184.528,
+     130.306
+    ],
+    [
+     -252.323,
+     -186.067,
+     130.31
+    ],
+    [
+     -250.361,
+     -187.606,
+     130.316
+    ],
+    [
+     -248.399,
+     -189.145,
+     130.321
+    ],
+    [
+     -246.438,
+     -190.684,
+     130.327
+    ],
+    [
+     -244.476,
+     -192.224,
+     130.334
+    ],
+    [
+     -242.514,
+     -193.763,
+     130.343
+    ],
+    [
+     -240.552,
+     -195.302,
+     130.356
+    ],
+    [
+     -238.59,
+     -196.841,
+     130.376
+    ],
+    [
+     -236.628,
+     -198.38,
+     130.403
+    ],
+    [
+     -234.666,
+     -199.919,
+     130.435
+    ],
+    [
+     -232.704,
+     -201.458,
+     130.461
+    ],
+    [
+     -230.742,
+     -202.998,
+     130.48
+    ],
+    [
+     -228.78,
+     -204.537,
+     130.494
+    ],
+    [
+     -226.818,
+     -206.076,
+     130.513
+    ],
+    [
+     -224.856,
+     -207.615,
+     130.545
+    ],
+    [
+     -222.895,
+     -209.154,
+     130.591
+    ],
+    [
+     -220.933,
+     -210.693,
+     130.636
+    ],
+    [
+     -218.971,
+     -212.233,
+     130.659
+    ],
+    [
+     -217.009,
+     -213.772,
+     130.644
+    ],
+    [
+     -215.047,
+     -215.311,
+     130.597
+    ]
+   ]
+  ],
+  "flagpoles": [
+   [
+    -238.608,
+    -165.504,
+    130.895
+   ],
+   [
+    -237.623,
+    -166.519,
+    130.858
+   ]
+  ],
+  "footprint_max": 131.337,
+  "footprint_min": 130.738,
+  "gate": [
+   [
+    -275.36,
+    -167.432,
+    130.184
+   ],
+   [
+    -273.722,
+    -168.72,
+    130.197
+   ],
+   [
+    -272.083,
+    -170.007,
+    130.222
+   ],
+   [
+    -270.445,
+    -171.294,
+    130.251
+   ],
+   [
+    -268.807,
+    -172.581,
+    130.272
+   ],
+   [
+    -267.169,
+    -173.868,
+    130.284
+   ],
+   [
+    -265.531,
+    -175.156,
+    130.288
+   ]
+  ],
+  "spruce": [
+   [
+    -238.1,
+    -188.394,
+    130.271,
+    7.6,
+    1.5,
+    0
+   ],
+   [
+    -234.967,
+    -188.92,
+    130.285,
+    6.2,
+    1.25,
+    1
+   ],
+   [
+    -250.011,
+    -176.66,
+    130.362,
+    4.8,
+    1.5,
+    2
+   ]
+  ],
+  "thuja": [
+   [
+    -270.89,
+    -169.094,
+    130.239,
+    2.22,
+    0.68,
+    0
+   ],
+   [
+    -268.592,
+    -171.308,
+    130.273,
+    4.03,
+    0.52,
+    1
+   ],
+   [
+    -266.681,
+    -172.455,
+    130.291,
+    4.76,
+    0.68,
+    2
+   ],
+   [
+    -263.677,
+    -174.688,
+    130.301,
+    5.12,
+    0.54,
+    3
+   ],
+   [
+    -262.196,
+    -176.202,
+    130.3,
+    5.21,
+    0.37,
+    4
+   ],
+   [
+    -259.721,
+    -177.944,
+    130.302,
+    3.99,
+    0.52,
+    5
+   ],
+   [
+    -258.015,
+    -179.171,
+    130.303,
+    2.45,
+    0.48,
+    6
+   ],
+   [
+    -255.453,
+    -181.067,
+    130.304,
+    5.02,
+    0.52,
+    7
+   ],
+   [
+    -253.94,
+    -182.58,
+    130.304,
+    4.04,
+    0.54,
+    8
+   ],
+   [
+    -251.89,
+    -184.32,
+    130.305,
+    4.83,
+    0.57,
+    9
+   ],
+   [
+    -248.978,
+    -186.406,
+    130.311,
+    3.99,
+    0.48,
+    10
+   ],
+   [
+    -246.827,
+    -188.09,
+    130.314,
+    3.96,
+    0.68,
+    11
+   ],
+   [
+    -245.209,
+    -189.482,
+    130.315,
+    4.53,
+    0.65,
+    12
+   ],
+   [
+    -242.995,
+    -190.989,
+    130.312,
+    3.67,
+    0.7,
+    13
+   ],
+   [
+    -240.731,
+    -193.025,
+    130.321,
+    4.02,
+    0.35,
+    14
+   ],
+   [
+    -239.068,
+    -194.218,
+    130.33,
+    2.33,
+    0.53,
+    15
+   ],
+   [
+    -236.969,
+    -195.801,
+    130.356,
+    4.56,
+    0.39,
+    16
+   ],
+   [
+    -234.98,
+    -197.244,
+    130.391,
+    3.91,
+    0.4,
+    17
+   ],
+   [
+    -232.897,
+    -198.977,
+    130.438,
+    5.22,
+    0.65,
+    18
+   ],
+   [
+    -230.756,
+    -200.819,
+    130.476,
+    3.07,
+    0.34,
+    19
+   ],
+   [
+    -228.414,
+    -202.532,
+    130.5,
+    3.91,
+    0.51,
+    20
+   ],
+   [
+    -226.043,
+    -204.336,
+    130.524,
+    2.81,
+    0.58,
+    21
+   ],
+   [
+    -224.031,
+    -206.302,
+    130.557,
+    4.51,
+    0.52,
+    22
+   ],
+   [
+    -221.862,
+    -207.571,
+    130.607,
+    4.28,
+    0.74,
+    23
+   ],
+   [
+    -219.356,
+    -209.416,
+    130.666,
+    2.85,
+    0.36,
+    24
+   ],
+   [
+    -217.618,
+    -211.102,
+    130.681,
+    3.65,
+    0.58,
+    25
+   ]
+  ]
+ },
+ "id": "andersa-jrg2-fire-station-hero",
+ "lod_ends_m": [
+  150.0,
+  450.0,
+  20000.0
+ ],
+ "osm_way": 211035271,
+ "region": "bialystok-industrial-c",
+ "schema": "truck-sim-pl/hero-building-spec/1"
+}

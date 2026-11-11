@@ -37,6 +37,8 @@ from shapely.geometry import LineString, Point
 from roads import standards as S
 from roads.network import MEDIAN_RURAL, RURAL, URBAN, side_params, side_extent
 
+from . import facade_atlas as FA
+
 # Ground-standing poles are seated on the lowest surface under their footing (gate 3 audit: lamps / masts up to
 # 0.44 m in the air, sign posts buried > 0.6 m); the part on the high side goes into the ground like a real foundation.
 SEATED_POLES = ("lamp_", "signal_mast", "signal_pole", "sign_post", "power_pole")
@@ -63,14 +65,14 @@ class SurfaceTop:
     (gate 3 audit). Upward faces only (|n.z| >= 0.5); bridge decks are a separate layer and are not sampled."""
     CELL = 4.0
 
-    def __init__(self, parts, collision=False):
+    def __init__(self, parts, collision=False, layers=("road", "paved")):
         tris = []
         for p in parts:
             if collision:                 # the smooth collision surfaces (4 m stations) the player and the audit stand on
                 if p.layer != "collision" or p.mat not in ("collision_asphalt", "collision_curb", "collision_paving",
                                                              "collision_grass"):
                     continue
-            elif p.layer not in ("road", "paved") or p.mat.startswith("collision") or p.mat.startswith("marking"):
+            elif p.layer not in layers or p.mat.startswith("collision") or p.mat.startswith("marking"):
                 continue
             A = p.V[p.T]
             nrm = np.cross(A[:, 1] - A[:, 0], A[:, 2] - A[:, 0])
@@ -241,6 +243,143 @@ def clear_carriageway(pl, carriage, zsurf, report):
     if drop:
         pl.items[:] = [it for it in pl.items if id(it) not in drop]
     report["props_off_carriageway"] = {"moved": moved, "still_on_road": 0, "removed": left[:20]}
+
+
+def clear_under_decks(pl, parts, report):
+    """Ground-standing poles whose shaft would pierce a bridge deck above them are removed with everything stacked
+    on the same base (ADR 0076, owner 2026-11-10: "a lamp stands in the middle of the lane" on the Andersa
+    viaduct - a 12 m lamp of the road below came up through the deck). Lamps along a road that passes under a
+    viaduct are placed by the same rule as anywhere else; under the deck there is no room for the column."""
+    deck = SurfaceTop(parts, layers=("bridge",))
+    groups = {}
+    for it in pl.items:
+        groups.setdefault((round(it["e"], 2), round(it["n"], 2)), []).append(it)
+    drop, removed = set(), []
+    for (e, n), items in groups.items():
+        base = [it for it in items if it["p"].startswith(GROUND_PROPS)]
+        if not base:
+            continue
+        b = min(base, key=lambda it: it["z"])
+        h = S.ground_prop_height(b["p"])
+        r = 0.6
+        zs = [deck.top(e + dx, n + dy) for dx, dy in ((0, 0), (r, 0), (-r, 0), (0, r), (0, -r))]
+        zs = [z for z in zs if math.isfinite(z)]
+        if zs and any(b["z"] + 0.5 < z < b["z"] + h + 0.5 for z in zs):
+            drop.update(id(it) for it in items)
+            removed.append({"p": b["p"], "at": [round(e, 1), round(n, 1)], "base_z": round(b["z"], 2),
+                            "deck_z": round(max(zs), 2), "src": b.get("src", "")})
+    if drop:
+        pl.items[:] = [it for it in pl.items if id(it) not in drop]
+    report["poles_under_decks"] = {"removed": len(removed), "items": removed[:40]}
+
+
+def clear_level_carriageways(pl, parts, report):
+    """Ground-standing props whose base stands on a carriageway at its own level are removed with everything
+    stacked on them (ADR 0076). clear_carriageway works on the 2D footprint of the ground roads only: a lamp of
+    one deck carriageway placed 0.6 m beyond its edge landed in the lane of the carriageway laid abreast of it,
+    and a ground lamp at a junction corner under another ribbon stayed (consistency.prop_on_carriageway: 2).
+    Same criterion as that check: carriageway under the base and under 4 points PROP_INSET_M around it, within
+    DZ_M of the base height, nothing else (kerb, sidewalk, island) on top."""
+    from roads import consistency as CQ
+    idx = CQ.SurfaceIndex(parts)
+    groups = {}
+    for it in pl.items:
+        groups.setdefault((round(it["e"], 2), round(it["n"], 2)), []).append(it)
+    ring = [(0.0, 0.0), (CQ.PROP_INSET_M, 0.0), (-CQ.PROP_INSET_M, 0.0), (0.0, CQ.PROP_INSET_M), (0.0, -CQ.PROP_INSET_M)]
+    drop, removed = set(), []
+    for (e, n), items in groups.items():
+        base = [it for it in items if it["p"].startswith(CQ.GROUND_PROPS)]
+        if not base:
+            continue
+        b = min(base, key=lambda it: it["z"])
+        lab = idx.classify(np.array([[e + dx, n + dy, b["z"]] for dx, dy in ring]))
+        if all(x == "carriageway" for x in lab):
+            drop.update(id(it) for it in items)
+            removed.append({"p": b["p"], "at": [round(e, 1), round(n, 1)], "src": b.get("src", "")})
+    if drop:
+        pl.items[:] = [it for it in pl.items if id(it) not in drop]
+    report["props_on_level_carriageway"] = {"removed": len(removed), "items": removed[:40]}
+
+
+NARROW_ISLAND_R = 1.0      # WORKING_VALUE: carriageway within this distance on two opposite sides = separation < ~2 m
+
+
+def clear_narrow_islands(pl, parts, net, report):
+    """No lamp on a separation narrower than ~2 m (ADR 0093, REVIEW 0076 #7: a lamp on the needle tip of an island
+    at E -774.5 N 77.5, luminaire over the lane). A rule-placed lamp with carriageway within NARROW_ISLAND_R on two
+    opposite sides is moved to the other edge of its own carriageway (the outer side of a ramp) when that spot is
+    clear, otherwise removed with everything stacked on it."""
+    from roads import consistency as CQ
+    idx = CQ.SurfaceIndex(parts)
+    ang = np.arange(8) * (math.pi / 4)
+    ring = np.column_stack([np.cos(ang), np.sin(ang)]) * NARROW_ISLAND_R
+    chains = {c.id: c for c in net.chains}
+
+    def narrow(e, n, z):
+        lab = idx.classify(np.array([[e + dx, n + dy, z] for dx, dy in ring]))
+        return any(lab[k] == "carriageway" and lab[k + 4] == "carriageway" for k in range(4))
+
+    groups = {}
+    for it in pl.items:
+        groups.setdefault((round(it["e"], 2), round(it["n"], 2)), []).append(it)
+    drop, moved, removed, add = set(), [], [], []
+    for (e, n), items in groups.items():
+        base = [it for it in items if it["p"].startswith("lamp_")]
+        if not base:
+            continue
+        b = min(base, key=lambda it: it["z"])
+        if not narrow(e, n, b["z"]):
+            continue
+        drop.update(id(it) for it in items)
+        c = chains.get(b.get("src", "")[5:]) if b.get("src", "").startswith("rule:") else None
+        q = None
+        # first choice: the outer edge of the carriageway on the far side of the island (a ramp beside the main
+        # carriageway keeps its lamps on its outer edge), then the other edge of the lamp's own carriageway
+        tries = []
+        if c is not None:
+            s_own, lat_own = c.line.project(np.array([e, n]))
+            best = None
+            for c2 in net.chains:
+                if c2 is c or c2.meta.get("absorbed") or c2.roundabout:
+                    continue
+                lo, hi = c2.line.p.min(0) - 12, c2.line.p.max(0) + 12
+                if not (lo[0] <= e <= hi[0] and lo[1] <= n <= hi[1]):
+                    continue
+                s2, lat2 = c2.line.project(np.array([e, n]))
+                if not (0.0 < s2 < c2.length):
+                    continue
+                gap = abs(lat2) - float(c2.hw_at(s2))
+                if -0.2 < gap < 2 * NARROW_ISLAND_R and (best is None or gap < best[0]):
+                    best = (gap, c2, float(s2), -1.0 if lat2 > 0 else 1.0)
+            if best is not None:
+                tries.append(best[1:])
+            tries.append((c, float(np.clip(s_own, 0.0, c.length)), -1.0 if lat_own > 0 else 1.0))
+        for c, s, sgn in tries:
+            if q is not None:
+                break
+            if not bool(c.bridge[c.idx(s)]):
+                kind, h, w, ext = side_surface_offset(c, "L" if sgn > 0 else "R", s)
+                if kind != MEDIAN_RURAL:
+                    hw = float(c.hw_at(s))
+                    off = hw + (S.KERB_TOP_W + S.LAMP_OFFSET if kind == URBAN else ext + 0.8)
+                    q = np.asarray(c.line.offset_point(s, sgn * off), float).reshape(-1)[:2]
+                    zq = float(c.crossfall_z(s, sgn * hw))
+                    lab = idx.classify(np.array([[q[0], q[1], zq]] + [[q[0] + dx * 0.25, q[1] + dy * 0.25, zq]
+                                                                    for dx, dy in ring[::2]]))
+                    if any(x == "carriageway" for x in lab) or narrow(q[0], q[1], zq) or pl.near("lamp", q, 8.0):
+                        q = None
+                    else:
+                        t, nn = c.line.frame(s)
+                        add.append((b["p"], q, yaw_of(-np.asarray(nn) * sgn), b.get("src", "")))
+        (moved if q is not None else removed).append({"p": b["p"], "from": [round(e, 1), round(n, 1)],
+                                                      "to": None if q is None else [round(float(q[0]), 1), round(float(q[1]), 1)],
+                                                      "src": b.get("src", "")})
+    if drop:
+        pl.items[:] = [it for it in pl.items if id(it) not in drop]
+    for proto, q, yaw, src in add:
+        pl.add(proto, q, yaw, src=src, group="lamp")
+    report["lamps_on_narrow_islands"] = {"moved": len(moved), "removed": len(removed), "radius_m": NARROW_ISLAND_R,
+                                         "items": (moved + removed)[:60]}
 
 
 # ------------------------------------------------------------------------------------------- lamps
@@ -689,6 +828,77 @@ def cut_by(line, poly):
     return [p for p in getattr(g, "geoms", [g]) if p.geom_type == "LineString" and p.length > 1.0]
 
 
+def concrete_fence(lin, line, key, style_key):
+    """Prefabricated concrete fence (ADR 0081, typical plot fence of the Bialystok industrial area): bays of
+    S.CONCRETE_FENCE_POST between H-posts; every bay is level and steps at the posts with the ground (the plates are
+    cast flat, nobody rakes them), four stacked 0.5 m plates or one framed panel per bay from the fence_concrete atlas
+    (UV0 = atlas metres, facade_atlas.fence_uv), a different cast on the two faces, posts 12 x 14 cm standing 8 cm
+    above the plates. One fence = one style; sprayed / painted-over bays stay rare (1 in ~7). Returns the bay count."""
+    L = line.length
+    nb = max(1, int(round(L / S.CONCRETE_FENCE_POST)))
+    Q = np.array([line.interpolate(L * k / nb).coords[0] for k in range(nb + 1)])
+    Zg = lin.z(Q)
+    style = "frame" if _h(style_key + ":style") % 10 < 3 else "plate"
+    nv = FA.FENCE_VARIANTS[style]
+    marked = {"plate": (1, 5, 6), "frame": (3,)}[style]
+    H, T2 = S.CONCRETE_FENCE_H, 0.025
+    Vs, UVs, Ts, Cv = [], [], [], []
+
+    def quad(P4, uv):
+        b = len(Vs)
+        Vs.extend(P4)
+        UVs.extend(uv)
+        Ts.extend([(b, b + 1, b + 2), (b, b + 2, b + 3)])
+
+    pu, pv, pw, ph = FA.fence_post_uv()
+    tops = []
+    for i in range(nb):
+        q0, q1 = Q[i], Q[i + 1]
+        t = (q1 - q0) / max(np.hypot(*(q1 - q0)), 1e-6)
+        nn = np.array([-t[1], t[0]])
+        zb = min(Zg[i], Zg[i + 1]) - 0.05
+        zt = zb + H
+        tops.append(zt)
+        for side in (1, -1):
+            v_ = (_h(f"{key}:{i}:{side}") >> 3) % nv
+            if v_ in marked and _h(f"{key}:{i}:{side}:m") % 7:
+                v_ = [x for x in range(nv) if x not in marked][_h(f"{key}:{i}:{side}:p") % (nv - len(marked))]
+            u0, v0, w, h = FA.fence_uv(style, v_)
+            o = nn * T2 * side
+            A_, B_ = (q0, q1) if side < 0 else (q1, q0)             # CCW seen from the side the face looks at
+            quad([[A_[0] + o[0], A_[1] + o[1], zb], [B_[0] + o[0], B_[1] + o[1], zb],
+                  [B_[0] + o[0], B_[1] + o[1], zt], [A_[0] + o[0], A_[1] + o[1], zt]],
+                 [[u0, v0], [u0 + w, v0], [u0 + w, v0 + h], [u0, v0 + h]])
+        o = nn * T2                                                    # top edge of the upper plate
+        quad([[q0[0] - o[0], q0[1] - o[1], zt], [q1[0] - o[0], q1[1] - o[1], zt],
+              [q1[0] + o[0], q1[1] + o[1], zt], [q0[0] + o[0], q0[1] + o[1], zt]],
+             [[pu + 0.02, pv + 0.1], [pu + 0.02, pv + 1.9], [pu + 0.07, pv + 1.9], [pu + 0.07, pv + 0.1]])
+        Cv.append([[q0[0], q0[1], zb - 0.3], [q1[0], q1[1], zb - 0.3], [q1[0], q1[1], zt], [q0[0], q0[1], zt]])
+    for i in range(nb + 1):                                            # H-posts
+        q = Q[i]
+        t = Q[min(i + 1, nb)] - Q[max(i - 1, 0)]
+        t = t / max(np.hypot(*t), 1e-6)
+        nn = np.array([-t[1], t[0]])
+        z0 = Zg[i] - 0.3
+        z1 = max(tops[max(i - 1, 0)], tops[min(i, nb - 1)]) + 0.08
+        hx, hy = t * 0.06, nn * 0.07
+        c = [q + sx * hx + sy * hy for sx, sy in ((-1, -1), (1, -1), (1, 1), (-1, 1))]
+        vv = ph * min(1.0, (z1 - z0) / 2.4)
+        for j in range(4):
+            a_, b_ = c[j], c[(j + 1) % 4]
+            uu = pu + 0.02 + 0.07 * j
+            quad([[a_[0], a_[1], z0], [b_[0], b_[1], z0], [b_[0], b_[1], z1], [a_[0], a_[1], z1]],
+                 [[uu, pv], [uu + 0.06, pv], [uu + 0.06, pv + vv], [uu, pv + vv]])
+        quad([[c[0][0], c[0][1], z1], [c[1][0], c[1][1], z1], [c[2][0], c[2][1], z1], [c[3][0], c[3][1], z1]],
+             [[pu + 0.05, pv + 1.0], [pu + 0.15, pv + 1.0], [pu + 0.15, pv + 1.1], [pu + 0.05, pv + 1.1]])
+    T = np.array(Ts)
+    lin.buf.add("furniture", "concrete_fence", np.array(Vs, float), np.array(UVs, float), T, src=key)
+    CV = np.array(Cv, float).reshape(-1, 3)
+    CT = np.array([(4 * k + j[0], 4 * k + j[1], 4 * k + j[2]) for k in range(nb) for j in ((0, 1, 2), (0, 2, 3), (0, 2, 1), (0, 3, 2))])
+    lin.buf.add("collision", "collision_fence", CV, CV[:, :2], CT, src=key)
+    return nb
+
+
 def fences(lin, src, origin, roads_poly, report):
     n = {"panel_m": 0.0, "concrete_m": 0.0, "retaining_m": 0.0}
     cutter = roads_poly.buffer(0.3) if roads_poly is not None else None
@@ -709,8 +919,11 @@ def fences(lin, src, origin, roads_poly, report):
                 lin.posts(col, P, S.FENCE_PANEL_W, 0.06, 0.04, S.FENCE_H + 0.05, src=key)
                 n["panel_m"] += part.length
             elif b == "wall":
-                lin.slab("concrete_fence", P, Z - 0.2, Z + S.CONCRETE_FENCE_H, 0.05, key, collision="collision_fence")
-                lin.posts("concrete_fence_post", P, S.CONCRETE_FENCE_POST, 0.12, 0.12, S.CONCRETE_FENCE_H + 0.1, src=key)
+                cc = np.asarray(part.simplify(0.15).coords)            # bays run corner to corner
+                for si in range(len(cc) - 1):
+                    if np.hypot(*(cc[si + 1] - cc[si])) >= 0.8:
+                        n["concrete_bays"] = n.get("concrete_bays", 0) + concrete_fence(
+                            lin, LineString([cc[si], cc[si + 1]]), f"{key}:{si}", key)
                 n["concrete_m"] += part.length
             else:
                 retaining(lin, P, key)

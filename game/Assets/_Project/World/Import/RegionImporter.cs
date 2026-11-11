@@ -160,6 +160,7 @@ namespace Game.World.Import
             if (!WorldTextureGenerator.Exist()) WorldTextureGenerator.GenerateAll();
             LookDevAssets.EnsureAll();
             WorldPbrMaterials.Reset();
+            FabMaterials.Reset();
             var roadAsphalt = Obj(manifest.Get("materials")).Get("road_asphalt") as Dictionary<string, object>;
             foreach (var kv in Obj(manifest.Get("materials")))
             {
@@ -299,6 +300,13 @@ namespace Game.World.Import
             float metal = m.Get("metal") != null ? (float)Num(m.Get("metal")) : 0f;
             string surface = Str(m.Get("surface"));
             string path = $"{r.Dir}/Materials/M_{id}.mat";
+            if (FabMaterials.IsBaseSurface(id) && FabMaterials.Has(id))
+            {
+                var surfaceBase = WorldPbrMaterials.Create(r, id, m, path);
+                if (surfaceBase != null && FabMaterials.ApplySurfaceBase(r, id, surfaceBase)) return surfaceBase;
+            }
+            var fab = FabMaterials.Create(r, id, path);
+            if (fab != null) return fab;
             if (m.Get("hlod") is bool hl && hl)
             {
                 // Forest HLOD (ADR 0015): shared PNG baked from the LOD0 trees (texture_ref, repo-relative). Edge walls are
@@ -328,7 +336,8 @@ namespace Game.World.Import
                 if (m.Get("shader") as string == "car_glass")
                     return CarGlassMaterial(path, albedo, rough, (float)Num(m.Get("alpha")), m.Get("dust") != null ? (float)Num(m.Get("dust")) : 0f,
                         m.Get("privacy_alpha") != null ? (float)Num(m.Get("privacy_alpha")) : 0.80f,
-                        m.Get("reflect") != null ? (float)Num(m.Get("reflect")) : 1f);
+                        m.Get("reflect") != null ? (float)Num(m.Get("reflect")) : 1f,
+                        m.Get("lens_alpha") != null ? (float)Num(m.Get("lens_alpha")) : -1f);
                 // Optional alpha texture (road film overlays of parked cars): matt, no sky mirror.
                 Texture2D bt = null;
                 if (m.Get("texture") is string btex)
@@ -455,7 +464,7 @@ namespace Game.World.Import
         }
 
         /// <summary>Parked-car glass (Kamion/World Car Glass): premultiplied tint + capped Fresnel reflection + UV0 dust.</summary>
-        static Material CarGlassMaterial(string path, Color tintLinear, float rough, float opacity, float dust, float privacy, float reflect)
+        static Material CarGlassMaterial(string path, Color tintLinear, float rough, float opacity, float dust, float privacy, float reflect, float lens = -1f)
         {
             var shader = Shader.Find("Kamion/World Car Glass") ?? throw new InvalidOperationException("Kamion/World Car Glass not found (compile error?)");
             var mat = AssetDatabase.LoadAssetAtPath<Material>(path);
@@ -470,6 +479,7 @@ namespace Game.World.Import
             // ADR 0041 par. 9: every look constant is written (an existing material asset keeps its saved values, so a
             // changed shader default alone never reaches a reimported world)
             mat.SetFloat("_PrivacyOpacity", privacy);
+            mat.SetFloat("_LensOpacity", lens);     // ADR 0078: clear lamp covers (UV0 u offset 8); -1 = code off
             mat.SetFloat("_Reflect", reflect);
             mat.SetFloat("_ReflectMax", 0.55f);
             mat.SetFloat("_Horizon", 0.30f);
@@ -487,6 +497,12 @@ namespace Game.World.Import
             var mat = AssetDatabase.LoadAssetAtPath<Material>(path);
             if (mat == null) { mat = new Material(shader); AssetDatabase.CreateAsset(mat, path); }
             mat.shader = shader;
+            // Optional scanned materials can fall back at the same asset path on
+            // reimport. Clear the scan-only state before restoring plain Lit.
+            foreach (var keyword in new[] { "_NORMALMAP", "_OCCLUSIONMAP", "_METALLICSPECGLOSSMAP" }) mat.DisableKeyword(keyword);
+            mat.SetTexture("_BumpMap", null);
+            mat.SetTexture("_OcclusionMap", null);
+            mat.SetTexture("_MetallicGlossMap", null);
             mat.enableInstancing = true;
             mat.SetColor("_BaseColor", new Color(linear.r, linear.g, linear.b, 1f).gamma);
             mat.SetTexture("_BaseMap", tex);

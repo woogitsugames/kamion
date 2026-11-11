@@ -184,7 +184,13 @@ def compute_corners(net, j: Junction, max_trim: dict, r_override=None):
             return ok
 
         c = None
-        if alpha_deg < S.NOSE_MAX_ANGLE_DEG:
+        # ADR 0095: node override `nose_max_angle` - a fork whose branch leaves at a wider angle than
+        # NOSE_MAX_ANGLE_DEG in the first metres (OSM kinks the link off the main axis) but then runs beside the
+        # main carriageway behind a kerbed separator: gore nose where the gutters cross, not a 2.5 m fillet 50 m on
+        nose_ang = S.NOSE_MAX_ANGLE_DEG
+        for n_ in j.nodes:
+            nose_ang = max(nose_ang, float(net.nodes[n_].get("override", {}).get("nose_max_angle", 0.0)))
+        if alpha_deg < nose_ang:
             h0 = hit(0.0, 160.0)
             if h0 is not None:   # fork: gutters cross -> gore nose just after the carriageways separate
                 c = Corner("nose", k, k1, tau_k=min(h0[0] + 1.5, mA), tau_k1=min(h0[1] + 1.5, mB))

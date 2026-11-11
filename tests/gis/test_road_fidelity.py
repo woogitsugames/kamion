@@ -19,8 +19,14 @@ from conftest import REGION_DIR, REPO
 
 QA = REGION_DIR / "generated" / "fidelity_qa.json"
 TARGET = {"axis_p95": 1.0, "edge_p95": 0.75, "lane_mismatch": 0, "islands_absent": 0}
-# measured 2026-11-10 (fidelity-r9); ratchet: never worse than this (+ small tolerance for classifier noise)
-BASELINE = {"axis_p95": 0.032, "edge_p95": 2.04, "lane_mismatch": 0, "islands_absent": 4, "lane_into_island_bug": 3}
+# Ratchet: never worse than this (+ small tolerance for classifier noise).
+# Refreshed 2026-11-11 (ADR 0077) on a full measurement. The fidelity-r9 numbers (axis 0.032, edge 2.04, islands 4,
+# lane bug 3) were measured BEFORE ADR 0074 was merged; the same code that is on main (merge base ffcc7b7, gores off:
+# artifacts/islands-r10/fidelity_before_qa.json) measures axis p95 0.129 (align_forks of ADR 0074 moves fork arms off
+# the OSM way, max 3.25 m), edge p95 2.483, islands 4, lane bug 0 (2 of the 3 were roundabout entries = tool error).
+# Now: axis 0.13 (unchanged; authored center_offset placement is excluded from the pooled axis by design), edge p95
+# 2.52 (p50 0.76 -> 0.46; the tail is local widenings / bays the generator does not build), islands 1, lane bug 0.
+BASELINE = {"axis_p95": 0.13, "edge_p95": 2.31, "lane_mismatch": 0, "islands_absent": 0, "lane_into_island_bug": 0}   # ADR 0095: edge 2.52 -> 2.30, islands 1 -> 0
 TOL = {"axis_p95": 0.02, "edge_p95": 0.05}
 
 
@@ -76,7 +82,7 @@ def test_ratchet_islands(qa):
 
 
 # which owner targets are already met (hard asserts); the rest xfail until met, then this test fails ("promote")
-MET = {"axis_p95": True, "edge_p95": False, "lane_mismatch": True, "islands_absent": False}
+MET = {"axis_p95": True, "edge_p95": False, "lane_mismatch": True, "islands_absent": True}
 
 
 def _target(name, ok):

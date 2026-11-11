@@ -57,7 +57,8 @@ def collect(src, origin, overrides, docks, roads_poly, buildings_poly, report, t
         ring = np.asarray(o["polygon_epsg2180"], float) - origin
         cand.append((o["id"], Polygon(ring), o["material"], "authored_override", bool(o.get("parking"))))
     for d in docks:
-        cand.append((d["id"], d["apron"], "yard_concrete", "dock_apron", False))
+        # the hero depot's apron (ADR 0071 r11): decades of trailers on the bumpers - darker, cracked, soiled concrete
+        cand.append((d["id"], d["apron"], "yard_concrete_worn" if d.get("hero") else "yard_concrete", "dock_apron", False))
     osm_park = [a for a in src["osm"]["areas"] if a["tags"].get("amenity") == "parking" or "area:highway" in a["tags"]]
     for a in osm_park:
         if a["tags"].get("surface") in OSM_SURFACE:
@@ -94,6 +95,7 @@ def collect(src, origin, overrides, docks, roads_poly, buildings_poly, report, t
         poly = shapely.make_valid(poly)
         g = poly.difference(taken)
         g = g.buffer(-0.05).buffer(0.05)           # drop slivers
+        g = _trim_spikes(g)
         parts = [p for p in getattr(g, "geoms", [g]) if p.geom_type == "Polygon" and p.area > 3.0]
         kept = 0.0
         for k, p in enumerate(parts):
@@ -108,6 +110,35 @@ def collect(src, origin, overrides, docks, roads_poly, buildings_poly, report, t
         report[srcname][0] += 1 if kept else 0
         report[srcname][1] = round(report[srcname][1] + kept, 1)
     return out
+
+
+SPIKE_OPEN_M = 0.5          # = half the terrain grid (1 m): a tip narrower than one cell has no terrain node under it
+SPIKE_MAX_M2 = 2.0
+
+
+def _trim_spikes(g):
+    """Cut the acute tips a road / building outline leaves on a paved area (ADR 0093). A tip narrower than the 1 m
+    terrain grid gets no conformed node, so it stood 0.28-0.35 m proud of the ground (terrain_walls skirt:yard_*:
+    every remaining case was such a tip, and their number moved with every change of the road footprint). Only tips
+    are cut (morphological opening, mitre joins keep straight edges and corners); a cut that would split the area
+    is not made, so part numbering (ids `<source>#<k>`) is unchanged."""
+    if g.is_empty:
+        return g
+    opened = g.buffer(-SPIKE_OPEN_M, join_style="mitre").buffer(SPIKE_OPEN_M, join_style="mitre")
+    rest = g.difference(opened)
+    spikes = [sp.buffer(0.01) for sp in getattr(rest, "geoms", [rest])
+              if not sp.is_empty and sp.geom_type == "Polygon" and 1e-4 <= sp.area <= SPIKE_MAX_M2]
+    if not spikes:
+        return g
+    nparts = len(getattr(g, "geoms", [g]))
+    t = g.difference(shapely.union_all(spikes))
+    if not t.is_empty and len(getattr(t, "geoms", [t])) == nparts:
+        return t
+    for sp in spikes:                              # some cut would split the area: take the others one by one
+        t = g.difference(sp)
+        if not t.is_empty and len(getattr(t, "geoms", [t])) == nparts:
+            g = t
+    return g
 
 
 def road_footprint_polygon(parts, bounds=None):

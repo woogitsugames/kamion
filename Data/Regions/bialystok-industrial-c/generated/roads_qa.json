@@ -848,15 +848,17 @@
     3
    ],
    "length_m": 129.8,
-   "max_grade": 0.0327,
-   "overrides": [],
+   "max_grade": 0.0344,
+   "overrides": [
+    "andersa-nw-xsec-s1080-1210"
+   ],
    "profile_rms_vs_nmt_m": 0.01,
    "sidewalk_frac": 0.0,
    "width_m": [
-    11.5
+    11.05
    ],
    "width_src": [
-    "PTB2022 §17 ust.1 standard"
+    "authored_override:andersa-nw-xsec-s1080-1210 (lane_edges, orthophoto)"
    ]
   },
   {
@@ -929,28 +931,41 @@
    ]
   },
   {
-   "axis_smoothing_dev_max_m": 1.63,
-   "bridge_m": 231.6,
+   "axis_smoothing_dev_max_m": 0.44,
+   "bridge_m": 231.3,
    "grade_limit": 0.08,
    "highway": [
     "trunk"
    ],
    "id": "c:w1101181473:10076968415-1847263305",
    "lanes": [
-    2,
-    3
+    2
    ],
-   "length_m": 615.5,
-   "max_grade": 0.0525,
-   "overrides": [],
-   "profile_rms_vs_nmt_m": 0.476,
+   "length_m": 616.1,
+   "max_grade": 0.0528,
+   "overrides": [
+    "dk8-viaduct-w-xsec-w1101181473",
+    "dk8-viaduct-w-xsec-w173985169",
+    "dk8-viaduct-w-xsec-w173985172",
+    "dk8-viaduct-w-xsec-w23844386",
+    "dk8-viaduct-w-xsec-w490398851",
+    "dk8-viaduct-w-xsec-w490398852"
+   ],
+   "profile_rms_vs_nmt_m": 0.45,
    "sidewalk_frac": 1.0,
    "width_m": [
+    7.1,
     8.0,
-    11.5
+    8.1,
+    8.2
    ],
    "width_src": [
-    "PTB2022 §17 ust.1 standard",
+    "authored_override:dk8-viaduct-w-xsec-w1101181473 (lane_edges, orthophoto)",
+    "authored_override:dk8-viaduct-w-xsec-w173985169 (lane_edges, orthophoto)",
+    "authored_override:dk8-viaduct-w-xsec-w173985172 (lane_edges, orthophoto)",
+    "authored_override:dk8-viaduct-w-xsec-w23844386 (lane_edges, orthophoto)",
+    "authored_override:dk8-viaduct-w-xsec-w490398851 (lane_edges, orthophoto)",
+    "authored_override:dk8-viaduct-w-xsec-w490398852 (lane_edges, orthophoto)",
     "bdot10k (clamped to PTB2022 §17 ust.1 range)"
    ]
   },
@@ -1085,9 +1100,9 @@
     2
    ],
    "length_m": 39.3,
-   "max_grade": 0.0253,
+   "max_grade": 0.0224,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.015,
+   "profile_rms_vs_nmt_m": 0.009,
    "sidewalk_frac": 0.0,
    "width_m": [
     5.5,
@@ -1623,9 +1638,9 @@
     3
    ],
    "length_m": 610.3,
-   "max_grade": 0.0515,
+   "max_grade": 0.0532,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.504,
+   "profile_rms_vs_nmt_m": 0.473,
    "sidewalk_frac": 1.0,
    "width_m": [
     8.0,
@@ -1651,7 +1666,7 @@
    "length_m": 324.7,
    "max_grade": 0.0511,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.424,
+   "profile_rms_vs_nmt_m": 0.426,
    "sidewalk_frac": 0.5,
    "width_m": [
     7.5,
@@ -1674,9 +1689,9 @@
     1
    ],
    "length_m": 43.8,
-   "max_grade": 0.0201,
+   "max_grade": 0.0241,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.043,
+   "profile_rms_vs_nmt_m": 0.093,
    "sidewalk_frac": 0.5,
    "width_m": [
     5.0
@@ -1697,9 +1712,9 @@
     1
    ],
    "length_m": 47.9,
-   "max_grade": 0.0342,
+   "max_grade": 0.0267,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.04,
+   "profile_rms_vs_nmt_m": 0.128,
    "sidewalk_frac": 0.0,
    "width_m": [
     5.0
@@ -1732,7 +1747,7 @@
    ]
   },
   {
-   "axis_smoothing_dev_max_m": 3.25,
+   "axis_smoothing_dev_max_m": 2.33,
    "bridge_m": 0.0,
    "grade_limit": 0.07,
    "highway": [
@@ -1743,17 +1758,19 @@
     1,
     2
    ],
-   "length_m": 189.3,
-   "max_grade": 0.0186,
-   "overrides": [],
-   "profile_rms_vs_nmt_m": 0.037,
+   "length_m": 190.2,
+   "max_grade": 0.0174,
+   "overrides": [
+    "putry-link-fork-placement"
+   ],
+   "profile_rms_vs_nmt_m": 0.045,
    "sidewalk_frac": 0.0,
    "width_m": [
-    5.5,
+    6.5,
     7.5
    ],
    "width_src": [
-    "bdot10k (clamped 3.50-5.50)",
+    "authored_override:putry-link-fork-placement (profile)",
     "bdot10k (clamped to PTB2022 §17 ust.1 range)"
    ]
   },
@@ -1896,7 +1913,7 @@
    ]
   },
   {
-   "axis_smoothing_dev_max_m": 0.8,
+   "axis_smoothing_dev_max_m": 0.85,
    "bridge_m": 0.0,
    "grade_limit": 0.12,
    "highway": [
@@ -1906,16 +1923,18 @@
    "lanes": [
     1
    ],
-   "length_m": 79.8,
-   "max_grade": 0.0455,
-   "overrides": [],
+   "length_m": 80.8,
+   "max_grade": 0.0449,
+   "overrides": [
+    "andersa-bay-s1060-service-lane"
+   ],
    "profile_rms_vs_nmt_m": 0.01,
-   "sidewalk_frac": 0.0,
+   "sidewalk_frac": 0.5,
    "width_m": [
-    4.0
+    4.9
    ],
    "width_src": [
-    "PTB2022 §17 ust.3 (>=3.50) + WORKING_VALUE"
+    "authored_override:andersa-bay-s1060-service-lane"
    ]
   },
   {
@@ -1930,7 +1949,7 @@
     2
    ],
    "length_m": 571.4,
-   "max_grade": 0.0502,
+   "max_grade": 0.0504,
    "overrides": [],
    "profile_rms_vs_nmt_m": 0.0,
    "sidewalk_frac": 1.0,
@@ -2195,7 +2214,7 @@
    ]
   },
   {
-   "axis_smoothing_dev_max_m": 0.13,
+   "axis_smoothing_dev_max_m": 0.14,
    "bridge_m": 0.0,
    "grade_limit": 0.07,
    "highway": [
@@ -2205,16 +2224,18 @@
    "lanes": [
     2
    ],
-   "length_m": 229.6,
-   "max_grade": 0.012,
-   "overrides": [],
-   "profile_rms_vs_nmt_m": 0.008,
+   "length_m": 229.5,
+   "max_grade": 0.0117,
+   "overrides": [
+    "lacznica-biezenstwa-placement"
+   ],
+   "profile_rms_vs_nmt_m": 0.01,
    "sidewalk_frac": 0.0,
    "width_m": [
-    6.5
+    7.5
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "authored_override:lacznica-biezenstwa-placement"
    ]
   },
   {
@@ -2232,7 +2253,7 @@
    "length_m": 276.5,
    "max_grade": 0.0201,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.036,
+   "profile_rms_vs_nmt_m": 0.035,
    "sidewalk_frac": 0.0,
    "width_m": [
     5.5,
@@ -2281,7 +2302,7 @@
    "length_m": 270.8,
    "max_grade": 0.0229,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.021,
+   "profile_rms_vs_nmt_m": 0.02,
    "sidewalk_frac": 0.5,
    "width_m": [
     5.5,
@@ -2304,9 +2325,9 @@
     2
    ],
    "length_m": 569.9,
-   "max_grade": 0.0525,
+   "max_grade": 0.0567,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 1.128,
+   "profile_rms_vs_nmt_m": 0.927,
    "sidewalk_frac": 1.0,
    "width_m": [
     8.0
@@ -2763,10 +2784,12 @@
    "lanes": [
     2
    ],
-   "length_m": 45.6,
-   "max_grade": 0.0247,
-   "overrides": [],
-   "profile_rms_vs_nmt_m": 0.014,
+   "length_m": 46.0,
+   "max_grade": 0.024,
+   "overrides": [
+    "putry-ring-s-placement"
+   ],
+   "profile_rms_vs_nmt_m": 0.016,
    "sidewalk_frac": 0.5,
    "width_m": [
     7.0
@@ -2790,7 +2813,7 @@
    "length_m": 269.9,
    "max_grade": 0.0241,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.02,
+   "profile_rms_vs_nmt_m": 0.018,
    "sidewalk_frac": 0.5,
    "width_m": [
     5.5,
@@ -2987,7 +3010,7 @@
   },
   {
    "axis_smoothing_dev_max_m": 0.08,
-   "bridge_m": 38.0,
+   "bridge_m": 38.5,
    "grade_limit": 0.08,
    "highway": [
     "trunk"
@@ -2996,10 +3019,13 @@
    "lanes": [
     2
    ],
-   "length_m": 812.7,
-   "max_grade": 0.0299,
-   "overrides": [],
-   "profile_rms_vs_nmt_m": 0.205,
+   "length_m": 813.1,
+   "max_grade": 0.0292,
+   "overrides": [
+    "dk8-placement-a",
+    "dk8-placement-b"
+   ],
+   "profile_rms_vs_nmt_m": 0.199,
    "sidewalk_frac": 0.0,
    "width_m": [
     7.5
@@ -3204,9 +3230,9 @@
     1
    ],
    "length_m": 43.4,
-   "max_grade": 0.0379,
+   "max_grade": 0.038,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.196,
+   "profile_rms_vs_nmt_m": 0.194,
    "sidewalk_frac": 0.0,
    "width_m": [
     5.0
@@ -3805,15 +3831,17 @@
     2
    ],
    "length_m": 34.6,
-   "max_grade": 0.0099,
-   "overrides": [],
-   "profile_rms_vs_nmt_m": 0.005,
+   "max_grade": 0.0104,
+   "overrides": [
+    "n10015785253-side-street-throat"
+   ],
+   "profile_rms_vs_nmt_m": 0.006,
    "sidewalk_frac": 0.0,
    "width_m": [
-    5.0
+    16.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "authored_override:n10015785253-side-street-throat (profile)"
    ]
   },
   {
@@ -4346,7 +4374,7 @@
    ]
   },
   {
-   "axis_smoothing_dev_max_m": 0.2,
+   "axis_smoothing_dev_max_m": 0.26,
    "bridge_m": 12.0,
    "grade_limit": 0.07,
    "highway": [
@@ -4357,16 +4385,20 @@
     1,
     2
    ],
-   "length_m": 284.3,
-   "max_grade": 0.0524,
-   "overrides": [],
-   "profile_rms_vs_nmt_m": 0.478,
+   "length_m": 284.6,
+   "max_grade": 0.0513,
+   "overrides": [
+    "dk8-viaduct-w-ramp-lane"
+   ],
+   "profile_rms_vs_nmt_m": 0.479,
    "sidewalk_frac": 0.5,
    "width_m": [
     5.5,
+    5.75,
     8.0
    ],
    "width_src": [
+    "authored_override:dk8-viaduct-w-ramp-lane (profile)",
     "bdot10k (clamped 3.50-5.50)",
     "bdot10k (clamped to PTB2022 §17 ust.1 range)"
    ]
@@ -4501,19 +4533,21 @@
     3
    ],
    "length_m": 71.2,
-   "max_grade": 0.0311,
-   "overrides": [],
-   "profile_rms_vs_nmt_m": 0.01,
+   "max_grade": 0.0313,
+   "overrides": [
+    "andersa-nw-xsec-bay-s1040-1080"
+   ],
+   "profile_rms_vs_nmt_m": 0.012,
    "sidewalk_frac": 0.0,
    "width_m": [
-    11.5
+    10.9
    ],
    "width_src": [
-    "PTB2022 §17 ust.1 standard"
+    "authored_override:andersa-nw-xsec-bay-s1040-1080 (lane_edges, orthophoto)"
    ]
   },
   {
-   "axis_smoothing_dev_max_m": 0.12,
+   "axis_smoothing_dev_max_m": 0.11,
    "bridge_m": 0.0,
    "grade_limit": 0.08,
    "highway": [
@@ -4523,16 +4557,18 @@
    "lanes": [
     3
    ],
-   "length_m": 144.0,
-   "max_grade": 0.033,
-   "overrides": [],
+   "length_m": 143.9,
+   "max_grade": 0.0319,
+   "overrides": [
+    "andersa-nw-xsec-s1100-1270"
+   ],
    "profile_rms_vs_nmt_m": 0.013,
    "sidewalk_frac": 0.0,
    "width_m": [
-    11.5
+    10.8
    ],
    "width_src": [
-    "PTB2022 §17 ust.1 standard"
+    "authored_override:andersa-nw-xsec-s1100-1270 (lane_edges, orthophoto)"
    ]
   },
   {
@@ -4858,7 +4894,7 @@
    ]
   },
   {
-   "axis_smoothing_dev_max_m": 0.5,
+   "axis_smoothing_dev_max_m": 0.68,
    "bridge_m": 0.0,
    "grade_limit": 0.08,
    "highway": [
@@ -4869,9 +4905,9 @@
     2
    ],
    "length_m": 27.6,
-   "max_grade": 0.0268,
+   "max_grade": 0.0299,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.009,
+   "profile_rms_vs_nmt_m": 0.017,
    "sidewalk_frac": 0.0,
    "width_m": [
     8.5
@@ -5124,15 +5160,17 @@
     3
    ],
    "length_m": 108.7,
-   "max_grade": 0.0544,
-   "overrides": [],
+   "max_grade": 0.0547,
+   "overrides": [
+    "dk8-w-of-ramp-merge-xsec-w262140922"
+   ],
    "profile_rms_vs_nmt_m": 0.0,
    "sidewalk_frac": 0.0,
    "width_m": [
-    10.75
+    10.5
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "authored_override:dk8-w-of-ramp-merge-xsec-w262140922 (lane_edges, orthophoto)"
    ]
   },
   {
@@ -5412,7 +5450,7 @@
    ]
   },
   {
-   "axis_smoothing_dev_max_m": 0.09,
+   "axis_smoothing_dev_max_m": 0.08,
    "bridge_m": 0.0,
    "grade_limit": 0.08,
    "highway": [
@@ -5423,15 +5461,20 @@
     3
    ],
    "length_m": 236.5,
-   "max_grade": 0.0317,
-   "overrides": [],
-   "profile_rms_vs_nmt_m": 0.01,
+   "max_grade": 0.0313,
+   "overrides": [
+    "andersa-se-xsec-w266084684",
+    "andersa-se-xsec-w560802655"
+   ],
+   "profile_rms_vs_nmt_m": 0.011,
    "sidewalk_frac": 0.0,
    "width_m": [
-    11.5
+    11.1,
+    11.2
    ],
    "width_src": [
-    "PTB2022 §17 ust.1 standard"
+    "authored_override:andersa-se-xsec-w266084684 (lane_edges, orthophoto)",
+    "authored_override:andersa-se-xsec-w560802655 (lane_edges, orthophoto)"
    ]
   },
   {
@@ -5469,19 +5512,21 @@
     3
    ],
    "length_m": 75.4,
-   "max_grade": 0.0117,
-   "overrides": [],
+   "max_grade": 0.0125,
+   "overrides": [
+    "andersa-nw-xsec-s1300-1355"
+   ],
    "profile_rms_vs_nmt_m": 0.011,
    "sidewalk_frac": 0.0,
    "width_m": [
-    11.5
+    11.1
    ],
    "width_src": [
-    "PTB2022 §17 ust.1 standard"
+    "authored_override:andersa-nw-xsec-s1300-1355 (lane_edges, orthophoto)"
    ]
   },
   {
-   "axis_smoothing_dev_max_m": 0.0,
+   "axis_smoothing_dev_max_m": 0.01,
    "bridge_m": 0.0,
    "grade_limit": 0.08,
    "highway": [
@@ -5492,15 +5537,17 @@
     3
    ],
    "length_m": 60.0,
-   "max_grade": 0.0251,
-   "overrides": [],
-   "profile_rms_vs_nmt_m": 0.012,
+   "max_grade": 0.0284,
+   "overrides": [
+    "andersa-nw-xsec-s1355-1410"
+   ],
+   "profile_rms_vs_nmt_m": 0.015,
    "sidewalk_frac": 0.0,
    "width_m": [
-    10.75
+    12.0
    ],
    "width_src": [
-    "bdot10k (clamped to PTB2022 §17 ust.1 range)"
+    "authored_override:andersa-nw-xsec-s1355-1410 (lane_edges, orthophoto)"
    ]
   },
   {
@@ -7550,15 +7597,17 @@
     2
    ],
    "length_m": 75.6,
-   "max_grade": 0.0144,
-   "overrides": [],
-   "profile_rms_vs_nmt_m": 0.007,
-   "sidewalk_frac": 0.0,
+   "max_grade": 0.0125,
+   "overrides": [
+    "s610-north-arm-width"
+   ],
+   "profile_rms_vs_nmt_m": 0.008,
+   "sidewalk_frac": 1.0,
    "width_m": [
-    5.5
+    9.0
    ],
    "width_src": [
-    "PTB2022 §17 ust.1 standard"
+    "authored_override:s610-north-arm-width"
    ]
   },
   {
@@ -7849,8 +7898,11 @@
     3
    ],
    "length_m": 255.5,
-   "max_grade": 0.024,
-   "overrides": [],
+   "max_grade": 0.0245,
+   "overrides": [
+    "andersa-placement-s1060",
+    "andersa-placement-s700-1060"
+   ],
    "profile_rms_vs_nmt_m": 0.013,
    "sidewalk_frac": 0.0,
    "width_m": [
@@ -7976,7 +8028,7 @@
    ]
   },
   {
-   "axis_smoothing_dev_max_m": 0.0,
+   "axis_smoothing_dev_max_m": 0.01,
    "bridge_m": 0.0,
    "grade_limit": 0.08,
    "highway": [
@@ -7987,9 +8039,11 @@
     3
    ],
    "length_m": 59.1,
-   "max_grade": 0.023,
-   "overrides": [],
-   "profile_rms_vs_nmt_m": 0.009,
+   "max_grade": 0.0231,
+   "overrides": [
+    "andersa-se-placement-w560802655-merge"
+   ],
+   "profile_rms_vs_nmt_m": 0.013,
    "sidewalk_frac": 0.0,
    "width_m": [
     11.5
@@ -8009,16 +8063,18 @@
    "lanes": [
     3
    ],
-   "length_m": 121.2,
-   "max_grade": 0.0315,
-   "overrides": [],
-   "profile_rms_vs_nmt_m": 0.01,
+   "length_m": 121.3,
+   "max_grade": 0.0331,
+   "overrides": [
+    "andersa-se-xsec-w560802656"
+   ],
+   "profile_rms_vs_nmt_m": 0.012,
    "sidewalk_frac": 0.0,
    "width_m": [
-    11.5
+    11.1
    ],
    "width_src": [
-    "PTB2022 §17 ust.1 standard"
+    "authored_override:andersa-se-xsec-w560802656 (lane_edges, orthophoto)"
    ]
   },
   {
@@ -8183,7 +8239,7 @@
    ]
   },
   {
-   "axis_smoothing_dev_max_m": 4.38,
+   "axis_smoothing_dev_max_m": 6.0,
    "bridge_m": 0.0,
    "grade_limit": 0.07,
    "highway": [
@@ -8193,10 +8249,10 @@
    "lanes": [
     1
    ],
-   "length_m": 29.1,
-   "max_grade": 0.034,
+   "length_m": 30.2,
+   "max_grade": 0.0261,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.054,
+   "profile_rms_vs_nmt_m": 0.038,
    "sidewalk_frac": 0.0,
    "width_m": [
     5.5
@@ -8217,9 +8273,9 @@
     1
    ],
    "length_m": 41.4,
-   "max_grade": 0.0385,
+   "max_grade": 0.035,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.009,
+   "profile_rms_vs_nmt_m": 0.046,
    "sidewalk_frac": 0.0,
    "width_m": [
     5.5
@@ -9768,7 +9824,7 @@
    "length_m": 114.3,
    "max_grade": 0.0129,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.007,
+   "profile_rms_vs_nmt_m": 0.01,
    "sidewalk_frac": 0.5,
    "width_m": [
     8.0,
@@ -9882,9 +9938,9 @@
     3
    ],
    "length_m": 21.6,
-   "max_grade": 0.008,
+   "max_grade": 0.0079,
    "overrides": [],
-   "profile_rms_vs_nmt_m": 0.015,
+   "profile_rms_vs_nmt_m": 0.007,
    "sidewalk_frac": 0.0,
    "width_m": [
     9.5
@@ -9950,11 +10006,11 @@
   "j:n1166108049": [
    "corner 0-1: kerb line continued to the emerging lane edge (gate-type split)"
   ],
+  "j:n131612943": [
+   "corner 1-2: no fillet fits (alpha 54 deg) -> sharp"
+  ],
   "j:n13358260889": [
    "corner 1-2: kerb line continued to the emerging lane edge (gate-type split)"
-  ],
-  "j:n1832991672": [
-   "corner 2-0: kerb line continued to the emerging lane edge (gate-type split)"
   ],
   "j:n1847044943": [
    "corner 2-3: kerb line continued to the emerging lane edge (gate-type split)"
@@ -9967,13 +10023,9 @@
    "corner 1-2: kerb chamfer 1:4 over 12.2 m (width step 3.04 m)"
   ],
   "j:n1847317049": [
-   "corner 2-0: arms touch (gap -1.52 m) -> no nose",
-   "corner 1-2: kerb chamfer 1:4 over 13.7 m (width step 3.42 m)",
-   "corner 2-0: kerb chamfer 1:4 over 7.7 m (width step 1.91 m)",
-   "corner 0-1: kerb line continued to the emerging lane edge (gate-type split)"
-  ],
-  "j:n1881569102": [
-   "corner 2-3: kerb chamfer 1:4 over 10.2 m (width step 2.56 m)"
+   "corner 1-2: arms touch (gap -1.06 m) -> no nose",
+   "corner 0-1: kerb chamfer 1:4 over 13.8 m (width step 3.45 m)",
+   "corner 1-2: kerb chamfer 1:4 over 5.9 m (width step 1.47 m)"
   ],
   "j:n1882887381": [
    "corner 1-2: kerb line continued to the emerging lane edge (gate-type split)",
@@ -10000,13 +10052,19 @@
    "corner 0-1: no fillet fits (alpha 91 deg) -> sharp",
    "corner 2-3: kerb chamfer 1:4 over -7.6 m (width step 2.46 m)"
   ],
+  "j:n2840742308": [
+   "corner 2-0: kerb chamfer 1:4 over 8.8 m (width step 2.20 m)"
+  ],
   "j:n3341716402": [
    "corner 0-1: arms touch (gap -6.10 m) -> no nose",
-   "corner 1-2: kerb chamfer 1:4 over 7.3 m (width step 1.83 m)",
-   "corner 2-0: kerb chamfer 1:4 over 10.4 m (width step 2.59 m)"
+   "corner 1-2: kerb chamfer 1:4 over 9.1 m (width step 2.26 m)",
+   "corner 2-0: kerb chamfer 1:4 over 9.2 m (width step 2.29 m)"
   ],
   "j:n3999157676": [
    "corner 2-0: kerb line continued to the emerging lane edge (gate-type split)"
+  ],
+  "j:n5202512922": [
+   "corner 0-1: kerb line continued to the emerging lane edge (gate-type split)"
   ],
   "j:n6311661182": [
    "corner 2-0: kerb line continued to the emerging lane edge (gate-type split)"
@@ -10029,10 +10087,68 @@
  "region": "bialystok-industrial-c",
  "schema": "truck-sim-pl/roads-qa/1",
  "summary": {
+  "authored_paint": [
+   {
+    "built": true,
+    "id": "andersa-bay-s1060-edge-solid",
+    "len_m": 47.5,
+    "line": "P-7b",
+    "tris": 96
+   },
+   {
+    "built": true,
+    "id": "andersa-bay-s1060-edge-dashed-nw",
+    "len_m": 34.1,
+    "line": "P-7a",
+    "tris": 64
+   },
+   {
+    "built": true,
+    "id": "andersa-bay-s1060-edge-dashed-se",
+    "len_m": 54.0,
+    "line": "P-7a",
+    "tris": 108
+   },
+   {
+    "built": true,
+    "id": "dk8-ramp-split-line-solid",
+    "len_m": 47.2,
+    "line": "P-2b",
+    "tris": 94
+   },
+   {
+    "built": true,
+    "id": "dk8-ramp-split-line-dashed",
+    "len_m": 38.1,
+    "line": "P-1e",
+    "tris": 76
+   },
+   {
+    "built": true,
+    "id": "n10015785253-edge-line",
+    "len_m": 64.7,
+    "line": "P-2b",
+    "tris": 130
+   },
+   {
+    "built": true,
+    "id": "n10015785253-crossing-west",
+    "kind": "painted_crossing",
+    "tris": 50,
+    "tris_off_carriageway": 0
+   },
+   {
+    "built": true,
+    "id": "n10015785253-crossing-east",
+    "kind": "painted_crossing",
+    "tris": 50,
+    "tris_off_carriageway": 0
+   }
+  ],
   "axis_smoothing_deviation_m": {
-   "max": 5.438,
+   "max": 6.0,
    "p50": 0.0,
-   "p95": 0.271
+   "p95": 0.253
   },
   "bridges": [
    {
@@ -10054,7 +10170,7 @@
     "confidence": "low",
     "note": "deck height interpolated between abutments; piers placed by rule (no data)",
     "piers": 7,
-    "span_m": 219.3
+    "span_m": 219.4
    },
    {
     "chain": "c:w173956078:1847263293-5749429982",
@@ -10067,7 +10183,7 @@
     "chain": "c:w173956078:1847263293-5749429982",
     "confidence": "low",
     "note": "deck height interpolated between abutments; piers placed by rule (no data)",
-    "piers": 6,
+    "piers": 5,
     "span_m": 212.9
    },
    {
@@ -10089,7 +10205,7 @@
     "confidence": "low",
     "note": "deck height interpolated between abutments; piers placed by rule (no data)",
     "piers": 1,
-    "span_m": 37.5
+    "span_m": 38.0
    },
    {
     "chain": "c:w240542867:1847044963-1832991672",
@@ -10113,22 +10229,22 @@
    1166108041,
    8473985999,
    1883043030,
-   1852129061,
    2881403132,
+   1852129061,
    1882953932,
    5645859049,
    5312688314,
-   2882674819,
    2882674820,
+   2882674819,
    3097201643,
    1882953931,
    3021817550,
    3021817549,
    1883043010,
-   1882953782,
    3563106549,
-   1882953779,
+   1882953782,
    3563106547,
+   1882953779,
    1883483225,
    1882953780,
    2441701386,
@@ -10142,10 +10258,10 @@
    2882674807,
    2882674810,
    3954799611,
-   1859438371,
    2881403139,
-   1883463881,
+   1859438371,
    3563106530,
+   1883463881,
    11499806841,
    3032448286,
    5645777751,
@@ -10157,20 +10273,96 @@
    9224916298,
    2641555452
   ],
+  "crossings_merged": 0,
+  "crossings_p11": 7,
   "crossings_skipped": [],
   "crossings_snapped": 71,
   "decals": {
-   "gullies": 773,
+   "gullies": 769,
    "oil": 286,
-   "patches": 301
+   "patches": 308
   },
   "emergency_signal_junctions": [
    "j:n12620261934",
    "j:n1847044938",
    "j:n2840742308"
   ],
-  "footprint_nodes": 504288,
+  "footprint_nodes": 504563,
+  "fork_abreast": [
+   {
+    "beside": "c:w173956078:1847263293-5749429982",
+    "chain": "c:w173956079:1832975577-2256069814",
+    "node": "n1832975577",
+    "overlap_max_m": 9.45,
+    "overlap_run_m": 117.0,
+    "shift_max_m": 0.0,
+    "side": "right"
+   },
+   {
+    "alongside_run_m": 90.5,
+    "beside": "c:w1101181473:10076968415-1847263305",
+    "chain": "c:w240542867:1847044963-1832991672",
+    "node": "n1832991672",
+    "shift_max_m": 0.0,
+    "to_m": 91.3
+   },
+   {
+    "beside": "c:w173956078:1847263293-5749429982",
+    "chain": "c:w268473388:1847263303-1847044938",
+    "node": "n1847044938",
+    "overlap_max_m": 9.2,
+    "overlap_run_m": 21.0,
+    "shift_max_m": 0.0,
+    "side": "right"
+   },
+   {
+    "beside": "c:w613026608:3890183128-1847044957",
+    "chain": "c:w173956080:1847044961-1847044957",
+    "node": "n1847044957",
+    "overlap_max_m": 5.95,
+    "overlap_run_m": 14.5,
+    "shift_max_m": 0.0,
+    "side": "right"
+   },
+   {
+    "beside": "c:w23982184:1847317040-1847317043",
+    "chain": "c:w606396470:5749429995-1847317043",
+    "node": "n1847317043",
+    "overlap_max_m": 7.83,
+    "overlap_run_m": 42.0,
+    "shift_max_m": 0.0,
+    "side": "right"
+   },
+   {
+    "alongside_run_m": 27.0,
+    "beside": "c:w257367422:1847317049-1847317047",
+    "chain": "c:w606396469:1847317049-1847317056",
+    "node": "n1847317049",
+    "shift_max_m": 0.0,
+    "to_m": 30.2
+   },
+   {
+    "beside": "c:w177895177:1883101822-1883062831",
+    "chain": "c:w536419675:3341716400-3341716402",
+    "node": "n3341716402",
+    "overlap_max_m": 7.7,
+    "overlap_run_m": 15.0,
+    "shift_max_m": 0.0,
+    "side": "right"
+   }
+  ],
   "fork_shifts": [
+   {
+    "chain": "c:w1101181473:10076968415-1847263305",
+    "hold_m": 40.0,
+    "lanes": [
+     3.58,
+     0.08
+    ],
+    "node": "n1832991672",
+    "shift_m": 0.35,
+    "taper_m": 40.0
+   },
    {
     "chain": "c:w1360055407:4075461271-1852129061",
     "hold_m": 16.0,
@@ -10238,21 +10430,21 @@
     "chain": "c:w257367422:1847317049-1847317047",
     "hold_m": 16.0,
     "lanes": [
-     2.13,
-     -1.12
+     2.58,
+     -0.92
     ],
     "node": "n1847317049",
-    "shift_m": 0.5,
+    "shift_m": -0.67,
     "taper_m": 6.1
    },
    {
     "chain": "c:w606396469:1847317049-1847317056",
     "hold_m": 16.0,
     "lanes": [
-     -4.37
+     -4.5
     ],
     "node": "n1847317049",
-    "shift_m": -4.38,
+    "shift_m": -6.0,
     "taper_m": 6.0
    },
    {
@@ -10342,24 +10534,14 @@
    },
    {
     "chain": "c:w1101181473:10076968415-1847263305",
-    "hold_m": 28.0,
+    "hold_m": 12.0,
     "lanes": [
-     3.25,
-     -0.0
+     4.31,
+     0.76
     ],
     "node": "n2840742308",
-    "shift_m": 1.62,
+    "shift_m": 0.44,
     "taper_m": 40.0
-   },
-   {
-    "chain": "c:w173956083:2840742310-1852129066",
-    "hold_m": 38.0,
-    "lanes": [
-     -3.25
-    ],
-    "node": "n2840742308",
-    "shift_m": -3.25,
-    "taper_m": 65.0
    },
    {
     "chain": "c:w606396458:4391371827-3341716400",
@@ -10454,13 +10636,6 @@
     "to_hw": 2.5
    },
    {
-    "chain": "c:w266084693:10015785253-12620261934",
-    "from_hw": 5.75,
-    "node": "n12620261934",
-    "taper_m": 15.0,
-    "to_hw": 5.37
-   },
-   {
     "chain": "c:w213244846:13358260889-2229796400",
     "from_hw": 2.75,
     "node": "n13358260889",
@@ -10475,13 +10650,6 @@
     "to_hw": 2.5
    },
    {
-    "chain": "c:w1101181473:10076968415-1847263305",
-    "from_hw": 5.75,
-    "node": "n1832991672",
-    "taper_m": 15.0,
-    "to_hw": 5.37
-   },
-   {
     "chain": "c:w240542867:1847044963-1832991672",
     "from_hw": 4.0,
     "node": "n1847044957",
@@ -10490,9 +10658,9 @@
    },
    {
     "chain": "c:w262140922:1832991672-1847317049",
-    "from_hw": 5.37,
+    "from_hw": 5.25,
     "node": "n1847317049",
-    "taper_m": 22.5,
+    "taper_m": 20.0,
     "to_hw": 4.25
    },
    {
@@ -10832,6 +11000,13 @@
     "to_hw": 2.5
    },
    {
+    "chain": "c:w227212660:5202512922-10015785256",
+    "from_hw": 3.65,
+    "node": "n5202512922",
+    "taper_m": 20.8,
+    "to_hw": 2.5
+   },
+   {
     "chain": "c:w305141607:7918287062-2638975384",
     "from_hw": 2.75,
     "node": "n5202512922",
@@ -10930,21 +11105,560 @@
     "to_hw": 4.0
    }
   ],
+  "gores": {
+   "gores": [
+    {
+     "area_m2": 32.0,
+     "built": true,
+     "hatch": false,
+     "note": "",
+     "why": "override:gore-s610-centre-hatch",
+     "xy": [
+      346.9,
+      -557.5
+     ]
+    },
+    {
+     "area_m2": 191.1,
+     "built": true,
+     "hatch": false,
+     "note": "",
+     "why": "override:gore-s610-hatch-south",
+     "xy": [
+      337.5,
+      -574.2
+     ]
+    },
+    {
+     "area_m2": 10.8,
+     "built": true,
+     "hatch": false,
+     "note": "",
+     "why": "override:gore-s610-corner-e",
+     "xy": [
+      366.2,
+      -562.1
+     ]
+    },
+    {
+     "area_m2": 10.5,
+     "built": true,
+     "hatch": false,
+     "note": "",
+     "why": "override:gore-s610-corner-n",
+     "xy": [
+      355.3,
+      -556.4
+     ]
+    },
+    {
+     "area_m2": 13.5,
+     "built": true,
+     "hatch": false,
+     "note": "",
+     "why": "override:gore-s610-corner-w",
+     "xy": [
+      336.0,
+      -563.1
+     ]
+    },
+    {
+     "area_m2": 92.6,
+     "built": true,
+     "hatch": false,
+     "note": "",
+     "why": "override:gore-andersa-bay-s1060-sett",
+     "xy": [
+      -83.5,
+      -342.2
+     ]
+    },
+    {
+     "area_m2": 43.0,
+     "built": true,
+     "hatch": false,
+     "note": "",
+     "why": "override:gore-dk8-ramp-split",
+     "xy": [
+      -791.3,
+      76.4
+     ]
+    },
+    {
+     "area_m2": 72.2,
+     "built": true,
+     "hatch": false,
+     "note": "",
+     "why": "merge",
+     "xy": [
+      772.7,
+      -846.5
+     ]
+    },
+    {
+     "area_m2": 50.9,
+     "built": true,
+     "hatch": false,
+     "note": "",
+     "why": "merge",
+     "xy": [
+      313.3,
+      -596.6
+     ]
+    },
+    {
+     "area_m2": 35.5,
+     "built": true,
+     "hatch": false,
+     "note": "",
+     "why": "merge",
+     "xy": [
+      791.7,
+      -836.0
+     ]
+    },
+    {
+     "area_m2": 13.1,
+     "built": true,
+     "hatch": false,
+     "note": "",
+     "why": "merge",
+     "xy": [
+      -227.6,
+      -1006.1
+     ]
+    },
+    {
+     "area_m2": 9.0,
+     "built": true,
+     "hatch": false,
+     "note": "",
+     "why": "merge",
+     "xy": [
+      -514.5,
+      -47.5
+     ]
+    },
+    {
+     "area_m2": 18.1,
+     "built": true,
+     "hatch": false,
+     "note": "",
+     "why": "sliver",
+     "xy": [
+      64.8,
+      -396.1
+     ]
+    },
+    {
+     "area_m2": 17.0,
+     "built": true,
+     "hatch": false,
+     "note": "",
+     "why": "sliver",
+     "xy": [
+      379.1,
+      -609.3
+     ]
+    },
+    {
+     "area_m2": 11.6,
+     "built": true,
+     "hatch": false,
+     "note": "",
+     "why": "sliver",
+     "xy": [
+      -235.6,
+      -1014.7
+     ]
+    },
+    {
+     "area_m2": 8.6,
+     "built": true,
+     "hatch": false,
+     "note": "",
+     "why": "sliver",
+     "xy": [
+      54.6,
+      -384.7
+     ]
+    },
+    {
+     "area_m2": 7.6,
+     "built": true,
+     "hatch": false,
+     "note": "",
+     "why": "sliver",
+     "xy": [
+      -566.9,
+      140.8
+     ]
+    },
+    {
+     "area_m2": 5.9,
+     "built": true,
+     "hatch": false,
+     "note": "",
+     "why": "sliver",
+     "xy": [
+      -340.9,
+      -142.5
+     ]
+    },
+    {
+     "area_m2": 5.8,
+     "built": true,
+     "hatch": false,
+     "note": "",
+     "why": "sliver",
+     "xy": [
+      -258.5,
+      -874.1
+     ]
+    },
+    {
+     "area_m2": 4.3,
+     "built": true,
+     "hatch": false,
+     "note": "",
+     "why": "sliver",
+     "xy": [
+      619.2,
+      -599.6
+     ]
+    },
+    {
+     "area_m2": 4.1,
+     "built": true,
+     "hatch": false,
+     "note": "",
+     "why": "sliver",
+     "xy": [
+      -473.2,
+      -460.1
+     ]
+    },
+    {
+     "area_m2": 3.8,
+     "built": true,
+     "hatch": false,
+     "note": "",
+     "why": "sliver",
+     "xy": [
+      -539.6,
+      -319.0
+     ]
+    },
+    {
+     "area_m2": 3.4,
+     "built": true,
+     "hatch": false,
+     "note": "",
+     "why": "sliver",
+     "xy": [
+      -186.6,
+      -305.8
+     ]
+    },
+    {
+     "area_m2": 3.0,
+     "built": true,
+     "hatch": false,
+     "note": "",
+     "why": "sliver",
+     "xy": [
+      -574.1,
+      87.2
+     ]
+    },
+    {
+     "area_m2": 2.5,
+     "built": true,
+     "hatch": false,
+     "note": "",
+     "why": "sliver",
+     "xy": [
+      971.4,
+      -930.8
+     ]
+    },
+    {
+     "area_m2": 2.4,
+     "built": true,
+     "hatch": false,
+     "note": "",
+     "why": "sliver",
+     "xy": [
+      -442.6,
+      -425.8
+     ]
+    },
+    {
+     "area_m2": 2.1,
+     "built": true,
+     "hatch": false,
+     "note": "",
+     "why": "sliver",
+     "xy": [
+      -190.2,
+      -301.9
+     ]
+    },
+    {
+     "area_m2": 1.8,
+     "built": true,
+     "hatch": false,
+     "note": "",
+     "why": "sliver",
+     "xy": [
+      -539.8,
+      -247.8
+     ]
+    },
+    {
+     "area_m2": 1.7,
+     "built": true,
+     "hatch": false,
+     "note": "",
+     "why": "sliver",
+     "xy": [
+      -551.3,
+      -74.4
+     ]
+    },
+    {
+     "area_m2": 1.6,
+     "built": true,
+     "hatch": false,
+     "note": "",
+     "why": "sliver",
+     "xy": [
+      -219.5,
+      -965.2
+     ]
+    },
+    {
+     "area_m2": 1.5,
+     "built": true,
+     "hatch": false,
+     "note": "",
+     "why": "sliver",
+     "xy": [
+      50.4,
+      -458.8
+     ]
+    }
+   ],
+   "islands": [
+    {
+     "area_m2": 73.1,
+     "built": true,
+     "id": "s1440-merge-separator-strip",
+     "note": "z 131.55",
+     "surface": "sidewalk_paving"
+    },
+    {
+     "area_m2": 71.7,
+     "built": true,
+     "id": "s610-refuge-island",
+     "note": "z 141.10",
+     "surface": "sidewalk_paving"
+    },
+    {
+     "area_m2": 65.4,
+     "built": true,
+     "id": "andersa-bay-s1060-kerb-strip",
+     "note": "z 135.01",
+     "surface": "sidewalk_paving"
+    },
+    {
+     "area_m2": 73.7,
+     "built": true,
+     "id": "dk8-ramp-split-island",
+     "note": "z 140.52",
+     "surface": "sidewalk_paving"
+    },
+    {
+     "area_m2": 24.9,
+     "built": true,
+     "id": "n10015785253-island",
+     "note": "z 130.35",
+     "surface": "sidewalk_paving"
+    }
+   ],
+   "kerb_dropped_m": 646.0,
+   "kerb_tris_in_fill": 0,
+   "paved": {
+    "merge": {
+     "area_m2": 180.7,
+     "count": 5
+    },
+    "override": {
+     "area_m2": 393.5,
+     "count": 7
+    },
+    "sliver": {
+     "area_m2": 106.8,
+     "count": 19
+    }
+   },
+   "rejected": [
+    {
+     "area_m2": 160.8,
+     "reason": "carriageways at different heights",
+     "step_m": 0.68,
+     "why": "merge",
+     "xy": [
+      -713.6,
+      72.6
+     ]
+    },
+    {
+     "area_m2": 151.7,
+     "reason": "carriageways at different heights",
+     "step_m": 0.48,
+     "why": "merge",
+     "xy": [
+      724.7,
+      -823.0
+     ]
+    },
+    {
+     "area_m2": 102.9,
+     "reason": "carriageways at different heights",
+     "step_m": 1.03,
+     "why": "merge",
+     "xy": [
+      -353.0,
+      -131.9
+     ]
+    },
+    {
+     "area_m2": 93.2,
+     "reason": "carriageways at different heights",
+     "step_m": 0.82,
+     "why": "merge",
+     "xy": [
+      -716.4,
+      47.7
+     ]
+    },
+    {
+     "area_m2": 91.8,
+     "reason": "carriageways at different heights",
+     "step_m": 1.2,
+     "why": "merge",
+     "xy": [
+      687.1,
+      -803.0
+     ]
+    },
+    {
+     "area_m2": 74.1,
+     "reason": "carriageways at different heights",
+     "step_m": 1.08,
+     "why": "merge",
+     "xy": [
+      395.3,
+      -644.2
+     ]
+    },
+    {
+     "area_m2": 67.9,
+     "reason": "carriageways at different heights",
+     "step_m": 0.23,
+     "why": "merge",
+     "xy": [
+      389.7,
+      -614.4
+     ]
+    },
+    {
+     "area_m2": 12.3,
+     "reason": "carriageways at different heights",
+     "step_m": 0.45,
+     "why": "merge",
+     "xy": [
+      -758.5,
+      51.5
+     ]
+    },
+    {
+     "area_m2": 68.0,
+     "reason": "carriageways at different heights",
+     "step_m": 0.33,
+     "why": "sliver",
+     "xy": [
+      -68.9,
+      -389.6
+     ]
+    },
+    {
+     "area_m2": 37.9,
+     "reason": "carriageways at different heights",
+     "step_m": 0.46,
+     "why": "sliver",
+     "xy": [
+      -729.2,
+      48.9
+     ]
+    },
+    {
+     "area_m2": 28.2,
+     "reason": "carriageways at different heights",
+     "step_m": 0.16,
+     "why": "sliver",
+     "xy": [
+      -750.7,
+      -973.8
+     ]
+    },
+    {
+     "area_m2": 14.6,
+     "reason": "carriageways at different heights",
+     "step_m": 0.15,
+     "why": "sliver",
+     "xy": [
+      750.7,
+      -824.2
+     ]
+    },
+    {
+     "area_m2": 11.9,
+     "reason": "carriageways at different heights",
+     "step_m": 0.47,
+     "why": "sliver",
+     "xy": [
+      -758.7,
+      51.5
+     ]
+    }
+   ],
+   "rule": {
+    "max_slope": 0.1,
+    "min_island_m2": 5.0,
+    "min_island_w_m": 2.0,
+    "sliver_max_len_m": 60.0,
+    "status": "WORKING_VALUE"
+   }
+  },
   "grade_over_limit": [],
   "junction_patches": {
-   "delaunay": 43,
-   "polar": 144,
-   "repaired": 18
+   "delaunay": 38,
+   "polar": 147,
+   "repaired": 20
   },
   "junctions": 205,
   "junctions_earclip": [],
   "junctions_repaired": [
+   "j:n12620261934",
    "j:n1847317043",
    "j:n1852129066",
    "j:n1882954015",
    "j:n1883101800",
    "j:n14311000107",
    "j:n2229796287",
+   "j:n2466608885",
    "j:n1882887385",
    "j:n3341716402",
    "j:n1847044943",
@@ -10966,18 +11680,21 @@
   ],
   "markings": {
    "P-1 centre line": 4,
-   "P-1 lane line": 173,
-   "P-10 crossing": 71,
-   "P-10 crossing in junction": 46,
+   "P-1 lane line": 169,
+   "P-10 crossing": 65,
+   "P-10 crossing in junction": 40,
+   "P-11 cycle crossing": 6,
+   "P-11 cycle crossing in junction": 6,
    "P-13": 15,
    "P-14": 27,
-   "P-7b edge line": 156,
-   "P-8 arrow": 98,
-   "P-8 skipped (lanes continue)": 10,
-   "P-8 skipped (off carriageway)": 62
+   "P-7b edge line": 135,
+   "P-8 arrow": 75,
+   "P-8 skipped (lane too narrow)": 13,
+   "P-8 skipped (lanes continue)": 6,
+   "P-8 skipped (off carriageway)": 66
   },
-  "markings_overlap_removed_tris": 113,
-  "nmt_nodes_replaced_under_decks": 2160,
+  "markings_overlap_removed_tris": 104,
+  "nmt_nodes_replaced_under_decks": 2156,
   "overrides_applied": [
    {
     "id": "kwadrat-park-yard-access-width",
@@ -11000,6 +11717,180 @@
     ]
    },
    {
+    "id": "s610-north-arm-width",
+    "targets": [
+     "w537184112:1882887385-2840742181"
+    ]
+   },
+   {
+    "id": "putry-ring-s-placement",
+    "targets": [
+     "w180144451:2629251364-4075461271"
+    ]
+   },
+   {
+    "id": "lacznica-biezenstwa-placement",
+    "targets": [
+     "w177861600:1882953899-4391371827"
+    ]
+   },
+   {
+    "id": "andersa-placement-s700-1060",
+    "targets": [
+     "w552161976:3341716402-2367445386"
+    ]
+   },
+   {
+    "id": "andersa-placement-s1060",
+    "targets": [
+     "w560802658:2367445386-1882690822"
+    ]
+   },
+   {
+    "id": "dk8-placement-a",
+    "targets": [
+     "w882366266:2256069816-8205694666"
+    ]
+   },
+   {
+    "id": "dk8-placement-b",
+    "targets": [
+     "w238861874:8205694666-2081020082"
+    ]
+   },
+   {
+    "id": "andersa-nw-xsec-s1100-1270",
+    "targets": [
+     "w249640399:1881569071-131612943"
+    ]
+   },
+   {
+    "id": "andersa-nw-xsec-bay-s1040-1080",
+    "targets": [
+     "w249640399:131612943-1852176912"
+    ]
+   },
+   {
+    "id": "andersa-nw-xsec-s1080-1210",
+    "targets": [
+     "w1093579590:1852176912-2359253621"
+    ]
+   },
+   {
+    "id": "andersa-nw-xsec-n10015785253",
+    "targets": [
+     "w1093579589:2359253621-10015785253"
+    ]
+   },
+   {
+    "id": "andersa-nw-xsec-s1300-1355",
+    "targets": [
+     "w266084693:10015785253-12620261934"
+    ]
+   },
+   {
+    "id": "andersa-nw-xsec-s1355-1410",
+    "targets": [
+     "w266084693:12620261934-2840742308"
+    ]
+   },
+   {
+    "id": "andersa-se-xsec-w560802655",
+    "targets": [
+     "w560802655:12620261936-1946476472"
+    ]
+   },
+   {
+    "id": "andersa-se-xsec-w266084684",
+    "targets": [
+     "w266084684:1946476472-4103450292"
+    ]
+   },
+   {
+    "id": "andersa-se-xsec-w560802656",
+    "targets": [
+     "w560802656:4103450292-277320063"
+    ]
+   },
+   {
+    "id": "andersa-bay-s1060-service-lane",
+    "targets": [
+     "w174545870:131612943-1852176912"
+    ]
+   },
+   {
+    "id": "dk8-viaduct-w-xsec-w490398852",
+    "targets": [
+     "w490398852:4825844768-1832991672"
+    ]
+   },
+   {
+    "id": "dk8-viaduct-w-ramp-lane",
+    "targets": [
+     "w240542867:1847044963-1832991672"
+    ]
+   },
+   {
+    "id": "dk8-viaduct-w-xsec-w490398851",
+    "targets": [
+     "w490398851:4825844766-4825844768"
+    ]
+   },
+   {
+    "id": "dk8-viaduct-w-xsec-w173985169",
+    "targets": [
+     "w173985169:1847263320-4825844766"
+    ]
+   },
+   {
+    "id": "dk8-viaduct-w-xsec-w23844386",
+    "targets": [
+     "w23844386:1166108055-1847263320"
+    ]
+   },
+   {
+    "id": "dk8-viaduct-w-xsec-w173985172",
+    "targets": [
+     "w173985172:1847263305-1166108055"
+    ]
+   },
+   {
+    "id": "dk8-viaduct-w-xsec-w1101181473",
+    "targets": [
+     "w1101181473:10076968415-1847263305"
+    ]
+   },
+   {
+    "id": "dk8-w-of-ramp-merge-xsec-w262140922",
+    "targets": [
+     "w262140922:1832991672-1847317049"
+    ]
+   },
+   {
+    "id": "n10015785253-side-street-throat",
+    "targets": [
+     "w227212660:5202512922-10015785256"
+    ]
+   },
+   {
+    "id": "putry-link-fork-placement",
+    "targets": [
+     "w606396463:2840742308-2840742310"
+    ]
+   },
+   {
+    "id": "putry-link-fork-nose",
+    "targets": [
+     "n2840742308"
+    ]
+   },
+   {
+    "id": "andersa-se-placement-w560802655-merge",
+    "targets": [
+     "w560802655:1847044938-12620261936"
+    ]
+   },
+   {
     "id": "andersa-viaduct-biezenstwa-style",
     "targets": [
      "w175157461",
@@ -11013,6 +11904,204 @@
      "w173956078",
      "w284022563",
      "w606396460"
+    ]
+   },
+   {
+    "id": "gore-s610-centre-hatch",
+    "targets": [
+     "gap@347,-558"
+    ]
+   },
+   {
+    "id": "gore-s610-hatch-south",
+    "targets": [
+     "gap@338,-574"
+    ]
+   },
+   {
+    "id": "gore-s610-corner-e",
+    "targets": [
+     "gap@366,-562"
+    ]
+   },
+   {
+    "id": "gore-s610-corner-n",
+    "targets": [
+     "gap@354,-556"
+    ]
+   },
+   {
+    "id": "gore-s610-corner-w",
+    "targets": [
+     "gap@336,-563"
+    ]
+   },
+   {
+    "id": "gore-andersa-bay-s1060-sett",
+    "targets": [
+     "gap@-83,-343"
+    ]
+   },
+   {
+    "id": "gore-dk8-ramp-split",
+    "targets": [
+     "gap@-797,77"
+    ]
+   },
+   {
+    "id": "s1440-merge-separator-strip",
+    "targets": [
+     "island"
+    ]
+   },
+   {
+    "id": "s610-refuge-island",
+    "targets": [
+     "island"
+    ]
+   },
+   {
+    "id": "andersa-bay-s1060-kerb-strip",
+    "targets": [
+     "island"
+    ]
+   },
+   {
+    "id": "dk8-ramp-split-island",
+    "targets": [
+     "island"
+    ]
+   },
+   {
+    "id": "n10015785253-island",
+    "targets": [
+     "island"
+    ]
+   },
+   {
+    "id": "n10015785253-edge-line-clear",
+    "targets": [
+     "clear@-224,-237"
+    ]
+   },
+   {
+    "id": "s1440-merge-p21-ramp",
+    "targets": [
+     "zone@-381,-145"
+    ]
+   },
+   {
+    "id": "s1440-diverge-p21",
+    "targets": [
+     "zone@-339,-144"
+    ]
+   },
+   {
+    "id": "s610-north-arm-p21-median",
+    "targets": [
+     "zone@357,-541"
+    ]
+   },
+   {
+    "id": "s610-p21-centre",
+    "targets": [
+     "zone@344,-566"
+    ]
+   },
+   {
+    "id": "s610-p21-west",
+    "targets": [
+     "zone@329,-576"
+    ]
+   },
+   {
+    "id": "s610-p21-south",
+    "targets": [
+     "zone@344,-583"
+    ]
+   },
+   {
+    "id": "dk8-ramp-split-p21-front",
+    "targets": [
+     "zone@-788,77"
+    ]
+   },
+   {
+    "id": "dk8-ramp-split-p21-side",
+    "targets": [
+     "zone@-766,78"
+    ]
+   },
+   {
+    "id": "n10015785253-p21-west",
+    "targets": [
+     "zone@-224,-231"
+    ]
+   },
+   {
+    "id": "n10015785253-p21-east",
+    "targets": [
+     "zone@-218,-235"
+    ]
+   },
+   {
+    "id": "n10015785253-p21-north",
+    "targets": [
+     "zone@-215,-226"
+    ]
+   },
+   {
+    "id": "s1440-diverge-p21-band",
+    "targets": [
+     "zone@-363,-119"
+    ]
+   },
+   {
+    "id": "andersa-bay-s1060-edge-solid",
+    "targets": [
+     "line@-64,-359"
+    ]
+   },
+   {
+    "id": "andersa-bay-s1060-edge-dashed-nw",
+    "targets": [
+     "line@-102,-329"
+    ]
+   },
+   {
+    "id": "andersa-bay-s1060-edge-dashed-se",
+    "targets": [
+     "line@-19,-391"
+    ]
+   },
+   {
+    "id": "dk8-ramp-split-line-solid",
+    "targets": [
+     "line@-848,76"
+    ]
+   },
+   {
+    "id": "dk8-ramp-split-line-dashed",
+    "targets": [
+     "line@-889,72"
+    ]
+   },
+   {
+    "id": "n10015785253-edge-line",
+    "targets": [
+     "line@-198,-257"
+    ]
+   },
+   {
+    "id": "n10015785253-crossing-west",
+    "targets": [
+     "painted_crossing"
+    ]
+   },
+   {
+    "id": "n10015785253-crossing-east",
+    "targets": [
+     "painted_crossing"
     ]
    },
    {
@@ -11030,36 +12119,190 @@
    }
   ],
   "overrides_stale": [],
+  "paint_clear_tris": {
+   "n10015785253-edge-line-clear": 63
+  },
+  "paint_erased_in_zones_tris": 104,
+  "painted_zones": [
+   {
+    "area_m2": 159.3,
+    "built": true,
+    "id": "s1440-merge-p21-ramp",
+    "tris": 305,
+    "tris_off_carriageway": 101,
+    "xy": [
+     -380.8,
+     -145.4
+    ]
+   },
+   {
+    "area_m2": 43.8,
+    "built": true,
+    "id": "s1440-diverge-p21",
+    "tris": 98,
+    "tris_off_carriageway": 10,
+    "xy": [
+     -339.1,
+     -143.9
+    ]
+   },
+   {
+    "area_m2": 53.3,
+    "built": true,
+    "id": "s610-north-arm-p21-median",
+    "tris": 167,
+    "tris_off_carriageway": 0,
+    "xy": [
+     356.7,
+     -541.4
+    ]
+   },
+   {
+    "area_m2": 116.2,
+    "built": true,
+    "id": "s610-p21-centre",
+    "tris": 250,
+    "tris_off_carriageway": 0,
+    "xy": [
+     343.9,
+     -566.1
+    ]
+   },
+   {
+    "area_m2": 38.0,
+    "built": true,
+    "id": "s610-p21-west",
+    "tris": 84,
+    "tris_off_carriageway": 0,
+    "xy": [
+     329.0,
+     -576.1
+    ]
+   },
+   {
+    "area_m2": 37.7,
+    "built": true,
+    "id": "s610-p21-south",
+    "tris": 96,
+    "tris_off_carriageway": 0,
+    "xy": [
+     344.4,
+     -583.4
+    ]
+   },
+   {
+    "area_m2": 31.1,
+    "built": true,
+    "id": "dk8-ramp-split-p21-front",
+    "tris": 104,
+    "tris_off_carriageway": 0,
+    "xy": [
+     -788.2,
+     76.8
+    ]
+   },
+   {
+    "area_m2": 58.3,
+    "built": true,
+    "id": "dk8-ramp-split-p21-side",
+    "tris": 117,
+    "tris_off_carriageway": 49,
+    "xy": [
+     -766.0,
+     78.3
+    ]
+   },
+   {
+    "area_m2": 7.0,
+    "built": true,
+    "id": "n10015785253-p21-west",
+    "tris": 32,
+    "tris_off_carriageway": 0,
+    "xy": [
+     -223.5,
+     -230.7
+    ]
+   },
+   {
+    "area_m2": 10.6,
+    "built": true,
+    "id": "n10015785253-p21-east",
+    "tris": 41,
+    "tris_off_carriageway": 0,
+    "xy": [
+     -217.8,
+     -235.2
+    ]
+   },
+   {
+    "area_m2": 3.2,
+    "built": true,
+    "id": "n10015785253-p21-north",
+    "tris": 14,
+    "tris_off_carriageway": 0,
+    "xy": [
+     -214.6,
+     -225.8
+    ]
+   },
+   {
+    "area_m2": 172.6,
+    "built": true,
+    "id": "s1440-diverge-p21-band",
+    "tris": 200,
+    "tris_off_carriageway": 162,
+    "xy": [
+     -363.3,
+     -119.0
+    ]
+   }
+  ],
   "roundabout_junctions": 12,
+  "sides_on_carriageway_culled": {
+   "kerb_tris": 4727,
+   "parts": 458,
+   "side_tris": 108
+  },
   "signalised_junctions": 11,
+  "through_lines": {
+   "crossing_pairs_skipped": 86,
+   "junctions": 59,
+   "lines": {
+    "P-7a": 7,
+    "P-7b": 21,
+    "lane": 104
+   },
+   "pairs": 238,
+   "unmatched": 57
+  },
   "walled_ramps": [
    {
     "chain": "c:w1101181473:10076968415-1847263305",
     "confidence": "medium",
-    "max_wall_h_m": 5.11,
-    "nmt_fill_max_m": 0.69,
-    "walled_m": 158.4
+    "max_wall_h_m": 5.15,
+    "nmt_fill_max_m": 0.75,
+    "walled_m": 155.9
    },
    {
     "chain": "c:w173956078:1847263293-5749429982",
     "confidence": "medium",
-    "max_wall_h_m": 5.71,
-    "nmt_fill_max_m": 0.88,
-    "walled_m": 153.0
+    "max_wall_h_m": 4.87,
+    "nmt_fill_max_m": 0.53,
+    "walled_m": 140.0
    },
    {
     "chain": "c:w175157461:1883101816-1883469484",
     "confidence": "medium",
-    "max_wall_h_m": 3.98,
+    "max_wall_h_m": 3.96,
     "nmt_fill_max_m": 0.86,
     "walled_m": 110.5
    },
    {
     "chain": "c:w177895177:1883101822-1883062831",
     "confidence": "medium",
-    "max_wall_h_m": 3.72,
-    "nmt_fill_max_m": 0.34,
-    "walled_m": 95.0
+    "max_wall_h_m": 3.12,
+    "nmt_fill_max_m": 0.29,
+    "walled_m": 82.5
    }
   ]
  }

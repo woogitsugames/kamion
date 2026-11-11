@@ -23,6 +23,8 @@ import sets_other as O  # noqa: E402
 import sets_facade as F  # noqa: E402
 import sets_scan as SC  # noqa: E402
 import sets_viaduct as V  # noqa: E402
+import sets_buildings as B  # noqa: E402
+import sets_fire_station as FS  # noqa: E402
 
 OUT = HERE.parent
 REPO = OUT.parents[2]
@@ -91,6 +93,11 @@ SETS = {
 }
 
 SETS.update(V.VIADUCT_SETS)      # hero viaduct strip atlas (ADR 0067)
+SETS.update(FS.FIRE_STATION_SETS)      # hero fire station atlas (ADR 0070)
+# Hero atlases on external CC0 scans (ADR 0067 / 0070): set name -> (module with write_layout(), spec key of the
+# clean-material mean). One table for every authored landmark atlas; add new hero sets here.
+HERO_ATLASES = {**{n: (V, "concrete_mean_rgb_linear") for n in V.VIADUCT_SETS},
+                **{n: (FS, "render_mean_rgb_linear") for n in FS.FIRE_STATION_SETS}}
 
 LAYERS = {
     "asphalt_cracks_layer": dict(tile_m=[16.0, 16.0], uv="world_xy_planar",
@@ -131,7 +138,8 @@ def gpu_estimate(files_info, tier, kind_map=None):
     tot = 0.0
     for f in files_info["files"]:
         kind = next((k for k in ("BaseColor", "Normal", "MaskMap", "Var") if f"_{k}" in f), "Var")
-        tot += astc_bytes(files_info["res"], ASTC[tier][kind])
+        res = files_info["res"] if kind == "BaseColor" else files_info.get("aux_res", files_info["res"])
+        tot += astc_bytes(res, ASTC[tier][kind])
     return tot
 
 
@@ -276,10 +284,11 @@ def main():
         entry["albedo_target_mean_lum_linear"] = meta["target"]
         _scan_entry(entry, s, scan)
         entry.update(info)
-        if hasattr(s, "source"):            # sets with an external CC0 base (sets_viaduct)
+        if name in HERO_ATLASES:            # authored landmark atlas (source text, clean-material mean, layout json)
+            mod, mean_key = HERO_ATLASES[name]
             entry["source"] = s.source
-            entry["concrete_mean_rgb_linear"] = s.concrete_mean
-            V.write_layout()
+            entry[mean_key] = s.concrete_mean
+            mod.write_layout()
         sets[name] = entry
     for name, meta in F.FACADE_SETS.items():
         if only and name not in only:
@@ -300,6 +309,27 @@ def main():
         entry["kind"] = "modulation_set"
         entry["albedo_target_mean_lum_linear"] = F.MOD_MEAN
         _scan_entry(entry, s, scan)
+        entry.update(info)
+        sets[name] = entry
+    for name, meta in B.BUILDING_SETS.items():       # building atlases (ADR 0081)
+        if only and name not in only:
+            continue
+        print("building set", name, flush=True)
+        t0 = time.perf_counter()
+        s = meta["fn"]()
+        s.name = name
+        info = K.write_set(s, OUT, tiers=TIERS_SEL)
+        print(f"  {time.perf_counter() - t0:.1f} s", flush=True)
+        for t, fi in info["files"].items():
+            fi["astc"] = ASTC[t]
+            fi["gpu_bytes_astc_mips"] = int(gpu_estimate(fi, t))
+        entry = {k: v for k, v in meta.items() if k != "fn"}
+        entry["albedo_target_mean_lum_linear"] = meta["target"]
+        if s.scan_info:                               # hybrid with a CC0 scan: same provenance fields as SC.build
+            src = dict(s.scan_info)
+            src["assets"] = [{"id": i, "page": SC.asset(i)["page"], "authors": SC.asset(i)["authors"],
+                              "license": SC.asset(i)["license"]} for i in [src["source"]]]
+            entry["source"] = src
         entry.update(info)
         sets[name] = entry
     for name, meta in SC.SCAN_ONLY_META.items():

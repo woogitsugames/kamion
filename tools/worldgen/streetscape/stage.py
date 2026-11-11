@@ -17,9 +17,11 @@ from terrain_mesh import conform as CF
 from . import buildings_mesh as BM
 from . import forest_hlod as FH
 from . import furniture as FU
+from . import fab_details as FD
 from . import signs_route as SR
 from . import gate as GT
 from . import depot_yard as DY
+from . import hero_building as HBD
 from . import hero_depot as HD
 from . import landmarks as LM
 from . import life as LF
@@ -27,6 +29,7 @@ from . import paved as PV
 from . import plantings as PT
 from . import sources as SRC
 from . import vegetation as VG
+from . import yard_wear as YW
 
 
 def run(w, road_z, rmask, deck, deck_mask, thick, log):
@@ -46,7 +49,9 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
 
     # buildings (+ docks facing yards described by the raw paved sources)
     fc = json.loads((pipeline.REGIONS / rid / "buildings.geojson").read_text(encoding="utf-8"))
-    blds = BM.load(fc, w.origin, overrides)
+    # hero buildings (override kind: hero_building, ADR 0070): authored asset instead of the rule facade
+    heroes = HBD.plan(rid, overrides, fc, w.origin, lambda e, n: float(np.asarray(zsmooth(e, n)).ravel()[0]), rep, log)
+    blds = BM.load(fc, w.origin, overrides, hero=HBD.targets(heroes))
     yard_src = [PV._poly_local(f["geometry"]["coordinates"], w.origin) for f in src["bdot10k"]["OT_PTPL_A"]
                 if f["props"].get("materialnawierzchni") != "grunt naturalny"]
     yard_src += [PV._poly_local(a["geometry"]["coordinates"], w.origin) for a in src["osm"]["areas"]
@@ -56,8 +61,8 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     yard_union = shapely.union_all([shapely.make_valid(p) for p in yard_src] + [roads_poly])
     brep = {}
     facade_signs = []
-    heroes = HD.plan(w, rid, overrides, blds, zsmooth, log)      # hero depot halls (override kind: hero_depot, ADR 0071)
-    docks = BM.build(w.buf, blds, hf, zsmooth, yard_union, roads_poly, brep, sign_out=facade_signs, heroes=heroes)
+    depots = HD.plan(w, rid, overrides, blds, zsmooth, log)      # hero depot halls (override kind: hero_depot, ADR 0071)
+    docks = BM.build(w.buf, blds, hf, zsmooth, yard_union, roads_poly, brep, sign_out=facade_signs, heroes=depots)
     rep["buildings"] = brep
     log("buildings", brep["typologies"], "docks", brep["docks"])
     bpoly = shapely.union_all([b["poly"] for b in blds])
@@ -147,16 +152,17 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     FU.misc_points(pl, w.net, src, origin, frep, codes)
     FU.lamps(pl, w.net, src["osm"]["nodes"], origin, frep)
     lin = FU.Lin(w.buf, zsurf)
-    FU.fences(lin, src, origin, roads_poly, frep)
+    # authored fences of hero buildings replace the generic panel fence of the same OSM way (ADR 0070 r3)
+    FU.fences(lin, src, origin, shapely.union_all([roads_poly] + HBD.fence_cut(heroes)), frep)
     def znat(e, n):                              # natural ground (NMT, decks removed): embankment height
         return PV.bilinear(hf.z, hf, np.asarray(e, float), np.asarray(n, float))
     FU.guardrails(lin, w.net, znat, frep)
     FU.noise_barriers(lin, src, origin, roads_poly, frep, overrides, pl=pl)
     FU.power_lines(lin, src, origin, frep, pl=pl, roads_poly=roads_poly)
-    GT.build(pl, lin, w.net, graph, overrides, roads_poly, bpoly, origin, frep)
+    GT.build(pl, lin, w.net, graph, overrides, roads_poly, bpoly, origin, frep, paved=paved)
     DY.apply(pl, overrides, origin, None, frep)                 # authored depot yards (override kind: depot_yard)
     pl.items.extend(facade_signs)
-    hero_tris = HD.apply(w, heroes, pl, log)
+    hero_tris = HD.apply(w, depots, pl, log)
     rep["hero_depots"] = w.stats.get("hero_depots", {})
     from roads import build_world as BW
     try:
@@ -169,9 +175,14 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     park_polys += [PV._poly_local(f["geometry"]["coordinates"], w.origin) for f in src["bdot10k"]["OT_KUKO_A"]
                    if f["props"].get("rodzaj") == "parking" and f["geometry"]["type"] == "Polygon"]
     LF.place(pl, docks, paved, blds, roads_poly, bpoly, route_P, frep, buf=w.buf, zsurf=zsurf, park_polys=park_polys,
-             no_parking=DY.no_parking(overrides, origin))
+             no_parking=DY.no_parking(overrides, origin) + GT.no_parking(frep), authored_trailers=DY.dock_trailers(overrides))
+    YW.apply(w.buf, overrides, origin, docks, paved, roads_poly, zsurf, frep)     # authored yard wear (ADR 0071 r11)
+    FD.apply(w, pl, roads_poly, bpoly, paved, park_polys, route_P, frep, log, overrides=overrides, deck_at=deck_at)   # Fab Megascans (ADR 0084)
     carriage = PV.road_footprint_polygon([p for p in road_parts if p.mat.startswith("road_")])
     FU.clear_carriageway(pl, carriage, zsurf, frep)
+    FU.clear_narrow_islands(pl, w.buf.parts, w.net, frep)        # ADR 0093: no lamp on a separation < ~2 m
+    FU.clear_under_decks(pl, w.buf.parts, frep)
+    FU.clear_level_carriageways(pl, w.buf.parts, frep)
     frep["poles_reseated"] = pl.reseated
     frep["pole_footing_steps"] = {"count": len(pl.seat_log), "max_m": max([r["step_m"] for r in pl.seat_log], default=0.0),
                                   "worst": sorted(pl.seat_log, key=lambda r: -r["step_m"])[:20]}
@@ -183,6 +194,9 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     blocked = ndimage.binary_dilation(mask | bmask, iterations=3)
     if plant_blocked:
         blocked |= PV.rasterize_polys(plant_blocked, hf)
+    hero_keepout = HBD.keepout(heroes)
+    if hero_keepout:
+        blocked |= PV.rasterize_polys(hero_keepout, hf)
     vrep = {}
     trees, forests = VG.place(src, origin, hf, zc, blocked, vrep, overrides)
     forest_mix = vrep.pop("_forest_mix")
@@ -194,5 +208,9 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     hlod = FH.build(trees, forest_mix, no_forest, zground, half, vrep)
     log("forest hlod", vrep["forest_hlod"])
     col = VG.ground_masks(src, origin, hf, dist, forests)
-    return {"zc": zc, "dist": dist, "mask": mask, "rmask": rmask, "col": col, "instances": pl.items + trees,
+    instances = pl.items + trees
+    hero_tris = {**hero_tris, **HBD.apply(w.buf, heroes, instances, rep, log)}      # depot halls + hero buildings
+    if heroes or rep.get("hero_buildings", {}).get("stale"):
+        log("hero buildings", {k: [x["id"] for x in v] for k, v in rep["hero_buildings"].items()})
+    return {"zc": zc, "dist": dist, "mask": mask, "rmask": rmask, "col": col, "instances": instances,
             "codes": codes, "boards": boards, "report": rep, "docks": docks, "paved": paved, "forest_hlod": hlod, "hero_tris": hero_tris}

@@ -1,0 +1,36 @@
+# Zadanie dla GPT 6.1 Sol — pakiet S10-B: 5 niezależnych sesji (po 1 agencie)
+
+Repo: `C:\Users\matma\Documents\Claude\kamion` (Unity 6000.3.28f1 URP, Białystok 1:1, mobilny symulator ciężarówki). Każda sesja dostaje JEDEN strumień (H, I, J, K albo L) i pracuje sama, w swoim worktree i na swojej gałęzi. **Nie scalasz do main i nie pushujesz main** — scala lider Claude po `REPORT.md`.
+
+## Najpierw przeczytaj
+`HANDOVER.md` (górna sekcja s10) → `CLAUDE.md` → `docs/owner/AGENT-RULES.md` (zwłaszcza pkt 3: blokada telefonu `artifacts/locks/PHONE_RUN` — gdy istnieje, NIE startuj Unity) → `docs/06_GRAFIKA_ANTI_AI_SLOP.md` → `docs/PERFORMANCE_BUDGETS.md` → `docs/owner/GPT-TASK-02-S10.md` (sekcje „Przygotowanie każdego worktree”, „Definition of Done” — obowiązują w całości) → recenzje `docs/reports/visual/REVIEW-2026-11-11-s10-*.md` i `…-s9*.md`.
+
+## Przygotowanie worktree
+Jak w GPT-TASK-02 („Przygotowanie każdego worktree”): z AKTUALNEGO main, kopie `Data\raw\derived`, `Data\raw\cc0`, `art-source\world\cc0\_raw`, `art-source\world\megascans`, `game\Assets\_Generated`; junctiony `Data\raw\{gugik,osm,refs,mapillary,fab}` tylko do odczytu. `uv run --project tools/worldgen python -m pytest tests/gis -q` (nie `uv run pytest`). Unity: jeden proces na worktree, efekty uboczne cofaj (`git checkout -- game/Assets/_Project/Rendering/Settings game/ProjectSettings`). Bez telefonów/adb (telefon robi lider). STATUS.md po KAŻDYM kroku + commit WIP (limit może ubić w każdej chwili).
+
+## NIE ruszać (pracują inni)
+- Claude: `tools/worldgen/roads/*`, `overrides.yaml`, oznakowanie poziome, krawężniki, bariery na E −830…−782 i na wiadukcie (ADR 0100 węzły r3); `streetscape/{buildings_mesh,facade_kit,roofs,facade_atlas}.py` i zestawy budynków (ADR 0097); wartości `_Tint` hali Kwadrat Park / ekranów / wiaduktu `bridge_concrete` (ADR 0101).
+- GPT koordynator (GPT-TASK-02): roślinność (0088), światło/post (0098), lakier/szyba/reflektory TRAKT `TruckExterior.shader` + szkło kabiny + `TruckLights.cs` (0087), osobówki (0089), remiza (0090), zużycie nawierzchni (0099).
+- Wspólne pliki (`WorldPbrMaterials.cs`, `WorldPBR.shader`, `WorldSurface.shader`, `materials.py`) — tylko addytywnie, opisane w REPORT jako „przewidywane konflikty”. Reguły: `_Tile` = `set_tile || elementScan || atlas`; zacieki `weather`‖`runoff`; jeden liniowy kontrakt `_Tint` (ADR 0086).
+
+## Strumienie (jedna sesja = jeden strumień)
+
+### H — ADR 0085 r2: tło za krawędzią świata (przejęcie od Argona)
+Gałąź `gpt-edge-r2` **z gałęzi `argon-edge`** (`git worktree add … -b gpt-edge-r2 argon-edge`, potem `git merge main`; konflikty generated → ours + regeneracja). STATUS `artifacts/edge-far-r2/STATUS.md`. Najpierw przeczytaj `artifacts/edge-far-r1/REPORT.md` i `docs/owner/ARGON-TASK-01-WORLD-EDGE.md` „UWAGI LIDERA s9”: (1) `edge-south` — budynek regionu (kremowy biurowiec) zdublowany długą halą `_FAR_FACADE` → wyklucz z far-field budynki przecinające granicę 2048 m + test; (2) kadr, gdzie las Pietrasze zamyka horyzont w `dk8-dk19-exit`; (3) usuń zbędne `art-source/truck/*/export/export/` (197 MB). Potem jakość tła: sylwetki zabudowy/lasu z danych (BDOT/NMT), mgiełka zgodna z 0098 (uzgodnij przez REPORT), brak „ściany”. Pliki: `far_field.py`, `WorldEdgeBuilder.cs`. Dowód: kamery edge-* przed/po Low/High × clear/overcast, PlayMode `WorldEdgeRecoveryTests`. Budżet Low: draws +0, tris ≤ +2 %.
+
+### I — ADR 0102: meble uliczne r1 (latarnie, znaki, słupki, ogrodzenia)
+Gałąź `gpt-furniture-r1`, STATUS `artifacts/furniture-r1/STATUS.md`. Pliki: `streetscape/{furniture,props,signs,signs_route}.py`, ich prototypy/zestawy. Z QA `world_manifest.json` (`pole_footing_steps`: 147 słupów ze stopniem do 1,09 m przy fundamencie) i recenzji s9/s10: fundamenty słupów osadzone w terenie (cokół/obsypka, bez „wiszących” i „zatopionych”), latarnie wg rodzin z Mapillary (wysięgnik, oprawa, kolor, wiek: `lamp_old_concrete_9m`, `lamp_old_steel_8m`), tył znaków (szare ocynkowane, obejmy), słupki/U-kształty, zużycie (rdza przy ziemi, brud, naklejki bez marek), ogrodzenia panelowe — słupki, podmurówka, zwis. Referencje: Mapillary (`tools/refs`), ADR 0069. NIE barierki/krawężniki w miejscach ADR 0100. Dowód: kamery trasy + zbliżenia; budżet Low: draws +0 (instancing), tris ≤ +3 %.
+
+### J — ADR 0103: zestaw porównań side-by-side do bramki 3
+Gałąź `gpt-sbs-gate3`, STATUS `artifacts/sbs-gate3/STATUS.md`. Bramka 3 (`docs/03`) wymaga porównania side-by-side ze zdjęciami „w tych samych ujęciach”. Zbuduj narzędzie: dla każdego zdjęcia referencyjnego z otwartych źródeł przy trasie G3-A/G3-B (Mapillary z `Data/raw/mapillary`/`tools/refs`, Wikimedia CC, `Data/photos/nowe`) wyznacz pozę kamery (pozycja z EXIF/Mapillary + kurs, dopasowanie wysokości oka i FOV, ręczna korekta jako `authored_overrides` w JSON), wygeneruj kamery `sbs-*` w `Data/Regions/bialystok-industrial-c/` (nowy plik, nie `control_cameras.json` innych), wyrenderuj (`scripts/visual-qa.ps1` lub własny wrapper), złóż arkusze zdjęcie|render z liniami horyzontu i siatką, plus metryki (histogram jasności, stosunek niebo/asfalt). Cel: ≥ 20 par na trasie, licencja każdego zdjęcia w `docs/LICENSES.md`/`docs/REFERENCES.md`. Zakaz Google. Bez zmian świata — tylko narzędzia, kamery, dokumentacja.
+
+### K — ADR 0104: kabina r1 — wnętrze i lusterka (widok kierowcy)
+Gałąź `gpt-cab-r1`, STATUS `artifacts/cab-r1/STATUS.md`. Bramka 3 obejmuje „fragment finalnej kabiny” i „lusterka”. Najpierw audyt: wyrenderuj kamery kabiny (`cab-*`, widok kierowcy, lusterka) Low/High × clear/overcast, oceń wg docs/06 i ADR 0020/0042/0044/0045/0068 — materiały deski (plastik ziarnisty, nie gładki), szwy, zużycie kierownicy/fotela, czytelność zegarów na telefonie, lusterka (rozdzielczość, odświeżanie, czy pokazują naczepę i pas). Potem poprawki. Pliki: wnętrze kabiny (art-source/truck/cab*, materiały wnętrza, shader czytelności z 0044, render lusterek). **NIE**: `TruckExterior.shader`, szyby, `TruckLights.cs` (0087). Po zmianach `Game.Editor.Setup.TruckAssetBuilder.BuildBatch` + `Game.World.Import.WorldTruckInstaller.InstallBatch`. Budżet lusterek z ADR 0068 nie gorszy.
+
+### L — ADR 0105: wiadukt DK8 — konstrukcja pod pomostem
+Gałąź `gpt-viaduct-r1`, STATUS `artifacts/viaduct-r10/STATUS.md`. Pliki: `streetscape/hero_bridge.py` i zestawy wiaduktu (NIE `bridge_concrete` `_Tint` — 0101, NIE pasy/bariery/oznakowanie na pomoście — 0100). Z recenzji (artifacts/viaduct-r9, REVIEW s9/s10): podpory i oczepy z fazami, łożyska, belki/dźwigary z kroplownikami, przyczółki ze skrzydłami i schodami skarpowymi, odwodnienie (rury spustowe), zacieki pod dylatacjami, graffiti BEZ treści/marek tylko jako plamy farby (WORKING_VALUE), roślinność samosiejna przy przyczółkach tylko z Megascans/CC0. Referencje: ortofoto, Mapillary, LoD2. Dowód: kamery pod wiaduktem i z trasy; budżet Low tris ≤ +3 %, draws +0.
+
+## Definition of Done
+Jak w GPT-TASK-02 (pytest gis zielone · EditMode bez nowych porażek · budżet Low nie gorszy · PNG przed/po obejrzane z samokrytyką · liczby zmierzone albo WORKING_VALUE/UNVERIFIED · ADR `docs/adr/01xx-*.md` · `artifacts/<dir>/REPORT.md` z gałęzią, sha, liczbami, ścieżkami PNG, otwartymi i przewidywanymi konfliktami · robocopy `artifacts/<dir>` do main bez commitowania).
+
+Numery ADR tego pakietu: 0085 (r2), 0102, 0103, 0104, 0105. Ostatni przydzielony w projekcie: **0105**.

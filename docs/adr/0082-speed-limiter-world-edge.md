@@ -90,7 +90,7 @@ N +1024; jezdnie biegną skośnie, ok. 12° na zachód od północy), Maczka, An
 - **Skąd +4 km/h w nagraniu (90 → 94 na 110–116 s):** nieodtworzone. Model i adapter trzymają ≤ 89,4 km/h na płaskim
   i na trawie; jezdnia wylotowa się wznosi. Do sprawdzenia na telefonie z nagraną telemetrią (prędkość, pochylenie,
   `SpeedLimiterFactor`, `OverrunBrakeActive`). Ochrona przed rozpędzaniem ogranicza skutek do 94 km/h (na zjeździe);
-  czy na zjeździe ma być twarde 90 (offset 0–1 km/h) — decyzja właściciela, jedna liczba `overrunBrakeOffsetKmh`.
+  czy na zjeździe ma być twarde 90 (offset 0–1 km/h) — decyzja właściciela D46 (2026-11-10): dopuszczać ~94 km/h, `overrunBrakeOffsetKmh = 4` zostaje.
 - Powrót ustawia zestaw przodem do krawędzi (ostatnia poza z jazdy); na jezdni jednokierunkowej trzeba użyć
   „Reset” / menu. Docelowo: graf pasów w runtime i powrót na pas w stronę mapy.
 - Fartuch nie ma lasu ani zabudowy (goła trawa + mgła); przy zamknięciach brak znaków B-1 / U-3 i świateł U-35.

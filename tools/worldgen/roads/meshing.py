@@ -12,7 +12,7 @@ import numpy as np
 
 from . import standards as S
 from .geom import ear_clip, polygon_area
-from .network import ISLAND, MEDIAN_RURAL, RURAL, URBAN, side_params, side_profile
+from .network import FLUSH_FILL_MAX_M, ISLAND, MAT_FLUSH_ROAD, MEDIAN_RURAL, RURAL, URBAN, side_params, side_profile
 
 
 @dataclass
@@ -118,7 +118,9 @@ def build_ribbon(buf: MeshBuf, net, c, coarse=False):
             UV1 = np.column_stack([np.repeat(st, len(q)), (latv + hwv - sec_mid.edge_strip) / lw * 5.0])
         else:
             # UV1 = (lane coordinate, distance to the nearer carriageway edge) for wheel-path / gutter weathering
-            if sec_mid.oneway or sec_mid.roundabout:
+            if getattr(sec_mid, "lane_edges", None):
+                lanec = sec_mid.lane_coord(latv, hwv, int(c.dirn[c.idx(0.5 * (s0 + s1))]) or 1)
+            elif sec_mid.oneway or sec_mid.roundabout:
                 lanec = (latv + hwv - sec_mid.edge_strip) / lw
             else:
                 lanec = np.abs(latv) / lw
@@ -165,16 +167,25 @@ def build_side_strip(buf, c, st, side, sgn, P, N, hw, br, coarse):
     kap = c.line.curvature(st) * sgn
     zg = c.crossfall_z(st, sgn * hw)
     G = P + N * (sgn * hw)[:, None]
-    kl = [p[0] for p in params]
-    if len(kinds) > 1 and len(kinds - {URBAN, ISLAND}) > 0:
+    # flush edge shared with another carriageway (asphalt, no kerb): its own strip, like a profile family
+    kl = [(p[0], p[4] == MAT_FLUSH_ROAD) for p in params]
+    if len(set(kl)) > 1 and (len(kinds - {URBAN, ISLAND}) > 0 or any(k[1] for k in kl)):
         # rural/urban mix (e.g. a bridge on a rural road): one strip per run of the same profile family,
         # sharing the boundary station so the strips meet
         cuts = [0] + [i for i in range(1, len(kl)) if kl[i] != kl[i - 1]] + [len(kl)]
         for r, (a, b) in enumerate(zip(cuts, cuts[1:])):
             lo, hi = max(0, a - 1) if r else a, b
             sl = slice(lo, hi)
-            kr = kl[a]
-            prm = [(kr, *p[1:]) for p in params[lo:hi]]
+            kr, fl = kl[a]
+            prm = [(kr, p[1], p[2], p[3], MAT_FLUSH_ROAD if fl else (0 if p[4] == MAT_FLUSH_ROAD else p[4]))
+                   for p in params[lo:hi]]
+            if r and c.meta.get("gore_flush") and len(prm) > 1:
+                # the station borrowed from the previous run carries the height of ANOTHER profile family. Next to
+                # a paved gore (ADR 0077) that is the dropped kerb (-0.06, which side_profile reads as "default
+                # ditch 0.6 m": a 0.2 m swale jumped to 0.6 m over one station = 0.5-0.7 m steep grass faces at
+                # E 786 N -831, E 321 N -603, E 48 N -460) or a ditch depth used as a kerb height (a concrete fin
+                # where the hidden kerb starts). The borrowed station continues this run's own height instead.
+                prm[0] = (kr, prm[1][1], *prm[0][2:])
             _emit_strip(buf, G[sl], (N * sgn)[sl], zg[sl], prm, kap[sl], hw[sl], side == "R",
                         br[sl] if br is not None else None, coarse, f"{c.id}:{side}:{r}")
         return
@@ -209,7 +220,9 @@ def _emit_strip(buf, G, OUT, zg, params, kap_toward, hw, flip, br, coarse, src):
     layer = "collision" if coarse else "road"
     for k in range(nseg):
         mats = [pr[k][4] for pr in profs]
-        mat = max(set(mats), key=mats.count)
+        # majority material; a tie goes to the one met first along the strip. `max(set(mats), ...)` broke ties by
+        # str-hash order = PYTHONHASHSEED: kerb vs sidewalk flipped between runs (ADR 0096)
+        mat = max(dict.fromkeys(mats), key=mats.count)
         rows = []
         # grass verge skirt: battered 1:EMBANKMENT_SLOPE outward instead of a vertical flange, so a terrain node
         # left lower than the verge edge shows a grass slope, not a green wall (REVIEW r4 W-H5). Plan footprint
@@ -243,8 +256,9 @@ def _emit_strip(buf, G, OUT, zg, params, kap_toward, hw, flip, br, coarse, src):
         T = grid_tris(n, 2, flip=flip)
         vertical = abs(profs[0][k][2] - profs[0][k][0]) < 1e-6
         is_flange = vertical and k == nseg - 1 and not coarse
-        cmat = ("collision_" + ("curb" if mat == "curb_concrete" else "paving" if mat in
-                                ("sidewalk_paving", "apron_sett", "bridge_concrete") else "grass")) if coarse else mat
+        cmat = ("collision_" + ("curb" if mat == "curb_concrete" else "asphalt" if mat.startswith("road_") else
+                                "paving" if mat in ("sidewalk_paving", "apron_sett", "bridge_concrete") else
+                                "grass")) if coarse else mat
         if br is not None and np.any(br):
             tri_st = np.minimum(T.min(1) // 2, n - 2)
             onb = br[tri_st] | br[np.minimum(tri_st + 1, n - 1)]
@@ -514,6 +528,14 @@ class PatchHeight:
         a, s, P, d, n, hw, g, z0 = self.arms[i]
         v = p - P
         along = float(v @ d)
+        if along < 0.0:
+            # beside the trimmed part of the arm (the gore of a 45 m merge patch): the arm's own surface at its
+            # nearest edge, not the end-section plane carried 15-40 m along a changing grade (0.18 m ridge between
+            # the Putry viaduct ramp and its on-ramp, MA-012)
+            sp_, lat_ = a.chain.line.project(p)
+            if 1e-3 < sp_ < a.chain.length - 1e-3:
+                hw_ = float(a.chain.hw_at(sp_))
+                return float(a.chain.crossfall_z(sp_, float(np.clip(lat_, -hw_, hw_))))
         lat = float(np.clip(v @ n, -hw, hw))
         cf = float(a.chain.crossfall_z(s, lat * a.lat_sign())) - z0
         return z0 + g * along + cf
@@ -891,5 +913,154 @@ def build_corner_strips(buf, net, j, bnd, zb, coarse, outline=None):
                 corner = j.corners[tag[1]]
                 if corner.kind in ("fillet", "nose") and corner.R > 0:
                     kap[m] = 1.0 / (0.8 / 0.9 * corner.R)
+        # another carriageway (not an arm of this junction) right beside the corner: the strip is flush asphalt up
+        # to it. The kerb of a median that two carriageways close on used to end 3 m before they met and left a
+        # slot down to the terrain (j:n10015785253, 0.5 m deep, terrain_walls QA; ADR 0076)
+        gaps, rise = _corner_gaps(net, j, G, OUT, Z)
+        params = [(URBAN, float(r), float(g), p[3], MAT_FLUSH_ROAD) if (p[0] == URBAN and np.isfinite(g)) else
+                  ((p[0], 0.0, p[2], p[3], p[4]) if (p[0] == URBAN and p[4] == MAT_FLUSH_ROAD) else p)
+                  for p, g, r in zip(params, gaps, rise)]
+        fl = [p[0] == URBAN and p[4] == MAT_FLUSH_ROAD for p in params]
         # the corner polyline runs CCW around the patch, outward = right of travel -> mirrored strip
-        _emit_strip(buf, G, OUT, Z, params, kap, hwz, True, None, coarse, j.id + f":corner{i}")
+        if len(set(fl)) > 1:
+            # one strip per run of flush / kerbed stations sharing the boundary station (as build_side_strip): the
+            # material of a strip is the majority of its stations
+            cuts = [0] + [m for m in range(1, len(fl)) if fl[m] != fl[m - 1]] + [len(fl)]
+            for r, (a_, b_) in enumerate(zip(cuts, cuts[1:])):
+                lo = max(0, a_ - 1) if r else a_
+                if b_ - lo < 2:
+                    continue
+                sl = slice(lo, b_)
+                # the shared station of a kerbed run is a flush one: kerb height 0 there (its `h` is a rise)
+                prm = [((q[0], q[1], q[2], q[3], MAT_FLUSH_ROAD) if fl[a_] else
+                        ((q[0], 0.0, 0.0, q[3], 0) if q[4] == MAT_FLUSH_ROAD else q))
+                       if q[0] == URBAN else q for q in params[lo:b_]]
+                _emit_strip(buf, G[sl], OUT[sl], Z[sl], prm, kap[sl], hwz[sl], True, None, coarse,
+                            j.id + f":corner{i}" + (f":{r}" if r else ""))
+        else:
+            _emit_strip(buf, G, OUT, Z, params, kap, hwz, True, None, coarse, j.id + f":corner{i}")
+
+
+CORNER_FILL_DZ_M = 0.15      # the neighbour's edge must be this close in height to the corner (WORKING_VALUE)
+
+
+def _corner_gaps(net, j, G, OUT, Z):
+    """Per corner station: (clear gap [m] to the carriageway of another ground chain lying outward of the corner and
+    running along it, height of that carriageway's edge above the corner), when the gap is under FLUSH_FILL_MAX_M
+    (0 where it overlaps) and the height difference under CORNER_FILL_DZ_M - the flush strip then slopes onto that
+    edge. Carriageways further apart in height (ramps beside a through road: 0.4-0.5 m at j:n1883469484) keep
+    their kerb. nan elsewhere."""
+    from shapely import STRtree
+    from shapely.geometry import LineString, Point
+    if getattr(net, "_cw_tree", None) is None:
+        ch = [c for c in net.chains if not c.meta.get("absorbed") and len(c.line.p) >= 2]
+        net._cw_tree = (STRtree([LineString(c.line.p) for c in ch]), ch)
+    tree, ch = net._cw_tree
+    own = {a.chain.id for a in j.arms} | {c.id for c in getattr(j, "internal", [])}
+    out = np.full(len(G), np.nan)
+    rise = np.zeros(len(G))
+    if _patch_on_bridge(j):
+        return out, rise
+    for m, (p, o) in enumerate(zip(G, OUT)):
+        best = None
+        for k in tree.query(Point(*p).buffer(FLUSH_FILL_MAX_M + 12.0)):
+            oc = ch[int(k)]
+            if oc.id in own:
+                continue
+            s_o, lat_o = oc.line.project(p)
+            if s_o <= 1e-3 or s_o >= oc.length - 1e-3:
+                continue
+            io = oc.idx(s_o)
+            if bool(oc.bridge[io]) or abs(float(np.dot(oc.line.t[io], o))) > 0.5:
+                continue
+            if float(np.dot(oc.line.point(s_o) - p, o)) <= 0.0:          # the other road is behind the corner
+                continue
+            hw_o = float(oc.hw_at(s_o))
+            gap = max(abs(lat_o) - hw_o, 0.0)
+            if gap >= FLUSH_FILL_MAX_M or (best is not None and gap >= best):
+                continue
+            z_o = float(oc.crossfall_z(s_o, float(np.clip(lat_o, -hw_o, hw_o))))     # its edge nearest the corner
+            if abs(z_o - float(Z[m])) > CORNER_FILL_DZ_M:
+                continue
+            best = gap
+            rise[m] = z_o - float(Z[m])
+        if best is not None:
+            out[m] = best
+    return out, rise
+
+
+# ---------------------------------------------------------------------------------------------
+CULL_CARRIAGEWAY = {"road_asphalt", "road_asphalt_new", "road_concrete", "road_paving", "road_sett", "road_gravel"}
+CULL_KERB = {"curb_concrete", "collision_curb"}
+CULL_SIDE = {"sidewalk_paving", "verge_grass", "shoulder_gravel", "collision_paving", "collision_grass"}
+CULL_RING_M = 0.30          # = consistency.KERB_RING_M: carriageway under the kerb and all around it at this radius
+CULL_DZ_M = 0.8             # = consistency.DZ_M: decks / underpasses are further apart
+
+
+def cull_sides_on_carriageway(buf: MeshBuf) -> dict:
+    """Kerbs / side strips of one ribbon or junction corner that lie on the carriageway of another (ADR 0076).
+
+    Where two elements overlap (a junction patch over a service road, two patches of a split junction, the gore of
+    a merge) each used to keep its own kerb, so a 12-15 cm kerb ran across the neighbour's lane: wheel collider in
+    Unity, the truck was launched at speed (owner 2026-11-10, MA-001 / MA-002). network.assign_sides(trims=True)
+    already makes ribbon edges flush beside another carriageway; this pass removes what is left, by the same
+    criterion as consistency.kerb_on_carriageway: a kerb triangle (top or face, render and collision) with a
+    carriageway under its centre and under 8 points around it at CULL_RING_M; a sidewalk / verge / shoulder
+    triangle with a carriageway under its centre and its three vertices. The asphalt under it stays."""
+    import shapely
+    polys, zs = [], []
+    for p in buf.parts:
+        if p.layer not in ("road", "bridge") or p.mat not in CULL_CARRIAGEWAY or len(p.T) == 0:
+            continue
+        tri = p.V[p.T]
+        a2 = 0.5 * np.abs((tri[:, 1, 0] - tri[:, 0, 0]) * (tri[:, 2, 1] - tri[:, 0, 1])
+                          - (tri[:, 2, 0] - tri[:, 0, 0]) * (tri[:, 1, 1] - tri[:, 0, 1]))
+        tri = tri[a2 > 1e-4]
+        if len(tri):
+            polys.append(shapely.polygons(np.concatenate([tri[:, :, :2], tri[:, :1, :2]], axis=1)))
+            zs.append(tri[:, :, 2].mean(1))
+    out = {"kerb_tris": 0, "side_tris": 0, "parts": 0}
+    if not polys:
+        return out
+    polys, zs = np.concatenate(polys), np.concatenate(zs)
+    tree = shapely.STRtree(polys)
+
+    def on_cw(P):
+        res = np.zeros(len(P), bool)
+        pi, ti = tree.query(shapely.points(P[:, :2]), predicate="intersects")
+        ok = np.abs(zs[ti] - P[pi, 2]) < CULL_DZ_M
+        res[np.unique(pi[ok])] = True
+        return res
+
+    ang = np.arange(8) * (math.pi / 4)
+    ring = np.column_stack([np.cos(ang), np.sin(ang)]) * CULL_RING_M
+    keep_parts = []
+    for p in buf.parts:
+        kerb, side = p.mat in CULL_KERB, p.mat in CULL_SIDE
+        if (p.layer not in ("road", "bridge", "collision") or not (kerb or side) or len(p.T) == 0
+                or p.src.startswith("island:")):       # authored islands lie on a carriageway by design (ADR 0077/0093)
+            keep_parts.append(p)
+            continue
+        tri = p.V[p.T]
+        cen = tri.mean(1)
+        drop = on_cw(cen)
+        if kerb:
+            for o in ring:
+                if not drop.any():
+                    break
+                q = cen.copy()
+                q[:, :2] += o
+                drop &= on_cw(q)
+        else:
+            for k in range(3):
+                if not drop.any():
+                    break
+                drop &= on_cw(tri[:, k])
+        if drop.any():
+            out["kerb_tris" if kerb else "side_tris"] += int(drop.sum())
+            out["parts"] += 1
+            p.T = p.T[~drop]
+        if len(p.T):
+            keep_parts.append(p)
+    buf.parts[:] = keep_parts
+    return out

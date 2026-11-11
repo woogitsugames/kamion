@@ -91,7 +91,8 @@ Etap otoczenia uruchamia się w `build_world.py` po drogach i oznakowaniu (`stre
    - schematyczne E-2 przy łącznicach z `destination`;
    - S-1 na wlotach skrzyżowań z sygnalizacją (maszt z wysięgnikiem przy ≥ 3 pasach);
    - bariery stalowe na mostach, pasach dzielących dróg zamiejskich i nasypach > 2 m (wysokość nasypu = krawędź jezdni minus **NMT** w 5/7/9 m za końcem przekroju; wcześniej sonda 2 m za przekrojem trafiała zawsze w bermę terenu konformowanego, więc reguła nigdy nie działała; odcinki i spadki w `streetscape_qa.json` → `furniture.embankment_check.runs`);
-   - zestaw bramy zakładu z override `kind: depot_gate` (`gate.py`, niżej);
+   - zestaw bramy zakładu z override `kind: depot_gate` (`gate.py`, niżej); od r11 szafy szlabanów stoją na wyspie z krawężnikiem (mediana między pasami, +0,16 m, kolizja), z pętlami indukcyjnymi w nawierzchni i słupkami na nosach wyspy;
+   - plac zakładu z override `kind: depot_yard` (`depot_yard.py`): strefa bez miejsc postojowych, lampy i kontenery z ortofotomapy, `dock_trailers` (naczepy przy dokach podane wprost: prototyp, kąt, odsunięcie) oraz `wear` (`yard_wear.py`: tory jazdy, przełożona kostka, wykop kablowy, olej przy dokach, brud przy krawędziach; współrzędne (u, o) w układzie ściany z dokami; ADR 0071 r11);
    - ekrany akustyczne, ogrodzenia panelowe 3D na cokole, ogrodzenia z płyt betonowych, mury oporowe z poręczą, linie energetyczne ze zwisem.
 
    Wysokość dolnej krawędzi znaku: 2,00 m, a na chodniku 2,20 m (Tabl. 1.11 zał. 1, Dz.U. 2021 poz. 2066). Lica znaków to nasze własne rysunki wektorowe (`signs.py`).
@@ -120,7 +121,7 @@ Oświetlenie `--light overcast|lowsun|both`: AgX, bez bloomu, winiety i aberracj
 
 ## Authored overrides
 
-`Data/Regions/<id>/overrides.yaml` jest stosowany po wczytaniu grafu, przed geometrią, i adresuje obiekty stabilnymi identyfikatorami z OSM (`edge`, `osm_way`, `node`). Dzięki temu przeżywa każdą regenerację. Cel, którego już nie ma w danych, trafia do `overrides_stale` w manifeście i w raporcie QA; nic nie jest pomijane po cichu. Obsługiwane pola: `lanes`, `lane_width`, `edge_strip`, `surface`, `side_left/side_right` (`sidewalk`, `verge`, `median`, `flush`), a dla węzła `curb_radius` i `z`. Otoczenie: `target: {building: <id z buildings.geojson>}` z `set: {typology, hero, docks, wall_material, max_docks_per_facade}` (przykład: magazyn Kwadrat Park, który BDOT10k opisuje jako obiekt handlowo-usługowy), `kind: paved_area` z `polygon_epsg2180`, `material` i opcjonalnym `parking: true` (plac, którego nie ma w danych) oraz `kind: depot_gate` (r2): `node` (węzeł OSM, w którym droga dwukierunkowa rozdziela się na wjazd i wyjazd), `depot_way` / `entry_way` / `exit_way` (identyfikatory dróg OSM), `gate_offset_m`, `gate_side` (strona, na którą odsuwa się skrzydło, względem kierunku do zakładu), `fence_return_m`, `median_min_w`, `barrier_past_nose_m`, `replace_radius_m`. Zestaw: szlaban na każdy pas z obudową na wysepce 3 m za jej nosem, portiernia za ogrodzeniem obok bramy (glazurą do jezdni; w razie braku miejsca przy pasie wjazdowym), brama przesuwna otwarta, przęsła ogrodzenia od słupków bramy wzdłuż linii bramy (cięte jezdniami i budynkami), plamy oleju przed szlabanami. Węzły OSM `lift_gate`/`gate` w promieniu `replace_radius_m` są zastępowane (licznik w QA). Wynik i niezastosowane wpisy: `streetscape_qa.json` → `furniture.gates`. `kind: plantings` (r6, ADR 0049, `plantings.py`): `beds[]` (`ring` w EPSG:2180 obrysowany z ortofoto, `rim_m` pas trawy, opcjonalnie `height_m`) daje strzyżony żywopłot z berberysu 0,6–0,8 m; `islands[]` (`at` w EPSG:2180, `fill: paving|soil`, opcjonalnie `shrubs`, `shrub_spacing_m`, `shrub_share`) wypełnia wysepkę otoczoną krawężnikiem (dziurę w obrysie jezdni) do wysokości krawężnika kostką albo ziemią z krzewami (nigdy pod pomostem wiaduktu). Wynik i nietrafione punkty (z najbliższymi wysepkami): `streetscape_qa.json` → `plantings`.
+`Data/Regions/<id>/overrides.yaml` jest stosowany po wczytaniu grafu, przed geometrią, i adresuje obiekty stabilnymi identyfikatorami z OSM (`edge`, `osm_way`, `node`). Dzięki temu przeżywa każdą regenerację. Cel, którego już nie ma w danych, trafia do `overrides_stale` w manifeście i w raporcie QA; nic nie jest pomijane po cichu. Obsługiwane pola: `lanes`, `lane_width`, `edge_strip`, `surface`, `side_left/side_right` (`sidewalk`, `verge`, `median`, `flush`), a dla węzła `curb_radius` i `z`. Otoczenie: `target: {building: <id z buildings.geojson>}` z `set: {typology, hero, docks, wall_material, max_docks_per_facade}` (przykład: magazyn Kwadrat Park, który BDOT10k opisuje jako obiekt handlowo-usługowy), `kind: paved_area` z `polygon_epsg2180`, `material` i opcjonalnym `parking: true` (plac, którego nie ma w danych) oraz `kind: depot_gate` (r2): `node` (węzeł OSM, w którym droga dwukierunkowa rozdziela się na wjazd i wyjazd), `depot_way` / `entry_way` / `exit_way` (identyfikatory dróg OSM), `gate_offset_m`, `gate_side` (strona, na którą odsuwa się skrzydło, względem kierunku do zakładu), `fence_return_m`, `median_min_w`, `barrier_past_nose_m`, `replace_radius_m`. Zestaw: szlaban na każdy pas z obudową na wysepce 3 m za jej nosem, portiernia za ogrodzeniem obok bramy (glazurą do jezdni; w razie braku miejsca przy pasie wjazdowym), brama przesuwna otwarta, przęsła ogrodzenia od słupków bramy wzdłuż linii bramy (cięte jezdniami i budynkami), plamy oleju przed szlabanami. Węzły OSM `lift_gate`/`gate` w promieniu `replace_radius_m` są zastępowane (licznik w QA). Wynik i niezastosowane wpisy: `streetscape_qa.json` → `furniture.gates`. `kind: plantings` (r6, ADR 0049, `plantings.py`): `beds[]` (`ring` w EPSG:2180 obrysowany z ortofoto, `rim_m` pas trawy, opcjonalnie `height_m`) daje strzyżony żywopłot z berberysu 0,6–0,8 m; `islands[]` (`at` w EPSG:2180, `fill: paving|soil`, opcjonalnie `shrubs`, `shrub_spacing_m`, `shrub_share`) wypełnia wysepkę otoczoną krawężnikiem (dziurę w obrysie jezdni) do wysokości krawężnika kostką albo ziemią z krzewami (nigdy pod pomostem wiaduktu). Wynik i nietrafione punkty (z najbliższymi wysepkami): `streetscape_qa.json` → `plantings`. `kind: hero_building` (ADR 0070, `hero_building.py`): `osm_way`, `buildings: [id z buildings.geojson, …]`, `asset`; regułowa elewacja wskazanych obrysów BDOT jest zastępowana autorskim assetem Blendera (`art-source/world/landmarks/<asset>/`: `dims.json` z wymiarami i źródłami, `<asset>.glb` z LOD0/1/2, `_meta.json`). Generator pisze spec `generated/landmarks/<asset>.spec.json` (wymiary + obrysy + poziom posadzki i wysokości terenu pod ogrodzeniem) i sprawdza jego sha256 w `_meta.json`; asset nieaktualny jest przebudowywany Blenderem (`KAMION_BLENDER` lub `blender` w PATH), a gdy Blendera brak, zostaje bryła generyczna i wpis w `streetscape_qa.json` → `hero_buildings.stale` z gotową komendą. Budynek celu zachowuje pryzmę kolizji i miejsce w masce zabudowy; instancja `landmark_<asset>` trafia do `instances_*.json`. Pierwszy obiekt: remiza JRG nr 2 (`andersa-jrg2-fire-station-hero`).
 
 Przykład w repo (baza Kwadrat Park): droga dojazdowa do placu ma w OSM tylko `highway=service`, więc generator dał klasę D (2 × 2,50 m). Ortofoto pokazuje ok. 7 m asfaltu, więc override ustawia 2 × 3,50 m. Na placu nie ma krawężników (`flush`), a łuk wjazdu ma 15 m dla naczepy. Każdy wpis ma `reason`, `confidence` i `verify` (pozycję z listy zdjęć właściciela). Test `test_overrides_applied_and_not_stale` pilnuje, że wpisy działają po regeneracji.
 
@@ -228,3 +229,35 @@ Wpis `kind: hero_bridge` (pola: `id`, `osm_ways`, `asset`, opcjonalne `params`) 
 - Photo-pose cameras: `tools/worldgen/photolist/photo_cameras.py` (pose from Mapillary lat/lon/compass, snapped to the
   road centreline) and `montage` (photo | before | after). Evidence: `artifacts/street-r9/`. Tests:
   `tests/gis/test_street_r9.py`.
+
+## Optional local Fab details (ADR 0084)
+
+With the owner's acquired ZIPs under `Data/raw/fab/`, run
+`pwsh scripts/prepare-megascans.ps1` **before** the normal world-generation/import
+commands. The preparation is offline and verifies pinned SHA256 + visual review.
+`-RefreshTextures` explicitly preserves existing mesh products while rebuilding
+maps; a full run is needed after changing the mesh generator. No ZIPs on disk is
+a supported fallback: the public clone keeps existing CC0/procedural content and
+logs warnings. `KAMION_DISABLE_FAB=1` disables consumption for before/after QA.
+
+All licensed source derivatives (including intermediate FBX, atlases and meshes)
+remain in ignored `art-source/world/megascans/_generated/` and Unity
+`game/Assets/_Generated/`. Never add them to git or overwrite tracked vegetation
+or prop libraries with them. `-UpdateHashInventory` refreshes a **hash-only**
+tracked denylist; it contains no licensed payload. The guard checks git-index
+blobs and LFS object ids, including renamed known products. Exact byte hashes do
+not identify every possible new transformation; output confinement remains
+mandatory.
+
+Street and yard utilities share one padded atlas and retain their existing positions;
+new lane covers and all art placements are WORKING_VALUE, not surveyed utility
+locations. Props are bounded, avoid carriageways/buildings and sample their
+support. Plantings on an authored island require `fab_plants` with explicitly
+selected source ids; existing maintained/gravel islands are preserved.
+
+Rejected scans and semantic mismatches are listed in `fab/review.json`, ADR 0084
+and `docs/LICENSES.md`. Pine mulch is not pine trunk bark; the Linden Branch
+source supplies wood but no leaves. Prepared normal maps stay disabled until
+world compact meshes have a reviewed tangent basis. Low/Medium maps are512 px,
+High1024 px; inspect both tiers after regeneration and compare scene estimates
+with `artifacts/megascans-r1/before/` before requesting integration.

@@ -1,6 +1,6 @@
 # ADR 0071 - Hero depot hall: Kwadrat Park (player base) as an authored Blender asset
 
-Status: proposed (2026-11-10) - asset, generator hook, importer, yard, automatic boom done and tested on WorldC; visual-critic review pending (leader)
+Status: accepted (merged 2026-11-10); r11 fixes after the visual-critic review (below) proposed 2026-11-11, second review pending (leader)
 
 ## Context
 The route starts in the yard of Kwadrat Park. The main hall (`bdot:9962cca0…`, 21 399 m², LoD1 2024 height 10.16 m) was
@@ -133,3 +133,99 @@ orthophoto neither confirms nor refutes it.
   exists (`artifacts/refs/kwadrat-park/INDEX.md`, ADR 0066: gap), the orthophoto shows one thin line across the entry
   lane only. A hit that is not predicted by the loop sensor (kinematic boom, first contact) still stops the vehicle
   for one step before the boom is released; the sensor path covers bodies with convex / primitive colliders.
+
+## r11 (2026-11-10): fixes after the visual-critic review (`docs/reports/visual/REVIEW-2026-11-10-0071-0080.md`, part A)
+
+Verdict of the review: FAIL (quality) - "plac wygląda jak gra mobilna z okolic 2016 r.". What changed, by finding:
+
+1. **A1 (P0) block size - the cause is global, not this ADR.** `WorldPbrMaterials.Create` never wrote `_Tile` (noted
+   in ADR 0067), so every texture set is sampled every 4 m whatever its `tile_m`. The CC0 scan set `behaton_i_grey`
+   (ADR 0063) is 1.92 x 1.92 m of real paving with 106 segmented blocks (`materials_spec.json`,
+   `source.elements_per_tile`) = 0.0348 m2 per block (a 200 x 165 mm block: 0.033 m2); stretched to 4 m every block is
+   4 / 1.92 = 2.08x too large: 0.20 m -> 0.42 m, which is what the reviewer measured in the frame (0.4-0.5 m). The
+   renders of ADR 0080 showed small blocks because that worktree (and the PNGs on disk in the main checkout, dated
+   before the scan fetch) still held the old PROCEDURAL set (20 blocks across a 4 m tile), i.e. textures that did not
+   match the spec in git. Fix at the source: sets segmented into physical elements (`source.elements_per_tile`:
+   behaton, 20 x 10 paving, 35 cm slabs) always get their real tile (`_Tile` = `tile_m`); the element size is a scale
+   cue. Effect on other surfaces: footways and car parks (`paving_20x10_grey`: 2.279 m tile, 239 blocks =
+   0.0217 m2 per block, a 20 x 10 cm block is 0.02 m2) were 4 / 2.279 = 1.76x too large and are now right (visible in
+   every street frame with a footway - a global change outside the Kwadrat yard). **Not changed, still open for the lead (ADR 0067 "znane")**: every other set is still sampled at 4 m
+   although its `tile_m` differs (`concrete_cast_5m_joints` 10 m: the "5 m" slabs render 2 m; `kerb_concrete_1m`
+   2 x 0.5 m; `sandwich_ribbed` 6 m; `box_panel` / `curtain_folds` 4.8 x 2.7 m; `brick` 1.4 m; `plaster` 2 m) - these
+   looks were reviewed at 4 m and belong to other agents' scopes (buildings, roads, light).
+2. **A2 (P0) sterile yard.** New block `wear` of the `depot_yard` override (`streetscape/yard_wear.py`), authored in the
+   frame of the dock wall (u along the wall, o out of it), deterministic (hashed), decals on the markings layer:
+   driving lines of articulated trucks (`decal_tyre` bands, 2 wheel paths x passes), relaid paving and a cable trench
+   (`decal_yard_patch_light / _dark`: the yard's own block set in another tone, world-planar so the bond runs through),
+   oil and grease where tractors stand coupled and under the axles (`decal_oil`, 2-5 per dock), soil washed against
+   every edge of the paved yard that is not a flush road edge and along authored lines (`decal_tyre` bands at low opacity: a soft
+   noise-broken film, no material of its own = no extra draw). SEEN on the GUGiK
+   orthophoto 2024-05-27: the dark soil line from the lane edge toward the containers and the lighter rectangle in the
+   middle of the yard; everything else is WORKING_VALUE (typical logistics yard; no open ground photo exists). The
+   dock apron of the hero hall is `yard_concrete_worn` (darker, soiled cast concrete with the 16 m crack layer;
+   manifest `cracks`).
+3. **A3 (P0) hall facade without streaks / AO.** `kp_wall` carries manifest `weather: true`: the importer gives it
+   the splash zone of the generated halls (`_SPLASH`, UV0.y = metres above the facade ground) and the parapet run-off
+   layer (`_RUNOFF`); `make_depot.py` writes TEXCOORD_1 on every cladding face = (u in the 24 m period, 1 + metres
+   below the edge that sheds water above it: the coping, or the sill of the strip windows / louvres above), and
+   `InstanceImporter` keeps TEXCOORD_1 on prototype meshes whose material reads it (before: never, which is why ADR
+   0071 said "instanced prototypes have no parapet run-off"). Macro tone drift 0.06 -> 0.12 on this wall; albedo
+   0.62 -> 0.56 (WORKING_VALUE, see A7). Spec key `weathering` forces the asset rebuild.
+4. **A4 (P1) box trailers.** `life_props.trailer`: slim telescopic landing gear (110 mm leg, 90 mm inner leg, sand
+   shoe, braces, cross shaft, crank), mudguards and a mud flap over the axle group, amber side markers, pallet box,
+   spare wheel, front bulkhead detail (document box, reflectors, hose bracket, hanging hoses), road film on the lower
+   third of the body (`car_dirt` overlay, LOD0 only). Every new part except that film reuses a material the trailer
+   already had, so the detail costs one submesh (draw) per prototype on LOD0 and none on LOD1; LOD0 stays inside the
+   existing 1200-triangle test budget (wheels 12 -> 10 segments pay for part of it). Curtain trailers in grey / blue /
+   green get a dark painted front bulkhead (`trailer_front_dark`). The trailers of the hero dock row are authored
+   (`depot_yard.dock_trailers`): 8 trailers on 11 docks, 7 different kinds / colours, each up to 1.2 deg off square,
+   +-0.12 m sideways, 0-0.30 m off the bumpers.
+5. **A5 (P1) contact shadows.** The analytic contact patch of ADR 0050 now also covers the landing gear of trailers
+   (4th contact core) and the static yard props that had none: ISO containers, the gatehouse, the barrier cabinets.
+   Their patch prototypes are named `propcontact_*` and culled with the prop (policy ends x lodBias): a `contact_*`
+   patch has the fixed vehicle cull distance and would outlive its prop on Low.
+6. **A6 (P1) barrier without an island.** `gate.py`: a raised kerbed island (precast kerb ring 0.15 m, +0.16 m,
+   block-paved top, hard collider) fills the median between the two lanes from 2.5 m before to 3.5 m after the housing
+   line; both cabinets stand on it, the rest posts across the lanes are founded at lane level; yellow steel bollards on
+   the island axis 0.55 m from both ends (in the `paved` layer: in `furniture` the two posts stretched that chunk
+   mesh's bounds into the gate view, +19 k triangles in the Low estimate); saw-cut induction loops with a feeder cut
+   (bitumen sealant decal) before and after each boom; the hashed asphalt repair patch that lay under the boom is
+   dropped (none within 14 m of the housing line). WORKING_VALUE (no open photo of the gate).
+7. **A7 (P1) palette.** Apron darker (0.30 -> 0.235), wall 0.62 -> 0.56, trailers in 7 kinds / colours with light
+   and dark fronts, soil bands and tyre lines break the single grey. Lighting / exposure were not touched (agent
+   "light r11" owns them). All albedo values WORKING_VALUE; the relaid-paving tones were first +24 % / -24 % and read
+   as a white sheet / a hole under the overcast grading of ADR 0080, now +7 % / -10 %.
+
+### Numbers (measured 2026-11-10/11, this worktree, textures built from the CC0 scans)
+- Block size: `M_yard_behaton.mat` `_Tile` 4 -> 1.92 m; 106 blocks per tile = 0.0348 m2 per block (0.151 m2 before).
+- Yard wear (`streetscape_qa.json` `furniture.yard_wear`): 14 driving-line bands, 5 relaid patches, 1 trench, 36 oil
+  stains, 17 soil bands, 1002 triangles in all; island 12.1 m2; 1 asphalt patch removed at the booms.
+- Trailers: LOD0 920 -> 1106 (curtain), 988 -> 1174 (box), <= 1188 (reefer); LOD1 196 -> 220 / 156 -> 180 (test
+  budgets 1200 / 250 unchanged).
+- Low frame estimate, 8 control cameras, `stats.txt` of visual-qa (chunk + instanced): draws 6170 -> 6214 (+0.7 %),
+  triangles 2092 k -> 2108 k (+0.8 %); worst camera +1.3 % draws / +1.0 % triangles (`kwadrat_park_gate`), +1.1 %
+  triangles (`g3a_ext34_s0040`, `g3a_eye_s0112`; the estimate is rounded to 1 k). Editor frame times in the same
+  files are not comparable between runs (desktop GPU, 3-8 ms) and are not used. No phone measurement.
+- Tests: `pytest tests/gis` 227 passed / 3 failed - the same 3 as on the main baseline built in this worktree
+  (fidelity report stale; route corridor and route profile at s = 1434-1480 m, chunk_2_4); PlayMode
+  `WorldCBarrierTests|DepotBarrierTests` 4 / 4 (40 t combination through the gate: boom contacts 0, max |dv| per
+  10 ms step 0.050 m/s - the island is not touched); EditMode 176 passed / 0 failed / 5 inconclusive (truck prefab
+  not generated in the worktree) / 7 skipped.
+- Evidence: `artifacts/kwadrat-r11/{before,after}/{Medium-overcast,Medium-clear,Low-overcast}/`, `compare/`,
+  `budget_low.txt`, `logs/`.
+
+### Self-review against `docs/06` (no visual-critic run: a subagent does not spawn subagents)
+- Better: block scale reads right next to the boom cabinet and the cars; the yard has driving lines, soil at the
+  wall foot and the apron joint, relaid paving; the hall has soot under the coping and the strip sills; the gate has
+  an island.
+- Still weak: the hall wall is now a mid grey that may be too dark against the CC0 photo in sun (WORKING_VALUE);
+  trailers on LOD1 (beyond 20 m on Low, 40 m on Medium) are still plain boxes; the dock apron shows few readable
+  cracks at driver distance; the driving lines are soft bands without tread detail; no kerb / wheel stops along the
+  yard edge, no signs at the gate; the lone white stand line in the yard (older rule) looks arbitrary.
+
+Not done (open): A8 (tower block facade, lamp head lit by day), a sign / board at the gate (no source), phone
+screenshots (`docs/06` §5.2; the leader's device queue), trailers still stand in a perfectly regular 4 m pitch
+(the dock pitch).
+
+## r12 (2026-11-11)
+See `docs/adr/0092-kwadrat-park-r12.md` (review `REVIEW-2026-11-11-s9.md` par. 4): curtain road film removed, gate side strips + closure lines, panel-quantised wall tone, sill run-off, twin-tyre tracks, kerb scuffs, reefer grille.

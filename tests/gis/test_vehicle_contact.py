@@ -44,8 +44,13 @@ def test_every_vehicle_has_a_spec_and_others_none():
         s = LP.contact_spec(n)
         assert s is not None, n
         assert all(len(v) == 4 for v in s.values()), n
-    for n in ("bench", "container_20_0", "lamp_x", "bin_1100_green"):
+    for n in ("bench", "lamp_x", "bin_1100_green", "pallet_load"):
         assert LP.contact_spec(n) is None
+    # ADR 0071 r11: static yard props resting on the ground carry a one-slab spec without tyres (the importer names
+    # their patch prototype "propcontact_*": culled with the prop, not at the fixed vehicle distance)
+    for n in ("container_20_0", "container_40_3", "gatehouse", "barrier_base"):
+        s = LP.contact_spec(n)
+        assert s is not None and all(len(v) == 4 for v in s.values()) and s["strength"][2] == 0.0, n
 
 
 def test_car_occlusion_profile():

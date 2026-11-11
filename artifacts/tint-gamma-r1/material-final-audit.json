@@ -1,0 +1,3017 @@
+[
+  {
+    "id": "balcony_panel",
+    "set": "trapezoid_sheet",
+    "kind": "modulation_set",
+    "path": "modulation_already_linear",
+    "logical_linear": [
+      0.35,
+      0.36,
+      0.36
+    ],
+    "gpu_before": [
+      0.35,
+      0.36,
+      0.36
+    ],
+    "gpu_correct": [
+      0.35,
+      0.36,
+      0.36
+    ],
+    "changed": false,
+    "final_calibration": {
+      "status": "contract no-op; existing ADR0081 linear modulation retained"
+    }
+  },
+  {
+    "id": "bed_soil",
+    "set": "soil_bed",
+    "kind": "modulation_set",
+    "path": "modulation_needs_conversion",
+    "logical_linear": [
+      0.17,
+      0.13,
+      0.095
+    ],
+    "gpu_before": [
+      0.024515013703524748,
+      0.01532520332062848,
+      0.00926431084760073
+    ],
+    "gpu_correct": [
+      0.17,
+      0.13,
+      0.095
+    ],
+    "changed": true,
+    "final_calibration": {
+      "status": "global linear contract applied; full-camera appearance inspected; no per-material photo-albedo claim or additional working pigment edit"
+    }
+  },
+  {
+    "id": "bed_stones",
+    "set": "gravel_compacted",
+    "kind": "tiling_set",
+    "path": "calibrated_ratio",
+    "logical_linear": [
+      1.055272723417971,
+      1.055272723417971,
+      1.055272723417971
+    ],
+    "gpu_before": [
+      1.130382189093755,
+      1.130382189093755,
+      1.130382189093755
+    ],
+    "gpu_correct": [
+      1.055272723417971,
+      1.055272723417971,
+      1.055272723417971
+    ],
+    "changed": true,
+    "final_calibration": {
+      "status": "global linear contract applied; full-camera appearance inspected; no per-material photo-albedo claim or additional working pigment edit"
+    }
+  },
+  {
+    "id": "booth_panel",
+    "set": "sandwich_ribbed",
+    "kind": "modulation_set",
+    "path": "modulation_needs_conversion",
+    "logical_linear": [
+      0.45,
+      0.46,
+      0.45
+    ],
+    "gpu_before": [
+      0.17064493581555268,
+      0.1788675039555289,
+      0.17064493581555268
+    ],
+    "gpu_correct": [
+      0.45,
+      0.46,
+      0.45
+    ],
+    "changed": true,
+    "final_calibration": {
+      "status": "global linear contract applied; full-camera appearance inspected; no per-material photo-albedo claim or additional working pigment edit"
+    }
+  },
+  {
+    "id": "brick_red",
+    "set": "brick",
+    "kind": "modulation_set",
+    "path": "modulation_already_linear",
+    "logical_linear": [
+      0.224,
+      0.109,
+      0.087
+    ],
+    "gpu_before": [
+      0.224,
+      0.109,
+      0.087
+    ],
+    "gpu_correct": [
+      0.224,
+      0.109,
+      0.087
+    ],
+    "changed": false,
+    "final_calibration": {
+      "status": "contract no-op; existing ADR0081 linear modulation retained"
+    }
+  },
+  {
+    "id": "brick_red__far_office",
+    "set": "facade_far",
+    "kind": "modulation_set",
+    "path": "modulation_already_linear",
+    "logical_linear": [
+      0.224,
+      0.109,
+      0.087
+    ],
+    "gpu_before": [
+      0.224,
+      0.109,
+      0.087
+    ],
+    "gpu_correct": [
+      0.224,
+      0.109,
+      0.087
+    ],
+    "changed": false,
+    "final_calibration": {
+      "status": "contract no-op; existing ADR0081 linear modulation retained"
+    }
+  },
+  {
+    "id": "brick_red__far_ribbon",
+    "set": "facade_far",
+    "kind": "modulation_set",
+    "path": "modulation_already_linear",
+    "logical_linear": [
+      0.224,
+      0.109,
+      0.087
+    ],
+    "gpu_before": [
+      0.224,
+      0.109,
+      0.087
+    ],
+    "gpu_correct": [
+      0.224,
+      0.109,
+      0.087
+    ],
+    "changed": false,
+    "final_calibration": {
+      "status": "contract no-op; existing ADR0081 linear modulation retained"
+    }
+  },
+  {
+    "id": "bridge_concrete",
+    "set": "concrete_precast",
+    "kind": "modulation_set",
+    "path": "modulation_needs_conversion",
+    "logical_linear": [
+      0.42,
+      0.42,
+      0.4
+    ],
+    "gpu_before": [
+      0.147318999244498,
+      0.147318999244498,
+      0.13286832155381798
+    ],
+    "gpu_correct": [
+      0.42,
+      0.42,
+      0.4
+    ],
+    "changed": true,
+    "final_calibration": {
+      "status": "global linear contract applied; full-camera appearance inspected; no per-material photo-albedo claim or additional working pigment edit"
+    }
+  },
+  {
+    "id": "bridge_soffit",
+    "set": "concrete_precast",
+    "kind": "modulation_set",
+    "path": "modulation_needs_conversion",
+    "logical_linear": [
+      0.15,
+      0.15,
+      0.145
+    ],
+    "gpu_before": [
+      0.01960664851623822,
+      0.01960664851623822,
+      0.018478473287962097
+    ],
+    "gpu_correct": [
+      0.15,
+      0.15,
+      0.145
+    ],
+    "changed": true,
+    "final_calibration": {
+      "status": "global linear contract applied; full-camera appearance inspected; no per-material photo-albedo claim or additional working pigment edit"
+    }
+  },
+  {
+    "id": "car_paint_beige",
+    "set": "car_grime",
+    "kind": "modulation_set",
+    "path": "modulation_needs_conversion",
+    "logical_linear": [
+      0.36,
+      0.32,
+      0.24
+    ],
+    "gpu_before": [
+      0.10653922395082352,
+      0.0835351274258047,
+      0.04696420068912289
+    ],
+    "gpu_correct": [
+      0.36,
+      0.32,
+      0.24
+    ],
+    "changed": true,
+    "final_calibration": {
+      "status": "global linear contract applied; full-camera appearance inspected; no per-material photo-albedo claim or additional working pigment edit"
+    }
+  },
+  {
+    "id": "car_paint_black",
+    "set": "car_grime",
+    "kind": "modulation_set",
+    "path": "modulation_needs_conversion",
+    "logical_linear": [
+      0.035,
+      0.035,
+      0.038
+    ],
+    "gpu_before": [
+      0.002708978328173375,
+      0.002708978328173375,
+      0.0029411764705882353
+    ],
+    "gpu_correct": [
+      0.035,
+      0.035,
+      0.038
+    ],
+    "changed": true,
+    "final_calibration": {
+      "status": "global linear contract applied; full-camera appearance inspected; no per-material photo-albedo claim or additional working pigment edit"
+    }
+  },
+  {
+    "id": "car_paint_blue",
+    "set": "car_grime",
+    "kind": "modulation_set",
+    "path": "modulation_needs_conversion",
+    "logical_linear": [
+      0.045,
+      0.085,
+      0.21
+    ],
+    "gpu_before": [
+      0.0035010160107980036,
+      0.007850573473382362,
+      0.036306484118193906
+    ],
+    "gpu_correct": [
+      0.045,
+      0.085,
+      0.21
+    ],
+    "changed": true,
+    "final_calibration": {
+      "status": "global linear contract applied; full-camera appearance inspected; no per-material photo-albedo claim or additional working pigment edit"
+    }
+  },
+  {
+    "id": "car_paint_green",
+    "set": "car_grime",
+    "kind": "modulation_set",
+    "path": "modulation_needs_conversion",
+    "logical_linear": [
+      0.035,
+      0.07,
+      0.045
+    ],
+    "gpu_before": [
+      0.002708978328173375,
+      0.00598105957261676,
+      0.0035010160107980036
+    ],
+    "gpu_correct": [
+      0.035,
+      0.07,
+      0.045
+    ],
+    "changed": true,
+    "final_calibration": {
+      "status": "global linear contract applied; full-camera appearance inspected; no per-material photo-albedo claim or additional working pigment edit"
+    }
+  },
+  {
+    "id": "car_paint_grey",
+    "set": "car_grime",
+    "kind": "modulation_set",
+    "path": "modulation_needs_conversion",
+    "logical_linear": [
+      0.16,
+      0.165,
+      0.17
+    ],
+    "gpu_before": [
+      0.021980947079887205,
+      0.023227824223555578,
+      0.024515013703524748
+    ],
+    "gpu_correct": [
+      0.16,
+      0.165,
+      0.17
+    ],
+    "changed": true,
+    "final_calibration": {
+      "status": "global linear contract applied; full-camera appearance inspected; no per-material photo-albedo claim or additional working pigment edit"
+    }
+  },
+  {
+    "id": "car_paint_red",
+    "set": "car_grime",
+    "kind": "modulation_set",
+    "path": "modulation_needs_conversion",
+    "logical_linear": [
+      0.32,
+      0.03,
+      0.025
+    ],
+    "gpu_before": [
+      0.0835351274258047,
+      0.0023219814241486067,
+      0.0019349845201238392
+    ],
+    "gpu_correct": [
+      0.32,
+      0.03,
+      0.025
+    ],
+    "changed": true,
+    "final_calibration": {
+      "status": "global linear contract applied; full-camera appearance inspected; no per-material photo-albedo claim or additional working pigment edit"
+    }
+  },
+  {
+    "id": "car_paint_silver",
+    "set": "car_grime",
+    "kind": "modulation_set",
+    "path": "modulation_needs_conversion",
+    "logical_linear": [
+      0.42,
+      0.43,
+      0.44
+    ],
+    "gpu_before": [
+      0.147318999244498,
+      0.15487248594976835,
+      0.16264719366814206
+    ],
+    "gpu_correct": [
+      0.42,
+      0.43,
+      0.44
+    ],
+    "changed": true,
+    "final_calibration": {
+      "status": "global linear contract applied; full-camera appearance inspected; no per-material photo-albedo claim or additional working pigment edit"
+    }
+  },
+  {
+    "id": "car_paint_white",
+    "set": "car_grime",
+    "kind": "modulation_set",
+    "path": "modulation_needs_conversion",
+    "logical_linear": [
+      0.68,
+      0.68,
+      0.66
+    ],
+    "gpu_before": [
+      0.4200332886842154,
+      0.4200332886842154,
+      0.3931231302267222
+    ],
+    "gpu_correct": [
+      0.68,
+      0.68,
+      0.66
+    ],
+    "changed": true,
+    "final_calibration": {
+      "status": "global linear contract applied; full-camera appearance inspected; no per-material photo-albedo claim or additional working pigment edit"
+    }
+  },
+  {
+    "id": "car_paint_white2",
+    "set": "car_grime",
+    "kind": "modulation_set",
+    "path": "modulation_needs_conversion",
+    "logical_linear": [
+      0.62,
+      0.63,
+      0.62
+    ],
+    "gpu_before": [
+      0.34239163959260344,
+      0.3546920614940455,
+      0.34239163959260344
+    ],
+    "gpu_correct": [
+      0.62,
+      0.63,
+      0.62
+    ],
+    "changed": true,
+    "final_calibration": {
+      "status": "global linear contract applied; full-camera appearance inspected; no per-material photo-albedo claim or additional working pigment edit"
+    }
+  },
+  {
+    "id": "chimney_brick",
+    "set": "brick",
+    "kind": "modulation_set",
+    "path": "modulation_already_linear",
+    "logical_linear": [
+      0.2,
+      0.092,
+      0.07
+    ],
+    "gpu_before": [
+      0.2,
+      0.092,
+      0.07
+    ],
+    "gpu_correct": [
+      0.2,
+      0.092,
+      0.07
+    ],
+    "changed": false,
+    "final_calibration": {
+      "status": "contract no-op; existing ADR0081 linear modulation retained"
+    }
+  },
+  {
+    "id": "concrete_fence",
+    "set": "fence_concrete",
+    "kind": "tiling_set",
+    "path": "calibrated_ratio",
+    "logical_linear": [
+      0.9994542137882474,
+      0.9994542137882474,
+      0.9994542137882474
+    ],
+    "gpu_before": [
+      0.9987588506278563,
+      0.9987588506278563,
+      0.9987588506278563
+    ],
+    "gpu_correct": [
+      0.9994542137882474,
+      0.9994542137882474,
+      0.9994542137882474
+    ],
+    "changed": false,
+    "final_calibration": {
+      "status": "neutral or near-identity; no additional pigment edit"
+    }
+  },
+  {
+    "id": "container_beige",
+    "set": "container_corrugation",
+    "kind": "modulation_set",
+    "path": "modulation_needs_conversion",
+    "logical_linear": [
+      0.36,
+      0.31,
+      0.22
+    ],
+    "gpu_before": [
+      0.10653922395082352,
+      0.07828831963873101,
+      0.039681909478526005
+    ],
+    "gpu_correct": [
+      0.36,
+      0.31,
+      0.22
+    ],
+    "changed": true,
+    "final_calibration": {
+      "status": "global linear contract applied; full-camera appearance inspected; no per-material photo-albedo claim or additional working pigment edit"
+    }
+  },
+  {
+    "id": "container_blue",
+    "set": "container_corrugation",
+    "kind": "modulation_set",
+    "path": "modulation_needs_conversion",
+    "logical_linear": [
+      0.05,
+      0.09,
+      0.16
+    ],
+    "gpu_before": [
+      0.003935939504088967,
+      0.008540382112116999,
+      0.021980947079887205
+    ],
+    "gpu_correct": [
+      0.05,
+      0.09,
+      0.16
+    ],
+    "changed": true,
+    "final_calibration": {
+      "status": "global linear contract applied; full-camera appearance inspected; no per-material photo-albedo claim or additional working pigment edit"
+    }
+  },
+  {
+    "id": "container_green",
+    "set": "container_corrugation",
+    "kind": "modulation_set",
+    "path": "modulation_needs_conversion",
+    "logical_linear": [
+      0.06,
+      0.11,
+      0.07
+    ],
+    "gpu_before": [
+      0.004896310081623859,
+      0.011645430905844125,
+      0.00598105957261676
+    ],
+    "gpu_correct": [
+      0.06,
+      0.11,
+      0.07
+    ],
+    "changed": true,
+    "final_calibration": {
+      "status": "global linear contract applied; full-camera appearance inspected; no per-material photo-albedo claim or additional working pigment edit"
+    }
+  },
+  {
+    "id": "container_grey",
+    "set": "container_corrugation",
+    "kind": "modulation_set",
+    "path": "modulation_needs_conversion",
+    "logical_linear": [
+      0.22,
+      0.23,
+      0.23
+    ],
+    "gpu_before": [
+      0.039681909478526005,
+      0.0432336359153358,
+      0.0432336359153358
+    ],
+    "gpu_correct": [
+      0.22,
+      0.23,
+      0.23
+    ],
+    "changed": true,
+    "final_calibration": {
+      "status": "global linear contract applied; full-camera appearance inspected; no per-material photo-albedo claim or additional working pigment edit"
+    }
+  },
+  {
+    "id": "container_rust",
+    "set": "container_corrugation",
+    "kind": "modulation_set",
+    "path": "modulation_needs_conversion",
+    "logical_linear": [
+      0.17,
+      0.06,
+      0.04
+    ],
+    "gpu_before": [
+      0.024515013703524748,
+      0.004896310081623859,
+      0.0030959752321981426
+    ],
+    "gpu_correct": [
+      0.17,
+      0.06,
+      0.04
+    ],
+    "changed": true,
+    "final_calibration": {
+      "status": "global linear contract applied; full-camera appearance inspected; no per-material photo-albedo claim or additional working pigment edit"
+    }
+  },
+  {
+    "id": "container_white",
+    "set": "container_corrugation",
+    "kind": "modulation_set",
+    "path": "modulation_needs_conversion",
+    "logical_linear": [
+      0.55,
+      0.55,
+      0.53
+    ],
+    "gpu_before": [
+      0.26327340845612224,
+      0.26327340845612224,
+      0.24286681390410306
+    ],
+    "gpu_correct": [
+      0.55,
+      0.55,
+      0.53
+    ],
+    "changed": true,
+    "final_calibration": {
+      "status": "global linear contract applied; full-camera appearance inspected; no per-material photo-albedo claim or additional working pigment edit"
+    }
+  },
+  {
+    "id": "curb_concrete",
+    "set": "kerb_concrete_1m",
+    "kind": "tiling_set",
+    "path": "calibrated_ratio",
+    "logical_linear": [
+      0.9923743134664127,
+      0.9923743134664127,
+      0.9923743134664127
+    ],
+    "gpu_before": [
+      0.9827401552362266,
+      0.9827401552362266,
+      0.9827401552362266
+    ],
+    "gpu_correct": [
+      0.9923743134664127,
+      0.9923743134664127,
+      0.9923743134664127
+    ],
+    "changed": true,
+    "final_calibration": {
+      "status": "global linear contract applied; full-camera appearance inspected; no per-material photo-albedo claim or additional working pigment edit"
+    }
+  },
+  {
+    "id": "decal_oil",
+    "set": "oil_stain_alpha",
+    "kind": "decal_atlas",
+    "path": "calibrated_ratio",
+    "logical_linear": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "gpu_before": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "gpu_correct": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "changed": false,
+    "final_calibration": {
+      "status": "neutral or near-identity; no additional pigment edit"
+    }
+  },
+  {
+    "id": "decal_patch",
+    "set": "asphalt_patch",
+    "kind": "tiling_set",
+    "path": "calibrated_ratio",
+    "logical_linear": [
+      0.9973270507686219,
+      0.9973270507686219,
+      0.9973270507686219
+    ],
+    "gpu_before": [
+      0.9939301377009341,
+      0.9939301377009341,
+      0.9939301377009341
+    ],
+    "gpu_correct": [
+      0.9973270507686219,
+      0.9973270507686219,
+      0.9973270507686219
+    ],
+    "changed": true,
+    "final_calibration": {
+      "status": "global linear contract applied; full-camera appearance inspected; no per-material photo-albedo claim or additional working pigment edit"
+    }
+  },
+  {
+    "id": "decal_tyre",
+    "set": "tyre_scrub_alpha",
+    "kind": "none",
+    "path": "decal_tyre_needs_conversion",
+    "logical_linear": [
+      0.018,
+      0.018,
+      0.017
+    ],
+    "gpu_before": [
+      0.001393188854489164,
+      0.001393188854489164,
+      0.0013157894736842107
+    ],
+    "gpu_correct": [
+      0.018,
+      0.018,
+      0.017
+    ],
+    "changed": true,
+    "final_calibration": {
+      "status": "global linear contract applied; full-camera appearance inspected; no per-material photo-albedo claim or additional working pigment edit"
+    }
+  },
+  {
+    "id": "decal_yard_patch_dark",
+    "set": "behaton_i_grey",
+    "kind": "tiling_set",
+    "path": "calibrated_ratio",
+    "logical_linear": [
+      0.8908764803684401,
+      0.8908764803684401,
+      0.8908764803684401
+    ],
+    "gpu_before": [
+      0.7694789096322154,
+      0.7694789096322154,
+      0.7694789096322154
+    ],
+    "gpu_correct": [
+      0.8908764803684401,
+      0.8908764803684401,
+      0.8908764803684401
+    ],
+    "changed": true,
+    "final_calibration": {
+      "status": "global linear contract applied; full-camera appearance inspected; no per-material photo-albedo claim or additional working pigment edit"
+    }
+  },
+  {
+    "id": "decal_yard_patch_light",
+    "set": "behaton_i_grey",
+    "kind": "tiling_set",
+    "path": "calibrated_ratio",
+    "logical_linear": [
+      1.0650705650332641,
+      1.0650705650332641,
+      1.0650705650332641
+    ],
+    "gpu_before": [
+      1.1544709766035792,
+      1.1544709766035792,
+      1.1544709766035792
+    ],
+    "gpu_correct": [
+      1.0650705650332641,
+      1.0650705650332641,
+      1.0650705650332641
+    ],
+    "changed": true,
+    "final_calibration": {
+      "status": "global linear contract applied; full-camera appearance inspected; no per-material photo-albedo claim or additional working pigment edit"
+    }
+  },
+  {
+    "id": "dock_door",
+    "set": "sectional_door",
+    "kind": "modulation_set",
+    "path": "modulation_already_linear",
+    "logical_linear": [
+      0.42,
+      0.43,
+      0.44
+    ],
+    "gpu_before": [
+      0.42,
+      0.43,
+      0.44
+    ],
+    "gpu_correct": [
+      0.42,
+      0.43,
+      0.44
+    ],
+    "changed": false,
+    "final_calibration": {
+      "status": "contract no-op; existing ADR0081 linear modulation retained"
+    }
+  },
+  {
+    "id": "facade_atlas",
+    "set": "facade_atlas",
+    "kind": "tiling_set",
+    "path": "calibrated_ratio",
+    "logical_linear": [
+      0.9996705307180688,
+      0.9996705307180688,
+      0.9996705307180688
+    ],
+    "gpu_before": [
+      0.9992506602588168,
+      0.9992506602588168,
+      0.9992506602588168
+    ],
+    "gpu_correct": [
+      0.9996705307180688,
+      0.9996705307180688,
+      0.9996705307180688
+    ],
+    "changed": false,
+    "final_calibration": {
+      "status": "neutral or near-identity; no additional pigment edit"
+    }
+  },
+  {
+    "id": "fire_station",
+    "set": "fire_station",
+    "kind": "tiling_set",
+    "path": "calibrated_ratio",
+    "logical_linear": [
+      0.9995963606743277,
+      0.9995963606743277,
+      0.9995963606743277
+    ],
+    "gpu_before": [
+      0.999082014264674,
+      0.999082014264674,
+      0.999082014264674
+    ],
+    "gpu_correct": [
+      0.9995963606743277,
+      0.9995963606743277,
+      0.9995963606743277
+    ],
+    "changed": false,
+    "final_calibration": {
+      "status": "plaster atlas pigment x1.15; neutral tint retained; other atlas zones unchanged"
+    }
+  },
+  {
+    "id": "garage_door",
+    "set": "sectional_door",
+    "kind": "modulation_set",
+    "path": "modulation_already_linear",
+    "logical_linear": [
+      0.42,
+      0.42,
+      0.4
+    ],
+    "gpu_before": [
+      0.42,
+      0.42,
+      0.4
+    ],
+    "gpu_correct": [
+      0.42,
+      0.42,
+      0.4
+    ],
+    "changed": false,
+    "final_calibration": {
+      "status": "contract no-op; existing ADR0081 linear modulation retained"
+    }
+  },
+  {
+    "id": "hall_plinth",
+    "set": "concrete_precast",
+    "kind": "modulation_set",
+    "path": "modulation_already_linear",
+    "logical_linear": [
+      0.25,
+      0.25,
+      0.24
+    ],
+    "gpu_before": [
+      0.25,
+      0.25,
+      0.24
+    ],
+    "gpu_correct": [
+      0.25,
+      0.25,
+      0.24
+    ],
+    "changed": false,
+    "final_calibration": {
+      "status": "contract no-op; existing ADR0081 linear modulation retained"
+    }
+  },
+  {
+    "id": "hall_wall_accent_blue",
+    "set": "trapezoid_sheet",
+    "kind": "modulation_set",
+    "path": "modulation_already_linear",
+    "logical_linear": [
+      0.06,
+      0.12,
+      0.2
+    ],
+    "gpu_before": [
+      0.06,
+      0.12,
+      0.2
+    ],
+    "gpu_correct": [
+      0.06,
+      0.12,
+      0.2
+    ],
+    "changed": false,
+    "final_calibration": {
+      "status": "contract no-op; existing ADR0081 linear modulation retained"
+    }
+  },
+  {
+    "id": "hall_wall_accent_green",
+    "set": "trapezoid_sheet",
+    "kind": "modulation_set",
+    "path": "modulation_already_linear",
+    "logical_linear": [
+      0.05,
+      0.13,
+      0.09
+    ],
+    "gpu_before": [
+      0.05,
+      0.13,
+      0.09
+    ],
+    "gpu_correct": [
+      0.05,
+      0.13,
+      0.09
+    ],
+    "changed": false,
+    "final_calibration": {
+      "status": "contract no-op; existing ADR0081 linear modulation retained"
+    }
+  },
+  {
+    "id": "hall_wall_accent_red",
+    "set": "trapezoid_sheet",
+    "kind": "modulation_set",
+    "path": "modulation_already_linear",
+    "logical_linear": [
+      0.22,
+      0.05,
+      0.04
+    ],
+    "gpu_before": [
+      0.22,
+      0.05,
+      0.04
+    ],
+    "gpu_correct": [
+      0.22,
+      0.05,
+      0.04
+    ],
+    "changed": false,
+    "final_calibration": {
+      "status": "contract no-op; existing ADR0081 linear modulation retained"
+    }
+  },
+  {
+    "id": "hall_wall_graphite",
+    "set": "trapezoid_sheet",
+    "kind": "modulation_set",
+    "path": "modulation_already_linear",
+    "logical_linear": [
+      0.08,
+      0.085,
+      0.09
+    ],
+    "gpu_before": [
+      0.08,
+      0.085,
+      0.09
+    ],
+    "gpu_correct": [
+      0.08,
+      0.085,
+      0.09
+    ],
+    "changed": false,
+    "final_calibration": {
+      "status": "contract no-op; existing ADR0081 linear modulation retained"
+    }
+  },
+  {
+    "id": "hall_wall_grey",
+    "set": "sandwich_ribbed",
+    "kind": "modulation_set",
+    "path": "modulation_already_linear",
+    "logical_linear": [
+      0.46,
+      0.47,
+      0.46
+    ],
+    "gpu_before": [
+      0.46,
+      0.47,
+      0.46
+    ],
+    "gpu_correct": [
+      0.46,
+      0.47,
+      0.46
+    ],
+    "changed": false,
+    "final_calibration": {
+      "status": "contract no-op; existing ADR0081 linear modulation retained"
+    }
+  },
+  {
+    "id": "hall_wall_ivory",
+    "set": "sandwich_ribbed",
+    "kind": "modulation_set",
+    "path": "modulation_already_linear",
+    "logical_linear": [
+      0.52,
+      0.47,
+      0.36
+    ],
+    "gpu_before": [
+      0.52,
+      0.47,
+      0.36
+    ],
+    "gpu_correct": [
+      0.52,
+      0.47,
+      0.36
+    ],
+    "changed": false,
+    "final_calibration": {
+      "status": "contract no-op; existing ADR0081 linear modulation retained"
+    }
+  },
+  {
+    "id": "hall_wall_silver",
+    "set": "sandwich_ribbed",
+    "kind": "modulation_set",
+    "path": "modulation_already_linear",
+    "logical_linear": [
+      0.4,
+      0.42,
+      0.43
+    ],
+    "gpu_before": [
+      0.4,
+      0.42,
+      0.43
+    ],
+    "gpu_correct": [
+      0.4,
+      0.42,
+      0.43
+    ],
+    "changed": false,
+    "final_calibration": {
+      "status": "contract no-op; existing ADR0081 linear modulation retained"
+    }
+  },
+  {
+    "id": "hall_wall_white",
+    "set": "sandwich_ribbed",
+    "kind": "modulation_set",
+    "path": "modulation_already_linear",
+    "logical_linear": [
+      0.55,
+      0.56,
+      0.55
+    ],
+    "gpu_before": [
+      0.55,
+      0.56,
+      0.55
+    ],
+    "gpu_correct": [
+      0.55,
+      0.56,
+      0.55
+    ],
+    "changed": false,
+    "final_calibration": {
+      "status": "contract no-op; existing ADR0081 linear modulation retained"
+    }
+  },
+  {
+    "id": "hedge_berberis",
+    "set": "hedge_foliage",
+    "kind": "modulation_set",
+    "path": "modulation_needs_conversion",
+    "logical_linear": [
+      0.085,
+      0.034,
+      0.024
+    ],
+    "gpu_before": [
+      0.007850573473382362,
+      0.0026315789473684214,
+      0.0018575851393188856
+    ],
+    "gpu_correct": [
+      0.085,
+      0.034,
+      0.024
+    ],
+    "changed": true,
+    "final_calibration": {
+      "status": "global linear contract applied; full-camera appearance inspected; no per-material photo-albedo claim or additional working pigment edit"
+    }
+  },
+  {
+    "id": "hedge_hornbeam",
+    "set": "hedge_foliage",
+    "kind": "modulation_set",
+    "path": "modulation_needs_conversion",
+    "logical_linear": [
+      0.026,
+      0.036,
+      0.014
+    ],
+    "gpu_before": [
+      0.0020123839009287925,
+      0.002786377708978328,
+      0.00108359133126935
+    ],
+    "gpu_correct": [
+      0.026,
+      0.036,
+      0.014
+    ],
+    "changed": true,
+    "final_calibration": {
+      "status": "global linear contract applied; full-camera appearance inspected; no per-material photo-albedo claim or additional working pigment edit"
+    }
+  },
+  {
+    "id": "hedge_privet",
+    "set": "hedge_foliage",
+    "kind": "modulation_set",
+    "path": "modulation_needs_conversion",
+    "logical_linear": [
+      0.02,
+      0.03,
+      0.012
+    ],
+    "gpu_before": [
+      0.0015479876160990713,
+      0.0023219814241486067,
+      0.0009287925696594428
+    ],
+    "gpu_correct": [
+      0.02,
+      0.03,
+      0.012
+    ],
+    "changed": true,
+    "final_calibration": {
+      "status": "global linear contract applied; full-camera appearance inspected; no per-material photo-albedo claim or additional working pigment edit"
+    }
+  },
+  {
+    "id": "hedge_thuja",
+    "set": "hedge_foliage",
+    "kind": "modulation_set",
+    "path": "modulation_needs_conversion",
+    "logical_linear": [
+      0.016,
+      0.028,
+      0.012
+    ],
+    "gpu_before": [
+      0.001238390092879257,
+      0.0021671826625387,
+      0.0009287925696594428
+    ],
+    "gpu_correct": [
+      0.016,
+      0.028,
+      0.012
+    ],
+    "changed": true,
+    "final_calibration": {
+      "status": "global linear contract applied; full-camera appearance inspected; no per-material photo-albedo claim or additional working pigment edit"
+    }
+  },
+  {
+    "id": "island_gravel",
+    "set": "gravel_compacted",
+    "kind": "tiling_set",
+    "path": "calibrated_ratio",
+    "logical_linear": [
+      1.4319983303086679,
+      1.4319983303086679,
+      1.4319983303086679
+    ],
+    "gpu_before": [
+      2.2789733727601145,
+      2.2789733727601145,
+      2.2789733727601145
+    ],
+    "gpu_correct": [
+      1.4319983303086679,
+      1.4319983303086679,
+      1.4319983303086679
+    ],
+    "changed": true,
+    "final_calibration": {
+      "status": "global linear contract applied; full-camera appearance inspected; no per-material photo-albedo claim or additional working pigment edit"
+    }
+  },
+  {
+    "id": "kp_wall",
+    "set": "sandwich_ribbed",
+    "kind": "modulation_set",
+    "path": "modulation_needs_conversion",
+    "logical_linear": [
+      0.56,
+      0.57,
+      0.57
+    ],
+    "gpu_before": [
+      0.27383841647314605,
+      0.28464669032765505,
+      0.28464669032765505
+    ],
+    "gpu_correct": [
+      0.56,
+      0.57,
+      0.57
+    ],
+    "changed": true,
+    "final_calibration": {
+      "status": "global linear contract applied; full-camera appearance inspected; no per-material photo-albedo claim or additional working pigment edit"
+    }
+  },
+  {
+    "id": "marking_white",
+    "set": "asphalt_worn",
+    "kind": "tiling_set",
+    "path": "calibrated_ratio",
+    "logical_linear": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "gpu_before": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "gpu_correct": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "changed": false,
+    "final_calibration": {
+      "status": "neutral or near-identity; no additional pigment edit"
+    }
+  },
+  {
+    "id": "noise_panel",
+    "set": "noise_cassette",
+    "kind": "modulation_set",
+    "path": "modulation_needs_conversion",
+    "logical_linear": [
+      0.05,
+      0.06,
+      0.055
+    ],
+    "gpu_before": [
+      0.003935939504088967,
+      0.004896310081623859,
+      0.00440084974745434
+    ],
+    "gpu_correct": [
+      0.05,
+      0.06,
+      0.055
+    ],
+    "changed": true,
+    "final_calibration": {
+      "status": "global linear contract applied; full-camera appearance inspected; no per-material photo-albedo claim or additional working pigment edit"
+    }
+  },
+  {
+    "id": "noise_panel_dark",
+    "set": "noise_cassette",
+    "kind": "modulation_set",
+    "path": "modulation_needs_conversion",
+    "logical_linear": [
+      0.068,
+      0.072,
+      0.07
+    ],
+    "gpu_before": [
+      0.005753953718244932,
+      0.006213310068848936,
+      0.00598105957261676
+    ],
+    "gpu_correct": [
+      0.068,
+      0.072,
+      0.07
+    ],
+    "changed": true,
+    "final_calibration": {
+      "status": "local screen ROI calibration",
+      "linear": [
+        0.022,
+        0.024,
+        0.023
+      ]
+    }
+  },
+  {
+    "id": "panel_concrete",
+    "set": "large_panel_joints",
+    "kind": "modulation_set",
+    "path": "modulation_already_linear",
+    "logical_linear": [
+      0.3,
+      0.29,
+      0.27
+    ],
+    "gpu_before": [
+      0.3,
+      0.29,
+      0.27
+    ],
+    "gpu_correct": [
+      0.3,
+      0.29,
+      0.27
+    ],
+    "changed": false,
+    "final_calibration": {
+      "status": "contract no-op; existing ADR0081 linear modulation retained"
+    }
+  },
+  {
+    "id": "panel_concrete__far_block",
+    "set": "facade_far",
+    "kind": "modulation_set",
+    "path": "modulation_already_linear",
+    "logical_linear": [
+      0.3,
+      0.29,
+      0.27
+    ],
+    "gpu_before": [
+      0.3,
+      0.29,
+      0.27
+    ],
+    "gpu_correct": [
+      0.3,
+      0.29,
+      0.27
+    ],
+    "changed": false,
+    "final_calibration": {
+      "status": "contract no-op; existing ADR0081 linear modulation retained"
+    }
+  },
+  {
+    "id": "path_asphalt",
+    "set": "asphalt_worn",
+    "kind": "tiling_set",
+    "path": "calibrated_ratio",
+    "logical_linear": [
+      1.0029844081382755,
+      1.0029844081382755,
+      1.0029844081382755
+    ],
+    "gpu_before": [
+      1.0068026237415646,
+      1.0068026237415646,
+      1.0068026237415646
+    ],
+    "gpu_correct": [
+      1.0029844081382755,
+      1.0029844081382755,
+      1.0029844081382755
+    ],
+    "changed": true,
+    "final_calibration": {
+      "status": "global linear contract applied; full-camera appearance inspected; no per-material photo-albedo claim or additional working pigment edit"
+    }
+  },
+  {
+    "id": "plaster_accent_green",
+    "set": "plaster",
+    "kind": "modulation_set",
+    "path": "modulation_already_linear",
+    "logical_linear": [
+      0.26,
+      0.33,
+      0.24
+    ],
+    "gpu_before": [
+      0.26,
+      0.33,
+      0.24
+    ],
+    "gpu_correct": [
+      0.26,
+      0.33,
+      0.24
+    ],
+    "changed": false,
+    "final_calibration": {
+      "status": "contract no-op; existing ADR0081 linear modulation retained"
+    }
+  },
+  {
+    "id": "plaster_accent_green__far_block",
+    "set": "facade_far",
+    "kind": "modulation_set",
+    "path": "modulation_already_linear",
+    "logical_linear": [
+      0.26,
+      0.33,
+      0.24
+    ],
+    "gpu_before": [
+      0.26,
+      0.33,
+      0.24
+    ],
+    "gpu_correct": [
+      0.26,
+      0.33,
+      0.24
+    ],
+    "changed": false,
+    "final_calibration": {
+      "status": "contract no-op; existing ADR0081 linear modulation retained"
+    }
+  },
+  {
+    "id": "plaster_accent_grey",
+    "set": "plaster",
+    "kind": "modulation_set",
+    "path": "modulation_already_linear",
+    "logical_linear": [
+      0.2,
+      0.21,
+      0.22
+    ],
+    "gpu_before": [
+      0.2,
+      0.21,
+      0.22
+    ],
+    "gpu_correct": [
+      0.2,
+      0.21,
+      0.22
+    ],
+    "changed": false,
+    "final_calibration": {
+      "status": "contract no-op; existing ADR0081 linear modulation retained"
+    }
+  },
+  {
+    "id": "plaster_accent_grey__far_block",
+    "set": "facade_far",
+    "kind": "modulation_set",
+    "path": "modulation_already_linear",
+    "logical_linear": [
+      0.2,
+      0.21,
+      0.22
+    ],
+    "gpu_before": [
+      0.2,
+      0.21,
+      0.22
+    ],
+    "gpu_correct": [
+      0.2,
+      0.21,
+      0.22
+    ],
+    "changed": false,
+    "final_calibration": {
+      "status": "contract no-op; existing ADR0081 linear modulation retained"
+    }
+  },
+  {
+    "id": "plaster_accent_ochre",
+    "set": "plaster",
+    "kind": "modulation_set",
+    "path": "modulation_already_linear",
+    "logical_linear": [
+      0.52,
+      0.38,
+      0.16
+    ],
+    "gpu_before": [
+      0.52,
+      0.38,
+      0.16
+    ],
+    "gpu_correct": [
+      0.52,
+      0.38,
+      0.16
+    ],
+    "changed": false,
+    "final_calibration": {
+      "status": "contract no-op; existing ADR0081 linear modulation retained"
+    }
+  },
+  {
+    "id": "plaster_accent_ochre__far_block",
+    "set": "facade_far",
+    "kind": "modulation_set",
+    "path": "modulation_already_linear",
+    "logical_linear": [
+      0.52,
+      0.38,
+      0.16
+    ],
+    "gpu_before": [
+      0.52,
+      0.38,
+      0.16
+    ],
+    "gpu_correct": [
+      0.52,
+      0.38,
+      0.16
+    ],
+    "changed": false,
+    "final_calibration": {
+      "status": "contract no-op; existing ADR0081 linear modulation retained"
+    }
+  },
+  {
+    "id": "plaster_accent_terracotta",
+    "set": "plaster",
+    "kind": "modulation_set",
+    "path": "modulation_already_linear",
+    "logical_linear": [
+      0.42,
+      0.2,
+      0.12
+    ],
+    "gpu_before": [
+      0.42,
+      0.2,
+      0.12
+    ],
+    "gpu_correct": [
+      0.42,
+      0.2,
+      0.12
+    ],
+    "changed": false,
+    "final_calibration": {
+      "status": "contract no-op; existing ADR0081 linear modulation retained"
+    }
+  },
+  {
+    "id": "plaster_accent_terracotta__far_block",
+    "set": "facade_far",
+    "kind": "modulation_set",
+    "path": "modulation_already_linear",
+    "logical_linear": [
+      0.42,
+      0.2,
+      0.12
+    ],
+    "gpu_before": [
+      0.42,
+      0.2,
+      0.12
+    ],
+    "gpu_correct": [
+      0.42,
+      0.2,
+      0.12
+    ],
+    "changed": false,
+    "final_calibration": {
+      "status": "contract no-op; existing ADR0081 linear modulation retained"
+    }
+  },
+  {
+    "id": "plaster_band_grey",
+    "set": "plaster",
+    "kind": "modulation_set",
+    "path": "modulation_already_linear",
+    "logical_linear": [
+      0.26,
+      0.27,
+      0.27
+    ],
+    "gpu_before": [
+      0.26,
+      0.27,
+      0.27
+    ],
+    "gpu_correct": [
+      0.26,
+      0.27,
+      0.27
+    ],
+    "changed": false,
+    "final_calibration": {
+      "status": "contract no-op; existing ADR0081 linear modulation retained"
+    }
+  },
+  {
+    "id": "plaster_beige",
+    "set": "plaster",
+    "kind": "modulation_set",
+    "path": "modulation_already_linear",
+    "logical_linear": [
+      0.5,
+      0.44,
+      0.34
+    ],
+    "gpu_before": [
+      0.5,
+      0.44,
+      0.34
+    ],
+    "gpu_correct": [
+      0.5,
+      0.44,
+      0.34
+    ],
+    "changed": false,
+    "final_calibration": {
+      "status": "contract no-op; existing ADR0081 linear modulation retained"
+    }
+  },
+  {
+    "id": "plaster_beige__far_office",
+    "set": "facade_far",
+    "kind": "modulation_set",
+    "path": "modulation_already_linear",
+    "logical_linear": [
+      0.5,
+      0.44,
+      0.34
+    ],
+    "gpu_before": [
+      0.5,
+      0.44,
+      0.34
+    ],
+    "gpu_correct": [
+      0.5,
+      0.44,
+      0.34
+    ],
+    "changed": false,
+    "final_calibration": {
+      "status": "contract no-op; existing ADR0081 linear modulation retained"
+    }
+  },
+  {
+    "id": "plaster_beige__far_ribbon",
+    "set": "facade_far",
+    "kind": "modulation_set",
+    "path": "modulation_already_linear",
+    "logical_linear": [
+      0.5,
+      0.44,
+      0.34
+    ],
+    "gpu_before": [
+      0.5,
+      0.44,
+      0.34
+    ],
+    "gpu_correct": [
+      0.5,
+      0.44,
+      0.34
+    ],
+    "changed": false,
+    "final_calibration": {
+      "status": "contract no-op; existing ADR0081 linear modulation retained"
+    }
+  },
+  {
+    "id": "plaster_cream",
+    "set": "plaster",
+    "kind": "modulation_set",
+    "path": "modulation_already_linear",
+    "logical_linear": [
+      0.55,
+      0.48,
+      0.33
+    ],
+    "gpu_before": [
+      0.55,
+      0.48,
+      0.33
+    ],
+    "gpu_correct": [
+      0.55,
+      0.48,
+      0.33
+    ],
+    "changed": false,
+    "final_calibration": {
+      "status": "contract no-op; existing ADR0081 linear modulation retained"
+    }
+  },
+  {
+    "id": "plaster_cream__far_block",
+    "set": "facade_far",
+    "kind": "modulation_set",
+    "path": "modulation_already_linear",
+    "logical_linear": [
+      0.55,
+      0.48,
+      0.33
+    ],
+    "gpu_before": [
+      0.55,
+      0.48,
+      0.33
+    ],
+    "gpu_correct": [
+      0.55,
+      0.48,
+      0.33
+    ],
+    "changed": false,
+    "final_calibration": {
+      "status": "contract no-op; existing ADR0081 linear modulation retained"
+    }
+  },
+  {
+    "id": "plaster_grey",
+    "set": "plaster",
+    "kind": "modulation_set",
+    "path": "modulation_already_linear",
+    "logical_linear": [
+      0.62,
+      0.62,
+      0.61
+    ],
+    "gpu_before": [
+      0.62,
+      0.62,
+      0.61
+    ],
+    "gpu_correct": [
+      0.62,
+      0.62,
+      0.61
+    ],
+    "changed": false,
+    "final_calibration": {
+      "status": "contract no-op; existing ADR0081 linear modulation retained"
+    }
+  },
+  {
+    "id": "plaster_grey__far_block",
+    "set": "facade_far",
+    "kind": "modulation_set",
+    "path": "modulation_already_linear",
+    "logical_linear": [
+      0.62,
+      0.62,
+      0.61
+    ],
+    "gpu_before": [
+      0.62,
+      0.62,
+      0.61
+    ],
+    "gpu_correct": [
+      0.62,
+      0.62,
+      0.61
+    ],
+    "changed": false,
+    "final_calibration": {
+      "status": "contract no-op; existing ADR0081 linear modulation retained"
+    }
+  },
+  {
+    "id": "plaster_grey__far_office",
+    "set": "facade_far",
+    "kind": "modulation_set",
+    "path": "modulation_already_linear",
+    "logical_linear": [
+      0.62,
+      0.62,
+      0.61
+    ],
+    "gpu_before": [
+      0.62,
+      0.62,
+      0.61
+    ],
+    "gpu_correct": [
+      0.62,
+      0.62,
+      0.61
+    ],
+    "changed": false,
+    "final_calibration": {
+      "status": "contract no-op; existing ADR0081 linear modulation retained"
+    }
+  },
+  {
+    "id": "plaster_grey__far_ribbon",
+    "set": "facade_far",
+    "kind": "modulation_set",
+    "path": "modulation_already_linear",
+    "logical_linear": [
+      0.62,
+      0.62,
+      0.61
+    ],
+    "gpu_before": [
+      0.62,
+      0.62,
+      0.61
+    ],
+    "gpu_correct": [
+      0.62,
+      0.62,
+      0.61
+    ],
+    "changed": false,
+    "final_calibration": {
+      "status": "contract no-op; existing ADR0081 linear modulation retained"
+    }
+  },
+  {
+    "id": "plaster_light",
+    "set": "plaster",
+    "kind": "modulation_set",
+    "path": "modulation_already_linear",
+    "logical_linear": [
+      0.52,
+      0.5,
+      0.46
+    ],
+    "gpu_before": [
+      0.52,
+      0.5,
+      0.46
+    ],
+    "gpu_correct": [
+      0.52,
+      0.5,
+      0.46
+    ],
+    "changed": false,
+    "final_calibration": {
+      "status": "contract no-op; existing ADR0081 linear modulation retained"
+    }
+  },
+  {
+    "id": "plaster_light__far_block",
+    "set": "facade_far",
+    "kind": "modulation_set",
+    "path": "modulation_already_linear",
+    "logical_linear": [
+      0.52,
+      0.5,
+      0.46
+    ],
+    "gpu_before": [
+      0.52,
+      0.5,
+      0.46
+    ],
+    "gpu_correct": [
+      0.52,
+      0.5,
+      0.46
+    ],
+    "changed": false,
+    "final_calibration": {
+      "status": "contract no-op; existing ADR0081 linear modulation retained"
+    }
+  },
+  {
+    "id": "plaster_light__far_office",
+    "set": "facade_far",
+    "kind": "modulation_set",
+    "path": "modulation_already_linear",
+    "logical_linear": [
+      0.52,
+      0.5,
+      0.46
+    ],
+    "gpu_before": [
+      0.52,
+      0.5,
+      0.46
+    ],
+    "gpu_correct": [
+      0.52,
+      0.5,
+      0.46
+    ],
+    "changed": false,
+    "final_calibration": {
+      "status": "contract no-op; existing ADR0081 linear modulation retained"
+    }
+  },
+  {
+    "id": "plaster_light__far_ribbon",
+    "set": "facade_far",
+    "kind": "modulation_set",
+    "path": "modulation_already_linear",
+    "logical_linear": [
+      0.52,
+      0.5,
+      0.46
+    ],
+    "gpu_before": [
+      0.52,
+      0.5,
+      0.46
+    ],
+    "gpu_correct": [
+      0.52,
+      0.5,
+      0.46
+    ],
+    "changed": false,
+    "final_calibration": {
+      "status": "contract no-op; existing ADR0081 linear modulation retained"
+    }
+  },
+  {
+    "id": "plaster_pastel_blue",
+    "set": "plaster",
+    "kind": "modulation_set",
+    "path": "modulation_already_linear",
+    "logical_linear": [
+      0.36,
+      0.42,
+      0.47
+    ],
+    "gpu_before": [
+      0.36,
+      0.42,
+      0.47
+    ],
+    "gpu_correct": [
+      0.36,
+      0.42,
+      0.47
+    ],
+    "changed": false,
+    "final_calibration": {
+      "status": "contract no-op; existing ADR0081 linear modulation retained"
+    }
+  },
+  {
+    "id": "plaster_pastel_blue__far_block",
+    "set": "facade_far",
+    "kind": "modulation_set",
+    "path": "modulation_already_linear",
+    "logical_linear": [
+      0.36,
+      0.42,
+      0.47
+    ],
+    "gpu_before": [
+      0.36,
+      0.42,
+      0.47
+    ],
+    "gpu_correct": [
+      0.36,
+      0.42,
+      0.47
+    ],
+    "changed": false,
+    "final_calibration": {
+      "status": "contract no-op; existing ADR0081 linear modulation retained"
+    }
+  },
+  {
+    "id": "plaster_peach",
+    "set": "plaster",
+    "kind": "modulation_set",
+    "path": "modulation_already_linear",
+    "logical_linear": [
+      0.58,
+      0.42,
+      0.32
+    ],
+    "gpu_before": [
+      0.58,
+      0.42,
+      0.32
+    ],
+    "gpu_correct": [
+      0.58,
+      0.42,
+      0.32
+    ],
+    "changed": false,
+    "final_calibration": {
+      "status": "contract no-op; existing ADR0081 linear modulation retained"
+    }
+  },
+  {
+    "id": "plaster_peach__far_block",
+    "set": "facade_far",
+    "kind": "modulation_set",
+    "path": "modulation_already_linear",
+    "logical_linear": [
+      0.58,
+      0.42,
+      0.32
+    ],
+    "gpu_before": [
+      0.58,
+      0.42,
+      0.32
+    ],
+    "gpu_correct": [
+      0.58,
+      0.42,
+      0.32
+    ],
+    "changed": false,
+    "final_calibration": {
+      "status": "contract no-op; existing ADR0081 linear modulation retained"
+    }
+  },
+  {
+    "id": "plaster_sage",
+    "set": "plaster",
+    "kind": "modulation_set",
+    "path": "modulation_already_linear",
+    "logical_linear": [
+      0.4,
+      0.45,
+      0.36
+    ],
+    "gpu_before": [
+      0.4,
+      0.45,
+      0.36
+    ],
+    "gpu_correct": [
+      0.4,
+      0.45,
+      0.36
+    ],
+    "changed": false,
+    "final_calibration": {
+      "status": "contract no-op; existing ADR0081 linear modulation retained"
+    }
+  },
+  {
+    "id": "plaster_sage__far_block",
+    "set": "facade_far",
+    "kind": "modulation_set",
+    "path": "modulation_already_linear",
+    "logical_linear": [
+      0.4,
+      0.45,
+      0.36
+    ],
+    "gpu_before": [
+      0.4,
+      0.45,
+      0.36
+    ],
+    "gpu_correct": [
+      0.4,
+      0.45,
+      0.36
+    ],
+    "changed": false,
+    "final_calibration": {
+      "status": "contract no-op; existing ADR0081 linear modulation retained"
+    }
+  },
+  {
+    "id": "plaster_white",
+    "set": "plaster",
+    "kind": "modulation_set",
+    "path": "modulation_already_linear",
+    "logical_linear": [
+      0.76,
+      0.76,
+      0.74
+    ],
+    "gpu_before": [
+      0.76,
+      0.76,
+      0.74
+    ],
+    "gpu_correct": [
+      0.76,
+      0.76,
+      0.74
+    ],
+    "changed": false,
+    "final_calibration": {
+      "status": "contract no-op; existing ADR0081 linear modulation retained"
+    }
+  },
+  {
+    "id": "plaster_white__far_office",
+    "set": "facade_far",
+    "kind": "modulation_set",
+    "path": "modulation_already_linear",
+    "logical_linear": [
+      0.76,
+      0.76,
+      0.74
+    ],
+    "gpu_before": [
+      0.76,
+      0.76,
+      0.74
+    ],
+    "gpu_correct": [
+      0.76,
+      0.76,
+      0.74
+    ],
+    "changed": false,
+    "final_calibration": {
+      "status": "contract no-op; existing ADR0081 linear modulation retained"
+    }
+  },
+  {
+    "id": "plaster_white__far_ribbon",
+    "set": "facade_far",
+    "kind": "modulation_set",
+    "path": "modulation_already_linear",
+    "logical_linear": [
+      0.76,
+      0.76,
+      0.74
+    ],
+    "gpu_before": [
+      0.76,
+      0.76,
+      0.74
+    ],
+    "gpu_correct": [
+      0.76,
+      0.76,
+      0.74
+    ],
+    "changed": false,
+    "final_calibration": {
+      "status": "contract no-op; existing ADR0081 linear modulation retained"
+    }
+  },
+  {
+    "id": "plaster_yellow",
+    "set": "plaster",
+    "kind": "modulation_set",
+    "path": "modulation_already_linear",
+    "logical_linear": [
+      0.58,
+      0.5,
+      0.28
+    ],
+    "gpu_before": [
+      0.58,
+      0.5,
+      0.28
+    ],
+    "gpu_correct": [
+      0.58,
+      0.5,
+      0.28
+    ],
+    "changed": false,
+    "final_calibration": {
+      "status": "contract no-op; existing ADR0081 linear modulation retained"
+    }
+  },
+  {
+    "id": "plaster_yellow__far_block",
+    "set": "facade_far",
+    "kind": "modulation_set",
+    "path": "modulation_already_linear",
+    "logical_linear": [
+      0.58,
+      0.5,
+      0.28
+    ],
+    "gpu_before": [
+      0.58,
+      0.5,
+      0.28
+    ],
+    "gpu_correct": [
+      0.58,
+      0.5,
+      0.28
+    ],
+    "changed": false,
+    "final_calibration": {
+      "status": "contract no-op; existing ADR0081 linear modulation retained"
+    }
+  },
+  {
+    "id": "plinth_dark",
+    "set": "plaster",
+    "kind": "modulation_set",
+    "path": "modulation_already_linear",
+    "logical_linear": [
+      0.2,
+      0.2,
+      0.195
+    ],
+    "gpu_before": [
+      0.2,
+      0.2,
+      0.195
+    ],
+    "gpu_correct": [
+      0.2,
+      0.2,
+      0.195
+    ],
+    "changed": false,
+    "final_calibration": {
+      "status": "contract no-op; existing ADR0081 linear modulation retained"
+    }
+  },
+  {
+    "id": "plinth_grey",
+    "set": "plaster",
+    "kind": "modulation_set",
+    "path": "modulation_already_linear",
+    "logical_linear": [
+      0.25,
+      0.25,
+      0.24
+    ],
+    "gpu_before": [
+      0.25,
+      0.25,
+      0.24
+    ],
+    "gpu_correct": [
+      0.25,
+      0.25,
+      0.24
+    ],
+    "changed": false,
+    "final_calibration": {
+      "status": "contract no-op; existing ADR0081 linear modulation retained"
+    }
+  },
+  {
+    "id": "road_asphalt",
+    "set": "asphalt_worn",
+    "kind": "tiling_set",
+    "path": "calibrated_ratio",
+    "logical_linear": [
+      1.0029844081382755,
+      1.0029844081382755,
+      1.0029844081382755
+    ],
+    "gpu_before": [
+      1.0068026237415646,
+      1.0068026237415646,
+      1.0068026237415646
+    ],
+    "gpu_correct": [
+      1.0029844081382755,
+      1.0029844081382755,
+      1.0029844081382755
+    ],
+    "changed": true,
+    "final_calibration": {
+      "status": "global linear contract applied; full-camera appearance inspected; no per-material photo-albedo claim or additional working pigment edit"
+    }
+  },
+  {
+    "id": "road_asphalt_new",
+    "set": "asphalt_sma_fresh",
+    "kind": "tiling_set",
+    "path": "calibrated_ratio",
+    "logical_linear": [
+      0.9978407727895248,
+      0.9978407727895248,
+      0.9978407727895248
+    ],
+    "gpu_before": [
+      0.9950950492265697,
+      0.9950950492265697,
+      0.9950950492265697
+    ],
+    "gpu_correct": [
+      0.9978407727895248,
+      0.9978407727895248,
+      0.9978407727895248
+    ],
+    "changed": true,
+    "final_calibration": {
+      "status": "global linear contract applied; full-camera appearance inspected; no per-material photo-albedo claim or additional working pigment edit"
+    }
+  },
+  {
+    "id": "road_concrete",
+    "set": "concrete_cast_5m_joints",
+    "kind": "tiling_set",
+    "path": "calibrated_ratio",
+    "logical_linear": [
+      0.9935802753298769,
+      0.9935802753298769,
+      0.9935802753298769
+    ],
+    "gpu_before": [
+      0.9854580431900343,
+      0.9854580431900343,
+      0.9854580431900343
+    ],
+    "gpu_correct": [
+      0.9935802753298769,
+      0.9935802753298769,
+      0.9935802753298769
+    ],
+    "changed": true,
+    "final_calibration": {
+      "status": "global linear contract applied; full-camera appearance inspected; no per-material photo-albedo claim or additional working pigment edit"
+    }
+  },
+  {
+    "id": "road_gravel",
+    "set": "gravel_compacted",
+    "kind": "tiling_set",
+    "path": "calibrated_ratio",
+    "logical_linear": [
+      0.9534621543798445,
+      0.9534621543798445,
+      0.9534621543798445
+    ],
+    "gpu_before": [
+      0.8973815742045896,
+      0.8973815742045896,
+      0.8973815742045896
+    ],
+    "gpu_correct": [
+      0.9534621543798445,
+      0.9534621543798445,
+      0.9534621543798445
+    ],
+    "changed": true,
+    "final_calibration": {
+      "status": "global linear contract applied; full-camera appearance inspected; no per-material photo-albedo claim or additional working pigment edit"
+    }
+  },
+  {
+    "id": "road_paving",
+    "set": "paving_20x10_grey",
+    "kind": "tiling_set",
+    "path": "calibrated_ratio",
+    "logical_linear": [
+      0.9856603083706528,
+      0.9856603083706528,
+      0.9856603083706528
+    ],
+    "gpu_before": [
+      0.9676887099606896,
+      0.9676887099606896,
+      0.9676887099606896
+    ],
+    "gpu_correct": [
+      0.9856603083706528,
+      0.9856603083706528,
+      0.9856603083706528
+    ],
+    "changed": true,
+    "final_calibration": {
+      "status": "global linear contract applied; full-camera appearance inspected; no per-material photo-albedo claim or additional working pigment edit"
+    }
+  },
+  {
+    "id": "roof_metal_graphite",
+    "set": "roof_tiles",
+    "kind": "modulation_set",
+    "path": "modulation_already_linear",
+    "logical_linear": [
+      0.055,
+      0.057,
+      0.06
+    ],
+    "gpu_before": [
+      0.055,
+      0.057,
+      0.06
+    ],
+    "gpu_correct": [
+      0.055,
+      0.057,
+      0.06
+    ],
+    "changed": false,
+    "final_calibration": {
+      "status": "contract no-op; existing ADR0081 linear modulation retained"
+    }
+  },
+  {
+    "id": "roof_tiles_brown",
+    "set": "roof_tiles",
+    "kind": "modulation_set",
+    "path": "modulation_already_linear",
+    "logical_linear": [
+      0.11,
+      0.065,
+      0.045
+    ],
+    "gpu_before": [
+      0.11,
+      0.065,
+      0.045
+    ],
+    "gpu_correct": [
+      0.11,
+      0.065,
+      0.045
+    ],
+    "changed": false,
+    "final_calibration": {
+      "status": "contract no-op; existing ADR0081 linear modulation retained"
+    }
+  },
+  {
+    "id": "roof_tiles_red",
+    "set": "roof_tiles",
+    "kind": "modulation_set",
+    "path": "modulation_already_linear",
+    "logical_linear": [
+      0.2,
+      0.075,
+      0.05
+    ],
+    "gpu_before": [
+      0.2,
+      0.075,
+      0.05
+    ],
+    "gpu_correct": [
+      0.2,
+      0.075,
+      0.05
+    ],
+    "changed": false,
+    "final_calibration": {
+      "status": "contract no-op; existing ADR0081 linear modulation retained"
+    }
+  },
+  {
+    "id": "shoulder_gravel",
+    "set": "gravel_compacted",
+    "kind": "tiling_set",
+    "path": "calibrated_ratio",
+    "logical_linear": [
+      0.9534621543798445,
+      0.9534621543798445,
+      0.9534621543798445
+    ],
+    "gpu_before": [
+      0.8973815742045896,
+      0.8973815742045896,
+      0.8973815742045896
+    ],
+    "gpu_correct": [
+      0.9534621543798445,
+      0.9534621543798445,
+      0.9534621543798445
+    ],
+    "changed": true,
+    "final_calibration": {
+      "status": "global linear contract applied; full-camera appearance inspected; no per-material photo-albedo claim or additional working pigment edit"
+    }
+  },
+  {
+    "id": "sidewalk_paving",
+    "set": "paving_20x10_grey",
+    "kind": "tiling_set",
+    "path": "calibrated_ratio",
+    "logical_linear": [
+      0.9856603083706528,
+      0.9856603083706528,
+      0.9856603083706528
+    ],
+    "gpu_before": [
+      0.9676887099606896,
+      0.9676887099606896,
+      0.9676887099606896
+    ],
+    "gpu_correct": [
+      0.9856603083706528,
+      0.9856603083706528,
+      0.9856603083706528
+    ],
+    "changed": true,
+    "final_calibration": {
+      "status": "global linear contract applied; full-camera appearance inspected; no per-material photo-albedo claim or additional working pigment edit"
+    }
+  },
+  {
+    "id": "terrain_grass",
+    "set": "grass_verge",
+    "kind": "tiling_set",
+    "path": "calibrated_ratio",
+    "logical_linear": [
+      0.9971777630776049,
+      0.9971777630776049,
+      0.9971777630776049
+    ],
+    "gpu_before": [
+      0.9935917635034631,
+      0.9935917635034631,
+      0.9935917635034631
+    ],
+    "gpu_correct": [
+      0.9971777630776049,
+      0.9971777630776049,
+      0.9971777630776049
+    ],
+    "changed": true,
+    "final_calibration": {
+      "status": "global linear contract applied; full-camera appearance inspected; no per-material photo-albedo claim or additional working pigment edit"
+    }
+  },
+  {
+    "id": "trailer_box_white",
+    "set": "box_panel",
+    "kind": "modulation_set",
+    "path": "modulation_needs_conversion",
+    "logical_linear": [
+      0.6,
+      0.61,
+      0.6
+    ],
+    "gpu_before": [
+      0.31854677812509186,
+      0.3303437128042374,
+      0.31854677812509186
+    ],
+    "gpu_correct": [
+      0.6,
+      0.61,
+      0.6
+    ],
+    "changed": true,
+    "final_calibration": {
+      "status": "review-supported working pigment preserves s9 GPU appearance",
+      "linear": [
+        0.31854678,
+        0.33034371,
+        0.31854678
+      ]
+    }
+  },
+  {
+    "id": "trailer_curtain_blue",
+    "set": "curtain_folds",
+    "kind": "modulation_set",
+    "path": "modulation_needs_conversion",
+    "logical_linear": [
+      0.03,
+      0.06,
+      0.14
+    ],
+    "gpu_before": [
+      0.0023219814241486067,
+      0.004896310081623859,
+      0.017389102368488736
+    ],
+    "gpu_correct": [
+      0.03,
+      0.06,
+      0.14
+    ],
+    "changed": true,
+    "final_calibration": {
+      "status": "review-supported working pigment preserves s9 GPU appearance",
+      "linear": [
+        0.00232198,
+        0.00489631,
+        0.0173891
+      ]
+    }
+  },
+  {
+    "id": "trailer_curtain_green",
+    "set": "curtain_folds",
+    "kind": "modulation_set",
+    "path": "modulation_needs_conversion",
+    "logical_linear": [
+      0.045,
+      0.08,
+      0.06
+    ],
+    "gpu_before": [
+      0.0035010160107980036,
+      0.007194409291082934,
+      0.004896310081623859
+    ],
+    "gpu_correct": [
+      0.045,
+      0.08,
+      0.06
+    ],
+    "changed": true,
+    "final_calibration": {
+      "status": "review-supported working pigment preserves s9 GPU appearance",
+      "linear": [
+        0.00350102,
+        0.00719441,
+        0.00489631
+      ]
+    }
+  },
+  {
+    "id": "trailer_curtain_grey",
+    "set": "curtain_folds",
+    "kind": "modulation_set",
+    "path": "modulation_needs_conversion",
+    "logical_linear": [
+      0.2,
+      0.21,
+      0.21
+    ],
+    "gpu_before": [
+      0.033104766570885055,
+      0.036306484118193906,
+      0.036306484118193906
+    ],
+    "gpu_correct": [
+      0.2,
+      0.21,
+      0.21
+    ],
+    "changed": true,
+    "final_calibration": {
+      "status": "review-supported working pigment preserves s9 GPU appearance",
+      "linear": [
+        0.03310477,
+        0.03630648,
+        0.03630648
+      ]
+    }
+  },
+  {
+    "id": "trailer_curtain_red",
+    "set": "curtain_folds",
+    "kind": "modulation_set",
+    "path": "modulation_needs_conversion",
+    "logical_linear": [
+      0.18,
+      0.045,
+      0.035
+    ],
+    "gpu_before": [
+      0.027211780951381357,
+      0.0035010160107980036,
+      0.002708978328173375
+    ],
+    "gpu_correct": [
+      0.18,
+      0.045,
+      0.035
+    ],
+    "changed": true,
+    "final_calibration": {
+      "status": "review-supported working pigment preserves s9 GPU appearance",
+      "linear": [
+        0.02721178,
+        0.00350102,
+        0.00270898
+      ]
+    }
+  },
+  {
+    "id": "trailer_curtain_silver",
+    "set": "curtain_folds",
+    "kind": "modulation_set",
+    "path": "modulation_needs_conversion",
+    "logical_linear": [
+      0.36,
+      0.37,
+      0.37
+    ],
+    "gpu_before": [
+      0.10653922395082352,
+      0.11280478678675158,
+      0.11280478678675158
+    ],
+    "gpu_correct": [
+      0.36,
+      0.37,
+      0.37
+    ],
+    "changed": true,
+    "final_calibration": {
+      "status": "review-supported working pigment preserves s9 GPU appearance",
+      "linear": [
+        0.10653922,
+        0.11280479,
+        0.11280479
+      ]
+    }
+  },
+  {
+    "id": "trailer_curtain_white",
+    "set": "curtain_folds",
+    "kind": "modulation_set",
+    "path": "modulation_needs_conversion",
+    "logical_linear": [
+      0.55,
+      0.56,
+      0.55
+    ],
+    "gpu_before": [
+      0.26327340845612224,
+      0.27383841647314605,
+      0.26327340845612224
+    ],
+    "gpu_correct": [
+      0.55,
+      0.56,
+      0.55
+    ],
+    "changed": true,
+    "final_calibration": {
+      "status": "review-supported working pigment preserves s9 GPU appearance",
+      "linear": [
+        0.26327341,
+        0.27383842,
+        0.26327341
+      ]
+    }
+  },
+  {
+    "id": "verge_grass",
+    "set": "grass_verge",
+    "kind": "tiling_set",
+    "path": "calibrated_ratio",
+    "logical_linear": [
+      0.9971777630776049,
+      0.9971777630776049,
+      0.9971777630776049
+    ],
+    "gpu_before": [
+      0.9935917635034631,
+      0.9935917635034631,
+      0.9935917635034631
+    ],
+    "gpu_correct": [
+      0.9971777630776049,
+      0.9971777630776049,
+      0.9971777630776049
+    ],
+    "changed": true,
+    "final_calibration": {
+      "status": "global linear contract applied; full-camera appearance inspected; no per-material photo-albedo claim or additional working pigment edit"
+    }
+  },
+  {
+    "id": "viaduct_concrete",
+    "set": "viaduct_concrete",
+    "kind": "tiling_set",
+    "path": "calibrated_ratio",
+    "logical_linear": [
+      1.0001529484076963,
+      1.0001529484076963,
+      1.0001529484076963
+    ],
+    "gpu_before": [
+      1.000347974816063,
+      1.000347974816063,
+      1.000347974816063
+    ],
+    "gpu_correct": [
+      1.0001529484076963,
+      1.0001529484076963,
+      1.0001529484076963
+    ],
+    "changed": false,
+    "final_calibration": {
+      "status": "neutral or near-identity; no additional pigment edit"
+    }
+  },
+  {
+    "id": "yard_asphalt",
+    "set": "asphalt_worn",
+    "kind": "tiling_set",
+    "path": "calibrated_ratio",
+    "logical_linear": [
+      1.0029844081382755,
+      1.0029844081382755,
+      1.0029844081382755
+    ],
+    "gpu_before": [
+      1.0068026237415646,
+      1.0068026237415646,
+      1.0068026237415646
+    ],
+    "gpu_correct": [
+      1.0029844081382755,
+      1.0029844081382755,
+      1.0029844081382755
+    ],
+    "changed": true,
+    "final_calibration": {
+      "status": "global linear contract applied; full-camera appearance inspected; no per-material photo-albedo claim or additional working pigment edit"
+    }
+  },
+  {
+    "id": "yard_behaton",
+    "set": "behaton_i_grey",
+    "kind": "tiling_set",
+    "path": "calibrated_ratio",
+    "logical_linear": [
+      0.9905537090529869,
+      0.9905537090529869,
+      0.9905537090529869
+    ],
+    "gpu_before": [
+      0.9786453337208624,
+      0.9786453337208624,
+      0.9786453337208624
+    ],
+    "gpu_correct": [
+      0.9905537090529869,
+      0.9905537090529869,
+      0.9905537090529869
+    ],
+    "changed": true,
+    "final_calibration": {
+      "status": "global linear contract applied; full-camera appearance inspected; no per-material photo-albedo claim or additional working pigment edit"
+    }
+  },
+  {
+    "id": "yard_concrete",
+    "set": "concrete_cast_5m_joints",
+    "kind": "tiling_set",
+    "path": "calibrated_ratio",
+    "logical_linear": [
+      0.9935802753298769,
+      0.9935802753298769,
+      0.9935802753298769
+    ],
+    "gpu_before": [
+      0.9854580431900343,
+      0.9854580431900343,
+      0.9854580431900343
+    ],
+    "gpu_correct": [
+      0.9935802753298769,
+      0.9935802753298769,
+      0.9935802753298769
+    ],
+    "changed": true,
+    "final_calibration": {
+      "status": "global linear contract applied; full-camera appearance inspected; no per-material photo-albedo claim or additional working pigment edit"
+    }
+  },
+  {
+    "id": "yard_concrete_worn",
+    "set": "concrete_cast_5m_joints",
+    "kind": "tiling_set",
+    "path": "calibrated_ratio",
+    "logical_linear": [
+      0.7761212604995068,
+      0.7761212604995068,
+      0.7761212604995068
+    ],
+    "gpu_before": [
+      0.5641422645106873,
+      0.5641422645106873,
+      0.5641422645106873
+    ],
+    "gpu_correct": [
+      0.7761212604995068,
+      0.7761212604995068,
+      0.7761212604995068
+    ],
+    "changed": true,
+    "final_calibration": {
+      "status": "global linear contract applied; full-camera appearance inspected; no per-material photo-albedo claim or additional working pigment edit"
+    }
+  },
+  {
+    "id": "yard_gravel",
+    "set": "gravel_compacted",
+    "kind": "tiling_set",
+    "path": "calibrated_ratio",
+    "logical_linear": [
+      0.9534621543798445,
+      0.9534621543798445,
+      0.9534621543798445
+    ],
+    "gpu_before": [
+      0.8973815742045896,
+      0.8973815742045896,
+      0.8973815742045896
+    ],
+    "gpu_correct": [
+      0.9534621543798445,
+      0.9534621543798445,
+      0.9534621543798445
+    ],
+    "changed": true,
+    "final_calibration": {
+      "status": "global linear contract applied; full-camera appearance inspected; no per-material photo-albedo claim or additional working pigment edit"
+    }
+  },
+  {
+    "id": "yard_paving",
+    "set": "paving_20x10_grey",
+    "kind": "tiling_set",
+    "path": "calibrated_ratio",
+    "logical_linear": [
+      0.9856603083706528,
+      0.9856603083706528,
+      0.9856603083706528
+    ],
+    "gpu_before": [
+      0.9676887099606896,
+      0.9676887099606896,
+      0.9676887099606896
+    ],
+    "gpu_correct": [
+      0.9856603083706528,
+      0.9856603083706528,
+      0.9856603083706528
+    ],
+    "changed": true,
+    "final_calibration": {
+      "status": "global linear contract applied; full-camera appearance inspected; no per-material photo-albedo claim or additional working pigment edit"
+    }
+  },
+  {
+    "id": "yard_slabs",
+    "set": "concrete_slab_3x1.5",
+    "kind": "tiling_set",
+    "path": "calibrated_ratio",
+    "logical_linear": [
+      1.005983724486428,
+      1.005983724486428,
+      1.005983724486428
+    ],
+    "gpu_before": [
+      1.01366634907669,
+      1.01366634907669,
+      1.01366634907669
+    ],
+    "gpu_correct": [
+      1.005983724486428,
+      1.005983724486428,
+      1.005983724486428
+    ],
+    "changed": true,
+    "final_calibration": {
+      "status": "global linear contract applied; full-camera appearance inspected; no per-material photo-albedo claim or additional working pigment edit"
+    }
+  }
+]

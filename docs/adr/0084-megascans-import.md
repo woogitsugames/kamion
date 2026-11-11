@@ -1,0 +1,104 @@
+# ADR 0084 — Optional reviewed Fab Megascans world details
+
+Status: implemented and exercised through four visual rounds on `gpt-megascans`;
+**not cleared for merge**: full visual realism and strict per-view Low cost gates
+remain unmet, with inherited GIS failures documented below.
+
+## Context
+
+D45 permits the owner's Fab Standard assets in the compiled game, but prohibits
+publishing source or derivative assets in this public repository. Sources are
+pinned in `Data/SourceManifests/fab-megascans-2026-11-10.json`. This ADR does not
+change project settings, packages, shared scenes, phone policy or the licence.
+
+## Decision
+
+- Offline `tools/worldgen/fab/prepare.py` verifies source SHA256, safe archive
+  members and a separately pinned visual approval in `fab/review.json`. Blender
+  imports the selected highest source meshes, bakes transforms and produces our
+  own decimated LOD0/1/2. Every result, intermediate and provenance file stays in
+  ignored `art-source/world/megascans/_generated/`. No downloads or account access.
+- `-MaterialTier Low/Medium` consumes 512 px maps; `-MaterialTier High` consumes
+  1024 px. Both geometry scenes share materials in the existing importer, so
+  the final matched Low/High profile QA uses the mobile-safe Medium material
+  import. This does not validate the separate 1024 px import on a device.
+  Per-prototype initial
+  caps are2400/800/200 triangles (props),8000/24/8 (shrubs) and4000/24/8 (grass), WORKING_VALUE. Near plants retain optimized true geometry; far LODs use silhouette billboards with their own source atlas.
+  Actual counts and source dimensions are recorded in the local output manifest.
+  Aggressive collapse and leaf removal failed visual review and are not used for active plant variants. Judge silhouettes and coverage in visual QA before accepting them.
+- `fab_tree_surfaces.py` crops clean atlas regions into bark_birch, bark_linden
+  and curb_concrete. It keeps our trees and Polish kerb geometry. Kerbs keep the existing World PBR shader, macro grime, normals/masks/variation and a two-unit 2 x0.5m UV tile; only the photographic base is overridden. Bark UV scale,
+  colour calibration, cropping and source mixing are WORKING_VALUE, not surveyed.
+- `FabMaterials` imports albedo, metallic/smoothness and AO into the ignored
+  Unity region output, ASTC with mipmaps and streaming-compatible non-readable
+  textures. Normals are prepared but deliberately disabled: compact world meshes
+  have no tangent attribute and source normal convention is UNVERIFIED.
+- Plant albedo is calibrated in linear light to opaque-pixel mean luminance
+  0.08 (green species) and 0.18 (dry wild grass), WORKING_VALUE. Source sRGB,
+  hue/detail and alpha remain intact; measured gains and clipping are recorded
+  locally. The unadjusted elderberry rendered almost black in both tiers.
+- `fab/grass_surface.py` bakes an emissive top-down periodic 4 m tile from
+  reviewed grass-clump geometry. It replaces only the existing grass base map,
+  retaining WorldPBR ground masks, normals, macro variation and vertex channels.
+  Mean linear RGB [0.08, 0.105, 0.038] preserves the previous palette; the tile
+  size, planting density and calibration are WORKING_VALUE. No runtime geometry
+  or shader pass is added by this surface.
+- `streetscape/fab_details.py` replaces existing35 m gully and yard-drain materials in one shared padded atlas, adds
+  lane-centred 640 mm covers at 90 m spacing, and bounded props by existing
+  shelters/gates/parking or on soft verges. These placements/dimensions are
+  WORKING_VALUE, not mapped utility positions. No extra road collider obstacles.
+  Covers are lifted4.5mm above the sampled road to avoid coplanar asphalt patches. Props use12/30/65 m LOD/cull distances and a regional 320-instance cap.
+  Authored islands require an explicit `fab_plants` list; existing references
+  are not replaced by generic shrubs. Scene budgets include measured Fab LODs.
+- Public clones retain existing geometry/materials and log a warning. Set
+  `KAMION_DISABLE_FAB=1` for a controlled before run even with local products.
+  Processing commands are explicit, so missing licensed files do not trigger
+  downloads or network/authentication work.
+- Reject scans with visible marks: round-manhole-cover (emblem/lettering),
+  trash-can (yellow emblem), urban-trash (marked bins/printed packaging).
+  pine-bark is a mulch/debris atlas, not pine trunk bark. Linden Branch contains
+  wood, not leaves. Existing pine bark and leaves remain; these requirements
+  cannot honestly be claimed as replaced by the supplied scans.
+- Three local source ZIPs differed from acquisition hashes. CRC and embedded
+  Quixel identity were checked; observed pins replace the active pins, while
+  original acquisition hashes/byte counts remain in the source manifest. Cause
+  of the discrepancy remains UNVERIFIED, not an invented acquisition history.
+
+## Import ordering
+
+Fab matrices append after the exact previous legacy matrix storage. Cell runs
+retain independent storage offsets, so adding a scan does not alter the existing
+forest's index-based distance thinning. Fab uses disjoint culling cells (reserved
+key bit with XOR, including negative boundary keys), so their bounds do not enlarge
+legacy forest/HLOD cells. Collider handling and runtime thinning
+algorithms remain unchanged. Reflection-based EditMode regressions cover equal
+sort keys, inserted Fab records and thinning phases.
+
+## Validation and limits
+
+`artifacts/megascans-r1/STATUS.md` is the incremental log; `REPORT.md` contains
+final test results, camera comparisons and measured budget changes. Visual QA
+and independent critic PASS are required before merge. No phone numbers are
+claimed: this task forbids phones/adb. Do not infer Android performance from
+editor scene estimates. Fab EULA legal review before store release remains as
+already recorded in `docs/LICENSES.md`.
+
+Final GIS run: 282 passed, 5 failed, 2 xfailed. Failures are the inherited three
+road-fidelity ratchets and two route-corridor checks; no thresholds were weakened.
+Nine grass-surface cases added after full-suite collection passed separately
+(all focused Fab tests: 76 passed). EditMode: 197 passed, zero failed, seven
+ignored, five inconclusive; native Unity exit 2 / wrapper exit 1 also occur in
+the baseline. Controlled no-Fab build/import and six matched before captures
+succeeded. Final source-world SHA verification matched 192/192 files.
+
+Low peak estimates remain 956 draws / 333k triangles across 28 views, while
+individual views increase by up to four draws / 4k triangles. Thus unchanged
+peak is not a strict per-view budget pass. High local deltas reach eight draws /
+20k triangles. Import mesh/instance memory increases by about 0.9 MiB. The visual
+critic accepts the local grass/material/detail improvements but rejects a large
+whole-scene realism claim. Low cover contrast and vegetation LOD compromises,
+inherited dark tree crowns and procedural large surfaces remain visible limits.
+
+Expected integration conflicts: build_world.py, streetscape stage/materials,
+plantings/life_props changes by other world agents and Unity instance/material
+import. Regenerate licensed outputs locally after integration; never merge them.

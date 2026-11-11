@@ -1,25 +1,13 @@
 {
  "by_source": {
   "skirt:yard_asphalt": 1,
-  "skirt:yard_concrete": 3,
-  "skirt:yard_slabs": 1,
-  "steep_grass:verge_grass": 4
+  "skirt:yard_concrete": 1,
+  "skirt:yard_slabs": 1
  },
- "count": 9,
- "max_m": 0.715,
- "p99_m": 0.715,
+ "count": 3,
+ "max_m": 0.345,
+ "p99_m": 0.344,
  "skirt_area": [
-  {
-   "e": -256.3,
-   "exposed_m2": 0.091,
-   "mat": "yard_concrete",
-   "max_h": 0.314,
-   "n": -575.8,
-   "points": 2,
-   "run_m": 0.889,
-   "src": "bdot:2BE4B432-FD5C-1BF0-E053-CC2BA8C0D140:0#0:edge",
-   "visible": true
-  },
   {
    "e": 461.1,
    "exposed_m2": 0.056,
@@ -55,41 +43,9 @@
   }
  ],
  "sliver_m2": 0.02,
- "thin_steep_faces_skipped": 174,
+ "thin_steep_faces_skipped": 152,
  "thresh_m": 0.15,
  "worst": [
-  {
-   "e": -1008.0,
-   "h": 0.715,
-   "kind": "steep_grass",
-   "mat": "verge_grass",
-   "n": 37.4,
-   "src": "c:w23982184:1847317040-1847317043:R:1"
-  },
-  {
-   "e": -1008.6,
-   "h": 0.715,
-   "kind": "steep_grass",
-   "mat": "verge_grass",
-   "n": 36.8,
-   "src": "c:w23982184:1847317040-1847317043:R:1"
-  },
-  {
-   "e": -1007.9,
-   "h": 0.5,
-   "kind": "steep_grass",
-   "mat": "verge_grass",
-   "n": 36.8,
-   "src": "c:w23982184:1847317040-1847317043:R:1"
-  },
-  {
-   "e": -1008.5,
-   "h": 0.5,
-   "kind": "steep_grass",
-   "mat": "verge_grass",
-   "n": 36.0,
-   "src": "c:w23982184:1847317040-1847317043:R:1"
-  },
   {
    "e": 461.1,
    "h": 0.345,
@@ -99,28 +55,12 @@
    "src": "bdot:2BE4B432-6D21-1BF0-E053-CC2BA8C0D140:0#0:edge"
   },
   {
-   "e": -255.5,
-   "h": 0.314,
-   "kind": "skirt",
-   "mat": "yard_concrete",
-   "n": -575.7,
-   "src": "bdot:2BE4B432-FD5C-1BF0-E053-CC2BA8C0D140:0#0:edge"
-  },
-  {
    "e": 18.6,
    "h": 0.307,
    "kind": "skirt",
    "mat": "yard_slabs",
    "n": -624.8,
    "src": "bdot:2BE4B432-6FB5-1BF0-E053-CC2BA8C0D140:0#0:edge"
-  },
-  {
-   "e": -256.3,
-   "h": 0.303,
-   "kind": "skirt",
-   "mat": "yard_concrete",
-   "n": -575.8,
-   "src": "bdot:2BE4B432-FD5C-1BF0-E053-CC2BA8C0D140:0#0:edge"
   },
   {
    "e": 31.9,

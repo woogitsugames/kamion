@@ -118,10 +118,24 @@ def test_instances_reference_existing_prototypes():
     trees = json.loads((REPO / "art-source/world/vegetation/trees_meta.json").read_text(encoding="utf-8"))["trees"]
     # authored landmark assets (ADR 0067 / 0071): prototypes listed in art-source/world/landmarks/<asset>/<asset>_meta.json
     props = dict(props)
+    # ADR 0084: optional Fab prototypes come from the current approved, pinned
+    # local library. Never accept an instance solely because its name starts fab_.
+    from streetscape import fab_details as FD
+    fab = FD.prototype_stats()
+    for name, stats in fab.items():
+        assert set(stats) == {"tris_lod0", "tris_lod1", "tris_lod2"}, name
+        assert all(isinstance(v, int) and v > 0 for v in stats.values()), name
+        assert stats["tris_lod2"] <= stats["tris_lod1"] <= stats["tris_lod0"], name
+    props.update(fab)
     for mf in (REPO / "art-source/world/landmarks").glob("*/*_meta.json"):
         for seg in json.loads(mf.read_text(encoding="utf-8")).get("segments", []):
             props[seg["name"]] = {"tris_lod0": seg["tris"][0]}
     man = json.loads((REGION_DIR / "generated" / "world_manifest.json").read_text(encoding="utf-8"))
+    # authored landmark libraries (ADR 0067 / 0070): art-source/world/landmarks/<asset>/<asset>_meta.json
+    landmarks = set()
+    for mp in (REPO / "art-source/world/landmarks").glob("*/*_meta.json"):
+        m = json.loads(mp.read_text(encoding="utf-8"))
+        landmarks |= {m["prototype"]} if "prototype" in m else {sg["name"] for sg in m.get("segments", [])}
     n = 0
     for ch in man["chunks"]:
         data = json.loads((REPO / ch["instances"]["file"]).read_text(encoding="utf-8"))
@@ -129,12 +143,10 @@ def test_instances_reference_existing_prototypes():
         for it in data["instances"]:
             if it["p"].startswith("tree_"):
                 assert f"{it['p']}_{it['v']}" in trees
-            elif it["p"].startswith("landmark_") and it["p"] not in props:                      # hero assets (ADR 0067): own GLB + meta
-                lm = {s["name"] for f in (REPO / "art-source/world/landmarks").glob("*/*_meta.json")
-                      for s in json.loads(f.read_text(encoding="utf-8"))["segments"]}
-                assert it["p"] in lm, it["p"]
+            elif it["p"].startswith("landmark_") and it["p"] not in props:      # hero assets (ADR 0067 / 0070): own GLB + meta
+                assert it["p"] in landmarks, it["p"]
             else:
-                assert it["p"] in props, it["p"]
+                assert it["p"] in props or it["p"] in landmarks, it["p"]
             assert b["e_min"] - 0.01 <= it["e"] <= b["e_max"] + 0.01 or b["e_min"] <= -1024 or b["e_max"] >= 1024
             assert 100.0 < it["z"] < 200.0
             n += 1
@@ -153,12 +165,12 @@ def test_life_prototypes_budget_and_lods():
     for k, v in P.items():
         if k.startswith(("car_", "van_")):
             t2 = sum(len(p["T"]) for p in v[3].out())
-            assert 0 < t2 <= 60 and t2 < tris[k][1], k
+            assert 0 < t2 <= 96 and t2 < tris[k][1], k        # r10 (ADR 0078): silhouette LOD2 (was the <= 60 box)
     # ADR 0041 par. 7 / 9 / r8 (WORKING_VALUE until the phone measurement): cars are seen from 5-12 m, LOD0 is drawn
     # only below 16 m on Low / 37.5 m on High, so LOD0 <= 4000; LOD1 is the Low car from 16 to 45 m (r8, REVIEW r7
     # N-14: rounded shoulders, 10-gon wheels with spoke windows, lamp lenses, housing back plates; the frame limits
     # of test_frame_budget_with_forest_hlod are unchanged) <= 900 (was 650); LOD2 (42.5 / 127.5 - 300 m) <= 60 triangles
-    assert max(t0 for k, (t0, _) in tris.items() if k.startswith(("car_", "van_"))) <= 4000
+    assert max(t0 for k, (t0, _) in tris.items() if k.startswith(("car_", "van_"))) <= 4200
     assert max(t1 for k, (_, t1) in tris.items() if k.startswith(("car_", "van_"))) <= 900
     assert max(t0 for k, (t0, _) in tris.items() if k.startswith("trailer_")) <= 1200
     assert max(t1 for k, (_, t1) in tris.items() if k.startswith("trailer_")) <= 250
@@ -187,7 +199,11 @@ def test_parked_cars_road_film_glass_mask_and_wheels():
         assert f["V"][:, 2].min() > 0.15 and f["V"][:, 2].max() < 1.25, k        # sills .. below the belt line
         g = np.array(m0["car_glass_tint"]["UV"], float)
         pv = np.abs(g[:, 0]) > 2.0                                                # privacy panes: u offset (par. 9)
+        ln = np.abs(g[:, 0]) > 6.0                                                # clear lamp covers (r10, LENS_U)
+        assert ln.any(), k
+        pv &= ~ln
         g[pv, 0] -= np.sign(g[pv, 0]) * LC.PRIVACY_U
+        g[ln, 0] -= np.sign(g[ln, 0]) * LC.LENS_U
         g = np.abs(g)
         assert 0.69 <= g.max() <= 1.0 + 1e-9, k
         assert pv.any() == (LC._style(k[4:])["privacy"] and not k.startswith("van_")), k

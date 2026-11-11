@@ -43,6 +43,7 @@ def main():
     (out / "tex").mkdir(parents=True, exist_ok=True)
     E.car_dirt_png().save(out / "tex" / "car_dirt.png")       # generated here: the art-source copies are LFS files
     LC.plate_atlas().save(out / "tex" / "car_plates.png")
+    LC.tyre_texture().save(out / "tex" / "car_tyre.png")
     doc = {"materials": {}, "protos": {}, "textures": str(out / "tex")}
     for name in a.protos.split(","):
         P = build(name)

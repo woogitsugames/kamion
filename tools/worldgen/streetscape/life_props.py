@@ -133,7 +133,10 @@ def trailer(kind, colour):
             bx(m, "trailer_alu", -hw - 0.02, hw + 0.02, 0.0, L, H - 0.12, H)               # roof + top rail
             bx(m, "trailer_chassis", -hw + 0.02, hw - 0.02, 0.0, L, zf - 0.14, zf)          # floor
             bx(m, "trailer_alu", -hw - 0.02, hw + 0.02, 0.0, L, zf, zb + 0.10)              # bottom rail (0.15 m)
-            bx(m, "trailer_front", -hw + 0.01, hw - 0.01, L - 0.06, L, zb + 0.10, H - 0.12)   # front bulkhead
+            # front bulkhead: painted steel in the fleet's dark tone on the grey / blue / green trailers, bare light
+            # panel on the others (r11, review A7: every front was the same light grey plate)
+            bx(m, "trailer_front_dark" if colour in ("grey", "blue", "green") else "trailer_front",
+               -hw + 0.01, hw - 0.01, L - 0.06, L, zb + 0.10, H - 0.12)
             if lod == 0:                         # curtain straps (buckles) every 0.62 m: flat strips on the curtain
                 for y in np.arange(0.6, L - 0.3, 0.62):
                     for sx in (-1, 1):
@@ -151,10 +154,20 @@ def trailer(kind, colour):
                     for sx in (-1, 1):
                         bx(m, "trailer_alu", sx * hw - 0.012, sx * hw + 0.012, y - 0.03, y + 0.03, zf, H - 0.02)
             if kind == "reefer":
+                # Transport refrigeration unit on the front bulkhead (r12, review s9: "agregat chłodni biały sześcian"):
+                # white housing, condenser grille with horizontal slats over the upper two thirds (material stripes
+                # `louvre_slats`, UV v = metres up), dark service band with the control box underneath. Generic shape,
+                # no product copied; sizes WORKING_VALUE. The grille is on both LODs (a plain white box at 25 m).
+                yq = L + 0.425
                 bx(m, "reefer_unit", -0.95, 0.95, L, L + 0.42, 2.45, 3.85)
+                # quads wound to face +y (out of the unit): until r12 the grille faced into the box and was culled,
+                # which is why the unit rendered as a plain white cube
+                m.quad("reefer_grille", [0.84, yq, 2.98], [-0.84, yq, 2.98], [-0.84, yq, 3.76], [0.84, yq, 3.76],
+                       uv=((0.0, 0.0), (1.68, 0.0), (1.68, 0.78), (0.0, 0.78)))
                 if lod == 0:
-                    m.quad("reefer_grille", [-0.85, L + 0.425, 2.6], [0.85, L + 0.425, 2.6], [0.85, L + 0.425, 3.7],
-                           [-0.85, L + 0.425, 3.7])
+                    m.quad("trailer_chassis", [0.84, yq, 2.52], [-0.84, yq, 2.52], [-0.84, yq, 2.90], [0.84, yq, 2.90])
+                    m.quad("reefer_unit", [0.78, yq + 0.004, 2.57], [0.38, yq + 0.004, 2.57], [0.38, yq + 0.004, 2.85],
+                           [0.78, yq + 0.004, 2.85])                                           # control box door
         if lod == 0:                             # front: corner posts, two uprights, coupling heads, marker lights
             yf = L + (0.42 if kind == "reefer" else 0.0)
             for x in (-hw + 0.04, hw - 0.04, -0.45, 0.45):
@@ -190,21 +203,72 @@ def trailer(kind, colour):
             if lod == 0:
                 bx(m, "trailer_alu", sx * (hw - 0.05) - 0.02, sx * (hw - 0.05) + 0.02, 6.4, 11.0, 0.55, 0.62)
                 bx(m, "trailer_alu", sx * (hw - 0.05) - 0.02, sx * (hw - 0.05) + 0.02, 6.4, 11.0, 0.80, 0.87)
-            leg_x = sx * 0.9
-            bx(m, "trailer_chassis", leg_x - 0.07, leg_x + 0.07, 11.45, 11.6, 0.12, zf - 0.3)
-            bx(m, "trailer_chassis", leg_x - 0.15, leg_x + 0.15, 11.4, 11.65, 0.0, 0.08)
+            # landing gear (r11, review 2026-11-10 A4 "klockowate nogi"): 110 mm outer leg + 90 mm inner leg, sand
+            # shoe 0.24 x 0.28 m, diagonal braces to the beam, cross shaft and the crank on the right side
+            leg_x = sx * 0.92
+            bx(m, "trailer_chassis", leg_x - 0.055, leg_x + 0.055, 11.47, 11.58, 0.52, zf - 0.14)
+            bx(m, "trailer_alu", leg_x - 0.042, leg_x + 0.042, 11.483, 11.567, 0.05, 0.54)
+            bx(m, "trailer_chassis", leg_x - 0.12, leg_x + 0.12, 11.385, 11.665, 0.0, 0.045)
+            if lod == 0:
+                m.tube("trailer_chassis", [leg_x, 11.50, 0.60], [leg_x, 10.72, zf - 0.20], 0.022, None, 4, cap=False)
+                m.tube("trailer_chassis", [leg_x, 11.50, 0.62], [sx * 0.55, 11.50, zf - 0.20], 0.022, None, 4, cap=False)
+                # mudguards over the axle group (three quarter shells approximated by a bent strip)
+                xw = sx * (hw - 0.27)
+                for ya in TRAILER_AXLES:
+                    # seen from outside / above only (the tyre fills the inside): single-sided, 3 strips
+                    pts = [(ya - 0.62, 0.80), (ya - 0.36, 1.12), (ya + 0.36, 1.12), (ya + 0.62, 0.80)]
+                    for (y0, z0), (y1, z1) in zip(pts[:-1], pts[1:]):
+                        m.quad("trailer_chassis", [xw + 0.21, y0, z0], [xw - 0.21, y0, z0], [xw - 0.21, y1, z1], [xw + 0.21, y1, z1])
+                bx(m, "trailer_chassis", xw - 0.2, xw + 0.2, TRAILER_AXLES[0] - 0.66, TRAILER_AXLES[0] - 0.645, 0.20, 0.74)   # flap
+                # amber side marker lamps along the bottom rail (ECE R48: every <= 3 m)
+                for y in np.arange(1.0, L - 0.5, 2.9):
+                    x = sx * (hw + 0.024)
+                    q = [[x, y - 0.05, zf - 0.02], [x, y + 0.05, zf - 0.02], [x, y + 0.05, zf + 0.03], [x, y - 0.05, zf + 0.03]]
+                    m.quad("coupling_yellow", *(q if sx > 0 else q[::-1]))
+            # road film on the lower third of the body sides (blend overlay, car_dirt: dense at the bottom edge,
+            # thinning upward). LOD0 only: it is the one extra submesh (= draw) the r11 detail costs per prototype; every
+            # other new part reuses a material the trailer already has (Low budget, review 2026-11-10)
+            # r12 (ADR 0092, review s9 "firanka odbija jak polerowana blacha"): on a CURTAIN the film is gone. It was a
+            # 1.37 m high blended sheet in a pale grey-brown, dense over its lower 0.85-1.25 m, drawn with URP Lit
+            # (sky SH without the baked sky visibility of Kamion/World PBR): in the shade of the hall it came out
+            # lighter and warmer than the dark tarpaulin under it, with a dark ragged upper edge - a "reflection" of
+            # the sunlit yard and the horizon. The curtain set already carries road grime on its lower third. Box
+            # bodies keep a lower film (0.85 m: dense to ~0.55 m).
+            if lod == 0 and kind != "curtain":
+                x = sx * (hw + 0.028)
+                q = [[x, 0.1, zf - 0.12], [x, L - 0.1, zf - 0.12], [x, L - 0.1, zf + 0.73], [x, 0.1, zf + 0.73]]
+                uvq = [[0, 0], [3, 0], [3, 1], [0, 1]]
+                m.add("car_dirt_3", q if sx > 0 else q[::-1], [(0, 1, 2), (0, 2, 3)], uvq if sx > 0 else uvq[::-1])
+        if lod == 0:
+            m.tube("trailer_alu", [-0.92, 11.525, 0.78], [0.92, 11.525, 0.78], 0.018, None, 4, cap=False)   # cross shaft
+            m.tube("trailer_alu", [1.0, 11.525, 0.78], [1.21, 11.525, 0.78], 0.014, None, 4, cap=False)     # crank
+            m.tube("trailer_alu", [1.21, 11.525, 0.78], [1.21, 11.36, 0.60], 0.014, None, 4, cap=False)
+            bx(m, "trailer_chassis", 1.19, 1.23, 11.30, 11.37, 0.55, 0.61)                                # crank handle
+            # pallet box (left) and spare wheel in a carrier (right) between the legs and the axle group
+            bx(m, "trailer_chassis", -hw + 0.06, -hw + 0.70, 7.2, 9.6, 0.50, zf - 0.16)
+            m.quad("trailer_alu", [-hw + 0.055, 9.55, 0.55], [-hw + 0.055, 7.25, 0.55], [-hw + 0.055, 7.25, zf - 0.21],
+                   [-hw + 0.055, 9.55, zf - 0.21])                                                # lid
+            m.tube("tyre", [0.35, 8.4, 0.52], [0.35, 8.4, 0.80], 0.50, None, 8)                    # spare wheel, lying flat
+            # front bulkhead: document box, registration plate holder, two reflectors, spiral-hose bracket
+            bx(m, "trailer_alu", -1.02, -0.70, L + 0.025, L + 0.065, zf + 0.40, zf + 0.64)
+            for sx in (-1, 1):
+                q = [[sx * (hw - 0.2) - 0.05, L + 0.031, zf + 0.12], [sx * (hw - 0.2) + 0.05, L + 0.031, zf + 0.12],
+                     [sx * (hw - 0.2) + 0.05, L + 0.031, zf + 0.22], [sx * (hw - 0.2) - 0.05, L + 0.031, zf + 0.22]]
+                m.quad("car_light_head", *q[::-1])
+            for x in (-0.35, -0.15):
+                m.tube("trailer_chassis", [x, L + 0.04, zf + 0.28], [x, L + 0.10, zf - 0.12], 0.016, None, 4, cap=False)   # hoses
         bx(m, "trailer_chassis", -hw + 0.1, hw - 0.1, 2.3, 6.4, zf - 0.30, zf - 0.05)         # axle bed
         for ya in TRAILER_AXLES:
             for sx in (-1, 1):
                 if lod == 0:
-                    wheel(m, [sx * (hw - 0.27), ya, 0.535], 0.535, 0.385, 12, out_sign=sx)
+                    wheel(m, [sx * (hw - 0.27), ya, 0.535], 0.535, 0.385, 10, out_sign=sx)
         if lod > 0:                              # LOD1: one prism per side spanning the axle group
             for sx in (-1, 1):
                 m.tube("tyre", [sx * (hw - 0.27), TRAILER_AXLES[0] - 0.5, 0.5], [sx * (hw - 0.27), TRAILER_AXLES[-1] + 0.5, 0.5],
                        0.38, None, 4)
             if lod == 0:
                 for sx in (-1, 1):               # mudflaps
-                    bx(m, "rubber_black", sx * (hw - 0.27) - 0.2, sx * (hw - 0.27) + 0.2, 2.28, 2.3, 0.18, 0.80)
+                    bx(m, "trailer_chassis", sx * (hw - 0.27) - 0.2, sx * (hw - 0.27) + 0.2, 2.28, 2.3, 0.18, 0.80)
         out.append(m)
     col = Mesh()
     col.box("collision_vehicle", [0, L / 2, (H + 0.2) / 2], hw, L / 2, (H - 0.2) / 2 + 0.1)
@@ -583,7 +647,7 @@ def barrier_base(L=BOOM_L):
     entrances, no product copied; sizes WORKING_VALUE."""
     m, l1, col = Mesh(), Mesh(), Mesh()
     for mm, lod in ((m, 0), (l1, 1)):
-        mm.box("concrete_base", [0, 0, -0.06], 0.38, 0.33, 0.12)
+        mm.box("concrete_base", [0, 0, -0.06], 0.30, 0.27, 0.12)      # footing inside the island kerb (gate._island)
         mm.box("barrier_housing", [0, 0, 0.555], 0.20, 0.175, 0.495)
         mm.box("barrier_housing", [0, 0, 1.065], 0.225, 0.20, 0.015)                  # cap overhang
         if lod == 0:
@@ -601,12 +665,14 @@ def barrier_base(L=BOOM_L):
             for z in (0.25, 0.85):                                                    # reflective bands on the cabinet
                 mm.box("reflector_red", [0, 0, z], 0.202, 0.177, 0.03)
         # rest post with a fork
-        mm.tube("steel_galv", [L - 0.25, 0.235, 0.0], [L - 0.25, 0.235, 0.84], 0.035, None, 8 if lod == 0 else 5)
+        # the housing may stand on a raised island (gate.ISLAND_H): the rest post across the lane reaches down to the
+        # lane level and its footing sits there (buried when the housing is at ground level)
+        mm.tube("steel_galv", [L - 0.25, 0.235, -0.30], [L - 0.25, 0.235, 0.84], 0.035, None, 8 if lod == 0 else 5)
         mm.box("steel_galv", [L - 0.25, 0.235, 0.85], 0.03, 0.075, 0.012)
         for sy in (-1, 1):
             mm.box("steel_galv", [L - 0.25, 0.235 + sy * 0.07, 0.92], 0.03, 0.008, 0.07)
         if lod == 0:
-            mm.box("concrete_base", [L - 0.25, 0.235, -0.05], 0.18, 0.18, 0.1)
+            mm.box("concrete_base", [L - 0.25, 0.235, -0.21], 0.18, 0.18, 0.1)
     col.box("collision_steel", [0, 0, 0.55], 0.2, 0.175, 0.55)
     return m, l1, col
 
@@ -912,8 +978,23 @@ def contact_spec(name):
         return _cs([L / 2, hw + 0.25, L / 2, zf - 0.20],                    # floor + main beams
                    [(a0 + a1) / 2, hw, (a1 - a0) / 2, 0.55],               # axle group: tyres close the sides
                    (0.90, 0.80, 0.90),
-                   [hw - 0.27, 0.19, 0.16, 0.05], TRAILER_AXLES,
+                   # 4th "axle" = the landing gear (r11, review A5: the legs stood "on" the texture): its sand shoes
+                   # sit 8 cm inside the tyre line, close enough for the tyre contact core
+                   [hw - 0.27, 0.19, 0.16, 0.05], (*TRAILER_AXLES, 11.525),
                    [L / 2, hw, L / 2, 0.95], [zf - 0.30, zf + 0.10, 0.05, 0.05], 1.60)
+    # r11 (review A5): static yard props that rest on the ground get the same analytic contact / sun patch. One slab
+    # just above the ground (the gap under a container between its corner castings, the plinth edge of the booth,
+    # the footing of the barrier cabinet); no tyres.
+    if name.startswith("container_"):
+        hl, hw = CONTAINER_L[int(name.split("_")[1])] / 2, CONTAINER_W / 2
+        return _cs([0.0, hw + 0.04, hl + 0.04, 0.16], [0.0, hw, hl, 0.5], (1.0, 0.35, 0.0),
+                   [0.0, 0.01, 0.01, 0.05], (), [0.0, hw, hl, 1.0], [0.1, CONTAINER_H - 0.1, 0.05, 0.05], 1.40)
+    if name == "gatehouse":
+        return _cs([0.0, 1.9, 1.3, 0.14], [0.0, 1.8, 1.2, 0.5], (1.0, 0.35, 0.0),
+                   [0.0, 0.01, 0.01, 0.05], (), [0.0, 1.8, 1.2, 1.0], [0.1, 2.7, 0.05, 0.05], 1.40)
+    if name == "barrier_base":
+        return _cs([0.0, 0.40, 0.35, 0.10], [0.0, 0.22, 0.2, 0.5], (1.0, 0.5, 0.0),
+                   [0.0, 0.01, 0.01, 0.05], (), [0.0, 0.2, 0.175, 1.0], [0.05, 1.05, 0.03, 0.05], 0.60)
     return None
 
 

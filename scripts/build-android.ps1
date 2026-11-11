@@ -31,6 +31,7 @@ $ErrorActionPreference = 'Stop'
 $ts = Get-Timestamp
 New-Item -ItemType Directory -Force $LogsDir, (Join-Path $ArtifactsDir 'apk') | Out-Null
 
+$apkArg = $Apk  # PowerShell names are case-insensitive: $apk below would overwrite the -Apk parameter
 $version = (Select-String -Path "$ProjectPath/ProjectSettings/ProjectSettings.asset" -Pattern '^\s*bundleVersion:\s*(.+)$').Matches[0].Groups[1].Value.Trim()
 $sha = Get-GitShortSha
 if (& git -C $RepoRoot status --porcelain --untracked-files=no) { $sha = "$sha-dirty" }
@@ -70,9 +71,9 @@ if (-not $SkipBuild) {
     Write-Host "SHA256 $hash"
     Write-Host "log    $log"
 } else {
-    if ($Apk) {
-        if (-not (Test-Path $Apk)) { throw "-Apk not found: $Apk" }
-        $apk = (Resolve-Path $Apk).Path
+    if ($apkArg) {
+        if (-not (Test-Path $apkArg)) { throw "-Apk not found: $apkArg" }
+        $apk = (Resolve-Path $apkArg).Path
     } else {
         $apk = Get-ChildItem (Join-Path $ArtifactsDir 'apk') -Filter *.apk | Sort-Object LastWriteTime -Descending | Select-Object -First 1 -ExpandProperty FullName
         if (-not $apk) { throw 'no APK in artifacts/apk (run without -SkipBuild)' }

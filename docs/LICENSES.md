@@ -66,6 +66,13 @@ Hala Kwadrat Park (ADR 0071): zdjęcia Rakoon `20210904_101250_September_2021_in
 referencja kształtu i kolorów; asset `art-source/world/landmarks/kwadrat_park/` jest wygenerowany naszym kodem
 (`tools/blender/world/landmarks/make_depot.py`), nie zawiera pikseli zdjęć ani własnych tekstur (materiały świata po nazwie).
 
+Zabudowa r10 (ADR 0081): zdjęcia Rakoon z Wikimedia Commons (CC0; identyfikatory stron 121537425, 121530695, 121537427,
+121530694, 121537432, 104322581, 104322582, 104322590 — blok przy Rondzie Putry i okolice; kopie robocze w
+`artifacts/buildings-r10/refs/`, poza gitem) posłużyły wyłącznie jako referencja wzrokowa (kolor tynku, balustrady,
+zabudowy balkonów, stolarka). Atlasy `facade_atlas`, `facade_far` i `fence_concrete` są malowane kodem
+(`art-source/world/materials/_src/sets_buildings.py`); `fence_concrete` bierze mikrodetal ze skanu CC0
+`concrete_floor_worn_001` (Poly Haven, wpis w tabeli skanów ADR 0063). Żadne zdjęcie nie trafia do tekstur ani do buildu.
+
 ## Zdjęcia uliczne Mapillary (referencja, D42, ADR 0065)
 
 Źródło: Mapillary Graph API v4, licencja CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/). Pobierane narzędziem `tools/refs/mapillary_fetch.py` do `Data/raw/mapillary/` (poza gitem, nie trafiają do buildu). Użycie wyłącznie jako referencja (wzór, dopasowanie kadru, kalibracja koloru); piksele w teksturze zrobiłyby z niej pochodną CC BY-SA (ADR 0065). Autorzy zdjęć faktycznie użytych: [docs/ATTRIBUTION-mapillary.md](ATTRIBUTION-mapillary.md) (generowany; pojawi się po pierwszym `--use ... --attribution`).
@@ -132,7 +139,7 @@ Tylko pipeline, nie trafiają do buildu: numpy (BSD-3), scipy (BSD-3), soundfile
 
 Wszystkie zasoby poniżej są **wygenerowane naszym kodem**. Nie korzystają z cudzych modeli, tekstur, zdjęć ani generatorów AI. Do 2026-11-10 tekstur CC0 nie używano; od ADR 0063 (D40) zestawy nawierzchni i fasad wymienione w sekcji „Skany materiałów CC0” biorą mikrodetal ze skanów Poly Haven, a układ i zużycie nadal z naszych generatorów. Wyjątek (2026-11-09): `world-ground-asphalt-detail` jest pochodną zdjęcia z domeny publicznej (wiersz niżej).
 
-Wszystkie zasoby poniżej są **wygenerowane naszym kodem**. Nie korzystają z cudzych modeli, tekstur, zdjęć ani generatorów AI. Tekstur CC0 (Poly Haven, ambientCG) nie użyto, wszystko jest proceduralne. Wyjątki: `world-ground-asphalt-detail` (2026-11-09) jest pochodną zdjęcia z domeny publicznej, `world-viaduct-concrete` (2026-11-10) używa skanu CC0 Poly Haven (wiersze niżej).
+Wszystkie zasoby poniżej są **wygenerowane naszym kodem**. Nie korzystają z cudzych modeli, tekstur, zdjęć ani generatorów AI. Tekstur CC0 (Poly Haven, ambientCG) nie użyto, wszystko jest proceduralne. Wyjątki: `world-ground-asphalt-detail` (2026-11-09) jest pochodną zdjęcia z domeny publicznej, `world-viaduct-concrete` (2026-11-10) używa skanu CC0 Poly Haven (wiersze niżej). Atlas `world-hero-fire-station-atlas` (2026-11-10, ADR 0070) również używa skanów CC0 Poly Haven jako bazy detalu.
 
 | ID | Źródło | Licencja | W gicie? | Użycie |
 |---|---|---|---|---|
@@ -150,6 +157,8 @@ Wszystkie zasoby poniżej są **wygenerowane naszym kodem**. Nie korzystają z c
 | `world-ground-pbr-renders` | `art-source/world/materials/_src/render_test.py` (Blender 4.2.9) → `art-source/world/materials/_renders/` | własna; montaż `compare_street_vs_photo.jpg` zawiera wycinek zdjęcia CC0 (Rakoon, `20201102_152339_Rondo_Pamięci_Bieżeństwa…jpg`) | tak (JPG ≤ 300 KB) | rendery kontrolne nawierzchni i porównanie ze zdjęciem; nie trafia do buildu |
 | `road-fidelity-qa` | `tools/worldgen/fidelity/run.py` → `Data/Regions/<id>/generated/fidelity_qa.json` (metryki zgodności dróg; OSM ways/tagi z wycinka Geofabrik 261108 + pomiary na ortofoto GUGiK) i nakładki `artifacts/fidelity-r9/overlays/*.jpg` (poza gitem) | ODbL 1.0 („© OpenStreetMap contributors”; JSON = baza pochodna, nakładki = Produced Work) + dane GUGiK (ortofotomapa, art. 40a ust. 2 pkt 1 Pgik; „Źródło danych: GUGiK”) | JSON tak, nakładki nie | QA, ADR 0075; nie trafia do buildu. Ta sama uwaga `LEGAL_REVIEW_REQUIRED` co dla grafu dróg |
 | `gugik-ortho-hr-cells` | GUGiK WMS `ORTO/WMS/HighResolution` (EPSG:2180, komórki 128 m, 0,08 m/px) → `Data/raw/refs/gugik-ortho-hr/<region>/c_XX_YY.jpg` + `manifest.jsonl` (URL, czas, SHA256, bbox) | dane GUGiK, art. 40a ust. 2 pkt 1 Pgik; WMS bez ograniczeń dostępu; „Źródło danych: Główny Urząd Geodezji i Kartografii” | nie (poza gitem) | tylko referencja i pomiar zgodności (ADR 0075), nigdy tekstura w grze; data nalotu mozaiki WMS `UNVERIFIED` |
+| `world-hero-fire-station` | `tools/blender/world/landmarks/make_fire_station.py` + `tools/worldgen/streetscape/hero_building.py` + `art-source/world/landmarks/fire_station_jrg2/{dims.json,atlas_layout.json}` → `fire_station_jrg2.glb`, `_meta.json`; `art-source/world/textures/fire_station_alpha.png` (`sets_fire_station.py --alpha`) | własna (projekt); wymiary z BDOT10k i GUGiK LoD2 2017 (CC BY 4.0, `lod2_roofs.json`), elewacje odwzorowane „na oko” ze zdjęć CC0 (Commons, Rakoon) i klatek CC BY-SA 4.0 użytych wyłącznie jako wzór | tak | remiza JRG nr 2 PSP, Andersa 46 (ADR 0070): budynek, ogrodzenie, tuje, maszty. Napis „PAŃSTWOWA STRAŻ POŻARNA” i „998” = nazwa służby i numer alarmowy (font DejaVu Sans Bold); bez logo, herbu i znaków graficznych PSP |
+| `world-hero-fire-station-atlas` | `art-source/world/materials/_src/sets_fire_station.py` → `art-source/world/materials/fire_station/{High,Medium,Low}/*.png`; bazy: skany **Poly Haven** „Painted Plaster Wall” (Amal Kumar; https://polyhaven.com/a/painted_plaster_wall), „Brick Wall 006” (Jan Burghardt; https://polyhaven.com/a/brick_wall_006), „Concrete Wall 008” (Charlotte Baglioni, Dario Barresi; https://polyhaven.com/a/concrete_wall_008), mapy diff/disp/rough 2k JPG, md5 w `sets_fire_station.py`, pobierane do `Data/raw/cc0/polyhaven/` | **CC0 1.0** (skany) + własna obróbka (górnoprzepust luminancji, relief, szorstkość; kolory, zacieki, okna, bramy, blacha generowane) | nie (generowane; skany poza repo) | atlas 14 × 14 m obiektu hero (ADR 0070). Pierwsze użycie skanów CC0 w świecie gry |
 | `world-streetscape-data` | `Data/Regions/bialystok-industrial-c/generated/streetscape_sources.json` (OSM + BDOT10k) | ODbL 1.0 (© OpenStreetMap contributors) + dane GUGiK (BDOT10k, art. 40a ust. 2 pkt 1 Pgik) | tak | place, ogrodzenia, drzewa, ekrany, słupy. Ta sama uwaga `LEGAL_REVIEW_REQUIRED` co dla grafu dróg |
 
 ## Referencje z otwartych zrodel (D43, ADR 0066)
@@ -182,12 +191,43 @@ Licencja **Fab Standard License** (Quixel Megascans; karta pozycji: „Licencja 
 | `trash-can` | Trash Can (3d) | https://www.fab.com/listings/35267674-3634-4fd2-bca2-423fbc7da4b3 | Fab Standard | 2026-11-10 | `c94ba814a011dc81bb36c049d7da08d98b8725bacd4e1db13a28007896f8d85b` |
 | `grass-clumps` | Grass Clumps (plant) | https://www.fab.com/listings/d22b2fc3-9389-4d39-894c-5369a7e49ddf | Fab Standard | 2026-11-10 | `3542bded154fbe4e946cb634dbb5ace08cb3e36c212f21d01b957bac8873f6f8` |
 | `wild-grass` | Wild Grass (plant) | https://www.fab.com/listings/5848d16a-f6ab-45a7-b69f-fe21dcbe4669 | Fab Standard | 2026-11-10 | `ff6fb1b4a07768a34482f2a2c13f5f888245059a9a2cc455e34d5149a7f35533` |
-| `boxwood` | Boxwood (plant) | https://www.fab.com/listings/ae90090d-cafb-4431-a74f-8cded15f93e1 | Fab Standard | 2026-11-10 | `c11a7c455f086bc71f4ad18a0762f6bd6cdb20cbe9cac12a5c7a24ad1b5a98d0` |
+| `boxwood` | Boxwood (plant) | https://www.fab.com/listings/ae90090d-cafb-4431-a74f-8cded15f93e1 | Fab Standard | 2026-11-10 | `9024cc6b4ec22da7958d83fc450b8e8dfa319e349da8a3915530695881d12376` |
 | `elderberry` | Elderberry (plant) | https://www.fab.com/listings/d72dd7bb-d514-4a14-8b4b-3333c99057fb | Fab Standard | 2026-11-10 | `70b9076f24d3852b8a2068dfd373048e4bcc427d233dc15b3ee2d90ff871cc75` |
 | `silver-birch-bark` | Silver Birch Bark (surface) | https://www.fab.com/listings/eb28e8b4-3198-4cf3-a42b-b3e12b612d06 | Fab Standard | 2026-11-10 | `2a3030a7c07ad56dc14ba4e515032815fdfd38c4cf1f3cf9f0f21c7506dee6c4` |
 | `birch-tree-trunk` | Birch Tree Trunk (3d) | https://www.fab.com/listings/a2289955-a389-4fdb-a17b-b27c4146b03d | Fab Standard | 2026-11-10 | `b65fc13b280b0041b32029c32555dd22df39deeabc4623ca2352ba3ebe8b7635` |
 | `pine-bark` | Pine Bark (surface) | https://www.fab.com/listings/5f6f6a17-3b21-470a-b74b-fbbf80c6dc11 | Fab Standard | 2026-11-10 | `b80cd5d01cae4070e71cfe3b917eed994ca022b426575855ef7ea81553fd8c4b` |
 | `linden-branch` | Linden Branch (plant) | https://www.fab.com/listings/d8c3a5b3-7212-45b7-93b2-6c630333ec13 | Fab Standard | 2026-11-10 | `20973973e53d2f6fa97ba9e9abbd8f37d84e8401d986bc2708549b96b183fe71` |
-| `granite-rock` | Granite Rock (3d) | https://www.fab.com/listings/01d40602-eb64-448b-af63-a7896924280a | Fab Standard | 2026-11-10 | `9acf14177d29d6f33909719e13d0af4430c5be109f55b9effb847cd211d378a8` |
-| `small-granite-rock` | Small Granite Rock (3d) | https://www.fab.com/listings/d4de5337-7536-41df-9706-2825dc0a9dad | Fab Standard | 2026-11-10 | `dc7fe40bae15ad1ce28df5acd4d6c384ea060f97f0fc4e2d48851864e0537680` |
+| `granite-rock` | Granite Rock (3d) | https://www.fab.com/listings/01d40602-eb64-448b-af63-a7896924280a | Fab Standard | 2026-11-10 | `178df9900e3eccaf3ce21069281cdd3cfa4eead781f3b1828596570986ae5484` |
+| `small-granite-rock` | Small Granite Rock (3d) | https://www.fab.com/listings/d4de5337-7536-41df-9706-2825dc0a9dad | Fab Standard | 2026-11-10 | `3af7d445e783e65254590ecd3abab12a83cc1e88f54aac82ce5c1873f420e11b` |
 | `urban-trash` | Urban Trash (3d, mid) | https://www.fab.com/listings/4eb4b87c-92bf-495a-b68a-5877fc07094f | Fab Standard | 2026-11-10 | `89aab0683b618a66040d49d40241cae63db9a9eeda0d18ce1c4e61f032e96383` |
+
+### Optional world integration (ADR 0084, gpt-megascans)
+
+Local source manifest + `tools/worldgen/fab/review.json` control eligibility.
+The observed local hashes for boxwood, granite-rock and small-granite-rock were
+verified against intact ZIPs and embedded Quixel identities; original acquisition
+pins remain in the manifest because the replacement chronology is UNVERIFIED.
+`tools/worldgen/fab/prepare.py` produces mobile LOD libraries, alpha/albedo,
+normal, roughness, AO and packed metallic/smoothness maps exclusively under
+`art-source/world/megascans/_generated/`; Unity copies into `Assets/_Generated`.
+Both directories are ignored; the git guard checks paths, archive/member hashes
+and derived-output provenance hashes. No Fab assets or textures enter tracked art.
+
+| Source ids | Intended local use / decision |
+|---|---|
+| street-curbs, modular-curb | Clean atlas crops blended into our generated road kerb material; original metric road geometry retained |
+| metal-manhole-cover | Lane-centred cover detail; locations WORKING_VALUE |
+| round-drain-cover, square-rusty-drain | Existing kerb-side gully mesh materials; spacing retained |
+| round-manhole-cover | Rejected: embossed emblem and lettering |
+| trash-bag-pack | Small grounded groups by existing shelter/gate/parking context |
+| trash-can, urban-trash | Rejected: visible emblem / printed packaging and branded bin |
+| grass-clumps, wild-grass | Bounded soft-verge details, LOD0/1/2; grass-clumps also supplies the private periodic grass base-map bake |
+| boxwood, elderberry | Landscaping/soft-verge shrubs and explicitly authored island selections |
+| silver-birch-bark, birch-tree-trunk | Bark crops mixed onto our generated birch material |
+| linden-branch | Woody bark crop onto our generated linden; supplied scan contains no leaves |
+| pine-bark | Rejected for trunk use: source is loose bark/mulch atlas; existing pine bark retained |
+| granite-rock, small-granite-rock | Grounded roadside stone props, LOD0/1/2 |
+
+Prepared normal maps remain disabled pending a tangent-capable reviewed mesh
+path. Existing tree leaves remain. Missing licensed files preserve procedural/CC0
+fallback; no licensed download is attempted by the public-clone build.

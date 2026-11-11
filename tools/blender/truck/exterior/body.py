@@ -1243,7 +1243,7 @@ def corners_roof_rear():
         xo = s * (CAB_HALF_W - 0.015)
         prof = [(CAB_BACK_Y + 0.10, 1.55), (CAB_BACK_Y - 0.30, 1.62), (CAB_BACK_Y - 0.34, 3.30),
                 (CAB_BACK_Y + 0.05, 3.42)]
-        extrude_poly(f"side_extender_{s}", prof, 0.016, "plastic", plane="YZ", origin=(xo - s * 0.016, 0, 0),
+        extrude_poly(f"side_extender_{s}", prof, 0.016, "paint", plane="YZ", origin=(xo - s * 0.016, 0, 0),
                      bev=0.004)
         rub = [(CAB_BACK_Y - 0.30, 1.62), (CAB_BACK_Y - 0.38, 1.625), (CAB_BACK_Y - 0.42, 3.29),
                (CAB_BACK_Y - 0.34, 3.30)]

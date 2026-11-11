@@ -40,6 +40,14 @@ namespace Game.World.Import
             s_Tier = EditorTools.Arg("-materialTier", "Medium");
         }
 
+        /// <summary>ADR0086: all authored tint values are linear multipliers. ShaderLab Color properties
+        /// are decoded from sRGB on GPU upload even with SetVector; encode once for storage so the shader
+        /// receives the original linear value. Verified by WorldPbrTintProbe, including HDR ratios > 1.</summary>
+        public static void SetLinearTint(Material material, Vector3 linear)
+        {
+            material.SetColor("_Tint", new Color(linear.x, linear.y, linear.z, 1f).gamma);
+        }
+
         static Dictionary<string, object> Spec()
         {
             if (s_Spec == null)
@@ -66,6 +74,7 @@ namespace Game.World.Import
         public static void Channels(Dictionary<string, object> def, string id, out bool uv0, out bool uv1, out bool colors)
         {
             uv0 = uv1 = colors = false;
+            if (id != null && id.StartsWith("fab_", StringComparison.Ordinal) && FabMaterials.Has(id)) { uv0 = true; return; }
             if (!Has(def, id)) return;
             var s = Set(def.Get("texture_set") as string);
             string kind = s != null ? Str(s.Get("kind")) : "decal";
@@ -73,12 +82,16 @@ namespace Game.World.Import
             if ((kind == "modulation_set" || uv.StartsWith("mesh_uv0")) && def.Get("uv") as string != "planar") uv0 = true;
             if (def.Get("uv1") as string == "along_m") uv1 = true;
             if (id == "road_asphalt" || id == "road_asphalt_new") uv1 = true;           // _ROADWEAR
-            if (id.StartsWith("hall_wall") && Set("parapet_runoff") != null) uv1 = true;   // _RUNOFF (wall-top space)
+            if ((id.StartsWith("hall_wall") || Runoff(def) || (def.Get("runoff") is bool ro && ro)) && Set("parapet_runoff") != null) uv1 = true;   // _RUNOFF (wall-top space): 0071 `weather` + 0081 `runoff`
             if (id == "decal_patch" || id == "decal_oil" || id == "decal_tyre") { uv0 = true; uv1 = true; }
             if (def.Get("paint") is Dictionary<string, object>) uv1 = true;              // _DECAL_PAINT wear data (ADR 0049)
             if (def.Get("procedural") as string == "grate" || Stripes(def) != null) uv0 = true;
             if (id == "terrain_grass") colors = true;
         }
+
+        /// <summary>ADR 0071 r11: manifest "weather": true = wall material of an authored asset that carries the splash
+        /// zone (UV0.y = metres above ground) and run-off space (TEXCOORD_1) of the generated hall walls.</summary>
+        static bool Runoff(Dictionary<string, object> def) => def.Get("weather") is bool b && b;
 
         /// <summary>Procedural stripe sets: (direction in UV metres, period m, colour A, colour B), linear colours.</summary>
         static (Vector2 dir, float period, Color a, Color b)? Stripes(Dictionary<string, object> def)
@@ -89,6 +102,9 @@ namespace Game.World.Import
                 case "boom_red_white": return (new Vector2(1f, 0f), 1.0f, new Color(0.45f, 0.025f, 0.02f), new Color(0.68f, 0.68f, 0.66f));
                 // dock leveller edges: yellow / black 45 deg, 0.1 m bands (WORKING_VALUE)
                 case "hazard_stripes_45deg": return (new Vector2(0.7071f, 0.7071f), 0.2f, new Color(0.55f, 0.40f, 0.03f), new Color(0.02f, 0.02f, 0.02f));
+                // ADR 0092: condenser grille of a transport refrigeration unit - horizontal slats, 60 mm pitch, dark
+                // gaps (UV v = metres up, life_props.trailer; WORKING_VALUE)
+                case "louvre_slats": return (new Vector2(0f, 1f), 0.06f, new Color(0.012f, 0.012f, 0.012f), new Color(0.085f, 0.088f, 0.09f));
             }
             return null;
         }
@@ -144,11 +160,24 @@ namespace Game.World.Import
             // ADR 0067: `tile` was never written to the material (every set is sampled at the shader default 4 x 4 m,
             // whatever tile_m says). Strip atlases (non-square, UV0 in atlas metres) need the real size; the other sets
             // keep the 4 m look they were reviewed with until the lead decides (see ADR 0067, "znane").
-            if (def.Get("set_tile") is bool stl && stl) mat.SetVector("_Tile", tile);
+            // ADR 0071 r11 (review 2026-11-10, P0 "kostka 0,4-0,5 m"): sets segmented into physical elements (CC0 scans of
+            // behaton / 20x10 paving / 35 cm slabs, `source.elements_per_tile`) are 1.9-3.1 m of real surface; sampled at
+            // the 4 m default every block came out 1.3-2.1x too large (behaton 0.42 m instead of 0.20 m). Their element
+            // size is a scale cue, so they always get their real tile.
+            bool elementScan = set != null && set.Get("source") is Dictionary<string, object> esrc && esrc.Get("elements_per_tile") != null;
+            // ADR 0070: authored atlases ("atlas": true in materials_spec.json: viaduct, fire station) address the atlas in
+            // metres through mesh UV0, so they also need the set's own tile size.
+            bool isAtlasSet = set != null && set.Get("atlas") is bool isAtlas && isAtlas;
+            if ((def.Get("set_tile") is bool stl && stl) || elementScan || isAtlasSet) mat.SetVector("_Tile", tile);
 
             float scale = 1f;
             Vector3 tint = Vector3.one;
-            if (kind == "modulation_set") { scale = 2f; tint = col; }
+            if (kind == "modulation_set")
+            {
+                scale = 2f; tint = col;
+                // ADR0081's tint_linear flag is accepted as legacy metadata, but conversion now applies
+                // to every set/path. Already-correct building colours retain their exact GPU values.
+            }
             else if (set != null && set.Get("albedo") is Dictionary<string, object> alb && alb.Get("mean_rgb_linear") is List<object> mean)
             {
                 // calibrated set: grey tint = manifest luminance / set mean luminance (1 when the generator uses the set
@@ -158,7 +187,7 @@ namespace Game.World.Import
                 float t = Mathf.Clamp(lc / Mathf.Max(lm, 1e-3f), 0.4f, 2.5f);
                 tint = new Vector3(t, t, t);
             }
-            mat.SetVector("_Tint", new Vector4(tint.x, tint.y, tint.z, 1f));
+            SetLinearTint(mat, tint);
             mat.SetFloat("_AlbedoScale", scale);
             mat.SetFloat("_NormalStrength", 1f);
             mat.SetFloat("_SmoothnessScale", 1f);
@@ -167,7 +196,25 @@ namespace Game.World.Import
             // manifest value was ignored and every paint rendered at 0.59 mean smoothness ("primer", REVIEW r8).
             if (id.StartsWith("car_paint_") && def.Get("rough") != null)
                 mat.SetFloat("_SmoothnessScale", Mathf.Clamp((1f - (float)Num(def.Get("rough"))) / 0.68f, 0.5f, 1.4f));
+            // ADR 0092 (review s9 par. 4, "firanka odbija jak polerowana blacha"): the curtain set carried smoothness 0.36
+            // whatever the manifest said; in the shade of the hall the grazing-angle environment term (smoothness + F0)
+            // then outshone the dark PVC and drew a horizon line across the tarpaulin. The manifest "rough" of a
+            // curtain is the mean roughness of matt PVC-coated fabric: the set is scaled to it. Metallic stays 0.
+            if (id.StartsWith("trailer_curtain_") && def.Get("rough") != null && set != null && FilesFor(set) is Dictionary<string, object> cinfo
+                && cinfo.Get("smoothness_mean") != null)
+                mat.SetFloat("_SmoothnessScale", Mathf.Clamp((1f - (float)Num(def.Get("rough"))) / Mathf.Max(0.05f, (float)Num(cinfo.Get("smoothness_mean"))), 0.2f, 1.2f));
             mat.SetFloat("_MetallicScale", 0f);
+            // Parked-car paint r10 (ADR 0078): clear coat over a base coat. Manifest "paint": [base metal, flake tilt,
+            // pearl, base-coat roughness] (+ optional "pearl_tint"); solid colours have metal 0 and no flake.
+            if (id.StartsWith("car_paint_") && def.Get("paint") is List<object> cp && cp.Count >= 4)
+            {
+                mat.EnableKeyword("_CARPAINT");
+                mat.SetVector("_CarPaint", new Vector4((float)Num(cp[0]), (float)Num(cp[1]), (float)Num(cp[2]), (float)Num(cp[3])));
+                mat.SetVector("_CarFlake", new Vector4(400f, 1f, 0.08f, 0f));   // 2.5 mm cells, gone when a pixel covers a cell; z = flake reflectance above the pigment (WORKING_VALUE)
+                var pt = def.Get("pearl_tint") as List<object>;
+                mat.SetColor("_PearlTint", pt != null && pt.Count >= 3
+                    ? new Color((float)Num(pt[0]), (float)Num(pt[1]), (float)Num(pt[2]), 1f) : Color.white);
+            }
             mat.SetFloat("_MacroSize", 64f);
             mat.SetFloat("_MacroStrength", kind == "modulation_set" ? 0.06f : 0.16f);
             mat.SetFloat("_MacroWear", kind == "modulation_set" ? 0.05f : 0.2f);
@@ -212,7 +259,8 @@ namespace Game.World.Import
                 // x damp darkening, y macro-pool threshold (~0.62 = 16 % of the area), z joint dirt, w damp gloss
                 mat.SetVector("_Grime", new Vector4(blocks ? 0.42f : 0.38f, 0.62f, blocks ? 0.45f : 0.3f, 0.5f));
             }
-            if (setName == "asphalt_worn")
+            // ADR 0071 r11: manifest "cracks": strength = the 16 m crack layer on a non-asphalt set (worn dock apron)
+            if (setName == "asphalt_worn" || def.Get("cracks") != null)
             {
                 var cm = Layer(r, "asphalt_cracks_layer", "T_asphalt_cracks_layer_Mask.png", false, false);
                 var cn = Layer(r, "asphalt_cracks_layer", "T_asphalt_cracks_layer_Normal.png", false, true);
@@ -220,7 +268,7 @@ namespace Game.World.Import
                 {
                     mat.SetTexture("_CrackMap", cm); mat.SetTexture("_CrackNormal", cn);
                     mat.EnableKeyword("_CRACKS");
-                    mat.SetFloat("_CrackStrength", id == "yard_asphalt" ? 0.9f : 0.75f);
+                    mat.SetFloat("_CrackStrength", def.Get("cracks") != null ? (float)Num(def.Get("cracks")) : id == "yard_asphalt" ? 0.9f : 0.75f);
                 }
             }
             if (asphalt)
@@ -243,12 +291,34 @@ namespace Game.World.Import
                 // D38 (ADR 0060): grass chroma x1.45 in the set -> refill re-measured (Medium, Var.B < 0.1)
                 mat.SetVector("_GrassFill", new Vector4(0.072f, 0.114f, 0.011f, 1f));   // linear, no sRGB conversion
             }
-            if (id.StartsWith("hall_wall") || id.StartsWith("plaster_") || id == "panel_concrete" || id == "brick_red" || id == "hall_plinth")
+            // ADR 0091: manifest "splash_h" (m) puts the splash zone on any wall material (plinths) with its own height
+            bool splashH = def.Get("splash_h") != null;
+            if (id.StartsWith("hall_wall") || id.StartsWith("plaster_") || id == "panel_concrete" || id == "brick_red" || id == "hall_plinth" || Runoff(def) || splashH)
             {
                 mat.EnableKeyword("_SPLASH");
-                mat.SetFloat("_SplashHeight", id == "hall_plinth" ? 0.35f : 0.6f);
+                mat.SetFloat("_SplashHeight", splashH ? (float)Num(def.Get("splash_h")) : id == "hall_plinth" ? 0.35f : 0.6f);
             }
-            if (id.StartsWith("hall_wall"))
+            if (Runoff(def)) mat.SetFloat("_MacroStrength", 0.12f);   // panel-to-panel tone drift of a 600 m facade (0071)
+            // ADR 0091: manifest "macro": [size m, strength] overrides the macro tone drift (brick: firing lots)
+            if (def.Get("macro") is List<object> mc && mc.Count >= 2)
+            {
+                mat.SetFloat("_MacroSize", (float)Num(mc[0]));
+                mat.SetFloat("_MacroStrength", (float)Num(mc[1]));
+            }
+            // ADR 0092: manifest "panel_m": [length, course] (metres of the texture set) = the drift above is quantised to
+            // the cladding module instead of a smooth noise. The set is sampled at `tile` (4 m unless _Tile is written),
+            // so the course on the wall is the set's course x applied tile / set tile.
+            if (def.Get("panel_m") is List<object> pm && pm.Count >= 2 && set != null)
+            {
+                var tmS = Arr(set.Get("tile_m"));
+                Vector4 applied = mat.GetVector("_Tile");
+                // only the course height follows the texture (its shadow-gap joints); the panel length is physical
+                float ky = applied.y / Mathf.Max(1e-3f, (float)Num(tmS[1]));
+                mat.EnableKeyword("_PANELTONE");
+                mat.SetVector("_PanelTone", new Vector4((float)Num(pm[0]), (float)Num(pm[1]) * ky, 0.35f, 0.3f));
+            }
+            bool plasterRunoff = def.Get("runoff") is bool pr && pr;   // ADR 0081: plaster / panel walls of flat-roofed blocks and offices
+            if (id.StartsWith("hall_wall") || Runoff(def) || plasterRunoff)
             {
                 // parapet run-off streaks (zacieki pod attyką): TEXCOORD_1 = (u m, 1 + metres below the fascia / length
                 // scale) from buildings_mesh.py hall walls; one RGB sample on all tiers
@@ -259,7 +329,8 @@ namespace Game.World.Import
                     mat.EnableKeyword("_RUNOFF");
                     // light cladding shows run-off most; dark graphite / accent sheet hides soot (rust still shows)
                     float lum = 0.2126f * col.x + 0.7152f * col.y + 0.0722f * col.z;
-                    mat.SetFloat("_RunoffStrength", Mathf.Lerp(0.55f, 0.9f, Mathf.InverseLerp(0.08f, 0.5f, lum)));
+                    // mineral render soaks the dirt in: softer than on coated sheet (WORKING_VALUE, judged on the r10 renders)
+                    mat.SetFloat("_RunoffStrength", Mathf.Lerp(0.55f, 0.9f, Mathf.InverseLerp(0.08f, 0.5f, lum)) * (plasterRunoff ? 0.6f : 1f));
                 }
             }
 
@@ -298,7 +369,7 @@ namespace Game.World.Import
                 {
                     mat.EnableKeyword("_DECAL_ALPHA");
                     mat.SetFloat("_DecalAlpha", 0.85f);
-                    mat.SetVector("_Tint", Vector4.one);
+                    SetLinearTint(mat, Vector3.one);
                     SetBlend(mat, true);
                     mat.renderQueue = (int)RenderQueue.Geometry + 20;
                 }
@@ -311,7 +382,7 @@ namespace Game.World.Import
                 {
                     // road markings (ADR 0049): paint film over the road's own asphalt set (calibrated, tint 1)
                     mat.EnableKeyword("_DECAL_PAINT");
-                    mat.SetVector("_Tint", Vector4.one);
+                    SetLinearTint(mat, Vector3.one);
                     float rough = def.Get("rough") != null ? (float)Num(def.Get("rough")) : 0.65f;
                     mat.SetVector("_PaintColor", new Vector4(col.x, col.y, col.z, Mathf.Clamp01(1f - rough)));
                     float P(string k, float d) => pd.Get(k) != null ? (float)Num(pd.Get(k)) : d;
@@ -320,7 +391,7 @@ namespace Game.World.Import
                 else if (id == "decal_tyre")
                 {
                     mat.EnableKeyword("_DECAL_TYRE");
-                    mat.SetVector("_Tint", new Vector4(col.x, col.y, col.z, 1f));
+                    SetLinearTint(mat, col);
                     mat.SetFloat("_DecalAlpha", 0.45f);
                     SetBlend(mat, true);
                     mat.renderQueue = (int)RenderQueue.Geometry + 20;

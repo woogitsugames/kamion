@@ -86,6 +86,24 @@ if ($code -eq -1073741819 -and $result -and $result.Line -match 'VISUALQA_RESULT
     }
     else { Write-Host "shutdown crash NOT accepted: signature=$sig freshPng=$fresh expected=$n" -ForegroundColor Red }
 }
+# ADR 0083: second shutdown flake of 6000.3.28f1 (2 of 18 runs in truck-ext-r10): the runner finished, every frame is on
+# disk, the editor reaches "Cleanup mono", then "abort_threads: Failed aborting id ..." and the process ends with a
+# non-zero code and NO crash stack (the log just stops after "debugger-agent: Unable to listen"). Accept only when all of
+# it is proven: VISUALQA_RESULT: OK rendered=N, N fresh PNGs, "Cleanup mono" and the abort_threads line AFTER the result
+# line, and no crash marker anywhere in the log. Anything else stays a failure.
+if ($code -ne 0 -and $result -and $result.Line -match 'VISUALQA_RESULT: OK rendered=(\d+)') {
+    $n = [int]$Matches[1]
+    $after = $result.LineNumber
+    $mono = Select-String -Path $log -SimpleMatch 'Cleanup mono' | Where-Object { $_.LineNumber -gt $after } | Select-Object -First 1
+    $abort = Select-String -Path $log -SimpleMatch 'abort_threads: Failed aborting' | Where-Object { $_.LineNumber -gt $after } | Select-Object -First 1
+    $crash = Select-String -Path $log -Pattern 'Crash!!!|Obtained \d+ stack frames|Fatal Error|error CS\d+' -Quiet
+    $fresh = @(Get-ChildItem $OutputDir -Filter *.png -ErrorAction SilentlyContinue |
+        Where-Object { $_.Name -notlike '*_mask.png' -and $_.LastWriteTime -ge $runStart }).Count
+    if ($mono -and $abort -and -not $crash -and $fresh -ge $n) {
+        Write-Warning "Unity exited with code $code during mono cleanup (abort_threads, no crash stack) AFTER writing all $n frames; accepted (ADR 0083)."
+        $code = 0
+    }
+}
 if ($code -ne 0 -or -not $result -or $result.Line -notmatch 'VISUALQA_RESULT: OK') {
     Write-Host "visual-qa FAILED (exit $code), log: $log" -ForegroundColor Red
     Show-UnityLogErrors $log

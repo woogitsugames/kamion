@@ -105,6 +105,8 @@ def lane_into_island(ctx, gmask, gsep, x0, y1, res, ahead=20.0):
             c = a.chain
             if c.meta.get("absorbed") or a.is_ring():
                 continue
+            if jn.roundabout:
+                continue      # entering a roundabout the lane follows the ring: straight ahead is the central island
             inb = a.inbound_dirn()
             t = jn.trims[ai]
             if t >= a.L - 2:
@@ -301,7 +303,12 @@ def main(argv=None):
             oc = Mx.ortho_lane_count(ctx, c, max(sp[0], c.t_a), min(sp[1], c.length - c.t_b), edge_rows.get(eid, []))
         lanes_osm = lc["osm"].get("lanes")
         truth, tsrc = None, None
-        if lanes_osm and lanes_osm.isdigit():
+        sec_ = ctx.net.sections.get(eid)
+        if sec_ is not None and getattr(sec_, "lane_edges", None):
+            # ADR 0095: lanes measured on the 0.08 m orthophoto (authored lane_edges with evidence) outrank the OSM
+            # lanes tag where the two differ (a turn lane that ends, a ramp counted as a third lane)
+            truth, tsrc = int(sec_.lanes), f"orthophoto:{sec_.provenance.get('authored_override')}"
+        elif lanes_osm and lanes_osm.isdigit():
             truth, tsrc = int(lanes_osm), "osm"
         elif oc and oc["agree"] >= 0.6 and (oc["lanes"] >= 2 or lc["gen"]["oneway"]):
             # an unmarked two-way road shows no separator line: paint cannot tell 1 from 2 lanes there
@@ -450,7 +457,11 @@ def main(argv=None):
         if ol is None or not sp:
             continue
         ss = np.arange(sp[0], sp[1], 1.0)
-        pooled += [ol.distance(Point(p)) for p in c.line.point(ss)]
+        pp = c.line.point(ss)
+        off = c.meta.get("center_offset")
+        if off is not None:        # authored carriageway placement is not an axis error (metrics.axis_metrics)
+            pp = pp - c.line.frame(ss)[1] * np.interp(ss, c.line.s, off)[:, None]
+        pooled += [ol.distance(Point(p)) for p in pp]
     route_ax = Mx.stats(pooled)
     rs = edge_summary(route_edge_all)
     summary = {

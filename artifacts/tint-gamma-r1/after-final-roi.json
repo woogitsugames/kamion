@@ -1,0 +1,706 @@
+[
+  {
+    "stage": "after-final",
+    "condition": "High-clear",
+    "roi": "asphalt",
+    "camera": "driver-andersa-to-putry",
+    "roi_960": [
+      450,
+      360,
+      530,
+      410
+    ],
+    "mean_rgb": [
+      103.23962703962704,
+      101.64310235219327,
+      97.61106166560712
+    ],
+    "mean_srgb": 100.83126368580913,
+    "median_luma": 101.71119999999998,
+    "p10_luma": 93.7128,
+    "p90_luma": 109.8516,
+    "clip_250_fraction": 0.0
+  },
+  {
+    "stage": "after-final",
+    "condition": "High-clear",
+    "roi": "pavers",
+    "camera": "kwadrat-park-gate",
+    "roi_960": [
+      760,
+      350,
+      850,
+      405
+    ],
+    "mean_rgb": [
+      152.08290366350067,
+      150.05702170963366,
+      142.8462686567164
+    ],
+    "mean_srgb": 148.32873134328358,
+    "median_luma": 155.2708,
+    "p10_luma": 109.9198,
+    "p90_luma": 176.77032,
+    "clip_250_fraction": 0.0
+  },
+  {
+    "stage": "after-final",
+    "condition": "High-clear",
+    "roi": "fire_plaster",
+    "camera": "fire-station-ref7197",
+    "roi_960": [
+      445,
+      201,
+      478,
+      228
+    ],
+    "mean_rgb": [
+      165.4371212121212,
+      185.65189393939394,
+      207.49280303030304
+    ],
+    "mean_srgb": 186.19393939393936,
+    "median_luma": 183.0516,
+    "p10_luma": 179.54899999999998,
+    "p90_luma": 186.3483,
+    "clip_250_fraction": 0.0
+  },
+  {
+    "stage": "after-final",
+    "condition": "High-clear",
+    "roi": "curtain_dock3",
+    "camera": "stretch-05-docks",
+    "roi_960": [
+      280,
+      185,
+      305,
+      215
+    ],
+    "mean_rgb": [
+      87.50797215360431,
+      90.13586346283404,
+      87.44913541432742
+    ],
+    "mean_srgb": 88.36432367692193,
+    "median_luma": 87.29,
+    "p10_luma": 84.286,
+    "p90_luma": 91.1456,
+    "clip_250_fraction": 0.0
+  },
+  {
+    "stage": "after-final",
+    "condition": "High-clear",
+    "roi": "hall_panel",
+    "camera": "stretch-05-docks",
+    "roi_960": [
+      210,
+      83,
+      240,
+      94
+    ],
+    "mean_rgb": [
+      130.14307458143074,
+      132.7047184170472,
+      130.9786910197869
+    ],
+    "mean_srgb": 131.27549467275495,
+    "median_luma": 133.5026,
+    "p10_luma": 119.5708,
+    "p90_luma": 143.933,
+    "clip_250_fraction": 0.0
+  },
+  {
+    "stage": "after-final",
+    "condition": "High-clear",
+    "roi": "screen_cassette",
+    "camera": "route-putry-entry-signs",
+    "roi_960": [
+      830,
+      165,
+      915,
+      205
+    ],
+    "mean_rgb": [
+      71.64369515922311,
+      74.19624371487726,
+      70.81923494035296
+    ],
+    "mean_srgb": 72.21972460481777,
+    "median_luma": 70.286,
+    "p10_luma": 68.3582,
+    "p90_luma": 72.1456,
+    "clip_250_fraction": 0.0
+  },
+  {
+    "stage": "after-final",
+    "condition": "High-clear",
+    "roi": "bridge_soffit",
+    "camera": "photo-biezenstwa-ground",
+    "roi_960": [
+      440,
+      225,
+      520,
+      235
+    ],
+    "mean_rgb": [
+      65.96183673469388,
+      65.98530612244897,
+      61.01020408163265
+    ],
+    "mean_srgb": 64.31911564625851,
+    "median_luma": 64.1416,
+    "p10_luma": 60.9238,
+    "p90_luma": 73.7204,
+    "clip_250_fraction": 0.0
+  },
+  {
+    "stage": "after-final",
+    "condition": "High-clear",
+    "roi": "sky_control",
+    "camera": "driver-andersa-to-putry",
+    "roi_960": [
+      560,
+      25,
+      720,
+      90
+    ],
+    "mean_rgb": [
+      109.0868711457319,
+      130.5642323920805,
+      154.34324894514768
+    ],
+    "mean_srgb": 131.33145082765336,
+    "median_luma": 127.553,
+    "p10_luma": 123.9874,
+    "p90_luma": 131.6986,
+    "clip_250_fraction": 0.0
+  },
+  {
+    "stage": "after-final",
+    "condition": "High-overcast",
+    "roi": "asphalt",
+    "camera": "driver-andersa-to-putry",
+    "roi_960": [
+      450,
+      360,
+      530,
+      410
+    ],
+    "mean_rgb": [
+      73.56677262131808,
+      72.57969908879,
+      71.48031362576818
+    ],
+    "mean_srgb": 72.54226177862542,
+    "median_luma": 72.4974,
+    "p10_luma": 64.7152,
+    "p90_luma": 80.71,
+    "clip_250_fraction": 0.0
+  },
+  {
+    "stage": "after-final",
+    "condition": "High-overcast",
+    "roi": "pavers",
+    "camera": "kwadrat-park-gate",
+    "roi_960": [
+      760,
+      350,
+      850,
+      405
+    ],
+    "mean_rgb": [
+      126.715434192673,
+      126.0012211668928,
+      122.87981682496608
+    ],
+    "mean_srgb": 125.19882406151062,
+    "median_luma": 134.5748,
+    "p10_luma": 79.56679999999999,
+    "p90_luma": 155.2768,
+    "clip_250_fraction": 0.0
+  },
+  {
+    "stage": "after-final",
+    "condition": "High-overcast",
+    "roi": "fire_plaster",
+    "camera": "fire-station-ref7197",
+    "roi_960": [
+      445,
+      201,
+      478,
+      228
+    ],
+    "mean_rgb": [
+      110.79791666666667,
+      129.0371212121212,
+      147.26098484848484
+    ],
+    "mean_srgb": 129.03200757575758,
+    "median_luma": 126.54499999999999,
+    "p10_luma": 124.1876,
+    "p90_luma": 129.1198,
+    "clip_250_fraction": 0.0
+  },
+  {
+    "stage": "after-final",
+    "condition": "High-overcast",
+    "roi": "curtain_dock3",
+    "camera": "stretch-05-docks",
+    "roi_960": [
+      280,
+      185,
+      305,
+      215
+    ],
+    "mean_rgb": [
+      53.29732764428475,
+      55.04468897372558,
+      54.37570177408489
+    ],
+    "mean_srgb": 54.23923946403173,
+    "median_luma": 50.502599999999994,
+    "p10_luma": 45.7152,
+    "p90_luma": 60.502599999999994,
+    "clip_250_fraction": 0.0
+  },
+  {
+    "stage": "after-final",
+    "condition": "High-overcast",
+    "roi": "hall_panel",
+    "camera": "stretch-05-docks",
+    "roi_960": [
+      210,
+      83,
+      240,
+      94
+    ],
+    "mean_rgb": [
+      126.76204972095383,
+      129.62100456621005,
+      129.52663622526637
+    ],
+    "mean_srgb": 128.63656350414342,
+    "median_luma": 131.5026,
+    "p10_luma": 113.64699999999999,
+    "p90_luma": 143.0052,
+    "clip_250_fraction": 0.0
+  },
+  {
+    "stage": "after-final",
+    "condition": "High-overcast",
+    "roi": "screen_cassette",
+    "camera": "route-putry-entry-signs",
+    "roi_960": [
+      830,
+      165,
+      915,
+      205
+    ],
+    "mean_rgb": [
+      36.32835453021789,
+      38.075076407374546,
+      36.51222517992704
+    ],
+    "mean_srgb": 36.97188537250649,
+    "median_luma": 34.9278,
+    "p10_luma": 32.9278,
+    "p90_luma": 37.502599999999994,
+    "clip_250_fraction": 0.0
+  },
+  {
+    "stage": "after-final",
+    "condition": "High-overcast",
+    "roi": "bridge_soffit",
+    "camera": "photo-biezenstwa-ground",
+    "roi_960": [
+      440,
+      225,
+      520,
+      235
+    ],
+    "mean_rgb": [
+      53.20673469387755,
+      53.08102040816326,
+      50.2069387755102
+    ],
+    "mean_srgb": 52.16489795918367,
+    "median_luma": 48.57079999999999,
+    "p10_luma": 45.643,
+    "p90_luma": 64.8648,
+    "clip_250_fraction": 0.0
+  },
+  {
+    "stage": "after-final",
+    "condition": "High-overcast",
+    "roi": "sky_control",
+    "camera": "driver-andersa-to-putry",
+    "roi_960": [
+      560,
+      25,
+      720,
+      90
+    ],
+    "mean_rgb": [
+      210.43709834469328,
+      214.22276858162934,
+      218.8356540084388
+    ],
+    "mean_srgb": 214.4985069782538,
+    "median_luma": 213.65619999999998,
+    "p10_luma": 203.50659999999996,
+    "p90_luma": 226.87279999999998,
+    "clip_250_fraction": 0.0
+  },
+  {
+    "stage": "after-final",
+    "condition": "Low-clear",
+    "roi": "asphalt",
+    "camera": "driver-andersa-to-putry",
+    "roi_960": [
+      450,
+      360,
+      530,
+      410
+    ],
+    "mean_rgb": [
+      99.11328671328671,
+      97.35193897012078,
+      93.06726001271456
+    ],
+    "mean_srgb": 96.51082856537401,
+    "median_luma": 97.1364,
+    "p10_luma": 92.9238,
+    "p90_luma": 102.06419999999999,
+    "clip_250_fraction": 0.0
+  },
+  {
+    "stage": "after-final",
+    "condition": "Low-clear",
+    "roi": "pavers",
+    "camera": "kwadrat-park-gate",
+    "roi_960": [
+      760,
+      350,
+      850,
+      405
+    ],
+    "mean_rgb": [
+      145.8700474898236,
+      144.12934192672998,
+      136.639789687924
+    ],
+    "mean_srgb": 142.21305970149254,
+    "median_luma": 148.59890000000001,
+    "p10_luma": 118.84078,
+    "p90_luma": 159.06019999999998,
+    "clip_250_fraction": 0.0
+  },
+  {
+    "stage": "after-final",
+    "condition": "Low-clear",
+    "roi": "fire_plaster",
+    "camera": "fire-station-ref7197",
+    "roi_960": [
+      445,
+      201,
+      478,
+      228
+    ],
+    "mean_rgb": [
+      150.2617424242424,
+      170.80113636363637,
+      186.51098484848484
+    ],
+    "mean_srgb": 169.19128787878788,
+    "median_luma": 167.6184,
+    "p10_luma": 165.61839999999998,
+    "p90_luma": 169.76279999999997,
+    "clip_250_fraction": 0.0
+  },
+  {
+    "stage": "after-final",
+    "condition": "Low-clear",
+    "roi": "curtain_dock3",
+    "camera": "stretch-05-docks",
+    "roi_960": [
+      280,
+      185,
+      305,
+      215
+    ],
+    "mean_rgb": [
+      79.72355715248148,
+      82.1120592858747,
+      79.00404221872894
+    ],
+    "mean_srgb": 80.27988621902837,
+    "median_luma": 81.3582,
+    "p10_luma": 80.1456,
+    "p90_luma": 83.1456,
+    "clip_250_fraction": 0.0
+  },
+  {
+    "stage": "after-final",
+    "condition": "Low-clear",
+    "roi": "hall_panel",
+    "camera": "stretch-05-docks",
+    "roi_960": [
+      210,
+      83,
+      240,
+      94
+    ],
+    "mean_rgb": [
+      125.03348554033485,
+      127.87874175545409,
+      126.05834601725013
+    ],
+    "mean_srgb": 126.32352443767968,
+    "median_luma": 128.21779999999998,
+    "p10_luma": 115.2178,
+    "p90_luma": 137.29,
+    "clip_250_fraction": 0.0
+  },
+  {
+    "stage": "after-final",
+    "condition": "Low-clear",
+    "roi": "screen_cassette",
+    "camera": "route-putry-entry-signs",
+    "roi_960": [
+      830,
+      165,
+      915,
+      205
+    ],
+    "mean_rgb": [
+      65.96766242728975,
+      68.51340826185546,
+      65.07187222715173
+    ],
+    "mean_srgb": 66.51764763876565,
+    "median_luma": 64.3582,
+    "p10_luma": 62.4304,
+    "p90_luma": 66.1456,
+    "clip_250_fraction": 0.0
+  },
+  {
+    "stage": "after-final",
+    "condition": "Low-clear",
+    "roi": "bridge_soffit",
+    "camera": "photo-biezenstwa-ground",
+    "roi_960": [
+      440,
+      225,
+      520,
+      235
+    ],
+    "mean_rgb": [
+      63.22387755102041,
+      63.59367346938775,
+      58.31
+    ],
+    "mean_srgb": 61.70918367346939,
+    "median_luma": 62.285999999999994,
+    "p10_luma": 57.3542,
+    "p90_luma": 73.2138,
+    "clip_250_fraction": 0.0
+  },
+  {
+    "stage": "after-final",
+    "condition": "Low-clear",
+    "roi": "sky_control",
+    "camera": "driver-andersa-to-putry",
+    "roi_960": [
+      560,
+      25,
+      720,
+      90
+    ],
+    "mean_rgb": [
+      102.47364492048037,
+      124.72039922103214,
+      151.32000973709833
+    ],
+    "mean_srgb": 126.17135129287028,
+    "median_luma": 121.98739999999998,
+    "p10_luma": 118.3444,
+    "p90_luma": 126.05559999999998,
+    "clip_250_fraction": 0.0
+  },
+  {
+    "stage": "after-final",
+    "condition": "Low-overcast",
+    "roi": "asphalt",
+    "camera": "driver-andersa-to-putry",
+    "roi_960": [
+      450,
+      360,
+      530,
+      410
+    ],
+    "mean_rgb": [
+      69.9287137105319,
+      68.87408349226531,
+      67.7058275058275
+    ],
+    "mean_srgb": 68.83620823620824,
+    "median_luma": 69.0682,
+    "p10_luma": 64.1404,
+    "p90_luma": 73.85560000000001,
+    "clip_250_fraction": 0.0
+  },
+  {
+    "stage": "after-final",
+    "condition": "Low-overcast",
+    "roi": "pavers",
+    "camera": "kwadrat-park-gate",
+    "roi_960": [
+      760,
+      350,
+      850,
+      405
+    ],
+    "mean_rgb": [
+      120.2828697421981,
+      119.74972862957938,
+      116.63985753052917
+    ],
+    "mean_srgb": 118.89081863410222,
+    "median_luma": 124.7834,
+    "p10_luma": 87.9278,
+    "p90_luma": 138.639,
+    "clip_250_fraction": 0.0
+  },
+  {
+    "stage": "after-final",
+    "condition": "Low-overcast",
+    "roi": "fire_plaster",
+    "camera": "fire-station-ref7197",
+    "roi_960": [
+      445,
+      201,
+      478,
+      228
+    ],
+    "mean_rgb": [
+      103.0751893939394,
+      120.42462121212121,
+      138.6412878787879
+    ],
+    "mean_srgb": 120.7136994949495,
+    "median_luma": 117.7576,
+    "p10_luma": 116.68539999999999,
+    "p90_luma": 119.7576,
+    "clip_250_fraction": 0.0
+  },
+  {
+    "stage": "after-final",
+    "condition": "Low-overcast",
+    "roi": "curtain_dock3",
+    "camera": "stretch-05-docks",
+    "roi_960": [
+      280,
+      185,
+      305,
+      215
+    ],
+    "mean_rgb": [
+      44.17359083763755,
+      45.79631708960252,
+      45.01863911969459
+    ],
+    "mean_srgb": 44.996182348978216,
+    "median_luma": 45.0,
+    "p10_luma": 43.502599999999994,
+    "p90_luma": 47.5026,
+    "clip_250_fraction": 0.0
+  },
+  {
+    "stage": "after-final",
+    "condition": "Low-overcast",
+    "roi": "hall_panel",
+    "camera": "stretch-05-docks",
+    "roi_960": [
+      210,
+      83,
+      240,
+      94
+    ],
+    "mean_rgb": [
+      121.93708777270422,
+      124.86047691527143,
+      124.70167427701675
+    ],
+    "mean_srgb": 123.83307965499746,
+    "median_luma": 125.36219999999999,
+    "p10_luma": 108.3622,
+    "p90_luma": 138.36219999999997,
+    "clip_250_fraction": 0.0
+  },
+  {
+    "stage": "after-final",
+    "condition": "Low-overcast",
+    "roi": "screen_cassette",
+    "camera": "route-putry-entry-signs",
+    "roi_960": [
+      830,
+      165,
+      915,
+      205
+    ],
+    "mean_rgb": [
+      32.147835945972595,
+      33.74829931972789,
+      32.33574879227053
+    ],
+    "mean_srgb": 32.743961352657,
+    "median_luma": 30.7152,
+    "p10_luma": 29.5026,
+    "p90_luma": 32.715199999999996,
+    "clip_250_fraction": 0.0
+  },
+  {
+    "stage": "after-final",
+    "condition": "Low-overcast",
+    "roi": "bridge_soffit",
+    "camera": "photo-biezenstwa-ground",
+    "roi_960": [
+      440,
+      225,
+      520,
+      235
+    ],
+    "mean_rgb": [
+      51.410816326530615,
+      51.93020408163265,
+      48.8230612244898
+    ],
+    "mean_srgb": 50.721360544217696,
+    "median_luma": 46.498599999999996,
+    "p10_luma": 43.5708,
+    "p90_luma": 76.5668,
+    "clip_250_fraction": 0.0
+  },
+  {
+    "stage": "after-final",
+    "condition": "Low-overcast",
+    "roi": "sky_control",
+    "camera": "driver-andersa-to-putry",
+    "roi_960": [
+      560,
+      25,
+      720,
+      90
+    ],
+    "mean_rgb": [
+      196.1634858812074,
+      199.42252515417073,
+      204.45196364816618
+    ],
+    "mean_srgb": 200.0126582278481,
+    "median_luma": 198.7232,
+    "p10_luma": 194.7232,
+    "p90_luma": 204.7232,
+    "clip_250_fraction": 0.0
+  }
+]

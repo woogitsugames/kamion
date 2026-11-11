@@ -99,9 +99,11 @@ MATERIALS = {
     "collision_grass": {"color": [1, 0, 1], "rough": 1.0, "surface": "grass", "collision": True},
 }
 from streetscape.materials import M as _SM   # noqa: E402
+from streetscape import fab_details as FD
 from streetscape import forest_hlod as FH     # noqa: E402
 MATERIALS.update(_SM)
 MATERIALS.update(FH.materials())
+MATERIALS.update(FD.materials())
 _GLB_MATS = None
 
 
@@ -262,6 +264,8 @@ def cameras(region_id, w):
         tch, nch = c.line.frame(cs)
         trav = 1 if float(np.dot(tch, t)) > 0 else -1
         lat_l = -trav * (hw - sec.edge_strip - sec.lane_w / 2)     # rightmost lane of travel
+        if getattr(sec, "lane_edges", None):
+            lat_l = float(MK.lane_layout(sec, hw, trav)[2]["fwd"][-1])
         q = c.line.offset_point(cs, lat_l)
         zq = float(c.crossfall_z(cs, lat_l))
         return q, zq, t
@@ -346,6 +350,39 @@ def cameras(region_id, w):
         _, _, _, zt = surface_at(w, tgt)
         cams.append({"id": cid, "type": "persp", "fov_deg": 60.0, "route_s_m": st,
                      "pos": [r(q[0]), r(q[1]), r(z + 2.5)], "look_at": [r(tgt[0]), r(tgt[1]), r(zt + 2.0)], "note": note})
+    # hero fire station JRG2 (ADR 0070): driver eye on the approach and abeam, the frame of the CC0 reference photo
+    # (Commons '7197 May 2021 in Bialystok': from across Andersa at the gable) and an oblique view from above
+    fs = REPO / "Data" / "Regions" / region_id / "generated" / "landmarks" / "fire_station_jrg2.spec.json"
+    if fs.exists():
+        sp = json.loads(fs.read_text(encoding="utf-8"))
+        A0 = np.array(sp["dims"]["axis"]["origin_en"], float)
+        U0 = np.array(sp["dims"]["axis"]["u"], float)
+        U0 /= np.hypot(*U0)
+        V0 = np.array([-U0[1], U0[0]])
+        zf = sp["anchor"][2]
+
+        def fs_en(u_, v_):
+            return A0 + U0 * u_ + V0 * v_
+        s_ab = float(s[int(np.argmin(np.hypot(*(P - fs_en(24.0, 0.0)).T)))])
+        for cid, st, tgt_uvz, fov, note in (
+                ("fire_station_route", s_ab - 60.0, (40.0, 0.0, 5.0), 60.0, "driver eye 2.5 m, 60 m before the fire station JRG2 (hero asset)"),
+                ("fire_station_abeam", s_ab + 9.0, (30.0, 0.0, 4.5), 60.0, "driver eye 2.5 m abeam of the fire station JRG2 (52 m right of the route)")):
+            q, z, t = lane_point(st)
+            g_ = fs_en(tgt_uvz[0], tgt_uvz[1])
+            cams.append({"id": cid, "type": "persp", "fov_deg": fov, "route_s_m": r(st),
+                         "pos": [r(q[0]), r(q[1]), r(z + 2.5)], "look_at": [r(g_[0]), r(g_[1]), r(zf + tgt_uvz[2])], "note": note})
+        # r3: the photo shows the SE side wall of the hall ~9 % of the gable width -> eye ~4.6 m SE of the gable
+        # corner; fov_deg is vertical in the engine (36 deg horizontal on the 3:2 photo = 24.5 deg vertical)
+        p_ = fs_en(53.0, -82.0)
+        g_ = fs_en(40.0, 0.0)
+        cams.append({"id": "fire_station_ref7197", "type": "persp", "fov_deg": 24.5,
+                     "pos": [r(p_[0]), r(p_[1]), r(zf + 1.6)], "look_at": [r(g_[0]), r(g_[1]), r(zf + 6.5)],
+                     "note": "frame of the CC0 photo 'File:7197 May 2021 in Bialystok.jpg' (Rakoon): the arched gable from across Andersa"})
+        p_ = fs_en(-35.0, -70.0)
+        g_ = fs_en(35.0, 12.0)
+        cams.append({"id": "fire_station_above", "type": "persp", "fov_deg": 50.0,
+                     "pos": [r(p_[0]), r(p_[1]), r(zf + 48.0)], "look_at": [r(g_[0]), r(g_[1]), r(zf + 3.0)],
+                     "note": "fire station JRG2 from ~48 m: roofs, yard, fence line"})
     q2 = at(585.0)
     _, _, _, z2 = surface_at(w, q2)
     t2 = at(590.0) - at(580.0)
@@ -511,6 +548,18 @@ def build(region_id: str, out_root: Path | None = None, verbose=True):
         if c.id not in hero_chains:
             M.build_bridge_supports(w.buf, c, w.hf, on_ground_road, w.bridges)
     hero_tris = HB.apply(w, heroes, st["instances"], log)
+    if heroes:
+        # HB.apply rebuilds the ribbons of the hero chains, kerbs included: the ones under a paved gore / on another
+        # carriageway came back sunk 6 cm at asphalt level (28 kerb_on_carriageway at both ends of the Bieżeństwa
+        # viaduct, grey strips on the lane at s 580-620; REVIEW 0077 #1, ADR 0093). Same cull as in pipeline.build.
+        again = M.cull_sides_on_carriageway(w.buf)
+        log("sides on carriageway culled after hero ribbons", again)
+        w.stats["sides_on_carriageway_culled_hero"] = again
+    from roads import gores as GO
+    if heroes:
+        w.stats["kerb_tris_dropped_in_fills_hero"] = GO.drop_kerbs_in_fills(w.buf, w.gore_plan)
+    w.stats["gores"]["kerb_tris_in_fill"] = GO.kerbs_in_fills(w.buf, w.gore_plan)
+    log("kerb triangles inside paved gore fills:", w.stats["gores"]["kerb_tris_in_fill"])
     log("hero bridges", {k: [x["id"] for x in v] for k, v in w.stats["hero_bridges"].items()})
 
     half = w.region["bbox"]["width_m"] / 2
@@ -528,7 +577,9 @@ def build(region_id: str, out_root: Path | None = None, verbose=True):
         ci_, cj_ = chunk_of(np.array([it["e"]]), np.array([it["n"]]), half)
         inst_by_chunk.setdefault((int(ci_[0]), int(cj_[0])), []).append(it)
     props_meta = PR.export(st["codes"], st["boards"], out_root.parent / "props" if out_root != DEFAULT_OUT(region_id) else None)
-    props_meta = {**props_meta, **hero_tris, **st.get("hero_tris", {})}      # hero viaduct + hero depot segments (art-source/world/landmarks), frame estimate
+    # hero assets (art-source/world/landmarks), frame estimate: viaduct segments (ADR 0067), hero buildings (ADR 0070),
+    # hero depot halls (ADR 0071)
+    props_meta = {**props_meta, **hero_tris, **st.get("hero_tris", {})}
     chunks_meta = []
     for key in sorted(terrain):
         ci, cj = key
@@ -690,10 +741,21 @@ VEHICLE_PREFIX = ("car_", "van_", "tractor_", "trailer_")
 VEHICLE_LOD0_MIN_M = 16.0
 
 
+# Hero landmark assets (art-source/world/landmarks): prototype prefix -> LOD end distances at lodBias 1 (last = never
+# culled). Mirror of InstanceImporter.Policy; one entry per asset family (ADR 0067 viaduct, ADR 0070 fire station).
+HERO_LOD_ENDS = {
+    "landmark_depot": (100.0, 400.0, 20000.0),
+    "landmark_viaduct": (90.0, 300.0, 20000.0),
+    "landmark_fire_station": (150.0, 450.0, 20000.0),
+}
+
+
 def instance_ends(proto, nlods):
     """(LOD end distances at lodBias 1, fixed_cull) of a non-tree prototype: a copy of InstanceImporter.Policy
     (game/Assets/_Project/World/Import/InstanceImporter.cs) incl. its LOD-count reduction. Keep the two in sync."""
-    if proto.startswith("lamp_"):
+    if proto.startswith("fab_"):
+        e = [12.0, 30.0, 65.0]
+    elif proto.startswith("lamp_"):
         e = [60.0, 400.0]
     elif proto in ("pylon", "power_pole"):
         e = [80.0, 1500.0]
@@ -701,10 +763,8 @@ def instance_ends(proto, nlods):
         e = [50.0, 250.0]
     elif proto == "bus_shelter" or proto.endswith("_gate"):
         e = [60.0, 300.0]
-    elif proto.startswith("landmark_depot"):       # hero depot hall segments (ADR 0071): LOD0 / LOD1 / silhouette
-        e = [100.0, 400.0, 20000.0]
-    elif proto.startswith("landmark_viaduct"):      # hero viaduct segments (ADR 0067): LOD0 / LOD1 / silhouette
-        e = [90.0, 300.0, 20000.0]
+    elif proto.startswith(tuple(HERO_LOD_ENDS)):      # hero landmark assets: LOD0 / LOD1 / silhouette
+        e = list(next(v for k, v in HERO_LOD_ENDS.items() if proto.startswith(k)))
     elif proto.startswith("landmark_"):
         e = [650.0, 20000.0]
     elif proto.startswith(("car_", "van_")):
@@ -749,6 +809,7 @@ def mesh_budget(chunks_meta, inst_by_chunk, props_meta, cams):
     """Static triangles/materials per chunk + per-camera frame estimate (120 deg wedge around the view) with a
     breakdown by category (terrain, roads = road + bridge + markings + paved, furniture, buildings, trees per
     LOD, forest HLOD, props)."""
+    props_meta = {**props_meta, **FD.prototype_stats()}
     tp = REPO / "art-source" / "world" / "vegetation" / "trees_meta.json"
     trees = json.loads(tp.read_text(encoding="utf-8"))["trees"] if tp.exists() else {}
 
@@ -854,7 +915,8 @@ def qa_report(w, mk_report, mask):
             continue
         raw = Polyline(c.raw)
         k = max(1, len(c.line.p) // 200)
-        dev = [abs(raw.project(p)[1]) for p in c.line.p[::k]]
+        ctr = c.line.p if c.meta.get("center_offset") is None or len(c.meta["center_offset"]) != len(c.line.p)             else c.line.p - c.line.n * c.meta["center_offset"][:, None]     # authored placement is not a deviation
+        dev = [abs(raw.project(p)[1]) for p in ctr[::k]]
         dev_all += dev
         secs = [net.sec_list[i] for i in np.unique(c.sec_idx)]
         st = w.profiles["chains"][c.id]
@@ -890,13 +952,23 @@ def qa_report(w, mk_report, mask):
             "markings_overlap_removed_tris": mk_report.get("overlap_removed_tris", 0),
             "decals": mk_report.get("decals", {}),
             "crossings_snapped": mk_report.get("crossings_snapped", 0),
+            "crossings_merged": mk_report.get("crossings_merged", 0),
+            "crossings_p11": mk_report.get("crossings_p11", 0),
+            "through_lines": mk_report.get("through_lines", {}),
+            "painted_zones": mk_report.get("painted_zones", []),
+            "authored_paint": mk_report.get("authored_paint", []),          # ADR 0095
+            "paint_clear_tris": mk_report.get("paint_clear_tris", {}),
+            "paint_erased_in_zones_tris": mk_report.get("paint_erased_in_zones_tris", 0),
             "crossings_skipped": mk_report.get("crossings_skipped", []),
             "crossings_in_junction": mk_report.get("crossings_in_junction", []),
             "bridges": w.bridges,
             "walled_ramps": w.profiles.get("walled_ramps", []),
             "clearance_by_class_m": S.CLEARANCE_BY_CLASS,
             "fork_tapers": w.stats.get("fork_tapers", []),
+            "fork_abreast": w.stats.get("fork_abreast", []),
+            "sides_on_carriageway_culled": w.stats.get("sides_on_carriageway_culled", {}),
             "fork_shifts": w.stats.get("fork_shifts", []),
+            "gores": w.stats.get("gores", {}),
             "overrides_applied": net.overrides_applied, "overrides_stale": net.overrides_stale,
             "low_confidence": [
                 "bridge deck heights interpolated between abutments (NMT = ground under deck); piers by rule",

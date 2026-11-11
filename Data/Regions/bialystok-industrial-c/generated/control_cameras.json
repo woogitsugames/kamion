@@ -6,13 +6,13 @@
    "look_at": [
     -292.594,
     -185.604,
-    131.376
+    131.377
    ],
    "note": "truck driver eye 2.5 m, right lane of Andersa (DK19/DK65) approaching Rondo Putry",
    "pos": [
-    -204.59,
-    -251.666,
-    133.365
+    -203.625,
+    -250.453,
+    133.334
    ],
    "type": "persp"
   },
@@ -20,15 +20,15 @@
    "fov_deg": 55.0,
    "id": "putry_above",
    "look_at": [
-    -554.833,
-    20.955,
-    140.759
+    -554.476,
+    21.445,
+    140.729
    ],
    "note": "Rondo Putry from ~40 m (two-level: Andersa viaduct above the ring)",
    "pos": [
-    -484.833,
-    100.955,
-    182.759
+    -484.476,
+    101.445,
+    182.729
    ],
    "type": "persp"
   },
@@ -54,13 +54,13 @@
    "look_at": [
     -710.709,
     663.642,
-    145.955
+    145.971
    ],
    "note": "Al. Tysiąclecia Państwa Polskiego northbound, DK8/DK19 exit from the city",
    "pos": [
-    -639.488,
-    579.731,
-    146.355
+    -639.05,
+    580.064,
+    146.367
    ],
    "type": "persp"
   },
@@ -153,7 +153,7 @@
    "look_at": [
     503.599,
     -667.112,
-    141.161
+    141.156
    ],
    "note": "reference stretch, driver eye 2.5 m: approach to Rondo Bieżeństwa under the Andersa viaduct",
    "pos": [
@@ -170,13 +170,13 @@
    "look_at": [
     351.136,
     -592.413,
-    141.791
+    141.794
    ],
    "note": "driver eye 2.5 m on the on-ramp beside the Andersa westbound ramp (r4 blocker, s 571 / 604 m)",
    "pos": [
-    397.932,
-    -610.098,
-    142.873
+    397.836,
+    -610.329,
+    142.881
    ],
    "route_s_m": 540.0,
    "type": "persp"
@@ -193,7 +193,7 @@
    "pos": [
     -421.784,
     -57.522,
-    134.722
+    134.721
    ],
    "route_s_m": 1540.0,
    "type": "persp"
@@ -216,18 +216,84 @@
    "type": "persp"
   },
   {
+   "fov_deg": 60.0,
+   "id": "fire_station_route",
+   "look_at": [
+    -231.271,
+    -167.131,
+    136.256
+   ],
+   "note": "driver eye 2.5 m, 60 m before the fire station JRG2 (hero asset)",
+   "pos": [
+    -230.485,
+    -233.529,
+    132.856
+   ],
+   "route_s_m": 1276.666,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 60.0,
+   "id": "fire_station_abeam",
+   "look_at": [
+    -239.183,
+    -161.016,
+    135.756
+   ],
+   "note": "driver eye 2.5 m abeam of the fire station JRG2 (52 m right of the route)",
+   "pos": [
+    -282.345,
+    -187.804,
+    132.526
+   ],
+   "route_s_m": 1345.666,
+   "type": "persp"
+  },
+  {
+   "fov_deg": 24.5,
+   "id": "fire_station_ref7197",
+   "look_at": [
+    -231.271,
+    -167.131,
+    137.756
+   ],
+   "note": "frame of the CC0 photo 'File:7197 May 2021 in Bialystok.jpg' (Rakoon): the arched gable from across Andersa",
+   "pos": [
+    -271.13,
+    -239.961,
+    132.856
+   ],
+   "type": "persp"
+  },
+  {
+   "fov_deg": 50.0,
+   "id": "fire_station_above",
+   "look_at": [
+    -227.889,
+    -154.579,
+    134.256
+   ],
+   "note": "fire station JRG2 from ~48 m: roofs, yard, fence line",
+   "pos": [
+    -333.419,
+    -176.653,
+    179.256
+   ],
+   "type": "persp"
+  },
+  {
    "fov_deg": 55.0,
    "id": "route_onramp_andersa_above",
    "look_at": [
     355.754,
     -594.331,
-    140.762
+    140.765
    ],
    "note": "oblique from above-left over the on-ramp / Andersa ramp end (r4 blocker, s 571-610 m)",
    "pos": [
     379.632,
     -628.077,
-    156.762
+    156.765
    ],
    "type": "persp"
   },
@@ -313,10 +379,10 @@
   },
   {
    "center": [
-    -554.833,
-    20.955
+    -554.476,
+    21.445
    ],
-   "height": 260.759,
+   "height": 260.729,
    "id": "ortho_putry",
    "note": "orthographic top view for overlay on the GUGiK orthophoto",
    "size_m": 260.0,

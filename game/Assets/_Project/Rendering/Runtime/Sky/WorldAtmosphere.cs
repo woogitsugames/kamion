@@ -22,6 +22,12 @@ namespace Game.Rendering
         public static bool? HazeOverride;
         /// <summary>rq_grassvar: lawn variation strength 0..1 (null = the preset's).</summary>
         public static float? GrassOverride;
+        /// <summary>rq_hazegf (r11 A/B): ground haze layer factor (null = the preset's).</summary>
+        public static float? HazeFactorOverride;
+        /// <summary>rq_hazeh (r11 A/B): ground haze scale height in m (null = the preset's).</summary>
+        public static float? HazeHeightOverride;
+        /// <summary>rq_leafamb (r11 A/B): 0 = no sky light through the leaves and no leaf sheen (the r10 foliage ambient), null / 1 = on.</summary>
+        public static float? LeafAmbientOverride;
 
         /// <summary>Contrast variants for the owner's decision (ADR 0080 §exposure): toe strength, half-point, pivot, EV bias.</summary>
         public static readonly Vector4[] LookVariants =
@@ -43,10 +49,19 @@ namespace Game.Rendering
             }
         }
 
+        /// <summary>
+        /// r11: share of the ambient (sky + ground) radiance mirrored by leaf and needle surfaces (Kamion/Vegetation).
+        /// A dielectric cuticle reflects ~4 % at normal incidence and more at grazing angles; part of that is already in
+        /// the measured albedo textures. WORKING_VALUE, set so the crowns of the control cameras match the vegetation
+        /// tones of the overcast reference photos (scripts/road-sky-metrics.py).
+        /// </summary>
+        public const float LeafSheen = 0.02f;
+
         static readonly int k_Haze = Shader.PropertyToID("_KamionHaze"), k_HazeColor = Shader.PropertyToID("_KamionHazeColor"),
             k_Tone = Shader.PropertyToID("_KamionTone"), k_Wet = Shader.PropertyToID("_KamionWet"),
             k_Cloud = Shader.PropertyToID("_KamionCloud"), k_CloudWind = Shader.PropertyToID("_KamionCloudWind"),
-            k_CloudSun = Shader.PropertyToID("_KamionCloudSun"), k_CloudTex = Shader.PropertyToID("_KamionCloudTex");
+            k_CloudSun = Shader.PropertyToID("_KamionCloudSun"), k_CloudTex = Shader.PropertyToID("_KamionCloudTex"),
+            k_LeafAmb = Shader.PropertyToID("_KamionLeafAmbient");
 
         /// <summary>Ground haze: extinction at height y = beta (1 + a exp(-(y - y0) / H)). Mirror of KamionFogTau.</summary>
         public static float FogTau(float beta, float a, float scaleHeightM, float y0, float cameraY, float pointY, float viewDepth)
@@ -71,7 +86,11 @@ namespace Game.Rendering
             float y0 = 0f;
             var gi = WorldSkyVisibility.Active;
             if (gi != null) y0 = gi.transform.TransformPoint(new Vector3(0f, gi.heightBase + 127f * gi.heightStep, 0f)).y;
-            Shader.SetGlobalVector(k_Haze, new Vector4(beta, layer ? p.hazeGroundFactor : 0f, 1f / Mathf.Max(p.hazeScaleHeightM, 1f), y0));
+            Shader.SetGlobalVector(k_Haze, new Vector4(beta, layer ? HazeFactorOverride ?? p.hazeGroundFactor : 0f,
+                1f / Mathf.Max(HazeHeightOverride ?? p.hazeScaleHeightM, 1f), y0));
+            // r11: diffuse sky light transmitted through the leaves (Kamion/Vegetation; per vertex, no fragment cost)
+            float leaf = Mathf.Clamp01(LeafAmbientOverride ?? 1f);
+            Shader.SetGlobalVector(k_LeafAmb, new Vector4(leaf, leaf * LeafSheen, 0f, 0f));
             Shader.SetGlobalVector(k_HazeColor, new Vector4(Mathf.Min(fogExposed.r, 1f), Mathf.Min(fogExposed.g, 1f), Mathf.Min(fogExposed.b, 1f), 1f));
 
             // ---- tone toe in the shaders: only where no grading LUT runs

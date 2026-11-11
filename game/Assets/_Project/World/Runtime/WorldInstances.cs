@@ -156,7 +156,7 @@ namespace Game.World
         /// <summary>A leaf card or impostor material: alpha-clipped and double sided (InstanceImporter.ProtoMaterial).</summary>
         static bool IsFoliage(Material m) =>
             m != null && m.IsKeywordEnabled("_ALPHATEST_ON") && m.HasProperty("_Cull") && m.GetFloat("_Cull") == 0f &&
-            (m.name.StartsWith("M_leaves_") || m.name.StartsWith("M_impostor_") || m.name.StartsWith("M_forest_edge_"));
+            (m.name.StartsWith("M_leaves_") || m.name.StartsWith("M_impostor_") || m.name.StartsWith("M_forest_edge_") || m.name.StartsWith("M_fab_"));
 
         void BuildMaterials(bool simple)
         {

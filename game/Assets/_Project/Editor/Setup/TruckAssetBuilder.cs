@@ -1065,8 +1065,18 @@ namespace Game.Editor.Setup
             // the truck-34 pixel scale): aliasing of thin front detail is judged here and in truck-34.
             Vector3 pf = new Vector3(0.8f, 1.9f, 10.6f), lookF = new Vector3(0f, 1.85f, 5.4f);
             Q("truck-front", pf, Quaternion.LookRotation(lookF - pf, Vector3.up), 30f, "r8: cab front head-on (mask bar, TRAKT letters, parked wipers, louvres, lamps).");
-            Vector3 pr = new Vector3(-7.5f, 2.3f, -17.5f), lookR = new Vector3(0f, 1.9f, -7.0f);
+            Vector3 pr = new Vector3(-3.6f, 2.2f, -16.5f), lookR = new Vector3(0.4f, 1.8f, -9.0f);   // r10: moved inside the lamp post that stood in the frame
             Q("trailer-34", pr, Quaternion.LookRotation(lookR - pr, Vector3.up), 45f, "Curtainsider rear 3/4, driver side (curtain, doors, tridem on the ground, landing gear, lamps).");
+            // r10 (ADR 0083): the views the player really has of the exterior - the chase camera (CameraRig with a trailer:
+            // 26 m behind, 7.5 m up, 50 deg), the tractor side (steps, tank, skirt, wheels, cab back / trailer gap), the
+            // tractor from behind the cab on the driver side, the trailer side (curtain, rail, side guards, tridem) and the
+            // passenger side 3/4 (exhaust, battery box, AdBlue).
+            void QL(string id, Vector3 p, Vector3 l, float fov, string note) => Q(id, p, Quaternion.LookRotation(l - p, Vector3.up), fov, note);
+            QL("chase", new Vector3(0f, 7.5f, -26f), new Vector3(0f, 2f, 3f), 50f, "r10: chase camera framing with the trailer (rear doors, lamps, roof, cab over the trailer).");
+            QL("truck-side", new Vector3(-9.5f, 1.7f, 1.9f), new Vector3(0f, 1.6f, 1.9f), 42f, "r10: tractor driver side, square on (door, steps, arch, tank, skirt, rear wheels, gap to the trailer).");
+            QL("truck-rear34", new Vector3(-5.2f, 2.0f, -3.6f), new Vector3(-0.4f, 1.3f, 2.2f), 45f, "r10: tractor from behind the cab, driver side (tank, rear mudguard, cab back, coiled lines, trailer front).");
+            QL("trailer-side", new Vector3(-11.5f, 1.8f, -6.2f), new Vector3(0f, 1.7f, -6.2f), 55f, "r10: curtainsider driver side (curtain, straps, rail, side guards, pallet box, tridem).");
+            QL("truck-34r", new Vector3(6.4f, 1.9f, 10.2f), new Vector3(0f, 1.6f, 1.8f), 45f, "r10: TRAKT front 3/4, passenger side (exhaust stack, aftertreatment, battery box, kerb mirror).");
         }
 
         // ------------------------------------------------------------------ tiny JSON reader (manifests)

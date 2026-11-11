@@ -26,8 +26,11 @@ def world(tmp_path_factory):
         pytest.skip("heightmap not built")
     from roads import build_world
     out = tmp_path_factory.mktemp("world")
+    # build() rewrites generated/*.json: keep the manifest of the earlier CLI run for test_export_is_deterministic
+    mp = REGION_DIR / "generated" / "world_manifest.json"
+    before = json.loads(mp.read_text(encoding="utf-8")) if mp.exists() else None
     w, manifest, qa = build_world.build(REGION_ID, out_root=out, verbose=False)
-    return {"w": w, "manifest": manifest, "qa": qa, "out": out}
+    return {"w": w, "manifest": manifest, "qa": qa, "out": out, "manifest_before": before}
 
 
 def q(p):
@@ -192,8 +195,11 @@ def test_terrain_stays_below_road(world):
 @needs_heightmap
 def test_export_is_deterministic(world):
     """Same inputs -> byte-identical GLBs: the in-process build equals the committed manifest (written
-    by an earlier CLI run, different process / hash seed)."""
-    committed = json.loads((REGION_DIR / "generated" / "world_manifest.json").read_text(encoding="utf-8"))
+    by an earlier CLI run, different process / hash seed). The manifest is read BEFORE the in-process build, which
+    rewrites it (reading it afterwards compared the build with itself and hid the hash-seed dependence, ADR 0096).
+    A failure after a generator change means: regenerate the region (build_world.py), then run the tests."""
+    committed = world["manifest_before"]
+    assert committed is not None, "generated/world_manifest.json missing: run build_world.py first"
     built = world["manifest"]
     assert [c["id"] for c in committed["chunks"]] == [c["id"] for c in built["chunks"]]
     for a, b in zip(committed["chunks"], built["chunks"]):
@@ -287,5 +293,11 @@ def test_grade_separation_clearance(world):
     cl = {k: v["clearance"] for k, v in st.items() if "clearance" in v}
     assert any("w177895177" in k or "w175157461" in k for k in cl)      # Bieżeństwa
     assert any("w1101181473" in k or "w173956078" in k for k in cl)     # Putry
-    assert all(v["min_margin_m"] > -0.10 for v in cl.values()), cl
+    # ADR 0077 (MA-010): the south ring segment of Rondo Putry sits 2.9 m further under the deck than its OSM way
+    # (orthophoto placement), 113 instead of 81 deck stations are constrained and the deck solver (class minimum
+    # radius + fixed end nodes) ends 0.154 m under the requirement there. The requirement includes the 0.30 m
+    # WORKING_VALUE margin, so the clearance is still 4.65 m >= 4.50 m (PTB2022 par. 80 ust. 1). Ratchet, not a target.
+    putry = {"c:w173956078:1847263293-5749429982": -0.16}
+    assert all(v["min_margin_m"] > putry.get(k, -0.10) for k, v in cl.items()), cl
+    assert all(v["min_margin_m"] > -S.BRIDGE_CLEARANCE_MARGIN for v in cl.values()), cl     # regulation height kept
     assert S.BRIDGE_CLEARANCE >= 4.5

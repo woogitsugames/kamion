@@ -1,0 +1,676 @@
+{
+ "schema": "truck-sim-pl/gate3-cameras/1",
+ "region": "bialystok-industrial-c",
+ "frame": "local E,N,U (EPSG:2180 minus region origin; U absolute EVRF2007 NMT + height, re-seated by raycast unless seat=file)",
+ "note": "ADR 0093 junction cameras: every junction from above + driver's eye; owner-video spots p0_lamp_putry_eye/top (lamp on the viaduct E -589 N 19.5) and p0_kerb_merge_eye/top (kerb E -782 N 77.5). Same cameras before / after.",
+ "cameras": [
+  {
+   "id": "p0_fork_putry_eye",
+   "type": "persp",
+   "kind": "driver_eye",
+   "seat": "file",
+   "fov_deg": 55.0,
+   "note": "route s=1372 -> fork Andersa / link to Rondo Putry (corridor P0 s 1408-1480)",
+   "pos": [
+    -307.046,
+    -170.265,
+    132.84
+   ],
+   "look_at": [
+    -336.633,
+    -143.842,
+    131.974
+   ]
+  },
+  {
+   "id": "p0_fork_putry_eye2",
+   "type": "persp",
+   "kind": "driver_eye",
+   "seat": "file",
+   "fov_deg": 55.0,
+   "note": "route s=1400 -> link to Rondo Putry",
+   "pos": [
+    -329.159,
+    -153.089,
+    133.351
+   ],
+   "look_at": [
+    -352.947,
+    -121.787,
+    132.493
+   ]
+  },
+  {
+   "id": "p0_lamp_putry_eye",
+   "type": "persp",
+   "kind": "driver_eye",
+   "seat": "file",
+   "fov_deg": 55.0,
+   "note": "owner video ~93-100 s: lamp in the left lane on the viaduct, was at E -588.9 N 19.5. ADR 0095: the deck is now the measured 2 lanes (was 11.5 m: the old camera spot is on the barrier line); camera in the left lane",
+   "pos": [
+    -543.2,
+    11.0,
+    143.05
+   ],
+   "look_at": [
+    -575.8,
+    34.1,
+    141.9
+   ]
+  },
+  {
+   "id": "p0_kerb_merge_eye",
+   "type": "persp",
+   "kind": "driver_eye",
+   "fov_deg": 55.0,
+   "note": "owner video ~105-112 s: kerb across the carriageway, was at E -781.7 N 77.5. ADR 0095: camera on the ramp lane from Rondo Putry (measured placement), separator nose on its left",
+   "pos": [
+    -745.0,
+    80.6,
+    143.5
+   ],
+   "look_at": [
+    -790.0,
+    78.5,
+    141.6
+   ]
+  },
+  {
+   "id": "p0_median_slot_eye",
+   "type": "persp",
+   "kind": "driver_eye",
+   "seat": "file",
+   "fov_deg": 55.0,
+   "note": "new skirt wall j:n10015785253:corner2 (terrain_walls_qa)",
+   "pos": [
+    -222.0,
+    -250.0,
+    133.346
+   ],
+   "look_at": [
+    -240.0,
+    -235.5,
+    130.833
+   ]
+  },
+  {
+   "id": "p0_lamp_w1101181473_eye",
+   "type": "persp",
+   "kind": "driver_eye",
+   "fov_deg": 55.0,
+   "note": "ADR 0095: moved from E -736 N 75 (inside the noise screen, REVIEW 0093) to the right lane of the westbound viaduct carriageway; looks at the separator nose E -781.9 N 76.5",
+   "pos": [
+    -736.0,
+    71.2,
+    143.05
+   ],
+   "look_at": [
+    -776.0,
+    73.6,
+    141.9
+   ]
+  },
+  {
+   "id": "p0_fork_putry_top",
+   "type": "persp",
+   "kind": "rondo_above",
+   "seat": "file",
+   "fov_deg": 65.0,
+   "note": "top-down",
+   "pos": [
+    -340.0,
+    -146.0,
+    181.206
+   ],
+   "look_at": [
+    -340.0,
+    -145.5,
+    131.206
+   ]
+  },
+  {
+   "id": "p0_lamp_putry_top",
+   "type": "persp",
+   "kind": "rondo_above",
+   "seat": "file",
+   "fov_deg": 65.0,
+   "note": "top-down",
+   "pos": [
+    -589.0,
+    19.5,
+    181.039
+   ],
+   "look_at": [
+    -589.0,
+    20.0,
+    141.039
+   ]
+  },
+  {
+   "id": "p0_kerb_merge_top",
+   "type": "persp",
+   "kind": "rondo_above",
+   "seat": "file",
+   "fov_deg": 65.0,
+   "note": "top-down",
+   "pos": [
+    -782.0,
+    77.5,
+    180.487
+   ],
+   "look_at": [
+    -782.0,
+    78.0,
+    140.487
+   ]
+  },
+  {
+   "id": "p0_ma001_top",
+   "type": "persp",
+   "kind": "rondo_above",
+   "seat": "file",
+   "fov_deg": 65.0,
+   "note": "top-down",
+   "pos": [
+    318.0,
+    -576.0,
+    186.324
+   ],
+   "look_at": [
+    318.0,
+    -575.5,
+    141.324
+   ]
+  },
+  {
+   "id": "p0_n4103450295_top",
+   "type": "persp",
+   "kind": "rondo_above",
+   "seat": "file",
+   "fov_deg": 65.0,
+   "note": "top-down",
+   "pos": [
+    -190.0,
+    -310.0,
+    172.234
+   ],
+   "look_at": [
+    -190.0,
+    -309.5,
+    132.234
+   ]
+  },
+  {
+   "id": "p0_n1882887385_top",
+   "type": "persp",
+   "kind": "rondo_above",
+   "seat": "file",
+   "fov_deg": 65.0,
+   "note": "top-down",
+   "pos": [
+    348.0,
+    -558.0,
+    181.512
+   ],
+   "look_at": [
+    348.0,
+    -557.5,
+    141.512
+   ]
+  },
+  {
+   "id": "p0_ma012_top",
+   "type": "persp",
+   "kind": "rondo_above",
+   "seat": "file",
+   "fov_deg": 65.0,
+   "note": "top-down",
+   "pos": [
+    -385.0,
+    -148.0,
+    181.551
+   ],
+   "look_at": [
+    -385.0,
+    -147.5,
+    131.551
+   ]
+  },
+  {
+   "id": "p0_n10015785253_top",
+   "type": "persp",
+   "kind": "rondo_above",
+   "seat": "file",
+   "fov_deg": 65.0,
+   "note": "top-down",
+   "pos": [
+    -239.0,
+    -236.0,
+    160.445
+   ],
+   "look_at": [
+    -239.0,
+    -235.5,
+    130.445
+   ]
+  },
+  {
+   "id": "au_f_s0620",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    331.819,
+    -582.851,
+    143.568
+   ],
+   "look_at": [
+    307.855,
+    -570.993,
+    142.683
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=620 m, edge w606396458:4391371827-3341716400"
+  },
+  {
+   "id": "au_f_s0640",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    315.562,
+    -574.033,
+    143.812
+   ],
+   "look_at": [
+    290.159,
+    -561.675,
+    142.977
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=640 m, edge w536419675:3341716400-3341716402"
+  },
+  {
+   "id": "au_r_s1380",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -395.301,
+    -142.315,
+    133.955
+   ],
+   "look_at": [
+    -369.486,
+    -157.589,
+    132.634
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=1380 m, edge w268473388:1847263303-1847044938"
+  },
+  {
+   "id": "au_r_s1400",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -378.107,
+    -152.521,
+    133.972
+   ],
+   "look_at": [
+    -350.699,
+    -162.151,
+    132.309
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=1400 m, edge w268473388:1847263303-1847044938, bridge:under",
+   "seat": "file"
+  },
+  {
+   "id": "au_r_s1420",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -360.698,
+    -162.053,
+    133.75
+   ],
+   "look_at": [
+    -337.663,
+    -172.616,
+    131.969
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=1420 m, edge w268473388:1847263303-1847044938, bridge:under",
+   "seat": "file"
+  },
+  {
+   "id": "au_f_s0580",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    367.213,
+    -597.199,
+    143.181
+   ],
+   "look_at": [
+    340.698,
+    -587.452,
+    142.108
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=580 m, edge w177861600:1882953899-4391371827"
+  },
+  {
+   "id": "au_f_s0600",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    348.745,
+    -589.524,
+    143.287
+   ],
+   "look_at": [
+    322.941,
+    -578.249,
+    142.396
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=600 m, edge w177861600:1882953899-4391371827"
+  },
+  {
+   "id": "au_f_s1040",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -32.964,
+    -385.854,
+    139.56
+   ],
+   "look_at": [
+    -57.346,
+    -368.374,
+    137.36
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=1040 m, edge w249640399:1881569071-131612943"
+  },
+  {
+   "id": "au_f_s1060",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -49.219,
+    -374.201,
+    138.934
+   ],
+   "look_at": [
+    -73.201,
+    -356.184,
+    136.737
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=1060 m, edge w249640399:1881569071-131612943"
+  },
+  {
+   "id": "au_f_s1080",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -65.282,
+    -362.29,
+    138.344
+   ],
+   "look_at": [
+    -89.041,
+    -343.973,
+    136.119
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 forward right lane s=1080 m, edge w249640399:1881569071-131612943"
+  },
+  {
+   "id": "au_r_s1140",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -576.556,
+    4.749,
+    137.022
+   ],
+   "look_at": [
+    -554.096,
+    -13.52,
+    135.083
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=1140 m, edge w257367425:3890183128-2629251364, bridge:under",
+   "seat": "file"
+  },
+  {
+   "id": "au_r_s1160",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -562.238,
+    -7.723,
+    136.678
+   ],
+   "look_at": [
+    -538.695,
+    -25.535,
+    134.755
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=1160 m, edge w180144451:2629251364-4075461271, bridge:under",
+   "seat": "file"
+  },
+  {
+   "id": "au_r_s1180",
+   "type": "persp",
+   "kind": "driver_eye",
+   "pos": [
+    -546.362,
+    -19.86,
+    136.224
+   ],
+   "look_at": [
+    -526.05,
+    -36.943,
+    134.38
+   ],
+   "fov_deg": 55.0,
+   "note": "audit r9 reverse right lane s=1180 m, edge w180144451:2629251364-4075461271, bridge:under",
+   "seat": "file"
+  },
+  {
+   "id": "top_s610",
+   "type": "persp",
+   "pos": [
+    346,
+    -574,
+    186
+   ],
+   "look_at": [
+    346,
+    -556,
+    141
+   ],
+   "fov_deg": 55.0,
+   "note": "s610 ramps junction: P-21 paint, paved gores",
+   "seat": "file",
+   "kind": "overview"
+  },
+  {
+   "id": "top_merge",
+   "type": "persp",
+   "pos": [
+    -84,
+    -363,
+    182
+   ],
+   "look_at": [
+    -84,
+    -345,
+    137
+   ],
+   "fov_deg": 55.0,
+   "note": "ramp/Andersa merge gore",
+   "seat": "file",
+   "kind": "overview"
+  },
+  {
+   "id": "top_ma010",
+   "type": "persp",
+   "pos": [
+    -560,
+    -26,
+    174
+   ],
+   "look_at": [
+    -560,
+    -8,
+    134
+   ],
+   "fov_deg": 55.0,
+   "note": "MA-010 Putry ring S, under the viaduct edge",
+   "seat": "file",
+   "kind": "overview"
+  },
+  {
+   "id": "top_putry_n",
+   "type": "persp",
+   "pos": [
+    -550,
+    104,
+    179
+   ],
+   "look_at": [
+    -550,
+    122,
+    134
+   ],
+   "fov_deg": 55.0,
+   "note": "Putry N arm",
+   "seat": "file",
+   "kind": "overview"
+  },
+  {
+   "id": "top_s1440",
+   "type": "persp",
+   "kind": "rondo_above",
+   "seat": "file",
+   "fov_deg": 65.0,
+   "note": "ADR 0093: s 1440 merge / diverge (E -366 N -119, E -395 N -132), top-down",
+   "pos": [
+    -372.0,
+    -138.0,
+    181.5
+   ],
+   "look_at": [
+    -372.0,
+    -137.5,
+    131.5
+   ]
+  },
+  {
+   "id": "eye_putry_n",
+   "type": "persp",
+   "kind": "driver_eye",
+   "fov_deg": 55.0,
+   "note": "ADR 0093: Putry N arm, driver's eye heading south to the ring. ADR 0095: moved from the median (E -552) to the southbound carriageway",
+   "pos": [
+    -561.5,
+    138.0,
+    139.5
+   ],
+   "look_at": [
+    -565.5,
+    108.0,
+    138.0
+   ]
+  },
+  {
+   "id": "eye_s610_north",
+   "type": "persp",
+   "kind": "driver_eye",
+   "fov_deg": 55.0,
+   "note": "ADR 0093: s 610 north arm, driver's eye heading SW into the junction",
+   "pos": [
+    364.0,
+    -527.0,
+    143.5
+   ],
+   "look_at": [
+    350.0,
+    -556.0,
+    142.0
+   ]
+  },
+  {
+   "id": "r2_bay_eye",
+   "type": "persp",
+   "kind": "driver_eye",
+   "fov_deg": 55.0,
+   "note": "ADR 0095: right lane of Andersa before the sett bay (route s ~1035), kerbed strip and bay on the right",
+   "pos": [
+    -40.0,
+    -379.3,
+    138.3
+   ],
+   "look_at": [
+    -75.0,
+    -352.5,
+    136.6
+   ]
+  },
+  {
+   "id": "r2_n100_eye",
+   "type": "persp",
+   "kind": "driver_eye",
+   "fov_deg": 55.0,
+   "note": "ADR 0095: second lane of Andersa before the side-street island at n10015785253 (route s ~1205)",
+   "pos": [
+    -190.0,
+    -262.5,
+    134.6
+   ],
+   "look_at": [
+    -222.0,
+    -237.5,
+    132.2
+   ]
+  },
+  {
+   "id": "r2_fork_link_eye",
+   "type": "persp",
+   "kind": "driver_eye",
+   "fov_deg": 55.0,
+   "note": "ADR 0095: link to Rondo Putry after the fork, P-21 band and separator on the left (route s ~1440)",
+   "pos": [
+    -343.1,
+    -132.9,
+    134.3
+   ],
+   "look_at": [
+    -375.2,
+    -109.1,
+    133.4
+   ]
+  },
+  {
+   "id": "r2_kerb_merge_main_eye",
+   "type": "persp",
+   "kind": "driver_eye",
+   "fov_deg": 55.0,
+   "note": "ADR 0095: main carriageway west of the separator nose, ramp lane joining on the right behind the solid line",
+   "pos": [
+    -760.0,
+    72.0,
+    143.0
+   ],
+   "look_at": [
+    -810.0,
+    74.5,
+    141.8
+   ]
+  }
+ ]
+}

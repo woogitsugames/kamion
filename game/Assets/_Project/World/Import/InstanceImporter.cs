@@ -25,6 +25,40 @@ namespace Game.World.Import
     {
         public const float CellM = 64f;
 
+        /// <summary>
+        /// Fab details have independent bounds/culling cells, so their new geometry cannot change a legacy
+        /// forest cell's frustum, near/far LOD band or HLOD switch. Bit 50 is outside the region grid domain.
+        /// Toggle rather than OR: negative boundary cells already have that bit set by signed grid encoding.
+        /// Legacy keys, matrix storage and collider placement are unchanged.
+        /// </summary>
+        public static long DetailCellKey(long cellKey, bool fab) => fab ? cellKey ^ (1L << 50) : cellKey;
+
+
+        /// <summary>
+        /// Keep every pre-Fab matrix at its legacy sorted index. Runtime forest thinning uses the absolute
+        /// matrix index, so inserting licensed details into the old sort changes the selected trees. Sort the
+        /// unchanged legacy input separately with precisely the old comparison (including its equal-key order),
+        /// then append the separately sorted Fab matrices. Cell runs may point into either storage partition.
+        /// This pure helper also permits an asset-free regression test without importing editor assemblies.
+        /// </summary>
+        public static int[] LegacyStorageOrder(long[] cells, bool[] forests, int[] prototypes, bool[] fab)
+        {
+            if (cells == null || forests == null || prototypes == null || fab == null)
+                throw new ArgumentNullException("Instance sort keys");
+            int count = cells.Length;
+            if (forests.Length != count || prototypes.Length != count || fab.Length != count)
+                throw new ArgumentException("Instance sort key lengths differ");
+            var legacy = new List<int>();
+            var details = new List<int>();
+            for (int i = 0; i < count; i++) (fab[i] ? details : legacy).Add(i);
+            int Compare(int a, int b) => cells[a] != cells[b] ? cells[a].CompareTo(cells[b])
+                : forests[a] != forests[b] ? forests[a].CompareTo(forests[b]) : prototypes[a].CompareTo(prototypes[b]);
+            legacy.Sort(Compare);
+            details.Sort(Compare);
+            legacy.AddRange(details);
+            return legacy.ToArray();
+        }
+
         public sealed class Colliders
         {
             public readonly List<(string proto, Matrix4x4 m, Bounds local)> Items = new List<(string, Matrix4x4, Bounds)>();
@@ -50,14 +84,16 @@ namespace Game.World.Import
             // Medium (budget 0.55 M for everything); 20/60 m keeps Medium at ~0.3 M there.
             if (proto.StartsWith("tree_shrub")) e = new[] { 12f, 40f, 300f };
             else if (proto.StartsWith("tree_")) e = new[] { 20f, 60f, 1000f };
+            else if (proto.StartsWith("fab_")) e = new[] { 12f, 30f, 65f };
             else if (proto.StartsWith("lamp_")) e = new[] { 60f, 400f };
             else if (proto == "pylon" || proto == "power_pole") e = new[] { 80f, 1500f };
             else if (proto.StartsWith("plate_") || proto.StartsWith("board_") || proto.StartsWith("sign_") || proto.StartsWith("signal_")) e = new[] { 50f, 250f };
             else if (proto == "bus_shelter" || proto.EndsWith("_gate")) e = new[] { 60f, 300f };
-            // Hero depot hall segments (ADR 0071, art-source/world/landmarks): LOD0 / LOD1 / silhouette, never culled.
+            // Hero landmark assets (ADR 0067 viaduct, ADR 0070 fire station, ADR 0071 depot; art-source/world/landmarks):
+            // LOD0 / LOD1 / silhouette, never culled. One line per asset family, most specific prefix first.
             else if (proto.StartsWith("landmark_depot")) e = new[] { 100f, 400f, 20000f };
-            // Hero viaduct segments (ADR 0067, art-source/world/landmarks): LOD0 / LOD1 / silhouette, never culled.
             else if (proto.StartsWith("landmark_viaduct")) e = new[] { 90f, 300f, 20000f };
+            else if (proto.StartsWith("landmark_fire_station")) e = new[] { 150f, 450f, 20000f };
             // Landmarks (chimneys): visible across the district, never culled inside the far plane.
             else if (proto.StartsWith("landmark_")) e = new[] { 650f, 20000f };
             // Vehicles (ADR 0041 v4, REVIEW r6 W-N6): LOD switches x lodBias, cull FIXED at VehicleCullM on every tier
@@ -81,8 +117,8 @@ namespace Game.World.Import
             var props = GlbReader.Load(Path.Combine(art, "props", "street_props.glb"));
             var trees = GlbReader.Load(Path.Combine(art, "vegetation", "trees.glb"));
             var impostors = GlbReader.Load(Path.Combine(art, "vegetation", "trees_lod2.glb"));
-            // Authored landmark assets (ADR 0067 / 0071): art-source/world/landmarks/<asset>/<asset>.glb, prototypes
-            // "landmark_<...>" (+ .lod1 / .lod2) in the same frame as street_props.glb.
+            // Authored landmark assets (ADR 0067 / 0070 / 0071): art-source/world/landmarks/<asset>/<asset>.glb,
+            // prototypes "landmark_<...>" (+ .lod1 / .lod2) in the same frame as street_props.glb.
             var landmarkLibs = new List<GlbReader>();
             string lmDir = Path.Combine(art, "landmarks");
             if (Directory.Exists(lmDir))
@@ -114,6 +150,11 @@ namespace Game.World.Import
                 if (n0 == null && !tree)
                     foreach (var lib in landmarkLibs)
                         if (lib.Find(name) is GlbReader.MeshNode ln) { src = lib; n0 = ln; break; }
+                if (n0 == null && name.StartsWith("fab_") && FabMaterials.Library(name) is string fabPath)
+                {
+                    src = GlbReader.Load(fabPath);
+                    n0 = src.Find(name);
+                }
                 if (n0 == null) { Debug.LogWarning($"[IMPORT] prototype '{name}' not in the library - instances skipped"); protoIndex[name] = -1; return -1; }
                 lodNodes.Add((src, n0));
                 var n1 = src.Find(name + ".lod1");
@@ -126,14 +167,21 @@ namespace Game.World.Import
                 foreach (var (g, n) in lodNodes)
                 {
                     starts.Add(materials.Count);
-                    bool uv = false;
+                    bool uv = false, uv1 = false;
                     foreach (var prim in n.Primitives)
                     {
                         var mat = ProtoMaterial(r, g, prim.Material, out bool textured);
                         materials.Add(mat);
                         uv |= textured;
+                        // ADR 0071 r11: wall-top / sill run-off space of the hero hall (TEXCOORD_1, only where the
+                        // material reads it and the primitive carries it)
+                        if (prim.Uv1 != null && prim.Material != null && r.MaterialDefs.TryGetValue(prim.Material, out var pd))
+                        {
+                            WorldPbrMaterials.Channels(pd, prim.Material, out _, out bool pu1, out _);
+                            uv1 |= pu1;
+                        }
                     }
-                    var mesh = WorldMeshBake.Compact(n.Name, n.Primitives, new WorldMeshBake.Options { Uv0 = uv });
+                    var mesh = WorldMeshBake.Compact(n.Name, n.Primitives, new WorldMeshBake.Options { Uv0 = uv, Uv1 = uv1 });
                     AssetDatabase.AddObjectToAsset(mesh, set);
                     bytes += WorldMeshBake.GpuBytes(mesh);
                     lods.Add(mesh);
@@ -177,6 +225,13 @@ namespace Game.World.Import
             {
                 var spec = cn.Extras != null ? cn.Extras.Get("contact") as Dictionary<string, object> : null;
                 var mat = ContactMaterial(r, spec, vehicle, out string id);
+                // ADR 0071 r11: static yard props (containers, gatehouse, barrier cabinets) also carry a contact spec.
+                // Their patch is culled with THEM (policy ends x lodBias), not at the fixed vehicle distance: the name
+                // must not start with "contact_" (WorldInstances.IsVehicle = fixed cull) or the patch would outlive its
+                // prop on Low.
+                bool vehicleOwner = WorldInstances.IsVehicle(vehicle);
+                if (!vehicleOwner) id = "prop" + id;
+                float cullM = vehicleOwner ? WorldInstances.VehicleCullM : Policy(vehicle, 3).Item1.Last();
                 if (protoIndex.TryGetValue(id, out int ci)) return ci;
                 var mesh = WorldMeshBake.Compact(id, cn.Primitives, new WorldMeshBake.Options());
                 AssetDatabase.AddObjectToAsset(mesh, set);
@@ -184,7 +239,7 @@ namespace Game.World.Import
                 var cp = new WorldInstanceSet.Prototype
                 {
                     name = id, lods = new[] { mesh }, materialStart = new[] { materials.Count },
-                    lodEndM = new[] { WorldInstances.VehicleCullM }, shadowLodMask = 0,
+                    lodEndM = new[] { cullM }, shadowLodMask = 0,
                 };
                 materials.Add(mat);
                 ci = protos.Count;
@@ -304,36 +359,48 @@ namespace Game.World.Import
                         colliders.Barriers.Add(bar);
                         continue;
                     }
-                    items.Add((cellKey, forest, pi, m));
+                    long drawCellKey = DetailCellKey(cellKey, p.StartsWith("fab_", StringComparison.Ordinal));
+                    items.Add((drawCellKey, forest, pi, m));
                     if (contactOf.TryGetValue(pi, out int cpi)) items.Add((cellKey, false, cpi, m));
                     if (colMeshes.TryGetValue(p, out var cb) && cb.HasValue && corridor.Any(c => e >= c.Min.x && e < c.Max.x && n >= c.Min.y && n < c.Max.y))
                         colliders.Items.Add((p, m, cb.Value));
                 }
             }
 
-            items.Sort((a, b) => a.cell != b.cell ? a.cell.CompareTo(b.cell) : a.forest != b.forest ? a.forest.CompareTo(b.forest) : a.proto.CompareTo(b.proto));
+            var storageOrder = LegacyStorageOrder(items.Select(it => it.cell).ToArray(), items.Select(it => it.forest).ToArray(),
+                items.Select(it => it.proto).ToArray(), items.Select(it => protos[it.proto].name.StartsWith("fab_", StringComparison.Ordinal)).ToArray());
+            var stored = storageOrder.Select(i => items[i]).ToArray();
+            var mats = stored.Select(it => it.m).ToArray();
+            // Each partition is already sorted. Record its contiguous runs before merging the run order;
+            // sorting individual matrices again would reintroduce the unstable equal-key permutation.
+            var orderedRuns = new List<(long cell, bool forest, int proto, int start, int count)>();
+            for (int i = 0; i < stored.Length;)
+            {
+                int start = i;
+                var first = stored[i++];
+                while (i < stored.Length && stored[i].cell == first.cell && stored[i].forest == first.forest && stored[i].proto == first.proto) i++;
+                orderedRuns.Add((first.cell, first.forest, first.proto, start, i - start));
+            }
+            orderedRuns.Sort((a, b) => a.cell != b.cell ? a.cell.CompareTo(b.cell) : a.forest != b.forest ? a.forest.CompareTo(b.forest) : a.proto.CompareTo(b.proto));
             var cells = new List<WorldInstanceSet.Cell>();
             var runs = new List<WorldInstanceSet.Run>();
-            var mats = new Matrix4x4[items.Count];
             var hlodUsed = new bool[hlods.Count];
-            for (int i = 0; i < items.Count;)
+            for (int ri = 0; ri < orderedRuns.Count;)
             {
-                long cell = items[i].cell;
+                long cell = orderedRuns[ri].cell;
                 var c = new WorldInstanceSet.Cell { runStart = runs.Count };
                 bool first = true;
-                while (i < items.Count && items[i].cell == cell)
+                while (ri < orderedRuns.Count && orderedRuns[ri].cell == cell)
                 {
-                    int pr = items[i].proto, start = i;
-                    bool forest = items[i].forest;
-                    while (i < items.Count && items[i].cell == cell && items[i].proto == pr && items[i].forest == forest)
+                    var run = orderedRuns[ri++];
+                    int pr = run.proto;
+                    for (int i = run.start; i < run.start + run.count; i++)
                     {
-                        mats[i] = items[i].m;
-                        var wb = Transform(protos[pr].lods[0].bounds, items[i].m);
+                        var wb = Transform(protos[pr].lods[0].bounds, mats[i]);
                         if (first) { c.bounds = wb; first = false; } else c.bounds.Encapsulate(wb);
-                        i++;
                     }
-                    runs.Add(new WorldInstanceSet.Run { prototype = pr, start = start, count = i - start, forest = forest });
-                    protos[pr].count += i - start;
+                    runs.Add(new WorldInstanceSet.Run { prototype = pr, start = run.start, count = run.count, forest = run.forest });
+                    protos[pr].count += run.count;
                 }
                 c.runCount = runs.Count - c.runStart;
                 if (hlodOfKey.TryGetValue(cell, out int hi))
@@ -445,6 +512,8 @@ namespace Game.World.Import
         {
             textured = false;
             if (name == null) return null;
+            var fab = FabMaterials.Create(r, name, $"{r.Dir}/Materials/Proto/M_{name}.mat");
+            if (fab != null) { textured = true; return fab; }
             if (r.Materials.TryGetValue(name, out var regionMat))
             {
                 textured = r.MaterialDefs.TryGetValue(name, out var d) && d.Get("texture") != null;

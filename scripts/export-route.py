@@ -7,8 +7,9 @@ docs/reports/map/candidates.json; the path is the same shortest drivable path as
 tools/worldgen/roads/build_world.py::route_polyline (networkx over roadgraph.to_digraph).
 Writes Data/Regions/<id>/route_start.json:
     points  [[e, n], ...]  region-local metres (E = x - origin.x, N = y - origin.y), resampled every 2 m,
-            offset to the centre of the right-hand lane on two-way roads (lane width/2 from the centreline,
-            lane width from `width`/`lanes` attrs or 3.0 m WORKING_VALUE); one-way carriageways keep the centreline.
+            centre of the rightmost lane in the direction of travel on the GENERATED carriageways
+            (roads.pipeline.build_network + roads.route.lane_route: fork shifts and lane layout of the generator;
+            the raw OSM axis ran along the kerb of shifted links, ADR 0076).
     maxspeed_kmh per point, edge id per point, total length.
 Unity (scripts/import-region.ps1) turns it into a WorldRoute; heights come from raycasts on the imported collision.
 """
@@ -50,52 +51,32 @@ def main() -> int:
     path = nx.shortest_path(g, nearest(route["start_epsg2180"]), nearest(route["end_epsg2180"]), weight="length")
     edges = {e["id"]: e for e in graph["edges"]}
 
-    segs = []  # (polyline local, offset m, maxspeed, edge id)
-    for u, v in zip(path, path[1:]):
-        e = edges[g[u][v]["id"]]
-        geo = e["geometry"] if e["from"] == u else e["geometry"][::-1]
-        P = np.array([(x - ox, y - oy) for x, y in geo], dtype=float)
-        at = e["attrs"]
-        oneway = at["oneway"]["v"] != "no"
-        lanes = max(1, int(at.get("lanes", {}).get("v", 2) or 2))
-        width = at.get("width", {}).get("v")
-        lane_w = min(3.5, max(2.75, (float(width) / lanes) if width else 3.0))
-        off = 0.0 if oneway else lane_w / 2.0
-        ms = at.get("maxspeed", {}).get("v")
-        try:
-            ms = float(ms)
-        except (TypeError, ValueError):
-            ms = 0.0
-        segs.append((P, off, ms, e["id"]))
+    # lane path on the generated network (fork shifts, lane layout), not the raw OSM axis (ADR 0076)
+    from roads import pipeline
+    from roads.route import lane_route
+    net, _, _, _ = pipeline.build_network(a.region, graph)
+    node_xy = {n["id"]: (n["x"] - ox, n["y"] - oy) for n in graph["nodes"]}
+    path_edges = [(g[u][v]["id"], u, v) for u, v in zip(path, path[1:])]
+    R, eid_pt, _, length = lane_route(net, path_edges, node_xy, a.step)
 
-    pts, spd, eid = [], [], []
-    for P, off, ms, ei in segs:
-        if off:
-            T = np.gradient(P, axis=0)
-            T /= np.maximum(np.linalg.norm(T, axis=1, keepdims=True), 1e-9)
-            right = np.stack([T[:, 1], -T[:, 0]], axis=1)  # (E, N): right of travel
-            P = P + right * off
-        for i, p in enumerate(P):
-            if pts and i == 0 and np.hypot(*(np.array(pts[-1]) - p)) < 0.5:
-                continue
-            pts.append(p.tolist()); spd.append(ms); eid.append(ei)
-    P = np.array(pts)
-    s = np.concatenate([[0], np.cumsum(np.hypot(*np.diff(P, axis=0).T))])
-    n = int(s[-1] // a.step) + 1
-    si = np.linspace(0, s[-1], n)
-    R = np.stack([np.interp(si, s, P[:, 0]), np.interp(si, s, P[:, 1])], axis=1)
-    idx = np.clip(np.searchsorted(s, si, side="right") - 1, 0, len(spd) - 1)
+    def _ms(ei):
+        try:
+            return float(edges[ei]["attrs"].get("maxspeed", {}).get("v"))
+        except (TypeError, ValueError):
+            return 0.0
+    spd_pt = [_ms(ei) for ei in eid_pt]
+    s = [length]
     out = {
         "schema": "truck-sim-pl/route/1",
         "region": a.region,
         "route": "start",
-        "note": "Depot gate (Kwadrat Park) -> DK8/DK19; centreline of one-way carriageways, right-lane centre on two-way roads",
+        "note": "Depot gate (Kwadrat Park) -> DK8/DK19; centre of the rightmost lane of the generated carriageways (roads.route, ADR 0076)",
         "frame": "region-local metres, E = x - origin.x, N = y - origin.y (EPSG:2180)",
         "length_m": round(float(s[-1]), 2),
         "step_m": a.step,
         "points_en": [[round(float(x), 3), round(float(y), 3)] for x, y in R],
-        "maxspeed_kmh": [spd[i] for i in idx],
-        "edge": [eid[i] for i in idx],
+        "maxspeed_kmh": spd_pt,
+        "edge": eid_pt,
         "graph_nodes": path,
     }
     dst = rdir / "route_start.json"

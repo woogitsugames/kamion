@@ -172,6 +172,10 @@ P10_GAP = 0.50
 P10_EDGE_MAX = 0.50
 P10_WIDTH = 4.0                     # pkt 4.2.1: crossing width s = 4.0 m (>= 2.5 m in built-up areas)
 P12_W = 0.50                        # rys. 4.2.3.1: STOP line 0.5 m
+# P-11 cycle crossing: two rows of squares. UNVERIFIED against [ZNAKI-Z2] pkt 4.2.2 (not at hand): 0.4 m squares,
+# 0.4 m gaps, rows 2.0 m apart (inner edges) read off the GUGiK 0.08 m orthophoto at Rondo Putry (ADR 0093).
+P11_SQUARE, P11_GAP, P11_CLEAR = 0.40, 0.40, 2.0
+P8_MIN_LANE_W = 2.5                 # ADR 0093: no arrow in a lane narrower than this (taper of a slip lane)
 P13_BASE, P13_GAP, P13_H = 0.50, 0.25, 0.70   # rys. 4.2.4.1: triangles
 P14_LEN, P14_GAP, P14_DEPTH = 0.75, 0.25, 0.50  # rys. 4.2.5.1: rectangles 0.5 deep (0.375 m2/mb)
 P14_BEFORE_SIGNAL = 2.0             # pkt 4.2.5: >= 2.0 m before signals beside the carriageway
@@ -197,7 +201,7 @@ EDGING_W = 0.08             # concrete edging (obrzeże betonowe 8 x 30 cm), com
 EDGING_H = 0.03             # top of edging above the block paving WORKING_VALUE
 SETBACK_PATH_W = 2.0        # default width of a set-back footpath without BDOT SZEROKOSC (PTB2022 § 29: >= 1.80 m)
 SURFACE_OF = {"yard_paving": "paving", "yard_behaton": "paving", "sidewalk_paving": "paving", "cycle_red": "asphalt",
-              "yard_concrete": "asphalt", "yard_slabs": "asphalt", "yard_asphalt": "asphalt",
+              "yard_concrete": "asphalt", "yard_concrete_worn": "asphalt", "yard_slabs": "asphalt", "yard_asphalt": "asphalt",
               "path_asphalt": "asphalt", "yard_gravel": "grass"}   # -> collision_<x> materials
 
 # Vertical signs [ZNAKI-Z1]. Table 1.11: lower edge >= 2.00 m in built-up areas, 2.20 m when the sign
@@ -295,3 +299,21 @@ def surface_material(chain, sec):
         return m
     h = int(hashlib.sha1(f"{chain.id}:asphalt_new".encode()).hexdigest()[:8], 16) / 0xFFFFFFFF
     return "road_asphalt_new" if h < NEW_ASPHALT_SHARE else m
+
+
+# Height of ground-standing props above their base (m), for "does it pierce a deck above" checks (ADR 0076).
+# Lamps carry their height in the prototype name; the rest are WORKING_VALUEs read off the prop generator.
+GROUND_PROP_H = {"signal_mast": SIGNAL_MAST_H, "signal_pole": SIGNAL_POLE_H, "sign_post": 3.6, "power_pole": 10.0,
+                 "pylon": 30.0, "bollard": 1.0, "bus_shelter": 2.8, "bench": 0.9, "waste_bin": 1.0,
+                 "street_cabinet": 1.4, "gantry_footing": 1.0}
+
+
+def ground_prop_height(proto: str) -> float:
+    import re
+    if proto.startswith("lamp_"):
+        m = re.search(r"_(\d+)m$", proto)
+        return float(m.group(1)) if m else 10.0
+    for k, v in GROUND_PROP_H.items():
+        if proto.startswith(k):
+            return v
+    return 3.0

@@ -129,14 +129,37 @@ class Space:
         self.taken.append(poly)
 
 
-def dock_trailers(pl, docks, sp, report):
+def dock_trailers(pl, docks, sp, report, authored=None):
+    """authored: {building id fragment: [{dock, proto, yaw_deg, off_m, lat_m}]} from `depot_yard.dock_trailers`
+    (ADR 0071 r11): that dock row gets exactly these trailers (kind / colour, a few cm and a degree or so of how a
+    driver really leaves a trailer) instead of the hashed pick; unknown docks / prototypes are reported, not dropped."""
     n = 0
+    stale = []
     for dk in docks:
         p, q = (np.asarray(x, float) for x in dk["edge"])
         d = (q - p) / np.linalg.norm(q - p)
         nout = np.array([d[1], -d[0]])
         hero = "9962cca0" in dk["id"]
         rate = 0.55 if hero else 0.35
+        rows = [v for k, v in (authored or {}).items() if k in dk["id"]]
+        if rows:
+            by_num = {dock["num"]: dock for dock in dk["docks"]}
+            for a in rows[0]:
+                dock = by_num.get(a["dock"])
+                if dock is None or not str(a.get("proto", "")).startswith("trailer_"):
+                    stale.append(f"{dk['id']}:{a.get('dock')}:{a.get('proto')}")
+                    continue
+                yaw = yaw_of(nout) + math.radians(float(a.get("yaw_deg", 0.0)))
+                f = np.array([-math.sin(yaw), math.cos(yaw)])                      # prototype +y in E, N
+                base = p + d * (dock["u"] + float(a.get("lat_m", 0.0))) + nout * (0.45 + float(a.get("off_m", 0.0)))
+                body = rect(base + f * 6.8, f, 6.8, 1.3)
+                if not sp.free(body):
+                    stale.append(f"{dk['id']}:{a['dock']}:blocked")
+                    continue
+                pl.add(a["proto"], base, yaw, z=dk["yard_z"], src=f"life:dock:{dk['id']}:{dock['num']}:authored")
+                sp.take(body)
+                n += 1
+            continue
         for dock in dk["docks"]:
             u = hf(dk["id"], dock["num"], "trailer")
             if u > rate:
@@ -158,6 +181,8 @@ def dock_trailers(pl, docks, sp, report):
             sp.take(body)
             n += 1
     report["dock_trailers"] = n
+    if authored:
+        report["dock_trailers_authored_stale"] = stale
 
 
 # Dock tyre-scrub shapes (review r6 W-N11: one arc repeated at every door read as a stamp). Lateral offset of the
@@ -301,7 +326,7 @@ def yard_drains(buf, paved, bpoly, zsurf, report):
     from buildings (procedural grate in the engine material drain_grate; UV0 0..1 over the grate)."""
     n = 0
     for item in paved:
-        if item["mat"] not in ("yard_behaton", "yard_concrete", "yard_asphalt", "yard_paving", "yard_slabs"):
+        if item["mat"] not in ("yard_behaton", "yard_concrete", "yard_concrete_worn", "yard_asphalt", "yard_paving", "yard_slabs"):
             continue
         for pi, pg in enumerate(getattr(item["poly"], "geoms", [item["poly"]])):
             if pg.geom_type != "Polygon" or pg.area < 600:
@@ -715,13 +740,14 @@ def yard_props(pl, blds, docks, sp, report):
 
 
 def place(pl, docks, paved, blds, roads_poly, bpoly, route_P, report, buf=None, zsurf=None, park_polys=None,
-          no_parking=None):
-    """no_parking: polygons (authored, streetscape.depot_yard) where no rule car bay is laid out."""
+          no_parking=None, authored_trailers=None):
+    """no_parking: polygons (authored, streetscape.depot_yard) where no rule car bay is laid out.
+    authored_trailers: see dock_trailers (streetscape.depot_yard.dock_trailers)."""
     rep = {}
     union = shapely.union_all([p["poly"] for p in paved])
     route = LineString(route_P) if route_P is not None and len(route_P) > 1 else None
     sp = Space(union, roads_poly, bpoly, route)
-    dock_trailers(pl, docks, sp, rep)
+    dock_trailers(pl, docks, sp, rep, authored=authored_trailers)
     if buf is not None and zsurf is not None:
         tyre_scrub(buf, docks, zsurf, rep)
     pu = shapely.union_all([shapely.make_valid(p) for p in park_polys]) if park_polys else None

@@ -1,28 +1,99 @@
+# HANDOVER — kamion, sesja 10 (2026-11-11 od ~10:05 lokalnie)
+
+## Najpierw (dla następnej sesji)
+- **Tempo (właściciel, s10):** dalej max 3 agentów naraz. Limit tygodniowy Fable zresetował się (0 % o 10:05, reset 15.11); 5 h reset 15:00 lokalnie.
+- Trigger 10:21: limit 5 h 8 %, tydzień 2 %; 3 agentów w toku, GPT B/C bez REPORT; regeneracja 0086 ZIELONA (gis 370/0), zacommitowana.
+- Trigger godzinny w sesji (CronCreate, :17) — ginie z sesją.
+- Regeneracja main po 0095: zielona (gis+physics+gate3 413/1 — znana `test_generator_reproduces_committed_scenarios` z 0082) → `48ac6b75`.
+- **Scalone w s10:** 0086 `_Tint` gamma (GPT A) `0e73211a` — konflikty generated → --ours; regeneracja (build_all → build_world → export-route → pytest gis) w toku: `artifacts/logs/s10-regen-0086.log`.
+
+| zadanie | ADR | worktree | STATUS | stan |
+|---|---|---|---|---|
+| recenzja 0095 | — | — | docs/reports/visual/REVIEW-2026-11-11-s10-0095.md | ZROBIONA `503c89ae`: scalenie PASS warunkowy, bramka wizualna węzłów FAIL (połamana P-21, Putry N/MA-010 gołe) |
+| węzły r3 | 0100 | .claude/worktrees/junctions-r3 (gałąź junctions-r3) | artifacts/junctions-r3/STATUS.md | w toku (world-builder) wg recenzji s10-0095 |
+| recenzja 0086 | — | — | docs/reports/visual/REVIEW-2026-11-11-s10-0086.md | ZROBIONA: kontrakt OK, kalibracja FAIL (hala kp_wall przepalona, ekrany za ciemne); D48: tynk remizy 110/126/145 zostaje |
+| kalibracja r2 | 0101 | .claude/worktrees/tint-r2 (gałąź tint-r2) | artifacts/tint-r2/STATUS.md | w toku (rendering-perf) wg recenzji s10-0086 |
+| zabudowa r5 | 0097 | .claude/worktrees/buildings-r5 (gałąź buildings-r5) | artifacts/buildings-r13/STATUS.md | w toku (world-builder) |
+| GPT B roślinność r2 | 0088 | gpt-vegetation-r2 | — | GPT w toku, brak REPORT |
+| GPT C światło r12 | 0098 | gpt-light-r12 | — | GPT w toku, brak REPORT |
+| GPT 0087 lakier TRAKT | 0087 | gpt-truck-paint | — | GPT w toku |
+| Argon 0085 | 0085 | argon-edge | artifacts/edge-far-r1 | czeka na poprawkę |
+
+## Następne kroki
+1. Integracja na main ZROBIONA (10:30–10:39, main 584f2cd4 + _Generated): import OK (Fab bez fallbacku), Truck/Trailer BuildBatch + InstallBatch OK, EditMode 226/226, PlayMode 110/0/7 skip, APK Low `artifacts/apk/kamion-0.1.0-43bc53a769-dirty.apk` 186,9 MB SHA256 a15d182d8fc3ab038bdf0b69f63dd1b279d3f8b92a05d35514fe5b6e790ee41d („dirty” = reserializacja LP_*.asset przez Unity, cofnięta). Log `artifacts/integration-s10/run.log`. Telefon A16 Low: `artifacts/integration-s10/phone.ps1` → `phone.log` (lock `artifacts/locks/PHONE_RUN`; jeśli sesja padła — usuń lock).
+2. Integracja na main z Megascans + 0086 (import-region, Truck BuildBatch/InstallBatch, EditMode/PlayMode, APK Low) → telefon A16 Low gate3.
+3. Scalanie GPT B 0088 → C 0098 po REPORT.md; 0097 po REPORT.md.
+4. Węzły r3 wg recenzji 0095; Kwadrat r13 po zdjęciach właściciela; raport bramki 3.
+5. **GPT pakiet S10-B** `docs/owner/GPT-TASK-03-S10.md` (5 nowych sesji właściciela, po 1 strumieniu): H 0085 r2 tło (gpt-edge-r2 z argon-edge), I 0102 meble uliczne (gpt-furniture-r1), J 0103 side-by-side bramki 3 (gpt-sbs-gate3), K 0104 kabina/lusterka (gpt-cab-r1), L 0105 wiadukt pod pomostem (gpt-viaduct-r1). Scalać po REPORT.md.
+6. Ostatni przydzielony ADR: **0105**.
+
+---
+# HANDOVER — kamion, sesja 9 (2026-11-11 00:30 → ~10:30 lokalnie; zamknięta na polecenie właściciela przy końcu limitu 5 h)
+
+## Najpierw (dla sesji 10)
+- **Start: `docs/owner/START-PROMPT-S10.md`.** Ta sekcja = prawda o stanie.
+- **main = ten commit, wypchnięty.** pytest gis 355/0 po 0096. **Po scaleniu 0095 (`471438fb`) regeneracja main trwała w tle przy zamknięciu s9** — sprawdź `artifacts/logs/s9-main-regen-0095.log` (build_world → export-route → fidelity → pytest gis+physics+gate3; oczekiwane ~356 ✓ gis, 47/1 physics — 1 znana z 0082); przy `PYTEST EXIT` 0 lub tylko ta znana porażka → `git add Data/Regions && git commit`; inaczej zdiagnozuj.
+- **Żaden agent Claude nie działa** (wszystkie worktree Claude usunięte). Działają: **GPT 6.1 Sol** (worktree `gpt-s10-coordination`, `gpt-tint-gamma`, `gpt-vegetation-r2`, `gpt-light-r12` — pakiet `docs/owner/GPT-TASK-02-S10.md`; NIE ruszać, scalać po REPORT.md w kolejności A 0086 → B 0088 → C 0098) i ewentualnie Argon (tylko poprawka 0085, `argon-edge`).
+- **Limity (08:00):** 5 h — 65 % (reset 09:30 UTC); **tygodniowy Fable 51 %** (reset 17.11) — przy 3 agentach naraz skończy się ok. 12.11. Właściciel zamknął s9 przed decyzją o tempie — **zapytaj go na starcie s10** (max 2 agentów / Sonnet do lżejszych zadań / dalej 3).
+- **Megascans (0084) działa na main tylko dzięki lokalnym produktom** (`pwsh scripts/prepare-megascans.ps1` → ignorowane `art-source/world/megascans/_generated`). **Każdy nowy worktree musi mieć te produkty** (robocopy `art-source/world/megascans` z main albo prepare), inaczej po cichu fallback.
+- **Determinizm naprawiony (0096):** generator świata daje identyczne hashe niezależnie od PYTHONHASHSEED (stan: 1526 stanowisk / 908 aut). Test `tests/gis/test_determinism.py`.
+- **`uv run pytest` bywa zepsuty („trampoline failed”) — używaj `uv run --project tools/worldgen python -m pytest …`.**
+- **APK Low `artifacts/apk/kamion-0.1.0-ad4062539c.apk`** (179,5 MB, SHA256 ad514a8bf6e6bfd795a72b2fcf5c645106e21fccc45682814789a7e1faffbf82; z integracji s9, BEZ Megascans, przed 0094/0096) — NIE był jeszcze na telefonie. Telefon tylko gdy żaden Unity nie działa (`artifacts/locks/PHONE_RUN`).
+- **Testy fizyki: 7× swept path czerwone = regresja z 0076** (linia trasy ścina narożnik na wyjazdach z rond Bieżeństwa E 559 N −689 i Putry E −535 N 52; prześwit naczepy do −2,94 m) — przekazane agentowi 0095. 1× `test_generator_reproduces_committed_scenarios` znane z 0082 (scenariusz zaostrzony ręcznie, generator nie).
+- **GPT/Codex i Argon bezczynni od ~02:00** — wznawia właściciel ręcznie. GPT: Q1 0086 (`_Tint` gamma), Q2 0088 (drzewa Megascans). Argon: najpierw „UWAGI LIDERA s9” do 0085 w `docs/owner/ARGON-TASK-01-WORLD-EDGE.md` (budynek regionu zdublowany halą far-field na `edge-south`; stan Argona zacommitowany przez lidera na `argon-edge` 293c5f69, NIEscalony), potem Q1 0087, Q2 0089.
+- **GPT 6.1 Sol — pakiet S10 (2026-11-11):** `docs/owner/GPT-TASK-02-S10.md` — jedna sesja GPT z 3 agentami: A 0086 `_Tint` gamma (`gpt-tint-gamma`), B 0088 roślinność r2 (`gpt-vegetation-r2`), C 0098 światło/post r12 (`gpt-light-r12`); potem D 0099 zużycie nawierzchni (po scaleniu 0095), E 0090 remiza r7 (`gpt-firestation-r7`). Scalanie A → B → C po REPORT.md. 0090 przeszło od Claude do GPT. **Argonowi zostało ~8 % limitu** → robi tylko poprawkę 0085; 0087 i 0089 przeniesione do GPT (strumienie F, G). Właściciel zlecił pakiet GPT (11.11 ~08:40).
+- **Prośba do właściciela (otwarta):** zdjęcia bramy Kwadrat Park z ziemi (tablica, czym zamknięte boki, krawężniki, trawnik) — do tego czasu płot/słupki przy bramie = WORKING_VALUE.
+
+## Scalone w s9 (wszystkie z recenzją visual-critic w `docs/reports/visual/REVIEW-2026-11-11-s9*.md`)
+0080 światło r11 · 0071 Kwadrat r11 · 0081 zabudowa r2 · 0070 remiza r6 · 0078 auta r10b · 0076 korytarz trasy · 0084 Megascans R1 (GPT) · 0077 wysepki z OSM · 0091 zabudowa r3 · 0092 Kwadrat r12 · 0093 węzły r1 · integracja s9 (dowody) · 0094 zabudowa r4 · 0096 determinizm.
+Integracja Unity (worktree, stan po 0093): import OK, Truck/Trailer BuildBatch+InstallBatch OK, EditMode 212/212, PlayMode 109/0/8 skip, rendery 3×59 kamer bez regresji integracji (`artifacts/integration-s9/REPORT.md`). **Na main `_Generated` (Unity) NIE jest zaimportowane po s9** — import-region + BuildBatch do zrobienia.
+
+| zadanie | ADR | worktree | STATUS | stan na koniec s9 |
+|---|---|---|---|---|
+| węzły r2 | 0095 | usunięty | artifacts/junctions-r2 (ADR 0095 „Otwarte”) | SCALONE `471438fb`: pasy/szerokości Andersa z ortofoto 0,08 m, zatoka s1060, n10015785253, wiadukt DK8 2 pasy + rozdział łącznicy E −782 (miejsce z filmu), rozwidlenie Putry; **swept path naprawiony** (G3-A −0,10/−1,12, G3-B −0,14/−0,14; physics+gate3 47/1 znane z 0082); fidelity krawędź p95 2,52→2,30, wysepki 1→0; gis 356/0 w gałęzi. Ortofoto 0,08 m (2 komórki) skopiowane do `Data/raw/refs/gugik-ortho-hr/bialystok-industrial-c/` + manifest. **visual-critic NIEzrobiony → s10.** Regeneracja main w tle `artifacts/logs/s9-main-regen-0095.log` (gis+physics+gate3). Otwarte: końce zatoki, przejazdy rowerowe n100…, separator rozwidlenia, SE s1440 4 pasy, Putry N, dół MA-010, szew łaty, krawężniki, sprzątanie linii |
+| tło za krawędzią | 0085 | argon-edge | artifacts/edge-far-r1/REPORT.md | NIEscalone — czeka na poprawkę Argona |
+| import Megascans R1 | 0084 | gpt-megascans | artifacts/megascans-r1 | scalone; worktree zostawiony dla Codex (nie usuwać bez właściciela) |
+
+## Następne kroki (kolejność)
+1. 0095 SCALONE — zrób visual-critic na `artifacts/junctions-r2` (renders_b12, plan_after) i sprawdź wynik regeneracji main (`artifacts/logs/s9-main-regen-0095.log`; zacommituj Data/Regions przy PYTEST EXIT 0). Następna runda węzłów (r3) = „Otwarte” w ADR 0095.
+2. Integracja na main: build_all → build_world → import-region → `Game.Editor.Setup.TruckAssetBuilder.BuildBatch` (+ naczepa) → `Game.World.Import.WorldTruckInstaller.InstallBatch` → EditMode/PlayMode → czysty APK Low z Megascans.
+3. **Telefon A16 Low gate3** (pierwszy pomiar po s9), potem S24+ High (bateria ≥ 40 %, < 36 °C).
+4. **0097 zabudowa r5** wg `REVIEW-2026-11-11-s9-0094.md` „Następna runda”.
+5. ~~0090 remiza r7~~ → GPT (pakiet S10, strumień E).
+6. Kwadrat r13 (krawężnik bramy wspólny z 0095 #6, hierarchia plam/śladów, zużycie słupków) — po zdjęciach właściciela.
+7. Raport bramki 3.
+8. **Ostatni przydzielony ADR: 0099** (0098, 0099 → GPT).
+
+---
 # HANDOVER — kamion, sesja 8 (2026-11-10 ok. 22:00 UTC start; limit 5 h reset 2026-11-11 03:00 UTC)
 
 ## Najpierw
+- **Polecenie właściciela (s8, ~00:10): następna sesja DOKŁADA PRACĘ GPT i Argonowi** — dopisując kolejne zadania na końcu ich plików w sekcji „KOLEJKA” (`docs/owner/GPT-TASK-01-MEGASCANS.md`, `docs/owner/ARGON-TASK-01-WORLD-EDGE.md`), z numerem ADR z góry, gałęzią, worktree i STATUS. Zawsze trzymaj w kolejce każdego co najmniej 1–2 niezrobione zadania. Obecnie: GPT Q1 = ADR 0086 (`_Tint` gamma globalnie), Q2 = ADR 0088 (Megascans r2 drzewa); Argon Q1 = ADR 0087 (lakier/szyba/reflektory ciągnika). Scalaj ich gałęzie po REPORT.md jak każdego agenta.
+- **Polecenie właściciela (s8, ~23:55 UTC): lider s8 NIE wznawia agentów po ich zakończeniu — pracę przejmuje sesja 9 wg `docs/owner/START-PROMPT-S9.md`: max 3 agentów naraz + zewnętrzny trigger co godzinę wybudzający sesję.** Agenci, którzy skończyli, zostają z raportem w STATUS.md swojego worktree.
+- **Limit 5 h na 83 % o ~23:50 UTC** (reset 03:00 UTC) — od teraz bez nowych agentów, dopóki działa ≥ 2.
 - main = ten commit. Start s8: 8 agentów Fable przejmuje/uruchomionych (tabela). GPT/Codex pracuje nad importem Megascans (ADR 0084, `gpt-megascans`, STATUS `artifacts/megascans-r1/STATUS.md`) — nie ruszać, scalić po REPORT.md. Antigravity (Argon 4) — zadanie `docs/owner/ARGON-TASK-01-WORLD-EDGE.md` (tło za krawędzią świata, ADR 0085, gałąź `argon-edge`).
-- Decyzja otwarta: ogranicznik na zjeździe twarde 90 czy ~94 (`overrunBrakeOffsetKmh`, ADR 0082).
+- Decyzja właściciela D47: firanka bez pasa (B), osłony boczne zostają (ADR 0083).
+- Decyzja właściciela D46: ogranicznik na zjeździe dopuszcza ~94 km/h (`overrunBrakeOffsetKmh = 4` zostaje, ADR 0082).
 - Decyzja lidera s8 (0076): ratchety fidelity — abreast oceniane na ortofoto; jeśli bliżej rzeczywistości, osobna metryka i nowy baseline z uzasadnieniem w ADR 0076; inaczej abreast ograniczony do osi p95 ≤ 0,13 m.
 
 | zadanie | ADR | worktree (`.claude/worktrees/`) | STATUS | stan |
 |---|---|---|---|---|
 | P0 korytarz + ratchety | 0076 | agent-ad6af5501cb259d76 | artifacts/roads-p0-r10 | s8: agent Fable w toku |
 | wysepki z OSM | 0077 | agent-a2afb96d89584cca6 | tools/worldgen/fidelity/STATUS_islands_r10.md | s8: agent Fable w toku (merge main po 0076) |
-| straż JRG2 | 0070 | agent-aa9c74c62497e5d1f | artifacts/firestation-r9 | s8: agent Fable w toku |
-| osobówki r10 | 0078 | agent-a2215bcc98d109edc | artifacts/cars-r10 | s8: agent Fable w toku |
-| zabudowa r10 | 0081 | agent-ac404823e7d8b56e7 | artifacts/buildings-r10 | s8: agent Fable w toku |
-| zewnętrze TRAKT + naczepa | 0083 | agent-a4049e15e1ab8c681 | artifacts/truck-ext-r10 | s8: agent Fable w toku |
-| Kwadrat Park r11 (recenzja) | 0071 | kwadrat-r11 | artifacts/kwadrat-r11 | s8: nowy agent Fable |
-| światło r11 (recenzja) | 0080 | light-r11 | artifacts/light-r11 | s8: nowy agent Fable |
-| import Megascans | 0084 | gpt-megascans | artifacts/megascans-r1 | GPT/Codex w toku |
-| tło za krawędzią | 0085 | argon-edge (Argon tworzy) | artifacts/edge-far-r1 | Antigravity — do startu przez właściciela |
+| straż JRG2 | 0070 | agent-aa9c74c62497e5d1f | artifacts/firestation-r9 | GOTOWE do scalenia `ff40d3e` (r6: tynk P0 spełniony 103/119/135, okna z ramami, tuje/świerki; LOD 9944/2828/164). Przed scaleniem: pełny pytest gis + EditMode (nie powtórzone po r6), ponowny visual-critic `unity/r6/view`. Otwarte: 2 świerki na kostce (`dims.json` spruce.items), pokrój stożek |
+| osobówki r10 | 0078 | agent-a2215bcc98d109edc | artifacts/cars-r10 | s8: GOTOWE do scalenia `032af23` (mora usunięta, lakier jaśniejszy; bok czarnego auta nadal ciemniejszy od opony; Low +0,69 %) — recenzja visual-critic m3 do zrobienia |
+| zabudowa r10 | 0081 | agent-ac404823e7d8b56e7 | artifacts/buildings-r10 | s8: GOTOWE do scalenia `70ef3ba` (r2, facade_atlas High 17,4 MB). Znalezisko: `_Tint` (Color) linearyzowany 2× we WSZYSTKICH zestawach World PBR — poprawione tylko dla budynków (`tint_linear`); globalnie → osobne zadanie ADR 0086 po scaleniach |
+| zewnętrze TRAKT + naczepa | 0083 | agent-a4049e15e1ab8c681 | artifacts/truck-ext-r10 | SCALONE `68e5335` (r8, wariant B, dach < 90 % luminancji). Na main wymagane TruckAssetBuilder.BuildBatch + WorldTruckInstaller.InstallBatch. Otwarte → nowe zadanie: lakier kabiny, szyba czołowa, reflektory w dzień (TruckExterior.shader/TruckLights.cs). Worktree do usunięcia |
+| Kwadrat Park r11 (recenzja) | 0071 | kwadrat-r11 | artifacts/kwadrat-r11 | GOTOWE do scalenia `bd28b1e`: kostka P0 = błąd GLOBALNY (importer nie zapisywał `_Tile`, kostka 2,08× za duża; zmienia też chodniki/parkingi wszędzie), zużycie placu, zacieki hali, naczepy, wyspa szlabanu; Low +0,7 % draws. Po scaleniu na main KONIECZNE `build_all.py` (PNG na main stare) → build_world → import-region. Decyzja lidera: `_Tile` 4 m dla zestawów bez `elements_per_tile` |
+| światło r11 (recenzja) | 0080 | light-r11 | artifacts/light-r11 | GOTOWE do scalenia `195eb5a` (niebo 6800 K, korony, mgiełka 2,4/40 m, szyba); zmienia WorldCarGlass.shader (możliwy konflikt z 0078). A/B telefon: komendy w STATUS |
+| import Megascans | 0084 | gpt-megascans | artifacts/megascans-r1 | GPT/Codex w toku — runda 3 (r1 sam ocenił FAIL: krawężnik bez brudu, Low +19 draw/+4k tris; poprawia) |
+| tło za krawędzią | 0085 | argon-edge | artifacts/edge-far-r1 | Antigravity w toku — r0-before gotowe, generator far_field.py; zmienia WorldSurface.shader + streetscape/materials.py (konflikt z 0081 `tint_linear` → unia ręcznie) |
 
 ## Następne kroki
 1. Scalanie: 0076 → 0077 → 0070 → 0078 → 0081 → 0083 → Kwadrat r11 → światło r11 → 0084 → 0085; po drogach: build_world → pytest gis → import-region → PlayMode WorldCBarrier|DepotBarrier|WorldCRoute.
 2. Sprzątanie ZROBIONE: worktree 0071/0080/0082 usunięte (artifacts skopiowane), 7 osieroconych katalogów usuniętych (junctiony odpięte, artifacts → artifacts/orphans/), nagranie → artifacts/owner/.
 3. Integracja, czyste buildy Low/High/Ultra, telefony, raport bramki 3.
-4. Ostatni przydzielony ADR: **0085**.
+4. Ostatni przydzielony ADR: **0088** (0086 = `_Tint` gamma → GPT Q1; 0087 = lakier/szyba/reflektory TRAKT → Argon Q1; 0088 = Megascans r2 drzewa → GPT Q2).
 
 ---
 # HANDOVER — kamion, sesja 7 (2026-11-10 ok. 23:00; LIMIT WYCZERPANY ok. 23:10; wszyscy agenci (0070, 0076, 0077, 0078, 0081, 0082, 0083) zapisali WIP i są zatrzymani; agenci dostali polecenie: commit WIP + STATUS.md i stop; nowa sesja startuje z docs/owner/START-PROMPT-S8.md)
