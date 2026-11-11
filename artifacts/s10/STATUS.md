@@ -530,3 +530,11 @@ patch/oilvisible, gateattributionnotproven; boundedwholecomponentUVtransferplan
 authorizedwithrejectgates. GbusREADONLY1ed61e9c received, noDsourcewrites.
 NEXT COMMAND: Ecorrectedruntimepolicy/R1bindings+metrics, Dcomponenthelper/tests
 andmatchedglyphcontrols; broadseparate/fullvalidationthen0108.
+
+Step41: D7077c84e lanehelper+importerhook reviewed; targeted10testsPASS, fullpending.
+Rootflagged indexedvsgeometricclosure, actual3350vs3343/7unions provesneedmetadata
+groupingfix+splitvertexnegative (no geometryweld). RawPBFfull20explicitbusstops
+read/pinned/current2kmregion; earlierpreliminary10assertrejectedbeforeproofwrite.
+Selectoromissionnotrawabsence. E6e1c30f9 checkpointR1LODscopefailcommitted.
+NEXT COMMAND: Dactualgroupedtransfer/native+glyphcontrols, verifiedbuscandidate;
+EtrueHighruntimepolicy/LowHighLowtests+R1bindings/metricsbeforefull160.

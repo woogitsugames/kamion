@@ -82,3 +82,15 @@ no direction/stop_position; not proofrawPBF lacks them (selector omission).
 Existing allowedfurniture/life flow/decal material permits future VERIFIEDsmall
 footprint, not projectedallshelters.0newdraw conditional onchunk/culling, actual
 matchedbudgetneeded. Source+photo/ortho verification or precisehandoff required.
+
+Full raw-source read contains20explicit bus=yes/public_transport=stop_position
+inside2048x2048mregion, pinnedPBF SHA0ff26cd42f175a5711c69b6d3087a9dcd3bb93367eda16809c75a11ce6c3869d.
+Root read exacttags/IDs/coordinates and sourcebbox. Earlieragent10count was
+preliminary; rootcountassert rejected it before publishing proof. Extracted-source
+absence was selectoromission, not rawabsence. Buspose/stain attribution still
+requires actualroad containment/height/direction and sourcephotozone proof.
+Targeted field+sentinel10/10pass (fullsuite pending). Wholecomponent source reviewed:
+realroadonly, overlap/height/7sample gates, clonedUV1.x, age/geometry untouched.
+Rootflagged indexed vscoincidentvertex closure; actual3350->3343components proves
+7metadata unionsneeded. Agent will union exactposition+sameage forGROUPING only
+and test splitvertexunknown closure; no geometricwelding. Initialimport not final.
