@@ -1,6 +1,7 @@
 # HANDOVER — kamion, sesja 9 (start 2026-11-11 00:30 lokalnie / 23:30 UTC; limit 5 h reset 04:30 UTC)
 
 ## Najpierw
+- 07:23 lokalnie (trigger): limit 44 %; 0094 r3, 0095 krok 1 (pasy z ortofoto) zrobiony, 0096 w toku; prepare-megascans na main w toku. **GPT (od ~02:00) i Argon (od 01:46) bezczynni** — wymagają ręcznego wznowienia przez właściciela (GPT: Q1 0086 / Q2 0088; Argon: uwagi lidera do 0085, potem Q1 0087 / Q2 0089).
 - **05:40 lokalnie: limit odnowiony (0 %).** Start: krytyk 0092+0093, integracja Unity (worktree integration-s9), 0094 zabudowa r4. Telefon (A16 Low) dopiero gdy żaden Unity nie działa — APK z integracji.
 - 04:22: limit 97 %, nic w toku (Argon/GPT bez zmian); jednorazowa pobudka 05:35 lokalnie na start pracy po resecie.
 - **03:22 lokalnie: limit 96 %** — stop nowych agentów do resetu 04:30 UTC (05:30 lokalnie). main ZIELONY po 0093: pytest gis 345 ✓ / 0 ✗ (regeneracja zacommitowana). Uruchamiacz `uv run pytest` bywa zepsuty („trampoline failed”) — używaj `python -m pytest`.
