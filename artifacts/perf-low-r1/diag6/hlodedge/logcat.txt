@@ -1,0 +1,88 @@
+--------- beginning of main
+11-11 14:02:11.529 25800 25800 V Unity   : Context Type: GameActivity
+11-11 14:02:11.534 25800 25814 I Unity   : UnityApplication::CreateInstance
+11-11 14:02:11.534 25800 25814 I Unity   : GameActivity Package Version '4.4.0'
+11-11 14:02:11.535 25800 25814 I Unity   : Starting Game Loop
+11-11 14:02:11.537 25800 25814 I Unity   : Handle cmd APP_CMD_START(11)
+11-11 14:02:11.545 25800 25814 I Unity   : Handle cmd APP_CMD_RESUME(12)
+11-11 14:02:11.570 25800 25814 I Unity   : Handle cmd APP_CMD_WINDOW_INSETS_CHANGED(17)
+11-11 14:02:11.586 25800 25814 I Unity   : Handle cmd APP_CMD_WINDOW_INSETS_CHANGED(17)
+11-11 14:02:11.586 25800 25814 I Unity   : Handle cmd APP_CMD_CONTENT_RECT_CHANGED(5)
+11-11 14:02:11.592 25800 25814 I Unity   : Handle cmd APP_CMD_INIT_WINDOW(1)
+11-11 14:02:11.603 25800 25814 I Unity   : MemoryManager: Using 'Dynamic Heap' Allocator.
+11-11 14:02:11.619 25800 25814 I Unity   : SystemInfo CPU = ARM64 FP ASIMD AES, Cores = 8, Memory = 3653mb
+11-11 14:02:11.619 25800 25814 I Unity   : SystemInfo ARM big.LITTLE configuration: 2 big (mask: 0xc0), 6 little (mask: 0x3f)
+11-11 14:02:11.619 25800 25814 I Unity   : ApplicationInfo 'com.woogitsugames.kamion', Version '0.1.0', Min API Level '29', Target API Level '36'
+11-11 14:02:11.619 25800 25814 I Unity   : Built from '6000.3/respin/6000.3.28f1-21f78c3e21d1' branch, Version '6000.3.28f1 (8f082d2fe476)', Build type 'Release', Scripting Backend 'il2cpp', CPU 'arm64-v8a', Stripping 'Enabled'
+11-11 14:02:11.619 25800 25814 I Unity   : Device Model 'samsung SM-A165F', OS 'Android OS 16 (API 36)'
+11-11 14:02:11.755 25800 25814 I Unity   : Company Name: woogitsugames
+11-11 14:02:11.755 25800 25814 I Unity   : Product Name: Kamion
+11-11 14:02:12.166 25800 25814 I Unity   :     HasWindow = 1, HasFocus = 0
+11-11 14:02:12.166 25800 25814 I Unity   : Handle cmd APP_CMD_WINDOW_RESIZED(3)
+11-11 14:02:12.166 25800 25814 I Unity   : Handle cmd APP_CMD_WINDOW_REDRAW_NEEDED(4)
+11-11 14:02:12.166 25800 25814 I Unity   : Handle cmd APP_CMD_GAINED_FOCUS(7)
+11-11 14:02:12.166 25800 25814 I Unity   : Handle cmd APP_CMD_WINDOW_INSETS_CHANGED(17)
+11-11 14:02:14.424 25800 25814 I Unity   : [BOOT] render overrides (profiling): msaa= scale= shadow= post= hdr= a2c= trees= treeshadow= card= cull= thin= vegshader= hlod= a8= envcap= scalemin= upscale= fsrsharp= pacing= lamppools= envcap_iv= envcap_lod= shadowcasc= shadowres= ab=hlodedge ab_period= mirror_cap= mirror_lod= mirror_far= mirror_res= mirror_rate= mirror_legacy=False mirror_off=False worldgi= worldsun= clouds= haze= ssao= look=-1 ev=0 wet= lod= far= mask= props= hud= glassfast=
+11-11 14:02:14.426 25800 25814 I Unity   : [BOOT] Kamion 0.1.0 (aa01f73747-dirty) unity=6000.3.28f1 platform=android-36 device='samsung SM-A165F' gpu='Mali-G57 MC2' api='Vulkan 1.1.0 [54.1.0 (0x0d801000)]' ram=3653MB screen=2340x1080 tier=Low targetFps=240
+11-11 14:02:14.431 25800 25814 I Unity   : [BOOT] diagnostics output: /storage/emulated/0/Android/data/com.woogitsugames.kamion/files/diag
+11-11 14:02:14.494 25800 25814 I Unity   : [CONTROLS] boot v3 steer=wheel wheelRange=270 wheelSens=1.00 centre=1.00 deadZone=0.010 gyroInvert=off gyroSens=1.00 throttle=progressive brake=progressive lookSens=1.00 cabFov=55 headMotion=on speedSteer=on
+11-11 14:02:14.504 25800 25814 I Unity   : [CONTROLS] menu shown light=overcast tier=Low fps=240
+11-11 14:02:14.524 25800 25814 I Unity   : [BOOT] launch argument scene=WorldC
+11-11 14:02:16.091 25800 25814 I Unity   : [WORLD] collision cooked at load: 274 meshes, bake 255 ms (parallel), enable 2 ms, total 257 ms
+11-11 14:02:16.093 25800 25814 I Unity   : [PASSAB] start key=hlodedge period=4,0s (A = shipping, B = no forest HLOD edge-wall submeshes); WARNING: pass rq_scale <s> rq_pacing 0 or the adaptive scale reacts to the toggle
+11-11 14:02:16.109 25800 25814 I Unity   : [CONTROLS] loaded v3 steer=wheel wheelRange=270 wheelSens=1.00 centre=1.00 deadZone=0.010 gyroInvert=off gyroSens=1.00 throttle=progressive brake=progressive lookSens=1.00 cabFov=55 headMotion=on speedSteer=on
+11-11 14:02:16.241 25800 25814 I Unity   : [LAB] DrivingLab ready: vehicle=Tractor4x2_TRAKT trailer=Trailer_Curtainsider_Art spawn=Gross40t steer=Wheel270 autopilot=route fixedDt=0,009999993
+11-11 14:02:17.283 25800 25814 I Unity   : [AUDIO] vehicle audio ready (122 engine loops + 47 sfx, tools/audio/render_all.py (procedural synthesis, no recordings))
+11-11 14:02:17.563 25800 25814 I Unity   : [TELEMETRY] recording → /storage/emulated/0/Android/data/com.woogitsugames.kamion/files/telemetry/drive-20261111-140217.csv
+11-11 14:02:17.564 25800 25814 I Unity   : [CAB] view camera Main Camera cabView=False gain 1,00 meter 0,00 EV
+11-11 14:02:19.133 25800 25814 I Unity   : [DIAG] t=3s tier=Low target=240 fps=0.3 p50=3283.33 p95=3283.33 p99=3283.33 max=3283.33ms temp=28.7C thermal=0 headroom=0.62 pss=895MB scale=0.75 fallback=none mir=0.00/f cpu=0.00 gpu=- cap=0.00/f cpu=0.00 gpu=- shd_gpu=- main_cpu=0.00 ab=hlodedge:A
+11-11 14:02:19.136 25800 25814 I Unity   : [CAB] view camera Main Camera cabView=True gain 4,94 meter 1,30 EV
+11-11 14:02:20.121 25800 25814 I Unity   : [PASSAB] key=hlodedge state=A n=27 gpu_p50=26.02 gpu_p90=46.69 cpu_p50=18.24 cpu_p90=54.43 dt_p50=33.32 mir=1.00/1166.70ms cap=6.00/815.10ms
+11-11 14:02:24.125 25800 25814 I Unity   : [DIAG] t=8s tier=Low target=240 fps=19.7 p50=33.31 p95=33.49 p99=250.00 max=3283.33ms temp=28.7C thermal=0 headroom=0.62 pss=940MB scale=0.75 fallback=none mir=1.00/f cpu=3.09 gpu=- cap=0.08/f cpu=0.14 gpu=- shd_gpu=- main_cpu=6.07 ab=hlodedge:B
+11-11 14:02:24.126 25800 25814 I Unity   : [PASSAB] key=hlodedge state=B n=117 gpu_p50=26.01 gpu_p90=30.64 cpu_p50=16.74 cpu_p90=21.50 dt_p50=33.30 mir=1.00/3.09ms cap=0.08/0.14ms
+11-11 14:02:28.156 25800 25814 I Unity   : [PASSAB] key=hlodedge state=A n=110 gpu_p50=27.44 gpu_p90=31.16 cpu_p50=17.21 cpu_p90=22.23 dt_p50=33.31 mir=1.00/3.64ms cap=0.09/0.16ms
+11-11 14:02:29.136 25800 25814 I Unity   : [DIAG] t=13s tier=Low target=240 fps=25.6 p50=33.31 p95=33.46 p99=100.03 max=3283.33ms temp=28.7C thermal=0 headroom=0.62 pss=898MB scale=0.75 fallback=none mir=1.00/f cpu=3.64 gpu=- cap=0.09/f cpu=0.16 gpu=- shd_gpu=- main_cpu=6.67 ab=hlodedge:B
+11-11 14:02:32.158 25800 25814 I Unity   : [PASSAB] key=hlodedge state=B n=118 gpu_p50=26.40 gpu_p90=29.93 cpu_p50=16.92 cpu_p90=20.36 dt_p50=33.32 mir=1.00/3.41ms cap=0.09/0.16ms
+11-11 14:02:34.155 25800 25814 I Unity   : [DIAG] t=18s tier=Low target=240 fps=28.1 p50=33.32 p95=33.46 p99=66.67 max=3283.33ms temp=28.7C thermal=0 headroom=0.62 pss=934MB scale=0.75 fallback=none mir=1.00/f cpu=3.56 gpu=- cap=0.10/f cpu=0.14 gpu=- shd_gpu=- main_cpu=6.98 ab=hlodedge:A
+11-11 14:02:36.189 25800 25814 I Unity   : [PASSAB] key=hlodedge state=A n=98 gpu_p50=33.33 gpu_p90=35.58 cpu_p50=19.00 cpu_p90=22.09 dt_p50=33.33 mir=1.00/3.76ms cap=0.10/0.15ms
+11-11 14:02:39.165 25800 25814 I Unity   : [DIAG] t=23s tier=Low target=240 fps=33.3 p50=33.32 p95=33.53 p99=50.07 max=116.66ms temp=28.7C thermal=0 headroom=0.62 pss=876MB scale=0.75 fallback=none mir=1.00/f cpu=3.90 gpu=- cap=0.10/f cpu=0.16 gpu=- shd_gpu=- main_cpu=7.06 ab=hlodedge:B
+11-11 14:02:40.197 25800 25814 I Unity   : [PASSAB] key=hlodedge state=B n=94 gpu_p50=34.29 gpu_p90=36.80 cpu_p50=19.35 cpu_p90=24.37 dt_p50=33.34 mir=1.00/4.15ms cap=0.10/0.15ms
+11-11 14:02:40.197 25800 25814 I Unity   : [PASSAB] summary key=hlodedge windows A=3 B=3 gpu_p50 A=27.44 B=26.40 (A-B +1.05) cpu_p50 A=18.24 B=16.92 (A-B +1.31)
+11-11 14:02:44.194 25800 25814 I Unity   : [DIAG] t=28s tier=Low target=240 fps=31.7 p50=33.33 p95=49.97 p99=50.08 max=100.03ms temp=28.7C thermal=0 headroom=0.62 pss=924MB scale=0.75 fallback=none mir=1.00/f cpu=4.12 gpu=- cap=0.08/f cpu=0.14 gpu=- shd_gpu=- main_cpu=7.76 ab=hlodedge:A
+11-11 14:02:44.222 25800 25814 I Unity   : [PASSAB] key=hlodedge state=A n=98 gpu_p50=32.86 gpu_p90=36.30 cpu_p50=18.82 cpu_p90=27.70 dt_p50=33.33 mir=1.00/4.12ms cap=0.08/0.14ms
+11-11 14:02:48.225 25800 25814 I Unity   : [PASSAB] key=hlodedge state=B n=100 gpu_p50=32.83 gpu_p90=34.70 cpu_p50=19.29 cpu_p90=22.85 dt_p50=33.32 mir=1.00/4.51ms cap=0.10/0.19ms
+11-11 14:02:49.225 25800 25814 I Unity   : [DIAG] t=33s tier=Low target=240 fps=30.6 p50=33.33 p95=49.98 p99=50.10 max=50.17ms temp=28.7C thermal=0 headroom=0.62 pss=922MB scale=0.75 fallback=none mir=1.00/f cpu=4.51 gpu=- cap=0.10/f cpu=0.19 gpu=- shd_gpu=- main_cpu=6.82 ab=hlodedge:A
+11-11 14:02:52.229 25800 25814 I Unity   : [PASSAB] key=hlodedge state=A n=106 gpu_p50=28.86 gpu_p90=32.64 cpu_p50=18.55 cpu_p90=22.69 dt_p50=33.31 mir=1.00/4.65ms cap=0.09/0.17ms
+11-11 14:02:54.239 25800 25814 I Unity   : [DIAG] t=38s tier=Low target=240 fps=30.6 p50=33.33 p95=49.97 p99=50.12 max=66.65ms temp=28.7C thermal=0 headroom=0.63 pss=864MB scale=0.75 fallback=none mir=1.00/f cpu=4.16 gpu=- cap=0.11/f cpu=0.17 gpu=- shd_gpu=- main_cpu=6.05 ab=hlodedge:B
+11-11 14:02:56.256 25800 25814 I Unity   : [PASSAB] key=hlodedge state=B n=122 gpu_p50=25.59 gpu_p90=29.06 cpu_p50=16.57 cpu_p90=19.30 dt_p50=33.28 mir=1.00/3.98ms cap=0.09/0.16ms
+11-11 14:02:59.243 25800 25814 I Unity   : [DIAG] t=43s tier=Low target=240 fps=33.1 p50=33.31 p95=33.54 p99=50.10 max=66.65ms temp=28.7C thermal=0 headroom=0.63 pss=863MB scale=0.75 fallback=none mir=1.00/f cpu=4.00 gpu=- cap=0.11/f cpu=0.18 gpu=- shd_gpu=- main_cpu=5.52 ab=hlodedge:A
+11-11 14:03:00.261 25800 25814 I Unity   : [PASSAB] key=hlodedge state=A n=121 gpu_p50=26.33 gpu_p90=29.39 cpu_p50=15.87 cpu_p90=18.85 dt_p50=33.31 mir=1.00/3.64ms cap=0.09/0.15ms
+11-11 14:03:04.244 25800 25814 I Unity   : [DIAG] t=48s tier=Low target=240 fps=35.7 p50=33.30 p95=33.46 p99=49.97 max=66.65ms temp=28.7C thermal=0 headroom=0.63 pss=875MB scale=0.75 fallback=none mir=1.00/f cpu=3.70 gpu=- cap=0.09/f cpu=0.16 gpu=- shd_gpu=- main_cpu=5.12 ab=hlodedge:B
+11-11 14:03:04.275 25800 25814 I Unity   : [PASSAB] key=hlodedge state=B n=127 gpu_p50=24.80 gpu_p90=27.91 cpu_p50=15.03 cpu_p90=19.03 dt_p50=33.24 mir=1.00/3.70ms cap=0.09/0.16ms
+11-11 14:03:04.275 25800 25814 I Unity   : [PASSAB] summary key=hlodedge windows A=6 B=6 gpu_p50 A=27.44 B=26.01 (A-B +1.44) cpu_p50 A=18.24 B=16.74 (A-B +1.50)
+11-11 14:03:08.291 25800 25814 I Unity   : [PASSAB] key=hlodedge state=A n=120 gpu_p50=26.15 gpu_p90=29.92 cpu_p50=16.25 cpu_p90=19.09 dt_p50=33.29 mir=1.00/3.50ms cap=0.11/0.19ms
+11-11 14:03:09.248 25800 25814 I Unity   : [DIAG] t=53s tier=Low target=240 fps=37.4 p50=33.28 p95=33.44 p99=33.54 max=50.18ms temp=28.7C thermal=0 headroom=0.63 pss=838MB scale=0.75 fallback=none mir=1.00/f cpu=3.50 gpu=- cap=0.11/f cpu=0.19 gpu=- shd_gpu=- main_cpu=5.42 ab=hlodedge:B
+11-11 14:03:12.326 25800 25814 I Unity   : [PASSAB] key=hlodedge state=B n=126 gpu_p50=24.98 gpu_p90=28.64 cpu_p50=15.37 cpu_p90=19.98 dt_p50=33.27 mir=1.00/3.63ms cap=0.10/0.15ms
+11-11 14:03:14.255 25800 25814 I Unity   : [DIAG] t=58s tier=Low target=240 fps=37.7 p50=33.27 p95=33.44 p99=33.54 max=50.09ms temp=28.7C thermal=0 headroom=0.64 pss=850MB scale=0.75 fallback=none mir=1.00/f cpu=3.42 gpu=- cap=0.11/f cpu=0.18 gpu=- shd_gpu=- main_cpu=5.95 ab=hlodedge:A
+11-11 14:03:16.328 25800 25814 I Unity   : [PASSAB] key=hlodedge state=A n=126 gpu_p50=24.81 gpu_p90=28.19 cpu_p50=16.03 cpu_p90=19.46 dt_p50=33.27 mir=1.00/3.54ms cap=0.08/0.12ms
+11-11 14:03:19.261 25800 25814 I Unity   : [DIAG] t=63s tier=Low target=240 fps=38.2 p50=33.27 p95=33.44 p99=33.51 max=50.09ms temp=28.7C thermal=0 headroom=0.64 pss=838MB scale=0.75 fallback=none mir=1.00/f cpu=3.63 gpu=- cap=0.09/f cpu=0.13 gpu=- shd_gpu=- main_cpu=6.03 ab=hlodedge:B
+11-11 14:03:20.361 25800 25814 I Unity   : [PASSAB] key=hlodedge state=B n=130 gpu_p50=24.48 gpu_p90=27.09 cpu_p50=15.05 cpu_p90=18.32 dt_p50=33.25 mir=1.00/3.35ms cap=0.09/0.13ms
+11-11 14:03:24.273 25800 25814 I Unity   : [DIAG] t=68s tier=Low target=240 fps=38.5 p50=33.27 p95=33.43 p99=33.49 max=50.09ms temp=28.7C thermal=0 headroom=0.64 pss=886MB scale=0.75 fallback=none mir=1.00/f cpu=3.29 gpu=- cap=0.09/f cpu=0.16 gpu=- shd_gpu=- main_cpu=5.66 ab=hlodedge:A
+11-11 14:03:24.391 25800 25814 I Unity   : [PASSAB] key=hlodedge state=A n=123 gpu_p50=25.79 gpu_p90=29.29 cpu_p50=15.53 cpu_p90=18.93 dt_p50=33.29 mir=1.00/3.29ms cap=0.09/0.16ms
+11-11 14:03:28.430 25800 25814 I Unity   : [PASSAB] key=hlodedge state=B n=130 gpu_p50=24.70 gpu_p90=27.70 cpu_p50=14.79 cpu_p90=18.36 dt_p50=33.22 mir=1.00/3.41ms cap=0.08/0.11ms
+11-11 14:03:28.430 25800 25814 I Unity   : [PASSAB] summary key=hlodedge windows A=9 B=9 gpu_p50 A=26.33 B=25.59 (A-B +0.74) cpu_p50 A=17.21 B=16.57 (A-B +0.63)
+11-11 14:03:29.277 25800 25814 I Unity   : [DIAG] t=73s tier=Low target=240 fps=38.8 p50=33.26 p95=33.43 p99=33.49 max=49.92ms temp=28.7C thermal=0 headroom=0.64 pss=883MB scale=0.75 fallback=none mir=1.00/f cpu=3.41 gpu=- cap=0.08/f cpu=0.11 gpu=- shd_gpu=- main_cpu=5.58 ab=hlodedge:A
+11-11 14:03:29.863 25800 25814 I Unity   : [GATE3] segment done t=70.5 s s=1714.0
+11-11 14:03:32.445 25800 25814 I Unity   : [PASSAB] key=hlodedge state=A n=118 gpu_p50=27.06 gpu_p90=30.40 cpu_p50=16.00 cpu_p90=19.73 dt_p50=33.31 mir=1.00/3.28ms cap=0.04/0.07ms
+11-11 14:03:34.278 25800 25814 I Unity   : [DIAG] t=78s tier=Low target=240 fps=38.1 p50=33.28 p95=33.43 p99=33.51 max=50.08ms temp=28.7C thermal=0 headroom=0.64 pss=837MB scale=0.75 fallback=none mir=1.00/f cpu=3.15 gpu=- cap=0.00/f cpu=0.00 gpu=- shd_gpu=- main_cpu=5.39 ab=hlodedge:B
+11-11 14:03:36.446 25800 25814 I Unity   : [PASSAB] key=hlodedge state=B n=129 gpu_p50=24.77 gpu_p90=26.66 cpu_p50=14.88 cpu_p90=19.13 dt_p50=33.21 mir=1.00/3.20ms cap=0.00/0.00ms
+11-11 14:03:39.295 25800 25814 I Unity   : [DIAG] t=83s tier=Low target=240 fps=38.0 p50=33.28 p95=33.42 p99=33.53 max=50.08ms temp=28.7C thermal=0 headroom=0.64 pss=869MB scale=0.75 fallback=none mir=1.00/f cpu=3.17 gpu=- cap=0.00/f cpu=0.00 gpu=- shd_gpu=- main_cpu=5.67 ab=hlodedge:A
+11-11 14:03:40.459 25800 25814 I Unity   : [PASSAB] key=hlodedge state=A n=118 gpu_p50=26.86 gpu_p90=30.33 cpu_p50=15.70 cpu_p90=19.94 dt_p50=33.31 mir=1.00/3.29ms cap=0.00/0.00ms
+11-11 14:03:44.314 25800 25814 I Unity   : [DIAG] t=88s tier=Low target=240 fps=37.8 p50=33.28 p95=33.43 p99=33.51 max=50.08ms temp=28.7C thermal=0 headroom=0.64 pss=837MB scale=0.75 fallback=none mir=1.00/f cpu=3.18 gpu=- cap=0.00/f cpu=0.00 gpu=- shd_gpu=- main_cpu=5.15 ab=hlodedge:B
+11-11 14:03:44.463 25800 25814 I Unity   : [PASSAB] key=hlodedge state=B n=129 gpu_p50=24.53 gpu_p90=27.38 cpu_p50=14.49 cpu_p90=17.98 dt_p50=33.21 mir=1.00/3.18ms cap=0.00/0.00ms
+11-11 14:03:48.483 25800 25814 I Unity   : [PASSAB] key=hlodedge state=A n=119 gpu_p50=26.65 gpu_p90=30.14 cpu_p50=15.83 cpu_p90=19.21 dt_p50=33.30 mir=1.00/3.23ms cap=0.00/0.00ms
+11-11 14:03:49.328 25800 25814 I Unity   : [DIAG] t=93s tier=Low target=240 fps=38.0 p50=33.27 p95=33.44 p99=33.49 max=33.60ms temp=28.7C thermal=0 headroom=0.64 pss=873MB scale=0.75 fallback=none mir=1.00/f cpu=3.23 gpu=- cap=0.00/f cpu=0.00 gpu=- shd_gpu=- main_cpu=5.80 ab=hlodedge:B
+11-11 14:03:52.492 25800 25814 I Unity   : [PASSAB] key=hlodedge state=B n=130 gpu_p50=24.83 gpu_p90=27.14 cpu_p50=14.46 cpu_p90=17.34 dt_p50=33.18 mir=1.00/3.19ms cap=0.08/0.12ms
+11-11 14:03:52.492 25800 25814 I Unity   : [PASSAB] summary key=hlodedge windows A=12 B=12 gpu_p50 A=26.65 B=24.83 (A-B +1.83) cpu_p50 A=16.03 B=15.05 (A-B +0.98)
+11-11 14:03:54.330 25800 25814 I Unity   : [DIAG] t=98s tier=Low target=240 fps=38.1 p50=33.27 p95=33.44 p99=33.48 max=33.60ms temp=28.7C thermal=0 headroom=0.65 pss=881MB scale=0.75 fallback=none mir=1.00/f cpu=3.22 gpu=- cap=0.00/f cpu=0.00 gpu=- shd_gpu=- main_cpu=5.63 ab=hlodedge:A
+11-11 14:03:56.498 25800 25814 I Unity   : [PASSAB] key=hlodedge state=A n=117 gpu_p50=26.97 gpu_p90=29.89 cpu_p50=16.44 cpu_p90=28.75 dt_p50=33.31 mir=1.00/3.30ms cap=0.00/0.00ms

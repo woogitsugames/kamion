@@ -1,0 +1,65 @@
+{
+  "serial": "RFGL34SJYDZ",
+  "timestamp": "20261111-140022",
+  "device": {
+    "ro.product.model": "SM-A165F",
+    "ro.product.manufacturer": "samsung",
+    "ro.soc.model": "MT6789",
+    "ro.build.version.release": "16",
+    "ro.build.version.sdk": "36",
+    "ro.hardware.egl": "meow"
+  },
+  "pssMb": 820.6,
+  "batteryTempC": 28.3,
+  "thermalStatus": 0,
+  "frameTime": {
+    "samples": 2792,
+    "warmupSeconds": 25,
+    "spanSeconds": 77.1,
+    "meanFps": 36.23,
+    "p50Ms": 33.303,
+    "p95Ms": 33.441,
+    "p99Ms": 49.99,
+    "maxMs": 66.647,
+    "over33ms": 261,
+    "over50ms": 21
+  },
+  "gpuMs": {
+    "samples": 2777,
+    "p50": 26.407,
+    "p95": 32.887,
+    "p99": 35.973
+  },
+  "cpuMainMs": {
+    "samples": 2792,
+    "p50": 16.226,
+    "p95": 21.962,
+    "p99": 38.038
+  },
+  "gameSummary": {
+    "build": "0.1.0 (aa01f73747-dirty)",
+    "device": "samsung SM-A165F",
+    "gpu": "Mali-G57 MC2",
+    "graphicsApi": "Vulkan 1.1.0 [54.1.0 (0x0d801000)]",
+    "qualityTier": "Low",
+    "targetFps": 240,
+    "resolution": "2340x1080",
+    "sessionSeconds": 98.21343994140625,
+    "frames": 3335,
+    "windowSamples": 600,
+    "meanFps": 36.99518966674805,
+    "p50Ms": 33.32014083862305,
+    "p95Ms": 33.372867584228516,
+    "p99Ms": 33.4225959777832,
+    "maxMs": 49.949317932128906,
+    "batteryTempC": 28.700000762939453,
+    "thermalStatus": 0,
+    "thermalHeadroom": 0.6163949370384216,
+    "pssKb": 895776,
+    "unityAllocatedBytes": 208433003,
+    "unityReservedBytes": 341663744,
+    "systemMemoryMb": 3653,
+    "renderScale": 0.75,
+    "capFallback": "none"
+  }
+}

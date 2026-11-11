@@ -51,13 +51,14 @@ Shader "Kamion/Truck Glass"
             #pragma vertex vert
             #pragma fragment frag
             #pragma multi_compile_fog
-            // ADR 0106: Low fast path (QualityProfile.glassFast, global keyword): ambient SH per vertex (flat panes), polynomial
-            // atan2 in the wiper sweeps. Same image within 1/255 (visual QA); A16 Low windscreen pass measured 3.6 ms GPU.
+            // ADR 0106: Low fast path (QualityProfile.glassFast, global keyword): Fresnel, body absorption, film phase, ambient SH
+            // and fog transmittance per vertex, wiper sweeps in half precision (FragFast). A16 Low: the pane (~80 % of the cab
+            // view) cost 3.6-4.3 ms GPU, the fast path saves 0.9 ms; control cameras PSNR 62-82 dB against the full path.
             #pragma multi_compile _ _KAMION_GLASS_FAST
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
             #include "Assets/_Project/Rendering/Shaders/KamionAtmosphere.hlsl"   // ADR 0080 height haze, Low tone toe, wetness
             #include "KamionVehicleEnv.hlsl"
-            float _KamionGlassDebug;    // ADR 0106 diagnostics (rq_ab glassdbg): 0 = normal; 1 constant, 2 no film/env/spec, 3 no film, 4 no spec, 5 no fog
+            float _KamionGlassDebug;    // ADR 0106 diagnostics (rq_ab glassdbg rq_glassdbg 1): 1 = constant colour (raster + blend floor of the pane)
             float _KamionCamOutside;    // CabInteriorLighting: 1 = view camera outside the cab, 0 = cab view or no cab lighting
             float4 _KamionGrimeUp[4];   // vehicle frames (ContactShadowCaster): height above the wheel-contact plane
 
@@ -224,7 +225,7 @@ Shader "Kamion/Truck Glass"
 
                 // ---- road film outside the wiper sweeps (windscreen) ----
                 half film = 0;
-                if (_Wiper > 0.0 && _KamionGlassDebug != 3.0 && _KamionGlassDebug != 2.0)
+                if (_Wiper > 0.0)
                 {
                     float2 p = i.positionOS.xy;
                     float rA, rB;
@@ -244,8 +245,7 @@ Shader "Kamion/Truck Glass"
                 bool hasFrame = slot >= 1u && slot <= 4u;
                 float h = hasFrame ? dot(i.positionWS, _KamionGrimeUp[slot - 1u].xyz) + _KamionGrimeUp[slot - 1u].w : 2.0;
                 half3 env;
-                if (_KamionGlassDebug == 2.0) env = 0;
-                else if (i.inside > 0.5)
+                if (i.inside > 0.5)
                 {
                     // Cab interior in the reflection: dash below (lit by the sky through the glass and by the sun on its
                     // top), headliner and back wall above (sky light only). Exposed units like the SH ambient.
@@ -266,7 +266,7 @@ Shader "Kamion/Truck Glass"
                 float3 H = SafeNormalize(float3(L.direction) + V);
                 float NoH = saturate(dot(float3(n), H));
                 float d = 1.0 - NoH * NoH * (1.0 - r * r);
-                half spec = (_KamionGlassDebug == 4.0 || _KamionGlassDebug == 2.0) ? 0.0 : (half)min((r * r) / (4.0 * PI * d * d) * saturate(dot(n, L.direction)) * F * 4.0, 2048.0);
+                half spec = (half)min((r * r) / (4.0 * PI * d * d) * saturate(dot(n, L.direction)) * F * 4.0, 2048.0);
 
                 // Transmittance of the pane: reflection loss x body absorption x grime / film (the film also scatters).
                 half trans = (1.0 - F) * tAbs * (1.0 - saturate(grime * 0.25));
@@ -299,7 +299,7 @@ Shader "Kamion/Truck Glass"
                 // r4 E2 "no double reflection"); from outside both surfaces mirror the sky.
                 half3 col = body + env * lerp(F, F1, i.inside) + L.color * spec * (1.0 - i.inside * 0.7);
                 half alpha = saturate(1.0 - trans);
-                if (_KamionGlassDebug != 5.0) col = KamionMixFog(col, i.fogFactor);
+                col = KamionMixFog(col, i.fogFactor);
                 // Premultiplied "over": transmission is grey (1 - alpha); the tint shows in the body term only.
                 return half4(col, alpha);
             #endif

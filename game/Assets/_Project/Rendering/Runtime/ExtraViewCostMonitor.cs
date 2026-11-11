@@ -137,7 +137,7 @@ namespace Game.Rendering
             "treeshadow" => "instanced trees cast no shadows",
             "treethin" => "tree thinning starts at half the distance",
             "treecard" => "tree card LOD distances x0.5",
-            "glassdbg" => "Kamion/Truck Glass debug level rq_glassdbg (1 constant, 2 no film/env/spec, 3 no film, 4 no spec, 5 no fog)",
+            "glassdbg" => "Kamion/Truck Glass constant colour (rq_glassdbg 1: raster + blend floor of the pane)",
             "glassfast" => "Kamion/Truck Glass fast path toggled (_KAMION_GLASS_FAST)",
             _ => "unknown key (no change)",
         };
