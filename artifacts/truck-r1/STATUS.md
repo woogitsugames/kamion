@@ -80,3 +80,4 @@ Krok 27: 3000 usuwa clipping w badanym ROI we wszystkich czterech warunkach, ale
 Zapisano hdr-shoulder-080 Low overcast, kod wejściowy zgodny z fingerprintem. Następny krok: pomiary i oględziny par przed/po.
 Zapisano hdr-shoulder-080 Low clear, kod wejściowy zgodny z fingerprintem. Następny krok: pomiary i oględziny par przed/po.
 Zapisano hdr-shoulder-080 High overcast, kod wejściowy zgodny z fingerprintem. Następny krok: pomiary i oględziny par przed/po.
+Zapisano hdr-shoulder-080 High clear, kod wejściowy zgodny z fingerprintem. Następny krok: pomiary i oględziny par przed/po.
