@@ -79,3 +79,5 @@ Krok 24: poprawiono wyłącznie maskę AO parapetu i poprzecznika rysowanych po 
 NASTĘPNA KOMENDA: pwsh artifacts/landmarks-r1/round2-resume.ps1
 
 Krok 25: materiał z poprawką białych detali wygenerowany we wszystkich trzech rozdzielczościach pod heavy. Wspólny spec zachowuje wszystkie pozostałe wpisy z HEAD. Następnie pojedynczy test remizy; bez pełnego GIS.
+
+Krok 26: pojedynczy plik testów remizy po poprawce zakończony exit 0 pod heavy. Pipeline przechodzi do importu i 16 renderów fokusowych wariantu 2 przez oddzielne sloty Unity. NASTĘPNA KOMENDA: Get-Content artifacts/landmarks-r1/round2-resume-wrapper.log -Tail 10
