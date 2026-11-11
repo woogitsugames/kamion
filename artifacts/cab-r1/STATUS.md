@@ -42,3 +42,4 @@ Full EditMode PASS 230/230 including trailer-side presentation and housing chann
 Final BuildBatch OK; wrapper stopped on its own Select-String argument binding (not a Unity failure). Corrected explicit -Path and rerun final rebuild/details/tests. NEXT COMMAND: pwsh -NoProfile -File artifacts/cab-r1/rebuild-final.ps1
 Inspections captured: Low overcast seat-entry/grain. NEXT COMMAND: pwsh scripts/test.ps1 -Platform EditMode (after detail matrix ends)
 Inspections captured: Low clear seat-entry/grain. NEXT COMMAND: pwsh scripts/test.ps1 -Platform EditMode (after detail matrix ends)
+Inspections captured: High overcast seat-entry/grain. NEXT COMMAND: pwsh scripts/test.ps1 -Platform EditMode (after detail matrix ends)
