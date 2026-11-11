@@ -18,6 +18,8 @@ namespace Game.Rendering
         public static float? WetOverride;
         /// <summary>rq_clouds: -1 = flat dome, 0..2 = quality (null = the tier's).</summary>
         public static int? CloudOverride;
+        /// <summary>rq_clearcover: clear cloud coverage ablation (null = preset).</summary>
+        public static float? ClearCloudCoverOverride;
         /// <summary>rq_haze: false = uniform fog only (null = the tier's).</summary>
         public static bool? HazeOverride;
         /// <summary>rq_grassvar: lawn variation strength 0..1 (null = the preset's).</summary>
@@ -106,7 +108,7 @@ namespace Game.Rendering
             int q = CloudOverride ?? (hasTier ? (t.cloudsOff ? -1 : t.cloudQuality) : 1);
             float contrast = q < 0 ? 0f : p.cloudContrast;
             // Clear clouds share the existing noise texture and sky pass. A zero coverage keeps the legacy dome.
-            float clearCover = q < 0 ? 0f : Mathf.Clamp01(p.clearCloudCover);
+            float clearCover = q < 0 ? 0f : Mathf.Clamp01(ClearCloudCoverOverride ?? p.clearCloudCover);
             Shader.SetGlobalFloat(k_ClearCloudCover, clearCover);
             Shader.SetGlobalVector(k_Cloud, new Vector4(contrast, Mathf.Max(q, 0), p.cloudScale, 5f));
             if (contrast > 0f || clearCover > 0f)
