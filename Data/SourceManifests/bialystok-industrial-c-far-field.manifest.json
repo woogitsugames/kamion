@@ -1,17 +1,17 @@
 {
   "adr": "0085-far-field-backdrop",
   "feature_counts": {
-    "buildings": 6697,
+    "buildings": 8470,
     "buildings_by_typology": {
-      "block": 1368,
-      "hall": 1733,
-      "house": 1007,
-      "office": 2589
+      "block": 2474,
+      "hall": 1620,
+      "house": 947,
+      "office": 3429
     },
-    "chimneys": 11,
-    "forest_polygons": 167,
-    "power_lines": 38,
-    "pylons": 224
+    "chimneys": 16,
+    "forest_polygons": 472,
+    "power_lines": 107,
+    "pylons": 302
   },
   "id": "bialystok-industrial-c-far-field",
   "region": "bialystok-industrial-c",
@@ -23,14 +23,21 @@
   "sources": [
     {
       "dataset": "BDOT10k powiat 2061 (m. Białystok): OT_PTLZ_A, OT_BUBD_A, OT_BUWT_P, OT_SULN_L",
-      "files": {},
+      "files": {
+        "bdot10k/PL.PZGiK.335.BDOT10k.2061__OT_BUBD_A.gpkg": "2ac7d2004c025ed1854f1077b4e6f51b2ff8c0e056a4e2b5820c371ebe7119b8",
+        "bdot10k/PL.PZGiK.335.BDOT10k.2061__OT_BUWT_P.gpkg": "c758f8489cab8b8935f832407362a3d20b90733224e5f08780113f4b2896e029",
+        "bdot10k/PL.PZGiK.335.BDOT10k.2061__OT_PTLZ_A.gpkg": "bb4cbe19c388401ea1dbc48d3ac54fbcf6e21c48e2cfd73a3f8d9f8e5f9d9e7e",
+        "bdot10k/PL.PZGiK.335.BDOT10k.2061__OT_SULN_L.gpkg": "96a8661f6372627120a6f90d0dbc4d794e4be5997e7a9b859adbc8c20694648e"
+      },
       "id": "gugik-bdot10k-2061",
       "license": "Open public data — Art. 40a ust. 2 pkt 1 lit. a Prawa geodezyjnego i kartograficznego (Dz.U. 2020 poz. 276)",
       "provider": "Główny Urząd Geodezji i Kartografii (GUGiK)"
     },
     {
       "dataset": "Modele 3D budynków LoD1 (2024) powiat 2061 (m. Białystok)",
-      "files": {},
+      "files": {
+        "lod1/2061_lod1_2024.zip": "57d3e14d4620c17232eaabd85a8aa5579ed1539772945e23a3971d867901d380"
+      },
       "id": "gugik-lod1-2024-2061",
       "license": "Open public data — Art. 40a ust. 2 pkt 1 lit. i Prawa geodezyjnego i kartograficznego",
       "provider": "Główny Urząd Geodezji i Kartografii (GUGiK)"

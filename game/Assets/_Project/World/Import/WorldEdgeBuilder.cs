@@ -419,6 +419,22 @@ namespace Game.World.Import
                 mean += height[i];
             }
             mean /= np;
+            var smoothHeight = new float[np];
+            const int win = 6;
+            for (int i = 0; i < np; i++)
+            {
+                float s = 0f;
+                for (int dj = -win; dj <= win; dj++) s += height[(i + dj + np) % np];
+                smoothHeight[i] = s / (2 * win + 1);
+            }
+            float ApronHeightAt(float z0, float zSm, float d)
+            {
+                float s1 = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(d / 220f));
+                float s2 = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01((d - 220f) / 1400f));
+                float zNear = Mathf.Lerp(z0, zSm - 0.15f, s1);
+                float zFar = zSm - 0.25f + 0.08f * (mean - zSm);
+                return Mathf.Lerp(zNear, zFar, s2);
+            }
 
             var pos = new List<Vector3>(); var nrm = new List<Vector3>(); var uv = new List<Vector2>(); var col = new List<Color32>();
             var grass = new List<int>(); var asphalt = new List<int>();
@@ -427,13 +443,13 @@ namespace Game.World.Import
                 {
                     float d = k_RingDist[k];
                     Vector2 p = basePt[i] + normal[i] * d;
-                    // Inner ring tucked under the terrain border; far rings ease over ApronEaseM (600 m) to mean height,
+                    // Inner ring tucked under the terrain border; far rings ease locally without pulling valleys uphill,
                     // matching BorderElevation.z_at_eff in tools/worldgen/streetscape/far_field.py.
                     float y = k == 0
                         ? height[i] - 0.6f
                         : k == 1
                             ? height[i] - 0.04f
-                            : Mathf.Lerp(height[i], mean, Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(d / ApronEaseM)));
+                            : ApronHeightAt(height[i], smoothHeight[i], d);
                     pos.Add(new Vector3(p.x, y, p.y));
                     nrm.Add(Vector3.up);
                     uv.Add(p);
@@ -450,19 +466,27 @@ namespace Game.World.Import
                 }
             }
 
-            // Road stubs: asphalt strip on a low embankment graded smoothly onto the apron surface.
+            // Road stubs: asphalt strip on a low embankment graded smoothly onto the local apron surface.
             foreach (var (start, dir, width) in stubs)
             {
                 Vector2 side = new Vector2(dir.y, -dir.x);   // right of the travel direction
                 const int seg = 12;
                 float hw = width * 0.5f + 0.75f;             // carriageway + hard strip
+                int bestIdx = 0;
+                float bestDist = float.MaxValue;
+                for (int i = 0; i < np; i++)
+                {
+                    float dd = Vector2.Distance(basePt[i], new Vector2(start.x, start.z));
+                    if (dd < bestDist) { bestDist = dd; bestIdx = i; }
+                }
+                float stubZSm = smoothHeight[bestIdx];
                 int v0 = pos.Count;
                 for (int s = 0; s <= seg; s++)
                 {
                     float d = StubLengthM * s / seg;
                     Vector2 c = new Vector2(start.x, start.z) + dir * d;
-                    float apronY = Mathf.Lerp(start.y, mean, Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(d / ApronEaseM)));
-                    float crownY = Mathf.Lerp(start.y + 0.03f, apronY + 0.16f, Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(d / 120f)));
+                    float apronY = ApronHeightAt(start.y, stubZSm, d);
+                    float crownY = Mathf.Lerp(start.y + 0.03f, apronY + 0.14f, Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(d / 120f)));
                     float toeY = apronY - 0.35f;
                     // cross-section: toe left, edge left, edge right, toe right
                     float[] off = { -hw - 4.5f, -hw, hw, hw + 4.5f };

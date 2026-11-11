@@ -187,6 +187,13 @@ namespace Game.Tests
             // Ground to the horizon: the apron renderer reaches far beyond the region.
             var apron = root.transform.Find("WorldEdge/Apron").GetComponent<MeshRenderer>();
             Assert.Greater(apron.bounds.size.x, 2048f + 2f * 1400f, "apron beyond the far clip plane on both sides");
+            var farField = root.transform.Find("WorldEdge/WorldFarField");
+            Assert.IsNotNull(farField, "ADR 0085 far-field backdrop present under WorldEdge");
+            Assert.AreEqual(0, farField.GetComponentsInChildren<Collider>(true).Length, "far-field backdrop has no colliders");
+            var ffRenderers = farField.GetComponentsInChildren<MeshRenderer>(true);
+            Assert.AreEqual(4, ffRenderers.Length, "4 sector meshes (far_north, far_east, far_south, far_west)");
+            foreach (var r in ffRenderers)
+                Assert.AreEqual(UnityEngine.Rendering.ShadowCastingMode.Off, r.shadowCastingMode, "far-field casts no shadows: " + r.name);
         }
     }
 }

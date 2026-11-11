@@ -9325,7 +9325,7 @@
     "z_max_evrf2007": 185.5,
     "z_min_evrf2007": 137.09
    },
-   "bytes": 10165688,
+   "bytes": 10166332,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_6_6.glb",
    "forest_cells": [],
    "id": "6_6",
@@ -9335,9 +9335,9 @@
     "sha256": "0d430a4b37f20ecb478f58145fa8b9c8bf7d60efc9463dc25c5da4d108d0b159"
    },
    "low": {
-    "bytes": 3388320,
+    "bytes": 3388964,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_6_6.low.glb",
-    "sha256": "3d3fa2721043241764c1dc989ce0fb3d8b7e680c9289be44b7b0e0dacaefe94d"
+    "sha256": "df674f774e4787acc7f13c33b4e8e56483f6c48ba537fe52f117f25d3a9d0eba"
    },
    "materials": [
     "apron_sett",
@@ -9349,6 +9349,7 @@
     "collision_building",
     "collision_curb",
     "collision_fence",
+    "collision_grass",
     "collision_paving",
     "concrete_plinth",
     "curb_concrete",
@@ -9419,7 +9420,7 @@
     "yard_concrete",
     "yard_slabs"
    ],
-   "sha256": "2702a37f6bbeabf2ede5f6ec55811e75b97ed3951a070a9b58d629f6fce34c68",
+   "sha256": "a38f7591cf112251f8603965ea750abf5fab2189f39bb4396232a7cbf7d34a40",
    "triangles": {
     "bridge": 4332,
     "buildings": 32015,
@@ -11240,94 +11241,94 @@
  ],
  "far_field": {
   "High": {
-   "bytes": 7583256,
+   "bytes": 10503008,
    "file": "Data/raw/derived/bialystok-industrial-c/world/far_field.glb",
    "sectors": {
     "far_east": {
      "by_material": {
-      "far_field_buildings": 22494,
-      "forest_edge_mixed": 2254
+      "far_field_buildings": 28524,
+      "forest_edge_mixed": 6506
      },
      "submeshes": 2,
-     "triangles": 24748,
-     "vertices": 48170
+     "triangles": 35030,
+     "vertices": 65328
     },
     "far_north": {
      "by_material": {
-      "far_field_buildings": 3687,
-      "forest_edge_mixed": 11068
+      "far_field_buildings": 3346,
+      "forest_edge_mixed": 16004
      },
      "submeshes": 2,
-     "triangles": 14755,
-     "vertices": 19131
+     "triangles": 19350,
+     "vertices": 24418
     },
     "far_south": {
      "by_material": {
-      "far_field_buildings": 32272,
-      "forest_edge_mixed": 2112
+      "far_field_buildings": 45403,
+      "forest_edge_mixed": 2178
      },
      "submeshes": 2,
-     "triangles": 34384,
-     "vertices": 67036
+     "triangles": 47581,
+     "vertices": 93515
     },
     "far_west": {
      "by_material": {
-      "far_field_buildings": 5622,
-      "forest_edge_mixed": 8642
+      "far_field_buildings": 8575,
+      "forest_edge_mixed": 8366
      },
      "submeshes": 2,
-     "triangles": 14264,
-     "vertices": 20676
+     "triangles": 16941,
+     "vertices": 26707
     }
    },
-   "sha256": "32224fd53e070c68c908e8f057b158d9df64ee1f46c5f88731997d2f9e575606",
-   "total_triangles": 88151,
-   "total_vertices": 155013
+   "sha256": "989d82815c97e273b56c180f52825ca3503f2b7c6ab1e549929612606dbea595",
+   "total_triangles": 118902,
+   "total_vertices": 209968
   },
   "Low": {
-   "bytes": 1677364,
+   "bytes": 1716608,
    "file": "Data/raw/derived/bialystok-industrial-c/world/far_field.low.glb",
    "sectors": {
     "far_east": {
      "by_material": {
-      "far_field_buildings": 5157,
-      "forest_edge_mixed": 936
+      "far_field_buildings": 4864,
+      "forest_edge_mixed": 1340
      },
      "submeshes": 2,
-     "triangles": 6093,
-     "vertices": 11549
+     "triangles": 6204,
+     "vertices": 11698
     },
     "far_north": {
      "by_material": {
-      "far_field_buildings": 1230,
-      "forest_edge_mixed": 4744
+      "far_field_buildings": 841,
+      "forest_edge_mixed": 3162
      },
      "submeshes": 2,
-     "triangles": 5974,
-     "vertices": 7646
+     "triangles": 4003,
+     "vertices": 5825
     },
     "far_south": {
      "by_material": {
-      "far_field_buildings": 8618,
-      "forest_edge_mixed": 874
+      "far_field_buildings": 10825,
+      "forest_edge_mixed": 386
      },
      "submeshes": 2,
-     "triangles": 9492,
-     "vertices": 18262
+     "triangles": 11211,
+     "vertices": 22187
     },
     "far_west": {
      "by_material": {
-      "far_field_buildings": 1847,
-      "forest_edge_mixed": 3712
+      "far_field_buildings": 1980,
+      "forest_edge_mixed": 1428
      },
      "submeshes": 2,
-     "triangles": 5559,
-     "vertices": 7915
+     "triangles": 3408,
+     "vertices": 6086
     }
    },
-   "sha256": "31e0a6388c8539f718d3a6bba34ea12d1c78e0f575c465f7573d82d14916ce5c",
-   "total_triangles": 27118,
-   "total_vertices": 45372
+   "sha256": "d8514eb5129b75560c49e8a112f132fe98282066b03da710b8e3da1781b6c55a",
+   "total_triangles": 24826,
+   "total_vertices": 45796
   }
  },
  "generator": "world-c/1",
@@ -14888,7 +14889,7 @@
  "sources_sha256": {
   "generated/osm_context.json": "27b824f9303be887c054d527e1e9e80a423cd3ecf719c628ff51b775ee6b672b",
   "heightmap.r16 (Data/raw)": "37b2d3c033a215e4ba17361ffe571088f8181feef6078ac316e75d683bcca091",
-  "overrides.yaml": "ed72cd4383d1e71701a25d62481e8fc15f0b1bf0ae5d96aa0e25e16241d70344",
+  "overrides.yaml": "8581b49924573e94d56900ddbc39cd8dab7d8dec8537d2c035a02e695b39229c",
   "roads.graph.json": "0bd625e041a6a2ca90a74f1652336c731182c234985352de4d377110f1d42cf6",
   "terrain.json": "52ee459e40fa0aaf59ac6d53223d604c3a01dbeb7099e84c77e02d27dbb1f234"
  },

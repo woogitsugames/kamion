@@ -45,7 +45,7 @@ def test_sector_partition_matches_four_border_exits():
     assert FF.sector_of(-1300.0, 298.0, 1024.0) == "far_west"
 
 
-def test_border_elevation_eases_to_mean():
+def test_border_elevation_preserves_local_corridor():
     from streetscape import far_field as FF
 
     elev = FF.BorderElevation(
@@ -58,7 +58,7 @@ def test_border_elevation_eases_to_mean():
     z_edge = elev.z_at_eff(0.0, 1024.0)
     z_far = elev.z_at_eff(0.0, 1024.0 + FF.APRON_EASE_M + 100.0)
     assert z_edge == pytest.approx(140.0)
-    assert z_far == pytest.approx(elev.mean)
+    assert abs(z_far - elev.mean) < 3.0
 
 
 def test_sector_builder_and_building_modes():

@@ -169,11 +169,11 @@ def foreshorten_point(e: float, n: float, half: float = 1024.0) -> tuple[float, 
 
 def sector_of(e: float, n: float, half: float = 1024.0) -> str:
     """Assign an outside point (e, n) to one of the 4 disjoint sectors aligned to the 4 border exit frustums."""
-    if (n > half and e >= -450.0) or (e > half and n > 220.0):
+    if n > half and e >= -half - 320.0:
         return "far_north"
-    if e > half and n <= 220.0 or (n < -half and e > 550.0):
+    if e > half or (n <= half and n >= -half and e >= 0.0):
         return "far_east"
-    if (n < -half and e <= 550.0) or (e < -half and n < -700.0):
+    if n < -half and e <= half:
         return "far_south"
     return "far_west"
 
@@ -187,7 +187,18 @@ class BorderElevation:
         self.east = np.asarray(east, dtype=np.float64)    # N from -half to +half at E = +half
         self.north = np.asarray(north, dtype=np.float64)  # E from +half to -half at N = +half
         self.west = np.asarray(west, dtype=np.float64)    # N from +half to -half at E = -half
-        self.mean = float(np.mean(np.concatenate([self.south[:-1], self.east[:-1], self.north[:-1], self.west[:-1]])))
+        n_seg = len(self.south) - 1
+        ring = np.concatenate([self.south[:-1], self.east[:-1], self.north[:-1], self.west[:-1]])
+        self.mean = float(np.mean(ring))
+        # Circular moving average (±6 samples = ±96 m) so road ditches smooth out while local hills/valleys stay faithful
+        w = min(6, max(1, len(ring) // 16))
+        kernel = np.ones(2 * w + 1, dtype=np.float64) / (2 * w + 1)
+        padded = np.concatenate([ring[-w:], ring, ring[:w]])
+        sm = np.convolve(padded, kernel, mode="valid")
+        self.south_sm = np.append(sm[0:n_seg], sm[n_seg % len(sm)])
+        self.east_sm = np.append(sm[n_seg:2 * n_seg], sm[(2 * n_seg) % len(sm)])
+        self.north_sm = np.append(sm[2 * n_seg:3 * n_seg], sm[(3 * n_seg) % len(sm)])
+        self.west_sm = np.append(sm[3 * n_seg:4 * n_seg], sm[0])
 
     @classmethod
     def from_region(cls, region_id: str, half: float = 1024.0, step_m: float = 16.0) -> "BorderElevation":
@@ -224,7 +235,7 @@ class BorderElevation:
         west = [round(sample_inside(-half, half - 2 * half * t), 3) for t in ts]
         return cls(half, south, east, north, west)
 
-    def border_z(self, eb: float, nb: float) -> float:
+    def border_z_and_smooth(self, eb: float, nb: float) -> tuple[float, float]:
         h = self.half
         n_seg = len(self.south) - 1
 
@@ -234,27 +245,37 @@ class BorderElevation:
             f = x - i
             return float(arr[i] * (1.0 - f) + arr[i + 1] * f)
 
-        # Find which side of [-h, +h]^2 the clamped border point lies on
         ds = abs(nb - (-h))
         de = abs(eb - h)
         dn = abs(nb - h)
         dw = abs(eb - (-h))
         m = min(ds, de, dn, dw)
         if m == ds:
-            return interp(self.south, (eb + h) / (2 * h))
+            t = (eb + h) / (2 * h)
+            return interp(self.south, t), interp(self.south_sm, t)
         if m == de:
-            return interp(self.east, (nb + h) / (2 * h))
+            t = (nb + h) / (2 * h)
+            return interp(self.east, t), interp(self.east_sm, t)
         if m == dn:
-            return interp(self.north, (h - eb) / (2 * h))
-        return interp(self.west, (h - nb) / (2 * h))
+            t = (h - eb) / (2 * h)
+            return interp(self.north, t), interp(self.north_sm, t)
+        t = (h - nb) / (2 * h)
+        return interp(self.west, t), interp(self.west_sm, t)
+
+    def border_z(self, eb: float, nb: float) -> float:
+        return self.border_z_and_smooth(eb, nb)[0]
 
     def z_at_eff(self, e_eff: float, n_eff: float) -> float:
         """Apron ground elevation at foreshortened coordinates (e_eff, n_eff)."""
         eb, nb, _, _, d_eff = outside_dist(e_eff, n_eff, self.half)
-        z0 = self.border_z(eb, nb)
-        t = min(max(d_eff / APRON_EASE_M, 0.0), 1.0)
-        s = t * t * (3.0 - 2.0 * t)
-        return float(z0 + (self.mean - z0) * s)
+        z0, z_sm = self.border_z_and_smooth(eb, nb)
+        t1 = min(max(d_eff / 220.0, 0.0), 1.0)
+        s1 = t1 * t1 * (3.0 - 2.0 * t1)
+        t2 = min(max((d_eff - 220.0) / 1400.0, 0.0), 1.0)
+        s2 = t2 * t2 * (3.0 - 2.0 * t2)
+        z_near = z0 + (z_sm - 0.15 - z0) * s1
+        z_far = z_sm - 0.25 + 0.08 * (self.mean - z_sm)
+        return float(z_near + (z_far - z_near) * s2)
 
 
 # ------------------------------------------------------------------------------------------- GIS extraction
@@ -280,19 +301,34 @@ def _extract_lod1_heights(zip_path: Path) -> dict[str, float]:
     return {m.group(1): float(m.group(2)) for m in pat.finditer(raw)}
 
 
+def _road_exit_corridors(half: float = 1024.0) -> shapely.Geometry:
+    """Clearance corridors along the 4 main border road exits so forest polygons never block road stubs."""
+    stubs = [
+        # North exit: al. Tysiąclecia Państwa Polskiego N (E = -856.6, N = +1024, dir = (-0.21, +0.98))
+        LineString([(-856.6, half - 20.0), (-876.0, half + 88.0)]).buffer(35.0),
+        # East exit: ul. Gen. Władysława Andersa E (E = +1024, N = -980.1, dir = (+0.88, -0.48))
+        LineString([(half - 20.0, -980.0), (half + 420.0, -1195.0)]).buffer(42.0),
+        # South exit: al. Tysiąclecia Państwa Polskiego S (E = -237.6, N = -1024, dir = (+0.46, -0.89))
+        LineString([(-237.6, -half + 20.0), (-40.0, -half - 400.0)]).buffer(42.0),
+        # West exit: ul. Gen. Stanisława Maczka W (E = -1024, N = +44.1, dir = (-1.00, -0.09))
+        LineString([(-half + 20.0, 44.1), (-half - 620.0, -12.0)]).buffer(36.0),
+    ]
+    return shapely.union_all(stubs)
+
+
 def extract_ring_gis(region_id: str, ox: float, oy: float, half: float = 1024.0) -> dict:
     """Extract and cache real ring features from BDOT10k (gpkg), GUGiK LoD1 2024, and OSM PBF."""
     import pyogrio
 
     bdot_dir = REPO / "Data" / "raw" / "gugik" / "bdot10k-2061" / "gpkg"
-    lod1_zip = REPO / "Data" / "raw" / "gugik" / "lod1-2024-2061" / "2061_lod1_2061.zip"
+    lod1_zip = REPO / "Data" / "raw" / "gugik" / "lod1-2024-2061" / "2061_lod1_2024.zip"
     osm_pbf = REPO / "Data" / "raw" / "osm" / "podlaskie-261108.osm.pbf"
 
     bdot_files = {
-        "OT_PTLZ_A": bdot_dir / "PL.PZGiK.330.2061__OT_PTLZ_A.gpkg",
-        "OT_BUBD_A": bdot_dir / "PL.PZGiK.330.2061__OT_BUBD_A.gpkg",
-        "OT_BUWT_P": bdot_dir / "PL.PZGiK.330.2061__OT_BUWT_P.gpkg",
-        "OT_SULN_L": bdot_dir / "PL.PZGiK.330.2061__OT_SULN_L.gpkg",
+        "OT_PTLZ_A": bdot_dir / "PL.PZGiK.335.BDOT10k.2061__OT_PTLZ_A.gpkg",
+        "OT_BUBD_A": bdot_dir / "PL.PZGiK.335.BDOT10k.2061__OT_BUBD_A.gpkg",
+        "OT_BUWT_P": bdot_dir / "PL.PZGiK.335.BDOT10k.2061__OT_BUWT_P.gpkg",
+        "OT_SULN_L": bdot_dir / "PL.PZGiK.335.BDOT10k.2061__OT_SULN_L.gpkg",
     }
     sources_sha = {}
     for k, p in bdot_files.items():
@@ -307,16 +343,18 @@ def extract_ring_gis(region_id: str, ox: float, oy: float, half: float = 1024.0)
     if cache_path.exists():
         try:
             cached = json.loads(cache_path.read_text(encoding="utf-8"))
-            if cached.get("sources_sha256") == sources_sha and cached.get("schema") == "far-field-gis-cache/4":
+            if cached.get("sources_sha256") == sources_sha and cached.get("schema") == "far-field-gis-cache/7":
                 return cached
         except Exception:
             pass
 
     t0 = time.time()
-    inner_box = box(-half + 4.0, -half + 4.0, half - 4.0, half - 4.0)
+    inner_box = box(-half - 8.0, -half - 8.0, half + 8.0, half + 8.0)
     outer_box = box(-RING_MAX_M, -RING_MAX_M, RING_MAX_M, RING_MAX_M)
     ring_zone = outer_box.difference(inner_box)
+    forest_ring_zone = ring_zone.difference(_road_exit_corridors(half))
     shapely.prepare(ring_zone)
+    shapely.prepare(forest_ring_zone)
     bbox_2180 = (ox - RING_MAX_M, oy - RING_MAX_M, ox + RING_MAX_M, oy + RING_MAX_M)
 
     lod1_h = _extract_lod1_heights(lod1_zip)
@@ -333,10 +371,10 @@ def extract_ring_gis(region_id: str, ox: float, oy: float, half: float = 1024.0)
         for _, row in df.iterrows():
             geom = shapely.affinity.translate(row.geometry, xoff=-ox, yoff=-oy)
             geom = shapely.make_valid(geom)
-            if not ring_zone.intersects(geom):
+            if not forest_ring_zone.intersects(geom):
                 continue
-            clipped = shapely.intersection(geom, ring_zone)
-            cat = str(row.get("kategoriaLasu") or "").strip()
+            clipped = shapely.intersection(geom, forest_ring_zone)
+            cat = str(row.get("KATEGORIA") or row.get("kategoriaLasu") or "").strip()
             mix = FH.MIX_OF_CATEGORY.get(cat, "mixed")
             for g in getattr(clipped, "geoms", [clipped]):
                 if g.geom_type == "Polygon" and g.area >= 400.0:
@@ -355,15 +393,15 @@ def extract_ring_gis(region_id: str, ox: float, oy: float, half: float = 1024.0)
                 continue
             c = geom.centroid
             cx, cy = float(c.x), float(c.y)
-            if abs(cx) > RING_MAX_M or abs(cy) > RING_MAX_M or (abs(cx) < half - 2.0 and abs(cy) < half - 2.0):
+            if abs(cx) > RING_MAX_M or abs(cy) > RING_MAX_M or (abs(cx) < half + 4.0 and abs(cy) < half + 4.0):
                 continue
             _, _, _, _, d = outside_dist(cx, cy, half)
-            if d < 2.0:
+            if d < 4.0:
                 continue
-            bid = str(row.get("lokalnyId") or "").strip()
-            func = str(row.get("funkcjaOgolnaBudynku") or "").strip()
-            pfunc = str(row.get("przewazajacaFunkcjaBudynku") or "").strip()
-            st_raw = row.get("liczbaKondygnacji")
+            bid = str(row.get("LOKALNYID") or row.get("lokalnyId") or "").strip()
+            func = str(row.get("FUNKCJAOGOLNABUDYNKU") or row.get("funkcjaOgolnaBudynku") or "").strip()
+            pfunc = str(row.get("PRZEWAZAJACAFUNKCJABUDYNKU") or row.get("przewazajacaFunkcjaBudynku") or "").strip()
+            st_raw = row.get("LICZBAKONDYGNACJI") if "LICZBAKONDYGNACJI" in row else row.get("liczbaKondygnacji")
             storeys = int(float(st_raw)) if st_raw is not None and not (isinstance(st_raw, float) and math.isnan(st_raw)) else None
             h_m = lod1_h.get(bid)
             f_str = (pfunc + " " + func).lower()
@@ -423,17 +461,19 @@ def extract_ring_gis(region_id: str, ox: float, oy: float, half: float = 1024.0)
         for _, row in df.iterrows():
             c = row.geometry.centroid
             e, n = float(c.x - ox), float(c.y - oy)
-            if abs(e) > RING_MAX_M or abs(n) > RING_MAX_M or (abs(e) < half and abs(n) < half):
+            if abs(e) > RING_MAX_M or abs(n) > RING_MAX_M or (abs(e) < half + 4.0 and abs(n) < half + 4.0):
                 continue
-            bid = str(row.get("lokalnyId") or "").strip()
-            kind = str(row.get("rodzaj") or "").strip()
-            h_raw = row.get("wysokosc")
+            bid = str(row.get("LOKALNYID") or row.get("lokalnyId") or "").strip()
+            kind = str(row.get("RODZAJ") or row.get("rodzaj") or "").strip()
+            h_raw = row.get("WYSOKOSC") if "WYSOKOSC" in row else row.get("wysokosc")
             h_m = float(h_raw) if h_raw is not None and not (isinstance(h_raw, float) and math.isnan(h_raw)) else None
             if kind == "komin":
+                if (h_m or 45.0) < 16.0:
+                    continue
                 chimneys.append({"id": bid or f"ch_{len(chimneys)}", "e": round(e, 1), "n": round(n, 1),
                                  "h": round(float(h_m or 48.0), 1), "src": "bdot10k"})
-            elif kind in ("słup energetyczny", "maszt oświetleniowy", "wieża telekomunikacyjna", "wieża ciśnień"):
-                if kind == "maszt oświetleniowy" and (h_m or 0) < 25.0:
+            elif kind in ("słup energetyczny", "maszt lub wieża telekomunikacyjna", "maszt", "maszt oświetleniowy", "wieża telekomunikacyjna", "wieża ciśnień"):
+                if kind in ("maszt oświetleniowy", "maszt") and (h_m or 0) < 22.0:
                     continue
                 pylons.append({"id": bid or f"py_{len(pylons)}", "e": round(e, 1), "n": round(n, 1),
                                "h": round(float(h_m or 26.0), 1), "kind": kind, "src": "bdot10k"})
@@ -546,9 +586,9 @@ def extract_ring_gis(region_id: str, ox: float, oy: float, half: float = 1024.0)
                     return
                 if lu == "forest" or nat == "wood":
                     poly = shapely.make_valid(Polygon(pts))
-                    if not ring_zone.intersects(poly):
+                    if not forest_ring_zone.intersects(poly):
                         return
-                    clipped = shapely.intersection(poly, ring_zone)
+                    clipped = shapely.intersection(poly, forest_ring_zone)
                     if not bdot_f_union.is_empty:
                         clipped = shapely.difference(clipped, bdot_f_union)
                     for g in getattr(clipped, "geoms", [clipped]):
@@ -560,7 +600,7 @@ def extract_ring_gis(region_id: str, ox: float, oy: float, half: float = 1024.0)
                                 forests.append({"coords": np.round(np.asarray(gs.exterior.coords), 1).tolist(), "mix": mix, "src": "osm"})
                     return
                 if btag:
-                    if abs(cx) < half - 2.0 and abs(cy) < half - 2.0:
+                    if abs(cx) < half + 4.0 and abs(cy) < half + 4.0:
                         return
                     if len(bdot_b_pts) > 0:
                         dmin = float(np.min(np.hypot(bdot_b_pts[:, 0] - cx, bdot_b_pts[:, 1] - cy)))
@@ -572,7 +612,7 @@ def extract_ring_gis(region_id: str, ox: float, oy: float, half: float = 1024.0)
                     if poly.geom_type != "Polygon" or poly.area < 55.0:
                         return
                     _, _, _, _, d = outside_dist(cx, cy, half)
-                    if d < 2.0:
+                    if d < 4.0:
                         return
                     lv_s = tags.get("building:levels")
                     h_s = tags.get("height")
@@ -625,7 +665,7 @@ def extract_ring_gis(region_id: str, ox: float, oy: float, half: float = 1024.0)
         RingHandler().apply_file(str(osm_pbf), locations=True)
 
     data = {
-        "schema": "far-field-gis-cache/4",
+        "schema": "far-field-gis-cache/7",
         "region": region_id,
         "origin_epsg2180": [ox, oy],
         "half_m": half,
@@ -773,15 +813,41 @@ class SectorBuilder:
 
 
 # ------------------------------------------------------------------------------------------- feature meshing
-def _crown_height_wave(e: np.ndarray, n: np.ndarray, h_base: float) -> np.ndarray:
-    """Natural non-repeating tree-crown height modulation along a stand edge."""
+def _corridor_taper(e: np.ndarray, n: np.ndarray, half: float = 1024.0) -> np.ndarray:
+    """Smoothly taper tree curtain height near the 4 road exit axes so stand edges step down naturally."""
+    taper = np.ones_like(e, dtype=np.float64)
+    # East exit road axis (E > 1024, N ~ -980 - 0.54*(E-1024))
+    mask_e = e > half - 10.0
+    if np.any(mask_e):
+        lat_e = np.abs(n[mask_e] - (-980.0 - 0.54 * (e[mask_e] - half)))
+        taper[mask_e] = np.minimum(taper[mask_e], np.clip((lat_e - 30.0) / 50.0, 0.38, 1.0))
+    # West exit road axis (E = -1024..-1120, N ~ +44 + 0.09*(E+1024))
+    mask_w = (e < -half + 10.0) & (e > -half - 95.0)
+    if np.any(mask_w):
+        lat_w = np.abs(n[mask_w] - (44.1 + 0.09 * (e[mask_w] + half)))
+        taper[mask_w] = np.minimum(taper[mask_w], np.clip((lat_w - 26.0) / 42.0, 0.38, 1.0))
+    # South exit road axis (N < -1024, E ~ -238 - 0.52*(N+1024))
+    mask_s = n < -half + 10.0
+    if np.any(mask_s):
+        lat_s = np.abs(e[mask_s] - (-237.6 - 0.52 * (n[mask_s] + half)))
+        taper[mask_s] = np.minimum(taper[mask_s], np.clip((lat_s - 30.0) / 50.0, 0.38, 1.0))
+    # North exit road axis (N = 1024..1095, E ~ -857 - 0.21*(N-1024); beyond N=1095 full pine height closes the vista)
+    mask_n = (n > half - 10.0) & (n < half + 72.0)
+    if np.any(mask_n):
+        lat_n = np.abs(e[mask_n] - (-856.6 - 0.21 * (n[mask_n] - half)))
+        taper[mask_n] = np.minimum(taper[mask_n], np.clip((lat_n - 26.0) / 40.0, 0.38, 1.0))
+    return taper
+
+
+def _crown_height_wave(e: np.ndarray, n: np.ndarray, h_base: float, half: float = 1024.0) -> np.ndarray:
+    """Natural non-repeating tree-crown height modulation along a stand edge with road-corridor taper."""
     w = (
         1.0
         + 0.16 * np.sin(0.085 * e + 0.065 * n)
         + 0.11 * np.cos(0.21 * e - 0.17 * n)
         + 0.07 * np.sin(0.43 * e + 0.31 * n)
     )
-    return h_base * np.clip(w, 0.72, 1.28)
+    return h_base * np.clip(w, 0.72, 1.28) * _corridor_taper(e, n, half)
 
 
 def _add_forest_stand(sectors: dict[str, SectorBuilder], coords: list, mix: str, elev: BorderElevation, half: float, tier: str):
@@ -793,8 +859,13 @@ def _add_forest_stand(sectors: dict[str, SectorBuilder], coords: list, mix: str,
         return
     c_raw = np.asarray(poly_raw.centroid.coords[0])
     _, _, _, _, d_cen = outside_dist(c_raw[0], c_raw[1], half)
-    if tier == "Low" and d_cen > 3400.0 and poly_raw.area < 4000.0:
-        return
+    if tier == "Low":
+        if d_cen > 2300.0 and poly_raw.area < 18000.0:
+            return
+        if d_cen > 1100.0 and poly_raw.area < 4500.0:
+            return
+        if poly_raw.area < 1400.0 and d_cen > 350.0:
+            return
 
     # Map polygon vertices through radial foreshortening
     mapped = [foreshorten_point(p[0], p[1], half) for p in pts_raw]
@@ -804,6 +875,10 @@ def _add_forest_stand(sectors: dict[str, SectorBuilder], coords: list, mix: str,
         poly_eff = max(poly_eff.geoms, key=lambda g: g.area)
     if poly_eff.geom_type != "Polygon" or poly_eff.area < 60.0:
         return
+    if tier == "Low":
+        poly_eff = poly_eff.simplify(8.0, preserve_topology=True)
+        if poly_eff.geom_type != "Polygon" or poly_eff.area < 60.0:
+            return
 
     ce, cn = float(poly_eff.centroid.x), float(poly_eff.centroid.y)
     sec = sectors[sector_of(ce, cn, half)]
@@ -811,60 +886,100 @@ def _add_forest_stand(sectors: dict[str, SectorBuilder], coords: list, mix: str,
     h_base = (21.5 if mix == "conifer" else 19.5 if mix == "mixed" else 18.0) * s_h
     h_base = max(h_base, 8.5)
 
-    seg_step = 9.0 if tier == "High" else 20.0
+    seg_step = 9.0 if tier == "High" else 28.0
     ext = np.asarray(poly_eff.exterior.coords, dtype=np.float64)
     if not poly_eff.exterior.is_ccw:
         ext = ext[::-1]
 
-    # 1. Outer stand-edge curtain (facing outward from the stand, and double-sided in Kamion/Vegetation)
-    dense = [ext[0]]
+    # 1. Outer stand-edge curtain: only keep front-facing edges (dot(n_seg, -rad) >= 0.44) outside the 10.5 m border
+    #    band so radial corridor edges never appear at grazing angles as dark parallel walls (forest_hlod.py v3.1 r2).
+    run = []
+
+    def flush_run(r_pts):
+        if len(r_pts) < 2:
+            return
+        P = np.asarray(r_pts, dtype=np.float64)
+        ds = np.hypot(*np.diff(P, axis=0).T)
+        s = np.concatenate([[0.0], np.cumsum(ds)])
+        total_s = float(s[-1])
+        if total_s < 8.0:
+            return
+        zg = np.array([elev.z_at_eff(p[0], p[1]) for p in P])
+        ht = _crown_height_wave(P[:, 0], P[:, 1], h_base, half)
+        # Taper ends of open runs so stand edges step down gently at margins instead of ending in a vertical wall
+        if np.hypot(*(P[0] - P[-1])) > 2.0:
+            end_taper = np.minimum(np.clip(s / 32.0, 0.30, 1.0), np.clip((total_s - s) / 32.0, 0.30, 1.0))
+            ht = ht * end_taper
+        sec.add_curtain1(P, zg - 0.5, zg + ht, face_sign=1.0)
+
     for a, b in zip(ext[:-1], ext[1:]):
         L = float(np.hypot(b[0] - a[0], b[1] - a[1]))
         if L < 0.5:
             continue
+        mx, my = 0.5 * (a[0] + b[0]), 0.5 * (a[1] + b[1])
+        _, _, de, dn, dm = outside_dist(mx, my, half)
+        # Outward normal of CCW polygon edge a->b is (dy/L, -dx/L); radial vector from border is (de/dm, dn/dm)
+        nx, ny = (b[1] - a[1]) / L, -(b[0] - a[0]) / L
+        facing_tile = -(nx * de + ny * dn) / max(dm, 1e-6)
+        if dm < 10.5 or facing_tile < 0.44:
+            flush_run(run)
+            run = []
+            continue
         k = max(1, int(math.ceil(L / seg_step)))
+        if not run:
+            run.append(a)
         for i in range(1, k + 1):
-            dense.append(a + (b - a) * (i / k))
-    if len(dense) >= 3:
-        P = np.asarray(dense, dtype=np.float64)
-        zg = np.array([elev.z_at_eff(p[0], p[1]) for p in P])
-        ht = _crown_height_wave(P[:, 0], P[:, 1], h_base)
-        sec.add_curtain1(P, zg - 0.5, zg + ht, face_sign=1.0)
+            run.append(a + (b - a) * (i / k))
+    flush_run(run)
 
     # 2. Internal layered ridge curtains facing the region centre so looking across a stand shows depth & layered tree tops
-    to_center = np.array([-ce, -cn], dtype=np.float64)
+    _, _, de_c, dn_c, dm_c = outside_dist(ce, cn, half)
+    to_center = np.array([-de_c, -dn_c], dtype=np.float64) if dm_c > 1.0 else np.array([-ce, -cn], dtype=np.float64)
     tc_len = float(np.hypot(to_center[0], to_center[1]))
     if tc_len > 1e-3:
         u_dir = to_center / tc_len
         v_dir = np.array([-u_dir[1], u_dir[0]])
         bminx, bminy, bmaxx, bmaxy = poly_eff.bounds
         span = max(bmaxx - bminx, bmaxy - bminy)
-        rib_spacing = 36.0 if tier == "High" else 72.0
-        n_ribs = min(int(span // rib_spacing), 6 if tier == "High" else 2)
+        rib_spacing = 34.0 if tier == "High" else 76.0
+        n_ribs = min(int(span // rib_spacing), 12 if tier == "High" else 3)
         for ri in range(1, n_ribs + 1):
             off = (ri - 0.5 * (n_ribs + 1)) * rib_spacing
             p_mid = np.array([ce, cn]) + u_dir * off
             cut_line = LineString([p_mid - v_dir * span, p_mid + v_dir * span])
             inter = poly_eff.intersection(cut_line)
             for seg in getattr(inter, "geoms", [inter]):
-                if seg.geom_type == "LineString" and seg.length >= 14.0:
+                if seg.geom_type == "LineString" and seg.length >= 22.0:
                     sc = np.asarray(seg.coords, dtype=np.float64)
+                    if (sc[-1, 0] - sc[0, 0]) * v_dir[0] + (sc[-1, 1] - sc[0, 1]) * v_dir[1] < 0.0:
+                        sc = sc[::-1]
                     L = float(seg.length)
                     ks = max(2, int(math.ceil(L / seg_step)))
                     P = np.array([sc[0] + (sc[-1] - sc[0]) * (i / ks) for i in range(ks + 1)])
+                    s = np.linspace(0.0, L, ks + 1)
+                    end_taper = np.minimum(np.clip(s / 30.0, 0.30, 1.0), np.clip((L - s) / 30.0, 0.30, 1.0))
                     zg = np.array([elev.z_at_eff(p[0], p[1]) for p in P])
-                    ht = _crown_height_wave(P[:, 0] + ri * 17.3, P[:, 1] - ri * 11.7, h_base * 1.06)
+                    ht = _crown_height_wave(P[:, 0] + ri * 17.3, P[:, 1] - ri * 11.7, h_base * 1.08, half) * end_taper
                     sec.add_curtain1(P, zg - 0.5, zg + ht, face_sign=1.0)
 
-    # 3. Opaque dark conifer/mixed canopy volume tucked 2.5 m inside and 3.2 m below the ragged alpha tree crowns
-    inset = poly_eff.buffer(-2.0)
+    # 3. Sloping dark conifer/mixed under-canopy mound tucked 10 m inside, split into <= 320 m convex-ish cells so
+    #    triangle fans never bridge concave bays or road corridors
+    inset = poly_eff.buffer(-10.0)
     if inset.is_empty:
-        inset = poly_eff
-    for g in getattr(inset, "geoms", [inset]):
-        if g.geom_type != "Polygon" or g.area < 80.0:
-            continue
-        gs = g.simplify(6.0 if tier == "High" else 10.0, preserve_topology=True)
-        if gs.geom_type != "Polygon" or gs.area < 60.0:
+        return
+    ibminx, ibminy, ibmaxx, ibmaxy = inset.bounds
+    cell_step = 320.0
+    cells = []
+    for gx in np.arange(ibminx, ibmaxx, cell_step):
+        for gy in np.arange(ibminy, ibmaxy, cell_step):
+            c_piece = inset.intersection(box(gx, gy, gx + cell_step, gy + cell_step))
+            if not c_piece.is_empty:
+                for g in getattr(c_piece, "geoms", [c_piece]):
+                    if g.geom_type == "Polygon" and g.area >= 220.0:
+                        cells.append(g)
+    for g in cells:
+        gs = g.simplify(8.0 if tier == "High" else 14.0, preserve_topology=True)
+        if gs.geom_type != "Polygon" or gs.area < 150.0:
             continue
         ring = np.asarray(gs.exterior.coords, dtype=np.float64)[:-1]
         if len(ring) < 3:
@@ -873,9 +988,8 @@ def _add_forest_stand(sectors: dict[str, SectorBuilder], coords: list, mix: str,
             ring = ring[::-1]
         c_xy = ring.mean(axis=0)
         z_c = elev.z_at_eff(c_xy[0], c_xy[1])
-        h_cap = max(h_base * 0.78, 6.5)
+        h_cap = max(h_base * 0.38, 3.5)
         col_top = (0.028, 0.044, 0.019, 0.0) if mix == "conifer" else (0.034, 0.052, 0.022, 0.0)
-        col_side = (0.018, 0.028, 0.013, 0.0)
         p_apex = [c_xy[0], c_xy[1], z_c + h_cap]
         m = len(ring)
         for i in range(m):
@@ -883,14 +997,9 @@ def _add_forest_stand(sectors: dict[str, SectorBuilder], coords: list, mix: str,
             b = ring[(i + 1) % m]
             za = elev.z_at_eff(a[0], a[1])
             zb = elev.z_at_eff(b[0], b[1])
-            ha = max(h_base * 0.68, 5.5)
-            hb = max(h_base * 0.68, 5.5)
-            pa_top = [a[0], a[1], za + ha]
-            pb_top = [b[0], b[1], zb + hb]
-            pa_bot = [a[0], a[1], za - 0.6]
-            pb_bot = [b[0], b[1], zb - 0.6]
-            sec.add_quad0(pa_bot, pb_bot, pb_top, pa_top, col_side)
-            sec.add_tri0(pa_top, pb_top, p_apex, col_top, normal=[0.0, 0.0, 1.0])
+            pa_bot = [a[0], a[1], za - 0.4]
+            pb_bot = [b[0], b[1], zb - 0.4]
+            sec.add_tri0(pa_bot, pb_bot, p_apex, col_top, normal=[0.0, 0.0, 1.0])
 
 
 def _wall_visible_from_tile(a: np.ndarray, c: np.ndarray, half: float = 1024.0) -> bool:
@@ -920,15 +1029,15 @@ def _add_building(sectors: dict[str, SectorBuilder], b: dict, elev: BorderElevat
     area = float(b["area"])
     h_raw = float(b["h"])
 
-    # Tier-specific density pruning so Low stays <= 25k tris total across all 4 sectors (~5-7k per sector)
+    # Tier-specific density pruning so Low stays <= 27k tris total across all 4 sectors (~5-8k per sector)
     if tier == "Low":
-        if typ == "house" and (d_raw > 180.0 or area < 105.0):
+        if typ == "house" and (d_raw > 140.0 or area < 120.0):
             return
-        if typ == "office" and (d_raw > 520.0 or (d_raw > 240.0 and area < 340.0)):
+        if typ == "office" and (d_raw > 360.0 or (d_raw > 180.0 and area < 380.0)):
             return
-        if typ == "hall" and (d_raw > 1150.0 and area < 950.0 or (d_raw > 480.0 and area < 450.0)):
+        if typ == "hall" and (d_raw > 850.0 and area < 1100.0 or (d_raw > 380.0 and area < 520.0)):
             return
-        if typ == "block" and (d_raw > 1450.0 and area < 450.0 and h_raw < 20.0 or (d_raw > 780.0 and area < 280.0 and h_raw < 15.0)):
+        if typ == "block" and (d_raw > 1050.0 and area < 520.0 and h_raw < 22.0 or (d_raw > 580.0 and area < 320.0 and h_raw < 16.0)):
             return
     else:
         if typ == "house" and d_raw > 420.0:
@@ -1187,24 +1296,19 @@ def _add_pylon(sectors: dict[str, SectorBuilder], py: dict, elev: BorderElevatio
 
 
 def _corridor_treelines(half: float = 1024.0) -> list[dict]:
-    """Authentic tree belts and horizon closures beyond the 4 main road exits and railway/estate corridors."""
+    """Horizon pine stands closing the distant DK8 curve in Las Bacieczki/Pietrasze and framing the western exit."""
     return [
-        # North exit (al. Tysiąclecia N, E ~ +712, N = +1024): Las Pietrasze flanks both sides of DK8 and curves across the distant bend
-        {"coords": [[440, 1025], [682, 1025], [665, 1380], [410, 1380], [440, 1025]], "mix": "conifer"},
-        {"coords": [[742, 1025], [1060, 1025], [1090, 1450], [725, 1450], [742, 1025]], "mix": "conifer"},
-        {"coords": [[520, 1340], [920, 1340], [960, 1780], [480, 1780], [520, 1340]], "mix": "conifer"},
-        # East exit (ul. Gen. Maczka E, E = +1024, N ~ -786): roadside shelterbelts & Wygoda/Pietrasze greenery
-        {"coords": [[1026, -745], [1340, -770], [1340, -610], [1026, -590], [1026, -745]], "mix": "mixed"},
-        {"coords": [[1026, -980], [1380, -1010], [1380, -830], [1026, -820], [1026, -980]], "mix": "mixed"},
-        {"coords": [[1310, -960], [1680, -980], [1680, -640], [1310, -620], [1310, -960]], "mix": "conifer"},
-        # West exit (ul. Gen. Maczka W, E = -1024, N ~ +298): Bacieczki/Dziesięciny park & shelterbelts
-        {"coords": [[-1360, 335], [-1026, 330], [-1026, 510], [-1360, 520], [-1360, 335]], "mix": "mixed"},
-        {"coords": [[-1340, 95], [-1026, 110], [-1026, 255], [-1340, 245], [-1340, 95]], "mix": "broadleaf"},
-        {"coords": [[-1780, 180], [-1420, 180], [-1420, 460], [-1780, 460], [-1780, 180]], "mix": "mixed"},
-        # South exit (al. Tysiąclecia S, E ~ -475, N = -1024): Białostoczek urban green belts & railway embankment trees
-        {"coords": [[-720, -1320], [-515, -1320], [-515, -1026], [-720, -1026], [-720, -1320]], "mix": "broadleaf"},
-        {"coords": [[-430, -1310], [-210, -1310], [-210, -1026], [-430, -1026], [-430, -1310]], "mix": "mixed"},
-        {"coords": [[-640, -1680], [-260, -1680], [-260, -1380], [-640, -1380], [-640, -1680]], "mix": "mixed"},
+        # North exit (al. Tysiąclecia N, E ~ -857, N = +1024, dir = (-0.21, +0.98)): Las Bacieczki/Pietrasze flanks DK8 and closes the curve at N >= 1105 m
+        {"coords": [[-1080, 1038], [-896, 1038], [-915, 1185], [-1100, 1185], [-1080, 1038]], "mix": "conifer"},
+        {"coords": [[-816, 1038], [-620, 1038], [-640, 1190], [-835, 1190], [-816, 1038]], "mix": "conifer"},
+        {"coords": [[-1050, 1105], [-710, 1105], [-730, 1310], [-1075, 1310], [-1050, 1105]], "mix": "conifer"},
+        {"coords": [[-1090, 1190], [-680, 1190], [-710, 1480], [-1120, 1480], [-1090, 1190]], "mix": "conifer"},
+        {"coords": [[-1140, 1350], [-650, 1350], [-680, 1760], [-1170, 1760], [-1140, 1350]], "mix": "conifer"},
+        # West exit (ul. Gen. Stanisława Maczka W, E = -1024, N ~ +44, dir = (-1.00, -0.09)): Las Bacieczki on right, Fasty halls + shelterbelts ahead
+        {"coords": [[-1220, -140], [-1040, -140], [-1040, 2], [-1220, -12], [-1220, -140]], "mix": "mixed"},
+        {"coords": [[-1220, 84], [-1040, 84], [-1040, 260], [-1220, 250], [-1220, 84]], "mix": "conifer"},
+        {"coords": [[-1560, -140], [-1250, -140], [-1250, 160], [-1560, 160], [-1560, -140]], "mix": "conifer"},
+        {"coords": [[-1920, -180], [-1520, -180], [-1520, 220], [-1920, 220], [-1920, -180]], "mix": "mixed"},
     ]
 
 
