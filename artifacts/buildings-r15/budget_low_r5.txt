@@ -1,0 +1,18 @@
+== base/Low-overcast vs noplots/Low-overcast: 67 cameras
+  MeshRenderer draws             18243 ->   18243 (+0); worst: biezenstwa-above 338->338 (+0), cab-dash 426->426 (+0), cab-driver 433->433 (+0), cab-gate 412->412 (+0)
+  shadow draws (MeshRenderer)     4640 ->    4640 (+0); worst: biezenstwa-above 49->49 (+0), cab-dash 105->105 (+0), cab-driver 105->105 (+0), cab-gate 105->105 (+0)
+  instanced draws                19162 ->   19314 (+152); worst: r10_house_2 106->151 (+45), r10_shed_2 176->212 (+36), r10_fence_2 226->252 (+26), r10_house_1 146->163 (+17)
+  instances                      18478 ->   19369 (+891); worst: r10_fence_2 170->366 (+196), r10_shed_2 119->312 (+193), r10_house_2 58->234 (+176), r10_house_1 82->190 (+108)
+  mesh tris k                    17842 ->   17773 (-69); worst: biezenstwa-above 264->264 (+0), cab-dash 335->335 (+0), cab-driver 342->342 (+0), cab-gate 351->351 (+0)
+  instanced tris k                1969 ->    1987 (+18); worst: r10_shed_2 14->21 (+7), r10_house_2 34->38 (+4), r10_fence_2 25->28 (+3), r10_house_1 36->38 (+2)
+  MeshRenderer + instanced     sum +152; worst: r10_house_2 +45, r10_shed_2 +36, r10_fence_2 +26, r10_house_1 +17, route-putry-approach +8, g3b-rondo-putry-approach +4
+                               best: r10_block_4 -5, kwadrat-park-gate -3, r10_hall_3 -3
+== r5/Low-overcast vs noplots/Low-overcast: 67 cameras
+  MeshRenderer draws             18243 ->   18340 (+97); worst: r10_house_1 147->157 (+10), r10_house_2 147->157 (+10), route-putry-approach 302->310 (+8), g3b-rondo-putry-approach 296->303 (+7)
+  shadow draws (MeshRenderer)     4640 ->    4684 (+44); worst: r10_house_1 66->72 (+6), r10_house_2 54->60 (+6), r10_shed_2 54->60 (+6), route-putry-entry-signs 141->145 (+4)
+  instanced draws                19162 ->   19183 (+21); worst: edge-north 90->95 (+5), r10_block_3 309->313 (+4), r10_block_2 319->322 (+3), r10_shed_2 176->179 (+3)
+  instances                      18478 ->   18490 (+12); worst: dk8-dk19-exit 927->937 (+10), truck-rear34 258->264 (+6), cab-dash 350->354 (+4), cab-driver 412->416 (+4)
+  mesh tris k                    17842 ->   18011 (+169); worst: g3b-rondo-putry-approach 275->294 (+19), route-putry-approach 281->300 (+19), r10_fence_2 322->339 (+17), putry-above 344->359 (+15)
+  instanced tris k                1969 ->    1969 (+0); worst: edge-north 27->28 (+1), biezenstwa-above 43->43 (+0), cab-dash 32->32 (+0), cab-driver 35->35 (+0)
+  MeshRenderer + instanced     sum +118; worst: r10_house_1 +11, r10_house_2 +10, r10_shed_2 +9, route-putry-approach +8, r10_block_3 +7, r10_block_2 +6
+                               best: g3a-rondo-bie-approach -2, r10_hall_1 -2, r10_hall_3 -2
