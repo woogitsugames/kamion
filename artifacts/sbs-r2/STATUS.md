@@ -84,3 +84,6 @@ Zapisano potwierdzenie ukończonego świata (kod 0, SHA logu i manifestu), aby p
 
 ## Poprawiony raport i zgodność SBS — wynik
 Ponowne test_sbs_report: 25/25 po poprawce surowego literału JSON; regresja z nieufnym autorem przechodzi bez zmiany testu. Test_sbs_gate3: 40/40. Logi zachowano. Test fotometrii jest kolejnym pojedynczym plikiem i oczekuje na heavy; fidelity oraz kompozycje nadal nie zostały zaliczone. Bramka świata pozostaje według recenzji r1 FAIL, bez nowej automatycznej oceny.
+
+## Powiązanie D51 z nową serią
+Manifest review-pair-manifest.json obejmuje wszystkie 25 B w Low-overcast. Dokładnie 19 par ma te same SHA zdjęcia i renderu co recenzja D51 r1. Sześć zmienionych renderów: 320215796381417, 2279538078845158, 837235577143499, 275528677534382, 150280503737744, 1801374876712141. Raport nie przeniesie na nie oceny starych pikseli. Zbiorczy wynik 12/11/2 jest nadal wyraźnie wynikiem ostatniej recenzji r1, a nie nowym pomiarem r2.
