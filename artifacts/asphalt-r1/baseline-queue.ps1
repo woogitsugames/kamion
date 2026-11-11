@@ -1,9 +1,9 @@
 $ErrorActionPreference = 'Stop'
 Set-Location (Resolve-Path "$PSScriptRoot/../..")
-# These are this worktree's two Python launcher PIDs, recorded at launch; never stop/touch other sessions.
-while ((Get-Process -Id 90580,112584 -ErrorAction SilentlyContinue).Count -gt 0) {
-    Start-Sleep -Seconds 10
-}
+# Invoked only after the producer/test handles have been observed terminal.
+# GIS fixtures overwrite metadata; audit every referenced file before importing it.
+& uv run --project tools/worldgen python artifacts/asphalt-r1/audit_manifest.py
+if ($LASTEXITCODE -ne 0) { throw 'Manifest/files mismatch after tests' }
 $log = Get-Content artifacts/asphalt-r1/baseline-build-world.log -Raw
 if ($log -match 'Traceback|fallback=True') { throw 'World generator error or Megascans fallback; inspect baseline log' }
 $manifest = Get-Item Data/Regions/bialystok-industrial-c/generated/world_manifest.json
