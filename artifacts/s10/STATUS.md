@@ -930,3 +930,12 @@ vertex keyword and validating actual 54 native plate submesh UV0/UV1 values.
 Reset on rejected repeated Configure is required. Draft semantic pytest44
 passed; no runtime/budget/SRP claim yet. E independently reviews same draft.
 NEXT COMMAND: Get-Content C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-car-paint/artifacts/car-paint-r1/STATUS.md -Tail 12
+
+Step 84: P2 corrected source is durably committed ced3d5a1, not earlier draft
+822666a8. ROOT corrected its earlier checkpoint attribution to E. Working code
+reads actual indexed native plate corners through MeshUtility, clears rejected
+local keyword/version, retains the Lit CBUFFER and uses GIHeight.z validity.
+Source semantic44 pass; native unreadable-buffer regression/compile and real
+shader/budget checks remain pending. CPU world export continues; E reviews
+pinned ced3d5a1. No full AFTER or fixture rebuild authorized before focus review.
+NEXT COMMAND: Get-Content C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-car-paint/artifacts/car-paint-r1/STATUS.md -Tail 8
