@@ -19,7 +19,7 @@ def fixture():
         sts.append(dict(s=s, t=[1., 0.], l=[s, 5.65, 10.], r=[s, -5.65, 10.],
                         lg=[s, 4., 9.77], rg=[s, -4., 9.77], c=[s, 0., 9.77],
                         open=True, zc=3., zl=3., zr=3.))
-    spec = dict(params=prm, stairs=[[[0., 6.3, 3.]], [[16., 6.3, 3.]]],
+    spec = dict(params=prm, stairs=[[[0., 6.3, 3., 3.1]], [[16., 6.3, 3., 3.1]]],
                 decks=[dict(stations=sts, s_open=[0., 16.], piers=[dict(s=8., top=8.8,
                 cols=[[8., -2., 3.], [8., 2., 3.]])])])
     buf = M.MeshBuf()

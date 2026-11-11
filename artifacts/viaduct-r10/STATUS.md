@@ -23,3 +23,6 @@
 - Regeneracja r2 PASS (299.6 s). QA drogowe wróciło dokładnie do bazowych 65 przypadków (bez nowych regresji). 8 kęp istniejącego Fab grass-clumps przy przyczółkach.
 - Niezależny audyt GLB Low: 64/64 chunków bazowych zweryfikowane po SHA; suma grup siatka/materiał delta 0. Nie zastępuje to liczników draws z renderu Unity.
 - NASTĘPNY KROK: uv run --project tools/worldgen python -m pytest tests/gis -q
+- Podgląd geometrii Blendera obejrzany (geometry-preview/compare.jpg; to NIE Unity). Ujawniono płaskie stopnie: zastąpiono je pełnym biegiem o riser 0.18 m, podpartym do próbkowanego gruntu; lot bez dolnego podparcia jest pomijany.
+- Zacieki i wysokość plam farby zróżnicowane deterministycznie pomiędzy podporami. Testy lokalne nadal 5/5 PASS.
+- Przerwany własny pełny GIS jako nieaktualny po korekcie geometrii; inne sesje nietknięte. NASTĘPNY KROK: uv run --project tools/worldgen python -u tools/worldgen/roads/build_world.py --region bialystok-industrial-c

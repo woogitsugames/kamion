@@ -353,15 +353,20 @@ def plan(w, region_id, overrides, zground, blocked, log=lambda *a: None) -> list
                     mid = (np.array(st["l"]) + np.array(st["r"])) / 2
                     back = t * (-1 if k == 0 else 1)
                     steps = []
-                    for j in range(18):
+                    stair_top = mid[2] - spec["params"]["girder_depth_m"] - .10
+                    for j in range(40):
                         xy = mid[:2] + n * (hw + .65) + back * ((j + .5) * spec["params"]["stairs_tread_m"])
                         if blocked(xy):
                             break
                         z = zground(*xy)
-                        # Stop before the upper road envelope; cap tops belong to 0100.
-                        if z + .10 >= mid[2] - spec["params"]["girder_depth_m"]:
+                        tread = stair_top - j * spec["params"]["stairs_rise_m"]
+                        if tread < z + .08:
                             break
-                        steps.append([_r(xy[0]), _r(xy[1]), _r(z)])
+                        steps.append([_r(xy[0]), _r(xy[1]), _r(z), _r(tread)])
+                    # Do not leave a truncated flight ending in mid-air when a
+                    # live road blocks its lower landing.
+                    if steps and steps[-1][3] - steps[-1][2] > .30:
+                        steps = []
                     spec["stairs"].append(steps)
                     for side, distance in ((-1, .8), (1, 1.7), (-1, 2.6)):
                         xy = mid[:2] + n * side * (hw + 1.2) + back * distance
@@ -507,7 +512,10 @@ def _apply_underdeck(w, hero, instances=None):
             # Uneven gravity-driven runoff under the bearing, never tiled at every station.
             for side in (-1, 1):
                 for j, length in enumerate((.50, .83, .36)):
-                    centre = np.array(q[:2]) + n * ((j - 1) * .13) + t * side * .501
+                    if (pi * 3 + qi + j) % 4 == 0:
+                        continue
+                    length *= .72 + .11 * ((pi * 7 + qi * 3 + j) % 5)
+                    centre = np.array(q[:2]) + n * ((j - 1) * .13 + .025 * ((pi + qi) % 3)) + t * side * .501
                     a = np.append(centre - n * .035, cap_bottom - .01)
                     b = np.append(centre + n * .035, cap_bottom - .01)
                     end = min(length, max(.05, cap_bottom - q[2] - .1))
@@ -516,7 +524,7 @@ def _apply_underdeck(w, hero, instances=None):
             if prm.get("paint_blobs") and (pi + qi) % 3 == 0:
                 # Abstract paint patch only: no glyphs, logos, lettering or copied pixels.
                 base = np.array(q[:2]) + t * .502
-                z = min(q[2] + 1.1, cap_bottom - .35)
+                z = min(q[2] + .85 + .12 * ((pi + qi) % 4), cap_bottom - .35)
                 _quad(buf, [(* (base - n * .22), z), (*(base + n * .17), z + .06),
                             (*(base + n * .24), z + .28), (*(base - n * .13), z + .22)],
                       "bridge_soffit", src + ":paint_WORKING_VALUE", np.append(t, 0))
@@ -556,11 +564,11 @@ def _apply_underdeck(w, hero, instances=None):
                 _quad(buf, [(*(xy - n * .07), z), (*(xy + n * .07), z),
                             (*(xy + n * .025), low), (*(xy - n * .025), low + .08)],
                       "bridge_soffit", src + ":joint_runoff", np.append(-back, 0))
-            # Ground-following precast treads with an embedded base. A missing
-            # ground-safe flight stays absent rather than crossing a live road.
-            for x, y, z in spec.get("stairs", [[], []])[k]:
+            # Solid stair flight descending away from the abutment; every riser
+            # is supported down to sampled ground, not a floating stack of slabs.
+            for x, y, z, tread in spec.get("stairs", [[], []])[k]:
                 M.box(buf, "bridge", "bridge_concrete", [x, y], t, prm["stairs_tread_m"] / 2,
-                      prm["stairs_width_m"] / 2, z - .25, z + .10, src + ":stairs")
+                      prm["stairs_width_m"] / 2, z - .25, tread, src + ":stairs")
     after = sum(len(p.T) for p in buf.parts if p.layer == "bridge")
     vegetation = 0
     # Reuse a Fab prototype already present in this region, never generate a
