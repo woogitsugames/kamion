@@ -1,0 +1,791 @@
+{
+  "note": "PNG native display RGB/luma; fixed ROI comparison, not linear photometry. Stats CPU estimates with rounded thousands of triangles; no GPU/device proof.",
+  "rounds": {
+    "r2-focused": {
+      "Low-clear": {
+        "roi": {
+          "r10b_black_05": {
+            "door": {
+              "box": [
+                980,
+                590,
+                1100,
+                660
+              ],
+              "rgb_mean": [
+                86.04809523809524,
+                85.25678571428571,
+                81.65511904761905
+              ],
+              "rgb_median": [
+                84.0,
+                83.0,
+                80.0
+              ],
+              "display_luma_mean": 85.16497778571429,
+              "display_luma_p05": 74.0682,
+              "display_luma_p95": 101.02414999999952,
+              "fraction_any250": 0.0
+            },
+            "hood_legacy_mixed": {
+              "box": [
+                1400,
+                470,
+                1520,
+                525
+              ],
+              "rgb_mean": [
+                64.03030303030303,
+                70.16348484848484,
+                78.66939393939394
+              ],
+              "rgb_median": [
+                67.0,
+                73.0,
+                81.0
+              ],
+              "display_luma_mean": 69.47369703030301,
+              "display_luma_p05": 45.7192,
+              "display_luma_p95": 84.1656,
+              "fraction_any250": 0.0
+            },
+            "hood": {
+              "box": [
+                1450,
+                560,
+                1580,
+                630
+              ],
+              "rgb_mean": [
+                65.58934065934066,
+                69.9,
+                77.86142857142858
+              ],
+              "rgb_median": [
+                65.0,
+                69.0,
+                78.0
+              ],
+              "display_luma_mean": 69.55836896703298,
+              "display_luma_p05": 66.655,
+              "display_luma_p95": 73.4464,
+              "fraction_any250": 0.0
+            },
+            "road": {
+              "box": [
+                1700,
+                940,
+                1850,
+                1020
+              ],
+              "rgb_mean": [
+                93.82583333333334,
+                91.99016666666667,
+                87.6055
+              ],
+              "rgb_median": [
+                93.0,
+                91.0,
+                87.0
+              ],
+              "display_luma_mean": 92.06385646666668,
+              "display_luma_p05": 85.1364,
+              "display_luma_p95": 100.06419999999999,
+              "fraction_any250": 0.0
+            },
+            "sky": {
+              "box": [
+                1700,
+                20,
+                1800,
+                90
+              ],
+              "rgb_mean": [
+                125.674,
+                142.24642857142857,
+                152.85357142857143
+              ],
+              "rgb_median": [
+                126.0,
+                143.0,
+                153.0
+              ],
+              "display_luma_mean": 139.48896597142857,
+              "display_luma_p05": 138.3966,
+              "display_luma_p95": 141.3886,
+              "fraction_any250": 0.0
+            }
+          }
+        },
+        "stats": {
+          "g_current_black_wheel_02": {
+            "renderer_objects": 58,
+            "renderer_draws_est": 163,
+            "renderer_shadow_draws_est": 49,
+            "renderer_triangles_k_rounded": 121,
+            "draws": 287,
+            "instances": 142,
+            "triangles_k_rounded": 42,
+            "cells": 116,
+            "forest_hlod_cells": 100,
+            "total_draws_est": 450,
+            "total_triangles_k_rounded": 163
+          },
+          "g_dirt_level_0": {
+            "renderer_objects": 73,
+            "renderer_draws_est": 354,
+            "renderer_shadow_draws_est": 33,
+            "renderer_triangles_k_rounded": 266,
+            "draws": 461,
+            "instances": 126,
+            "triangles_k_rounded": 75,
+            "cells": 190,
+            "forest_hlod_cells": 25,
+            "total_draws_est": 815,
+            "total_triangles_k_rounded": 341
+          },
+          "g_dirt_level_1": {
+            "renderer_objects": 29,
+            "renderer_draws_est": 217,
+            "renderer_shadow_draws_est": 65,
+            "renderer_triangles_k_rounded": 195,
+            "draws": 361,
+            "instances": 220,
+            "triangles_k_rounded": 61,
+            "cells": 55,
+            "forest_hlod_cells": 0,
+            "total_draws_est": 578,
+            "total_triangles_k_rounded": 256
+          },
+          "g_dirt_level_2": {
+            "renderer_objects": 14,
+            "renderer_draws_est": 120,
+            "renderer_shadow_draws_est": 90,
+            "renderer_triangles_k_rounded": 109,
+            "draws": 395,
+            "instances": 127,
+            "triangles_k_rounded": 87,
+            "cells": 48,
+            "forest_hlod_cells": 38,
+            "total_draws_est": 515,
+            "total_triangles_k_rounded": 196
+          },
+          "g_dirt_level_3": {
+            "renderer_objects": 42,
+            "renderer_draws_est": 366,
+            "renderer_shadow_draws_est": 58,
+            "renderer_triangles_k_rounded": 241,
+            "draws": 123,
+            "instances": 61,
+            "triangles_k_rounded": 17,
+            "cells": 224,
+            "forest_hlod_cells": 20,
+            "total_draws_est": 489,
+            "total_triangles_k_rounded": 258
+          },
+          "r10b_black_05": {
+            "renderer_objects": 37,
+            "renderer_draws_est": 194,
+            "renderer_shadow_draws_est": 64,
+            "renderer_triangles_k_rounded": 182,
+            "draws": 372,
+            "instances": 167,
+            "triangles_k_rounded": 47,
+            "cells": 171,
+            "forest_hlod_cells": 89,
+            "total_draws_est": 566,
+            "total_triangles_k_rounded": 229
+          }
+        }
+      },
+      "Low-overcast": {
+        "roi": {
+          "r10b_black_05": {
+            "door": {
+              "box": [
+                980,
+                590,
+                1100,
+                660
+              ],
+              "rgb_mean": [
+                41.771190476190476,
+                41.74940476190476,
+                40.93345238095238
+              ],
+              "rgb_median": [
+                40.0,
+                40.0,
+                40.0
+              ],
+              "display_luma_mean": 41.695124642857145,
+              "display_luma_p05": 34.7874,
+              "display_luma_p95": 51.06819999999999,
+              "fraction_any250": 0.0
+            },
+            "hood_legacy_mixed": {
+              "box": [
+                1400,
+                470,
+                1520,
+                525
+              ],
+              "rgb_mean": [
+                72.29712121212121,
+                73.70424242424242,
+                76.8340909090909
+              ],
+              "rgb_median": [
+                76.0,
+                77.0,
+                81.0
+              ],
+              "display_luma_mean": 73.63106351515151,
+              "display_luma_p05": 29.8596,
+              "display_luma_p95": 91.9358,
+              "fraction_any250": 0.0
+            },
+            "hood": {
+              "box": [
+                1450,
+                560,
+                1580,
+                630
+              ],
+              "rgb_mean": [
+                70.29252747252747,
+                71.62472527472528,
+                75.73769230769231
+              ],
+              "rgb_median": [
+                70.0,
+                72.0,
+                76.0
+              ],
+              "display_luma_mean": 71.63845624175825,
+              "display_luma_p05": 66.7914,
+              "display_luma_p95": 78.1484,
+              "fraction_any250": 0.0
+            },
+            "road": {
+              "box": [
+                1700,
+                940,
+                1850,
+                1020
+              ],
+              "rgb_mean": [
+                55.68366666666667,
+                54.73491666666666,
+                53.55283333333333
+              ],
+              "rgb_median": [
+                55.0,
+                54.0,
+                53.0
+              ],
+              "display_luma_mean": 54.8512745,
+              "display_luma_p05": 48.855599999999995,
+              "display_luma_p95": 62.0682,
+              "fraction_any250": 0.0
+            },
+            "sky": {
+              "box": [
+                1700,
+                20,
+                1800,
+                90
+              ],
+              "rgb_mean": [
+                161.95185714285714,
+                164.66042857142858,
+                168.90857142857143
+              ],
+              "rgb_median": [
+                162.0,
+                164.0,
+                169.0
+              ],
+              "display_luma_mean": 164.3913022,
+              "display_luma_p05": 162.65099999999998,
+              "display_luma_p95": 170.65099999999998,
+              "fraction_any250": 0.0
+            }
+          }
+        },
+        "stats": {
+          "g_current_black_wheel_02": {
+            "renderer_objects": 58,
+            "renderer_draws_est": 163,
+            "renderer_shadow_draws_est": 49,
+            "renderer_triangles_k_rounded": 121,
+            "draws": 287,
+            "instances": 142,
+            "triangles_k_rounded": 42,
+            "cells": 116,
+            "forest_hlod_cells": 100,
+            "total_draws_est": 450,
+            "total_triangles_k_rounded": 163
+          },
+          "g_dirt_level_0": {
+            "renderer_objects": 73,
+            "renderer_draws_est": 354,
+            "renderer_shadow_draws_est": 33,
+            "renderer_triangles_k_rounded": 266,
+            "draws": 461,
+            "instances": 126,
+            "triangles_k_rounded": 75,
+            "cells": 190,
+            "forest_hlod_cells": 25,
+            "total_draws_est": 815,
+            "total_triangles_k_rounded": 341
+          },
+          "g_dirt_level_1": {
+            "renderer_objects": 29,
+            "renderer_draws_est": 217,
+            "renderer_shadow_draws_est": 65,
+            "renderer_triangles_k_rounded": 195,
+            "draws": 361,
+            "instances": 220,
+            "triangles_k_rounded": 61,
+            "cells": 55,
+            "forest_hlod_cells": 0,
+            "total_draws_est": 578,
+            "total_triangles_k_rounded": 256
+          },
+          "g_dirt_level_2": {
+            "renderer_objects": 14,
+            "renderer_draws_est": 120,
+            "renderer_shadow_draws_est": 90,
+            "renderer_triangles_k_rounded": 109,
+            "draws": 395,
+            "instances": 127,
+            "triangles_k_rounded": 87,
+            "cells": 48,
+            "forest_hlod_cells": 38,
+            "total_draws_est": 515,
+            "total_triangles_k_rounded": 196
+          },
+          "g_dirt_level_3": {
+            "renderer_objects": 42,
+            "renderer_draws_est": 366,
+            "renderer_shadow_draws_est": 58,
+            "renderer_triangles_k_rounded": 241,
+            "draws": 123,
+            "instances": 61,
+            "triangles_k_rounded": 17,
+            "cells": 224,
+            "forest_hlod_cells": 20,
+            "total_draws_est": 489,
+            "total_triangles_k_rounded": 258
+          },
+          "r10b_black_05": {
+            "renderer_objects": 37,
+            "renderer_draws_est": 194,
+            "renderer_shadow_draws_est": 64,
+            "renderer_triangles_k_rounded": 182,
+            "draws": 372,
+            "instances": 167,
+            "triangles_k_rounded": 47,
+            "cells": 171,
+            "forest_hlod_cells": 89,
+            "total_draws_est": 566,
+            "total_triangles_k_rounded": 229
+          }
+        }
+      },
+      "High-clear": {
+        "roi": {
+          "r10b_black_05": {
+            "door": {
+              "box": [
+                980,
+                590,
+                1100,
+                660
+              ],
+              "rgb_mean": [
+                91.9927380952381,
+                91.19488095238096,
+                87.57404761904762
+              ],
+              "rgb_median": [
+                90.0,
+                89.0,
+                86.0
+              ],
+              "display_luma_mean": 91.1030812142857,
+              "display_luma_p05": 79.8556,
+              "display_luma_p95": 107.345,
+              "fraction_any250": 0.0
+            },
+            "hood_legacy_mixed": {
+              "box": [
+                1400,
+                470,
+                1520,
+                525
+              ],
+              "rgb_mean": [
+                70.10348484848485,
+                76.28030303030303,
+                84.85
+              ],
+              "rgb_median": [
+                73.0,
+                78.0,
+                86.0
+              ],
+              "display_luma_mean": 75.5858436060606,
+              "display_luma_p05": 50.7874,
+              "display_luma_p95": 91.23780000000001,
+              "fraction_any250": 0.0
+            },
+            "hood": {
+              "box": [
+                1450,
+                560,
+                1580,
+                630
+              ],
+              "rgb_mean": [
+                71.48087912087912,
+                75.95703296703297,
+                84.08065934065934
+              ],
+              "rgb_median": [
+                71.0,
+                76.0,
+                84.0
+              ],
+              "display_luma_mean": 75.59192848351648,
+              "display_luma_p05": 72.012,
+              "display_luma_p95": 79.4464,
+              "fraction_any250": 0.0
+            },
+            "road": {
+              "box": [
+                1700,
+                940,
+                1850,
+                1020
+              ],
+              "rgb_mean": [
+                98.7415,
+                96.93508333333334,
+                92.5345
+              ],
+              "rgb_median": [
+                98.0,
+                97.0,
+                91.0
+              ],
+              "display_luma_mean": 97.00140540000001,
+              "display_luma_p05": 81.706,
+              "display_luma_p95": 114.9198,
+              "fraction_any250": 0.0
+            },
+            "sky": {
+              "box": [
+                1700,
+                20,
+                1800,
+                90
+              ],
+              "rgb_mean": [
+                131.413,
+                146.42085714285713,
+                155.26042857142858
+              ],
+              "rgb_median": [
+                132.0,
+                148.0,
+                156.0
+              ],
+              "display_luma_mean": 143.86840377142855,
+              "display_luma_p05": 141.8178,
+              "display_luma_p95": 146.6694,
+              "fraction_any250": 0.0
+            }
+          }
+        },
+        "stats": {
+          "g_current_black_wheel_02": {
+            "renderer_objects": 70,
+            "renderer_draws_est": 225,
+            "renderer_shadow_draws_est": 492,
+            "renderer_triangles_k_rounded": 581,
+            "draws": 349,
+            "instances": 513,
+            "triangles_k_rounded": 78,
+            "cells": 205,
+            "forest_hlod_cells": 187,
+            "total_draws_est": 574,
+            "total_triangles_k_rounded": 659
+          },
+          "g_dirt_level_0": {
+            "renderer_objects": 121,
+            "renderer_draws_est": 579,
+            "renderer_shadow_draws_est": 336,
+            "renderer_triangles_k_rounded": 1293,
+            "draws": 473,
+            "instances": 405,
+            "triangles_k_rounded": 134,
+            "cells": 270,
+            "forest_hlod_cells": 90,
+            "total_draws_est": 1052,
+            "total_triangles_k_rounded": 1427
+          },
+          "g_dirt_level_1": {
+            "renderer_objects": 32,
+            "renderer_draws_est": 222,
+            "renderer_shadow_draws_est": 459,
+            "renderer_triangles_k_rounded": 729,
+            "draws": 549,
+            "instances": 361,
+            "triangles_k_rounded": 115,
+            "cells": 55,
+            "forest_hlod_cells": 0,
+            "total_draws_est": 771,
+            "total_triangles_k_rounded": 844
+          },
+          "g_dirt_level_2": {
+            "renderer_objects": 14,
+            "renderer_draws_est": 146,
+            "renderer_shadow_draws_est": 378,
+            "renderer_triangles_k_rounded": 372,
+            "draws": 436,
+            "instances": 192,
+            "triangles_k_rounded": 118,
+            "cells": 52,
+            "forest_hlod_cells": 41,
+            "total_draws_est": 582,
+            "total_triangles_k_rounded": 490
+          },
+          "g_dirt_level_3": {
+            "renderer_objects": 164,
+            "renderer_draws_est": 889,
+            "renderer_shadow_draws_est": 219,
+            "renderer_triangles_k_rounded": 1851,
+            "draws": 302,
+            "instances": 441,
+            "triangles_k_rounded": 68,
+            "cells": 484,
+            "forest_hlod_cells": 90,
+            "total_draws_est": 1191,
+            "total_triangles_k_rounded": 1919
+          },
+          "r10b_black_05": {
+            "renderer_objects": 57,
+            "renderer_draws_est": 316,
+            "renderer_shadow_draws_est": 504,
+            "renderer_triangles_k_rounded": 933,
+            "draws": 538,
+            "instances": 447,
+            "triangles_k_rounded": 121,
+            "cells": 358,
+            "forest_hlod_cells": 276,
+            "total_draws_est": 854,
+            "total_triangles_k_rounded": 1054
+          }
+        }
+      },
+      "High-overcast": {
+        "roi": {
+          "r10b_black_05": {
+            "door": {
+              "box": [
+                980,
+                590,
+                1100,
+                660
+              ],
+              "rgb_mean": [
+                46.681785714285716,
+                46.67452380952381,
+                45.87119047619048
+              ],
+              "rgb_median": [
+                45.0,
+                46.0,
+                45.0
+              ],
+              "display_luma_mean": 46.61806702380952,
+              "display_luma_p05": 38.9278,
+              "display_luma_p95": 56.2086,
+              "fraction_any250": 0.0
+            },
+            "hood_legacy_mixed": {
+              "box": [
+                1400,
+                470,
+                1520,
+                525
+              ],
+              "rgb_mean": [
+                78.79530303030303,
+                80.34772727272727,
+                83.73136363636364
+              ],
+              "rgb_median": [
+                84.0,
+                85.0,
+                89.0
+              ],
+              "display_luma_mean": 80.26198042424242,
+              "display_luma_p05": 30.0,
+              "display_luma_p95": 100.4384,
+              "fraction_any250": 0.0
+            },
+            "hood": {
+              "box": [
+                1450,
+                560,
+                1580,
+                630
+              ],
+              "rgb_mean": [
+                77.11252747252747,
+                78.71076923076923,
+                83.22351648351648
+              ],
+              "rgb_median": [
+                76.0,
+                78.0,
+                84.0
+              ],
+              "display_luma_mean": 78.69680338461538,
+              "display_luma_p05": 73.07619999999999,
+              "display_luma_p95": 86.1484,
+              "fraction_any250": 0.0
+            },
+            "road": {
+              "box": [
+                1700,
+                940,
+                1850,
+                1020
+              ],
+              "rgb_mean": [
+                60.49,
+                59.5555,
+                58.36108333333333
+              ],
+              "rgb_median": [
+                59.0,
+                58.0,
+                57.0
+              ],
+              "display_luma_mean": 59.66793781666667,
+              "display_luma_p05": 47.99259000000001,
+              "display_luma_p95": 74.4986,
+              "fraction_any250": 0.0
+            },
+            "sky": {
+              "box": [
+                1700,
+                20,
+                1800,
+                90
+              ],
+              "rgb_mean": [
+                168.93085714285715,
+                170.9027142857143,
+                175.68557142857142
+              ],
+              "rgb_median": [
+                169.0,
+                171.0,
+                175.0
+              ],
+              "display_luma_mean": 170.82881974285715,
+              "display_luma_p05": 167.50205000000003,
+              "display_luma_p95": 179.43839999999997,
+              "fraction_any250": 0.0
+            }
+          }
+        },
+        "stats": {
+          "g_current_black_wheel_02": {
+            "renderer_objects": 70,
+            "renderer_draws_est": 225,
+            "renderer_shadow_draws_est": 492,
+            "renderer_triangles_k_rounded": 581,
+            "draws": 349,
+            "instances": 513,
+            "triangles_k_rounded": 78,
+            "cells": 205,
+            "forest_hlod_cells": 187,
+            "total_draws_est": 574,
+            "total_triangles_k_rounded": 659
+          },
+          "g_dirt_level_0": {
+            "renderer_objects": 121,
+            "renderer_draws_est": 579,
+            "renderer_shadow_draws_est": 336,
+            "renderer_triangles_k_rounded": 1293,
+            "draws": 473,
+            "instances": 405,
+            "triangles_k_rounded": 134,
+            "cells": 270,
+            "forest_hlod_cells": 90,
+            "total_draws_est": 1052,
+            "total_triangles_k_rounded": 1427
+          },
+          "g_dirt_level_1": {
+            "renderer_objects": 32,
+            "renderer_draws_est": 222,
+            "renderer_shadow_draws_est": 459,
+            "renderer_triangles_k_rounded": 729,
+            "draws": 549,
+            "instances": 361,
+            "triangles_k_rounded": 115,
+            "cells": 55,
+            "forest_hlod_cells": 0,
+            "total_draws_est": 771,
+            "total_triangles_k_rounded": 844
+          },
+          "g_dirt_level_2": {
+            "renderer_objects": 14,
+            "renderer_draws_est": 146,
+            "renderer_shadow_draws_est": 378,
+            "renderer_triangles_k_rounded": 372,
+            "draws": 436,
+            "instances": 192,
+            "triangles_k_rounded": 118,
+            "cells": 52,
+            "forest_hlod_cells": 41,
+            "total_draws_est": 582,
+            "total_triangles_k_rounded": 490
+          },
+          "g_dirt_level_3": {
+            "renderer_objects": 164,
+            "renderer_draws_est": 889,
+            "renderer_shadow_draws_est": 219,
+            "renderer_triangles_k_rounded": 1851,
+            "draws": 302,
+            "instances": 441,
+            "triangles_k_rounded": 68,
+            "cells": 484,
+            "forest_hlod_cells": 90,
+            "total_draws_est": 1191,
+            "total_triangles_k_rounded": 1919
+          },
+          "r10b_black_05": {
+            "renderer_objects": 57,
+            "renderer_draws_est": 316,
+            "renderer_shadow_draws_est": 504,
+            "renderer_triangles_k_rounded": 933,
+            "draws": 538,
+            "instances": 447,
+            "triangles_k_rounded": 121,
+            "cells": 358,
+            "forest_hlod_cells": 276,
+            "total_draws_est": 854,
+            "total_triangles_k_rounded": 1054
+          }
+        }
+      }
+    }
+  }
+}

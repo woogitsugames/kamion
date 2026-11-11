@@ -71,3 +71,6 @@
 
 - Step24 CPU-only: compact original236route-condition budget summary and labelled actual-scene fragment-diagnostic provenance saved. All CPU/GPU claims separated; diagnostic post RGB is not treated as linear readback. Rechecked actual Mapillary crops: clean dark cars retain readable body/specular and neutral wheels; these references do not calibrate dirty-film albedo across lighting. No Unity active/queued while diag4HOLD continues.
 - NEXT COMMAND: on NEW explicitROOT release + both guards absent run capture-focused.ps1, inspect24actualR2frames before fullmatrix.
+
+- Step25: explicitROOT13:44:17 release -> actual24focused R2 frames completed fourconditions; viewed4dirt sheets, measuredcontrol. R2 REJECTED: level3 opaque/blocky patches, Highovdoor46.618 andLowov41.695 violate target; bonnet exactlyR1(78.697High/71.638Low). Existing Trilinear ASTC mask relative threshold amplified compressed edges. Two6frame runs had documented post-completion mono-cleanup exit-1073741819 accepted by standard ADR0083 wrapper after allfreshframes; no missing captures. Next bounded refinement lowers height/opacity/grit and widens mask threshold; no global material/texture/geometry change.
+- NEXT COMMAND: guarded R3 focused24 after source refinement; no fullmatrix until actuallevels/control accepted. Sourceguard everylaunch.
