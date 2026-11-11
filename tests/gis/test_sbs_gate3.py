@@ -145,3 +145,13 @@ def test_all_committed_poses_have_explicit_confidence_and_j1_is_quarantined():
     for ref in refs:
         assert ref['pose_confidence'] in ('A','B','C')
         if ref['source_id'] in bad: assert ref['pose_confidence']=='C'
+
+
+def test_compose_rejects_capture_from_different_camera_snapshot(tmp_path,monkeypatch):
+    monkeypatch.setattr(sbs,'REGION',tmp_path)
+    sbs.write(tmp_path/'sbs_references.json',{'references':[]})
+    sbs.write(tmp_path/'sbs_cameras.json',{'cameras':[]})
+    render=tmp_path/'renders';render.mkdir()
+    sbs.write(render/'capture-test.json',{'status':'OK','cameras_sha256':'stale'})
+    with pytest.raises(ValueError,match='stale render capture'):
+        sbs.compose(render,tmp_path/'out')

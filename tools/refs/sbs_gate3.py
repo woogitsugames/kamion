@@ -379,8 +379,9 @@ def compose(render_dir, outdir, strict=True, include_rejected=False):
     rejected=[]
     captures=[read(path) for path in render_dir.glob('capture-*.json')]
     camera_hash=hashlib.sha256((REGION/'sbs_cameras.json').read_bytes()).hexdigest() if (REGION/'sbs_cameras.json').exists() else None
+    reference_hash=hashlib.sha256((REGION/'sbs_references.json').read_bytes()).hexdigest()
     for capture in captures:
-        if capture.get('status')!='OK' or capture.get('cameras_sha256')!=camera_hash:
+        if capture.get('status')!='OK' or capture.get('cameras_sha256')!=camera_hash or capture.get('references_sha256')!=reference_hash:
             raise ValueError('incomplete or stale render capture; rerender after camera edits')
     for r in refs:
         if r.get('pose_confidence','C') == 'C' and not include_rejected:
@@ -391,6 +392,11 @@ def compose(render_dir, outdir, strict=True, include_rejected=False):
         render=render_dir/(r['camera']+'.png')
         if not render.exists():
             missing.append(r['camera']); continue
+        if captures:
+            matching=[c for c in captures if r['camera'] in c.get('cameras',[])]
+            digest=hashlib.sha256(render.read_bytes()).hexdigest()
+            if len(matching)!=1 or matching[0].get('render_sha256',{}).get(r['camera'])!=digest:
+                raise ValueError(f'render hash/provenance mismatch: {r["camera"]}')
         with Image.open(ROOT/r.get('comparison_photo',r['photo'])) as src, Image.open(render) as dst:
             if r.get('sha256') and hashlib.sha256((ROOT/r['photo']).read_bytes()).hexdigest()!=r['sha256']:
                 raise ValueError(f"photo hash mismatch: {r['camera']}")

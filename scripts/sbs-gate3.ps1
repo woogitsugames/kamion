@@ -66,6 +66,11 @@ try {
                         $capture | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath $captureFile -Encoding utf8
                         & pwsh -NoProfile -File scripts/visual-qa.ps1 -Scene WorldC -Tier $tier -Lighting $light -Width $width -Height $height -Gate3 $cameraFile -Cameras $ids -OutputDir $renderDir
                         if ($LASTEXITCODE -ne 0) { throw "Render failed: $tier $light $($group.Name)" }
+                        $capture.render_sha256 = @{}
+                        foreach ($camera in $group.Group.camera) {
+                            $png = Join-Path $renderDir ($camera + '.png')
+                            $capture.render_sha256[$camera] = (Get-FileHash -LiteralPath $png -Algorithm SHA256).Hash.ToLowerInvariant()
+                        }
                         $capture.status = 'OK'
                         $capture | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath $captureFile -Encoding utf8
                         # visual-qa stats.txt is overwritten per invocation; preserve every aspect group.

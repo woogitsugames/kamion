@@ -18,3 +18,6 @@ Następny krok: uv run --project tools/worldgen tools/worldgen/roads/build_world
 Testy narzędzia SBS: 13/13 zaliczone. Dodano rejestr SHA kamer, SHA referencji, commitów gałęzi i main oraz czasu renderu. Kompozycja odmawia użycia zapisu renderu ze starym SHA kamer; odrzucone pary są usuwane z katalogu arkuszy dowodowych przy ponownym składaniu.
 Pełne testy GIS i własna generacja świata nadal pracują. Unity nie było jeszcze uruchomione.
 Następny krok: Get-Content artifacts/sbs-r1/build-world.log -Tail 20
+## Walidacja metadanych
+14/14 testów SBS zaliczone; parser PowerShell sprawdzony bez uruchamiania Unity. Zapisano ADR 0111 i migawkę danych wejściowych. Horyzont 2948 po przecięciu wybranych linii: 0,5249381; status nadal roboczy.
+Następny krok: Get-Content artifacts/sbs-r1/build-world.log -Tail 20
