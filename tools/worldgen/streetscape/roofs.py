@@ -30,6 +30,10 @@ OVERHANG = 0.5                  # eaves / verge overhang, m (WORKING_VALUE: 0.4-
 T_TOP = 0.14                    # covering + battens above the structural plane (= wall top), m
 T_SOFFIT = 0.04                 # soffit below the structural plane, m -> fascia board 0.18 m
 EAVE_MIN = 2.5                  # lowest eave above the ground, m
+# ADR 0094: overhang inside the re-entrant corners of an L / T plan, m. The roof is one height field over the whole
+# plan, so the walls of a notch rise high under it and a full 0.5 m overhang there hung over the lower wing like a
+# dark sail (review s9 P1-4); 0.15 m = a verge flashing, not an eave
+OVERHANG_NOTCH = 0.15
 
 
 class Roof:
@@ -188,10 +192,25 @@ def _polys(g):
     return [x for x in getattr(g, "geoms", [g]) if x.geom_type == "Polygon" and x.area > 1e-4]
 
 
-def build(acc, roof, poly, mat, fascia_mat="hall_flashing", ov=OVERHANG, low_layer="buildings_low"):
-    """Roof covering (LOD0, LOD1, collision), soffit and fascia (LOD0). Returns the horizontal eave edges
-    [(a, b, z_top)] of the covering (outward normal = right of a -> b) for the gutters."""
+def covering(poly, ov=OVERHANG):
+    """Plan outline of the roof covering: the footprint grown by the overhang, by OVERHANG_NOTCH only inside the
+    re-entrant corners (convex hull minus footprint)."""
     exp = poly.buffer(ov, join_style="mitre", mitre_limit=2.5)
+    notch = poly.convex_hull.difference(poly.buffer(OVERHANG_NOTCH, join_style="mitre", mitre_limit=2.5))
+    if not notch.is_empty and notch.area > 0.05:
+        cut = exp.difference(notch)
+        parts = _polys(cut)
+        if parts:
+            exp = max(parts, key=lambda g: g.area)
+    return exp
+
+
+def build(acc, roof, poly, mat, fascia_mat="hall_flashing", ov=OVERHANG, low_layer="buildings_low", soffit_mat=None):
+    """Roof covering (LOD0, LOD1, collision), soffit and fascia (LOD0). Returns the horizontal eave edges
+    [(a, b, z_top)] of the covering (outward normal = right of a -> b) for the gutters.
+    soffit_mat: material of the soffit under the overhang (default = fascia_mat)."""
+    exp = covering(poly, ov)
+    soffit_mat = soffit_mat or fascia_mat
     eaves = []
     for face, e, d0 in roof.faces(ov + 0.05):
         for g in _polys(exp.intersection(face)):
@@ -219,8 +238,43 @@ def build(acc, roof, poly, mat, fascia_mat="hall_flashing", ov=OVERHANG, low_lay
                 S = _tris(sg)
                 if len(S):
                     sxy = S[:, [0, 2, 1]].reshape(-1, 2)
-                    acc.add("buildings", fascia_mat, np.column_stack([sxy, roof.z(sxy) - T_SOFFIT]),
+                    acc.add("buildings", soffit_mat, np.column_stack([sxy, roof.z(sxy) - T_SOFFIT]),
                             np.arange(len(sxy)).reshape(-1, 3), sxy)
+    # ridge and hip caps (gąsiory, ADR 0094 - review s9 P2-3 "knife-edge ridge"): a three-facet cap 0.22 m wide and
+    # 5 cm proud along every ridge / hip line of the height field, where the covering exists. LOD0, the roof's own
+    # material; UV0 turned by 90 deg, so the course lines of the set become the joints between the cap tiles.
+    lines = []
+    if roof.kind in ("gable", "hip"):
+        k = roof.hu + ov if roof.kind == "gable" else roof.hu - roof.hv
+        W = lambda u, v: roof.c + roof.eu * u + roof.ev * v
+        lines.append((W(-k, 0.0), W(k, 0.0)))
+        if roof.kind == "hip":
+            hu, hv = roof.hu + ov, roof.hv + ov
+            lines += [(W(sx * k, 0.0), W(sx * hu, sy * hv)) for sx in (-1, 1) for sy in (-1, 1)]
+    for p0, p1 in lines:
+        if np.hypot(*(p1 - p0)) < 0.3:
+            continue
+        seg = exp.intersection(shapely.LineString([p0, p1]))
+        for ls in getattr(seg, "geoms", [seg]):
+            if ls.geom_type != "LineString" or ls.length < 0.3:
+                continue
+            q0, q1 = (np.asarray(c_) for c_ in ls.coords[:2])
+            t = (q1 - q0) / ls.length
+            n = np.array([-t[1], t[0]])
+            V, UV = [], []
+            for q, sa in ((q0, 0.0), (q1, ls.length)):
+                zt_ = float(roof.z(q)) + T_TOP + 0.05
+                for off, zz in ((-0.11, None), (-0.04, zt_), (0.04, zt_), (0.11, None)):
+                    r = q + n * off
+                    V.append([r[0], r[1], float(roof.z(r)) + T_TOP + 0.01 if zz is None else zz])
+                    UV.append([off, sa])
+            T = []
+            for j in range(3):
+                T += [[j, j + 1, j + 5], [j, j + 5, j + 4]]
+            V = np.asarray(V)
+            if np.cross(V[1] - V[0], V[5] - V[0])[2] < 0:       # faces look up
+                T = [tr[::-1] for tr in T]
+            acc.add("buildings", mat, V, T, UV)
     return eaves
 
 

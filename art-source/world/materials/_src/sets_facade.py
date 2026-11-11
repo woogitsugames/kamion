@@ -203,9 +203,14 @@ def roof_tiles(n=512):
     t = hash01(row * 7 + col, 1)
     grain = noise(c, 1, c.px * 2, 0.01, beta=0.4)
     lichen = sstep(0.6, 2.2, noise(c, 2, 0.02, 0.25, beta=0.8))
-    h = 0.022 * roll + 0.014 * (1 - pv) + 0.3e-3 * grain
-    shadow = sstep(0.93, 1.0, pv)               # the line under the lower edge of the next course
-    lum = (1 + 0.14 * (t - 0.5) + 0.05 * grain) * (1 - 0.5 * shadow) * (1 - 0.14 * (1 - roll)) * (1 - 0.10 * lichen)
+    # ADR 0094 (review s9 P2-3 "tile like trapezoid sheet"): the rolls were the strongest feature (relief 22 mm,
+    # albedo -14 % in the pans) and the courses the weakest, so a slope read as vertical ribbing. Rolls 12 mm / -6 %,
+    # course step 18 mm with a darker shadow line, tone per tile +-10 % and per course +-4 %.
+    trow = hash01(row, 4)
+    h = 0.012 * roll + 0.018 * (1 - pv) + 0.3e-3 * grain
+    shadow = sstep(0.90, 1.0, pv)               # the line under the lower edge of the next course
+    lum = ((1 + 0.20 * (t - 0.5) + 0.08 * (trow - 0.5) + 0.05 * grain) * (1 - 0.6 * shadow) * (1 - 0.06 * (1 - roll))
+           * (1 - 0.10 * lichen))
     lum *= _streaks(c, 3, 0.08)
     rough = 0.72 + 0.12 * (1 - roll) + 0.1 * lichen
     return _finish("roof_tiles", c, lum, h, rough, t, shadow)

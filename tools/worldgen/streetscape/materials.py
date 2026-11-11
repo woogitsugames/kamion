@@ -56,7 +56,10 @@ M = {
                   "macro": [48.0, 0.18]},
     # plinths (cokół): render in two tones, `splash_h` = splash / soil zone height (m) of Kamion/World PBR _SPLASH
     # (the plinth covers the zone the plaster_* walls had it in, so r10 showed no splash at all)
-    "plinth_dark": {"color": [0.16, 0.16, 0.16], "rough": 0.9, "texture_set": "plaster", "splash_h": 0.5},
+    # ADR 0094: one plinth tone again (plinth_grey stays defined but unused: every material is a draw per chunk on
+    # both LODs - review s9 "draws Low +3...5 %"), 0.16 -> 0.20; the tone variation of a plinth now comes from the
+    # splash zone that follows the terrain (buildings_mesh: plinth UV0.v = metres above the ground at the wall)
+    "plinth_dark": {"color": [0.20, 0.20, 0.195], "rough": 0.9, "texture_set": "plaster", "splash_h": 0.5},
     "plinth_grey": {"color": [0.25, 0.25, 0.24], "rough": 0.9, "texture_set": "plaster", "splash_h": 0.5},
     # pitched roofs (ADR 0091): one modulation set `roof_tiles` (S-profile tile courses) for ceramic tile and pressed
     # metal tile sheet, set_tile = real course size
@@ -368,6 +371,11 @@ for _k, _v in M.items():
     # and read as a coarse relief from the street (r11 r2 render) - same fix as brick in ADR 0081
     if _v.get("texture_set") == "plaster":
         _v["set_tile"] = True
+        # ADR 0094: the walls' splash zone (0.6 m) was hidden behind the plinth (0.45-0.9 m); 1.2 m leaves a faint
+        # soiled band above the plinth (-10 % at 0.6 m, 0 at 1.2 m) - the tone variation of a facade comes from here
+        # and from the run-off streaks, not from the plaster tile (review s9 P1-2). WORKING_VALUE.
+        if _k.startswith("plaster_"):
+            _v["splash_h"] = 1.2
 
 # ADR 0081 (r10 r2): run-off streaks under the attic coping also on the render / panel walls of flat-roofed blocks
 # and offices (LOD0 only; the wall-top TEXCOORD_1 comes from buildings_mesh, the importer enables _RUNOFF)

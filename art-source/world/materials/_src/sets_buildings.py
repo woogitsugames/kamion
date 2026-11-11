@@ -436,29 +436,32 @@ def _garage(p, i, kind):
 def _balf(p, i, kind):
     """Balcony balustrade front 2.6 x 1.05 m (top rail at 1.0 m, slab edge below)."""
     full = p.rect(0, p.w, 0, p.h)
-    shade = np.array([0.045, 0.045, 0.045], F32)
-    p.put(full, shade, h=-0.03, r=0.85)                   # the shaded balcony behind
-    steel = np.array(lin(92, 96, 98), F32)
+    # ADR 0094 (review s9 P1-5: balustrade front 37-40 sRGB next to a wall of 155): what shows between bars / around
+    # panels is the lit wall and door behind seen through the balustrade, not a black hole (0.045 -> 0.13); frames are
+    # painted light grey steel (was dark 92-98 sRGB); the infill colours sit at >= 0.5 of a light wall tone
+    shade = np.array([0.13, 0.13, 0.125], F32)
+    p.put(full, shade, h=-0.03, r=0.85)                   # the balcony behind, seen through the balustrade
+    steel = np.array(lin(150, 153, 154), F32)
     panel = p.rect(0.05, p.w - 0.05, 0.10, 0.93)
     n1 = p.noise(0.4, 1)
     if i == 0:                                            # perforated steel-blue sheet in a grey frame
-        c = np.array(lin(98, 124, 146), F32)
+        c = np.array(lin(128, 152, 172), F32)
         hole = (np.hypot((p.X / 0.03) % 1 - 0.5, (p.Y / 0.03) % 1 - 0.5) < 0.2)
         p.put(panel, c * (1 + 0.04 * n1)[..., None] * np.where(hole, 0.5, 1.0)[..., None], h=-0.004, r=0.5)
         for xb in (0.87, 1.73):
             p.put(p.rect(xb - 0.02, xb + 0.02, 0.0, 1.0), steel, h=0.0)
     elif i in (1, 2):                                     # trapezoid sheet, white / brown
-        c = np.array([lin(214, 214, 208), lin(96, 62, 44)][i - 1], F32)
+        c = np.array([lin(214, 214, 208), lin(146, 104, 78)][i - 1], F32)
         rib = 0.5 + 0.5 * np.cos(6.2832 * p.X / 0.137)
         p.put(panel, c * (0.82 + 0.18 * rib)[..., None] * (1 + 0.03 * n1)[..., None], r=0.5)
         p.hgt = np.where(panel > 0.5, -0.012 * (1 - rib), p.hgt)
     elif i == 3:                                          # frosted glass panels in a steel frame
         for k in range(3):
             g = p.rect(0.07 + k * 0.85, 0.07 + k * 0.85 + 0.78, 0.14, 0.9)
-            p.put(g, np.array([0.33, 0.37, 0.37], F32) * (1 + 0.03 * n1)[..., None], h=-0.01, r=0.25)
+            p.put(g, np.array([0.40, 0.44, 0.44], F32) * (1 + 0.03 * n1)[..., None], h=-0.01, r=0.25)
     elif i == 4:                                          # vertical bars + flower boxes on the rail
         bars = (np.abs(((p.X / 0.11) % 1) - 0.5) < 0.09) & (p.Y > 0.1) & (p.Y < 0.97)
-        p.put(bars * full, steel * 0.7, h=0.0, r=0.5)
+        p.put(bars * full, steel * 0.85, h=0.0, r=0.5)
         for k in range(3):
             xb = 0.2 + k * 0.8
             p.put(p.rect(xb, xb + 0.6, 0.86, 1.0), lin(120, 70, 50), h=0.02, r=0.7)
@@ -479,14 +482,14 @@ def _balf(p, i, kind):
         p.put(panel * np.clip(run, 0, 0.6), [0.10, 0.10, 0.09])
     else:                                                 # corrugated green plastic, faded
         rib = 0.5 + 0.5 * np.cos(6.2832 * p.X / 0.076)
-        c = np.array(lin(92, 128, 96), F32) * (0.8 + 0.2 * rib)[..., None] * (1 + 0.10 * n1)[..., None]
+        c = np.array(lin(128, 160, 130), F32) * (0.8 + 0.2 * rib)[..., None] * (1 + 0.10 * n1)[..., None]
         p.put(panel, c, r=0.6)
         p.hgt = np.where(panel > 0.5, -0.008 * (1 - rib), p.hgt)
     # frame: top rail, bottom rail, end posts; slab edge with a drip stain at the very bottom
     for (a, b, c_, d) in ((0, p.w, 0.96, 1.02), (0, p.w, 0.08, 0.12), (0, 0.045, 0.0, 1.0), (p.w - 0.045, p.w, 0.0, 1.0)):
         p.put(p.rect(a, b, c_, d), steel * (1 + 0.05 * n1)[..., None], h=0.004, r=0.5)
-    rust = np.clip(p.noise(0.07, 9) - 1.3, 0, 1) * p.rect(0, p.w, 0.05, 0.14)
-    p.put(np.clip(rust * 2, 0, 0.8), [0.17, 0.07, 0.03])
+    rust = np.clip(p.noise(0.07, 9) - 1.7, 0, 1) * p.rect(0, p.w, 0.07, 0.13)      # few rust blooms on the bottom rail
+    p.put(np.clip(rust * 2, 0, 0.6), [0.20, 0.10, 0.05])
 
 
 def _balg(p, i, kind):
@@ -556,7 +559,7 @@ SWATCH_COL = {
     "wood": (tuple(lin(120, 84, 52)), 0.8), "pvc_brown": (BROWN_PVC, 0.42), "cloth_white": (tuple(lin(225, 224, 218)), 0.9),
     "cloth_red": (tuple(lin(170, 44, 48)), 0.9), "cloth_blue": (tuple(lin(60, 90, 150)), 0.9),
     "cloth_dark": (tuple(lin(40, 44, 54)), 0.9), "cloth_yellow": (tuple(lin(214, 180, 70)), 0.9),
-    "cloth_green": (tuple(lin(84, 130, 92)), 0.9), "dish": (tuple(lin(200, 200, 196)), 0.45),
+    "cloth_green": (tuple(lin(84, 130, 92)), 0.9), "dish": (tuple(lin(176, 177, 174)), 0.45),
     "rubber": ((0.02, 0.02, 0.02), 0.85), "glass_dark": ((0.025, 0.03, 0.032), 0.07), "roof_felt": ((0.06, 0.06, 0.06), 0.9),
     "terracotta": (tuple(lin(150, 82, 55)), 0.85), "leaf": ((0.045, 0.09, 0.03), 0.8),
 }
