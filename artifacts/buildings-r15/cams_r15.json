@@ -272,6 +272,330 @@
    ],
    "fov_deg": 60.0,
    "note": "ADR 0097 review camera, bdot:d0f4dd2c-c040-439e-aece-8fe13f9d3046, 45.0 m at az 180 deg, 1.7 m up"
+  },
+  {
+   "id": "r15_sill_5m",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    -288.85,
+    -376.96,
+    134.82
+   ],
+   "look_at": [
+    -293.81,
+    -377.58,
+    135.4
+   ],
+   "fov_deg": 55.0,
+   "note": "ADR 0114: square on the wall of bdot:2BE4B431-C728-1BF0-E053-CC2BA8C0D140 from 5.0 m (sill marks; pixel = 0.5 cm)"
+  },
+  {
+   "id": "r15_sill_20m",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    -273.97,
+    -375.09,
+    134.09
+   ],
+   "look_at": [
+    -293.81,
+    -377.58,
+    137.7
+   ],
+   "fov_deg": 55.0,
+   "note": "ADR 0114: square on the wall of bdot:2BE4B431-C728-1BF0-E053-CC2BA8C0D140 from 20.0 m (sill marks; pixel = 1.9 cm)"
+  },
+  {
+   "id": "r15_front_lamella",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    -439.07,
+    -626.36,
+    129.67
+   ],
+   "look_at": [
+    -447.25,
+    -624.34,
+    129.41
+   ],
+   "fov_deg": 62.0,
+   "note": "ADR 0114: plot bdot:0ad51284-0b91-467c-8f6e-d695542ee754 (new, front lamella, side wall, gate swing, walk curb_concrete), eye 1.6 m on the carriageway"
+  },
+  {
+   "id": "r15_cab_0",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    -454.0,
+    -638.12,
+    129.41
+   ],
+   "look_at": [
+    -441.36,
+    -622.05,
+    129.58
+   ],
+   "fov_deg": 60.0,
+   "note": "ADR 0114: driver eye 2.5 m, 14 m before the gate of plot bdot:0ad51284-0b91-467c-8f6e-d695542ee754 (lamella)"
+  },
+  {
+   "id": "r15_front_boards_brown",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    -534.67,
+    -452.63,
+    131.36
+   ],
+   "look_at": [
+    -533.35,
+    -443.86,
+    131.04
+   ],
+   "fov_deg": 62.0,
+   "note": "ADR 0114: plot bdot:2BE4B431-AC09-1BF0-E053-CC2BA8C0D140 (prl, front boards_brown, side chainlink, gate swing, walk curb_concrete), eye 1.6 m on the carriageway"
+  },
+  {
+   "id": "r15_cab_1",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    -548.25,
+    -439.33,
+    131.59
+   ],
+   "look_at": [
+    -530.31,
+    -449.42,
+    130.93
+   ],
+   "fov_deg": 60.0,
+   "note": "ADR 0114: driver eye 2.5 m, 14 m before the gate of plot bdot:2BE4B431-AC09-1BF0-E053-CC2BA8C0D140 (boards_brown)"
+  },
+  {
+   "id": "r15_front_brick_picket",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    -507.23,
+    -484.02,
+    132.12
+   ],
+   "look_at": [
+    -506.59,
+    -475.66,
+    132.06
+   ],
+   "fov_deg": 62.0,
+   "note": "ADR 0114: plot bdot:2BE4B431-AC0A-1BF0-E053-CC2BA8C0D140 (prl, front brick_picket, side concrete, gate swing, walk None), eye 1.6 m on the carriageway"
+  },
+  {
+   "id": "r15_cab_2",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    -521.25,
+    -471.2,
+    132.86
+   ],
+   "look_at": [
+    -503.37,
+    -481.1,
+    131.87
+   ],
+   "fov_deg": 60.0,
+   "note": "ADR 0114: driver eye 2.5 m, 14 m before the gate of plot bdot:2BE4B431-AC0A-1BF0-E053-CC2BA8C0D140 (brick_picket)"
+  },
+  {
+   "id": "r15_front_picket",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    -420.54,
+    -545.37,
+    133.41
+   ],
+   "look_at": [
+    -424.1,
+    -556.05,
+    132.61
+   ],
+   "fov_deg": 62.0,
+   "note": "ADR 0114: plot bdot:2BE4B431-AD84-1BF0-E053-CC2BA8C0D140 (old, front picket, side chainlink, gate swing, walk sidewalk_paving), eye 1.6 m on the carriageway"
+  },
+  {
+   "id": "r15_front_bars",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    -502.82,
+    -488.11,
+    132.07
+   ],
+   "look_at": [
+    -494.0,
+    -489.34,
+    132.29
+   ],
+   "fov_deg": 62.0,
+   "note": "ADR 0114: plot bdot:2BE4B431-AD87-1BF0-E053-CC2BA8C0D140 (prl, front bars, side chainlink, gate slide, walk None), eye 1.6 m on the carriageway"
+  },
+  {
+   "id": "r15_front_chainlink",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    -582.11,
+    -118.78,
+    131.82
+   ],
+   "look_at": [
+    -592.66,
+    -113.82,
+    131.45
+   ],
+   "fov_deg": 62.0,
+   "note": "ADR 0114: plot bdot:2BE4B431-AE4C-1BF0-E053-CC2BA8C0D140 (prl, front chainlink, side chainlink, gate swing, walk curb_concrete), eye 1.6 m on the carriageway"
+  },
+  {
+   "id": "r15_front_concrete",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    -757.07,
+    -989.74,
+    135.0
+   ],
+   "look_at": [
+    -773.0,
+    -992.29,
+    134.47
+   ],
+   "fov_deg": 62.0,
+   "note": "ADR 0114: plot bdot:2BE4B431-AF01-1BF0-E053-CC2BA8C0D140 (prl, front concrete, side chainlink, gate swing, walk None), eye 1.6 m on the carriageway"
+  },
+  {
+   "id": "r15_front_brick_bars",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    -485.61,
+    -610.01,
+    128.59
+   ],
+   "look_at": [
+    -484.3,
+    -601.2,
+    128.43
+   ],
+   "fov_deg": 62.0,
+   "note": "ADR 0114: plot bdot:2BE4B431-B089-1BF0-E053-CC2BA8C0D140 (new, front brick_bars, side lamella, gate slide, walk curb_concrete), eye 1.6 m on the carriageway"
+  },
+  {
+   "id": "r15_front_brick_boards",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    -495.39,
+    105.0,
+    136.84
+   ],
+   "look_at": [
+    -486.89,
+    106.75,
+    136.55
+   ],
+   "fov_deg": 62.0,
+   "note": "ADR 0114: plot bdot:2BE4B431-BBCD-1BF0-E053-CC2BA8C0D140 (prl, front brick_boards, side concrete, gate slide, walk curb_concrete), eye 1.6 m on the carriageway"
+  },
+  {
+   "id": "r15_front_wall",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    -562.97,
+    -419.4,
+    129.72
+   ],
+   "look_at": [
+    -562.0,
+    -411.52,
+    130.14
+   ],
+   "fov_deg": 62.0,
+   "note": "ADR 0114: plot bdot:c7e22bea-9862-4c9a-bb91-ca716a606dd2 (new, front wall, side lamella, gate slide, walk None), eye 1.6 m on the carriageway"
+  },
+  {
+   "id": "r15_dist_60",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    -567.4,
+    109.56,
+    138.14
+   ],
+   "look_at": [
+    -512.03,
+    132.68,
+    137.79
+   ],
+   "fov_deg": 60.0,
+   "note": "ADR 0114: the r10_house_2 plot from 60 m, eye 2.5 m (pop check)"
+  },
+  {
+   "id": "r15_dist_120",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    -622.76,
+    86.44,
+    136.59
+   ],
+   "look_at": [
+    -512.03,
+    132.68,
+    137.79
+   ],
+   "fov_deg": 60.0,
+   "note": "ADR 0114: the r10_house_2 plot from 120 m, eye 2.5 m (pop check)"
+  },
+  {
+   "id": "r15_dist_250",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    -742.73,
+    36.35,
+    136.45
+   ],
+   "look_at": [
+    -512.03,
+    132.68,
+    137.79
+   ],
+   "fov_deg": 60.0,
+   "note": "ADR 0114: the r10_house_2 plot from 250 m, eye 2.5 m (pop check)"
   }
  ]
 }

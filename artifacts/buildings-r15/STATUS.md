@@ -34,3 +34,16 @@ Gałąź `buildings-r7`, worktree `.claude/worktrees/buildings-r7`, z main `dd45
 - NASTĘPNY KROK: `python artifacts/buildings-r15/budget2.py artifacts/buildings-r15/noplots/Low-overcast artifacts/buildings-r15/base/Low-overcast artifacts/buildings-r15/r1/Low-overcast`
   → poprawki (A) → `pwsh artifacts/buildings-r15/chain.ps1 -Round r2 -Configs 'Low:overcast,High:overcast'` →
   `uv run --project tools/worldgen python artifacts/buildings-r15/cams_r15.py` → `pwsh artifacts/buildings-r15/extra.ps1 -Round r2`
+
+## krok 3 — odniesienie `noplots`, r2, pomiar zacieków (po resecie limitu)
+- `noplots` (świat bez działek) = prawdziwe odniesienie budżetu. Low, 67 kamer, MeshRenderer + instancjonowane:
+  r6 (main): suma +152, maks. +45 (r10_house_2); r1: suma +241, maks. +20; r2 (bez żwiru i obrzeża): suma +192, maks. +15
+  (r10_shed_2), MR maks. +15, cienie MR +44 (maks. +6). Pliki `budget_low_r1.txt`, `budget_low_r2.txt`.
+- r3 w budowie: warstwa `plot_ground` (trawnik/podjazd tylko LOD0/1 chunka, bez cieni) — ma zbić sumę w dalekich kadrach.
+- P1-f zmierzone na r2 (para Runoff on/off, `sill_r2.txt`): 20 m — wąsy średnio 10,0 poziomu sRGB (p10 8,1), rdzeń 14,8;
+  5 m — p50 9,0 / p90 27,6 poziomu na pikselach śladu.
+- Znalezione: krawężnik przy `r15_front_brick_bars` NIE wygląda na obniżony i podjazd kończy się ~0,5 m przed nim
+  (pas trawy) → `drop_check.py` (w toku) sprawdza wysokość krawężnika w siatce przed/po `apply_drops`.
+- Tuje: graniaste „kryształy” z plamiastą teksturą → do poprawy (więcej boków/pierścieni, gęstsza tekstura).
+- NASTĘPNY KROK: `cat <wynik drop_check>` → poprawka zjazdu → `pwsh artifacts/buildings-r15/run_round.ps1 -Round r3 -Configs 'Low:overcast,High:overcast'`
+  (świat r3 już zbudowany, jeśli `r3/round.log` ma `build_world exit 0`) → `python artifacts/buildings-r15/budget2.py artifacts/buildings-r15/noplots/Low-overcast artifacts/buildings-r15/r3/Low-overcast`
