@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="6" result="Failed(Child)" total="6" passed="5" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-11-11 19:05:22Z" end-time="2026-11-11 19:05:22Z" duration="0,0385809">
+  <test-suite type="TestSuite" id="1000" name="Kamion" fullname="Kamion" runstate="Runnable" testcasecount="272" result="Failed" site="Child" start-time="2026-11-11 19:05:22Z" end-time="2026-11-11 19:05:22Z" duration="0.038581" total="6" passed="5" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1341" name="Game.Tests.EditMode.dll" fullname="C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-car-paint/game/Library/ScriptAssemblies/Game.Tests.EditMode.dll" runstate="Runnable" testcasecount="272" result="Failed" site="Child" start-time="2026-11-11 19:05:22Z" end-time="2026-11-11 19:05:22Z" duration="0.034469" total="6" passed="5" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="100528" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1342" name="Game" fullname="Game" runstate="Runnable" testcasecount="272" result="Failed" site="Child" start-time="2026-11-11 19:05:22Z" end-time="2026-11-11 19:05:22Z" duration="0.034124" total="6" passed="5" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1343" name="Tests" fullname="Game.Tests" runstate="Runnable" testcasecount="272" result="Failed" site="Child" start-time="2026-11-11 19:05:22Z" end-time="2026-11-11 19:05:22Z" duration="0.033872" total="6" passed="5" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1025" name="CarPlatePayloadTests" fullname="Game.Tests.CarPlatePayloadTests" classname="Game.Tests.CarPlatePayloadTests" runstate="Runnable" testcasecount="6" result="Failed" site="Child" start-time="2026-11-11 19:05:22Z" end-time="2026-11-11 19:05:22Z" duration="0.031005" total="6" passed="5" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1026" name="CompletePlateCornersPreserveAtlasEndpointOrientation" fullname="Game.Tests.CarPlatePayloadTests.CompletePlateCornersPreserveAtlasEndpointOrientation" methodname="CompletePlateCornersPreserveAtlasEndpointOrientation" classname="Game.Tests.CarPlatePayloadTests" runstate="Runnable" seed="24586952" result="Passed" start-time="2026-11-11 19:05:22Z" end-time="2026-11-11 19:05:22Z" duration="0.007020" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1030" name="MaterialEligibilityIsExactIdAndRejectsUnsupportedBindings" fullname="Game.Tests.CarPlatePayloadTests.MaterialEligibilityIsExactIdAndRejectsUnsupportedBindings" classname="Game.Tests.CarPlatePayloadTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-11-11 19:05:22Z" end-time="2026-11-11 19:05:22Z" duration="0.005448" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1027" name="MaterialEligibilityIsExactIdAndRejectsUnsupportedBindings(&quot;car_plate&quot;,True)" fullname="Game.Tests.CarPlatePayloadTests.MaterialEligibilityIsExactIdAndRejectsUnsupportedBindings(&quot;car_plate&quot;,True)" methodname="MaterialEligibilityIsExactIdAndRejectsUnsupportedBindings" classname="Game.Tests.CarPlatePayloadTests" runstate="Runnable" seed="1002025434" result="Passed" start-time="2026-11-11 19:05:22Z" end-time="2026-11-11 19:05:22Z" duration="0.003436" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1028" name="MaterialEligibilityIsExactIdAndRejectsUnsupportedBindings(&quot;car_paint_black&quot;,False)" fullname="Game.Tests.CarPlatePayloadTests.MaterialEligibilityIsExactIdAndRejectsUnsupportedBindings(&quot;car_paint_black&quot;,False)" methodname="MaterialEligibilityIsExactIdAndRejectsUnsupportedBindings" classname="Game.Tests.CarPlatePayloadTests" runstate="Runnable" seed="1755631423" result="Passed" start-time="2026-11-11 19:05:22Z" end-time="2026-11-11 19:05:22Z" duration="0.000170" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1029" name="MaterialEligibilityIsExactIdAndRejectsUnsupportedBindings(&quot;truck_plate&quot;,False)" fullname="Game.Tests.CarPlatePayloadTests.MaterialEligibilityIsExactIdAndRejectsUnsupportedBindings(&quot;truck_plate&quot;,False)" methodname="MaterialEligibilityIsExactIdAndRejectsUnsupportedBindings" classname="Game.Tests.CarPlatePayloadTests" runstate="Runnable" seed="1674725860" result="Passed" start-time="2026-11-11 19:05:22Z" end-time="2026-11-11 19:05:22Z" duration="0.000102" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1031" name="NativeValidationRejectsZeroFilledPayloadDespiteIdenticalDescriptor" fullname="Game.Tests.CarPlatePayloadTests.NativeValidationRejectsZeroFilledPayloadDespiteIdenticalDescriptor" methodname="NativeValidationRejectsZeroFilledPayloadDespiteIdenticalDescriptor" classname="Game.Tests.CarPlatePayloadTests" runstate="Runnable" seed="1216505461" result="Passed" start-time="2026-11-11 19:05:22Z" end-time="2026-11-11 19:05:22Z" duration="0.006683" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1032" name="OwnedPlateShaderDefaultsToLegacyUv0AndPreservesOpaquePasses" fullname="Game.Tests.CarPlatePayloadTests.OwnedPlateShaderDefaultsToLegacyUv0AndPreservesOpaquePasses" methodname="OwnedPlateShaderDefaultsToLegacyUv0AndPreservesOpaquePasses" classname="Game.Tests.CarPlatePayloadTests" runstate="Runnable" seed="1819055472" result="Failed" start-time="2026-11-11 19:05:22Z" end-time="2026-11-11 19:05:22Z" duration="0.005099" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  ForwardLit
+  Expected: greater than or equal to 0
+  But was:  -1
+]]></message>
+                <stack-trace><![CDATA[at Game.Tests.CarPlatePayloadTests.OwnedPlateShaderDefaultsToLegacyUv0AndPreservesOpaquePasses () [0x00072] in C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-car-paint\game\Assets\_Project\Tests\EditMode\CarPlatePayloadTests.cs:95
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[Saving results to: C:/Users/matma/AppData/LocalLow/woogitsugames/Kamion\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

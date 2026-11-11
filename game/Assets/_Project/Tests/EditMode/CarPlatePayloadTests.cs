@@ -1,4 +1,6 @@
 using System;
+using System.Linq;
+using UnityEditor;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -91,8 +93,12 @@ namespace Game.Tests
             {
                 Assert.That(material.GetFloat("_PlatePayloadVersion"), Is.Zero);
                 Assert.False(material.IsKeywordEnabled("_PLATE_LOCAL_CORNERS"));
+                // EditMode does not activate a URP renderer. Inspect imported subshader
+                // metadata rather than Material.FindPass's currently active pipeline.
+                var subshader = ShaderUtil.GetShaderData(shader).GetSubshader(0);
+                var names = Enumerable.Range(0, subshader.PassCount).Select(i => subshader.GetPass(i).Name.ToUpperInvariant()).ToArray();
                 foreach (string pass in new[] { "ForwardLit", "ShadowCaster", "DepthOnly", "DepthNormals", "GBuffer" })
-                    Assert.That(material.FindPass(pass), Is.GreaterThanOrEqualTo(0), pass);
+                    Assert.Contains(pass.ToUpperInvariant(), names);
             }
             finally { UnityEngine.Object.DestroyImmediate(material); }
         }
