@@ -113,3 +113,20 @@ measured narrow frame shadows remain;12cm is flatter. Keep smallest tested
 acceptable8cm on kp_glass_block only, Medium/High only, with Low/casters unchanged.
 Clear highlight shoulder still needs measured red<=240; do not call it passed yet.
 NEXT COMMAND: review B full-needle world and C final empty-Rq matrix/tests; next free worker starts G from then-current main, followed by E and D.
+
+## Step 8 ? reopened A calibration; bounded B/C final candidates
+Read updated S10 queue again: F,G,E,D; D gate satisfied by main471438fb.
+A contract remains valid, calibration approval superseded by external critic
+d80a85a4: KP illuminated wall clipping and screen neutral-ratio miss. Root
+REVIEW-A-0086.md corrected. Leader already owns tint-r2/ADR0101; no duplicate
+workstream. OwnerD48 retains plaster110/126/145.
+F rebased safely before photos by merging maindb1432c5 into its own branch
+f52fabf6, canonical fixture built before102baseline captures. Actual GPU/CPU
+Half readback confirms DRL/highbeam Infinity; normalized finite encoding next.
+B accepted only pineimpostor open0/min16: connected twig bridges improve; all
+HLOD r1/min600 and nonpine rules retained. Final freshworld/matrix/tests next.
+C native+70percent resolution proxy reviewed: RCAS0 widens paintedge .333px at
+floor, windowgradient-15percent, cabcontrast128to126 remains readable. Accept
+bounded tradeoff, explicitly not lossless/device proof. Final1.2shoulder ROI
+and canonicalfixture EditMode remain outstanding.
+NEXT COMMAND: inspect final C metrics/matrix and B final matrices/tests; reuse first free worker for G from then-current main, followed by E,D.
