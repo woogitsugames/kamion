@@ -87,3 +87,27 @@ def test_authored_area_masks_and_overlap_rejection():
     assert m['mask_method'].startswith('authored')
     with pytest.raises(ValueError,match='overlap'):
         sbs.measurements(im,0.5,{'sky':[top],'asphalt':[top]})
+
+
+def test_perspective_rectification_rays_and_fisheye_center():
+    x,y=sbs.projection_grid(101,101,0.5,'perspective',[0.5,0,0])
+    assert x[50,50]==0 and y[50,50]==0
+    assert x[50,100]==pytest.approx(50/101)
+    fx,fy=sbs.projection_grid(101,101,0.5,'fisheye',[0.5,0,0])
+    assert fx[50,50]==0 and fy[50,50]==0
+    assert fx[50,100]==pytest.approx(0.5*np.arctan(100/101))
+    assert 0<fx[50,100]<x[50,100]
+
+
+def test_rectification_does_not_fill_missing_pixels(tmp_path):
+    a=np.zeros((60,80,3),dtype='uint8');a[:,:,0]=np.arange(80)
+    source=tmp_path/'photo.png';Image.fromarray(a).save(source)
+    meta={'camera_type':'perspective','camera_parameters':[0.7,0,0],'exif_orientation':3}
+    focal,w,h=sbs.rectify(source,meta,tmp_path/'rectified.png')
+    assert focal>=0.7 and (w,h)==(1280,960)
+    corrected=np.asarray(Image.open(tmp_path/'rectified.png'))
+    assert corrected[:,:,0].min()>=a[:,:,0].min()
+    assert corrected[:,:,0].max()<=a[:,:,0].max()
+    assert sbs.rectified_horizon(0.5,80,60,meta,focal)==0.5
+    meta['exif_orientation']=6
+    with pytest.raises(ValueError,match='unsupported'):sbs.rectify(source,meta,tmp_path/'invalid.png')

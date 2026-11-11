@@ -1,7 +1,8 @@
 """ADR 0103: offline, reproducible photo-pose cameras and reference | render sheets.
 
-No network or world writes. Coordinates: local E,N,absolute U (not Unity XYZ).
-FOV/eye/pitch are explicitly WORKING_VALUE until calibrated in authored_overrides.
+Prepare/compose are offline; fetch-intrinsics explicitly requests public metadata.
+No world writes. Coordinates: local E,N,absolute U (not Unity XYZ).
+Eye/pitch remain WORKING_VALUE until calibrated in authored_overrides.
 """
 from __future__ import annotations
 
@@ -67,6 +68,86 @@ def ground_sampler():
     return sample
 
 
+def fetch_intrinsics():
+    """Explicit opt-in network step, token only in existing client's Authorization header."""
+    from mapillary_fetch import MapillaryClient, resolve_token
+    token=resolve_token()
+    if not token: raise SystemExit('Mapillary metadata unavailable: no configured token')
+    client=MapillaryClient(token,retries=1)
+    path=REGION/'sbs_intrinsics.json'
+    records=read(path).get('images',{}) if path.exists() else {}
+    fields='id,camera_parameters,camera_type,computed_compass_angle,exif_orientation,width,height'
+    for ref in read(REGION/'sbs_references.json')['references']:
+        sid=ref['source_id']
+        if sid in records: continue
+        body=client._get('https://graph.mapillary.com/'+sid,params={'fields':fields}).json()
+        records[sid]={k:body[k] for k in fields.split(',') if k in body}
+        write(path,{'schema':'kamion/sbs-intrinsics/1','images':records})
+    print(f'Cached intrinsics for {len(records)} images; no image downloads or credentials saved.')
+
+
+def projection_grid(width,height,focal,camera_type,parameters):
+    """Pinhole output rays -> Mapillary normalized source coordinates (max dimension units).
+
+    Formula contract: MapillaryJS geometry/camera/{Perspective,Fisheye}Camera.ts and geo/Transform.ts.
+    This is a photographic rectification operation, not generated/repainted image content.
+    """
+    yy,xx=np.indices((height,width),dtype=float)
+    scale=max(width,height)
+    x=(xx-(width-1)/2)/(scale*focal)
+    y=(yy-(height-1)/2)/(scale*focal)
+    r2=x*x+y*y
+    if camera_type=='fisheye':
+        radius=np.sqrt(r2)
+        theta=np.arctan(radius)
+        factor=np.divide(theta,radius,out=np.ones_like(theta),where=radius>1e-12)
+        x,y=x*factor,y*factor
+        r2=theta*theta
+    source_f,k1,k2=parameters
+    d=1+k1*r2+k2*r2*r2
+    return source_f*x*d,source_f*y*d
+
+
+def rectify(photo,metadata,destination):
+    # Mapillary thumbnails are already upright. A 180-degree rotation leaves the centered radial model invariant.
+    if metadata.get('exif_orientation',1) not in (1,3) or metadata.get('camera_type') not in ('perspective','fisheye'):
+        raise ValueError('unsupported camera projection/orientation; cannot claim a pinhole match')
+    params=metadata.get('camera_parameters',[])
+    if len(params)!=3 or params[0]<=0: raise ValueError('invalid intrinsics')
+    with Image.open(photo) as im: source=np.asarray(im.convert('RGB'),dtype=float)
+    sh,sw=source.shape[:2]
+    width,height=1280,round(1280*sh/sw)
+    # Crop to <=90-degree pinhole view and increase focal until every output ray has source pixels.
+    focal=max(params[0],0.5)
+    for _ in range(60):
+        sx,sy=projection_grid(width,height,focal,metadata['camera_type'],params)
+        px=sx*max(sw,sh)+(sw-1)/2; py=sy*max(sw,sh)+(sh-1)/2
+        if px.min()>=0 and py.min()>=0 and px.max()<sw-1 and py.max()<sh-1: break
+        focal*=1.03
+    else: raise ValueError('unable to find valid rectified image bounds')
+    x0=px.astype(int);y0=py.astype(int)
+    fx=(px-x0)[...,None];fy=(py-y0)[...,None]
+    out=(source[y0,x0]*(1-fx)*(1-fy)+source[y0,x0+1]*fx*(1-fy)
+         +source[y0+1,x0]*(1-fx)*fy+source[y0+1,x0+1]*fx*fy)
+    destination.parent.mkdir(parents=True,exist_ok=True)
+    Image.fromarray(np.rint(out).clip(0,255).astype('uint8')).save(destination)
+    return focal,width,height
+
+
+def rectified_horizon(original_fraction,width,height,metadata,target_focal):
+    """Unproject manually marked central horizon point, then project into rectified image."""
+    f,k1,k2=metadata['camera_parameters']
+    distorted=abs((original_fraction-0.5)*height/max(width,height)/f)
+    radius=distorted
+    for _ in range(30):
+        value=radius*(1+k1*radius**2+k2*radius**4)-distorted
+        derivative=1+3*k1*radius**2+5*k2*radius**4
+        radius-=value/derivative
+    if metadata['camera_type']=='fisheye': radius=math.tan(radius)
+    signed=math.copysign(radius,original_fraction-0.5)
+    return 0.5+signed*target_focal*max(width,height)/height
+
+
 def prepare(count=20, radius=40):
     manifest = ROOT / 'Data/raw/mapillary/bialystok-industrial-c/manifest.jsonl'
     records = [json.loads(line) for line in manifest.read_text(encoding='utf-8').splitlines() if line.strip()]
@@ -76,6 +157,8 @@ def prepare(count=20, radius=40):
     config_path = REGION / 'sbs_authored_overrides.json'
     config = read(config_path) if config_path.exists() else {'schema': 'kamion/sbs-overrides/1', 'authored_overrides': {}}
     overrides = config['authored_overrides']
+    intrinsics_path=REGION/'sbs_intrinsics.json'
+    intrinsics=read(intrinsics_path)['images'] if intrinsics_path.exists() else {}
     eligible = []
     for r in records:
         photo = manifest.parent / r['file']
@@ -123,6 +206,12 @@ def prepare(count=20, radius=40):
                 raise ValueError(f"photo hash mismatch: {r['id']}")
             with Image.open(photo) as im:
                 width, height = im.size
+            lens=intrinsics.get(r['id'])
+            comparison=photo
+            focal=None
+            if lens:
+                comparison=OUTPUT/'rectified'/(r['id']+'.png')
+                focal,_,_=rectify(photo,lens,comparison)
             ov = overrides.get(camera_id, {})
             allowed = {'east_delta_m','north_delta_m','eye_height_m','absolute_u_m','heading_delta_deg',
                        'horizontal_fov_deg','horizon_y_fraction','pose_status','note','masks'}
@@ -132,9 +221,14 @@ def prepare(count=20, radius=40):
             n = y-origin['y'] + ov.get('north_delta_m', 0)
             eye = ov.get('eye_height_m', 2.2)
             u = ov.get('absolute_u_m', terrain(e+origin['x'], n+origin['y']) + eye)
-            heading = (grid_heading(r['lon'], r['lat'], r['compass_angle'], transform) + ov.get('heading_delta_deg', 0)) % 360
-            fov = vfov(ov.get('horizontal_fov_deg', 90), width/height)
+            true_heading=lens.get('computed_compass_angle',r['compass_angle']) if lens else r['compass_angle']
+            heading = (grid_heading(r['lon'], r['lat'], true_heading, transform) + ov.get('heading_delta_deg', 0)) % 360
+            native_hfov=math.degrees(2*math.atan(width/max(width,height)/(2*focal))) if focal else 90
+            if lens and 'horizontal_fov_deg' in ov:
+                raise ValueError('change rectification focal policy instead of overriding render-only FOV')
+            fov = vfov(ov.get('horizontal_fov_deg', native_hfov), width/height)
             horizon = ov.get('horizon_y_fraction', 0.5)
+            if lens: horizon=rectified_horizon(horizon,width,height,lens,focal)
             if not (0 < horizon < 1 and eye > 0):
                 raise ValueError(f'invalid authored horizon/eye: {camera_id}')
             pitch = math.degrees(math.atan((2*horizon-1)*math.tan(math.radians(fov)/2)))
@@ -146,10 +240,13 @@ def prepare(count=20, radius=40):
                          'source_id': r['id'], 'page_url': r['page_url'], 'author': r['author'],
                          'license': r['license'], 'license_url': r['license_url'], 'captured_at': r['captured_at'],
                          'sha256': digest, 'width': width, 'height': height, 'lon': r['lon'], 'lat': r['lat'],
-                         'heading_grid_deg': heading, 'heading_true_deg': r['compass_angle'], 'route_distance_m': round(distance,3),
+                         'comparison_photo':comparison.relative_to(ROOT).as_posix(),
+                         'comparison_sha256':hashlib.sha256(comparison.read_bytes()).hexdigest(),
+                         'projection':lens, 'rectified_focal':focal,
+                         'heading_grid_deg': heading, 'heading_true_deg': true_heading, 'route_distance_m': round(distance,3),
                          'segment_station_m': round(station,3), 'horizon_y_fraction': horizon,
                          'pose_status': ov.get('pose_status','WORKING_VALUE'),
-                         'assumptions': 'NMT bare earth; eye/FOV/pitch WORKING_VALUE unless verified. Zero roll; lens distortion not corrected. GPS/compass accuracy unknown.',
+                         'assumptions': ('NMT/eye/manual horizon WORKING_VALUE; FOV and radial rectification from Mapillary SfM intrinsics. Roll/GPS/SfM accuracy unverified.' if lens else 'NMT bare earth; eye/FOV/pitch WORKING_VALUE. Zero roll; lens distortion not corrected. GPS/compass accuracy unknown.'),
                          'authored_overrides': ov})
     write(REGION / 'sbs_cameras.json', {'schema': 'kamion/sbs-cameras/1', 'frame': 'E,N,absolute U', 'cameras': cameras})
     input_hashes={name:hashlib.sha256((REGION/name).read_bytes()).hexdigest()
@@ -158,7 +255,7 @@ def prepare(count=20, radius=40):
           'source_manifest_sha256': hashlib.sha256(manifest.read_bytes()).hexdigest(), 'references': refs})
     write(config_path, config)
     lines = ['# ADR 0103 — per-photo attribution (reference sheets only)', '',
-             'Photos stay outside git and builds. Source pixels on sheets are resized with grid/horizon overlays.',
+             'Photos stay outside git and builds. Source pixels on sheets are rectified/cropped, resized and overlaid.',
              'Photo panels and their modifications: CC BY-SA 4.0; render panels retain project terms.',
              'License: https://creativecommons.org/licenses/by-sa/4.0/', '',
              '| Camera | Author | Date | Source | SHA256 |', '|---|---|---|---|---|']
@@ -187,7 +284,7 @@ def contact(refs):
         sheet = Image.new('RGB', (960, math.ceil(len(group)/4)*165), '#202020')
         d = ImageDraw.Draw(sheet)
         for i,r in enumerate(group):
-            with Image.open(ROOT/r['photo']) as im:
+            with Image.open(ROOT/r.get('comparison_photo',r['photo'])) as im:
                 thumb = ImageOps.contain(im.convert('RGB'), (238,135))
             x,y=(i%4)*240,(i//4)*165
             sheet.paste(thumb,(x,y))
@@ -234,15 +331,17 @@ def compose(render_dir, outdir, strict=True):
         render=render_dir/(r['camera']+'.png')
         if not render.exists():
             missing.append(r['camera']); continue
-        with Image.open(ROOT/r['photo']) as src, Image.open(render) as dst:
+        with Image.open(ROOT/r.get('comparison_photo',r['photo'])) as src, Image.open(render) as dst:
             if r.get('sha256') and hashlib.sha256((ROOT/r['photo']).read_bytes()).hexdigest()!=r['sha256']:
                 raise ValueError(f"photo hash mismatch: {r['camera']}")
+            if r.get('comparison_sha256') and hashlib.sha256((ROOT/r.get('comparison_photo',r['photo'])).read_bytes()).hexdigest()!=r['comparison_sha256']:
+                raise ValueError(f"rectified photo hash mismatch: {r['camera']}")
             if src.width*dst.height != dst.width*src.height:
                 raise ValueError(f"aspect mismatch: {r['camera']}; render at photo aspect ratio")
             left,right=src.convert('RGB'),dst.convert('RGB')
         masks=r.get('authored_overrides',{}).get('masks',{})
         m={'camera':r['camera'],'pose_status':r['pose_status'], 'photo_sha256':r.get('sha256'),
-           'render_sha256':hashlib.sha256(render.read_bytes()).hexdigest(),
+           'render_sha256':hashlib.sha256(render.read_bytes()).hexdigest(), 'comparison_sha256':r.get('comparison_sha256'),
            'photo':measurements(left,r['horizon_y_fraction'],masks.get('photo')),
            'render':measurements(right,r['horizon_y_fraction'],masks.get('render'))}
         ph=np.array(m['photo']['histogram_32'],dtype=float); ph/=ph.sum()
@@ -262,7 +361,7 @@ def compose(render_dir, outdir, strict=True):
             d.line((x,hy,x+470,hy),fill='#ff5050',width=2)
             d.text((x+4,28),label,fill='#ff5050')
         for j,text in enumerate([f"Photo: {r['author']} | {r['license']} | {r['captured_at']}",r['page_url'],
-                                  'Grid: 25%; red: authored/assumed horizon. Photo pixels resized + overlays.',
+                                  'Grid: 25%; red: authored horizon. Photo rectified/cropped if intrinsics cached.',
                                   'Histogram and sky/asphalt estimates: metrics.json; no gate PASS inferred.']):
             d.text((6,height+29+j*17),text,fill='white')
         peak=max(float(ph.max()),float(rh.max()),1e-9)
@@ -283,9 +382,11 @@ def main():
     ap=argparse.ArgumentParser(description=__doc__)
     sub=ap.add_subparsers(dest='command',required=True)
     p=sub.add_parser('prepare'); p.add_argument('--count-per-segment',type=int,default=20)
+    sub.add_parser('fetch-intrinsics')
     p=sub.add_parser('compose'); p.add_argument('--renders',type=Path,required=True); p.add_argument('--output',type=Path,required=True)
     args=ap.parse_args()
     if args.command=='prepare': prepare(args.count_per_segment)
+    elif args.command=='fetch-intrinsics': fetch_intrinsics()
     else: compose(args.renders,args.output)
 
 

@@ -19,3 +19,6 @@ NEXT: Get-Content artifacts/sbs-gate3/render-run.log -Tail 10
 
 Step 7: existing refs tool tests also pass after declaring NumPy directly (see pytest-refs.log). Unity remains queued under the owner-confirmed PHONE_RUN lock.
 NEXT: Get-Content artifacts/sbs-gate3/render-run.log -Tail 10
+
+Step 8: fetched safe public intrinsics for all 40 references using existing header-only token loader (no credentials saved). 27 fisheye / 13 perspective. Added photographic radial rectification + matched FOV, preserved originals, hashed derivatives and preferred SfM compass. Rectified contacts inspected: bridge/poles now straight, no blank borders observed. 9 focused tests pass. No Unity start: PHONE_RUN still active.
+NEXT: Get-Content artifacts/sbs-gate3/render-run.log -Tail 10

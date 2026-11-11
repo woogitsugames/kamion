@@ -104,3 +104,5 @@ Zasady: na zdjęciach są osoby (także dzieci) — tylko jako referencja, nigdy
 
 ## ADR 0103 — odtwarzalne kadry SBS bramki 3
 40 unikalnych zdjęć Mapillary przy G3-A/G3-B: [pełny rejestr autorów i źródeł](refs/sbs-gate3-attribution.md), metadane i SHA256 w `Data/Regions/bialystok-industrial-c/sbs_references.json`. Kamery wyłącznie w nowym `sbs_cameras.json`, korekty w `sbs_authored_overrides.json`; `control_cameras.json` bez zmian. Współrzędne z GPS przeliczone do EPSG:2180, kurs skorygowany o zbieżność południków; wysokość NMT+oko, FOV i ręczny horyzont to WORKING_VALUE do kalibracji par. Zdjęcia publiczne nie zastępują wymaganych w docs/03 zdjęć właściciela ani jego akceptacji. Część zdjęć ma zniekształcenie szerokokątne i światło przy zachodzie. Brak referencji początkowych ~300 m G3-A; nie traktować 20 zdjęć z okolic ronda jako pełnego pokrycia segmentu.
+
+SBS 0103: sbs_intrinsics.json zawiera publiczne parametry Mapillary dla całych 40 zdjęć (27 fisheye, 13 perspective). Offline prepare prostuje radialne zniekształcenia, zachowuje oryginały i wyprowadza zgodny FOV renderu. Nadal do kalibracji: wysokość oka, horyzont/roll oraz dokładność GPS/SfM.
