@@ -113,3 +113,6 @@
 
 - Step38 docs-only encoding repair: rewrote own E-FINAL-INDEPENDENT-REVIEW.md as readable English ASCII after Polish characters were lost in the PS5-to-Python pipe. Preserved all numbers, findings, scope and pending-at-review-time gates. Verified zero question marks/non-ASCII in the rewritten review. No E/G implementation or validation changes.
 - NEXT COMMAND: WIP commit/copy, then standby0108 after D/E closure and explicit dispatch. No Unity.
+
+- Step39 docs-only reference wording correction: changed own English review from real CC0 photo7197 to reference photo7197, without asserting the building reference license. Needle-map CC0 and other results remain separate; no web/code/test/Unity action.
+- NEXT COMMAND: WIP commit/copy and send final review hash to E/ROOT, then standby0108.
