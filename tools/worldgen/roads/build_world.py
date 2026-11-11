@@ -85,12 +85,12 @@ MATERIALS = {
     "bridge_soffit": {"color": [0.15, 0.15, 0.145], "rough": 0.9, "surface": "concrete",
                       "texture_set": "concrete_precast", "uv": "planar", "sky_occ": [0.6, 0.0]},
     # ADR 0117 (REVIEW s10-0110 P1-2, "bialy plotek"): weathered hot-dip zinc is a dull grey patina, not a mirror -
-    # 0.55 / metal 0.9 reflected the clear sky and was the brightest object of the frame. Albedo 0.11 WORKING_VALUE (b1 with 0.25: beam sRGB ~185 at asphalt 60 in the High overcast frame of
+    # 0.55 / metal 0.9 reflected the clear sky and was the brightest object of the frame. Albedo 0.13 WORKING_VALUE (0.11 in b3 went near black in shade) (b1 with 0.25: beam sRGB ~185 at asphalt 60 in the High overcast frame of
     # r4_deck_bz_eye; the photo has the beam at 74-102 at asphalt 63 - matched in the frame). Derivation
     # from Mapillary 454716650857984 (overcast): beam / asphalt luminance 1.3-2.4, beam / cap 0.7-1.2 against the
     # generated asphalt 0.08 and cap 0.26, vertical faces seeing about half the sky. Set barrier_galv: UV0 metres
     # (u along the beam, v unrolled across the profile), 4.0 x 0.5 m tile.
-    "barrier_steel": {"color": [0.11, 0.112, 0.115], "rough": 0.65, "metal": 0.0, "surface": "steel",
+    "barrier_steel": {"color": [0.13, 0.132, 0.135], "rough": 0.65, "metal": 0.0, "surface": "steel",
                       "texture_set": "barrier_galv", "set_tile": True},
     "verge_grass": {"color": [0.08, 0.105, 0.038], "rough": 0.95, "surface": "grass", "texture_set": "grass_verge"},
     "shoulder_gravel": {"color": [0.20, 0.19, 0.17], "rough": 0.95, "surface": "gravel", "texture_set": "gravel_compacted"},

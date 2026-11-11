@@ -69,7 +69,7 @@ def test_spec_follows_the_generated_road(spec):
         assert ss == sorted(ss) and max(b - a for a, b in zip(ss, ss[1:])) <= spec["params"]["station_step_m"] * 1.25  # chain vertices are kept, measured max 4.565 m
         for s in dk["stations"][1:-1]:                                 # chain end stations taper to the road (9.95 m)
             w = ((s["l"][0] - s["r"][0]) ** 2 + (s["l"][1] - s["r"][1]) ** 2) ** 0.5
-            assert 11.0 < w < 11.6, w                                  # 8.0 m carriageway + 2 x (0.15 + 1.50) m
+            assert 10.0 < w < 10.6, w                                  # 8.0 m carriageway + 2 x (0.15 + 1.00) m (ADR 0117 cap_w)
             if s["open"] and so[0] + 45 < s["s"] < so[1] - 45:
                 # middle of the open range (ring + island); the ends run down to the abutments. Measured 3.27-4.99 m:
                 # 4.5 m + margin over the ring carriageways, less over the island mound of the generated terrain.

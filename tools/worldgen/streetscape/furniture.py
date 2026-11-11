@@ -1322,10 +1322,47 @@ def _dedup_guardrail(lin, P, Z, key, built, m, tall=None, term=(True, True)):
     m["dedup_skipped_pts"] = m.get("dedup_skipped_pts", 0) + int((~keep).sum())
 
 
-def _flush_rails(lin):
-    for it in getattr(lin, "rail_queue", None) or []:
+def _join_free_ends(queue, m):
+    """ADR 0117 (p0_kerb_merge_eye): an end of a run that stops within GUARDRAIL_JOIN_M of ANOTHER rail (a deck
+    barrier starting 2 m beside the separator rail of the gore, two rails of one nose) swings onto it: the rails meet
+    in a V / Y as on the orthophoto (E -781 N 76.5) instead of ending side by side. The end loses its terminal."""
+    from shapely.geometry import LineString, Point
+    from shapely.ops import nearest_points
+    lines = [LineString(it["P"]) for it in queue]
+    for i, it in enumerate(queue):
+        Ps = it["P"]
+        if len(Ps) < GUARDRAIL_JOIN_BLEND + 4:
+            continue
+        others = [l for j, l in enumerate(lines) if j != i]
+        if not others:
+            continue
+        allb = shapely.union_all(others)
+        for end in (0, -1):
+            pe = Point(Ps[end])
+            d = allb.distance(pe)
+            if not (0.3 < d <= GUARDRAIL_JOIN_M):
+                continue
+            q = nearest_points(allb, pe)[0]
+            dv = np.array([q.x, q.y]) - Ps[end]
+            u = np.linspace(1.0, 0.0, GUARDRAIL_JOIN_BLEND + 1)[:-1]
+            w = u * u * (3 - 2 * u)
+            idx = np.arange(GUARDRAIL_JOIN_BLEND) if end == 0 else len(Ps) - 1 - np.arange(GUARDRAIL_JOIN_BLEND)
+            Ps[idx] += dv[None, :] * w[:, None]
+            t_ = list(it["term"])
+            t_[end] = False
+            it["term"] = tuple(t_)
+            m["joined_free_ends"] = m.get("joined_free_ends", 0) + 1
+        lines[i] = LineString(Ps)
+
+
+def _flush_rails(lin, m=None):
+    queue = getattr(lin, "rail_queue", None) or []
+    if queue and m is not None:
+        _join_free_ends(queue, m)
+    for it in queue:
         guardrail(lin, it["P"], it["Z"], it["key"], it["tall"], it["term"])
     lin.rail_queue = None
+    return [bool(np.all(it["tall"])) for it in queue]
 
 
 STRUCT_GUARD_GAP_M = 8.0     # WORKING_VALUE (ADR 0110): a ground carriageway edge this close to a viaduct / walled ramp
@@ -1504,9 +1541,10 @@ def guardrails(lin, net, zground, report):
                     for q in (1, 2, 3, 4):
                         m[names[q]] += float((want[sl] == q).sum())
                 k = kk + 1
-    _flush_rails(lin)
+    deck_flags = _flush_rails(lin, m)
     report["guardrails_m"] = {k: round(v) for k, v in m.items()}
-    net.guardrail_built = built                # pier_guardrails (after the bridge supports exist) dedups against these
+    # pier_guardrails (after the bridge supports exist) dedups against the GROUND rails (deck rails pass overhead)
+    net.guardrail_built = [b for b, dk in zip(built, deck_flags) if not dk] if len(deck_flags) == len(built) else built
     d = np.array(drops) if drops else np.zeros(1)
     report["embankment_check"] = {"rural_sides": len(drops), "max_drop_m": round(float(d.max()), 2),
                                   "p95_drop_m": round(float(np.percentile(d, 95)), 2),
