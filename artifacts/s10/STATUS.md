@@ -701,3 +701,17 @@ Step 60: Root re-viewed rejected R3 white estate and level3 sheet; independently
 confirms detached mid-door grey patches. Review records earlier root acceptance
 was too lenient and requires new metric profiles, not recolouring old mask.
 NEXT COMMAND: Get-Content C:/Users/matma/Documents/Claude/kamion/artifacts/integration-s10/run5.log -Tail 10
+
+Step 61: G inactive precomputed deposition failed a meaningful gradient test
+(+11.904/m on sedanLOD0); rejected, no production activation. Approved affine
+height and axle coordinate payload instead, direct monotone shader falloff.
+G4cba78e3 now has source-expression/threshold contracts and81LOD geometry/UV0
+invariance PASS; Float16 max height error .000467781m, opacity .000159228.
+Estimated total native increase584576B, actual descriptors/resident maps pending.
+Canonical merged-source R3 baseline22ba86be:192raw checks PASS, Fab15/no fallback.
+CPU current1009 instances distribute100/369/329/211; actualGPU still pending.
+PHONE run5 entered segmentB17:51; hold remains until actual whole END. D remains
+first Unity priority. D owner may do bounded readonly F2 capture-data preflight
+in old F artifacts during wait; no source/newWT/Unity or D scope change.
+NEXT COMMAND: Get-Content C:/Users/matma/Documents/Claude/kamion/artifacts/integration-s10/run5.log -Tail 10
+After actual END+PHONEabsence remove only own diag12 and explicitly release D.
