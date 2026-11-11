@@ -1,3 +1,18 @@
+# HANDOVER — kamion, SESJA 11 (start 2026-11-11 23:05)
+
+## Stan na żywo (s11)
+- 23:05 start: ops-watchdog uruchomiony w tle przez lidera (log `artifacts/logs/ops-watchdog.log`). Usage: 5 h 0 % (reset 04:00), tydzień 33 %, Fable 62 % (reset 17.11 04:00). Trigger godzinny :17 (CronCreate, tylko w sesji lidera).
+- Agenci Claude (3/3):
+| zadanie | ADR | worktree / gałąź | STATUS | stan |
+|---|---|---|---|---|
+| węzły r6 bariery — dokończenie b3 (Fable) | 0123 | `.claude/worktrees/junctions-r6` / `junctions-r6` | `artifacts/junctions-r6/STATUS.md` | w toku od 23:08 (post.sh b3 full → EditMode/PlayMode → pairs → poprawki → ADR) |
+| zabudowa r8 — runda r2 (Fable) | 0124 | `.claude/worktrees/buildings-r8` / `buildings-r8` | `artifacts/buildings-r16/STATUS.md` | w toku od 23:08 (pytest/fidelity → EditMode → r2 → ADR) |
+| visual-critic D51 na świeżym sbs-r1 GPT (168 renderów, 100 arkuszy B) | — | czyta `.claude/worktrees/gpt-sbs/artifacts/sbs-r1/evidence/sheets` | wynik → `docs/reports/visual/REVIEW-2026-11-11-s11-sbs-r1-D51.md` | w toku od 23:10 → lista blokerów rozpoznawalności |
+- GPT 24 h: wszystkie 10 rund w toku, żadna nie gotowa do scalenia (cab-r1, furniture-r1 REPORT = „w toku”).
+- Następne: po krytyku D51 → agenci na blokery (Fable geometria) → krytyk 0123/0124 → scalenie → jedna regeneracja → integracja Unity + czysty APK Low → gate3 A16 A+B.
+- Ostatni przydzielony ADR: 0124.
+
+---
 # HANDOVER — kamion, ZAMKNIĘCIE sesji 10 (2026-11-11 ~22:50; właściciel zmienia konto → limity od zera)
 
 ## Prawda o stanie (czytaj to, niżej jest dziennik s10)
