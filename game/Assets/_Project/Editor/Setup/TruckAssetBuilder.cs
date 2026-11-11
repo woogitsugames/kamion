@@ -933,6 +933,48 @@ namespace Game.Editor.Setup
             return m;
         }
 
+        // ADR 0104: called only for the detailed exterior body after inspecting the baseline. Low/Medium retain their
+        // original body meshes; all tiers retain the exact mirror glass transforms and camera optics.
+        static void RecessMirrorBacking(Transform root, Renderer body, Dictionary<string, Dictionary<string, object>> mirrors)
+        {
+            var filter = body != null ? body.GetComponent<MeshFilter>() : null;
+            if (filter == null || filter.sharedMesh == null) return;
+            var openings = new List<MirrorHousingRecess.Opening>(2);
+            foreach (string side in new[] { "L", "R" })
+            {
+                if (!mirrors.TryGetValue("MIRROR_Main" + side, out var main) ||
+                    !mirrors.TryGetValue("MIRROR_Wide" + side, out var wide)) continue;
+                var axes = Json.Obj(main["axes_unity_vehicle"]);
+                Vector3 centre = V3(main["pivot_unity_vehicle"]), up = V3(axes["Y"]).normalized;
+                var size = Json.Arr(main["size_m"]);
+                var wideSize = Json.Arr(wide["size_m"]);
+                openings.Add(new MirrorHousingRecess.Opening {
+                    centre = centre, right = V3(axes["X"]).normalized, up = up,
+                    normal = V3(main["normal_unity_vehicle"]).normalized,
+                    halfWidth = (float)Json.Num(size[0]) * 0.5f,
+                    bottom = Vector3.Dot(V3(wide["pivot_unity_vehicle"]) - centre, up) - (float)Json.Num(wideSize[1]) * 0.5f,
+                    top = (float)Json.Num(size[1]) * 0.5f,
+                });
+            }
+            var source = filter.sharedMesh;
+            var mesh = MirrorHousingRecess.Apply(source, root.worldToLocalMatrix * body.transform.localToWorldMatrix, openings, out int moved);
+            if (mesh == null) { Debug.Log("[TRUCK] Mirror housing recess: no backing vertices need moving"); return; }
+            string dir = Root + "/Meshes";
+            Directory.CreateDirectory(Path.Combine(EditorTools.ProjectRoot, dir));
+            string path = $"{dir}/{mesh.name}.asset";
+            var old = AssetDatabase.LoadAssetAtPath<Mesh>(path);
+            if (old != null)
+            {
+                EditorUtility.CopySerialized(mesh, old);
+                UnityEngine.Object.DestroyImmediate(mesh);
+                EditorUtility.SetDirty(old);
+                mesh = old;
+            }
+            else AssetDatabase.CreateAsset(mesh, path);
+            filter.sharedMesh = mesh;
+            Debug.Log($"[TRUCK] Mirror housing recess {body.name}: moved={moved} vertices={source.vertexCount}->{mesh.vertexCount} indices={source.triangles.Length}->{mesh.triangles.Length}; optics unchanged");
+        }
+
         /// <summary>
         /// ADR 0045: returns a copy of a single-sided glass sheet with an inside face (reversed winding, flipped normals and
         /// tangents) saved under Assets/_Generated/Truck/Meshes, or null when the mesh already has normals facing
