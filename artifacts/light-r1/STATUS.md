@@ -93,3 +93,5 @@ Import fotograficznej mapy nieba zakończony: linear, mipmapy, ASTC 6x6, oś źr
 Batch światła zakończony: artifacts/light-r1/cloud-photo.json; log C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-light\artifacts\light-r1\cloud-photo.20261111-230639.log. Następny krok: obejrzeć PNG i policzyć metryki, nie deklarować PASS z samego kodu wyjścia.
 
 Krok 29: przygotowano kontaktówki wszystkich 20 PNG cieni oraz 16 PNG ramienia bieli i natywny wycinek cienia. Metryki asfaltu/szczytu domu liczone z oryginałów; ROI cienia wymaga najpierw potwierdzenia wzrokowego, więc brak deklaracji metrycznej 10 m. Następny krok: review-matrices.py w heavy i oględziny; osobno trwa import fotograficznej mapy nieba w Unity.
+
+Krok 30: fotograficzna mapa została zaimportowana i 15/15 PNG cloud-photo wykonanych, z jawnie sprawdzonymi presetami/tierami. Przygotowano natywny wycinek nieba i podgląd kontrastu ×16 do oceny bandingu oraz kontaktówki wszystkich wariantów. Dołączono je do już czekającej analizy cieni/bieli, aby nie rezerwować drugiego własnego heavy. Następny krok: obejrzeć photo-*.jpg i shadow-/shoulder-*.jpg po zwolnieniu miejsca w puli.

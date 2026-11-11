@@ -1,5 +1,6 @@
 """Review sheets for actual shadow/shoulder ablations; original PNG measurements."""
 import json
+import runpy
 from pathlib import Path
 
 from PIL import Image, ImageDraw
@@ -49,3 +50,5 @@ for variant, cameras in results["shoulder"].items():
         for label in ("asphalt_near", "sunlit_gable"):
             if label in rois:
                 print(variant, camera, label, rois[label]["rgb_p95"], "clip%", rois[label]["clip_ge250_percent"])
+if (ROOT / "cloud-photo/Low-clear-clouds/r10_house_2.png").exists():
+    runpy.run_path(str(ROOT / "photo-review.py"), run_name="__main__")
