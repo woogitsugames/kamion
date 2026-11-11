@@ -34,6 +34,16 @@ D30/D35 continuity uses the approved r7method: door vertical-profile max-min and
 
 Baseline102render ended nonzero only after OK102, all102fresh PNGs, mono cleanup/abort_threads and no crash stack; accepted under the same explicit ADR0083 rule as scripts/visual-qa.ps1. Corrected controls exited normally or met the same explicit output proof. Do not describe this as a normal baseline Unity exit.
 
+## Candidate1 actual evidence (not accepted)
+
+After explicit root release, canonical Truck/Trailer/Install completed and102matched frames rendered. Actual GPU storage is now DRL160/high80/night56/50/off0 (scale1000), all finite; exposed production decode at0.0001 gives16/8/5.6/5/0. Root observed thinner DRLs and less windscreen veil. All102camera budget rows are identical, with0mesh/FBX changes and0semantic hierarchy/local-pose changes. GPU timing remains UNVERIFIED.
+
+Owner thresholds still FAIL. Overcast Low/High door profile ranges are1.57/2.01points (minimum4); roof14.17/15.72passes. Glass median18.77/22.61 and sigma5.92/5.32 remain below required median/near-pane-reference gates. Clear sigma4.92/5.18 is below8. Lowsun sigma11.28/11.84passes. Full condition rows are retained in candidate1-contract-metrics artifacts; this is not a visual PASS.
+
+Actual paint-mesh diagnostics show coat1, AO1, median dirt.002, Fc.051, NoV.59 and effective roughness.0976; coat/masks are enabled. Dominant-horizontal non-tie cubemap orientation passes all +/-X/Z in both tiers. An independent High256 capture barely changes the native gate crop (p50 28.908->28.936, sigma11.113->11.074), so capture-size-only changes have no demonstrated value.
+
+Corrected layer diagnosis: the hard house/upper boundary remains in the exact gate crop with only the near windscreen removed and with all dedicated panes removed. It is transmitted cab/background geometry, not evidence of a low-resolution near reflection. Root independently reviewed gate-step-layer-classification.png. Do not blur an actual transmitted silhouette into compliance. Front shader mask is uniformly outside/glazing/hasFrame=(0,1,1).
+
 ## Pending evidence
 
-Candidate canonical truck build compiled successfully (TRUCK_RESULT OK). Trailer/install/GPUafter/renders are held for ROOT's phone window; PHONE_RUN and GPT_UNITY_HOLD guard every F launch wrapper. Candidate images, final GIS/EditMode, budget comparison, independent root review and final limitations remain required before completion. No main merge/push is performed by this worker.
+A renewed phone window explicitly holds all Unity launches. Candidate2 is CPU-prepared only: capture mips are box-filtered, so angular footprint alpha=pr^2 versus face-centre texel2/N replaces the GGX-prefiltered-probe mip heuristic in the capture branch. It is an approximation, not a GGX convolution. Both paint/glass consumers change; fallback, F0 and radiance remain unchanged. Numeric plan, focused matched render wrapper, far-pane mask and read-only generated mesh audit are prepared but not yet compiled/rendered/adopted. Full GIS completed during the hold:370passed/1xfailed, exit0 in542.66s. All4234source/generated/cache input hashes stayed identical;0new files and0restorations. The private744file recovery copy was not needed. FullGIS remains relevant after shader-only changes; repeat if Python/products change or a failure emerges. Final candidate images, EditMode, independent root review and final limitations remain required. No main merge/push is performed by this worker.
