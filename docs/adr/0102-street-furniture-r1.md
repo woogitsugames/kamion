@@ -35,7 +35,7 @@ pozostają heurystyką WORKING_VALUE, nie pomiarem inwentaryzacyjnym.
 
 ## Weryfikacja i ograniczenia
 
-Bazowe GIS: 370 passed, 1 xfailed / 635,18 s. Nowe regresje: 6 passed. Budżet prototypów w
+Bazowe GIS: 370 passed, 1 xfailed / 635,18 s. GIS po zmianach: 377 passed, 1 xfailed / 538,42 s. Nowe regresje: 7 passed. Budżet prototypów w
 `artifacts/furniture-r1/prototype-budget.json`: Low betonowej latarni 105→91 tris; stalowej 53→53;
 nowoczesnej 53→53; łukowej 88→88; zwykłego słupka 50→50. To nie są statystyki kadru ani pomiar GPU.
 
@@ -47,3 +47,15 @@ Niezależna recenzja i pomiary na telefonie należą do lidera; nie stanowią do
 
 Przewidywane konflikty: addytywne klucze w `materials.py`; `export.py`; wygenerowane GLB/metadata i QA.
 Po scaleniu z innymi strumieniami regeneracja zamiast wybierania obcych produktów binarnych.
+
+### Wyniki generacji r1
+
+- Stopnie podparcia: 147 → 135, maksimum 1,087 → 0,517 m. Najgorszy pozostały wpis dotyczy `sign_post`.
+- Korekty podpór lamp: 100, najgorsza pozostała wartość kryterium w tych korektach 0,167 m.
+- Finalny filtr usuwa 3 zamiast 2 słupów spod pomostu; po odsunięciach nadal 0 pozostawionych na jezdni.
+- Estymator generatora (23 kamery): Low tris −0,3421%…−0,0047%, liczba materiałów bez zmian.
+  Nie zastępuje to SceneStats ani pomiaru GPU.
+- 388 chronionych prymitywów `road_`, `bridge_`, `barrier_`, `marking` porównano w obu wariantach:
+  POSITION/NORMAL/UV/COLOR/index identyczne bajtowo (`protected-geometry.json`).
+- Zużycie atlasu dotyczy koloru. Roughness/metallic pozostają stałe per materiał; osobna mapa korozji
+  zmieniająca metaliczność nie jest częścią r1. Nie ma fotogrametrycznej inwentaryzacji każdej bocznej ulicy.
