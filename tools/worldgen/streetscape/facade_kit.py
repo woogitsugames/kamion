@@ -118,6 +118,48 @@ def coping(acc, a, c, nout, zt, mat="hall_flashing"):
     acc.box(L0, mat, v3(ctr, zt + 0.03), np.append(d * (L / 2 + 0.06), 0), np.append(nout * 0.11, 0), [0, 0, 0.05])
 
 
+def plinth_drip(acc, a, d, nout, L, z, ops, mat="window_sill"):
+    """ADR 0097 (review 0094 P1-a "linia cokół-ściana"): starter / drip profile of the insulation over the plinth -
+    3.5 cm proud, 3 cm tall, top + front + underside (the underside is a face looking down: the engine halves its
+    ambient, so it reads as the 2-3 cm shadow line between the insulated wall and the recessed plinth). Split round the
+    openings that cross z (entrance doors). LOD0, 6 triangles per run."""
+    d3, n3 = np.append(d, 0.0), np.append(nout, 0.0)
+    cuts = sorted((o[0] - 0.02, o[1] + 0.02) for o in ops if o[2] < z + 0.03 and o[3] > z - 0.01)
+    u, runs = -0.035, []
+    for c0, c1 in cuts:
+        if c0 > u + 0.1:
+            runs.append((u, c0))
+        u = max(u, c1)
+    if L + 0.035 > u + 0.1:
+        runs.append((u, L + 0.035))
+    for u0, u1 in runs:
+        c = v3(a + d * ((u0 + u1) / 2) + nout * 0.0175, z + 0.005)
+        acc.box(L0, mat, c, d3 * ((u1 - u0) / 2), n3 * 0.0175, [0, 0, 0.015], skip=(2, 4, 5))
+
+
+def door_steps(acc, a, d, nout, u, zd, zg, mat="plinth_dark", w=1.4):
+    """ADR 0097 (review 0094 P2-b "drzwi bez stopnia i progu"): landing 1.0 m deep at the door sill (2 cm below it),
+    steps of <= 0.18 m rise / 0.30 m going down to the ground in front (WT par. 69: rise <= 0.175 m outdoors is the
+    usual target; WORKING_VALUE), a 3 cm sheet threshold in the door line. zg = terrain at the door. LOD0 only (LOD1
+    house walls carry no plinth material: one more draw per chunk)."""
+    d3, n3 = np.append(d, 0.0), np.append(nout, 0.0)
+    top = zd - 0.02
+    rise = top - zg
+    if rise < 0.05:
+        return
+    nst = max(0, int(math.ceil(rise / 0.18)) - 1)
+    zb = zg - 0.15
+    c = a + d * u + nout * 0.5
+    acc.box(L0, mat, v3(c, (top + zb) / 2), d3 * (w / 2), n3 * 0.5, [0, 0, (top - zb) / 2], skip=(0, 2))
+    for k in range(nst):
+        zt_ = top - (k + 1) * rise / (nst + 1)
+        c = a + d * u + nout * (1.0 + 0.15 + 0.3 * k)
+        acc.box(L0, mat, v3(c, (zt_ + zb) / 2), d3 * (w / 2 - 0.05 * (k + 1)), n3 * 0.15, [0, 0, (zt_ - zb) / 2],
+                skip=(0, 2))
+    acc.box(L0, "window_sill", v3(a + d * u + nout * 0.03, zd - 0.005), d3 * 0.52, n3 * 0.09, [0, 0, 0.018],
+            skip=(0, 2, 4, 5))
+
+
 def corner_trim(acc, p, n_a, n_b, z0, z1, mat="hall_flashing"):
     """L-shaped corner flashing as one box at the outer corner (bisector of the two outward normals)."""
     bis = n_a + n_b
@@ -317,19 +359,25 @@ def balcony(acc, a, d, nout, u, w, zf, depth=1.15, variant=0, key="", inner=True
                 s0, s1, ua_, ub_ = s1, s0, ub_, ua_
             _aq(acc, s0, s1, s1 + gup, s0 + gup, [[ua_, gv_], [ub_, gv_], [ub_, gv_ + gh], [ua_, gv_ + gh]])
     else:
-        if hfloat(key, "line") < 0.30:          # laundry: cloths hanging from a line under the slab above
-            x = -hw + 0.3
+        if hfloat(key, "line") < 0.12:          # laundry: cloths hanging from a line under the slab above
+            # ADR 0097 (review 0094 P2-d "pranie jak flaga"): 12 % of the balconies (was 30 %), on a rack 0.5 m behind
+            # the balustrade, line 1.55-1.75 m, small pieces (0.25-0.55 m) of muted colours with gaps, hanging at
+            # different depths and a few degrees off the line - only the tops show over the 1.1 m handrail
+            x = -hw + 0.35 + 0.3 * hfloat(key, "lx")
+            zl = 1.55 + 0.2 * hfloat(key, "lz")
             k = 0
-            while x < hw - 0.5:
-                cw = 0.35 + 0.45 * hfloat(key, "cw", k)
-                ch = 0.5 + 0.5 * hfloat(key, "ch", k)
-                col = hpick(["cloth_white", "cloth_red", "cloth_blue", "cloth_dark", "cloth_yellow", "cloth_green",
-                             "cloth_white"], key, "cc", k)
-                c0 = w0 + d3 * x + n3 * (depth - 0.35) + [0, 0, 1.95]
+            while x < hw - 0.45 and k < 5:
+                cw = 0.22 + 0.33 * hfloat(key, "cw", k)
+                ch = 0.25 + 0.30 * hfloat(key, "ch", k)
+                col = hpick(["cloth_white", "cloth_dark", "cloth_white", "cloth_blue", "cloth_dark", "cloth_white",
+                             "cloth_red"], key, "cc", k)
+                tilt = (hfloat(key, "ct", k) - 0.5) * 0.12
+                c0 = w0 + d3 * x + n3 * (depth - 0.55 - 0.1 * hfloat(key, "cd", k)) + [0, 0, zl]
                 uvc = FA.swatch_uv(col)
-                _aq(acc, c0 - [0, 0, ch], c0 + d3 * cw - [0, 0, ch], c0 + d3 * cw, c0, uvc)
-                _aq(acc, c0 + d3 * cw - [0, 0, ch], c0 - [0, 0, ch], c0, c0 + d3 * cw, uvc)
-                x += cw + 0.08 + 0.3 * hfloat(key, "cg", k)
+                lo = c0 - [0, 0, ch] + n3 * tilt
+                _aq(acc, lo, lo + d3 * cw, c0 + d3 * cw, c0, uvc)
+                _aq(acc, lo + d3 * cw, lo, c0, c0 + d3 * cw, uvc)
+                x += cw + 0.12 + 0.35 * hfloat(key, "cg", k)
                 k += 1
         if hfloat(key, "dish") < 0.18 and float(n3 @ DISH_AZ) > -0.2:
             # satellite dish on an arm off the balustrade rail (review s9 P1-5: the dishes were white ovals hanging in
