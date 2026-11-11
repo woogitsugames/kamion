@@ -19,12 +19,12 @@ Integracja Unity (worktree, stan po 0093): import OK, Truck/Trailer BuildBatch+I
 
 | zadanie | ADR | worktree | STATUS | stan na koniec s9 |
 |---|---|---|---|---|
-| węzły r2: szerokości/liczba pasów z ortofoto + swept-path z 0076 | 0095 | junctions-r2 (z 88c6c6e9) | artifacts/junctions-r2/STATUS.md | agent Fable w toku (krok 1 zrobiony 07:20; swept-path dodane); polecono WIP po każdym kroku. Jeśli ubity: nowy agent „pracuj WYŁĄCZNIE w <wt>, najpierw docs/owner/AGENT-RULES.md i STATUS.md, dokończ”; przy merge main wziąć poprawkę 0096 w `roads/meshing.py`. |
+| węzły r2 | 0095 | usunięty | artifacts/junctions-r2 (ADR 0095 „Otwarte”) | SCALONE `471438fb`: pasy/szerokości Andersa z ortofoto 0,08 m, zatoka s1060, n10015785253, wiadukt DK8 2 pasy + rozdział łącznicy E −782 (miejsce z filmu), rozwidlenie Putry; **swept path naprawiony** (G3-A −0,10/−1,12, G3-B −0,14/−0,14; physics+gate3 47/1 znane z 0082); fidelity krawędź p95 2,52→2,30, wysepki 1→0; gis 356/0 w gałęzi. Ortofoto 0,08 m (2 komórki) skopiowane do `Data/raw/refs/gugik-ortho-hr/bialystok-industrial-c/` + manifest. **visual-critic NIEzrobiony → s10.** Regeneracja main w tle `artifacts/logs/s9-main-regen-0095.log` (gis+physics+gate3). Otwarte: końce zatoki, przejazdy rowerowe n100…, separator rozwidlenia, SE s1440 4 pasy, Putry N, dół MA-010, szew łaty, krawężniki, sprzątanie linii |
 | tło za krawędzią | 0085 | argon-edge | artifacts/edge-far-r1/REPORT.md | NIEscalone — czeka na poprawkę Argona |
 | import Megascans R1 | 0084 | gpt-megascans | artifacts/megascans-r1 | scalone; worktree zostawiony dla Codex (nie usuwać bez właściciela) |
 
 ## Następne kroki (kolejność)
-1. Dokończ/scal 0095 (visual-critic na `artifacts/junctions-r2`, potem regeneracja main + `python -m pytest tests/gis tests/physics tests/gate3`).
+1. 0095 SCALONE — zrób visual-critic na `artifacts/junctions-r2` (renders_b12, plan_after) i sprawdź wynik regeneracji main (`artifacts/logs/s9-main-regen-0095.log`; zacommituj Data/Regions przy PYTEST EXIT 0). Następna runda węzłów (r3) = „Otwarte” w ADR 0095.
 2. Integracja na main: build_all → build_world → import-region → `Game.Editor.Setup.TruckAssetBuilder.BuildBatch` (+ naczepa) → `Game.World.Import.WorldTruckInstaller.InstallBatch` → EditMode/PlayMode → czysty APK Low z Megascans.
 3. **Telefon A16 Low gate3** (pierwszy pomiar po s9), potem S24+ High (bateria ≥ 40 %, < 36 °C).
 4. **0097 zabudowa r5** wg `REVIEW-2026-11-11-s9-0094.md` „Następna runda”.
