@@ -971,3 +971,11 @@ new list empty. Sent concrete runtime finding to G/E; preserve pass-enabled
 state in Configure/reimport before focus. Potential extra motion work is not
 a measured draw regression. Focus is still gated on this correction/proof.
 NEXT COMMAND: Get-Content C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-car-paint/artifacts/car-paint-r1/STATUS.md -Tail 8
+
+Step 89: Actual plate-r2 import completed OK64chunks/54enabled. ROOT repeated
+saved YAML comparison against R3: MOTIONVECTORS disabled state now exact;
+only expected shader/localkeyword/version differ. Native parity report covers
+81 car LODs geometry/normals/UV0/indices exact, nonplate UV1 exact,54 migrated
+plate submeshes and stride24->24 (zero extra vertex bytes for P2). This is read
+of author's native proof, not ROOT re-decoding. GPU/focus remains next gate.
+NEXT COMMAND: Get-Content C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-car-paint/artifacts/car-paint-r1/STATUS.md -Tail 8
