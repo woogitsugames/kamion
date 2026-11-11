@@ -8,3 +8,6 @@
 
 - Step3: fresh baseline world build completed330s;128 High/Low chunk SHA verified against current manifest. Fab15ready and fallbackFalse. Geometry source unchanged; two GLB serialization hashes refreshed by rebuild. Fixed-camera capture wrapper checks MAIN PHONE_RUN before every Unity launch.
 - NEXT COMMAND: powershell -File scripts/import-region.ps1 -Region bialystok-industrial-c (then capture.ps1 -Phase before).
+
+- Step4: prepared PNG-native fixed-ROI metric script and documented primary installed URP evidence: camera dithering +/-1LSB plus sky +/-0.5LSB; FSR RCAS may also run at100pct. No renderer policy changed before baseline. Import rebuilding143stale material maps from exact source, healthy.
+- NEXT COMMAND: powershell -File artifacts/light-r12/capture.ps1 -Phase before (after baseline import).
