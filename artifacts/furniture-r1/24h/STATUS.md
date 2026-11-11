@@ -123,3 +123,5 @@ NASTĘPNY KROK: uv run --project tools/worldgen tools/worldgen/roads/build_world
 2026-11-12T00:05:23.7840001+01:00: heavy focused after; sukces=True; slot gpt-furniture-r1 zwolniony. NASTĘPNY KROK: sprawdzić log i kontynuować walidację rundy.
 
 2026-11-12T00:05:26.7507868+01:00: heavy focused after; sukces=True; slot gpt-furniture-r1 zwolniony. NASTĘPNY KROK: sprawdzić log i kontynuować walidację rundy.
+
+2026-11-12T00:06:01.0616844+01:00: podczas oczekiwania obejrzano sześć kolejnych lokalnych zdjęć Mapillary. Zapisano autorów/licencje/hashe i obserwacje w reference-audit-extra.json. Zdjęcia pokazują głównie żelbet z otworami oraz latarnie ozdobne; nie potwierdzają okrągłego słupa ani konstrukcji sztywnego panelu na skarpie. NASTĘPNY KROK: odczytać wynik kolejki heavy i finalne rendery, zachować jawne ograniczenia referencji.
