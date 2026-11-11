@@ -955,3 +955,11 @@ UploadMeshData(true). Pass metadata test checks imported URP passes without
 assuming an active renderer. Invalid quit/active-pass attempts are retained by
 G and are not final PASS. Export CPU worker remains active; no restart needed.
 NEXT COMMAND: Get-Content C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-car-paint/artifacts/car-paint-r1/r4-plate-world.log -Tail 6
+
+Step 87: ROOT read completed P2 normal import:64 chunks Low/High OK; log enables
+54 plates Forward-only. Wrapper proof192raw/0mismatch, Fab15/fallbackFalse and
+90 canonical fixtures unchanged. Actual saved M_car_plate has ownedshader GUID,
+local keyword, instancing enabled and diagnostic version1. This confirms saved
+binding, not executed GPU output. No fresh BEFORE: original368 R3 baseline is
+immutable. Native parity/readback/four-target focus now pending.
+NEXT COMMAND: Get-Content C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-car-paint/artifacts/car-paint-r1/STATUS.md -Tail 8
