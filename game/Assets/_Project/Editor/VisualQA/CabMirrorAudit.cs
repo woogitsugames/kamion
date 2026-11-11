@@ -30,7 +30,8 @@ namespace Game.Editor.VisualQA
                     .First(p => Path.GetFileNameWithoutExtension(p) == scene);
                 EditorSceneManager.OpenScene(path, OpenSceneMode.Single);
                 var env = UnityEngine.Object.FindAnyObjectByType<EnvironmentLighting>();
-                if (env != null) { env.SetPreset(lighting); env.Apply(); }
+                if (env == null || !env.SetPreset(lighting)) throw new InvalidOperationException("Missing environment or unknown lighting: " + lighting);
+                env.Apply();
                 foreach (var rig in UnityEngine.Object.FindObjectsByType<TruckVisualRig>(FindObjectsSortMode.None)) rig.Apply();
                 var eye = UnityEngine.Object.FindObjectsByType<ControlCamera>(FindObjectsInactive.Include, FindObjectsSortMode.None)
                     .First(c => c.id == "cab-driver").GetComponent<Camera>();
@@ -39,12 +40,15 @@ namespace Game.Editor.VisualQA
                 report.AppendLine("# Editor mirror audit; cadence is configured, not measured phone Hz. Native RT pixels are unflipped; glass flips horizontally.");
                 report.AppendLine("mirror\tclass\twidth\theight\tfovV\taspect\tnear\tfar\tlodScale\tcap\tintervalDrivingFrames\tintervalStandingFrames");
                 var previous = RenderTexture.active;
+                var mirrors = UnityEngine.Object.FindObjectsByType<RenderTextureMirror>(FindObjectsSortMode.None).OrderBy(m => m.phase).ToArray();
+                if (mirrors.Length != 6) throw new InvalidOperationException("Expected six player mirrors, found " + mirrors.Length);
                 try
                 {
-                    foreach (var mirror in UnityEngine.Object.FindObjectsByType<RenderTextureMirror>(FindObjectsSortMode.None).OrderBy(m => m.phase))
+                    foreach (var mirror in mirrors)
                     {
                         mirror.RenderNow(); mirror.RenderNow();
                         var rt = mirror.Texture;
+                        if (rt == null || !rt.IsCreated()) throw new InvalidOperationException("Missing mirror texture: " + mirror.name);
                         var cam = mirror.GetComponent<Camera>();
                         var pixels = new Texture2D(rt.width, rt.height, TextureFormat.RGB24, false);
                         try
