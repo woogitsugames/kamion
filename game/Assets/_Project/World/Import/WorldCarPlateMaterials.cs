@@ -16,6 +16,7 @@ namespace Game.World.Import
     {
         public const string ShaderName = "Kamion/World Car Plate";
         public const string Keyword = "_PLATE_LOCAL_CORNERS";
+        static readonly string[] Passes = { "ForwardLit", "ShadowCaster", "GBuffer", "DepthOnly", "DepthNormals", "Meta", "Universal2D", "MotionVectors", "XRMotionVectors" };
         static readonly Regex Vehicle = new Regex(@"^(car_(hatch|sedan|estate|suv)_(silver|grey|black|white|blue|red)|van_(white|silver|white2))(\.lod[12])?$", RegexOptions.CultureInvariant);
 
         public static bool ValidCorners(Vector2[] uv0, Vector2[] local)
@@ -129,6 +130,22 @@ namespace Game.World.Import
                 !material.IsKeywordEnabled("DYNAMICLIGHTMAP_ON");
         }
 
+        public static Material PreserveLitPasses(string path, Func<Material> factory)
+        {
+            var existing = AssetDatabase.LoadAssetAtPath<Material>(path);
+            var states = existing == null ? null : Passes.Select(existing.GetShaderPassEnabled).ToArray();
+            var material = factory();
+            if (states != null) for (int i = 0; i < Passes.Length; i++) material.SetShaderPassEnabled(Passes[i], states[i]);
+            return material;
+        }
+
+        public static void ChangeShaderPreservingPasses(Material material, Shader shader)
+        {
+            var states = Passes.Select(material.GetShaderPassEnabled).ToArray();
+            material.shader = shader;
+            for (int i = 0; i < Passes.Length; i++) material.SetShaderPassEnabled(Passes[i], states[i]);
+        }
+
         public static void Configure(RegionImporter.Result region)
         {
             if (!region.Materials.TryGetValue("car_plate", out var plate)) return;
@@ -137,7 +154,7 @@ namespace Game.World.Import
             if (original == null) return;
             plate.DisableKeyword(Keyword);
             if (plate.HasProperty("_PlatePayloadVersion")) plate.SetFloat("_PlatePayloadVersion", 0f);
-            plate.shader = original;
+            ChangeShaderPreservingPasses(plate, original);
             bool eligible = EligibleMaterial("car_plate", plate) && ForwardOnly(GraphicsSettings.defaultRenderPipeline);
             for (int i = 0; eligible && i < QualitySettings.names.Length; i++)
             {
@@ -151,7 +168,7 @@ namespace Game.World.Import
             if (eligible) eligible = ValidNativeLibrary(region.Instances, plate);
             if (eligible)
             {
-                plate.shader = shader;
+                ChangeShaderPreservingPasses(plate, shader);
                 plate.SetFloat("_PlatePayloadVersion", 1f);
                 plate.EnableKeyword(Keyword);
             }

@@ -84,6 +84,26 @@ namespace Game.Tests
         }
 
         [Test]
+        public void RepeatedShaderSwitchPreservesDisabledMotionAndEnabledDepthPasses()
+        {
+            var lit = Shader.Find("Universal Render Pipeline/Lit");
+            var material = new Material(lit);
+            var type = Type.GetType("Game.World.Import.WorldCarPlateMaterials, Game.World.Import.Editor", true);
+            try
+            {
+                material.SetShaderPassEnabled("MotionVectors", false);
+                material.SetShaderPassEnabled("DepthOnly", true);
+                foreach (var shader in new[] { Shader.Find("Kamion/World Car Plate"), lit, Shader.Find("Kamion/World Car Plate") })
+                {
+                    type.GetMethod("ChangeShaderPreservingPasses").Invoke(null, new object[] { material, shader });
+                    Assert.False(material.GetShaderPassEnabled("MotionVectors"));
+                    Assert.True(material.GetShaderPassEnabled("DepthOnly"));
+                }
+            }
+            finally { UnityEngine.Object.DestroyImmediate(material); }
+        }
+
+        [Test]
         public void OwnedPlateShaderDefaultsToLegacyUv0AndPreservesOpaquePasses()
         {
             var shader = Shader.Find("Kamion/World Car Plate");

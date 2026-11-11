@@ -72,6 +72,10 @@ files=set(allmaps+[ROOT/r['file'] for r in before['sources']]+[specpath,fir])
 files.update(ROOT/p for p in (
     'game/Assets/_Project/Environment/Shaders/WorldPBR.shader',
     'game/Assets/_Project/World/Import/WorldPbrMaterials.cs',
+    'game/Assets/_Project/Environment/Shaders/WorldCarPlate.shader',
+    'game/Assets/_Project/World/Import/WorldCarPlateMaterials.cs',
+    'game/Assets/_Project/World/Import/InstanceImporter.cs',
+    'game/Assets/_Project/World/Import/RegionImporter.cs',
     'tools/worldgen/streetscape/life_cars.py','tools/worldgen/streetscape/export.py',
     'tools/worldgen/streetscape/materials.py'))
 manifestpath=ROOT/'Data/Regions/bialystok-industrial-c/generated/world_manifest.json'

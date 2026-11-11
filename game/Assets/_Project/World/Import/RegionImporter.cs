@@ -387,6 +387,9 @@ namespace Game.World.Import
                     // Exposed units (ADR 0010): emissive in the manifest is relative radiance; ×0.25 keeps a lit signal
                     // lamp clearly brighter than daylit surfaces without clipping to white on LDR tiers.
                     emission = new Color((float)Num(e[0]), (float)Num(e[1]), (float)Num(e[2])) * 0.25f;
+                if (id == "car_plate")
+                    return WorldCarPlateMaterials.PreserveLitPasses(path,
+                        () => LitMaterial(path, albedo, rough, metal, t, clip, clip ? (float)Num(m.Get("alpha_cutoff")) : 0.5f, clip, emission));
                 return LitMaterial(path, albedo, rough, metal, t, clip, clip ? (float)Num(m.Get("alpha_cutoff")) : 0.5f, clip, emission);
             }
             bool decal = m.Get("decal") is bool dc && dc;
