@@ -32,13 +32,21 @@ foreach ($case in $Cases) {
         $runStart = Get-Date
         $code = Invoke-UnityBatch -LogFile $log -Arguments $argsForUnity
         $expected = if ($case -eq 'no-pane') { 6 } else { 12 }
-        $resultOk = Select-String -LiteralPath $log -Pattern ("^TRUCK_ROUND_RESULT: OK " + [regex]::Escape($round) + " count=$expected$") -Quiet
+        $result = Select-String -LiteralPath $log -Pattern ("^TRUCK_ROUND_RESULT: OK " + [regex]::Escape($round) + " count=$expected$") | Select-Object -Last 1
+        $resultOk = $null -ne $result
         $fresh = @(Get-ChildItem "artifacts/truck-r1/$round" -Recurse -Filter '*.png' -ErrorAction SilentlyContinue | Where-Object LastWriteTime -ge $runStart).Count
         $productionSha = (Get-FileHash game/Assets/_Project/Rendering/Shaders/TruckExterior.shader -Algorithm SHA256).Hash.ToLowerInvariant()
         $cleanup = Select-String -LiteralPath $log -SimpleMatch "TRUCK_ABLATION_CLEANUP: productionSHA=$productionSha" -Quiet
         # Same narrowly documented exception as visual-qa.ps1 / ADR 0051. No generic crash acceptance.
         if ($code -eq -1073741819 -and $resultOk -and $cleanup -and $fresh -eq $expected -and
             (Select-String -LiteralPath $log -SimpleMatch 'D3D12PipelineCacheLibrary::SaveCache' -Quiet)) { $code = 0 }
+        # ADR 0083: the second documented shutdown flake, AFTER the result and mono cleanup, with no crash stack.
+        if ($code -ne 0 -and $resultOk -and $cleanup -and $fresh -eq $expected) {
+            $mono = Select-String -LiteralPath $log -SimpleMatch 'Cleanup mono' | Where-Object LineNumber -gt $result.LineNumber | Select-Object -First 1
+            $abort = Select-String -LiteralPath $log -SimpleMatch 'abort_threads: Failed aborting' | Where-Object LineNumber -gt $result.LineNumber | Select-Object -First 1
+            $crash = Select-String -LiteralPath $log -Pattern 'Crash!!!|Obtained \d+ stack frames|Fatal Error|error CS\d+' -Quiet
+            if ($mono -and $abort -and !$crash) { $code = 0 }
+        }
         if ($code -ne 0 -or !$resultOk -or !$cleanup -or $fresh -ne $expected -or (SourceFingerprint) -ne $fingerprint) {
             throw "Nieudana kontrola $case; exit $code. Zachowano log."
         }
