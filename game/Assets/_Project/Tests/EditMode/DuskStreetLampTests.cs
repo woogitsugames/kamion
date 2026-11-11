@@ -11,6 +11,26 @@ namespace Game.Tests
     /// </summary>
     public class DuskStreetLampTests
     {
+        [Test]
+        public void NightSeparatesDarkAmbientFromFixedLampPhotometryWithoutChangingDusk()
+        {
+            var dusk = LightingPreset.CreateDusk();
+            var night = LightingPreset.CreateNight();
+            try
+            {
+                var d = dusk.CreateModel(); var n = night.CreateModel();
+                Assert.AreEqual(-5f, dusk.sunElevationDeg, "existing dusk stays intact");
+                Assert.AreEqual(0f, dusk.exposureCompensation);
+                Assert.AreEqual(0f, n.SunNormalIlluminanceLux);
+                Assert.Less(n.SkyHorizontalIlluminanceLux, d.SkyHorizontalIlluminanceLux);
+                float ambientRatio = n.HorizontalIlluminanceLux*n.Exposure/(d.HorizontalIlluminanceLux*d.Exposure);
+                Assert.That(ambientRatio, Is.InRange(1f/32f, 1f/8f), "night ambient must be clearly darker, not just a renamed dusk");
+                Assert.Greater(StreetLamps.DownIntensityCd/n.HorizontalIlluminanceLux,
+                    StreetLamps.DownIntensityCd/d.HorizontalIlluminanceLux, "fixed lamp gains contrast against darker sky");
+            }
+            finally { Object.DestroyImmediate(dusk); Object.DestroyImmediate(night); }
+        }
+
         const float LampHeightM = 8f;   // typical urban road luminaire mounting height (WORKING_VALUE)
 
         [Test]

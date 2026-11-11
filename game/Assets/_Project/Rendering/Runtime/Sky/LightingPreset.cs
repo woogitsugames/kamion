@@ -179,6 +179,18 @@ namespace Game.Rendering
             p.lookSaturation = -3f;
             return p;
         }
+
+        /// <summary>ADR 0108 r2 WORKING_VALUE: a separate night appearance at the existing twilight model's
+        /// lower bound. This is not an astronomical night-sky fit. Extra exposure restraint darkens ambient-lit
+        /// surfaces while fixed-luminance lamps gain contrast against the dimmer sky; dusk remains unchanged.</summary>
+        public static LightingPreset CreateNight()
+        {
+            var p = CreateDusk();
+            p.name = "LP_Night";
+            p.sunElevationDeg = SkyModel.MinTwilightElevationDeg;
+            p.exposureCompensation = -4f; // provisional; image ablation -2/-3/-4/-5 EV before choosing.
+            return p;
+        }
     }
 
     /// <summary>
