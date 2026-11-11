@@ -35,3 +35,5 @@ Krok 13: zapisano własny QA i manifest źródeł nowej siatki; uboczne metadane
 Następny krok: po potwierdzeniu kodu 0 audytu wykonać ScopeGenerated i sprawdzić diff world_manifest.
 Krok 14: po około 14 minutach kolejki zatrzymano wyłącznie własny proces oczekujący na AuditHeights (PID 58904; własny slot nie istniał), bez zatrzymywania obliczeń. Log kolejki zachowano. Kolejne heavy sprawdzają dostępność co 2 s zamiast 7 s; MaxSlots nadal 3, StaleHours zapobiega usuwaniu cudzych slotów.
 Następny krok: ponowny AuditHeights tą samą pulą; bez omijania blokady zasobów.
+Uzupełnienie kroku 14: zatrzymanie wrappera pozostawiło jego własny proces Acquire (PID 71344, rodzic 58904), który trzymał log. Sprawdzono tożsamość i zatrzymano także ten proces oczekujący; nie działał żaden Python audytu i nie było własnego slotu. Pierwsze wznowienie nie wystartowało przez otwarty log. Log przeniesiono dopiero po zamknięciu obu procesów.
+Następny krok: ponowne uruchomienie AuditHeights, kod wyniku odczytać z nowego kwitu zadania.
