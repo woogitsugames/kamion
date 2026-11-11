@@ -447,4 +447,5 @@ for _k, _v in M.items():
 for _kind, _base in (("galv", "steel_galv"), ("grey", "steel_painted_grey"),
                      ("concrete", "concrete_pole"), ("bollard", "steel_painted")):
     M[f"furniture_{_kind}"] = {**M[_base], "texture": f"furniture_{_kind}"}
+M["furniture_footing"] = {**M["concrete_base"], "texture": "furniture_concrete"}
 

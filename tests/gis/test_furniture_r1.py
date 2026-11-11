@@ -25,7 +25,7 @@ def test_visible_axis_contact_is_independent_of_low_collision():
     assert np.hypot(it["e"], it["n"]) <= 1.051
     assert it["e"] < -0.25 and it["z"] == 0
     m = P.lamp(12, 2)[0].out()
-    v = next(p["V"] for p in m if p["mat"] == "concrete_base")[:, 2]
+    v = next(p["V"] for p in m if p["mat"] == "furniture_footing")[:, 2]
     assert -0.6 < v.min() < 0 and v.max() > 0
 
 

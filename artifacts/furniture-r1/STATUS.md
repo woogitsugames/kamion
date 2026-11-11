@@ -16,3 +16,6 @@ NASTĘPNY KROK: pwsh artifacts/furniture-r1/run-validation.ps1 (resume using com
 
 Regeneracja bazowego kodu zakończona 297.2 s; QA odtwarza 147 / 1.087 m. W logu brak fallback=True. Dodano stałą kamerę zwykłego ogrodzenia OSM 590134608; kamery mają seat=file, tył znaku wyznaczony z yaw. Import Unity czeka na PHONE_RUN.
 NASTĘPNY KROK: pwsh artifacts/furniture-r1/run-validation.ps1
+
+Dopracowano mapowanie atlasu: metry fizyczne (9 m atlas dla lamp, 0.9 m dla słupków) zamiast rozciągania strefy brudu z wysokością lampy. Istniejąca stopa otrzymała ten sam skan betonu przez addytywny materiał furniture_footing, bez dodatkowego slotu. Testy regresji: 6 passed.
+NASTĘPNY KROK: czekać na PHONE_RUN; pipeline walidacji działa.

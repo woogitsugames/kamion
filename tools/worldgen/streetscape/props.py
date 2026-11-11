@@ -71,10 +71,12 @@ class Mesh:
         for mat, (Vs, Ts, UVs) in sorted(self.prims.items()):
             V, UV = np.concatenate(Vs), np.concatenate(UVs)
             # ADR 0102: atlas height is the physical pole height, not one repeating dirt band every metre.
-            if self.pole_height and mat in ("steel_galv", "steel_painted_grey", "concrete_pole", "steel_painted"):
+            if self.pole_height and mat in ("steel_galv", "steel_painted_grey", "concrete_pole", "steel_painted", "concrete_base"):
                 mat = {"steel_galv": "furniture_galv", "steel_painted_grey": "furniture_grey",
-                       "concrete_pole": "furniture_concrete", "steel_painted": "furniture_bollard"}[mat]
-                UV = np.column_stack([UV[:, 0], np.clip(V[:, 2] / self.pole_height, 0.002, 0.998)])
+                       "concrete_pole": "furniture_concrete", "steel_painted": "furniture_bollard",
+                       "concrete_base": "furniture_footing"}[mat]
+                atlas_height = 0.9 if self.pole_height <= 1 else 9.0
+                UV = np.column_stack([UV[:, 0], np.clip(V[:, 2] / atlas_height, 0.002, 0.998)])
             res.append({"V": V, "T": np.concatenate(Ts), "UV": UV, "mat": mat})
         return res
 
