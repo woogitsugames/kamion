@@ -1,7 +1,7 @@
 # ARGON-TASK-01-WORLD-EDGE Status
 - Branch: `argon-edge`
 - Worktree: `.claude/worktrees/argon-edge`
-- Last completed step: Step 3 (Round 2 `r2` + GIS Tests + ADR 0085 + REPORT.md) — Fixed all 5 `r1` visual defects (BDOT10k `335` + LoD1 2024 extraction, synchronized `w=6` local perimeter smoothing between `WorldEdgeBuilder.cs` and `far_field.py`, removed radial grazing-angle forest curtains, subdivided under-canopy mounds into `<= 320 m` cells, aligned road exit corridors with true border coordinates), regenerated `far_field.glb` (`118,902` tris) and `far_field.low.glb` (`24,826` tris), rebuilt `WorldEdge` on `WorldC` and `WorldC_High`, rendered and inspected all 20 `r2` frames (`<= 960 px`).
+- Last completed step: DONE — All Definition of Done criteria verified: `r0-before`, `r1`, `r2` visual QA rounds completed and inspected (`<= 960 px`), `pytest tests/gis/test_far_field.py` (5/5 passed) + `tests/gis/test_route_corridor.py` (3/3 passed), Unity `EditMode` (`188/188 passed`), Unity `PlayMode -Filter WorldEdgeRecoveryTests` (`3/3 passed`), ADR [`0085-far-field-backdrop.md`](../../docs/adr/0085-far-field-backdrop.md), [`LICENSES.md`](../../docs/LICENSES.md), and [`REPORT.md`](./REPORT.md) finalized.
 
 ## `r0-before` Baseline Summary
 - `r0-before` stats (`Low-clear`, without `WorldFarField`):
@@ -45,5 +45,9 @@
   - `edge-west`: `objects=14 drawsEst=48 shadowDrawsEst=102 trisK=80`
   - `dk8-dk19-exit`: `objects=30 drawsEst=96 shadowDrawsEst=51 trisK=153`
   - Total High far-field mesh: **`118,902` tris** across 4 sectors (`far_north`: 19,350, `far_east`: 35,030, `far_south`: 47,581, `far_west`: 16,941).
+- **Test Suite Verification:**
+  - `uv run --project tools/worldgen pytest tests/gis/test_far_field.py -q`: `5 passed`
+  - `pwsh scripts/test.ps1 -Platform EditMode`: `188 total, 188 passed, 0 failed` (`artifacts/tests/editmode-20261111-104802.xml`)
+  - `pwsh scripts/test.ps1 -Platform PlayMode -Filter WorldEdgeRecoveryTests`: `3 total, 3 passed, 0 failed` (`artifacts/tests/playmode-20261111-115415.xml`)
 - Next step (ready command):
-  `pwsh -NoProfile -File scripts/test.ps1 -Platform EditMode`
+  Task complete — branch `argon-edge` ready for owner review/merge.
