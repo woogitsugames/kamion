@@ -33,3 +33,12 @@ Gałąź `junctions-r5` (z main 60705006). Dowody: `artifacts/junctions-r5/` (re
   łączenie biegów w `furniture._dedup_guardrail`, nos Putry N (wielokąt elipsy w overrides `putry-n-median-nose`), murek
   `r2_fork_link_eye`; `bash artifacts/junctions-r5/scripts/fast.sh b2 && bash artifacts/junctions-r5/scripts/imp.sh b2` →
   `python artifacts/junctions-r5/scripts/stats_cmp.py artifacts/junctions-r5/renders_m0_low_clear/stats.txt artifacts/junctions-r5/renders_b2_low_clear/stats.txt`
+- krok 3 (b3, po resecie limitu): baseline `m0` = świat main f260ab36 zaimportowany w tym worktree (`renders_m0_*`). b3 (łączenie biegów,
+  latarnie nie kasowane pod barierami, ocynk 0,11, cięcia trójkątów, nos Putry N): Low clear vs m0 na 102 kamerach: draws −12…+0,
+  tris max +1,0 % (`python artifacts/junctions-r5/scripts/stats_cmp.py artifacts/junctions-r5/renders_m0_low_clear/stats.txt artifacts/junctions-r5/renders_b3_low_clear/stats.txt`).
+  Swept G3-A −0,10 / −1,12, G3-B −0,14 (= main); fidelity p50 0,36 / p95 2,304 (= main). Latarnia w `p0_lamp_putry_eye` wróciła.
+  OBEJRZANE pary `pairs_b3/photo_*` (zdjęcie | render): bariera pomostu ciemna, matowa, W czytelne, kapa wąska. NIE naprawione w b3:
+  `p0_kerb_merge_eye` (nadal plątanina biegów po lewej), bariera przy filarze (reguła dała 0 m — dedup z istniejącymi biegami),
+  murek `r2_fork_link_eye`.
+  NASTĘPNY KROK: `uv run --project tools/worldgen python artifacts/junctions-r5/scripts/dbg_rails.py -765,76,20 560,-715,40` →
+  poprawka łączenia → `bash artifacts/junctions-r5/scripts/cycle2.sh b4` → `bash artifacts/junctions-r5/scripts/pairs.sh b4`

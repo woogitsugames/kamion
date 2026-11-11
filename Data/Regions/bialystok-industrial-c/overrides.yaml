@@ -264,6 +264,7 @@ overrides:
     kind: hero_bridge
     target: {osm_way: [175157461, 177895177]}
     asset: viaduct_biezenstwa
+    set: {rail_h_m: 1.10, rail_inset_m: 0.08}   # ADR 0117: deck-edge railing with horizontal bars in the asset
     reason: >-
       Landmark object of route G3-A (ADR 0067): the Andersa viaduct over Rondo Pamięci Bieżeństwa 1915 r. gets an
       authored Blender asset (art-source/world/landmarks/viaduct_biezenstwa, tools/blender/world/landmarks/

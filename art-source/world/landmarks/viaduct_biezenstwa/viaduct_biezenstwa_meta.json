@@ -3,7 +3,7 @@
  "axes": "glTF (x, y, z) = (-dE, dU, dN) relative to the segment anchor (local E, N, U)",
  "blender": "4.2.9 LTS",
  "camera_station_m": 297.613,
- "glb_sha256": "2d0ffc42726cfb8958f266c9fdecaf9655c3e4ffa856689c3ac04f8372964f6b",
+ "glb_sha256": "2e46f1337c924c3ad910d895d846140bc42db45f181a06b70725871930ddeddc",
  "materials": [
   "viaduct_concrete",
   "viaduct_steel"
@@ -12,9 +12,9 @@
  "segments": [
   {
    "anchor": [
-    437.166,
-    -660.48,
-    142.894
+    437.165,
+    -660.481,
+    142.897
    ],
    "name": "landmark_viaduct_biezenstwa_00",
    "s_lead": [
@@ -22,16 +22,16 @@
     192.256
    ],
    "tris": [
-    360,
-    128,
-    36
+    1064,
+    420,
+    100
    ]
   },
   {
    "anchor": [
     487.499,
     -688.084,
-    144.928
+    144.925
    ],
    "name": "landmark_viaduct_biezenstwa_01",
    "s_lead": [
@@ -39,16 +39,16 @@
     241.318
    ],
    "tris": [
-    1766,
-    832,
-    272
+    2402,
+    1100,
+    332
    ]
   },
   {
    "anchor": [
     530.556,
     -711.605,
-    145.73
+    145.72
    ],
    "name": "landmark_viaduct_biezenstwa_02",
    "s_lead": [
@@ -56,16 +56,16 @@
     290.381
    ],
    "tris": [
-    1718,
-    780,
-    244
+    2334,
+    1040,
+    300
    ]
   },
   {
    "anchor": [
     573.614,
     -735.123,
-    145.9
+    145.89
    ],
    "name": "landmark_viaduct_biezenstwa_03",
    "s_lead": [
@@ -73,16 +73,16 @@
     339.443
    ],
    "tris": [
-    1788,
-    744,
-    244
+    2420,
+    996,
+    300
    ]
   },
   {
    "anchor": [
-    616.676,
+    616.675,
     -758.636,
-    145.415
+    145.405
    ],
    "name": "landmark_viaduct_biezenstwa_04",
    "s_lead": [
@@ -90,16 +90,16 @@
     388.506
    ],
    "tris": [
-    1728,
-    804,
-    236
+    2364,
+    1072,
+    292
    ]
   },
   {
    "anchor": [
-    657.79,
+    657.789,
     -780.851,
-    144.272
+    144.264
    ],
    "name": "landmark_viaduct_biezenstwa_05",
    "s_lead": [
@@ -107,17 +107,17 @@
     432.908
    ],
    "tris": [
-    252,
-    88,
-    24
+    740,
+    288,
+    68
    ]
   }
  ],
  "spec": "Data/Regions/bialystok-industrial-c/generated/landmarks/viaduct_biezenstwa.spec.json",
- "spec_sha256": "ee4d48bdcde0a421c40e78d3533488008d42fc5cb6d4e86a9586a0d77b042326",
+ "spec_sha256": "ef74feb9bc2e9104ad1955ccbdc10f9f8c9cf090bc422490554d6e4c004fff1a",
  "tris_total": [
-  7612,
-  3376,
-  1056
+  11324,
+  4916,
+  1392
  ]
 }

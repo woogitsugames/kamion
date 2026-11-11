@@ -65,8 +65,10 @@ DEFAULTS = {
     # bars (viaduct_steel.png; Mapillary 500263111404933 from below, 454716650857984 from the deck: a separate
     # handrail with horizontal bars behind the road barrier). The road barrier (W-beam + upper beam) is generated
     # (streetscape.furniture.guardrails) and stands in front of it.
-    "rail_h_m": 1.10,
-    "rail_inset_m": 0.08,
+    # Set per asset in the override (`set: {rail_h_m: 1.10, rail_inset_m: 0.08}` for viaduct_biezenstwa); the default
+    # stays 0 so that the specs of other heroes (0105 DK8 underdeck) do not change.
+    "rail_h_m": 0.0,
+    "rail_inset_m": 0.15,
     "rail_post_m": 2.0,
     "pipe_d_m": 0.20,            # deck drainage collector under the low cantilever
     "pipe_offset_m": 4.35,
