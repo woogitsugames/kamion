@@ -1102,3 +1102,13 @@ zero mismatches. Consolidated REVIEW-G-FINAL.md written accepting technical
 closure/scopedPASS and retaining dirtrealismPARTIAL. G must commit review and
 finish filtered-copy receipt before fresh-main C13 starts. No newengine work.
 NEXT COMMAND: Get-Content C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-car-paint/artifacts/car-paint-r1/STATUS.md -Tail 8
+
+Step 104: Fresh main advanced65f8829b: new owner packages04/05 assign separate
+24h domain sessions; asphalt review0099 explicitly hands its next round to an
+asphalt session. Read relevant packages and new machine-wide unity-slot script.
+No C13 branch/worktree exists. Asked user asynchronously whether future C13
+stays here or moves to new domain sessions, while completing G handoff. Do not
+infer all10/24h tasks from docs alone. C13 dispatch marked ownership-pending;
+new Unity launches also require slot Acquire/Release plus immediate PHONE/HOLD
+guard. No more Unity planned for G. NEXT COMMAND:
+Get-Content C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-car-paint/artifacts/car-paint-r1/STATUS.md -Tail 8
