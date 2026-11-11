@@ -125,3 +125,5 @@ NASTĘPNY KROK: uv run --project tools/worldgen tools/worldgen/roads/build_world
 2026-11-12T00:05:26.7507868+01:00: heavy focused after; sukces=True; slot gpt-furniture-r1 zwolniony. NASTĘPNY KROK: sprawdzić log i kontynuować walidację rundy.
 
 2026-11-12T00:06:01.0616844+01:00: podczas oczekiwania obejrzano sześć kolejnych lokalnych zdjęć Mapillary. Zapisano autorów/licencje/hashe i obserwacje w reference-audit-extra.json. Zdjęcia pokazują głównie żelbet z otworami oraz latarnie ozdobne; nie potwierdzają okrągłego słupa ani konstrukcji sztywnego panelu na skarpie. NASTĘPNY KROK: odczytać wynik kolejki heavy i finalne rendery, zachować jawne ograniczenia referencji.
+
+2026-11-12T00:06:36.6364113+01:00: poprawka iteracji3 przeszła pojedyncze pliki: test_furniture_0120.py 14/14 (w tym UV), test_furniture_r1.py 9/9. Zachowano osobne logi obu plików. Generator after3 jest kolejnym krokiem tej samej działającej kolejki. NASTĘPNY KROK: po jego sukcesie weryfikacja chronionej geometrii i import z osobnym slotem Unity.
