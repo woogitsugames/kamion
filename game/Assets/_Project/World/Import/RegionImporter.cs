@@ -523,6 +523,11 @@ namespace Game.World.Import
             {
                 var nd = layer == "buildings" && tier != "High" ? extraBuildingsLod0 : g.Find(layer);
                 if (nd == null || nd.Primitives.Count == 0) continue;
+                if (layer == "markings")
+                {
+                    nd = new RoadPaintLaneField(g.Find("road")).Transfer(nd, out var paintLaneStats);
+                    Debug.Log($"[PAINT_LANE] {ch.Id}/{tier}: accepted={paintLaneStats.AcceptedComponents} rejected={paintLaneStats.RejectedComponents} changedVerts={paintLaneStats.ChangedVertices} area={paintLaneStats.AcceptedArea:F3}m2");
+                }
                 var mats = new Material[nd.Primitives.Count];
                 bool uv = false, uv1 = false, colors = false;
                 bool roadWear = false;
