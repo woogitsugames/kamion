@@ -248,6 +248,8 @@ def runoff_uv1(runoff, ua, ub, za, zb):
     return [[a, ka], [b, ka], [b, kb], [a, kb]]
 
 
+LOD1_HOUSE_OPENINGS = True     # ADR 0124 r2: windows / door of houses on the LOD1 prism (dark quads, no new material)
+LOD1_HOUSE_OPENING_MAT = "hall_flashing"       # 0.045 graphite sheet: already on the LOD1 of every pitched house (verge / fascia)
 SILL_CLEAN = 0.40              # ADR 0107: share of windows whose sill left no mark (review 0097 P1-f: 30-50 %)
 
 
@@ -944,6 +946,7 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
     counts = {}
     roof_kinds = {}
     canopy_skipped = 0
+    lod1_house_openings = 0
     bal_count = 0
     btree = shapely.STRtree([b["poly"] for b in blds])
     house_pal = house_palette(blds)
@@ -1318,6 +1321,17 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
                       "ribbon" if variant["ribbon"] else typ, pitched, zone_wall=lod1_zone, runoff=lod1_ro,
                       pieces=lod1_pieces, fkey=f"{key}:{ei}", balcony=bal_group if ei in bal_edges else False, plinth=plinth,
                       ground=lod1_gfn)
+            if typ == "house" and LOD1_HOUSE_OPENINGS:
+                # ADR 0124 r2: the LOD1 prism of a house carries its windows and door as dark quads 5 cm proud of the
+                # wall, in a material the LOD1 of a house chunk already has (no new draw). The Low scene shows LOD1
+                # everywhere beyond 60 m of the route: house streets were blank boxes with a canopy over no door.
+                for o in ops:
+                    if o[5] not in ("window", "door") or o[1] - o[0] < 0.4 or o[3] - o[2] < 0.4:
+                        continue
+                    q0, q1 = a + d * o[0] + nout * 0.05, a + d * o[1] + nout * 0.05
+                    acc.quad("buildings_low", LOD1_HOUSE_OPENING_MAT, [q0[0], q0[1], o[2]], [q1[0], q1[1], o[2]],
+                             [q1[0], q1[1], o[3]], [q0[0], q0[1], o[3]])
+                    lod1_house_openings += 1
             u_acc += L
         if typ == "block" and BLOCK_APRON:                         # ADR 0097 (P2-g): paved apron
             FK.wall_apron(acc, poly, hf)
@@ -1391,7 +1405,7 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
                    "dock_facades": [d["id"] for d in all_docks], "facade_signs": len(signs),
                    "hall_wall_runoff_tris": dict(Acc.runoff_tris),
                    "house_roofs": dict(sorted(roof_kinds.items())),
-                   "house_canopies_under_eave_skipped": canopy_skipped, "balconies": bal_count})
+                   "house_canopies_under_eave_skipped": canopy_skipped, "lod1_house_openings": lod1_house_openings, "balconies": bal_count})
     if sign_out is not None:
         sign_out.extend(signs)
     return all_docks

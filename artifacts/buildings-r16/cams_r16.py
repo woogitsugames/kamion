@@ -70,8 +70,13 @@ for p in P:                                       # wicket -> door steps (fence 
         continue
     d = p["door"][0]
     dp, dn = np.array(d[:2]), np.array(d[2:])
-    add(f"r16_door_{k}", dp + dn * 9.0 + np.array([-dn[1], dn[0]]) * 3.0, dp, 1.6, 1.0, 55.0,
-        f"ADR 0124: house door / steps of plot {p['id']} ({p['front']}) from 9 m")
+    wm = np.array(p["wicket"]["m"])                # r2: stand INSIDE the wicket (r1 stood behind the fence / in a wall)
+    v = wm - dp
+    dist = float(np.linalg.norm(v))
+    if dist < 3.0:
+        continue
+    add(f"r16_door_{k}", dp + v / dist * min(dist - 0.8, 7.0), dp, 1.6, 1.1, 55.0,
+        f"ADR 0124: house door / steps of plot {p['id']} ({p['front']}) from inside the wicket, {min(dist - 0.8, 7.0):.1f} m")
     k += 1
 k = 0
 for p in P:                                       # garden close-ups (plants from 6-8 m, eye level)
@@ -80,8 +85,9 @@ for p in P:                                       # garden close-ups (plants fro
     c = np.array(p["c"])
     if p["gate"]:
         nn = np.array(p["gate"]["n"])
-        add(f"r16_garden_{k}", c + nn * 11.0 + np.array([-nn[1], nn[0]]) * 6.0, c, 1.7, 1.5, 60.0,
-            f"ADR 0124: garden of plot {p['id']} ({p['age']}, {p['front']}) from the street side, eye 1.7 m")
+        gm = np.array(p["gate"]["m"])               # r2: just inside the gate, looking over the garden at the house
+        add(f"r16_garden_{k}", gm - nn * 1.0 + np.array([-nn[1], nn[0]]) * 0.8, c, 1.7, 1.2, 65.0,
+            f"ADR 0124: garden of plot {p['id']} ({p['age']}, {p['front']}) from just inside the gate, eye 1.7 m")
         k += 1
 h2 = r10["r10_house_2"]
 p0, l0 = np.array(h2["pos"][:2]), np.array(h2["look_at"][:2])

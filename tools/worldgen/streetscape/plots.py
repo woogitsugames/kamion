@@ -1557,6 +1557,26 @@ def _verge_overlay(buf, plot, surf_top, src_id, zf=None, roads_poly=None, carria
             if not len(T):
                 continue
         Z = np.array([top[i] if on_road[i] else zf(P[i]) for i in range(len(P))]) + 0.02
+        # ADR 0124 r2 (r1: a wedge of grass between this strip and the apron on driveways oblique to the road,
+        # `r16_kerb_0`): outside the road surfaces the strip lay 2 cm over the INTERPOLATED ground, and the terrain
+        # mesh (1 m / 2 m grid, other triangle split) came through it on the batter of the footprint edge. There the
+        # strip is now a ruled surface along the driveway (kerb side -> apron side), never lower than the highest
+        # ground sample within 0.8 m + 3 cm.
+        un = (P - m) @ n
+        free = ~on_road
+        if free.any() and on_road.any():
+            u_in = float(un[on_road].max())                      # last vertex on a road surface, along the driveway
+            u_out = float(un.max())
+            tt = np.array([-n[1], n[0]])
+            for i in np.nonzero(free)[0]:
+                s_ = float((P[i] - m) @ tt)
+                near_i = on_road & (np.abs((P - m) @ tt - s_) < 0.6)
+                za = float(Z[near_i][np.argmax(un[near_i])]) if near_i.any() else Z[i]
+                ua = float(un[near_i].max()) if near_i.any() else u_in
+                zb = zf(m + tt * s_ + n * u_out) + 0.03
+                f = min(max((un[i] - ua) / max(u_out - ua, 0.05), 0.0), 1.0)
+                ring = max(zf(P[i] + d_ * 0.8) for d_ in (n, -n, tt, -tt, 0 * n))
+                Z[i] = max(za + (zb - za) * f, ring + 0.03)
         V = np.column_stack([P, Z])
         buf.add(GROUND_LAYER, DRIVE_MAT, V, P.copy(), T, src=src_id + ":verge", UV1=np.tile([25.0, 25.0], (len(V), 1)))
         done = 1
