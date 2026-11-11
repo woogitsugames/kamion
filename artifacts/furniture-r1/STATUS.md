@@ -87,3 +87,6 @@ NASTĘPNY KROK: pwsh artifacts/furniture-r1/run-validation.ps1 (resume using com
 
 Render after High clear complete: artifacts/furniture-r1/after/High-clear
 NASTĘPNY KROK: pwsh artifacts/furniture-r1/run-validation.ps1 (resume using completed evidence directories; do not overwrite baseline)
+
+R1 odrzucona po Gate3Audit: pole floating 4→27 (22 lamp12). Zdiagnozowano: probe liczy od dna bounds, więc głębokie niewidoczne końce pod pomostem powodują wybór terenu kilka metrów niżej; dodatkowo usunięty fallback kolizji zaniżył jeden sygnalizator w luce siatki. R2 przywraca wybór poziomu collision/terrain, nadal osadza na środku stopy zamiast minimum. Uproszczono niewidoczne końce modeli (cokół render −0.10/+0.08); dodano 2 regresje poziomów. 9 testów zielonych. R1 PNG/audyt zachowane w after-r1/ i audit-after-r1.json. Aktywne GIS przerwano przed regeneracją.
+NASTĘPNY KROK: uv run --project tools/worldgen python tools/worldgen/roads/build_world.py --region bialystok-industrial-c

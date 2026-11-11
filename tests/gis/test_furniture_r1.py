@@ -14,9 +14,10 @@ class Top:
         return self.fn(e, n)
 
 
-def test_visible_axis_contact_is_independent_of_low_collision():
+def test_axis_contact_and_local_search_avoid_a_sharp_step():
     flat = lambda e, n: np.zeros_like(e, dtype=float)
-    pl = F.Placer(flat, flat, Top(lambda e, n: 1.087 if e >= 0 else 0), Top(lambda e, n: 0))
+    pl = F.Placer(flat, flat, Top(lambda e, n: 1.087 if e >= 0 else 0),
+                  Top(lambda e, n: 1.087 if e >= 0 else 0))
     z, step = pl.seat("lamp_12m", (0, 0))
     assert z == 1.087 and step == 1.087
     # Do not bury a metre of visible shaft: shift locally to stable ground, then use a shallow footing.
@@ -35,6 +36,18 @@ def test_explicit_bridge_lamp_position_and_height_are_preserved():
     pl.add("lamp_12m", (0, 0), 0, z=8)
     assert pl.items[-1]["e"] == 0 and pl.items[-1]["z"] == 8
     assert not pl.support_moves
+
+
+def test_visual_gap_keeps_the_existing_collision_deck_level():
+    flat = lambda e, n: np.zeros_like(e, dtype=float)
+    pl = F.Placer(flat, flat, Top(lambda e, n: float('nan')), Top(lambda e, n: 8.0))
+    assert pl.add('signal_pole', (0, 0), 0) == 8.0
+
+
+def test_overlapping_visual_ribbon_does_not_raise_a_bridge_pole():
+    flat = lambda e, n: np.zeros_like(e, dtype=float)
+    pl = F.Placer(flat, flat, Top(lambda e, n: 14.0), Top(lambda e, n: 8.0))
+    assert pl.add('lamp_12m', (0, 0), 0, z=8.0) == 8.0
 
 
 def test_sign_assembly_keeps_legal_clearance_on_kerb():

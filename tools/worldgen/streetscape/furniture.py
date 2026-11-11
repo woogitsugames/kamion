@@ -39,8 +39,8 @@ from roads.network import MEDIAN_RURAL, RURAL, URBAN, side_params, side_extent
 
 from . import facade_atlas as FA
 
-# ADR 0102: visible foundations follow the render surface at the pole axis. The coarser collision surface is
-# deliberately NOT a height reference for art: it can lie a metre below a kerb/embankment edge.
+# ADR 0102: contact follows the pole axis rather than the lowest point around the footing. Keep collision/terrain
+# level selection: overlapping elevated ribbons and small visual holes must not move poles between road levels.
 SEATED_POLES = ("lamp_", "signal_mast", "signal_pole", "sign_post", "power_pole", "bollard")
 SEAT_R = 0.35                 # m, footing radius probed (WORKING_VALUE)
 SEAT_TOL = 0.30              # m, an explicit z this far below the local ground is raised to it (gate 3 tolerance)
@@ -147,6 +147,14 @@ class Placer:
         z = []
         for k in range(5):
             m = self.surf.top(float(e[k]), float(n[k])) if self.surf is not None else float("nan")
+            # Preserve the level selection of ADR 0076: a visual road/verge may overlap an underpass, or have a
+            # small hole where the collision still covers it. Contact uses the centre, but cannot ignore that level.
+            if self.col is not None:
+                c = self.col.top(float(e[k]), float(n[k]), below=(m + 0.05) if math.isfinite(m) else None)
+                if math.isfinite(c) and (not math.isfinite(m) or c < m):
+                    m = c
+                elif not math.isfinite(c) and math.isfinite(m):
+                    m = min(m, float(zt[k]))
             z.append(m if math.isfinite(m) else float(zt[k]))
         return float(z[0]), float(max(z) - min(z))
 
