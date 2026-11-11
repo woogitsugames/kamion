@@ -1,8 +1,9 @@
-# HANDOVER — kamion, sesja 9 (2026-11-11 00:30 → ~08:20 lokalnie; zamknięta na polecenie właściciela przy końcu limitu 5 h)
+# HANDOVER — kamion, sesja 9 (2026-11-11 00:30 → ~10:30 lokalnie; zamknięta na polecenie właściciela przy końcu limitu 5 h)
 
 ## Najpierw (dla sesji 10)
 - **Start: `docs/owner/START-PROMPT-S10.md`.** Ta sekcja = prawda o stanie.
-- **main = ten commit, wypchnięty. pytest gis na main: 355 ✓ / 0 ✗ po 0096 (regeneracja zacommitowana).**
+- **main = ten commit, wypchnięty.** pytest gis 355/0 po 0096. **Po scaleniu 0095 (`471438fb`) regeneracja main trwała w tle przy zamknięciu s9** — sprawdź `artifacts/logs/s9-main-regen-0095.log` (build_world → export-route → fidelity → pytest gis+physics+gate3; oczekiwane ~356 ✓ gis, 47/1 physics — 1 znana z 0082); przy `PYTEST EXIT` 0 lub tylko ta znana porażka → `git add Data/Regions && git commit`; inaczej zdiagnozuj.
+- **Żaden agent Claude nie działa** (wszystkie worktree Claude usunięte). Działają: **GPT 6.1 Sol** (worktree `gpt-s10-coordination`, `gpt-tint-gamma`, `gpt-vegetation-r2`, `gpt-light-r12` — pakiet `docs/owner/GPT-TASK-02-S10.md`; NIE ruszać, scalać po REPORT.md w kolejności A 0086 → B 0088 → C 0098) i ewentualnie Argon (tylko poprawka 0085, `argon-edge`).
 - **Limity (08:00):** 5 h — 65 % (reset 09:30 UTC); **tygodniowy Fable 51 %** (reset 17.11) — przy 3 agentach naraz skończy się ok. 12.11. Właściciel zamknął s9 przed decyzją o tempie — **zapytaj go na starcie s10** (max 2 agentów / Sonnet do lżejszych zadań / dalej 3).
 - **Megascans (0084) działa na main tylko dzięki lokalnym produktom** (`pwsh scripts/prepare-megascans.ps1` → ignorowane `art-source/world/megascans/_generated`). **Każdy nowy worktree musi mieć te produkty** (robocopy `art-source/world/megascans` z main albo prepare), inaczej po cichu fallback.
 - **Determinizm naprawiony (0096):** generator świata daje identyczne hashe niezależnie od PYTHONHASHSEED (stan: 1526 stanowisk / 908 aut). Test `tests/gis/test_determinism.py`.
