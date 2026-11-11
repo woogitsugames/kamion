@@ -51,7 +51,7 @@ function Set-Tree($ids, [bool]$suspend) { foreach ($i in $ids) { if ($suspend) {
 try {
     Log "start MaxHeavy=$MaxHeavy ReservedCores=$ReservedCores/$cores MinFreeGB=$MinFreeGB"
     while ($true) {
-        foreach ($p in Get-Process python, Unity, uv, blender -ErrorAction SilentlyContinue) {
+        foreach ($p in Get-Process python, Unity, UnityShaderCompiler, uv, blender, robocopy, git, git-lfs -ErrorAction SilentlyContinue) {
             try { if ($p.PriorityClass -ne 'BelowNormal' -and $p.PriorityClass -ne 'Idle') { $p.PriorityClass = 'BelowNormal' }; $p.ProcessorAffinity = $mask } catch {}
         }
         $all = @(Get-CimInstance Win32_Process -Filter "name='python.exe'" | Select-Object ProcessId, ParentProcessId, CreationDate, CommandLine)
