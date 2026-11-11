@@ -27,3 +27,5 @@ Krok 8: dokončene clear RCAS: 0,75 daje asfalt HF 5,6999 i niebo HF 0,6418 (r=1
 
 Krok 9: skybox zachowuje kontrakt cap-off przy przechwytywaniu odbić: chmury używają radiancji modelu zamiast limitu wyświetlania. Następny krok: import i oględziny nieba oraz odbić po zakończeniu bieżącej serii.
 Render ablacji zakończony: artifacts/light-r1/rcas/High-overcast-0. PNG wymagają obejrzenia i pomiarów. Następny krok: kolejny wariant w artifacts/light-r1/rcas-ablation.ps1, potem analiza.
+
+Krok 10: preset LP_Clear zapisany z pokryciem 0,42 zgodnie z fabryką. Dodano LightQaBatch: wiele porównań w jednym procesie/slotcie Unity, z istniejącym rendererem QA i przywróceniem profilu/pipeline w pamięci. Nie zmienia asmdef. Następny krok: kompilacja i mały smoke batch po zakończeniu bieżącej serii; potem pełna matryca światła.
