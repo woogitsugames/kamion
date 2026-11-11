@@ -1,7 +1,9 @@
 param(
- [Parameter(Mandatory)][ValidateSet('World','Materials','Fidelity','TestFile')][string]$Task,
+ [Parameter(Mandatory)][ValidateSet('World','Materials','Fidelity','TestFile','Script')][string]$Task,
  [Parameter(Mandatory)][ValidatePattern('^[a-z0-9-]+$')][string]$Tag,
- [string]$TestPath=''
+ [string]$TestPath='',
+ [string]$ScriptPath='',
+ [string[]]$ScriptArguments=@()
 )
 $ErrorActionPreference='Stop'
 Set-Location ([IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..')))
@@ -10,6 +12,11 @@ if($owner -notmatch '^gpt-life-r\d+$'){throw 'Unexpected heavy-slot owner'}
 if($Task -eq 'TestFile' -and $TestPath -notmatch '^tests/(gis|physics|gate3)/[^/]+\.py(?:::[A-Za-z0-9_]+)?$') {
  throw 'During a round, select one explicit test file or test case'
 }
+if($Task -eq 'Script') {
+ if($ScriptPath -notmatch '^artifacts/life-r\d+/[^/]+\.py$' -or !(Test-Path -LiteralPath $ScriptPath)){throw 'Select an existing own life Python helper'}
+}
+$ownSlot="C:/Users/matma/Documents/Claude/kamion/artifacts/locks/heavy-slots/$owner.slot"
+if(Test-Path -LiteralPath $ownSlot){throw 'This branch already holds a heavy slot; do not overlap own jobs'}
 $log="artifacts/life-r1/$Tag.log"
 if(Test-Path -LiteralPath $log){throw "Refuse overwriting evidence: $log"}
 # Never let the common slot helper prune another session's old slot.
@@ -22,6 +29,7 @@ try {
   'Materials' { & uv run --project tools/worldgen python -u art-source/world/materials/_src/build_all.py *> $log }
   'Fidelity' { & uv run --project tools/worldgen python -u tools/worldgen/fidelity/run.py --region bialystok-industrial-c --art "artifacts/life-r1/$Tag" *> $log }
   'TestFile' { & uv run --project tools/worldgen python -m pytest $TestPath -q *> $log }
+  'Script' { & uv run --project tools/worldgen python -u $ScriptPath @ScriptArguments *> $log }
  }
  $code=$LASTEXITCODE
 } finally {

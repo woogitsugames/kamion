@@ -34,10 +34,14 @@ def main():
     sources={name:sha(ROOT/name) for name in (
         'art-source/world/materials/_src/sets_facade.py',
         'art-source/world/materials/materials_spec.json',
+        'art-source/world/props/street_props.glb',
+        'art-source/world/props/props_meta.json',
         'tools/worldgen/streetscape/life_cars.py',
         'tools/worldgen/streetscape/materials.py',
         'game/Assets/_Project/Environment/Shaders/WorldPBR.shader')}
-    result=dict(manifest_sha=sha(manifest),products=products,raw_count=len(products),mismatches=sum(not p['valid'] for p in products),fab_ready=len(ready),fixtures=fixtures,prepared_medium_textures=texture_sha,source_sha=sources)
+    mode_path=Path(__file__).with_name('SOURCE-MODE.json')
+    mode=json.loads(mode_path.read_text(encoding='utf-8-sig')) if mode_path.exists() else None
+    result=dict(manifest_sha=sha(manifest),products=products,raw_count=len(products),mismatches=sum(not p['valid'] for p in products),fab_ready=len(ready),fixtures=fixtures,prepared_medium_textures=texture_sha,source_sha=sources,source_mode=mode)
     assert len(products)==192 and result['mismatches']==0
     assert len(ready)==15,'Fab/Megascans ready library missing entries'
     tag=sys.argv[1] if len(sys.argv)>1 else 'candidate'

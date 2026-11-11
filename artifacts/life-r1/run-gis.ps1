@@ -2,11 +2,13 @@ param([switch]$FinalRound)
 $ErrorActionPreference='Stop'
 if(!$FinalRound){throw 'Full GIS is permitted only at the end of the round; use -FinalRound'}
 Set-Location ([IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..')))
+$owner=(git branch --show-current).Trim()
+if($owner -notmatch '^gpt-life-r\d+$'){throw 'Unexpected heavy-slot owner'}
+if(Test-Path -LiteralPath "C:/Users/matma/Documents/Claude/kamion/artifacts/locks/heavy-slots/$owner.slot") { throw 'This branch already holds a heavy slot; do not overlap own jobs' }
 $manifest='Data/Regions/bialystok-industrial-c/generated/world_manifest.json'
 $snapshot='artifacts/life-r1/manifest-before-gis.json'
 Copy-Item $manifest $snapshot
 $before=(Get-FileHash $manifest -Algorithm SHA256).Hash
-$owner=(git branch --show-current).Trim()
 & pwsh scripts/unity-slot.ps1 -Acquire -Pool heavy -Owner $owner -StaleHours 1000000
 if($LASTEXITCODE -ne 0){throw 'Heavy slot acquisition failed'}
 try {

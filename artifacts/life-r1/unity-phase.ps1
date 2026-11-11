@@ -6,7 +6,7 @@ if ($Phase -eq 'PreparedImport') {
  # changing their content. Validate every actual map and raw product instead of
  # rebuilding all unrelated sets solely because git restore touched a .py file.
  $stamp=Get-Date -Format yyyyMMdd-HHmmss
- & uv run --project tools/worldgen python artifacts/life-r1/source-proof.py "prepared-import-$stamp"
+ & pwsh artifacts/life-r1/heavy.ps1 -Task Script -Tag "prepared-proof-$stamp" -ScriptPath artifacts/life-r1/source-proof.py -ScriptArguments "prepared-import-$stamp"
  if ($LASTEXITCODE -ne 0) { throw 'Prepared input verification failed' }
 }
 & pwsh scripts/unity-slot.ps1 -Acquire -Owner gpt-life -StaleHours 1000000
