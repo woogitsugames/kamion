@@ -16,3 +16,6 @@ Uruchomiono regenerację świata z właścicielem heavy gpt-sbs-r2. Testy raport
 
 ## Kontrola niezależna raportu
 Recenzent wskazał trzy blokery: ukrycie D51 przez brak pliku, awans starej diagnostyki i różne rozdzielczości trendu. Poprawiono: domyślnie ładowana jest repozytoryjna recenzja D51, jawnie brakująca ścieżka zgłasza błąd; diagnostyka wymaga identycznej epoki i nie może awansować C; trend porównuje rozdzielczości źródłowe, analityczne i gradientu. Dodano regresje. Arkusz pokazuje końcowy status kwalifikacji próbki. Generator nadal oczekuje na wolny heavy, bez uruchamiania równoległych ciężkich zadań naszej gałęzi.
+
+## Próbki i widok diagnostyczny
+Obejrzano trzy pary Low-clear (281855, 397016, 149248). Zapisano małe maski czystego nieba i asfaltu, związane z SHA zdjęcia oraz renderu r1. Uwaga w danych wyraźnie ogranicza interpretację przez różny kierunek słońca i przybliżoną pozę. Nie kwalifikowano innych tierów ani nowych renderów. Skrypt SBS może teraz dodatkowo komponować C do osobnego katalogu diagnostycznego, nigdy do domyślnej kohorty A/B. Obie kompozycje są wykonywane sekwencyjnie w jednym slocie heavy.

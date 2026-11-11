@@ -5,6 +5,8 @@ param(
     [switch]$EditMode,
     [string]$SlotOwner = 'gpt-sbs',
     [string]$OutputRoot = 'artifacts/sbs-gate3',
+    [switch]$IncludeDiagnostics,
+    [string]$Photometry,
     [switch]$ComposeOnly
 )
 $ErrorActionPreference = 'Stop'
@@ -107,8 +109,16 @@ try {
             & pwsh -NoProfile -File $slotScript -Acquire -Pool heavy -Owner $heavyOwner -PollSeconds 7 -StaleHours 87600
             if ($LASTEXITCODE -ne 0) { throw 'Heavy slot acquisition failed' }
             try {
-                & uv run --project tools/refs python tools/refs/sbs_gate3.py compose --renders $renderDir --output (Join-Path $output "sheets/$tier-$light")
+                $composeArgs=@('compose','--renders',$renderDir,'--output',(Join-Path $output "sheets/$tier-$light"))
+                if($Photometry){$composeArgs+=@('--photometry',$Photometry)}
+                & uv run --project tools/refs python tools/refs/sbs_gate3.py @composeArgs
                 if ($LASTEXITCODE -ne 0) { throw "Incomplete evidence: $tier $light" }
+                if($IncludeDiagnostics){
+                    $diagnosticArgs=@('compose','--renders',$renderDir,'--output',(Join-Path $output "diagnostics/$tier-$light"),'--include-rejected')
+                    if($Photometry){$diagnosticArgs+=@('--photometry',$Photometry)}
+                    & uv run --project tools/refs python tools/refs/sbs_gate3.py @diagnosticArgs
+                    if($LASTEXITCODE -ne 0){throw "Incomplete diagnostic evidence: $tier $light"}
+                }
             } finally { & pwsh -NoProfile -File $slotScript -Release -Pool heavy -Owner $heavyOwner }
         }
     }

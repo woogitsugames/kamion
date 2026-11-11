@@ -1,4 +1,4 @@
-﻿param(
+param(
     [Parameter(Mandatory)][ValidateSet('World','Materials','Fidelity','TestFile','FinalGis','PrepareSbs','ComposeSbs')][string]$Task,
     [string]$TestFile,
     [string]$Only,
@@ -8,6 +8,7 @@
     [switch]$Historical,
     [string]$Inputs,
     [string]$Landmarks,
+    [string]$Photometry,
     [switch]$EndOfRound
 )
 $ErrorActionPreference='Stop'
@@ -38,6 +39,7 @@ try {
                 if($Historical){$composeArgs+='--historical'}
                 if($Inputs){$composeArgs+=@('--inputs',$Inputs)}
                 if($Landmarks){$composeArgs+=@('--landmarks',$Landmarks)}
+                if($Photometry){$composeArgs+=@('--photometry',$Photometry)}
                 uv run --project tools/refs python tools/refs/sbs_gate3.py @composeArgs
             }
             PrepareSbs {uv run --project tools/refs python tools/refs/sbs_gate3.py prepare}
