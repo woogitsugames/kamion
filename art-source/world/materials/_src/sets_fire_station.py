@@ -92,7 +92,7 @@ LAYOUT = {
     "render_blue_linear": [0.21275, 0.299, 0.41975],
     "roof_blue_linear": [0.024, 0.085, 0.235],        # r6: B -35 % linear (review P1 #3)
     "trim_blue_linear": [0.022, 0.060, 0.22],
-    "clinker_linear": [0.47, 0.29, 0.115],
+    "clinker_linear": [0.27, 0.135, 0.060],          # r7: brown fired brick, WORKING_VALUE; keep scan relief/joints
     # Hero-local intended leaf palette, shared by opaque cores/far foliage and clipped boughs.
     # Retains the previous far-LOD starting palette; lit Low/High calibration remains WORKING_VALUE.
     "foliage_linear": [0.040, 0.068, 0.030],
@@ -226,6 +226,16 @@ def fire_station(nx=2048):
     g_top = P["h"] - pv
     streak = ss(0.25, 1.1, n_run) * np.clip(1 - g_top / (0.5 + 0.6 * ss(-1, 1, n_big)), 0, 1) ** 1.4
     streak += 0.25 * ss(0.10, 0.0, g_top)
+    # r7: discrete runoff below the flashing only, 7-16 cm wide and 0.35-1.0 m long.
+    # Metric authored WORKING_VALUE, not general wall noise. Hashing does not advance old material RNGs.
+    drip_cell = np.floor(X / 0.78).astype(np.int64)
+    drip_centre = (drip_cell + 0.20 + 0.60 * K.hash01(drip_cell, 73)) * 0.78
+    drip_halfwidth = 0.035 + 0.045 * K.hash01(drip_cell, 79)
+    drip_length = 0.35 + 0.65 * K.hash01(drip_cell, 83)
+    drip = ss(drip_halfwidth * 1.7, drip_halfwidth, np.abs(X - drip_centre))
+    drip *= np.clip(1 - g_top / drip_length, 0, 1) ** 1.2
+    drip *= K.hash01(drip_cell, 89) > 0.30
+    streak += 0.32 * drip
     streak = np.clip(streak, 0, 0.7) * (pv > P["base_h"])
     # hairline shrinkage cracks, sparse
     crk = ss(0.012, 0.004, np.abs(noise(c, 7, 0.5, 4.0, beta=1.4))) * ss(0.2, 0.9, noise(c, 8, 1.5, 6.0, beta=1.0))
@@ -371,6 +381,9 @@ def fire_station(nx=2048):
         gmax = float(gv[mask & inside].max()) if (mask & inside).any() else 1.0
         sky = (0.55 + 0.9 * np.clip(gv / max(gmax, 1e-3), 0, 1) ** 1.3)[..., None]
         if glass is not None:                      # big hall glazing: grey daylight reflection, no blinds (photo 7197)
+            # r7: the old strong gradient made upper glass ~100-113 sRGB while mid panes were83-94.
+            # A hall-local soft sky gradient and .60 linear base factor target60-75; actual renders gate this value.
+            sky = (0.90 + 0.06 * np.clip(gv / max(gmax, 1e-3), 0, 1) ** 1.3)[..., None]
             gcol = glass[None, None, :] * sky * (0.85 + 0.3 * K.hash01(pane, 19))[..., None] * (1 + 0.10 * n_big)[..., None]
         else:                                      # three states: blind / net curtain / dark interior
             curtain = np.array([0.36, 0.36, 0.34], np.float32) * (0.85 + 0.15 * np.cos(2 * np.pi * gu / 0.11))[..., None]
@@ -392,7 +405,7 @@ def fire_station(nx=2048):
     # than the office glazing. Linear albedo WORKING_VALUE by eye.
     # r5: measured on the Unity r4b render (High overcast) the glass was 0.27-0.34 x the wall (linearised sRGB), on the
     # photo 0.45-1.0 x (mean ~0.7): doubled. Still a WORKING_VALUE (one overcast photo).
-    hall_glass = np.array([0.170, 0.180, 0.195], np.float32)
+    hall_glass = np.array([0.102, 0.108, 0.117], np.float32)  # r7 WORKING_VALUE; office panes keep their old palette/gradient
     # arched window 3.4 x 3.4: segmental arch (rise 1.0 m above the 2.4 m springing), blue trim band 0.16 m
     A = L["win_arch"]
     ga = L["arch"]
