@@ -41,3 +41,5 @@ Zapisano wszystkie kamery: before-all Low overcast. Następny krok: zestawić li
 Zapisano wszystkie kamery: before-all High overcast. Następny krok: zestawić liczniki rendererów i instancji osobno dla każdej kamery.
 
 Krok 17: pełne zestawy baseline: 48 kamer Low i 48 High, oba VISUALQA_RESULT OK. Kontrola white-on zapisała 12 świeżych obrazów i TRUCK_ABLATION_CLEANUP, ale proces zakończył się -1073741819 bez wymaganej sygnatury SaveCache; nie zaliczono. Zachowano log próby 1. Procedura ma unikalne logi, sprawdzenie świeżości wszystkich kadrów, fingerprint trzech źródeł i wznawianie wyłącznie zaliczonych kontroli. Generator adaptera nie nadpisuje identycznego C#, aby uniknąć zbędnych kompilacji. Następny krok: ponowić paint-controls.ps1.
+
+Krok 18: po dodaniu wznawiania poprawiono położenie znacznika ukończenia względem try/finally; parser sprawdził wszystkie procedury PowerShell w pakiecie. Nieudana próba składniowa nie uruchomiła Unity ani nie zajęła slotu. Następny krok: wznowić kontrole pigmentu.

@@ -43,11 +43,11 @@ foreach ($case in $Cases) {
             throw "Nieudana kontrola $case; exit $code. Zachowano log."
         }
     }
-    $fingerprint | Set-Content -Encoding utf8 -LiteralPath $marker
     finally {
         pwsh $slotScript -Release -Owner gpt-truck
         git restore -- game/Assets/_Project/Rendering/Settings game/ProjectSettings
     }
+    $fingerprint | Set-Content -Encoding utf8 -LiteralPath $marker
     Add-Content -Encoding utf8 artifacts/truck-r1/STATUS.md "Zapisano kontrolę pigmentu $case. Następny krok: porównać amplitudę odbicia ON/OFF i wybrać poprawkę lakieru na podstawie wyniku."
     git add -f artifacts/truck-r1/STATUS.md
     git commit -m "wip(truck): kontrola pigmentu $case"
