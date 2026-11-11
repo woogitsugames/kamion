@@ -75,6 +75,7 @@ Shader "Kamion/World PBR"
         _StripeB ("Stripe colour B (linear)", Color) = (0.7, 0.7, 0.68, 1)
         _PaintColor ("Paint film albedo (linear, _DECAL_PAINT), a = smoothness", Vector) = (0.6, 0.6, 0.57, 0.35)
         _PaintWear ("Paint wear: x wheel-path, y age, z dirt film, w line width m", Vector) = (0.85, 0.25, 0.3, 0.12)
+        _PaintFreshWear ("Fresh road paint: wheel, weather, dirt, substrate multipliers (ADR0118)", Vector) = (1, 1, 1, 1)
         _CarPaint ("Car paint (_CARPAINT): x base metal, y flake tilt, z pearl, w base-coat roughness", Vector) = (0, 0, 0, 0.5)
         _CarFlake ("Car flake: x cells per m, y fade scale (1 = gone when a pixel covers a cell)", Vector) = (400, 1, 0, 0)
         _PearlTint ("Pearl grazing tint (linear)", Color) = (1, 1, 1, 1)
@@ -106,6 +107,7 @@ Shader "Kamion/World PBR"
             float4 _Stripe, _StripeA, _StripeB;
             float4 _GrassFill;
             float4 _PaintColor, _PaintWear;
+            float4 _PaintFreshWear;
             float4 _AsphaltWear;
             float4 _PatchSeam;
             float4 _Grime, _SkyOcc;
@@ -226,6 +228,12 @@ Shader "Kamion/World PBR"
                 half3 n = normalize(i.normalWS);
                 n *= IS_FRONT_VFACE(isFront, 1.0, -1.0);
                 float3 pw = i.positionWS;
+                half paintFresh = 0.0;
+            #if defined(_DECAL_PAINT)
+                // Fresh longitudinal [4,5), transverse [6,7). Preserve legacy no-data (-1,5).
+                paintFresh = step(4.0, i.uv.w) * (1.0 - step(5.0, i.uv.w))
+                           + step(6.0, i.uv.w) * (1.0 - step(7.0, i.uv.w));
+            #endif
 
                 // ---- UV (metres) and tangent frame
                 float2 um; float3 T, B;
@@ -381,12 +389,12 @@ Shader "Kamion/World PBR"
                 // whole stretches can be sound
             #if defined(_CRACKS)
             #if !defined(_KAMION_WORLD_DETAIL)
-                if (_AsphaltWear.z > 0.5) // opt-in: existing mask, one fetch, no crack normal on Low
+                if (_AsphaltWear.z > 0.5 && paintFresh < 0.5) // existing mask, no crack normal on Low
             #endif
                 {
                     float2 uc = pw.xz / _Tile.z;
                     half4 cm = SAMPLE_TEXTURE2D(_CrackMap, sampler_CrackMap, uc);
-                    half amount = _CrackStrength * saturate(0.25 + (macro.b - 0.35) * 2.2);
+                    half amount = _CrackStrength * saturate(0.25 + (macro.b - 0.35) * 2.2) * (1.0 - paintFresh);
                     albedo *= lerp(1.0, 0.35, cm.r * amount);
                     albedo = lerp(albedo, half3(0.03, 0.03, 0.03), cm.g * amount);
                     albedo *= 1.0 - cm.a * amount * 0.12;
@@ -401,18 +409,23 @@ Shader "Kamion/World PBR"
                 // ---- close-range photo detail (asphalt), fades out by _DetailFade
             #if defined(_PHOTO_DETAIL)
             #if !defined(_KAMION_WORLD_DETAIL)
-                if (_AsphaltWear.w > 0.001) // explicit Low albedo-only detail; keep the expensive normal on High
+                if (_AsphaltWear.w > 0.001 && paintFresh < 0.5) // explicit Low albedo-only detail
             #endif
                 {
                     float dist = length(GetCameraPositionWS() - pw);
-                    half f = saturate(1.0 - dist / _DetailFade) * mask.b;
+                    half f = saturate(1.0 - dist / _DetailFade) * mask.b * (1.0 - paintFresh);
                 #if !defined(_KAMION_WORLD_DETAIL)
                     f *= _AsphaltWear.w;
                 #endif
                     if (f > 0.001)
                     {
                         float2 ud = pw.xz / _Tile.w;
+                    #if defined(_KAMION_WORLD_DETAIL)
                         half d = SAMPLE_TEXTURE2D(_DetailAlbedo, sampler_DetailAlbedo, ud).r;
+                    #else
+                        // Low upscales a 0.75-resolution image: one coarser mip avoids a crawling photo-grain grid.
+                        half d = SAMPLE_TEXTURE2D_BIAS(_DetailAlbedo, sampler_DetailAlbedo, ud, 1.0).r;
+                    #endif
                         albedo *= lerp(1.0, d * 4.594794, f);          // unity_ColorSpaceDouble (linear)
                     #if defined(_KAMION_WORLD_DETAIL)
                         half3 dn = UnpackNormalScale(SAMPLE_TEXTURE2D(_DetailNormal, sampler_DetailAlbedo, ud), f);
@@ -426,7 +439,7 @@ Shader "Kamion/World PBR"
             #if defined(_ROADWEAR)
                 {
                     float2 w = i.uv.zw;
-                    albedo *= _AsphaltWear.x; // tone also applies to old-road patches without lane data
+                    albedo *= lerp(_AsphaltWear.x, _PaintFreshWear.w, paintFresh);
                     if (w.x > -0.5)        // (-1, 5) = no road data (junction patches, kerbs)
                     {
                         // wheel paths at ~0.25 / 0.75 of a lane: darker binder-rich, smoother
@@ -434,8 +447,9 @@ Shader "Kamion/World PBR"
                         half wp = saturate(1.0 - abs(abs(lc - 0.5) - 0.24) / 0.11);
                         // ADR0118: traffic polish darkens binder; existing macro breaks continuous bands.
                         half traffic = _AsphaltWear.y * (0.65 + 0.35 * macro.a);
-                        albedo *= 1.0 - wp * (0.10 * _WheelPolish + traffic);
+                        albedo *= 1.0 - wp * (0.10 * _WheelPolish + traffic) * (1.0 - paintFresh);
                         smooth = lerp(smooth, smooth + 0.12, wp * _WheelPolish);
+                    #if !defined(_DECAL_PAINT)
                         // gutter: grit, leaves and soot within ~0.6 m of the kerb
                         half g = (1.0 - smoothstep(0.05, 0.65, w.y)) * _GutterDirt;
                         albedo = lerp(albedo, albedo * half3(1.12, 1.06, 0.92) + half3(0.012, 0.010, 0.006), g);
@@ -445,10 +459,11 @@ Shader "Kamion/World PBR"
                         half damp = (1.0 - smoothstep(0.08, 0.3, w.y)) * saturate(0.35 + (macro.a - 0.5) * 2.0 + (macro.b - 0.5)) * _GutterDirt;
                         albedo *= 1.0 - 0.5 * damp;
                         smooth = lerp(smooth, 0.55, damp);
+                    #endif
                         // oil / soot drip band between the wheel paths (lane centre 0.5 +- ~0.12), mottled, strongest where
                         // traffic queues; WORKING_VALUE darkening, the band is ~0.8 m of a 3.5 m lane
                         half drip = saturate(1.0 - abs(lc - 0.5) / 0.13) * saturate(0.45 + (macro.a - 0.5) * 2.2 + (macro.g - 0.5) * 0.8);
-                        albedo *= 1.0 - _DripBand * drip;
+                        albedo *= 1.0 - _DripBand * drip * (1.0 - paintFresh);
                     }
                 }
             #endif
@@ -506,7 +521,8 @@ Shader "Kamion/World PBR"
                     smooth = sm.a * _SmoothnessScale;
                     ao = 1.0;
                     tn = half3(0, 0, 1);
-                    alpha = st.a * _DecalAlpha;
+                    half oilStrength = i.uv.z > 0.0 ? i.uv.z : 1.0; // legacy/yard/bus data = 0
+                    alpha = saturate(st.a * _DecalAlpha * oilStrength);
                 }
             #endif
             #if defined(_DECAL_TYRE)
@@ -538,7 +554,7 @@ Shader "Kamion/World PBR"
             #if defined(_DECAL_PAINT)
                 {
                     // road paint over the asphalt beneath (albedo / smooth / tn hold that asphalt here)
-                    float ex = i.uv.w;                                   // [0,1) longitudinal, [2,3) transverse; frac = age
+                    float ex = i.uv.w - 4.0 * paintFresh; // [0,1) longitudinal, [2,3) transverse; frac = age
                     half transverse = step(1.5, ex);
                     half age = (half)frac(ex);
                     half known = step(-0.5, i.uv.z);                     // (-1, 5) = no wear data
@@ -547,13 +563,14 @@ Shader "Kamion/World PBR"
                     half wp = saturate(1.0 - abs(abs(lc - 0.5) - 0.24) / 0.085) * known;
                     half peaks = SAMPLE_TEXTURE2D(_VarMap, sampler_BaseMap, uvb).r;     // aggregate tops wear first
                     half mott = (macro.a - 0.5) * 2.0;
-                    half worn = _PaintWear.x * wp * transverse * (0.55 + 0.9 * age)     // tyres scrub the crossed marks
-                              + _PaintWear.y * (0.35 + age) * (0.6 + 0.4 * wp)          // weathering everywhere
+                    half worn = _PaintWear.x * wp * transverse * (0.55 + 0.9 * age) * lerp(1.0, _PaintFreshWear.x, paintFresh)
+                              + _PaintWear.y * (0.35 + age) * (0.6 + 0.4 * wp) * lerp(1.0, _PaintFreshWear.y, paintFresh)
                               + 0.10 * mott;
                     // chipped, not faded: a narrow threshold on the peak-weighted wear gives sharp-edged bare spots
                     half cover = 1.0 - smoothstep(0.42, 0.58, saturate(worn) * (0.35 + 1.3 * peaks));
                     // traffic film: tyre soot and road dust, grey-brown, heavier on old marks and soiled patches
                     half dirt = saturate(_PaintWear.z * (0.75 + 0.5 * age) * (0.85 + 0.3 * macro.b) * (1.0 + 0.4 * wp * transverse));
+                    dirt *= lerp(1.0, _PaintFreshWear.z, paintFresh);
                     half3 film = _PaintColor.rgb * (1.0 - dirt * half3(1.0, 1.0, 1.03));   // neutral grey film (r6 critic: beige read as concrete)
                     half3 asph = albedo;
                     albedo = lerp(asph, film, cover);

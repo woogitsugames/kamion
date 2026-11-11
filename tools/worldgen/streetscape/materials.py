@@ -532,4 +532,12 @@ M["decal_patch"]["asphalt_wear"] = {"low_photo_detail": 0.75}
 from roads.standards import MARKING_LIFT as _ASPHALT_PAINT_LIFT
 M["marking_white"] = {"color": [0.55, 0.55, 0.54], "rough": 0.65, "surface": "paint",
                       "texture_set": "asphalt_worn", "decal": True, "depth_offset_m": _ASPHALT_PAINT_LIFT,
-                      "paint": {"wheel_wear": 0.85, "age_wear": 0.25, "dirt": 0.38, "line_w_m": 0.12}}
+                      "paint": {"wheel_wear": 0.85, "age_wear": 0.25, "dirt": 0.38, "line_w_m": 0.12,
+                                "fresh_surface_from_road": True, "asphalt_underlay": True,
+                                "fresh_wheel_scale": 0.0, "fresh_age_scale": 0.0,
+                                "fresh_dirt_scale": 1.0, "fresh_underlay_scale": 0.9375},
+                      "asphalt_wear": {"tone": 0.90, "wheel_darkening": 0.45, "low_cracks": 1.0,
+                                       "low_photo_detail": 0.75, "wheel_polish": 0.6, "drip_band": 0.22}}
+# WORKING_VALUE: 0.85 legacy opacity × 1.15 = 0.9775, only for roads.decals traffic-stop stains.
+# Private-yard/gate/bus oil retains UV1.x=0 and the previous material response.
+M["decal_oil"]["traffic_opacity_scale"] = 1.15

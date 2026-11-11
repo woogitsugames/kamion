@@ -175,6 +175,77 @@ def normalize_asphalt_patch_uvs(buf, style=None):
     return counts
 
 
+def mark_fresh_road_paint(buf, enabled=None):
+    """Encode actual fresh-road support in paint UV1.y (+4), preserving its fractional age and geometry.
+
+    Samples must agree at every vertex, edge midpoint and triangle centroid. Heights disambiguate an overpass;
+    coplanar old/fresh overlaps remain conservative old/unknown. No field is extrapolated beyond a road triangle.
+    """
+    if enabled is None:
+        from .materials import M
+        enabled = M.get("marking_white", {}).get("paint", {}).get("fresh_surface_from_road", False)
+    counts = {"fresh_parts": 0, "fresh_vertices": 0, "old_or_unknown_parts": 0}
+    if not enabled:
+        return counts
+    from .furniture import SurfaceTop
+    fresh = SurfaceTop([p for p in buf.parts if p.mat == "road_asphalt_new"], layers=("road",))
+    old = SurfaceTop([p for p in buf.parts if p.mat == "road_asphalt"], layers=("road",))
+    known = {}
+
+    def supported(point):
+        key = tuple(float(x) for x in point)
+        if key not in known:
+            e, n, z = key
+            f = fresh.top(e, n, below=z + 0.035)
+            o = old.top(e, n, below=z + 0.035)
+            known[key] = math.isfinite(f) and abs(f - z) <= 0.035 and not (
+                math.isfinite(o) and abs(o - z) <= 0.035)
+        return known[key]
+
+    for part in buf.parts:
+        if part.layer != "markings" or part.mat != "marking_white" or part.UV1 is None:
+            continue
+        ex = part.UV1[:, 1]
+        encoded = ((ex >= 4.0) & (ex < 5.0)) | ((ex >= 6.0) & (ex < 7.0))
+        base = np.where(encoded, ex - 4.0, ex)
+        if not np.all(((base >= 0.0) & (base < 1.0)) | ((base >= 2.0) & (base < 3.0))):
+            counts["old_or_unknown_parts"] += 1
+            continue # e.g. (-1,5) is a no-data sentinel, not an encoded fresh mark
+        valid = all(supported(p) for p in part.V)
+        if valid:
+            for a, b, c in part.V[part.T]:
+                if not all(supported(p) for p in ((a+b)/2, (b+c)/2, (c+a)/2, (a+b+c)/3)):
+                    valid = False
+                    break
+        target = base + 4.0 if valid else base
+        if not np.array_equal(ex, target):
+            part.UV1 = part.UV1.copy()
+            part.UV1[:, 1] = target
+        if valid:
+            counts["fresh_parts"] += 1
+            counts["fresh_vertices"] += len(part.V)
+        else:
+            counts["old_or_unknown_parts"] += 1
+    return counts
+
+
+def mark_traffic_oil_strength(buf, scale=None):
+    """Oil UV1.x was unused. Positive values scale only the traffic-stop stains, not yard/gate/bus oil."""
+    if scale is None:
+        from .materials import M
+        scale = M.get("decal_oil", {}).get("traffic_opacity_scale", 0.0)
+    count = 0
+    if float(scale) <= 0:
+        return count
+    for part in buf.parts:
+        if part.mat != "decal_oil" or not part.src.startswith("oil:") or part.UV1 is None:
+            continue
+        part.UV1 = part.UV1.copy()
+        part.UV1[:, 0] = float(scale)
+        count += 1
+    return count
+
+
 def apply(buf, overrides, origin, docks, paved, roads_poly, zsurf, report):
     rep = {"applied": [], "stale": []}
     o_ = np.asarray(origin, float)
@@ -329,5 +400,11 @@ def apply(buf, overrides, origin, docks, paved, roads_poly, zsurf, report):
     patch_uv = normalize_asphalt_patch_uvs(buf)
     if patch_uv["normalised"] or patch_uv["invalid_uv"]:
         rep["asphalt_patch_uv"] = patch_uv
+    paint_surface = mark_fresh_road_paint(buf)
+    if paint_surface["fresh_parts"] or paint_surface["old_or_unknown_parts"]:
+        rep["paint_surface"] = paint_surface
+    traffic_oil = mark_traffic_oil_strength(buf)
+    if traffic_oil:
+        rep["traffic_oil_parts"] = traffic_oil
     report["yard_wear"] = rep
     return rep
