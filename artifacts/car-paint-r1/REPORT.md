@@ -1,5 +1,5 @@
 # G / ADR0089 - passenger cars
-Status: R3 finalny; pelna niezalezna recenzja ROOT bez nowej regresji, EditMode231/231 i final-source GPU PASS.
+Status: SCOPED PASS - [niezalezna recenzja ROOT](REVIEW.md), EditMode231/231 i final-source GPU PASS; integracja main/GPUtelefonu UNVERIFIED.
 Base43bc53a7; fresh ownworld/PBR/import/canonical vehicles,192SHA/Fab15no fallback;90fixture SHA match before after finalR3.
 Fresh A-correct door already38.672Highov/34.144Lowov; no pigment or reflection-floor lift. Original historical21-24 not reproduced.
 ActualGPU HDRColor probe drove separate Pearl upload correction; Pearl-onlydoor38.356/33.854, purebonnet78.519/71.475High/Lowov; tinthelper unchanged.
