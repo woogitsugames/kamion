@@ -8,7 +8,7 @@
 
 | zadanie | ADR | worktree | STATUS | stan s9 |
 |---|---|---|---|---|
-| P0 korytarz + ratchety | 0076 | usunięty | artifacts/roads-p0-r10 | SCALONE `da5dd11` (main po s9-scaleniach: pytest gis 246/3 znane przed 0076); regeneracja main po 0076 w tle: `artifacts/logs/s9-main-regen-0076.log`; recenzja visual-critic w toku |
+| P0 korytarz + ratchety | 0076 | usunięty | artifacts/roads-p0-r10 | SCALONE `da5dd11` (main po s9-scaleniach: pytest gis 246/3 znane przed 0076); regeneracja main po 0076 w tle: `artifacts/logs/s9-main-regen-0076.log`; recenzja `docs/reports/visual/REVIEW-2026-11-11-s9-0076.md`: PASS warunkowy scalenia, węzły vs ortofoto FAIL (łaty bez linii P-1, nosy klinów, P-21, latarnia na igłowej wysepce E −774,5 N 77,5) → ADR 0093 |
 | wysepki z OSM | 0077 | agent-a2afb96d89584cca6 | tools/worldgen/fidelity/STATUS_islands_r10.md | s9: agent przejmujący w toku (steep_grass, import, kamery) |
 | zabudowa r3 (domy dwuspadowe, balkony, tynk, cegła) | 0091 | buildings-r11 (z d205d4a) | artifacts/buildings-r11 | s9: agent Fable start 01:05 |
 | import Megascans | 0084 | gpt-megascans | artifacts/megascans-r1 | GPT w toku |
@@ -17,9 +17,9 @@
 ## Następne kroki
 1. Scal 0076 → 0077 (gdy skończą); na main: build_all → build_world → pytest gis → import-region → Truck/Trailer BuildBatch + InstallBatch → EditMode/PlayMode (`WorldCBarrierTests|DepotBarrierTests|WorldCRouteTests|WorldEdgeRecoveryTests`).
 2. Render stanu połączonego (wymóg recenzji): High+Low overcast `fire-station-ref7197`, `stretch-05-docks`, `kwadrat-park-gate`, `truck-at-gate`, `r10_block_2`, `r10b_black_05` + zrzuty z telefonu → ponowny pomiar tynku remizy.
-3. Nowe zadania z recenzji s9 (agenci po zwolnieniu miejsc): **0090** remiza r7 (świerki piętrowe, tuje 3 kształty + Low, szkło 60–75, zacieki), **0092** Kwadrat r12 (firanka matowa, szlaban domknięty, dryf makro do paneli). **0089** czarny lakier aut → Argon Q2 (dopisane).
+3. Nowe zadania z recenzji s9 (agenci po zwolnieniu miejsc): **0090** remiza r7 (świerki piętrowe, tuje 3 kształty + Low, szkło 60–75, zacieki), **0092** Kwadrat r12 (firanka matowa, szlaban domknięty, dryf makro do paneli). **0089** czarny lakier aut → Argon Q2 (dopisane). **0093** geometria i oznakowanie węzłów vs ortofoto (recenzja 0076 #1–11 + kamery miejsc z filmu właściciela) — start PO scaleniu 0077 (te same pliki roads/).
 4. Integracja, czyste buildy Low/High, telefony (A16 Low gate3, S24+ High), raport bramki 3.
-5. Ostatni przydzielony ADR: **0092**.
+5. Ostatni przydzielony ADR: **0093**.
 
 ---
 # HANDOVER — kamion, sesja 8 (2026-11-10 ok. 22:00 UTC start; limit 5 h reset 2026-11-11 03:00 UTC)
