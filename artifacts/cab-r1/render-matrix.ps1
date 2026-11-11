@@ -2,6 +2,7 @@ param([ValidateSet('before','after')] [string]$Stage='before')
 $ErrorActionPreference='Stop'
 $repo=(Resolve-Path "$PSScriptRoot/../..").Path
 Set-Location $repo
+if ((git branch --show-current) -ne "gpt-cab-r1") { throw "Run this evidence/WIP script only in the gpt-cab-r1 worktree, never main." }
 . "$repo/scripts/env.ps1"
 $phoneLock='C:\Users\matma\Documents\Claude\kamion\artifacts\locks\PHONE_RUN'
 $coordinatorHold=Join-Path (Split-Path $phoneLock) 'GPT_UNITY_HOLD'
@@ -37,4 +38,5 @@ foreach($tier in @('Low','High')) {
     git commit -m "wip(cab): render $Stage $tier $light"
   }
 }
+
 

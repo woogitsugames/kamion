@@ -45,3 +45,4 @@ Inspections captured: Low clear seat-entry/grain. NEXT COMMAND: pwsh scripts/tes
 Inspections captured: High overcast seat-entry/grain. NEXT COMMAND: pwsh scripts/test.ps1 -Platform EditMode (after detail matrix ends)
 ADR rewritten around final implementation: double-flip fix, detailed-only backing recess, exact unchanged budgets and explicit phone/review limits. NEXT COMMAND: Get-ChildItem artifacts/cab-r1/validation/tests/*.xml | Sort-Object LastWriteTime -Descending | Select-Object -First 1
 Inspections captured: High clear seat-entry/grain. NEXT COMMAND: pwsh scripts/test.ps1 -Platform EditMode (after detail matrix ends)
+FINAL: final rebuild/install OK;230/230 EditMode after final QA pose,72 matched+48 native+8 details inspected,all budget/config deltas0. Self-review/REPORT complete; no main source/settings change or phone action. NEXT COMMAND (leader): Get-Content artifacts/cab-r1/REPORT.md; inspect review/after/*/*-pair.jpg before integrating gpt-cab-r1.

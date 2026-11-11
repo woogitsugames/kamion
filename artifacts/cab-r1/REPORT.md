@@ -1,18 +1,18 @@
-# K / ADR 0104 — IN PROGRESS, not ready to merge
-Branch: gpt-cab-r1; base main 9e6e9fde; current SHA: see git rev-parse HEAD.
-Scope: stream K only, isolated .claude/worktrees/gpt-cab-r1; no push/merge, no adb.
-Prepared: copied local products, source LOD0, Library; source checks and lock-aware Unity evidence matrix.
-GIS baseline: 370 passed / 1 xfailed (643.87 s), gis-baseline.log.
-Blender export: PASS 103285 / 44190 / 21479 tris; instrument/head-box sightlines PASS.
-Added inactive cab-seat / cab-materials QA cameras; native mirror RT/config audit and image-pair metrics.
-Full adjusted source rays (315/glass), High: MainL100%, MainR99.0%, WideL84.1%, WideR74.9%, Kerb/Front100%.
-Low exterior LOD2, interior/glass LOD0: WideL97.5%, WideR89.5%; other glasses100%.
-Prepared but NOT enabled: LOD0-only 30mm housing-backing recess, no added topology, UV/slot/optics changes.
-Source study: WideL97.5%, WideR88.3% after recess; right door/channel still obstruct. Not a Unity result.
-Blender geometry PNGs inspected: clay-before/, clay-recess/, clay-pair-L.jpg, clay-pair-R.jpg.
-Auxiliary A16 frames from leader: phone-lead-*; dirty APK, not candidate evidence; no phone actions by this stream.
-OPEN: PHONE_RUN + GPT_UNITY_HOLD; no Unity process started by K. Fresh before/after matrix/EditMode/budgets pending.
-OPEN: assess plastic grain, seams, seat/wheel wear in game-material detail frames; independent review and phone by leader.
-Expected conflicts: TruckAssetBuilder.cs (additive QA views and future scoped mirror import), generated truck/scenes must rebuild.
-No changes to TruckExterior.shader, glazing, TruckLights.cs, world materials, ProjectSettings or Packages.
-Resume command after holds: pwsh -NoProfile -File artifacts/cab-r1/render-matrix.ps1 -Stage before
+# K / ADR 0104 — ready for leader review
+Branch gpt-cab-r1; base 9e6e9fde; tested checkout 1a9e2fdc (final production code 9f51fea8); no push/merge.
+Fixed double horizontal flip for TRAKT; trailer-side projection tests verify own vehicle at inner mirror edges.
+Recessed LOD0 housing backing:107 moved vertices; 28500 vertices /110904 indices unchanged; Low/Medium mesh unchanged.
+Audited plastic/seams/wear/instruments; added four inactive inspection cameras; interior materials/shader unchanged.
+GIS:370 passed,1 xfailed (643.87s); export+instrument sightlines PASS (103285/44190/21479 interior tris).
+Final EditMode:230/230,0 skipped (validation/tests/editmode-20261111-121652.xml), Android-target compilation.
+TruckAssetBuilder.BuildBatch + WorldTruckInstaller.InstallBatch OK; final-*.log. No new APK/phone run by K.
+Evidence:before/ +after/ 72 matched PNG;48 native mirror PNG;after-details/8 final inspection PNG;all inspected.
+Pairs/previews:review/after/*/*-pair.jpg;SELF-REVIEW.md;image-metrics.json;budget-comparison.json;logs/.
+All36 scene-stat rows delta0 (draws/shadows/triangles);all4 mirror configuration tables identical;phone GPU UNVERIFIED.
+Source ray study High WideL84.1->97.5%,WideR74.9->88.3%;not pixel counts or R46 certification.
+OPEN:right-wide door/channel occlusion,small text/seat wear on clean phone,owner-cab material calibration.
+Independent visual review and clean A16/S24+ checks remain with leader;no Gate3 PASS claimed.
+Expected conflicts:TruckAssetBuilder.cs(additive cameras/import),RenderTextureMirror.cs(presentation flag);generated->rebuild.
+After leader merge,run Unity executeMethods Game.Editor.Setup.TruckAssetBuilder.BuildBatch then Game.World.Import.WorldTruckInstaller.InstallBatch.
+ADR:docs/adr/0104-cab-interior-mirrors-r1.md. Evidence scripts contain WIP commits and guard against execution on main.
+Evidence copied to main artifacts/cab-r1 without committing main;worktree retained for review.
