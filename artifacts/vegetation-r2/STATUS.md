@@ -50,3 +50,6 @@
 
 - Krok8a: obejrzano rzeczywistą galerię3pasm LOD0/1+billboard (lod-gallery.jpg), prześwity zachowane w LOD1. Wszystkie18wariantów nie zwiększają trójkątów LOD0/1; lipa nadal ma stylizowane skupiska, finalna ocena w świecie otwarta. Przerwany pre-copy fullGIS nie jest wynikiem końcowym; pełny suite będzie po canonical build. NASTĘPNY KROK: `Get-Content artifacts/vegetation-r2/world-after.log -Tail 8`.
 
+
+- Krok9: świat po zbudowany i obie sceny zaimportowane; bez fallback=True. NASTĘPNY KROK: visual-qa WorldC/WorldC_High overcast z identycznymi kamerami DK8/Andersa/Putry i fence.
+
