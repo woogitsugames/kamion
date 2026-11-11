@@ -1,6 +1,6 @@
 param(
     [Parameter(Mandatory)]
-    [ValidateSet('BuildWorld','BuildMaterials','FarField','GisFile','GisFinal','PhysicsFile','Gate3File','AuditMesh','AuditHeights','Compare')]
+    [ValidateSet('BuildWorld','BuildMaterials','FarField','GisFile','GisFinal','PhysicsFile','Gate3File','AuditMesh','AuditHeights','ScopeGenerated','Compare')]
     [string]$Task,
     [string]$TestFile,
     [switch]$AtRoundEnd,
@@ -32,6 +32,7 @@ try {
         'FarField' { & uv run --project tools/worldgen tools/worldgen/streetscape/far_field.py --region bialystok-industrial-c }
         'AuditMesh' { & uv run --project tools/worldgen python "$PSScriptRoot/audit_mesh.py" $Phase }
         'AuditHeights' { & uv run --project tools/worldgen python "$PSScriptRoot/audit_heights.py" }
+        'ScopeGenerated' { & uv run --project tools/worldgen python "$PSScriptRoot/scope_generated.py" }
         'Compare' { & uv run --project tools/worldgen python "$PSScriptRoot/compare.py" }
         'GisFinal' { & uv run --project tools/worldgen python -m pytest tests/gis -q }
         default { & uv run --project tools/worldgen python -m pytest $TestFile -q }

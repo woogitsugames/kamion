@@ -27,3 +27,6 @@ Krok 9: build_world działa i przeszedł etapy dróg/budynków/placów (ostatnio
 Następny krok: po końcu budowy test_lod1 → AuditHeights → test_far_field, sekwencyjnie i każdy przez heavy.
 Krok 10: build_world zakończył się komunikatem done po 459,9 s i zwolnił heavy. Far-field High 118524 trójkątów, Low 24500 (baza 24508). Log nie zawiera fallback=True. Weryfikacja rzeczywistych rekordów i budżetu kamer nadal przed nami.
 Następny krok: pwsh artifacts/edge-r2/heavy.ps1 -Task GisFile -TestFile tests/gis/test_far_field_lod1.py.
+Krok 11: QA po budowie potwierdza 31 GML, 36971 poprawnych wysokości i 0 duplikatów/konfliktów; 5390 budynków z LoD1, 97 szacunków BDOT, 2921 szacunków OSM i 39 tagów OSM UNVERIFIED, łącznie 8447. Są 16 kominów, 302 maszty/słupy i 107 linii.
+Test parsera czeka na heavy. Dodano polecenie ScopeGenerated do tej samej puli: przed renderami odtworzymy uboczne metadane dróg/props i zachowamy wyłącznie pola far-field w world_manifest, zgodnie z własnością dziedzin.
+Następny krok po teście: AuditHeights → ScopeGenerated → test_far_field.py → validate.ps1 -Phase After.
