@@ -15,3 +15,5 @@ NASTĘPNY KROK: uv run --project tools/worldgen tools/worldgen/roads/build_world
 2026-11-11T21:37:50.6953790+01:00: zmierzono kandydat na 15 m granicy (płasko, 10%, 40%); candidate-measurements.json. To test syntetyczny, nie wynik kamer ani telefonu. NASTĘPNY KROK: baseline import i pomiar rzeczywistych kadrów.
 
 2026-11-11T21:38:53.2777977+01:00: kandydat zmniejsza syntetyczną odsłoniętą podmurówkę na spadku 40% z 1,20 do 0,447 m; 130→442 trójkąty na 15 m, trzy te same materiały. Zapisano odtwarzalny apply_r1.py, jeszcze nie uruchomiony. NASTĘPNY KROK: zakończyć baseline przed modyfikacją produkcji.
+
+2026-11-11T21:40:32.2821582+01:00: kandydat tekstur zachowuje skan CC0, wzmacnia jego kontrast tylko na betonie i lokalizuje zacieki pod obejmami. Tył aluminiowego znaku otrzyma ślady od stalowych mocowań. NASTĘPNY KROK: zastosować apply_r1.py dopiero po baseline i zachowaniu produktów A/B.
