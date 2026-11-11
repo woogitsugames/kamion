@@ -20,7 +20,7 @@
 | Argon 0085 | 0085 | argon-edge | artifacts/edge-far-r1 | czeka na poprawkę |
 
 ## Następne kroki
-1. Po regeneracji 0086: commit Data/Regions; visual-critic 0086 (artifacts/tint-gamma-r1 compare-final).
+1. Regeneracja 0086 + recenzja ZROBIONE. Integracja na main w toku (lider, tło): `artifacts/integration-s10/run.ps1` → `run.log` (import-region, Truck/Trailer BuildBatch, InstallBatch, EditMode, PlayMode, APK Low).
 2. Integracja na main z Megascans + 0086 (import-region, Truck BuildBatch/InstallBatch, EditMode/PlayMode, APK Low) → telefon A16 Low gate3.
 3. Scalanie GPT B 0088 → C 0098 po REPORT.md; 0097 po REPORT.md.
 4. Węzły r3 wg recenzji 0095; Kwadrat r13 po zdjęciach właściciela; raport bramki 3.
