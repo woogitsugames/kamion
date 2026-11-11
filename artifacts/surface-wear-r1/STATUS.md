@@ -49,3 +49,6 @@
 
 - Step22 applied ONLY candidate-r1.patch to allowed importer/baker and three tests. Broad shader patch remains INACTIVE. Production geometry/source maps unchanged; causal Import/Capture wrapper uses distinct output/log paths and both shared guards before every launch.
 - NEXT COMMAND: uv-sentinel.ps1 -Phase Import, native-audit.ps1 -Stage sentinel, compare all native geometry/UV hashes, then uv-sentinel.ps1 -Phase Capture.
+
+- Step23 isolated UVsentinel canonical import COMPLETE exit0/IMPORT_RESULT OK. No broad shader edit. Readonly raw source-field inventory verifies all192pins and finds312 patch,871oil,799tyre connected footprints; 4989.216m2 white/yellow marking area includes572.831m2 constant-halfUV area (area NOT screen pixels; constantUV not authorship proof).23 bus_shelters nearest generic oil7.04-92.11m: no dedicated stop attribution, needs source-specific controls. Existing large patch footprints up to27.38m2 support reference-guided visibility investigation rather than global dirt.
+- NEXT COMMAND: native-audit.ps1 -Stage sentinel then strict geometry/channel comparison and12causalframes; sourcefield target controls separate from broadactivation.
