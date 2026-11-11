@@ -18,8 +18,9 @@ from . import signs as SG
 
 
 class Mesh:
-    def __init__(self):
+    def __init__(self, pole_height=None):
         self.prims = {}
+        self.pole_height = pole_height
 
     def add(self, mat, V, T, UV=None):
         V = np.asarray(V, float)
@@ -68,7 +69,15 @@ class Mesh:
     def out(self):
         res = []
         for mat, (Vs, Ts, UVs) in sorted(self.prims.items()):
-            res.append({"V": np.concatenate(Vs), "T": np.concatenate(Ts), "UV": np.concatenate(UVs), "mat": mat})
+            V, UV = np.concatenate(Vs), np.concatenate(UVs)
+            # ADR 0102: atlas height is the physical pole height, not one repeating dirt band every metre.
+            if self.pole_height and mat in ("steel_galv", "steel_painted_grey", "concrete_pole", "steel_painted", "concrete_base"):
+                mat = {"steel_galv": "furniture_galv", "steel_painted_grey": "furniture_grey",
+                       "concrete_pole": "furniture_concrete", "steel_painted": "furniture_bollard",
+                       "concrete_base": "furniture_footing"}[mat]
+                atlas_height = 0.9 if self.pole_height <= 1 else 9.0
+                UV = np.column_stack([UV[:, 0], np.clip(V[:, 2] / atlas_height, 0.002, 0.998)])
+            res.append({"V": V, "T": np.concatenate(Ts), "UV": UV, "mat": mat})
         return res
 
 
@@ -77,9 +86,11 @@ LAMP_OLD = (("concrete", 9), ("steel", 8))     # (kind, height m) of the older s
 # ------------------------------------------------------------------------------------------- builders
 def lamp(h, bracket, double=False):
     m, l1, col = Mesh(), Mesh(), Mesh()
+    m.pole_height = l1.pole_height = h
     for mm, seg in ((m, 12), (l1, 6)):
-        mm.box("concrete_base", [0, 0, 0.1], 0.25, 0.25, 0.2)
-        mm.tube("steel_galv", [0, 0, 0.2], [0, 0, h - 0.3], 0.085, 0.040, seg)
+        # ADR 0102: buried footing, 8 cm cap above the local surface. Same primitive/material budget.
+        mm.box("concrete_base", [0, 0, -0.01], 0.25, 0.25, 0.09)
+        mm.tube("steel_galv", [0, 0, 0.06], [0, 0, h - 0.3], 0.085, 0.040, seg)
         for sgn in ((1, -1) if double else (1,)):
             top = np.array([0, 0, h - 0.4])
             end = np.array([0, sgn * bracket, h])
@@ -98,25 +109,31 @@ def lamp_old(h, kind):
         elongated "cobra" sodium luminaire (orange-tinted bowl);
       kind "steel":    thin grey-painted steel pole with a straight arm tilted up 15 deg and a box luminaire."""
     m, l1, col = Mesh(), Mesh(), Mesh()
+    m.pole_height = l1.pole_height = h
     for mm, seg in ((m, 10), (l1, 5)):
         if kind == "concrete":
-            mm.tube("concrete_pole", [0, 0, -0.3], [0, 0, h], 0.12, 0.07, seg)
+            mm.tube("concrete_pole", [0, 0, -0.3], [0, 0, 0], 0.12, 0.12, seg, cap=False)
+            mm.tube("concrete_pole", [0, 0, 0], [0, 0, h], 0.12, 0.07, seg)
             pts = [np.array([0.0, 0.05, h - 1.4])]
-            for k in range(1, 7):                       # arc: up then out (quarter ellipse 1.2 m out, 1.0 m up)
-                a = k / 6 * math.pi / 2
+            bends = 6 if seg > 5 else 3
+            for k in range(1, bends + 1):              # same silhouette, fewer sections on Low
+                a = k / bends * math.pi / 2
                 pts.append(np.array([0.0, 0.05 + 1.2 * math.sin(a), h - 1.4 + 1.0 * (1 - math.cos(a)) + 0.35 * math.sin(a)]))
             pts.append(pts[-1] + [0, 0.5, 0.06])
             for a_, b_ in zip(pts[:-1], pts[1:]):
                 mm.tube("steel_painted_grey", a_, b_, 0.03, 0.03, max(4, seg // 2), cap=False)
             for zb in (h - 1.4, h - 0.7):               # clamp bands
-                mm.tube("steel_painted_grey", [0, 0, zb], [0, 0, zb + 0.08], 0.105, 0.105, seg, cap=False)
+                rr = 0.12 - 0.05 * zb / h + 0.004
+                mm.tube("steel_painted_grey", [0, 0, zb], [0, 0, zb + 0.08], rr, rr, seg, cap=False)
             e = pts[-1]
             mm.box("luminaire_old", e + [0, 0.35, 0.02], 0.15, 0.40, 0.08)
             mm.quad("lamp_glass_sodium", e + [-0.12, 0.02, -0.065], e + [0.12, 0.02, -0.065],
                     e + [0.12, 0.66, -0.065], e + [-0.12, 0.66, -0.065])
         else:
-            mm.box("concrete_base", [0, 0, 0.1], 0.2, 0.2, 0.2)
-            mm.tube("steel_painted_grey", [0, 0, 0.2], [0, 0, h - 0.2], 0.075, 0.05, seg)
+            mm.box("concrete_base", [0, 0, -0.01], 0.2, 0.2, 0.09)
+            mm.tube("steel_painted_grey", [0, 0, 0.06], [0, 0, h - 0.2], 0.075, 0.05, seg)
+            if seg > 5:
+                mm.box("steel_painted_grey", [0, -0.073, 0.55], 0.033, 0.005, 0.13)  # flush service hatch
             top = np.array([0, 0, h - 0.35])
             end = top + np.array([0, 1.4 * math.cos(math.radians(15)), 1.4 * math.sin(math.radians(15))])
             mm.tube("steel_painted_grey", top, end, 0.03, 0.03, max(4, seg // 2))
@@ -133,8 +150,9 @@ def lamp_arc(h=9.0, reach=2.2, double=False):
     (CC0 photo 20210904_101250, Rakoon, Commons: tall arched columns along the lane; reference only, proportions
     by eye: column ~9 m, arm ~2 m; WORKING_VALUE). Arm along +y."""
     m, l1, col = Mesh(), Mesh(), Mesh()
+    m.pole_height = l1.pole_height = h
     for mm, seg in ((m, 10), (l1, 5)):
-        mm.box("concrete_base", [0, 0, 0.04], 0.28, 0.28, 0.08)
+        mm.box("concrete_base", [0, 0, -0.01], 0.28, 0.28, 0.09)
         mm.tube("steel_galv", [0, 0, 0.08], [0, 0, 1.1], 0.095, 0.085, seg)             # base section with the hatch
         mm.tube("steel_galv", [0, 0, 1.1], [0, 0, h - 1.6], 0.075, 0.045, seg)
         if seg > 5:
@@ -158,10 +176,10 @@ def lamp_arc(h=9.0, reach=2.2, double=False):
 
 def sign_post():
     m, l1, col = Mesh(), Mesh(), Mesh()
-    # embed 0.1 of the unit post: the instance scales z by its height (sz up to ~5), a -0.3 embed became 1.1-1.5 m
-    # below the base and the gate 3 audit read the posts as buried 0.85 m (Rondo Bieżeństwa / Putry approaches)
-    m.tube("steel_galv", [0, 0, -0.1], [0, 0, 1.0], S.SIGN_POST_D / 2, None, 10)
-    l1.tube("steel_galv", [0, 0, -0.1], [0, 0, 1.0], S.SIGN_POST_D / 2, None, 4)
+    # Render only a short buried end: the instance scales z by its height (sz up to ~5). Real underground
+    # foundation depth is not a render-mesh dimension; long hidden ends confuse lowest-point contact audits.
+    m.tube("steel_galv", [0, 0, -0.03], [0, 0, 1.0], S.SIGN_POST_D / 2, None, 10)
+    l1.tube("steel_galv", [0, 0, -0.03], [0, 0, 1.0], S.SIGN_POST_D / 2, None, 4)
     col.tube("collision_steel", [0, 0, 0], [0, 0, 1.0], 0.05, None, 4)
     return m, l1, col
 
@@ -269,9 +287,9 @@ def signal_pole(h=S.SIGNAL_POLE_H, arm=0.0):
     za = h - 0.4                                        # arm axis height
     for mm, seg, nb in ((m, 10, 6), (l1, 5, 2)):
         if not arm:
-            mm.tube("steel_galv", [0, 0, -0.2], [0, 0, h], 0.07, 0.06, seg)
+            mm.tube("steel_galv", [0, 0, -0.1], [0, 0, h], 0.07, 0.06, seg)
             continue
-        mm.tube("steel_galv", [0, 0, -0.2], [0, 0, za - R], 0.13, 0.11, seg, cap=False)
+        mm.tube("steel_galv", [0, 0, -0.1], [0, 0, za - R], 0.13, 0.11, seg, cap=False)
         prev, r_prev = np.array([0.0, 0.0, za - R]), 0.11
         for k in range(1, nb + 1):                      # quarter bend: centre (0, R, za - R)
             a = 0.5 * math.pi * k / nb
@@ -326,10 +344,25 @@ def sliding_gate(w=8.0):
 
 def bollard():
     m, col = Mesh(), Mesh()
-    m.tube("steel_painted", [0, 0, 0], [0, 0, 0.9], 0.06, None, 10)
+    m.pole_height = 0.9
+    m.tube("steel_painted", [0, 0, -0.1], [0, 0, 0.9], 0.06, None, 10)
     m.tube("paint_white_reflective", [0, 0, 0.75], [0, 0, 0.82], 0.062, None, 10, cap=False)
     col.tube("collision_steel", [0, 0, 0], [0, 0, 0.9], 0.07, None, 6)
     return m, m, col
+
+
+def hoop_bollard():
+    """OSM barrier=cycle_barrier / bollard=hoop only; no invented placements. Dimensions WORKING_VALUE."""
+    m, l1, col = Mesh(1.0), Mesh(1.0), Mesh()
+    for mm, seg, bends in ((m, 8, 6), (l1, 4, 3), (col, 4, 3)):
+        mat = "collision_steel" if mm is col else "steel_painted"
+        for x in (-0.45, 0.45):
+            mm.tube(mat, [x, 0, -0.3], [x, 0, 0.8], 0.03, seg=seg, cap=False)
+        pts = [[0.45 * math.cos(k * math.pi / bends), 0, 0.8 + 0.2 * math.sin(k * math.pi / bends)]
+               for k in range(bends + 1)]
+        for a, b in zip(pts[:-1], pts[1:]):
+            mm.tube(mat, a, b, 0.03, seg=seg, cap=False)
+    return m, l1, col
 
 
 def power_pole():
@@ -406,6 +439,7 @@ def build_all(sign_codes, boards):
     P["lift_gate"] = lift_gate()
     P["sliding_gate"] = sliding_gate()
     P["bollard"] = bollard()
+    P["bollard_hoop"] = hoop_bollard()
     P["power_pole"] = power_pole()
     P["pylon"] = pylon()
     P["bench"] = bench()

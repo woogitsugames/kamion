@@ -39,11 +39,10 @@ from roads.network import MEDIAN_RURAL, RURAL, URBAN, side_params, side_extent
 
 from . import facade_atlas as FA
 
-# Ground-standing poles are seated on the lowest surface under their footing (gate 3 audit: lamps / masts up to
-# 0.44 m in the air, sign posts buried > 0.6 m); the part on the high side goes into the ground like a real foundation.
-SEATED_POLES = ("lamp_", "signal_mast", "signal_pole", "sign_post", "power_pole")
+# ADR 0102: contact follows the pole axis rather than the lowest point around the footing. Keep collision/terrain
+# level selection: overlapping elevated ribbons and small visual holes must not move poles between road levels.
+SEATED_POLES = ("lamp_", "signal_mast", "signal_pole", "sign_post", "power_pole", "bollard")
 SEAT_R = 0.35                 # m, footing radius probed (WORKING_VALUE)
-SEAT_MAX_BURY = 0.40          # m, deepest the pole axis is set below the surface at its centre (WORKING_VALUE)
 SEAT_TOL = 0.30              # m, an explicit z this far below the local ground is raised to it (gate 3 tolerance)
 
 RANK = {"A": 0, "S": 1, "GP": 2, "G": 3, "Z": 4, "L": 5, "D": 6}
@@ -118,7 +117,8 @@ class SurfaceTop:
 
 
 # footing radius per pole family (m): the part of the footprint that must stand on the surface
-FOOT_R = {"lamp_": 0.25, "signal_mast": 0.30, "signal_pole": 0.10, "sign_post": 0.04, "power_pole": 0.15}
+FOOT_R = {"lamp_arc_": 0.28, "lamp_old_concrete_": 0.12, "lamp_old_steel_": 0.20, "lamp_": 0.25,
+          "signal_mast": 0.30, "signal_pole": 0.10, "sign_post": 0.04, "power_pole": 0.15, "bollard": 0.06}
 
 
 class Placer:
@@ -130,12 +130,16 @@ class Placer:
         self.zsurf = zsurf
         self.reseated = 0
         self.seat_log = []
+        self.support_moves = []
         self.pts = {}
 
     def seat(self, proto, p):
-        """Base height of a ground-standing pole: the actual surface under its footing (mesh top: island / kerb /
-        footway / verge / yard, else the conformed terrain), lowest of the centre + 4 footing points so no part of
-        the base hangs in the air; the high side goes into the ground like a foundation. Returns (z, step)."""
+        """Visible axis contact and surrounding terrain relief (not a corrected/zeroed QA metric).
+
+        Foundations extend below their axis contact in the prototypes. Sampling the minimum lowered the entire
+        lamp into the high bank; sampling the maximum raised it above the ground at its axis. A concrete footing
+        may be partly exposed on the downhill face, as in a real installation. Dimensions are WORKING_VALUE.
+        """
         r = next((v for k, v in FOOT_R.items() if proto.startswith(k)), SEAT_R)
         e = np.array([p[0], p[0] + r, p[0] - r, p[0], p[0]])
         n = np.array([p[1], p[1], p[1], p[1] + r, p[1] - r])
@@ -143,23 +147,53 @@ class Placer:
         z = []
         for k in range(5):
             m = self.surf.top(float(e[k]), float(n[k])) if self.surf is not None else float("nan")
-            if self.col is not None:     # never above the collision the pole is audited / driven against
+            # Preserve the level selection of ADR 0076: a visual road/verge may overlap an underpass, or have a
+            # small hole where the collision still covers it. Contact uses the centre, but cannot ignore that level.
+            if self.col is not None:
                 c = self.col.top(float(e[k]), float(n[k]), below=(m + 0.05) if math.isfinite(m) else None)
                 if math.isfinite(c) and (not math.isfinite(m) or c < m):
                     m = c
-                elif not math.isfinite(c) and math.isfinite(m):   # no collision here (verge ribbon): terrain collider
+                elif not math.isfinite(c) and math.isfinite(m):
                     m = min(m, float(zt[k]))
             z.append(m if math.isfinite(m) else float(zt[k]))
-        # on a ditch / embankment slope the footing reaches down to the low side, but the axis never goes more than
-        # SEAT_MAX_BURY into the ground at its centre (a 12 m lamp 1.6 m shorter reads wrong; audit sunk tolerance 0.6)
-        zs = max(min(z), z[0] - SEAT_MAX_BURY)
-        return float(zs), float(max(z) - min(z))
+        return float(z[0]), float(max(z) - min(z))
 
     def near(self, group, p, r):
         for q in self.pts.get(group, []):
             if (q[0] - p[0]) ** 2 + (q[1] - p[1]) ** 2 < r * r:
                 return True
         return False
+
+    def lamp_support(self, proto, p):
+        """Move a lamp at most 1.05 m off a sharp edge, never shorten it by burying its shaft.
+
+        Deterministic local search; carriageway and deck keep-outs still run after placement. Collision is only a
+        suitability check, not the visible seating height. Maximum shift/relief are WORKING_VALUE (ADR 0102).
+        """
+        p = np.asarray(p, float)
+
+        def score(q):
+            z, relief = self.seat(proto, q)
+            c = self.col.top(float(q[0]), float(q[1]), below=z + 0.05) if self.col is not None else z
+            mismatch = abs(z - c) if math.isfinite(c) else 0.0
+            return max(relief, mismatch)
+
+        before = score(p)
+        if before <= 0.15:
+            return p
+        best, best_score = p, before
+        for radius in (0.35, 0.70, 1.05):
+            for a in np.arange(16) * math.pi / 8:
+                q = p + radius * np.array([math.cos(a), math.sin(a)])
+                s = score(q)
+                if s < best_score - 1e-6:
+                    best, best_score = q, s
+            if best_score <= 0.15:
+                break
+        if not np.array_equal(best, p):
+            self.support_moves.append({"p": proto, "from": p.tolist(), "to": best.tolist(),
+                                       "before_m": round(before, 3), "after_m": round(best_score, 3)})
+        return best
 
     def ground_min(self, p, r=None, on_verge=True):
         """lowest surface under a pole footing: centre + 4 points at r (the bilinear surface at a kerb / footway edge
@@ -173,6 +207,8 @@ class Placer:
         return float(z)
 
     def add(self, proto, p, yaw, z=None, sz=1.0, src="", group=None):
+        if proto.startswith("lamp_") and z is None and self.surf is not None:
+            p = self.lamp_support(proto, p)
         if proto.startswith(SEATED_POLES):
             if self.surf is not None:
                 zg, step = self.seat(proto, p)
@@ -432,6 +468,7 @@ def lamps(pl, net, osm_nodes, origin, report):
                        group="lamp")
                 n += 1
     report["lamps"] = {"osm": n0, "rule": n,
+                       "support_adjustments": pl.support_moves,
                        "by_family": {k: sum(1 for it in pl.items if it["p"] == k) for k in
                                      sorted({it["p"] for it in pl.items if it["p"].startswith("lamp_")})}}
 
@@ -703,6 +740,8 @@ def misc_points(pl, net, src, origin, report, codes):
             proto = "lift_gate"
         elif t.get("barrier") in ("gate", "sliding_gate", "swing_gate"):
             proto = "sliding_gate"
+        elif t.get("barrier") == "cycle_barrier" or t.get("bollard") == "hoop":
+            proto = "bollard_hoop"
         elif t.get("barrier") == "bollard":
             proto = "bollard"
         elif t.get("amenity") == "bench":
@@ -796,21 +835,21 @@ class Lin:
             self.ribbon(collision, P, zb, zt, 0.0, src, both=False, collision=None)
             self.buf.parts[-1].layer = "collision"
 
-    def posts(self, mat, P, spacing, w, d, h, zb=None, src=""):
+    def posts(self, mat, P, spacing, w, d, h, zb=None, src="", ground_feet=False):
         line = LineString(P)
         L = line.length
-        ss = np.arange(0, L + 1e-6, spacing)
-        Q = np.array([line.interpolate(s).coords[0] for s in ss])
+        ss = np.concatenate([[0], np.cumsum(np.hypot(*np.diff(P, axis=0).T))]) if spacing is None else np.arange(0, L + 1e-6, spacing)
+        Q = np.asarray(P) if spacing is None else np.array([line.interpolate(s).coords[0] for s in ss])
         if len(Q) < 1:
             return
         Z = self.z(Q) if zb is None else np.interp(ss, np.concatenate([[0], np.cumsum(np.hypot(*np.diff(P, axis=0).T))]), zb)
         dd = np.gradient(Q, axis=0) if len(Q) > 1 else np.array([[1.0, 0.0]])
         dd /= np.maximum(np.hypot(dd[:, 0], dd[:, 1]), 1e-9)[:, None]
         Vs, Ts = [], []
-        for q, z, t in zip(Q, Z, dd):
+        for q, z, ground, t in zip(Q, Z, self.z(Q) if ground_feet else Z, dd):
             nn = np.array([-t[1], t[0]])
-            c = [q[0], q[1], z - 0.3 + (h + 0.3) / 2]
-            hx, hy, hz = t * w / 2, nn * d / 2, (h + 0.3) / 2
+            c = [q[0], q[1], (ground - 0.3 + z + h) / 2]
+            hx, hy, hz = t * w / 2, nn * d / 2, (z + h - ground + 0.3) / 2
             P8 = [np.array(c) + np.append(sx * hx + sy * hy, sz * hz) for sz in (-1, 1) for sy in (-1, 1) for sx in (-1, 1)]
             faces = [(4, 5, 7, 6), (0, 1, 5, 4), (2, 6, 7, 3), (0, 4, 6, 2), (1, 3, 7, 5)]
             base = len(Vs)
@@ -899,6 +938,35 @@ def concrete_fence(lin, line, key, style_key):
     return nb
 
 
+def panel_fence(lin, line, col, key, flexible=False):
+    """ADR 0102: rigid, level bays step with the plot boundary; only tagged flexible mesh sags.
+
+    Keep corners and place posts at every bay boundary. Concrete plinth follows the ground below each level bay,
+    rather than a long sloping ribbon through the post centres. No extra materials or layers.
+    """
+    P = [np.asarray(line.coords[0], float)]
+    for a, b in zip(np.asarray(line.coords)[:-1], np.asarray(line.coords)[1:]):
+        n = max(1, int(math.ceil(np.linalg.norm(b - a) / S.FENCE_PANEL_W)))
+        P.extend(a + (b - a) * k / n for k in range(1, n + 1))
+    P = np.asarray(P)
+    Z = lin.z(P)
+    bases = np.maximum(Z[:-1], Z[1:])
+    post_base = np.maximum(np.r_[bases[0], bases], np.r_[bases, bases[-1]])
+    for i, base in enumerate(bases):
+        Q = P[i:i + 2]
+        low = Z[i:i + 2] - 0.2
+        top = np.full(2, base + S.FENCE_PLINTH_H)
+        lin.slab("concrete_plinth", Q, low, top, 0.05, key)
+        if flexible:
+            Q = np.array([Q[0], Q.mean(axis=0), Q[1]])
+            bottom = np.full(3, base + S.FENCE_PLINTH_H)
+            upper = base + S.FENCE_H - np.array([0, 0.045, 0])  # 4.5 cm, WORKING_VALUE
+        else:
+            bottom, upper = top, np.full(2, base + S.FENCE_H)
+        lin.ribbon(f"{col}_mesh", Q, bottom, upper, 0, key, both=True, collision="collision_fence")
+    lin.posts(col, P, None, 0.06, 0.04, S.FENCE_H + 0.05, zb=post_base, src=key, ground_feet=True)
+
+
 def fences(lin, src, origin, roads_poly, report):
     n = {"panel_m": 0.0, "concrete_m": 0.0, "retaining_m": 0.0}
     cutter = roads_poly.buffer(0.3) if roads_poly is not None else None
@@ -913,10 +981,7 @@ def fences(lin, src, origin, roads_poly, report):
             Z = lin.z(P)
             if b in ("fence", "yes"):
                 col = ["fence_green", "fence_anthracite", "fence_galv"][_h(key) % 3]
-                lin.slab("concrete_plinth", P, Z - 0.2, Z + S.FENCE_PLINTH_H, 0.05, key)
-                lin.ribbon(f"{col}_mesh", P, Z + S.FENCE_PLINTH_H, Z + S.FENCE_H, 0.0, key, both=True,
-                           collision="collision_fence")
-                lin.posts(col, P, S.FENCE_PANEL_W, 0.06, 0.04, S.FENCE_H + 0.05, src=key)
+                panel_fence(lin, part, col, key, flexible=f["tags"].get("fence_type") in ("chain_link", "wire"))
                 n["panel_m"] += part.length
             elif b == "wall":
                 cc = np.asarray(part.simplify(0.15).coords)            # bays run corner to corner

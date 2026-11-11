@@ -468,3 +468,9 @@ for _k, _v in M.items():
 M["plaster_cream"]["color"][:] = [round(c * 0.92, 4) for c in M["plaster_cream"]["color"]]
 M["plinth_dark"]["color"][:] = [0.24, 0.24, 0.235]
 M["plinth_dark"]["splash_h"] = 0.8
+# ADR 0102: additive, furniture-only atlas bindings; existing shared pigments and the linear tint contract stay intact.
+for _kind, _base in (("galv", "steel_galv"), ("grey", "steel_painted_grey"),
+                     ("concrete", "concrete_pole"), ("bollard", "steel_painted")):
+    M[f"furniture_{_kind}"] = {**M[_base], "texture": f"furniture_{_kind}"}
+M["furniture_footing"] = {**M["concrete_base"], "texture": "furniture_concrete"}
+

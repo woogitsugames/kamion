@@ -235,3 +235,12 @@ fallback; no licensed download is attempted by the public-clone build.
 ADR0088 roślinność r2: bark_pine.png i bark_pine_lower.png oraz sosnowe partie naszych publicznych GLB/impostorów/HLOD korzystają ze skanu Pine Bark (Dimitrios Savva, Poly Haven, CC0; https://polyhaven.com/a/pine_bark). Wejście diffuse2k i SHA256: art-source/world/cc0/cc0_manifest.json, generator weryfikuje hash. Liście i geometria pozostają nasze proceduralne. Fab brzoza/lipa jest wyłącznie zatwierdzonym near override importera, nie wejściem do publicznego bake; linden-branch jest drewnem, nie liśćmi. Mapillary w artifacts/vegetation-r2 służy wyłącznie QA referencyjnemu, nie teksturowaniu ani buildowi.
 
 ADR0088 igły sosny: pine_tree_01 (Rico Cilliers — model, Rob Tuytel — fotografia), https://polyhaven.com/a/pine_tree_01, CC0 według https://polyhaven.com/license (sprawdzone2026-11-11). Wykorzystano wyłącznie czystą gałązkę z twig_diff+twig_alpha1kPNG, crop [5,26,220,450], bez szyszek i paddingu atlasu. Jawne URL/MD5API/SHA256 i przetwarzanie: art-source/world/cc0/pine_needles_manifest.json, tools/worldgen/streetscape/pine_needles.py; raw ignorowane, legalne pochodne CC0 mogą wejść do publicznych kart/bake. Nie użyto modelu3D PolyHaven.
+# ADR 0102 — dodatkowe użycie istniejących skanów CC0 (2026-11-11)
+
+`streetscape/furniture_textures.py` wykorzystuje mikrostrukturę istniejących, lokalnych map Diffuse
+`brushed_concrete` (Dario Barresi / Dimitrios Savva) i `corrugated_iron_03` (Charlotte Baglioni),
+Poly Haven, CC0 1.0, opisanych wraz z hashami w tabeli ADR 0063 oraz `cc0_manifest.json`.
+Wynik: tekstury `furniture_{galv,grey,concrete,bollard}` — filtr usuwa szerokie oświetlenie/przetłoczenia,
+warstwy zużycia są własne. Mapillary p12/p15/p20/p26/p30 tylko jako referencja proporcji i rodzin;
+żaden piksel Mapillary nie trafia do atlasów ani do builda.
+

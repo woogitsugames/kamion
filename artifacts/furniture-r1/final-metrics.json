@@ -1,0 +1,52 @@
+{
+  "round": "R2",
+  "region": "bialystok-industrial-c",
+  "corridor_m": 40,
+  "before": {
+    "supports_probed": 223,
+    "floating": 4,
+    "sunk": 0,
+    "mesh_summary": {
+      "checked": 973,
+      "missing_normals": 0,
+      "missing_uv0": 110,
+      "nan": 0,
+      "unreadable_by_api": 0
+    },
+    "footing_steps": 147,
+    "footing_step_max_m": 1.087,
+    "support_adjustments": 0
+  },
+  "after": {
+    "supports_probed": 223,
+    "floating": 0,
+    "sunk": 0,
+    "mesh_summary": {
+      "checked": 973,
+      "missing_normals": 0,
+      "missing_uv0": 98,
+      "nan": 0,
+      "unreadable_by_api": 0
+    },
+    "footing_steps": 107,
+    "footing_step_max_m": 0.411,
+    "support_adjustments": 20
+  },
+  "low_budget": {
+    "contract": "CPU SceneStats + instanced; k-tris quantisation conservatively bounded; not GPU/device",
+    "route_low_frames": 8,
+    "max_draw_delta": 0,
+    "max_tris_upper_delta_pct": 1.1822485207100497
+  },
+  "protected_geometry": {
+    "protected_primitives_before": 806,
+    "protected_primitives_after": 806,
+    "different": [],
+    "contract": "Raw POSITION/NORMAL/UV/COLOR/index payloads: road_, bridge_, barrier_, marking, curb_/kerb_, road collision materials"
+  },
+  "gis_result": "379 passed, 1 xfailed in 649.86s (0:10:49)",
+  "fallback_true_in_generation_logs": {
+    "build-before.log": 0,
+    "build-after-r2.log": 0
+  }
+}
