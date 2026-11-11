@@ -84,3 +84,4 @@ Zapisano after WorldC Low clear. Następny krok: obejrzenie arkuszy i porównani
 Zapisano after WorldC_High High overcast. Następny krok: obejrzenie arkuszy i porównanie statystyk.
 Zapisano after WorldC_High High clear. Następny krok: obejrzenie arkuszy i porównanie statystyk.
 Zapisano pary foto after Low-clear-photo-1280x720. Następny krok: porównać z photo-references.json.
+Zapisano pary foto after Low-clear-photo-2048x1152. Następny krok: porównać z photo-references.json.
