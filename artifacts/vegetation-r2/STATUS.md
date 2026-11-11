@@ -59,3 +59,6 @@
 
 - After59 WorldC Low-overcast: rzeczywista scena profilu,59 identycznych kamer. NASTĘPNY KROK: porównanie stats i ROI, następnie pozostałe warunki / końcowy GIS+EditMode.
 
+
+- After59 WorldC Low-clear: rzeczywista scena profilu,59 identycznych kamer. NASTĘPNY KROK: porównanie stats i ROI, następnie pozostałe warunki / końcowy GIS+EditMode.
+
