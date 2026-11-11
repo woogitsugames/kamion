@@ -32,7 +32,7 @@ switch ($Task) {
     'Analyze' { $uvArguments += @('python',$Script); $uvArguments += $ScriptArguments }
 }
 $log = Join-Path $PSScriptRoot ("heavy-{0}-{1}.log" -f $Task,(Get-Date -Format 'yyyyMMdd-HHmmss'))
-& pwsh $slot -Acquire -Pool heavy -Owner $owner
+& pwsh $slot -Acquire -Pool heavy -Owner $owner -PollSeconds 5
 if ($LASTEXITCODE -ne 0) { throw 'Nie uzyskano slotu heavy' }
 $code = 1
 try {
