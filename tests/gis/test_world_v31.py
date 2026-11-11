@@ -221,3 +221,131 @@ def test_dock_lod1_silhouette_is_cheap_and_complete():
         assert l1.get(m), m
     assert set(l1) == {"hall_flashing", "paint_yellow", "downpipe"}, set(l1)
     assert sum(l1.values()) < 0.4 * sum(l0.values())
+
+
+# ------------------------------------------------------------------------------------------- ADR 0091 (buildings r3)
+def _kf(salt):
+    return 0.9
+
+
+def test_house_roof_heights_come_from_lod2():
+    """Gable over a rectangle: ridge = LoD2 height, eave = LoD2 eave; without LoD2 the LoD1 height sits at
+    K_LOD1 of the rise (measured on the region's 229 LoD2 houses)."""
+    from shapely.geometry import box
+    from streetscape import roofs as RF
+    fp = box(0, 0, 12, 8)
+    r = RF.plan(fp, {"roof_type_lod2": "1030", "height_lod2_2017_m": 7.0, "lod2_eave_rel_m": 3.2}, 5.3, 100.0, _kf)
+    assert r.kind == "gable" and r.source == "lod2"
+    assert r.zeave == pytest.approx(103.2) and r.zridge == pytest.approx(107.0)
+    assert abs(float(r.eu[0])) == pytest.approx(1.0)                  # ridge along the long side
+    assert float(r.z([6.0, 4.0])) == pytest.approx(107.0) and float(r.z([6.0, 0.0])) == pytest.approx(103.2)
+    r1 = RF.plan(fp, {"roof_type_lod2": None}, 6.0, 100.0, _kf)
+    assert r1.source == "lod1"
+    assert (106.0 - r1.zeave) / (r1.zridge - r1.zeave) == pytest.approx(RF.K_LOD1, abs=0.01)
+    assert RF.plan(fp, {"roof_type_lod2": "1000"}, 4.0, 100.0, _kf) is None           # LoD2 says flat
+
+
+def test_house_roof_profiles_and_kinds():
+    """Gable end = three profile points (eave, ridge, eave); hip walls stay at the eave; a mono-pitch half rises
+    towards its party wall; an L-shaped footprint keeps its plan and no wall drops below the eave."""
+    import numpy as np
+    from shapely.geometry import Polygon, box
+    from streetscape import roofs as RF
+    fp = box(0, 0, 12, 8)
+    g = RF.plan(fp, {"roof_type_lod2": "1030", "height_lod2_2017_m": 7.0, "lod2_eave_rel_m": 3.2}, 5.3, 100.0, _kf)
+    end = g.profile([12, 0], [12, 8])
+    assert len(end) == 3 and end[1][0] == pytest.approx(4.0) and end[1][1] == pytest.approx(107.0)
+    assert [round(z, 2) for _, z in g.profile([0, 0], [12, 0])] == [103.2, 103.2]
+    h = RF.plan(box(0, 0, 9, 8.5), {"roof_type_lod2": "1040", "height_lod2_2017_m": 7.0, "lod2_eave_rel_m": 3.5}, 5.5,
+                100.0, _kf)
+    assert h.kind == "hip"
+    for a, b in (([0, 0], [9, 0]), ([9, 0], [9, 8.5])):
+        zs = [z for _, z in h.profile(a, b)]
+        assert max(zs) - min(zs) < 0.35                                # hip: eave all round (ridge stub 0.25 m)
+    half = box(0, 0, 8, 12)
+    m = RF.plan(half, {"roof_type_lod2": "1010", "height_lod2_2017_m": 11.0, "lod2_eave_rel_m": 5.0}, 7.9, 100.0, _kf,
+                others=[box(8, 0, 16, 12)])
+    assert m.kind == "mono" and float(m.z([7.9, 6.0])) > float(m.z([0.1, 6.0])) + 3.0     # high at the party wall
+    assert RF.plan(half, {"roof_type_lod2": "1010"}, 7.9, 100.0, _kf).kind == "gable"      # no neighbour: gable
+    ell = Polygon([(0, 0), (12, 0), (12, 5), (7, 5), (7, 9), (0, 9)])
+    r = RF.plan(ell, {"roof_type_lod2": "1130", "height_lod2_2017_m": 8.0, "lod2_eave_rel_m": 3.4}, 6.0, 100.0, _kf)
+    c = np.asarray(ell.exterior.coords)
+    assert all(z >= r.zeave - 1e-6 for a, b in zip(c, c[1:]) for _, z in r.profile(a, b))
+
+
+def test_house_roof_mesh_covers_footprint_with_overhang():
+    """The covering spans the footprint plus the overhang on both LODs and the collision, the soffit / fascia are
+    LOD0 only, and the eaves (gutter lines) are the two long sides of a gable."""
+    import numpy as np
+    from shapely.geometry import box
+    from streetscape import buildings_mesh as B
+    from streetscape import roofs as RF
+    fp = box(0, 0, 12, 8)
+    r = RF.plan(fp, {"roof_type_lod2": "1030", "height_lod2_2017_m": 7.0, "lod2_eave_rel_m": 3.2}, 5.3, 100.0, _kf)
+    acc = B.Acc()
+    eaves = RF.build(acc, r, fp, "roof_tiles_red")
+    assert len(eaves) == 2 and all(abs(float(np.hypot(*(b - a))) - 13.0) < 0.2 for a, b, _ in eaves)
+
+    def area(layer, mat):
+        s = 0.0
+        for V, T, *_ in acc.d[(layer, mat)]:
+            p = V[T]
+            e1, e2 = p[:, 1, :2] - p[:, 0, :2], p[:, 2, :2] - p[:, 0, :2]
+            s += 0.5 * np.abs(e1[:, 0] * e2[:, 1] - e1[:, 1] * e2[:, 0]).sum()
+        return s
+    want = (12 + 2 * RF.OVERHANG) * (8 + 2 * RF.OVERHANG)
+    for layer in ("buildings", "buildings_low"):
+        assert area(layer, "roof_tiles_red") == pytest.approx(want, rel=0.01)
+    assert area("collision", "collision_building") == pytest.approx(want, rel=0.01)
+    assert ("buildings", "hall_flashing") in acc.d and ("buildings_low", "hall_flashing") not in acc.d
+    V = np.concatenate([it[0] for it in acc.d[("buildings", "roof_tiles_red")]])
+    assert V[:, 2].max() == pytest.approx(107.0 + RF.T_TOP, abs=0.01)
+    uv = np.concatenate([it[2] for it in acc.d[("buildings", "roof_tiles_red")]])
+    assert uv[:, 1].min() >= -1e-6 and uv[:, 1].max() == pytest.approx((4 + RF.OVERHANG + 0.05) * r.sl, abs=0.02)
+
+
+def test_attic_window_sits_in_the_gable():
+    """A 2-storey house whose eave is one storey high gets its upper window in the gable end, inside the wall
+    column that rises as a rectangle."""
+    from streetscape import buildings_mesh as B
+    prof = [(0.0, 103.3), (4.0, 107.0), (8.0, 103.3)]
+    aw = B.attic_window(prof, 103.3, 100.0, 0.3, 2.9, 2, "h:1")
+    assert aw is not None
+    ua, ub, va, vb = aw["op"][:4]
+    assert ua > aw["u0"] and ub < aw["u1"] and vb < aw["zband"] and va >= 103.3 + 0.5
+    assert 0.5 * (ua + ub) == pytest.approx(4.0)
+    assert B.attic_window([(0.0, 103.3), (8.0, 103.3)], 103.3, 100.0, 0.3, 2.9, 2, "h:1") is None   # eave wall
+
+
+def test_block_balconies_face_the_sun_and_have_a_rail():
+    """Balcony rail geometry (ADR 0091): 12 triangles of handrail on top of the balustrade card."""
+    import numpy as np
+    from streetscape import buildings_mesh as B
+    from streetscape import facade_kit as FK
+    acc = B.Acc()
+    FK.balcony(acc, np.array([0.0, 0.0]), np.array([1.0, 0.0]), np.array([0.0, -1.0]), 5.0, 2.4, 103.0, key="glz-free-1")
+    rail = sum(len(it[1]) for it in acc.d[("buildings", "downpipe")])
+    assert rail >= 12
+    z = np.concatenate([it[0][:, 2] for it in acc.d[("buildings", "downpipe")]])
+    assert z.max() >= 103.0 + 1.09 - 0.01                                        # handrail top (a dish bracket may sit higher)
+    assert float(B.BALCONY_SUN[1]) < 0 and float(B.BALCONY_SUN[0]) < 0          # south-south-west
+
+
+def test_r3_materials():
+    """Plinth variants carry the splash zone, pitched roofs the roof_tiles set at its own tile, brick the macro drift;
+    tint_linear stays scoped to the building envelope (ADR 0086 is a separate task)."""
+    from streetscape.materials import M
+    for k in ("plinth_dark", "plinth_grey"):
+        assert M[k]["splash_h"] == 0.5 and M[k]["tint_linear"] and "runoff" not in M[k]
+    for k in ("roof_tiles_red", "roof_tiles_brown", "roof_metal_graphite"):
+        assert M[k]["texture_set"] == "roof_tiles" and M[k]["set_tile"]
+    assert M["brick_red"]["macro"][1] > 0.06
+    r, g, b = M["brick_red"]["color"]
+    assert r / b < 0.26 / 0.07                                                   # less saturated than r10
+    assert not M["concrete_fence"].get("tint_linear") and not M["yard_paving"].get("tint_linear")
+    spec = json.loads((REPO / "art-source" / "world" / "materials" / "materials_spec.json").read_text(encoding="utf-8"))
+    assert spec["sets"]["roof_tiles"]["kind"] == "modulation_set"
+    pl = spec["sets"]["plaster"]                    # r10: albedo p05-p95 0.447-0.551, relief -3.2..+2.5 mm ('pepper')
+    assert pl["albedo"]["p95"] - pl["albedo"]["p05"] < 0.07
+    assert pl["height_range_m"][1] - pl["height_range_m"][0] < 0.5 * 0.0057
+    assert M["plaster_grey"]["set_tile"] and M["plinth_dark"]["set_tile"]

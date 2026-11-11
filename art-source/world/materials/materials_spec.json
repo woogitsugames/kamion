@@ -888,7 +888,7 @@
           ],
           "texel_mm": 1.47,
           "dir": "brick/High",
-          "png_bytes": 5835221,
+          "png_bytes": 5803235,
           "files": [
             "T_brick_BaseColor.png",
             "T_brick_MaskMap.png",
@@ -911,7 +911,7 @@
           ],
           "texel_mm": 2.94,
           "dir": "brick/Medium",
-          "png_bytes": 1661685,
+          "png_bytes": 1652866,
           "files": [
             "T_brick_BaseColor.png",
             "T_brick_MaskMap.png",
@@ -934,7 +934,7 @@
           ],
           "texel_mm": 5.88,
           "dir": "brick/Low",
-          "png_bytes": 446617,
+          "png_bytes": 445791,
           "files": [
             "T_brick_BaseColor.png",
             "T_brick_MaskMap.png",
@@ -956,16 +956,16 @@
         0.00406
       ],
       "albedo": {
-        "mean_lum_linear": 0.4989,
-        "p05": 0.3677,
-        "p95": 0.707,
+        "mean_lum_linear": 0.4999,
+        "p05": 0.3062,
+        "p95": 0.6534,
         "mean_rgb_linear": [
+          0.4998,
           0.4999,
-          0.4987,
-          0.4977
+          0.4998
         ]
       },
-      "hf_ratio_albedo": 0.0295,
+      "hf_ratio_albedo": 0.0215,
       "ao_mean": 0.916
     },
     "car_grime": {
@@ -3219,7 +3219,7 @@
           ],
           "texel_mm": 1.95,
           "dir": "plaster/High",
-          "png_bytes": 6129485,
+          "png_bytes": 4675108,
           "files": [
             "T_plaster_BaseColor.png",
             "T_plaster_MaskMap.png",
@@ -3242,7 +3242,7 @@
           ],
           "texel_mm": 3.91,
           "dir": "plaster/Medium",
-          "png_bytes": 1593377,
+          "png_bytes": 1232582,
           "files": [
             "T_plaster_BaseColor.png",
             "T_plaster_MaskMap.png",
@@ -3265,14 +3265,14 @@
           ],
           "texel_mm": 7.81,
           "dir": "plaster/Low",
-          "png_bytes": 372596,
+          "png_bytes": 299036,
           "files": [
             "T_plaster_BaseColor.png",
             "T_plaster_MaskMap.png",
             "T_plaster_Normal.png",
             "T_plaster_Var.png"
           ],
-          "smoothness_mean": 0.08,
+          "smoothness_mean": 0.081,
           "astc": {
             "BaseColor": "8x8",
             "Normal": "8x8",
@@ -3283,21 +3283,122 @@
         }
       },
       "height_range_m": [
-        -0.00318,
-        0.00252
+        -0.00039,
+        0.00033
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.5001,
+        "p05": 0.4707,
+        "p95": 0.5303,
+        "mean_rgb_linear": [
+          0.5002,
+          0.5002,
+          0.5002
+        ]
+      },
+      "hf_ratio_albedo": 0.1106,
+      "ao_mean": 0.995
+    },
+    "roof_tiles": {
+      "tile_m": [
+        1.4,
+        1.4
+      ],
+      "slots": [
+        "roof_tiles_*",
+        "roof_metal_*"
+      ],
+      "note": "S-profile roof tile courses, roll pitch 0.20 m, gauge 0.35 m (u along the eave, v up the slope).",
+      "uv": "mesh_uv0_metres (u along, v up)",
+      "kind": "modulation_set",
+      "albedo_target_mean_lum_linear": 0.5,
+      "files": {
+        "High": {
+          "res": [
+            512,
+            512
+          ],
+          "texel_mm": 2.73,
+          "dir": "roof_tiles/High",
+          "png_bytes": 1186456,
+          "files": [
+            "T_roof_tiles_BaseColor.png",
+            "T_roof_tiles_MaskMap.png",
+            "T_roof_tiles_Normal.png",
+            "T_roof_tiles_Var.png"
+          ],
+          "smoothness_mean": 0.199,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 622155
+        },
+        "Medium": {
+          "res": [
+            256,
+            256
+          ],
+          "texel_mm": 5.47,
+          "dir": "roof_tiles/Medium",
+          "png_bytes": 266662,
+          "files": [
+            "T_roof_tiles_BaseColor.png",
+            "T_roof_tiles_MaskMap.png",
+            "T_roof_tiles_Normal.png",
+            "T_roof_tiles_Var.png"
+          ],
+          "smoothness_mean": 0.189,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 121460
+        },
+        "Low": {
+          "res": [
+            128,
+            128
+          ],
+          "texel_mm": 10.94,
+          "dir": "roof_tiles/Low",
+          "png_bytes": 53668,
+          "files": [
+            "T_roof_tiles_BaseColor.png",
+            "T_roof_tiles_MaskMap.png",
+            "T_roof_tiles_Normal.png",
+            "T_roof_tiles_Var.png"
+          ],
+          "smoothness_mean": 0.181,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 21845
+        }
+      },
+      "height_range_m": [
+        -0.00027,
+        0.03622
       ],
       "albedo": {
         "mean_lum_linear": 0.5,
-        "p05": 0.4469,
-        "p95": 0.5514,
+        "p05": 0.4174,
+        "p95": 0.5812,
         "mean_rgb_linear": [
           0.5,
           0.5,
           0.5
         ]
       },
-      "hf_ratio_albedo": 0.2233,
-      "ao_mean": 0.978
+      "hf_ratio_albedo": 0.0529,
+      "ao_mean": 0.925
     },
     "sandwich_ribbed": {
       "tile_m": [

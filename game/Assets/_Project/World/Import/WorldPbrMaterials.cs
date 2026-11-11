@@ -278,12 +278,20 @@ namespace Game.World.Import
                 // D38 (ADR 0060): grass chroma x1.45 in the set -> refill re-measured (Medium, Var.B < 0.1)
                 mat.SetVector("_GrassFill", new Vector4(0.072f, 0.114f, 0.011f, 1f));   // linear, no sRGB conversion
             }
-            if (id.StartsWith("hall_wall") || id.StartsWith("plaster_") || id == "panel_concrete" || id == "brick_red" || id == "hall_plinth" || Runoff(def))
+            // ADR 0091: manifest "splash_h" (m) puts the splash zone on any wall material (plinths) with its own height
+            bool splashH = def.Get("splash_h") != null;
+            if (id.StartsWith("hall_wall") || id.StartsWith("plaster_") || id == "panel_concrete" || id == "brick_red" || id == "hall_plinth" || Runoff(def) || splashH)
             {
                 mat.EnableKeyword("_SPLASH");
-                mat.SetFloat("_SplashHeight", id == "hall_plinth" ? 0.35f : 0.6f);
+                mat.SetFloat("_SplashHeight", splashH ? (float)Num(def.Get("splash_h")) : id == "hall_plinth" ? 0.35f : 0.6f);
             }
             if (Runoff(def)) mat.SetFloat("_MacroStrength", 0.12f);   // panel-to-panel tone drift of a 600 m facade (0071)
+            // ADR 0091: manifest "macro": [size m, strength] overrides the macro tone drift (brick: firing lots)
+            if (def.Get("macro") is List<object> mc && mc.Count >= 2)
+            {
+                mat.SetFloat("_MacroSize", (float)Num(mc[0]));
+                mat.SetFloat("_MacroStrength", (float)Num(mc[1]));
+            }
             bool plasterRunoff = def.Get("runoff") is bool pr && pr;   // ADR 0081: plaster / panel walls of flat-roofed blocks and offices
             if (id.StartsWith("hall_wall") || Runoff(def) || plasterRunoff)
             {
