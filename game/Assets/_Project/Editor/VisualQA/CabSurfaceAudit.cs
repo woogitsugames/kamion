@@ -20,6 +20,7 @@ namespace Game.Editor.VisualQA
             try
             {
                 string output = EditorTools.Arg("-cabOutput", Path.Combine(EditorTools.RepoRoot, "artifacts/cab-r1/surface-audit"));
+                string tier = EditorTools.Arg("-cabTier", "High"), light = EditorTools.Arg("-cabLighting", "clear");
                 foreach (string mode in new[] { "baseline", "roughness-flat", "detail-off", "wear-flat", "ao-flat", "tint-flat" })
                 {
                     var copies = new List<Mesh>();
@@ -62,7 +63,7 @@ namespace Game.Editor.VisualQA
                     EditorSceneManager.sceneOpened += Prepare;
                     try
                     {
-                        int rendered = VisualQaRunner.Render("WorldC", 1920, 1080, "Low", Path.Combine(output, mode), "overcast", "cab-grain,cab-dash");
+                        int rendered = VisualQaRunner.Render(tier == "High" ? "WorldC_High" : "WorldC", 1920, 1080, tier, Path.Combine(output, mode), light, "cab-grain,cab-dash");
                         if (rendered != 2) throw new InvalidOperationException("Expected two surface audit views, got " + rendered);
                     }
                     finally
