@@ -963,3 +963,11 @@ local keyword, instancing enabled and diagnostic version1. This confirms saved
 binding, not executed GPU output. No fresh BEFORE: original368 R3 baseline is
 immutable. Native parity/readback/four-target focus now pending.
 NEXT COMMAND: Get-Content C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-car-paint/artifacts/car-paint-r1/STATUS.md -Tail 8
+
+Step 88: ROOT compared actual saved plate YAML against R3 snapshot. Texture/
+material values match except expected shader/keyword/version, but disabled
+MOTIONVECTORS pass was lost: old disabledShaderPasses contains MOTIONVECTORS,
+new list empty. Sent concrete runtime finding to G/E; preserve pass-enabled
+state in Configure/reimport before focus. Potential extra motion work is not
+a measured draw regression. Focus is still gated on this correction/proof.
+NEXT COMMAND: Get-Content C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-car-paint/artifacts/car-paint-r1/STATUS.md -Tail 8
