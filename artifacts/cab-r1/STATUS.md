@@ -36,3 +36,4 @@ Zapisano baseline High clear, siedem kamer i sześć natywnych RT z identyfikato
 Zapisano baseline High overcast, siedem kamer i sześć natywnych RT z identyfikatorem wnętrza. Następny krok: kontynuować macierz lub porównać PNG.
 Poprawiono błąd składni zmiennej Stage przed dwukropkiem w helperze route-0112.ps1. Nie uruchomiono przez ten błąd żadnego procesu Unity ani slotu. Następny krok: ponowić route-0112 baseline.
 Zapisano baseline: pełna macierz Low overcast z kamerami Gate3, osobne draws instancji w stats.txt. Następny krok: porównać pełne stats baseline/result-0112 i obejrzeć arkusze.
+Obejrzano arkusze wszystkich 28 bazowych PNG kabiny. Porównanie compare-0112.py sprawdza również pełną macierz route-all i zgłasza brak wiersza instancji jako błąd, zamiast zastępować go zerem. Lokalny cache .venv-cab wyłączono z indeksowania w git/info/exclude. Następny krok: koniec route baseline, aktywacja V/VI i BuildBatch.
