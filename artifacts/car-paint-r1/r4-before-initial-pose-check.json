@@ -1,0 +1,383 @@
+{
+  "note": "Initial/warm-up observer check only; final fullcondition check required",
+  "fields": [
+    "cameraParents",
+    "vehicleHierarchy",
+    "regionRoots",
+    "view",
+    "projection",
+    "pixelRect",
+    "targetWidth",
+    "targetHeight"
+  ],
+  "cameras": [
+    {
+      "camera": "biezenstwa-above",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "cab-dash",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "cab-driver",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "cab-gate",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "cab-grain",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "cab-left",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "cab-materials",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "cab-mirror-front",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "cab-mirrors-left",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "cab-mirrors-right",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "cab-right",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "cab-seat",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "cab-seat-entry",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "car_lod_08",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "car_lod_12",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "car_lod_15",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "car_lod_25",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "chase",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "dk8-dk19-exit",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "driver-andersa-to-putry",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "edge-east",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "edge-north",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "edge-south",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "edge-west",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "fire-station-abeam",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "fire-station-above",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "fire-station-ref7197",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "fire-station-route",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "g3a-eye-s0262",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "g3a-rondo-bie-approach",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "g3b-eye-s1482",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "g3b-rondo-putry-approach",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "glass_front",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "g_current_black_lod_05",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "g_current_black_lod_20",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "g_current_black_lod_45",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "g_current_black_wheel_02",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "g_dirt_level_0",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "g_dirt_level_1",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "g_dirt_level_2",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "g_dirt_level_3",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "kwadrat-park-gate",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "photo-biezenstwa-ground",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "putry-above",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "r10b_black_05",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "r10b_black_20",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "r10b_black_45",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "r10b_blue_05",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "r10b_blue_20",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "r10b_grey_05",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "r10b_grey_20",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "r10b_silver_05",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "r10_block_1",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "r10_block_2",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "r10_block_3",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "r10_block_4",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "r10_block_5",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "r10_fence_1",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "r10_fence_2",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "r10_fence_3",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "r10_front_04",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "r10_hall_1",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "r10_hall_2",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "r10_hall_3",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "r10_hall_4",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "r10_house_1",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "r10_house_2",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "r10_office_1",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "r10_office_2",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "r10_rear_04",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "r10_shed_1",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "r10_shed_2",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "r10_shed_3",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "r10_wheel_02",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "r4_dirt_candidate_3",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "route-onramp-andersa-above",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "route-onramp-andersa",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "route-putry-approach",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "route-putry-entry-signs",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "stretch-01",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "stretch-02",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "stretch-03",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "stretch-04",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "stretch-05-docks",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "trailer-34",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "trailer-side",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "truck-34",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "truck-34r",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "truck-at-gate",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "truck-front",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "truck-rear34",
+      "begin_end_equal": true
+    },
+    {
+      "camera": "truck-side",
+      "begin_end_equal": true
+    }
+  ]
+}

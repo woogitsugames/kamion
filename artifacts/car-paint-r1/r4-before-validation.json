@@ -1,0 +1,35 @@
+{
+  "status": "canonical BEFORE complete; candidate still inactive",
+  "frames": 368,
+  "conditions": [
+    {
+      "condition": "Low-clear",
+      "frames": 92,
+      "pose_mismatches": 0,
+      "stats_sha256": "b75c22c8daf5c5376d0b9b365380b028b56f75478b16194412adbd3ed960a633"
+    },
+    {
+      "condition": "Low-overcast",
+      "frames": 92,
+      "pose_mismatches": 0,
+      "stats_sha256": "6cf2411f593583d7710ff11de72944aa2e4852d53ab67c16433c859f9fc5ff3d"
+    },
+    {
+      "condition": "High-clear",
+      "frames": 92,
+      "pose_mismatches": 0,
+      "stats_sha256": "8078d0349dcd65dbac7880a162543f2a6c59fdc92111485fbcd9092c362f4814"
+    },
+    {
+      "condition": "High-overcast",
+      "frames": 92,
+      "pose_mismatches": 0,
+      "stats_sha256": "9009466f4742a2c68ec18ffa90bdf46d81979344a2d42402c8c15b2bafb4b936"
+    }
+  ],
+  "raw192_valid": true,
+  "fixture90_unchanged": true,
+  "sourceHead": "1fe4c37f",
+  "material_note": "NativeGetColor is authored state; actual GPU colour readback not claimed",
+  "internal_dimensions": "UNVERIFIED beyond targetRT/liveURP packet"
+}

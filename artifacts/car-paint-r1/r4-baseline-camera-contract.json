@@ -1,15 +1,19 @@
 {
-  "expected_camera_count": 84,
+  "expected_camera_count": 92,
   "expected_camera_ids": [
     "biezenstwa-above",
     "cab-dash",
     "cab-driver",
     "cab-gate",
+    "cab-grain",
     "cab-left",
+    "cab-materials",
     "cab-mirror-front",
     "cab-mirrors-left",
     "cab-mirrors-right",
     "cab-right",
+    "cab-seat",
+    "cab-seat-entry",
     "car_lod_08",
     "car_lod_12",
     "car_lod_15",
@@ -17,6 +21,10 @@
     "chase",
     "dk8-dk19-exit",
     "driver-andersa-to-putry",
+    "edge-east",
+    "edge-north",
+    "edge-south",
+    "edge-west",
     "fire-station-abeam",
     "fire-station-above",
     "fire-station-ref7197",
@@ -92,11 +100,22 @@
     "High-clear",
     "High-overcast"
   ],
-  "expected_frames": 336,
+  "expected_frames": 368,
   "camera_json_sha256": "ed4a285c73998f4764495c9fa0cc44db05139783fd27fe11fed7d17967c024bc",
   "output_dimensions": [
     2340,
     1080
   ],
-  "note": "Expected registry from historical81 plus3 additive controls; actual registry and buffer/pose packets must be verified after capture. Native PNG dimensions are not internal pipeline proof."
+  "note": "Actual current-main warm-up registry92, including8 existing controls absent from historical81. Input union poses unchanged; final PNG/stat/pose parity still required. Native PNG dimensions are not internal pipeline proof.",
+  "initial_expected_camera_count": 84,
+  "additional_current_main_registry_ids": [
+    "cab-grain",
+    "cab-materials",
+    "cab-seat",
+    "cab-seat-entry",
+    "edge-east",
+    "edge-north",
+    "edge-south",
+    "edge-west"
+  ]
 }
