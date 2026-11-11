@@ -34,5 +34,15 @@ plan_* = ortofoto | generator, renders_* = kamery Unity, scripts = narzędzia r3
 - b3 (bez Unity): fidelity edge p50 0,36 / p95 2,304 (= b0); swept G3-A wide −0,10 / lane −1,12, G3-B −0,14, RING-B +1,61/+1,75,
   min. prześwit do propów 0,69–0,88 (= b0). Szacunek budżetu (`mesh_budget.frame_estimate`, Low): b2 +5…+15 %, b3 −6…+6,6 % —
   stąd niemeszowany kołnierz + tolerancja 2,5 cm w b4.
-  NASTĘPNY KROK: `cat artifacts/junctions-r4/logs/b4_loop.out artifacts/junctions-r4/logs/b4_unity.out`; obejrzeć
-  `artifacts/junctions-r4/renders_b4_high/*.png`; `python artifacts/junctions-r4/scripts/stats_cmp.py artifacts/junctions-r4/renders_b0_low/stats.txt artifacts/junctions-r4/renders_b4_low/stats.txt`
+- b4 (Unity: import + 53 kamery High overcast + Low clear, `renders_b4_*`, `view_b4/`): mediany równo z krawężnikiem, murki zniknęły
+  (`p0_median_slot_eye`, `r2_fork_link_eye`, `eye_putry_n`), barieroporęcz na pomoście Bieżeństwa + bariera przy łącznicy
+  (`r4_deck_bz_eye`, `r4_link_bz_a`), pole n100 N z pasami, strzałki P-9, rozdział wsch. wg ortofoto. Low `stats.txt`: draws +6…+10 na
+  kamerach strony Bieżeństwa (materiał `verge_grass` w 23 chunkach drogi) → pasy trawy przeniesione do prymitywów terenu (b6).
+- b6/b7: rozdział wsch. wraca na oś OSM na styku z wiaduktem (b4/b6: furniture_in_lane 9 / 2, linie na kapie); linia segregacyjna P-1
+  autorska. b7: road_consistency 65 = b0 (7 / 54 / 2 / 2).
+- b8 (sha 7d503935): skarpa pasa 1 : 2, pasy trawy w `terrain_walls_qa.verge_strips` (steep 226, skirt 18, max 0,627 m), ściany
+  terenu 4 (b0: 3; yard_concrete 1 → 2, w ratchecie), szacunek siatek Low −9,9…+1,3 %, High −6,0…+0,5 % względem b0.
+  Unity b8 czeka na zdjęcie blokad PHONE_RUN / GPT_UNITY_HOLD (od 15:53).
+  NASTĘPNY KROK: `cat artifacts/junctions-r4/logs/b8_loop.out artifacts/junctions-r4/logs/b8_unity.out`; po renderach:
+  `python artifacts/junctions-r4/scripts/stats_cmp.py artifacts/junctions-r4/renders_b0_low/stats.txt artifacts/junctions-r4/renders_b8_low/stats.txt`;
+  potem `pwsh scripts/test.ps1 -Platform EditMode`, `pwsh scripts/test.ps1 -Platform PlayMode -Filter "WorldCRouteTests|WorldCBarrierTests"`
