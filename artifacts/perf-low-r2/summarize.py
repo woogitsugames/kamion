@@ -6,13 +6,18 @@ def pct(a, q):
 def summ(d):
     f = os.path.join(d, 'frametimes.csv')
     if not os.path.exists(f): return None
-    rows = [r for r in csv.DictReader(open(f)) if float(r['t_s']) > 25]
+    allr = list(csv.DictReader(open(f)))
+    tlast = float(allr[-1]['t_s']) if allr else 0
+    rows = [r for r in allr if float(r['t_s']) > 25]
     ft = [float(r['frame_ms']) for r in rows]
+    # ADR 0113: device-metrics runs screencap + dumpsys meminfo while the app still renders (last ~1.5 s of the CSV)
+    ftx = [float(r['frame_ms']) for r in rows if float(r['t_s']) < tlast - 1.5]
     g = [float(r['gpu_ms']) for r in rows if float(r['gpu_ms']) > 0]
     c = [float(r['cpu_main_ms']) for r in rows if float(r['cpu_main_ms']) > 0]
     span = sum(ft)/1000
     out = dict(n=len(ft), fps=len(ft)/span if span else 0, p50=pct(ft,.5), p95=pct(ft,.95), p99=pct(ft,.99),
-               gp50=pct(g,.5), gp95=pct(g,.95), gp99=pct(g,.99), cp50=pct(c,.5), cp95=pct(c,.95), over40=sum(x>40 for x in ft))
+               gp50=pct(g,.5), gp95=pct(g,.95), gp99=pct(g,.99), cp50=pct(c,.5), cp95=pct(c,.95), over40=sum(x>40 for x in ft),
+               p99x=pct(ftx,.99), over40x=sum(x>40 for x in ftx), first5=sum(x>40 for r,x in zip(rows,ft) if float(r['t_s']) < 30))
     # A/B rows
     ab = {}
     for r in rows:
@@ -29,10 +34,10 @@ def summ(d):
     return out
 dirs = []
 for a in sys.argv[1:]: dirs += sorted(glob.glob(a))
-print(f"{'run':28} {'n':>5} {'fps':>6} {'p50':>6} {'p95':>6} {'p99':>6} {'>40':>4} {'gp50':>6} {'gp95':>6} {'gp99':>6} {'cp50':>6} {'cp95':>6} {'pss':>5} {'T':>5}")
+print(f"{'run':28} {'n':>5} {'fps':>6} {'p50':>6} {'p95':>6} {'p99':>6} {'>40':>4} {'gp50':>6} {'gp95':>6} {'gp99':>6} {'cp50':>6} {'cp95':>6} {'pss':>5} {'T':>5} {'p99x':>6} {'>40x':>4} {'5s':>3}")
 for d in dirs:
     s = summ(d)
     if not s: continue
-    print(f"{os.path.basename(d):28} {s['n']:5d} {s['fps']:6.2f} {s['p50']:6.2f} {s['p95']:6.2f} {s['p99']:6.2f} {s['over40']:4d} {s['gp50']:6.2f} {s['gp95']:6.2f} {s['gp99']:6.2f} {s['cp50']:6.2f} {s['cp95']:6.2f} {s.get('pss') or 0:5.0f} {s.get('temp') or 0:5.1f}")
+    print(f"{os.path.basename(d):28} {s['n']:5d} {s['fps']:6.2f} {s['p50']:6.2f} {s['p95']:6.2f} {s['p99']:6.2f} {s['over40']:4d} {s['gp50']:6.2f} {s['gp95']:6.2f} {s['gp99']:6.2f} {s['cp50']:6.2f} {s['cp95']:6.2f} {s.get('pss') or 0:5.0f} {s.get('temp') or 0:5.1f} {s['p99x']:6.2f} {s['over40x']:4d} {s['first5']:3d}")
     if s['ab']: print('   ab', s['ab'])
     if s.get('passab'): print('   ', s['passab'])
