@@ -51,3 +51,6 @@ Przyczyna ponownego PBR: 2 stare mapy asphalt_detail_photo; build_all pomijał i
 
 Import before complete.
 NASTĘPNY KROK: pwsh artifacts/furniture-r1/run-validation.ps1 (resume using completed evidence directories; do not overwrite baseline)
+
+Ground/UV/material audit before complete.
+NASTĘPNY KROK: pwsh artifacts/furniture-r1/run-validation.ps1 (resume using completed evidence directories; do not overwrite baseline)
