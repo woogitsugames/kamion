@@ -1,12 +1,12 @@
 {
   "adr": "0085-far-field-backdrop",
   "feature_counts": {
-    "buildings": 8470,
+    "buildings": 8447,
     "buildings_by_typology": {
-      "block": 2474,
-      "hall": 1620,
+      "block": 2472,
+      "hall": 1602,
       "house": 947,
-      "office": 3429
+      "office": 3426
     },
     "chimneys": 16,
     "forest_polygons": 472,
@@ -15,6 +15,9 @@
   },
   "id": "bialystok-industrial-c-far-field",
   "region": "bialystok-industrial-c",
+  "region_inputs_sha256": {
+    "region/buildings.geojson": "fc62f0be4c39546471b2d3ec437eaebe2bf0c068f12d5e617c89cdae996d9333"
+  },
   "ring_bounds_local_m": {
     "inner_half_m": 1024.0,
     "outer_half_m": 4200.0

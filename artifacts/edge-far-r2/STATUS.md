@@ -34,3 +34,5 @@
 - FULL GIS PASS: 388 passed, 1 xfailed in 536.80s; no skipped tests. Baseline 4 stale generated failures resolved. Log gis-after.log.
 - Rendering continuation has passed the GIS gate and waits for local material preparation completion, then PHONE_RUN; owner confirmation remains respected.
 - NEXT: Get-Content artifacts/edge-far-r2/materials-prepare.log -Tail 10; Get-Content artifacts/edge-far-r2/run-evidence.log -Tail 20
+- Committing regenerated world/fidelity/source manifests after the passing full GIS run; before-render phase will temporarily regenerate only the far-field baseline, then restore final r2 via the generator.
+- NEXT: Get-Content artifacts/edge-far-r2/run-evidence.log -Tail 20
