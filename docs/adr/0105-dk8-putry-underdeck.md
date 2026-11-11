@@ -1,6 +1,6 @@
 # ADR 0105 — DK8 / Rondo Putry: konstrukcja pod pomostem
 
-Status: implementacja; weryfikacja wizualna i EditMode w toku. 2026-11-11.
+Status: gotowe do niezależnej recenzji lidera; testy i budżet edytora spełnione. 2026-11-11.
 
 ## Zakres i źródła
 
@@ -63,10 +63,19 @@ głowice, łożyska, rury, skrzydła, schody, zacieki i położenie plam farby s
   gruby LOD terenu nie pozwalają ocenić końcowego materiału ani kontaktu w Unity.
   Końcowy GIS r4: **377 PASS / 1 XFAIL**, 663,87 s, w tym deterministyczny eksport;
   `artifacts/viaduct-r10/final-gis-r4.log`.
-- Unity uruchomiono dopiero po zwolnieniu PHONE_RUN (~11:54). Pierwszy import
-  przeszedł, EditMode 226/226 PASS. Para before/after ujawniła +1 draw od dodatkowej
-  trawy; finalny import i rendery bez nowych kęp są w toku. Bez uruchamiania adb.
+- Unity uruchomiono dopiero po zwolnieniu PHONE_RUN (~11:54). Końcowy import
+  Low+High PASS, EditMode **226/226 PASS** (`EditMode-final.xml`).
+- Obejrzano 20 PNG before + 28 PNG after, Low/High × clear/overcast:
+  cztery `paired-*.jpg`, `details-final.jpg`, `reference-render.jpg`.
+  Zestawienie ze zdjęciem jest referencją rodziny konstrukcji, **nie** dopasowaną
+  pozą ani dowodem side-by-side bramki 3. Samokrytyka: `SELF_REVIEW.md`.
+- `unity-budget.json`: 20 par, delta drawsEst **0 w każdej**, Low maks.
+  **+1,408% tris** (limit +3%). To szacunek SceneStats przed SRP batching,
+  wraz z instancjami; nie licznik sprzętowy. Brak regresji budżetu tego strumienia.
+- Fixture GIS zapisuje raw do temp, a manifest do generated/. Cache importu
+  uzgodniono z testowanym manifestem: SHA256 wszystkich 128 GLB i 64 plików instancji
+  zgodne (`cache-reconciliation.json`). Usunięto tylko 8 odrzuconych kęp.
 
 Dowody i aktualny stan: `artifacts/viaduct-r10/STATUS.md`, `REPORT.md`,
-`generator-budget.json`, `lod2-audit.json`, logi i PNG przed/po po zwolnieniu telefonu.
+`generator-budget.json`, `unity-budget.json`, `lod2-audit.json`, logi i PNG przed/po.
 Brak telefonu w tym strumieniu; pomiar urządzeń i niezależny visual-critic po stronie lidera.

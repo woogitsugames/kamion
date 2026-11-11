@@ -48,3 +48,7 @@
 - Wykryto różnicę fixture/import: test_world_roads buduje raw do temp (po sukcesie czyszczony), aktualizuje jednak generated/world_manifest.json. Lokalny raw nadal miał 8 odrzuconych kęp.
 - reconcile_instances.py odtworzył wyłącznie usunięcie tych 8 instancji; PRZED zapisem sprawdził wszystkie 64 wynikowe SHA instancji i 128 GLB względem manifestu z zielonego testu. Wszystkie 192 pliki zgodne byte-for-byte z testowanym wyjściem, bez nowej geometrii. Następne importy automatycznie sprawdzają ten warunek.
 - NASTĘPNY KROK: pwsh artifacts/viaduct-r10/validate-after.ps1 -GisLog artifacts/viaduct-r10/final-gis-r4.log
+- FINAL: import Low+High PASS, EditMode 226/226 PASS (EditMode-final.xml), 20 before + 28 świeżych after PNG. Obejrzano wszystkie cztery arkusze par, detale i zestawienie z CC0 (inna poza; nie gate3 matched SBS).
+- Końcowy SceneStats: 20/20 par delta drawsEst 0; maks. Low tris +1.408% <3%. Efekty uboczne Unity cofnięte, worktree czysty przed zapisem dokumentacji.
+- SELF_REVIEW.md opisuje ciemny spód, niezweryfikowane wymiary i ograniczenia kamery. Gotowe do niezależnej recenzji lidera; bez merge/push i bez telefonu.
+- NASTĘPNY KROK (lider): git merge gpt-viaduct-r1; uv run --project tools/worldgen python tools/worldgen/roads/build_world.py --region bialystok-industrial-c; pwsh scripts/import-region.ps1 -Region bialystok-industrial-c
