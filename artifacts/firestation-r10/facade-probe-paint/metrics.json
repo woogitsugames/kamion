@@ -1,0 +1,245 @@
+{
+  "method": "EXACT locked baseline material/UV clean-paint masks reused. Report z5-8 band to avoid lower changedplants; overlays require validation. No RGB threshold filters hide dark paint.",
+  "results": {
+    "Low-overcast": {
+      "gable": {
+        "all_clean_above2m": {
+          "pixels": 40340,
+          "median_rgb_srgb": [
+            105.0,
+            123.0,
+            142.0
+          ],
+          "mean_rgb_srgb": [
+            105.19645513138325,
+            123.22902825979178,
+            141.9486861675756
+          ],
+          "median_luma_srgb": 120.545
+        },
+        "matched_z2to5": {
+          "pixels": 6854,
+          "median_rgb_srgb": [
+            105.0,
+            123.0,
+            141.0
+          ],
+          "mean_rgb_srgb": [
+            104.78844470382259,
+            122.54318646046104,
+            140.76539247154946
+          ],
+          "median_luma_srgb": 120.4728
+        },
+        "matched_z5to8": {
+          "pixels": 18932,
+          "median_rgb_srgb": [
+            105.0,
+            123.0,
+            141.0
+          ],
+          "mean_rgb_srgb": [
+            105.12798436509614,
+            123.1394992605113,
+            141.89932389604903
+          ],
+          "median_luma_srgb": 120.4728
+        }
+      },
+      "wing": {
+        "all_clean_above2m": {
+          "pixels": 33110,
+          "median_rgb_srgb": [
+            109.0,
+            127.0,
+            146.0
+          ],
+          "mean_rgb_srgb": [
+            106.61371186952583,
+            124.26874056176382,
+            141.12259136212626
+          ],
+          "median_luma_srgb": 124.545
+        },
+        "matched_z2to5": {
+          "pixels": 30920,
+          "median_rgb_srgb": [
+            108.0,
+            127.0,
+            146.0
+          ],
+          "mean_rgb_srgb": [
+            106.24492238033635,
+            123.87461190168176,
+            140.58868046571797
+          ],
+          "median_luma_srgb": 124.47279999999999
+        },
+        "matched_z5to8": {
+          "pixels": 2190,
+          "median_rgb_srgb": [
+            110.0,
+            129.0,
+            148.0
+          ],
+          "mean_rgb_srgb": [
+            111.82054794520548,
+            129.83333333333334,
+            148.6607305936073
+          ],
+          "median_luma_srgb": 126.192
+        }
+      },
+      "tower": {
+        "all_clean_above2m": {
+          "pixels": 5349,
+          "median_rgb_srgb": [
+            109.0,
+            128.0,
+            147.0
+          ],
+          "mean_rgb_srgb": [
+            110.18377266778838,
+            128.0514114787811,
+            147.15086932136848
+          ],
+          "median_luma_srgb": 125.33239999999999
+        },
+        "matched_z5to8": {
+          "pixels": 1364,
+          "median_rgb_srgb": [
+            109.0,
+            128.0,
+            148.0
+          ],
+          "mean_rgb_srgb": [
+            109.86436950146627,
+            127.75366568914956,
+            147.94941348973606
+          ],
+          "median_luma_srgb": 125.33239999999999
+        }
+      }
+    },
+    "High-overcast": {
+      "gable": {
+        "all_clean_above2m": {
+          "pixels": 43083,
+          "median_rgb_srgb": [
+            112.0,
+            131.0,
+            150.0
+          ],
+          "mean_rgb_srgb": [
+            111.67578859410905,
+            130.7704430982058,
+            149.60599308311862
+          ],
+          "median_luma_srgb": 128.2642
+        },
+        "matched_z2to5": {
+          "pixels": 7115,
+          "median_rgb_srgb": [
+            111.0,
+            130.0,
+            150.0
+          ],
+          "mean_rgb_srgb": [
+            111.02825017568517,
+            129.79226985242445,
+            148.0619817287421
+          ],
+          "median_luma_srgb": 127.4768
+        },
+        "matched_z5to8": {
+          "pixels": 21600,
+          "median_rgb_srgb": [
+            112.0,
+            131.0,
+            150.0
+          ],
+          "mean_rgb_srgb": [
+            111.80175925925926,
+            130.85962962962964,
+            149.69967592592593
+          ],
+          "median_luma_srgb": 128.2602
+        }
+      },
+      "wing": {
+        "all_clean_above2m": {
+          "pixels": 29244,
+          "median_rgb_srgb": [
+            113.0,
+            133.0,
+            153.0
+          ],
+          "mean_rgb_srgb": [
+            108.6130830255779,
+            127.63349746956641,
+            145.0421966899193
+          ],
+          "median_luma_srgb": 130.6946
+        },
+        "matched_z2to5": {
+          "pixels": 27147,
+          "median_rgb_srgb": [
+            113.0,
+            133.0,
+            153.0
+          ],
+          "mean_rgb_srgb": [
+            108.2103731535713,
+            127.17239473975025,
+            144.34954138578848
+          ],
+          "median_luma_srgb": 130.6172
+        },
+        "matched_z5to8": {
+          "pixels": 2097,
+          "median_rgb_srgb": [
+            114.0,
+            134.0,
+            155.0
+          ],
+          "mean_rgb_srgb": [
+            113.82641869337148,
+            133.60276585598473,
+            154.00906056270864
+          ],
+          "median_luma_srgb": 131.1238
+        }
+      },
+      "tower": {
+        "all_clean_above2m": {
+          "pixels": 5349,
+          "median_rgb_srgb": [
+            114.0,
+            134.0,
+            153.0
+          ],
+          "mean_rgb_srgb": [
+            113.9070854365302,
+            133.24247522901476,
+            153.02187324733595
+          ],
+          "median_luma_srgb": 130.9072
+        },
+        "matched_z5to8": {
+          "pixels": 1364,
+          "median_rgb_srgb": [
+            114.0,
+            134.0,
+            152.5
+          ],
+          "mean_rgb_srgb": [
+            114.54985337243401,
+            133.70527859237538,
+            152.87390029325513
+          ],
+          "median_luma_srgb": 130.8338
+        }
+      }
+    }
+  }
+}

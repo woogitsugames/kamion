@@ -1,0 +1,38 @@
+{
+  "Low": [
+    {
+      "name": "Spawn_KwadratParkGate",
+      "transform": "--- !u!4 &46627923\nTransform:\n  m_ObjectHideFlags: 0\n  m_CorrespondingSourceObject: {fileID: 0}\n  m_PrefabInstance: {fileID: 0}\n  m_PrefabAsset: {fileID: 0}\n  m_GameObject: {fileID: 46627922}\n  serializedVersion: 2\n  m_LocalRotation: {x: 0, y: 0.96733606, z: 0, w: -0.2534974}\n  m_LocalPosition: {x: 729.57574, y: 10.364564, z: -395.76938}\n  m_LocalScale: {x: 1, y: 1, z: 1}\n  m_ConstrainProportionsScale: 0\n  m_Children: []\n  m_Father: {fileID: 0}\n  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}\n"
+    },
+    {
+      "name": "QA_truck-rear34",
+      "transform": "--- !u!4 &1424696146\nTransform:\n  m_ObjectHideFlags: 0\n  m_CorrespondingSourceObject: {fileID: 0}\n  m_PrefabInstance: {fileID: 0}\n  m_PrefabAsset: {fileID: 0}\n  m_GameObject: {fileID: 1424696145}\n  serializedVersion: 2\n  m_LocalRotation: {x: 0.04359842, y: 0.33846167, z: -0.01570099, w: 0.93983847}\n  m_LocalPosition: {x: -5.2, y: 2, z: -3.6}\n  m_LocalScale: {x: 1, y: 1, z: 1}\n  m_ConstrainProportionsScale: 0\n  m_Children: []\n  m_Father: {fileID: 2041245489}\n  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}\n"
+    },
+    {
+      "name": "QA_trailer-34",
+      "transform": "--- !u!4 &1808388707\nTransform:\n  m_ObjectHideFlags: 0\n  m_CorrespondingSourceObject: {fileID: 0}\n  m_PrefabInstance: {fileID: 0}\n  m_PrefabAsset: {fileID: 0}\n  m_GameObject: {fileID: 1808388706}\n  serializedVersion: 2\n  m_LocalRotation: {x: 0.02280796, y: 0.24246861, z: -0.00570199, w: 0.9698744}\n  m_LocalPosition: {x: -3.6, y: 2.2, z: -16.5}\n  m_LocalScale: {x: 1, y: 1, z: 1}\n  m_ConstrainProportionsScale: 0\n  m_Children: []\n  m_Father: {fileID: 2041245489}\n  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}\n"
+    },
+    {
+      "name": "ControlCameras_A7",
+      "transform": "--- !u!4 &2041245489\nTransform:\n  m_ObjectHideFlags: 0\n  m_CorrespondingSourceObject: {fileID: 0}\n  m_PrefabInstance: {fileID: 0}\n  m_PrefabAsset: {fileID: 0}\n  m_GameObject: {fileID: 2041245488}\n  serializedVersion: 2\n  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}\n  m_LocalPosition: {x: 0, y: 0, z: 0}\n  m_LocalScale: {x: 1, y: 1, z: 1}\n  m_ConstrainProportionsScale: 0\n  m_Children:\n  - {fileID: 1361138340}\n  - {fileID: 1702165965}\n  - {fileID: 527752987}\n  - {fileID: 1010994212}\n  - {fileID: 984734212}\n  - {fileID: 1885422436}\n  - {fileID: 1428083041}\n  - {fileID: 466855107}\n  - {fileID: 1714783714}\n  - {fileID: 1808388707}\n  - {fileID: 980323774}\n  - {fileID: 275623636}\n  - {fileID: 1424696146}\n  - {fileID: 1266900653}\n  - {fileID: 2083176572}\n  m_Father: {fileID: 1465418767}\n  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}\n"
+    }
+  ],
+  "High": [
+    {
+      "name": "Spawn_KwadratParkGate",
+      "transform": "--- !u!4 &391412706\nTransform:\n  m_ObjectHideFlags: 0\n  m_CorrespondingSourceObject: {fileID: 0}\n  m_PrefabInstance: {fileID: 0}\n  m_PrefabAsset: {fileID: 0}\n  m_GameObject: {fileID: 391412705}\n  serializedVersion: 2\n  m_LocalRotation: {x: 0, y: 0.96733606, z: 0, w: -0.2534974}\n  m_LocalPosition: {x: 729.57574, y: 10.364564, z: -395.76938}\n  m_LocalScale: {x: 1, y: 1, z: 1}\n  m_ConstrainProportionsScale: 0\n  m_Children: []\n  m_Father: {fileID: 0}\n  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}\n"
+    },
+    {
+      "name": "ControlCameras_A7",
+      "transform": "--- !u!4 &1214109596\nTransform:\n  m_ObjectHideFlags: 0\n  m_CorrespondingSourceObject: {fileID: 0}\n  m_PrefabInstance: {fileID: 0}\n  m_PrefabAsset: {fileID: 0}\n  m_GameObject: {fileID: 1214109595}\n  serializedVersion: 2\n  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}\n  m_LocalPosition: {x: 0, y: 0, z: 0}\n  m_LocalScale: {x: 1, y: 1, z: 1}\n  m_ConstrainProportionsScale: 0\n  m_Children:\n  - {fileID: 1311197187}\n  - {fileID: 1626477798}\n  - {fileID: 1348463494}\n  - {fileID: 1827488296}\n  - {fileID: 597797699}\n  - {fileID: 1604182036}\n  - {fileID: 1277039110}\n  - {fileID: 1261475456}\n  - {fileID: 1958805555}\n  - {fileID: 1808731119}\n  - {fileID: 1082713145}\n  - {fileID: 1304321556}\n  - {fileID: 1604847411}\n  - {fileID: 1009974237}\n  - {fileID: 1895803029}\n  m_Father: {fileID: 1402357875}\n  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}\n"
+    },
+    {
+      "name": "QA_truck-rear34",
+      "transform": "--- !u!4 &1604847411\nTransform:\n  m_ObjectHideFlags: 0\n  m_CorrespondingSourceObject: {fileID: 0}\n  m_PrefabInstance: {fileID: 0}\n  m_PrefabAsset: {fileID: 0}\n  m_GameObject: {fileID: 1604847410}\n  serializedVersion: 2\n  m_LocalRotation: {x: 0.04359842, y: 0.33846167, z: -0.01570099, w: 0.93983847}\n  m_LocalPosition: {x: -5.2, y: 2, z: -3.6}\n  m_LocalScale: {x: 1, y: 1, z: 1}\n  m_ConstrainProportionsScale: 0\n  m_Children: []\n  m_Father: {fileID: 1214109596}\n  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}\n"
+    },
+    {
+      "name": "QA_trailer-34",
+      "transform": "--- !u!4 &1808731119\nTransform:\n  m_ObjectHideFlags: 0\n  m_CorrespondingSourceObject: {fileID: 0}\n  m_PrefabInstance: {fileID: 0}\n  m_PrefabAsset: {fileID: 0}\n  m_GameObject: {fileID: 1808731118}\n  serializedVersion: 2\n  m_LocalRotation: {x: 0.02280796, y: 0.24246861, z: -0.00570199, w: 0.9698744}\n  m_LocalPosition: {x: -3.6, y: 2.2, z: -16.5}\n  m_LocalScale: {x: 1, y: 1, z: 1}\n  m_ConstrainProportionsScale: 0\n  m_Children: []\n  m_Father: {fileID: 1214109596}\n  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}\n"
+    }
+  ]
+}
