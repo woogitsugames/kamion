@@ -20,3 +20,4 @@ Propozycja obejmuje cztery korony z ortofoto, z niepewnością pozycji około 3 
 Zapisano pary foto before Low-overcast-photo-2048x1536. Następny krok: porównać z photo-references.json.
 Zapisano pary foto before High-clear-photo-1280x720. Następny krok: porównać z photo-references.json.
 Zapisano pary foto before High-clear-photo-2048x1152. Następny krok: porównać z photo-references.json.
+Zapisano pary foto before High-clear-photo-2048x1536. Następny krok: porównać z photo-references.json.
