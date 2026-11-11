@@ -8,3 +8,11 @@
 - Uruchomiony skrypt ablacji telefonu `artifacts/perf-low-r1/phone-diag.ps1` (czeka na brak Unity i PHONE_RUN), uncapped G3-B:
   base / rq_ab mirrors / shadow 0 / msaa 1 / scale 0.6 / trees 0 / sky / a8 0 / base.
 - NASTĘPNY KROK: `pwsh -NoProfile -File artifacts/perf-low-r1/phone-diag.ps1 -Apk C:\Users\matma\Documents\Claude\kamion\artifacts\apk\kamion-0.1.0-43bc53a769-dirty.apk -OutTag diag0 -Segment B -Uncapped -Runs "base0=;ab_mir=rq_ab=mirrors;shadow0=rq_shadow=0;msaa1=rq_msaa=1;scale06=rq_scale=0.6;trees0=rq_trees=0;sky=rq_clouds=-1 rq_haze=0;a8off=rq_a8=0;base1="` (jeśli przerwane), potem analiza `artifacts/perf-low-r1/diag0/*/frametimes.csv`.
+
+## 12:50 — krok 1a: ablacja A16 (G3-B Low, uncapped, APK 43bc53a769-dirty) — `artifacts/perf-low-r1/diag0/summary.txt`
+- base GPU p50 27,9/28,0 ms (cap 30: 30,0 → DVFS rozciąga tylko ~2 ms; GPU naprawdę ~28 ms). Start G3-B (s≈1232–1300) 34–36 ms.
+- Δ GPU p50: lusterka −0,75…−1,25 (rq_ab), cienie off −0,9, MSAA 1× 0, skala 0,6 −4,8 (→ ~13 ms zależne od pikseli przy 0,75,
+  ~15 ms stałe), drzewa off −2,4 (i p99 50→33,5), niebo/mgiełka 0, A8 0.
+- Wniosek: ~11 ms niezależnych od rozdzielczości i niewyjaśnionych → geometria/draws świata, ciężarówka, HUD, blit.
+- Dodane przełączniki diagnostyczne rq_lod/far/mask/props/hud i rq_ab lod|scale|far|props|trees|truck|hud (ab18bf1b); build w toku.
+- NASTĘPNY KROK: `pwsh -NoProfile -File artifacts/perf-low-r1/phone-diag.ps1 -Apk <apk ab18bf1b> -OutTag diag1 -Segment B -Uncapped -Runs "ab_lod=rq_ab=lod;ab_props=rq_ab=props;ab_truck=rq_ab=truck;ab_hud=rq_ab=hud;ab_far=rq_ab=far;ab_trees=rq_ab=trees;ab_scale=rq_ab=scale"`
