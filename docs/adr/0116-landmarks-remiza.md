@@ -36,9 +36,12 @@ Pythona o dużym koszcie zajmują slot `heavy`; import nie uruchamia generatoró
 
 Osobna diagnostyka plamy przy maszcie: mediana Y wybranego ROI na High wynosi
 114,83, po wyłączeniu cieni bezpośrednich 131,12; sąsiedni tynk 131,19.
-Wyłączenie ambient GI albo SSAO pozostawia 114,83. To efekt cieni, prawdopodobnie
-rzucanych przez flagę. Nie dodano do albedo kompensującej jasnej plamy.
+Wyłączenie ambient GI albo SSAO pozostawia 114,83. Dodatkowy promień CPU od tego
+punktu ku słońcu presetu overcast trafia w komórkę atlasu flagi po 6,76 m;
+promienie z jasnych miejsc obok nie trafiają w przeszkodę. Źródłem jest flaga.
+Nie dodano do albedo kompensującej jasnej plamy.
 Dowody i dokładne ROI są w `artifacts/landmarks-r1/wall-patch-diagnostics.json`.
+Geometria przeszkody: `artifacts/landmarks-r1/shadow-occluder.json`.
 
 Ocena wyglądu kandydata w Unity, końcowe wartości barw i pełny budżet: UNVERIFIED,
 import i porównanie fokusowe w toku.

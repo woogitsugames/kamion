@@ -62,3 +62,42 @@ for lod in (0,1):
         rows.append(best or {'label':label,'lod':lod,'no_hit':True})
 (HERE/'wall-uv-probe.json').write_text(json.dumps(rows,indent=2),encoding='utf-8')
 for row in rows: print(row)
+
+# Identify the actual opaque caster toward the preset sun, rather than guessing
+# that the patch is dirt from its shape. This is a CPU geometry proof, separate
+# from the measured Unity shadow on/off ablation above.
+import re
+preset=(ROOT/'game/Assets/_Project/Rendering/Settings/Lighting/LP_Overcast.asset').read_text()
+el=float(re.search(r'sunElevationDeg:\s*([-\d.]+)',preset)[1])
+az=float(re.search(r'sunAzimuthDeg:\s*([-\d.]+)',preset)[1])
+elr,azr=np.deg2rad([el,az])
+sun=np.array([np.cos(elr)*np.sin(azr),np.sin(elr),np.cos(elr)*np.cos(azr)])
+shadow_rows=[]
+for source in [r for r in rows if r.get('lod')==0 and 'position' in r]:
+    origin=np.array(source['position'])+sun*.02
+    best=None
+    for primitive in doc['meshes'][doc['nodes'][0]['mesh']]['primitives']:
+        if doc['materials'][primitive['material']]['name']!='fire_station': continue
+        p=acc(primitive['attributes']['POSITION']); p[:,0]*=-1; p+=np.array(anchor)[[0,2,1]]
+        uv=acc(primitive['attributes']['TEXCOORD_0']); uv[:,1]=1-uv[:,1]
+        t=acc(primitive['indices']).ravel().reshape(-1,3)
+        v0=p[t[:,0]]; e1=p[t[:,1]]-v0; e2=p[t[:,2]]-v0
+        hv=np.cross(sun,e2); det=(e1*hv).sum(1)
+        inv=np.divide(1,det,out=np.zeros_like(det),where=np.abs(det)>1e-10)
+        sv=origin-v0; u=(sv*hv).sum(1)*inv; q=np.cross(sv,e1)
+        v=(q*sun).sum(1)*inv; distance=(e2*q).sum(1)*inv
+        ids=np.flatnonzero((np.abs(det)>1e-10)&(u>=0)&(v>=0)&(u+v<=1)&(distance>.02))
+        if not len(ids): continue
+        i=ids[np.argmin(distance[ids])]
+        tex=uv[t[i,0]]*(1-u[i]-v[i])+uv[t[i,1]]*u[i]+uv[t[i,2]]*v[i]
+        if best is None or distance[i]<best['distance_m']:
+            best={'distance_m':float(distance[i]),'uv_metres':tex.tolist(),
+                'caster_position':(origin+sun*distance[i]).tolist()}
+    flag=json.loads((HERE/'baseline-asset/atlas_layout.json').read_text())['atlas']['flag']
+    is_flag=bool(best and flag['u'][0] <= best['uv_metres'][0] <= flag['u'][1]
+                 and flag['v'][0] <= best['uv_metres'][1] <= flag['v'][1])
+    shadow_rows.append({'label':source['label'],'hit':best,'hit_flag_atlas_cell':is_flag})
+proof={'scope':'CPU ray against baseline hero opaque mesh; sun from LP_Overcast',
+    'sun_elevation_deg':el,'sun_azimuth_deg':az,'rows':shadow_rows}
+(HERE/'shadow-occluder.json').write_text(json.dumps(proof,indent=2),encoding='utf-8')
+print('shadow occluders:',shadow_rows)

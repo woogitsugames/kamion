@@ -68,3 +68,6 @@ NASTĘPNA KOMENDA: pwsh artifacts/landmarks-r1/round1-build.ps1 -Phase round2
 
 Krok 21: materiały wariantu 2 ukończone pod heavy, exit 0, 31 s. Slot zwolniony; World osobno zajął heavy i działa. Przygotowano końcowe zachowanie wszystkich wpisów wspólnego materials_spec poza fire_station; przed końcowym commitem remiza będzie wygenerowana we wszystkich trzech rozdzielczościach, aby nie usuwać cudzych opisów High/Low. Pełny GIS nadal nie był uruchamiany w trakcie strojenia.
 NASTĘPNA KOMENDA: Get-Content artifacts/landmarks-r1/round2-world.log -Tail 10
+
+Krok 22: źródło plamy rozpoznane jednoznacznie. Promień CPU z ciemnego ROI ku słońcu LP_Overcast trafia po 6,76 m w flagę; promienie z jasnych miejsc nad i obok nie mają przeszkody. W połączeniu z ablacją Unity potwierdza to cień flagi, nie wadę atlasu. Nie zmieniano z tego powodu światła ani albedo. World wariantu 2 przebudowuje teraz hero pod aktualne dane korony.
+NASTĘPNA KOMENDA: Get-Content artifacts/landmarks-r1/round2-build-wrapper.log -Tail 10
