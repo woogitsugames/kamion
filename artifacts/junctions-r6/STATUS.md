@@ -52,3 +52,48 @@ Gałąź `junctions-r6` (z main 3540bbdf). Dowody: `artifacts/junctions-r6/` (re
   ADR 0123 szkic (`docs/adr/0123-junctions-r6-barriers.md`), build b3 + import + 4 zestawy renderów uruchomione jednym poleceniem
   (`logs/b3_all.out`). Polecenie właściciela: po tej operacji STOP.
   NASTĘPNY KROK (gdyby przerwało w trakcie): `bash artifacts/junctions-r6/scripts/build.sh b3 && bash artifacts/junctions-r6/scripts/imp.sh b3`
+
+## RAPORT KOŃCOWY — przerwane (polecenie właściciela 11.11 ~22:50: stop po bieżącej operacji; ADR 0123, gałąź `junctions-r6`)
+
+Wynik: **PARTIAL, niezweryfikowany do końca.** Build końcowy b3 (22:39–22:49) zaimportowany i wyrenderowany: Low/High × clear/overcast,
+102 kamery każdy (`renders_b3_*`). Baza: m0 = main 3540bbdf zregenerowany w tym worktree (`renders_m0_low_clear`, `renders_m0_high_overcast`).
+
+### Liczby (m0 → b3)
+| miara | m0 | b3 |
+|---|---|---|
+| Low clear, 102 kamery (`stats_cmp.py`) | — | draws max **+0**, tris max **+0,7 %** |
+| High overcast, 102 kamery | — | draws max +0, tris max +0,6 % |
+| Low overcast / High clear | brak bazy (kolejka slotów Unity) | tylko „po” |
+| szachownica cienia na kapie, `r4_deck_bz_eye2` Low clear | jest | **nie ma** (obejrzane natywnie) |
+| taśma W / asfalt (sRGB, `lum_set.sh`): Low clear / High overcast / Low overcast / High clear | 1,36 / 1,18 / — / — | 1,38–1,41 / 1,30–1,45 / 1,55–1,59 / 1,32–1,34 (zdjęcia: 1,47 pochm., 1,53 słońce) |
+| taśma w cieniu (lewa), Low clear | 0,61–0,66 | 0,88–0,91 (zdjęcie 0,58 — **gorzej**, odbicie nieba bez okluzji) |
+| kapa / asfalt: Low clear / High overcast / Low overcast / High clear | 1,64 / 1,77 | 1,35 / 1,46–1,49 / 1,54 / 1,20–1,31 (zdjęcia 1,48 i 1,43–1,56; recenzja 1,2) |
+| krawężnik pomostu / asfalt | ~1,6 | 1,36–1,43 / 1,19–1,50 / 1,20–1,52 / 1,32–1,39 (zdjęcia 1,40 / 1,35) |
+| lico krawężnika → lico taśmy (GLB, b2) | 0,65 m | ~0,45 m (oś linii krawędziowej → lico 1,02 → ~0,85 m) |
+| `guardrails_m.pier` | 132 | 172 (b2) |
+| latarnie na pomostach Bieżeństwa | 15 pojedynczych na zewn. kapach | 10 podwójnych między pomostami |
+| fidelity p50 / p95 | 0,36 / 2,304 | 0,36 / 2,304 (b2; b3 nie liczone) |
+| kluczowe testy gis (6 plików) | — | 110 passed (b2; b3 nie uruchomione) |
+
+### Rozliczenie 7 punktów zlecenia
+| # | punkt | stan |
+|---|---|---|
+| 1 | szachownica cienia | **zrobione** — przyczyną była poręcz assetu; flaga w `WorldInstanceSet.noShadowMaterials`, bariera bez cienia na Low (`_LowNoShadow`) |
+| 2 | ocynk jako metal, 2 zdjęcia | **częściowo** — ton w słońcu i pochmurno w zakresie zdjęć na pomoście; w cieniu za jasna; z dołu (`r4_link_bz_a`) taśma / trawa 1,4 → 2,3 (zdjęcie 3–4, ale tam słońce za kamerą, w renderze pod słońce); białe refleksy na górnych krawędziach belek (p90 180–208) |
+| 3 | kapa ciemniejsza, bariera bliżej | **zrobione** (kapa 1,2–1,54, bariera −0,2 m w siatce); skośny krawężnik — nie |
+| 4 | filar `r4_pier_bz` | **częściowo** — rzędy filarów z pomiaru (krawędzie wyspy), bariera przy wyspie w kadrze; filara w kadrze nadal nie ma (wymaga przebudowy spodu wiaduktu, domena GPT) |
+| 5 | murek `r2_fork_link_eye` | **zrobione** (b2 obejrzane: skarpa z trawy; `walls_at.py` — brak kołnierza) |
+| 6 | słupek / koniec belki `p0_kerb_merge_eye`, nos Putry N | **częściowo** — bariera pomostu łącznicy prosta na swojej kapie, druga szyna separatora; brak ~6 m szyny E −756…−750; nos: szczelina zamknięta (b2), zostaje lico krawężnika wyspy od północy. b3: `p0_kerb_merge_eye` obejrzany, nos w b3 NIE obejrzany |
+| 7 | RING-B 2 propy | **zidentyfikowane i przeniesione** — latarnie na pomoście, nie na fartuchu; filtr w `swept_path_gate3.py`. Swept po zmianie **NIE zmierzony** (b2: rc 127, pusty log) |
+
+### NIE zrobione / niezweryfikowane
+swept path b3; pełny `pytest tests/gis tests/physics tests/gate3`; EditMode / PlayMode (zmieniony shader, importer, `WorldInstances`); pary
+zdjęcie | render (`pairs.sh`); przegląd wszystkich 102 kamer b3 (obejrzane: `r4_deck_bz_eye2`, `p0_kerb_merge_eye` b3; reszta tylko b2 / t1);
+telefon; `visual-critic`; finalne liczby w ADR 0123 (szkic). Pliki `Data/Regions/…/generated/*` w commicie = stan b3.
+Uwaga: pełny pytest uruchomiony bez `KAMION_BLENDER` nadpisuje `generated/world_manifest.json` wersją z generycznymi filarami (asset „stale”).
+
+### NASTĘPNY KROK (sesja 11, z katalogu worktree `.claude/worktrees/junctions-r6`)
+1. `bash artifacts/junctions-r6/scripts/post.sh b3 full` (slot heavy: fidelity, swept, pełny pytest; logi `logs/b3_*`)
+2. `pwsh C:\Users\matma\Documents\Claude\kamion\scripts\unity-slot.ps1 -Acquire -Owner claude-junctions-r6; pwsh scripts/test.ps1 -Platform EditMode; pwsh scripts/test.ps1 -Platform PlayMode -Filter "WorldCRouteTests|WorldCBarrierTests"; pwsh C:\Users\matma\Documents\Claude\kamion\scripts\unity-slot.ps1 -Release -Owner claude-junctions-r6; git checkout -- game/Assets/_Project/Rendering/Settings game/ProjectSettings`
+3. `bash artifacts/junctions-r6/scripts/pairs.sh b3` → obejrzeć `pairs_b3/photo_*`, `ba_*` (zwł. `r4_putry_nose_eye`, `r4_pier_bz`, `r2_fork_link_eye`, `p0_lamp_putry_eye`)
+4. uzupełnić „Wynik” w `docs/adr/0123-junctions-r6-barriers.md`, `robocopy artifacts\junctions-r6 C:\Users\matma\Documents\Claude\kamion\artifacts\junctions-r6 /E /XF *.pkl`, potem `visual-critic`.
