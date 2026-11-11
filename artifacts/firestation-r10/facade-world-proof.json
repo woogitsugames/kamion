@@ -1,0 +1,63 @@
+{
+  "Fab_ready": 15,
+  "fallback": false,
+  "heroFresh": true,
+  "hero": {
+    "anchor": [
+      -262.92,
+      -142.67,
+      131.256
+    ],
+    "asset": "fire_station_jrg2",
+    "axes": "glTF (x, y, z) = (-dE, dU, dN) relative to the anchor (local E, N, U)",
+    "blender": "4.2.9 LTS",
+    "conifer_foliage": {
+      "applied": true,
+      "id": "fir_tree_01",
+      "intended_mean_rgb_linear_WORKING_VALUE": [
+        0.04,
+        0.068,
+        0.03
+      ],
+      "source_sha256": {
+        "alpha": "3f399629337e7ac3af27a01b08ffb9c0d60224a9dd374a1427761a5c2eea9d6e",
+        "diff": "76f6d0c0044d76bac08fbbd3d2ac1c9b66bb046de7d0b1a22aa9b319308f3833"
+      },
+      "species_status": "short-needle fir/conifer, NOT verified Picea"
+    },
+    "glb_sha256": "14843932611729e4b1dbe541863e127ae964e9152f59b8e3c0ab6b9cfe92c0a9",
+    "lod_ends_m": [
+      150.0,
+      450.0,
+      20000.0
+    ],
+    "materials": [
+      "fire_station",
+      "fire_station_alpha",
+      "fire_station_thuja_shell"
+    ],
+    "prototype": "landmark_fire_station_jrg2",
+    "schema": "truck-sim-pl/hero-building-asset/1",
+    "spec": "Data/Regions/bialystok-industrial-c/generated/landmarks/fire_station_jrg2.spec.json",
+    "spec_sha256": "96bafe654b11506bc2ef233307ed7f8da02a1d6d94ced99d76af3336cba74439",
+    "tris": [
+      9344,
+      2828,
+      164
+    ]
+  },
+  "canonical_raw_count": 192,
+  "vehicle_unchanged": true,
+  "rawmanifest_firestation_color": [
+    0.185,
+    0.225,
+    0.292
+  ],
+  "materialset_mean_rgb_linear": [
+    0.1851,
+    0.2247,
+    0.2924
+  ],
+  "expected_near_unit_linear_tint": 1.0007434134750721,
+  "rounding_note": "Existing _set_mean rounds3dec; near-unit is not bitexact1. Paint/roof/trim BaseColor pixels protected."
+}
