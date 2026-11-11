@@ -1,0 +1,12 @@
+diff --git a/game/Assets/_Project/World/Runtime/WorldInstances.cs b/game/Assets/_Project/World/Runtime/WorldInstances.cs
+--- a/game/Assets/_Project/World/Runtime/WorldInstances.cs
++++ b/game/Assets/_Project/World/Runtime/WorldInstances.cs
+@@ -166,7 +166,7 @@
+         {
+             ReleaseMaterials();
+             m_SimpleFoliage = simple;
+-            m_HeroLeafHigh = QualityProfileApplier.HasCurrent && QualityProfileApplier.Current.name == "High";
++            m_HeroLeafHigh = QualityProfileApplier.HasCurrent && (QualityProfileApplier.Current.name == "High" || QualityProfileApplier.Current.name == "Ultra");
+             var src = set != null ? set.materials : null;
+             if (src == null) { m_Mats = Array.Empty<Material>(); return; }
+             m_Mats = (Material[])src.Clone();
