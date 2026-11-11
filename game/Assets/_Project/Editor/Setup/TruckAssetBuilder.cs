@@ -980,6 +980,7 @@ namespace Game.Editor.Setup
             else AssetDatabase.CreateAsset(mesh, path);
             filter.sharedMesh = mesh;
             Debug.Log($"[TRUCK] Mirror support clearance {body.name}: moved={moved} vertices={source.vertexCount}->{mesh.vertexCount} indices={source.triangles.Length}->{mesh.triangles.Length}");
+            Debug.Log($"[TRUCK] Mirror support bounds {body.name}: centreDelta={(source.bounds.center - mesh.bounds.center).magnitude:F7} sizeDelta={(source.bounds.size - mesh.bounds.size).magnitude:F7}");
         }
 
         // ADR 0104: backing recess only on the detailed exterior body. Low/Medium retain their original backing;
