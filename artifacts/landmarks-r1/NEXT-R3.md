@@ -12,13 +12,32 @@ Nie zmieniać wysokości 120 m, średnic ani pozycji bez osobnego źródła.
 Kominy różnią się detalami zwieńczenia i stanem malowania; zdjęcie nie uzasadnia
 identycznej kosmetyki dla obu. Zimowa fotografia pod słońce nie kalibruje albedo.
 
+Natywne wycinki 073128 są w chimney-photo-details (172x528 i 204x808,
+SHA źródła w source.json). Lewy komin ma trzy osobne wyloty na głowicy;
+prawy jeden duży wylot i inny układ galerii/zużycia. Obecny wspólny builder
+tego nie odwzorowuje. Nie oceniać detalu z samej miniatury 960x540.
+
 Własność: `landmarks.py` rejestruje nazwy i wymiary w LP.LANDMARKS. Sam builder
 `chimney()` znajduje się w cudzym life_props.py; jego pliku nie edytować.
 Mesh.tube zapisuje UV0.y od zera osobno dla każdego odcinka, więc proste użycie
 istniejącego _STRIPES nie przeniesie ciągłego malowania na cały trzon.
 Nie stosować monkey patchingu funkcji life ani hacków w typach wysokości.
 
-Możliwy wariant zgodny ze wspólnymi plikami: addytywna flaga materiału i wariant
+Lepsza możliwość po sprawdzeniu istniejącego przepływu: własne GLB w
+art-source/world/landmarks, unikalne nazwy landmark_ec_chimney_*, rejestracja
+przez rozszerzenie hero_building.plan za osobną konfiguracją EC. Istniejący
+InstanceImporter już automatycznie skanuje te biblioteki; nazwa landmark_ ma
+domyślnie te same odległości 650/20000 m jak stare kominy. Generyczne HB.apply
+zwraca tris do st.hero_tris i światowego estymatora, więc nie potrzeba zmian
+w roads/build_world.py, stage.py, props.py ani life_props.py. Własny rekord musi
+mieć buildings=[], ground z pustymi fence/gate/thuja/flagpoles oraz meta/spec SHA.
+landmarks.py powinien pomijać stary LP model TYLKO przy zweryfikowanym własnym
+zasobie; brak/stale ma zachować poprzedni model i czytelny raport. Zachować
+zakotwiczenie z obecnej instancji, wysokość/średnice z niezmienianego override.
+To pozwala poprawić pasy i głowice geometrią bez nowego shadera. Sprawdzić
+kontrakty wszystkich testów HB/landmarks i zderzenie nazw przed implementacją.
+
+Alternatywny wariant zgodny ze wspólnymi plikami: addytywna flaga materiału i wariant
 WorldSurface wyznaczający pasy z lokalnej wysokości wierzchołka, na obecnych trzech
 materiałach kominów. Osobne pole danych z zakresem/metrami, liczbą pasów i kolorami
 liniowymi; domyślnie wyłączone dla wszystkich innych materiałów. Nie zmieniać
