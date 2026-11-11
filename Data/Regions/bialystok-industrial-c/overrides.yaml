@@ -720,9 +720,11 @@ overrides:
       Andersa NW-bound after the side street (strips xsec/n100_w266.png, xsec/and2.png station 30-54, xsec/and5.png
       station 2-26): median kerb 5.4-5.9 m left of the line placed at -0.8 (ADR 0077), lane lines 1.25-1.6 m left /
       1.95-2.2 m right, right kerb 5.4-5.6 m right -> 11.1 m, centre 0.1 m left of the previous placement -> -0.7.
+      turn_lanes empty: OSM way 266084693 has through|through|slight_right, no arrows are visible on these strips
+      (the exit lane is marked by the solid line and the chevrons on the next edge).
     confidence: high
     verify: owner drive
-    set: {center_offset: -0.7, lane_edges: [0.7, 4.2, 7.7, 11.1]}
+    set: {center_offset: -0.7, lane_edges: [0.7, 4.2, 7.7, 11.1], turn_lanes: ""}
   - id: andersa-nw-xsec-s1355-1410
     target: {edge: "w266084693:12620261934-2840742308"}
     reason: >-
