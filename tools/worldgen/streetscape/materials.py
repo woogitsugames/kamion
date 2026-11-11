@@ -167,19 +167,19 @@ M = {
     # r10b: dark paints lifted (black 0.018 -> 0.035, blue 0.03 / 0.05 / 0.12 -> 0.045 / 0.085 / 0.21, grey 0.13 -> 0.16):
     # under the ADR 0080 overcast the old values rendered as black silhouettes (review 0080 P1 #2); the Mapillary
     # crops in artifacts/cars-r9/refs show black / dark grey bodies clearly above the tyres. WORKING_VALUE.
-    "car_paint_silver": {"color": [0.42, 0.43, 0.44], "rough": 0.28, "metal": 0.6, "texture_set": "car_grime",
+    "car_paint_silver": {"color": [0.42, 0.43, 0.44], "rough": 0.28, "metal": 0.6, "texture_set": "car_grime_clean",
                          "paint": [0.85, 0.30, 0.0, 0.50]},
-    "car_paint_grey": {"color": [0.16, 0.165, 0.17], "rough": 0.26, "metal": 0.5, "texture_set": "car_grime",
+    "car_paint_grey": {"color": [0.16, 0.165, 0.17], "rough": 0.26, "metal": 0.5, "texture_set": "car_grime_clean",
                        "paint": [0.75, 0.28, 0.0, 0.50]},
-    "car_paint_black": {"color": [0.035, 0.035, 0.038], "rough": 0.2, "metal": 0.3, "texture_set": "car_grime",
+    "car_paint_black": {"color": [0.035, 0.035, 0.038], "rough": 0.2, "metal": 0.3, "texture_set": "car_grime_clean",
                         "paint": [0.55, 0.22, 0.8, 0.45], "pearl_tint": [1.6, 1.9, 3.2]},
-    "car_paint_white": {"color": [0.68, 0.68, 0.66], "rough": 0.3, "texture_set": "car_grime",
+    "car_paint_white": {"color": [0.68, 0.68, 0.66], "rough": 0.3, "texture_set": "car_grime_clean",
                         "paint": [0.0, 0.0, 0.0, 0.5]},
-    "car_paint_white2": {"color": [0.62, 0.63, 0.62], "rough": 0.36, "texture_set": "car_grime",
+    "car_paint_white2": {"color": [0.62, 0.63, 0.62], "rough": 0.36, "texture_set": "car_grime_clean",
                          "paint": [0.0, 0.0, 0.0, 0.5]},
-    "car_paint_blue": {"color": [0.045, 0.085, 0.21], "rough": 0.24, "metal": 0.4, "texture_set": "car_grime",
+    "car_paint_blue": {"color": [0.045, 0.085, 0.21], "rough": 0.24, "metal": 0.4, "texture_set": "car_grime_clean",
                        "paint": [0.70, 0.30, 0.0, 0.48]},
-    "car_paint_red": {"color": [0.32, 0.03, 0.025], "rough": 0.28, "metal": 0.2, "texture_set": "car_grime",
+    "car_paint_red": {"color": [0.32, 0.03, 0.025], "rough": 0.28, "metal": 0.2, "texture_set": "car_grime_clean",
                       "paint": [0.0, 0.0, 0.0, 0.5]},
     "car_paint_green": {"color": [0.035, 0.07, 0.045], "rough": 0.35, "metal": 0.4, "texture_set": "car_grime"},
     "car_paint_beige": {"color": [0.36, 0.32, 0.24], "rough": 0.4, "metal": 0.3, "texture_set": "car_grime"},
@@ -195,11 +195,12 @@ M = {
     "car_dirt_3": {"color": [0.18, 0.165, 0.135], "rough": 1.0, "alpha": 0.78, "blend": True, "texture": "car_dirt"},
     "car_lamp": {"color": [0.045, 0.047, 0.05], "rough": 0.12, "metal": 0.5},     # smoked lamp housing behind the lens
     # alloy under brake dust (v4: 0.115 rendered as a black disc on LOD1 at 12-45 m on Low, read as "no rim")
-    "rim_dusty": {"color": [0.27, 0.25, 0.22], "rough": 0.58, "metal": 0.45},
-    "tyre_dusty": {"color": [0.05, 0.045, 0.038], "rough": 0.95},
+    # ADR0089 WORKING_VALUE: neutral brake dust/rubber, old luminance retained; dark dish stays rim_dark/car_trim.
+    "rim_dusty": {"color": [0.25, 0.25, 0.25], "rough": 0.58, "metal": 0.45},
+    "tyre_dusty": {"color": [0.046, 0.046, 0.046], "rough": 0.95},
     # r10 (ADR 0078): LOD0 car tyres with the tread / sidewall texture (modulation, mean ~0.78; colour raised to match)
     "car_tyre": {"color": [0.033, 0.033, 0.033], "rough": 0.85, "texture": "car_tyre"},
-    "car_tyre_dusty": {"color": [0.066, 0.059, 0.050], "rough": 0.95, "texture": "car_tyre"},
+    "car_tyre_dusty": {"color": [0.060, 0.060, 0.060], "rough": 0.95, "texture": "car_tyre"},
     "car_interior": {"color": [0.022, 0.022, 0.024], "rough": 0.9},
     "rim_dark": {"color": [0.05, 0.05, 0.052], "rough": 0.6, "metal": 0.5},
     "rim_steel": {"color": [0.07, 0.07, 0.072], "rough": 0.55, "metal": 0.6},

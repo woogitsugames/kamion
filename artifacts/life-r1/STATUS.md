@@ -3,3 +3,6 @@ Przeczytano wymagane instrukcje, recenzję 0089 i feedback. Utworzono worktree z
 Poprzednia gałąź gpt-car-paint zawiera już ukończone techniczne R4, 368 par i raport z ograniczeniem: realizm kurzu PARTIAL. Nie należy ponownie implementować napraw ani kopiować starych plików innych dziedzin.
 Następny krok: pwsh -File artifacts/life-r1/prepare-worktree.ps1; następnie selektywnie przenieść wyłącznie zmiany life z gpt-car-paint, zachowując aktualne main.
 Sesja rozpoczęta 11.11.2026; planowany czas pracy 24 godziny. Bez scalania do main, pushowania i telefonów. Właściciel slotu Unity: gpt-life.
+
+Krok 2: skopiowano wymagane zasoby i utworzono junctiony; git lfs checkout zakończony bez błędu. Selektywnie zastosowano patch R4 dotyczący aut, bez starych generatów i zmian budynków/dróg. Zależności eksportera/importera i generatora car_grime są wyłącznie opt-in dla aut/tablic; pliki wspólne scalane trójstronnie.
+Następny krok: uv run --project tools/worldgen python -m pytest tests/gis/test_car_deposition.py tests/gis/test_car_map_fields.py tests/gis/test_car_plate_payload.py tests/gis/test_cars_r11.py -q
