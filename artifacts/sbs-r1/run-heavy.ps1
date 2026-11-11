@@ -5,6 +5,9 @@ param(
     [string]$RenderDir,
     [string]$OutputDir,
     [switch]$IncludeRejected,
+    [switch]$Historical,
+    [string]$Inputs,
+    [string]$Landmarks,
     [switch]$EndOfRound
 )
 $ErrorActionPreference='Stop'
@@ -30,8 +33,12 @@ try {
             FinalGis {uv run --project tools/worldgen python -m pytest tests/gis -q}
             ComposeSbs {
                 if(!$RenderDir -or !$OutputDir){throw 'RenderDir and OutputDir required'}
-                if($IncludeRejected){uv run --project tools/refs python tools/refs/sbs_gate3.py compose --renders $RenderDir --output $OutputDir --include-rejected}
-                else {uv run --project tools/refs python tools/refs/sbs_gate3.py compose --renders $RenderDir --output $OutputDir}
+                $composeArgs=@('compose','--renders',$RenderDir,'--output',$OutputDir)
+                if($IncludeRejected){$composeArgs+='--include-rejected'}
+                if($Historical){$composeArgs+='--historical'}
+                if($Inputs){$composeArgs+=@('--inputs',$Inputs)}
+                if($Landmarks){$composeArgs+=@('--landmarks',$Landmarks)}
+                uv run --project tools/refs python tools/refs/sbs_gate3.py @composeArgs
             }
             PrepareSbs {uv run --project tools/refs python tools/refs/sbs_gate3.py prepare}
         }

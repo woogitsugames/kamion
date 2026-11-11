@@ -241,3 +241,30 @@ def test_capture_groups_cannot_mix_epochs_or_render_states(tmp_path,monkeypatch,
     capture[changed]='different';sbs.write(renders/'capture-b.json',capture)
     with pytest.raises(ValueError,match='mixed render captures'):
         sbs.compose(renders,tmp_path/'out')
+
+
+def test_landmark_errors_use_exact_bound_pixels_and_render_resolution():
+    ref={'camera':'test','comparison_sha256':'a'*64}
+    annotation={'camera':'test','comparison_sha256':'a'*64,'render_sha256':'b'*64,'points':[
+        {'id':'one','photo':[0.2,0.3],'render':[0.3,0.3]},
+        {'id':'two','photo':[0.5,0.5],'render':[0.5,0.6]}]}
+    result=sbs.landmark_report([annotation],ref,'b'*64,(100,100))
+    assert result['status']=='MATCHED_HASHES' and result['rmse_render_px']==10
+    stale=sbs.landmark_report([annotation],ref,'c'*64,(100,100))
+    assert stale['status']=='STALE' and not stale['points'] and stale['rmse_render_px'] is None
+
+
+@pytest.mark.parametrize('points',[
+    [{'id':'same','photo':[0,0],'render':[0,0]},{'id':'same','photo':[0,0],'render':[0,0]}],
+    [{'id':'bad','photo':[1.1,0],'render':[0,0]}]])
+def test_landmark_annotations_reject_ambiguous_or_invalid_points(points):
+    ref={'camera':'test','comparison_sha256':'a'*64}
+    annotation={'camera':'test','comparison_sha256':'a'*64,'render_sha256':'b'*64,'points':points}
+    with pytest.raises(ValueError):sbs.landmark_report([annotation],ref,'b'*64,(100,100))
+
+
+def test_one_vanishing_point_cannot_claim_enough_pose_anchors():
+    ref={'camera':'test','comparison_sha256':'a'*64}
+    annotation={'camera':'test','comparison_sha256':'a'*64,'render_sha256':'b'*64,'points':[
+        {'id':'VP','photo':[0.5,0.5],'render':[0.5,0.5]}]}
+    assert sbs.landmark_report([annotation],ref,'b'*64,(100,100))['status']=='INSUFFICIENT_ANCHORS'

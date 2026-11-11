@@ -440,10 +440,40 @@ def measurements(im, horizon, authored_masks=None):
             'mask_method':method}
 
 
-def compose(render_dir, outdir, strict=True, include_rejected=False, historical=False, inputs=None):
+def landmark_report(annotations, ref, render_digest, render_size):
+    """Manual correspondences, bound to exact photo/render pixels; no automatic pose approval."""
+    candidates=[a for a in annotations if a.get('camera')==ref['camera']]
+    matching=[a for a in candidates if a.get('comparison_sha256')==ref.get('comparison_sha256')
+              and a.get('render_sha256')==render_digest]
+    if not matching:
+        return {'status':'STALE' if candidates else 'UNANNOTATED','points':[],'rmse_render_px':None}
+    if len(matching)!=1: raise ValueError('duplicate landmark annotation for the same image pair')
+    points=matching[0].get('points',[])
+    if not 1<=len(points)<=32: raise ValueError('landmarks require 1-32 points')
+    rows=[];ids=set()
+    for point in points:
+        name=point.get('id')
+        if not isinstance(name,str) or not name or name in ids: raise ValueError('landmark IDs must be unique nonempty strings')
+        ids.add(name)
+        for panel in ('photo','render'):
+            xy=point.get(panel,[])
+            if len(xy)!=2 or any(isinstance(v,bool) or not isinstance(v,(int,float)) or not math.isfinite(v) or not 0<=v<=1 for v in xy):
+                raise ValueError('landmark coordinates must be normalized finite pairs')
+        dx=(point['render'][0]-point['photo'][0])*render_size[0]
+        dy=(point['render'][1]-point['photo'][1])*render_size[1]
+        rows.append({**point,'dx_render_px':round(dx,3),'dy_render_px':round(dy,3),'error_render_px':round(math.hypot(dx,dy),3)})
+    return {'status':'MATCHED_HASHES' if len(rows)>=2 else 'INSUFFICIENT_ANCHORS','points':rows,
+            'rmse_render_px':round(math.sqrt(sum(r['error_render_px']**2 for r in rows)/len(rows)),3),
+            'method':'WORKING_VALUE manually marked correspondences; geometric identity and point placement require review'}
+
+
+def compose(render_dir, outdir, strict=True, include_rejected=False, historical=False, inputs=None, landmarks_file=None):
     if inputs is not None and not historical: raise ValueError("custom input snapshots require --historical")
     input_dir=Path(inputs) if inputs is not None else REGION
     refs=read(input_dir/'sbs_references.json')['references']
+    landmark_path=Path(landmarks_file) if landmarks_file is not None else input_dir/'sbs_landmarks.json'
+    annotations=read(landmark_path).get('annotations',[]) if landmark_path.exists() else []
+    landmark_hash=hashlib.sha256(landmark_path.read_bytes()).hexdigest() if landmark_path.exists() else None
     outdir.mkdir(parents=True,exist_ok=True)
     metrics=[]
     missing=[]
@@ -510,12 +540,13 @@ def compose(render_dir, outdir, strict=True, include_rejected=False, historical=
            'render':measurements(right,r['horizon_y_fraction'],masks.get('render'))}
         ph=np.array(m['photo']['histogram_32'],dtype=float); ph/=ph.sum()
         rh=np.array(m['render']['histogram_32'],dtype=float); rh/=rh.sum()
+        m['landmarks']=landmark_report(annotations,r,m['render_sha256'],right.size)
         m['histogram_l1_distance']=round(float(np.abs(ph-rh).sum()),5)
         metrics.append(m)
         height=round(470*r['height']/r['width'])
         sheet=Image.new('RGB',(960,height+210),'#202020')
         d=ImageDraw.Draw(sheet)
-        d.text((8,4),r['camera']+' | '+r.get('pose_confidence','C')+' | '+r['pose_status'],fill='white')
+        d.text((8,4),r['camera']+' | '+r.get('pose_confidence','C')+' | '+r['pose_status']+' | anchors '+str(len(m['landmarks']['points'])),fill='white')
         for x,im,label in [(0,left,'PHOTO'),(490,right,'RENDER')]:
             sheet.paste(im.resize((470,height)),(x,24))
             for fraction in (0.25,0.5,0.75):
@@ -524,6 +555,11 @@ def compose(render_dir, outdir, strict=True, include_rejected=False, historical=
             hy=24+height*r['horizon_y_fraction']
             d.line((x,hy,x+470,hy),fill='#ff5050',width=2)
             d.text((x+4,28),label,fill='#ff5050')
+        for point in m['landmarks']['points']:
+            for panel,x in (('photo',0),('render',490)):
+                px=x+470*point[panel][0];py=24+height*point[panel][1]
+                d.ellipse((px-4,py-4,px+4,py+4),outline='#dd99ff',width=2)
+                d.text((px+5,py-10),point['id'],fill='#dd99ff')
         lines=r.get('authored_overrides',{}).get('vanishing_lines')
         if lines:
             for line in lines:
@@ -541,7 +577,7 @@ def compose(render_dir, outdir, strict=True, include_rejected=False, historical=
             d.line(points,fill=color,width=2)
         d.text((24,height+119),'sRGB luma histogram: blue PHOTO / orange RENDER (32 bins, normalized)',fill='white')
         save_png(sheet,outdir/(r['camera']+'.png'))
-    write(outdir/'metrics.json',{'pairs':metrics,'missing_renders':missing,'rejected_poses':rejected,'render_captures':captures,'provenance_status':provenance,'provenance_warnings':warnings,'gate_status':'UNVERIFIED',
+    write(outdir/'metrics.json',{'pairs':metrics,'missing_renders':missing,'rejected_poses':rejected,'render_captures':captures,'provenance_status':provenance,'provenance_warnings':warnings,'landmarks_sha256':landmark_hash,'gate_status':'UNVERIFIED',
           'cameras_sha256':camera_hash})
     print(f'Composed {len(metrics)} pairs; missing {len(missing)} renders.')
     if strict and missing:
@@ -553,11 +589,11 @@ def main():
     sub=ap.add_subparsers(dest='command',required=True)
     p=sub.add_parser('prepare'); p.add_argument('--count-per-segment',type=int,default=20)
     sub.add_parser('fetch-intrinsics')
-    p=sub.add_parser('compose'); p.add_argument('--renders',type=Path,required=True); p.add_argument('--output',type=Path,required=True); p.add_argument('--include-rejected',action='store_true'); p.add_argument('--historical',action='store_true'); p.add_argument('--inputs',type=Path)
+    p=sub.add_parser('compose'); p.add_argument('--renders',type=Path,required=True); p.add_argument('--output',type=Path,required=True); p.add_argument('--include-rejected',action='store_true'); p.add_argument('--historical',action='store_true'); p.add_argument('--inputs',type=Path); p.add_argument('--landmarks',type=Path)
     args=ap.parse_args()
     if args.command=='prepare': prepare(args.count_per_segment)
     elif args.command=='fetch-intrinsics': fetch_intrinsics()
-    else: compose(args.renders,args.output,include_rejected=args.include_rejected,historical=args.historical,inputs=args.inputs)
+    else: compose(args.renders,args.output,include_rejected=args.include_rejected,historical=args.historical,inputs=args.inputs,landmarks_file=args.landmarks)
 
 
 if __name__=='__main__':

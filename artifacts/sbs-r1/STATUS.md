@@ -75,3 +75,7 @@ Następny krok: niezależna recenzja, następnie końcowe testy rundy przez pul�
 ## Poprawki po niezależnej recenzji
 Usunięto luki klas A/B/C, walidacji Commons i integralności epoki renderu. Odczyt SHA następuje po Acquire, z kontrolą niezmienności po renderze. Kompozycja odrzuca mieszane światy/materiały/tiery/światło/commity; historyczne rekonstrukcje wymagają jawnego trybu. Testy SBS: 33/33 przez heavy; slot zwolniony. Zachowano 17 C bez awansu. Zapisano recenzję i binarne archiwum migawki baseline, aby konwersja końców linii w gicie nie zmieniała jej pierwotnych SHA.
 Następny krok: uzupełnić narzędzie o kotwice pozy i wykonać końcowy pełny render na zamrożonym HEAD.
+## Kotwice pozy i dalszy wynik recenzji
+Ponowna niezależna ocena potwierdziła warunkowy PASS narzędzia po poprawkach integralności. Dodano opcjonalne adnotacje punktów na obu panelach, związane z SHA zdjęcia porównawczego i renderu. Po zmianie obrazu adnotacja ma status STALE i nie daje wyniku błędu. Jeden punkt zbiegu ma status INSUFFICIENT_ANCHORS i nie zatwierdza pozy. Przykład 2948 obejrzano w diagnostic-anchored; pozostaje C.
+Testy SBS: 37/37 przez heavy. Obejrzano wszystkie 16 galerii prób. Nie przyjęto żadnej z 144 hipotez automatycznie; dopasowania pozy i różnice geometrii nadal wymagają rozdzielenia.
+Następny krok: końcowy render wszystkich 42 par Low/High × clear/overcast, bez zmiany HEAD w trakcie joba.
