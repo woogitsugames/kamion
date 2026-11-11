@@ -104,6 +104,27 @@ namespace Game.Tests
         }
 
         [Test]
+        public void OwnedMaterialReimportPreservesMotionStateAndLocalKeyword()
+        {
+            const string path = "Assets/_Generated/R4PlatePersistTest.mat";
+            var material = new Material(Shader.Find("Kamion/World Car Plate"));
+            material.SetShaderPassEnabled("MotionVectors", false);
+            material.SetFloat("_PlatePayloadVersion", 1);
+            material.EnableKeyword("_PLATE_LOCAL_CORNERS");
+            try
+            {
+                AssetDatabase.CreateAsset(material, path);
+                AssetDatabase.SaveAssets();
+                AssetDatabase.ImportAsset(path, ImportAssetOptions.ForceSynchronousImport | ImportAssetOptions.ForceUpdate);
+                var loaded = AssetDatabase.LoadAssetAtPath<Material>(path);
+                Assert.False(loaded.GetShaderPassEnabled("MotionVectors"));
+                Assert.True(loaded.IsKeywordEnabled("_PLATE_LOCAL_CORNERS"));
+                Assert.That(loaded.GetFloat("_PlatePayloadVersion"), Is.EqualTo(1));
+            }
+            finally { AssetDatabase.DeleteAsset(path); }
+        }
+
+        [Test]
         public void OwnedPlateShaderDefaultsToLegacyUv0AndPreservesOpaquePasses()
         {
             var shader = Shader.Find("Kamion/World Car Plate");

@@ -1,0 +1,62 @@
+{
+  "replay_frames": 2,
+  "all_poses_exact": true,
+  "all_render_programs_byte_exact_to_gpu_focus_source": true,
+  "note": "Only inherited CustomEditor removed. Previous28 focus callback motion flag TRUE is retained as invalid pass-state evidence; replay proves effective disabled state after independent load. RenderType override serialization differs but effective Opaque/queue2000 unchanged.",
+  "rows": [
+    {
+      "tier": "Low",
+      "pose_exact": true,
+      "state": {
+        "tier": "Low",
+        "shader": "Kamion/World Car Plate",
+        "renderType": "Opaque",
+        "texture": "Assets/_Generated/World/bialystok-industrial-c/Textures/car_plates.png",
+        "motionMixed": false,
+        "motionUpper": false,
+        "keyword": true,
+        "instancing": true,
+        "queue": 2000,
+        "version": 1.0,
+        "smoothness": 0.550000011920929,
+        "scale": {
+          "x": 1.0,
+          "y": 1.0
+        },
+        "offset": {
+          "x": 0.0,
+          "y": 0.0
+        }
+      },
+      "image_mae": 0.00940619394323098,
+      "max_rgb_delta": 30
+    },
+    {
+      "tier": "High",
+      "pose_exact": true,
+      "state": {
+        "tier": "High",
+        "shader": "Kamion/World Car Plate",
+        "renderType": "Opaque",
+        "texture": "Assets/_Generated/World/bialystok-industrial-c/Textures/car_plates.png",
+        "motionMixed": false,
+        "motionUpper": false,
+        "keyword": true,
+        "instancing": true,
+        "queue": 2000,
+        "version": 1.0,
+        "smoothness": 0.550000011920929,
+        "scale": {
+          "x": 1.0,
+          "y": 1.0
+        },
+        "offset": {
+          "x": 0.0,
+          "y": 0.0
+        }
+      },
+      "image_mae": 0.4365498047905455,
+      "max_rgb_delta": 96
+    }
+  ]
+}

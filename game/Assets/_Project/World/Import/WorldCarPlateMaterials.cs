@@ -16,7 +16,8 @@ namespace Game.World.Import
     {
         public const string ShaderName = "Kamion/World Car Plate";
         public const string Keyword = "_PLATE_LOCAL_CORNERS";
-        static readonly string[] Passes = { "ForwardLit", "ShadowCaster", "GBuffer", "DepthOnly", "DepthNormals", "Meta", "Universal2D", "MotionVectors", "XRMotionVectors" };
+        // Material API keys are LightMode tags, not ShaderLab pass names.
+        static readonly string[] Passes = { "UniversalForward", "ShadowCaster", "UniversalGBuffer", "DepthOnly", "DepthNormals", "Meta", "Universal2D", "MotionVectors", "XRMotionVectors" };
         static readonly Regex Vehicle = new Regex(@"^(car_(hatch|sedan|estate|suv)_(silver|grey|black|white|blue|red)|van_(white|silver|white2))(\.lod[12])?$", RegexOptions.CultureInvariant);
 
         public static bool ValidCorners(Vector2[] uv0, Vector2[] local)
