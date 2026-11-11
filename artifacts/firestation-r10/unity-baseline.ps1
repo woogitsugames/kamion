@@ -51,7 +51,7 @@ elseif($Stage -eq 'Capture') {
         foreach($light in @('clear','overcast')) {
             Assert-EUnityRelease
             $captureArgs=@()
-            if($OnlyHero) {$captureArgs=@('-Cameras','fire_station_route,fire_station_abeam,fire_station_ref7197,fire_station_above')}
+            if($OnlyHero) {$captureArgs=@('-Cameras','fire-station-route,fire-station-abeam,fire-station-ref7197,fire-station-above')}
             $output="$taskRoot/$Phase/$tier-$light"
             if(Test-Path "$output/stats.txt") {throw "Completed evidence already exists: $output; preserve it"}
             # Standard route cameras include all four fire_station_* hero cameras.
