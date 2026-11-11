@@ -34,6 +34,7 @@ public static class R4PosePacket
         public Node[] cameraParents, vehicleHierarchy, regionRoots;
         public string regionState;
         public Paint[] paintMaterials;
+        public Plate[] plateMaterials;
         public NativeMesh[] carMeshes;
         public string note="Target and live pipeline fields are observed; actual internal URP descriptor/pass execution is NOT established by this packet.";
     }
@@ -44,6 +45,13 @@ public static class R4PosePacket
         public float albedoScale;
         public Vector4 flake;
         public bool carPaint, meshUv0, meshUv1;
+    }
+    [Serializable] public class Plate
+    {
+        public string name, path, shader, baseMap;
+        public bool localCorners, motionVectors, instancing;
+        public float version, smoothness, metallic, cull;
+        public Vector2 scale, offset;
     }
     [Serializable] public class NativeMesh
     {
@@ -116,6 +124,12 @@ public static class R4PosePacket
             regionRoots=regions.OrderBy(t=>PathOf(t.transform)).Select(t=>Read(t.transform)).ToArray(),
             regionState=string.Join("\n",regions.Select(t=>JsonUtility.ToJson(t))),
             carMeshes=NativeMeshes(),
+            plateMaterials=Resources.FindObjectsOfTypeAll<Material>().Where(m=>m.name=="M_car_plate").Select(m=>new Plate {
+                name=m.name,path=AssetDatabase.GetAssetPath(m),shader=m.shader.name,baseMap=AssetDatabase.GetAssetPath(m.GetTexture("_BaseMap")),
+                localCorners=m.IsKeywordEnabled("_PLATE_LOCAL_CORNERS"),motionVectors=m.GetShaderPassEnabled("MotionVectors"),instancing=m.enableInstancing,
+                version=m.HasProperty("_PlatePayloadVersion")?m.GetFloat("_PlatePayloadVersion"):0,
+                smoothness=m.GetFloat("_Smoothness"),metallic=m.GetFloat("_Metallic"),cull=m.GetFloat("_Cull"),
+                scale=m.GetTextureScale("_BaseMap"),offset=m.GetTextureOffset("_BaseMap")}).ToArray(),
             paintMaterials=Resources.FindObjectsOfTypeAll<Material>().Where(m=>m.name.Contains("car_paint_")&&m.HasProperty("_CarFlake"))
                 .OrderBy(m=>AssetDatabase.GetAssetPath(m)).Select(m=>new Paint {name=m.name,path=AssetDatabase.GetAssetPath(m),shader=m.shader.name,
                     tint=m.GetColor("_Tint"),albedoScale=m.GetFloat("_AlbedoScale"),flake=m.GetVector("_CarFlake"),

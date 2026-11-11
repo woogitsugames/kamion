@@ -1,0 +1,996 @@
+{
+  "schema": "truck-sim-pl/gate3-cameras/1",
+  "region": "bialystok-industrial-c",
+  "car": {
+    "e": 728.369,
+    "n": -385.583,
+    "p": "car_suv_blue",
+    "src": "life:parking:bdot:d08cb805-66c9-4991-893e-4eeb53d2776e:0#0~p0~d1",
+    "yaw": -2.0802,
+    "z": 141.635
+  },
+  "cameras": [
+    {
+      "id": "r10_hall_1",
+      "type": "persp",
+      "kind": "photo_match",
+      "seat": "road",
+      "pos": [
+        662.57,
+        -509.31,
+        153.63
+      ],
+      "look_at": [
+        684.53,
+        -516.93,
+        154.78
+      ],
+      "fov_deg": 60.0,
+      "note": "hall bdot:7abd670e-1a55-4ccb-9da0-9a2ad052ff32 (obiekt handlowo-us\u0142ugowy, h 5.7 m, storeys 1), 18 m from the start route, view +50 deg off the route side"
+    },
+    {
+      "id": "r10_hall_2",
+      "type": "persp",
+      "kind": "photo_match",
+      "seat": "road",
+      "pos": [
+        622.55,
+        -591.1,
+        153.58
+      ],
+      "look_at": [
+        679.93,
+        -595.43,
+        154.69
+      ],
+      "fov_deg": 60.0,
+      "note": "hall bdot:2BE4B431-CB20-1BF0-E053-CC2BA8C0D140 (magazyn, h 5.6 m, storeys None), 34 m from the start route, view +25 deg off the route side"
+    },
+    {
+      "id": "r10_hall_3",
+      "type": "persp",
+      "kind": "photo_match",
+      "seat": "road",
+      "pos": [
+        711.15,
+        -357.83,
+        147.03
+      ],
+      "look_at": [
+        606.04,
+        -349.75,
+        151.33
+      ],
+      "fov_deg": 60.0,
+      "note": "hall bdot:245cc9a6-b45c-4f68-a384-6fc834c62d8b (obiekt handlowo-us\u0142ugowy, h 14.3 m, storeys 2), 41 m from the start route, view +25 deg off the route side"
+    },
+    {
+      "id": "r10_hall_4",
+      "type": "persp",
+      "kind": "photo_match",
+      "seat": "road",
+      "pos": [
+        716.43,
+        -451.43,
+        152.05
+      ],
+      "look_at": [
+        679.53,
+        -320.08,
+        155.32
+      ],
+      "fov_deg": 60.0,
+      "note": "hall bdot:6693a8b5-71fb-400a-9d62-2c1b38e22c2b (magazyn, h 9.9 m, storeys None), 44 m from the start route, view -25 deg off the route side"
+    },
+    {
+      "id": "r10_house_1",
+      "type": "persp",
+      "kind": "photo_match",
+      "seat": "road",
+      "pos": [
+        -538.01,
+        94.54,
+        147.33
+      ],
+      "look_at": [
+        -516.97,
+        104.51,
+        148.78
+      ],
+      "fov_deg": 60.0,
+      "note": "house bdot:2BE4B431-C792-1BF0-E053-CC2BA8C0D140 (budynek jednorodzinny, h 6.3 m, storeys 2), 25 m from the start route, view +25 deg off the route side"
+    },
+    {
+      "id": "r10_house_2",
+      "type": "persp",
+      "kind": "photo_match",
+      "seat": "road",
+      "pos": [
+        -533.32,
+        123.79,
+        147.64
+      ],
+      "look_at": [
+        -512.03,
+        132.68,
+        148.62
+      ],
+      "fov_deg": 60.0,
+      "note": "house bdot:2BE4B431-C793-1BF0-E053-CC2BA8C0D140 (budynek jednorodzinny, h 5.3 m, storeys 2), 29 m from the start route, view +25 deg off the route side"
+    },
+    {
+      "id": "r10_office_1",
+      "type": "persp",
+      "kind": "photo_match",
+      "seat": "road",
+      "pos": [
+        709.11,
+        -421.77,
+        153.87
+      ],
+      "look_at": [
+        744.32,
+        -424.47,
+        154.92
+      ],
+      "fov_deg": 60.0,
+      "note": "office bdot:9a38533b-00ee-4f83-8e23-1d5c2e052a87 (obiekt handlowo-us\u0142ugowy, h 5.5 m, storeys 1), 17 m from the start route, view +25 deg off the route side"
+    },
+    {
+      "id": "r10_office_2",
+      "type": "persp",
+      "kind": "photo_match",
+      "seat": "road",
+      "pos": [
+        623.11,
+        -572.27,
+        153.14
+      ],
+      "look_at": [
+        661.62,
+        -575.19,
+        155.72
+      ],
+      "fov_deg": 60.0,
+      "note": "office bdot:ffe33067-f96d-4676-9355-469cfe147783 (obiekt handlowo-us\u0142ugowy, h 8.6 m, storeys 2), 17 m from the start route, view +25 deg off the route side"
+    },
+    {
+      "id": "r10_shed_1",
+      "type": "persp",
+      "kind": "photo_match",
+      "seat": "road",
+      "pos": [
+        729.37,
+        -408.1,
+        153.85
+      ],
+      "look_at": [
+        752.67,
+        -409.9,
+        154.73
+      ],
+      "fov_deg": 60.0,
+      "note": "shed bdot:da26b671-1894-11ed-913d-b8ca3aa2e5c2 (budynek gospodarczy, h 5.2 m, storeys 1), 17 m from the start route, view +25 deg off the route side"
+    },
+    {
+      "id": "r10_shed_2",
+      "type": "persp",
+      "kind": "photo_match",
+      "seat": "road",
+      "pos": [
+        -525.33,
+        133.99,
+        147.48
+      ],
+      "look_at": [
+        -514.07,
+        118.8,
+        147.29
+      ],
+      "fov_deg": 60.0,
+      "note": "shed bdot:2BE4B431-BD32-1BF0-E053-CC2BA8C0D140 (budynek gospodarczy, h 3.0 m, storeys 1), 26 m from the start route, view -50 deg off the route side"
+    },
+    {
+      "id": "r10_shed_3",
+      "type": "persp",
+      "kind": "photo_match",
+      "seat": "road",
+      "pos": [
+        65.68,
+        -476.57,
+        152.8
+      ],
+      "look_at": [
+        80.55,
+        -490.57,
+        152.98
+      ],
+      "fov_deg": 60.0,
+      "note": "shed bdot:2BE4B431-C508-1BF0-E053-CC2BA8C0D140 (stacja transformatorowa, h 3.8 m, storeys 1), 29 m from the start route, view +75 deg off the route side"
+    },
+    {
+      "id": "r10_block_1",
+      "type": "persp",
+      "kind": "photo_match",
+      "seat": "road",
+      "pos": [
+        -268.74,
+        -236.43,
+        140.41
+      ],
+      "look_at": [
+        -277.68,
+        -272.09,
+        144.71
+      ],
+      "fov_deg": 60.0,
+      "note": "block bdot:d0f4dd2c-c040-439e-aece-8fe13f9d3046 (budynek wielorodzinny, h 14.3 m, storeys 4), 50 m from the start route, view +25 deg off the route side"
+    },
+    {
+      "id": "r10_block_2",
+      "type": "persp",
+      "kind": "photo_match",
+      "seat": "road",
+      "pos": [
+        -331.58,
+        -320.31,
+        141.91
+      ],
+      "look_at": [
+        -342.08,
+        -362.17,
+        146.21
+      ],
+      "fov_deg": 60.0,
+      "note": "block bdot:2BE4B431-CA03-1BF0-E053-CC2BA8C0D140 (budynek wielorodzinny, h 17.5 m, storeys 5), 138 m from the start route, view +25 deg off the route side"
+    },
+    {
+      "id": "r10_block_3",
+      "type": "persp",
+      "kind": "photo_match",
+      "seat": "road",
+      "pos": [
+        -279.51,
+        -351.29,
+        143.92
+      ],
+      "look_at": [
+        -288.49,
+        -388.58,
+        148.22
+      ],
+      "fov_deg": 60.0,
+      "note": "block bdot:2BE4B431-C728-1BF0-E053-CC2BA8C0D140 (budynek wielorodzinny, h 15.2 m, storeys 4), 140 m from the start route, view +25 deg off the route side"
+    },
+    {
+      "id": "r10_block_4",
+      "type": "persp",
+      "kind": "photo_match",
+      "seat": "road",
+      "pos": [
+        -381.84,
+        -303.74,
+        140.56
+      ],
+      "look_at": [
+        -395.66,
+        -358.85,
+        144.86
+      ],
+      "fov_deg": 60.0,
+      "note": "block bdot:2BE4B431-C9E1-1BF0-E053-CC2BA8C0D140 (budynek wielorodzinny, h 20.1 m, storeys 6), 144 m from the start route, view +25 deg off the route side"
+    },
+    {
+      "id": "r10_block_5",
+      "type": "persp",
+      "kind": "photo_match",
+      "seat": "road",
+      "pos": [
+        -401.77,
+        -274.43,
+        139.51
+      ],
+      "look_at": [
+        -410.85,
+        -314.31,
+        143.81
+      ],
+      "fov_deg": 60.0,
+      "note": "block bdot:2BE4B431-C9E3-1BF0-E053-CC2BA8C0D140 (budynek wielorodzinny, h 20.0 m, storeys 6), 150 m from the start route, view +25 deg off the route side"
+    },
+    {
+      "id": "r10_fence_1",
+      "type": "persp",
+      "kind": "photo_match",
+      "seat": "road",
+      "pos": [
+        -288.52,
+        -243.17,
+        142.84
+      ],
+      "look_at": [
+        -302.83,
+        -250.16,
+        142.34
+      ],
+      "fov_deg": 55.0,
+      "note": "concrete fence osm way 1537671087, 31 m, 39 m from the start route"
+    },
+    {
+      "id": "r10_fence_2",
+      "type": "persp",
+      "kind": "photo_match",
+      "seat": "road",
+      "pos": [
+        -608.8,
+        -87.68,
+        142.84
+      ],
+      "look_at": [
+        -587.16,
+        -91.14,
+        142.34
+      ],
+      "fov_deg": 55.0,
+      "note": "concrete fence osm way 1341554979, 53 m, 119 m from the start route"
+    },
+    {
+      "id": "r10_fence_3",
+      "type": "persp",
+      "kind": "photo_match",
+      "seat": "road",
+      "pos": [
+        -429.18,
+        -358.22,
+        142.84
+      ],
+      "look_at": [
+        -402.5,
+        -342.7,
+        142.34
+      ],
+      "fov_deg": 55.0,
+      "note": "concrete fence osm way 1537671072, 83 m, 158 m from the start route"
+    },
+    {
+      "id": "glass_front",
+      "type": "persp",
+      "kind": "photo_match",
+      "fov_deg": 50.0,
+      "pos": [
+        734.4802482593753,
+        -388.9965970342562,
+        143.33499999999998
+      ],
+      "look_at": [
+        728.8928212793751,
+        -385.8755940315077,
+        142.785
+      ],
+      "note": "car glass QA, windscreen"
+    },
+    {
+      "id": "car_lod_08",
+      "type": "persp",
+      "kind": "photo_match",
+      "fov_deg": 40.0,
+      "pos": [
+        730.5490313994948,
+        -393.2802373678624,
+        143.33499999999998
+      ],
+      "look_at": [
+        728.369,
+        -385.583,
+        142.435
+      ],
+      "note": "car LOD QA, front 3/4 at 8 m"
+    },
+    {
+      "id": "car_lod_12",
+      "type": "persp",
+      "kind": "photo_match",
+      "fov_deg": 40.0,
+      "pos": [
+        731.6390470992421,
+        -397.1288560517936,
+        143.33499999999998
+      ],
+      "look_at": [
+        728.369,
+        -385.583,
+        142.435
+      ],
+      "note": "car LOD QA, front 3/4 at 12 m"
+    },
+    {
+      "id": "car_lod_15",
+      "type": "persp",
+      "kind": "photo_match",
+      "fov_deg": 40.0,
+      "pos": [
+        732.4565588740527,
+        -400.015320064742,
+        143.33499999999998
+      ],
+      "look_at": [
+        728.369,
+        -385.583,
+        142.435
+      ],
+      "note": "car LOD QA, front 3/4 at 15 m"
+    },
+    {
+      "id": "car_lod_25",
+      "type": "persp",
+      "kind": "photo_match",
+      "fov_deg": 40.0,
+      "pos": [
+        735.1815981234212,
+        -409.63686677456997,
+        143.33499999999998
+      ],
+      "look_at": [
+        728.369,
+        -385.583,
+        142.435
+      ],
+      "note": "car LOD QA, front 3/4 at 25 m"
+    },
+    {
+      "id": "r10_front_04",
+      "type": "persp",
+      "kind": "photo_match",
+      "fov_deg": 40.0,
+      "pos": [
+        729.5026163277373,
+        -389.58556343128845,
+        142.903
+      ],
+      "look_at": [
+        728.369,
+        -385.583,
+        142.435
+      ],
+      "note": "r10 detail: lamps / grille / plate at ~4 m"
+    },
+    {
+      "id": "r10_rear_04",
+      "type": "persp",
+      "kind": "photo_match",
+      "fov_deg": 40.0,
+      "pos": [
+        727.169982730278,
+        -381.34951944767573,
+        142.92999999999998
+      ],
+      "look_at": [
+        728.369,
+        -385.583,
+        142.435
+      ],
+      "note": "r10 detail: tail lamps / plate at ~4 m"
+    },
+    {
+      "id": "r10_wheel_02",
+      "type": "persp",
+      "kind": "photo_match",
+      "fov_deg": 35.0,
+      "pos": [
+        729.0230094198484,
+        -387.89217121035875,
+        141.95499999999998
+      ],
+      "look_at": [
+        728.369,
+        -385.583,
+        142.185
+      ],
+      "note": "r10 detail: tyre / rim / arch"
+    },
+    {
+      "id": "r10b_black_05",
+      "type": "persp",
+      "kind": "photo_match",
+      "note": "r10b dark paint QA: car_hatch_black front 3/4 at 5 m",
+      "fov_deg": 40.0,
+      "pos": [
+        717.9332275390625,
+        -451.54571533203125,
+        143.47900390625
+      ],
+      "look_at": [
+        716.3499755859375,
+        -446.8030090332031,
+        142.57899475097656
+      ]
+    },
+    {
+      "id": "r10b_black_20",
+      "type": "persp",
+      "kind": "photo_match",
+      "fov_deg": 40.0,
+      "pos": [
+        722.6829777863375,
+        -465.77385639494844,
+        143.47899999999998
+      ],
+      "look_at": [
+        716.35,
+        -446.803,
+        142.579
+      ],
+      "note": "r10b dark paint QA: car_hatch_black front 3/4 at 20 m"
+    },
+    {
+      "id": "r10b_black_45",
+      "type": "persp",
+      "kind": "photo_match",
+      "fov_deg": 40.0,
+      "pos": [
+        730.5992000192592,
+        -489.48742688863405,
+        143.47899999999998
+      ],
+      "look_at": [
+        716.35,
+        -446.803,
+        142.579
+      ],
+      "note": "r10b dark paint QA: car_hatch_black front 3/4 at 45 m"
+    },
+    {
+      "id": "r10b_grey_05",
+      "type": "persp",
+      "kind": "photo_match",
+      "fov_deg": 40.0,
+      "pos": [
+        698.68635800163,
+        -486.8344745365916,
+        143.201
+      ],
+      "look_at": [
+        697.173,
+        -482.069,
+        142.30100000000002
+      ],
+      "note": "r10b dark paint QA: car_hatch_grey front 3/4 at 5 m"
+    },
+    {
+      "id": "r10b_blue_05",
+      "type": "persp",
+      "kind": "photo_match",
+      "fov_deg": 40.0,
+      "pos": [
+        694.8794775543552,
+        -493.2564452006878,
+        143.20299999999997
+      ],
+      "look_at": [
+        693.642,
+        -488.412,
+        142.303
+      ],
+      "note": "r10b dark paint QA: car_hatch_blue front 3/4 at 5 m"
+    },
+    {
+      "id": "r10b_silver_05",
+      "type": "persp",
+      "kind": "photo_match",
+      "fov_deg": 40.0,
+      "pos": [
+        731.5990069296871,
+        -388.4236805233337,
+        143.30499999999998
+      ],
+      "look_at": [
+        730.049,
+        -383.67,
+        142.405
+      ],
+      "note": "r10b dark paint QA: car_suv_silver front 3/4 at 5 m"
+    },
+    {
+      "id": "g_current_black_wheel_02",
+      "type": "persp",
+      "kind": "photo_match",
+      "note": "WORKING_VALUE QA camera2m outside actual generated front wheel; no world placement changes; source life:parking:kwadrat-park-units-forecourt#0",
+      "fov_deg": 50.0,
+      "pos": [
+        716.2093505859375,
+        -449.9653625488281,
+        142.2480010986328
+      ],
+      "look_at": [
+        717.103515625,
+        -448.1763610839844,
+        142.09800720214844
+      ]
+    },
+    {
+      "id": "g_current_black_lod_05",
+      "type": "persp",
+      "kind": "photo_match",
+      "note": "WORKING_VALUE QA camera at 5m; actual source life:parking:kwadrat-park-units-forecourt#0. Cooked scene full rays plus actual instanced vehicle OBBs tested; world placements unchanged.",
+      "fov_deg": 40.0,
+      "pos": [
+        713.1455688476562,
+        -450.6124267578125,
+        144.08200073242188
+      ],
+      "look_at": [
+        716.3900146484375,
+        -446.8080139160156,
+        142.58200073242188
+      ]
+    },
+    {
+      "id": "g_current_black_lod_20",
+      "type": "persp",
+      "kind": "photo_match",
+      "note": "WORKING_VALUE QA camera at 20m; actual source life:parking:kwadrat-park-units-forecourt#0. Cooked scene full rays plus actual instanced vehicle OBBs tested; world placements unchanged.",
+      "fov_deg": 40.0,
+      "pos": [
+        703.4122314453125,
+        -462.025634765625,
+        144.08200073242188
+      ],
+      "look_at": [
+        716.3900146484375,
+        -446.8080139160156,
+        142.58200073242188
+      ]
+    },
+    {
+      "id": "g_current_black_lod_45",
+      "type": "persp",
+      "kind": "photo_match",
+      "note": "WORKING_VALUE QA camera at 45m; actual source life:parking:kwadrat-park-units-forecourt#0. Cooked scene full rays plus actual instanced vehicle OBBs tested; world placements unchanged.",
+      "fov_deg": 40.0,
+      "pos": [
+        687.18994140625,
+        -481.0476989746094,
+        144.08200073242188
+      ],
+      "look_at": [
+        716.3900146484375,
+        -446.8080139160156,
+        142.58200073242188
+      ]
+    },
+    {
+      "id": "g_dirt_level_0",
+      "type": "persp",
+      "kind": "photo_match",
+      "fov_deg": 45,
+      "pos": [
+        170.48015363761183,
+        -1003.3710408996202,
+        136.582
+      ],
+      "look_at": [
+        174.754,
+        -1000.776,
+        135.682
+      ],
+      "note": "WORKING_VALUE QA: actual GPU-proven paint film level0/3; car_hatch_black; life:parking:osm:way/1570938388:0#0. Raw vehicle/building footprints checked, visual review still required. No world placement edit."
+    },
+    {
+      "id": "g_dirt_level_1",
+      "type": "persp",
+      "kind": "photo_match",
+      "fov_deg": 45,
+      "pos": [
+        -61.304684847467186,
+        -853.9561970123165,
+        134.82399999999998
+      ],
+      "look_at": [
+        -65.083,
+        -857.231,
+        133.92399999999998
+      ],
+      "note": "WORKING_VALUE QA: actual GPU-proven paint film level1/3; car_hatch_black; life:parking:osm:way/549993409:0#0. Raw vehicle/building footprints checked, visual review still required. No world placement edit."
+    },
+    {
+      "id": "g_dirt_level_2",
+      "type": "persp",
+      "kind": "photo_match",
+      "fov_deg": 45,
+      "pos": [
+        761.7038696066276,
+        -756.1781974576166,
+        145.935
+      ],
+      "look_at": [
+        765.805,
+        -753.318,
+        145.035
+      ],
+      "note": "WORKING_VALUE QA: actual GPU-proven paint film level2/3; car_hatch_black; life:parking:osm:way/1540337259:0#0. Raw vehicle/building footprints checked, visual review still required. No world placement edit."
+    },
+    {
+      "id": "g_dirt_level_3",
+      "type": "persp",
+      "kind": "photo_match",
+      "fov_deg": 45,
+      "pos": [
+        -475.6105111262601,
+        -1024.0020616733075,
+        128.963
+      ],
+      "look_at": [
+        -472.394,
+        -1020.174,
+        128.063
+      ],
+      "note": "WORKING_VALUE QA: actual GPU-proven paint film level3/3; car_hatch_black; life:parking:osm:way/397105100:0#0. Raw vehicle/building footprints checked, visual review still required. No world placement edit."
+    },
+    {
+      "id": "r10b_grey_20",
+      "type": "persp",
+      "kind": "photo_match",
+      "fov_deg": 40.0,
+      "pos": [
+        703.22643200652,
+        -501.13089814636623,
+        143.201
+      ],
+      "look_at": [
+        697.173,
+        -482.069,
+        142.30100000000002
+      ],
+      "note": "r10b dark paint QA: car_hatch_grey front 3/4 at 20 m"
+    },
+    {
+      "id": "r10b_blue_20",
+      "type": "persp",
+      "kind": "photo_match",
+      "fov_deg": 40.0,
+      "pos": [
+        698.5919102174205,
+        -507.7897808027513,
+        143.20299999999997
+      ],
+      "look_at": [
+        693.642,
+        -488.412,
+        142.303
+      ],
+      "note": "r10b dark paint QA: car_hatch_blue front 3/4 at 20 m"
+    },
+    {
+      "id": "r4_dirt_candidate_3",
+      "type": "persp",
+      "kind": "photo_match",
+      "fov_deg": 45,
+      "pos": [
+        672.5986719335007,
+        -528.2982970696864,
+        143.357
+      ],
+      "look_at": [
+        674.796,
+        -523.807,
+        142.457
+      ],
+      "note": "WORKING_VALUE QA camera: CPU-proposed R4 level3 on actual car_hatch_black. GPU binding and fresh visibility not yet verified. No world placement change."
+    },
+    {
+      "id": "r4_rear_target_3",
+      "type": "persp",
+      "kind": "photo_match",
+      "fov_deg": 45,
+      "pos": [
+        668.1408923014147,
+        -523.6160483782422,
+        143.05700000000002
+      ],
+      "look_at": [
+        672.9096552307318,
+        -522.8841222120702,
+        142.30700000000002
+      ],
+      "note": "WORKING_VALUE QA-only supplemental rear3/4 on actual level3 target. CPU vehicle/building footprint rays clear; fresh image verification required. No placement or old-camera edit."
+    }
+  ],
+  "dark_cars": {
+    "black": "car_hatch_black",
+    "grey": "car_hatch_grey",
+    "blue": "car_hatch_blue",
+    "silver": "car_suv_silver"
+  },
+  "note": "Original fixed cameras retained. Historical blocked views are regression-only. New far views claim visible rear/body ROI only; no whole-car claim. Four current dirt cases use actual GPU-proven same-prototype instances.",
+  "dirt_case_sources": [
+    {
+      "gpu": {
+        "prototype": "car_hatch_black",
+        "level": 0,
+        "index": 631,
+        "e": 174.75399780273438,
+        "n": -1000.7760009765625,
+        "z": 134.98199462890625,
+        "worldOrigin": {
+          "x": 174.75399780273438,
+          "y": 3.8419952392578125,
+          "z": -1000.7760009765625
+        }
+      },
+      "instance": {
+        "e": 174.754,
+        "n": -1000.776,
+        "p": "car_hatch_black",
+        "src": "life:parking:osm:way/1570938388:0#0",
+        "yaw": -3.6431,
+        "z": 134.982
+      },
+      "camera": {
+        "id": "g_dirt_level_0",
+        "type": "persp",
+        "kind": "photo_match",
+        "fov_deg": 45,
+        "pos": [
+          170.48015363761183,
+          -1003.3710408996202,
+          136.582
+        ],
+        "look_at": [
+          174.754,
+          -1000.776,
+          135.682
+        ],
+        "note": "WORKING_VALUE QA: actual GPU-proven paint film level0/3; car_hatch_black; life:parking:osm:way/1570938388:0#0. Raw vehicle/building footprints checked, visual review still required. No world placement edit."
+      }
+    },
+    {
+      "gpu": {
+        "prototype": "car_hatch_black",
+        "level": 1,
+        "index": 2006,
+        "e": -65.08300018310547,
+        "n": -857.2310180664062,
+        "z": 133.2239990234375,
+        "worldOrigin": {
+          "x": -65.08300018310547,
+          "y": 2.0839996337890625,
+          "z": -857.2310180664062
+        }
+      },
+      "instance": {
+        "e": -65.083,
+        "n": -857.231,
+        "p": "car_hatch_black",
+        "src": "life:parking:osm:way/549993409:0#0",
+        "yaw": -0.5076,
+        "z": 133.224
+      },
+      "camera": {
+        "id": "g_dirt_level_1",
+        "type": "persp",
+        "kind": "photo_match",
+        "fov_deg": 45,
+        "pos": [
+          -61.304684847467186,
+          -853.9561970123165,
+          134.82399999999998
+        ],
+        "look_at": [
+          -65.083,
+          -857.231,
+          133.92399999999998
+        ],
+        "note": "WORKING_VALUE QA: actual GPU-proven paint film level1/3; car_hatch_black; life:parking:osm:way/549993409:0#0. Raw vehicle/building footprints checked, visual review still required. No world placement edit."
+      }
+    },
+    {
+      "gpu": {
+        "prototype": "car_hatch_black",
+        "level": 2,
+        "index": 3278,
+        "e": 765.8049926757812,
+        "n": -753.3179931640625,
+        "z": 144.3350067138672,
+        "worldOrigin": {
+          "x": 765.8049926757812,
+          "y": 13.19500732421875,
+          "z": -753.3179931640625
+        }
+      },
+      "instance": {
+        "e": 765.805,
+        "n": -753.318,
+        "p": "car_hatch_black",
+        "src": "life:parking:osm:way/1540337259:0#0",
+        "yaw": -3.5798,
+        "z": 144.335
+      },
+      "camera": {
+        "id": "g_dirt_level_2",
+        "type": "persp",
+        "kind": "photo_match",
+        "fov_deg": 45,
+        "pos": [
+          761.7038696066276,
+          -756.1781974576166,
+          145.935
+        ],
+        "look_at": [
+          765.805,
+          -753.318,
+          145.035
+        ],
+        "note": "WORKING_VALUE QA: actual GPU-proven paint film level2/3; car_hatch_black; life:parking:osm:way/1540337259:0#0. Raw vehicle/building footprints checked, visual review still required. No world placement edit."
+      }
+    },
+    {
+      "gpu": {
+        "prototype": "car_hatch_black",
+        "level": 3,
+        "index": 471,
+        "e": -472.3940124511719,
+        "n": -1020.1740112304688,
+        "z": 127.36299896240234,
+        "worldOrigin": {
+          "x": -472.3940124511719,
+          "y": -3.7770004272460938,
+          "z": -1020.1740112304688
+        }
+      },
+      "instance": {
+        "e": -472.394,
+        "n": -1020.174,
+        "p": "car_hatch_black",
+        "src": "life:parking:osm:way/397105100:0#0",
+        "yaw": -2.2696,
+        "z": 127.363
+      },
+      "camera": {
+        "id": "g_dirt_level_3",
+        "type": "persp",
+        "kind": "photo_match",
+        "fov_deg": 45,
+        "pos": [
+          -475.6105111262601,
+          -1024.0020616733075,
+          128.963
+        ],
+        "look_at": [
+          -472.394,
+          -1020.174,
+          128.063
+        ],
+        "note": "WORKING_VALUE QA: actual GPU-proven paint film level3/3; car_hatch_black; life:parking:osm:way/397105100:0#0. Raw vehicle/building footprints checked, visual review still required. No world placement edit."
+      }
+    }
+  ],
+  "r4_additional_target": {
+    "instance": {
+      "e": 674.796,
+      "n": -523.807,
+      "p": "car_hatch_black",
+      "src": "life:parking:kwadrat-park-units-forecourt#0",
+      "yaw": -2.0258,
+      "z": 141.757
+    },
+    "cpu_expected_r4_level": 3,
+    "camera": {
+      "id": "r4_dirt_candidate_3",
+      "type": "persp",
+      "kind": "photo_match",
+      "fov_deg": 45,
+      "pos": [
+        672.5986719335007,
+        -528.2982970696864,
+        143.357
+      ],
+      "look_at": [
+        674.796,
+        -523.807,
+        142.457
+      ],
+      "note": "WORKING_VALUE QA camera: CPU-proposed R4 level3 on actual car_hatch_black. GPU binding and fresh visibility not yet verified. No world placement change."
+    }
+  },
+  "r4_note": "Old camera poses unchanged. Add historical grey20/blue20 and one CPU-proposed R4 level3 target. Old g_dirt_level IDs name historical R3 cases; actual R4 levels require GPU readback. Wall/trailer views remain regression-only."
+}

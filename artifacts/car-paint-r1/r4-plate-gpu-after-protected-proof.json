@@ -1,0 +1,20 @@
+{
+  "instances_before_after_exact": true,
+  "source_before_after_exact": true,
+  "protected_world_fixture_proof": "r4-plate-gpu-after-source-proof.json",
+  "rows": [
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Instances.asset",
+      "sha256": "94e11d8175739b390c9c67396109838f303c4e1576a793aad861a6c74e43a686"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_car_plate.mat",
+      "sha256": "54fdad7f14fe0b8fddb8d16638351d158b6726e20ea7f7d2b68ade5cabc21877"
+    },
+    {
+      "file": "game/Assets/_Project/Environment/Shaders/WorldCarPlate.shader",
+      "sha256": "3d517ceb43fb9afc1e07258c782b9e16bdb15ba3f38e711731fd5b906c1126b6"
+    }
+  ],
+  "note": "Independent post-process disk hashes; current capture reads these assets, no new GPU run needed for this unchanged-file check."
+}

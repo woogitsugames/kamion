@@ -31,8 +31,8 @@ namespace Game.Editor.VisualQA
         }
         static Vector2 Expected(int cell)
         {
-            return new Vector2(cell%4*.25f+4f/1024+(8.5f/16)*248f/1024,
-                (7-cell/4)*.125f+5f/512+(4.5f/8)*54f/512);
+            return new Vector2(cell%4*.25f+4f/1024+.5f*248f/1024,
+                (7-cell/4)*.125f+5f/512+.5f*54f/512);
         }
         static string Sha(string path)=>BitConverter.ToString(System.Security.Cryptography.SHA256.Create().ComputeHash(File.ReadAllBytes(path))).Replace("-","").ToLowerInvariant();
         static int Srp(Shader shader)
@@ -70,7 +70,7 @@ namespace Game.Editor.VisualQA
             var evidence=new Evidence{graphics=SystemInfo.graphicsDeviceType.ToString(),shader=plate.shader.name,texture=AssetDatabase.GetAssetPath(plate.GetTexture("_BaseMap")),sourceSha256=before,
                 instancesSha256=Sha(System.IO.Path.Combine(EditorTools.ProjectRoot,AssetDatabase.GetAssetPath(set))),nativePlatePrimitives=54,nativeMeshes=81,skippedLod2=27,
                 ownedSrpCode=Srp(plate.shader),litSrpCode=Srp(Shader.Find("Universal Render Pipeline/Lit")),keywordEnabled=true,
-                note="Actual plate-only source forward vertex function, native plate submeshes and RenderMeshInstanced matrices. Float RT UV readback, diagnostic clip/fragment only. Not phone, timing, uniqueness or far-readability proof."};
+                note="Actual plate-only source forward vertex function, native plate submeshes and RenderMeshInstanced matrices. Float RT UV readback averages four center-adjacent pixels to remove backend RT Y convention. Native corner orientation is independently audited. Diagnostic clip/fragment only; not phone, timing, uniqueness or far-readability proof."};
             // Exercise repeat success -> rejection -> success on PRIVATE clones only.
             var copy=UnityEngine.Object.Instantiate(set);var clonedPlate=new Material(plate);
             try
@@ -118,7 +118,8 @@ namespace Game.Editor.VisualQA
                         Graphics.RenderMeshInstanced(rp,mesh,sub,matrices,4);};
                     RenderPipelineManager.beginCameraRendering+=issue;try{camera.Render();}finally{RenderPipelineManager.beginCameraRendering-=issue;}
                     var active=RenderTexture.active;RenderTexture.active=rt;pixels.ReadPixels(new Rect(0,0,64,8),0,0);pixels.Apply();RenderTexture.active=active;
-                    for(int j=0;j<4;j++){int cpu=(int)(Hash(batchInputs[j].matrix,rect)%27);var expected=Expected(cpu);Color pixel=pixels.GetPixel(8+16*j,4);var actual=new Vector2(pixel.r,pixel.g);
+                    for(int j=0;j<4;j++){int cpu=(int)(Hash(batchInputs[j].matrix,rect)%27);var expected=Expected(cpu);
+                        Color pixel=(pixels.GetPixel(7+16*j,3)+pixels.GetPixel(8+16*j,3)+pixels.GetPixel(7+16*j,4)+pixels.GetPixel(8+16*j,4))*.25f;var actual=new Vector2(pixel.r,pixel.g);
                         float error=(actual-expected).magnitude;evidence.maxUvError=Mathf.Max(error,evidence.maxUvError);
                         if(error>.0001f||pixel.b>.001f)throw new InvalidOperationException($"Plate UV mismatch {proto.name} lod{lod} {control} cpu{cpu} actual{actual} expected{expected}");
                         int gpu=Mathf.FloorToInt(actual.x*4)+4*(7-Mathf.FloorToInt(actual.y*8));
