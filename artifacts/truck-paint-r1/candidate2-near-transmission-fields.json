@@ -1,0 +1,57 @@
+{
+  "method": "Actual shader returns(trans,F,film), post/RCASoff, PNG sRGB decoded. Conservative validpane mask from existing geometricGPUmask, ownerROI fortruck34; Low intersection alsofiltersfieldranges. Not a lamp/albedo physicalmeasurement.",
+  "rows": [
+    {
+      "tier": "Low",
+      "camera": "truck-34",
+      "pixels": 16214,
+      "transmission_median": 0.7454042095403874,
+      "transmission_p10p90": [
+        0.7083757798916868,
+        0.7605245046752924
+      ],
+      "F_median": 0.0822827071298148,
+      "film_median": 0.0,
+      "film_p90": 0.13843161503245183
+    },
+    {
+      "tier": "Low",
+      "camera": "truck-at-gate",
+      "pixels": 28332,
+      "transmission_median": 0.7379104087727308,
+      "transmission_p10p90": [
+        0.7083757798916868,
+        0.7529422167760779
+      ],
+      "F_median": 0.0822827071298148,
+      "film_median": 0.0021246888848418626,
+      "film_p90": 0.19086359169678496
+    },
+    {
+      "tier": "High",
+      "camera": "truck-34",
+      "pixels": 16221,
+      "transmission_median": 0.7454042095403874,
+      "transmission_p10p90": [
+        0.7083757798916868,
+        0.7605245046752924
+      ],
+      "F_median": 0.0822827071298148,
+      "film_median": 0.0,
+      "film_p90": 0.13843161503245183
+    },
+    {
+      "tier": "High",
+      "camera": "truck-at-gate",
+      "pixels": 28355,
+      "transmission_median": 0.7379104087727308,
+      "transmission_p10p90": [
+        0.7156935005064807,
+        0.7529422167760779
+      ],
+      "F_median": 0.0822827071298148,
+      "film_median": 0.0,
+      "film_p90": 0.19120168274079138
+    }
+  ]
+}

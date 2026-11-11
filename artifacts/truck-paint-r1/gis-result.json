@@ -1,0 +1,31 @@
+{
+  "command": "uv run --project tools/worldgen python -m pytest tests/gis -q --junitxml=artifacts/truck-paint-r1/gis-full.xml",
+  "exitCode": 0,
+  "passed": 370,
+  "xfailed": 1,
+  "failed": 0,
+  "durationSeconds": 542.66,
+  "sourceHead": "ea5e403c2dfbf9d0209f46583f55fbb5981f84ff",
+  "junit": {
+    "name": "pytest",
+    "errors": "0",
+    "failures": "0",
+    "skipped": "1",
+    "tests": "371",
+    "time": "542.355",
+    "timestamp": "2026-11-11T12:35:30.735583+01:00",
+    "hostname": "DOM-NEW"
+  },
+  "pinFileCount": 4234,
+  "inputChanges": 0,
+  "restoredFiles": 0,
+  "unrestoredFiles": [],
+  "newFiles": [],
+  "meshFbxDeltaVsBaseline": 0,
+  "poseHierarchyDeltaVsBaseline": 0,
+  "canonicalGeneratedDeltaVsBaseline": 8,
+  "canonicalGeneratedDeltaNote": "8 already-known candidate1 material/prefab changes; GIS itself changes0 of4234 inputs.",
+  "productionGameToolsWorkingDiff": "",
+  "unityLaunched": false,
+  "relevance": "Full GIS applies to current Python/generated products; shader-only refinement does not require repeat unless Python/product inputs change or failure emerges."
+}

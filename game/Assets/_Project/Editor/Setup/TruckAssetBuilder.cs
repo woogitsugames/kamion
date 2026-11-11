@@ -42,9 +42,9 @@ namespace Game.Editor.Setup
         const string MatDir = Root + "/Materials";
         const string ResDir = Root + "/Resources/TRAKT";
         static readonly string[] Tiers = { "High", "Medium", "Low" };
-        /// <summary>Near-pane exterior transmission of the cab glazing (ADR 0048 r6 0.42; ADR 0059 experiment via -extTrans).</summary>
-        static float ExtTransmission => float.TryParse(EditorTools.Arg("-extTrans", "0.42"), System.Globalization.NumberStyles.Float,
-            System.Globalization.CultureInfo.InvariantCulture, out var v) ? v : 0.42f;
+        /// <summary>ADR0087 windscreen transmission experiment; side doors retain ADR0059 value0.42; -extTrans overrides the windscreen.</summary>
+        static float ExtTransmission => float.TryParse(EditorTools.Arg("-extTrans", "1.0"), System.Globalization.NumberStyles.Float,
+            System.Globalization.CultureInfo.InvariantCulture, out var v) ? v : 1f;
         const string ExtManifest = "art-source/truck/exterior/export/truck_exterior_manifest.json";
         const string IntManifest = "art-source/truck/interior/export/cab_interior_manifest.json";
 
@@ -287,18 +287,24 @@ namespace Game.Editor.Setup
                     m.SetTexture("_MMap", Tex<Texture2D>($"{et}/T_Ext_{slot}_M.png"));
                     m.SetFloat("_IsPaint", slot == "Paint" ? 1f : 0f);
                     m.SetFloat("_Dirt", 0.5f);
+                    // Legacy Color storage, decoded by Unity (probe .15 -> .01960665 GPU); preserve calibration.
                     m.SetColor("_DirtColor", new Color(0.15f, 0.135f, 0.11f, 1f));
                     // ADR 0038: coated base lobe, orange peel, procedural road grime (vehicle frame from ContactShadowCaster). WORKING_VALUE.
-                    m.SetFloat("_CoatedBaseRoughness", 0.6f); m.SetFloat("_OrangePeel", 0.012f);
+                    m.SetFloat("_CoatedBaseRoughness", 0.6f);
+                    // ADR0087 WORKING_VALUE: narrower unresolved ripple lobe, retain dielectricF0/coat energy.
+                    m.SetFloat("_OrangePeel", slot == "Paint" ? 0.004f : 0.012f);
                     m.SetFloat("_GrimeHeight", 0.8f); m.SetFloat("_GrimeChassis", 1.3f);
                     if (slot == "Paint")
                     {
-                        // Livery "white" (biel flotowa), manifest liveries.white; colours are linear.
+                        // Legacy serialized Color encoding deliberately preserved (ADR0087 actual GPU probe):
+                        // stored .78/.785/.78 -> linear shader multiplier .5704816/.5787147/.5704816.
+                        // These stored numbers are not physical linear reflectance or the final albedo (_CMap also multiplies).
                         m.SetTexture("_DecalMap", Tex<Texture2D>($"{et}/T_Ext_Decal.png"));
                         m.SetColor("_PaintColor", new Color(0.78f, 0.785f, 0.78f, 1f));
                         // Base coat under a clear coat (review r3 E1): base 0.36, coat 0.08, F0 0.04 (shader).
                         m.SetFloat("_PaintRoughness", 0.36f); m.SetFloat("_PaintMetallic", 0f);
                         m.SetFloat("_ClearCoat", 1f); m.SetFloat("_ClearCoatRoughness", 0.08f); m.SetFloat("_Flake", 0f);
+                        // Same legacy Color storage contract, not a newly measured metallic reflectance.
                         m.SetColor("_DecalColor", new Color(0.1f, 0.104f, 0.11f, 1f));
                         m.SetFloat("_DecalMetallic", 1f); m.SetFloat("_DecalRoughness", 0.3f);
                     }
@@ -316,7 +322,8 @@ namespace Game.Editor.Setup
                 g.SetVector("_WiperSweep", new Vector4(-5f, 100f, 0.8f, 2.0f));
                 g.SetFloat("_WindscreenMinZ", 0.95f);
                 g.SetVector("_CabCentreOS", new Vector4(0f, 1.0f, -0.6f, 0f));
-                // Review r6 E2: from outside only ~0.7 x cab occlusion 0.6 of the cab behind the glazing reaches the eye (shader).
+                // ADR0087 candidate: near windscreen uses its actual Fresnel+absorption transmission; preserve far-pane
+                // clutter0.35 and door calibration. Reject visually if the old empty-cab aquarium returns.
                 g.SetFloat("_ExteriorTransmission", ExtTransmission);
                 g.SetFloat("_SeeThroughClutter", 0.35f);
                 g.renderQueue = (int)RenderQueue.Transparent;
@@ -334,6 +341,7 @@ namespace Game.Editor.Setup
                     var dg = Mat(dir, "MI_Ext_DoorGlass" + side, glass);
                     dg.CopyPropertiesFromMaterial(g);
                     dg.SetFloat("_Wiper", 0f); dg.SetFloat("_Opacity", 0.12f);
+                    dg.SetFloat("_ExteriorTransmission", 0.42f); // keep ADR0059 side/far-pane clutter calibration
                     dg.renderQueue = (int)RenderQueue.Transparent;
                     Add("MI_Ext_DoorGlass" + side, dg);
                 }
@@ -555,6 +563,9 @@ namespace Game.Editor.Setup
                             r.receiveShadows = !glassish;
                             // Wheels (origin = wheel centre): tyre contact-patch flattening in Kamion/Truck Exterior.
                             if (role.StartsWith("WHEEL_", StringComparison.Ordinal)) r.renderingLayerMask |= TruckVisualRig.TyreRenderingLayer;
+                            // ADR0087 reserved bit10: actual painted door object, allLODs; keep default light-layer bit0.
+                            // Crown uses object-local coordinates, so it stays attached through hinge/cab transforms.
+                            if (role == "DOOR_L" || role == "DOOR_R") r.renderingLayerMask |= 1u << 10;
                             (transparent ? glassLods : exteriorLods)[lod].Add(r);
                         }
                     }

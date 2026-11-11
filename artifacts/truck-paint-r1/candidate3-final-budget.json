@@ -1,0 +1,44 @@
+{
+  "cameraFrames": 102,
+  "comparison": "All full VisualQaRunner estimate/counter rows and headers. These are BEFORE-SRP draw/tris estimates andinstancedsubmissioncounters, not actual GPU drawcalls/timing.",
+  "shaderMathGpuCost": "UNVERIFIED",
+  "AndroidGpuTiming": "UNVERIFIED",
+  "rows": [
+    {
+      "condition": "High-clear",
+      "identical": true,
+      "baselineRows": 35,
+      "finalRows": 35
+    },
+    {
+      "condition": "High-lowsun",
+      "identical": true,
+      "baselineRows": 35,
+      "finalRows": 35
+    },
+    {
+      "condition": "High-overcast",
+      "identical": true,
+      "baselineRows": 35,
+      "finalRows": 35
+    },
+    {
+      "condition": "Low-clear",
+      "identical": true,
+      "baselineRows": 35,
+      "finalRows": 35
+    },
+    {
+      "condition": "Low-lowsun",
+      "identical": true,
+      "baselineRows": 35,
+      "finalRows": 35
+    },
+    {
+      "condition": "Low-overcast",
+      "identical": true,
+      "baselineRows": 35,
+      "finalRows": 35
+    }
+  ]
+}

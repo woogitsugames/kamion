@@ -53,7 +53,8 @@ namespace Game.Rendering
         static readonly int k_Capture = Shader.PropertyToID("_KamionVehicleCapture"),
             k_SkyCapOff = Shader.PropertyToID("_KamionSkyCapOff"),
             k_EnvCube = Shader.PropertyToID("_KamionVehicleEnvCube"),
-            k_EnvParams = Shader.PropertyToID("_KamionVehicleEnvParams");
+            k_EnvParams = Shader.PropertyToID("_KamionVehicleEnvParams"),
+            k_Tone = Shader.PropertyToID("_KamionTone");
 
         GameObject m_Root;
         Camera m_Cam;
@@ -161,8 +162,8 @@ namespace Game.Rendering
         void Bind()
         {
             Shader.SetGlobalTexture(k_EnvCube, m_Cube);
-            // x: mip of perceptual roughness 1 (URP's UNITY_SPECCUBE_LOD_STEPS = 6, capped by the cube's mip count)
-            Shader.SetGlobalVector(k_EnvParams, new Vector4(Mathf.Min(6f, m_Cube.mipmapCount - 1), 0f, 0f, 0f));
+            // ADR0087 box-mip footprint: x maximum sampled mip, y actual face size (not a GGX probe).
+            Shader.SetGlobalVector(k_EnvParams, new Vector4(Mathf.Min(6f, m_Cube.mipmapCount - 1), m_Size, 0f, 0f));
             Shader.SetGlobalFloat(k_Capture, 1f);   // KamionVehicleEnv.hlsl samples _KamionVehicleEnvCube
         }
 
@@ -211,12 +212,23 @@ namespace Game.Rendering
             m_Request.mipLevel = 0;
             if (!RenderPipeline.SupportsRenderRequest(m_Cam, m_Request)) return;
             // r6 L4: the reflection sees the physical sky radiance, not the phone-compressed dome of the main view.
-            Shader.SetGlobalFloat(k_SkyCapOff, 1f);
-            // The capture must not mirror itself: the vehicle shaders read the analytic env while the faces render.
-            Shader.SetGlobalFloat(k_Capture, 0f);
-            RenderPipeline.SubmitRenderRequest(m_Cam, m_Request);
-            Shader.SetGlobalFloat(k_Capture, 1f);
-            Shader.SetGlobalFloat(k_SkyCapOff, 0f);
+            float skyCapOff = Shader.GetGlobalFloat(k_SkyCapOff), capture = Shader.GetGlobalFloat(k_Capture);
+            Vector4 tone = Shader.GetGlobalVector(k_Tone);
+            try
+            {
+                Shader.SetGlobalFloat(k_SkyCapOff, 1f);
+                // Capture physical scene radiance. Low world surfaces otherwise bake their look into the cube,
+                // then TruckExterior/Glass apply it again. Physical sky already bypasses its display cap.
+                Shader.SetGlobalVector(k_Tone, Vector4.zero);
+                Shader.SetGlobalFloat(k_Capture, 0f);
+                RenderPipeline.SubmitRenderRequest(m_Cam, m_Request);
+            }
+            finally
+            {
+                Shader.SetGlobalFloat(k_Capture, capture);
+                Shader.SetGlobalFloat(k_SkyCapOff, skyCapOff);
+                Shader.SetGlobalVector(k_Tone, tone);
+            }
             Graphics.CopyTexture(m_FaceRT, 0, 0, m_Cube, face, 0);
             m_FacesRendered++;
         }

@@ -1,0 +1,242 @@
+{
+  "fbxSHA256": "262e395a60c96a2752e0af76f0c9bd7f47728f20c72e918f3b138d4314114f50",
+  "normalMap": "art-source\\truck\\exterior\\export\\textures\\High\\T_Ext_Paint_N.png",
+  "normalSHA256": "9f91e9ccbaa34c3c97a8d0b383d16fe4b79d9aa44f2a28393ad602dd574f120a",
+  "normalResolution": [
+    4096,
+    4096
+  ],
+  "method": "Read actual exported FBX in Blender4.2; triangle-loop UV samples bilinear High OpenGL+Y normal PNG and Mikk tangent basis. Uncompressed source map diagnostic, not ASTC/GPU readback. Unity actual mesh field debug separately confirmed mapped nWS. RGB quantization changes zero normal to small ~.004 slopes. Loop sampling is topology weighted, not area weighted.",
+  "rows": [
+    {
+      "name": "DOOR_L_LOD0",
+      "panelFilterSourceXYZ": "z1.35..1.85m; y-.35...65m; normal outward x>.8, excludes window/edge/handle",
+      "loopSamples": 211,
+      "lateralPosition_m": {
+        "min": [
+          -1.2450003623962402
+        ],
+        "median": [
+          -1.2450003623962402
+        ],
+        "max": [
+          -1.2450003623962402
+        ],
+        "std": [
+          0.0
+        ]
+      },
+      "geometryNormal": {
+        "min": [
+          -1.0,
+          -8.742277657347586e-08,
+          0.0
+        ],
+        "median": [
+          -1.0,
+          -8.742277657347586e-08,
+          0.0
+        ],
+        "max": [
+          -1.0,
+          -8.742277657347586e-08,
+          0.0
+        ],
+        "std": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "mappedBakedSourceNormal": {
+        "min": [
+          -0.9999846213121382,
+          -0.003923743809375354,
+          0.0039193593175143576
+        ],
+        "median": [
+          -0.9999846213121141,
+          -0.003923740366502281,
+          0.003919362394719282
+        ],
+        "max": [
+          -0.9999846213102773,
+          -0.003923736882542081,
+          0.003919366244347863
+        ],
+        "std": [
+          9.149090145135032e-13,
+          1.8981503096668427e-09,
+          1.9118957028983075e-09
+        ]
+      },
+      "heightBins": [
+        {
+          "z_m": [
+            1.35,
+            1.45
+          ],
+          "samples": 31,
+          "geometry_up_normal_mean": 0.0,
+          "baked_up_normal_mean": 0.003919363167926749,
+          "baked_up_normal_std": 1.6599769739463563e-09
+        },
+        {
+          "z_m": [
+            1.45,
+            1.55
+          ],
+          "samples": 54,
+          "geometry_up_normal_mean": 0.0,
+          "baked_up_normal_mean": 0.00391936303767814,
+          "baked_up_normal_std": 1.4700658296464617e-09
+        },
+        {
+          "z_m": [
+            1.55,
+            1.65
+          ],
+          "samples": 36,
+          "geometry_up_normal_mean": 0.0,
+          "baked_up_normal_mean": 0.003919363175028754,
+          "baked_up_normal_std": 1.9399538674886108e-09
+        },
+        {
+          "z_m": [
+            1.65,
+            1.75
+          ],
+          "samples": 36,
+          "geometry_up_normal_mean": 0.0,
+          "baked_up_normal_mean": 0.003919361896383266,
+          "baked_up_normal_std": 1.8062945003886359e-09
+        },
+        {
+          "z_m": [
+            1.75,
+            1.85
+          ],
+          "samples": 54,
+          "geometry_up_normal_mean": 0.0,
+          "baked_up_normal_mean": 0.00391936226782787,
+          "baked_up_normal_std": 2.2020278505829715e-09
+        }
+      ]
+    },
+    {
+      "name": "DOOR_R_LOD0",
+      "panelFilterSourceXYZ": "z1.35..1.85m; y-.35...65m; normal outward x>.8, excludes window/edge/handle",
+      "loopSamples": 211,
+      "lateralPosition_m": {
+        "min": [
+          1.244999647140503
+        ],
+        "median": [
+          1.244999647140503
+        ],
+        "max": [
+          1.244999647140503
+        ],
+        "std": [
+          0.0
+        ]
+      },
+      "geometryNormal": {
+        "min": [
+          1.0,
+          8.742277657347586e-08,
+          0.0
+        ],
+        "median": [
+          1.0,
+          8.742277657347586e-08,
+          0.0
+        ],
+        "max": [
+          1.0,
+          8.742277657347586e-08,
+          0.0
+        ],
+        "std": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "mappedBakedSourceNormal": {
+        "min": [
+          0.9999846213088731,
+          0.003919459057780945,
+          0.003923638698565013
+        ],
+        "median": [
+          0.9999846213088898,
+          0.003919461733237859,
+          0.003923641762516271
+        ],
+        "max": [
+          0.9999846213107272,
+          0.003919464428325291,
+          0.00392364406910918
+        ],
+        "std": [
+          9.03098118430868e-13,
+          1.4850949751236408e-09,
+          1.4525805407850681e-09
+        ]
+      },
+      "heightBins": [
+        {
+          "z_m": [
+            1.35,
+            1.45
+          ],
+          "samples": 31,
+          "geometry_up_normal_mean": 0.0,
+          "baked_up_normal_mean": 0.003923642284906816,
+          "baked_up_normal_std": 1.2206049705541793e-09
+        },
+        {
+          "z_m": [
+            1.45,
+            1.55
+          ],
+          "samples": 54,
+          "geometry_up_normal_mean": 0.0,
+          "baked_up_normal_mean": 0.0039236412617138245,
+          "baked_up_normal_std": 9.715357894900818e-10
+        },
+        {
+          "z_m": [
+            1.55,
+            1.65
+          ],
+          "samples": 36,
+          "geometry_up_normal_mean": 0.0,
+          "baked_up_normal_mean": 0.003923641904690136,
+          "baked_up_normal_std": 1.407263462050091e-09
+        },
+        {
+          "z_m": [
+            1.65,
+            1.75
+          ],
+          "samples": 36,
+          "geometry_up_normal_mean": 0.0,
+          "baked_up_normal_mean": 0.003923641334375575,
+          "baked_up_normal_std": 2.02621835160708e-09
+        },
+        {
+          "z_m": [
+            1.75,
+            1.85
+          ],
+          "samples": 54,
+          "geometry_up_normal_mean": 0.0,
+          "baked_up_normal_mean": 0.003923641810731839,
+          "baked_up_normal_std": 1.3685071531673974e-09
+        }
+      ]
+    }
+  ]
+}
