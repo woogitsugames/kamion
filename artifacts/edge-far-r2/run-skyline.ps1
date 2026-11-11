@@ -1,3 +1,4 @@
+param([switch]$ResumeAfter)
 $ErrorActionPreference = 'Stop'
 $root = Split-Path (Split-Path $PSScriptRoot -Parent) -Parent
 Set-Location $root
@@ -10,7 +11,8 @@ function Wait-Phone {
     }
 }
 if (!(Test-Path "$out/EVIDENCE_COMPLETE")) { throw 'Finish the primary matrix and tests first' }
-foreach ($phase in @('before','after')) {
+$phases = if ($ResumeAfter) { @('after') } else { @('before','after') }
+foreach ($phase in $phases) {
     & uv run --project tools/worldgen python "$out/generate_evidence.py" $phase > "$out/skyline-generate-$phase.log"
     if ($LASTEXITCODE -ne 0) { throw 'Generation failed' }
     Wait-Phone

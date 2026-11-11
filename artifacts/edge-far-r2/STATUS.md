@@ -57,3 +57,7 @@
 - Shallow-canopy experiment REJECTED after inspecting cap-prototype-pair.jpg: introduced broad flat green surfaces without resolving the visible layered cards. Restored exact previously validated far_field.py from c05e8f06; no candidate canopy change retained.
 - Skyline diagnostic demonstrates horizon closure but exposes inherited aerial/card limitations. It is not a driver-eye quality claim; core corrected road views and budgets remain validated.
 - NEXT: pwsh artifacts/edge-far-r2/run-skyline.ps1 -ResumeAfter to regenerate/rebuild restored final geometry and complete four skyline after views.
+- FINAL READY FOR LEADER REVIEW: 64 final PNGs / 32 pairs inspected; 388 GIS pass + 1 expected xfail; EditMode 226/226; WorldEdgeRecoveryTests 3/3, no skips. Low delta draws 0, max rounded trisK delta 0; total Low mesh -1.28%.
+- verify_final.py confirms final Python/C#/regression source AND both GLBs match tested c05e8f06 after rejecting canopy experiment. Skyline source identity verified; 40m diagnostic discloses inherited cards, not phone/driver-eye proof. Known final skyline shutdown issue accepted by project wrapper only after complete frame.
+- REPORT/ADR/SELF-REVIEW finalized. Open only leader independent/device review and stated inherited approximations; original export/export paths absent, backups in quarantine, no disk space reclaimed after deletion-policy rejection.
+- NEXT: robocopy artifacts/edge-far-r2 C:\Users\matma\Documents\Claude\kamion\artifacts\edge-far-r2 /E /XJ /XD offline; verify report/validation hashes; no main merge/push.

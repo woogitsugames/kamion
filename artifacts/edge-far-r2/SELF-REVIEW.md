@@ -1,12 +1,12 @@
 # Self-review H r2 (author; not independent visual-critic approval)
-- Inspected all four compare-*.jpg sheets: 28 before/after pairs, Low/High x clear/overcast, including unchanged dk8-dk19-exit.
+- Inspected all four compare-*.jpg sheets: 32 before/after pairs (28 primary + 4 skyline), Low/High x clear/overcast, including unchanged dk8-dk19-exit.
 - P0 edge-south: long red-fascia far hall disappears, exposing the regional office; false yellow hall at left also disappears. Corrected in all four conditions.
 - High edge-east: removal of a false far facade reveals regional detail behind the fence. No new floating far buildings or changed foreground geometry observed.
 - North/west/DK8 driving views: no new skyline gap or new grazing-angle forest wall observed. Their distant silhouettes largely retain the inherited r1 look.
-- First source-verified NE helpers are occluded by nearby crowns. These images cannot be used as proof of the far-field skyline. A separate 40m diagnostic view is being captured; it is not a driver-eye or phone view.
+- First source-verified NE helpers are occluded by nearby crowns. These images cannot be used as proof of the far-field skyline. The separate 40m diagnostic view was inspected in all four conditions: forest closes the horizon, but elevated views expose layered cards. It is not a driver-eye or phone view.
 - Inherited issues outside this fix: dark/regular near-tree crowns and floating leaf cards; road/yard material simplicity; distant forest silhouette can still read as a band. No claim of photographic equivalence or full gate-3 pass.
 - Atmosphere: same common WorldSurface/Vegetation haze as main; no private fog calibration. Full-ring NMT relief remains unimplemented (border-derived apron approximation).
 - Performance: 28 paired editor estimates, Low static+instanced draws delta 0; rounded static triangles delta 0 or -1k. No positive triangle change in any Low view. Mesh total delta -318 Low / -378 High tris.
 - This is relative to Argon+main, not to main without a backdrop (which would inherit r1 +2..4 estimated draws). No phone/GPU/thermal performance claim.
-- Test audit: GIS 388 pass / 1 expected xfail; initial EditMode 226/226. PlayMode found missing WorldFarField container; builder corrected without weakening test; final reruns pending.
-- Open: final skyline diagnostic, final Unity reruns, leader independent review and phone gate.
+- Test audit: GIS 388 pass / 1 expected xfail; final EditMode 226/226 and PlayMode 3/3, no skips. WorldFarField hierarchy fixed without weakening the existing assertion. Final source/meshes verified identical to tested checkpoint.
+- Open: leader independent review and phone gate; full-ring NMT relief and physical-distance haze remain unverified. Shallow canopy experiment rejected because it added flat planes; original canopy retained.

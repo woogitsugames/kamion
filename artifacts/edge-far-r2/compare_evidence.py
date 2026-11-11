@@ -57,3 +57,29 @@ assert all(row["after"]["static_tris_k"] + row["after"]["instanced_tris_k"]
            <= 1.02 * (row["before"]["static_tris_k"] + row["before"]["instanced_tris_k"])
            for row in low)
 print(f"{len(rows)} paired editor estimates; Low draws +0 and tris <= +2% verified")
+
+if (ROOT / "SKYLINE_COMPLETE").exists():
+    skyline_rows = []
+    sheet = Image.new("RGB", (960, 254 * 4), "white")
+    draw = ImageDraw.Draw(sheet)
+    for index, configuration in enumerate(("Low-clear", "Low-overcast", "High-clear", "High-overcast")):
+        values = {}
+        for column, phase in enumerate(("before", "after")):
+            path = ROOT / "skyline" / phase / configuration
+            values[phase] = stats(path / "stats.txt")["edge-pietrasze-skyline"]
+            frame = ImageOps.contain(Image.open(path / "edge-pietrasze-skyline.png").convert("RGB"), (480, 224))
+            sheet.paste(frame, (column * 480, index * 254 + 28))
+            draw.text((column * 480 + 4, index * 254 + 4),
+                      f"40m diagnostic | {phase} {configuration}", fill="black")
+        before, after = values["before"], values["after"]
+        row = dict(configuration=configuration, camera="edge-pietrasze-skyline", **values)
+        row["delta_draws"] = (after["static_draws"] + after["instanced_draws"]
+                              - before["static_draws"] - before["instanced_draws"])
+        row["delta_tris_k"] = (after["static_tris_k"] + after["instanced_tris_k"]
+                               - before["static_tris_k"] - before["instanced_tris_k"])
+        if configuration.startswith("Low"):
+            assert row["delta_draws"] <= 0 and row["delta_tris_k"] <= 0
+        skyline_rows.append(row)
+    sheet.save(ROOT / "compare-skyline.jpg", quality=94)
+    (ROOT / "skyline-measurements.json").write_text(json.dumps(skyline_rows, indent=2), encoding="utf-8")
+    print("4 supplementary skyline pairs measured; Low budget unchanged")
