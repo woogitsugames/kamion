@@ -996,3 +996,12 @@ Observed D3D12/Forward; source/material unchanged and cloned factory idempotent
 per probe records. SRP raw code1 for both owned and Lit is parity, not a claim
 of compatibility. E audits the harness independently. Small focus next.
 NEXT COMMAND: Get-Content C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-car-paint/artifacts/car-paint-r1/STATUS.md -Tail 8
+
+Step 92: E harness audit confirms 4px symmetric center and correct hash math.
+Scope is native submesh coordinates + supplied matrices/synthetic common
+rect/matrix rebase and strength.w=0; not actual LOD-selector/profile switching,
+endpoint/mip proof. Source/material restore asserted in probe; Instances after
+hash was missing. ROOT directly hashed current Instances.asset after probe:
+94e11d81...43a686 exactly matches recorded before SHA, closing that asset's gap.
+Saved result in independent JSON; G asked for full native protected afterproof.
+NEXT COMMAND: Get-Content C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-car-paint/artifacts/car-paint-r1/STATUS.md -Tail 8
