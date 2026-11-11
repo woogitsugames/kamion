@@ -146,7 +146,7 @@ def test_plot_layout_has_gate_wicket_drive_and_closed_fence():
         assert [d[0] for d in lay["drive"]] == ["in", "out"]
         # bays + gate + wicket cover the outline (minus what a neighbour's parallel fence already closes)
         length = sum(float(np.hypot(*(b[4] - b[3]))) for b in lay["bays"]) + PL.GATE_SLOT_M + PL.WICKET_SLOT_M
-        assert length <= p["poly"].length + 4 * 1.3            # overlap of the pushed-back half bays only
+        assert length <= p["poly"].length + 4 * PL.MODULE_M    # overlap of the pushed-back bays only
         total += length / p["poly"].length
         names = {b[0] for b in lay["bays"]}
         assert names <= set(PL.protos())
@@ -183,10 +183,29 @@ def test_plot_prototypes_are_small_and_use_existing_materials():
     from streetscape import materials as M
     from streetscape import plots as PL
     P = PL.protos()
-    assert len(P) == 26
+    assert len(P) == 19 and not [k for k in P if k.endswith('_h') and 'concrete' not in k]
     for name, (lod0, lod1, col) in P.items():
         t0 = sum(len(p["T"]) for p in lod0.out())
         t1 = sum(len(p["T"]) for p in lod1.out())
         assert t1 <= t0 and t0 <= 420, (name, t0, t1)
-        assert len(lod0.out()) <= 3 and {p["mat"] for p in lod0.out()} <= set(M.M), name
+        assert len(lod0.out()) <= 2 and {p["mat"] for p in lod0.out()} <= set(M.M), name
         assert col is None
+
+
+def test_rectangular_plots_close_with_whole_bays():
+    """Budget: one bay prototype per fence type - a clean rectangular plot is a whole number of 2.5 m modules and the
+    gate group sits on the module, so mesh / panel / picket runs need no half bay and overlap nothing."""
+    from streetscape import plots as PL
+    road, houses = _plot_scene()
+    plots = PL.plan(houses, road, [], [])
+    for p in plots:
+        x0, y0, x1, y1 = p["poly"].bounds
+        assert (x1 - x0) / PL.MODULE_M == pytest.approx(round((x1 - x0) / PL.MODULE_M), abs=1e-6)
+        assert (y1 - y0) / PL.MODULE_M == pytest.approx(round((y1 - y0) / PL.MODULE_M), abs=1e-6)
+        lay = PL.layout(p, None, None)
+        g, w = lay["gate"][1], lay["wicket"][1]
+        assert float(np.hypot(*(g - w))) == pytest.approx((PL.GATE_SLOT_M + PL.WICKET_SLOT_M) / 2)
+        front = [b for b in lay["bays"] if b[2] @ p["front"] > 0.7 and "concrete" not in b[0]]
+        if front:
+            mids = sorted(float(b[1][0]) for b in front)
+            assert all(abs((b_ - a_) / PL.MODULE_M - round((b_ - a_) / PL.MODULE_M)) < 1e-6 for a_, b_ in zip(mids, mids[1:]))

@@ -54,6 +54,12 @@ WICKET_SLOT_M = 1.25          # 1.0 m wicket + posts
 TERRACE_MIN = 3               # houses in one group from which the row is a terrace (wicket per house, no gate / drive)
 DRIVE_W_M = 3.0
 DRIVE_TILE_M = 2.5
+# Module of the plot outline, m. Rectangular plots are cut to whole modules and the gate group (3.75 + 1.25 m = two
+# modules) starts on a module, so mesh / panel / picket fences close with whole 2.5 m bays: one prototype per type
+# (no half bays). Where a run still has a rest (clipped plots, concrete bays of 2.0 m) the last bay is pushed back
+# over the one before it by a whole number of the fence's own pattern pitch, so the doubled part shows no seam.
+MODULE_M = 2.5
+PITCH_M = {"mesh": 0.05, "panel": 0.05, "picket": 0.145}       # wire pitch of `fence_mesh`, picket + gap
 # (front type, colour) weights and the side / back choice given the front
 FRONT_TYPES = [("panel", "anthracite", 0.30), ("panel", "green", 0.15), ("picket", "wood", 0.20),
                ("mesh", "green", 0.15), ("mesh", "galv", 0.10), ("concrete", "concrete", 0.10)]
@@ -210,6 +216,17 @@ def plan(houses, roads_poly, obstacles, barriers=(), seed=""):
                 break
             mg[k] -= 1.0
             poly = rect(mg)
+        if poly.intersection(obs).area < 0.3:               # a clean rectangle: cut it down to whole modules
+            for ks in ((2, 3) if du else (0, 1), (0, 1) if du else (2, 3)):
+                size = (bb[1] - bb[0] + mg[0] + mg[1]) if ks == (0, 1) else (bb[3] - bb[2] + mg[2] + mg[3])
+                cutm = size - math.floor(size / MODULE_M + 1e-6) * MODULE_M
+                # take it off the back / the side without the driveway first, then the other one
+                order = sorted(ks, key=lambda k: -mg[k])
+                for k in order:
+                    take = min(cutm, max(mg[k] - MIN_MARGIN_M, 0.0))
+                    mg[k] -= take
+                    cutm -= take
+            poly = rect(mg)
         if poly.intersection(obs).area >= 0.3:              # still on something: cut it off, keep the house's part
             parts = [q for q in getattr(poly.difference(obs.buffer(0.01)), "geoms", [poly.difference(obs.buffer(0.01))])
                      if q.geom_type == "Polygon" and q.area > 1.0]
@@ -283,19 +300,30 @@ def layout(plot, cut=None, near=None):
         if len(plot["houses"]) >= TERRACE_MIN:               # terrace: a wicket in front of every house, no shared gate
             for k, hp in enumerate(plot["house_pts"]):
                 sw = float((hp - a) @ t)
-                if 0.5 + WICKET_SLOT_M / 2 <= sw <= L - 0.5 - WICKET_SLOT_M / 2:
-                    gate_iv[f"wicket{k}"] = (sw - WICKET_SLOT_M / 2, sw + WICKET_SLOT_M / 2)
-        elif L >= GATE_SLOT_M + 1.0:
-            g0 = min(max(sg - GATE_SLOT_M / 2, 0.5), L - GATE_SLOT_M - 0.5)
+                w0 = round((sw - WICKET_SLOT_M / 2) / WICKET_SLOT_M) * WICKET_SLOT_M       # on the half module
+                # every fence run between the wickets and the corners is empty or at least one bay long
+                if (0.0 <= w0 and w0 + WICKET_SLOT_M <= L + 1e-6 and (w0 < 1e-6 or w0 >= MODULE_M - 1e-6)
+                        and (L - w0 - WICKET_SLOT_M < 0.3 or L - w0 - WICKET_SLOT_M >= MODULE_M - 1e-6)
+                        and all(abs(w0 - x[0]) >= MODULE_M + WICKET_SLOT_M - 1e-6 for x in gate_iv.values())):
+                    gate_iv[f"wicket{k}"] = (w0, w0 + WICKET_SLOT_M)
+        elif L >= GATE_SLOT_M + WICKET_SLOT_M - 1e-6:
+            # gate + wicket = two modules, starting on a module from corner a; a rest of the edge that is no whole
+            # module goes to the far side when a pushed-back bay can close it, else the group ends on corner b
+            grp = GATE_SLOT_M + WICKET_SLOT_M
+            g0 = round((sg - (GATE_SLOT_M / 2 if w_side > 0 else GATE_SLOT_M / 2 + WICKET_SLOT_M)) / MODULE_M) * MODULE_M
+            g0 = min(max(g0, 0.0), math.floor((L - grp) / MODULE_M + 1e-6) * MODULE_M)
+            rest = L - g0 - grp
+            if 0.3 < rest < MODULE_M - 1e-6:
+                g0 = L - grp
+            if w_side > 0:
+                gate_iv["gate"], gate_iv["wicket"] = (g0, g0 + GATE_SLOT_M), (g0 + GATE_SLOT_M, g0 + grp)
+            else:
+                gate_iv["wicket"], gate_iv["gate"] = (g0, g0 + WICKET_SLOT_M), (g0 + WICKET_SLOT_M, g0 + grp)
+        elif L >= GATE_SLOT_M + 0.5:
+            g0 = 0.0 if sg < L / 2 else L - GATE_SLOT_M
             gate_iv["gate"] = (g0, g0 + GATE_SLOT_M)
-            if L >= GATE_SLOT_M + WICKET_SLOT_M + 1.0:
-                w0 = g0 + GATE_SLOT_M if w_side > 0 else g0 - WICKET_SLOT_M
-                if w0 < 0.5 or w0 + WICKET_SLOT_M > L - 0.5:
-                    w0 = g0 - WICKET_SLOT_M if w_side > 0 else g0 + GATE_SLOT_M
-                if 0.5 <= w0 and w0 + WICKET_SLOT_M <= L - 0.5:
-                    gate_iv["wicket"] = (w0, w0 + WICKET_SLOT_M)
-        elif L >= WICKET_SLOT_M + 1.0:
-            w0 = min(max(sg - WICKET_SLOT_M / 2, 0.5), L - WICKET_SLOT_M - 0.5)
+        elif L >= WICKET_SLOT_M + 0.5:
+            w0 = 0.0 if sg < L / 2 else L - WICKET_SLOT_M
             gate_iv["wicket"] = (w0, w0 + WICKET_SLOT_M)
         for kind, (s0, s1) in list(gate_iv.items()):
             m = a + t * 0.5 * (s0 + s1)
@@ -327,13 +355,15 @@ def layout(plot, cut=None, near=None):
                 nb = int(Lq / bay + 1e-6)
                 spans = [(k * bay, (k + 1) * bay, False) for k in range(nb)]
                 rem = Lq - nb * bay
-                if rem > 0.05:                              # the rest: half bays, the last one pushed back to end on the corner
+                if rem > 0.05 and typ == "concrete":        # 2.0 m plates: half bays, the last one pushed back
                     if rem > bay / 2:
                         spans.append((nb * bay, nb * bay + bay / 2, True))
                     if Lq >= bay / 2:
                         spans.append((Lq - bay / 2, Lq, True))
-                    else:
-                        spans.append((0.0, Lq, True))
+                elif rem > 0.05 and nb >= 1:                # one more whole bay, pushed back by whole pattern pitches
+                    back = math.ceil((bay - rem) / PITCH_M[typ] - 1e-6) * PITCH_M[typ]
+                    spans.append((nb * bay - back, nb * bay - back + bay, False))
+                # a run shorter than a bay (clipped plots only) stays open: no prototype shorter than a bay
                 for s0, s1, half in spans:
                     q0, q1 = p0 + t * s0, p0 + t * s1
                     m = 0.5 * (q0 + q1)
@@ -357,8 +387,24 @@ def layout(plot, cut=None, near=None):
 
 
 # ------------------------------------------------------------------------------------------- prototypes
-def _post(m, mat, x, s, h, deep=0.3):
-    m.box(mat, [x, 0.0, (h - deep) / 2], s / 2, s / 2, (h + deep) / 2)
+# Steel posts / frames are drawn with the fence's own alpha-tested mesh material, every vertex pinned to an opaque
+# texel of `fence_mesh` (the centre of a vertical wire: 3 px wide at u = 0, full height): one submesh = one instanced
+# draw per steel prototype instead of two (the post material has the same colour).
+PIN_UV = (1.5 / 512.0, 0.5)
+
+
+def _box(m, mat, c, hx, hy, hz, pin=False):
+    if not pin:
+        m.box(mat, c, hx, hy, hz)
+        return
+    c = np.asarray(c, float)
+    P = [c + [sx * hx, sy * hy, sz * hz] for sz in (-1, 1) for sy in (-1, 1) for sx in (-1, 1)]
+    for f in ((0, 2, 3, 1), (4, 5, 7, 6), (0, 1, 5, 4), (2, 6, 7, 3), (0, 4, 6, 2), (1, 3, 7, 5)):
+        m.add(mat, [P[i] for i in f], [(0, 1, 2), (0, 2, 3)], [PIN_UV] * 4)
+
+
+def _post(m, mat, x, s, h, deep=0.3, pin=False):
+    _box(m, mat, [x, 0.0, (h - deep) / 2], s / 2, s / 2, (h + deep) / 2, pin)
 
 
 def _dq(m, mat, x0, x1, z0, z1, y=0.0, uv=None):
@@ -371,7 +417,7 @@ def _dq(m, mat, x0, x1, z0, z1, y=0.0, uv=None):
 
 def fence_mesh(L, col, plinth, h):
     from . import props as PP
-    post, mesh = f"fence_{col}", f"fence_{col}_mesh"
+    mesh = f"fence_{col}_mesh"
     lod0, lod1 = PP.Mesh(), PP.Mesh()
     zb = 0.22 if plinth else 0.04
     for mm in (lod0, lod1):
@@ -379,7 +425,7 @@ def fence_mesh(L, col, plinth, h):
         if plinth:                                           # concrete plinth (podmurówka) 5 cm, 0.4 m into the ground
             mm.box("concrete_plinth", [0.0, 0.0, (zb - 0.4) / 2], L / 2, 0.03, (zb + 0.4) / 2)
     for x in (-L / 2, L / 2):
-        _post(lod0, post, x, 0.06 if plinth else 0.05, h + 0.05)
+        _post(lod0, mesh, x, 0.06 if plinth else 0.05, h + 0.05, pin=True)
     return lod0, lod1, None
 
 
@@ -437,17 +483,18 @@ def gate(W, col, h=1.5, leaves=2):
     from . import props as PP
     lod0, lod1 = PP.Mesh(), PP.Mesh()
     wood = col == "wood"
-    frame = "wood_planks" if wood else f"fence_{col}"
+    frame = "wood_planks" if wood else f"fence_{col}_mesh"
+    pin = not wood
     for x in (-(W / 2 + 0.06), W / 2 + 0.06):
-        _post(lod0, frame, x, 0.10, h + 0.12)
-        _post(lod1, frame, x, 0.10, h + 0.12)
+        _post(lod0, frame, x, 0.10, h + 0.12, pin=pin)
+        _post(lod1, frame, x, 0.10, h + 0.12, pin=pin)
     lw = W / leaves
     for k in range(leaves):
         x0, x1 = -W / 2 + k * lw + 0.015, -W / 2 + (k + 1) * lw - 0.015
         for z in (0.10, h - 0.02):
-            lod0.box(frame, [0.5 * (x0 + x1), 0.0, z], (x1 - x0) / 2, 0.02, 0.02)
+            _box(lod0, frame, [0.5 * (x0 + x1), 0.0, z], (x1 - x0) / 2, 0.02, 0.02, pin)
         for x in (x0 + 0.02, x1 - 0.02):
-            lod0.box(frame, [x, 0.0, 0.5 * (0.10 + h - 0.02)], 0.02, 0.02, 0.5 * (h - 0.12))
+            _box(lod0, frame, [x, 0.0, 0.5 * (0.10 + h - 0.02)], 0.02, 0.02, 0.5 * (h - 0.12), pin)
         if wood:
             pw, gap = 0.09, 0.055
             n = int((x1 - x0 - 0.04) / (pw + gap))
@@ -504,12 +551,9 @@ def protos():
     P = {}
     for col in ("green", "galv"):
         P[f"plot_fence_mesh_{col}"] = fence_mesh(BAY_M["mesh"], col, False, FENCE_H["mesh"])
-        P[f"plot_fence_mesh_{col}_h"] = fence_mesh(BAY_M["mesh"] / 2, col, False, FENCE_H["mesh"])
     for col in ("anthracite", "green"):
         P[f"plot_fence_panel_{col}"] = fence_mesh(BAY_M["panel"], col, True, FENCE_H["panel"])
-        P[f"plot_fence_panel_{col}_h"] = fence_mesh(BAY_M["panel"] / 2, col, True, FENCE_H["panel"])
     P["plot_fence_picket"] = fence_picket(BAY_M["picket"], FENCE_H["picket"])
-    P["plot_fence_picket_h"] = fence_picket(BAY_M["picket"] / 2, FENCE_H["picket"])
     P["plot_fence_concrete_a"] = fence_concrete(BAY_M["concrete"], 0, FENCE_H["concrete"])
     P["plot_fence_concrete_b"] = fence_concrete(BAY_M["concrete"], 2, FENCE_H["concrete"])
     P["plot_fence_concrete_h"] = fence_concrete(BAY_M["concrete"] / 2, 4, FENCE_H["concrete"])
@@ -519,7 +563,6 @@ def protos():
         P[f"plot_wicket_{col}"] = gate(WICKET_SLOT_M - 0.25, col, hh, 1)
     for surf, mat in (("paving", "yard_paving"), ("gravel", "yard_gravel")):
         P[f"plot_drive_{surf}"] = drive_tile(DRIVE_TILE_M, mat)
-        P[f"plot_drive_{surf}_h"] = drive_tile(DRIVE_TILE_M / 2, mat)
     P["plot_thuja"] = thuja()
     return P
 
@@ -593,20 +636,17 @@ def build(pl, blds, roads_poly, bpoly, paved, src, origin, zground, report, seed
                 continue
             surf = plot["surface"]
             nb = int(L / DRIVE_TILE_M + 1e-6)
-            spans = [(k * DRIVE_TILE_M, (k + 1) * DRIVE_TILE_M, False) for k in range(nb)]
-            rem = L - nb * DRIVE_TILE_M
-            if rem > 0.1:
-                if rem > DRIVE_TILE_M / 2:
-                    spans.append((nb * DRIVE_TILE_M, nb * DRIVE_TILE_M + DRIVE_TILE_M / 2, True))
-                spans.append((max(L - DRIVE_TILE_M / 2, 0.0), max(L, DRIVE_TILE_M / 2), True))
-            for s0, s1, half in spans:
+            spans = [(k * DRIVE_TILE_M, (k + 1) * DRIVE_TILE_M) for k in range(nb)]
+            if L - nb * DRIVE_TILE_M > 0.1:                  # the last tile ends on the run's end (laps the one before;
+                spans.append((L - DRIVE_TILE_M, L))          # outside the gate a short run laps under the gate)
+            for s0, s1 in spans:
                 cm = m + d * 0.5 * (s0 + s1)
                 hl = 0.5 * (s1 - s0)
                 pts = [cm, cm + d * hl + t * 1.4, cm + d * hl - t * 1.4, cm - d * hl + t * 1.4, cm - d * hl - t * 1.4]
                 if which == "in" and any(plot["foot"].distance(Point(*q)) < 0.25 for q in pts):
                     continue                                 # never under the house wall
                 z = max(zg(q) for q in pts) - 0.01
-                pl.add(f"plot_drive_{surf}" + ("_h" if half else ""), cm, _yaw(d), z=z, src=src_id)
+                pl.add(f"plot_drive_{surf}", cm, _yaw(d), z=z, src=src_id)
                 rep["drive_tiles"] += 1
             drive_polys.append(LineString([m, m + d * L]).buffer(DRIVE_W_M / 2 + 0.3, cap_style="flat"))
         keepout += drive_polys
