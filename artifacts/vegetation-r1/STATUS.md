@@ -10,3 +10,4 @@ Przygotowano review_images.py: wszystkie kamery, draws statyczne i instancje oso
 Zapisano PLAN.md z hipotezami trawy, pokrywy żywopłotu i koron. Regeneracja bazowa działa. Następny krok: kontrola logu, import bazowy i before. Pliki generatorów Blender pozostają poza edycją (własność).
 Przygotowano sekwencyjną kolejkę: czeka na koniec generatora, odrzuca fallback, pobiera slot, importuje i renderuje bazę. Następny krok: pwsh artifacts/vegetation-r1/baseline-pipeline.ps1
 Wywołania Acquire ustawiają StaleHours 1000000, aby skrypt nie sprzątał cudzych slotów. Owner pozostaje gpt-vegetation. Następny krok: dokończyć sekwencyjny baseline; nie zmieniać shaderów przed końcem before.
+Przygotowano wyłącznie syntetyczną hipotezę masek ground_candidate.py: osobno jawny trawnik, pobocze i teren niekoszony. To nie render ani dowód poprawy. Następny krok: obejrzeć ground-mask-hypothesis.jpg i ocenić kandydat na końcu before.
