@@ -1050,3 +1050,14 @@ controls do not prove fleet. G reports final368 complete and fullPBR467s/
 443PNG+spec byte parity; fullGIS in progress. E reviews High184. D memoryaudit
 c7306100 validates arithmetic/GUIDs and bounds dependency counterfactual vs GPU.
 NEXT COMMAND: Get-Content C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-car-paint/artifacts/car-paint-r1/STATUS.md -Tail 8
+
+Step 98: ROOT independently parsed all368 R3/final captured pose packets:
+selected camera/projection/pipeline/vehicle/region fields exact cross-pair and
+within-frame. All nine numeric stat deltas0 for368. Independently checked736
+begin/end live plate packets: ownedshader/localcorner/instancingtrue/version1,
+MotionVectors false everywhere. Hashed all368 final PNGs into independent JSON.
+These are live material states/editor estimates, not a newGPU execution/device
+measurement. Read D memoryauditc7306100: eightGUID/mip arithmetic exact, normal/
+Var duplicate pixels do not deduplicate GUIDs; currentdeps vsR3counterfactual.
+G renamed dependency count; +170368B is format payload projection, not residency.
+NEXT COMMAND: Get-Content C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-car-paint/artifacts/car-paint-r1/STATUS.md -Tail 8
