@@ -40,3 +40,4 @@ Zapisano before WorldC Low clear. Następny krok: obejrzenie arkuszy i porównan
 Kolejka naturalnie uzyskała slot dla następnego wariantu before; nie zatrzymano żadnego procesu ani nie usunięto slotu. Dodano tryb render-matrix.ps1 -Resume: pomija wyłącznie warianty z VISUALQA_RESULT OK oraz zgodną liczbą PNG i obecnym stats.txt. Następny krok: koniec pozostałych wariantów before, potem render-photos before.
 Zapisano before WorldC_High High overcast. Następny krok: obejrzenie arkuszy i porównanie statystyk.
 Zapisano before WorldC_High High clear. Następny krok: obejrzenie arkuszy i porównanie statystyk.
+Zakończono macierz before: 67 kamer razy 4 warianty = 268 PNG. Uruchomiono before-photos.log (27 dziennych dopasowań na Low/High w proporcjach zdjęć). Źródła shaderów pozostają bazowe. Następny krok: obejrzenie kontaktów wszystkich wariantów i zakończenie before-photos, potem implementacja VegetationGround.
