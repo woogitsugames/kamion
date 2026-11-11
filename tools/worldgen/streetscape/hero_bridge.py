@@ -334,12 +334,39 @@ def plan(w, region_id, overrides, zground, blocked, log=lambda *a: None) -> list
         from types import SimpleNamespace
         cfg = json.loads(config.read_text(encoding="utf-8"))
         for c in _chains(w.net, {str(x) for x in cfg["target"]["osm_way"]}):
-            if any(c in h["chains"] for h in out):
+            if any(c.id in {ch.id for ch in h["chains"]} for h in out):
                 continue
             local = SimpleNamespace(net=SimpleNamespace(chains=[c]), region=w.region)
             spec = build_spec(local, cfg, zground, blocked)
             if spec is not None:
+                # Ground samples are authored into the spec, so stairs cannot float
+                # above an imagined planar embankment. Never write to raw junctions.
+                spec["stairs"] = []
+                dk = spec["decks"][0]
+                for k, end in enumerate(dk["s_open"]):
+                    st = min(dk["stations"], key=lambda st: abs(st["s"] - end))
+                    t = np.array(st["t"])
+                    n = np.array(st["l"][:2]) - np.array(st["r"][:2])
+                    hw = np.linalg.norm(n) / 2
+                    n /= 2 * hw
+                    mid = (np.array(st["l"]) + np.array(st["r"])) / 2
+                    back = t * (-1 if k == 0 else 1)
+                    steps = []
+                    for j in range(18):
+                        xy = mid[:2] + n * (hw + .65) + back * ((j + .5) * spec["params"]["stairs_tread_m"])
+                        if blocked(xy):
+                            break
+                        z = zground(*xy)
+                        # Stop before the upper road envelope; cap tops belong to 0100.
+                        if z + .10 >= mid[2] - spec["params"]["girder_depth_m"]:
+                            break
+                        steps.append([_r(xy[0]), _r(xy[1]), _r(z)])
+                    spec["stairs"].append(steps)
                 out.append({"underdeck": True, "spec": spec, "chains": [c], "override": cfg})
+        sp = spec_path(region_id, cfg["asset"])
+        sp.parent.mkdir(parents=True, exist_ok=True)
+        sp.write_text(json.dumps([h["spec"] for h in out if h.get("underdeck")],
+                                 sort_keys=True, indent=1) + "\n", encoding="utf-8", newline="\n")
     return out
 
 
@@ -403,6 +430,15 @@ def _apply_underdeck(w, hero):
     spec, c = hero["spec"], hero["chains"][0]
     prm, buf = spec["params"], w.buf
     src = c.id + ":underdeck0105"
+    def deck_hash():
+        digest = hashlib.sha256()
+        for p in buf.parts:
+            if (p.src == c.id or p.src.startswith(c.id + ":")) and p.src != c.id + ":soffit" and not p.src.startswith(src):
+                digest.update((p.src + p.layer + p.mat).encode())
+                for arr in (p.V, p.UV, p.T):
+                    digest.update(np.ascontiguousarray(arr).tobytes())
+        return digest.hexdigest()
+    original_deck = deck_hash()
     before = sum(len(p.T) for p in buf.parts if p.layer == "bridge")
     removed = sum(len(p.T) for p in buf.parts if p.src == c.id + ":soffit")
     buf.parts = [p for p in buf.parts if p.src != c.id + ":soffit"]
@@ -477,10 +513,9 @@ def _apply_underdeck(w, hero):
                 _quad(buf, [(* (base - n * .22), z), (*(base + n * .17), z + .06),
                             (*(base + n * .24), z + .28), (*(base - n * .13), z + .22)],
                       "bridge_soffit", src + ":paint_WORKING_VALUE", np.append(t, 0))
-        q = pr["cols"][0]
-        x = float(np.dot(np.array(q[:2]) - mid[:2], n))
         hw = np.linalg.norm(np.array(st["l"][:2]) - np.array(st["r"][:2])) / 2
         sgn = -1 if st["l"][2] > st["r"][2] else 1
+        q = max(pr["cols"], key=lambda q: sgn * float(np.dot(np.array(q[:2]) - mid[:2], n)))
         a = at(st, sgn * (hw - .7), .90)
         xy = np.array(q[:2]) - t * .67
         b = np.append(xy, a[2] - .1)
@@ -507,20 +542,25 @@ def _apply_underdeck(w, hero):
                 for normal in (np.append(n * side, 0), -np.append(n * side, 0)):
                     _quad(buf, [(*a, ground - .3), (*b, ground - .3), (*b, ground + .25), (*a, top)],
                           "bridge_concrete", src + ":wing", normal)
-            # Stairs rise into the retained embankment, not into the roundabout.
-            # Terminate at the underside (this task does not author a deck access path).
-            count = max(1, int((top - ground) / prm["stairs_rise_m"]))
-            for j in range(count):
-                xy = mid[:2] + n * (hw + .65) + back * ((j + .5) * prm["stairs_tread_m"])
-                M.box(buf, "bridge", "bridge_concrete", xy, t, prm["stairs_tread_m"] / 2,
-                      prm["stairs_width_m"] / 2, ground + j * prm["stairs_rise_m"],
-                      ground + (j + 1) * prm["stairs_rise_m"], src + ":stairs")
+            for j, length in enumerate((.6, 1.0, .45, .8)):
+                xy = mid[:2] + n * ((j - 1.5) * 1.1) - back * .002
+                z = top - .02
+                low = max(ground, z - length)
+                _quad(buf, [(*(xy - n * .07), z), (*(xy + n * .07), z),
+                            (*(xy + n * .025), low), (*(xy - n * .025), low + .08)],
+                      "bridge_soffit", src + ":joint_runoff", np.append(-back, 0))
+            # Ground-following precast treads with an embedded base. A missing
+            # ground-safe flight stays absent rather than crossing a live road.
+            for x, y, z in spec.get("stairs", [[], []])[k]:
+                M.box(buf, "bridge", "bridge_concrete", [x, y], t, prm["stairs_tread_m"] / 2,
+                      prm["stairs_width_m"] / 2, z - .25, z + .10, src + ":stairs")
     after = sum(len(p.T) for p in buf.parts if p.layer == "bridge")
-    w.stats.setdefault("viaduct_underdeck", []).append({
+    w.stats["hero_bridges"].setdefault("underdeck", []).append({
         "id": hero["override"]["id"], "chain": c.id, "spec_sha256": _sha(spec),
         "removed_soffit_tris": removed, "added_net_tris": after - before,
         "pier_lines": len(dk["piers"]), "structure": "WORKING_VALUE",
-        "deck_barriers_unchanged": True, "new_materials": [], "vegetation_added": 0})
+        "deck_before_sha256": original_deck, "deck_after_sha256": deck_hash(),
+        "deck_barriers_unchanged": original_deck == deck_hash(), "new_materials": [], "vegetation_added": 0})
 
 
 def apply(w, heroes, instances: list, log=lambda *a: None) -> dict:

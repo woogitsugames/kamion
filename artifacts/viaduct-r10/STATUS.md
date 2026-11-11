@@ -6,3 +6,6 @@
 - Implementacja r1: osobny viaduct_underdeck.json (bez edycji overrides.yaml), konstrukcja w hero_bridge.py, stare materiały i chunk batching; pomost/ekrany/barierki pozostają nietknięte.
 - Podpory, głowice, łożyska, dźwigar/kroplowniki, rury, ściany skrzydłowe i schody wymagają testów i przeglądu; wymiary WORKING_VALUE.
 - NASTĘPNY KROK: uv run --project tools/worldgen python tools/worldgen/roads/build_world.py --region bialystok-industrial-c
+- Testy jednostkowe r1: 4/4 PASS (niezmienność siatek pomostu, normalne, prześwit, osadzenie). Obejrzano ref7204.jpg oraz refp45.jpg; żółte podpory potwierdzone, wymiary nadal WORKING_VALUE.
+- Uściślenie: wcześniejszy asset r9 = Bieżeństwa; 0105 = DK8/Putry. Osobny zakres OSM z istniejącego bridge_style Putry.
+- NASTĘPNY KROK: Get-Content artifacts/viaduct-r10/build-r1.log -Tail 20; Get-Content artifacts/viaduct-r10/baseline-gis.log -Tail 10
