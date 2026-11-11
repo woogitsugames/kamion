@@ -1,4 +1,4 @@
-param([string]$Phase = 'before', [string]$Rq = '', [switch]$LowSunOnly)
+param([string]$Phase = 'before', [string]$Rq = '', [switch]$LowSunOnly, [switch]$Targeted)
 $ErrorActionPreference = 'Stop'
 $repo = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..'))
 Set-Location $repo
@@ -14,7 +14,10 @@ foreach ($tier in @('Low','High')) {
     foreach ($light in $conditions) {
         Assert-UnitySlot
         $scene = if ($tier -eq 'High') { 'WorldC_High' } else { 'WorldC' }
-        & powershell -NoProfile -ExecutionPolicy Bypass -File scripts/visual-qa.ps1 -Scene $scene -Tier $tier -Lighting $light -Cameras $cameras -Gate3 Data/Regions/bialystok-industrial-c/buildings_r10_cameras.json -OutputDir "artifacts/light-r12/$Phase/$tier-$light" -Rq $Rq
+        $argsQa = @('-Scene', $scene, '-Tier', $tier, '-Lighting', $light, '-Gate3', 'Data/Regions/bialystok-industrial-c/buildings_r10_cameras.json', '-OutputDir', "artifacts/light-r12/$Phase/$tier-$light")
+        if ($Rq) { $argsQa += @('-Rq', $Rq) }
+        if ($LowSunOnly -or $Targeted) { $argsQa += @('-Cameras', $cameras) }
+        & powershell -NoProfile -ExecutionPolicy Bypass -File scripts/visual-qa.ps1 @argsQa
         if ($LASTEXITCODE -ne 0) { throw "Capture failed: $tier $light" }
         # Unity setup/QA writes tier assets; restore only these known generated policy side effects.
         git restore -- game/ProjectSettings game/Assets/_Project/Rendering/Settings
