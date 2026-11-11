@@ -20,10 +20,15 @@ The source instrument/head-box sightline test passes. GIS baseline: 370 passed, 
 - `CabMirrorAudit.Run` writes native render textures and TSV configuration. Native images have not undergone the
   horizontal flip applied by the glass material. Record resolution, FOV, aspect, near/far, LOD scale and shared cap.
   Interval columns describe configuration; actual round-robin cadence depends on visibility and is not measured Hz.
-- `mirror_sightlines.py` diagnoses interior obstruction on 315 samples per nominal exterior-manifest mirror glass.
-  It excludes transparent glazing and removed shell placeholders and applies the export's interior fit. It does
-  **not** model exterior housings or the builder's glass-adjuster rotation, so it is not a complete visibility or
-  R46 compliance test. Baseline: WideR 314/315 unblocked, other five 315/315. Confirm with rendered frames.
+- `mirror_sightlines.py` diagnoses obstruction on 315 samples per exterior-manifest mirror glass. It excludes
+  transparent glazing and removed shell placeholders and applies the export's interior fit. Read glass-adjuster
+  targets from the owning C# builder; `--include-exterior` includes opaque exterior FBX geometry in the same frame.
+  This tests visibility of the glass, not the reflected R46 field or transparency attenuation. Confirm in renders.
+  Initial interior-only/unadjusted check: WideR 314/315 clear, other five 315/315.
+  Full adjusted baseline: MainL 315/315, MainR 312/315, WideL 265/315, WideR 236/315, Kerb and Front 315/315.
+  Blockers: left wide CAB_Body 50; right wide CAB_Body 60, DOOR_R 17, interior win_channel 2.
+  A solid housing face behind glass which the builder tilts by ~6 degrees is a candidate cause; inspect native
+  mirror frames and the rendered glass before choosing a fix. Evidence `mirror-full-before.json` / `.log`.
 - `artifacts/cab-r1/render-matrix.ps1` serializes BuildBatch, InstallBatch and Low/High × overcast/clear captures,
   using WorldC / WorldC_High respectively. It waits for both PHONE_RUN and the coordinator's GPT_UNITY_HOLD before
   every Unity launch, and restores rendering settings / ProjectSettings after each run.
