@@ -13,7 +13,7 @@ FRONT = {
     'left_lamp': (695, 645, 845, 755),
 }
 # Previous owner-method crops, expressed at 1024 px width, retained for continuity.
-PAINT = {'door': (514, 218, 533, 252), 'deflector': (440, 120, 520, 134)}
+PAINT = {'glass': (380, 160, 460, 200), 'door': (514, 218, 533, 252), 'deflector': (440, 120, 520, 134)}
 
 def luminance(rgb):
     return np.asarray(rgb, dtype=np.float64) @ np.array([.2126, .7152, .0722]) / 255 * 100
@@ -42,6 +42,9 @@ def main(stage):
                 continue
             im = Image.open(file).convert('RGB')
             row[camera] = {key: crop_stats(im, box, width) for key, box in rois.items()}
+            legacy = im.resize((1024, round(im.height * 1024 / im.width)), Image.Resampling.LANCZOS)
+            for key, box in rois.items():
+                row[camera][key]['legacy1024'] = crop_stats(legacy, box, width)
             preview = im.copy()
             draw = ImageDraw.Draw(preview)
             for key, value in row[camera].items():

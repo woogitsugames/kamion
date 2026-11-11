@@ -33,3 +33,5 @@ Krok 14 — pilna aktualizacja właściciela: każde ciężkie zadanie Pythona w
 
 Krok 15: procedury korzystają teraz z aktualnego unity-slot.ps1 w main, bez edycji infrastruktury w worktree. Końcowy GIS ma lokalny limit jednego wątku BLAS/OMP/MKL. Low-clear rozpoczął render pod własnym slotem; ciężki Python nie jest uruchomiony. Następny krok: ukończyć baseline High i zestawy kontrolne.
 Baseline Low clear zapisany. Następny krok: obejrzeć PNG i zmierzyć lakier, szybę oraz DRL.
+
+Krok 16: pomiary zapisują także historyczną metodę po zmniejszeniu do 1024 px oraz dotychczasowe ROI szyby w truck-34, obok pomiaru natywnego. Dodano kontrolę bez samej przedniej tafli dla D44 przy zachmurzeniu; nie usuwa soczewek lamp ani pozostałego szkła. Następny krok: po baseline wykonać zestawy kontrolne, porównywać te same ROI i metodę.

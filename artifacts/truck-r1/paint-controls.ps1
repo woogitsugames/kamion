@@ -4,10 +4,12 @@ $slotScript = 'C:/Users/matma/Documents/Claude/kamion/scripts/unity-slot.ps1'
 uv run --project tools/worldgen python art-source/truck/exterior/qa/prepare_round_0115.py
 if ($LASTEXITCODE -ne 0) { throw 'Nie przygotowano diagnostyki.' }
 . scripts/env.ps1
-foreach ($case in @('white-on', 'white-off', 'dark-on', 'dark-off')) {
-    $argsForUnity = @('-executeMethod', 'Game.Editor.VisualQA.TruckRound0115.RunBatch', '-truckRound', "control-$case", '-truckOutputRoot', 'artifacts/truck-r1', '-truckCameras', 'truck-34,truck-side', '-truckTiers', 'Low,High', '-truckLights', 'overcast,clear')
+foreach ($case in @('white-on', 'white-off', 'dark-on', 'dark-off', 'no-pane')) {
+    $lighting = if ($case -eq 'no-pane') { 'overcast' } else { 'overcast,clear' }
+    $argsForUnity = @('-executeMethod', 'Game.Editor.VisualQA.TruckRound0115.RunBatch', '-truckRound', "control-$case", '-truckOutputRoot', 'artifacts/truck-r1', '-truckCameras', 'truck-34,truck-side,truck-front', '-truckTiers', 'Low,High', '-truckLights', $lighting)
     if ($case.StartsWith('dark')) { $argsForUnity += @('-truckPigment', '0.08') }
     if ($case.EndsWith('off')) { $argsForUnity += @('-truckCoatRadianceOff', '1') }
+    if ($case -eq 'no-pane') { $argsForUnity += @('-truckNoPane', 'windscreen') }
     pwsh $slotScript -Acquire -Owner gpt-truck -StaleHours 100000 -PollSeconds 5
     if ($LASTEXITCODE -ne 0) { throw 'Nie uzyskano slotu Unity.' }
     try {
