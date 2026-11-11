@@ -369,6 +369,13 @@ M = {
     "plaster_band_grey": {"color": [0.26, 0.27, 0.27], "rough": 0.9, "texture_set": "plaster"},
     # retaining walls of the raised ramps (roads.profile.mark_walled_ramps): block-faced concrete
     "ramp_wall_blocks": {"color": [0.34, 0.33, 0.31], "rough": 0.9, "texture_set": "concrete_blocks_split"},
+    # far-field backdrop beyond the 2x2 km region border (ADR 0085, streetscape.far_field): one merged submesh per
+    # cardinal sector with linear albedo in COLOR_0.rgb, window-mode flag in COLOR_0.a (1 = block/office grid,
+    # 0.75 = ribbon windows, 0 = windowless wall/roof/plinth/chimney/pylon), and bay x storey coordinates in TEXCOORD_1.
+    "far_field_buildings": {"color": [1.0, 1.0, 1.0], "rough": 0.88, "base": "plaster_white", "vertex_color": True,
+                            "window_grid": {"pitch_m": 3.0, "win_w": 0.48, "sill": 0.30, "head": 0.82,
+                                            "uv": "TEXCOORD_1"},
+                            "glass_color": [0.032, 0.038, 0.046]},
 }
 
 # ADR 0081 (r10 r2): Kamion/World PBR declares _Tint as a Color property, so Unity converts the value written by the

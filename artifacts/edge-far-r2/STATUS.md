@@ -1,0 +1,65 @@
+# H / ADR 0085 r2
+- Worktree gpt-edge-r2 from argon-edge 293c5f69; merged main 9e6e9fde; generated conflicts: ours, regeneration pending.
+- Read owner task and project rules; PHONE_RUN active: Unity prohibited until lock clears. No adb.
+- NEXT: git lfs checkout; copy required local data and create read-only-use raw junctions; inspect far_field.py.
+- Required copies/junctions and LFS checkout complete; local material/Library cache prepared. Baseline GIS and merged-world regeneration running.
+- NEXT: uv run --project tools/worldgen python -m streetscape.far_field --region bialystok-industrial-c (after boundary regression tests).
+- Boundary regression: 10 synthetic tests passed (four sides, touching, MultiPolygon and concave source; Low/High emit guard). Before generator source saved.
+- NEXT: finish merged build baseline, regenerate far field, pytest GIS, wait for PHONE_RUN before Unity.
+- Audit of Argon cache: 17/8470 generated building rectangles intersect the region; source audit saved in boundary-before-audit.json. 11 targeted tests now pass including BDOT extraction regression.
+- Explicit export/export cleanup: both original paths absent; 204580041 bytes retained in artifacts/edge-far-r2/quarantine (reversible; recursive deletion was blocked by automatic policy).
+- Baseline world generation still running; driver run-evidence.ps1 waits for it then for PHONE_RUN at every Unity start. Main material source accidentally included by cache copy restored to branch HEAD.
+- NEXT: Get-Content artifacts/edge-far-r2/run-evidence.log -Tail 20
+- Merged-world build complete: 64 chunks, High 405 MiB / Low 92 MiB; no fallback=True in build log. Patched far-field build yielded Low 24584 vs 24826 tris, High 118612 vs 118902; final metadata will be regenerated after baseline captures.
+- ADR r2 records ownership boundary guards, atmosphere contract with 0098, NMT apron approximation and honest inherited +2..4 draw cost relative to no-backdrop main.
+- NEXT: Get-Content artifacts/edge-far-r2/run-evidence.log -Tail 20 (PHONE_RUN still active).
+- Owner confirmed PHONE_RUN is still active: continue waiting; no Unity started and lock untouched.
+- Fresh offline GIS extraction: 8453 buildings; zero raw-rectangle and compressed-rectangle intersections. Exclusion counters include wholly inside buildings, so 589 BDOT source rejections must NOT be called 589 removed duplicates; actual delta is 17 (2 blocks, 13 halls, 2 offices).
+- Baseline GIS: 4 failures, 370 passed, 1 skipped, 1 xfailed; stale generated r4/depot/fidelity/determinism inputs. Regenerated world, refresh fidelity, then fresh full GIS sequentially (no writer race).
+- NEXT: Get-Content artifacts/edge-far-r2/gis-after.log -Tail 30
+- Deeper source-plan review found 2 more rectangles beyond the tile intersecting full regional building continuations. Extended exclusion to tile union complete region building outlines; cache /9 pins region buildings.geojson SHA256. New synthetic test changes that file and verifies cache invalidation.
+- Targeted extraction/geometry regression remains green (11 passing before local-data check); new full generation and GIS refresh underway. PHONE_RUN respected per owner reply.
+- NEXT: Get-Content artifacts/edge-far-r2/gis-after.log -Tail 30
+- Real-data regression caught an additional case: a rectangle disjoint in source space can move into a regional building continuation after distance compression. Extraction now validates both raw and mapped rectangles (cache /10), not only the final mesh guard. No visual claim made from the earlier 8451 count.
+- NEXT: Get-Content artifacts/edge-far-r2/generate-after.log -Tail 20; Get-Content artifacts/edge-far-r2/gis-after.log -Tail 30
+- Final real-data audit after cache /10: raw intersections with full region buildings 19 -> 0; compressed intersections 22 -> 0; 8470 -> 8447 buildings (23 distinct exclusions, sets overlap). Low triangles 24826 -> 24508 (-1.28%), High 118902 -> 118524 (-0.32%). after-audit.json records exact IDs.
+- Added deterministic synthetic compression-overlap regression: 12 passed plus local-data case pending in the next full GIS collection. Corrected license inventory ring extent to square +/-4200m from region anchor (existing sources only).
+- NEXT: Get-Content artifacts/edge-far-r2/gis-after.log -Tail 30; after GIS passes run pwsh artifacts/edge-far-r2/run-evidence.ps1 -SkipGis (waits PHONE_RUN).
+- Fidelity regeneration finished; full GIS now running sequentially after data regeneration. Render continuation waits for a passing full-GIS summary, then still checks PHONE_RUN before every Unity process.
+- Evidence generator can reconstruct the baseline source from git argon-edge 293c5f69 and re-extract missing local cache, so the before comparison does not depend on an unversioned Python file.
+- NEXT: Get-Content artifacts/edge-far-r2/gis-after.log -Tail 30
+- Full GIS at 74%, no failures so far; slow final fixture rebuilds world and validates deterministic export. Exact before/after ID sets: removed 23, added 0.
+- Preparing existing PBR sets offline to avoid long pre-Unity material generation; render driver waits for material completion as well as GIS success and PHONE_RUN clearance. No material-generator source changes.
+- NEXT: Get-Content artifacts/edge-far-r2/gis-after.log -Tail 30; Get-Content artifacts/edge-far-r2/materials-prepare.log -Tail 10
+- FULL GIS PASS: 388 passed, 1 xfailed in 536.80s; no skipped tests. Baseline 4 stale generated failures resolved. Log gis-after.log.
+- Rendering continuation has passed the GIS gate and waits for local material preparation completion, then PHONE_RUN; owner confirmation remains respected.
+- NEXT: Get-Content artifacts/edge-far-r2/materials-prepare.log -Tail 10; Get-Content artifacts/edge-far-r2/run-evidence.log -Tail 20
+- Committing regenerated world/fidelity/source manifests after the passing full GIS run; before-render phase will temporarily regenerate only the far-field baseline, then restore final r2 via the generator.
+- NEXT: Get-Content artifacts/edge-far-r2/run-evidence.log -Tail 20
+- Offline PBR preparation complete (466s). Missing asphalt source photo found in main, copied locally, and asphalt_detail_photo regenerated in 1s; materials_spec.json remains byte-equivalent under git (no material source/spec changes).
+- New guarded render sequence running: session uses baseline generator then waits for PHONE_RUN before import. No Unity launched yet; user confirmed phone measurement still active.
+- NEXT: Get-Content artifacts/edge-far-r2/run-evidence.log -Tail 20
+- Verified named Las Pietrasze in the pinned local OSM source (pyosmium Area.id 11153179); nearest outside-tile part from helper camera is E -637.79 / N 1032. Camera target E -500/N1300 is inside source polygon.
+- Supplementary cameras now look NE from DK8/DK19 exit, not along NNW road axis; standard dk8-dk19-exit unchanged. forest_identity.py reproduces source identity/geometry, summary kept in git.
+- NEXT: Get-Content artifacts/edge-far-r2/run-evidence.log -Tail 20 (PHONE_RUN active, no Unity).
+- PHONE_RUN cleared; guarded import succeeded: 64 chunks, Low+High; before matrix captured. First Low-clear edge-south pair inspected: false long red-fascia hall removed and regional cream office revealed; false yellow hall on left also removed.
+- Self-critique: source-verified NE helper at road eye/18.2m is occluded by nearby crowns, so it does not prove the far skyline. Added separate 40m diagnostic camera (explicitly not driver eye), to run as second evidence round after primary matrix/tests finish. Original 7 views preserved.
+- NEXT: Get-Content artifacts/edge-far-r2/run-evidence.log -Tail 20; after EVIDENCE_COMPLETE run pwsh artifacts/edge-far-r2/run-skyline.ps1
+- Primary 28 before/after pairs rendered and inspected (all 4 sheets). Editor estimates: Low static+instanced draws delta 0 for every camera; rounded trisK delta 0 or -1; shadows unchanged. compare_evidence.py passes.
+- EditMode 226/226 passed. PlayMode 2/3 passed: scene test expects WorldEdge/WorldFarField, but inherited builder parents sectors directly under WorldEdge. Added identity WorldFarField container (no geometry/material/collider changes), preserving existing integration assertion.
+- NEXT: pwsh artifacts/edge-far-r2/run-evidence.ps1 -SkipGis -ResumeAfter (rebuild, re-render final after, rerun both Unity suites). Then run-skyline.ps1.
+- FINAL primary Unity validation after hierarchy fix: EditMode 226/226; WorldEdgeRecoveryTests 3/3, no skips. XML editmode-20261111-120601.xml and playmode-20261111-120628.xml.
+- Re-rendered all four after configurations after C# fix, checked budgets again; diagnostic skyline second round now running (checks PHONE_RUN at every start).
+- NEXT: Get-Content artifacts/edge-far-r2/run-skyline.log -Tail 20; inspect skyline PNGs; finalize REPORT and copy artifacts to main.
+- Second-round 40m skyline shows inherited ground-to-apex triangle fans as repeated dark pyramids. Testing a shallow internal canopy fill with rim at 0.8*h_cap (WORKING_VALUE), same triangle/vertex/material count; external crown curtains unchanged.
+- Prototype first shell did not rebuild due Windows PowerShell execution policy; that capture is invalid for the experiment. Re-running under project-supported pwsh with terminating errors and explicit successful rebuild before render (test-cap.ps1).
+- NEXT: Get-Content artifacts/edge-far-r2/test-cap.log -Tail 20; inspect cap-prototype/Low-clear/edge-pietrasze-skyline.png before accepting/rejecting variant.
+- Shallow-canopy experiment REJECTED after inspecting cap-prototype-pair.jpg: introduced broad flat green surfaces without resolving the visible layered cards. Restored exact previously validated far_field.py from c05e8f06; no candidate canopy change retained.
+- Skyline diagnostic demonstrates horizon closure but exposes inherited aerial/card limitations. It is not a driver-eye quality claim; core corrected road views and budgets remain validated.
+- NEXT: pwsh artifacts/edge-far-r2/run-skyline.ps1 -ResumeAfter to regenerate/rebuild restored final geometry and complete four skyline after views.
+- FINAL READY FOR LEADER REVIEW: 64 final PNGs / 32 pairs inspected; 388 GIS pass + 1 expected xfail; EditMode 226/226; WorldEdgeRecoveryTests 3/3, no skips. Low delta draws 0, max rounded trisK delta 0; total Low mesh -1.28%.
+- verify_final.py confirms final Python/C#/regression source AND both GLBs match tested c05e8f06 after rejecting canopy experiment. Skyline source identity verified; 40m diagnostic discloses inherited cards, not phone/driver-eye proof. Known final skyline shutdown issue accepted by project wrapper only after complete frame.
+- REPORT/ADR/SELF-REVIEW finalized. Open only leader independent/device review and stated inherited approximations; original export/export paths absent, backups in quarantine, no disk space reclaimed after deletion-policy rejection.
+- NEXT: robocopy artifacts/edge-far-r2 C:\Users\matma\Documents\Claude\kamion\artifacts\edge-far-r2 /E /XJ /XD offline; verify report/validation hashes; no main merge/push.
+- DELIVERED: main artifacts/edge-far-r2 contains 64 final PNGs plus logs/tests/VALIDATION/report; REPORT, VALIDATION, STATUS and skyline comparison SHA256 matched source copy. Quarantine backup verified 204580041 bytes; original duplicate directories absent.
+- Branch source/worktree clean; no main merge/push. NEXT (leader): review REPORT.md, independent visual-critic/device gate, then merge and regenerate integrated world as documented.

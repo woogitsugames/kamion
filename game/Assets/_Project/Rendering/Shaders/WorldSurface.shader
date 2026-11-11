@@ -197,15 +197,18 @@ Shader "Kamion/World Surface"
                 half smooth = saturate(_Smoothness + _SmoothnessVar * (det - 0.5));
             #if defined(_FAR_FACADE)
                 {
+                    albedo *= i.masks.rgb;
                     float2 g = i.uv1;
                     float2 bay = floor(g);
                     float2 f = g - bay;
                     float2 fw = max(fwidth(g), 1e-4);
+                    half isRibbon = step(0.6, i.masks.a) * step(i.masks.a, 0.88);
+                    float4 wg = lerp(_WindowGrid, float4(0.08, 0.92, 0.32, 0.76), isRibbon);
                     // Box-filtered pane rectangle (signed distance to the nearest edge in pixels, clamped).
-                    half mx = saturate(min(f.x - _WindowGrid.x, _WindowGrid.y - f.x) / fw.x + 0.5);
-                    half my = saturate(min(f.y - _WindowGrid.z, _WindowGrid.w - f.y) / fw.y + 0.5);
-                    half row = step(0.0, bay.y);
-                    half mean = (_WindowGrid.y - _WindowGrid.x) * (_WindowGrid.w - _WindowGrid.z);
+                    half mx = saturate(min(f.x - wg.x, wg.y - f.x) / fw.x + 0.5);
+                    half my = saturate(min(f.y - wg.z, wg.w - f.y) / fw.y + 0.5);
+                    half row = step(0.0, bay.y) * step(0.5, i.masks.a);
+                    half mean = (wg.y - wg.x) * (wg.w - wg.z);
                     half sub = saturate(max(fw.x, fw.y) * 1.5 - 0.5);   // bay < ~1.5 px: use the mean coverage
                     half pane = lerp(mx * my, mean, sub) * row;
                     float h = frac(sin(dot(bay, float2(12.9898, 78.233))) * 43758.5453);

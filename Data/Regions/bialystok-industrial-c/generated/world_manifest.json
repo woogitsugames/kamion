@@ -11083,6 +11083,98 @@
    }
   }
  ],
+ "far_field": {
+  "High": {
+   "bytes": 10462520,
+   "file": "Data/raw/derived/bialystok-industrial-c/world/far_field.glb",
+   "sectors": {
+    "far_east": {
+     "by_material": {
+      "far_field_buildings": 28506,
+      "forest_edge_mixed": 6506
+     },
+     "submeshes": 2,
+     "triangles": 35012,
+     "vertices": 65292
+    },
+    "far_north": {
+     "by_material": {
+      "far_field_buildings": 3346,
+      "forest_edge_mixed": 16004
+     },
+     "submeshes": 2,
+     "triangles": 19350,
+     "vertices": 24418
+    },
+    "far_south": {
+     "by_material": {
+      "far_field_buildings": 45081,
+      "forest_edge_mixed": 2178
+     },
+     "submeshes": 2,
+     "triangles": 47259,
+     "vertices": 92871
+    },
+    "far_west": {
+     "by_material": {
+      "far_field_buildings": 8537,
+      "forest_edge_mixed": 8366
+     },
+     "submeshes": 2,
+     "triangles": 16903,
+     "vertices": 26631
+    }
+   },
+   "sha256": "1e800b583ca312440ced83828c538996960c800c1377214e92041c2a5ca33dc0",
+   "total_triangles": 118524,
+   "total_vertices": 209212
+  },
+  "Low": {
+   "bytes": 1691804,
+   "file": "Data/raw/derived/bialystok-industrial-c/world/far_field.low.glb",
+   "sectors": {
+    "far_east": {
+     "by_material": {
+      "far_field_buildings": 4848,
+      "forest_edge_mixed": 1340
+     },
+     "submeshes": 2,
+     "triangles": 6188,
+     "vertices": 11666
+    },
+    "far_north": {
+     "by_material": {
+      "far_field_buildings": 841,
+      "forest_edge_mixed": 3162
+     },
+     "submeshes": 2,
+     "triangles": 4003,
+     "vertices": 5825
+    },
+    "far_south": {
+     "by_material": {
+      "far_field_buildings": 10555,
+      "forest_edge_mixed": 386
+     },
+     "submeshes": 2,
+     "triangles": 10941,
+     "vertices": 21647
+    },
+    "far_west": {
+     "by_material": {
+      "far_field_buildings": 1948,
+      "forest_edge_mixed": 1428
+     },
+     "submeshes": 2,
+     "triangles": 3376,
+     "vertices": 6022
+    }
+   },
+   "sha256": "69549b754e8e29ac6c10d09544a4304c1857e59b2d4c3ecded80d244dc1ed11e",
+   "total_triangles": 24508,
+   "total_vertices": 45160
+  }
+ },
  "generator": "world-c/1",
  "gltf_axes": "glTF(x,y,z) = (-E, U, N); Unity import (x negated) -> (E, U, N)",
  "instances": "Data/raw/derived/<id>/world/instances_<ci>_<cj>.json: point instances {p: prototype, e, n, z, yaw [, sz scale z][, h/v/lean for trees]} of art-source/world/props/street_props.glb and art-source/world/vegetation/trees.glb (+ trees_lod2.glb impostors)",
@@ -12470,6 +12562,32 @@
     0.9
    ],
    "texture_set": "facade_atlas"
+  },
+  "far_field_buildings": {
+   "base": "plaster_white",
+   "color": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "glass_color": [
+    0.032,
+    0.038,
+    0.046
+   ],
+   "rough": 0.88,
+   "sky_occ": [
+    0.5,
+    0.9
+   ],
+   "vertex_color": true,
+   "window_grid": {
+    "head": 0.82,
+    "pitch_m": 3.0,
+    "sill": 0.3,
+    "uv": "TEXCOORD_1",
+    "win_w": 0.48
+   }
   },
   "fence_anthracite": {
    "color": [
