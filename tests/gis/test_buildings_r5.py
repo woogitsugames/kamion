@@ -136,7 +136,7 @@ def test_door_landing_and_steps():
     acc = B.Acc()
     FK.door_steps(acc, np.array([0.0, 0.0]), np.array([1.0, 0.0]), np.array([0.0, -1.0]), 3.0, 100.6, 100.0)
     # landing (4 faces) + 3 steps for 0.58 m of rise
-    assert _tris(acc, "plinth_dark") == 8 + 3 * 8 and _tris(acc, "window_sill") == 4
+    assert _tris(acc, "plinth_dark") == 8 + 3 * 8 and _tris(acc, "downpipe") == 4          # ADR 0107: grey threshold
     assert _tris(acc, "plinth_dark", "buildings_low") == 0
 
 

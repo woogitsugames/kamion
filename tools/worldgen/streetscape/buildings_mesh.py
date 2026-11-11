@@ -1189,6 +1189,9 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
                                    sills=sills_)
                 if typ in ("block", "office", "house") and not wooden and zpl > zbot + 0.6:
                     FK.plinth_drip(acc, a, d, nout, L, zpl, ops)
+                    if typ in ("block", "office"):       # ADR 0107 (P2-k): joints of a tall plinth on a slope
+                        FK.plinth_joints(acc, a, d, nout, L, zpl, zbot, ops, lambda u, ua0=u_acc: gfn(ua0 + u),
+                                         FK.hfloat(key, ei, "pj"))
                 if typ in ("block", "office"):                       # attic coping (obróbka attyki): silhouette
                     FK.coping(acc, a, c_, nout, zt, mat="hall_flashing")
                 if typ == "block":

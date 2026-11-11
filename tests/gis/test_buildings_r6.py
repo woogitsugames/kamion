@@ -88,3 +88,105 @@ def test_balcony_slab_reads_as_painted_soffit():
     from streetscape import materials as M
     s = M.M["balcony_slab"]
     assert min(s["color"]) >= 0.35 and s["sky_occ"] == [0.0, 0.0]
+
+
+def test_tall_plinth_gets_joints_but_not_across_openings():
+    """Review 0097 P2-k: a plinth standing > 0.9 m out of the slope carries a band joint and vertical joints; a low
+    plinth and the span of a basement door carry none."""
+    from streetscape import buildings_mesh as B
+    from streetscape import facade_kit as FK
+    a, d, n = np.array([0.0, 0.0]), np.array([1.0, 0.0]), np.array([0.0, -1.0])
+    acc = B.Acc()
+    assert FK.plinth_joints(acc, a, d, n, 12.0, 100.3, 99.0, [], lambda u: 100.0, 0.5) == 0     # 0.3 m plinth
+    acc = B.Acc()
+    nt = FK.plinth_joints(acc, a, d, n, 12.0, 102.0, 99.0, [], lambda u: 100.0, 0.5)
+    assert nt >= 2 * 4 + 2 * 4 and _tris(acc, "hall_flashing") == nt
+    acc2 = B.Acc()
+    door = [(0.0, 12.0, 100.0, 102.0, 0.1, "door", "x")]
+    assert FK.plinth_joints(acc2, a, d, n, 12.0, 102.0, 99.0, door, lambda u: 100.0, 0.5) == 0
+    V = np.concatenate([it[0] for it in acc.d[("buildings", "hall_flashing")]])
+    assert V[:, 2].max() <= 102.0 - FK.PLINTH_BAND_M + 0.01 and V[:, 1].max() < 0      # in front of the wall (n = -y)
+
+
+# ---------------------------------------------------------------------------------------------- plots (P1-h)
+def _plot_scene():
+    from shapely.geometry import box
+    road = box(-100, -6, 100, 0)                               # street along x, houses north of it
+    houses = [{"id": f"h{k}", "poly": box(20 * k, 6, 20 * k + 10, 14)} for k in range(4)]
+    return road, houses
+
+
+def test_plots_are_deterministic_disjoint_and_face_the_road():
+    from streetscape import plots as PL
+    road, houses = _plot_scene()
+    p1 = PL.plan(houses, road, [], [])
+    p2 = PL.plan(houses, road, [], [])
+    assert len(p1) == 4 and [p["poly"].wkt for p in p1] == [p["poly"].wkt for p in p2]
+    for i, p in enumerate(p1):
+        assert p["front"] @ np.array([0.0, -1.0]) > 0.99                    # the street side
+        assert p["poly"].distance(road) >= PL.ROAD_CLEAR_M - 1e-6
+        assert p["poly"].contains(houses[i]["poly"])
+        assert p["poly"].area >= PL.MIN_AREA_RATIO * 80.0
+        for q in p1[i + 1:]:
+            assert p["poly"].intersection(q["poly"]).area < 0.3
+    assert len({p["front_style"] for p in p1} | {p["side_style"] for p in p1}) >= 2      # not one fence for all
+
+
+def test_plot_layout_has_gate_wicket_drive_and_closed_fence():
+    from streetscape import plots as PL
+    road, houses = _plot_scene()
+    plots = PL.plan(houses, road, [], [])
+    near = PL._Near()
+    total = 0
+    for p in plots:
+        lay = PL.layout(p, road.buffer(0.3), near)
+        near.add(lay["segs"])
+        assert lay["gate"] is not None and lay["wicket"] is not None
+        assert lay["gate"][2] @ p["front"] > 0.99
+        assert [d[0] for d in lay["drive"]] == ["in", "out"]
+        # bays + gate + wicket cover the outline (minus what a neighbour's parallel fence already closes)
+        length = sum(float(np.hypot(*(b[4] - b[3]))) for b in lay["bays"]) + PL.GATE_SLOT_M + PL.WICKET_SLOT_M
+        assert length <= p["poly"].length + 4 * 1.3            # overlap of the pushed-back half bays only
+        total += length / p["poly"].length
+        names = {b[0] for b in lay["bays"]}
+        assert names <= set(PL.protos())
+    assert total / len(plots) > 0.7
+
+
+def test_plot_shrinks_to_an_existing_fence_and_does_not_double_it():
+    from shapely.geometry import LineString, box
+    from streetscape import plots as PL
+    road = box(-100, -6, 100, 0)
+    house = [{"id": "h0", "poly": box(0, 6, 10, 14)}]
+    fence = LineString([(12.5, 0), (12.5, 40)])               # a real fence 2.5 m east of the house
+    p = PL.plan(house, road, [], [fence])[0]
+    assert p["poly"].bounds[2] <= 12.5 - 0.4
+    near = PL._Near()
+    near.add(PL._segments(fence))
+    lay = PL.layout(p, road.buffer(0.3), near)
+    east = [b for b in lay["bays"] if abs(b[2][0] - 1.0) < 1e-6]         # bays facing east
+    assert not [b for b in east if abs(b[1][0] - 12.5) < PL.PARALLEL_SKIP_M]
+
+
+def test_terrace_gets_a_wicket_per_house():
+    from shapely.geometry import box
+    from streetscape import plots as PL
+    road = box(-100, -6, 100, 0)
+    row = [{"id": f"t{k}", "poly": box(7 * k, 6, 7 * k + 7, 14)} for k in range(4)]
+    plots = PL.plan(row, road, [], [])
+    assert len(plots) == 1 and len(plots[0]["houses"]) == 4
+    lay = PL.layout(plots[0], road.buffer(0.3), PL._Near())
+    assert lay["gate"] is None and len(lay["wickets"]) == 4 and not lay["drive"]
+
+
+def test_plot_prototypes_are_small_and_use_existing_materials():
+    from streetscape import materials as M
+    from streetscape import plots as PL
+    P = PL.protos()
+    assert len(P) == 26
+    for name, (lod0, lod1, col) in P.items():
+        t0 = sum(len(p["T"]) for p in lod0.out())
+        t1 = sum(len(p["T"]) for p in lod1.out())
+        assert t1 <= t0 and t0 <= 420, (name, t0, t1)
+        assert len(lod0.out()) <= 3 and {p["mat"] for p in lod0.out()} <= set(M.M), name
+        assert col is None
