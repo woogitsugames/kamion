@@ -58,3 +58,7 @@ scripts = narzędzia r2 + zones_plan.py; logs). „Przed” = main b12 z ADR 009
   patrzyła na szerokość w 1. stacji (0,06 m) → teraz max po stacjach (sha 02b26dd6). b9: build OK.
   W toku: import b9 → `renders_b9_high/` → EditMode.
   NASTĘPNY KROK: obejrzeć `renders_b9_high/p0_kerb_merge_top.png`; robocopy; raport.
+- b10 (sha b82c0c42): wiersz paska jest „pionowy” tylko gdy ma 0 m we WSZYSTKICH stacjach (pas N 82 miał 0 m w 1. stacji → UV/materiał
+  krawężnika); teraz `sidewalk_paving` w planie. Testy b10: kluczowe 51/51, terrain_walls + world_roads + streetscape 76/76.
+  W toku: import b10 → `renders_b10_high/` → EditMode.
+  NASTĘPNY KROK: obejrzeć `renders_b10_high/p0_kerb_merge_top.png`, robocopy, raport.
