@@ -5,7 +5,7 @@ $ErrorActionPreference = 'Stop'
 $repo = Resolve-Path "$PSScriptRoot/../.."
 foreach ($m in $Materials.Split(',')) {
   while ((Test-Path 'C:/Users/matma/Documents/Claude/kamion/artifacts/locks/PHONE_RUN') -or (Test-Path 'C:/Users/matma/Documents/Claude/kamion/artifacts/locks/GPT_UNITY_HOLD')) { Start-Sleep 60 }
-  $out = Join-Path $repo "artifacts/tint-r2/masks/$m"
+  $out = Join-Path $repo "artifacts/tint-r2/masks$(if($Scene -ne 'WorldC'){'-'+$Scene})/$m"
   $a = @{ Scene = $Scene; Tier = $Tier; Lighting = 'overcast'; OutputDir = $out; Mask = ":M_$m"; Gate3 = (Join-Path $repo 'artifacts/tint-r2/cameras_r2.json') }
   if ($Cameras) { $a.Cameras = $Cameras }
   & "$repo/scripts/visual-qa.ps1" @a

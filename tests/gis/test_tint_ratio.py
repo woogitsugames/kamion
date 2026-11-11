@@ -56,3 +56,14 @@ def test_ratio_clip_and_limits_are_measured_on_full_png(tmp_path):
 def test_linear_ratio_uses_srgb_decode():
     a = np.full((4, 4, 3), 188, np.float64)   # sRGB 188 ~ linear 0.5
     assert abs(TR.roi_stats(a)["lin_luma"] - 0.5) < 0.01
+
+
+def test_placement_check_flags_roi_off_the_material_mask(tmp_path):
+    a = np.zeros((443, 960, 3), np.uint8)
+    a[0:100, 0:100] = (255, 0, 255)                           # material slot rendered flat magenta
+    (tmp_path / "m").mkdir()
+    Image.fromarray(a).resize((2340, 1080), Image.NEAREST).save(tmp_path / "m" / "c1_mask.png")
+    good = {"materials": {"m": {"checks": [{"id": "g", "camera": "c1", "roi": [10, 10, 90, 90], "ref_roi": [200, 200, 300, 300]}]}}}
+    bad = {"materials": {"m": {"checks": [{"id": "b", "camera": "c1", "roi": [50, 50, 150, 150], "ref_roi": [20, 20, 40, 40]}]}}}
+    assert TR.check_placement(good, tmp_path) == []
+    assert len(TR.check_placement(bad, tmp_path)) == 1

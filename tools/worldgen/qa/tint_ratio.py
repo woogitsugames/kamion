@@ -90,6 +90,26 @@ def _limit_ok(value: float, rng) -> bool:
     return rng is None or (rng[0] <= value <= rng[1])
 
 
+def mask_fraction(mask_png: Path, box960) -> float:
+    """Share of the ROI covered by a VisualQaRunner -qaMask render (flat magenta material slots)."""
+    a = roi_pixels(mask_png, box960)
+    return float(((a[..., 0] > 235) & (a[..., 1] < 25) & (a[..., 2] > 235)).mean())
+
+
+def check_placement(spec: dict, masks_dir: Path) -> list[str]:
+    """ROI on the material, reference off it (renderer masks only; instanced props/heroes have none)."""
+    problems = []
+    for mat, entry in spec["materials"].items():
+        for c in entry["checks"]:
+            png = masks_dir / mat / f"{c['camera']}_mask.png"
+            if not png.exists() or mask_fraction(png, [0, 0, 960, 9999]) == 0.0:
+                continue                      # no renderer slot (instanced/hero): use a change mask instead
+            on, off = mask_fraction(png, c["roi"]), mask_fraction(png, c["ref_roi"])
+            if on < 0.9 or off > 0.02:
+                problems.append(f"{mat}/{c['id']}: ROI on mask {on:.2f} (>= 0.9), reference on mask {off:.2f} (<= 0.02)")
+    return problems
+
+
 def evaluate(spec: dict, round_dir: Path, before_dir: Path | None = None) -> dict:
     rows, failures = [], []
     for mat, entry in spec["materials"].items():
@@ -157,12 +177,18 @@ def main(argv=None) -> int:
     ap.add_argument("--round", type=Path, required=True)
     ap.add_argument("--before", type=Path)
     ap.add_argument("--out", type=Path)
+    ap.add_argument("--masks", type=Path, help="dir with <material>/<camera>_mask.png (run-masks.ps1) to verify ROI placement")
     args = ap.parse_args(argv)
     spec = json.loads(args.spec.read_text(encoding="utf-8"))
     errors = validate_spec(spec)
     if errors:
         print("SPEC INVALID:\n  " + "\n  ".join(errors))
         return 2
+    if args.masks:
+        placement = check_placement(spec, args.masks)
+        print("ROI PLACEMENT: " + ("; ".join(placement) if placement else "ok"))
+        if placement:
+            return 2
     result = evaluate(spec, args.round, args.before)
     result["photo_refs"] = photo_ratios(spec)
     print(table(result))
