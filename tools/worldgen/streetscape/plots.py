@@ -78,7 +78,7 @@ DROP_H_M = 0.03               # lowered kerb at a driveway, m above the gutter (
 DROP_RAMP_M = 1.0             # kerb ramps down over this length on either side of the driveway
 DROP_REACH_M = 14.0           # a gate further than this from the carriageway gets no access
 DITCH_FILL_M = 0.06           # roadside ditch depth left over a driveway (culvert), m
-SEG_M = PK.BAY_M              # fence panels follow the ground in steps of the post pitch drawn into the atlas
+SEG_M = 2 * PK.BAY_M          # fence panels follow the ground in steps of two post pitches of the atlas (5.12 m)
 
 # fence style -> (atlas row of the infill, height range m, plinth (kind, height m) | None, post swatch, brick posts)
 STYLES = {
@@ -112,6 +112,7 @@ GATE_FRAME = {"picket": "wood_brown", "boards_rust": "wood_rust", "boards_brown"
               "chainlink": "steel_green", "bars": "steel_black", "lamella": "steel_graphite"}
 GATE_ROW = {"wall": "lamella", "concrete": "bars"}          # a wall / concrete fence has a steel gate
 SURFACE_BY_AGE = {"old": 0.25, "prl": 0.6, "new": 0.9}      # share of block-paved driveways (the rest: gravel, P20)
+THUJA_ROW_MAX = 12            # plants per row (triangle budget: every plant is 36-60 triangles of the chunk mesh)
 THUJA_ROW_SHARE = {"old": 0.2, "prl": 0.45, "new": 0.65}
 SPRUCE_SHARE = {"old": 0.4, "prl": 0.35, "new": 0.2}
 FRUIT_SHARE = {"old": 0.85, "prl": 0.6, "new": 0.25}
@@ -745,11 +746,11 @@ def fence_run(kit, style, a, b, n, h, zf, key, col=None, ends=(True, True)):
         if brick and (k > 0 or ends[0]):
             brick_post(kit, a + t * s0, t, z0, h + 0.12, (key, k))
         elif post and k == 0 and ends[0]:
-            kit.box(a + t * s0, t, 0.045, 0.045, z0 - 0.1, z0 + h + 0.04, PK.SWATCH[post])
+            kit.box(a + t * s0, t, 0.045, 0.045, z0 - 0.1, z0 + h + 0.04, PK.SWATCH[post], top=False)
     if brick and ends[1]:
         brick_post(kit, b, t, Z[-1], h + 0.12, (key, "e"))
     elif post and ends[1]:
-        kit.box(b, t, 0.045, 0.045, Z[-1] - 0.1, Z[-1] + h + 0.04, PK.SWATCH[post])
+        kit.box(b, t, 0.045, 0.045, Z[-1] - 0.1, Z[-1] + h + 0.04, PK.SWATCH[post], top=False)
     if col is not None:
         col.append((a, b, min(Z) - 0.1, max(Z) + h))
 
@@ -768,7 +769,7 @@ def gate_geo(kit, g, style, h, z, key, col=None):
         if brick:
             brick_post(kit, p, t, z, max(h, hg) + 0.14, (key, "gp", sx))
         else:
-            kit.box(p, t, 0.05, 0.05, z - 0.1, z + hg + 0.10, frame)
+            kit.box(p, t, 0.05, 0.05, z - 0.1, z + hg + 0.10, frame, top=False)
     v0, v1 = PK.row(rowname)
     leaves = [(-W / 2 + 0.02, W / 2 - 0.02, 0.0)] if kind == "wicket" else \
         [(-W / 2 + 0.02, -0.012, 0.0), (0.012, W / 2 - 0.02, 0.0)] if kind == "swing" else \
@@ -778,7 +779,7 @@ def gate_geo(kit, g, style, h, z, key, col=None):
         zb, zt = z + 0.08, z + hg
         for (cx, hx, c0, c1) in ((0.5 * (x0 + x1), (x1 - x0) / 2, zb, zb + 0.045), (0.5 * (x0 + x1), (x1 - x0) / 2, zt - 0.045, zt),
                                  (x0 + 0.022, 0.022, zb, zt), (x1 - 0.022, 0.022, zb, zt)):
-            kit.box(m + t * cx + o, t, hx, 0.022, c0, c1, frame)
+            kit.box(m + t * cx + o, t, hx, 0.022, c0, c1, frame, top=False, sides=(0, 2))
         u0 = 0.06 / PK.KIT_M + int(hfloat(key, "gu", x0) * 3) * 0.25
         u1 = u0 + (x1 - x0 - 0.09) / PK.KIT_M
         for sg in (1.0, -1.0):
@@ -800,17 +801,16 @@ def gate_geo(kit, g, style, h, z, key, col=None):
 
 
 def thuja(kit, p, z, h, r, key, dead=False):
-    """Columnar thuja ('Smaragd' / 'Brabant'): one 7-sided shell of the foliage row with a ring every 0.6 m, every ring
-    a little off round and off centre (r2: five sides and three rings read as green crystals)."""
-    step = PK.ROW_H_M["thuja"] / 2
+    """Columnar thuja ('Smaragd' / 'Brabant'): one 6-sided shell of the foliage row with a ring every 0.8 m, every ring
+    a little off round and off centre (r2: five sides, three rings and +-14 % radius jitter read as green crystals)."""
+    step = PK.ROW_H_M["thuja"] * 2 / 3
     zs = [0.0]
     while zs[-1] < h - 1e-6:
         zs.append(min(zs[-1] + step, h))
     if len(zs) > 2 and zs[-1] - zs[-2] < 0.2:
         zs.pop(-2)
     v0, v1 = PK.row("thuja")
-    vm = 0.5 * (v0 + v1)
-    sides = 7
+    sides = 6
     circ = 2 * math.pi * r
     span = min(circ / PK.KIT_M, 0.11) if dead else circ / PK.KIT_M
     u0 = (PK.THUJA_GREEN_U + 0.015 + hfloat(key, "tu") * (1 - PK.THUJA_GREEN_U - 0.03 - span)) if dead else         hfloat(key, "tu") * (PK.THUJA_GREEN_U - span - 0.01)
@@ -827,7 +827,7 @@ def thuja(kit, p, z, h, r, key, dead=False):
             rr = r * k * (0.92 + 0.16 * hfloat(key, "tr", i, jj))
             ang = a0 + 2 * math.pi * j / sides
             V.append([p[0] + lean[0] * zz + off[0] + math.cos(ang) * rr, p[1] + lean[1] * zz + off[1] + math.sin(ang) * rr, z - 0.05 + zz])
-            UV.append([u0 + span * j / sides, (v0, vm, v1, vm)[i % 4]])
+            UV.append([u0 + span * j / sides, (v0, v0 + (v1 - v0) * 2 / 3, v0 + (v1 - v0) / 3, v1, v0 + (v1 - v0) / 3, v0 + (v1 - v0) * 2 / 3)[i % 6]])
     T = []
     m = sides + 1
     for i in range(len(zs) - 1):
@@ -1000,7 +1000,7 @@ def build(buf, rp, zf, surf_top, report):
                 s0 = 0.9 + hfloat(key, "ths", ri) * 0.35 * L
                 s1 = L - 0.9 - hfloat(key, "the", ri) * 0.25 * L
                 s, k = s0, 0
-                while s < s1:
+                while s < s1 and k < THUJA_ROW_MAX:
                     k += 1
                     step = pitch * (0.8 + 0.4 * hfloat(key, "thd", ri, k))      # +-20 % spacing (review 0107 P1-r7-e)
                     p = a + t * s - n * (0.65 + 0.2 * hfloat(key, "tho", ri, k))
