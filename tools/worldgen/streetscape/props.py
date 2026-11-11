@@ -18,8 +18,9 @@ from . import signs as SG
 
 
 class Mesh:
-    def __init__(self):
+    def __init__(self, pole_height=None):
         self.prims = {}
+        self.pole_height = pole_height
 
     def add(self, mat, V, T, UV=None):
         V = np.asarray(V, float)
@@ -68,7 +69,13 @@ class Mesh:
     def out(self):
         res = []
         for mat, (Vs, Ts, UVs) in sorted(self.prims.items()):
-            res.append({"V": np.concatenate(Vs), "T": np.concatenate(Ts), "UV": np.concatenate(UVs), "mat": mat})
+            V, UV = np.concatenate(Vs), np.concatenate(UVs)
+            # ADR 0102: atlas height is the physical pole height, not one repeating dirt band every metre.
+            if self.pole_height and mat in ("steel_galv", "steel_painted_grey", "concrete_pole", "steel_painted"):
+                mat = {"steel_galv": "furniture_galv", "steel_painted_grey": "furniture_grey",
+                       "concrete_pole": "furniture_concrete", "steel_painted": "furniture_bollard"}[mat]
+                UV = np.column_stack([UV[:, 0], np.clip(V[:, 2] / self.pole_height, 0.002, 0.998)])
+            res.append({"V": V, "T": np.concatenate(Ts), "UV": UV, "mat": mat})
         return res
 
 
@@ -77,6 +84,7 @@ LAMP_OLD = (("concrete", 9), ("steel", 8))     # (kind, height m) of the older s
 # ------------------------------------------------------------------------------------------- builders
 def lamp(h, bracket, double=False):
     m, l1, col = Mesh(), Mesh(), Mesh()
+    m.pole_height = l1.pole_height = h
     for mm, seg in ((m, 12), (l1, 6)):
         # ADR 0102: buried footing, 8 cm cap above the local surface. Same primitive/material budget.
         mm.box("concrete_base", [0, 0, -0.585], 0.25, 0.25, 0.665)
@@ -99,6 +107,7 @@ def lamp_old(h, kind):
         elongated "cobra" sodium luminaire (orange-tinted bowl);
       kind "steel":    thin grey-painted steel pole with a straight arm tilted up 15 deg and a box luminaire."""
     m, l1, col = Mesh(), Mesh(), Mesh()
+    m.pole_height = l1.pole_height = h
     for mm, seg in ((m, 10), (l1, 5)):
         if kind == "concrete":
             mm.tube("concrete_pole", [0, 0, -1.25], [0, 0, 0], 0.12, 0.12, seg, cap=False)
@@ -139,6 +148,7 @@ def lamp_arc(h=9.0, reach=2.2, double=False):
     (CC0 photo 20210904_101250, Rakoon, Commons: tall arched columns along the lane; reference only, proportions
     by eye: column ~9 m, arm ~2 m; WORKING_VALUE). Arm along +y."""
     m, l1, col = Mesh(), Mesh(), Mesh()
+    m.pole_height = l1.pole_height = h
     for mm, seg in ((m, 10), (l1, 5)):
         mm.box("concrete_base", [0, 0, -0.585], 0.28, 0.28, 0.665)
         mm.tube("steel_galv", [0, 0, 0.08], [0, 0, 1.1], 0.095, 0.085, seg)             # base section with the hatch
@@ -332,10 +342,25 @@ def sliding_gate(w=8.0):
 
 def bollard():
     m, col = Mesh(), Mesh()
+    m.pole_height = 0.9
     m.tube("steel_painted", [0, 0, -0.3], [0, 0, 0.9], 0.06, None, 10)
     m.tube("paint_white_reflective", [0, 0, 0.75], [0, 0, 0.82], 0.062, None, 10, cap=False)
     col.tube("collision_steel", [0, 0, 0], [0, 0, 0.9], 0.07, None, 6)
     return m, m, col
+
+
+def hoop_bollard():
+    """OSM barrier=cycle_barrier / bollard=hoop only; no invented placements. Dimensions WORKING_VALUE."""
+    m, l1, col = Mesh(1.0), Mesh(1.0), Mesh()
+    for mm, seg, bends in ((m, 8, 6), (l1, 4, 3), (col, 4, 3)):
+        mat = "collision_steel" if mm is col else "steel_painted"
+        for x in (-0.45, 0.45):
+            mm.tube(mat, [x, 0, -0.3], [x, 0, 0.8], 0.03, seg=seg, cap=False)
+        pts = [[0.45 * math.cos(k * math.pi / bends), 0, 0.8 + 0.2 * math.sin(k * math.pi / bends)]
+               for k in range(bends + 1)]
+        for a, b in zip(pts[:-1], pts[1:]):
+            mm.tube(mat, a, b, 0.03, seg=seg, cap=False)
+    return m, l1, col
 
 
 def power_pole():
@@ -412,6 +437,7 @@ def build_all(sign_codes, boards):
     P["lift_gate"] = lift_gate()
     P["sliding_gate"] = sliding_gate()
     P["bollard"] = bollard()
+    P["bollard_hoop"] = hoop_bollard()
     P["power_pole"] = power_pole()
     P["pylon"] = pylon()
     P["bench"] = bench()

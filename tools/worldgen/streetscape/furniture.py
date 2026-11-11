@@ -41,9 +41,8 @@ from . import facade_atlas as FA
 
 # ADR 0102: visible foundations follow the render surface at the pole axis. The coarser collision surface is
 # deliberately NOT a height reference for art: it can lie a metre below a kerb/embankment edge.
-SEATED_POLES = ("lamp_", "signal_mast", "signal_pole", "sign_post", "power_pole")
+SEATED_POLES = ("lamp_", "signal_mast", "signal_pole", "sign_post", "power_pole", "bollard")
 SEAT_R = 0.35                 # m, footing radius probed (WORKING_VALUE)
-SEAT_MAX_BURY = 0.40          # m, deepest the pole axis is set below the surface at its centre (WORKING_VALUE)
 SEAT_TOL = 0.30              # m, an explicit z this far below the local ground is raised to it (gate 3 tolerance)
 
 RANK = {"A": 0, "S": 1, "GP": 2, "G": 3, "Z": 4, "L": 5, "D": 6}
@@ -118,7 +117,8 @@ class SurfaceTop:
 
 
 # footing radius per pole family (m): the part of the footprint that must stand on the surface
-FOOT_R = {"lamp_": 0.25, "signal_mast": 0.30, "signal_pole": 0.10, "sign_post": 0.04, "power_pole": 0.15}
+FOOT_R = {"lamp_arc_": 0.28, "lamp_old_concrete_": 0.12, "lamp_old_steel_": 0.20, "lamp_": 0.25,
+          "signal_mast": 0.30, "signal_pole": 0.10, "sign_post": 0.04, "power_pole": 0.15, "bollard": 0.06}
 
 
 class Placer:
@@ -697,6 +697,8 @@ def misc_points(pl, net, src, origin, report, codes):
             proto = "lift_gate"
         elif t.get("barrier") in ("gate", "sliding_gate", "swing_gate"):
             proto = "sliding_gate"
+        elif t.get("barrier") == "cycle_barrier" or t.get("bollard") == "hoop":
+            proto = "bollard_hoop"
         elif t.get("barrier") == "bollard":
             proto = "bollard"
         elif t.get("amenity") == "bench":
@@ -793,18 +795,18 @@ class Lin:
     def posts(self, mat, P, spacing, w, d, h, zb=None, src=""):
         line = LineString(P)
         L = line.length
-        ss = np.arange(0, L + 1e-6, spacing)
-        Q = np.array([line.interpolate(s).coords[0] for s in ss])
+        ss = np.concatenate([[0], np.cumsum(np.hypot(*np.diff(P, axis=0).T))]) if spacing is None else np.arange(0, L + 1e-6, spacing)
+        Q = np.asarray(P) if spacing is None else np.array([line.interpolate(s).coords[0] for s in ss])
         if len(Q) < 1:
             return
         Z = self.z(Q) if zb is None else np.interp(ss, np.concatenate([[0], np.cumsum(np.hypot(*np.diff(P, axis=0).T))]), zb)
         dd = np.gradient(Q, axis=0) if len(Q) > 1 else np.array([[1.0, 0.0]])
         dd /= np.maximum(np.hypot(dd[:, 0], dd[:, 1]), 1e-9)[:, None]
         Vs, Ts = [], []
-        for q, z, t in zip(Q, Z, dd):
+        for q, z, ground, t in zip(Q, Z, self.z(Q), dd):
             nn = np.array([-t[1], t[0]])
-            c = [q[0], q[1], z - 0.3 + (h + 0.3) / 2]
-            hx, hy, hz = t * w / 2, nn * d / 2, (h + 0.3) / 2
+            c = [q[0], q[1], (ground - 0.3 + z + h) / 2]
+            hx, hy, hz = t * w / 2, nn * d / 2, (z + h - ground + 0.3) / 2
             P8 = [np.array(c) + np.append(sx * hx + sy * hy, sz * hz) for sz in (-1, 1) for sy in (-1, 1) for sx in (-1, 1)]
             faces = [(4, 5, 7, 6), (0, 1, 5, 4), (2, 6, 7, 3), (0, 4, 6, 2), (1, 3, 7, 5)]
             base = len(Vs)
@@ -893,6 +895,35 @@ def concrete_fence(lin, line, key, style_key):
     return nb
 
 
+def panel_fence(lin, line, col, key, flexible=False):
+    """ADR 0102: rigid, level bays step with the plot boundary; only tagged flexible mesh sags.
+
+    Keep corners and place posts at every bay boundary. Concrete plinth follows the ground below each level bay,
+    rather than a long sloping ribbon through the post centres. No extra materials or layers.
+    """
+    P = [np.asarray(line.coords[0], float)]
+    for a, b in zip(np.asarray(line.coords)[:-1], np.asarray(line.coords)[1:]):
+        n = max(1, int(math.ceil(np.linalg.norm(b - a) / S.FENCE_PANEL_W)))
+        P.extend(a + (b - a) * k / n for k in range(1, n + 1))
+    P = np.asarray(P)
+    Z = lin.z(P)
+    bases = np.maximum(Z[:-1], Z[1:])
+    post_base = np.maximum(np.r_[bases[0], bases], np.r_[bases, bases[-1]])
+    for i, base in enumerate(bases):
+        Q = P[i:i + 2]
+        low = Z[i:i + 2] - 0.2
+        top = np.full(2, base + S.FENCE_PLINTH_H)
+        lin.slab("concrete_plinth", Q, low, top, 0.05, key)
+        if flexible:
+            Q = np.array([Q[0], Q.mean(axis=0), Q[1]])
+            bottom = np.full(3, base + S.FENCE_PLINTH_H)
+            upper = base + S.FENCE_H - np.array([0, 0.045, 0])  # 4.5 cm, WORKING_VALUE
+        else:
+            bottom, upper = top, np.full(2, base + S.FENCE_H)
+        lin.ribbon(f"{col}_mesh", Q, bottom, upper, 0, key, both=True, collision="collision_fence")
+    lin.posts(col, P, None, 0.06, 0.04, S.FENCE_H + 0.05, zb=post_base, src=key)
+
+
 def fences(lin, src, origin, roads_poly, report):
     n = {"panel_m": 0.0, "concrete_m": 0.0, "retaining_m": 0.0}
     cutter = roads_poly.buffer(0.3) if roads_poly is not None else None
@@ -907,10 +938,7 @@ def fences(lin, src, origin, roads_poly, report):
             Z = lin.z(P)
             if b in ("fence", "yes"):
                 col = ["fence_green", "fence_anthracite", "fence_galv"][_h(key) % 3]
-                lin.slab("concrete_plinth", P, Z - 0.2, Z + S.FENCE_PLINTH_H, 0.05, key)
-                lin.ribbon(f"{col}_mesh", P, Z + S.FENCE_PLINTH_H, Z + S.FENCE_H, 0.0, key, both=True,
-                           collision="collision_fence")
-                lin.posts(col, P, S.FENCE_PANEL_W, 0.06, 0.04, S.FENCE_H + 0.05, src=key)
+                panel_fence(lin, part, col, key, flexible=f["tags"].get("fence_type") in ("chain_link", "wire"))
                 n["panel_m"] += part.length
             elif b == "wall":
                 cc = np.asarray(part.simplify(0.15).coords)            # bays run corner to corner

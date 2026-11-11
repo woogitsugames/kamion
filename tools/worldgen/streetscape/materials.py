@@ -443,3 +443,8 @@ for _k, _v in M.items():
     if _so is not None:
         _v.setdefault("sky_occ", _so)
 
+# ADR 0102: additive, furniture-only atlas bindings; existing shared pigments and the linear tint contract stay intact.
+for _kind, _base in (("galv", "steel_galv"), ("grey", "steel_painted_grey"),
+                     ("concrete", "concrete_pole"), ("bollard", "steel_painted")):
+    M[f"furniture_{_kind}"] = {**M[_base], "texture": f"furniture_{_kind}"}
+
