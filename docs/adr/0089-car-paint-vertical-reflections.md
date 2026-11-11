@@ -1,5 +1,5 @@
 # ADR 0089: osobowki - lakier, kola i brud per instancja
-Status: WIP; R3 wizualnie/budzetowo zweryfikowany, finalne EditMode i rerun GPU czekaja na PHONE/HOLD.
+Status: przyjety zakresowo po niezaleznej recenzji ROOT; R3, EditMode231/231 i final-source GPU PASS.
 Baza: main43bc53a7, swiezy world/PBR/import oraz kanoniczne Truck/Trailer przed porownaniem;192SHA/Fab15bez fallback.
 Aktualna baza po korekcie TintA ma High-overcast drzwi38.672 i czysta maske81.017 sRGB, wiec nie dodajemy podbicia pigmentu ani dolnej granicy odbicia.
 Pomiar GPU Color-property wykryl ponowne dekodowanie HDRPearl1.6/1.9/3.2 do2.812/4.104/12.922; SetLinearPearlTint koduje gamma przed SetColor, zachowujac liniowe proporcje i helperTint.
@@ -11,5 +11,5 @@ Cztery poziomy i faza z hasha poczatku instancji wzgledem _KamionGIRect, raz per
 R1 film za slabo czytelny; diagnostyka prawdziwej sceny potwierdzila aktywne UV/maski/poziomy, hipoteza braku pasma UV odrzucona.
 R2 odrzucony: bloki/camo oraz drzwi46.618Highov/41.695Lowov. R3: szerszy prog istniejacej maski.25..1.5, grit.14linear, cap.75/top.70m; WORKING_VALUE, bez nowych tekstur/draw.
 R3 drzwi39.840Highov/35.226Lowov, maska78.697/71.638 bez zmiany wzgledemR1; czesciowy wplyw brudu naROI jawny. Budzet oryginalnych59kamer: Lowdraw-23..0, High-42..0 i brak wzrostu zaokraglonych trianglesK; estymacje edytora, koszt GPU/telefonu UNVERIFIED.
-375GISpass/1knownxfail,17celowanychPASS; finalne EditMode/rerun GPU/review jeszcze wymagane.292before +4wheelbaseline;8nowychkamer R1 to AFTER-only, bez wymyslonych par.
+375GISpass/1knownxfail,17celowanychPASS; EditMode231/231PASS (5carcases), final-source GPU1007/18PASS, ROOT obejrzal324R3+24focused bez nowej regresji.292before +4wheelbaseline;8nowychkamer R1 to AFTER-only, bez wymyslonych par.
 Dowody: artifacts/car-paint-r1/STATUS.md, R1-SELF-CRITICISM.md, pearl-probe.json, pearl-only-delta.json, instanced-film-gpu-proof.json i metrics-before-vs-r1.json.

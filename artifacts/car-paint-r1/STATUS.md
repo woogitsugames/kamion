@@ -86,3 +86,6 @@
 
 - Step29 CPU-only: prepared artifact bundle copied to main artifacts/car-paint-r1 using robocopy /E /XJ, successful standard exit1; allsourcefiles present withmatching sizes. This is evidence-only handoff, no main source edit/merge. Final two Unity checks still blocked; copy will be updated after their results/review.
 - NEXT COMMAND: on NEW explicitROOT release+bothguards absent final-editmode.ps1 then gpu-proof.ps1. No active/queuedUnity.
+
+- Step30: NEW explicitROOT release13:58:24 -> immediate fullEditMode231/231PASS,0fail/skip incl5CarPaintMaterialTests. Separate guarded final-source GPU rerun1007actualinstances counts253/273/226/255 and18realLOD/rebasecasesPASS; SHAexactcurrentR3. Rechecked192rawSHA/0/Fab15no fallback,90vehiclefixture hashes equalcanonicalbefore; source/settings clean after wrappers, no Unity active/queued. ROOT independently viewed all324R3+24focused+nativewheels withoutnewscopedregression; finalreviewfile requested. REPORT/ADR pending-gate lines replaced only after actualpasses; no newvisual/sourcechanges.
+- NEXT COMMAND: receive/forceaddROOTREVIEW.md, final evidence copy /E /XJ, verifycleancommit andhandoff; leaderhandles integration/regeneration, no mainmerge/push. DbelongsF.

@@ -1,4 +1,4 @@
-# G / ADR0089 - final R3 visual self-review (EditMode pending)
+# G / ADR0089 - final R3 visual self-review (verified)
 
 Viewed all292fresh before frames,4additional wheel baselines,20Pearl-only frames,324R1,24R2focused,24R3focused and324R3 through labelled <=960px sheets and native crops. Compared actual Mapillary references (refs/provenance.json), not cross-weather albedo truth.
 Fresh A-correct blackdoor already satisfied requested30-40; no invented old21-24 reproduction or pigment/reflection-floor boost. Pearl-only is separately causal; controlfilm0.796078prototype -> instance2/3 explicitly changes for combined views.
@@ -7,6 +7,6 @@ R1 numeric seed proof did not imply dirty-level legibility: originalR1 failed. A
 R3 clean0 retained;1subtle/2moderate/3heavier continuous lower spray visible in clear, subtler/coherent overcast. Existing mask and neutral grit are WORKING_VALUE art parameters, not measured dirt reflectance. White/light cars make grime more contrasty; whitevan preexisting clear clipping remains outside black-paint fix.
 Native wheels rounder22vs14; chords remain visible at2m. Neutral rubber/gray spokes/dark dish retained. ExistingLOD0 range25m/37.5mHigh also receives cost; LOD1 stays10, no fourth runtime band/material/draw split.
 All236common route camera-condition CPU counters nonincrease; fleet allLOD0 -30000triangles is separate. FragmentALU changes are not measured device cost; phone/GPU timing UNVERIFIED. No unrelated quality reduction/road geometry change.
-Actual RenderMeshInstanced1007inputs and18LOD/rebase cases passed, counts253/273/226/255. This proves stable seed and origin policy, not final visual appearance or timing. Finalsource-hash rerun pending sharedUnityrelease.
+Actual RenderMeshInstanced1007inputs and18LOD/rebase cases passed, counts253/273/226/255. This proves stable seed and origin policy, not final visual appearance or timing. Finalsource-hash rerun passes1007instances/18cases with exactcurrentR3SHA.
 Limitations: historicalsilver nowblackSUV; wheel02 cutoff/occluded, threeoldLOD/glass views see trailer. New20/45m only visible rear/body ROI, no whole-car guarantee;8new diagnostic cameras AFTER-only, original73pairs plus4wheelbaselines strict.
-Final192SHA/0mismatch/Fab15fallbackFalse;90vehiclefixture hashes equal freshcanonical before. GIS375pass/1knownxfail and17targetedpass; fullEditMode pending phonehold, task notcomplete.
+Final192SHA/0mismatch/Fab15fallbackFalse;90vehiclefixture hashes equal freshcanonical before. GIS375pass/1knownxfail and17targetedpass; finalEditMode231/231PASS incl5carcases; independentROOT reviewed all324final frames plusnativewheel/levels withoutnewscopedregression.
