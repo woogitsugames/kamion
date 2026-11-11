@@ -11,7 +11,7 @@ $owner=(& git branch --show-current).Trim()
 if ($owner -notmatch '^gpt-furniture-r\d+$') { throw 'Not an owned furniture round branch' }
 # Use the owning main copy: this worktree predates the newly introduced heavy pool.
 $slotScript='C:/Users/matma/Documents/Claude/kamion/scripts/unity-slot.ps1'
-& pwsh $slotScript -Acquire -Pool heavy -Owner $owner -StaleHours 876000
+& pwsh $slotScript -Acquire -Pool heavy -Owner $owner -StaleHours 876000 -PollSeconds 10
 if ($LASTEXITCODE -ne 0) { throw 'Could not acquire heavy slot' }
 $ok=$false
 try {

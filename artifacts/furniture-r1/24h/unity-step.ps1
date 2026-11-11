@@ -30,7 +30,7 @@ if ($Step -eq 'import') {
     }
 }
 # Never clean another owner's slot, including an old slot. The protocol owns release.
-& pwsh $slotScript -Acquire -Owner gpt-furniture -StaleHours 876000
+& pwsh $slotScript -Acquire -Owner gpt-furniture -StaleHours 876000 -PollSeconds 10
 if ($LASTEXITCODE -ne 0) { throw 'Could not acquire Unity slot' }
 $ok=$false
 try {
