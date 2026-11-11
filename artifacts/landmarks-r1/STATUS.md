@@ -108,3 +108,5 @@ Krok 35: pełny GIS 493 passed, 2 failed, 1 xfailed (662 s). Własna porażka: t
 Krok 36: domyślny przekrój rdzenia Low również 5 boków dla speców sprzed nowego pola. Przygotowano kontrolowaną regenerację i walidację całego modelu; kolejne rendery w osobnym after-budget. NASTĘPNA KOMENDA po oczekującym pojedynczym teście: pwsh artifacts/landmarks-r1/budget-fix.ps1
 
 Krok 36a: dowód stale-fidelity-proof.json potwierdza, że wszystkie 7 niezgodnych wejść raportu dróg jest nietkniętych od bazy rundy. Nie zmieniam cudzych źródeł ani raportu fidelity. Pipeline czeka na zakończenie i zwolnienie slotu przez już oczekujący pojedynczy test; nie ma dwóch ciężkich zadań tej sesji pod jedną tożsamością.
+
+Krok 36b: test remizy z kontrolą całego LOD1 przeszedł: 7/7 w 4,88 s pod heavy. Slot zwolniono przed uruchomieniem generatora, który teraz działa pod własnym kolejnym przydziałem. NASTĘPNY KROK: pipeline budget-fix.ps1 sam wykona test_hero_building.py, import i pełne rendery po regeneracji.
