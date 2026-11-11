@@ -5,7 +5,7 @@ namespace Game.Vehicle.Runtime
 {
     /// <summary>
     /// Lamp state of the art truck (track A7): writes the 16 x 1 light-state texture read by the Lights slot of
-    /// Kamion/Truck Exterior (texel = light group id from the manifest light_groups; RGB = lamp luminance in cd/m^2, the
+    /// Kamion/Truck Exterior (texel = light group id from the manifest light_groups; RGB = lamp luminance / NitsPerEncodedUnit, the
     /// shader multiplies by the scene exposure). State from the solver input: DRL on, low beam + tail lamps with the
     /// automatic light sensor (sun below <see cref="autoLowBeamSunDeg"/>), brake lamps from the service brake pedal, reverse
     /// lamps with the selector in R. Luminances are WORKING_VALUE (LED signal lamps: ECE R7/R87 intensity over the lens
@@ -28,6 +28,10 @@ namespace Game.Vehicle.Runtime
         const float DrlNits = 1.6e5f, LowNits = 5e4f, HighNits = 8e4f, TailNits = 1.3e3f, BrakeNits = 2.0e4f, ReverseNits = 3e4f, MarkerNits = 2e3f, IndicatorNits = 2.5e4f;   // amber LED indicator ~ 2e4 cd/m^2 apparent (WORKING_VALUE; R48 minimum intensity over the lens)
         static readonly Color White = new Color(1f, 0.97f, 0.92f), Red = new Color(1f, 0.03f, 0.01f), Amber = new Color(1f, 0.42f, 0.02f);
 
+        // Encode luminance before RGBAHalf storage: DRL160000 and high80000 exceed65504.
+        // Shader decodes in float after combining this scale with scene exposure. No photometric calibration implied.
+        public const float NitsPerEncodedUnit = 1000f;
+        static readonly int k_NitsScale = Shader.PropertyToID("_TruckLightNitsScale");
         static readonly int k_State = Shader.PropertyToID("_TruckLightState");
         Texture2D m_Tex;
         readonly Color[] m_Px = new Color[16];
@@ -92,9 +96,11 @@ namespace Game.Vehicle.Runtime
             m_Px[IND_L] = indL ? Amber * IndicatorNits : Color.clear;
             m_Px[IND_R] = indR ? Amber * IndicatorNits : Color.clear;
             m_Px[REVERSE] = reverse ? White * ReverseNits : Color.clear;
+            for (int i = 0; i < m_Px.Length; i++) m_Px[i] *= 1f / NitsPerEncodedUnit;
             m_Tex.SetPixels(m_Px);
             m_Tex.Apply(false);
             // Global, not a property block: a property block would take the lamps out of the SRP batcher.
+            Shader.SetGlobalFloat(k_NitsScale, NitsPerEncodedUnit);
             Shader.SetGlobalTexture(k_State, m_Tex);
         }
     }

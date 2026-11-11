@@ -3,7 +3,7 @@
 // - _CMap: RGB albedo (sRGB), A roughness. _NMap: tangent normal (OpenGL +Y). _MMap: R AO, G dirt mask, B metallic
 //   (Paint: B = paint mask). Paint: albedo = C.rgb * _PaintColor where the paint mask is set; TRAKT wordmark from the
 //   decal atlas on uv1. Dirt: lerp to _DirtColor by M.g * _Dirt; dust is dielectric and rougher.
-// - Lights slot (_KAMION_TRUCK_LAMPS): emission = _TruckLightState[uv2.x] (RGB luminance in cd/m^2, written by
+// - Lights slot (_KAMION_TRUCK_LAMPS): emission = _TruckLightState[uv2.x] (RGB luminance / _TruckLightNitsScale, written by
 //   TruckLights) * uv2.y * _KamionExposure (display value per cd/m^2, EnvironmentLighting). Lamps are therefore in the same
 //   exposed units as the sun and sky: a DRL is bright, a tail lamp is a dim red by day, both read correctly at dusk.
 // - Lighting: URP UniversalFragmentPBR (main light + cascaded shadows, SH ambient x AO, reflection probe / custom
@@ -120,6 +120,12 @@ Shader "Kamion/Truck Exterior"
             TEXTURE2D(_DecalMap); SAMPLER(sampler_DecalMap);
             TEXTURE2D(_TruckLightState); SAMPLER(sampler_point_clamp);
             float _KamionExposure;
+            float _TruckLightNitsScale; // TruckLights: nits per RGBAHalf encoded unit
+            float3 TruckLampRadiance(float3 encoded)
+            {
+                // Keep both operations in float; expanding to nits in half would overflow before exposure.
+                return encoded * (_TruckLightNitsScale * _KamionExposure);
+            }
             float _KamionClearCoatOff;
             half4 _CabShadowLift;   // cab-view local shadow lift (CabInteriorLighting; 0 outside the cab view)
             // Grime vehicle frames (ContactShadowCaster): per slot right / up / forward with w = -dot(axis, origin); origin on
@@ -361,8 +367,8 @@ Shader "Kamion/Truck Exterior"
             #if defined(_KAMION_TRUCK_LAMPS)
                 // 16 x 1 state texture: texel x = light group id (0 = none).
                 float u = (i.uv2.x + 0.5) / 16.0;
-                half3 lum = SAMPLE_TEXTURE2D_LOD(_TruckLightState, sampler_point_clamp, float2(u, 0.5), 0).rgb;
-                s.emission = lum * saturate(i.uv2.y) * _KamionExposure;
+                float3 encoded = SAMPLE_TEXTURE2D_LOD(_TruckLightState, sampler_point_clamp, float2(u, 0.5), 0).rgb;
+                s.emission = (half3)(TruckLampRadiance(encoded) * saturate(i.uv2.y));
             #endif
                 // Metallic flake: per-cell random normal tilt in the base specular only, faded out where a cell is
                 // smaller than a pixel (no sparkle aliasing at distance).

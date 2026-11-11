@@ -158,7 +158,10 @@ Shader "Kamion/Truck Glass"
                 else
                 {
                     // r6 E2: analytic ground below the horizon on the tiers without the vehicle capture (KamionVehicleEnv).
-                    env = KamionVehicleEnv(R, i.positionWS, pr, 1.0, h);
+                    // ADR0087 WORKING_VALUE: filter the finite64/128px capture footprint, without changing
+                    // the physical Fresnel/direct-sun roughness or substituting an analytic sky for the scene.
+                    half captureRoughness = _KamionVehicleCapture > 0.5 ? max(pr, 0.09h) : pr;
+                    env = KamionVehicleEnv(R, i.positionWS, captureRoughness, 1.0, h);
                 }
 
                 // Float GGX with the sun-disc alpha floor 0.01 (r6, as Kamion/Truck Exterior CoatDirect): the half form
@@ -200,7 +203,9 @@ Shader "Kamion/Truck Glass"
                 // r4 E2 "no double reflection"); from outside both surfaces mirror the sky.
                 half3 col = body + env * lerp(F, F1, i.inside) + L.color * spec * (1.0 - i.inside * 0.7);
                 half alpha = saturate(1.0 - trans);
-                col = KamionMixFog(col, i.fogFactor);
+                // Premultiplied glass adds only its alpha share of in-scatter: the transmitted scene already
+                // contains fog. Full opaque in-scatter here added an extra grey veil over that background.
+                col = KamionTone(lerp(_KamionHazeColor.rgb * alpha, col, exp(-i.fogFactor)));
                 // Premultiplied "over": transmission is grey (1 - alpha); the tint shows in the body term only.
                 return half4(col, alpha);
             }
