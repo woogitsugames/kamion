@@ -18,11 +18,15 @@ Po pierwszym cyklu renderów znaleziono drugi błąd: promień deduplikacji 30 m
 
 ### Walidacja r1
 
+Siatka przekazuje także TEXCOORD_1 = (−1, 5), czyli istniejący w WorldPBR znacznik braku danych o zużyciu drogi. Poprzedni brak kanału dawał (0, 0) i uruchamiał warstwę zabrudzonego brzegu na całej szerokości kontynuacji. To poprawka danych własnej siatki, bez zmiany shadera czy materiałów. Stride wierzchołka wzrósł z 52 do 60 bajtów; liczba trójkątów nie zmieniła się przez dodanie kanału. Dwa testy stoków sprawdzają również ten kontrakt.
+
 Po drugiej przebudowie siatka ma 6572 wierzchołki zamiast 6000 oraz 10968 trójkątów zamiast 10176 (+792). W 840 środkach trójkątów asfaltu najmniejszy prześwit względem apron wynosi 0,0403 m; w bazie minimum 576 próbek wynosiło −8,8035 m. To pomiar gotowej siatki wygenerowanej przez C#, nie wyłącznie prototypu Python. `mesh-audit-summary.json` zawiera podsumowanie.
 
 EditMode: 267/267, w tym dwa przypadki stoków poprzecznych i cztery przypadki deduplikacji. Cztery konfiguracje Low/High × clear/overcast: 356 par kamer, z tego 178 Low; w każdej Low suma draw calls statycznych i instancji ma deltę 0. Największa zmiana sumy zaokrąglonych trójkątów wynosi +1,1765%, poniżej +2%. Wszystkie kamery i obie składowe instancji są zapisane w `all-cameras.csv` / `measurements.json`. To estymaty edytora, nie liczniki GPU telefonu. Są także 136 par zdjęcie–render do 960 px z atrybucją i ograniczeniami pozy.
 
-Ocena obrazu: efekt w standardowych kadrach jest subtelny. Usunięto konkretne błędy geometrii tła; ogólny cel fotograficznej jakości H1 nie jest jeszcze zamknięty, a masa zabudowy pozostaje rzadka. Ujęcie w osi DK8 jest z wysokości kabiny; nazwa lasu wymaga osobnego potwierdzenia źródłowego. Telefon i niezależna recenzja należą do lidera. Pełny GIS zostanie uruchomiony przy zamknięciu rundy pod pulą heavy; znana jest nieaktualność raportu fidelity dla siedmiu niezmienianych plików dziedziny Claude.
+Ocena obrazu: efekt w standardowych kadrach jest subtelny. Maska Apron:road_asphalt dopasowała jeden materiał na jednym rendererze i potwierdziła widoczność kontynuacji w kadrach east/south. Usunięto konkretne błędy geometrii tła; ogólny cel fotograficznej jakości H1 nie jest jeszcze zamknięty, a masa zabudowy pozostaje rzadka. Ujęcie w osi DK8 jest z wysokości kabiny; nazwa lasu wymaga osobnego potwierdzenia źródłowego. Telefon i niezależna recenzja należą do lidera.
+
+Pełny GIS przy zamknięciu rundy, pod pulą heavy: 492 passed, 1 failed, 1 xfailed (658,63 s). Jedyna porażka to test_report_not_stale: istniejący fidelity_qa jest nieaktualny dla overrides.yaml oraz sześciu plików roads. Wszystkie siedem plików i sam raport pozostają bez zmian względem bazy rundy. Nie naprawiano dziedziny Claude. Po odtworzeniu ubocznych metadanych innych dziedzin i zachowaniu tylko pól far_field w world_manifest, własny test_far_field.py przeszedł 5/5, a oba SHA siatek są zgodne z QA. W world_manifest zmieniono wyłącznie dwa skróty far-field; źródła dróg, budynków i roślinności są nietknięte.
 
 ### Kolejna runda
 
