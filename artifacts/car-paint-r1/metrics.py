@@ -40,9 +40,16 @@ def stats(path):
     result={}
     pattern=r'^  (.+) instanced \(props\+trees\): draws (\d+), instances (\d+), triangles (\d+)k, cells (\d+), forest HLOD cells (\d+)'
     for line in p.read_text(encoding='utf-8-sig').splitlines():
+        head=re.match(r'^(.+): objects=(\d+) drawsEst=(\d+) shadowDrawsEst=(\d+) trisK=(\d+)',line)
+        if head:
+            result[head[1]]=dict(zip(('renderer_objects','renderer_draws_est','renderer_shadow_draws_est','renderer_triangles_k_rounded'),map(int,head.groups()[1:])))
         match=re.match(pattern,line)
         if match:
-            result[match[1]]=dict(zip(('draws','instances','triangles_k_rounded','cells','forest_hlod_cells'),map(int,match.groups()[1:])))
+            result.setdefault(match[1],{}).update(dict(zip(('draws','instances','triangles_k_rounded','cells','forest_hlod_cells'),map(int,match.groups()[1:]))))
+    for record in result.values():
+        if 'draws' in record:
+            record['total_draws_est']=record['renderer_draws_est']+record['draws']
+            record['total_triangles_k_rounded']=record['renderer_triangles_k_rounded']+record['triangles_k_rounded']
     return result
 
 def main():
@@ -55,9 +62,18 @@ def main():
         result['stats_delta']={}
         for condition in conditions:
             sa=result['rounds'][a][condition]['stats']; sb=result['rounds'][b][condition]['stats']
-            assert sa.keys()==sb.keys(),f'Camera registries differ: {condition}'
+            # New GPU dirt/LOD diagnostic views are AFTER-only. Every original camera must still match.
+            extra=set(sb)-set(sa)
+            allowed={c['id'] for c in json.loads((ROOT/'r1-cameras.json').read_text())['cameras']}-{c['id'] for c in json.loads((ROOT/'qa-cameras.json').read_text())['cameras']}
+            assert set(sa)<=set(sb) and extra<=allowed,f'Unexpected/missing camera registry: {condition}'
             delta={k:{f:sb[k][f]-sa[k][f] for f in sa[k]} for k in sa}
+            car_ids={c['id'] for c in json.loads((ROOT/'car_cams.json').read_text())['cameras']}
+            route={k:v for k,v in delta.items() if k not in car_ids}
+            assert len(route)==59,('Original route camera count changed',condition,len(route))
             result['stats_delta'][condition]=dict(camera_count=len(delta),per_camera=delta,
+                unpaired_after_only_diagnostics=sorted(extra),original_route59=route,
+                original_route59_min={f:min(d[f] for d in route.values()) for f in ('total_draws_est','total_triangles_k_rounded')},
+                original_route59_max={f:max(d[f] for d in route.values()) for f in ('total_draws_est','total_triangles_k_rounded')},
                 min={f:min((d[f] for d in delta.values()),default=0) for f in ('draws','triangles_k_rounded')},
                 max={f:max((d[f] for d in delta.values()),default=0) for f in ('draws','triangles_k_rounded')})
     out=ROOT/('metrics-'+'-vs-'.join(sys.argv[1:])+'.json')
