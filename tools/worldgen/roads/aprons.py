@@ -14,7 +14,7 @@ from __future__ import annotations
 
 import numpy as np
 import shapely
-from shapely.geometry import Polygon
+from shapely.geometry import LineString, Polygon
 
 CARRIAGEWAY = {"road_asphalt", "road_asphalt_new", "road_concrete", "road_paving", "road_sett", "road_gravel"}
 SURFACES = {"sett": "road_sett", "paving": "road_paving", "concrete": "road_concrete", "asphalt": "road_asphalt"}
@@ -110,9 +110,27 @@ def apply(buf, overrides, report, applied, stale):
                     drop[k] = True
                 else:
                     cand = np.append(cand, k)
+            # edges used by one triangle of this part = its outline (seams with the neighbouring ribbon / patch). A
+            # cut across such an edge would put a T-vertex into the seam (test_junction_seams_are_watertight): those
+            # triangles move whole, by their centroid, instead of being split.
+            ek = {}
+            for t in p.T:
+                for a_, b_ in ((t[0], t[1]), (t[1], t[2]), (t[2], t[0])):
+                    key = (min(a_, b_), max(a_, b_))
+                    ek[key] = ek.get(key, 0) + 1
+            ring = pg.boundary
             for k in cand:
                 tp = Polygon(tri2[k])
                 if tp.area < 1e-8 or not tp.intersects(pg):
+                    continue
+                t = p.T[k]
+                seam_cut = any(ek.get((min(a_, b_), max(a_, b_)), 0) == 1
+                               and LineString(p.V[[a_, b_], :2]).crosses(ring)
+                               for a_, b_ in ((t[0], t[1]), (t[1], t[2]), (t[2], t[0])))
+                if seam_cut:
+                    if pg.contains(tp.centroid):
+                        inside.add(p, k, tri2[k])
+                        drop[k] = True
                     continue
                 cut = tp.intersection(pg)
                 if cut.area < 1e-4:
@@ -133,7 +151,9 @@ def apply(buf, overrides, report, applied, stale):
                 a = V[T][:, :, :2]
                 u, v = a[:, 1] - a[:, 0], a[:, 2] - a[:, 0]
                 area += float(np.abs(u[:, 0] * v[:, 1] - u[:, 1] * v[:, 0]).sum() / 2)
-                new_parts.append(Part(p.layer, mat, V, V[:, :2].copy(), T, p.footprint, f"apron:{o['id']}", UV1, COL))
+                # same src as the part it was cut from: seams are matched by src (patch id / chain id); the apron id is in
+                # roads_qa.summary.paved_aprons
+                new_parts.append(Part(p.layer, mat, V, V[:, :2].copy(), T, p.footprint, p.src, UV1, COL))
         buf.parts[:] = [p for p in buf.parts if len(p.T)] + new_parts
         if area > 0.5:
             applied.append({"id": o["id"], "targets": [f"apron@{pg.centroid.x:.0f},{pg.centroid.y:.0f}"]})

@@ -32,18 +32,32 @@ def _area(p):
 def test_apron_splits_plate_and_keeps_surface():
     buf = _plate()
     rep, applied, stale = {}, [], []
-    poly = [[3.3, -1.0], [7.7, -1.0], [6.1, 7.0], [3.3, 7.0]]
+    poly = [[3.3, 0.5], [7.7, 0.5], [6.1, 5.5], [3.3, 5.5]]
     aprons.apply(buf, [{"id": "a", "kind": "paved_apron", "surface": "sett", "polygon_en": poly}], rep, applied, stale)
     assert not stale and applied
     sett = [p for p in buf.parts if p.mat == "road_sett"]
     asph = [p for p in buf.parts if p.mat == "road_asphalt"]
     tot = sum(_area(p) for p in buf.parts)
     assert abs(tot - 60.0) < 1e-6
-    want = 6 * ((7.7 - 3.3) + (6.1 - 3.3)) / 2 - 0.0   # trapezoid clipped to y 0..6 (edge from (7.7,-1) to (6.1,7))
-    # exact clip: right edge x = 7.7 - 0.2 (y + 1)
-    want = sum((7.7 - 0.2 * (y + 1) - 3.3) for y in np.linspace(0, 6, 60001)) * (6 / 60001)
+    want = 5.0 * ((7.7 - 3.3) + (6.1 - 3.3)) / 2      # trapezoid inside the plate
     assert abs(sum(_area(p) for p in sett) - want) < 1e-3
     for p in sett + asph:
         z = 100.0 + 0.02 * p.V[:, 0] + 0.03 * p.V[:, 1]
         assert np.allclose(p.V[:, 2], z, atol=1e-9)
     assert rep["paved_aprons"][0]["built"]
+
+
+def test_apron_never_splits_the_plate_outline():
+    """A polygon crossing the outline (= seams with neighbouring parts) moves those triangles whole: no new vertex
+    on an outline edge (T-junction in the seam)."""
+    buf = _plate()
+    before = {tuple(np.round(v[:2], 6)) for v in buf.parts[0].V}
+    rep, applied, stale = {}, [], []
+    poly = [[3.3, -1.0], [7.7, -1.0], [6.1, 7.0], [3.3, 7.0]]
+    aprons.apply(buf, [{"id": "a", "kind": "paved_apron", "polygon_en": poly}], rep, applied, stale)
+    for p in buf.parts:
+        for v in p.V:
+            x, y = v[:2]
+            if abs(y) < 1e-9 or abs(y - 6.0) < 1e-9 or abs(x) < 1e-9 or abs(x - 10.0) < 1e-9:
+                assert tuple(np.round(v[:2], 6)) in before, (x, y)
+    assert abs(sum(_area(p) for p in buf.parts) - 60.0) < 1e-6
