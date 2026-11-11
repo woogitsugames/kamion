@@ -67,3 +67,5 @@ Decyzje podjęte przez właściciela przed startem. Zmiana wymaga ADR i jego zgo
 | D46 | Ogranicznik na zjeździe, 2026-11-10 s8 | **Dopuszczać ~94 km/h jak w realu**: ogranicznik 90 km/h nie hamuje, na zjeździe zestaw może się rozpędzić do ~94 km/h, potem retarder (`driveline.overrunBrakeOffsetKmh = 4` zostaje; ADR 0082) |
 | D47 | Naczepa i ciągnik TRAKT, 2026-11-10 s8 | Firanka naczepy **bez pasa** (wariant B, rendery `artifacts/truck-ext-r10/owner-band/`); **osłony boczne ciągnika zostają** (ADR 0083) |
 | D48 | Tynk remizy JRG2 (0086), 2026-11-11 s10 | Właściciel po obejrzeniu zdjęcia 7197 i renderów przed/po (`artifacts/tint-gamma-r1/owner-remiza/`): **zostaje cel 110/126/145 ±10** (overcast), mimo uwagi krytyka o zimnym balansie bieli (`REVIEW-2026-11-11-s10-0086.md` P1-1) |
+| D49 | Profil A16 dla bramki 3, 2026-11-11 s10 | **A16 (Mali-G57) oficjalnie Low** — bramka 3 mierzona na A16 w Low (Medium 21,7 FPS, ADR 0106); Medium/High stroimy na S24+ |
+| D50 | Skala renderu Low, 2026-11-11 s10 | **Bez obniżania do 70 %** — najpierw druga runda wydajności (las HLOD, korony, impostory, prewarm shaderów, skok CPU G3-A t≈55 s) |
