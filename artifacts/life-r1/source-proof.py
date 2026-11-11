@@ -20,11 +20,28 @@ def main():
         for p in sorted((ROOT/folder).rglob('*')):
             if p.is_file() and p.suffix.lower() in ('.prefab','.mat','.fbx'):
                 fixtures[p.relative_to(ROOT).as_posix()]=sha(p)
-    result=dict(manifest_sha=sha(manifest),products=products,raw_count=len(products),mismatches=sum(not p['valid'] for p in products),fab_ready=len(ready),fixtures=fixtures)
+    material_root=ROOT/'art-source/world/materials'
+    spec_path=material_root/'materials_spec.json'
+    spec=json.loads(spec_path.read_text(encoding='utf-8-sig'))
+    texture_sha={}
+    for entry in spec['sets'].values():
+        tier=entry.get('files',{}).get('Medium')
+        if not tier:continue
+        for filename in tier.get('files',[]):
+            image=material_root/tier['dir']/filename
+            assert image.is_file(),f'Missing prepared PBR map: {image}'
+            texture_sha[image.relative_to(ROOT).as_posix()]=sha(image)
+    sources={name:sha(ROOT/name) for name in (
+        'art-source/world/materials/_src/sets_facade.py',
+        'art-source/world/materials/materials_spec.json',
+        'tools/worldgen/streetscape/life_cars.py',
+        'tools/worldgen/streetscape/materials.py',
+        'game/Assets/_Project/Environment/Shaders/WorldPBR.shader')}
+    result=dict(manifest_sha=sha(manifest),products=products,raw_count=len(products),mismatches=sum(not p['valid'] for p in products),fab_ready=len(ready),fixtures=fixtures,prepared_medium_textures=texture_sha,source_sha=sources)
     assert len(products)==192 and result['mismatches']==0
     assert len(ready)==15,'Fab/Megascans ready library missing entries'
     tag=sys.argv[1] if len(sys.argv)>1 else 'candidate'
     out=Path(__file__).with_name(f'{tag}-source-proof.json')
     out.write_text(json.dumps(result,indent=2),encoding='utf-8')
-    print(json.dumps({k:result[k] for k in ('raw_count','mismatches','fab_ready')}))
+    print(json.dumps({k:result[k] for k in ('raw_count','mismatches','fab_ready')}|{'prepared_maps':len(texture_sha)}))
 if __name__=='__main__':main()
