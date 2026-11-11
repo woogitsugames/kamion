@@ -1040,16 +1040,17 @@ overrides:
       the chain runs with its kerb 2.25 m and the P-21 band 1.1-3.1 m either side of the way: carriageway 5.35 m,
       centre 0.45 m left of the way. The fork alignment held its 4.65 m shift for 40 m and faded it over 93 m, which
       put the link 4-4.8 m beyond the real kerb, on the verge and the barrier (edge_sides: left -2.8, right +5.3 m).
-      First 20 m: carriageway centre and width between the P-21 border and the verge read on the clean crop
-      trace/fork_zoom_o.jpg (0.08 m, 1 m = 50 px) at N -132 / -135 / -138 / -141 / -144: E -346.0 (with the 2 m P-21
-      band) / -342.65 / -339.9 / -336.8 / -333.6, width 6.0 / 5.3 / 6.2 / 6.8 / 7.2 m; the first 0.3 of the profile
-      is fitted to these points (artifacts/junctions-r2/scripts/fit_offset.py, residual <= 0.2 m). Two earlier
-      readings off overview plan views were 1-2.5 m out and are superseded.
+      First 20 m: asphalt lane between the P-21 border and the lighter paved strip, 4.2 m wide, read on the clean
+      crop trace/fork_zoom_o.jpg (0.08 m, 1 m = 50 px) at N -144 / -141 / -138 / -135: centre E -335.1 / -338.1 /
+      -340.9 / -343.2; at N -132 with the 2 m P-21 band E -346.0, 6.0 m. The first 0.3 of the profile is fitted to
+      these points (artifacts/junctions-r2/scripts/fit_offset.py, residual <= 0.15 m). Earlier readings (overview
+      plan views; then the lane taken to reach the grass, 6.5 m, which left a hole between the 13.4 m stem and the
+      link start under the route) are superseded.
     confidence: medium
     verify: owner drive
     set:
-      center_offset: [[0.0, -8.4], [0.05, -8.04], [0.1, -4.03], [0.15, -0.87], [0.222, -1.29], [0.3, -0.53], [0.366, -0.2], [0.5, 0.35], [0.75, 0.45], [1.0, 0.2]]
-      width: [[0.0, 6.5], [0.061, 7.2], [0.108, 6.8], [0.152, 6.2], [0.203, 5.3], [0.268, 6.0], [0.366, 5.35], [0.75, 5.35], [1.0, 6.5]]
+      center_offset: [[0.0, -8.4], [0.05, -6.97], [0.1, -2.45], [0.15, -0.07], [0.222, -1.2], [0.3, -0.58], [0.366, -0.2], [0.5, 0.35], [0.75, 0.45], [1.0, 0.2]]
+      width: [[0.0, 4.2], [0.25, 4.2], [0.3, 6.0], [0.366, 5.35], [0.75, 5.35], [1.0, 6.5]]
   - id: s1440-diverge-p21-band
     kind: painted_zone
     stripe_az_deg: 4

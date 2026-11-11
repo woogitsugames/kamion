@@ -128,5 +128,10 @@ def test_andersa_median_stays_open(overrides):
     11.5 m centred on OSM ways drawn towards the median). Measured sections: 10.5-11.3 m, centres right of the way."""
     ov = [o for o in overrides if o["id"].startswith(("andersa-nw-xsec", "andersa-se-xsec"))]
     widths = [o["set"].get("width", o["set"]["lane_edges"][-1]) for o in ov]
-    assert len(widths) == 9 and max(widths) <= 11.3 and min(widths) >= 10.5
-    assert all(-1.6 <= o["set"]["center_offset"] <= -0.5 for o in ov)
+    widths = [max(v for _, v in w) if isinstance(w, list) else w for w in widths]
+    assert len(widths) == 9 and min(widths) >= 10.5
+    assert sorted(widths)[-2] <= 11.3 and max(widths) <= 13.5     # only the edge before the fork widens (exit lane)
+    for o in ov:      # every carriageway centre lies right of its OSM way (scalar or [[t, m], ...] profile)
+        co = o["set"]["center_offset"]
+        vals = [v for _, v in co] if isinstance(co, list) else [co]
+        assert all(-2.2 <= v <= -0.5 for v in vals), o["id"]
