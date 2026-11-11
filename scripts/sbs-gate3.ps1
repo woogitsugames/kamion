@@ -4,6 +4,7 @@ param(
     [string[]]$Lighting = @('overcast', 'clear'),
     [switch]$EditMode,
     [string]$SlotOwner = 'gpt-sbs',
+    [string]$OutputRoot = 'artifacts/sbs-gate3',
     [switch]$ComposeOnly
 )
 $ErrorActionPreference = 'Stop'
@@ -13,7 +14,7 @@ $mainRoot = Split-Path $mainRoot -Parent
 $phoneLock = Join-Path $mainRoot 'artifacts/locks/PHONE_RUN'
 $cameraFile = Join-Path $taskRoot 'Data/Regions/bialystok-industrial-c/sbs_cameras.json'
 $references = (Get-Content (Join-Path $taskRoot 'Data/Regions/bialystok-industrial-c/sbs_references.json') -Raw | ConvertFrom-Json).references
-$output = Join-Path $taskRoot 'artifacts/sbs-gate3'
+$output = [IO.Path]::GetFullPath($OutputRoot, $taskRoot)
 function Wait-Phone {
     while (Test-Path -LiteralPath $phoneLock) {
         Write-Host 'PHONE_RUN active; waiting 60 seconds before any Unity start.'
@@ -45,11 +46,28 @@ try {
                     $width = 1280
                     $height = [int]($width * $first.height / $first.width)
                     $ids = ($group.Group.camera -join ',')
+                    New-Item -ItemType Directory -Force $renderDir | Out-Null
+                    $capture = [ordered]@{
+                        captured_at_utc = [DateTime]::UtcNow.ToString('o')
+                        git_sha = (& git rev-parse HEAD).Trim()
+                        main_sha = (& git rev-parse main).Trim()
+                        cameras_sha256 = (Get-FileHash -LiteralPath $cameraFile -Algorithm SHA256).Hash.ToLowerInvariant()
+                        references_sha256 = (Get-FileHash -LiteralPath (Join-Path $taskRoot 'Data/Regions/bialystok-industrial-c/sbs_references.json') -Algorithm SHA256).Hash.ToLowerInvariant()
+                        tier = $tier; lighting = $light; width = $width; height = $height
+                        cameras = @($group.Group.camera)
+                        status = 'RUNNING'
+                    }
+                    $captureFile = Join-Path $renderDir "capture-$($group.Name).json"
+
                     & pwsh -NoProfile -File scripts/unity-slot.ps1 -Acquire -Owner $SlotOwner
                     if ($LASTEXITCODE -ne 0) { throw 'Unity slot acquisition failed' }
                     try {
+                        $capture.captured_at_utc = [DateTime]::UtcNow.ToString('o')
+                        $capture | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath $captureFile -Encoding utf8
                         & pwsh -NoProfile -File scripts/visual-qa.ps1 -Scene WorldC -Tier $tier -Lighting $light -Width $width -Height $height -Gate3 $cameraFile -Cameras $ids -OutputDir $renderDir
                         if ($LASTEXITCODE -ne 0) { throw "Render failed: $tier $light $($group.Name)" }
+                        $capture.status = 'OK'
+                        $capture | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath $captureFile -Encoding utf8
                         # visual-qa stats.txt is overwritten per invocation; preserve every aspect group.
                         Copy-Item -LiteralPath (Join-Path $renderDir 'stats.txt') -Destination (Join-Path $renderDir "stats-$($group.Name).txt")
                     } finally { Restore-UnitySideEffects; & pwsh -NoProfile -File scripts/unity-slot.ps1 -Release -Owner $SlotOwner }

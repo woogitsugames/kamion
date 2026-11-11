@@ -377,8 +377,15 @@ def compose(render_dir, outdir, strict=True, include_rejected=False):
     metrics=[]
     missing=[]
     rejected=[]
+    captures=[read(path) for path in render_dir.glob('capture-*.json')]
+    camera_hash=hashlib.sha256((REGION/'sbs_cameras.json').read_bytes()).hexdigest() if (REGION/'sbs_cameras.json').exists() else None
+    for capture in captures:
+        if capture.get('status')!='OK' or capture.get('cameras_sha256')!=camera_hash:
+            raise ValueError('incomplete or stale render capture; rerender after camera edits')
     for r in refs:
         if r.get('pose_confidence','C') == 'C' and not include_rejected:
+            stale=outdir/(r['camera']+'.png')
+            if stale.exists(): stale.unlink()
             rejected.append({'camera':r['camera'], 'reason':r.get('pose_reason','Unreviewed pose')})
             continue
         render=render_dir/(r['camera']+'.png')
@@ -424,7 +431,7 @@ def compose(render_dir, outdir, strict=True, include_rejected=False):
             d.line(points,fill=color,width=2)
         d.text((24,height+99),'sRGB luma histogram: blue PHOTO / orange RENDER (32 bins, normalized)',fill='white')
         save_png(sheet,outdir/(r['camera']+'.png'))
-    write(outdir/'metrics.json',{'pairs':metrics,'missing_renders':missing,'rejected_poses':rejected,'gate_status':'UNVERIFIED',
+    write(outdir/'metrics.json',{'pairs':metrics,'missing_renders':missing,'rejected_poses':rejected,'render_captures':captures,'provenance_status':'RECORDED' if captures else 'UNVERIFIED','gate_status':'UNVERIFIED',
           'cameras_sha256':hashlib.sha256((REGION/'sbs_cameras.json').read_bytes()).hexdigest()
               if (REGION/'sbs_cameras.json').exists() else None})
     print(f'Composed {len(metrics)} pairs; missing {len(missing)} renders.')

@@ -14,3 +14,7 @@ Następny krok: Get-Content artifacts/sbs-r1/render-validation.log -Tail 20
 ## Weryfikacja świeżości importu
 Skopiowane sceny _Generated są z 17:11, a bieżąca regeneracja main zakończyła eksport GLB około 21:35. Przerwano oczekujące uruchomienie SBS przed uzyskaniem slotu; nie wystartowało Unity. Konieczna własna regeneracja i import, aby nie prezentować starych scen jako aktualnych.
 Następny krok: uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c
+## Integralność dowodów
+Testy narzędzia SBS: 13/13 zaliczone. Dodano rejestr SHA kamer, SHA referencji, commitów gałęzi i main oraz czasu renderu. Kompozycja odmawia użycia zapisu renderu ze starym SHA kamer; odrzucone pary są usuwane z katalogu arkuszy dowodowych przy ponownym składaniu.
+Pełne testy GIS i własna generacja świata nadal pracują. Unity nie było jeszcze uruchomione.
+Następny krok: Get-Content artifacts/sbs-r1/build-world.log -Tail 20
