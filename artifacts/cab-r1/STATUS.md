@@ -46,3 +46,4 @@ Zapisano result-0112 Low clear, siedem kamer i sześć natywnych RT z identyfika
 Zapisano result-0112 Low overcast, siedem kamer i sześć natywnych RT z identyfikatorem wnętrza. Następny krok: kontynuować macierz lub porównać PNG.
 Zapisano result-0112 High clear, siedem kamer i sześć natywnych RT z identyfikatorem wnętrza. Następny krok: kontynuować macierz lub porównać PNG.
 Zapisano result-0112 High overcast, siedem kamer i sześć natywnych RT z identyfikatorem wnętrza. Następny krok: kontynuować macierz lub porównać PNG.
+Obejrzano pary K1/K2: w lusterku przednim pojawia się dach zamiast foteli, dolne lewe szkło odsłonięte przez cofnięte ramię. Low clear: wnętrze Kerb 3366→0 i Front 5364→0 pikseli; zwykłe draws Kerb 83→77, Front 120→100, instancje 79/102 bez zmian. Trwa pełny result route-all. Następny krok: porównanie 78 kamer i EditMode, dalej P2 ramka/smuga/podłokietnik/zużycie w obrębie cab.
