@@ -168,4 +168,4 @@ def test_built_region_verge_strips_do_not_make_walls():
     assert v["max_m"] <= 0.65, v
 
 
-RATCHET_VERGE = {"steep_grass": 300, "skirt": 40}
+RATCHET_VERGE = {"steep_grass": 230, "skirt": 20}     # b8: 226 / 18, max 0.627 m
