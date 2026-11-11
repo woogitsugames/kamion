@@ -43,7 +43,9 @@ JOINT_MILD_TURN_DEG = 60.0
 RING_BLEND_M = 30.0          # WORKING_VALUE
 RING_HOLD_M = 12.0           # WORKING_VALUE: axis held this far from the ring before the blend (the trailer is still
                              # off-tracking through the exit corner)
-RING_JOINT_ROUND_M = 2.0     # corner rounding at ring joints: the ring / arm axes meet at the node, a longer Bezier
+CURVE_R0_M, CURVE_R1_M = 60.0, 30.0   # WORKING_VALUE: bends tighter than R0 pull the route to the axis, fully at R1
+CURVE_LEAD_M = 12.0          # WORKING_VALUE: lead in / out of that pull
+RING_JOINT_ROUND_M = 2.0    # corner rounding at ring joints: the ring / arm axes meet at the node, a longer Bezier
                              # only cuts the inner corner
 
 
@@ -187,6 +189,17 @@ def lane_route(net, path_edges, node_xy, step=2.0):
         elif sec.oneway:
             lat *= _smoothstep((ring_before[i_e] + np.abs(ss - s0) - RING_HOLD_M) / RING_BLEND_M) * \
                 _smoothstep((ring_after[i_e] + np.abs(s1 - ss) - RING_HOLD_M) / RING_BLEND_M)
+        if sec.oneway and sec.lanes >= 2 and not sec.roundabout and len(ss) > 3:
+            # tight bend with the lane on its inside (the bypass of Rondo Putry, R ~ 30 m): towards the carriageway
+            # axis like on the ring, or the tridem cuts the inner kerb (G3-B, E -535 N 52: -0.98 m)
+            kap = np.asarray(c.line.curvature(ss), float)
+            wc = np.clip((np.abs(kap) - 1.0 / CURVE_R0_M) / (1.0 / CURVE_R1_M - 1.0 / CURVE_R0_M), 0.0, 1.0)
+            wc = wc * ((lat * kap) > 0)
+            k_ = max(1, int(CURVE_LEAD_M / SAMPLE_M))
+            wc = np.array([wc[max(0, i_ - k_):i_ + k_ + 1].max() for i_ in range(len(wc))])   # lead in / out
+            ker = np.hanning(2 * k_ + 1)
+            wc = np.convolve(np.pad(wc, k_, mode="edge"), ker / ker.sum(), mode="valid")
+            lat = lat * (1.0 - wc)
         P = c.line.offset_point(ss, lat)
         hw = np.asarray(c.hw_at(ss), float)
         if pieces:

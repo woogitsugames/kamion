@@ -80,4 +80,33 @@ Tabela liczb: sekcja „Liczby” niżej (uzupełniana z `roads_qa.json`, `fidel
 LICZBY_PLACEHOLDER
 
 ## Otwarte
-OTWARTE_PLACEHOLDER
+Z listy recenzji 0093 zrobiony jest punkt 1 (trzy P0-L) i część punktów 4 i 8; reszta nie została ruszona w tej rundzie.
+1. **Zatoka s 1040–1080 — końce**: otwarcia zatoki to nadal łaty skrzyżowania (asfalt, zaokrąglony narożnik „ucho”) zamiast
+   klina z kostki o prostej krawędzi. Potrzebny wielokąt autorski nawierzchni z krawężnikiem (`paved_apron`) i wyłączenie
+   linii serwisowej z budowy wstęgi; zaprojektowane, nie zrobione. Zatoka zaczyna się w rzeczywistości ok. 45 m przed
+   węzłem OSM (linia P-7a jest, kostki pod nią nie ma).
+2. **n10015785253**: czerwone przejazdy rowerowe przy obu zebrach (brak materiału farby czerwonej w warstwie oznakowania),
+   P-13 / linie warunkowego zatrzymania na pasach skrętu, sygnalizator na wyspie; krawężniki gardzieli to łuki
+   generatora, nie odrys.
+3. **Rozdział łącznicy E −782**: po wschodniej stronie nosa między wyspą a pasmem P-21 zostaje wąski pas trawy
+   (65 trójkątów farby poza jezdnią); bliźniaczy rozdział na jezdni wschodniej (E −825…−790, N 45–62) nie odrysowany.
+4. **Rozwidlenie do ronda Putry**: separator z barierą między łącznicą a dojazdem wiaduktu to trawa z krawężnikiem
+   generatora (w rzeczywistości kostka / beton z barierą); klin przed nosem buduje reguła `merge` (13 m²), wielokąt
+   autorski odrzucony za 0,37 m różnicy profili. Jezdnia SE w560802655:1847044938-12620261936 ma na ortofoto 4 pasy
+   (zrobione tylko położenie, WORKING_VALUE).
+5. **Punkt 2 recenzji (Putry N)**, **punkt 3 (MA-010, dół pierścienia)**: nie ruszone. Narzędzia z tej rundy
+   (`painted_line`, `painted_arrow`, `paint_clear`, `lane_edges`) wystarczą do odrysowania; nawierzchnia przejazdu przez
+   pas dzielący i plac z kostki wymagają `paved_apron` (jak w 1).
+6. **Punkt 4**: P-21 przy s 610 i `s1440-merge-p21-ramp` — nadal pasy równoległe z ADR 0093 (kąt do kierunku jazdy nie
+   zmierzony ponownie); zrobione: jodełka przed nosami E −782 i s 1440, ukośne pasma przy łącznicach. s 610 (pole do
+   zach. krawędzi, ramię wsch., droga gruntowa, U-25) — nie ruszone.
+7. **Punkty 5–7**: szew łata / jezdnia, krawężniki (odsłona, moduł, tekstura, UV kostki), sprzątanie linii, atlas P-13,
+   wzór P-8, P-11 obok P-10 — nie ruszone. Linie krawędziowe P-7b przy krawężnikach na odcinkach BEZ pomiaru są nadal
+   malowane z reguły klasy drogi (na ortofoto Andersa ich nie ma).
+8. **Kamery**: przestawione `p0_lamp_w1101181473_eye`, `p0_kerb_merge_eye`, `p0_lamp_putry_eye`, `eye_putry_n`; dodane
+   `r2_bay_eye`, `r2_n100_eye`, `r2_fork_link_eye`, `r2_kerb_merge_main_eye`. Ocena `visual-critic` i zrzut z telefonu —
+   dla lidera (agent nie tworzy subagentów, telefonów nie używa).
+9. WORKING_VALUE: szerokości „jedna na krawędź” (łącznica E −782 4,2 m w środku profilu, w266084693 przed rozwidleniem),
+   `RING_HOLD_M` 12 m, `RING_BLEND_M` 30 m, `RING_JOINT_ROUND_M` 2 m, `CURVE_R0_M` / `CURVE_R1_M` 60 / 30 m,
+   `ALONGSIDE_GAP_M` 1,0 m, `ALONGSIDE_MIN_RUN_M` 15 m, wzór P-1e (0,24 m, 1 / 1 m). UNVERIFIED: data mozaiki WMS
+   HighResolution (zgodna z arkuszem 2024-05-27 tam, gdzie sprawdzono: wiadukt DK8).
