@@ -26,3 +26,4 @@ Prepared unused builder integration for LOD0 recess, reading glass frames from m
 Added budget comparison: nine camera estimates/configuration, Low increases fail, mirror TSV must stay identical. Does not claim phone GPU timing. NEXT COMMAND: tools/worldgen/.venv/Scripts/python.exe artifacts/cab-r1/compare_budget.py (after both matrices exist)
 Rendered before Low overcast plus native mirror evidence. NEXT: continue matrix / inspect artifacts/cab-r1/before
 Rendered before Low clear plus native mirror evidence. NEXT: continue matrix / inspect artifacts/cab-r1/before
+Rendered before High overcast plus native mirror evidence. NEXT: continue matrix / inspect artifacts/cab-r1/before
