@@ -45,3 +45,6 @@
 - NASTĘPNY KROK: Get-Content artifacts/viaduct-r10/final-gis-r4.log -Tail 8; Get-Content artifacts/viaduct-r10/validate-after-r4.log -Tail 8
 - Końcowy GIS r4: 377 PASS / 1 XFAIL, 663.87 s. Raport QA potwierdza vegetation_added [0,0]; GLB konstrukcji bez zmian. Końcowy import rozpoczęty po sprawdzeniu braku PHONE_RUN.
 - NASTĘPNY KROK: Get-Content artifacts/viaduct-r10/validate-after-r4.log -Tail 10; uv run --project tools/worldgen python artifacts/viaduct-r10/compare_stats.py
+- Wykryto różnicę fixture/import: test_world_roads buduje raw do temp (po sukcesie czyszczony), aktualizuje jednak generated/world_manifest.json. Lokalny raw nadal miał 8 odrzuconych kęp.
+- reconcile_instances.py odtworzył wyłącznie usunięcie tych 8 instancji; PRZED zapisem sprawdził wszystkie 64 wynikowe SHA instancji i 128 GLB względem manifestu z zielonego testu. Wszystkie 192 pliki zgodne byte-for-byte z testowanym wyjściem, bez nowej geometrii. Następne importy automatycznie sprawdzają ten warunek.
+- NASTĘPNY KROK: pwsh artifacts/viaduct-r10/validate-after.ps1 -GisLog artifacts/viaduct-r10/final-gis-r4.log

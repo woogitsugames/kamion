@@ -19,6 +19,8 @@ while ($true) {
  Start-Sleep -Seconds 30
 }
 . ./scripts/env.ps1
+& uv run --project tools/worldgen python artifacts/viaduct-r10/reconcile_instances.py
+if ($LASTEXITCODE -ne 0) { throw 'Raw cache does not match the tested canonical manifest' }
 # All Medium PBR sets were copied from main during preparation; validate that
 # direct import cannot silently use a missing-texture fallback.
 $spec = Get-Content art-source/world/materials/materials_spec.json -Raw | ConvertFrom-Json
