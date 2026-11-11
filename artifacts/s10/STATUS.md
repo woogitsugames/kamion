@@ -148,3 +148,10 @@ B all20finalaftersheets plus960focalpairedframes reviewed; REVIEW-B-0088.md
 records boundedvisualPASS pendingfinaltests. Putryp50 increases~13percent
 explicitlynoted; DK8blackcrownfixandsilhouette improved, style/temporalP2remain.
 NEXT COMMAND: verifyGbootstrap/currentmain and BfinalGIS/EditMode+REPORT; thenassignE on nextfreeworker.
+
+## Step11 - B reference and shrub preservation proof
+Viewed mixedseasonphoto crownROIs and explicit960runtime-textured FabLODgallery.
+All6boxwood/elderberry activeLOD GLBs match originalsourcecache;6/37world
+instances present. Shape/sourcepreservation verified, no newmesh/driverlightclaim.
+RootconditionalREVIEW.md copiedtoB; finalGIS~78percent, EditModequeued.
+NEXT COMMAND: read B finalGIS completion and canonicalfixture EditModeXML, finalizeREVIEW thenEdispatch.

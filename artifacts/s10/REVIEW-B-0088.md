@@ -27,6 +27,11 @@ variants staywithinbaselinegeometry. CPUestimates are not deviceGPUtiming.
 
 P2 remains: repeatedcard clumps and linden stylization, limited closehedgegeometry,
 staticproof cannot ruleout movement shimmer/LODpop. No photorealism/phoneclearance.
-R1Fabboxwood/elderberry scans unchanged, targetedpreservationproof requested.
+R1Fabboxwood/elderberry preserved proof reviewed: all6activeLOD GLB hashes
+match originalcache,6boxwood/37elderberry worldinstances; actual externalruntime
+texture gallery viewed at960x860. Gallery is source-model QA, not driver lighting
+or GPUbudget proof. Lowbudget elderberry LODs retain coarse inherited appearance.
 FinalGIS/canonicalfixtureEditMode and ADR/report stillneed closure. C/A/leader
 ADR0101 integration is separate; commonshaderincludes/CanopyPolicy must survive.
+
+Reference photo-crown-rois.jpg independently viewed with sourceSHA/ROIs; mixedseason/exposure and sparse5.3percent secondphoto mask preclude exactphysicalalbedo inference.
