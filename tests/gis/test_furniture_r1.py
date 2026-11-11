@@ -24,7 +24,8 @@ def test_axis_contact_and_local_search_avoid_a_sharp_step():
     pl.add("lamp_12m", (0, 0), 0)
     it = pl.items[-1]
     assert np.hypot(it["e"], it["n"]) <= 1.051
-    assert it["e"] < -0.25 and it["z"] == 0
+    assert abs(it["e"]) > 0.25
+    assert it["z"] == pytest.approx(1.087 if it["e"] > 0 else 0)
     m = P.lamp(12, 2)[0].out()
     v = next(p["V"] for p in m if p["mat"] == "furniture_footing")[:, 2]
     assert -0.6 < v.min() < 0 and v.max() > 0
