@@ -20,3 +20,5 @@
 - Deeper source-plan review found 2 more rectangles beyond the tile intersecting full regional building continuations. Extended exclusion to tile union complete region building outlines; cache /9 pins region buildings.geojson SHA256. New synthetic test changes that file and verifies cache invalidation.
 - Targeted extraction/geometry regression remains green (11 passing before local-data check); new full generation and GIS refresh underway. PHONE_RUN respected per owner reply.
 - NEXT: Get-Content artifacts/edge-far-r2/gis-after.log -Tail 30
+- Real-data regression caught an additional case: a rectangle disjoint in source space can move into a regional building continuation after distance compression. Extraction now validates both raw and mapped rectangles (cache /10), not only the final mesh guard. No visual claim made from the earlier 8451 count.
+- NEXT: Get-Content artifacts/edge-far-r2/generate-after.log -Tail 20; Get-Content artifacts/edge-far-r2/gis-after.log -Tail 30

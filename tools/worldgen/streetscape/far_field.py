@@ -53,7 +53,7 @@ FORESHORTEN_SPAN_M = 520.0
 FORESHORTEN_TAU_M = 950.0
 
 SECTORS = ("far_north", "far_east", "far_south", "far_west")
-GIS_CACHE_SCHEMA = "far-field-gis-cache/9"
+GIS_CACHE_SCHEMA = "far-field-gis-cache/10"
 
 # Linear RGB albedos calibrated to docs/06 §3 and streetscape/materials.py
 PALETTE_BLOCK = [
@@ -340,6 +340,18 @@ def building_outside_region(footprint, half: float, exclusion=None) -> bool:
     return not footprint.is_empty and not exclusion.intersects(footprint)
 
 
+def building_rectangle_outside_region(rect, half: float, exclusion=None) -> bool:
+    """The emitted, distance-compressed rectangle must also clear region geometry."""
+    points = np.asarray(rect, dtype=np.float64)
+    if len(points) < 4 or not building_outside_region(Polygon(points), half, exclusion):
+        return False
+    cx, cy = points.mean(axis=0)
+    ce, cn, distance, _ = foreshorten_point(cx, cy, half)
+    scale, _ = foreshorten_scales(distance)
+    mapped = (points - [cx, cy]) * scale + [ce, cn]
+    return building_outside_region(Polygon(mapped), half, exclusion)
+
+
 def extract_ring_gis(region_id: str, ox: float, oy: float, half: float = 1024.0) -> dict:
     """Extract and cache real ring features from BDOT10k (gpkg), GUGiK LoD1 2024, and OSM PBF."""
     import pyogrio
@@ -481,7 +493,7 @@ def extract_ring_gis(region_id: str, ox: float, oy: float, half: float = 1024.0)
             if rect.geom_type != "Polygon" or rect.area < 30.0:
                 continue
             rc = np.round(np.asarray(rect.exterior.coords)[:4], 1).tolist()
-            if not building_outside_region(Polygon(rc), half, building_exclusion):
+            if not building_rectangle_outside_region(rc, half, building_exclusion):
                 boundary_exclusions["bdot_rectangle"] += 1
                 continue
             buildings.append({
@@ -694,7 +706,7 @@ def extract_ring_gis(region_id: str, ox: float, oy: float, half: float = 1024.0)
                     if rect.geom_type != "Polygon" or rect.area < 35.0:
                         return
                     rc = np.round(np.asarray(rect.exterior.coords)[:4], 1).tolist()
-                    if not building_outside_region(Polygon(rc), half, building_exclusion):
+                    if not building_rectangle_outside_region(rc, half, building_exclusion):
                         boundary_exclusions["osm_rectangle"] += 1
                         return
                     buildings.append({
