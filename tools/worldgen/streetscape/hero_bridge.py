@@ -610,7 +610,9 @@ def apply(w, heroes, instances: list, log=lambda *a: None) -> dict:
             # they were dropped with the ribbons, so the hero decks had no road barrier at all (gate-3 sbs #4a)
             rails = ("bridge", "median", "embankment", "structure")
             w.buf.parts = [p for p in w.buf.parts if not (p.src == c.id or p.src.startswith(c.id + ":"))
-                           or (p.layer in ("furniture", "collision") and p.src.rsplit(":", 1)[-1] in rails)]
+                           or (p.layer in ("furniture", "collision", "bridge") and p.mat in ("barrier_steel", "barrier_post",
+                                                                                           "collision_steel")
+                               and p.src.rsplit(":", 1)[-1] in rails)]
             c.meta["hero"] = o["id"]
             br = c.bridge
             for side in ("L", "R"):

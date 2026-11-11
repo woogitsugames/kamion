@@ -1027,6 +1027,7 @@ def guardrail(lin, P, Z, key, tall=None, term=(False, False)):
     to the ground over GUARDRAIL_TERMINAL_M at that end (a free end on the ground; REVIEW s10-0100 P2-7)."""
     n = len(P)
     tall = np.zeros(n, bool) if tall is None else np.asarray(tall, bool)
+    first = len(lin.buf.parts)
     top = np.full(n, S.GUARDRAIL_H)
     tl = int(S.GUARDRAIL_TERMINAL_M)
     lo, hi = 0, n
@@ -1079,6 +1080,12 @@ def guardrail(lin, P, Z, key, tall=None, term=(False, False)):
     T = np.array(T)
     lin.buf.add("furniture", "barrier_steel", V, UV, T, src=key)
     lin.buf.add("furniture", "barrier_steel", V, UV, T[:, [0, 2, 1]], src=key)
+    if tall.any():
+        # ADR 0110: a run on a deck belongs to the bridge mesh of its chunk (drawn with the deck), not to the furniture
+        # mesh (fences, hedges: its bounds grew by the viaduct and 8 more draws entered frames beside it)
+        for prt in lin.buf.parts[first:]:
+            if prt.layer == "furniture":
+                prt.layer = "bridge"
     lin.buf.add("collision", "collision_steel", V, UV, np.concatenate([T, T[:, [0, 2, 1]]]), src=key)
 
 

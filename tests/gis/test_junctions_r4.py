@@ -109,7 +109,7 @@ def _rail(n=80, tall=None, term=(True, True)):
 
 def _is_posts(p):
     """Lin.posts: 8 vertices and 10 triangles (5 faces) per post, same material as the beam (one draw call)."""
-    return p.layer == "furniture" and len(p.V) % 8 == 0 and len(p.T) == len(p.V) // 8 * 10
+    return p.layer in ("furniture", "bridge") and len(p.V) % 8 == 0 and len(p.T) == len(p.V) // 8 * 10
 
 
 def _posts(parts):
@@ -136,7 +136,8 @@ def test_bridge_barrier_railing_has_posts_to_the_handrail_and_two_rails_above_th
     posts = _posts(parts)
     tops = sorted({round(float(p.V[:, 2].max() - 10.0), 2) for p in posts})
     assert tops == [round(S.GUARDRAIL_H - 0.05, 2), S.BRIDGE_BARRIER_H]
-    steel = [p for p in parts if p.layer == "furniture" and p.mat == "barrier_steel" and not _is_posts(p)]
+    assert not [p for p in parts if p.layer == "furniture"]          # a deck run lives in the bridge mesh
+    steel = [p for p in parts if p.layer == "bridge" and p.mat == "barrier_steel" and not _is_posts(p)]
     zmax = max(float(p.V[:, 2].max()) for p in steel) - 10.0
     assert np.isclose(zmax, S.BRIDGE_BARRIER_H)
     mid = [p for p in steel if np.isclose(p.V[:, 2].max() - 10.0, S.BRIDGE_BARRIER_MID + 0.03)]
