@@ -61,3 +61,6 @@ Przygotowano osobny audyt r2, bez nadpisywania wejść zapisanych przez serię. 
 
 ## Kontrola powiązania metryk z renderem
 Audyt r2 dodatkowo wymaga dokładnej zgodności capture w metrykach i katalogu raw, identycznego SHA zdjęcia i renderu dla każdej pary oraz poprawnego tieru/światła. Kontroluje także obecność i poprawność wszystkich 168 diagnostycznych PNG. Te warunki zapobiegają uznaniu starej kompozycji przy nowym renderze.
+
+## Świat po regeneracji i przygotowanie importu
+Generacja zakończona kodem 0 po 457 s, bez fallback=True. Wszystkie 64 SHA GLB w nowym manifeście są identyczne z r1. Przygotowano import przez osobny slot Unity gpt-sbs. Wrapper sprawdza, czy import nie uruchomi automatycznie build_world/build_all poza heavy: w razie brakujących lub nieaktualnych materiałów przerwie przed Unity. Fidelity zapisuje tylko QA, nie zmienia GLB, dlatego import może działać niezależnie od kolejki testów heavy. Nowe capture dopiero po obu etapach i zamrożeniu HEAD.
