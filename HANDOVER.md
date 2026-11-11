@@ -1,9 +1,60 @@
+# HANDOVER — kamion, SESJA 11 (start 2026-11-11 23:05)
+
+## Stan na żywo (s11)
+- 23:05 start: ops-watchdog uruchomiony w tle przez lidera (log `artifacts/logs/ops-watchdog.log`). Usage: 5 h 0 % (reset 04:00), tydzień 33 %, Fable 62 % (reset 17.11 04:00). Trigger godzinny :17 (CronCreate, tylko w sesji lidera). Właściciel 23:4x: tempo normalne (Fable 62 % tygodniowo na tym koncie); rano zmiana na konto po resecie → wtedy Fable na maksa.
+- Agenci Claude (3/3):
+| zadanie | ADR | worktree / gałąź | STATUS | stan |
+|---|---|---|---|---|
+| węzły r6 bariery — dokończenie b3 (Fable) | 0123 | `.claude/worktrees/junctions-r6` / `junctions-r6` | `artifacts/junctions-r6/STATUS.md` | w toku od 23:08 (post.sh b3 full → EditMode/PlayMode → pairs → poprawki → ADR) |
+| zabudowa r8 — runda r2 (Fable) | 0124 | `.claude/worktrees/buildings-r8` / `buildings-r8` | `artifacts/buildings-r16/STATUS.md` | w toku od 23:08 (pytest/fidelity → EditMode → r2 → ADR) |
+| G3-B bramownice, znaki, ekrany akustyczne, linia WN (Fable) | 0125 | `.claude/worktrees/gate3-signs` / `gate3-signs` | `artifacts/gate3-signs/STATUS.md` | start ~23:20 (blokery 1,3,4,5 z recenzji D51) |
+- **Recenzja D51 sbs-r1 (`docs/reports/visual/REVIEW-2026-11-11-s11-sbs-r1-D51.md`): bramka 3 FAIL** — 25 kadrów B Low-overcast: 12 rozpoznawalnych / 11 częściowo / 2 nie; G3-A 11/15 OK warunkowo, G3-B 1/10. Blokery: 1 bramownice G3-B, 2 brak filarów s≈351–359, 3 ekrany akustyczne (strona), 4 słup WN, 5 znaki pionowe, 6 pierzeja handlowa G3-B, 7 pod wiaduktem (bariera łuku, nasyp), 8 drzewa w pasie dzielącym, 9 bloki na horyzoncie. B2+B7 dopisane do 0123; B1,3,4,5 → 0125; B6 → zabudowa po 0124; B8 → GPT vegetation, B9 → GPT edge.
+- **23:26 trigger:** 5 h 22 %, tydzień 36 %, Fable 68 %. Watchdog żyje. **GPT sbs r1 SCALONE `7cfd05b6`** (tylko narzędzie/dowody, świat bez zmian; test_sbs_gate3 40/40 na main; sesja GPT ruszyła r2). **GPT edge r1 GOTOWE** (`gpt-edge-r1` 6a06c6c8: kontynuacje jezdni 24→35, apron +792 tris, Low draws +0; EditMode 267/267, GIS 492/1 fail = nieaktualny fidelity_qa) → czeka na visual-critic, gdy zwolni się slot (max 3). Pozostałe GPT w toku.
+- Następne: po krytyku D51 → agenci na blokery (Fable geometria) → krytyk 0123/0124 → scalenie → jedna regeneracja → integracja Unity + czysty APK Low → gate3 A16 A+B.
+- Ostatni przydzielony ADR: 0125.
+
+---
+# HANDOVER — kamion, ZAMKNIĘCIE sesji 10 (2026-11-11 ~22:50; właściciel zmienia konto → limity od zera)
+
+## Prawda o stanie (czytaj to, niżej jest dziennik s10)
+- **main = ten commit, wypchnięty.** Start s11: `docs/owner/START-PROMPT-S11.md`.
+- **Bramka 3 — kryterium D51 (właściciel):** rozpoznawalność trasy (układ jezdni, pasy, skrzyżowania, ronda, wiadukty, znaki/bramownice, budynki i obiekty charakterystyczne — „z grubsza podobne” do zdjęć). Niebo/ekspozycja, odcień trawy, tekstury, dziury NIE blokują bramki (dopracujemy później).
+- **Scalone w s10 (wszystko po visual-critic, recenzje `docs/reports/visual/REVIEW-2026-11-11-s10-*.md`):** 0086+0101 `_Tint`/kalibracja · 0088 roślinność · 0098 światło · 0097/0107/0114 zabudowa r5–r7 + działki · 0100/0110/0117 węzły r3–r5 + bariery · 0102 meble · 0103 side-by-side (40 par Mapillary) · 0104 kabina/lusterka · 0105 wiadukt pod pomostem · 0085 r2 tło · 0087 TRAKT · 0090 remiza r7 · 0106/0113 wydajność A16 Low · `.venv` odśledzony · fix `build-android.ps1 -Apk` · fix `device-metrics.ps1` (CSV przed screencap) · fix sondy Tint.
+- **NIE scalone:** GPT 0089 osobówki (brud progów FAIL → R4 w toku w sesji GPT „life”), GPT 0099 asfalt (cel FAIL → przejęte przez sesję GPT „asphalt”).
+- **Telefon A16 Low (ostatni ważny, APK `kamion-0.1.0-21a55c3fe4.apk`, po 0106):** G3-A 29,7 fps p95 33,5 / p99 50 (część to artefakt starego device-metrics — naprawiony później), GPU p95 31,8; G3-B 29,9 fps p99 33,7, GPU p95 33,3; PSS ~830 MB; termika 0. Po 0113 (prewarm, las) agent zmierzył G3-A p99 33,6 bez końcówki. **Ważny pomiar po wszystkich scaleniach jeszcze nie zrobiony.**
+- **Decyzje właściciela s10:** D48 tynk remizy 110/126/145 zostaje · D49 A16 = Low dla bramki 3 · D50 bez obniżania skali renderu · D51 bramka 3 = rozpoznawalność.
+
+## Agenci na zamknięciu s10
+| zadanie | ADR | worktree / gałąź | STATUS | stan |
+|---|---|---|---|---|
+| węzły r6 bariery (Fable) | 0123 | `.claude/worktrees/junctions-r6` / `junctions-r6` | `artifacts/junctions-r6/STATUS.md` (RAPORT KOŃCOWY — przerwane) | **PRZERWANE na polecenie właściciela, `13852fdb`**: b3 zbudowany/zaimportowany/wyrenderowany (Low/High × clear/overcast); Low/High draws max +0, tris ≤ +0,7 %. Zrobione: cień poręczy (szachownica), kapa ciemniejsza + bariera bliżej, murek → skarpa, latarnie RING-B przeniesione między pomosty. Częściowo: ocynk (w cieniu za jasny, białe refleksy), filar w r4_pier_bz, ~6 m szyny przed pomostem łącznicy, nos Putry N. Niezweryfikowane: swept path, pełny pytest + EditMode/PlayMode (zmieniony shader/importer/WorldInstances), przegląd 102 kamer, ADR szkic. s11: `bash artifacts/junctions-r6/scripts/post.sh b3 full` (w worktree) → krytyk → scalenie |
+| zabudowa r8 działki (Fable) | 0124 | `.claude/worktrees/buildings-r8` / `buildings-r8` | `artifacts/buildings-r16/STATUS.md` (RAPORT KOŃCOWY) | **PRZERWANE limitem po r1, `4147f032`** — budżet lepszy od r7 (Low −12 / najgorsza +3, High −56, cienie −123), 43/43 bram z obniżonym krawężnikiem, kostka nie na jezdni, 0 kolizji płot–schody/garaż, nowy atlas roślin CC0, krawężnik osiedlowy 10 cm, przewody. NIE zrobione: klin trawy na skośnych zjazdach, pomiar zacieków, MirrorCostProfiler (uwaga: `cab-mirror-*` w stats to widok główny, nie RT lusterek), pełny pytest gis + fidelity/run.py + EditMode, kamery r16_door/garden złe. s11: dokończyć r2 (agent Fable z STATUS) → krytyk → scalenie |
+| **10 sesji GPT 24 h** (od ~21:25, właściciel) | 0108, 0109, 0118, 0111, 0112, 0115, 0116/0119, 0120, 0121, 0089/0122 | `.claude/worktrees/gpt-<dziedzina>` / `gpt-<dziedzina>-rN` | `artifacts/<dziedzina>-rN/REPORT.md` | pracują; `docs/owner/GPT-TASK-05-24H.md`, uwagi `docs/owner/GPT-FEEDBACK-S10.md` |
+Stare worktree GPT z dnia (`gpt-cab-r1`, `gpt-edge-r2`, `gpt-firestation-r7`, `gpt-furniture-r1`, `gpt-light-r12`, `gpt-megascans`, `gpt-sbs-gate3`, `gpt-surface-wear`, `gpt-tint-gamma`, `gpt-truck-paint`, `gpt-vegetation-r2`, `gpt-viaduct-r1`, `gpt-car-paint`) — scalone/zastąpione; usuwać tylko za zgodą właściciela (GPT może z nich korzystać). `argon-edge` zastąpiony przez 0085 r2.
+
+## Ochrona maszyny (WAŻNE — 64 GB RAM, 24 wątki, RTX 5070, ~13 sesji)
+- 22:13 kilkanaście równoległych pytest/build_world zawiesiło PC. Od tego czasu:
+  - `scripts/unity-slot.ps1 -Acquire|-Release -Owner <x> [-Pool unity|heavy]` — Unity max 4, ciężki Python max 3; respektuje `artifacts/locks/PHONE_RUN`.
+  - **`scripts/ops-watchdog.ps1`** — wymusza limit bez współpracy sesji (BelowNormal, 4 rdzenie dla Windows, max 3 ciężkie zadania Pythona: nadmiarowe WSTRZYMUJE i wznawia; < 8 GB RAM → wstrzymuje). Log `artifacts/logs/ops-watchdog.log`. **Ginie z sesją lidera — s11 musi go uruchomić od razu:** `pwsh -NoProfile -File scripts/ops-watchdog.ps1` (w tle). Sesje GPT nie znają `-Pool heavy` (wystartowały wcześniej; właściciel nie może do nich pisać) — watchdog to za nie pilnuje.
+  - Właściciel dodał wykluczenie Defendera dla folderu repo.
+
+## Następne kroki (s11)
+1. Uruchom `ops-watchdog.ps1` w tle. Ustaw godzinny trigger (CronCreate, minuta nie :00/:30).
+2. 0123 i 0124 PRZERWANE (patrz tabela) — dokończ (agent Fable z ich STATUS.md: 0123 weryfikacja b3, 0124 runda r2), potem visual-critic (kryterium D51) → scalenie → JEDNA regeneracja (build_all, build_world, export-route, fidelity/run.py, pytest gis+physics+gate3 z `-Pool heavy`).
+3. Co godzinę: rundy GPT (`gpt-<dziedzina>-rN` z REPORT.md) → visual-critic (można łączyć) → scalenie (generated → ours) → regeneracja → uwagi do `GPT-FEEDBACK-S10.md`.
+4. **Ścieżka do bramki 3 (D51):** świeży zestaw sbs na aktualnym main (sesja GPT „sbs” r2) → visual-critic z pytaniem „czy kierowca rozpozna to miejsce?” → lista blokerów rozpoznawalności → poprawki (Claude: geometria/obiekty) → integracja Unity (import, Truck/Trailer BuildBatch, InstallBatch, EditMode/PlayMode, czysty APK Low) → gate3 A16 Low A+B z kamerami → pakiet porównań dla właściciela do akceptacji kierunku.
+5. Otwarte: wideo migotania lasu (`artifacts/perf-low-r2/shimmer.ps1`), ponowne nagranie PSO po scaleniach, Kwadrat r13 (po zdjęciach bramy), S24+ High (bateria ≥ 40 %).
+6. **Ostatni przydzielony ADR: 0124.**
+
+---
 # HANDOVER — kamion, sesja 10 (2026-11-11 od ~10:05 lokalnie)
 
 ## Najpierw (dla następnej sesji)
 - **Tempo (właściciel, s10):** dalej max 3 agentów naraz. Limit tygodniowy Fable zresetował się (0 % o 10:05, reset 15.11); 5 h reset 15:00 lokalnie.
 - GPT J 0103 i K 0104 SCALONE (`8b176456`, `1c894f25`); `.venv` odśledzony. Regeneracja HIL zielona (494/1 znane). Integracja s10b na main w toku: `artifacts/integration-s10/run2.log` (czeka na PHONE_RUN agenta 0106; import, truck, EditMode, PlayMode, gis, commit reserializacji, czysty APK Low). Priorytety bramki 3 z side-by-side (top 5): niebo/ekspozycja, trawa/pobocza, asfalt bez zużycia, bariery na pomostach/łącznicach, pod wiaduktem → GPT 0108/0109/0099 i Claude 0110.
-- Trigger 21:21: 5 h 33 %, tydzień 40 %, **Fable 55 %** (3,5 dnia do resetu — przy 2 agentach Fable wystarczy na ok. 1,5 dnia; potem Opus). 0123/0124 na starcie (regeneracja bazy). Regeneracja main 0117+0114 w toku. Sesje GPT 24 h jeszcze nie wystartowały.
+- **D51 (właściciel, ~22:40): bramka 3 = rozpoznawalność trasy** (geometria, pasy, skrzyżowania, wiadukty, znaki/bramownice, budynki i obiekty charakterystyczne — „z grubsza podobne”), NIE perfekcja nieba/trawy/tekstur/dziur. Recenzje i priorytety Claude odtąd ważone tym kryterium; sesje GPT light/vegetation/asphalt robią swoje, ale nie blokują bramki.
+- **22:13 PRZECIĄŻENIE MASZYNY:** ~13 równoległych pytest/build_world (10 sesji GPT + Claude) → 99 % CPU, zawieszenie. Działa **`scripts/ops-watchdog.ps1`** (uruchomiony przez lidera w tle; log `artifacts/logs/ops-watchdog.log`): priorytet BelowNormal + 4 rdzenie zostawione dla Windows, max 3 ciężkie zadania Pythona naraz — nadmiarowe są WSTRZYMYWANE (nie zabijane) i wznawiane po kolei; przy < 8 GB wolnego RAM wstrzymuje kolejne. **Jeśli sesja lidera padnie, watchdog znika — uruchom ponownie:** `pwsh -NoProfile -File scripts/ops-watchdog.ps1`. Unity ograniczone `scripts/unity-slot.ps1` (max 4). Sesje GPT nie znają `-Pool heavy` (właściciel nie może do nich pisać) — watchdog wymusza limit za nie.
+- Trigger 21:21: 5 h 33 %, tydzień 40 %, **Fable 55 %** (3,5 dnia do resetu — przy 2 agentach Fable wystarczy na ok. 1,5 dnia; potem Opus). 0123/0124 na starcie (regeneracja bazy). Regeneracja main 0117+0114 w toku. Sesje GPT 24 h URUCHOMIONE przez właściciela ~21:25 (10 dziedzin, `docs/owner/GPT-TASK-05-24H.md`) — trigger scala ich rundy po REPORT.md (gałęzie `gpt-<dziedzina>-rN`).
 - **~21:15:** **0114 SCALONE `3540bbdf`** (recenzja s10-0114: PASS, jakość warunkowa; r8: zjazdy/kostka na jezdni, szwy, schody przed płotem, tuje/jabłonie/kute pręty, ulica bez przewodów, zacieki, koszt działek w lusterkach High). Regeneracja 0117+0114 `artifacts/logs/s10-regen-0117-0114.log`. Start (Fable): **0123 węzły r6** (`junctions-r6`) i **0124 zabudowa r8** (`buildings-r8`) — oba używają `unity-slot.ps1`.
 - **~21:00:** **0117 SCALONE `6be0d8f6`** (recenzja s10-0117: PASS warunkowy, bariery pkt 4 bramki NIE zamknięte — r6: szachownica cienia poręczy na kapie Low clear, taśma W za ciemna w słońcu (albedo 0,13 metal 0 → cynk), kapa najjaśniejsza w kadrze, bariera przy filarze wg pomiaru, murek r2_fork_link (3. runda!), samotny słupek p0_kerb_merge, RING-B prześwit 1,31 m — 2 nowe propy na fartuchu wyspy E571 N−716 / E558 N−733). **0114 GOTOWE `2622bda0`** (działki bez instancji, Low najgorsza +11, High +29 / suma +359, cienie +189) → krytyk w toku; po nim scalenie i JEDNA regeneracja dla 0117+0114 (+ fidelity/run.py). Potem węzły r6 (0123, Fable) i A16 na r10_house_1/2, r10_shed_2. GPT 24 h — 10 sesji czeka na start przez właściciela (`docs/owner/GPT-PROMPTS-24H.md`).
 - **~20:45:** recenzja GPT 0099 (`REVIEW-2026-11-11-s10-gpt-0099.md`): scalenie PASS warunkowy, cel asfaltu FAIL (kadry trasy bez zmian) — NIE scalone; przejmuje sesja GPT „asphalt” (r1 z tej gałęzi po merge main).
