@@ -176,3 +176,20 @@ forbiddenroads/build_world.py untouched. Broad3blockcandidate remains separate.
 FullGIS386/1xfail511.28s on finalPythonproducts; noPythonchanges afterpaintadoption.
 Gate BEFORE8 complete on frozenbus cache. PHONEperfdiag2 returned16:42:56
 beforegateimport, so nextactualuniform/gateAFTER pending freshrelease.
+
+Root update 17:21: Gate r1 import and all eight AFTER frames completed after the
+16:51 release. Actual paint uniform is [.425,.25,.38,.12]. All eight camera and
+truck/trailer runtime pose packets match BEFORE; rounded counters also match.
+Source geometry still explicitly adds 64 tyre triangles per tier. Visual review
+and projected masks show weak, broken tracks: High overcast mean darkening per
+strip is only .657-1.361 LSB. This is not a gate-track visibility PASS.
+Root authorized one bounded correction: negative physical length selects short
+.65/.90 m fades for the NEW gate vertices only. Existing nonnegative and zero
+lengths retain the literal old 2.5/4 m formula. Strength .9 and global alpha are
+unchanged. Immutable raw audit found 28 legacy tyre primitives, 37160 vertices,
+all nonnegative. R2 strict proof preserves every ordered primitive and changes
+only 72 UV1.x signs per tier; 190 other raw files and 2441 cached files are exact.
+Actual shader visibility, legacy kerb controls and GPU cost remain pending.
+The GIS386/1xfail result above belongs to r1; changed Python requires a new suite,
+now running. Do not reuse the original 372 frames as the fresh broad-wear BEFORE:
+paint calibration and gate state have changed. Broad56 remains inactive.

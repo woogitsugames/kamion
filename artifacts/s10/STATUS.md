@@ -651,3 +651,7 @@ remove ONLY owned diag12 and issue fresh explicit release; D r2 import/install/
 Step 53: Refreshed REPORT with actual D gate/paint proof, pending r2 GIS/16frames,
 and new0115/0116 feedback. No aggregate quality PASS. NEXT COMMAND: monitor
 run5 END/PHONE and issue new guarded release before D Unity; no main merge.
+
+Step 54: Updated independent D review with actual gate r1 failure, exact signed
+r2 delta, new GIS requirement and fresh broad-baseline requirement. NEXT COMMAND:
+wait actual run5 END/PHONE absence, release D guarded16frame packet.
