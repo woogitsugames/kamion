@@ -286,14 +286,18 @@ Shader "Kamion/World PBR"
                     mask.a = saturate(mask.a + 0.35h * removedFilm);
                     // WORKING_VALUE road-grit deposition: bounded sill height/opacity, existing modulation
                     // pattern with a per-instance phase. Bonnet/roof detail remains independent of road spray.
-                    half top = lerp(0.32h, 0.62h, i.carFilm.x);
-                    carFilmOpacity = legacyFilm * i.carFilm.x * (1.0h - smoothstep(top - 0.08h, top + 0.08h, um.y)) * 0.65h;
+                    // Divide out the height envelope to retain the existing fan/drop variation as spray patches,
+                    // rather than restoring the old uniform sill stripe. No additional texture sample/noise layer.
+                    half expectedFilm = max(1.0h - smoothstep(0.15h, 0.95h, um.y), 0.08h);
+                    half sprayPatch = smoothstep(0.62h, 0.98h, legacyFilm / expectedFilm);
+                    half top = lerp(0.35h, 0.85h, i.carFilm.x);
+                    carFilmOpacity = sprayPatch * i.carFilm.x * (1.0h - smoothstep(top - 0.14h, top + 0.12h, um.y)) * 0.85h * (1.0h - keepUpper);
                     mask.a = lerp(mask.a, 0.25h, carFilmOpacity);
                 }
                 #endif
                 half3 albedo = base.rgb * _Tint.rgb * _AlbedoScale;
                 #if defined(_CARPAINT)
-                albedo = lerp(albedo, half3(0.080h, 0.078h, 0.074h), carFilmOpacity);
+                albedo = lerp(albedo, half3(0.160h, 0.156h, 0.148h), carFilmOpacity);
                 #endif
                 half smooth = mask.a * _SmoothnessScale;
                 half ao = mask.g;
