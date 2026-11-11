@@ -697,20 +697,24 @@ overrides:
     reason: >-
       Andersa NW-bound after the bay (strips xsec/n100_w1093590.png, xsec/and2.png stations 10-34 and 95-119): median
       kerb 4.3 m left of the OSM way, lane lines 0.1 m left / 3.4 m right, right kerb 6.75 m right -> lanes
-      3.5 / 3.5 / 3.35 m, 11.05 m, centre 1.2 m right of the way.
+      3.5 / 3.5 / 3.35 m, 11.05 m, centre 1.2 m right of the way. The right lane is the right-turn lane into the
+      side street at n10015785253 (wide broken line from station 60, solid from 108, arrows; it ends at the island),
+      OSM has no turn:lanes here -> turn_lanes.
     confidence: high
     verify: owner drive
-    set: {center_offset: -1.2, lane_edges: [0.7, 4.2, 7.7, 11.05]}
+    set: {center_offset: -1.2, lane_edges: [0.7, 4.2, 7.7, 11.05], turn_lanes: "through|through|right"}
   - id: andersa-nw-xsec-n10015785253
     target: {edge: "w1093579589:2359253621-10015785253"}
     reason: >-
-      Andersa NW-bound at the side-street island (strip xsec/and5.png, station 0-20): median kerb 4.4 m, lane line
-      0.2 m, solid right-lane line 3.25 m on the other side, mouth of the side street 6.6 m -> 11.0 m, centre 1.1 m
-      right of the OSM way. REVIEW 0093 P0-L: the generated median ran to zero here because both carriageways were
-      11.5 m centred on ways drawn 1.1-1.3 m towards the median.
+      Andersa NW-bound at the side-street island (strip xsec/and5.png station 0-20, crop trace/n100_o.jpg): median
+      kerb 4.4 m, lane line 0.2 m, solid edge line 3.25 m on the other side of the OSM way: TWO through lanes. The
+      third lane of the neighbouring edges ends here as the right-turn lane and starts again as the merge lane; between
+      them lie 1.9 m of asphalt, the P-21 fields and the kerbed island (carriageway to 11.0 m from the median kerb).
+      REVIEW 0093 P0-L: the generated median ran to zero here because both carriageways were 11.5 m centred on ways
+      drawn 1.1-1.3 m towards the median.
     confidence: high
     verify: owner drive
-    set: {center_offset: -1.1, lane_edges: [0.5, 4.2, 7.65, 11.0]}
+    set: {center_offset: -1.1, lane_edges: [0.5, 4.2, 7.65], width: 11.0, edge_lines: right}
   - id: andersa-nw-xsec-s1300-1355
     target: {edge: "w266084693:10015785253-12620261934"}
     reason: >-
@@ -724,12 +728,12 @@ overrides:
     target: {edge: "w266084693:12620261934-2840742308"}
     reason: >-
       Andersa NW-bound before the fork to Rondo Putry (strip xsec/and5.png station 18-42): median barrier kerb 4.7 m
-      left of the OSM way, lane lines 0.6 m left / 3.0 m right (solid), right kerb 7.25 m right at station 30 where
-      the exit lane is already 4.25 m wide; one width per edge: 11.6 m (WORKING_VALUE between the 11.1 m of the
-      previous edge and 11.95 m measured), centre 1.2 m right of the way.
+      left of the OSM way, lane lines 0.6 m left / 3.0 m right (solid). Right edge: read as 7.25 m on the strip, but
+      fidelity/edge_sides puts the pavement edge 0.72 m inside that (n 20) and the plan view agrees
+      (plan1/fork_putry.jpg): 6.3 m -> 11.0 m, centre 0.8 m right of the way.
     confidence: medium
     verify: owner drive
-    set: {center_offset: -1.2, lane_edges: [0.6, 4.1, 7.7, 11.6]}
+    set: {center_offset: -0.8, lane_edges: [0.6, 4.1, 7.7, 11.0]}
   - id: andersa-se-xsec-w560802655
     target: {edge: "w560802655:12620261936-1946476472"}
     reason: >-
@@ -940,3 +944,81 @@ overrides:
     confidence: high
     verify: owner drive
     set: {center_offset: -1.5, lane_edges: [0.0, 3.35, 7.0, 10.5]}
+  # --- side street at n10015785253 (REVIEW 0093 P0-L / 0076 #1): crop artifacts/junctions-r2/trace/n100_o.jpg (2 m grid)
+  - id: n10015785253-side-street-throat
+    target: {edge: "w227212660:5202512922-10015785256"}
+    reason: >-
+      Side street at its junction with Andersa (strip xsec/n100_side.png): 7.3 m kerb to kerb (4.0 m / 3.3 m either
+      side of the OSM way; OSM lanes=2 gave 5.0 m), flaring to about 16 m at the crossings where the two slip lanes
+      (OSM w1093579592 / w1093579593, absorbed into the junction plate by the generator) pass either side of the
+      island. width = [[t, m], ...] along the edge, t = 1 at the junction.
+    confidence: medium
+    verify: owner drive
+    set:
+      center_offset: -0.35
+      width: [[0.0, 7.3], [0.6, 7.3], [0.8, 9.5], [1.0, 16.0]]
+  - id: n10015785253-island
+    kind: traffic_island
+    surface: sidewalk_paving
+    polygon_en: [[-223.1, -232.3], [-222.25, -231.3], [-221.25, -230.6], [-218.6, -228.7], [-216.25, -226.8],
+                 [-215.45, -227.0], [-215.25, -227.65], [-216.75, -229.7], [-218.25, -231.7], [-219.2, -234.2],
+                 [-219.6, -235.3], [-221.25, -234.2], [-222.95, -233.0]]
+    reason: >-
+      Kerbed paved island between the two slip lanes of the side street (refuge of both crossings), traced on the
+      0.08 m orthophoto.
+    confidence: high
+    verify: owner drive
+  - id: n10015785253-p21-west
+    kind: painted_zone
+    stripe_az_deg: 11
+    polygon_en: [[-226.75, -230.45], [-221.5, -229.5], [-221.1, -230.3], [-222.3, -231.1], [-223.2, -232.1]]
+    reason: P-21 west of the island (between the merging slip lane and the Andersa edge line).
+    confidence: high
+    verify: owner drive
+  - id: n10015785253-p21-east
+    kind: painted_zone
+    stripe_az_deg: 5
+    polygon_en: [[-219.1, -234.3], [-218.1, -231.9], [-217.25, -232.95], [-216.75, -234.95], [-216.3, -238.7], [-219.5, -235.5]]
+    reason: P-21 south-east of the island (between the Andersa edge line and the slip lane that leaves it).
+    confidence: high
+    verify: owner drive
+  - id: n10015785253-p21-north
+    kind: painted_zone
+    stripe_az_deg: 42
+    polygon_en: [[-216.25, -226.6], [-212.5, -223.6], [-215.0, -227.3]]
+    reason: P-21 north of the island tip, between the two slip lanes.
+    confidence: high
+    verify: owner drive
+  - id: n10015785253-edge-line-clear
+    kind: paint_clear
+    polygon_en: [[-238.0, -225.2], [-206.9, -245.1], [-207.6, -246.1], [-238.7, -226.2]]
+    reason: >-
+      The generated broken lane line 2|3 carried across this junction plate; on the orthophoto it is one solid line
+      (next override).
+    confidence: high
+    verify: owner drive
+  - id: n10015785253-edge-line
+    kind: painted_line
+    line: P-7b
+    polyline_en: [[-238.35, -225.7], [-207.25, -245.6]]
+    reason: >-
+      Solid 0.24 m line along the right edge of the two through lanes of Andersa across the side-street junction
+      (trace/n100_o.jpg: from E -237 N -226 to E -207 N -245).
+    confidence: high
+    verify: owner drive
+  - id: n10015785253-crossing-west
+    kind: painted_crossing
+    crossing: P-10
+    line_en: [[-222.7, -224.45], [-218.5, -227.6]]
+    reason: >-
+      Zebra across the slip lane from the side street onto Andersa (OSM node 10015785254; the slip way is absorbed
+      into the junction plate, so the generator had no chain to put it on). Red cycle crossing beside it: not built.
+    confidence: medium
+    verify: owner drive
+  - id: n10015785253-crossing-east
+    kind: painted_crossing
+    crossing: P-10
+    line_en: [[-216.0, -230.2], [-211.75, -233.45]]
+    reason: Zebra across the slip lane from Andersa into the side street (OSM node 3867825902). Red cycle crossing not built.
+    confidence: medium
+    verify: owner drive

@@ -71,7 +71,14 @@ def test_center_offset_overrides_applied(qa, overrides):
     for o in overrides:
         st = o.get("set") or {}
         if "center_offset" in st:
-            assert abs(st["center_offset"]) <= 3.5, "larger than a lane: fix the graph, not the placement"
+            co = st["center_offset"]
+            if isinstance(co, list) and co and isinstance(co[0], list):
+                # ADR 0095 profile [[t, m], ...]: up to a lane inside the edge; near its ends up to 5.5 m (OSM draws
+                # a ramp into the axis of the carriageway it joins, the real lane stays beside it)
+                assert all(abs(v) <= (5.5 if (t <= 0.15 or t >= 0.85) else 3.5) for t, v in co), o["id"]
+            else:
+                vals = co if isinstance(co, list) else [co]
+                assert all(abs(v) <= 3.5 for v in vals), "larger than a lane: fix the graph, not the placement"
             assert o.get("reason") and o.get("verify")
 
 

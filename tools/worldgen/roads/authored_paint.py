@@ -8,6 +8,8 @@ that is solid for part of an edge) the paint is listed in `overrides.yaml` with 
                        (optional width_m, dash_m: [dash, gap], smooth: false)
   kind: painted_arrow  at_en: [E, N] (tail of the glyph)  heading_deg (0 = east, counter-clockwise)
                        turns: [through, left, right, slight_left, slight_right]   long: bool
+  kind: painted_crossing  line_en: [[E, N], [E, N]] (the walking line across the carriageway, kerb to kerb)
+                       crossing: P-10 (bars 0.5 / 0.5 m) | P-11 (two rows of squares)   width_m (default 4.0 / 2.0 clear)
   kind: paint_clear    polygon_en: [[E, N], ...]    generated paint inside is removed (authored paint stays)
 
 All paint is draped on the generated carriageway surface (through_lines._Top); parts off the carriageway are dropped
@@ -149,7 +151,7 @@ def paint(buf, overrides, report, applied, stale):
     rep = []
     for o in overrides:
         kind = o.get("kind")
-        if kind not in ("painted_line", "painted_arrow"):
+        if kind not in ("painted_line", "painted_arrow", "painted_crossing"):
             continue
         if top is None:
             top = _Top(buf.parts)
@@ -180,6 +182,38 @@ def paint(buf, overrides, report, applied, stale):
                 (applied.append({"id": o["id"], "targets": [f"line@{Q[0][0]:.0f},{Q[0][1]:.0f}"]}) if n
                  else stale.append(o["id"]))
                 continue
+        elif kind == "painted_crossing":
+            L = np.asarray(o.get("line_en") or [], float)
+            if L.shape != (2, 2) or float(np.hypot(*(L[1] - L[0]))) < 1.0:
+                stale.append(o["id"])
+                rep.append({"id": o["id"], "built": False, "note": "line_en needs two points >= 1 m apart"})
+                continue
+            t = (L[1] - L[0]) / float(np.hypot(*(L[1] - L[0])))
+            nrm = np.array([-t[1], t[0]])
+            length = float(np.hypot(*(L[1] - L[0])))
+            name = str(o.get("crossing", "P-10"))
+            shapes = []
+            if name == "P-11":
+                clear = float(o.get("width_m", S.P11_CLEAR))
+                x = S.P11_GAP / 2
+                while x + S.P11_SQUARE <= length + 1e-6:
+                    for sg in (-1.0, 1.0):
+                        c0 = L[0] + t * (x + S.P11_SQUARE / 2) + nrm * sg * (clear + S.P11_SQUARE) / 2
+                        h = S.P11_SQUARE / 2
+                        shapes.append(Polygon([c0 - t * h - nrm * h, c0 + t * h - nrm * h, c0 + t * h + nrm * h, c0 - t * h + nrm * h]))
+                    x += S.P11_SQUARE + S.P11_GAP
+            else:
+                wd = float(o.get("width_m", S.P10_WIDTH)) / 2
+                x = S.P10_GAP / 2
+                while x + S.P10_STRIPE <= length + 1e-6:
+                    c0 = L[0] + t * (x + S.P10_STRIPE / 2)
+                    h = S.P10_STRIPE / 2
+                    shapes.append(Polygon([c0 - t * h - nrm * wd, c0 + t * h - nrm * wd, c0 + t * h + nrm * wd, c0 - t * h + nrm * wd]))
+                    x += S.P10_STRIPE + S.P10_GAP
+            for g in shapes:
+                a_, b_ = _drape_polygon(buf, top, g, f"{AUTHORED_PREFIX}{name}@{o['id']}", 2.0)
+                n += a_
+                lost += b_
         else:
             at = np.asarray(o.get("at_en") or [], float)
             if at.shape != (2,):

@@ -352,6 +352,11 @@ def _build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
         appr = {}   # stations of junction approaches for P-2a
         for end, sj in (("a", s0), ("b", s1)):
             info = arm_info.get((c.id, end))
+            # ADR 0095: a one-way carriageway approaches a junction only at its downstream end; the solid P-2a was
+            # also painted for 20 m behind the junction (Andersa after the side street at n10015785253)
+            d_end = int(c.dirn[0 if end == "a" else -1])
+            if (d_end > 0 and end == "a") or (d_end < 0 and end == "b"):
+                continue
             if info and (info[0].signalized or (any(net.sec_list[i].turn_fwd for i in np.unique(sidx))
                                                 and not _lanes_continue(c, end, info[0], secs))):
                 appr[end] = sj

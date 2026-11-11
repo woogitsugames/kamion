@@ -277,7 +277,7 @@ def apply_edge_overrides(net: Network, edges, overrides):
                 sec.width = max(v for _, v in sec.width_profile)
                 sec.lane_w = round((sec.width - 2 * sec.edge_strip) / max(sec.lanes, 1), 3)
                 sec.width_src = f"authored_override:{ov['id']} (profile)"
-            elif "width" in st:
+            elif "width" in st and "lane_edges" not in st:
                 # measured carriageway width (orthophoto): lanes keep their count, lane width follows
                 sec.width = float(st["width"])
                 sec.lane_w = round((sec.width - 2 * sec.edge_strip) / max(sec.lanes, 1), 3)
@@ -288,6 +288,8 @@ def apply_edge_overrides(net: Network, edges, overrides):
                 total = le[-1] if le else 0.0
                 if len(le) >= 3 and 0 < le[-1] - le[-2] < 2.0:
                     le = le[:-1]                    # right edge strip
+                if "width" in st and not isinstance(st["width"], (list, tuple)):
+                    total = max(total, float(st["width"]))   # carriageway beyond the last lane (hatching, island)
                 if not sec.oneway or len(le) < 2 or any(b - a < 2.0 for a, b in zip(le, le[1:])) or le[0] < 0:
                     if ov["id"] not in net.overrides_stale:
                         net.overrides_stale.append(ov["id"])

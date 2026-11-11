@@ -42,6 +42,7 @@ def main():
     ap.add_argument("--px", type=int, default=900)
     ap.add_argument("--ortho-only", action="store_true")
     ap.add_argument("--outline", action="store_true", help="generated carriageway outline (cyan) + kerbs (magenta) on the ortho")
+    ap.add_argument("--route", action="store_true", help="draw Data/Regions/<id>/route_start.json (red) on both panels")
     ap.add_argument("--cache", default=os.environ.get("PLAN_CACHE", "artifacts/junctions-r1/plan_cache.pkl"))
     a = ap.parse_args()
     d = load(a.region, Path(a.cache), a.rebuild)
@@ -50,6 +51,10 @@ def main():
     ortho = O.Ortho(reg)
     out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
     polys = [np.array([[float(v) for v in pt.split(",")] for pt in s.split()]) for s in a.poly]
+    route = None
+    if a.route:
+        import json
+        route = np.asarray(json.loads((pipeline.REGIONS / a.region / "route_start.json").read_text(encoding="utf-8"))["points_en"], float)
     for spec in a.at:
         e, n, half, name = spec.split(","); e, n, half = float(e), float(n), float(half)
         res = 2 * half / a.px
@@ -96,6 +101,10 @@ def main():
             for P in polys:
                 q = [tuple(v) for v in px(P)]
                 dd.line(q + q[:1], fill=(255, 220, 0), width=1)
+            if route is not None:
+                m = (np.abs(route[:, 0] - e) < half + 5) & (np.abs(route[:, 1] - n) < half + 5)
+                if m.sum() > 1:
+                    dd.line([tuple(v) for v in px(route[m])], fill=(255, 40, 40), width=2)
         if a.outline:
             import shapely
             cw, kb = [], []

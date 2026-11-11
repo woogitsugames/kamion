@@ -35,6 +35,12 @@ JOINT_SEARCH_M = 8.0         # how far from a joint the two lane lines are searc
 JOINT_ROUND_M = 4.0          # WORKING_VALUE: corner rounding length each side of a turning joint
 JOINT_ROUND_MILD_M = 10.0    # WORKING_VALUE: the same at mild turns (a diverge onto a link), <= JOINT_MILD_TURN_DEG
 JOINT_MILD_TURN_DEG = 60.0
+# ADR 0095: on a roundabout ring and on the one-way arms next to it the route follows the carriageway axis, not the
+# centre of the rightmost lane, blending back to the lane over RING_BLEND_M. With the lane centre (ADR 0076) the
+# line hugged the outer kerb of the ring and cut the inner corner of the exit: the tridem of the 16.5 m combination
+# ran 2.9 m (Rondo Biezenstwa, E 559 N -689) / 1.0 m (Rondo Putry, E -535 N 52) off the carriageway in
+# tests/physics/test_swept_path_gate3 (was 1.1 m / clear on the OSM axes). A truck straddles the ring lanes anyway.
+RING_BLEND_M = 30.0          # WORKING_VALUE
 
 
 def _seg_x(p, q, a, b):
@@ -107,13 +113,25 @@ def _edge_span(net, eid):
     raise KeyError(eid)
 
 
-def _right_lane_lat(c, sec, s, trav):
-    """Chain lateral (left +) of the rightmost lane centre for travel sign `trav` along the chain."""
+def _through_lane(sec):
+    """Index (from the left) of the rightmost lane a vehicle going straight on may use, by turn:lanes; None = the
+    rightmost lane. ADR 0095: the right lane of Andersa before the side street at n10015785253 is a right-turn lane
+    that ends at a kerbed island - the route keeps to the lane beside it."""
+    tl = sec.turn_fwd if sec.oneway else None
+    if not tl or len(tl) != sec.lanes:
+        return None
+    ok = [i for i, t in enumerate(tl) if not t or t == "none" or "through" in t.split(";")]
+    return ok[-1] if ok and ok[-1] != len(tl) - 1 else None
+
+
+def _right_lane_lat(c, sec, s, trav, lane=None):
+    """Chain lateral (left +) of the rightmost lane centre for travel sign `trav` along the chain (`lane`: index
+    from the left on a one-way carriageway instead of the rightmost one)."""
     hw = float(c.hw_at(s))
     dirn = int(c.dirn[c.idx(s)])
     _, _, cen = lane_layout(sec, hw, dirn or 1)
     if sec.oneway:
-        lat = cen["fwd"][-1] if cen["fwd"] else 0.0
+        lat = cen["fwd"][-1 if lane is None else lane] if cen["fwd"] else 0.0
     else:
         lanes = cen["fwd"] if trav > 0 else cen["bwd"]
         lat = lanes[-1] if lanes else (-0.5 * hw if trav > 0 else 0.5 * hw)
@@ -126,7 +144,27 @@ def lane_route(net, path_edges, node_xy, step=2.0):
     Returns (points (n, 2) every `step` m, edge id per point, half carriageway width per point)."""
     secs = net.sec_list
     pieces = []
+    spans = []
     for eid, u, v in path_edges:
+        c, sa, sb = _edge_span(net, eid)
+        fw = float(np.hypot(*(c.line.point(sa) - np.asarray(node_xy[u], float)))) <= \
+            float(np.hypot(*(c.line.point(sb) - np.asarray(node_xy[u], float))))
+        s_in, s_out = (sa, sb) if fw else (sb, sa)
+        sg = 1.0 if fw else -1.0
+        spans.append((c.line.frame(s_in)[0] * sg, c.line.frame(s_out)[0] * sg))
+    # path distance from the end of the last roundabout edge before / to the first one after every edge
+    elen = [abs(_edge_span(net, e_)[2] - _edge_span(net, e_)[1]) for e_, _, _ in path_edges]
+    isr = [bool(net.sections[e_].roundabout) for e_, _, _ in path_edges]
+    ring_before, ring_after = [1e9] * len(elen), [1e9] * len(elen)
+    acc = 1e9
+    for i_ in range(len(elen)):
+        ring_before[i_] = acc
+        acc = 0.0 if isr[i_] else acc + elen[i_]
+    acc = 1e9
+    for i_ in range(len(elen) - 1, -1, -1):
+        ring_after[i_] = acc
+        acc = 0.0 if isr[i_] else acc + elen[i_]
+    for i_e, (eid, u, v) in enumerate(path_edges):
         c, sa, sb = _edge_span(net, eid)
         pa, pb = c.line.point(sa), c.line.point(sb)
         xu = np.asarray(node_xy[u], float)
@@ -135,7 +173,16 @@ def lane_route(net, path_edges, node_xy, step=2.0):
         n = max(2, int(math.ceil(abs(s1 - s0) / SAMPLE_M)) + 1)
         ss = np.linspace(s0, s1, n)
         sec = net.sections[eid]
-        lat = np.array([_right_lane_lat(c, sec, float(s), trav) for s in ss])
+        lane = None
+        if i_e + 1 < len(path_edges):       # going straight on at the end of this edge: not in a turn-only lane
+            if float(np.dot(spans[i_e][1], spans[i_e + 1][0])) > math.cos(math.radians(20.0)):
+                lane = _through_lane(sec)
+        lat = np.array([_right_lane_lat(c, sec, float(s), trav, lane) for s in ss])
+        if sec.roundabout:
+            lat[:] = 0.0
+        elif sec.oneway:
+            lat *= _smoothstep((ring_before[i_e] + np.abs(ss - s0)) / RING_BLEND_M) * \
+                _smoothstep((ring_after[i_e] + np.abs(s1 - ss)) / RING_BLEND_M)
         P = c.line.offset_point(ss, lat)
         hw = np.asarray(c.hw_at(ss), float)
         if pieces:
