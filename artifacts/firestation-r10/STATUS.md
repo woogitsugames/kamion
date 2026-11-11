@@ -63,3 +63,6 @@ Krok17: connected.55Rworld ukończony300.9s, actual9344/2828/164tris, Fab15ready
 
 Krok18: po freshROOTrelease13:13 import i4core-probe actualPNG13:16DONE, obieUnityexitOK, brakaktywnych.192rawi canonicalvehicleSHAunchanged.2Lowviews static+instanceddraws/trisK EXACTbaseline; Highinstanced−1drawkażdyview,route−1ktri. Cztery960pxporównania/viewyobejrzane;antennaVoidwypełniony, łukiotwarte, nadalstylized/narrow—ROOTreviewPENDING, nievisualPASS. CausalPP/palette/alpha/oldfence-textpixelsbez zmian. MipQAhelper offlineC#compilePASS(337Unityrefs),nadalpozaAssets. NASTĘPNA KOMENDA:ROOTgate4framesprzedfullR1;następnieguardcheckedactualmipQA i osobnypomierzonyglass/clinker/weatherround (niezlewaćzmorfologią). GdyPHONEwróci—stop i nowyrelease, bezautoresume.
 
+
+Krok19: ROOT obejrzałcore4actual+nativecrops; nadalREJECT/PENDING—masa wypełniona, lecz3fir za wąskie/kolumnowe względem7197. Niewłączaćfullmatrix ani niepodnosićcoredo.70. PonownyHOLDdiag3,release13:13suspended; zeroUnityactive/queued. ROOT wymaga pomiaru packedSPRITEbbox/coverage versusactualinner_uv, zachowaniaRoot/outergutter16px; potem artifact-only2–3spraybundle ewentualnieUVcontentfix. CurrentGLB/raw/sourcefrozen,PP/palette/globalhedgesbez zmian. NASTĘPNA KOMENDA: packed-conifer-audit.py (CPU); ROOTreviewartifactów, dopiero potem wybranyfix; UnitytylkopoFreshExplicitRelease+bothguardsabsent.
+
