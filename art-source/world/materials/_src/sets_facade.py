@@ -365,8 +365,14 @@ def car_grime(n=1024, lower_film=True):
         clean_raw = clean_lum[..., None] * np.ones(3, np.float32)
         kd = dust[..., None] * 0.5
         clean_raw = clean_raw * (1 - kd) + clean_raw * np.array([1.0, 0.97, 0.90], np.float32) * kd
-        result.albedo = np.where(film[..., None] > 0, np.clip(clean_raw.astype(np.float32) * gain, 0, 1), result.albedo)
-        result.rough = np.clip(0.32 + 0.15 * dust, 0.05, 1).astype(np.float32)
+        # Keep the legacy repeat-boundary padding: the writer's periodic Gaussian
+        # otherwise carries the changed bottom film into the unchanged top rows.
+        # Native paint UV/Tile ranges are audited separately; mip filtering is not
+        # claimed identical merely because point coordinates miss this gutter.
+        clean_region = v >= 0.05
+        result.albedo = np.where(((film > 0) & clean_region)[..., None],
+                                 np.clip(clean_raw.astype(np.float32) * gain, 0, 1), result.albedo)
+        result.rough = np.where(clean_region, np.clip(0.32 + 0.15 * dust, 0.05, 1).astype(np.float32), result.rough)
     return result
 
 

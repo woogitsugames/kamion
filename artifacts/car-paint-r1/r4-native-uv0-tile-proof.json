@@ -1,0 +1,2126 @@
+{
+  "method": "Actual serialized native Instances.asset Float16 TexCoord0, index-selected paint submeshes and material GUID-bound Tile",
+  "instances_sha256": "694d6f7795543564c1d76a87f61b06b85fd2a6c1647ad4babc313ece802c0410",
+  "paint_lod_rows": 81,
+  "gutter_source_map_m": [
+    0,
+    0.05
+  ],
+  "texture_v_wrap_crossings": 0,
+  "native_tile_values": [
+    [
+      4.0,
+      4.0
+    ]
+  ],
+  "all_vertex_and_affine_triangle_ranges_outside_gutter": true,
+  "note": "Level0 coordinate range proof. Does not establish mip-identical filtering or fragment GPU binding; derivative/mip footprints can extend beyond a point sample.",
+  "rows": [
+    {
+      "prototype": "car_hatch_silver",
+      "lod": 0,
+      "material": "M_car_paint_silver",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.130859375,
+        0.18994140625
+      ],
+      "uv0_max": [
+        2.12109375,
+        1.4599609375
+      ],
+      "repeated_v_min": 0.0474853515625,
+      "repeated_v_max": 0.364990234375,
+      "source_map_v_min_m": 0.11871337890625,
+      "source_map_v_max_m": 0.9124755859375,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "7073c9c36255244e13eef758fd8649bd1b1e0bf211b545745951cb0304bb0362"
+    },
+    {
+      "prototype": "car_hatch_silver",
+      "lod": 1,
+      "material": "M_car_paint_silver",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.1171875,
+        0.18994140625
+      ],
+      "uv0_max": [
+        2.12109375,
+        1.4599609375
+      ],
+      "repeated_v_min": 0.0474853515625,
+      "repeated_v_max": 0.364990234375,
+      "source_map_v_min_m": 0.11871337890625,
+      "source_map_v_max_m": 0.9124755859375,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "cf30f9aaad1faf63126bb6717cce99c2fd42f74a7f91ddbf83d4e13bba5e3f57"
+    },
+    {
+      "prototype": "car_hatch_silver",
+      "lod": 2,
+      "material": "M_car_paint_silver",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.1171875,
+        0.2099609375
+      ],
+      "uv0_max": [
+        2.12109375,
+        1.4599609375
+      ],
+      "repeated_v_min": 0.052490234375,
+      "repeated_v_max": 0.364990234375,
+      "source_map_v_min_m": 0.1312255859375,
+      "source_map_v_max_m": 0.9124755859375,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "ee97212368d65df56d46d4254bb76d8ee9fddd35d7b3c0ac365234cf3e9bf60e"
+    },
+    {
+      "prototype": "car_sedan_white",
+      "lod": 0,
+      "material": "M_car_paint_white",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.3203125,
+        0.18994140625
+      ],
+      "uv0_max": [
+        2.3125,
+        1.4404296875
+      ],
+      "repeated_v_min": 0.0474853515625,
+      "repeated_v_max": 0.360107421875,
+      "source_map_v_min_m": 0.11871337890625,
+      "source_map_v_max_m": 0.9002685546875,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "84e64f652dd9236b86343fd74bebb3da913285c5356cfaea67d233e7dcaba1db"
+    },
+    {
+      "prototype": "car_sedan_white",
+      "lod": 1,
+      "material": "M_car_paint_white",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.30859375,
+        0.18994140625
+      ],
+      "uv0_max": [
+        2.3125,
+        1.4404296875
+      ],
+      "repeated_v_min": 0.0474853515625,
+      "repeated_v_max": 0.360107421875,
+      "source_map_v_min_m": 0.11871337890625,
+      "source_map_v_max_m": 0.9002685546875,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "52a61bc2b4111ffc3e8ef22b4d9d36e6ec61d1dfcecdffc00036ecb88dd7e161"
+    },
+    {
+      "prototype": "car_sedan_white",
+      "lod": 2,
+      "material": "M_car_paint_white",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.30859375,
+        0.2099609375
+      ],
+      "uv0_max": [
+        2.3125,
+        1.4404296875
+      ],
+      "repeated_v_min": 0.052490234375,
+      "repeated_v_max": 0.360107421875,
+      "source_map_v_min_m": 0.1312255859375,
+      "source_map_v_max_m": 0.9002685546875,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "176f04425f0742f04be0a9715a62b2e56cc1bf2f1b938a085aba3e4d3e608a67"
+    },
+    {
+      "prototype": "car_suv_silver",
+      "lod": 0,
+      "material": "M_car_paint_silver",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.2109375,
+        0.25
+      ],
+      "uv0_max": [
+        2.203125,
+        1.650390625
+      ],
+      "repeated_v_min": 0.0625,
+      "repeated_v_max": 0.41259765625,
+      "source_map_v_min_m": 0.15625,
+      "source_map_v_max_m": 1.031494140625,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "59a05db4971a75e9b39fcac2a2de218f956528d653f228f0a0f39bdb0c4e957e"
+    },
+    {
+      "prototype": "car_suv_silver",
+      "lod": 1,
+      "material": "M_car_paint_silver",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.197265625,
+        0.25
+      ],
+      "uv0_max": [
+        2.203125,
+        1.650390625
+      ],
+      "repeated_v_min": 0.0625,
+      "repeated_v_max": 0.41259765625,
+      "source_map_v_min_m": 0.15625,
+      "source_map_v_max_m": 1.031494140625,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "b080520bb86c6cec635c636801e8c632a54bcf36ad57e7c2be0fbff47528d4cc"
+    },
+    {
+      "prototype": "car_suv_silver",
+      "lod": 2,
+      "material": "M_car_paint_silver",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.197265625,
+        0.27001953125
+      ],
+      "uv0_max": [
+        2.203125,
+        1.650390625
+      ],
+      "repeated_v_min": 0.0675048828125,
+      "repeated_v_max": 0.41259765625,
+      "source_map_v_min_m": 0.16876220703125,
+      "source_map_v_max_m": 1.031494140625,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "e8dff0e4f18411c842c4647a015a32ff344e0fa2201aa331ff99b9d4ba45ff38"
+    },
+    {
+      "prototype": "car_estate_silver",
+      "lod": 0,
+      "material": "M_car_paint_silver",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.330078125,
+        0.18994140625
+      ],
+      "uv0_max": [
+        2.322265625,
+        1.48046875
+      ],
+      "repeated_v_min": 0.0474853515625,
+      "repeated_v_max": 0.3701171875,
+      "source_map_v_min_m": 0.11871337890625,
+      "source_map_v_max_m": 0.92529296875,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "6c6e916de122f5259dfb1ef286ee7800f2b06e0846ce3b6033530421d91c26b8"
+    },
+    {
+      "prototype": "car_estate_silver",
+      "lod": 1,
+      "material": "M_car_paint_silver",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.318359375,
+        0.18994140625
+      ],
+      "uv0_max": [
+        2.322265625,
+        1.48046875
+      ],
+      "repeated_v_min": 0.0474853515625,
+      "repeated_v_max": 0.3701171875,
+      "source_map_v_min_m": 0.11871337890625,
+      "source_map_v_max_m": 0.92529296875,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "a87d39c2d3332e70e294020d801b7728efde8c1bc3dedb4739f255ed2ad0432a"
+    },
+    {
+      "prototype": "car_estate_silver",
+      "lod": 2,
+      "material": "M_car_paint_silver",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.318359375,
+        0.2099609375
+      ],
+      "uv0_max": [
+        2.322265625,
+        1.48046875
+      ],
+      "repeated_v_min": 0.052490234375,
+      "repeated_v_max": 0.3701171875,
+      "source_map_v_min_m": 0.1312255859375,
+      "source_map_v_max_m": 0.92529296875,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "f5df0e8505862fff92979ed85fd9764155884c0e457e9f3ff20ff8eea9c35360"
+    },
+    {
+      "prototype": "car_estate_white",
+      "lod": 0,
+      "material": "M_car_paint_white",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.330078125,
+        0.18994140625
+      ],
+      "uv0_max": [
+        2.322265625,
+        1.48046875
+      ],
+      "repeated_v_min": 0.0474853515625,
+      "repeated_v_max": 0.3701171875,
+      "source_map_v_min_m": 0.11871337890625,
+      "source_map_v_max_m": 0.92529296875,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "a6137ba008676338bcffaeae68cff8f7230300ada54ddfedc3bf4eee61b52f5d"
+    },
+    {
+      "prototype": "car_estate_white",
+      "lod": 1,
+      "material": "M_car_paint_white",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.318359375,
+        0.18994140625
+      ],
+      "uv0_max": [
+        2.322265625,
+        1.48046875
+      ],
+      "repeated_v_min": 0.0474853515625,
+      "repeated_v_max": 0.3701171875,
+      "source_map_v_min_m": 0.11871337890625,
+      "source_map_v_max_m": 0.92529296875,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "5eb52c08826c00906e7794e0ff60c87085331a2745a58c60b346302c29ce90eb"
+    },
+    {
+      "prototype": "car_estate_white",
+      "lod": 2,
+      "material": "M_car_paint_white",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.318359375,
+        0.2099609375
+      ],
+      "uv0_max": [
+        2.322265625,
+        1.48046875
+      ],
+      "repeated_v_min": 0.052490234375,
+      "repeated_v_max": 0.3701171875,
+      "source_map_v_min_m": 0.1312255859375,
+      "source_map_v_max_m": 0.92529296875,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "0d2ccc90d39c1a6a035a22beb0a255be949efea8d84c948dfc996934cca00065"
+    },
+    {
+      "prototype": "car_hatch_blue",
+      "lod": 0,
+      "material": "M_car_paint_blue",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.130859375,
+        0.18994140625
+      ],
+      "uv0_max": [
+        2.12109375,
+        1.4599609375
+      ],
+      "repeated_v_min": 0.0474853515625,
+      "repeated_v_max": 0.364990234375,
+      "source_map_v_min_m": 0.11871337890625,
+      "source_map_v_max_m": 0.9124755859375,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "6e1558ffe8475196f3ab7be606ab492ed5adc9404ef014d9d56841da3a7ce039"
+    },
+    {
+      "prototype": "car_hatch_blue",
+      "lod": 1,
+      "material": "M_car_paint_blue",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.1171875,
+        0.18994140625
+      ],
+      "uv0_max": [
+        2.12109375,
+        1.4599609375
+      ],
+      "repeated_v_min": 0.0474853515625,
+      "repeated_v_max": 0.364990234375,
+      "source_map_v_min_m": 0.11871337890625,
+      "source_map_v_max_m": 0.9124755859375,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "d1418b4e318d1cf368c77d78046baf13bb457fbf8897e0e79aa5c3487954f7b5"
+    },
+    {
+      "prototype": "car_hatch_blue",
+      "lod": 2,
+      "material": "M_car_paint_blue",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.1171875,
+        0.2099609375
+      ],
+      "uv0_max": [
+        2.12109375,
+        1.4599609375
+      ],
+      "repeated_v_min": 0.052490234375,
+      "repeated_v_max": 0.364990234375,
+      "source_map_v_min_m": 0.1312255859375,
+      "source_map_v_max_m": 0.9124755859375,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "ee97212368d65df56d46d4254bb76d8ee9fddd35d7b3c0ac365234cf3e9bf60e"
+    },
+    {
+      "prototype": "car_hatch_white",
+      "lod": 0,
+      "material": "M_car_paint_white",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.130859375,
+        0.18994140625
+      ],
+      "uv0_max": [
+        2.12109375,
+        1.4599609375
+      ],
+      "repeated_v_min": 0.0474853515625,
+      "repeated_v_max": 0.364990234375,
+      "source_map_v_min_m": 0.11871337890625,
+      "source_map_v_max_m": 0.9124755859375,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "5bec07e952d4cbafed3a056b8063da5c915e515da82cc0ba07e5e928c2103f3c"
+    },
+    {
+      "prototype": "car_hatch_white",
+      "lod": 1,
+      "material": "M_car_paint_white",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.1171875,
+        0.18994140625
+      ],
+      "uv0_max": [
+        2.12109375,
+        1.4599609375
+      ],
+      "repeated_v_min": 0.0474853515625,
+      "repeated_v_max": 0.364990234375,
+      "source_map_v_min_m": 0.11871337890625,
+      "source_map_v_max_m": 0.9124755859375,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "a5697814670f38bf96e991b9adfeb004f1b07248d6245b8f1c683c41578c3d9d"
+    },
+    {
+      "prototype": "car_hatch_white",
+      "lod": 2,
+      "material": "M_car_paint_white",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.1171875,
+        0.2099609375
+      ],
+      "uv0_max": [
+        2.12109375,
+        1.4599609375
+      ],
+      "repeated_v_min": 0.052490234375,
+      "repeated_v_max": 0.364990234375,
+      "source_map_v_min_m": 0.1312255859375,
+      "source_map_v_max_m": 0.9124755859375,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "740a74330b6b2055dc9ba26ef950c4a507ed33054bef0bc45f9cc191d151b1dd"
+    },
+    {
+      "prototype": "car_sedan_silver",
+      "lod": 0,
+      "material": "M_car_paint_silver",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.3203125,
+        0.18994140625
+      ],
+      "uv0_max": [
+        2.3125,
+        1.4404296875
+      ],
+      "repeated_v_min": 0.0474853515625,
+      "repeated_v_max": 0.360107421875,
+      "source_map_v_min_m": 0.11871337890625,
+      "source_map_v_max_m": 0.9002685546875,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "07d7614fbd6b93d3923e70637cf39b3b75facac3c59da0b1316e008aa6bf2f61"
+    },
+    {
+      "prototype": "car_sedan_silver",
+      "lod": 1,
+      "material": "M_car_paint_silver",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.30859375,
+        0.18994140625
+      ],
+      "uv0_max": [
+        2.3125,
+        1.4404296875
+      ],
+      "repeated_v_min": 0.0474853515625,
+      "repeated_v_max": 0.360107421875,
+      "source_map_v_min_m": 0.11871337890625,
+      "source_map_v_max_m": 0.9002685546875,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "85a9f55a3a86a632b5d6523a20cb72cb2c3c959f125d5bc5df0725488fd9f544"
+    },
+    {
+      "prototype": "car_sedan_silver",
+      "lod": 2,
+      "material": "M_car_paint_silver",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.30859375,
+        0.2099609375
+      ],
+      "uv0_max": [
+        2.3125,
+        1.4404296875
+      ],
+      "repeated_v_min": 0.052490234375,
+      "repeated_v_max": 0.360107421875,
+      "source_map_v_min_m": 0.1312255859375,
+      "source_map_v_max_m": 0.9002685546875,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "176f04425f0742f04be0a9715a62b2e56cc1bf2f1b938a085aba3e4d3e608a67"
+    },
+    {
+      "prototype": "car_suv_black",
+      "lod": 0,
+      "material": "M_car_paint_black",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.2109375,
+        0.25
+      ],
+      "uv0_max": [
+        2.203125,
+        1.650390625
+      ],
+      "repeated_v_min": 0.0625,
+      "repeated_v_max": 0.41259765625,
+      "source_map_v_min_m": 0.15625,
+      "source_map_v_max_m": 1.031494140625,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "16fa95d40948db0a1bac983ffedecc059e0654cb90480072e3a9729b8ab66da9"
+    },
+    {
+      "prototype": "car_suv_black",
+      "lod": 1,
+      "material": "M_car_paint_black",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.197265625,
+        0.25
+      ],
+      "uv0_max": [
+        2.203125,
+        1.650390625
+      ],
+      "repeated_v_min": 0.0625,
+      "repeated_v_max": 0.41259765625,
+      "source_map_v_min_m": 0.15625,
+      "source_map_v_max_m": 1.031494140625,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "2174f1c7808cdfe80d154f5122dff9752cea4a9af564bb1df413e02d0f78ca4a"
+    },
+    {
+      "prototype": "car_suv_black",
+      "lod": 2,
+      "material": "M_car_paint_black",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.197265625,
+        0.27001953125
+      ],
+      "uv0_max": [
+        2.203125,
+        1.650390625
+      ],
+      "repeated_v_min": 0.0675048828125,
+      "repeated_v_max": 0.41259765625,
+      "source_map_v_min_m": 0.16876220703125,
+      "source_map_v_max_m": 1.031494140625,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "e8dff0e4f18411c842c4647a015a32ff344e0fa2201aa331ff99b9d4ba45ff38"
+    },
+    {
+      "prototype": "van_white2",
+      "lod": 0,
+      "material": "M_car_paint_white2",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.44921875,
+        0.27001953125
+      ],
+      "uv0_max": [
+        2.435546875,
+        1.9697265625
+      ],
+      "repeated_v_min": 0.0675048828125,
+      "repeated_v_max": 0.492431640625,
+      "source_map_v_min_m": 0.16876220703125,
+      "source_map_v_max_m": 1.2310791015625,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "fc73e32100bb6475c5299001730a033039da02078646b45649eb57cbc0142517"
+    },
+    {
+      "prototype": "van_white2",
+      "lod": 1,
+      "material": "M_car_paint_white2",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.419921875,
+        0.27001953125
+      ],
+      "uv0_max": [
+        2.435546875,
+        1.9697265625
+      ],
+      "repeated_v_min": 0.0675048828125,
+      "repeated_v_max": 0.492431640625,
+      "source_map_v_min_m": 0.16876220703125,
+      "source_map_v_max_m": 1.2310791015625,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "dcd1cd5cd51b904b9374eb5178a7cbe8bcd4ba86ff389c6f5577d6917cb20603"
+    },
+    {
+      "prototype": "van_white2",
+      "lod": 2,
+      "material": "M_car_paint_white2",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.4375,
+        0.2900390625
+      ],
+      "uv0_max": [
+        2.443359375,
+        1.9697265625
+      ],
+      "repeated_v_min": 0.072509765625,
+      "repeated_v_max": 0.492431640625,
+      "source_map_v_min_m": 0.1812744140625,
+      "source_map_v_max_m": 1.2310791015625,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "1a7d808d22b31c2bfed5d3c4ef630015100d87212bc462406edd474a3cb07224"
+    },
+    {
+      "prototype": "car_estate_grey",
+      "lod": 0,
+      "material": "M_car_paint_grey",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.330078125,
+        0.18994140625
+      ],
+      "uv0_max": [
+        2.322265625,
+        1.48046875
+      ],
+      "repeated_v_min": 0.0474853515625,
+      "repeated_v_max": 0.3701171875,
+      "source_map_v_min_m": 0.11871337890625,
+      "source_map_v_max_m": 0.92529296875,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "2af486c10c3ef0e4bd917ca064e77d0a81be33a997fc98cadc124dd0694ae4c0"
+    },
+    {
+      "prototype": "car_estate_grey",
+      "lod": 1,
+      "material": "M_car_paint_grey",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.318359375,
+        0.18994140625
+      ],
+      "uv0_max": [
+        2.322265625,
+        1.48046875
+      ],
+      "repeated_v_min": 0.0474853515625,
+      "repeated_v_max": 0.3701171875,
+      "source_map_v_min_m": 0.11871337890625,
+      "source_map_v_max_m": 0.92529296875,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "5045aa8807428bb10fd55fa4e0c7c580543ff0b9f438d4bc46a5f1e655823ce2"
+    },
+    {
+      "prototype": "car_estate_grey",
+      "lod": 2,
+      "material": "M_car_paint_grey",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.318359375,
+        0.2099609375
+      ],
+      "uv0_max": [
+        2.322265625,
+        1.48046875
+      ],
+      "repeated_v_min": 0.052490234375,
+      "repeated_v_max": 0.3701171875,
+      "source_map_v_min_m": 0.1312255859375,
+      "source_map_v_max_m": 0.92529296875,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "f5df0e8505862fff92979ed85fd9764155884c0e457e9f3ff20ff8eea9c35360"
+    },
+    {
+      "prototype": "car_hatch_black",
+      "lod": 0,
+      "material": "M_car_paint_black",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.130859375,
+        0.18994140625
+      ],
+      "uv0_max": [
+        2.12109375,
+        1.4599609375
+      ],
+      "repeated_v_min": 0.0474853515625,
+      "repeated_v_max": 0.364990234375,
+      "source_map_v_min_m": 0.11871337890625,
+      "source_map_v_max_m": 0.9124755859375,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "fa5a6faa87b7076ca5cceb03c06d1e3742af7ed94e8457d39cd75f0bf76814a9"
+    },
+    {
+      "prototype": "car_hatch_black",
+      "lod": 1,
+      "material": "M_car_paint_black",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.1171875,
+        0.18994140625
+      ],
+      "uv0_max": [
+        2.12109375,
+        1.4599609375
+      ],
+      "repeated_v_min": 0.0474853515625,
+      "repeated_v_max": 0.364990234375,
+      "source_map_v_min_m": 0.11871337890625,
+      "source_map_v_max_m": 0.9124755859375,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "ddfea3828b4a20dde241ebdcda99639ca11c00ad14ff061a82244c90443cdbf5"
+    },
+    {
+      "prototype": "car_hatch_black",
+      "lod": 2,
+      "material": "M_car_paint_black",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.1171875,
+        0.2099609375
+      ],
+      "uv0_max": [
+        2.12109375,
+        1.4599609375
+      ],
+      "repeated_v_min": 0.052490234375,
+      "repeated_v_max": 0.364990234375,
+      "source_map_v_min_m": 0.1312255859375,
+      "source_map_v_max_m": 0.9124755859375,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "ee97212368d65df56d46d4254bb76d8ee9fddd35d7b3c0ac365234cf3e9bf60e"
+    },
+    {
+      "prototype": "car_hatch_grey",
+      "lod": 0,
+      "material": "M_car_paint_grey",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.130859375,
+        0.18994140625
+      ],
+      "uv0_max": [
+        2.12109375,
+        1.4599609375
+      ],
+      "repeated_v_min": 0.0474853515625,
+      "repeated_v_max": 0.364990234375,
+      "source_map_v_min_m": 0.11871337890625,
+      "source_map_v_max_m": 0.9124755859375,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "7a2b9a653513608b73a7deccd5f4d0d418a87d66f9d6d0361386725e2051a72e"
+    },
+    {
+      "prototype": "car_hatch_grey",
+      "lod": 1,
+      "material": "M_car_paint_grey",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.1171875,
+        0.18994140625
+      ],
+      "uv0_max": [
+        2.12109375,
+        1.4599609375
+      ],
+      "repeated_v_min": 0.0474853515625,
+      "repeated_v_max": 0.364990234375,
+      "source_map_v_min_m": 0.11871337890625,
+      "source_map_v_max_m": 0.9124755859375,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "ff3d11ee279fa63094a8aaf172a0ba07222fb4536d0d21a803db2879ab4df6a8"
+    },
+    {
+      "prototype": "car_hatch_grey",
+      "lod": 2,
+      "material": "M_car_paint_grey",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.1171875,
+        0.2099609375
+      ],
+      "uv0_max": [
+        2.12109375,
+        1.4599609375
+      ],
+      "repeated_v_min": 0.052490234375,
+      "repeated_v_max": 0.364990234375,
+      "source_map_v_min_m": 0.1312255859375,
+      "source_map_v_max_m": 0.9124755859375,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "ee97212368d65df56d46d4254bb76d8ee9fddd35d7b3c0ac365234cf3e9bf60e"
+    },
+    {
+      "prototype": "car_hatch_red",
+      "lod": 0,
+      "material": "M_car_paint_red",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.130859375,
+        0.18994140625
+      ],
+      "uv0_max": [
+        2.12109375,
+        1.4599609375
+      ],
+      "repeated_v_min": 0.0474853515625,
+      "repeated_v_max": 0.364990234375,
+      "source_map_v_min_m": 0.11871337890625,
+      "source_map_v_max_m": 0.9124755859375,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "fb45f9b34b3e51b156e4b197af73526f40802707100d29280ff671c270d66516"
+    },
+    {
+      "prototype": "car_hatch_red",
+      "lod": 1,
+      "material": "M_car_paint_red",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.1171875,
+        0.18994140625
+      ],
+      "uv0_max": [
+        2.12109375,
+        1.4599609375
+      ],
+      "repeated_v_min": 0.0474853515625,
+      "repeated_v_max": 0.364990234375,
+      "source_map_v_min_m": 0.11871337890625,
+      "source_map_v_max_m": 0.9124755859375,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "3571d9acab1cfcbdf7a35ee89259edde9ecf46fcc54f8194c74da62050fe8a0f"
+    },
+    {
+      "prototype": "car_hatch_red",
+      "lod": 2,
+      "material": "M_car_paint_red",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.1171875,
+        0.2099609375
+      ],
+      "uv0_max": [
+        2.12109375,
+        1.4599609375
+      ],
+      "repeated_v_min": 0.052490234375,
+      "repeated_v_max": 0.364990234375,
+      "source_map_v_min_m": 0.1312255859375,
+      "source_map_v_max_m": 0.9124755859375,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "ee97212368d65df56d46d4254bb76d8ee9fddd35d7b3c0ac365234cf3e9bf60e"
+    },
+    {
+      "prototype": "car_sedan_grey",
+      "lod": 0,
+      "material": "M_car_paint_grey",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.3203125,
+        0.18994140625
+      ],
+      "uv0_max": [
+        2.3125,
+        1.4404296875
+      ],
+      "repeated_v_min": 0.0474853515625,
+      "repeated_v_max": 0.360107421875,
+      "source_map_v_min_m": 0.11871337890625,
+      "source_map_v_max_m": 0.9002685546875,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "29b3c540c6d80e3f66d5a34e8a3759b448a62a3be7ede25967dac6aa36ebd9b4"
+    },
+    {
+      "prototype": "car_sedan_grey",
+      "lod": 1,
+      "material": "M_car_paint_grey",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.30859375,
+        0.18994140625
+      ],
+      "uv0_max": [
+        2.3125,
+        1.4404296875
+      ],
+      "repeated_v_min": 0.0474853515625,
+      "repeated_v_max": 0.360107421875,
+      "source_map_v_min_m": 0.11871337890625,
+      "source_map_v_max_m": 0.9002685546875,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "e9db64b505b7ae695aab8f195e0ba5bf87d5e711cbd4adfbf5307eb6374342eb"
+    },
+    {
+      "prototype": "car_sedan_grey",
+      "lod": 2,
+      "material": "M_car_paint_grey",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.30859375,
+        0.2099609375
+      ],
+      "uv0_max": [
+        2.3125,
+        1.4404296875
+      ],
+      "repeated_v_min": 0.052490234375,
+      "repeated_v_max": 0.360107421875,
+      "source_map_v_min_m": 0.1312255859375,
+      "source_map_v_max_m": 0.9002685546875,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "176f04425f0742f04be0a9715a62b2e56cc1bf2f1b938a085aba3e4d3e608a67"
+    },
+    {
+      "prototype": "car_suv_grey",
+      "lod": 0,
+      "material": "M_car_paint_grey",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.2109375,
+        0.25
+      ],
+      "uv0_max": [
+        2.203125,
+        1.650390625
+      ],
+      "repeated_v_min": 0.0625,
+      "repeated_v_max": 0.41259765625,
+      "source_map_v_min_m": 0.15625,
+      "source_map_v_max_m": 1.031494140625,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "ee6ef50a5667b0c7d9252c1997b4b026b9b493c89a87955234523cc38e55dea4"
+    },
+    {
+      "prototype": "car_suv_grey",
+      "lod": 1,
+      "material": "M_car_paint_grey",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.197265625,
+        0.25
+      ],
+      "uv0_max": [
+        2.203125,
+        1.650390625
+      ],
+      "repeated_v_min": 0.0625,
+      "repeated_v_max": 0.41259765625,
+      "source_map_v_min_m": 0.15625,
+      "source_map_v_max_m": 1.031494140625,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "43d7387426124f5a02c8c8cd779b9283fcfa528662cc26483ab8322c937e4c3a"
+    },
+    {
+      "prototype": "car_suv_grey",
+      "lod": 2,
+      "material": "M_car_paint_grey",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.197265625,
+        0.27001953125
+      ],
+      "uv0_max": [
+        2.203125,
+        1.650390625
+      ],
+      "repeated_v_min": 0.0675048828125,
+      "repeated_v_max": 0.41259765625,
+      "source_map_v_min_m": 0.16876220703125,
+      "source_map_v_max_m": 1.031494140625,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "e8dff0e4f18411c842c4647a015a32ff344e0fa2201aa331ff99b9d4ba45ff38"
+    },
+    {
+      "prototype": "van_white",
+      "lod": 0,
+      "material": "M_car_paint_white",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.44921875,
+        0.27001953125
+      ],
+      "uv0_max": [
+        2.435546875,
+        1.9697265625
+      ],
+      "repeated_v_min": 0.0675048828125,
+      "repeated_v_max": 0.492431640625,
+      "source_map_v_min_m": 0.16876220703125,
+      "source_map_v_max_m": 1.2310791015625,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "8281ce31a09bc45adb047899877341ff8aa4c379dd66546df8470c6bf3de7b7e"
+    },
+    {
+      "prototype": "van_white",
+      "lod": 1,
+      "material": "M_car_paint_white",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.419921875,
+        0.27001953125
+      ],
+      "uv0_max": [
+        2.435546875,
+        1.9697265625
+      ],
+      "repeated_v_min": 0.0675048828125,
+      "repeated_v_max": 0.492431640625,
+      "source_map_v_min_m": 0.16876220703125,
+      "source_map_v_max_m": 1.2310791015625,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "456f7a0e8e080f8ce6afa4b26fbd6c0f2f01ceceb638ac5447fde37db844fcce"
+    },
+    {
+      "prototype": "van_white",
+      "lod": 2,
+      "material": "M_car_paint_white",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.4375,
+        0.2900390625
+      ],
+      "uv0_max": [
+        2.443359375,
+        1.9697265625
+      ],
+      "repeated_v_min": 0.072509765625,
+      "repeated_v_max": 0.492431640625,
+      "source_map_v_min_m": 0.1812744140625,
+      "source_map_v_max_m": 1.2310791015625,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "1a7d808d22b31c2bfed5d3c4ef630015100d87212bc462406edd474a3cb07224"
+    },
+    {
+      "prototype": "car_estate_black",
+      "lod": 0,
+      "material": "M_car_paint_black",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.330078125,
+        0.18994140625
+      ],
+      "uv0_max": [
+        2.322265625,
+        1.48046875
+      ],
+      "repeated_v_min": 0.0474853515625,
+      "repeated_v_max": 0.3701171875,
+      "source_map_v_min_m": 0.11871337890625,
+      "source_map_v_max_m": 0.92529296875,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "723ee724c66e17a6a1007def7b1c3ab9cf69a6c94a5caed9c247abef64dc9377"
+    },
+    {
+      "prototype": "car_estate_black",
+      "lod": 1,
+      "material": "M_car_paint_black",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.318359375,
+        0.18994140625
+      ],
+      "uv0_max": [
+        2.322265625,
+        1.48046875
+      ],
+      "repeated_v_min": 0.0474853515625,
+      "repeated_v_max": 0.3701171875,
+      "source_map_v_min_m": 0.11871337890625,
+      "source_map_v_max_m": 0.92529296875,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "273f0fdaa57d977d3afaa4364a2f58b85c2899d4da5fb5aec58e78f1822df6d1"
+    },
+    {
+      "prototype": "car_estate_black",
+      "lod": 2,
+      "material": "M_car_paint_black",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.318359375,
+        0.2099609375
+      ],
+      "uv0_max": [
+        2.322265625,
+        1.48046875
+      ],
+      "repeated_v_min": 0.052490234375,
+      "repeated_v_max": 0.3701171875,
+      "source_map_v_min_m": 0.1312255859375,
+      "source_map_v_max_m": 0.92529296875,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "f5df0e8505862fff92979ed85fd9764155884c0e457e9f3ff20ff8eea9c35360"
+    },
+    {
+      "prototype": "car_estate_blue",
+      "lod": 0,
+      "material": "M_car_paint_blue",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.330078125,
+        0.18994140625
+      ],
+      "uv0_max": [
+        2.322265625,
+        1.48046875
+      ],
+      "repeated_v_min": 0.0474853515625,
+      "repeated_v_max": 0.3701171875,
+      "source_map_v_min_m": 0.11871337890625,
+      "source_map_v_max_m": 0.92529296875,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "c3cba3ab036406b01fde2cd7d790bcd0ffc2f328964684fabb454eb4f4dad32c"
+    },
+    {
+      "prototype": "car_estate_blue",
+      "lod": 1,
+      "material": "M_car_paint_blue",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.318359375,
+        0.18994140625
+      ],
+      "uv0_max": [
+        2.322265625,
+        1.48046875
+      ],
+      "repeated_v_min": 0.0474853515625,
+      "repeated_v_max": 0.3701171875,
+      "source_map_v_min_m": 0.11871337890625,
+      "source_map_v_max_m": 0.92529296875,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "91e46d96cc5215c38b7bd2972c4a8ff647800749b3410213070b683ad8fabadb"
+    },
+    {
+      "prototype": "car_estate_blue",
+      "lod": 2,
+      "material": "M_car_paint_blue",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.318359375,
+        0.2099609375
+      ],
+      "uv0_max": [
+        2.322265625,
+        1.48046875
+      ],
+      "repeated_v_min": 0.052490234375,
+      "repeated_v_max": 0.3701171875,
+      "source_map_v_min_m": 0.1312255859375,
+      "source_map_v_max_m": 0.92529296875,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "f5df0e8505862fff92979ed85fd9764155884c0e457e9f3ff20ff8eea9c35360"
+    },
+    {
+      "prototype": "car_estate_red",
+      "lod": 0,
+      "material": "M_car_paint_red",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.330078125,
+        0.18994140625
+      ],
+      "uv0_max": [
+        2.322265625,
+        1.48046875
+      ],
+      "repeated_v_min": 0.0474853515625,
+      "repeated_v_max": 0.3701171875,
+      "source_map_v_min_m": 0.11871337890625,
+      "source_map_v_max_m": 0.92529296875,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "75a72aad6c89f1871f55e5e997b9886fb6092ab6c604106ab0472245d1f52268"
+    },
+    {
+      "prototype": "car_estate_red",
+      "lod": 1,
+      "material": "M_car_paint_red",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.318359375,
+        0.18994140625
+      ],
+      "uv0_max": [
+        2.322265625,
+        1.48046875
+      ],
+      "repeated_v_min": 0.0474853515625,
+      "repeated_v_max": 0.3701171875,
+      "source_map_v_min_m": 0.11871337890625,
+      "source_map_v_max_m": 0.92529296875,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "5e6e625a7dea6abdfbe0f75847a283ef55316820a2b24f846edc9b8092b14b37"
+    },
+    {
+      "prototype": "car_estate_red",
+      "lod": 2,
+      "material": "M_car_paint_red",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.318359375,
+        0.2099609375
+      ],
+      "uv0_max": [
+        2.322265625,
+        1.48046875
+      ],
+      "repeated_v_min": 0.052490234375,
+      "repeated_v_max": 0.3701171875,
+      "source_map_v_min_m": 0.1312255859375,
+      "source_map_v_max_m": 0.92529296875,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "f5df0e8505862fff92979ed85fd9764155884c0e457e9f3ff20ff8eea9c35360"
+    },
+    {
+      "prototype": "car_sedan_blue",
+      "lod": 0,
+      "material": "M_car_paint_blue",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.3203125,
+        0.18994140625
+      ],
+      "uv0_max": [
+        2.3125,
+        1.4404296875
+      ],
+      "repeated_v_min": 0.0474853515625,
+      "repeated_v_max": 0.360107421875,
+      "source_map_v_min_m": 0.11871337890625,
+      "source_map_v_max_m": 0.9002685546875,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "a958b33cb559f11ecf79dedbc16dbba710e7efdb4cc3dea478cc778eaf2ecb96"
+    },
+    {
+      "prototype": "car_sedan_blue",
+      "lod": 1,
+      "material": "M_car_paint_blue",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.30859375,
+        0.18994140625
+      ],
+      "uv0_max": [
+        2.3125,
+        1.4404296875
+      ],
+      "repeated_v_min": 0.0474853515625,
+      "repeated_v_max": 0.360107421875,
+      "source_map_v_min_m": 0.11871337890625,
+      "source_map_v_max_m": 0.9002685546875,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "19faf6c9f99eb7eab4c7671dac57605c31d1b5045ae8d6b265367d4300f7a74c"
+    },
+    {
+      "prototype": "car_sedan_blue",
+      "lod": 2,
+      "material": "M_car_paint_blue",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.30859375,
+        0.2099609375
+      ],
+      "uv0_max": [
+        2.3125,
+        1.4404296875
+      ],
+      "repeated_v_min": 0.052490234375,
+      "repeated_v_max": 0.360107421875,
+      "source_map_v_min_m": 0.1312255859375,
+      "source_map_v_max_m": 0.9002685546875,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "176f04425f0742f04be0a9715a62b2e56cc1bf2f1b938a085aba3e4d3e608a67"
+    },
+    {
+      "prototype": "car_suv_blue",
+      "lod": 0,
+      "material": "M_car_paint_blue",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.2109375,
+        0.25
+      ],
+      "uv0_max": [
+        2.203125,
+        1.650390625
+      ],
+      "repeated_v_min": 0.0625,
+      "repeated_v_max": 0.41259765625,
+      "source_map_v_min_m": 0.15625,
+      "source_map_v_max_m": 1.031494140625,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "454978a9d3eb410d37250aa2e34f13c54cb9039691be0d74384850b0c9b547fb"
+    },
+    {
+      "prototype": "car_suv_blue",
+      "lod": 1,
+      "material": "M_car_paint_blue",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.197265625,
+        0.25
+      ],
+      "uv0_max": [
+        2.203125,
+        1.650390625
+      ],
+      "repeated_v_min": 0.0625,
+      "repeated_v_max": 0.41259765625,
+      "source_map_v_min_m": 0.15625,
+      "source_map_v_max_m": 1.031494140625,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "e7071ed225551012b910f6f7557ece11e64760855419f585072f9a1ada960488"
+    },
+    {
+      "prototype": "car_suv_blue",
+      "lod": 2,
+      "material": "M_car_paint_blue",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.197265625,
+        0.27001953125
+      ],
+      "uv0_max": [
+        2.203125,
+        1.650390625
+      ],
+      "repeated_v_min": 0.0675048828125,
+      "repeated_v_max": 0.41259765625,
+      "source_map_v_min_m": 0.16876220703125,
+      "source_map_v_max_m": 1.031494140625,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "e8dff0e4f18411c842c4647a015a32ff344e0fa2201aa331ff99b9d4ba45ff38"
+    },
+    {
+      "prototype": "car_suv_red",
+      "lod": 0,
+      "material": "M_car_paint_red",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.2109375,
+        0.25
+      ],
+      "uv0_max": [
+        2.203125,
+        1.650390625
+      ],
+      "repeated_v_min": 0.0625,
+      "repeated_v_max": 0.41259765625,
+      "source_map_v_min_m": 0.15625,
+      "source_map_v_max_m": 1.031494140625,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "b06594e4afe96722a63b6b41e8f9aa5076fad71dc899966abec8f5e4262f5eff"
+    },
+    {
+      "prototype": "car_suv_red",
+      "lod": 1,
+      "material": "M_car_paint_red",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.197265625,
+        0.25
+      ],
+      "uv0_max": [
+        2.203125,
+        1.650390625
+      ],
+      "repeated_v_min": 0.0625,
+      "repeated_v_max": 0.41259765625,
+      "source_map_v_min_m": 0.15625,
+      "source_map_v_max_m": 1.031494140625,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "d547b413704e6b71909571060884ee08377208a3e78c59c8edced23a5f018c53"
+    },
+    {
+      "prototype": "car_suv_red",
+      "lod": 2,
+      "material": "M_car_paint_red",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.197265625,
+        0.27001953125
+      ],
+      "uv0_max": [
+        2.203125,
+        1.650390625
+      ],
+      "repeated_v_min": 0.0675048828125,
+      "repeated_v_max": 0.41259765625,
+      "source_map_v_min_m": 0.16876220703125,
+      "source_map_v_max_m": 1.031494140625,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "e8dff0e4f18411c842c4647a015a32ff344e0fa2201aa331ff99b9d4ba45ff38"
+    },
+    {
+      "prototype": "car_suv_white",
+      "lod": 0,
+      "material": "M_car_paint_white",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.2109375,
+        0.25
+      ],
+      "uv0_max": [
+        2.203125,
+        1.650390625
+      ],
+      "repeated_v_min": 0.0625,
+      "repeated_v_max": 0.41259765625,
+      "source_map_v_min_m": 0.15625,
+      "source_map_v_max_m": 1.031494140625,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "03cb1dfa8fbff3c991f31d2a45f130b63f9ba73e95abc030468caad85cb4d3db"
+    },
+    {
+      "prototype": "car_suv_white",
+      "lod": 1,
+      "material": "M_car_paint_white",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.197265625,
+        0.25
+      ],
+      "uv0_max": [
+        2.203125,
+        1.650390625
+      ],
+      "repeated_v_min": 0.0625,
+      "repeated_v_max": 0.41259765625,
+      "source_map_v_min_m": 0.15625,
+      "source_map_v_max_m": 1.031494140625,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "22ec08529ff4241e753dd460171c030ce8d7a12bdfa743df4fe7e673b7e4681e"
+    },
+    {
+      "prototype": "car_suv_white",
+      "lod": 2,
+      "material": "M_car_paint_white",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.197265625,
+        0.27001953125
+      ],
+      "uv0_max": [
+        2.203125,
+        1.650390625
+      ],
+      "repeated_v_min": 0.0675048828125,
+      "repeated_v_max": 0.41259765625,
+      "source_map_v_min_m": 0.16876220703125,
+      "source_map_v_max_m": 1.031494140625,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "e8dff0e4f18411c842c4647a015a32ff344e0fa2201aa331ff99b9d4ba45ff38"
+    },
+    {
+      "prototype": "van_silver",
+      "lod": 0,
+      "material": "M_car_paint_silver",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.44921875,
+        0.27001953125
+      ],
+      "uv0_max": [
+        2.435546875,
+        1.9697265625
+      ],
+      "repeated_v_min": 0.0675048828125,
+      "repeated_v_max": 0.492431640625,
+      "source_map_v_min_m": 0.16876220703125,
+      "source_map_v_max_m": 1.2310791015625,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "30b00daff7b8db48a07455f320a72ef96ff2b56f4cd894183162eb0542c5da05"
+    },
+    {
+      "prototype": "van_silver",
+      "lod": 1,
+      "material": "M_car_paint_silver",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.419921875,
+        0.27001953125
+      ],
+      "uv0_max": [
+        2.435546875,
+        1.9697265625
+      ],
+      "repeated_v_min": 0.0675048828125,
+      "repeated_v_max": 0.492431640625,
+      "source_map_v_min_m": 0.16876220703125,
+      "source_map_v_max_m": 1.2310791015625,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "e28af32ee4653c91e1d315110641597ffcb612e640294dd15dd6736de989f1d0"
+    },
+    {
+      "prototype": "van_silver",
+      "lod": 2,
+      "material": "M_car_paint_silver",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.4375,
+        0.2900390625
+      ],
+      "uv0_max": [
+        2.443359375,
+        1.9697265625
+      ],
+      "repeated_v_min": 0.072509765625,
+      "repeated_v_max": 0.492431640625,
+      "source_map_v_min_m": 0.1812744140625,
+      "source_map_v_max_m": 1.2310791015625,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "1a7d808d22b31c2bfed5d3c4ef630015100d87212bc462406edd474a3cb07224"
+    },
+    {
+      "prototype": "car_sedan_black",
+      "lod": 0,
+      "material": "M_car_paint_black",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.3203125,
+        0.18994140625
+      ],
+      "uv0_max": [
+        2.3125,
+        1.4404296875
+      ],
+      "repeated_v_min": 0.0474853515625,
+      "repeated_v_max": 0.360107421875,
+      "source_map_v_min_m": 0.11871337890625,
+      "source_map_v_max_m": 0.9002685546875,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "b13077fb2bacbfbe2f95d8d13cbd61ef095eaff29831b7e874927623620cf1ee"
+    },
+    {
+      "prototype": "car_sedan_black",
+      "lod": 1,
+      "material": "M_car_paint_black",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.30859375,
+        0.18994140625
+      ],
+      "uv0_max": [
+        2.3125,
+        1.4404296875
+      ],
+      "repeated_v_min": 0.0474853515625,
+      "repeated_v_max": 0.360107421875,
+      "source_map_v_min_m": 0.11871337890625,
+      "source_map_v_max_m": 0.9002685546875,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "2dcde5394e59a7ab6143cda6dbaa2d53efe5293bf0fa4a400317e2b3d92852ba"
+    },
+    {
+      "prototype": "car_sedan_black",
+      "lod": 2,
+      "material": "M_car_paint_black",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.30859375,
+        0.2099609375
+      ],
+      "uv0_max": [
+        2.3125,
+        1.4404296875
+      ],
+      "repeated_v_min": 0.052490234375,
+      "repeated_v_max": 0.360107421875,
+      "source_map_v_min_m": 0.1312255859375,
+      "source_map_v_max_m": 0.9002685546875,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "176f04425f0742f04be0a9715a62b2e56cc1bf2f1b938a085aba3e4d3e608a67"
+    },
+    {
+      "prototype": "car_sedan_red",
+      "lod": 0,
+      "material": "M_car_paint_red",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.3203125,
+        0.18994140625
+      ],
+      "uv0_max": [
+        2.3125,
+        1.4404296875
+      ],
+      "repeated_v_min": 0.0474853515625,
+      "repeated_v_max": 0.360107421875,
+      "source_map_v_min_m": 0.11871337890625,
+      "source_map_v_max_m": 0.9002685546875,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "5147770fa4f2da553d23bc98b292d771eb260c782d39b13a5f9f72a605fcf421"
+    },
+    {
+      "prototype": "car_sedan_red",
+      "lod": 1,
+      "material": "M_car_paint_red",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.30859375,
+        0.18994140625
+      ],
+      "uv0_max": [
+        2.3125,
+        1.4404296875
+      ],
+      "repeated_v_min": 0.0474853515625,
+      "repeated_v_max": 0.360107421875,
+      "source_map_v_min_m": 0.11871337890625,
+      "source_map_v_max_m": 0.9002685546875,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "ba1ae985fb21c23a1709bcac22118d510cf04d4066ab0df64f73d09b32734b77"
+    },
+    {
+      "prototype": "car_sedan_red",
+      "lod": 2,
+      "material": "M_car_paint_red",
+      "tile": [
+        4.0,
+        4.0,
+        16.0,
+        1.0
+      ],
+      "stride": 20,
+      "uv0_min": [
+        -2.30859375,
+        0.2099609375
+      ],
+      "uv0_max": [
+        2.3125,
+        1.4404296875
+      ],
+      "repeated_v_min": 0.052490234375,
+      "repeated_v_max": 0.360107421875,
+      "source_map_v_min_m": 0.1312255859375,
+      "source_map_v_max_m": 0.9002685546875,
+      "samples_legacy_gutter": false,
+      "vertex_buffer_sha256": "176f04425f0742f04be0a9715a62b2e56cc1bf2f1b938a085aba3e4d3e608a67"
+    }
+  ]
+}

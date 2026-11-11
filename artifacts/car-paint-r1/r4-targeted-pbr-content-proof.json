@@ -1,0 +1,3063 @@
+{
+  "private_R4_exception": true,
+  "baseline_pngs_exact": 427,
+  "legacy_car_grime_exact": 12,
+  "unrelated_facade_ast_exact": true,
+  "other_src_hashes_exact": true,
+  "missing": 0,
+  "clean_kind": "modulation_set",
+  "fir_applied": true,
+  "new_map_comparisons": [
+    {
+      "file": "art-source/world/materials/car_grime_clean/High/T_car_grime_clean_BaseColor.png",
+      "upper_changed_components": 0,
+      "changed_components": 325361
+    },
+    {
+      "file": "art-source/world/materials/car_grime_clean/High/T_car_grime_clean_MaskMap.png",
+      "upper_changed_components": 0,
+      "changed_components": 108717
+    },
+    {
+      "file": "art-source/world/materials/car_grime_clean/High/T_car_grime_clean_Normal.png",
+      "upper_changed_components": 0,
+      "changed_components": 0
+    },
+    {
+      "file": "art-source/world/materials/car_grime_clean/High/T_car_grime_clean_Var.png",
+      "upper_changed_components": 0,
+      "changed_components": 0
+    },
+    {
+      "file": "art-source/world/materials/car_grime_clean/Medium/T_car_grime_clean_BaseColor.png",
+      "upper_changed_components": 0,
+      "changed_components": 81976
+    },
+    {
+      "file": "art-source/world/materials/car_grime_clean/Medium/T_car_grime_clean_MaskMap.png",
+      "upper_changed_components": 0,
+      "changed_components": 27236
+    },
+    {
+      "file": "art-source/world/materials/car_grime_clean/Medium/T_car_grime_clean_Normal.png",
+      "upper_changed_components": 0,
+      "changed_components": 0
+    },
+    {
+      "file": "art-source/world/materials/car_grime_clean/Medium/T_car_grime_clean_Var.png",
+      "upper_changed_components": 0,
+      "changed_components": 0
+    },
+    {
+      "file": "art-source/world/materials/car_grime_clean/Low/T_car_grime_clean_BaseColor.png",
+      "upper_changed_components": 0,
+      "changed_components": 20546
+    },
+    {
+      "file": "art-source/world/materials/car_grime_clean/Low/T_car_grime_clean_MaskMap.png",
+      "upper_changed_components": 0,
+      "changed_components": 6951
+    },
+    {
+      "file": "art-source/world/materials/car_grime_clean/Low/T_car_grime_clean_Normal.png",
+      "upper_changed_components": 0,
+      "changed_components": 0
+    },
+    {
+      "file": "art-source/world/materials/car_grime_clean/Low/T_car_grime_clean_Var.png",
+      "upper_changed_components": 0,
+      "changed_components": 0
+    }
+  ],
+  "content": [
+    {
+      "file": "art-source/world/cc0/_raw/fir_tree_01/twig_alpha.png",
+      "sha256": "3f399629337e7ac3af27a01b08ffb9c0d60224a9dd374a1427761a5c2eea9d6e"
+    },
+    {
+      "file": "art-source/world/cc0/_raw/fir_tree_01/twig_diff.png",
+      "sha256": "76f6d0c0044d76bac08fbbd3d2ac1c9b66bb046de7d0b1a22aa9b319308f3833"
+    },
+    {
+      "file": "art-source/world/landmarks/fire_station_jrg2/atlas_layout.json",
+      "sha256": "cbbfb6fb83bd09d9642b99ba723aef147207bfa8b39e56f1947bc26a3981d3d3"
+    },
+    {
+      "file": "art-source/world/landmarks/fire_station_jrg2/conifer_foliage_meta.json",
+      "sha256": "82141a0bc460cbb196ce83f29325f0f7433ad7f42dddabad54fc8503e165d05a"
+    },
+    {
+      "file": "art-source/world/landmarks/fire_station_jrg2/fire_station_jrg2.glb",
+      "sha256": "14843932611729e4b1dbe541863e127ae964e9152f59b8e3c0ab6b9cfe92c0a9"
+    },
+    {
+      "file": "art-source/world/materials/_src/build_all.py",
+      "sha256": "64a08f9c663242d40771eff7851ff123ca032d8469724074f851d2dc2d6db4b1"
+    },
+    {
+      "file": "art-source/world/materials/_src/cc0_fetch.py",
+      "sha256": "cac4e0e525d3aeb9d3ca47b9396ec4d88a7a380a415c3091759155632ee2405f"
+    },
+    {
+      "file": "art-source/world/materials/_src/pbrkit.py",
+      "sha256": "8d7580f447fffac055ef8d573c92142a2704f30f0f9b4de00cf0285e3d90fab5"
+    },
+    {
+      "file": "art-source/world/materials/_src/render_test.py",
+      "sha256": "927da5089a778be8d7143d2fdad4b69f81a319ecf8bf2ceae7de7715b9280993"
+    },
+    {
+      "file": "art-source/world/materials/_src/sets_asphalt.py",
+      "sha256": "d26ff93db82abae93a111a33c445bc4c3f5a87dea013d0b70f6030363267dd84"
+    },
+    {
+      "file": "art-source/world/materials/_src/sets_buildings.py",
+      "sha256": "696da7c41f500d5efba2efa1918644c0d87b9a9905d603e1c81ea559f3f3c435"
+    },
+    {
+      "file": "art-source/world/materials/_src/sets_facade.py",
+      "sha256": "b62ad7c70b165b0fea368c153daa9755e3d29cb993f920f5e426149dc8f0a6d2"
+    },
+    {
+      "file": "art-source/world/materials/_src/sets_fire_station.py",
+      "sha256": "a9f6643b93661b070dd92b1baa1d503d5d7151078b60e9a0bcfeeb3bef9189a5"
+    },
+    {
+      "file": "art-source/world/materials/_src/sets_other.py",
+      "sha256": "81e4170ad4713dce57e0c1d7805465f3ce59f494390437e6cad4aae36e676276"
+    },
+    {
+      "file": "art-source/world/materials/_src/sets_scan.py",
+      "sha256": "abe3d4327867efa1d14b12a01b09592d6e01fd52f5e0a9a32e7254a224db14b4"
+    },
+    {
+      "file": "art-source/world/materials/_src/sets_viaduct.py",
+      "sha256": "9b8092a7e1a573f906a1a6424708dcbcf69aa97f39d52bb335d886890bcf7c89"
+    },
+    {
+      "file": "art-source/world/materials/asphalt_cracks_layer/High/T_asphalt_cracks_layer_Mask.png",
+      "sha256": "c83791c24a032a87cb560ae2d496edde40e51e20292832d915a2dcd2c2547fb8"
+    },
+    {
+      "file": "art-source/world/materials/asphalt_cracks_layer/High/T_asphalt_cracks_layer_Normal.png",
+      "sha256": "111a4a7ed310af6645f7eaf1886256ce028d4990d9c2bed60b8120598dac52eb"
+    },
+    {
+      "file": "art-source/world/materials/asphalt_cracks_layer/Low/T_asphalt_cracks_layer_Mask.png",
+      "sha256": "22ee5ce089756cfaefe254061991fbdbe5b71ec81cb8c05be1690d8258a4ae15"
+    },
+    {
+      "file": "art-source/world/materials/asphalt_cracks_layer/Low/T_asphalt_cracks_layer_Normal.png",
+      "sha256": "8417cbc8729db686a69bdb184ef51e104ba7c0bc849bb12f669e6215ee44c7aa"
+    },
+    {
+      "file": "art-source/world/materials/asphalt_cracks_layer/Medium/T_asphalt_cracks_layer_Mask.png",
+      "sha256": "2294d365beb6ed28e2636c6368f6ce95d40f6e8431a6ed7c0691146222dec8ec"
+    },
+    {
+      "file": "art-source/world/materials/asphalt_cracks_layer/Medium/T_asphalt_cracks_layer_Normal.png",
+      "sha256": "60b1e23796f3e0b6a98046e2bcd2e42e4b8e756639449aa23f6bdfdcfcaad40b"
+    },
+    {
+      "file": "art-source/world/materials/asphalt_detail_photo/High/T_asphalt_detail_photo_DetailAlbedo.png",
+      "sha256": "b52e0c476ae07ffa9bad83614cf9cf5565b2a2cb645e49df144a5f5ecf8cfc8d"
+    },
+    {
+      "file": "art-source/world/materials/asphalt_detail_photo/High/T_asphalt_detail_photo_DetailNormal.png",
+      "sha256": "458d112bda19bf63cba8eaa3ef5a4b0b1c13f02a499b5ba0b0e20453b5261b0f"
+    },
+    {
+      "file": "art-source/world/materials/asphalt_detail_photo/Medium/T_asphalt_detail_photo_DetailAlbedo.png",
+      "sha256": "0342dcc93b62810737e38b8b18efe1a6ba654cbd50b37e414cc22c3084ff8c48"
+    },
+    {
+      "file": "art-source/world/materials/asphalt_detail_photo/Medium/T_asphalt_detail_photo_DetailNormal.png",
+      "sha256": "010c86283515395e0217d04399bbf095eb70d56cf4d702968c38900643a839f7"
+    },
+    {
+      "file": "art-source/world/materials/asphalt_patch/High/T_asphalt_patch_BaseColor.png",
+      "sha256": "a8d7cfd4dfc59c199975dc5a0d558df20d85123cfe1b39820a9381deac74f013"
+    },
+    {
+      "file": "art-source/world/materials/asphalt_patch/High/T_asphalt_patch_MaskMap.png",
+      "sha256": "564f5a1b6313cee71b4015c1974bbb2128a71473548a89c752050415201157d7"
+    },
+    {
+      "file": "art-source/world/materials/asphalt_patch/High/T_asphalt_patch_Normal.png",
+      "sha256": "c62ad5543acd530a0012476929fbf8311388715ccc9134a040e3443c0dba905c"
+    },
+    {
+      "file": "art-source/world/materials/asphalt_patch/High/T_asphalt_patch_Var.png",
+      "sha256": "6fd4212075c45dd1de00363c29b9ad35d6e07791275ece0d3e0759fa21731a5e"
+    },
+    {
+      "file": "art-source/world/materials/asphalt_patch/Low/T_asphalt_patch_BaseColor.png",
+      "sha256": "fed53dc7913582f41b11f2b28d5ca71ab04e0b5f30fd11987ed0bbdb3c290e2e"
+    },
+    {
+      "file": "art-source/world/materials/asphalt_patch/Low/T_asphalt_patch_MaskMap.png",
+      "sha256": "0c21813b5eae3a01ca277a1f1b78416e91cc392f704cb93c8113b47ecb05e852"
+    },
+    {
+      "file": "art-source/world/materials/asphalt_patch/Low/T_asphalt_patch_Normal.png",
+      "sha256": "e6345f5341a798af4285fbd29ca5bbe45d2239d2ebd45e943597dd3e5f832638"
+    },
+    {
+      "file": "art-source/world/materials/asphalt_patch/Low/T_asphalt_patch_Var.png",
+      "sha256": "9f42bbe6be4270a1ba332850840b8e0bf42e7be8e46670b29f926f8ab7eddc30"
+    },
+    {
+      "file": "art-source/world/materials/asphalt_patch/Medium/T_asphalt_patch_BaseColor.png",
+      "sha256": "4a0411f291a2b23a024d1ef448a1f829d91ae4463fccb010058b6714b981b4b8"
+    },
+    {
+      "file": "art-source/world/materials/asphalt_patch/Medium/T_asphalt_patch_MaskMap.png",
+      "sha256": "a241a959bfc9d8e599293065a86e774eac9b8e5007fff30a230a88fd72d1c4b6"
+    },
+    {
+      "file": "art-source/world/materials/asphalt_patch/Medium/T_asphalt_patch_Normal.png",
+      "sha256": "e44822b9c65546e0e38f1d84b0dd924fbbf4b3e868592347edbee5e3315e39b3"
+    },
+    {
+      "file": "art-source/world/materials/asphalt_patch/Medium/T_asphalt_patch_Var.png",
+      "sha256": "64403e1edffa2720d290b9d64e283e91ea895412655052fabd8311a5b4c3b9aa"
+    },
+    {
+      "file": "art-source/world/materials/asphalt_sma_fresh/High/T_asphalt_sma_fresh_BaseColor.png",
+      "sha256": "2c51d8a00de210fd816047429beb5fb335f1d0a468beab20a8e05ad0d9843007"
+    },
+    {
+      "file": "art-source/world/materials/asphalt_sma_fresh/High/T_asphalt_sma_fresh_MaskMap.png",
+      "sha256": "b45ec59894ccfb0804f60b665b5c92d870054a480934643d2d0263dabae67bf7"
+    },
+    {
+      "file": "art-source/world/materials/asphalt_sma_fresh/High/T_asphalt_sma_fresh_Normal.png",
+      "sha256": "6fb88fd153ff0782e0698ba6101d5b686533e80ac40bdc2d2b3c4518ce23400e"
+    },
+    {
+      "file": "art-source/world/materials/asphalt_sma_fresh/High/T_asphalt_sma_fresh_Var.png",
+      "sha256": "2bab6f61d5100bcd0c45e59f4bb694bf2ee363093eabe38fcf4c9a0c3dc25314"
+    },
+    {
+      "file": "art-source/world/materials/asphalt_sma_fresh/Low/T_asphalt_sma_fresh_BaseColor.png",
+      "sha256": "1b91609d9065f4be9f09c4fb34f58fde6b1e795baede30bf7576bbb7e47c4d1e"
+    },
+    {
+      "file": "art-source/world/materials/asphalt_sma_fresh/Low/T_asphalt_sma_fresh_MaskMap.png",
+      "sha256": "2124a0807ce652b9bd066b6083bad230382e58190be6a070dc530c2776ee2846"
+    },
+    {
+      "file": "art-source/world/materials/asphalt_sma_fresh/Low/T_asphalt_sma_fresh_Normal.png",
+      "sha256": "c2d2c83d6db406b72c25cecfe0fb2facd306d2cd16d0e92e1f7a74197306a43e"
+    },
+    {
+      "file": "art-source/world/materials/asphalt_sma_fresh/Low/T_asphalt_sma_fresh_Var.png",
+      "sha256": "5448ef8668cd7a4282c95388ea483168cf152b0e5a5e3ec8660dc3449a8c1bdf"
+    },
+    {
+      "file": "art-source/world/materials/asphalt_sma_fresh/Medium/T_asphalt_sma_fresh_BaseColor.png",
+      "sha256": "80cafcafd64a4cf732a9762b4dd39162864cfa0240cfc330f7764ee917cc06e9"
+    },
+    {
+      "file": "art-source/world/materials/asphalt_sma_fresh/Medium/T_asphalt_sma_fresh_MaskMap.png",
+      "sha256": "26170e8b8892d558e6fa2b576b27fc6e12edb712a04590e0a812730fde1c5b3b"
+    },
+    {
+      "file": "art-source/world/materials/asphalt_sma_fresh/Medium/T_asphalt_sma_fresh_Normal.png",
+      "sha256": "4fa618c23c942e0a0fb31698bbefe85551361da5c0282b93a388c834b8ee6c0b"
+    },
+    {
+      "file": "art-source/world/materials/asphalt_sma_fresh/Medium/T_asphalt_sma_fresh_Var.png",
+      "sha256": "39c15fcd231c874c8a4d3dacf4db3fb07b962ba2218c773465b84453fa34e7f5"
+    },
+    {
+      "file": "art-source/world/materials/asphalt_worn/High/T_asphalt_worn_BaseColor.png",
+      "sha256": "a9989c34e0ddd3ada7dfa51dff247230bcd81c4ad0e0450a4fc44201aed8f652"
+    },
+    {
+      "file": "art-source/world/materials/asphalt_worn/High/T_asphalt_worn_MaskMap.png",
+      "sha256": "c4bb8a46b1324069551850314047bf8ed4293a7724ea74e67d8278e0515a7a32"
+    },
+    {
+      "file": "art-source/world/materials/asphalt_worn/High/T_asphalt_worn_Normal.png",
+      "sha256": "a313efcc01081a18db24d1f93369c1b80e9aaa0f2bf00b591de54dc61f03a8e5"
+    },
+    {
+      "file": "art-source/world/materials/asphalt_worn/High/T_asphalt_worn_Var.png",
+      "sha256": "403890eb2f68b3f0fba898a540b1c799c1f111ee3e0c1471167de9e05de939d1"
+    },
+    {
+      "file": "art-source/world/materials/asphalt_worn/Low/T_asphalt_worn_BaseColor.png",
+      "sha256": "a431f57a2e0b06f71418a2d751f59cdf6c9d7e0e66eb2c8a5aa976c9b9662146"
+    },
+    {
+      "file": "art-source/world/materials/asphalt_worn/Low/T_asphalt_worn_MaskMap.png",
+      "sha256": "5266f9eb59162709bdd1153174b74a1026015bd0e4b503f3762b5f0b801a4f8d"
+    },
+    {
+      "file": "art-source/world/materials/asphalt_worn/Low/T_asphalt_worn_Normal.png",
+      "sha256": "412a8c0a4f9ecc2963f63c3b44b7a9a27c72b8522675980b914b1a0b087eb70d"
+    },
+    {
+      "file": "art-source/world/materials/asphalt_worn/Low/T_asphalt_worn_Var.png",
+      "sha256": "35215a3a27c5c8df8170e27acac147904e3e75f08cbeb4d299561accf54376c4"
+    },
+    {
+      "file": "art-source/world/materials/asphalt_worn/Medium/T_asphalt_worn_BaseColor.png",
+      "sha256": "da5809d643e54300fe93f4befc9a1f65672953955b9b2c1b0ebdd49b4936e849"
+    },
+    {
+      "file": "art-source/world/materials/asphalt_worn/Medium/T_asphalt_worn_MaskMap.png",
+      "sha256": "f1309027dc74df76e3aaac21c6cf4bfd79a9a4d3fe8451b71352cee128c28fd7"
+    },
+    {
+      "file": "art-source/world/materials/asphalt_worn/Medium/T_asphalt_worn_Normal.png",
+      "sha256": "2b6cba055036806aaeaa0b0123c68251f8c6d02efe98d841cc2348b9197fcd8f"
+    },
+    {
+      "file": "art-source/world/materials/asphalt_worn/Medium/T_asphalt_worn_Var.png",
+      "sha256": "989a92456377031311b377d19a8a4e2bb5e04fbf882a9e6da9c30d92cf186663"
+    },
+    {
+      "file": "art-source/world/materials/bark_pine/High/T_bark_pine_BaseColor.png",
+      "sha256": "1e14caf69dca6e30ec166581698474c570c8045fa20a919c6842ec825bbfc0db"
+    },
+    {
+      "file": "art-source/world/materials/bark_pine/High/T_bark_pine_MaskMap.png",
+      "sha256": "bc9fa85f95604a5f0bfb7e6a5f6e6054e2dca34e4a106ae48c54b679c8ca7fcd"
+    },
+    {
+      "file": "art-source/world/materials/bark_pine/High/T_bark_pine_Normal.png",
+      "sha256": "8c532ddc1169230ddbd49116e508bb2676090216ad143c478a6667b7107023bd"
+    },
+    {
+      "file": "art-source/world/materials/bark_pine/High/T_bark_pine_Var.png",
+      "sha256": "45a80247ce0bb3377ba6107499f4e0f90cc8b8c205f8b8a757ebf7bc498f05d1"
+    },
+    {
+      "file": "art-source/world/materials/bark_pine/Low/T_bark_pine_BaseColor.png",
+      "sha256": "9ae15a789356eade753f36fa8c0ddd08115dad81d957ffb802c45d2cf4c29256"
+    },
+    {
+      "file": "art-source/world/materials/bark_pine/Low/T_bark_pine_MaskMap.png",
+      "sha256": "8455c59dc5a9be585186f85b034aeaf72ae34822a3ab22ae015e3b2e9044482e"
+    },
+    {
+      "file": "art-source/world/materials/bark_pine/Low/T_bark_pine_Normal.png",
+      "sha256": "2761832febc735b48ccef7f25b5e9d820c87b9ae59d910242ae378dd76377e54"
+    },
+    {
+      "file": "art-source/world/materials/bark_pine/Low/T_bark_pine_Var.png",
+      "sha256": "8d6dc00c6e46a9bb138e2f7d0ea6166511029ae189b1011fc320d44fcb10af71"
+    },
+    {
+      "file": "art-source/world/materials/bark_pine/Medium/T_bark_pine_BaseColor.png",
+      "sha256": "22a1f05e31e024601319f38c444d5d099b854f284639909c26920f951b32d154"
+    },
+    {
+      "file": "art-source/world/materials/bark_pine/Medium/T_bark_pine_MaskMap.png",
+      "sha256": "01df94e3b489e39f8d7131864f91d4e2dceb7e482025d64a4092558ccaee74ee"
+    },
+    {
+      "file": "art-source/world/materials/bark_pine/Medium/T_bark_pine_Normal.png",
+      "sha256": "49f0e52f3eaf30f1bf38ec887da585c514922f76488c907bee592f162e5f7ae7"
+    },
+    {
+      "file": "art-source/world/materials/bark_pine/Medium/T_bark_pine_Var.png",
+      "sha256": "4b58502f5ab51bf9bb773011db9aa47850595f3683944bcaedea868da36621f0"
+    },
+    {
+      "file": "art-source/world/materials/behaton_i_grey/High/T_behaton_i_grey_BaseColor.png",
+      "sha256": "9a811deaff4b96dc7b8f022f0a341736b85abf2c7dfdfb815a2665bca18965e0"
+    },
+    {
+      "file": "art-source/world/materials/behaton_i_grey/High/T_behaton_i_grey_MaskMap.png",
+      "sha256": "82983b0885257be3ccba7156f1f58b3bfce312ee748cb360e655bd32469e8fb3"
+    },
+    {
+      "file": "art-source/world/materials/behaton_i_grey/High/T_behaton_i_grey_Normal.png",
+      "sha256": "6d60b7c991c7c54113caf20d469b68de46940990c05b381da46eabc14372d4a6"
+    },
+    {
+      "file": "art-source/world/materials/behaton_i_grey/High/T_behaton_i_grey_Var.png",
+      "sha256": "e5d86df7e3ebe94d0dbe0b63e1b0f3077eb0b0802293eda75e8efb07cdf1f94a"
+    },
+    {
+      "file": "art-source/world/materials/behaton_i_grey/Low/T_behaton_i_grey_BaseColor.png",
+      "sha256": "b729728a5d1ed501f69ce18fb9f5cabf7924cd87169b3c184a1b2a377bb80709"
+    },
+    {
+      "file": "art-source/world/materials/behaton_i_grey/Low/T_behaton_i_grey_MaskMap.png",
+      "sha256": "7146f9308697eb09a1983ba2b7cf01bef9c13db578a8d09e0bf473479a8b992e"
+    },
+    {
+      "file": "art-source/world/materials/behaton_i_grey/Low/T_behaton_i_grey_Normal.png",
+      "sha256": "914313000ff8da89d7470636b652a72d767bb1c2d9890cd89dc482c3dc3e56c5"
+    },
+    {
+      "file": "art-source/world/materials/behaton_i_grey/Low/T_behaton_i_grey_Var.png",
+      "sha256": "84cfe2c3ed73c442df331009274ca6086536910d765f51c148b80c72afe25718"
+    },
+    {
+      "file": "art-source/world/materials/behaton_i_grey/Medium/T_behaton_i_grey_BaseColor.png",
+      "sha256": "880f128db8f86160cfc25b9a9fe5532768d9d1d6b0e4cc6721420f7cb68cca76"
+    },
+    {
+      "file": "art-source/world/materials/behaton_i_grey/Medium/T_behaton_i_grey_MaskMap.png",
+      "sha256": "ea22896f815ebe861b59cb765dcd3bc3dad8fed7ea0ec1908a5bce294bc2b0b3"
+    },
+    {
+      "file": "art-source/world/materials/behaton_i_grey/Medium/T_behaton_i_grey_Normal.png",
+      "sha256": "6adc861c374fa1ef9d69cf256fb087b31046d399419a52123702653c4eec8747"
+    },
+    {
+      "file": "art-source/world/materials/behaton_i_grey/Medium/T_behaton_i_grey_Var.png",
+      "sha256": "d45fb98bf5691fac000a4dbf4e0b0fc82274bfba7fd66d4359e699f4990b30d9"
+    },
+    {
+      "file": "art-source/world/materials/box_panel/High/T_box_panel_BaseColor.png",
+      "sha256": "80d4b4ca07ba7a0972599d3cb65ca0e7393996d89906dbd11f15543df2103449"
+    },
+    {
+      "file": "art-source/world/materials/box_panel/High/T_box_panel_MaskMap.png",
+      "sha256": "8fba956afc1fde8b92fdfb847648285548cab5b59bc3062c73d24213e8e01c9b"
+    },
+    {
+      "file": "art-source/world/materials/box_panel/High/T_box_panel_Normal.png",
+      "sha256": "e0d42b11f8d00293f25ce6e88db6c22e2f93d0f44727ba738ef2a4a4d15d20e5"
+    },
+    {
+      "file": "art-source/world/materials/box_panel/High/T_box_panel_Var.png",
+      "sha256": "5acdabda45a1144244938b2ed72e385d57a78a33b0e61de05d2661728d555005"
+    },
+    {
+      "file": "art-source/world/materials/box_panel/Low/T_box_panel_BaseColor.png",
+      "sha256": "8b3cf097d75d5bee76bba5faf78a26d82d3345bed21fabf5963452bc801c5383"
+    },
+    {
+      "file": "art-source/world/materials/box_panel/Low/T_box_panel_MaskMap.png",
+      "sha256": "800a141f6578b7763b0c92688bf0d2be5951c4705dfaf2484ab55b84040e84d9"
+    },
+    {
+      "file": "art-source/world/materials/box_panel/Low/T_box_panel_Normal.png",
+      "sha256": "f1dc31303f1e91b340500902cd8e9b50b481fb9b3b8a27c47fa34782055fb849"
+    },
+    {
+      "file": "art-source/world/materials/box_panel/Low/T_box_panel_Var.png",
+      "sha256": "ba8af5e2a16b3c4219005e1444e33e641322b5977275851ca44b11ead5f061ae"
+    },
+    {
+      "file": "art-source/world/materials/box_panel/Medium/T_box_panel_BaseColor.png",
+      "sha256": "83e9882444a52a0ad3fbfe7fae9c573d91546103e368ddd15b98ab6dc0eb5d0f"
+    },
+    {
+      "file": "art-source/world/materials/box_panel/Medium/T_box_panel_MaskMap.png",
+      "sha256": "46bb044d894232a702124351aec62dcd1f854465bbca72d0a3b4bc17226cf83e"
+    },
+    {
+      "file": "art-source/world/materials/box_panel/Medium/T_box_panel_Normal.png",
+      "sha256": "26d2f67732c97aee7c255901f48c584fd40c3d93da7954d38a113427f429f13e"
+    },
+    {
+      "file": "art-source/world/materials/box_panel/Medium/T_box_panel_Var.png",
+      "sha256": "9eba0a0c0120e03b18e51bf384acc93cfd6938eb515fcd4a1f52a224c90b1d6f"
+    },
+    {
+      "file": "art-source/world/materials/brick/High/T_brick_BaseColor.png",
+      "sha256": "0747e5681d2680f951f646ef495020c9bcee627447700cedeb0a639cbf4163c2"
+    },
+    {
+      "file": "art-source/world/materials/brick/High/T_brick_MaskMap.png",
+      "sha256": "ebd242bb89ccbb1eeb1b6781bcfd999508c594783e138022289e714bd7d5395c"
+    },
+    {
+      "file": "art-source/world/materials/brick/High/T_brick_Normal.png",
+      "sha256": "72186f694623c5a70ebc00dc6af508da30e6ce77476080168356caed2f7fcdfa"
+    },
+    {
+      "file": "art-source/world/materials/brick/High/T_brick_Var.png",
+      "sha256": "6c26337c38086c3612e467d89b688d233a7a3071077f98cabd0863f7e832f9c3"
+    },
+    {
+      "file": "art-source/world/materials/brick/Low/T_brick_BaseColor.png",
+      "sha256": "750397ca0c47d8be02d1d637b4614cac926f6bff9c67756d2e756d94a2147165"
+    },
+    {
+      "file": "art-source/world/materials/brick/Low/T_brick_MaskMap.png",
+      "sha256": "11e18b90be9f5d45c0fafd5a7967e9750d7d1dc6fef29d79f216e5fde2a951cf"
+    },
+    {
+      "file": "art-source/world/materials/brick/Low/T_brick_Normal.png",
+      "sha256": "979130eeb924f7cc731f9a55dd6f663c0bc270f613386ee74e4e8b97c76275d0"
+    },
+    {
+      "file": "art-source/world/materials/brick/Low/T_brick_Var.png",
+      "sha256": "6d9662d5e2a2145d663fb6434bbcba98c0fd0d4ecc4b6e5e421b510c844e30ae"
+    },
+    {
+      "file": "art-source/world/materials/brick/Medium/T_brick_BaseColor.png",
+      "sha256": "8c36749bd3d1b80716a59eab29e4e470c228b8390138985c3d959b690c259244"
+    },
+    {
+      "file": "art-source/world/materials/brick/Medium/T_brick_MaskMap.png",
+      "sha256": "5d0f143019a5cafa2a55c575a55d799a7992f321861824435df242a85daeea2e"
+    },
+    {
+      "file": "art-source/world/materials/brick/Medium/T_brick_Normal.png",
+      "sha256": "87ec49045bac3ed2b9e09bba0cd516a47773167741ea46c46a7d0191f9030c04"
+    },
+    {
+      "file": "art-source/world/materials/brick/Medium/T_brick_Var.png",
+      "sha256": "d8444201a595348f35e118a46f0e565b8fad65d6dc0a8addc1c84af49378d7e4"
+    },
+    {
+      "file": "art-source/world/materials/car_grime/High/T_car_grime_BaseColor.png",
+      "sha256": "269e3c4fbc35539f69ae591073ca791698623db1f10ed83febb6c460b94d907b"
+    },
+    {
+      "file": "art-source/world/materials/car_grime/High/T_car_grime_MaskMap.png",
+      "sha256": "f951d0bbccf5d3ece7424462220559622388181fab19f92a80b7cb7edad8c72e"
+    },
+    {
+      "file": "art-source/world/materials/car_grime/High/T_car_grime_Normal.png",
+      "sha256": "cde0459c7f8620571960565cab5bf8e90f1da0787f782493b91f2b75c7b5c62d"
+    },
+    {
+      "file": "art-source/world/materials/car_grime/High/T_car_grime_Var.png",
+      "sha256": "24ff210c32bb183747bdd51e405de3f113512d8ad626bb6ba6c2c8cdd2acb80e"
+    },
+    {
+      "file": "art-source/world/materials/car_grime/Low/T_car_grime_BaseColor.png",
+      "sha256": "ae0a37fe6d2c05f0266a98d95038e3cc268dfc89452822e4b2a21d571857ea89"
+    },
+    {
+      "file": "art-source/world/materials/car_grime/Low/T_car_grime_MaskMap.png",
+      "sha256": "c8bb85918932c8fc39c4799549f8d04b56eabb4aed948fd12d6a72fe5f2dd014"
+    },
+    {
+      "file": "art-source/world/materials/car_grime/Low/T_car_grime_Normal.png",
+      "sha256": "458f7b15a6bf3eb404f314b61108d37a599957ab97b51f2bff62c77d87ec2966"
+    },
+    {
+      "file": "art-source/world/materials/car_grime/Low/T_car_grime_Var.png",
+      "sha256": "0a8a08bd2d97d70ece0d436c1bd23c915c102afc74046388bff6e171d346619b"
+    },
+    {
+      "file": "art-source/world/materials/car_grime/Medium/T_car_grime_BaseColor.png",
+      "sha256": "bc6943c2e1d6353fc6a703fcc6c6f9d66bae78a5d138098b9f6811211bddff4b"
+    },
+    {
+      "file": "art-source/world/materials/car_grime/Medium/T_car_grime_MaskMap.png",
+      "sha256": "c0f26119d1d6d539fc323f71202cf32899b383442d485aa8e93caa20bd053e43"
+    },
+    {
+      "file": "art-source/world/materials/car_grime/Medium/T_car_grime_Normal.png",
+      "sha256": "2931486177aaf1890bfe6e042d936f1faf11bd510b57fdffc7665dac7b37300c"
+    },
+    {
+      "file": "art-source/world/materials/car_grime/Medium/T_car_grime_Var.png",
+      "sha256": "ac297f78c6f731146674331a1419901836345770ba33cee38c5769f236766bba"
+    },
+    {
+      "file": "art-source/world/materials/car_grime_clean/High/T_car_grime_clean_BaseColor.png",
+      "sha256": "e321b6f02c4155c3e50522ff43784a46a7eb46b20ae4ed716a312196416019a6"
+    },
+    {
+      "file": "art-source/world/materials/car_grime_clean/High/T_car_grime_clean_MaskMap.png",
+      "sha256": "2ca95392140521c2d59ff426da425f22e3d501c6cd2c2d265225a75f3796e625"
+    },
+    {
+      "file": "art-source/world/materials/car_grime_clean/High/T_car_grime_clean_Normal.png",
+      "sha256": "cde0459c7f8620571960565cab5bf8e90f1da0787f782493b91f2b75c7b5c62d"
+    },
+    {
+      "file": "art-source/world/materials/car_grime_clean/High/T_car_grime_clean_Var.png",
+      "sha256": "24ff210c32bb183747bdd51e405de3f113512d8ad626bb6ba6c2c8cdd2acb80e"
+    },
+    {
+      "file": "art-source/world/materials/car_grime_clean/Low/T_car_grime_clean_BaseColor.png",
+      "sha256": "f18ae31a01e96be9a4f92018b7046ecacdae579cbdbb4cdd05ee0130085ef4db"
+    },
+    {
+      "file": "art-source/world/materials/car_grime_clean/Low/T_car_grime_clean_MaskMap.png",
+      "sha256": "ad22d558514be3df2f5c6be37c43c6bdded7d7dfee339bef52a8a4999d7400e4"
+    },
+    {
+      "file": "art-source/world/materials/car_grime_clean/Low/T_car_grime_clean_Normal.png",
+      "sha256": "458f7b15a6bf3eb404f314b61108d37a599957ab97b51f2bff62c77d87ec2966"
+    },
+    {
+      "file": "art-source/world/materials/car_grime_clean/Low/T_car_grime_clean_Var.png",
+      "sha256": "0a8a08bd2d97d70ece0d436c1bd23c915c102afc74046388bff6e171d346619b"
+    },
+    {
+      "file": "art-source/world/materials/car_grime_clean/Medium/T_car_grime_clean_BaseColor.png",
+      "sha256": "9c6515f8b24195c1703487892531f6074325770c2ef20b8d68420b31efa714ed"
+    },
+    {
+      "file": "art-source/world/materials/car_grime_clean/Medium/T_car_grime_clean_MaskMap.png",
+      "sha256": "5288a1ca26f325540c8cfc3c1769db1905cc20c08019eebc11085b5e4d4ef5fc"
+    },
+    {
+      "file": "art-source/world/materials/car_grime_clean/Medium/T_car_grime_clean_Normal.png",
+      "sha256": "2931486177aaf1890bfe6e042d936f1faf11bd510b57fdffc7665dac7b37300c"
+    },
+    {
+      "file": "art-source/world/materials/car_grime_clean/Medium/T_car_grime_clean_Var.png",
+      "sha256": "ac297f78c6f731146674331a1419901836345770ba33cee38c5769f236766bba"
+    },
+    {
+      "file": "art-source/world/materials/concrete_cast_5m_joints/High/T_concrete_cast_5m_joints_BaseColor.png",
+      "sha256": "0c2ef65ef81bff4ce96898ddbb53578cf92ab4b25395dae22b6cbc62b6254659"
+    },
+    {
+      "file": "art-source/world/materials/concrete_cast_5m_joints/High/T_concrete_cast_5m_joints_MaskMap.png",
+      "sha256": "a50526ebb71fa5d7556ec20ea372d3a77ca0c588d73edcb5c1698bf03a0c78b5"
+    },
+    {
+      "file": "art-source/world/materials/concrete_cast_5m_joints/High/T_concrete_cast_5m_joints_Normal.png",
+      "sha256": "e200c9a5961912de79308a2898effe998b31f5a524119e5d58ea0c756a33facc"
+    },
+    {
+      "file": "art-source/world/materials/concrete_cast_5m_joints/High/T_concrete_cast_5m_joints_Var.png",
+      "sha256": "5c1ed98cb4a20bd79b6e60aacc29c93d2a1406861d94f7ef213b5e073feb6117"
+    },
+    {
+      "file": "art-source/world/materials/concrete_cast_5m_joints/Low/T_concrete_cast_5m_joints_BaseColor.png",
+      "sha256": "6bc00b0b9c715087dd9ce971ce61f4c91b7a9341dca72f742e2064d57a2c208e"
+    },
+    {
+      "file": "art-source/world/materials/concrete_cast_5m_joints/Low/T_concrete_cast_5m_joints_MaskMap.png",
+      "sha256": "9db5bfab959caea918c759ebe0951f03f3a0cc9aa8a709448a26273c28d760dd"
+    },
+    {
+      "file": "art-source/world/materials/concrete_cast_5m_joints/Low/T_concrete_cast_5m_joints_Normal.png",
+      "sha256": "c18fcfd7a50fc17dfa714997abdd817ac01cc8e0a53a01d8ff1706c58b5e3fd7"
+    },
+    {
+      "file": "art-source/world/materials/concrete_cast_5m_joints/Low/T_concrete_cast_5m_joints_Var.png",
+      "sha256": "d9a61a4e153b6e46a6474007353a40a12bbb67be28d9e4f6f86652cf71b24a46"
+    },
+    {
+      "file": "art-source/world/materials/concrete_cast_5m_joints/Medium/T_concrete_cast_5m_joints_BaseColor.png",
+      "sha256": "3f3fe920898be4472bf24db3838bb2153e40d316220338790ba7089d86ae7dfb"
+    },
+    {
+      "file": "art-source/world/materials/concrete_cast_5m_joints/Medium/T_concrete_cast_5m_joints_MaskMap.png",
+      "sha256": "807736f3d72b2cc3eabcfb6d64faf963f3b52a30d854766d294d2f2afde15e03"
+    },
+    {
+      "file": "art-source/world/materials/concrete_cast_5m_joints/Medium/T_concrete_cast_5m_joints_Normal.png",
+      "sha256": "36815151635eb3733b52266eac8cd10de6d115ac27a1d615da80a72c0a496d28"
+    },
+    {
+      "file": "art-source/world/materials/concrete_cast_5m_joints/Medium/T_concrete_cast_5m_joints_Var.png",
+      "sha256": "6017b2a901c803a488630bac1ef6de7a24fcc0a133a57e8fcf2b319ff6aef5d1"
+    },
+    {
+      "file": "art-source/world/materials/concrete_fence_panel/High/T_concrete_fence_panel_BaseColor.png",
+      "sha256": "bf032213eff834823f0b8093d0649863875f5628910ea6a6f99b73b32990a31a"
+    },
+    {
+      "file": "art-source/world/materials/concrete_fence_panel/High/T_concrete_fence_panel_MaskMap.png",
+      "sha256": "2b423734b6e1268d3d8daebd10e133e631c4b97b6b0e46d028d1c6c1aa16cb54"
+    },
+    {
+      "file": "art-source/world/materials/concrete_fence_panel/High/T_concrete_fence_panel_Normal.png",
+      "sha256": "9177306aaf07fdc9cdd5e902b876ffc678ef25799c76ded0c5f3dca6e53ad640"
+    },
+    {
+      "file": "art-source/world/materials/concrete_fence_panel/High/T_concrete_fence_panel_Var.png",
+      "sha256": "13c23a35f831f29cd9e241c4cd033b2a05c32f3b97ca159e4c0d6b01bd57a10f"
+    },
+    {
+      "file": "art-source/world/materials/concrete_fence_panel/Low/T_concrete_fence_panel_BaseColor.png",
+      "sha256": "fe3c62587fb78a04fa160adb71a109b2c46897221c20d7d0225e690ab6f517a0"
+    },
+    {
+      "file": "art-source/world/materials/concrete_fence_panel/Low/T_concrete_fence_panel_MaskMap.png",
+      "sha256": "e6aa2762bf272103e51910ab6f0ede24dd21676f8ae2280d4c59ae22861743d4"
+    },
+    {
+      "file": "art-source/world/materials/concrete_fence_panel/Low/T_concrete_fence_panel_Normal.png",
+      "sha256": "68ebae7980a5ac75c5f9a74de77b5311552ef4378dd70e99ca1b7bf78b24fc15"
+    },
+    {
+      "file": "art-source/world/materials/concrete_fence_panel/Low/T_concrete_fence_panel_Var.png",
+      "sha256": "1dfd42669f1300eff9091bdf882724fc7f8d78d639c596a1b24580e58df344d2"
+    },
+    {
+      "file": "art-source/world/materials/concrete_fence_panel/Medium/T_concrete_fence_panel_BaseColor.png",
+      "sha256": "d932fd7d48c548b6b85b7b256daed8e47802c829a32efc605ecf6ea2e95193a4"
+    },
+    {
+      "file": "art-source/world/materials/concrete_fence_panel/Medium/T_concrete_fence_panel_MaskMap.png",
+      "sha256": "4f1d94e8586f43289a8dde36aa94a7b05c5c1442a6dccacb97390f14678f04bc"
+    },
+    {
+      "file": "art-source/world/materials/concrete_fence_panel/Medium/T_concrete_fence_panel_Normal.png",
+      "sha256": "e5a6bad68f4ae97be03eefff858baedf5cf870a70b547feda897af4425aba941"
+    },
+    {
+      "file": "art-source/world/materials/concrete_fence_panel/Medium/T_concrete_fence_panel_Var.png",
+      "sha256": "dfe7cdf98e2784df92dea46bcc7b3253460c58d64e12912e8277087d71fe7baf"
+    },
+    {
+      "file": "art-source/world/materials/concrete_precast/High/T_concrete_precast_BaseColor.png",
+      "sha256": "665ca3c7972552bf831bd02d4a27414c4f40923a88918b1a11c45af1e1d34dfc"
+    },
+    {
+      "file": "art-source/world/materials/concrete_precast/High/T_concrete_precast_MaskMap.png",
+      "sha256": "0f6034b355a93ca11311cd7a29077709a5a948472c8ef8b425a32d7e375c2173"
+    },
+    {
+      "file": "art-source/world/materials/concrete_precast/High/T_concrete_precast_Normal.png",
+      "sha256": "7826a3d6bc666833235cb767edaa6801c05501019020160a2c6067af8d9fc109"
+    },
+    {
+      "file": "art-source/world/materials/concrete_precast/High/T_concrete_precast_Var.png",
+      "sha256": "cdd04a004357dcf4c4144960434a2163ea4bc34b60808741f96eebc72c842ead"
+    },
+    {
+      "file": "art-source/world/materials/concrete_precast/Low/T_concrete_precast_BaseColor.png",
+      "sha256": "a8b1fc6e214119dfb242973ee29a623371d49adc939b168df8103a1729545e02"
+    },
+    {
+      "file": "art-source/world/materials/concrete_precast/Low/T_concrete_precast_MaskMap.png",
+      "sha256": "2023bddfe0754a09161cdcd7edf14fa8af31032158bfcf96aa38773708114795"
+    },
+    {
+      "file": "art-source/world/materials/concrete_precast/Low/T_concrete_precast_Normal.png",
+      "sha256": "61e805863138a44b0f223120e0b55dd241331b317640836465f3611710e7fc23"
+    },
+    {
+      "file": "art-source/world/materials/concrete_precast/Low/T_concrete_precast_Var.png",
+      "sha256": "b5e239357522696ed86f7d6bfd9fb3839df53a4fe41d9d94e874adf0af756502"
+    },
+    {
+      "file": "art-source/world/materials/concrete_precast/Medium/T_concrete_precast_BaseColor.png",
+      "sha256": "45caab9c34b38b80741d594b08430b021ae654d8e7054cc0164ec3836a5f7778"
+    },
+    {
+      "file": "art-source/world/materials/concrete_precast/Medium/T_concrete_precast_MaskMap.png",
+      "sha256": "bda90f6ee131caab60bcfc4b5dcc585b16d72c4e2cf985e0e295c42af49a89a6"
+    },
+    {
+      "file": "art-source/world/materials/concrete_precast/Medium/T_concrete_precast_Normal.png",
+      "sha256": "e304f86231e40126feaa6cff9a8dd25bf67d40fde81babb2df497eb88619cb83"
+    },
+    {
+      "file": "art-source/world/materials/concrete_precast/Medium/T_concrete_precast_Var.png",
+      "sha256": "6181500db49a3c655d9886926181b13395559289dae7d87b241a9af8f065592c"
+    },
+    {
+      "file": "art-source/world/materials/concrete_slab_3x1.5/High/T_concrete_slab_3x1.5_BaseColor.png",
+      "sha256": "4dde8b5816a9d25f139b449a91451d222e33f02e0a7997425da51596b5acdaa1"
+    },
+    {
+      "file": "art-source/world/materials/concrete_slab_3x1.5/High/T_concrete_slab_3x1.5_MaskMap.png",
+      "sha256": "3f6cec9bd953d49aa5966461d18f0405d0bc967604caa2ac3e6e3c87bbda8562"
+    },
+    {
+      "file": "art-source/world/materials/concrete_slab_3x1.5/High/T_concrete_slab_3x1.5_Normal.png",
+      "sha256": "d69f7ea0e8b1f8e9cd76ce1bb5410ff9730b4500ad2da8c4452e4f453d133618"
+    },
+    {
+      "file": "art-source/world/materials/concrete_slab_3x1.5/High/T_concrete_slab_3x1.5_Var.png",
+      "sha256": "21e0a21e256a8534425c96896ba04796b811185e7cd99b1e7ab3640e4511d914"
+    },
+    {
+      "file": "art-source/world/materials/concrete_slab_3x1.5/Low/T_concrete_slab_3x1.5_BaseColor.png",
+      "sha256": "748ef6ce17790a7b1edd4a1cb3a23f4076374159372fdcc2d3eca69be64d09e2"
+    },
+    {
+      "file": "art-source/world/materials/concrete_slab_3x1.5/Low/T_concrete_slab_3x1.5_MaskMap.png",
+      "sha256": "449a0588aeeb0ddcf3ea9e5eb3707c1044779915edad26f0e279d0363e7db0e4"
+    },
+    {
+      "file": "art-source/world/materials/concrete_slab_3x1.5/Low/T_concrete_slab_3x1.5_Normal.png",
+      "sha256": "57ddc6947767369b4c4cfea0a9e46650220c4e4a25780ef01be2937f8ca48d8c"
+    },
+    {
+      "file": "art-source/world/materials/concrete_slab_3x1.5/Low/T_concrete_slab_3x1.5_Var.png",
+      "sha256": "12ca598a8161b488ae713ba0c83267649d93cc443828d041bd116b33ecd05d54"
+    },
+    {
+      "file": "art-source/world/materials/concrete_slab_3x1.5/Medium/T_concrete_slab_3x1.5_BaseColor.png",
+      "sha256": "522e4c5ea1a896ff5d86eb98a37da7c1d0679731425f7208ba85695b434da1e3"
+    },
+    {
+      "file": "art-source/world/materials/concrete_slab_3x1.5/Medium/T_concrete_slab_3x1.5_MaskMap.png",
+      "sha256": "976e8d84fb3db0014449361fdad657954d38694f3fc7f868b4e5c52b720ed3c2"
+    },
+    {
+      "file": "art-source/world/materials/concrete_slab_3x1.5/Medium/T_concrete_slab_3x1.5_Normal.png",
+      "sha256": "f7856d80badf6e0aaa84d0b8a7cbd147f955f44a5e38a4561aa8318be26e7b14"
+    },
+    {
+      "file": "art-source/world/materials/concrete_slab_3x1.5/Medium/T_concrete_slab_3x1.5_Var.png",
+      "sha256": "11050515c40ad17281d3048aaf20cdfe9bcc54695bd04a271f945338e24736f6"
+    },
+    {
+      "file": "art-source/world/materials/container_corrugation/High/T_container_corrugation_BaseColor.png",
+      "sha256": "7ef7150a1777287bfa19477f8608fba0b1d24054b10562bdaac878dd18f72094"
+    },
+    {
+      "file": "art-source/world/materials/container_corrugation/High/T_container_corrugation_MaskMap.png",
+      "sha256": "4a0d5e5fa391779f256c500aab4ee43a99c6075e800040bde97fc10b6da5daf0"
+    },
+    {
+      "file": "art-source/world/materials/container_corrugation/High/T_container_corrugation_Normal.png",
+      "sha256": "779c552003e294726f65dc0cbcc9aa478ba3e6dd55e231b20f6c8e4e02486dc2"
+    },
+    {
+      "file": "art-source/world/materials/container_corrugation/High/T_container_corrugation_Var.png",
+      "sha256": "6c048b1035f3ca6a49811b8ac1b9237d39a320589fae97acab7175b6589bb378"
+    },
+    {
+      "file": "art-source/world/materials/container_corrugation/Low/T_container_corrugation_BaseColor.png",
+      "sha256": "c1cf3621b012cefd07bddc0f4e4468f49a347345ae1986a85146fad001b77d80"
+    },
+    {
+      "file": "art-source/world/materials/container_corrugation/Low/T_container_corrugation_MaskMap.png",
+      "sha256": "9035e56fe38c20b3739ac852432fc5be092ea1cb05f83f7df9c412b318985586"
+    },
+    {
+      "file": "art-source/world/materials/container_corrugation/Low/T_container_corrugation_Normal.png",
+      "sha256": "2d61df418f128152ade8ec3a11da73aa5f223da96277c7e9743b438523f3b5f4"
+    },
+    {
+      "file": "art-source/world/materials/container_corrugation/Low/T_container_corrugation_Var.png",
+      "sha256": "b3d56e516efa57defaf0dc4d867949ea1d67fd5960676a5cd26f57987b4feb8a"
+    },
+    {
+      "file": "art-source/world/materials/container_corrugation/Medium/T_container_corrugation_BaseColor.png",
+      "sha256": "88f882d468e48c79122c5eb0479b4d996f4077eec461e30b697dd214d230475c"
+    },
+    {
+      "file": "art-source/world/materials/container_corrugation/Medium/T_container_corrugation_MaskMap.png",
+      "sha256": "bb45993c90df6ddc1ecda96ad9acb93d684bf540120a09ddf18426c611cb29fb"
+    },
+    {
+      "file": "art-source/world/materials/container_corrugation/Medium/T_container_corrugation_Normal.png",
+      "sha256": "ba617d4a7640e645d3e70f25553a5f438f2832e91f556b615b0d43cd960dbed4"
+    },
+    {
+      "file": "art-source/world/materials/container_corrugation/Medium/T_container_corrugation_Var.png",
+      "sha256": "adfe3e6e01a08dd0f609ee6c0e26556bcb8c1e1319205bbbef1391ae959ef6b3"
+    },
+    {
+      "file": "art-source/world/materials/curtain_folds/High/T_curtain_folds_BaseColor.png",
+      "sha256": "41235909977a1e46c0337b3c34135153af556e60ac11b189f010222726c6a44c"
+    },
+    {
+      "file": "art-source/world/materials/curtain_folds/High/T_curtain_folds_MaskMap.png",
+      "sha256": "767797bf352a3d7b1e29e73a856b0829eaaba471bdad3b8a9bd43f6729cc62a4"
+    },
+    {
+      "file": "art-source/world/materials/curtain_folds/High/T_curtain_folds_Normal.png",
+      "sha256": "9acc65ba06192f7bd65bb5d4252a17fee2c6ed32ec0194732f92f919191d3ed4"
+    },
+    {
+      "file": "art-source/world/materials/curtain_folds/High/T_curtain_folds_Var.png",
+      "sha256": "3d47b3645742f52b3f0dfff4d86696a9fa697065e3d0bd33aac437aa94986b8f"
+    },
+    {
+      "file": "art-source/world/materials/curtain_folds/Low/T_curtain_folds_BaseColor.png",
+      "sha256": "695148970faa4cbe6ebc474c2d76d020dd2d362aa13b49e4cf62e5b734548cc4"
+    },
+    {
+      "file": "art-source/world/materials/curtain_folds/Low/T_curtain_folds_MaskMap.png",
+      "sha256": "5d86694fbef7c1a0e84e4385e54401a7f75dfeaf20edf7eab3857c311f327a51"
+    },
+    {
+      "file": "art-source/world/materials/curtain_folds/Low/T_curtain_folds_Normal.png",
+      "sha256": "3384afff270a7ded9ffaabeb5f2c2ece954484dc06fbf75f766d9a2064322938"
+    },
+    {
+      "file": "art-source/world/materials/curtain_folds/Low/T_curtain_folds_Var.png",
+      "sha256": "ef309398dd361d5adb556b30dbba4a8ec718a9c1d517f1e1ff4d39bb4c67ed31"
+    },
+    {
+      "file": "art-source/world/materials/curtain_folds/Medium/T_curtain_folds_BaseColor.png",
+      "sha256": "07619b66a52aeb2d4b6cdc3b15ffc8e712fe21b167957b65902b565fb2289577"
+    },
+    {
+      "file": "art-source/world/materials/curtain_folds/Medium/T_curtain_folds_MaskMap.png",
+      "sha256": "3ed5fb37714b4144ddc9e075d6cdccd00d60ad57381f77b162c1dab01d13cafa"
+    },
+    {
+      "file": "art-source/world/materials/curtain_folds/Medium/T_curtain_folds_Normal.png",
+      "sha256": "39ffe651e69804ac1838af87a68ee579ce982b5eda3cd48dd8b3a5b3e4eef5e1"
+    },
+    {
+      "file": "art-source/world/materials/curtain_folds/Medium/T_curtain_folds_Var.png",
+      "sha256": "0c8a92ad7770a6a0cf65193c9f5279d7710ac63e5a0d370fec9566e017a577d3"
+    },
+    {
+      "file": "art-source/world/materials/facade_atlas/High/T_facade_atlas_BaseColor.png",
+      "sha256": "fa1dca15f04b01bb172ee6c18cd2c448f1ace330f5022ed78c00ac310193e1f1"
+    },
+    {
+      "file": "art-source/world/materials/facade_atlas/High/T_facade_atlas_MaskMap.png",
+      "sha256": "8cdd252129c4b4d8504e15c938f4c929d97317b21b31be16e877b780157f0fc5"
+    },
+    {
+      "file": "art-source/world/materials/facade_atlas/High/T_facade_atlas_Normal.png",
+      "sha256": "932092d540854f23d398a34b7b56b9a5e52dff7ae5500b6512dd1a61da758013"
+    },
+    {
+      "file": "art-source/world/materials/facade_atlas/High/T_facade_atlas_Var.png",
+      "sha256": "881ad02d7f3961d3072977ef42177000409662566de718323fd6af4af3d18236"
+    },
+    {
+      "file": "art-source/world/materials/facade_atlas/Low/T_facade_atlas_BaseColor.png",
+      "sha256": "30949953c46b3a466f5a35d0db5b5ecfc78f2b9b037015fe3783d20aff01ad28"
+    },
+    {
+      "file": "art-source/world/materials/facade_atlas/Low/T_facade_atlas_MaskMap.png",
+      "sha256": "a94c568e466343108a99fd4d4d9725d171e0de55f45380187efda1b4414832df"
+    },
+    {
+      "file": "art-source/world/materials/facade_atlas/Low/T_facade_atlas_Normal.png",
+      "sha256": "5c9ce3324a08f715439f5c3284b2015266f68c0119b371507a26e9efade542eb"
+    },
+    {
+      "file": "art-source/world/materials/facade_atlas/Low/T_facade_atlas_Var.png",
+      "sha256": "204d38e85127179f9058833c3cb96e262c5f976b9e6f5c4c3d3f6c68846308b0"
+    },
+    {
+      "file": "art-source/world/materials/facade_atlas/Medium/T_facade_atlas_BaseColor.png",
+      "sha256": "6866288ae8298fa2d5024ab2fa15ba728b57bb3797b2467ce715cd27a78ecb43"
+    },
+    {
+      "file": "art-source/world/materials/facade_atlas/Medium/T_facade_atlas_MaskMap.png",
+      "sha256": "ebf1a5f702a9658cf78b2dadc9f66ca2a3e38ec327e56509145c675e6281d270"
+    },
+    {
+      "file": "art-source/world/materials/facade_atlas/Medium/T_facade_atlas_Normal.png",
+      "sha256": "c7f4c609837484bc386d6a5c25772e1f387ceb9b8e01c39273e249c52c9006be"
+    },
+    {
+      "file": "art-source/world/materials/facade_atlas/Medium/T_facade_atlas_Var.png",
+      "sha256": "97bfb7850325c763c62ffd3deb39f71eefd9c2589d15174bc43c16a6563dc759"
+    },
+    {
+      "file": "art-source/world/materials/facade_far/High/T_facade_far_BaseColor.png",
+      "sha256": "8d125e80d82e2b2e01e7e0a39d970e79e373320305511872eb61c32188ee21d6"
+    },
+    {
+      "file": "art-source/world/materials/facade_far/High/T_facade_far_MaskMap.png",
+      "sha256": "589150172741c5dd34af687c126b6c49b9501724c883d118877a9dbada514ac2"
+    },
+    {
+      "file": "art-source/world/materials/facade_far/High/T_facade_far_Normal.png",
+      "sha256": "993b8f611ee0ffa6770226e67db82c453e9753a4a927d06cda56edf7c1d968e4"
+    },
+    {
+      "file": "art-source/world/materials/facade_far/High/T_facade_far_Var.png",
+      "sha256": "e76a648dd343cb2ca15fb78927de74ab6967bd7621c3db00dc034efddeff0ff1"
+    },
+    {
+      "file": "art-source/world/materials/facade_far/Low/T_facade_far_BaseColor.png",
+      "sha256": "a1a95076f446f853af4c45951c4f35fb277621e4e0d90cb64838bc7e8e831f0d"
+    },
+    {
+      "file": "art-source/world/materials/facade_far/Low/T_facade_far_MaskMap.png",
+      "sha256": "589150172741c5dd34af687c126b6c49b9501724c883d118877a9dbada514ac2"
+    },
+    {
+      "file": "art-source/world/materials/facade_far/Low/T_facade_far_Normal.png",
+      "sha256": "993b8f611ee0ffa6770226e67db82c453e9753a4a927d06cda56edf7c1d968e4"
+    },
+    {
+      "file": "art-source/world/materials/facade_far/Low/T_facade_far_Var.png",
+      "sha256": "e76a648dd343cb2ca15fb78927de74ab6967bd7621c3db00dc034efddeff0ff1"
+    },
+    {
+      "file": "art-source/world/materials/facade_far/Medium/T_facade_far_BaseColor.png",
+      "sha256": "f563e67f8da3777409dcda6588cdbfc60202ebbf90f1f8ad37dac994f8ec3790"
+    },
+    {
+      "file": "art-source/world/materials/facade_far/Medium/T_facade_far_MaskMap.png",
+      "sha256": "589150172741c5dd34af687c126b6c49b9501724c883d118877a9dbada514ac2"
+    },
+    {
+      "file": "art-source/world/materials/facade_far/Medium/T_facade_far_Normal.png",
+      "sha256": "993b8f611ee0ffa6770226e67db82c453e9753a4a927d06cda56edf7c1d968e4"
+    },
+    {
+      "file": "art-source/world/materials/facade_far/Medium/T_facade_far_Var.png",
+      "sha256": "e76a648dd343cb2ca15fb78927de74ab6967bd7621c3db00dc034efddeff0ff1"
+    },
+    {
+      "file": "art-source/world/materials/fence_concrete/High/T_fence_concrete_BaseColor.png",
+      "sha256": "719a32ac543f061fdbd3a41105c05d8d9edf2ca4cee00ec61711ce036cfd5c45"
+    },
+    {
+      "file": "art-source/world/materials/fence_concrete/High/T_fence_concrete_MaskMap.png",
+      "sha256": "ad55ff71b950c0d13f6bfce7ffe2bd987b3e0bcc49d5b1a47c8862c5ddff1538"
+    },
+    {
+      "file": "art-source/world/materials/fence_concrete/High/T_fence_concrete_Normal.png",
+      "sha256": "a3c8f0347b43a1408ad562672be8c9ba52181be0316c4c4dcf1acf27b427901c"
+    },
+    {
+      "file": "art-source/world/materials/fence_concrete/High/T_fence_concrete_Var.png",
+      "sha256": "5ae70608bba104d57081289fad32f97778168cb8ea77dac367a6184c67d6952f"
+    },
+    {
+      "file": "art-source/world/materials/fence_concrete/Low/T_fence_concrete_BaseColor.png",
+      "sha256": "b6bd73964a66b68fdf75604bcf6faad77605278c66c6278a79c4aac0fc83474b"
+    },
+    {
+      "file": "art-source/world/materials/fence_concrete/Low/T_fence_concrete_MaskMap.png",
+      "sha256": "2b63c352797176355f3530fe2af5d7d46d756e08a7ed0aa2ee818812e3b6496d"
+    },
+    {
+      "file": "art-source/world/materials/fence_concrete/Low/T_fence_concrete_Normal.png",
+      "sha256": "8facd02a92e45fd008b580d3efb0f12b6b75e5b855f80142d2bb687f76f97534"
+    },
+    {
+      "file": "art-source/world/materials/fence_concrete/Low/T_fence_concrete_Var.png",
+      "sha256": "289732c3ca908d20d203e79bfb5a9e4ae0a6eb1d06a52c159a1b940cca61ff0e"
+    },
+    {
+      "file": "art-source/world/materials/fence_concrete/Medium/T_fence_concrete_BaseColor.png",
+      "sha256": "cc385a413355a123ddb17fead564bf4c34249baf63d845416aaee5e3c6a1ca45"
+    },
+    {
+      "file": "art-source/world/materials/fence_concrete/Medium/T_fence_concrete_MaskMap.png",
+      "sha256": "8ceb75a03c402738d99100b17f576a0587c1a600544f1aa271f38ada5847a0fa"
+    },
+    {
+      "file": "art-source/world/materials/fence_concrete/Medium/T_fence_concrete_Normal.png",
+      "sha256": "79258e0f8dda78c6b7e2834cbc6847cbcb193c6595e4ee5f217f8bbba194d0ea"
+    },
+    {
+      "file": "art-source/world/materials/fence_concrete/Medium/T_fence_concrete_Var.png",
+      "sha256": "1b31e395efb58fb6194dc65c336ece459c817a10d0cf61848f6487a10a1cd113"
+    },
+    {
+      "file": "art-source/world/materials/fire_station/High/T_fire_station_BaseColor.png",
+      "sha256": "b0a44c59835e44d91f0736aa102ffcbef61e8b21ff2debec593e432b4ca959b8"
+    },
+    {
+      "file": "art-source/world/materials/fire_station/High/T_fire_station_MaskMap.png",
+      "sha256": "fe2589d2404b4d2044a700fe45df48220bf10d35ec11f14c03fc7d86836ab4fe"
+    },
+    {
+      "file": "art-source/world/materials/fire_station/High/T_fire_station_Normal.png",
+      "sha256": "9730d55499f062b63d92e95f56637478a396e9e05e496381b4d2b91726dfcbcd"
+    },
+    {
+      "file": "art-source/world/materials/fire_station/High/T_fire_station_Var.png",
+      "sha256": "4bbaa35bbfcb4cb1cbecb31e82ed21e076dae2eae55bbf4e12fe2ad0819a1aa4"
+    },
+    {
+      "file": "art-source/world/materials/fire_station/Low/T_fire_station_BaseColor.png",
+      "sha256": "8718b8a4ed69bce1f5e1cc7f298e839390a80194026c75097ba46265cac508fb"
+    },
+    {
+      "file": "art-source/world/materials/fire_station/Low/T_fire_station_MaskMap.png",
+      "sha256": "4ccacda6be649cb18ebedb5f4cec8df05b4aeadc6aaafa0453794c8e88efaf91"
+    },
+    {
+      "file": "art-source/world/materials/fire_station/Low/T_fire_station_Normal.png",
+      "sha256": "d3adb4eeb4a7eb90cfd8877405e41a447c7766f6c6efc22a6ba50ebfa46a8b1f"
+    },
+    {
+      "file": "art-source/world/materials/fire_station/Low/T_fire_station_Var.png",
+      "sha256": "96b225da408f749ae2f37978009f221b750d14b654dbfc5cd6cda6b103826746"
+    },
+    {
+      "file": "art-source/world/materials/fire_station/Medium/T_fire_station_BaseColor.png",
+      "sha256": "b94b5d922cefc0c9505fe725514490518b2974d49e6c60a28e5fc7339479fb96"
+    },
+    {
+      "file": "art-source/world/materials/fire_station/Medium/T_fire_station_MaskMap.png",
+      "sha256": "7231a6620a863fc2365afcad27ad9fc102aa9b64c17609de16f4156433e5002a"
+    },
+    {
+      "file": "art-source/world/materials/fire_station/Medium/T_fire_station_Normal.png",
+      "sha256": "210b04f07be17bbc8547f6231f0192acace04c6c97f8592e82d81867e42d466a"
+    },
+    {
+      "file": "art-source/world/materials/fire_station/Medium/T_fire_station_Var.png",
+      "sha256": "fad4018995d8d913eb54d727727e16a2534bb3adfb5710c5dad4dbbcc7e0caa9"
+    },
+    {
+      "file": "art-source/world/materials/grass_verge/High/T_grass_verge_BaseColor.png",
+      "sha256": "eadf7a68f1178975a31fe581183b37f07472acf31722e34aef8271c6c88b5b39"
+    },
+    {
+      "file": "art-source/world/materials/grass_verge/High/T_grass_verge_BaseColor_late_autumn.png",
+      "sha256": "d137a38b32ff3994ec0da023f1ec46a2f45c914a5a537060df07ff01dfebf4fb"
+    },
+    {
+      "file": "art-source/world/materials/grass_verge/High/T_grass_verge_MaskMap.png",
+      "sha256": "5cfa9dbce1ec52aa0e57374890f8befc47a956b91b51cc66ce5f5a84fff459d7"
+    },
+    {
+      "file": "art-source/world/materials/grass_verge/High/T_grass_verge_Normal.png",
+      "sha256": "c84a94f8c7734fbe3b324b00c30e7c788b17817503a1e0f2879c87325fbe27be"
+    },
+    {
+      "file": "art-source/world/materials/grass_verge/High/T_grass_verge_Var.png",
+      "sha256": "7da609d7bb63028e0ad89e3a2053cdeba1bcd5b9f120a2bb16f8610f8adfa667"
+    },
+    {
+      "file": "art-source/world/materials/grass_verge/Low/T_grass_verge_BaseColor.png",
+      "sha256": "df214d21d72d8e500b49ae8c1d2b3ae3f9fe0036e401a9fe7ecb70e9ec8b3ac3"
+    },
+    {
+      "file": "art-source/world/materials/grass_verge/Low/T_grass_verge_BaseColor_late_autumn.png",
+      "sha256": "f8aa5085dd4fdb64f34f48526e98b50d1cb29e37385ced631d22ffe396d81dc6"
+    },
+    {
+      "file": "art-source/world/materials/grass_verge/Low/T_grass_verge_MaskMap.png",
+      "sha256": "bac52aeb2020926f45949657cc8073ffd922a95e2fab24471301d561f72c9b96"
+    },
+    {
+      "file": "art-source/world/materials/grass_verge/Low/T_grass_verge_Normal.png",
+      "sha256": "db1bfea570e50f36f489171decdf6f3d42d5fd060ec7b92d883b146e7c11bec1"
+    },
+    {
+      "file": "art-source/world/materials/grass_verge/Low/T_grass_verge_Var.png",
+      "sha256": "27cafb569128933137cc3567694b5ea4fdacbde36d90056f7adee8763ba8a149"
+    },
+    {
+      "file": "art-source/world/materials/grass_verge/Medium/T_grass_verge_BaseColor.png",
+      "sha256": "a2d107da4cc05f928fdbf554f1c2bbec65670040597f392bca18838adb00989e"
+    },
+    {
+      "file": "art-source/world/materials/grass_verge/Medium/T_grass_verge_BaseColor_late_autumn.png",
+      "sha256": "da8a04c8646f8709c7551745566bb4fc5c719f4d2cddf06b1cd66e3f50daec84"
+    },
+    {
+      "file": "art-source/world/materials/grass_verge/Medium/T_grass_verge_MaskMap.png",
+      "sha256": "95ba3cca09aad76e77adb8f448a41047074830d10e96e2e55648b03546f62931"
+    },
+    {
+      "file": "art-source/world/materials/grass_verge/Medium/T_grass_verge_Normal.png",
+      "sha256": "776c4dddcc5df6aff1a4ca2e27f00d2afff02e765ef176018dd7ebc3f921fbee"
+    },
+    {
+      "file": "art-source/world/materials/grass_verge/Medium/T_grass_verge_Var.png",
+      "sha256": "ec8464c265d0f62e4d077dd039fe9d633cceaa4b64cb2669c95f446de2663edb"
+    },
+    {
+      "file": "art-source/world/materials/gravel_compacted/High/T_gravel_compacted_BaseColor.png",
+      "sha256": "a3f35e524500977b2ab44931a71391b75928f850a5fbe86cafd3853c957f09e6"
+    },
+    {
+      "file": "art-source/world/materials/gravel_compacted/High/T_gravel_compacted_MaskMap.png",
+      "sha256": "38e3b28f514e4ce7903534e1a0e8fc92c037931173e117856d7558d8b16f3453"
+    },
+    {
+      "file": "art-source/world/materials/gravel_compacted/High/T_gravel_compacted_Normal.png",
+      "sha256": "440f1b0781b3236fe32b9c9ac0dcceee0842c1207723a1236299d588d406c9c7"
+    },
+    {
+      "file": "art-source/world/materials/gravel_compacted/High/T_gravel_compacted_Var.png",
+      "sha256": "c6f6a4d7c4059c4946cf22be418da45db67e94caaa16d22d48c840398419fc2c"
+    },
+    {
+      "file": "art-source/world/materials/gravel_compacted/Low/T_gravel_compacted_BaseColor.png",
+      "sha256": "885b2a474bb1b755d8b8d6e433a264c715294d377fc58c4e2c16611bc5236d42"
+    },
+    {
+      "file": "art-source/world/materials/gravel_compacted/Low/T_gravel_compacted_MaskMap.png",
+      "sha256": "90ed449c57934b5197a3ea795dd97fc64eb4099609bde56fd5bdc64fc7118cdb"
+    },
+    {
+      "file": "art-source/world/materials/gravel_compacted/Low/T_gravel_compacted_Normal.png",
+      "sha256": "b575c5deb61a8236f54f8df4617fde1824ea49c7f04175b4e0b71d49c3ea29ed"
+    },
+    {
+      "file": "art-source/world/materials/gravel_compacted/Low/T_gravel_compacted_Var.png",
+      "sha256": "e4dbd5ab600c04297bf824d4c663601099891c583bff43c70f4483ee575e26e8"
+    },
+    {
+      "file": "art-source/world/materials/gravel_compacted/Medium/T_gravel_compacted_BaseColor.png",
+      "sha256": "c76ff4574573b703e6677cb3e25fd75fd7db9eb80afe2c5771b34ee558020d0f"
+    },
+    {
+      "file": "art-source/world/materials/gravel_compacted/Medium/T_gravel_compacted_MaskMap.png",
+      "sha256": "692eed8aa8b846464f8926656feb1de6d77cac0d237223ae4f2e546173083f0c"
+    },
+    {
+      "file": "art-source/world/materials/gravel_compacted/Medium/T_gravel_compacted_Normal.png",
+      "sha256": "ed407fc7e4e02766a2055d9baac56566df779863ff10759a1a40dcc081e73303"
+    },
+    {
+      "file": "art-source/world/materials/gravel_compacted/Medium/T_gravel_compacted_Var.png",
+      "sha256": "d8be28c8d11d3c86ab5f0fd204848d756d198ec7af4eb85c6b2465a90037b37e"
+    },
+    {
+      "file": "art-source/world/materials/hedge_foliage/High/T_hedge_foliage_BaseColor.png",
+      "sha256": "8fcfcfbee3f5cbbd05c0c8da54cc44de3b3fb8e9d7ad30f34f64dd4dcd104166"
+    },
+    {
+      "file": "art-source/world/materials/hedge_foliage/High/T_hedge_foliage_MaskMap.png",
+      "sha256": "d7161f9811df61937a8ff4adf92a7ef2206fbe0ff6ef4d347b946e6fa027fbbd"
+    },
+    {
+      "file": "art-source/world/materials/hedge_foliage/High/T_hedge_foliage_Normal.png",
+      "sha256": "fbf5270484e3238a573f589fd74f23b499d3e10cc29151189c2a2bafd3a98dc2"
+    },
+    {
+      "file": "art-source/world/materials/hedge_foliage/High/T_hedge_foliage_Var.png",
+      "sha256": "4f725e8306acf74863f94c9bbab51626ae8468e5ada4dc5e79ee2bd82eddeea0"
+    },
+    {
+      "file": "art-source/world/materials/hedge_foliage/Low/T_hedge_foliage_BaseColor.png",
+      "sha256": "03e3fc32c6f44c0176fdf1c5280c6e646efb51af9c7562ba7049c57ecc0631b5"
+    },
+    {
+      "file": "art-source/world/materials/hedge_foliage/Low/T_hedge_foliage_MaskMap.png",
+      "sha256": "38ed2bb1f688a617d9340b55a024dbe79bf017fd0cef628a9efa2f5b9e8ac058"
+    },
+    {
+      "file": "art-source/world/materials/hedge_foliage/Low/T_hedge_foliage_Normal.png",
+      "sha256": "82bf848e39ac0840f77861eb3f5896c146010f2d72327016201bc099c0878663"
+    },
+    {
+      "file": "art-source/world/materials/hedge_foliage/Low/T_hedge_foliage_Var.png",
+      "sha256": "8d9de8f4841b546fa105d2179faba5d030278a0f3dbcc32069fd02e7baffc5d1"
+    },
+    {
+      "file": "art-source/world/materials/hedge_foliage/Medium/T_hedge_foliage_BaseColor.png",
+      "sha256": "73ff49af61143fdee797d005d8df23e8b5b18d1ae447974abab6a648b061bcad"
+    },
+    {
+      "file": "art-source/world/materials/hedge_foliage/Medium/T_hedge_foliage_MaskMap.png",
+      "sha256": "5dd061653c2e6a76c0e821e5dd8eec2a13009126ee75088a645d4579d4298d16"
+    },
+    {
+      "file": "art-source/world/materials/hedge_foliage/Medium/T_hedge_foliage_Normal.png",
+      "sha256": "cfb5b63fe94d0aedb1b2984882dd58c3280ddcfb3ba8f6aee61fc6139d09aa35"
+    },
+    {
+      "file": "art-source/world/materials/hedge_foliage/Medium/T_hedge_foliage_Var.png",
+      "sha256": "486027a9af4889f41c577fac2e4c58999f44e837bf9704a5a1c67ff061f15805"
+    },
+    {
+      "file": "art-source/world/materials/kerb_concrete_1m/High/T_kerb_concrete_1m_BaseColor.png",
+      "sha256": "1f14fd6e58b0d1cc7a12279fb208334d36d5cd55f2a136a95dc94057df52b34b"
+    },
+    {
+      "file": "art-source/world/materials/kerb_concrete_1m/High/T_kerb_concrete_1m_MaskMap.png",
+      "sha256": "bb8f9f2fafdff0edb58619faeb819fff9c52284534c44cda3b5ba784b61e07d1"
+    },
+    {
+      "file": "art-source/world/materials/kerb_concrete_1m/High/T_kerb_concrete_1m_Normal.png",
+      "sha256": "5cf007e9ff4e4fa83b34fea90dc81958b19061b05587fca84754a032d95a66d4"
+    },
+    {
+      "file": "art-source/world/materials/kerb_concrete_1m/High/T_kerb_concrete_1m_Var.png",
+      "sha256": "5cd3cb0faecde4e65d6b9bb007792d0349a81496ebbbc333338292422ab88676"
+    },
+    {
+      "file": "art-source/world/materials/kerb_concrete_1m/Low/T_kerb_concrete_1m_BaseColor.png",
+      "sha256": "d41ac99eb91a3d0df98d282d727bb4245cd8e4e1ca6dc29adbb03bcc8e3b3862"
+    },
+    {
+      "file": "art-source/world/materials/kerb_concrete_1m/Low/T_kerb_concrete_1m_MaskMap.png",
+      "sha256": "72e0d0ee5fe9a00996d5d574c0e913caa14c3ca00ae85a4402318fac99930ac7"
+    },
+    {
+      "file": "art-source/world/materials/kerb_concrete_1m/Low/T_kerb_concrete_1m_Normal.png",
+      "sha256": "66bfc2017c17f6ad76fe2c93ee11037cd37e849fef46c083ca8262c1b5498306"
+    },
+    {
+      "file": "art-source/world/materials/kerb_concrete_1m/Low/T_kerb_concrete_1m_Var.png",
+      "sha256": "454111efb66c112b64504de6f90fe6bc6328935bdc43547cfc875d27349d8a91"
+    },
+    {
+      "file": "art-source/world/materials/kerb_concrete_1m/Medium/T_kerb_concrete_1m_BaseColor.png",
+      "sha256": "83a212b09a0d8cddc10ef46bc77bfc1fcdf95d14a22a20cbc18814b8ec872cca"
+    },
+    {
+      "file": "art-source/world/materials/kerb_concrete_1m/Medium/T_kerb_concrete_1m_MaskMap.png",
+      "sha256": "6638c3f99ba707f585b09bcec8eb75fb2f58193ac683f79d6856509c8d492fb4"
+    },
+    {
+      "file": "art-source/world/materials/kerb_concrete_1m/Medium/T_kerb_concrete_1m_Normal.png",
+      "sha256": "4755b8a81cbc1eaecf298746fa59d07435e8ffcda69401eb0cf5456bc3b1e5f0"
+    },
+    {
+      "file": "art-source/world/materials/kerb_concrete_1m/Medium/T_kerb_concrete_1m_Var.png",
+      "sha256": "785b4339796c795b630eab4dc87ea5fb6b226dc448baca6e12a5f991d2d073d9"
+    },
+    {
+      "file": "art-source/world/materials/large_panel_joints/High/T_large_panel_joints_BaseColor.png",
+      "sha256": "b31f2bfade4664a70b34f557093a3aa7451b3b0851c815150de0bb4bf3b4db8e"
+    },
+    {
+      "file": "art-source/world/materials/large_panel_joints/High/T_large_panel_joints_MaskMap.png",
+      "sha256": "3ec0e2de4f76c17b065f30d9c73b86acbee0e0e5b65ae5183f1a37637c10253a"
+    },
+    {
+      "file": "art-source/world/materials/large_panel_joints/High/T_large_panel_joints_Normal.png",
+      "sha256": "1147f04b4d996d78778efaadcd778609b9d900c3fc7348379c008d98ee7d9cbd"
+    },
+    {
+      "file": "art-source/world/materials/large_panel_joints/High/T_large_panel_joints_Var.png",
+      "sha256": "6d9a4d7b29139827f77a1bdce3a737a13d14ab332952279d6f8094f4d67b06e2"
+    },
+    {
+      "file": "art-source/world/materials/large_panel_joints/Low/T_large_panel_joints_BaseColor.png",
+      "sha256": "36ccf024e11911312b494033d41285465b1019a10ebec47e3e0948c159183ca2"
+    },
+    {
+      "file": "art-source/world/materials/large_panel_joints/Low/T_large_panel_joints_MaskMap.png",
+      "sha256": "2e56fd21d4d2ffea9b88fc3f15782f10c1d3071e938b9a28d2a278a948228275"
+    },
+    {
+      "file": "art-source/world/materials/large_panel_joints/Low/T_large_panel_joints_Normal.png",
+      "sha256": "e2e880ce2f20fad50e7a3265f01d0c146db925519b16f3ca0a438b194eec8ef0"
+    },
+    {
+      "file": "art-source/world/materials/large_panel_joints/Low/T_large_panel_joints_Var.png",
+      "sha256": "c2e44c907e2f3967889cdbcd9cdf1805e6716947942398765bc6f5029c3a6c1c"
+    },
+    {
+      "file": "art-source/world/materials/large_panel_joints/Medium/T_large_panel_joints_BaseColor.png",
+      "sha256": "21653f8f5d9598943a1ec0d65c5351f71717f8e2daab596a8ad3464793a93b9e"
+    },
+    {
+      "file": "art-source/world/materials/large_panel_joints/Medium/T_large_panel_joints_MaskMap.png",
+      "sha256": "eaf9866ee7c88f18f7b9c0cb36d9023163d1c202d26147d09c16f8e6a09f0ce3"
+    },
+    {
+      "file": "art-source/world/materials/large_panel_joints/Medium/T_large_panel_joints_Normal.png",
+      "sha256": "dc8df334d8e760bcbcab251867667176221e6338dc836cb6fc5a824896594246"
+    },
+    {
+      "file": "art-source/world/materials/large_panel_joints/Medium/T_large_panel_joints_Var.png",
+      "sha256": "1598a338ebc36b3004ef1f055e097ed1c3a4aff5d6d9e7398cadc61f804242a6"
+    },
+    {
+      "file": "art-source/world/materials/macro_variation/High/T_macro_variation.png",
+      "sha256": "0bf72426be52ce00642267f3f5a5a11256c82802b52effcf797d4964743791a7"
+    },
+    {
+      "file": "art-source/world/materials/macro_variation/Low/T_macro_variation.png",
+      "sha256": "bb17d7876f08e59d1a67d92c39d25e4f84294c76c42e08f6ff36f442f5d95de4"
+    },
+    {
+      "file": "art-source/world/materials/macro_variation/Medium/T_macro_variation.png",
+      "sha256": "2806efe9df2a8b951d05dc89e9b2fa1eb85b28030655be5eabd828a6db872ec7"
+    },
+    {
+      "file": "art-source/world/materials/materials_spec.json",
+      "sha256": "20bce26294c2a2b40e1dd2db49320a30e563fc5209562031b8b3a39d63c45fd6"
+    },
+    {
+      "file": "art-source/world/materials/noise_cassette/High/T_noise_cassette_BaseColor.png",
+      "sha256": "c5249c18471da7bc105ca094e01657db16c6a94fa2a62bf2102f29d8e999448e"
+    },
+    {
+      "file": "art-source/world/materials/noise_cassette/High/T_noise_cassette_MaskMap.png",
+      "sha256": "e5566805512e2554ed3b10c1892c97899b9e664e27afc4ce082f552c077333af"
+    },
+    {
+      "file": "art-source/world/materials/noise_cassette/High/T_noise_cassette_Normal.png",
+      "sha256": "ec8298345abb22b3c4b639036bbfabf8e15a9faac374a4154c678155b8c4fb0c"
+    },
+    {
+      "file": "art-source/world/materials/noise_cassette/High/T_noise_cassette_Var.png",
+      "sha256": "473bb0b702ab5acfab8219d46c7559b7f2289f1387cfe6e017fbf867563730d8"
+    },
+    {
+      "file": "art-source/world/materials/noise_cassette/Low/T_noise_cassette_BaseColor.png",
+      "sha256": "be3188dba88db2e0c9691437fd001c31af90ca18fa0fac387e9819893363ea7a"
+    },
+    {
+      "file": "art-source/world/materials/noise_cassette/Low/T_noise_cassette_MaskMap.png",
+      "sha256": "8568a8e1582bbbc8933b76f4f3d6a988fd030513538051646e76b543250c67fe"
+    },
+    {
+      "file": "art-source/world/materials/noise_cassette/Low/T_noise_cassette_Normal.png",
+      "sha256": "4b4e7dbeea0c8a4d17158cbf4ff3231dbf1db373dd2d551f58d16de89062df50"
+    },
+    {
+      "file": "art-source/world/materials/noise_cassette/Low/T_noise_cassette_Var.png",
+      "sha256": "5b620934f1898a4869036d6a56bbd327d24dc2d770f7bceb0c1098ab7d000a05"
+    },
+    {
+      "file": "art-source/world/materials/noise_cassette/Medium/T_noise_cassette_BaseColor.png",
+      "sha256": "d74434321ac7b6aac0b122a8bf764813b7935f3b47981cb3605a5d65d764a41e"
+    },
+    {
+      "file": "art-source/world/materials/noise_cassette/Medium/T_noise_cassette_MaskMap.png",
+      "sha256": "63377701ac1543624ccf83d60359742c20f873ac48ec5a869aa15ef6843e3bdf"
+    },
+    {
+      "file": "art-source/world/materials/noise_cassette/Medium/T_noise_cassette_Normal.png",
+      "sha256": "d0293eb3bdf7223e4994fc51f208e4ae06f5c3330b77979040eec9809533b58e"
+    },
+    {
+      "file": "art-source/world/materials/noise_cassette/Medium/T_noise_cassette_Var.png",
+      "sha256": "621b7750b80f5adbec41c21a8c59e73b9224e50aad5359ea67a034c8e53ae56f"
+    },
+    {
+      "file": "art-source/world/materials/oil_stain_alpha/High/T_oil_stain_alpha_BaseColor.png",
+      "sha256": "684c01bdd5b175877676c6bdc3cc942719dad39505f496e656faae97571983a6"
+    },
+    {
+      "file": "art-source/world/materials/oil_stain_alpha/High/T_oil_stain_alpha_MaskMap.png",
+      "sha256": "d2a77aad13ac1ff75c950735b3277a38c365ed8d01a481ddd0af5f26cd1750f0"
+    },
+    {
+      "file": "art-source/world/materials/oil_stain_alpha/High/T_oil_stain_alpha_Normal.png",
+      "sha256": "d4ba394da3e03d820f9b4f29740f766a4c786900206c5c8a0788fa9d6c1107f7"
+    },
+    {
+      "file": "art-source/world/materials/oil_stain_alpha/High/T_oil_stain_alpha_Var.png",
+      "sha256": "ddd51de05f8f479c2f85b237825ceeb85df41a53b03fe4b3a0d36a405810ea95"
+    },
+    {
+      "file": "art-source/world/materials/oil_stain_alpha/Low/T_oil_stain_alpha_BaseColor.png",
+      "sha256": "088d1da9dfc4d76f025be02e30586babdcf3e77505cb1a7a993c94c5982d7a58"
+    },
+    {
+      "file": "art-source/world/materials/oil_stain_alpha/Low/T_oil_stain_alpha_MaskMap.png",
+      "sha256": "472b445ea5b67b2ef96731b9e17bdd65a27074a6f62d707b704739bed5faa422"
+    },
+    {
+      "file": "art-source/world/materials/oil_stain_alpha/Low/T_oil_stain_alpha_Normal.png",
+      "sha256": "a0032ce7f62aaa7abb3367e44bb4781f29b80d2ce848d0142420d88a194ca43b"
+    },
+    {
+      "file": "art-source/world/materials/oil_stain_alpha/Low/T_oil_stain_alpha_Var.png",
+      "sha256": "11df41b74a4c7b79a450a873485e2b06250b5fc3c190e54f91fd32c4ef2bc23f"
+    },
+    {
+      "file": "art-source/world/materials/oil_stain_alpha/Medium/T_oil_stain_alpha_BaseColor.png",
+      "sha256": "576a60e18d2e252e579eabd2af5dd12b5717e5d58337f8ade49b3744a59ac8b6"
+    },
+    {
+      "file": "art-source/world/materials/oil_stain_alpha/Medium/T_oil_stain_alpha_MaskMap.png",
+      "sha256": "95fb06503ed89e0c1850bd269464344c1e4eef714307baed4f3dbd2bfaf2c132"
+    },
+    {
+      "file": "art-source/world/materials/oil_stain_alpha/Medium/T_oil_stain_alpha_Normal.png",
+      "sha256": "933fd9ad6057f90a6aa9ed7f5ca979bacabff130480e66dd80ebf1b990bc5cfc"
+    },
+    {
+      "file": "art-source/world/materials/oil_stain_alpha/Medium/T_oil_stain_alpha_Var.png",
+      "sha256": "ca06e909b8d20beb27af19ba694fa183981b59d8e84e2aee942f6c7be6e6fc65"
+    },
+    {
+      "file": "art-source/world/materials/parapet_runoff/High/T_parapet_runoff.png",
+      "sha256": "0c59a7578de3d3ca44e6784017732dced370c3e8164865662df2caa55132e3ff"
+    },
+    {
+      "file": "art-source/world/materials/parapet_runoff/Low/T_parapet_runoff.png",
+      "sha256": "a8122454bd5ba397072d04001878adb1933904980bf1f85403cf76107e2449f4"
+    },
+    {
+      "file": "art-source/world/materials/parapet_runoff/Medium/T_parapet_runoff.png",
+      "sha256": "7bd6401d946b20c6dfd16a2d6ba7222a60e432a8ce994d7710f35d09c135061c"
+    },
+    {
+      "file": "art-source/world/materials/paving_20x10_grey/High/T_paving_20x10_grey_BaseColor.png",
+      "sha256": "3b926721eebf74e6dd247d369dbe2eb591e0882d9b462f714541f67322aaac01"
+    },
+    {
+      "file": "art-source/world/materials/paving_20x10_grey/High/T_paving_20x10_grey_MaskMap.png",
+      "sha256": "d7c38b603323d4c38fc5dc5558ebda93784948aa03b40f2947084a94f7b69687"
+    },
+    {
+      "file": "art-source/world/materials/paving_20x10_grey/High/T_paving_20x10_grey_Normal.png",
+      "sha256": "5a1c8ef208eda25646609d744cf0db7777a048ab5ace1a7145dd39cb0c72811d"
+    },
+    {
+      "file": "art-source/world/materials/paving_20x10_grey/High/T_paving_20x10_grey_Var.png",
+      "sha256": "55df3f1b9c041269368b599e5ff8c5638731c5fec24d3588f89da79630349d71"
+    },
+    {
+      "file": "art-source/world/materials/paving_20x10_grey/Low/T_paving_20x10_grey_BaseColor.png",
+      "sha256": "e479a1e7a33766eeff6904a4d7630f108b21b73613690091cbfa70c6e0fc521d"
+    },
+    {
+      "file": "art-source/world/materials/paving_20x10_grey/Low/T_paving_20x10_grey_MaskMap.png",
+      "sha256": "39bc502dcf616f5db45ebe2c073b0626e592c0603096b22c9c103c08dc1560c5"
+    },
+    {
+      "file": "art-source/world/materials/paving_20x10_grey/Low/T_paving_20x10_grey_Normal.png",
+      "sha256": "e4af3c87603dfd0b221ff34084ba63493fcb45af8647b198fd3dcab1aaafb973"
+    },
+    {
+      "file": "art-source/world/materials/paving_20x10_grey/Low/T_paving_20x10_grey_Var.png",
+      "sha256": "467267066bd9d3f83ec9513e709d81a6a2ab2802ff32eb4e8e83802d5c6229af"
+    },
+    {
+      "file": "art-source/world/materials/paving_20x10_grey/Medium/T_paving_20x10_grey_BaseColor.png",
+      "sha256": "50906a1b48c9650bcf6a4ba9cc02cb4bc987b5762c8b68a061561cf20695b7a5"
+    },
+    {
+      "file": "art-source/world/materials/paving_20x10_grey/Medium/T_paving_20x10_grey_MaskMap.png",
+      "sha256": "7d3b88707bc306168f4475a5ec719bf575eedb1411e6f6ba8fbf2b2e00bae826"
+    },
+    {
+      "file": "art-source/world/materials/paving_20x10_grey/Medium/T_paving_20x10_grey_Normal.png",
+      "sha256": "714cf799a6e822e810223ee7213de51f1d551c0521a5f590ed4df7cf90dbbc59"
+    },
+    {
+      "file": "art-source/world/materials/paving_20x10_grey/Medium/T_paving_20x10_grey_Var.png",
+      "sha256": "f566d674d69bc9a56ac0305a8bbd93fbd0f0e2bec854ee3c4b5f6936347d79b9"
+    },
+    {
+      "file": "art-source/world/materials/plaster/High/T_plaster_BaseColor.png",
+      "sha256": "9286954ebf85c1cf6b190a2ba865c0bddb0c02af5acc8b6fe42330b960f112d4"
+    },
+    {
+      "file": "art-source/world/materials/plaster/High/T_plaster_MaskMap.png",
+      "sha256": "a93f149453c55a9b19dc2a57a9f722034350a72bf9afa29df450454b6cffab24"
+    },
+    {
+      "file": "art-source/world/materials/plaster/High/T_plaster_Normal.png",
+      "sha256": "0116d0400d8f41b4125cb7e8827639f0699c660d7aedbe15a71697118bcaf3c9"
+    },
+    {
+      "file": "art-source/world/materials/plaster/High/T_plaster_Var.png",
+      "sha256": "1173ed6931f88865d279d5159e0b79b478d2778c0462af379e6b82cfe518da25"
+    },
+    {
+      "file": "art-source/world/materials/plaster/Low/T_plaster_BaseColor.png",
+      "sha256": "a3a3b47987f1d3ff99f75ca890d06351da802722f5084b0c26381975e9942c56"
+    },
+    {
+      "file": "art-source/world/materials/plaster/Low/T_plaster_MaskMap.png",
+      "sha256": "b57b68d0595eeb949dce4271673027f7700231f04337eb8235503c9e6505677f"
+    },
+    {
+      "file": "art-source/world/materials/plaster/Low/T_plaster_Normal.png",
+      "sha256": "185887d8ccac69e49ab86066688afeb5df0d5f1ee512140a0ed9057442f2c286"
+    },
+    {
+      "file": "art-source/world/materials/plaster/Low/T_plaster_Var.png",
+      "sha256": "f7dee28c8d5a2aa7404058defad982bb996163aba95a7ef114a768a6b89c42aa"
+    },
+    {
+      "file": "art-source/world/materials/plaster/Medium/T_plaster_BaseColor.png",
+      "sha256": "d595fb219869479fcf4676f61f7f19c6b92afa9b8068459f5a741817c35584b8"
+    },
+    {
+      "file": "art-source/world/materials/plaster/Medium/T_plaster_MaskMap.png",
+      "sha256": "528b1b460c7fd4df814f7fc0746db17e6d2d4d86907eecc6467073e39ad18197"
+    },
+    {
+      "file": "art-source/world/materials/plaster/Medium/T_plaster_Normal.png",
+      "sha256": "5e0f3bd61f3b3aa4d852876b8e907017bb16b56342622fce2bc322edd479c45b"
+    },
+    {
+      "file": "art-source/world/materials/plaster/Medium/T_plaster_Var.png",
+      "sha256": "6bf76848a50c87f3ab286084082bb1a7490eb873d8129d05f7b0dd6c9dd05af8"
+    },
+    {
+      "file": "art-source/world/materials/roof_tiles/High/T_roof_tiles_BaseColor.png",
+      "sha256": "a86bed7fb5074446f673d88ec8b915ad6939bfdf2009c1fe91923d2b0cb69a22"
+    },
+    {
+      "file": "art-source/world/materials/roof_tiles/High/T_roof_tiles_MaskMap.png",
+      "sha256": "dab77afd4f6c79e6a6f590e4aa211c9d02dca89dfc19d8d8f30b1a85a51ef611"
+    },
+    {
+      "file": "art-source/world/materials/roof_tiles/High/T_roof_tiles_Normal.png",
+      "sha256": "4b3c87bbc14fcdf903f9e827267e9647b06c601343d57483b254ed4d7e79691f"
+    },
+    {
+      "file": "art-source/world/materials/roof_tiles/High/T_roof_tiles_Var.png",
+      "sha256": "db494b2d41129315cd7638ceace44ca865496ea25a651f291f9a7f0033010c51"
+    },
+    {
+      "file": "art-source/world/materials/roof_tiles/Low/T_roof_tiles_BaseColor.png",
+      "sha256": "a999a053b68d782f25c708e7f02e8dfcca93eee66e67e0f0bea85b2124c0b005"
+    },
+    {
+      "file": "art-source/world/materials/roof_tiles/Low/T_roof_tiles_MaskMap.png",
+      "sha256": "09848f533cc22970dfc49dde479108c7637048e27f1ebdfb690092b33adf07ac"
+    },
+    {
+      "file": "art-source/world/materials/roof_tiles/Low/T_roof_tiles_Normal.png",
+      "sha256": "eb1fffb167d28e92653dfe9f6ffb9ce2a9b30d7a89c66efd81a88633d348c0b1"
+    },
+    {
+      "file": "art-source/world/materials/roof_tiles/Low/T_roof_tiles_Var.png",
+      "sha256": "eafb89681c307737efeef9bd4b55d74408e78d539886f1b7ce3636e2ac185622"
+    },
+    {
+      "file": "art-source/world/materials/roof_tiles/Medium/T_roof_tiles_BaseColor.png",
+      "sha256": "55dffb2ef90cd20a1d38f9f12cb4d9185f6c751b3908ad1851bcca5e9356e698"
+    },
+    {
+      "file": "art-source/world/materials/roof_tiles/Medium/T_roof_tiles_MaskMap.png",
+      "sha256": "53022f286e8c03d2eb817e6daea3c59ee466a334ff5d2c04f2af90774f421dae"
+    },
+    {
+      "file": "art-source/world/materials/roof_tiles/Medium/T_roof_tiles_Normal.png",
+      "sha256": "c9aec7d96ceb53dd3b4c6d6946ba040a4d15a8d3840a2542f4b2d968eb612ef1"
+    },
+    {
+      "file": "art-source/world/materials/roof_tiles/Medium/T_roof_tiles_Var.png",
+      "sha256": "28aaa7b469b8b33afc61167c801e37cb1185bdd1d1c5b6c52ffa41e3878e60be"
+    },
+    {
+      "file": "art-source/world/materials/sandwich_ribbed/High/T_sandwich_ribbed_BaseColor.png",
+      "sha256": "f5bb71488da9e3942496370eef3a06586762b8701d0949ca77d3652a8f83ad3f"
+    },
+    {
+      "file": "art-source/world/materials/sandwich_ribbed/High/T_sandwich_ribbed_MaskMap.png",
+      "sha256": "950c5da41b275a181b856028a2771c97730ee0db9c6401c7a8b5da2919cc751a"
+    },
+    {
+      "file": "art-source/world/materials/sandwich_ribbed/High/T_sandwich_ribbed_Normal.png",
+      "sha256": "f81c365b366f59f3f2a6cedda4be8baf5f731d4ac87a187bfb6717b56974a36d"
+    },
+    {
+      "file": "art-source/world/materials/sandwich_ribbed/High/T_sandwich_ribbed_Var.png",
+      "sha256": "b9f1c829bc730ad18a565d63758775603f0fd69e7fa7ae5efbb938f519944169"
+    },
+    {
+      "file": "art-source/world/materials/sandwich_ribbed/Low/T_sandwich_ribbed_BaseColor.png",
+      "sha256": "ff72879564fc9c1ee262858dcbecb72c769242ad2fe74c95e2724272c223189a"
+    },
+    {
+      "file": "art-source/world/materials/sandwich_ribbed/Low/T_sandwich_ribbed_MaskMap.png",
+      "sha256": "6a47af5eb62a402fe97bd42e4f9c43028d3945acc00a4d163d2e18ab85a6a1b3"
+    },
+    {
+      "file": "art-source/world/materials/sandwich_ribbed/Low/T_sandwich_ribbed_Normal.png",
+      "sha256": "0ad577234c12eccb969e15ec51b556a97693462a109b3aa4dc8d012787bf23e9"
+    },
+    {
+      "file": "art-source/world/materials/sandwich_ribbed/Low/T_sandwich_ribbed_Var.png",
+      "sha256": "c5368def592c5a14fbb2f5e26ce06ab03d2a5d4a0e742843adcc4f0cb50ac6ff"
+    },
+    {
+      "file": "art-source/world/materials/sandwich_ribbed/Medium/T_sandwich_ribbed_BaseColor.png",
+      "sha256": "2b0d2ca2545dbc1f47840ed78d74f14d3050fd0ef3597d42e6dbc6c852150d08"
+    },
+    {
+      "file": "art-source/world/materials/sandwich_ribbed/Medium/T_sandwich_ribbed_MaskMap.png",
+      "sha256": "588bde1643a860787ce6ee1b681447195e3ca48429d8c60883b58d0fd3255961"
+    },
+    {
+      "file": "art-source/world/materials/sandwich_ribbed/Medium/T_sandwich_ribbed_Normal.png",
+      "sha256": "7a0bed4150cd7811c09a360e72c87670bbebe39e4918b40e72c707f11526fca6"
+    },
+    {
+      "file": "art-source/world/materials/sandwich_ribbed/Medium/T_sandwich_ribbed_Var.png",
+      "sha256": "6869ff6479839b56aaf762d3c1a57e941ceba2d305bfcc767956e5d8b9631cd5"
+    },
+    {
+      "file": "art-source/world/materials/sectional_door/High/T_sectional_door_BaseColor.png",
+      "sha256": "893f45187e5ec53bc4ac5ff5f41433232226125b9ad9cc1eb0ce0775422c2163"
+    },
+    {
+      "file": "art-source/world/materials/sectional_door/High/T_sectional_door_MaskMap.png",
+      "sha256": "0bc9e41feb70933f4f335a7ea1b0bf348db819908cda21c01fd8364ff202c602"
+    },
+    {
+      "file": "art-source/world/materials/sectional_door/High/T_sectional_door_Normal.png",
+      "sha256": "59b3377d9a747c852e653cdb5575aa94e141dd5bdc8f32026caba0b496876b41"
+    },
+    {
+      "file": "art-source/world/materials/sectional_door/High/T_sectional_door_Var.png",
+      "sha256": "5172b4862df069b236337cbcc47448a586c44987d304657c0d8d8974aeffc24d"
+    },
+    {
+      "file": "art-source/world/materials/sectional_door/Low/T_sectional_door_BaseColor.png",
+      "sha256": "248ec262ac58c465dcad0293b4d01426ac78bcfa54c1e468199a5e9aefd9be50"
+    },
+    {
+      "file": "art-source/world/materials/sectional_door/Low/T_sectional_door_MaskMap.png",
+      "sha256": "5125cb36f2e6a35e156c82d3684781b5f65de906f035de25035c5193960be2e5"
+    },
+    {
+      "file": "art-source/world/materials/sectional_door/Low/T_sectional_door_Normal.png",
+      "sha256": "271998ed8c58cf3523d8ff2eeac9a123711425a517b895a259496179244ddde2"
+    },
+    {
+      "file": "art-source/world/materials/sectional_door/Low/T_sectional_door_Var.png",
+      "sha256": "389344bec180fdf2a6257ba83fc028af4a123e52c8092cf199217fc8ba58fe32"
+    },
+    {
+      "file": "art-source/world/materials/sectional_door/Medium/T_sectional_door_BaseColor.png",
+      "sha256": "2eddc6b44f9fd8f284830e7b500a97d0c577522b0df33898946a341feb796d81"
+    },
+    {
+      "file": "art-source/world/materials/sectional_door/Medium/T_sectional_door_MaskMap.png",
+      "sha256": "cc14fc0e65c04deaf6984af87b591db50e751712b016fffb13006f2a94af7a8f"
+    },
+    {
+      "file": "art-source/world/materials/sectional_door/Medium/T_sectional_door_Normal.png",
+      "sha256": "846f39307cadafae43bf5bb0bea86ca4cd91d3765b5bd6f86079417e8be957ab"
+    },
+    {
+      "file": "art-source/world/materials/sectional_door/Medium/T_sectional_door_Var.png",
+      "sha256": "4487923bb2a4aa23ce56be9ec4db4796379313ba70cb8e620221229f3ebd66f6"
+    },
+    {
+      "file": "art-source/world/materials/sidewalk_slab_35/High/T_sidewalk_slab_35_BaseColor.png",
+      "sha256": "7d166d1db939b3594ab353930882fbd15ab25467231925b1a197b8ce561b9e18"
+    },
+    {
+      "file": "art-source/world/materials/sidewalk_slab_35/High/T_sidewalk_slab_35_MaskMap.png",
+      "sha256": "44d176789c3084fad532bc206598c80d9dba57d454f3cea3b8ae9f9e502d8fcc"
+    },
+    {
+      "file": "art-source/world/materials/sidewalk_slab_35/High/T_sidewalk_slab_35_Normal.png",
+      "sha256": "a8d206e6049ee424d474bb4a33578d9220f0157b0451b6ad48230d163fc9bffc"
+    },
+    {
+      "file": "art-source/world/materials/sidewalk_slab_35/High/T_sidewalk_slab_35_Var.png",
+      "sha256": "447782461897a028933899744d8e4f435b273aff384ebd524082f9b07b30f74d"
+    },
+    {
+      "file": "art-source/world/materials/sidewalk_slab_35/Low/T_sidewalk_slab_35_BaseColor.png",
+      "sha256": "edf98dcd167ac2730b140e4eee06e9fb66d4ab4b6f970640066448df93cd1bde"
+    },
+    {
+      "file": "art-source/world/materials/sidewalk_slab_35/Low/T_sidewalk_slab_35_MaskMap.png",
+      "sha256": "664d2648c501ff2269ae706fefc4a5559db73953a3ba9eded698592c699c6aaa"
+    },
+    {
+      "file": "art-source/world/materials/sidewalk_slab_35/Low/T_sidewalk_slab_35_Normal.png",
+      "sha256": "3bab43bb21ee64b7014d831d27dc0c62f9d44548b2f1cee8a59d1a7c31bb9a70"
+    },
+    {
+      "file": "art-source/world/materials/sidewalk_slab_35/Low/T_sidewalk_slab_35_Var.png",
+      "sha256": "c06378e42510883ec8c9859ac8879c6214cb34f482b0cb7e9598ef26f594d14f"
+    },
+    {
+      "file": "art-source/world/materials/sidewalk_slab_35/Medium/T_sidewalk_slab_35_BaseColor.png",
+      "sha256": "3227404eb2d0d509c30aa2097976cb30ca974c52df9f53299502f99eb011ee9e"
+    },
+    {
+      "file": "art-source/world/materials/sidewalk_slab_35/Medium/T_sidewalk_slab_35_MaskMap.png",
+      "sha256": "70af99db2d1f0570afcc6347e0cc4e548bb2d5bd63c15b8dbb3aa34031fc8a93"
+    },
+    {
+      "file": "art-source/world/materials/sidewalk_slab_35/Medium/T_sidewalk_slab_35_Normal.png",
+      "sha256": "00e0f52f3a9ea91015ae8f8d7909584a1b58b9ba77a3c830d5847fb682ad5d98"
+    },
+    {
+      "file": "art-source/world/materials/sidewalk_slab_35/Medium/T_sidewalk_slab_35_Var.png",
+      "sha256": "3fc92c937ccba1216836a4aa4c11ce5ce7133787385dd608248d430159ee88ee"
+    },
+    {
+      "file": "art-source/world/materials/soil_bed/High/T_soil_bed_BaseColor.png",
+      "sha256": "408b044800f9a6b956dbee97d31b3eaf83b2571cb4720427c0e3aebfcd718613"
+    },
+    {
+      "file": "art-source/world/materials/soil_bed/High/T_soil_bed_MaskMap.png",
+      "sha256": "a986b4e3520b162692460ee9795b95da880f1b05dbd6e298c4563161cea9b8d9"
+    },
+    {
+      "file": "art-source/world/materials/soil_bed/High/T_soil_bed_Normal.png",
+      "sha256": "8f104472e123085d7a23f4694692d82b76008a7f5f74f94559e1f04f1c4204cb"
+    },
+    {
+      "file": "art-source/world/materials/soil_bed/High/T_soil_bed_Var.png",
+      "sha256": "59a0b1e9b5b60992d237f2f1bd35320d7d23f89ef660c964f1bb16aed67f40a4"
+    },
+    {
+      "file": "art-source/world/materials/soil_bed/Low/T_soil_bed_BaseColor.png",
+      "sha256": "aa95aa1842b4cea3793177fcfc313a540b1bc963a72948db2a01b6db3a006c49"
+    },
+    {
+      "file": "art-source/world/materials/soil_bed/Low/T_soil_bed_MaskMap.png",
+      "sha256": "206e69b999551774dbab347e942499592eda4a7e47ffb7b31be674bf5f805258"
+    },
+    {
+      "file": "art-source/world/materials/soil_bed/Low/T_soil_bed_Normal.png",
+      "sha256": "a615582b64c2cb9be63f59b9d9605614c87664489353dee18ee4268ebd3870b4"
+    },
+    {
+      "file": "art-source/world/materials/soil_bed/Low/T_soil_bed_Var.png",
+      "sha256": "09d68cbfdc0069538f899c83ed29e26dca852bc113802a66cc69ef8031055da2"
+    },
+    {
+      "file": "art-source/world/materials/soil_bed/Medium/T_soil_bed_BaseColor.png",
+      "sha256": "19b7dd54a66c872a3bc64005a77769b4aa49967d04f0c202d5cdf762836f1d6b"
+    },
+    {
+      "file": "art-source/world/materials/soil_bed/Medium/T_soil_bed_MaskMap.png",
+      "sha256": "977311d8ceb4ba9849a6d6080b2d59399155ddf51add8d96ece56048b2edbfac"
+    },
+    {
+      "file": "art-source/world/materials/soil_bed/Medium/T_soil_bed_Normal.png",
+      "sha256": "57164c2dbab7a93daa1aebb2c44557bc7a9cd7204101d93b5a68cfc712e873a2"
+    },
+    {
+      "file": "art-source/world/materials/soil_bed/Medium/T_soil_bed_Var.png",
+      "sha256": "697d524ae8d5a9d7d00711b6fb3365f0ca7c27f99130f77cb1b51d72f64ee557"
+    },
+    {
+      "file": "art-source/world/materials/trapezoid_sheet/High/T_trapezoid_sheet_BaseColor.png",
+      "sha256": "3874b47fa7e88676927ae3854420d8ca154189aba231a9f06d9e83bec4362f36"
+    },
+    {
+      "file": "art-source/world/materials/trapezoid_sheet/High/T_trapezoid_sheet_MaskMap.png",
+      "sha256": "32f4856f34c5c6328b8a6ecb60165cb7afa6db61203ea7f18b34978aeed5cfbc"
+    },
+    {
+      "file": "art-source/world/materials/trapezoid_sheet/High/T_trapezoid_sheet_Normal.png",
+      "sha256": "fd8e494c0e69915c93fc1e22cf1b6ab73e15974982525c11d9645cd2ed9b4757"
+    },
+    {
+      "file": "art-source/world/materials/trapezoid_sheet/High/T_trapezoid_sheet_Var.png",
+      "sha256": "6eda2f7a372a1bc56e86f52346ede00ce2bb4029eb1959f9b5daefe6335e49ff"
+    },
+    {
+      "file": "art-source/world/materials/trapezoid_sheet/Low/T_trapezoid_sheet_BaseColor.png",
+      "sha256": "a30039177b8fb5d24506258ade826d75267582b65064dcd3c0fb01f4843cca27"
+    },
+    {
+      "file": "art-source/world/materials/trapezoid_sheet/Low/T_trapezoid_sheet_MaskMap.png",
+      "sha256": "87a0ba5216bb766ec92f268cb2970f97dbb21e16e5b926441353f2f3a944a5f9"
+    },
+    {
+      "file": "art-source/world/materials/trapezoid_sheet/Low/T_trapezoid_sheet_Normal.png",
+      "sha256": "d1e60d803e98385f16118a0821e71cdf1aa00e0b97fce4d20394c20bf3fda470"
+    },
+    {
+      "file": "art-source/world/materials/trapezoid_sheet/Low/T_trapezoid_sheet_Var.png",
+      "sha256": "56239ff822d30d6194506d87603ccae514838992d984f1096986a944be58a5d9"
+    },
+    {
+      "file": "art-source/world/materials/trapezoid_sheet/Medium/T_trapezoid_sheet_BaseColor.png",
+      "sha256": "e8443272f4fce762ab00a2519fa91ee229c8ca28e5fc9f79cd58c34521174eb5"
+    },
+    {
+      "file": "art-source/world/materials/trapezoid_sheet/Medium/T_trapezoid_sheet_MaskMap.png",
+      "sha256": "3587acd92f4f09ffd27799b3e7573b8898441529adcbf1a45c27ff286ef10e82"
+    },
+    {
+      "file": "art-source/world/materials/trapezoid_sheet/Medium/T_trapezoid_sheet_Normal.png",
+      "sha256": "27083103b59699ef296361fc0842feaa998ebd0d172c3bf34a7298f46f4b9e39"
+    },
+    {
+      "file": "art-source/world/materials/trapezoid_sheet/Medium/T_trapezoid_sheet_Var.png",
+      "sha256": "7f1dc542c80ef5f94e396431f2501356ff3b0e5d117e2660ee2a8de6fea60e32"
+    },
+    {
+      "file": "art-source/world/materials/viaduct_concrete/High/T_viaduct_concrete_BaseColor.png",
+      "sha256": "b303639c882168bb58628b7831e9acb06838c3ab14f8bea3cc80804450d98ca9"
+    },
+    {
+      "file": "art-source/world/materials/viaduct_concrete/High/T_viaduct_concrete_MaskMap.png",
+      "sha256": "8680e6a220e340acacc9c1f4a874646cd0aa9046ac7a4889856656c7972c68a3"
+    },
+    {
+      "file": "art-source/world/materials/viaduct_concrete/High/T_viaduct_concrete_Normal.png",
+      "sha256": "5d1d6af655035a308cab1bc33a56e002d76f234cb21f23e22feab7ac67726050"
+    },
+    {
+      "file": "art-source/world/materials/viaduct_concrete/High/T_viaduct_concrete_Var.png",
+      "sha256": "f017fcf24a78f92387a403958f63413dd1f0e950ff464ce93b96f75fd7eca6e5"
+    },
+    {
+      "file": "art-source/world/materials/viaduct_concrete/Low/T_viaduct_concrete_BaseColor.png",
+      "sha256": "0c919549c66de5b58dd58cdc193ddb227e5a7f03fb44486f7fed8b94f8f9b1de"
+    },
+    {
+      "file": "art-source/world/materials/viaduct_concrete/Low/T_viaduct_concrete_MaskMap.png",
+      "sha256": "5f1b345b75c58b67c62713677833ee33d19091592dd31e036e4f3212a834f4a1"
+    },
+    {
+      "file": "art-source/world/materials/viaduct_concrete/Low/T_viaduct_concrete_Normal.png",
+      "sha256": "cea2a2b9dd64d353721fc32a4cc3e325bd5925a9e73d2f789d8e5916b75b0c5f"
+    },
+    {
+      "file": "art-source/world/materials/viaduct_concrete/Low/T_viaduct_concrete_Var.png",
+      "sha256": "a23a5bad328c878a1dbacce8944ae22380f86074e26628d057cc60522ab1df31"
+    },
+    {
+      "file": "art-source/world/materials/viaduct_concrete/Medium/T_viaduct_concrete_BaseColor.png",
+      "sha256": "2355d5101329f9a2c9c0f11cb7f2146ccd7b4c6058d9f84bf648990183555b2e"
+    },
+    {
+      "file": "art-source/world/materials/viaduct_concrete/Medium/T_viaduct_concrete_MaskMap.png",
+      "sha256": "5560280f81749f4be3ce1ba3da1fab9825ba1f55a16768f7989c1f99fc74b342"
+    },
+    {
+      "file": "art-source/world/materials/viaduct_concrete/Medium/T_viaduct_concrete_Normal.png",
+      "sha256": "77a9d18cecfacfd91aa21f79f5fdeb2a20d7fe776709fb9e22fd540c3a5a101e"
+    },
+    {
+      "file": "art-source/world/materials/viaduct_concrete/Medium/T_viaduct_concrete_Var.png",
+      "sha256": "bb2960c4d380211acd8d1b82bf38c7b12d53cfc39f1ca694d32f7dae89d257c0"
+    },
+    {
+      "file": "art-source/world/props/props_meta.json",
+      "sha256": "3f8c5673ac9ba8be8adf7d171f776c579c6a24217412ccb6ddf83ee92f179b33"
+    },
+    {
+      "file": "art-source/world/props/street_props.glb",
+      "sha256": "76d5047557b30c58f83a9ea1ad0bb17c6839b7dfda8fef32b14363d5bf91e881"
+    },
+    {
+      "file": "art-source/world/textures/fire_station_alpha.png",
+      "sha256": "44c2e2ceda71e4172704114cf834388c27d9c607a09cb61dc00dd0136735a804"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_0_0.glb",
+      "sha256": "4bf800950946a4314759609a55541f9ef9ed3338ef4f2fe83f7416ba648735a5"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_0_0.low.glb",
+      "sha256": "24ae9031e6989012638ab2ac396487e1d67f426ebdadc7e0fc6dce04e5921e87"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_0_1.glb",
+      "sha256": "334c974093278c88a1e57b3731d3fbeb1525755f1b5530044df4fdbbff26b67c"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_0_1.low.glb",
+      "sha256": "bfd0052445bbddc6004a5d6a843ccf39fab5aaa8180e55df8c25694bd3af79fa"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_0_2.glb",
+      "sha256": "018c4d7eab8b3a273aae582cc0f29c8e67ce3cddc19000c8031be88540b2ecf6"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_0_2.low.glb",
+      "sha256": "a879d5d4e12d2787845ec73c4f13334248d3fc94749d06e43da408b72aad7f41"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_0_3.glb",
+      "sha256": "2dd742a4744638b54d0064765f3a20ff43ab43507992f3e27bd309c1cd6cf0e4"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_0_3.low.glb",
+      "sha256": "549bb533a9869d910a7b44ddda900c4de18d7676b4b416114022320553b2ff62"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_0_4.glb",
+      "sha256": "64aaf85d43663401f13b6a12b8cf852c7118a18ef9a65b16abb6589c1dee859c"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_0_4.low.glb",
+      "sha256": "42f5eb2f6a79dce32cbaf74c5d57e637d0b1037a27cbc82fa1f572a3df480e6c"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_0_5.glb",
+      "sha256": "98527c504d10ee0a2c17f098dc828c6f28f8213aff817f8e1932435e02a495ba"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_0_5.low.glb",
+      "sha256": "9579aaccbf00a43cd09e60399142c97934ec46a10c4b7c7590a6be79ebb9ee37"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_0_6.glb",
+      "sha256": "e317675fc54aaa78dc81f68e7ad2d1199409c2e58140c0c2ee7c51c7a9bdfa25"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_0_6.low.glb",
+      "sha256": "00713bcf87aa5480c9cba6b4c73ada7735a7f939cc7346f6b949ff518fa4c46c"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_0_7.glb",
+      "sha256": "cc308ef08ce5e4d34b5d299ef649d571589bf285f60dea1bf6e1724eeb5170f7"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_0_7.low.glb",
+      "sha256": "da40fbda36e4e34b50cddfa81c1979a2097ea608da561bcdc87e580de55145f2"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_1_0.glb",
+      "sha256": "ef2f8dd9a792fe29fa4b0ecd02f2c984a3f79830a24c8340c96e240f85444f42"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_1_0.low.glb",
+      "sha256": "1cc3f0e202c65c147ccd82eed12a8df13ab44b6a0e731cdc4660ff1eeac4cf66"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_1_1.glb",
+      "sha256": "7ea0f86259be08e5ce9150c10c24b44141b3e7858c008cdf5d5d5d0ffa9a689a"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_1_1.low.glb",
+      "sha256": "99fac1b3ed6cef8236facb4a0594378c6cf61400d973bc35ee55ab9d4d2a84ae"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_1_2.glb",
+      "sha256": "04d1910c9f3cf7b980e03e9050c39f98343635079af7b0663803826422eea49e"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_1_2.low.glb",
+      "sha256": "0ede4f9dc0a36a58226bbf10ed52ec1f1fcbafdacbc50783d16b34501ae5c0d6"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_1_3.glb",
+      "sha256": "b56d86a41dcf794e3698d0f174d0fe7dbadbea4b9ad71eccfe220b4c974f1dd1"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_1_3.low.glb",
+      "sha256": "52577249b5d4bd4f7ac0b43efb0bb1176132017b0e750d8ad265852b97a74efd"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_1_4.glb",
+      "sha256": "e56fdd7034c9f7e336e10343b14f27e343e2ed1f3d8d7e4232b318c169bb3ff9"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_1_4.low.glb",
+      "sha256": "71a4205f8c9871e0e5fcea4719e1a2094f0f8cdf32e95d0d244481ce145f8830"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_1_5.glb",
+      "sha256": "a6c8bcb0a20bd4f09468898a4be6b2e2c4e7bdecc28ddd775876746a860cf1bb"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_1_5.low.glb",
+      "sha256": "75f386ae9eaa1f53d39008fb3133583c6befe99371e6e9221466e53e5452cfa1"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_1_6.glb",
+      "sha256": "629ec7fb7aabe5a47d14bbb2441ff85b430c3c5c2d1a39d987fa1fca37eb78c3"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_1_6.low.glb",
+      "sha256": "ce9c309ec9a4604e0a56185137f6ad12b4ec29a6ff46c38cc8674794707bafa6"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_1_7.glb",
+      "sha256": "df68f911b6808b8c30e9369b9fa49b0d0aa0805cd682d683be507820362fcec7"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_1_7.low.glb",
+      "sha256": "61ec6c397ff057b011afa9d39b9c7686b8434e702e90175679ffea877b106399"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_2_0.glb",
+      "sha256": "b8ae449753ba6ac1c81e8a008ed3fc9bb90c7e63e2a1be0464c18c92cb433c54"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_2_0.low.glb",
+      "sha256": "b6c5e5ec966835527c6044da3507f1c3089f2419d2e4f5d31305e3a6f14076ba"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_2_1.glb",
+      "sha256": "79f5e7214ec1e6dc22c4bb00a4d51398778ad53e57e51bd2a5fa0c6c45a3123b"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_2_1.low.glb",
+      "sha256": "893b4df31057ad89e54c8b696fa9c5a29e629cb3dddc1bb37120b948c5bfefd6"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_2_2.glb",
+      "sha256": "997264c58f8edd5ad510b7b4d479f00445976c455f89b4a72b627f8a5aaa0dc3"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_2_2.low.glb",
+      "sha256": "ca678e50a858abc4fc5d78099f71f4bf720b4a622c800527837ef86b8c75ce56"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_2_3.glb",
+      "sha256": "2fdf82c102394f74f4195d4cdc6a4ee5ac963b5b6f71ca7b65eb6dc6dd8140c1"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_2_3.low.glb",
+      "sha256": "944dba521755a1d939c8f73fb3298dbcefc2a8cccb8de1b9a93aed7a31ca3ff5"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_2_4.glb",
+      "sha256": "c0d6774302efaff8fe5d813bf3f844c3356bd26c567e338d920ee7646fb67100"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_2_4.low.glb",
+      "sha256": "1ff00b334b0b7c0c983f38a825bb2eeb265cafa4b127f36a44df3c60aa9e5a92"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_2_5.glb",
+      "sha256": "17b46760d753c7014e6f875160933362c608ffc8fababee758741adb182a4449"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_2_5.low.glb",
+      "sha256": "369cf218483e663d17020af4ce9a36e4c9ff398d960e233ac2720dc4e00338d4"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_2_6.glb",
+      "sha256": "04f8beb2e95cb7299cd8717b411042a73b3f6a10a0510e2be9c1bf4633298cb8"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_2_6.low.glb",
+      "sha256": "f125f8b4299fca2766c1246d8249953e80978721bb2a9454d9fc95b7bad67ac7"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_2_7.glb",
+      "sha256": "5e92ef1359c51ed6f3249a1acb2690bbd67261a886f4a23476c39c503ce8dd46"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_2_7.low.glb",
+      "sha256": "abfbc11d628cc6051743040cf1e65f5196ef48ed8302bedc274a4e184d2e8ec5"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_3_0.glb",
+      "sha256": "afa901b4ba41640b12c18f44aeb3f935b0b2fdb432e8265d4071e0dbd353e5e9"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_3_0.low.glb",
+      "sha256": "abc0c8d37ea120b2b0c4316f724e2f87c34c79f3e648b2e090c512dce495a114"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_3_1.glb",
+      "sha256": "fd757a84cbc92884990a2143083dedaa42a0ab0afcc9fe1c1b7312d54f1b22f2"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_3_1.low.glb",
+      "sha256": "70d9b26be872f1a37b60439fe8c16e451b84b4ba8264a777cbc861e416eb65c5"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_3_2.glb",
+      "sha256": "9bf7979855d6e8703b21410a1c9c81284d1b875b0ef9508dc2c440d9bf2221c3"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_3_2.low.glb",
+      "sha256": "bf4ccf746ebbd5fe78f77d28c09cea671d0aa99849e8ef366fbf407f262775e2"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_3_3.glb",
+      "sha256": "f90e40272ebb6041c8e1db67925979e415f46f457deca06b37fbc2c2eae4ab8b"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_3_3.low.glb",
+      "sha256": "c882096571a2e06c61ba23aa5c4137e3b8b8431884b91668296ab889273927f2"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_3_4.glb",
+      "sha256": "6cdf76696ec1801d5423c9df525ec63f0bde2b8f5f9c42f195233a05157bc045"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_3_4.low.glb",
+      "sha256": "40bbdcf700bbbb0e73d5669307932937434f5524d74e100f2978cc12a39f0c09"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_3_5.glb",
+      "sha256": "d031dc4a596f1ccd590e38ade21815c5f4051b2311593b20a7c0b1214b483329"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_3_5.low.glb",
+      "sha256": "6707674ee69f8a7691b42a41a1cf525af9dc85c24fb96c72d65f83362e373426"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_3_6.glb",
+      "sha256": "6f4c6efe4c7bd343823429adc7b89c495af33b8980fb2e59e61251c408c30207"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_3_6.low.glb",
+      "sha256": "eeaa367b157b16a22795fb7dd989d91683576be0a21e5c084d9807af475216eb"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_3_7.glb",
+      "sha256": "78ef086f3a244f81fa6923d9134de109480fc8e320fc1d253ce5521a27c2a7af"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_3_7.low.glb",
+      "sha256": "6b54c149000838b39e5e985e58e7b21091b4f0e3272e2ef8c45f65e37fe84eab"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_4_0.glb",
+      "sha256": "93059629d025fa594317d99cc3f5546ea011f7d2bc3ebccbf50d26c7e5eacaba"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_4_0.low.glb",
+      "sha256": "88a0e708c926b2e214a6e7711bb47a3dde426364d6c79594320bc2c2386e75d4"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_4_1.glb",
+      "sha256": "61b4b5f54f20a9cd13d13e71a2e297be1afcc53238d342665c3b260287ab5aa3"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_4_1.low.glb",
+      "sha256": "534f02a3465875d17511dc6e342f72ae78fbb02f10bf060a537d298f0700c894"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_4_2.glb",
+      "sha256": "076a036a23a04ba394afc086c13e2251b07f25a277380621af0a0370362273fd"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_4_2.low.glb",
+      "sha256": "98a59d27edf2fb327647a8c3390dd64ac8c51f0ebdfdd8dbdba1ce92d3bbf96b"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_4_3.glb",
+      "sha256": "80415038604a2ce16779faff4ea9b1272fdda613a34ccacab255cee3a6022460"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_4_3.low.glb",
+      "sha256": "3bd59f386fc587abbdab94e02536dc98447cf4388c74587cfcf2e749d377fdd4"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_4_4.glb",
+      "sha256": "0718fbd0dbb4a118b0e03bd65d7fbc756d8e049609af6225b58a33dce692c549"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_4_4.low.glb",
+      "sha256": "d3985fc5743e3aea7d3f226d9ea7edec0bb6ac9249ae70e310ca3d7553b3129e"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_4_5.glb",
+      "sha256": "5e826315c921b860a879ff6de028354ee5244f93bf717c1829ee9307514e3ca7"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_4_5.low.glb",
+      "sha256": "0f6437ab0273a03d0f4dcbca61d207d962b7a57e812b73686e67c560e00a97fd"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_4_6.glb",
+      "sha256": "2e91a83b3240dd4a75c55192d83f3e81da3a1fc04b5b33683340697716b7974e"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_4_6.low.glb",
+      "sha256": "f95465e0fe76ce0b7cc8dc1e0f0a55bfed690d49a0ef827f47d336019ecfe689"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_4_7.glb",
+      "sha256": "0cd14efbe203cf8c6ba78ea4564a31dbc730e1d367013985eb7ddc99305192f9"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_4_7.low.glb",
+      "sha256": "b00551fefeda9e0eb95735d4a36976398026f65a57fe6f65cfdfca1fa244f295"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_5_0.glb",
+      "sha256": "610757dd85a5abd67f0d552b3eb4b3b261d48a2127bd091534a341f53076f93c"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_5_0.low.glb",
+      "sha256": "709dd3086e3cc02f33ea0cfa7d64d9839a0567dfc8cb4596b4043ded58097d92"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_5_1.glb",
+      "sha256": "a66210b2213699583fded78a20cb8459195d9a0691c5888dd64c0464d351b340"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_5_1.low.glb",
+      "sha256": "625abc9c295522cb5244f3c48a0a34013fd7dcbc6d2bf10ee001c5c243b9a0ed"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_5_2.glb",
+      "sha256": "59aa35b304ba9ca628753ee7a0dfe0a3703afb755b5330ae3037744921309a94"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_5_2.low.glb",
+      "sha256": "2da06501aaa0c11024794d7040e7f8793b85e615260e323b79daf305c445c3cb"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_5_3.glb",
+      "sha256": "f7ce1afe2e024cea699ce0951ecfc52fd0f5c41b756eabfb371740572b0c5f7d"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_5_3.low.glb",
+      "sha256": "73dbd293b653cb7b0461d170f96ee0876d796b95f4470cacf52c67e4ac4410ae"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_5_4.glb",
+      "sha256": "85debac26fbc477fc6059c9e44708e9e29e394bf81ec7e80263f59eaf9f4d0e7"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_5_4.low.glb",
+      "sha256": "8e2d639578994e5fe83830a103e1b6595825e28cc5d3999081ad05604e5406d5"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_5_5.glb",
+      "sha256": "96c376f2715f34b3af01e89c439958179b13a287a227ea212de1ada39250a573"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_5_5.low.glb",
+      "sha256": "5674cfb93d46e3ab1080367183dec5260673cff25a631de754af511aab0a5ac2"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_5_6.glb",
+      "sha256": "706ae4a4b1aaea35b3cc53d85fc96a504a219237a7a465f225be5960a067aa8f"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_5_6.low.glb",
+      "sha256": "80e570ce625d682f93ac6613b80c0f35e3598907486f59fd675726358e9ce58d"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_5_7.glb",
+      "sha256": "d6546ec98a1d96cecf2a40637fc2870113f3ea7c585a7c6458f1e773400426ad"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_5_7.low.glb",
+      "sha256": "6484824ccebae2c6f70ff07e1eed8bdbf1d62765fbfa57636d493e3f88a8d582"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_6_0.glb",
+      "sha256": "fc9bf21571d51865a03ab09b12c33667b255a663dc44907cc8a94af69a32fbc3"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_6_0.low.glb",
+      "sha256": "7e155e42d2315cabecd12f261d75b1b399fb1dd26606d2289dc65ec4a8ee5c37"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_6_1.glb",
+      "sha256": "5c34e41d6df9a7cd117582e7998c6dd9ca27ae11f30393725c828b2c7226d493"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_6_1.low.glb",
+      "sha256": "b8d3bdfd00eb69a905313eeddcf025e9c985bdfe47ddd059e756312a5d7ae333"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_6_2.glb",
+      "sha256": "7131f35add9bf3562abf5b0e6fb8ab5d23e43776345a5c8514158816388c283c"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_6_2.low.glb",
+      "sha256": "80af772451c45bfb3a444504c2ec235fcf903526e8764d4a132a72ae3a0a7d68"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_6_3.glb",
+      "sha256": "e1ee8fd20de8322e3d1fa97b565b47125d5218ced1f1539f6a1da74e7f2ce535"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_6_3.low.glb",
+      "sha256": "361872cd2c584588154e0dfe1be501936a868419c3ff7b9a4e07f63f48cc336d"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_6_4.glb",
+      "sha256": "751d8cd02db9dd8cf6d442672b431fd8ec35de5eb04c5ae0590d5db404d219c4"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_6_4.low.glb",
+      "sha256": "54cb8754424b02cb58fdaf443cc8cc75383b00019ace6249f85646469bf42547"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_6_5.glb",
+      "sha256": "7baad6db8beba96f799a6c14f2c22fbd4295dbcd0379dcafad0a4b83ff3bdb2d"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_6_5.low.glb",
+      "sha256": "db98a88f8942c09867cd94b3c6decc221dd3ba26a658ff5e5475eea72fe08cd2"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_6_6.glb",
+      "sha256": "b6edd1093733cbf7c8215e990c10fa876e64b503512cbe60793391a48c7a5461"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_6_6.low.glb",
+      "sha256": "0fa4c70133e973828bc72cda0320bcfe9f071f9de1c658d09997cd35529a62fe"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_6_7.glb",
+      "sha256": "8daf51fad6b1899a7753c075968978ceb584a6e0d46eb0469bf6e1584f81bfd5"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_6_7.low.glb",
+      "sha256": "0ff7597dbca949e3fd6f18c3920a0403d27d48310d735815c2d5d55a36adb485"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_7_0.glb",
+      "sha256": "85911287b2c44daa84e7da29adbe560619893ea2e22c82e925f024078e43a918"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_7_0.low.glb",
+      "sha256": "9ff4056d9f111863e8a105a18c29e6e216c71fb9399fe722a3bb6fb0521cb9f7"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_7_1.glb",
+      "sha256": "30087e28740197922b8ceca85ae17c29f74127d28ab3de564ce221064cc9f692"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_7_1.low.glb",
+      "sha256": "6a6aca1f7a159522e287a8f363f55ea8ab1d65c19ff2b0e25f2a7e7fd1ceaa2c"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_7_2.glb",
+      "sha256": "8ba97863d00d4c3224251c30d3307941132fbee78b48c1a1b15ea91ee2e39d18"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_7_2.low.glb",
+      "sha256": "76213edcc97d8f133999786b022aad840bfa9ba654a74584e4f5a4b203476730"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_7_3.glb",
+      "sha256": "f24890a1bd26fdfceac11bd592c99bc778d4d30efd0f4d22f294d3d5dba8b2e6"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_7_3.low.glb",
+      "sha256": "9f0c47038104130f1a0ec377d7bfe676c5497efdae7ee8cb1d42f9ff162de3e3"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_7_4.glb",
+      "sha256": "810ae94dc81eb63407010892077ad1725ef31f1b672d8bfbf671d3c768d0c0dd"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_7_4.low.glb",
+      "sha256": "3d6f2b90eb115c188947493152839d05587444d35636c8c2327a569cd20d4aec"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_7_5.glb",
+      "sha256": "cecc603229155a2327a50f342605443ca3583ece86554005bcfd51b4e08bbf15"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_7_5.low.glb",
+      "sha256": "760ee7bbe53a9f714dbd62e57a765b914c0431ba45db63008f8b482b91540609"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_7_6.glb",
+      "sha256": "860e91884e77821753b952547fe2830c7e82644a908c5c605bcdea8f2ecfb0c9"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_7_6.low.glb",
+      "sha256": "50845c3a21083c4fd480dd545cefb2cd487ad54f037f3a662546b647dc2be31e"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_7_7.glb",
+      "sha256": "be90942e87337bc8c8213a3df8cf86850613c27b13b134497e706428a98670d3"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_7_7.low.glb",
+      "sha256": "2861bac7f1d505a2af7574c4033ebf4e3e5aa2b8b8fc623f0422884e302af1e6"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_0_0.json",
+      "sha256": "e366ea3ddca0015fcfe6a802a24f9babeae2f6d096dbfca15a9131258a9ef312"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_0_1.json",
+      "sha256": "1f7b0e2114bd5e6fbea1030f2b76dc19aaeaa7655dccbce75b83d27740339db6"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_0_2.json",
+      "sha256": "c2ba20c5e85b718a20dbc74bcd0a7aca4f5884da8d33b63ab955fca9c39105b1"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_0_3.json",
+      "sha256": "2137355821b260f5969e9789fc6181a354543f6d172bd59e7707d3b99db5b3e2"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_0_4.json",
+      "sha256": "2b58797d78a6f5dbb975dfe456daa32ee9584790274c5a003255da72b9319934"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_0_5.json",
+      "sha256": "2167fbe02c5a1ca95bed4d68a4d6723747368fe918b8c7f08a214788dc89af78"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_0_6.json",
+      "sha256": "b97bc054a0baacc63ef408fcfe078767fc33f8809cb4b3af8c328e985c250627"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_0_7.json",
+      "sha256": "1a8f2a318651877e10600ffb4210840a45e7320a4faf473d8a7140bb33676242"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_1_0.json",
+      "sha256": "fa0665cf60cfe2238a6ac2ecf40aad636cf8ea48ec7ddbea7196c1189e00476a"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_1_1.json",
+      "sha256": "6c4158657b303a825b17e95d3503149293535cdf624d5caf1f513994623b76b0"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_1_2.json",
+      "sha256": "72f0faddf3c84034cf1c7e7893a066987688a4cbbe03960b4dbe5d946924db2e"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_1_3.json",
+      "sha256": "759e8027c69ae77a6fe908535b567182ed64f182c44ffe3ff9f333b66533fb4e"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_1_4.json",
+      "sha256": "d1b5d9581bb8f5a1110ebd4d15059a476c60298c6cca30d556f7fcde563b72c2"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_1_5.json",
+      "sha256": "30ab8d6f3542151d104db2c77dc0bfa51814480630b8aed58ff76763405738ac"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_1_6.json",
+      "sha256": "1a2b006b82e0f6b1ffa0b19476c2310ab30438be34c771b224e3f7a73dbc0a00"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_1_7.json",
+      "sha256": "6c80144ee463a96a8dfd2ef9b86b268fa05cfe25763c348290c5425df9f226f4"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_2_0.json",
+      "sha256": "4accd6881bef629b0c1c82f8d48376ccaf2263482c85a0b103521598dd07684a"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_2_1.json",
+      "sha256": "4f30f6a52e2168e0589204b7dbbd0e8bab139e25e49d8815ad1cc58a8a1c7550"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_2_2.json",
+      "sha256": "7e07353d57f0c2d5bad66aed4215a731f0123f7109b261126fd5c1ee44fe9fce"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_2_3.json",
+      "sha256": "6f32ab9826c900e5a197f5a8bbfd4b663136b864583419e92385930f35105222"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_2_4.json",
+      "sha256": "a1792a6dbb2393c367ee5afa499b3dc21164f299fa089f5a81a661484bab83ac"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_2_5.json",
+      "sha256": "db79e3bc1ebff707bd99897925ff80ac78f2baa6627d3e7da65370fe02bbabb9"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_2_6.json",
+      "sha256": "20a55dbe939a6716c43ebf4d1c3c4d26a7245adc96ec854c1e7684eff54a98b7"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_2_7.json",
+      "sha256": "3df782c63d1aaa7eb1cb3140ac4320f10d05220f0a091497c2c35fdea499e8a8"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_3_0.json",
+      "sha256": "10fac61717856d996fe040d93f70ea8df9ec142504cc69ecd6c4b34aee34749d"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_3_1.json",
+      "sha256": "33361a3140aa4d11cbd997101d1ba39ebaaffab75f51bbdd461c10f137165d3b"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_3_2.json",
+      "sha256": "220dc86b4747391ecc8c18cef8b92dcfd67b55508edb9977112517a7b4fd00e3"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_3_3.json",
+      "sha256": "f26afaa5c5e02c5f7b222989a16bc11430f723676d21955ed551d5e7d0357545"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_3_4.json",
+      "sha256": "56842663d8a59bb7f83ee88238c35dc2e8ea4815b54c4bca955297fed269d0f3"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_3_5.json",
+      "sha256": "3a564d98a8b26a33abdc5cc1e7b657e2c21c0bc68a1dcd5464f9a91d87235818"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_3_6.json",
+      "sha256": "46bb26cff69deb64565a28c9ec2df0635bb5bf4c9dfe092b9a7e4f6d3f6719cb"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_3_7.json",
+      "sha256": "e2035ebab745a4e657a89128b029b23e857b206552feca2ad296654496ca3440"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_4_0.json",
+      "sha256": "5bd88d8d216f11a414f3df0aef4b4a7595774f1e468ecafbf39527da964eafca"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_4_1.json",
+      "sha256": "ed2505eea904157275e70b9305736f2bc39d27b12d70eab1d1be287654e11dd3"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_4_2.json",
+      "sha256": "7912490ea275aa4d127a1d8ae28515de79361a7f2efa1447f5fe8fcba04bc218"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_4_3.json",
+      "sha256": "b78018b63bf5a35afec2af7483c3ac2dc5435598aabcc188bdd0c19394a69f8e"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_4_4.json",
+      "sha256": "674d833c21f0988a28742e99fdd033c821e74e6e9c09a068013c748cc3d06854"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_4_5.json",
+      "sha256": "c6d707a01a658c2f770c13ecdc5d925c6926c64799c27dd069124b9646ca7c8b"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_4_6.json",
+      "sha256": "3da751db4397ac47941b8e775bb5f5bb49aacb80318c30e10e1866bd1460326c"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_4_7.json",
+      "sha256": "e16ac1fc2861e37a0ede15eff0d0577cf15b61ea807d0743d2c8469a9d6cdcfd"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_5_0.json",
+      "sha256": "0719904ba2bac23dcc3e16ee3b89c04e0ed53f6b5384db244db6d78fc7ff4b93"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_5_1.json",
+      "sha256": "31271c56c0bf194777f782ee190d180743b6917c47552c55c5235b2428c83be5"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_5_2.json",
+      "sha256": "cc3d39950ec4852e28bbe478da507ff231caed466b1d29f2c0ada19e0f2b7910"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_5_3.json",
+      "sha256": "f2067698562b76de777e114517ee1a1a091e5092390d0bd4c36b46004586551f"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_5_4.json",
+      "sha256": "55fdff67d6ff8a6240f5001cc15134310038ffae1ed44c10f0339e3ac9653d8c"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_5_5.json",
+      "sha256": "3f928d228d0e216beabeb12b8f52af842c12ff8c607e90be09be145350146fd6"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_5_6.json",
+      "sha256": "855bd401ec343de52fc95f610c3247a21c34f18c3d26929feda48ada2a678f9f"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_5_7.json",
+      "sha256": "d605b08d41334fee2ab7973a612547becfcfeb173371be881b881afe35e07752"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_6_0.json",
+      "sha256": "b5f2f522f7476964688750a54f73d586d52c358047d1b008660bfc5e843e4155"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_6_1.json",
+      "sha256": "57db2ef77c902e32b5cfa7a8385b2d6258adda836eb850801cf395a394989ccc"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_6_2.json",
+      "sha256": "e2abf0e74f8b33aa3599f84a092611d6bde5dd6108109af19cf270808fca9345"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_6_3.json",
+      "sha256": "46b90e0ecce594cc9ba28637964347e3fabb9b0055fa86845208e2456d319245"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_6_4.json",
+      "sha256": "dce5fa14cdc0c7aad79c83c9bd4ef608c181c166792465ebe0e75295c2b68e77"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_6_5.json",
+      "sha256": "024505484ad20725d012deb84a6c10170f79925ebbce05c8bacbb2b6c1360c48"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_6_6.json",
+      "sha256": "59defc51cb24853bbf1d4385c97e00147937af004248389fb9def392e651bde2"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_6_7.json",
+      "sha256": "b823bf6120a64b7c07b8254b6fb889b22b7a2a2153183e8905a539f0375e1f07"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_7_0.json",
+      "sha256": "af4513cba8b1c6ece2916f9e4582fa417e7136028b4c4b000c11f81c3f43aa65"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_7_1.json",
+      "sha256": "17a483d30604c4c895687d50ac07cf81dee217c6830cb1fc30e5d242ef7721f5"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_7_2.json",
+      "sha256": "34fd7d778bb27c0b77ec8fe233957ba7bc928f7da9eb2f4954eccc60e8d09f7a"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_7_3.json",
+      "sha256": "f4fb1bf1cad962cc2c5ffe4f5c69d2a6d6e6bdea90984328a3c6f0827a549d7a"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_7_4.json",
+      "sha256": "8cebf780b7ee55b63566175f7862219a8a713a58045eb5f99fa64e143fb7bc6d"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_7_5.json",
+      "sha256": "3bf0a75ffb8d7ba5c63cae4e038d694748abef868adcaf3efc380fca4d2219ea"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_7_6.json",
+      "sha256": "1b857aaf03d42f4e51759ad203a9b4928d11eaa8c1cd62b200253282dcc984b1"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/instances_7_7.json",
+      "sha256": "67588d8fba41c43178fcad739bd9decbce83e478f37a9fc23044ca3232961aed"
+    },
+    {
+      "file": "Data/Regions/bialystok-industrial-c/generated/world_manifest.json",
+      "sha256": "ab2ab0c347b8d63969cdbe289576e5dbe9450bbc08dd9648d441942b587a5683"
+    },
+    {
+      "file": "game/Assets/_Generated/Trailer/Materials/High/MI_Trl_Curtain.mat",
+      "sha256": "56759aff77c64e21cc9d0eb85d702981995867fa72d4375f78879f1a53158cda"
+    },
+    {
+      "file": "game/Assets/_Generated/Trailer/Materials/High/MI_Trl_Lights.mat",
+      "sha256": "2bd1da3d8ba3c46444d3ba8c04a68f7fdfde3081e30e8eba5e50a6f6d62d3f64"
+    },
+    {
+      "file": "game/Assets/_Generated/Trailer/Materials/High/MI_Trl_Metal.mat",
+      "sha256": "5a29c814839be9b3d6b8f10a4ad7cc59c324f32877524679e185a16d11c4d337"
+    },
+    {
+      "file": "game/Assets/_Generated/Trailer/Materials/High/MI_Trl_Paint.mat",
+      "sha256": "1bed052bc98811dec5f434ab8fc9ad211bc10edc6d427e3c6577d3f8799d9ed7"
+    },
+    {
+      "file": "game/Assets/_Generated/Trailer/Materials/High/MI_Trl_Trim.mat",
+      "sha256": "33935ace8cabd64cca311fb25a4b4ac05f30182822f3e25a4b6bb232ce892a9b"
+    },
+    {
+      "file": "game/Assets/_Generated/Trailer/Materials/Low/MI_Trl_Curtain.mat",
+      "sha256": "742ed066fccae0384aa2ea297313ef50a798e746b807e29f49a24eb783c53198"
+    },
+    {
+      "file": "game/Assets/_Generated/Trailer/Materials/Low/MI_Trl_Lights.mat",
+      "sha256": "148cec0175a2d725b877457fdbaa1256b6a52d2c2acd1eeb6c1c35f01e271724"
+    },
+    {
+      "file": "game/Assets/_Generated/Trailer/Materials/Low/MI_Trl_Metal.mat",
+      "sha256": "611f77451d7f719e55177889c3491ef8b2c2b1d397a04ddd0f4223f82f02ddb0"
+    },
+    {
+      "file": "game/Assets/_Generated/Trailer/Materials/Low/MI_Trl_Paint.mat",
+      "sha256": "b9d075610f0ed9f1f20ed5c7fce91f356270bbaf070f527824f2d9623159947d"
+    },
+    {
+      "file": "game/Assets/_Generated/Trailer/Materials/Low/MI_Trl_Trim.mat",
+      "sha256": "dfcd6ba275acc6e748c1f55cc9ede7970a5dc16405ef43891914ab8c63788f13"
+    },
+    {
+      "file": "game/Assets/_Generated/Trailer/Materials/Medium/MI_Trl_Curtain.mat",
+      "sha256": "2a2dddca727e2006569b68f23360e7f92c3db7ae357a208422bb49b0b5dba386"
+    },
+    {
+      "file": "game/Assets/_Generated/Trailer/Materials/Medium/MI_Trl_Lights.mat",
+      "sha256": "a821da1c7c1bb39a9c0b0bf49d2af06a00154aee68f46f8e5257959981dca9ef"
+    },
+    {
+      "file": "game/Assets/_Generated/Trailer/Materials/Medium/MI_Trl_Metal.mat",
+      "sha256": "c05257c562793ec64f71bf37a692ce72365e1dc3529e053e8ef34f33bbacec1b"
+    },
+    {
+      "file": "game/Assets/_Generated/Trailer/Materials/Medium/MI_Trl_Paint.mat",
+      "sha256": "7723b462f260c9584c8cee940862cf4e384f9516e3332bde01fad35784e9c2fc"
+    },
+    {
+      "file": "game/Assets/_Generated/Trailer/Materials/Medium/MI_Trl_Trim.mat",
+      "sha256": "cb479c5f32e7b2813265c890cf9be72b130b0ff8a25b00ef677e26fa7ba84eeb"
+    },
+    {
+      "file": "game/Assets/_Generated/Trailer/Source/SM_Trailer_LOD0.fbx",
+      "sha256": "84df434493a29e7ff8eacc4a2f2e1a07408aeb751535e3ea98f7a9eb34835cc2"
+    },
+    {
+      "file": "game/Assets/_Generated/Trailer/Source/SM_Trailer_LOD1.fbx",
+      "sha256": "5a68a6c3e932434735e60c243ac496abf5c015ef93cf6970e26309403243e18a"
+    },
+    {
+      "file": "game/Assets/_Generated/Trailer/Source/SM_Trailer_LOD2.fbx",
+      "sha256": "eaa066856ef124db96740287b49a8117a43478a9cb0f5b5ae2efb5ebced791b8"
+    },
+    {
+      "file": "game/Assets/_Generated/Trailer/Trailer_Curtainsider_Art.prefab",
+      "sha256": "aa7e6d66b2eee9f5f6f25002934477562f35b6c676aa722e2ace3aca9ce79897"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/High/MI_Cab_Decal.mat",
+      "sha256": "4c64926a466434cb63088d4865a1315a358e484c60ae5a2f0456517066daf49e"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/High/MI_Cab_DISPLAY_BunkPanel.mat",
+      "sha256": "d40e903139840593a2d1c5fc66b3ccff5630b97090477388d84896ef3be585b4"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/High/MI_Cab_DISPLAY_Cluster.mat",
+      "sha256": "7f763a37c086e812ece4c2507e8ca8053bf647efae3d956e1a1608853f80a809"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/High/MI_Cab_DISPLAY_Infotainment.mat",
+      "sha256": "40f6761c62ba2c1245445546539fa6a25596d23cf99e6965d733a6785f44ca59"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/High/MI_Cab_DISPLAY_Radio.mat",
+      "sha256": "77a47161514b36323029e131d1d9a3e77604f2b15c96e908454252a5dda31371"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/High/MI_Cab_DISPLAY_Tachograph.mat",
+      "sha256": "7bf6ebf921999f5c2a12121e8f29fad754b54af0108060f14491e8b838104caf"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/High/MI_Cab_Fabric.mat",
+      "sha256": "198d72537ebba3ba9f86965c05adf98999a647867b1af210f07515439611cb1c"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/High/MI_Cab_Glass.mat",
+      "sha256": "2c003f8011d389e3e048a79f9f46a3d1c929156dd2a84edfc7ce242d7ab9764a"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/High/MI_Cab_Leather.mat",
+      "sha256": "03754bb40f693990ff4d755f6b85d0bd5de6a52fa33dee4f99c2ea066f705d1e"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/High/MI_Cab_Metal.mat",
+      "sha256": "242db0cd243852d455da602e2062a6af6c486cde6b237c925bb4ecc6331cc7a5"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/High/MI_Cab_Plastic.mat",
+      "sha256": "82fd06bc956a977c8e67a95644bebdad309ca3b6bffb4a11abf45d008f244823"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/High/MI_Cab_Rubber.mat",
+      "sha256": "5f3fce7f608cfcb0c67ba77396a78c1fddcbf8e8b04dc9dd44098e85b4f7209e"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/High/MI_Ext_DoorGlassL.mat",
+      "sha256": "2f19cb71fc4e61863db541daf767aaeffa012891579fe88e4295e03bd863885d"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/High/MI_Ext_DoorGlassR.mat",
+      "sha256": "66741baebf7d2ff7059190f3b1855cc75f0756e18658a28ee95d4aff24c9dfd2"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/High/MI_Ext_Glass.mat",
+      "sha256": "2907213fbd7a79a2520e9c4b11ff756d9f248df0d9bdddc4c9d653f923688997"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/High/MI_Ext_Lights.mat",
+      "sha256": "a8e3e5c864575688c02f0ff74e99fca5fe4d36d7c92f51726daccf8ec0210691"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/High/MI_Ext_Metal.mat",
+      "sha256": "a00abbd5fba0b5bd839c2bb1872547d6c6e87ef2d546220b8eb0205e5cb91b69"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/High/MI_Ext_MirrorProbe.mat",
+      "sha256": "2d162369ccb38b417c4eaa83a714ea6c694cbc6826254f460bd0e5e44bcc6b00"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/High/MI_Ext_MirrorRT.mat",
+      "sha256": "b0576f290f06d95d0fef6516b06839f1034d4be0d224711d5e7b65b948f8abb4"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/High/MI_Ext_Paint.mat",
+      "sha256": "2958c2c774beef19d052fb9fe28c686c869e2c5246dff57dbfc46803e054a961"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/High/MI_Ext_Trim.mat",
+      "sha256": "483374b2a365b152af2b59aea57fe49c5ba5ee8c76747367c24fac01c1ab6452"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Low/MI_Cab_Decal.mat",
+      "sha256": "b5af6388037644e57ca6d47ccadce0f29450db440a2f55fe6d86ea3732a1a1ac"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Low/MI_Cab_DISPLAY_BunkPanel.mat",
+      "sha256": "d40e903139840593a2d1c5fc66b3ccff5630b97090477388d84896ef3be585b4"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Low/MI_Cab_DISPLAY_Cluster.mat",
+      "sha256": "7f763a37c086e812ece4c2507e8ca8053bf647efae3d956e1a1608853f80a809"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Low/MI_Cab_DISPLAY_Infotainment.mat",
+      "sha256": "40f6761c62ba2c1245445546539fa6a25596d23cf99e6965d733a6785f44ca59"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Low/MI_Cab_DISPLAY_Radio.mat",
+      "sha256": "77a47161514b36323029e131d1d9a3e77604f2b15c96e908454252a5dda31371"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Low/MI_Cab_DISPLAY_Tachograph.mat",
+      "sha256": "7bf6ebf921999f5c2a12121e8f29fad754b54af0108060f14491e8b838104caf"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Low/MI_Cab_Fabric.mat",
+      "sha256": "a873b7ed2f0607f1b96f7e380a30eade6b91b497f14f2237a905cd7d877444cf"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Low/MI_Cab_Glass.mat",
+      "sha256": "69108981d6d426fa2badcdaa7bb9aee1ab3a8785bf17bba7ba86c5f4a99bf598"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Low/MI_Cab_Leather.mat",
+      "sha256": "9d6a73c90775dbc1857e18fa5a16d0e61e1e699c0f970995eca86310196e182c"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Low/MI_Cab_Metal.mat",
+      "sha256": "cee975cde8e08008d64dc5336df45731f765288f0176d3bbffa80e7f15d2dd4c"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Low/MI_Cab_Plastic.mat",
+      "sha256": "1aa64739854b29ab41e0cc8fc0cff7be11a700b866d0d3a82ea17428aa376d83"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Low/MI_Cab_Rubber.mat",
+      "sha256": "a25338bac29fe81456b5106b7f83cc7b7078bc5b9531d0c66d32e49a05d90dd9"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Low/MI_Ext_DoorGlassL.mat",
+      "sha256": "2f19cb71fc4e61863db541daf767aaeffa012891579fe88e4295e03bd863885d"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Low/MI_Ext_DoorGlassR.mat",
+      "sha256": "66741baebf7d2ff7059190f3b1855cc75f0756e18658a28ee95d4aff24c9dfd2"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Low/MI_Ext_Glass.mat",
+      "sha256": "2907213fbd7a79a2520e9c4b11ff756d9f248df0d9bdddc4c9d653f923688997"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Low/MI_Ext_Lights.mat",
+      "sha256": "b50965d14832c0bfa211516a77d171c38fc7604ea73b0abee0f0bad28197e724"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Low/MI_Ext_Metal.mat",
+      "sha256": "910a5be053317de53552896df2aaf09197b972f84559ce200135654951b53565"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Low/MI_Ext_MirrorProbe.mat",
+      "sha256": "5cff1ed33a9ac341d202464a689b0c763db43d1dded1a6c3c8db0238d014d082"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Low/MI_Ext_MirrorRT.mat",
+      "sha256": "74702a1ebc9db423bc95e427ef83c599766a8919884b43fa7cac0f8320a64e1f"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Low/MI_Ext_Paint.mat",
+      "sha256": "ebb30cfa5d977a46305ba46da4d7fe71bb29233966e128ad3cf8a2482629bec9"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Low/MI_Ext_Trim.mat",
+      "sha256": "311ae32f39413ccd77fb19e0d14a6e3ed15dc63f8e12f5387a43d49d8b1ec0b0"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Medium/MI_Cab_Decal.mat",
+      "sha256": "d70d54573365c788e228d1cf3a358115dc25b691d398a09aa326fbb4bb95a7fb"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Medium/MI_Cab_DISPLAY_BunkPanel.mat",
+      "sha256": "d40e903139840593a2d1c5fc66b3ccff5630b97090477388d84896ef3be585b4"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Medium/MI_Cab_DISPLAY_Cluster.mat",
+      "sha256": "7f763a37c086e812ece4c2507e8ca8053bf647efae3d956e1a1608853f80a809"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Medium/MI_Cab_DISPLAY_Infotainment.mat",
+      "sha256": "40f6761c62ba2c1245445546539fa6a25596d23cf99e6965d733a6785f44ca59"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Medium/MI_Cab_DISPLAY_Radio.mat",
+      "sha256": "77a47161514b36323029e131d1d9a3e77604f2b15c96e908454252a5dda31371"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Medium/MI_Cab_DISPLAY_Tachograph.mat",
+      "sha256": "7bf6ebf921999f5c2a12121e8f29fad754b54af0108060f14491e8b838104caf"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Medium/MI_Cab_Fabric.mat",
+      "sha256": "fc975555ac6474aab2541ffbbd9dc4bf2cc9ac7958f9d6df117625f1089f115d"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Medium/MI_Cab_Glass.mat",
+      "sha256": "9716e6e6985ad36839759203777311cb61eca13cfd605dc6e339704ad8cb4166"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Medium/MI_Cab_Leather.mat",
+      "sha256": "949105d04e0f98bdf49fea8485a0418ae0a227f89b463187e292c45b7c3bcf06"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Medium/MI_Cab_Metal.mat",
+      "sha256": "05d5702a169c25660945c6abaf9f6b992983b5a45dcd3507eeb361a633ecf3d1"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Medium/MI_Cab_Plastic.mat",
+      "sha256": "d819e8bec7248ab896e6cc6cf62fe3c76369a68c2f391afa1d80da6c88e46cdf"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Medium/MI_Cab_Rubber.mat",
+      "sha256": "f82bca992837fd07ffc8bd02011dca4ca126ee9dc3cf0a6022776f798bcc5d47"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Medium/MI_Ext_DoorGlassL.mat",
+      "sha256": "2f19cb71fc4e61863db541daf767aaeffa012891579fe88e4295e03bd863885d"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Medium/MI_Ext_DoorGlassR.mat",
+      "sha256": "66741baebf7d2ff7059190f3b1855cc75f0756e18658a28ee95d4aff24c9dfd2"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Medium/MI_Ext_Glass.mat",
+      "sha256": "2907213fbd7a79a2520e9c4b11ff756d9f248df0d9bdddc4c9d653f923688997"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Medium/MI_Ext_Lights.mat",
+      "sha256": "37eddfe05d6136d8ffaf16f9c9d58a714d78e982fab004220cc0fbb50fa4111a"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Medium/MI_Ext_Metal.mat",
+      "sha256": "aba4dc8569f4079ba38b55a0b73cb7dec57a8d02e56eb899b86f77bb2a0fef80"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Medium/MI_Ext_MirrorProbe.mat",
+      "sha256": "14cbbdafc2429adab7dcf31162e9d1e7f46bae7f7d191ea62f37cd408a257549"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Medium/MI_Ext_MirrorRT.mat",
+      "sha256": "e936be8b2f7db917839962c515fde55d128a7256753f5c838452da7e47e3c0f3"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Medium/MI_Ext_Paint.mat",
+      "sha256": "2f6d5ac86974467e83d81348e52e0aceb8050a29a8fc0df2c2acf1a66882fc11"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/Medium/MI_Ext_Trim.mat",
+      "sha256": "46ffec0d997e999dcde4a879c1a35669c6afbbe202954c0be0aab96b452bdc2a"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Materials/MI_FifthWheel_Interim.mat",
+      "sha256": "bf3b6f3bff7921d26217188d939583d0ff978297e6401ab8161859c9cc3f9f0a"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Source/Exterior/SM_TruckExterior_LOD0.fbx",
+      "sha256": "262e395a60c96a2752e0af76f0c9bd7f47728f20c72e918f3b138d4314114f50"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Source/Exterior/SM_TruckExterior_LOD1.fbx",
+      "sha256": "655e625fe638b78bf6801af91c99be1890648d29cd5ffabca99bef86e71309c3"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Source/Exterior/SM_TruckExterior_LOD2.fbx",
+      "sha256": "5237249cf58700f76df853bd692e5a3607e1afb815434d955100060e8ed94b8a"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Source/Interior/SM_CabInterior_LOD0.fbx",
+      "sha256": "177d820ebe99b45b359789469107eaa498198e679a851a24db912ebd2a2930fe"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Source/Interior/SM_CabInterior_LOD1.fbx",
+      "sha256": "14564e63466ce5625e536158e90c577d968f0855b04a4faad65640f4c4c6e667"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Source/Interior/SM_CabInterior_LOD2.fbx",
+      "sha256": "7e2dbc22cb078b3adb93ac99607ba7a08e9c7850503cafb23365b316ed3f58dd"
+    },
+    {
+      "file": "game/Assets/_Generated/Truck/Tractor4x2_TRAKT.prefab",
+      "sha256": "76a1696a4f162b7d63401e2c5f6b6ef5e3f064b79a5fcbc7bd7934d748360231"
+    },
+    {
+      "file": "game/Assets/_Project/Environment/Shaders/WorldPBR.shader",
+      "sha256": "a285cec8415de593b0c9bfedc28816acd98659de97b421c009bdafc1706e949b"
+    },
+    {
+      "file": "game/Assets/_Project/World/Import/WorldPbrMaterials.cs",
+      "sha256": "101348478291d2b8e69dc1b919572ca848e6923caebc13bae8128a9135f6a68a"
+    },
+    {
+      "file": "tools/worldgen/streetscape/export.py",
+      "sha256": "7f98225b8b89a25faf4008de3a1a9c748d537df97b4c073c0f974dd9d35e5fd4"
+    },
+    {
+      "file": "tools/worldgen/streetscape/life_cars.py",
+      "sha256": "4330211f62e359b449eeb120ef24545c0e2a80fa562993f9dc4fc981a2f502d7"
+    },
+    {
+      "file": "tools/worldgen/streetscape/materials.py",
+      "sha256": "4b89c4f43ffc02d6537589a892eff406b6c1faf98ab17e36de9d0efb7a541459"
+    }
+  ],
+  "note": "Private targeted generation after canonical full baseline PBR451s. No mtime changes. Final full canonical regeneration must reproduce these products; not a claim of full PBR regeneration after R4."
+}

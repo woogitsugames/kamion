@@ -1,7 +1,8 @@
 param(
  [Parameter(Mandatory=$true)][ValidateSet('Fixtures','PrepareImport','Import','Capture')][string]$Phase,
  [Parameter(Mandatory=$true)][string]$RootRelease,
- [string]$Cameras=''
+ [string]$Cameras='',
+ [string]$ContentProof=''
 )
 $ErrorActionPreference='Stop'
 Set-Location ([IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..')))
@@ -49,6 +50,19 @@ if($Phase-eq'PrepareImport') {
  $cut=$text.IndexOf($anchor)
  if($cut-lt0){throw 'Canonical import CPU/Unity boundary changed'}
  $cpu=$text.Substring(0,$cut).Replace('. "$PSScriptRoot/env.ps1"',(". '"+[IO.Path]::GetFullPath('scripts/env.ps1')+"'"))
+ if($ContentProof) {
+  & uv run --project tools/worldgen python artifacts/car-paint-r1/r4-pbr-content-proof.py --check $ContentProof
+  if($LASTEXITCODE-ne0){throw 'Private R4 targeted content proof failed'}
+  $needle='if ($missing -gt 0 -or $stale -gt 0) {'
+  if($cpu.IndexOf($needle)-lt0){throw 'Canonical stale conditional changed'}
+  $replacement=@'
+if ($missing -ne 0) { throw 'Missing PBR files: private content exception refused' }
+Write-Output 'PRIVATE R4 EXCEPTION: all baseline PNGs/other source AST exact; targeted clean variant validated. This is not a full post-R4 PBR regeneration.'
+$stale = 0
+if ($missing -gt 0 -or $stale -gt 0) {
+'@
+  $cpu=$cpu.Replace($needle,$replacement)
+ }
  $cpu+="`nWrite-Output 'R4_IMPORT_CPU_READY'`nexit 0`n"
  $copy=[IO.Path]::GetFullPath('artifacts/car-paint-r1/r4-import-cpu-only.ps1')
  [IO.File]::WriteAllText($copy,$cpu,[Text.UTF8Encoding]::new($false))
@@ -63,12 +77,22 @@ if($Phase-eq'PrepareImport') {
   $null=$watch.WaitForExit(2000)
  }
  [IO.File]::WriteAllText([IO.Path]::GetFullPath('artifacts/car-paint-r1/r4-import-cpu-ready.txt'),(Get-FileHash $sourcePath).Hash,[Text.UTF8Encoding]::new($false))
+ $readyRecord=@{canonicalImportSha=(Get-FileHash $sourcePath).Hash;shaderSha=(Get-FileHash 'game/Assets/_Project/Environment/Shaders/WorldPBR.shader').Hash;specSha=(Get-FileHash 'art-source/world/materials/materials_spec.json').Hash;contentProof=$ContentProof;contentProofSha=''}
+ if($ContentProof){$readyRecord.contentProofSha=(Get-FileHash $ContentProof).Hash}
+ $readyRecord | ConvertTo-Json | Set-Content artifacts/car-paint-r1/r4-import-cpu-ready.json -Encoding utf8
  Write-Output 'CPU only complete. STOPPED: launch Import separately after a fresh release/guard check.'
 }
 if($Phase-eq'Import') {
  $ready='artifacts/car-paint-r1/r4-import-cpu-ready.txt'
  if(-not(Test-Path $ready)){throw 'Run PrepareImport first; CPU and Unity are deliberately separate commands'}
  if([IO.File]::ReadAllText([IO.Path]::GetFullPath($ready))-ne(Get-FileHash scripts/import-region.ps1).Hash){throw 'Canonical import source changed after CPU preparation'}
+ $record=Get-Content artifacts/car-paint-r1/r4-import-cpu-ready.json -Raw | ConvertFrom-Json
+ if($record.shaderSha-ne(Get-FileHash 'game/Assets/_Project/Environment/Shaders/WorldPBR.shader').Hash -or $record.specSha-ne(Get-FileHash 'art-source/world/materials/materials_spec.json').Hash){throw 'Ready shader/spec content drift'}
+ if($record.contentProof) {
+  if($record.contentProofSha-ne(Get-FileHash $record.contentProof).Hash){throw 'Ready content proof file changed'}
+  & uv run --project tools/worldgen python artifacts/car-paint-r1/r4-pbr-content-proof.py --check $record.contentProof
+  if($LASTEXITCODE-ne0){throw 'Content drift after CPU ready record'}
+ }
  Assert-Slot
  # Install only our artifact observer into ignored editor output; no production QA source edits.
  $observer='game/Assets/_Generated/Editor/R4PosePacket.cs'

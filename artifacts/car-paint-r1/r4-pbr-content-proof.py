@@ -74,6 +74,21 @@ files.update(ROOT/p for p in (
     'game/Assets/_Project/World/Import/WorldPbrMaterials.cs',
     'tools/worldgen/streetscape/life_cars.py','tools/worldgen/streetscape/export.py',
     'tools/worldgen/streetscape/materials.py'))
+manifestpath=ROOT/'Data/Regions/bialystok-industrial-c/generated/world_manifest.json'
+manifest=json.loads(manifestpath.read_text())
+files.add(manifestpath)
+files.update(ROOT/ref['file'] for c in manifest['chunks'] for ref in (c,c['low'],c['instances']))
+files.update(ROOT/p for p in (
+    'art-source/world/props/street_props.glb','art-source/world/props/props_meta.json',
+    'art-source/world/textures/fire_station_alpha.png',
+    'art-source/world/landmarks/fire_station_jrg2/fire_station_jrg2.glb',
+    'art-source/world/landmarks/fire_station_jrg2/atlas_layout.json',
+    'art-source/world/cc0/_raw/fir_tree_01/twig_diff.png',
+    'art-source/world/cc0/_raw/fir_tree_01/twig_alpha.png'))
+baseline=json.loads((ART/'r4-before-imported-source-proof.json').read_text())
+for p,digest in baseline['fixture_sha256'].items():
+    assert sha(ROOT/p)==digest,'Canonical vehicle fixture drift after BEFORE'
+    files.add(ROOT/p)
 content=[dict(file=p.relative_to(ROOT).as_posix(),sha256=sha(p)) for p in sorted(files)]
 out=dict(private_R4_exception=True,baseline_pngs_exact=len(before['maps']),legacy_car_grime_exact=12,
     unrelated_facade_ast_exact=True,other_src_hashes_exact=True,missing=0,
