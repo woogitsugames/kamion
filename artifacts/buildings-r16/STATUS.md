@@ -12,3 +12,20 @@
 - Reguła koordynatora: ciężki Python tylko w slocie `-Pool heavy` (`world.ps1`), pełny pytest na końcu.
 - NASTĘPNY KROK: `pwsh artifacts/buildings-r16/world.ps1 -Round r1` → `pwsh artifacts/buildings-r16/full_round.ps1 -Round r1`
   → `python artifacts/buildings-r16/budget2.py artifacts/buildings-r16/base/Low-overcast artifacts/buildings-r16/r1/Low-overcast`
+
+## krok 2 — świat r1 zbudowany, import r1 w toku (stan na przerwanie sesji)
+- Commit kodu r1 + testy `tests/gis/test_buildings_r8.py` (6/6), `test_buildings_r5..r7` zielone (pełny `pytest tests/gis` NIE uruchomiony).
+- `build_world` r1: exit 0, 526 s; region High 4073 submeshy / 14,167 mln tris (baza 4085 / 14,21), Low 3054 / 4,515 mln
+  (baza 3066 / 4,609); `plot_kit` 52 022 tris (r7 56 964); przewody: 6 łańcuchów, 15 przęseł 469 m, 22 przyłącza, 370 tris.
+- Działki: 99, bramy 43 (wszystkie z dojazdem i obniżeniem: 43/43; 11 przesuniętych, 5 → sama furtka), płot nie przecina
+  żadnej strefy schodów / bramy garażu (0). `drop_check_r2.txt`: 43/43 krawężniki obniżone o 10 cm do 3 cm (pomiar
+  maks. z krawężnika − mediana asfaltu w 1,2 m: 3,0–8,0 cm, reszta to spadek poprzeczny); krawężnik ulic domów mediana 10,5 cm.
+- Baza `base/` kompletna: Low/High overcast + extra + extra_low (stats.txt do budżetu).
+- NIEZROBIONE / NIEZWERYFIKOWANE: żaden render r1 jeszcze nie obejrzany (import r1 trwa: shader `WorldPlotKit`, `PlotViewCull`
+  i zmiana `WorldPBR` nieskompilowane w Unity!), budżet draws r1 vs baza, pomiar zacieków, lusterka (MirrorCostProfiler),
+  EditMode, fidelity/run.py (dotknięty `roads/build_world.py`), ADR 0124, LICENSES (fir_tree_01 CC0 w `plot_kit`), pary referencji.
+- NASTĘPNY KROK (jeśli import padł lub sesja zginęła):
+  `pwsh artifacts/buildings-r16/full_round.ps1 -Round r1` (touch PNG w art-source/world/materials przed) →
+  `grep -n "error CS\|Shader error" artifacts/buildings-r16/r1/import.log` →
+  `python artifacts/buildings-r16/budget2.py artifacts/buildings-r16/base/Low-overcast artifacts/buildings-r16/r1/Low-overcast` (i High) →
+  obejrzeć `r1/extra/960/r16_*.jpg`, `r15_front_*.jpg` → poprawki → ADR `docs/adr/0124-buildings-r8.md`.
