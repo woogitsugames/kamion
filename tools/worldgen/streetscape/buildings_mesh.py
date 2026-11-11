@@ -1247,7 +1247,10 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
             # fascia / verge board: white boards with a tile roof, sheet flashing in the roof tone with a metal roof
             # (review s9 P2-3 "thick black verge board")
             eaves = RF.build(acc, roof, poly, rmat, soffit_mat="soffit_boards",
-                             fascia_mat="hall_flashing" if rmat.startswith("roof_metal") else "reveal_plaster")
+                             fascia_mat="hall_flashing" if rmat.startswith("roof_metal") else "soffit_boards")
+            # ADR 0097 (review 0094 P2-c "wiatrownica biała vs szara"): with a tile roof the fascia / verge boards are
+            # the soffit boarding material, so main roof and wing show one board colour (was white reveal_plaster
+            # fascia next to the grey soffit_boards under the short wing overhang)
             eaves.sort(key=lambda e_: -float(np.hypot(*(e_[1] - e_[0]))))
             for k_, (ea, eb, ze) in enumerate(eaves):             # eaves gutters; downpipes on the two longest
                 le = float(np.hypot(*(eb - ea)))
