@@ -51,3 +51,6 @@
 - FINAL primary Unity validation after hierarchy fix: EditMode 226/226; WorldEdgeRecoveryTests 3/3, no skips. XML editmode-20261111-120601.xml and playmode-20261111-120628.xml.
 - Re-rendered all four after configurations after C# fix, checked budgets again; diagnostic skyline second round now running (checks PHONE_RUN at every start).
 - NEXT: Get-Content artifacts/edge-far-r2/run-skyline.log -Tail 20; inspect skyline PNGs; finalize REPORT and copy artifacts to main.
+- Second-round 40m skyline shows inherited ground-to-apex triangle fans as repeated dark pyramids. Testing a shallow internal canopy fill with rim at 0.8*h_cap (WORKING_VALUE), same triangle/vertex/material count; external crown curtains unchanged.
+- Prototype first shell did not rebuild due Windows PowerShell execution policy; that capture is invalid for the experiment. Re-running under project-supported pwsh with terminating errors and explicit successful rebuild before render (test-cap.ps1).
+- NEXT: Get-Content artifacts/edge-far-r2/test-cap.log -Tail 20; inspect cap-prototype/Low-clear/edge-pietrasze-skyline.png before accepting/rejecting variant.
