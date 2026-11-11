@@ -85,3 +85,7 @@ NASTĘPNY KROK: uv run --project tools/worldgen tools/worldgen/roads/build_world
 2026-11-11T22:59:27.6127238+01:00: heavy focused after; sukces=True; slot gpt-furniture-r1 zwolniony. NASTĘPNY KROK: sprawdzić log i kontynuować walidację rundy.
 
 2026-11-11T23:06:26.9349743+01:00: opisano w ADR faktyczny kontrakt COLOR_0 i odrzucone warianty materiału/UV. STATUS w katalogu rundy zsynchronizowano z pełnym dziennikiem 24h; kolejne wrappery robią to automatycznie. Build-after trwa pod heavy, pełny GIS nadal nie był uruchamiany. NASTĘPNY KROK: po build-after sprawdzić marker w GLB, hashe chronionej geometrii i importować wariant po zmianie.
+
+2026-11-11T23:07:15.5453825+01:00: heavy world after; sukces=True; slot gpt-furniture-r1 zwolniony. NASTĘPNY KROK: sprawdzić log i kontynuować walidację rundy.
+
+2026-11-11T23:11:30.4394720+01:00: build-after exit=0, slot heavy zwolniony. Przygotowano analizę eksportowanych markerów i porównanie 6833 chronionych payloadów, także w puli heavy. Baseline/odrzucone zbliżenia pozostają zachowane. NASTĘPNY KROK: heavy-step geometry after, następnie import after.
