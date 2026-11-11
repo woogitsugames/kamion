@@ -59,3 +59,4 @@ Przygotowano porównanie wszystkich kamer: mesh draws, shadow draws oraz draws/t
 2026-11-11T23:46:00.0686012+01:00: Drugi generator zakończony; audyt 196 odwołań SHA bez rozbieżności. Kolejka importu i czterech serii candidate2 przygotowana.
 2026-11-11T23:47:23.9890914+01:00: Import kandydata zakończony. Następny krok: cztery serie Capture candidate.
 2026-11-11T23:47:34.6964558+01:00: Przygotowano pomiar kontrastu na faktycznych macierzach kamery i interpolowanym UV1 Half. Wyniki wymagają oględzin kolorowych masek. ADR poprawiony: próby filtracji nie usunęły drobnego wzoru przy krawężniku, nie deklarujemy naprawy.
+2026-11-11T23:47:55.2626807+01:00: zapisano artifacts/asphalt-r1/candidate2/Low-overcast. Następny krok: pozostałe serie lub porównanie wariantu.
