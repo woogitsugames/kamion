@@ -1,0 +1,119 @@
+{
+  "method": "Owner1024ROI, matchedC2production vsnear-radianceOFF andC1near-paneOFF. CapturemipchangedC1?C2 butfar-doorinsideanalyticunchanged; near-paneOFF excludesnearreflectionbranch. AllRGBApostgradedPNGs; displayLinear meansdecodeddisplayoutput, NOT pretonemap physicalradiance. Covariance iscausal displaydeltaonly.",
+  "rows": [
+    {
+      "condition": "Low-overcast",
+      "production": {
+        "p50": 18.796784313725485,
+        "sd": 5.923674390463553
+      },
+      "nearRadianceOff": {
+        "p50": 4.760941176470588,
+        "sd": 10.433126695563045
+      },
+      "nearPaneRemoved": {
+        "p50": 6.329568627450981,
+        "sd": 12.098412867071907
+      },
+      "productionToNoPaneSdRatio": 0.48962408999827906,
+      "transmissionOnlyToNoPaneSdRatio": 0.8623549890547008,
+      "displayLinearAddedMedian": 0.021296995241560777,
+      "displayLinearAddedBackgroundCovariance": -5.92412353621879e-05
+    },
+    {
+      "condition": "High-overcast",
+      "production": {
+        "p50": 22.606666666666666,
+        "sd": 5.333285847923455
+      },
+      "nearRadianceOff": {
+        "p50": 4.67756862745098,
+        "sd": 7.829994817399869
+      },
+      "nearPaneRemoved": {
+        "p50": 6.581725490196078,
+        "sd": 10.109345611002803
+      },
+      "productionToNoPaneSdRatio": 0.5275599483035595,
+      "transmissionOnlyToNoPaneSdRatio": 0.7745303324952966,
+      "displayLinearAddedMedian": 0.035526272851763296,
+      "displayLinearAddedBackgroundCovariance": 5.0884129144969386e-05
+    },
+    {
+      "condition": "Low-clear",
+      "production": {
+        "p50": 28.32227450980392,
+        "sd": 4.926948815138012
+      },
+      "nearRadianceOff": {
+        "p50": 13.68301960784314,
+        "sd": 10.27495471202488
+      },
+      "nearPaneRemoved": {
+        "p50": 17.00219607843137,
+        "sd": 12.11174761776466
+      },
+      "productionToNoPaneSdRatio": 0.4067909083501302,
+      "transmissionOnlyToNoPaneSdRatio": 0.8483461707007747,
+      "displayLinearAddedMedian": 0.04507483227303609,
+      "displayLinearAddedBackgroundCovariance": -4.331226699978914e-05
+    },
+    {
+      "condition": "High-clear",
+      "production": {
+        "p50": 30.17137254901961,
+        "sd": 5.18568865264274
+      },
+      "nearRadianceOff": {
+        "p50": 12.170235294117646,
+        "sd": 10.77295875194173
+      },
+      "nearPaneRemoved": {
+        "p50": 15.028823529411765,
+        "sd": 12.828447985286095
+      },
+      "productionToNoPaneSdRatio": 0.4042335174598356,
+      "transmissionOnlyToNoPaneSdRatio": 0.839771012385757,
+      "displayLinearAddedMedian": 0.05212297579079531,
+      "displayLinearAddedBackgroundCovariance": -8.830238988979986e-05
+    },
+    {
+      "condition": "Low-lowsun",
+      "production": {
+        "p50": 21.764156862745097,
+        "sd": 11.275533274430176
+      },
+      "nearRadianceOff": {
+        "p50": 4.36878431372549,
+        "sd": 16.401127922896713
+      },
+      "nearPaneRemoved": {
+        "p50": 5.798980392156863,
+        "sd": 18.918910635146972
+      },
+      "productionToNoPaneSdRatio": 0.5959927340363264,
+      "transmissionOnlyToNoPaneSdRatio": 0.8669171412241464,
+      "displayLinearAddedMedian": 0.02590068707458891,
+      "displayLinearAddedBackgroundCovariance": -1.8545246878018137e-05
+    },
+    {
+      "condition": "High-lowsun",
+      "production": {
+        "p50": 23.498745098039215,
+        "sd": 11.855807549311582
+      },
+      "nearRadianceOff": {
+        "p50": 5.392666666666667,
+        "sd": 17.179816965386728
+      },
+      "nearPaneRemoved": {
+        "p50": 6.219450980392157,
+        "sd": 20.127041839945917
+      },
+      "productionToNoPaneSdRatio": 0.5890486860210868,
+      "transmissionOnlyToNoPaneSdRatio": 0.8535689000899345,
+      "displayLinearAddedMedian": 0.028585775074462805,
+      "displayLinearAddedBackgroundCovariance": -0.00013652084612248043
+    }
+  ]
+}

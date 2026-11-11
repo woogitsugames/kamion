@@ -59,12 +59,20 @@ namespace Game.Editor.VisualQA
                 string fields=mode=="mask"?"float3(coat,dirt,m.r)":mode=="fresnel"?"debugFc":mode=="env"?"debugEnv":mode=="crown"?"float3((renderingLayer & (1u << 10)) != 0u ? 1:0,saturate(length(KamionDoorCrownGradient(TransformWorldToObject(i.positionWS),TransformWorldToObjectDir(i.normalWS),m.b,renderingLayer))/0.017455),saturate(_IsPaint*m.b))":throw new InvalidOperationException("Unknown paint diagnostic mode");
                 source=source.Replace("return half4(col.rgb, 1);","return half4("+fields+",1);");
             }
+            // Crown fields only sample MMap; the optimizer strips CMap, so its associated sampler would be orphaned.
+            // Use the remaining atlas texture's identically configured sampler in this diagnostic only.
+            if(mode=="crown")source=source.Replace("sampler_CMap","sampler_MMap");
             string target="Assets/_Generated/TruckPaintProbe/PaintDiagnostic_"+mode+".shader";
             string full=Path.Combine(EditorTools.ProjectRoot,target);
             Directory.CreateDirectory(Path.GetDirectoryName(full)); File.WriteAllText(full,source);
             AssetDatabase.ImportAsset(target,ImportAssetOptions.ForceSynchronousImport|ImportAssetOptions.ForceUpdate);
             var shader=AssetDatabase.LoadAssetAtPath<Shader>(target);
-            if(shader==null||ShaderUtil.ShaderHasError(shader)) throw new InvalidOperationException("Coat radiance-only ablation shader failed");
+            if(shader==null||ShaderUtil.ShaderHasError(shader))
+            {
+                string errors=shader==null?"missing shader":"";
+                if(shader!=null)foreach(var message in ShaderUtil.GetShaderMessages(shader))errors+="\n"+message.message+" @"+message.file+":"+message.line;
+                throw new InvalidOperationException("Paint diagnostic compile failed: "+errors);
+            }
             foreach(var guid in AssetDatabase.FindAssets("MI_Ext_Paint t:Material",new[]{"Assets/_Generated/Truck"}))
             {
                 var material=AssetDatabase.LoadAssetAtPath<Material>(AssetDatabase.GUIDToAssetPath(guid));
