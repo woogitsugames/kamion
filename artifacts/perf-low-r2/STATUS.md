@@ -30,8 +30,9 @@
 - APK `artifacts/apk/kamion-0.1.0-6b6c1d8003.apk` (SHA256 02ce1654a3d14c23073b259863f0c8b6bb95258bed933affcb6ce0d368b12fc3, 191,4 MB).
 - Testy: EditMode 248/248, PlayMode 110 pass / 0 fail / 7 skip. visual-qa Low overcast/clear przed/po: `vqa/`, `vqa/960/`.
 - docs/adr/0113-perf-low-a16-r2.md, docs/PERFORMANCE_BUDGETS.md (sekcja r2).
-- W toku: `artifacts/perf-low-r2/shimmer.ps1` (wideo z telefonu, las w ruchu, po/przed) — czeka na PHONE_RUN lidera.
-- NASTĘPNY KROK: po `shimmer.done`: `ffmpeg -i artifacts/perf-low-r2/shimmer/after.mp4 -vf fps=10,scale=960:-1 ...` → obejrzeć klatki, dopisać do ADR/STATUS.
+- Wideo migotania lasu z telefonu NIE nagrane: lider trzymał PHONE_RUN 17:15–18:05+ (gate3 run5); skrypt gotowy, zatrzymany.
+- NASTĘPNY KROK: `pwsh -NoProfile -File artifacts/perf-low-r2/shimmer.ps1` (po/przed, ten sam APK 6b6c1d8003 już na A16), potem
+  `ffmpeg -i artifacts/perf-low-r2/shimmer/after.mp4 -vf fps=10,scale=960:-1 artifacts/perf-low-r2/shimmer/after-%03d.jpg` (+ before) i porównać pas lasu.
 
 ## RAPORT KOŃCOWY (ADR 0113, gałąź perf-low-r2)
 - SHA kodu pomiaru: `6b6c1d80` (APK powyżej); ostatni commit gałęzi: patrz `git log -1` (docs/artefakty po pomiarze).
@@ -53,6 +54,7 @@
   (`vqa/960/clear-*-crop-before-after.jpg`).
 - Otwarte: (1) device-metrics: zrzut/meminfo po zatrzymaniu zapisu klatek (build-qa); (2) GPU p95 ≤ 28 tylko przez mniej pikseli (D50);
   (3) nagrać PSO ponownie po scaleniu 0107/0108/0110 i dla Medium/High na S24+; (4) korony HLOD bez toe/KamionMixFog (jak URP Lit) — do oceny;
-  (5) lusterka bez zmian (Low = 1 render/klatkę już; rzadziej = szarpanie).
+  (5) lusterka bez zmian (Low = 1 render/klatkę już; rzadziej = szarpanie); (6) wideo migotania lasu z telefonu nienagrane
+  (telefon zajęty przez lidera) — skrypt `shimmer.ps1`; ryzyko niskie: ściany jednoprzebiegowe mają to samo A2C i ten sam clip.
 - Konflikty: QualityProfile(.cs/.asset)/ProjectSetup (rev 113, migracje 98/106 zachowane), Vegetation.shader (GPT 0109),
   WorldInstances.cs (3 haki), RenderOverrides/ExtraViewCostMonitor/QualityProfileApplier (dopisane).

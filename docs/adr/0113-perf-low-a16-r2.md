@@ -76,8 +76,9 @@ renderu ~13 ms zależne od pikseli) są poza zakresem bez zmiany obrazu (D50). J
 przejazdami ±5–10 klatek > 40 ms; kierunek spójny w obu odcinkach.
 
 Jakość (kamery kontrolne Low, `artifacts/perf-low-r2/vqa/`): overcast PSNR ≥ 60 dB (różnice < 0,02 % pikseli), clear ≥ 47 dB —
-jedyne widoczne różnice to usunięte artefakty cienia (`vqa/960/*-crop-before-after.jpg`). Migotanie lasu w ruchu: patrz STATUS
-(wideo z telefonu).
+jedyne widoczne różnice to usunięte artefakty cienia (`vqa/960/*-crop-before-after.jpg`). Migotanie lasu w ruchu: **wideo z telefonu nie nagrane w tej rundzie** (telefon zajęty
+pomiarami lidera); skrypt `artifacts/perf-low-r2/shimmer.ps1` (ten sam APK, po/przed). Ryzyko niskie: ściany jednoprzebiegowe
+mają to samo pokrycie A2C i ten sam próg co ścieżka dwuprzebiegowa, impostory i karty bez zmian geometrii.
 
 ## Otwarte
 1. `scripts/device-metrics.ps1` (build-qa): zatrzymać zapis klatek przed `screencap`/`dumpsys meminfo` albo liczyć p99 do
@@ -85,6 +86,7 @@ jedyne widoczne różnice to usunięte artefakty cienia (`vqa/960/*-crop-before-
 2. GPU p95 ≤ 28 ms przy limicie 30: wymaga mniej pikseli (skala/HLOD/impostory — decyzja właściciela, D50) albo szyby r2.
 3. PSO: kolekcje nagrane dla Low/Vulkan i dwóch odcinków; nowe treści (zabudowa 0107, drogi 0110, światło 0108) dodadzą stany —
    po scaleniu nagrać ponownie (`pso_trace`, build Development) i podmienić pliki. Medium/High: nagrać na S24+.
+5. Wideo migotania lasu na A16 (po/przed) — `shimmer.ps1`, do obejrzenia przed scaleniem.
 4. Korony HLOD nadal bez tonu „toe” Low i z mgłą Unity (jak URP Lit) — niespójność z resztą świata (KamionMixFog) zostawiona,
    bo zmiana obrazu; do oceny wizualnej.
 
