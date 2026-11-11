@@ -21,6 +21,11 @@ if ($LASTEXITCODE -ne 0) { throw 'Nie uzyskano slotu heavy dla niejawnych genera
 try {
     & pwsh $slot -Acquire -Owner gpt-light
     if ($LASTEXITCODE -ne 0) { throw 'Nie uzyskano slotu importu' }
+    git diff --quiet HEAD -- game/Assets/_Project/Rendering/Settings game/ProjectSettings
+    if ($LASTEXITCODE -ne 0) {
+        & pwsh $slot -Release -Owner gpt-light
+        throw 'Import odmówiony: istnieją niezacommitowane zmiany ustawień sprzed Unity'
+    }
     try {
         # import-region may call build_world/build_all: the outer heavy slot covers every such invocation.
         & pwsh scripts/import-region.ps1 -Region bialystok-industrial-c
@@ -39,6 +44,11 @@ git commit -m 'wip(light): zaimportuj swiezy swiat przed weryfikacja nieba'
 if ($LASTEXITCODE -ne 0) { throw "Smoke batch nieudany: $LASTEXITCODE" }
 & pwsh $slot -Acquire -Owner gpt-light
 if ($LASTEXITCODE -ne 0) { throw 'Nie uzyskano slotu EditMode' }
+git diff --quiet HEAD -- game/Assets/_Project/Rendering/Settings game/ProjectSettings
+if ($LASTEXITCODE -ne 0) {
+    & pwsh $slot -Release -Owner gpt-light
+    throw 'EditMode odmówione: istnieją niezacommitowane zmiany ustawień sprzed Unity'
+}
 try {
     & pwsh scripts/test.ps1 -Platform EditMode
     if ($LASTEXITCODE -ne 0) { throw "EditMode nieudany: $LASTEXITCODE" }

@@ -1,4 +1,13 @@
-﻿# Status rundy 1 — światło
+﻿## Stan bieżący po zmianie limitów — 11 listopada, około 22:28
+Gałąź gpt-light-r1; własny worktree gpt-light. Okno pracy do 12 listopada 21:30, Europe/Warsaw.
+Ciężki Python wyłącznie przez run-heavy.ps1 i aktualny helper slotów z main: pula heavy, właściciel gpt-light-r1, max 3. Pełny GIS tylko na końcu rundy (-Task GisFinal -RoundEnd).
+35/40 PNG ablacji RCAS gotowych; ostatni wariant High-overcast-0.75 czeka w istniejącym procesie 93600. Poprawiony kontroler importu czeka na jego koniec, potem bierze heavy również dla niejawnego build_all/build_world.
+GIS pierwszy pełny: 492 PASS / 1 FAIL (stary fidelity) / 1 XFAIL. Po odświeżeniu pełny przebieg zatrzymano na pilne polecenie limitu; nie jest zaliczony. Pojedynczy test_road_fidelity.py po odświeżeniu: 9 PASS / 1 XFAIL w puli heavy, slot zwolniony.
+RCAS .75 jest kandydatem, nie zamknięciem P0: asfalt HF 5,6999, niebo HF 0,6418 > 0,6. Niezależna recenzja w review-rcas/REVIEW.md. Nowe chmury i próby bieli/cieni wymagają renderów i oględzin.
+Następny krok: Get-Content artifacts/light-r1/rcas-ablation.log -Tail 6; Get-Content artifacts/light-r1/validation-followup-heavy.log -Tail 6. Nie uruchamiać drugiej kopii tych procesów. Po smoke obejrzeć PNG, potem próby cieni/bieli i pełne SBS; EditMode w kolejce, pełny GIS na końcu.
+
+## Dziennik kroków
+# Status rundy 1 — światło
 Przeczytano instrukcję 24 h, HANDOVER s10, CLAUDE, reguły agentów, standard grafiki, budżety, decyzje D48–D50, recenzje 0088/0098 i J/K oraz feedback.
 Gałąź gpt-light-r1 utworzona z main 4c9905b1. Start 2026-11-11; koniec okna pracy po 24 godzinach od startu.
 Następny krok: przygotować kopie danych i junctiony według protokołu, git lfs checkout, potem baseline High/Low i ablacja RCAS.
@@ -9,7 +18,7 @@ Krok 2: skopiowano wymagane dane, Megascans i _Generated; junctiony istnieją, g
 
 Krok 3: kopia Library zakończona (kod robocopy 1 = skopiowane pliki). Ruszyła ablacja RCAS, każdy render bierze i zwalnia slot gpt-light. Generator baseline działa równolegle. Stwierdzono w Sky.shader: chmury mnożone przez overcast, więc clear=0 wyłącza całą strukturę. Następny krok: pomiary PNG i poprawka nieba clear w istniejącym przebiegu.
 
-Krok 4: zapisano ADR 0108 z kryteriami r1, granicami własności i oknem pracy do 12.11.2026 21:30 Europe/Warsaw. Następny krok: zakończyć ablacjas RCAS, obejrzeć i zmierzyć PNG.
+Krok 4: zapisano ADR 0108 z kryteriami r1, granicami własności i oknem pracy do 12.11.2026 21:30 Europe/Warsaw. Następny krok: zakończyć ablację RCAS, obejrzeć i zmierzyć PNG.
 Render ablacji zakończony: artifacts/light-r1/rcas/High-clear-0. PNG wymagają obejrzenia i pomiarów. Następny krok: kolejny wariant w artifacts/light-r1/rcas-ablation.ps1, potem analiza.
 
 Krok 5: przygotowano compare_rcas.py, który liczy RMS z oryginalnych PNG i zapisuje arkusze ≤960 px. Następny krok: uv run --project tools/worldgen python artifacts/light-r1/compare_rcas.py po zakończeniu ablacji.
@@ -18,12 +27,12 @@ Render ablacji zakończony: artifacts/light-r1/rcas/High-clear-0.5. PNG wymagaj�
 
 Punkt kontrolny 21:42: baseline clear obejrzany; RMS nieba 1,5 px = 0,5503, asfaltu = 3,4372. RCAS 0,25: niebo 0,6076, asfalt 4,0386. Runda NIEZAKOŃCZONA. W toku: rcas-ablation.ps1 (pozostałe warianty) i build-world-baseline.log. Następny krok: po zakończeniu procesów uv run --project tools/worldgen python artifacts/light-r1/compare_rcas.py; obejrzeć arkusze. Nie zmieniać źródeł w trakcie ablacji. Kolejno: import baseline z osobnym Acquire/Release, baseline Low i sbs, poprawka chmur clear i wybór RCAS, cienie/ekspozycja, testy i REPORT. Cel 24 h aktywny, koniec 12.11.2026 21:30 Warszawa.
 
-Krok 6: budget_compare.py porównał wszystkie 5 kamer RCAS 0 i 0,5: osobne draws instancji, zmiana liczby draws i trójkątów = 0. To estymaty CPU SceneStats, nie pomiar GPU. Proces generatora 98884 potwierdzony żywy (CPU 298 s o 21:42). Następny krok: dokończyć renderowanie i obejrzeć pełną ablacjas.
+Krok 6: budget_compare.py porównał wszystkie 5 kamer RCAS 0 i 0,5: osobne draws instancji, zmiana liczby draws i trójkątów = 0. To estymaty CPU SceneStats, nie pomiar GPU. Proces generatora 98884 potwierdzony żywy (CPU 298 s o 21:42). Następny krok: dokończyć renderowanie i obejrzeć pełną ablację.
 Render ablacji zakończony: artifacts/light-r1/rcas/High-clear-0.75. PNG wymagają obejrzenia i pomiarów. Następny krok: kolejny wariant w artifacts/light-r1/rcas-ablation.ps1, potem analiza.
 
-Krok 7: dodano clearCloudCover w LightingPreset (clear 0,42 WORKING_VALUE; inne presety 0), global atmosfery i warstwę chmur w istniejącym przebiegu Sky.shader. Clear ablacjas zakończone przed zmianą. Overcast zachowuje oryginalny wzór i coverage 0. Źródła zmienione, preset asset jeszcze nie zsynchronizowany; wygląd nowego nieba UNVERIFIED. Następny krok: zakończyć overcast RCAS, potem import/synchronizacja presetów i rendery nieba clear.
+Krok 7: dodano clearCloudCover w LightingPreset (clear 0,42 WORKING_VALUE; inne presety 0), global atmosfery i warstwę chmur w istniejącym przebiegu Sky.shader. Clear ablację zakończone przed zmianą. Overcast zachowuje oryginalny wzór i coverage 0. Źródła zmienione, preset asset jeszcze nie zsynchronizowany; wygląd nowego nieba UNVERIFIED. Następny krok: zakończyć overcast RCAS, potem import/synchronizacja presetów i rendery nieba clear.
 
-Krok 8: dokončene clear RCAS: 0,75 daje asfalt HF 5,6999 i niebo HF 0,6418 (r=1,5 px). Wybrano 0,75 jako kandydat odzyskujący detal, próg nieba ≤0,6 pozostaje niespełniony o 0,0418, bez deklaracji PASS. Applier rozwiązuje historyczne High/FSR/zero do 0,75, zachowuje jawne Rq i pozostałe profile. Dodano test granic Low/High/Linear/jawne zero. Bez nowego pola QualityProfile ani migracji. Następny krok: dokończyć overcast ablacjas i zweryfikować kandydata w pełnym renderze.
+Krok 8: zakończone clear RCAS: 0,75 daje asfalt HF 5,6999 i niebo HF 0,6418 (r=1,5 px). Wybrano 0,75 jako kandydat odzyskujący detal, próg nieba ≤0,6 pozostaje niespełniony o 0,0418, bez deklaracji PASS. Applier rozwiązuje historyczne High/FSR/zero do 0,75, zachowuje jawne Rq i pozostałe profile. Dodano test granic Low/High/Linear/jawne zero. Bez nowego pola QualityProfile ani migracji. Następny krok: dokończyć overcast ablację i zweryfikować kandydata w pełnym renderze.
 
 Krok 9: skybox zachowuje kontrakt cap-off przy przechwytywaniu odbić: chmury używają radiancji modelu zamiast limitu wyświetlania. Następny krok: import i oględziny nieba oraz odbić po zakończeniu bieżącej serii.
 Render ablacji zakończony: artifacts/light-r1/rcas/High-overcast-0. PNG wymagają obejrzenia i pomiarów. Następny krok: kolejny wariant w artifacts/light-r1/rcas-ablation.ps1, potem analiza.
@@ -50,3 +59,6 @@ PILNA ZMIANA PROTOKOŁU 22:20: pełny GIS PID 102644 i jego właściwy proces po
 
 Krok 18 — potwierdzenie limitów po pilnej zmianie: parser PowerShell zaakceptował run-heavy.ps1, validation-followup.ps1 i run-light-batch.ps1. O 22:23 stwierdzono ZERO własnych procesów Pythona; zatrzymane PID 60756/102644/107476 nie istnieją. Poprawiony kontroler czeka na istniejący proces RCAS 93600; nie uruchomiono kolejnego ciężkiego Pythona. Pełny GIS z odświeżonym fidelity został przerwany przy końcowych testach, bez deklaracji PASS; wróci na końcu rundy w heavy. Następny krok: kontynuować oczekiwanie na slot Unity i realizować poprawioną kolejkę.
 Zadanie heavy TestFile zakończone kodem 0. Log: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-light\artifacts\light-r1\heavy-TestFile-20261111-222614.log. Następny krok: odczytać wynik i wykonać tylko uzasadnioną następną operację.
+
+
+Krok 19: dodano preflight ustawień przed nowymi uruchomieniami Unity; przy wcześniejszych niezacommitowanych zmianach start zostaje odrzucony bez ich cofania. Pełny restore po Unity pozostaje zgodny z jawnym protokołem użytkownika. Następny krok: zakończyć istniejącą kolejkę i zweryfikować smoke.

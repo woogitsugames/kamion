@@ -14,6 +14,11 @@ $unityArguments = @('-executeMethod', 'Game.Rendering.Editor.LightQaBatch.Run', 
 if ($Gate3) { $unityArguments += @('-qaGate3', [IO.Path]::GetFullPath($Gate3, $repo)) }
 & pwsh $slot -Acquire -Owner gpt-light
 if ($LASTEXITCODE -ne 0) { throw 'Nie uzyskano slotu Unity' }
+git diff --quiet HEAD -- game/Assets/_Project/Rendering/Settings game/ProjectSettings
+if ($LASTEXITCODE -ne 0) {
+    & pwsh $slot -Release -Owner gpt-light
+    throw 'Przed Unity ustawienia muszą być zacommitowane: wymagane sprzątanie nie może usuwać wcześniejszych zmian'
+}
 try {
     $code = Invoke-UnityBatch -LogFile $log -Arguments $unityArguments
     if ($code -ne 0 -or -not (Select-String -Path $log -Pattern 'LIGHT_QA_RESULT: OK' -Quiet)) {
