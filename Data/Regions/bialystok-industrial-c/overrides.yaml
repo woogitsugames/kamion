@@ -520,7 +520,10 @@ overrides:
     verify: owner drive
   - id: s1440-merge-p21-ramp
     kind: painted_zone
-    stripe_az_deg: 62
+    axis: [[-407.4, -124.7], [-354.5, -162.5]]
+    stripe_rel_deg: -30     # ADR 0100: zones2/s1440-merge-p21-ramp.jpg - steep oblique stripes like the band at s 1440 (was 62 deg absolute = ladder)
+    stripe_w_m: 0.3
+    stripe_gap_m: 0.25
     polygon_en: [[-407.4, -124.7], [-391.5, -136.6], [-375.3, -147.4], [-362.2, -155.9], [-354.5, -162.5],
                  [-365.6, -157.1], [-381.8, -147.4], [-396.3, -136.6]]
     reason: >-

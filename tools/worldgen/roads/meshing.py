@@ -271,6 +271,11 @@ def _emit_strip(buf, G, OUT, zg, params, kap_toward, hw, flip, br, coarse, src):
             UV = _grass_uv(V[:, :2], src)
         else:
             UV = V[:, :2].copy()
+            if mat == "curb_concrete":
+                # a walk strip wider than a kerb top coded as concrete (walk mat 0): the kerb texture set has 1 m
+                # joints and striations along u - mapped in plan metres it still reads as streaks across the strip
+                # (render b6, N 82). Paving, as the strip was before ADR 0095 and as the orthophoto shows it.
+                mat = "sidewalk_paving"
         # UV1 = (metres along the edge, metres from the gutter) -> joints, dirt bands, weeds at the kerb line
         UV1 = np.column_stack([np.repeat(along, 2),
                                np.array([[profs[i][k][0] * scale[i], profs[i][k][2] * scale[i]] for i in range(n)]).ravel()])
