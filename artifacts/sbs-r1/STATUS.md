@@ -86,3 +86,7 @@ Następny krok: pwsh -NoProfile -File scripts/sbs-gate3.ps1 -OutputRoot artifact
 ## Końcowe rendery i audyt
 Pełny render 42 kadrów w czterech stanach zakończony. Audyt potwierdził 168 PNG, 100 arkuszy B, 68 wykluczeń C w czterech stanach, jedną epokę źródeł i spójne SHA wszystkich klatek. Zapisano 28 przeglądów PNG oraz pełne liczniki kamer, z instancjami osobno. Migawka inputs.zip zachowuje pierwotne bajty wejść renderu.
 Następny krok: pwsh -NoProfile -File artifacts/sbs-r1/run-heavy.ps1 -Task FinalGis -EndOfRound
+## Końcowa ocena obrazów
+Obejrzano wszystkie 28 stron overview (100 par B) i 16 galerii prób. Niezależny recenzent potwierdził PASS narzędzia i kompletności pakietu; bramka świata nadal UNVERIFIED. Zapisano VISUAL-REVIEW.md z jawnymi ograniczeniami: 17 C, brak potwierdzonego pokrycia początku, wyłączona fotometria i możliwe pomieszanie błędów pozy z geometrią.
+Końcowy GIS nadal działa przez heavy; nie uruchamiamy równolegle kolejnego ciężkiego zadania tej sesji.
+Następny krok: Get-Content artifacts/sbs-r1/pytest-gis-final.log -Tail 20
