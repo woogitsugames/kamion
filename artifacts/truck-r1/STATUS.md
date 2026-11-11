@@ -100,3 +100,4 @@ Krok 33: końcowy kandydat po kanonicznym builderze ma komplet 28 kadrów, 7 kam
 Zapisano final-medium Medium overcast, kod wejściowy zgodny z fingerprintem. Następny krok: pomiary i oględziny par przed/po.
 Zapisano final-medium Medium clear, kod wejściowy zgodny z fingerprintem. Następny krok: pomiary i oględziny par przed/po.
 Zapisano final-dusk Low dusk, kod wejściowy zgodny z fingerprintem. Następny krok: pomiary i oględziny par przed/po.
+Zapisano final-dusk High dusk, kod wejściowy zgodny z fingerprintem. Następny krok: pomiary i oględziny par przed/po.
