@@ -54,7 +54,7 @@ asmdef zmienia tylko lider.
 | Zestaw | Wynik |
 |---|---|
 | audio `uv run --project tools/audio --with pytest pytest tools/audio/tests -q` | **46 passed** (stary `comb_estimate`: 45 passed, 1 failed) |
-| `dotnet test tools/physics-runner/PhysicsRunner.sln -c Release` | **221/221** |
+| `dotnet test tools/physics-runner/PhysicsRunner.sln -c Release` | **221/221** (po merge main d15b4012c: **226/226**) |
 | Runner `dotnet run -c Release --project tools/physics-runner/Runner` | **112/112 scenariuszy, 589 checków** |
 | gis `pytest tests/gis -q -m unit` | **72 passed, 2 xfailed (strict)** (nowe: 16 audytu znaków + 2 xfail oznakowania) |
 | Unity PlayMode `HudTextAllocTests` (dodany przez lidera, merge #19 na próbę; licznik `GC.Alloc` przez `Profiling.Recorder`, 500 aktualizacji) | `TextBuffer` (format telemetrii PR #19): **0 GC.Alloc**; stara ścieżka `Text.text = "Gyro: " + x.ToString("F1")`: **1003 GC.Alloc**; `UiFonts.DefaultTmp`: **NullReferenceException** → 1/3 passed. `GC.GetAllocatedBytesForCurrentThread()` w edytorze Unity (Mono) zwracał 0 B także dla starej ścieżki — nie nadaje się jako dowód. |
