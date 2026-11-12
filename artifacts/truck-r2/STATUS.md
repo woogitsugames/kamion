@@ -69,3 +69,4 @@ Krok 27: recenzent zaakceptował krótszy rozbryzg High, lecz wykrył różnicę
 Krok 28: niezależna ocena Low potwierdza poprawę charakteru smug, ale regresję dolnego pomarańczowego elementu. Odrzucono short-splash-017 w całości, przywrócono zaakceptowany shed-025 bez dodatkowego kosztu i maski lamp. Produkt rundy 2 ogranicza się do czytelniejszych górnych metalowych powierzchni stopni; błotniki i plandeka pozostają otwarte. Następny krok: kanoniczny rebuild, końcowe kadry, liczniki wszystkich kamer, testy i build.
 Końcowy rebuild obu prefabów i instalacja scen zakończone poprawnie. Następny krok: końcowe kadry i wszystkie kamery.
 Zapisano final Low overcast, kod wejściowy zgodny z fingerprintem. Następny krok: pomiary i oględziny par przed/po.
+Zapisano final Low clear, kod wejściowy zgodny z fingerprintem. Następny krok: pomiary i oględziny par przed/po.
