@@ -19,3 +19,4 @@ Krok 8: pominiętą warstwę zdjęciową wygenerowano osobno pod heavy (1 s); im
 Odświeżono oba prefaby i instalację po zmianach main; sam import regionu używałby starych prefabów. Następny krok: baseline r2, wszystkie kamery i kontrole brudu.
 Zapisano before Low overcast, kod wejściowy zgodny z fingerprintem. Następny krok: pomiary i oględziny par przed/po.
 Zapisano before Low clear, kod wejściowy zgodny z fingerprintem. Następny krok: pomiary i oględziny par przed/po.
+Zapisano before High overcast, kod wejściowy zgodny z fingerprintem. Następny krok: pomiary i oględziny par przed/po.
