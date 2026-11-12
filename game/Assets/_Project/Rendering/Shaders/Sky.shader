@@ -45,7 +45,7 @@ Shader "Kamion/Sky"
             // while the vehicle reflection capture renders (reflections keep the physical sky radiance).
             float4 _KamionSkyCap;
             float _KamionSkyDitherOff; // ADR0098 A/B; zero preserves existing sky dither.
-            float _KamionSkyCapOff;
+            // _KamionSkyCapOff is declared by the shared atmosphere include above.
             TEXTURE2D(_SkyChroma); SAMPLER(sampler_SkyChroma);   // u = γ/π, v = sqrt(cos θ); rgb of luminance 1
             TEXTURE2D(_KamionCloudTex); SAMPLER(sampler_KamionCloudTex);   // R billows, G medium, B fine, A sheets; mean 0.5 each
             float4 _KamionCloud;       // x contrast (0 = off), y quality 0..2, z uv per plane unit, w horizon fade rate

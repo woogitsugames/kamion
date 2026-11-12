@@ -27,6 +27,7 @@ try {
     $result = Select-String -Path $log -Pattern 'LIGHT_QA_RESULT: OK jobs=(\d+) rendered=(\d+)' | Select-Object -Last 1
     $fresh = @()
     $complete = $null -ne $result
+    if(Select-String -Path $log -Pattern 'Shader error|error CS\d+' -Quiet){$complete=$false}
     foreach ($job in $spec.jobs) {
         $files = @(Get-ChildItem -LiteralPath $job.output -Filter '*.png' -ErrorAction SilentlyContinue |
             Where-Object { $_.LastWriteTime -ge $runStart -and $_.Length -gt 0 -and $_.Name -notlike '*_mask.png' -and $_.Name -notlike '*_envcube.png' })
