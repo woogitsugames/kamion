@@ -35,7 +35,7 @@ namespace Game.Tests
             mesh = new Mesh { name = "M32_quad", hideFlags = HideFlags.DontSave };
             mesh.vertices = new[] { new Vector3(0f, 0f, 0f), new Vector3(1f, 0f, 0f), new Vector3(1f, 1f, 0f), new Vector3(0f, 1f, 0f) };
             mesh.triangles = new[] { 0, 1, 2, 0, 2, 3 };
-            mat = new Material(Shader.Find("Hidden/InternalErrorShader")) { name = "M32_test", hideFlags = HideFlags.DontSave };
+            mat = new Material(Shader.Find("Hidden/InternalErrorShader")) { name = "M32_test", hideFlags = HideFlags.DontSave, enableInstancing = true };   // RenderMeshInstanced requires instancing (InvalidOperationException otherwise)
             var set = ScriptableObject.CreateInstance<WorldInstanceSet>();
             set.prototypes = new[]
             {
