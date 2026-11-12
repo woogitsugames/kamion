@@ -1,0 +1,45 @@
+# SBS r3 — raport rundy
+
+Gałąź gpt-sbs-r3, ten sam worktree gpt-sbs. Główny kod raportu: bafa7544 z korektą tekstu d117810d; rejestr D51 aa7c79a. Pełna seria renderów: 62d45b92, baza main 14ccbaf1; świat wygenerowany ze źródeł main 9874d98c. Późniejsze integracje main f560cbd1 i 49a9d332 nie są przedstawione przez te obrazy. Kod produkcyjny zamrożony do końcowego GIS: bcc65bbb; HEAD zaobserwowany po Acquire zapisano w gis-started.json. SHA przygotowanej dostawy zapisuje delivery-receipt.json.
+
+Runda dostarcza świeże dowody bramki 3 i ranking największych odstępstw. Powstało 168 raw z jednej epoki, 100 arkuszy B i 168 arkuszy diagnostycznych, wszystkie pary mają szerokość 960 px. Zestaw nadal zawiera 42 zdjęcia: 25 pozy B, 17 C, brak A. Pierwsze 300 m trasy nadal bez zaakceptowanej pary. Pełny przegląd niezależny obejmuje 25 B Low-overcast; własny obejmuje pozostałe 75 B. Formalny wynik nowej bazy: FAIL, 13 rozpoznawalnych, 11 częściowych, 1 nierozpoznawalny. Historyczne r1 miało 12/11/2. Nie oznacza to zaliczenia żadnej nowej próby C ani przypisania poprawy do narzędzia SBS.
+
+Ranking docs/refs/sbs-priorities.md odróżnia problemy świata od kamery. Najwyżej pozostają sześć pozy G3-B, układ wysepki i przejścia A320326, brak zgodnej pierzei handlowej oraz najbliższych podpór A201270/A139889. Dalsze podpory i tablica ronda już istnieją. Ekrany B494288/B180137 również istnieją, lecz projekcja i relacja do drogi nadal nie pasują. W B297817 High ma kratownicę portalu, a Low pełną szarą ramę — osobny problem LOD. Panorama bloków i klin tła clear nadal widoczne na tej bazie. Wyniku nie przenoszę na późniejsze scalenia main.
+
+Diagnostyka pozy obejmuje pierwszą serię 18 C oraz drugą serię 30 planowanych prób: 28 wyrenderowanych i 2 odrzucone przed renderem z braku bezpiecznej powierzchni asfaltu. Dla 328135/297817 przesunięcie prowadzi po połączonej osi jezdni z kontrolą rzeczywistego asfaltu GLB i ciągłości wysokości. To zapobiega cofnięciu na pobocze, które występowało przy prostej wzdłuż spojrzenia. Najlepsze robocze warianty: 275528-02/04 bez rozstrzygnięcia, 837235-12, 328135-21, 297817-26. Niezależny recenzent obejrzał wszystkie 28 natywnych raw i cztery zdjęcia, ja wszystkie 28 par 960 px. Żaden wariant nie ma dwóch jednoznacznych niezależnych kotwic: zero akceptacji do produkcji. Następne minimalne kroki r4: pitch przy stałym XY dwóch prób po osi drogi, pojedyncza próba B275528 po kontroli dwóch kotwic oraz oddzielne próby pitch dwóch kamer mostowych. Przy 494288 stary ray trafił wyłącznie powierzchnię kolizji, bez potwierdzenia widocznego road_asphalt; nowa baza wymaga osobnego sprawdzenia powierzchni i zapisania U kontroli oraz wariantów. Nie traktować trafienia kolizji jako pomiaru widocznego asfaltu. Wymiary modelu portalu i nominalne oko pozostają WORKING_VALUE.
+
+Raport HTML zachowuje trzy rundy i osiem przejść stanów. Nowy rejestr ocen zawiera bieżący przegląd oraz historię r1. Dopasowanie D51 wymaga obu SHA zdjęcia i renderu; stare obrazy nie dostają przyszłych uzasadnień. Bez dopasowania karta może pokazać wyłącznie ocenę ze snapshotu tej rundy z ostrzeżeniem; przy braku snapshotu lub kamery pokazuje brak oceny. Testy raportu: 34/34. Niezależny przegląd kodu PASS. Kontrola przeglądarkowa: 12 kombinacji runda/stan, C=42, 1280×960 i 390×844 bez poziomego przepełnienia, konsola bez błędów/ostrzeżeń. Własny latest jest strukturalnie zgodny ze sprawdzonym podglądem poza czasem generacji i niewyświetlaną notatką rejestru.
+
+R3 nie ma kwalifikowanych nowych próbek fotometrycznych; stare maski są nieaktualne po zmianie obrazu. Trend r2→r3: NO_COMPARABLE_SAMPLES we wszystkich stanach. Historyczne trzy zgodne Low-clear r1→r2 pozostają w raporcie, ale ich zero zmiany nie jest oceną ekspozycji r3 ani pomiarem albedo.
+
+Liczniki obejmują wszystkie 168 kamer, statyczne i instancje oddzielnie. Maksimum Low: 810 draws = 445 statycznych + 365 instancji; High: 1376 = 945 + 431. Delta wobec r2: Low −17…+29 draws i 0…+10 tys. tris; High −33…+49 draws i −2…+10 tys. tris. Wspólna baza ma 38/84 wierszy Low ze wzrostem draws oraz 22/84 z tris ponad +2%. Nie deklaruję PASS budżetu zintegrowanego świata. To estymacje edytora przed batchingiem, nie pomiar GPU/A16 i nie izolowany koszt SBS. Narzędzie i rejestr nie zmieniają runtime, geometrii ani produkcyjnych kamer.
+
+Wykonana walidacja: materiały exit0, 456 s; świat exit0, 413,7 s, bez fallback=True; import 64 chunków Low+High; EditMode 317/317. Audyt główny exit0: SHA 168 raw, ZIP wejść, 128 rzeczywistych GLB i 168 wierszy liczników oraz powiązanie nowego D51 z parą i arkuszem. Uzupełniający audyt dekodowania wszystkich 268 arkuszy i unikalności zakończony poprawnie; fidelity exit0, wyniki w fidelity/. Końcowy pełny GIS: 665 passed, 1 xfailed, 726,22 s, exit0. Wykonano jeden rzeczywisty pełny przebieg. Po około 45 minutach kolejki zatrzymano wyłącznie zweryfikowany proces Acquire, zanim pytest ruszył, i użyto oficjalnej rezerwacji następnego heavy dla tego zadania. Zachowano stary log i gis-queue-adjustment.json. Nowa sesja 80208 wykonała testy i zwolniła slot; wynik i SHA logu są w gis-completed.json.
+
+Wcześniejsze kopie robocze są oznaczone PRESTAGE_NOT_FINAL_DELIVERY. Końcowy skrypt deliver.ps1 kopiuje pełne artifacts/sbs-r3 oraz artifacts/sbs-gate3/latest do main, weryfikuje długości wszystkich plików i SHA obrazów oraz krytycznych raportów. Wymaga pomyślnych receiptów, zgodności źródeł i audytowanych bajtów. Wynik i dokładne liczby kopii zapisuje delivery-receipt.json. Nie wykonano merge do main, push ani pracy z telefonem. Nie zmieniano plików Claude ani innych dziedzin; po walidacji przywrócono dokładnie osiem znanych pochodnych generatorów do HEAD. Receipt generated-restoration.json zachowuje SHA przed i po, a źródła produkcyjne są czyste. Przewidywane konflikty integracji: sbs_recognition.json i ADR0111, jeśli lider scalił równolegle r2; zachować historię ocen i sekcje obu rund, a produktów generatorów nie integrować z tej gałęzi.
+
+Przerwa w wykonaniu 03:42–09:04 miała nieustaloną przyczynę. Pełne odświeżenie około 06:19 nie zostało wykonane; serię uzupełniono 09:06–09:09. Nie przedstawiam tego jako nieprzerwanej pracy ani nie wymyślam przyczyny. Następna runda rozpocznie się od bieżącego main i nowej pełnej serii, zgodnie z odświeżaniem około co sześć godzin.
+
+Dowody: evidence/sheets i diagnostics; REVIEW-D51-BASELINE.md, REVIEW-LOW-CLEAR.md, REVIEW-HIGH.md; REVIEW-REFINEMENT1.md i pose-refinement1/pairs; AUDIT.json, audit-completed.json, counters; ui-history-review; MAIN-DRIFT-AND-R4.md oraz ROAD-PROJECTION-NOTES.md. Zdjęcia pozostają referencjami z atrybucją i SHA, poza buildem i gitem.
+
+
+
+Pary kontrolne poniżej mają po 960 px szerokości. Dwie pierwsze należą do bazowej serii z renderu 62d45b92. Dwie kolejne to osobna diagnostyka C z dd92f5c7, na tym samym świecie, bez awansu produkcyjnej pozy. Pełną serię i historię zawiera ../sbs-gate3/latest/index.html; plan i powody odrzucenia prób są w pose-refinement1/inputs/probe_plan.json.
+
+A201270, baza Low-overcast: tablica ronda i dalsze podpory już istnieją, najbliższa podpora, nasyp i bariera łuku nadal nie pasują.
+
+![A201270 — zdjęcie i bazowy render Low-overcast](evidence/sheets/Low-overcast/sbs-g3-a-201270605169291.png)
+
+B328135, baza Low-overcast: ostatnia niezależna ocena NOT_RECOGNISABLE. Ten kadr jest częścią wyniku 13/11/1.
+
+![B328135 — zdjęcie i bazowy render Low-overcast](evidence/sheets/Low-overcast/sbs-g3-b-3281350541967811.png)
+
+B328135, diagnostyczny wariant 21: portal jest w kadrze, ale konflikt jego projekcji z dalszą jezdnią pozostaje. To C, nie nowa ocena D51.
+
+![B328135 — wariant 21, diagnostyka C](pose-refinement1/pairs/sbs-refine1-3281350541967811-21.png)
+
+B275528, diagnostyczny wariant 04: skala portalu jest bliższa zdjęciu, lecz zbieżność jezdni i boczne znaki nadal nie potwierdzają pozy. To C.
+
+![B275528 — wariant 04, diagnostyka C](pose-refinement1/pairs/sbs-refine1-275528677534382-04.png)
+
+Ranking uzupełniono o nowsze recenzje s12 wszystkich dziesięciu dziedzin. Ich źródła i SHA zachowano w review-source-index.json, a dokładne oryginalne bajty wraz z bazową recenzją D51 w review-evidence.zip (pięć wpisów zweryfikowanych SHA). Archiwum zabezpiecza znaczenie źródłowych skrótów przed normalizacją końców linii w Git. Wnioski tych recenzji pozostają oddzielone od naszej epoki renderów.

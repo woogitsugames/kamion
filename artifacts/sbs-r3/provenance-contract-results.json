@@ -1,0 +1,56 @@
+{
+  "checked_at_utc": "2026-11-12T02:23:45.9612642Z",
+  "wrapper_sha256": "1e438acbd61ab87d0853b7faed6e3a3cc4f1272534ea61ec7382e77cf737bd73",
+  "source_function": "Assert-ProbeInputs extracted by PowerShell AST",
+  "scope": "Tiny synthetic files only; does not launch Unity, Python, acquire slots or claim runtime world validation",
+  "results": [
+    {
+      "case": "matching imported inputs",
+      "accepted": true
+    },
+    {
+      "case": "Data/Regions/bialystok-industrial-c/generated/world_manifest.json",
+      "rejected": true,
+      "reason": "Current inputs differ from imported scene"
+    },
+    {
+      "case": "art-source/world/materials/materials_spec.json",
+      "rejected": true,
+      "reason": "Current inputs differ from imported scene"
+    },
+    {
+      "case": "probe-cameras.json",
+      "rejected": true,
+      "reason": "Probe plan does not match world/cameras"
+    },
+    {
+      "case": "plan.json",
+      "rejected": true,
+      "reason": "Plan/import receipt changed after loading"
+    },
+    {
+      "case": "import.json",
+      "rejected": true,
+      "reason": "Plan/import receipt changed after loading"
+    },
+    {
+      "case": "Data/Regions/bialystok-industrial-c/sbs_cameras.json",
+      "rejected": true,
+      "reason": "Production source changed since probe preparation"
+    },
+    {
+      "case": "Data/Regions/bialystok-industrial-c/sbs_references.json",
+      "rejected": true,
+      "reason": "Production source changed since probe preparation"
+    },
+    {
+      "case": "comparison.png",
+      "rejected": true,
+      "reason": "Comparison photo changed since preparation"
+    },
+    {
+      "case": "matching Windows separator bindings",
+      "accepted": true
+    }
+  ]
+}

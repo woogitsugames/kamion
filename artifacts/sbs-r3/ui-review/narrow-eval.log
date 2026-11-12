@@ -1,0 +1,13 @@
+### Result
+{
+  "viewport": 390,
+  "documentWidth": 390,
+  "run": "sbs-r3",
+  "state": "Low-clear",
+  "cards": 25,
+  "brokenLoadedImages": 0
+}
+### Ran Playwright code
+```js
+await page.evaluate('() => (({viewport:innerWidth,documentWidth:document.documentElement.scrollWidth,run:document.querySelectorAll(\'select\')[0].value,state:document.querySelectorAll(\'select\')[1].value,cards:[...document.querySelectorAll(\'article\')].filter(a=>a.querySelector(\'h3\')?.textContent.startsWith(\'sbs-g3-\')).length,brokenLoadedImages:[...document.images].filter(i=>i.complete&&i.naturalWidth===0).length}))');
+```

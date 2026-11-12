@@ -1,0 +1,384 @@
+{
+  "schema": "kamion/sbs-cameras/1",
+  "frame": "E,N,absolute U",
+  "cameras": [
+    {
+      "id": "sbs-probe-gantry-837235577143499-b000",
+      "kind": "photo_match",
+      "seat": "file",
+      "type": "persp",
+      "pos": [
+        -222.4313,
+        -240.6727,
+        132.7129
+      ],
+      "look_at": [
+        -254.3341,
+        -216.7762,
+        136.0546
+      ],
+      "fov_deg": 58.71551,
+      "segment": "G3-B",
+      "pose_confidence": "C",
+      "pose_reason": "Diagnostic hypothesis, not a production pose",
+      "note": "Longitudinal offset along original grid view, unchanged yaw/FOV/pitch; NMT+2.2m on ground road, all WORKING_VALUE."
+    },
+    {
+      "id": "sbs-probe-gantry-837235577143499-b012",
+      "kind": "photo_match",
+      "seat": "file",
+      "type": "persp",
+      "pos": [
+        -212.8269,
+        -247.8668,
+        132.9219
+      ],
+      "look_at": [
+        -244.7297,
+        -223.9703,
+        136.2636
+      ],
+      "fov_deg": 58.71551,
+      "segment": "G3-B",
+      "pose_confidence": "C",
+      "pose_reason": "Diagnostic hypothesis, not a production pose",
+      "note": "Longitudinal offset along original grid view, unchanged yaw/FOV/pitch; NMT+2.2m on ground road, all WORKING_VALUE."
+    },
+    {
+      "id": "sbs-probe-gantry-837235577143499-b016",
+      "kind": "photo_match",
+      "seat": "file",
+      "type": "persp",
+      "pos": [
+        -209.6254,
+        -250.2648,
+        133.0137
+      ],
+      "look_at": [
+        -241.5282,
+        -226.3683,
+        136.3554
+      ],
+      "fov_deg": 58.71551,
+      "segment": "G3-B",
+      "pose_confidence": "C",
+      "pose_reason": "Diagnostic hypothesis, not a production pose",
+      "note": "Longitudinal offset along original grid view, unchanged yaw/FOV/pitch; NMT+2.2m on ground road, all WORKING_VALUE."
+    },
+    {
+      "id": "sbs-probe-gantry-837235577143499-b020",
+      "kind": "photo_match",
+      "seat": "file",
+      "type": "persp",
+      "pos": [
+        -206.4239,
+        -252.6629,
+        133.082
+      ],
+      "look_at": [
+        -238.3267,
+        -228.7664,
+        136.4237
+      ],
+      "fov_deg": 58.71551,
+      "segment": "G3-B",
+      "pose_confidence": "C",
+      "pose_reason": "Diagnostic hypothesis, not a production pose",
+      "note": "Longitudinal offset along original grid view, unchanged yaw/FOV/pitch; NMT+2.2m on ground road, all WORKING_VALUE."
+    },
+    {
+      "id": "sbs-probe-gantry-837235577143499-b028",
+      "kind": "photo_match",
+      "seat": "file",
+      "type": "persp",
+      "pos": [
+        -200.021,
+        -257.4589,
+        133.2537
+      ],
+      "look_at": [
+        -231.9238,
+        -233.5624,
+        136.5954
+      ],
+      "fov_deg": 58.71551,
+      "segment": "G3-B",
+      "pose_confidence": "C",
+      "pose_reason": "Diagnostic hypothesis, not a production pose",
+      "note": "Longitudinal offset along original grid view, unchanged yaw/FOV/pitch; NMT+2.2m on ground road, all WORKING_VALUE."
+    },
+    {
+      "id": "sbs-probe-gantry-275528677534382-b000",
+      "kind": "photo_match",
+      "seat": "file",
+      "type": "persp",
+      "pos": [
+        -255.326,
+        -214.3122,
+        132.2961
+      ],
+      "look_at": [
+        -287.198,
+        -190.446,
+        136.1143
+      ],
+      "fov_deg": 58.71551,
+      "segment": "G3-B",
+      "pose_confidence": "C",
+      "pose_reason": "Diagnostic hypothesis, not a production pose",
+      "note": "Longitudinal offset along original grid view, unchanged yaw/FOV/pitch; NMT+2.2m on ground road, all WORKING_VALUE."
+    },
+    {
+      "id": "sbs-probe-gantry-275528677534382-b012",
+      "kind": "photo_match",
+      "seat": "file",
+      "type": "persp",
+      "pos": [
+        -245.7205,
+        -221.5049,
+        132.3466
+      ],
+      "look_at": [
+        -277.5925,
+        -197.6387,
+        136.1648
+      ],
+      "fov_deg": 58.71551,
+      "segment": "G3-B",
+      "pose_confidence": "C",
+      "pose_reason": "Diagnostic hypothesis, not a production pose",
+      "note": "Longitudinal offset along original grid view, unchanged yaw/FOV/pitch; NMT+2.2m on ground road, all WORKING_VALUE."
+    },
+    {
+      "id": "sbs-probe-gantry-275528677534382-b016",
+      "kind": "photo_match",
+      "seat": "file",
+      "type": "persp",
+      "pos": [
+        -242.5187,
+        -223.9025,
+        132.3736
+      ],
+      "look_at": [
+        -274.3907,
+        -200.0363,
+        136.1918
+      ],
+      "fov_deg": 58.71551,
+      "segment": "G3-B",
+      "pose_confidence": "C",
+      "pose_reason": "Diagnostic hypothesis, not a production pose",
+      "note": "Longitudinal offset along original grid view, unchanged yaw/FOV/pitch; NMT+2.2m on ground road, all WORKING_VALUE."
+    },
+    {
+      "id": "sbs-probe-gantry-275528677534382-b020",
+      "kind": "photo_match",
+      "seat": "file",
+      "type": "persp",
+      "pos": [
+        -239.3169,
+        -226.3,
+        132.4082
+      ],
+      "look_at": [
+        -271.1889,
+        -202.4338,
+        136.2264
+      ],
+      "fov_deg": 58.71551,
+      "segment": "G3-B",
+      "pose_confidence": "C",
+      "pose_reason": "Diagnostic hypothesis, not a production pose",
+      "note": "Longitudinal offset along original grid view, unchanged yaw/FOV/pitch; NMT+2.2m on ground road, all WORKING_VALUE."
+    },
+    {
+      "id": "sbs-probe-gantry-275528677534382-b028",
+      "kind": "photo_match",
+      "seat": "file",
+      "type": "persp",
+      "pos": [
+        -232.9132,
+        -231.0952,
+        132.5293
+      ],
+      "look_at": [
+        -264.7852,
+        -207.229,
+        136.3475
+      ],
+      "fov_deg": 58.71551,
+      "segment": "G3-B",
+      "pose_confidence": "C",
+      "pose_reason": "Diagnostic hypothesis, not a production pose",
+      "note": "Longitudinal offset along original grid view, unchanged yaw/FOV/pitch; NMT+2.2m on ground road, all WORKING_VALUE."
+    },
+    {
+      "id": "sbs-probe-gantry-3281350541967811-b000",
+      "kind": "photo_match",
+      "seat": "file",
+      "type": "persp",
+      "pos": [
+        -249.0174,
+        -233.4495,
+        132.5914
+      ],
+      "look_at": [
+        -214.7555,
+        -253.2455,
+        138.4427
+      ],
+      "fov_deg": 43.54635,
+      "segment": "G3-B",
+      "pose_confidence": "C",
+      "pose_reason": "Diagnostic hypothesis, not a production pose",
+      "note": "Longitudinal offset along original grid view, unchanged yaw/FOV/pitch; NMT+2.2m on ground road, all WORKING_VALUE."
+    },
+    {
+      "id": "sbs-probe-gantry-3281350541967811-b030",
+      "kind": "photo_match",
+      "seat": "file",
+      "type": "persp",
+      "pos": [
+        -274.9933,
+        -218.441,
+        132.3104
+      ],
+      "look_at": [
+        -240.7314,
+        -238.237,
+        138.1617
+      ],
+      "fov_deg": 43.54635,
+      "segment": "G3-B",
+      "pose_confidence": "C",
+      "pose_reason": "Diagnostic hypothesis, not a production pose",
+      "note": "Longitudinal offset along original grid view, unchanged yaw/FOV/pitch; NMT+2.2m on ground road, all WORKING_VALUE."
+    },
+    {
+      "id": "sbs-probe-gantry-3281350541967811-b045",
+      "kind": "photo_match",
+      "seat": "file",
+      "type": "persp",
+      "pos": [
+        -287.9812,
+        -210.9368,
+        132.2632
+      ],
+      "look_at": [
+        -253.7193,
+        -230.7328,
+        138.1145
+      ],
+      "fov_deg": 43.54635,
+      "segment": "G3-B",
+      "pose_confidence": "C",
+      "pose_reason": "Diagnostic hypothesis, not a production pose",
+      "note": "Longitudinal offset along original grid view, unchanged yaw/FOV/pitch; NMT+2.2m on ground road, all WORKING_VALUE."
+    },
+    {
+      "id": "sbs-probe-gantry-3281350541967811-b060",
+      "kind": "photo_match",
+      "seat": "file",
+      "type": "persp",
+      "pos": [
+        -300.9691,
+        -203.4326,
+        132.3002
+      ],
+      "look_at": [
+        -266.7072,
+        -223.2286,
+        138.1515
+      ],
+      "fov_deg": 43.54635,
+      "segment": "G3-B",
+      "pose_confidence": "C",
+      "pose_reason": "Diagnostic hypothesis, not a production pose",
+      "note": "Longitudinal offset along original grid view, unchanged yaw/FOV/pitch; NMT+2.2m on ground road, all WORKING_VALUE."
+    },
+    {
+      "id": "sbs-probe-gantry-297817221966185-b000",
+      "kind": "photo_match",
+      "seat": "file",
+      "type": "persp",
+      "pos": [
+        -298.3237,
+        -199.657,
+        132.3836
+      ],
+      "look_at": [
+        -263.1444,
+        -217.7726,
+        138.2349
+      ],
+      "fov_deg": 43.54635,
+      "segment": "G3-B",
+      "pose_confidence": "C",
+      "pose_reason": "Diagnostic hypothesis, not a production pose",
+      "note": "Longitudinal offset along original grid view, unchanged yaw/FOV/pitch; NMT+2.2m on ground road, all WORKING_VALUE."
+    },
+    {
+      "id": "sbs-probe-gantry-297817221966185-b030",
+      "kind": "photo_match",
+      "seat": "file",
+      "type": "persp",
+      "pos": [
+        -324.9951,
+        -185.9225,
+        132.6374
+      ],
+      "look_at": [
+        -289.8158,
+        -204.0381,
+        138.4887
+      ],
+      "fov_deg": 43.54635,
+      "segment": "G3-B",
+      "pose_confidence": "C",
+      "pose_reason": "Diagnostic hypothesis, not a production pose",
+      "note": "Longitudinal offset along original grid view, unchanged yaw/FOV/pitch; NMT+2.2m on ground road, all WORKING_VALUE."
+    },
+    {
+      "id": "sbs-probe-gantry-297817221966185-b045",
+      "kind": "photo_match",
+      "seat": "file",
+      "type": "persp",
+      "pos": [
+        -338.3308,
+        -179.0553,
+        133.0568
+      ],
+      "look_at": [
+        -303.1515,
+        -197.1709,
+        138.9081
+      ],
+      "fov_deg": 43.54635,
+      "segment": "G3-B",
+      "pose_confidence": "C",
+      "pose_reason": "Diagnostic hypothesis, not a production pose",
+      "note": "Longitudinal offset along original grid view, unchanged yaw/FOV/pitch; NMT+2.2m on ground road, all WORKING_VALUE."
+    },
+    {
+      "id": "sbs-probe-gantry-297817221966185-b060",
+      "kind": "photo_match",
+      "seat": "file",
+      "type": "persp",
+      "pos": [
+        -351.6665,
+        -172.1881,
+        133.2849
+      ],
+      "look_at": [
+        -316.4872,
+        -190.3037,
+        139.1362
+      ],
+      "fov_deg": 43.54635,
+      "segment": "G3-B",
+      "pose_confidence": "C",
+      "pose_reason": "Diagnostic hypothesis, not a production pose",
+      "note": "Longitudinal offset along original grid view, unchanged yaw/FOV/pitch; NMT+2.2m on ground road, all WORKING_VALUE."
+    }
+  ]
+}

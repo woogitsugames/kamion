@@ -131,21 +131,49 @@ def collect_run(path,outdir):
             'reference_snapshot':'CAPTURED_INPUTS' if references else 'MISSING_REFERENCE_SNAPSHOT'}
 
 
+def recognition_versions(recognition):
+    history=recognition.get('history',[])
+    if not isinstance(history,list) or any(not isinstance(entry,dict) for entry in history):
+        raise ValueError('recognition history must be a list of reviews')
+    return [recognition,*history]
+
+
+def pixel_match(pair,review):
+    return bool(review and all(valid_sha(pair.get(key)) and valid_sha(review.get(key)) and review[key]==pair[key]
+                               for key in ('render_sha256','comparison_sha256')))
+
+
+def review_for_pair(pair,versions,fallback):
+    def assessment(version):
+        if version is None:return None
+        found=next((row for row in version.get('assessments',[]) if row['camera']==pair['camera']),None)
+        if found is None:return None
+        return {**found,'reviewed_run':version.get('reviewed_run'),'reviewed_state':version.get('reviewed_state'),
+                'review_date':version.get('review_date'),'recorded_at':version.get('recorded_at'),
+                'source_review':version.get('source_review')}
+    for version in versions:
+        row=assessment(version)
+        if pixel_match(pair,row):return row
+    return assessment(fallback)
+
+
 def build_report(run_paths,outdir,recognition_file=None):
     outdir=Path(outdir);outdir.mkdir(parents=True,exist_ok=True)
-    runs=[collect_run(Path(path),outdir) for path in run_paths]
+    paths=[Path(path) for path in run_paths]
+    runs=[collect_run(path,outdir) for path in paths]
     if len({r['id'] for r in runs})!=len(runs):raise ValueError('duplicate report run IDs')
     runs.sort(key=lambda r:r.get('captured_at_utc') or '')
     recognition_path=Path(recognition_file) if recognition_file is not None else ROOT/'Data/Regions/bialystok-industrial-c/sbs_recognition.json'
     if not recognition_path.is_file():raise ValueError('recognition review file required; refusing to hide existing D51 verdict')
     recognition=read(recognition_path)
-    review_by_camera={r['camera']:r for r in recognition.get('assessments',[])}
+    versions=recognition_versions(recognition)
+    snapshots={run_id(path):read(path/'inputs/sbs_recognition.json') for path in paths if (path/'inputs/sbs_recognition.json').is_file()}
     for run in runs:
         for state in run['states'].values():
             for pair in state['pairs']:
-                review=review_by_camera.get(pair['camera'])
+                review=review_for_pair(pair,versions,snapshots.get(run['id']))
                 pair['last_recognition_review']=review
-                pair['review_matches_current_pixels']=bool(review and all(valid_sha(pair.get(key)) and valid_sha(review.get(key)) and review[key]==pair[key] for key in ('render_sha256','comparison_sha256')))
+                pair['review_matches_current_pixels']=pixel_match(pair,review)
     trends=[]
     for first,last in zip(runs,runs[1:]):
         for state in STATES:

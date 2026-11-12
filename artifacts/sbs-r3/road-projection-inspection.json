@@ -1,0 +1,50 @@
+{
+  "recorded_at": "2026-11-12T10:31:09.6115479+01:00",
+  "status": "DIAGNOSTIC_ONLY",
+  "probes": [
+    {
+      "probe": "sbs-refine1-3281350541967811-21",
+      "photo": "artifacts/sbs-gate3/rectified/3281350541967811.png",
+      "photo_sha256": "6cf1e2a6f02736e4d48f9d75809ab4242cccdb7ad017258068eed9ecba078912",
+      "raw": "artifacts/sbs-r3/pose-refinement1/renders/1280x960/sbs-refine1-3281350541967811-21.png",
+      "raw_sha256": "5d746cd3c51ef4901937de52dcf6f24541b8bec4d4932d502324c86a57c9f9b2",
+      "photo_road_band_y_fraction": [
+        0.76,
+        0.79
+      ],
+      "render_road_band_y_fraction": [
+        0.66,
+        0.69
+      ],
+      "measurement_status": "WORKING_VALUE visual broad band, not level horizon",
+      "current_horizon_y_fraction": 0.6851061399740858,
+      "next_hypotheses": [
+        0.74,
+        0.77
+      ],
+      "production_accepted": false
+    },
+    {
+      "probe": "sbs-refine1-297817221966185-26",
+      "photo": "artifacts/sbs-gate3/rectified/297817221966185.png",
+      "photo_sha256": "0db1fb1dc739f82198c4f6f488b74725fd9793bbc4c77fd80191d5a3052464cd",
+      "raw": "artifacts/sbs-r3/pose-refinement1/renders/1280x960/sbs-refine1-297817221966185-26.png",
+      "raw_sha256": "6047b42be65daf57b7ff96cd70ad97a4ac4fc8b98dfd6093adfdef57e8038488",
+      "photo_road_band_y_fraction": [
+        0.76,
+        0.79
+      ],
+      "render_road_band_y_fraction": [
+        0.66,
+        0.69
+      ],
+      "measurement_status": "WORKING_VALUE visual broad band, not level horizon",
+      "current_horizon_y_fraction": 0.6851062165673607,
+      "next_hypotheses": [
+        0.74,
+        0.77
+      ],
+      "production_accepted": false
+    }
+  ]
+}
