@@ -56,11 +56,13 @@ SaveCandidate 'game/Assets/_Project/Rendering/Editor/LightQaBatch.cs' {
 }
 SaveCandidate 'game/Assets/_Project/Rendering/Editor/LightQaLampProbe.cs' {
     param($s)
-    $s=ReplaceOnce $s 'public Vector4 cloudSourceLimits;' "public Vector4 cloudSourceLimits;`r`n            public float actualClearCloudCover, actualClearCloudPhoto;`r`n            public Vector4 actualCloud, actualHaze, actualSkyCap;`r`n            public Vector3 actualCloudRotationUp;`r`n            public bool requestedHorizonLock;"
+    $s=ReplaceOnce $s 'public Vector4 cloudSourceLimits;' "public Vector4 cloudSourceLimits;`r`n            public float actualClearCloudCover, actualClearCloudPhoto;`r`n            public float actualExposureGlobal, actualStreetLampsGlobal;`r`n            public Vector4 actualCloud, actualHaze, actualSkyCap;`r`n            public Vector3 actualCloudRotationUp;`r`n            public bool requestedHorizonLock;"
     $s=ReplaceOnce $s '                cloudSourceLimits = Shader.GetGlobalVector("_KamionClearCloudSourceLimits"),' @'
                 cloudSourceLimits = Shader.GetGlobalVector("_KamionClearCloudSourceLimits"),
                 actualClearCloudCover = Shader.GetGlobalFloat("_KamionClearCloudCover"),
                 actualClearCloudPhoto = Shader.GetGlobalFloat("_KamionClearCloudPhoto"),
+                actualExposureGlobal = Shader.GetGlobalFloat("_KamionExposure"),
+                actualStreetLampsGlobal = Shader.GetGlobalFloat("_KamionStreetLamps"),
                 actualCloud = Shader.GetGlobalVector("_KamionCloud"),
                 actualHaze = Shader.GetGlobalVector("_KamionHaze"),
                 actualSkyCap = Shader.GetGlobalVector("_KamionSkyCap"),

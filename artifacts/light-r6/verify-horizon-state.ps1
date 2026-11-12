@@ -17,9 +17,15 @@ foreach($job in $spec.jobs){
     $rq=@{};foreach($pair in $job.rq.Split(',')){$keyValue=$pair.Split('=');$rq[$keyValue[0].Trim()]=$keyValue[1].Trim()}
     foreach($row in $rows){
         if($ids -notcontains $row.camera){throw "Unexpected camera: $($row.camera)"}
-        foreach($name in 'actualClearCloudCover','actualClearCloudPhoto','actualCloud','actualHaze','actualSkyCap','actualCloudRotationUp','requestedHorizonLock'){
+        foreach($name in 'actualClearCloudCover','actualClearCloudPhoto','actualExposureGlobal','actualStreetLampsGlobal','actualCloud','actualHaze','actualSkyCap','actualCloudRotationUp','requestedHorizonLock'){
             if($row.PSObject.Properties.Name -notcontains $name){throw "Missing current diagnostic field $name in $file"}
         }
+        $actualExposure=[double]$row.actualExposureGlobal;$modelExposure=[double]$row.exposure
+        if([double]::IsNaN($actualExposure) -or [double]::IsInfinity($actualExposure) -or $actualExposure -le 0 -or
+            [Math]::Abs($actualExposure-$modelExposure) -gt [Math]::Max(1e-8,[Math]::Abs($modelExposure)*1e-4)){
+            throw 'Global emissive exposure differs from the actual model'
+        }
+        NearZero ([double]$row.actualStreetLampsGlobal-[double]$row.lampsOn) 'global street-lamp activation'
         if(($rq.ContainsKey('rq_clearcover') -and [double]$rq.rq_clearcover -eq 0) -or $rq.rq_clouds -eq '-1'){
             NearZero $row.actualClearCloudCover "$($row.camera) clear coverage"
             NearZero $row.actualClearCloudPhoto "$($row.camera) photographic branch"

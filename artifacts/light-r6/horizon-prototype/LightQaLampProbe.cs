@@ -23,6 +23,7 @@ namespace Game.Rendering.Editor
             public float clearCloudSourceMinElevationDeg;
             public Vector4 cloudSourceLimits;
             public float actualClearCloudCover, actualClearCloudPhoto;
+            public float actualExposureGlobal, actualStreetLampsGlobal;
             public Vector4 actualCloud, actualHaze, actualSkyCap;
             public Vector3 actualCloudRotationUp;
             public bool requestedHorizonLock;
@@ -94,6 +95,8 @@ namespace Game.Rendering.Editor
                 cloudSourceLimits = Shader.GetGlobalVector("_KamionClearCloudSourceLimits"),
                 actualClearCloudCover = Shader.GetGlobalFloat("_KamionClearCloudCover"),
                 actualClearCloudPhoto = Shader.GetGlobalFloat("_KamionClearCloudPhoto"),
+                actualExposureGlobal = Shader.GetGlobalFloat("_KamionExposure"),
+                actualStreetLampsGlobal = Shader.GetGlobalFloat("_KamionStreetLamps"),
                 actualCloud = Shader.GetGlobalVector("_KamionCloud"),
                 actualHaze = Shader.GetGlobalVector("_KamionHaze"),
                 actualSkyCap = Shader.GetGlobalVector("_KamionSkyCap"),
