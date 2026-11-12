@@ -1,0 +1,23 @@
+{
+  "main": "3cdd6da465b82d9687f27ad95ec5fce692e1898b",
+  "roundStart": "20e7e6a1f3d7d36c8091959620dbee5448794378",
+  "extraCameras": 61,
+  "presets": [
+    "clear",
+    "overcast",
+    "lowsun",
+    "dusk",
+    "night"
+  ],
+  "scope": "Low default OFF; High explicit HDR intermediate reference. Fresh merged source and raw snapshot, not a phone/GPU claim.",
+  "qaSources": [
+    {
+      "sha256": "8FF29F757A65B9812E1FB8D1EB76954C56F9505BFAA873FB34879FB4E752E58D",
+      "file": "Data/Regions/bialystok-industrial-c/sbs_cameras.json"
+    },
+    {
+      "sha256": "33B5A28A2BE921AAC04D06B040C2D09615922CE17D18B44012DB9B4280AA3218",
+      "file": "Data/Regions/bialystok-industrial-c/buildings_r10_cameras.json"
+    }
+  ]
+}
