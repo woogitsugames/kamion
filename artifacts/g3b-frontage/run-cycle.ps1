@@ -1,0 +1,5 @@
+# build_world -> import -> SBS render (Low overcast) -> artifacts/g3b-frontage/<Name>
+param([string]$Name = 'baseline', [string]$Tag = '0')
+& pwsh -NoProfile -File (Join-Path $PSScriptRoot 'run-build.ps1') -Log "build-world-$Tag.log"
+& pwsh -NoProfile -File (Join-Path $PSScriptRoot 'run-import.ps1') -Log "import-$Tag.log"
+& pwsh -NoProfile -File (Join-Path $PSScriptRoot 'run-sbs.ps1') -Name $Name
