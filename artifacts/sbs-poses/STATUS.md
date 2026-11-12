@@ -7,3 +7,5 @@
 - NEXT: render r2 `pwsh artifacts/sbs-poses/tools/render.ps1 -Round r2`, then `uv run --project tools/refs python artifacts/sbs-poses/tools/sheets.py r2 Low-overcast`.
 - r2 rendered + sheets. Chosen: 3281350 a0, 297817 b0, 1801374 d0 (+20 m), 494288 right +3.0 m (between c1/c2). Written by `artifacts/sbs-poses/tools/finalize.py --write` into sbs_authored_overrides/cameras/references (formula-consistent).
 - NEXT: pytest `pwsh C:/Users/matma/Documents/Claude/kamion/scripts/unity-slot.ps1 -Acquire -Pool heavy -Owner claude-sbs-poses; uv run --project tools/refs python -m pytest tests/gate3 tests/gis/test_sbs_gate3.py tests/gis/test_sbs_photometry.py tests/gis/test_sbs_report.py -q`; then `pwsh scripts/sbs-gate3.ps1 -RenderOnly -Tiers Low,High -SlotOwner claude-sbs-poses -OutputRoot artifacts/sbs-poses/final`.
+- 4-state render done (`artifacts/sbs-poses/final/renders/{Low,High}-{overcast,clear}`, sbs-gate3.ps1 -RenderOnly, all 42 cameras, captures OK at sha 0a? see capture-*.json). Pairs photo|before|after x4: `artifacts/sbs-poses/pairs/*.jpg`. ADR 0130 written.
+- NEXT: pytest waiting in heavy FIFO (owner claude-sbs-poses-py); then report to lead.
