@@ -43,9 +43,9 @@ TEAL = (0, 126, 122)          # Białystok street-name plates and their posts (M
 GALV = (150, 153, 154)
 BACK = SG.GREY_BACK
 FLUO = (238, 208, 0)          # yellow of warning signs / T plates
-# face code -> (shape, width m, height m). Triangle side 0.9 m and D-1 / D-6 0.8 m = standards.SIGN_SIZE (medium
-# group); D-3 0.6 m, U-4a 0.75 x 1.35 m, plates 0.6 x 0.45 m and the street-name plate 1.0 x 0.25 m are WORKING_VALUE
-# read off the photos against the Ø60 mm post.
+# face code -> (shape, width m, height m). Triangle side 0.9 m and D-1 0.6 m = standards.SIGN_SIZE (medium group,
+# Tabela 1.1 / Tabela 5.1 of Dz.U. 2019 poz. 2311 zał. 1); D-3 0.6 m, U-4a 0.75 x 1.35 m, plates 0.6 x 0.45 m
+# and the street-name plate 1.0 x 0.25 m are WORKING_VALUE read off the photos against the Ø60 mm post.
 FACE_DIM = {
     "A-30": ("tri_up", S.SIGN_SIZE["triangle"], S.SIGN_SIZE["triangle"] * math.sqrt(3) / 2),
     "D-1": ("diamond", S.SIGN_SIZE["diamond"], S.SIGN_SIZE["diamond"]),
