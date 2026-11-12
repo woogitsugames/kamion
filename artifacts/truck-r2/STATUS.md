@@ -18,3 +18,4 @@ Import bieżącej bazy zakończony. Zmiany generated innych dziedzin zachować j
 Krok 8: pominiętą warstwę zdjęciową wygenerowano osobno pod heavy (1 s); import regionu zakończony poprawnie. Zachowano baseline-generated-sideeffects.patch i przywrócono dokładnie pięć zmienionych plików metadanych poza truckiem, bez zmiany źródeł innych dziedzin. Świeże prywatne zasoby Unity pozostają wejściem baseline. Następny krok: pwsh -NoProfile -ExecutionPolicy Bypass -File artifacts/truck-r2/baseline-captures.ps1.
 Odświeżono oba prefaby i instalację po zmianach main; sam import regionu używałby starych prefabów. Następny krok: baseline r2, wszystkie kamery i kontrole brudu.
 Zapisano before Low overcast, kod wejściowy zgodny z fingerprintem. Następny krok: pomiary i oględziny par przed/po.
+Zapisano before Low clear, kod wejściowy zgodny z fingerprintem. Następny krok: pomiary i oględziny par przed/po.
