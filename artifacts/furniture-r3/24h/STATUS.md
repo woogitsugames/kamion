@@ -36,3 +36,5 @@ potem poprawić największe udokumentowane odstępstwo wiaty. WIP po każdym kro
 2026-11-12T11:20:55.9543893+01:00: doprecyzowanie liczbykamer:plik zawiera11 własnych wpisów(7z r2+4wiaty); oczekiwane59 obejmuje również kamery sceny, musi zostać potwierdzone logiem renderera. Źródła przystanków mają odległość1,06m i1,59m od wybranych instancji. Nie traktować11 wpisów jako pełnej liczby kadrów ani59 jako już wyrenderowanych.
 
 2026-11-12T11:22:46.0832558+01:00: heavy geometry before; sukces=True; slot gpt-furniture-r3 zwolniony. NASTĘPNY KROK: sprawdzić log i kontynuować walidację rundy.
+
+2026-11-12T11:24:14.6230225+01:00: Unity import before Low overcast; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
