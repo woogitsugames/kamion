@@ -1,0 +1,126 @@
+{
+  "scope": "Offline candidate; no game-map writes or visual acceptance",
+  "baseline": [
+    {
+      "file": "High/T_Cab_Leather_Detail.png",
+      "original_sha256": "54b542082be0d3113e45259ee61462960b12515cd85b992f5e0fc53adf983cbb",
+      "reproduced_sha256": "54b542082be0d3113e45259ee61462960b12515cd85b992f5e0fc53adf983cbb",
+      "matches": true
+    },
+    {
+      "file": "High/T_Cab_Leather_Normal.png",
+      "original_sha256": "26f58dfa43bf130fedf9bd9b8c9f78fd95d711c148e9db163a96b9ee31f956ad",
+      "reproduced_sha256": "26f58dfa43bf130fedf9bd9b8c9f78fd95d711c148e9db163a96b9ee31f956ad",
+      "matches": true
+    },
+    {
+      "file": "Medium/T_Cab_Leather_Detail.png",
+      "original_sha256": "689cecca8ddfa04a612125e1dc3cb81a7af028a2040ff0057eafbae88b60f1b9",
+      "reproduced_sha256": "689cecca8ddfa04a612125e1dc3cb81a7af028a2040ff0057eafbae88b60f1b9",
+      "matches": true
+    },
+    {
+      "file": "Medium/T_Cab_Leather_Normal.png",
+      "original_sha256": "ef40ad01f7af5f356671a2bacc1745b3962c76d4af0c2a093ee0c9c8fed4c87f",
+      "reproduced_sha256": "ef40ad01f7af5f356671a2bacc1745b3962c76d4af0c2a093ee0c9c8fed4c87f",
+      "matches": true
+    },
+    {
+      "file": "Low/T_Cab_Leather_Detail.png",
+      "original_sha256": "9d83af53b4ee05274328cebbce3bec83a038031dc389f48dd9e19b2b19af2fda",
+      "reproduced_sha256": "9d83af53b4ee05274328cebbce3bec83a038031dc389f48dd9e19b2b19af2fda",
+      "matches": true
+    },
+    {
+      "file": "Low/T_Cab_Leather_Normal.png",
+      "original_sha256": "0788c58221f835c0f0c450a5ef24621145b915623dad2dbfd59bb36b8760c780",
+      "reproduced_sha256": "0788c58221f835c0f0c450a5ef24621145b915623dad2dbfd59bb36b8760c780",
+      "matches": true
+    },
+    {
+      "file": "High/T_Cab_Plastic_Detail.png",
+      "original_sha256": "d9dd88a451df91800f5bf9476c6384501bd368a630e35edcb163184f8d27e107",
+      "reproduced_sha256": "d9dd88a451df91800f5bf9476c6384501bd368a630e35edcb163184f8d27e107",
+      "matches": true
+    },
+    {
+      "file": "High/T_Cab_Plastic_Normal.png",
+      "original_sha256": "ddfb751b4062305c7663693773fccd73d7b0526502f93b901b33e2d8b79aea17",
+      "reproduced_sha256": "ddfb751b4062305c7663693773fccd73d7b0526502f93b901b33e2d8b79aea17",
+      "matches": true
+    },
+    {
+      "file": "Medium/T_Cab_Plastic_Detail.png",
+      "original_sha256": "94e8970af0f3db442526af1b40199fc33cd4a3069d205dcda7bec81a48cde3cb",
+      "reproduced_sha256": "94e8970af0f3db442526af1b40199fc33cd4a3069d205dcda7bec81a48cde3cb",
+      "matches": true
+    },
+    {
+      "file": "Medium/T_Cab_Plastic_Normal.png",
+      "original_sha256": "03105d860c678661e90c35d45f8bd254c523d4f1979ce5be79ddb4d26d0fe571",
+      "reproduced_sha256": "03105d860c678661e90c35d45f8bd254c523d4f1979ce5be79ddb4d26d0fe571",
+      "matches": true
+    },
+    {
+      "file": "Low/T_Cab_Plastic_Detail.png",
+      "original_sha256": "07f04f476f013829466ee7fc8cf37173fbacd2e7156f68de30f41afe59706f4d",
+      "reproduced_sha256": "07f04f476f013829466ee7fc8cf37173fbacd2e7156f68de30f41afe59706f4d",
+      "matches": true
+    },
+    {
+      "file": "Low/T_Cab_Plastic_Normal.png",
+      "original_sha256": "9819683717b3e846e98a82cc31d0e06ec1d0b81d19daf53cc67e1166f16fbb05",
+      "reproduced_sha256": "9819683717b3e846e98a82cc31d0e06ec1d0b81d19daf53cc67e1166f16fbb05",
+      "matches": true
+    }
+  ],
+  "candidate": [
+    {
+      "file": "High/T_Cab_Plastic_Detail.png",
+      "baseline_sha256": "d9dd88a451df91800f5bf9476c6384501bd368a630e35edcb163184f8d27e107",
+      "candidate_sha256": "d9dd88a451df91800f5bf9476c6384501bd368a630e35edcb163184f8d27e107",
+      "identical": true
+    },
+    {
+      "file": "High/T_Cab_Plastic_Normal.png",
+      "baseline_sha256": "ddfb751b4062305c7663693773fccd73d7b0526502f93b901b33e2d8b79aea17",
+      "candidate_sha256": "591abcf92cdb659224485a2efd22337dd3d09997a47702aaabe9e7104962912b",
+      "identical": false,
+      "max_unit_length_error_8bit": 0.00429987907409668,
+      "min_normal_z": 0.8980392217636108
+    },
+    {
+      "file": "Medium/T_Cab_Plastic_Detail.png",
+      "baseline_sha256": "94e8970af0f3db442526af1b40199fc33cd4a3069d205dcda7bec81a48cde3cb",
+      "candidate_sha256": "94e8970af0f3db442526af1b40199fc33cd4a3069d205dcda7bec81a48cde3cb",
+      "identical": true
+    },
+    {
+      "file": "Medium/T_Cab_Plastic_Normal.png",
+      "baseline_sha256": "03105d860c678661e90c35d45f8bd254c523d4f1979ce5be79ddb4d26d0fe571",
+      "candidate_sha256": "8b5dc70248d46c0197dc97713c1b6c23e69534e819dbd7f8e97e8aac8db29458",
+      "identical": false,
+      "max_unit_length_error_8bit": 0.005169272422790527,
+      "min_normal_z": 0.929411768913269
+    },
+    {
+      "file": "Low/T_Cab_Plastic_Detail.png",
+      "baseline_sha256": "07f04f476f013829466ee7fc8cf37173fbacd2e7156f68de30f41afe59706f4d",
+      "candidate_sha256": "07f04f476f013829466ee7fc8cf37173fbacd2e7156f68de30f41afe59706f4d",
+      "identical": true
+    },
+    {
+      "file": "Low/T_Cab_Plastic_Normal.png",
+      "baseline_sha256": "9819683717b3e846e98a82cc31d0e06ec1d0b81d19daf53cc67e1166f16fbb05",
+      "candidate_sha256": "44c954fd6d8a7414bf942081bd4f33ee1da5ab25253d460cff7425f54c0fbb9b",
+      "identical": false,
+      "max_unit_length_error_8bit": 0.00417637825012207,
+      "min_normal_z": 0.9686274528503418
+    }
+  ],
+  "normal_highpass_mm": 1.5,
+  "reference_tile_metres": 0.1,
+  "uv_limits": "Nominal 10 cm tile; inherited per-part UV sizes remain. Not a uniform physical cutoff over every part.",
+  "parameter_status": "WORKING_VALUE",
+  "status": "PASS: 12/12 baseline maps exact; candidate changes only Plastic normals"
+}
