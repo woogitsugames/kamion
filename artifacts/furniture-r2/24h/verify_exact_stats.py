@@ -1,5 +1,6 @@
 """Validate actual unrounded CPU counters against both current and frozen runner output."""
 import argparse
+import hashlib
 import json
 import re
 from pathlib import Path
@@ -44,6 +45,8 @@ for camera, row in rows.items():
         assert row[field] // 1000 == old.get(field, 0), (camera, field)
 proof = dict(phase=args.phase, tier=args.tier, lighting=args.lighting, cameras=len(rows),
              runner_and_frozen_match=True, unrounded_values_match_every_reported_floor=True,
+             frozen_stats_sha256=hashlib.sha256((ROOT / args.phase / key / 'stats.txt').read_bytes()).hexdigest(),
+             packet_sha256=hashlib.sha256((probe / 'exact-stats.json').read_bytes()).hexdigest(),
              scope='CPU estimates before SRP batching, not GPU measurements')
 (probe / 'validation.json').write_text(json.dumps(proof, indent=2) + '\n')
 print(json.dumps(proof))

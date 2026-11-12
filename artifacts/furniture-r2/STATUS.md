@@ -101,3 +101,5 @@ NASTĘPNY KROK: przygotować własne skrypty r2 z ownerem heavy gpt-furniture-r2
 2026-11-12T03:41:43.3521740+01:00: dokładny licznik CPU before Low overcast; sukces=True, slot Unity zwolniony. NASTĘPNY KROK: pozostałe warianty i porównanie przed/po, bez deklaracji czasu GPU.
 
 2026-11-12T03:42:08.5800792+01:00: dokładny licznik CPU before Low dusk; sukces=True, slot Unity zwolniony. NASTĘPNY KROK: pozostałe warianty i porównanie przed/po, bez deklaracji czasu GPU.
+
+2026-11-12T09:04:48.5540917+01:00: po wznowieniu potwierdzono brak procesów starej sekwencji (log zatrzymany03:44). Generator i testy są zakończone; brakuje wyłącznie hasherów after. Trzy cudze sloty heavy pozostają zajęte — nie usuwamy ich. Ponownie zweryfikowano165 dokładnych liczników baseline i powiązano dowody hashami plików. Import może działać niezależnie od czytających GLB hasherów; raport nie uzna geometrii za potwierdzoną przed ich wynikiem. NASTĘPNY KROK: wznowić tylko heavy geometry after oraz import w oddzielnym pool Unity.
