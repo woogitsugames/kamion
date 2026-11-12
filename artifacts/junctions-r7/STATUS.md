@@ -12,3 +12,4 @@
 - 19:47 W TLE: chain.sh r7c, 2. próba (1.: MemoryError w clear_level_carriageways przy 4/4 slotach heavy) -> logs/r7c_build.out, r7c_imp.out.
 - NASTĘPNY KROK po chain: obejrzeć pairs_r7c, `bash artifacts/junctions-r7/scripts/post.sh r7c full`, EditMode (scripts/test.ps1 -Platform EditMode w slocie unity).
 - 20:05 live nadpisany (artifacts/live/junctions-r7.md); build r7c rc 0, chain w toku (import/rendery).
+- 20:13 r7c: test_guardrail_overlap 8/8, cols_check 0/32 kolumn przy jezdni, rail_far 0 biegów > 3 m. W TLE: chain.sh r7c (import/rendery, logs/r7c_imp.out) + post.sh r7c full (logs/r7c_post.out).
