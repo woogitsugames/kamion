@@ -11,7 +11,6 @@
 | zabudowa r9 wysoka zieleń | 0132 | `buildings-r9` | `artifacts/live/buildings-r9.md` | r3: pytest gis 2 czerwone (estymata kadru High > 2 M: kit posesji High 52→94 k) → **decyzja lidera 19:20: wariant B** (r4: pełne bryły roślin ≤ 12 m od frontu, próg bez zmian) |
 | krawędź mapy / tło | 0141 | `edge-r6c` | `artifacts/live/edge-r6c.md` | pary after → merge main → testy |
 | **węzły r7: kolizja W-beam/poręcz (P1-1), filary z danych (P1-2), żwir nasypu/nosa, spód pomostu** | 0144 | `junctions-r7` (Fable) | `artifacts/live/junctions-r7.md` | start 18:37 |
-| **dźwięk opon: szuranie w ciasnym skręcie + pisk (właściciel: pisk zły; był syntezą 930 Hz)** | 0145 | `tyre-scrub` (Opus audio) | `artifacts/live/tyre-scrub.md` | start 18:59; nagrania: `docs/owner/ELEVENLABS-REGEN-03.md` (właściciel generuje) |
 | **świat Putry/Andersa: wysokość latarni Y, prawe pobocze 494288, mur oporowy 810896** | 0146 | `putry-andersa` (Fable) | `artifacts/live/putry-andersa.md` | start 19:18 |
 | **A16 GPU runda 2: props G3-A wg prefiksu** (jedyny agent telefonowy) | 0136 r2 | `a16-perf` (Opus) | `artifacts/live/a16-perf.md` | start 18:4x |
 - Scalone wcześniej (s13): 0129, 0136, 0140, 0142 — patrz niżej. **main wymaga regeneracji** (0129, 0133) + `ImpostorTrimBake.RunBatch` (0136) w jednej integracji.
@@ -24,6 +23,7 @@
 - **Mistral r2 zrecenzowane** (`docs/reports/REVIEW-2026-11-12-s14-mistral-r2.md`, komentarze PL na #6–#14): 3 SCAL, 6 SCAL po drobnych poprawkach, 0 NIE. Agent buduje gałąź `mistral-r2-int` (merge --no-ff PR-ów + poprawki lidera, live `artifacts/live/mistral-r2-int.md`) → lider scala do main. M9 (znaki pionowe) bez PR — właściciel wznawia tylko sesję M9. Osobne zadania z recenzji: oktawa comb_estimate (audio), źródła R13/AMT (fizyka), duplikat `concrete_pole` w materials.py (świat, regeneracja), fidelity run po #14.
 - **19:18: SCALONE 0143 pozy SBS r3** (494288 prosta, 482392, 320326 promowana z 0128, 810896 przestawiona ale świat zły — poza D51 do 0146; 837235 bez zmian: różnica 2019 vs 2024). Błędy świata z 0143 → 0144 (tablica F-10 w 482392, filary) i 0146. Po integracji: przegrade `sbs_recognition.json` dla 494288/482392/320326. Mistral runda 3 (M16–M20) **zlecona przez właściciela** (PR-y `mistral/16..20-*` → recenzja w triggerze :47): `docs/owner/MISTRAL-TASKS-3.md`; M9 wznawiana.
 - **19:20: SCALONE 0139 g3b-r2** `97996ef6` (critic SCAL warunkowo, `REVIEW-…-s14-0139.md`: **G3-B 5/10 RECOGNISABLE, 5 PARTIAL** — 297817 obniżone: kominy EC niewidoczne na Low → 0141; tablice portalu Andersa ~0,6 m za wysoko, gzyms czerwony, dwuteowniki → 0146; pozy 810525/810896 złe → po 0146). Worktree g3b-r2 usunięty.
+- **19:4x: SCALONE 0145 tyre-scrub** (szuranie osi naczepy w ciasnym skręcie + pisk tylko przy poślizgu 18–32 km/h; nagrania REGEN-03; PlayMode 27/27, 0 B GC). A/B wysłane właścicielowi (`artifacts/tyre-scrub/ab/`). **APK z oponami w kolejce:** `artifacts/lead-s14/apk-tyres.sh` (log `apk-tyres.log`) czeka na zdjęcie PHONE_RUN (0136 mierzy A16), potem slot Unity → build. `.gitignore`: `art-source/audio/elevenlabs/`.
 - **Ostatni przydzielony ADR: 0146.**
 
 ---
