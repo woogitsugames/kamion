@@ -1,5 +1,9 @@
 # Uzupełnienie przygotowania r3
 
+AKTUALIZACJA: hipoteza pełnych pasów co 15 m poniżej została ODRZUCONA do wdrożenia.
+Dokument ENEA i zdjęcie wykonawcy zbadane później podważają skalowanie fotografii
+z samego podanego GPS. Najpierw rozwiązać pozę; patrz ostatnia sekcja.
+
 Najpierw zakończyć r2. To analiza referencji, bez zmian kominów ani plików life.
 Niniejsza notatka koryguje NEXT-R3.md z r1 tam, gdzie podano CC0 lub trzy materiały
 dla każdego LOD. Zdjęcie Rakoon 20200711 073128 jest CC BY 3.0, lokalna kopia
@@ -35,3 +39,18 @@ OSM wskazuje stronę https://radiopolska.pl/wykaz/obiekt/765 (komin w554).
 Podaje posadowienie 137 m n.p.m. i zawieszenie anten 116 m n.p.t.; nie jest to
 niezależny pomiar średnic. Zdjęcia RadioPolski wymagają zgody na reprodukcję;
 nie pobrano ich ani nie dołączono do dowodów. Nie otwierano linku Google ze strony.
+
+## Późniejsza kontrola techniczna — ważniejsza od hipotezy GPS
+
+W opisie zamówienia ENEA z maja 2025 komin jednoprzewodowy nr 2 ma H=120 m,
+zewnętrzną średnicę góry 4,80 m i podstawy 7,65 m, rok budowy 1974. EMKA w swoim
+opisie realizacji potwierdza H=120 m komina wieloprzewodowego. Własne źródła i
+linki są w chimney-technical-sources.json; nie kopiowano pełnego ogłoszenia.
+Fotografia EMKA pokazuje długi biały dół i pasy na górnej części; obejrzana tylko
+z cache TEMP, nie umieszczona w artifacts ani git. Brak zgody na reprodukcję.
+
+Nie zmieniać wysokości ani szerokości do źle dopasowanego aparatu. Przedział
+roboczy +/-2 m dla pasów nie obejmował systematycznego błędu pozy/GPS i nie jest
+wiarygodną granicą. Liczby 14,64/15,08 m zachowano jako ślad odrzuconej hipotezy,
+nie parametry do modelu. Dla r3 rozwiązać pozę na znanych 120 m i położeniach,
+sprawdzić granice pasów i biały dół; nie wprowadzać pełnego malowania od podstawy.

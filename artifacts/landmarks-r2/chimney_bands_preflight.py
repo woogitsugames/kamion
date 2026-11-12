@@ -32,9 +32,11 @@ result = dict(source_page=source["file_page"], author=source["author"], license=
               source_status="Resized reference; original download HTTP 429 twice, no local original claimed",
               heading_WORKING_VALUE_deg=heading, focal_pixels_assuming_36mm_equivalent_width=focal_px,
               assumptions="Rectilinear projection, small camera pitch, same stripe height; GPS rounded and equivalent focal/crop uncertain",
-              estimated_uncertainty_m_WORKING_VALUE=2.0, observations=observations,
-              candidate_only=dict(pitch_m=15.0, height_m_retained_from_OSM=120,
-                                  alternating_phase="white 0..15 m, red 15..30 m, continuing to red 105..120 m",
-                                  status="WORKING_VALUE. Check with photo-aligned r3 renders before choosing; no mesh/source changes applied"))
+              uncertainty="Not bounded until pose is solved. Initial +/-2 m estimate omitted systematic GPS/focal/pose uncertainty.",
+              observations=observations,
+              candidate_only=dict(gps_based_pitch_hypothesis_m=15.0, height_m_retained_from_OSM=120,
+                                  rejected_phase_assumption="full-height white/red bands at 15 m spacing",
+                                  status="DO NOT APPLY. Contractor photo shows a long white base; technical dimensions require solving the photographic pose instead of scaling the shaft or painting from this GPS estimate.",
+                                  further_evidence_file="chimney-technical-sources.json"))
 (root / "chimney-bands-preflight.json").write_text(json.dumps(result, indent=2), encoding="utf-8")
 print(json.dumps(result, indent=2))

@@ -11,7 +11,7 @@
   "heading_WORKING_VALUE_deg": 147.07754451999938,
   "focal_pixels_assuming_36mm_equivalent_width": 2880.0,
   "assumptions": "Rectilinear projection, small camera pitch, same stripe height; GPS rounded and equivalent focal/crop uncertain",
-  "estimated_uncertainty_m_WORKING_VALUE": 2.0,
+  "uncertainty": "Not bounded until pose is solved. Initial +/-2 m estimate omitted systematic GPS/focal/pose uncertainty.",
   "observations": {
     "left": {
       "osm_way": "628899554",
@@ -56,9 +56,10 @@
     }
   },
   "candidate_only": {
-    "pitch_m": 15.0,
+    "gps_based_pitch_hypothesis_m": 15.0,
     "height_m_retained_from_OSM": 120,
-    "alternating_phase": "white 0..15 m, red 15..30 m, continuing to red 105..120 m",
-    "status": "WORKING_VALUE. Check with photo-aligned r3 renders before choosing; no mesh/source changes applied"
+    "rejected_phase_assumption": "full-height white/red bands at 15 m spacing",
+    "status": "DO NOT APPLY. Contractor photo shows a long white base; technical dimensions require solving the photographic pose instead of scaling the shaft or painting from this GPS estimate.",
+    "further_evidence_file": "chimney-technical-sources.json"
   }
 }
