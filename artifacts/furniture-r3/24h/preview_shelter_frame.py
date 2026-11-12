@@ -5,7 +5,7 @@ from pathlib import Path
 from PIL import Image
 
 parser = argparse.ArgumentParser()
-parser.add_argument('phase', choices=('before', 'after', 'before-side', 'after-side'))
+parser.add_argument('phase', choices=('before', 'after', 'before-side', 'after-side', 'early-after1'))
 parser.add_argument('variant', choices=('Low-clear', 'Low-overcast', 'High-clear', 'High-overcast'))
 parser.add_argument('camera', choices=tuple(f'furniture-shelter-{stop}-{view}'
     for stop in ('anders-1000', 'factory') for view in ('front', 'corner', 'reverse')))
