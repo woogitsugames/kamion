@@ -208,3 +208,5 @@ Końcowy heavy (2026-11-12T11:27:12.6469592+01:00): odśwież raport fidelity po
 Końcowy heavy (2026-11-12T11:27:13.8942058+01:00): sprawdź pojedynczy test odświeżonego fidelity. Następny krok: odczyt wyników, oględziny pełnych plansz, EditMode, REPORT/kopia, potem r4.
 
 Krok 59: kanoniczne fidelity zakończone, osobny test_road_fidelity 9 passed i 1 xfailed (0,14 s). Ponowny pełny GIS już działa w tym samym heavy 90863. Przygotowano publish.ps1, który wymaga terminalnego heavy complete/0, zielonego EditMode i czystej gałęzi, sprawdza rozmiary całego zbioru oraz SHA krytycznych dowodów, kopiuje bez usuwania i publikuje REPORT ostatni. Skrypt jeszcze nie uruchomiony; brak REPORT. Następny krok: wynik GIS, aktualizacja końcowych dokumentów i przekazanie.
+
+Krok 60: przygotowano 18-wierszowy REPORT-DRAFT.md z rzeczywistymi pomiarami C, jawnym PARTIAL i miejscem na końcowy wynik GIS. Nie jest REPORT.md i nie oznacza przekazania rundy. Parser PowerShell sprawdził składnię publish.ps1 bez błędów; nie uruchomiono publikacji. Pełny GIS 90863 nadal działa. Następny krok: terminalny wynik, uzupełnienie dokumentów i kopia/report-last.
