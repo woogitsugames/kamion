@@ -272,6 +272,11 @@ namespace Game.World.Import
             }
             // ADR0118 r2: material-local dirt; reset on every Apply to prevent reuse leaking it.
             mat.SetVector("_KerbWear", new Vector4(0f, 0f, 0.55f, 0f));
+            mat.SetVector("_GroundWearExclude", Vector4.zero);
+            mat.SetVector("_GroundGrimeBase", Vector4.zero);
+            if (def.Get("ground_wear_exclude_local_en") is List<object> bounds && bounds.Count == 4)
+                mat.SetVector("_GroundWearExclude", new Vector4((float)Num(bounds[0]), (float)Num(bounds[1]),
+                    (float)Num(bounds[2]), (float)Num(bounds[3])));
             if (setName == "kerb_concrete_1m" && def.Get("kerb_wear") is Dictionary<string, object> kw)
             {
                 float K(string key, float fallback) => kw.Get(key) != null ? (float)Num(kw.Get(key)) : fallback;
@@ -296,6 +301,7 @@ namespace Game.World.Import
                 mat.EnableKeyword("_GRIME");
                 // x damp darkening, y macro-pool threshold (~0.62 = 16 % of the area), z joint dirt, w damp gloss
                 mat.SetVector("_Grime", new Vector4(blocks ? 0.42f : 0.38f, 0.62f, blocks ? 0.45f : 0.3f, 0.5f));
+                mat.SetVector("_GroundGrimeBase", mat.GetVector("_Grime"));
                 if (def.Get("ground_grime") is Dictionary<string, object> gg)
                 {
                     var defaults = mat.GetVector("_Grime");

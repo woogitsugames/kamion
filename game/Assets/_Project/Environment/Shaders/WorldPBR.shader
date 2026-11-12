@@ -62,6 +62,8 @@ Shader "Kamion/World PBR"
         _DripBand ("Lane-centre oil / soot drip band between the wheel paths (_ROADWEAR)", Range(0, 1)) = 0
         _Grime ("Ground grime (_GRIME): x damp darkening, y damp threshold (macro pool), z joint dirt, w damp gloss", Vector) = (0.45, 0.62, 0.3, 0.5)
         _KerbWear ("Kerb wear: joint dirt, mineral film, film threshold, enabled (ADR0118)", Vector) = (0, 0, 0.55, 0)
+        _GroundWearExclude ("Ground wear exclusion: object-local E/N bounds, min/max (ADR0118)", Vector) = (0, 0, 0, 0)
+        _GroundGrimeBase ("Ground grime inside exclusion: original coefficients (ADR0118)", Vector) = (0.45, 0.62, 0.3, 0.5)
         _SkyOcc ("Sky occlusion: x down-facing ambient, y horizon reflection (0 = off; ADR 0060)", Vector) = (0, 0, 0, 0)
         _AgeTint ("Patch age target / base albedo ratio", Float) = 2.0
         _PatchSeam ("Repair: seam width m, darkening, fresh tone, aged tone (ADR0118)", Vector) = (0, 0, 1, 1)
@@ -113,6 +115,7 @@ Shader "Kamion/World PBR"
             float4 _PatchSeam;
             float4 _Grime, _SkyOcc;
             float4 _KerbWear;
+            float4 _GroundWearExclude, _GroundGrimeBase;
             float _DripBand;
             float4 _CarPaint, _CarFlake, _PearlTint;
             float _OffsetFactor, _OffsetUnits, _SrcBlend, _DstBlend, _ZWrite, _Cull, _ReceiveShadows;
@@ -519,6 +522,17 @@ Shader "Kamion/World PBR"
                 }
             #endif
 
+                // ADR0118: leave a separately owned site at its original material response.
+                // World chunk mesh coordinates are authoring E/N; object space survives origin shifts.
+                // Inside the bounds: exactly zero new wear. Outside: an 8 m transition avoids a visible seam.
+                half groundWear = 1.0;
+                if (_GroundWearExclude.z > _GroundWearExclude.x && _GroundWearExclude.w > _GroundWearExclude.y)
+                {
+                    float2 localEN = TransformWorldToObject(pw).xz;
+                    float2 outside = max(_GroundWearExclude.xy - localEN, localEN - _GroundWearExclude.zw);
+                    groundWear = saturate(max(outside.x, outside.y) * 0.125);
+                }
+
                 // ---- ground grime (ADR 0060, review r7 N-2): dirty joints on every tier (Var.B, the Medium+ element jitter
                 // only adds tone) and damp / oily hollows: water and fines stay in the low points (Var.R height) of the
                 // 1.5-24 m wear patches (macro B) broken by the 0.5-4 m mottling (macro A). Paving, yard concrete, yard and
@@ -526,12 +540,14 @@ Shader "Kamion/World PBR"
             #if defined(_GRIME)
                 {
                     half4 gv = SAMPLE_TEXTURE2D(_VarMap, sampler_BaseMap, uvb);
+                    float4 grime = _Grime;
+                    if (groundWear < 1.0) grime = lerp(_GroundGrimeBase, _Grime, groundWear);
                     half jfade = saturate(0.012 / max(footprint, 1e-4));             // joints resolved: full dirt
-                    albedo *= 1.0 - _Grime.z * gv.b * lerp(0.5, 1.0, jfade);
+                    albedo *= 1.0 - grime.z * gv.b * lerp(0.5, 1.0, jfade);
                     half pool = macro.b * 0.65 + macro.a * 0.35 - (gv.r - 0.7) * 0.06;
-                    half wet = smoothstep(_Grime.y, _Grime.y + 0.025, pool);
-                    albedo *= 1.0 - _Grime.x * wet;
-                    smooth = lerp(smooth, max(smooth, 0.62), wet * _Grime.w);
+                    half wet = smoothstep(grime.y, grime.y + 0.025, pool);
+                    albedo *= 1.0 - grime.x * wet;
+                    smooth = lerp(smooth, max(smooth, 0.62), wet * grime.w);
                 }
             #endif
 
@@ -542,7 +558,7 @@ Shader "Kamion/World PBR"
                 {
                     half joints = saturate(1.0 - mask.b);
                     half film = smoothstep(_KerbWear.z, _KerbWear.z + 0.18, macro.b * 0.6 + macro.a * 0.4);
-                    albedo *= (1.0 - _KerbWear.x * joints) * (1.0 - _KerbWear.y * film);
+                    albedo *= (1.0 - groundWear * _KerbWear.x * joints) * (1.0 - groundWear * _KerbWear.y * film);
                 }
 
                 // ---- decals

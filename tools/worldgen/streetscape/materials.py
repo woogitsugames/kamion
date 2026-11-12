@@ -554,3 +554,11 @@ M["sidewalk_paving"] = {"color": [0.26, 0.255, 0.245], "rough": 0.85, "surface":
                         "texture_set": "paving_20x10_grey",
                         "ground_grime": {"damp_darkening": 0.18, "damp_threshold": 0.65,
                                          "joint_dirt": 0.45, "damp_gloss": 0.15}}
+
+# The gate's entry island also uses sidewalk_paving. Exclude the whole separately owned
+# Kwadrat site, not merely its yard material IDs. Conservative local-E/N envelope:
+# authored points E=493.4..765, N=-551..-343 plus entry node (627.592,-585.783),
+# with a buffer for the gate / kerb returns. Read-only source: regional overrides / graph.
+# These are scope bounds, not a survey of the site. No override/mesh/hero asset is edited.
+for _asphalt_ground_id in ("curb_concrete", "sidewalk_paving"):
+    M[_asphalt_ground_id]["ground_wear_exclude_local_en"] = [400.0, -700.0, 850.0, -250.0]
