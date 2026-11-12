@@ -52,3 +52,5 @@ Dodatkowe kamery: after/Low-overcast zapisane.
 Dodatkowe kamery: after/High-clear zapisane.
 
 Dodatkowe kamery: after/High-overcast zapisane.
+
+Autor obejrzał wszystkie40nowych zwykłych Low-clear. Pozy GPU zastępują wcześniejsze odrzucone warianty; reszta warunków after zakończona. Rozpoczynam identyczny baseline i automatyczne przywrócenie kandydata. Sprzątanie na bieżąco: żadnych kolejnych kopii pełnego świata; źródła referencyjne tylko odczyt. Własne odrzucone PNG pozostały po blokadzie automatycznego przeglądu usuwania; DECYZJA: ręczne usunięcie clear-rejected po recenzji.
