@@ -231,3 +231,5 @@ NASTĘPNY KROK: uv run --project tools/worldgen tools/worldgen/roads/build_world
 2026-11-12T02:08:26.2285393+01:00: Unity editmode final4 Low overcast; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
 
 2026-11-12T02:08:26.8810770+01:00: końcowe zestawy wykonane: GIS=1, physics/gate3=1, EditMode=0. NASTĘPNY KROK: odczytać pełne wyniki i każdą porażkę; nie utożsamiać samego wykonania z PASS.
+
+2026-11-12T02:09:58.3513206+01:00: runda 1 zamknięta: EditMode268/268; GIS509pass/1xfail/1fail; physics47pass/1fail. Pełne raporty, XML i audyty zachowane. Cofnięto cztery uboczne produkty innych dziedzin. NASTĘPNY KROK: robocopy artifacts/furniture-r1 do main, git switch -c gpt-furniture-r2, git merge main --quiet.

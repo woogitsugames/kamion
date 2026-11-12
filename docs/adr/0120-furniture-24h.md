@@ -139,3 +139,20 @@ modelu, a nie dokładnie całemu stożkowi. Próbki terenu nie dowodzą braku ka
 szczeliny względem uproszczonego Low. Dodano przypadek ostrego poprzecznego
 uskoku oraz porównanie hashy rzeczywistych accessorów kolizji GLB przed/po
 iteracji 4 (w slocie heavy przed generatorem i po kontroli eksportu).
+
+### r1, zamknięcie
+
+Zweryfikowany kod i zasoby: 7adbe982. Iteracja 4 poprawiła odczyt betonu;
+niezależnie obejrzano 40 arkuszy, 220 par, bez nowej istotnej regresji.
+DrawEst mesh i instancji osobno +0 we wszystkich 220 wariantach.
+Dokładne liczniki Low potwierdziły górną granicę tris ≤+2% w 102/110 wariantach;
+8 wariantów diagnostycznych above/edge pozostaje nierozstrzygniętych.
+Chroniona geometria 6833→6833 bez różnic; kolizje ogrodzeń 80→80 bez różnic
+wyłącznie między iteracją 3 i 4. Import Low 120,0 MB, High 262,1 MB, nie PSS.
+EditMode 268/268; własne Python 17/17 i 9/9. Pełny GIS: 509 passed,
+1 xfailed, 1 failed (zastane niezgodności siedmiu hashy fidelity).
+Physics/gate3: 47 passed, 1 failed (znana niezgodność top_speed_flat_comb).
+Niezmienność odpowiednich wejść od bazy sesji potwierdzają audyty w artefaktach.
+Nie zmieniano cudzych źródeł w celu uzyskania PASS. Otwarte I3/I5, aliasing Low,
+rodzina słupa i konstrukcja sztywnego panelu są opisane w REPORT i PACKET.
+Brak pomiaru telefonu/GPU/PSS; obrazy statyczne nie potwierdzają zachowania w ruchu.
