@@ -44,6 +44,55 @@ for frozen in json.loads((HERE/'evidence-inputs.json').read_text(encoding='utf-8
         raise RuntimeError(f"Camera/reference input changed: {frozen['path']}")
 if not (HERE/'After.complete').exists():
     raise RuntimeError('After matrix has not completed')
+
+# Check the recorded inputs as well as current camera files. An unchanged camera
+# alone would not isolate the facade change if sky, light or quality drifted.
+capture_audit = []
+phase_hashes = {'before':{}, 'after':{}}
+allowed_changes = {
+    'tools/worldgen/streetscape/far_field.py',
+    'game/Assets/_Project/Rendering/Shaders/WorldSurface.shader',
+    'Data/Regions/bialystok-industrial-c/generated/world_manifest.json',
+    'game/Assets/_Generated/World/bialystok-industrial-c/WorldC.unity',
+    'game/Assets/_Generated/World/bialystok-industrial-c/WorldC_High.unity',
+    'game/Assets/_Generated/World/bialystok-industrial-c/Meshes/world_edge.asset',
+    'game/Assets/_Generated/World/bialystok-industrial-c/Meshes/Low/world_edge_far.asset',
+    'game/Assets/_Generated/World/bialystok-industrial-c/Meshes/High/world_edge_far.asset',
+}
+required_changes = {
+    'tools/worldgen/streetscape/far_field.py',
+    'game/Assets/_Project/Rendering/Shaders/WorldSurface.shader',
+}
+native_input_groups = json.loads((HERE/'native-camera-groups.json').read_text(encoding='utf-8-sig'))['groups']
+for tier in ('Low','High'):
+    for lighting in ('clear','overcast'):
+        config = f'{tier}-{lighting}'
+        captures = [(HERE/'before'/config,HERE/'after'/config)]
+        captures += [(HERE/'before-photo'/config/g['id'],HERE/'after-photo'/config/g['id'])
+                     for g in native_input_groups]
+        for before_dir,after_dir in captures:
+            inputs = []
+            for phase,directory in (('before',before_dir),('after',after_dir)):
+                doc = json.loads((directory/'capture-inputs.json').read_text(encoding='utf-8-sig'))
+                hashes = doc.get('inputs_sha256',doc.get('input_sha256'))
+                if not hashes or doc['phase'] != phase or doc['tier'] != tier or doc['lighting'] != lighting:
+                    raise RuntimeError(f'Incorrect capture identity: {directory}')
+                normalized = {('artifacts/edge-r5/proof-cameras.json' if key == 'proof-cameras.json' else key):value.lower()
+                              for key,value in hashes.items()}
+                for key,value in normalized.items():
+                    if phase_hashes[phase].setdefault(key,value) != value:
+                        raise RuntimeError(f'Input drift within {phase}: {key}')
+                inputs.append(normalized)
+            old,new = inputs
+            if old.keys() != new.keys():
+                raise RuntimeError(f'Capture fingerprint coverage changed: {before_dir}')
+            changed = {key for key in old if old[key] != new[key]}
+            if changed - allowed_changes or not required_changes <= changed:
+                raise RuntimeError(f'Unexpected/missing input changes: {before_dir}: {sorted(changed)}')
+            capture_audit.append(dict(before=str(before_dir.relative_to(HERE)),
+                                      after=str(after_dir.relative_to(HERE)),changed=sorted(changed),
+                                      unchanged_inputs=len(old)-len(changed)))
+(HERE/'capture-inputs-audit.json').write_text(json.dumps(capture_audit,indent=2),encoding='utf-8')
 pairs = HERE / 'pairs'
 pairs.mkdir(exist_ok=True)
 
