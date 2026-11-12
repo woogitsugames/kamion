@@ -193,7 +193,8 @@ Wet asphalt friction scale: **0.625**, so peak μ ≈ 0.5. Status: WORKING_VALUE
 | Pitch (fore/aft plate) limit | ±12 | deg | WORKING_VALUE | Soft stop, 10 Hz |
 | Roll coupling stiffness / damping / hard limit | 1.0e7 N m/rad / 2.0e5 N m s/rad / ±4° | – | WORKING_VALUE | Implicit soft constraint (unconditionally stable) |
 | Articulation stop (cab/frame contact) | ±90 | deg | WORKING_VALUE | Soft stop 3 Hz, critically damped (deformable contact) |
-| Plate friction | μ 0.08 × kingpin load × 0.35 m | – | WORKING_VALUE | Greased plate |
+| Plate friction | μ 0.08 × kingpin load × 0.35 m | – | WORKING_VALUE | Greased plate. Order of magnitude: patent US 6045148 (semi-trailer coupling) specifies friction-lining segments with μ 0.1–0.2 for "comfortable sliding" (design target for a non-greased lining, not a measurement of a greased plate); patent US 5746438 calls grease the usual way to cut plate friction and links high break-away friction to trailer swing. No measured greased-plate μ found (UNVERIFIED) |
+| Plate creep rate (`plateFrictionCreepRateDegS`) | 1.0 | deg/s | WORKING_VALUE | ADR 0151: below the break-away torque the plate friction is viscous (torque ∝ relative yaw rate, full at 1 deg/s) instead of an ideal stick. The ideal stick held a released 40 t combination at −0.41° articulation turning 0.43 deg/s with straight wheels for 20 s; a real plate under road vibration and kingpin play creeps. 1 deg/s: residual < 0.01° within ~8 s (`straight_after_steer_pulse`); 0.25–4 deg/s all return (sweep in ADR 0151) |
 | Capture window | 0.05 m horizontal, 0.12 m vertical, < 1.5 m/s | – | WORKING_VALUE | |
 | Jaw engagement | 0.4 s compliant phase, 4 Hz critically damped | – | WORKING_VALUE | Spreads the coupling bump (measured ≤ 62 kN, dv ≤ 0.14 m/s per step) |
 | Baumgarte factor / speed cap / iterations | 0.2 / 0.5 m/s / 8 | – | Solver setting | Max kingpin separation in all scenarios 0.16 mm |

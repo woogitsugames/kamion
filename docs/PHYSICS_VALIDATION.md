@@ -359,3 +359,11 @@ dotnet test tools/physics-runner -c Release --filter "FullyQualifiedName~TouchSt
 
 Open (diagnostic only): after a released steering pulse the combination keeps a small articulation (40 t: −0.41°) and a
 steady yaw rate (0.43 °/s) with straight wheels; solo returns to zero. Plate friction μ 0.08 is a WORKING_VALUE.
+
+### Straight running after a released steering pulse (ADR 0151)
+
+`straight_after_steer_pulse` (solo / empty / laden40): the owner's thumb flick replayed through the touch chain at
+35 km/h, then released. From 10 to 14 s: max |articulation| ≤ 0.05° and max |yaw rate| ≤ 0.05 °/s. With the former
+ideal-stick plate friction it failed (40 t: 0.413° / 0.426 °/s held for 20 s); with plate creep 1 °/s it passes
+(0.0027° / 0.0011 °/s). Drag gesture above 60 km/h: lateral acceleration per mm held at the 60 km/h value; PIO onset
+thumb gain at 70/80/90 km/h 6/6/5 → 8/10/10 mm/m.
