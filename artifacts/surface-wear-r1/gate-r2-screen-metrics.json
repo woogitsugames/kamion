@@ -1,0 +1,773 @@
+{
+  "stage": "gate-r2-after",
+  "note": "Native screen RGB contrast over exact source triangles, not physical reflectance or visibility PASS. Before/after runtime matrices exact. Masks include decal edge fade and uncovered triangle pixels; original PNGs untouched.",
+  "strength_working": 0.9,
+  "source_strip_length_m": 4.2,
+  "source_strip_width_m": 0.2,
+  "results": [
+    {
+      "condition": "Low-clear",
+      "camera": "d_gate_pair_entry",
+      "strips": [
+        {
+          "strip": 0,
+          "source_gate": "entry",
+          "native_bbox": [
+            882,
+            357,
+            1246,
+            961
+          ],
+          "pixels": 27766,
+          "before_rgb": [
+            96.78985089678024,
+            95.14056760066268,
+            91.21256212634157
+          ],
+          "after_rgb": [
+            94.12313620975293,
+            92.6068212922279,
+            88.9012821436289
+          ],
+          "mean_darkening_lsb": 2.5039136593915816,
+          "median_darkening_lsb": 1.0,
+          "darkened_over3_lsb_fraction": 0.2635237340632428,
+          "darkening_p90_lsb": 8.666666666666666
+        },
+        {
+          "strip": 1,
+          "source_gate": "entry",
+          "native_bbox": [
+            1121,
+            292,
+            1567,
+            806
+          ],
+          "pixels": 21830,
+          "before_rgb": [
+            96.02785158039396,
+            94.28218048557032,
+            90.27700412276684
+          ],
+          "after_rgb": [
+            91.64122766834632,
+            90.1460833715071,
+            86.49633531836922
+          ],
+          "mean_darkening_lsb": 4.101129943502825,
+          "median_darkening_lsb": 3.6666666666666665,
+          "darkened_over3_lsb_fraction": 0.5224919835089327,
+          "darkening_p90_lsb": 9.0
+        },
+        {
+          "strip": 2,
+          "source_gate": "exit",
+          "native_bbox": [
+            -181,
+            54,
+            154,
+            369
+          ],
+          "pixels": 3931,
+          "before_rgb": [
+            98.03281607733402,
+            96.47443398626304,
+            92.53039938946833
+          ],
+          "after_rgb": [
+            90.79445433731875,
+            89.99771050623251,
+            87.15670312897481
+          ],
+          "mean_darkening_lsb": 6.362927160179768,
+          "median_darkening_lsb": 7.0,
+          "darkened_over3_lsb_fraction": 0.7199185957771559,
+          "darkening_p90_lsb": 11.0
+        },
+        {
+          "strip": 3,
+          "source_gate": "exit",
+          "native_bbox": [
+            105,
+            44,
+            356,
+            350
+          ],
+          "pixels": 9011,
+          "before_rgb": [
+            117.73532349350793,
+            107.76994784152703,
+            96.27166796138053
+          ],
+          "after_rgb": [
+            115.7218954611031,
+            105.95605371212962,
+            94.74209299744757
+          ],
+          "mean_darkening_lsb": 1.7856323752450711,
+          "median_darkening_lsb": 0.3333333333333333,
+          "darkened_over3_lsb_fraction": 0.21262900898901343,
+          "darkening_p90_lsb": 6.333333333333333
+        }
+      ],
+      "outside_strips_mean_abs_rgb_lsb": 2.650802963381321e-05,
+      "actual_runtime_matrices_identical": true
+    },
+    {
+      "condition": "Low-clear",
+      "camera": "d_gate_pair_exit",
+      "strips": [
+        {
+          "strip": 0,
+          "source_gate": "entry",
+          "native_bbox": [
+            -148,
+            242,
+            17,
+            544
+          ],
+          "pixels": 385,
+          "before_rgb": [
+            115.57402597402597,
+            113.62597402597403,
+            107.95844155844156
+          ],
+          "after_rgb": [
+            116.24935064935065,
+            114.35584415584415,
+            108.66493506493507
+          ],
+          "mean_darkening_lsb": -0.7038961038961039,
+          "median_darkening_lsb": -0.3333333333333333,
+          "darkened_over3_lsb_fraction": 0.0,
+          "darkening_p90_lsb": -0.0
+        },
+        {
+          "strip": 2,
+          "source_gate": "exit",
+          "native_bbox": [
+            1122,
+            302,
+            1573,
+            791
+          ],
+          "pixels": 21148,
+          "before_rgb": [
+            101.95001891431814,
+            100.20129563079252,
+            95.51333459428787
+          ],
+          "after_rgb": [
+            97.37582750141857,
+            95.8925193871761,
+            91.63613580480424
+          ],
+          "mean_darkening_lsb": 4.2533888153332065,
+          "median_darkening_lsb": 3.3333333333333335,
+          "darkened_over3_lsb_fraction": 0.5089843011159447,
+          "darkening_p90_lsb": 9.666666666666666
+        },
+        {
+          "strip": 3,
+          "source_gate": "exit",
+          "native_bbox": [
+            885,
+            371,
+            1250,
+            951
+          ],
+          "pixels": 27168,
+          "before_rgb": [
+            103.1968492343934,
+            101.56993521790342,
+            96.82148115429918
+          ],
+          "after_rgb": [
+            102.19405182567726,
+            100.63777237926973,
+            95.89469228504123
+          ],
+          "mean_darkening_lsb": 0.9539163722025913,
+          "median_darkening_lsb": 0.3333333333333333,
+          "darkened_over3_lsb_fraction": 0.09794611307420495,
+          "darkening_p90_lsb": 3.0
+        }
+      ],
+      "outside_strips_mean_abs_rgb_lsb": 4.572660038730431e-06,
+      "actual_runtime_matrices_identical": true
+    },
+    {
+      "condition": "Low-overcast",
+      "camera": "d_gate_pair_entry",
+      "strips": [
+        {
+          "strip": 0,
+          "source_gate": "entry",
+          "native_bbox": [
+            882,
+            357,
+            1246,
+            961
+          ],
+          "pixels": 27766,
+          "before_rgb": [
+            68.33339335878412,
+            67.48325289922927,
+            66.67200893178708
+          ],
+          "after_rgb": [
+            66.56709644889433,
+            65.77476049845134,
+            65.0139379096737
+          ],
+          "mean_darkening_lsb": 1.7109534442603662,
+          "median_darkening_lsb": 1.0,
+          "darkened_over3_lsb_fraction": 0.1975797738241014,
+          "darkening_p90_lsb": 6.0
+        },
+        {
+          "strip": 1,
+          "source_gate": "entry",
+          "native_bbox": [
+            1121,
+            292,
+            1567,
+            806
+          ],
+          "pixels": 21830,
+          "before_rgb": [
+            67.1996793403573,
+            66.22611085661933,
+            65.2343563902886
+          ],
+          "after_rgb": [
+            64.28034814475492,
+            63.42638570774164,
+            62.53504351809436
+          ],
+          "mean_darkening_lsb": 2.8061230722247674,
+          "median_darkening_lsb": 2.3333333333333335,
+          "darkened_over3_lsb_fraction": 0.42084287677508014,
+          "darkening_p90_lsb": 6.333333333333333
+        },
+        {
+          "strip": 2,
+          "source_gate": "exit",
+          "native_bbox": [
+            -181,
+            54,
+            154,
+            369
+          ],
+          "pixels": 3931,
+          "before_rgb": [
+            69.60925973034851,
+            68.73492749936403,
+            67.80106843042483
+          ],
+          "after_rgb": [
+            66.03968455863648,
+            65.49249554820656,
+            64.81302467565504
+          ],
+          "mean_darkening_lsb": 3.2666836258797587,
+          "median_darkening_lsb": 3.3333333333333335,
+          "darkened_over3_lsb_fraction": 0.5347239888069194,
+          "darkening_p90_lsb": 6.0
+        },
+        {
+          "strip": 3,
+          "source_gate": "exit",
+          "native_bbox": [
+            105,
+            44,
+            356,
+            350
+          ],
+          "pixels": 9011,
+          "before_rgb": [
+            88.43768727111308,
+            80.44689823548995,
+            72.3353678836977
+          ],
+          "after_rgb": [
+            87.43602263899677,
+            79.51315059371879,
+            71.4521140827877
+          ],
+          "mean_darkening_lsb": 0.9395553582658234,
+          "median_darkening_lsb": -0.0,
+          "darkened_over3_lsb_fraction": 0.12296082565752968,
+          "darkening_p90_lsb": 3.6666666666666665
+        }
+      ],
+      "outside_strips_mean_abs_rgb_lsb": 1.2442544521993956e-05,
+      "actual_runtime_matrices_identical": true
+    },
+    {
+      "condition": "Low-overcast",
+      "camera": "d_gate_pair_exit",
+      "strips": [
+        {
+          "strip": 0,
+          "source_gate": "entry",
+          "native_bbox": [
+            -148,
+            242,
+            17,
+            544
+          ],
+          "pixels": 385,
+          "before_rgb": [
+            75.63376623376624,
+            74.37662337662337,
+            72.38441558441558
+          ],
+          "after_rgb": [
+            75.67272727272727,
+            74.3922077922078,
+            72.3896103896104
+          ],
+          "mean_darkening_lsb": -0.01991341991341991,
+          "median_darkening_lsb": -0.0,
+          "darkened_over3_lsb_fraction": 0.0,
+          "darkening_p90_lsb": -0.0
+        },
+        {
+          "strip": 2,
+          "source_gate": "exit",
+          "native_bbox": [
+            1122,
+            302,
+            1573,
+            791
+          ],
+          "pixels": 21148,
+          "before_rgb": [
+            69.41956686211462,
+            68.48978626820504,
+            67.36802534518631
+          ],
+          "after_rgb": [
+            66.0234064686968,
+            65.23822583695858,
+            64.21117836202005
+          ],
+          "mean_darkening_lsb": 3.268189269276842,
+          "median_darkening_lsb": 2.6666666666666665,
+          "darkened_over3_lsb_fraction": 0.4494514847739739,
+          "darkening_p90_lsb": 7.666666666666667
+        },
+        {
+          "strip": 3,
+          "source_gate": "exit",
+          "native_bbox": [
+            885,
+            371,
+            1250,
+            951
+          ],
+          "pixels": 27168,
+          "before_rgb": [
+            69.75607332155477,
+            68.97405035335689,
+            67.98494552414606
+          ],
+          "after_rgb": [
+            68.29019434628975,
+            67.56411955241461,
+            66.5594449352179
+          ],
+          "mean_darkening_lsb": 1.4337701217118177,
+          "median_darkening_lsb": 0.6666666666666666,
+          "darkened_over3_lsb_fraction": 0.15507214369846878,
+          "darkening_p90_lsb": 4.333333333333333
+        }
+      ],
+      "outside_strips_mean_abs_rgb_lsb": 1.3449000113913031e-06,
+      "actual_runtime_matrices_identical": true
+    },
+    {
+      "condition": "High-clear",
+      "camera": "d_gate_pair_entry",
+      "strips": [
+        {
+          "strip": 0,
+          "source_gate": "entry",
+          "native_bbox": [
+            882,
+            357,
+            1246,
+            961
+          ],
+          "pixels": 27766,
+          "before_rgb": [
+            104.39108982208457,
+            103.02575091838939,
+            99.17892386371821
+          ],
+          "after_rgb": [
+            100.17895987898869,
+            98.94525678887848,
+            95.34473816898365
+          ],
+          "mean_darkening_lsb": 4.042269922447117,
+          "median_darkening_lsb": 2.3333333333333335,
+          "darkened_over3_lsb_fraction": 0.43164301663905497,
+          "darkening_p90_lsb": 12.333333333333334
+        },
+        {
+          "strip": 1,
+          "source_gate": "entry",
+          "native_bbox": [
+            1121,
+            292,
+            1567,
+            806
+          ],
+          "pixels": 21830,
+          "before_rgb": [
+            104.31681172698121,
+            102.66555199267064,
+            98.6078332569858
+          ],
+          "after_rgb": [
+            98.63504351809436,
+            97.2087494273935,
+            93.50742098030234
+          ],
+          "mean_darkening_lsb": 5.412994350282485,
+          "median_darkening_lsb": 4.666666666666667,
+          "darkened_over3_lsb_fraction": 0.5882730187814934,
+          "darkening_p90_lsb": 12.333333333333334
+        },
+        {
+          "strip": 2,
+          "source_gate": "exit",
+          "native_bbox": [
+            -181,
+            54,
+            154,
+            369
+          ],
+          "pixels": 3931,
+          "before_rgb": [
+            105.86466547952175,
+            104.50496056982956,
+            100.78758585601628
+          ],
+          "after_rgb": [
+            97.87458661918087,
+            97.20503688628848,
+            94.38717883490206
+          ],
+          "mean_darkening_lsb": 7.230136521665394,
+          "median_darkening_lsb": 8.333333333333334,
+          "darkened_over3_lsb_fraction": 0.7201729839735437,
+          "darkening_p90_lsb": 13.333333333333334
+        },
+        {
+          "strip": 3,
+          "source_gate": "exit",
+          "native_bbox": [
+            105,
+            44,
+            356,
+            350
+          ],
+          "pixels": 9011,
+          "before_rgb": [
+            126.72755521029852,
+            117.22006436577516,
+            109.18732660082122
+          ],
+          "after_rgb": [
+            123.92387082454778,
+            114.64665408944623,
+            106.86139163244923
+          ],
+          "mean_darkening_lsb": 2.5676765434838904,
+          "median_darkening_lsb": 1.0,
+          "darkened_over3_lsb_fraction": 0.2714460104316946,
+          "darkening_p90_lsb": 9.666666666666666
+        }
+      ],
+      "outside_strips_mean_abs_rgb_lsb": 0.49800540601510473,
+      "actual_runtime_matrices_identical": true
+    },
+    {
+      "condition": "High-clear",
+      "camera": "d_gate_pair_exit",
+      "strips": [
+        {
+          "strip": 0,
+          "source_gate": "entry",
+          "native_bbox": [
+            -148,
+            242,
+            17,
+            544
+          ],
+          "pixels": 385,
+          "before_rgb": [
+            122.84415584415585,
+            121.14545454545454,
+            115.75064935064935
+          ],
+          "after_rgb": [
+            123.50389610389611,
+            121.81818181818181,
+            116.34285714285714
+          ],
+          "mean_darkening_lsb": -0.6415584415584416,
+          "median_darkening_lsb": -0.3333333333333333,
+          "darkened_over3_lsb_fraction": 0.0,
+          "darkening_p90_lsb": 0.6666666666666666
+        },
+        {
+          "strip": 2,
+          "source_gate": "exit",
+          "native_bbox": [
+            1122,
+            302,
+            1573,
+            791
+          ],
+          "pixels": 21148,
+          "before_rgb": [
+            109.57939285038775,
+            108.05773595611878,
+            103.76338188008322
+          ],
+          "after_rgb": [
+            104.66167013429165,
+            103.37166635142803,
+            99.30787781350482
+          ],
+          "mean_darkening_lsb": 4.686432129121744,
+          "median_darkening_lsb": 3.6666666666666665,
+          "darkened_over3_lsb_fraction": 0.5513523737469265,
+          "darkening_p90_lsb": 11.0
+        },
+        {
+          "strip": 3,
+          "source_gate": "exit",
+          "native_bbox": [
+            885,
+            371,
+            1250,
+            951
+          ],
+          "pixels": 27168,
+          "before_rgb": [
+            110.84419169611307,
+            109.48704358068316,
+            105.15128091872792
+          ],
+          "after_rgb": [
+            109.54674617196702,
+            108.257398409894,
+            103.87672997644287
+          ],
+          "mean_darkening_lsb": 1.26721387907342,
+          "median_darkening_lsb": 0.6666666666666666,
+          "darkened_over3_lsb_fraction": 0.16015164899882214,
+          "darkening_p90_lsb": 4.333333333333333
+        }
+      ],
+      "outside_strips_mean_abs_rgb_lsb": 0.5058631588446609,
+      "actual_runtime_matrices_identical": true
+    },
+    {
+      "condition": "High-overcast",
+      "camera": "d_gate_pair_entry",
+      "strips": [
+        {
+          "strip": 0,
+          "source_gate": "entry",
+          "native_bbox": [
+            882,
+            357,
+            1246,
+            961
+          ],
+          "pixels": 27766,
+          "before_rgb": [
+            75.5312972700425,
+            74.940970971692,
+            74.22041345530505
+          ],
+          "after_rgb": [
+            72.27015054383058,
+            71.77443636101707,
+            71.11431246848665
+          ],
+          "mean_darkening_lsb": 3.1779274412350835,
+          "median_darkening_lsb": 2.0,
+          "darkened_over3_lsb_fraction": 0.3641143844990276,
+          "darkening_p90_lsb": 9.333333333333334
+        },
+        {
+          "strip": 1,
+          "source_gate": "entry",
+          "native_bbox": [
+            1121,
+            292,
+            1567,
+            806
+          ],
+          "pixels": 21830,
+          "before_rgb": [
+            74.93609711406322,
+            74.02194228126432,
+            73.0545121392579
+          ],
+          "after_rgb": [
+            70.59537333944114,
+            69.85881814017407,
+            68.98786074209804
+          ],
+          "mean_darkening_lsb": 4.190166437624064,
+          "median_darkening_lsb": 3.6666666666666665,
+          "darkened_over3_lsb_fraction": 0.5386165826843793,
+          "darkening_p90_lsb": 9.666666666666666
+        },
+        {
+          "strip": 2,
+          "source_gate": "exit",
+          "native_bbox": [
+            -181,
+            54,
+            154,
+            369
+          ],
+          "pixels": 3931,
+          "before_rgb": [
+            77.29102009666751,
+            76.55253116255406,
+            75.62019842279318
+          ],
+          "after_rgb": [
+            72.95675400661409,
+            72.55660137369627,
+            71.91376240142458
+          ],
+          "mean_darkening_lsb": 4.012210633426609,
+          "median_darkening_lsb": 4.0,
+          "darkened_over3_lsb_fraction": 0.5807682523530908,
+          "darkening_p90_lsb": 8.333333333333334
+        },
+        {
+          "strip": 3,
+          "source_gate": "exit",
+          "native_bbox": [
+            105,
+            44,
+            356,
+            350
+          ],
+          "pixels": 9011,
+          "before_rgb": [
+            97.01254022860948,
+            88.67195649761403,
+            81.57507490844523
+          ],
+          "after_rgb": [
+            95.34846298967928,
+            87.11719010098768,
+            80.10542670069914
+          ],
+          "mean_darkening_lsb": 1.5628306144342101,
+          "median_darkening_lsb": 0.6666666666666666,
+          "darkened_over3_lsb_fraction": 0.20841194096104762,
+          "darkening_p90_lsb": 5.666666666666667
+        }
+      ],
+      "outside_strips_mean_abs_rgb_lsb": 0.49805531143824183,
+      "actual_runtime_matrices_identical": true
+    },
+    {
+      "condition": "High-overcast",
+      "camera": "d_gate_pair_exit",
+      "strips": [
+        {
+          "strip": 0,
+          "source_gate": "entry",
+          "native_bbox": [
+            -148,
+            242,
+            17,
+            544
+          ],
+          "pixels": 385,
+          "before_rgb": [
+            83.81818181818181,
+            82.7012987012987,
+            80.55064935064935
+          ],
+          "after_rgb": [
+            83.88311688311688,
+            82.7012987012987,
+            80.54545454545455
+          ],
+          "mean_darkening_lsb": -0.019913419913419914,
+          "median_darkening_lsb": -0.0,
+          "darkened_over3_lsb_fraction": 0.0,
+          "darkening_p90_lsb": 1.0
+        },
+        {
+          "strip": 2,
+          "source_gate": "exit",
+          "native_bbox": [
+            1122,
+            302,
+            1573,
+            791
+          ],
+          "pixels": 21148,
+          "before_rgb": [
+            76.96647437109893,
+            76.18223945526763,
+            75.19306790240212
+          ],
+          "after_rgb": [
+            72.6908454700208,
+            72.06657839984868,
+            71.14909211272933
+          ],
+          "mean_darkening_lsb": 4.145088582056617,
+          "median_darkening_lsb": 3.3333333333333335,
+          "darkened_over3_lsb_fraction": 0.5154151692831473,
+          "darkening_p90_lsb": 9.666666666666666
+        },
+        {
+          "strip": 3,
+          "source_gate": "exit",
+          "native_bbox": [
+            885,
+            371,
+            1250,
+            951
+          ],
+          "pixels": 27168,
+          "before_rgb": [
+            77.71057862190813,
+            77.10943021201413,
+            76.20064045936395
+          ],
+          "after_rgb": [
+            75.50360718492344,
+            74.95686101295642,
+            73.97846731448763
+          ],
+          "mean_darkening_lsb": 2.193904593639576,
+          "median_darkening_lsb": 1.3333333333333333,
+          "darkened_over3_lsb_fraction": 0.2801457597173145,
+          "darkening_p90_lsb": 6.333333333333333
+        }
+      ],
+      "outside_strips_mean_abs_rgb_lsb": 0.5056078968224988,
+      "actual_runtime_matrices_identical": true
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "applied": [
+    {
+      "osm_node": 2367445386,
+      "ref": "464",
+      "photo": "mapillary:1170695487387705",
+      "working_value": true,
+      "radius_m": 0.22,
+      "triangles": 9,
+      "vertices": [
+        [
+          133.26,
+          -482.17
+        ],
+        [
+          133.54148135155447,
+          -482.32985925533353
+        ],
+        [
+          133.41141754569253,
+          -482.12852532279993
+        ],
+        [
+          133.34682770794666,
+          -481.9988336317077
+        ],
+        [
+          133.20952794689532,
+          -481.8832523553724
+        ],
+        [
+          133.07513524388628,
+          -481.9673347423766
+        ],
+        [
+          132.98844316035246,
+          -482.1287151920085
+        ],
+        [
+          133.11169729384653,
+          -482.29541472177806
+        ],
+        [
+          133.22824188409652,
+          -482.42101305540257
+        ],
+        [
+          133.36942383936014,
+          -482.39400587302396
+        ]
+      ],
+      "new_source_material_groups": 0,
+      "lift_m": 0.0035,
+      "engine_offset_m": 0,
+      "road_z": [
+        141.35186730446983,
+        141.3551957957347,
+        141.35083742338662,
+        141.3479250443294,
+        141.34537518390871,
+        141.3473642728444,
+        141.35108391070023,
+        141.3547316194746,
+        141.35740187982805,
+        141.35671565413205
+      ],
+      "chunk": [
+        4,
+        5
+      ]
+    }
+  ],
+  "rejected": [],
+  "source_glb": "Data/raw/derived/bialystok-industrial-c/world/chunk_4_5.glb",
+  "raw_source_node": {
+    "osm_node": 2367445386,
+    "tags": {
+      "bus": "yes",
+      "name": "Gen. Andersa/Fabryka Dywan\u00f3w",
+      "network": "BKM",
+      "public_transport": "stop_position",
+      "ref": "464"
+    },
+    "epsg2180": [
+      778128.260225157,
+      595740.8332327874
+    ],
+    "local_en": [
+      133.2602251570206,
+      -482.16676721256226
+    ]
+  },
+  "added_parts": 1,
+  "note": "Productionemitter against actualpinnedrawroad+markingfootprints BEFOREworldgeneration. Photo verifies bay context, oil/radius authoredWORKING_VALUE, not measuredphotooil. Native/runtimeproofpending."
+}

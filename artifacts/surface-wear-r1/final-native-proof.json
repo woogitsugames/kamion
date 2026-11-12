@@ -1,0 +1,178 @@
+{
+  "native_meshes": 154,
+  "geometry_UV0_exact_meshes": 150,
+  "deliberate_marking_geometry_changes": [
+    {
+      "scene": "WorldC",
+      "path": "Assets/_Generated/World/bialystok-industrial-c/Meshes/Low/chunk_4_5.asset#4_5_markings",
+      "changed_fields": [
+        "positions",
+        "normals",
+        "indices",
+        "uv0",
+        "vertices"
+      ],
+      "added_vertices": 10
+    },
+    {
+      "scene": "WorldC",
+      "path": "Assets/_Generated/World/bialystok-industrial-c/Meshes/Low/chunk_6_6.asset#6_6_markings",
+      "changed_fields": [
+        "positions",
+        "normals",
+        "indices",
+        "uv0",
+        "vertices"
+      ],
+      "added_vertices": 72
+    },
+    {
+      "scene": "WorldC_High",
+      "path": "Assets/_Generated/World/bialystok-industrial-c/Meshes/High/chunk_6_6.asset#6_6_markings",
+      "changed_fields": [
+        "positions",
+        "normals",
+        "indices",
+        "uv0",
+        "vertices"
+      ],
+      "added_vertices": 72
+    },
+    {
+      "scene": "WorldC_High",
+      "path": "Assets/_Generated/World/bialystok-industrial-c/Meshes/High/chunk_4_5.asset#4_5_markings",
+      "changed_fields": [
+        "positions",
+        "normals",
+        "indices",
+        "uv0",
+        "vertices"
+      ],
+      "added_vertices": 10
+    }
+  ],
+  "total_added_vertices_both_tiers": 164,
+  "changed_UV1_buffers": [
+    {
+      "scene": "WorldC",
+      "path": "Assets/_Generated/World/bialystok-industrial-c/Meshes/Low/chunk_2_4.asset#2_4_markings"
+    },
+    {
+      "scene": "WorldC",
+      "path": "Assets/_Generated/World/bialystok-industrial-c/Meshes/Low/chunk_4_5.asset#4_5_markings"
+    },
+    {
+      "scene": "WorldC",
+      "path": "Assets/_Generated/World/bialystok-industrial-c/Meshes/Low/chunk_1_3.asset#1_3_markings"
+    },
+    {
+      "scene": "WorldC",
+      "path": "Assets/_Generated/World/bialystok-industrial-c/Meshes/Low/chunk_3_5.asset#3_5_markings"
+    },
+    {
+      "scene": "WorldC",
+      "path": "Assets/_Generated/World/bialystok-industrial-c/Meshes/Low/chunk_2_3.asset#2_3_road"
+    },
+    {
+      "scene": "WorldC",
+      "path": "Assets/_Generated/World/bialystok-industrial-c/Meshes/Low/chunk_5_4.asset#5_4_road"
+    },
+    {
+      "scene": "WorldC",
+      "path": "Assets/_Generated/World/bialystok-industrial-c/Meshes/Low/chunk_6_6.asset#6_6_markings"
+    },
+    {
+      "scene": "WorldC_High",
+      "path": "Assets/_Generated/World/bialystok-industrial-c/Meshes/High/chunk_6_6.asset#6_6_markings"
+    },
+    {
+      "scene": "WorldC_High",
+      "path": "Assets/_Generated/World/bialystok-industrial-c/Meshes/High/chunk_5_4.asset#5_4_road"
+    },
+    {
+      "scene": "WorldC_High",
+      "path": "Assets/_Generated/World/bialystok-industrial-c/Meshes/High/chunk_2_3.asset#2_3_road"
+    },
+    {
+      "scene": "WorldC_High",
+      "path": "Assets/_Generated/World/bialystok-industrial-c/Meshes/High/chunk_1_3.asset#1_3_markings"
+    },
+    {
+      "scene": "WorldC_High",
+      "path": "Assets/_Generated/World/bialystok-industrial-c/Meshes/High/chunk_2_4.asset#2_4_markings"
+    },
+    {
+      "scene": "WorldC_High",
+      "path": "Assets/_Generated/World/bialystok-industrial-c/Meshes/High/chunk_4_5.asset#4_5_markings"
+    },
+    {
+      "scene": "WorldC_High",
+      "path": "Assets/_Generated/World/bialystok-industrial-c/Meshes/High/chunk_3_5.asset#3_5_markings"
+    }
+  ],
+  "all_native_UV1_age_matches_current_raw": true,
+  "signed_gate": [
+    {
+      "scene": "WorldC",
+      "vertices": 72,
+      "minimum_length": -4.19921875
+    },
+    {
+      "scene": "WorldC_High",
+      "vertices": 72,
+      "minimum_length": -4.19921875
+    }
+  ],
+  "actual_old_road_material": {
+    "path": "Assets/_Generated/World/bialystok-industrial-c/Materials/M_road_asphalt.mat",
+    "shader": "Kamion/World PBR",
+    "keywords": "_CRACKS,_PHOTO_DETAIL,_ROADWEAR",
+    "fields": [
+      "_WheelPolish=0.6",
+      "_GutterDirt=0.55",
+      "_DripBand=0.22",
+      "_CrackStrength=0.75",
+      "_MetallicScale=0",
+      "_AgeTint=2",
+      "_MacroSize=64",
+      "_SmoothnessScale=1",
+      "_DecalAlpha=1",
+      "_PaintWear=(0.85, 0.25, 0.3, 0.12)",
+      "_Tint=(1.00135541, 1.00135541, 1.00135541, 1)",
+      "_Tile=(4, 4, 16, 1)",
+      "_Grime=(0.45, 0.62, 0.3, 0.5)",
+      "_BaseMap=Assets/_Generated/World/bialystok-industrial-c/Textures/PBR/asphalt_worn/T_asphalt_worn_BaseColor.png",
+      "_NormalMap=Assets/_Generated/World/bialystok-industrial-c/Textures/PBR/asphalt_worn/T_asphalt_worn_Normal.png",
+      "_MaskMap=Assets/_Generated/World/bialystok-industrial-c/Textures/PBR/asphalt_worn/T_asphalt_worn_MaskMap.png",
+      "_VarMap=Assets/_Generated/World/bialystok-industrial-c/Textures/PBR/asphalt_worn/T_asphalt_worn_Var.png",
+      "_MacroMap=Assets/_Generated/World/bialystok-industrial-c/Textures/PBR/macro_variation/T_macro_variation.png",
+      "_CrackMap=Assets/_Generated/World/bialystok-industrial-c/Textures/PBR/asphalt_cracks_layer/T_asphalt_cracks_layer_Mask.png",
+      "_CrackNormal=Assets/_Generated/World/bialystok-industrial-c/Textures/PBR/asphalt_cracks_layer/T_asphalt_cracks_layer_Normal.png"
+    ]
+  },
+  "actual_paint_uniform": {
+    "stage": "final",
+    "materials": [
+      {
+        "material": "marking_white",
+        "nominal_source_wheel": 0.85,
+        "actual_uniform": [
+          0.425,
+          0.25,
+          0.38,
+          0.12
+        ],
+        "expected_from_fresh_metadata": [
+          0.425,
+          0.25,
+          0.38,
+          0.12
+        ]
+      }
+    ],
+    "repeated_import_matches_first": true,
+    "note": "Actual native material readback, fresh metadata*.5; age/dirt/width exact. No scaling of existing material values. Repeat check uses a later planned canonical import, not an extra round."
+  },
+  "QA_shaders_and_packed_textures_unbound": true,
+  "note": "Actual native buffer readback. All road geometry remains exact; four marking buffers add only10bus/72gate vertices per tier. Raw ordered-primitive proofs establish73additionaltriangles per tier and preservation of all old marking data. UV-only changes are separate from geometry deltas. No overall appearance or GPU budget PASS."
+}

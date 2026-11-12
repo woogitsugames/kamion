@@ -1,0 +1,139 @@
+{
+  "note": "Actual GLB road triangles projected with runtime matrices, Half UV1 and perspective interpolation inside inspected clear-asphalt ROIs. Source masks are not a general occlusion renderer; selected ROIs contain no visible foreground objects. Zero gutter coverage here cannot validate the separate edge block. Display deltas are not physical albedo or a visual PASS.",
+  "rows": [
+    {
+      "camera": "d_wear_lane_old",
+      "chunk": "3_4",
+      "roi960": [
+        470,
+        280,
+        610,
+        400
+      ],
+      "source_material": "road_asphalt",
+      "pixels": 99913,
+      "roi_pixels": 99913,
+      "source_coverage_fraction": 1.0,
+      "known_fraction": 1.0,
+      "wheel_mask_positive_fraction": 0.42170688498994124,
+      "wheel_mask_mean": 0.21579608111365092,
+      "wheel_mask_max": 0.9999896666620954,
+      "edge_under_065m_fraction": 0.18743306676808824,
+      "edge_distance_min": 9.588148745923919e-05,
+      "native_binding": {
+        "path": "Assets/_Generated/World/bialystok-industrial-c/Materials/M_road_asphalt.mat",
+        "shader": "Kamion/World PBR",
+        "keywords": "_CRACKS,_PHOTO_DETAIL,_ROADWEAR",
+        "fields": [
+          "_WheelPolish=0.6",
+          "_GutterDirt=0.55",
+          "_DripBand=0.22",
+          "_CrackStrength=0.75",
+          "_DecalAlpha=1",
+          "_PaintWear=(0.85, 0.25, 0.3, 0.12)",
+          "_Tint=(1.00135541, 1.00135541, 1.00135541, 1)",
+          "_Tile=(4, 4, 16, 1)",
+          "_Grime=(0.45, 0.62, 0.3, 0.5)",
+          "_BaseMap=Assets/_Generated/World/bialystok-industrial-c/Textures/PBR/asphalt_worn/T_asphalt_worn_BaseColor.png",
+          "_VarMap=Assets/_Generated/World/bialystok-industrial-c/Textures/PBR/asphalt_worn/T_asphalt_worn_Var.png",
+          "_MacroMap=Assets/_Generated/World/bialystok-industrial-c/Textures/PBR/macro_variation/T_macro_variation.png",
+          "_CrackMap=Assets/_Generated/World/bialystok-industrial-c/Textures/PBR/asphalt_cracks_layer/T_asphalt_cracks_layer_Mask.png",
+          "_CrackNormal=Assets/_Generated/World/bialystok-industrial-c/Textures/PBR/asphalt_cracks_layer/T_asphalt_cracks_layer_Normal.png"
+        ]
+      },
+      "conditions": [
+        {
+          "condition": "Low-clear",
+          "source_asphalt_mean_delta_lsb": 0.0332534024601403,
+          "actual_wheel_mask_mean_delta_lsb": 0.04686965870793182,
+          "actual_wheel_mask_pixels": 42134
+        },
+        {
+          "condition": "Low-overcast",
+          "source_asphalt_mean_delta_lsb": 0.15918305525807455,
+          "actual_wheel_mask_mean_delta_lsb": 0.2345922675274126,
+          "actual_wheel_mask_pixels": 42134
+        },
+        {
+          "condition": "High-clear",
+          "source_asphalt_mean_delta_lsb": 0.04119969173180664,
+          "actual_wheel_mask_mean_delta_lsb": 0.059256652584610964,
+          "actual_wheel_mask_pixels": 42134
+        },
+        {
+          "condition": "High-overcast",
+          "source_asphalt_mean_delta_lsb": 0.18830398846996887,
+          "actual_wheel_mask_mean_delta_lsb": 0.27817369820097787,
+          "actual_wheel_mask_pixels": 42134
+        }
+      ]
+    },
+    {
+      "camera": "d_wear_newroad_negative",
+      "chunk": "0_0",
+      "roi960": [
+        800,
+        150,
+        870,
+        230
+      ],
+      "source_material": "road_asphalt_new",
+      "pixels": 33345,
+      "roi_pixels": 33345,
+      "source_coverage_fraction": 1.0,
+      "known_fraction": 1.0,
+      "wheel_mask_positive_fraction": 0.5014245014245015,
+      "wheel_mask_mean": 0.25461655279622525,
+      "wheel_mask_max": 0.9998967338474204,
+      "edge_under_065m_fraction": 0.0,
+      "edge_distance_min": 2.428769430226234,
+      "native_binding": {
+        "path": "Assets/_Generated/World/bialystok-industrial-c/Materials/M_road_asphalt_new.mat",
+        "shader": "Kamion/World PBR",
+        "keywords": "_PHOTO_DETAIL,_ROADWEAR",
+        "fields": [
+          "_WheelPolish=0.25",
+          "_GutterDirt=0.3",
+          "_DripBand=0.06",
+          "_CrackStrength=0.8",
+          "_DecalAlpha=1",
+          "_PaintWear=(0.85, 0.25, 0.3, 0.12)",
+          "_Tint=(0.9990502, 0.9990502, 0.9990502, 1)",
+          "_Tile=(4, 4, 16, 1)",
+          "_Grime=(0.45, 0.62, 0.3, 0.5)",
+          "_BaseMap=Assets/_Generated/World/bialystok-industrial-c/Textures/PBR/asphalt_sma_fresh/T_asphalt_sma_fresh_BaseColor.png",
+          "_VarMap=Assets/_Generated/World/bialystok-industrial-c/Textures/PBR/asphalt_sma_fresh/T_asphalt_sma_fresh_Var.png",
+          "_MacroMap=Assets/_Generated/World/bialystok-industrial-c/Textures/PBR/macro_variation/T_macro_variation.png",
+          "_CrackMap=",
+          "_CrackNormal="
+        ]
+      },
+      "conditions": [
+        {
+          "condition": "Low-clear",
+          "source_asphalt_mean_delta_lsb": 0.05367967611336028,
+          "actual_wheel_mask_mean_delta_lsb": 0.10705435406698555,
+          "actual_wheel_mask_pixels": 16720
+        },
+        {
+          "condition": "Low-overcast",
+          "source_asphalt_mean_delta_lsb": 0.16692761733393313,
+          "actual_wheel_mask_mean_delta_lsb": 0.33287264354066987,
+          "actual_wheel_mask_pixels": 16720
+        },
+        {
+          "condition": "High-clear",
+          "source_asphalt_mean_delta_lsb": 0.050068322087269475,
+          "actual_wheel_mask_mean_delta_lsb": 0.09990765550239239,
+          "actual_wheel_mask_pixels": 16720
+        },
+        {
+          "condition": "High-overcast",
+          "source_asphalt_mean_delta_lsb": 0.16103622732043782,
+          "actual_wheel_mask_mean_delta_lsb": 0.3211571650717703,
+          "actual_wheel_mask_pixels": 16720
+        }
+      ]
+    }
+  ]
+}

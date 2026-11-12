@@ -1,0 +1,9 @@
+{
+  "jobs": [
+    {"scene":"WorldC_High","tier":"High","lighting":"lowsun","width":2340,"height":1080,"cameras":"r10_hall_3,r10_hall_2,r10_block_3,stretch-05-docks","output":"artifacts/light-r1/shadow/legacy","rq":""},
+    {"scene":"WorldC_High","tier":"High","lighting":"lowsun","width":2340,"height":1080,"cameras":"r10_hall_3,r10_hall_2,r10_block_3,stretch-05-docks","output":"artifacts/light-r1/shadow/filter-medium","rq":"","shadowFilter":2},
+    {"scene":"WorldC_High","tier":"High","lighting":"lowsun","width":2340,"height":1080,"cameras":"r10_hall_3,r10_hall_2,r10_block_3,stretch-05-docks","output":"artifacts/light-r1/shadow/filter-high","rq":"","shadowFilter":3},
+    {"scene":"WorldC_High","tier":"High","lighting":"lowsun","width":2340,"height":1080,"cameras":"r10_hall_3,r10_hall_2,r10_block_3,stretch-05-docks","output":"artifacts/light-r1/shadow/filter-high-near-split","rq":"rq_shadowsplit=0.12,rq_shadowsplit2=0.4","shadowFilter":3},
+    {"scene":"WorldC_High","tier":"High","lighting":"lowsun","width":2340,"height":1080,"cameras":"r10_hall_3,r10_hall_2,r10_block_3,stretch-05-docks","output":"artifacts/light-r1/shadow/filter-high-4096","rq":"rq_shadowres=4096","shadowFilter":3}
+  ]
+}
