@@ -32,8 +32,24 @@ switch ($Task) {
     'Analyze' { $uvArguments += @('python',$Script); $uvArguments += $ScriptArguments }
 }
 $log = Join-Path $PSScriptRoot ("heavy-{0}-{1}.log" -f $Task,(Get-Date -Format 'yyyyMMdd-HHmmss'))
-& pwsh $slot -Acquire -Pool heavy -Owner $owner -PollSeconds 1 -StaleHours 87600
-if ($LASTEXITCODE -ne 0) { throw 'Nie uzyskano slotu heavy' }
+$acquired = $false
+for ($slotAttempt=1; $slotAttempt -le 5; $slotAttempt++) {
+    $acquireLog = "$log.acquire-$slotAttempt.log"
+    Write-Output "Acquire heavy attempt $slotAttempt; queue log: $acquireLog"
+    & pwsh $slot -Acquire -Pool heavy -Owner $owner -PollSeconds 5 -StaleHours 87600 *> $acquireLog
+    if ($LASTEXITCODE -eq 0) { $acquired=$true; Get-Content -LiteralPath $acquireLog -Tail 3; break }
+    $acquireFailure=Get-Content -LiteralPath $acquireLog -Raw
+    Get-Content -LiteralPath $acquireLog -Tail 12
+    # The mandatory shared helper rewrites its queue heartbeat while other waiters read it. Retry only
+    # that file-sharing failure, after this exact helper has exited; no Python has started yet.
+    if ($acquireFailure -notmatch 'being used by another process|used by another process|używany przez inny proces') {
+        throw 'Heavy acquire failed for a different reason; inspect queue log'
+    }
+    $ownSlot="C:/Users/matma/Documents/Claude/kamion/artifacts/locks/heavy-slots/$owner.slot"
+    if (Test-Path -LiteralPath $ownSlot) { throw 'Partial own slot exists after failure; inspect before retry' }
+    Start-Sleep -Seconds ([Math]::Min(10,2*$slotAttempt))
+}
+if (-not $acquired) { throw 'Nie uzyskano slotu heavy po błędach współdzielenia pliku kolejki' }
 $code = 1
 try {
     $env:PYTHONUNBUFFERED = '1'
