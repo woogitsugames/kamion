@@ -34,13 +34,13 @@ namespace Game.Rendering.Editor
             QualityTiers.Apply(name);s_Applier.ApplyNow();s_Environment.Apply();
             if(s_Camera.GetUniversalAdditionalCameraData().renderPostProcessing!=(name=="High"))throw new InvalidOperationException("Wrong actual chart camera post state");
         }
-        static Color32[] Render(Color[] values,int columns,int rows,int cellPixels,bool useLut,Texture3D lut=null)
+        static Color32[] Render(Color[] values,int columns,int rows,int cellPixels,bool useLut,Texture3D lut=null,int cellHeight=0)
         {
             var map=new Texture2D(columns,rows,TextureFormat.RGBAFloat,false,true){filterMode=FilterMode.Point,wrapMode=TextureWrapMode.Clamp};
             var padded=new Color[columns*rows];Array.Copy(values,padded,values.Length);map.SetPixels(padded);map.Apply();
             s_Material.SetTexture("_LabInput",map);s_Material.SetFloat("_LabUseLut",useLut?1:0);
             s_Material.SetTexture("_LabLut",lut);s_Material.SetFloat("_LabLutSize",lut!=null?lut.width:1);
-            int width=columns*cellPixels,height=rows*cellPixels;
+            int width=columns*cellPixels,height=rows*(cellHeight>0?cellHeight:cellPixels);
             s_Camera.aspect=(float)width/height;
             // Keep cell centres away from RCAS edges.
             var surface=GameObject.Find("grade lab input plane");surface.transform.localScale=new Vector3(2*s_Camera.aspect,2,1);
@@ -69,6 +69,35 @@ namespace Game.Rendering.Editor
                 samples[i]=new Sample{id=i<64?"grey-"+i:"holdout-"+i,input=new Vector3(inputs[i].r,inputs[i].g,inputs[i].b),reference=reference[i],output=output[i]};
             }
             return new Measurement{name=name,size=size,meanAbsoluteRgb=sum/(inputs.Length*3),maxRgb=max,samples=samples};
+        }
+        static Color[] GradientInputs()
+        {
+            var values=new Color[1024*12];
+            for(int row=0;row<12;row++)for(int x=0;x<1024;x++){
+                float t=x/1023f;Color c;
+                switch(row){
+                    case 0:c=new Color(t,t,t);break;
+                    case 1:c=new Color(t*.08f,t*.08f,t*.08f);break;
+                    case 2:c=new Color(t*4,t*4,t*4);break;
+                    case 3:float v=Mathf.Pow(10,-4+4.5f*t);c=new Color(v,v,v);break;
+                    case 4:c=new Color(t,0,0);break;
+                    case 5:c=new Color(0,t,0);break;
+                    case 6:c=new Color(0,0,t);break;
+                    case 7:c=new Color(t,t*.55f,t*.1f);break;
+                    case 8:c=new Color(t*.1f,t*.55f,t);break;
+                    case 9:c=new Color(t*.2f,t,t*.35f);break;
+                    case 10:c=new Color(t,1-t,.1f);break;
+                    default:c=new Color(.04f*t,.04f*(1-t),.02f);break;
+                }
+                c.a=1;values[row*1024+x]=c;
+            }
+            return values;
+        }
+        static Color32[] GradientCentres(Color32[] pixels)
+        {
+            var result=new Color32[1024*12];
+            for(int row=0;row<12;row++)Array.Copy(pixels,(row*32+16)*1024,result,row*1024,1024);
+            return result;
         }
         public static void Run()
         {
@@ -99,6 +128,9 @@ namespace Game.Rendering.Editor
                     if(Shader.GetGlobalFloat("_KamionSkyCapOff")>.5f)throw new InvalidOperationException("Physical capture bypass unexpectedly active");
                     var highPixels=Render(inputs,16,12,32,false);var reference=Centres(highPixels,inputs.Length,16,32);
                     SaveImage(Path.Combine(folder,presetName+"-High-reference.png"),highPixels,512,384);imageCount++;
+                    var gradientInputs=GradientInputs();var highGradient=Render(gradientInputs,1024,12,1,false,null,32);
+                    var gradientReference=GradientCentres(highGradient);
+                    SaveImage(Path.Combine(folder,presetName+"-gradient-High-reference.png"),highGradient,1024,384);imageCount++;
                     var stack=s_Camera.GetUniversalAdditionalCameraData().volumeStack??VolumeManager.instance.stack;
                     var curves=stack.GetComponent<ColorCurves>();var adjustment=stack.GetComponent<ColorAdjustments>();
                     var volume=s_Environment.GetComponentInChildren<Volume>();
@@ -120,13 +152,22 @@ namespace Game.Rendering.Editor
                     SelectTier("Low");var measurements=new List<Measurement>();
                     var low=Render(inputs,16,12,32,false);SaveImage(Path.Combine(folder,presetName+"-Low-baseline.png"),low,512,384);imageCount++;
                     measurements.Add(Measure("Low baseline",0,inputs,reference,Centres(low,inputs.Length,16,32)));
+                    var gradientMeasurements=new List<Measurement>();
+                    var lowGradient=Render(gradientInputs,1024,12,1,false,null,32);
+                    SaveImage(Path.Combine(folder,presetName+"-gradient-Low-baseline.png"),lowGradient,1024,384);imageCount++;
+                    gradientMeasurements.Add(Measure("Low baseline",0,gradientInputs,gradientReference,GradientCentres(lowGradient)));
                     foreach(var cube in cubes){var pixels=Render(inputs,16,12,32,true,cube);SaveImage(Path.Combine(folder,$"{presetName}-Low-lut{cube.width}.png"),pixels,512,384);imageCount++;
-                        measurements.Add(Measure("Low lab LUT",cube.width,inputs,reference,Centres(pixels,inputs.Length,16,32)));}
+                        measurements.Add(Measure("Low lab LUT",cube.width,inputs,reference,Centres(pixels,inputs.Length,16,32)));
+                        var gradient=Render(gradientInputs,1024,12,1,true,cube,32);
+                        SaveImage(Path.Combine(folder,$"{presetName}-gradient-Low-lut{cube.width}.png"),gradient,1024,384);imageCount++;
+                        gradientMeasurements.Add(Measure("Low lab LUT",cube.width,gradientInputs,gradientReference,GradientCentres(gradient)));}
                     File.WriteAllText(Path.Combine(folder,presetName+"-proof.json"),JsonUtility.ToJson(new Proof{preset=presetName,exposure=s_Environment.Model.Exposure,dimColour=preset.dimColourDesaturation,
                         actualHighMaster=actual,requestedMaster=wanted,actualHighSaturation=adjustment.saturation.value,measurements=measurements.ToArray()},true));
+                    File.WriteAllText(Path.Combine(folder,presetName+"-gradient-proof.json"),JsonUtility.ToJson(new Proof{preset=presetName,exposure=s_Environment.Model.Exposure,dimColour=preset.dimColourDesaturation,
+                        actualHighMaster=actual,requestedMaster=wanted,actualHighSaturation=adjustment.saturation.value,measurements=gradientMeasurements.ToArray()},true));
                     foreach(var cube in cubes)UnityEngine.Object.DestroyImmediate(cube);UnityEngine.Object.DestroyImmediate(s_Material);
                 }
-                Debug.Log($"LIGHT_GRADE_LAB_RESULT: OK images={imageCount} cubes=6 holdoutPerPreset=192");exit=0;
+                Debug.Log($"LIGHT_GRADE_LAB_RESULT: OK images={imageCount} cubes=6 holdoutPerPreset=192 gradientPerPreset=12288");exit=0;
             }catch(Exception ex){Debug.LogException(ex);Debug.Log("LIGHT_GRADE_LAB_RESULT: FAILED");}
             finally{EditorSceneManager.NewScene(NewSceneSetup.EmptyScene,NewSceneMode.Single);}
             if(Application.isBatchMode)EditorApplication.Exit(exit);
