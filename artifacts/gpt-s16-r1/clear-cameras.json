@@ -1,684 +1,844 @@
 {
-  "cameras": [
-    {
-      "id": "clear_car_hatch_white_Low_015p9",
-      "kind": "photo_match",
-      "seat": "file",
-      "pos": [
-        672.2122972943275,
-        -516.7739202495077,
-        143.942727361942
-      ],
-      "look_at": [
-        670.412,
-        -532.428,
-        142.61700000000002
-      ],
-      "fov_deg": 60,
-      "note": "ADR0153 actual instance, source-footprint sightline clear, camera 2.5m above NMT. WORKING_VALUE QA pose, not a calibrated photo pose."
-    },
-    {
-      "id": "clear_car_hatch_white_Low_016p1",
-      "kind": "photo_match",
-      "seat": "file",
-      "pos": [
-        672.2354968734852,
-        -516.5721935327833,
-        143.93319007336433
-      ],
-      "look_at": [
-        670.412,
-        -532.428,
-        142.61700000000002
-      ],
-      "fov_deg": 60,
-      "note": "ADR0153 actual instance, source-footprint sightline clear, camera 2.5m above NMT. WORKING_VALUE QA pose, not a calibrated photo pose."
-    },
-    {
-      "id": "clear_car_hatch_white_Low_042p4",
-      "kind": "photo_match",
-      "seat": "file",
-      "pos": [
-        675.2514699623526,
-        -490.34747864417614,
-        143.70624665026492
-      ],
-      "look_at": [
-        670.412,
-        -532.428,
-        142.61700000000002
-      ],
-      "fov_deg": 60,
-      "note": "ADR0153 actual instance, source-footprint sightline clear, camera 2.5m above NMT. WORKING_VALUE QA pose, not a calibrated photo pose."
-    },
-    {
-      "id": "clear_car_hatch_white_Low_042p6",
-      "kind": "photo_match",
-      "seat": "file",
-      "pos": [
-        675.274378977038,
-        -490.148278465394,
-        143.6991311431015
-      ],
-      "look_at": [
-        670.412,
-        -532.428,
-        142.61700000000002
-      ],
-      "fov_deg": 60,
-      "note": "ADR0153 actual instance, source-footprint sightline clear, camera 2.5m above NMT. WORKING_VALUE QA pose, not a calibrated photo pose."
-    },
-    {
-      "id": "clear_car_hatch_white_High_037p4",
-      "kind": "photo_match",
-      "seat": "file",
-      "pos": [
-        674.6793975698556,
-        -495.32180531978713,
-        143.73523729891102
-      ],
-      "look_at": [
-        670.412,
-        -532.428,
-        142.61700000000002
-      ],
-      "fov_deg": 60,
-      "note": "ADR0153 actual instance, source-footprint sightline clear, camera 2.5m above NMT. WORKING_VALUE QA pose, not a calibrated photo pose."
-    },
-    {
-      "id": "clear_car_hatch_white_High_037p6",
-      "kind": "photo_match",
-      "seat": "file",
-      "pos": [
-        674.7022927957694,
-        -495.1227250381643,
-        143.7326846683113
-      ],
-      "look_at": [
-        670.412,
-        -532.428,
-        142.61700000000002
-      ],
-      "fov_deg": 60,
-      "note": "ADR0153 actual instance, source-footprint sightline clear, camera 2.5m above NMT. WORKING_VALUE QA pose, not a calibrated photo pose."
-    },
-    {
-      "id": "clear_car_hatch_white_High_127p4",
-      "kind": "photo_match",
-      "seat": "file",
-      "pos": [
-        684.9650124189056,
-        -405.88555740828554,
-        144.26241457790783
-      ],
-      "look_at": [
-        670.412,
-        -532.428,
-        142.61700000000002
-      ],
-      "fov_deg": 60,
-      "note": "ADR0153 actual instance, source-footprint sightline clear, camera 2.5m above NMT. WORKING_VALUE QA pose, not a calibrated photo pose."
-    },
-    {
-      "id": "clear_car_hatch_white_High_127p6",
-      "kind": "photo_match",
-      "seat": "file",
-      "pos": [
-        684.9878257319535,
-        -405.68718938154325,
-        144.28118911778546
-      ],
-      "look_at": [
-        670.412,
-        -532.428,
-        142.61700000000002
-      ],
-      "fov_deg": 60,
-      "note": "ADR0153 actual instance, source-footprint sightline clear, camera 2.5m above NMT. WORKING_VALUE QA pose, not a calibrated photo pose."
-    },
-    {
-      "id": "clear_car_suv_black_Low_015p9",
-      "kind": "photo_match",
-      "seat": "file",
-      "pos": [
-        720.1262968088597,
-        -420.2773346516175,
-        143.8314956433903
-      ],
-      "look_at": [
-        722.694,
-        -435.842,
-        142.64200000000002
-      ],
-      "fov_deg": 60,
-      "note": "ADR0153 actual instance, source-footprint sightline clear, camera 2.5m above NMT. WORKING_VALUE QA pose, not a calibrated photo pose."
-    },
-    {
-      "id": "clear_car_suv_black_Low_016p1",
-      "kind": "photo_match",
-      "seat": "file",
-      "pos": [
-        720.0934817873765,
-        -420.07841959416515,
-        143.83118018655753
-      ],
-      "look_at": [
-        722.694,
-        -435.842,
-        142.64200000000002
-      ],
-      "fov_deg": 60,
-      "note": "ADR0153 actual instance, source-footprint sightline clear, camera 2.5m above NMT. WORKING_VALUE QA pose, not a calibrated photo pose."
-    },
-    {
-      "id": "clear_car_suv_black_Low_042p4",
-      "kind": "photo_match",
-      "seat": "file",
-      "pos": [
-        715.8024130610128,
-        -394.067216685973,
-        144.10772472477913
-      ],
-      "look_at": [
-        722.694,
-        -435.842,
-        142.64200000000002
-      ],
-      "fov_deg": 60,
-      "note": "ADR0153 actual instance, source-footprint sightline clear, camera 2.5m above NMT. WORKING_VALUE QA pose, not a calibrated photo pose."
-    },
-    {
-      "id": "clear_car_suv_black_Low_042p6",
-      "kind": "photo_match",
-      "seat": "file",
-      "pos": [
-        715.7698414366987,
-        -393.86977703093436,
-        144.111036629344
-      ],
-      "look_at": [
-        722.694,
-        -435.842,
-        142.64200000000002
-      ],
-      "fov_deg": 60,
-      "note": "ADR0153 actual instance, source-footprint sightline clear, camera 2.5m above NMT. WORKING_VALUE QA pose, not a calibrated photo pose."
-    },
-    {
-      "id": "clear_car_suv_black_High_037p4",
-      "kind": "photo_match",
-      "seat": "file",
-      "pos": [
-        716.6174054765529,
-        -399.00746221478755,
-        144.08962655869956
-      ],
-      "look_at": [
-        722.694,
-        -435.842,
-        142.64200000000002
-      ],
-      "fov_deg": 60,
-      "note": "ADR0153 actual instance, source-footprint sightline clear, camera 2.5m above NMT. WORKING_VALUE QA pose, not a calibrated photo pose."
-    },
-    {
-      "id": "clear_car_suv_black_High_037p6",
-      "kind": "photo_match",
-      "seat": "file",
-      "pos": [
-        716.5848060706496,
-        -398.80985415588435,
-        144.09098281757326
-      ],
-      "look_at": [
-        722.694,
-        -435.842,
-        142.64200000000002
-      ],
-      "fov_deg": 60,
-      "note": "ADR0153 actual instance, source-footprint sightline clear, camera 2.5m above NMT. WORKING_VALUE QA pose, not a calibrated photo pose."
-    },
-    {
-      "id": "clear_car_suv_black_High_127p4",
-      "kind": "photo_match",
-      "seat": "file",
-      "pos": [
-        716.2253123909501,
-        -353.4226219450954,
-        144.07925522537937
-      ],
-      "look_at": [
-        698.514,
-        -479.559,
-        142.294
-      ],
-      "fov_deg": 60,
-      "note": "ADR0153 actual instance, source-footprint sightline clear, camera 2.5m above NMT. WORKING_VALUE QA pose, not a calibrated photo pose."
-    },
-    {
-      "id": "clear_car_suv_black_High_127p6",
-      "kind": "photo_match",
-      "seat": "file",
-      "pos": [
-        716.2531137596183,
-        -353.2246262307542,
-        144.08433730541157
-      ],
-      "look_at": [
-        698.514,
-        -479.559,
-        142.294
-      ],
-      "fov_deg": 60,
-      "note": "ADR0153 actual instance, source-footprint sightline clear, camera 2.5m above NMT. WORKING_VALUE QA pose, not a calibrated photo pose."
-    },
-    {
-      "id": "clear_tractor_blue_Low_019p9",
-      "kind": "photo_match",
-      "seat": "file",
-      "pos": [
-        825.2336530371796,
-        -606.0196623482234,
-        148.0291142294336
-      ],
-      "look_at": [
-        806.5153862443,
-        -604.1658197573526,
-        146.372
-      ],
-      "fov_deg": 60,
-      "note": "ADR0153 actual instance, source-footprint sightline clear, camera 2.5m above NMT. WORKING_VALUE QA pose, not a calibrated photo pose."
-    },
-    {
-      "id": "clear_tractor_blue_Low_020p1",
-      "kind": "photo_match",
-      "seat": "file",
-      "pos": [
-        825.4369004810727,
-        -606.0284886039358,
-        148.02906541993627
-      ],
-      "look_at": [
-        806.5153862443,
-        -604.1658197573526,
-        146.372
-      ],
-      "fov_deg": 60,
-      "note": "ADR0153 actual instance, source-footprint sightline clear, camera 2.5m above NMT. WORKING_VALUE QA pose, not a calibrated photo pose."
-    },
-    {
-      "id": "clear_tractor_blue_Low_049p9",
-      "kind": "photo_match",
-      "seat": "file",
-      "pos": [
-        767.4880097353947,
-        -573.1301377965464,
-        146.35308154848883
-      ],
-      "look_at": [
-        806.5153862443,
-        -604.1658197573526,
-        146.372
-      ],
-      "fov_deg": 60,
-      "note": "ADR0153 actual instance, source-footprint sightline clear, camera 2.5m above NMT. WORKING_VALUE QA pose, not a calibrated photo pose."
-    },
-    {
-      "id": "clear_tractor_blue_Low_050p1",
-      "kind": "photo_match",
-      "seat": "file",
-      "pos": [
-        767.3346633146382,
-        -573.0015260961842,
-        146.35351074457884
-      ],
-      "look_at": [
-        806.5153862443,
-        -604.1658197573526,
-        146.372
-      ],
-      "fov_deg": 60,
-      "note": "ADR0153 actual instance, source-footprint sightline clear, camera 2.5m above NMT. WORKING_VALUE QA pose, not a calibrated photo pose."
-    },
-    {
-      "id": "clear_tractor_blue_High_059p9",
-      "kind": "photo_match",
-      "seat": "file",
-      "pos": [
-        759.8182828943426,
-        -566.6975350303708,
-        146.24184453231433
-      ],
-      "look_at": [
-        806.5153862443,
-        -604.1658197573526,
-        146.372
-      ],
-      "fov_deg": 60,
-      "note": "ADR0153 actual instance, source-footprint sightline clear, camera 2.5m above NMT. WORKING_VALUE QA pose, not a calibrated photo pose."
-    },
-    {
-      "id": "clear_tractor_blue_High_060p1",
-      "kind": "photo_match",
-      "seat": "file",
-      "pos": [
-        759.664910378066,
-        -566.5689014436861,
-        146.23936744169978
-      ],
-      "look_at": [
-        806.5153862443,
-        -604.1658197573526,
-        146.372
-      ],
-      "fov_deg": 60,
-      "note": "ADR0153 actual instance, source-footprint sightline clear, camera 2.5m above NMT. WORKING_VALUE QA pose, not a calibrated photo pose."
-    },
-    {
-      "id": "clear_tractor_blue_High_149p9",
-      "kind": "photo_match",
-      "seat": "file",
-      "pos": [
-        931.9690126806275,
-        -685.5773705148412,
-        152.03288076276502
-      ],
-      "look_at": [
-        806.5153862443,
-        -604.1658197573526,
-        146.372
-      ],
-      "fov_deg": 60,
-      "note": "ADR0153 actual instance, source-footprint sightline clear, camera 2.5m above NMT. WORKING_VALUE QA pose, not a calibrated photo pose."
-    },
-    {
-      "id": "clear_tractor_blue_High_150p1",
-      "kind": "photo_match",
-      "seat": "file",
-      "pos": [
-        932.1372710892713,
-        -685.6845075188251,
-        152.04830344857376
-      ],
-      "look_at": [
-        806.5153862443,
-        -604.1658197573526,
-        146.372
-      ],
-      "fov_deg": 60,
-      "note": "ADR0153 actual instance, source-footprint sightline clear, camera 2.5m above NMT. WORKING_VALUE QA pose, not a calibrated photo pose."
-    },
-    {
-      "id": "clear_trailer_curtain_0_Low_019p9",
-      "kind": "photo_match",
-      "seat": "file",
-      "pos": [
-        648.3499506853377,
-        -493.23945973897327,
-        143.9959803072096
-      ],
-      "look_at": [
-        642.1280700303561,
-        -480.95840774292304,
-        143.631
-      ],
-      "fov_deg": 60,
-      "note": "ADR0153 actual instance, source-footprint sightline clear, camera 2.5m above NMT. WORKING_VALUE QA pose, not a calibrated photo pose."
-    },
-    {
-      "id": "clear_trailer_curtain_0_Low_020p1",
-      "kind": "photo_match",
-      "seat": "file",
-      "pos": [
-        648.4742589040899,
-        -493.39824892183975,
-        143.99390057980662
-      ],
-      "look_at": [
-        642.1280700303561,
-        -480.95840774292304,
-        143.631
-      ],
-      "fov_deg": 60,
-      "note": "ADR0153 actual instance, source-footprint sightline clear, camera 2.5m above NMT. WORKING_VALUE QA pose, not a calibrated photo pose."
-    },
-    {
-      "id": "clear_trailer_curtain_0_Low_049p9",
-      "kind": "photo_match",
-      "seat": "file",
-      "pos": [
-        655.6918344403607,
-        -523.5476704308355,
-        143.90179802542372
-      ],
-      "look_at": [
-        642.1280700303561,
-        -480.95840774292304,
-        143.631
-      ],
-      "fov_deg": 60,
-      "note": "ADR0153 actual instance, source-footprint sightline clear, camera 2.5m above NMT. WORKING_VALUE QA pose, not a calibrated photo pose."
-    },
-    {
-      "id": "clear_trailer_curtain_0_Low_050p1",
-      "kind": "photo_match",
-      "seat": "file",
-      "pos": [
-        655.7702343393455,
-        -523.7318714770812,
-        143.90213408765064
-      ],
-      "look_at": [
-        642.1280700303561,
-        -480.95840774292304,
-        143.631
-      ],
-      "fov_deg": 60,
-      "note": "ADR0153 actual instance, source-footprint sightline clear, camera 2.5m above NMT. WORKING_VALUE QA pose, not a calibrated photo pose."
-    },
-    {
-      "id": "clear_trailer_curtain_0_High_059p9",
-      "kind": "photo_match",
-      "seat": "file",
-      "pos": [
-        659.6117337139557,
-        -532.7574979525943,
-        143.88366370367618
-      ],
-      "look_at": [
-        642.1280700303561,
-        -480.95840774292304,
-        143.631
-      ],
-      "fov_deg": 60,
-      "note": "ADR0153 actual instance, source-footprint sightline clear, camera 2.5m above NMT. WORKING_VALUE QA pose, not a calibrated photo pose."
-    },
-    {
-      "id": "clear_trailer_curtain_0_High_060p1",
-      "kind": "photo_match",
-      "seat": "file",
-      "pos": [
-        659.6900437155583,
-        -532.9414877843861,
-        143.88843957835695
-      ],
-      "look_at": [
-        642.1280700303561,
-        -480.95840774292304,
-        143.631
-      ],
-      "fov_deg": 60,
-      "note": "ADR0153 actual instance, source-footprint sightline clear, camera 2.5m above NMT. WORKING_VALUE QA pose, not a calibrated photo pose."
-    },
-    {
-      "id": "clear_trailer_curtain_0_High_149p9",
-      "kind": "photo_match",
-      "seat": "file",
-      "pos": [
-        754.1823271831013,
-        -385.29497018295285,
-        144.44562741270076
-      ],
-      "look_at": [
-        642.1280700303561,
-        -480.95840774292304,
-        143.631
-      ],
-      "fov_deg": 60,
-      "note": "ADR0153 actual instance, source-footprint sightline clear, camera 2.5m above NMT. WORKING_VALUE QA pose, not a calibrated photo pose."
-    },
-    {
-      "id": "clear_trailer_curtain_0_High_150p1",
-      "kind": "photo_match",
-      "seat": "file",
-      "pos": [
-        754.3398197949716,
-        -385.1716769856783,
-        144.44682049424742
-      ],
-      "look_at": [
-        642.1280700303561,
-        -480.95840774292304,
-        143.631
-      ],
-      "fov_deg": 60,
-      "note": "ADR0153 actual instance, source-footprint sightline clear, camera 2.5m above NMT. WORKING_VALUE QA pose, not a calibrated photo pose."
-    },
-    {
-      "id": "clear_trailer_reefer_0_Low_019p9",
-      "kind": "photo_match",
-      "seat": "file",
-      "pos": [
-        634.5340541075394,
-        -515.8893701358342,
-        143.98425612836704
-      ],
-      "look_at": [
-        636.8302032575683,
-        -505.6444620925684,
-        144.951
-      ],
-      "fov_deg": 60,
-      "note": "ADR0153 actual instance, source-footprint sightline clear, camera 2.5m above NMT. WORKING_VALUE QA pose, not a calibrated photo pose."
-    },
-    {
-      "id": "clear_trailer_reefer_0_Low_020p1",
-      "kind": "photo_match",
-      "seat": "file",
-      "pos": [
-        634.6354027118482,
-        -516.0631017910416,
-        143.98651707988859
-      ],
-      "look_at": [
-        636.8302032575683,
-        -505.6444620925684,
-        144.951
-      ],
-      "fov_deg": 60,
-      "note": "ADR0153 actual instance, source-footprint sightline clear, camera 2.5m above NMT. WORKING_VALUE QA pose, not a calibrated photo pose."
-    },
-    {
-      "id": "clear_trailer_reefer_0_Low_049p9",
-      "kind": "photo_match",
-      "seat": "file",
-      "pos": [
-        649.6932490666686,
-        -541.8752438419709,
-        143.97964216456583
-      ],
-      "look_at": [
-        636.8302032575683,
-        -505.6444620925684,
-        144.951
-      ],
-      "fov_deg": 60,
-      "note": "ADR0153 actual instance, source-footprint sightline clear, camera 2.5m above NMT. WORKING_VALUE QA pose, not a calibrated photo pose."
-    },
-    {
-      "id": "clear_trailer_reefer_0_Low_050p1",
-      "kind": "photo_match",
-      "seat": "file",
-      "pos": [
-        649.7943785273088,
-        -542.048599841366,
-        143.96946790979902
-      ],
-      "look_at": [
-        636.8302032575683,
-        -505.6444620925684,
-        144.951
-      ],
-      "fov_deg": 60,
-      "note": "ADR0153 actual instance, source-footprint sightline clear, camera 2.5m above NMT. WORKING_VALUE QA pose, not a calibrated photo pose."
-    },
-    {
-      "id": "clear_trailer_reefer_0_High_059p9",
-      "kind": "photo_match",
-      "seat": "file",
-      "pos": [
-        654.7375526434845,
-        -550.5221829463202,
-        143.94157269756408
-      ],
-      "look_at": [
-        636.8302032575683,
-        -505.6444620925684,
-        144.951
-      ],
-      "fov_deg": 60,
-      "note": "ADR0153 actual instance, source-footprint sightline clear, camera 2.5m above NMT. WORKING_VALUE QA pose, not a calibrated photo pose."
-    },
-    {
-      "id": "clear_trailer_reefer_0_High_060p1",
-      "kind": "photo_match",
-      "seat": "file",
-      "pos": [
-        654.8383768382081,
-        -550.6950156592495,
-        143.94304914305388
-      ],
-      "look_at": [
-        636.8302032575683,
-        -505.6444620925684,
-        144.951
-      ],
-      "fov_deg": 60,
-      "note": "ADR0153 actual instance, source-footprint sightline clear, camera 2.5m above NMT. WORKING_VALUE QA pose, not a calibrated photo pose."
-    },
-    {
-      "id": "clear_trailer_reefer_0_High_149p9",
-      "kind": "photo_match",
-      "seat": "file",
-      "pos": [
-        688.9085409114261,
-        -147.79698835442093,
-        144.34452659469235
-      ],
-      "look_at": [
-        638.6586993306857,
-        -274.09892525403285,
-        143.601
-      ],
-      "fov_deg": 60,
-      "note": "ADR0153 actual instance, source-footprint sightline clear, camera 2.5m above NMT. WORKING_VALUE QA pose, not a calibrated photo pose."
-    },
-    {
-      "id": "clear_trailer_reefer_0_High_150p1",
-      "kind": "photo_match",
-      "seat": "file",
-      "pos": [
-        688.9847792046396,
-        -147.6120434433305,
-        144.34567807798317
-      ],
-      "look_at": [
-        638.6586993306857,
-        -274.09892525403285,
-        143.601
-      ],
-      "fov_deg": 60,
-      "note": "ADR0153 actual instance, source-footprint sightline clear, camera 2.5m above NMT. WORKING_VALUE QA pose, not a calibrated photo pose."
-    }
-  ]
+    "cameras": [
+        {
+            "id": "clear_car_hatch_white_Low_015p9",
+            "kind": "photo_match",
+            "seat": "file",
+            "note": "ADR0153 working QA pose. Real depth-tested visibility search: 1080/1087 mask pixels at640x296; camera height relative to instance 2,5m. Mask-only1cm offset is NOT used by final QA renders.",
+            "pos": [
+                686.099853515625,
+                -533.2529296875,
+                144.2707061767578
+            ],
+            "look_at": [
+                670.4124145507813,
+                -532.42822265625,
+                142.5469970703125
+            ],
+            "fov_deg": 60.0,
+            "visibleFraction": 0.993560254573822,
+            "soloPixels": 1087,
+            "visiblePixels": 1080,
+            "nativeIndex": 6606
+        },
+        {
+            "id": "clear_car_hatch_white_Low_016p1",
+            "kind": "photo_match",
+            "seat": "file",
+            "note": "ADR0153 working QA pose. Real depth-tested visibility search: 1080/1087 mask pixels at640x296; camera height relative to instance 2,5m. Mask-only1cm offset is NOT used by final QA renders.",
+            "pos": [
+                686.2971801757813,
+                -533.2633056640625,
+                144.30157470703126
+            ],
+            "look_at": [
+                670.4124145507813,
+                -532.42822265625,
+                142.5469970703125
+            ],
+            "fov_deg": 60.0,
+            "visibleFraction": 0.993560254573822,
+            "soloPixels": 1087,
+            "visiblePixels": 1080,
+            "nativeIndex": 6606
+        },
+        {
+            "id": "clear_car_hatch_white_Low_042p4",
+            "kind": "photo_match",
+            "seat": "file",
+            "note": "ADR0153 working QA pose. Real depth-tested visibility search: 178/182 mask pixels at640x296; camera height relative to instance 2,5m. Mask-only1cm offset is NOT used by final QA renders.",
+            "pos": [
+                706.7921142578125,
+                -510.792724609375,
+                144.2994384765625
+            ],
+            "look_at": [
+                670.4124145507813,
+                -532.42822265625,
+                142.5469970703125
+            ],
+            "fov_deg": 60.0,
+            "visibleFraction": 0.9780219793319702,
+            "soloPixels": 182,
+            "visiblePixels": 178,
+            "nativeIndex": 6606
+        },
+        {
+            "id": "clear_car_hatch_white_Low_042p6",
+            "kind": "photo_match",
+            "seat": "file",
+            "note": "ADR0153 working QA pose. Real depth-tested visibility search: 178/182 mask pixels at640x296; camera height relative to instance 2,5m. Mask-only1cm offset is NOT used by final QA renders.",
+            "pos": [
+                706.9636840820313,
+                -510.690673828125,
+                144.31114196777345
+            ],
+            "look_at": [
+                670.4124145507813,
+                -532.42822265625,
+                142.5469970703125
+            ],
+            "fov_deg": 60.0,
+            "visibleFraction": 0.9780219793319702,
+            "soloPixels": 182,
+            "visiblePixels": 178,
+            "nativeIndex": 6606
+        },
+        {
+            "id": "clear_car_hatch_white_High_037p4",
+            "kind": "photo_match",
+            "seat": "file",
+            "note": "ADR0153 working QA pose. Real depth-tested visibility search: 236/239 mask pixels at640x296; camera height relative to instance 2,5m. Mask-only1cm offset is NOT used by final QA renders.",
+            "pos": [
+                702.4863891601563,
+                -513.3533325195313,
+                144.29710388183595
+            ],
+            "look_at": [
+                670.4124145507813,
+                -532.42822265625,
+                142.5469970703125
+            ],
+            "fov_deg": 60.0,
+            "visibleFraction": 0.9874476790428162,
+            "soloPixels": 239,
+            "visiblePixels": 236,
+            "nativeIndex": 6606
+        },
+        {
+            "id": "clear_car_hatch_white_High_037p6",
+            "kind": "photo_match",
+            "seat": "file",
+            "note": "ADR0153 working QA pose. Real depth-tested visibility search: 236/239 mask pixels at640x296; camera height relative to instance 2,5m. Mask-only1cm offset is NOT used by final QA renders.",
+            "pos": [
+                702.6578979492188,
+                -513.2513427734375,
+                144.31036376953126
+            ],
+            "look_at": [
+                670.4124145507813,
+                -532.42822265625,
+                142.5469970703125
+            ],
+            "fov_deg": 60.0,
+            "visibleFraction": 0.9874476790428162,
+            "soloPixels": 239,
+            "visiblePixels": 236,
+            "nativeIndex": 6606
+        },
+        {
+            "id": "clear_car_hatch_white_High_127p4",
+            "kind": "photo_match",
+            "seat": "file",
+            "note": "ADR0153 working QA pose. Real depth-tested visibility search: 19/17 mask pixels at640x296; camera height relative to instance 2,5m. Mask-only1cm offset is NOT used by final QA renders.",
+            "pos": [
+                730.9865112304688,
+                -452.98663330078127,
+                143.9081268310547
+            ],
+            "look_at": [
+                633.8705444335938,
+                -535.40673828125,
+                142.1439971923828
+            ],
+            "fov_deg": 60.0,
+            "visibleFraction": 1.0,
+            "soloPixels": 17,
+            "visiblePixels": 19,
+            "nativeIndex": 6562
+        },
+        {
+            "id": "clear_car_hatch_white_High_127p6",
+            "kind": "photo_match",
+            "seat": "file",
+            "note": "ADR0153 working QA pose. Real depth-tested visibility search: 19/17 mask pixels at640x296; camera height relative to instance 2,5m. Mask-only1cm offset is NOT used by final QA renders.",
+            "pos": [
+                731.1389770507813,
+                -452.85723876953127,
+                143.91204833984376
+            ],
+            "look_at": [
+                633.8705444335938,
+                -535.40673828125,
+                142.1439971923828
+            ],
+            "fov_deg": 60.0,
+            "visibleFraction": 1.0,
+            "soloPixels": 17,
+            "visiblePixels": 19,
+            "nativeIndex": 6562
+        },
+        {
+            "id": "clear_car_suv_black_Low_015p9",
+            "kind": "photo_match",
+            "seat": "file",
+            "note": "ADR0153 working QA pose. Real depth-tested visibility search: 2241/2293 mask pixels at640x296; camera height relative to instance 12m. Mask-only1cm offset is NOT used by final QA renders.",
+            "pos": [
+                731.7850952148438,
+                -430.2344055175781,
+                153.61978149414063
+            ],
+            "look_at": [
+                722.6957397460938,
+                -435.8429260253906,
+                142.6669921875
+            ],
+            "fov_deg": 60.0,
+            "visibleFraction": 0.9773222804069519,
+            "soloPixels": 2293,
+            "visiblePixels": 2241,
+            "nativeIndex": 10275
+        },
+        {
+            "id": "clear_car_suv_black_Low_016p1",
+            "kind": "photo_match",
+            "seat": "file",
+            "note": "ADR0153 working QA pose. Real depth-tested visibility search: 2241/2293 mask pixels at640x296; camera height relative to instance 12m. Mask-only1cm offset is NOT used by final QA renders.",
+            "pos": [
+                731.8994140625,
+                -430.1638488769531,
+                153.76792907714845
+            ],
+            "look_at": [
+                722.6957397460938,
+                -435.8429260253906,
+                142.6669921875
+            ],
+            "fov_deg": 60.0,
+            "visibleFraction": 0.9773222804069519,
+            "soloPixels": 2293,
+            "visiblePixels": 2241,
+            "nativeIndex": 10275
+        },
+        {
+            "id": "clear_car_suv_black_Low_042p4",
+            "kind": "photo_match",
+            "seat": "file",
+            "note": "ADR0153 working QA pose. Real depth-tested visibility search: 242/249 mask pixels at640x296; camera height relative to instance 12m. Mask-only1cm offset is NOT used by final QA renders.",
+            "pos": [
+                724.1728515625,
+                -395.17767333984377,
+                153.7576904296875
+            ],
+            "look_at": [
+                722.6957397460938,
+                -435.8429260253906,
+                142.6669921875
+            ],
+            "fov_deg": 60.0,
+            "visibleFraction": 0.9718875288963318,
+            "soloPixels": 249,
+            "visiblePixels": 242,
+            "nativeIndex": 10275
+        },
+        {
+            "id": "clear_car_suv_black_Low_042p6",
+            "kind": "photo_match",
+            "seat": "file",
+            "note": "ADR0153 working QA pose. Real depth-tested visibility search: 242/249 mask pixels at640x296; camera height relative to instance 12m. Mask-only1cm offset is NOT used by final QA renders.",
+            "pos": [
+                724.1798095703125,
+                -394.98583984375,
+                153.8138885498047
+            ],
+            "look_at": [
+                722.6957397460938,
+                -435.8429260253906,
+                142.6669921875
+            ],
+            "fov_deg": 60.0,
+            "visibleFraction": 0.9718875288963318,
+            "soloPixels": 249,
+            "visiblePixels": 242,
+            "nativeIndex": 10275
+        },
+        {
+            "id": "clear_car_suv_black_High_037p4",
+            "kind": "photo_match",
+            "seat": "file",
+            "note": "ADR0153 working QA pose. Real depth-tested visibility search: 326/333 mask pixels at640x296; camera height relative to instance 12m. Mask-only1cm offset is NOT used by final QA renders.",
+            "pos": [
+                737.4434814453125,
+                -403.6007995605469,
+                153.7465057373047
+            ],
+            "look_at": [
+                722.6957397460938,
+                -435.8429260253906,
+                142.6669921875
+            ],
+            "fov_deg": 60.0,
+            "visibleFraction": 0.9789789915084839,
+            "soloPixels": 333,
+            "visiblePixels": 326,
+            "nativeIndex": 10275
+        },
+        {
+            "id": "clear_car_suv_black_High_037p6",
+            "kind": "photo_match",
+            "seat": "file",
+            "note": "ADR0153 working QA pose. Real depth-tested visibility search: 326/333 mask pixels at640x296; camera height relative to instance 12m. Mask-only1cm offset is NOT used by final QA renders.",
+            "pos": [
+                737.5223388671875,
+                -403.42840576171877,
+                153.81016540527345
+            ],
+            "look_at": [
+                722.6957397460938,
+                -435.8429260253906,
+                142.6669921875
+            ],
+            "fov_deg": 60.0,
+            "visibleFraction": 0.9789789915084839,
+            "soloPixels": 333,
+            "visiblePixels": 326,
+            "nativeIndex": 10275
+        },
+        {
+            "id": "clear_car_suv_black_High_127p4",
+            "kind": "photo_match",
+            "seat": "file",
+            "note": "ADR0153 working QA pose. Real depth-tested visibility search: 16/16 mask pixels at640x296; camera height relative to instance 2,5m. Mask-only1cm offset is NOT used by final QA renders.",
+            "pos": [
+                606.8635864257813,
+                -382.8527526855469,
+                144.33612060546876
+            ],
+            "look_at": [
+                722.6957397460938,
+                -435.8429260253906,
+                142.6669921875
+            ],
+            "fov_deg": 60.0,
+            "visibleFraction": 1.0,
+            "soloPixels": 16,
+            "visiblePixels": 16,
+            "nativeIndex": 10275
+        },
+        {
+            "id": "clear_car_suv_black_High_127p6",
+            "kind": "photo_match",
+            "seat": "file",
+            "note": "ADR0153 working QA pose. Real depth-tested visibility search: 16/16 mask pixels at640x296; camera height relative to instance 2,5m. Mask-only1cm offset is NOT used by final QA renders.",
+            "pos": [
+                606.6817626953125,
+                -382.7695617675781,
+                144.3400421142578
+            ],
+            "look_at": [
+                722.6957397460938,
+                -435.8429260253906,
+                142.6669921875
+            ],
+            "fov_deg": 60.0,
+            "visibleFraction": 1.0,
+            "soloPixels": 16,
+            "visiblePixels": 16,
+            "nativeIndex": 10275
+        },
+        {
+            "id": "clear_tractor_blue_Low_019p9",
+            "kind": "photo_match",
+            "seat": "file",
+            "note": "ADR0153 working QA pose. Real depth-tested visibility search: 2601/2614 mask pixels at640x296; camera height relative to instance 2,5m. Mask-only1cm offset is NOT used by final QA renders.",
+            "pos": [
+                825.416259765625,
+                -606.0971069335938,
+                146.83486938476563
+            ],
+            "look_at": [
+                806.6612548828125,
+                -603.988037109375,
+                146.30349731445313
+            ],
+            "fov_deg": 60.0,
+            "visibleFraction": 0.9950267672538757,
+            "soloPixels": 2614,
+            "visiblePixels": 2601,
+            "nativeIndex": 5166
+        },
+        {
+            "id": "clear_tractor_blue_Low_020p1",
+            "kind": "photo_match",
+            "seat": "file",
+            "note": "ADR0153 working QA pose. Real depth-tested visibility search: 2601/2614 mask pixels at640x296; camera height relative to instance 2,5m. Mask-only1cm offset is NOT used by final QA renders.",
+            "pos": [
+                825.614501953125,
+                -606.1064453125,
+                146.859619140625
+            ],
+            "look_at": [
+                806.6612548828125,
+                -603.988037109375,
+                146.30349731445313
+            ],
+            "fov_deg": 60.0,
+            "visibleFraction": 0.9950267672538757,
+            "soloPixels": 2614,
+            "visiblePixels": 2601,
+            "nativeIndex": 5166
+        },
+        {
+            "id": "clear_tractor_blue_Low_049p9",
+            "kind": "photo_match",
+            "seat": "file",
+            "note": "ADR0153 working QA pose. Real depth-tested visibility search: 398/403 mask pixels at640x296; camera height relative to instance 6m. Mask-only1cm offset is NOT used by final QA renders.",
+            "pos": [
+                854.68115234375,
+                -597.795166015625,
+                150.3361358642578
+            ],
+            "look_at": [
+                806.6612548828125,
+                -603.988037109375,
+                146.30349731445313
+            ],
+            "fov_deg": 60.0,
+            "visibleFraction": 0.9875930547714233,
+            "soloPixels": 403,
+            "visiblePixels": 398,
+            "nativeIndex": 5166
+        },
+        {
+            "id": "clear_tractor_blue_Low_050p1",
+            "kind": "photo_match",
+            "seat": "file",
+            "note": "ADR0153 working QA pose. Real depth-tested visibility search: 398/403 mask pixels at640x296; camera height relative to instance 6m. Mask-only1cm offset is NOT used by final QA renders.",
+            "pos": [
+                854.8775024414063,
+                -597.765625,
+                150.36004638671876
+            ],
+            "look_at": [
+                806.6612548828125,
+                -603.988037109375,
+                146.30349731445313
+            ],
+            "fov_deg": 60.0,
+            "visibleFraction": 0.9875930547714233,
+            "soloPixels": 403,
+            "visiblePixels": 398,
+            "nativeIndex": 5166
+        },
+        {
+            "id": "clear_tractor_blue_High_059p9",
+            "kind": "photo_match",
+            "seat": "file",
+            "note": "ADR0153 working QA pose. Real depth-tested visibility search: 257/261 mask pixels at640x296; camera height relative to instance 6m. Mask-only1cm offset is NOT used by final QA renders.",
+            "pos": [
+                864.6284790039063,
+                -596.2975463867188,
+                150.34210205078126
+            ],
+            "look_at": [
+                806.6612548828125,
+                -603.988037109375,
+                146.30349731445313
+            ],
+            "fov_deg": 60.0,
+            "visibleFraction": 0.984674334526062,
+            "soloPixels": 261,
+            "visiblePixels": 257,
+            "nativeIndex": 5166
+        },
+        {
+            "id": "clear_tractor_blue_High_060p1",
+            "kind": "photo_match",
+            "seat": "file",
+            "note": "ADR0153 working QA pose. Real depth-tested visibility search: 257/261 mask pixels at640x296; camera height relative to instance 6m. Mask-only1cm offset is NOT used by final QA renders.",
+            "pos": [
+                864.8252563476563,
+                -596.2679443359375,
+                150.36203002929688
+            ],
+            "look_at": [
+                806.6612548828125,
+                -603.988037109375,
+                146.30349731445313
+            ],
+            "fov_deg": 60.0,
+            "visibleFraction": 0.984674334526062,
+            "soloPixels": 261,
+            "visiblePixels": 257,
+            "nativeIndex": 5166
+        },
+        {
+            "id": "clear_tractor_blue_High_149p9",
+            "kind": "photo_match",
+            "seat": "file",
+            "note": "ADR0153 working QA pose. Real depth-tested visibility search: 38/38 mask pixels at640x296; camera height relative to instance 6m. Mask-only1cm offset is NOT used by final QA renders.",
+            "pos": [
+                670.15234375,
+                -541.426025390625,
+                150.36001586914063
+            ],
+            "look_at": [
+                806.6612548828125,
+                -603.988037109375,
+                146.30349731445313
+            ],
+            "fov_deg": 60.0,
+            "visibleFraction": 1.0,
+            "soloPixels": 38,
+            "visiblePixels": 38,
+            "nativeIndex": 5166
+        },
+        {
+            "id": "clear_tractor_blue_High_150p1",
+            "kind": "photo_match",
+            "seat": "file",
+            "note": "ADR0153 working QA pose. Real depth-tested visibility search: 38/38 mask pixels at640x296; camera height relative to instance 6m. Mask-only1cm offset is NOT used by final QA renders.",
+            "pos": [
+                669.971435546875,
+                -541.3410034179688,
+                150.3679962158203
+            ],
+            "look_at": [
+                806.6612548828125,
+                -603.988037109375,
+                146.30349731445313
+            ],
+            "fov_deg": 60.0,
+            "visibleFraction": 1.0,
+            "soloPixels": 38,
+            "visiblePixels": 38,
+            "nativeIndex": 5166
+        },
+        {
+            "id": "clear_trailer_curtain_0_Low_019p9",
+            "kind": "photo_match",
+            "seat": "file",
+            "note": "ADR0153 working QA pose. Real depth-tested visibility search: 14218/14464 mask pixels at640x296; camera height relative to instance 12m. Mask-only1cm offset is NOT used by final QA renders.",
+            "pos": [
+                638.3575439453125,
+                -493.538818359375,
+                153.45278930664063
+            ],
+            "look_at": [
+                642.12353515625,
+                -480.924072265625,
+                143.63099670410157
+            ],
+            "fov_deg": 60.0,
+            "visibleFraction": 0.9829922318458557,
+            "soloPixels": 14464,
+            "visiblePixels": 14218,
+            "nativeIndex": 8385
+        },
+        {
+            "id": "clear_trailer_curtain_0_Low_020p1",
+            "kind": "photo_match",
+            "seat": "file",
+            "note": "ADR0153 working QA pose. Real depth-tested visibility search: 14218/14464 mask pixels at640x296; camera height relative to instance 12m. Mask-only1cm offset is NOT used by final QA renders.",
+            "pos": [
+                638.3795166015625,
+                -493.69818115234377,
+                153.57159423828126
+            ],
+            "look_at": [
+                642.12353515625,
+                -480.924072265625,
+                143.63099670410157
+            ],
+            "fov_deg": 60.0,
+            "visibleFraction": 0.9829922318458557,
+            "soloPixels": 14464,
+            "visiblePixels": 14218,
+            "nativeIndex": 8385
+        },
+        {
+            "id": "clear_trailer_curtain_0_Low_049p9",
+            "kind": "photo_match",
+            "seat": "file",
+            "note": "ADR0153 working QA pose. Real depth-tested visibility search: 967/990 mask pixels at640x296; camera height relative to instance 2,5m. Mask-only1cm offset is NOT used by final QA renders.",
+            "pos": [
+                669.2615966796875,
+                -514.9473266601563,
+                144.11605834960938
+            ],
+            "look_at": [
+                642.12353515625,
+                -480.924072265625,
+                143.63099670410157
+            ],
+            "fov_deg": 60.0,
+            "visibleFraction": 0.9767676591873169,
+            "soloPixels": 990,
+            "visiblePixels": 967,
+            "nativeIndex": 8385
+        },
+        {
+            "id": "clear_trailer_curtain_0_Low_050p1",
+            "kind": "photo_match",
+            "seat": "file",
+            "note": "ADR0153 working QA pose. Real depth-tested visibility search: 967/990 mask pixels at640x296; camera height relative to instance 2,5m. Mask-only1cm offset is NOT used by final QA renders.",
+            "pos": [
+                669.3942260742188,
+                -515.0966796875,
+                144.1260223388672
+            ],
+            "look_at": [
+                642.12353515625,
+                -480.924072265625,
+                143.63099670410157
+            ],
+            "fov_deg": 60.0,
+            "visibleFraction": 0.9767676591873169,
+            "soloPixels": 990,
+            "visiblePixels": 967,
+            "nativeIndex": 8385
+        },
+        {
+            "id": "clear_trailer_curtain_0_High_059p9",
+            "kind": "photo_match",
+            "seat": "file",
+            "note": "ADR0153 working QA pose. Real depth-tested visibility search: 613/623 mask pixels at640x296; camera height relative to instance 2,5m. Mask-only1cm offset is NOT used by final QA renders.",
+            "pos": [
+                675.908203125,
+                -522.4324951171875,
+                144.11854553222657
+            ],
+            "look_at": [
+                642.12353515625,
+                -480.924072265625,
+                143.63099670410157
+            ],
+            "fov_deg": 60.0,
+            "visibleFraction": 0.9839486479759216,
+            "soloPixels": 623,
+            "visiblePixels": 613,
+            "nativeIndex": 8385
+        },
+        {
+            "id": "clear_trailer_curtain_0_High_060p1",
+            "kind": "photo_match",
+            "seat": "file",
+            "note": "ADR0153 working QA pose. Real depth-tested visibility search: 613/623 mask pixels at640x296; camera height relative to instance 2,5m. Mask-only1cm offset is NOT used by final QA renders.",
+            "pos": [
+                676.0408935546875,
+                -522.5819091796875,
+                144.12684631347657
+            ],
+            "look_at": [
+                642.12353515625,
+                -480.924072265625,
+                143.63099670410157
+            ],
+            "fov_deg": 60.0,
+            "visibleFraction": 0.9839486479759216,
+            "soloPixels": 623,
+            "visiblePixels": 613,
+            "nativeIndex": 8385
+        },
+        {
+            "id": "clear_trailer_curtain_0_High_149p9",
+            "kind": "photo_match",
+            "seat": "file",
+            "note": "ADR0153 working QA pose. Real depth-tested visibility search: 131/133 mask pixels at640x296; camera height relative to instance 12m. Mask-only1cm offset is NOT used by final QA renders.",
+            "pos": [
+                777.361328125,
+                -428.7771911621094,
+                153.60702514648438
+            ],
+            "look_at": [
+                642.12353515625,
+                -480.924072265625,
+                143.63099670410157
+            ],
+            "fov_deg": 60.0,
+            "visibleFraction": 0.9849624037742615,
+            "soloPixels": 133,
+            "visiblePixels": 131,
+            "nativeIndex": 8385
+        },
+        {
+            "id": "clear_trailer_curtain_0_High_150p1",
+            "kind": "photo_match",
+            "seat": "file",
+            "note": "ADR0153 working QA pose. Real depth-tested visibility search: 131/133 mask pixels at640x296; camera height relative to instance 12m. Mask-only1cm offset is NOT used by final QA renders.",
+            "pos": [
+                777.5497436523438,
+                -428.7119445800781,
+                153.6230010986328
+            ],
+            "look_at": [
+                642.12353515625,
+                -480.924072265625,
+                143.63099670410157
+            ],
+            "fov_deg": 60.0,
+            "visibleFraction": 0.9849624037742615,
+            "soloPixels": 133,
+            "visiblePixels": 131,
+            "nativeIndex": 8385
+        },
+        {
+            "id": "clear_trailer_reefer_0_Low_019p9",
+            "kind": "photo_match",
+            "seat": "file",
+            "note": "ADR0153 working QA pose. Real depth-tested visibility search: 219/219 mask pixels at640x296; camera height relative to instance 2,5m. Mask-only1cm offset is NOT used by final QA renders.",
+            "pos": [
+                634.4678344726563,
+                -515.9124145507813,
+                144.0938720703125
+            ],
+            "look_at": [
+                636.830322265625,
+                -505.644287109375,
+                144.9510040283203
+            ],
+            "fov_deg": 60.0,
+            "visibleFraction": 1.0,
+            "soloPixels": 219,
+            "visiblePixels": 219,
+            "nativeIndex": 8382
+        },
+        {
+            "id": "clear_trailer_reefer_0_Low_020p1",
+            "kind": "photo_match",
+            "seat": "file",
+            "note": "ADR0153 working QA pose. Real depth-tested visibility search: 219/219 mask pixels at640x296; camera height relative to instance 2,5m. Mask-only1cm offset is NOT used by final QA renders.",
+            "pos": [
+                634.5672607421875,
+                -516.084228515625,
+                144.11862182617188
+            ],
+            "look_at": [
+                636.830322265625,
+                -505.644287109375,
+                144.9510040283203
+            ],
+            "fov_deg": 60.0,
+            "visibleFraction": 1.0,
+            "soloPixels": 219,
+            "visiblePixels": 219,
+            "nativeIndex": 8382
+        },
+        {
+            "id": "clear_trailer_reefer_0_Low_049p9",
+            "kind": "photo_match",
+            "seat": "file",
+            "note": "ADR0153 working QA pose. Real depth-tested visibility search: 40/40 mask pixels at640x296; camera height relative to instance 2,5m. Mask-only1cm offset is NOT used by final QA renders.",
+            "pos": [
+                649.5397338867188,
+                -541.956787109375,
+                144.11605834960938
+            ],
+            "look_at": [
+                636.830322265625,
+                -505.644287109375,
+                144.9510040283203
+            ],
+            "fov_deg": 60.0,
+            "visibleFraction": 1.0,
+            "soloPixels": 40,
+            "visiblePixels": 40,
+            "nativeIndex": 8382
+        },
+        {
+            "id": "clear_trailer_reefer_0_Low_050p1",
+            "kind": "photo_match",
+            "seat": "file",
+            "note": "ADR0153 working QA pose. Real depth-tested visibility search: 40/40 mask pixels at640x296; camera height relative to instance 2,5m. Mask-only1cm offset is NOT used by final QA renders.",
+            "pos": [
+                649.6398315429688,
+                -542.1296997070313,
+                144.1260223388672
+            ],
+            "look_at": [
+                636.830322265625,
+                -505.644287109375,
+                144.9510040283203
+            ],
+            "fov_deg": 60.0,
+            "visibleFraction": 1.0,
+            "soloPixels": 40,
+            "visiblePixels": 40,
+            "nativeIndex": 8382
+        },
+        {
+            "id": "clear_trailer_reefer_0_High_059p9",
+            "kind": "photo_match",
+            "seat": "file",
+            "note": "ADR0153 working QA pose. Real depth-tested visibility search: 24/24 mask pixels at640x296; camera height relative to instance 2,5m. Mask-only1cm offset is NOT used by final QA renders.",
+            "pos": [
+                654.5536499023438,
+                -550.620849609375,
+                144.1185302734375
+            ],
+            "look_at": [
+                636.830322265625,
+                -505.644287109375,
+                144.9510040283203
+            ],
+            "fov_deg": 60.0,
+            "visibleFraction": 1.0,
+            "soloPixels": 24,
+            "visiblePixels": 24,
+            "nativeIndex": 8382
+        },
+        {
+            "id": "clear_trailer_reefer_0_High_060p1",
+            "kind": "photo_match",
+            "seat": "file",
+            "note": "ADR0153 working QA pose. Real depth-tested visibility search: 24/24 mask pixels at640x296; camera height relative to instance 2,5m. Mask-only1cm offset is NOT used by final QA renders.",
+            "pos": [
+                654.6537475585938,
+                -550.7938232421875,
+                144.12684631347657
+            ],
+            "look_at": [
+                636.830322265625,
+                -505.644287109375,
+                144.9510040283203
+            ],
+            "fov_deg": 60.0,
+            "visibleFraction": 1.0,
+            "soloPixels": 24,
+            "visiblePixels": 24,
+            "nativeIndex": 8382
+        },
+        {
+            "id": "clear_trailer_reefer_0_High_149p9",
+            "kind": "photo_match",
+            "seat": "file",
+            "note": "ADR0153 working QA pose. Real depth-tested visibility search: 8/8 mask pixels at640x296; camera height relative to instance 12m. Mask-only1cm offset is NOT used by final QA renders.",
+            "pos": [
+                743.2125854492188,
+                -589.66259765625,
+                153.60702514648438
+            ],
+            "look_at": [
+                636.830322265625,
+                -505.644287109375,
+                144.9510040283203
+            ],
+            "fov_deg": 60.0,
+            "visibleFraction": 1.0,
+            "soloPixels": 8,
+            "visiblePixels": 8,
+            "nativeIndex": 8382
+        },
+        {
+            "id": "clear_trailer_reefer_0_High_150p1",
+            "kind": "photo_match",
+            "seat": "file",
+            "note": "ADR0153 working QA pose. Real depth-tested visibility search: 8/8 mask pixels at640x296; camera height relative to instance 12m. Mask-only1cm offset is NOT used by final QA renders.",
+            "pos": [
+                743.3709106445313,
+                -589.7837524414063,
+                153.62301635742188
+            ],
+            "look_at": [
+                636.830322265625,
+                -505.644287109375,
+                144.9510040283203
+            ],
+            "fov_deg": 60.0,
+            "visibleFraction": 1.0,
+            "soloPixels": 8,
+            "visiblePixels": 8,
+            "nativeIndex": 8382
+        }
+    ]
 }
