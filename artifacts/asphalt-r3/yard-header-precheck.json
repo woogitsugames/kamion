@@ -1,0 +1,351 @@
+{
+  "read_at": "2026-11-12T13:41:06.8379386+01:00",
+  "manifest_sha256": "51CF1C24311F0DA27AF9F7FD97FD8C622C0C8E92E466D1E79FD724A2AC13E4C3",
+  "source": "GLB JSON chunks only; BIN geometry was not read",
+  "rows": [
+    {
+      "local_en_bbox": [
+        255.20199584960938,
+        -404.57000732421875,
+        473.00299072265625,
+        -291.45098876953125
+      ],
+      "material": "curb_concrete",
+      "engine_definition": {
+        "color": [
+          0.28,
+          0.278,
+          0.27
+        ],
+        "ground_wear_exclude_local_en": [
+          400.0,
+          -700.0,
+          850.0,
+          -250.0
+        ],
+        "kerb_wear": {
+          "film_threshold": 0.55,
+          "joint_dirt": 0.35,
+          "mineral_film": 0.16
+        },
+        "rough": 0.85,
+        "surface": "concrete_kerb",
+        "texture_set": "kerb_concrete_1m"
+      },
+      "vertices": 535,
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_5_5.low.glb",
+      "elevation_u_bounds": [
+        135.4550018310547,
+        141.8520050048828
+      ],
+      "node": "paved",
+      "uv1_in_raw": false
+    },
+    {
+      "local_en_bbox": [
+        255.44700622558594,
+        -512.1090087890625,
+        474.9440002441406,
+        -298.4429931640625
+      ],
+      "material": "yard_asphalt",
+      "engine_definition": {
+        "color": [
+          0.081,
+          0.08,
+          0.079
+        ],
+        "rough": 0.9,
+        "surface": "asphalt",
+        "texture_set": "asphalt_worn"
+      },
+      "vertices": 1718,
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_5_5.low.glb",
+      "elevation_u_bounds": [
+        135.42599487304688,
+        142.6199951171875
+      ],
+      "node": "paved",
+      "uv1_in_raw": true
+    },
+    {
+      "local_en_bbox": [
+        256.0,
+        -404.52099609375,
+        276.093994140625,
+        -291.864990234375
+      ],
+      "material": "yard_behaton",
+      "engine_definition": {
+        "color": [
+          0.23,
+          0.228,
+          0.22
+        ],
+        "rough": 0.85,
+        "surface": "paving_stones",
+        "texture_set": "behaton_i_grey"
+      },
+      "vertices": 66,
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_5_5.low.glb",
+      "elevation_u_bounds": [
+        140.6219940185547,
+        141.82200622558594
+      ],
+      "node": "paved",
+      "uv1_in_raw": true
+    },
+    {
+      "local_en_bbox": [
+        435.5069885253906,
+        -334.5840148925781,
+        464.03900146484375,
+        -302.3940124511719
+      ],
+      "material": "yard_concrete",
+      "engine_definition": {
+        "color": [
+          0.3,
+          0.297,
+          0.288
+        ],
+        "rough": 0.85,
+        "sky_occ": [
+          0.5,
+          0.0
+        ],
+        "surface": "concrete",
+        "texture_set": "concrete_cast_5m_joints"
+      },
+      "vertices": 182,
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_5_5.low.glb",
+      "elevation_u_bounds": [
+        135.4499969482422,
+        136.4510040283203
+      ],
+      "node": "paved",
+      "uv1_in_raw": true
+    },
+    {
+      "local_en_bbox": [
+        436.33099365234375,
+        -340.1369934082031,
+        473.00299072265625,
+        -299.4670104980469
+      ],
+      "material": "yard_paving",
+      "engine_definition": {
+        "color": [
+          0.26,
+          0.255,
+          0.245
+        ],
+        "rough": 0.85,
+        "surface": "paving_stones",
+        "texture_set": "paving_20x10_grey"
+      },
+      "vertices": 106,
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_5_5.low.glb",
+      "elevation_u_bounds": [
+        135.7550048828125,
+        136.9409942626953
+      ],
+      "node": "paved",
+      "uv1_in_raw": true
+    },
+    {
+      "local_en_bbox": [
+        254.9600067138672,
+        -737.3460083007812,
+        513.02099609375,
+        -526.3280029296875
+      ],
+      "material": "curb_concrete",
+      "engine_definition": {
+        "color": [
+          0.28,
+          0.278,
+          0.27
+        ],
+        "ground_wear_exclude_local_en": [
+          400.0,
+          -700.0,
+          850.0,
+          -250.0
+        ],
+        "kerb_wear": {
+          "film_threshold": 0.55,
+          "joint_dirt": 0.35,
+          "mineral_film": 0.16
+        },
+        "rough": 0.85,
+        "surface": "concrete_kerb",
+        "texture_set": "kerb_concrete_1m"
+      },
+      "vertices": 2353,
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_5_6.low.glb",
+      "elevation_u_bounds": [
+        139.27000427246094,
+        142.54800415039062
+      ],
+      "node": "paved",
+      "uv1_in_raw": false
+    },
+    {
+      "local_en_bbox": [
+        256.0,
+        -737.6380004882812,
+        512.0,
+        -584.0859985351562
+      ],
+      "material": "cycle_red",
+      "engine_definition": {
+        "color": [
+          0.2,
+          0.06,
+          0.05
+        ],
+        "rough": 0.88,
+        "surface": "asphalt",
+        "texture_set": "paving_red"
+      },
+      "vertices": 260,
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_5_6.low.glb",
+      "elevation_u_bounds": [
+        139.5749969482422,
+        142.51699829101562
+      ],
+      "node": "paved",
+      "uv1_in_raw": true
+    },
+    {
+      "local_en_bbox": [
+        256.0,
+        -661.3480224609375,
+        512.0,
+        -526.7169799804688
+      ],
+      "material": "sidewalk_paving",
+      "engine_definition": {
+        "color": [
+          0.26,
+          0.255,
+          0.245
+        ],
+        "ground_grime": {
+          "damp_darkening": 0.18,
+          "damp_gloss": 0.15,
+          "damp_threshold": 0.65,
+          "joint_dirt": 0.45
+        },
+        "ground_wear_exclude_local_en": [
+          400.0,
+          -700.0,
+          850.0,
+          -250.0
+        ],
+        "rough": 0.85,
+        "surface": "paving_stones",
+        "texture_set": "paving_20x10_grey"
+      },
+      "vertices": 233,
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_5_6.low.glb",
+      "elevation_u_bounds": [
+        139.9770050048828,
+        142.26400756835938
+      ],
+      "node": "paved",
+      "uv1_in_raw": true
+    },
+    {
+      "local_en_bbox": [
+        277.5639953613281,
+        -768.0,
+        512.0,
+        -511.70001220703125
+      ],
+      "material": "yard_asphalt",
+      "engine_definition": {
+        "color": [
+          0.081,
+          0.08,
+          0.079
+        ],
+        "rough": 0.9,
+        "surface": "asphalt",
+        "texture_set": "asphalt_worn"
+      },
+      "vertices": 570,
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_5_6.low.glb",
+      "elevation_u_bounds": [
+        138.93099975585938,
+        142.15199279785156
+      ],
+      "node": "paved",
+      "uv1_in_raw": true
+    },
+    {
+      "local_en_bbox": [
+        434.5069885253906,
+        -768.6729736328125,
+        499.62701416015625,
+        -730.052001953125
+      ],
+      "material": "yard_concrete",
+      "engine_definition": {
+        "color": [
+          0.3,
+          0.297,
+          0.288
+        ],
+        "rough": 0.85,
+        "sky_occ": [
+          0.5,
+          0.0
+        ],
+        "surface": "concrete",
+        "texture_set": "concrete_cast_5m_joints"
+      },
+      "vertices": 482,
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_5_6.low.glb",
+      "elevation_u_bounds": [
+        139.01600646972656,
+        139.76600646972656
+      ],
+      "node": "paved",
+      "uv1_in_raw": true
+    },
+    {
+      "local_en_bbox": [
+        280.8219909667969,
+        -768.60498046875,
+        362.65399169921875,
+        -734.3610229492188
+      ],
+      "material": "yard_slabs",
+      "engine_definition": {
+        "color": [
+          0.27,
+          0.267,
+          0.258
+        ],
+        "rough": 0.85,
+        "sky_occ": [
+          0.5,
+          0.0
+        ],
+        "surface": "concrete",
+        "texture_set": "concrete_slab_3x1.5"
+      },
+      "vertices": 298,
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_5_6.low.glb",
+      "elevation_u_bounds": [
+        135.5229949951172,
+        137.06900024414062
+      ],
+      "node": "paved",
+      "uv1_in_raw": true
+    }
+  ],
+  "note": "Whole-primitive accessor bounding boxes, not a point query or camera elevation. Recent full file-SHA validation is baseline-pre-import-audit.log. The actual point query remains queued under heavy."
+}

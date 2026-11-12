@@ -92,7 +92,10 @@ def main():
                 if definition['name'] != material:
                     raise RuntimeError('Material index/name mismatch.')
                 definition_key = f'{path.name}:{node}:{primitive}'
-                definitions[definition_key] = dict(gltf_material_index=material_index, definition=definition)
+                if material not in manifest['materials']:
+                    raise RuntimeError(f'Engine material definition missing from manifest: {material}')
+                definitions[definition_key] = dict(gltf_material_index=material_index, definition=definition,
+                                                   engine_definition=manifest['materials'][material])
                 inventory.append(dict(file=path.name, node=node, material=material, primitive=primitive,
                                       definition_key=definition_key,
                                       top_triangles_with_bbox_overlap=len(xy),

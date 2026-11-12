@@ -662,6 +662,24 @@
       "pose_confidence": "B",
       "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
       "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+    },
+    {
+      "id": "asphalt_r10_house2_material",
+      "type": "persp",
+      "kind": "photo_match",
+      "seat": "file",
+      "pos": [
+        -533.32,
+        123.79,
+        147.64
+      ],
+      "look_at": [
+        -512.03,
+        132.68,
+        148.62
+      ],
+      "fov_deg": 60.0,
+      "note": "house bdot:2BE4B431-C793-1BF0-E053-CC2BA8C0D140 (budynek jednorodzinny, h 5.3 m, storeys 2), 29 m from the start route, view +25 deg off the route side"
     }
   ]
 }
