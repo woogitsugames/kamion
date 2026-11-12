@@ -84,3 +84,5 @@ Zapisano kompletną niezależną ocenę baseline w REVIEW-D51-BASELINE.md: G3-A 
 2026-11-12T10:31:09.6211459+01:00: natywna kontrola dwóch najlepszych prób po osi drogi potwierdziła konflikt pionowej projekcji dalszej jezdni i portalu. Zapisałem szerokie, jawnie robocze pasma y, SHA obrazów i minimalną następną próbę pitch przy stałym XY do r4. Nie zmieniam produkcyjnych kamer bez dwóch kotwic. R3 przechodzi do końcowej walidacji po obecnym pojedynczym teście raportu; nie dodaję kolejnej szerokiej siatki.
 
 2026-11-12T10:33:00.3547736+01:00: dodałem sekcję r3 do ADR 0111 z jawnym statusem trwającej walidacji. Wymienia wykonane dowody, brak awansu C, nową ocenę bazową, ograniczenie trendu i pozostałe testy. Nie oznacza zamknięcia rundy.
+
+2026-11-12T10:33:35.8799391+01:00: pojedynczy pytest tests/gis/test_sbs_report.py zakończony exit0, 34 passed in0.31s, heavy zwolniony. Następny task Audit (sesja75884) czeka na heavy. Po testach wprowadziłem wersjonowany rejestr ocen do Data/sbs_recognition.json i odbudowałem własny latest z trzech rund; historyczne wejścia renderów pozostały bez zmian. Wynik r3 FAIL13/11/1, brak akceptacji C.
