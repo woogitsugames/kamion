@@ -146,8 +146,7 @@ namespace PhysicsRunner.Sim
                     var inp = driver.Update(t, 0.01, s);
                     sw.Restart();
                     s.Combo.Step(0.01, s.Body.State, s.TrailerBody.State, inp, s.Ground);
-                    s.Body.Integrate(0.01, s.Combo.TractorForce, s.Combo.TractorTorque);
-                    s.TrailerBody.Integrate(0.01, s.Combo.TrailerForce, s.Combo.TrailerTorque);
+                    ScenarioRunner.StepBodies(s, 0.01);
                     sw.Stop();
                     if (i >= 1000) times[i - 1000] = sw.ElapsedTicks * 1e6 / Stopwatch.Frequency;
                     t += 0.01;

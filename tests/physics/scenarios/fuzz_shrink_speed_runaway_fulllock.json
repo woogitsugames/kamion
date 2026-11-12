@@ -1,0 +1,130 @@
+{
+  "schemaVersion": 1,
+  "id": "fuzz_shrink_speed_runaway_fulllock",
+  "description": "ADR 0158 (F2, M34 fuzz shrink): constant throttle 0.378 + full left lock from 30 km/h, cargo24 on dry asphalt. The combination rolls over at t~4 s (all 10 wheels lift). Before ADR 0158 the runner had no chassis colliders, so the combination fell through the road (CoM y = -3070 m at 30 s, |v| 765 km/h; the reported 275 km/h was the free-fall velocity projected on the tumbling tractor forward axis) while E = KE + PE never grew (no energy injection). Now the tractor/trailer colliders (mirror of the Unity graybox BoxColliders) catch it: it lands on its side, slides and stops.",
+  "spec": "docs/04 s6.9/s6.14 (M34 fuzz shrink), ADR 0158",
+  "combination": "cargo24",
+  "ground": {
+    "gradePercent": 0,
+    "surface": "dry_asphalt"
+  },
+  "initial": {
+    "speedKmh": 30
+  },
+  "duration": 30,
+  "dt": 0.01,
+  "substeps": 4,
+  "driver": {
+    "type": "timeline",
+    "keys": [
+      {
+        "t": 0,
+        "throttle": 0.377795,
+        "brake": 0,
+        "steer": -1,
+        "selector": "D"
+      }
+    ]
+  },
+  "checks": [
+    {
+      "metric": "nan_detected",
+      "status": "WORKING_VALUE",
+      "source": "no NaN",
+      "max": 0
+    },
+    {
+      "metric": "max_pos_jump_m",
+      "status": "WORKING_VALUE",
+      "source": "no teleport |dx_com - v*dt| <= 1e-4 m",
+      "max": 0.0001
+    },
+    {
+      "metric": "max_dv_step_ms",
+      "to": 3.5,
+      "status": "WORKING_VALUE",
+      "source": "driving phase before the rollover: per-step velocity change <= 0.35 m/s (kerb-scenario ceiling)",
+      "max": 0.35
+    },
+    {
+      "metric": "max_dv_step_ms",
+      "status": "DERIVED",
+      "source": "whole run incl. the side impact: <= sqrt(2 g dh) = 4.18 m/s, dh = 0.89 m = trailer CoM drop from its tip-over apex (2.164 m) to lying on its side (1.275 m = half width), ADR 0158; measured 1.83 m/s",
+      "max": 4.2
+    },
+    {
+      "metric": "max_tire_friction_ratio",
+      "status": "WORKING_VALUE",
+      "source": "sqrt(Fx^2+Fy^2) <= mu*Fz, margin 0.001",
+      "max": 1.001
+    },
+    {
+      "metric": "articulation_limit_excess_deg",
+      "status": "WORKING_VALUE",
+      "source": "articulation inside yawLimitDeg=90 (tractor_4x2_generic.vehicle.json:305)",
+      "max": 0
+    },
+    {
+      "metric": "max_fifth_wheel_error_mm",
+      "to": 3.5,
+      "status": "WORKING_VALUE",
+      "source": "driving phase: kingpin constraint error <= 5 mm",
+      "max": 5
+    },
+    {
+      "metric": "max_fifth_wheel_error_mm",
+      "status": "WORKING_VALUE",
+      "source": "whole run: coupling holds through the side impact (measured 24.4 mm peak at landing, 9 mm lying: colliders and the soft kingpin joint are slightly over-constrained), no blow-up; ADR 0158",
+      "max": 50
+    },
+    {
+      "metric": "min_air_all_bar",
+      "status": "WORKING_VALUE",
+      "source": "no negative air pressure",
+      "min": 0
+    },
+    {
+      "metric": "max_speed_kmh",
+      "status": "WORKING_VALUE",
+      "source": "EU limiter 90 km/h (docs/04 s5), same margin as top_speed_flat_comb (+0.5); before ADR 0158: 275.4 km/h",
+      "max": 90.5
+    },
+    {
+      "metric": "min_com_height_m",
+      "status": "WORKING_VALUE",
+      "source": "no fall-through: both CoMs stay above the road (static tractor CoM 1.05 m, lying on its side >= 1.25 m); before ADR 0158: -3070 m",
+      "min": 0.9
+    },
+    {
+      "metric": "max_body_penetration_m",
+      "status": "WORKING_VALUE",
+      "source": "collider corners penetrate the road by <= 2 cm (Baumgarte slop 5 mm), ADR 0158",
+      "max": 0.02
+    },
+    {
+      "metric": "body_contact_s",
+      "status": "WORKING_VALUE",
+      "source": "the rollover ends on the chassis colliders (scenario meaning), ADR 0158",
+      "min": 1
+    },
+    {
+      "metric": "max_free_flight_energy_gain_j",
+      "status": "WORKING_VALUE",
+      "source": "no energy source in free flight: E = KE + PE must not grow between samples, ADR 0158",
+      "max": 1
+    },
+    {
+      "metric": "max_energy_j",
+      "status": "WORKING_VALUE",
+      "source": "throttle 0.378 only replaces losses while upright; nothing may raise E above its t=0 value (2.031 MJ) + 5 % (measured max 2.055 MJ at t~0.5 s, +1.2 %)",
+      "max": 2133000
+    },
+    {
+      "metric": "max_speed_after_ms",
+      "from": 8,
+      "status": "WORKING_VALUE",
+      "source": "the overturned combination slides to a stop (body friction 0.6 = Unity default PhysicsMaterial) and stays at rest",
+      "max": 0.05
+    }
+  ]
+}

@@ -131,6 +131,8 @@ namespace PhysicsRunner.Sim
         public double headingDeg;
         public double x, z;
         public bool parkingBrake;
+        /// <summary>Lifts the whole (equilibrium-placed) vehicle by this height before t = 0, so it starts in free fall [m] (ADR 0158).</summary>
+        public double dropHeight;
     }
 
     public sealed class DriverSpec

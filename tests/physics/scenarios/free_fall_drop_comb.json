@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "id": "free_fall_drop_comb",
+  "description": "ADR 0158 ballistic check: the coupled combination (cargo24) is lifted 1.0 m above its equilibrium pose and released at 30 km/h, no throttle. While nothing touches the ground (no wheel ray, landing gear or collider contact) only gravity, aero drag and internal fifth-wheel forces act: E = KE + PE must not grow and the combined CoM must accelerate at g (drag bound below). Then it lands on its wheels without the chassis touching. Note (ADR 0158 Open): after the 1 m drop the combination rebounds strongly (first apex returns ~80 % of the drop energy) - heavy-landing damping is a separate question, not checked here.",
+  "spec": "ADR 0158 (F2 follow-up): energy and ballistics in free flight",
+  "combination": "cargo24",
+  "ground": {
+    "gradePercent": 0,
+    "surface": "dry_asphalt"
+  },
+  "initial": {
+    "speedKmh": 30,
+    "dropHeight": 1.0
+  },
+  "duration": 6,
+  "dt": 0.01,
+  "substeps": 4,
+  "driver": {
+    "type": "timeline",
+    "keys": [
+      {
+        "t": 0,
+        "throttle": 0,
+        "brake": 0,
+        "steer": 0,
+        "selector": "D"
+      }
+    ]
+  },
+  "checks": [
+    {
+      "metric": "nan_detected",
+      "status": "WORKING_VALUE",
+      "source": "no NaN",
+      "max": 0
+    },
+    {
+      "metric": "free_flight_s",
+      "status": "DERIVED",
+      "source": "the drop really is a flight: free fall of ~0.9 m (wheels hang below the static pose) lasts ~sqrt(2*0.9/9.81) = 0.43 s; require >= 0.3 s",
+      "min": 0.3
+    },
+    {
+      "metric": "max_free_flight_energy_gain_j",
+      "status": "WORKING_VALUE",
+      "source": "no energy source in free flight: E = KE + PE must not grow between samples",
+      "max": 1
+    },
+    {
+      "metric": "max_free_flight_accel_error_ms2",
+      "status": "DERIVED",
+      "source": "|a_com - g| <= aero drag 0.5*rho*CdA*v^2/M: rho 1.2, CdA <= 7.5 m^2 (tractor 6.0 + trailer 1.5, VehicleDefinition/TrailerDefinition), v <= 9 m/s, M >= 30 t -> 0.0122 m/s^2; limit 0.05",
+      "max": 0.05
+    },
+    {
+      "metric": "max_body_penetration_m",
+      "status": "WORKING_VALUE",
+      "source": "lands on the suspension: chassis colliders do not reach the road (bumper bottom 0.35 m)",
+      "max": 0
+    },
+    {
+      "metric": "min_com_height_m",
+      "status": "WORKING_VALUE",
+      "source": "no fall-through: the tractor CoM (1.05 m static) may dip on the bump stops at the 1 m-drop landing (measured 0.737 m) but stays well above the road",
+      "min": 0.5
+    },
+    {
+      "metric": "max_fifth_wheel_error_mm",
+      "status": "WORKING_VALUE",
+      "source": "coupling holds through a 1 m-drop landing (4.4 m/s impact; measured 7.5 mm, driving limit is 5 mm), no blow-up",
+      "max": 15
+    }
+  ]
+}
