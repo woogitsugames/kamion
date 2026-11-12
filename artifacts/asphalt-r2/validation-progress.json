@@ -5,6 +5,10 @@
   "compare": 0,
   "gis_exit": 0,
   "physics_gate3_exit": 1,
-  "resumed_at": "2026-11-12T11:38:29.9623509+01:00",
-  "resumed_reason": "Own waiting wrapper rescheduled after more than one hour without a heavy slot; no running Python task interrupted."
+  "resumed_at": "2026-11-12T11:44:42.9853959+01:00",
+  "resumed_reason": "Switched own waiting wrapper to the current main FIFO slot implementation; no running Python task interrupted.",
+  "resume_history": {
+    "at": "2026-11-12T11:38:29.9623509+01:00",
+    "reason": "Own waiting wrapper rescheduled after more than one hour without a heavy slot; no running Python task interrupted."
+  }
 }
