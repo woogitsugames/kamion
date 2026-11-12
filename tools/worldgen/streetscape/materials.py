@@ -513,7 +513,10 @@ for _k in ("roof_tiles_red", "roof_tiles_brown"):
 # - `plot_lawn`: the mown lawn inside a plot, a draped surface of the grass_verge set. Lighter and yellower than the
 #   rough grass outside the fence (WORKING_VALUE, refs P13 / P19 / C04: a lawn reads ~1.3x the luminance of the
 #   unmown verge next to it).
-M["plot_kit"] = {"color": [1.0, 1.0, 1.0], "rough": 0.85, "texture": "plot_kit", "alpha_cutoff": 0.5}
+# ADR 0124: `vertex_color` - COLOR_0 selects hard surface (a = 0, rgb * 2 = ageing tint) / foliage (a = 1, rgb = normal);
+# `shader` - the importer swaps URP Lit for Kamion/World PlotKit (two-sided panels lit correctly, plants as volumes).
+M["plot_kit"] = {"color": [1.0, 1.0, 1.0], "rough": 0.85, "texture": "plot_kit", "alpha_cutoff": 0.5, "vertex_color": True,
+                 "shader": "Kamion/World PlotKit"}
 M["plot_lawn"] = {"color": [0.150, 0.200, 0.060], "rough": 0.95, "surface": "grass", "texture_set": "grass_verge"}
 
 # ADR 0120, furniture-only alias: the shallow lamp footing keeps the concrete-base pigment,
