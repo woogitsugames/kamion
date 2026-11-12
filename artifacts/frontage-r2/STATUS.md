@@ -16,3 +16,7 @@ NASTĘPNY KROK (po linii `build exit=` w `artifacts/frontage-r2/cycle-0.log`): `
 ## 3. Kod rundy 2 w drzewie (14:0x)
 Baseline build OK (597 s), import + rendery baseline lecą w tle (cycle-0). Kod rundy 2 skopiowany do drzewa: test_g3b_frontage 13 passed. Pliki generated/ i glb z builda baseline NIE są commitowane.
 NASTĘPNY KROK (po `artifacts/frontage-r2/cycle-0.done`): `pwsh artifacts/frontage-r2/run-cycle.ps1 -Name after -Tag 1 ; python artifacts/frontage-r2/make-pairs.py after Low-overcast ; python artifacts/frontage-r2/make-pairs.py after Low-clear ; python artifacts/frontage-r2/stats-diff.py after`
+
+## 4. Build after (15:4x)
+build_world z kodem rundy 2 OK (653 s). Unity (import + rendery after) czeka na slot / PHONE_RUN w tle (cycle-1).
+NASTĘPNY KROK (po `artifacts/frontage-r2/cycle-1.done`): `python artifacts/frontage-r2/make-pairs.py after Low-overcast ; python artifacts/frontage-r2/make-pairs.py after Low-clear ; python artifacts/frontage-r2/stats-diff.py after`
