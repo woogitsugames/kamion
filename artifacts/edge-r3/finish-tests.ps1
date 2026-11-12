@@ -16,9 +16,9 @@ $chunks | ConvertTo-Json -Depth 5 | Set-Content "$PSScriptRoot/cli-chunks-before
 if ($LASTEXITCODE -ne 0) { throw 'Heavy acquisition failed' }
 $code = 1
 try {
-    & uv run --project tools/worldgen python "$PSScriptRoot/scope_generated.py"
-    if ($LASTEXITCODE -ne 0) { throw 'Scope restoration failed' }
-    Add-Content "$PSScriptRoot/STATUS.md" 'Krok 27: poprawny audyt kurtyn zakończony pod heavy; zachowano manifest i SHA wszystkich 64 plików CLI. Odtworzono cudze pola wygenerowane. Zaczynamy jedyny pełny GIS na zakończenie r3, pod tym samym slotem heavy; wynik pozostaje otwarty.'
+    # Test the required fresh whole-world regeneration, then restore unrelated
+    # tracked metadata in post-gis.ps1 after output hashes have been checked.
+    Add-Content "$PSScriptRoot/STATUS.md" 'Krok 27: poprawny audyt kurtyn zakończony pod heavy; zachowano świeży manifest i SHA wszystkich 64 plików CLI. Zaczynamy jedyny pełny GIS na zakończenie r3 pod heavy, wobec faktycznej pełnej regeneracji. Cudze metadane zostaną odtworzone dopiero po teście i kontroli SHA w post-gis.ps1; wynik pozostaje otwarty.'
     git add artifacts/edge-r3/STATUS.md
     git commit -m 'WIP edge r3: freeze CLI chunk hashes and start round-end GIS'
     & uv run --project tools/worldgen python -m pytest tests/gis -q *> "$PSScriptRoot/gis-final.log"
