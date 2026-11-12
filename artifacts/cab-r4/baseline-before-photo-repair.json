@@ -1,0 +1,62 @@
+[
+  {
+    "ProcessId": 77492,
+    "ParentProcessId": 66292,
+    "Name": "pwsh.exe",
+    "CommandLine": "\"C:\\Program Files\\WindowsApps\\OpenAI.CodexPrimaryRuntime.v26-1104-2876-0_26.1104.2876.0_x64__3k8sg7r9htsxt\\dependencies\\native\\powershell\\pwsh.exe\" -NoProfile -ExecutionPolicy Bypass -File artifacts/cab-r4/baseline-sequence.ps1"
+  },
+  {
+    "ProcessId": 76244,
+    "ParentProcessId": 77492,
+    "Name": "pwsh.exe",
+    "CommandLine": "\"C:\\Program Files\\WindowsApps\\OpenAI.CodexPrimaryRuntime.v26-1104-2876-0_26.1104.2876.0_x64__3k8sg7r9htsxt\\dependencies\\native\\powershell\\pwsh.exe\" -NoProfile -ExecutionPolicy Bypass -File artifacts/cab-r4/capture-0112.ps1 -Stage baseline"
+  },
+  {
+    "ProcessId": 48884,
+    "ParentProcessId": 76244,
+    "Name": "pwsh.exe",
+    "CommandLine": "\"C:\\Program Files\\WindowsApps\\OpenAI.CodexPrimaryRuntime.v26-1104-2876-0_26.1104.2876.0_x64__3k8sg7r9htsxt\\dependencies\\native\\powershell\\pwsh.exe\" scripts/visual-qa.ps1 -Scene WorldC -Tier Low -Lighting dusk -Width 1920 -Height 1080 -Cameras cab-driver,cab-dash,cab-mirrors-left,cab-mirrors-right,cab-mirror-front,cab-grain,cab-seat-entry -OutputDir C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-cab/artifacts/cab-r4/baseline/Low-dusk"
+  },
+  {
+    "ProcessId": 53932,
+    "ParentProcessId": 48884,
+    "Name": "Unity.exe",
+    "CommandLine": "\"C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.28f1\\Editor\\Unity.exe\" -batchmode -projectPath C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-cab\\game -logFile C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-cab\\artifacts\\logs\\visual-qa-WorldC-20261112-124029.log -buildTarget Android -quit -executeMethod Game.Editor.VisualQA.VisualQaRunner.RenderControlCameras -qaScene WorldC -qaWidth 1920 -qaHeight 1080 -qaTier Low -qaOutput C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-cab\\artifacts\\cab-r4\\baseline\\Low-dusk -qaLighting dusk -qaCameras cab-driver,cab-dash,cab-mirrors-left,cab-mirrors-right,cab-mirror-front,cab-grain,cab-seat-entry"
+  },
+  {
+    "ProcessId": 47964,
+    "ParentProcessId": 53932,
+    "Name": "UnityCrashHandler64.exe",
+    "CommandLine": "\"C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.28f1\\Editor\\Data\\Tools\\UnityCrashHandler64.exe\" --attach 53932 2781727690752"
+  },
+  {
+    "ProcessId": 49256,
+    "ParentProcessId": 53932,
+    "Name": "conhost.exe",
+    "CommandLine": "\\??\\C:\\Windows\\system32\\conhost.exe 0x4"
+  },
+  {
+    "ProcessId": 46032,
+    "ParentProcessId": 53932,
+    "Name": "dotnet.exe",
+    "CommandLine": "\"C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.28f1\\Editor\\Data\\NetCoreRuntime\\dotnet.exe\" \"exec\" \"C:/Program Files/Unity/Hub/Editor/6000.3.28f1/Editor/Data/DotNetSdkRoslyn/VBCSCompiler.dll\""
+  },
+  {
+    "ProcessId": 58716,
+    "ParentProcessId": 53932,
+    "Name": "UnityAutoQuitter.exe",
+    "CommandLine": "\"C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.28f1\\Editor\\Data\\Tools\\UnityAutoQuitter.exe\" \"53932\" \"46032\""
+  },
+  {
+    "ProcessId": 76676,
+    "ParentProcessId": 53932,
+    "Name": "UnityPackageManager.exe",
+    "CommandLine": "\"C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.28f1\\Editor\\Data\\Resources\\PackageManager\\Server\\UnityPackageManager.exe\" \"server\" \"-s\" \"53932\" \"--ipc-path\" \"Unity-Upm-53932\" \"-l\" \"2\""
+  },
+  {
+    "ProcessId": 26972,
+    "ParentProcessId": 76676,
+    "Name": "conhost.exe",
+    "CommandLine": "\\??\\C:\\Windows\\system32\\conhost.exe 0x4"
+  }
+]
