@@ -53,7 +53,7 @@ def test_coated_cap_only_on_spans_and_textured():
     assert 3.0 <= r / g <= 6.0 and 0.2126 * r + 0.7152 * g + 0.0722 * b <= 0.09
     assert S.CAP_COAT_GRIME[0] > S.CAP_COAT_GRIME[1] > 0
     src = (ROOT / "tools/worldgen/roads/meshing.py").read_text(encoding="utf-8")
-    assert "capm = br & ~" in src                                       # walled ramps keep the bare concrete cap
+    assert "capm = capm & ~" in src                                      # walled ramps keep the bare concrete cap
 
 
 def test_mapped_barrier_on_screened_deck_edge_is_not_rebuilt():

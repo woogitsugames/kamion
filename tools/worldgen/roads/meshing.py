@@ -98,8 +98,6 @@ def build_ribbon(buf: MeshBuf, net, c, coarse=False):
     _, N = c.line.frame(st)
     hw = c.hw_at(st)
     br = c.interp(c.bridge.astype(float), st) > 0.5
-    _wl = c.meta.get("walled")      # ADR 0146: stations of the spans proper (coated cap), not of the walled ramps
-    capm = br & ~(c.interp(_wl.astype(float), st) > 0.5) if _wl is not None else br
     q = lat_fracs(c, coarse)
     lat = hw[:, None] * q[None, :]
     XY = P[:, None, :] + N[:, None, :] * lat[..., None]
@@ -165,6 +163,10 @@ def _profile_rows(kind, h, w, depth, mat, coarse):
 
 def build_side_strip(buf, c, st, side, sgn, P, N, hw, br, coarse):
     params = [side_params(c, side, s) for s in st]
+    _wl = c.meta.get("walled")      # ADR 0146: stations of the spans proper (coated cap), not of the walled ramps
+    capm = np.asarray(br, bool) if br is not None else np.zeros(len(st), bool)
+    if _wl is not None:
+        capm = capm & ~(c.interp(_wl.astype(float), st) > 0.5)
     kinds = {p[0] for p in params}
     # inner side of curves: compress the profile so it does not fold
     kap = c.line.curvature(st) * sgn
