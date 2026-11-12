@@ -73,3 +73,5 @@ Krok 14i: zapisuję do WIP własne GLB, meta i spec pierwszego wariantu EC wraz 
 Krok 15: jednostki podpomostu i EC wykonane kolejno, osobne pliki i logi artifacts/landmarks-r3/corrected-world.log.pier-units oraz artifacts/landmarks-r3/corrected-world.log.units; testy wygenerowanych wyjść celowo wyłączone do czasu regeneracji. Pod tym samym heavy rozpoczyna się generator, bez równoległego Pythona tej sesji.
 
 Krok 16: generator korekty i dwa osobno wykonane pliki testów EC/podpomostu zakończone; brak fallback=True. Następny krok: import i pełny zestaw czterech warunków after-corrected, bez zmiany kamer baseline.
+
+Krok 17: audyt poprawionego wariantu gotowy. 7283 niepodpomostowe prymitywy zachowane bajtowo we wszystkich128 plikach; roads_qa i125468 nie-EC instancji identyczne. Zmiana definicji materiałów ograniczona do color pier_yellow. Osobny audit_piers.py potwierdza baseline spec przez jego SHA z zachowanego QA; pomosty/decks i brak schodów zachowane, plamy/fazy wyłączone, weather zostaje. EC LOD0 676/636, LOD1 292/274; końcowy budżet kamer nadal do oceny po renderze.
