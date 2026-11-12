@@ -245,14 +245,19 @@ def ground_masks(src, origin, hf, dist_road, forests):
     G = PV.rasterize_polys(forests, hf).astype(float)
     lawns = [PV._poly_local(a["geometry"]["coordinates"], origin) for a in src["osm"]["areas"]
              if a["tags"].get("landuse") == "grass" or a["tags"].get("leisure") in ("park", "playground", "pitch")]
-    mown = PV.rasterize_polys(lawns, hf) | (dist_road < 4.0)
+    mapped_lawn = PV.rasterize_polys(lawns, hf)
     east = hf.x0 + np.arange(W)
     north = hf.y1 - np.arange(H)
-    dry = metric_patch_field(east, north, 6.0, 881)
-    # Existing BDOT / OSM classes constrain the variation: managed turf has only
-    # small dry patches, while unmanaged grass has larger straw / tuft regions.
-    # WORKING_VALUE moisture / mowing appearance, not surveyed bare-foot paths.
-    B = np.where(mown, dry * .18, .55 + dry * .45)
+    # ADR0109 r1: road proximity is not evidence of a uniformly maintained lawn.
+    # Keep the mapped lawns quieter, but let the verges retain metre-scale
+    # patches of green regrowth and straw. The secondary field breaks the large
+    # cell shape without leaf-sized procedural noise. All values WORKING_VALUE,
+    # not surveyed moisture, salt damage or pedestrian paths.
+    large = metric_patch_field(east, north, 8.0, 881)
+    small = metric_patch_field(east, north, 2.5, 883)
+    dry = np.clip((.8 * large + .2 * small - .5) * 2.4 + .5, 0, 1)
+    B = np.where(mapped_lawn, .06 + dry * .40,
+                 np.where(dist_road < 4.0, .08 + dry * .84, .25 + dry * .75))
     bare_polys = [PV._poly_local(f["geometry"]["coordinates"], origin) for f in src["bdot10k"]["OT_PTNZ_A"]]
     bare_polys += [PV._poly_local(a["geometry"]["coordinates"], origin) for a in src["osm"]["areas"]
                    if a["tags"].get("landuse") in ("construction", "brownfield")]

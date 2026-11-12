@@ -1,0 +1,38 @@
+{
+    "branch":  "gpt-edge-r1",
+    "code_commit":  "97da2435c95740a800276ef32569709a036fc182",
+    "source_sha256":  "148c01fafaa5d643b413d44d003ab6358ae2dbf06f0ca9a3f0f2b6de9a1c6c8c",
+    "editmode":  {
+                     "result":  "Passed",
+                     "xml":  "tests/editmode-20261111-230611.xml",
+                     "skipped":  0,
+                     "failed":  0,
+                     "passed":  267
+                 },
+    "gis":  {
+                "log":  "gis-round-final.log",
+                "passed":  492,
+                "xfailed":  1,
+                "heavy_pool_released":  true,
+                "unchanged_stale_inputs":  "fidelity-staleness.json",
+                "duration_seconds":  658.63,
+                "failure":  "test_road_fidelity.py::test_report_not_stale",
+                "failed":  1
+            },
+    "scoped_far_field_tests":  {
+                                   "passed":  5,
+                                   "log":  "gis-scoped-far-field.log"
+                               },
+    "renders":  {
+                    "low_budget_failures":  0,
+                    "before_png":  356,
+                    "paired_cameras":  356,
+                    "comparison_width_px":  960,
+                    "after_png":  356,
+                    "low_pairs":  178,
+                    "photo_pairs":  136
+                },
+    "quality":  "PARTIAL: H1 general background appearance remains open; road continuations are source approximations",
+    "device_gpu":  "UNVERIFIED; no phones used",
+    "next_round":  "r2: fix zero-height LoD1 ingestion; feasibility audit found 5390 direct ring matches"
+}

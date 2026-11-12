@@ -1,0 +1,219 @@
+--- a/tools/worldgen/streetscape/gate.py
++++ b/tools/worldgen/streetscape/gate.py
+@@ -405,6 +405,7 @@
+                 rep["stale"].append(o["id"] + ":island")
+         # --- barriers: housing on the median kerb, boom over each lane, raised (MA-003)
+         bars = []
++        wear_cases = []
+         strips = {}
+         clos = {}
+         for (c, s0, g), name in (((ce, se, ge), "entry"), ((cx, sx, gx), "exit")):
+@@ -428,6 +429,7 @@
+             side_y = np.array([-math.sin(yaw_b), math.cos(yaw_b)])            # prototype +y in E, N
+             t_lane = c.line.frame(s)[0] * g                                   # away from the split node along the lane
+             travel_dir = t_lane if name == "exit" else -t_lane                # entry traffic runs toward the node
++            wear_cases.append({"chain": c, "station": s, "travel": travel_dir, "name": name, "src": src})
+             pl.add("barrier_boom", base + side_y * LP.BOOM_SIDE, yaw_b, z=zb + LP.BOOM_HINGE[2], src=f"{src}:{name}:boom")
+             pl.items[-1]["barrier"] = {"L": LP.BOOM_L, "open_deg": LP.BOOM_OPEN_DEG, "lane": name,
+                                        "travel": 1.0 if float(np.dot(travel_dir, side_y)) >= 0 else -1.0}
+@@ -558,6 +560,9 @@
+                     if not (p_.mat == "decal_patch" and float(np.hypot(*(p_.V[:, :2].mean(axis=0) - m))) < 14.0)]
+             rep["patches_removed_at_gate"] = len(lin.buf.parts) - len(keep)
+             lin.buf.parts[:] = keep
++        from .gate_wear import emit as paired_tyre_tracks
++        paired_tyre_tracks(lin.buf, wear_cases, (graph["bbox"][2]-graph["bbox"][0])*.5,
++                           [isl_poly]+[st_["poly"] for st_ in strips.values()], rep)
+         rep["applied"].append({"id": o["id"], "node": o["node"], "fence_m": round(total, 1),
+                                "island_m2": round(float(isl_poly.area), 1) if isl_poly is not None else 0.0,
+                                "gatehouse": [round(float(v), 2) for v in placed[0]] if placed is not None else None,
+--- /dev/null
++++ b/tools/worldgen/streetscape/gate_wear.py
+@@ -0,0 +1,69 @@
++"""Gate approach tyre decals (ADR0099).
++Straight paired approach strips follow actual gate-builder chains/travel, never procedural arcs.
++All dimensions/strength are WORKING_VALUE appearance rules, not measured tyre evidence.
++"""
++import numpy as np
++import shapely
++from shapely.geometry import Polygon
++from roads.build_world import chunk_of
++from .furniture import SurfaceTop
++from .bus_stop_wear import _height, _road_covers_polygon as _covered
++
++SPACING_M, WIDTH_M, LENGTH_M, STRENGTH, LIFT_M = 1.6, .20, 4.2, .9, .005
++CLEARANCE_M = .15
++
++
++def emit(buf,cases,half_m,forbidden,report):
++    rep=report.setdefault("tyre_tracks",{"applied":[],"rejected":[]})
++    top=SurfaceTop([p for p in buf.parts if p.layer=="road" and p.mat in ("road_asphalt","road_asphalt_new")],layers=("road",))
++    groups=set()
++    for p in buf.parts:
++        if p.layer=="markings" and p.mat=="decal_tyre":
++            centers=p.V[p.T,:2].mean(axis=1);ci,cj=chunk_of(centers[:,0],centers[:,1],half_m)
++            groups.update(zip(ci.tolist(),cj.tolist()))
++    paint=[Polygon(p.V[t,:2]) for p in buf.parts if p.layer=="markings" and p.mat.startswith("marking_") for t in p.T]
++    for case in cases:
++        c,s=case["chain"],case["station"]
++        tangent=c.line.frame(s)[0];sign=1 if float(np.dot(tangent,case["travel"]))>0 else -1
++        stations=s-sign*np.linspace(5.,.8,9)
++        center=np.asarray(c.line.offset_point(s-sign*2.9,0.))
++        ci,cj=chunk_of(center[0:1],center[1:2],half_m);anchor=(int(ci[0]),int(cj[0]))
++        pending=[];reason=None
++        if anchor not in groups:reason="would_add_material_group"
++        if reason is None:
++            for side in (-1,1):
++                lat=side*SPACING_M*.5
++                a=np.array([c.line.offset_point(float(st),lat+WIDTH_M*.5) for st in stations])
++                b=np.array([c.line.offset_point(float(st),lat-WIDTH_M*.5) for st in stations])
++                points=np.vstack([a,b]);n=len(stations)
++                triangles=np.array([(i,i+1,n+i+1) for i in range(n-1)]+[(i,n+i+1,n+i) for i in range(n-1)])
++                polygon=Polygon(np.vstack([a,b[::-1]]))
++                clearance=polygon.buffer(CLEARANCE_M,join_style="mitre")
++                if not polygon.is_valid or any(clearance.intersects(p) for p in forbidden if p is not None):reason="kerb_island_clearance";break
++                if any(polygon.intersects(p) for p in paint):reason="paint_overlap";break
++                if not _covered(top,clearance):reason="whole_footprint_outside_asphalt";break
++                test=np.vstack([points,points[triangles].mean(axis=1)])
++                ci,cj=chunk_of(test[:,0],test[:,1],half_m)
++                if any((int(i),int(j))!=anchor for i,j in zip(ci,cj)):reason="cross_chunk_pair";break
++                try:z=np.array([_height(top,q) for q in test])
++                except ValueError as exc:reason=str(exc);break
++                if np.ptp(z)>.20:reason="road_height_discontinuity";break
++                vertices=np.column_stack([points,z[:len(points)]+LIFT_M])
++                tri=vertices[triangles[0]]
++                if np.cross(tri[1]-tri[0],tri[2]-tri[0])[2]<0:triangles=triangles[:,[0,2,1]]
++                ss=np.linspace(0,LENGTH_M,n)
++                uv=np.column_stack([np.tile(ss,2),np.repeat([0.,1.],n)])
++                uv1=np.column_stack([np.full(len(points),LENGTH_M),np.full(len(points),STRENGTH)])
++                pending.append((vertices,uv,triangles,uv1,side))
++        if reason is not None:
++            rep["rejected"].append({"source":case["src"],"lane":case["name"],"reason":reason})
++            continue
++        # Pair-atomic: never leave a single unsupported wheel strip.
++        for vertices,uv,triangles,uv1,side in pending:
++            buf.add("markings","decal_tyre",vertices,uv,triangles,UV1=uv1,src=f"tyre:{case['src']}:{case['name']}:{side}")
++        rep["applied"].append({"source":case["src"],"lane":case["name"],"working_value":True,
++                               "chunk":list(anchor),"spacing_m":SPACING_M,"width_m":WIDTH_M,"length_m":LENGTH_M,
++                               "strength":STRENGTH,"lift_m":LIFT_M,"clearance_m":CLEARANCE_M,
++                               "triangles":32,"vertices":36,"new_source_material_groups":0,
++                               "center_en":center.tolist(),"travel_en":np.asarray(case["travel"]).tolist()})
++    return rep
+--- a/tools/worldgen/streetscape/bus_stop_wear.py
++++ b/tools/worldgen/streetscape/bus_stop_wear.py
+@@ -7,6 +7,7 @@
+ from __future__ import annotations
+ 
+ import math
++import shapely
+ import numpy as np
+ from shapely.geometry import Polygon
+ from roads import decals as DC
+@@ -38,6 +39,17 @@
+     if float(np.ptp(z)) > .02:
+         raise ValueError("ambiguous_road_levels")
+     return float(z.mean())
++
++
++def _road_covers_polygon(top, polygon):
++    """Exact plan-area coverage, not only vertex/centroid sampling."""
++    lo=np.floor(np.asarray(polygon.bounds[:2])/top.CELL).astype(int)
++    hi=np.floor(np.asarray(polygon.bounds[2:])/top.CELL).astype(int)
++    ids=set()
++    for i in range(lo[0],hi[0]+1):
++        for j in range(lo[1],hi[1]+1):ids.update(top.grid.get((i,j),[]))
++    support=shapely.union_all([Polygon(top.A[i,:,:2]) for i in ids])
++    return polygon.difference(support).area <= 1e-8
+ 
+ 
+ def emit(buf, candidates, report):
+@@ -74,6 +86,8 @@
+             polygon = Polygon(points[1:])
+             if not polygon.is_valid or any(polygon.intersects(p) for p in paint):
+                 raise ValueError("paint_overlap_or_invalid_polygon")
++            if not _road_covers_polygon(top, polygon):
++                raise ValueError("outside_driveable_asphalt")
+             triangles = np.array([(0, 1+k, 1+(k+1) % 9) for k in range(9)])
+             tri = points[triangles]
+             samples = np.vstack([points, tri.mean(axis=1), (tri[:, 0]+tri[:, 1])/2,
+--- /dev/null
++++ b/tests/gis/test_gate_wear.py
+@@ -0,0 +1,63 @@
++"""Actual gate decal footprint, source preservation and pair-atomicity guards."""
++from pathlib import Path
++import importlib.util
++import sys
++from types import SimpleNamespace
++import numpy as np
++from shapely.geometry import box
++ROOT=Path(__file__).resolve().parents[2]
++sys.path.insert(0,str(ROOT/'tools/worldgen'))
++from streetscape import gate_wear as G
++
++def part(layer,mat,v,t):return SimpleNamespace(layer=layer,mat=mat,V=np.asarray(v,float),T=np.asarray(t,int))
++class Buffer:
++ def __init__(self,tyre=True):
++  self.parts=[part('road','road_asphalt',[(0,-20,0),(20,-20,.2),(0,0,0),(20,0,.2)],[(0,1,2),(1,3,2)])]
++  if tyre:self.parts.append(part('markings','decal_tyre',[(2,-3,0),(3,-3,0),(2,-2,0)],[(0,1,2)]))
++ def add(self,layer,mat,v,uv,t,UV1=None,src=None):
++  p=part(layer,mat,v,t);p.UV=np.asarray(uv);p.UV1=np.asarray(UV1);p.src=src;self.parts.append(p)
++class Line:
++ def __init__(self,n=-10):self.n=n
++ def frame(self,s):return np.array([1.,0.]),np.array([0.,1.])
++ def offset_point(self,s,lat):return np.array([s,self.n+lat])
++def cases(n=-10):return [dict(chain=SimpleNamespace(line=Line(n)),station=10.,travel=np.array([1.,0.]),name='entry',src='gate:verified-source')]
++
++def test_supported_pair_is_deterministic_and_draped_without_road_changes():
++ a,b=Buffer(),Buffer();road=a.parts[0].V.copy();x=G.emit(a,cases(),1024,[],{});y=G.emit(b,cases(),1024,[],{})
++ assert x==y and len(x['applied'])==1 and not x['rejected']
++ assert np.array_equal(a.parts[0].V,road)
++ assert sum(len(p.T) for p in a.parts[2:])==32
++ assert sum(len(p.V) for p in a.parts[2:])==36
++ for p in a.parts[2:]:
++  assert p.mat=='decal_tyre' and np.allclose(p.V[:,2],p.V[:,0]*.01+.005)
++  assert np.isfinite(p.UV).all() and np.all(p.UV1[:,1]==.9)
++  assert np.all(np.cross(p.V[p.T[:,1]]-p.V[p.T[:,0]],p.V[p.T[:,2]]-p.V[p.T[:,0]])[:,2]>0)
++ assert x['applied'][0]['new_source_material_groups']==0
++
++def test_island_clearance_rejects_entire_pair():
++ b=Buffer();x=G.emit(b,cases(),1024,[box(6,-11,7,-10.7)],{})
++ assert not x['applied'] and x['rejected'][0]['reason']=='kerb_island_clearance' and len(b.parts)==2
++
++def test_full_footprint_support_not_only_center_is_required():
++ b=Buffer();b.parts[0].V[:,0]=np.where(b.parts[0].V[:,0]==0,8,20)
++ x=G.emit(b,cases(),1024,[],{})
++ assert not x['applied'] and x['rejected'][0]['reason']=='whole_footprint_outside_asphalt' and len(b.parts)==2
++
++def test_no_new_material_group_is_enforced():
++ b=Buffer(tyre=False);x=G.emit(b,cases(),1024,[],{})
++ assert not x['applied'] and x['rejected'][0]['reason']=='would_add_material_group' and len(b.parts)==1
++
++def test_multiple_road_levels_are_not_silently_flattened():
++ b=Buffer();b.parts.append(part('road','road_asphalt',b.parts[0].V+[0,0,2],b.parts[0].T))
++ x=G.emit(b,cases(),1024,[],{})
++ assert not x['applied'] and x['rejected'][0]['reason']=='ambiguous_road_levels' and len(b.parts)==3
++
++def test_existing_paint_is_preserved():
++ b=Buffer();b.parts.append(part('markings','marking_white',[(6,-11,0),(7,-11,0),(6,-10,0)],[(0,1,2)]))
++ x=G.emit(b,cases(),1024,[],{})
++ assert not x['applied'] and x['rejected'][0]['reason']=='paint_overlap' and len(b.parts)==3
++
++def test_chunk_crossing_pair_is_rejected_atomically():
++ b=Buffer();b.parts[0].V[:,1]=np.where(b.parts[0].V[:,1]==0,20,-20)
++ x=G.emit(b,cases(n=-.05),1024,[],{})
++ assert not x['applied'] and x['rejected'][0]['reason']=='cross_chunk_pair' and len(b.parts)==2
+--- a/tests/gis/test_bus_stop_wear.py
++++ b/tests/gis/test_bus_stop_wear.py
+@@ -81,3 +81,13 @@
+     assert S._match({"public_transport":"stop_position","bus":"yes"},S.OSM_NODE_KEYS)
+     assert not S._match({"public_transport":"platform"},S.OSM_NODE_KEYS)
+     assert S._tags({"public_transport":"stop_position","bus":"yes","ref":"464"})["bus"]=="yes"
++
++
++def test_tiny_interior_road_hole_rejects_whole_oil_fan():
++    buf=Buffer();roads=[]
++    for x0,y0,x1,y1 in [(0,-20,10.09,0),(10.11,-20,20,0),(10.09,-20,10.11,-10.03),(10.09,-10.01,10.11,0)]:
++        roads.append(part("road","road_asphalt",[(x0,y0,x0*.01),(x1,y0,x1*.01),(x1,y1,x1*.01),(x0,y1,x0*.01)],[(0,1,2),(0,2,3)]))
++    buf.parts=roads+[buf.parts[1]]
++    result=B.emit(buf,[stop()],{})
++    assert not result["applied"] and result["rejected"][0]["reason"]=="outside_driveable_asphalt"
++    assert len(buf.parts)==5
