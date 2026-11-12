@@ -11,6 +11,7 @@ parser=argparse.ArgumentParser()
 parser.add_argument('--after-root',default='probe-a')
 parser.add_argument('--snapshot',default='candidate-a')
 parser.add_argument('--before-root',default='before',help='Explicit ablation baseline; final budget still uses before')
+parser.add_argument('--native-crop',action='store_true',help='Fixed470px subset of each ROI, without crop resampling')
 args=parser.parse_args()
 snapshot_path=here/('snapshot-'+args.snapshot)/'sha256.json'
 snapshot=json.loads(snapshot_path.read_text())
@@ -18,11 +19,14 @@ stats=runpy.run_path(str(here/'review_images.py'))['stats']
 reference=json.loads((here/'berberis-reference.json').read_text())
 photo=Image.open(root/reference['local_photo']).convert('RGB')
 evidence_label=args.after_root if args.before_root=='before' else args.after_root+'-vs-'+args.before_root
+if args.native_crop:
+    evidence_label+='-native'
 out=here/('berberis-review-'+evidence_label)
 out.mkdir(exist_ok=True)
 rois={'g3a-rondo-bie-approach':(0,.54,.27,.69),
       'photo-biezenstwa-ground':(.72,.54,1,.73)}
 costs=[]
+actual_rois={}
 for tier in ('Low','High'):
     for lighting in ('overcast','clear'):
         group=tier+'-'+lighting
@@ -49,14 +53,23 @@ for tier in ('Low','High'):
                 full=frame.copy();full.thumbnail((470,220));sheet.paste(full,(x,475))
                 draw.text((x+3,452),label+' '+group+' '+camera,fill='white')
                 w,h=frame.size
-                crop=frame.crop(tuple(round(v*s) for v,s in zip(roi,(w,h,w,h))))
-                crop.thumbnail((470,290));sheet.paste(crop,(x,730))
-                draw.text((x+3,707),label+' fixed crop; no semantic segmentation',fill='white')
+                box=list(round(v*s) for v,s in zip(roi,(w,h,w,h)))
+                if args.native_crop:
+                    if camera=='g3a-rondo-bie-approach':
+                        box[2]=min(box[2],box[0]+470)
+                    else:
+                        box[0]=max(box[0],box[2]-470)
+                actual_rois[group+'/'+camera]=box
+                crop=frame.crop(box)
+                if not args.native_crop:
+                    crop.thumbnail((470,290))
+                sheet.paste(crop,(x,730))
+                draw.text((x+3,707),label+(' native1:1 pixels' if args.native_crop else ' fixed crop')+'; no segmentation',fill='white')
             draw.text((5,1035),'Same render pose before/after. Reference pose/season differ. Not measured dimensions or GPU time.',fill='white')
             sheet.save(out/(group+'-'+camera+'.jpg'),quality=93)
 low=[r for r in costs if r['group'].startswith('Low-')]
 result=dict(snapshot_source_sha=snapshot['source_sha'],after_root=args.after_root,before_root=args.before_root,
-    reference=reference,fixed_rois=rois,all_probe_costs=costs,
+    reference=reference,fixed_rois=rois,actual_crop_pixels=actual_rois,native_crop=args.native_crop,all_probe_costs=costs,
     maximum_low_draw_delta=max(r['delta_draws'] for r in low),
     maximum_low_triangle_delta_percent=max(r['delta_triangles_percent'] for r in low),
     note='Limited probe only; static/instance draws separate, integer trisK precision. No full-camera acceptance or GPU timing. Ablation baseline is not the final budget baseline.')

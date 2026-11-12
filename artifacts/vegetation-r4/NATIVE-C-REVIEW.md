@@ -1,0 +1,11 @@
+# Uzupełniający odczyt C w pikselach wyjściowego PNG
+
+Autor obejrzał wszystkie osiem arkuszy berberis-review-probe-c-vs-probe-b-native: dwa kadry, Low/High, clear/overcast. To wycinki z już istniejących PNG B2 i C, nie nowe rendery. Wycinek ma do 470 pikseli szerokości i jest wklejony bez dodatkowego przeskalowania. Arkusz nadal ma 960 px. Są to piksele pliku wyjściowego, nie gwarancja wewnętrznej rozdzielczości renderowania lub braku wcześniejszego upscalingu. Dokładne prostokąty zapisano w probe-c-vs-probe-b-native-comparison.json; przy podejściu do ronda zachowano lewą część pierwotnego ROI, a przy widoku z gruntu prawą.
+
+Bez pomniejszenia wycinka nadal widać płaski brunatny środek pomiędzy elementami pokrywy C. W High detale są czytelniejsze, lecz nie stają się zwartą strukturą liści; w Low część pozostaje ciemnymi punktami. Wniosek C pozostaje PARTIAL dla pokrywy i FAIL końcowego realizmu. Nie wynikał wyłącznie z pomniejszenia wcześniejszych arkuszy. Nie jest to nowa niezależna recenzja ani ocena D. Krytyk obejrzał wcześniej wszystkie 16 standardowych arkuszy C i podtrzymywał ten sam werdykt.
+
+Helper review_berberis.py przyjmuje opcję --native-crop. D może później otrzymać osobne standardowe porównania baseline–D, C–D oraz uzupełniające C–D-native. Te same kamery i PNG nie stają się przez to dodatkowymi pomiarami lub testami. Podstawą budżetu pozostają rzeczywiste wiersze stats z przechwycenia, bez podwójnego liczenia.
+
+Sprawdzono też importowany materiał i teksturę C na dysku, aby nie przypisywać problemu błędnemu powtarzaniu lub zgubionemu powiązaniu. imported-hedge-texture-check.json potwierdza: BaseMap GUID zgadza się z meta właściwego PNG, skala jest 1 × 1, wrap U/V/W = Repeat, alpha-test i próg 0,5 są ustawione, a zachowanie pokrycia mipów włączone. Importowany PNG ma identyczne bajty z plikiem źródłowym. GUID shaderu odpowiada URP/Lit w lokalnym PackageCache, a nie własnemu WorldPBR. Nie ma podstaw do naprawiania tych plików na podstawie hipotezy Clamp lub brakującej tekstury.
+
+To kontrola plików importu, nie introspekcja wartości materiału w działającej scenie ani pomiar GPU. Nie edytowano importera, InstanceImporter, materiałów, shaderów, tekstur lub źródła D. D nadal wymaga własnych testów, generatora, importu i obrazów.
