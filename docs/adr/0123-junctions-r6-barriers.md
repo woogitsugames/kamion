@@ -99,6 +99,27 @@ worktree, `renders_b*_*`, `renders_t*_*` = iteracja materiału, `ortho/`, `refs/
 - `overrides.yaml`: `bridge_style.lamps`, `hero_bridge.pier_lines_en`, `dk8-ramp-split-barrier-n`, wielokąt `putry-n-median-nose`.
 
 ## Wynik
-Liczby końcowe (build b3 względem m0): patrz `artifacts/junctions-r6/STATUS.md`, sekcja „RAPORT KOŃCOWY”. Stan pośredni b2
-(bez `bridge_kerb`, bez flagi cienia poręczy w zestawie instancji): Low clear 102 kamery max +0 draws, tris max +0,7 %; High overcast
-+0 / +0,8 %; fidelity p50 0,36 / p95 2,304 (= main); kluczowe testy 110 passed.
+Buildy: m0 = main 3540bbdf (baza), b3 = pkt 1–9, b4/b5 = pkt 10–11 (+ scalenie main s11), b6 = pkt 12, **b7 = b6 po scaleniu main
+bedc52d1 (s13)** — stan do scalenia. Dowody: `artifacts/junctions-r6/` (`renders_b7_*` 4 zestawy × 102 kamery, `renders_b7sbs_low_overcast`,
+`pairs_b7/` 24, `pairs_b7sbs/` 20 par zdjęcie | render, `view/b7_{photo,ba}_sheet.jpg`, `logs/b7_*`, `swept_b7/`).
+
+| miara | wynik |
+|---|---|
+| EditMode / PlayMode (`WorldCRouteTests|WorldCBarrierTests`) | b7: **403/403**, **3/3** (b6: 317/317, 3/3) |
+| pytest `tests/gis tests/physics tests/gate3` | b6: 666 passed, 1 xfailed; b7: B7_PYTEST |
+| fidelity krawędzi p50 / p95 | b6: 0,36 / 2,304 (= main); b7: B7_FID |
+| swept path (min opona / prop) | b6: G3-A lane −1,12 / 0,70, wide −0,10 / 0,69; G3-B −0,14 / 0,86–0,88; RING-B +1,75 / 2,41 (v15), +1,61 / 2,28 (v25) — opony = main, RING-B prop 1,31 → 2,41 / 1,79 → 2,28; b7: B7_SWEPT |
+| budżet Low clear, 102 kamery (drawsEst edytora, bez telefonu) | b3 vs m0 +0 draws / tris ≤ +0,7 %; b6 vs b5 **+0 / +0,0 %**; b7 vs b6 max +4 draws, tris ≤ +3,7 % (treść scalona z main, nie ta gałąź) |
+| szachownica cienia na kapie (`r4_deck_bz_eye2`) | nie ma (b3…b7 obejrzane) |
+| taśma / asfalt (sRGB), pomost: Low clear / High overcast | m0 1,36 / 1,18 → b3 1,38–1,41 / 1,30–1,45 (zdjęcia 1,53 / 1,47) |
+| kapa / asfalt | m0 1,64 / 1,77 → b3 1,35 / 1,46–1,49 (zdjęcia 1,43–1,56 / 1,48) |
+| lico krawężnika → lico taśmy (GLB) | 0,65 → ~0,45 m |
+| `guardrails_m.pier` | 132 → 172 m |
+| latarnie na pomostach Bieżeństwa | 15 pojedynczych na kapach → 10 podwójnych między pomostami |
+
+**Kryterium D51 (czy kierowca rozpozna węzeł): TAK** — w parach SBS (2818555625124739, 201270605169291, 1398898753813071,
+178689077481862) układ jest ten sam co na zdjęciach: wiadukt z czerwonym gzymsem i poręczą, rząd filarów przy krawędzi wyspy, asfalt
+do krawężnika wyspy, taśma W za krawężnikiem, nasyp z kruszywa, tabliczka z nazwą ronda, wieżowiec w tle. Różnice, które zostają
+(polerka wg D51, nie rozpoznawalność): kruszywo szarsze i ciemniejsze niż na zdjęciu, filary prostokątne zamiast owalnych z szerokim
+czerwonym pasem, spód pomostu ciemniejszy, C-9 reguły na osi kadru `r4_pier_bz`. Niezależna ocena `visual-critic` — po stronie lidera
+(agent nie tworzy subagentów).
