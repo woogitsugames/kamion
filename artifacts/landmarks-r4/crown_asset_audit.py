@@ -61,6 +61,12 @@ assert new_spec["dims"] == current_dims
 assert new_spec != old_spec, "Trial spec is unchanged from baseline"
 assert meta["glb_sha256"] == hashlib.sha256(asset.read_bytes()).hexdigest()
 assert meta["spec_sha256"] == hashlib.sha256(json.dumps(new_spec, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+alpha_identical = None
+if current_dims["spruce"].get("irregular_core_WORKING_VALUE", False):
+    alpha_before = collections.Counter({k: c for k, c in before.items() if k[1] == "fire_station_alpha"})
+    alpha_after = collections.Counter({k: c for k, c in after.items() if k[1] == "fire_station_alpha"})
+    assert alpha_before == alpha_after, "Variant B must preserve every alpha triangle and attribute"
+    alpha_identical = True
 assert old_spec["anchor"] == new_spec["anchor"]
 assert old_spec["ground"] == new_spec["ground"]
 anchor = np.array(old_spec["anchor"])
@@ -90,6 +96,7 @@ summary.update(complete=True, unchanged_oriented_triangles=sum((before & after).
                scope="Every changed triangle is inside one of the three conifer envelopes; all other triangles exact",
                anchor_and_ground_identical=True, lod2_exact=True,
                current_spec_config_meta_glb_fresh=True,
+               alpha_triangles_byte_identical=alpha_identical,
                before_sha256=hashlib.sha256((base / "fire_station_jrg2.glb").read_bytes()).hexdigest(),
                after_sha256=hashlib.sha256(asset.read_bytes()).hexdigest())
 (out / "crown-asset-audit.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")

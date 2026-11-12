@@ -50,3 +50,5 @@ Krok 8: A ODRZUCONY wizualnie: cienki stożek, płaskie kliny i trójkątne dziu
 Krok 9: obejrzano wszystkie8 pełnych PNG A oraz2 natywne pary ze zdjęciem; odrzucenie potwierdzone także z trasy i z góry. B przygotowany z baseline: oryginalne12/54 kart i ich UV/orientacja,8 pierścieni rdzenia o nieregularnych promieniach i wysokościach zamiast pełnych półek; normalne z powierzchni. Środek pozycji, wysokości, promienie, atlas i budżet98/224 bez zmiany. source_scope.py PASS. Spec/GLB nadal należą do odrzuconego A i wymagają World B; nie renderować jako B przed regeneracją.
 
 Krok 9a: kolejka B uproszczona do World →3 audyty → WIP wszystkich wyjść → podgląd8PNG, zanim dojdą długie kolejki testów. ADR wyraźnie oddziela odrzucone A od nieobejrzanego B. Pełny GIS dopiero na końcu ustalonej rundy. Ścieżki logów i obrazów B osobne, dowody A zachowane.
+
+Krok 9b: audyt B dodatkowo wymaga bajtowej identyczności wszystkich trójkątów fire_station_alpha i ich atrybutów względem baseline. Pozwala to potwierdzić zachowanie kart/UV/normalnych i braku wzrostu powierzchni alfa zamiast opierania się na samym planie. Jeszcze niewykonany na GLB B; World B czeka FIFO9.
