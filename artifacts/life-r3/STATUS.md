@@ -78,3 +78,5 @@ Krok 28: zapisano plan późniejszej ablacji czerni (bez zastosowania): ewentual
 Kandydat a (2026-11-12T10:05:59.3661640+01:00): wygeneruj osobówki r3 a. Następny etap w candidate-build.ps1; po komplecie PreparedVerified, capture i oględziny.
 
 Kandydat a (2026-11-12T10:06:00.8757604+01:00): sprawdź zakres geometrii r3 a. Następny etap w candidate-build.ps1; po komplecie PreparedVerified, capture i oględziny.
+
+Kandydat a (2026-11-12T10:06:06.7428902+01:00): sprawdź test_cars_r9.py wariantu a. Następny etap w candidate-build.ps1; po komplecie PreparedVerified, capture i oględziny.
