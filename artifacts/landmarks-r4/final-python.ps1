@@ -9,6 +9,11 @@ if($owner -ne 'gpt-landmarks-r4'){throw 'Unexpected final branch'}
 function Check-VisualCheckpoint {
     $record=Get-Content "$PSScriptRoot/FINAL-CANDIDATE.json" -Raw | ConvertFrom-Json
     if(-not $record.visual_review_complete -or $record.camera_conditions -ne 244){throw 'Full visual review not recorded'}
+    $required=@('tools/blender/world/landmarks/make_fire_station.py','art-source/world/landmarks/fire_station_jrg2/dims.json',
+        'art-source/world/landmarks/fire_station_jrg2/fire_station_jrg2.glb','art-source/world/landmarks/fire_station_jrg2/fire_station_jrg2_meta.json',
+        'Data/Regions/bialystok-industrial-c/generated/landmarks/fire_station_jrg2.spec.json',
+        'Data/Regions/bialystok-industrial-c/generated/world_manifest.json','artifacts/landmarks-r4/cameras.json')
+    foreach($name in $required){if(-not $record.renderer_input_sha256.PSObject.Properties[$name]){throw "Missing renderer binding: $name"}}
     foreach($entry in $record.renderer_input_sha256.PSObject.Properties){
         if((Get-FileHash -LiteralPath $entry.Name).Hash -ne $entry.Value){throw "Changed renderer input: $($entry.Name)"}
     }
