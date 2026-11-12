@@ -15,10 +15,11 @@ if ($physics.passed -ne 47 -or $physics.failed -ne 1 -or @($physics.changed).Cou
 $inputs = @(& git diff --name-only 6832f50b -- game/Assets/_Project tools/worldgen art-source/world/materials/_src tests)
 if ($inputs.Count) { throw "Product or test inputs changed since validation: $($inputs -join ', ')" }
 if ($results.ContainsKey('fidelity_exit') -or $results.ContainsKey('editmode_exit')) { throw 'A remaining stage already has a result; inspect it instead of repeating.' }
+$results.resume_history = @($results.resume_history) + @([ordered]@{at=$results.resumed_at;reason=$results.resumed_reason}) | Where-Object { $_ }
 $results.resumed_at = Get-Date -Format o
-$results.resumed_reason = 'Own waiting wrapper rescheduled after more than one hour without a heavy slot; no running Python task interrupted.'
+$results.resumed_reason = 'Switched own waiting wrapper to the current main FIFO slot implementation; no running Python task interrupted.'
 $results | ConvertTo-Json | Set-Content $path
-& pwsh artifacts/asphalt-r2/run-heavy.ps1 -Stage Fidelity -Label candidate2-final -ReserveNext
+& pwsh artifacts/asphalt-r2/run-heavy.ps1 -Stage Fidelity -Label candidate2-final
 $results.fidelity_exit = $LASTEXITCODE
 $results | ConvertTo-Json | Set-Content $path
 if ($results.fidelity_exit -ne 0) { throw 'Fidelity failed; read log before retrying or continuing.' }

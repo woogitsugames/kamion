@@ -17,3 +17,7 @@ Nie omijać końcowego audytu odwołań/SHA, przywrócenia ustawień Unity i kon
 ## Aktualizacja po świadomym przeplanowaniu kolejki
 
 Uchwyt17097 został celowo zakończony po sprawdzeniu, że jego drzewo zawiera tylko trzy oczekujące pwsh, bez Pythona i bez własnego slotu. Dowód w rescheduled-waiter-tree.json. Stary end-validation-recovered.log jest historią, nie aktualnym procesem. Nowy wykonawca: finish-remaining.ps1, log remaining-validation.log. Odczytać aktualny uchwyt i proces przed wznowieniem; nie uruchamiać obu naraz. Ten runner wznawia tylko fidelity z istniejącą funkcją rezerwacji slotu, potem EditMode, zachowując GIS/physics i blokując powtórzenie już zakończonego etapu. Pula nadal max3; cudzych rezerwacji nie usuwa ani nie nadpisuje.
+
+## Aktualizacja FIFO (obowiązuje zamiast rezerwacji opisanej wyżej)
+
+Main unity-slot.ps1 zmienił się podczas oczekiwania około11:43: ma FIFO, Priority jest tylko dla lead. Stary proces82337 z załadowanym poprzednim skryptem został świadomie zakończony po kontroli3pwsh/brakuPythona/braku własnego slotu; dowód fifo-transition-waiter-tree.json. ReserveNext usunięto z własnego runnera. Aktualne wznowienie: finish-remaining.ps1 przez bieżący FIFO main, log remaining-fifo-validation.log. Nie używać poprzednich uchwytów17097/82337 ani traktować ich exit1 jako niepowodzenia fidelity. Nadal zachować ukończone GIS i physics; sprawdzić nowy proces przed jakimkolwiek ponowieniem.
