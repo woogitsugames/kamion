@@ -1,4 +1,5 @@
 """Photographed bed caps must not fall back to metre-long crossing triangles."""
+import json
 from pathlib import Path
 
 import numpy as np
@@ -27,9 +28,19 @@ def authored_bed(index):
     return pt.band_of(poly,width),key,bed
 
 
+@pytest.fixture(scope='module')
+def conformed_ground_fixture():
+    data=json.loads((Path(__file__).parent/'fixtures/berberis_0109_ground_c.json').read_text(encoding='utf-8'))
+    assert data['version']==1 and data['spacing_m']==1.
+    assert data['height_quantization_m']==.001
+    region=yaml.safe_load((REGION/'region.yaml').read_text(encoding='utf-8'))
+    assert all(data['origin_epsg2180'][axis]==region['origin'][axis] for axis in ('x','y'))
+    return data
+
+
 @pytest.mark.parametrize('bed_index',range(4))
-@pytest.mark.parametrize('slope',[0.,.03])
-def test_authored_berberis_has_valid_local_caps_and_uncrossed_strips(monkeypatch,bed_index,slope):
+@pytest.mark.parametrize('ground_case',['flat','slope','frozen-c-conformed-1mm'])
+def test_authored_berberis_has_valid_local_caps_and_uncrossed_strips(monkeypatch,bed_index,ground_case,conformed_ground_fixture):
     from roads import geom
     # A valid Delaunay result may contain boundary vertices only on a narrow bed.
     # It must never use the invalid-ring ear-clipping escape route again.
@@ -80,14 +91,33 @@ def test_authored_berberis_has_valid_local_caps_and_uncrossed_strips(monkeypatch
         def add(self,layer,material,vertices,uv,triangles,**kwargs):
             self.parts.append((np.asarray(vertices),np.asarray(triangles)))
     poly,key,bed=authored_bed(bed_index)
+    if ground_case=='frozen-c-conformed-1mm':
+        field=next(f for f in conformed_ground_fixture['beds'] if f['index']==bed_index)
+        np.testing.assert_array_equal(field['anchor_epsg2180'],bed['ring'][0],
+                                      err_msg='Captured ground anchor changed; deliberately refresh the real-ground fixture')
+        grid=np.asarray(field['heights_m'],float)
+        origin=conformed_ground_fixture['origin_epsg2180']
+        offset=np.asarray(bed['ring'][0])-np.array([origin['x'],origin['y']])
+        def ground(x,y):
+            fi=np.asarray(x)+offset[0]-field['x0']
+            fj=np.asarray(y)+offset[1]-field['y0']
+            i,j=np.floor(fi).astype(int),np.floor(fj).astype(int)
+            assert ((i>=0)&(i<grid.shape[1]-1)&(j>=0)&(j<grid.shape[0]-1)).all(), 'Ground query outside frozen sample patch'
+            a,b=fi-i,fj-j
+            return ((1-a)*(1-b)*grid[j,i]+a*(1-b)*grid[j,i+1]+
+                    (1-a)*b*grid[j+1,i]+a*b*grid[j+1,i+1])
+    else:
+        slope=.03 if ground_case=='slope' else 0.
+        ground=lambda x,y:slope*x+.5*slope*y
     buf=Capture()
-    pt.hedge_mass(buf,poly,lambda x,y:slope*x+.5*slope*y,key,h=bed.get('height_m'))
+    pt.hedge_mass(buf,poly,ground,key,h=bed.get('height_m'))
     assert len(caps)==2, 'Both inner and outer cap must be emitted'
     assert len(ring_sets)==2
     for (core_ring,_),(shell_ring,_) in zip(*ring_sets):
         assert Polygon(shell_ring).buffer(1e-7).covers(Polygon(core_ring)), 'Inner ring leaves the shell'
     # Compare the actual triangulated cap, not the interpolated boundary field.
-    # Both flat and sloping ground use exactly the same shell geometry as export.
+    # The recorded case reconstructs the real conformed1m ground to its exported
+    #1mm quantization; flat/slope cases remain independent synthetic regressions.
     core=buf.parts[1][0]
     shell_vertices,shell_indices=buf.parts[3]
     triangles=shell_vertices[shell_indices]
