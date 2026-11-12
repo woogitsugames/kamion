@@ -19,6 +19,9 @@ base['far_field']=fresh['far_field']
 base['materials']['far_field_buildings']=fresh['materials']['far_field_buildings']
 (ROOT/relative).write_text(json.dumps(base,ensure_ascii=False,indent=1,sort_keys=True,allow_nan=False)+'\n',
                            encoding='utf-8',newline='\n')
+written=json.loads((ROOT/relative).read_text())
+if written != base or written['far_field'] != fresh['far_field'] or written['materials']['far_field_buildings'] != fresh['materials']['far_field_buildings']:
+    raise RuntimeError('Persisted scoped manifest did not preserve the new edge fields')
 restore=[f'Data/Regions/{REGION}/generated/landmarks/viaduct_putry_underdeck.spec.json',
          f'Data/Regions/{REGION}/generated/roads_qa.json',
          f'Data/Regions/{REGION}/generated/streetscape_qa.json',
@@ -26,6 +29,7 @@ restore=[f'Data/Regions/{REGION}/generated/landmarks/viaduct_putry_underdeck.spe
          'art-source/world/props/street_props.glb']
 subprocess.run(['git','restore','--',*restore],cwd=ROOT,check=True)
 receipt=dict(retained_world_manifest_fields=['far_field','materials.far_field_buildings'],
+             persisted_manifest_verified=True,
              restored_unrelated_generated_files=restore,verified_raw_far_field_hashes=2,
              note='No source files from roads, buildings, vegetation or Claude changed.')
 (HERE/'generated-scope.json').write_text(json.dumps(receipt,indent=2),encoding='utf-8')
