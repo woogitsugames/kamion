@@ -6,7 +6,9 @@ $referencePath='Data/Regions/bialystok-industrial-c/sbs_references.json'
 $cams=(Get-Content $canonical -Raw|ConvertFrom-Json).cameras
 $refs=(Get-Content $referencePath -Raw|ConvertFrom-Json).references
 $oldProof=(Get-Content artifacts/edge-r5/proof-cameras.json -Raw|ConvertFrom-Json).cameras
-$extra=@($oldProof|Where-Object {$_.id -notlike 'sbs-*'})
+# The old NW tripod is below the archived conformed terrain. Preserve it in
+# separate ownership/height diagnostics, never as a valid ground-view camera.
+$extra=@($oldProof|Where-Object {$_.id -eq 'edge-pietrasze-driver'})
 $proof=@($extra)+@($cams)
 if(@($proof.id|Sort-Object -Unique).Count -ne$proof.Count){throw 'Duplicate proof camera'}
 @{cameras=$proof}|ConvertTo-Json -Depth 30|Set-Content "$PSScriptRoot/proof-cameras.json"
