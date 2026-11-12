@@ -1,0 +1,35 @@
+{
+  "source": "Data\\raw\\refs\\commons\\cmFile_20200711_073128_Elektrociep_ownia_Bia_ystok.jpg.jpg",
+  "source_size": [
+    3840,
+    2160
+  ],
+  "method": "Largest contiguous red-paint run in each row: R-G>10, R-B>12, at least 30 px; fixed clean band window",
+  "status": "Measured screen centres on a resized photo; pose and material identity remain UNVERIFIED",
+  "rows": [
+    {
+      "side": "left",
+      "sampled_box": [
+        2876,
+        505,
+        3048,
+        545
+      ],
+      "rows_used": 40,
+      "centre_x_median": 2969.75,
+      "width_median": 62.0
+    },
+    {
+      "side": "right",
+      "sampled_box": [
+        3560,
+        280,
+        3764,
+        330
+      ],
+      "rows_used": 50,
+      "centre_x_median": 3630.25,
+      "width_median": 57.5
+    }
+  ]
+}

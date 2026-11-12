@@ -542,3 +542,44 @@ M["marking_white"] = {"color": [0.55, 0.55, 0.54], "rough": 0.65, "surface": "pa
 # WORKING_VALUE: 0.85 legacy opacity × 1.15 = 0.9775, only for roads.decals traffic-stop stains.
 # Private-yard/gate/bus oil retains UV1.x=0 and the previous material response.
 M["decal_oil"]["traffic_opacity_scale"] = 1.15
+
+
+def _underdeck_pier_paint(default):
+    """ADR 0119: opt-in pigment for the existing DK8 pier material only."""
+    import json
+    import math
+    from pathlib import Path
+    path = Path(__file__).resolve().parents[3] / "Data/Regions/bialystok-industrial-c/viaduct_underdeck.json"
+    try:
+        paint = json.loads(path.read_text(encoding="utf-8")).get("pier_paint", {})
+        color = paint.get("color_linear")
+        if paint.get("enabled") is True and isinstance(color, list) and len(color) == 3:
+            if all(isinstance(c, (int, float)) and not isinstance(c, bool) and math.isfinite(c) and 0 <= c <= 1 for c in color):
+                return list(color)
+    except (OSError, ValueError, TypeError):
+        pass
+    return default
+
+
+M["pier_yellow"]["color"] = _underdeck_pier_paint(M["pier_yellow"]["color"])
+
+
+def _underdeck_pier_weather():
+    """ADR 0119: reuse existing concrete modulation/splash/runoff behind a data flag."""
+    import json
+    import math
+    from pathlib import Path
+    path = Path(__file__).resolve().parents[3] / "Data/Regions/bialystok-industrial-c/viaduct_underdeck.json"
+    try:
+        cfg = json.loads(path.read_text(encoding="utf-8"))
+        paint = cfg.get("pier_paint", {})
+        if cfg.get("set", {}).get("paint_weathering") is True and paint.get("enabled") is True:
+            height = float(paint.get("splash_h_m", .8))
+            if math.isfinite(height) and .1 <= height <= 1.5:
+                return {"texture_set": "concrete_precast", "splash_h": height, "runoff": True}
+    except (OSError, ValueError, TypeError):
+        pass
+    return {}
+
+
+M["pier_yellow"].update(_underdeck_pier_weather())
