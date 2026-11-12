@@ -23,3 +23,5 @@ Sprawdzono metadata 494288/180137 i źródłowy graf bez ciężkiego Pythona. br
 Około 02:59 generacja bazowa uzyskała heavy gpt-sbs-r3 (3/3) i rozpoczęła build_all.py; log pokazuje pierwszy zestaw asphalt_sma_fresh. Następnie ten sam wrapper wykona build_world i zwolni slot w finally. Nie uruchomiono obok drugiego ciężkiego Pythona tej gałęzi.
 
 Przygotowano read-only sample-bridge-surfaces.py (jeszcze nie uruchomiono). Korzysta z read_glb/node_triangles/ray_heights istniejącego tests/gis/route_corridor.py, sprawdzi SHA nowych Low GLB wobec ukończonego baseline. 21 punktów dla stacji/bocznych przesunięć494288 i stacji180137 oraz oryginalnego GPS494288; zachowuje wszystkie poziomy asfaltu zamiast automatycznie wybierać NMT lub najwyższy pokład. Wynik będzie diagnostyką rzeczywistych trójkątów, nie akceptacją kamery.
+
+Po niezależnym odczycie dopracowano proweniencję narzędzia powierzchni: SHA helpera/intrinsics zapisane przed użyciem i sprawdzone na końcu, ponownie kontrolowane bajty odczytanych GLB; usunięto zaszyte U141,888 dla oryginalnego GPS. Algorytm znaków/poziomów nie wymagał korekty. To nadal przygotowanie, bez uruchomienia obok build_all.
