@@ -231,6 +231,7 @@ namespace Game.Editor.Setup
             PlayerSettings.allowedAutorotateToPortraitUpsideDown = false;
             PlayerSettings.allowedAutorotateToLandscapeLeft = true;
             PlayerSettings.allowedAutorotateToLandscapeRight = true;
+            ApplyFoldableOrientationSettings();
             PlayerSettings.Android.renderOutsideSafeArea = true; // UI keeps to Screen.safeArea itself
             PlayerSettings.Android.optimizedFramePacing = true;
             PlayerSettings.Android.startInFullscreen = true;
@@ -246,6 +247,23 @@ namespace Game.Editor.Setup
             // GPU / CPU frame times in the diagnostics CSV (FrameTimingManager) for on-device profiling.
             PlayerSettings.enableFrameTimingStats = true;
             Debug.Log($"[SETUP] player settings: {ApplicationId} min={MinSdk} target={TargetSdk} IL2CPP ARM64 Vulkan+GLES3 linear landscape");
+        }
+
+        /// <summary>
+        /// ADR 0135 (Fold): pins the Android activity settings the runtime orientation policy (Game.Gameplay.
+        /// ScreenOrientationGuard) relies on. Values equal to the ProjectSettings of main at afaa87c9, written here so they
+        /// cannot drift: resizeable activity (a fold is a resize, Unity declares every configChanges flag, no restart),
+        /// auto-rotation behaviour User (rotation lock respected; manifest userLandscape / fullUser), and "is game" (manifest
+        /// android:appCategory="game": target SDK 36 on Android 16 otherwise IGNORES screenOrientation on sw &gt;= 600dp
+        /// screens such as a Fold inner screen; games are exempt, developer.android.com/about/versions/16/behavior-changes-16).
+        /// </summary>
+        static void ApplyFoldableOrientationSettings()
+        {
+            var ps = new SerializedObject(AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/ProjectSettings.asset")[0]);
+            Set(ps, "androidResizeableActivity", true);
+            Set(ps, "androidAutoRotationBehavior", 1);   // 1 = User
+            Set(ps, "AndroidIsGame", true);
+            ps.ApplyModifiedPropertiesWithoutUndo();
         }
 
         static UniversalRenderPipelineAsset[] CreateUrpTierAssets()

@@ -94,7 +94,9 @@ namespace Game.UI.Driving
         public static readonly Vector2 ThrottleSize = new Vector2(170f, 360f);
         public static readonly Vector2 GearsSize = new Vector2(208f, 328f);
         public const float DevTextHeight = 112f;
-        const float ControlsBottom = Margin + 8f, WheelLeft = Margin + 16f;
+        /// <summary>Gap between the safe-area edge and the wheel (left) / the bottom controls; the wheel's invisible grab
+        /// area extends over it (ADR 0135).</summary>
+        public const float ControlsBottom = Margin + 8f, WheelLeft = Margin + 16f;
 
         public static void Solve(in HudLayoutInput s, out HudLayoutResult r)
         {

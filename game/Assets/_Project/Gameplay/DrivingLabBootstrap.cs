@@ -280,6 +280,7 @@ namespace Game.Gameplay
         {
             bool wasGyro = Gyro.Enabled;
             Controls.ApplyTo(Wheel, Gyro, Touch, Column);
+            ScreenOrientationGuard.GyroSteeringActive = Controls.gyroEnabled;   // ADR 0135: no autorotation while steering by tilt
             m_SteerMode = Controls.gyroEnabled ? SteerMode.Gyro : (Controls.wheelRangeDeg >= 600f ? SteerMode.Wheel900 : SteerMode.Wheel270);
             if (Gyro.Enabled && !wasGyro) Gyro.Calibrate();
             if (!Controls.gyroEnabled) Gyro.Suspend();
