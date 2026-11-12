@@ -94,3 +94,44 @@ def test_no_kerb_under_a_fill(qa):
     g = qa["summary"]["gores"]
     assert "kerb_tris_in_fill" in g, "old roads_qa.json: rebuild the region"
     assert g["kerb_tris_in_fill"] == 0
+
+
+def test_island_patches_split_the_top():
+    """ADR 0128: `patches` of a traffic_island give parts of the top another surface inside the one kerb ring; areas add
+    up to the top inside the kerb band, and the island reports its top height for the signs that stand on it."""
+    import numpy as np
+    from shapely.geometry import Polygon
+
+    from roads import gores as GO
+    from roads import standards as S
+
+    class Buf:
+        def __init__(self):
+            self.parts = []
+
+        def add(self, layer, mat, V, UV, T, **kw):
+            self.parts.append((layer, mat, np.asarray(V, float), np.asarray(T)))
+
+    class Flat:
+        def z(self, p, *a, **kw):
+            return 10.0
+
+    def area(buf, mat):
+        tot = 0.0
+        for layer, m, V, T in buf.parts:
+            if layer == "road" and m == mat:
+                a, b, c = V[T[:, 0], :2], V[T[:, 1], :2], V[T[:, 2], :2]
+                tot += float(np.abs((b[:, 0] - a[:, 0]) * (c[:, 1] - a[:, 1]) - (c[:, 0] - a[:, 0]) * (b[:, 1] - a[:, 1])).sum() / 2)
+        return tot
+
+    isl = GO.Island("t", Polygon([(0, 0), (8, 0), (8, 6), (0, 6)]), "island_gravel")
+    isl.patches.append((Polygon([(-1, -1), (3, -1), (3, 7), (-1, 7)]), "sidewalk_paving"))
+    buf = Buf()
+    GO._build_island(buf, isl, Flat(), Flat())
+    assert isl.built
+    w = S.KERB_TOP_W
+    assert area(buf, "sidewalk_paving") == pytest.approx((3 - w) * (6 - 2 * w), abs=0.05)
+    assert area(buf, "island_gravel") == pytest.approx((8 - w - 3) * (6 - 2 * w), abs=0.05)
+    assert isl.top_z((4.0, 3.0)) == pytest.approx(10.0 + S.KERB_HEIGHT)
+    mats = {m for layer, m, _, _ in buf.parts if layer == "collision"}
+    assert mats == {"collision_curb", "collision_paving"}

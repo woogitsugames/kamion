@@ -4,6 +4,8 @@
                       before the node `before_node` on OSM way `osm_way`; boards = [{lanes: [i, ...] (0 = left
                       lane in the direction of travel), rows: [[[refs], destination], ...] | from_osm: [{way,
                       refs_extra}]}] (from_osm: OSM destination / destination:ref of that way, ADR 0069).
+                      Optional per board `size_m: [w, h]` and per portal `beam_depth_m`, `columns_en` (measured on
+                      photos / the orthophoto, ADR 0127 / 0139).
                       `form: cantilever` (ADR 0069): one column on `column_side` (L / R of travel, `column_offset_m`
                       behind the carriageway side strip) and a lattice arm over the boards. Board faces are our
                       own schematic drawings (signs.overhead_board); bottom edge 5.20 m above the road
@@ -108,8 +110,12 @@ def build(pl, net, graph, overrides, origin, boards, report):
             for bd in o["boards"]:
                 rows = _board_rows(graph, bd, rep, o["id"])
                 key = "OB_" + hashlib.sha1(repr(rows).encode()).hexdigest()[:8]
+                size = bd.get("size_m")        # ADR 0139: board width / height measured on a photo
+                if size:
+                    key = "OB_" + hashlib.sha1(
+                        repr((rows, [float(v) for v in size], len(bd["lanes"]))).encode()).hexdigest()[:8]
                 if key not in boards:
-                    im, wm, hm = SG.overhead_board(rows)
+                    im, wm, hm = SG.overhead_board(rows, size_m=size, arrows=len(bd["lanes"]))
                     boards[key] = (round(wm, 3), round(hm, 3), im)
                 wm, hm, _ = boards[key]
                 hmax = max(hmax, hm)
@@ -145,8 +151,9 @@ def build(pl, net, graph, overrides, origin, boards, report):
                 if o.get("columns_en"):       # ADR 0127: column feet read off the orthophoto (region-local E, N)
                     ca, cb = (np.asarray(v, float) for v in o["columns_en"])
                     ctr, span = (ca + cb) / 2, round(float(np.hypot(*(cb - ca))))
-                LP.GANTRIES.add((int(span), int(round(H * 10))))
-                pl.add(f"sign_gantry_{int(span)}_{int(round(H * 10))}", ctr, yaw, z=z, src=f"override:{o['id']}")
+                bdm = int(round(float(o["beam_depth_m"]) * 10)) if o.get("beam_depth_m") else None     # ADR 0139
+                LP.GANTRIES.add((int(span), int(round(H * 10))) + ((bdm,) if bdm else ()))
+                pl.add(LP.gantry_name(span, round(H * 10), bdm), ctr, yaw, z=z, src=f"override:{o['id']}")
                 for sx in (-1, 1):            # column footings + colliders (local x of the gantry = (cos yaw, sin yaw))
                     q = ctr + np.array([math.cos(yaw), math.sin(yaw)]) * sx * int(span) / 2
                     pl.add("gantry_footing", q, yaw, z=z, src=f"override:{o['id']}")

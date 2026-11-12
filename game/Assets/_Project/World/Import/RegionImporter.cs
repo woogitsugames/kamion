@@ -296,6 +296,34 @@ namespace Game.World.Import
                 mat.SetVector("_SkyOcc", new Vector4((float)Num(so[0]), (float)Num(so[1]), 0f, 0f));
                 EditorUtility.SetDirty(mat);
             }
+            // ADR 0123: manifest "cast_shadows": false is honoured per submesh by the instance set
+            // (InstanceImporter -> WorldInstanceSet.noShadowMaterials): URP's material validation re-enables the
+            // ShadowCaster pass of an opaque Lit material, so it cannot be stored on the material asset.
+            // ADR 0123: manifest "shadow_low": false = no shadow casting on the Low tier (Kamion/World PBR _LowNoShadow)
+            if (mat != null && mat.HasProperty("_LowNoShadow"))
+            {
+                mat.SetFloat("_LowNoShadow", m.Get("shadow_low") is bool sl && !sl ? 1f : 0f);
+                EditorUtility.SetDirty(mat);
+            }
+            // ADR 0123: manifest "vertex_grime": [r, g, b, roughness gain] = road film where the mesh carries COLOR_0.r
+            // (Kamion/World PBR _VERTEX_GRIME; bridge caps). Linear albedo, a Vector property (no sRGB conversion).
+            if (mat != null && mat.HasProperty("_VertexGrime"))
+            {
+                if (m.Get("vertex_grime") is List<object> vgr && vgr.Count >= 4)
+                {
+                    mat.EnableKeyword("_VERTEX_GRIME");
+                    mat.SetVector("_VertexGrime", new Vector4((float)Num(vgr[0]), (float)Num(vgr[1]), (float)Num(vgr[2]), (float)Num(vgr[3])));
+                }
+                else mat.DisableKeyword("_VERTEX_GRIME");
+                EditorUtility.SetDirty(mat);
+            }
+            // ADR 0123: manifest "set_metal" (0..1) = metallic scale of a generated PBR set whose MaskMap.r carries a
+            // metal mask (galvanised barrier: bare zinc 1, dirt / rust 0). Sets without the key keep metallic 0.
+            if (mat != null && mat.HasProperty("_MetallicScale") && m.Get("set_metal") != null)
+            {
+                mat.SetFloat("_MetallicScale", Mathf.Clamp01((float)Num(m.Get("set_metal"))));
+                EditorUtility.SetDirty(mat);
+            }
             return mat;
         }
 
@@ -513,7 +541,10 @@ namespace Game.World.Import
             mat.SetFloat("_ScreenSheet", screen != null ? 1f : 0f);
             mat.SetFloat("_HorizonSky", Scr("horizon_sky", 0f));
             mat.SetFloat("_Haze", Scr("haze", 0f));
-            mat.SetColor("_HazeColor", new Color(0.50f, 0.52f, 0.52f, 1f));
+            var hazeCol = screen != null ? screen.Get("haze_color") as List<object> : null;      // ADR 0139
+            mat.SetColor("_HazeColor", hazeCol != null && hazeCol.Count >= 3
+                ? new Color((float)Num(hazeCol[0]), (float)Num(hazeCol[1]), (float)Num(hazeCol[2]), 1f).gamma   // manifest: linear
+                : new Color(0.50f, 0.52f, 0.52f, 1f));
             mat.SetVector("_Stripe", stripe != null && stripe.Count >= 3
                 ? new Vector4((float)Num(stripe[0]), (float)Num(stripe[1]), (float)Num(stripe[2]), 0f) : new Vector4(0f, 0f, 0.25f, 0f));
             if (screen != null) mat.EnableKeyword("_SCREEN_SHEET");

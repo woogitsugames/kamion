@@ -62,6 +62,8 @@ class EdgeSection:
     center_offset_profile: list | None = None  # authored: [[t, offset], ...], t = 0..1 along the edge (ADR 0095)
     width_profile: list | None = None          # authored: [[t, width], ...] along the edge (ADR 0095); `width` = max
     edge_lines: str | None = None   # painted edge lines in the direction of travel: none | left | right | both
+    apron: str | None = None        # authored (ADR 0123): roundabout apron "asphalt" = no mountable sett apron, the ring
+                                    # carriageway runs flush to the island kerb (orthophoto / photos); default sett apron
     provenance: dict = field(default_factory=dict)
 
     def lane_coord(self, lat, hw, dirn=1):
@@ -305,6 +307,8 @@ def apply_edge_overrides(net: Network, edges, overrides):
                         sec.turn_fwd = None
             if "edge_lines" in st:
                 sec.edge_lines = str(st["edge_lines"])
+            if "apron" in st:
+                sec.apron = str(st["apron"])
             if "turn_lanes" in st:
                 sec.turn_fwd = [t for t in str(st["turn_lanes"]).split("|")] if st["turn_lanes"] else None
             if "center_offset" in st:
@@ -1006,7 +1010,9 @@ def assign_sides(net: Network, footways: list, built_up: bool = True, walkways: 
             if c.roundabout and side == ("L" if (c.dirn > 0).mean() >= 0.5 else "R"):
                 kind[:] = ISLAND
                 w[:] = S.ROUNDABOUT_APRON_W
-                mat[:] = 0
+                # ADR 0123 (REVIEW s11 D51 blocker 7): `apron: asphalt` on the ring edges = the 2 m strip is carriageway
+                # (asphalt, no 4 cm lip); the island kerb, the footprint and the lane layout stay
+                mat[:] = MAT_FLUSH_ROAD if sec_mid.apron == "asphalt" else 0
             # a parallel carriageway right next to this edge (on-ramp beside the Andersa ramp at Rondo Bieżeństwa):
             # the verge / ditch / sidewalk would lie on the other road, so the edge is a plain kerb
             if not (c.roundabout and kind[0] == ISLAND):
@@ -1151,8 +1157,12 @@ def side_profile(kind: int, h: float, w: float, depth: float, mat: int):
         ha = S.KERB_HEIGHT_APRON
         ap = w
         top = ha + 0.02 * ap
+        am = "apron_sett"
+        if mat == MAT_FLUSH_ROAD:           # authored asphalt apron (ADR 0123): flush, same topology
+            ha, am = 0.0, "road_asphalt"
+            top = 0.02 * ap
         return [(0.0, 0.0, 0.0, ha, "curb_concrete"),
-                (0.0, ha, ap, top, "apron_sett"),
+                (0.0, ha, ap, top, am),
                 (ap, top, ap, top + S.KERB_HEIGHT, "curb_concrete"),
                 (ap, top + S.KERB_HEIGHT, ap + S.KERB_TOP_W, top + S.KERB_HEIGHT, "curb_concrete"),
                 (ap + S.KERB_TOP_W, top + S.KERB_HEIGHT, ap + S.KERB_TOP_W, top + S.KERB_HEIGHT - depth,

@@ -279,9 +279,12 @@ def off_carriageway(carriage, p):
     return q if not carriage.contains(Point(float(q[0]), float(q[1]))) else None
 
 
-def build(pl, net, graph, overrides, origin, boards, report, carriage=None):
+def build(pl, net, graph, overrides, origin, boards, report, carriage=None, islands=()):
     """Place every `gate3_sign` override. `boards` gets the texture of each distinct assembly (exported as
-    art-source/world/signs/<key>.png, material sign_<key>); the prototype sign_g3_<key> is registered in PROTOS."""
+    art-source/world/signs/<key>.png, material sign_<key>); the prototype sign_g3_<key> is registered in PROTOS.
+    `islands` = built roads.gores.Island objects: authored kerbed islands lie ON the carriageway footprint, a sign
+    whose authored position is on one stands there, on the island top (ADR 0128)."""
+    from shapely.geometry import Point
     rep = {"signs": [], "stale": []}
     nodes = {n["id"]: n for n in graph["nodes"]}
     for o in overrides:
@@ -305,7 +308,10 @@ def build(pl, net, graph, overrides, origin, boards, report, carriage=None):
             p = np.asarray(o["at_en"], float)
             travel = _bearing_vec(o["travel_bearing_deg"])
         moved = 0.0
-        if carriage is not None:
+        isl = next((i for i in islands if i.poly.contains(Point(float(p[0]), float(p[1])))), None)
+        if isl is not None:
+            z_isl = isl.top_z(p)
+        elif carriage is not None:
             q = off_carriageway(carriage, p)
             if q is None:
                 rep["stale"].append(f"{o['id']}: on a carriageway at {[round(float(v), 1) for v in p]}")
@@ -318,10 +324,11 @@ def build(pl, net, graph, overrides, origin, boards, report, carriage=None):
         zs = float(pl.zsurf(np.array([p[0]]), np.array([p[1]]))[0])
         zg = float(pl.zground(np.array([p[0]]), np.array([p[1]]))[0]) if pl.zground is not None else zs
         under = (zs - zg) > UNDER_DECK_M and not o.get("on_deck")
-        z = pl.add(proto, p, PP_yaw(-travel), z=zg if under else zs, src=f"override:{o['id']}")
+        z = pl.add(proto, p, PP_yaw(-travel), z=z_isl if isl is not None else (zg if under else zs), src=f"override:{o['id']}")
         rep["signs"].append({"id": o["id"], "proto": proto, "at": [round(float(v), 1) for v in p], "z": round(float(z), 2),
                              "faces": [c for c, _ in _norm_parts(parts)], "top_m": round(top, 2),
                              "snapped_m": round(moved, 2), "under_deck": bool(under),
+                             **({"island": isl.id} if isl is not None else {}),
                              "travel_bearing_deg": round(math.degrees(math.atan2(travel[0], travel[1])) % 360, 1),
                              "mapillary": o.get("mapillary", [])})
     report["gate3_landmarks"] = rep
