@@ -27,7 +27,8 @@
 - **Sprzątanie (decyzja właściciela 23:5x):** przy każdym :17 `uv run --project tools/worldgen python scripts/cleanup-artifacts.py` (nieśledzone artefakty > 3 dni poza raportami/parami/dowodami bramek; APK: 5 najnowszych + wymienione w HANDOVER). Worktree po scaleniu usuwać od razu. Usunięte: worktree `argon-edge`, `gpt-life` (gałęzie wypchnięte, artefakty w `artifacts/_worktree-rescue/`), 37 starych gałęzi gpt-*/codex (scalone lub z kopią na origin; 19 tylko lokalnych zostało), 2,1 GB artefaktów.
 - **RANO (właściciel 00:0x): ChatGPT 6 Pro (G1–G10) się wysypuje po czasie (error) — rano sprawdzić, czy cokolwiek oddał (`research/gptpro/`, gałęzie `gptpro/*`); jeśli nie — przydzielić G1–G10 komuś innemu (agenci Claude z WebSearch/WebFetch albo Mistral/Codex), z priorytetem G10, G3, G1, G7, G5.**
 - **00:2x: SCALONE Mistral r6** (#33 nav-runner — nie kompilował się, trasy wzorcowe przepisane z C#; #34 przepisy; #35 perfgate + metryka naprzemienności z ADR 0152; #36 walidator świata — fałszywe alarmy poprawione; #37 fizyka: F1 miękki ogranicznik przegubu 1,4–3,3° za 90° (decyzja tolerancji), **F2 275 km/h w powietrzu bez napędu = błąd fizyki → osobne zadanie vehicle-physics**). Raport `docs/reports/REVIEW-2026-11-13-s16-mistral-r6.md`. Fałszywe twierdzenia w 4/5 PR (plik nie istnieje) → r7: surowe wyjście komend w PR. Otwarte: numer zjazdu ronda liczy wszystkie wyloty, do 6 komunikatów głosowych na manewr, ETA co klatkę, 53 drzewa w jezdni do obejrzenia.
-- **Ostatni przydzielony ADR: 0157** (0153–0155 → Codex).
+- 00:3x: **0158 physics-f2** (Opus, worktree `physics-f2`, live `artifacts/live/physics-f2.md`): błąd F2 (275 km/h w powietrzu) + rekomendacja F1. Agentów Claude w toku: 2 (world-int-s16, physics-f2). Worktree mistral-r6-int usunięty.
+- **Ostatni przydzielony ADR: 0158** (0153–0155 → Codex).
 
 # HANDOVER — kamion, SESJA 15 (start 2026-11-12 20:25, nowe konto)
 
