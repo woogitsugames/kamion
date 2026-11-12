@@ -1,11 +1,10 @@
 {
-  "checked_at": "2026-11-12T10:22:03.7897033+01:00",
+  "checked_at": "2026-11-12T10:59:41.3863490+01:00",
   "visual_review_hashes_verified": 60,
   "camera_conditions": 328,
   "counter_rows": 2952,
   "geometry_equal": true,
   "validation_pending": [
-    "physics_gate3_exit",
     "fidelity_exit",
     "editmode_exit",
     "finished"
@@ -15,7 +14,8 @@
     "label": "candidate2",
     "started": "2026-11-12T09:06:27.2893061+01:00",
     "compare": 0,
-    "gis_exit": 0
+    "gis_exit": 0,
+    "physics_gate3_exit": 1
   },
   "note": "Read-only integrity check, not final acceptance. Read test logs, final XML and fidelity findings before REPORT and end-round-checks.json."
 }
