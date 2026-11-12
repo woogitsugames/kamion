@@ -6,10 +6,10 @@ Aktualne FBX i shadery produkcyjne pozostają bazowe. Hooki wheel_disc.py i whee
 
 Wiring przygotowany pod opt-in; wykonanie i ocena po świeżym baseline:
 1. W chassis.wheel tylko przednia tarcza: make_authoring z regularnymi otworami16. Przedni kołpak rozważyć jako płaski dekiel stalowy zamiast półkuli: wysokość40 mm zamiast95, szeroka płaska część. Wartości robocze do oceny, próg pokrycia osi>150 mm musi przejść. Tył ciągnika/naczepa na razie bez tych zmian.
-2. to_game_piece zachowuje pierwotne UV również przy parametric_disc_atlas. disc_parameter FLOAT_VECTOR/CORNER i disc_chart INT/FACE przetrwają reset warstw UV. Nie dodawać runtime UV kanału.
-3. unwrap_atlases pomija Smart Project również dla tej flagi, dopasowuje jednolicie gęstość do pozostałego slotu. Oryginalny disc_parameter nie jest zmieniany. Packer/priority/widen mogą stosować różne afiniczne transformacje chartów, które replace_lod odtworzy i sprawdzi.
+2. to_game_piece zachowuje pierwotne UV również przy parametric_disc_atlas. Parametry źródłowe odtwarzamy z kanonicznego przepisu i zweryfikowanych indeksów/współrzędnych wierzchołków oraz kluczy trójkątów; nie dokładamy kanałów ani atrybutów siatki. Zmiana topologii przed rekonstrukcją ma zostać odrzucona.
+3. unwrap_atlases pomija Smart Project również dla tej flagi, dopasowuje jednolicie gęstość do pozostałego slotu. Oryginalne parametry są odtwarzane z przepisu niezależnie od zmian Atlas. Packer/priority/widen mogą stosować różne afiniczne transformacje chartów, które replace_lod odtworzy i sprawdzi.
 4. lod_pieces na kopii GAME front disc: replace_lod(...,8) dlaLOD2. decimate_pieces musi wyłączyć regular_disc_lod z COLLAPSE, inaczej regularne otwory znowu się rozpadną.
-5. finalize_mesh usuwa disc_parameter i disc_chart przed FBX, tak jak prio. Jedna istniejąca paleta Metal, bez nowych draws/przebiegów/map.
+5. finalize_mesh usuwa prio i defensywnie także nazwy dawnych atrybutów prototypu; aktualny adapter ich nie tworzy. Jedna istniejąca paleta Metal, bez nowych draws/przebiegów/map.
 
 Budżet i prześwit to nadal HIPOTEZY:
 - Pełna zamknięta tarcza8 =680 tris,16 =1000. Obecny front Low ma około349 tris tarczy, więc potrzebne przesunięcie budżetu; nie podnosić limitu17900. Aktualny cel17690.
@@ -21,4 +21,5 @@ Następne: przygotowanie69474 → import/baseline-captures → zdjęcia/zbliżen
 
 
 Uwaga do przyszłego reexportu cache: REGULAR_FRONT_WHEELS to stan modułu Pythona i nie zapisuje się w blend. Przy LOD2-only trzeba go odtworzyć z manifest.regular_front_wheels, aby nie wrócić do starych reguł rim/dish. Domyślną flagę przełączyć na True dopiero po zaakceptowanym eksporcie i obrazach, tak aby zwykła regeneracja lidera odtwarzała dostarczony wariant. Nie instalować opt-in bez poprawnych walidatorów.
+
 

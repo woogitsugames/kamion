@@ -1,8 +1,8 @@
-"""Blender adapter for regular wheel-disc meshes, not enabled by the exporter yet.
+"""Blender adapter for regular wheel discs, behind the exporter opt-in.
 
-Auxiliary chart/parameter attributes must be removed by finalize_mesh before FBX.
-FLOAT_VECTOR/CORNER API: Blender 4.2 source, rna_attribute.cc lines 759-789:
-https://github.com/blender/blender/blob/blender-v4.2-release/source/blender/makesrna/intern/rna_attribute.cc
+The canonical source recipe reconstructs original parameter coordinates after
+packing. Vertex coordinates and triangle keys must still match that recipe;
+otherwise reconstruction fails. No auxiliary runtime mesh attributes are needed.
 """
 import json
 import math
@@ -41,22 +41,16 @@ def make_authoring(name, center, side, offset, material='alu_wheel', segments=16
     from geom import obj_from_bm
     spec = dict(inner_radius=.112, outer_radius=.236, hole_ring_radius=.2,
                 hole_radius=.028, thickness=.022, hole_count=10,
-                center=list(center), side=side, offset=offset)
+                center=list(center), side=side, offset=offset, source_segments=segments)
     vertices, faces, parameters, charts = geometry(spec, segments)
     bm = bmesh.new()
     verts = [bm.verts.new(p) for p in vertices]
     uv_layer = bm.loops.layers.uv.new('UVMap')
-    chart_layer = bm.faces.layers.int.new('disc_chart')
     for tri, uv, chart in zip(faces, parameters, charts):
         face = bm.faces.new([verts[i] for i in tri])
-        face[chart_layer] = chart
         for loop, point in zip(face.loops, uv):
             loop[uv_layer].uv = point
     ob = obj_from_bm(name, bm, material, sharp=40, uv=False)
-    parameter = ob.data.attributes.new('disc_parameter', 'FLOAT_VECTOR', 'CORNER')
-    original = ob.data.uv_layers['UVMap'].data
-    for i, point in enumerate(parameter.data):
-        point.vector = (*original[i].uv, 0.0)
     ob['disc_spec_json'] = json.dumps(spec, sort_keys=True)
     ob['parametric_disc_atlas'] = True
     return ob
@@ -92,16 +86,27 @@ def replace_lod(ob, segments=8):
         raise ValueError('Not a parameterized wheel disc')
     if len(old.materials) != 1:
         raise RuntimeError('Disc proxy expects one existing material slot')
+    spec = json.loads(ob['disc_spec_json'])
+    source_vertices, source_faces, source_uv, source_charts = geometry(spec, spec.get('source_segments', 16))
+    if len(old.vertices) != len(source_vertices) or len(old.polygons) != len(source_faces):
+        raise RuntimeError('Source disc topology changed before LOD reconstruction')
+    if any(math.dist(tuple(v.co), expected) > 1e-6 for v, expected in zip(old.vertices, source_vertices)):
+        raise RuntimeError('Source disc vertex indices or positions changed')
+    by_triangle = {tuple(sorted(tri)): (dict(zip(tri, uv)), chart)
+                   for tri, uv, chart in zip(source_faces, source_uv, source_charts)}
+    if len(by_triangle) != len(source_faces):
+        raise RuntimeError('Ambiguous source disc triangle keys')
     samples = {}
-    tags = old.attributes['disc_chart'].data
-    parameter = old.attributes['disc_parameter'].data
     atlas = old.uv_layers['Atlas'].data
     for face in old.polygons:
-        bucket = samples.setdefault(tags[face.index].value, [])
+        original = by_triangle.get(tuple(sorted(face.vertices)))
+        if original is None:
+            raise RuntimeError('Source disc faces changed during packing')
+        parameters, chart = original
+        bucket = samples.setdefault(chart, [])
         for i in face.loop_indices:
-            bucket.append((tuple(parameter[i].vector[:2]), tuple(atlas[i].uv)))
+            bucket.append((parameters[old.loops[i].vertex_index], tuple(atlas[i].uv)))
     transforms = {tag: chart_transform(points) for tag, points in samples.items()}
-    spec = json.loads(ob['disc_spec_json'])
     vertices, faces, coordinates, charts = geometry(spec, segments)
     mesh = bpy.data.meshes.new(old.name+'_regular')
     mesh.from_pydata(vertices, [], faces)
@@ -111,27 +116,21 @@ def replace_lod(ob, segments=8):
         mesh.uv_layers.new(name=name)
     mesh.color_attributes.new('Col', 'BYTE_COLOR', 'CORNER')
     mesh.attributes.new('prio', 'FLOAT', 'FACE')
-    mesh.attributes.new('disc_chart', 'INT', 'FACE')
-    mesh.attributes.new('disc_parameter', 'FLOAT_VECTOR', 'CORNER')
     # Fetch RNA layer references after all custom-data allocations.
     uv_atlas, uv_decal, uv_data = (mesh.uv_layers[n].data for n in ('Atlas', 'Decal', 'Data'))
     color = mesh.color_attributes['Col'].data
     priority = mesh.attributes['prio'].data
-    new_tags = mesh.attributes['disc_chart'].data
-    new_parameter = mesh.attributes['disc_parameter'].data
     data_value = tuple(old.uv_layers['Data'].data[0].uv)
     decal_value = tuple(old.uv_layers['Decal'].data[0].uv)
     color_value = tuple(old.color_attributes['Col'].data[0].color)
     priority_value = old.attributes['prio'].data[0].value
     for face, face_uv, chart in zip(mesh.polygons, coordinates, charts):
         priority[face.index].value = priority_value
-        new_tags[face.index].value = chart
         for i, point in zip(face.loop_indices, face_uv):
             uv_atlas[i].uv = transforms[chart](point)
             uv_decal[i].uv = decal_value
             uv_data[i].uv = data_value
             color[i].color = color_value
-            new_parameter[i].vector = (*point, 0.0)
     mesh.uv_layers.active = mesh.uv_layers['Atlas']
     mesh.color_attributes.active_color = mesh.color_attributes['Col']
     mesh.shade_smooth()
