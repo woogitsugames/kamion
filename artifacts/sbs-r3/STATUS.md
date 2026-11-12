@@ -98,3 +98,5 @@ Zapisano kompletną niezależną ocenę baseline w REVIEW-D51-BASELINE.md: G3-A 
 2026-11-12T10:42:00.9307748+01:00: audyt główny zakończony exit0, 168 raw, 100 B, 168 diagnostycznych, 128 rzeczywistych GLB i168 liczników zweryfikowane. Heavy oddany. Uruchomiłem następny task Fidelity, który najpierw wykona uzupełniony audyt arkuszy, następnie fidelity w jednej dzierżawie; nie uruchamiam równoległego zadania heavy.
 
 2026-11-12T10:42:33.1801662+01:00: audyt pokazał 38/84 Low ze wzrostem draws i22/84 z delta tris>2% versus r2. Zapisałem BUDGET-LIMITATIONS.md; r3 nie deklaruje PASS budżetu wspólnego świata. Kamer produkcyjnych ani runtime SBS nie zmieniono, wzrost dotyczy nowej zintegrowanej bazy. Nie przypisuję go bez analizy konkretnej domenie ani nie poprawiam cudzych plików.
+
+2026-11-12T10:44:15.4802484+01:00: przygotowałem REPORT-DRAFT.md jako konkretny projekt do kontroli przed zamknięciem. Wprost oznacza brak wyników fidelity/końcowego GIS i niewykonaną końcową dostawę, więc nie zastępuje REPORT.md. Utrwala koszty, porównania, zero akceptacji C oraz brak pokrycia pierwszych300m.
