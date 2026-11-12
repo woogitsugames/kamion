@@ -65,3 +65,4 @@ Dodatkowy pełny przegląd źródła pobocza 320326319617139 i świeżego baseli
 Celowane testy kandydata A przeszły kodem 0. Dalej pełna generacja świata w tym samym slocie heavy, sekwencyjnie.
 Kandydat A: 18 testów celowanych passed w 3,27 s. Zadanie 8662 po otrzymaniu heavy uruchomiło World około 10:35:28. Log: pass1 72,1 s, planowanie działek 190,5 s. Żywy proces Python 5324; nie uruchomiono drugiej generacji. Po World w tym samym slocie powstanie dekodowana migawka kolizji.
 World kandydata A i migawka geometrii kolizji zakończone kodem 0; kolejny krok to porównanie źródeł i wyjść, import i próba wizualna.
+8662 terminalne kod 0: World 538,6 s, 130 GLB, cztery żywopłoty 94,3 m²/18 402 tris, dekodowane wejścia kolizji 64 Low chunków. Heavy zwolniony. Nowa sekwencja 85314 czeka heavy na migawkę i porównanie przed importem, bez ponownego World.
