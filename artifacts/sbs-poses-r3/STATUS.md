@@ -14,3 +14,5 @@ NEXT: after regen: cd worktree; uv run --project tools/refs python artifacts/sbs
 - 494288 resection (tools/fit494b.py: lamp forks x + 1/d ladder with free height offset, dash line, road VP): s -32 m from A1 = E -487.0 N -31.2 (41 m SE of production), 0.85 m right of the dash, eye ~1.0, heading 316.8, pitch 7.6, roll -3.7 (not renderable), rms 13.8 px. Lamp ladder spacing ~33 m fits the photo; arm span/height: generated lamps ~2x too large / heads ~3.5-5 m too high (world finding, ADR 0133 lamp_y 12 m on deck).
 - r1 probes written (artifacts/sbs-poses-r3/r1).
 NEXT: pwsh artifacts/sbs-poses-r3/tools/render.ps1 -Round r1  (after import finishes)
+19:03 import done 19:03; preflight OK. r1 render Low-overcast started (bg, log artifacts/sbs-poses-r3/r1-render.log; waits for PHONE_RUN a16-perf 18:54). Note: the import's Unity slot was taken before PHONE_RUN appeared.
+NEXT: uv run --project tools/refs python artifacts/sbs-poses-r3/tools/sheets.py r1 Low-overcast ; look at sheets
