@@ -346,3 +346,24 @@ Położenia i obrysy: © OpenStreetMap contributors, ODbL; wysokości gruntu: is
 Wymiary techniczne jednoprzewodowego komina pochodzą z opisu zamówienia ENEA 2025,
 H 120 m wieloprzewodowego potwierdza tekstowy rekord EMKA. Zamknięta fotografia EMKA
 nie jest dystrybuowanym assetem ani otwartą referencją obrazową D43.
+
+## Audyt śledzonych zasobów — M31 (2026-11-12)
+
+Reguła zasobu (taka sama w skrypcie i testach): plik śledzony przez git (`git ls-files`) o rozszerzeniu
+zasobu — tekstura/obraz/HDRI/zdjęcie (png jpg jpeg webp tga tif tiff exr hdr psd bmp), audio (wav ogg mp3
+aiff), model 3D (glb fbx obj blend), font (ttf otf woff woff2) — z pominięciem ścieżek, których segment
+katalogu to `generated`/`_Generated` (bez względu na wielkość liter): tam są wyłącznie wyniki generatorów
+kodu (`Data/**/generated/**`, `game/Assets/_Generated/**`, `game/Assets/_Project/Audio/Generated/**`).
+Pliki `.meta` i `*_meta.json` nie są zasobami. Audyt: `uv run --project tools/licenses python tools/licenses/audit.py`;
+testy: `uv run --project tools/licenses pytest tools/licenses/tests -q`.
+
+| ID | Wzorzec (ścieżka) | Źródło / dowód w repo | Licencja |
+|---|---|---|---|
+| `audit-truck-export-a6` | `art-source/truck/exterior/export/**`, `art-source/truck/interior/export/**`, `art-source/truck/interior/textures/**`, `art-source/truck/trailer/export/**` | wiersze `truck-exterior-a6`, `truck-interior-a6`, `trailer-curtainsider-13-6` powyżej: FBX i atlasy PBR generowane przez `tools/blender/truck/{exterior,interior,trailer}/*.py`, tekstury bake'owane w skryptach, bez pobrań | własna (projekt) |
+| `audit-world-textures-extra` | `art-source/world/textures/car_tyre.png`, `art-source/world/textures/plate_pl.png`, `art-source/world/textures/plate_back.png`, `art-source/world/textures/furniture_*.png`, `art-source/world/vegetation/forest_edge_*_n.png` | `tools/worldgen/streetscape/export.py` (car_tyre, plate_pl); ADR 0120 — `plate_back` proceduralna, `furniture_*` z `streetscape/furniture_textures.py` (ADR 0102/0120, mikrodetal z CC0 Poly Haven wg tabeli ADR 0063); `tools/blender/world/make_trees.py` (forest_edge_*_n) | własna (projekt) + CC0 1.0 (mikrodetal furniture) |
+| `audit-sky-boot` | `game/Assets/_Project/Rendering/Resources/Sky/T_ClearClouds.png`, `game/Assets/_Project/Environment/Boot/T_Checker_1m.png` | ADR 0108 (sekcja „Niebo fotograficzne” powyżej: pochodna CC0 Poly Haven Kloofendal 48d Pure Sky); `game/Assets/_Project/Editor/Setup/BootSceneBuilder.cs` `CreateCheckerTexture` (także raport `docs/reports/AUDIT-DOCS-2026-11-12-mistral.md`) | CC0 1.0 (pochodna nieba) / własna (checker) |
+| `audit-audio-demo` | `art-source/audio/demo/**` | `tools/audio/render_demo.py` + `docs/AUDIO_DESIGN.md` — demo dla właściciela z 100% syntezy własnej (sekcja „Audio” powyżej) | własna (projekt) |
+| `audit-owner-img` | `docs/owner/img/**` | zrzuty ekranu własnej gry użyte w `docs/owner/FEEL-TEST.md` | własna (projekt) |
+| `audit-docs-reports` | `docs/reports/**` | raporty bramek i zrzuty z telefonu własnego builda (`docs/03_ETAPY_I_BRAMKI.md`, `scripts/device-metrics.ps1`), rendery kontrolne (`scripts/visual-qa.ps1`), wykresy audio (`tools/audio/analyze.py`); `docs/reports/map/*.png` to Produced Work OSM/GUGiK (wpis w sekcji „Dane geograficzne”) | własna (projekt); mapy: ODbL 1.0 + dane GUGiK |
+| `audit-artifacts-own` | `artifacts/**` | katalogi robocze agentów — dowody z narzędzi repo (`docs/owner/AGENT-RULES.md` pkt 4): rendery kontrolne, zrzuty ekranu, wykresy analiz, A/B audio (przetworzone klipy ElevenLabs Pro tylko do QA, wiersze `audio-elevenlabs-*`); nie trafiają do buildu. Wyjątek: materiał referencyjny osób trzecich — wiersz niżej | własna (projekt) |
+| `audit-artifacts-refs` | `artifacts/**/refs/**`, `artifacts/**/references/**`, `artifacts/**/reference*/**`, `artifacts/asphalt-r2/backlog-r3-references/**`, `artifacts/sbs-*/**`, `artifacts/vegetation-r3/before/**`, `artifacts/vegetation-r3/after/**`, `artifacts/vegetation-r3/ablation-zero/**`, `artifacts/vegetation-r3/contacts/**`, `artifacts/vegetation-r3/references/**`, `*sbs-*`, `*-prod.*`, `*cm[0-9]*.*`, `*photo*`, `*ortho*`, `*plan*`, `*sheet*`, `*-pair.*`, `*ablation*494288*` | zdjęcia referencyjne Mapillary (CC BY-SA 4.0 — ADR 0065, ADR 0103) i Wikimedia Commons / ortofoto GUGiK (CC0/CC BY, dane GUGiK) — rejestry per katalog (`REFERENCES.json`, `PROVENANCE.md`, `README.md` w katalogach refs/references); użyte tylko jako wzór do QA, żaden piksel nie trafia do tekstur ani buildu | CC BY-SA 4.0 / CC0 / CC BY / dane GUGiK — tylko referencja |

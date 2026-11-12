@@ -1,0 +1,14 @@
+[project]
+name = "truck-licenses"
+version = "0.1.0"
+description = "TRUCK SIM PL license audit: tracked binary assets vs docs/LICENSES.md (CLAUDE.md rule 8)"
+requires-python = "==3.12.*"
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "pytest>=9.2.0",
+]
+
+[tool.uv]
+package = false
