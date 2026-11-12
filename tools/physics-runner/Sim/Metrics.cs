@@ -292,7 +292,29 @@ namespace PhysicsRunner.Sim
                     double m = 0;
                     for (int i = i0; i <= i1; i++)
                         if (s[i].AmtState >= (int)AmtState.ShiftTorqueRamp)
-                            m = Math.Max(m, s[i].WheelBrakeTorque + s[i].RetarderTorque + s[i].EngineBrakeTorque);
+                            // The engine brake counts only while the clutch transmits: with the clutch open it only pulls the
+                            // engine down to the new gear's speed (AMT up-shift sync, ADR 0134) and cannot brake the vehicle.
+                            m = Math.Max(m, s[i].WheelBrakeTorque + s[i].RetarderTorque + (s[i].ClutchCmd > 0.01 ? s[i].EngineBrakeTorque : 0));
+                    return m;
+                }
+                case "max_shift_eye_pitch_swing_deg":
+                {
+                    // ADR 0134 (owner feel test 2026-11-12, "buja jak sportowe auto"): peak-to-peak pitch of the driver's eye
+                    // in the world (chassis pitch, nose up +, minus cab pitch relative to the frame, nose down +) within
+                    // arg seconds (default 1.5) after the start of each shift; worst shift. The cab-view camera rides on
+                    // the cab pivot, so this is the nod the player sees on every gear change.
+                    double win = arg > 0 ? arg : 1.5, m = 0;
+                    for (int i = Math.Max(i0, 1); i <= i1; i++)
+                    {
+                        if (!(s[i].AmtState == (int)AmtState.ShiftTorqueRamp && s[i - 1].AmtState != (int)AmtState.ShiftTorqueRamp)) continue;
+                        double lo = double.MaxValue, hi = double.MinValue;
+                        for (int j = i; j <= i1 && s[j].T <= s[i].T + win; j++)
+                        {
+                            double e = s[j].Pitch - s[j].CabPitch;
+                            lo = Math.Min(lo, e); hi = Math.Max(hi, e);
+                        }
+                        m = Math.Max(m, (hi - lo) * MathUtil.Rad2Deg);
+                    }
                     return m;
                 }
                 case "min_accel_shift_gap_ms2":

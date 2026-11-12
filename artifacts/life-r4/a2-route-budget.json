@@ -1,0 +1,22 @@
+{
+  "all_camera_summary": "a2-budget-summary.json",
+  "conditions": {
+    "Low-clear": {
+      "max_tris_percent": 0.3658086082153766,
+      "cameras": 59
+    },
+    "High-overcast": {
+      "max_tris_percent": 0.585729008044545,
+      "cameras": 59
+    },
+    "High-clear": {
+      "max_tris_percent": 0.585729008044545,
+      "cameras": 59
+    },
+    "Low-overcast": {
+      "max_tris_percent": 0.3658086082153766,
+      "cameras": 59
+    }
+  },
+  "source_capture": "after-a2-inputs.json"
+}

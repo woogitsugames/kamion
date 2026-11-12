@@ -1,0 +1,88 @@
+{
+  "semantic_differences": [
+    {
+      "prefab": "game/Assets/_Generated/Truck/Tractor4x2_TRAKT.prefab",
+      "category": "renderers",
+      "node": "/Tractor4x2_TRAKT/CabSuspension/CabBody/CAB_Body_LOD0/DOOR_R_LOD0/DOOR_R_LOD2",
+      "before": {
+        "m_Enabled": 1,
+        "m_RenderingLayerMask": 1025,
+        "m_CastShadows": 1,
+        "m_ReceiveShadows": 1,
+        "m_Materials": [
+          {
+            "fileID": 2100000,
+            "guid": "32fa2cbb987c35c4197a858e0d1252c9",
+            "type": 2
+          },
+          {
+            "fileID": 2100000,
+            "guid": "f345b4932d558c742bc6290af916e0a0",
+            "type": 2
+          }
+        ]
+      },
+      "after": {
+        "m_Enabled": 1,
+        "m_RenderingLayerMask": 1025,
+        "m_CastShadows": 1,
+        "m_ReceiveShadows": 1,
+        "m_Materials": [
+          {
+            "fileID": 2100000,
+            "guid": "f345b4932d558c742bc6290af916e0a0",
+            "type": 2
+          },
+          {
+            "fileID": 2100000,
+            "guid": "32fa2cbb987c35c4197a858e0d1252c9",
+            "type": 2
+          }
+        ]
+      }
+    },
+    {
+      "prefab": "game/Assets/_Generated/Truck/Tractor4x2_TRAKT.prefab",
+      "category": "renderers",
+      "node": "/Tractor4x2_TRAKT/CabSuspension/CabBody/CAB_Body_LOD0/DOOR_L_LOD0/DOOR_L_LOD2",
+      "before": {
+        "m_Enabled": 1,
+        "m_RenderingLayerMask": 1025,
+        "m_CastShadows": 1,
+        "m_ReceiveShadows": 1,
+        "m_Materials": [
+          {
+            "fileID": 2100000,
+            "guid": "32fa2cbb987c35c4197a858e0d1252c9",
+            "type": 2
+          },
+          {
+            "fileID": 2100000,
+            "guid": "f345b4932d558c742bc6290af916e0a0",
+            "type": 2
+          }
+        ]
+      },
+      "after": {
+        "m_Enabled": 1,
+        "m_RenderingLayerMask": 1025,
+        "m_CastShadows": 1,
+        "m_ReceiveShadows": 1,
+        "m_Materials": [
+          {
+            "fileID": 2100000,
+            "guid": "f345b4932d558c742bc6290af916e0a0",
+            "type": 2
+          },
+          {
+            "fileID": 2100000,
+            "guid": "32fa2cbb987c35c4197a858e0d1252c9",
+            "type": 2
+          }
+        ]
+      }
+    }
+  ],
+  "poses_identical": true,
+  "note": "Only two Low door renderers reorder Paint/Trim slots. TruckAssetBuilder.cs reads actual imported material names and resolves each name in the same order (lines552-560); no positional material-index contract assumed. Whole Low comparisons show no visible material swap. File bytes and mesh payloads intentionally differ."
+}

@@ -1,4 +1,24 @@
 {
+  "appearance_policy": {
+    "classification": "declared function; height alone does not imply an energy plant",
+    "industrial_panel_min_height_m": 12.0,
+    "not_measured": [
+      "wall_colour",
+      "cladding_modules",
+      "glazing_band",
+      "roof_fascia"
+    ],
+    "panel_alpha": 0.25,
+    "panel_ribbon_alpha": 0.65,
+    "schema": "far-field-appearance/1",
+    "source_hall_counts": {
+      "energy": 5,
+      "industrial": 283,
+      "other": 1314
+    },
+    "source_panel_hall_count": 18,
+    "status": "WORKING_VALUE"
+  },
   "boundary_exclusions": {
     "bdot_rectangle": 2,
     "bdot_source": 593,
@@ -76,7 +96,7 @@
           "vertices": 26631
         }
       },
-      "sha256": "a38ae38ee249fe6186044fe50f6362a97d16ded9f768773184742e829beba8d4",
+      "sha256": "a87693a344b8298f09a5c929dd1101237993945942da1786348df075fe15ea5b",
       "total_triangles": 118524,
       "total_vertices": 209212
     },
@@ -121,7 +141,7 @@
           "vertices": 5982
         }
       },
-      "sha256": "8758975811917023433566a37677bbf073af5d96f76603ca96b76820421b6076",
+      "sha256": "13c637deaaa6baa8297ae35d3a2f5dce66ffa911ebe3800b9f09a428dc3c2f29",
       "total_triangles": 24500,
       "total_vertices": 45144
     }

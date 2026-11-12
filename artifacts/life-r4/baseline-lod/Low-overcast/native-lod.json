@@ -1,0 +1,449 @@
+{
+    "schema": "kamion/life4-native-lod-buffer/1",
+    "note": "Actual compiled WorldInstances.OnBeginCamera dispatch, selected-prototype retained batches cleared before each diagnostic camera. CPU submission evidence, not GPU/A16 timing. Compare diagnostic legacy counts and pose with canonical capture.",
+    "rows": [
+        {
+            "camera": "yard_tractor_blue_side8",
+            "prototype": "tractor_blue",
+            "nativeIndex": 5166,
+            "prototypeCount": 34,
+            "observedLods": [
+                0
+            ],
+            "meshTriangles": [
+                766,
+                286
+            ],
+            "distance": 8.242512702941895,
+            "distanceScale": 1.0,
+            "qualityLodBias": 0.5,
+            "localPosition": {
+                "x": 805.6909790039063,
+                "y": 144.3719940185547,
+                "z": -605.1710205078125
+            },
+            "worldPosition": {
+                "x": 805.6909790039063,
+                "y": 13.23199462890625,
+                "z": -605.1710205078125
+            },
+            "cameraPosition": {
+                "x": 800.3297119140625,
+                "y": 14.731993675231934,
+                "z": -599.0927124023438
+            },
+            "instanceDraws": 106,
+            "instanceTriangles": 8934,
+            "instances": 109
+        },
+        {
+            "camera": "yard_tractor_blue_wheel2",
+            "prototype": "tractor_blue",
+            "nativeIndex": 5166,
+            "prototypeCount": 34,
+            "observedLods": [
+                0
+            ],
+            "meshTriangles": [
+                766,
+                286
+            ],
+            "distance": 4.240347862243652,
+            "distanceScale": 1.0,
+            "qualityLodBias": 0.5,
+            "localPosition": {
+                "x": 805.6909790039063,
+                "y": 144.3719940185547,
+                "z": -605.1710205078125
+            },
+            "worldPosition": {
+                "x": 805.6909790039063,
+                "y": 13.23199462890625,
+                "z": -605.1710205078125
+            },
+            "cameraPosition": {
+                "x": 804.6281127929688,
+                "y": 13.231993675231934,
+                "z": -601.0660400390625
+            },
+            "instanceDraws": 81,
+            "instanceTriangles": 8066,
+            "instances": 95
+        },
+        {
+            "camera": "yard_tractor_white_side8",
+            "prototype": "tractor_white",
+            "nativeIndex": 14164,
+            "prototypeCount": 19,
+            "observedLods": [
+                0
+            ],
+            "meshTriangles": [
+                766,
+                286
+            ],
+            "distance": 8.242594718933106,
+            "distanceScale": 1.0,
+            "qualityLodBias": 0.5,
+            "localPosition": {
+                "x": 582.041015625,
+                "y": 138.61199951171876,
+                "z": -236.23500061035157
+            },
+            "worldPosition": {
+                "x": 582.041015625,
+                "y": 7.4720001220703129,
+                "z": -236.23500061035157
+            },
+            "cameraPosition": {
+                "x": 588.4946899414063,
+                "y": 8.971999168395996,
+                "z": -241.1381072998047
+            },
+            "instanceDraws": 390,
+            "instanceTriangles": 48117,
+            "instances": 357
+        },
+        {
+            "camera": "yard_tractor_white_wheel2",
+            "prototype": "tractor_white",
+            "nativeIndex": 14164,
+            "prototypeCount": 19,
+            "observedLods": [
+                0
+            ],
+            "meshTriangles": [
+                766,
+                286
+            ],
+            "distance": 4.240345478057861,
+            "distanceScale": 1.0,
+            "qualityLodBias": 0.5,
+            "localPosition": {
+                "x": 582.041015625,
+                "y": 138.61199951171876,
+                "z": -236.23500061035157
+            },
+            "worldPosition": {
+                "x": 582.041015625,
+                "y": 7.4720001220703129,
+                "z": -236.23500061035157
+            },
+            "cameraPosition": {
+                "x": 583.8917236328125,
+                "y": 7.471999645233154,
+                "z": -240.05015563964845
+            },
+            "instanceDraws": 349,
+            "instanceTriangles": 35943,
+            "instances": 257
+        },
+        {
+            "camera": "yard_trailer_curtain_0_side8",
+            "prototype": "trailer_curtain_0",
+            "nativeIndex": 12290,
+            "prototypeCount": 36,
+            "observedLods": [
+                0
+            ],
+            "meshTriangles": [
+                1102,
+                316
+            ],
+            "distance": 9.233634948730469,
+            "distanceScale": 1.0,
+            "qualityLodBias": 0.5,
+            "localPosition": {
+                "x": 242.1649932861328,
+                "y": 140.38600158691407,
+                "z": -285.4590148925781
+            },
+            "worldPosition": {
+                "x": 242.1649932861328,
+                "y": 9.246002197265625,
+                "z": -285.4590148925781
+            },
+            "cameraPosition": {
+                "x": 246.94110107421876,
+                "y": 10.746001243591309,
+                "z": -293.2178039550781
+            },
+            "instanceDraws": 349,
+            "instanceTriangles": 47500,
+            "instances": 241
+        },
+        {
+            "camera": "yard_trailer_curtain_0_supports5",
+            "prototype": "trailer_curtain_0",
+            "nativeIndex": 12290,
+            "prototypeCount": 36,
+            "observedLods": [
+                0
+            ],
+            "meshTriangles": [
+                1102,
+                316
+            ],
+            "distance": 11.853240013122559,
+            "distanceScale": 1.0,
+            "qualityLodBias": 0.5,
+            "localPosition": {
+                "x": 242.1649932861328,
+                "y": 140.38600158691407,
+                "z": -285.4590148925781
+            },
+            "worldPosition": {
+                "x": 242.1649932861328,
+                "y": 9.246002197265625,
+                "z": -285.4590148925781
+            },
+            "cameraPosition": {
+                "x": 241.72067260742188,
+                "y": 9.246001243591309,
+                "z": -297.3039245605469
+            },
+            "instanceDraws": 322,
+            "instanceTriangles": 40442,
+            "instances": 213
+        },
+        {
+            "camera": "yard_trailer_curtain_0_wheel2",
+            "prototype": "trailer_curtain_0",
+            "nativeIndex": 12290,
+            "prototypeCount": 36,
+            "observedLods": [
+                0
+            ],
+            "meshTriangles": [
+                1102,
+                316
+            ],
+            "distance": 4.159671783447266,
+            "distanceScale": 1.0,
+            "qualityLodBias": 0.5,
+            "localPosition": {
+                "x": 242.1649932861328,
+                "y": 140.38600158691407,
+                "z": -285.4590148925781
+            },
+            "worldPosition": {
+                "x": 242.1649932861328,
+                "y": 9.246002197265625,
+                "z": -285.4590148925781
+            },
+            "cameraPosition": {
+                "x": 243.92088317871095,
+                "y": 9.246001243591309,
+                "z": -289.22991943359377
+            },
+            "instanceDraws": 299,
+            "instanceTriangles": 29498,
+            "instances": 154
+        },
+        {
+            "camera": "yard_trailer_curtain_3_side8",
+            "prototype": "trailer_curtain_3",
+            "nativeIndex": 20483,
+            "prototypeCount": 32,
+            "observedLods": [
+                0
+            ],
+            "meshTriangles": [
+                1102,
+                316
+            ],
+            "distance": 9.233569145202637,
+            "distanceScale": 1.0,
+            "qualityLodBias": 0.5,
+            "localPosition": {
+                "x": 341.1839904785156,
+                "y": 134.9550018310547,
+                "z": -52.305999755859378
+            },
+            "worldPosition": {
+                "x": 341.1839904785156,
+                "y": 3.81500244140625,
+                "z": -52.305999755859378
+            },
+            "cameraPosition": {
+                "x": 341.2304992675781,
+                "y": 5.315001964569092,
+                "z": -43.1952018737793
+            },
+            "instanceDraws": 336,
+            "instanceTriangles": 29151,
+            "instances": 250
+        },
+        {
+            "camera": "yard_trailer_curtain_3_supports5",
+            "prototype": "trailer_curtain_3",
+            "nativeIndex": 20483,
+            "prototypeCount": 32,
+            "observedLods": [
+                0
+            ],
+            "meshTriangles": [
+                1102,
+                316
+            ],
+            "distance": 11.853266716003418,
+            "distanceScale": 1.0,
+            "qualityLodBias": 0.5,
+            "localPosition": {
+                "x": 341.1839904785156,
+                "y": 134.9550018310547,
+                "z": -52.305999755859378
+            },
+            "worldPosition": {
+                "x": 341.1839904785156,
+                "y": 3.81500244140625,
+                "z": -52.305999755859378
+            },
+            "cameraPosition": {
+                "x": 334.64666748046877,
+                "y": 3.8150017261505129,
+                "z": -42.41846466064453
+            },
+            "instanceDraws": 285,
+            "instanceTriangles": 27602,
+            "instances": 219
+        },
+        {
+            "camera": "yard_trailer_curtain_3_wheel2",
+            "prototype": "trailer_curtain_3",
+            "nativeIndex": 20483,
+            "prototypeCount": 32,
+            "observedLods": [
+                0
+            ],
+            "meshTriangles": [
+                1102,
+                316
+            ],
+            "distance": 4.1596879959106449,
+            "distanceScale": 1.0,
+            "qualityLodBias": 0.5,
+            "localPosition": {
+                "x": 341.1839904785156,
+                "y": 134.9550018310547,
+                "z": -52.305999755859378
+            },
+            "worldPosition": {
+                "x": 341.1839904785156,
+                "y": 3.81500244140625,
+                "z": -52.305999755859378
+            },
+            "cameraPosition": {
+                "x": 340.72357177734377,
+                "y": 3.8150017261505129,
+                "z": -48.171871185302737
+            },
+            "instanceDraws": 280,
+            "instanceTriangles": 26036,
+            "instances": 210
+        },
+        {
+            "camera": "yard_trailer_reefer_0_side8",
+            "prototype": "trailer_reefer_0",
+            "nativeIndex": 12285,
+            "prototypeCount": 53,
+            "observedLods": [
+                0
+            ],
+            "meshTriangles": [
+                1192,
+                290
+            ],
+            "distance": 9.233625411987305,
+            "distanceScale": 1.0,
+            "qualityLodBias": 0.5,
+            "localPosition": {
+                "x": 205.6219940185547,
+                "y": 139.76499938964845,
+                "z": -268.82598876953127
+            },
+            "worldPosition": {
+                "x": 205.6219940185547,
+                "y": 8.625,
+                "z": -268.82598876953127
+            },
+            "cameraPosition": {
+                "x": 213.17640686035157,
+                "y": 10.124999046325684,
+                "z": -263.7327880859375
+            },
+            "instanceDraws": 388,
+            "instanceTriangles": 84170,
+            "instances": 1188
+        },
+        {
+            "camera": "yard_trailer_reefer_0_supports5",
+            "prototype": "trailer_reefer_0",
+            "nativeIndex": 12285,
+            "prototypeCount": 53,
+            "observedLods": [
+                0
+            ],
+            "meshTriangles": [
+                1192,
+                290
+            ],
+            "distance": 11.853270530700684,
+            "distanceScale": 1.0,
+            "qualityLodBias": 0.5,
+            "localPosition": {
+                "x": 205.6219940185547,
+                "y": 139.76499938964845,
+                "z": -268.82598876953127
+            },
+            "worldPosition": {
+                "x": 205.6219940185547,
+                "y": 8.625,
+                "z": -268.82598876953127
+            },
+            "cameraPosition": {
+                "x": 217.4751739501953,
+                "y": 8.624999046325684,
+                "z": -268.7796630859375
+            },
+            "instanceDraws": 407,
+            "instanceTriangles": 79592,
+            "instances": 1132
+        },
+        {
+            "camera": "yard_trailer_reefer_0_wheel2",
+            "prototype": "trailer_reefer_0",
+            "nativeIndex": 12285,
+            "prototypeCount": 53,
+            "observedLods": [
+                0
+            ],
+            "meshTriangles": [
+                1192,
+                290
+            ],
+            "distance": 4.159679889678955,
+            "distanceScale": 1.0,
+            "qualityLodBias": 0.5,
+            "localPosition": {
+                "x": 205.6219940185547,
+                "y": 139.76499938964845,
+                "z": -268.82598876953127
+            },
+            "worldPosition": {
+                "x": 205.6219940185547,
+                "y": 8.625,
+                "z": -268.82598876953127
+            },
+            "cameraPosition": {
+                "x": 209.3170166015625,
+                "y": 8.624999046325684,
+                "z": -266.9155578613281
+            },
+            "instanceDraws": 388,
+            "instanceTriangles": 76535,
+            "instances": 1115
+        }
+    ],
+    "errors": []
+}

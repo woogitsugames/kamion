@@ -68,6 +68,7 @@ Shader "Kamion/World PBR"
         _AgeTint ("Patch age target / base albedo ratio", Float) = 2.0
         _PatchSeam ("Repair: seam width m, darkening, fresh tone, aged tone (ADR0118)", Vector) = (0, 0, 1, 1)
         _DecalAlpha ("Decal opacity", Range(0, 1)) = 1
+        _DecalCells ("Decal atlas cells per side (_DECAL_ALPHA): 2 oil atlas, 1 whole UV", Float) = 2
         _SplashHeight ("Splash zone height (m)", Float) = 0.6
         _RunoffMap ("Parapet run-off (R soot, G rust; _RUNOFF)", 2D) = "black" {}
         _RunoffStrength ("Parapet run-off strength", Range(0, 1)) = 0.5
@@ -105,7 +106,7 @@ Shader "Kamion/World PBR"
             float4 _Tile;
             float _AlbedoScale, _NormalStrength, _SmoothnessScale, _MetallicScale;
             float _ElementJitter, _ElementSize, _MacroSize, _MacroStrength, _MacroWear, _CrackStrength, _DetailFade;
-            float _WheelPolish, _GutterDirt, _AgeTint, _DecalAlpha, _SplashHeight, _GroundTint, _RunoffStrength;
+            float _WheelPolish, _GutterDirt, _AgeTint, _DecalAlpha, _DecalCells, _SplashHeight, _GroundTint, _RunoffStrength;
             float4 _PanelTone;
             float4 _Stripe, _StripeA, _StripeB;
             float4 _GrassFill;
@@ -477,7 +478,11 @@ Shader "Kamion/World PBR"
                     albedo *= lerp(1.0, 0.35, cm.r * amount);
                     albedo = lerp(albedo, half3(0.03, 0.03, 0.03), cm.g * amount);
                     albedo *= 1.0 - cm.a * amount * 0.12;
-                    smooth = lerp(smooth, 0.55, cm.g * amount);
+                    // ADR 0131: aged, dust-filmed bitumen sealant - a dark band only slightly smoother than the asphalt
+                    // around it (+0.06, WORKING_VALUE). At 0.55 the env term at grazing NoV (grazing = smooth)
+                    // out-reflected the 0.03 albedo and the sealant read as white chalk, also under an overcast sky;
+                    // at 0.24 it cancelled the dark albedo exactly (invisible from the driver's eye height).
+                    smooth = lerp(smooth, smooth + 0.06, cm.g * amount);
                 #if defined(_KAMION_WORLD_DETAIL)
                     half3 cn = UnpackNormalScale(SAMPLE_TEXTURE2D(_CrackNormal, sampler_CrackMap, uc), amount);
                     tn = normalize(half3(tn.xy + cn.xy, tn.z * cn.z));
@@ -610,10 +615,12 @@ Shader "Kamion/World PBR"
             #endif
             #if defined(_DECAL_ALPHA)
                 {
-                    // 2x2 atlas, one stain per cell, centre 0.5/0.5 of the radial UV; cell from TEXCOORD_1.y
-                    float cell = floor(saturate(i.uv.w) * 3.999);
-                    float2 cxy = float2(fmod(cell, 2.0), floor(cell * 0.5));
-                    float2 ua = (saturate(i.uv.xy) + cxy) * 0.5;
+                    // 2x2 atlas, one stain per cell, centre 0.5/0.5 of the radial UV; cell from TEXCOORD_1.y.
+                    // ADR 0131: _DecalCells 1 = the whole UV (Fab manhole / drain covers, their own atlas rects).
+                    float cells = max(_DecalCells, 1.0);
+                    float cell = floor(saturate(i.uv.w) * (cells * cells - 0.001));
+                    float2 cxy = float2(fmod(cell, cells), floor(cell / cells));
+                    float2 ua = (saturate(i.uv.xy) + cxy) / cells;
                     half4 st = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, ua);
                     half4 sm = SAMPLE_TEXTURE2D(_MaskMap, sampler_MaskMap, ua);
                     albedo = st.rgb * _Tint.rgb * _AlbedoScale;

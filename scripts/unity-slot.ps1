@@ -22,7 +22,7 @@ param(
     [switch]$Status,
     [string]$Owner = $env:USERNAME,
     # Pool: 'unity' (Unity batch: import, tests, renders, builds; max 4) or 'heavy' (Python world jobs:
-    # build_world.py, build_all.py, pytest tests/gis|physics|gate3, fidelity/run.py; max 3 - each takes 1-8 GB and all cores).
+    # build_world.py, build_all.py, pytest tests/gis|physics|gate3, fidelity/run.py; max 4 (s13) - each takes 1-8 GB and all cores).
     # 2026-11-11: ~13 parallel pytest/build_world runs froze the PC at 100 % CPU / RAM.
     [ValidateSet('unity', 'heavy')] [string]$Pool = 'unity',
     [int]$MaxSlots = 0,
@@ -33,7 +33,7 @@ param(
 )
 $ErrorActionPreference = 'Stop'
 $main = 'C:\Users\matma\Documents\Claude\kamion'
-if ($MaxSlots -le 0) { $MaxSlots = if ($Pool -eq 'heavy') { 3 } else { 4 } }
+if ($MaxSlots -le 0) { $MaxSlots = if ($Pool -eq 'heavy') { 4 } else { 4 } }
 $dir = Join-Path $main ("artifacts\locks\{0}-slots" -f $Pool)
 $phone = Join-Path $main 'artifacts\locks\PHONE_RUN'
 New-Item -ItemType Directory -Force $dir | Out-Null
@@ -85,7 +85,9 @@ if ($Acquire) {
                 }
             }
             $free = $MaxSlots - $live.Count
-            if (-not (Test-Path $phone) -and -not $blockedByReserve -and $free -gt 0 -and $ahead -lt $free) {
+            # PHONE_RUN blocks only the Unity pool (Unity kills the adb daemon); heavy Python jobs do not touch adb.
+            $phoneBlocks = ($Pool -eq 'unity') -and (Test-Path $phone)
+            if (-not $phoneBlocks -and -not $blockedByReserve -and $free -gt 0 -and $ahead -lt $free) {
                 "$safe $(Get-Date -Format o)" | Set-Content $mine
                 Start-Sleep -Milliseconds (Get-Random -Minimum 200 -Maximum 900)   # settle a race between two acquirers
                 if (@(Get-LiveSlots).Count -le $MaxSlots) {

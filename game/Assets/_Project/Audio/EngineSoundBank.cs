@@ -29,6 +29,9 @@ namespace TruckSim.Audio
         [Tooltip("0 = 2D (cab), 1 = fully 3D (exterior, source on the engine bay).")]
         [Range(0f, 1f)] public float spatialBlend = 1f;
 
+        [Tooltip("Cells are unrelated recordings (ElevenLabs, ADR 0137): crossfade equal-power, no crank-phase alignment.")]
+        public bool incoherent;
+
         public int RpmCount => rpmPoints.Length;
         public int LoadCount => loadPoints.Length;
 

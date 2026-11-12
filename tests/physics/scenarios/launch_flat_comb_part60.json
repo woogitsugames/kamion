@@ -1,0 +1,110 @@
+{
+  "schemaVersion": 1,
+  "id": "launch_flat_comb_part60",
+  "description": "Standstill on flat, release brake, 60 % pedal (owner-style launch, feel test 2026-11-12), AMT auto",
+  "spec": "docs/04 s6.2, s6.3; ADR 0134",
+  "variants": [
+    "empty",
+    "laden40"
+  ],
+  "ground": {
+    "gradePercent": 0,
+    "surface": "dry_asphalt"
+  },
+  "initial": {},
+  "duration": 60,
+  "driver": {
+    "type": "timeline",
+    "keys": [
+      {
+        "t": 0,
+        "throttle": 0,
+        "brake": 1,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D"
+      },
+      {
+        "t": 1.0,
+        "throttle": 0.6,
+        "brake": 0,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D"
+      }
+    ]
+  },
+  "checks": [
+    {
+      "metric": "rollback_m",
+      "status": "WORKING_VALUE",
+      "source": "no rollback on flat",
+      "max": 0.02
+    },
+    {
+      "metric": "stalled",
+      "status": "WORKING_VALUE",
+      "source": "engine must not stall",
+      "max": 0
+    },
+    {
+      "metric": "min_rpm",
+      "status": "WORKING_VALUE",
+      "source": "engine stays near idle or above",
+      "min": 550,
+      "from": 1
+    },
+    {
+      "metric": "time_to_kmh",
+      "status": "DERIVED",
+      "source": "part load: plausibility around the Proctor/Grimes SAE 950136 traffic averages (bobtail 0.138 g, box 0.106 g over the first 50 ft)",
+      "min": 8,
+      "max": 30,
+      "arg": 50,
+      "variant": "empty"
+    },
+    {
+      "metric": "time_to_kmh",
+      "status": "DERIVED",
+      "source": "part load 40 t: ~3.5 ft/s2 max from rest for 27-36 t trucks (Washburn freight curriculum 4.1, engineering estimate) -> >= 13 s to 50 km/h",
+      "min": 15,
+      "max": 45,
+      "arg": 50,
+      "variant": "laden40"
+    },
+    {
+      "metric": "max_shift_retard_torque_nm",
+      "status": "WORKING_VALUE",
+      "source": "ADR 0004 addendum 2026-11-10: no vehicle braking during an up-shift",
+      "max": 1,
+      "from": 1
+    },
+    {
+      "metric": "max_shift_eye_pitch_swing_deg",
+      "status": "WORKING_VALUE",
+      "source": "ADR 0134 regression guard (WORKING_VALUE): per-shift eye nod at 60 % pedal; before ADR 0134 4.5 deg empty / 3.2 deg laden",
+      "max": 3.8,
+      "arg": 1.5,
+      "from": 1,
+      "to": 30
+    },
+    {
+      "metric": "max_clutch_temp_c",
+      "status": "WORKING_VALUE",
+      "source": "clutch below the warning temperature on a flat start",
+      "max": 250
+    },
+    {
+      "metric": "max_dv_step_ms",
+      "status": "WORKING_VALUE",
+      "source": "no solver explosion / impulse spikes (per-step velocity change of either body)",
+      "max": 0.35
+    },
+    {
+      "metric": "max_fifth_wheel_error_mm",
+      "status": "WORKING_VALUE",
+      "source": "kingpin constraint drift (custom fifth-wheel constraint)",
+      "max": 5
+    }
+  ]
+}

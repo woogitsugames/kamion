@@ -200,6 +200,7 @@ namespace Game.Editor.Build
                 Debug.Log(sb.ToString());
                 Debug.Log("BUILD_SHADER_VARIANTS: " + ShaderVariantCounter.Summary());
                 File.WriteAllText(Path.ChangeExtension(outputPath, ".top.txt"), sb + "SHADER_VARIANTS " + ShaderVariantCounter.Summary() + nl);
+                File.WriteAllText(Path.ChangeExtension(outputPath, ".variants.txt"), ShaderVariantCounter.Full() + nl);
             }
             catch (Exception e) { Debug.LogWarning("[BUILD] content report failed: " + e.Message); }
         }

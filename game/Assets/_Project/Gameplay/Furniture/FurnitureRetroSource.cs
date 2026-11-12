@@ -59,6 +59,11 @@ namespace Game.Gameplay.Furniture
             Shader.SetGlobalVector(State, Vector4.zero);
         }
 
+        // ADR 0131: zero GC in the render loop. Sockets are re-scanned only when the rig hierarchy differs from the
+        // last scan (root id / transform count), into a reused list; a missing TruckLights is looked up at most once a
+        // second (2 s of per-camera retries after a scene change), and that lookup is FindAnyObjectByType only.
+        static readonly System.Collections.Generic.List<Transform> s_Sockets = new System.Collections.Generic.List<Transform>(256);
+
         static void BeginCamera(ScriptableRenderContext context, Camera camera)
         {
             float now=Time.realtimeSinceStartup;
@@ -70,36 +75,42 @@ namespace Game.Gameplay.Furniture
                 s_NextFind=0; s_FastRetryUntil=now+2f;
                 s_RootId=s_HierarchyCount=0;
             }
-            // A newly created/rebuilt rig must not inherit the missing-source retry delay.
-            if (!ReferenceEquals(s_Lights,null) && s_Lights==null) s_NextFind=0;
-            if (s_Lights!=null)
+            // Destroyed rig (Unity-null): forget it and look again without the idle delay.
+            if (!ReferenceEquals(s_Lights,null) && s_Lights==null) { s_Lights=null; s_NextFind=0; s_RootId=s_HierarchyCount=0; }
+            if (s_Lights==null || !s_Lights.isActiveAndEnabled)
             {
-                var root=s_Lights.body!=null?s_Lights.body.transform:s_Lights.transform;
-                if(root.GetInstanceID()!=s_RootId || root.hierarchyCount!=s_HierarchyCount) s_NextFind=0;
-            }
-            if ((s_Lights == null || !s_Lights.isActiveAndEnabled || s_Left == null || s_Right == null
-                || s_HighLeft == null || s_HighRight == null)
-                && (now >= s_NextFind || now < s_FastRetryUntil))
-            {
-                s_NextFind = Time.realtimeSinceStartup + 1f;
-                s_Lights = Object.FindAnyObjectByType<TruckLights>();
-                s_Left = s_Right = null;
-                s_HighLeft = s_HighRight = null;
-                if (s_Lights != null)
+                if (now>=s_NextFind || now<s_FastRetryUntil)
                 {
-                    var root = s_Lights.body != null ? s_Lights.body.transform : s_Lights.transform;
-                    s_RootId=root.GetInstanceID(); s_HierarchyCount=root.hierarchyCount;
-                    // One discovery allocation, at most once a second while the rig is unavailable.
-                    foreach (var socket in root.GetComponentsInChildren<Transform>(true))
-                    {
-                        if (socket.name == "LIGHT_LowBeam_L") s_Left = socket;
-                        else if (socket.name == "LIGHT_LowBeam_R") s_Right = socket;
-                        else if (socket.name == "LIGHT_HighBeam_L") s_HighLeft = socket;
-                        else if (socket.name == "LIGHT_HighBeam_R") s_HighRight = socket;
-                    }
+                    s_NextFind=now+1f;
+                    var found=Object.FindAnyObjectByType<TruckLights>();
+                    if (!ReferenceEquals(found,s_Lights)) { s_Lights=found; s_RootId=s_HierarchyCount=0; }
                 }
             }
+            if (s_Lights!=null && (s_Left==null || s_Right==null || s_HighLeft==null || s_HighRight==null))
+            {
+                var root=s_Lights.body!=null?s_Lights.body.transform:s_Lights.transform;
+                // Incomplete rig: scan again only when its hierarchy changed since the last scan (sockets added later).
+                if (root.GetInstanceID()!=s_RootId || root.hierarchyCount!=s_HierarchyCount) Discover(root);
+            }
             Publish(s_Lights, s_Left, s_Right, s_HighLeft, s_HighRight);
+        }
+
+        static void Discover(Transform root)
+        {
+            s_RootId=root.GetInstanceID(); s_HierarchyCount=root.hierarchyCount;
+            s_Left=s_Right=s_HighLeft=s_HighRight=null;
+            root.GetComponentsInChildren(true, s_Sockets);
+            for (int i=0;i<s_Sockets.Count;i++)
+            {
+                var socket=s_Sockets[i];
+                // Transform.name marshals a string: this runs once per distinct hierarchy, never per frame.
+                string n=socket.name;
+                if (n=="LIGHT_LowBeam_L") s_Left=socket;
+                else if (n=="LIGHT_LowBeam_R") s_Right=socket;
+                else if (n=="LIGHT_HighBeam_L") s_HighLeft=socket;
+                else if (n=="LIGHT_HighBeam_R") s_HighRight=socket;
+            }
+            s_Sockets.Clear();
         }
 
         /// <summary>Explicit source input also lets EditMode verify stale/off state without a fabricated live source.</summary>

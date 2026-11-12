@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4595eb7b062092e4cb9aab41a7156859, type: 3}
+  m_Name: EngineBrakeBank_el_ext
+  m_EditorClassIdentifier: Game.Audio::TruckSim.Audio.EngineSoundBank
+  rpmPoints:
+  - 1000
+  - 1400
+  - 1800
+  - 2200
+  loadPoints:
+  - 0
+  clips:
+  - {fileID: 8300000, guid: e8c29f9da5be73646b4aaa73f2f43267, type: 3}
+  - {fileID: 8300000, guid: 96e7b29c86d0dcc40a9007ebee9302db, type: 3}
+  - {fileID: 8300000, guid: d9066fe4ec129ea43b5915a36236f0a5, type: 3}
+  - {fileID: 8300000, guid: 7d123cb0b03ef3e4caedf660d2ebff07, type: 3}
+  clipRpmExact:
+  - 999.9999
+  - 1400.0005
+  - 1799.998
+  - 2200.003
+  clipCycles: 48000000480000004800000048000000
+  spatialBlend: 1
+  incoherent: 1
