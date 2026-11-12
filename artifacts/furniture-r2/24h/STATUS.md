@@ -79,3 +79,5 @@ NASTĘPNY KROK: przygotować własne skrypty r2 z ownerem heavy gpt-furniture-r2
 2026-11-12T03:05:57.2174735+01:00: heavy focused candidate1; sukces=True; slot gpt-furniture-r2 zwolniony. NASTĘPNY KROK: sprawdzić log i kontynuować walidację rundy.
 
 2026-11-12T03:06:01.5819075+01:00: heavy focused candidate1; sukces=True; slot gpt-furniture-r2 zwolniony. NASTĘPNY KROK: sprawdzić log i kontynuować walidację rundy.
+
+2026-11-12T03:06:01.7257508+01:00: zapisano NEXT.md z bramkami rzeczywistego importu, kompletu330 par oraz kontrolowanego kadru z prawdziwym riggiem. Test rodziny sam nie dowodzi przypisania wszystkich36 lic w scenie, a kamery kontrolne nie dowodzą pozycji reflektorów. Sekwencja58010 nadal żyje i czeka na heavy; bez duplikatu. NASTĘPNY KROK: odczytać candidate-build.log i przejść do importu dopiero po testach/generatorze/porównaniu geometrii.
