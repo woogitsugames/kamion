@@ -43,3 +43,7 @@
   Obejście: rq_landscape=1 (DiagLandscape) w phone-diag.ps1. r2b (landscape, capped 30, APK 23dc12142c, przeplatane):
   before (rq_vehcull=300) GPU p95 35.70/35.93, after (Low vehicleCullM 150) 34.53/34.47 => -1.3 ms; p99 frame 50 bez zmian; >40: 26/40 -> 26/31.
   NASTĘPNY KROK: landscape uncapped A/B: run-diag1 -Segment A -OutTag diagA4 -Only ab_cc,ab_grime,ab_shadows,ab_shd25,ab_shr512,ab_mirrors,ab_mirres,ab_vc100,ab_veh
+- 19:42 diagA4 (LANDSCAPE, uncapped, po vehcull 150; Δ A-B p50 GPU/CPU): mirrors +1.46/+2.74, shadows +1.11/+2.37, grime +0.68/+0.61,
+  mirres x0.75 +0.47/+0.26, shd25 +0.39, shr512 +0.31, cc +0.15, vc 150->100 +1.29/+1.08, veh (reszta) +0.57/+2.88 (szum okien ±0.7).
+  Zmiana Low #2: mirrorResolutionScale 0.75 (lusterko klasy II 224 -> 168 px = skala renderu Low). Build r2c + przeplatane capped x3 w tle.
+  NASTĘPNY KROK: `python artifacts/a16-perf/summarize.py 'artifacts/a16-perf/r2c/*'`, potem `pwsh artifacts/a16-perf/vqa-r2.ps1 -Before 'rq_vehcull=300,rq_mirror_res=1'`
