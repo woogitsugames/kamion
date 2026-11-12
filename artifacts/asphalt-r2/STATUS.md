@@ -12,3 +12,4 @@
 2026-11-12T01:17:46.9572438+01:00: heavy World owner=gpt-asphalt-r2 exit=0; log artifacts/asphalt-r2/baseline-World.log. Slot zwolniony po zakończeniu procesu.
 2026-11-12T01:17:48.2035662+01:00: Świat i materiały baseline po merge main gotowe, brak Megascans fallback, audyt odwołań bez rozbieżności. Następny krok: import i cztery serie baseline.
 2026-11-12T01:19:55.5463891+01:00: zapisano artifacts/asphalt-r2/baseline/Low-overcast. Następny krok: pozostałe serie lub porównanie wariantu.
+2026-11-12T01:20:26.3278564+01:00: zapisano artifacts/asphalt-r2/baseline/Low-clear. Następny krok: pozostałe serie lub porównanie wariantu.
