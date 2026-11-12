@@ -62,3 +62,5 @@ Krok 9e: B zachowuje osiem pierścieni i pierwotną liczbę narożników, więc 
 Krok 9f: 14:20CET pojawił się PHONE_RUN; waiter B nadal żywy (terminal13840), nic nie uruchamia przed zwolnieniem blokady. Brak własnego lease heavy i nowych logów World B. Kolejka z9 przesunęła się do1 właściciela przede mną. Model B pozostaje zapisany, bez dalszych zmian.
 
 Krok 9g: podczas PHONE_RUN przeanalizowano wyłącznie mały model propozycji C (0,4s, bez eksportu/world/pytest i bez modyfikacji B). Pięć pierścieni+27/78 pionowych sprayów zachowuje98/224 tris i oryginalny próg216 normalnych (240 narożników Low); wszystkie6 pól alfa mniejsze niż baseline. Hipoteza nie ma obrazu i nie jest przyjęta; B nadal czeka na telefon/slot.
+
+Krok 9h: przygotowano niewykonane skrypty końcowych testów. Wymagają FINAL-CANDIDATE.json po rzeczywistym przeglądzie244 par; GIS i physics/gate3 mają osobne Acquire/Release heavy. Kontrola192 plików runtime oraz źródeł, GLB/meta i map Medium remizy przed/po każdym zestawie. EditMode osobno pod Unity. Żadnego z tych testów jeszcze nie uruchomiono; B nadal blokuje PHONE_RUN.
