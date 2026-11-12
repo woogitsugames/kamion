@@ -11,3 +11,4 @@
 - NEXT: pwsh scripts/unity-slot.ps1 -Acquire -Owner claude-putry-deck; pwsh scripts/import-region.ps1 -Region bialystok-industrial-c; release; render_putry.ps1 -OutDir artifacts/putry-deck/after
 - step 5: import-region OK (Low 121.0 MB, High 263.1 MB). NEXT: pwsh artifacts/putry-deck/tools/render_putry.ps1 -OutDir artifacts/putry-deck/after
 - step 6: merged main (clean). Regenerating: build_world (heavy) -> import -> render after (single cycle on merged state). NEXT: pwsh artifacts/putry-deck/tools/build_world.ps1
+- step 7: regen on merged main OK (582 s); lamp_rows placed 14, console 11, rule lamps removed 23. NEXT: import-region (slot) -> render_putry.ps1 -OutDir artifacts/putry-deck/after
