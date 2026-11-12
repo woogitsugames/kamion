@@ -1,7 +1,7 @@
 param([ValidateSet('Import','Capture','Test','Probe')][string]$Stage, [string]$Label = 'baseline',
     [string]$Cameras='', [ValidateSet('Low','High')][string]$ProbeTier='Low',
     [ValidateSet('clear','overcast')][string]$ProbeLighting='overcast',
-    [ValidateSet('none','cracks_off','photo_off','grime_off')][string]$Ablation='none',
+    [ValidateSet('none','cracks_off','photo_off','grime_off','behaton_preview')][string]$Ablation='none',
     [ValidatePattern('^[a-z0-9_]+([,;][a-z0-9_]+)*$')][string]$AblationMaterials='road_asphalt')
 $ErrorActionPreference = 'Stop'
 $repo = (Resolve-Path "$PSScriptRoot/../..").Path
@@ -9,6 +9,10 @@ Set-Location $repo
 $env:KAMION_ARTIFACTS_DIR = Join-Path $repo 'artifacts'
 $slotScript = 'C:\Users\matma\Documents\Claude\kamion\scripts\unity-slot.ps1'
 $importStatePath='artifacts/asphalt-r3/current-import-state.json'
+if($Ablation -eq 'behaton_preview' -and ($Stage -ne 'Probe' -or $AblationMaterials -ne 'yard_asphalt' -or
+    -not $Cameras -or @($Cameras.Split(',')|Where-Object {$_ -notlike 'asphalt_pcrt_*'}).Count)){
+    throw 'Behaton preview is restricted to explicit PCRT inspection probes on yard_asphalt.'
+}
 function Assert-ImportedWorld {
     if(-not(Test-Path $importStatePath)){throw 'No recorded fresh import; run Import first.'}
     $importState=Get-Content $importStatePath -Raw|ConvertFrom-Json
