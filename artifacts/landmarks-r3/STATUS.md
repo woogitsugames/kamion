@@ -71,3 +71,5 @@ Krok 14h: kolejka uzyskała heavy, podpomost 14 PASS/1 deselected (.33 s). EC: 1
 Krok 14i: zapisuję do WIP własne GLB, meta i spec pierwszego wariantu EC wraz z wygenerowaną biblioteką bez starych stożków. Są dowodem już wyrenderowanego after-silhouette; świadomie nie są świeże wobec obecnego buildera/config korekty i kolejny generator ma je odtworzyć po poprawnych jednostkach. Nie traktować tego checkpointu jako gotowego pakietu do scalenia.
 
 Krok 15: jednostki podpomostu i EC wykonane kolejno, osobne pliki i logi artifacts/landmarks-r3/corrected-world.log.pier-units oraz artifacts/landmarks-r3/corrected-world.log.units; testy wygenerowanych wyjść celowo wyłączone do czasu regeneracji. Pod tym samym heavy rozpoczyna się generator, bez równoległego Pythona tej sesji.
+
+Krok 16: generator korekty i dwa osobno wykonane pliki testów EC/podpomostu zakończone; brak fallback=True. Następny krok: import i pełny zestaw czterech warunków after-corrected, bez zmiany kamer baseline.
