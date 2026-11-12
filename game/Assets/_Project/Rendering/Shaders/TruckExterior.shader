@@ -228,10 +228,18 @@ Shader "Kamion/Truck Exterior"
                 half spray = along * ((1.0 - smoothstep(0.55 * edge, edge, hb)) + 0.15 * (1.0 - smoothstep(edge, 1.6 * edge, hb)));
                 float dr = os.z - _CurtainGrime.w;
                 half wake = (1.0 - smoothstep(0.0, 1.3, dr)) * (0.18 + 0.22 * (1.0 - saturate(hb / H)));
-                // ADR 0115 r2: the continuous rail leaves broad dried runoff, not only subpixel post lines.
-                // Reuse the existing longitudinal variation: no extra noise calls, textures or loops on Low.
-                half roofDown = 1.0 - smoothstep(0.0, 1.3, _CurtainGrime.z - os.y);
-                half railFilm = smoothstep(0.25, 0.80, retention) * roofDown * (_CurtainPosts.z * 2.0);
+                // ADR 0115 r2: separate rail-fed trails, with unequal lengths/widths and clean gaps.
+                // A cheap per-cell sequence reuses retention; no extra noise calls, textures or loops on Low.
+                float roofDistance = max(_CurtainGrime.z - os.y, 0.0);
+                float flowCell = dr / 1.25;
+                float seed = frac((floor(flowCell) + 17.0 + step(0.0, os.x) * 11.0) * 0.618034);
+                float centre = lerp(0.25, 0.75, seed);
+                float widthMacro = lerp(0.06, 0.18, frac(seed * 3.17));
+                float flowLength = lerp(0.55, 1.65, frac(seed * 5.31));
+                half trail = 1.0 - smoothstep(widthMacro * 0.35, widthMacro, abs(frac(flowCell) - centre));
+                half trailDown = 1.0 - smoothstep(0.03, flowLength, roofDistance);
+                half railLip = 1.0 - smoothstep(0.02, 0.12, roofDistance);
+                half railFilm = max(railLip * 0.2, trail * trailDown * lerp(0.6, 1.0, retention)) * (_CurtainPosts.z * 2.0);
                 half g = max(max(spray, wake), railFilm); // strength multiplier is a WORKING_VALUE, not a measured deposit
                 if (detail > 0.5)
                 {
@@ -239,6 +247,7 @@ Shader "Kamion/Truck Exterior"
                     float dzp = abs(frac((dr - _CurtainPosts.y) / pitch + 0.5) - 0.5) * pitch;
                     float width = max(0.08, fwidth(os.z) * 1.5);
                     half streak = saturate(exp(-dzp * dzp / (width * width)) * (0.08 / width));
+                    half roofDown = 1.0 - smoothstep(0.0, 1.3, roofDistance);
                     g = max(g, streak * roofDown * _CurtainPosts.z);
                 }
                 return g * _CurtainPosts.w;
