@@ -1,4 +1,4 @@
-param([Parameter(Mandatory)][int]$GisExitCode)
+﻿param([Parameter(Mandatory)][int]$GisExitCode)
 $ErrorActionPreference = 'Stop'
 $repo = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..'))
 Set-Location $repo
@@ -51,8 +51,8 @@ $report = @(
 'Eksperymentalne reflektory pozostają opt-in i domyślnie off we wszystkich presetach. Rzeczywiste anchory pojazdu i istniejący stan świateł, bez kamery jako źródła; 8 testów lifecycle i 32 ujęcia off/on. Brak occlusion, kalibracji kształtu/20 kcd, pomiaru zasięgu i kosztu A16.',
 'Poprawiono błąd dodatkowej kamery QA po Camera.CopyFrom; cztery nowe ujęcia i actual-eye.json potwierdzają poziomy widok. Wcześniejsze pochylone dowody zachowano i opisano, nie uznano ich za poprawny eye.',
 "Testy końcowe: [EditMode 276/276](tests/editmode-final.xml); pełny GIS $passed passed / $xfailed xfailed w $seconds s, kod0. GIS tylko na końcu rundy; własne zadania Python szeregowo przez heavy, Unity przez osobny slot.",
-'Generator 438 s bez fallback=True, fidelity i import pięciu presetów zakończone kodem0; build_all 459 s pod heavy. Raport pamięci importera Low 117,0 / High 259,1 MiB nie jest PSS telefonu.',
-'W początkowej ablacji sky średnia zmiana RGB stałych ROI gruntu/instrumentów wynosiła 0,026–0,073 na Low i 0,090–0,260 na High, maksimum 2/11 poziomów8-bit. Nie deklarujemy identyczności pikseli ani braku bandingu.',
+'Generator 438 s bez fallback=True, fidelity i import pięciu presetów zakończone kodem 0; build_all 459 s pod heavy. Raport pamięci importera Low 117,0 / High 259,1 MiB nie jest PSS telefonu.',
+'W początkowej ablacji sky średnia zmiana RGB stałych ROI gruntu/instrumentów wynosiła 0,026–0,073 na Low i 0,090–0,260 na High, maksimum 2/11 poziomów 8-bitowego RGB. Nie deklarujemy identyczności pikseli ani braku bandingu.',
 'Pozostają ciemne przejścia g3a-eye-s0262/stretch-03 i odcinki edge-west/fence2/office1/docks bez skutecznych reflektorów. Nie ogłaszamy pełnej nocnej przejezdności, kalibracji lamp, occlusion, GPU ani oceny telefonu.',
 'Własne raporty/generated z regeneracji zachowano w generated-baseline-rebuild.patch i przywrócono; nie są produkcyjną zmianą light. Do odtworzenia wymagane generator, fidelity i import w slotach.',
 'Przewidywane styki: LightingPreset/LookDevAssets/EnvironmentLighting/WorldAtmosphere/SkyModel/Sky.shader/RenderOverrides, addytywny include KamionLampPools. Nie zmieniono WorldPBR, WorldSurface, TruckLights, Cab, geometrii ani QualityProfile.',
@@ -84,3 +84,4 @@ if ($LASTEXITCODE) { throw 'Could not start round3 branch' }
 git merge main
 if ($LASTEXITCODE) { throw 'Resolve round3 main merge explicitly; do not overwrite other owners' }
 exit 0
+
