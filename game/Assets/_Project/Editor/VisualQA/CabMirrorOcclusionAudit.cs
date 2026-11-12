@@ -103,7 +103,19 @@ namespace Game.Editor.VisualQA
                                     slot = slot, asset = AssetDatabase.GetAssetPath(source) });
                             }
                         }
+                        // An isolated triangle above the cab proves that mesh cooking and the query mask work.
+                        var probePoint = eye.position + Vector3.up * 100f;
+                        var probeMesh = new Mesh { name = "OcclusionPositiveControl" };
+                        probeMesh.vertices = new[] { probePoint + new Vector3(-1f,-1f,0f), probePoint + new Vector3(1f,-1f,0f), probePoint + new Vector3(0f,1f,0f) };
+                        probeMesh.triangles = new[] { 0, 1, 2 }; meshes.Add(probeMesh);
+                        var probeGo = new GameObject("OcclusionPositiveControl"); SceneManager.MoveGameObjectToScene(probeGo, temporary);
+                        probeGo.transform.SetParent(root.transform, false); probeGo.layer = isolationLayer;
+                        var probeCollider = probeGo.AddComponent<MeshCollider>(); probeCollider.sharedMesh = probeMesh;
                         Physics.SyncTransforms();
+                        Physics.queriesHitBackfaces = false;
+                        if (!physics.Raycast(probePoint + Vector3.forward, Vector3.back, out var controlHit, 2f, queryMask, QueryTriggerInteraction.Ignore) || controlHit.collider != probeCollider)
+                            throw new InvalidOperationException("Mesh-ray positive control failed");
+                        Debug.Log($"CAB_MIRROR_OCCLUSION_CONTROL {tier}: PASS, opaque slots={owners.Count}");
                         foreach (var mirror in mirrors.Where(m => m.phase < 4))
                         {
                             var glassMesh = mirror.glass.GetComponent<MeshFilter>().sharedMesh;
@@ -116,16 +128,21 @@ namespace Game.Editor.VisualQA
                                 Physics.queriesHitBackfaces = backfaces;
                                 int samples = 0, centralSamples = 0, blocked = 0, centralBlocked = 0;
                                 var counts = new Dictionary<int, Counts>();
+                                var grid = Enumerable.Repeat(new Color32(100,100,100,255), 2400).ToArray();
                                 for (int i = 0; i < 40; i++) for (int j = 0; j < 60; j++)
                                 {
                                     var point = new Vector2((i+.5f)/40f, (j+.5f)/60f);
                                     if (!SurfacePoint(vertices, uv, triangles, point, out var local)) continue;
+                                    grid[j*40+i] = new Color32(35,175,90,255);
                                     Vector3 target = mirror.glass.localToWorldMatrix.MultiplyPoint3x4(local);
                                     Vector3 ray = target - eye.position;
                                     bool central = point.x >= .05f && point.x <= .95f && point.y >= .05f && point.y <= .95f;
                                     samples++; if (central) centralSamples++;
                                     if (!physics.Raycast(eye.position, ray.normalized, out var hit, ray.magnitude-.002f, queryMask, QueryTriggerInteraction.Ignore)) continue;
                                     if (!owners.TryGetValue(hit.collider.GetInstanceID(), out var owner)) throw new InvalidOperationException("Foreign collider in isolated audit");
+                                    grid[j*40+i] = owner.renderer.StartsWith("DOOR_", StringComparison.Ordinal) ? new Color32(220,55,65,255)
+                                        : owner.material.StartsWith("MI_Cab_Rubber", StringComparison.Ordinal) ? new Color32(40,100,235,255)
+                                        : new Color32(245,155,35,255);
                                     blocked++; if (central) centralBlocked++;
                                     if (!counts.TryGetValue(hit.collider.GetInstanceID(), out var count)) counts.Add(hit.collider.GetInstanceID(), count = new Counts());
                                     count.total++; if (central) count.central++;
@@ -136,6 +153,15 @@ namespace Game.Editor.VisualQA
                                     }
                                 }
                                 if (samples == 0) throw new InvalidOperationException("No valid UV targets on " + mirror.name);
+                                var heatmap = new Texture2D(400, 600, TextureFormat.RGBA32, false, true);
+                                try
+                                {
+                                    var expanded = new Color32[400*600];
+                                    for (int y = 0; y < 600; y++) for (int x = 0; x < 400; x++) expanded[y*400+x] = grid[(y/10)*40+x/10];
+                                    heatmap.SetPixels32(expanded); heatmap.Apply();
+                                    File.WriteAllBytes(Path.Combine(output, $"uv-{tier}-{mirror.phase}-{(backfaces ? "two-sided" : "front")}.png"), heatmap.EncodeToPNG());
+                                }
+                                finally { UnityEngine.Object.DestroyImmediate(heatmap); }
                                 report.AppendLine($"{tier}\t{mirror.name}\t{backfaces}\t{samples}\t{centralSamples}\t{blocked}\t{centralBlocked}\t{exteriorLod}\t{interiorLod}");
                                 foreach (var pair in counts.OrderByDescending(p => p.Value.total))
                                 {
