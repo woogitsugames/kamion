@@ -70,3 +70,5 @@ potem poprawić największe udokumentowane odstępstwo wiaty. WIP po każdym kro
 2026-11-12T11:39:23.1284410+01:00: dokładne liczniki bazowe Low zakończone: 118 kadrów, po 59 clear i overcast. Wszystkie runner/frozen/floors zgodne; proof SHA256 zapisane. Własny PAUSE_UNITY usunięty w finally, slot Unity zwolniony. Test pliku shelters nadal czeka na heavy i rezerwację gpt-sbs-r3. NASTĘPNY KROK: wynik 10 prób, generator kandydata i porównanie z bazą, bez powtarzania tych dwóch udanych prób Unity.
 
 2026-11-12T11:56:18.0780855+01:00: szybka kontrola diff --check względem baseline 162214c3 zakończyła się kodem 0. Zmienione źródła produktu ograniczają się do props.py, furniture.py, fab_details.py, addytywnego materials.py oraz własnego pliku testów. Nie zmieniono roads, overrides, barier ani plików Claude. Nie zastępuje to oczekujących testów i pomiarów renderu.
+
+2026-11-12T11:56:36.7394836+01:00: heavy focused candidate1; sukces=True; slot gpt-furniture-r3 zwolniony. NASTĘPNY KROK: sprawdzić log i kontynuować walidację rundy.
