@@ -20,3 +20,5 @@ Dodatkowe kamery: before/Low-overcast zapisane.
 Dodatkowe kamery: before/High-clear zapisane.
 
 Dodatkowe kamery: before/High-overcast zapisane.
+
+Przywrócono bibliotekę i import kandydata B po dodatkowym baseline.
