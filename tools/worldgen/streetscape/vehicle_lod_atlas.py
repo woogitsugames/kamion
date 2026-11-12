@@ -69,30 +69,6 @@ def consolidate(prims, name):
     return out
 
 
-def far_yard(prims, name):
-    """Drop only tiny accessory faces for the third yard LOD, never the main shell.
-
-    WORKING_VALUE bounds awaiting editor transition review: <= 12 cm edges and
-    < 0.003 m². Long thin supports, all wheel silhouettes and glazing remain.
-    """
-    if not name.startswith(("tractor_", "trailer_")):
-        raise ValueError(name)
-    keep = primary(name)
-    result = []
-    for p in prims:
-        if p["mat"] == keep:
-            result.append(p)
-            continue
-        xyz = p["V"][p["T"]]
-        edges = xyz - np.roll(xyz, 1, axis=1)
-        area = np.linalg.norm(np.cross(xyz[:, 1]-xyz[:, 0], xyz[:, 2]-xyz[:, 0]), axis=1) / 2
-        longest = np.linalg.norm(edges, axis=2).max(axis=1)
-        visible = (area >= .003) | (longest >= .12)
-        if np.any(visible):
-            result.append(dict(p, T=p["T"][visible]))
-    return result
-
-
 def generate(root=None):
     from .materials import M
     from .life_cars import plate_atlas
