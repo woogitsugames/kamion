@@ -74,6 +74,8 @@ first_stub_vertex = int(apron['triangles'][1].min()) - 1
 triangles = apron['triangles'][0]
 triangles = triangles[np.all(triangles < first_stub_vertex, axis=1)]
 ground = apron['positions'][triangles].astype(float)
+if not len(ground) or not np.isfinite(ground).all():
+    raise RuntimeError('Original apron surface is empty or nonfinite')
 en = ground[:, :, [0, 2]]
 tree = STRtree(shapely.polygons(en))
 
@@ -112,6 +114,8 @@ for tier, filename in (('Low', 'far_field.low.glb'), ('High', 'far_field.glb')):
         base_ids = ids[mesh['uv0'][ids, 1] == 0]
         top_ids = ids[mesh['uv0'][ids, 1] == 1]
         bases, tops = mesh['positions'][base_ids], mesh['positions'][top_ids]
+        if len(base_ids)+len(top_ids) != len(ids) or not np.isfinite(bases).all() or not np.isfinite(tops).all():
+            raise RuntimeError('Unexpected intermediate forest UV row or nonfinite geometry')
         if len(bases) != len(source['bases']) or len(tops) != len(source['tops']) or not len(bases):
             raise RuntimeError('UV base/top selection does not match raw source inventory')
         if not np.allclose(bases[:, [0, 2]], source['bases'][:, [0, 2]], atol=1e-3, rtol=0):
