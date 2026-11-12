@@ -113,3 +113,5 @@ Iteracja C (2026-11-12T02:57:28.7192836+01:00): Capture C, siedem SHA źródeł,
 Iteracja C (2026-11-12T02:59:14.9157077+01:00): Compare B zakończony 0 pod heavy; wynik ramek osobówek w passenger-car-frame-check-b.json.
 
 Iteracja C (2026-11-12T02:59:34.2980699+01:00): Compare C zakończony 0 pod heavy. Następne: oględziny autora; jeśli C wybrany, pełny GIS i EditMode na koniec rundy. REPORT jeszcze nie powstał.
+
+Krok 42: porównania B i C zakończone 0, wszystkie 114×4 statystyki gotowe. C ma 59/76 pełnych PNG odziedziczonych zbliżeń osobówek identycznych z A; 17 różnych wymaga analizy pikseli/tła. Dodano audit-protected-c.py pod heavy: zmierzy liczbę różnic, maksimum i bbox, przygotuje plansze oraz przegląd wszystkich arkuszy C. Nie uznajemy różnego SHA za regresję lakieru. Następny krok: heavy.ps1 -Task Script -Tag protected-c -ScriptPath artifacts/life-r2/audit-protected-c.py, obejrzeć plansze, wybrać C i dopiero pełny GIS.
