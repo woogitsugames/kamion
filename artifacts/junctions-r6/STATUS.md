@@ -152,3 +152,5 @@ Uwaga: pełny pytest uruchomiony bez `KAMION_BLENDER` nadpisuje `generated/world
   tabliczki ronda stoją na nim (niezakopane), filary + czerwony gzyms czytelne — węzeł rozpoznawalny (D51).
   NASTĘPNY KROK: `git merge main` (generated/glb → ours; `WorldPBR.shader` CBUFFER: zostawić obie strony) →
   `bash artifacts/junctions-r6/scripts/build.sh b7 && bash artifacts/junctions-r6/scripts/b7_all.sh`
+- s13 krok 2 (17:03): `git merge main` (bedc52d1, 1825 commitów) → `c92cffb5`; konflikty: generated ×4 + `street_props.glb` → ours, `WorldPBR.shader` CBUFFER → obie strony. Uruchomione w tle `build.sh b7 && b7_all.sh` (log `logs/b7_all.out`).
+  NASTĘPNY KROK (jeśli przerwane): `bash artifacts/junctions-r6/scripts/build.sh b7 && bash artifacts/junctions-r6/scripts/b7_all.sh` → `pairs.sh b7 && pairs_sbs.sh b7` → ADR „Wynik” → robocopy
