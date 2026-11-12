@@ -2061,9 +2061,40 @@ def noise_wall(lin, P, Z, st, H, key):
     lin.posts(st["post_mat"], P, S.NOISE_BARRIER_POST, NOISE_POST_W, NOISE_POST_W, H + 0.1, src=key)
 
 
-def noise_barriers(lin, src, origin, roads_poly, report, overrides=None, pl=None):
+NOISE_ON_DECK_M = 2.5     # WORKING_VALUE: a mapped noise barrier this close to a screened deck edge IS that screen
+
+
+def deck_screen_keepout(net):
+    """ADR 0146: plan corridor along the deck / ramp edges that carry the noise screen of a bridge_style. OSM and
+    BDOT10k map that screen as a barrier line; built again as a ground wall it stood 0.5 m outside the ramp wall of
+    Andersa (E -428 N -74), base on the ground 3 m below the deck, in front of the wall and its red band
+    (Mapillary 810525063224609 / 209622370971977: one screen, on the wall)."""
+    from roads.meshing import screen_sides
+    polys = []
+    for c in net.chains:
+        if c.meta.get("absorbed") or c.bridge is None or not c.bridge.any():
+            continue
+        sides = screen_sides(c, bridge_style(c))
+        if not sides:
+            continue
+        idx = np.where(c.bridge)[0]
+        for run in np.split(idx, np.where(np.diff(idx) > 1)[0] + 1):
+            if len(run) < 2:
+                continue
+            ss = np.asarray(c.line.s)[run]
+            P = c.line.point(ss)
+            _, N = c.line.frame(ss)
+            off = c.hw_at(ss) + S.KERB_TOP_W + bridge_cap_w(c)
+            for side in sides:
+                sgn = 1.0 if side == "L" else -1.0
+                polys.append(LineString(P + N * (sgn * off)[:, None]).buffer(NOISE_ON_DECK_M, cap_style="flat"))
+    return shapely.union_all(polys) if polys else None
+
+
+def noise_barriers(lin, src, origin, roads_poly, report, overrides=None, pl=None, net=None):
     """BDOT10k OT_OIKM_L + OSM barrier=wall/wall=noise_barrier (parts > NOISE_DEDUP_M from BDOT) + authored lines,
-    styled by authored zones (kind: noise_barrier_style, Mapillary image ids as provenance), default `solid`."""
+    styled by authored zones (kind: noise_barrier_style, Mapillary image ids as provenance), default `solid`.
+    Parts along a deck edge that carries a bridge_style screen are not built (deck_screen_keepout, ADR 0146)."""
     L = {"bdot": 0.0, "osm": 0.0, "override": 0.0}
     by_style = {}
     cutter = roads_poly.buffer(0.2) if roads_poly is not None else None
@@ -2083,6 +2114,10 @@ def noise_barriers(lin, src, origin, roads_poly, report, overrides=None, pl=None
         feats.append((ln, key, "override", H))
     used_zones = set()
     walls = []
+    on_deck = deck_screen_keepout(net) if net is not None else None
+    if on_deck is not None:
+        cutter = on_deck if cutter is None else cutter.union(on_deck)
+    m_on_deck = sum(f[0].intersection(on_deck).length for f in feats if f[2] != "override") if on_deck is not None else 0.0
     for line, key, kind, H in feats:
         for part in cut_by(line, cutter):
             walls.append(part)
@@ -2100,6 +2135,7 @@ def noise_barriers(lin, src, origin, roads_poly, report, overrides=None, pl=None
     report["noise_barriers"] = {"m_by_source": {k: round(v) for k, v in L.items()},
                                 "m_by_style": {k: round(v) for k, v in by_style.items()},
                                 "zones_stale": sorted({z[3] for z in zones} - used_zones)}
+    report["noise_barriers"]["on_screened_deck_m"] = round(float(m_on_deck), 1)       # ADR 0146: not built twice
     if pl is not None:
         report["noise_barriers"]["signs_moved_off_wall"] = _signs_off_walls(pl, walls, roads_poly)
 
