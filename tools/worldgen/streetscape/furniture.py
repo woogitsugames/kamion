@@ -1261,9 +1261,33 @@ def fence_styles(overrides):
     return out
 
 
-def fences(lin, src, origin, roads_poly, report, styles=None):
+def ramp_wall_keepout(net, r=2.5):
+    """ADR 0146 r2: plan corridor along both edges of the walled ramps (roads.profile.mark_walled_ramps). BDOT10k /
+    OSM map the ramp's own retaining wall as a line; rebuilt by retaining() it stood as a 1 m concrete wall with a
+    railing 0.5 m in front of the block wall of the Andersa ramp (E -428 N -74; not on Mapillary 810525063224609 /
+    209622370971977). r WORKING_VALUE."""
+    polys = []
+    for c in net.chains:
+        wl = c.meta.get("walled")
+        if c.meta.get("absorbed") or wl is None or not np.any(wl):
+            continue
+        idx = np.where(wl)[0]
+        for run in np.split(idx, np.where(np.diff(idx) > 1)[0] + 1):
+            if len(run) < 2:
+                continue
+            ss = np.asarray(c.line.s)[run]
+            P = c.line.point(ss)
+            _, N = c.line.frame(ss)
+            off = c.hw_at(ss) + S.KERB_TOP_W + bridge_cap_w(c)
+            for sgn in (1.0, -1.0):
+                polys.append(LineString(P + N * (sgn * off)[:, None]).buffer(r, cap_style="flat"))
+    return shapely.union_all(polys) if polys else None
+
+
+def fences(lin, src, origin, roads_poly, report, styles=None, net=None):
     """styles: {osm way id: colour material} of the authored fence_style overrides (fence_styles)."""
-    n = {"panel_m": 0.0, "concrete_m": 0.0, "retaining_m": 0.0}
+    n = {"panel_m": 0.0, "concrete_m": 0.0, "retaining_m": 0.0, "retaining_on_ramp_wall_m": 0.0}
+    ramp_cut = ramp_wall_keepout(net) if net is not None else None
     styles = styles or {}
     seen = set()
     cutter = roads_poly.buffer(0.3) if roads_poly is not None else None
@@ -1291,13 +1315,17 @@ def fences(lin, src, origin, roads_poly, report, styles=None):
                             lin, LineString([cc[si], cc[si + 1]]), f"{key}:{si}", key)
                 n["concrete_m"] += part.length
             else:
-                retaining(lin, P, key)
-                n["retaining_m"] += part.length
+                for sub in cut_by(part, ramp_cut):
+                    retaining(lin, lin.dens(sub, 2.0), key)
+                    n["retaining_m"] += sub.length
+                n["retaining_on_ramp_wall_m"] += part.length - sum(x.length for x in cut_by(part, ramp_cut))
     for f in src["bdot10k"]["OT_BUUO_L"]:
         line = LineString(np.asarray(f["geometry"]["coordinates"], float) - origin)
         for part in cut_by(line, cutter):
-            retaining(lin, lin.dens(part, 1.0), f"bdot:{f['id']}")
-            n["retaining_m"] += part.length
+            for sub in cut_by(part, ramp_cut):
+                retaining(lin, lin.dens(sub, 1.0), f"bdot:{f['id']}")
+                n["retaining_m"] += sub.length
+            n["retaining_on_ramp_wall_m"] += part.length - sum(x.length for x in cut_by(part, ramp_cut))
     report["fences"] = {k: round(v) for k, v in n.items()}
     if styles:      # a styled way that is no longer in the data is reported, never silently dropped
         report["fences"]["styled_ways"] = sorted(seen)

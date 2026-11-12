@@ -563,8 +563,18 @@ def build_bridge_extras(buf, c, st, P, N, hw, br):
                     bot = top.copy()
                     bot[:, 2] = np.minimum(zg, top[:, 2] - 0.3)
                     off = np.column_stack([nn0[wr] * sgn * 0.02, np.zeros(len(wr))])
+                    # ADR 0146 r2: the block facing ends under the painted band of the cap edge. It ran up to the cap
+                    # top 5 mm in front of the band, so the red band of `ramp_fascia` was never seen (slab section
+                    # at E -428 N -79: ramp_wall_blocks to 135.24, bridge_fascia_red 134.69-135.26 behind it).
+                    vtop = top.copy()
+                    if style["fascia"] and not hero:
+                        vtop[:, 2] -= FASCIA_BAND_H - 0.02
+                    vbot = bot.copy()
+                    vbot[:, 2] = np.minimum(vbot[:, 2], vtop[:, 2] - 0.05)
                     for layer, mat in (("bridge", "ramp_wall_blocks"), ("collision", "collision_fence")):
-                        _strip(buf, layer, mat, bot + off, top + off, c.id + ":ramp_wall", both=False)
+                        vis = layer == "bridge"
+                        _strip(buf, layer, mat, (vbot if vis else bot) + off, (vtop if vis else top) + off,
+                               c.id + ":ramp_wall", both=False)
                         if sgn > 0:
                             buf.parts[-1].T = buf.parts[-1].T[:, [0, 2, 1]]
         # balustrade on both cap edges (WORKING_VALUE geometry, low confidence): open steel railing =

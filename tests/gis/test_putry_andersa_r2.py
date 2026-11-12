@@ -62,3 +62,11 @@ def test_mapped_barrier_on_screened_deck_edge_is_not_rebuilt():
     if "on_screened_deck_m" not in nb:
         pytest.skip("generated world predates ADR 0146 round 2 (rebuild)")
     assert nb["on_screened_deck_m"] > 50.0
+
+
+def test_mapped_retaining_wall_on_a_walled_ramp_is_not_rebuilt():
+    qa = json.loads(QA.read_text(encoding="utf-8"))
+    fe = qa["furniture"]["fences"]
+    if "retaining_on_ramp_wall_m" not in fe:
+        pytest.skip("generated world predates ADR 0146 round 2 (rebuild)")
+    assert fe["retaining_on_ramp_wall_m"] > 20
