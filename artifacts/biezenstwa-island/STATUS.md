@@ -13,3 +13,9 @@
   → `renders_b5sbs_*` (+ `stats.txt`), pary `pairs_b5/`; kamera-sonda pozy 320326 (`cams_sbs.json`, `sbs-g3-a-p0128-…`); test syntetyczny
   `patches` zielony; szkic ADR 0128. Build i1 w kolejce FIFO puli heavy (9. miejsce o 13:34), po nim automatycznie import + SBS.
   NASTĘPNY KROK (gdy `logs/i1_build.out` ma „build done”): `bash artifacts/biezenstwa-island/scripts/imp_sbs.sh i1 && bash artifacts/biezenstwa-island/scripts/pairs.sh i1 b5`
+- krok 4 (13:38): baza b5 przerenderowana z kamerą-sondą (`pairs_b5/probe_320326_low_overcast.jpg`). Build i1 nadal w kolejce heavy
+  (`nohup build.sh i1`, log `logs/i1_build.out`); łańcuch w tle sam odpali import + SBS po „build rc 0”. Lider 13:5x: limit 91 %, oszczędnie do 14:12.
+  NASTĘPNY KROK: jeśli `logs/i1_build.out` nie istnieje / brak „build start” → `bash artifacts/biezenstwa-island/scripts/build.sh i1`;
+  po „build done” → `bash artifacts/biezenstwa-island/scripts/imp_sbs.sh i1 && bash artifacts/biezenstwa-island/scripts/pairs.sh i1 b5`
+  → obejrzeć `pairs_i1/sbs-g3-a-p0128-320326319617139_low_overcast.jpg`, `sbs-g3-b-381800493259507_*`, `sbs-g3-b-837235577143499_*`
+  → `bash artifacts/biezenstwa-island/scripts/post.sh i1 full` → uzupełnić „Result” w `docs/adr/0128-biezenstwa-island.md`.
