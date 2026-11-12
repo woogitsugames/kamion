@@ -5,17 +5,18 @@
   "started_at": "2026-11-12T03:05:53.123339+01:00",
   "deadline_at": "2026-11-12T21:30:50+01:00",
   "base_merge_sha": "c3cf303d",
-  "phase": "candidate_d_implemented_waiting_heavy",
+  "phase": "candidate_d_resumed_waiting_heavy",
   "production_changed": true,
   "unity_owner": "gpt-vegetation",
   "heavy_owner": "gpt-vegetation-r4",
-  "next_step": "Live execution24975 queuedheavy: focused41tests then conditional World/collision, same slot. Poll handle before retry. Only after green-d-and-world.done run candidate-d-probe.ps1 once, then baseline/D and C/D review. Do not run final GIS until endround.",
+  "next_step": "Live execution68527, controlled resume after24975 terminal Acquire failure. Full transcript green-d-pipeline-resume.log; focused41tests then conditional World/collision in same heavy. Poll68527; do not rerun wrapper while transcript exists. Then candidate-d-probe once after done.",
   "materials": "completed exit0,446s",
   "pipeline_log": "baseline-resume.log",
-  "state_authority": "Source D implemented, generated/imported World still rejected C. C sequences4178/34215 terminal0; snapshots/probes preserved. C self/critic16sheets FAIL finalrealism. No D acceptance or formaltestresult yet.",
+  "state_authority": "D production unchanged; generated/imported World remains rejected C. Old24975 ended1 before work: no D test/Worldlogs/process/ownslot/ticket. New FIFO position12 at resume. Main f7d0e5a0 allows heavy during PHONE_RUN; Unity still blocked. No D formal result/visual acceptance.",
   "initial_base_merge_sha": "7c9b4ca6",
   "interruption": "Old execution handle missing and own process absent; old World log stopped waiting at03:44:51. Resumed09:06 after source-only checks; no World had run.",
-  "world": "completed exit0,614.8s",
+  "world": "candidate C completed exit0,515.6s; D not started",
   "frames_reused": 0,
-  "before_frames": 368
+  "before_frames": 368,
+  "baseline_world": "completed exit0,614.8s"
 }
