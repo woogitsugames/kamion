@@ -7,7 +7,6 @@ using Game.UI;
 using Game.UI.Driving;
 using NUnit.Framework;
 using UnityEngine;
-using UnityEngine.Profiling;
 using UnityEngine.TestTools;
 using UnityEngine.UI;
 
@@ -15,25 +14,12 @@ namespace Game.Tests
 {
     /// <summary>
     /// M23 (variant (b): UnityEngine.UI.Text, no TextMeshPro): HUD/overlay label updates during driving must not
-    /// allocate GC memory. Counts GC.Alloc samples on this thread with Profiling.Recorder (same mechanism as
+    /// allocate GC memory. Counts GC.Alloc samples on this thread with <see cref="GcAllocCounter"/> (same mechanism as
     /// Is.Not.AllocatingGCMemory; proven in the r3 review: legacy gyro concat = 1003 samples / 500 updates) over 500
     /// updates with varying values and expects 0. GC.GetAllocatedBytesForCurrentThread returns 0 in the editor.
     /// </summary>
     public class HudTextAllocTests
     {
-        /// <summary>Number of GC.Alloc samples on this thread while running <paramref name="a"/>.</summary>
-        static int CountAllocs(Action a)
-        {
-            var r = Recorder.Get("GC.Alloc");
-            r.enabled = false;
-            r.FilterToCurrentThread();
-            r.enabled = true;
-            a();
-            r.enabled = false;
-            int n = r.sampleBlockCount;
-            r.CollectFromAllThreads();
-            return n;
-        }
 
         DrivingHud m_Hud;
         DiagnosticsOverlay m_Overlay;
@@ -90,8 +76,8 @@ namespace Game.Tests
             yield return null;
 
             // Baseline: the reflection write that forces the 0.2 s gyro/telemetry branch (test harness only).
-            int harness = CountAllocs(() => { for (int i = 0; i < 500; i++) s_NextTelemetry.SetValue(m_Hud, zero); });
-            int total = CountAllocs(() =>
+            int harness = GcAllocCounter.Count(() => { for (int i = 0; i < 500; i++) s_NextTelemetry.SetValue(m_Hud, zero); });
+            int total = GcAllocCounter.Count(() =>
             {
                 for (int i = 0; i < 500; i++)
                 {
@@ -119,7 +105,7 @@ namespace Game.Tests
                 t.font = UiFonts.Default;
                 var ci = CultureInfo.InvariantCulture;
                 for (int i = 0; i < 10; i++) t.text = "Gyro: " + (i * 0.1f).ToString("F1", ci) + "°";
-                int n = CountAllocs(() => { for (int i = 0; i < 500; i++) t.text = "Gyro: " + (i * 0.1f - 20f).ToString("F1", ci) + "°"; });
+                int n = GcAllocCounter.Count(() => { for (int i = 0; i < 500; i++) t.text = "Gyro: " + (i * 0.1f - 20f).ToString("F1", ci) + "°"; });
                 Debug.Log($"[HudAlloc] legacy gyro concat: {n} GC.Alloc / 500 updates");
                 Assert.Greater(n, 0);
             }
@@ -188,7 +174,7 @@ namespace Game.Tests
             m_Overlay.RefreshNow();
             string at60 = label.text;
 
-            long allocs = CountAllocs(() => { for (int i = 0; i < 500; i++) m_Overlay.RefreshNow(); });
+            long allocs = GcAllocCounter.Count(() => { for (int i = 0; i < 500; i++) m_Overlay.RefreshNow(); });
             Debug.Log($"[HudAlloc] DiagnosticsOverlay 500 refreshes (panel hidden): {allocs} GC.Alloc");
             yield return null;
             Assert.AreEqual(0, allocs, $"500 diagnostics overlay refreshes (unchanged state) allocated {allocs} GC.Alloc samples (expected 0)");

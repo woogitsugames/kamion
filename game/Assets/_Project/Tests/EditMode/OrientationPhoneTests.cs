@@ -132,15 +132,16 @@ namespace Game.Tests
             l.Step(0.5f, 2340, 1080, ScreenOrientation.LandscapeLeft, false, DeviceOrientation.FaceUp);
             var n = new ScreenOrientationLock();
             n.Step(0f, 1812, 2176, ScreenOrientation.Portrait, false);
-            long before = GC.GetAllocatedBytesForCurrentThread();
-            for (int i = 0; i < 10000; i++)
+            GcAllocCounter.AssertZero(() =>
             {
-                float t = 1f + i * 0.016f;
-                l.Step(t, 2340, 1080, (i / 500) % 2 == 0 ? ScreenOrientation.LandscapeLeft : ScreenOrientation.LandscapeRight, i % 3000 < 1500, DeviceOrientation.FaceUp);
-                n.Step(t, 1812, 2176, ScreenOrientation.Portrait, true);
-                ScreenOrientationPolicy.Decide(1080, 2340);
-            }
-            Assert.AreEqual(0L, GC.GetAllocatedBytesForCurrentThread() - before, "0 B GC in the per-frame path");
+                for (int i = 0; i < 10000; i++)
+                {
+                    float t = 1f + i * 0.016f;
+                    l.Step(t, 2340, 1080, (i / 500) % 2 == 0 ? ScreenOrientation.LandscapeLeft : ScreenOrientation.LandscapeRight, i % 3000 < 1500, DeviceOrientation.FaceUp);
+                    n.Step(t, 1812, 2176, ScreenOrientation.Portrait, true);
+                    ScreenOrientationPolicy.Decide(1080, 2340);
+                }
+            }, message: "0 GC.Alloc in the per-frame path");
         }
     }
 }

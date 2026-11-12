@@ -2,7 +2,6 @@ using System;
 using Game.World;
 using NUnit.Framework;
 using UnityEngine;
-using UnityEngine.Profiling;
 using Object = UnityEngine.Object;
 
 namespace Game.Tests
@@ -12,23 +11,11 @@ namespace Game.Tests
     /// beginCameraRendering for every camera - main, mirrors, reversing camera - every frame) must not allocate.
     /// Integration r5: the PR's premise was wrong - UnityEngine.RenderParams is a struct (no heap allocation per
     /// draw), so the runtime change was dropped; this test stays as the regression guard of the render path.
-    /// Counted with Profiling.Recorder("GC.Alloc").sampleBlockCount on this thread (as HudTextAllocTests);
+    /// Counted with <see cref="GcAllocCounter"/> (Profiling.Recorder("GC.Alloc").sampleBlockCount);
     /// a control allocation proves the counter is live.
     /// </summary>
     public class WorldInstancesRenderGcTests
     {
-        static int CountAllocs(Action a)
-        {
-            var r = Recorder.Get("GC.Alloc");
-            r.enabled = false;
-            r.FilterToCurrentThread();
-            r.enabled = true;
-            a();
-            r.enabled = false;
-            int n = r.sampleBlockCount;
-            r.CollectFromAllThreads();
-            return n;
-        }
 
         static WorldInstanceSet MiniSet(out Mesh mesh, out Material mat)
         {
@@ -80,10 +67,10 @@ namespace Game.Tests
             wi.Render(cam);
             Assert.Greater(WorldInstances.Last.Draws, 0, "the mini set must actually issue draws");
 
-            int control = CountAllocs(() => GC.KeepAlive(new byte[64]));
+            int control = GcAllocCounter.Count(() => GC.KeepAlive(new byte[64]));
             Assert.Greater(control, 0, "control: the GC.Alloc counter must see a 64 B allocation in this run");
 
-            int allocs = CountAllocs(() => { for (int i = 0; i < 60; i++) wi.Render(cam); });
+            int allocs = GcAllocCounter.Count(() => { for (int i = 0; i < 60; i++) wi.Render(cam); });
             Debug.Log($"[WorldInstancesGc] 60 renders, {WorldInstances.Last.Draws} draws/render: {allocs} GC.Alloc (control {control})");
             Assert.AreEqual(0, allocs, $"60 per-camera renders of the instanced world must not allocate GC ({allocs} GC.Alloc samples)");
 

@@ -192,11 +192,10 @@ namespace Game.Tests
             Assert.Less(squeal, 0.01f, "tight turn at 10 km/h: no squeal");
             Assert.Greater(audio.ScrubLoop.ExtVolume + audio.ScrubLoop.CabVolume, 0.01f, "scrub loop is playing");
 
-            for (int i = 0; i < 20; i++) audio.AudioStep(Dt);
-            long before = GC.GetAllocatedBytesForCurrentThread();
-            for (int i = 0; i < 300; i++) audio.AudioStep(Dt);
-            long allocated = GC.GetAllocatedBytesForCurrentThread() - before;
-            Assert.AreEqual(0, allocated, "audio step with the scrub layer must not allocate");
+            GcAllocCounter.AssertZero(
+                () => { for (int i = 0; i < 300; i++) audio.AudioStep(Dt); },
+                warmup: () => { for (int i = 0; i < 20; i++) audio.AudioStep(Dt); },
+                message: "audio step with the scrub layer must not allocate");
         }
     }
 }
