@@ -73,3 +73,4 @@ Import kandydata A kod 0; następny krok to 16 próbnych kadrów.
 Probe probe-a: Low overcast zapisany. Obejrzeć arkusze i koszt przed dalszą decyzją; to nie pełna macierz.
 Probe probe-a: Low clear zapisany. Obejrzeć arkusze i koszt przed dalszą decyzją; to nie pełna macierz.
 Probe probe-a: High overcast zapisany. Obejrzeć arkusze i koszt przed dalszą decyzją; to nie pełna macierz.
+Probe probe-a: High clear zapisany. Obejrzeć arkusze i koszt przed dalszą decyzją; to nie pełna macierz.
