@@ -70,3 +70,5 @@ Zapisano kompletną niezależną ocenę baseline w REVIEW-D51-BASELINE.md: G3-A 
 
 
 2026-11-12T10:14:53.4571183+01:00: obejrzałem wszystkie 25 arkuszy Low-clear; zapisałem przegląd i SHA. Ranking odstępstw uwzględnia teraz pełny niezależny Low-overcast i własny pełny Low-clear. Podgląd historii raportu: 25/25 zgodnych ocen r1, 19/25 r2, 25/25 r3 w Low-overcast. To kontrola danych, nie wynik pytest ani QA nowego HTML.
+
+2026-11-12T10:17:06.5989862+01:00: zakończyłem własny przegląd obu stanów High po 25 arkuszy. Własne pokrycie bazowe: 75 B (Low-clear + oba High); niezależny recenzent: 25 B Low-overcast. Łącznie obejrzano 100 unikalnych B. Różnicę kratownicy B297817 Low/High zapisałem jako osobny problem LOD, bez przypisywania go wyłącznie pozie. Kolejka kompozycji nadal oczekuje na heavy, bez uruchamiania następnego ciężkiego procesu.
