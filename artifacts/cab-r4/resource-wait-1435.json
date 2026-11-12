@@ -1,0 +1,42 @@
+{
+  "checked_at": "2026-11-12T14:35:02.7343962+01:00",
+  "scope": "Exact descendants of live own waiters only",
+  "processes": [
+    {
+      "pid": 67820,
+      "parent": 79052,
+      "name": "pwsh.exe",
+      "working_set_mb": 96.1,
+      "cpu_seconds": 0.734375
+    },
+    {
+      "pid": 9628,
+      "parent": 67820,
+      "name": "pwsh.exe",
+      "working_set_mb": 98.7,
+      "cpu_seconds": 0.671875
+    },
+    {
+      "pid": 70268,
+      "parent": 9628,
+      "name": "pwsh.exe",
+      "working_set_mb": 124.4,
+      "cpu_seconds": 3.453125
+    },
+    {
+      "pid": 45068,
+      "parent": 71148,
+      "name": "pwsh.exe",
+      "working_set_mb": 100.1,
+      "cpu_seconds": 0.90625
+    },
+    {
+      "pid": 28908,
+      "parent": 45068,
+      "name": "pwsh.exe",
+      "working_set_mb": 122.1,
+      "cpu_seconds": 2.65625
+    }
+  ],
+  "has_python_or_unity": false
+}
