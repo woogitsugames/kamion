@@ -63,3 +63,5 @@ Nie wykonano merge do main, push, telefonu ani edycji innych dziedzin. Odśwież
 2026-11-12T13:00:40.7790198+01:00: osiem odpowiedzi/receiptów metadanych zamknięto w reference-metadata-evidence.zip z SHA każdego wpisu. Archiwum nie zawiera obrazów i zachowuje dokładne bajty mimo normalizacji końców linii przez Git. To dowód źródłowy, nie ocena pozy lub D51.
 
 2026-11-12T13:02:29.3985455+01:00: nagłówki przyszłych arkuszy rozróżniają KONTROLĘ od PRÓBY, a stopka pokazuje widoczny node/material i zmianęU od źródła. Dzięki temu ponowne osadzenie oka nie jest ukryte za etykietą kontroli. Obrazów r4 nadal nie oceniano; World osiągnął planowanie98 posesji i28 obniżeń krawężnika.
+
+2026-11-12T13:06:15.5316847+01:00: generator World zakończony exit0; osobny heavy zwolniony. Szczegóły i SHA w receipcie kroku.
