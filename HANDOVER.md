@@ -9,7 +9,7 @@
 | zadanie | ADR | worktree / gałąź | live | stan |
 |---|---|---|---|---|
 | węzły r6 b7 | 0123 | `junctions-r6` | `artifacts/live/junctions-r6.md` | b7_all/post.sh w tle; swept do powtórki (MemoryError) |
-| wysepka + D-3/D-6 Bieżeństwa (**scalać PO 0123**) | 0128 | `biezenstwa-island` | `artifacts/live/biezenstwa-island.md` | **i3 GOTOWE** `f311b243` (pytest 860/1x, EditMode 403/403, draws Low ≤ +3); visual-critic w toku → scalić PO 0123, potem regeneracja |
+| wysepka + D-3/D-6 Bieżeństwa (**scalać PO 0123**) | 0128 | `biezenstwa-island` | `artifacts/live/biezenstwa-island.md` | **i3 GOTOWE** `f311b243` (pytest 860/1x, EditMode 403/403, draws Low ≤ +3); **critic SCAL warunkowo** (`REVIEW-…-s14-0128.md`: poza 320326 z `cams_sbs.json` → 0143; żwir nosa za jasny) → scalić PO 0123 |
 | zabudowa r9 wysoka zieleń | 0132 | `buildings-r9` | `artifacts/live/buildings-r9.md` | r3_chain w tle |
 | poprawki G3-B z 0127 | 0139 | `g3b-r2` | `artifacts/live/g3b-r2.md` | pary after → merge main → final |
 | krawędź mapy / tło | 0141 | `edge-r6c` | `artifacts/live/edge-r6c.md` | pary after → merge main → testy |
