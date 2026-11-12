@@ -39,3 +39,4 @@ Aktualne uchwyty po potwierdzonym terminalnym acquire: baseline 70328 (PID 78136
 Rozszerzono trwałe logowanie acquire także w wrapperze przyszłego MaterialPrep/GIS/Images: każdy receipt wskazuje unikalny *.acquire.log. Bez zmiany limitu, FIFO, Priority, mutexu ani uruchamiania dodatkowego zadania. Parser skryptu bez błędów. Bieżący import 70328 nadal czeka w tej samej kolejce.
 Poprawiona sekwencja uzyskała heavy; photo-layer-repair.log potwierdza zbudowanie wyłącznie asphalt_detail_photo w 2 s, bez SKIP. Użyto istniejącego zdjęcia z main o zweryfikowanym SHA. Teraz ponowny import przed kompletnym baseline; źródła generatorów innych dziedzin nie były edytowane.
 Import baseline exit 0; build_all/cc0_fetch i Unity objęte slotami heavy oraz Unity, zwolnionymi w finally. Następny krok przebudowa kabiny i świeże kadry.
+Zakończono Game.Editor.Setup.TruckAssetBuilder.BuildBatch, exit 0. Następny krok: kolejny etap prefab/sceny lub capture-0112 -Stage result-0112.
