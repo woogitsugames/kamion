@@ -98,6 +98,8 @@ def build_ribbon(buf: MeshBuf, net, c, coarse=False):
     _, N = c.line.frame(st)
     hw = c.hw_at(st)
     br = c.interp(c.bridge.astype(float), st) > 0.5
+    _wl = c.meta.get("walled")      # ADR 0146: stations of the spans proper (coated cap), not of the walled ramps
+    capm = br & ~(c.interp(_wl.astype(float), st) > 0.5) if _wl is not None else br
     q = lat_fracs(c, coarse)
     lat = hw[:, None] * q[None, :]
     XY = P[:, None, :] + N[:, None, :] * lat[..., None]
@@ -203,10 +205,10 @@ def build_side_strip(buf, c, st, side, sgn, P, N, hw, br, coarse):
                 prm[0] = (kr, prm[1][1], *prm[0][2:])
             _emit_strip(buf, G[sl], (N * sgn)[sl], zg[sl], prm, kap[sl], hw[sl], side == "R",
                         br[sl] if br is not None else None, coarse, f"{c.id}:{side}:{r}",
-                        noflange=None if nofl is None else nofl[sl])
+                        noflange=None if nofl is None else nofl[sl], capm=capm[sl])
         return
     _emit_strip(buf, G, N * sgn, zg, params, kap, hw, side == "R",
-                br, coarse, c.id + ":" + side, noflange=nofl)
+                br, coarse, c.id + ":" + side, noflange=nofl, capm=capm)
 
 
 def _emit_verge(buf, G, OUT, zg, H, VW, kap_toward, hw, flip, src):
@@ -266,7 +268,7 @@ def _emit_verge(buf, G, OUT, zg, H, VW, kap_toward, hw, flip, src):
 KERB_TOP_UV_MAX_W = 0.4
 
 
-def _emit_strip(buf, G, OUT, zg, params, kap_toward, hw, flip, br, coarse, src, noflange=None):
+def _emit_strip(buf, G, OUT, zg, params, kap_toward, hw, flip, br, coarse, src, noflange=None, capm=None):
     """G: gutter points (n,2), OUT: unit outward vectors (n,2) (may be miter-scaled), zg gutter z,
     params: per-point side params, kap_toward: curvature toward this side (>0 = side is inside)."""
     n = len(G)
@@ -358,26 +360,37 @@ def _emit_strip(buf, G, OUT, zg, params, kap_toward, hw, flip, br, coarse, src, 
                 Vg[1::2, :2] += np.asarray(OUT, float) * (dep * S.VERGE_SKIRT_SLOPE)[:, None]
                 buf.add("road", "verge_grass", Vg, Vg[:, :2].copy(), T[one], footprint=False, src=src + ":vg")     # ":vg" = merged into the terrain mesh
             T = T[~(both | one)]
-        if not coarse and not vertical and mat == "bridge_concrete" and cap_mat:
-            mat = cap_mat          # ADR 0146: coated deck cap (bridge_style `cap_mat`), kerb and fascia stay concrete
-        cmat = ("collision_" + ("curb" if mat == "curb_concrete" else "asphalt" if mat.startswith("road_") else
-                                "paving" if mat in ("sidewalk_paving", "apron_sett", "bridge_concrete") else
-                                "grass")) if coarse else mat
-        # ADR 0123 (REVIEW s10-0117 P1-3): the top of a bridge cap (kapa: the concrete strip behind the kerb of a deck
-        # or a walled ramp) carries road film in COLOR_0.r (Kamion/World PBR _VERTEX_GRIME, manifest `vertex_grime` of
-        # bridge_concrete): heaviest at the kerb, where spray and grit land - same material, no extra draw call
-        COL = None
-        if not coarse and not vertical and mat == "bridge_concrete":
-            COL = np.zeros((2 * n, 4))
-            COL[0::2, 0], COL[1::2, 0] = S.CAP_GRIME[0], S.CAP_GRIME[1]
-        if br is not None and np.any(br):
-            tri_st = np.minimum(T.min(1) // 2, n - 2)
-            onb = br[tri_st] | br[np.minimum(tri_st + 1, n - 1)]
-            buf.add(layer, cmat, V, UV, T[~onb], footprint=(not coarse and not vertical), src=src, UV1=UV1, COL=COL)
-            buf.add("collision" if coarse else "bridge", cmat, V, UV, T[onb], footprint=False, src=src, UV1=UV1, COL=COL)
-        else:
-            buf.add(layer, cmat, V, UV, T, footprint=(not coarse and not vertical and not is_flange), src=src, UV1=UV1,
-                    COL=COL)
+        # ADR 0146: coated deck cap (bridge_style `cap_mat`) on the SPANS only (`capm`: bridge and not a walled ramp;
+        # Mapillary 494288258686575 on the deck: red-brown coat, 810896133189484 on the ramp: bare light concrete).
+        # Kerb and fascia stay concrete. The coat keeps a lighter road film (CAP_COAT_GRIME).
+        groups = [(mat, T)]
+        if not coarse and not vertical and mat == "bridge_concrete" and cap_mat and capm is not None and len(T):
+            ts = np.minimum(T.min(1) // 2, n - 2)
+            on = capm[ts] & capm[np.minimum(ts + 1, n - 1)]
+            groups = [(cap_mat, T[on]), (mat, T[~on])]
+        for mat, T in groups:
+            cmat = ("collision_" + ("curb" if mat == "curb_concrete" else "asphalt" if mat.startswith("road_") else
+                                    "paving" if mat in ("sidewalk_paving", "apron_sett", "bridge_concrete") else
+                                    "grass")) if coarse else mat
+            # ADR 0123 (REVIEW s10-0117 P1-3): the top of a bridge cap (kapa: the concrete strip behind the kerb of a
+            # deck or a walled ramp) carries road film in COLOR_0.r (Kamion/World PBR _VERTEX_GRIME, manifest
+            # `vertex_grime` of the material): heaviest at the kerb, where spray and grit land - no extra draw call
+            COL = None
+            if not coarse and not vertical and mat in ("bridge_concrete", cap_mat):
+                g0, g1 = S.CAP_GRIME if mat == "bridge_concrete" else S.CAP_COAT_GRIME
+                COL = np.zeros((2 * n, 4))
+                COL[0::2, 0], COL[1::2, 0] = g0, g1
+            if not len(T):
+                continue
+            if br is not None and np.any(br):
+                tri_st = np.minimum(T.min(1) // 2, n - 2)
+                onb = br[tri_st] | br[np.minimum(tri_st + 1, n - 1)]
+                buf.add(layer, cmat, V, UV, T[~onb], footprint=(not coarse and not vertical), src=src, UV1=UV1, COL=COL)
+                buf.add("collision" if coarse else "bridge", cmat, V, UV, T[onb], footprint=False, src=src, UV1=UV1,
+                        COL=COL)
+            else:
+                buf.add(layer, cmat, V, UV, T, footprint=(not coarse and not vertical and not is_flange), src=src,
+                        UV1=UV1, COL=COL)
 
 
 # Per-bridge look from authored overrides `kind: bridge_style` (keyed by OSM way id, set by roads.pipeline):

@@ -96,6 +96,13 @@ MATERIALS = {
     "bridge_concrete": {"color": [0.26, 0.26, 0.25], "rough": 0.85, "surface": "concrete",
                         "texture_set": "concrete_precast", "uv": "planar", "sky_occ": [0.5, 0.0],
                         "vertex_grime": [0.165, 0.158, 0.145, 0.3]},   # t1: cap / asphalt 1.35 (Low clear), 1.46-1.50 (High overcast)
+    # ADR 0146: red-brown coat of the deck caps of the Andersa viaduct (bridge_style `cap_mat`). The flat
+    # bridge_fascia_red (0.30, 0.05, 0.04) read as fresh paint: sRGB R/G 1.9-2.05 and cap / asphalt luminance 1.44
+    # (Low overcast) against R/G ~1.4 and ~1.2 on Mapillary 494288258686575 (cap in the shade of the screen; UNVERIFIED
+    # in sun). Concrete modulation set + dark road film at the kerb (vertex_grime, CAP_COAT_GRIME). WORKING_VALUE.
+    "bridge_cap_red": {"color": [0.19, 0.04, 0.032], "rough": 0.85, "surface": "concrete",
+                       "texture_set": "concrete_precast", "uv": "planar", "sky_occ": [0.5, 0.0],
+                       "vertex_grime": [0.07, 0.062, 0.055, 0.3]},
     "bridge_soffit": {"color": [0.15, 0.15, 0.145], "rough": 0.9, "surface": "concrete",
                       "texture_set": "concrete_precast", "uv": "planar", "sky_occ": [0.6, 0.0]},
     # ADR 0117 (REVIEW s10-0110 P1-2, "bialy plotek"): weathered hot-dip zinc is a dull grey patina, not a mirror -

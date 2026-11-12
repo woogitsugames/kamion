@@ -246,6 +246,7 @@ GUARDRAIL_TERMINAL_M = 4    # WORKING_VALUE (ADR 0110): free ground end of a W-b
 GUARDRAIL_POST_SPACING_GROUND = 4.0   # WORKING_VALUE (ADR 0117): ground runs, posts every 4 m (SP-05/4 class; Mapillary
 #                                       500263111404933 / 1259231227807789: 2-4 m read by eye); decks keep 2.0 m
 CAP_GRIME = (1.0, 0.85)     # ADR 0123: road film on a bridge cap, COLOR_0.r at the kerb / at the outer edge (WORKING_VALUE)
+CAP_COAT_GRIME = (0.55, 0.2)   # ADR 0146: the same on a coated cap (bridge_style cap_mat): grit at the kerb, coat shows behind (WORKING_VALUE)
 BRIDGE_BARRIER_H = 0.98     # WORKING_VALUE (ADR 0117): top of the deck posts and of the upper box beam above the W-beam
 #                             (Mapillary 454716650857984: W-beam low, a second beam above it; 1.10 with a handrail in 0110)
 BRIDGE_BARRIER_EDGE_M = 0.40  # WORKING_VALUE: barrier post line in from the outer edge of the cap (orthophoto 0.2-0.4 m)
