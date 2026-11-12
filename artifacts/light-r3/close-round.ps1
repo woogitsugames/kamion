@@ -31,22 +31,22 @@ git commit -m 'WIP light r3: archive completed validation and own regenerated ef
 if($LASTEXITCODE){throw 'Validation commit failed'}
 $sha=(git rev-parse HEAD).Trim()
 $report=@(
-"Runda3, gałąź gpt-light-r3, SHA wyniku$sha; baza main522361aa, merge b36e36b2. Naprawiono P1 nieba; mokra nawierzchnia nie została zaakceptowana.",
-'Szary klin nad halami2948595898752384/303305168125936 pochodził z obróconej twardej granicy dolnej półsfery mapy chmur. Maski FarField/Apron go nie barwiły, a izolacja samego nieba zachowała go przy0 aktywnych rendererów i instancerów.',
-'Clear ogranicza teraz źródłową elewację mapy do0,5 stopnia po obrocie. Ablacja0/0,5/1 na12PNG wybrała najmniejszy sprawdzony margines; inne presety domyślnie0 zachowują starą ścieżkę. Hasz tekstury niezmieniony, bez nowej próbki lub przebiegu.',
-'Końcowy Clear122/122,61kamer na obu tierach, obejrzany przez rodzica i niezależnego krytyka. Dodatkowo48 poprawnych kierunków kamery przy słońcu42 stopnie i8 statycznych kostek64/128 bez powrotu ostrego klina. Pierwszy błędny sweep look_at odrzucony, dowód tylko sky-direction-v2.',
+"Runda 3, gałąź gpt-light-r3, SHA wyniku $sha; baza main 522361aa, merge b36e36b2. Naprawiono P1 nieba; mokra nawierzchnia nie została zaakceptowana.",
+'Szary klin nad halami w pozycjach 2948595898752384 i 303305168125936 pochodził z obróconej twardej granicy dolnej półsfery mapy chmur. Maski FarField i Apron go nie barwiły, a izolacja samego nieba zachowała go przy zerze aktywnych rendererów i instancerów.',
+'Clear ogranicza teraz źródłową elewację mapy do 0,5 stopnia po obrocie. Ablacja 0/0,5/1 na 12 PNG wybrała najmniejszy sprawdzony margines; domyślne zero w innych presetach zachowuje starą ścieżkę. Hasz tekstury niezmieniony, bez nowej próbki lub przebiegu.',
+'Końcowy Clear: 122/122 obrazów, 61 kamer na obu poziomach jakości, obejrzanych przez rodzica i niezależnego krytyka. Dodatkowo 48 poprawnych kierunków kamery przy słońcu 42 stopnie i osiem statycznych kostek 64/128 px bez powrotu ostrego klina. Pierwsza błędna seria look_at odrzucona; dowodem jest tylko sky-direction-v2.',
 'Pozostaje miękki szary pas dolnego nieba; inne kąty słońca, ruch, GPU i ekran telefonu niezweryfikowane. Nie deklarujemy zaliczenia bramki lub kalibracji wszystkich zdjęć.',
-'Mokry baseline36PNG przy wet0/0,5/1 pokazuje globalnie jasne wygładzenie bez wiarygodnej lokalnej treści odbić. Zdjęciecm92458760: Rakoon2020-07-11, CC BY3.0, zgodny SHA; pozaC błędna, tylko odniesienie jakościowe, bez fotometrii.',
-'Eksperyment istniejącej kostki pojazdu:16PNG z oka/daleka i32 bliskiePNG z32dumpami. Dał ciemny owal8–12m, nie przekonujące odbicie. Usunięto cały binder, shader, flagę i styki wspólnych shaderów; patch i opinie zachowano.',
-'Ablacja filmu72PNG: połysk0,52/0,35/0,2 oraz udział kałuż0,3/0,08. Krytyk i rodzic odrzucili wszystkie warianty: mniejszy połysk redukuje plastik, lecz nie daje mokrego odczytu z odbiciem. Usunięto nieprzyjęty parametr, presety nadal bez nowego mokra.',
-'Scena diagnostyczna v2:16PNG i2kostki. Surowa kostka/sfera20m deformują położenie znanych pasów ściany; znana rzeczywista płaszczyzna pozwala dopasować odbicie. To ograniczenie paralaksy, nie rozwiązanie geometrii/okluzji całego świata. Scena nie jest zapisana ani częścią produktu.',
-'Cztery odległe porównania off/on mokrego eksperymentu miały zerową różnicę pikseli. Suche oko miało śladowe różnice średnie poniżej0,00004 RGB; nie deklarujemy identyczności całego kadru.',
-'Budżet122/122 porównany na tych samych kamerach: estymowane draws+0 i tris+0, instancing osobno. To estymatyCPU przed grupowaniemSRP, nie pomiarGPU/A16. Brak nowych kamer lub przebiegów produktu.',
-"Pełne końcowe EditMode$editPassed/$editPassed; GIS$passed passed/$xfailed xfailed w$seconds s, kod0. W trakcie rundy tylko ukierunkowane testy13/13 i wcześniejsze7/7; pełnyGIS wyłącznie przy zamknięciu.",
-'Generator428s bezfallback, fidelity0, build_all446s, importLow/High0. Import raportuje117,5/259,6MiB, nie PSS telefonu. Własny Python pojedynczo w heavy z limitem wątków1, Unity osobnym slotem.',
+'Mokry stan bazowy: 36 PNG przy wet 0/0,5/1 pokazuje globalnie jasne wygładzenie bez wiarygodnej lokalnej treści odbić. Zdjęcie cm92458760: Rakoon, 2020-07-11, CC BY 3.0, zgodny SHA; błędna poza klasy C, tylko odniesienie jakościowe, bez fotometrii.',
+'Eksperyment istniejącej kostki pojazdu: 16 PNG z oka kierowcy i daleka oraz 32 bliskie PNG z 32 zrzutami kostek. Dał ciemny owal w zasięgu 8–12 m zamiast przekonującego odbicia. Usunięto cały mechanizm, shader, flagę i styki wspólnych shaderów; patch i opinie zachowano.',
+'Ablacja filmu: 72 PNG, połysk 0,52/0,35/0,2 oraz udział kałuż 0,3/0,08. Krytyk i rodzic odrzucili wszystkie warianty: mniejszy połysk redukuje plastik, lecz nie daje mokrego wyglądu z odbiciem. Usunięto nieprzyjęty parametr; presety nadal bez nowego mokra.',
+'Scena diagnostyczna v2: 16 PNG i dwie kostki. Surowa kostka i sfera 20 m deformują położenie znanych pasów ściany; znana rzeczywista płaszczyzna pozwala dopasować odbicie. To ograniczenie paralaksy, nie rozwiązanie geometrii i okluzji całego świata. Scena nie jest zapisana ani częścią produktu.',
+'Cztery odległe porównania off/on mokrego eksperymentu miały zerową różnicę pikseli. Suche oko miało śladowe różnice średnie poniżej 0,00004 RGB; nie deklarujemy identyczności całego kadru.',
+'Budżet 122/122 porównany na tych samych kamerach: estymowane draws +0 i tris +0, instancing osobno. To estymaty CPU przed grupowaniem SRP, nie pomiar GPU/A16. Brak nowych kamer lub przebiegów produktu.',
+"Pełne końcowe EditMode $editPassed/$editPassed; GIS: $passed passed, $xfailed xfailed w $seconds s, kod 0. W trakcie rundy tylko ukierunkowane testy 13/13 i wcześniejsze 7/7; pełny GIS wyłącznie przy zamknięciu.",
+'Generator 428 s bez fallback, fidelity i import Low/High z kodem 0, build_all 446 s. Import raportuje 117,5/259,6 MiB, nie PSS telefonu. Własny Python pojedynczo w heavy z limitem jednego wątku, Unity osobnym slotem.',
 'Własne efekty regeneracji zapisano w generated-baseline-rebuild.patch i przywrócono do bazy. Nie są zmianą produkcyjną light; odtworzenie wymaga generatora/fidelity/importu przez sloty.',
 'Styki końcowe: LightingPreset, WorldAtmosphere, Sky.shader, Clear asset i metadane źródła; własne narzędzia QA. WorldPBR, WorldSurface i mokry KamionAtmosphere przywrócone po odrzuceniu eksperymentów, bez zmian cudzej geometrii/asfaltowego albedo.',
-'Wynik: P1 nieba poprawione, mokra droga nadalFAIL. Raporty niezależne w review, szczegóły i ograniczenia w ADR0108. Integruje lider; bez push, merge do main i telefonów. Następna runda gpt-light-r4: spójność tonówLow/High po merge main.'
+'Wynik: P1 nieba poprawione, mokra droga nadal FAIL. Raporty niezależne w review, szczegóły i ograniczenia w ADR 0108. Integruje lider; bez push, merge do main i telefonów. Następna runda gpt-light-r4: spójność tonów Low/High po merge main.'
 )
 if($report.Count -gt 20){throw 'REPORT exceeds20lines'}
 $report|Set-Content "$PSScriptRoot/REPORT.md" -Encoding utf8
