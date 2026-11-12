@@ -10,3 +10,5 @@ Awaryjny restore: Copy-Item artifacts/gpt-s16-r1/candidate-b-street_props.glb ar
 Otwarte: dodatkowepary+recenzja, finalGIS/EditMode, przywrócenie7natywnych materiałów z bazowejkopii, ADR/REPORT,push; później r2,r3.
 Sprzątanie: ograniczam kopie; automatyczny przegląd zablokował kasowanie własnych clear-rejected PNG. DECYZJA: ręczne usunięcie po recenzji, brak obchodzenia blokady.
 Pomiar GPU/telefon: UNVERIFIED, należy do lidera. Limit pracy:12h od22:34, około10:34 13.11.2026.
+
+Dodatkowe kamery: before/Low-clear zapisane.
