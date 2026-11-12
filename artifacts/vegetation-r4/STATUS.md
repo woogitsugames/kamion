@@ -6,3 +6,4 @@ Main wnosi zmiany światła, asfaltu, remizy, pojazdów i obiektów trasy. Basel
 
 LFS checkout zakończony kodem 0. Przygotowano własne helpery r4. Owner heavy bierze aktualną gałąź gpt-vegetation-r4; Unity ma owner gpt-vegetation. Każdy ciężki generator i testy GIS przechodzą przez właściwy slot. Pełny GIS wyłącznie na końcu rundy. Nie zmieniać produkcji podczas baseline.
 Sekwencja sync-and-baseline.ps1 kopiuje tylko potrzebne źródła CC0/Megascans z main, nie aktywny świat derived. Potem osobno Materials i World w heavy, QA 15 Megascans bez fallback, migawka 130 GLB i 64 instancji z pinami źródeł, import i wszystkie świeże obrazy. Nie uruchamia pełnego GIS ani nie nakłada propozycji.
+Synchronizacja brakujących zasobów Data/raw/cc0, robocopy kod 0 (0–7 nie oznacza porażki). Nie kopiowano aktywnie generowanego świata main.
