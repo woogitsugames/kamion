@@ -31,11 +31,15 @@ import soundfile as sf
 from scipy import signal
 
 from el_analyze import MAIN, comb_estimate, lufs, track
+from el_regen01 import REGEN01, line_follow, prompt_entry
+from el_sweepcut import MAX_LEN_S, choose_segment, flatten_level, smooth_track, stretch_psola, top_segment, warp_to_constant
 from sfx_layers import cab_filter
 
 ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / "game" / "Assets" / "_Project" / "Audio" / "ElevenLabs"
 ANALYSIS = ROOT / "artifacts" / "audio-el" / "analysis" / "analysis.json"
+ANALYSIS_R01 = ROOT / "artifacts" / "audio-regen01" / "analysis" / "regen01.json"  # el_regen01.py (ADR 0138)
+REPORT = ROOT / "artifacts" / "audio-regen01" / "prepare.txt"
 SYNTH = MAIN / "art-source" / "audio" / "generated"
 FS = 48000
 GRID = [600, 900, 1200, 1500, 1800, 2100]
@@ -51,6 +55,17 @@ ENGINE_PICK: dict[tuple[str, str, int], str | None] = {
     # wanders 18.8 %, the strong 133 Hz line is ambiguous k=2/k=3) and failed el_verify pitch (> 4 %) when tried.
     ("cab", "off", 1200): "ENG_CAB_OFF_1800 (3).wav",   # GPT: best of its ID; measured 1218 rpm
     ("cab", "off", 1500): "ENG_CAB_OFF_1800 (3).wav",
+}
+# ADR 0138: rows cut from one REGEN-01 sweep (one machine, consistent timbre across the row) instead of picking loops.
+# rise = (t0, t1, start band Hz, harmonic number of the followed line), steady = windows for targets outside the rise
+# (idle before it). Windows authored from artifacts/audio-regen01/analysis/sheets/ENG_EXT_ON_SWEEP.png. Sweep = el_regen01
+# rank 1: ENG_EXT_ON_SWEEP (4), 904->1772 rpm, monotonic 91 %, line 22.7 dB, period (YIN) = line in 100 % of 1 s chunks.
+# (2)/(3) rise further but carry a constant ~46 Hz partial: their 1500/1800 cells are periodic an octave low (YIN 0.49/0.51).
+# ENG_CAB_ON_SWEEP: no variant rises monotonically (25-77 %) with a consistent period, the cab/on row keeps picked loops.
+LOOP_MIN_S = 3.6  # output loop length floor (> 3 s asserted by ElevenLabsEngineAudioTests, + seam crossfade margin)
+SWEEP_ROWS: dict[tuple[str, str], dict] = {
+    ("ext", "on"): {"file": "ENG_EXT_ON_SWEEP (4).wav", "rise": (9.0, 15.4, (40, 50), 1),
+                    "steady": (5.0, 9.0, (36, 46), 1)},
 }
 EVENTS = {
     # name in game          : (source file, kind, target)  target = LUFS or "rel:<db>" relative to a synth clip
@@ -155,7 +170,26 @@ def synth_lufs() -> dict:
     return out
 
 
-def candidates(rows: list[dict], persp: str, load: str) -> list[dict]:
+_AMBIG: dict[str, float] = {}
+
+
+def ladder_ambiguity(src: Path, r: dict) -> float:
+    """Prominence (dB) of a line at 0.5x or 1.5x the dominant one: >= 6 dB means the ladder spacing (period) is half the
+    dominant line, i.e. the loop would be heard an octave below the grid cell (ADR 0138). Cached per file."""
+    if r["file"] not in _AMBIG:
+        from el_analyze import prominence_db, welch_db
+        f, pdb = welch_db(mono(src / r["file"]), FS)
+        pr = prominence_db(f, pdb)
+        df = f[1] - f[0]
+        v = []
+        for m in (0.5, 1.5):
+            j = int(round(r["dom_hz"] * m / df))
+            v.append(float(pr[max(0, j - 3): j + 4].max()))
+        _AMBIG[r["file"]] = max(v)
+    return _AMBIG[r["file"]]
+
+
+def candidates(rows: list[dict], persp: str, load: str, src: Path | None = None) -> list[dict]:
     """Stable, clearly tonal loops of one perspective/load (any prompt rpm)."""
     out = []
     for r in rows:
@@ -164,8 +198,11 @@ def candidates(rows: list[dict], persp: str, load: str) -> list[dict]:
         span = (r["rpm_max"] - r["rpm_min"]) / r["rpm_med"]
         # seam is re-made by seam_loop(), so the raw seam only screens gross faults; span = 1 s tracking of a weak
         # line is noisy, 15 % still means a held note (sheets reviewed)
+        # ADR 0138: range widened for the REGEN-01 high/slow-idle loops; level-unstable (revving) loops excluded
         ok = (r["dom_prom_db"] >= 9 and span <= 0.15 and r["seam_jump_ratio"] < 1.0
-              and abs(r["drift_db"]) < 3 and 650 <= r["rpm_med"] <= 1600)
+              and abs(r["drift_db"]) < 3 and 580 <= r["rpm_med"] <= 2000 and r.get("level_range_db", 0.0) <= 8)
+        if ok and src is not None and ladder_ambiguity(src, r) >= 6.0:
+            ok = False
         if ok:
             out.append(dict(r, span=span))
     return out
@@ -176,21 +213,72 @@ def score(c: dict, target: int) -> float:
     return 2.0 * c["ladder_n"] + c["dom_prom_db"] / 4 - 60 * c["span"] - 14 * shift - 40 * max(0.0, shift - 0.6)
 
 
+def sweep_cell(src: Path, cfg: dict, rpm: int) -> tuple[np.ndarray, dict]:
+    """One grid cell cut from a sweep (el_sweepcut). Inside the rise: flattened segment around rpm. Above it: the top
+    of the rise, flattened and shifted up. Below it: the authored steady (idle) window, flattened and shifted down."""
+    sos = signal.butter(2, 25.0, "hp", fs=FS, output="sos")
+    x = signal.sosfiltfilt(sos, mono(src / cfg["file"]))
+    f_t = rpm / 20.0
+    t0, t1, band, k = cfg["rise"]
+    tr = line_follow(x, FS, t0, t1, band)
+    t, fsm = tr["t"], smooth_track(tr["t"], tr["f0"] / k)
+    seg, kind = choose_segment(t, fsm, f_t), "rise"
+    if seg is None and f_t > fsm.max():
+        seg, kind = top_segment(t, fsm), "top"
+    if seg is None:
+        s0, s1, sband, sk = cfg["steady"]
+        st = line_follow(x, FS, s0, s1, sband, fixed=True)
+        t, fsm = st["t"], smooth_track(st["t"], st["f0"] / sk)
+        mid, half = 0.5 * (s0 + s1), min(MAX_LEN_S, s1 - s0) / 2
+        seg, kind = (max(mid - half, float(t[0])), min(mid + half, float(t[-1]))), "steady"
+    y, info = warp_to_constant(x, FS, t, fsm, seg[0], seg[1], f_t)
+    y, info["level_flatten_db"] = flatten_level(y, FS)
+    info["stretch"] = 1.0
+    if len(y) < int(LOOP_MIN_S * FS):  # fast part of the sweep: PSOLA-stretch to a loop that is not heard as a loop
+        info["stretch"] = LOOP_MIN_S * FS / len(y)
+        y = stretch_psola(y, FS, f_t, int(LOOP_MIN_S * FS))
+    info["segment_kind"] = kind
+    return seam_loop(y), info
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--src", default=str(MAIN / "art-source" / "audio" / "elevenlabs"))
     a = ap.parse_args()
     src = Path(a.src)
     rows = [r for r in json.loads(ANALYSIS.read_text(encoding="utf-8")) if "error" not in r]
+    if ANALYSIS_R01.exists():
+        rows += [r for r in json.loads(ANALYSIS_R01.read_text(encoding="utf-8")) if "persp" in r]
     gen = json.loads((src / "generation-manifest.json").read_text(encoding="utf-8"))
     prompt_of = {g["id"]: g for g in gen}
+    prompt_of.update({k: prompt_entry(k) for k in REGEN01})
     ref = synth_lufs()
     clips, sfx, report = [], [], []
     for persp_up, persp in (("EXT", "ext"), ("CAB", "cab")):
         for load_up, layer, load in (("OFF", "off", 0.0), ("ON", "on", 1.0)):
-            cands = candidates(rows, persp_up, load_up)
+            cands = candidates(rows, persp_up, load_up, src)
             prev = None
             for rpm in GRID:
+                cfg = SWEEP_ROWS.get((persp, layer))
+                if cfg:
+                    y, info = sweep_cell(src, cfg, rpm)
+                    target = ref[(persp, layer, rpm)]
+                    y, gain = to_lufs(y, target)
+                    y, lim = soft_limit(y)
+                    name = f"el_engine_{persp}_{layer}_{rpm:04d}"
+                    f = write(name, f"engine/{persp}", y)
+                    cycles = max(1, int(round(len(y) / FS * rpm / 120)))
+                    clips.append({"name": name, "file": f, "kind": "engine", "perspective": persp, "rpm": rpm, "layer": layer,
+                                  "load": load, "rpm_exact": float(rpm), "cycles": cycles, "samples": len(y),
+                                  "source": cfg["file"], "source_rpm_measured": info["rpm_measured_mean"],
+                                  "pitch_ratio": rpm / info["rpm_measured_mean"], "gain_db": gain, "target_lufs": target,
+                                  "limit_db": lim, "lufs": lufs(y, FS), "source_prompt_id": cfg["file"].split(" (")[0],
+                                  "sweep_segment": info})
+                    report.append(f"{name:28s} <- {cfg['file']:28s} {info['segment_kind']:6s} {info['seg_t0']:5.2f}-{info['seg_t1']:5.2f} s "
+                                  f"measured {info['rpm_measured_mean']:6.0f} rpm  warp {info['warp_min']:.3f}-{info['warp_max']:.3f}  "
+                                  f"level flat {info['level_flatten_db']:.1f} dB  stretch x{info['stretch']:.2f}  "
+                                  f"{gain:+.1f} dB -> {target:.1f} LUFS  limit {lim:.1f} dB")
+                    continue
                 pick = ENGINE_PICK.get((persp, layer, rpm))
                 if pick:
                     c = next(r for r in rows if r["file"] == pick)
@@ -274,7 +362,8 @@ def main() -> None:
     }
     OUT.mkdir(parents=True, exist_ok=True)
     (OUT / "el_manifest.json").write_text(json.dumps(man, indent=1), encoding="utf-8")
-    rep = ROOT / "artifacts" / "audio-el" / "prepare.txt"
+    rep = REPORT
+    rep.parent.mkdir(parents=True, exist_ok=True)
     rep.write_text("\n".join(report) + "\n", encoding="utf-8")
     print("\n".join(report))
 

@@ -18,7 +18,7 @@ import el_demo as ed  # noqa: E402
 import runtime_sim as rs  # noqa: E402
 from dsp import FS  # noqa: E402
 
-OUT = ed.ROOT / "artifacts" / "audio-el" / "verify"
+OUT = ed.ROOT / "artifacts" / "audio-regen01" / "verify"
 
 
 def main():

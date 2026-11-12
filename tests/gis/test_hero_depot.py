@@ -14,7 +14,7 @@ import numpy as np
 import pytest
 from shapely.geometry import Polygon
 
-from conftest import REGION_DIR, REPO
+from conftest import REGION_DIR, REPO, require_lfs
 
 from roads import standards as S
 from streetscape import hero_depot as HD
@@ -105,6 +105,7 @@ def spec():
 def meta():
     if not (META.exists() and GLB.exists()):
         pytest.skip("hero depot asset not built")
+    require_lfs(GLB)
     return json.loads(META.read_text(encoding="utf-8"))
 
 

@@ -69,6 +69,9 @@ def _board_rows(graph, bd, rep, oid):
     return rows
 
 
+BOARD_ABOVE_BEAM_M = 0.25      # WORKING_VALUE read off Mapillary 275528677534382 against the 1.0 m beam depth
+
+
 def build(pl, net, graph, overrides, origin, boards, report):
     rep = {"gantries": [], "landmarks": [], "stale": []}
     nodes = {n["id"]: n for n in graph["nodes"]}
@@ -112,7 +115,13 @@ def build(pl, net, graph, overrides, origin, boards, report):
                 hmax = max(hmax, hm)
                 lat = float(np.mean([cen[i] for i in bd["lanes"] if i < len(cen)]))
                 items.append((key, lat, hm))
-            H = round(S.SIGN_H_OVERHEAD + 0.2 + hmax + 0.15, 1)
+            # ADR 0127 (review s11-0125 P2): on a portal the boards stand ON the beam - their tops BOARD_ABOVE_BEAM_M
+            # above the top chord, the faces covering the 1.0 m beam (Mapillary 275528677534382 from the front,
+            # 3281350541967811 from behind). The tallest board keeps the overhead clearance. A cantilever keeps the
+            # hung layout (boards 0.15 m under the arm top, ADR 0069 p37).
+            portal = o.get("form") != "cantilever"
+            top_off = BOARD_ABOVE_BEAM_M if portal else -0.15
+            H = round(S.SIGN_H_OVERHEAD + 0.2 + hmax - top_off, 1)
             yaw = _yaw(-travel)
             if o.get("form") == "cantilever":
                 # one column beside the carriageway (column_side relative to travel), lattice arm over the lanes
@@ -132,15 +141,18 @@ def build(pl, net, graph, overrides, origin, boards, report):
                 pl.add("gantry_footing", q, yaw, z=z, src=f"override:{o['id']}")
                 ctr, span = q, reach
             else:
-                LP.GANTRIES.add((int(span), int(round(H * 10))))
                 ctr = c.line.offset_point(s, 0.5 * (lat_l + lat_r))
+                if o.get("columns_en"):       # ADR 0127: column feet read off the orthophoto (region-local E, N)
+                    ca, cb = (np.asarray(v, float) for v in o["columns_en"])
+                    ctr, span = (ca + cb) / 2, round(float(np.hypot(*(cb - ca))))
+                LP.GANTRIES.add((int(span), int(round(H * 10))))
                 pl.add(f"sign_gantry_{int(span)}_{int(round(H * 10))}", ctr, yaw, z=z, src=f"override:{o['id']}")
                 for sx in (-1, 1):            # column footings + colliders (local x of the gantry = (cos yaw, sin yaw))
                     q = ctr + np.array([math.cos(yaw), math.sin(yaw)]) * sx * int(span) / 2
                     pl.add("gantry_footing", q, yaw, z=z, src=f"override:{o['id']}")
             for key, lat, hm in items:
                 p = c.line.offset_point(s, lat) - travel * 0.45
-                pl.add(f"board_{key}", p, _yaw(-travel), z=z + S.SIGN_H_OVERHEAD + 0.2 + hm / 2,
+                pl.add(f"board_{key}", p, _yaw(-travel), z=z + H + top_off - hm / 2,
                        src=f"override:{o['id']}")
             rep["gantries"].append({"id": o["id"], "form": o.get("form", "portal"), "span_m": int(span), "height_m": H,
                                     "at": [round(float(v), 1) for v in ctr],

@@ -38,6 +38,7 @@ SHIFT = 3.0
 START_T, STOP_T = 0.5, 35.0
 START_DELAY, START_FADE = 1.2, 1.0  # EngineAudio.startLoopDelay / startLoopFade
 FRAME = int(FS / rs.FRAME_HZ)
+CLIP_ROOT = ROOT  # repo root the el_manifest file paths resolve against (el_ab.py points it at main for the A/B)
 
 
 def telemetry(t: float) -> dict:
@@ -67,13 +68,13 @@ def load_grid_el(man: dict, kind: str, persp: str, pool: int) -> rs.LayerGrid:
     for ld in loads:
         for r in rpms:
             c = next(c for c in sel if c["rpm"] == r and (kind != "engine" or c["load"] == ld))
-            clips.append(rs.Clip(sf.read(ROOT / c["file"])[0].astype(np.float64), c["rpm_exact"], c["cycles"]))
+            clips.append(rs.Clip(sf.read(CLIP_ROOT / c["file"])[0].astype(np.float64), c["rpm_exact"], c["cycles"]))
     return rs.LayerGrid([float(r) for r in rpms], loads, clips, pool=pool)
 
 
 def el_sfx(man: dict, name: str) -> np.ndarray:
     s = next(s for s in man["sfx"] if s["name"] == name)
-    return sf.read(ROOT / s["file"])[0].astype(np.float64)
+    return sf.read(CLIP_ROOT / s["file"])[0].astype(np.float64)
 
 
 class Ctrl(rd.Controller):

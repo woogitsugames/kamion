@@ -8,7 +8,7 @@ Numeracja sesji wg `docs/owner/GPT-TASK-05-24H.md`: 1 light, 2 vegetation, 3 asp
 
 | Sesja | Dziedzina / runda | Kopia | Gałąź @ HEAD (16:29) | Stan rundy |
 |---|---|---|---|---|
-| 1 | light r6 | `gpt-handovers/light-r6.md` | `gpt-light-r6` @ `7889149c3` | wstrzymana; brak REPORT; kod Assets niezmieniony |
+| 1 | light r6 | `gpt-handovers/light-r6.md` | `gpt-light-r6` @ `48f55d254` | wstrzymana; brak REPORT; kod Assets niezmieniony; 16:34 proces zakończył się sam, zmiany generatora tylko w worktree (bez world checkpoint) |
 | 2 | vegetation r4 | `gpt-handovers/vegetation-r4.md` | `gpt-vegetation-r4` @ `fc398161b` | wstrzymana; REPORT-DRAFT; **NIE SCALAĆ** |
 | 4 | sbs r4 | `gpt-handovers/sbs-r4.md` | `gpt-sbs-r4` @ `e2ce37d6e` | wstrzymana; REPORT-DRAFT |
 | 5 | cab r4 | `gpt-handovers/cab-r4.md` | `gpt-cab-r4` @ `9b474d04e` | wstrzymana; REPORT-DRAFT, „nie gotowa do scalenia” |

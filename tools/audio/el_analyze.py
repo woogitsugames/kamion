@@ -39,6 +39,22 @@ from scipy import signal  # noqa: E402
 
 MAIN = Path(r"C:\Users\matma\Documents\Claude\kamion")
 ENG_RE = re.compile(r"^ENG_(EXT|CAB)_(ON|OFF)_(\d+)$")
+# REGEN-01 (ADR 0138): loops described in words, no rpm number. Nominal rpm = the grid cell they were asked for.
+ENG_ALIAS = {
+    "ENG_EXT_ON_HIGH": ("EXT", "ON", 2100), "ENG_EXT_OFF_HIGH": ("EXT", "OFF", 2100),
+    "ENG_CAB_ON_HIGH": ("CAB", "ON", 2100), "ENG_CAB_OFF_HIGH": ("CAB", "OFF", 2100),
+    "ENG_EXT_IDLE_SLOW": ("EXT", "OFF", 600), "ENG_CAB_IDLE_SLOW": ("CAB", "OFF", 600),
+}
+
+
+def engine_id(fid: str) -> tuple[str, str, int] | None:
+    """(perspective EXT|CAB, load ON|OFF, nominal rpm) of a constant-rpm engine loop ID, else None."""
+    m = ENG_RE.match(fid)
+    if m:
+        return m[1], m[2], int(m[3])
+    return ENG_ALIAS.get(fid)
+
+
 NAME_RE = re.compile(r"^(?P<id>.+?) \((?P<n>\d+)\)\.wav$")
 
 
@@ -199,6 +215,33 @@ def track(x: np.ndarray, fs: int, f_fire: float, f: np.ndarray, prom: np.ndarray
             "rpm_std": float(rpm.std()), "rpm_slope_per_s": float(np.polyfit(np.arange(len(rpm)) * 0.25, rpm, 1)[0]) if len(rpm) > 2 else 0.0}
 
 
+def yin_f0(x: np.ndarray, fs: int, fmin: float = 25.0, fmax: float = 160.0, thr: float = 0.35) -> tuple[float, float]:
+    """Periodicity (YIN, de Cheveigne & Kawahara 2002) of the 25-600 Hz band: median f0 over 0.25 s frames and the median
+    aperiodicity (cumulative-mean-normalised difference at the chosen lag; < ~0.35 = clearly periodic). Used as the octave
+    check of a grid cell (ADR 0138): the dominant-line convention can sit an octave above the actual period."""
+    sos = signal.butter(4, [25, 600], "bp", fs=fs, output="sos")
+    dec = 8
+    y = signal.decimate(signal.sosfiltfilt(sos, x), dec, ftype="fir")
+    fsd = fs / dec
+    w, tmax, tmin = int(0.25 * fsd), int(fsd / fmin), int(fsd / fmax)
+    res = []
+    for i0 in range(0, len(y) - w - tmax, w // 2):
+        seg = y[i0:i0 + w + tmax]
+        d = np.array([np.sum((seg[:w] - seg[t:t + w]) ** 2) for t in range(tmax + 1)])
+        cm = np.concatenate([[1.0], d[1:] * np.arange(1, tmax + 1) / np.maximum(np.cumsum(d[1:]), 1e-20)])
+        r = cm[tmin:]
+        idx = np.where(r < thr)[0]
+        if len(idx):
+            j = idx[0]
+            while j + 1 < len(r) and r[j + 1] < r[j]:
+                j += 1
+        else:
+            j = int(np.argmin(r))
+        res.append((fsd / (j + tmin), r[j]))
+    a = np.array(res)
+    return float(np.median(a[:, 0])), float(np.median(a[:, 1]))
+
+
 # --------------------------------------------------------------------------- per file
 def analyse(path: Path) -> dict:
     data, fs = sf.read(path, always_2d=True)
@@ -213,10 +256,10 @@ def analyse(path: Path) -> dict:
     sec = min(fs, len(x) // 3)
     r["drift_db"] = db(np.sqrt(np.mean(x[-sec:] ** 2))) - db(np.sqrt(np.mean(x[:sec] ** 2)))
     r.update(seam(x, fs))
-    em = ENG_RE.match(fid)
+    em = engine_id(fid)
     if em:
-        rpm_nom = int(em[3])
-        r.update({"persp": em[1], "load": em[2], "rpm_nominal": rpm_nom})
+        rpm_nom = em[2]
+        r.update({"persp": em[0], "load": em[1], "rpm_nominal": rpm_nom})
         c = comb_estimate(x, fs)
         r["comb_rpm"] = c["comb_f"] * 20
         r["comb_score"] = c["comb_score"]
