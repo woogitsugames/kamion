@@ -1,10 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Collections;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using Game.World;
 using NUnit.Framework;
 using UnityEditor;
+using UnityEngine;
 
 namespace Game.Tests
 {
@@ -45,6 +48,24 @@ namespace Game.Tests
             Assert.IsTrue((bool)args[2]);
             Assert.IsFalse((bool)args[3]);
             Assert.IsFalse((bool)args[4]);
+        }
+
+        [Test]
+        public void MigratedLibrary_StillRejectsCorruptLod0PlateCorners()
+        {
+            string path = Path.GetFullPath(Path.Combine(Application.dataPath, "..", "..", "art-source/world/props/street_props.glb"));
+            if (!File.Exists(path)) Assert.Ignore("Prototype library not generated: " + path);
+            var reader = Type.GetType("Game.World.Import.GlbReader, Game.World.Import.Editor", true);
+            object library = reader.GetMethod("Load").Invoke(null, new object[] { path });
+            var validator = Type.GetType("Game.World.Import.WorldCarPlateMaterials, Game.World.Import.Editor", true).GetMethod("ValidLibrary");
+            Assert.IsTrue((bool)validator.Invoke(null, new[] { library }), "Complete migrated library must remain eligible");
+            var nodes = ((IEnumerable)reader.GetField("Nodes").GetValue(library)).Cast<object>();
+            object root = nodes.First(n => (string)n.GetType().GetField("Name").GetValue(n) == "car_hatch_white");
+            var primitives = ((IEnumerable)root.GetType().GetField("Primitives").GetValue(root)).Cast<object>();
+            object plate = primitives.First(p => (string)p.GetType().GetField("Material").GetValue(p) == "car_plate");
+            var corners = (Vector2[])plate.GetType().GetField("Uv1").GetValue(plate);
+            corners[0] = new Vector2(.3f, .7f);
+            Assert.IsFalse((bool)validator.Invoke(null, new[] { library }), "Atlas LOD1 must not relax the LOD0 corner guard");
         }
 
         [Test]

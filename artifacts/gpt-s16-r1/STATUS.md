@@ -6,3 +6,5 @@ NASTĘPNY KROK: Get-Content artifacts/gpt-s16-r1/STATUS.md
 Gotowe do recenzji: NIE
 
 Baseline rozszerzony zakończony: 114 kamer ×4 warunki. Obejrzano inspection/baseline-targets-near.jpg; oba auta widoczne częściowo (inne pojazdy/wyposażenie), ciągnik i naczepa widoczne. Statyczna re-recenzja zamknęła 3 pierwotne regresje. Regeneracja B w toku, po niej import after.
+
+Potwierdzono baseline logiem: remap tablic był aktywny (54 plates, Forward only). Dodano negatywny EditMode: biblioteka po migracji musi nadal odrzucać uszkodzony róg UV1 tablicy LOD0. Native test nadal wymaga aktywnego remapu po imporcie.
