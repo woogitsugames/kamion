@@ -1,3 +1,17 @@
+# HANDOVER — kamion, SESJA 16 (start 2026-11-12 22:23, nowe konto: 5 h 0 %, tydzień 0 %, Fable 0 %; reset 5 h 13.11 03:20)
+
+## STAN S16 (lider) — main `700517b22`
+- Maszyna 22:23: C: 853 GB wolnego, watchdog żyje (pid 73848), PHONE_RUN brak, **A16 RFGL34SJYDZ znów online**, Fold RFGL80RXBPZ online.
+- Triggery CronCreate: **:17** limit/dysk/live/scalenia/HANDOVER/push, **:47** PR-y Mistrala, **:07** przekazania GPT.
+- Agenci (w tle, live nadpisywany po każdym kroku):
+| ADR | zadanie | model | worktree / gałąź | live | stan |
+|---|---|---|---|---|---|
+| 0152 | fold-flicker: A16 Low regresja → Fold Ultra/60 5 min → tier Folda → merge main | Opus | `fold-flicker` | `artifacts/live/fold-flicker.md` | start 22:3x |
+| 0146 | putry-andersa: fidelity+pytest+commit → merge main → import, rendery par 494288/810896/Andersa → `artifacts/putry-andersa/after4` | Fable | `putry-andersa` | `artifacts/live/putry-andersa.md` | start 22:3x (rebuild 22:22 exit 0) |
+| — | Mistral r4 #21–#25 recenzja + integracja (KRTG v2 #21+#23 połączyć) | Opus | `mistral-r4-int` | `artifacts/live/mistral-r4-int.md` | start 22:3x |
+- Dalej (kolejność s16): scalenie 0152 → czysty APK właściciela; scalenie 0146 po visual-critic D51; scalenie Mistral r4; JEDNA integracja świata; krytyk D51 → APK Low → gate3 A16; potem LOD1/LOD2 aut, zieleń ulic domów.
+- **Ostatni przydzielony ADR: 0152.**
+
 # HANDOVER — kamion, SESJA 15 (start 2026-11-12 20:25, nowe konto)
 
 ## KONIEC S15 (22:5x, limit 5 h 89 % — reset 13.11 01:20, tydzień 39 %, Fable 63 %) — prompt dla s16: `docs/owner/START-PROMPT-S16.md`
