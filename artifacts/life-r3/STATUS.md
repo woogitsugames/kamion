@@ -84,3 +84,5 @@ Kandydat a (2026-11-12T10:06:06.7428902+01:00): sprawdź test_cars_r9.py wariant
 Kandydat a (2026-11-12T10:06:08.7847659+01:00): sprawdź test_cars_r11.py wariantu a. Następny etap w candidate-build.ps1; po komplecie PreparedVerified, capture i oględziny.
 
 Kandydat a (2026-11-12T10:06:14.6356831+01:00): sprawdź test_car_deposition.py wariantu a. Następny etap w candidate-build.ps1; po komplecie PreparedVerified, capture i oględziny.
+
+Kandydat a (2026-11-12T10:06:26.5450471+01:00): sprawdź test_car_plate_payload.py wariantu a. Następny etap w candidate-build.ps1; po komplecie PreparedVerified, capture i oględziny.
