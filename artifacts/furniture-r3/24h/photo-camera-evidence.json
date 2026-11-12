@@ -1,0 +1,69 @@
+{
+  "photo_id": "1911352299378570",
+  "original_sha256": "911c8c4a93f4479b934c3a8e734f5fd5dca54eb0eef587f52cf707b6c6120c2f",
+  "source_lon_lat": [
+    23.153667645284,
+    53.158277671594
+  ],
+  "source_compass_deg": 313,
+  "grid_heading_deg": 309.67371919821585,
+  "source_position_en": [
+    -412.9620515733259,
+    -54.42193022463471
+  ],
+  "shelter_instance": {
+    "e": -437.618,
+    "n": -35.018,
+    "p": "bus_shelter",
+    "src": "bus_stop",
+    "yaw": -3.909,
+    "z": 132.72
+  },
+  "distance_to_shelter_m": 31.375600408299857,
+  "target_relative_bearing_deg": -1.4714058276135773,
+  "horizon_fraction_working": 0.665,
+  "image_aspect": 1.3333333333333333,
+  "assumed_road_height_m": 132.72,
+  "assumed_eye_height_m": 1.65,
+  "caveat": "Pose hypotheses only. No matched-frame or metric/photo calibration claim until inspected against renders.",
+  "source_provenance": "reference/provenance.json",
+  "one_object_fits_working": [
+    {
+      "vfov_deg": 45,
+      "lateral_shift_m": -5.863849497905686,
+      "source_en": [
+        -416.7056200954652,
+        -58.93529101833786
+      ],
+      "camera_z_m": 133.6346007048996,
+      "implied_road_height_if_eye_165_m": 131.9846007048996,
+      "observed_target_u": 0.646,
+      "observed_ground_v": 0.701
+    },
+    {
+      "vfov_deg": 55,
+      "lateral_shift_m": -7.16258928627931,
+      "source_en": [
+        -417.5347548459293,
+        -59.93492125171294
+      ],
+      "camera_z_m": 133.85480016289654,
+      "implied_road_height_if_eye_165_m": 132.20480016289653,
+      "observed_target_u": 0.646,
+      "observed_ground_v": 0.701
+    },
+    {
+      "vfov_deg": 65,
+      "lateral_shift_m": -8.585272803516023,
+      "source_en": [
+        -418.4430171118684,
+        -61.02995003968528
+      ],
+      "camera_z_m": 134.08519119431665,
+      "implied_road_height_if_eye_165_m": 132.43519119431664,
+      "observed_target_u": 0.646,
+      "observed_ground_v": 0.701
+    }
+  ],
+  "fit_caveat": "Manual image points and nominal generated shelter ground. Inspect road/background too; never present this fit as independent dimensional evidence."
+}

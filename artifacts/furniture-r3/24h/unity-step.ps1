@@ -1,5 +1,5 @@
 param(
-    [ValidateSet('import','render','side-render','sbs-sign','editmode','plinth-probe','sign-probe','shelter-policy-probe','shelter-material-probe','night-rig')] [string]$Step,
+    [ValidateSet('import','render','side-render','sbs-sign','sbs-shelter','editmode','plinth-probe','sign-probe','shelter-policy-probe','shelter-material-probe','night-rig')] [string]$Step,
     [string]$Phase='before',
     [ValidateSet('Low','High')] [string]$Tier='Low',
     [ValidateSet('clear','overcast','dusk')] [string]$Lighting='overcast',
@@ -16,7 +16,7 @@ $slotScript='C:/Users/matma/Documents/Claude/kamion/scripts/unity-slot.ps1'
 if ($OwnedPauseBypass -and ($Step -ne 'import' -or !(Test-Path "$ev/PAUSE_UNITY"))) {
     throw 'The preview bypass requires its own scheduling marker and an import step'
 }
-if ($Step -in @('import','render','sbs-sign') -and !$OwnedPauseBypass) {
+if ($Step -in @('import','render','sbs-sign','sbs-shelter') -and !$OwnedPauseBypass) {
     while (Test-Path "$ev/PAUSE_UNITY") { Start-Sleep -Seconds 2 }
 }
 if ($Step -eq 'import') {
@@ -102,6 +102,12 @@ try {
                 Where-Object camera -eq 'sbs-g3-b-297817221966185'
             $height=[int](1280 * $reference.height / $reference.width)
             & pwsh scripts/visual-qa.ps1 -Scene $scene -Tier $Tier -Lighting $Lighting -Width 1280 -Height $height -Gate3 Data/Regions/bialystok-industrial-c/sbs_cameras.json -Cameras $reference.camera -OutputDir "$ev/$Phase-sbs/$Tier-$Lighting" *> "$ev/sbs-sign-$Phase-$Tier-$Lighting.log"
+        }
+        'sbs-shelter' {
+            $scene=if($Tier -eq 'High'){'WorldC_High'}else{'WorldC'}
+            $photo=(Get-Content "$ev/photo-cameras.json" -Raw|ConvertFrom-Json).cameras
+            $ids=($photo.id -join ',')
+            & pwsh scripts/visual-qa.ps1 -Scene $scene -Tier $Tier -Lighting $Lighting -Width 1280 -Height 960 -Gate3 "$ev/photo-cameras.json" -Cameras $ids -OutputDir "$ev/photo-$Phase/$Tier-$Lighting" *> "$ev/sbs-shelter-$Phase-$Tier-$Lighting.log"
         }
     }
     if ($LASTEXITCODE -ne 0) { throw "Unity $Step failed: $LASTEXITCODE" }
