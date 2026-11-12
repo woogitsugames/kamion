@@ -305,7 +305,7 @@ def main() -> None:
                 report.append(f"{name:28s} <- {c['file']:28s} measured {c['rpm_med']:6.0f} rpm  x{exact:.3f}  "
                               f"span {100 * c['span']:.1f}%  {gain:+.1f} dB -> {target:.1f} LUFS  limit {lim:.1f} dB")
     # engine (exhaust) brake: one source, resampled to a small rpm grid, both perspectives
-    r = next(r for r in rows if r["file"] == EBRAKE_SRC)
+    next(r for r in rows if r["file"] == EBRAKE_SRC)
     xe = circular_hp(mono(src / EBRAKE_SRC))
     c = comb_estimate(xe, FS)
     fd = 72.5 if abs(c["comb_f"] - 72.5) > 3 else c["comb_f"]

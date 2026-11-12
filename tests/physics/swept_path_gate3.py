@@ -318,7 +318,6 @@ def pts(frame, z, x):
 
 # ------------------------------------------------------------------------------------------------ analysis
 def analyse(P, cat, lo, props, ss_win, Q, ss):
-    (fT, fS) = None, None
     tract, trail, kp_err, dirn = frames(P)
     ok = (cat == CAT["carriageway"]) | (cat == CAT["apron"])
     cw = cat == CAT["carriageway"]
@@ -334,7 +333,6 @@ def analyse(P, cat, lo, props, ss_win, Q, ss):
 
     # station of each sample (steer-axle projection on the route) to restrict to the analysed window
     front = pts(tract, WB, 0.0)
-    from scipy.spatial import cKDTree
     idx, cur = np.zeros(len(front), int), 0
     for n_, p_ in enumerate(front):                 # progressive nearest point (a full lap revisits points)
         j1 = min(len(Q), cur + 60)

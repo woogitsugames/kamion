@@ -3,7 +3,6 @@ Straight paired approach strips follow actual gate-builder chains/travel, never 
 All dimensions/strength are WORKING_VALUE appearance rules, not measured tyre evidence.
 """
 import numpy as np
-import shapely
 from shapely.geometry import Polygon
 from roads.build_world import chunk_of
 from .furniture import SurfaceTop

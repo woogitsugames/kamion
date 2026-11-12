@@ -596,7 +596,7 @@ def build(region_id: str, out_root: Path | None = None, verbose=True):
         p.footprint = False
     from streetscape import stage as SS
     st = SS.run(w, road_z, rmask, deck, deck_mask, thick, log)
-    zc, dist, mask = st["zc"], st["dist"], st["mask"]
+    zc, _dist, mask = st["zc"], st["dist"], st["mask"]
     w.stats["hero_docks"] = []
     for dk in st["docks"]:
         if "9962cca0" not in dk["id"] and not dk.get("hero"):

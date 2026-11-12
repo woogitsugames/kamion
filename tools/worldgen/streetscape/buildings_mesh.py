@@ -24,7 +24,7 @@ import math
 
 import numpy as np
 import shapely
-from shapely.geometry import Polygon, shape
+from shapely.geometry import Polygon
 
 from roads import standards as S
 
@@ -754,7 +754,7 @@ def build_dock(acc, layer, p, d, nout, u, zy, num):
     """One loading dock at u along the wall (yard level zy)."""
     zf = zy + S.DOCK_FLOOR_H
     c = p + d * u
-    W, H = S.DOCK_DOOR_W, S.DOCK_DOOR_H
+    W, _H = S.DOCK_DOOR_W, S.DOCK_DOOR_H
     def P(off_u, z, out=0.0):
         q = c + d * off_u + nout * out
         return np.array([q[0], q[1], z])

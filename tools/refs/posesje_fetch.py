@@ -70,7 +70,6 @@ def main():
         if ll is None or ca is None:
             continue
         px, py = to_pl.transform(*ll)
-        best = None
         score = 0
         for hx, hy in houses:
             dx, dy = hx - px, hy - py

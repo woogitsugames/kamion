@@ -31,7 +31,7 @@ import geom as G  # noqa: E402
 import materials as M  # noqa: E402
 import backdrop as BD  # noqa: E402
 from geom import (V, bevel, box, box_mm, cyl, loft, panel, plane_uv, quad_on, rod, rrect, solidify,  # noqa: E402
-                  strip, subsurf, tube)
+                  strip, tube)
 
 REPO = os.path.abspath(os.path.join(HERE, "..", "..", "..", ".."))
 DIMS = json.load(open(os.path.join(REPO, "art-source", "truck", "dims.json"), encoding="utf-8"))
@@ -682,7 +682,7 @@ def build_glass():
             y = glass_y(x, z)          # A6: inner face of the exterior windscreen (placeholder glass)
             lp.append(V(x, y, z))
         loops.append(lp)
-    g = loft("windscreen", list(zip(*loops)), "windscreen", closed=False, sharp=None)
+    loft("windscreen", list(zip(*loops)), "windscreen", closed=False, sharp=None)
     # (loft along x: loops transposed so faces span z)
     build_frit(hw)
     # rubber gasket around the windscreen (outside face)
@@ -986,7 +986,7 @@ def build_dash():
         lp = [V(x, face_at(x, tz + dz) - lift * (0.35 + 0.65 * end), tz + dz) for dz, lift in band]
         lp += [V(x, face_at(x, tz - 0.170) + 0.012, tz - 0.170), V(x, face_at(x, tz - 0.026) + 0.012, tz - 0.026)]
         lps.append(lp)
-    ins = loft("dash_insert", lps, "leather_trim", closed=True, cap0=True, cap1=True, sharp=70)
+    loft("dash_insert", lps, "leather_trim", closed=True, cap0=True, cap1=True, sharp=70)
     for k, dz in enumerate((-0.033, -0.163)):
         pts = [V(x, face_at(x, dash_top_z(x) + dz) - 0.0068, dash_top_z(x) + dz) for x in xs_l[1:-1]]
         strip(f"dash_insert_stitch_{k}", pts, V(0, -1, 0.15).normalized(), 0.005, "stitch", offset=0.0004,
@@ -1059,7 +1059,6 @@ def build_dash():
         for i in range(9):
             t = i / 8
             x, z = a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t
-            yb = None
             prof = dash_profile(x)
             best = min(prof[:40], key=lambda p: abs(p.z - z))
             pts.append(V(x, best.y - 0.0015, z))
@@ -2121,7 +2120,7 @@ def seat(prefix, cx, driver):
         seg=10)
     # side shields (plastic covers over the mechanism) + levers
     for s in (-1, 1):
-        sh = box(f"{prefix}_shield_{s}", (cx + s * (W2 + 0.012), yc - 0.02, zc + 0.01), (0.022, 0.46, 0.10), "dash_dark",
+        box(f"{prefix}_shield_{s}", (cx + s * (W2 + 0.012), yc - 0.02, zc + 0.01), (0.022, 0.46, 0.10), "dash_dark",
                  bev=0.012, seg=3)
     rod(f"{prefix}_lever_h", (cx - (W2 + 0.03), yc + 0.12, zc + 0.02), (cx - (W2 + 0.045), yc + 0.22, zc + 0.0), 0.007,
         "knob", seg=8)
@@ -2182,7 +2181,7 @@ def build_doors():
             y = y0 + (y1(WIN_Z0 - 0.03) - y0) * yi / 12
             loops.append([V(xw - s * px, y, WIN_Z0 - 0.06 + pz) for px, pz in
                           ((0.0, 0.0), (0.075, 0.0), (0.083, 0.03), (0.07, 0.058), (0.02, 0.066), (0.0, 0.066))])
-        sc = loft(f"door_sill_{s}", loops, "dash_soft", closed=True, cap0=True, cap1=True)
+        loft(f"door_sill_{s}", loops, "dash_soft", closed=True, cap0=True, cap1=True)
         # B2.1 (owner sheets): padded koniak leather panel between armrest and sill (was a 7 cm painted strip),
         # crowned 6 mm, twin stitch lines along its top and bottom edges
         loops = []
@@ -2192,7 +2191,7 @@ def build_doors():
             loops.append([V(xw - s * 0.071, y, 1.992), V(xw - s * 0.077, y, 2.010), V(xw - s * 0.080, y, 2.050),
                           V(xw - s * 0.077, y, 2.092), V(xw - s * 0.071, y, 2.104), V(xw - s * 0.058, y, 2.104),
                           V(xw - s * 0.058, y, 1.992)])
-        ins = loft(f"door_insert_{s}", loops, "leather_trim", closed=True, cap0=True, cap1=True, sharp=70)
+        loft(f"door_insert_{s}", loops, "leather_trim", closed=True, cap0=True, cap1=True, sharp=70)
         for k, (z, d) in enumerate(((1.999, 0.0737), (2.097, 0.0745))):
             pts = [V(xw - s * d, door_y(0.04 + 0.88 * i / 16, z, 0.04), z) for i in range(17)]
             strip(f"door_insert_stitch_{s}_{k}", pts, V(-s, 0, 0), 0.005, "stitch", offset=0.0006, u_len=0.017)
@@ -2275,7 +2274,7 @@ def build_bunk():
     # base with drawers: left storage, centre fridge drawer, right storage
     box_mm("bunk_base", -xb, xb, YB, yf, FLOOR, 1.86, "dash_lower", bev=0.008)
     for i, (x0, x1) in enumerate(((-1.03, -0.40), (-0.36, 0.36), (0.40, 1.03))):
-        fr = box_mm(f"drawer_{i}", x0, x1, yf - 0.012, yf + 0.002, 1.47, 1.80, "dash_lower", bev=0.006)
+        box_mm(f"drawer_{i}", x0, x1, yf - 0.012, yf + 0.002, 1.47, 1.80, "dash_lower", bev=0.006)
         box_mm(f"drawer_grip_{i}", (x0 + x1) / 2 - 0.09, (x0 + x1) / 2 + 0.09, yf - 0.024, yf - 0.010, 1.755, 1.775,
                "dash_dark", bev=0.004)
     box_mm("fridge_vent", -0.25, 0.25, yf - 0.013, yf - 0.011, 1.50, 1.53, "gap")
@@ -2286,7 +2285,7 @@ def build_bunk():
         loops.append([V(x, y, z) for y, z in
                       ((YB + 0.01, 1.865), (yf - 0.01, 1.865), (yf - 0.005, 1.90), (yf - 0.012, 1.99), (yf - 0.035, 2.005),
                        (YB + 0.03, 2.005), (YB + 0.01, 1.99))])
-    mt = loft("mattress", loops, "mattress", closed=True, cap0=True, cap1=True, sharp=70)
+    loft("mattress", loops, "mattress", closed=True, cap0=True, cap1=True, sharp=70)
     tube("mattress_piping", [V(-xb + 0.02, yf - 0.025, 2.0), V(xb - 0.02, yf - 0.025, 2.0)], 0.004, "mattress", seg=6)
     # pillow + folded blanket (lived-in, tidy)
     loops = []
@@ -2296,7 +2295,7 @@ def build_bunk():
         h = 0.065 * math.sin(math.pi * t) ** 0.6 + 0.01
         loops.append([V(-1.02 + px, y, 2.005 + max(0.0, pz + h * 0.5)) for px, pz in rrect(0.30, h, h * 0.45, 3)])
     loft("pillow", loops, "mattress", closed=True, cap0=True, cap1=True)
-    blanket = box_mm("blanket", 0.45, 0.95, YB + 0.08, YB + 0.48, 2.005, 2.045, "curtain", bev=0.015, seg=3)
+    box_mm("blanket", 0.45, 0.95, YB + 0.08, YB + 0.48, 2.005, 2.045, "curtain", bev=0.015, seg=3)
     # folded upper bunk against the back wall + straps
     box_mm("upper_bunk", -XI + 0.02, XI - 0.02, YB + 0.002, YB + 0.085, 2.38, 3.08, "wall_fabric", bev=0.02, seg=3)
     for x in (-0.6, 0.6):
@@ -2330,7 +2329,7 @@ def build_overhead():
     bevel(oh, 0.012, 3, angle=30)
     # lids on the rear face: 2 left, DIN console centre, 2 right
     for i, (x0, x1) in enumerate(((-1.12, -0.70), (-0.67, -0.25), (0.25, 0.67), (0.70, 1.12))):
-        lid = box_mm(f"oh_lid_{i}", x0, x1, yback - 0.026, yback - 0.006, zb + 0.06, zb + 0.30, "dash_lower", bev=0.008)
+        box_mm(f"oh_lid_{i}", x0, x1, yback - 0.026, yback - 0.006, zb + 0.06, zb + 0.30, "dash_lower", bev=0.008)
         box_mm(f"oh_grip_{i}", (x0 + x1) / 2 - 0.06, (x0 + x1) / 2 + 0.06, yback - 0.034, yback - 0.02, zb + 0.07,
                zb + 0.085, "dash_dark", bev=0.004)
     # centre DIN console angled down towards the seats: tachograph (top) + radio/CB (bottom)
@@ -2560,7 +2559,7 @@ def auto_uv(objs):
     k = math.sqrt(a3 / max(auv, 1e-9))
     for o in todo:
         me = o.data
-        bake = me.uv_layers.new(name="Bake")  # copies the active (atlas) layout
+        me.uv_layers.new(name="Bake")  # copies the active (atlas) layout
         uv = me.uv_layers["UVMap"].data
         for d in uv:
             d.uv = d.uv * k

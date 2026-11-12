@@ -36,3 +36,22 @@ jobs:
       - uses: astral-sh/setup-uv@v6
       - name: GIS tests (raw-data tests auto-skip)
         run: uv run --project tools/worldgen pytest tests/gis -q
+
+  lint:
+    # NIEBLOKUJĄCY: continue-on-error - lint nie może blokować merge'u.
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+        with: { lfs: false }
+      - uses: astral-sh/setup-uv@v6
+      - name: Ruff (tools/, tests/) - konfiguracja w ruff.toml
+        run: uvx ruff check tools tests
+      - name: PSScriptAnalyzer (scripts/*.ps1)
+        shell: pwsh
+        run: |
+          Install-Module PSScriptAnalyzer -Scope CurrentUser -Force -SkipPublisherCheck
+          $found = Invoke-ScriptAnalyzer -Path scripts -Recurse
+          $found | Select-Object ScriptName, Line, Severity, RuleName, Message |
+            Format-Table -AutoSize | Out-String -Width 220
+          if ($found) { exit 1 }

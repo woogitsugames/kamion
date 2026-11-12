@@ -9,7 +9,6 @@ staggered rows with aerial haze. Frame as build_interior: Z up, truck faces +Y, 
 import math
 import random
 
-import bpy
 
 import geom as G
 import materials as M
@@ -159,7 +158,6 @@ def card(bm, uvl, pos, h, idx, face_to=V(0, 0, 0)):
 
 def trailer(name, x, y, rot, curtain="yard_curtain"):
     """Parked 13.6 m curtain-side semi-trailer (box body, straps, under-run bar, 3 axles, landing legs)."""
-    import bmesh
     from mathutils import Matrix
     objs = []
     objs.append(box(name + "_body", (0, 0, 2.6), (2.55, 13.6, 2.85), curtain, bev=0.03))

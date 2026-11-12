@@ -16,7 +16,6 @@ from shapely.geometry import Polygon
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools" / "worldgen"))
 from roads import p21_hatch as H  # noqa: E402
-from roads import standards as S  # noqa: E402
 
 REGION = ROOT / "Data" / "Regions" / "bialystok-industrial-c"
 

@@ -1091,7 +1091,6 @@ def fences(lin, src, origin, roads_poly, report):
         key = f"osm:way/{f['osm_way']}:{f['part']}"
         for part in cut_by(line, cutter):
             P = lin.dens(part, 2.0)              # 2 m: the Low terrain band is 2 m, posts sample the ground themselves
-            Z = lin.z(P)
             if b in ("fence", "yes"):
                 col = ["fence_green", "fence_anthracite", "fence_galv"][_h(key) % 3]
                 panel_fence(lin, part, col, key, flexible=f["tags"].get("fence_type") in ("chain_link", "wire"))

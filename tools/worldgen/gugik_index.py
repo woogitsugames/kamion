@@ -17,7 +17,7 @@ import json
 import re
 import time
 import xml.etree.ElementTree as ET
-from dataclasses import asdict, dataclass, field
+from dataclasses import dataclass, field
 
 import requests
 
