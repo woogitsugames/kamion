@@ -46,3 +46,11 @@ Wariant night1: flaga danych cab_backlight.json i lokalny keyword tylko w istnie
 Dodatkowy pomiar prawego szerokokątnego z DriverEyePoint rozdzielił geometrię od treści odbicia. Raycast przednich stron: centralnie 0/1944 trafień, 127/2400 na brzegach. Maska GPU szkła obejmuje szeroki ciemny obszar widoczny w normalnym renderze: w tej pozycji jest to treść RT, nie szerokie zasłonięcie kanałem drzwi. Low exit 0; High ma komplet PNG i marker OK, ale proces zamknął się kodem -1073741819, więc dodatkowy High opisano z ograniczeniem. Nie zmieniono geometrii, oka ani optyki.
 
 
+
+## r4 — Ograniczenie makrofal tłoczenia tworzywa
+
+Stan: runda w toku, brak zintegrowanej zmiany map. Gałąź gpt-cab-r4 od r3 aefad847, merge main 8b74c2c5 (merge 6c5c12f8). Rejestr licencji łączy wpis nieba i pełny wpis Brown Leather bez duplikatu. Świeży World i import poprzedzają baseline; nie porównujemy materiału na różnych stanach świata.
+
+Niezależna recenzja s12 batch B wskazuje, że tłoczenie z r2 ma zbyt szerokie fale normalnych, przez co deska przypomina skaj. Przygotowano opcjonalny parametr wypieku plastic.normal_highpass_mm: sigma w milimetrach na kaflu gry. Filtr odejmuje niskie częstotliwości nachyleń XY/Z, rekonstruuje jednostkowe normalne i zachowuje okresowe krawędzie. Domyślnie 0, dotychczasowa ścieżka bez zmian; dodatnia wartość dla Leather odrzucana. Nie dodaje shaderowi próbek, przebiegów ani parametrów QualityProfile. Kandydat 1,5 mm jest WORKING_VALUE, do oceny po baseline.
+
+Pięć małych testów numerycznych zaliczone w 0,44 s: wyłączenie bitowe wejścia, usunięcie stałego nachylenia, rozdzielenie szerokiej fali i drobnego ziarna, jednostkowe normalne, zgodność skali fizycznej przy różnych rozdzielczościach oraz odrzucanie błędnych danych. Nie dowodzi to poprawy wizualnej. Po baseline konwersja pod heavy ma odtworzyć 12 map obu materiałów i porównać SHA, następnie przygotować wariant wyłącznie do artefaktów. Integracja wymaga obejrzenia nowego baseline, kandydata, renderów Low/High oraz zachowania pełnych budżetów i maski wnętrza w lustrach. Plastic pozostaje pochodną skanu skóry, nie skanem konkretnego tworzywa.
