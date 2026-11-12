@@ -70,3 +70,4 @@ Krok 28: niezależna ocena Low potwierdza poprawę charakteru smug, ale regresj�
 Końcowy rebuild obu prefabów i instalacja scen zakończone poprawnie. Następny krok: końcowe kadry i wszystkie kamery.
 Zapisano final Low overcast, kod wejściowy zgodny z fingerprintem. Następny krok: pomiary i oględziny par przed/po.
 Zapisano final Low clear, kod wejściowy zgodny z fingerprintem. Następny krok: pomiary i oględziny par przed/po.
+Krok 29: przygotowano sekwencyjne arkusze końcowe i stałe ROI kratki (piksele natywne 800,810,1080,855), bez wyboru maski na podstawie jasności wyniku. Skrypt final-evidence.py tworzy pary 960 px i mierzy wyświetlaną luminancję; nie udaje pokrycia fizycznym brudem. Końcowy GIS oczekuje w puli heavy, renderowanie trwa pod slotem Unity.
