@@ -58,7 +58,7 @@ new_spec = json.loads((root / "Data/Regions/bialystok-industrial-c/generated/lan
 meta = json.loads(asset.with_name("fire_station_jrg2_meta.json").read_text(encoding="utf-8-sig"))
 current_dims = json.loads((asset.parent / "dims.json").read_text(encoding="utf-8-sig"))
 assert new_spec["dims"] == current_dims
-assert current_dims["spruce"]["lateral_bough_cards_WORKING_VALUE"] is True
+assert new_spec != old_spec, "Trial spec is unchanged from baseline"
 assert meta["glb_sha256"] == hashlib.sha256(asset.read_bytes()).hexdigest()
 assert meta["spec_sha256"] == hashlib.sha256(json.dumps(new_spec, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
 assert old_spec["anchor"] == new_spec["anchor"]

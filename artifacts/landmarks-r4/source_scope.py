@@ -19,7 +19,8 @@ a, b = old.pop("spruce"), new.pop("spruce")
 assert old == new
 allowed = {"inner_core_fill_r_WORKING_VALUE", "core_profile_WORKING_VALUE", "low_bough_counts",
            "high_bough_counts_WORKING_VALUE", "lateral_bough_cards_WORKING_VALUE", "bough_width_r_WORKING_VALUE",
-           "core_shape_note", "low_core_budget_note", "inner_core_note"}
+           "core_shape_note", "low_core_budget_note", "inner_core_note", "irregular_core_WORKING_VALUE",
+           "core_radius_factor_WORKING_VALUE", "core_level_stagger_WORKING_VALUE"}
 changed = {k for k in a.keys() | b.keys() if a.get(k) != b.get(k)}
 assert changed <= allowed
 assert a["items"] == b["items"]

@@ -1107,7 +1107,7 @@ def build_thuja(mb, c, height, radius, key, lod):
 
 
 def build_conifer(mb, c, height, radius, key, lod):
-    """Root-attached short-needle boughs and a continuous opaque inner crown.
+    """Root-attached short-needle boughs and an irregular opaque inner crown.
 
     Low trades sparse cards for the core silhouette within the original plant budget.
 
@@ -1116,7 +1116,7 @@ def build_conifer(mb, c, height, radius, key, lod):
     """
     u0,v0,u1,v1 = ALAY["conifer_bough"]["inner_uv"]
     for j,base_f in enumerate((.08,.17,.27,.36,.45,.55,.65,.76,.87)):
-        count = D["spruce"].get("high_bough_counts_WORKING_VALUE", [6]*9)[j] if lod == 0 else D["spruce"].get("low_bough_counts", [4]*9)[j]
+        count = 6 if lod == 0 else D["spruce"].get("low_bough_counts", [4]*9)[j]
         for i in range(count):
             angle = key*.63+j*1.69+i*2*math.pi/count+.35*(h01(key,j,i,"azimuth")-.5)
             f = base_f+.04*(h01(key,j,i,"level")-.5)
@@ -1124,13 +1124,8 @@ def build_conifer(mb, c, height, radius, key, lod):
             root = c + np.array([0,0,height*f])
             length = radius*(1-f)**.7*(1.03+.30*h01(key,j,i))
             tip = c + np.r_[direction*length,height*(f-.04)]
-            if D["spruce"].get("lateral_bough_cards_WORKING_VALUE", False):
-                roll = .45+.35*(h01(key,j,i,"roll")-.5)
-                width = D["spruce"]["bough_width_r_WORKING_VALUE"]["High" if lod == 0 else "Low"]
-                side = (UP*math.sin(roll)+np.r_[-direction[1],direction[0],0]*math.cos(roll))*min(length*width,height*f*.90)
-            else:
-                roll = .50*(h01(key,j,i,"roll")-.5)
-                side = (UP*math.cos(roll)+np.r_[-direction[1],direction[0],0]*math.sin(roll))*min(length*.65,height*f*.90)
+            roll = .50*(h01(key,j,i,"roll")-.5)
+            side = (UP*math.cos(roll)+np.r_[-direction[1],direction[0],0]*math.sin(roll))*min(length*.65,height*f*.90)
             mb.face([root-side,root+side,tip+side,tip-side],[(u0,v0),(u1,v0),(u1,v1),(u0,v1)],ALPHA)
     # Continuous inner mass instead of four isolated diamonds. The broader lower third
     # and asymmetric radii carry the envelope; clipped outer sprays keep branch gaps.
@@ -1144,11 +1139,28 @@ def build_conifer(mb, c, height, radius, key, lod):
         slope = -radius*fill*(profile[hi][1]-profile[lo][1])/(height*(profile[hi][0]-profile[lo][0]))
         for i in range(sides):
             angle = i*2*math.pi/sides+key*.63+.12*math.sin(j*1.4+key)
-            rr = max(radius*.025,radius*fill*shape*(.86+.28*h01(key,j,i,"inner")))
-            level = f+.014*(h01(key,j,i,"z")-.5)*(j<len(profile)-1)
+            if D["spruce"].get("irregular_core_WORKING_VALUE", False):
+                r0, r1 = D["spruce"]["core_radius_factor_WORKING_VALUE"]
+                factor = r0+(r1-r0)*h01(key,j,i,"inner")
+                span = min(f-profile[j-1][0],profile[j+1][0]-f) if 0 < j < len(profile)-1 else 0.0
+                level = f+span*D["spruce"]["core_level_stagger_WORKING_VALUE"]*(2*h01(key,j,i,"z")-1)
+            else:
+                factor = .86+.28*h01(key,j,i,"inner")
+                level = f+.014*(h01(key,j,i,"z")-.5)*(j<len(profile)-1)
+            rr = max(radius*.025,radius*fill*shape*factor)
             ring.append(c+np.array([math.cos(angle)*rr,math.sin(angle)*rr,height*level]))
             nr.append(np.array([math.cos(angle),math.sin(angle),slope]))
         rings.append(ring); normals.append(nr)
+    if D["spruce"].get("irregular_core_WORKING_VALUE", False):
+        # Smooth normals follow the staggered surface, not an ideal cone.
+        for j in range(len(rings)):
+            for i in range(sides):
+                around = rings[j][(i+1)%sides]-rings[j][(i-1)%sides]
+                upward = rings[min(j+1,len(rings)-1)][i]-rings[max(j-1,0)][i]
+                normal = np.cross(around,upward)
+                radial = rings[j][i]-c; radial[2] = 0
+                if np.dot(normal,radial) < 0: normal = -normal
+                normals[j][i] = normal/np.linalg.norm(normal)
     for j in range(len(rings)-1):
         for i in range(sides):
             ii = (i+1)%sides

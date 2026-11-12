@@ -285,19 +285,35 @@
    ]
   ],
   "note": "r7: first two foreground conifers shifted+4u m screen-right in ref7197; wing conifer unchanged. Tiered root-connected boughs, CC0 short-needle fir/conifer proxy (not verified Picea). Placement WORKING_VALUE?3m from one photo; ground re-sampled by planner.",
-  "inner_core_fill_r_WORKING_VALUE": 0.55,
+  "inner_core_fill_r_WORKING_VALUE": 0.9,
   "core_profile_WORKING_VALUE": [
    [
     0.045,
     0.5
    ],
    [
-    0.27,
-    1.0
+    0.13,
+    0.95
    ],
    [
-    0.6,
-    0.58
+    0.27,
+    0.85
+   ],
+   [
+    0.4,
+    0.72
+   ],
+   [
+    0.53,
+    0.56
+   ],
+   [
+    0.67,
+    0.43
+   ],
+   [
+    0.82,
+    0.2
    ],
    [
     0.975,
@@ -305,36 +321,26 @@
    ]
   ],
   "low_bough_counts": [
-   5,
-   4,
-   4,
-   4,
-   4,
-   3,
-   3,
-   3,
-   2
+   2,
+   1,
+   1,
+   2,
+   1,
+   1,
+   2,
+   1,
+   1
   ],
   "low_core_sides": 5,
-  "low_core_budget_note": "ADR 0116 r4 candidate: five smooth-normal sides x three segments =30 core triangles, 32 cards =64, trunk4; 98 per tree, same as r1. Whole Low hero limit2828 unchanged; atlas/material slots unchanged.",
-  "core_shape_note": "ADR 0116 r4 candidate: four tapered inner rings, no full alternating skirts; 32 Low / 86 High narrower lateral bough cards. Triangle totals per tree stay 98/224. Authored WORKING_VALUE, pending rendered comparison with CC0 photo7197.",
-  "inner_core_note": "ADR 0116 r4 candidate: narrower continuous opaque core, branch gaps carried by smaller lateral CC0 needle cards. Species remains an unverified fir proxy, not scanned spruce geometry.",
+  "low_core_budget_note": "ADR 0116 r4 B: original five smooth-normal sides x seven segments=70 core tris,12 cards=24,trunk4;98 per tree. Whole Low hero limit2828 remains unchanged. No added alpha cards or area.",
+  "core_shape_note": "ADR 0116 r4 B: eight tapered rings with azimuth-dependent radius and staggered levels instead of full annular skirts; geometry-derived smooth normals. Original 12 Low / 54 High bough cards and UV are unchanged. WORKING_VALUE, pending rendered comparison.",
+  "inner_core_note": "ADR 0116 r4 B: opaque canopy without synchronised radial shelves; original CC0 needle cards, species remains an unverified fir proxy. Positions, heights, authored radii, atlas and material slots unchanged.",
   "bough_uv_revision": "r7-bundle2-root-content-16px",
-  "high_bough_counts_WORKING_VALUE": [
-   12,
-   11,
-   10,
-   10,
-   10,
-   9,
-   9,
-   8,
-   7
+  "irregular_core_WORKING_VALUE": true,
+  "core_radius_factor_WORKING_VALUE": [
+   0.72,
+   1.2
   ],
-  "lateral_bough_cards_WORKING_VALUE": true,
-  "bough_width_r_WORKING_VALUE": {
-   "High": 0.24,
-   "Low": 0.16
-  }
+  "core_level_stagger_WORKING_VALUE": 0.4
  }
 }
