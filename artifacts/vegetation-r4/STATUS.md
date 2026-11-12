@@ -9,3 +9,4 @@ Sekwencja sync-and-baseline.ps1 kopiuje tylko potrzebne źródła CC0/Megascans 
 Synchronizacja brakujących zasobów Data/raw/cc0, robocopy kod 0 (0–7 nie oznacza porażki). Nie kopiowano aktywnie generowanego świata main.
 Synchronizacja brakujących zasobów art-source/world/cc0/_raw, robocopy kod 0 (0–7 nie oznacza porażki). Nie kopiowano aktywnie generowanego świata main.
 Synchronizacja brakujących zasobów art-source/world/megascans, robocopy kod 0 (0–7 nie oznacza porażki). Nie kopiowano aktywnie generowanego świata main.
+Świeży baseline r4: przygotowanie fotografii i kamer kod 0. Produkcja bez zmian; kolejny etap zgodnie z baseline.ps1.
