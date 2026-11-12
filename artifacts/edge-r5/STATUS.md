@@ -21,3 +21,4 @@ Krok 12: przed pierwszym Red doprecyzowano ten sam test hali: wymaga jawnego zna
 2026-11-12T11:29:46.1786650+01:00 Pełny import bazowy Low/High i odtworzenie generowanych prefabów pojazdów nowego main potwierdzone IMPORT_RESULT/TRUCK_RESULT: OK; sprawdzono 151 gotowych map Medium bez niejawnego build_all. Źródła cab/truck bez edycji. Następnie validate.ps1 -Phase Before.
 2026-11-12T11:30:47.7751446+01:00 Zapisano rendery before/Low-clear wszystkich kamer; ocena PNG i budżetu nadal w toku.
 Krok 13: Before zachowa także niemutowalny cache GIS z SHA obok siatek/apron; identyfikator czyta tę kopię, nie później regenerowany katalog derived. To wzmacnia dowód pochodzenia wysokości/obrysu kandydata. Import zakończony, trwa macierz telefonu Before; produkcja nadal stara.
+2026-11-12T11:31:20.1083649+01:00 Zapisano rendery before/Low-overcast wszystkich kamer; ocena PNG i budżetu nadal w toku.
