@@ -7,11 +7,17 @@ Konwencje (udokumentowane też w tools/perf/README.md):
 - GPU/CPU main: próbki 0.000 („sterownik nie raportuje") są odrzucane,
   jak w device-metrics.ps1.
 - Cel klatki (target): 1000/30 = 33.333 ms lub 1000/60 = 16.667 ms.
-- Naprzemienność klatek (wzór z dyskusji ADR 0152, sformalizowany tutaj,
-  bo plik ADR 0152 nie jest w repo): klatka i (i >= 1) jest „naprzemienna”,
-  gdy |frame_ms[i] - frame_ms[i-1]| >= 0.5 * target_ms. alternation_pct =
-  100 * liczba takich i / (n - 1). Przy pełnej naprzemienności vsync
-  (16.7/33.3 ms) wychodzi 100 % („okna do 100 %”), przy stałym renderze 0 %.
+- Skoki czasu klatki (pole `alternation_*`, nazwa historyczna z M38): klatka i (i >= 1)
+  liczy się, gdy |frame_ms[i] - frame_ms[i-1]| >= 0.5 * target_ms; alternation_pct =
+  100 * liczba takich i / (n - 1). To NIE jest naprzemienność z ADR 0152 (integracja r6:
+  M38 twierdził, że ADR 0152 nie ma w repo - jest, docs/adr/0152-fold-flicker-shadows-fps.md).
+  Na pomiarach A16 z ADR 0152 ta metryka daje 60,5 % (błąd) vs 63,0 % (po poprawce) - nie
+  odróżnia ich.
+- Naprzemienność ADR 0152 (`pose_alternation_frac`, port artifacts/fold-flicker/campose.py):
+  szereg pozy kamery (diag/campose.csv) po warm-up 25 s od pierwszej próbki; d = różnice
+  kolejnych próbek; klatka naprzemienna, gdy d[k] * d[k+1] < 0 i oba |d| > próg (2 mm dla
+  head/eye, 0,05° dla pitch/yaw); frac = liczba / max(1, len(d) - 1). A16 legacy head_z
+  15,6 % / head_x 10,6 %, po poprawce 0,0 % (ADR 0152, tabela „Wyniki”).
 - Janky frame (definicja lokalna; gfxinfo w tych zrzutach nie raportuje
   własnej liczby): frame_ms > 2 * target_ms (pominięte >= 2 pełne vsynci).
 - Okna przesuwne: szerokość window_s, krok stride_s; okno ważne gdy ma
@@ -88,6 +94,44 @@ class FrameMetrics:
     cpu_p95_ms: float | None
     cpu_p99_ms: float | None
     cpu_n: int
+
+
+def resolve_warmup(run: dict | None, override: float | None) -> float:
+    """Warm-up [s]: jawny argument, inaczej frameTime.warmupSeconds z metrics.json pomiaru (ta sama
+    liczba, z którą device-metrics.ps1 policzył metrics.json - integracja r6: domyślne 5 s dawało dla
+    perf-low-r1/diag0/base0 p95 33,52 zamiast 33,469 z metrics.json), inaczej 5 s jak w ps1."""
+    if override is not None:
+        return float(override)
+    mj = (run or {}).get("metrics") or {}
+    w = (mj.get("frameTime") or {}).get("warmupSeconds")
+    return float(w) if isinstance(w, (int, float)) else 5.0
+
+
+CAMPOSE_THRESHOLDS = {"head_x_mm": 2.0, "head_z_mm": 2.0, "eye_x_mm": 2.0, "eye_y_mm": 2.0, "eye_z_mm": 2.0,
+                      "pitch_deg": 0.05, "yaw_deg": 0.05}
+
+
+def pose_alternation_frac(values, thr: float) -> float:
+    """ADR 0152 (campose.py): udział klatek, w których krok pozy zmienia znak, oba kroki > thr."""
+    v = list(values)
+    d = [b - a for a, b in zip(v, v[1:])]
+    alt = sum(1 for a, b in zip(d, d[1:]) if a * b < 0 and abs(a) > thr and abs(b) > thr)
+    return alt / max(1, len(d) - 1)
+
+
+def campose_alternation(path, warmup_s: float = 25.0) -> dict:
+    """diag/campose.csv (ADR 0152) -> {kolumna: frac} dla kolumn z CAMPOSE_THRESHOLDS obecnych w pliku.
+    Warm-up liczony od pierwszej próbki (t_s - t0 >= warmup_s), jak w campose.py."""
+    import csv
+
+    with open(path, newline="", encoding="utf-8") as f:
+        rows = [{k: float(v) for k, v in r.items()} for r in csv.DictReader(f)]
+    if not rows:
+        return {}
+    t0 = rows[0]["t_s"]
+    rows = [r for r in rows if r["t_s"] - t0 >= warmup_s]
+    return {c: pose_alternation_frac([r[c] for r in rows], thr)
+            for c, thr in CAMPOSE_THRESHOLDS.items() if c in rows[0]}
 
 
 def compute_frame_metrics(

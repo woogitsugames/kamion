@@ -42,12 +42,13 @@ Nieznane kolumny w `frametimes.csv` → błąd z komunikatem (żadnych cichych p
 
 - **Percentyle**: nearest-rank — `rank = ceil(p*n)` (min 1), wartość `sorted[rank-1]`; identycznie jak `Get-Percentile` w `scripts/device-metrics.ps1`. **Nie** interpolacja liniowa.
 - **FPS średni** = `n / (t_last - t_first)` po warm-up (jak `metrics.json`); dodatkowo FPS harmoniczny = `1000 / mean(frame_ms)`.
-- **Warm-up**: domyślnie 5 s (jak `device-metrics.ps1 -WarmupSeconds 5`); parametr `--warmup-s`.
+- **Warm-up**: domyślnie `frameTime.warmupSeconds` z `metrics.json` pomiaru (te same liczby co `device-metrics.ps1`), bez `metrics.json` 5 s (jak `-WarmupSeconds 5`); parametr `--warmup-s` nadpisuje.
 - **Cel klatki**: `--target-fps 30|60`, domyślnie `targetFps` z `summary.json` gdy 30/60, inaczej 30 → 33.333 / 16.667 ms.
 - **Frame pacing**: MAD i RMS odchylenia `frame_ms` od celu [ms].
 - **> 1.5× celu**: procent klatek z `frame_ms > 1.5 * target_ms` (przy 30 FPS: > 50.0 ms).
 - **Janky frames**: definicja lokalna (sekcja gfxinfo w tych zrzutach nie raportuje własnej liczby): `frame_ms > 2 * target_ms` — klatka pominęła ≥ 2 pełne vsynci (przy 30 FPS: > 66.667 ms).
-- **Naprzemienność klatek** (wzór z dyskusji ADR 0152 — plik ADR 0152 nie jest w repo, definicja sformalizowana tutaj): klatka `i ≥ 1` jest naprzemienna, gdy `|frame_ms[i] - frame_ms[i-1]| >= 0.5 * target_ms`; `alternation_pct = 100 * Σ / (n-1)`. Pełna naprzemienność vsync (16.7/33.3 ms) daje 100 % („okna do 100 %”), stały render 0 %. Test: syntetyczna naprzemienność 15.6 % daje 15.6 %.
+- **Naprzemienność pozy kamery (ADR 0152)**: `campose_alternation(diag/campose.csv)` — port `campose.py` z ADR 0152 (krok pozy zmienia znak, oba kroki > 2 mm / 0,05°, warm-up 25 s); w raporcie, gdy w katalogu jest `campose.csv`. A16: 15,6 % → 0,0 %.
+- **Skoki czasu klatki** (pole `alternation_*`; integracja r6 — to NIE jest naprzemienność ADR 0152, która jest w repo): klatka `i ≥ 1` jest naprzemienna, gdy `|frame_ms[i] - frame_ms[i-1]| >= 0.5 * target_ms`; `alternation_pct = 100 * Σ / (n-1)`. Pełna naprzemienność vsync (16.7/33.3 ms) daje 100 % („okna do 100 %”), stały render 0 %. Test: syntetyczna naprzemienność 15.6 % daje 15.6 %.
 - **Trend termiczny**: nachylenie LSQ temperatury z `[DIAG] temp=` [°C/min]; **moment throttlingu** = pierwsze `t`, w którym `thermal >= 2` (MODERATE+, nazwy statusów Androida) **lub** skala renderu `scale` spadła poniżej `0.95 × skala startowa` (adaptacyjna skala = reakcja na temperaturę).
 - **PSS**: min/max/trend (nachylenie LSQ [MB/min]) z `[DIAG] pss=`; podejrzenie wycieku gdy trend > 0.5 MB/min przy rozpiętości ≥ 300 s (próg `WORKING_VALUE`).
 - **Okna przesuwne**: szerokość `--window-s` (domyślnie 10 s), krok 1 s; okno ważne przy ≥ 5 klatkach i rozpiętości ≥ 1 s. Raportowane najgorsze okno wg p95, wg FPS i wg naprzemienności.

@@ -14,8 +14,10 @@ from .formats import load_run_dir
 from .metrics import (
     THERMAL_STATUS_NAMES,
     analyze_diag_series,
+    campose_alternation,
     compute_frame_metrics,
     detect_target_fps,
+    resolve_warmup,
     sliding_windows,
 )
 from .quality import check_run_quality
@@ -161,7 +163,7 @@ def build_report_md(run: dict, fm, windows, therm, quality, charts: list[str], t
     lines.append(f"| frame pacing MAD / RMS od celu | {_fmt(fm.pacing_mad_ms)} / {_fmt(fm.pacing_rms_ms)} ms |")
     lines.append(f"| klatki > 1.5x celu (> {1.5 * fm.target_ms:.2f} ms) | {fm.over_1_5x_count} ({fm.over_1_5x_pct:.2f} %) |")
     lines.append(f"| janky frames (> 2x celu = {2.0 * fm.target_ms:.2f} ms) | {fm.janky_count} ({fm.janky_pct:.2f} %) |")
-    lines.append(f"| naprzemienność klatek | {fm.alternation_count}/{fm.n - 1} = {fm.alternation_pct:.2f} % |")
+    lines.append(f"| skoki czasu klatki (|Δ| ≥ 0,5×cel; nie ADR 0152) | {fm.alternation_count}/{fm.n - 1} = {fm.alternation_pct:.2f} % |")
     lines.append("")
     lines.append("## Okna przesuwne (10 s, krok 1 s)")
     lines.append("")
@@ -241,7 +243,7 @@ def build_report_md(run: dict, fm, windows, therm, quality, charts: list[str], t
     return "\n".join(lines) + "\n"
 
 
-def generate_report(run_dir: Path, out_dir: Path | None = None, warmup_s: float = 5.0,
+def generate_report(run_dir: Path, out_dir: Path | None = None, warmup_s: float | None = None,
                     target_fps: int | None = None, window_s: float = 10.0) -> Path:
     run = load_run_dir(run_dir)
     if run["frames"] is None:
@@ -249,6 +251,7 @@ def generate_report(run_dir: Path, out_dir: Path | None = None, warmup_s: float 
 
         raise ParseError(f"{run_dir}: brak frametimes.csv — nie ma czego raportować")
     tf = detect_target_fps(run, target_fps)
+    warmup_s = resolve_warmup(run, warmup_s)
     fm = compute_frame_metrics(run["frames"], warmup_s=warmup_s, target_fps=tf)
     windows = sliding_windows(run["frames"], warmup_s=warmup_s, target_fps=tf, window_s=window_s)
     therm = analyze_diag_series(run.get("diags") or [])
@@ -259,6 +262,12 @@ def generate_report(run_dir: Path, out_dir: Path | None = None, warmup_s: float 
     if tc:
         charts.append(tc)
     md = build_report_md(run, fm, windows, therm, quality, charts, tf)
+    for cp in (Path(run_dir) / "campose.csv", Path(run_dir) / "diag" / "campose.csv"):
+        if cp.exists():
+            alt = campose_alternation(cp)
+            head = "\n## Naprzemienność pozy kamery (ADR 0152, campose.csv)\n\n| kolumna | naprzemienne klatki |\n|---|---|\n"
+            md += head + "".join(f"| {c} | {100 * v:.1f} % |\n" for c, v in alt.items())
+            break
     rp = out_dir / "report.md"
     rp.write_text(md, encoding="utf-8")
     return rp

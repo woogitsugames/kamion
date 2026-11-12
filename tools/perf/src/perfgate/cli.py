@@ -19,6 +19,7 @@ from . import __version__
 from .compare import compare_runs
 from .formats import FORMATS, ParseError, load_run_dir
 from .metrics import (
+    resolve_warmup,
     analyze_diag_series,
     compute_frame_metrics,
     detect_target_fps,
@@ -33,6 +34,7 @@ def _load_frames(run_dir: Path, warmup_s: float):
     if run["frames"] is None:
         raise ParseError(f"{run_dir}: brak frametimes.csv")
     tf = detect_target_fps(run, None)
+    warmup_s = resolve_warmup(run, warmup_s)
     kept = [r for r in run["frames"] if r.t_s >= warmup_s] or list(run["frames"])
     ft = np.array([r.frame_ms for r in kept], dtype=float)
     gpu = np.array([r.gpu_ms for r in kept if r.gpu_ms > 0], dtype=float)
@@ -87,9 +89,10 @@ def cmd_history(args) -> int:
         try:
             run = load_run_dir(d)
             tf = detect_target_fps(run, args.target_fps)
-            fm = compute_frame_metrics(run["frames"], warmup_s=args.warmup_s, target_fps=tf)
+            w = resolve_warmup(run, args.warmup_s)
+            fm = compute_frame_metrics(run["frames"], warmup_s=w, target_fps=tf)
             therm = analyze_diag_series(run.get("diags") or [])
-            q = check_run_quality(run, warmup_s=args.warmup_s)
+            q = check_run_quality(run, warmup_s=w)
             mj = run.get("metrics") or {}
             rows.append((d, fm, therm, q, tf, mj.get("serial", "?")))
         except ParseError as e:
@@ -121,7 +124,7 @@ def cmd_history(args) -> int:
 
 def cmd_check(args) -> int:
     run = load_run_dir(Path(args.run_dir))
-    q = check_run_quality(run, warmup_s=args.warmup_s)
+    q = check_run_quality(run, warmup_s=resolve_warmup(run, args.warmup_s))
     if q.valid:
         print(f"VALID: {args.run_dir}")
         return 0
@@ -148,7 +151,8 @@ def main(argv: list[str] | None = None) -> int:
     p = sub.add_parser("report", help="raport MD + PNG dla katalogu pomiaru")
     p.add_argument("run_dir")
     p.add_argument("--out", default=None)
-    p.add_argument("--warmup-s", type=float, default=5.0)
+    p.add_argument("--warmup-s", type=float, default=None,
+                   help="domyślnie frameTime.warmupSeconds z metrics.json pomiaru, inaczej 5 s")
     p.add_argument("--target-fps", type=int, default=None, choices=[30, 60])
     p.add_argument("--window-s", type=float, default=10.0)
     p.set_defaults(fn=cmd_report)
@@ -156,7 +160,8 @@ def main(argv: list[str] | None = None) -> int:
     p = sub.add_parser("compare", help="bootstrapowe porównanie dwóch przebiegów")
     p.add_argument("dir_a")
     p.add_argument("dir_b")
-    p.add_argument("--warmup-s", type=float, default=5.0)
+    p.add_argument("--warmup-s", type=float, default=None,
+                   help="domyślnie frameTime.warmupSeconds z metrics.json pomiaru, inaczej 5 s")
     p.add_argument("--boot", type=int, default=20000)
     p.add_argument("--seed", type=int, default=20261113)
     p.add_argument("--out", default=None)
@@ -165,14 +170,16 @@ def main(argv: list[str] | None = None) -> int:
     p = sub.add_parser("history", help="zbiorcza tabela wszystkich pomiarów pod root (można podać kilka)")
     p.add_argument("root", nargs="+")
     p.add_argument("--out", default=None)
-    p.add_argument("--warmup-s", type=float, default=5.0)
+    p.add_argument("--warmup-s", type=float, default=None,
+                   help="domyślnie frameTime.warmupSeconds z metrics.json pomiaru, inaczej 5 s")
     p.add_argument("--target-fps", type=int, default=None, choices=[30, 60])
     p.add_argument("--limit", type=int, default=None)
     p.set_defaults(fn=cmd_history)
 
     p = sub.add_parser("check", help="werdykt jakości pomiaru (exit 1 = do odrzucenia)")
     p.add_argument("run_dir")
-    p.add_argument("--warmup-s", type=float, default=5.0)
+    p.add_argument("--warmup-s", type=float, default=None,
+                   help="domyślnie frameTime.warmupSeconds z metrics.json pomiaru, inaczej 5 s")
     p.set_defaults(fn=cmd_check)
 
     p = sub.add_parser("formats", help="lista rozpoznanych formatów i wersji")

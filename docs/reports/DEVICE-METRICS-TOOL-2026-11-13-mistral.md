@@ -58,6 +58,13 @@ Uwaga: `artifacts/fold-flicker/fold-run.ps1` i ADR 0152 **nie są w żadnej gał
 została sformalizowana w narzędziu na podstawie opisu w HANDOVER.md („naprzemienność
 100 % klatek … → 0 %, okna do 100 %”), oznaczona jako formalizacja M38.
 
+> **Korekta integracji r6:** twierdzenie powyżej jest **nieprawdziwe** — `docs/adr/0152-fold-flicker-shadows-fps.md`
+> jest w `main` (także w bazie tej gałęzi 55e66520d; `git ls-tree 55e66520d docs/adr/`). ADR 0152 mierzy naprzemienność
+> **pozy kamery** (`diag/campose.csv`, skrypt `campose.py`: zmiana znaku kolejnych kroków, oba > 2 mm / 0,05°), nie czasu
+> klatki. Metryka M38 z `frame_ms` na pomiarach A16 z ADR 0152 daje 60,5 % (z błędem) i 63,0 % (po poprawce) — nie
+> odróżnia ich. Dodano `pose_alternation_frac` / `campose_alternation` (port `campose.py`) z testem na prawdziwych danych
+> A16 (15,6 % / 10,6 % → 0,0 %, zgodnie z tabelą ADR); metryka `frame_ms` w raporcie nazywa się teraz „skoki czasu klatki”.
+
 ## Definicje metryk (pełna wersja w tools/perf/README.md)
 
 - Percentyle **nearest-rank** (`rank=ceil(p·n)`), identycznie jak `Get-Percentile` w `device-metrics.ps1` — zweryfikowane numerycznie przeciw `metrics.json` (patrz A).
@@ -121,8 +128,11 @@ z zadania/HANDOVER; reszta mierzona.
 
 ## Otwarte
 
-- ADR 0152 nie istnieje w repo — definicja naprzemienności to formalizacja M38; przy scaleniu
-  0152 warto zweryfikować zgodność progu 0.5×cel.
+- (r6) ADR 0152 jest w repo — naprzemienność ADR = `campose_alternation`; „skoki czasu klatki” (0,5×cel) zostają jako
+  osobna metryka bez oparcia w ADR.
+- (r6) Warm-up domyślnie z `metrics.json` (`frameTime.warmupSeconds`); wcześniej stałe 5 s dawało inne liczby niż
+  `metrics.json` (base0: n 3217 vs 2603, p95 33,52 vs 33,469 ms) — porównanie z sekcji A było możliwe tylko z ręcznym
+  `--warmup-s 25`.
 - `artifacts/fold-flicker/fold-run.ps1` (camlog=1) nie jest w gicie — parser logów kamery
   czeka na pierwszy zapisany przebieg (formát będzie dopisany jako v2 z błędem na nieznane kolumny).
 - Prog wycieku PSS (0.5 MB/min / 300 s) to WORKING_VALUE.
