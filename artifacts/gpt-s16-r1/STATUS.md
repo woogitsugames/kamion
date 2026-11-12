@@ -11,3 +11,5 @@ Atlas: 7/7 testów kontraktowych geometrii i parametrów powierzchni. Nowa fabry
 Próba 41 prototypów: max 2 podsiatki po łączeniu, tris bez zmiany (prototype-planning.json); to analiza generatora, nie kamery. Baseline w tle nadal tworzy bazowe PBR, następnie world/import/VQA.
 
 Materiały baseline zakończone: 474 s. Generator zgłosił brak lokalnej fotografii asfaltu; istniejący set w spec i skopiowane mapy zachowane. Uzupełniono prywatną kopię brakującego wejścia ze ścieżki main; bez pobierania i commitowania zdjęcia. World baseline w toku.
+
+Przygotowano image_pairs.py (pary do 960 px, hashe i metryki każdej kamery przed ewentualnym usunięciem natywnych kopii). Obejrzano referencję posesji mapillary_sheet1.jpg: P07/P08/P12 — wysokie korony powyżej dachów i ciągłe zielone fronty; wnioski dla r2, bez zmian r2 w tej gałęzi.
