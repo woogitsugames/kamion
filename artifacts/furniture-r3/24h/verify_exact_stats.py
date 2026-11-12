@@ -7,7 +7,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 p = argparse.ArgumentParser()
-p.add_argument('phase', choices=['before', 'after', 'after2'])
+p.add_argument('phase', choices=['before', 'after', 'after2', 'after3'])
 p.add_argument('tier', choices=['Low', 'High'])
 p.add_argument('lighting', choices=['clear', 'overcast', 'dusk'])
 args = p.parse_args()

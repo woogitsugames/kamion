@@ -7,7 +7,7 @@ from pathlib import Path
 ev = Path(__file__).resolve().parent
 root = ev.parents[2]
 phase = sys.argv[1]
-assert phase in ('before2', 'after2')
+assert phase in ('before2', 'after2', 'after3')
 path = root / 'game/Assets/_Generated/World/bialystok-industrial-c/Instances.asset'
 policies, current, field, found = {}, None, None, False
 with path.open(encoding='utf-8-sig') as handle:
@@ -37,7 +37,7 @@ variant = 'bus_shelter_red_0120'
 assert policies['bus_shelter']['lodEndM'] == [60., 300.]
 assert variant in policies
 result = dict(phase=phase, policies=policies, scope='Visibility policy, shadow mask, LOD count and instance count only; not mesh payloads')
-if phase == 'after2':
+if phase in ('after2', 'after3'):
     before = json.loads((ev / 'shelter-policy-before2.json').read_text())['policies']
     changed = [name for name in policies.keys() | before.keys() if policies.get(name) != before.get(name)]
     result['changed_prototypes'] = sorted(changed)

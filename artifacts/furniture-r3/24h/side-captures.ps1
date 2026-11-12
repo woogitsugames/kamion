@@ -1,4 +1,4 @@
-param([ValidateSet('before-side','after-side','after2-side')][string]$Phase='before-side')
+param([ValidateSet('before-side','after-side','after2-side','after3-side')][string]$Phase='before-side')
 $ErrorActionPreference='Continue'
 $PSNativeCommandUseErrorActionPreference=$false
 Set-Location (Resolve-Path "$PSScriptRoot/../../..")
