@@ -44,3 +44,5 @@ Niezależny reviewer zakończył Low-clear55/55. Łącznie165/330 (wszystkieLow)
 Root obejrzał High-overcast01–10,55/55 kamer, pojedyncze arkusze≤960px. Brak nowej oczywistej regresji mebli, utraty obiektów czy halo. Białe drobiny na gruncie występują także w baseline; bez przypisania ich zmianie znaków. Rootłącznie220/330, Highclear/dusk110 otwarte. Przekazano High-overcast do niezależnej oceny.
 
 Niezależny reviewer zakończył High-overcast55/55. Łącznie220/330 (wszystkieLow iHigh-overcast), brak nowego widocznego blokera. Potwierdził kompletność kadrów i obecność białych drobin także w baseline; High-clear/dusk110 nieocenione. Ograniczenia detalu, fotometrii, okluzji, ruchu/urządzenia/GPU zachowane.
+
+Root zakończył High-dusk01–10,55/55,łącznie275/330. Brak nowej oczywistej regresji mebli, osadzenia i niezamierzonej emisji; ciemne kadry pozostają kompletne. Nie oznacza kalibracji nocy ani kosztu GPU. Wariant przekazano niezależnemu reviewerowi. Ostatni nieoceniony wariant root:High-clear55.

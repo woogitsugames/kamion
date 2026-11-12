@@ -227,3 +227,5 @@ NASTĘPNY KROK: przygotować własne skrypty r2 z ownerem heavy gpt-furniture-r2
 2026-11-12T10:24:23.5876905+01:00: root220/330 (Low165 iHigh-overcast55), bez nowego oczywistego blokera. Reviewer sprawdza High-overcast. Wszystkie ciężkie kontrole nadal oczekują w heavy; nie uruchamiano dodatkowej pełnej partii ani testów poza slotem.
 
 2026-11-12T10:24:54.1070899+01:00: niezależne pokrycie wzrosło do220/330; High-overcast55/55 bez nowego blokera. NASTĘPNY KROK: High-clear iHigh-dusk, potem domknięcie ciężkich kontroli według kolejki.
+
+2026-11-12T10:26:57.0168747+01:00: root275/330; High-dusk55/55 bez nowego oczywistego blokera. Reviewer uzupełnia wariant. Pozostał High-clear55 oraz ciężkie kontrole. Kod i zasoby bez zmian.
