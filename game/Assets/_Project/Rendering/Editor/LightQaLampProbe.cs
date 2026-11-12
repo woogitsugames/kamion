@@ -100,7 +100,7 @@ namespace Game.Rendering.Editor
             };
         }
 
-        public void Write(string folder, int expected, int expectedHeadlamps = 0, float? expectedWetness = null)
+        public void Write(string folder, int expected, int expectedHeadlamps = 0, float? expectedWetness = null, float? expectedDimColour = null)
         {
             if (m_Cameras.Count != expected)
                 throw new InvalidOperationException($"Incomplete lamp probes: {m_Cameras.Count}, expected {expected}");
@@ -108,6 +108,8 @@ namespace Game.Rendering.Editor
                 throw new InvalidOperationException("Projected headlamp state does not match the requested on/off proof");
             if (expectedWetness.HasValue && m_Cameras.Values.Any(s => Mathf.Abs(s.actualWetness-expectedWetness.Value) > 0.0001f))
                 throw new InvalidOperationException("Actual per-camera wetness does not match the requested proof");
+            if(expectedDimColour.HasValue && m_Cameras.Values.Any(s=>Mathf.Abs(s.actualDimColourDesaturation-expectedDimColour.Value)>.0001f || Mathf.Abs(s.presetDimColourDesaturation-expectedDimColour.Value)>.0001f))
+                throw new InvalidOperationException("Actual per-camera dim colour/preset does not match requested proof");
             File.WriteAllText(Path.Combine(folder, "lamp-probes.json"), JsonUtility.ToJson(new Document {
                 cameras = m_Cameras.OrderBy(p => p.Key, StringComparer.Ordinal).Select(p => p.Value).ToArray()
             }, true));

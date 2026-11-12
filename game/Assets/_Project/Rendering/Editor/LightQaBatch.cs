@@ -232,7 +232,8 @@ namespace Game.Rendering.Editor
                         File.WriteAllText(Path.Combine(job.output, "sky-only-proof.json"), JsonUtility.ToJson(final, true));
                     }
                     lampProbe?.Write(job.output, expected, job.expectedHeadlamps,
-                        job.verifyWetness ? job.expectedWetness : (float?)null);
+                        job.verifyWetness ? job.expectedWetness : (float?)null,
+                        job.verifyDimColour ? job.expectedDimColour : (float?)null);
                     var environment = UnityEngine.Object.FindAnyObjectByType<EnvironmentLighting>();
                     if (environment == null || environment.Active == null || environment.Model == null)
                         throw new InvalidOperationException("Lighting QA requires a configured EnvironmentLighting");
