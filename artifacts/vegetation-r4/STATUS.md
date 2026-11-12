@@ -28,3 +28,4 @@ Obejrzano pięć rzeczywistych zdjęć poboczy wskazanych przez recenzję. Czter
 Około 09:37 World otrzymał heavy. Log pokazuje pass1 po 76,6 s i planowanie działek po 196,8 s; generator rzeczywiście pracuje. Nie uruchomiono drugiej kopii ani nie powtarzano materiałów. Po World w tym samym slocie zapis geometrii kolizji, potem migawka, QA, import i wszystkie świeże obrazy.
 Świeży baseline r4: świat przez heavy kod 0. Produkcja bez zmian; kolejny etap zgodnie z baseline.ps1.
 Świeży baseline r4: migawka świata i źródeł kod 0. Produkcja bez zmian; kolejny etap zgodnie z baseline.ps1.
+Świeży baseline r4: QA Megascans i wejść kod 0. Produkcja bez zmian; kolejny etap zgodnie z baseline.ps1.
