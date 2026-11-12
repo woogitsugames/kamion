@@ -36,6 +36,11 @@ namespace PhysicsRunner.Sim
         public DriverSpec driver = new DriverSpec();
         public EventSpec[] events = Array.Empty<EventSpec>();
         public CheckSpec[] checks = Array.Empty<CheckSpec>();
+        /// <summary>Only for tests/physics/scenarios_expected_fail/: why this scenario is a known failure.</summary>
+        public string expectedFailReason = "";
+        /// <summary>Only for tests/physics/scenarios_expected_fail/: metrics that are expected to FAIL
+        /// (ExpectedFailureTests asserts exactly these fail and all other checks pass).</summary>
+        public string[] expectedFailMetrics = Array.Empty<string>();
         /// <summary>Set on expanded variants.</summary>
         public string variant = "";
         public string baseId = "";
