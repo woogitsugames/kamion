@@ -102,3 +102,5 @@ Krok 29: GPU A 1005 instancji, poziomy CPU/GPU identyczne 99/366/331/209, 81 LOD
 Krok 30: dokończono oględziny A we wszystkich warunkach. Fazy felg wyraźniejsze, lecz uproszczone; tył poziomu 2 nadal zbyt subtelny. Przyjęto A jako bazę następnej próby, nie finalny odbiór realizmu. Natywne materiały zapisano przed B dla porównania zakresu. Następny krok: opt-in flake_lift=0,025 tylko czerni, bez zmiany pigmentu/Pearl/roughness; candidate-build.ps1 -Stage b -ReviewStage a.
 
 Krok 31: B wprowadzony addytywnie: flake_lift=0,025 tylko car_paint_black; WorldPbrMaterials czyta flagę wyłącznie dla car_paint_, clamp 0…0,08 i domyślne 0,08 zachowują pozostałe kolory/kabiny. To podbicie warstwy płatków, nie zmiana pełnego F0. Pigment, Pearl, roughness i shader A bez zmiany; natywna biblioteka nadal A. Następny krok: candidate-build.ps1 -Stage b -ReviewStage a (obrazy A i budowa/testy B sekwencyjnie pod jednym heavy).
+
+Kandydat b (2026-11-12T10:24:05.0778341+01:00): zapisz plansze wariantu a. Następny etap w candidate-build.ps1; po komplecie PreparedVerified, capture i oględziny.
