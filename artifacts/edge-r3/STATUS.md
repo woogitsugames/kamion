@@ -50,3 +50,5 @@ Następna komenda: test-corner.ps1 -Phase Green, następnie wymagany build_world
 2026-11-12T01:51:30.6730666+01:00 Test narożnika Green potwierdzony: total 2, passed 2, failed 0; XML i SHA w corner-green-result.json.
 Krok 17: Green potwierdzony: 2/2 zaliczone, 0 pominięć, te same SHA testu co Red, inny SHA kodu produkcyjnego. Stary kod miał błąd około ±0,425 m na analitycznych stokach; poprawka spełnia tolerancję 0,01 m przez rzeczywisty generator siatki.
 Następny krok: pełny build_world po zmianie pod heavy, potem validate.ps1 -Phase After (wyłącznie przebudowa edge w istniejącej bazie). Pozostałe generatory/źródła bez edycji.
+Krok 19: przed dalszą regeneracją zachowano także oba źródłowe GLB far-field i QA. Przygotowano audyt rzeczywistych dolnych wierzchołków kurtyn lasu względem zamrożonego Before i przyszłego After. Wymaga niezmienionych SHA obu GLB; nie utożsamia wierzchołków z drzewami ani nie ocenia widoczności/alfy tekstury.
+Następny krok po pełnym After: uruchomić audyt kurtyn pod heavy razem z pozostałymi odczytami siatki, przed końcowym GIS. Nadal czeka build_world po zmianie.
