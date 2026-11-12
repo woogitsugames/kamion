@@ -1,4 +1,4 @@
-param([ValidateSet('Red','Green')][string]$Phase,[int]$WaitPid=0)
+param([ValidateSet('Red','Green')][string]$Phase,[int]$WaitPid=0,[switch]$HeavyAlreadyHeld)
 $ErrorActionPreference='Stop'
 $env:OMP_NUM_THREADS='1';$env:OPENBLAS_NUM_THREADS='1';$env:MKL_NUM_THREADS='1';$env:NUMEXPR_NUM_THREADS='1'
 Set-Location (Resolve-Path "$PSScriptRoot/../..")
@@ -18,14 +18,18 @@ if($Phase -eq 'Green'){
 $label=$Phase.ToLowerInvariant()
 New-Item -ItemType Directory -Force "$PSScriptRoot/tests"|Out-Null
 $slot='C:/Users/matma/Documents/Claude/kamion/scripts/unity-slot.ps1'
-& pwsh -File $slot -Acquire -Pool heavy -Owner gpt-edge-r5 -PollSeconds 1 -StaleHours 100000
-if($LASTEXITCODE -ne 0){throw 'Facade test heavy acquisition failed'}
+if($HeavyAlreadyHeld){
+    if(-not(Test-Path 'C:/Users/matma/Documents/Claude/kamion/artifacts/locks/heavy-slots/gpt-edge-r5.slot')){throw 'No caller heavy lease'}
+}else{
+    & pwsh -File $slot -Acquire -Pool heavy -Owner gpt-edge-r5 -PollSeconds 1 -StaleHours 100000
+    if($LASTEXITCODE -ne 0){throw 'Facade test heavy acquisition failed'}
+}
 $code=99
 try{
     & uv run --project tools/worldgen python -m pytest $test -q --junitxml "$PSScriptRoot/tests/facade-$label.xml" *> "$PSScriptRoot/facade-$label.log"
     $code=$LASTEXITCODE
 }finally{
-    & pwsh -File $slot -Release -Pool heavy -Owner gpt-edge-r5 -StaleHours 100000
+    if(-not$HeavyAlreadyHeld){ & pwsh -File $slot -Release -Pool heavy -Owner gpt-edge-r5 -StaleHours 100000 }
 }
 $xml=[xml](Get-Content "$PSScriptRoot/tests/facade-$label.xml" -Raw)
 $cases=@($xml.SelectNodes('//testcase'))
