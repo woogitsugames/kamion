@@ -1236,7 +1236,8 @@
   "tools/worldgen/roads/__init__.py": "0c26fa3038394a956286b47576ce1d6a0725f8dc0a2e7682901a055d264a6e40",
   "tools/worldgen/roads/aprons.py": "790b409e810cb5a80c9d2525eb34c80e994b9d7dc229ccb18983ee6a18736729",
   "tools/worldgen/roads/authored_paint.py": "cfa394a6e9c34275a8e07176ac76336a035d50acd959c11a530b55ab1508451e",
-  "tools/worldgen/roads/build_world.py": "11e3be3f2d41be08594dc744d2cd94a81924c0a8b0f1029a6c3943ad878b5e06",
+  "tools/worldgen/roads/barrier_audit.py": "2cd11f5f8243992ebc02f75f51671183b00d436adf234cd0e8c0aba3db46f948",
+  "tools/worldgen/roads/build_world.py": "24c434bddd80f445182b4812ad8cbea72a511fc0e69d0b44ad5cd99749a13bc4",
   "tools/worldgen/roads/consistency.py": "379c5a94bb0e81ef1910e459930d55ccd0460ae1bed3ee132727486897ee99bc",
   "tools/worldgen/roads/context.py": "90f3a943cc21d0be5c46f4346c01c02dfa52ef7abb3d850c0fbe20f31fe37aa2",
   "tools/worldgen/roads/decals.py": "2e3a058461a0554b1213496a4a8e41272e483cf470182e079de7600e206784fd",
@@ -1251,7 +1252,7 @@
   "tools/worldgen/roads/profile.py": "667f2de75831484dd23a9f1506260d256802af1f974c0c003baf1137ec2b2a36",
   "tools/worldgen/roads/qa_ortho.py": "6e32d52950954922afceae3ee2f0aa379b8d42467c2d294b7e951750d39f3e6b",
   "tools/worldgen/roads/route.py": "e8bb7cd40bd2bf4dfef526aff16bafda35e2b8e68d64f2a8fb576818a453c5b4",
-  "tools/worldgen/roads/standards.py": "48845d544bee7e2bc5d8e198f5f4a724d948d26f7ac1647d50315db45b8fbf30",
+  "tools/worldgen/roads/standards.py": "69d3560e08033c9b263577b7627773024c424c651c8689fca52f92a57a142c54",
   "tools/worldgen/roads/through_lines.py": "be22b6b67118b50577e67ae1520287dcd5831b39400e7f2b805fde1b6e2795c5"
  },
  "lane_into_island": [
@@ -5664,14 +5665,14 @@
      "chain": "c:w177903962:1883043012-1882953792",
      "kind": "P-13",
      "ortho": {
-      "band_frac": 0.367,
+      "band_frac": 0.378,
       "offset_m": 5.4,
       "present": true
      },
-     "s": 16.77,
+     "s": 16.72,
      "xy": [
-      538.209,
-      -752.426
+      538.234,
+      -752.384
      ]
     },
     {
@@ -8543,13 +8544,13 @@
      "kind": "P-14",
      "ortho": {
       "band_frac": 0.122,
-      "offset_m": 5.8,
+      "offset_m": 5.9,
       "present": false
      },
-     "s": 72.52,
+     "s": 72.47,
      "xy": [
-      -518.788,
-      36.43
+      -518.751,
+      36.396
      ]
     },
     {
