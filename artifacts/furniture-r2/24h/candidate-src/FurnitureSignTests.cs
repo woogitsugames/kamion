@@ -354,9 +354,10 @@ namespace Game.Tests
             }
             finally
             {
-                Object.DestroyImmediate(go); RenderSettings.sun=sun;initialize.Invoke(null,null);
+                UnityEngine.Object.DestroyImmediate(go); RenderSettings.sun=sun;initialize.Invoke(null,null);
                 Shader.SetGlobalTexture("_TruckLightState",texture);Shader.SetGlobalFloat("_TruckLightNitsScale",scale);
             }
         }
     }
 }
+

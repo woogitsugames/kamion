@@ -133,3 +133,7 @@ NASTĘPNY KROK: przygotować własne skrypty r2 z ownerem heavy gpt-furniture-r2
 2026-11-12T09:20:01.7701223+01:00: komplet330 kadrów i dokładnych165 liczników Low: draws mesh0, instancje0; maksymalna delta tris0,18998%. Nocny fixture wykrył źródło0 po przeładowaniu sceny. Poprawiono unieważnianie cache przy zmianie sceny/riggu oraz szybkie rozpoznanie dobudowanych socketów, dodano regresję automatycznego hooka. Rzeczywista ekspozycja nocnego modelu wyniosła1,4167; usunięto nieuzasadniony mnożnik512, współczynnik jest teraz odniesiony do ekspozycji1. Geometria bez zmian; wymagany ponowny obraz po korekcie shadera. NASTĘPNY KROK: FurnitureSignTests -Phase cache2, potem ponowna walidacja nocnego źródła i obrazów.
 
 2026-11-12T09:20:10.4568734+01:00: Unity sign-probe cache2 Low overcast; sukces=False. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
+
+2026-11-12T09:20:11.0381226+01:00: próba znaków nie przeszła (exit=1). Własny import/render pozostaje wstrzymany przez PAUSE_UNITY do odczytu logu i naprawy. NASTĘPNY KROK: odczytać sign-probe-first.log oraz XML, usunąć marker dopiero po usunięciu błędu kompilacji.
+
+2026-11-12T09:20:28.7516724+01:00: nowa regresja miała niejednoznaczne Object w sprzątaniu; poprawiono pełną nazwę UnityEngine.Object. Próba nie przeszła kompilacji, nie uznano testów za wykonane. NASTĘPNY KROK: ponowić tylko FurnitureSignTests -Phase cache2-fixed.
