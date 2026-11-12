@@ -18,7 +18,8 @@
 | regresja GPU A16 (jedyny telefonowy) | 0136 | Opus | `a16-perf` | `artifacts/a16-perf/STATUS.md` |
 | ElevenLabs REGEN-01 wybór + integracja | 0138 | Opus | `audio-regen01` | `artifacts/audio-regen01/STATUS.md` |
 - Ścieżka bramki 3: krytyk D51 → scal 0127, 0123→0128, 0129, 0133, 0132 → 0136 GPU → jedna integracja (regen, import, testy, vqa, SBS Low render-only) → krytyk D51 → czysty APK Low → gate3 A16 A+B → pakiet zdjęcie|render dla właściciela.
-- **Ostatni przydzielony ADR: 0138.**
+- **17:3x:** scalone **0135 r3** `f3083747` (APK Fold `kamion-0.1.0-f308374749.apk`), **0138 audio REGEN-01** `1fa46ca6` (APK z nowym dźwiękiem `kamion-0.1.0-1fa46ca6ad.apk`; odsłuchy A/B wysłane; `docs/owner/ELEVENLABS-REGEN-02.md` wysłany), **0127 g3b-lowread** `a6cfe38a` (`REVIEW-2026-11-12-s13-0127.md`: SCAL warunkowo; G3-B 6/10, słabe 3→2; portal Andersa rozpiętość 16→14 m). Nowi: **0139** `g3b-r2` (Fable, P1/P2 z recenzji 0127), **0140** `sbs-poses-r2` (Opus, pozy po 14 m + komenda pełnego SBS), **0141** `edge-r6c` (Fable, tło/zapory, przejęte z GPT edge r6), **0142** `audio-fx` (Opus, wpięcie efektów kabiny C–G). Worktree tworzy `scripts/new-agent-worktree.ps1 -Name <x>`. Recenzja 5 PR-ów Mistrala w toku (agent). **Mistral runda 2: `docs/owner/MISTRAL-TASKS-2.md` (M6–M15).**
+- **Ostatni przydzielony ADR: 0142.**
 
 ---
 # HANDOVER — kamion, SESJA 12 (start 2026-11-12 09:11, nowe konto)
