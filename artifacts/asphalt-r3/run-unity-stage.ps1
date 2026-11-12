@@ -1,11 +1,16 @@
 param([ValidateSet('Import','Capture','Test','Probe')][string]$Stage, [string]$Label = 'baseline',
     [string]$Cameras='', [ValidateSet('Low','High')][string]$ProbeTier='Low',
-    [ValidateSet('clear','overcast')][string]$ProbeLighting='overcast')
+    [ValidateSet('clear','overcast')][string]$ProbeLighting='overcast',
+    [ValidateSet('none','cracks_off','photo_off','grime_off')][string]$Ablation='none',
+    [ValidatePattern('^[a-z0-9_]+([,;][a-z0-9_]+)*$')][string]$AblationMaterials='road_asphalt')
 $ErrorActionPreference = 'Stop'
 $repo = (Resolve-Path "$PSScriptRoot/../..").Path
 Set-Location $repo
 $env:KAMION_ARTIFACTS_DIR = Join-Path $repo 'artifacts'
 $slotScript = 'C:\Users\matma\Documents\Claude\kamion\scripts\unity-slot.ps1'
+if ($Stage -ne 'Probe' -and ($Ablation -ne 'none' -or $env:KAMION_ASPHALT_QA_ABLATION)) {
+    throw 'Ablations are permitted only for explicit Probe captures, never import/test/full capture.'
+}
 function Invoke-Slotted([scriptblock]$Action) {
     & pwsh $slotScript -Acquire -Owner gpt-asphalt -PollSeconds 5
     if ($LASTEXITCODE -ne 0) { throw 'Unity slot acquisition failed' }
@@ -44,6 +49,8 @@ if ($Stage -eq 'Import') {
     $out = "artifacts/asphalt-r3/$Label/$ProbeTier-$ProbeLighting"
     $env:KAMION_ASPHALT_QA_STATE = '1'
     $env:KAMION_ASPHALT_QA_DIRECTORY = [IO.Path]::GetFullPath($out, $repo)
+    $env:KAMION_ASPHALT_QA_ABLATION = if ($Ablation -eq 'none') { $null } else { $Ablation }
+    $env:KAMION_ASPHALT_QA_ABLATION_MATERIALS = $AblationMaterials
     try {
         Invoke-Slotted {
             & pwsh scripts/visual-qa.ps1 -Scene WorldC -Tier $ProbeTier -Lighting $ProbeLighting -Cameras $Cameras -Gate3 artifacts/asphalt-r3/cameras.json -OutputDir $out
@@ -51,6 +58,12 @@ if ($Stage -eq 'Import') {
     } finally {
         $env:KAMION_ASPHALT_QA_STATE = $null
         $env:KAMION_ASPHALT_QA_DIRECTORY = $null
+        $env:KAMION_ASPHALT_QA_ABLATION = $null
+        $env:KAMION_ASPHALT_QA_ABLATION_MATERIALS = $null
+    }
+    if ($Ablation -ne 'none') {
+        $evidence = Get-Content "$out/ablation-state.json" -Raw | ConvertFrom-Json
+        if ($evidence.mode -ne $Ablation -or $evidence.materialSlots -le 0) { throw 'Ablation did not match an enabled material slot.' }
     }
     Add-Content artifacts/asphalt-r3/STATUS.md "$(Get-Date -Format o): Zapisano próbę pozy $out dla $Cameras; nie jest to pełny baseline ani końcowy komplet kamer."
     git add -f artifacts/asphalt-r3/STATUS.md

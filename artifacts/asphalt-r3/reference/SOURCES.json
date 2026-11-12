@@ -27,5 +27,6 @@
       "copied_from": "artifacts/asphalt-r2/backlog-r3-references/pcrt-ground-native-960-source.json"
     }
   ],
-  "note": "Reference evidence only. Native crop960x432+1800+2160, no resizing. Original attribution sidecar retains its round2 paths; exact round3 copies and SHA are listed here. No fitted pose or GPS for this photo; no logo/texture extraction."
+  "note": "Reference evidence only. Native crop960x432+1800+2160, no resizing. Original attribution sidecar retains its round2 paths; exact round3 copies and SHA are listed here. No fitted pose or GPS for this photo; no logo/texture extraction.",
+  "git_policy": "Track960px previews, native crop and attribution. Full original kept locally for provenance/review and excluded from Git per leader review."
 }
