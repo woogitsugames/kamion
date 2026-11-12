@@ -367,33 +367,52 @@ def roundabout_diagram(items, px_m=360):
 
 
 def weather(im, key, strength=1.0):
-    """Light ageing of a sign face (review r4 W-H6: signs and lines must not be factory-new): road film and dust
-    settling toward the lower edge, a faint mottle, a few specks, the red slightly faded (UV) and a darker rim where
-    dirt collects at the folded edge. Deterministic per key. Only covered texels change; alpha is kept."""
+    """Subtle road film and edge damage; deterministic, coverage/legend preserved.
+
+    WORKING_VALUE appearance, not the measured condition of a particular plate.
+    No rust blanket on aluminium. strength=0 is the unmodified RGBA source.
+    """
     import hashlib
     import numpy as np
-    a = np.asarray(im.convert("RGBA")).astype(np.float32) / 255.0
+    strength = float(np.clip(strength, 0.0, 1.5))
+    source = im.convert("RGBA")
+    if strength == 0:
+        return source.copy()
+    a = np.asarray(source).astype(np.float32) / 255.0
     h, w = a.shape[:2]
     rng = np.random.default_rng(int(hashlib.sha1(key.encode()).hexdigest()[:8], 16))
-    low = Image.fromarray((rng.random((8, 8)) * 255).astype(np.uint8)).resize((w, h), Image.BICUBIC)
+    age = 0.55 + 0.45 * float(rng.random())
+    low = Image.fromarray((rng.random((12, 12)) * 255).astype(np.uint8)).resize((w, h), Image.BICUBIC)
     mott = np.asarray(low).astype(np.float32) / 255.0
     yy = np.linspace(0, 1, h)[:, None]
-    film = 0.05 + 0.10 * np.clip((yy - 0.45) / 0.55, 0, 1) ** 1.5         # more at the bottom
-    k = 1.0 - strength * film * (0.6 + 0.8 * mott)
-    speck = rng.random((h, w)) < 0.0025 * strength
-    k = np.where(speck, k * 0.82, k)
+    film = strength * age * (0.025 + 0.11 * np.clip((yy - 0.42) / 0.58, 0, 1) ** 1.5)
+    k = 1.0 - film * (0.65 + 0.70 * mott)
     rgb = a[..., :3]
+    # Small, strength-controlled pigment fading; no colour change in the zero-wear control.
     red = (rgb[..., 0] > 0.55) & (rgb[..., 1] < 0.35)
-    rgb = np.where(red[..., None], rgb * np.array([0.93, 1.08, 1.08]) + 0.015, rgb)
+    fade = min(1.0, strength * age)
+    faded = rgb * np.array([1.0 - 0.045 * fade, 1.0 + 0.05 * fade, 1.0 + 0.05 * fade]) + 0.008 * fade
+    rgb = np.where(red[..., None], faded, rgb)
     lum = rgb @ np.array([0.2126, 0.7152, 0.0722])
-    rgb = rgb * 0.94 + lum[..., None] * 0.06
+    rgb = rgb * (1.0 - 0.035 * fade) + lum[..., None] * (0.035 * fade)
     cov = a[..., 3] > 0.5
-    edge = cov.copy()
-    for dy, dx in ((-6, 0), (6, 0), (0, -6), (0, 6)):
-        edge &= np.roll(np.roll(cov, dy, 0), dx, 1)
-    rim = cov & ~edge
-    k = np.where(rim, k * 0.93, k)
-    out = np.concatenate([np.clip(rgb * k[..., None], 0, 1), a[..., 3:]], -1)
+    # Pad with uncovered space. Unlike np.roll this also finds the edges of a full rectangular board.
+    radius = max(1, int(round(min(w, h) * 0.008)))
+    padded = np.pad(cov, radius, constant_values=False)
+    inner = cov.copy()
+    for dy, dx in ((-radius, 0), (radius, 0), (0, -radius), (0, radius)):
+        inner &= padded[radius + dy:radius + dy + h, radius + dx:radius + dx + w]
+    rim = cov & ~inner
+    k = np.where(rim, k * (1.0 - 0.08 * fade), k)
+    speck = (rng.random((h, w)) < 0.0015 * strength * age) & cov
+    k = np.where(speck, k * 0.84, k)
+    worn = np.clip(rgb * k[..., None], 0, 1)
+    # Rare tiny edge chips expose neutral aluminium, never paint over the legend.
+    chips = rim & red & (rng.random((h, w)) < 0.008 * strength * age)
+    worn = np.where(chips[..., None], np.array([0.39, 0.40, 0.40]), worn)
+    # Preserve transparent texels as well as alpha. This avoids coloured mip fringes outside coverage.
+    worn = np.where(cov[..., None], worn, a[..., :3])
+    out = np.concatenate([worn, a[..., 3:]], -1)
     return Image.fromarray((out * 255 + 0.5).astype(np.uint8), "RGBA")
 
 

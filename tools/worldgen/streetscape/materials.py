@@ -1,4 +1,4 @@
-﻿"""Engine material table for streetscape surfaces (glTF base factors + metadata).
+"""Engine material table for streetscape surfaces (glTF base factors + metadata).
 
 Linear albedo / roughness = WORKING_VALUE placeholders in the ranges of docs/06 §3 (measured albedo of
 concrete 0.25-0.40, asphalt 0.05-0.12, painted steel, galvanised steel 0.45-0.6 metal, vegetation 0.05-0.2),
@@ -552,3 +552,9 @@ M["marking_white"] = {"color": [0.55, 0.55, 0.54], "rough": 0.65, "surface": "pa
 # Private-yard/gate/bus oil retains UV1.x=0 and the previous material response.
 M["decal_oil"]["traffic_opacity_scale"] = 1.15
 
+
+
+# ADR0120 r2: explicit road-sign assembly recipe; face IDs come from current props metadata.
+M["plate_back"] = {**M["plate_back"], "furniture_sign_fronts": {
+    "gain": 800.0,  # uncalibrated display coefficient, WORKING_VALUE
+}}

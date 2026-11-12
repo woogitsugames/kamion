@@ -250,6 +250,14 @@ def plate(code):
     for zc in (-hh * 0.28, hh * 0.22):              # clamps around the post, behind the plate
         m.box("steel_galv", [0, 0.0, zc], S.SIGN_POST_D / 2 + 0.008, S.SIGN_POST_D / 2 + 0.008, 0.022)
         m.box("steel_galv", [0, (S.SIGN_POST_D / 2 + y - rim) / 2 + 0.004, zc], 0.06, (y - rim - S.SIGN_POST_D / 2) / 2, 0.018)
+    # ADR0120 r2: retain rear mounting hardware on Low without another material slot.
+    # Low reuses its EXISTING plate_back slot. steel_galv would add a draw on every Low sign.
+    # Two simple rear spacers stand in for the High collar/rail assembly: 24 triangles total.
+    hardware = Mesh()
+    for zc in (-hh * 0.28, hh * 0.22):
+        hardware.box("plate_back", [0, 0.012, zc], 0.065, y - 0.004 - 0.012, 0.018)
+    for part in hardware.out():
+        l1.add("plate_back", part["V"], part["T"], np.full((len(part["V"]), 2), 0.10))
     return m, l1, None
 
 
