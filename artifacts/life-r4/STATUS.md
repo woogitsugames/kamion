@@ -31,3 +31,5 @@ Krok 10: ograniczono czyszczenie diagnostycznych buforów do pięciu wybranych p
 Krok 11: podczas generacji przygotowano NEXT-R5.md z jawnym pierwszeństwem zaległych palet po r4. Ponownie odczytano oficjalną stronę EPAL (wymiary, 11 desek, 9 klocków, zakres grubości); bez kopiowania znaków lub dodawania fikcyjnego rozmieszczenia. R4 nadal koła i rzeczywista widoczność osprzętu; nie rozszerzono produkcji. World 92152 przekroczył teren/chunki drogi, post 77731 nadal oczekuje. Następny krok: odebrać baseline, import/capture i oględziny.
 
 Baseline (2026-11-12T12:08:10.6769408+01:00): wygeneruj World baseline r4. Następny etap w baseline-gen.ps1; potem import i oględziny, bez zmiany produkcji przed baseline.
+
+Baseline (2026-11-12T12:12:01.6074528+01:00): potwierdź World i fidelity baseline r4. Następny etap w baseline-gen.ps1; potem import i oględziny, bez zmiany produkcji przed baseline.
