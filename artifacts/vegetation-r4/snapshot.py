@@ -15,6 +15,8 @@ dest = HERE/("snapshot-"+args.label)
 dest.mkdir(exist_ok=True)
 files = list((ROOT/"Data/Regions/bialystok-industrial-c/generated").glob("*.json"))
 files += list((ROOT/"Data/raw/derived/bialystok-industrial-c/world").glob("*.glb"))
+files += [ROOT/'art-source/world/materials/materials_spec.json',ROOT/'art-source/world/props/props_meta.json',
+          ROOT/'Data/SourceManifests/bialystok-industrial-c-far-field.manifest.json']
 hashes = {}
 for path in sorted(files):
     with path.open("rb") as stream:
@@ -27,8 +29,10 @@ report = dict(source_sha=source_sha, source_note=(
     "Fresh R4 baseline after main merge; no frame reuse from previous rounds."
     if args.label == "baseline" else "Snapshot of generated outputs; inspect dirty state separately."), files=hashes)
 tracked = subprocess.check_output(['git','ls-files','-z','--','tools/worldgen','game/Assets/_Project',
-    'art-source/world/materials/_src','Data/Regions/bialystok-industrial-c'],cwd=ROOT).decode('utf-8').split('\0')
-extensions = {'.py','.cs','.shader','.hlsl','.asset','.mat','.json','.yaml','.yml','.unity'}
+    'art-source/world/materials/_src','art-source/world/props','art-source/world/landmarks',
+    'art-source/world/textures','art-source/world/vegetation',
+    'Data/Regions/bialystok-industrial-c'],cwd=ROOT).decode('utf-8').split('\0')
+extensions = {'.py','.cs','.shader','.hlsl','.asset','.mat','.json','.yaml','.yml','.unity','.glb','.png'}
 report['source_files'] = {name: hashlib.sha256((ROOT/name).read_bytes()).hexdigest()
     for name in tracked if name and (ROOT/name).is_file() and Path(name).suffix in extensions}
 instance_dest = dest/'instances'
