@@ -7,7 +7,7 @@ if ($prior -and ($prior.Name -ne 'pwsh.exe' -or $prior.CommandLine -notlike '*ar
 }
 while (Get-Process -Id $AfterProcessId -ErrorAction SilentlyContinue) { Start-Sleep -Seconds 5 }
 $log = Get-ChildItem $PSScriptRoot -Filter 'baseline.*.log' | Sort-Object LastWriteTime | Select-Object -Last 1
-if ($null -eq $log -or -not (Select-String $log.FullName -SimpleMatch 'LIGHT_QA_RESULT: OK jobs=14 rendered=40' -Quiet)) {
+if ($null -eq $log -or -not (Select-String -Path $log.FullName -SimpleMatch -Pattern 'LIGHT_QA_RESULT: OK jobs=14 rendered=40' -Quiet)) {
     throw 'Complete baseline40 required before contacts; inspect original pipeline, do not restart blindly'
 }
 & pwsh "$PSScriptRoot/review-baseline.ps1"

@@ -1,3 +1,4 @@
+param([switch]$ResumeAfterWorld)
 $ErrorActionPreference = 'Stop'
 $repo = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..'))
 Set-Location $repo
@@ -10,9 +11,25 @@ $env:OMP_NUM_THREADS='1'; $env:OPENBLAS_NUM_THREADS='1'; $env:MKL_NUM_THREADS='1
 if ($LASTEXITCODE) { throw 'No heavy slot' }
 $code=1
 try {
-    & uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c *> "$PSScriptRoot/build-world.log"
-    if ($LASTEXITCODE) { throw 'build_world failed' }
-    if (Select-String "$PSScriptRoot/build-world.log" -SimpleMatch 'fallback=True' -Quiet) { throw 'Megascans fallback forbidden' }
+    if ($ResumeAfterWorld) {
+        $checkpoint = Get-Content "$PSScriptRoot/world-checkpoint.json" -Raw | ConvertFrom-Json
+        if ($checkpoint.manifest_sha256 -ne (Get-FileHash Data/Regions/bialystok-industrial-c/generated/world_manifest.json).Hash -or
+            $checkpoint.log_sha256 -ne (Get-FileHash "$PSScriptRoot/build-world.log").Hash -or
+            $checkpoint.worldgen_tree -ne (git rev-parse HEAD:tools/worldgen).Trim()) {
+            throw 'World checkpoint changed; do not reuse it blindly'
+        }
+    }
+    else {
+        & uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c *> "$PSScriptRoot/build-world.log"
+        if ($LASTEXITCODE) { throw 'build_world failed' }
+    }
+    if (-not (Select-String -Path "$PSScriptRoot/build-world.log" -Pattern '\[world\s+\d+(?:\.\d+)?s\] done$' -Quiet)) { throw 'World completion marker missing' }
+    if (Select-String -Path "$PSScriptRoot/build-world.log" -SimpleMatch -Pattern 'fallback=True' -Quiet) { throw 'Megascans fallback forbidden' }
+    if (-not $ResumeAfterWorld) {
+        @{manifest_sha256=(Get-FileHash Data/Regions/bialystok-industrial-c/generated/world_manifest.json).Hash;
+          log_sha256=(Get-FileHash "$PSScriptRoot/build-world.log").Hash;
+          worldgen_tree=(git rev-parse HEAD:tools/worldgen).Trim()} | ConvertTo-Json | Set-Content "$PSScriptRoot/world-checkpoint.json" -Encoding utf8
+    }
     & uv run --project tools/worldgen tools/worldgen/fidelity/run.py --region bialystok-industrial-c --art "$PSScriptRoot/fidelity" *> "$PSScriptRoot/fidelity-preimport.log"
     if ($LASTEXITCODE) { throw 'fidelity failed' }
     # Import may build missing material sets first: retain heavy for that nested sequential Python work.
