@@ -41,6 +41,7 @@ jobs:
       - name: Unit tests
         run: dotnet test tools/nav-runner/NavRunner.sln -c Release --logger "trx;LogFileName=nav.trx"
       - name: Scenario runner (golden dump, graph report, GC)
+        if: always()
         run: dotnet run -c Release --project tools/nav-runner/Runner
       - uses: actions/upload-artifact@v4
         if: always()
