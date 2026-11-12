@@ -90,14 +90,18 @@ def test_hedge_mass_is_closed_and_tall_enough():
     V = np.vstack([p.V for p in solid])
     assert PT.HEDGE_H[0] - 0.1 <= V[:, 2].max() <= PT.HEDGE_H[1] + 0.2
     assert V[:, 2].min() < 0.0                                   # foot tucked into the ground
-    assert {p.mat for p in buf.parts} == {"hedge_berberis", "hedge_shell_berberis", "hedge_sprig_berberis"}
+    # ADR 0109: berberis retains the inner surface with leaf alpha material.
+    assert {p.mat for p in buf.parts} == {"hedge_shell_berberis", "hedge_sprig_berberis"}
 
 
-def test_hedge_reads_as_plants_not_a_box():
+def test_hedge_reads_as_plants_not_a_box(monkeypatch):
     """ADR 0049 addendum: alpha shell outside a darker core, open foot, lumpy top, loose shoots above the top."""
     from shapely.geometry import Polygon
     from roads.meshing import MeshBuf
     from streetscape import plantings as PT
+    # Label the inner reference surface separately for spatial selection.
+    # test_berberis_0109_leaf_core proves identical geometry for leaf_core=True.
+    monkeypatch.setitem(PT.SPECIES['berberis_red'], 'leaf_core', False)
     buf = MeshBuf()
     poly = Polygon([(0, 0), (12, 0), (12, 1.6), (0, 1.6)])
     st = {}
@@ -141,7 +145,7 @@ def test_hedge_textures_alpha_coverage():
     from streetscape import hedge_textures as HT
     tx = HT.textures()
     for sp in HT.SPECIES:
-        assert 0.5 < HT.coverage(tx[f"hedge_shell_{sp}"]) < 0.92      # holes: the dark core shows through
+        assert 0.5 < HT.coverage(tx[f"hedge_shell_{sp}"]) < 0.92      # gaps reveal the inner layer
         a = np.asarray(tx[f"hedge_sprig_{sp}"])[..., 3]
         assert 0.15 < (a > 127).mean() < 0.7
         assert a[:2].max() == 0 and a[:, :2].max() == 0 and a[:, -2:].max() == 0   # no straight clip edges
