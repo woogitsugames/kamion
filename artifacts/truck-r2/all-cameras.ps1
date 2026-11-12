@@ -16,5 +16,5 @@ foreach ($tier in @('Low', 'High')) {
     }
     Add-Content -Encoding utf8 artifacts/truck-r2/STATUS.md "Zapisano wszystkie kamery: $Stage $tier overcast. Następny krok: zestawić liczniki rendererów i instancji osobno dla każdej kamery."
     git add -f artifacts/truck-r2/STATUS.md
-    git commit -m "wip(truck): wszystkie kamery $Stage $tier"
+    git commit --only artifacts/truck-r2/STATUS.md -m "wip(truck): wszystkie kamery $Stage $tier"
 }
