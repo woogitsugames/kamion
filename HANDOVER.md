@@ -32,6 +32,8 @@
 - Agenci aktywni: 0132 buildings-r9, 0144 junctions-r7 (r7d zygzak gotowy wizualnie), 0146 putry-andersa.
 - 21:5x: właściciel o APK r2: „jest spoko, już lepiej się jeździ” (D55); D54 inne pojazdy później. **Nowe zgłoszenie (film `artifacts/owner-feedback/2026-11-12-fold-video2/`): od ~1:40 cienie „późno”, czarne mignięcia na ekranie (niewidoczne na nagraniu), mało FPS** → agent **0152 fold-flicker** (Opus, worktree `fold-flicker`, live `artifacts/live/fold-flicker.md`; telefony A16 + S24+ wg zasad baterii).
 - 22:1x: **Mistral runda 4 zlecona przez właściciela** (M21–M25, `docs/owner/MISTRAL-TASKS-4.md`: GPS limity ciężarówki, pasy ruchu, HUD zero-alloc bez TMP, wymiary znaków + concrete_pole, P-11 + zmiany zał. 2). PR-y `mistral/21..25-*` → recenzja w triggerze :47. Decyzje D54 (inne pojazdy później), D55 (kierowanie OK), D56 (pełny Windows z kierownicami po bramce 3).
+- 22:2x: **Mistral r4: PR #21 (M21 limity), #22 (M23 HUD bez TMP), #23 (M22 pasy), #24 (M24 znaki) — gotowe, NIEZRECENZOWANE; M25 brak PR/gałęzi.** #21 i #23 oba podnoszą format KRTG do v2 → konflikt do ręcznego połączenia. Recenzja + integracja (`mistral-r4-int`, Opus) **po resecie limitu 01:20** (usage 22:2x: 5 h 80 %, tydzień 37 %, Fable 61 %).
+- 0152 fold-flicker: przyczyna „przeskakującego obrazu” = `CameraRig.UpdateCab` całkuje sprężynę kołysania głowy 1 krokiem Eulera/klatkę, niestabilne przy < ~11 FPS (Fold Ultra/60, A16 High) → pod-kroki ≤ 1/60 s; + adaptacyjna skala High < 15 FPS, env capture po wznowieniu. Fold RFGL80RXBPZ podłączony USB (telefon właściciela: ≥ 40 %, < 36 °C); Fold miał Ultra/60 wybrane w menu, 5,65 Mpx przy renderScale 1,0 + MSAA 4x.
 - **Ostatni przydzielony ADR: 0152.**
 
 
