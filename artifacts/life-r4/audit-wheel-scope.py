@@ -81,10 +81,16 @@ class Library:
             # frame; preserve raw glTF attributes in the protected-face hashes.
             xyz = vertices[tri][:, [0, 2, 1]].copy()
             xyz[:, 0] *= -1
-            wheel = any(np.all(np.abs(xyz[:, 0] - x) <= w / 2 + .025001)
-                        and np.all(np.abs(xyz[:, 1] - y) <= r + .000001)
-                        and np.all(np.abs(xyz[:, 2] - z) <= r + .000001)
-                        for x, y, z, w, r in boxes)
+            containing = [box for box in boxes
+                          if np.all(np.abs(xyz[:, 0] - box[0]) <= box[3] / 2 + .025001)
+                          and np.all(np.abs(xyz[:, 1] - box[1]) <= box[4] + .000001)
+                          and np.all(np.abs(xyz[:, 2] - box[2]) <= box[4] + .000001)]
+            wheel = bool(containing)
+            # The existing tread spans the tyre width. Protect its actual
+            # triangle attributes too; only the sidewall/rim/recess can change.
+            if wheel and self.material(p)['name'] == 'tyre':
+                if any(np.ptp(xyz[:, 0]) > box[3] * .5 for box in containing):
+                    wheel = False
             if wheel:
                 continue
             corners = [b''.join(a[i].tobytes() for a in arrays.values()) for i in tri]
@@ -133,7 +139,8 @@ def main():
                   changed_primitives=changes, changed_outside_static_wheels=protected + unexpected,
                   materials_identical=True, groups_identical=True, raw_count=len(proof['products']),
                   raw_changed=raw_changed, static_counts=counts,
-                  note='Only near wheel geometry inside nominal boxes is allowed; distant LODs and all other triangle attributes preserved. This is scope evidence, not visual acceptance or frame/GPU cost.')
+                  valid=not protected and not unexpected and not raw_changed,
+                  note='Only near sidewall/rim/recess geometry inside nominal boxes is allowed. Existing tread triangle attributes, distant LODs and all other triangles are protected. This is scope evidence, not visual acceptance or frame/GPU cost.')
     (OUT / f'{tag}-wheel-scope.json').write_text(json.dumps(result, indent=2), encoding='utf-8')
     print(json.dumps(dict(nodes=len(after.nodes), changed_primitives=len(changes),
                           protected=len(protected), unexpected=len(unexpected), raw_changed=len(raw_changed))))
