@@ -29,3 +29,5 @@ NASTĘPNY KROK: przygotować własne skrypty r2 z ownerem heavy gpt-furniture-r2
 2026-11-12T02:39:27.5426397+01:00: Unity sign-probe third Low overcast; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
 
 2026-11-12T02:42:39.6920904+01:00: trzecia próba GPU 10/10 passed, bez pominięć. Potwierdzono liniowy HDR współczynnika 1 i 800, zgodność off/no-source z URP Lit, alpha, przód/tył, kąt, dystans i 9→9 przebiegów. Generator bazowy zdobył slot heavy i działa. Dodano nieaktywną bez flagi fabrykę znaków do wspólnego C# oraz test jej trwałości i wycofania do Lit; manifest świata nadal bez flag znaku. NASTĘPNY KROK: izolowana próba fabryki i socketów high-only; własny import/render czeka na markerze.
+
+2026-11-12T02:43:01.4134427+01:00: Unity sign-probe factory Low overcast; sukces=False. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
