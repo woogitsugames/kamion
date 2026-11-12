@@ -76,3 +76,4 @@ Krok 10a: B wygenerowany w680,0s bez fallback=True, WIP273682bb. Audyty:336/210 
 Krok 10b: statycznie sprawdzono składnię wszystkich skryptów PowerShell r4 i15 plików Python (w tym builder/test), błędów0. Mapy Medium użyte przez przyszłą kontrolę cache istnieją. Kontrola trwała0,44s bez uruchamiania testów/generatora/Unity. B nadal czeka na podgląd z powodu PHONE_RUN; nie ma FINAL-CANDIDATE.
 
 Krok 10c: 16:18CET PHONE_RUN zwolniony; podgląd B przesuwa się w kolejce Unity (2 przede mną). Własny terminal13840 nadal aktywny, ciężkie zadania i import zakończone. Nadal brak oceny wizualnej B i brak pełnego GIS.
+`nKrok 11: obejrzano8 PNG B i2 natywne pary; częściowa poprawa obrysu i usunięcie półek. B przechodzi do pełnych244 ujęć, bez końcowej akceptacji. Low nadal zbyt pełny; C niewdrożone. Preview zakończony0, własny marker usunięty i slot zwolniony.
