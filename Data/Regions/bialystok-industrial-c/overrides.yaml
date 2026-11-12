@@ -1430,7 +1430,10 @@ overrides:
     verify: owner drive
   - id: dk8-ramp-split-barrier
     kind: guardrail
-    polyline_en: [[-780.5, 76.35], [-753.5, 75.2]]
+    # ADR 0123 b4: carried on to the start of the DK8 deck barrier (E -749 N 75.9 in the generated world) and kept
+    # there (free_ends): with the north rail now reaching E -752 its free end swung onto that rail instead
+    polyline_en: [[-780.5, 76.35], [-753.5, 75.2], [-750.2, 75.65]]
+    free_ends: [true, false]
     reason: >-
       Steel barrier on the westbound separator dk8-ramp-split-island (REVIEW s10-0095 P1-3: "na wyspie brak bariery";
       artifacts/junctions-r2/xsec/km_sheet.png, dk8_front.jpg x 960-1000 y 490-530: barrier end at the nose ~E -781, along the island centre).
@@ -1441,7 +1444,8 @@ overrides:
     # b4: carried on to the ramp deck along N 76.65 (orthophoto: rail at N 76.6-76.9). The generated island narrows to
     # N 76.8 at E -755...-753 (xsec_glb.py, build b3), so the b2 line at N 77.05 left it at E -756 and dived; at N 76.65
     # it stays on the paving up to E -753 and the free end swings onto the start of the deck barrier (_join_free_ends).
-    polyline_en: [[-752.9, 76.62], [-757.0, 76.68], [-765.0, 76.8], [-775.0, 76.7], [-778.5, 76.7]]
+    polyline_en: [[-752.3, 76.75], [-753.5, 76.64], [-757.0, 76.68], [-765.0, 76.8], [-775.0, 76.7], [-778.5, 76.7]]
+    free_ends: [false, true]      # east end: stays at the deck joint (no swing onto the south rail, no terminal)
     reason: >-
       ADR 0123 (REVIEW s10-0117 P1-4, p0_kerb_merge_eye): second rail of the separator dk8-ramp-split-island, on its
       ramp side. The 0.08 m orthophoto (artifacts/junctions-r6/ortho/kerb_merge.jpg, kerb_merge_e.jpg) has two rails

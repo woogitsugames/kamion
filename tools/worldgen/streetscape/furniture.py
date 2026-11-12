@@ -1407,6 +1407,8 @@ def _join_free_ends(queue, m):
             # left alone, a beam end in the air). Ground rails still come to it.
             if it["tall"] is not None and bool(np.asarray(it["tall"])[end]):
                 continue
+            if end in it.get("nojoin", ()):
+                continue
             pe = Point(Ps[end])
             # rails at the same level only (a deck rail passes over a ground rail without meeting it)
             others = []
@@ -1529,6 +1531,18 @@ def guardrails(lin, net, zground, report):
         # apart: the second was cut away by the 2.5 m ground rule) - only the rule runs give way to them
         own = []
         _dedup_guardrail(lin, P, Z, f"authored:{o['id']}", own, m)
+        # ADR 0123 b4: `free_ends: [start, end]` (drawing order), False = that end stays where it was traced, without
+        # a turned-down terminal (the east end of dk8-ramp-split-barrier-n stops at the expansion joint of the ramp
+        # deck: _join_free_ends swung its last 8 m onto the OTHER rail of the separator, 1.4 m away)
+        fe = o.get("free_ends")
+        mine = [it for it in lin.rail_queue if it["key"] == f"authored:{o['id']}"]
+        if fe and mine:
+            for it, e_, keep_ in ((mine[0], 0, fe[0]), (mine[-1], -1, fe[1])):
+                if not keep_:
+                    it.setdefault("nojoin", set()).add(e_)
+                    t_ = list(it["term"])
+                    t_[e_] = False
+                    it["term"] = tuple(t_)
         built.extend(own)
         net.overrides_applied.append({"id": o["id"], "targets": [f"guardrail@{P[0][0]:.0f},{P[0][1]:.0f}"]})
         m["authored"] += float(sq[-1])

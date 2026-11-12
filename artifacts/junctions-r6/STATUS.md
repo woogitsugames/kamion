@@ -108,3 +108,7 @@ Uwaga: pełny pytest uruchomiony bez `KAMION_BLENDER` nadpisuje `generated/world
   201270 / 1398898 (recenzja oglądała main). B7: fartuch z kostki 2 m wokół wyspy, którego w rzeczywistości nie ma (ortofoto
   `plan_b3/ringb.jpg`) → b4: `apron: asphalt` (override `biezenstwa-ring-no-apron`) + szyna N separatora DK8 do pomostu (N 76,65).
   NASTĘPNY KROK: `bash artifacts/junctions-r6/scripts/build.sh b4 && bash artifacts/junctions-r6/scripts/imp.sh b4 && bash artifacts/junctions-r6/scripts/post.sh b4 full`
+- s11 krok 2a: EditMode na b3: 261/261 passed (`artifacts/tests/editmode-20261111-233236.xml`). Build b4 (3 iteracje danych): obie szyny
+  separatora DK8 dochodzą do barier swoich pomostów (`view/rails_b4.png`; nowy klucz `free_ends` autorskiej szyny), fartuch ronda
+  Bieżeństwa = asfalt (xsec: `apron_sett` zniknął, krawężnik wyspy bez zmian), `overrides_stale` puste.
+  NASTĘPNY KROK: `bash artifacts/junctions-r6/scripts/b4_all.sh` (import + 4 zestawy + SBS + PlayMode + post full)

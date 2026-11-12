@@ -2285,7 +2285,9 @@
    ],
    "length_m": 42.8,
    "max_grade": 0.0103,
-   "overrides": [],
+   "overrides": [
+    "biezenstwa-ring-no-apron"
+   ],
    "profile_rms_vs_nmt_m": 0.018,
    "sidewalk_frac": 0.5,
    "width_m": [
@@ -7445,7 +7447,9 @@
    ],
    "length_m": 10.0,
    "max_grade": 0.0053,
-   "overrides": [],
+   "overrides": [
+    "biezenstwa-ring-no-apron"
+   ],
    "profile_rms_vs_nmt_m": 0.008,
    "sidewalk_frac": 0.5,
    "width_m": [
@@ -7468,7 +7472,9 @@
    ],
    "length_m": 12.3,
    "max_grade": 0.0101,
-   "overrides": [],
+   "overrides": [
+    "biezenstwa-ring-no-apron"
+   ],
    "profile_rms_vs_nmt_m": 0.011,
    "sidewalk_frac": 0.5,
    "width_m": [
@@ -7537,7 +7543,9 @@
    ],
    "length_m": 42.9,
    "max_grade": 0.0091,
-   "overrides": [],
+   "overrides": [
+    "biezenstwa-ring-no-apron"
+   ],
    "profile_rms_vs_nmt_m": 0.01,
    "sidewalk_frac": 0.5,
    "width_m": [
@@ -7933,7 +7941,9 @@
    ],
    "length_m": 8.9,
    "max_grade": 0.0026,
-   "overrides": [],
+   "overrides": [
+    "biezenstwa-ring-no-apron"
+   ],
    "profile_rms_vs_nmt_m": 0.011,
    "sidewalk_frac": 0.5,
    "width_m": [
@@ -7979,7 +7989,9 @@
    ],
    "length_m": 9.5,
    "max_grade": 0.0088,
-   "overrides": [],
+   "overrides": [
+    "biezenstwa-ring-no-apron"
+   ],
    "profile_rms_vs_nmt_m": 0.004,
    "sidewalk_frac": 0.5,
    "width_m": [
@@ -8002,7 +8014,9 @@
    ],
    "length_m": 11.0,
    "max_grade": 0.005,
-   "overrides": [],
+   "overrides": [
+    "biezenstwa-ring-no-apron"
+   ],
    "profile_rms_vs_nmt_m": 0.008,
    "sidewalk_frac": 0.5,
    "width_m": [
@@ -8025,7 +8039,9 @@
    ],
    "length_m": 8.6,
    "max_grade": 0.0087,
-   "overrides": [],
+   "overrides": [
+    "biezenstwa-ring-no-apron"
+   ],
    "profile_rms_vs_nmt_m": 0.011,
    "sidewalk_frac": 0.5,
    "width_m": [
@@ -11798,6 +11814,19 @@
     ]
    },
    {
+    "id": "biezenstwa-ring-no-apron",
+    "targets": [
+     "w177895161:1882953794-1882953865",
+     "w536419678:1882953898-1882953899",
+     "w536419680:1882953821-1882953792",
+     "w536419699:1882953899-1882953825",
+     "w552161978:1882953825-1882953821",
+     "w553285004:1882953865-1882953869",
+     "w553285004:1882953869-1882953898",
+     "w553285005:1882953792-1882953794"
+    ]
+   },
+   {
     "id": "s610-north-arm-width",
     "targets": [
      "w537184112:1882887385-2840742181"
@@ -12386,7 +12415,7 @@
    {
     "id": "dk8-ramp-split-barrier-n",
     "targets": [
-     "guardrail@-756,77"
+     "guardrail@-752,77"
     ]
    },
    {
@@ -12504,8 +12533,8 @@
     "stripe_cover": 0.437,
     "stripes": 34,
     "stripes_built": 34,
-    "tris": 1449,
-    "tris_off_carriageway": 9,
+    "tris": 1448,
+    "tris_off_carriageway": 10,
     "xy": [
      343.9,
      -566.1
