@@ -22,9 +22,12 @@ if($LASTEXITCODE -ne 0){throw 'R3 baseline import failed'}
 & pwsh artifacts/landmarks-r3/unity-step.ps1 -Step Capture -Phase before -Cameras all
 if($LASTEXITCODE -ne 0){throw 'R3 baseline capture failed'}
 $inventories=@{}
+$required=@(Get-ChildItem 'artifacts/landmarks-r2/before/Low-overcast' -Filter *.png -File | ForEach-Object Name)
+$required+=@((Get-Content "$PSScriptRoot/cameras.json" -Raw | ConvertFrom-Json).cameras | ForEach-Object { $_.id+'.png' })
 foreach($condition in @('Low-overcast','Low-clear','High-overcast','High-clear')) {
     $frames=@(Get-ChildItem "$PSScriptRoot/before/$condition" -Filter *.png -File | Sort-Object Name | ForEach-Object Name)
     if($frames.Count -lt 13){throw "Incomplete inventory: $condition"}
+    foreach($name in $required) { if($frames -notcontains $name) {throw "Missing known route/detail camera $condition/$name"} }
     $inventories[$condition]=$frames
 }
 $first=$inventories['Low-overcast'] -join '|'
