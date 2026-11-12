@@ -40,3 +40,5 @@ Krok 5e: audyt GLB uzupełniono o warunek rzeczywistej zmiany względem baseline
 Krok 5f: przygotowano analyze.ps1 — także duże porównanie244 PNG i składanie arkuszy będzie pod heavy z main (bez dodatkowych zagnieżdżonych Acquire), zwalnianym przed oględzinami. Obsługuje jawny podzbiór16 diagnostycznych obrazów i późniejszy pełny inwentarz. Jeszcze niewykonany; nie ma renderu wariantu.
 
 Krok 6: generator wariantu zakończony bez fallback=True; audyt GLB zaliczony. Następnie dwa pojedyncze pliki testów, każdy w osobnym heavy, bez trzymania heavy przez import/render.
+
+Krok 6a: audyt finalnego GLB próby PASS:660/282 zmienionych trójkątów High/Low, wszystkie wewnątrz3 koron,11624 identyczne z pełnymi atrybutami, LOD2 i anchor/ground identyczne. Generator623,9s bez fallback=True. Zapisuję wygenerowane wyjścia do WIP. Pierwszy plik testów czeka FIFO10; przygotowano niezależny preview8PNG Low/High overcast pod Unity, z własnym markerem DIAGNOSTICS_RUNNING blokującym ewentualny równoległy import głównej kolejki. Model pozostaje zamrożony.
