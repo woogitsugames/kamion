@@ -22,3 +22,5 @@ Krok 2f: lekki odczyt GPS zdjęcia i istniejących pozycji kominów przewiduje k
 Krok 2g: kontrola separacji kominów porównuje model otworkowy ogniskowej 27 mm z centrami lokalnych kadrów. Pozostaje rozbieżność kierunku między dwoma przypisaniami; json jawnie oznacza pozę UNVERIFIED. Nie dopasowano ani nie przesunięto modeli do zdjęcia.
 
 Krok 3: świeży baseline świata po merge main wygenerowany pod heavy, bez fallback=True. Agregaty i spec podmostowy zachowane. NASTĘPNY KROK: import i wszystkie kamery trasy wraz z dziewięcioma własnymi kadrami detalu pod slotem Unity.
+
+Krok 3a: zapisano CANDIDATE.md z dokładnym planem flag schodów, podziału ścięć bez dodatkowych trójkątów i testów zachowania kolizji oraz UV1/COL pomostu. To plan, nie wdrożona zmiana. Przygotowanie map nadal oczekuje heavy; Unity nie zostało uruchomione.
