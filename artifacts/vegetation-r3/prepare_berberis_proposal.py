@@ -11,6 +11,7 @@ from shapely.geometry import box
 
 here = Path(__file__).resolve().parent
 root = here.parents[1]
+sys.dont_write_bytecode = True
 sys.path.insert(0, str(root/'tools/worldgen'))
 from streetscape import plantings as baseline
 
