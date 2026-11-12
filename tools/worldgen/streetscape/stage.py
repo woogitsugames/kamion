@@ -63,7 +63,10 @@ def plan_plots(w, rid, blds=None):
     yards = [g for p in _yard_src(src, w.origin, overrides) for g in getattr(shapely.make_valid(p), "geoms", [shapely.make_valid(p)])
              if g.geom_type == "Polygon"]
     bpoly = shapely.union_all([b["poly"] for b in blds])
-    return PLT.region_plan(blds, roads_poly, carriage, yards, src, origin, bpoly, net=w.net)
+    rp = PLT.region_plan(blds, roads_poly, carriage, yards, src, origin, bpoly, net=w.net)
+    from . import plot_canopy as PCN                 # ADR 0132: crowns read off the orthophoto (None when not built)
+    rp["canopy"] = PCN.load(rid)
+    return rp
 
 
 def run(w, road_z, rmask, deck, deck_mask, thick, log):
@@ -237,7 +240,7 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
                                   "worst": sorted(pl.seat_log, key=lambda r: -r["step_m"])[:20]}
     SR.route_audit(pl.items, route_P, w.net, w.junctions, frep)
     rep["furniture"] = frep
-    log("furniture", {k: v for k, v in frep.items() if k != "junction_signs"})
+    log("furniture", {k: v for k, v in frep.items() if k not in ("junction_signs", "guardrail_runs")})
 
     # house plots (ADR 0107 / 0114): fences, gates and garden as chunk geometry in one material (`plot_kit`)
     def zplot(q):
@@ -267,7 +270,18 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     log("forest hlod", vrep["forest_hlod"])
     col = VG.ground_masks(src, origin, hf, dist, forests)
     col = PLT.lawn_mask(col, plots["lawns"], hf, PV.rasterize_polys)     # no grit strip around the lawns (ADR 0114)
-    instances = pl.items + trees
+    # ADR 0132: grown garden trees of the house plots (orthophoto crowns) join the tree instances - same prototypes,
+    # LODs and impostors as every street tree; none closer than 2.5 m to a tree the region already has there
+    ptrees = plots.get("trees") or []
+    if ptrees and trees:
+        from scipy.spatial import cKDTree
+        kd = cKDTree(np.array([[t_["e"], t_["n"]] for t_ in trees]))
+        dd, _ = kd.query(np.array([[t_["e"], t_["n"]] for t_ in ptrees]))
+        ptrees = [t_ for t_, d_ in zip(ptrees, dd) if d_ >= 2.5]
+    rep["plots"]["inst_trees_kept"] = len(ptrees)
+    for t_ in ptrees:
+        vrep["trees"][t_["p"]] = vrep["trees"].get(t_["p"], 0) + 1
+    instances = pl.items + trees + ptrees
     hero_tris = {**hero_tris, **HBD.apply(w.buf, heroes, instances, rep, log)}      # depot halls + hero buildings
     if heroes or rep.get("hero_buildings", {}).get("stale"):
         log("hero buildings", {k: [x["id"] for x in v] for k, v in rep["hero_buildings"].items()})

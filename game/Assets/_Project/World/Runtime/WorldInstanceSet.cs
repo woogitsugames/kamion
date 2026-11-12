@@ -40,6 +40,8 @@ namespace Game.World
             public int prototype, start, count;
             [Tooltip("Forest trees replaced by the cell's HLOD beyond the switch distance (instance \"fc\", ADR 0015)")]
             public bool forest;
+            [Tooltip("Instances exported with \"tier\": \"high\" (garden trees, ADR 0132 p. 17): not drawn on the Low tier")]
+            public bool highOnly;
         }
 
         /// <summary>Forest HLOD of one 64 m cell (ADR 0015): canopy + edge walls, region-root space.</summary>

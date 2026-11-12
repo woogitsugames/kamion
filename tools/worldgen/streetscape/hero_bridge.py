@@ -136,6 +136,9 @@ def _station(c, s):
     return out
 
 
+BLOCKED_COLS = []      # ADR 0144: columns of measured pier rows (`pier_lines_en`) that stand on a carriageway (QA, last plan())
+
+
 def build_spec(w, o, zground, blocked) -> dict | None:
     """Spec of one hero bridge. zground(e, n) -> conformed terrain height; blocked(q) -> True where a column may not
     stand (carriageway or paved surface underneath)."""
@@ -184,6 +187,8 @@ def build_spec(w, o, zground, blocked) -> dict | None:
             sc = sl if c is lead else on(c, pl_)
             oc = opens[c.id]
             per[c.id] = None if (oc is None or not (oc[0] + 3.0 < sc < oc[1] - 3.0)) else (sc, cols_at(c, sc))
+            if per[c.id] is not None:           # ADR 0144: a measured row is kept, but a column on a carriageway is reported
+                BLOCKED_COLS.extend([_r(q[0], 1), _r(q[1], 1)] for q in per[c.id][1] if blocked(q))
         if any(v is not None for v in per.values()):
             lines.append({"s_lead": sl, "per": per})
         else:
@@ -324,10 +329,12 @@ def plan(w, region_id, overrides, zground, blocked, log=lambda *a: None) -> list
     """[{override, spec, meta, chains}] of the hero bridges whose asset matches the current spec."""
     out = []
     rep = w.stats.setdefault("hero_bridges", {"applied": [], "stale": []})
+    BLOCKED_COLS.clear()
     for o in overrides:
         if o.get("kind") != KIND:
             continue
         spec = build_spec(w, o, zground, blocked)
+        rep["pier_cols_on_carriageway"] = [list(q) for q in BLOCKED_COLS]
         if spec is None:
             rep["stale"].append({"id": o["id"], "why": "no elevated chain on the target ways"})
             w.net.overrides_stale.append(o["id"])
@@ -675,6 +682,9 @@ def apply(w, heroes, instances: list, log=lambda *a: None) -> dict:
             for p in w.buf.parts:
                 if p.src.startswith(c.id + ":") and p.src.rsplit(":", 1)[-1] in removed:
                     removed[p.src.rsplit(":", 1)[-1]] += len(p.T)
+            # ADR 0144: balustrade triangles already dropped beside the deck barriers (furniture.drop_parapets_at_barriers)
+            # are generic dressing this asset replaces as well
+            removed["parapet"] += getattr(w.buf, "parapet_dropped", {}).get(c.id + ":parapet", 0)
             # ADR 0110: the barriers of the chain (streetscape.furniture.guardrails, src "<chain>:<side>:<rule>") stay:
             # they were dropped with the ribbons, so the hero decks had no road barrier at all (gate-3 sbs #4a)
             rails = ("bridge", "median", "embankment", "structure")

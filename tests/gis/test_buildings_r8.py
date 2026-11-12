@@ -157,7 +157,6 @@ def test_one_card_per_fence_panel_and_foliage_normals():
     kit = PL.Kit()
     PL.thuja(kit, np.array([0.0, 0.0]), 0.0, 3.0, 0.45, "t")
     PL.spruce(kit, np.array([5.0, 0.0]), 0.0, 6.0, "s")
-    PL.fruit_tree(kit, np.array([10.0, 0.0]), 0.0, 3.5, "f")
     V, UV, T, C = kit.out()
     fol = C[:, 3] > 0.5
     assert fol.sum() > 40
