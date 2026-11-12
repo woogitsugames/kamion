@@ -8,8 +8,7 @@
 - Agenci (5, Fable, wznowieni 18:3x z live; łańcuchy w tle s13 przejęte, nie dublowane):
 | zadanie | ADR | worktree / gałąź | live | stan |
 |---|---|---|---|---|
-| zabudowa r9 wysoka zieleń | 0132 | `buildings-r9` | `artifacts/live/buildings-r9.md` | r3_chain w tle |
-| poprawki G3-B z 0127 | 0139 | `g3b-r2` | `artifacts/live/g3b-r2.md` | **GOTOWE** `052bd210` (pytest 849/1x, EditMode 408/408; Low 0..+1 draw); visual-critic w toku. Uwaga: +45..+47 instanced draws w 150280/1528935/297817/3281350 vs baseline 0140 — przypisane treści main (0133/0123/0128?), UNVERIFIED → sprawdzić w integracji/0136 |
+| zabudowa r9 wysoka zieleń | 0132 | `buildings-r9` | `artifacts/live/buildings-r9.md` | r3: pytest gis 2 czerwone (estymata kadru High > 2 M: kit posesji High 52→94 k) → **decyzja lidera 19:20: wariant B** (r4: pełne bryły roślin ≤ 12 m od frontu, próg bez zmian) |
 | krawędź mapy / tło | 0141 | `edge-r6c` | `artifacts/live/edge-r6c.md` | pary after → merge main → testy |
 | **węzły r7: kolizja W-beam/poręcz (P1-1), filary z danych (P1-2), żwir nasypu/nosa, spód pomostu** | 0144 | `junctions-r7` (Fable) | `artifacts/live/junctions-r7.md` | start 18:37 |
 | **dźwięk opon: szuranie w ciasnym skręcie + pisk (właściciel: pisk zły; był syntezą 930 Hz)** | 0145 | `tyre-scrub` (Opus audio) | `artifacts/live/tyre-scrub.md` | start 18:59; nagrania: `docs/owner/ELEVENLABS-REGEN-03.md` (właściciel generuje) |
@@ -24,6 +23,7 @@
 - 18:59: właściciel pyta o APK z dźwiękami → `kamion-0.1.0-5557fe0165.apk` (aktualne audio). Mistral PR #6–#14: właściciel potwierdził koniec sesji Mistrala → recenzja wszystkich (też drafty) w toku → raport `docs/reports/REVIEW-2026-11-12-s14-mistral-r2.md`, scalanie przez lidera.
 - **Mistral r2 zrecenzowane** (`docs/reports/REVIEW-2026-11-12-s14-mistral-r2.md`, komentarze PL na #6–#14): 3 SCAL, 6 SCAL po drobnych poprawkach, 0 NIE. Agent buduje gałąź `mistral-r2-int` (merge --no-ff PR-ów + poprawki lidera, live `artifacts/live/mistral-r2-int.md`) → lider scala do main. M9 (znaki pionowe) bez PR — właściciel wznawia tylko sesję M9. Osobne zadania z recenzji: oktawa comb_estimate (audio), źródła R13/AMT (fizyka), duplikat `concrete_pole` w materials.py (świat, regeneracja), fidelity run po #14.
 - **19:18: SCALONE 0143 pozy SBS r3** (494288 prosta, 482392, 320326 promowana z 0128, 810896 przestawiona ale świat zły — poza D51 do 0146; 837235 bez zmian: różnica 2019 vs 2024). Błędy świata z 0143 → 0144 (tablica F-10 w 482392, filary) i 0146. Po integracji: przegrade `sbs_recognition.json` dla 494288/482392/320326. Mistral runda 3 (M16–M20) **zlecona przez właściciela** (PR-y `mistral/16..20-*` → recenzja w triggerze :47): `docs/owner/MISTRAL-TASKS-3.md`; M9 wznawiana.
+- **19:20: SCALONE 0139 g3b-r2** `97996ef6` (critic SCAL warunkowo, `REVIEW-…-s14-0139.md`: **G3-B 5/10 RECOGNISABLE, 5 PARTIAL** — 297817 obniżone: kominy EC niewidoczne na Low → 0141; tablice portalu Andersa ~0,6 m za wysoko, gzyms czerwony, dwuteowniki → 0146; pozy 810525/810896 złe → po 0146). Worktree g3b-r2 usunięty.
 - **Ostatni przydzielony ADR: 0146.**
 
 ---
