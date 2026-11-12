@@ -19,13 +19,14 @@ namespace Game.Editor.VisualQA
         }
         [Serializable] sealed class GroundSnapshot
         {
-            public string id, shader, baseMap, maskMap;
+            public string id, shader, baseMap, maskMap, normalMap, varMap, macroMap;
             public bool exists, grimeEnabled;
             public Vector4 tint, tile, grime, grimeBase, exclusion;
-            public float normalStrength, smoothnessScale;
+            public float normalStrength, smoothnessScale, macroStrength, macroWear, elementJitter, albedoScale;
         }
         [Serializable] sealed class Snapshot
         {
+            public int schemaVersion = 3;
             public string camera, maskFormat;
             public int width, height;
             public float fov, aspect;
@@ -106,10 +107,13 @@ namespace Game.Editor.VisualQA
                             ? ground.GetTexture(property).name : "none";
                         record.shader = ground.shader != null ? ground.shader.name : "none";
                         record.baseMap = T("_BaseMap"); record.maskMap = T("_MaskMap");
+                        record.normalMap = T("_NormalMap"); record.varMap = T("_VarMap"); record.macroMap = T("_MacroMap");
                         record.grimeEnabled = ground.IsKeywordEnabled("_GRIME");
                         record.tint = V("_Tint"); record.tile = V("_Tile"); record.grime = V("_Grime");
                         record.grimeBase = V("_GroundGrimeBase"); record.exclusion = V("_GroundWearExclude");
                         record.normalStrength = F("_NormalStrength"); record.smoothnessScale = F("_SmoothnessScale");
+                        record.macroStrength = F("_MacroStrength"); record.macroWear = F("_MacroWear");
+                        record.elementJitter = F("_ElementJitter"); record.albedoScale = F("_AlbedoScale");
                     }
                     records[i] = record;
                 }

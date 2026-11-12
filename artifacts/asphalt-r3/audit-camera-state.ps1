@@ -44,6 +44,7 @@ foreach($series in 'Low-overcast','Low-clear','High-overcast','High-clear'){
  foreach($file in $snap){
   $a=Get-Content $file.FullName -Raw|ConvertFrom-Json
   $b=Get-Content "$beforeDir/runtime-cameras/$($file.Name)" -Raw|ConvertFrom-Json
+  if($a.schemaVersion -ne 3 -or $b.schemaVersion -ne 3){throw 'Snapshot schema 3 required on both sides; do not reuse pre-0131 diagnostics'}
   $id=$a.camera -replace '^QA_',''
   if($id -notin $expected -or $seen.ContainsKey($id)){throw "Unexpected/duplicate snapshot: $series/$id"}
   $seen[$id]=$true
