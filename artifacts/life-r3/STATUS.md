@@ -68,3 +68,5 @@ Krok 24: zapisano gpu-proof-a.ps1 (NIE uruchomiony); wymaga pełnego after-a-inp
 Krok 25: doprecyzowano GPU wrapper: kod 0 dopiero po dwóch dowodach, 81 LOD opacity, zgodnym rozkładzie CPU/GPU i niezmienionych SHA źródeł/tablic. Błąd walidatora nie może zapisać pozornego sukcesu. Nie wykonano jeszcze testu A ani GPU (86769 nadal kolejka heavy). Następny krok: 86769, świeży import/capture A.
 
 Krok 26: przyszły capture A sprawdzi siedem SHA produkcji, GLB/meta i packet przed/po KAŻDYM Unity, aby odrzucić mieszanie etapów. Baseline jest już ukończony; nie renderowano go ponownie. Następny krok: 86769, po sukcesie import/capture A i porównanie dokładnych liczników oraz pozy.
+
+Kandydat a (2026-11-12T09:57:33.6815587+01:00): sprawdź normalne faz wariantu a. Następny etap w candidate-build.ps1; po komplecie PreparedVerified, capture i oględziny.
