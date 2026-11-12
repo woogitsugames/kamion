@@ -112,3 +112,5 @@ Zapisano kompletną niezależną ocenę baseline w REVIEW-D51-BASELINE.md: G3-A 
 2026-11-12T10:51:46.8869922+01:00: warunek dostawy sprawdza także treść receipt fidelity (exit0 i Release) oraz wynik uzupełniającego audytu268 arkuszy, nie tylko istnienie plików. To zmiana pomocnika dostawy, bez zmiany testowanego kodu produkcyjnego.
 
 2026-11-12T10:52:36.6570671+01:00: uzgodniłem projekt raportu i ADR z zakończonym fidelity oraz uzupełniającym audytem. Pozostała końcowa walidacja GIS; kod testowany zamrożony w bcc65bbb, późniejsze commity dotyczą dokumentacji i pomocnika dostawy. Zweryfikowany parser PowerShell helpera deliver.ps1 bez błędów składni.
+
+2026-11-12T10:53:16.0882771+01:00: sprawdziłem brak zmian produkcyjnych po zamrożeniu bcc65bbb w tools/scripts/Data/game/tests/art-source. Zmieniały się wyłącznie dokumenty i artefakty pomocnicze. Pochodne generatorów nadal pozostają lokalnie do końca GIS i nie są commitowane.

@@ -1,0 +1,15 @@
+{
+  "checked_at": "2026-11-12T10:53:16.0531991+01:00",
+  "gis_source_head": "bcc65bbb3cea94a5355036ac293d1b9209a892d0",
+  "current_head": "771bdba5b230eee02a148593d6e525b450547161",
+  "production_changes_since_freeze": [],
+  "scope": [
+    "tools",
+    "scripts",
+    "Data",
+    "game",
+    "tests",
+    "art-source"
+  ],
+  "note": "Tracked generator side effects still present for end-of-round tests; they are excluded from commits and will be restored after GIS."
+}
