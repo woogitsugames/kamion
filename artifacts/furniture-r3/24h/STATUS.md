@@ -154,3 +154,5 @@ potem poprawić największe udokumentowane odstępstwo wiaty. WIP po każdym kro
 2026-11-12T13:14:35.2057271+01:00: Unity shelter-policy-probe candidate2 Low overcast; sukces=False. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
 
 2026-11-12T13:16:17.3915180+01:00: pierwsza próba focused EditMode zakończyła się błędem kompilacji CS0234: testy nie referencjonują assembly World.Import.Editor. Przeniesiono wyłącznie własny nowy hook do Editor/Furniture w istniejącym Game.Editor, dodano właściwy using Game.World i zachowano GUID pliku oraz folderu. Nie zmieniono cudzych asmdef. Log pierwszej kompilacji zachowano; ponowna próba ma osobną fazę candidate2b. NASTĘPNY KROK: wynik rzeczywistego zapisu/reload polityki.
+
+2026-11-12T13:18:11.1310372+01:00: Unity shelter-policy-probe candidate2b Low overcast; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
