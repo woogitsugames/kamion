@@ -1,5 +1,5 @@
 # gpt-s16 r1 — ADR 0153
-Gałąź `gpt-s16-r1`; kod/audyt `6b06b4d25`, baza `421f1b4fb`. Gotowe do recenzji: NIE — trwa końcowy GIS.
+Gałąź `gpt-s16-r1`; kod/audyt `6b06b4d25`, baza `421f1b4fb`. Gotowe do recenzji: TAK (statyczny edytor; telefon pozostaje u lidera).
 41 prototypów aut/pojazdów placowych: LOD1/LOD2 mają najwyżej 2 podsiatki, wspólny atlas detali i dotychczasowy lakier/poszycie; LOD0 bez zmian.
 Końcowy audyt GLB: 420 chronionych węzłów identycznych, 68 dalekich LOD z tą samą geometrią, 14 nowych aliasów LOD1→LOD2, zero błędów (`glb-audit.json`).
 456 wcześniejszych materiałów natywnych identycznych SHA256 po cofnięciu 7 ubocznych zapisów Unity; tylko 1 nowy atlas (`native-material-audit.json`, `native-cleanup-ledger.json`).
@@ -11,8 +11,8 @@ Generator B 647,7 s bez fallback; import po dodatkowym baseline przywrócony. Od
 616 par przed/po ≤960 px: `pairs/`, `clear/pairs/`, zbliżenia `clear/target-crops/`; autor obejrzał wszystkie, niezależny critic PASS dla statycznego edytora (`REVIEW-VISUAL.md`).
 Porównano lokalne zdjęcia aut/kół z istniejących referencji. Zachowana kratka chłodni i aktywny remap tablic LOD0; istniejące wielokątne koła LOD1 nadal obecne także w baseline.
 Szczegóły SUV przy High 127,5 m są za małe do oceny koloru; oceniono brak widocznego artefaktu. Ruch, ASTC, GPU p95 A16 oraz zysk 0,7 ms pozostają UNVERIFIED.
-Testy celowane 37 passed; końcowy EditMode 452 passed, 0 failed/skipped. Pierwszy GIS 926 passed/3 xfailed/1 fail starego fidelity; raport odświeżony, ponowny pełny GIS w toku.
+Testy celowane 37 passed; końcowy EditMode 452 passed, 0 failed/skipped. Pierwszy GIS 926 passed/3 xfailed/1 fail starego fidelity; raport odświeżony; końcowy pełny GIS 927 passed, 3 xfailed, 880,57 s.
 Wspólne pliki zmieniono addytywnie za `vehicle_lod_atlas`: `materials.py`, `WorldPbrMaterials.cs`, `InstanceImporter.cs`; walidator tablic zachowuje ścisły LOD0 i stare biblioteki. Bez nowych shaderów/przebiegów.
 Możliwe konflikty: powyższe pliki, `streetscape/export.py`, wygenerowane manifesty/GLB/meta. Przy integracji unia kodu, regeneracja świata i import; main scala wyłącznie lider.
 Sprzątnięto zastąpioną diagnostykę i efekty uboczne Unity; pełne PNG pozostają tylko lokalnie. Automatyczny przegląd odrzucił usunięcie własnych `clear-rejected` (0,412 GB) — DECYZJA: ręczne usunięcie po recenzji; nie obchodzono blokady.
-Następny krok: zakończyć GIS, zapisać wynik i push wyłącznie `gpt-s16-r1`; potem `git switch -c gpt-s16-r2; git merge origin/main` i baseline ADR 0154. Telefonów i main nie dotykano.
+Następny krok: lider recenzuje/scala i mierzy A16; agent kontynuuje na `git switch -c gpt-s16-r2; git merge origin/main` i baseline ADR 0154. Telefonów i main nie dotykano.

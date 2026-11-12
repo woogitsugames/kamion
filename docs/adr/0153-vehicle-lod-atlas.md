@@ -1,6 +1,6 @@
 # ADR 0153 — LOD1/LOD2 aut
 
-Status: implementacja i statyczna recenzja edytora PASS; końcowy GIS w toku.
+Status: implementacja, testy i statyczna recenzja edytora PASS; do recenzji lidera.
 Gałąź gpt-s16-r1. Baza: origin/main 421f1b4fb (12.11.2026).
 
 ## Problem i granice
@@ -81,8 +81,7 @@ Jawne różnice są w `native-cleanup-ledger.json`; nie zmieniono generatora zna
 8 testów atlasu wraz z deposition/yard: 37 passed. Końcowy EditMode:
 452 passed, 0 failed, 0 skipped. Pierwszy pełny GIS wykrył wyłącznie nieaktualny
 raport fidelity (926 passed, 3 xfailed, 1 failed); odświeżono go bez edycji
-roads/* i jego 9 testów przechodzi z 1 xfail. Pełne powtórzenie GIS trwa;
-wynik zostanie dopisany przed push.
+roads/* i jego 9 testów przechodzi z 1 xfail. Końcowe pełne powtórzenie GIS: 927 passed, 3 xfailed, 880,57 s.
 
 Autor obejrzał wszystkie porównania i lokalne zdjęcia konstrukcji aut/kół;
 niezależny visual-critic ocenił 456 podstawowych i 160 dodatkowych par:
