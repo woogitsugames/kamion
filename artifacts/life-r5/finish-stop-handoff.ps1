@@ -27,7 +27,7 @@ if(Test-Path artifacts/life-r5/STOP-DRAINED.json){git add -f artifacts/life-r5/S
 git commit -m 'wip(life): zapisz naturalne zakończenie batcha i przekazanie'
 if($LASTEXITCODE){throw 'Final WIP failed'}
 $main='C:/Users/matma/Documents/Claude/kamion/artifacts/life-r5'
-robocopy artifacts/life-r5 $main /E /XF REPORT.md finish-stop-console.log /R:0 /W:0 /NFL /NDL /NJH /NJS *> artifacts/life-r5/final-copy.log
+robocopy artifacts/life-r5 $main /E /XF REPORT.md finish-stop-console.log finish-stop-error.log final-copy.log initial-copy.log /R:0 /W:0 /NFL /NDL /NJH /NJS *> artifacts/life-r5/final-copy.log
 if($LASTEXITCODE -gt 7){throw 'Final artifact copy incomplete; inspect final-copy.log'}
 Copy-Item artifacts/life-r5/REPORT.md (Join-Path $main 'REPORT.md')
 if((Get-FileHash artifacts/life-r5/REPORT.md).Hash -ne (Get-FileHash (Join-Path $main 'REPORT.md')).Hash){throw 'Final report copy mismatch'}
