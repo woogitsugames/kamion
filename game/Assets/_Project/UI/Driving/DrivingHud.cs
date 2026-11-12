@@ -1,6 +1,5 @@
 using System;
 using System.Globalization;
-using System.Text;
 using Game.Cameras;
 using Game.Controls;
 using Game.Telemetry;
@@ -120,8 +119,8 @@ namespace Game.UI.Driving
         CanvasGroup m_ParkWarnGroup;
         ParkingBrakeWarningTracker m_ParkWarnTracker;
         float m_LastParkWarnAlpha = -1f;
-        Text m_Speed, m_Gear, m_Rpm, m_Park, m_Status, m_Telemetry;
-        TextMeshProUGUI m_GyroLabel;
+        Text m_Speed, m_Gear, m_Rpm, m_Park, m_Status;
+        TextMeshProUGUI m_Telemetry, m_GyroLabel;
         readonly TextBuffer m_GyroBuf = new TextBuffer(64);
         long m_LastGyroTenth = long.MinValue;
         bool m_LastGyroSensor = true;
@@ -130,7 +129,7 @@ namespace Game.UI.Driving
         int m_LastSpeed = int.MinValue, m_LastRpmBucket = int.MinValue;
         string m_LastGear;
         float m_NextTelemetry;
-        readonly StringBuilder m_Sb = new StringBuilder(2048);
+        readonly TextBuffer m_TelemetryBuf = new TextBuffer(2048);
         static readonly string[] k_SpeedStrings = BuildNumbers(200);
         static readonly string[] k_RpmStrings = BuildRpmStrings();
 
@@ -320,12 +319,12 @@ namespace Game.UI.Driving
             var p = ZonePanel("Telemetry", new Vector2(HudLayout.TelemetryMaxWidth, 440f));
             m_TelemetryRt = p;
             m_TelemetryPanel = p.gameObject;
-            m_Telemetry = Label(p, "Body", "", 20, TextAnchor.UpperLeft, Vector2.zero, Vector2.zero);
+            m_Telemetry = TmpLabel(p, "Body", "", 20, TextAlignmentOptions.TopLeft, Vector2.zero, Vector2.zero);
             var rt = m_Telemetry.rectTransform;
             rt.anchorMin = Vector2.zero; rt.anchorMax = Vector2.one; rt.offsetMin = new Vector2(14f, 10f); rt.offsetMax = new Vector2(-14f, -10f);
             // The panel width follows the free column: long lines wrap, nothing spills over the cluster or the mirrors.
-            m_Telemetry.horizontalOverflow = HorizontalWrapMode.Wrap;
-            m_Telemetry.verticalOverflow = VerticalWrapMode.Truncate;
+            m_Telemetry.enableWordWrapping = true;
+            m_Telemetry.overflowMode = TextOverflowModes.Truncate;
             m_TelemetryPanel.SetActive(false);
         }
 
@@ -777,7 +776,9 @@ namespace Game.UI.Driving
             if (TelemetryVisible && Time.unscaledTime >= m_NextTelemetry)
             {
                 m_NextTelemetry = Time.unscaledTime + 0.2f;
-                m_Telemetry.text = BuildTelemetry();
+                var tb = m_TelemetryBuf; tb.Clear();
+                BuildTelemetry(tb);
+                m_Telemetry.SetCharArray(tb.Chars, 0, tb.Length);   // zero-alloc: reused char buffer
             }
             if (m_RecImage != null) m_RecImage.color = m_Ctx.Recorder != null && m_Ctx.Recorder.IsRecording ? new Color(0.55f, 0.16f, 0.14f, 0.95f) : k_Button;
             RefreshStage2(v);
@@ -863,41 +864,42 @@ namespace Game.UI.Driving
             return arr[Mathf.Clamp(gear, 0, arr.Length - 1)];
         }
 
-        string BuildTelemetry()
+        static readonly string[] k_AmtStateNames = Enum.GetNames(typeof(AmtState));
+
+        /// <summary>Formats the telemetry block into the reused char buffer (invariant '.' decimals, same layout as before) — no string allocations.</summary>
+        void BuildTelemetry(TextBuffer sb)
         {
-            var ci = CultureInfo.InvariantCulture;
-            var sb = m_Sb; sb.Clear();
             var v = m_Ctx.Vehicle;
             if (v == null || !v.Initialized)
             {
                 sb.Append("TELEMETRIA (podgląd)\nprędkość —  obroty —  bieg —\nkoła: Fz [kN] · poślizg · kąt znosu · nawierzchnia\nkrok fizyki — µs");
-                return sb.ToString();
+                return;
             }
             var m = v.Model;
             var inp = v.Input;
-            sb.Append("TELEMETRIA  t=").Append(m.Time.ToString("F1", ci)).Append(" s\n");
-            sb.Append("v ").Append(v.SpeedKmh.ToString("F1", ci)).Append(" km/h   a_x ").Append(m.LocalAcceleration.z.ToString("F2", ci))
-              .Append("  a_y ").Append(m.LocalAcceleration.x.ToString("F2", ci)).Append(" m/s²   yaw ").Append((m.YawRate * MathUtil.Rad2Deg).ToString("F1", ci)).Append(" °/s\n");
-            sb.Append("silnik ").Append(m.Engine.Rpm.ToString("F0", ci)).Append(" obr/min  M ").Append(m.EngineTorque.ToString("F0", ci))
-              .Append(" Nm  bieg ").Append(m.Amt.Gear).Append(' ').Append(m.Amt.State).Append("  sprzęgło ").Append(m.Amt.ClutchCommand.ToString("F2", ci)).Append('\n');
-            sb.Append("gaz ").Append(inp.Throttle.ToString("F2", ci)).Append("→").Append(m.ThrottleDemand.ToString("F2", ci))
-              .Append("  hamulec ").Append(inp.Brake.ToString("F2", ci)).Append("→").Append(m.BrakeDemand.ToString("F2", ci))
-              .Append("  skręt ").Append(inp.Steer.ToString("+0.00;-0.00", ci)).Append(" (koło kier. ").Append(m.Steering.HandwheelDeg.ToString("F0", ci)).Append("°)\n");
-            sb.Append("powietrze ").Append(m.Air.Front.ToString("F1", ci)).Append('/').Append(m.Air.Rear.ToString("F1", ci))
-              .Append(" bar  postojowy ").Append(m.ParkingBrakeState.ToString("F2", ci)).Append(m.HillHoldActive ? "  HSA" : "")
-              .Append("  dźwignia ").Append(inp.RetarderLever).Append("  HS ").Append(m.Engine.EngineBrakeTorque.ToString("F0", ci))
-              .Append(" Nm  ret ").Append(m.Retarder.Torque.ToString("F0", ci)).Append(" Nm\n");
+            sb.Append("TELEMETRIA  t=").AppendFixed(m.Time, 1, false, '.').Append(" s\n");
+            sb.Append("v ").AppendFixed(v.SpeedKmh, 1, false, '.').Append(" km/h   a_x ").AppendFixed(m.LocalAcceleration.z, 2, false, '.')
+              .Append("  a_y ").AppendFixed(m.LocalAcceleration.x, 2, false, '.').Append(" m/s²   yaw ").AppendFixed(m.YawRate * MathUtil.Rad2Deg, 1, false, '.').Append(" °/s\n");
+            sb.Append("silnik ").AppendFixed(m.Engine.Rpm, 0, false, '.').Append(" obr/min  M ").AppendFixed(m.EngineTorque, 0, false, '.')
+              .Append(" Nm  bieg ").Append(m.Amt.Gear).Append(' ').Append(k_AmtStateNames[(int)m.Amt.State]).Append("  sprzęgło ").AppendFixed(m.Amt.ClutchCommand, 2, false, '.').Append('\n');
+            sb.Append("gaz ").AppendFixed(inp.Throttle, 2, false, '.').Append("→").AppendFixed(m.ThrottleDemand, 2, false, '.')
+              .Append("  hamulec ").AppendFixed(inp.Brake, 2, false, '.').Append("→").AppendFixed(m.BrakeDemand, 2, false, '.')
+              .Append("  skręt ").AppendSigned(inp.Steer, 2, '.').Append(" (koło kier. ").AppendFixed(m.Steering.HandwheelDeg, 0, false, '.').Append("°)\n");
+            sb.Append("powietrze ").AppendFixed(m.Air.Front, 1, false, '.').Append('/').AppendFixed(m.Air.Rear, 1, false, '.')
+              .Append(" bar  postojowy ").AppendFixed(m.ParkingBrakeState, 2, false, '.').Append(m.HillHoldActive ? "  HSA" : "")
+              .Append("  dźwignia ").Append(inp.RetarderLever).Append("  HS ").AppendFixed(m.Engine.EngineBrakeTorque, 0, false, '.')
+              .Append(" Nm  ret ").AppendFixed(m.Retarder.Torque, 0, false, '.').Append(" Nm\n");
             if (v.Trailer != null)
             {
                 var fw = v.Combination.FifthWheel;
                 var tm = v.Trailer.Model;
-                sb.Append("naczepa ").Append((tm.Mass / 1000).ToString("F1", ci)).Append(" t  ").Append(fw.Coupled ? "sprzężona" : "odpięta")
-                  .Append("  przegub ").Append((fw.Articulation * MathUtil.Rad2Deg).ToString("+0.0;-0.0", ci)).Append("°  siodło Fz ")
-                  .Append((fw.KingpinLoadLocal.y / 1000).ToString("F0", ci)).Append(" kN Fx ").Append((fw.KingpinLoadLocal.z / 1000).ToString("F0", ci))
-                  .Append(" kN  błąd ").Append((fw.PositionError * 1000).ToString("F2", ci)).Append(" mm\n");
+                sb.Append("naczepa ").AppendFixed(tm.Mass / 1000, 1, false, '.').Append(" t  ").Append(fw.Coupled ? "sprzężona" : "odpięta")
+                  .Append("  przegub ").AppendSigned(fw.Articulation * MathUtil.Rad2Deg, 1, '.').Append("°  siodło Fz ")
+                  .AppendFixed(fw.KingpinLoadLocal.y / 1000, 0, false, '.').Append(" kN Fx ").AppendFixed(fw.KingpinLoadLocal.z / 1000, 0, false, '.')
+                  .Append(" kN  błąd ").AppendFixed(fw.PositionError * 1000, 2, false, '.').Append(" mm\n");
                 double tl = 0; foreach (var tw in tm.Wheels) tl += tw.Fz;
-                sb.Append("  osie naczepy ").Append((tl / 1000).ToString("F0", ci)).Append(" kN  nogi ").Append((tm.LandingGearLoad / 1000).ToString("F0", ci))
-                  .Append(" kN  zbiornik ").Append(tm.Brakes.Reservoir.ToString("F1", ci)).Append(" bar").Append(tm.Brakes.Emergency ? "  HAM. AWARYJNE" : "")
+                sb.Append("  osie naczepy ").AppendFixed(tl / 1000, 0, false, '.').Append(" kN  nogi ").AppendFixed(tm.LandingGearLoad / 1000, 0, false, '.')
+                  .Append(" kN  zbiornik ").AppendFixed(tm.Brakes.Reservoir, 1, false, '.').Append(" bar").Append(tm.Brakes.Emergency ? "  HAM. AWARYJNE" : "")
                   .Append(tm.Brakes.AbsAnyActive ? "  ABS" : "").Append('\n');
             }
             sb.Append("koło    Fz kN   poślizg  znos°  ugięcie  nawierzchnia\n");
@@ -905,24 +907,23 @@ namespace Game.UI.Driving
             for (int i = 0; i < ws.Length; i++)
             {
                 var w = ws[i];
-                sb.Append(w.Name.PadRight(8)).Append((w.Fz / 1000).ToString("F1", ci).PadLeft(6))
-                  .Append((w.SlipRatio).ToString("+0.000;-0.000", ci).PadLeft(9))
-                  .Append((w.SlipAngle * MathUtil.Rad2Deg).ToString("+0.0;-0.0", ci).PadLeft(7))
-                  .Append((w.Compression * 100).ToString("+0.0;-0.0", ci).PadLeft(7)).Append(" cm  ")
+                sb.AppendRight(w.Name, 8).AppendFixedPadded(w.Fz / 1000, 1, '.', 6)
+                  .AppendSignedPadded(w.SlipRatio, 3, '.', 9)
+                  .AppendSignedPadded(w.SlipAngle * MathUtil.Rad2Deg, 1, '.', 7)
+                  .AppendSignedPadded(w.Compression * 100, 1, '.', 7).Append(" cm  ")
                   .Append(w.Contact ? SurfaceTable.DisplayNamePl(w.SurfaceId) : "brak styku").Append('\n');
             }
-            sb.Append("krok fizyki ").Append(v.LastStepMicros.ToString("F0", ci)).Append(" µs (śr. ").Append(v.AverageStepMicros.ToString("F0", ci)).Append(")");
+            sb.Append("krok fizyki ").AppendFixed(v.LastStepMicros, 0, false, '.').Append(" µs (śr. ").AppendFixed(v.AverageStepMicros, 0, false, '.').Append(")");
             var s = m_Ctx.Sampler;
             if (s != null && s.Snapshot.Frames.Samples > 0)
             {
                 var f = s.Snapshot.Frames;
-                sb.Append("   klatka p50 ").Append(f.P50Ms.ToString("F1", ci)).Append(" · p95 ").Append(f.P95Ms.ToString("F1", ci))
-                  .Append(" · p99 ").Append(f.P99Ms.ToString("F1", ci)).Append(" ms");
+                sb.Append("   klatka p50 ").AppendFixed(f.P50Ms, 1, false, '.').Append(" · p95 ").AppendFixed(f.P95Ms, 1, false, '.')
+                  .Append(" · p99 ").AppendFixed(f.P99Ms, 1, false, '.').Append(" ms");
             }
             sb.Append('\n');
             if (m_Ctx.Mixer != null) sb.Append("sterowanie: ").Append(m_Ctx.Mixer.SteeringSource);
-            if (m_Ctx.Recorder != null && m_Ctx.Recorder.IsRecording) sb.Append("   REC ").Append(System.IO.Path.GetFileName(m_Ctx.Recorder.CurrentFile));
-            return sb.ToString();
+            if (m_Ctx.Recorder != null && m_Ctx.Recorder.IsRecording) sb.Append("   REC ").AppendFileName(m_Ctx.Recorder.CurrentFile);
         }
 
         void RefreshLabels()
