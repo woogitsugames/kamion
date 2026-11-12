@@ -1,4 +1,4 @@
-param([ValidateSet('baseline','final-native')][string]$Series='baseline')
+param([ValidateSet('baseline','final-native','final-native-v2')][string]$Series='baseline')
 $ErrorActionPreference='Stop'
 $repo=[IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..'))
 Set-Location $repo
@@ -28,4 +28,5 @@ foreach($tier in 'Low','High'){foreach($preset in 'clear','overcast','night'){
     Write-Output "Contact sheets ready: $tier-$preset ($($files.Count) images)"
 }}
 $index|ConvertTo-Json -Depth 5|Set-Content "$PSScriptRoot/review/$Series/index.json" -Encoding utf8
+
 

@@ -1,3 +1,4 @@
+param([string]$Series='final-native-v2')
 $ErrorActionPreference='Stop'
 $repo=[IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..'))
 Set-Location $repo
@@ -16,10 +17,10 @@ function ReadBudget([string]$path){
 $entries=@();$proofs=@()
 foreach($preset in 'clear','overcast','night'){
     $before=ReadBudget "$PSScriptRoot/baseline/Low-$preset/stats.txt"
-    $after=ReadBudget "$PSScriptRoot/final-native/Low-$preset/stats.txt"
+    $after=ReadBudget "$PSScriptRoot/$Series/Low-$preset/stats.txt"
     if($before.Count -ne 109 -or $after.Count -ne 109){throw 'Require all109 route cameras'}
-    $proof=Get-Content "$PSScriptRoot/final-native/Low-$preset/opaque-grade-proof.json" -Raw|ConvertFrom-Json
-    $hdr=Get-Content "$PSScriptRoot/final-native/High-$preset/hdr-reference-proof.json" -Raw|ConvertFrom-Json
+    $proof=Get-Content "$PSScriptRoot/$Series/Low-$preset/opaque-grade-proof.json" -Raw|ConvertFrom-Json
+    $hdr=Get-Content "$PSScriptRoot/$Series/High-$preset/hdr-reference-proof.json" -Raw|ConvertFrom-Json
     if($proof.frames.Count -ne 109 -or $hdr.frames.Count -ne 109){throw 'Require complete actual proof'}
     if(@($proof.frames|Where-Object {$_.enabled -ne 1 -or $_.physicalCaptureBypass -ne 0 -or $_.actualDomainMode -ne 1}).Count){throw 'Native LUT absent/domain/bypass'}
     if(@($hdr.frames|Where-Object {$_.colorBeforePostFormat -ne 'R16G16B16A16_SFloat' -or -not $_.hdrEnabled -or -not $_.postEnabled}).Count){throw 'Actual HDR missing'}
@@ -32,6 +33,7 @@ foreach($preset in 'clear','overcast','night'){
     }
     $proofs+=@{preset=$preset;nativeFrames=$proof.frames.Count;hdrFrames=$hdr.frames.Count}
 }
-@{scope='Rounded CPU estimates before SRP; Low native versus same-round fresh baseline, all109 cameras and3 presets. Instances separately. No GPU/phone claim.';entries=$entries;actualProofCounts=$proofs}|ConvertTo-Json -Depth 8|Set-Content "$PSScriptRoot/final-native-budget-all.json" -Encoding utf8
+@{scope='Rounded CPU estimates before SRP; Low native versus same-round fresh baseline, all109 cameras and3 presets. Instances separately. No GPU/phone claim.';entries=$entries;actualProofCounts=$proofs}|ConvertTo-Json -Depth 8|Set-Content "$PSScriptRoot/$Series-budget-all.json" -Encoding utf8
 if($entries.Count -ne 327 -or @($entries|Where-Object {$_.totalDrawDelta -gt 0 -or $_.totalTriangleDeltaPercent -gt 2}).Count){throw 'Budget failed'}
 $entries|Group-Object totalDrawDelta,totalTriangleDeltaPercent|Select-Object Count,Name
+
