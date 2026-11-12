@@ -65,3 +65,5 @@ NASTĘPNY KROK: przygotować własne skrypty r2 z ownerem heavy gpt-furniture-r2
 2026-11-12T02:55:13.0653759+01:00: bazowe obrazy po scaleniu main gotowe. NASTĘPNY KROK: policzyć kompletność kamer i obejrzeć znaki przed zmianą.
 
 2026-11-12T02:56:56.8954010+01:00: sekwencja72293 zakończyła się exit0. Cztery dzienne warianty mają po55 PNG (razem220). Przygotowano finish-baseline.ps1: dwa rendery zmierzchu, potem hashe chronionej geometrii w heavy. NASTĘPNY KROK: pwsh artifacts/furniture-r2/24h/finish-baseline.ps1; po sukcesie wdrożyć flagę/materiale, zużycie i Low mocowania z kandydatów.
+
+2026-11-12T02:57:23.9113856+01:00: Unity render before Low dusk; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
