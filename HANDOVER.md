@@ -30,7 +30,9 @@
 - **22:5x: SCALONE** 0148 audio-idle `63bf93dc6` („dziwny jałowy” = sprężarka powietrza głośniejsza od silnika; compressorVolume 0,35→0,06; ElevenLabs cab coast nadal szumowy → opcjonalnie `docs/owner/ELEVENLABS-REGEN-04.md`), 0136 r2 a16-perf `f520563e9` (Low: GPU p95 35,9→34,0; skyline 0141 OK na A16 Vulkan, GLES nie sprawdzone; brakuje ~0,7 ms → LOD1/LOD2 aut, otwarte), **0151** steer-r3 `e364975f1` (pełzanie płyty siodła — zestaw wraca do prostej po ~8 s; pasek AWAR. przekazuje przesuw do kierownicy; a_lat/mm stałe >60 km/h). Worktree audio-idle, a16-perf, steer-r2 usunięte. C: 837 GB.
 - **APK dla właściciela (czysty, main e364975f1): `artifacts/apk/kamion-0.1.0-e364975f12.apk`** — kierowanie r2+r3, GPS/mapa, sprężarka, Low A16. Smoke A16 21:29: start OK, 30 fps p95 33,45 ms, PSS 380 MB, brak wyjątków (`artifacts/logs/logcat-RFGL34SJYDZ-20261112-212918.txt`). Właściciel testuje na Foldzie.
 - Agenci aktywni: 0132 buildings-r9, 0144 junctions-r7 (r7d zygzak gotowy wizualnie), 0146 putry-andersa.
-- **Ostatni przydzielony ADR: 0151.**
+- 21:5x: właściciel o APK r2: „jest spoko, już lepiej się jeździ” (D55); D54 inne pojazdy później. **Nowe zgłoszenie (film `artifacts/owner-feedback/2026-11-12-fold-video2/`): od ~1:40 cienie „późno”, czarne mignięcia na ekranie (niewidoczne na nagraniu), mało FPS** → agent **0152 fold-flicker** (Opus, worktree `fold-flicker`, live `artifacts/live/fold-flicker.md`; telefony A16 + S24+ wg zasad baterii).
+- **Ostatni przydzielony ADR: 0152.**
+
 
 - Ścieżka bramki 3 bez zmian (patrz KONIEC S14 niżej).
 
