@@ -34,7 +34,7 @@ def test_authored_berberis_has_valid_local_caps_and_uncrossed_strips(monkeypatch
     # A valid Delaunay result may contain boundary vertices only on a narrow bed.
     # It must never use the invalid-ring ear-clipping escape route again.
     monkeypatch.setattr(geom,'ear_clip',lambda *args: pytest.fail('Authored hedge used ear_clip fallback'))
-    original_fill=pt._fill
+    original_fill=pt._hedge_cap
     caps=[]
     def checked_fill(ring,spacing):
         polygon=Polygon(ring)
@@ -43,9 +43,38 @@ def test_authored_berberis_has_valid_local_caps_and_uncrossed_strips(monkeypatch
         faces=vertices[triangles]
         assert np.linalg.norm(faces[:,[1,2,0]]-faces,axis=2).max()<1.5
         assert all(polygon.buffer(1e-7).covers(Polygon(face)) for face in faces)
+        union=shapely.union_all(shapely.polygons(faces))
+        assert union.symmetric_difference(polygon).area<1e-7
+        assert abs(shapely.area(shapely.polygons(faces)).sum()-union.area)<1e-7
         caps.append((vertices,triangles))
         return vertices,triangles
-    monkeypatch.setattr(pt,'_fill',checked_fill)
+    monkeypatch.setattr(pt,'_hedge_cap',checked_fill)
+    original_annulus=pt._annulus_triangles
+    def checked_annulus(lower,upper):
+        triangles=original_annulus(lower,upper)
+        points=np.vstack([lower,upper])
+        faces=shapely.polygons(points[triangles])
+        target=Polygon(lower).symmetric_difference(Polygon(upper))
+        union=shapely.union_all(faces)
+        assert all(target.buffer(1e-7).covers(face) for face in faces)
+        assert abs(shapely.area(faces).sum()-union.area)<1e-7
+        assert union.symmetric_difference(target).area<1e-7
+        a,b,c=(points[triangles[:,i]] for i in range(3))
+        signed=(b[:,0]-a[:,0])*(c[:,1]-a[:,1])-(b[:,1]-a[:,1])*(c[:,0]-a[:,0])
+        assert (signed<0).all() if Polygon(upper).area>Polygon(lower).area else (signed>0).all()
+        return triangles
+    monkeypatch.setattr(pt,'_annulus_triangles',checked_annulus)
+    original_strip=pt._hedge_ring_strip
+    ring_sets=[]
+    def checked_strip(rings,zground,tile,phase=(0.,0.)):
+        ring_sets.append(rings)
+        vertices,uv,triangles=original_strip(rings,zground,tile,phase)
+        boundary={tuple(p) for xy,z in rings for p in np.column_stack([xy,z])}
+        assert all(tuple(p) in boundary for p in vertices), 'Boundary height was changed'
+        period=min(Polygon(xy).length/tile for xy,z in rings)
+        assert np.ptp(uv[triangles][:,:,0],axis=1).max()<period/2, 'UV wraps through a whole hedge'
+        return vertices,uv,triangles
+    monkeypatch.setattr(pt,'_hedge_ring_strip',checked_strip)
     class Capture:
         def __init__(self): self.parts=[]
         def add(self,layer,material,vertices,uv,triangles,**kwargs):
@@ -54,23 +83,8 @@ def test_authored_berberis_has_valid_local_caps_and_uncrossed_strips(monkeypatch
     buf=Capture()
     pt.hedge_mass(buf,poly,lambda x,y:slope*x+.5*slope*y,key,h=bed.get('height_m'))
     assert len(caps)==2, 'Both inner and outer cap must be emitted'
-    # The first and third parts are the two six-ring side strips.
-    for vertices,_ in (buf.parts[0],buf.parts[2]):
-        rings=vertices[:,:2].reshape(6,-1,2)
-        for outer,inner in zip(rings,rings[1:]):
-            quads=[]
-            for i in range(len(outer)):
-                j=(i+1)%len(outer)
-                quad=Polygon([outer[i],outer[j],inner[j],inner[i]])
-                assert quad.is_valid and quad.area>1e-10, 'Crossed or collapsed side strip'
-                quads.append(quad)
-            union=shapely.union_all(quads)
-            assert abs(sum(q.area for q in quads)-union.area)<1e-7, 'Side quads overlap globally'
-            annulus=Polygon(outer).symmetric_difference(Polygon(inner))
-            assert union.symmetric_difference(annulus).area<1e-7, 'Side strip leaves its annulus'
-    core_rings=buf.parts[0][0][:,:2].reshape(6,-1,2)
-    shell_rings=buf.parts[2][0][:,:2].reshape(6,-1,2)
-    for core_ring,shell_ring in zip(core_rings,shell_rings):
+    assert len(ring_sets)==2
+    for (core_ring,_),(shell_ring,_) in zip(*ring_sets):
         assert Polygon(shell_ring).buffer(1e-7).covers(Polygon(core_ring)), 'Inner ring leaves the shell'
     # Compare the actual triangulated cap, not the interpolated boundary field.
     # Both flat and sloping ground use exactly the same shell geometry as export.
@@ -97,4 +111,35 @@ def test_offset_refuses_disconnected_or_empty_geometry_instead_of_dropping_a_pie
     from shapely.geometry import box
     narrow=box(0,0,4,.2)
     with pytest.raises(ValueError,match='not one valid polygon'):
-        pt._offset_ring(narrow,.2,20,[0,0])
+        pt._offset_ring(narrow,.2,step=.45,anchor=np.array([0.,0.]))
+
+
+def test_offset_refuses_holes_instead_of_filling_them():
+    polygon=Polygon([(0,0),(5,0),(5,5),(0,5)],holes=[[(1,1),(1,2),(2,2),(2,1)]])
+    with pytest.raises(ValueError,match='not one valid polygon'):
+        pt._offset_ring(polygon,0.)
+
+
+def test_annulus_refuses_crossing_outlines():
+    lower=np.array([[0.,0.],[2.,0.],[2.,2.],[0.,2.]])
+    with pytest.raises(ValueError,match='not strictly nested'):
+        pt._annulus_triangles(lower,lower+[1.,0.])
+
+
+def test_cap_samples_on_an_internal_edge_split_both_neighbours_without_a_crack():
+    ring=np.array([[0.,0.],[2.,0.],[2.,2.],[0.,2.]])
+    points,triangles=pt._hedge_cap(ring,.5)
+    assert len(points)>len(ring)
+    polygons=shapely.polygons(points[triangles])
+    union=shapely.union_all(polygons)
+    assert abs(shapely.area(polygons).sum()-4.)<1e-9
+    assert union.symmetric_difference(Polygon(ring)).area<1e-9
+    for face in triangles:
+        for i,j in zip(face,np.roll(face,-1)):
+            a,b=points[i],points[j]
+            for k,p in enumerate(points):
+                if k in (i,j): continue
+                delta=b-a
+                cross=delta[0]*(p-a)[1]-delta[1]*(p-a)[0]
+                station=np.dot(p-a,delta)/np.dot(delta,delta)
+                assert not (abs(cross)<1e-10 and 1e-9<station<1.-1e-9), 'Unsplit T junction'

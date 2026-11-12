@@ -4,8 +4,8 @@ Set-Location 'C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-veget
 . ./artifacts/vegetation-r4/checkpoint.ps1
 $owner=(git branch --show-current).Trim()
 if ($owner -ne 'gpt-vegetation-r4') { throw 'Wrong branch' }
-Add-Content artifacts/vegetation-r4/STATUS.md 'B naprawia offsety ringów berberysu i ich próbkowanie, bez zmiany tekstur A. Lekka analiza0,81s: osiem capów poprawnych, najdłuższa krawędź<0,98m zamiast16–20m; część wąskich capów prawidłowo ma tylko punkty brzegu. Dla E2/A/C wróciło odpowiednio6/4/1 punktów wewnętrznych. To nie akceptacja wizualna; sprawdzić paski, prześwit rdzenia i koszty.'
-Save-VegetationCheckpoint -Message 'wip(vegetation): r4 poprawne offsety berberysu przed walidacją B' -Paths @('artifacts/vegetation-r4/STATUS.md','tools/worldgen/streetscape/plantings.py','tests/gis/test_berberis_0109_rings.py','artifacts/vegetation-r4/inspect_cap.py','artifacts/vegetation-r4/cap-study-b-initial.json','artifacts/vegetation-r4/green-b-and-world.ps1')
+Add-Content artifacts/vegetation-r4/STATUS.md 'B2 zastępuje odrzucony loft dokładnymi offsetami i lokalnym CDT pasów/capów, bez zmiany tekstur A. Ringi mają niezależne liczby punktów, wyłączone bulgeXY tylko berberysu i zachowane wysokości granic; szwy UV są rozdzielane. Cap dodaje próbki przez spójny podział wszystkich zawierających trójkątów, także na wspólnej krawędzi. Lekka analiza1,22s:20347tris, brak wykrytych luk/nakładania i rdzenia poza shell w XY. Formalne30testów, Z, UV i kamery jeszcze niepotwierdzone.'
+Save-VegetationCheckpoint -Message 'wip(vegetation): r4 CDT pasów i capów przed walidacją B2' -Paths @('artifacts/vegetation-r4/STATUS.md','tools/worldgen/streetscape/plantings.py','tests/gis/test_berberis_0109_rings.py','artifacts/vegetation-r4/inspect_cap.py','artifacts/vegetation-r4/cap-study-b-annulus-cap.json','artifacts/vegetation-r4/green-b-and-world.ps1')
 $slot='C:\Users\matma\Documents\Claude\kamion\scripts\unity-slot.ps1'
 pwsh $slot -Acquire -Pool heavy -Owner $owner -StaleHours 1000000 -PollSeconds 2
 if ($LASTEXITCODE -ne 0) { throw 'Heavy acquisition failed' }

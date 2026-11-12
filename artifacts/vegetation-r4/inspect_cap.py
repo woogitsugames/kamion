@@ -20,7 +20,7 @@ from streetscape import plantings as pt
 origin=json.loads((here/'snapshot-candidate-a/world_manifest.json').read_text())['origin_epsg2180']
 origin=np.array([origin['x'],origin['y']])
 plans=yaml.safe_load((root/'Data/Regions/bialystok-industrial-c/overrides.yaml').read_text(encoding='utf-8'))['overrides']
-original=pt._fill
+original=pt._hedge_cap
 original_annulus=pt._annulus_triangles
 original_strip=pt._hedge_ring_strip
 records=[]
@@ -62,7 +62,7 @@ class Capture:
     def add(self,layer,material,vertices,uv,triangles,**kwargs):
         triangle_counts[active]=triangle_counts.get(active,0)+len(triangles)
         self.parts.append(np.asarray(vertices))
-pt._fill=capture_fill
+pt._hedge_cap=capture_fill
 pt._annulus_triangles=capture_annulus
 pt._hedge_ring_strip=capture_strip
 try:
@@ -81,7 +81,7 @@ try:
                 if width: g=pt.band_of(g,float(width))
                 if g.geom_type!='Polygon' or g.area<.5: continue
                 active=bed.get('name',str(bi))
-                sampled=Polygon(pt._offset_ring(g,0.0,step=.3,anchor=np.asarray(g.exterior.coords)[0]))
+                sampled=Polygon(pt._offset_ring(g,0.0,step=preset['ring_step'],anchor=np.asarray(g.exterior.coords)[0]))
                 footprints.append(dict(bed=active,authored_band_area_m2=g.area,
                     sampled_area_m2=sampled.area,area_difference_percent=100*(sampled.area/g.area-1),
                     boundary_hausdorff_m=g.boundary.hausdorff_distance(sampled.boundary)))
@@ -96,7 +96,7 @@ try:
                 strip_metrics.append(dict(bed=active,core_outside_shell_m2=outside,
                     core_ring_sizes=[len(p) for p in cr],shell_ring_sizes=[len(p) for p in sr],strips=list(annuli)))
 finally:
-    pt._fill=original
+    pt._hedge_cap=original
     pt._annulus_triangles=original_annulus
     pt._hedge_ring_strip=original_strip
 result=dict(source_sha256=hashlib.sha256((root/'tools/worldgen/streetscape/plantings.py').read_bytes()).hexdigest(),

@@ -81,7 +81,7 @@ SPECIES = {
     # with a small rounded arris; shoots grow out lighter (copper) above the cut. Lumps 0.015 m, dome 0.05.
     "berberis_red": dict(tex="berberis", h=HEDGE_H, plant=(0.55, 0.85), bulge=0.025, dome=0.10, gap_p=0.09, sigma=0.5,
                          sprig=0.13, sprig_wh=((0.16, 0.28), (0.10, 0.20)), prof="clipped", band=BAND_M,
-                         local_top=True, leaf_core=True, offset_rings=True),
+                         local_top=True, leaf_core=True, offset_rings=True, ring_step=0.45),
     "privet": dict(tex="privet", h=(1.2, 1.7), plant=(0.45, 0.65), bulge=0.08, dome=0.12, gap_p=0.10, sigma=0.36,
                    sprig=0.30, sprig_wh=((0.14, 0.24), (0.10, 0.18))),
     "hornbeam": dict(tex="hornbeam", h=(1.4, 2.0), plant=(0.5, 0.7), bulge=0.08, dome=0.10, gap_p=0.09, sigma=0.38,
@@ -184,7 +184,7 @@ def _local_top_height(points, boundary, heights):
     return (weights @ heights) / weights.sum(1)
 
 
-def _offset_ring(poly, inset, step=0.3, anchor=None):
+def _offset_ring(poly, inset, step=0.45, anchor=None):
     """Exact polygon offset corners plus short collinear edges; no discarded pieces."""
     offset = poly.buffer(-inset, quad_segs=4)
     if (offset.geom_type != "Polygon" or offset.is_empty or not offset.is_valid
@@ -200,6 +200,33 @@ def _offset_ring(poly, inset, step=0.3, anchor=None):
     return ring
 
 
+def _boundary_cdt(polygon, points):
+    """Constrained faces referencing exactly the supplied boundary vertices."""
+    lookup = {tuple(p): i for i, p in enumerate(points)}
+    faces = []
+    for face in shapely.constrained_delaunay_triangles(polygon).geoms:
+        ids = [lookup.get(tuple(p)) for p in np.asarray(face.exterior.coords)[:3]]
+        if None in ids:
+            raise ValueError("Hedge CDT inserted an unassigned vertex")
+        faces.append(ids)
+    triangles = np.asarray(faces, dtype=int)
+    if not len(triangles):
+        raise ValueError("Empty hedge triangulation")
+    a, b, c = (points[triangles[:, i]] for i in range(3))
+    cross = (b[:, 0]-a[:, 0])*(c[:, 1]-a[:, 1])-(b[:, 1]-a[:, 1])*(c[:, 0]-a[:, 0])
+    if np.any(abs(cross) < 1e-12):
+        raise ValueError("Degenerate hedge triangle")
+    reverse = cross < 0
+    triangles[reverse] = triangles[reverse][:, [0, 2, 1]]
+    edges = {tuple(sorted((int(i), int(j)))) for tri in triangles
+             for i, j in zip(tri, np.roll(tri, -1))}
+    for boundary in (polygon.exterior, *polygon.interiors):
+        ids = [lookup[tuple(p)] for p in np.asarray(boundary.coords)[:-1]]
+        if any(tuple(sorted((i, j))) not in edges for i, j in zip(ids, np.roll(ids, -1))):
+            raise ValueError("Hedge CDT failed to recover a boundary edge")
+    return triangles
+
+
 def _annulus_triangles(lower, upper):
     """Boundary-indexed CDT of the actual ring between two nested cross-sections."""
     p0, p1 = Polygon(lower), Polygon(upper)
@@ -211,30 +238,43 @@ def _annulus_triangles(lower, upper):
     annulus = Polygon(outer.exterior.coords, [inner.exterior.coords])
     if not annulus.is_valid:
         raise ValueError("Invalid hedge annulus")
-    points = np.vstack([lower, upper])
-    lookup = {tuple(p): i for i, p in enumerate(points)}
-    faces = []
-    for face in shapely.constrained_delaunay_triangles(annulus).geoms:
-        ids = [lookup.get(tuple(p)) for p in np.asarray(face.exterior.coords)[:3]]
-        if None in ids:
-            raise ValueError("Hedge CDT inserted an unassigned boundary vertex")
-        faces.append(ids)
-    triangles = np.asarray(faces, dtype=int)
-    if not len(triangles):
-        raise ValueError("Empty hedge annulus triangulation")
-    a, b, c = (points[triangles[:, i]] for i in range(3))
-    cross = (b[:, 0]-a[:, 0])*(c[:, 1]-a[:, 1])-(b[:, 1]-a[:, 1])*(c[:, 0]-a[:, 0])
-    if np.any(abs(cross) < 1e-12):
-        raise ValueError("Degenerate hedge annulus triangle")
+    triangles = _boundary_cdt(annulus, np.vstack([lower, upper]))
     # A section widening upwards is the underside of the outward-flaring foot.
-    reverse = cross > 0 if p1.area > p0.area else cross < 0
-    triangles[reverse] = triangles[reverse][:, [0, 2, 1]]
-    edges = {tuple(sorted((int(i), int(j)))) for tri in triangles
-             for i, j in zip(tri, np.roll(tri, -1))}
-    for start, count in ((0, len(lower)), (len(lower), len(upper))):
-        if any(tuple(sorted((start+i, start+(i+1) % count))) not in edges for i in range(count)):
-            raise ValueError("Hedge CDT failed to recover a boundary edge")
-    return triangles
+    return triangles[:, [0, 2, 1]] if p1.area > p0.area else triangles
+
+
+def _hedge_cap(ring, spacing):
+    """Constrained cap with optional interior samples, without a centroid-only clip."""
+    polygon = Polygon(ring)
+    if not polygon.is_valid or polygon.is_empty:
+        raise ValueError("Invalid hedge cap")
+    points = ring.copy()
+    triangles = _boundary_cdt(polygon, points)
+    lo, hi = points.min(0), points.max(0)
+    grid = np.array([(x, y) for y in np.arange(lo[1]+spacing/2, hi[1], spacing)
+                     for x in np.arange(lo[0]+spacing/2, hi[0], spacing)]).reshape(-1, 2)
+    inner = polygon.buffer(-.6*spacing)
+    if len(grid) and not inner.is_empty:
+        grid = grid[shapely.contains_xy(inner, grid[:, 0], grid[:, 1])]
+    else:
+        grid = np.zeros((0, 2))
+    cross = lambda x, y: x[..., 0]*y[..., 1]-x[..., 1]*y[..., 0]
+    for point in grid:
+        if np.linalg.norm(points-point, axis=1).min()<1e-7:
+            continue
+        a, b, c = (points[triangles[:, i]] for i in range(3))
+        den = cross(b-a, c-a)
+        w1, w2 = cross(point-a, c-a)/den, cross(b-a, point-a)/den
+        hit = (w1>=-1e-10) & (w2>=-1e-10) & (w1+w2<=1.+1e-10)
+        if not hit.any():
+            raise ValueError("Interior hedge sample has no containing cap face")
+        index = len(points)
+        points = np.vstack([points, point])
+        split = np.array([[i, j, index] for face in triangles[hit] for i, j in zip(face, np.roll(face, -1))])
+        a, b, c = (points[split[:, i]] for i in range(3))
+        split = split[cross(b-a, c-a)>1e-12]
+        triangles = np.vstack([triangles[~hit], split])
+    return points, triangles
 
 
 def _hedge_ring_strip(rings, zground, tile, phase=(0., 0.)):
@@ -275,7 +315,8 @@ def _offset_hedge_mass(buf, poly, zground, key, h, src, plant, stats):
     S = species(plant)
     core_m, shell_m, sprig_m = hedge_mats(plant)
     h = h if h is not None else S['h'][0]+_h(key, 'h')*(S['h'][1]-S['h'][0])
-    base = _offset_ring(poly, 0.)
+    step = S['ring_step']  # collinear subdivision only; retains every traced corner
+    base = _offset_ring(poly, 0., step=step)
     per = np.r_[0., np.cumsum(np.linalg.norm(np.roll(base, -1, axis=0)-base, axis=1))[:-1]]
     perimeter = float(np.linalg.norm(np.roll(base, -1, axis=0)-base, axis=1).sum())
     _, topm = _plants(per, perimeter, key, S)
@@ -285,7 +326,7 @@ def _offset_hedge_mass(buf, poly, zground, key, h, src, plant, stats):
     def make_rings(extra, profile, lower=0.):
         out = []
         for d, fraction, _ in profile:
-            points = _offset_ring(poly, extra+d*k, anchor=base[0])
+            points = _offset_ring(poly, extra+d*k, step=step, anchor=base[0])
             local = _local_top_height(points, base, heights-lower)
             out.append((points, zground(points[:, 0], points[:, 1])+fraction*local))
         return out
@@ -299,7 +340,7 @@ def _offset_hedge_mass(buf, poly, zground, key, h, src, plant, stats):
     vertices, uv, triangles = _hedge_ring_strip(core, zground, HEDGE_TILE_M if leaf_core else 1., phase)
     buf.add('furniture', core_draw, vertices, uv, triangles, src=src)
     nt = len(triangles)
-    points, triangles = _fill(core[-1][0], 1.)
+    points, triangles = _hedge_cap(core[-1][0], 1.)
     ncore = len(core[-1][0])
     z = zground(points[:, 0], points[:, 1])+_local_top_height(points, stop, top_h)-.5*S['dome']*h-SHELL_D
     z[:ncore] = core[-1][1]
@@ -309,7 +350,7 @@ def _offset_hedge_mass(buf, poly, zground, key, h, src, plant, stats):
     vertices, uv, triangles = _hedge_ring_strip(shell, zground, HEDGE_TILE_M, (_h(key, 'uo'), _h(key, 'vo')))
     buf.add('furniture', shell_m, vertices, uv, triangles, src=src)
     nt += len(triangles)
-    points, triangles = _fill(stop, .6)
+    points, triangles = _hedge_cap(stop, .6)
     n = len(stop)
     ground = zground(points[:, 0], points[:, 1])
     z = np.empty(len(points))
