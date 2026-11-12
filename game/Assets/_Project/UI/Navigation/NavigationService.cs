@@ -35,6 +35,7 @@ namespace Game.UI.Navigation
         float m_StreetT;
         ushort m_Street;
         float m_RestoreAt = -1f;
+        bool m_TestPose;
         Vector2 m_RestoreGoal;
 
         public RouteGraph Graph => m_Graph;
@@ -132,8 +133,8 @@ namespace Game.UI.Navigation
 
         void Sample(float dt)
         {
-            HasPosition = truck != null;
-            if (!HasPosition) return;
+            if (truck == null) { if (!m_TestPose) HasPosition = false; return; }
+            HasPosition = true;
             Vector3 p = regionFrame != null ? regionFrame.InverseTransformPoint(truck.position) : truck.position;
             Vector3 f = regionFrame != null ? regionFrame.InverseTransformDirection(truck.forward) : truck.forward;
             Position = new Vector2(p.x, p.z);
@@ -145,7 +146,7 @@ namespace Game.UI.Navigation
         /// <summary>For tests and captures: place the truck without a transform.</summary>
         public void SetPoseForTest(Vector2 pos, float headingDeg, float speedMs)
         {
-            truck = null; HasPosition = true; Position = pos; HeadingDeg = headingDeg; SpeedMs = speedMs;
+            truck = null; m_TestPose = true; HasPosition = true; Position = pos; HeadingDeg = headingDeg; SpeedMs = speedMs;
             m_Tracker.Update(m_Path, Position, HeadingDeg, SpeedMs, 0.02f, ref m_Guide);
             int e = m_Graph.Snap(Position, 30f, out _, out _, out _);
             m_Street = e >= 0 ? m_Graph.EdgeName[e] : (ushort)0;

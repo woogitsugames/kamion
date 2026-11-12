@@ -81,7 +81,11 @@ namespace Game.UI.Navigation
             return v;
         }
 
-        public void OverrideScreen(Vector2 px, Rect safePx, float dpi) { m_View.OverrideScreen(px, safePx, dpi); m_View.Refresh(); EnsureCanvas(); Relayout(); }
+        public void OverrideScreen(Vector2 px, Rect safePx, float dpi)
+        {
+            m_View.OverrideScreen(px, safePx, dpi); m_View.Refresh(); EnsureCanvas();
+            m_Zoom = DefaultZoom(); Recenter(); Relayout();
+        }
 
         void Build(Camera cam)
         {
@@ -108,10 +112,12 @@ namespace Game.UI.Navigation
             Btn(m_SafeRt, "ZoomIn", new Vector2(1f, 1f), new Vector2(-Margin - 88f, -Margin - 88f), new Vector2(88f, 88f), NavText.ZoomIn, 40, k_Button, () => ZoomBy(1.6f), out _);
             Btn(m_SafeRt, "ZoomOut", new Vector2(1f, 1f), new Vector2(-Margin - 88f, -Margin - 184f), new Vector2(88f, 88f), NavText.ZoomOut, 40, k_Button, () => ZoomBy(1f / 1.6f), out _);
             Btn(m_SafeRt, "Recenter", new Vector2(1f, 1f), new Vector2(-Margin - 132f, -Margin - 280f), new Vector2(132f, 80f), NavText.Recenter, 24, k_Button, Recenter, out _);
-            m_PauseNote = Label(m_SafeRt, "PauseNote", NavText.Paused, 20, TextAnchor.MiddleCenter, k_Muted);
-            var pn = (RectTransform)m_PauseNote.transform;
+            var pn = NewRect("PauseNote", m_SafeRt);
             pn.anchorMin = pn.anchorMax = new Vector2(0.5f, 1f); pn.pivot = new Vector2(0.5f, 1f);
-            pn.anchoredPosition = new Vector2(0f, -Margin - 22f); pn.sizeDelta = new Vector2(620f, 40f);
+            pn.anchoredPosition = new Vector2(0f, -Margin); pn.sizeDelta = new Vector2(560f, 48f);
+            var pni = pn.gameObject.AddComponent<Image>(); pni.color = k_Panel; pni.raycastTarget = false;
+            m_PauseNote = Label(pn, "Text", NavText.Paused, 21, TextAnchor.MiddleCenter, k_Muted);
+            Stretch((RectTransform)m_PauseNote.transform);
 
             var panel = NewRect("Panel", m_SafeRt);
             m_Panel = panel.gameObject;
@@ -201,8 +207,8 @@ namespace Game.UI.Navigation
 
         void EnsureCanvas()
         {
-            Vector2 px = m_UiCanvas.pixelRect.size;
-            float ppu = m_UiCanvas.scaleFactor;
+            Vector2 px = m_View.PixelSize;   // the viewport's pixel size (honours the capture / test override)
+            float ppu = m_View.PixelsPerUnit;
             if (px.x < 1f || px.y < 1f) px = new Vector2(Screen.width, Screen.height);
             Vector2 units = new Vector2(Mathf.Round(px.x / ppu), Mathf.Round(px.y / ppu));
             if (m_Canvas != null && units == m_DesignSize && Mathf.Approximately(ppu, m_Ppu)) return;
@@ -217,7 +223,7 @@ namespace Game.UI.Navigation
             m_Dirty = true;
         }
 
-        static readonly float[] s_Sizes = { 22f, 19f, 17f, 15f };
+        static readonly float[] s_Sizes = { 22f, 19f, 17f, 16f, 15f };
 
         // ------------------------------------------------------------------ view
 
@@ -406,7 +412,7 @@ namespace Game.UI.Navigation
             Rect safe = SafeDesignRect();
             float by = safe.yMax - PanelH - Margin - 16f;
             ScaleBar(d, safe.xMin + Margin, by - 26f, pal);
-            d.Text(NavText.Attribution, safe.xMin + Margin, by, 15f, night ? pal.BarSub : new Color32(70, 72, 76, 255));
+            d.Text(NavText.Attribution, safe.xMin + Margin, by, 16f, night ? pal.BarSub : new Color32(70, 72, 76, 255));
             d.End(pal.Bg);
         }
 
@@ -444,9 +450,7 @@ namespace Game.UI.Navigation
             if (map == null || m_Zoom < 0.25f) return;
             if (m_RoadOrder == null)
             {
-                m_RoadOrder = new int[map.RoadCount];
-                for (int i = 0; i < m_RoadOrder.Length; i++) m_RoadOrder[i] = i;
-                System.Array.Sort(m_RoadOrder, (a, b) => map.RoadClass[b].CompareTo(map.RoadClass[a]));
+                BuildChains(map);
                 m_NameAt = new Vector2[map.Names.Length];
                 m_NameN = new byte[map.Names.Length];
             }
@@ -456,22 +460,34 @@ namespace Game.UI.Navigation
             Color32 halo = night ? pal.Bg : new Color32(250, 250, 246, 255);
             foreach (int i in m_RoadOrder)
             {
-                int nm = map.RoadName[i];
+                int nm = m_ChainName[i];
                 if (nm == 0 || m_NameN[nm] >= 3) continue;
-                if (map.RoadClass[i] == 0 && m_Zoom < 0.9f) continue;   // minor names only when zoomed in
-                // Longest visible segment of the polyline.
+                if (m_ChainClass[i] == 0 && m_Zoom < 0.9f) continue;   // minor names only when zoomed in
+                // Longest nearly straight visible run of the street chain (direction within 15° of the run's first segment).
                 float best = 0f; Vector2 ba = default, bb = default;
-                for (int k = map.RoadStart[i] + 1; k < map.RoadStart[i + 1]; k++)
+                int k0 = m_ChainStart[i], k1 = m_ChainStart[i + 1];
+                Vector2 runA = default, runDir = default, prev = default;
+                float runLen = 0f;
+                for (int k = k0; k < k1; k++)
                 {
-                    Vector2 a = xf.ToScreen(map.RoadPoints[k - 1]), b = xf.ToScreen(map.RoadPoints[k]);
-                    Vector2 mid = (a + b) * 0.5f;
-                    if (mid.x < 40f || mid.x > W - 40f || mid.y < 40f || mid.y > H - 40f) continue;
-                    float l = (b - a).sqrMagnitude;
-                    if (l > best) { best = l; ba = a; bb = b; }
+                    Vector2 q = xf.ToScreen(m_ChainPts[k]);
+                    bool inside = q.x > 30f && q.x < W - 30f && q.y > 30f && q.y < H - 30f;
+                    if (k > k0)
+                    {
+                        Vector2 seg = q - prev;
+                        float sl = seg.magnitude;
+                        bool cont = inside && runLen > 0f && sl > 1e-3f && Vector2.Dot(seg / sl, runDir) > 0.966f;
+                        if (cont) runLen += sl;
+                        else if (inside && sl > 1e-3f && prev.x > 30f && prev.x < W - 30f && prev.y > 30f && prev.y < H - 30f)
+                        { runA = prev; runDir = seg / sl; runLen = sl; }
+                        else runLen = 0f;
+                        if (runLen > 0f && runLen * runLen > best) { best = runLen * runLen; ba = runA; bb = q; }
+                    }
+                    prev = q;
                 }
                 if (best <= 0f) continue;
                 string text = NavLayout.Abbreviate(map.Names[nm]);
-                float size = map.RoadClass[i] >= 2 ? 19f : 17f;
+                float size = m_ChainClass[i] >= 2 ? 19f : 17f;
                 float tw = d.Measure(text, size);
                 if (Mathf.Sqrt(best) < tw + 24f) continue;
                 Vector2 c = (ba + bb) * 0.5f;
@@ -490,6 +506,74 @@ namespace Game.UI.Navigation
                 d.TextRotated(text, c.x, c.y - o, ang, size, halo); d.TextRotated(text, c.x, c.y + o, ang, size, halo);
                 d.TextRotated(text, c.x, c.y, ang, size, fg);
             }
+        }
+
+        Vector2[] m_ChainPts;
+        int[] m_ChainStart;
+        ushort[] m_ChainName;
+        byte[] m_ChainClass;
+
+        /// <summary>
+        /// Joins the map's road polylines (split at every junction) into street chains - consecutive pieces with the same
+        /// name meeting end to end - so a label can use a long straight stretch of the street. Built once per map open.
+        /// </summary>
+        void BuildChains(NavMapData map)
+        {
+            int n = map.RoadCount;
+            var used = new bool[n];
+            var byEnd = new System.Collections.Generic.Dictionary<long, System.Collections.Generic.List<int>>();
+            long Key(Vector2 p, int name) => ((long)Mathf.RoundToInt(p.x * 2f) * 73856093L) ^ ((long)Mathf.RoundToInt(p.y * 2f) * 19349663L) ^ ((long)name << 40);
+            void Index(Vector2 p, int name, int road)
+            {
+                long k = Key(p, name);
+                if (!byEnd.TryGetValue(k, out var l)) byEnd[k] = l = new System.Collections.Generic.List<int>(2);
+                l.Add(road);
+            }
+            for (int i = 0; i < n; i++)
+            {
+                if (map.RoadName[i] == 0 || map.RoadStart[i + 1] - map.RoadStart[i] < 2) continue;
+                Index(map.RoadPoints[map.RoadStart[i]], map.RoadName[i], i);
+                Index(map.RoadPoints[map.RoadStart[i + 1] - 1], map.RoadName[i], i);
+            }
+            var pts = new System.Collections.Generic.List<Vector2>(map.RoadPoints.Length);
+            var starts = new System.Collections.Generic.List<int>();
+            var names = new System.Collections.Generic.List<ushort>();
+            var classes = new System.Collections.Generic.List<byte>();
+            var chain = new System.Collections.Generic.List<Vector2>(256);
+            int Next(Vector2 end, int name)
+            {
+                if (!byEnd.TryGetValue(Key(end, name), out var l)) return -1;
+                foreach (int r in l) if (!used[r]) return r;
+                return -1;
+            }
+            void Append(int r, bool atEnd)
+            {
+                used[r] = true;
+                int a = map.RoadStart[r], b = map.RoadStart[r + 1] - 1;
+                Vector2 tail = atEnd ? chain[chain.Count - 1] : chain[0];
+                bool fwd = (map.RoadPoints[a] - tail).sqrMagnitude <= (map.RoadPoints[b] - tail).sqrMagnitude;
+                if (atEnd) { if (fwd) for (int k = a + 1; k <= b; k++) chain.Add(map.RoadPoints[k]); else for (int k = b - 1; k >= a; k--) chain.Add(map.RoadPoints[k]); }
+                else { if (fwd) for (int k = a + 1; k <= b; k++) chain.Insert(0, map.RoadPoints[k]); else for (int k = b - 1; k >= a; k--) chain.Insert(0, map.RoadPoints[k]); }
+            }
+            for (int i = 0; i < n; i++)
+            {
+                if (used[i] || map.RoadName[i] == 0 || map.RoadStart[i + 1] - map.RoadStart[i] < 2) continue;
+                int name = map.RoadName[i];
+                byte cls = map.RoadClass[i];
+                used[i] = true;
+                chain.Clear();
+                for (int k = map.RoadStart[i]; k < map.RoadStart[i + 1]; k++) chain.Add(map.RoadPoints[k]);
+                for (int r; (r = Next(chain[chain.Count - 1], name)) >= 0;) { Append(r, true); cls = (byte)Mathf.Max(cls, map.RoadClass[r]); }
+                for (int r; (r = Next(chain[0], name)) >= 0;) { Append(r, false); cls = (byte)Mathf.Max(cls, map.RoadClass[r]); }
+                starts.Add(pts.Count); names.Add((ushort)name); classes.Add(cls);
+                pts.AddRange(chain);
+            }
+            starts.Add(pts.Count);
+            m_ChainPts = pts.ToArray(); m_ChainStart = starts.ToArray(); m_ChainName = names.ToArray(); m_ChainClass = classes.ToArray();
+            m_RoadOrder = new int[m_ChainName.Length];
+            for (int i = 0; i < m_RoadOrder.Length; i++) m_RoadOrder[i] = i;
+            var cl = m_ChainClass;
+            System.Array.Sort(m_RoadOrder, (a, b) => cl[b].CompareTo(cl[a]));
         }
 
         bool Overlaps(Vector4 b)

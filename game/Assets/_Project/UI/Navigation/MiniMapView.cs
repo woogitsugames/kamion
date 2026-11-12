@@ -34,7 +34,7 @@ namespace Game.UI.Navigation
         float m_T, m_Zoom = 1.6f;
         bool m_NightBaked;
         Mesh m_Under;
-        readonly TextBuffer m_B = new TextBuffer(48);
+        readonly TextBuffer m_B = new TextBuffer(48), m_Fit = new TextBuffer(96);
         int m_Refreshes;
         double m_CpuSum;
 
@@ -47,6 +47,8 @@ namespace Game.UI.Navigation
         public double LastCpuMs { get; private set; }
         public double AverageCpuMs => m_Refreshes > 0 ? m_CpuSum / m_Refreshes : 0;
         public int RefreshCount => m_Refreshes;
+        /// <summary>Restarts the CPU statistics (after warm-up: glyph rasterisation and the static map bake are one-off).</summary>
+        public void ResetStats() { m_Refreshes = 0; m_CpuSum = 0; }
 
         public static MiniMapView Create(DrivingHud hud, NavigationService nav)
         {
@@ -180,7 +182,7 @@ namespace Game.UI.Navigation
             // Street strip.
             d.Rect(0f, H - StreetH, W, StreetH, pal.Bar);
             string street = m_Nav.NameOf(m_Nav.CurrentStreet);
-            if (street.Length > 0) d.Text(NavLayout.Abbreviate(street), W * 0.5f, H - 11f, 19f, pal.BarText, DisplayCanvas.Align.Center);
+            if (street.Length > 0) NavDraw.FitText(d, m_Fit, NavLayout.Abbreviate(street), W * 0.5f, H - 11f, 19f, W - 16f, pal.BarText, DisplayCanvas.Align.Center);
 
             if (route) Banner(d, g, path, W, pal);
             d.End(pal.Bg);
@@ -222,7 +224,8 @@ namespace Game.UI.Navigation
                 d.Text(m_B, 54f, BannerH * 0.5f + 6f, 16f, pal.BoxText, DisplayCanvas.Align.Center);
             }
             string nm = m_Nav.NameOf(p.ManName[k]);
-            if (nm.Length > 0) d.Text(NavLayout.Abbreviate(nm), 104f, 88f, 18f, pal.BoxSub);
+            float nameW = W - 104f - 10f;
+            if (nm.Length > 0) NavDraw.FitText(d, m_Fit, NavLayout.Abbreviate(nm), 104f, 90f, 19f, nameW, pal.BoxSub);
             if (g.Then >= 0 && W >= 300f)
             {
                 // "then" chip: small pictogram of the following manoeuvre, top right.

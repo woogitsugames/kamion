@@ -179,5 +179,27 @@ namespace Game.UI.Navigation
         }
 
         public static void AppendDistance(TextBuffer b, float m) => NavLayout.AppendDistance(b, m);
+
+        /// <summary>
+        /// Text that must fit <paramref name="maxWidth"/>: drawn at <paramref name="size"/>, else at most 15 % smaller,
+        /// else cut with "..." (street names like "Rondo Krzysztofa Jakuba Putry ..."). No allocation (<paramref name="b"/>).
+        /// </summary>
+        public static void FitText(DisplayCanvas d, TextBuffer b, string s, float x, float baseline, float size, float maxWidth, Color32 c,
+            DisplayCanvas.Align align = DisplayCanvas.Align.Left)
+        {
+            if (string.IsNullOrEmpty(s)) return;
+            if (d.Measure(s, size) <= maxWidth) { d.Text(s, x, baseline, size, c, align); return; }
+            float small = size * 0.85f;
+            if (d.Measure(s, small) <= maxWidth) { d.Text(s, x, baseline, small, c, align); return; }
+            float dots = d.Measure("...", small);
+            b.Clear();
+            for (int i = 0; i < s.Length; i++)
+            {
+                b.Append(s[i]);
+                if (d.Measure(b, small) + dots > maxWidth) { b.Clear(); b.Append(s, i); break; }
+            }
+            b.Append("...");
+            d.Text(b, x, baseline, small, c, align);
+        }
     }
 }
