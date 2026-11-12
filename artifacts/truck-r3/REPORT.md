@@ -1,4 +1,4 @@
-Runda 3 trwa na gałęzi gpt-truck-r3; kod poprawki jest zapisany w d01382a5, baza main 9874d98c, merge f92690f3.
+Runda 3 zakończona na gałęzi gpt-truck-r3; kod poprawki jest zapisany w d01382a5, baza main 9874d98c, merge f92690f3.
 Naprawiono otwarte osie Low ciągnika i naczepy oraz mostkowanie wysp atlasu opon i rantów. Mapy mają dotychczasowe rozdzielczości; nie dodano przebiegów shaderów ani draws.
 Pełne bake obu pojazdów i natywne walidatory przeszły. Końcowy LOD2: ciągnik 17 690/17 900, naczepa 7 849/8 000 trójkątów. Mapy oraz LOD0/1 są identyczne bajtowo z pełnym wariantem v2.
 Przednia tarcza Low jest wyraźnie pełniejsza niż w v2; krytyk potwierdza poprawę poza samą piastą. Nadal P1: nieregularne otwory, ząbkowany rant i wnętrze felgi naczepy. Bez pełnego PASS wyglądu.
@@ -10,6 +10,6 @@ Wszystkie 96 wierszy kamer: draws rendererów i osobno instancji bez wzrostu, tr
 Testy geometrii 12/12, pełny EditMode 326/326, zero failed/skipped. Czerwony baseline potwierdzał odsłonięte osie wyłącznie w LOD2.
 Audyt 580 plików i dwóch prefabów: pozycje identyczne. Dwa renderery drzwi Low zmieniły kolejność Paint/Trim, rozwiązywaną po nazwach przez importer; jawny diff w fixture-final-semantic-diff.json.
 Android Low+High: Succeeded, 0 błędów, 12 ostrzeżeń, 162 s. APK 389093741 bajtów, SHA256 AC52927339EC9DDA4CB4519591FC985D11E24E12682F125081CB5631AF7C0F14, źródło f3e79869dcea5b04ad03af0a9b93591e515508d5. Bez instalacji i uruchamiania.
-Końcowy GIS czeka na slot heavy; świeży world_manifest nie został odtworzony do starszej wersji. Ten raport nie jest jeszcze przekazaniem zakończonej rundy.
+Końcowy GIS pod heavy: 617 passed, 1 failed, 1 xfailed, 814,39 s. Jedyny błąd: nieaktualny fidelity_qa względem overrides.yaml i roads/meshing.py. Deterministyczność świata przeszła na świeżym manifeście; siedem plików ubocznych zachowano i przywrócono.
 Nie rozwiązano pozostałego P1 felg, lakieru/dachu, mleczności szyby ani pełnego brudu naczepy. A16 i ruch pozostają UNVERIFIED; telefonów nie używano.
 Przewidywane konflikty: własne generatory eksportu kół, źródłowe mapy/FBX i testy TruckWheelLodGeometryTests; ADR 0115. Bez merge do main i bez push.
