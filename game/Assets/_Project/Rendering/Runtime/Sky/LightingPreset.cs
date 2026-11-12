@@ -133,6 +133,8 @@ namespace Game.Rendering
             // ADR 0108 r1 WORKING_VALUE: the route reference photos show scattered cumulus in blue sky.
             p.clearCloudCover = 1f;
             p.clearSkySaturation = 2f; // ADR 0108: 1/2/3/4 ablation against the daytime reference skies.
+            // ADR 0108 r3: 0/0.5/1 degree ablation; extend the valid HDRI horizon after sun-alignment pitch.
+            p.clearCloudSourceMinElevationDeg = 0.5f;
             return p;
         }
 
