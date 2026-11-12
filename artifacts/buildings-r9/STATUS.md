@@ -88,3 +88,17 @@
   `pwsh artifacts/buildings-r9/round.ps1 -Round r3 -SkipWorld; pwsh artifacts/buildings-r9/editmode.ps1 -Round r3`) ->
   `python artifacts/buildings-r9/budget2.py artifacts/buildings-r9/base/Low-overcast artifacts/buildings-r9/r3/Low-overcast`
   -> commit generated -> ADR Liczby -> kopia `artifacts/buildings-r9` do main.
+
+## krok 7 — r3 zakonczone i zmierzone (19:19); 2 testy budzetu HIGH czerwone -> decyzja lidera
+- Lancuch r3: `CHAIN DONE`. build_world 0 (High 4070 / 14 272 032, Low 3050 / 4 582 476), fidelity 0, import 776 s bez bledow,
+  EditMode 407/407. Pytest gis 819 passed / 3 failed: determinizm (moj kod ramek LOD1, `set` -> `sorted`, POPRAWIONE, zielony);
+  estymata kadru HIGH > 2,0 M: `stretch_04` 2 027 946 (main 1 986 709), `route_onramp_andersa_above` 2 009 629 (main 1 981 768) -
+  kit posesji High +41,8 k przy zapasie main 13 k. Low bez zmian. Warianty A/B/C w ADR 0132 "Otwarte: budzet High".
+- Budzet Low r3 vs baza (`r3/budget_low.txt`): MR +11, cienie -25, instancjonowane +186, tris siatek +60 k, tris instancji +165 k -
+  z tego tresc main z merge (r3 - r2): instancjonowane +163, tris inst. +155 k. Wklad 0132 (r2 vs baza): MR +0, inst. +23, instancje +81.
+- Pary / arkusze r3: `pairs_r3/sheet_base_hc.jpg`, `sheet_base_low.jpg`, `sheet_ref.jpg` (+ 29 par). ADR: Liczby r3, koszt drzew
+  ogrodowych + propozycja filtra per tier, otwarty budzet High.
+- NASTEPNY KROK (po decyzji lidera): wariant A -> nic w galezi (lider zmienia prog / estymator), potem
+  `uv run --project tools/worldgen python -m pytest tests/gis/test_hero_bridge.py tests/gis/test_world_v31.py -q -p no:cacheprovider`;
+  wariant B -> edycja `tools/worldgen/streetscape/plots.py` (thuja/bush/fruit_tree + front <= 12 m), potem
+  `pwsh artifacts/buildings-r9/r3_chain.ps1 -Round r4`.

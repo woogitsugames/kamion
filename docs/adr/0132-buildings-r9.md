@@ -88,11 +88,61 @@ WORKING_VALUE: wszystkie progi, udziały i wymiary powyżej.
   draw MeshRenderer 18 265 → 18 265 (**+0**), cienie 4623 → 4622, draw instancjonowane 18 673 → 18 696 (+23; najgorsze
   `r10_shed_2` 176 → 190, `r10_house_2` 105 → 115, pozostałe −2…+4), instancje +81 (najw. +18), trójkąty siatek +258 k w sumie
   (najw. +29 k — ramki LOD1, wyłączone w r3), trójkąty instancji +10 k w sumie (najw. +6 k).
-- Po scaleniu main i wyłączeniu ramek (r3): patrz `artifacts/buildings-r9/STATUS.md` (krok 7) i `r3/budget_low.txt`.
+- **r3 (po scaleniu main `b2f86cb7c`, ramki LOD1 wyłączone; kod `3d992ddb2` + poprawka determinizmu)**: `build_world` exit 0
+  (497 s), region High 4070 submeshy / 14 272 032 trójkąty, **Low 3050 / 4 582 476**; kit posesji High 94 172 / **Low 51 508**
+  (0124: 52 406); instancje drzew ogrodowych 117 (34 w pasie przed płotem). Import 776 s, 0 `error CS` / `Shader error`.
+  EditMode **407 / 407**. Fidelity exit 0. Pytest gis: **819 passed, 3 failed, 1 xfailed** — (1) `test_determinism`
+  (iteracja po `set` w kodzie ramek LOD1) — POPRAWIONE (`sorted`, wynik bez zmian, test zielony); (2) i (3) budżet
+  trójkątów kadru HIGH — patrz „Otwarte: budżet High”.
+- Kamery kontrolne **Low overcast, 67 kamer, r3 vs baza** (`r3/budget_low.txt`; baza = import main z 14:03, czyli SPRZED
+  scalenia `b2f86cb7c` — różnica zawiera też treść main z s13): draw MeshRenderer 18 265 → 18 276 (+11, najw. +2), cienie
+  4623 → 4598 (−25), draw instancjonowane 18 673 → 18 859 (+186; najw. `r10_fence_3` +40, `r10_shed_2` +22), instancje +150,
+  trójkąty siatek 17 768 k → 17 828 k (+60 k w sumie, najw. kamera +3 k), trójkąty instancji +165 k.
+  **Rozdzielenie wkładu** (r2 = ten sam kod posesji PRZED scaleniem main, r3 = PO): r3 − r2 = instancjonowane +163, instancje
+  +69, trójkąty instancji +155 k, MeshRenderer +11 — to treść main (między r2 a r3 w tej gałęzi zmieniło się tylko wyłączenie
+  ramek: trójkąty siatek −198 k; liczba drzew ogrodowych 117 = 117). **Wkład 0132 na Low = pomiar r2 vs baza: MeshRenderer
+  +0, cienie −1, instancjonowane +23 (67 kamer; kamery trasy / kabiny −2…+3; uliczki domów `r10_shed_2` +14,
+  `r10_house_2` +10), instancje +81, trójkąty instancji +10 k; trójkąty siatek po wyłączeniu ramek ≈ 0** (kit −0,9 k,
+  grunt działek +0,6 k w regionie). Estymata kadru generatora, Low (`streetscape_qa.json`, 23 kamery): −1,7 k…+1,4 k
+  trójkątów na kamerę względem main (`stretch_04` 946 528 → 946 920).
 - Telefon: NIE mierzone (UNVERIFIED). Koszt GPU instancji drzew ogrodowych na A16 Low nieznany.
 
+## Koszt drzew ogrodowych na Low i propozycja filtra per tier (poza własnością gałęzi — tylko propozycja)
+- Kontekst: ADR 0136 — drzewa przy drodze kosztują A16 Low 6,6–8,7 ms GPU w oknach z lasem (impostory przycięte
+  `ImpostorTrim`), A16 Low jest na granicy 33,3 ms. Każda dodatkowa instancja drzewa na Low wymaga uzasadnienia.
+- Co dokłada 0132: **117 instancji** (brzoza 38, klon 36, lipa 31, sosna 12; 4 gatunki × 1 wariant — te same prototypy,
+  LOD-y i impostory co drzewa regionu, 0 nowych materiałów), 60 działek, 34 w pasie przed płotem. Wspólne dla Low i High,
+  bo region ma jeden `WorldInstanceSet`. Zmierzone w edytorze (Low, 67 kamer): +23 draw instancjonowane, +81 instancji,
+  +10 k trójkątów; na kamerach trasy Gate 3 i kabiny −2…+3 draw. Trasa Gate 3 nie przebiega uliczkami domów — drzewa
+  ogrodowe są tam tłem (impostor / LOD2). Koszt GPU w ms: UNVERIFIED (brak pomiaru `rq_ab` na A16).
+- Uzasadnienie pozostawienia na Low do decyzji lidera: to jedyna wysoka zieleń posesji na Low (krzewy i byliny Low nie ma,
+  drzewka i tuje to wersje lite); bez nich ulice domów na Low wracają do stanu z recenzji 0124 (P1-a „brak wysokiej zieleni”).
+- **Propozycja filtra per tier** (zmiana w `World/Import/InstanceImporter` + `World/Runtime/WorldInstances`, właściciel:
+  lider / rendering-perf): generator już oznacza te instancje `"src": "<plot>:canopy"`; dopisać w rekordzie pole
+  `"tier": "high"` (brak pola = wszystkie tiery); importer zapisuje bit „tylko High” per instancja (albo osobną listę
+  komórek, jak `DetailCellKey` dla Fab), runtime pomija te instancje, gdy aktywny profil < High — tak samo, jak dziś wybiera
+  gęstość wg profilu, nie wg odległości. Warianty tańsze, bez zmiany importera, w mojej własności: (a) `plots.INST_R_M`
+  2,3 → 3,0 m (mniej instancji na wszystkich tierach; korony 2,3–3,0 m stają się drzewkami kitu: High 65 trójkątów, Low 10),
+  (b) Low tylko pas przed płotem (34 instancje) — wymaga jednak pola tier. Zalecenie: pole `tier` + pomiar
+  `rq_ab off:` drzew ogrodowych na A16 przed decyzją; do tego czasu 117 wspólnych.
+
+## Otwarte: budżet High (2 testy pytest gis czerwone)
+- `tests/gis/test_hero_bridge.py::test_asset_lods_and_budget` i `tests/gis/test_world_v31.py::test_frame_budget_with_forest_hlod`:
+  estymata kadru HIGH ≤ 2 000 000 trójkątów. r3: `stretch_04` **2 027 946** (main 1 986 709), `route_onramp_andersa_above`
+  **2 009 629** (main 1 981 768). Przyczyna: kit posesji High 52,4 k → 94,2 k (+41,8 k; krzewy / drzewka jako bryły, tuje,
+  żywopłot zaokrąglony — odpowiedź na P1-a/b/e recenzji 0124), a main miał w tych kadrach 13,3 k / 18,2 k zapasu
+  (99,3 % / 99,1 % limitu). Estymator liczy kit posesji High bez limitu odległości (`LOD_POLICY["High"]["furn"] = 1e9`,
+  klin 120° do 1600 m) — w `stretch_04` wchodzi +40,6 k z 41,8 k całego regionu. Low bez zmian (+0,4 k).
+- Nie zmieniałem progu testu (budżet = decyzja lidera; docs/06 §6: High „≤ 1,5–2 mln, hipoteza”, High nie był mierzony na
+  telefonie) ani nie ciąłem kitu High (cofnęłoby poprawki, o które prosił krytyk). Warianty:
+  (A) lider podnosi próg estymaty High do 2,05 M albo estymator dostaje realny zasięg kitu posesji (np. `furn` High 600 m);
+  (B) runda r4 w tej gałęzi: pełne bryły tylko dla roślin ≤ ~12 m od frontu działki, reszta w wersjach lite + odchudzone
+  rdzenie (tuja w rzędzie 39 → 24, krzew 36 → 28, drzewko 65 → 50) — szacunek kit High ≈ 63 k (+11 k; mieści się o ~2 k,
+  WORKING_VALUE, niepoliczone w silniku), koszt: ~50 min regeneracji + ponowny przegląd, z lotu ptaka widać karty;
+  (C) LOD kitu posesji w High (`plots` → geometria `plots_low` powyżej N m) — zmiana `RegionImporter`, poza własnością.
+
 ## Samokrytyka (D51 — rozpoznawalność, nie polerka)
-- Względem zdjęć (`pairs_r2/sheet_ref.jpg`): ulice domów na zdjęciach toną w koronach wyższych od dachów i w gęstych
+- Względem zdjęć (`pairs_r3/sheet_ref.jpg`, `pairs_r2/sheet_ref.jpg`): ulice domów na zdjęciach toną w koronach wyższych od dachów i w gęstych
   krzewach; u nas korony są na właściwych miejscach (ortofoto), ale prototypy drzew regionu są rzadkie i cienkie — ulica
   nadal czyta się jako „nowe osiedle z kilkoma drzewami”. Ocena własna D51: PARTIAL (lepiej niż 0124, nie „jak na zdjęciu”).
 - `r16_drive_3`: skośny panel ściany bocznej przy bramie nadal widoczny (brama stoi teraz w narożniku, panel to płot sąsiada).

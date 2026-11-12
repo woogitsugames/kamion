@@ -1440,7 +1440,7 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
             l1_cells.update(map(tuple, np.floor(it[0][it[1]].mean(1)[:, :2] / _CHUNK_M).astype(int).tolist()))
         for fm in LOD1_HOUSE_FRAME_MATS:                     # ADR 0132: materials a frame may use, per chunk cell
             for it in acc.d.get(("buildings_low", fm), ()):
-                for cell in set(map(tuple, np.floor(it[0][it[1]].mean(1)[:, :2] / _CHUNK_M).astype(int).tolist())):
+                for cell in sorted(set(map(tuple, np.floor(it[0][it[1]].mean(1)[:, :2] / _CHUNK_M).astype(int).tolist()))):
                     l1_frame_cells.setdefault(cell, set()).add(fm)
         acc.flush(buf, key)
     # ADR 0124 r2: LOD1 openings of houses, in the dark sheet material where the LOD1 of that chunk has it anyway and in
