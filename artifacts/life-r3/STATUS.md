@@ -212,3 +212,5 @@ Krok 59: kanoniczne fidelity zakończone, osobny test_road_fidelity 9 passed i 1
 Krok 60: przygotowano 18-wierszowy REPORT-DRAFT.md z rzeczywistymi pomiarami C, jawnym PARTIAL i miejscem na końcowy wynik GIS. Nie jest REPORT.md i nie oznacza przekazania rundy. Parser PowerShell sprawdził składnię publish.ps1 bez błędów; nie uruchomiono publikacji. Pełny GIS 90863 nadal działa. Następny krok: terminalny wynik, uzupełnienie dokumentów i kopia/report-last.
 
 Końcowy heavy (2026-11-12T11:40:10.0695529+01:00): zapisz końcowy GIS osobówek C. Następny krok: odczyt wyników, oględziny pełnych plansz, EditMode, REPORT/kopia, potem r4.
+
+Końcowy heavy (2026-11-12T11:40:11.8155332+01:00): potwierdź zamrożone wejścia C po GIS. Następny krok: odczyt wyników, oględziny pełnych plansz, EditMode, REPORT/kopia, potem r4.
