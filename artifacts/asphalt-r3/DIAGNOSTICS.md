@@ -18,6 +18,8 @@ Poprawiony kadr porównano z `house-grime-off`, gdzie `_Grime=0` zastosowano do 
 
 Arkusz `diagnostic-sheets/house-before-grime-off-960.png`: u góry poprawiony stan wyjściowy, na dole brud wyłączony. Dwa natywne wycinki 960 × 350 z pozycji +450+730; bez skalowania.
 
+Dodatkowa próba `house-public-grime-off` wyłączyła `_Grime` wyłącznie na `sidewalk_paving` (44 dopasowane sloty). Po obejrzeniu PNG dominujące plamy przed posesją nadal pozostają. Samo podobieństwo tekstury nie identyfikuje materiału: manifest zawiera również osobny `road_paving` z tym samym zestawem `paving_20x10_grey` i bez danych `ground_grime`. Następna próba osobno sprawdza ten identyfikator; na tym etapie to hipoteza, nie ustalona przyczyna.
+
 ## Zakres dowodu
 
 Własna ocena wszystkich pięciu właściwych PNG i niezależna ocena krytyka są zgodne co do powyższej atrybucji. Nie przyznano końcowego PASS. Próby używają nieserializowanych MaterialPropertyBlock, więc ich liczników rysowania nie używamy do wykazania budżetu. Materiały na dysku nie zostały zmienione.
