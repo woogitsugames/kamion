@@ -13,8 +13,13 @@ target.mkdir(parents=True, exist_ok=True)
 source = out / "reference7197.jpg"
 photo = Image.open(source).convert("RGB")
 assert photo.size == (3840, 2560)
+processed = []
 for condition in ("Low-overcast", "Low-clear", "High-overcast", "High-clear"):
-    render = Image.open(out / phase / condition / "fire-station-ref7197.png").convert("RGB")
+    capture = out / phase / condition / "fire-station-ref7197.png"
+    if not capture.exists():
+        continue
+    processed.append(condition)
+    render = Image.open(capture).convert("RGB")
     assert render.size == (2340, 1080)
     gable = Image.new("RGB", (960, 370), (24, 24, 24))
     draw = ImageDraw.Draw(gable)
@@ -39,10 +44,12 @@ for condition in ("Low-overcast", "Low-clear", "High-overcast", "High-clear"):
     native.paste(before.crop((1400, 460, 1680, 800)), (316, 44))
     native.paste(render.crop((1400, 460, 1680, 800)), (602, 44))
     native.save(target / f"{condition}-photo-crowns-native.jpg", quality=95)
+assert processed, "No reference-camera captures"
 (target / "source.json").write_text(json.dumps(dict(
     title="7197 May 2021 in Białystok", author="Rakoon", license="CC0",
     url="https://commons.wikimedia.org/wiki/File:7197_May_2021_in_Białystok.jpg",
     local_sha256=hashlib.sha256(source.read_bytes()).hexdigest(), local_size=[3840, 2560],
+    conditions=processed,
     photo_gable_crop=[1120, 1000, 2960, 2140], render_gable_crop=[865, 317, 1670, 817],
     photo_crowns_crop=[2020, 1400, 2640, 2160], render_crowns_crop=[1400, 460, 1680, 800],
     status="Fixed crops reused from baseline; approximate pose, not matched photogrammetry; no per-tree transforms"), indent=2), encoding="utf-8")
