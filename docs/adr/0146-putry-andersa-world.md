@@ -1,6 +1,6 @@
 # ADR 0146 — G3-B world fixes: Putry deck lamps and verge, Andersa SE ramp level (810896), portal follow-ups
 
-Status: PROPOSED on branch `putry-andersa` (2026-11-12, s14-s15); not merged. Validation below;
+Status: PROPOSED on branch `putry-andersa` (2026-11-12, s14-s16); not merged. Validation below (r5 on main 700517b22);
 a visual-critic review is still required.
 Source: ADR 0143 "World findings" 1-3, `docs/reports/visual/REVIEW-2026-11-12-s14-0133.md` P2-4..7,
 `docs/reports/visual/REVIEW-2026-11-12-s14-0139.md` P1-1, P2-2..5 (lead request, s14).
@@ -131,6 +131,28 @@ Tests: `tests/gis/test_putry_andersa_r2.py` (4), `tests/gis/test_lamp_rows.py`; 
 import; no C# changed in r3). Full pytest (tests/gis + gate3 + swept path): see STATUS / final report of the branch.
 r1 run: 866 passed, 1 failed (`test_report_not_stale`, fixed by rerunning `fidelity/run.py`).
 
+### r5: regenerated on the merged tree (main 700517b22, 2026-11-12 s16)
+
+The first merge of main into this branch (ad4a3b201) had taken main at 42f62d86f, not c72e2a6c8: 61 commits were
+missing (ADR 0132 r4 / r4b, ADR 0144 r7). Merged again at 700517b22 (5fc48566f; conflicts only in
+`generated/*.json` and `street_props.glb`, resolved as ours; no conflict in code), then rebuilt, re-imported and
+re-rendered. Evidence: `artifacts/putry-andersa/after4/` (`pairs/Low-{overcast,clear}`, `probe/`,
+`control/{Low,High}-clear` = the 48 WorldC control cameras, `view/` = contact sheets), logs `build-world-5.log`,
+`fidelity-5.log`, `import-5.log`, `renders-after4.log`, `control-after4.log`.
+
+| Item | r5 (measured) |
+|---|---|
+| `build_world` | exit 0, 583 s; 64 GLB, 498 MiB High / 169 MiB Low; far field High 118588 / Low 24548 |
+| Road consistency | 65 (arrow_no_exit 7, lane_blind_end 54, marking_off_carriageway 2, obstacle_in_lane 2), same as main |
+| Terrain walls > 0.15 m | **4**, max 0.345 m (main and r3: 3). New: skirt `yard_concrete` at E 486.1 N -1024.0, 0.317 m over 1.95 m - 1 km from the Putry / Andersa edits; appears only with ADR 0132 r4 + this branch together (not investigated) |
+| Section 1-5 numbers | unchanged against r3: lamp row `console: 0`; noise barrier not doubled 611.9 m; retaining wall not doubled 274 m; `median_fills` 82.1 m, 3.57-4.11 m wide, edges within 0.03 m; `profile_ties` residual 0.007 m over 315 stations |
+| Unity import | exit 0; WORLD_MEMORY High 264.4 MB total |
+| EditMode | 444 / 444 passed (`artifacts/tests/editmode-20261112-225118.xml`) |
+| pytest (tests/gis + gate3 + swept path) | 961 passed, 3 xfailed, 0 failed (1175 s; includes `test_report_not_stale`) |
+| Pairs 494288 / 810896 / 275528, probes | same picture as r3 (looked at Low-clear and Low-overcast): lamps as ground masts with arcs, red cap on the span, both carriageways level with the grass median, boards on the beam. One difference from ADR 0144: no post foot plates on the deck barrier (the white squares of r3 are gone) |
+| Neighbouring frames 810525 / 209622 | as r3: red band above the block wall, no doubled barrier |
+| Control cameras Low / High clear | 48 + 48 rendered, exit 0; `putry-above`, `driver-andersa-to-putry`, `g3b-rondo-putry-approach`, `route-onramp-andersa` looked at: no holes, no doubled barriers |
+
 Not validated: no visual-critic review yet (required before the merge; a subagent may not start one), nothing
 measured on the phone (geometry: -10 triangles per screen post pair is the only budget-relevant change, plus the
 removed doubled barrier / wall).
@@ -147,5 +169,10 @@ removed doubled barrier / wall).
   taller than on the photo.
 - Lamp column 16 of the row is skipped (carriageway); south-east of E -282 the rule lamps stay (UNVERIFIED).
 - Keep-out radii 2.5 m and the cap colour are WORKING_VALUE; cap colour in sun UNVERIFIED (the reference is shaded).
-- After the merge of main (generator changes of the navgraph / Mistral r2 stream) the region has to be regenerated
-  once more on the merged tree; this branch keeps its own generated files (`--ours`).
+- 810896 after ADR 0144: the foreground end of the median guardrail is a 2 m stub of two beams lying on the fill
+  wall; the photo has a continuous guardrail on posts across the whole foreground.
+- 810525: a ground guardrail runs along the link road in the foreground (there since before this ADR); the photo has
+  none there, and young trees on the verge that are not generated.
+- Terrain walls 4 instead of 3 (new yard skirt at E 486.1 N -1024.0, 0.317 m), see r5.
+- The generated files of this branch are regenerated on main 700517b22; a later merge of main with generator
+  changes needs one more regeneration (`--ours` + `build_world`).
