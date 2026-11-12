@@ -92,7 +92,7 @@ for state in STATES:
         roster=[p['camera'] for p in metrics['pairs']]
         assert len(roster)==len(set(roster))==len(expected) and set(roster)==expected
         assert {p.stem for p in directory.glob('*.png')}==expected
-        assert metrics['provenance_status']=='RECORDED' and not metrics['missing_renders']
+        assert metrics['provenance_status']=='RECORDED' and not metrics['missing_renders'] and not metrics['provenance_warnings']
         assert metrics['render_captures']==captures
         assert metrics['cameras_sha256']==source_hashes['cameras_sha256']
         assert metrics['gate_status']=='UNVERIFIED'  # Metrics do not confer D51.
@@ -131,7 +131,16 @@ review=read(ART/'recognition-r4-baseline.json');native=read(ART/'independent-nat
 request=read(ART/'recognition-native-request.json');registry=read(ROOT/'Data/Regions/bialystok-industrial-c/sbs_recognition.json')
 assert review['render_git_sha']==full['git_sha'] and review['sheet_review_status']=='NOT_REVIEWED'
 assert len(review['assessments'])==25 and {r['camera'] for r in review['assessments']}==eligible
+assert native['status']=='COMPLETE' and native['count']==request['count']==25
+assert native['reviewed_run']==review['reviewed_run']=='sbs-r4'
+assert native['reviewed_state']==review['reviewed_state']=='Low-overcast'
+assert native['render_git_sha']==full['git_sha'] and native['gate_result']==review['gate_result']
+assert native['excluded_C']==request['excluded_C']==17
 assert len(native['viewed_camera_ids'])==25 and set(native['viewed_camera_ids'])==eligible and not native['missing_camera_ids']
+assert len(native['assessments'])==25 and {r['camera'] for r in native['assessments']}==eligible
+assert len(request['rows'])==25 and {r['camera'] for r in request['rows']}==eligible
+native_by_id={r['camera']:r for r in native['assessments']}
+request_by_id={r['camera']:r for r in request['rows']}
 assert review['native_review_json_sha256']==sha(ART/'independent-native-review.json')
 assert review['request_sha256']==sha(ART/'recognition-native-request.json')
 assert sha(ROOT/review['source_review'])==review['source_review_sha256']
@@ -144,7 +153,16 @@ for key in ('assessments','counts','gate_result','source_review_sha256','render_
 derived=[]
 for assessment in review['assessments']:
     pair=low_pairs[assessment['camera']]
+    independent=native_by_id[assessment['camera']];bound=request_by_id[assessment['camera']]
+    for key in ('result','reason','pose_warning','render_sha256','comparison_sha256'):
+        assert independent[key]==assessment[key],(assessment['camera'],key)
     for key in ('render_sha256','comparison_sha256'):assert assessment[key]==pair[key]
+    for key in ('render_sha256','comparison_sha256'):assert bound[key]==assessment[key]
+    assert bound['render_git_sha']==full['git_sha'] and bound['pose_confidence']==by_id[assessment['camera']]['pose_confidence']
+    assert (ROOT/bound['raw']).resolve()==(EVIDENCE/'renders/Low-overcast'/(assessment['camera']+'.png')).resolve()
+    assert (ROOT/bound['photo']).resolve()==(ROOT/by_id[assessment['camera']].get('comparison_photo',by_id[assessment['camera']]['photo'])).resolve()
+    assert Path(bound['raw_absolute']).resolve()==(ROOT/bound['raw']).resolve()
+    assert Path(bound['photo_absolute']).resolve()==(ROOT/bound['photo']).resolve()
     derived.append({'camera':assessment['camera'],'render_sha256':pair['render_sha256'],
                     'comparison_sha256':pair['comparison_sha256'],'derived_sheet_sha256':pair['sheet_sha256'],
                     'sheet_reviewed_by_independent_critic':False})
