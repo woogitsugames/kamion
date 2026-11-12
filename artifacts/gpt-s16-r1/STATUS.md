@@ -10,3 +10,5 @@ EditMode zakończony: exit 0; szczegóły EDITMODE-STATUS.md i final-editmode.xm
 EditMode:452/452 passed,0skipped. Wszystkie456parPNG i per-kamera count gotowe; Low bez wzrostów. Dodano odczyt natywnych pasm/projekcji w edytorze do pomiaru progów i kadrów; bez pomiaru GPU, bez modyfikacji sceny/profili.
 
 Pełny GIS zakończony: exit 1; szczegóły GIS-STATUS.md oraz final-gis.log.
+
+GIS:926passed,3xfailed,1FAIL(test_report_not_stale) — odświeżenie fidelity w slocie heavy27250, bez zmian roads/*. Recenzja wizualnaPARTIAL: brak nowej regresji w widocznych celach, ale część przejść zasłonięta. Wyszukiwarka dodatkowych kamer sprawdzi statyczne linie widzenia do rzeczywistych instancji, także agregatu chłodni; wynik wymaga oględzin.
