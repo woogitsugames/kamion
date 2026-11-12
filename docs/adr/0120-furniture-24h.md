@@ -253,3 +253,38 @@ nie jest pomiarem zdjęcia. Barwa,alpha i profil dachu WORKING_VALUE.
 Trzy sloty nowej rodziny nie dowodzą braku wzrostu draws po podziale instancji;
 pełna kontrola236kadrów obowiązkowa. Przed generatorem pojedynczy własny
 plik testów w heavy; pełnyGIS dopiero przy zamknięciu rundy.
+
+### r3, poprawka podpór i wczesny przegląd
+
+Kod kandydata po poprawce dachu: `973a50be`. Niezależna kontrola kodu
+wykryła pierwotną szczelinę podpór oraz za wysoki dach. Poprawiono profil
+do maksymalnej wysokości 2,60 m i długości wszystkich pięciu podpór do
+interpolowanej spodniej powierzchni segmentów. Wymiary nominalne nadal
+są wartością zastaną WORKING_VALUE, a nie pomiarem fotograficznym.
+
+Pojedynczy własny plik testów przeszedł 10/10 w 0,27 s w slocie heavy.
+Generator after1 trwał 546,9 s, zapisał 64 GLB, bez `fallback=True`.
+Audyt pełnych multizbiorów instancji w 64 plikach JSON potwierdził
+23 wiaty i dokładnie dwa nowe warianty: wszystkie inne pola i dane
+instancji są identyczne z bazą. Nie jest to dowód niezmienności geometrii;
+odpowiednia kontrola payloadów nadal oczekuje na slot heavy.
+
+Podczas tej kolejki wykonano dodatkowy import i cztery kamery Low-clear,
+z wymaganymi slotami Unity i markerem zatrzymującym wyłącznie własny
+standardowy pipeline. Root i niezależny recenzent obejrzeli 4/4 podglądy
+o szerokości 960 px. Czerwona rama, widoczność przez szkło oraz lżejsza
+ławka poprawiają odczyt. Nie widać wcześniejszej szczeliny ani rażącego
+sortowania z tych stron. Pozostaje słaby odczyt powierzchni dachu od frontu
+i niemal niewidoczne szkło; nie zmieniać alpha przed sprawdzeniem High.
+
+Te cztery kadry mają DrawEst mesh i cieni +0, instancji Anders −1,
+Factory 0. Nie zastępuje to pełnego budżetu 236 kadrów ani 118 dokładnych
+liczników Low. W Factory licznik renderowanych instancji wzrósł o jeden;
+przyczyny nie zweryfikowano oddzielnie. High, overcast i drugi narożnik
+pozostają nieocenione. Kamera diagnostyczna nie jest dopasowana do zdjęcia.
+
+Oryginały trzech zdjęć Mapillary mają ponownie sprawdzone SHA256;
+autorstwo, CC BY-SA 4.0, adresy źródeł i osobny hash wycinka zapisano
+w `artifacts/furniture-r3/24h/reference/provenance.json`. Bieżący pakiet
+zachowuje pozycje OCZEKUJĄCE dla pełnych renderów, geometrii i końcowych
+testów; wyników r2 nie przedstawiono jako wyników r3.
