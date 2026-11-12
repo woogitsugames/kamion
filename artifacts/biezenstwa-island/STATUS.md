@@ -57,3 +57,5 @@
   NASTĘPNY KROK: `tail -20 artifacts/biezenstwa-island/logs/i2_all.out` — gdy „all done”: obejrzeć `pairs_i2/`, `logs/i2_pytest.log`, `logs/i2_editmode.log`,
   uzupełnić „Result” w `docs/adr/0128-biezenstwa-island.md`, commit, robocopy do main. Brak procesu i brak „all done”:
   `bash artifacts/biezenstwa-island/scripts/all.sh i2 > artifacts/biezenstwa-island/logs/i2_all.out 2>&1`
+- krok 10 (17:13): build i2 rc 0 na drzewie scalonym (main bedc52d1 + junctions-r6 61f8eda5), consistency 65 (= b5/i1), 64 GLB. W tle dalej all.sh i2 (PID 44241): fidelity/swept/pytest + import/SBS/EditMode.
+  NASTĘPNY KROK: `tail -20 artifacts/biezenstwa-island/logs/i2_all.out` — po „all done”: pary, ADR Result, robocopy do main.
