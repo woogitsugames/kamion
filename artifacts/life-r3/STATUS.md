@@ -90,3 +90,5 @@ Kandydat a (2026-11-12T10:06:26.5450471+01:00): sprawdź test_car_plate_payload.
 Kandydat a (2026-11-12T10:06:28.3699796+01:00): zamroź wejścia importu r3 a. Następny etap w candidate-build.ps1; po komplecie PreparedVerified, capture i oględziny.
 
 Po budowie A (2026-11-12T10:07:47.1656820+01:00): zaimportuj spójny natywny kandydat A. Następny etap w post-a.ps1; po kompletach obejrzeć obrazy i zdecydować o kolejnej ablacji.
+
+Po budowie A (2026-11-12T10:10:37.9511531+01:00): zapisz 492 kontrolowane kadry i budżet A. Następny etap w post-a.ps1; po kompletach obejrzeć obrazy i zdecydować o kolejnej ablacji.
