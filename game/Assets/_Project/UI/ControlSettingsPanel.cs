@@ -184,6 +184,11 @@ namespace Game.UI
             Stepper(content, right, ref y, "Czułość rozglądania", () => Pct(Settings.lookSensitivity), d => Settings.lookSensitivity = Step(Settings.lookSensitivity, d, 0.1f, ControlSettings.LookMin, ControlSettings.LookMax));
             Stepper(content, right, ref y, "Pole widzenia", () => F0(Settings.cabFov) + "°", d => Settings.cabFov = Step(Settings.cabFov, d, 5f, ControlSettings.FovMin, ControlSettings.FovMax));
             Segment(content, right, ref y, "Ruch głowy", "włączony", "wyłączony", () => !Settings.headMotion, v => Settings.headMotion = !v);
+            y += 18f;
+            Header(content, "DŹWIĘK", right, ref y);
+            // ADR 0137: owner A/B of the engine sound (ElevenLabs layers vs procedural synthesis); applied live.
+            Segment(content, right, ref y, "Silnik", "synteza", "ElevenLabs", () => Game.Core.AudioPreferences.ElevenLabsEngine,
+                v => Game.Core.AudioPreferences.ElevenLabsEngine = v);
 
             float contentH = Mathf.Max(leftEnd, y) + 8f;
             float panelH = Mathf.Min(avail.y, HeaderH + contentH + FooterH);
