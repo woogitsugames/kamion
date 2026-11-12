@@ -46,6 +46,11 @@ def main():
         raise RuntimeError('Complete the matching canonical world producer before this probe.')
     manifest_path = ROOT / 'Data/Regions/bialystok-industrial-c/generated/world_manifest.json'
     manifest = json.loads(manifest_path.read_text(encoding='utf-8-sig'))
+    if args.label == 'baseline':
+        receipt = json.loads((OUT / 'baseline-producer-progress.json').read_text(encoding='utf-8-sig'))
+        if (not receipt['complete'] or receipt['world_exit'] != 0 or receipt['resync_merge'] != 'e5eb5902'
+                or receipt['manifest_sha256'].lower() != hashlib.sha256(manifest_path.read_bytes()).hexdigest()):
+            raise RuntimeError('Fresh post-0131 producer receipt/manifest mismatch.')
     points = [{'en': [float(e), float(n)], 'hits': []}
               for n in range(-550, -309, 20) for e in range(285, 386, 20)]
     files, inventory, definitions = [], [], {}

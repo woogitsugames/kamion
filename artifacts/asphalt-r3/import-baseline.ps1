@@ -1,6 +1,9 @@
 $ErrorActionPreference='Stop'
 Set-Location (Resolve-Path "$PSScriptRoot/../..")
 if ((& git branch --show-current).Trim() -ne 'gpt-asphalt-r3') { throw 'Wrong round' }
+$receipt=Get-Content artifacts/asphalt-r3/baseline-producer-progress.json -Raw|ConvertFrom-Json
+if(-not $receipt.complete -or $receipt.world_exit -ne 0 -or $receipt.resync_merge -ne 'e5eb5902'){throw 'Fresh post-0131 producer did not complete'}
+if($receipt.manifest_sha256 -ne (Get-FileHash Data/Regions/bialystok-industrial-c/generated/world_manifest.json).Hash){throw 'Producer receipt/manifest mismatch'}
 $status=Get-Content artifacts/asphalt-r3/STATUS.md -Raw
 if($status -notmatch 'heavy World owner=gpt-asphalt-r3 exit=0; log artifacts/asphalt-r3/baseline-World.log'){throw 'Fresh World producer has not completed'}
 if(Select-String -Path artifacts/asphalt-r3/baseline-World.log -Pattern 'fallback=True' -SimpleMatch -Quiet){throw 'Fallback found'}
