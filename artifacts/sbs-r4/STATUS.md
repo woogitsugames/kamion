@@ -30,4 +30,7 @@ Nie wykonano merge do main, push, telefonu ani edycji innych dziedzin. Odśwież
 
 2026-11-12T12:30:55.3660397+01:00: przygotowałem make-controlled-probes.py z15 próbami C i kontrolami. Czyta widoczną jezdnię z road ORAZ bridge i rozdziela kolizje; source meshing.py:133 jawnie eksportuje nawierzchnię pomostu do bridge, którego stary sampler nie badał. Wszystkie poziomy i odrzucone hipotezy zostaną zapisane. Bez NMT/topmostfallback i bez zapisów produkcyjnych. Skrypt jeszcze niewykonany: wymaga zakończonej nowej bazy i osobnego heavy po terminalu77049.
 
-2026-11-12T12:32:58.2020705+01:00: potvrzeno SHA produkcyjnych kamer/referencji nadal zgodne z bazą hipotez r3. Nowy sampler ma poprawną składnięAST; zachowa plan odrzuceń także przy zerze kandydatów i wymaga jawnego braku fallbacków bazy. Dodałem źródłowe powiązanie eksportu nawierzchni bridge. Żaden nowy ray ani render jeszcze nie wykonany.
+2026-11-12T12:32:58.2020705+01:00: Potwierdzono SHA produkcyjnych kamer/referencji nadal zgodne z bazą hipotez r3. Nowy sampler ma poprawną składnięAST; zachowa plan odrzuceń także przy zerze kandydatów i wymaga jawnego braku fallbacków bazy. Dodałem źródłowe powiązanie eksportu nawierzchni bridge. Żaden nowy ray ani render jeszcze nie wykonany.
+
+
+2026-11-12T12:35:49.6345987+01:00: materiały uzyskały heavy FIFO, generator pracuje. Przygotowałem prywatne wrappery importu i kontrolowanych renderów r4; delta przesunięcia jest jawnie względem odziedziczonej kontroli, a poziom oka będzie ponownie osadzony na świeżej widocznej jezdni. Bez uruchomienia drugiego zadania heavy ani Unity.
