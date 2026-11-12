@@ -101,29 +101,51 @@ def lamp(h, bracket, double=False):
     return m, l1, col
 
 
-def lamp_y(h=12.0, reach=2.4, rise=1.1, console=False):
-    """Median double-arm column (ADR 0133): straight galvanised column, two straight arms rising in a Y to `reach`
-    on both sides (+y and -y, across both carriageways), flat LED housings at h. Photo Mapillary 494288258686575
-    scaled on the visible column above the median barrier: arm reach ~2.4 m, rise ~1.1 m (WORKING_VALUE).
-    console=True: the column stands on a steel console bolted to the deck fascia on its +y side (the 4.2 m gap
-    between the two DK8 decks over Rondo Putry, GUGiK ortho 0.08 m), no concrete footing (WORKING_VALUE)."""
+# Luminaire height of the DK8 median columns above the road (ADR 0146), WORKING_VALUE 9.4-11.3 m: Mapillary
+# 494288258686575 with the focal length measured in the frame (1900 px of 2048: 5.57 m lane-dash module of the 0.08 m
+# orthophoto, eye 1.0 m from the 3.5 m lane) -> head 9.0 m above the eye = 10.0 m above the deck; orthophoto shadows:
+# luminaire shadow on the NE deck 11.3 m, fork shadow of ground column 1 10.8 m at 1.05-1.13 m of shadow per metre.
+LAMP_Y_H_M = 10.3
+LAMP_MAST_SINK_M = 7.5        # WORKING_VALUE: deepest gap floor under the Putry decks is 6.2 m below the deck (NMT)
+LAMP_Y_ARM_R_LOD1 = 0.06     # WORKING_VALUE (ADR 0146): arm radius of the Low mesh, so a 7-9 cm tube does not alias away
+
+
+def lamp_y(h=10.3, reach=1.3, rise=1.0, console=False, sink=0.0):
+    """Median double-arm column of DK8 / Andersa at Rondo Putry (ADR 0133, reshaped in ADR 0146): tapered galvanised
+    column, two arms leaving the column top steeply and bending out in an arc to a flat LED housing on each side
+    (+y and -y, across both carriageways). Luminaires at `h` above the origin.
+    ADR 0146, GUGiK orthophoto 0.08 m (ground column at E -759.9 N 63.5): arm tips 3.8-4.0 m apart including the
+    0.65 m housings (-> `reach` 1.3 m to the arm end), arm rise ~1.0 m (shadow of both arms); Mapillary
+    494288258686575: rise / half span ~0.5, arc shape. WORKING_VALUE +-0.2 m.
+    sink > 0: a mast standing on the ground in the gap between two decks (origin = deck level, shaft continues `sink`
+    m below it into the ground under the viaduct, no footing in the mesh). console=True (ADR 0133, kept for other
+    rows): column on a steel console bolted to the deck fascia on its +y side."""
     m, l1, col = Mesh(), Mesh(), Mesh()
     m.pole_height = l1.pole_height = h
     hj = h - rise
-    for mm, seg in ((m, 12), (l1, 6)):
+    for mm, seg, bends, r_arm in ((m, 12, 5, None), (l1, 6, 3, LAMP_Y_ARM_R_LOD1)):
         if console:
             mm.box("steel_galv", [0, 0, 0.015], 0.17, 0.17, 0.015)                      # base plate on the console
             mm.box("steel_galv", [0, 0.105, -0.17], 0.13, 0.255, 0.17)                 # console into the fascia
-        else:
+        elif sink <= 0:
             mm.box("concrete_base", [0, 0, -0.01], 0.25, 0.25, 0.09)
-        mm.tube("steel_galv", [0, 0, 0.03 if console else 0.06], [0, 0, hj + 0.15], 0.095, 0.055, seg)
+        z0 = -sink if sink > 0 else (0.03 if console else 0.06)
+        r_base = 0.095 + 0.0035 * sink                                                # same taper continued downward
+        mm.tube("steel_galv", [0, 0, z0], [0, 0, hj + 0.12], r_base, 0.055, seg)
         for sgn in (1, -1):
-            end = np.array([0, sgn * reach, h])
-            mm.tube("steel_galv", [0, 0, hj], end, 0.045, 0.035, seg // 2)
+            pts = [np.array([0.0, 0.0, hj])]
+            for k in range(1, bends + 1):                # quarter ellipse: vertical at the column, flat at the housing
+                a = k / bends * math.pi / 2
+                pts.append(np.array([0.0, sgn * reach * (1 - math.cos(a)), hj + rise * math.sin(a)]))
+            for k, (a_, b_) in enumerate(zip(pts[:-1], pts[1:])):
+                r0 = r_arm or (0.045 - 0.010 * k / bends)
+                r1 = r_arm or (0.045 - 0.010 * (k + 1) / bends)
+                mm.tube("steel_galv", a_, b_, r0, r1, max(4, seg // 2), cap=False)
+            end = pts[-1]
             mm.box("luminaire_housing", end + [0, sgn * 0.32, -0.03], 0.16, 0.34, 0.05)
             mm.quad("lamp_glass", end + [-0.13, sgn * 0.04, -0.081], end + [0.13, sgn * 0.04, -0.081],
                     end + [0.13, sgn * 0.6, -0.081], end + [-0.13, sgn * 0.6, -0.081])
-    col.tube("collision_steel", [0, 0, 0], [0, 0, hj], 0.12, 0.12, 6)
+    col.tube("collision_steel", [0, 0, -sink], [0, 0, hj], 0.12, 0.12, 6)
     return m, l1, col
 
 
@@ -511,8 +533,10 @@ def build_all(sign_codes, boards):
         P[f"lamp_old_{kind}_{hh}m"] = lamp_old(float(hh), kind)
     P["lamp_arc_9m"] = lamp_arc(9.0)
     P["lamp_arc_9m_double"] = lamp_arc(9.0, double=True)
-    P["lamp_double_12m"] = lamp_y(12.0)                     # ADR 0133: DK8 median row (authored lamp_rows.json)
-    P["lamp_double_console_12m"] = lamp_y(12.0, console=True)
+    # ADR 0133 / 0146: DK8 median row (authored lamp_rows.json). Luminaires LAMP_Y_H_M above the road; in the gap
+    # between the decks the mast stands on the ground under the viaduct (LAMP_MAST_SINK_M of shaft below deck level).
+    P["lamp_double_10m"] = lamp_y(LAMP_Y_H_M)
+    P["lamp_double_mast_10m"] = lamp_y(LAMP_Y_H_M, sink=LAMP_MAST_SINK_M)
     P["sign_post"] = sign_post()
     for c in sorted(sign_codes):
         P[f"plate_{c}"] = plate(c)

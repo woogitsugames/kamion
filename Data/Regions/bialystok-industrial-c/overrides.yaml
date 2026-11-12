@@ -324,7 +324,14 @@ overrides:
   - id: andersa-viaduct-putry-style
     kind: bridge_style
     target: {osm_way: [1101181473, 173956078, 284022563, 606396460]}
-    set: {fascia: green, pier_mat: pier_yellow, noise_screen: transparent, screen_h: 3.0, screen_side: travel_right}
+    set: {fascia: green, pier_mat: pier_yellow, noise_screen: transparent, screen_h: 3.0, screen_side: travel_right,
+          # ADR 0146: cap 1.2 m (was the generic 1.5 m), red-brown coated cap on the spans (the ramp caps stay bare
+          # concrete: Mapillary 810896133189484), barrier posts 0.7 m behind the kerb face, red band on top of the
+          # ramp walls
+          cap_w: 1.2, cap_mat: bridge_cap_red, barrier_face_m: 0.70, ramp_fascia: red,
+          # ADR 0146 r2: green-grey painted posts (Mapillary 810525063224609 sunlit, 494288258686575 in shade); the
+          # default barrier_steel printed diagonal stripes on the thin H flange (plan-metre UV of the W-beam set)
+          screen_post_mat: noise_post}
     reason: >-
       Andersa viaduct at Rondo Putry (DK8/DK19/DK65): green deck edge, yellow-painted round piers in pairs,
       transparent noise screens on posts along the deck (CC0 photo 7204_May_2021, Rakoon; consistent with the
@@ -332,6 +339,11 @@ overrides:
       ADR 0125: the screen stands on the outer (right-hand) edge only - Mapillary 494288258686575 (szurek 2017,
       northbound deck) has the screen on the right and a guard rail with an open view of the other carriageway
       on the left. The southbound deck is assumed symmetric (UNVERIFIED).
+      ADR 0146: Mapillary 494288258686575 measured from the road vanishing point with eye height 1.0 m (lane 3.5 m):
+      edge line centre -> kerb face 0.4 m, kerb -> barrier posts ~0.75 m on a red-brown coated cap, screen ~0.5 m
+      behind the posts (kerb face -> screen ~1.3 m; was 1.65 m on a light concrete cap). Orthophoto 0.08 m: 1.1 m from
+      the edge line to the barrier; the caps on the median side are red. Mapillary 810525063224609 /
+      209622370971977: the fascia is green on the spans and red on top of the block-faced ramp walls. WORKING_VALUE.
     confidence: medium
     verify: screen height and post spacing, which deck sides carry screens
   - id: andersa-putry-approach-gantry
@@ -348,7 +360,9 @@ overrides:
     # beam chords 30 px apart -> 0.55 m, board tops ~0.3 m above the top chord, bottoms at the bottom chord.
     # The rule gave 4.06 x 1.42 m and 4.03 x 2.04 m on a 1.0 m beam. With the 5.0 + 0.2 m clearance the portal top comes
     # to 6.1 m, board bottoms 5.2-5.5 m (ADR 0127 read 6.2-6.5 m / ~5.5 m off the same frame; the rule gave 7.0 m). WORKING_VALUE (+-5 %).
-    beam_depth_m: 0.55
+    # ADR 0146: 0.6 (was 0.55; the prototype name carries decimetres and 0.55 already built `_b6` = 0.6 m; the
+    # rectified frame gives 28 px at 42 px/m = 0.65 m, so the range is 0.55-0.65 m).
+    beam_depth_m: 0.6
     boards:
       - lanes: [0, 1]
         size_m: [3.75, 0.82]

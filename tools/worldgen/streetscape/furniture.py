@@ -349,12 +349,17 @@ CAP_IN_M = 0.35            # deck-top sample this far inside the fascia edge (ca
 
 
 def lamp_rows(pl, parts, path, report):
-    """Authored lamp rows (ADR 0133, `<region>/lamp_rows.json`, survives every regeneration): positions measured
-    on the GUGiK 0.08 m orthophoto replace the rule lamps of the named chains within `within_m` of the row.
-    Runs after the carriageway / island / deck clearing passes: the row is authored, and a column on a console in
-    the gap between two decks stands above the ground roads under it (clear_carriageway would push it away).
-    A point within `deck_snap_m` of a bridge deck goes on a console at the nearest deck edge (fascia), on the
-    cap-top height, arms across the road (+y toward the deck); otherwise it is a ground column on the terrain."""
+    """Authored lamp rows (ADR 0133 / 0146, `<region>/lamp_rows.json`, survives every regeneration): positions
+    measured on the GUGiK 0.08 m orthophoto replace the rule lamps of the named chains within `within_m` of the row.
+    Runs after the carriageway / island / deck clearing passes: the row is authored, and a mast in the gap between
+    two decks stands above the ground roads under it (clear_carriageway would push it away).
+    A point within `deck_snap_m` of a bridge deck, outside it:
+      - `proto_mast` (ADR 0146): the mast stays at the measured point (its base is on the ground under the viaduct,
+        orthophoto: the pole shadow starts on the gravel in the gap) and its origin is the cap-top height of the
+        nearest deck edge, so the luminaires keep their height above the road;
+      - else `proto_console` (ADR 0133): on a console at the nearest deck edge (fascia), arms across the road.
+    A point on a deck-level surface (median fill between two walled ramps) is a ground column on that surface;
+    otherwise a ground column on the terrain."""
     import json
     from pathlib import Path
     from shapely.ops import nearest_points
@@ -412,7 +417,9 @@ def lamp_rows(pl, parts, path, report):
                     u = (edge - p) / max(d, 1e-9)                 # toward the deck, across the road
                     u = u if abs(float(u @ nrm)) > 0.7 else nrm * np.sign(float((edge - p) @ nrm) or 1.0)
                     zc = deck.top(*(edge + u * CAP_IN_M))
-                    if math.isfinite(zc):
+                    if math.isfinite(zc) and row.get("proto_mast"):
+                        z, proto = float(zc), row["proto_mast"]
+                    elif math.isfinite(zc):
                         q, z, proto = edge - u * CONSOLE_OUT_M, float(zc), row["proto_console"]
                 elif inside:
                     zc = deck.top(*p)
@@ -425,7 +432,8 @@ def lamp_rows(pl, parts, path, report):
             placed.append({"k": k, "p": proto, "at": [round(float(q[0]), 2), round(float(q[1]), 2)], "z": round(zb, 2),
                            "shift_m": round(float(np.hypot(*(np.asarray(q) - p))), 2)})
         out[row["id"]] = {"rule_lamps_removed": removed, "placed": sum(1 for x in placed if "p" in x),
-                          "console": sum(1 for x in placed if x.get("p") == row["proto_console"]), "items": placed}
+                          "console": sum(1 for x in placed if "p" in x and x["p"] == row.get("proto_console")),
+                          "mast": sum(1 for x in placed if "p" in x and x["p"] == row.get("proto_mast")), "items": placed}
     report["lamp_rows"] = out
 
 
@@ -1253,9 +1261,33 @@ def fence_styles(overrides):
     return out
 
 
-def fences(lin, src, origin, roads_poly, report, styles=None):
+def ramp_wall_keepout(net, r=2.5):
+    """ADR 0146 r2: plan corridor along both edges of the walled ramps (roads.profile.mark_walled_ramps). BDOT10k /
+    OSM map the ramp's own retaining wall as a line; rebuilt by retaining() it stood as a 1 m concrete wall with a
+    railing 0.5 m in front of the block wall of the Andersa ramp (E -428 N -74; not on Mapillary 810525063224609 /
+    209622370971977). r WORKING_VALUE."""
+    polys = []
+    for c in net.chains:
+        wl = c.meta.get("walled")
+        if c.meta.get("absorbed") or wl is None or not np.any(wl):
+            continue
+        idx = np.where(wl)[0]
+        for run in np.split(idx, np.where(np.diff(idx) > 1)[0] + 1):
+            if len(run) < 2:
+                continue
+            ss = np.asarray(c.line.s)[run]
+            P = c.line.point(ss)
+            _, N = c.line.frame(ss)
+            off = c.hw_at(ss) + S.KERB_TOP_W + bridge_cap_w(c)
+            for sgn in (1.0, -1.0):
+                polys.append(LineString(P + N * (sgn * off)[:, None]).buffer(r, cap_style="flat"))
+    return shapely.union_all(polys) if polys else None
+
+
+def fences(lin, src, origin, roads_poly, report, styles=None, net=None):
     """styles: {osm way id: colour material} of the authored fence_style overrides (fence_styles)."""
-    n = {"panel_m": 0.0, "concrete_m": 0.0, "retaining_m": 0.0}
+    n = {"panel_m": 0.0, "concrete_m": 0.0, "retaining_m": 0.0, "retaining_on_ramp_wall_m": 0.0}
+    ramp_cut = ramp_wall_keepout(net) if net is not None else None
     styles = styles or {}
     seen = set()
     cutter = roads_poly.buffer(0.3) if roads_poly is not None else None
@@ -1282,13 +1314,17 @@ def fences(lin, src, origin, roads_poly, report, styles=None):
                             lin, LineString([cc[si], cc[si + 1]]), f"{key}:{si}", key)
                 n["concrete_m"] += part.length
             else:
-                retaining(lin, P, key)
-                n["retaining_m"] += part.length
+                for sub in cut_by(part, ramp_cut):
+                    retaining(lin, lin.dens(sub, 2.0), key)
+                    n["retaining_m"] += sub.length
+                n["retaining_on_ramp_wall_m"] += part.length - sum(x.length for x in cut_by(part, ramp_cut))
     for f in src["bdot10k"]["OT_BUUO_L"]:
         line = LineString(np.asarray(f["geometry"]["coordinates"], float) - origin)
         for part in cut_by(line, cutter):
-            retaining(lin, lin.dens(part, 1.0), f"bdot:{f['id']}")
-            n["retaining_m"] += part.length
+            for sub in cut_by(part, ramp_cut):
+                retaining(lin, lin.dens(sub, 1.0), f"bdot:{f['id']}")
+                n["retaining_m"] += sub.length
+            n["retaining_on_ramp_wall_m"] += part.length - sum(x.length for x in cut_by(part, ramp_cut))
     report["fences"] = {k: round(v) for k, v in n.items()}
     if styles:      # a styled way that is no longer in the data is reported, never silently dropped
         report["fences"]["styled_ways"] = sorted(seen)
@@ -1910,7 +1946,9 @@ def guardrails(lin, net, zground, report):
             # BRIDGE_BARRIER_EDGE_MIN_M to the cap edge
             # ADR 0123: on a narrow cap the face distance rules (0.42 m: the post line may stand further than
             # BRIDGE_BARRIER_EDGE_M from the cap edge); the 1.5 m caps keep BRIDGE_BARRIER_EDGE_M as before
-            edge = kw[br] + S.KERB_TOP_W - (S.BRIDGE_BARRIER_FACE_M + W_BACK + 0.083)
+            # ADR 0146: bridge_style `barrier_face_m` (Putry decks: posts ~0.7 m behind the kerb face on 494288)
+            face_m = float(bridge_style(c).get("barrier_face_m") or S.BRIDGE_BARRIER_FACE_M)
+            edge = kw[br] + S.KERB_TOP_W - (face_m + W_BACK + 0.083)
             edge = np.where(kw[br] < 1.3, np.maximum(edge, S.BRIDGE_BARRIER_EDGE_MIN_M),
                             np.clip(edge, S.BRIDGE_BARRIER_EDGE_MIN_M, S.BRIDGE_BARRIER_EDGE_M))
             off[br] = hw[br] + S.KERB_TOP_W + kw[br] - edge
@@ -2183,9 +2221,40 @@ def noise_wall(lin, P, Z, st, H, key):
     lin.posts(st["post_mat"], P, S.NOISE_BARRIER_POST, NOISE_POST_W, NOISE_POST_W, H + 0.1, src=key)
 
 
-def noise_barriers(lin, src, origin, roads_poly, report, overrides=None, pl=None):
+NOISE_ON_DECK_M = 2.5     # WORKING_VALUE: a mapped noise barrier this close to a screened deck edge IS that screen
+
+
+def deck_screen_keepout(net):
+    """ADR 0146: plan corridor along the deck / ramp edges that carry the noise screen of a bridge_style. OSM and
+    BDOT10k map that screen as a barrier line; built again as a ground wall it stood 0.5 m outside the ramp wall of
+    Andersa (E -428 N -74), base on the ground 3 m below the deck, in front of the wall and its red band
+    (Mapillary 810525063224609 / 209622370971977: one screen, on the wall)."""
+    from roads.meshing import screen_sides
+    polys = []
+    for c in net.chains:
+        if c.meta.get("absorbed") or c.bridge is None or not c.bridge.any():
+            continue
+        sides = screen_sides(c, bridge_style(c))
+        if not sides:
+            continue
+        idx = np.where(c.bridge)[0]
+        for run in np.split(idx, np.where(np.diff(idx) > 1)[0] + 1):
+            if len(run) < 2:
+                continue
+            ss = np.asarray(c.line.s)[run]
+            P = c.line.point(ss)
+            _, N = c.line.frame(ss)
+            off = c.hw_at(ss) + S.KERB_TOP_W + bridge_cap_w(c)
+            for side in sides:
+                sgn = 1.0 if side == "L" else -1.0
+                polys.append(LineString(P + N * (sgn * off)[:, None]).buffer(NOISE_ON_DECK_M, cap_style="flat"))
+    return shapely.union_all(polys) if polys else None
+
+
+def noise_barriers(lin, src, origin, roads_poly, report, overrides=None, pl=None, net=None):
     """BDOT10k OT_OIKM_L + OSM barrier=wall/wall=noise_barrier (parts > NOISE_DEDUP_M from BDOT) + authored lines,
-    styled by authored zones (kind: noise_barrier_style, Mapillary image ids as provenance), default `solid`."""
+    styled by authored zones (kind: noise_barrier_style, Mapillary image ids as provenance), default `solid`.
+    Parts along a deck edge that carries a bridge_style screen are not built (deck_screen_keepout, ADR 0146)."""
     L = {"bdot": 0.0, "osm": 0.0, "override": 0.0}
     by_style = {}
     cutter = roads_poly.buffer(0.2) if roads_poly is not None else None
@@ -2205,6 +2274,10 @@ def noise_barriers(lin, src, origin, roads_poly, report, overrides=None, pl=None
         feats.append((ln, key, "override", H))
     used_zones = set()
     walls = []
+    on_deck = deck_screen_keepout(net) if net is not None else None
+    if on_deck is not None:
+        cutter = on_deck if cutter is None else cutter.union(on_deck)
+    m_on_deck = sum(f[0].intersection(on_deck).length for f in feats if f[2] != "override") if on_deck is not None else 0.0
     for line, key, kind, H in feats:
         for part in cut_by(line, cutter):
             walls.append(part)
@@ -2222,6 +2295,7 @@ def noise_barriers(lin, src, origin, roads_poly, report, overrides=None, pl=None
     report["noise_barriers"] = {"m_by_source": {k: round(v) for k, v in L.items()},
                                 "m_by_style": {k: round(v) for k, v in by_style.items()},
                                 "zones_stale": sorted({z[3] for z in zones} - used_zones)}
+    report["noise_barriers"]["on_screened_deck_m"] = round(float(m_on_deck), 1)       # ADR 0146: not built twice
     if pl is not None:
         report["noise_barriers"]["signs_moved_off_wall"] = _signs_off_walls(pl, walls, roads_poly)
 
