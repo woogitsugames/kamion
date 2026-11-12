@@ -58,9 +58,16 @@ try {
     $env:OPENBLAS_NUM_THREADS = '1'
     $env:MKL_NUM_THREADS = '1'
     $env:NUMEXPR_NUM_THREADS = '1'
-    & uv @uvArguments *> $log
-    $code = $LASTEXITCODE
-    Get-Content $log -Tail 18
+    if ($Task -eq 'BuildAll') {
+        & uv run --project tools/worldgen python art-source/world/materials/_src/cc0_fetch.py *> "$log.cc0-verify.log"
+        $code=$LASTEXITCODE
+        if($code){Get-Content "$log.cc0-verify.log" -Tail 12}
+    }
+    if($Task -ne 'BuildAll' -or $code -eq 0){
+        & uv @uvArguments *> $log
+        $code = $LASTEXITCODE
+        Get-Content $log -Tail 18
+    }
 }
 finally { & pwsh $slot -Release -Pool heavy -Owner $owner }
 Add-Content (Join-Path $PSScriptRoot 'STATUS.md') "Zadanie heavy $Task zakończone kodem $code. Log: $log. Następny krok: odczytać wynik i wykonać tylko uzasadnioną następną operację."
