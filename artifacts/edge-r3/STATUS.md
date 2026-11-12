@@ -43,3 +43,4 @@ Krok 14: obejrzano bazowy statyw NW w 960 px. Kadr zasłaniają regionalny płot
 Następny krok: probe-nw.ps1; jeśli czytelny, przyjąć pozę i ponowić całą bazę Before z identycznymi późniejszymi kamerami.
 Krok 15: dodatkowy statyw NW poza regionem trafił wewnątrz kurtyny HLOD; również nie jest dowodem widocznego szwu. Nie przyjęto nowej pozy i nie zmieniono zamrożonych kamer Before. Oba poglądowe obrazy są zachowane, ocena wizualna pozostaje otwarta.
 Po ukończonej bazie dodano wyłącznie dwa testy rzeczywistego BuildApron na stokach N ±0,025, z niezależną średnią 13066/13. Kod produkcyjny nadal stary. Następna komenda: test-corner.ps1 -Phase Red; AuditGround before czeka/wykonuje się niezależnie na zamrożonej siatce pod heavy.
+2026-11-12T01:46:53.4690809+01:00 Test narożnika Red potwierdzony: total 2, passed 0, failed 2; XML i SHA w corner-red-result.json.
