@@ -282,18 +282,19 @@ namespace Game.Core.Navigation
             bool rev = RouteGraph.Reversed(d);
             ushort name = g.EdgeName[e];
             byte lim = g.EdgeMaxSpeedOsm[e] ? g.EdgeMaxSpeed[e] : (byte)0;
-            p.Add(g.PointAlong(d, a), name, lim);
+            byte cls = g.EdgeClass[e];
+            p.Add(g.PointAlong(d, a), name, lim, cls);
             int k0 = g.EdgeStart[e], k1 = g.EdgeStart[e + 1] - 1;
             float len = g.PointS[k1];
             if (!rev)
             {
-                for (int k = k0; k <= k1; k++) { float s = g.PointS[k]; if (s > a && s < b) p.Add(g.Points[k], name, lim); }
+                for (int k = k0; k <= k1; k++) { float s = g.PointS[k]; if (s > a && s < b) p.Add(g.Points[k], name, lim, cls); }
             }
             else
             {
-                for (int k = k1; k >= k0; k--) { float s = len - g.PointS[k]; if (s > a && s < b) p.Add(g.Points[k], name, lim); }
+                for (int k = k1; k >= k0; k--) { float s = len - g.PointS[k]; if (s > a && s < b) p.Add(g.Points[k], name, lim, cls); }
             }
-            p.Add(g.PointAlong(d, b), name, lim);
+            p.Add(g.PointAlong(d, b), name, lim, cls);
         }
 
         // Path index where each directed edge of the route begins (filled by BuildGeometry, read by BuildManeuvers).

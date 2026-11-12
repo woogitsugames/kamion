@@ -1,0 +1,135 @@
+// Minimal UnityEngine stand-in so the game's navigation sources (Game.Core.Navigation: RouteGraph, RoutePlanner,
+// RoutePath, RouteTracker, NavEta, NavVoice) compile in the .NET runner unchanged (ADR 0150). Only what those files
+// use; semantics copied from the Unity scripting reference (SignedAngle: + = clockwise from `from` to `to` in a
+// y-up frame, i.e. + = right for x-east/y-north). Resources.Load reads the real files under
+// game/Assets/_Project/UI/Resources (repo root found by walking up from the assembly location), so the runner
+// tests the committed <region>_route.bytes.
+using System;
+using System.IO;
+
+namespace UnityEngine
+{
+    public static class Mathf
+    {
+        public const float Rad2Deg = 57.29578f;
+        public const float Deg2Rad = 0.017453292f;
+        public static float Abs(float f) => Math.Abs(f);
+        public static int Abs(int v) => Math.Abs(v);
+        public static float Sign(float f) => f >= 0f ? 1f : -1f;
+        public static float Min(float a, float b) => a < b ? a : b;
+        public static int Min(int a, int b) => a < b ? a : b;
+        public static float Max(float a, float b) => a > b ? a : b;
+        public static int Max(int a, int b) => a > b ? a : b;
+        public static float Sqrt(float f) => (float)Math.Sqrt(f);
+        public static float Sin(float f) => (float)Math.Sin(f);
+        public static float Cos(float f) => (float)Math.Cos(f);
+        public static float Atan2(float y, float x) => (float)Math.Atan2(y, x);
+        public static float Clamp(float v, float lo, float hi) => v < lo ? lo : v > hi ? hi : v;
+        public static int Clamp(int v, int lo, int hi) => v < lo ? lo : v > hi ? hi : v;
+        public static float Clamp01(float v) => v < 0f ? 0f : v > 1f ? 1f : v;
+        public static float Lerp(float a, float b, float t) => a + (b - a) * Clamp01(t);
+    }
+
+    public struct Vector2 : IEquatable<Vector2>
+    {
+        public float x, y;
+        public Vector2(float x, float y) { this.x = x; this.y = y; }
+        public float magnitude => (float)Math.Sqrt(x * x + y * y);
+        public float sqrMagnitude => x * x + y * y;
+        public Vector2 normalized { get { float m = magnitude; return m > 1e-5f ? new Vector2(x / m, y / m) : zero; } }
+        public static Vector2 zero => new Vector2(0f, 0f);
+        public static Vector2 up => new Vector2(0f, 1f);
+        public static Vector2 operator +(Vector2 a, Vector2 b) => new Vector2(a.x + b.x, a.y + b.y);
+        public static Vector2 operator -(Vector2 a, Vector2 b) => new Vector2(a.x - b.x, a.y - b.y);
+        public static Vector2 operator -(Vector2 a) => new Vector2(-a.x, -a.y);
+        public static Vector2 operator *(Vector2 a, float d) => new Vector2(a.x * d, a.y * d);
+        public static Vector2 operator *(float d, Vector2 a) => new Vector2(a.x * d, a.y * d);
+        public static Vector2 operator /(Vector2 a, float d) => new Vector2(a.x / d, a.y / d);
+        public static bool operator ==(Vector2 a, Vector2 b) => a.x == b.x && a.y == b.y;
+        public static bool operator !=(Vector2 a, Vector2 b) => !(a == b);
+        public bool Equals(Vector2 o) => this == o;
+        public override bool Equals(object o) => o is Vector2 v && Equals(v);
+        public override int GetHashCode() => x.GetHashCode() ^ (y.GetHashCode() << 2);
+        public static float Dot(Vector2 a, Vector2 b) => a.x * b.x + a.y * b.y;
+        public static float Distance(Vector2 a, Vector2 b) => (a - b).magnitude;
+        public static Vector2 Min(Vector2 a, Vector2 b) => new Vector2(Math.Min(a.x, b.x), Math.Min(a.y, b.y));
+        public static Vector2 Max(Vector2 a, Vector2 b) => new Vector2(Math.Max(a.x, b.x), Math.Max(a.y, b.y));
+        public static Vector2 Lerp(Vector2 a, Vector2 b, float t) => a + (b - a) * Mathf.Clamp01(t);
+        // Unity: angle in degrees from `from` to `to`, + clockwise in the y-up screen/world frame (+ = right for x-east/y-north).
+        public static float SignedAngle(Vector2 from, Vector2 to)
+        {
+            float dot = Dot(from, to);
+            float det = from.x * to.y - from.y * to.x;
+            return (float)Math.Atan2(det, dot) * Mathf.Rad2Deg;
+        }
+        public override string ToString() => "(" + x + ", " + y + ")";
+    }
+
+    public struct Vector4
+    {
+        public float x, y, z, w;
+        public Vector4(float x, float y, float z, float w) { this.x = x; this.y = y; this.z = z; this.w = w; }
+    }
+
+    public class Object { }
+
+    public class TextAsset : Object
+    {
+        public byte[] bytes = Array.Empty<byte>();
+        public string text = "";
+    }
+
+    public static class Application
+    {
+        /// <summary>game/Assets of this repo (used by tests that dump artifacts next to the Unity project).</summary>
+        public static string dataPath => RepoRoot() + "/game/Assets";
+    }
+
+    internal static class RepoRootCache
+    {
+        public static string Root;
+    }
+
+    public static class Resources
+    {
+        static string RepoRoot()
+        {
+            if (RepoRootCache.Root != null) return RepoRootCache.Root;
+            var dir = new DirectoryInfo(AppContext.BaseDirectory);
+            while (dir != null)
+            {
+                if (Directory.Exists(Path.Combine(dir.FullName, "game", "Assets", "_Project", "UI", "Resources")))
+                {
+                    RepoRootCache.Root = dir.FullName;
+                    return RepoRootCache.Root;
+                }
+                dir = dir.Parent;
+            }
+            throw new DirectoryNotFoundException("repo root (game/Assets/_Project/UI/Resources) not found above " + AppContext.BaseDirectory);
+        }
+
+        /// <summary>Loads a file from game/Assets/_Project/UI/Resources (e.g. "CabDisplay/Nav/&lt;region&gt;_route" -> .bytes).</summary>
+        public static T Load<T>(string path) where T : Object
+        {
+            string file = Path.Combine(RepoRoot(), "game", "Assets", "_Project", "UI", "Resources", path.Replace('/', Path.DirectorySeparatorChar));
+            if (!File.Exists(file) && File.Exists(file + ".bytes")) file += ".bytes";
+            if (!File.Exists(file)) return null;
+            if (typeof(T) == typeof(TextAsset))
+            {
+                var ta = new TextAsset { bytes = File.ReadAllBytes(file) };
+                ta.text = System.Text.Encoding.UTF8.GetString(ta.bytes);
+                return (T)(Object)ta;
+            }
+            return null;
+        }
+
+        public static void UnloadAsset(Object asset) { }
+    }
+
+    public static class Debug
+    {
+        public static void Log(object message) => Console.WriteLine(message);
+        public static void LogWarning(object message) => Console.WriteLine("[warn] " + message);
+        public static void LogError(object message) => Console.WriteLine("[error] " + message);
+    }
+}
