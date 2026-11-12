@@ -20,7 +20,7 @@ $shader=$shader.Replace('[HDR] _EmissionColor("Color", Color)', '[HDR] _Emission
 $shader='// URP Lit scaffold: copyright Unity Technologies ApS, Unity Companion License.'+"`n"+
     '// Forward source pinned to installed URP; all other passes and UnityPerMaterial layout remain URP Lit.'+"`n"+$shader
 foreach ($pass in @('ShadowCaster','GBuffer','DepthOnly','DepthNormals','Meta','Universal2D','MotionVectors','XRMotionVectors')) {
-    $shader+="`n        UsePass `"Universal Render Pipeline/Lit/$pass`""
+    $shader+="`n        UsePass `"Universal Render Pipeline/Lit/$($pass.ToUpperInvariant())`""
 }
 $shader+="`n    }`n    FallBack `"Hidden/Universal Render Pipeline/FallbackError`"`n}`n"
 Set-Content "$out/FurnitureSign.shader" $shader -Encoding utf8

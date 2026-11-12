@@ -181,14 +181,14 @@ Shader "Kamion/Furniture Sign"
             #include "FurnitureSignForward.hlsl"
             ENDHLSL
         }
-        UsePass "Universal Render Pipeline/Lit/ShadowCaster"
-        UsePass "Universal Render Pipeline/Lit/GBuffer"
-        UsePass "Universal Render Pipeline/Lit/DepthOnly"
-        UsePass "Universal Render Pipeline/Lit/DepthNormals"
-        UsePass "Universal Render Pipeline/Lit/Meta"
-        UsePass "Universal Render Pipeline/Lit/Universal2D"
-        UsePass "Universal Render Pipeline/Lit/MotionVectors"
-        UsePass "Universal Render Pipeline/Lit/XRMotionVectors"
+        UsePass "Universal Render Pipeline/Lit/SHADOWCASTER"
+        UsePass "Universal Render Pipeline/Lit/GBUFFER"
+        UsePass "Universal Render Pipeline/Lit/DEPTHONLY"
+        UsePass "Universal Render Pipeline/Lit/DEPTHNORMALS"
+        UsePass "Universal Render Pipeline/Lit/META"
+        UsePass "Universal Render Pipeline/Lit/UNIVERSAL2D"
+        UsePass "Universal Render Pipeline/Lit/MOTIONVECTORS"
+        UsePass "Universal Render Pipeline/Lit/XRMOTIONVECTORS"
     }
     FallBack "Hidden/Universal Render Pipeline/FallbackError"
 }

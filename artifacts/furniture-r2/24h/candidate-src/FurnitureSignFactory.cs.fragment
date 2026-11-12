@@ -23,7 +23,7 @@ static Material FurnitureSign(RegionImporter.Result r, string id, Dictionary<str
         mat.shader = shader;
         mat.shaderKeywords = new[] { "_ALPHATEST_ON", "_FURNITURE_RETRO" };
         float gain = Mathf.Max(0f, (float)Num(retro.Get("gain")));
-        mat.SetColor("_EmissionColor", new Color(gain, gain, gain, 1f).gamma);
+        mat.SetColor("_EmissionColor", new Color(gain, gain, gain, 1f));
     }
     else
     {

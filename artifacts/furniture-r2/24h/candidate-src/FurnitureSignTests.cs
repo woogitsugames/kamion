@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using Game.Gameplay.Furniture;
 using Game.Vehicle.Runtime;
 using NUnit.Framework;
@@ -14,6 +15,27 @@ namespace Game.Tests
         const string Keyword = "_FURNITURE_RETRO";
         string m_Pipeline;
         int m_MaxLod;
+        static Shader s_CoefficientProbe;
+
+        static Shader CoefficientProbe()
+        {
+            if (s_CoefficientProbe != null) return s_CoefficientProbe;
+            const string dir = "Assets/_Generated/FurnitureSignProbe";
+            string root = Path.GetDirectoryName(Application.dataPath);
+            Directory.CreateDirectory(Path.Combine(root, dir));
+            string shader = File.ReadAllText(Path.Combine(Application.dataPath, "_Project/Rendering/Shaders/FurnitureSign.shader"));
+            string fragment = File.ReadAllText(Path.Combine(Application.dataPath, "_Project/Rendering/Shaders/FurnitureSignForward.hlsl"));
+            StringAssert.Contains("outColor = color;", fragment);
+            fragment = fragment.Replace("outColor = color;", "outColor = half4(_EmissionColor.rgb, 1);");
+            shader = shader.Replace("Shader \"Kamion/Furniture Sign\"", "Shader \"Hidden/Kamion/FurnitureSignCoefficient\"")
+                .Replace("\"FurnitureSignForward.hlsl\"", "\"FurnitureCoefficientForward.hlsl\"");
+            File.WriteAllText(Path.Combine(root, dir, "FurnitureCoefficientForward.hlsl"), fragment);
+            File.WriteAllText(Path.Combine(root, dir, "FurnitureCoefficient.shader"), shader);
+            AssetDatabase.ImportAsset(dir + "/FurnitureCoefficientForward.hlsl", ImportAssetOptions.ForceSynchronousImport);
+            AssetDatabase.ImportAsset(dir + "/FurnitureCoefficient.shader", ImportAssetOptions.ForceSynchronousImport);
+            s_CoefficientProbe = AssetDatabase.LoadAssetAtPath<Shader>(dir + "/FurnitureCoefficient.shader");
+            return s_CoefficientProbe;
+        }
 
         [OneTimeSetUp] public void SetUpPipelineTag()
         {
@@ -31,10 +53,11 @@ namespace Game.Tests
         }
 
         static Color Draw(bool candidate, bool keyword, bool sourceOn, float distance = 50,
-            float eyeOffset = 0, bool back = false, bool transparent = false)
+            float eyeOffset = 0, bool back = false, bool transparent = false,
+            float gain = 800, bool coefficientOnly = false, float lampHalfWidth = 1)
         {
             if (SystemInfo.graphicsDeviceType == GraphicsDeviceType.Null) Assert.Ignore("GPU required");
-            var shader = Shader.Find(candidate ? "Kamion/Furniture Sign" : "Universal Render Pipeline/Lit");
+            var shader = coefficientOnly ? CoefficientProbe() : Shader.Find(candidate ? "Kamion/Furniture Sign" : "Universal Render Pipeline/Lit");
             Assert.NotNull(shader);
             Assert.IsFalse(ShaderUtil.ShaderHasError(shader));
             var mat = new Material(shader);
@@ -53,7 +76,7 @@ namespace Game.Tests
                 tex.SetPixel(0, 0, new Color(.6f, .2f, .1f, transparent ? 0 : 1)); tex.Apply();
                 mat.SetTexture("_BaseMap", tex);
                 mat.SetColor("_BaseColor", Color.white);
-                mat.SetColor("_EmissionColor", new Color(800, 800, 800, 1).gamma);
+                mat.SetColor("_EmissionColor", new Color(gain, gain, gain, 1));
                 mat.DisableKeyword("_EMISSION");
                 mat.EnableKeyword("_ALPHATEST_ON"); mat.SetFloat("_AlphaClip", 1); mat.SetFloat("_Cutoff", .5f);
                 mat.SetFloat("_Surface", 0); mat.SetFloat("_Smoothness", .55f); mat.SetFloat("_Metallic", 0);
@@ -71,8 +94,8 @@ namespace Game.Tests
                 cb.SetGlobalVector("_WorldSpaceCameraPos", new Vector4(eyeOffset, 0, -distance, 1));
                 cb.SetGlobalVector("_MainLightPosition", new Vector4(0, 0, -1, 0));
                 cb.SetGlobalVector("_MainLightColor", new Vector4(.25f, .25f, .25f, 1));
-                cb.SetGlobalVector("_FurnitureRetroHead0", new Vector4(-1, 0, -distance, 1));
-                cb.SetGlobalVector("_FurnitureRetroHead1", new Vector4(1, 0, -distance, 1));
+                cb.SetGlobalVector("_FurnitureRetroHead0", new Vector4(-lampHalfWidth, 0, -distance, 1));
+                cb.SetGlobalVector("_FurnitureRetroHead1", new Vector4(lampHalfWidth, 0, -distance, 1));
                 cb.SetGlobalVector("_FurnitureRetroHead2", Vector4.zero);
                 cb.SetGlobalVector("_FurnitureRetroHead3", Vector4.zero);
                 cb.SetGlobalVector("_FurnitureRetroForward", new Vector4(0, 0, 1, 0));
@@ -84,7 +107,7 @@ namespace Game.Tests
                 RenderTexture.active = rt; pixel.ReadPixels(new Rect(8,8,1,1), 0, 0); pixel.Apply();
                 var c = pixel.GetPixel(0,0);
                 Assert.IsFalse(float.IsNaN(c.r) || float.IsInfinity(c.r));
-                if (!transparent) Assert.Less(c.b, .9f, "Probe did not render");
+                if (!transparent && !coefficientOnly) Assert.Less(c.b, .9f, "Probe did not render");
                 return c;
             }
             finally
@@ -106,6 +129,13 @@ namespace Game.Tests
         [Test] public void KeywordOffMatchesInstalledUrpLitOnGpu() => Same(Draw(false,false,false), Draw(true,false,false));
         [Test] public void EnabledKeywordWithNoSourceMatchesInstalledUrpLit() => Same(Draw(false,false,false), Draw(true,true,false));
         [Test] public void AlphaCutoutRemainsEmptyWithHeadlights() => Same(Color.magenta, Draw(true,true,true,transparent:true));
+        [TestCase(1f)] [TestCase(800f)] public void HdrReturnCoefficientReachesGpuWithoutGammaEncoding(float gain)
+        {
+            var c = Draw(true,true,false,gain:gain,coefficientOnly:true);
+            Assert.That(c.r, Is.EqualTo(gain).Within(gain * .002f));
+            Assert.That(c.g, Is.EqualTo(gain).Within(gain * .002f));
+            Assert.That(c.b, Is.EqualTo(gain).Within(gain * .002f));
+        }
         [Test] public void ReturnDoesNotCreateAdditionalPasses()
         {
             var a = new Material(Shader.Find("Universal Render Pipeline/Lit"));
@@ -132,7 +162,9 @@ namespace Game.Tests
         }
         [Test] public void ReturnFallsWithDistanceAndEndsBeyondRange()
         {
-            float near = Draw(true,true,true,distance:25).r - Draw(true,true,false,distance:25).r;
+            // Keep the observation angle constant while testing distance, rather than letting
+            // the closer fixed-width headlamps widen the observation angle and suppress return.
+            float near = Draw(true,true,true,distance:25,lampHalfWidth:.5f).r - Draw(true,true,false,distance:25,lampHalfWidth:.5f).r;
             float far = Draw(true,true,true,distance:50).r - Draw(true,true,false,distance:50).r;
             Assert.Greater(near, far * 2); Assert.Greater(far, .005f);
             Same(Draw(true,true,false,distance:160), Draw(true,true,true,distance:160));
