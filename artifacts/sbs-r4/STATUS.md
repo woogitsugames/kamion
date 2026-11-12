@@ -41,4 +41,7 @@ Nie wykonano merge do main, push, telefonu ani edycji innych dziedzin. Odśwież
 
 2026-11-12T12:39:26.9379522+01:00: generator Materials zakończony exit0; osobny heavy zwolniony. Szczegóły i SHA w receipcie kroku.
 
-2026-11-12T12:39:35.4060595+01:00: prywatne próby wiążą teraz także materials_spec z planem i importem, zachowują main_sha i sprawdzają pełny unikalny roster raw przy składaniu. Jest to przygotowanie kodu, nie wynik renderu. Materiały baseline nadal pracują w tym samym slocie.
+2026-11-12T12:39:35.4060595+01:00: prywatne próby wiążą teraz także materials_spec z planem i importem, zachowują main_sha i sprawdzają pełny unikalny roster raw przy składaniu. Jest to przygotowanie kodu, nie wynik renderu. W chwili zapisu zakończenie materiałów już nastąpiło; poniższy receipt potwierdza wynik.
+
+
+2026-11-12T12:39:50.3809308+01:00: potwierdzono Materials exit0, 505 s w logu, spec SHA c552a473. Source HEAD3a1e398c; późniejsze commity dotyczyły jedynie SBS i helperów, nie źródeł materiałów. Heavy zwolniony12:39:26, World ma nowy bilet FIFO (6 wcześniejszych). Ten sam proces orkiestracji77049, bez nowego heavyjobu.
