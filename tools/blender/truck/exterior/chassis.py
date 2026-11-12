@@ -5,6 +5,7 @@ and battery box on the right. Wheels: forged-aluminium 22.5x9.00 discs; front ET
 rear duals mounted back to back (outer wheel shows the deep dish). ET values WORKING_VALUE (class typical).
 """
 import math
+import json
 
 import bmesh
 import bpy
@@ -16,6 +17,8 @@ from geom import (WB, WHEEL_Z, TYRE_R, FRONT_TRACK, REAR_TRACK, DUAL_SPACING, FI
                   lathe, arch, extrude_poly, rrect, boolean, bevel, set_group)
 
 Y_END = -WB - REAR_OH
+# WIP r4: explicit exporter opt-in until native budgets and appearance pass.
+REGULAR_FRONT_WHEELS = False
 
 
 # ---------------------------------------------------------------- tyre
@@ -70,15 +73,21 @@ def wheel(name, xc, y, out, et, tyre_mat, nuts=True, hub="front", seg=48):
     dish = [(0.259, sgn * 0.06), (0.250, sgn * 0.09), (0.236, xd - sgn * 0.004), (0.226, xd + sgn * 0.008),
             (0.244, sgn * 0.085), (0.250, sgn * 0.055)]
     if abs(et) > 0.09:
-        lathe(name + "_dish", dish, c, "alu_wheel", seg=48, side=out, sharp=40)
-    disc = lathe(name + "_disc", [(0.112, xd - 0.011), (0.236, xd - 0.011), (0.236, xd + 0.011),
-                                  (0.112, xd + 0.011)], c, "alu_wheel", seg=min(40, seg), side=out, sharp=40, closed_ends=False)
-    cutters = []
-    for k in range(10):
-        a = 2 * math.pi * (k + 0.5) / 10
-        cutters.append(cyl(f"{name}_hh{k}", (xc + out * xd, y + 0.200 * math.cos(a), WHEEL_Z + 0.200 * math.sin(a)),
-                           0.028, 0.06, "alu_wheel", seg=16 if seg > 30 else 10))
-    boolean(disc, cutters)
+        bowl = lathe(name + "_dish", dish, c, "alu_wheel", seg=48, side=out, sharp=40)
+        if REGULAR_FRONT_WHEELS and hub == "front":
+            bowl['round_profile_json'] = json.dumps(dish)
+    if REGULAR_FRONT_WHEELS and hub == "front":
+        from wheel_disc_blender import make_authoring
+        disc = make_authoring(name + "_disc", c, out, xd, segments=16)
+    else:
+        disc = lathe(name + "_disc", [(0.112, xd - 0.011), (0.236, xd - 0.011), (0.236, xd + 0.011),
+                                      (0.112, xd + 0.011)], c, "alu_wheel", seg=min(40, seg), side=out, sharp=40, closed_ends=False)
+        cutters = []
+        for k in range(10):
+            a = 2 * math.pi * (k + 0.5) / 10
+            cutters.append(cyl(f"{name}_hh{k}", (xc + out * xd, y + 0.200 * math.cos(a), WHEEL_Z + 0.200 * math.sin(a)),
+                               0.028, 0.06, "alu_wheel", seg=16 if seg > 30 else 10))
+        boolean(disc, cutters)
     xf = xc + out * (xd + 0.011)   # disc outer face
     if nuts:
         for k in range(10):
@@ -87,8 +96,12 @@ def wheel(name, xc, y, out, et, tyre_mat, nuts=True, hub="front", seg=48):
             cyl(f"{name}_nut{k}", p, 0.0175, 0.032, "steel", seg=6, axis="X")
             cyl(f"{name}_washer{k}", (xf + out * 0.002, p[1], p[2]), 0.022, 0.004, "steel", seg=12)
     if hub == "front":
-        lathe(name + "_hubcap", [(0.105, 0.0), (0.105, 0.035), (0.095, 0.060), (0.06, 0.085), (0.0, 0.095)],
-              V((xf, y, WHEEL_Z)), "satin_alu", seg=40, side=out, sharp=40)
+        # Generic pressed steel cover; 40 mm height is a WORKING_VALUE, not a measured OEM shape.
+        cap = ([(0.105, 0.0), (0.105, 0.015), (0.095, 0.032), (0.075, 0.040), (0.0, 0.040)]
+               if REGULAR_FRONT_WHEELS else
+               [(0.105, 0.0), (0.105, 0.035), (0.095, 0.060), (0.06, 0.085), (0.0, 0.095)])
+        lathe(name + "_hubcap", cap, V((xf, y, WHEEL_Z)),
+              "steel" if REGULAR_FRONT_WHEELS else "satin_alu", seg=40, side=out, sharp=40)
     elif hub == "rear":
         lathe(name + "_hub", [(0.118, 0.0), (0.118, 0.09), (0.125, 0.10), (0.125, 0.135), (0.10, 0.16),
                               (0.07, 0.175), (0.0, 0.178)], V((xf, y, WHEEL_Z)), "steel", seg=40, side=out, sharp=40)

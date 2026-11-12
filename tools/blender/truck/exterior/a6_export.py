@@ -42,6 +42,7 @@ import materials as M  # noqa: E402
 import body as B  # noqa: E402
 import chassis as C  # noqa: E402
 import scene as S  # noqa: E402
+import wheel_disc_blender as WD  # noqa: E402
 
 V = Vector
 REPO = G.REPO
@@ -497,7 +498,8 @@ def to_game_piece(o, gm):
     me = o.data
     names = [m.name if m else "" for m in me.materials]
     cylindrical = is_round_wheel_piece(o)
-    keep_uv = [tuple(d.uv) for d in me.uv_layers[0].data] if o.name.startswith("MIRROR_") or cylindrical else None
+    parametric_disc = bool(o.get('parametric_disc_atlas', False))
+    keep_uv = [tuple(d.uv) for d in me.uv_layers[0].data] if o.name.startswith("MIRROR_") or cylindrical or parametric_disc else None
     if cylindrical:
         o["cylindrical_atlas"] = True
     for uvl in list(me.uv_layers):
@@ -621,6 +623,8 @@ MASK_BAND_BACK = 0.45          # m behind the front plane: the wrapped ends of t
 
 
 def keep_face(o, p, slot):
+    if o.get('parametric_disc_atlas', False):
+        return True   # closed source charts are also the Low reconstruction contract
     if o.name.startswith(HIDDEN_KEEP):
         return True
     if o.name.startswith("cab_shell") and slot != "Paint":
@@ -803,10 +807,18 @@ def normalize_cylindrical_atlas_density(objs, mname):
             mapped += abs(sum(a.x*b.y-b.x*a.y for a,b in zip(q,q[1:]+q[:1]))) * 0.5
         return physical, mapped
 
-    body = [areas(o) for o in objs if not o.get("cylindrical_atlas", False)]
+    body = [areas(o) for o in objs if not o.get("cylindrical_atlas", False) and not o.get('parametric_disc_atlas', False)]
     physical = sum(a for a,b in body)
     target = sum(b for a,b in body)/physical if physical > 1e-10 else 1.0
     for o in objs:
+        if o.get('parametric_disc_atlas', False):
+            real, mapped = areas(o)
+            if mapped <= 1e-14:
+                raise RuntimeError('Invalid parameterized disc UV: '+o.name)
+            scale = math.sqrt(target*real/mapped)
+            for loop in o.data.uv_layers['Atlas'].data:
+                loop.uv *= scale
+            continue
         if not o.get("cylindrical_atlas", False):
             continue
         me = o.data
@@ -845,13 +857,13 @@ def unwrap_atlases(pieces):
         for o in objs:
             o.data.uv_layers.active = o.data.uv_layers["Atlas"]
         select(objs)
-        if any(not o.get("cylindrical_atlas", False) for o in objs):
+        if any(not (o.get("cylindrical_atlas", False) or o.get('parametric_disc_atlas', False)) for o in objs):
             bpy.ops.object.mode_set(mode="EDIT")
             for o in objs:
                 bm = bmesh.from_edit_mesh(o.data)
                 mi = [m.name for m in o.data.materials].index(mname)
                 for f in bm.faces:
-                    f.select = f.material_index == mi and not o.get("cylindrical_atlas", False)
+                    f.select = f.material_index == mi and not (o.get("cylindrical_atlas", False) or o.get('parametric_disc_atlas', False))
                 bmesh.update_edit_mesh(o.data)
             bpy.ops.uv.smart_project(angle_limit=math.radians(62), island_margin=0.0, area_weight=0.0,
                                      correct_aspect=True, scale_to_bounds=False)
@@ -1316,7 +1328,7 @@ TRAILER_RIM_LOW_MIN_RATIO = 0.10
 
 
 def is_round_wheel_piece(o):
-    return o.name.startswith("wheel_") and any(k in o.name for k in ROUND_KEYS)
+    return o.name.startswith("wheel_") and (any(k in o.name for k in ROUND_KEYS) or bool(o.get('round_profile_json')))
 
 
 def reduce_round(o, target_seg, profile_tol=0.004, tyre_tol=0.02):
@@ -1336,7 +1348,8 @@ def reduce_round(o, target_seg, profile_tol=0.004, tyre_tol=0.02):
     else:   # lathe centre in x as chassis.wheels() places it
         xc = sgn * (G.REAR_TRACK / 2 + (G.DUAL_SPACING / 2 if o.name[8] == "o" else -G.DUAL_SPACING / 2))
     is_tyre = "_tyre" in o.name
-    prof = C.tyre_profile()[0] if is_tyre else C.RIM_PROF + C.RIM_INNER[::-1]
+    prof = (json.loads(o['round_profile_json']) if o.get('round_profile_json') else
+            C.tyre_profile()[0] if is_tyre else C.RIM_PROF + C.RIM_INNER[::-1])
     pts = [(r, xc + sgn * x) for r, x in prof]
     bm = bmesh.new()
     bm.from_mesh(o.data)
@@ -1683,7 +1696,14 @@ def decimate_pieces(pieces, target, floor_tris=40, lights_min=0.5, round_seg=0, 
         # r7c: the inner dual rims (hidden behind the outer wheel but for the view from under the frame) keep a
         # coarser meridian: 402 -> ~200 triangles each, spent on the front of the cab
         inner = o.name.startswith(("wheel_RLi_rim", "wheel_RRi_rim"))
-        before, after = reduce_round(o, round_seg, profile_tol=0.012 if inner else 0.004)
+        columns, tolerance = round_seg, 0.012 if inner else 0.004
+        if C.REGULAR_FRONT_WHEELS and grid_lod == 2:
+            if o.get('round_profile_json'):
+                columns, tolerance = 16, .012
+            elif '_rim' in o.name:
+                columns = 40 if o.name.startswith('wheel_F') else round_seg
+                tolerance = .030 if inner else .020   # WIP budget redistribution, native validation required
+        before, after = reduce_round(o, columns, profile_tol=tolerance)
         print(f"  round {o.name}: {before} -> {after} segments, {tris_of(o)} tris")
     grids = [o for o in pieces if grid_lod and grid_spec(o) and grid_spec(o)[grid_lod] is not None]
     for o in grids:
@@ -1693,7 +1713,7 @@ def decimate_pieces(pieces, target, floor_tris=40, lights_min=0.5, round_seg=0, 
         before, after = reduce_grid(o, spec[0], spec[grid_lod], open_top=ot)
         print(f"  grid {o.name}: {before} -> {after} columns, {t_before} -> {tris_of(o)} tris")
     dec = [o for o in pieces if tris_of(o) > floor_tris and not o.name.startswith(("decal_", "MIRROR_") + NO_DECIMATE + tuple(keep))
-           and o not in rounds and o not in grids]
+           and o not in rounds and o not in grids and not o.get('regular_disc_lod', False)]
     fixed = sum(tris_of(o) for o in pieces if o not in dec)
     base = {o.name: tris_of(o) for o in dec}
     area = {o.name: max(1e-6, sum(p.area for p in o.data.polygons)) for o in dec}
@@ -1827,8 +1847,9 @@ def finalize_mesh(ob):
         me.materials.append(m)
     for p, i in zip(me.polygons, idx):
         p.material_index = i
-    if "prio" in me.attributes:
-        me.attributes.remove(me.attributes["prio"])
+    for attribute in ('prio', 'disc_chart', 'disc_parameter'):
+        if attribute in me.attributes:
+            me.attributes.remove(me.attributes[attribute])
     me.color_attributes.active_color = me.color_attributes["Col"]
     me.uv_layers.active = me.uv_layers["Atlas"]
 
@@ -1861,13 +1882,16 @@ def lod_pieces(master, lod, coll):
         keep = [o for o in master if any(k in o.name for k in LOD3_KEEP) and not o.name.startswith("MIRROR_")]
     else:
         drop = LOD2_DROP if lod == 2 else LOD1_DROP
-        keep = [o for o in master if not any(k in o.name for k in drop)
+        keep = [o for o in master if not any(k in o.name for k in drop
+                    if not (C.REGULAR_FRONT_WHEELS and lod == 2 and k == '_dish' and o.name.startswith('wheel_F')))
                 and not (lod == 2 and o.name.startswith("MIRROR_"))]
     out = []
     for o in keep:
         c = copy_object(o, f"{o.name}__L{lod}", coll)
         c["part"] = o["part"]
         c["slots"] = list(o.get("slots", []))
+        if lod >= 2 and c.get('parametric_disc_atlas', False):
+            WD.replace_lod(c, segments=8 if lod == 2 else 6)
         if lod == 3:
             p = c["part"]
             if p.startswith(("DOOR_", "WIPER_")):
@@ -2644,7 +2668,10 @@ def main():
     p.add_argument("--lods", default="0,1,2")   # LOD3 (traffic, ~5k) is a draft: wheels/fenders break at that
                                                  # budget - opt in with --lods 0,1,2,3 once it is reworked
     p.add_argument("--blend", default="")
+    p.add_argument('--regular-front-wheels', action=argparse.BooleanOptionalAction, default=False,
+                   help='WIP r4 regular front disc and wheel LOD detail; explicit opt-in until validated')
     a = p.parse_args(argv)
+    C.REGULAR_FRONT_WHEELS = a.regular_front_wheels
     a.out = os.path.abspath(a.out)            # Blender resolves relative output paths against the drive root
     a.renders = "" if a.no_renders else os.path.abspath(a.renders)
     t0 = time.time()
@@ -2705,7 +2732,7 @@ def main():
     master = pieces
     td = texel_density(master, {s: ATLAS_RES[s] for s in BAKED})
     manifest = {"asset": "TRAKT tractor exterior (concept B), track A6", "generator": rel(__file__) if False else
-                "tools/blender/truck/exterior/a6_export.py", "lods": {},
+                "tools/blender/truck/exterior/a6_export.py", "lods": {}, "regular_front_wheels": C.REGULAR_FRONT_WHEELS,
                 "tri_budget": {**{f"LOD{k}": v for k, v in TRI_LIMIT.items() if k < 3},
                                "note": "triangle limits; LOD0 100k -> 140k (owner/lead 2026-11-09, quality first, phone "
                                        "headroom: A16 Low cab GPU 16 ms / 33 ms), LOD1/LOD2 unchanged (Medium/Low)"}}

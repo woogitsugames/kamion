@@ -2,9 +2,9 @@
 
 Priorytet po nowej recenzji lidera: P1 felgi Low (regularne otwory, rant, prześwit, kołpak), potem kolejne największe odstępstwo. Adapter kontrolek szkła jest gotowy na dalszą diagnozę, lecz nie zastępuje poprawki koła. Bazą pozostaje merge main f8b85fa2 do r4 (07bbd7c1), wykonany na początku rundy; nie zmieniać źródeł świata w połowie przygotowania.
 
-Aktualne FBX i shadery produkcyjne pozostają bazowe. Nowe wheel_disc.py i wheel_disc_blender.py nie są jeszcze podłączone. Czysty checker potwierdza zamknięcie/topologię i syntetyczny transfer; nie dowodzi działania bpy, packera, bake, FBX ani wyglądu.
+Aktualne FBX i shadery produkcyjne pozostają bazowe. Hooki wheel_disc.py i wheel_disc_blender.py są teraz wpięte pod jawną flagą generatora --regular-front-wheels, domyślnie False do czasu walidacji. Aktualne eksporty pozostają bazowe. Czysty checker potwierdza zamknięcie/topologię i syntetyczny transfer; nie dowodzi działania bpy, packera, bake, FBX ani wyglądu.
 
-Wiring po świeżym baseline:
+Wiring przygotowany pod opt-in; wykonanie i ocena po świeżym baseline:
 1. W chassis.wheel tylko przednia tarcza: make_authoring z regularnymi otworami16. Przedni kołpak rozważyć jako płaski dekiel stalowy zamiast półkuli: wysokość40 mm zamiast95, szeroka płaska część. Wartości robocze do oceny, próg pokrycia osi>150 mm musi przejść. Tył ciągnika/naczepa na razie bez tych zmian.
 2. to_game_piece zachowuje pierwotne UV również przy parametric_disc_atlas. disc_parameter FLOAT_VECTOR/CORNER i disc_chart INT/FACE przetrwają reset warstw UV. Nie dodawać runtime UV kanału.
 3. unwrap_atlases pomija Smart Project również dla tej flagi, dopasowuje jednolicie gęstość do pozostałego slotu. Oryginalny disc_parameter nie jest zmieniany. Packer/priority/widen mogą stosować różne afiniczne transformacje chartów, które replace_lod odtworzy i sprawdzi.
@@ -18,3 +18,7 @@ Budżet i prześwit to nadal HIPOTEZY:
 - Regularna tarcza nie może próbkować pustych texeli High przy krawędzi otworu; obejrzeć albedo/flat i sprawdzić padding. Żadnego ślepego mapowania na sąsiednie wyspy.
 
 Następne: przygotowanie69474 → import/baseline-captures → zdjęcia/zbliżenia i wybór kandydata → wiring → smoke rzeczywistego bpy/packera w tym samym slotowanym cyklu generowania → pełny bake ciągnika/check_export → installer i te same kamery/testy. Nie instalować częściowego eksportu. Naczepę badać osobno po największej przedniej wadzie. Końcowe EditMode/APK/GIS i REPORT/robocopy jak wcześniej, pełny GIS wyłącznie na końcu rundy.
+
+
+Uwaga do przyszłego reexportu cache: REGULAR_FRONT_WHEELS to stan modułu Pythona i nie zapisuje się w blend. Przy LOD2-only trzeba go odtworzyć z manifest.regular_front_wheels, aby nie wrócić do starych reguł rim/dish. Domyślną flagę przełączyć na True dopiero po zaakceptowanym eksporcie i obrazach, tak aby zwykła regeneracja lidera odtwarzała dostarczony wariant. Nie instalować opt-in bez poprawnych walidatorów.
+
