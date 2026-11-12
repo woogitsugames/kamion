@@ -30,6 +30,7 @@ function Write-CaptureContext([string]$OutputDir,[string]$Tier,[string]$Lighting
         requested_ids=$RequestedIds;ablation=$Ablation;import=$state;
         fixture_sha256=(Get-FileHash artifacts/asphalt-r3/cameras.json).Hash;
         qa_probe_sha256=(Get-FileHash game/Assets/_Project/Editor/VisualQA/AsphaltQaStateProbe.cs).Hash;
+        world_root_sha256=(Get-FileHash game/Assets/_Project/World/Runtime/WorldRegionRoot.cs).Hash;
         shader_sha256=(Get-FileHash game/Assets/_Project/Environment/Shaders/WorldPBR.shader).Hash
     }|ConvertTo-Json -Depth 8|Set-Content "$OutputDir/capture-context.json"
 }
