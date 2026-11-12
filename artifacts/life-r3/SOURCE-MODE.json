@@ -1,6 +1,8 @@
 {
-  "requires_reimport": false,
-  "mode": "candidate-a-native-imported",
-  "imported": "2026-11-12T10:07:47.1611134+01:00",
-  "requires_generation": false
+  "flake_lift": 0.025,
+  "requires_generation": true,
+  "mode": "candidate-b-source-applied",
+  "requires_reimport": true,
+  "native_library": "candidate-a",
+  "note": "Only black paint opt-in; pigment/Pearl/roughness and shader A unchanged"
 }
