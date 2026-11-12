@@ -41,27 +41,34 @@ namespace Game.Editor.VisualQA
                         Vector3 target = h.position + frame.forward * .10f;
                         camera.transform.SetPositionAndRotation(position, Quaternion.LookRotation(target - position, pose == "top" ? frame.forward : frame.up));
                         camera.fieldOfView = 58; camera.nearClipPlane = .03f; camera.farClipPlane = 3;
+                        camera.cullingMask = 1 << rig.gameObject.layer; camera.clearFlags = CameraClearFlags.SolidColor;
+                        camera.backgroundColor = new Color(.55f, .58f, .61f);
                         go.AddComponent<ControlCamera>().id = go.name;
+                        RenderPipelineManager.beginCameraRendering += Before;
                     }
                     void Before(ScriptableRenderContext context, Camera camera)
                     {
                         var control = camera.GetComponent<ControlCamera>();
-                        if (patched || control == null || control.id != "cab-clearance-" + pose) return;
+                        if (control == null || control.id != "cab-clearance-" + pose) return;
                         patched = true;
                         try
                         {
                             var shader = Shader.Find("Hidden/Kamion/Cab Clearance Inspection");
                             if (shader == null || !shader.isSupported) throw new InvalidOperationException("Missing clearance inspection shader");
                             Material Part(Color colour) { var m = new Material(shader); m.SetColor("_Color", colour); palette.Add(m); return m; }
-                            var wheel = Part(new Color(.8f, .12f, .07f)); var leather = Part(new Color(.8f, .55f, .12f));
-                            var fabric = Part(new Color(.12f, .35f, .7f)); var plastic = Part(new Color(.35f, .38f, .4f));
+                            if (palette.Count == 0)
+                            {
+                                Part(new Color(.8f, .12f, .07f)); Part(new Color(.8f, .55f, .12f));
+                                Part(new Color(.12f, .35f, .7f)); Part(new Color(.35f, .38f, .4f));
+                            }
+                            var wheel = palette[0]; var leather = palette[1]; var fabric = palette[2]; var plastic = palette[3];
                             var selected = new HashSet<Renderer>(rig.interiorLods[0].renderers.Where(r => r.name.StartsWith("CAB_Interior", StringComparison.Ordinal) || r.name.StartsWith("STEERING_WHEEL", StringComparison.Ordinal)));
                             foreach (var renderer in rig.GetComponentsInChildren<Renderer>(true))
                             {
-                                flags.Add(renderer, renderer.forceRenderingOff);
+                                if (!flags.ContainsKey(renderer)) flags.Add(renderer, renderer.forceRenderingOff);
                                 renderer.forceRenderingOff = !selected.Contains(renderer);
                                 if (!selected.Contains(renderer)) continue;
-                                var original = renderer.sharedMaterials; saved.Add(renderer, original);
+                                if (!saved.TryGetValue(renderer, out var original)) { original = renderer.sharedMaterials; saved.Add(renderer, original); }
                                 renderer.sharedMaterials = original.Select(m => renderer.name.StartsWith("STEERING_WHEEL", StringComparison.Ordinal) ? wheel :
                                     m.name.StartsWith("MI_Cab_Leather", StringComparison.Ordinal) ? leather : m.name.StartsWith("MI_Cab_Fabric", StringComparison.Ordinal) ? fabric : plastic).ToArray();
                             }
@@ -76,7 +83,7 @@ namespace Game.Editor.VisualQA
                         }
                         catch (Exception exception) { failure = exception; }
                     }
-                    EditorSceneManager.sceneOpened += Prepare; RenderPipelineManager.beginCameraRendering += Before;
+                    EditorSceneManager.sceneOpened += Prepare;
                     try
                     {
                         int count = VisualQaRunner.Render("WorldC_High", 1920, 1080, "High", output, "clear", "cab-clearance-" + pose);
