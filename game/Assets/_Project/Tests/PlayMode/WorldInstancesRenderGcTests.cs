@@ -72,7 +72,11 @@ namespace Game.Tests
             cam.transform.position = new Vector3(0f, 1f, -10f);
             cam.farClipPlane = 2000f;
 
-            wi.Render(cam);   // warm-up: Allocate(), ReadTier(), JIT, first draws
+            // Warm-up through the real per-camera entry (OnBeginCamera: ReadTier + Allocate, then Render) - Render alone
+            // expects Allocate() to have run (integration r5: NullReferenceException on m_Ends otherwise).
+            var begin = typeof(WorldInstances).GetMethod("OnBeginCamera", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+            Assert.NotNull(begin, "WorldInstances.OnBeginCamera");
+            begin.Invoke(wi, new object[] { default(UnityEngine.Rendering.ScriptableRenderContext), cam });
             wi.Render(cam);
             Assert.Greater(WorldInstances.Last.Draws, 0, "the mini set must actually issue draws");
 
