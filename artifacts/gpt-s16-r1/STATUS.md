@@ -16,3 +16,5 @@ GIS:926passed,3xfailed,1FAIL(test_report_not_stale) — odświeżenie fidelity w
 Wyszukano40uzupełniającychkamer; każda para progowa18/18niezasłoniętych prób statycznych. Nie oznacza to akceptacji wizualnej. Obejrzano wszystkie456par w20arkuszach author-overviews i lokalny real-cars-contact.jpg; brak nowej zmiany makro, luki widoczności potwierdzone. Start renderów dodatkowych after przed ponownym bazowym importem.
 
 Dodatkowe kamery: after/Low-clear zapisane.
+
+Dodatkowe kamery: after/Low-overcast zapisane.
