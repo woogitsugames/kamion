@@ -187,3 +187,5 @@ NASTĘPNY KROK: uv run --project tools/worldgen tools/worldgen/roads/build_world
 2026-11-12T01:01:09.6706135+01:00: after4 uzyskał heavy; zachowano 80 rzeczywistych payloadów kolizji ogrodzeń przed generatorem. Python PID79472 działa, zapisany world-context-after4.json. Punkt odniesienia zachowano w WIP, bo bieżący wrapper został załadowany przed dodaniem automatycznego commitu tego kroku. NASTĘPNY KROK: sukces generatora, kontrola6833 chronionych payloadów i porównanie80 kolizji przed/po, potem import i rendery.
 
 2026-11-12T01:10:30.3461906+01:00: heavy world after4; sukces=True; slot gpt-furniture-r1 zwolniony. NASTĘPNY KROK: sprawdzić log i kontynuować walidację rundy.
+
+2026-11-12T01:10:33.8305950+01:00: heavy geometry after; sukces=True; slot gpt-furniture-r1 zwolniony. NASTĘPNY KROK: sprawdzić log i kontynuować walidację rundy.
