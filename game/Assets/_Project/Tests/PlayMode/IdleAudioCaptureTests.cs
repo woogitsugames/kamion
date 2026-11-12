@@ -100,17 +100,27 @@ namespace Game.Tests
             return Path.GetFullPath(Path.Combine(Application.dataPath, "..", "..", "artifacts", "audio-idle", "capture"));
         }
 
-        [UnityTest]
-        public IEnumerator FoldDrive_Capture_Synth() => Run(AudioPreferences.EngineProcedural, "synth");
+        /// <summary>Compressor level before ADR 0148 (APK 387a492d24), to render the "before" mix.</summary>
+        const float CompressorBefore = 0.35f;
 
         [UnityTest]
-        public IEnumerator FoldDrive_Capture_ElevenLabs() => Run(AudioPreferences.EngineElevenLabs, "el");
+        public IEnumerator FoldDrive_Capture_Synth() => Run(AudioPreferences.EngineProcedural, "synth", -1f);
 
-        IEnumerator Run(int engineSource, string tag)
+        [UnityTest]
+        public IEnumerator FoldDrive_Capture_Synth_Before() => Run(AudioPreferences.EngineProcedural, "synth_before", CompressorBefore);
+
+        [UnityTest]
+        public IEnumerator FoldDrive_Capture_ElevenLabs() => Run(AudioPreferences.EngineElevenLabs, "el", -1f);
+
+        [UnityTest]
+        public IEnumerator FoldDrive_Capture_ElevenLabs_Before() => Run(AudioPreferences.EngineElevenLabs, "el_before", CompressorBefore);
+
+        IEnumerator Run(int engineSource, string tag, float compressorVolume)
         {
             AudioPreferences.EngineSource = engineSource;
             Time.captureDeltaTime = Dt; // EngineAudio / TruckAudioController Update see dt = 0.01 s, one physics step per frame
             var audio = Spawn();
+            if (compressorVolume >= 0f) audio.compressorVolume = compressorVolume;
             yield return null;
             if (!audio.HasAudio) Assert.Ignore("VehicleAudioLibrary not generated");
             yield return null;
