@@ -99,7 +99,16 @@ Python: `tyre_slip_scan.py`, `el_regen03.py`, `el_fx.py` (REGEN03_SLOTS), `sfx_l
 (`TYRE_SLIP_LUFS`), `tyre_scrub_ab.py`.
 
 ## Wyniki testów
-TESTS_PLACEHOLDER
+Unity 6000.3.28f1, worktree `tyre-scrub`, po `VehicleAudioImporter.ImportBatch` (AUDIOIMPORT_RESULT: OK):
+- **PlayMode 27/27** (filtr `Audio|TyreScrub|DrivingLabScene|ControlSettingsPanel`): nowe `TyreScrubTests` 4/4,
+  `AudioLayersTests` (zaktualizowany test pisku i nowy warunek „zaparkowany nie szura”), `ElevenLabsFxAudioTests`
+  (w tym 0 B GC w 300 aktualizacjach), `ElevenLabsEngineAudioTests`, `DrivingLabSceneTests`. EditMode `Audio` 1/1.
+  Wyniki: `artifacts/tyre-scrub/tests/playmode-20261112-192435.xml`.
+- `TyreScrubTests` (40 t, fizyka w trybie Script, krok 0,01 s, `TruckAudioController.AudioStep`):
+  postój z kierownicą w ruchu: szuranie 0,0000, pisk 0,0000. Prosta 28,6 km/h: szuranie 0, pisk 0, kąt naczepy 0,00°.
+  Ciasny skręt R 12 m, średnio 8,6 km/h, przegub −37,9°: kąt znoszenia naczepy 9,7° (runner 9,4°), poślizg kombinowany
+  1,69 (runner 1,64), **szuranie min. 1,000, pisk maks. 0,0000**, grają klipy `el_tyre_scrub_loop` i `el_tyre_squeal_loop`.
+  **0 B GC** w 300 krokach audio z warstwą szurania.
 
 ## Konsekwencje
 - Wszystkie progi i poziomy to `WORKING_VALUE` do oceny właściciela (telefon: głośnik i słuchawki).
