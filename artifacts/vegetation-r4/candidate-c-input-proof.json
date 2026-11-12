@@ -1,0 +1,81 @@
+{
+  "label": "candidate-c",
+  "source_changes": [
+    "tools/worldgen/streetscape/plantings.py"
+  ],
+  "instance_changes": [],
+  "collision_changes": [],
+  "collision_low_chunks": 64,
+  "generated_changes": [
+    "Data\\Regions\\bialystok-industrial-c\\generated\\streetscape_qa.json",
+    "Data\\Regions\\bialystok-industrial-c\\generated\\world_manifest.json",
+    "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_6_6.glb",
+    "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_6_6.low.glb"
+  ],
+  "far_field_glb_changes": [],
+  "plantings_before": {
+    "hedge_m2": 94.3,
+    "hedges": 4,
+    "islands": [
+      {
+        "area_m2": 51.1,
+        "fill": "paving",
+        "id": "biezenstwa-plantings:island0",
+        "kerb_z": [
+          139.69,
+          139.85
+        ],
+        "shrubs": 0
+      },
+      {
+        "area_m2": 996.9,
+        "fill": "gravel",
+        "id": "biezenstwa-plantings:island1",
+        "kerb_z": [
+          139.71,
+          140.12
+        ],
+        "shrubs": 0
+      }
+    ],
+    "shrubs": 0,
+    "stale": [],
+    "tris": 18402
+  },
+  "plantings_after": {
+    "hedge_m2": 94.3,
+    "hedges": 4,
+    "islands": [
+      {
+        "area_m2": 51.1,
+        "fill": "paving",
+        "id": "biezenstwa-plantings:island0",
+        "kerb_z": [
+          139.69,
+          139.85
+        ],
+        "shrubs": 0
+      },
+      {
+        "area_m2": 996.9,
+        "fill": "gravel",
+        "id": "biezenstwa-plantings:island1",
+        "kerb_z": [
+          139.71,
+          140.12
+        ],
+        "shrubs": 0
+      }
+    ],
+    "shrubs": 0,
+    "stale": [],
+    "tris": 21697
+  },
+  "megascans_available": 15,
+  "megascans_fallback": false,
+  "collision_note": "Exact decoded geometry/transform/material digests; not a PhysX runtime measurement.",
+  "plantings_triangle_delta": 3295,
+  "plantings_triangle_change_explicitly_allowed": true,
+  "budget_note": "Provenance only. Per-camera Low draw/triangle budgets require new render measurements.",
+  "pass": true
+}
