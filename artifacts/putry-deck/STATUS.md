@@ -3,3 +3,5 @@
 - NEXT: pwsh scripts/unity-slot.ps1 -Acquire -Pool heavy -Owner claude-putry-deck; uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c; release; then import-region -SkipCopy + SBS render.
 - step 2: ADR draft, render_putry.ps1/build_world.ps1/pairs.py; before render + build_world queued (PHONE_RUN active, heavy queue 13).
 - NEXT: wait for logs artifacts/putry-deck/render_before.log + logs/build_world.log; then pwsh scripts/import-region.ps1 -Region bialystok-industrial-c -SkipCopy (unity slot), render_putry.ps1 -OutDir artifacts/putry-deck/after, python artifacts/putry-deck/tools/pairs.py
+- step 3: before renders Low overcast/clear (10 frames) in artifacts/putry-deck/before; build_world queued (heavy).
+- NEXT: after build: pwsh scripts/unity-slot.ps1 -Acquire -Owner claude-putry-deck; pwsh scripts/import-region.ps1 -Region bialystok-industrial-c; release; render_putry.ps1 -OutDir artifacts/putry-deck/after; python artifacts/putry-deck/tools/pairs.py
