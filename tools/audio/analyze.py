@@ -51,7 +51,7 @@ def order_metrics(x: np.ndarray, fs: int, n_cycles: int, rpm: float) -> dict:
     P = X ** 2
     df = fs / len(x)
     f_fire = rpm / 20.0
-    fire_bin = 6 * n_cycles  # loop holds exactly n_cycles engine cycles
+    # loop holds exactly n_cycles engine cycles
     # strongest bin 15..300 Hz
     lo, hi = int(15 / df), int(300 / df)
     kmax = lo + int(np.argmax(P[lo:hi]))

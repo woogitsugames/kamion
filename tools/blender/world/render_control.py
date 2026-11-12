@@ -20,7 +20,6 @@ import sys
 from pathlib import Path
 
 import bpy
-import bmesh
 from mathutils import Matrix, Vector
 
 REPO = Path(__file__).resolve().parents[3]
@@ -643,7 +642,6 @@ def mat_terrain(name):
     b = NB(m)
     obj = b.tc.outputs["Object"]
     a = b.attr("Color")
-    cr, cg, cb, _ = None, None, None, None
     sepc = b.nt.nodes.new("ShaderNodeSeparateColor")
     b.link(a.outputs["Color"], sepc.inputs[0])
     R, G, B = sepc.outputs[0], sepc.outputs[1], sepc.outputs[2]
@@ -685,7 +683,7 @@ def mat_hall(name, col, ribs="h"):
         h = b.math("SUBTRACT", rib, j)
     base = b.mix(b.math("MULTIPLY", b.noise(obj, 0.3, 3.0), 0.15), col, tuple(c * 0.85 for c in col))
     streak = b.noise(b.vmath("MULTIPLY", obj, (6.0, 6.0, 0.15)), 1.0, 3.0, 0.6)
-    top = b.math("SUBTRACT", 1.0, b.math("DIVIDE", b.math("ABSOLUTE", b.math("SUBTRACT", v, 12.0)), 30.0), clamp=True)
+    b.math("SUBTRACT", 1.0, b.math("DIVIDE", b.math("ABSOLUTE", b.math("SUBTRACT", v, 12.0)), 30.0), clamp=True)
     base = b.mix(b.math("MULTIPLY", b.math("GREATER_THAN", streak, 0.58), 0.25), base, tuple(c * 0.6 for c in col))
     splash = b.math("SUBTRACT", 1.0, b.math("DIVIDE", b.math("SUBTRACT", v, 0.5), 0.8), clamp=True)
     base = b.mix(b.math("MULTIPLY", splash, 0.55), base, (0.12, 0.11, 0.09))

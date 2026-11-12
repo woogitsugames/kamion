@@ -167,7 +167,6 @@ def compute_corners(net, j: Junction, max_trim: dict, r_override=None):
             break
         dA, dB = A.direction(min(4.0, A.L / 2)), B.direction(min(4.0, B.L / 2))
         alpha = (_ang(dB) - _ang(dA)) % (2 * math.pi)
-        lookA, lookB = min(LOOK, A.L), min(LOOK, B.L)
         mA, mB = max_trim[k] - 0.3, max_trim[k1] - 0.3
         alpha_deg = math.degrees(alpha)
         back = 25.0 if len(j.nodes) > 1 else 0.0

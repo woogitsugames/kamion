@@ -14,7 +14,6 @@ from . import junctions as J
 from . import meshing as M
 from . import network as Nw
 from . import profile as P
-from .context import footway_lines
 
 REPO = Path(__file__).resolve().parents[3]
 REGIONS = REPO / "Data" / "Regions"

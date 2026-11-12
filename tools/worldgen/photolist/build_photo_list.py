@@ -448,7 +448,6 @@ def appendix_rows():
     for s, cid, c, pos, az in order:
         lat, lon = wgs(pos)
         nr = [str(sh["nr"]) for sh in SHOTS if cid in sh["cams"] or sh["mode"] == ("cam", cid)]
-        eye = c["pos"][2]
         out.append(f"| `{cid}` | {', '.join(nr) or '—'} | `{lat:.6f}, {lon:.6f}` | {az:.0f}° {compass(az)} | {c['fov_deg']:.0f}° | "
                    f"{s:.0f} | [OSM]({osm_link(lat, lon)}) · [Mapillary]({mly_link(lat, lon)}) |")
     return out

@@ -494,7 +494,6 @@ def render_area(layers, box, title, out: Path, stats=None, sub="", grid=False):
     if len(big):
         big.plot(ax=ax, color="#9b8f84", edgecolor="#6f655c", linewidth=0.4, zorder=2)
     r_v = roads[roads.intersects(view)]
-    rail = r_v.iloc[0:0]
     for hw, (col, lw, z) in sorted(STYLE.items(), key=lambda kv: kv[1][2]):
         s = r_v[r_v.highway == hw]
         if len(s):

@@ -34,7 +34,6 @@ import matplotlib.pyplot as plt  # noqa: E402
 import networkx as nx  # noqa: E402
 import numpy as np  # noqa: E402
 import rasterio  # noqa: E402
-import shapely  # noqa: E402
 from matplotlib.collections import LineCollection, PatchCollection  # noqa: E402
 from matplotlib.lines import Line2D  # noqa: E402
 from matplotlib.patches import Patch, Polygon as MplPolygon  # noqa: E402

@@ -35,7 +35,7 @@ def summarize(raw_root: Path = rc.RAW_ROOT):
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--md", action="store_true")
-    a = ap.parse_args(argv)
+    ap.parse_args(argv)
     out, cov = summarize()
     for s, v in out.items():
         print(f"{s}: {v['count']} items, licences {v['licenses']}, {v['authors']} authors, shots {len(v['shots_with_images'])}/55")
