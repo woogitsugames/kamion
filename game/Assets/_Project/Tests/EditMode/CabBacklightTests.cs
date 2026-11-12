@@ -93,6 +93,10 @@ namespace Game.Tests.EditMode
                 RenderSettings.ambientLight = Color.black;
                 RenderSettings.ambientProbe = new SphericalHarmonicsL2();
                 RenderSettings.reflectionIntensity = 0f;
+                // Keep URP's directional-light frame valid while its irradiance remains below one 8-bit step.
+                var sunGo = new GameObject("fixture-directional-light"); sunGo.transform.SetParent(root.transform, false);
+                var sun = sunGo.AddComponent<Light>(); sun.type = LightType.Directional; sun.intensity = .0001f;
+                sun.shadows = LightShadows.None; RenderSettings.sun = sun;
                 for (int i = 0; i < keys.Length; i++) Shader.SetGlobalVector(keys[i], Vector4.zero);
                 Shader.SetGlobalFloat("_CabGain", 1f); Shader.SetGlobalFloat("_CabEnclosure", 1f);
                 material.EnableKeyword("_KAMION_CAB_DECAL");
@@ -134,7 +138,7 @@ namespace Game.Tests.EditMode
                     pixels.ReadPixels(new Rect(0, 0, 128, 64), 0, 0); pixels.Apply();
                     File.WriteAllBytes(Path.Combine(output, name + ".png"), pixels.EncodeToPNG());
                     var result = new Vector2(pixels.GetPixel(45, 32).r, pixels.GetPixel(83, 32).r);
-                    Debug.Log($"CAB_BACKLIGHT_FIXTURE {name}: icon={result.x:F5} stitch={result.y:F5}, environment={Shader.GetGlobalVector(EnvironmentKey)}, keywords={string.Join(",", material.shaderKeywords)}");
+                    Debug.Log($"CAB_BACKLIGHT_FIXTURE {name}: icon={result.x:F5} stitch={result.y:F5}, environment={Shader.GetGlobalVector(EnvironmentKey)}, keywords={string.Join(",", material.shaderKeywords)}, luminance={material.GetFloat("_LegendLuminance")}, cap={material.GetFloat("_LegendMaxDisplay")}, color={material.GetColor("_LegendColor")}");
                     return result;
                 }
                 // A separate unlit shader proves camera/mesh/readback before interpreting a black cab-shader image.
