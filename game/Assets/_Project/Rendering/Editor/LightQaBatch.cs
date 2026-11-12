@@ -30,6 +30,7 @@ namespace Game.Rendering.Editor
             public float clearSkySaturation; // 0 leaves preset unchanged; diagnostic display-only chroma.
             public bool lampProbe;
             public bool actualDriverEye; // QA only: cab-dash eye, horizontal actual cab forward. Never a light source.
+            public bool wetRoadViews; // QA only: two external near-road views anchored to the real truck.
             public bool verifyWetness;
             public float expectedWetness;
             public bool skyOnly; // Diagnostic only: disable scene renderers and the custom world instancer, retain lighting.
@@ -167,6 +168,27 @@ namespace Game.Rendering.Editor
                             position = go.transform.position, forward = go.transform.forward, up = go.transform.up,
                             source = "cab-dash.position + CabInteriorLighting.cab.forward/up", fieldOfView = camera.fieldOfView
                         }, true));
+                        if (job.wetRoadViews)
+                        {
+                            var source = UnityEngine.Object.FindObjectsByType<VehicleReflectionCapture>(FindObjectsInactive.Exclude, FindObjectsSortMode.None)
+                                .Single(c => c.gameObject.scene == scene);
+                            Vector3 origin = source.transform.TransformPoint(source.captureOffset);
+                            foreach (int side in new[] { -1, 1 })
+                            {
+                                var roadGo = new GameObject("Light QA near wet road " + side);
+                                SceneManager.MoveGameObjectToScene(roadGo, scene);
+                                var roadCamera = roadGo.AddComponent<Camera>();
+                                roadCamera.CopyFrom(camera);
+                                Vector3 position = origin + cab.forward*4f + cab.right*(side*3.5f) - Vector3.up*0.7f;
+                                Vector3 target = origin + cab.forward*10f + cab.right*(side*3.5f) - Vector3.up*2.2f;
+                                roadGo.transform.SetPositionAndRotation(position, Quaternion.LookRotation(target-position, Vector3.up));
+                                roadCamera.fieldOfView = 65f; roadCamera.enabled = false;
+                                var roadControl = roadGo.AddComponent<ControlCamera>();
+                                roadControl.id = side < 0 ? "light-wet-left" : "light-wet-right";
+                                roadControl.note = "QA-only near-road view from actual truck capture origin; no matched photograph or driver-eye claim.";
+                                roadGo.SetActive(false);
+                            }
+                        }
                     }
                     if (job.actualDriverEye) EditorSceneManager.sceneOpened += AddDriverEye;
                     if (job.skyOnly) EditorSceneManager.sceneOpened += PrepareSkyOnly;
