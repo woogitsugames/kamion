@@ -33,6 +33,8 @@ SaveCandidate 'game/Assets/_Project/Rendering/Runtime/RenderOverrides.cs' {
 }
 SaveCandidate 'game/Assets/_Project/Rendering/Editor/LightQaBatch.cs' {
     param($s)
+    $s=ReplaceOnce $s '// Scene components subscribe while the runner opens the scene. Reorder this experimental' '// The QA runner explicitly refreshes cab globals before rendering. Reorder this experimental'
+    $s=ReplaceOnce $s '// callback after CabInteriorLighting so the Low-only approximate curve cannot overwrite it.' '// callback after scene-open subscriptions; actual observed globals remain the evidence of its final state.'
     $s=ReplaceOnce $s 'public bool overrideCloudSourceMin;' "public bool overrideSunElevation;`r`n            public float sunElevationDeg;`r`n            public bool overrideCloudSourceMin;"
     $s=ReplaceOnce $s '                    if (job.overrideCloudSourceMin)' @'
                     if (job.overrideSunElevation)

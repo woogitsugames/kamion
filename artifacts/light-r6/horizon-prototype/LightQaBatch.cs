@@ -182,8 +182,8 @@ namespace Game.Rendering.Editor
                             throw new InvalidOperationException($"Actual per-camera dim colour mismatch: requested{job.expectedDimColour}, global{Shader.GetGlobalFloat("_KamionDimColourDesaturation")}, preset{EnvironmentLighting.Instance?.Active?.dimColourDesaturation}, path{AssetDatabase.GetAssetPath(EnvironmentLighting.Instance?.Active)}");
                     };
                     int count;
-                    // Scene components subscribe while the runner opens the scene. Reorder this experimental
-                    // callback after CabInteriorLighting so the Low-only approximate curve cannot overwrite it.
+                    // The QA runner explicitly refreshes cab globals before rendering. Reorder this experimental
+                    // callback after scene-open subscriptions; actual observed globals remain the evidence of its final state.
                     void OrderGradeProbe(Scene scene,OpenSceneMode mode)
                     {
                         RenderPipelineManager.beginCameraRendering-=filter;
