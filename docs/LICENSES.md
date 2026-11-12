@@ -309,3 +309,21 @@ Własny dodatek to analityczny odblask i czytnik stanu istniejących reflektoró
 Wersja źródeł, hashe i skrypt odtworzenia są w
 `artifacts/furniture-r2/24h/candidate-src/provenance.json` oraz
 `artifacts/furniture-r2/24h/prepare-sign-prototype.ps1`. Nie użyto grafiki producentów folii.
+
+### Kominy EC — uzupełnienie referencji ADR 0116 r3
+
+`20200711 073128 Elektrociepłownia Białystok` — Rakoon, [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:20200711_073128_Elektrociep%C5%82ownia_Bia%C5%82ystok.jpg), [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/).
+Lokalna referencja jest pomniejszoną kopią 3840×2160; pary w artifacts/landmarks-r3
+jawnie opisują kadrowanie, zmianę rozmiaru i autora. Oryginał 4608×2592 nie został
+lokalnie zweryfikowany. Starsze `EC_Białystok.jpg` — Hiuppo, CC BY-SA 2.5
+([strona pliku](https://commons.wikimedia.org/wiki/File:EC_Bia%C5%82ystok.jpg)) —
+pozostaje osobną referencją z 2007 r.; jej szachownicy i logo nie przeniesiono do modelu.
+
+`art-source/world/landmarks/ec_chimney_single/` i `ec_chimney_multi/` powstają
+z własnego kodu `tools/worldgen/streetscape/ec_chimneys.py` i danych
+`Data/Regions/bialystok-industrial-c/ec_chimneys.json`. Nie zawierają pikseli zdjęć,
+logo ani cudzej geometrii. Odwołania do źródeł i robocze wymiary są w konfiguracji.
+Położenia i obrysy: © OpenStreetMap contributors, ODbL; wysokości gruntu: istniejący NMT GUGiK.
+Wymiary techniczne jednoprzewodowego komina pochodzą z opisu zamówienia ENEA 2025,
+H 120 m wieloprzewodowego potwierdza tekstowy rekord EMKA. Zamknięta fotografia EMKA
+nie jest dystrybuowanym assetem ani otwartą referencją obrazową D43.
