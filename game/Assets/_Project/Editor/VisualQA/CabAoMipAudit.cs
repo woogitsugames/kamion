@@ -9,7 +9,7 @@ using UnityEngine.Rendering;
 
 namespace Game.Editor.VisualQA
 {
-    /// <summary>Editor-only AO mip ablation. Clones textures/materials in memory and restores all renderer references.</summary>
+    /// <summary>Editor material ablations: AO mip or diffuse fill recovery. No saved material/texture changes.</summary>
     public static class CabAoMipAudit
     {
         public static void Run()
@@ -19,8 +19,11 @@ namespace Game.Editor.VisualQA
             {
                 string tier = EditorTools.Arg("-cabTier", "High"), lighting = EditorTools.Arg("-cabLighting", "clear");
                 string output = EditorTools.Arg("-cabOutput", Path.Combine(EditorTools.RepoRoot, "artifacts/cab-r2/ao-mip-audit"));
+                string ablation = EditorTools.Arg("-cabAblation", "ao-mip0");
+                if (ablation != "ao-mip0" && ablation != "fill-recovery") throw new ArgumentException("Unknown cab material ablation");
                 foreach (bool mip0 in new[] { false, true })
                 {
+                    Exception failure = null;
                     var saved = new Dictionary<Renderer, Material[]>();
                     var materials = new Dictionary<Material, Material>();
                     var textures = new Dictionary<Texture, Texture2D>();
@@ -33,6 +36,8 @@ namespace Game.Editor.VisualQA
                     {
                         var control = camera.GetComponent<ControlCamera>();
                         if (!mip0 || control == null || (control.id != "cab-grain" && control.id != "cab-dash")) return;
+                        try
+                        {
                         Restore();
                         foreach (var renderer in UnityEngine.Object.FindObjectsByType<MeshRenderer>(FindObjectsSortMode.None))
                         {
@@ -44,6 +49,15 @@ namespace Game.Editor.VisualQA
                                 if (material == null || !material.name.StartsWith("MI_Cab_Plastic", StringComparison.Ordinal)) continue;
                                 if (!materials.TryGetValue(material, out var copy))
                                 {
+                                    if (ablation == "fill-recovery")
+                                    {
+                                        if (!material.HasProperty("_CabFillOcclusionRecovery")) throw new InvalidOperationException("Missing diffuse recovery property");
+                                        copy = new Material(material) { name = material.name + "_FillRecoveryAudit" };
+                                        copy.EnableKeyword("_KAMION_CAB_FILL_RECOVERY"); copy.SetFloat("_CabFillOcclusionRecovery", 1);
+                                        materials.Add(material, copy);
+                                    }
+                                    else
+                                    {
                                     var ao = material.GetTexture("_AO");
                                     if (ao == null) throw new InvalidOperationException("Missing cab AO atlas");
                                     if (!textures.TryGetValue(ao, out var texture))
@@ -65,12 +79,15 @@ namespace Game.Editor.VisualQA
                                     }
                                     copy = new Material(material) { name = material.name + "_AoMip0Audit" };
                                     copy.SetTexture("_AO", texture); materials.Add(material, copy);
+                                    }
                                 }
                                 if (changed == null) changed = (Material[])original.Clone();
                                 changed[slot] = copy;
                             }
                             if (changed != null) { saved.Add(renderer, original); renderer.sharedMaterials = changed; }
                         }
+                        }
+                        catch (Exception exception) { failure = exception; Restore(); }
                     }
                     void After(ScriptableRenderContext context, Camera camera)
                     {
@@ -82,9 +99,11 @@ namespace Game.Editor.VisualQA
                     try
                     {
                         int rendered = VisualQaRunner.Render(tier == "High" ? "WorldC_High" : "WorldC", 1920, 1080, tier,
-                            Path.Combine(output, mip0 ? "ao-mip0" : "baseline"), lighting, "cab-grain,cab-dash");
+                            Path.Combine(output, mip0 ? ablation : "baseline"), lighting, "cab-grain,cab-dash");
+                        if (failure != null) throw failure;
                         if (rendered != 2) throw new InvalidOperationException("Expected two AO audit views");
-                        if (mip0 && textures.Count == 0) throw new InvalidOperationException("AO mip ablation did not run");
+                        if (mip0 && materials.Count == 0) throw new InvalidOperationException("Material ablation did not run");
+                        if (mip0 && ablation == "ao-mip0" && textures.Count == 0) throw new InvalidOperationException("AO mip ablation did not run");
                     }
                     finally
                     {

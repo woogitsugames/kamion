@@ -21,6 +21,7 @@ Shader "Kamion/Cab Interior"
         _Cutoff ("Decal alpha clip", Range(0, 1)) = 0.5
         _WearBlackAlbedo ("Worn black albedo (linear, neutral)", Range(0, 0.2)) = 0.085
         _WearRoughMin ("Worn roughness floor", Range(0.08, 1)) = 0.08
+        _CabFillOcclusionRecovery ("Diffuse bounce occlusion recovery", Range(0, 1)) = 0
         [Toggle(_KAMION_CAB_DECAL)] _IsDecal ("Decal slot", Float) = 0
     }
     SubShader
@@ -32,6 +33,7 @@ Shader "Kamion/Cab Interior"
         CBUFFER_START(UnityPerMaterial)
             float4 _Detail_ST;
             float _Cutoff, _IsDecal, _WearBlackAlbedo, _WearRoughMin;
+            float _CabFillOcclusionRecovery;
         CBUFFER_END
         ENDHLSL
 
@@ -49,6 +51,7 @@ Shader "Kamion/Cab Interior"
             // Hard shadows in the cab (no soft-shadow variants): the sun patches come through the glass edges and the
             // frit, soft filtering on a full-screen interior cost ~3 ms GPU on the S24+ High (A7 measurement, throttled).
             #pragma shader_feature_local _KAMION_CAB_DECAL
+            #pragma shader_feature_local _ _KAMION_CAB_FILL_RECOVERY
             #pragma multi_compile_fog
             #define _NORMALMAP 1
 
@@ -182,6 +185,12 @@ Shader "Kamion/Cab Interior"
                 const BRDFData noCoat = (BRDFData)0;
                 half3 indirect = GlobalIllumination(brdf, noCoat, 0.0, input.bakedGI, ao, input.positionWS, nWS,
                     input.viewDirectionWS, input.normalizedScreenSpaceUV);
+            #if defined(_KAMION_CAB_FILL_RECOVERY)
+                // ADR 0112 experiment: the atlas is sky visibility, while CabFill models diffuse wall bounce.
+                // Recover only part of that diffuse term; contact albedo and specular AO stay unchanged.
+                // WORKING_VALUE: sqrt(ao), bounded [0,1], with recovery defaulting to zero.
+                indirect += brdf.diffuse * _CabFill.rgb * (sqrt(saturate(ao)) - ao) * saturate(_CabFillOcclusionRecovery);
+            #endif
                 half4 col = half4(direct + indirect * (_CabGain > 0.0 ? _CabGain : 1.0), 1.0);   // unset global (0) = no gain
                 // Local shadow lift (review r4 L1): a phone's local tone mapping lifts deep shade in a backlit cab. Smooth
                 // in luminance (Y * gain stays monotone for k < 16), ~1 above 3 x the knee.
