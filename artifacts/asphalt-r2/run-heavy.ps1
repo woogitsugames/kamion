@@ -1,6 +1,7 @@
 ﻿param(
     [Parameter(Mandatory)][ValidateSet('World','Materials','FocusedTests','Fidelity','PhysicsGate3','Compare','Inventory','WheelMetrics','GeometryAudit')][string]$Stage,
-    [string]$Label = 'candidate', [string[]]$Tests = @(), [string]$Only = '', [switch]$EndOfRound
+    [string]$Label = 'candidate', [string[]]$Tests = @(), [string]$Only = '', [switch]$EndOfRound,
+    [switch]$ReserveNext
 )
 $ErrorActionPreference = 'Stop'
 Set-Location (Resolve-Path "$PSScriptRoot/../..")
@@ -16,7 +17,9 @@ if ($Stage -eq 'FocusedTests') {
 }
 if ($Stage -eq 'PhysicsGate3' -and -not $EndOfRound) { throw 'Use -EndOfRound for the complete physics/gate3 suite' }
 $log = "artifacts/asphalt-r2/$Label-$Stage.log"
-& pwsh $slotScript -Acquire -Pool heavy -Owner $owner -PollSeconds 5
+$slotArgs = @($slotScript, '-Acquire', '-Pool', 'heavy', '-Owner', $owner, '-PollSeconds', '5')
+if ($ReserveNext) { $slotArgs += '-Priority' }
+& pwsh @slotArgs
 if ($LASTEXITCODE -ne 0) { throw 'Heavy slot acquisition failed' }
 $code = 1
 try {
