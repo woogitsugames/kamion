@@ -32,3 +32,10 @@ ucięcie nie pozwala jeszcze ustalić pełnego profilu.1134567850380236 jest
 nocne i nie stanowi wystarczającego dowodu konstrukcyjnego.
 Shortlista zawiera teraz osobne kandydatury z UTC08–14. To tylko heurystyka
 wyboru metadanych: jasność i widoczność zawsze wymagają obejrzenia zdjęcia.
+
+Dalsze referencje:5726790167361670 z2019-10-20 pokazuje z dalszej odległości
+czerwoną wiatę po prawej, w kierunku przystanku Fabryka Dywanów. Potwierdza
+kolor/ogólną rodzinę, bez wymiarów i pełnego profilu.1484379768878742 z2024
+ma inny kierunek/kadr z budynkiem i znakiem parkingowym; mimo odległości50–64m
+nie stanowi porównywalnego zbliżenia wiaty. Selekcja na podstawie metadanych
+nadal wymaga kontroli obrazu, także przy filtrze godzinyUTC.
