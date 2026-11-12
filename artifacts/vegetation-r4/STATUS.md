@@ -10,3 +10,4 @@ Synchronizacja brakujących zasobów Data/raw/cc0, robocopy kod 0 (0–7 nie ozn
 Synchronizacja brakujących zasobów art-source/world/cc0/_raw, robocopy kod 0 (0–7 nie oznacza porażki). Nie kopiowano aktywnie generowanego świata main.
 Synchronizacja brakujących zasobów art-source/world/megascans, robocopy kod 0 (0–7 nie oznacza porażki). Nie kopiowano aktywnie generowanego świata main.
 Świeży baseline r4: przygotowanie fotografii i kamer kod 0. Produkcja bez zmian; kolejny etap zgodnie z baseline.ps1.
+Przygotowano pending_test_berberis_leaf_core.py wyłącznie w artefaktach, bez uruchamiania i bez zmiany tests/gis podczas baseline. Po obejrzeniu before przenieść test do GIS, wykonać red w heavy, dopiero potem nakładać kandydata. Testy chronią brak pełnego nieprzezroczystego rdzenia, geometrię/budżet i inne gatunki; stary test wysokości powinien użyć oznaczonej referencji opaque, a nowy potwierdzi równość geometrii.
