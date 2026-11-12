@@ -26,3 +26,4 @@ Watchdog automatycznie RESUME własny root 60996 o 12:28:54 po pauzie od 12:22:0
 Import baseline exit 0; build_all/cc0_fetch i Unity objęte slotami heavy oraz Unity, zwolnionymi w finally. Następny krok przebudowa kabiny i świeże kadry.
 Zakończono Game.Editor.Setup.TruckAssetBuilder.BuildBatch, exit 0. Następny krok: kolejny etap prefab/sceny lub capture-0112 -Stage result-0112.
 Zakończono Game.World.Import.WorldTruckInstaller.InstallBatch, exit 0. Następny krok: kolejny etap prefab/sceny lub capture-0112 -Stage result-0112.
+Zapisano baseline Low clear, siedem kamer i sześć natywnych RT z identyfikatorem wnętrza. Następny krok: kontynuować macierz lub porównać PNG.
