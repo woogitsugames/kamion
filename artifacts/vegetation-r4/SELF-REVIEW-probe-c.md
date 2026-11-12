@@ -1,0 +1,9 @@
+# Ocena autorska C / B3
+
+Autor obejrzał wszystkie osiem arkuszy baseline–C i wszystkie osiem B2–C, po dwa kadry w Low/High oraz clear/overcast. To pełny zestaw małej próby, bez pełnej macierzy. Fotografia Rakoon z 2020-11-02, CC0, jest odniesieniem charakteru roślinności; zgodność pozy i sezonu pozostaje UNVERIFIED.
+
+C dodaje strukturę w środku góry, niezależną od wierzchołków triangulacji. Efekt jest czytelny w bezpośrednim porównaniu do B2, szczególnie w High-clear. Nadal jednak pozostaje duża płaska brunatna powierzchnia, na której leżą lub sterczą pojedyncze ciemne elementy. W Low te elementy częściowo zlewają się w punkty; długi pas nadal przypomina belkę. Nie widać dominującej regularnej kratki, dużych dziur ani nowej utraty kontaktu z gruntem. Nie ma też dowodu na wszystkie drobne podstawy kart w rozdzielczości arkuszy.
+
+Ocena: PARTIAL dla samej poprawy pokrywy, FAIL dla końcowego realizmu. Nie uruchamiać pełnej macierzy ani końcowego GIS dla C jako zaakceptowanej wersji. Geometria i osadzenie korzeni przeszły 40 testów w 11,56 s, World zakończył się w 515,6 s, kontrola kolizji objęła 64 Low chunki. To nie dowodzi wyglądu ani kosztu GPU. Piny potwierdzają zmianę wyłącznie plantings.py, chunk_6_6 Low/High i metadanych; instancje, dekodowana kolizja i far-field bez zmian, 15 Megascans bez fallback.
+
+W 16 wierszach pomiarowych małej próby maksymalny przyrost Low względem świeżego baseline wynosi 0 draws i 1,020408% trisK; względem B2: 0 draws i 0,337838% trisK. Statyczne i instancjonowane wywołania są zapisane osobno. Zaokrąglone trisK, brak pełnej macierzy i brak pomiaru GPU ograniczają ten wynik. Sześć z ośmiu kontrolnych PNG jest identycznych z baseline; dwa wymagają porównania z wcześniej zbadanymi mikroróżnicami B2, zanim zostanie podany zakres różnicy.

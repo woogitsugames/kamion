@@ -1,0 +1,456 @@
+{
+  "snapshot_source_sha": "ebb9b3d526169eb8a9feb55aae2b08fd6e628485",
+  "after_root": "probe-c",
+  "before_root": "before",
+  "reference": {
+    "author": "Rakoon",
+    "captured_at": "2020-11-02",
+    "license": "CC0",
+    "real_photograph": true,
+    "ai_reference": false,
+    "source_filename": "20201102_152339_Rondo_Pami\u0119ci_Bie\u017ce\u0144stwa_1915_roku_Bia\u0142ystok.jpg",
+    "supplied_source": "C:\\Users\\matma\\Documents\\Claude\\kamion\\Data\\photos\\nowe\\20201102_152339_Rondo_Pami\u0119ci_Bie\u017ce\u0144stwa_1915_roku_Bia\u0142ystok.jpg",
+    "local_photo": "artifacts\\vegetation-r4\\references\\rakoon-rondo-20201102.jpg",
+    "sha256": "c9f7ebe04c9f46fd75d793deaf3a7509a61ec00587aaf232421b523d7338245e",
+    "width": 4608,
+    "height": 2592,
+    "attribution_source": "docs/REFERENCES.md: Real photos (Wikimedia Commons)",
+    "attribution_document_sha256": "db949598efe531e35cdb5c2b3aa421a76bffbfdada940811f6bdbfac6cbee256",
+    "use": "Appearance of clipped berberis only. Existing control camera pose is UNVERIFIED relative to this photo; do not infer surveyed dimensions or exact alignment. Never a game texture in this experiment."
+  },
+  "fixed_rois": {
+    "g3a-rondo-bie-approach": [
+      0,
+      0.54,
+      0.27,
+      0.69
+    ],
+    "photo-biezenstwa-ground": [
+      0.72,
+      0.54,
+      1,
+      0.73
+    ]
+  },
+  "all_probe_costs": [
+    {
+      "camera": "fire-station-ref7197",
+      "group": "Low-overcast",
+      "before": {
+        "static_draws": 124,
+        "shadow_draws": 100,
+        "static_triangles_k": 331,
+        "instance_draws": 184,
+        "instances": 138,
+        "instance_triangles_k": 32,
+        "total_draws": 308,
+        "total_triangles_k": 363
+      },
+      "after": {
+        "static_draws": 124,
+        "shadow_draws": 100,
+        "static_triangles_k": 331,
+        "instance_draws": 184,
+        "instances": 138,
+        "instance_triangles_k": 32,
+        "total_draws": 308,
+        "total_triangles_k": 363
+      },
+      "delta_draws": 0,
+      "delta_triangles_percent": 0.0
+    },
+    {
+      "camera": "g3a-rondo-bie-approach",
+      "group": "Low-overcast",
+      "before": {
+        "static_draws": 312,
+        "shadow_draws": 48,
+        "static_triangles_k": 280,
+        "instance_draws": 161,
+        "instances": 157,
+        "instance_triangles_k": 14,
+        "total_draws": 473,
+        "total_triangles_k": 294
+      },
+      "after": {
+        "static_draws": 311,
+        "shadow_draws": 47,
+        "static_triangles_k": 283,
+        "instance_draws": 161,
+        "instances": 157,
+        "instance_triangles_k": 14,
+        "total_draws": 472,
+        "total_triangles_k": 297
+      },
+      "delta_draws": -1,
+      "delta_triangles_percent": 1.0204081632652962
+    },
+    {
+      "camera": "photo-biezenstwa-ground",
+      "group": "Low-overcast",
+      "before": {
+        "static_draws": 341,
+        "shadow_draws": 48,
+        "static_triangles_k": 288,
+        "instance_draws": 159,
+        "instances": 153,
+        "instance_triangles_k": 13,
+        "total_draws": 500,
+        "total_triangles_k": 301
+      },
+      "after": {
+        "static_draws": 340,
+        "shadow_draws": 47,
+        "static_triangles_k": 291,
+        "instance_draws": 159,
+        "instances": 153,
+        "instance_triangles_k": 13,
+        "total_draws": 499,
+        "total_triangles_k": 304
+      },
+      "delta_draws": -1,
+      "delta_triangles_percent": 0.9966777408637828
+    },
+    {
+      "camera": "r10_fence_2",
+      "group": "Low-overcast",
+      "before": {
+        "static_draws": 384,
+        "shadow_draws": 39,
+        "static_triangles_k": 314,
+        "instance_draws": 224,
+        "instances": 163,
+        "instance_triangles_k": 24,
+        "total_draws": 608,
+        "total_triangles_k": 338
+      },
+      "after": {
+        "static_draws": 384,
+        "shadow_draws": 39,
+        "static_triangles_k": 314,
+        "instance_draws": 224,
+        "instances": 163,
+        "instance_triangles_k": 24,
+        "total_draws": 608,
+        "total_triangles_k": 338
+      },
+      "delta_draws": 0,
+      "delta_triangles_percent": 0.0
+    },
+    {
+      "camera": "fire-station-ref7197",
+      "group": "Low-clear",
+      "before": {
+        "static_draws": 124,
+        "shadow_draws": 100,
+        "static_triangles_k": 331,
+        "instance_draws": 184,
+        "instances": 138,
+        "instance_triangles_k": 32,
+        "total_draws": 308,
+        "total_triangles_k": 363
+      },
+      "after": {
+        "static_draws": 124,
+        "shadow_draws": 100,
+        "static_triangles_k": 331,
+        "instance_draws": 184,
+        "instances": 138,
+        "instance_triangles_k": 32,
+        "total_draws": 308,
+        "total_triangles_k": 363
+      },
+      "delta_draws": 0,
+      "delta_triangles_percent": 0.0
+    },
+    {
+      "camera": "g3a-rondo-bie-approach",
+      "group": "Low-clear",
+      "before": {
+        "static_draws": 312,
+        "shadow_draws": 48,
+        "static_triangles_k": 280,
+        "instance_draws": 161,
+        "instances": 157,
+        "instance_triangles_k": 14,
+        "total_draws": 473,
+        "total_triangles_k": 294
+      },
+      "after": {
+        "static_draws": 311,
+        "shadow_draws": 47,
+        "static_triangles_k": 283,
+        "instance_draws": 161,
+        "instances": 157,
+        "instance_triangles_k": 14,
+        "total_draws": 472,
+        "total_triangles_k": 297
+      },
+      "delta_draws": -1,
+      "delta_triangles_percent": 1.0204081632652962
+    },
+    {
+      "camera": "photo-biezenstwa-ground",
+      "group": "Low-clear",
+      "before": {
+        "static_draws": 341,
+        "shadow_draws": 48,
+        "static_triangles_k": 288,
+        "instance_draws": 159,
+        "instances": 153,
+        "instance_triangles_k": 13,
+        "total_draws": 500,
+        "total_triangles_k": 301
+      },
+      "after": {
+        "static_draws": 340,
+        "shadow_draws": 47,
+        "static_triangles_k": 291,
+        "instance_draws": 159,
+        "instances": 153,
+        "instance_triangles_k": 13,
+        "total_draws": 499,
+        "total_triangles_k": 304
+      },
+      "delta_draws": -1,
+      "delta_triangles_percent": 0.9966777408637828
+    },
+    {
+      "camera": "r10_fence_2",
+      "group": "Low-clear",
+      "before": {
+        "static_draws": 384,
+        "shadow_draws": 39,
+        "static_triangles_k": 314,
+        "instance_draws": 224,
+        "instances": 163,
+        "instance_triangles_k": 24,
+        "total_draws": 608,
+        "total_triangles_k": 338
+      },
+      "after": {
+        "static_draws": 384,
+        "shadow_draws": 39,
+        "static_triangles_k": 314,
+        "instance_draws": 224,
+        "instances": 163,
+        "instance_triangles_k": 24,
+        "total_draws": 608,
+        "total_triangles_k": 338
+      },
+      "delta_draws": 0,
+      "delta_triangles_percent": 0.0
+    },
+    {
+      "camera": "fire-station-ref7197",
+      "group": "High-overcast",
+      "before": {
+        "static_draws": 150,
+        "shadow_draws": 342,
+        "static_triangles_k": 1002,
+        "instance_draws": 239,
+        "instances": 530,
+        "instance_triangles_k": 68,
+        "total_draws": 389,
+        "total_triangles_k": 1070
+      },
+      "after": {
+        "static_draws": 150,
+        "shadow_draws": 342,
+        "static_triangles_k": 1002,
+        "instance_draws": 239,
+        "instances": 530,
+        "instance_triangles_k": 68,
+        "total_draws": 389,
+        "total_triangles_k": 1070
+      },
+      "delta_draws": 0,
+      "delta_triangles_percent": 0.0
+    },
+    {
+      "camera": "g3a-rondo-bie-approach",
+      "group": "High-overcast",
+      "before": {
+        "static_draws": 396,
+        "shadow_draws": 336,
+        "static_triangles_k": 941,
+        "instance_draws": 250,
+        "instances": 334,
+        "instance_triangles_k": 33,
+        "total_draws": 646,
+        "total_triangles_k": 974
+      },
+      "after": {
+        "static_draws": 395,
+        "shadow_draws": 333,
+        "static_triangles_k": 944,
+        "instance_draws": 250,
+        "instances": 334,
+        "instance_triangles_k": 33,
+        "total_draws": 645,
+        "total_triangles_k": 977
+      },
+      "delta_draws": -1,
+      "delta_triangles_percent": 0.30800821355236874
+    },
+    {
+      "camera": "photo-biezenstwa-ground",
+      "group": "High-overcast",
+      "before": {
+        "static_draws": 419,
+        "shadow_draws": 480,
+        "static_triangles_k": 964,
+        "instance_draws": 242,
+        "instances": 325,
+        "instance_triangles_k": 31,
+        "total_draws": 661,
+        "total_triangles_k": 995
+      },
+      "after": {
+        "static_draws": 418,
+        "shadow_draws": 477,
+        "static_triangles_k": 967,
+        "instance_draws": 242,
+        "instances": 325,
+        "instance_triangles_k": 31,
+        "total_draws": 660,
+        "total_triangles_k": 998
+      },
+      "delta_draws": -1,
+      "delta_triangles_percent": 0.3015075376884502
+    },
+    {
+      "camera": "r10_fence_2",
+      "group": "High-overcast",
+      "before": {
+        "static_draws": 884,
+        "shadow_draws": 342,
+        "static_triangles_k": 1688,
+        "instance_draws": 488,
+        "instances": 700,
+        "instance_triangles_k": 78,
+        "total_draws": 1372,
+        "total_triangles_k": 1766
+      },
+      "after": {
+        "static_draws": 884,
+        "shadow_draws": 342,
+        "static_triangles_k": 1688,
+        "instance_draws": 488,
+        "instances": 700,
+        "instance_triangles_k": 78,
+        "total_draws": 1372,
+        "total_triangles_k": 1766
+      },
+      "delta_draws": 0,
+      "delta_triangles_percent": 0.0
+    },
+    {
+      "camera": "fire-station-ref7197",
+      "group": "High-clear",
+      "before": {
+        "static_draws": 150,
+        "shadow_draws": 342,
+        "static_triangles_k": 1002,
+        "instance_draws": 239,
+        "instances": 530,
+        "instance_triangles_k": 68,
+        "total_draws": 389,
+        "total_triangles_k": 1070
+      },
+      "after": {
+        "static_draws": 150,
+        "shadow_draws": 342,
+        "static_triangles_k": 1002,
+        "instance_draws": 239,
+        "instances": 530,
+        "instance_triangles_k": 68,
+        "total_draws": 389,
+        "total_triangles_k": 1070
+      },
+      "delta_draws": 0,
+      "delta_triangles_percent": 0.0
+    },
+    {
+      "camera": "g3a-rondo-bie-approach",
+      "group": "High-clear",
+      "before": {
+        "static_draws": 396,
+        "shadow_draws": 336,
+        "static_triangles_k": 941,
+        "instance_draws": 250,
+        "instances": 334,
+        "instance_triangles_k": 33,
+        "total_draws": 646,
+        "total_triangles_k": 974
+      },
+      "after": {
+        "static_draws": 395,
+        "shadow_draws": 333,
+        "static_triangles_k": 944,
+        "instance_draws": 250,
+        "instances": 334,
+        "instance_triangles_k": 33,
+        "total_draws": 645,
+        "total_triangles_k": 977
+      },
+      "delta_draws": -1,
+      "delta_triangles_percent": 0.30800821355236874
+    },
+    {
+      "camera": "photo-biezenstwa-ground",
+      "group": "High-clear",
+      "before": {
+        "static_draws": 419,
+        "shadow_draws": 480,
+        "static_triangles_k": 964,
+        "instance_draws": 242,
+        "instances": 325,
+        "instance_triangles_k": 31,
+        "total_draws": 661,
+        "total_triangles_k": 995
+      },
+      "after": {
+        "static_draws": 418,
+        "shadow_draws": 477,
+        "static_triangles_k": 967,
+        "instance_draws": 242,
+        "instances": 325,
+        "instance_triangles_k": 31,
+        "total_draws": 660,
+        "total_triangles_k": 998
+      },
+      "delta_draws": -1,
+      "delta_triangles_percent": 0.3015075376884502
+    },
+    {
+      "camera": "r10_fence_2",
+      "group": "High-clear",
+      "before": {
+        "static_draws": 884,
+        "shadow_draws": 342,
+        "static_triangles_k": 1688,
+        "instance_draws": 488,
+        "instances": 700,
+        "instance_triangles_k": 78,
+        "total_draws": 1372,
+        "total_triangles_k": 1766
+      },
+      "after": {
+        "static_draws": 884,
+        "shadow_draws": 342,
+        "static_triangles_k": 1688,
+        "instance_draws": 488,
+        "instances": 700,
+        "instance_triangles_k": 78,
+        "total_draws": 1372,
+        "total_triangles_k": 1766
+      },
+      "delta_draws": 0,
+      "delta_triangles_percent": 0.0
+    }
+  ],
+  "maximum_low_draw_delta": 0,
+  "maximum_low_triangle_delta_percent": 1.0204081632652962,
+  "note": "Limited probe only; static/instance draws separate, integer trisK precision. No full-camera acceptance or GPU timing. Ablation baseline is not the final budget baseline."
+}

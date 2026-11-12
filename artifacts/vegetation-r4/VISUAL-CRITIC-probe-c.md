@@ -1,0 +1,7 @@
+# Niezależna recenzja C / B3
+
+vegetation_critic obejrzał wszystkie 16 arkuszy: osiem baseline–C oraz osiem B2–C. Werdykt: PARTIAL dla kroku względem B2, FAIL dla końcowego realizmu berberysu. Pokrywa rzeczywiście dociera do środka wierzchu, najczytelniej w obu kadrach High-clear. Jest to poprawa powierzchni odrębna od wcześniejszej naprawy triangulacji.
+
+P1: elementy wyglądają głównie jak rozrzucone, wystające pędy na gładkiej pokrywie. Płaski brunatny blat pomiędzy kartami nadal można prześledzić wzrokiem, szczególnie na bliższym lewym krzewie. W Low część kart zlewa się w ciemne punkty, a belka pozostaje dominująca. Fotografia pokazuje zwartą, drobną strukturę liści na całej powierzchni. Nie stwierdzono dominujących prostych rzędów, dużych dziur na przestrzał, jednoznacznego unoszenia kart ani dużych prostokątnych płatów. Drobne podstawy pozostają ograniczeniem rozdzielczości. Sylwetka i kontakt z gruntem nie wykazują istotnej regresji.
+
+Zalecenie: zachować B2 i niezależne próbkowanie C, ale przy tej samej liczbie kart zmienić pokrywę w niższe, bardziej pochylone i częściowo zachodzące na siebie skupiska liści. Zmniejszyć wysokość wystawania ponad cap, zwiększyć udział powierzchni widocznej z góry i głębiej schować podstawę. Nie zwiększać od razu gęstości ani garbów. Jeżeli istniejący atlas po pochyleniu nadal wygląda jak gałązki, dopiero następny krok może dotyczyć własnego atlasu, z kontrolą wszystkich pędów brzegowych, które też go używają. Delty małej próby nie dowodzą pełnego budżetu ani GPU.

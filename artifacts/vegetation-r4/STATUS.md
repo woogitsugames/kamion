@@ -122,3 +122,4 @@ Probe probe-c: Low overcast zapisany. Obejrzeć arkusze i koszt przed dalszą de
 Probe probe-c: Low clear zapisany. Obejrzeć arkusze i koszt przed dalszą decyzją; to nie pełna macierz.
 Probe probe-c: High overcast zapisany. Obejrzeć arkusze i koszt przed dalszą decyzją; to nie pełna macierz.
 Probe probe-c: High clear zapisany. Obejrzeć arkusze i koszt przed dalszą decyzją; to nie pełna macierz.
+C zakonczone0, autor i krytyk obejrzeli16arkuszy: PARTIAL pokrywa, FAIL realizm. Low maxdrawdelta0/trisK+1.020408% vsbaseline, +.337838% vsB2. Nadal gladki blat miedzy sterczacymi pedami. SELF-REVIEW/VISUAL-CRITIC-probe-c i PLAN-D zapisane. Dalej D: ta sama liczba kart, wiekszy rzut XY, nizsze wystawanie, bez zmiany atlasu/materialow. Brak aktywnego wlasnego heavy/Unity.
