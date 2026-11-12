@@ -1,5 +1,6 @@
 ﻿$ErrorActionPreference = 'Stop'
 Set-Location 'C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-vegetation'
+New-Item -ItemType Directory -Force artifacts/vegetation-r3/restored-probe | Out-Null
 $slot = 'C:\Users\matma\Documents\Claude\kamion\scripts\unity-slot.ps1'
 pwsh $slot -Acquire -Owner gpt-vegetation -StaleHours 1000000 -PollSeconds 10
 if ($LASTEXITCODE -ne 0) { throw 'Unity slot acquisition failed' }
