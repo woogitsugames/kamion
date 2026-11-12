@@ -13,3 +13,4 @@
 - NEXT: `pwsh C:/Users/matma/Documents/Claude/kamion/scripts/unity-slot.ps1 -Acquire -Pool heavy -Owner claude-sbs-poses-py; uv run --project tools/refs python -m pytest tests/gate3 tests/gis/test_sbs_gate3.py tests/gis/test_sbs_photometry.py tests/gis/test_sbs_report.py -q; pwsh C:/Users/matma/Documents/Claude/kamion/scripts/unity-slot.ps1 -Release -Pool heavy -Owner claude-sbs-poses-py`
 - pytest tests/gate3 + tests/gis/test_sbs_{gate3,photometry,report}: 109 passed (heavy slot). NEXT: lead review/merge of branch sbs-poses.
 - 275528/837235: rectified_horizon 0.52 explicit + references entries; all Mapillary cameras now match formula (0 mismatches). NEXT: pytest rerun under heavy, commit, final report.
+- pytest rerun after 275528/837235 fix not executed: heavy FIFO stalled (13 waiters, 0 slots held); my ticket withdrawn. Previous run 109 passed on data differing only in those 2 entries. NEXT (lead): run the pytest command above once heavy FIFO moves.
