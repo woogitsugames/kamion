@@ -56,6 +56,11 @@ def consolidate(prims, name):
             # Plate rectangle, with 8 px of edge extension. v=0 is image bottom.
             q["UV"] = np.column_stack([(8 + uv[:, 0] * 1008) / 1024,
                                          (264 + uv[:, 1] * 240) / 512])
+        elif p["mat"] == "reefer_grille":
+            # Source physical rectangle: life_props.trailer, 1.68 x .78 m.
+            uv = np.asarray(p["UV"], float)
+            q["UV"] = np.column_stack([(8 + uv[:, 0] / 1.68 * 1008) / 1024,
+                                         (136 + uv[:, 1] / .78 * 112) / 512])
         else:
             q["UV"] = np.broadcast_to(center(p["mat"]), (len(p["V"]), 2)).copy()
         parts.append(q)
@@ -84,12 +89,25 @@ def generate(root=None, texture_dir=None):
         srgb = np.where(linear <= .0031308, 12.92 * linear, 1.055 * linear ** (1 / 2.4) - .055)
         x, y = k % 16 * 64, 512 - (k // 16 + 1) * 64
         base[y:y + 64, x:x + 64] = np.round(srgb * 255).astype(np.uint8)
-        mask[y:y + 64, x:x + 64] = [round(definition.get("metal", 0) * 255), 255, 0,
+        # Preserve the *effective* baseline: LookDevAssets.WorldMaterial uses
+        # dielectric World Surface for ordinary materials with metal <= .5.
+        metal = definition.get("metal", 0)
+        mask[y:y + 64, x:x + 64] = [round((metal if metal > .5 else 0) * 255), 255, 0,
                                          round((1 - definition["rough"]) * 255)]
     # Extend the plate border into the padding so filtering never reaches a black texel.
     plates = np.asarray(plate_atlas().resize((1008, 240), Image.Resampling.LANCZOS))
     base[:256] = np.pad(plates, ((8, 8), (8, 8), (0, 0)), mode="edge")
     mask[:256] = [0, 255, 0, round((1 - M["car_plate"]["rough"]) * 255)]
+    # WorldPbrMaterials.Stripes(louvre_slats), WorldPBR _STRIPES: 60 mm pitch,
+    # half dark gap / half light slat; source shader overrides smoothness to .45.
+    v = .78 * (1 - (np.arange(112) + .5) / 112)
+    phase = np.mod(v / .06, 1)
+    bright = np.abs(phase - .5) >= .25
+    linear = np.where(bright[:, None], [.085, .088, .09], [.012, .012, .012])
+    srgb = np.where(linear <= .0031308, 12.92 * linear, 1.055 * linear ** (1 / 2.4) - .055)
+    grille = np.broadcast_to(np.round(srgb * 255).astype(np.uint8)[:, None, :], (112, 1008, 3))
+    base[256:384] = np.pad(grille, ((8, 8), (8, 8), (0, 0)), mode="edge")
+    mask[256:384] = [0, 255, 0, round(.45 * 255)]
     Image.fromarray(base).save(dest / f"{NAME}_BaseColor.png")
     Image.fromarray(mask).save(dest / f"{NAME}_MaskMap.png")
     return dest

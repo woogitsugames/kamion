@@ -59,6 +59,7 @@ namespace Game.World.Import
             mat.SetVector("_SkyOcc", Vector4.zero);
             mat.renderQueue = -1;
             mat.SetOverrideTag("RenderType", "Opaque");
+            mat.SetOverrideTag("KamionVehicleLodAtlas", "1"); // explicit native migration marker, ADR0153
             EditorUtility.SetDirty(mat);
             return mat;
         }

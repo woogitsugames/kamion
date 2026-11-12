@@ -46,7 +46,29 @@ def test_atlas_keeps_linear_albedo_metallic_and_smoothness(tmp_path):
         rgb = base[y, x]
         linear = np.where(rgb <= .04045, rgb / 12.92, ((rgb + .055) / 1.055) ** 2.4)
         np.testing.assert_allclose(linear, M[name]["color"], atol=.004)
-        assert mask[y, x, 0] == pytest.approx(M[name].get("metal", 0), abs=1/255)
+        source_metal = M[name].get("metal", 0)
+        assert mask[y, x, 0] == pytest.approx(source_metal if source_metal > .5 else 0, abs=1/255)
         assert mask[y, x, 3] == pytest.approx(1 - M[name]["rough"], abs=1/255)
+
+
+def test_refrigeration_grille_keeps_60mm_stripes_and_source_smoothness(tmp_path):
+    dest = atlas.generate(tmp_path)
+    base = np.asarray(Image.open(dest / f"{atlas.NAME}_BaseColor.png")) / 255
+    mask = np.asarray(Image.open(dest / f"{atlas.NAME}_MaskMap.png")) / 255
+    sample = base[264:376, 512, 0]
+    linear = np.where(sample <= .04045, sample/12.92, ((sample+.055)/1.055)**2.4)
+    assert linear.min() == pytest.approx(.012, abs=.001)
+    assert linear.max() == pytest.approx(.085, abs=.002)
+    # 0.78 m / 0.06 m = 13 authored periods, two boundaries each.
+    assert np.count_nonzero(np.diff(linear > .04)) == 26
+    assert mask[300, 512, 3] == pytest.approx(.45, abs=1/255)
+    source = crease_normals(yard.trailer('reefer', None)[1].out())
+    result = atlas.consolidate(source, 'trailer_reefer_0')
+    old = next(p for p in source if p['mat'] == 'reefer_grille')
+    detail = next(p for p in result if p['mat'] == atlas.NAME)
+    # The rectangle spans atlas UV, unlike the solid palette cells.
+    index = next(i for i,p in enumerate([p for p in source if p['mat'] != atlas.primary('trailer_reefer_0')]) if p is old)
+    offset = sum(len(p['V']) for p in [p for p in source if p['mat'] != atlas.primary('trailer_reefer_0')][:index])
+    assert np.all(np.ptp(detail['UV'][offset:offset+len(old['V'])],axis=0) > .1)
 
 

@@ -56,6 +56,9 @@ namespace Game.Tests
             var vehicles = set.prototypes.Where(p => p.name.StartsWith("car_") || p.name.StartsWith("van_")
                 || p.name.StartsWith("tractor_") || p.name.StartsWith("trailer_")).ToArray();
             Assert.IsNotEmpty(vehicles);
+            var plate = set.materials.FirstOrDefault(m => m != null && m.shader.name == "Kamion/World Car Plate");
+            Assert.NotNull(plate, "LOD1 atlas must not disable the original LOD0 plate remap");
+            Assert.IsTrue(plate.IsKeywordEnabled("_PLATE_LOCAL_CORNERS"), "LOD0 per-instance plate remapping");
             foreach (var p in vehicles)
             {
                 Assert.AreEqual(3, p.lods.Length, p.name);
