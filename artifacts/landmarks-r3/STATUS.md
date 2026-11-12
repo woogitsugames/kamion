@@ -81,3 +81,5 @@ Krok 17a: ADR0119 ma osobną sekcję r3 z korektą P1/P2 i zmierzonym -16 tris b
 Krok 18: obejrzano wszystkie 32 arkusze finalnej korekty, 244 pary / 95 PNG identycznych. Low: 122 pomiary, draw mesh i instanced +0, zmiana tris -0,3185% do +0,3718%, cały budżet PASS. Runtime obu kominów: oś 0 stopni, po 3 submeshe na obu LOD. Fazy i ukośna plama zniknęły; materiał kominów nadal zbyt płaski/szary względem zdjęcia, PARTIAL. Zapis finalnych własnych wyjść przed końcowym GIS/physics/gate3 i EditMode; model pozostaje zamrożony na czas testów.
 
 Krok 19: ADR0116/0119 i SELF_REVIEW uaktualnione o finalne obrazy, budżet i jawne ograniczenia. EditMode ma aktywny slot Unity gpt-landmarks; końcowy Python czeka na heavy gpt-landmarks-r3. Bez zmiany modelu podczas testów.
+
+Krok 20: EditMode 317/317 PASS, slot Unity zwolniony. Natywna para filarów czterech warunków obejrzana i zapisana w review/pier-final-native-pair.jpg (840 px). Python wciąż czeka w żywej kolejce heavy; przygotowano notatkę następnej rundy remizy, bez mutowania modelu r3.
