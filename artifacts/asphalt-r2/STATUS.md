@@ -41,3 +41,4 @@
 2026-11-12T02:22:15.8222997+01:00: Producent świata kandydata exit 0, 424,1 s, brak fallback=True. Audyt odwołań przed importem exit 0. Następny krok: import i 4 serie obrazów kandydata.
 2026-11-12T02:23:36.3822084+01:00: Import kandydata exit 0; zachowano raport pamięci. Następny krok: 4 serie capture.
 2026-11-12T02:24:10.9144959+01:00: zapisano artifacts/asphalt-r2/candidate/Low-overcast. Następny krok: pozostałe serie lub porównanie wariantu.
+2026-11-12T02:24:23.9556955+01:00: Import porównany: wszystkie 22 kategorie bajtów delta 0, ASTC 40 910 657 bez zmiany, instancje 126 992 i collidery 2674 bez zmiany. Snapshot Low potwierdza kerbWear i ground_grime zgodne z kandydatem; yardGrime zachowuje baseline. Trwa capture, audyt geometrii czeka na heavy.
