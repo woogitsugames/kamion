@@ -22,5 +22,20 @@
                                -250
                            ],
     "transition_outside_m":  8,
-    "note":  "Read-only references. Conservative ownership envelope, not survey. Shader works in chunk mesh object space; GPU origin-shift tests 312 total passed."
+    "note":  "Read-only references. Conservative ownership envelope, not survey. Shader works in chunk mesh object space; GPU origin-shift tests 312 total passed.",
+    "coordinate_source_evidence":  [
+                                       {
+                                           "file":  "game/Assets/_Project/World/Import/GlbReader.cs",
+                                           "sha256":  "da2609428e76149cbb8b7c458a90de7bb62330677909af527ea1c428f415fd5a"
+                                       },
+                                       {
+                                           "file":  "game/Assets/_Project/World/Import/WorldMeshBake.cs",
+                                           "sha256":  "e209b64275f547a154f6e240161b73171765f895dc3effdad54dfc6e356e1e2f"
+                                       },
+                                       {
+                                           "file":  "game/Assets/_Project/World/Import/WorldSceneBuilder.cs",
+                                           "sha256":  "99691702abfc38c9a7833af1246e26202b6189ca260375f72504cc3e28700b07"
+                                       }
+                                   ],
+    "coordinate_contract":  "GlbReader converts handedness; WorldMeshBake copies positions without recentering; WorldSceneBuilder.BuildChunk parents chunk/layer objects with identity transforms, region root offsets height. Object XZ retains authoring E/N even after root translation."
 }
