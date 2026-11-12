@@ -1,0 +1,31 @@
+﻿{
+    "result":  "Failed",
+    "exit":  1,
+    "passed":  575,
+    "failed":  1,
+    "xfailed":  1,
+    "seconds":  657.56,
+    "failures":  [
+                     "FAILED tests/gis/test_world_roads.py::test_export_is_deterministic"
+                 ],
+    "previous_round_failures":  [
+                                    "FAILED tests/gis/test_far_field.py::test_generated_far_field_qa_and_manifests",
+                                    "FAILED tests/gis/test_hero_bridge.py::test_instances_emitted",
+                                    "FAILED tests/gis/test_road_fidelity.py::test_report_not_stale",
+                                    "FAILED tests/gis/test_streetscape.py::test_instances_reference_existing_prototypes",
+                                    "FAILED tests/gis/test_world_roads.py::test_export_is_deterministic"
+                                ],
+    "comparison_note":  "Porównanie z r1, nie ze świeżą bazą r2; main i liczba testów zmieniły się. Brak podstaw do przypisywania napraw innych dziedzin zmianie shaderu truck.",
+    "side_effect_files":  [
+                              "Data/Regions/bialystok-industrial-c/generated/far_field_qa.json",
+                              "Data/Regions/bialystok-industrial-c/generated/landmarks/viaduct_putry_underdeck.spec.json",
+                              "Data/Regions/bialystok-industrial-c/generated/world_manifest.json",
+                              "Data/SourceManifests/bialystok-industrial-c-far-field.manifest.json"
+                          ],
+    "semantic_diff_files":  [
+                                "Data/Regions/bialystok-industrial-c/generated/world_manifest.json"
+                            ],
+    "pool":  "heavy",
+    "owner":  "gpt-truck-r2",
+    "numeric_threads":  1
+}

@@ -360,7 +360,10 @@ def plan(w, region_id, overrides, zground, blocked, log=lambda *a: None) -> list
                     back = t * (-1 if k == 0 else 1)
                     steps = []
                     stair_top = mid[2] - spec["params"]["girder_depth_m"] - .10
-                    for j in range(40):
+                    # ADR 0119: a flight needs an explicitly confirmed landing.
+                    # The former default crossed the noise screen. Keep grass
+                    # sampling independent of this fail-closed structural flag.
+                    for j in range(40 if spec["params"].get("stairs_enabled", False) else 0):
                         xy = mid[:2] + n * (hw + .65) + back * ((j + .5) * spec["params"]["stairs_tread_m"])
                         if blocked(xy):
                             break
@@ -413,7 +416,7 @@ def _quad(buf, points, mat, src, outward):
     buf.add("bridge", mat, v, np.column_stack([v[:, 0] + v[:, 2], v[:, 1] + v[:, 2]]), t, src=src)
 
 
-def _prism(buf, centre, t, hl, hw, bevel, z0, z1, mat, src, collision=False):
+def _prism(buf, centre, t, hl, hw, bevel, z0, z1, mat, src, collision=False, *, bevel_mat=None, paint_weather=None):
     """Eight-sided concrete column/head; bevel is geometry, never a round normal."""
     t = np.asarray(t, float)
     n = np.array([-t[1], t[0]])
@@ -427,7 +430,22 @@ def _prism(buf, centre, t, hl, hw, bevel, z0, z1, mat, src, collision=False):
         faces += [(i, j, j + 8), (i, j + 8, i + 8)]
     faces += [(8, 8 + i, 9 + i) for i in range(1, 7)]
     uv = np.column_stack([v[:, 0] + v[:, 2], v[:, 1] + v[:, 2]])
-    buf.add("bridge", mat, v, uv, faces, src=src)
+    visual_uv, weather_uv1 = uv, None
+    if paint_weather is not None:
+        # Both broad face directions have a metric horizontal coordinate.
+        # Collision and unpainted concrete deliberately keep the original UVs.
+        u = v[:, :2] @ (t + n)
+        visual_uv = np.column_stack([u, v[:, 2] - paint_weather["ground_z"]])
+        weather_uv1 = np.column_stack([u, 1 + (z1 - v[:, 2]) / paint_weather["runoff_scale"]])
+    if bevel_mat and bevel_mat != mat:
+        # ADR 0119: the photo shows bare concrete on the four vertical bevels.
+        # Partition existing triangles only; the collision stays one full solid.
+        painted = [face for i, face in enumerate(faces) if i >= 16 or (i // 2) % 2 == 0]
+        bare = [face for i, face in enumerate(faces) if i < 16 and (i // 2) % 2 == 1]
+        buf.add("bridge", mat, v, visual_uv, painted, src=src, UV1=weather_uv1)
+        buf.add("bridge", bevel_mat, v, uv, bare, src=src + ":chamfer")
+    else:
+        buf.add("bridge", mat, v, visual_uv, faces, src=src, UV1=weather_uv1)
     if collision:
         buf.add("collision", "collision_building", v, uv, faces, src=src)
 
@@ -453,7 +471,7 @@ def _pipe(buf, a, b, radius, src):
 
 
 def _apply_underdeck(w, hero, instances=None):
-    """DK8 Putry: chunk-batched structure only. No instance/material/draw group is added.
+    """DK8 Putry: chunk-batched structure, reusing existing material identities.
 
     Girder bottom stays at the old 1.20 m deck envelope. Reuse the two original
     concrete materials and yellow pier paint documented by the CC0 photograph.
@@ -523,14 +541,27 @@ def _apply_underdeck(w, hero, instances=None):
         cap_bottom = cap_top - prm["cap_h_m"]
         # The support footprint was checked against the ground-road exclusion mask.
         for qi, q in enumerate(pr["cols"]):
+            paint_cfg = hero["override"].get("pier_paint", {})
+            paint_weather = None
+            if (prm.get("paint_weathering") is True and
+                    hero["override"].get("set", {}).get("paint_weathering") is True and
+                    paint_cfg.get("enabled") is True):
+                length_scale = float(paint_cfg.get("runoff_length_scale", .35))
+                if not math.isfinite(length_scale) or not .1 <= length_scale <= 1:
+                    raise ValueError("Underdeck runoff_length_scale must be in [0.1, 1]")
+                paint_weather = {"ground_z": q[2], "runoff_scale": length_scale}
             _prism(buf, q[:2], t, .5, .6, .25, q[2] - .5, cap_bottom,
-                   "pier_yellow", src + ":column", collision=True)
+                   "pier_yellow", src + ":column", collision=True,
+                   bevel_mat="bridge_concrete" if prm.get("unpainted_chamfers", False) else None,
+                   paint_weather=paint_weather)
             _prism(buf, q[:2], t, .66, .75, .13, cap_bottom, cap_top,
                    "bridge_concrete", src + ":head", collision=True)
             M.box(buf, "bridge", "bridge_soffit", q[:2], t, .30, .36,
                   cap_top, pr["top"], src + ":bearing")
-            # Uneven gravity-driven runoff under the bearing, never tiled at every station.
-            for side in (-1, 1):
+            # The opt-in PBR path replaces these short geometric streaks rather
+            # than stacking two forms of dirt. Unflagged specs retain the old path.
+            runoff_sides = () if paint_weather else (-1, 1)
+            for side in runoff_sides:
                 for j, length in enumerate((.50, .83, .36)):
                     if (pi * 3 + qi + j) % 4 == 0:
                         continue
@@ -557,7 +588,8 @@ def _apply_underdeck(w, hero, instances=None):
         _pipe(buf, a, b, .075, src + ":outlet")
         _pipe(buf, b, [*xy, q[2] + .15], .075, src + ":downpipe")
 
-    # Abutments, wing walls and an explicit stair flight down the embankment.
+    # Abutments and wing walls; stairs require a confirmed landing in both
+    # current configuration and generated spec (a stale spec cannot enable them).
     so = dk["s_open"]
     if so:
         for k, end in enumerate(so):
@@ -586,7 +618,10 @@ def _apply_underdeck(w, hero, instances=None):
                       "bridge_soffit", src + ":joint_runoff", np.append(-back, 0))
             # Solid stair flight descending away from the abutment; every riser
             # is supported down to sampled ground, not a floating stack of slabs.
-            for x, y, z, tread in spec.get("stairs", [[], []])[k]:
+            stairs_enabled = (prm.get("stairs_enabled", False) is True and
+                              hero["override"].get("set", {}).get("stairs_enabled", False) is True)
+            steps = spec.get("stairs", [[], []])[k] if stairs_enabled else []
+            for x, y, z, tread in steps:
                 M.box(buf, "bridge", "bridge_concrete", [x, y], t, prm["stairs_tread_m"] / 2,
                       prm["stairs_width_m"] / 2, z - .25, tread, src + ":stairs")
     after = sum(len(p.T) for p in buf.parts if p.layer == "bridge")

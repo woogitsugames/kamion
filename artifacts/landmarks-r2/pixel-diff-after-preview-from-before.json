@@ -1,0 +1,179 @@
+{
+  "base": "before",
+  "phase": "after-preview",
+  "inventories": {
+    "Low-overcast": [
+      "dk8-abutment.png",
+      "dk8-bearing.png",
+      "dk8-ref7204.png",
+      "dk8-under-span.png",
+      "dk8-west-interior.png"
+    ],
+    "Low-clear": [
+      "dk8-abutment.png",
+      "dk8-bearing.png",
+      "dk8-ref7204.png",
+      "dk8-under-span.png",
+      "dk8-west-interior.png"
+    ],
+    "High-overcast": [
+      "dk8-abutment.png",
+      "dk8-bearing.png",
+      "dk8-ref7204.png",
+      "dk8-under-span.png",
+      "dk8-west-interior.png"
+    ],
+    "High-clear": [
+      "dk8-abutment.png",
+      "dk8-bearing.png",
+      "dk8-ref7204.png",
+      "dk8-under-span.png",
+      "dk8-west-interior.png"
+    ]
+  },
+  "camera_conditions": 20,
+  "scope": "diagnostic subset only",
+  "exact": 0,
+  "rows": [
+    {
+      "condition": "Low-overcast",
+      "camera": "dk8-abutment",
+      "mean_abs": 0.8802097182652738,
+      "fraction_over_5": 0.040275403608736944,
+      "exact": false
+    },
+    {
+      "condition": "Low-overcast",
+      "camera": "dk8-bearing",
+      "mean_abs": 0.257968898385565,
+      "fraction_over_5": 0.021688034188034187,
+      "exact": false
+    },
+    {
+      "condition": "Low-overcast",
+      "camera": "dk8-ref7204",
+      "mean_abs": 0.09147726073652,
+      "fraction_over_5": 0.008900364039252928,
+      "exact": false
+    },
+    {
+      "condition": "Low-overcast",
+      "camera": "dk8-under-span",
+      "mean_abs": 0.18377136752136752,
+      "fraction_over_5": 0.015507280785058563,
+      "exact": false
+    },
+    {
+      "condition": "Low-overcast",
+      "camera": "dk8-west-interior",
+      "mean_abs": 0.7405021367521367,
+      "fraction_over_5": 0.027585470085470087,
+      "exact": false
+    },
+    {
+      "condition": "Low-clear",
+      "camera": "dk8-abutment",
+      "mean_abs": 0.686082489184341,
+      "fraction_over_5": 0.03762266540044318,
+      "exact": false
+    },
+    {
+      "condition": "Low-clear",
+      "camera": "dk8-bearing",
+      "mean_abs": 0.21871768492138863,
+      "fraction_over_5": 0.016677350427350426,
+      "exact": false
+    },
+    {
+      "condition": "Low-clear",
+      "camera": "dk8-ref7204",
+      "mean_abs": 0.11484449192782527,
+      "fraction_over_5": 0.010084283000949667,
+      "exact": false
+    },
+    {
+      "condition": "Low-clear",
+      "camera": "dk8-under-span",
+      "mean_abs": 0.18465192043895748,
+      "fraction_over_5": 0.014162709718265274,
+      "exact": false
+    },
+    {
+      "condition": "Low-clear",
+      "camera": "dk8-west-interior",
+      "mean_abs": 0.5887025166191833,
+      "fraction_over_5": 0.024559195948084835,
+      "exact": false
+    },
+    {
+      "condition": "High-overcast",
+      "camera": "dk8-abutment",
+      "mean_abs": 1.354352643241532,
+      "fraction_over_5": 0.03967434314656537,
+      "exact": false
+    },
+    {
+      "condition": "High-overcast",
+      "camera": "dk8-bearing",
+      "mean_abs": 0.7019386409201224,
+      "fraction_over_5": 0.021462092434314656,
+      "exact": false
+    },
+    {
+      "condition": "High-overcast",
+      "camera": "dk8-ref7204",
+      "mean_abs": 0.5037445921705181,
+      "fraction_over_5": 0.005925925925925926,
+      "exact": false
+    },
+    {
+      "condition": "High-overcast",
+      "camera": "dk8-under-span",
+      "mean_abs": 0.5904797140445288,
+      "fraction_over_5": 0.015263532763532763,
+      "exact": false
+    },
+    {
+      "condition": "High-overcast",
+      "camera": "dk8-west-interior",
+      "mean_abs": 1.2775154320987654,
+      "fraction_over_5": 0.04136119025007914,
+      "exact": false
+    },
+    {
+      "condition": "High-clear",
+      "camera": "dk8-abutment",
+      "mean_abs": 1.111153714255566,
+      "fraction_over_5": 0.034212962962962966,
+      "exact": false
+    },
+    {
+      "condition": "High-clear",
+      "camera": "dk8-bearing",
+      "mean_abs": 0.6594607998311702,
+      "fraction_over_5": 0.017412947135169356,
+      "exact": false
+    },
+    {
+      "condition": "High-clear",
+      "camera": "dk8-ref7204",
+      "mean_abs": 0.49313667299778413,
+      "fraction_over_5": 0.005660414688192466,
+      "exact": false
+    },
+    {
+      "condition": "High-clear",
+      "camera": "dk8-under-span",
+      "mean_abs": 0.5641224807428511,
+      "fraction_over_5": 0.013073361823361824,
+      "exact": false
+    },
+    {
+      "condition": "High-clear",
+      "camera": "dk8-west-interior",
+      "mean_abs": 1.0963067162604199,
+      "fraction_over_5": 0.030113564419119974,
+      "exact": false
+    }
+  ]
+}

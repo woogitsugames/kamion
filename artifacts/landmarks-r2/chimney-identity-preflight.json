@@ -1,0 +1,46 @@
+{
+  "camera_epsg2180": [
+    778597.2560734943,
+    595614.4411440389
+  ],
+  "source_page": "https://commons.wikimedia.org/wiki/File:20200711_073128_Elektrociep%C5%82ownia_Bia%C5%82ystok.jpg",
+  "source_gps_precision_note": "Rounded source GPS; not a surveyed camera pose",
+  "stacks": [
+    {
+      "osm_way": "628899553",
+      "epsg2180": [
+        778619.25,
+        595139.04
+      ],
+      "distance_m": 475.9096348642445,
+      "bearing_clockwise_from_north_deg": 177.3511606542434
+    },
+    {
+      "osm_way": "628899554",
+      "epsg2180": [
+        778713.26,
+        595089.71
+      ],
+      "distance_m": 537.4008601492673,
+      "bearing_clockwise_from_north_deg": 167.53395052014795
+    }
+  ],
+  "predicted_left_to_right": [
+    "628899554",
+    "628899553"
+  ],
+  "angular_separation_deg": 9.817210134095433,
+  "measured_painted_shaft_centres_x": [
+    2969.75,
+    3630.25
+  ],
+  "centre_method_file": "chimney-centres.json",
+  "image_separation_pinhole_deg": 10.676777139226903,
+  "inferred_heading_from_each_stack_deg": [
+    147.50732802256513,
+    146.64776101743365
+  ],
+  "heading_disagreement_deg": 0.8595670051314812,
+  "pose_status": "UNVERIFIED. Rounded GPS, crop centres and equivalent focal length do not establish an exact pose.",
+  "conclusion": "Geometric prediction only. Inspect original photo and compare projected separation before assigning head geometry."
+}

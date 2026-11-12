@@ -1,0 +1,30 @@
+diff --git a/game/Assets/_Project/Environment/Shaders/WorldPBR.shader b/game/Assets/_Project/Environment/Shaders/WorldPBR.shader
+index aa8a0600..790f2659 100644
+--- a/game/Assets/_Project/Environment/Shaders/WorldPBR.shader
++++ b/game/Assets/_Project/Environment/Shaders/WorldPBR.shader
+@@ -499,7 +499,8 @@ Shader "Kamion/World PBR"
+                     half age = (half)frac(ex);
+                     half known = step(-0.5, i.uv.z);                     // (-1, 5) = no wear data
+                     float lc = frac(i.uv.z);
+-                    half wp = saturate(1.0 - abs(abs(lc - 0.5) - 0.24) / 0.13) * known;
++                    // ADR0099 WORKING_VALUE: ~0.60m contact band at lane3.5m; asphalt polish stays wider.
++                    half wp = saturate(1.0 - abs(abs(lc - 0.5) - 0.24) / 0.085) * known;
+                     half peaks = SAMPLE_TEXTURE2D(_VarMap, sampler_BaseMap, uvb).r;     // aggregate tops wear first
+                     half mott = (macro.a - 0.5) * 2.0;
+                     half worn = _PaintWear.x * wp * transverse * (0.55 + 0.9 * age)     // tyres scrub the crossed marks
+diff --git a/game/Assets/_Project/World/Import/WorldPbrMaterials.cs b/game/Assets/_Project/World/Import/WorldPbrMaterials.cs
+index 56e2681d..9b375562 100644
+--- a/game/Assets/_Project/World/Import/WorldPbrMaterials.cs
++++ b/game/Assets/_Project/World/Import/WorldPbrMaterials.cs
+@@ -386,7 +386,10 @@ namespace Game.World.Import
+                     float rough = def.Get("rough") != null ? (float)Num(def.Get("rough")) : 0.65f;
+                     mat.SetVector("_PaintColor", new Vector4(col.x, col.y, col.z, Mathf.Clamp01(1f - rough)));
+                     float P(string k, float d) => pd.Get(k) != null ? (float)Num(pd.Get(k)) : d;
+-                    mat.SetVector("_PaintWear", new Vector4(P("wheel_wear", 0.85f), P("age_wear", 0.25f), P("dirt", 0.3f), P("line_w_m", 0.12f)));
++                    // ADR0099 WORKING_VALUE: narrower contact wear remains legible on P8/P10.
++                    // Always calibrate fresh metadata, never the existing material (reimports must be idempotent).
++                    float wheelWear = P("wheel_wear", 0.85f) * 0.5f;
++                    mat.SetVector("_PaintWear", new Vector4(wheelWear, P("age_wear", 0.25f), P("dirt", 0.3f), P("line_w_m", 0.12f)));
+                 }
+                 else if (id == "decal_tyre")
+                 {

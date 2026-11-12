@@ -1,0 +1,53 @@
+{
+  "source": "Mapillary 150280503737744",
+  "author": "picturehoover",
+  "license": "CC BY-SA 4.0",
+  "captured_at": "2020-06-27",
+  "note": "Display luma in one photograph. Exposure, wear placement and view are not a physical albedo measurement. WORKING_VALUE target for matched-render tuning; other photos may differ.",
+  "preview_size": [
+    960,
+    540
+  ],
+  "measurements": {
+    "left_wheel": {
+      "box_preview_px": [
+        320,
+        350,
+        335,
+        370
+      ],
+      "median_srgb_luma": 58.8912,
+      "mean_srgb_luma": 58.62088133333334,
+      "std_srgb_luma": 2.8832421991081887,
+      "pixels": 300,
+      "ratio_to_between_wheels": 0.6686855130174713,
+      "delta_to_between_wheels": -29.1789
+    },
+    "between_wheels": {
+      "box_preview_px": [
+        375,
+        350,
+        390,
+        370
+      ],
+      "median_srgb_luma": 88.0701,
+      "mean_srgb_luma": 85.838184,
+      "std_srgb_luma": 7.963160099508904,
+      "pixels": 300
+    },
+    "right_wheel": {
+      "box_preview_px": [
+        430,
+        350,
+        445,
+        370
+      ],
+      "median_srgb_luma": 59.0276,
+      "mean_srgb_luma": 61.080350666666675,
+      "std_srgb_luma": 7.252486301140657,
+      "pixels": 300,
+      "ratio_to_between_wheels": 0.6702342792843429,
+      "delta_to_between_wheels": -29.042499999999997
+    }
+  }
+}

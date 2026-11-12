@@ -1,0 +1,441 @@
+{
+  "note": "Native matched PNG measurements in inspected visible ROIs, display luma levels; not physical albedo. High tests GBA/compression drift and absence of double-crack response; Low tests the single existing mask sample. Mean alone is not a visibility PASS.",
+  "rows": [
+    {
+      "condition": "Low-clear",
+      "camera": "d_wear_lane_old",
+      "label": "old_asphalt",
+      "roi960": [
+        470,
+        280,
+        610,
+        400
+      ],
+      "mean_RGB_delta": [
+        -0.07481508912754097,
+        -0.07276330407454486,
+        -0.06639776605646913
+      ],
+      "before_mean_luma": 95.45185709367149,
+      "after_mean_luma": 95.3791171719396,
+      "mean_luma_delta_lsb": -0.07273992173190673,
+      "mean_abs_luma_lsb": 0.08666492048081827,
+      "p99_abs_luma_lsb": 2.0,
+      "max_abs_luma_lsb": 10.000000000000014,
+      "darkened_over1_fraction": 0.01764535145576652,
+      "darkened_over3_fraction": 0.006205398696866274,
+      "mean_within1_lsb": true,
+      "whole_frame_mean_abs_RGB_lsb": 0.05216313179276142
+    },
+    {
+      "condition": "Low-clear",
+      "camera": "d_wear_missing_uv_2",
+      "label": "missing_field_asphalt",
+      "roi960": [
+        300,
+        300,
+        850,
+        415
+      ],
+      "mean_RGB_delta": [
+        -0.03692734746736514,
+        -0.03509623932848753,
+        -0.03144463817037798
+      ],
+      "before_mean_luma": 94.86624845908268,
+      "after_mean_luma": 94.83102657176748,
+      "mean_luma_delta_lsb": -0.035221887315197396,
+      "mean_abs_luma_lsb": 0.03884165160646567,
+      "p99_abs_luma_lsb": 1.0721999999999952,
+      "max_abs_luma_lsb": 12.927800000000005,
+      "darkened_over1_fraction": 0.010976033713619994,
+      "darkened_over3_fraction": 0.0021946759867417158,
+      "mean_within1_lsb": true,
+      "whole_frame_mean_abs_RGB_lsb": 0.03386857655376174
+    },
+    {
+      "condition": "Low-clear",
+      "camera": "d_wear_newroad_negative",
+      "label": "fresh_asphalt_negative",
+      "roi960": [
+        800,
+        150,
+        870,
+        230
+      ],
+      "mean_RGB_delta": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "before_mean_luma": 104.73375355225672,
+      "after_mean_luma": 104.73375355225672,
+      "mean_luma_delta_lsb": 0.0,
+      "mean_abs_luma_lsb": 0.0,
+      "p99_abs_luma_lsb": 0.0,
+      "max_abs_luma_lsb": 0.0,
+      "darkened_over1_fraction": 0.0,
+      "darkened_over3_fraction": 0.0,
+      "mean_within1_lsb": true,
+      "whole_frame_mean_abs_RGB_lsb": 0.010671626041996412
+    },
+    {
+      "condition": "Low-clear",
+      "camera": "d_field_p8_turn",
+      "label": "paint_P8_context",
+      "roi960": [
+        380,
+        175,
+        605,
+        345
+      ],
+      "mean_RGB_delta": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "before_mean_luma": 104.34035962003819,
+      "after_mean_luma": 104.34035962003819,
+      "mean_luma_delta_lsb": 0.0,
+      "mean_abs_luma_lsb": 0.0,
+      "p99_abs_luma_lsb": 0.0,
+      "max_abs_luma_lsb": 0.0,
+      "darkened_over1_fraction": 0.0,
+      "darkened_over3_fraction": 0.0,
+      "mean_within1_lsb": true,
+      "whole_frame_mean_abs_RGB_lsb": 0.0005515986071541627,
+      "fixed_paint_context_threshold": 123.13239999999999,
+      "before_bright_fraction": 0.15176033719630774,
+      "after_bright_fraction": 0.15176033719630774,
+      "original_bright_pixel_mean_abs_luma_lsb": 0.0,
+      "paint_readability_requires_visual_review": true
+    },
+    {
+      "condition": "Low-overcast",
+      "camera": "d_wear_lane_old",
+      "label": "old_asphalt",
+      "roi960": [
+        470,
+        280,
+        610,
+        400
+      ],
+      "mean_RGB_delta": [
+        -0.07281334761242281,
+        -0.06843954240188964,
+        -0.07261317346091099
+      ],
+      "before_mean_luma": 66.9703934182739,
+      "after_mean_luma": 66.90072266872178,
+      "mean_luma_delta_lsb": -0.06967074955211036,
+      "mean_abs_luma_lsb": 0.12847912884209264,
+      "p99_abs_luma_lsb": 2.0,
+      "max_abs_luma_lsb": 10.927800000000012,
+      "darkened_over1_fraction": 0.01923673596028545,
+      "darkened_over3_fraction": 0.006455616386256043,
+      "mean_within1_lsb": true,
+      "whole_frame_mean_abs_RGB_lsb": 0.09038883612957688
+    },
+    {
+      "condition": "Low-overcast",
+      "camera": "d_wear_missing_uv_2",
+      "label": "missing_field_asphalt",
+      "roi960": [
+        300,
+        300,
+        850,
+        415
+      ],
+      "mean_RGB_delta": [
+        -0.03316428755297608,
+        -0.03233365444070262,
+        -0.03198600927230701
+      ],
+      "before_mean_luma": 65.17830825670544,
+      "after_mean_luma": 65.14582310964623,
+      "mean_luma_delta_lsb": -0.032485147059213786,
+      "mean_abs_luma_lsb": 0.05103474594038018,
+      "p99_abs_luma_lsb": 1.2125999999999948,
+      "max_abs_luma_lsb": 12.927800000000005,
+      "darkened_over1_fraction": 0.012034891898275309,
+      "darkened_over3_fraction": 0.002276943163995637,
+      "mean_within1_lsb": true,
+      "whole_frame_mean_abs_RGB_lsb": 0.04963780732299251
+    },
+    {
+      "condition": "Low-overcast",
+      "camera": "d_wear_newroad_negative",
+      "label": "fresh_asphalt_negative",
+      "roi960": [
+        800,
+        150,
+        870,
+        230
+      ],
+      "mean_RGB_delta": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "before_mean_luma": 84.02573907932224,
+      "after_mean_luma": 84.02573907932224,
+      "mean_luma_delta_lsb": 0.0,
+      "mean_abs_luma_lsb": 0.0,
+      "p99_abs_luma_lsb": 0.0,
+      "max_abs_luma_lsb": 0.0,
+      "darkened_over1_fraction": 0.0,
+      "darkened_over3_fraction": 0.0,
+      "mean_within1_lsb": true,
+      "whole_frame_mean_abs_RGB_lsb": 0.023138915268544898
+    },
+    {
+      "condition": "Low-overcast",
+      "camera": "d_field_p8_turn",
+      "label": "paint_P8_context",
+      "roi960": [
+        380,
+        175,
+        605,
+        345
+      ],
+      "mean_RGB_delta": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "before_mean_luma": 80.39026524906944,
+      "after_mean_luma": 80.39026524906944,
+      "mean_luma_delta_lsb": 0.0,
+      "mean_abs_luma_lsb": 0.0,
+      "p99_abs_luma_lsb": 0.0,
+      "max_abs_luma_lsb": 0.0,
+      "darkened_over1_fraction": 0.0,
+      "darkened_over3_fraction": 0.0,
+      "mean_within1_lsb": true,
+      "whole_frame_mean_abs_RGB_lsb": 0.002094940381977419,
+      "fixed_paint_context_threshold": 100.7798,
+      "before_bright_fraction": 0.14674463011360137,
+      "after_bright_fraction": 0.14674463011360137,
+      "original_bright_pixel_mean_abs_luma_lsb": 0.0,
+      "paint_readability_requires_visual_review": true
+    },
+    {
+      "condition": "High-clear",
+      "camera": "d_wear_lane_old",
+      "label": "old_asphalt",
+      "roi960": [
+        470,
+        280,
+        610,
+        400
+      ],
+      "mean_RGB_delta": [
+        0.004854223174161521,
+        0.003483030236305586,
+        0.005364667260516649
+      ],
+      "before_mean_luma": 99.95328461961907,
+      "after_mean_luma": 99.95719501966711,
+      "mean_luma_delta_lsb": 0.003910400048041752,
+      "mean_abs_luma_lsb": 0.5194820273638064,
+      "p99_abs_luma_lsb": 2.0,
+      "max_abs_luma_lsb": 8.213799999999992,
+      "darkened_over1_fraction": 0.06548697366709037,
+      "darkened_over3_fraction": 0.0006005224545354459,
+      "mean_within1_lsb": true,
+      "whole_frame_mean_abs_RGB_lsb": 0.5282321673525378
+    },
+    {
+      "condition": "High-clear",
+      "camera": "d_wear_missing_uv_2",
+      "label": "missing_field_asphalt",
+      "roi960": [
+        300,
+        300,
+        850,
+        415
+      ],
+      "mean_RGB_delta": [
+        0.0008173642127163826,
+        0.0010588581846553138,
+        0.0013215823958855797
+      ],
+      "before_mean_luma": 100.25788177038964,
+      "after_mean_luma": 100.25890825564393,
+      "mean_luma_delta_lsb": 0.0010264852542719298,
+      "mean_abs_luma_lsb": 0.5031803089530572,
+      "p99_abs_luma_lsb": 1.7874000000000052,
+      "max_abs_luma_lsb": 7.073400000000007,
+      "darkened_over1_fraction": 0.0489702007053747,
+      "darkened_over3_fraction": 0.0002202637326475966,
+      "mean_within1_lsb": true,
+      "whole_frame_mean_abs_RGB_lsb": 0.5002012767753509
+    },
+    {
+      "condition": "High-clear",
+      "camera": "d_wear_newroad_negative",
+      "label": "fresh_asphalt_negative",
+      "roi960": [
+        800,
+        150,
+        870,
+        230
+      ],
+      "mean_RGB_delta": [
+        0.0004198530514319988,
+        0.004168541010646274,
+        -0.003778677462887989
+      ],
+      "before_mean_luma": 112.60217837156993,
+      "after_mean_luma": 112.60497615234667,
+      "mean_luma_delta_lsb": 0.002797780776728235,
+      "mean_abs_luma_lsb": 0.467694179037337,
+      "p99_abs_luma_lsb": 1.787399999999991,
+      "max_abs_luma_lsb": 2.0000000000000284,
+      "darkened_over1_fraction": 0.04546408756935073,
+      "darkened_over3_fraction": 0.0,
+      "mean_within1_lsb": true,
+      "whole_frame_mean_abs_RGB_lsb": 0.4820233196159122
+    },
+    {
+      "condition": "High-clear",
+      "camera": "d_field_p8_turn",
+      "label": "paint_P8_context",
+      "roi960": [
+        380,
+        175,
+        605,
+        345
+      ],
+      "mean_RGB_delta": [
+        -0.00030358227079538557,
+        0.0009635437290462238,
+        0.00016719023609021232
+      ],
+      "before_mean_luma": 111.42991489840992,
+      "after_mean_luma": 111.43055155442921,
+      "mean_luma_delta_lsb": 0.0006366560192884997,
+      "mean_abs_luma_lsb": 0.47934560773650814,
+      "p99_abs_luma_lsb": 1.787399999999991,
+      "max_abs_luma_lsb": 2.000000000000057,
+      "darkened_over1_fraction": 0.04251031739746399,
+      "darkened_over3_fraction": 0.0,
+      "mean_within1_lsb": true,
+      "whole_frame_mean_abs_RGB_lsb": 0.4788448348633534,
+      "fixed_paint_context_threshold": 126.6344,
+      "before_bright_fraction": 0.16085020634794928,
+      "after_bright_fraction": 0.16089860352155433,
+      "original_bright_pixel_mean_abs_luma_lsb": 0.4738081129133729,
+      "paint_readability_requires_visual_review": true
+    },
+    {
+      "condition": "High-overcast",
+      "camera": "d_wear_lane_old",
+      "label": "old_asphalt",
+      "roi960": [
+        470,
+        280,
+        610,
+        400
+      ],
+      "mean_RGB_delta": [
+        0.010529160369521484,
+        0.0106192387377018,
+        0.01206049262858687
+      ],
+      "before_mean_luma": 70.98734627726122,
+      "after_mean_luma": 70.99805042386876,
+      "mean_luma_delta_lsb": 0.010704146607548563,
+      "mean_abs_luma_lsb": 0.5720402049783311,
+      "p99_abs_luma_lsb": 2.7834000000000003,
+      "max_abs_luma_lsb": 11.072200000000002,
+      "darkened_over1_fraction": 0.07340386135938266,
+      "darkened_over3_fraction": 0.0027624032908630507,
+      "mean_within1_lsb": true,
+      "whole_frame_mean_abs_RGB_lsb": 0.5705959164292498
+    },
+    {
+      "condition": "High-overcast",
+      "camera": "d_wear_missing_uv_2",
+      "label": "missing_field_asphalt",
+      "roi960": [
+        300,
+        300,
+        850,
+        415
+      ],
+      "mean_RGB_delta": [
+        0.00424870163817834,
+        0.004593693026662527,
+        0.0065415674816424775
+      ],
+      "before_mean_luma": 70.14778236669399,
+      "after_mean_luma": 70.15244335108711,
+      "mean_luma_delta_lsb": 0.004660984393120329,
+      "mean_abs_luma_lsb": 0.5254152459655911,
+      "p99_abs_luma_lsb": 2.0,
+      "max_abs_luma_lsb": 9.855600000000003,
+      "darkened_over1_fraction": 0.05386642464193875,
+      "darkened_over3_fraction": 0.0010774346440352316,
+      "mean_within1_lsb": true,
+      "whole_frame_mean_abs_RGB_lsb": 0.5156226917800992
+    },
+    {
+      "condition": "High-overcast",
+      "camera": "d_wear_newroad_negative",
+      "label": "fresh_asphalt_negative",
+      "roi960": [
+        800,
+        150,
+        870,
+        230
+      ],
+      "mean_RGB_delta": [
+        0.0021592442645074223,
+        -0.004708352076773129,
+        -0.0021892337681811364
+      ],
+      "before_mean_luma": 90.7291615354626,
+      "after_mean_luma": 90.72609511470985,
+      "mean_luma_delta_lsb": -0.003066420752736621,
+      "mean_abs_luma_lsb": 0.46824866696656176,
+      "p99_abs_luma_lsb": 1.7874000000000052,
+      "max_abs_luma_lsb": 2.000000000000057,
+      "darkened_over1_fraction": 0.04504423451791873,
+      "darkened_over3_fraction": 0.0,
+      "mean_within1_lsb": true,
+      "whole_frame_mean_abs_RGB_lsb": 0.49977761949984173
+    },
+    {
+      "condition": "High-overcast",
+      "camera": "d_field_p8_turn",
+      "label": "paint_P8_context",
+      "roi960": [
+        380,
+        175,
+        605,
+        345
+      ],
+      "mean_RGB_delta": [
+        -0.0004047763610605141,
+        -0.00011879306248515087,
+        -8.359511804510616e-05
+      ],
+      "before_mean_luma": 86.61550398704715,
+      "after_mean_luma": 86.61532693522697,
+      "mean_luma_delta_lsb": -0.0001770518201737081,
+      "mean_abs_luma_lsb": 0.47910501218728835,
+      "p99_abs_luma_lsb": 1.9277999999999906,
+      "max_abs_luma_lsb": 2.0000000000000284,
+      "darkened_over1_fraction": 0.04116399602263228,
+      "darkened_over3_fraction": 0.0,
+      "mean_within1_lsb": true,
+      "whole_frame_mean_abs_RGB_lsb": 0.4783918961696739,
+      "fixed_paint_context_threshold": 103.70859999999999,
+      "before_bright_fraction": 0.1532210518905696,
+      "after_bright_fraction": 0.1531506560016895,
+      "original_bright_pixel_mean_abs_luma_lsb": 0.47801695333811955,
+      "paint_readability_requires_visual_review": true
+    }
+  ]
+}

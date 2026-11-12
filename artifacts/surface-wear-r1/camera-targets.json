@@ -1,0 +1,57 @@
+{
+  "routeNative": 24,
+  "routeGateAdditional": 26,
+  "wearAdditional": 8,
+  "expectedCamerasPerCondition": 57,
+  "uvMissingActualGeometryTargets": [
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_2_3.glb",
+      "vertices": 9,
+      "surfaceArea_m2": 4.969167709350586,
+      "targetENU": [
+        -510.9996643066406,
+        28.68500328063965,
+        134.17332458496094
+      ],
+      "targetGltfXYZ": [
+        510.9996643066406,
+        134.17332458496094,
+        28.68500328063965
+      ]
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_5_4.glb",
+      "vertices": 162,
+      "surfaceArea_m2": 75.36991882324219,
+      "targetENU": [
+        509.6336669921875,
+        -243.97601318359375,
+        136.65432739257812
+      ],
+      "targetGltfXYZ": [
+        -509.6336669921875,
+        136.65432739257812,
+        -243.97601318359375
+      ]
+    }
+  ],
+  "freshNegative": {
+    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_0_0.glb",
+    "targetENU": [
+      -829.8126831054688,
+      880.5203247070312,
+      147.03065490722656
+    ],
+    "targetGltfXYZ": [
+      829.8126831054688,
+      147.03065490722656,
+      880.5203247070312
+    ]
+  },
+  "limits": "Source-target proof only, noactualvisibilityclaim; inspectbeforeactivation. AllNoDataarea isgeometryarea, notscreenpixelcoverage.",
+  "frameConversion": "Manifest states glTF(x,y,z)=(-E,U,N), camera pos=(E,N,U). CorrectedbeforeANYimage, noinvalidframesgenerated.",
+  "originalRequestedCount": 58,
+  "unavailableRequested": [
+    "ortho_putry"
+  ]
+}
