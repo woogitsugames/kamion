@@ -1,6 +1,6 @@
 # Przekazanie sesji cab
 
-Stan zapisany 12 listopada 2026 około 16:26 CET. Praca została przerwana na wyraźną prośbę użytkownika z powodu kończącego się limitu tygodniowego. Pierwotne okno 24 godzin nie zostało dokończone. Runda 4 pozostaje otwarta i nie jest gotowa do scalenia. Nie uruchamiać dalszej pracy bez nowego polecenia użytkownika.
+Stan zapisany 12 listopada 2026; aktualizacja końcowa około 16:30 CET. Praca została przerwana na wyraźną prośbę użytkownika z powodu kończącego się limitu tygodniowego. Pierwotne okno 24 godzin nie zostało dokończone. Runda 4 pozostaje otwarta i nie jest gotowa do scalenia. Nie uruchamiać dalszej pracy bez nowego polecenia użytkownika.
 
 ## Miejsce i Git
 
@@ -13,7 +13,9 @@ Stan zapisany 12 listopada 2026 około 16:26 CET. Praca została przerwana na wy
 
 Ich dokładne ścieżki i SHA256 zawiera preserved-world-state.json. Kopie bajtowe są w preserved-world-state/, a dodatkowo w preserved-world-state.zip; różnicę Git zachowuje preserved-world-state.patch. Plików źródłowych innych dziedzin nie zmieniano. Settings Unity są cofnięte przez wrappery.
 
-## Pozostawiony proces — nie uruchamiać duplikatu
+## Zadanie zakończone naturalnie — brak aktywnych procesów
+
+Aktualizacja końcowa: MaterialFine zakończył się naturalnie o 16:27:02, exit 0, sesja 19993 terminalna. fine-verification.json ma PASS. Oba warianty hp03 i hp06 są przygotowane offline, ale nie zostały obejrzane w grze ani zintegrowane. Sześć map normalnych w kopii main zgadza się SHA256 z weryfikacją; fine-output-saved.json zachowuje dowód. Własny slot heavy został zwolniony. Nie ma własnego aktywnego zadania. Poniższe dane procesu są historią kontroli przed jego zakończeniem.
 
 Na prośbę użytkownika nie zabijano istniejącego zadania podczas kończenia pracy. Ostatnia kontrola 16:26 potwierdziła:
 
@@ -45,7 +47,7 @@ Do końcowej walidacji wybrano Low Decal 256 px z mip bias −0,75, sterowany ca
 
 Odrzucono atlas Low 512 jako wizualnie znikomy. Odrzucono ogólny cutoff 0,4, który nie sterował widocznym pasmem ikon, oraz osobny próg ikon 0,28, który usuwał cienkie kreski. Ich kod i pola danych wycofano. CabInterior.shader jest dokładnie przywrócony do stanu bazy r4. LEGEND-REVIEW.md podaje obejrzane ROI, hashe i zakres porównań. Uwaga: ostatni BuildBatch był dla odrzuconego eksperymentu; przed nowymi ocenami gry przebudować assety z aktualnych źródeł.
 
-Plastic ma w źródłach nadal eksperymentalny filtr normalnych 1,5 mm. Jest technicznie poprawny, ale High clear nadal wygląda jak tłoczenie skóry; brak akceptacji wizualnej. Mocniejsze 0,3 i 0,6 mm nie zostały jeszcze przygotowane ani zintegrowane w momencie przekazania. To zadanie pozostawionego procesu. Plastic nadal jest pochodną skanu Brown Leather, nie skanem konkretnego tworzywa. Nominalny kafel 10 cm i zachowane UV części 8/6 cm dają proporcjonalnie różne progi fizyczne. Parametry są WORKING_VALUE.
+Plastic ma w źródłach nadal eksperymentalny filtr normalnych 1,5 mm. Jest technicznie poprawny, ale High clear nadal wygląda jak tłoczenie skóry; brak akceptacji wizualnej. Mocniejsze 0,3 i 0,6 mm zostały przygotowane offline przez istniejący proces przed końcowym zapisem. Nie zostały obejrzane w grze ani zintegrowane. Wyniki są w worktree i w kopii main. Plastic nadal jest pochodną skanu Brown Leather, nie skanem konkretnego tworzywa. Nominalny kafel 10 cm i zachowane UV części 8/6 cm dają proporcjonalnie różne progi fizyczne. Parametry są WORKING_VALUE.
 
 Odtworzenie 12 map bazowych zgadza się SHA256 12/12. Kandydat hp15 zmienia tylko trzy Normal Plastic; Detail/alpha i Leather pozostają identyczne. Małe testy filtra: 7/7 w 1,00 s. Metadane i dowody są w material-prep/verification.json oraz normal-highpass-unit.log.
 
@@ -81,3 +83,4 @@ Kopia artefaktów wykonana przy przekazaniu jest opisana w COPY-ON-STOP.json. Je
 ## Końcowy zapis przy zatrzymaniu
 
 Kopia do main: 769 plików, FAILED 0, robocopy exit 1 (udane kopiowanie), 12 listopada 16:28. Końcowa kontrola procesu: 2026-11-12T16:29:36.1557191+01:00, status finished, root żywy: False. Pełne dane w handoff-final-state.json. Nie uruchomiono nowych buildów, testów ani renderów po poleceniu zatrzymania. Istniejącego zadania nie przerywano.
+

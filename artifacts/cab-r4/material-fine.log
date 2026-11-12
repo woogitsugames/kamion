@@ -1,0 +1,147 @@
+{
+  "status": "candidate; inspect before integration",
+  "profile": "plastic",
+  "source_metres": 0.4,
+  "requested_tile_metres": 0.1,
+  "requested_source_crop_metres": 0.2,
+  "grain_xy_scale": 0.5,
+  "actual_crop_metres": 0.2,
+  "crop_pixels": 1024,
+  "source_pixels": [
+    2048,
+    2048
+  ],
+  "crop_box": [
+    512,
+    512,
+    1536,
+    1536
+  ],
+  "edge_crossfade_fraction": 0.06,
+  "scan_roughness_median": 0.658823549747467,
+  "mapping_limits": "Derivative emboss pattern based on a leather scan, not a scanned plastic part. Source crop and game tile intentionally differ; this is an authored working value for moulded grain.",
+  "required_unity_rim_uv_scale": 1.0,
+  "working_values": {
+    "variation_gain": 0.35,
+    "roughness_gain": 0.35,
+    "ao_gain": 0.35,
+    "normal_strength": 0.6,
+    "normal_highpass_mm": 0.3
+  },
+  "normal_filter_scale_limits": "Sigma uses the profile reference tile. Existing per-part UV tiling is retained; the physical surface cutoff scales with each part UV tile/reference tile. Plastic dash_soft uses 10 cm; dash_lower/dash_mid use 8 cm, dash_dark 6 cm.",
+  "perforation_alpha_source": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-cab\\art-source\\truck\\interior\\export\\textures\\High\\T_Cab_Plastic_Detail.png",
+  "perforation_alpha_source_sha256": "d9dd88a451df91800f5bf9476c6384501bd368a630e35edcb163184f8d27e107",
+  "perforation_alpha_pixels_sha256": "f5fb04aa5b882706b9309e885f19477261336ef76a150c3b4d3489dfac3953ec",
+  "sources": {
+    "diffuse": {
+      "file": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-cab\\art-source\\truck\\interior\\cc0\\_raw\\brown_leather\\brown_leather_albedo_2k.jpg",
+      "sha256": "b0de2403a31efa31e501b0028c0bd8e504d5bd6318f4a5ce90c550c3067f96d8"
+    },
+    "normal": {
+      "file": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-cab\\art-source\\truck\\interior\\cc0\\_raw\\brown_leather\\brown_leather_nor_gl_2k.png",
+      "sha256": "a9a3f2bf3d04c0ffefc97fbe6aa7b9ed56992359a9a97e37571faa6a15aeefd3"
+    },
+    "roughness": {
+      "file": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-cab\\art-source\\truck\\interior\\cc0\\_raw\\brown_leather\\brown_leather_rough_2k.jpg",
+      "sha256": "8a47afca2630310849034fe40ca9497db0956c67c0d933e6efd49d3cd2befe83"
+    },
+    "ao": {
+      "file": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-cab\\art-source\\truck\\interior\\cc0\\_raw\\brown_leather\\brown_leather_ao_2k.jpg",
+      "sha256": "0f1f8753775779d4e25512f4d08aec1e7dbb73b1d0dc98df66af2071fe8bfa77"
+    }
+  },
+  "outputs": [
+    {
+      "tier": "High",
+      "pixels": 1024,
+      "detail": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-cab\\artifacts\\cab-r4\\material-prep\\candidate-hp03\\High\\T_Cab_Plastic_Detail.png",
+      "normal": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-cab\\artifacts\\cab-r4\\material-prep\\candidate-hp03\\High\\T_Cab_Plastic_Normal.png"
+    },
+    {
+      "tier": "Medium",
+      "pixels": 512,
+      "detail": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-cab\\artifacts\\cab-r4\\material-prep\\candidate-hp03\\Medium\\T_Cab_Plastic_Detail.png",
+      "normal": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-cab\\artifacts\\cab-r4\\material-prep\\candidate-hp03\\Medium\\T_Cab_Plastic_Normal.png"
+    },
+    {
+      "tier": "Low",
+      "pixels": 256,
+      "detail": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-cab\\artifacts\\cab-r4\\material-prep\\candidate-hp03\\Low\\T_Cab_Plastic_Detail.png",
+      "normal": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-cab\\artifacts\\cab-r4\\material-prep\\candidate-hp03\\Low\\T_Cab_Plastic_Normal.png"
+    }
+  ]
+}
+{
+  "status": "candidate; inspect before integration",
+  "profile": "plastic",
+  "source_metres": 0.4,
+  "requested_tile_metres": 0.1,
+  "requested_source_crop_metres": 0.2,
+  "grain_xy_scale": 0.5,
+  "actual_crop_metres": 0.2,
+  "crop_pixels": 1024,
+  "source_pixels": [
+    2048,
+    2048
+  ],
+  "crop_box": [
+    512,
+    512,
+    1536,
+    1536
+  ],
+  "edge_crossfade_fraction": 0.06,
+  "scan_roughness_median": 0.658823549747467,
+  "mapping_limits": "Derivative emboss pattern based on a leather scan, not a scanned plastic part. Source crop and game tile intentionally differ; this is an authored working value for moulded grain.",
+  "required_unity_rim_uv_scale": 1.0,
+  "working_values": {
+    "variation_gain": 0.35,
+    "roughness_gain": 0.35,
+    "ao_gain": 0.35,
+    "normal_strength": 0.6,
+    "normal_highpass_mm": 0.6
+  },
+  "normal_filter_scale_limits": "Sigma uses the profile reference tile. Existing per-part UV tiling is retained; the physical surface cutoff scales with each part UV tile/reference tile. Plastic dash_soft uses 10 cm; dash_lower/dash_mid use 8 cm, dash_dark 6 cm.",
+  "perforation_alpha_source": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-cab\\art-source\\truck\\interior\\export\\textures\\High\\T_Cab_Plastic_Detail.png",
+  "perforation_alpha_source_sha256": "d9dd88a451df91800f5bf9476c6384501bd368a630e35edcb163184f8d27e107",
+  "perforation_alpha_pixels_sha256": "f5fb04aa5b882706b9309e885f19477261336ef76a150c3b4d3489dfac3953ec",
+  "sources": {
+    "diffuse": {
+      "file": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-cab\\art-source\\truck\\interior\\cc0\\_raw\\brown_leather\\brown_leather_albedo_2k.jpg",
+      "sha256": "b0de2403a31efa31e501b0028c0bd8e504d5bd6318f4a5ce90c550c3067f96d8"
+    },
+    "normal": {
+      "file": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-cab\\art-source\\truck\\interior\\cc0\\_raw\\brown_leather\\brown_leather_nor_gl_2k.png",
+      "sha256": "a9a3f2bf3d04c0ffefc97fbe6aa7b9ed56992359a9a97e37571faa6a15aeefd3"
+    },
+    "roughness": {
+      "file": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-cab\\art-source\\truck\\interior\\cc0\\_raw\\brown_leather\\brown_leather_rough_2k.jpg",
+      "sha256": "8a47afca2630310849034fe40ca9497db0956c67c0d933e6efd49d3cd2befe83"
+    },
+    "ao": {
+      "file": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-cab\\art-source\\truck\\interior\\cc0\\_raw\\brown_leather\\brown_leather_ao_2k.jpg",
+      "sha256": "0f1f8753775779d4e25512f4d08aec1e7dbb73b1d0dc98df66af2071fe8bfa77"
+    }
+  },
+  "outputs": [
+    {
+      "tier": "High",
+      "pixels": 1024,
+      "detail": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-cab\\artifacts\\cab-r4\\material-prep\\candidate-hp06\\High\\T_Cab_Plastic_Detail.png",
+      "normal": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-cab\\artifacts\\cab-r4\\material-prep\\candidate-hp06\\High\\T_Cab_Plastic_Normal.png"
+    },
+    {
+      "tier": "Medium",
+      "pixels": 512,
+      "detail": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-cab\\artifacts\\cab-r4\\material-prep\\candidate-hp06\\Medium\\T_Cab_Plastic_Detail.png",
+      "normal": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-cab\\artifacts\\cab-r4\\material-prep\\candidate-hp06\\Medium\\T_Cab_Plastic_Normal.png"
+    },
+    {
+      "tier": "Low",
+      "pixels": 256,
+      "detail": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-cab\\artifacts\\cab-r4\\material-prep\\candidate-hp06\\Low\\T_Cab_Plastic_Detail.png",
+      "normal": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-cab\\artifacts\\cab-r4\\material-prep\\candidate-hp06\\Low\\T_Cab_Plastic_Normal.png"
+    }
+  ]
+}
+CAB_MATERIAL_FINE_RESULT: OK
