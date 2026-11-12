@@ -40,3 +40,11 @@
   sprawdzić `logs/i2_pytest.log`, `logs/i2_editmode.log`, `swept_i2`, wpisać liczby do „Result” w `docs/adr/0128-biezenstwa-island.md`, commit, potem
   `robocopy artifacts\biezenstwa-island C:\Users\matma\Documents\Claude\kamion\artifacts\biezenstwa-island /E /XF *.pkl`. Jeśli brak procesu i brak „all done”:
   `bash artifacts/biezenstwa-island/scripts/all.sh i2 > artifacts/biezenstwa-island/logs/i2_all.out 2>&1`
+- STOP (limit lidera, ok. 16:35): nic nowego nie zaczynam. W TLE DZIAŁA (nie zabite): `nohup bash artifacts/biezenstwa-island/scripts/all.sh i2`
+  → log `artifacts/biezenstwa-island/logs/i2_all.out` (kolejka heavy → build i2 → fidelity/swept/pytest pełny; równolegle import + SBS + EditMode,
+  log `logs/i2_imp.out`; na końcu `pairs_i2/` i linia „all done”). Slot heavy/unity zwalnia sam skrypt. Stan gałęzi: i1 zweryfikowane (stale puste,
+  draws max +1, tris max +0,3 %), junctions-r6 605182b7 scalone, ADR 0128 „Result” = RESULTS_PENDING, dowody jeszcze NIE skopiowane do main.
+  NASTĘPNY KROK: `tail -20 artifacts/biezenstwa-island/logs/i2_all.out` — gdy „all done”: `git add -A Data art-source/world/props art-source/world/signs && git commit -m "wip(island): i2"`,
+  obejrzeć `pairs_i2/`, uzupełnić „Result” w `docs/adr/0128-biezenstwa-island.md`, `robocopy artifacts\biezenstwa-island C:\Users\matma\Documents\Claude\kamion\artifacts\biezenstwa-island /E /XF *.pkl`;
+  gdy brak „all done” i brak procesu: `bash artifacts/biezenstwa-island/scripts/all.sh i2 > artifacts/biezenstwa-island/logs/i2_all.out 2>&1`.
+  Do decyzji lidera: U-4a przy Andersa — świat 2024 (ortofoto, krótsza wyspa) czy stan ze zdjęć 2017–2019.
