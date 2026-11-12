@@ -175,6 +175,60 @@
         137.31146174318087
       ],
       "note": "Commons camera GPS and 38 mm focal; heading 295 degrees visually selected, pitch 1.7 and eye 1.65 m WORKING_VALUE. Pose UNVERIFIED, screen/deck differences remain."
+    },
+    {
+      "id": "ec-ref073128",
+      "type": "persp",
+      "kind": "driver_eye",
+      "seat": "file",
+      "fov_deg": 43.254006972184285,
+      "pos": [
+        546.000007843886,
+        -756.7457421410536,
+        140.70348712834343
+      ],
+      "look_at": [
+        617.5798822322856,
+        -826.551104214832,
+        142.5831169561662
+      ],
+      "note": "WORKING_VALUE photographic resection; no roll. Full photo height, central1920 of2340 render versus3840 photo. Rakoon CC BY3.0"
+    },
+    {
+      "id": "ec-single-head",
+      "type": "persp",
+      "kind": "driver_eye",
+      "seat": "file",
+      "fov_deg": 35,
+      "pos": [
+        580,
+        -970,
+        230
+      ],
+      "look_at": [
+        624.25,
+        -1083.96,
+        252
+      ],
+      "note": "Diagnostic only, WORKING_VALUE pose"
+    },
+    {
+      "id": "ec-multi-head",
+      "type": "persp",
+      "kind": "driver_eye",
+      "seat": "file",
+      "fov_deg": 35,
+      "pos": [
+        670,
+        -1020,
+        230
+      ],
+      "look_at": [
+        718.26,
+        -1133.29,
+        252
+      ],
+      "note": "Diagnostic only, WORKING_VALUE pose"
     }
   ]
 }

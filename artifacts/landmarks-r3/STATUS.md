@@ -6,3 +6,5 @@ Ciężkie zadania tylko pod heavy gpt-landmarks-r3; Unity pod gpt-landmarks, zgo
 Krok 2: przygotowano kolejny baseline pełnego świata po merge. Skrypty korzystają z aktualnych limitów main; brak równoległego generatora tej sesji. Kamery szczegółowe kominów będą dodane po analizie pozy, przed importem.
 
 Krok 3: robocze dopasowanie fotograficzne obu osi z wysokościami 120 m i średnicą pojedynczego komina ENEA. Usunięto z pomiaru szerokości okno przecinające galerię. Wynik i reszty w photo-pose-fit.json, poza nadal WORKING_VALUE (GPS ma przesunięcie, brak modelu dystorsji, ręczne piksele głowic). Dodano trzy kamery EC; pełny kadr referencji zachowa całą wysokość zdjęcia. Źródła runtime kominów jeszcze bez zmian, trwa oczekiwanie baseline na heavy.
+
+Krok 3a: dodanie kamer wykonano skryptem prepare_cameras.py po błędzie cytowania polecenia inline; dopiero teraz plik zawiera 13 dodatkowych kadrów, w tym 3 EC. Poprzedni zapis kroku 3 wyprzedził wykonanie tej części.
