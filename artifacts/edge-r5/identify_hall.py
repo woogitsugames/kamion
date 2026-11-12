@@ -80,7 +80,8 @@ for tier, filename in (('High','far_field.glb'),('Low','far_field.low.glb')):
         raise RuntimeError(f'{tier}: candidate produced no geometry')
     path = HERE/'before-source'/filename
     actual = collections.Counter(triangle_key(t) for _, triangles in glb_triangles(path) for t in triangles)
-    missing = [triangle_key(t) for t in expected if actual[triangle_key(t)] < 1]
+    expected_counts = collections.Counter(triangle_key(t) for t in expected)
+    missing = list((expected_counts-actual).elements())
     if missing:
         raise RuntimeError(f'{tier}: {len(missing)} candidate triangles absent from frozen GLB')
     result['tiers'][tier] = dict(triangles=len(expected), matched=len(expected),
@@ -104,17 +105,26 @@ def vector(text,key,fields):
     payload = re.search(rf'{key}: \{{([^}}]+)\}}',text)[1]
     return np.array([float(re.search(rf'\b{field}: ([\d.eE+\-]+)',payload)[1]) for field in fields])
 position = vector(transform,'m_LocalPosition','xyz')
+if not np.allclose(vector(transform,'m_LocalScale','xyz'),1):
+    raise RuntimeError('Scaled camera transform unsupported')
 qx,qy,qz,qw = vector(transform,'m_LocalRotation','xyzw')
 rotation = np.array([[1-2*(qy*qy+qz*qz),2*(qx*qy-qz*qw),2*(qx*qz+qy*qw)],
                      [2*(qx*qy+qz*qw),1-2*(qx*qx+qz*qz),2*(qy*qz-qx*qw)],
                      [2*(qx*qz-qy*qw),2*(qy*qz+qx*qw),1-2*(qx*qx+qy*qy)]])
 parent_id = re.search(r'm_Father: \{fileID: (-?\d+)\}',transform)[1]
 parent = [d for d in documents if d.startswith(f'4 &{parent_id}\n') or d.startswith(f'4 &{parent_id}\r\n')]
-if len(parent) != 1 or not np.allclose(vector(parent[0],'m_LocalPosition','xyz'),0) or not np.allclose(vector(parent[0],'m_LocalRotation','xyzw'),[0,0,0,1]):
+if len(parent) != 1 or not np.allclose(vector(parent[0],'m_LocalPosition','xyz'),0) or not np.allclose(vector(parent[0],'m_LocalRotation','xyzw'),[0,0,0,1]) or not np.allclose(vector(parent[0],'m_LocalScale','xyz'),1):
     raise RuntimeError('Nonidentity camera parent; resolve full transform before overlay')
 if re.search(r'm_Father: \{fileID: (-?\d+)\}',parent[0])[1] != '0':
     raise RuntimeError('Nested camera parent unsupported')
 anchor_z = float(re.search(r'^  anchorZ: ([\d.\-]+)',scene,re.M)[1])
+region_docs = [d for d in documents if re.search(r'^  anchorZ:',d,re.M)]
+if len(region_docs) != 1:
+    raise RuntimeError('Region root ambiguous')
+region_go = re.search(r'm_GameObject: \{fileID: (-?\d+)\}',region_docs[0])[1]
+region_transform = [d for d in documents if d.startswith('4 &') and f'm_GameObject: {{fileID: {region_go}}}' in d]
+if len(region_transform) != 1 or not np.allclose(vector(region_transform[0],'m_LocalPosition','xyz'),[0,-anchor_z,0]) or not np.allclose(vector(region_transform[0],'m_LocalRotation','xyzw'),[0,0,0,1]) or not np.allclose(vector(region_transform[0],'m_LocalScale','xyz'),1):
+    raise RuntimeError('Region root transform differs from expected local ENU contract')
 camera_docs = [d for d in documents if d.startswith('20 &') and f'm_GameObject: {{fileID: {go_id}}}' in d]
 fov = float(re.search(r'field of view: ([\d.]+)',camera_docs[0])[1])
 width,height = 2340,1080
