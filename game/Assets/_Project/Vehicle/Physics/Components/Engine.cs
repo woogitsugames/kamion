@@ -60,6 +60,10 @@ namespace Game.Vehicle.Physics
             return Math.Max(drag, eb);
         }
 
+        /// <summary>Set by the vehicle each step from AmtController.SyncBrakeRequest: an up-shift is being synchronised with the
+        /// engine brake, so the brake may act although a rev-matching target is set (ADR 0134; explicit signal, review P2).</summary>
+        public bool SyncBrakeActive;
+
         /// <summary>Releases the engine brake at once (AMT up-shift sync finished, clutch about to close; ADR 0134).</summary>
         public void CutEngineBrake() => EngineBrakeState = 0;
 
@@ -108,7 +112,7 @@ namespace Game.Vehicle.Physics
             if (Omega >= _maxOmega) effLoad = 0;
 
             double retard = drag;
-            if (EngineBrakeState > 0 && effLoad < 0.02 && (targetOmega <= 0 || Omega > targetOmega))
+            if (EngineBrakeState > 0 && effLoad < 0.02 && (targetOmega <= 0 || SyncBrakeActive))
             {
                 // Fuel cut while the engine brake is active (also above a rev-matching target: AMT up-shift sync, ADR 0134).
                 double total = EngineBrakeTotal(Omega);

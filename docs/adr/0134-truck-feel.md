@@ -104,3 +104,15 @@ picks (empty / 40 t / solo) are kept. Unchanged: `trailer=` launch argument, `au
 (solo), and a stored Solo in a world scene still falls back to the empty coupled trailer. EditMode test `DefaultSpawnTests`.
 With 24 t the free-drive launch is the "laden40" row of the table above: 0-50 km/h ~20 s at full pedal, ~34 s at 60 %,
 sequential shifts, per-shift eye nod max 3.4 / 2.3 deg.
+
+## Addendum 2026-11-12 - review fixes (REVIEW-2026-11-12-s12-0134-0135)
+- P1 hill start: `CombinationLabTests.HillStart_6pct_40t_NoRollback` reference 4.5 -> 4.84 s (runner after ADR 0134);
+  tolerance kept at the old absolute ±0.45 s (not widened); runner check `launch_6pct_uphill_comb@laden40` time_to_kmh(15)
+  moved with it to 4.39-5.29 s. The slower start comes from the longer torque fade-out/in, not from the sync (sync time on
+  the 40 t starts measured 0.20 s = no extra).
+- P2 engine brake during sync: `Engine` now acts on the explicit `Engine.SyncBrakeActive` (= `Amt.SyncBrakeRequest`,
+  set each step by `VehicleModel`) instead of comparing the engine speed with the rev-matching target, so a down-shift
+  rev-match never gets a fuel cut.
+- P2 shift-duration prediction: `totalShift` includes a running mean of the measured extra sync time of recent up-shifts
+  (0 for the 40 t starts, ~0.1 s after an empty skip shift). Runner 107/107, xUnit 155/155, 6 goldens regenerated (shift
+  timing only).

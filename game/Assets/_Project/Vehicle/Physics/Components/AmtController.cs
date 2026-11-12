@@ -39,6 +39,8 @@ namespace Game.Vehicle.Physics
         public bool SyncBrakeCut { get; private set; }
         int _shiftFromGear;
         bool _syncBraked;
+        /// <summary>Running mean of the sync time beyond shiftSyncTime of recent up-shifts [s] (feeds the shift-duration prediction).</summary>
+        double _syncExtraEst;
         public int ShiftCount { get; private set; }
         public int RejectedShiftCount { get; private set; }
         public bool Manual { get; private set; }
@@ -306,7 +308,12 @@ namespace Game.Vehicle.Physics
                     // (or after shiftSyncMaxExtraTime): closing on a 200-300 rpm overspeed dumps the engine inertia into the
                     // driveline as a jolt that rocks the chassis, the trailer and the cab.
                     bool synced = !Def.upshiftEngineBrakeSync || Math.Abs(syncErrRpm) < Def.shiftSyncToleranceRpm || _timer >= Def.shiftSyncTime + Def.shiftSyncMaxExtraTime;
-                    if (_timer >= Def.shiftSyncTime && synced) { Gear = TargetGear; State = AmtState.ShiftEngage; _timer = 0; SyncBrakeRequest = false; }
+                    if (_timer >= Def.shiftSyncTime && synced)
+                    {
+                        if (Def.upshiftEngineBrakeSync && TargetGear > _shiftFromGear)
+                            _syncExtraEst += 0.5 * (Math.Max(0, _timer - Def.shiftSyncTime) - _syncExtraEst);
+                        Gear = TargetGear; State = AmtState.ShiftEngage; _timer = 0; SyncBrakeRequest = false;
+                    }
                     break;
                 }
                 case AmtState.ShiftEngage:
@@ -349,7 +356,9 @@ namespace Game.Vehicle.Physics
             double downLine = MathUtil.Lerp(Def.downshiftRpmLight, Def.downshiftRpmFull, throttle);
             if (gradeSin > Def.gradeDownshiftThreshold && throttle > 0.5) downLine += Def.gradeDownshiftBonusRpm;
             // Speed lost during the torque interruption (resistance only, no drive) -> rpm after the shift is lower.
-            double totalShift = Def.shiftTorqueRampTime + Def.shiftNeutralTime + Def.shiftSyncTime + Math.Max(Def.shiftClutchCloseTime, Def.shiftTorqueRampInTime) * 0.5;
+            // + the extra engine-brake synchronisation time the last up-shifts actually needed (running mean; ADR 0134 review P2).
+            double totalShift = Def.shiftTorqueRampTime + Def.shiftNeutralTime + Def.shiftSyncTime + Math.Max(Def.shiftClutchCloseTime, Def.shiftTorqueRampInTime) * 0.5
+                + _syncExtraEst;
             double dv = Math.Max(0, resistance) / Math.Max(massKg, 1) * totalShift;
             double speedFactor = speed > 0.5 ? Math.Max(0.5, 1 - dv / speed) : 1;
             if (Gear < Def.ForwardGearCount && (rpmPred > upRpm || overRev || ebOverRev))
