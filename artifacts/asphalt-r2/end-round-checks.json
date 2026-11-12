@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-12T12:24:16.9765890+01:00",
+  "checked_at": "2026-11-12T12:24:16.976589+01:00",
   "branch": "gpt-asphalt-r2",
   "source_commit": "6832f50b",
   "base": "4992c434c65bd87648e0b528e4b331fa13d8ca84",
@@ -62,6 +62,11 @@
   },
   "source_changes_since_product_freeze": [],
   "unity_settings_changes": [],
-  "report_sha256": "A567F4E0D524AE31A1CC961D0FC866113342B46F0897D529AC57DAF98166F80B",
-  "note": "Known physics failure disclosed. No phone, push or merge into main. Delivery through robocopy only; next round still requires fresh main merge and baseline."
+  "report_sha256": "6D91BE3864FB5268DD3E7042C101AF7383AC3EEEE7022B1AEC5434AE104A2D48",
+  "note": "Known physics failure disclosed. No phone, push or merge into main. Delivery through robocopy only; next round still requires fresh main merge and baseline.",
+  "whitespace": {
+    "full_artifact_pass": false,
+    "product_source_exit": 0,
+    "note": "Raw XML/log/material snapshot formatting and helper EOF blank lines retained; not a product/test failure."
+  }
 }
