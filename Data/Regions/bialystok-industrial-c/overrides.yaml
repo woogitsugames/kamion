@@ -291,9 +291,12 @@ overrides:
       # abutment = 84.7 m on the lead deck (generated open range), so 4 equal spans of 21.2 m; the first span read
       # off 2818555625124739 with the camera pose of sbs_cameras.json is 19.8 m +- 2 m (bearings of the two columns
       # of the near deck in rows 1 and 2), consistent. South-east half: 83.6 m -> 4 x 20.9 m by symmetry of the
-      # structure (WORKING_VALUE: no open frame looks along that half). The two island rows are unchanged (ADR 0123).
-      pier_lines_en: [[484.54, -686.47], [503.12, -696.62], [521.70, -706.77], [540.3, -716.9], [564.8, -730.3],
-                      [583.14, -740.33], [601.49, -750.35], [619.84, -760.38]]
+      # structure (WORKING_VALUE: no open frame looks along that half). North-west island row unchanged (ADR 0123).
+      # r7b check (artifacts/junctions-r7/scripts/cols_check.py): with the columns 1.75 m off the deck axis the outer
+      # column of the south-east island row stood ON the island kerb (0.01 m from the ring asphalt). That row is moved
+      # 1.5 m towards the ring centre (inside the +-2 m of ADR 0123): main span 26.4 m, south-east spans 4 x 21.3 m.
+      pier_lines_en: [[484.54, -686.47], [503.12, -696.62], [521.70, -706.77], [540.3, -716.9], [563.48, -729.59],
+                      [582.16, -739.79], [600.83, -749.99], [619.52, -760.20]]
       # ADR 0144 (P2-4): oval piers with the red band on their noses instead of chamfered 0.8 x 1.0 m boxes.
       # 3970163613102941 / 2818555625124739: nose face : side face = 1 : 2.0-2.4 after removing the view angle, i.e.
       # the long axis lies ALONG the bridge; against the pier height of the model (4.3 m) the nearest pier measures

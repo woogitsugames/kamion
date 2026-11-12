@@ -92,7 +92,7 @@ def test_bridge_dips():
     Z = np.array([10.0, 10.0, 10.0, 9.2, 9.1, 9.3, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0])
     assert np.allclose(FU._bridge_dips(Z), 10.0)
     # a dip at the end of the run (rail carried over the grass before a deck joint)
-    Z = np.concatenate([np.full(20, 10.0), [9.5, 9.0, 8.8]])
+    Z = np.concatenate([np.full(20, 10.0), [9.9, 9.6, 9.7, 9.5, 9.0, 8.8]])
     assert FU._bridge_dips(Z).min() >= 10.0 - 1e-9
     # a real, long descent is kept
     Z = np.linspace(10.0, 6.0, 40)

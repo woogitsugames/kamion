@@ -2,7 +2,7 @@
  "schema": "truck-sim-pl/gate3-cameras/1",
  "region": "bialystok-industrial-c",
  "frame": "local E,N,U (EPSG:2180 minus region origin; U absolute EVRF2007 NMT + height, re-seated by raycast unless seat=file)",
- "note": "ADR 0144: junction cameras + SBS G3-A photo poses (incl. probe p0128)",
+ "note": "ADR 0144: junction cameras + SBS G3-A photo poses of sbs_cameras.json (ADR 0143 poses)",
  "cameras": [
   {
    "id": "p0_fork_putry_eye",
@@ -1197,19 +1197,19 @@
    "seat": "file",
    "type": "persp",
    "pos": [
-    538.2126,
-    -687.839,
-    141.2575
+    541.5,
+    -690.4,
+    140.52
    ],
    "look_at": [
-    505.3573,
-    -706.3527,
-    154.5907
+    507.3665,
+    -707.048,
+    153.0798
    ],
    "fov_deg": 73.7398,
    "segment": "G3-A",
    "pose_confidence": "B",
-   "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+   "pose_reason": "ADR 0143 (s14): probe sbs-p143-320326-p128; anchors: ADR 0128 probe (zenith VP pitch 18.3 deg, zebra corner anchor, eye 0.9 m), accepted by REVIEW s14-0128 (D-3 left, D-6 right on the kerbed nose); re-rendered here on the regenerated main world: viaduct fascia line and roundabout kerb as on the photo",
    "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
   },
   {
@@ -1218,19 +1218,19 @@
    "seat": "file",
    "type": "persp",
    "pos": [
-    528.1973,
-    -682.424,
-    141.3375
+    531.5,
+    -685.0,
+    140.5406
    ],
    "look_at": [
-    494.6899,
-    -699.7295,
-    154.6708
+    497.2609,
+    -700.1798,
+    154.5855
    ],
    "fov_deg": 73.7398,
    "segment": "G3-A",
    "pose_confidence": "B",
-   "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+   "pose_reason": "ADR 0143 (s14): probe sbs-p143-482392-sa; anchors: near kerb line from the bottom (x 0.62) to the right edge (y 0.83) as on the photo; far pier pair and abutment within ~30 px; same richlv 2020-08-15 sequence as 320326 (ADR 0128 shift +3.3/-2.6 m, +3.4 deg, eye 0.9)",
    "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
   },
   {
@@ -1400,27 +1400,6 @@
    "pose_confidence": "C",
    "pose_reason": "New Commons candidate at station 230/249m; heading, FOV and GPS need fresh photo-render calibration",
    "note": "ADR0111 Commons GPS; manually inferred heading/FOV/eye/horizon WORKING_VALUE"
-  },
-  {
-   "id": "sbs-g3-a-p0128-320326319617139",
-   "kind": "photo_match",
-   "seat": "file",
-   "type": "persp",
-   "pos": [
-    541.5,
-    -690.4,
-    140.52
-   ],
-   "look_at": [
-    507.366,
-    -707.048,
-    153.08
-   ],
-   "fov_deg": 73.7398,
-   "segment": "G3-A",
-   "pose_confidence": "C",
-   "pose_reason": "ADR 0128 probe: photo geometry (zenith VP pitch 18.3 deg, zebra corner anchor, eye 0.9 m), not promoted",
-   "note": "ADR 0128 pose probe for 320326319617139; WORKING_VALUE"
   }
  ]
 }

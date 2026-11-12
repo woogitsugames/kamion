@@ -1553,8 +1553,8 @@ def _bridge_dips(Z):
             i = best[0]
         else:
             i += 1
-    h = RAIL_DIP_M // 2
-    if n > 2 * RAIL_DIP_M:          # ends: a sudden drop over the last / first few points of a run that was level before
+    h = RAIL_DIP_M
+    if n > 2 * h + 1:               # ends: a drop over the last / first h points of a run that was level before them
         if (Z[n - h - 1] - Z[n - h:] > RAIL_DIP_MIN).any() and abs(Z[n - h - 1] - Z[n - 2 * h - 1]) < 0.15:
             Z[n - h:] = np.maximum(Z[n - h:], Z[n - h - 1])
         if (Z[h] - Z[:h] > RAIL_DIP_MIN).any() and abs(Z[h] - Z[2 * h]) < 0.15:

@@ -13,7 +13,8 @@ for tl in low_clear low_overcast; do
   for f in $R/*.png; do
     n=$(basename $f .png)
     case $n in
-      sbs-g3-*) B=$MA/biezenstwa-island/renders_i3sbs_$tl/$n.png; id=${n##*-}
+      sbs-g3-*) id=${n##*-}; lt=${tl#low_}; B=$MA/sbs-poses-r3/after/renders/Low-$lt/$n.png   # main world, ADR 0143 poses
+        [ -f $B ] || B=$MA/biezenstwa-island/renders_i3sbs_$tl/$n.png
         if [ -f $SBS/$id.png ]; then
           wh=$(magick identify -format "%w %h" $SBS/$id.png); w=${wh% *}; h=${wh#* }; cw=$(( 1080 * w / h ))
           magick \( $SBS/$id.png -resize 480x \) \( $f -gravity center -crop ${cw}x1080+0+0 +repage -resize 480x \) +append -quality 90 $O/photo_${n}_$tl.jpg
