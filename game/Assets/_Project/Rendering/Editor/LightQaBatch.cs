@@ -46,6 +46,8 @@ namespace Game.Rendering.Editor
             public int expectedHeadlamps; // 0 unchecked, 1 off, 2 on. Requires per-camera probes.
             public bool overrideSkyDisplay;
             public float skyDisplayGain = 1f, skyDisplayDesaturation;
+            public string opaqueGradeLabFolder; // Editor-only explicit experiment; no preset/player binding.
+            public int opaqueGradeLabSize;
         }
 
         static string Arg(string key)
@@ -141,6 +143,9 @@ namespace Game.Rendering.Editor
                     Directory.CreateDirectory(job.output);
                     if (job.shadowFilter < 0 || job.shadowFilter > 3) throw new ArgumentException("shadowFilter must be 0..3");
                     var lampProbe = job.lampProbe ? new LightQaLampProbe() : null;
+                    using var gradeProbe = job.opaqueGradeLabSize>0
+                        ? new LightGradeLutWorldProbe(job.opaqueGradeLabFolder,
+                            char.ToUpperInvariant(job.lighting[0])+job.lighting.Substring(1),job.opaqueGradeLabSize) : null;
                     if (job.verifyWetness && (lampProbe == null || job.expectedWetness < 0f || job.expectedWetness > 1f))
                         throw new ArgumentException("Wetness proof requires lampProbe and expectedWetness0..1");
                     if(job.verifyDimColour && (lampProbe==null || job.expectedDimColour<0f || job.expectedDimColour>1f))
@@ -148,6 +153,7 @@ namespace Game.Rendering.Editor
                     if (job.expectedHeadlamps < 0 || job.expectedHeadlamps > 2 || (job.expectedHeadlamps > 0 && lampProbe == null))
                         throw new ArgumentException("expectedHeadlamps requires lampProbe and a value0..2");
                     Action<ScriptableRenderContext, Camera> filter = (_, camera) => {
+                        gradeProbe?.Apply(camera);
                         if (job.skyOnly) HideWorldForSkyQa();
                         if (job.shadowFilter > 0)
                             foreach (var light in UnityEngine.Object.FindObjectsByType<Light>(FindObjectsSortMode.None))
@@ -225,6 +231,7 @@ namespace Game.Rendering.Editor
                     int expected = string.IsNullOrEmpty(job.cameras) ? count : job.cameras.Split(',')
                         .Select(id => id.Trim()).Where(id => id.Length > 0).Distinct(StringComparer.OrdinalIgnoreCase).Count();
                     if (count != expected) throw new InvalidOperationException($"Incomplete lighting QA: expected={expected}, rendered={count}");
+                    gradeProbe?.Write(job.output,expected);
                     if (job.skyOnly)
                     {
                         var final = HideWorldForSkyQa();

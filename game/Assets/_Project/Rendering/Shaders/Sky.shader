@@ -216,7 +216,7 @@ Shader "Kamion/Sky"
                     float y = dot(c, float3(0.2126, 0.7152, 0.0722));
                     c = lerp(c, y.xxx, _KamionSkyDisplay.y)*_KamionSkyDisplay.x;
                 }
-                c = KamionTone(c);
+                c = KamionOpaqueTone(c);
                 // Banding: ±0.5 LSB of 8-bit sRGB in linear space (interleaved gradient noise, Jimenez 2014).
                 float n = frac(52.9829189 * frac(dot(i.positionCS.xy, float2(0.06711056, 0.00583715)))) - 0.5;
                 float3 srgb = LinearToSRGB(saturate(c)) + n * (1.0 - _KamionSkyDitherOff) / 255.0;

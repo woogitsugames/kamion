@@ -125,6 +125,7 @@ namespace Game.Rendering.Editor
                     var shader=Shader.Find("Hidden/KamionLightQA/GradeLutLab");if(shader==null)throw new InvalidOperationException("Missing lab shader");
                     s_Material=new Material(shader);var plane=GameObject.CreatePrimitive(PrimitiveType.Quad);plane.name="grade lab input plane";plane.GetComponent<Renderer>().sharedMaterial=s_Material;
                     SelectTier("High");
+                    File.WriteAllText(Path.Combine(folder,presetName+"-key.json"),JsonUtility.ToJson(LightGradeLutWorldProbe.CaptureKey(preset),true));
                     if(Shader.GetGlobalFloat("_KamionSkyCapOff")>.5f)throw new InvalidOperationException("Physical capture bypass unexpectedly active");
                     var highPixels=Render(inputs,16,12,32,false);var reference=Centres(highPixels,inputs.Length,16,32);
                     SaveImage(Path.Combine(folder,presetName+"-High-reference.png"),highPixels,512,384);imageCount++;
