@@ -47,3 +47,5 @@ Krok 16: przygotowano nieuruchomiony post-candidate.ps1: poczeka na konkretny ka
 Krok 17: kontrakt promieni uzupełniono o orientację pierwszej trafionej ściany klocka przy patrzeniu z czterech stron. Dzięki temu odwrócone, niewidoczne od zewnątrz ręcznie składane ściany nie przejdą testu samej obecności trójkątów. Nadal tylko przygotowany artefakt, bez uruchomienia GIS i bez zmiany produkcji przed baseline. Następny krok: import/capture przez istniejący 63528 po PHONE_RUN.
 
 Po baseline (2026-11-12T16:17:48.6795256+01:00): zaimportuj świeży baseline r5. Następny krok: kanoniczny capture, diagnostyka LOD, oględziny; produkcja bez zmian przed oceną.
+
+Po baseline (2026-11-12T16:17:50.0745982+01:00): zapisz przerwany etap r5 capture. Następny krok: kanoniczny capture, diagnostyka LOD, oględziny; produkcja bez zmian przed oceną.
