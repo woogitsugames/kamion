@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "id": "jackknife_wet_curve_noabs",
+  "description": "Wet R = 120 m curve at 60 km/h, EBS fault (no ABS, no load sensing: pneumatic back-up), driver brakes with half pedal at t = 6 s holding the steering",
+  "spec": "docs/04 s6.9",
+  "variants": [
+    "empty",
+    "laden40"
+  ],
+  "ground": {
+    "gradePercent": 0,
+    "surface": "wet_asphalt"
+  },
+  "initial": {
+    "speedKmh": 60
+  },
+  "overrides": {
+    "absEnabled": false,
+    "loadSensing": false
+  },
+  "duration": 14,
+  "driver": {
+    "type": "circle",
+    "targetKmh": 60,
+    "radius": 120,
+    "direction": 1,
+    "brakeAt": 6,
+    "brakeLevel": 0.5,
+    "holdSteerOnBrake": true
+  },
+  "checks": [
+    {
+      "metric": "max_articulation_deg",
+      "status": "WORKING_VALUE",
+      "source": "jackknife must be possible: lightly loaded drive axle locks first without load sensing, empty trailer pushes (classic driver/defect case)",
+      "min": 30,
+      "variant": "empty"
+    },
+    {
+      "metric": "rear_lock_time_s",
+      "status": "WORKING_VALUE",
+      "source": "drive axle locks without ABS",
+      "min": 0.5
+    },
+    {
+      "metric": "max_dv_step_ms",
+      "status": "WORKING_VALUE",
+      "source": "no solver explosion / impulse spikes (per-step velocity change of either body)",
+      "max": 0.35
+    }
+  ]
+}

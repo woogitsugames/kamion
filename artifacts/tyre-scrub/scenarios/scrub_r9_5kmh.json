@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "id": "scrub_r9_5kmh",
+  "description": "ADR 0145 tyre-scrub measurement: combination on R = 9 m at 5 km/h",
+  "spec": "ADR 0145",
+  "variants": ["empty", "laden40"],
+  "ground": { "gradePercent": 0, "surface": "dry_asphalt" },
+  "initial": {},
+  "duration": 60,
+  "driver": { "type": "circle", "targetKmh": 5, "radius": 9, "direction": 1 },
+  "checks": [ { "metric": "max_dv_step_ms", "status": "WORKING_VALUE", "source": "sanity", "max": 0.35 } ]
+}
