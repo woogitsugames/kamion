@@ -42,3 +42,7 @@ Gałąź `edge-r6c`, worktree `.claude/worktrees/edge-r6c`, baza main 76c88d4fd.
 - Budżet merged vs baseline: draws -51/-13/+140, shadow -28, trisK +434/33055; outlier +140 = 494288 (poza z 0143, main). merged vs after na edge/route: 0.
 - Otwarte: głębia skyline na GLES/A16 UNVERIFIED (ADR ryzyko 1).
 - NASTĘPNY KROK: `git fetch origin; git merge origin/main` (generated -> ours), commit, robocopy dowodów do main artifacts/edge-r6c.
+
+## 2026-11-12 20:55 — merge origin/main 830698a90
+- Bez konfliktów (main: lint importów w generatorach, testy, audio, fizyka; żaden plik tej gałęzi poza far_field.py — tylko usunięte nieużywane importy). pytest tests/gis/test_far_field*.py: 55 passed. Bez ponownej regeneracji i bez Unity (PHONE_RUN aktywny) — EditMode 412/412 dotyczy stanu sprzed tego merge.
+- NASTĘPNY KROK (lider): scalić edge-r6c, regeneracja w integracji; pomiar skyline na A16 (ADR 0141 ryzyko 1); visual-critic na artifacts/edge-r6c/pairs-merged + crops/ec-*.jpg.
