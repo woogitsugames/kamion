@@ -99,7 +99,6 @@ pozostałych kroków wiersza (3,1–3,6).
 - Spektrogram zjazdu przed/po: `artifacts/audio-regen04/ab/ab_coast.png` (obejrzany: przed linia znika przy 2–6 s,
   czyli 1400–1200 obr/min; po jest ciągła drabina 1./2./3. harmonicznej przez cały zjazd).
 - pytest `tools/audio/tests`: 46 passed.
-- EditMode / APK: patrz niżej (Wyniki testów).
 
 ## Odsłuch dla właściciela
 `artifacts/audio-regen04/ab/coast_1500_900_{before,after}.wav` (14 s, toczenie na biegu, sam silnik w kabinie,
@@ -118,4 +117,12 @@ Ustawienia → DŹWIĘK → Silnik: ElevenLabs, kamera w kabinie, rozpędzić na
 - Odrzuconych ujęć nie kasujemy (D54); zostają w `art-source/audio/elevenlabs/`.
 
 ## Wyniki testów
-(uzupełniane)
+Unity 6000.3.28f1, worktree `audio-regen04`:
+- pytest `tools/audio/tests`: **46 passed**.
+- PlayMode `-testFilter ElevenLabs|Audio|IdleAudio`: **18/18 passed** (w tym `ElevenLabsEngineAudioTests`, `IdleAudioCaptureTests`).
+- EditMode: 433 passed / 456, 10 skipped, 8 failed. Wszystkie 8 porażek bez związku z audio: 2× znane `CarPaintMaterialTests.DepositionChannel`
+  oraz 6× brak `Assets/_Generated` (TRAKT, świat `bialystok-industrial-c`; poza gitem) w świeżym worktree w chwili uruchomienia
+  (`MirrorPresentationTests` ×2, `TruckDoorCrownTests` ×3, `LightPostPolicyTests` ×1). Potem `_Generated` skopiowano z main na potrzeby buildu.
+- Bank `EngineBank_el_cab.asset` zaimportowany ponownie: obroty 1200/1500 (było 1199,9979/1500,0013), cykle 60→79 i 60→79.
+- APK: `artifacts/audio-regen04/kamion-0.1.0-ce1fb254e6.apk` (215,2 MB, SHA256 `4247be20…262d`; build 263 s, 0 błędów).
+  Nie instalowano, telefonów nie dotykano.
