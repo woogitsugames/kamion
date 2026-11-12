@@ -13,8 +13,8 @@
 | krawędź mapy / tło | 0141 | `edge-r6c` | `artifacts/live/edge-r6c.md` | pary after → merge main → testy |
 | **węzły r7: kolizja W-beam/poręcz (P1-1), filary z danych (P1-2), żwir nasypu/nosa, spód pomostu** | 0144 | `junctions-r7` (Fable) | `artifacts/live/junctions-r7.md` | start 18:37 |
 | **dźwięk opon: szuranie w ciasnym skręcie + pisk (właściciel: pisk zły; był syntezą 930 Hz)** | 0145 | `tyre-scrub` (Opus audio) | `artifacts/live/tyre-scrub.md` | start 18:59; nagrania: `docs/owner/ELEVENLABS-REGEN-03.md` (właściciel generuje) |
+| **świat Putry/Andersa: wysokość latarni Y, prawe pobocze 494288, mur oporowy 810896** | 0146 | `putry-andersa` (Fable) | `artifacts/live/putry-andersa.md` | start 19:18 |
 | **A16 GPU runda 2: props G3-A wg prefiksu** (jedyny agent telefonowy) | 0136 r2 | `a16-perf` (Opus) | `artifacts/live/a16-perf.md` | start 18:4x |
-| **pozy SBS r3: 494288 (pomost Putry), 810896 (za murem), 837235** | 0143 | `sbs-poses-r3` (Opus) | `artifacts/live/sbs-poses-r3.md` | start 18:4x |
 - Scalone wcześniej (s13): 0129, 0136, 0140, 0142 — patrz niżej. **main wymaga regeneracji** (0129, 0133) + `ImpostorTrimBake.RunBatch` (0136) w jednej integracji.
 - Ścieżka bramki 3: krytyk D51 dla gotowych → scal 0123→0128, 0139, 0141, 0132 → jedna integracja (regen, import, ImpostorTrimBake, testy, vqa, `pwsh scripts/sbs-low-pairs.ps1 -Before artifacts/sbs-poses-r2/after`) → krytyk D51 → czysty APK Low → gate3 A16 A+B → pakiet zdjęcie|render.
 - Otwarte bez agenta: 0136 runda 2 (props G3-A wg prefiksu), hashe fidelity CRLF (M1), pozy 494288/810896 (0140 r3), UI Fold (po bramce 3), audio (wycieraczki, deszcz, klakson HUD).
@@ -23,7 +23,8 @@
 - **18:37: SCALONE 0123 b7** `bc84fe48` (critic SCAL warunkowo: P1-1 W-beam przez poręcz na p0_kerb_merge_eye, P1-2 luka filarów → 0144) **i 0128 i3** `e79c5cc3` (critic SCAL warunkowo: poza 320326 → 0143). Worktree junctions-r6 i biezenstwa-island do sprzątnięcia (dowody już w main artifacts). **main wymaga regeneracji** (0123, 0128, 0129, 0133, fidelity CRLF).
 - 18:59: właściciel pyta o APK z dźwiękami → `kamion-0.1.0-5557fe0165.apk` (aktualne audio). Mistral PR #6–#14: właściciel potwierdził koniec sesji Mistrala → recenzja wszystkich (też drafty) w toku → raport `docs/reports/REVIEW-2026-11-12-s14-mistral-r2.md`, scalanie przez lidera.
 - **Mistral r2 zrecenzowane** (`docs/reports/REVIEW-2026-11-12-s14-mistral-r2.md`, komentarze PL na #6–#14): 3 SCAL, 6 SCAL po drobnych poprawkach, 0 NIE. Agent buduje gałąź `mistral-r2-int` (merge --no-ff PR-ów + poprawki lidera, live `artifacts/live/mistral-r2-int.md`) → lider scala do main. M9 (znaki pionowe) bez PR — właściciel wznawia tylko sesję M9. Osobne zadania z recenzji: oktawa comb_estimate (audio), źródła R13/AMT (fizyka), duplikat `concrete_pole` w materials.py (świat, regeneracja), fidelity run po #14.
-- **Ostatni przydzielony ADR: 0145.**
+- **19:18: SCALONE 0143 pozy SBS r3** (494288 prosta, 482392, 320326 promowana z 0128, 810896 przestawiona ale świat zły — poza D51 do 0146; 837235 bez zmian: różnica 2019 vs 2024). Błędy świata z 0143 → 0144 (tablica F-10 w 482392, filary) i 0146. Po integracji: przegrade `sbs_recognition.json` dla 494288/482392/320326. Mistral runda 3 (M16–M20) przekazana właścicielowi: `docs/owner/MISTRAL-TASKS-3.md`; M9 wznawiana.
+- **Ostatni przydzielony ADR: 0146.**
 
 ---
 # HANDOVER — kamion, SESJA 13 (start 2026-11-12 16:41, nowe konto)
