@@ -217,7 +217,7 @@ namespace Game.Rendering
                 worldDetail = false, additionalLightsPerObject = 2,
                 treeCardLodScale = 0.5f, treeThinStartM = 90f, treeCullM = 600f, treeShadowLodMask = 1, leafAlphaToCoverage = true, simpleFoliage = true,
                 forestHlodM = 70f, forestHlodCullM = 1000f,
-                clearCoat = true, vehicleGrimeDetail = true, envCaptureSize = 64, envCaptureInterval = 10, envCaptureFarClip = 150f, envCaptureMinMove = 2f, envCaptureMaxAge = 20f, contactShadows = true, cabShadowLift = 8f, streetLights = 0, lampPools = 4,
+                clearCoat = true, vehicleGrimeDetail = false /* ADR 0136 r2: A16 G3-A -0.68 ms GPU */, envCaptureSize = 64, envCaptureInterval = 10, envCaptureFarClip = 150f, envCaptureMinMove = 2f, envCaptureMaxAge = 20f, contactShadows = true, cabShadowLift = 8f, streetLights = 0, lampPools = 4,
                 glassFast = true, forestFast = true, vehicleCullM = 150f, mirrorResolutionScale = 0.75f,
                 budgetDrawCalls = 250, budgetTrianglesK = 350, budgetTextureMB = 64, budgetShadowMs = 1.0f, budgetStatus = "UNMEASURED",
             },

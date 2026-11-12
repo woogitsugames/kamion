@@ -74,6 +74,7 @@ namespace Game.Rendering
         public static bool? Hud;         // rq_hud
         public static bool? GlassFast;   // rq_glassfast (tier override, ADR 0106)
         public static bool? ForestFast;  // rq_forestfast (tier override, ADR 0113)
+        public static bool? Grime;        // rq_grime (vehicle grime detail, tier override; ADR 0136 r2)
         public static float? VehicleCull; // rq_vehcull (m, tier override; 0 = common 300 m; ADR 0136 r2)
         public static bool Landscape;     // rq_landscape=1: device measurement forced to landscape left (DiagLandscape)
         public static int? GlassDebug;   // rq_glassdbg (with rq_ab glassdbg: the B level of _KamionGlassDebug)
@@ -101,7 +102,7 @@ namespace Game.Rendering
                                   Game.Core.MirrorOverrides.Any ||
                                   WorldGi.HasValue || WorldSun.HasValue ||
                                   Clouds.HasValue || GroundHaze.HasValue || Ssao.HasValue || Look || CabToe.HasValue ||
-                                  LodBias.HasValue || FarClip.HasValue || VehicleCull.HasValue || CullMask.HasValue || Props.HasValue || Hud.HasValue || GlassFast.HasValue || ForestFast.HasValue;
+                                  LodBias.HasValue || FarClip.HasValue || VehicleCull.HasValue || Grime.HasValue || CullMask.HasValue || Props.HasValue || Hud.HasValue || GlassFast.HasValue || ForestFast.HasValue;
 
         /// <summary>Reads the overrides through a launch-argument getter (platform services). Returns a log line.</summary>
         public static string Parse(Func<string, string> arg)
@@ -142,6 +143,7 @@ namespace Game.Rendering
             LodBias = F(arg("rq_lod")); FarClip = F(arg("rq_far")); CullMask = I(arg("rq_mask")); Props = B(arg("rq_props")); Hud = B(arg("rq_hud")); GlassDebug = I(arg("rq_glassdbg")); GlassFast = B(arg("rq_glassfast"));   // ADR 0106
             ForestFast = B(arg("rq_forestfast"));   // ADR 0113
             VehicleCull = F(arg("rq_vehcull"));      // ADR 0136 r2
+            Grime = B(arg("rq_grime"));
             Landscape = B(arg("rq_landscape")) == true;   // ADR 0136 r2: measurement runs in landscape (DiagLandscape)
             PsoWarmup.Init(arg);   // ADR 0113: PSO warm-up / trace, spike probe (player only)
             string ab = arg("rq_ab");
@@ -164,7 +166,7 @@ namespace Game.Rendering
                          $"mirror_res={Game.Core.MirrorOverrides.Resolution} mirror_rate={Game.Core.MirrorOverrides.DueSchedule} mirror_legacy={Game.Core.MirrorOverrides.Legacy} " +
                          $"mirror_off={Game.Core.MirrorOverrides.Suspended} worldgi={WorldGi} worldsun={WorldSun} " +
                          $"clouds={Clouds} haze={GroundHaze} ssao={Ssao} look={WorldAtmosphere.LookVariant} ev={LightingPreset.ExposureBiasOverride} wet={WorldAtmosphere.WetOverride} " +
-                         $"lod={LodBias} far={FarClip} mask={CullMask} props={Props} hud={Hud} glassfast={GlassFast} forestfast={ForestFast} vehcull={VehicleCull}" : null;
+                         $"lod={LodBias} far={FarClip} mask={CullMask} props={Props} hud={Hud} glassfast={GlassFast} forestfast={ForestFast} vehcull={VehicleCull} grime={Grime}" : null;
         }
 
         /// <summary>The tier with the overrides applied (vegetation + camera fields; URP asset fields by the applier).</summary>
@@ -180,6 +182,7 @@ namespace Game.Rendering
             if (TreeCardScale.HasValue) t.treeCardLodScale = TreeCardScale.Value;
             if (TreeCull.HasValue) t.treeCullM = TreeCull.Value;
             if (VehicleCull.HasValue) t.vehicleCullM = VehicleCull.Value;
+            if (Grime.HasValue) t.vehicleGrimeDetail = Grime.Value;
             if (TreeThin.HasValue) t.treeThinStartM = TreeThin.Value;
             if (SimpleFoliage.HasValue) t.simpleFoliage = SimpleFoliage.Value;
             if (ForestHlod.HasValue) t.forestHlodM = ForestHlod.Value > 0f ? ForestHlod.Value : -1f;   // -1 = off

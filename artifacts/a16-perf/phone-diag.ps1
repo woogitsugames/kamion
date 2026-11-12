@@ -54,7 +54,7 @@ try {
             if ($t -lt $CoolBelowC) { break }
             L "cooling: battery $t C"; & $adb -s $Serial shell am force-stop com.woogitsugames.kamion | Out-Null; Start-Sleep -Seconds 60
         }
-        $extra = @('telemetry=1', "route_end=$($seg.s_end_m)", 'rq_landscape=1')   # r2: A16 flat on the desk stayed portrait (ADR 0135)
+        $extra = @('telemetry=1', "route_end=$($seg.s_end_m)")   # r2: rq_landscape=1 removed after ADR 0147 (pass it in -Runs if needed)
         if ($seg.s_start_m -gt 30) { $extra += "route_s=$($seg.s_start_m)" }
         if ($ex) { $extra += ($ex -split ' ' | Where-Object { $_ }) }
         L "run $name ($dur s): $($extra -join ',') battery=$t C"
