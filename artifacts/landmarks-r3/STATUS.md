@@ -87,3 +87,5 @@ Krok 20: EditMode 317/317 PASS, slot Unity zwolniony. Natywna para filarów czte
 Krok 21: przygotowano REPORT-DRAFT.md z jednoznacznym statusem szkicu i polami W TOKU. Finalny REPORT powstanie dopiero po odczycie wyników Pythona i cache; nie kopiuje się szkicu jako zamknięcia rundy. Kolejka heavy nadal żywa, bez trzymania dodatkowego slotu.
 
 Krok 22: przygotowano copy-main.ps1 (jeszcze niewykonany): tylko własny katalog artifacts/landmarks-r3, robocopy /E bez /MIR, weryfikacja wszystkich244 końcowych PNG i REPORT SHA, receipt bez commitu main. Cache przed testami:192/192 zgodne z manifestem. Pełny GIS działa w przydzielonym heavy.
+
+Krok 23: pełny GIS końca rundy:643 PASS,1 XFAIL,1 FAIL,720,55 s. Jedyna porażka test_report_not_stale: raport fidelity nieaktualny dla overrides.yaml i roads/meshing.py. stale-fidelity-proof.json potwierdza oba wejścia identyczne kanonicznie z bazą14ccbaf1 i pusty git diff; żadnego z nich ani raportu dróg nie zmieniano. Physics/gate3 nadal działa pod tym samym heavy, kontrola cache po testach oczekuje.
