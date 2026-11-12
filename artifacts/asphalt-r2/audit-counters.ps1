@@ -1,3 +1,4 @@
+param([ValidatePattern('^candidate[0-9]*$')][string]$After='candidate2')
 $ErrorActionPreference='Stop'
 Set-Location (Resolve-Path "$PSScriptRoot/../..")
 function Read-Counters([string]$Path) {
@@ -15,7 +16,7 @@ function Read-Counters([string]$Path) {
 $result=@()
 foreach($condition in 'Low-overcast','Low-clear','High-overcast','High-clear') {
  $before=Read-Counters "artifacts/asphalt-r2/baseline/$condition/stats.txt"
- $after=Read-Counters "artifacts/asphalt-r2/candidate/$condition/stats.txt"
+ $after=Read-Counters "artifacts/asphalt-r2/$After/$condition/stats.txt"
  if($before.Count -ne 82 -or $after.Count -ne 82){throw "Camera count mismatch: $condition"}
  foreach($id in $before.Keys | Sort-Object) {
   if(-not $after.ContainsKey($id)){throw "Missing camera: $id"}
@@ -26,8 +27,9 @@ foreach($condition in 'Low-overcast','Low-clear','High-overcast','High-clear') {
   }
  }
 }
-$result | Export-Csv artifacts/asphalt-r2/counter-audit.csv -NoTypeInformation
+$result | Export-Csv "artifacts/asphalt-r2/counter-audit-$After.csv" -NoTypeInformation
 $changed=@($result | Where-Object delta -ne 0)
-[ordered]@{camera_conditions=328;counter_rows=$result.Count;changed_rows=$changed.Count;changes=$changed;note='CPU visibility/LOD estimates, triangles rounded in thousands; instance counters separate; not GPU timings.'} | ConvertTo-Json -Depth 5 | Set-Content artifacts/asphalt-r2/counter-audit.json
+[ordered]@{camera_conditions=328;counter_rows=$result.Count;changed_rows=$changed.Count;changes=$changed;note='CPU visibility/LOD estimates, triangles rounded in thousands; instance counters separate; not GPU timings.'} | ConvertTo-Json -Depth 5 | Set-Content "artifacts/asphalt-r2/counter-audit-$After.json"
 if($changed.Count){throw 'Counter changes require review'}
 Write-Output "All $($result.Count) counters unchanged across 328 camera/conditions."
+

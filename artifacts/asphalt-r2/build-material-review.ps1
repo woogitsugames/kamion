@@ -1,12 +1,13 @@
+param([ValidatePattern('^candidate[0-9]*$')][string]$After='candidate2')
 $ErrorActionPreference='Stop'
 Set-Location (Resolve-Path "$PSScriptRoot/../..")
-$out='artifacts/asphalt-r2/material-review-960'
+${out}="artifacts/asphalt-r2/material-review-$After-960"
 New-Item $out -ItemType Directory -Force | Out-Null
 $manifest=@()
 foreach($condition in 'Low-overcast','Low-clear','High-overcast','High-clear') {
  foreach($id in 'asphalt_kerb_andersa_close','asphalt_paving_andersa_close') {
   $before="artifacts/asphalt-r2/baseline/$condition/$id.png"
-  $after="artifacts/asphalt-r2/candidate/$condition/$id.png"
+  $after="artifacts/asphalt-r2/$After/$condition/$id.png"
   foreach($entry in @(@($before,'before'),@($after,'after'))) {
    magick -limit thread 2 $entry[0] -resize 960x "$out/$condition-$id-$($entry[1]).jpg"
    if($LASTEXITCODE -ne 0){throw 'Image preview failed'}
@@ -19,3 +20,4 @@ foreach($condition in 'Low-overcast','Low-clear','High-overcast','High-clear') {
  }
 }
 $manifest | ConvertTo-Json -Depth 4 | Set-Content "$out/sources.json"
+
