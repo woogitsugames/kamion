@@ -6,20 +6,23 @@ Stan r4, 12.11 około 13:30: bazą nowej generacji jest main 0023f39d po pakieta
 
 [Własny punktowy przegląd](../../artifacts/sbs-r4/FRESH-SPOT-REVIEW.md) A294859/A303305 Low-clear i High-clear potwierdza brak ostrego ukośnego klina nad prawym horyzontem w nowej wspólnej bazie. Pozostaje miękki szary pas dolnego nieba; nie utożsamiać go z dawnym twardym klinem ani blokerem D51. W 303305 nadal nie zgadza się sylwetka bloków po lewej. Ta kontrola obejmuje tylko 4 klatki: 294859 jest C, 303305 jest B.
 
+Aktualizacja około 16:01: [niezależny ogląd pozostałych stanów](../../artifacts/sbs-r4/OTHER-STATES-VISUAL-REVIEW.md) zakończył wszystkie 75/75 B raw i 25/25 zdjęć źródłowych. Łącznie z wcześniejszym Low-overcast obejrzano wszystkie 100 B raw czterech stanów. SHA, ścieżki i roster 75 par ponownie związano z capture/request oraz zachowano dokładne bajty recenzji w ZIP. To nadal baza 80159a70 bez ADR 0130, bez nowej oceny D51 i bez oglądu przyszłych arkuszy. High ujawnia różnice LOD portali, ale nie usuwa rozbieżności projekcji, pierzei i ekranów.
+
 ## Aktualne największe odstępstwa z natywnych par r4
 
 | Kolejność | Problem | Dowód i następny krok | Właściciel |
 |---|---|---|---|
-| 1 | Stacje i projekcja portali: B328135, B275528, B297817; dalej B837235, B494288, B180137 | B328135 nadal nierozpoznawalny. Portal istnieje; brak zgodnej projekcji nie dowodzi braku obiektu. Wykonać przygotowane kontrole C i porównać dwie trwałe kotwice, rozdzielając pozę od świata. | sbs; geometria portalu i ekranu pozostaje u właściciela świata |
-| 2 | Wyspa, chodnik i przejście A320326; U-3 przy B837235 | Świeża para pokazuje trawiastą wyspę zamiast zgodnej relacji chodnika, przejścia i znaków. Nie zamykać problemu samym przesunięciem tarczy. | Claude — geometria węzłów; furniture — lica i słupki; sbs — poza |
-| 3 | Pierzeja B150280/B297817, częściowo B328135 | Hale i blok są obecne, lecz nie zastępują charakterystycznej zabudowy usługowej i dominant. Sprawdzić po kalibracji pozy oraz na kolejnej scalonej bazie 0126. | Claude — zabudowa |
-| 4 | Najbliższe podpory i łuk A201270/A139889; duży C-9 A177786 | Dalsze filary istnieją. Niezgodna jest relacja najbliższego filara do kamery, łuku i nasypu; rozdzielić stację od geometrii. | Claude — wiadukty i węzły; sbs — poza |
-| 5 | Prawy ekran i WN B367829/B494288/B180137 | Ekrany i słup są obecne. Pozostają proporcje, ciągłość i relacja do włączenia. B494288 w obu obrazach skręca w lewo; brak podstaw do dużego yaw. | furniture / Claude; sbs — poza |
-| 6 | Panorama bloków A454716/A303305/A320215 i dolne niebo | Panorama nadal niezgodna, ale pomost pozostaje rozpoznawalny. Ostry klin naprawiony w dwóch kontrolowanych kadrach; miękki szary pas to dalsza jakość obrazu, nie samodzielny bloker D51. | edge / vegetation / light |
+| 1 | Stacje i projekcja portali: B328135, B275528, B297817; dalej B837235, B494288, B180137 | B328135 nadal nierozpoznawalny na starej bazie. R5: świeży świat i cztery stany po ADR 0130, dwie trwałe kotwice, rozdzielenie pozy od świata. Nie uruchamiać zastąpionego przepisu 15 prób. | sbs; geometria portalu i ekranu pozostaje u właściciela świata |
+| 2 | LOD portali B227953/B837235/B297817; B381800 | Ogląd trzech pozostałych stanów potwierdza pełną ramę Low zamiast ażurowej kratownicy High w pierwszych trzech kadrach. B381800 pozostaje pełny także na High. Sprawdzić po integracji 0127, na tych samych dystansach. | Claude — czytelność Low 0127 |
+| 3 | Wyspa, chodnik i przejście A320326; U-3 przy B837235 | Świeża para pokazuje trawiastą wyspę zamiast zgodnej relacji chodnika, przejścia i znaków. Nie zamykać problemu samym przesunięciem tarczy. | Claude — geometria węzłów; furniture — lica i słupki; sbs — poza |
+| 4 | Pierzeja B150280/B297817, częściowo B328135 | Hale i blok są obecne, lecz nie zastępują charakterystycznej zabudowy usługowej i dominant. Sprawdzić po kalibracji pozy oraz na kolejnej scalonej bazie 0126. | Claude — zabudowa |
+| 5 | Najbliższe podpory i łuk A201270/A139889; duży C-9 A177786 | Dalsze filary istnieją. Niezgodna jest relacja najbliższego filara do kamery, łuku i nasypu; rozdzielić stację od geometrii. | Claude — wiadukty i węzły; sbs — poza |
+| 6 | Prawy ekran i WN B367829/B494288/B180137 | Ekrany i słup są obecne. Pozostają proporcje, ciągłość i relacja do włączenia. B494288 w obu obrazach skręca w lewo; brak podstaw do dużego yaw. | furniture / Claude; sbs — poza |
+| 7 | Panorama bloków A454716/A303305/A320215 i dolne niebo | Panorama nadal niezgodna, ale pomost pozostaje rozpoznawalny. Ostry klin naprawiony w dwóch kontrolowanych kadrach; miękki szary pas to dalsza jakość obrazu, nie samodzielny bloker D51. | edge / vegetation / light |
 
 Koszt skumulowany nie jest zamknięty: [wszystkie liczniki r4](../../artifacts/sbs-r4/BUDGET-LIMITATIONS.md) pokazują względem r3 draws +0 i tris ≤+2%, lecz względem r2 Low nadal ma 38/84 wzrostów draws i już 34/84 przekroczeń +2% tris (r3: 22/84). To estymaty edytora, bez pomiaru GPU A16. Nie resetować oceny budżetu co rundę.
 
-Kolejne cele z [recenzji pakietu C](../reports/visual/REVIEW-2026-11-12-s12-gpt-batch-c.md): edge — kolor i podział hal południowej panoramy; furniture — profil tyłu tarczy i kontrast obejm; life — odbicie otoczenia na czerni, szum płatków i prostokątny cień pod autem. Szczegółów kabiny i naczep nie oceniać z samych kadrów trasy. SBS nadal zaczyna od sześciu niepewnych pozy; przygotowano 15 kontrolowanych hipotez C z osobnym rozpoznaniem widocznej jezdni w węźle bridge, bez awansu produkcyjnych kamer.
+Kolejne cele z [recenzji pakietu C](../reports/visual/REVIEW-2026-11-12-s12-gpt-batch-c.md): edge — kolor i podział hal południowej panoramy; furniture — profil tyłu tarczy i kontrast obejm; life — odbicie otoczenia na czerni, szum płatków i prostokątny cień pod autem. Szczegółów kabiny i naczep nie oceniać z samych kadrów trasy. SBS ma najpierw sprawdzić sześć scalonych korekt na aktualnym main. Historyczny przepis 15 hipotez C nie został wykonany i pozostaje zastąpiony. Własny ogląd B150280 potwierdza hipotezę pitch jako kolejny osobny temat, bez produkcyjnej korekty i bez leczenia braków pierzei kamerą.
 
 ## Historia r3
 
