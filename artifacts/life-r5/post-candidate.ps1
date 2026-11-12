@@ -38,14 +38,14 @@ try {
  $mode=Get-Content artifacts/life-r5/SOURCE-MODE.json -Raw|ConvertFrom-Json
  $mode.requires_reimport=$false
  $mode|ConvertTo-Json|Set-Content artifacts/life-r5/SOURCE-MODE.json
- $snapshotPath='artifacts/life-r5/native-material-backups/baseline-native/snapshot.json'
+ $snapshotPath='artifacts/life-r5/native-material-backups/baseline-native-full/snapshot.json'
  $snapshot=Get-Content $snapshotPath -Raw|ConvertFrom-Json
  $materialRoot='game/Assets/_Generated/World/bialystok-industrial-c/Materials'
  $mismatches=@(foreach($item in $snapshot.materials){
   $path=Join-Path $materialRoot $item.file
   if(!(Test-Path $path) -or (Get-FileHash $path).Hash -ne $item.sha){$item.file}
  })
- $actualCount=@(Get-ChildItem $materialRoot -Filter '*.mat' -File).Count
+ $actualCount=@(Get-ChildItem $materialRoot -Filter '*.mat' -File -Recurse).Count
  @{snapshot_sha=(Get-FileHash $snapshotPath).Hash;expected=$snapshot.materials.Count;actual=$actualCount;mismatches=$mismatches}|ConvertTo-Json -Depth 4|Set-Content "$prefix-native-material-parity.json"
  if($mismatches.Count -or $actualCount -ne $snapshot.materials.Count){throw 'Native material bytes changed; inspect before capture'}
  Save-Step "zaimportuj geometrię palet $Tag" @("$prefix-gen-result.json","$prefix-native-material-parity.json")

@@ -1,0 +1,2530 @@
+{
+  "note": "Exact own native bytes for tracing EditMode side effects. Not permission to hide test failures or normalize materials. Any restoration requires explicit diff, reference check, retained raw results and full fresh parity.",
+  "missing_required": [],
+  "materials": [
+    {
+      "bytes": 2036,
+      "sha": "A7FC83B1F6F47E3AF68641A06EF66878B6CA55DD8E5529FA9ABD6E175E428D9F",
+      "file": "M_apron_sett.mat"
+    },
+    {
+      "bytes": 4228,
+      "sha": "59340CC20C36E4BC8029969081F5AF4C9097F8FB324A77BFBFF826BC6AFFADD3",
+      "file": "M_balcony_panel.mat"
+    },
+    {
+      "bytes": 2040,
+      "sha": "73F3C83146CD73E0F72136931951564A81A2F1A63C50AE88A1812384411663BC",
+      "file": "M_balcony_slab.mat"
+    },
+    {
+      "bytes": 2040,
+      "sha": "4C91FDEFA9751578511DA053900D33845D10519E69036F17FFB85756C8CBF5D1",
+      "file": "M_barrier_housing.mat"
+    },
+    {
+      "bytes": 3865,
+      "sha": "CD27203A3DC5B359BBA4F7C10AECD9310DB5E22D9FDDB1103E040A5933BE07BF",
+      "file": "M_barrier_post.mat"
+    },
+    {
+      "bytes": 6582,
+      "sha": "960CB44EDA696524636C302B4053740648A0A96C598A8450B7C0918D179773C8",
+      "file": "M_barrier_steel.mat"
+    },
+    {
+      "bytes": 3691,
+      "sha": "362AD7CE8E1907D018E3BE4433220EA558383D6A233823533562F0C3DC9E7D3E",
+      "file": "M_bed_soil.mat"
+    },
+    {
+      "bytes": 3680,
+      "sha": "C18AD3351BD4B1C12AB33CD0C89789D8011A9EBD8E7D44B940BD5DFC27CDE904",
+      "file": "M_bed_stones.mat"
+    },
+    {
+      "bytes": 2042,
+      "sha": "BD134BFE8ADEB33BAB15CC77AD28F0B4DDCB25CA142B70F28B59F009C9E369D3",
+      "file": "M_bench_wood.mat"
+    },
+    {
+      "bytes": 2047,
+      "sha": "DE18DC8E3ABFCB6DDD012F13E1CF2D02DCD7889BFF5E47F338BE1A804BFBE00C",
+      "file": "M_bin_plastic_blue.mat"
+    },
+    {
+      "bytes": 2050,
+      "sha": "8D0F9D4F457B0C14D20EB1FC1A99BED4A4292FF20EA9F3C9D59A021393F86671",
+      "file": "M_bin_plastic_green.mat"
+    },
+    {
+      "bytes": 2049,
+      "sha": "20E57C0113A9D2A2EACA603A2B228289BB4B37DAAE03AC68D4CB3E0B864C5698",
+      "file": "M_bin_plastic_grey.mat"
+    },
+    {
+      "bytes": 2050,
+      "sha": "124CD3508167D140A8EF1FCC27C0C7CCF70627340E6469E383071038EF8402DE",
+      "file": "M_bin_plastic_yellow.mat"
+    },
+    {
+      "bytes": 2037,
+      "sha": "471B81B92EF0C7281AE79BD045EE257183F2AB71881DD8FD77A55CF0395C78D5",
+      "file": "M_booth_glass.mat"
+    },
+    {
+      "bytes": 4223,
+      "sha": "8A3EAE0BFCB0A7A1E951F8C6E5BAA6D57D8248D91E96B1A10A565E8B59839D4F",
+      "file": "M_booth_panel.mat"
+    },
+    {
+      "bytes": 4303,
+      "sha": "E7E1F8D149807E767B63D49520FD6BAEA2D962B034BDA0F36B423F01ABA478BB",
+      "file": "M_brick_red__far_office.mat"
+    },
+    {
+      "bytes": 4297,
+      "sha": "FA2B31BC9297B386D1AC96C397D8C03F3585EBBBD6D6496F2769377AF9729C79",
+      "file": "M_brick_red__far_ribbon.mat"
+    },
+    {
+      "bytes": 4248,
+      "sha": "E8EB1987176AD28B28F4EFCCB09576F561809670293BAEEF049E62764952ACDC",
+      "file": "M_brick_red.mat"
+    },
+    {
+      "bytes": 4218,
+      "sha": "44959C15B1555520F09C2A2B0CF4F08490F3473A5F50585E802B4944DE75A426",
+      "file": "M_bridge_concrete.mat"
+    },
+    {
+      "bytes": 2043,
+      "sha": "19805ACCD8DAE6C3FE8F47A90E3336499C460B039A4BEBBE820F197F6C4FA436",
+      "file": "M_bridge_fascia_green.mat"
+    },
+    {
+      "bytes": 2041,
+      "sha": "DC3B4EB8CBC0470D992D138A75A17B564525223D7127BE6E7DEDB8217B8922E1",
+      "file": "M_bridge_fascia_red.mat"
+    },
+    {
+      "bytes": 3689,
+      "sha": "6421F7F9AC7A741318C3ABBFA4104E2169BD1ABEF15BFC7FD9CD0D8E68FB797A",
+      "file": "M_bridge_soffit.mat"
+    },
+    {
+      "bytes": 2042,
+      "sha": "2C3F74E3A75C26CB97C14BAF664FB65F193936E52A3B2F2FF0F889E2033CE113",
+      "file": "M_cabinet_grey.mat"
+    },
+    {
+      "bytes": 2039,
+      "sha": "D05D9DBE592AB03FB16733B87A3242A15BA5AB8C0C63AC9B9C6E1351F1CD25C9",
+      "file": "M_canopy_fascia.mat"
+    },
+    {
+      "bytes": 2035,
+      "sha": "782E1313AE860887151731942C6FD19091F86CC70BA3DA40DE5CDEA21C495302",
+      "file": "M_canopy_glass.mat"
+    },
+    {
+      "bytes": 3863,
+      "sha": "21D27D87388A93244FA3C2CBEB20033329564C57DE71F720BE3906AD90B18FBE",
+      "file": "M_canopy_steel.mat"
+    },
+    {
+      "bytes": 4124,
+      "sha": "E1059A6D7F190A95E4759E9C1A4150C9BA57340C1212A2DB0FA1C938476CF328",
+      "file": "M_car_dirt_1.mat"
+    },
+    {
+      "bytes": 4123,
+      "sha": "FFFE3F5D82210A151FC2A7EBBCFAA67EDDAA9C7874C6D10B8CCCDE80F901EE51",
+      "file": "M_car_dirt_2.mat"
+    },
+    {
+      "bytes": 4124,
+      "sha": "9540030EC8304A3D4E8C5F5D124448A8A0FFE2AF52D33013F76991901D38E30C",
+      "file": "M_car_dirt_3.mat"
+    },
+    {
+      "bytes": 1072,
+      "sha": "BDA49F798267208C9CBD33EDD9AD817A4D19269D15D2D8C2F4D19EA3DFE65E29",
+      "file": "M_car_glass_tint.mat"
+    },
+    {
+      "bytes": 2039,
+      "sha": "4661E962AC316B5591081FC99EDB95B1C2EE6CA090EC44455F35816F28B081E9",
+      "file": "M_car_glass.mat"
+    },
+    {
+      "bytes": 2042,
+      "sha": "67705CAAC3E84111004A007A4999537BF84A2B2399CBB93BC6AD722A8125A2DB",
+      "file": "M_car_interior.mat"
+    },
+    {
+      "bytes": 2033,
+      "sha": "E9EDBC61B012A9D7D057106D8DC4D308BF924AA778AA8C2E8E228BA9E5926B43",
+      "file": "M_car_lamp.mat"
+    },
+    {
+      "bytes": 2035,
+      "sha": "83782FCDB2F3A4715D4741D16D37D26220C574F27F2E460568648AA7EA185FF7",
+      "file": "M_car_light_head.mat"
+    },
+    {
+      "bytes": 2039,
+      "sha": "225F596CFCBD80F13EE71649418DBC811AE7EDD3C458D9DFD3ABA4218986E626",
+      "file": "M_car_light_tail.mat"
+    },
+    {
+      "bytes": 4272,
+      "sha": "D85C6E9BBE9C404E4526A9C321B75F4A7C8F2FFE4CD69F06543DC01AF43BDE04",
+      "file": "M_car_paint_beige.mat"
+    },
+    {
+      "bytes": 4328,
+      "sha": "267C805B99DBA15F8AF5203C4B995DD3F35CD9BC7B14750FB22474802CFE81A8",
+      "file": "M_car_paint_black.mat"
+    },
+    {
+      "bytes": 4297,
+      "sha": "D2250FB1799D40A796EB65A6EB4C50CF37F6A594B1040DFA6A28E3F1166D8399",
+      "file": "M_car_paint_blue.mat"
+    },
+    {
+      "bytes": 4274,
+      "sha": "6BBF993FB3EA5D462E521EFB01D0212E0341E94EEC4C99D3CE34C186729B6A3D",
+      "file": "M_car_paint_green.mat"
+    },
+    {
+      "bytes": 4297,
+      "sha": "2C967D00DD09BCC09F71F250635717BB5252F9671013A304B6A374426109D315",
+      "file": "M_car_paint_grey.mat"
+    },
+    {
+      "bytes": 4291,
+      "sha": "1F67785C1A119FB4DEB09C151C9369E421684480BC466751FDF3868564378AF1",
+      "file": "M_car_paint_red.mat"
+    },
+    {
+      "bytes": 6613,
+      "sha": "CFFD1B8D88D18755DEDB71121215A1A6A2029D56A9BC0AEAD42D5A74387A7B9A",
+      "file": "M_car_paint_silver.mat"
+    },
+    {
+      "bytes": 4293,
+      "sha": "7929F7EDFC87DA4AC6AD366E46FC40D5BF8B64FA8D86ACBB1076ED8D2BFEE31B",
+      "file": "M_car_paint_white.mat"
+    },
+    {
+      "bytes": 4291,
+      "sha": "88FA5B8B76E657A540DDFEA940F594B0B1C0E88AA1664D3FA6C8C1CA15541F43",
+      "file": "M_car_paint_white2.mat"
+    },
+    {
+      "bytes": 3946,
+      "sha": "BB3C5F5C20719E5BF210C3227AB2341CEDB3A030E3DF02FA64CDAB040929574C",
+      "file": "M_car_plate.mat"
+    },
+    {
+      "bytes": 2038,
+      "sha": "5E1F5066C9DC38B05ED45DD1CD7FE78BBEF3F1F244DDE9212BA073FDABD14B69",
+      "file": "M_car_sill.mat"
+    },
+    {
+      "bytes": 2039,
+      "sha": "0D5A7F882246D29F96531285A68AE06711F7DDDC7E3419BF228FB808139D2B2F",
+      "file": "M_car_trim.mat"
+    },
+    {
+      "bytes": 3978,
+      "sha": "963A1C4AF3BFD19C2E43F8781547A8F2EE03123E9C2452D828A6518BBEF080B9",
+      "file": "M_car_tyre_dusty.mat"
+    },
+    {
+      "bytes": 3970,
+      "sha": "51DE88468B03888EA36469702CE8DB76A0E349DD59D0C5E93E211DC948BFDA78",
+      "file": "M_car_tyre.mat"
+    },
+    {
+      "bytes": 2041,
+      "sha": "CD0277508D4B3E24C8A9916802B52FAC387BE4492BEBC65FBF5A6AD50D0B0A15",
+      "file": "M_cardboard.mat"
+    },
+    {
+      "bytes": 4241,
+      "sha": "DEB54B3D722BD030340398F780336E4B632EF9747D355D310FF90BEAAC7C1710",
+      "file": "M_chimney_brick.mat"
+    },
+    {
+      "bytes": 2049,
+      "sha": "AF2656931DCE2E5AFFFAD9B42BC1F9A2604E93118DC700FA061BCBC2D2BD8803",
+      "file": "M_chimney_concrete.mat"
+    },
+    {
+      "bytes": 2042,
+      "sha": "B397A5B3AEFE6A1AF224F5C40D2AD970C38D78BEE6FF53F7E7203C708FAA91ED",
+      "file": "M_chimney_red.mat"
+    },
+    {
+      "bytes": 2044,
+      "sha": "F191CC43933B57086BBFB136BD222BACE3EF94632B712E3A0E9516FC1E217CE1",
+      "file": "M_chimney_white.mat"
+    },
+    {
+      "bytes": 2045,
+      "sha": "28B3A4843766F0DF0264009589C6C674E5A218903B9068A6BC507E05198026D0",
+      "file": "M_concrete_base.mat"
+    },
+    {
+      "bytes": 1813,
+      "sha": "912A00F52F07326CB21965541670FE2564317DC67B8024E050A1975834F20D78",
+      "file": "M_concrete_fence_post.mat"
+    },
+    {
+      "bytes": 4269,
+      "sha": "0B6D654717AF3BE1A6A4E6B17F25C9987EEAF5CA8BD5FD88DE0618F57A4CA126",
+      "file": "M_concrete_fence.mat"
+    },
+    {
+      "bytes": 2121,
+      "sha": "89A3AFDEAFD4B67910242DF07D03BEB5B06277F475C24FC5DF62F6EF5F977155",
+      "file": "M_concrete_plinth.mat"
+    },
+    {
+      "bytes": 2044,
+      "sha": "5689981F02FB924CC42260B2152274650120673B01F8243E5C3946EFBCEAEDFD",
+      "file": "M_concrete_pole.mat"
+    },
+    {
+      "bytes": 2045,
+      "sha": "44D015A09D88F78B847904F155BBD5805DB6C5297649ED2A342CE7068ACEB1ED",
+      "file": "M_concrete_wall.mat"
+    },
+    {
+      "bytes": 2042,
+      "sha": "BB144B9F6A0DB2EA19AEB082F1547AC3F340D7722B7637E102E739682382242A",
+      "file": "M_cone_base.mat"
+    },
+    {
+      "bytes": 2044,
+      "sha": "7FC0A4D0C2B6F9EFCD971A9BFC50BA4945C4DA3D118EB0382158716798E1D460",
+      "file": "M_cone_orange.mat"
+    },
+    {
+      "bytes": 4225,
+      "sha": "8987C1FCB18DAF1DB77D606F8F8689F3E12F0C03B3B722AB43F9057C039FFC1E",
+      "file": "M_container_beige.mat"
+    },
+    {
+      "bytes": 4218,
+      "sha": "39B776D9BC3E5B238C507362626C54E1267F275E08DD7AAB93BFCEB196DCD5DA",
+      "file": "M_container_blue.mat"
+    },
+    {
+      "bytes": 2041,
+      "sha": "33A5568BB83C271C806D2FB2EF2391499413473985A797CE580112C1F020B5F2",
+      "file": "M_container_doors.mat"
+    },
+    {
+      "bytes": 2041,
+      "sha": "A5D6F4B7FFB0BBDA3C0EBE74F4759D5BD388F878E672CC9927EC0C16EDE27E13",
+      "file": "M_container_frame.mat"
+    },
+    {
+      "bytes": 4225,
+      "sha": "3CEA646B6DFA81969AB5BEF5CC9DCD57D85A85B03F728956DDA110450B631F5F",
+      "file": "M_container_green.mat"
+    },
+    {
+      "bytes": 4220,
+      "sha": "32BB12029A87EADAA3925BF947880C34084F24F70DC983C65EAA08B0B8323270",
+      "file": "M_container_grey.mat"
+    },
+    {
+      "bytes": 4227,
+      "sha": "7BD9291136C46B43B4C3A5E8E1CFC959BAEC337D6E376D74FA9E35782C497B9C",
+      "file": "M_container_rust.mat"
+    },
+    {
+      "bytes": 4223,
+      "sha": "F1ECC6CD0C3A8B1F2ABC483F525B5CE465ACE42B5B2D6DF3AFA1F2E1B618BB1A",
+      "file": "M_container_white.mat"
+    },
+    {
+      "bytes": 2037,
+      "sha": "65A7A6A6AE2B2B05622CF6E3D57E8EB4635D87DA73E78111DDD729CFA8C7D33D",
+      "file": "M_coupling_red.mat"
+    },
+    {
+      "bytes": 2040,
+      "sha": "D4A0145CFBBE7754756AA0D4173F87669021D0B220FDA194211D2718A0D859E0",
+      "file": "M_coupling_yellow.mat"
+    },
+    {
+      "bytes": 4246,
+      "sha": "C37A3CB828FD5FCD33DB3AD014CFAC9EBFCDB75AA1E62726AEAD869D119043A7",
+      "file": "M_curb_concrete.mat"
+    },
+    {
+      "bytes": 2046,
+      "sha": "487A5B3B052452D568780D4A35619F7046FDD46191A263B7A0CA9A089BAAA97B",
+      "file": "M_cycle_red.mat"
+    },
+    {
+      "bytes": 4213,
+      "sha": "1B14C77D9FFF58D49BBEE4C0448183CAA82B86A356BE0DE29D6BC5CD2F894E4C",
+      "file": "M_decal_oil.mat"
+    },
+    {
+      "bytes": 4391,
+      "sha": "A16FEE3CE15A7091F335961911AD144870142DB5A3FF310102C25E1964832827",
+      "file": "M_decal_patch.mat"
+    },
+    {
+      "bytes": 2047,
+      "sha": "141BB1639FEE5F504B5E788C824031208EE5C26D92C6AFC10570EC69C1E2D3C1",
+      "file": "M_decal_sealant.mat"
+    },
+    {
+      "bytes": 4075,
+      "sha": "076784E755CBA1D7E855DA3D56408E256803AB667F7654D1C43F49BFE70A4D44",
+      "file": "M_decal_tyre.mat"
+    },
+    {
+      "bytes": 3725,
+      "sha": "18C0DE0D6CF8B43EF7C59EBD7A05EC4C4F0E835FB84BFAACEBD8A1EBDF170707",
+      "file": "M_decal_yard_patch_dark.mat"
+    },
+    {
+      "bytes": 3726,
+      "sha": "46C12F2E80DEE56B3D5A8113447EDC67F6A6C95AEB989184D92AFD719C90BBB3",
+      "file": "M_decal_yard_patch_light.mat"
+    },
+    {
+      "bytes": 3917,
+      "sha": "B2422A40A59CCC25B6F9B0871E70A30E08A5E73AD9DBB6D4A982DD1861EC4105",
+      "file": "M_dock_digits.mat"
+    },
+    {
+      "bytes": 4218,
+      "sha": "356B477CF2564F703B0BF2A6A3A2ACB7B9C1AE2552F8BDEB4724FC72DCFF971E",
+      "file": "M_dock_door.mat"
+    },
+    {
+      "bytes": 2036,
+      "sha": "2209657B47B7A7CA62AA89D20F9728B666A5DA37712A2A1DC1E7AB2EA5CAF904",
+      "file": "M_dock_light.mat"
+    },
+    {
+      "bytes": 2038,
+      "sha": "AA19C3157578FC9D5BA336080D07601814C69C44CA702A6ACBC40155AE2F61F6",
+      "file": "M_dock_shelter.mat"
+    },
+    {
+      "bytes": 2036,
+      "sha": "4EE517A19C841B6DBF12F06E13C5C243B86B4CB652BA4225D1D0D3C5254D43A1",
+      "file": "M_door_glass.mat"
+    },
+    {
+      "bytes": 2033,
+      "sha": "55B5E057126D8C88EE6FF67AEC09527B9DA07DB9F5995BEB8FE1DB8CD94FFA84",
+      "file": "M_door_steel.mat"
+    },
+    {
+      "bytes": 3856,
+      "sha": "610C9A4B1ED89D2D0174484AA1322FB0BC827D1611CB1F3D58DD3F658444866D",
+      "file": "M_downpipe.mat"
+    },
+    {
+      "bytes": 3455,
+      "sha": "DE74B10D48DDF40F63A692B9CDB8FA58BA6066A5F6E9C9E8A35AA482BA10F1E3",
+      "file": "M_drain_grate.mat"
+    },
+    {
+      "bytes": 4075,
+      "sha": "AFE3CCF3127104B6048AC8F556DB74DB8C3169E694906B53BF214D1CA2729881",
+      "file": "M_fab_birch_tree_trunk.mat"
+    },
+    {
+      "bytes": 4096,
+      "sha": "230E279384A6D84CFCC8F466EDEC607AF4FDF39929AF6D0FAB662BC1BEEC6A4D",
+      "file": "M_fab_boxwood.mat"
+    },
+    {
+      "bytes": 4100,
+      "sha": "92DB1E851DF4818527E7A32CB51F6826EAA761B76450CF3FCC68133C30A12DEA",
+      "file": "M_fab_drainage.mat"
+    },
+    {
+      "bytes": 4100,
+      "sha": "EABA9FE4E153FA48BD9BF018BD8D34B24638427AFE3B74A6895423026F09E3D5",
+      "file": "M_fab_elderberry.mat"
+    },
+    {
+      "bytes": 4070,
+      "sha": "E6E88A3CD403D4A3F44E2CB9D7639813528710658C5F86D68F52655713644D67",
+      "file": "M_fab_granite_rock.mat"
+    },
+    {
+      "bytes": 4028,
+      "sha": "0155F44B4226BE571F4EC3779035BAF36CD18E6C62FD2F1CEC92ADC34B8614C2",
+      "file": "M_fab_grass_clumps.mat"
+    },
+    {
+      "bytes": 4071,
+      "sha": "040089471CEB498D10CECB877CCB61838C6A7F7EB5D7D3D13D2A1EB8D9B95D91",
+      "file": "M_fab_linden_branch.mat"
+    },
+    {
+      "bytes": 4112,
+      "sha": "CBCCFB5CCBEE7EB8BDC0932FB6C905498BFCF1F87ABDBA745E2CAD213562C60E",
+      "file": "M_fab_metal_manhole_cover.mat"
+    },
+    {
+      "bytes": 4070,
+      "sha": "0F92B027D75A46F0D88F540CE76942AA94AEDE8EBAC83B8E69BD9A1058734065",
+      "file": "M_fab_modular_curb.mat"
+    },
+    {
+      "bytes": 4109,
+      "sha": "3182E23CB9B3024E003374531F940ADD65506ECBA99C651F20E2C749DD06C34D",
+      "file": "M_fab_round_drain_cover.mat"
+    },
+    {
+      "bytes": 4076,
+      "sha": "1C6B5357018E46EC0664F12B5BDFF6BAB831890218577D7DDCFFD08672A0D722",
+      "file": "M_fab_silver_birch_bark.mat"
+    },
+    {
+      "bytes": 4077,
+      "sha": "0A52DE80483F76F522A45E0F19E5AB5DA955499985FA1A7ADA3F7B23E8C13F25",
+      "file": "M_fab_small_granite_rock.mat"
+    },
+    {
+      "bytes": 4110,
+      "sha": "89BF7E428ECB31BDA30D751CE13127217D8C73ECCDC6EF53862AFBCB23E07E94",
+      "file": "M_fab_square_rusty_drain.mat"
+    },
+    {
+      "bytes": 4070,
+      "sha": "0AC30295AB61ED3E4AE59C4AB02F0E2C04630AB36E52CAD8BA9EB79D92EA1D75",
+      "file": "M_fab_street_curbs.mat"
+    },
+    {
+      "bytes": 4072,
+      "sha": "6671F696BB59BD51CAAFE50C6368577F7D01ABA30B0BA303EB6C3BE0EB99BDF0",
+      "file": "M_fab_trash_bag_pack.mat"
+    },
+    {
+      "bytes": 4026,
+      "sha": "C82D9C3605BE7D74B9DAB128B42F626C664F8086CCAE755C2001F6D7BD4DCD46",
+      "file": "M_fab_wild_grass.mat"
+    },
+    {
+      "bytes": 3702,
+      "sha": "24AFB1F5FF85BA617442C1FA89BCF63CD2F746D6F7A8C31435496F827979881A",
+      "file": "M_facade_atlas.mat"
+    },
+    {
+      "bytes": 2059,
+      "sha": "87CA7A9A624BEDF665F0A30CDD5CADE943AD1B9F7442405C3A399757061ACE2B",
+      "file": "M_far_field_buildings.mat"
+    },
+    {
+      "bytes": 4007,
+      "sha": "081F563208B35D6E2ABAF3D53AFD02795C34CA73B7990E63FF9E8C2A2B1BDCB9",
+      "file": "M_fence_anthracite_mesh.mat"
+    },
+    {
+      "bytes": 2042,
+      "sha": "852C09A8EDCDE31B8F52C3A535EA83D9395755806C524C497A2F53DD1BF3A77E",
+      "file": "M_fence_anthracite.mat"
+    },
+    {
+      "bytes": 4003,
+      "sha": "DBEB74802861BC02C9A2F7DA003F874744D8DF72E1222895E974962A956A6D49",
+      "file": "M_fence_galv_mesh.mat"
+    },
+    {
+      "bytes": 3862,
+      "sha": "77FEC330BCEAAC956470EEAD768A4BFCA984B6A35F843220F66207F2BC095ADC",
+      "file": "M_fence_galv.mat"
+    },
+    {
+      "bytes": 4001,
+      "sha": "8E24B1B6561848CF71DD649DCED1E3551B996B9C265E62F8D42D779CD93B5080",
+      "file": "M_fence_green_mesh.mat"
+    },
+    {
+      "bytes": 2034,
+      "sha": "12F11C162DE9E3C7686C2BAB31AA5F909103C540C10117746FE50FD082B604B5",
+      "file": "M_fence_green.mat"
+    },
+    {
+      "bytes": 3959,
+      "sha": "7C813DD210A473ADDC3796C821F7214AA5FF3A6E7E4DC288E86297293EFB379C",
+      "file": "M_fire_station_alpha.mat"
+    },
+    {
+      "bytes": 4013,
+      "sha": "83075CD7606C269F06F233C594B4E89D47EBE2B6EADB94AEA55D4ED4BA4ED291",
+      "file": "M_fire_station_thuja_shell.mat"
+    },
+    {
+      "bytes": 3697,
+      "sha": "17552C67F2EB0C12DCC3BA93D6AEB83933789D2A82EE5B07F65A06C335C3FF07",
+      "file": "M_fire_station.mat"
+    },
+    {
+      "bytes": 3937,
+      "sha": "93119667C9E19D809A814A8EB0FD0B3756571D076FE719709ECF50ADC7170FDB",
+      "file": "M_forest_canopy_broadleaf.mat"
+    },
+    {
+      "bytes": 3935,
+      "sha": "4DCF6804FFBF1E8ACF432CB11CE2561B10F2050D6A1DDE87839CAAC39F8265C0",
+      "file": "M_forest_canopy_conifer.mat"
+    },
+    {
+      "bytes": 3933,
+      "sha": "48DF8BD2072DEC9ACE9D16F3C44C29BA54FC746639438E6B373C107042183052",
+      "file": "M_forest_canopy_mixed.mat"
+    },
+    {
+      "bytes": 4275,
+      "sha": "0F2C758CD9D8D1BDF5A336E88AF6BF4D936353B44A55D4561D711BDEF066683E",
+      "file": "M_forest_edge_broadleaf.mat"
+    },
+    {
+      "bytes": 4275,
+      "sha": "5F4EC55B9702E110A91511FD6908DCDF26FED5AB8985BC210B13AF3938FD487B",
+      "file": "M_forest_edge_conifer.mat"
+    },
+    {
+      "bytes": 4274,
+      "sha": "77F95AEC59255F52A387FCB161C8D8100D9CB6E04959897C146BAA68252D974E",
+      "file": "M_forest_edge_mixed.mat"
+    },
+    {
+      "bytes": 3975,
+      "sha": "5F5F77F6314A36350799AB481EA17184B5C2ADA2F3687D8F03E43DDC9C31A6A5",
+      "file": "M_furniture_bollard.mat"
+    },
+    {
+      "bytes": 3980,
+      "sha": "26F08AEEFF194919EDA14EF518ADC4BD7EE9DBA433DFEB1A2EB08BF37E74321E",
+      "file": "M_furniture_concrete.mat"
+    },
+    {
+      "bytes": 3982,
+      "sha": "C2372478E55BD365EA9918D72FA561FCF4F548DBE7177335BC078C5E71594570",
+      "file": "M_furniture_footing.mat"
+    },
+    {
+      "bytes": 3974,
+      "sha": "7D89D76A5C195EB298F143647678A600410AF6129B84F192CBC5E15ADA00DDB0",
+      "file": "M_furniture_galv.mat"
+    },
+    {
+      "bytes": 3975,
+      "sha": "71AC267F26C446087219B6C2937592DBF7195D8F70A18561DB3B9920A4556A64",
+      "file": "M_furniture_grey.mat"
+    },
+    {
+      "bytes": 3863,
+      "sha": "EBBBF9A2BC7F642A8B549C14E084AF33447612E052589C082B93B1170D6194D5",
+      "file": "M_gantry_steel.mat"
+    },
+    {
+      "bytes": 4221,
+      "sha": "94A57E90B48A60BA9AC08072CA35F8F1CA8D30E26A1C6A3CCF02FA5CDB00BF00",
+      "file": "M_garage_door.mat"
+    },
+    {
+      "bytes": 4040,
+      "sha": "9BAF9DDD7B527C670B823387256593B334E0E82CDCC2BD0FDF0EE55E62AAD98B",
+      "file": "M_gate_boom.mat"
+    },
+    {
+      "bytes": 2031,
+      "sha": "9201E00FF983590D8CD87AB2EF09945D958B8C4631D34BC0CE9D22BAAC5F53F2",
+      "file": "M_glass.mat"
+    },
+    {
+      "bytes": 3854,
+      "sha": "E9B596B34EA7C21B229F0B1FFEB0AA0CEBF08EA79DA1212D1E88244182710C19",
+      "file": "M_gutter.mat"
+    },
+    {
+      "bytes": 2039,
+      "sha": "4726A98958F9667817A291996FD96E070B74C4F65738F0E57B720B5E005CC8AA",
+      "file": "M_hall_flashing.mat"
+    },
+    {
+      "bytes": 4240,
+      "sha": "BF0B20AB5E722A542F50E9290F948E62BCEAC7B9E9DA1002AEB1E0108173EDBD",
+      "file": "M_hall_plinth.mat"
+    },
+    {
+      "bytes": 4318,
+      "sha": "C9533A28B4A11B3B41A7E219146D0B6D9233F8D262541323B9A20DCA94BB642E",
+      "file": "M_hall_wall_accent_blue.mat"
+    },
+    {
+      "bytes": 4314,
+      "sha": "3A68962F5BC1683A53E35C9F590E2946EC4280860A4645747667B378E904A54B",
+      "file": "M_hall_wall_accent_green.mat"
+    },
+    {
+      "bytes": 4317,
+      "sha": "DFED975C6B9407B1C232DC0B05FCA3EA100196668C76E38CC858D4B2A0BCF728",
+      "file": "M_hall_wall_accent_red.mat"
+    },
+    {
+      "bytes": 4312,
+      "sha": "EC4F784869DB4216B6FC17AC3EE2F0961BA14BB85A34A49A07149C622A4641E4",
+      "file": "M_hall_wall_graphite.mat"
+    },
+    {
+      "bytes": 4310,
+      "sha": "B5EEF575D67BD32E0772144C585C8805022AE9E30F859EB855FF7C144406E71A",
+      "file": "M_hall_wall_grey.mat"
+    },
+    {
+      "bytes": 4309,
+      "sha": "773F0C4DA7D753C052A2577A7EA73E918FC4696BC8EC5352178ED87C6A069E91",
+      "file": "M_hall_wall_ivory.mat"
+    },
+    {
+      "bytes": 4315,
+      "sha": "06BF5C99BA4E9D8035669C533843E55E62E1321FF8494F704FF524AA0D1E3FC1",
+      "file": "M_hall_wall_silver.mat"
+    },
+    {
+      "bytes": 4300,
+      "sha": "63441EC0196E017316E41B9BECD28095DE8DEFC53B8215D56134750D80B30AA6",
+      "file": "M_hall_wall_white.mat"
+    },
+    {
+      "bytes": 4054,
+      "sha": "1B6330772E56540288DE0649891B86CE1FF1213EAF9258F67445D0708506A53D",
+      "file": "M_hazard_stripes.mat"
+    },
+    {
+      "bytes": 3699,
+      "sha": "924419DA815F0DB758F1D1171E30AC9CD1C056536CCD7092951F62974C46909E",
+      "file": "M_hedge_berberis.mat"
+    },
+    {
+      "bytes": 3698,
+      "sha": "3F3ED2648589A5C71418C288D73D5ACBE62307E62E3586BC80CA0D830CF7850C",
+      "file": "M_hedge_hornbeam.mat"
+    },
+    {
+      "bytes": 3697,
+      "sha": "A7FF77127832CE69D3036730C158450B6272E4139030577FA095A571BC93917E",
+      "file": "M_hedge_privet.mat"
+    },
+    {
+      "bytes": 3962,
+      "sha": "F4269DA2140920AF88A86930DCD1788018D4C0475CDAAAF9AC8513D576BC1AB4",
+      "file": "M_hedge_shell_berberis.mat"
+    },
+    {
+      "bytes": 3961,
+      "sha": "C6909E844D1F5C26177477867E9C55550E7C93372BD44CDE009CBB1C9F3D512C",
+      "file": "M_hedge_shell_hornbeam.mat"
+    },
+    {
+      "bytes": 3959,
+      "sha": "407331A0269C94C7AC1B549BC236BBD5B0C85CCF2A21BAC85192DAFE35BF66ED",
+      "file": "M_hedge_shell_privet.mat"
+    },
+    {
+      "bytes": 3959,
+      "sha": "B94BBF84355E932AF5DC9F06852AE12B4B69D1FD4DE6B0FED5C7FEC38D96FCAF",
+      "file": "M_hedge_shell_thuja.mat"
+    },
+    {
+      "bytes": 3962,
+      "sha": "D9182EE2929DFF4BA5E70BA671C121F6ACE188A6BCA1BE6FD96708BB1BF6BA63",
+      "file": "M_hedge_sprig_berberis.mat"
+    },
+    {
+      "bytes": 3962,
+      "sha": "8700B7A5977CD4D8C56FA24DA3DD597EB893A1DA075525E0CF70AC7938F4959A",
+      "file": "M_hedge_sprig_hornbeam.mat"
+    },
+    {
+      "bytes": 3959,
+      "sha": "E126079AF5E5B0E84A18F3695EA89CD66AD7524E643A65ABF658E3ABBF205302",
+      "file": "M_hedge_sprig_privet.mat"
+    },
+    {
+      "bytes": 3958,
+      "sha": "10900BA34E5C88F6395F53C2B5CDFB71143A91589BED7F5B2AC49C45E7F58875",
+      "file": "M_hedge_sprig_thuja.mat"
+    },
+    {
+      "bytes": 3695,
+      "sha": "611F9B9A877CBF7E0F22AEE0ACB2DF588A4054823FBC810D286F2B87C424F023",
+      "file": "M_hedge_thuja.mat"
+    },
+    {
+      "bytes": 2032,
+      "sha": "95772A7228E8460F9787443A1B0434050D13350E988F93B29312A4561D5D97F2",
+      "file": "M_insulator.mat"
+    },
+    {
+      "bytes": 3683,
+      "sha": "BC63D7BF7FCF80D5181F0879097B48D49CE756A0836A9F384841F6747A79E6EB",
+      "file": "M_island_gravel.mat"
+    },
+    {
+      "bytes": 2033,
+      "sha": "04B1D56F89591120160A038A912B862FBF87DA9AB8491E8991EA5AE91368A326",
+      "file": "M_kp_accent.mat"
+    },
+    {
+      "bytes": 2038,
+      "sha": "BDA9087F0C42C07B4886DAABC4816D423B7DFCA952DF1A12F65F66E22C00E474",
+      "file": "M_kp_glass_block.mat"
+    },
+    {
+      "bytes": 2041,
+      "sha": "CE0312E3439C7CB4D6215DB030BD65D28538CFE90BD943972729713481CC7E8E",
+      "file": "M_kp_roof_white.mat"
+    },
+    {
+      "bytes": 3800,
+      "sha": "62FB667EC9069552269FC3C219EF5E4F2E3E0A537274B9DAA07009F03E1C84BA",
+      "file": "M_kp_wall.mat"
+    },
+    {
+      "bytes": 2040,
+      "sha": "62FE970254D2C328D2DBFFDFFEED1BD143E8165E9EE554E32DF3197402360531",
+      "file": "M_lamp_glass_sodium.mat"
+    },
+    {
+      "bytes": 2031,
+      "sha": "FE30455B5E13E78891D217336F91308A2E1CC06D3FE1770C4EBEFBE939C5ACB8",
+      "file": "M_lamp_glass.mat"
+    },
+    {
+      "bytes": 2040,
+      "sha": "969E6D8FB73B466282827AF829E43271292409BDD75E07D406032BCF11C4D174",
+      "file": "M_luminaire_housing.mat"
+    },
+    {
+      "bytes": 2037,
+      "sha": "49A59C2F95D17D7C28C1588096618251D6FACE71CC928BAB30B91FD304FC344A",
+      "file": "M_luminaire_old.mat"
+    },
+    {
+      "bytes": 4565,
+      "sha": "5685EC7499C5345EC1DB92445D3D0EB887AE73D733F8567FB38F1D9B19C5F635",
+      "file": "M_marking_white.mat"
+    },
+    {
+      "bytes": 2044,
+      "sha": "310D28BA7A1CC429DE02388993DEA8AF3F11F659BB6CA3FCA2BC62FD497E04E9",
+      "file": "M_marking_yard.mat"
+    },
+    {
+      "bytes": 2070,
+      "sha": "1002735648EFDA00E8329C85E9E910A854AB3F8EFD6C99B6176DB9AC1524BDB4",
+      "file": "M_noise_glass.mat"
+    },
+    {
+      "bytes": 3702,
+      "sha": "CE33483D3AD48C70F0E38EFDA65D48A9915D069321A89A1F0F82BCE53ED72C77",
+      "file": "M_noise_panel_dark.mat"
+    },
+    {
+      "bytes": 4273,
+      "sha": "9FB3AA685A378E3CFA6B77759609DD3E6B78DE3720C1F06C1EF3636138FF7948",
+      "file": "M_noise_panel.mat"
+    },
+    {
+      "bytes": 2036,
+      "sha": "C26EBB3FF60F7DC4FE94A56EB05D838D6ACB5330373F0405DA4CD155C6211F56",
+      "file": "M_noise_post.mat"
+    },
+    {
+      "bytes": 2048,
+      "sha": "3A4A3BA7600091779E630D76884EAD817AC536D1E8BA80560A1C74C5888E2525",
+      "file": "M_paint_white_reflective.mat"
+    },
+    {
+      "bytes": 2037,
+      "sha": "196BB54123229B984C109309098148DFC18E037DDB71ABF499A0C5ACB495FE80",
+      "file": "M_paint_yellow.mat"
+    },
+    {
+      "bytes": 2037,
+      "sha": "686AF8C746E71C04932867910476E1B909D99AFF5481DC251673BBC67702AB64",
+      "file": "M_pallet_foil.mat"
+    },
+    {
+      "bytes": 2043,
+      "sha": "AB22B73F431C826AD873235805E77F3EF3480341D0A0B5B4C2CF14403733CFB2",
+      "file": "M_pallet_wood.mat"
+    },
+    {
+      "bytes": 4309,
+      "sha": "10B5FE960BC390536CBC911F08A99B31AACFA653C69D166966F821126B2644FE",
+      "file": "M_panel_concrete__far_block.mat"
+    },
+    {
+      "bytes": 4321,
+      "sha": "CD4F87C56A136C92C8333A4C82EF51CF2EA046534092CB8D6069017BD5E135D3",
+      "file": "M_panel_concrete.mat"
+    },
+    {
+      "bytes": 4491,
+      "sha": "288C720813397E7CCB796E1DE968C15088084AD3D2A40DAB38A92E0FC4E498C3",
+      "file": "M_path_asphalt.mat"
+    },
+    {
+      "bytes": 4387,
+      "sha": "3F13D7A30C81F48B1D167F328020C0FCE98A57AAFAFD51BD8F08C7E665BFCF65",
+      "file": "M_pier_yellow.mat"
+    },
+    {
+      "bytes": 4325,
+      "sha": "7201DCD1D0F168EE6ABFDEAA0897C75C19B47D0F5BD7D15FD8E6B67134D0EC42",
+      "file": "M_plaster_accent_green__far_block.mat"
+    },
+    {
+      "bytes": 4319,
+      "sha": "D85692DA7B789A7E94F10C1D10B6737AB62EB2A339395531A3F0F053F0BFDFBA",
+      "file": "M_plaster_accent_green.mat"
+    },
+    {
+      "bytes": 4330,
+      "sha": "DE8AD62129FF98A6364D641FCF7B015371DAD83942482C1D78E4EFDB16B4FE21",
+      "file": "M_plaster_accent_grey__far_block.mat"
+    },
+    {
+      "bytes": 4327,
+      "sha": "29A783E48C0B1E60D645550125883BE4E895B72411F62EF25C90326261E2BA7D",
+      "file": "M_plaster_accent_grey.mat"
+    },
+    {
+      "bytes": 4321,
+      "sha": "A2897DF530DA7EDF0A4EC7643E5B23051C1A6B759889D5376594D98BEFAAB721",
+      "file": "M_plaster_accent_ochre__far_block.mat"
+    },
+    {
+      "bytes": 4315,
+      "sha": "01A47D878079DB48056ABD04E0F14864491FF22BEA0B78A9B6E5A5C59673B86B",
+      "file": "M_plaster_accent_ochre.mat"
+    },
+    {
+      "bytes": 4332,
+      "sha": "AD29E1980CA24FA7D0C73AD390679D0107466DFACEC9F998849F3675F47C0A93",
+      "file": "M_plaster_accent_terracotta__far_block.mat"
+    },
+    {
+      "bytes": 4329,
+      "sha": "81E5157159F1BF51CA356F2F1D321CAAB7D24268A1F72317F941481E0F5FA62F",
+      "file": "M_plaster_accent_terracotta.mat"
+    },
+    {
+      "bytes": 4319,
+      "sha": "8890FD6B857699867C89919199C16BC4B50211AF3BB0323AECADF128954DE09B",
+      "file": "M_plaster_band_grey.mat"
+    },
+    {
+      "bytes": 4317,
+      "sha": "A8A25FB5A50D25A8E6284F45758884B98FDFA68B75A92C7EE05773A99D2B7395",
+      "file": "M_plaster_beige__far_office.mat"
+    },
+    {
+      "bytes": 4311,
+      "sha": "EECD8588C745EC467824477D851A3CB9C81D47FE5AAE516A7CDFB61330DF40B6",
+      "file": "M_plaster_beige__far_ribbon.mat"
+    },
+    {
+      "bytes": 4313,
+      "sha": "9C53FC36E27736CE0E20ADA411F9B4111AE3BEA3DBCD883382892EC461152586",
+      "file": "M_plaster_beige.mat"
+    },
+    {
+      "bytes": 4319,
+      "sha": "9579CAD1EEA87EE7D9C426912BD4D4EFED12B4F3F89C7AF7A7F9072C351CC0FD",
+      "file": "M_plaster_cream__far_block.mat"
+    },
+    {
+      "bytes": 4316,
+      "sha": "E545B469C08943F96BFD7F9CA94C508A0AF710CF895B3BE8A228F9FE3B523DF5",
+      "file": "M_plaster_cream.mat"
+    },
+    {
+      "bytes": 4318,
+      "sha": "CF3A2DFA8058631B4D0C70FFF38214507447A00A883B078803DF4F2D65C02EBF",
+      "file": "M_plaster_grey__far_block.mat"
+    },
+    {
+      "bytes": 4319,
+      "sha": "0455E0FDD6D10F5B0A2D95D575BFF8BD373BD79A85D0511720EDCE13531B2A5E",
+      "file": "M_plaster_grey__far_office.mat"
+    },
+    {
+      "bytes": 4313,
+      "sha": "6513F5512478E2F7953F0093091E9DAD52420D55DD6944A6E88283402A00B4EB",
+      "file": "M_plaster_grey__far_ribbon.mat"
+    },
+    {
+      "bytes": 4309,
+      "sha": "C5A7F370C98D513A2176B097A8868CBAC94A4C1EAEB75674581121FB362CBA82",
+      "file": "M_plaster_grey.mat"
+    },
+    {
+      "bytes": 4316,
+      "sha": "6920D22262B3C326AA407A3AF5207467676B246ECC2E2297FFFC1575972F5FDD",
+      "file": "M_plaster_light__far_block.mat"
+    },
+    {
+      "bytes": 4317,
+      "sha": "0B7C168A496FE9244545E4A6964BA9F846758F4A5EC22D769801C50BDF2DDA42",
+      "file": "M_plaster_light__far_office.mat"
+    },
+    {
+      "bytes": 4311,
+      "sha": "9052DE6D102E80BFA381E8A9FBA24D7BFDDD0512CA2BE7F2BD6A17374119166D",
+      "file": "M_plaster_light__far_ribbon.mat"
+    },
+    {
+      "bytes": 4307,
+      "sha": "0D333BAD071A02BD498EF88D6A63B1A07B77B5B4C123FD1189223D2D73E8047B",
+      "file": "M_plaster_light.mat"
+    },
+    {
+      "bytes": 4326,
+      "sha": "C7EB466B4585E37C5BDD5928584E325D691494B321468B00EB16E7A42F6806B0",
+      "file": "M_plaster_pastel_blue__far_block.mat"
+    },
+    {
+      "bytes": 4323,
+      "sha": "1303FE65FA9C42D9A8A191296BB4ADDBE495859DFA00E8F6462A2567678CBDF7",
+      "file": "M_plaster_pastel_blue.mat"
+    },
+    {
+      "bytes": 4320,
+      "sha": "95A9092B1199F9F876E79954A02D76C5E4D3934F0814BA06FDF27314B6CCBF48",
+      "file": "M_plaster_peach__far_block.mat"
+    },
+    {
+      "bytes": 4315,
+      "sha": "48D4E188A3A44819A5193930BAF4342E3EE86B4B0EB42344AB0AB6731CB6EE3E",
+      "file": "M_plaster_peach.mat"
+    },
+    {
+      "bytes": 4321,
+      "sha": "FF6D74C4E2A920A017F934A45619766F97FDD119DDEA6CF7B56679BFB7B2FE40",
+      "file": "M_plaster_sage__far_block.mat"
+    },
+    {
+      "bytes": 4316,
+      "sha": "0F6EC89103016C742B85567B8D60F76D1FDE1379CDEC8CB087A0514C8ECC5E86",
+      "file": "M_plaster_sage.mat"
+    },
+    {
+      "bytes": 4322,
+      "sha": "F5CE9463E322BDF99DC25CA1F257728A9DD2C515DF628ED81AAE7255A2AF0FEA",
+      "file": "M_plaster_white__far_office.mat"
+    },
+    {
+      "bytes": 4316,
+      "sha": "B25C7BB719072BBF52142ECF3AC6F0BF7BA2D677F2D2E29F517B7CB32D625B76",
+      "file": "M_plaster_white__far_ribbon.mat"
+    },
+    {
+      "bytes": 4312,
+      "sha": "410ED8EF62D418BCF40657E16A3DE1BACC880333C476985F0B052F2C604E87D0",
+      "file": "M_plaster_white.mat"
+    },
+    {
+      "bytes": 4323,
+      "sha": "D11CD482D8B68C44708744A569A811BE092E2F91AF6C03D3E237BE552680BC31",
+      "file": "M_plaster_yellow__far_block.mat"
+    },
+    {
+      "bytes": 4314,
+      "sha": "6E66309444D7C40BEB2716F17007CA3A6BFA25CDF0A73CE467007D7369D44433",
+      "file": "M_plaster_yellow.mat"
+    },
+    {
+      "bytes": 3917,
+      "sha": "10ECC1385EEC126BE79388B3D88E56ED45956EEC67039ADD7829347E759B6D6A",
+      "file": "M_plate_back.mat"
+    },
+    {
+      "bytes": 2037,
+      "sha": "87E8A34F23EB04381B45B25C4413D5AD0DB9A7AAD217A4DED82411C960E216FD",
+      "file": "M_plate_white.mat"
+    },
+    {
+      "bytes": 4278,
+      "sha": "049275B347331A2478C679BB0C7D8311A9A2562CD7ED3BFF1EA0623CBA91919F",
+      "file": "M_plinth_dark.mat"
+    },
+    {
+      "bytes": 3707,
+      "sha": "097438E0C1B775334A5BA70BBDF58141A814D822C3CF6D8DE2B340303758EAAB",
+      "file": "M_plinth_grey.mat"
+    },
+    {
+      "bytes": 3995,
+      "sha": "1D232AEA4B754A86B8AFAC8D32339BC70A6A49AB4B72B1442AC81E953D3BE0D1",
+      "file": "M_plot_kit.mat"
+    },
+    {
+      "bytes": 3694,
+      "sha": "65736771521DEA05EEA1CE0A2044F49379BD0BAA834A8D9E48985699090DFB2A",
+      "file": "M_plot_lawn.mat"
+    },
+    {
+      "bytes": 2047,
+      "sha": "B1E4D60D7C6CBCD59F8F4A440B619770E774F50CA0B5419EA62BC6DD49AD519F",
+      "file": "M_ramp_wall_blocks.mat"
+    },
+    {
+      "bytes": 4100,
+      "sha": "B5C904591B8288E43B9CC22E7319D8083C2C7934C309FA94EE005FED951F9CC2",
+      "file": "M_reefer_grille.mat"
+    },
+    {
+      "bytes": 2034,
+      "sha": "D51FDBAC1B1B6E62D10CF645A54D8FE5C7F39D3D124E18A0F2CABD1EF69D4D82",
+      "file": "M_reefer_unit.mat"
+    },
+    {
+      "bytes": 2039,
+      "sha": "5E3582F8B2D5B36941AD4D484B90689539876522F33B54CE61002D7ADCEB4F49",
+      "file": "M_reflector_red.mat"
+    },
+    {
+      "bytes": 2041,
+      "sha": "59B0E8F56656B9173E0AEB2A1C97AA6329C8522BEEC6CC1B58F353B280721DC3",
+      "file": "M_reveal_hall.mat"
+    },
+    {
+      "bytes": 2044,
+      "sha": "D85339D834360AD5B058DFA80A909AE3BBED5B4A052E8626A40D61AB1BF9D633",
+      "file": "M_reveal_plaster.mat"
+    },
+    {
+      "bytes": 2039,
+      "sha": "964483BB72879A19DE0ACDCC75B2FE73B011BC648E939437554A1E53F392B43B",
+      "file": "M_rim_dark.mat"
+    },
+    {
+      "bytes": 2037,
+      "sha": "CC40587CC7046D6ED1870B4AA834887F62013ADE9DDFB92C861C1D10DFCF7D6D",
+      "file": "M_rim_dusty.mat"
+    },
+    {
+      "bytes": 3856,
+      "sha": "5E802FE80E4A5559107E1FED900A47C7C5E558D859BE10AC70D911460F59E29E",
+      "file": "M_rim_steel.mat"
+    },
+    {
+      "bytes": 3849,
+      "sha": "069C8575E01EE43C1B123B824AC07F11EF97950D739DF32D5AE88C36B976951F",
+      "file": "M_rim.mat"
+    },
+    {
+      "bytes": 3829,
+      "sha": "B47B44A0491F39D5540144BA2DF11835881049935DD536B34CFFFB0B2892F79D",
+      "file": "M_road_asphalt_new.mat"
+    },
+    {
+      "bytes": 4492,
+      "sha": "808C19022CD58316A4F3C587B527904520F1056DE62988BBAE122849BD4D5EC5",
+      "file": "M_road_asphalt.mat"
+    },
+    {
+      "bytes": 4248,
+      "sha": "455AFC7238F8E35F06FD61891299F7C0014D054E673F28BC620A8357616C571D",
+      "file": "M_road_concrete.mat"
+    },
+    {
+      "bytes": 4209,
+      "sha": "4382C60FAD01FD0F47C3A19B6223DA27678E033ECA4360FEAA1A47DD30C15358",
+      "file": "M_road_gravel.mat"
+    },
+    {
+      "bytes": 4242,
+      "sha": "4B40B4310DAF7024BFBBD525F7FF8991F504C4259A1D1D29D8E14B4D8F2A1FEF",
+      "file": "M_road_paving.mat"
+    },
+    {
+      "bytes": 2036,
+      "sha": "6E0EDFF2082DE96DAE1915D11CE530EF51F9E14B22BF8D61EBBE5FDCEBF37408",
+      "file": "M_road_sett.mat"
+    },
+    {
+      "bytes": 2040,
+      "sha": "4556FF10C6B896F3960E212F3F4C7A469C1F96904FB1635F3AA618207B9E4700",
+      "file": "M_roof_membrane.mat"
+    },
+    {
+      "bytes": 4278,
+      "sha": "0F79A9E3A4FE5864EC4BB5F5AF721B5615B5F832D6EFA82DC1B2ED826862CE9F",
+      "file": "M_roof_metal_graphite.mat"
+    },
+    {
+      "bytes": 4273,
+      "sha": "9AFACE018A2AB8FAEB4A690890EFA4B095C49A1E36C249080650DFBC894A1530",
+      "file": "M_roof_tiles_brown.mat"
+    },
+    {
+      "bytes": 4268,
+      "sha": "E7065DDC32D4FB8A00DCF0A578F64C39633C04B218DC1959B3FD8E2515378EA1",
+      "file": "M_roof_tiles_red.mat"
+    },
+    {
+      "bytes": 3860,
+      "sha": "596E0E1F0810B5CC95641E9FA778ED8B067A799750745009F645BDC3C45D34DE",
+      "file": "M_roof_vent.mat"
+    },
+    {
+      "bytes": 2045,
+      "sha": "2C8C47459F2F6193F6AAF372A9C6AD8C760C5B74B5D67A8E402D029BC6AECD56",
+      "file": "M_rubber_black.mat"
+    },
+    {
+      "bytes": 2040,
+      "sha": "9CDCF09FBEE24A6D660729D27BAF860CDE924AC310853143C21C71FCC0A1C7A9",
+      "file": "M_rubble.mat"
+    },
+    {
+      "bytes": 2040,
+      "sha": "33DC664864A0657CD8CE9DACC1E5B9A16D20C11445BC92B5C601A4CA55F8BBFC",
+      "file": "M_shelter_glass.mat"
+    },
+    {
+      "bytes": 2034,
+      "sha": "2F9E3A179F82D1E19F10D6AA76997C16DFAB8C7927B6CAA6F6E69C9CADD9341D",
+      "file": "M_shelter_roof.mat"
+    },
+    {
+      "bytes": 4213,
+      "sha": "2C2E3D00D5F19E4DBF42108B467AA95E71265A62907F0AAD715477B4BAC4A54E",
+      "file": "M_shoulder_gravel.mat"
+    },
+    {
+      "bytes": 4258,
+      "sha": "6EED41C9F062789F715E6954C832783D674E47FAAACF7708D04A3E9BA30DCB89",
+      "file": "M_sidewalk_paving.mat"
+    },
+    {
+      "bytes": 3882,
+      "sha": "98D01152CE14FCC98A0AA142206D3F8AC1F2536038C0BB803ACE342A2BB66D83",
+      "file": "M_sign_A-7.mat"
+    },
+    {
+      "bytes": 3886,
+      "sha": "262275DFCB8912D6B537B44DF9AC7C556F0C0A149304C56C6F2B1896F4818F6D",
+      "file": "M_sign_B-33_20.mat"
+    },
+    {
+      "bytes": 3885,
+      "sha": "E67067022E03279C7ADA4474E42C474F1C655021DEF8F478FBE186D7DD23F23A",
+      "file": "M_sign_B-33_30.mat"
+    },
+    {
+      "bytes": 3885,
+      "sha": "78821671C127E62CF94744C558123CF85C122848391BACE5FA14FC6E9553C4B9",
+      "file": "M_sign_B-33_40.mat"
+    },
+    {
+      "bytes": 3885,
+      "sha": "4D45835593E170037049B4223BD62545BF7AB09FEB6E1E77683908BB152BDA0E",
+      "file": "M_sign_B-33_70.mat"
+    },
+    {
+      "bytes": 3882,
+      "sha": "B7295DE23A4B6C1879F9D324EF0612D2D70DB7E1CE8677E8FE2541A1214C5536",
+      "file": "M_sign_C-12.mat"
+    },
+    {
+      "bytes": 3882,
+      "sha": "3C674BF70484092428C7B172154859930643677B4F93D3574FFF41556C67EF96",
+      "file": "M_sign_C-9.mat"
+    },
+    {
+      "bytes": 3881,
+      "sha": "30CC780D25504AE30704E0B3E1046FD95D4F0DA986A35D1E139B4CF74BA1431E",
+      "file": "M_sign_D-1.mat"
+    },
+    {
+      "bytes": 3882,
+      "sha": "0AB3FC6A3C93D90F6AA2AEED587DD9F2E8F9AFC29B80301F729281ACFD363986",
+      "file": "M_sign_D-15.mat"
+    },
+    {
+      "bytes": 3881,
+      "sha": "755743351DEF29D3702525E5803D1CF79544347F02C7C9FA30601BD25EC35F7A",
+      "file": "M_sign_D-6.mat"
+    },
+    {
+      "bytes": 3887,
+      "sha": "50B54AE10061C3F9D4E68654C45ADF9B89008EEB05D1F3FB8662CF83FEA2E94B",
+      "file": "M_sign_E-1_57412.mat"
+    },
+    {
+      "bytes": 3887,
+      "sha": "60C31D931A09726CE495FFEB5779D5E2E97E7C49AB843BDE09B3750ACF6C838D",
+      "file": "M_sign_E-1_79161.mat"
+    },
+    {
+      "bytes": 3887,
+      "sha": "F14510B7530D349268F3497166DAB6D5D3252B3CD70FBCF42FF8E76B974227FA",
+      "file": "M_sign_E-1_82686.mat"
+    },
+    {
+      "bytes": 3888,
+      "sha": "FDF5970812BB9805770AD485300A0B2C882A7BD93D1435E367D25B3A585C40BB",
+      "file": "M_sign_E-1_92106.mat"
+    },
+    {
+      "bytes": 3888,
+      "sha": "FD13A62479A5C1C15A0919D565A3B889BC95F085A0EE02CC72F69F9B485644DF",
+      "file": "M_sign_E-2_41037.mat"
+    },
+    {
+      "bytes": 3888,
+      "sha": "F03C840F7C0C71E0DEF66E8F3E8F11B32C30134C4750315594A6ACF9D77FDD5C",
+      "file": "M_sign_E-2_57737.mat"
+    },
+    {
+      "bytes": 3887,
+      "sha": "F9EE60558395D6B9B0DF06A71261109CEB317FA773DAA7DACA7E306C7CB8E86D",
+      "file": "M_sign_E-2_60520.mat"
+    },
+    {
+      "bytes": 3887,
+      "sha": "0E680C0732ABB387A280B2FD9AD3F05AB6DEBD74C329E81D316B62E0D0BA3FE1",
+      "file": "M_sign_E-2_65161.mat"
+    },
+    {
+      "bytes": 3888,
+      "sha": "86EFB07F57FB94EB4F21A7C184F34DDD5F0589507990E809766CD5A8DAA91F96",
+      "file": "M_sign_E-2_76988.mat"
+    },
+    {
+      "bytes": 3888,
+      "sha": "72D38E499E4631FA0C701C4B2885C4F5127F765B7FC4DC474EDE4778A9FE2729",
+      "file": "M_sign_E-2_80201.mat"
+    },
+    {
+      "bytes": 3887,
+      "sha": "A169592E12412B4A9CEE23390DAF639788370DF53766EA85621239557C75699E",
+      "file": "M_sign_E-2_90339.mat"
+    },
+    {
+      "bytes": 3889,
+      "sha": "B2B9FE0A0D819EA182ED59909426D156748F0C8C349C46493E6176581DA3ED8E",
+      "file": "M_sign_E-2a_32638.mat"
+    },
+    {
+      "bytes": 3888,
+      "sha": "F6BBE71DDAC5D494F83FC76B68FC15AC3BA6F1F0F39C0D9814E2A91BEB53DC4C",
+      "file": "M_sign_E-2a_41037.mat"
+    },
+    {
+      "bytes": 3888,
+      "sha": "64B782455EC199207D315934745CA207F5C36362C3078C3CE59C04F1E8DD149E",
+      "file": "M_sign_E-2a_57737.mat"
+    },
+    {
+      "bytes": 3889,
+      "sha": "322AD95C089A843574CA0C0CE58C2F5BC90CD3F25A75B23F9D5C4E4A21F2191D",
+      "file": "M_sign_E-2a_60520.mat"
+    },
+    {
+      "bytes": 3887,
+      "sha": "A3BF248F80864C8E57943F7D6672E9E7158CC05529BFA5426C9F5F0F25E0C927",
+      "file": "M_sign_E-2a_71003.mat"
+    },
+    {
+      "bytes": 3887,
+      "sha": "44A1958F84C388512BCFE9F33D01AAB7A2F07C3DC335F768045B56B04F7DFBDE",
+      "file": "M_sign_E-2a_80201.mat"
+    },
+    {
+      "bytes": 3886,
+      "sha": "68F79ACFE63BD5B429879610432315872A723D1580A5C17D668076754E9AC4C9",
+      "file": "M_sign_E-2a_90339.mat"
+    },
+    {
+      "bytes": 3888,
+      "sha": "9CBB07C0E93057FC8B2B70251916E3A70E40F9701D107D2E761BC6256D8A36AD",
+      "file": "M_sign_G33c600842.mat"
+    },
+    {
+      "bytes": 3888,
+      "sha": "C11F3DD193B1BAB40B687242600E83607CC3E5085AB90DADA22AAFD493F3E01F",
+      "file": "M_sign_G3518e7fb6.mat"
+    },
+    {
+      "bytes": 3889,
+      "sha": "3C4EFEC370FC8916A357587A95F2B31DEE15A14060767F778A9BF7AC2D71C3A0",
+      "file": "M_sign_G3ae1e4f1d.mat"
+    },
+    {
+      "bytes": 3889,
+      "sha": "20AB6F03931F29F55F18081C66BC0FDE55ED305AF7401094DC5A675BFB14206D",
+      "file": "M_sign_OB_0a31f00e.mat"
+    },
+    {
+      "bytes": 3889,
+      "sha": "E47D86C30D43A7D2A9871EB9D4FC30C1244704480A24177984E2A30D6A907DFC",
+      "file": "M_sign_OB_0bfe6830.mat"
+    },
+    {
+      "bytes": 3889,
+      "sha": "B46303113FC1EE70B8AF36B86F45B4F7D93EE8652B8D96386F63BB15D943C5D8",
+      "file": "M_sign_OB_6bbf26a1.mat"
+    },
+    {
+      "bytes": 3889,
+      "sha": "E1EA07CB8003B57055C639C82C31802993E4BC1CBA8597D4E7C769C2CD58E375",
+      "file": "M_sign_OB_b7134a83.mat"
+    },
+    {
+      "bytes": 3889,
+      "sha": "D3E2E498D194100F5C37E3AE36966FA5391627096EC7A7722776E355484410A4",
+      "file": "M_sign_OB_f99035fb.mat"
+    },
+    {
+      "bytes": 2040,
+      "sha": "B98B2D5D8211523130EB1036EA069212E5A25B44AA6CFFFBFD6A71EDF8D328A8",
+      "file": "M_signal_backplate.mat"
+    },
+    {
+      "bytes": 2037,
+      "sha": "5CDFAD6A1C213E83A8F0E835DEE5D690AFA90C30B028208C49417713FC39D792",
+      "file": "M_signal_border.mat"
+    },
+    {
+      "bytes": 2040,
+      "sha": "3B069EE6D996CFE8BE967E6282BCF8DE897FAF349266A066DB1F7F96DBF59708",
+      "file": "M_signal_green_off.mat"
+    },
+    {
+      "bytes": 3886,
+      "sha": "5B156F147D20CB348062E77264460CAA0ADA58286581C0D5F1BE2D87ADEAACF3",
+      "file": "M_signal_green_on.mat"
+    },
+    {
+      "bytes": 2045,
+      "sha": "E4F0E7DA3DA9BB06B43314F9D824A4F876AEEB8B3A525B7068DA52B8C5CC74A1",
+      "file": "M_signal_housing.mat"
+    },
+    {
+      "bytes": 2037,
+      "sha": "1E3A2E7C235E6FE7AD517443FEFAA9E34E61CE576BE59B6BD5EDD3369B26BD6B",
+      "file": "M_signal_red_off.mat"
+    },
+    {
+      "bytes": 3885,
+      "sha": "6AD08E66A4C778758933AD7F59748C8F8FEA71B9A1A4487D84EBB1C0758C1F41",
+      "file": "M_signal_red_on.mat"
+    },
+    {
+      "bytes": 2041,
+      "sha": "A6BC84FA2B54B74ADBA38FDE42384A9EED9710F50F742C5E9E97AF68BEF19539",
+      "file": "M_signal_yellow_off.mat"
+    },
+    {
+      "bytes": 2041,
+      "sha": "98D52CB4B7B62FC959E67A63F050F1C014524B75313237F9F39DE3DCA1290E8C",
+      "file": "M_skip_inside.mat"
+    },
+    {
+      "bytes": 2035,
+      "sha": "B924C8DB4201BDC00577A27FC5D86E342B0F32839AB70C28F7A96FE1490BA500",
+      "file": "M_skip_paint.mat"
+    },
+    {
+      "bytes": 2032,
+      "sha": "8C0257154D34270F7C14B708A0BEF6F1AE402CB25D15CCF80B3B38A967B2AFFD",
+      "file": "M_skylight.mat"
+    },
+    {
+      "bytes": 2042,
+      "sha": "ABCB28893482E4388AFCBF592F9CA1050D49191AE017AF1DAEAECE9B009D9206",
+      "file": "M_soffit_boards.mat"
+    },
+    {
+      "bytes": 3861,
+      "sha": "73C51CB63C1F7FCDB849F9EC978E8CCB50E6AF643A9B188D170D8B7A8D4FD6FF",
+      "file": "M_steel_checker.mat"
+    },
+    {
+      "bytes": 3868,
+      "sha": "2E42D31BA40D5312337B79F9E8DEAA6CB026760F1B963FFCA91F59415E8FD1CF",
+      "file": "M_steel_galv_dark.mat"
+    },
+    {
+      "bytes": 3860,
+      "sha": "DE62445E5168C6A1F95A685CFEF4C501BDFC48167433C5B979AF89FAC6906244",
+      "file": "M_steel_galv.mat"
+    },
+    {
+      "bytes": 2047,
+      "sha": "A7F7B344DAC6B695A4D061400B811DBDF040864E3EFCDF8FCA6A9436CA425733",
+      "file": "M_steel_painted_grey.mat"
+    },
+    {
+      "bytes": 2036,
+      "sha": "A688B5064DA0099E40179CE6F3582C816EE5DFD6EE4AE157837CE58F6D243259",
+      "file": "M_steel_painted.mat"
+    },
+    {
+      "bytes": 4275,
+      "sha": "88670CC1262DEFED2AE9584EECD244E59C89DB6BB0BE85D73AC8B066F04840D5",
+      "file": "M_terrain_grass.mat"
+    },
+    {
+      "bytes": 4327,
+      "sha": "C59453ED1D5FEAA8B999B0A806238D9B233BC5BA509360B6F89456B0A942866E",
+      "file": "M_tractor_paint_black.mat"
+    },
+    {
+      "bytes": 4324,
+      "sha": "173E3E5DD698BA35AAF896E7A643CB763ED1D8C78F7EB52D8E4A3FCC214B1157",
+      "file": "M_tractor_paint_blue.mat"
+    },
+    {
+      "bytes": 4329,
+      "sha": "C65A9C909AFFC9795C906C10BB5B253F8EA87AAAAF9D5D3D740184455FB13585",
+      "file": "M_tractor_paint_green.mat"
+    },
+    {
+      "bytes": 4325,
+      "sha": "1AC7CE9EF356E0F54EC1834533D636E5B38E980CDB85AD80BF3BC4620AB8C28A",
+      "file": "M_tractor_paint_red.mat"
+    },
+    {
+      "bytes": 6619,
+      "sha": "F77EE436003A3CADF7BEC87A56651C238839D63C5BFA79D65409BA3DCF17664E",
+      "file": "M_tractor_paint_silver.mat"
+    },
+    {
+      "bytes": 4321,
+      "sha": "419B8997CEBB08C8C9062589EBAD7C0931ADD2154B8DAAD90EEE47DFDFA9ED11",
+      "file": "M_tractor_paint_white.mat"
+    },
+    {
+      "bytes": 3858,
+      "sha": "30529DBAFF804DE71C102C2A35C1144BB28DDBEE859017089EFF84380470BD19",
+      "file": "M_trailer_alu.mat"
+    },
+    {
+      "bytes": 4230,
+      "sha": "E57272E1734519F72F2F5281BD32A4F9A13130E4E1BEA1DEA2A4461A924B8DE0",
+      "file": "M_trailer_box_white.mat"
+    },
+    {
+      "bytes": 2046,
+      "sha": "E0CF9CE085787D90D93D35959A7580D58266D4797AFBBB5D92466C17A872759C",
+      "file": "M_trailer_chassis.mat"
+    },
+    {
+      "bytes": 4245,
+      "sha": "E87AFEAD7E2CB25134227ED8460AFCF8C02A1703568517B630C60D82D1BE2076",
+      "file": "M_trailer_curtain_blue.mat"
+    },
+    {
+      "bytes": 4246,
+      "sha": "2B1494BAD2BD66CC8F69AED4CE1BC6AD3FDD72788D8652741A78D5552505912B",
+      "file": "M_trailer_curtain_green.mat"
+    },
+    {
+      "bytes": 4245,
+      "sha": "15C91A587289DA22A88478E490879043FFCD46D2343FA96963C3A56F075473BC",
+      "file": "M_trailer_curtain_grey.mat"
+    },
+    {
+      "bytes": 4244,
+      "sha": "6961382D815C7ADD5E825B731206F51ED1980DF089C3A77C397C4F5335309A29",
+      "file": "M_trailer_curtain_red.mat"
+    },
+    {
+      "bytes": 4252,
+      "sha": "59D57648588E1737070085527730339DA456384AC28BC84F690F69C28F96254B",
+      "file": "M_trailer_curtain_silver.mat"
+    },
+    {
+      "bytes": 4242,
+      "sha": "87AE922B0AE99870B87CB0652B008430478C93E36C4A714AD602A1A342F37A9E",
+      "file": "M_trailer_curtain_white.mat"
+    },
+    {
+      "bytes": 2035,
+      "sha": "837C4607776EA5271224CE5E48BA2911AA9FA18AC775FE4AE2D7CB429E71BFE6",
+      "file": "M_trailer_doors.mat"
+    },
+    {
+      "bytes": 2040,
+      "sha": "B80A2540C8D4EB6A3919B9FABDAB527B362E1FCE9C21C6B35813D35A25C1BB95",
+      "file": "M_trailer_front_dark.mat"
+    },
+    {
+      "bytes": 2037,
+      "sha": "280B1312CCC33DEE74812786466B3B504F2D7237A0BCE9AE2B6B3A2A7A4FD571",
+      "file": "M_trailer_front.mat"
+    },
+    {
+      "bytes": 2044,
+      "sha": "BBFD84E0E2A9E1F3E0BA6D50C65CF5AAEE65A3B1FDC3BD1FF78018FFB76DA762",
+      "file": "M_trailer_strap.mat"
+    },
+    {
+      "bytes": 2042,
+      "sha": "9DDCA0D0911C7DCBF1929FF163C6C4EF0CD50F41C487DE7384857837B6E263E0",
+      "file": "M_tyre_dusty.mat"
+    },
+    {
+      "bytes": 2035,
+      "sha": "556261AEC0D8DA7B5B27DCB26D10CE18EC509B114A4759ACE105D94ABB4B5F6B",
+      "file": "M_tyre.mat"
+    },
+    {
+      "bytes": 1134,
+      "sha": "C2C332CFF27BF783AFE0E1F50F284F1CB77A0AC439DE0AAAD18DB611710798CB",
+      "file": "M_vehicle_contact.mat"
+    },
+    {
+      "bytes": 4256,
+      "sha": "EA290F6AC574B2359F5F4DCE26203A72421773FD3F28608027A1BBCB739688F9",
+      "file": "M_verge_grass.mat"
+    },
+    {
+      "bytes": 3701,
+      "sha": "22FB856D55C40304C24C7A503A06FEA110AA5D027BA3B9112154CC25F6679672",
+      "file": "M_viaduct_concrete.mat"
+    },
+    {
+      "bytes": 3955,
+      "sha": "C7C531DA7751FCC5DE6B74AB51CD2F57C794C7347215E609248117597A8B12E2",
+      "file": "M_viaduct_steel.mat"
+    },
+    {
+      "bytes": 2038,
+      "sha": "DFB258C6E01F05184E983ED02FA3ABDC6DEE1FB12F9C565FAE729CA17F7B1C33",
+      "file": "M_window_frame.mat"
+    },
+    {
+      "bytes": 3862,
+      "sha": "F7541060DEB7806EC1165F87CC824527EAFFCE5CA6EFD35CEBC5D542546C9922",
+      "file": "M_window_sill.mat"
+    },
+    {
+      "bytes": 3902,
+      "sha": "38E2CD0E75D7004FC1B8636171821B4DF44595AE7498F2BEF05912CCEE01F0A2",
+      "file": "M_wire.mat"
+    },
+    {
+      "bytes": 2050,
+      "sha": "81792DE1230F1558AA33ED534E3BB0891CE7D69112FE715D4A6D2C53678059CA",
+      "file": "M_wood_planks_green.mat"
+    },
+    {
+      "bytes": 2041,
+      "sha": "00E27E63FA576A9D95019509F7E8C22DF7C285E3E7ADE92C358CE98450700E71",
+      "file": "M_wood_planks.mat"
+    },
+    {
+      "bytes": 4486,
+      "sha": "7815F5121EB8488D94B85162E404923E21AF2F320240AD42FEBA34A8AC874EED",
+      "file": "M_yard_asphalt.mat"
+    },
+    {
+      "bytes": 4242,
+      "sha": "A1FFED953A86C439DB5A3A67952E428044813AA646DC591E7DB05ECE0780102D",
+      "file": "M_yard_behaton.mat"
+    },
+    {
+      "bytes": 3825,
+      "sha": "30431520E460AE5732866F65E5CF1FABC64658F6E4A178AD8D04CA53302DB8BF",
+      "file": "M_yard_concrete_worn.mat"
+    },
+    {
+      "bytes": 4236,
+      "sha": "7B3132AAC718F64D0759CFD6EE4E689AE53DE06A6830D60E32AF1E2DBC245A8D",
+      "file": "M_yard_concrete.mat"
+    },
+    {
+      "bytes": 4211,
+      "sha": "CBB495E9864EE4960E75AE8AAAF7F72E97C5FB2F59500167CB16C3019F30F314",
+      "file": "M_yard_gravel.mat"
+    },
+    {
+      "bytes": 4245,
+      "sha": "2A904E0FA33DD919CFA70426726808B4211CC109FC1260349AF3BB898CF23855",
+      "file": "M_yard_paving.mat"
+    },
+    {
+      "bytes": 4229,
+      "sha": "D59EB32124B23E6E7C7B60526772CFABAD7D0082CDC7910E7F6C29F257EC6A44",
+      "file": "M_yard_slabs.mat"
+    },
+    {
+      "bytes": 3923,
+      "sha": "2668D9A50EC26F279CFA59DE1C829C3D56E04456039DD5E02B661E4D3DEFE1B3",
+      "file": "Proto\\M_bark_alder.mat"
+    },
+    {
+      "bytes": 4064,
+      "sha": "B175F3417073F527774EC6D7D81AE24AEE8B67F43C0A58A98B2969FD33099F1A",
+      "file": "Proto\\M_bark_birch.mat"
+    },
+    {
+      "bytes": 4066,
+      "sha": "B923F1072F127CD0E54AC324F7A75EC67F50D600A5D0957468C2753FA37B4076",
+      "file": "Proto\\M_bark_linden.mat"
+    },
+    {
+      "bytes": 3924,
+      "sha": "A561544D12DA96F806AF8A9DBAE17CFFD0C04AFB1D7A969800718D945CA36EFE",
+      "file": "Proto\\M_bark_maple.mat"
+    },
+    {
+      "bytes": 3929,
+      "sha": "52A12F10484465AEDAEBCE31BDD5AD5E8B60F1482E1272E2A2211406EC1E25C8",
+      "file": "Proto\\M_bark_pine_lower.mat"
+    },
+    {
+      "bytes": 3923,
+      "sha": "CDCB510E1A771E5960A1B5CDECAF01B27C44EECFF783458116CFE8A48D425DA0",
+      "file": "Proto\\M_bark_pine.mat"
+    },
+    {
+      "bytes": 3923,
+      "sha": "985DEB54B4B752916F358636BE489AF52FFAF7F579CF9D31A937D07B673C672D",
+      "file": "Proto\\M_bark_shrub.mat"
+    },
+    {
+      "bytes": 3922,
+      "sha": "52B635584DEF88E226BEBE2CF2393262B4D7A2B6CCF74905B40BAA0054832129",
+      "file": "Proto\\M_bark_twig.mat"
+    },
+    {
+      "bytes": 1153,
+      "sha": "CCBFBDA24879463CD4296C747872AAE5ED64384F702B0A3F05B8B9DFA5D7C85D",
+      "file": "Proto\\M_contact_08ff46d042.mat"
+    },
+    {
+      "bytes": 1163,
+      "sha": "D213D0ED8123767B8039FFFF9D0D67C07D57FCE7D8843F5488F0DDB5352A5A24",
+      "file": "Proto\\M_contact_12b4852f20.mat"
+    },
+    {
+      "bytes": 1159,
+      "sha": "EA7B8CAB09CA60BF46EA39615A88866CC83544B06E4E96518429929327FBD4B0",
+      "file": "Proto\\M_contact_132be592a2.mat"
+    },
+    {
+      "bytes": 1157,
+      "sha": "DCE9B2EA5198600E7EDA8894F79440990D9D14AE47017B93339E8813F36631EF",
+      "file": "Proto\\M_contact_1bea3aec92.mat"
+    },
+    {
+      "bytes": 1158,
+      "sha": "803C99544447D86CB3616896FF8E26A8A25734A49778AA1F74F840BA275A7BCB",
+      "file": "Proto\\M_contact_2108b04360.mat"
+    },
+    {
+      "bytes": 1139,
+      "sha": "970ED1AC40AD8C82E1E34776FE289C03B4B44C18D409E7EFEFFE36509B4AAD10",
+      "file": "Proto\\M_contact_2673e2ce12.mat"
+    },
+    {
+      "bytes": 1157,
+      "sha": "AE4AE1FC1A01F2A2838879B609A75AD6045DE517F8CDADDC9D03D8EED3E6B454",
+      "file": "Proto\\M_contact_35e5c7ba9a.mat"
+    },
+    {
+      "bytes": 1158,
+      "sha": "BC2B8140C0D091FD282D7991C77F4718A3A55998D91452A5471D09B03C5650DC",
+      "file": "Proto\\M_contact_3b556841aa.mat"
+    },
+    {
+      "bytes": 1156,
+      "sha": "6B0BFA22F7DB45ED7497CDC2E55B2D9F1DC00D34C06067D31BF063910AB9A128",
+      "file": "Proto\\M_contact_471acc4eb6.mat"
+    },
+    {
+      "bytes": 1157,
+      "sha": "323106D2AAA55F40BA580A17801080505040DD8331881FD3772CD1EFDB9127AA",
+      "file": "Proto\\M_contact_aa0029a0c4.mat"
+    },
+    {
+      "bytes": 1157,
+      "sha": "5E9048988DB256015A882B769D5C2DE7D0BC53498810CE5777918C3C6DC1361B",
+      "file": "Proto\\M_contact_b5143813fb.mat"
+    },
+    {
+      "bytes": 1160,
+      "sha": "47EC6FD1FBDEB07545CA15ED1393C8961C02EC8F978A897BCCB407897BC7A9A2",
+      "file": "Proto\\M_contact_ba07d0bb4b.mat"
+    },
+    {
+      "bytes": 1142,
+      "sha": "986B157AF7BA11A4070A9DA206250AA4B77DF1ED8DFAF9F251CB58EBBE1501E2",
+      "file": "Proto\\M_contact_bbc039ced6.mat"
+    },
+    {
+      "bytes": 1161,
+      "sha": "ED7BDB883F28009114438F8FA02B269352C8C570653C0B8291930144E2727663",
+      "file": "Proto\\M_contact_cb0ceac02e.mat"
+    },
+    {
+      "bytes": 1173,
+      "sha": "2903D173035BEE9FE792641ECAC42AE05FB26102A069D4F77358AB3310D2FE85",
+      "file": "Proto\\M_contact_e3704b746d.mat"
+    },
+    {
+      "bytes": 1162,
+      "sha": "9A87BF5416F38DFDE4710B25582A12886A0B39DCF4B75C42144D7C56593CF029",
+      "file": "Proto\\M_contact_f291297c95.mat"
+    },
+    {
+      "bytes": 1159,
+      "sha": "4D6DA86E2AF9E1096D497CAA46A729CC4C47F58AD22E005F4E75814AE6FCE700",
+      "file": "Proto\\M_contact_f2f5deb121.mat"
+    },
+    {
+      "bytes": 3961,
+      "sha": "4C73B0C03A29A36EBA723D3863BD1BB7C543D5E2956DC44EB963F3B1E9809914",
+      "file": "Proto\\M_fab_boxwood_billboard.mat"
+    },
+    {
+      "bytes": 4096,
+      "sha": "CC37C670D0F273069AC8F0CBDC439344C903C79D4264E8FA0D1CCB0DBC8E3815",
+      "file": "Proto\\M_fab_boxwood.mat"
+    },
+    {
+      "bytes": 3964,
+      "sha": "CEB5D79C4F35B90A6B80E413716413C5C21F74C0129585664A8F1549595C1439",
+      "file": "Proto\\M_fab_elderberry_billboard.mat"
+    },
+    {
+      "bytes": 4097,
+      "sha": "B97CE673E10019D3CB90A00D79D0481836F1163B36C0716A0229746DBB38B789",
+      "file": "Proto\\M_fab_elderberry.mat"
+    },
+    {
+      "bytes": 4070,
+      "sha": "7A2BB6580A9F73A1F85324589F30FF86EC7A845DED9CF708C8F628F5410EDB39",
+      "file": "Proto\\M_fab_granite_rock.mat"
+    },
+    {
+      "bytes": 3966,
+      "sha": "3C4F641FFB2382A95F76DC1C9ADBB6748C1ED010B9DD34F90121040B701654C9",
+      "file": "Proto\\M_fab_grass_clumps_billboard.mat"
+    },
+    {
+      "bytes": 4029,
+      "sha": "72CB29AD0C11958BBEC954283F7294012A4F98994842EBCC3C7466487D1AC496",
+      "file": "Proto\\M_fab_grass_clumps.mat"
+    },
+    {
+      "bytes": 4076,
+      "sha": "FB91C8AC651317B2E61E7888C98AD7549FBDBC774F345C6C336CE47245964047",
+      "file": "Proto\\M_fab_small_granite_rock.mat"
+    },
+    {
+      "bytes": 4073,
+      "sha": "79171501528CA6617A5514C2690ED9079ACBF7F7C056C111D35ED6D0E38F2300",
+      "file": "Proto\\M_fab_trash_bag_pack.mat"
+    },
+    {
+      "bytes": 3965,
+      "sha": "8FE38851A2806F7BF877DACB312A848B3B51243CFD3D935807C75637ACAC71D5",
+      "file": "Proto\\M_fab_wild_grass_billboard.mat"
+    },
+    {
+      "bytes": 4026,
+      "sha": "68C4BF1FDF337D493D5FE22A73436BBE3DF95DAB24FB8E3624625257EE49367F",
+      "file": "Proto\\M_fab_wild_grass.mat"
+    },
+    {
+      "bytes": 4270,
+      "sha": "8E0BCD47B614D112769075E44FAA27CBF308B1ABAD538327E1E5DFF4AFA43E23",
+      "file": "Proto\\M_impostor_tree_alder_0.mat"
+    },
+    {
+      "bytes": 4270,
+      "sha": "0E38F4EDAA7594D8B6D0A5FB07B98766318CA662BC67494738988FA92A7D65DC",
+      "file": "Proto\\M_impostor_tree_alder_1.mat"
+    },
+    {
+      "bytes": 4270,
+      "sha": "B7BA61588EE8141703B3A54EBD2D3C7C08B52F20DF4920C8E8676B61BFFFAE27",
+      "file": "Proto\\M_impostor_tree_alder_2.mat"
+    },
+    {
+      "bytes": 4272,
+      "sha": "B8B048BC656798212FE39852C3D95F9BEF86BA02B22BAE367B7880BE0269A4CF",
+      "file": "Proto\\M_impostor_tree_birch_0.mat"
+    },
+    {
+      "bytes": 4271,
+      "sha": "CA656779B09E7B233784D896D8BE1E73F684596A9BE696BC046260FB1D81D596",
+      "file": "Proto\\M_impostor_tree_birch_1.mat"
+    },
+    {
+      "bytes": 4272,
+      "sha": "39C0EAA15CD0D9F39DC1213B360FE2EFE3D4E9DAD946BE5A60DED236CEAE324E",
+      "file": "Proto\\M_impostor_tree_birch_2.mat"
+    },
+    {
+      "bytes": 4273,
+      "sha": "CD29465BA251C871D26EC82AC23374A99C291C3CF6AB954D3B1BFD17BEA2C94E",
+      "file": "Proto\\M_impostor_tree_linden_0.mat"
+    },
+    {
+      "bytes": 4273,
+      "sha": "0A6114D7910173A40F2D39855E5C510DF7699B982D4A85CA634C568A558DC1E3",
+      "file": "Proto\\M_impostor_tree_linden_1.mat"
+    },
+    {
+      "bytes": 4272,
+      "sha": "66F0D7CC5F6B7FBA4C79388761103C0B3B9D8B1C40086FB67C4227A70BDB140D",
+      "file": "Proto\\M_impostor_tree_linden_2.mat"
+    },
+    {
+      "bytes": 4271,
+      "sha": "33F8BC8012F4D19AE0119A3C307654E9A9A1A9E2240D005CE0BB4D974243DE25",
+      "file": "Proto\\M_impostor_tree_maple_0.mat"
+    },
+    {
+      "bytes": 4272,
+      "sha": "95368325F65B6EBB7BE7241F6CA059956DC989E9BA1A7A36586A321230AB53D8",
+      "file": "Proto\\M_impostor_tree_maple_1.mat"
+    },
+    {
+      "bytes": 4271,
+      "sha": "9541E04FD6483F331E0515BA4F4FB756553032E26A12BA4B22E1ECB2C326B2B0",
+      "file": "Proto\\M_impostor_tree_maple_2.mat"
+    },
+    {
+      "bytes": 4269,
+      "sha": "23651F0C5D7B230BCC2806BBBAF39264D11399321FB008420E71B7A9AB996A0F",
+      "file": "Proto\\M_impostor_tree_pine_0.mat"
+    },
+    {
+      "bytes": 4269,
+      "sha": "DD8ED54802E27B1B797FD8CB641FD0102CAC1F2E0AD96ACEC2BF1FA733308302",
+      "file": "Proto\\M_impostor_tree_pine_1.mat"
+    },
+    {
+      "bytes": 4270,
+      "sha": "4997A046BE3715A3014165C45E1CD679C794095930A3DCAE09BF31BD71C16745",
+      "file": "Proto\\M_impostor_tree_pine_2.mat"
+    },
+    {
+      "bytes": 4271,
+      "sha": "AA7D38888A5E2D1792A86AE1FA2297C48EC300BB2255FB792C3FCA29F2B88B79",
+      "file": "Proto\\M_impostor_tree_shrub_0.mat"
+    },
+    {
+      "bytes": 4272,
+      "sha": "13D61E21C828C60B70690375FE1D9981AF18699F47BD48A294E2EF1849B229EE",
+      "file": "Proto\\M_impostor_tree_shrub_1.mat"
+    },
+    {
+      "bytes": 4272,
+      "sha": "98628D577165F1B4E0B86BE7F435B99CAF61BF07C2D86421C3EDEC957E57D3E4",
+      "file": "Proto\\M_impostor_tree_shrub_2.mat"
+    },
+    {
+      "bytes": 3946,
+      "sha": "C1AF4119300D9ABE513971F8315C2E7BCEAAA62545623401D371124FF6089920",
+      "file": "Proto\\M_leaves_alder.mat"
+    },
+    {
+      "bytes": 3945,
+      "sha": "A47D39A561A9D94F7CDBA086ECF3AD3D3E6D16916E07FDE1874E224D84018445",
+      "file": "Proto\\M_leaves_birch.mat"
+    },
+    {
+      "bytes": 3947,
+      "sha": "887FB468343B295C10717FB805562681D9BEF885DFCD30100AB7FA9B20729D6B",
+      "file": "Proto\\M_leaves_linden.mat"
+    },
+    {
+      "bytes": 3947,
+      "sha": "3FCB124A608495C49AFC266376E10367BAF54D740644A2FC5BBAF0CC2751413F",
+      "file": "Proto\\M_leaves_maple.mat"
+    },
+    {
+      "bytes": 3945,
+      "sha": "B2964D3C647B0BEDCA310CCD44216B6CFB6A7FF5C958441863AD977064A9934F",
+      "file": "Proto\\M_leaves_pine.mat"
+    },
+    {
+      "bytes": 3946,
+      "sha": "AA96BD7E770D419C6E262F8814F62A25571DCF0A4BFFB6632466817857FD915B",
+      "file": "Proto\\M_leaves_shrub.mat"
+    },
+    {
+      "bytes": 3811,
+      "sha": "FAA7814125A0D37233F6EA9971DA86A5AB099920FC3BCC96B4D905477B9C4F17",
+      "file": "Proto\\M_plate_pl.mat"
+    },
+    {
+      "bytes": 3942,
+      "sha": "9A5171A80C3C3BA1B9DF8D672A89F648EDE92EDC2B35FFCF25163A1EF63639C0",
+      "file": "Proto\\M_sign_A-7.mat"
+    },
+    {
+      "bytes": 3947,
+      "sha": "609BBACF20C02676EB57115106C0C013AAD4A89EB25027A764B1AC993B76D2A0",
+      "file": "Proto\\M_sign_B-33_20.mat"
+    },
+    {
+      "bytes": 3946,
+      "sha": "BA9AAA55C50E351520B5D82DCD5120E477A6BA5987307D8CF0E3F3275CAC6693",
+      "file": "Proto\\M_sign_B-33_30.mat"
+    },
+    {
+      "bytes": 3947,
+      "sha": "1DB171430D1A335D1143EB2B6FD0070541F08519718468C1096B5EB4FC5F68BF",
+      "file": "Proto\\M_sign_B-33_40.mat"
+    },
+    {
+      "bytes": 3947,
+      "sha": "F5577B806C7CD0E546A28DF8393CCC5D0B1A27B10465CBF9A3F01A14887127CF",
+      "file": "Proto\\M_sign_B-33_70.mat"
+    },
+    {
+      "bytes": 3947,
+      "sha": "941C9C5E386FA5691B07D55675FD6BE2DA8CB8F4E47629C46D8D514627ADA6C1",
+      "file": "Proto\\M_sign_B-33_90.mat"
+    },
+    {
+      "bytes": 3944,
+      "sha": "77AFEF5D93DCF483F93A53DC1751AF83BD9D052997B705E119E1502207EC9250",
+      "file": "Proto\\M_sign_C-12.mat"
+    },
+    {
+      "bytes": 3941,
+      "sha": "8ED7520AF02FBC5EEB478B331D5F285E7B1667F163BDC8AAD7BF66FC5FFE8375",
+      "file": "Proto\\M_sign_C-9.mat"
+    },
+    {
+      "bytes": 3943,
+      "sha": "E525B027067F5D4FD0367EC0B2E714F27AC3798E5E04C54F526381E1B198021E",
+      "file": "Proto\\M_sign_D-1.mat"
+    },
+    {
+      "bytes": 3943,
+      "sha": "EAC574A8E7258DE8E11B0DCE63C7DD9A90B8946471930AEDC87A82E5EB942056",
+      "file": "Proto\\M_sign_D-15.mat"
+    },
+    {
+      "bytes": 3943,
+      "sha": "EC5390775CC860759E85199FD2E0DC5F659581229C4E3DEC4900DD6EF7D189C5",
+      "file": "Proto\\M_sign_D-6.mat"
+    },
+    {
+      "bytes": 3949,
+      "sha": "BC7A4791CB07A5F28910F9957EF108B1A3DFA40030443E0134E8053C2FA18114",
+      "file": "Proto\\M_sign_E-1_57412.mat"
+    },
+    {
+      "bytes": 3948,
+      "sha": "71DDB0D35069626D4C6D3702F19C754D376073ABFA5D4680552105372D386BEC",
+      "file": "Proto\\M_sign_E-1_79161.mat"
+    },
+    {
+      "bytes": 3948,
+      "sha": "A245BE2AD519678DC4BADA7E3857F95B795BCCDF3B2CFE7ACC500892DAA8FF7E",
+      "file": "Proto\\M_sign_E-1_82686.mat"
+    },
+    {
+      "bytes": 3947,
+      "sha": "89B035D72D3C090067A51C675B18B497710354C8D00B9AC9407C510F637E424E",
+      "file": "Proto\\M_sign_E-1_92106.mat"
+    },
+    {
+      "bytes": 3949,
+      "sha": "B0043757711CF35A07F9B136FEBF209D2384D4F1C027272DEC4880D7788BED29",
+      "file": "Proto\\M_sign_E-2_41037.mat"
+    },
+    {
+      "bytes": 3949,
+      "sha": "02CBCF4E8043E451CBB3427CCB878B2F2FD352CDEFDEA7E9A2158FC1A22698A2",
+      "file": "Proto\\M_sign_E-2_57737.mat"
+    },
+    {
+      "bytes": 3949,
+      "sha": "E551BBE53A18A5A8517A2C32D2F2EED02FBE7DEF57E9C383BF5FEFF5CAE017AF",
+      "file": "Proto\\M_sign_E-2_60520.mat"
+    },
+    {
+      "bytes": 3948,
+      "sha": "AB4F225A11671BA7CA4FA79F887142C53BD5EADEA3DC30656051AD30AC304455",
+      "file": "Proto\\M_sign_E-2_65161.mat"
+    },
+    {
+      "bytes": 3948,
+      "sha": "E181129B121675D4040663837AE5EA9916B7E115DFF45D712732C336BD475C00",
+      "file": "Proto\\M_sign_E-2_76988.mat"
+    },
+    {
+      "bytes": 3948,
+      "sha": "70E9F8B54FBD0AB56DF6DB6547444BA7E812DAC599B20E619742C0B56A52789B",
+      "file": "Proto\\M_sign_E-2_80201.mat"
+    },
+    {
+      "bytes": 3949,
+      "sha": "79481DEF32BFF9D519B51F99396E1750DC837D668182ADF4529482CA4BC42CFB",
+      "file": "Proto\\M_sign_E-2_90339.mat"
+    },
+    {
+      "bytes": 3950,
+      "sha": "0034C1E79B0A95BE2B1B289AADECC0D79AB879C36F6FA28F15F691F0A51A77E7",
+      "file": "Proto\\M_sign_E-2a_32638.mat"
+    },
+    {
+      "bytes": 3950,
+      "sha": "8EDE5A2AEFB7322AED55750DDA1A0C33901C49FAACC9CF66211E62096B1529A0",
+      "file": "Proto\\M_sign_E-2a_41037.mat"
+    },
+    {
+      "bytes": 3949,
+      "sha": "19873BE0EB566B5247FF897FE2B977116CBCF2248A1B328886EF96B7BBDD34B2",
+      "file": "Proto\\M_sign_E-2a_60520.mat"
+    },
+    {
+      "bytes": 3950,
+      "sha": "AF0FED4F48DAD339AD674B3DD69307BEC6A064A72958F1B66FD58BB01F51732F",
+      "file": "Proto\\M_sign_E-2a_71003.mat"
+    },
+    {
+      "bytes": 3949,
+      "sha": "C8B8EE64F0E3B77F86B3EDFAB43A38AFF052DC26D75DDEA26A67A0886F52576A",
+      "file": "Proto\\M_sign_E-2a_80201.mat"
+    },
+    {
+      "bytes": 3950,
+      "sha": "3D7BB9F971FCC1CF08E6437E7B4EC275E95F607A859FF77154259BD44A4D2D45",
+      "file": "Proto\\M_sign_E-2a_90339.mat"
+    },
+    {
+      "bytes": 3951,
+      "sha": "E2AFDBBF35920D4D3967599BEC45B9F1744BCB37033F7D53A859A05BD4F07B17",
+      "file": "Proto\\M_sign_facade_biuro.mat"
+    },
+    {
+      "bytes": 3954,
+      "sha": "6E08171BE39925A1BFBF999375608A7B09A83ABB2FB6D11080C62D2D82E2BB0D",
+      "file": "Proto\\M_sign_facade_dostawy.mat"
+    },
+    {
+      "bytes": 3953,
+      "sha": "43F1FBB377E20B015ECC37EC547059784190764E8A45F2D8843FB4CDCC0B3ED3",
+      "file": "Proto\\M_sign_facade_hala_a.mat"
+    },
+    {
+      "bytes": 3952,
+      "sha": "785CBAC3D066994FB696B235DF7B8F578C034C2040DD4323B421FEB2AD540A6C",
+      "file": "Proto\\M_sign_facade_hala_b.mat"
+    },
+    {
+      "bytes": 3953,
+      "sha": "988251B5979E28A9D037C6CAD668B7F415F8C358F517AD242113C176BFE2B09A",
+      "file": "Proto\\M_sign_facade_hala_c.mat"
+    },
+    {
+      "bytes": 3952,
+      "sha": "6300550612E0072B1163D4755FA2AAC88574072B4258FCC55205732041674F7C",
+      "file": "Proto\\M_sign_facade_hala_d.mat"
+    },
+    {
+      "bytes": 3953,
+      "sha": "2F7ED375EC002F48C181E8B3BEC183B7907203ED82043B0DA64F9C94762F37E4",
+      "file": "Proto\\M_sign_facade_magazyn.mat"
+    },
+    {
+      "bytes": 3957,
+      "sha": "3E2C0D937F5088C3524D43E6238751FB33A9F1ED57C7E0B2649C937CDDA82EF3",
+      "file": "Proto\\M_sign_facade_portiernia.mat"
+    },
+    {
+      "bytes": 3955,
+      "sha": "148BAF03C6D185206F8E4F28AB4EE6BDEA7501D1032CBB59E1078150D12A9691",
+      "file": "Proto\\M_sign_facade_recepcja.mat"
+    },
+    {
+      "bytes": 3952,
+      "sha": "23A4F1C6B05704B995E77D22E3708F0B1EA5AD3ED99E7FF10B2834D36AE0E670",
+      "file": "Proto\\M_sign_facade_serwis.mat"
+    },
+    {
+      "bytes": 3950,
+      "sha": "629908B77115FD22AFCE808F3ED8E67EFAF30E8DE76127C054E3A83B399BEE0B",
+      "file": "Proto\\M_sign_G33c600842.mat"
+    },
+    {
+      "bytes": 3948,
+      "sha": "244FC0DDC95CEBBC134ED487B52A9429A90405AD029BBF6355279BA1B331E933",
+      "file": "Proto\\M_sign_G3518e7fb6.mat"
+    },
+    {
+      "bytes": 3949,
+      "sha": "E9B2E5671D3804DE6F4A6395C30F7296674122DDBED6F07B0AE4162A5B6D7D3D",
+      "file": "Proto\\M_sign_G3ae1e4f1d.mat"
+    },
+    {
+      "bytes": 3950,
+      "sha": "7CBF5D36D6F73A3572F26BF4DC472DF0E3A311013A4C89C5C3ADFB96A506CA90",
+      "file": "Proto\\M_sign_OB_0a31f00e.mat"
+    },
+    {
+      "bytes": 3951,
+      "sha": "F2BE583A89C586CCAF442DBB141CFCF9BA0CE009CDF1EE59641C103215F0DF60",
+      "file": "Proto\\M_sign_OB_0bfe6830.mat"
+    },
+    {
+      "bytes": 3951,
+      "sha": "9784001CDC8E9C20E480E91C765E6123C0900936220B36886BA2D09ADE3C15AA",
+      "file": "Proto\\M_sign_OB_26fd429a.mat"
+    },
+    {
+      "bytes": 3951,
+      "sha": "E5B100F39BAB09F277A1D491CFDDA5D4642E70729241E47DB4DCCB9DC0820EC0",
+      "file": "Proto\\M_sign_OB_6bbf26a1.mat"
+    },
+    {
+      "bytes": 3951,
+      "sha": "5E2E0059EFED14FC9F0862E3879F36B3436D31498D7D22E23902D90C98D3ED8D",
+      "file": "Proto\\M_sign_OB_8a02c9de.mat"
+    },
+    {
+      "bytes": 3951,
+      "sha": "049C670A8D64C563EF3E586FAABE314E1396807E62AF876FA5C0F58CAE9B40BF",
+      "file": "Proto\\M_sign_OB_b7134a83.mat"
+    },
+    {
+      "bytes": 3950,
+      "sha": "30F5AF8E1B7717A119AE57F3BE5A83B944229674CE2636146AFC8DD03AAAD1D0",
+      "file": "Proto\\M_sign_OB_f99035fb.mat"
+    }
+  ],
+  "required_materials": [
+    "apron_sett",
+    "balcony_panel",
+    "balcony_slab",
+    "barrier_housing",
+    "barrier_post",
+    "barrier_steel",
+    "bed_soil",
+    "bed_stones",
+    "bench_wood",
+    "bin_plastic_blue",
+    "bin_plastic_green",
+    "bin_plastic_grey",
+    "bin_plastic_yellow",
+    "booth_glass",
+    "booth_panel",
+    "brick_red",
+    "brick_red__far_office",
+    "brick_red__far_ribbon",
+    "bridge_concrete",
+    "bridge_fascia_green",
+    "bridge_fascia_red",
+    "bridge_soffit",
+    "cabinet_grey",
+    "canopy_fascia",
+    "canopy_glass",
+    "canopy_steel",
+    "car_dirt_1",
+    "car_dirt_2",
+    "car_dirt_3",
+    "car_glass",
+    "car_glass_tint",
+    "car_interior",
+    "car_lamp",
+    "car_light_head",
+    "car_light_tail",
+    "car_paint_beige",
+    "car_paint_black",
+    "car_paint_blue",
+    "car_paint_green",
+    "car_paint_grey",
+    "car_paint_red",
+    "car_paint_silver",
+    "car_paint_white",
+    "car_paint_white2",
+    "car_plate",
+    "car_sill",
+    "car_trim",
+    "car_tyre",
+    "car_tyre_dusty",
+    "cardboard",
+    "chimney_brick",
+    "chimney_concrete",
+    "chimney_red",
+    "chimney_white",
+    "concrete_base",
+    "concrete_fence",
+    "concrete_plinth",
+    "concrete_pole",
+    "concrete_wall",
+    "cone_base",
+    "cone_orange",
+    "container_beige",
+    "container_blue",
+    "container_doors",
+    "container_frame",
+    "container_green",
+    "container_grey",
+    "container_rust",
+    "container_white",
+    "coupling_red",
+    "coupling_yellow",
+    "curb_concrete",
+    "cycle_red",
+    "decal_oil",
+    "decal_patch",
+    "decal_sealant",
+    "decal_tyre",
+    "decal_yard_patch_dark",
+    "decal_yard_patch_light",
+    "dock_digits",
+    "dock_door",
+    "dock_light",
+    "dock_shelter",
+    "door_glass",
+    "door_steel",
+    "downpipe",
+    "drain_grate",
+    "fab_birch_tree_trunk",
+    "fab_boxwood",
+    "fab_drainage",
+    "fab_elderberry",
+    "fab_granite_rock",
+    "fab_grass_clumps",
+    "fab_linden_branch",
+    "fab_metal_manhole_cover",
+    "fab_modular_curb",
+    "fab_round_drain_cover",
+    "fab_silver_birch_bark",
+    "fab_small_granite_rock",
+    "fab_square_rusty_drain",
+    "fab_street_curbs",
+    "fab_trash_bag_pack",
+    "fab_wild_grass",
+    "facade_atlas",
+    "far_field_buildings",
+    "fence_anthracite",
+    "fence_anthracite_mesh",
+    "fence_galv",
+    "fence_galv_mesh",
+    "fence_green",
+    "fence_green_mesh",
+    "fire_station",
+    "fire_station_alpha",
+    "fire_station_thuja_shell",
+    "forest_canopy_broadleaf",
+    "forest_canopy_conifer",
+    "forest_canopy_mixed",
+    "forest_edge_broadleaf",
+    "forest_edge_conifer",
+    "forest_edge_mixed",
+    "furniture_bollard",
+    "furniture_concrete",
+    "furniture_footing",
+    "furniture_galv",
+    "furniture_grey",
+    "gantry_steel",
+    "garage_door",
+    "gate_boom",
+    "glass",
+    "gutter",
+    "hall_flashing",
+    "hall_plinth",
+    "hall_wall_accent_blue",
+    "hall_wall_accent_green",
+    "hall_wall_accent_red",
+    "hall_wall_graphite",
+    "hall_wall_grey",
+    "hall_wall_ivory",
+    "hall_wall_silver",
+    "hall_wall_white",
+    "hazard_stripes",
+    "hedge_berberis",
+    "hedge_hornbeam",
+    "hedge_privet",
+    "hedge_shell_berberis",
+    "hedge_shell_hornbeam",
+    "hedge_shell_privet",
+    "hedge_shell_thuja",
+    "hedge_sprig_berberis",
+    "hedge_sprig_hornbeam",
+    "hedge_sprig_privet",
+    "hedge_sprig_thuja",
+    "hedge_thuja",
+    "insulator",
+    "island_gravel",
+    "kp_accent",
+    "kp_glass_block",
+    "kp_roof_white",
+    "kp_wall",
+    "lamp_glass",
+    "lamp_glass_sodium",
+    "luminaire_housing",
+    "luminaire_old",
+    "marking_white",
+    "marking_yard",
+    "noise_glass",
+    "noise_panel",
+    "noise_panel_dark",
+    "noise_post",
+    "paint_white_reflective",
+    "paint_yellow",
+    "pallet_foil",
+    "pallet_wood",
+    "panel_concrete",
+    "panel_concrete__far_block",
+    "path_asphalt",
+    "pier_yellow",
+    "plaster_accent_green",
+    "plaster_accent_green__far_block",
+    "plaster_accent_grey",
+    "plaster_accent_grey__far_block",
+    "plaster_accent_ochre",
+    "plaster_accent_ochre__far_block",
+    "plaster_accent_terracotta",
+    "plaster_accent_terracotta__far_block",
+    "plaster_band_grey",
+    "plaster_beige",
+    "plaster_beige__far_office",
+    "plaster_beige__far_ribbon",
+    "plaster_cream",
+    "plaster_cream__far_block",
+    "plaster_grey",
+    "plaster_grey__far_block",
+    "plaster_grey__far_office",
+    "plaster_grey__far_ribbon",
+    "plaster_light",
+    "plaster_light__far_block",
+    "plaster_light__far_office",
+    "plaster_light__far_ribbon",
+    "plaster_pastel_blue",
+    "plaster_pastel_blue__far_block",
+    "plaster_peach",
+    "plaster_peach__far_block",
+    "plaster_sage",
+    "plaster_sage__far_block",
+    "plaster_white",
+    "plaster_white__far_office",
+    "plaster_white__far_ribbon",
+    "plaster_yellow",
+    "plaster_yellow__far_block",
+    "plate_back",
+    "plate_white",
+    "plinth_dark",
+    "plinth_grey",
+    "plot_kit",
+    "plot_lawn",
+    "ramp_wall_blocks",
+    "reefer_grille",
+    "reefer_unit",
+    "reflector_red",
+    "reveal_hall",
+    "reveal_plaster",
+    "rim",
+    "rim_dark",
+    "rim_dusty",
+    "rim_steel",
+    "road_asphalt",
+    "road_asphalt_new",
+    "road_concrete",
+    "road_gravel",
+    "road_paving",
+    "road_sett",
+    "roof_membrane",
+    "roof_metal_graphite",
+    "roof_tiles_brown",
+    "roof_tiles_red",
+    "roof_vent",
+    "rubber_black",
+    "rubble",
+    "shelter_glass",
+    "shelter_roof",
+    "shoulder_gravel",
+    "sidewalk_paving",
+    "signal_backplate",
+    "signal_border",
+    "signal_green_off",
+    "signal_green_on",
+    "signal_housing",
+    "signal_red_off",
+    "signal_red_on",
+    "signal_yellow_off",
+    "skip_inside",
+    "skip_paint",
+    "skylight",
+    "soffit_boards",
+    "steel_checker",
+    "steel_galv",
+    "steel_galv_dark",
+    "steel_painted",
+    "steel_painted_grey",
+    "terrain_grass",
+    "tractor_paint_black",
+    "tractor_paint_blue",
+    "tractor_paint_green",
+    "tractor_paint_red",
+    "tractor_paint_silver",
+    "tractor_paint_white",
+    "trailer_alu",
+    "trailer_box_white",
+    "trailer_chassis",
+    "trailer_curtain_blue",
+    "trailer_curtain_green",
+    "trailer_curtain_grey",
+    "trailer_curtain_red",
+    "trailer_curtain_silver",
+    "trailer_curtain_white",
+    "trailer_doors",
+    "trailer_front",
+    "trailer_front_dark",
+    "trailer_strap",
+    "tyre",
+    "tyre_dusty",
+    "vehicle_contact",
+    "verge_grass",
+    "viaduct_concrete",
+    "viaduct_steel",
+    "window_frame",
+    "window_sill",
+    "wire",
+    "wood_planks",
+    "wood_planks_green",
+    "yard_asphalt",
+    "yard_behaton",
+    "yard_concrete",
+    "yard_concrete_worn",
+    "yard_gravel",
+    "yard_paving",
+    "yard_slabs"
+  ],
+  "manifest_sha": "BF4A2C8F5DD033E22868E642BAFF744EACF5DDF5AD0A25236786B71DAD777B1B",
+  "time": "2026-11-12T16:20:46.2689714+01:00",
+  "source_commit": "c359a8c5f50a81f4f155db1f2d5325bd3d96b924",
+  "source": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-life\\game\\Assets\\_Generated\\World\\bialystok-industrial-c\\Materials"
+}
