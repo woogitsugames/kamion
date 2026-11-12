@@ -46,3 +46,15 @@ niezależna ocena. Mocowania Low i zużycie tekstury wymagają osobnej oceny obr
 Źródło części szkieletu: Unity Technologies ApS, Unity Companion License,
 https://unity.com/legal/licenses/unity-companion-license; pliki źródłowe i hashe
 w provenance.json. Skrypt odtworzenia: prepare-sign-prototype.ps1.
+
+Stan2026-11-12 po korektach: pliki produkcyjne w game/Assets są nadrzędne wobec
+wcześniejszych fragmentów tego katalogu. Flaga została włączona; biblioteka36,
+przypisane materiały sceny35. Próby GPU/fabryki16/16, diagnostyczny night-rig
+after3 Low/High OK. Współczynnik jest liniowy i mnożony przez faktyczną ekspozycję,
+bez wcześniejszego błędnego wzmocnienia512. Dodano robocze prawe wzniesienie
+mijania. W ustalonym stanie publisher nie tworzy tablic; po zmianie sceny przez
+2s może ponawiać wyszukiwanie przy kamerach do czasu odnalezienia socketów.
+Fixture EV5, słońce-8, gain800 nie stanowią kalibracji. Okluzja nie jest obsługiwana.
+Ocena czterech960px podglądów25m potwierdziła tylko miejscową reakcję znaku.
+Nowy komplet330 kadrów i dokładnych liczników Low jest w toku; stare zachowano
+w iteration1. Chroniona geometria czeka na slotheavy, nie ma jeszcze wyniku.

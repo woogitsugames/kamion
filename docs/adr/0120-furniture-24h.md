@@ -195,7 +195,8 @@ Dusk ma słońce -5 stopni; sam ten preset nie dowodzi efektu w pełnej nocy.
 ### r2, bieżący kandydat i diagnostyka po korektach
 
 Włączono flagę danych w materials.py, wygenerowano świat i zaimportowano
-36 lic z biblioteki. Zużycie jest deterministyczne dla klucza znaku,
+Biblioteka ma36 lic, a odczyt przypisanych materiałów sceny potwierdził35
+lic z aktywnym shaderem. Zużycie jest deterministyczne dla klucza znaku,
 zachowuje alfę i wyłącza się przy sile zero. Low otrzymało dwa dystanse
 uchwytów w istniejącym slocie plate_back; brak nowego draw i zmian kolizji.
 To zastępuje wcześniejszą informację o niewłączonej fladze.
@@ -219,3 +220,4 @@ kalibracji fotograficznej i przesłaniania ścieżki światła. Obejrzane obrazy
 Pierwszą serię 330 obrazów i dokładne liczniki Low zachowano w iteration1;
 po korekcie shadera i cache konieczny jest nowy komplet standardowych kadrów.
 Kontrola chronionej geometrii nadal czeka na heavy, więc nie ma jeszcze wyniku.
+
