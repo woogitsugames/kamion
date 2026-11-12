@@ -34,5 +34,5 @@ foreach($key in $before.Keys){
 @{source=$main;finished=(Get-Date -Format o);fixtures=$after;count=$after.Count}|ConvertTo-Json -Depth 5|Set-Content "$PSScriptRoot/prepared-fixtures.json"
 Add-Content "$PSScriptRoot/STATUS.md" "`nKrok 2: odświeżono raw CC0, źródła CC0/Megascans i natywne Truck/Trailer z main; źródła fixture przed/po kopiowaniu oraz wszystkie kopie zgodne SHA. Nie kopiowano świata z aktywnego main. Następny krok: baseline-gen.ps1 pod jednym heavy."
 git add -f artifacts/life-r5
-git commit -m 'wip(life): przygotuj źródła i fixture świeżego baseline r4'
+git commit -m 'wip(life): przygotuj źródła i fixture świeżego baseline r5'
 if($LASTEXITCODE){throw 'WIP failed'}
