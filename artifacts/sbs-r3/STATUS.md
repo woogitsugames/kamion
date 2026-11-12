@@ -27,3 +27,5 @@ Przygotowano read-only sample-bridge-surfaces.py (jeszcze nie uruchomiono). Korz
 Po niezależnym odczycie dopracowano proweniencję narzędzia powierzchni: SHA helpera/intrinsics zapisane przed użyciem i sprawdzone na końcu, ponownie kontrolowane bajty odczytanych GLB; usunięto zaszyte U141,888 dla oryginalnego GPS. Algorytm znaków/poziomów nie wymagał korekty. To nadal przygotowanie, bez uruchomienia obok build_all.
 
 Przygotowano compose-gantry-probes.py do późniejszej dzierżawy heavy: galeria 18 par960px, źródła/licencje, offsety, C i brak D51; kontroluje dwie grupy capture, wszystkie siedem migawek wejść, oba SHA obrazu i jeden HEAD. Kopiuje cztery natywne zdjęcia do lokalnej galerii dla przenośności, bez zapisu produkcyjnych źródeł. Skrypt jeszcze nie wykonany; build_all nadal postępuje.
+
+Materiały zakończone: build_all total456s, kod0 potwierdzony przejściem sekwencyjnego wrappera do build_world. Receipt materials-completed.json zapisuje SHA logu i materials_spec. Świat ruszył w tej samej dzierżawie; pierwszy log pass1:16261węzłówpokładu. To licznik generatora, nie ocena obrazu ani nowy wynik bramki.
