@@ -810,7 +810,7 @@ namespace PhysicsRunner.Tests
         public void SmallSlip_LateralLinearity()
         {
             var tm = NewTire();
-            double fz = 60000, count = 2;
+            double fz = 60000; int count = 2;
             double fzt = fz / count;
             tm.CombinedForces(fz, count, 1.0, 0, 1e-6, out double fx, out double fy, out _);
             Assert.InRange(fy / 1e-6, 0.99 * tm.KyPerLoad(fzt) * fz, 1.01 * tm.KyPerLoad(fzt) * fz);
