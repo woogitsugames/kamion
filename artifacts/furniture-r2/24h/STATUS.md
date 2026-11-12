@@ -37,3 +37,5 @@ NASTĘPNY KROK: przygotować własne skrypty r2 z ownerem heavy gpt-furniture-r2
 2026-11-12T02:46:40.3169847+01:00: próba fabryki: 11 passed, 1 failed na zbyt silnej tożsamości managed wrappera po AssetDatabase reimport. Test teraz kontroluje trwały GUID materiału i tekstury, shader oraz flagi. Przygotowano obsługę całej rodziny znaków przez jawną flagę plate_back: tylko aktualne identyfikatory z props_meta, bez etykiet fasad i bez nadpisywania cudzych jawnych definicji. Pozwala objąć tablice kierunkowe bez listy hashy; flaga nadal nieaktywna w bazowym świecie. NASTĘPNY KROK: dokończyć testy fabryki/rodziny w slocie Unity, sprawdzić bazowy generator.
 
 2026-11-12T02:47:40.1495412+01:00: test rozszerzono na faktyczne lica całej biblioteki props_meta: tablice kierunkowe, komplet tekstur, zachowanie cudzej jawnej definicji i brak rejestracji po usunięciu flagi rodziny. Wciąż brak aktywacji w świecie bazowym. NASTĘPNY KROK: pwsh artifacts/furniture-r2/24h/sign-probe.ps1 -Phase family.
+
+2026-11-12T02:48:08.1939883+01:00: Unity sign-probe family Low overcast; sukces=False. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
