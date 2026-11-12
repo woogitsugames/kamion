@@ -1,7 +1,8 @@
 param(
     [Parameter(Mandatory)][ValidateSet('PrepareDiagnostics','ComposeDiagnostics','PrepareRefinement','ComposeRefinement','TestFile','Audit','Fidelity','FinalGis')][string]$Task,
     [string]$TestFile,
-    [switch]$EndOfRound
+    [switch]$EndOfRound,
+    [switch]$Priority
 )
 $ErrorActionPreference='Stop'
 $root=[IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..'))
@@ -10,9 +11,10 @@ try {
     $owner=(& git branch --show-current).Trim()
     if($owner -ne 'gpt-sbs-r3'){throw 'Expected r3 branch'}
     if($Task -eq 'FinalGis' -and !$EndOfRound){throw 'Full GIS only at end of round'}
+    if($Priority -and $Task -ne 'FinalGis'){throw 'Priority reserved for this end-of-round GIS wait only'}
     if($Task -eq 'TestFile' -and (!$TestFile -or !(Test-Path -LiteralPath $TestFile -PathType Leaf))){throw 'Single existing test file required'}
     $slot='C:/Users/matma/Documents/Claude/kamion/scripts/unity-slot.ps1'
-    pwsh -NoProfile -File $slot -Acquire -Pool heavy -Owner $owner -PollSeconds 1 -StaleHours 87600
+    pwsh -NoProfile -File $slot -Acquire -Pool heavy -Owner $owner -PollSeconds 1 -StaleHours 87600 -Priority:$Priority
     if($LASTEXITCODE -ne 0){throw 'Heavy lease failed'}
     try {
         $env:PYTHONUNBUFFERED='1'
