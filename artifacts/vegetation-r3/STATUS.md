@@ -56,3 +56,4 @@ Wariant B, generator zakończone kodem 0. Następny etap zgodnie z run-b.ps1; po
 Wariant B, QA instancji i GLB zakończone kodem 0. Następny etap zgodnie z run-b.ps1; po probe konieczna ocena obrazów i kosztów.
 Wariant B, migawka zakończone kodem 0. Następny etap zgodnie z run-b.ps1; po probe konieczna ocena obrazów i kosztów.
 Wariant B, import zakończone kodem 0. Następny etap zgodnie z run-b.ps1; po probe konieczna ocena obrazów i kosztów.
+Zapisano próbę B/120 Low-overcast w tych samych 1024x768 i FOV co baseline. Następny krok: obejrzeć i porównać koszt, przed pełną macierzą.
