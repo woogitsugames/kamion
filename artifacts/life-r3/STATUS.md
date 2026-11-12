@@ -106,3 +106,5 @@ Krok 31: B wprowadzony addytywnie: flake_lift=0,025 tylko car_paint_black; World
 Kandydat b (2026-11-12T10:24:05.0778341+01:00): zapisz plansze wariantu a. Następny etap w candidate-build.ps1; po komplecie PreparedVerified, capture i oględziny.
 
 Kandydat b (2026-11-12T10:24:06.5457115+01:00): sprawdź normalne faz wariantu b. Następny etap w candidate-build.ps1; po komplecie PreparedVerified, capture i oględziny.
+
+Krok 32: przygotowano post-b.ps1 i walidację 31 zapisanych materiałów natywnych: B może zmienić wyłącznie _CarFlake.z czerni 0,08→0,025, po normalizacji tego jednego pola reszta czerni ma być identyczna, wszystkie inne materiały bitowo zgodne. Po imporcie pełne 492 kadry, dokładne pozycje/liczniki i te same ROI/RGB. GPU A pozostaje dowodem identycznej obwiedni (shader A i UV1 bez zmiany B); nie jest nowym GPU proof B. Następny krok: uruchomić raz post-b.ps1, obecny build B 13271.
