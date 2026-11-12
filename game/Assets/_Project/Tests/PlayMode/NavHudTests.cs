@@ -230,6 +230,17 @@ namespace Game.Tests
             for (int i = 0; i < path.Count; i++) if (path.S[i] <= 190f) idx = i;
             Vector2 at = path.Points[idx], dir = (path.Points[Mathf.Min(path.Count - 1, idx + 1)] - at).normalized;
             float heading = Mathf.Atan2(dir.x, dir.y) * Mathf.Rad2Deg;
+            // Cab navigation screen (1280 x 768 design) with the live GPS route.
+            {
+                for (int i = 0; i < 40; i++) nav.StepForTest(at, heading, 11f, 0.05f);
+                var layout = new Game.UI.CabDisplays.NavLayout { Map = nav.Map, Live = nav };
+                var dc = new Game.UI.CabDisplays.DisplayCanvas("NavCapture", Game.UI.CabDisplays.NavLayout.Width, Game.UI.CabDisplays.NavLayout.Height, 1f, 6000, Game.UI.UiFonts.Default, 1f);
+                Game.UI.CabDisplays.NavLayout.RequestGlyphs(dc);
+                var st = new Game.UI.CabDisplays.CabDisplayState { HasPosition = true, PosE = at.x, PosN = at.y, HeadingDeg = heading, SpeedKmh = 40f, ClockMinutes = 14 * 60 + 5 };
+                layout.Draw(dc, st, 0f);
+                Save(dc.Texture, "cab-nav-live-route", 1280);
+                layout.ReleaseStatic(); dc.Dispose();
+            }
             foreach (var d in new[] { k_Devices[2], k_Devices[0], k_Devices[3] })
             {
                 var hud = DrivingHud.Create(cam, ctx);
