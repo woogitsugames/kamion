@@ -33,3 +33,4 @@ Zakończono Game.World.Import.WorldTruckInstaller.InstallBatch, exit 0. Następn
 Scan2 BuildBatch/InstallBatch zakończone. Dodano --textures-only do kanonicznego eksportera: odtwarza tylko Plastic/Leather z bazowych map i aktywnych flag, bez geometrii, AO i obcych materiałów. Zapewnia poprawne odtwarzanie także po zmianie flag; kontrola zapisze wynik poza grą. Następny krok: rendery scan2 i reprodukcja pod heavy, porównanie hashów.
 Zapisano result-0112-scan2 Low clear, siedem kamer i sześć natywnych RT z identyfikatorem wnętrza. Następny krok: kontynuować macierz lub porównać PNG.
 Zapisano result-0112-scan2 Low overcast, siedem kamer i sześć natywnych RT z identyfikatorem wnętrza. Następny krok: kontynuować macierz lub porównać PNG.
+Zapisano result-0112-scan2 High clear, siedem kamer i sześć natywnych RT z identyfikatorem wnętrza. Następny krok: kontynuować macierz lub porównać PNG.
