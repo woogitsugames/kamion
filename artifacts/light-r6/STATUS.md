@@ -1,3 +1,4 @@
 Start rundy6 od zakończonej rundy5. Aktualny main: 3cdd6da465b82d9687f27ad95ec5fce692e1898b.
 Zakres: wyłącznie light. Najpierw merge main i ponowna lektura HANDOVER/feedback. Kandydat runtime native grade domyślnie OFF według artifacts/light-r5/NEXT-ROUND-CANDIDATE.md.
 Unity wyłącznie slot gpt-light; ciężki Python przez heavy gpt-light-r6. Bez telefonów, push i merge do main. Cel24h trwa do12.11 21:30:47 Warszawa.
+Krok1: merge main3cdd6da4 bezkonfliktów (1549384c), gałąźcd58f165. Ponownie odczytano feedback: P1szaro-beżowy horyzont i inne wysokości słońca. R6 zaczyna od świeżego świata i5presetów; izolacjaOvercast oraz runtimeOFF zachowują właściwe ograniczenia. Odświeżono4surowe katalogi i Generated przez robocopybezusuwania, LFScheckout; junctiony źródeł pozostają do odczytu. Bez zmian plików innych właścicieli.
