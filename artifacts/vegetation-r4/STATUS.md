@@ -33,3 +33,4 @@ Około 09:37 World otrzymał heavy. Log pokazuje pass1 po 76,6 s i planowanie dz
 Zapisano before WorldC Low overcast. Następny krok: obejrzenie arkuszy i porównanie statystyk.
 Zapisano before WorldC Low clear. Następny krok: obejrzenie arkuszy i porównanie statystyk.
 Zapisano before WorldC_High High overcast. Następny krok: obejrzenie arkuszy i porównanie statystyk.
+Zapisano before WorldC_High High clear. Następny krok: obejrzenie arkuszy i porównanie statystyk.
