@@ -175,3 +175,5 @@ NASTĘPNY KROK: przygotować własne skrypty r2 z ownerem heavy gpt-furniture-r2
 2026-11-12T09:44:49.8645636+01:00: Unity render after High dusk; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
 
 2026-11-12T09:44:56.6240852+01:00: podczas renderu przygotowano małą analizę metadanych do backlogu r3:20 przystanków OSM,400 istniejących zdjęć Mapillary, po3 najbliższe referencje z autorem/licencją/hash. Bliskość nie dowodzi widoczności ani obecności wiaty. Kod obecnie dodaje wiatę i kosz przy każdym dopasowanym przystanku, niezależnie od tagów; to kandydat do weryfikacji zdjęciowej w r3, bez zmian implementacji teraz.
+
+2026-11-12T09:45:15.1809502+01:00: dokładny licznik CPU after Low clear; sukces=True, slot Unity zwolniony. NASTĘPNY KROK: pozostałe warianty i porównanie przed/po, bez deklaracji czasu GPU.
