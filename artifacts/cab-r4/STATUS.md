@@ -103,3 +103,4 @@ Uaktualniono początkowy stan i tytuł sekcji r4 ADR, aby nie sugerował nadal b
 Zakończono Game.Editor.Setup.TruckAssetBuilder.BuildBatch, exit 0. Następny krok: kolejny etap prefab/sceny lub capture-0112 -Stage result-0112.
 Zakończono Game.World.Import.WorldTruckInstaller.InstallBatch, exit 0. Następny krok: kolejny etap prefab/sceny lub capture-0112 -Stage result-0112.
 Zapisano izolowany atlas legend 256 bias -0.75 cutoff 0.4 Low clear: cab-driver/cab-dash. Plastic/Leather bez zmian. To eksperyment czytelności, nie pełny gate budżetów.
+Zapisano izolowany atlas legend 256 bias -0.75 cutoff 0.4 Low overcast: cab-driver/cab-dash. Plastic/Leather bez zmian. To eksperyment czytelności, nie pełny gate budżetów.
