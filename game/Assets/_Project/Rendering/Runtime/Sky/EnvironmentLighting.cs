@@ -125,6 +125,7 @@ namespace Game.Rendering
                 sun.intensity = m.SunLightIntensity * max;
                 sun.enabled = m.SunNormalIlluminanceLux > 1f;
                 sun.shadows = LightShadows.Soft;   // URP asset decides whether soft filtering is supported per tier
+                ApplySunShadowFilter();
                 RenderSettings.sun = sun;
             }
 
@@ -183,7 +184,25 @@ namespace Game.Rendering
         /// <summary>Display caps of the sky dome at the horizon and towards the zenith (review r6 L4: phone local tone mapping).</summary>
         public const float SkyCapHorizonDisplay = 0.98f, SkyCapZenithDisplay = 0.875f;
 
-        void OnTierApplied(QualityProfile.Tier t) => ApplySkyCap();
+        void OnTierApplied(QualityProfile.Tier t)
+        {
+            ApplySkyCap();
+            ApplySunShadowFilter();
+        }
+
+        /// <summary>ADR 0108: the preset explicitly opts High into a smoother filter, without raising atlas size.
+        /// Returning to another preset/tier restores pipeline inheritance, including Low's disabled soft shadows.</summary>
+        public static SoftShadowQuality SunShadowFilter(LightingPreset preset, string tier) =>
+            preset != null && tier == "High" && preset.highSunShadowFilter > 0
+                ? (SoftShadowQuality)Mathf.Clamp(preset.highSunShadowFilter, 1, 3)
+                : SoftShadowQuality.UsePipelineSettings;
+
+        void ApplySunShadowFilter()
+        {
+            if (sun != null)
+                sun.GetUniversalAdditionalLightData().softShadowQuality = SunShadowFilter(Active,
+                    QualityProfileApplier.HasCurrent ? QualityProfileApplier.Current.name : null);
+        }
 
         /// <summary>
         /// Review r6 L4: the overcast dome clipped to 254/254/254 on the post-processing tiers (the D23 curve clips at

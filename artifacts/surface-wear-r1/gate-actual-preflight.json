@@ -1,0 +1,123 @@
+{
+  "applied": [
+    {
+      "source": "override:kwadrat-park-gate-kit",
+      "lane": "entry",
+      "working_value": true,
+      "chunk": [
+        6,
+        6
+      ],
+      "spacing_m": 1.6,
+      "width_m": 0.2,
+      "length_m": 4.2,
+      "strength": 0.9,
+      "lift_m": 0.005,
+      "clearance_m": 0.15,
+      "triangles": 32,
+      "vertices": 36,
+      "new_source_material_groups": 0,
+      "center_en": [
+        619.4010960645683,
+        -606.0935651715344
+      ],
+      "travel_en": [
+        0.37398491476936935,
+        0.927434786669633
+      ]
+    },
+    {
+      "source": "override:kwadrat-park-gate-kit",
+      "lane": "exit",
+      "working_value": true,
+      "chunk": [
+        6,
+        6
+      ],
+      "spacing_m": 1.6,
+      "width_m": 0.2,
+      "length_m": 4.2,
+      "strength": 0.9,
+      "lift_m": 0.005,
+      "clearance_m": 0.15,
+      "triangles": 32,
+      "vertices": 36,
+      "new_source_material_groups": 0,
+      "center_en": [
+        617.1202142177591,
+        -598.0121333516856
+      ],
+      "travel_en": [
+        -0.6503695675875965,
+        -0.7596179470996739
+      ]
+    }
+  ],
+  "rejected": [],
+  "candidate_only": true,
+  "actual_added_triangles": 64,
+  "actual_added_vertices": 72,
+  "source": "immutable raw-before/chunk_6_6.glb +canonicalbuild_network finalcentreline/width/gate station recipe",
+  "footprints": [
+    {
+      "src": "tyre:override:kwadrat-park-gate-kit:entry:-1",
+      "bounds": [
+        [
+          617.7751774490089,
+          -607.7703228102504,
+          140.65681921727207
+        ],
+        [
+          619.5387371652442,
+          -603.8098114615195,
+          140.72433231411964
+        ]
+      ]
+    },
+    {
+      "src": "tyre:override:kwadrat-park-gate-kit:entry:1",
+      "bounds": [
+        [
+          619.2539321415863,
+          -608.3812929888845,
+          140.66327102510232
+        ],
+        [
+          621.0225368786921,
+          -604.4084252020668,
+          140.72090009003205
+        ]
+      ]
+    },
+    {
+      "src": "tyre:override:kwadrat-park-gate-kit:exit:-1",
+      "bounds": [
+        [
+          615.0707129656435,
+          -599.1519426678904,
+          140.73403370870247
+        ],
+        [
+          617.9543978697124,
+          -595.8316496720337,
+          140.8569000658377
+        ]
+      ]
+    },
+    {
+      "src": "tyre:override:kwadrat-park-gate-kit:exit:1",
+      "bounds": [
+        [
+          616.2860305658056,
+          -600.1926170313375,
+          140.71136700357607
+        ],
+        [
+          619.1697154698745,
+          -596.8723240354808,
+          140.84561000720294
+        ]
+      ]
+    }
+  ]
+}

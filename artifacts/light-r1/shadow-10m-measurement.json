@@ -1,0 +1,158 @@
+{
+  "method": "native luminance derivative, Gaussian radius 1.5/2.5 px, 5-column average, subpixel quadratic minimum, ordinary least squares line, all columns retained",
+  "scope": "static hall3 shadow edge only; no movement, other cameras or GPU/device claim",
+  "results": {
+    "legacy": {
+      "proof": {
+        "camera": "r10_hall_3",
+        "collider": "col_concrete",
+        "scope": "10 m horizontal segment on raycast vertical wall; pixel coordinates origin top-left; edge measured separately",
+        "width": 2340,
+        "height": 1080,
+        "worldCenter": {
+          "x": 701.1846923828125,
+          "y": 12.20391845703125,
+          "z": -355.6551208496094
+        },
+        "normal": {
+          "x": 0.8807271718978882,
+          "y": 0.0,
+          "z": -0.47362396121025085
+        },
+        "worldStart": {
+          "x": 703.5527954101562,
+          "y": 12.20391845703125,
+          "z": -351.2514953613281
+        },
+        "worldEnd": {
+          "x": 698.8165893554688,
+          "y": 12.20391845703125,
+          "z": -360.0587463378906
+        },
+        "pixelStart": {
+          "x": 1861.8199462890625,
+          "y": 555.4574584960938,
+          "z": 8.080368041992188
+        },
+        "pixelEnd": {
+          "x": 925.6460571289062,
+          "y": 563.026611328125,
+          "z": 12.124239921569824
+        },
+        "spanMetres": 10.0
+      },
+      "sampled_x": [
+        926,
+        1861
+      ],
+      "smoothing": {
+        "1.5": {
+          "columns": 936,
+          "max_absolute_deviation_px": 5.3412115606189445,
+          "rms_deviation_px": 1.740033303130172,
+          "strongest_gradient_range": [
+            -9.599999999999994,
+            -5.799999999999997
+          ],
+          "edge_y_range": [
+            566.3333333333334,
+            575.0833333333334
+          ],
+          "threshold_1px_met": false,
+          "excluded_columns": 0
+        },
+        "2.5": {
+          "columns": 936,
+          "max_absolute_deviation_px": 2.625000500546321,
+          "rms_deviation_px": 0.7910154735568792,
+          "strongest_gradient_range": [
+            -8.599999999999994,
+            -5.0
+          ],
+          "edge_y_range": [
+            566.5,
+            573.5
+          ],
+          "threshold_1px_met": false,
+          "excluded_columns": 0
+        }
+      }
+    },
+    "policy": {
+      "proof": {
+        "camera": "r10_hall_3",
+        "collider": "col_concrete",
+        "scope": "10 m horizontal segment on raycast vertical wall; pixel coordinates origin top-left; edge measured separately",
+        "width": 2340,
+        "height": 1080,
+        "worldCenter": {
+          "x": 701.1846923828125,
+          "y": 12.20391845703125,
+          "z": -355.6551208496094
+        },
+        "normal": {
+          "x": 0.8807271718978882,
+          "y": 0.0,
+          "z": -0.47362396121025085
+        },
+        "worldStart": {
+          "x": 703.5527954101562,
+          "y": 12.20391845703125,
+          "z": -351.2514953613281
+        },
+        "worldEnd": {
+          "x": 698.8165893554688,
+          "y": 12.20391845703125,
+          "z": -360.0587463378906
+        },
+        "pixelStart": {
+          "x": 1861.8199462890625,
+          "y": 555.4574584960938,
+          "z": 8.080368041992188
+        },
+        "pixelEnd": {
+          "x": 925.6460571289062,
+          "y": 563.026611328125,
+          "z": 12.124239921569824
+        },
+        "spanMetres": 10.0
+      },
+      "sampled_x": [
+        926,
+        1861
+      ],
+      "smoothing": {
+        "1.5": {
+          "columns": 936,
+          "max_absolute_deviation_px": 11.437052789239374,
+          "rms_deviation_px": 3.1596204269763293,
+          "strongest_gradient_range": [
+            -5.0,
+            -3.0999999999999943
+          ],
+          "edge_y_range": [
+            559.5,
+            582.3333333333334
+          ],
+          "threshold_1px_met": false,
+          "excluded_columns": 0
+        },
+        "2.5": {
+          "columns": 936,
+          "max_absolute_deviation_px": 5.367982798551225,
+          "rms_deviation_px": 2.4715741000650078,
+          "strongest_gradient_range": [
+            -4.5,
+            -2.5
+          ],
+          "edge_y_range": [
+            565.5,
+            577.5
+          ],
+          "threshold_1px_met": false,
+          "excluded_columns": 0
+        }
+      }
+    }
+  }
+}
