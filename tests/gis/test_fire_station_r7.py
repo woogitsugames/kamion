@@ -138,6 +138,7 @@ def test_new_geometry_keeps_two_low_slots_and_original_plant_budget(geometry_nam
         assert len(mb.core_normals) > previous_normals, "each conifer needs an opaque core with radial normals"
     assert set(mb.M) == {"fire_station", "fire_station_alpha"}
     assert sum(len(face)-2 for face in mb.F) <= 888
+    assert len(mb.core_normals) - thuja_normal_corners >= 216, "three conifer cores retain their radial normals"
     core = namespace["LAY"]["conifer_core"]
     shared_core = {}
     for face,uv,material in zip(mb.F,mb.UV,mb.M):

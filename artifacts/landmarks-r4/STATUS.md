@@ -56,3 +56,5 @@ Krok 9b: audyt B dodatkowo wymaga bajtowej identyczności wszystkich trójkątó
 Krok 9c: lekka analiza6 izolowanych koron B (bez Blender/world/pytest) potwierdza98/224 tris,12/54 identyczne karty i UV, skończone niezerowe normalne na zewnątrz i identyczne na połączeniach. Wyłączona flaga danych odtwarza geometrię baseline dokładnie. To nie jest PASS GIS ani dowód GLB/renderu B; World B nadal czekaFIFO.
 
 Krok 9d: zapisana hipoteza ewentualnego C wyłącznie w notatce, bez zmiany modelu B: mniejsze/liczniejsze spraye z pierwotną orientacją, jeżeli B nadal będzie bryłą. Decyzja dopiero po renderze B; brak poprawy oznacza odrzucenie, także NO-OP zamiast pozornego PASS.
+
+Krok 9e: B zachowuje osiem pierścieni i pierwotną liczbę narożników, więc przywrócono także oryginalny próg216 normalnych w teście r7. Nowe kontrole rdzenia każdego drzewa, skończoności i ciągłości normalnych pozostają. Wariant B nie wymaga osłabienia żadnego dotychczasowego progu. Testy po aktualizacji spec/GLB przez World B, nie na pozostawionych wyjściach A.
