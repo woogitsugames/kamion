@@ -1,4 +1,4 @@
-param(
+﻿param(
     [Parameter(Mandatory)][ValidateSet('World','Materials','Fidelity','TestFile','FinalGis','PrepareSbs','ComposeSbs','Audit')][string]$Task,
     [string]$TestFile,
     [string]$Only,
@@ -19,7 +19,7 @@ try {
     $owner=(& git branch --show-current).Trim()
     if($Task -eq 'FinalGis' -and !$EndOfRound){throw 'Pełny GIS tylko na końcu rundy: wymagane -EndOfRound'}
     if($Task -eq 'TestFile' -and (!$TestFile -or !(Test-Path -LiteralPath $TestFile -PathType Leaf))){throw 'TestFile musi wskazywać pojedynczy istniejący plik'}
-    pwsh -NoProfile -File $slotScript -Acquire -Pool heavy -Owner $owner -PollSeconds 7 -StaleHours 87600
+    pwsh -NoProfile -File $slotScript -Acquire -Pool heavy -Owner $owner -PollSeconds 1 -StaleHours 87600
     if($LASTEXITCODE -ne 0){throw 'Nie uzyskano slotu heavy'}
     try {
         $env:PYTHONUNBUFFERED='1'
@@ -49,4 +49,5 @@ try {
         if($taskExit -ne 0){throw "Zadanie $Task zakończone kodem $taskExit"}
     } finally {pwsh -NoProfile -File $slotScript -Release -Pool heavy -Owner $owner}
 } finally {Pop-Location}
+
 
