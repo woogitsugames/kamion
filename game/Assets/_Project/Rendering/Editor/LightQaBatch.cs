@@ -127,9 +127,13 @@ namespace Game.Rendering.Editor
                             .Single(c => c.gameObject.scene == scene && c.cab != null).cab;
                         var go = new GameObject("Light QA actual driver eye");
                         SceneManager.MoveGameObjectToScene(go, scene);
-                        go.transform.SetPositionAndRotation(eye.transform.position, Quaternion.LookRotation(cab.forward, cab.up));
                         var camera = go.AddComponent<Camera>();
                         camera.CopyFrom(eye.GetComponent<Camera>());
+                        // CopyFrom also copies the camera transform in this Unity version. Set the QA pose last.
+                        go.transform.SetPositionAndRotation(eye.transform.position, Quaternion.LookRotation(cab.forward, cab.up));
+                        if (Vector3.Dot(go.transform.forward, cab.forward.normalized) < 0.9999f ||
+                            Mathf.Abs(go.transform.forward.y) > 0.1f)
+                            throw new InvalidOperationException("Actual driver eye must follow the level parked cab frame");
                         camera.fieldOfView = 60f;
                         camera.enabled = false;
                         var control = go.AddComponent<ControlCamera>();
