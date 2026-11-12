@@ -10,7 +10,9 @@
 | 0146 | putry-andersa: fidelity+pytest+commit → merge main → import, rendery par 494288/810896/Andersa → `artifacts/putry-andersa/after4` | Fable | `putry-andersa` | `artifacts/live/putry-andersa.md` | start 22:3x (rebuild 22:22 exit 0) |
 | — | Mistral r4 #21–#25 recenzja + integracja (KRTG v2 #21+#23 połączyć) | Opus | `mistral-r4-int` | `artifacts/live/mistral-r4-int.md` | start 22:3x |
 - Dalej (kolejność s16): scalenie 0152 → czysty APK właściciela; scalenie 0146 po visual-critic D51; scalenie Mistral r4; JEDNA integracja świata; krytyk D51 → APK Low → gate3 A16; potem LOD1/LOD2 aut, zieleń ulic domów.
-- **Ostatni przydzielony ADR: 0152.**
+- 22:4x: **Mistral r5** M26–M32 przygotowane (`docs/owner/MISTRAL-TASKS-5.md`; PR bez śledzenia). **Codex 12 h** (`docs/owner/CODEX-S16-12H.md`, worktree `gpt-s16`, gałęzie `gpt-s16-rN`): r1 0153 LOD1/LOD2 aut, r2 0154 zieleń ulic domów, r3 0155 plamy słońca pod wiaduktem; przekazanie `artifacts/gpt-s16/PRZEKAZANIE.md`.
+- Telefony 22:30: Fold odłączony, S24+ RZCX60VE8ZY podłączony (37,8 °C — czekać < 36 °C); A16 online.
+- **Ostatni przydzielony ADR: 0155** (0153–0155 → Codex).
 
 # HANDOVER — kamion, SESJA 15 (start 2026-11-12 20:25, nowe konto)
 
