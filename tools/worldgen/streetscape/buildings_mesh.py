@@ -250,6 +250,8 @@ def runoff_uv1(runoff, ua, ub, za, zb):
 
 
 LOD1_HOUSE_OPENINGS = True     # ADR 0124 r2: windows / door of houses on the LOD1 prism (dark quads, no new material)
+LOD1_HOUSE_FRAME_M = 0.07                      # ADR 0132: frame round a LOD1 opening of a house, m
+LOD1_HOUSE_FRAME_MATS = ("plaster_white", "plaster_light", "downpipe")      # first one the chunk's LOD1 has and the wall is not
 LOD1_HOUSE_OPENING_FALLBACK = "downpipe"       # 0.30 grey: gutters of every pitched house on LOD1
 _CHUNK_M = 256.0                               # terrain_mesh.chunks.CHUNK_M (chunk bounds are multiples of it)
 LOD1_HOUSE_OPENING_MAT = "hall_flashing"       # 0.045 graphite sheet: already on the LOD1 of every pitched house (verge / fascia)
@@ -951,6 +953,7 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
     canopy_skipped = 0
     lod1_house_openings = 0
     l1_pending, l1_cells, l1_fallback = [], set(), 0
+    l1_frame_cells, l1_framed = {}, 0
     bal_count = 0
     frontages = 0
     frontage_props = []
@@ -1355,7 +1358,7 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
                         continue
                     q0, q1 = a + d * o[0] + nout * 0.05, a + d * o[1] + nout * 0.05
                     l1_pending.append((key, [[q0[0], q0[1], o[2]], [q1[0], q1[1], o[2]], [q1[0], q1[1], o[3]],
-                                             [q0[0], q0[1], o[3]]]))
+                                             [q0[0], q0[1], o[3]]], str(wall)))
                     lod1_house_openings += 1
             u_acc += L
         if typ == "block" and BLOCK_APRON:                         # ADR 0097 (P2-g): paved apron
@@ -1431,15 +1434,37 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
             l1_pending[:] = [q for q in l1_pending if q[0] != key]
         for it in acc.d.get(("buildings_low", LOD1_HOUSE_OPENING_MAT), ()):
             l1_cells.update(map(tuple, np.floor(it[0][it[1]].mean(1)[:, :2] / _CHUNK_M).astype(int).tolist()))
+        for fm in LOD1_HOUSE_FRAME_MATS:                     # ADR 0132: materials a frame may use, per chunk cell
+            for it in acc.d.get(("buildings_low", fm), ()):
+                for cell in set(map(tuple, np.floor(it[0][it[1]].mean(1)[:, :2] / _CHUNK_M).astype(int).tolist())):
+                    l1_frame_cells.setdefault(cell, set()).add(fm)
         acc.flush(buf, key)
     # ADR 0124 r2: LOD1 openings of houses, in the dark sheet material where the LOD1 of that chunk has it anyway and in
     # the gutter grey elsewhere (2 chunks of bialystok-industrial-c) - never a draw of their own
     by_key = {}
-    for k_, quad in l1_pending:
+    for k_, quad, wall_ in l1_pending:
         cell = tuple(np.floor(np.mean(quad, axis=0)[:2] / _CHUNK_M).astype(int).tolist())
         mat = LOD1_HOUSE_OPENING_MAT if cell in l1_cells else LOD1_HOUSE_OPENING_FALLBACK
-        by_key.setdefault(k_, Acc()).quad("buildings_low", mat, *quad)
         l1_fallback += mat != LOD1_HOUSE_OPENING_MAT
+        # ADR 0132 (review 0124 P2-d: black rectangles without frames read as a burnt-out house from close by): a
+        # frame of LOD1_HOUSE_FRAME_M round the dark pane, in the same plane (4 quads, no overlap -> no z-fight), in
+        # a light material the LOD1 of that chunk already draws and that is not the wall of this house
+        fm = next((m_ for m_ in LOD1_HOUSE_FRAME_MATS if m_ != wall_ and m_ != mat and m_ in l1_frame_cells.get(cell, ())), None)
+        q = np.asarray(quad, float)
+        wq, hq = float(np.linalg.norm(q[1] - q[0])), float(q[3][2] - q[0][2])
+        f_ = min(LOD1_HOUSE_FRAME_M, 0.2 * wq, 0.2 * hq)
+        acc_ = by_key.setdefault(k_, Acc())
+        if fm is None or f_ < 0.03:
+            acc_.quad("buildings_low", mat, *quad)
+            continue
+        eu = (q[1] - q[0]) / wq * f_
+        ez = np.array([0.0, 0.0, f_])
+        inner = [q[0] + eu + ez, q[1] - eu + ez, q[2] - eu - ez, q[3] + eu - ez]
+        acc_.quad("buildings_low", mat, *[list(v_) for v_ in inner])
+        for i_ in range(4):
+            j_ = (i_ + 1) % 4
+            acc_.quad("buildings_low", fm, list(q[i_]), list(q[j_]), list(inner[j_]), list(inner[i_]))
+        l1_framed += 1
     for k_, a_ in by_key.items():
         a_.flush(buf, k_)
     report.update({"typologies": counts, "docks": sum(len(d["docks"]) for d in all_docks),
@@ -1448,6 +1473,7 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
                    "house_roofs": dict(sorted(roof_kinds.items())),
                    "house_canopies_under_eave_skipped": canopy_skipped, "balconies": bal_count,
                    "lod1_house_openings": lod1_house_openings, "lod1_house_openings_fallback_mat": int(l1_fallback),
+                   "lod1_house_openings_framed": int(l1_framed),
                    "frontages": frontages, "frontage_props": frontage_props})
     if sign_out is not None:
         sign_out.extend(signs)

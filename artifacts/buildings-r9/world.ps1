@@ -7,6 +7,10 @@ New-Item -ItemType Directory -Force $out | Out-Null
 $slot = 'C:\Users\matma\Documents\Claude\kamion\scripts\unity-slot.ps1'
 pwsh $slot -Acquire -Pool heavy -Owner claude-buildings-r9 | Out-Host
 try {
+    # real-data dry run of the plot plan + kit build first (fails fast: ~2 min instead of a broken 9 min build)
+    uv run --project tools/worldgen python artifacts/buildings-r9/plan_dry.py "$out/plan.png" *> "$out/plan_dry.txt"
+    "plan_dry exit $LASTEXITCODE" | Tee-Object -Append "$out/round.log"
+    if ($LASTEXITCODE -ne 0) { "build_world exit SKIPPED (plan_dry failed)" | Tee-Object -Append "$out/round.log"; return }
     $t = Get-Date
     uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c *> "$out/build_world.log"
     "build_world exit $LASTEXITCODE, $([int]((Get-Date) - $t).TotalSeconds) s" | Tee-Object -Append "$out/round.log"
