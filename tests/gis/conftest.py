@@ -58,3 +58,11 @@ def raw_available() -> bool:
 
 
 needs_raw = pytest.mark.skipif(not raw_available(), reason="raw data not ingested (Data/raw is gitignored)")
+
+
+def pytest_configure(config):
+    config.addinivalue_line(
+        "markers",
+        "unit: fast pure-function unit tests on small synthetic data; run in CI without Data/raw "
+        "(`pytest tests/gis -m unit`)",
+    )
