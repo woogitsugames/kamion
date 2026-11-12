@@ -44,3 +44,6 @@ Następny krok: probe-nw.ps1; jeśli czytelny, przyjąć pozę i ponowić całą
 Krok 15: dodatkowy statyw NW poza regionem trafił wewnątrz kurtyny HLOD; również nie jest dowodem widocznego szwu. Nie przyjęto nowej pozy i nie zmieniono zamrożonych kamer Before. Oba poglądowe obrazy są zachowane, ocena wizualna pozostaje otwarta.
 Po ukończonej bazie dodano wyłącznie dwa testy rzeczywistego BuildApron na stokach N ±0,025, z niezależną średnią 13066/13. Kod produkcyjny nadal stary. Następna komenda: test-corner.ps1 -Phase Red; AuditGround before czeka/wykonuje się niezależnie na zamrożonej siatce pod heavy.
 2026-11-12T01:46:53.4690809+01:00 Test narożnika Red potwierdzony: total 2, passed 0, failed 2; XML i SHA w corner-red-result.json.
+Krok 16: Red potwierdzony: 2/2 oczekiwanych porażek właściwej asercji, bez pominięć; XML i SHA w corner-red-result.json. Audyt nowej bazy: 5676 punktów, max +1,4267 m, 40 >0,8 m, p95 abs 0,1733 m.
+Poprawiono wyłącznie WorldEdgeBuilder: średnia i okno wygładzania są liczone po 512 unikalnych punktach, wynik przypisany także 16 dodatkowym kopiom narożników. Pozostają te same wierzchołki/topologia/UV/kolory i podział submesh; surowe próbki terenu przy brzegu bez zmian. Obliczenia tylko przy imporcie.
+Następna komenda: test-corner.ps1 -Phase Green, następnie wymagany build_world pod heavy, przebudowa edge i macierz After.
