@@ -17,6 +17,8 @@ namespace Game.Rendering.Editor
             public float sunElevation, skyHorizontalLux, exposure, lampsOn;
             public float presetExposureCompensation, skyDisplayGain, skyDisplayDesaturation;
             public float actualWetness, actualPuddleShare;
+            public float clearCloudSourceMinElevationDeg;
+            public Vector4 cloudSourceLimits;
             public int pools, enabledPointLights;
             public Vector4[] headsAndWeights;
             public Vector4 exposedPoolColor;
@@ -49,6 +51,8 @@ namespace Game.Rendering.Editor
                 skyDisplayGain = environment.Active.skyDisplayGain, skyDisplayDesaturation = environment.Active.skyDisplayDesaturation,
                 actualWetness = Shader.GetGlobalVector("_KamionWet").x,
                 actualPuddleShare = Shader.GetGlobalVector("_KamionWet").y,
+                clearCloudSourceMinElevationDeg = environment.Active.clearCloudSourceMinElevationDeg,
+                cloudSourceLimits = Shader.GetGlobalVector("_KamionClearCloudSourceLimits"),
                 pools = count, headsAndWeights = positions,
                 projectedHeadlamps = KamionHeadlamps.Enabled, headlampDiagnostics = KamionHeadlamps.Diagnostics,
                 headlampLeft = Shader.GetGlobalVector("_KamionHeadlampLeft"),

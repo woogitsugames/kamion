@@ -33,6 +33,8 @@ namespace Game.Rendering.Editor
             public bool verifyWetness;
             public float expectedWetness;
             public bool skyOnly; // Diagnostic only: disable scene renderers and the custom world instancer, retain lighting.
+            public bool overrideCloudSourceMin;
+            public float cloudSourceMinElevationDeg;
             public int expectedHeadlamps; // 0 unchecked, 1 off, 2 on. Requires per-camera probes.
             public bool overrideSkyDisplay;
             public float skyDisplayGain = 1f, skyDisplayDesaturation;
@@ -103,6 +105,13 @@ namespace Game.Rendering.Editor
                         var preset = presetSnapshots.Keys.Single(p => string.Equals(p.name, "LP_" + job.lighting, StringComparison.OrdinalIgnoreCase));
                         preset.skyDisplayGain = job.skyDisplayGain;
                         preset.skyDisplayDesaturation = job.skyDisplayDesaturation;
+                    }
+                    if (job.overrideCloudSourceMin)
+                    {
+                        if (job.cloudSourceMinElevationDeg < 0f || job.cloudSourceMinElevationDeg > 5f)
+                            throw new ArgumentException("cloud source minimum outside0..5 degrees");
+                        var preset = presetSnapshots.Keys.Single(p => string.Equals(p.name, "LP_" + job.lighting, StringComparison.OrdinalIgnoreCase));
+                        preset.clearCloudSourceMinElevationDeg = job.cloudSourceMinElevationDeg;
                     }
                     profile.tiers = (QualityProfile.Tier[])originalTiers.Clone();
                     var overrides = (job.rq ?? "").Split(',').Where(s => !string.IsNullOrWhiteSpace(s))
@@ -193,6 +202,8 @@ namespace Game.Rendering.Editor
                     if (job.overrideSkyDisplay && (Mathf.Abs(environment.Active.skyDisplayGain-job.skyDisplayGain) > 0.0001f ||
                         Mathf.Abs(environment.Active.skyDisplayDesaturation-job.skyDisplayDesaturation) > 0.0001f))
                         throw new InvalidOperationException("Requested sky presentation grade was not retained");
+                    if (job.overrideCloudSourceMin && Mathf.Abs(environment.Active.clearCloudSourceMinElevationDeg-job.cloudSourceMinElevationDeg) > 0.0001f)
+                        throw new InvalidOperationException("Requested photo source horizon clamp was not retained");
                     var actualFilter = environment.sun.GetUniversalAdditionalLightData().softShadowQuality;
                     if (job.shadowFilter > 0 && (int)actualFilter != job.shadowFilter)
                         throw new InvalidOperationException("Requested shadow filter was not retained: " + actualFilter);
