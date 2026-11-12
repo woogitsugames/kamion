@@ -47,6 +47,13 @@ namespace Game.Controls
         /// 20-30 deg lane-change correction is a 4-6 mm thumb slide; the rotate gesture on the reference phone gave ~3-6
         /// deg/mm at the rim). WORKING_VALUE.</summary>
         public float dragHighSpeedHandwheelDegPerMm = 5f;
+        /// <summary>Drag gesture between <see cref="speedGainStartKmh"/> and this speed [km/h] (ADR 0149): the cab-wheel
+        /// degrees per millimetre are capped at <see cref="dragHighSpeedHandwheelDegPerMm"/> x (this / v)^2, i.e. one
+        /// millimetre of thumb never asks for more kinematic lateral acceleration (v^2 x road-wheel angle / wheelbase) than
+        /// at this speed. Without it the smoothstep fade left 24 deg/mm at 34 km/h = 1.6x the lateral acceleration per mm
+        /// of 60 km/h (owner's Fold video 12.11: 4.4 mm thumb = 5 deg road wheel, lane lost). 0 = off (ADR 0135 curve).
+        /// Equal to <see cref="speedGainEndKmh"/> by default, so nothing changes from there up or below ~24 km/h. WORKING_VALUE.</summary>
+        public float dragLatAccelMatchKmh = 60f;
         /// <summary>Gyro: fraction of full lock reachable at full tilt at speed (1 at low speed).</summary>
         public float gyroHighSpeedGain = 0.3f;
 
@@ -106,6 +113,21 @@ namespace Game.Controls
         {
             float high = Mathf.Min(1f, highScreenToHandwheel * Mathf.Max(1f, screenRangeDeg) / Mathf.Max(1f, lockDeg));
             return Mathf.Lerp(1f, high, SpeedBlend(speedKmh));
+        }
+
+        /// <summary>
+        /// Drag gesture (ADR 0149): <see cref="WheelGain(float,float,float,float)"/> capped below
+        /// <see cref="dragLatAccelMatchKmh"/> so the kinematic lateral acceleration per millimetre of thumb is at most the
+        /// value at that speed (gain proportional to 1/v^2). Continuous at the match speed; unchanged above it.
+        /// </summary>
+        public float DragGain(float speedKmh, float screenRangeDeg, float lockDeg, float highScreenToHandwheel)
+        {
+            float g = WheelGain(speedKmh, screenRangeDeg, lockDeg, highScreenToHandwheel);
+            float v = Mathf.Abs(speedKmh);
+            if (dragLatAccelMatchKmh <= 0f || v >= dragLatAccelMatchKmh || v < 1f) return g;
+            float high = Mathf.Min(1f, highScreenToHandwheel * Mathf.Max(1f, screenRangeDeg) / Mathf.Max(1f, lockDeg));
+            float r = dragLatAccelMatchKmh / v;
+            return Mathf.Min(g, high * r * r);
         }
 
         public float GyroGain(float speedKmh) => Mathf.Lerp(1f, Mathf.Clamp01(gyroHighSpeedGain), SpeedBlend(speedKmh));
