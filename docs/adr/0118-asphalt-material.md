@@ -1,4 +1,4 @@
-﻿# ADR 0118 — Materiał nawierzchni
+# ADR 0118 — Materiał nawierzchni
 
 ## r1 — Low, ślady kół i widoczność istniejących napraw
 
@@ -28,7 +28,7 @@ Kod produktu: 53e403c964cbb62e028c27eabd6d78ec1c27e3f5. Porównano 312 par z 78 
 
 ## r2 — krawężniki i kostka jako materiał
 
-Stan: przygotowanie baseline po merge main 4992c434. D51 określa rozpoznawalność trasy jako priorytet bramki 3; ocena drobnych materiałów w tej rundzie nie jest blokadą tej bramki.
+Stan końcowy: runda zakończona, candidate2 ma PASS ograniczonej poprawy materiałowej; jedna znana porażka physics/gate3 jest ujawniona, GPU A16 UNVERIFIED. Bazą jest merge main 4992c434. D51 określa rozpoznawalność trasy jako priorytet bramki 3; ocena drobnych materiałów w tej rundzie nie jest blokadą tej bramki.
 
 Zakres pozostaje materiałowy. Istniejący generator zapisuje UV1 długości i odległości od rynsztoka dla profili krawężników/chodników, a zestawy mają maskę fug Var.B. Zbadamy wykorzystanie tych danych do brudu przy krawędzi i czytelniejszych fug. Źródła roads, geometria i ustawienia jakości pozostają poza zmianą. Materiały bez nowych flag muszą zachować dotychczasowe działanie; brak UV1 nie może być interpretowany jako poprawne dane brzegu.
 
@@ -50,3 +50,7 @@ Wybrano candidate2. Baseline i kandydat mają 82 kamery × cztery warunki, 328 z
 Samodzielnie obejrzano 60 arkuszy obejmujących wszystkie pary. Niezależny visual-critic: PASS ograniczonej poprawy materiału candidate2; brak zatwierdzenia pełnego realizmu, stabilności w ruchu i Gate3. Publiczna kostka ma słabsze duże plamy, obrzeże czytelniejsze spoiny. Jasne punkty High i regularność kostek pozostają ograniczeniami. Chroniona brama: candidate2 zmienia o ponad 2 poziomy RGB 0/7/4/6 pikseli całych czterech obrazów wobec 9996/9240/8820/8828 w odrzuconym candidate1. Nie jest to deklaracja identyczności całych obrazów ani dowód całego obwodu wyłączenia.
 
 Końcowy GIS: 604 passed, 1 oczekiwany xfailed, exit 0, 1224,78 s; po odtworzeniu metadanych producenta audyt 196 odwołań/SHA bez rozbieżności. Physics/gate3, fidelity i końcowy EditMode pozostają w sekwencji walidacji; raport końcowy i przekazanie rundy nastąpią po odczytaniu ich wyników. Narzędzia hosta były niedostępne od około 03:44 do 09:04; nie zaliczamy tego jako ciągłej pracy. Wznowiono tylko brakującą walidację, zachowując ukończone rendery i audyty.
+
+### Wynik końcowy r2 / candidate2
+
+Końcowy EditMode312/312 passed, bez pominięć i porażek. GIS604 passed,1 oczekiwany xfailed,exit0. Physics/gate3:47 passed,1 znana porażka odtwarzalności top_speed_flat_comb.json,exit1; wejścia tego testu i dims.json bez zmian względem bazy. Fidelityexit0 po229,3s; wygenerowane zmiany obejmują tylko17 ścieżek nakładek, bez zmian metryk. Wskaźniki narzędzia nadal wykazują niezweryfikowane pasy i brakujące wyspy/drogi, więc exit0 nie jest zatwierdzeniem Gate3. Końcowy audyt196 odwołań/SHA bez rozbieżności. Wszystkie60 obejrzanych arkuszy ponownie zgodne SHA. Ustawienia Unity przywrócone, własne sloty zwolnione. Pełny raport i wszystkie328 par/2952 liczniki w artifacts/asphalt-r2/REPORT.md; przekazanie wyłącznie przez robocopy artifacts, bez merge do main i bez push. Następna runda obejmuje materiały placów przemysłowych poza Kwadratem po świeżym merge main i nowym baseline.
