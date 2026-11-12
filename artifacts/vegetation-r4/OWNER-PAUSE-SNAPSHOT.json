@@ -1,0 +1,57 @@
+{
+  "saved_at": "2026-11-12T16:25:27.2291107+01:00",
+  "branch": "gpt-vegetation-r4",
+  "head_before_handoff": "0586000c4de478d74653b6a53cc60e12a7ab0fb4",
+  "plantings_sha256": "6B25CE013DC206D563D3CBD039A44466FF2B6E9F345E6CDC5DD103BAA7851FB5",
+  "targeted_test_sha256": "2095B65B6A66C8AF09AC2D46449579ABD3A04A91370DB328DD193A00ACAEF526",
+  "ground_fixture_sha256": "0ED40DE07F57E96CBD28CB5315D55729DCA1CB140B70AD54E7BC8747C4F375D2",
+  "backup_root": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-vegetation\\artifacts\\vegetation-r4\\owner-pause-backup-20261112",
+  "preserved": [
+    {
+      "file": "Data/Regions/bialystok-industrial-c/generated/far_field_qa.json",
+      "bytes": 2972,
+      "sha256": "E9B94F22B937A3B92D6584017E6D0360789437E56427FC84E8992F748DC4716B"
+    },
+    {
+      "file": "Data/Regions/bialystok-industrial-c/generated/landmarks/viaduct_putry_underdeck.spec.json",
+      "bytes": 68380,
+      "sha256": "633A75F466A9D8497C39B6E6BD255F7E4526ADFCFA504E2F3EC95C3B4D682E18"
+    },
+    {
+      "file": "Data/Regions/bialystok-industrial-c/generated/streetscape_qa.json",
+      "bytes": 103821,
+      "sha256": "7022FC9891E35B218CD3BA2F6AF0E8A22B6953EEFCABD025D21C6E5D25365D88"
+    },
+    {
+      "file": "Data/Regions/bialystok-industrial-c/generated/world_manifest.json",
+      "bytes": 276936,
+      "sha256": "10AE3FC4DB0BAD85CC3BA4DE82E0282491CD30E38C79AAD5422DDEF869B1AA85"
+    },
+    {
+      "file": "Data/SourceManifests/bialystok-industrial-c-far-field.manifest.json",
+      "bytes": 2382,
+      "sha256": "7171D1C26D0A8E0C03AC520FE994C31A5F477D2B906B0B025016BFDA3300E036"
+    },
+    {
+      "file": "art-source/world/props/props_meta.json",
+      "bytes": 31647,
+      "sha256": "C96577B84793420B6D33C347A746C6E89F024F2F96B8DA9CB2282C900EC7D218"
+    },
+    {
+      "file": "art-source/world/props/street_props.glb",
+      "bytes": 12038588,
+      "sha256": "FCDFA2FBFE07CAFA68EF942767961B48FC0FB0897B1386099390661C08DA5718"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_6_6.glb",
+      "bytes": 10212868,
+      "sha256": "5C136523170E12E87995B39153D12ECE909267BA86FCB658AE7B45253970C824"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_6_6.low.glb",
+      "bytes": 3904028,
+      "sha256": "CF136CF11BFDA2CEC05B60D40A08541D3E3E1E077FB82CC979E4CF5BD7666443"
+    }
+  ],
+  "note": "Seven dirty generator-side-effect files plus two current C GLBs copied and SHA-verified. Originals unchanged, no jobs terminated. Binary backups stay in artifacts, not staged into Git."
+}
