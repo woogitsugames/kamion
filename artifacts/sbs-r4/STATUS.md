@@ -119,3 +119,5 @@ Nie wykonano merge do main, push, telefonu ani edycji innych dziedzin. Odśwież
 2026-11-12T15:23:16.3807572+01:00: zapisano REPORT-DRAFT.md normalnym polskim tekstem, wyłącznie z potwierdzonymi wynikami i jawnymi brakami. Nie jest to raport końcowy ani dostawa; brak arkuszy, audytu i pełnego GIS pozostaje wymieniony. Składanie 31378 nadal jest tym samym żywym oczekiwaniem na FIFO, bez nowego procesu lub zmiany kolejności.
 
 2026-11-12T15:27:46.5230953+01:00: przygotowano składanie raportu historii r1–r4 z kontrolą kompletu metryk czterech stanów, 25 B/17 C i zgodności wszystkich 25 natywnych ocen Low-overcast z pikselami r4. Generator nie renderuje ani nie dekoduje obrazów; używa istniejącego narzędzia raportu i kopiuje gotowe arkusze. AST poprawny, nie uruchomiono go przed powstaniem metryk. Składanie 31378 nadal oczekuje na FIFO.
+
+2026-11-12T15:29:02.9712608+01:00: generator historii r4 zapisze rzeczywisty HEAD, kod wyjścia i SHA generatora/szablonu, zamiast pustego pola pochodzenia. Odmawia pracy na późniejszej gałęzi, aby stary skrypt nie nadpisał nowszej historii. To nadal przygotowanie kodu, bez zbudowania brakujących metryk lub raportu.
