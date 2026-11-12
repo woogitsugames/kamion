@@ -28,3 +28,7 @@ Draws Low-overcast G3-B (20 kamer, szacunek edytora przed batchingiem, `stats-di
 EditMode 261/261. tests/gis/test_gate3_landmarks.py 12 passed. Pełne `pytest tests/gis` - czeka na slot heavy (log `pytest-gis.log`).
 OTWARTE: D-3/D-6 przy rondzie Bieżeństwa (stale: jezdnia generowana), pozy kamer SBS (3281350 ~45 m, grobin ~12 m), czytelność szkła ekranów na Low-overcast.
 NASTĘPNY KROK: `Get-Content artifacts/gate3-signs/pytest-gis.log -Tail 15` ; scalenie: `git merge gate3-signs` + `uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c` + import
+
+## 6. Testy końcowe
+`pytest tests/gis -q` (heavy, 701 s): 504 passed, 1 xfailed, 1 failed = test_road_fidelity::test_report_not_stale (fidelity_qa.json nieaktualny względem overrides.yaml, meshing.py ORAZ plików nietkniętych przez to zadanie: network.py, pipeline.py, profile.py, build_world.py -> stan zastany + zmiana overrides; wymaga `tools/worldgen/fidelity/run.py` po scaleniu). EditMode 261/261.
+NASTĘPNY KROK (lider): `git merge gate3-signs` -> `pwsh scripts/unity-slot.ps1 -Acquire -Pool heavy -Owner lead; uv run --project tools/worldgen python tools/worldgen/fidelity/run.py --region bialystok-industrial-c` -> build_world + import
