@@ -47,7 +47,11 @@ def forest_bases(path):
                 raise RuntimeError('Expected unquantized source positions')
             position = accessor(attributes['POSITION'])
             uv = accessor(attributes['TEXCOORD_0'])
-            for index in np.flatnonzero(uv[:,1] == 0):
+            # glTF writer stores v = 1 - source_v; curtain bottoms have source_v=0.
+            # UV accessors are float32, not normalized integer attributes.
+            if doc['accessors'][attributes['TEXCOORD_0']]['componentType'] != 5126:
+                raise RuntimeError('Expected float32 source UVs')
+            for index in np.flatnonzero(uv[:,1] == 1):
                 p = position[index]
                 points.append((node['name'], float(-p[0]), float(p[2]), float(p[1])))
     if not points:
