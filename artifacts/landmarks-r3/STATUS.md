@@ -15,3 +15,5 @@ Krok 5: wznowienie po restarcie Windows, LastBootUpTime 2026-11-12 09:01:27 CET.
 Krok 6: w artifacts zapisano szkic pojedynczego pliku testów: wymiary i osie, materiały LOD, brak wpływu na BDOT/keepout, brakujący/stary/zmieniony asset i deterministyczność bajtów. Jeszcze nie wykonywano pytest; wdrożenie po obejrzeniu baseline. Generator baseline uzyskał własny slot o 09:04:46.
 
 Krok 6a: skrypt kontynuacji baseline oczekuje wyłącznie na potwierdzony proces 49724, nie uruchamia ponownego generatora. QA zachowa wszystkie znane kadry r2 i trzy nowe EC; pełny faktyczny spis czterech warunków będzie zapisany i porównany, bez założenia liczby 48. Narzędzia budżetu i arkuszy przygotowane do tego spisu.
+
+Krok 6b: przygotowano pary EC 960 px z pełną wysokością zdjęcia CC BY 3.0; tylko centralne przycięcie renderu 2340→1920 i jawne powiększenie detali 2x. Bez osobnego skalowania kominów, przekształcania pozy i korekty barwy. Ograniczenia źródła i atrybucja zapiszą się przy każdej parze. NASTĘPNY KROK po baseline: uv run --project tools/worldgen python artifacts/landmarks-r3/photo_pair.py before.
