@@ -102,6 +102,11 @@ namespace PhysicsRunner.Sim
         public double? initialAirBar;
         /// <summary>false = start with the trailer standing on its landing gear, uncoupled.</summary>
         public bool coupled = true;
+        /// <summary>
+        /// false = run without the chassis-to-ground colliders (ADR 0158). Only for a scenario whose checks were authored
+        /// without them and where a collider strike is a known open decision (kerb_step_27cm: bumper corner hits the road).
+        /// </summary>
+        public bool bodyContact = true;
         /// <summary>Uncoupled start: kingpin distance behind the open fifth-wheel jaw [m].</summary>
         public double trailerGap = 2.0;
         /// <summary>Uncoupled start: lateral offset of the kingpin from the tractor centre line [m, + = right] (R5 hand-coupling).</summary>
@@ -131,6 +136,8 @@ namespace PhysicsRunner.Sim
         public double headingDeg;
         public double x, z;
         public bool parkingBrake;
+        /// <summary>Lifts the whole (equilibrium-placed) vehicle by this height before t = 0, so it starts in free fall [m] (ADR 0158).</summary>
+        public double dropHeight;
     }
 
     public sealed class DriverSpec

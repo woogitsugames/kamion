@@ -340,6 +340,42 @@ namespace PhysicsRunner.Sim
                 case "energy_total_j": return s[i1].KineticEnergy + s[i1].PotentialEnergy;
                 case "energy_drift_j": return (s[i1].KineticEnergy + s[i1].PotentialEnergy) - (s[i0].KineticEnergy + s[i0].PotentialEnergy);
                 case "max_energy_j": return Max(s, i0, i1, x => x.KineticEnergy + x.PotentialEnergy);
+                // ---------------- free flight / chassis contact (ADR 0158) ----------------
+                // Free flight = no wheel, landing-gear or collider contact in two consecutive samples: only gravity,
+                // aero drag and internal (fifth-wheel) forces act, so E = KE + PE must not grow and the combined CoM
+                // must follow ballistics (a = g, minus drag).
+                case "free_flight_s":
+                {
+                    double tf = 0;
+                    for (int i = Math.Max(i0, 1); i <= i1; i++) if (FreeFlight(s[i - 1]) && FreeFlight(s[i])) tf += s[i].T - s[i - 1].T;
+                    return tf;
+                }
+                case "max_free_flight_energy_gain_j":
+                {
+                    double m = 0;
+                    for (int i = Math.Max(i0, 1); i <= i1; i++)
+                        if (FreeFlight(s[i - 1]) && FreeFlight(s[i]))
+                            m = Math.Max(m, (s[i].KineticEnergy + s[i].PotentialEnergy) - (s[i - 1].KineticEnergy + s[i - 1].PotentialEnergy));
+                    return m;
+                }
+                case "max_free_flight_accel_error_ms2":
+                {
+                    // |a_com - g| over free-flight sample pairs (the remainder is aero drag, which is small at these speeds).
+                    double m = 0;
+                    var g = new Vec3(0, -9.81, 0);
+                    for (int i = Math.Max(i0, 1); i <= i1; i++)
+                        if (FreeFlight(s[i - 1]) && FreeFlight(s[i]))
+                            m = Math.Max(m, ((s[i].SystemVel - s[i - 1].SystemVel) / (s[i].T - s[i - 1].T) - g).Magnitude);
+                    return m;
+                }
+                case "max_body_penetration_m": return Max(s, i0, i1, x => x.BodyPenetration);
+                case "min_com_height_m": return Min(s, i0, i1, x => x.ComHeightAboveGround); // above the ground below each CoM (grades, kerb boxes)
+                case "body_contact_s":
+                {
+                    double tc = 0;
+                    for (int i = Math.Max(i0, 1); i <= i1; i++) if (s[i].BodyContacts > 0) tc += s[i].T - s[i - 1].T;
+                    return tc;
+                }
                 case "max_tire_friction_ratio": return Max(s, i0, i1, x => x.MaxFrictionRatio);
                 case "min_air_all_bar":
                     return Min(s, i0, i1, x => Math.Min(Math.Min(x.AirSupply, Math.Min(x.AirFront, x.AirRear)), Math.Min(x.AirPark, x.AirTrailer)));
@@ -388,6 +424,8 @@ namespace PhysicsRunner.Sim
             for (int i = Math.Max(a, 1); i <= b; i++) m = Math.Max(m, Math.Abs(f(s[i]) - f(s[i - 1])) / dtS);
             return m;
         }
+
+        static bool FreeFlight(in Sample x) => x.WheelsTouching == 0 && x.BodyContacts == 0;
 
         static double Max(List<Sample> s, int a, int b, Func<Sample, double> f)
         {

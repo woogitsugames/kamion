@@ -22,6 +22,9 @@
   "initial": {
     "speedKmh": 42
   },
+  "overrides": {
+    "bodyContact": false
+  },
   "duration": 6,
   "driver": {
     "type": "speedhold",
@@ -49,10 +52,10 @@
     },
     {
       "metric": "max_wheel_airtime_s",
-      "arg": 1,
       "status": "WORKING_VALUE",
       "source": "regression guard on measured 0.42 s (phone: both front wheels unloaded ~0.4 s)",
-      "max": 0.5
+      "max": 0.5,
+      "arg": 1
     },
     {
       "metric": "max_fifth_wheel_error_mm",

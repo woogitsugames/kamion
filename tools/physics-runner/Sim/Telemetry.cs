@@ -48,6 +48,17 @@ namespace PhysicsRunner.Sim
         public bool ParkWarning;
         /// <summary>Sum of the brake torque capacity on every wheel (service + spring, tractor + trailer) [N m].</summary>
         public double WheelBrakeTorque;
+        // chassis-ground contact / free flight (ADR 0158)
+        /// <summary>Collider corners pushing on the ground this step (tractor + trailer).</summary>
+        public int BodyContacts;
+        /// <summary>Deepest collider-corner penetration into the ground at the start of the step [m].</summary>
+        public double BodyPenetration;
+        /// <summary>Wheels whose suspension ray touched the ground (strict Contact flag, any load), tractor + trailer.</summary>
+        public int WheelsTouching;
+        /// <summary>Lowest height of the tractor / trailer CoM above the ground directly below it [m].</summary>
+        public double ComHeightAboveGround;
+        /// <summary>Velocity of the combined centre of mass (momentum / total mass) [m/s].</summary>
+        public Vec3 SystemVel;
     }
 
     /// <summary>CSV telemetry writer (docs/04 section 4).</summary>
