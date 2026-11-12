@@ -81,8 +81,11 @@ def rounded_rect(hw, zb, zt, r=0.08, rb=0.05):
 
 
 def wheel(m, c, r, w, seg, axis=(1, 0, 0), tyre="tyre", rim="rim", rim_r=0.62, out_sign=1, simple=False):
-    """Tyre (tread tube + outer sidewall ring) and a flat rim disc on the outer side (out_sign = side of the
-    vehicle the wheel is on; the inner side is never visible). simple=True: six-sided tread and outer discs."""
+    """Tyre and recessed, vented outer rim (out_sign = vehicle side).
+
+    The inner side is never visible. simple=True keeps the distant six-sided
+    tread and discs. ADR 0122 life r4: near rims reuse existing rim/tyre groups.
+    """
     c = np.asarray(c, float)
     ax = np.asarray(axis, float)
     if simple:
@@ -123,9 +126,52 @@ def wheel(m, c, r, w, seg, axis=(1, 0, 0), tyre="tyre", rim="rim", rim_r=0.62, o
         a0, a1, b0, b1 = i, (i + 1) % seg, seg + i, seg + (i + 1) % seg
         T += [(a0, a1, b1), (a0, b1, b0)] if sgn > 0 else [(a0, b1, a1), (a0, b0, b1)]
     m.add(tyre, ring + inner, T)
-    Vr = [cc + ax * sgn * 0.02] + inner
-    Tr = [(0, 1 + i, 1 + (i + 1) % seg) if sgn > 0 else (0, 1 + (i + 1) % seg, 1 + i) for i in range(seg)]
-    m.add(rim, Vr, Tr)
+    # Keep the tread, nominal envelope, sidewall and outer bead exactly where
+    # they were. The dish/vents replace the old almost-flat full grey fan.
+    # Dimensions below are WORKING_VALUE for a generic unbranded steel rim.
+    directions = np.asarray([math.cos(t) * u + math.sin(t) * v for t in a])
+    rr = r * rim_r
+
+    def rim_ring(radius, depth):
+        return cc + ax * sgn * depth + directions * radius
+
+    def face(material, points):
+        points = list(points)
+        if sgn < 0:
+            points.reverse()
+        m.quad(material, *points)
+
+    def annulus(outer, inside):
+        for i in range(seg):
+            j = (i + 1) % seg
+            face(rim, [outer[i], outer[j], inside[j], inside[i]])
+
+    bead = np.asarray(inner)                    # existing tyre/rim seam
+    dish_outer = rim_ring(rr * 0.88, -0.035)
+    dish_inner = rim_ring(rr * 0.42, -0.055)
+    hub = rim_ring(rr * 0.28, 0.018)            # within the old +0.020 m cap
+    annulus(bead, dish_outer)
+    for i in range(seg):
+        j = (i + 1) % seg
+        q = np.asarray([dish_outer[i], dish_outer[j], dish_inner[j], dish_inner[i]])
+        if i % 2:
+            face(rim, q)
+            continue
+        # An actual inset opening with four metal walls and a dark backing.
+        # Its occluded interior reuses tyre; no decal or new draw/material.
+        centre = q.mean(axis=0)
+        opening = centre + (q - centre) * 0.56
+        back = opening - ax * sgn * 0.035
+        for k in range(4):
+            nk = (k + 1) % 4
+            face(rim, [q[k], q[nk], opening[nk], opening[k]])
+            face(rim, [opening[k], opening[nk], back[nk], back[k]])
+        face(tyre, back)
+    annulus(dish_inner, hub)
+    centre = cc + ax * sgn * 0.018
+    fan = [(0, 1 + i, 1 + (i + 1) % seg) if sgn > 0
+           else (0, 1 + (i + 1) % seg, 1 + i) for i in range(seg)]
+    m.add(rim, [centre] + list(hub), fan)
 
 
 def bx(m, mat, x0, x1, y0, y1, z0, z1):

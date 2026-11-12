@@ -119,7 +119,7 @@ def main():
                 continue
             change = dict(node=name, material=material, triangles_before=nb, triangles_after=na)
             changes.append(change)
-            if not static:
+            if not static or name.endswith(('.lod1', '.lod2')):
                 protected.append(change)
             elif material not in ('tyre', 'rim', 'trailer_alu'):
                 unexpected.append(change)
@@ -133,7 +133,7 @@ def main():
                   changed_primitives=changes, changed_outside_static_wheels=protected + unexpected,
                   materials_identical=True, groups_identical=True, raw_count=len(proof['products']),
                   raw_changed=raw_changed, static_counts=counts,
-                  note='Nominal wheel boxes restrict allowed geometry; all other triangle attributes preserved. This is scope evidence, not visual acceptance or frame/GPU cost.')
+                  note='Only near wheel geometry inside nominal boxes is allowed; distant LODs and all other triangle attributes preserved. This is scope evidence, not visual acceptance or frame/GPU cost.')
     (OUT / f'{tag}-wheel-scope.json').write_text(json.dumps(result, indent=2), encoding='utf-8')
     print(json.dumps(dict(nodes=len(after.nodes), changed_primitives=len(changes),
                           protected=len(protected), unexpected=len(unexpected), raw_changed=len(raw_changed))))
