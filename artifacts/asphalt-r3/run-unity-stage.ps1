@@ -1,4 +1,6 @@
-param([ValidateSet('Import','Capture','Test')][string]$Stage, [string]$Label = 'baseline')
+param([ValidateSet('Import','Capture','Test','Probe')][string]$Stage, [string]$Label = 'baseline',
+    [string]$Cameras='', [ValidateSet('Low','High')][string]$ProbeTier='Low',
+    [ValidateSet('clear','overcast')][string]$ProbeLighting='overcast')
 $ErrorActionPreference = 'Stop'
 $repo = (Resolve-Path "$PSScriptRoot/../..").Path
 Set-Location $repo
@@ -37,6 +39,22 @@ if ($Stage -eq 'Import') {
     Invoke-Slotted { & pwsh scripts/import-region.ps1 -Region bialystok-industrial-c }
 } elseif ($Stage -eq 'Test') {
     Invoke-Slotted { & pwsh scripts/test.ps1 -Platform EditMode }
+} elseif ($Stage -eq 'Probe') {
+    if (-not $Cameras) { throw 'Specify the exact camera IDs for a pose probe.' }
+    $out = "artifacts/asphalt-r3/$Label/$ProbeTier-$ProbeLighting"
+    $env:KAMION_ASPHALT_QA_STATE = '1'
+    $env:KAMION_ASPHALT_QA_DIRECTORY = [IO.Path]::GetFullPath($out, $repo)
+    try {
+        Invoke-Slotted {
+            & pwsh scripts/visual-qa.ps1 -Scene WorldC -Tier $ProbeTier -Lighting $ProbeLighting -Cameras $Cameras -Gate3 artifacts/asphalt-r3/cameras.json -OutputDir $out
+        }
+    } finally {
+        $env:KAMION_ASPHALT_QA_STATE = $null
+        $env:KAMION_ASPHALT_QA_DIRECTORY = $null
+    }
+    Add-Content artifacts/asphalt-r3/STATUS.md "$(Get-Date -Format o): Zapisano próbę pozy $out dla $Cameras; nie jest to pełny baseline ani końcowy komplet kamer."
+    git add -f artifacts/asphalt-r3/STATUS.md
+    git commit -m "wip(asphalt): checkpoint selected-camera pose probe $Label"
 } else {
     foreach ($tier in @('Low','High')) {
         foreach ($lighting in @('overcast','clear')) {
