@@ -22,3 +22,5 @@ Krok 7: pomocniki PS/Python parsują się poprawnie; inwentarz aktualnej sceny o
 Baseline (2026-11-12T09:13:02.3950166+01:00): odtwórz materiały świeżego baseline r3. Następny etap w baseline-gen.ps1; po generacji nowe kamery i PreparedImport.
 
 Krok 8: materiały ukończone w 519 s, checkpoint cdc1e6b5; generator World nadal w tym samym heavy 2467. Audyt przyszłego kandydata sprawdzi też .col/.contact i każdą podsiatkę osobówki; pozwala jedynie rim/rim_dark/rim_dusty przy zachowanym układzie grup. Następny krok: ukończenie World → post-baseline 46468 automatycznie przygotuje kamery i capture.
+
+Krok 9: obejrzano zimową miniaturę PD (250 px); opisano zakres informacji i brak dopasowania fotometrycznego. Kamery zapiszą też rzeczywistą odległość pos→look_at, aby przybliżone nazwy rear5/wheel2 nie zastępowały pomiaru. World ma aktywny proces 35436 i narastający CPU, log na tym etapie jeszcze pusty; nie uruchamiać duplikatu. Następny krok: istniejący 2467 → 46468.

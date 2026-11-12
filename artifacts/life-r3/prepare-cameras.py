@@ -52,7 +52,7 @@ for proto, label in [('car_hatch_black','black'), ('car_estate_white','white')]:
             cameras.append(dict(id=f'life3_{label}_{view}',type='persp',kind='inspection',seat='yard',
                                 pos=pos,look_at=target,fov_deg=40 if view!='wheel2' else 35,
                                 note=f"Actual {v['src']}; 2D obstacle count {n}; visual visibility and GPU dirt level UNVERIFIED",
-                                target_instance=v,obstacle_count=n))
+                                target_instance=v,obstacle_count=n,target_distance_m=math.dist(pos,target)))
         score=sum(c['obstacle_count'] for c in cameras)
         choices.append((score,(v['e']-700)**2+(v['n']+450)**2,v,cameras))
     if not choices: raise RuntimeError(f'Missing prototype {proto}')

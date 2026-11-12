@@ -8,3 +8,5 @@ Pliki służą analizie powierzchni, nie teksturom gry. Nie przenosi się marek,
 - Istniejące lokalne zdjęcia Mapillary osobówek: provenance.json i refs/r4-reference-review.jpg rundy life-r1. Pozostają kontrolą czytelności czerni i budowy koła, a nie wzorcem zimowego brudu. R3 zmierzy drzwi/asfalt w świeżych renderach clear/overcast; cel stosunku 0,4–0,7 pochodzi z recenzji lidera i ma ograniczenia różnych ekspozycji/pozy.
 
 Metadane API i licencje dwóch CC BY zapisano w *-source.json. Zmiany plików: serwerowe miniatury, bez retuszu. Brak nowego otwartego zdjęcia z dopasowanym listopadowym overcast; dopóki nie ma takiej pary, dopasowanie sezonowej fotometrii pozostaje UNVERIFIED.
+
+Obejrzano także miniaturę zimową 250×187: na czarnym aucie osad jest jaśniejszy od lakieru i obejmuje dolną klapę/zderzak. Mała rozdzielczość i błysk wykluczają ilościowy pomiar koloru; nie jest wzorem drobnych smug.
