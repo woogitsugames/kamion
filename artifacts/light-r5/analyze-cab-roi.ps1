@@ -8,7 +8,7 @@ $views=@(
     @{camera='cab-dash';regions=@(@{name='asphalt-through-windscreen';rect='120x150+850+270'},@{name='paving-through-windscreen';rect='500x150+1550+230'},@{name='opaque-dash';rect='320x100+1570+600'},@{name='opaque-wheel';rect='200x100+800+800'})}
 )
 function Mean($file){$v=& magick @limits $file -alpha off -format '%[fx:mean*255]' info:;if($LASTEXITCODE){throw 'Mean failed'};return [double]::Parse($v,[Globalization.CultureInfo]::InvariantCulture)}
-function Diff($a,$b){$v=& magick @limits $a $b -alpha off -compose difference -composite -format '%[fx:mean*255] %[fx:maxima*255]' info:;if($LASTEXITCODE){throw 'Diff failed'};$n=$v.Split(' ');return @{mean=[double]::Parse($n[0],[Globalization.CultureInfo]::InvariantCulture);max=[double]::Parse($n[1],[Globalization.CultureInfo]::InvariantCulture)}}
+function MeasureRgbDifference($a,$b){$v=& magick @limits $a $b -alpha off -compose difference -composite -format '%[fx:mean*255] %[fx:maxima*255]' info:;if($LASTEXITCODE){throw 'Diff failed'};$n=$v.Split(' ');return @{mean=[double]::Parse($n[0],[Globalization.CultureInfo]::InvariantCulture);max=[double]::Parse($n[1],[Globalization.CultureInfo]::InvariantCulture)}}
 $entries=@();$sources=@()
 foreach($preset in 'clear','overcast','night'){foreach($view in $views){
     $thumbs=@();$id=$view.camera
@@ -24,10 +24,11 @@ foreach($preset in 'clear','overcast','night'){foreach($view in $views){
             if($LASTEXITCODE){throw 'Thumbnail failed'};$thumbs+=$thumb
             $sources+=@{file=$source;sha256=(Get-FileHash -LiteralPath $source).Hash}
         }
-        $entries+=@{preset=$preset;camera=$id;region=$region.name;rect=$region.rect;meanRgbCodes=$means;baselineVsHdr=(Diff $crops['Low-base'] $crops['High-HDR']);nativeVsHdr=(Diff $crops['Low-native'] $crops['High-HDR'])}
+        $entries+=@{preset=$preset;camera=$id;region=$region.name;rect=$region.rect;meanRgbCodes=$means;baselineVsHdr=(MeasureRgbDifference $crops['Low-base'] $crops['High-HDR']);nativeVsHdr=(MeasureRgbDifference $crops['Low-native'] $crops['High-HDR'])}
     }
     & magick montage @limits @thumbs -tile 3x4 -geometry +2+2 "$out/$preset-$id.jpg"
     if($LASTEXITCODE){throw 'ROI sheet failed'}
 }}
 @{scope='Manual rectangular ROIs of existing twelve-camera ablation, not material/glass segmentation or photometric calibration. Through-windscreen regions include glass composition; opaque regions still have tier/shadow/geometry differences.';entries=$entries;sources=@($sources|Sort-Object file -Unique)}|ConvertTo-Json -Depth 9|Set-Content "$root/cab-roi-comparison.json" -Encoding utf8
 $entries|Where-Object preset -eq 'overcast'|ForEach-Object {[pscustomobject]@{camera=$_.camera;region=$_.region;before=$_.baselineVsHdr.mean;after=$_.nativeVsHdr.mean;high=$_.meanRgbCodes['High-HDR'];native=$_.meanRgbCodes['Low-native']}}
+
