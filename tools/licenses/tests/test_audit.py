@@ -121,3 +121,16 @@ def test_unverified_section_patterns_do_not_cover(tmp_path, monkeypatch):
                 (asset.unverified_by if pat.unverified_only else asset.covered_by).append(pat.raw)
     assert a.status == "covered"
     assert b.status == "unverified"
+
+
+def test_leading_wildcard_patterns_do_not_cover_shipped_assets():
+    """Integracja r5: wzorzec bez katalogu zaczynający się od `*` (np. `*photo*`) dopasowuje się do dowolnego sufiksu
+    ścieżki, więc „pokrywałby” każdy przyszły zasób gry o takiej nazwie i przypisywał mu cudzą licencję. Takie wzorce
+    mogą pokrywać tylko robocze `artifacts/` i `docs/reports/`."""
+    shipped = [a.path for a in A.list_assets() if not a.path.startswith(("artifacts/", "docs/reports/"))]
+    bad = []
+    for pat in A.load_patterns():
+        if "/" in pat.raw or not pat.raw.startswith("*"):
+            continue
+        bad += [(pat.raw, p) for p in shipped if A.pattern_matches(pat.raw, p)]
+    assert not bad, f"zbyt szerokie wzorce w docs/LICENSES.md pokrywają zasoby gry: {bad[:10]}"
