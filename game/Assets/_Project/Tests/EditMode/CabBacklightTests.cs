@@ -99,6 +99,9 @@ namespace Game.Tests.EditMode
                 var sun = sunGo.AddComponent<Light>(); sun.type = LightType.Directional; sun.intensity = .0001f;
                 sun.shadows = LightShadows.None; RenderSettings.sun = sun;
                 for (int i = 0; i < keys.Length; i++) Shader.SetGlobalVector(keys[i], Vector4.zero);
+                // Real CabInteriorLighting keeps a positive knee even when lift strength is zero.
+                // A zero knee and a perfectly black half-precision input can produce 0/0 in the existing lift path.
+                Shader.SetGlobalVector("_CabShadowLift", new Vector4(0f, .004f, 0f, 0f));
                 Shader.SetGlobalFloat("_CabGain", 1f); Shader.SetGlobalFloat("_CabEnclosure", 1f);
                 material.EnableKeyword("_KAMION_CAB_DECAL");
                 material.SetFloat("_IsDecal", 1f);
