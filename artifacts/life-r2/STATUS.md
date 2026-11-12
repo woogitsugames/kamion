@@ -85,3 +85,5 @@ Krok 34: nowy preflight Mapillary zakończony 0: 16 pobranych zdjęć/21 zapyta�
 Krok 35: do porównania B dodano kontrolę SHA pełnych PNG odziedziczonych zbliżeń osobówek względem A. Identyczne kadry dadzą dowód zachowania obrazu; różne mogą zawierać zmienione kabiny w tle i wymagają oględzin, bez automatycznego osądu regresji. World B nadal istniejąca sesja 6737; ciąg 36998 oczekuje na wynik. Następny krok: odebrać te procesy, nie uruchamiać ponownie generatora.
 
 Iteracja B (2026-11-12T02:19:36.3229383+01:00): World B zakończony 0, brak fallback=True. Następna kontrola zakresu i prototypów. Następne etapy w run-b-after-world.ps1, REPORT po oględzinach i testach końcowych.
+
+Krok 36: ADR zaktualizowany do zakończonego World B (424,7 s, 0, brak fallback=True) i rozróżnia wdrożoną ścieżkę od jeszcze niewykonanego dowodu native. Manifest zawiera oczekiwane nowe flagi materiałów; nie twierdzimy, że cały manifest jest bajtowo identyczny. Niezmienność raw/geometrii sprawdzi istniejący scope-b w sesji 36998. Następny krok: odebrać ten proces, następnie import/capture i ocena B.

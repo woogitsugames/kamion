@@ -1,6 +1,6 @@
 # ADR 0122 — statyczne pojazdy placowe
 
-Status: r2 w toku; żaden kandydat nie został jeszcze odebrany wizualnie ani scalony do main.
+Status: r2 w toku. A ma potwierdzony budżet CPU; B jest wygenerowany, czeka na import/oględziny i testy końcowe. Bez scalenia do main.
 
 ## Runda life r2
 
@@ -8,7 +8,7 @@ Punktem wyjścia jest gpt-life-r1 z dołączonym main 765145c5 w worktree gpt-li
 
 Referencje: istniejące lokalne fotografie Krone Tautliner (Jk20301, CC BY-SA 4.0) i WieltonCurtainSider (Cekay, CC0), ze źródłami i ograniczeniami w artifacts/life-r1/refs/YARD-REFERENCES.md. Fotografie potwierdzają trzy oddzielne koła po każdej stronie naczepy, przerwy między nimi, widoczne felgi i zróżnicowanie powierzchni. Logo i oznaczeń handlowych nie przenosimy do gry. Zdjęcia są referencją bryły, nie skalibrowanym pomiarem albedo ani zgodnością miejsca.
 
-Obecny LOD1 naczepy zastępuje trzy koła jednym długim graniastosłupem na stronę. Preflight modelu curtain: 220 trójkątów, 6 grup materiałowych, z tego 24 trójkąty opon; LOD0: 1102 trójkąty, 15 grup. Ciągniki mają osobne koła, ale dalszy LOD pomija widoczne czoła kół. Te miejsca sprawdzimy na zamrożonych kamerach rzeczywistych instancji, obok wszystkich odziedziczonych kontroli trasy.
+Wyjściowy LOD1 naczepy zastępuje trzy koła jednym długim graniastosłupem na stronę. Preflight modelu curtain: 220 trójkątów, 6 grup materiałowych, z tego 24 trójkąty opon; LOD0: 1102 trójkąty, 15 grup. Ciągniki mają osobne koła, ale dalszy LOD pomija widoczne czoła kół. Te miejsca sprawdzimy na zamrożonych kamerach rzeczywistych instancji, obok wszystkich odziedziczonych kontroli trasy.
 
 Kryterium wyboru: poprawa sylwetki i powierzchni na renderze Low/High, clear/overcast względem baseline i zdjęć; bez nowych grup materiałowych/draws na Low, trójkąty na kamerach trasy najwyżej +2%. Zmiany nie mogą przesuwać obrysu kolizji, osi ani punktu podparcia kół. Koszt geometrii prototypu oraz pełny budżet kamer będą raportowane osobno. Limity szacunkowe pojedynczego prototypu nie zastępują pomiaru trasy.
 
@@ -31,3 +31,10 @@ Seria AFTER A ma 456 PNG. Wszystkie cztery warunki zachowują liczbę grup/draws
 Obejrzane plansze A: całe 22 widoki placowe Low/clear oraz próbki Low/overcast i High/clear/overcast. Poprawa jest wyraźna na dalszym LOD Low: osobne osie i zamknięte czoła opon zamiast długiego bloku/otworów. LOD0 geometrii nie zmieniono, więc bliskie płaskie felgi i czyste kabiny pozostały. Czerwone plandeki są ciemne, a sam poziomy offset UV nie daje wystarczającej różnorodności. Nie ogłaszamy PASS jakości.
 
 Plan B (jeszcze niewykonany): opt-in danych yard_paint tylko dla sześciu tractor_paint_* z istniejącym car_grime_clean i payloadem UV1 od rzeczywistego dołu kabiny 1,05 m. Istniejący _CARPAINT ma obsłużyć statyczne kabiny bez nowego przebiegu, tekstury ani keywordu; _CarFlake.w=2 wyłączy odtwarzanie historycznego nalotu dachu osobówek, zachowując ich w=1 bez zmiany. Pozostałe materiały nie dostaną tej ścieżki. Dla sześciu plandek set_tile=true włączy rzeczywisty kafel 4,8×2,7 m, zgodnie z globalnym kontraktem _Tile. To addytywne wyjątki w plikach wspólnych zgodne z pkt 10 protokołu; wymagają testu zachowania UV1 w imporcie i natywnego dowodu materiału. Geometrię A pozostawimy tylko jeśli dokładny budżet trasy spełni 2%; inaczej odchudzimy zasłonięte powierzchnie LOD1 i powtórzymy pomiar.
+
+
+## Iteracja B — wdrożona, jeszcze bez odbioru obrazu
+
+Dane generatora: 0236178a. Natywna ścieżka opt-in: 975dfbc9. Regeneracja World B zakończyła się 0, bez fallback=True, po 424,7 s; zapis 86dab638. Zmiana manifestu dotyczy definicji materiałów ciągników/plandek i jest oczekiwana, a nie zmianą geometrii trasy. Niezmienność 192 produktów raw wymaga oddzielnego audytu B. Kody i materiały są za flagami wyłącznie wymienionymi wyżej; nie dodano keywordu, tekstury ani przebiegu. Test_yard_vehicle_lod: 12 passed w 0,56 s pod heavy. Sześć nowych testów EditMode kanału UV1 jeszcze nie wykonano.
+
+LifeExactStats uruchamiany tylko przez -qaLifeExact zapisze również nazwy rzeczywistych shaderów, flagi CARPAINT, tile, mapy bazowe, tablice i ich MotionVectors. Dla kabin czyta natywny bufor w edytorze po UploadMeshData(true), porównując Half2 do pozycji każdego wierzchołka lakieru: wysokość minus 1,05 m oraz (longitudinal + 0,55 m)/3,70 m. Tolerancja 0,002 dla kwantyzacji nie zmienia modelu. To dopiero przygotowana walidacja, nie wykonany dowód B. Po import/capture muszą przejść wszystkie 456 wierszy, rzeczywiste materiały i pełny budżet kamer. Ścieżka osobówek w=1 ma tę samą formułę; dodatkowo porównamy SHA ich odziedziczonych zbliżeń z A, a różnice (w tym tło) obejrzymy.
