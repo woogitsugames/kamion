@@ -1,0 +1,809 @@
+{
+  "status": "COMPLETE",
+  "scope": "Pozostałe stany; nie nowa ocena D51",
+  "capture_head": "80159a70e7cea39146a465208da5471cb9beb915",
+  "upstream_ADR0130_present": false,
+  "method": "Wzrokowy ogląd natywnych plików przez view_image, źródło i trzy raw osobno dla każdej kamery. SHA odczytane Get-FileHash; bez obliczeń obrazów.",
+  "expected_count": 75,
+  "count": 75,
+  "counts": {
+    "Low-clear": 25,
+    "High-clear": 25,
+    "High-overcast": 25
+  },
+  "missing_camera_ids": [],
+  "inspections": [
+    {
+      "camera": "sbs-g3-a-2818555625124739",
+      "state": "Low-clear",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\Low-clear\\sbs-g3-a-2818555625124739.png",
+      "render_sha256": "0ec3dea7b283c12b902d9b53f18e3de9193cdebabca885403b58d64905f17cbd",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\2818555625124739.png",
+      "comparison_sha256": "a749eb65cd4a38889d419d4f137ef162b12f781302597b536726a0d2ae611256",
+      "viewed": true,
+      "observation": "High wyostrza balustrady, elewacje i kostkę; clear daje mocne ażurowe cienie. Czerwona belka i łuk drogi zachowane; duża brukowana wyspa zamiast kamienistej oraz różnice filarów pozostają we wszystkich stanach."
+    },
+    {
+      "camera": "sbs-g3-a-2818555625124739",
+      "state": "High-clear",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\High-clear\\sbs-g3-a-2818555625124739.png",
+      "render_sha256": "1cdf8bee44c7c66ed47c05be4524cadec9f62946a76ffed8914fa496c953a952",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\2818555625124739.png",
+      "comparison_sha256": "a749eb65cd4a38889d419d4f137ef162b12f781302597b536726a0d2ae611256",
+      "viewed": true,
+      "observation": "High wyostrza balustrady, elewacje i kostkę; clear daje mocne ażurowe cienie. Czerwona belka i łuk drogi zachowane; duża brukowana wyspa zamiast kamienistej oraz różnice filarów pozostają we wszystkich stanach."
+    },
+    {
+      "camera": "sbs-g3-a-2818555625124739",
+      "state": "High-overcast",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\High-overcast\\sbs-g3-a-2818555625124739.png",
+      "render_sha256": "f705a9f29cf90bd1b68d26f0c66bcb01e9769fb4555932ef1e4dee04fdcdcfd3",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\2818555625124739.png",
+      "comparison_sha256": "a749eb65cd4a38889d419d4f137ef162b12f781302597b536726a0d2ae611256",
+      "viewed": true,
+      "observation": "High wyostrza balustrady, elewacje i kostkę; clear daje mocne ażurowe cienie. Czerwona belka i łuk drogi zachowane; duża brukowana wyspa zamiast kamienistej oraz różnice filarów pozostają we wszystkich stanach."
+    },
+    {
+      "camera": "sbs-g3-a-3970163613102941",
+      "state": "Low-clear",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\Low-clear\\sbs-g3-a-3970163613102941.png",
+      "render_sha256": "d0f3f238c19f961c0614ff1154cf1b795bf7ce06d5a9950ddc08cf43444405fa",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\3970163613102941.png",
+      "comparison_sha256": "2655985ab39cd8e6b74d893fbfd74b0a0a548e56d8fbe62acec2e295ff88a70d",
+      "viewed": true,
+      "observation": "High poprawia krawędzie, napis tablicy i detale fasad, clear uwydatnia cień poręczy. We wszystkich stanach tablica i rytm najbliższych podpór różnią się od zdjęcia, wyspa pozostaje brukowana."
+    },
+    {
+      "camera": "sbs-g3-a-3970163613102941",
+      "state": "High-clear",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\High-clear\\sbs-g3-a-3970163613102941.png",
+      "render_sha256": "6ff66db693db492c22488f30b225b1bd242ade7c76b220eb692fa6e6f3875b22",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\3970163613102941.png",
+      "comparison_sha256": "2655985ab39cd8e6b74d893fbfd74b0a0a548e56d8fbe62acec2e295ff88a70d",
+      "viewed": true,
+      "observation": "High poprawia krawędzie, napis tablicy i detale fasad, clear uwydatnia cień poręczy. We wszystkich stanach tablica i rytm najbliższych podpór różnią się od zdjęcia, wyspa pozostaje brukowana."
+    },
+    {
+      "camera": "sbs-g3-a-3970163613102941",
+      "state": "High-overcast",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\High-overcast\\sbs-g3-a-3970163613102941.png",
+      "render_sha256": "73d5af61bad97b7987d4e03b8233d7b934c91c15e7ac056fee63da56005ecd36",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\3970163613102941.png",
+      "comparison_sha256": "2655985ab39cd8e6b74d893fbfd74b0a0a548e56d8fbe62acec2e295ff88a70d",
+      "viewed": true,
+      "observation": "High poprawia krawędzie, napis tablicy i detale fasad, clear uwydatnia cień poręczy. We wszystkich stanach tablica i rytm najbliższych podpór różnią się od zdjęcia, wyspa pozostaje brukowana."
+    },
+    {
+      "camera": "sbs-g3-a-149248627179406",
+      "state": "Low-clear",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\Low-clear\\sbs-g3-a-149248627179406.png",
+      "render_sha256": "e7a2e08963a4424deabc19b418ebb3ee5d8db595b691d2e28b535871fcb0710b",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\149248627179406.png",
+      "comparison_sha256": "6f92ec21d233062320d4819caffb33d14416f5a8e526057b017f8a26eb4dfb8d",
+      "viewed": true,
+      "observation": "Tablica wysunięta znacznie bliżej niż na zdjęciu w każdym stanie. High czytelniej pokazuje tekst i poręcze; clear nie zmienia układu jezdni i podpór, tylko cienie."
+    },
+    {
+      "camera": "sbs-g3-a-149248627179406",
+      "state": "High-clear",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\High-clear\\sbs-g3-a-149248627179406.png",
+      "render_sha256": "4a99004a4d4998fdcad45362f64fc1f2932dd113643fa7b2be8061f309c9bc38",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\149248627179406.png",
+      "comparison_sha256": "6f92ec21d233062320d4819caffb33d14416f5a8e526057b017f8a26eb4dfb8d",
+      "viewed": true,
+      "observation": "Tablica wysunięta znacznie bliżej niż na zdjęciu w każdym stanie. High czytelniej pokazuje tekst i poręcze; clear nie zmienia układu jezdni i podpór, tylko cienie."
+    },
+    {
+      "camera": "sbs-g3-a-149248627179406",
+      "state": "High-overcast",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\High-overcast\\sbs-g3-a-149248627179406.png",
+      "render_sha256": "c8ed4fd04e56b10b96be62903f3a5ec604152a92a409cc140132da5a0747a93b",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\149248627179406.png",
+      "comparison_sha256": "6f92ec21d233062320d4819caffb33d14416f5a8e526057b017f8a26eb4dfb8d",
+      "viewed": true,
+      "observation": "Tablica wysunięta znacznie bliżej niż na zdjęciu w każdym stanie. High czytelniej pokazuje tekst i poręcze; clear nie zmienia układu jezdni i podpór, tylko cienie."
+    },
+    {
+      "camera": "sbs-g3-a-177786140912399",
+      "state": "Low-clear",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\Low-clear\\sbs-g3-a-177786140912399.png",
+      "render_sha256": "7e82786befdca89bf2a102d0c6e6a0e66351b1d28d5ce55a8202784905489247",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\177786140912399.png",
+      "comparison_sha256": "090fc0ee15ab8cb46afcdd14f1d3bcfee30a22eec535aa1e4e47930800f89105",
+      "viewed": true,
+      "observation": "Ogromny bliski C9 i brak odpowiadającego mu najbliższego filara w projekcji utrzymują się w trzech stanach; High ostrzej pokazuje wieżowiec i wysepkę, bez rozwiązania zastrzeżenia pozy."
+    },
+    {
+      "camera": "sbs-g3-a-177786140912399",
+      "state": "High-clear",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\High-clear\\sbs-g3-a-177786140912399.png",
+      "render_sha256": "af895ecad6d4e03bd7a4349502e5142b9976bd12bcffc53d5ff2a18f77dff283",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\177786140912399.png",
+      "comparison_sha256": "090fc0ee15ab8cb46afcdd14f1d3bcfee30a22eec535aa1e4e47930800f89105",
+      "viewed": true,
+      "observation": "Ogromny bliski C9 i brak odpowiadającego mu najbliższego filara w projekcji utrzymują się w trzech stanach; High ostrzej pokazuje wieżowiec i wysepkę, bez rozwiązania zastrzeżenia pozy."
+    },
+    {
+      "camera": "sbs-g3-a-177786140912399",
+      "state": "High-overcast",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\High-overcast\\sbs-g3-a-177786140912399.png",
+      "render_sha256": "b96d427a311ba6d2a6938989bfca1274b8651ca47535f83f11e81afc27b358eb",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\177786140912399.png",
+      "comparison_sha256": "090fc0ee15ab8cb46afcdd14f1d3bcfee30a22eec535aa1e4e47930800f89105",
+      "viewed": true,
+      "observation": "Ogromny bliski C9 i brak odpowiadającego mu najbliższego filara w projekcji utrzymują się w trzech stanach; High ostrzej pokazuje wieżowiec i wysepkę, bez rozwiązania zastrzeżenia pozy."
+    },
+    {
+      "camera": "sbs-g3-a-178689077481862",
+      "state": "Low-clear",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\Low-clear\\sbs-g3-a-178689077481862.png",
+      "render_sha256": "c83ed3a4a1f89ace6ee66610f816acee02de2669996eb0503360e21ef782404b",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\178689077481862.png",
+      "comparison_sha256": "109b11aedb75f1a1346fb5243913b2e5985c9746b6a1744631db8c1e6d04f7c2",
+      "viewed": true,
+      "observation": "Wieżowiec, most i łuk jezdni pozostają czytelne we wszystkich stanach; High doprecyzowuje okna i balustrady. Układ bliskich filarów, C9 i brak bariery na kamienistej wyspie nie zgadzają się ze źródłem niezależnie od światła."
+    },
+    {
+      "camera": "sbs-g3-a-178689077481862",
+      "state": "High-clear",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\High-clear\\sbs-g3-a-178689077481862.png",
+      "render_sha256": "91cc4bf93fe9c8c07c40156c103368eb18a72317f043aa7bd47ce434cb1f7638",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\178689077481862.png",
+      "comparison_sha256": "109b11aedb75f1a1346fb5243913b2e5985c9746b6a1744631db8c1e6d04f7c2",
+      "viewed": true,
+      "observation": "Wieżowiec, most i łuk jezdni pozostają czytelne we wszystkich stanach; High doprecyzowuje okna i balustrady. Układ bliskich filarów, C9 i brak bariery na kamienistej wyspie nie zgadzają się ze źródłem niezależnie od światła."
+    },
+    {
+      "camera": "sbs-g3-a-178689077481862",
+      "state": "High-overcast",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\High-overcast\\sbs-g3-a-178689077481862.png",
+      "render_sha256": "4537c5ad62bad4366e67e591fdee507caa5fe29b7810490de1a6a38786bc3997",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\178689077481862.png",
+      "comparison_sha256": "109b11aedb75f1a1346fb5243913b2e5985c9746b6a1744631db8c1e6d04f7c2",
+      "viewed": true,
+      "observation": "Wieżowiec, most i łuk jezdni pozostają czytelne we wszystkich stanach; High doprecyzowuje okna i balustrady. Układ bliskich filarów, C9 i brak bariery na kamienistej wyspie nie zgadzają się ze źródłem niezależnie od światła."
+    },
+    {
+      "camera": "sbs-g3-a-223210302566110",
+      "state": "Low-clear",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\Low-clear\\sbs-g3-a-223210302566110.png",
+      "render_sha256": "357f8b16e31fac88d2fbfc18030a7dffe1b33f28248d8df369718d9f1d188d27",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\223210302566110.png",
+      "comparison_sha256": "be3bc9a41296027e0b9f04847c28f8570f03e9596885737d5ed605e83e0bb63c",
+      "viewed": true,
+      "observation": "Układ dwóch pasów na wiadukcie trwały między stanami. High pokazuje cieńsze przewody i poręcze, overcast spłaszcza odległe bryły. Jednoramienne lampy nadal odbiegają od dwuramiennych na źródle; pora zachodu nie jest kryterium D51."
+    },
+    {
+      "camera": "sbs-g3-a-223210302566110",
+      "state": "High-clear",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\High-clear\\sbs-g3-a-223210302566110.png",
+      "render_sha256": "c86ab4997a379f82141096ecae92b8d79b307450b39a11f32afbc1c17ef5261e",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\223210302566110.png",
+      "comparison_sha256": "be3bc9a41296027e0b9f04847c28f8570f03e9596885737d5ed605e83e0bb63c",
+      "viewed": true,
+      "observation": "Układ dwóch pasów na wiadukcie trwały między stanami. High pokazuje cieńsze przewody i poręcze, overcast spłaszcza odległe bryły. Jednoramienne lampy nadal odbiegają od dwuramiennych na źródle; pora zachodu nie jest kryterium D51."
+    },
+    {
+      "camera": "sbs-g3-a-223210302566110",
+      "state": "High-overcast",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\High-overcast\\sbs-g3-a-223210302566110.png",
+      "render_sha256": "adf46d09e6114e29d814802e67d2b0695245239f7180da58d463bd4a513954c3",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\223210302566110.png",
+      "comparison_sha256": "be3bc9a41296027e0b9f04847c28f8570f03e9596885737d5ed605e83e0bb63c",
+      "viewed": true,
+      "observation": "Układ dwóch pasów na wiadukcie trwały między stanami. High pokazuje cieńsze przewody i poręcze, overcast spłaszcza odległe bryły. Jednoramienne lampy nadal odbiegają od dwuramiennych na źródle; pora zachodu nie jest kryterium D51."
+    },
+    {
+      "camera": "sbs-g3-a-309664504075286",
+      "state": "Low-clear",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\Low-clear\\sbs-g3-a-309664504075286.png",
+      "render_sha256": "2e85a3226f34c2cdb38a0f22a32947dfda719e0dfff222f8fe668f1c6e05c209",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\309664504075286.png",
+      "comparison_sha256": "438ddde2184888ff3c54ccf48fd7b3e036c0df36bb35d805a8ce2391e4d028a3",
+      "viewed": true,
+      "observation": "High ostrzej rysuje słup energetyczny i bariery; overcast redukuje kontrast drzew i bloków. Bliski słup z prawej i jednoramienne latarnie są wspólne stanom, bez odpowiedniej relacji do lamp źródła."
+    },
+    {
+      "camera": "sbs-g3-a-309664504075286",
+      "state": "High-clear",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\High-clear\\sbs-g3-a-309664504075286.png",
+      "render_sha256": "f1988ebf3c6176c437c3b552e919b772cfe7e50ef41962fe3d8852b503069beb",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\309664504075286.png",
+      "comparison_sha256": "438ddde2184888ff3c54ccf48fd7b3e036c0df36bb35d805a8ce2391e4d028a3",
+      "viewed": true,
+      "observation": "High ostrzej rysuje słup energetyczny i bariery; overcast redukuje kontrast drzew i bloków. Bliski słup z prawej i jednoramienne latarnie są wspólne stanom, bez odpowiedniej relacji do lamp źródła."
+    },
+    {
+      "camera": "sbs-g3-a-309664504075286",
+      "state": "High-overcast",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\High-overcast\\sbs-g3-a-309664504075286.png",
+      "render_sha256": "3a30dd98ad18c9b1c75859be521de46bab621667b7ed88bba90b10df18e40947",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\309664504075286.png",
+      "comparison_sha256": "438ddde2184888ff3c54ccf48fd7b3e036c0df36bb35d805a8ce2391e4d028a3",
+      "viewed": true,
+      "observation": "High ostrzej rysuje słup energetyczny i bariery; overcast redukuje kontrast drzew i bloków. Bliski słup z prawej i jednoramienne latarnie są wspólne stanom, bez odpowiedniej relacji do lamp źródła."
+    },
+    {
+      "camera": "sbs-g3-a-504348097385466",
+      "state": "Low-clear",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\Low-clear\\sbs-g3-a-504348097385466.png",
+      "render_sha256": "9fab193e57408e326e851556f66f27860658f8c54bba7ed218bfae64e772d76d",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\504348097385466.png",
+      "comparison_sha256": "81b6841f0b1a4067f161c5211d89529e08588762871dd9d941a3c070d86a644c",
+      "viewed": true,
+      "observation": "High poprawia tekst tablicy i podpory; zmiana oświetlenia nie zmienia ich projekcji. Tablica w środku zamiast przy lewej krawędzi i wyspa bez kamienia/bariery pozostają ograniczeniem porównania."
+    },
+    {
+      "camera": "sbs-g3-a-504348097385466",
+      "state": "High-clear",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\High-clear\\sbs-g3-a-504348097385466.png",
+      "render_sha256": "cbbd7b66ea6294df6437afcf53ce3dbd8de8c27bc62c2ebe0f9e0d11c44ba6f0",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\504348097385466.png",
+      "comparison_sha256": "81b6841f0b1a4067f161c5211d89529e08588762871dd9d941a3c070d86a644c",
+      "viewed": true,
+      "observation": "High poprawia tekst tablicy i podpory; zmiana oświetlenia nie zmienia ich projekcji. Tablica w środku zamiast przy lewej krawędzi i wyspa bez kamienia/bariery pozostają ograniczeniem porównania."
+    },
+    {
+      "camera": "sbs-g3-a-504348097385466",
+      "state": "High-overcast",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\High-overcast\\sbs-g3-a-504348097385466.png",
+      "render_sha256": "308d98b9ebd81fb11c71c09c5068788a20116c7c89fd0e3ae72c09bd714a1a7e",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\504348097385466.png",
+      "comparison_sha256": "81b6841f0b1a4067f161c5211d89529e08588762871dd9d941a3c070d86a644c",
+      "viewed": true,
+      "observation": "High poprawia tekst tablicy i podpory; zmiana oświetlenia nie zmienia ich projekcji. Tablica w środku zamiast przy lewej krawędzi i wyspa bez kamienia/bariery pozostają ograniczeniem porównania."
+    },
+    {
+      "camera": "sbs-g3-a-201270605169291",
+      "state": "Low-clear",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\Low-clear\\sbs-g3-a-201270605169291.png",
+      "render_sha256": "03adad26ccc91a58dabc5794c25ee13a1bca5a0693649b02ac00f641c2207c72",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\201270605169291.png",
+      "comparison_sha256": "9d6455ab20f8bfe4d581d50c3832e266878a24c40195921b7bb3e3cc344d2782",
+      "viewed": true,
+      "observation": "Wspólny duży otwór pod mostem zamiast najbliższych podpór zdjęcia; dalsze filary są widoczne. High i clear nie rozwiązują projekcji, tylko poprawiają ostrość i cienie. Ta para nie rozstrzyga udziału pozy i geometrii."
+    },
+    {
+      "camera": "sbs-g3-a-201270605169291",
+      "state": "High-clear",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\High-clear\\sbs-g3-a-201270605169291.png",
+      "render_sha256": "46e67bd3b9da540f05f46a963e0cac1c81786f70039a67cb17a71b77e8210d9b",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\201270605169291.png",
+      "comparison_sha256": "9d6455ab20f8bfe4d581d50c3832e266878a24c40195921b7bb3e3cc344d2782",
+      "viewed": true,
+      "observation": "Wspólny duży otwór pod mostem zamiast najbliższych podpór zdjęcia; dalsze filary są widoczne. High i clear nie rozwiązują projekcji, tylko poprawiają ostrość i cienie. Ta para nie rozstrzyga udziału pozy i geometrii."
+    },
+    {
+      "camera": "sbs-g3-a-201270605169291",
+      "state": "High-overcast",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\High-overcast\\sbs-g3-a-201270605169291.png",
+      "render_sha256": "b0b3a4c0ceda6f9a7f0445ea53e7655a3c75c5cb6aeba6f020d4c3d1acd83401",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\201270605169291.png",
+      "comparison_sha256": "9d6455ab20f8bfe4d581d50c3832e266878a24c40195921b7bb3e3cc344d2782",
+      "viewed": true,
+      "observation": "Wspólny duży otwór pod mostem zamiast najbliższych podpór zdjęcia; dalsze filary są widoczne. High i clear nie rozwiązują projekcji, tylko poprawiają ostrość i cienie. Ta para nie rozstrzyga udziału pozy i geometrii."
+    },
+    {
+      "camera": "sbs-g3-a-1398898753813071",
+      "state": "Low-clear",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\Low-clear\\sbs-g3-a-1398898753813071.png",
+      "render_sha256": "d522a83dc14c34e450a9ca55edf43ba7adbf7f6861656db36c530cda1cedbf5c",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\1398898753813071.png",
+      "comparison_sha256": "f323ab061cdbd1f4bfb9abb4c312dbf1dcafc6d2a1108308ed9cc376d614eeea",
+      "viewed": true,
+      "observation": "Dalsze podpory są, lecz duży najbliższy filar zdjęcia nie trafia w projekcję we wszystkich stanach. High czytelniej pokazuje belki i poręcze, a prześwit i brak bariery wyspy pozostają problemem geometrii/pozy."
+    },
+    {
+      "camera": "sbs-g3-a-1398898753813071",
+      "state": "High-clear",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\High-clear\\sbs-g3-a-1398898753813071.png",
+      "render_sha256": "2ea79f597291513e3d630943c71a3cd2396b40fd2865069ae8127b06f004b4a6",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\1398898753813071.png",
+      "comparison_sha256": "f323ab061cdbd1f4bfb9abb4c312dbf1dcafc6d2a1108308ed9cc376d614eeea",
+      "viewed": true,
+      "observation": "Dalsze podpory są, lecz duży najbliższy filar zdjęcia nie trafia w projekcję we wszystkich stanach. High czytelniej pokazuje belki i poręcze, a prześwit i brak bariery wyspy pozostają problemem geometrii/pozy."
+    },
+    {
+      "camera": "sbs-g3-a-1398898753813071",
+      "state": "High-overcast",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\High-overcast\\sbs-g3-a-1398898753813071.png",
+      "render_sha256": "fef9afb47d914bceebb678676edb7018bd63e1b354e76aa66f4f9f4fcede67e1",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\1398898753813071.png",
+      "comparison_sha256": "f323ab061cdbd1f4bfb9abb4c312dbf1dcafc6d2a1108308ed9cc376d614eeea",
+      "viewed": true,
+      "observation": "Dalsze podpory są, lecz duży najbliższy filar zdjęcia nie trafia w projekcję we wszystkich stanach. High czytelniej pokazuje belki i poręcze, a prześwit i brak bariery wyspy pozostają problemem geometrii/pozy."
+    },
+    {
+      "camera": "sbs-g3-a-320326319617139",
+      "state": "Low-clear",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\Low-clear\\sbs-g3-a-320326319617139.png",
+      "render_sha256": "24f9f73c573f0d16b2499cb0a695628c8bb488e735e4b2e0200d20b02634ee14",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\320326319617139.png",
+      "comparison_sha256": "3015576aeeea68797c66d0689793b32d17affb27c991a9fa6ddf9f952711aff8",
+      "viewed": true,
+      "observation": "We wszystkich stanach trawiasta wyspa zajmuje miejsce chodnika/przejścia i bliskich znaków D3/D6 zdjęcia. High tylko wyostrza podpory i trawę; rozbieżność układu oraz ewentualnego bocznego ustawienia kamery trwa."
+    },
+    {
+      "camera": "sbs-g3-a-320326319617139",
+      "state": "High-clear",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\High-clear\\sbs-g3-a-320326319617139.png",
+      "render_sha256": "2770921f07978985680c8f32ebdc0d097944a6ab96397a10af36017431b07617",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\320326319617139.png",
+      "comparison_sha256": "3015576aeeea68797c66d0689793b32d17affb27c991a9fa6ddf9f952711aff8",
+      "viewed": true,
+      "observation": "We wszystkich stanach trawiasta wyspa zajmuje miejsce chodnika/przejścia i bliskich znaków D3/D6 zdjęcia. High tylko wyostrza podpory i trawę; rozbieżność układu oraz ewentualnego bocznego ustawienia kamery trwa."
+    },
+    {
+      "camera": "sbs-g3-a-320326319617139",
+      "state": "High-overcast",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\High-overcast\\sbs-g3-a-320326319617139.png",
+      "render_sha256": "ae0bf922272db2f4cfbf93b28182050bcd3468cd3abc3e0a258a7813e48636b9",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\320326319617139.png",
+      "comparison_sha256": "3015576aeeea68797c66d0689793b32d17affb27c991a9fa6ddf9f952711aff8",
+      "viewed": true,
+      "observation": "We wszystkich stanach trawiasta wyspa zajmuje miejsce chodnika/przejścia i bliskich znaków D3/D6 zdjęcia. High tylko wyostrza podpory i trawę; rozbieżność układu oraz ewentualnego bocznego ustawienia kamery trwa."
+    },
+    {
+      "camera": "sbs-g3-a-482392746429891",
+      "state": "Low-clear",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\Low-clear\\sbs-g3-a-482392746429891.png",
+      "render_sha256": "bd463cf054dedc1128841620f7ca89d35c2d13477e1a992b438039969f69c242",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\482392746429891.png",
+      "comparison_sha256": "a4bd6fd6fac72eaff9125b21402b065436071f0863f2430a2222947e64338e57",
+      "viewed": true,
+      "observation": "Bariery i most czytelne we wszystkich stanach. High wyostrza filary, odwodnienie i poręcze, ale brak odpowiedniego niebieskiego znaku oraz inny rytm podpór/fasady nie są naprawiane światłem."
+    },
+    {
+      "camera": "sbs-g3-a-482392746429891",
+      "state": "High-clear",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\High-clear\\sbs-g3-a-482392746429891.png",
+      "render_sha256": "796cd47e5b7cfbfa967583755a8a0b2fdcccf37432a11ab09d6d990032c785a0",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\482392746429891.png",
+      "comparison_sha256": "a4bd6fd6fac72eaff9125b21402b065436071f0863f2430a2222947e64338e57",
+      "viewed": true,
+      "observation": "Bariery i most czytelne we wszystkich stanach. High wyostrza filary, odwodnienie i poręcze, ale brak odpowiedniego niebieskiego znaku oraz inny rytm podpór/fasady nie są naprawiane światłem."
+    },
+    {
+      "camera": "sbs-g3-a-482392746429891",
+      "state": "High-overcast",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\High-overcast\\sbs-g3-a-482392746429891.png",
+      "render_sha256": "31ad607a70fea3bf87524711632da775e579957d38fa03f8ffca392cf5264859",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\482392746429891.png",
+      "comparison_sha256": "a4bd6fd6fac72eaff9125b21402b065436071f0863f2430a2222947e64338e57",
+      "viewed": true,
+      "observation": "Bariery i most czytelne we wszystkich stanach. High wyostrza filary, odwodnienie i poręcze, ale brak odpowiedniego niebieskiego znaku oraz inny rytm podpór/fasady nie są naprawiane światłem."
+    },
+    {
+      "camera": "sbs-g3-a-454716650857984",
+      "state": "Low-clear",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\Low-clear\\sbs-g3-a-454716650857984.png",
+      "render_sha256": "def3802ad4427539678212ec7cc6250f3bba5bed85543e5030eba43cd389c8dd",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\454716650857984.png",
+      "comparison_sha256": "f1c89052fe31a413f87b240f573ed5b33b7d797343b1248cb435905cef501cb9",
+      "viewed": true,
+      "observation": "Zjazd z wiaduktu i dwa pasy nie zmieniają układu. High wyostrza bariery i odległe drogi; overcast rozjaśnia/spłaszcza las. Brak zgodnego tła reklamowo-usługowego i dwuramiennych lamp pozostaje wspólny."
+    },
+    {
+      "camera": "sbs-g3-a-454716650857984",
+      "state": "High-clear",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\High-clear\\sbs-g3-a-454716650857984.png",
+      "render_sha256": "c21b37712428d7e86e4b935ceec24041376b940b0a0b6d677ec0d650e5b68140",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\454716650857984.png",
+      "comparison_sha256": "f1c89052fe31a413f87b240f573ed5b33b7d797343b1248cb435905cef501cb9",
+      "viewed": true,
+      "observation": "Zjazd z wiaduktu i dwa pasy nie zmieniają układu. High wyostrza bariery i odległe drogi; overcast rozjaśnia/spłaszcza las. Brak zgodnego tła reklamowo-usługowego i dwuramiennych lamp pozostaje wspólny."
+    },
+    {
+      "camera": "sbs-g3-a-454716650857984",
+      "state": "High-overcast",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\High-overcast\\sbs-g3-a-454716650857984.png",
+      "render_sha256": "d6a1b195885e1a09557a6ee7e97619c4d33483a36e27fb5e351a5f757d09b848",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\454716650857984.png",
+      "comparison_sha256": "f1c89052fe31a413f87b240f573ed5b33b7d797343b1248cb435905cef501cb9",
+      "viewed": true,
+      "observation": "Zjazd z wiaduktu i dwa pasy nie zmieniają układu. High wyostrza bariery i odległe drogi; overcast rozjaśnia/spłaszcza las. Brak zgodnego tła reklamowo-usługowego i dwuramiennych lamp pozostaje wspólny."
+    },
+    {
+      "camera": "sbs-g3-a-303305168125936",
+      "state": "Low-clear",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\Low-clear\\sbs-g3-a-303305168125936.png",
+      "render_sha256": "4fb439e748c53469480b647d042fd5bd822f4f12b44a3a93311045e279041a67",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\303305168125936.png",
+      "comparison_sha256": "a8bb7d37739164759a15b2193b811d50c4aa7890a528195f0dec9c2bfb1a7efc",
+      "viewed": true,
+      "observation": "High pokazuje drobniejsze poręcze i dalekie bryły, clear zwiększa kontrast zieleni. Zjazd zachowany, ale bloki po lewej zastąpione gęstym drzewostanem, brak par żółtych znaków i charakterystycznego tła usługowego utrzymuje się."
+    },
+    {
+      "camera": "sbs-g3-a-303305168125936",
+      "state": "High-clear",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\High-clear\\sbs-g3-a-303305168125936.png",
+      "render_sha256": "81eeef730e9e297c42c290cfb7649a93f44fc3d80fcf2a0d9f5596b10caa6ca0",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\303305168125936.png",
+      "comparison_sha256": "a8bb7d37739164759a15b2193b811d50c4aa7890a528195f0dec9c2bfb1a7efc",
+      "viewed": true,
+      "observation": "High pokazuje drobniejsze poręcze i dalekie bryły, clear zwiększa kontrast zieleni. Zjazd zachowany, ale bloki po lewej zastąpione gęstym drzewostanem, brak par żółtych znaków i charakterystycznego tła usługowego utrzymuje się."
+    },
+    {
+      "camera": "sbs-g3-a-303305168125936",
+      "state": "High-overcast",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\High-overcast\\sbs-g3-a-303305168125936.png",
+      "render_sha256": "be1987544ed45c241ab5a5cf8d82a450688debcaf7aa9d6310c643949fc389ec",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\303305168125936.png",
+      "comparison_sha256": "a8bb7d37739164759a15b2193b811d50c4aa7890a528195f0dec9c2bfb1a7efc",
+      "viewed": true,
+      "observation": "High pokazuje drobniejsze poręcze i dalekie bryły, clear zwiększa kontrast zieleni. Zjazd zachowany, ale bloki po lewej zastąpione gęstym drzewostanem, brak par żółtych znaków i charakterystycznego tła usługowego utrzymuje się."
+    },
+    {
+      "camera": "sbs-g3-a-320215796381417",
+      "state": "Low-clear",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\Low-clear\\sbs-g3-a-320215796381417.png",
+      "render_sha256": "78fa4e284c7fd303e072272f0bc2be9da49097e2e12706742be0e9c0296ec930",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\320215796381417.png",
+      "comparison_sha256": "4cdbe7483c84e7e96f4b9c6f294753e510c49dd5433337d0ccf64c50ab1a8586",
+      "viewed": true,
+      "observation": "Układ zjazdu identyczny między stanami, High ostrzejszy. Duży cień clear nie jest nową przeszkodą drogową; brak odpowiadających lamp dwuramiennych, znaków i części panoramy pozostaje."
+    },
+    {
+      "camera": "sbs-g3-a-320215796381417",
+      "state": "High-clear",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\High-clear\\sbs-g3-a-320215796381417.png",
+      "render_sha256": "09f66bbe976fe2c61e3addbf96f44585f94e9278d08858d1361e5c3996361a34",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\320215796381417.png",
+      "comparison_sha256": "4cdbe7483c84e7e96f4b9c6f294753e510c49dd5433337d0ccf64c50ab1a8586",
+      "viewed": true,
+      "observation": "Układ zjazdu identyczny między stanami, High ostrzejszy. Duży cień clear nie jest nową przeszkodą drogową; brak odpowiadających lamp dwuramiennych, znaków i części panoramy pozostaje."
+    },
+    {
+      "camera": "sbs-g3-a-320215796381417",
+      "state": "High-overcast",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\High-overcast\\sbs-g3-a-320215796381417.png",
+      "render_sha256": "44c944d8bd7d946cd631b74e0ab83bdbad08fafdcdec839eaf5c5fd593e8b48d",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\320215796381417.png",
+      "comparison_sha256": "4cdbe7483c84e7e96f4b9c6f294753e510c49dd5433337d0ccf64c50ab1a8586",
+      "viewed": true,
+      "observation": "Układ zjazdu identyczny między stanami, High ostrzejszy. Duży cień clear nie jest nową przeszkodą drogową; brak odpowiadających lamp dwuramiennych, znaków i części panoramy pozostaje."
+    },
+    {
+      "camera": "sbs-g3-b-381800493259507",
+      "state": "Low-clear",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\Low-clear\\sbs-g3-b-381800493259507.png",
+      "render_sha256": "e0c87376251ea6c26f261a012abdbd9811a79bcd13eeea88a57ce680376d8fde",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\381800493259507.png",
+      "comparison_sha256": "bb8686f2fe7465ba42ea971dda6547a304768aeaacf82ae9a24b949dcfcd77d3",
+      "viewed": true,
+      "observation": "Podział jezdni, U3 i portal obecne w trzech stanach. High czytelniej pokazuje napisy i ogrodzenie; portal nadal pełną szarą ramą. U3 mniejszy/dalszy niż w źródle, a stanowisko/kształt nosa nie są wyjaśnione przez światło."
+    },
+    {
+      "camera": "sbs-g3-b-381800493259507",
+      "state": "High-clear",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\High-clear\\sbs-g3-b-381800493259507.png",
+      "render_sha256": "684000aff5eefad0bcd3274963a484f441d582ae2191af8acba2165ac07d8ac8",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\381800493259507.png",
+      "comparison_sha256": "bb8686f2fe7465ba42ea971dda6547a304768aeaacf82ae9a24b949dcfcd77d3",
+      "viewed": true,
+      "observation": "Podział jezdni, U3 i portal obecne w trzech stanach. High czytelniej pokazuje napisy i ogrodzenie; portal nadal pełną szarą ramą. U3 mniejszy/dalszy niż w źródle, a stanowisko/kształt nosa nie są wyjaśnione przez światło."
+    },
+    {
+      "camera": "sbs-g3-b-381800493259507",
+      "state": "High-overcast",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\High-overcast\\sbs-g3-b-381800493259507.png",
+      "render_sha256": "2ab54241e3ff36495ec0c6df299495a80c1c7ec2dcabdf7d106f9bd609ea06f9",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\381800493259507.png",
+      "comparison_sha256": "bb8686f2fe7465ba42ea971dda6547a304768aeaacf82ae9a24b949dcfcd77d3",
+      "viewed": true,
+      "observation": "Podział jezdni, U3 i portal obecne w trzech stanach. High czytelniej pokazuje napisy i ogrodzenie; portal nadal pełną szarą ramą. U3 mniejszy/dalszy niż w źródle, a stanowisko/kształt nosa nie są wyjaśnione przez światło."
+    },
+    {
+      "camera": "sbs-g3-b-2279538078845158",
+      "state": "Low-clear",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\Low-clear\\sbs-g3-b-2279538078845158.png",
+      "render_sha256": "c446ca9405f3aadc481c7c49a3d006697020b337d218f19d7d5d017200fe8cb1",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\2279538078845158.png",
+      "comparison_sha256": "d7a0c29ce47125e3f1bcc19370906ce2ed7e433302e45887f9568e23aaefb2bf",
+      "viewed": true,
+      "observation": "Istotna różnica LOD: Low ma pełną szarą ramę portalu, High ażurową kratownicę bliższą konstrukcji źródła. Blok po lewej, niebieski budynek po prawej i odgałęzienie wspólne. High nie rozwiązuje skali/położenia U3 i nosa wyspy."
+    },
+    {
+      "camera": "sbs-g3-b-2279538078845158",
+      "state": "High-clear",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\High-clear\\sbs-g3-b-2279538078845158.png",
+      "render_sha256": "bab8c863aadc7d7ccc8c1a3ba4c374f8eed2057ebcb842d44daa16088953f05c",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\2279538078845158.png",
+      "comparison_sha256": "d7a0c29ce47125e3f1bcc19370906ce2ed7e433302e45887f9568e23aaefb2bf",
+      "viewed": true,
+      "observation": "Istotna różnica LOD: Low ma pełną szarą ramę portalu, High ażurową kratownicę bliższą konstrukcji źródła. Blok po lewej, niebieski budynek po prawej i odgałęzienie wspólne. High nie rozwiązuje skali/położenia U3 i nosa wyspy."
+    },
+    {
+      "camera": "sbs-g3-b-2279538078845158",
+      "state": "High-overcast",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\High-overcast\\sbs-g3-b-2279538078845158.png",
+      "render_sha256": "90a5dc1b7a2143868bf94e430f4023b89f9507c3fe0d758b5b33b0d9856b309f",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\2279538078845158.png",
+      "comparison_sha256": "d7a0c29ce47125e3f1bcc19370906ce2ed7e433302e45887f9568e23aaefb2bf",
+      "viewed": true,
+      "observation": "Istotna różnica LOD: Low ma pełną szarą ramę portalu, High ażurową kratownicę bliższą konstrukcji źródła. Blok po lewej, niebieski budynek po prawej i odgałęzienie wspólne. High nie rozwiązuje skali/położenia U3 i nosa wyspy."
+    },
+    {
+      "camera": "sbs-g3-b-837235577143499",
+      "state": "Low-clear",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\Low-clear\\sbs-g3-b-837235577143499.png",
+      "render_sha256": "e2ab0e15255ee36e619e40911e411c62831ecc0da00ff75b7d6bc71794ea40ff",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\837235577143499.png",
+      "comparison_sha256": "8676ada6ab9b0582d015f708cdc62ee28cb31dfe02dc0db2993d5bd2f093bb3d",
+      "viewed": true,
+      "observation": "High zmienia pełną ramę Low na ażurowy portal; to rzeczywista różnica charakterystycznego obiektu. Duży bliski U3 zdjęcia nadal nie jest w odpowiadającej projekcji w żadnym stanie, choć dalszy portal jest. Problem nosa/stanowiska nie znika."
+    },
+    {
+      "camera": "sbs-g3-b-837235577143499",
+      "state": "High-clear",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\High-clear\\sbs-g3-b-837235577143499.png",
+      "render_sha256": "5c29a9ae2368c244f5e94591c751b420194c86d753ba4363551a11cd55193d0f",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\837235577143499.png",
+      "comparison_sha256": "8676ada6ab9b0582d015f708cdc62ee28cb31dfe02dc0db2993d5bd2f093bb3d",
+      "viewed": true,
+      "observation": "High zmienia pełną ramę Low na ażurowy portal; to rzeczywista różnica charakterystycznego obiektu. Duży bliski U3 zdjęcia nadal nie jest w odpowiadającej projekcji w żadnym stanie, choć dalszy portal jest. Problem nosa/stanowiska nie znika."
+    },
+    {
+      "camera": "sbs-g3-b-837235577143499",
+      "state": "High-overcast",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\High-overcast\\sbs-g3-b-837235577143499.png",
+      "render_sha256": "5e76f25e25a227352623ca9da333e7e57f62bd5105964d727ca59f0433df4758",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\837235577143499.png",
+      "comparison_sha256": "8676ada6ab9b0582d015f708cdc62ee28cb31dfe02dc0db2993d5bd2f093bb3d",
+      "viewed": true,
+      "observation": "High zmienia pełną ramę Low na ażurowy portal; to rzeczywista różnica charakterystycznego obiektu. Duży bliski U3 zdjęcia nadal nie jest w odpowiadającej projekcji w żadnym stanie, choć dalszy portal jest. Problem nosa/stanowiska nie znika."
+    },
+    {
+      "camera": "sbs-g3-b-3281350541967811",
+      "state": "Low-clear",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\Low-clear\\sbs-g3-b-3281350541967811.png",
+      "render_sha256": "856e77b815fcf5f576bcd374afe2687c0e0080f2d75022bf6ef8e7d673c3503e",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\3281350541967811.png",
+      "comparison_sha256": "6cf1e2a6f02736e4d48f9d75809ab4242cccdb7ad017258068eed9ecba078912",
+      "viewed": true,
+      "observation": "Najważniejszy bliski portal od tyłu po lewej zdjęcia nie jest w tej projekcji w żadnym stanie. High ujawnia dalekie kominy, słupy i portalowe obiekty, lecz nie zastępują bliskiej kotwicy. Overcast dodatkowo osłabia dalekie kominy; problem ustawienia kamery pozostaje."
+    },
+    {
+      "camera": "sbs-g3-b-3281350541967811",
+      "state": "High-clear",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\High-clear\\sbs-g3-b-3281350541967811.png",
+      "render_sha256": "93866a54ec4909d4392ee2454b256a327cac11338ccac2acbb52bd7af53c56dd",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\3281350541967811.png",
+      "comparison_sha256": "6cf1e2a6f02736e4d48f9d75809ab4242cccdb7ad017258068eed9ecba078912",
+      "viewed": true,
+      "observation": "Najważniejszy bliski portal od tyłu po lewej zdjęcia nie jest w tej projekcji w żadnym stanie. High ujawnia dalekie kominy, słupy i portalowe obiekty, lecz nie zastępują bliskiej kotwicy. Overcast dodatkowo osłabia dalekie kominy; problem ustawienia kamery pozostaje."
+    },
+    {
+      "camera": "sbs-g3-b-3281350541967811",
+      "state": "High-overcast",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\High-overcast\\sbs-g3-b-3281350541967811.png",
+      "render_sha256": "4a2be795c217acf02be16abc86e95833febc9a0ca994535f717d07fe72c3924b",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\3281350541967811.png",
+      "comparison_sha256": "6cf1e2a6f02736e4d48f9d75809ab4242cccdb7ad017258068eed9ecba078912",
+      "viewed": true,
+      "observation": "Najważniejszy bliski portal od tyłu po lewej zdjęcia nie jest w tej projekcji w żadnym stanie. High ujawnia dalekie kominy, słupy i portalowe obiekty, lecz nie zastępują bliskiej kotwicy. Overcast dodatkowo osłabia dalekie kominy; problem ustawienia kamery pozostaje."
+    },
+    {
+      "camera": "sbs-g3-b-275528677534382",
+      "state": "Low-clear",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\Low-clear\\sbs-g3-b-275528677534382.png",
+      "render_sha256": "b577e81d1ed7fc0265f60b4eb5b63e3c5a3ea2e29a7299504fe33cc1e6a96ba8",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\275528677534382.png",
+      "comparison_sha256": "07f8aceba89a22f0d8ef678b4962d89d6b39715000eb3bf0dd00057ce3159007",
+      "viewed": true,
+      "observation": "Portal ażurowy w Low i High, High ostrzejszy; clear dodaje jego cień. We wszystkich stanach portal jest za blisko/za duży i obcięty u góry względem całego portalu zdjęcia. Brakuje zgodnej pary żółtych znaków; proporcje portalu i pozycja nadal wymagają kalibracji."
+    },
+    {
+      "camera": "sbs-g3-b-275528677534382",
+      "state": "High-clear",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\High-clear\\sbs-g3-b-275528677534382.png",
+      "render_sha256": "a3d0f0d4a53ec8bf2c1c825d66c414b18ed443f85bc1e13f5696c5a6ab0ead15",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\275528677534382.png",
+      "comparison_sha256": "07f8aceba89a22f0d8ef678b4962d89d6b39715000eb3bf0dd00057ce3159007",
+      "viewed": true,
+      "observation": "Portal ażurowy w Low i High, High ostrzejszy; clear dodaje jego cień. We wszystkich stanach portal jest za blisko/za duży i obcięty u góry względem całego portalu zdjęcia. Brakuje zgodnej pary żółtych znaków; proporcje portalu i pozycja nadal wymagają kalibracji."
+    },
+    {
+      "camera": "sbs-g3-b-275528677534382",
+      "state": "High-overcast",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\High-overcast\\sbs-g3-b-275528677534382.png",
+      "render_sha256": "7b51c689f33dc7db98df15995732541adffaccb3f9e44d70236d9ec623e98fc5",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\275528677534382.png",
+      "comparison_sha256": "07f8aceba89a22f0d8ef678b4962d89d6b39715000eb3bf0dd00057ce3159007",
+      "viewed": true,
+      "observation": "Portal ażurowy w Low i High, High ostrzejszy; clear dodaje jego cień. We wszystkich stanach portal jest za blisko/za duży i obcięty u góry względem całego portalu zdjęcia. Brakuje zgodnej pary żółtych znaków; proporcje portalu i pozycja nadal wymagają kalibracji."
+    },
+    {
+      "camera": "sbs-g3-b-150280503737744",
+      "state": "Low-clear",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\Low-clear\\sbs-g3-b-150280503737744.png",
+      "render_sha256": "11f9bb529b637d3e16b43173af6cef06cb444e1207dfbe99155b6ec8d20c6ae2",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\150280503737744.png",
+      "comparison_sha256": "087e595a45f7654b6b01c9f95790edfcd04512ce8b18fb382bb71b2e3c3ab668",
+      "viewed": true,
+      "observation": "High ujawnia odległe kominy słabiej widoczne w Low i overcast. Nie odtwarza jednak charakterystycznej czerwonej pierzei, pylonów i żółtego ogrodzenia źródła; białe hale pozostają w każdym stanie. To istotne braki świata ponad kosmetyką."
+    },
+    {
+      "camera": "sbs-g3-b-150280503737744",
+      "state": "High-clear",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\High-clear\\sbs-g3-b-150280503737744.png",
+      "render_sha256": "2ab369f42ccd5130792d2854264c09b5dfc1bdea3bc2e9aa8887f000865deabb",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\150280503737744.png",
+      "comparison_sha256": "087e595a45f7654b6b01c9f95790edfcd04512ce8b18fb382bb71b2e3c3ab668",
+      "viewed": true,
+      "observation": "High ujawnia odległe kominy słabiej widoczne w Low i overcast. Nie odtwarza jednak charakterystycznej czerwonej pierzei, pylonów i żółtego ogrodzenia źródła; białe hale pozostają w każdym stanie. To istotne braki świata ponad kosmetyką."
+    },
+    {
+      "camera": "sbs-g3-b-150280503737744",
+      "state": "High-overcast",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\High-overcast\\sbs-g3-b-150280503737744.png",
+      "render_sha256": "661b7cbb5fe7f4163b82263082c0594a6c8605f937c09d0bf5a7cde4a7cb3d63",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\150280503737744.png",
+      "comparison_sha256": "087e595a45f7654b6b01c9f95790edfcd04512ce8b18fb382bb71b2e3c3ab668",
+      "viewed": true,
+      "observation": "High ujawnia odległe kominy słabiej widoczne w Low i overcast. Nie odtwarza jednak charakterystycznej czerwonej pierzei, pylonów i żółtego ogrodzenia źródła; białe hale pozostają w każdym stanie. To istotne braki świata ponad kosmetyką."
+    },
+    {
+      "camera": "sbs-g3-b-297817221966185",
+      "state": "Low-clear",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\Low-clear\\sbs-g3-b-297817221966185.png",
+      "render_sha256": "3f119cacfa0770e09260e202961dee4786d070217c4f888bc68ced54b988ca5c",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\297817221966185.png",
+      "comparison_sha256": "0db1fb1dc739f82198c4f6f488b74725fd9793bbc4c77fd80191d5a3052464cd",
+      "viewed": true,
+      "observation": "High zastępuje pełną ramę Low kratownicą i uwidacznia kominy; overcast mocno osłabia ich kontrast. Portal nadal dużo bliższy/większy niż daleki portal źródła; dojrzałe drzewa i prawa czerwona pierzeja źródła nie są odtworzone. Brak podstaw do zamiany ID."
+    },
+    {
+      "camera": "sbs-g3-b-297817221966185",
+      "state": "High-clear",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\High-clear\\sbs-g3-b-297817221966185.png",
+      "render_sha256": "2420101addd49d42d0092fa969d195458670712305b05668219647c6d042cf72",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\297817221966185.png",
+      "comparison_sha256": "0db1fb1dc739f82198c4f6f488b74725fd9793bbc4c77fd80191d5a3052464cd",
+      "viewed": true,
+      "observation": "High zastępuje pełną ramę Low kratownicą i uwidacznia kominy; overcast mocno osłabia ich kontrast. Portal nadal dużo bliższy/większy niż daleki portal źródła; dojrzałe drzewa i prawa czerwona pierzeja źródła nie są odtworzone. Brak podstaw do zamiany ID."
+    },
+    {
+      "camera": "sbs-g3-b-297817221966185",
+      "state": "High-overcast",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\High-overcast\\sbs-g3-b-297817221966185.png",
+      "render_sha256": "fa179c1864c9b1e8bb8b959aa33f3eb7870a9ae427ecfb7647e889ef153588f7",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\297817221966185.png",
+      "comparison_sha256": "0db1fb1dc739f82198c4f6f488b74725fd9793bbc4c77fd80191d5a3052464cd",
+      "viewed": true,
+      "observation": "High zastępuje pełną ramę Low kratownicą i uwidacznia kominy; overcast mocno osłabia ich kontrast. Portal nadal dużo bliższy/większy niż daleki portal źródła; dojrzałe drzewa i prawa czerwona pierzeja źródła nie są odtworzone. Brak podstaw do zamiany ID."
+    },
+    {
+      "camera": "sbs-g3-b-3678296072299092",
+      "state": "Low-clear",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\Low-clear\\sbs-g3-b-3678296072299092.png",
+      "render_sha256": "9ce297c435f3979e8c80d25e32bb0b1084ad4f725a65a12d66ec6902d56056ef",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\3678296072299092.png",
+      "comparison_sha256": "d543e0ab31a4482c075c44b8bd6382a9c9cd7802c16fd892a820ae47a03f8afa",
+      "viewed": true,
+      "observation": "High wyraźniej pokazuje słup energetyczny i ramy ekranów, także w overcast. Ekran i prawy zjazd są wspólne stanom, ale ich sylweta, początek oraz relacja do rampy zdjęcia pozostają niedopasowane. Światło tego nie rozstrzyga."
+    },
+    {
+      "camera": "sbs-g3-b-3678296072299092",
+      "state": "High-clear",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\High-clear\\sbs-g3-b-3678296072299092.png",
+      "render_sha256": "93798d07d86c1062e497c3fba529cae025378fa760fa94db8d3e7a66b0eff7c5",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\3678296072299092.png",
+      "comparison_sha256": "d543e0ab31a4482c075c44b8bd6382a9c9cd7802c16fd892a820ae47a03f8afa",
+      "viewed": true,
+      "observation": "High wyraźniej pokazuje słup energetyczny i ramy ekranów, także w overcast. Ekran i prawy zjazd są wspólne stanom, ale ich sylweta, początek oraz relacja do rampy zdjęcia pozostają niedopasowane. Światło tego nie rozstrzyga."
+    },
+    {
+      "camera": "sbs-g3-b-3678296072299092",
+      "state": "High-overcast",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\High-overcast\\sbs-g3-b-3678296072299092.png",
+      "render_sha256": "7f491ad131c05069ed671678c8453f595e78224a070431a6c3e8e7967d5f6b31",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\3678296072299092.png",
+      "comparison_sha256": "d543e0ab31a4482c075c44b8bd6382a9c9cd7802c16fd892a820ae47a03f8afa",
+      "viewed": true,
+      "observation": "High wyraźniej pokazuje słup energetyczny i ramy ekranów, także w overcast. Ekran i prawy zjazd są wspólne stanom, ale ich sylweta, początek oraz relacja do rampy zdjęcia pozostają niedopasowane. Światło tego nie rozstrzyga."
+    },
+    {
+      "camera": "sbs-g3-b-494288258686575",
+      "state": "Low-clear",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\Low-clear\\sbs-g3-b-494288258686575.png",
+      "render_sha256": "f37d60a47fdb58b1baac2d352be59e91b54d0314b878da1b91aa39e255a2cce5",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\494288258686575.png",
+      "comparison_sha256": "4943df7b00e9a99e18e3487548285155f50e2e1dc6daa19391e24e05cf4e2ced",
+      "viewed": true,
+      "observation": "Oba źródło i raw kręcą w lewo. High wyostrza ekran i bariery, clear ich cienie; nadal inny pion drogi oraz znacznie niższa górna krawędź ekranu w kadrze. To osobne zastrzeżenia pozy i proporcji ekranu, bez uzasadnienia dużego yaw."
+    },
+    {
+      "camera": "sbs-g3-b-494288258686575",
+      "state": "High-clear",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\High-clear\\sbs-g3-b-494288258686575.png",
+      "render_sha256": "3ddcf5675398583e305b0515065140daeba74dbaa6b3e77cdf7b0e24c9d0661d",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\494288258686575.png",
+      "comparison_sha256": "4943df7b00e9a99e18e3487548285155f50e2e1dc6daa19391e24e05cf4e2ced",
+      "viewed": true,
+      "observation": "Oba źródło i raw kręcą w lewo. High wyostrza ekran i bariery, clear ich cienie; nadal inny pion drogi oraz znacznie niższa górna krawędź ekranu w kadrze. To osobne zastrzeżenia pozy i proporcji ekranu, bez uzasadnienia dużego yaw."
+    },
+    {
+      "camera": "sbs-g3-b-494288258686575",
+      "state": "High-overcast",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\High-overcast\\sbs-g3-b-494288258686575.png",
+      "render_sha256": "7035904af5e2538617332b2264d0f06d980c3767de736a5c287b6989d57c4a4e",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\494288258686575.png",
+      "comparison_sha256": "4943df7b00e9a99e18e3487548285155f50e2e1dc6daa19391e24e05cf4e2ced",
+      "viewed": true,
+      "observation": "Oba źródło i raw kręcą w lewo. High wyostrza ekran i bariery, clear ich cienie; nadal inny pion drogi oraz znacznie niższa górna krawędź ekranu w kadrze. To osobne zastrzeżenia pozy i proporcji ekranu, bez uzasadnienia dużego yaw."
+    },
+    {
+      "camera": "sbs-g3-b-1801374876712141",
+      "state": "Low-clear",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\Low-clear\\sbs-g3-b-1801374876712141.png",
+      "render_sha256": "778fed74faf09a76367a8e8920a26fb544e5cd815c42d8a422dd986f00924282",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\1801374876712141.png",
+      "comparison_sha256": "ce07076f1c2f18dc6b8ebcc94b17b79e6be18aa28c9345ae29f5e7a5b6f903e7",
+      "viewed": true,
+      "observation": "High wyostrza ekran i domy, overcast osłabia daleką zieleń. We wszystkich stanach ekran zaczyna się inaczej, relacja do prawego wjazdu i pion jezdni różnią się od źródła; billboardu z lewej nie ma, domy są dużo bardziej odsłonięte. Poza nadal niepotwierdzona."
+    },
+    {
+      "camera": "sbs-g3-b-1801374876712141",
+      "state": "High-clear",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\High-clear\\sbs-g3-b-1801374876712141.png",
+      "render_sha256": "d69d83afbb61aad445d315f0266bfa91e0838fc16421f04b35b9e963a07ffda9",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\1801374876712141.png",
+      "comparison_sha256": "ce07076f1c2f18dc6b8ebcc94b17b79e6be18aa28c9345ae29f5e7a5b6f903e7",
+      "viewed": true,
+      "observation": "High wyostrza ekran i domy, overcast osłabia daleką zieleń. We wszystkich stanach ekran zaczyna się inaczej, relacja do prawego wjazdu i pion jezdni różnią się od źródła; billboardu z lewej nie ma, domy są dużo bardziej odsłonięte. Poza nadal niepotwierdzona."
+    },
+    {
+      "camera": "sbs-g3-b-1801374876712141",
+      "state": "High-overcast",
+      "raw_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-r4\\evidence\\renders\\High-overcast\\sbs-g3-b-1801374876712141.png",
+      "render_sha256": "4daba84c92cfdc3506ddd8f3a9b9aaa6abada55287f438fedda82add968d049a",
+      "photo_path": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs\\artifacts\\sbs-gate3\\rectified\\1801374876712141.png",
+      "comparison_sha256": "ce07076f1c2f18dc6b8ebcc94b17b79e6be18aa28c9345ae29f5e7a5b6f903e7",
+      "viewed": true,
+      "observation": "High wyostrza ekran i domy, overcast osłabia daleką zieleń. We wszystkich stanach ekran zaczyna się inaczej, relacja do prawego wjazdu i pion jezdni różnią się od źródła; billboardu z lewej nie ma, domy są dużo bardziej odsłonięte. Poza nadal niepotwierdzona."
+    }
+  ],
+  "photo_count": 25,
+  "viewed_camera_ids": [
+    "sbs-g3-a-2818555625124739",
+    "sbs-g3-a-3970163613102941",
+    "sbs-g3-a-149248627179406",
+    "sbs-g3-a-177786140912399",
+    "sbs-g3-a-178689077481862",
+    "sbs-g3-a-223210302566110",
+    "sbs-g3-a-309664504075286",
+    "sbs-g3-a-504348097385466",
+    "sbs-g3-a-201270605169291",
+    "sbs-g3-a-1398898753813071",
+    "sbs-g3-a-320326319617139",
+    "sbs-g3-a-482392746429891",
+    "sbs-g3-a-454716650857984",
+    "sbs-g3-a-303305168125936",
+    "sbs-g3-a-320215796381417",
+    "sbs-g3-b-381800493259507",
+    "sbs-g3-b-2279538078845158",
+    "sbs-g3-b-837235577143499",
+    "sbs-g3-b-3281350541967811",
+    "sbs-g3-b-275528677534382",
+    "sbs-g3-b-150280503737744",
+    "sbs-g3-b-297817221966185",
+    "sbs-g3-b-3678296072299092",
+    "sbs-g3-b-494288258686575",
+    "sbs-g3-b-1801374876712141"
+  ],
+  "d51_reassessment": false,
+  "gate_result": "NOT_ASSESSED_OTHER_STATES_VISUAL_INSPECTION_ONLY",
+  "photos_match_request_sha256": true,
+  "significant_differences": [
+    "High poprawia ostrość cienkich elementów, napisów, fasad i odległych kominów. Dla B227953/B837235/B297817 ma ażurową kratownicę zamiast pełnej ramy Low; B381800 nadal ma pełną ramę także High. B275528 jest ażurowy w obu tierach. To lokalnie istotne różnice charakterystycznego obiektu, nie samo niebo.",
+    "Clear dodaje silne cienie balustrad i portali; High-overcast ma mniejszy kontrast odległych drzew, kominów i zabudowy. W obejrzanych kadrach nie stwierdzono zmiany przebiegu głównej jezdni wskutek samego przełączenia światła.",
+    "Lepszy detal High nie rozwiązuje rozbieżności projekcji B328135/B275528/B297817, nosa/U3 B837235, pierzei B150280 ani wysokości/początku ekranów B494288/B180137. Rozróżnienie udziału pozy i świata wymaga dalszej kalibracji."
+  ],
+  "limitations": [
+    "Ogląd statycznych natywnych PNG; bez pomiaru telefonu, testu runtime, akceptacji właściciela ani nowego wyniku D51.",
+    "Frozen capture HEAD80159a70, upstream ADR0130 nieobecne; wnioski nie opisują przyszłego ani bieżącego po ADR0130 świata.",
+    "Historyczna kohorta 25 B zachowana; 17 C wykluczonych, żadnej promocji lub zmiany kamer/świata. Zastrzeżenia pozy nie są usuwane przez wybór ładniejszego stanu.",
+    "SHA identyfikuje odczytane pliki; hash nie jest potwierdzeniem rozpoznawalności. Nie wykonywano audytu epoki ani ciężkich obliczeń."
+  ]
+}

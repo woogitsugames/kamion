@@ -166,7 +166,29 @@ for assessment in review['assessments']:
     derived.append({'camera':assessment['camera'],'render_sha256':pair['render_sha256'],
                     'comparison_sha256':pair['comparison_sha256'],'derived_sheet_sha256':pair['sheet_sha256'],
                     'sheet_reviewed_by_independent_critic':False})
-for stem in ('native-review-evidence','reference-metadata-evidence'):
+other=read(ART/'other-states-visual-inspection.json')
+other_record=read(ART/'other-states-review-recorded.json')
+other_states=set(STATES)-{'Low-overcast'}
+assert other['status']=='COMPLETE' and other['count']==len(other['inspections'])==75
+assert other['capture_head']==full['git_sha'] and other['upstream_ADR0130_present'] is False
+assert not other['missing_camera_ids'] and other['d51_reassessment'] is False
+assert other_record['status']=='VERIFIED' and other_record['raw_count']==75 and other_record['unique_photo_count']==25
+assert other_record['review_json_sha256']==sha(ART/'other-states-visual-inspection.json')
+assert other_record['review_md_sha256']==sha(ART/'OTHER-STATES-VISUAL-REVIEW.md')
+assert other_record['request_sha256']==sha(ART/'recognition-native-request.json')
+assert {(r['state'],r['camera']) for r in other['inspections']}=={(state,camera) for state in other_states for camera in eligible}
+decoded_by_path={r['path']:r for r in raw_rows}
+for inspection in other['inspections']:
+    raw_path=EVIDENCE/'renders'/inspection['state']/(inspection['camera']+'.png')
+    photo_path=ROOT/request_by_id[inspection['camera']]['photo']
+    assert inspection['viewed'] is True
+    assert Path(inspection['raw_path']).resolve()==raw_path.resolve()
+    assert Path(inspection['photo_path']).resolve()==photo_path.resolve()
+    assert inspection['render_sha256']==decoded_by_path[raw_path.relative_to(ROOT).as_posix()]['sha256']
+    assert inspection['comparison_sha256']==photos[photo_path.relative_to(ROOT).as_posix()]
+other_archive=read(ART/'other-states-review-evidence.json')
+for entry in other_archive['entries']:assert sha(ART/entry['entry'])==entry['sha256']
+for stem in ('native-review-evidence','reference-metadata-evidence','other-states-review-evidence'):
     audit_archive(ART/(stem+'.zip'),read(ART/(stem+'.json')))
 
 counter_receipt=read(ART/'counters-completed.json')
@@ -190,6 +212,7 @@ summary={'status':'VERIFIED','scope':'Baseline only; not a later pose variant or
     'verified_glb_files':world_files,'counter_rows':168,'counter_comparisons':counter_receipt['comparisons'],
     'baseline_d51':{'gate_result':review['gate_result'],'counts':review['counts'],'method':review['review_method']},
     'baseline_review_present_in_registry':True,'registry_sha256':sha(ROOT/'Data/Regions/bialystok-industrial-c/sbs_recognition.json'),
+    'other_states_native_inspection':{'status':'COMPLETE','raw_count':75,'photo_count':25,'d51_reassessment':False},
     'capture_input_review':read(INPUT/'sbs_recognition.json')['reviewed_run'],
     'photo_hashes':photos,'captures':all_captures,'raw_files':raw_rows,'sheet_files':sheet_rows}
 write(ART/'AUDIT.json',summary)
