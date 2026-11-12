@@ -144,3 +144,7 @@ Obejrzano wszystkie 25 natywnych Low-clear; zapisano ledger z SHA zdjęcia, raw 
 
 ## Ponowna próba źródeł początku trasy
 Mapillary API znów dostępne. Oryginalny mały bbox początku: 0 rekordów. Jedno zapytanie obejmujące pierwsze 300 m z buforem 35 m: 20 rekordów, brak dalszej strony. Wszystkie mają rzutowane stacje 317,017–365,438 m, żadnej do 300 m, także bez odrzucania panoram (rekordów panoramicznych 0). Nie pobrano nowych zdjęć i nie zapisano nic do współdzielonego raw. Wynik nie dowodzi braku wszelkich możliwych źródeł, ale nie dostarczył nowego kandydata na ten odcinek. Metadata są oczyszczone z podpisanych URL i danych autoryzacyjnych.
+
+## Audyt i kontrola HTML
+Audyt zakończony kodem 0: rzeczywiste 64 High +64 Low, 168 raw, 100 A/B, 168 diagnostycznych arkuszy, migawka ZIP i 168 liczników zgodne. Oba warianty siatek bez zmian względem r1; identyczne wejście kamer. Raport latest zawiera r1/r2 i cztery stany trendu: Low-clear 3 zgodne próbki, wszystkie trzy mediany zmiany błędu 0; pozostałe stany bez porównywalnych próbek.
+Przegląd HTML potwierdził poprawne daty Warszawy, D51 r1 FAIL 12/11/2 oraz rozróżnienie starych i nowych pikseli. Dla czytelności zmieniono samą etykietę STALE na opis próbek dla innego obrazu i dodano skrót do trendu. Nie zmieniono metryk, kwalifikacji ani ocen. Dodano pustą ikonę danych, żeby uniknąć zbędnego żądania favicon. Raport lokalny przebudowany; dalsza kontrola przeglądarkowa i 75 A/B przed pełnym GIS.
