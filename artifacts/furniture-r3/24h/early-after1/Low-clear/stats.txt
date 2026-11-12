@@ -1,0 +1,9 @@
+tier=Low lighting=clear msaa=2 renderScale=0.75
+furniture-shelter-anders-1000-corner: objects=42 drawsEst=224 shadowDrawsEst=68 trisK=253 (estimate, before SRP batching)
+  furniture-shelter-anders-1000-corner instanced (props+trees): draws 148, instances 161, triangles 25k, cells 196, forest HLOD cells 74
+furniture-shelter-anders-1000-front: objects=29 drawsEst=113 shadowDrawsEst=68 trisK=198 (estimate, before SRP batching)
+  furniture-shelter-anders-1000-front instanced (props+trees): draws 109, instances 83, triangles 32k, cells 170, forest HLOD cells 140
+furniture-shelter-factory-corner: objects=80 drawsEst=364 shadowDrawsEst=39 trisK=306 (estimate, before SRP batching)
+  furniture-shelter-factory-corner instanced (props+trees): draws 550, instances 1256, triangles 104k, cells 191, forest HLOD cells 77
+furniture-shelter-factory-front: objects=40 drawsEst=213 shadowDrawsEst=39 trisK=242 (estimate, before SRP batching)
+  furniture-shelter-factory-front instanced (props+trees): draws 504, instances 802, triangles 87k, cells 181, forest HLOD cells 84

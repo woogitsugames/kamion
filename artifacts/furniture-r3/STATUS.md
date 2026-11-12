@@ -104,3 +104,5 @@ potem poprawić największe udokumentowane odstępstwo wiaty. WIP po każdym kro
 2026-11-12T12:41:32.6640117+01:00: Unity side-render early-after1 Low clear; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
 
 2026-11-12T12:41:33.1944102+01:00: wczesny import i 4 diagnostyczne kadry wiat Low-clear; sukces=True. Każdy krok pobierał i zwalniał slot Unity; standardowy pipeline czekał na własny marker. Ten dodatkowy podgląd nie zastępuje 236 kadrów budżetowych ani oczekującej kontroli geometrii. NASTĘPNY KROK: obejrzeć podglądy i kontynuować pełną walidację.
+
+2026-11-12T12:43:43.5226936+01:00: obejrzano cztery wczesne kadry Low-clear obu wiat; szkło przepuszcza tło, z tych stron nie widać szczeliny dachu ani rażącego sortowania. Zapisano OBSERVATIONS z jawnymi ograniczeniami i pełnymi licznikami tych czterech kamer: mesh/cienie +0, instancje draws Anders -1, Factory 0. Factory ma +1 renderowaną instancję; przyczyny nie ustalono, mimo identycznych danych JSON. Nie deklaruje się budżetu całej trasy. Recenzent dostał te same 4 JPG; geometry nadal czeka na heavy. NASTĘPNY KROK: recenzja i pełne 236 kadrów.
