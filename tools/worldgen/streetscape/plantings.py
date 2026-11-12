@@ -268,6 +268,20 @@ def _hedge_cap(ring, spacing):
         hit = (w1>=-1e-10) & (w2>=-1e-10) & (w1+w2<=1.+1e-10)
         if not hit.any():
             raise ValueError("Interior hedge sample has no containing cap face")
+        if np.count_nonzero(hit)>1:
+            neighbours = triangles[hit]
+            shared = set(neighbours[0]).intersection(*(set(face) for face in neighbours[1:]))
+            if len(shared)!=2:
+                raise ValueError("Ambiguous interior hedge sample neighbourhood")
+            left, right = points[sorted(shared)]
+            edge = right-left
+            fraction = np.clip(np.dot(point-left, edge)/np.dot(edge, edge), 0., 1.)
+            snapped = left+fraction*edge
+            if np.linalg.norm(snapped-point)>1e-9*max(1., np.linalg.norm(edge)):
+                raise ValueError("Overlapping cap faces away from a shared edge")
+            # A fuzzy barycentric hit on both neighbours becomes one exact edge
+            # split. Never retain an extra tiny face on only one side of it.
+            point = snapped
         index = len(points)
         points = np.vstack([points, point])
         split = np.array([[i, j, index] for face in triangles[hit] for i, j in zip(face, np.roll(face, -1))])
