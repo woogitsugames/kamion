@@ -13,11 +13,14 @@
 | zabudowa r9 wysoka zieleń | 0132 | `buildings-r9` | `artifacts/live/buildings-r9.md` | r3_chain w tle |
 | poprawki G3-B z 0127 | 0139 | `g3b-r2` | `artifacts/live/g3b-r2.md` | pary after → merge main → final |
 | krawędź mapy / tło | 0141 | `edge-r6c` | `artifacts/live/edge-r6c.md` | pary after → merge main → testy |
+| **A16 GPU runda 2: props G3-A wg prefiksu** (jedyny agent telefonowy) | 0136 r2 | `a16-perf` (Opus) | `artifacts/live/a16-perf.md` | start 18:4x |
+| **pozy SBS r3: 494288 (pomost Putry), 810896 (za murem), 837235** | 0143 | `sbs-poses-r3` (Opus) | `artifacts/live/sbs-poses-r3.md` | start 18:4x |
 - Scalone wcześniej (s13): 0129, 0136, 0140, 0142 — patrz niżej. **main wymaga regeneracji** (0129, 0133) + `ImpostorTrimBake.RunBatch` (0136) w jednej integracji.
 - Ścieżka bramki 3: krytyk D51 dla gotowych → scal 0123→0128, 0139, 0141, 0132 → jedna integracja (regen, import, ImpostorTrimBake, testy, vqa, `pwsh scripts/sbs-low-pairs.ps1 -Before artifacts/sbs-poses-r2/after`) → krytyk D51 → czysty APK Low → gate3 A16 A+B → pakiet zdjęcie|render.
 - Otwarte bez agenta: 0136 runda 2 (props G3-A wg prefiksu), hashe fidelity CRLF (M1), pozy 494288/810896 (0140 r3), UI Fold (po bramce 3), audio (wycieraczki, deszcz, klakson HUD).
 - **Jeśli sesja padnie:** wznów agentów z `artifacts/live/*.md` (NASTĘPNY KROK); nie dubluj procesów w tle (sprawdź `Get-CimInstance Win32_Process` bash/pwsh/Unity).
-- **Ostatni przydzielony ADR: 0142.**
+- 18:4x: **fix fidelity CRLF** `a4cb9995` (M1) → `fidelity_qa.json` do regeneracji w integracji.
+- **Ostatni przydzielony ADR: 0143.**
 
 ---
 # HANDOVER — kamion, SESJA 13 (start 2026-11-12 16:41, nowe konto)
