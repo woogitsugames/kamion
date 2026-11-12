@@ -15,9 +15,9 @@ if($LASTEXITCODE){& pwsh $slot -Release -Owner gpt-light;throw 'Commit own setti
 try{
     $start=Get-Date
     $code=Invoke-UnityBatch -LogFile $log -Arguments @('-executeMethod','Game.Rendering.Editor.LightGradeLutLab.RunNative','-lightGradeLabOut',$folder)
-    $result=Select-String -Path $log -SimpleMatch 'LIGHT_NATIVE_GRADE_LAB_RESULT: OK images=27 cubes=3 holdoutPerPreset=192 gradientPerPreset=12288 physicalBypassMax=0'|Select-Object -Last 1
+    $result=Select-String -Path $log -SimpleMatch 'LIGHT_NATIVE_GRADE_LAB_RESULT: OK images=33 cubes=3 holdoutPerPreset=192 gradientPerPreset=12288 physicalBypassMax=0'|Select-Object -Last 1
     $files=@(Get-ChildItem -LiteralPath $folder -Filter '*.png' -ErrorAction SilentlyContinue|Where-Object {$_.LastWriteTime -ge $start -and $_.Length -gt 0})
-    $complete=$result -and $files.Count -eq 27
+    $complete=$result -and $files.Count -eq 33
     if(-not $complete){Show-UnityLogErrors $log;throw "Incomplete lab before proof reading: exit=$code, freshPNG=$($files.Count), log=$log"}
     foreach($preset in @('Clear','Overcast','Night')){
         $proof=Get-Content "$folder/$preset-proof.json" -Raw|ConvertFrom-Json
@@ -45,9 +45,10 @@ try{
     @{source_commit=$source;source_files=$sourceHashes;outputs=$outputs;started=$start.ToUniversalTime().ToString('o');log=$log}|ConvertTo-Json -Depth 8|Set-Content "$folder/manifest.json" -Encoding utf8
 }
 finally{git restore -- game/Assets/_Project/Rendering/Settings game/ProjectSettings;& pwsh $slot -Release -Owner gpt-light}
-Add-Content "$PSScriptRoot/STATUS.md" "Lab natywnego gradingu27PNG+3kostki,192holdout+12288gradientnaPreset zakończony; log=$log. To diagnostyka, bez wdrożenia lub GPU PASS."
+Add-Content "$PSScriptRoot/STATUS.md" "Lab natywnego gradingu33PNG+3kostki,192holdout+12288gradientnaPreset zakończony; log=$log. To diagnostyka, bez wdrożenia lub GPU PASS."
 git add -f artifacts/light-r5/STATUS.md
 git commit -m 'WIP light r5: record actual High-baked LUT laboratory evidence'
+
 
 
 

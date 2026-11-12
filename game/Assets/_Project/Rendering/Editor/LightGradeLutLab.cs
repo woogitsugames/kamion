@@ -50,8 +50,30 @@ namespace Game.Rendering.Editor
             var surface=GameObject.Find("grade lab input plane");surface.transform.localScale=new Vector3(2*s_Camera.aspect,2,1);
             var tier=QualityProfileApplier.Current;
             object[] args={s_Camera,width,height,0,null,tier.msaa,tier.renderScale};
-            try{s_Render.Invoke(null,args);return (Color32[])s_Render.Invoke(null,args);}
+            try{
+                if(s_HdrReference){RenderHdrPixels(s_Camera,width,height,tier.msaa,tier.renderScale);return RenderHdrPixels(s_Camera,width,height,tier.msaa,tier.renderScale);}
+                s_Render.Invoke(null,args);return (Color32[])s_Render.Invoke(null,args);
+            }
             finally{UnityEngine.Object.DestroyImmediate(map);}
+        }
+        static bool s_HdrReference;
+        static Color32[] RenderHdrPixels(Camera camera,int width,int height,int msaa,float scale)
+        {
+            // Diagnostic only: preserve exposed HDR opaque values before High post. The common QA helper forces
+            // ARGB32 as its camera target; compare both routes explicitly instead of assuming they are equivalent.
+            int sw=Mathf.Max(16,Mathf.RoundToInt(width*scale)),sh=Mathf.Max(16,Mathf.RoundToInt(height*scale));
+            var source=new RenderTexture(sw,sh,24,RenderTextureFormat.ARGBHalf,RenderTextureReadWrite.Linear){antiAliasing=msaa};
+            var resolved=new RenderTexture(width,height,0,RenderTextureFormat.ARGB32,RenderTextureReadWrite.sRGB){filterMode=FilterMode.Bilinear};
+            var read=new Texture2D(width,height,TextureFormat.RGBA32,false);
+            var previous=camera.targetTexture;var previousActive=RenderTexture.active;
+            try{
+                camera.targetTexture=source;camera.Render();Graphics.Blit(source,resolved);
+                RenderTexture.active=resolved;read.ReadPixels(new Rect(0,0,width,height),0,0);read.Apply();return read.GetPixels32();
+            }finally{
+                camera.targetTexture=previous;RenderTexture.active=previousActive;
+                UnityEngine.Object.DestroyImmediate(read);source.Release();resolved.Release();
+                UnityEngine.Object.DestroyImmediate(source);UnityEngine.Object.DestroyImmediate(resolved);
+            }
         }
         static Color32[] Centres(Color32[] pixels,int count,int columns,int cellPixels)
         {
@@ -141,15 +163,23 @@ namespace Game.Rendering.Editor
                     var preset=PreparePreset(name);
                     Texture3D cube=null;string sourceFormat=null;int copyPasses=0;
                     try{
-                        Color32[] highPixels,highGradient;
+                        Color32[] highPixels,highGradient,legacyPixels,legacyGradient;
                         using(var copy=new LightNativeGradeLutCapture(s_Camera,32)){
-                            highPixels=Render(inputs,16,12,32,false);
-                            highGradient=Render(gradients,1024,12,1,false,null,32);
+                            legacyPixels=Render(inputs,16,12,32,false);
+                            legacyGradient=Render(gradients,1024,12,1,false,null,32);
+                            s_HdrReference=true;
+                            try{
+                                highPixels=Render(inputs,16,12,32,false);
+                                highGradient=Render(gradients,1024,12,1,false,null,32);
+                            }finally{s_HdrReference=false;}
                             cube=copy.ReadCube();sourceFormat=copy.SourceFormat;copyPasses=copy.RecordedCopies;
+                            File.WriteAllText(Path.Combine(folder,name+"-native-capture-states.json"),copy.StateJson);
                         }
                         var reference=Centres(highPixels,192,16,32);var gradientReference=GradientCentres(highGradient);
                         SaveImage(Path.Combine(folder,name+"-High-reference.png"),highPixels,512,384);imageCount++;
                         SaveImage(Path.Combine(folder,name+"-gradient-High-reference.png"),highGradient,1024,384);imageCount++;
+                        SaveImage(Path.Combine(folder,name+"-High-legacy-ARGB32.png"),legacyPixels,512,384);imageCount++;
+                        SaveImage(Path.Combine(folder,name+"-gradient-High-legacy-ARGB32.png"),legacyGradient,1024,384);imageCount++;
                         var stack=s_Camera.GetUniversalAdditionalCameraData().volumeStack??VolumeManager.instance.stack;
                         var curves=stack.GetComponent<ColorCurves>();var adjustment=stack.GetComponent<ColorAdjustments>();
                         var volume=s_Environment.GetComponentInChildren<Volume>();
@@ -173,6 +203,8 @@ namespace Game.Rendering.Editor
                             probe.Apply(s_Camera);var sharedPixels=Render(inputs,16,12,32,false,null,0,true);
                             SaveImage(Path.Combine(folder,name+"-Low-shared-native32.png"),sharedPixels,512,384);imageCount++;
                             shared=Measure("Actual shared native LogC path",32,inputs,reference,Centres(sharedPixels,192,16,32));
+                            File.WriteAllText(Path.Combine(folder,name+"-native-precheck.json"),JsonUtility.ToJson(new Proof{preset=name,nativeSourceFormat=sourceFormat,nativeCopyPasses=copyPasses,
+                                measurements=new[]{shared,Measure("Legacy ARGB32 High versus HDR reference",0,inputs,reference,Centres(legacyPixels,192,16,32))}},true));
                             if(shared.meanAbsoluteRgb>1 || shared.maxRgb>8)throw new InvalidOperationException("Native shared response missing or outside smoke bounds");
                             Shader.SetGlobalFloat("_KamionSkyCapOff",1);
                             try{
@@ -196,7 +228,7 @@ namespace Game.Rendering.Editor
                 }
                 Debug.Log($"LIGHT_NATIVE_GRADE_LAB_RESULT: OK images={imageCount} cubes=3 holdoutPerPreset=192 gradientPerPreset=12288 physicalBypassMax=0");exit=0;
             }catch(Exception ex){Debug.LogException(ex);Debug.Log("LIGHT_NATIVE_GRADE_LAB_RESULT: FAILED");}
-            finally{EditorSceneManager.NewScene(NewSceneSetup.EmptyScene,NewSceneMode.Single);}
+            finally{s_HdrReference=false;EditorSceneManager.NewScene(NewSceneSetup.EmptyScene,NewSceneMode.Single);}
             if(Application.isBatchMode)EditorApplication.Exit(exit);
         }
         public static void Run()

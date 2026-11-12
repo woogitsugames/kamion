@@ -13,6 +13,14 @@ namespace Game.Rendering.Editor
     /// Temporarily attaches to renderer instances, never renderer-data assets. No player/Low render pass.</summary>
     public sealed class LightNativeGradeLutCapture : IDisposable
     {
+        [Serializable] public sealed class CopyState
+        {
+            public bool hdrEnabled;
+            public string cameraFormat,lutFormat;
+            public int gradingMode;
+        }
+        [Serializable] public sealed class CopyStates {public CopyState[] states;}
+        readonly List<CopyState> m_States=new List<CopyState>();
         static readonly PropertyInfo s_Features=typeof(ScriptableRenderer).GetProperty("rendererFeatures",BindingFlags.Instance|BindingFlags.NonPublic);
         readonly Camera m_Camera;
         readonly int m_Size;
@@ -23,6 +31,7 @@ namespace Game.Rendering.Editor
         string m_Error;
         public int RecordedCopies {get;private set;}
         public string SourceFormat {get;private set;}
+        public string StateJson => JsonUtility.ToJson(new CopyStates{states=m_States.ToArray()},true);
 
         public LightNativeGradeLutCapture(Camera camera,int size)
         {
@@ -101,6 +110,8 @@ namespace Game.Rendering.Editor
                     m_Owner.m_Error=$"Unexpected native LUT dimensions {info.width}x{info.height}";return;
                 }
                 m_Owner.SourceFormat=info.format.ToString();
+                m_Owner.m_States.Add(new CopyState{hdrEnabled=camera.isHdrEnabled,cameraFormat=camera.cameraTargetDescriptor.graphicsFormat.ToString(),
+                    lutFormat=info.format.ToString(),gradingMode=(int)frameData.Get<UniversalPostProcessingData>().gradingMode});
                 var destination=graph.ImportTexture(m_Owner.m_Handle);
                 graph.AddBlitPass(source,destination,Vector2.one,Vector2.zero,filterMode:RenderGraphUtils.BlitFilterMode.ClampNearest,
                     passName:"Editor-only copy actual High grading LUT");
