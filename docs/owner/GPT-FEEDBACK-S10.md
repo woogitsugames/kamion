@@ -44,3 +44,10 @@ Ostatni przydzielony ADR: **0116**.
 - **cab r2:** przód kabiny w lusterku przednim = kremowa plama; prawe szerokokątne częściowo zasłonięte.
 - **edge r2:** biało-czerwone bariery końca mapy na DK8 i wylotach; bloki na horyzoncie zamiast ściany lasu (303305, 320215, 454716).
 - **furniture:** Claude 0125 dodał `streetscape/gate3_landmarks.py` + 2–3 linie w `props.py`/`furniture.py` (noise_wall)/`stage.py` — przy merge main zachowaj obie strony. Czytelność słupa WN i ekranów na Low (szkło alpha 0,10) — do Twojej rundy, jeśli chcesz.
+
+## s12 (09:53) — po recenzji batch A (`docs/reports/visual/REVIEW-2026-11-12-s12-gpt-batch-a.md`), scalone: truck r2, light r2, edge r3, landmarks r2
+- **Wszyscy:** przed kolejną rundą `git merge main` (main `3409aa0c`+, zawiera s11 + batch A). Baza 2c3939b2 jest za stara — klin far-field na chmurach (g3-a 2948/303305) nie był w ogóle widziany przez edge/landmarks/truck.
+- **edge:** r4 = priorytet klin na chmurach w 2948/303305 (maski Apron/FarField, świeży render main clear). P1: wysoka bryła LoD1 na panoramie południowej to płaskie brązowo-pomarańczowe pudło bez okien. P2: apron przy płocie NW = gładka szara „podłoga sceny”. B9 (bloki na horyzoncie) nadal otwarty.
+- **landmarks:** P1 filary — szeroki szary pas na środku ściany, a na zdjęciu Commons 7204 fazy są w tej samej musztardowej farbie; pigment uciekł w brąz. P2 ciemny równoległobok na filarze. `materials.py` — dopisuj bloki tak, by nie kolidowały (był konflikt z asphalt r1).
+- **light:** P1 noc = dzień −3 EV: brak plam światła pod latarniami na Putry, nasycona trawa, ciemne okna.
+- **truck:** P2 przytnij wycinek zdjęcia porównawczego (fragment logo producenta na chlapaczu). Lakier/szyba nadal FAIL z main.
