@@ -872,10 +872,11 @@ def _polys(g, min_area, simplify=0.05):
 
 
 # ------------------------------------------------------------------------------------------------- geometry
-def _fol(n):
-    """COLOR_0 of a foliage vertex: normal * 0.5 + 0.5 (generator axes), a = 1 (Kamion/World PlotKit)."""
+def _fol(n, occ=1.0):
+    """COLOR_0 of a foliage vertex: normal * 0.5 + 0.5 (generator axes), a = 1 (Kamion/World PlotKit). ADR 0132: the
+    LENGTH of the normal is the plant's own occlusion (1 = lit skin, ~0.5 = foot / inside of a hedge or crown)."""
     n = np.asarray(n, float)
-    n = n / max(float(np.linalg.norm(n)), 1e-9)
+    n = n / max(float(np.linalg.norm(n)), 1e-9) * min(max(float(occ), 0.05), 1.0)
     return [n[0] * 0.5 + 0.5, n[1] * 0.5 + 0.5, n[2] * 0.5 + 0.5, 1.0]
 
 
@@ -1051,10 +1052,20 @@ def gate_geo(kit, g, style, h, z, key, col=None):
                  [[u0, v0 + 0.06 * (v1 - v0)], [u1, v0 + 0.06 * (v1 - v0)], [u1, v1 - 0.04 * (v1 - v0)], [u0, v1 - 0.04 * (v1 - v0)]])
         if kind == "slide":                                  # ground beam of the cantilever gate
             kit.box(m + t * 0.5 * (x0 + x1) + o, t, (x1 - x0) / 2, 0.04, z + 0.02, z + 0.09, frame)
-    if kind == "wicket":                                     # letter box on the post, street side
-        box = PK.SWATCH[hpick(["galv", "steel_black", "steel_green", "wood_brown"], key, "mail")]
-        p = m + t * (W / 2 + ph) + n * (ph + 0.05)
-        kit.box(p, t, 0.13, 0.05, z + 0.95, z + 1.29, box)
+    if kind == "wicket":
+        # Letter box on the wicket post, street side. ADR 0132 (review 0124 P1-d: a black 26 x 34 cm box on a 10 cm
+        # black post in front of black lamellae read as a square hanging on the infill): the box never has the colour
+        # of the fence frame, is 24 x 32 x 9 cm, and a steel / wooden fence gets a 12 x 12 cm post with a cap to carry it.
+        frame_name = GATE_FRAME.get(rowname, "steel_graphite")
+        box = PK.SWATCH[hpick([c for c in ("galv", "steel_green", "wood_brown", "steel_black", "lid_brown") if c != frame_name
+                               and not (c == "steel_black" and frame_name == "steel_graphite")], key, "mail")]
+        pp = m + t * (W / 2 + ph)
+        if not brick:
+            kit.box(pp, t, 0.06, 0.06, z - 0.1, z + hg + 0.12, frame, top=False)
+            kit.box(pp, t, 0.07, 0.07, z + hg + 0.12, z + hg + 0.145, frame)
+        off = (0.19 if brick else 0.06) + 0.047
+        kit.box(pp + n * off, t, 0.12, 0.045, z + 0.98, z + 1.30, box)
+        kit.box(pp + n * off, t, 0.13, 0.055, z + 1.30, z + 1.315, box)       # lid lip
     if col is not None:
         col.append((m - t * (W / 2), m + t * (W / 2), z - 0.1, z + hg))
 
@@ -1140,56 +1151,222 @@ def big_tree(kit, p, z, h, key):
         card(kit, p, z, "tree_a", W, H, a0 + i * math.pi / 3, z_off=h - H)
 
 
-def fruit_tree(kit, p, z, h, key):
-    """Small orchard tree (apple): a trunk and three crossed crown cards."""
-    sp = "apple_a" if hfloat(key, "fa") < 0.5 else "apple_b"
-    wm, hm = PK.SPRITE_M[sp]
-    k = h / 3.4
-    a0 = hfloat(key, "fy") * 3.1416
-    tr = 0.05 + 0.02 * k
-    kit.box(np.asarray(p, float), np.array([math.cos(a0), math.sin(a0)]), tr, tr, z - 0.1, z + 0.36 * h, PK.SWATCH["trunk"], top=False)
-    for i in range(3):
-        card(kit, p, z, sp, wm * k, hm * k, a0 + i * math.pi / 3, z_off=h - hm * k)
+def _skin_card(kit, c, z, az, W, H, sprite, tilt, occ=1.0, flip=False):
+    """A plant card that lies ON the skin of a crown / bush: centred on xy c at height z (its foot), facing outward
+    along azimuth az, leaning back by `tilt` (rad) at the top. Normals = radial + up, so every card of one plant shades
+    as one volume."""
+    u0, u1, v0, v1 = PK.sprite(sprite)
+    if flip:
+        u0, u1 = u1, u0
+    out = np.array([math.cos(az), math.sin(az)])
+    side = np.array([-out[1], out[0]]) * (W / 2)
+    back = -out * (math.sin(tilt) * H)
+    hz = math.cos(tilt) * H
+    A, B = np.asarray(c, float) - side, np.asarray(c, float) + side
+    lo = [out[0], out[1], 0.15]
+    hi = [out[0] * 0.55, out[1] * 0.55, 0.85]
+    kit.quad([[*A, z], [*B, z], [*(B + back), z + hz], [*(A + back), z + hz]],
+             [[u0, v0], [u1, v0], [u1, v1], [u0, v1]],
+             [_fol(lo, occ * 0.80), _fol(lo, occ * 0.80), _fol(hi, occ), _fol(hi, occ)])
+
+
+def _core(kit, c, z0, rx, h, key, sides=5, occ=0.26):
+    """Dark inner mass of a bush / crown: a lumpy dome of the dense hedge-leaf row, deep in the plant's own shade - it
+    closes the gaps between the skin cards (no sky through the middle of a crown) and is what every real shrub shows
+    between its outer sprays. The row is drawn 1 : 1 (1.5 m of leaves in v), never stretched."""
+    v0, v1 = PK.row("hedge")
+    fr = ((0.0, 0.60), (0.40, 1.0), (0.78, 0.66))
+    a0 = hfloat(key, "ca") * 6.2832
+    u_off = hfloat(key, "cu")
+    span = 2 * math.pi * rx / PK.KIT_M
+    row_m = PK.ROW_H_M["hedge"]
+    vb = 0.08
+
+    def vfold(zr):                                           # height on the dome -> v, folded back and forth in the row
+        q = (zr / row_m) % 1.32
+        return vb + (q if q <= 0.66 else 1.32 - q)
+    V, UV, C = [], [], []
+    for i, (f, k) in enumerate(fr):
+        for j in range(sides + 1):
+            jj = j % sides
+            ang = a0 + 2 * math.pi * j / sides
+            rr = rx * k * (0.88 + 0.24 * hfloat(key, "cr", i, jj))
+            V.append([c[0] + math.cos(ang) * rr, c[1] + math.sin(ang) * rr, z0 + f * h])
+            UV.append([u_off + span * j / sides, v0 + (v1 - v0) * vfold(f * h)])
+            C.append(_fol([math.cos(ang), math.sin(ang), -0.2 + 0.9 * f], occ * (0.8 + 0.3 * f)))
+    top = len(V)
+    V.append([c[0], c[1], z0 + h * 0.96])
+    UV.append([u_off + span * 0.5, v0 + (v1 - v0) * vfold(h * 0.96)])
+    C.append(_fol([0, 0, 1], occ * 1.15))
+    T = []
+    m = sides + 1
+    for i in range(len(fr) - 1):
+        for j in range(sides):
+            a_, b_, c_, d_ = i * m + j, i * m + j + 1, (i + 1) * m + j + 1, (i + 1) * m + j
+            T += [(a_, b_, c_), (a_, c_, d_)]
+    for j in range(sides):
+        T.append(((len(fr) - 1) * m + j, (len(fr) - 1) * m + j + 1, top))
+    kit.tris(V, UV, T, C)
+
+
+def _tent(kit, c, z, az, r_base, W, H, sprite, occ, tilt=0.82):
+    """Two cards leaning against each other over the middle of a crown: its top, from every side and from above."""
+    for j in range(2):
+        a = az + j * math.pi
+        _skin_card(kit, np.asarray(c, float) + np.array([math.cos(a), math.sin(a)]) * r_base, z, a, W, H, sprite, tilt, occ, flip=j == 1)
+
+
+def bush(kit, p, z, r, h, key, red=False, cards=6):
+    """A grown shrub (lilac, mock orange, elder, hazel; refs P08, P09, P12: they stand against the fences and hang over
+    them). ADR 0132 (review 0124 P1-a / P1-e): a dark core + leaf sprays lying on its skin, overlapping all round, + a
+    tent of two sprays over the top - instead of the two crossed cards of ADR 0114 (a paper cut-out from 5-10 m).
+    20 + 2 * (cards + 2) triangles."""
+    p = np.asarray(p, float)
+    sp = "shrub_b" if red else "shrub_a"
+    occ = 0.86 + 0.14 * hfloat(key, "bo")
+    _core(kit, p, z - 0.05, r * 0.52, h * 0.66, key, sides=4, occ=0.26 * occ)
+    a0 = hfloat(key, "ba") * 6.2832
+    for i in range(cards):
+        az = a0 + 2 * math.pi * (i + 0.35 * (hfloat(key, "bj", i) - 0.5)) / cards
+        c = p + np.array([math.cos(az), math.sin(az)]) * r * (0.36 + 0.10 * hfloat(key, "bd", i))
+        W = max(r * (1.75 + 0.35 * hfloat(key, "bk", i)), 0.8)
+        H = h * (0.88 + 0.20 * hfloat(key, "bh", i))
+        _skin_card(kit, c, z - 0.04, az, W, H, sp, 0.16 + 0.16 * hfloat(key, "bt", i), occ, flip=hfloat(key, "bf", i) < 0.5)
+    _tent(kit, p, z + h * 0.44, a0 + 0.9, r * 0.44, 1.55 * r, h * 0.62, sp, occ)
+
+
+def fruit_tree(kit, p, z, h, key, r=None):
+    """Small orchard / garden tree (apple, plum, cherry): 3.2-6 m. ADR 0132 (review 0124 P1-e: crossed cards): a
+    trunk that forks into three limbs, a dark core and two tiers of leaf sprays on the crown's skin + a tent over the
+    top (crown radius r - read off the orthophoto when there is one). ~65 triangles."""
+    p = np.asarray(p, float)
+    R = float(r) if r is not None else h * (0.36 + 0.10 * hfloat(key, "fr"))
+    R = min(max(R, 1.0), 0.62 * h)
+    a0 = hfloat(key, "fy") * 6.2832
+    occ = 0.84 + 0.16 * hfloat(key, "fo")
+    fork = h * (0.28 + 0.08 * hfloat(key, "ff"))
+    zc0 = z + max(h - 1.9 * R, fork * 0.85)                  # underside of the crown
+    hc = z + h - zc0
+    tr = 0.055 + 0.022 * h / 3.4
+    lean = (np.array([hfloat(key, "flx"), hfloat(key, "fly")]) - 0.5) * 0.5
+    top = p + lean * fork / max(h, 1.0)
+    t = np.array([math.cos(a0), math.sin(a0)])
+    kit.box(p, t, tr, tr, z - 0.1, z + fork, PK.SWATCH["trunk"], top=False, shift=top - p)
+    for k in range(3):                                       # limbs into the crown
+        az = a0 + 2.0944 * k + 0.5 * (hfloat(key, "fl", k) - 0.5)
+        d = np.array([math.cos(az), math.sin(az)])
+        e = top + d * R * 0.5
+        ze = zc0 + hc * 0.40
+        nrm = np.array([-d[1], d[0]]) * tr * 0.7
+        kit.quad([[*(top - nrm), z + fork - 0.05], [*(top + nrm), z + fork - 0.05], [*(e + nrm * 0.5), ze], [*(e - nrm * 0.5), ze]],
+                 [PK.SWATCH["trunk"]] * 4)
+    cc = top + lean * 0.3
+    _core(kit, cc, zc0 + hc * 0.14, R * 0.50, hc * 0.60, key, sides=5, occ=0.26 * occ)
+    low = "apple_a" if hfloat(key, "fa") < 0.5 else "apple_b"
+    for i in range(6):                                       # lower tier: sprays hanging out and down
+        az = a0 + 2 * math.pi * (i + 0.4 * (hfloat(key, "tj", i) - 0.5)) / 6
+        c = cc + np.array([math.cos(az), math.sin(az)]) * R * (0.40 + 0.10 * hfloat(key, "td", i))
+        _skin_card(kit, c, zc0 - 0.03 * hc, az, R * (1.45 + 0.3 * hfloat(key, "tw", i)), hc * (0.70 + 0.12 * hfloat(key, "th", i)),
+                   low if i % 2 == 0 else "shrub_a", 0.12 + 0.16 * hfloat(key, "tt", i), occ, flip=hfloat(key, "tf", i) < 0.5)
+    for i in range(5):                                       # upper tier
+        az = a0 + 0.8 + 2 * math.pi * i / 5
+        c = cc + np.array([math.cos(az), math.sin(az)]) * R * 0.24
+        _skin_card(kit, c, zc0 + hc * 0.30, az, R * 1.55, hc * 0.62, "shrub_a", 0.34 + 0.18 * hfloat(key, "ut", i), occ,
+                   flip=i % 2 == 1)
+    _tent(kit, cc, zc0 + hc * 0.58, a0 + 0.3, R * 0.34, R * 1.2, hc * 0.46, "shrub_a", occ)
 
 
 def shrub(kit, p, z, h, key):
-    sp = "shrub_a" if hfloat(key, "sh") < 0.7 else "shrub_b"
-    wm, hm = PK.SPRITE_M[sp]
-    k = h / hm
-    a0 = hfloat(key, "sy") * 3.1416
-    for i in range(2):
-        card(kit, p, z - 0.04, sp, wm * k, h, a0 + i * math.pi / 2)
+    red = hfloat(key, "sh") >= 0.7
+    wm, hm = PK.SPRITE_M["shrub_b" if red else "shrub_a"]
+    bush(kit, p, z, 0.5 * wm * h / hm, h, key, red=red, cards=5)
 
 
-def hedge(kit, a, b, n, zf, h, key, thick=0.6):
-    """Clipped broadleaf hedge a -> b (n: normal towards the street), refs P08 / P12: two leafy sides with a ragged top
-    line and a top, in steps of SEG_M that follow the ground. 6 triangles per step."""
+HEDGE_STEP_M = 1.28           # station pitch of a hedge (SEG_M / 4): the top line and the sides wander between stations
+# cross-section of a clipped hedge, per side: (half-thickness factor, height factor, normal out, normal up, occlusion).
+# Index _HEDGE_SEAM is doubled: the atlas row is 1.5 m of leaves and never tiles in v, so the side is two bands (foot ->
+# seam, seam -> crown), each drawn 1 : 1; the seam between two stretches of random leaves does not show.
+_HEDGE_PROFILE = ((0.76, 0.00, 0.95, 0.05, 0.40), (0.97, 0.26, 1.00, 0.12, 0.66), (1.00, 0.52, 1.00, 0.20, 0.86),
+                  (0.94, 0.80, 0.85, 0.45, 0.97), (0.58, 0.955, 0.45, 0.85, 1.0))
+_HEDGE_SEAM = 2
+
+
+def hedge(kit, a, b, n, zf, h, key, thick=0.7):
+    """Clipped broadleaf hedge a -> b (n: normal towards the street), refs P08 / P12.
+    ADR 0132 (review 0124 P1-b: a box with wallpaper and a flat shelf on top that overhung the sides and read as a
+    board): a rounded cross-section (foot narrower than the shoulders, shoulders rounded into a crown line), stations
+    every HEDGE_STEP_M whose height (+-5 cm, slow wave +-6 cm), thickness (+-12 %) and centre line (+-5 cm) wander, the
+    plant's own occlusion in COLOR_0 (dark, twiggy foot -> lit top; shader Kamion/World PlotKit), narrowed ends with
+    caps, leaves at their true size (two v bands), and a low fringe of loose shoots along the crown line (the ragged
+    top band of the atlas row). ~22 triangles per station (ADR 0124: 6 per 5.12 m)."""
     L = float(np.hypot(*(b - a)))
     if L < 1.5:
         return 0.0
     t = (b - a) / L
-    nb = max(1, int(math.ceil(L / SEG_M - 1e-6)))
-    cuts = [L * k / nb for k in range(nb + 1)]
-    Z = [zf(a + t * s) - 0.03 for s in cuts]
-    H = [h * (0.92 + 0.16 * hfloat(key, "hh", k)) for k in range(nb + 1)]
+    nb = max(2, int(round(L / HEDGE_STEP_M)))
     v0, v1 = PK.row("hedge")
+    dv = v1 - v0
+    row_m = PK.ROW_H_M["hedge"]
     u_off = hfloat(key, "hu") * PK.KIT_M
-    up = np.array([0.0, 0.0, 1.0])
-    for k in range(nb):
-        s0, s1 = cuts[k], cuts[k + 1]
-        u0, u1 = (u_off + s0) / PK.KIT_M, (u_off + s1) / PK.KIT_M
+    ph0, ph1 = hfloat(key, "hp0") * 6.2832, hfloat(key, "hp1") * 6.2832
+    prof = _HEDGE_PROFILE
+    np_ = len(prof)
+    # arc length of the nominal profile -> v of the two bands (constant along the hedge)
+    pts = [(thick / 2 * kw, h * kh) for kw, kh, *_ in prof] + [(0.0, h)]
+    arc = [0.0]
+    for i in range(1, len(pts)):
+        arc.append(arc[-1] + math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]))
+    sc = max(1.0, arc[_HEDGE_SEAM] / (0.70 * row_m), (arc[-1] - arc[_HEDGE_SEAM]) / (0.70 * row_m))
+    v_lo = [0.03 + arc[i] / (row_m * sc) for i in range(_HEDGE_SEAM + 1)]
+    v_hi = [0.78 - (arc[-1] - arc[i]) / (row_m * sc) for i in range(_HEDGE_SEAM, len(pts))]
+    cols = [(i, v_lo[i]) for i in range(_HEDGE_SEAM + 1)] + [(i, v_hi[i - _HEDGE_SEAM]) for i in range(_HEDGE_SEAM, np_)]
+    nc = len(cols)                                           # vertices per side and station
+    V, UV, C = [], [], []
+    for k in range(nb + 1):
+        s = L * k / nb
+        endf = 0.55 if k in (0, nb) else 1.0                 # narrowed ends
+        c = a + t * s + n * (0.05 * (hfloat(key, "ho", k) * 2 - 1))
+        zz = zf(a + t * s) - 0.03
+        hh = (h + 0.06 * math.sin(ph0 + s * 0.55) + 0.05 * (hfloat(key, "hh", k) * 2 - 1)) * (0.93 if k in (0, nb) else 1.0)
+        w = thick / 2 * (1.0 + 0.10 * math.sin(ph1 + s * 0.9) + 0.07 * (hfloat(key, "hw", k) * 2 - 1)) * endf
+        u = (u_off + s) / PK.KIT_M
         for sg in (1.0, -1.0):
-            o = n * (thick / 2 * sg)
-            A, B = a + t * s0 + o, a + t * s1 + o
-            nn = np.array([n[0] * sg * 0.8, n[1] * sg * 0.8, 0.45])
-            top = np.array([n[0] * sg * 0.45, n[1] * sg * 0.45, 0.85])
-            kit.quad([[*A, Z[k]], [*B, Z[k + 1]], [*B, Z[k + 1] + H[k + 1] + 0.12], [*A, Z[k] + H[k] + 0.12]],
-                     [[u0, v0], [u1, v0], [u1, v1], [u0, v1]], [_fol(nn), _fol(nn), _fol(top), _fol(top)])
-        A, B = a + t * s0, a + t * s1
-        o = n * (thick / 2)
-        vm0, vm1 = v0 + (v1 - v0) * 0.30, v0 + (v1 - v0) * 0.62
-        kit.quad([[*(A + o), Z[k] + H[k]], [*(B + o), Z[k + 1] + H[k + 1]], [*(B - o), Z[k + 1] + H[k + 1]], [*(A - o), Z[k] + H[k]]],
-                 [[u0, vm0], [u1, vm0], [u1, vm1], [u0, vm1]], [_fol(up)] * 4)
+            uu = u if sg > 0 else u + 0.37                   # the two sides show different stretches of the row
+            for i, vv in cols:
+                kw, kh, no, nu, occ = prof[i]
+                q = c + n * (sg * w * kw)
+                V.append([q[0], q[1], zz + hh * kh])
+                UV.append([uu, v0 + dv * vv])
+                C.append(_fol([n[0] * sg * no, n[1] * sg * no, nu], occ))
+            V.append([c[0], c[1], zz + hh])                  # crown line (one per side: own u)
+            UV.append([uu, v0 + dv * 0.78])
+            C.append(_fol([0.0, 0.0, 1.0], 1.0))
+    ms = nc + 1                                              # per side
+    m = 2 * ms
+    T = []
+    for k in range(nb):
+        for side in range(2):
+            b0, b1 = k * m + side * ms, (k + 1) * m + side * ms
+            for i in range(ms - 1):
+                if i == _HEDGE_SEAM:                         # the doubled seam vertex: no strip between the two copies
+                    continue
+                q = (b0 + i, b1 + i, b1 + i + 1, b0 + i + 1)
+                T += [(q[0], q[1], q[2]), (q[0], q[2], q[3])] if side == 0 else [(q[1], q[0], q[3]), (q[1], q[3], q[2])]
+    for o, flip in ((0, False), (nb * m, True)):             # end caps: a fan over the profile
+        ring = [o + i for i in range(ms) if i != _HEDGE_SEAM] + [o + ms + i for i in range(ms - 2, -1, -1) if i != _HEDGE_SEAM]
+        for i in range(1, len(ring) - 1):
+            T.append((ring[0], ring[i + 1], ring[i]) if not flip else (ring[0], ring[i], ring[i + 1]))
+    kit.tris(V, UV, T, C)
+    # loose shoots above the crown line: the ragged top band of the row on an upright card along the centre
+    for k in range(nb):
+        s0, s1 = L * k / nb, L * (k + 1) / nb
+        if hfloat(key, "hf", k) < 0.25:
+            continue
+        c0, c1 = np.asarray(V[k * m + ms - 1]), np.asarray(V[(k + 1) * m + ms - 1])
+        fh = 0.10 + 0.06 * hfloat(key, "hfh", k)             # the row is 1.5 m in v: 0.16 of it = 0.24 m, drawn 1 : 1
+        u0, u1 = (u_off * 1.7 + s0) / PK.KIT_M, (u_off * 1.7 + s1) / PK.KIT_M
+        kit.quad([[c0[0], c0[1], c0[2] - 0.10], [c1[0], c1[1], c1[2] - 0.10], [c1[0], c1[1], c1[2] + fh], [c0[0], c0[1], c0[2] + fh]],
+                 [[u0, v0 + dv * 0.74], [u1, v0 + dv * 0.74], [u1, v0 + dv * 0.90], [u0, v0 + dv * 0.90]], [_fol([0, 0, 1], 1.0)] * 4)
     return L
 
 
