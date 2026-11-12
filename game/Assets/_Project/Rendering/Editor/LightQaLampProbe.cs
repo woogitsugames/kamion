@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using UnityEngine;
 
 namespace Game.Rendering.Editor
@@ -35,6 +36,7 @@ namespace Game.Rendering.Editor
             public string name, shader;
             public Vector4 emission;
             public float cull;
+            public bool registered;
         }
         [Serializable] sealed class Document
         {
@@ -68,10 +70,10 @@ namespace Game.Rendering.Editor
                 }
             }
             if(m_LampSurfaces==null)
-                m_LampSurfaces=Resources.FindObjectsOfTypeAll<Material>()
-                    .Where(m=>StreetLamps.IsLampGlass(m))
+                m_LampSurfaces=((IEnumerable<Material>)typeof(StreetLamps).GetField("s_Glass",BindingFlags.NonPublic|BindingFlags.Static).GetValue(null))
+                    .Where(m=>m!=null)
                     .Select(m=>new LampSurface{name=m.name,shader=m.shader!=null?m.shader.name:"missing",
-                        emission=m.HasProperty("_Emission")?m.GetVector("_Emission"):Vector4.zero,cull=m.HasProperty("_Cull")?m.GetFloat("_Cull"):-1})
+                        registered=true,emission=m.HasProperty("_Emission")?m.GetVector("_Emission"):Vector4.zero,cull=m.HasProperty("_Cull")?m.GetFloat("_Cull"):-1})
                     .ToArray();
             m_Cameras[qa.id] = new Snapshot {
                 camera = qa.id, diagnostics = StreetLamps.Diagnostics,
