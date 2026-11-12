@@ -28,7 +28,7 @@ exec(compile(ast.Module(body=[old_function],type_ignores=[]),'<round-r2-baseline
 baseline = namespace['reduce_round']
 
 
-def make_rim(name, split_profile, split_angular):
+def make_rim(name, profile_cut, angular_cut):
     profile = A.C.RIM_PROF + A.C.RIM_INNER[::-1]
     count = 40
     centre_x = -A.G.FRONT_TRACK/2
@@ -49,8 +49,8 @@ def make_rim(name, split_profile, split_angular):
     atlas = mesh.uv_layers.new(name='Atlas')
     for polygon,(c,r) in zip(mesh.polygons,cells):
         # Disjoint real chart boxes in UV, with identical continuous geometry.
-        xbase = .5 if split_angular and c >= 9 else 0
-        ybase = .5 if split_profile and r%2 else 0
+        xbase = .5 if angular_cut is not None and c >= angular_cut else 0
+        ybase = .5 if profile_cut is not None and r >= profile_cut else 0
         coordinates = ((c,r),(c+1,r),(c+1,r+1),(c,r+1))
         for loop,(column,ring) in zip(polygon.loop_indices,coordinates):
             atlas.data[loop].uv = (xbase+.05+.18*column/count,
@@ -73,30 +73,45 @@ def measure(obj):
 
 
 results = []
-for label,profile,angular in (('continuous',False,False),('profile-seams',True,False),
-                             ('angular-seam',False,True),('both-seams',True,True)):
-    row = {'case':label}
-    for key,function in (('baseline',baseline),('candidate',A.reduce_round)):
-        # The function recognizes the actual wheel role from its name.
-        obj = make_rim('wheel_FL_rim',profile,angular)
-        before = measure(obj)
-        columns = function(obj,24)
-        after = measure(obj)
-        row[key] = {'before':before,'after':after,'columns':columns}
-        bpy.data.objects.remove(obj,do_unlink=True)
-        if key == 'candidate' and after['cross_chart_triangles']:
-            raise AssertionError(f'{label}: candidate bridged atlas charts: {after}')
-    if (profile or angular) and row['baseline']['after']['cross_chart_triangles'] == 0:
-        raise AssertionError(f'{label}: test did not reproduce the previous reducer defect')
-    if not (profile or angular) and row['baseline']['after'] != row['candidate']['after']:
-        raise AssertionError('Continuous atlas changed unexpectedly')
-    results.append(row)
+profile_cuts = range(1,len(A.C.RIM_PROF+A.C.RIM_INNER[::-1])-1)
+cases = (
+    ('continuous',[(None,None)]),
+    ('profile-seams',[(r,None) for r in profile_cuts]),
+    ('angular-seams',[(None,c) for c in range(1,40)]),
+    ('both-seams',[(r,9) for r in profile_cuts]),
+)
+for label,variants in cases:
+    case = {'case':label,'variants':[],'baseline_cross_total':0,'candidate_cross_total':0}
+    for profile_cut,angular_cut in variants:
+        row = {'profile_cut':profile_cut,'angular_cut':angular_cut}
+        for key,function in (('baseline',baseline),('candidate',A.reduce_round)):
+            # The function recognizes the actual wheel role from its name.
+            obj = make_rim('wheel_FL_rim',profile_cut,angular_cut)
+            before = measure(obj)
+            columns = function(obj,24)
+            after = measure(obj)
+            row[key] = {'before':before,'after':after,'columns':columns}
+            mesh = obj.data
+            bpy.data.objects.remove(obj,do_unlink=True)
+            bpy.data.meshes.remove(mesh)
+            if key == 'candidate' and after['cross_chart_triangles']:
+                print('ATLAS_FAILED_VARIANT:',json.dumps(row))
+                raise AssertionError(f'{label}: candidate bridged atlas charts: {after}')
+            case[key+'_cross_total'] += after['cross_chart_triangles']
+        if label=='continuous' and row['baseline']['after'] != row['candidate']['after']:
+            raise AssertionError('Continuous atlas changed unexpectedly')
+        case['variants'].append(row)
+    print('ATLAS_CASE:',label,'variants=',len(variants),'baseline_cross=',case['baseline_cross_total'],
+          'candidate_cross=',case['candidate_cross_total'])
+    results.append(case)
+if not any(case['baseline_cross_total'] for case in results):
+    raise AssertionError('No fixture reproduced the previous reducer defect')
 
 source = ROOT/'tools/blender/truck/exterior/a6_export.py'
 output = ROOT/'artifacts/truck-r3/atlas-seam-regression.json'
 output.parent.mkdir(parents=True,exist_ok=True)
 output.write_text(json.dumps({'result':'Passed','baseline_commit':'e35eb7e5',
     'candidate_source_sha256':hashlib.sha256(source.read_bytes()).hexdigest(),
-    'note':'Synthetic regression of real BMesh reducer only; not an FBX, budget or visual acceptance.',
+    'note':'Exhaustive seam locations in four groups on the real reducer; at least one must reproduce the old defect. Not an FBX, budget or visual acceptance.',
     'cases':results},indent=2),encoding='utf8')
 print('TRUCK_ATLAS_SEAM_TEST: OK cases=4 '+str(output))
