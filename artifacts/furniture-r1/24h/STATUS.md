@@ -217,3 +217,5 @@ NASTĘPNY KROK: uv run --project tools/worldgen tools/worldgen/roads/build_world
 2026-11-12T01:43:26.7673620+01:00: ograniczone zapytanie Mapillary35m wybrało0zdjęć. Aby rozróżnić brak pokrycia od filtrów, dodano jawne podsumowanie liczby rekordów/odległości i pojedynczy wariant75m z panoramami (do8zdjęć). Token i podpisane adresy nadal wyłącznie w pamięci. NASTĘPNY KROK: sprawdzić wynik tej próby oraz końcowe testy.
 
 2026-11-12T01:49:40.4225282+01:00: obejrzano7/7 nowych zdjęć Mapillary. 117rekordów, najbliższe metadane38,6m od punktu modelu, 0panoram. Brak identyfikacji konkretnego starego betonowego słupa; nie uznano zdjęć za spełnienie I5. Zapisano obserwacje i pełne atrybucje. Budżet podsumowano: 102/110 wariantówLow z udowodnioną górną granicą<=2%, 8 niepotwierdzonych (above i3edge), drawsEst mesh/inst0 w220. NASTĘPNY KROK: odczytać końcowy GIS i zbadać każdą porażkę.
+
+2026-11-12T01:51:25.4791724+01:00: heavy gis final4; sukces=False; slot gpt-furniture-r1 zwolniony. NASTĘPNY KROK: sprawdzić log i kontynuować walidację rundy.
