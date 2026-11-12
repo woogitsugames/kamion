@@ -66,3 +66,5 @@ Krok 23: przygotowano, lecz nie zainstalowano/nie uruchomiono dwóch diagnostyk 
 Krok 24: zapisano gpu-proof-a.ps1 (NIE uruchomiony); wymaga pełnego after-a-inputs, identycznych źródeł/biblioteki i wolnego własnego Unity. Instaluje diagnostyki wyłącznie do ignorowanego _Generated/Editor, chroni SHA tablic, przywraca ustawienia i zwalnia slot w finally. Następny krok: nadal 86769, potem import/capture A, dopiero proof.
 
 Krok 25: doprecyzowano GPU wrapper: kod 0 dopiero po dwóch dowodach, 81 LOD opacity, zgodnym rozkładzie CPU/GPU i niezmienionych SHA źródeł/tablic. Błąd walidatora nie może zapisać pozornego sukcesu. Nie wykonano jeszcze testu A ani GPU (86769 nadal kolejka heavy). Następny krok: 86769, świeży import/capture A.
+
+Krok 26: przyszły capture A sprawdzi siedem SHA produkcji, GLB/meta i packet przed/po KAŻDYM Unity, aby odrzucić mieszanie etapów. Baseline jest już ukończony; nie renderowano go ponownie. Następny krok: 86769, po sukcesie import/capture A i porównanie dokładnych liczników oraz pozy.
