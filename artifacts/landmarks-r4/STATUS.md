@@ -42,3 +42,5 @@ Krok 5f: przygotowano analyze.ps1 — także duże porównanie244 PNG i składan
 Krok 6: generator wariantu zakończony bez fallback=True; audyt GLB zaliczony. Następnie dwa pojedyncze pliki testów, każdy w osobnym heavy, bez trzymania heavy przez import/render.
 
 Krok 6a: audyt finalnego GLB próby PASS:660/282 zmienionych trójkątów High/Low, wszystkie wewnątrz3 koron,11624 identyczne z pełnymi atrybutami, LOD2 i anchor/ground identyczne. Generator623,9s bez fallback=True. Zapisuję wygenerowane wyjścia do WIP. Pierwszy plik testów czeka FIFO10; przygotowano niezależny preview8PNG Low/High overcast pod Unity, z własnym markerem DIAGNOSTICS_RUNNING blokującym ewentualny równoległy import głównej kolejki. Model pozostaje zamrożony.
+
+Krok 6b: world_scope.py PASS: cały manifest semantycznie identyczny z baseline, wszystkie128 GLB chunków i64 pliki instancji zgodne bajtowo z tymi samymi SHA, roads_qa identyczny bajtowo, wszystkie definicje materiałów identyczne. Zmiana pozostaje w osobnym GLB remizy. Wczesny podgląd ma slot Unity; testy nadal czekają pod heavy, model bez kolejnych zmian.
