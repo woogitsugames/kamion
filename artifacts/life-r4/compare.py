@@ -38,7 +38,8 @@ for condition in ('Low-clear','Low-overcast','High-clear','High-overcast'):
                 rows[camera].update(world_triangles=value['worldTriangles'], instance_triangles=value['instanceTriangles'])
         for camera, value in exact_stages[0].items():
             other = exact_stages[1][camera]
-            assert value['aspect'] == other['aspect'] and value['fov'] == other['fov'], camera
+            for field in ('position', 'rotation', 'aspect', 'fov', 'orthographic', 'orthographicSize'):
+                assert value[field] == other[field], (camera, field, 'Pose/projection changed')
     if before.keys() != after.keys():
         raise ValueError(f'Camera mismatch: {condition}')
     rows=[]
@@ -70,7 +71,7 @@ for condition in ('Low-clear','Low-overcast','High-clear','High-overcast'):
     pairs=sorted(out.glob('*.jpg'))
     for start in range(0,len(pairs),3):
         page=Image.new('RGB',(960,780),'#252525')
-        ImageDraw.Draw(page).text((5,5),f'{condition} | life r2 baseline / candidate',fill='white')
+        ImageDraw.Draw(page).text((5,5),f'{condition} | life r4 baseline / candidate',fill='white')
         for index,pair in enumerate(pairs[start:start+3]):
             with Image.open(pair) as frame:page.paste(frame,(0,30+index*250))
         page.save(out/f'page-{start//3:02d}.png')
