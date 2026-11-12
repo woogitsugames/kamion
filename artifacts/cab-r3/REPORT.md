@@ -25,3 +25,13 @@ Podczas kolejki fidelity wykonano dodatkowy, wyłącznie odczytowy audyt okluzji
 
 Krzyżowa kontrola GPU prawego szerokokątnego: maska powierzchni szkła pokrywa także szeroki ciemny prostokąt widoczny w zwykłym obrazie. Dla badanego DriverEyePoint jest to treść RT, nie szerokie zasłonięcie kanałem drzwi. Nie zmieniano geometrii i FOV. Low exit 0; High ma komplet 8 świeżych PNG i marker OK, lecz proces zakończył się -1073741819 podczas zamykania, więc ten dodatkowy pomiar High jest opisany z ograniczeniem. OCCLUSION-GPU-PREFLIGHT.md i occlusion-gpu-mask-counts.json podają zakres; nie jest to dowód dla wszystkich pozycji oka ani procent okluzji.
 
+
+Para rzeczywiste zdjęcie | render (maksymalnie 960 px). Zdjęcie Volvo ma prawa autorskie i służy tylko prywatnemu porównaniu; inne auto, poza i ekspozycja. Nie jest zasobem gry ani dopasowaniem fotometrycznym.
+
+![Zdjęcie Volvo i render night1, porównanie jakościowe](photo-night-reference-vs-render-960.jpg)
+
+Detale baseline | night1 na Low oraz High (maksymalnie 960 px); komplet macierzy i ocena w VISUAL-REVIEW.md.
+
+![Detale podświetlenia Low przed i po](backlight-details-Low-960.jpg)
+
+![Detale podświetlenia High przed i po](backlight-details-High-960.jpg)
