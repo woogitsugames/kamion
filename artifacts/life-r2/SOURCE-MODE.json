@@ -1,7 +1,10 @@
 {
-    "requires_shader_recompile":  true,
-    "requires_world_regeneration":  false,
+    "requires_shader_recompile":  false,
+    "verified_frames":  456,
+    "capture":  "after-c-exact",
     "native_library":  "candidate-b",
-    "source_change":  "only _CARPAINT mode 2 dust envelope",
-    "mode":  "candidate-b-library-with-c-shader"
+    "author_selection":  "pending full sheet review",
+    "shader_source_commit":  "d47d3d72",
+    "mode":  "candidate-c-native-captured",
+    "requires_world_regeneration":  false
 }
