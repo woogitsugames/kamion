@@ -16,3 +16,5 @@ Brak tagu shelter/bin nie dowodzi braku obiektu; brak widoczności zdjęcia rów
 NASTĘPNY KROK:przygotować baseline po merge (cachePBR jeżeli nieaktualny,
 build_world w heavyOwner gpt-furniture-r3, import/rendery w UnityOwnergpt-furniture),
 potem poprawić największe udokumentowane odstępstwo wiaty. WIP po każdym kroku.
+
+2026-11-12T11:01:04.0365756+01:00: przygotowano helpery r3 z identyfikatorem artefaktówr3 i właścicielemheavy bieżącej gałęzi. Przed baseline sprawdzeniecachePBR:nieaktualnychplikówMedium=0. Baseline kolejnoPBR,world,snapshot,import,220 kadrówclear/overcast. Brak nowych zmian geometrii przed baseline.

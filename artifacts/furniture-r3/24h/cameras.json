@@ -1,0 +1,124 @@
+{
+  "cameras": [
+    {
+      "id": "furniture-footing-slope",
+      "type": "persp",
+      "fov_deg": 50,
+      "pos": [
+        -723.302,
+        69.779,
+        141.287
+      ],
+      "look_at": [
+        -727.302,
+        74.779,
+        141.187
+      ],
+      "note": "ADR0102 authored close-up from baseline instance; fixed for before/after.",
+      "seat": "file"
+    },
+    {
+      "id": "furniture-old-steel",
+      "type": "persp",
+      "fov_deg": 50,
+      "pos": [
+        33.408,
+        -479.929,
+        143.93200000000002
+      ],
+      "look_at": [
+        24.408,
+        -467.929,
+        143.93200000000002
+      ],
+      "note": "ADR0102 authored close-up from baseline instance; fixed for before/after.",
+      "seat": "file"
+    },
+    {
+      "id": "furniture-old-concrete",
+      "type": "persp",
+      "fov_deg": 50,
+      "pos": [
+        365.883,
+        -564.258,
+        145.573
+      ],
+      "look_at": [
+        356.883,
+        -552.258,
+        145.573
+      ],
+      "note": "ADR0102 authored close-up from baseline instance; fixed for before/after.",
+      "seat": "file"
+    },
+    {
+      "id": "furniture-sign-back",
+      "type": "persp",
+      "fov_deg": 50,
+      "pos": [
+        -269.2014396789257,
+        -235.32291884056175,
+        132.191
+      ],
+      "look_at": [
+        -272.472,
+        -233.02,
+        132.191
+      ],
+      "note": "ADR0102 authored close-up from baseline instance; fixed for before/after.",
+      "seat": "file"
+    },
+    {
+      "id": "furniture-fence",
+      "kind": "photo_match",
+      "seat": "file",
+      "fov_deg": 55,
+      "pos": [
+        24.614279025619833,
+        -575.0933116232131,
+        141.74030670634014
+      ],
+      "look_at": [
+        23.239999999990687,
+        -580.7600000000093,
+        140.88006408789198
+      ],
+      "note": "ADR0102 authored OSM fence 590134608; fixed A/B pose, NMT height WORKING_VALUE."
+    },
+    {
+      "id": "furniture-concrete-foot-close",
+      "type": "persp",
+      "seat": "file",
+      "fov_deg": 50,
+      "pos": [
+        358.08299999999997,
+        -553.158,
+        142.573
+      ],
+      "look_at": [
+        356.883,
+        -552.258,
+        141.923
+      ],
+      "note": "ADR0120 fixed baseline instance E356.883 N-552.258 U141.573; camera 1.5 m horizontally from the column; ground and lower shaft."
+    },
+    {
+      "id": "furniture-concrete-collars",
+      "type": "persp",
+      "seat": "file",
+      "fov_deg": 50,
+      "pos": [
+        360.883,
+        -557.258,
+        149.37300000000002
+      ],
+      "look_at": [
+        356.883,
+        -552.258,
+        149.37300000000002
+      ],
+      "note": "ADR0120 diagnostic arm-collar view derived from actual baseline instance altitude, fixed before/after."
+    }
+  ]
+}
+
