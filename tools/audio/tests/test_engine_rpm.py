@@ -75,7 +75,7 @@ def test_analyse_end_to_end_on_synthetic_wav(tmp_path):
     assert r["ladder_n"] >= 3, f"ladder_n={r['ladder_n']}"
 
 
-@pytest.mark.skip(reason="KNOWN BUG (not fixed per task): el_analyze.py comb_estimate computes the octave "
+@pytest.mark.skip(reason="KNOWN BUG (not fixed per task): el_analyze.py:146-160 comb_estimate computes the octave "
                           "check (comb_half/comb_double) but never applies it, so on a synthetic 1500 rpm "
                           "harmonic ladder (75 Hz firing line) read back from a float32 WAV it returns "
                           "comb_f = 149 Hz -> comb_rpm = 2980 (octave up). Expected comb_rpm = 1500 +- 3 %. "
