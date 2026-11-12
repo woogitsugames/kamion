@@ -75,6 +75,7 @@ namespace Game.Rendering
         public static bool? GlassFast;   // rq_glassfast (tier override, ADR 0106)
         public static bool? ForestFast;  // rq_forestfast (tier override, ADR 0113)
         public static float? VehicleCull; // rq_vehcull (m, tier override; 0 = common 300 m; ADR 0136 r2)
+        public static bool Landscape;     // rq_landscape=1: device measurement forced to landscape left (DiagLandscape)
         public static int? GlassDebug;   // rq_glassdbg (with rq_ab glassdbg: the B level of _KamionGlassDebug)
         /// <summary>ADR 0106 A/B state (ExtraViewCostMonitor): instanced trees / props suspended in the B windows.</summary>
         public static bool AbTreesOff, AbPropsOff, AbTreeShadowOff, AbHlodOff, AbImpostorOff;
@@ -141,6 +142,7 @@ namespace Game.Rendering
             LodBias = F(arg("rq_lod")); FarClip = F(arg("rq_far")); CullMask = I(arg("rq_mask")); Props = B(arg("rq_props")); Hud = B(arg("rq_hud")); GlassDebug = I(arg("rq_glassdbg")); GlassFast = B(arg("rq_glassfast"));   // ADR 0106
             ForestFast = B(arg("rq_forestfast"));   // ADR 0113
             VehicleCull = F(arg("rq_vehcull"));      // ADR 0136 r2
+            Landscape = B(arg("rq_landscape")) == true;   // ADR 0136 r2: measurement runs in landscape (DiagLandscape)
             PsoWarmup.Init(arg);   // ADR 0113: PSO warm-up / trace, spike probe (player only)
             string ab = arg("rq_ab");
             Ab = string.IsNullOrEmpty(ab) ? null : ab.ToLowerInvariant();
