@@ -144,7 +144,7 @@ namespace Game.Rendering
             "hlod1pass" => "forest HLOD edge walls one-pass toggled (no depth pre-pass, ZWrite colour pass)",
             "canopyfast" => "forest HLOD canopy Kamion/Forest Canopy vs URP Lit toggled",
             "veganiso" => "vegetation textures aniso 1 (import: 2)",
-            _ => "unknown key (no change)",
+            _ => key.IndexOf(':') > 0 ? "generic material ablation (ADR 0136): " + key : "unknown key (no change)",
         };
 
         void OnBegin(ScriptableRenderContext ctx, Camera cam)
@@ -310,6 +310,131 @@ namespace Game.Rendering
             m_AbLogged = true;
         }
 
+        // ---------------- ADR 0136: generic material ablation ----------------
+        // rq_ab "<op>:<sel>[:args][+<op>:<sel>...]" (lower case, no spaces; several parts applied together in B).
+        //   off:s.<sub>                every pass of materials whose shader name (lower, no spaces) contains sub is disabled
+        //   off:m.<sub>                same, materials whose name (lower) contains sub
+        //   kwoff:<sel>:<keyword>      local keyword disabled on the selected materials (keyword upper-cased)
+        //   kwon:<sel>:<keyword>       local keyword enabled
+        //   vec:<sel>:<prop>:<c>:<v>   component c (0..3) of a vector property set to v (property matched ignoring case)
+        //   flt:<sel>:<prop>:<v>       float property set to v
+        //   gkw:<keyword>              global keyword flipped
+        // Applies to every loaded Material (renderers and Graphics.RenderMesh* alike). A restores the saved values.
+        static readonly string[] s_PassTags = { "UniversalForward", "UniversalForwardOnly", "SRPDefaultUnlit", "DepthOnly", "DepthNormals", "DepthNormalsOnly", "ShadowCaster", "MotionVectors" };
+        struct GenUndo { public Material m; public int op; public string name; public Vector4 v; public float f; public bool on; }
+        readonly System.Collections.Generic.List<GenUndo> m_GenUndo = new System.Collections.Generic.List<GenUndo>();
+        bool m_GenLogged;
+
+        static bool Sel(Material m, string sel)
+        {
+            if (m == null || sel.Length < 3) return false;
+            string sub = sel.Substring(2);
+            if (sel[0] == 's') return m.shader != null && m.shader.name.Replace(" ", "").ToLowerInvariant().Contains(sub);
+            if (sel[0] == 'm') return m.name.ToLowerInvariant().Contains(sub);
+            return false;
+        }
+
+        static string PropName(Material m, string lower)
+        {
+            var sh = m.shader;
+            if (sh == null) return null;
+            int n = sh.GetPropertyCount();
+            for (int i = 0; i < n; i++) { string pn = sh.GetPropertyName(i); if (pn.ToLowerInvariant() == lower) return pn; }
+            return null;
+        }
+
+        void SetGeneric(bool b)
+        {
+            if (!b)
+            {
+                for (int i = m_GenUndo.Count - 1; i >= 0; i--)
+                {
+                    var u = m_GenUndo[i];
+                    if (u.op == 4) { if (u.on) Shader.EnableKeyword(u.name); else Shader.DisableKeyword(u.name); continue; }
+                    if (u.m == null) continue;
+                    switch (u.op)
+                    {
+                        case 0: u.m.SetShaderPassEnabled(u.name, u.on); break;
+                        case 1: if (u.on) u.m.EnableKeyword(u.name); else u.m.DisableKeyword(u.name); break;
+                        case 2: u.m.SetVector(u.name, u.v); break;
+                        case 3: u.m.SetFloat(u.name, u.f); break;
+                    }
+                }
+                m_GenUndo.Clear();
+                return;
+            }
+            var mats = Resources.FindObjectsOfTypeAll<Material>();
+            var sb = m_GenLogged ? null : new System.Text.StringBuilder();
+            foreach (var part in m_AbKey.Split('+'))
+            {
+                var a = part.Split(':');
+                if (a.Length < 2) continue;
+                string op = a[0];
+                if (op == "gkw")
+                {
+                    string kw = a[1].ToUpperInvariant();
+                    bool on = Shader.IsKeywordEnabled(kw);
+                    m_GenUndo.Add(new GenUndo { op = 4, name = kw, on = on });
+                    if (on) Shader.DisableKeyword(kw); else Shader.EnableKeyword(kw);
+                    sb?.Append($" gkw {kw} {on}->{!on};");
+                    continue;
+                }
+                int hits = 0;
+                foreach (var m in mats)
+                {
+                    if (!Sel(m, a[1])) continue;
+                    switch (op)
+                    {
+                        case "off":
+                            foreach (var t in s_PassTags)
+                            {
+                                if (!m.GetShaderPassEnabled(t)) continue;
+                                m_GenUndo.Add(new GenUndo { m = m, op = 0, name = t, on = true });
+                                m.SetShaderPassEnabled(t, false);
+                            }
+                            break;
+                        case "kwoff":
+                        case "kwon":
+                        {
+                            if (a.Length < 3) continue;
+                            string kw = a[2].ToUpperInvariant();
+                            bool on = m.IsKeywordEnabled(kw), want = op == "kwon";
+                            if (on == want) continue;
+                            m_GenUndo.Add(new GenUndo { m = m, op = 1, name = kw, on = on });
+                            if (want) m.EnableKeyword(kw); else m.DisableKeyword(kw);
+                            break;
+                        }
+                        case "vec":
+                        {
+                            if (a.Length < 5) continue;
+                            string pn = PropName(m, a[2]);
+                            if (pn == null) continue;
+                            var v = m.GetVector(pn);
+                            m_GenUndo.Add(new GenUndo { m = m, op = 2, name = pn, v = v });
+                            int c = Mathf.Clamp(int.Parse(a[3], System.Globalization.CultureInfo.InvariantCulture), 0, 3);
+                            v[c] = float.Parse(a[4], System.Globalization.CultureInfo.InvariantCulture);
+                            m.SetVector(pn, v);
+                            break;
+                        }
+                        case "flt":
+                        {
+                            if (a.Length < 4) continue;
+                            string pn = PropName(m, a[2]);
+                            if (pn == null) continue;
+                            m_GenUndo.Add(new GenUndo { m = m, op = 3, name = pn, f = m.GetFloat(pn) });
+                            m.SetFloat(pn, float.Parse(a[3], System.Globalization.CultureInfo.InvariantCulture));
+                            break;
+                        }
+                        default: continue;
+                    }
+                    hits++;
+                    if (sb != null && hits <= 24) sb.Append(' ').Append(m.name).Append('[').Append(m.shader != null ? m.shader.name : "-").Append(']');
+                }
+                sb?.Append($" | {part}: {hits} materials;");
+            }
+            if (sb != null) { Debug.Log("[PASSAB] generic" + sb); m_GenLogged = true; }
+        }
+
         static readonly float[] s_Tmp = new float[2048];
 
         static float P(float[] a, int n, float q)
@@ -389,6 +514,9 @@ namespace Game.Rendering
                 case "hlod1pass": ForestFastPath.FlipEdgeOnePass = b; ForestFastPath.Refresh(); break;
                 case "canopyfast": ForestFastPath.FlipCanopy = b; break;
                 case "veganiso": ForestFastPath.FlipAniso = b; ForestFastPath.Refresh(); break;
+                default:
+                    if (m_AbKey.IndexOf(':') > 0) SetGeneric(b);   // ADR 0136
+                    break;
                 case "shadowcasc":
                     if (urp == null) break;
                     if (b) { m_SavedCascades = urp.shadowCascadeCount; urp.shadowCascadeCount = Mathf.Max(1, m_SavedCascades - 1); }
