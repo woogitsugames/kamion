@@ -159,7 +159,7 @@ namespace Game.Rendering.Editor
                 s_Render=Type.GetType("Game.Editor.VisualQA.VisualQaRunner, Game.Editor",true).GetMethod("RenderToPixels",BindingFlags.NonPublic|BindingFlags.Static);
                 if(s_Render==null)throw new MissingMethodException("World QA render path");
                 var inputs=HoldoutInputs();var gradients=GradientInputs();int imageCount=0;
-                foreach(string name in new[]{"Clear","Overcast","Night"}){
+                foreach(string name in new[]{"Clear","Overcast","LowSun","Dusk","Night"}){
                     var preset=PreparePreset(name);
                     Texture3D cube=null;string sourceFormat=null;int copyPasses=0;
                     try{
@@ -237,7 +237,7 @@ namespace Game.Rendering.Editor
                         File.WriteAllText(Path.Combine(folder,name+"-gradient-proof.json"),JsonUtility.ToJson(new Proof{preset=name,domain=domain,measurements=gradientMeasurements},true));
                     }finally{if(cube!=null)UnityEngine.Object.DestroyImmediate(cube);if(s_Material!=null)UnityEngine.Object.DestroyImmediate(s_Material);}
                 }
-                Debug.Log($"LIGHT_NATIVE_GRADE_LAB_RESULT: OK images={imageCount} cubes=3 holdoutPerPreset=192 gradientPerPreset=12288 physicalBypassMax=0");exit=0;
+                Debug.Log($"LIGHT_NATIVE_GRADE_LAB_RESULT: OK images={imageCount} cubes=5 holdoutPerPreset=192 gradientPerPreset=12288 physicalBypassMax=0");exit=0;
             }catch(Exception ex){Debug.LogException(ex);Debug.Log("LIGHT_NATIVE_GRADE_LAB_RESULT: FAILED");}
             finally{s_HdrReference=false;EditorSceneManager.NewScene(NewSceneSetup.EmptyScene,NewSceneMode.Single);}
             if(Application.isBatchMode)EditorApplication.Exit(exit);
@@ -323,4 +323,5 @@ namespace Game.Rendering.Editor
         }
     }
 }
+
 
