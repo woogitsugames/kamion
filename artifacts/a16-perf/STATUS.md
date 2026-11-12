@@ -7,3 +7,7 @@
   trees +2.53 (0113 oczekiwane ~1,7-2,3), fsign +0.06, plot +0.38. ab_far: logcat nie zebrany (phone-diag zawisł po device-metrics 18 min),
   sweep przerwany na polecenie lidera, PHONE_RUN usunięty 16:16. Poprawka: PHONE_RUN tylko na czas pomiaru, timeout na adb po runie.
   NASTĘPNY KROK: `pwsh artifacts/a16-perf/run-diag1.ps1 -Only ab_far,ab_decal,ab_fab,ab_bld,ab_hedge,ab_noise,ab_carfilm` (APK już zainstalowany).
+- 16:57 (s13) diag1 c.d. (Δ GPU p50 A-B, G3-B uncapped): far +0.23, decal +0.12, fab -0.12, bld -0.34, hedge +0.14, noise/gantry +0.08,
+  carfilm -0.12, mirrors +0.93 (=0106). Drzewa per okno: 6.6-8.7 ms w oknach 3-4 (s≈1300-1450, las przy drodze) vs ~2.5 dalej -> piki p99.
+  Uncapped dziś ≈ s10 capped; realna regresja ~+3 ms rozproszona (sum. małych +1.7 + drzewa). Ustawienia jakości/URP bez zmian s10->s12.
+  NASTĘPNY KROK: czekaj na envcap/shadows/hlodedge/hlodcanopy/impostor (`python artifacts/a16-perf/abwin.py artifacts/a16-perf/diag1/ab_*`).
