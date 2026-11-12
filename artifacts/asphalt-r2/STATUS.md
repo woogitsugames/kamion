@@ -11,3 +11,4 @@
 2026-11-12T01:09:47.8771749+01:00: Potwierdzono źródłowy kontrakt MaskMap.B = 1-Var.B dla krawężnika: max błąd PNG 0. Dla paving max błąd 1, więc nie wolno zakładać takiej zgodności. Potencjalne użycie już pobranej maski krawężnika oszczędzi dodatkowy fetch, ale wymaga sprawdzenia ASTC/renderu. Parametrów materiałów nadal nie zmieniono. Baseline World czeka na heavy w aktywnej kolejce 87802.
 2026-11-12T01:17:46.9572438+01:00: heavy World owner=gpt-asphalt-r2 exit=0; log artifacts/asphalt-r2/baseline-World.log. Slot zwolniony po zakończeniu procesu.
 2026-11-12T01:17:48.2035662+01:00: Świat i materiały baseline po merge main gotowe, brak Megascans fallback, audyt odwołań bez rozbieżności. Następny krok: import i cztery serie baseline.
+2026-11-12T01:19:55.5463891+01:00: zapisano artifacts/asphalt-r2/baseline/Low-overcast. Następny krok: pozostałe serie lub porównanie wariantu.
