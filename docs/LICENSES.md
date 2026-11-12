@@ -266,6 +266,15 @@ Zdjęcia nie wchodzą do builda ani tekstur. Rejestr: [`docs/refs/posesje-bialys
 - Odrzucone: `Wysoki stoczek 58 Bialystok.jpg` (wygląd jak zrzut z panoramy Google; usunięty z dysku i manifestu).
 - Google Maps/Street View/Earth/3D Tiles: nie użyte.
 
+## ADR 0120 — pochodne tekstury mebli ulicznych (2026-11-11)
+
+`furniture_concrete`, `furniture_footing` i `furniture_plinth` korzystają z istniejącego
+skanu `brushed_concrete`, Poly Haven, CC0 1.0 (Dario Barresi / Dimitrios Savva;
+źródło i hash w tabeli ADR 0063 oraz `cc0_manifest.json`). Generator pozostaje
+w `streetscape/furniture_textures.py`. `plate_back` to własna tekstura proceduralna.
+Nie dodano nowego źródła ani pikseli Fab. Fotografie użyte w porównaniach tej rundy
+służą wyłącznie jako referencje; atrybucje z istniejących rejestrów zapisano też
+w `artifacts/furniture-r1/24h/reference-selection.json`. Nie trafiają do tekstur gry.
 ## Niebo fotograficzne — ADR 0108, light r1
 - Zasób: Kloofendal 48d Partly Cloudy (Pure Sky), Poly Haven: https://polyhaven.com/a/kloofendal_48d_partly_cloudy_puresky
 - Autorzy: Greg Zaal (oryginał), Jarod Guest (edycja czystego nieba). Licencja CC0 1.0: https://polyhaven.com/license (sprawdzono 2026-11-11).
@@ -288,3 +297,15 @@ Pochodne gry: istniejące pary Detail/Normal materiałów `MI_Cab_Leather` oraz 
 
 ## Life r3 — referencje analityczne (nie zasoby gry)
 Greg Schechter, 2200 km Later, oraz Nenad Stojkovic, Dirty back car window: CC BY 2.0; strony źródłowe, licencja i miniatury z atrybucją w artifacts/life-r3/refs/REFERENCES.md. Johann H. Addicks: wyłącznie udostępniona jako PD miniatura 250 px Salt coverd car during winter P1020038, bez oryginału. Brak kopiowania znaków/logo/tablic do gry.
+
+## ADR 0120 r2 — wariant materiału znaków oparty o URP Lit
+
+Szkielet `FurnitureSign.shader` oraz część funkcji Forward w
+`FurnitureSignForward.hlsl` pochodzą z zainstalowanego pakietu Unity URP:
+com.unity.render-pipelines.universal, copyright © 2020 Unity Technologies ApS,
+[Unity Companion License](https://unity.com/legal/licenses/unity-companion-license).
+Pozostałe przebiegi i funkcje są używane bezpośrednio z pakietu.
+Własny dodatek to analityczny odblask i czytnik stanu istniejących reflektorów.
+Wersja źródeł, hashe i skrypt odtworzenia są w
+`artifacts/furniture-r2/24h/candidate-src/provenance.json` oraz
+`artifacts/furniture-r2/24h/prepare-sign-prototype.ps1`. Nie użyto grafiki producentów folii.

@@ -81,13 +81,15 @@ class Buffer:
         self.parts.append((layer, mat, np.asarray(V), np.asarray(T)))
 
 
-def test_panel_fence_has_level_bays_corner_posts_and_buried_feet():
+def test_panel_fence_keeps_regular_corner_posts_and_follows_the_grade():
     buf = Buffer()
     lin = F.Lin(buf, lambda e, n: 0.4 * e)
     F.panel_fence(lin, LineString([(0, 0), (4, 0), (4, 2)]), "fence_green", "test")
     mesh = [v for layer, mat, v, t in buf.parts if mat == "fence_green_mesh"]
     for v in mesh:
-        assert np.ptp(v[len(v)//2:, 2]) == 0  # level top, not sheared mesh
+        top = v[len(v)//2:]
+        from roads import standards as S
+        assert np.max(np.abs(top[:,2]-.4*top[:,0]-S.FENCE_H)) < .02
     posts = next(v for layer, mat, v, t in buf.parts if mat == "fence_green")
     for v in posts.reshape(-1, 8, 3):
         e = v[:, 0].mean()

@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using Game.Editor.Build;
+using Game.Rendering.Editor;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -88,6 +89,9 @@ namespace Game.World.Import
         public static void Channels(Dictionary<string, object> def, string id, out bool uv0, out bool uv1, out bool colors)
         {
             uv0 = uv1 = colors = false;
+            // ADR0120: the existing World Surface material reads a byte-stable board marker, not UVs.
+            if (id == "concrete_plinth" && def.Get("furniture_plinth_detail") is Dictionary<string, object>) { colors = true; return; }
+            if (def.Get("furniture_sign_face") is string) { uv0 = true; return; }
             if (id != null && id.StartsWith("fab_", StringComparison.Ordinal) && FabMaterials.Has(id)) { uv0 = true; return; }
             if (!Has(def, id)) return;
             var s = Set(def.Get("texture_set") as string);
@@ -139,6 +143,22 @@ namespace Game.World.Import
         /// <summary>PBR material for a manifest material, or null when its set is missing (caller falls back).</summary>
         public static Material Create(RegionImporter.Result r, string id, Dictionary<string, object> def, string path)
         {
+            if (id == "plate_back" && def.Get("furniture_sign_fronts") is Dictionary<string, object> fronts)
+                FurnitureSignFronts(r, fronts);
+            if (def.Get("furniture_sign_face") is string face) return FurnitureSign(r, id, def, face, path);
+            // ADR0120 additive, data-gated route: retain the original World Surface factory and material identity.
+            if (id == "concrete_plinth")
+            {
+                if (def.Get("furniture_plinth_detail") is Dictionary<string, object> detail)
+                    return FurniturePlinth(r, def, detail, path);
+                var previous = AssetDatabase.LoadAssetAtPath<Material>(path);
+                if (previous != null && previous.IsKeywordEnabled("_FURNITURE_PLINTH"))
+                {
+                    previous.DisableKeyword("_FURNITURE_PLINTH");
+                    previous.SetTexture("_FurnitureMap", null);
+                    EditorUtility.SetDirty(previous);
+                }
+            }
             if (!Has(def, id)) return null;
             var shader = Shader.Find(ShaderName) ?? throw new InvalidOperationException(ShaderName + " not found (compile error?)");
             var mat = AssetDatabase.LoadAssetAtPath<Material>(path);
@@ -550,6 +570,88 @@ namespace Game.World.Import
             if (!AssetDatabase.IsValidFolder(dir)) return Array.Empty<Texture>();
             return AssetDatabase.FindAssets("t:Texture2D", new[] { dir }).Select(AssetDatabase.GUIDToAssetPath)
                 .Where(p => !p.EndsWith("_Var.png")).Select(AssetDatabase.LoadAssetAtPath<Texture>).Where(t => t != null).ToArray();
+        }
+
+        // A plate assembly's explicit data flag registers only its actual front IDs. RegionImporter
+        // iterates a ToList snapshot of MaterialDefs before importing prototypes, so these additions
+        // safely provide their existing texture/UV path without editing the generic prototype importer.
+        static void FurnitureSignFronts(RegionImporter.Result r, Dictionary<string, object> settings)
+        {
+            string meta = Path.Combine(EditorTools.RepoRoot, "art-source", "world", "props", "props_meta.json");
+            var prototypes = Obj(Obj(Parse(File.ReadAllText(meta))).Get("prototypes"));
+            var faces = new HashSet<string>(StringComparer.Ordinal);
+            foreach (var proto in prototypes.Values)
+                foreach (var material in Arr(Obj(proto).Get("materials")))
+                    if (material is string name && name.StartsWith("sign_", StringComparison.Ordinal)
+                        && !name.StartsWith("sign_facade_", StringComparison.Ordinal)) faces.Add(name);
+            foreach (string name in faces.OrderBy(x => x, StringComparer.Ordinal))
+            {
+                // An explicitly authored material definition from another domain retains ownership.
+                if (r.MaterialDefs.ContainsKey(name)) continue;
+                var face = new Dictionary<string, object> {
+                    { "color", new List<object> { 1.0, 1.0, 1.0 } }, { "rough", 0.45 },
+                    { "furniture_sign_face", name.Substring(5) },
+                    { "furniture_sign_retro", new Dictionary<string, object> { { "gain", Num(settings.Get("gain")) } } }
+                };
+                r.MaterialDefs[name] = face;
+                r.Materials[name] = FurnitureSign(r, name, face, name.Substring(5), $"{r.Dir}/Materials/M_{name}.mat");
+            }
+        }
+
+        // ADR0120 r2: explicit face data preserves the original Lit texture/UV path. The optional
+        // retro block selects the additive forward shader; removing it restores ordinary URP Lit.
+        static Material FurnitureSign(RegionImporter.Result r, string id, Dictionary<string, object> def,
+            string face, string path)
+        {
+            if (id != "sign_" + face || !System.Text.RegularExpressions.Regex.IsMatch(face, @"^[A-Z][A-Za-z0-9_-]*$"))
+                throw new InvalidOperationException("Invalid explicitly flagged furniture sign face");
+            string png = Path.Combine(EditorTools.RepoRoot, "art-source", "world", "signs", face + ".png");
+            if (!File.Exists(png)) throw new FileNotFoundException("Flagged furniture sign texture missing", png);
+            var tex = InstanceImporter.ImportTexture(r, png, clamp: true);
+            var c = Arr(def.Get("color"));
+            var color = new Color((float)Num(c[0]), (float)Num(c[1]), (float)Num(c[2]));
+            float rough = def.Get("rough") != null ? (float)Num(def.Get("rough")) : 0.45f;
+            var mat = RegionImporter.LitMaterial(path, color, rough, 0f, tex, true, 0.5f, false, null);
+            if (def.Get("furniture_sign_retro") is Dictionary<string, object> retro)
+            {
+                var shader = Shader.Find("Kamion/Furniture Sign") ?? throw new InvalidOperationException("Furniture sign shader missing");
+                mat.shader = shader;
+                mat.shaderKeywords = new[] { "_ALPHATEST_ON", "_FURNITURE_RETRO" };
+                float gain = Mathf.Max(0f, (float)Num(retro.Get("gain")));
+                // HDR Lit property: actual GPU readback receives this linear value directly.
+                // This is not the plain _Tint contract (which continues to use SetLinearTint).
+                mat.SetColor("_EmissionColor", new Color(gain, gain, gain, 1f));
+            }
+            else
+            {
+                mat.shaderKeywords = new[] { "_ALPHATEST_ON" };
+                mat.SetColor("_EmissionColor", Color.black);
+            }
+            EditorUtility.SetDirty(mat);
+            return mat;
+        }
+
+        static Material FurniturePlinth(RegionImporter.Result r, Dictionary<string, object> def,
+            Dictionary<string, object> detail, string path)
+        {
+            var c = Arr(def.Get("color"));
+            var albedo = new Color((float)Num(c[0]), (float)Num(c[1]), (float)Num(c[2]));
+            float rough = def.Get("rough") != null ? (float)Num(def.Get("rough")) : 0.9f;
+            float metal = def.Get("metal") != null ? (float)Num(def.Get("metal")) : 0f;
+            var mat = LookDevAssets.WorldMaterial(path, Str(def.Get("surface")), albedo, rough, metal, false);
+            mat.SetFloat("_GroundMasks", 0f); // same final state as RegionImporter's original fallback
+            string texture = detail.Get("texture") as string ?? "furniture_plinth";
+            if (texture != "furniture_plinth") throw new InvalidOperationException("Unexpected furniture plinth texture");
+            var scan = InstanceImporter.ImportTexture(r,
+                Path.Combine(EditorTools.RepoRoot, "art-source", "world", "textures", texture + ".png"), clamp: false);
+            mat.SetTexture("_FurnitureMap", scan);
+            mat.SetVector("_FurnitureDetail", new Vector4(
+                Mathf.Max(0.01f, (float)Num(detail.Get("tile_m"))),
+                Mathf.Max(0.01f, (float)Num(detail.Get("dirt_h"))),
+                Mathf.Clamp01((float)Num(detail.Get("dirt_strength"))), 0f));
+            mat.EnableKeyword("_FURNITURE_PLINTH");
+            EditorUtility.SetDirty(mat); // persisted scene material retains the build-time variant reference
+            return mat;
         }
 
         /// <summary>Estimated GPU bytes of the imported PBR textures (Android ASTC with mips, from the spec).</summary>

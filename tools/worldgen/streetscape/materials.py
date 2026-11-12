@@ -516,6 +516,15 @@ for _k in ("roof_tiles_red", "roof_tiles_brown"):
 M["plot_kit"] = {"color": [1.0, 1.0, 1.0], "rough": 0.85, "texture": "plot_kit", "alpha_cutoff": 0.5}
 M["plot_lawn"] = {"color": [0.150, 0.200, 0.060], "rough": 0.95, "surface": "grass", "texture_set": "grass_verge"}
 
+# ADR 0120, furniture-only alias: the shallow lamp footing keeps the concrete-base pigment,
+# but no longer samples the dirty ground line of the entire concrete pole atlas (review I3).
+# Existing material identity/slot count, linear tint and tiling rules stay unchanged.
+M["furniture_footing"] = {**M["furniture_footing"], "texture": "furniture_footing"}
+
+# ADR 0120: one existing material identity. Only panel_fence COLOR_0 markers activate this detail;
+# gates and noise-wall plinths retain the unmarked path. No texture_set/_Tile/_Tint contract changes.
+M["concrete_plinth"] = {**M["concrete_plinth"], "furniture_plinth_detail": {
+    "texture": "furniture_plinth", "tile_m": 1.0, "dirt_h": 0.25, "dirt_strength": 0.55}}
 
 # ADR0118 r1: asphalt-only overrides of the road material table (MATERIALS.update(M)).
 # WORKING_VALUE: judged against local photo wheel/centre ratio 0.67, not measured physical albedo.
@@ -584,3 +593,8 @@ def _underdeck_pier_weather():
 
 
 M["pier_yellow"].update(_underdeck_pier_weather())
+
+# ADR0120 r2: explicit road-sign assembly recipe; face IDs come from current props metadata.
+M["plate_back"] = {**M["plate_back"], "furniture_sign_fronts": {
+    "gain": 800.0,  # uncalibrated display coefficient, WORKING_VALUE
+}}

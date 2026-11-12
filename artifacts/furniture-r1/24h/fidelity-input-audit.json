@@ -1,0 +1,209 @@
+﻿[
+    {
+        "file":  "Data/Regions/bialystok-industrial-c/overrides.yaml",
+        "expected_sha256":  "47cd08d78ba86f275cae434301af233bcc6e4235d443d65b5697cfd838d10ad3",
+        "actual_sha256":  "bab8ec77f157bb8f478a5faa16ead67e02ab15578d36ed41b81f22a2979831f7",
+        "lf_sha256":  "1866517288dc1c1ff57629061ef9b877fc28453102d633e2bfb06725c1e7ccab",
+        "raw_matches":  false,
+        "lf_matches":  false,
+        "committed_blob_unchanged":  true
+    },
+    {
+        "file":  "Data/Regions/bialystok-industrial-c/roads.graph.json",
+        "expected_sha256":  "0bd625e041a6a2ca90a74f1652336c731182c234985352de4d377110f1d42cf6",
+        "actual_sha256":  "0bd625e041a6a2ca90a74f1652336c731182c234985352de4d377110f1d42cf6",
+        "lf_sha256":  "a18a4ceab78f91d41516eaef33122521a083d3f150ce3a3bff915f564431984f",
+        "raw_matches":  true,
+        "lf_matches":  false,
+        "committed_blob_unchanged":  true
+    },
+    {
+        "file":  "Data/Regions/bialystok-industrial-c/route_start.json",
+        "expected_sha256":  "c7ddb34ae01729cdf76c05f40edbcffe70f99d68852c32dc4325ca802f5f9d8a",
+        "actual_sha256":  "c7ddb34ae01729cdf76c05f40edbcffe70f99d68852c32dc4325ca802f5f9d8a",
+        "lf_sha256":  "82501495eef51d93bd92b13de8edb7a9c40b74809262ef6e37b54a8702931600",
+        "raw_matches":  true,
+        "lf_matches":  false,
+        "committed_blob_unchanged":  true
+    },
+    {
+        "file":  "tools/worldgen/roads/__init__.py",
+        "expected_sha256":  "328cd6e70845296ce7e67aee4b775c310c3fb318b638111b8ea4d4ad9ca0157b",
+        "actual_sha256":  "328cd6e70845296ce7e67aee4b775c310c3fb318b638111b8ea4d4ad9ca0157b",
+        "lf_sha256":  "0c26fa3038394a956286b47576ce1d6a0725f8dc0a2e7682901a055d264a6e40",
+        "raw_matches":  true,
+        "lf_matches":  false,
+        "committed_blob_unchanged":  true
+    },
+    {
+        "file":  "tools/worldgen/roads/aprons.py",
+        "expected_sha256":  "d25db7889d8805ea77e360148224cc820c9dbc459edc0441d9eef3429e0f320f",
+        "actual_sha256":  "d25db7889d8805ea77e360148224cc820c9dbc459edc0441d9eef3429e0f320f",
+        "lf_sha256":  "790b409e810cb5a80c9d2525eb34c80e994b9d7dc229ccb18983ee6a18736729",
+        "raw_matches":  true,
+        "lf_matches":  false,
+        "committed_blob_unchanged":  true
+    },
+    {
+        "file":  "tools/worldgen/roads/authored_paint.py",
+        "expected_sha256":  "9a4c11f8a7d02bc427e546a4aaa355b5ed9bd394ab801611e89373a0ecc7d3a8",
+        "actual_sha256":  "9a4c11f8a7d02bc427e546a4aaa355b5ed9bd394ab801611e89373a0ecc7d3a8",
+        "lf_sha256":  "e93fe9fbe14978adb222deca064bcb01c43b6550a122e713a3be0ac7625248a4",
+        "raw_matches":  true,
+        "lf_matches":  false,
+        "committed_blob_unchanged":  true
+    },
+    {
+        "file":  "tools/worldgen/roads/build_world.py",
+        "expected_sha256":  "81d52a2ee6a394640ef18ae9bb4b158eda3137de3904ab29897edcce08415ef4",
+        "actual_sha256":  "17610e90c69610e14e8bd34f040e73b65795a241408bc3befcbb824e221e6c0a",
+        "lf_sha256":  "c4f24275b256c630a9eae1fcc83138520f817d3fe6f9605ab45c6b49b6f8719f",
+        "raw_matches":  false,
+        "lf_matches":  false,
+        "committed_blob_unchanged":  true
+    },
+    {
+        "file":  "tools/worldgen/roads/consistency.py",
+        "expected_sha256":  "8acdbef67038fd66c7df6a8374115867f6a86bd580c2729a7af8d43295b4c726",
+        "actual_sha256":  "8acdbef67038fd66c7df6a8374115867f6a86bd580c2729a7af8d43295b4c726",
+        "lf_sha256":  "3fc1fe60e0680a728e7bee551f609520a4b54a962bf872d4c02314287fb0e7db",
+        "raw_matches":  true,
+        "lf_matches":  false,
+        "committed_blob_unchanged":  true
+    },
+    {
+        "file":  "tools/worldgen/roads/context.py",
+        "expected_sha256":  "c89b7fe82daaebd9d0c85bca4049fa33f1c38e250a74e7fcd043765a55d8a78c",
+        "actual_sha256":  "c89b7fe82daaebd9d0c85bca4049fa33f1c38e250a74e7fcd043765a55d8a78c",
+        "lf_sha256":  "90f3a943cc21d0be5c46f4346c01c02dfa52ef7abb3d850c0fbe20f31fe37aa2",
+        "raw_matches":  true,
+        "lf_matches":  false,
+        "committed_blob_unchanged":  true
+    },
+    {
+        "file":  "tools/worldgen/roads/decals.py",
+        "expected_sha256":  "5c63f4a5bf69b6a6e801e18a27f8b1569b6f1a773f4ce54627642c39590b4a6f",
+        "actual_sha256":  "5c63f4a5bf69b6a6e801e18a27f8b1569b6f1a773f4ce54627642c39590b4a6f",
+        "lf_sha256":  "2e3a058461a0554b1213496a4a8e41272e483cf470182e079de7600e206784fd",
+        "raw_matches":  true,
+        "lf_matches":  false,
+        "committed_blob_unchanged":  true
+    },
+    {
+        "file":  "tools/worldgen/roads/geom.py",
+        "expected_sha256":  "7e43689419909242550ff62e16c6baffa9343dac5d1a160dc0279a9bd49b8646",
+        "actual_sha256":  "7e43689419909242550ff62e16c6baffa9343dac5d1a160dc0279a9bd49b8646",
+        "lf_sha256":  "8f9f732d90273b92cf23f00f65c6a2c7eed6d1f9a0b3cc211679a908f2788e21",
+        "raw_matches":  true,
+        "lf_matches":  false,
+        "committed_blob_unchanged":  true
+    },
+    {
+        "file":  "tools/worldgen/roads/gores.py",
+        "expected_sha256":  "f16d45d1e402e6e93be5fd2c98412e05b264296895b468eebb59af1fe9cbffa3",
+        "actual_sha256":  "f16d45d1e402e6e93be5fd2c98412e05b264296895b468eebb59af1fe9cbffa3",
+        "lf_sha256":  "65f88ccd5794b0f1eaa77d12fe2297d36ca1a4a172339405b78bc5a82abb4aba",
+        "raw_matches":  true,
+        "lf_matches":  false,
+        "committed_blob_unchanged":  true
+    },
+    {
+        "file":  "tools/worldgen/roads/junctions.py",
+        "expected_sha256":  "52f9dc56e2531fc2afae061cdd9143111751857d708875764f952a3cd07244d1",
+        "actual_sha256":  "52f9dc56e2531fc2afae061cdd9143111751857d708875764f952a3cd07244d1",
+        "lf_sha256":  "1a883a6f7ed26d16c060c421efeec1022fb60206441fc999b572b2d07e0eb997",
+        "raw_matches":  true,
+        "lf_matches":  false,
+        "committed_blob_unchanged":  true
+    },
+    {
+        "file":  "tools/worldgen/roads/markings.py",
+        "expected_sha256":  "5c8bd786c58becfe731b17e2f049a90f5eecbd5584bfa8ec55c1757a18b36fab",
+        "actual_sha256":  "5c8bd786c58becfe731b17e2f049a90f5eecbd5584bfa8ec55c1757a18b36fab",
+        "lf_sha256":  "40d90c97314afc44677cdf80dce48140240fec3062949adffb974b63a7a8a8f1",
+        "raw_matches":  true,
+        "lf_matches":  false,
+        "committed_blob_unchanged":  true
+    },
+    {
+        "file":  "tools/worldgen/roads/meshing.py",
+        "expected_sha256":  "6d799d88a2a87cb5e2ebf42a22746a355e250d02329a2fcdeb5e8258ad02e4cf",
+        "actual_sha256":  "cd44e9f6ef4d89bc4cb323dbf1dfe269d1812422761c6f0a323e2c58080faa04",
+        "lf_sha256":  "b30c1e106fa8fdd9126941e61f1eaae4b571dcc4ed24c8b45b21e10366c67b80",
+        "raw_matches":  false,
+        "lf_matches":  false,
+        "committed_blob_unchanged":  true
+    },
+    {
+        "file":  "tools/worldgen/roads/network.py",
+        "expected_sha256":  "11737fe488f1bf62be955d9b47a8520c0a901f9ae89104b75bc4f400c9c64b72",
+        "actual_sha256":  "db415c54ee264d40be493b371b43ec9f386decf31048d3ba5070634d5c4d5f40",
+        "lf_sha256":  "65c7bca8cfa2eb04916b3dec1203eb3009a2a4fbcdcffcb753e253218ae6192c",
+        "raw_matches":  false,
+        "lf_matches":  false,
+        "committed_blob_unchanged":  true
+    },
+    {
+        "file":  "tools/worldgen/roads/p21_hatch.py",
+        "expected_sha256":  "8f6347af587c2f02d918e2d2ab49e52b7d7ecbf6cdc90e8c90f1c901b15cefa5",
+        "actual_sha256":  "8f6347af587c2f02d918e2d2ab49e52b7d7ecbf6cdc90e8c90f1c901b15cefa5",
+        "lf_sha256":  "f6d6fedc2efd1ae6bb8acb390ac44e8a50ccff02b6c6b7dba5d30029d2e2bddb",
+        "raw_matches":  true,
+        "lf_matches":  false,
+        "committed_blob_unchanged":  true
+    },
+    {
+        "file":  "tools/worldgen/roads/pipeline.py",
+        "expected_sha256":  "b54f63239ccad73a67a08c31a1f0c0afb835db3e3be22860c5ede0001bd75b05",
+        "actual_sha256":  "6353f7bb5f3551d6675e545334f7e65616c8a24928c2fc8bcf52f4a7453b83e0",
+        "lf_sha256":  "860b538a8725c7ea24663b3f3123a0fe9c7d68ff6a5f36a79db00940e1d92aae",
+        "raw_matches":  false,
+        "lf_matches":  false,
+        "committed_blob_unchanged":  true
+    },
+    {
+        "file":  "tools/worldgen/roads/profile.py",
+        "expected_sha256":  "97961c07a3e201e7eee808563780a2d8bc2832d407891b7ca5940f65a18e7eef",
+        "actual_sha256":  "ffa9663b56509b1245bd24bd5a9d135c41a598f38a125755616cc6e16b7307fc",
+        "lf_sha256":  "6074c694f878f886457c4fad28b2cf5979b2fcf7cebf5dadb07086b1a885a756",
+        "raw_matches":  false,
+        "lf_matches":  false,
+        "committed_blob_unchanged":  true
+    },
+    {
+        "file":  "tools/worldgen/roads/qa_ortho.py",
+        "expected_sha256":  "3173a1dcac1107bcb905bc6062460818ab03e8286c9de397aa0c5ed3835a9d8d",
+        "actual_sha256":  "3173a1dcac1107bcb905bc6062460818ab03e8286c9de397aa0c5ed3835a9d8d",
+        "lf_sha256":  "6e32d52950954922afceae3ee2f0aa379b8d42467c2d294b7e951750d39f3e6b",
+        "raw_matches":  true,
+        "lf_matches":  false,
+        "committed_blob_unchanged":  true
+    },
+    {
+        "file":  "tools/worldgen/roads/route.py",
+        "expected_sha256":  "8cbcff1de5bf8e43e1f62cd24f19d82bc212ea07d1c2efc1f1f0ec7c6b195782",
+        "actual_sha256":  "8cbcff1de5bf8e43e1f62cd24f19d82bc212ea07d1c2efc1f1f0ec7c6b195782",
+        "lf_sha256":  "909e2f61e3353083c8d55ceca15fc9d65dfd9157e63aac2c027da74ded5d6b02",
+        "raw_matches":  true,
+        "lf_matches":  false,
+        "committed_blob_unchanged":  true
+    },
+    {
+        "file":  "tools/worldgen/roads/standards.py",
+        "expected_sha256":  "9b81590bb1318c57e45443b3e66d93b85c06e47b70a5d9029b65c850ab521a0a",
+        "actual_sha256":  "d26369bfa3ea95e2bb732991b33ff7afb0a185cab32d35fb49e49ab68e561a5e",
+        "lf_sha256":  "298401ad16c15a59ae3bedaf907541de012f02385e4f1cdf90f26c41b5d2a078",
+        "raw_matches":  false,
+        "lf_matches":  false,
+        "committed_blob_unchanged":  true
+    },
+    {
+        "file":  "tools/worldgen/roads/through_lines.py",
+        "expected_sha256":  "25909812a15b31a63698b6630f4bff1b98caaa534dae8308e016ec0247fbd20a",
+        "actual_sha256":  "25909812a15b31a63698b6630f4bff1b98caaa534dae8308e016ec0247fbd20a",
+        "lf_sha256":  "be22b6b67118b50577e67ae1520287dcd5831b39400e7f2b805fde1b6e2795c5",
+        "raw_matches":  true,
+        "lf_matches":  false,
+        "committed_blob_unchanged":  true
+    }
+]
