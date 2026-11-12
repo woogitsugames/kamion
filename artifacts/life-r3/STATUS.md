@@ -190,3 +190,5 @@ Krok 52: readonly precheck fidelity wskazuje wyłącznie stare SHA overrides.yam
 Krok 53: zapisano AUTHOR-REVIEW.md z dokładnym zakresem oględzin, PARTIAL i otwartym tyłem/czernią. Oddziela dowód GPU od jakości obrazu, historyczne ROI od nowych oraz własną ocenę od niezależnego odbioru. Nie jest końcowym REPORT, pełny GIS nadal działa. Następny krok: odebrać 42276; jeśli jedyna porażka to potwierdzony stale fidelity, final-heavy.ps1 -Tag final-rerun -SkipImages -RefreshFidelity.
 
 Końcowy heavy (2026-11-12T11:10:05.5903194+01:00): zapisz końcowy GIS osobówek C. Następny krok: odczyt wyników, oględziny pełnych plansz, EditMode, REPORT/kopia, potem r4.
+
+Końcowy heavy (2026-11-12T11:10:05.9875981+01:00): zapisz przerwany końcowy heavy gis. Następny krok: odczyt wyników, oględziny pełnych plansz, EditMode, REPORT/kopia, potem r4.
