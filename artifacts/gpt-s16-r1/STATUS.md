@@ -30,3 +30,5 @@ Końcowy EditMode: 452 passed,0failed,0skipped. Audyt GLB B ponowiony:420chronio
 Dopisano końcowy zakres raportu i ADR; jedyny oczekiwany wynik to końcowy pełny GIS. NASTĘPNY KROK: Get-Content artifacts/gpt-s16-r1/final-gis.log -Tail 20
 
 Audyt zakresu:1051zmienionych plików (w tym dowody),0edycji zakazanych źródeł;960obrazów recenzji ma max960px. Kopia do main/artifacts/gpt-s16-r1:1027plików,52.1MB,bez pełnychPNG ani prywatnych surowców. GIS nadal działa, pozostałe kroki r1 gotowe.
+
+Przygotowano NEXT-ROUND.md: źródłowa przyczyna D51 to cienkie korony, budżet High ma około19kzapasuwstretch_04 na obecnej bazie; r2 będzie rozważać poszerzenie istniejących koron high i żywopłoty w obecnym materiale. Bez zmian produktu r2 przed zakończeniem r1.
