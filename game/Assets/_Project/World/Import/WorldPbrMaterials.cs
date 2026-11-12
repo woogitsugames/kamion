@@ -89,6 +89,7 @@ namespace Game.World.Import
         public static void Channels(Dictionary<string, object> def, string id, out bool uv0, out bool uv1, out bool colors)
         {
             uv0 = uv1 = colors = false;
+            if (id == "shelter_opaque_0120" && def.Get("furniture_shelter_palette") is List<object>) { uv0 = true; return; }
             // ADR0120: the existing World Surface material reads a byte-stable board marker, not UVs.
             if (id == "concrete_plinth" && def.Get("furniture_plinth_detail") is Dictionary<string, object>) { colors = true; return; }
             if (def.Get("furniture_sign_face") is string) { uv0 = true; return; }
@@ -143,6 +144,17 @@ namespace Game.World.Import
         /// <summary>PBR material for a manifest material, or null when its set is missing (caller falls back).</summary>
         public static Material Create(RegionImporter.Result r, string id, Dictionary<string, object> def, string path)
         {
+            if (id == "shelter_opaque_0120")
+            {
+                if (def.Get("furniture_shelter_palette") is List<object> palette)
+                    return FurnitureShelterPalette(r, palette, path);
+                var previousPalette = AssetDatabase.LoadAssetAtPath<Material>(path);
+                if (previousPalette != null && previousPalette.IsKeywordEnabled("_FURNITURE_SHELTER_PALETTE"))
+                {
+                    previousPalette.DisableKeyword("_FURNITURE_SHELTER_PALETTE");
+                    EditorUtility.SetDirty(previousPalette);
+                }
+            }
             if (id == "plate_back" && def.Get("furniture_sign_fronts") is Dictionary<string, object> fronts)
                 FurnitureSignFronts(r, fronts);
             if (def.Get("furniture_sign_face") is string face) return FurnitureSign(r, id, def, face, path);
@@ -560,6 +572,31 @@ namespace Game.World.Import
         }
 
         /// <summary>All PBR textures under the region's generated folder (for the tier's aniso / mip bias).</summary>
+        static Material FurnitureShelterPalette(RegionImporter.Result r, List<object> palette, string path)
+        {
+            if (palette.Count != 4) throw new InvalidOperationException("Shelter palette requires four source recipes");
+            var values = new Color[4];
+            for (int i = 0; i < values.Length; i++)
+            {
+                string source = palette[i] as string;
+                if (source == null || !r.MaterialDefs.TryGetValue(source, out var recipe) ||
+                    recipe.Get("surface") != null || recipe.Get("texture") != null || recipe.Get("texture_set") != null ||
+                    (recipe.Get("metal") != null && Num(recipe.Get("metal")) > 0.5))
+                    throw new InvalidOperationException("Shelter palette cannot replace a textured or metallic surface: " + source);
+                var rgb = Arr(recipe.Get("color"));
+                float rough = recipe.Get("rough") != null ? (float)Num(recipe.Get("rough")) : 0.9f;
+                values[i] = new Color((float)Num(rgb[0]), (float)Num(rgb[1]), (float)Num(rgb[2]), 1f - rough);
+            }
+            // All supported sources already use this same untextured World Surface style.
+            var mat = LookDevAssets.WorldMaterial(path, null, Color.white, 0.5f, 0f, false);
+            mat.shaderKeywords = Array.Empty<string>();
+            mat.EnableKeyword("_FURNITURE_SHELTER_PALETTE");
+            mat.SetFloat("_GroundMasks", 0f);
+            for (int i = 0; i < values.Length; i++) mat.SetColor("_FurnitureShelter" + i, values[i].gamma);
+            EditorUtility.SetDirty(mat);
+            return mat;
+        }
+
         public static Texture[] LoadAll(string regionDir)
         {
             string dir = $"{regionDir}/Textures/PBR";

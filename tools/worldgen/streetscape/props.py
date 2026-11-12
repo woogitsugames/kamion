@@ -81,6 +81,34 @@ class Mesh:
         return res
 
 
+class ShelterPaletteMesh0120(Mesh):
+    """Batch only shelter opaque parts; preserve geometry and each source's surface recipe.
+
+    UV0.x selects a material recipe in the data-gated World Surface palette. No extra
+    geometry, texture or pass; generic glazing and the red family's transmission stay separate.
+    """
+    def out(self):
+        from .materials import M
+        sources = M['shelter_opaque_0120']['furniture_shelter_palette']
+        opaque, other = [], []
+        offset = 0
+        for primitive in super().out():
+            if primitive['mat'] not in sources:
+                other.append(primitive)
+                continue
+            p = dict(primitive)
+            p['T'] = p['T'] + offset
+            p['UV'] = np.tile([float(sources.index(p['mat'])), .5], (len(p['V']), 1))
+            opaque.append(p)
+            offset += len(p['V'])
+        if opaque:
+            other.append({'mat': 'shelter_opaque_0120',
+                          'V': np.concatenate([p['V'] for p in opaque]),
+                          'T': np.concatenate([p['T'] for p in opaque]),
+                          'UV': np.concatenate([p['UV'] for p in opaque])})
+        return sorted(other, key=lambda p: p['mat'])
+
+
 LAMP_OLD = (("concrete", 9), ("steel", 8))     # (kind, height m) of the older side-street family
 
 # ------------------------------------------------------------------------------------------- builders
@@ -320,7 +348,7 @@ def signal_pole(h=S.SIGNAL_POLE_H, arm=0.0):
 
 
 def bus_shelter():
-    m, col = Mesh(), Mesh()
+    m, col = ShelterPaletteMesh0120(), Mesh()
     W, D, H = 4.0, 1.5, 2.5
     for x in (-W / 2, 0, W / 2):
         for y in (-D / 2, D / 2):
@@ -346,7 +374,7 @@ def bus_shelter_red_0120():
     Frame and roof share one material; no separate dirt/trim/glass overlay.
     """
     W, D, H = 4.0, 1.5, 2.5
-    high, low = Mesh(), Mesh()
+    high, low = ShelterPaletteMesh0120(), ShelterPaletteMesh0120()
     frame, glass = "shelter_red_frame_0120", "shelter_clear_glass_0120"
     for m, segments in ((high, 4), (low, 2)):
         ys = np.linspace(-D/2-.12, D/2+.12, segments+1)

@@ -603,3 +603,7 @@ M["pier_yellow"].update(_underdeck_pier_weather())
 # Colour, transparency and roughness WORKING_VALUE; no change to generic steel/glass or other stops.
 M["shelter_red_frame_0120"] = {"color": [0.22, 0.022, 0.016], "rough": 0.50, "metal": 0.25}
 M["shelter_clear_glass_0120"] = {"color": [0.12, 0.15, 0.15], "rough": 0.40, "alpha": 0.14, "blend": True}
+M["shelter_opaque_0120"] = {
+    "color": [1.0, 1.0, 1.0], "rough": 0.5,
+    "furniture_shelter_palette": ["steel_painted", "shelter_roof", "bench_wood", "shelter_red_frame_0120"],
+}

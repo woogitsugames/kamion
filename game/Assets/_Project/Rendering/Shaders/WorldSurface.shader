@@ -51,6 +51,10 @@ Shader "Kamion/World Surface"
         [Toggle] _GroundMasks ("Terrain ground masks from COLOR_0 (R road distance/20 m, G forest floor, B unmown, A bare soil)", Float) = 0
         _FurnitureMap ("Marked fence-board scan (mean 0.5 linear)", 2D) = "grey" {}
         _FurnitureDetail ("Fence board: tile m, dirt height m, dirt strength", Vector) = (1, 0.25, 0.55, 0)
+        _FurnitureShelter0 ("Shelter source 0 colour / smoothness", Color) = (1, 1, 1, 0.5)
+        _FurnitureShelter1 ("Shelter source 1 colour / smoothness", Color) = (1, 1, 1, 0.5)
+        _FurnitureShelter2 ("Shelter source 2 colour / smoothness", Color) = (1, 1, 1, 0.5)
+        _FurnitureShelter3 ("Shelter source 3 colour / smoothness", Color) = (1, 1, 1, 0.5)
     }
     SubShader
     {
@@ -74,6 +78,7 @@ Shader "Kamion/World Surface"
             float4 _SkyOcc;
             float _ArchitecturalGlass;
             float4 _FurnitureDetail;
+            float4 _FurnitureShelter0, _FurnitureShelter1, _FurnitureShelter2, _FurnitureShelter3;
         CBUFFER_END
         float _KamionStreetLamps, _KamionLampLights, _KamionExposure;
         float _KamionGlassShadowBias;
@@ -100,6 +105,7 @@ Shader "Kamion/World Surface"
             #pragma multi_compile_instancing
             #pragma shader_feature_local _FAR_FACADE
             #pragma shader_feature_local _FURNITURE_PLINTH
+            #pragma shader_feature_local _FURNITURE_SHELTER_PALETTE
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
             #include "Assets/_Project/Rendering/Shaders/KamionAtmosphere.hlsl"   // ADR 0080 height haze, Low tone toe, wetness
@@ -114,6 +120,9 @@ Shader "Kamion/World Surface"
             struct Attributes
             {
                 float4 positionOS : POSITION; float3 normalOS : NORMAL; half4 color : COLOR;
+            #if defined(_FURNITURE_SHELTER_PALETTE)
+                float2 shelterSlot : TEXCOORD0;
+            #endif
             #if defined(_FAR_FACADE)
                 float2 uv1 : TEXCOORD1;
             #endif
@@ -125,7 +134,11 @@ Shader "Kamion/World Surface"
                 float3 positionWS : TEXCOORD0;
                 half3 normalWS : TEXCOORD1;
                 half fogFactor : TEXCOORD2;
+            #if defined(_FURNITURE_SHELTER_PALETTE)
+                float4 masks : TEXCOORD3;
+            #else
                 half4 masks : TEXCOORD3;
+            #endif
             #if defined(_FAR_FACADE)
                 float2 uv1 : TEXCOORD4;
             #endif
@@ -145,6 +158,13 @@ Shader "Kamion/World Surface"
                 o.normalWS = TransformObjectToWorldNormal(v.normalOS);
                 o.fogFactor = KamionFogTau(p.positionWS, p.positionCS.w);
                 o.masks = v.color;
+            #if defined(_FURNITURE_SHELTER_PALETTE)
+                // Constant per triangle; choose existing source recipes in the vertex stage.
+                // Reuse the existing interpolator and texture samples, with no extra pass.
+                float slot = v.shelterSlot.x;
+                o.masks = slot < 0.5 ? _FurnitureShelter0 : slot < 1.5 ? _FurnitureShelter1
+                    : slot < 2.5 ? _FurnitureShelter2 : _FurnitureShelter3;
+            #endif
             #if defined(_FAR_FACADE)
                 o.uv1 = v.uv1;
             #endif
@@ -177,6 +197,9 @@ Shader "Kamion/World Surface"
                 // Detail texture mean 0.5 → ×2; macro mean 0.5 → ±strength.
                 half m = (macro - 0.5) * 2.0;
                 half3 albedo = _BaseColor.rgb * (2.0 * det) * (1.0 + _MacroStrength * m);
+            #if defined(_FURNITURE_SHELTER_PALETTE)
+                albedo = i.masks.rgb * (2.0 * det) * (1.0 + _MacroStrength * m);
+            #endif
                 albedo *= lerp(half3(1, 1, 1), _MacroTint.rgb, saturate(m));
                 if (_GroundMasks > 0.5)
                 {
@@ -216,6 +239,9 @@ Shader "Kamion/World Surface"
                     albedo = lerp(_FadeColor.rgb, albedo, coverage);
                 }
                 half smooth = saturate(_Smoothness + _SmoothnessVar * (det - 0.5));
+            #if defined(_FURNITURE_SHELTER_PALETTE)
+                smooth = saturate(i.masks.a + _SmoothnessVar * (det - 0.5));
+            #endif
             #if defined(_FAR_FACADE)
                 {
                     albedo *= i.masks.rgb;
