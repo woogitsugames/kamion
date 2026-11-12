@@ -1,0 +1,57 @@
+{
+  "result": "Failed",
+  "exit": 1,
+  "passed": 617,
+  "failed": 1,
+  "xfailed": 1,
+  "seconds": 814.39,
+  "failures": [
+    "tests/gis/test_road_fidelity.py::test_report_not_stale"
+  ],
+  "stale_inputs": [
+    "overrides.yaml",
+    "tools/worldgen/roads/meshing.py"
+  ],
+  "world_determinism": "Passed",
+  "pool": "heavy",
+  "owner": "gpt-truck-r3",
+  "numeric_threads": 1,
+  "note": "Świeży manifest zachowano do testu. To wynik końcowej walidacji tej bazy, bez świeżego bazowego GIS r3 i bez przypisywania zmian innych dziedzin poprawce truck. Błędu fidelity nie naprawiano w cudzych plikach.",
+  "preserved_generated_files": [
+    {
+      "sha256": "E9B94F22B937A3B92D6584017E6D0360789437E56427FC84E8992F748DC4716B",
+      "path": "Data/Regions/bialystok-industrial-c/generated/far_field_qa.json",
+      "bytes": 2972
+    },
+    {
+      "sha256": "633A75F466A9D8497C39B6E6BD255F7E4526ADFCFA504E2F3EC95C3B4D682E18",
+      "path": "Data/Regions/bialystok-industrial-c/generated/landmarks/viaduct_putry_underdeck.spec.json",
+      "bytes": 68380
+    },
+    {
+      "sha256": "30A03C9F82E3C0E11C740C69F261F8FA73F1A62C03704E4FA4EF59EB90A955F5",
+      "path": "Data/Regions/bialystok-industrial-c/generated/streetscape_qa.json",
+      "bytes": 103821
+    },
+    {
+      "sha256": "2D486AC202829CA711B2D72FABC2299B6C637F1059F7ADC9C42E1AD6B8ABA489",
+      "path": "Data/Regions/bialystok-industrial-c/generated/world_manifest.json",
+      "bytes": 276958
+    },
+    {
+      "sha256": "7171D1C26D0A8E0C03AC520FE994C31A5F477D2B906B0B025016BFDA3300E036",
+      "path": "Data/SourceManifests/bialystok-industrial-c-far-field.manifest.json",
+      "bytes": 2382
+    },
+    {
+      "sha256": "C96577B84793420B6D33C347A746C6E89F024F2F96B8DA9CB2282C900EC7D218",
+      "path": "art-source/world/props/props_meta.json",
+      "bytes": 31647
+    },
+    {
+      "sha256": "FCDFA2FBFE07CAFA68EF942767961B48FC0FB0897B1386099390661C08DA5718",
+      "path": "art-source/world/props/street_props.glb",
+      "bytes": 12038588
+    }
+  ]
+}
