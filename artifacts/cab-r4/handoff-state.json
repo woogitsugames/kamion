@@ -1,0 +1,36 @@
+{
+  "saved_at": "2026-11-12T16:26:02.8718320+01:00",
+  "reason": "User requested stopping at nearest opportunity without killing jobs",
+  "branch": "gpt-cab-r4",
+  "head_before_handoff": "8958177ca874d6019cc8b37d34580b7e09a47a3e",
+  "active_receipt": {
+    "pid": 63712,
+    "exit_code": null,
+    "owner": "gpt-cab-r4",
+    "job": "MaterialFine",
+    "queued_at": "2026-11-12T15:52:56.2671033+01:00",
+    "acquire_log": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-cab\\artifacts\\cab-r4\\job-MaterialFine-20261112-155256-63712.acquire.log",
+    "log": "artifacts/cab-r4/material-fine.log",
+    "source_sha": "e86aae197ab6cbb10e06ff236233ec7746847532",
+    "acquire_attempt": 1,
+    "schema": 1,
+    "status": "waiting"
+  },
+  "processes": [
+    {
+      "ProcessId": 63712,
+      "ParentProcessId": 26312,
+      "Name": "pwsh.exe",
+      "CreationDate": "2026-11-12T15:52:55.924861+01:00"
+    },
+    {
+      "ProcessId": 70644,
+      "ParentProcessId": 63712,
+      "Name": "pwsh.exe",
+      "CreationDate": "2026-11-12T15:52:56.288522+01:00"
+    }
+  ],
+  "has_python_or_unity": false,
+  "heavy_session_id": 19993,
+  "new_jobs_started_after_stop_request": false
+}
