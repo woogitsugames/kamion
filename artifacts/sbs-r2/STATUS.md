@@ -1,10 +1,10 @@
-﻿# Aktualny stan R2 — 12.11.2026, 01:33 Europe/Warsaw
+﻿# Aktualny stan R2 — 12.11.2026, 02:00 Europe/Warsaw
 
 Gałąź gpt-sbs-r2, wyłącznie domena SBS. Runda jeszcze niezakończona.
 
 Gotowe: świat kod 0 (457 s, bez fallback=True), 64 GLB o SHA identycznych z r1; import Low+High; EditMode 261/261; 168 nowych renderów z jednego HEAD b9b5574e; 168 wierszy liczników, wszystkie delty Low geometrii/instancji/tris = 0. SHA 143/168 PNG identyczne z r1. Test raportu po rzeczywistej poprawce HTML: 25/25; test zgodności SBS: 40/40, fotometria: 13/13, fidelity: kod 0. Własny i niezależny przegląd sześciu zmienionych B zapisany. Formalna recenzja D51 pozostaje r1 FAIL 12/11/2, klasy 25 B / 17 C / brak A bez zmian.
 
-W toku: post-world (sesja 79348) zakończony kodem 0: 78 testów, fidelity i historyczne kompozycje. Kompozycje r2 oraz zweryfikowana migawka wejść także gotowe. Żywa sesja 44605 czeka na heavy dla audytu 168 renderów i 128 GLB; po sukcesie wygeneruje raport latest. Low-clear obejrzano w całości: 25 natywnych arkuszy. Nie powtarzać generatora ani renderów i nie uruchamiać równoległego heavy naszej gałęzi.
+W toku: końcowy pełny GIS w sesji 87983, przez heavy gpt-sbs-r2 z -EndOfRound, źródła e386b929. Wcześniejsze sekwencje 79348 i 44605 zakończone kodem 0. Audyt, kompozycje, raport, przegląd 100/100 i kontrola UI gotowe. Nie zmieniać kodu źródłowego do zakończenia testu; można dopracować roboczą dokumentację. REPORT-DRAFT.md nie jest jeszcze końcowym REPORT i nie uruchamia dostawy do main.
 
 Do zakończenia: audyt oraz przegląd pozostałych 75 A/B i raportu HTML; niezależny przegląd narzędzia/pakietu; pełny GIS dopiero na końcu; finalny ADR/REPORT; robocopy r2 i latest do main bez commitowania na main; zaraz potem nowa gałąź rundy i merge main. Produkty generatorów spoza SBS nie będą commitowane i zostaną przywrócone po zachowaniu dowodów. Nowe pełne capture wykonano około 00:20; następny odczyt aktualnego main najpóźniej około 06:20.
 
@@ -155,3 +155,7 @@ W obu tierach pozostają te same istotne braki podpór, oznakowania, bramownic i
 
 ## UI końcowe i gotowość do GIS
 Sprawdzono desktop 1280×960, wąski widok 390×844, skrót do trendu, zmianę stanu, przełącznik C (42 karty), przełączenie r1/r2 i poprawne epoki. Załadowane obrazy bez braków; konsola 0 błędów i ostrzeżeń. Wykryte 22 px przewijania poziomego kodów pominięć naprawiono zawijaniem długich opisów; wynik po poprawce: dokument 390 px przy viewport 390 px, także dla C. Zrzuty topu i trendu obejrzano, logi w ui-final. Przeglądarka i lokalny serwer zamknięte. Zapisano niezależny PASS narzędzia/kompletności, z jawnym brakiem końcowego GIS i zaliczenia świata. Zmiana CSS nie dotyka metryk ani danych obrazów. Następny krok: jednorazowy pełny GIS na końcu rundy przez heavy.
+
+
+## Roboczy raport końcowy
+Przygotowano REPORT-DRAFT.md z potwierdzonymi liczbami, dwiema parami 960 px, ograniczeniami i ścieżkami dowodów. Pełny GIS oraz dostarczenie do main są jawnie oznaczone jako niewykonane. Kod źródłowy pozostaje na e386b929; późniejsze zmiany tego kroku dotyczą dokumentacji.
