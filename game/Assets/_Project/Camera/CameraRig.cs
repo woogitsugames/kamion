@@ -165,8 +165,7 @@ namespace Game.Cameras
 
         void LogPose()
         {
-            if (m_Log == null) { m_Log = new float[LogCols * LogRows]; try { System.IO.File.WriteAllText(PoseLogPath, "t_s,dt_ms,fixed_steps,head_x_mm,head_z_mm,eye_x_mm,eye_y_mm,eye_z_mm,pitch_deg,yaw_deg,roll_deg,target_move_mm
-"); } catch { PoseLogPath = null; return; } m_LastTargetPos = target.position; }
+            if (m_Log == null) { m_Log = new float[LogCols * LogRows]; try { System.IO.File.WriteAllText(PoseLogPath, "t_s,dt_ms,fixed_steps,head_x_mm,head_z_mm,eye_x_mm,eye_y_mm,eye_z_mm,pitch_deg,yaw_deg,roll_deg,target_move_mm\n"); } catch { PoseLogPath = null; return; } m_LastTargetPos = target.position; }
             Vector3 eye = target.InverseTransformPoint(cam.transform.position);
             Vector3 e = (Quaternion.Inverse(target.rotation) * cam.transform.rotation).eulerAngles;
             int o = m_LogN * LogCols;
@@ -187,8 +186,7 @@ namespace Game.Cameras
             for (int r = 0; r < m_LogN; r++)
             {
                 for (int c = 0; c < LogCols; c++) { if (c > 0) sb.Append(','); sb.Append(m_Log[r * LogCols + c].ToString(c == 0 ? "F3" : "F2", ci)); }
-                sb.Append('
-');
+                sb.Append('\n');
             }
             try { System.IO.File.AppendAllText(PoseLogPath, sb.ToString()); } catch { }
             m_LogN = 0;
