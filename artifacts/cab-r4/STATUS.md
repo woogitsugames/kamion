@@ -48,3 +48,4 @@ Obejrzano poprawione baseline Low overcast cab-grain i cab-dash, dwa natywne PNG
 Zapisano baseline High clear, siedem kamer i sześć natywnych RT z identyfikatorem wnętrza. Następny krok: kontynuować macierz lub porównać PNG.
 Zapisano baseline High overcast, siedem kamer i sześć natywnych RT z identyfikatorem wnętrza. Następny krok: kontynuować macierz lub porównać PNG.
 Obejrzano trzeci natywny kadr poprawionego baseline: High clear cab-grain. Silniejsze światło pokazuje skórzane tłoczenie i szerokie nierówności Plastic; to główny kadr porównania kandydata. Pasmo wypieku AO pozostaje odrębne. Aktualizacja BASELINE-REVIEW.md i hashów; bez deklaracji obejrzenia całej macierzy.
+Zapisano baseline High dusk, siedem kamer i sześć natywnych RT z identyfikatorem wnętrza. Następny krok: kontynuować macierz lub porównać PNG.
