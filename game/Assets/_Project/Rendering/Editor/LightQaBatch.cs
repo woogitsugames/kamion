@@ -143,6 +143,8 @@ namespace Game.Rendering.Editor
                     var lampProbe = job.lampProbe ? new LightQaLampProbe() : null;
                     if (job.verifyWetness && (lampProbe == null || job.expectedWetness < 0f || job.expectedWetness > 1f))
                         throw new ArgumentException("Wetness proof requires lampProbe and expectedWetness0..1");
+                    if(job.verifyDimColour && (lampProbe==null || job.expectedDimColour<0f || job.expectedDimColour>1f))
+                        throw new ArgumentException("Dim-colour proof requires lampProbe and expectedDimColour0..1");
                     if (job.expectedHeadlamps < 0 || job.expectedHeadlamps > 2 || (job.expectedHeadlamps > 0 && lampProbe == null))
                         throw new ArgumentException("expectedHeadlamps requires lampProbe and a value0..2");
                     Action<ScriptableRenderContext, Camera> filter = (_, camera) => {
