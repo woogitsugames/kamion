@@ -9,3 +9,5 @@ Ponownie sprawdzona 12.11.2026 [oficjalna specyfikacja EPAL](https://www.epal-pa
 Najpierw znaleźć czytelne kadry rzeczywistych istniejących stosów w nowym raw, ustalić natywny LOD na Low/High i baseline w czterech warunkach. Nie stosować podwyższonego wspólnego LOD jako substytutu geometrii. Uproszczenie ma zachować widoczne otwory z bliska, jedną istniejącą grupę drewna, obrys i kolizję. Budżet mierzyć na pełnej trasie oraz wszystkich kamerach, draws świata/instancji osobno +0 i tris trasy ≤+2%. LOD1 pełnego bloku także wymaga świadomej oceny wyglądu i kosztu.
 
 Pallet_wood używa dotychczasowego materiału/tekstury; dawny brak euro_pallet_side w spec PBR nie dowodził braku BaseMap. Przed zmianą sprawdzić świeży materiał natywny. Koła/osad/czerń pozostają PARTIAL według rzeczywistych wyników; nie ogłaszać ich przy okazji pełnym PASS.
+
+Przed baseline r5 uaktualnić historyczny docstring tractor LOD0 <=1.5 k do nowego sufitu 1.7 k (r4 ma test 1700, rzeczywiste 1550). W r4 nie zmieniano już bajtów zamrożonej produkcji po capture; doc-only poprawka może wejść przed kolejną kanoniczną generacją.
