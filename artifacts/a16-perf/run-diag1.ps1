@@ -23,6 +23,19 @@ $runs = [ordered]@{
   ab_hlodedge = 'hlodedge'
   ab_hlodcanopy = 'hlodcanopy'
   ab_impostor = 'impostor'
+  # ADR 0136 r2: props per prototype prefix (pp: not drawn, ps: no shadow, vc: vehicle cull m)
+  ab_veh    = 'pp:car_/van_/tractor_/trailer_/bus_/contact_'
+  ab_vcar   = 'pp:car_/van_/contact_'
+  ab_vtruck = 'pp:tractor_/trailer_/bus_'
+  ab_lamp   = 'pp:lamp_'
+  ab_signs  = 'pp:sign_/plate_/board_/signal_/gantry_'
+  ab_fabp   = 'pp:fab_/propcontact_'
+  ab_lmk    = 'pp:landmark_/facade_/gatehouse_'
+  ab_misc   = 'pp:pallet/bin_/waste_/cone_/container_/skip_/barrier_/lift_/sliding_/power_/pylon_/bollard_/bench_'
+  ab_pshadow = 'ps:all'
+  ab_vshadow = 'ps:car_/van_/tractor_/trailer_/bus_'
+  ab_vc150  = 'vc:150'
+  ab_vc100  = 'vc:100'
 }
 $sel = if ($Only) { $Only -split ',' } else { $runs.Keys }
 $spec = ($sel | ForEach-Object { "$_=rq_ab=$($runs[$_]) $fix" }) -join ';'

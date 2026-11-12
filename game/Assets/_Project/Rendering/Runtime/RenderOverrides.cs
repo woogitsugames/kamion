@@ -79,6 +79,11 @@ namespace Game.Rendering
         public static bool AbTreesOff, AbPropsOff, AbTreeShadowOff, AbHlodOff, AbImpostorOff;
         public static float AbTreeThinScale = 1f, AbTreeCardScale = 1f;
         public static int AbHlodPart;   // 1 canopy off, 2 edge walls off
+        /// <summary>ADR 0136 r2 A/B (diagnostics, ExtraViewCostMonitor keys pp: / ps: / vc:): instanced props whose prototype name
+        /// starts with one of these prefixes are not drawn (AbPropsPrefix) or cast no shadow (AbPropShadowPrefix; "all" = every
+        /// non-tree prototype); AbVehicleCullM &gt; 0 replaces the fixed vehicle cull distance. null / 0 = shipping state.</summary>
+        public static string[] AbPropsPrefix, AbPropShadowPrefix;
+        public static float AbVehicleCullM;
 
         public static bool Any => Msaa.HasValue || RenderScale.HasValue || ShadowDistance.HasValue || Post.HasValue || Dither.HasValue || SkyDither.HasValue || GlassShadowBias.HasValue || Hdr.HasValue ||
                                   LeafA2C.HasValue || Trees.HasValue || TreeShadowMask.HasValue || TreeCardScale.HasValue ||
