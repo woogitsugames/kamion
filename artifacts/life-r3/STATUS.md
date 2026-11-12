@@ -130,3 +130,5 @@ Kandydat b (2026-11-12T10:40:46.2674494+01:00): sprawdź test_cars_r11.py warian
 Kandydat b (2026-11-12T10:40:51.8879784+01:00): sprawdź test_car_deposition.py wariantu b. Następny etap w candidate-build.ps1; po komplecie PreparedVerified, capture i oględziny.
 
 Kandydat b (2026-11-12T10:41:01.0647677+01:00): sprawdź test_car_plate_payload.py wariantu b. Następny etap w candidate-build.ps1; po komplecie PreparedVerified, capture i oględziny.
+
+Kandydat b (2026-11-12T10:41:02.4909014+01:00): zamroź wejścia importu r3 b. Następny etap w candidate-build.ps1; po komplecie PreparedVerified, capture i oględziny.
