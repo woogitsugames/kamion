@@ -1,3 +1,29 @@
+# HANDOVER — kamion, ZAMKNIĘCIE sesji 11 (2026-11-12 09:10) → start s12 na koncie z czystym limitem
+
+## Prawda o stanie (czytaj to; niżej dziennik s11)
+- **main `HEAD` wypchnięty.** Start s12: `docs/owner/START-PROMPT-S12.md`.
+- **03:44 komputer się zrestartował** (bash `fork ... 0xC000026B`, boot 09:01) — zginęły: agenci Claude 0123/0124/0126, 10 sesji GPT, watchdog, trigger. Nic nie zostało utracone poza procesami — wszystko w WIP commitach / STATUS.md.
+- **Scalone w s11 (wszystko po visual-critic):** GPT sbs r1 (narzędzie, 168 renderów), GPT life r1, vegetation r1, cab r1, edge r1 (`REVIEW-2026-11-12-s11-gpt-r1-batch.md`), **Claude 0125 bramownica/znaki/ekrany G3-B** (`REVIEW-…-s11-0125.md`), GPT truck r1, light r1 (chmury CC0), landmarks r1, asphalt r1 (+0099 surface-wear) (`…-gpt-r1-batch2.md`). Fix generatora scenariuszy fizyki (ADR 0082). `unity-slot.ps1 -Priority -PollSeconds 5` dla lidera (rezerwacja `RESERVED.lock`).
+- **Bramka 3 wg D51: FAIL** (`REVIEW-2026-11-11-s11-sbs-r1-D51.md`): G3-A 11/15 rozpoznawalnych (warunkowo OK), G3-B 2/10 po 0125. Blokery G3-B: (1) **pozy kamer SBS** (3281350 ~45 m, grobin 275528/837235 ~12–20 m, 297817, 1801374, kurs 494288 — domena GPT sbs, uwagi w `GPT-FEEDBACK-S10.md`), (2) D-3/D-6 + wysepka z przejściem przy rondzie Bieżeństwa (stale w overrides — geometria węzła), (3) pierzeja handlowa (0126 w toku), (4) filary wiaduktu s≈351–359 (0123 twierdzi, że już są w gałęzi), (5) czytelność słupa WN i ekranów na Low, (6) LOD bramownicy 40–120 m traci kratownicę, (7) nasyp/bariera pod wiaduktem (0123 b4), drzewa w pasie dzielącym (GPT veg), bloki na horyzoncie (GPT edge).
+- **Integracja po scaleniach NIE zrobiona.** O 09:04 lider uruchomił ponownie `bash artifacts/integration-s11/regen.sh b2` (log `artifacts/logs/s11-regen-b2.log`) i `artifacts/integration-s11/run.ps1` (log `run.log`: czeka na END regeneracji → import, Truck/Trailer/Install, EditMode, PlayMode, visual-qa WorldC Low clear+overcast → `artifacts/integration-s11/vqa/`, APK Low). **Jeśli sesja s11 zostanie zamknięta, te procesy giną → s12 sprawdza logi i w razie potrzeby uruchamia je ponownie.** Po integracji: klin far-field na tle chmur w g3-a 2948/303305 (light r1 — warunek scalenia), commit reserializacji ustawień, gate3 A16 Low A+B.
+
+## Agenci Claude przerwani restartem (wznowić w s12 z ich STATUS.md)
+| zadanie | ADR | worktree / gałąź | ostatni commit | NASTĘPNY KROK (z STATUS) |
+|---|---|---|---|---|
+| węzły r6 bariery + D51 B2/B7 (Fable) | 0123 | `.claude/worktrees/junctions-r6` / `junctions-r6` | `310c6437` 02:15 b4 zbudowany (szyny separatora DK8 do barier pomostów, fartuch ronda Bieżeństwa → asfalt) | `bash artifacts/junctions-r6/scripts/b4_all.sh` (import + 4 zestawy + SBS + PlayMode + post full) → pary → ADR → raport → krytyk |
+| zabudowa r8 r2 (Fable) | 0124 | `.claude/worktrees/buildings-r8` / `buildings-r8` | `c294f85c` 00:27 r2 zmierzone (Low +3, najgorsza +1 vs r1) | patrz `artifacts/buildings-r16/STATUS.md`: full_round r2 → budget2 → obejrzeć `r2/extra_hc/960`, `r2/extra_low/960` → ADR → raport → krytyk |
+| pierzeja handlowa G3-B (Fable) | 0126 | `.claude/worktrees/g3b-frontage` / `g3b-frontage` | `b89e4ced` 03:13 build 1 obejrzany (salony, maszty flag, owal) | `pwsh artifacts/g3b-frontage/run-cycle.ps1 -Name after -Tag 2` → `make-pairs.sh after` → `stats-diff.py after` → ADR → raport → krytyk |
+Uwaga: STATUS 0124 i 0126 mają starsze/nowsze wpisy — czytaj cały plik. Wszystkie trzy gałęzie są z main sprzed scaleń s11 → przed scaleniem `git merge main` w worktree (generated → ours + regeneracja).
+
+## GPT 24 h — przerwane o 03:44, właściciel wznawia sam
+Ostatnie gałęzie: landmarks-r3, life-r3, sbs-r3, truck-r3, furniture-r2, vegetation-r4, cab-r3, light-r3, asphalt-r2, edge-r3. Lider sprawdza `artifacts/<dziedzina>-rN/REPORT.md` w worktree `gpt-*` → krytyk zbiorczy → scalenie (generated → ours) → regeneracja.
+
+## Limity na koniec s11 (stare konto)
+5 h reset 13:00; tydzień 49 %, **Fable 92 %**. s12 = nowe konto z czystym limitem → Fable dla geometrii na maksa (właściciel).
+
+- **Ostatni przydzielony ADR: 0126.**
+
+---
 # HANDOVER — kamion, SESJA 11 (start 2026-11-11 23:05)
 
 ## Stan na żywo (s11)
