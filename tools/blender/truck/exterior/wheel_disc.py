@@ -118,3 +118,63 @@ def perforated_annulus(inner_radius, outer_radius, hole_ring_radius, hole_radius
             'outer_loop': circular_loop(outer_radius),
             'bore_loop': circular_loop(inner_radius),
             'hole_segments': hole_segments, 'hole_count': hole_count}
+
+
+def solid_annulus(inner_radius, outer_radius, hole_ring_radius, hole_radius,
+                  thickness, hole_count=10, hole_segments=8):
+    """Closed plate with both faces and all bore/hand-hole walls.
+
+    X is the wheel axis. Independent UV charts use metres; wall U is analytic
+    arc length, so High/Low hole segment counts share the same parameterization.
+    Charts still need layout/atlas packing before this can become an asset.
+    """
+    if thickness <= 0:
+        raise ValueError('Plate thickness must be positive')
+    plane = perforated_annulus(inner_radius, outer_radius, hole_ring_radius,
+                               hole_radius, hole_count, hole_segments)
+    points = plane['vertices']
+    count = len(points)
+    vertices = [(x, y, z) for x in (thickness/2, -thickness/2) for y, z in points]
+    triangles, uv, charts = [], [], []
+
+    def face(indices, coordinates, chart):
+        triangles.append(tuple(indices))
+        uv.append(tuple(coordinates))
+        charts.append(chart)
+
+    for tri in plane['triangles']:
+        face(tri, [points[i] for i in tri], 0)
+        back = tuple(reversed(tri))
+        face([i+count for i in back], [points[i] for i in back], 1)
+
+    def clockwise(loop):
+        return [loop[0]]+list(reversed(loop[1:]))
+
+    loops = [plane['outer_loop'], clockwise(plane['bore_loop'])]
+    loops += [clockwise(loop) for loop in plane['hand_holes']]
+    names = ['front', 'back', 'outer-wall', 'bore-wall']
+    names += ['hand-hole-wall-'+str(i) for i in range(hole_count)]
+    for index, loop in enumerate(loops):
+        cy = sum(points[i][0] for i in loop)/len(loop)
+        cz = sum(points[i][1] for i in loop)/len(loop)
+        radius = sum(math.hypot(points[i][0]-cy, points[i][1]-cz) for i in loop)/len(loop)
+        start = math.atan2(points[loop[0]][1]-cz, points[loop[0]][0]-cy)
+        sign = 1 if index == 0 else -1
+        phases = []
+        for i in loop:
+            a = sign*(math.atan2(points[i][1]-cz, points[i][0]-cy)-start) % TAU
+            if a > TAU-1e-9 or a < 1e-9:
+                a = 0.0
+            phases.append(a*radius)
+        if any(b <= a for a, b in zip(phases, phases[1:])):
+            raise ValueError('Wall loop is not consistently wound')
+        for j, a in enumerate(loop):
+            b = loop[(j+1) % len(loop)]
+            ua, ub = phases[j], phases[j+1] if j+1 < len(loop) else TAU*radius
+            q = (a+count, b+count, b, a)
+            tex = ((ua, -thickness/2), (ub, -thickness/2),
+                   (ub, thickness/2), (ua, thickness/2))
+            face((q[0], q[1], q[2]), (tex[0], tex[1], tex[2]), index+2)
+            face((q[0], q[2], q[3]), (tex[0], tex[2], tex[3]), index+2)
+    return {'vertices': vertices, 'triangles': triangles, 'uv': uv,
+            'face_charts': charts, 'chart_names': names, 'plane': plane}
