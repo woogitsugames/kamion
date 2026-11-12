@@ -8,3 +8,5 @@ Dalej: import, minimum6ulicdomów i kamerykontrolne przed zmianą; następnieveg
 R1: GIS927passed3xfailed,EditMode452passed,616par,niezależnyPASSedytora; telefonlider.
 Sprzątanie: jedenworktree, kompaktowedowody, odrzuconePNG r1pozostały po blokadzie automatycznego przeglądu.
 Limit całej sesji około10:34 13.11.2026.
+
+Dodano recepty importu/renderów i generator12pozna6rzeczywistych ulicach OSM. Referencje zdjęciowe będą oznaczone jako typologiczne, bo repo dokumentuje brak zdjęć bocznych ulic regionu. Generator baseline w tle; kod produktu nadal bez r2.
