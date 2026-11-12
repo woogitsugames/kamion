@@ -28,7 +28,8 @@ def config_args(output, alpha, config=CONFIG, fetch=False, profile='leather'):
                               source_crop_metres=entry.get('source_crop_metres', entry['tile_metres']),
                               rim_uv_scale=entry.get('wheel_authored_tile_metres', entry['tile_metres']) / entry['tile_metres'],
                               variation_gain=entry.get('variation_gain', 1.0), roughness_gain=entry.get('roughness_gain', 1.0),
-                              ao_gain=entry.get('ao_gain', 1.0), normal_strength=entry.get('normal_strength', 1.0))
+                              ao_gain=entry.get('ao_gain', 1.0), normal_strength=entry.get('normal_strength', 1.0),
+                              normal_highpass_mm=entry.get('normal_highpass_mm', 0.0))
     for role, item in entry['maps'].items():
         path = raw / item['file']
         if not path.exists() and fetch:
@@ -89,6 +90,30 @@ def unit_normals(encoded, strength=1.0):
     return vectors / lengths * .5 + .5
 
 
+def highpass_normals(encoded, tile_metres, sigma_mm):
+    """Remove broad slope variation in game-space millimetres; zero preserves the old path.
+
+    This is an authored derivative of the scan, not a scan of moulded plastic.
+    Filter tangent slopes rather than RGB or normal Z, then reconstruct unit vectors.
+    """
+    if not np.isfinite(sigma_mm) or sigma_mm < 0:
+        raise ValueError('Normal high-pass sigma must be finite and nonnegative')
+    if sigma_mm == 0:
+        return encoded
+    if not np.isfinite(tile_metres) or tile_metres <= 0 or sigma_mm >= tile_metres * 250:
+        raise ValueError('Normal high-pass sigma must be smaller than a quarter of the tile')
+    from scipy.ndimage import gaussian_filter
+    vectors = encoded * 2 - 1
+    if not np.all(np.isfinite(vectors)) or np.any(vectors[..., 2] <= 0):
+        raise ValueError('Expected finite forward-facing tangent normals')
+    slopes = vectors[..., :2] / np.maximum(vectors[..., 2:], 1e-4)
+    sigma_px = sigma_mm * encoded.shape[0] / (tile_metres * 1000)
+    slopes = slopes - gaussian_filter(slopes, sigma=(sigma_px, sigma_px, 0), mode='wrap')
+    result = np.concatenate((slopes, np.ones_like(slopes[..., :1])), axis=-1)
+    result /= np.linalg.norm(result, axis=-1, keepdims=True)
+    return result * .5 + .5
+
+
 def image8(array):
     from PIL import Image
     return Image.fromarray(np.rint(np.clip(array, 0, 1) * 255).astype(np.uint8))
@@ -120,7 +145,12 @@ def prepare(args):
     # Keep authored vertex roughness; convert only variation to the shader's gain of 0.6.
     micro_ao = 1 + (crops['ao'] - 1) * args.ao_gain
     detail = periodic_edges(np.stack((variation, micro_ao, roughness), -1))
-    normal = unit_normals(periodic_edges(crops['normal']), args.normal_strength)
+    normal_input = periodic_edges(crops['normal'])
+    if args.normal_highpass_mm != 0:
+        if args.profile != 'plastic':
+            raise ValueError('Normal high-pass is restricted to the plastic derivative')
+        normal_input = periodic_edges(highpass_normals(normal_input, args.tile_metres, args.normal_highpass_mm))
+    normal = unit_normals(normal_input, args.normal_strength)
     alpha_source_sha = hashlib.sha256(args.preserve_alpha.read_bytes()).hexdigest()
     old_alpha = Image.open(args.preserve_alpha).convert('RGBA').getchannel('A')
     alpha_pixels_sha = hashlib.sha256(old_alpha.tobytes()).hexdigest()
@@ -147,7 +177,7 @@ def prepare(args):
         'mapping_limits': ('12 cm upholstery crop. Authored wheel UV uses 5 cm; requires the flagged Unity rim UV correction, verified separately in builder logs. Source-only previews retain the authored wheel scale.' if args.profile == 'leather' else
                            'Derivative emboss pattern based on a leather scan, not a scanned plastic part. Source crop and game tile intentionally differ; this is an authored working value for moulded grain.'),
         'required_unity_rim_uv_scale': args.rim_uv_scale,
-        'working_values': {key: getattr(args, key) for key in ('variation_gain', 'roughness_gain', 'ao_gain', 'normal_strength')},
+        'working_values': {key: getattr(args, key) for key in ('variation_gain', 'roughness_gain', 'ao_gain', 'normal_strength', 'normal_highpass_mm')},
         'perforation_alpha_source': str(args.preserve_alpha),
         'perforation_alpha_source_sha256': alpha_source_sha,
         'perforation_alpha_pixels_sha256': alpha_pixels_sha,
