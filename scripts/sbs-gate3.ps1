@@ -8,19 +8,33 @@ param(
     [switch]$RenderOnly,
     [switch]$IncludeDiagnostics,
     [string]$Photometry,
-    [switch]$ComposeOnly
+    [switch]$ComposeOnly,
+    [string]$Inputs,
+    [string]$HeavyLeaseOwner
 )
 $ErrorActionPreference = 'Stop'
 if($RenderOnly -and $ComposeOnly){throw 'RenderOnly and ComposeOnly are mutually exclusive'}
+if(($Inputs -or $HeavyLeaseOwner) -and !$ComposeOnly){throw 'Inputs and HeavyLeaseOwner require ComposeOnly'}
 $taskRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
 $mainRoot = (& git -C $taskRoot rev-parse --path-format=absolute --git-common-dir).Trim()
 $mainRoot = Split-Path $mainRoot -Parent
 $slotScript = Join-Path $mainRoot 'scripts/unity-slot.ps1'
 $phoneLock = Join-Path $mainRoot 'artifacts/locks/PHONE_RUN'
-$cameraFile = Join-Path $taskRoot 'Data/Regions/bialystok-industrial-c/sbs_cameras.json'
-$references = (Get-Content (Join-Path $taskRoot 'Data/Regions/bialystok-industrial-c/sbs_references.json') -Raw | ConvertFrom-Json).references
-$loadedReferencesHash = (Get-FileHash -LiteralPath (Join-Path $taskRoot 'Data/Regions/bialystok-industrial-c/sbs_references.json') -Algorithm SHA256).Hash.ToLowerInvariant()
 $output = [IO.Path]::GetFullPath($OutputRoot, $taskRoot)
+$region = Join-Path $taskRoot 'Data/Regions/bialystok-industrial-c'
+$inputSnapshot = $null
+if($Inputs){$inputSnapshot=[IO.Path]::GetFullPath($Inputs,$taskRoot)}
+elseif($ComposeOnly -and (Test-Path -LiteralPath (Join-Path $output 'inputs') -PathType Container)){$inputSnapshot=Join-Path $output 'inputs'}
+$sourceInputRoot=if($inputSnapshot){$inputSnapshot}else{$region}
+if($inputSnapshot){
+    foreach($name in @('sbs_cameras.json','sbs_references.json','world_manifest.json','materials_spec.json')){
+        if(!(Test-Path -LiteralPath (Join-Path $inputSnapshot $name) -PathType Leaf)){throw "Incomplete captured inputs: $name"}
+    }
+    Write-Host "Composing from captured input bytes: $inputSnapshot"
+}
+$cameraFile = Join-Path $sourceInputRoot 'sbs_cameras.json'
+$references = (Get-Content (Join-Path $sourceInputRoot 'sbs_references.json') -Raw | ConvertFrom-Json).references
+$loadedReferencesHash = (Get-FileHash -LiteralPath (Join-Path $sourceInputRoot 'sbs_references.json') -Algorithm SHA256).Hash.ToLowerInvariant()
 function Wait-Phone {
     while (Test-Path -LiteralPath $phoneLock) {
         Write-Host 'PHONE_RUN active; waiting 60 seconds before any Unity start.'
@@ -35,12 +49,12 @@ function Get-AspectKey($width, $height) {
 function Restore-UnitySideEffects {
     & git -C $taskRoot restore -- game/Assets/_Project/Rendering/Settings game/ProjectSettings
 }
-function Save-EvidenceInputs {
+function Save-EvidenceInputs([switch]$CaptureOnly) {
     $sourceMap=[ordered]@{
         'sbs_cameras.json'=$cameraFile
-        'sbs_references.json'=(Join-Path $taskRoot 'Data/Regions/bialystok-industrial-c/sbs_references.json')
-        'world_manifest.json'=(Join-Path $taskRoot 'Data/Regions/bialystok-industrial-c/generated/world_manifest.json')
-        'materials_spec.json'=(Join-Path $taskRoot 'art-source/world/materials/materials_spec.json')
+        'sbs_references.json'=(Join-Path $sourceInputRoot 'sbs_references.json')
+        'world_manifest.json'=$(if($inputSnapshot){Join-Path $inputSnapshot 'world_manifest.json'}else{Join-Path $region 'generated/world_manifest.json'})
+        'materials_spec.json'=$(if($inputSnapshot){Join-Path $inputSnapshot 'materials_spec.json'}else{Join-Path $taskRoot 'art-source/world/materials/materials_spec.json'})
     }
     $expected=@{'sbs_cameras.json'='cameras_sha256';'sbs_references.json'='references_sha256';'world_manifest.json'='world_manifest_sha256';'materials_spec.json'='materials_spec_sha256'}
     $captureRows=@();$metricRows=@()
@@ -48,12 +62,14 @@ function Save-EvidenceInputs {
         $files=@(Get-ChildItem -LiteralPath (Join-Path $output "renders/$tier-$light") -Filter 'capture-*.json')
         if(!$files.Count){throw 'Cannot snapshot evidence without render captures'}
         foreach($file in $files){$captureRows+=Get-Content -LiteralPath $file.FullName -Raw | ConvertFrom-Json}
-        $metricRows+=Get-Content -LiteralPath (Join-Path $output "sheets/$tier-$light/metrics.json") -Raw | ConvertFrom-Json
-        if($IncludeDiagnostics){$metricRows+=Get-Content -LiteralPath (Join-Path $output "diagnostics/$tier-$light/metrics.json") -Raw | ConvertFrom-Json}
+        if(!$CaptureOnly){
+            $metricRows+=Get-Content -LiteralPath (Join-Path $output "sheets/$tier-$light/metrics.json") -Raw | ConvertFrom-Json
+            if($IncludeDiagnostics){$metricRows+=Get-Content -LiteralPath (Join-Path $output "diagnostics/$tier-$light/metrics.json") -Raw | ConvertFrom-Json}
+        }
     }}
     if(@($captureRows.git_sha | Select-Object -Unique).Count -ne 1){throw 'Cannot snapshot mixed code epochs'}
     foreach($name in @('sbs_authored_overrides.json','sbs_extra_references.json','sbs_intrinsics.json','sbs_landmarks.json','sbs_photometry.json','sbs_recognition.json')){
-        $source=Join-Path $taskRoot ('Data/Regions/bialystok-industrial-c/'+$name)
+        $source=Join-Path $sourceInputRoot $name
         if(Test-Path -LiteralPath $source){$sourceMap[$name]=$source}
     }
     if($Photometry){$sourceMap['sbs_photometry.json']=[IO.Path]::GetFullPath($Photometry,$taskRoot)}
@@ -89,15 +105,26 @@ function Save-EvidenceInputs {
     Move-Item -LiteralPath $staging -Destination $snapshot
     Move-Item -LiteralPath $stagingZip -Destination (Join-Path $output 'inputs.zip') -Force
 }
-$composeBatchLeaseHeld=$false
-$composeBatchOwner=$null
+$borrowedHeavyLease=$false
+$borrowedHeavyRecord=$null
+$heavyOwner=(& git -C $taskRoot branch --show-current).Trim()
+$heavySlot=Join-Path $mainRoot ('artifacts/locks/heavy-slots/'+($heavyOwner -replace '[^A-Za-z0-9._-]','_')+'.slot')
+function Assert-BorrowedHeavyLease {
+    if(!(Test-Path -LiteralPath $heavySlot -PathType Leaf)){throw 'Borrowed heavy lease is no longer held'}
+    $record=(Get-Content -LiteralPath $heavySlot -Raw).Trim()
+    if(($record -split '\s+')[0] -ne $HeavyLeaseOwner){throw 'Borrowed heavy lease owner differs'}
+    if($borrowedHeavyRecord -and $record -ne $borrowedHeavyRecord){throw 'Borrowed heavy lease was replaced'}
+}
 Push-Location $taskRoot
 try {
-    if($ComposeOnly){
-        $composeBatchOwner=(& git branch --show-current).Trim()
-        & pwsh -NoProfile -File $slotScript -Acquire -Pool heavy -Owner $composeBatchOwner -PollSeconds 7 -StaleHours 87600
-        if($LASTEXITCODE -ne 0){throw 'Heavy batch slot acquisition failed'}
-        $composeBatchLeaseHeld=$true
+    if($HeavyLeaseOwner){
+        if($HeavyLeaseOwner -ne $heavyOwner -or $Tiers.Count -ne 1 -or $Lighting.Count -ne 1){throw 'Borrowed heavy lease requires current branch owner and exactly one render state'}
+        Assert-BorrowedHeavyLease
+        $borrowedHeavyRecord=(Get-Content -LiteralPath $heavySlot -Raw).Trim()
+        Assert-BorrowedHeavyLease
+        $borrowedHeavyLease=$true
+    } elseif(!$RenderOnly -and (Test-Path -LiteralPath $heavySlot)){
+        throw 'Heavy lease already held by this branch; pass HeavyLeaseOwner explicitly for one ComposeOnly state'
     }
     if ($EditMode -and !$ComposeOnly) {
         & pwsh -NoProfile -File $slotScript -Acquire -Owner $SlotOwner -PollSeconds 7 -StaleHours 87600
@@ -170,32 +197,31 @@ try {
                 }
             }
             if($RenderOnly){continue}
-            $heavyOwner = (& git branch --show-current).Trim()
             $stateLeaseHeld=$false
-            if(!$composeBatchLeaseHeld){
+            if($borrowedHeavyLease){Assert-BorrowedHeavyLease}
+            else {
                 & pwsh -NoProfile -File $slotScript -Acquire -Pool heavy -Owner $heavyOwner -PollSeconds 7 -StaleHours 87600
                 if ($LASTEXITCODE -ne 0) { throw 'Heavy slot acquisition failed' }
                 $stateLeaseHeld=$true
             }
             try {
                 $composeArgs=@('compose','--renders',$renderDir,'--output',(Join-Path $output "sheets/$tier-$light"))
+                if($inputSnapshot){$composeArgs+=@('--inputs',$inputSnapshot)}
                 if($Photometry){$composeArgs+=@('--photometry',$Photometry)}
                 & uv run --project tools/refs python tools/refs/sbs_gate3.py @composeArgs
                 if ($LASTEXITCODE -ne 0) { throw "Incomplete evidence: $tier $light" }
                 if($IncludeDiagnostics){
                     $diagnosticArgs=@('compose','--renders',$renderDir,'--output',(Join-Path $output "diagnostics/$tier-$light"),'--include-rejected')
+                    if($inputSnapshot){$diagnosticArgs+=@('--inputs',$inputSnapshot)}
                     if($Photometry){$diagnosticArgs+=@('--photometry',$Photometry)}
                     & uv run --project tools/refs python tools/refs/sbs_gate3.py @diagnosticArgs
                     if($LASTEXITCODE -ne 0){throw "Incomplete diagnostic evidence: $tier $light"}
                 }
+                if($borrowedHeavyLease){Assert-BorrowedHeavyLease}
             } finally {
                 if($stateLeaseHeld){& pwsh -NoProfile -File $slotScript -Release -Pool heavy -Owner $heavyOwner}
             }
         }
     }
-    if(!$RenderOnly){Save-EvidenceInputs}
-} finally {
-    try {
-        if($composeBatchLeaseHeld){& pwsh -NoProfile -File $slotScript -Release -Pool heavy -Owner $composeBatchOwner}
-    } finally {Pop-Location}
-}
+    Save-EvidenceInputs -CaptureOnly:$RenderOnly
+} finally {Pop-Location}

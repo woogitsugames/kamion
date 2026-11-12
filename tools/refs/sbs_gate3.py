@@ -443,7 +443,8 @@ def landmark_report(annotations, ref, render_digest, render_size):
 
 
 def compose(render_dir, outdir, strict=True, include_rejected=False, historical=False, inputs=None, landmarks_file=None, photometry_file=None):
-    if inputs is not None and not historical: raise ValueError("custom input snapshots require --historical")
+    # A sealed snapshot changes where bytes are read, not the strength of capture checks.
+    # Legacy provenance still requires the separate, explicit historical mode.
     input_dir=Path(inputs) if inputs is not None else REGION
     refs=read(input_dir/'sbs_references.json')['references']
     cameras_by_id={c['id']:c for c in read(input_dir/'sbs_cameras.json').get('cameras',[])} if (input_dir/'sbs_cameras.json').exists() else {}
