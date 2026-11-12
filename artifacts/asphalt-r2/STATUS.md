@@ -45,3 +45,4 @@
 2026-11-12T02:24:40.3620957+01:00: zapisano artifacts/asphalt-r2/candidate/Low-clear. Następny krok: pozostałe serie lub porównanie wariantu.
 2026-11-12T02:25:23.3027369+01:00: zapisano artifacts/asphalt-r2/candidate/High-overcast. Następny krok: pozostałe serie lub porównanie wariantu.
 2026-11-12T02:25:57.3862361+01:00: zapisano artifacts/asphalt-r2/candidate/High-clear. Następny krok: pozostałe serie lub porównanie wariantu.
+2026-11-12T02:27:39.8491461+01:00: Candidate capture zakończony exit 0: 328 PNG. Porównanie wszystkich 328 snapshotów: view/projection/rootToWorld/pozycja/FOV/aspect bez różnic. Obejrzano 8 natywnych par wycinków; efekt subtelny, fugi zachowane, obrzeże z ciemniejszymi podziałami. Końcowy visual-critic zlecony. 128 GLB nadal czeka na heavy, więc brak deklaracji PASS geometrii/liczników.
