@@ -201,6 +201,9 @@ namespace Game.Tests.EditMode
         public void MirrorRender_KeepsOptics_RestoresLodBias()
         {
             int level = QualitySettings.GetQualityLevel();
+            // ADR 0136 r2: the tier mirror scale is a static set by QualityProfileApplier (Low 0.75) - pin the Medium tier value.
+            float tierRes = Game.Core.MirrorOverrides.TierResolution;
+            Game.Core.MirrorOverrides.TierResolution = 1f;
             var root = new GameObject("mirror-test");
             try
             {
@@ -239,6 +242,7 @@ namespace Game.Tests.EditMode
             {
                 Object.DestroyImmediate(root);
                 QualitySettings.SetQualityLevel(level, false);
+                Game.Core.MirrorOverrides.TierResolution = tierRes;
             }
         }
     }
