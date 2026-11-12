@@ -683,6 +683,9 @@ def apply(w, heroes, instances: list, log=lambda *a: None) -> dict:
             for p in w.buf.parts:
                 if p.src.startswith(c.id + ":") and p.src.rsplit(":", 1)[-1] in removed:
                     removed[p.src.rsplit(":", 1)[-1]] += len(p.T)
+            # ADR 0144: balustrade triangles already dropped beside the deck barriers (furniture.drop_parapets_at_barriers)
+            # are generic dressing this asset replaces as well
+            removed["parapet"] += getattr(w.buf, "parapet_dropped", {}).get(c.id + ":parapet", 0)
             # ADR 0110: the barriers of the chain (streetscape.furniture.guardrails, src "<chain>:<side>:<rule>") stay:
             # they were dropped with the ribbons, so the hero decks had no road barrier at all (gate-3 sbs #4a)
             rails = ("bridge", "median", "embankment", "structure")

@@ -425,6 +425,22 @@ overrides:
       read off the frame: +- 5 m, WORKING_VALUE. The name is the official name of the roundabout (OSM).
     confidence: low
     verify: plate position and text layout on site
+  - id: biezenstwa-f10-north
+    kind: gate3_sign
+    at_en: [515.8, -680.3]
+    travel_bearing_deg: 299
+    parts: [{face: F-10}]
+    mapillary: ["482392746429891", "320326319617139"]
+    reason: >-
+      ADR 0144 (ADR 0143 point 4): blue lane-direction board (straight | right turn, dashed lane line, two posts)
+      behind the guardrail north of the viaduct, read on two frames of one sequence (richlv 482392746429891 and
+      320326319617139, 2020-08-15). Position: rays from the two ADR 0143 poses (37 deg right of the optical axis of
+      482392, right frame edge of 320326) cross near E 514-519 N -681; the 0.08 m GUGiK orthophoto has a small object
+      with a shadow in the grass strip at E 515.8 N -680.3 (artifacts/junctions-r7/ortho/board482_r7c.jpg), 6 m north of
+      the deck edge. The ADR 0143 guess (E 495 N -676) was 21 m further and under the deck. Designation F-10, plate
+      0.90 x 0.55 m and lower edge 2.0 m are WORKING_VALUE; present state (after 2020) UNVERIFIED.
+    confidence: medium
+    verify: board still standing, plate size on site
   - id: biezenstwa-street-name-north
     kind: gate3_sign
     at_en: [550.2, -699.7]
@@ -1318,11 +1334,22 @@ overrides:
       these points (artifacts/junctions-r2/scripts/fit_offset.py, residual <= 0.15 m). Earlier readings (overview
       plan views; then the lane taken to reach the grass, 6.5 m, which left a hole between the 13.4 m stem and the
       link start under the route) are superseded.
+      ADR 0144 (owner, Fold video 2026-11-12: "the exit lane zigzags"): the knots at t 0.15-0.37 (the 6.0 m reading
+      with the P-21 band at N -132 and the centres at N -138 / -135) put both edges 0.9-1.4 m to the NE over 12 m and
+      back: the NE kerb bulged onto the verge at chain station 161-171 and stepped 1.4 m into the lane at 172-178.
+      On the 0.08 m orthophoto the NE asphalt / concrete-gutter boundary is one smooth line (brightness transects
+      every 6 m, artifacts/junctions-r7/scripts/zz_ortho_edge.py: 0.25 m inside the old kerb at station 143, 0.95 m
+      at 165-185; +-0.15 m). Knots t 0.154-0.704 refitted so the NE edge follows that line and the SW edge keeps the
+      line it had outside the bump (artifacts/junctions-r7/scripts/zz_fit.py, residual <= 0.08 m; edge slope <= 0.14).
     confidence: medium
     verify: owner drive
     set:
-      center_offset: [[0.0, -8.4], [0.05, -6.97], [0.1, -2.45], [0.15, -0.07], [0.222, -1.2], [0.3, -0.58], [0.366, -0.2], [0.5, 0.35], [0.75, 0.45], [1.0, 0.2]]
-      width: [[0.0, 4.2], [0.25, 4.2], [0.3, 6.0], [0.366, 5.35], [0.75, 5.35], [1.0, 6.5]]
+      center_offset: [[0.0, -8.4], [0.05, -6.97], [0.1, -2.45], [0.15, -0.07], [0.154, -0.13], [0.194, -0.14], [0.237, 0.27],
+                      [0.28, 0.46], [0.322, 0.33], [0.365, 0.34], [0.407, 0.41], [0.45, 0.48], [0.492, 0.5], [0.534, 0.53],
+                      [0.577, 0.55], [0.619, 0.54], [0.661, 0.52], [0.704, 0.51], [0.75, 0.45], [1.0, 0.2]]
+      width: [[0.0, 4.2], [0.15, 4.2], [0.154, 4.53], [0.194, 4.47], [0.237, 4.45], [0.28, 4.43], [0.322, 4.49], [0.365, 4.55],
+              [0.407, 4.6], [0.45, 4.65], [0.492, 4.76], [0.534, 4.84], [0.577, 4.98], [0.619, 5.0], [0.661, 5.1], [0.704, 5.17],
+              [0.75, 5.35], [1.0, 6.5]]
   - id: s1440-diverge-p21-band
     kind: painted_zone
     axis: [[-386.6, -98.1], [-344.6, -136.4]]

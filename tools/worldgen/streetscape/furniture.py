@@ -1738,7 +1738,8 @@ def drop_parapets_at_barriers(buf, runs, m=None):
     edge) are two rail systems 0.1-0.3 m apart: on p0_kerb_merge_eye the W-beam ran through the balustrade posts for
     ~10 m. One system per edge: where a deck barrier (W-beam + upper box beam at BRIDGE_BARRIER_H - a barrier-railing)
     runs within PARAPET_BARRIER_MIN_M, the balustrade triangles are dropped. Hero viaducts carry their authored
-    railing in the asset (measured off photos, e.g. Mapillary 454716650857984) and are not touched. Returns the
+    railing in the asset (measured off photos, e.g. Mapillary 454716650857984); their generic balustrade goes either way (here or in
+    hero_bridge.apply, which counts both). Returns the
     number of triangles removed."""
     from scipy.spatial import cKDTree
     pts = []
@@ -1764,6 +1765,9 @@ def drop_parapets_at_barriers(buf, runs, m=None):
         if near.any():
             removed += int(near.sum())
             p.T = p.T[~near]
+            # per part, for the accounting of hero viaducts (hero_bridge.apply: "generic dressing the asset replaces")
+            by_src = buf.__dict__.setdefault("parapet_dropped", {})
+            by_src[p.src] = by_src.get(p.src, 0) + int(near.sum())
     if m is not None:
         m["parapet_tris_dropped"] = removed
     return removed
