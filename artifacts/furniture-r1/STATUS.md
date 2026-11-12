@@ -207,3 +207,5 @@ NASTĘPNY KROK: uv run --project tools/worldgen tools/worldgen/roads/build_world
 2026-11-12T01:28:41.4475038+01:00: niezależna ocena iteracji4 potwierdziła lepszy beton i brak nowej regresji siatki w sprawdzonych kadrach. Metryki220: mesh draws i instancje delta0; driver i fire-station-route spełniają konserwatywne<=2%, abeam2,065% i above2,287% nadal niepotwierdzone przez zaokrąglenie. Przygotowano tymczasowy licznik edytorowy bez zaokrągleń: przechwytuje kwalifikację rendererów i instancje w klatce, używa projekcji po przywróceniu celu jak SceneStats; porównuje wszystkie55 rekordów z licznikiem runnera i zamrożonymi wynikami4. NASTĘPNY KROK: pomiary Low overcast/clear w slotach Unity, bez zmiany geometrii.
 
 2026-11-12T01:29:09.3153738+01:00: dokładniejszy licznik CPU Low overcast; sukces=True. Slot Unity zwolniony. NASTĘPNY KROK: odczytać zweryfikowane granice budżetu; to nie pomiar GPU.
+
+2026-11-12T01:29:34.7448044+01:00: dokładniejszy licznik CPU Low clear; sukces=True. Slot Unity zwolniony. NASTĘPNY KROK: odczytać zweryfikowane granice budżetu; to nie pomiar GPU.
