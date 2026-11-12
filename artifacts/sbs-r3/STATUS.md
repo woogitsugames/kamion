@@ -22,7 +22,7 @@ Przegląd przygotowania znalazł dwie luki: kontrolę importu przed czekaniem na
 
 Próba rozszerzenia siatki o −8 m nastąpiła, gdy oczekujące przygotowanie zdążyło już skończyć na 18 wariantach. Sprawdzono rzeczywisty wynik i przywrócono zgodną wersję skryptów. Nie opisywano 18 klatek jako 20. Wariant −8 m pozostaje do ewentualnej następnej próby. gantry-model-anchor.json zawiera faktyczny model sign_gantry_16_74: rozpiętość 16 m, wysokość 7,4 m nad bazą. To wymiary modelu WORKING_VALUE, nie pomiar realnego obiektu.
 
-Graf przy 494288 ma osie wiaduktu około 304–307°, blisko zapisanego kursu 309,37°. Nie przenosić kursu kamery 180137 z innej drogi. Stare raycasty zachowano jako historyczną wskazówkę; nowy bridge-surface-survey.json jest osobnym wynikiem z aktualnych bajtów siatek. Kamery na pokładzie nie mogą używać w ciemno NMT.
+Poprawiona projekcja na graf: najbliższa oś wiaduktu przy 494288 ma około 306,99°, blisko zapisanego kursu 309,37°. Nie przenosić kursu kamery 180137 z innej drogi. Stare raycasty zachowano jako historyczną wskazówkę; nowy bridge-surface-survey.json jest osobnym wynikiem z aktualnych bajtów siatek. Kamery na pokładzie nie mogą używać w ciemno NMT.
 
 ## Dalej
 
@@ -33,3 +33,6 @@ Fidelity, pełny GIS r3 i końcowy audyt 128 siatek/całej serii nie są jeszcze
 Nie ma aktywnego Unity ani ciężkiego Pythona naszej sesji. Ostatnie uchwyty zakończone: baseline 1171, przygotowanie 54688, import 12781, EditMode 62910, render 40279, kompozycja 33915 — wszystkie kod 0. Każdy proces miał właściwy slot i Release. Ciężki Python: heavy gpt-sbs-r3, Unity: gpt-sbs; cudzych slotów i PHONE_RUN nie ruszamy.
 
 Pozostają niezatwierdzone pochodne generatora poza SBS: far_field_qa.json, viaduct_putry_underdeck.spec.json, streetscape_qa.json, world_manifest.json, far-field manifest, props_meta.json i street_props.glb. Przywrócić dokładne pliki po końcowej walidacji, zachowując migawki dowodów. Świat, runtime, shadery, znaki i pliki Claude są poza zakresem edycji SBS.
+
+
+Niezależny przegląd18/18 zapisany w REVIEW-GANTRY-INITIAL.md: wszystkie C. Wskazuje grobin275528 −8…−12m i kontrolę pionowego kadru,837235 −16…−20m z bocznym położeniem, zsolt po właściwej osi jezdni. Naprawiono pomocniczą projekcję PowerShell na odcinki: pierwotna mogła zaokrąglać do końców. Sanity (u=0,25, odległość3m) poprawne; nowe odległości:4942881,69m od osi wiaduktu,3281352,90m od osi trunk,2978170,50m. Kamery i18raw nie korzystały z błędnego pomocnika; własne skrypty NumPy były niezależne. Nowy inspect-road-topology.ps1 i poprawiony JSON są dowodem do kolejnej rodziny prób.

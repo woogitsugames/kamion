@@ -1,149 +1,465 @@
-﻿{
-    "checked_at":  "2026-11-12T02:55:50.9201715+01:00",
-    "graph_sha256":  "0bd625e041a6a2ca90a74f1652336c731182c234985352de4d377110f1d42cf6",
-    "note":  "Source graph segments only, no raycast and no proof of generated deck/pixel alignment. Axis unsigned modulo180 then oriented northward; not a measured camera heading.",
-    "cameras":  [
-                    {
-                        "camera":  "sbs-g3-b-494288258686575",
-                        "stored_pos":  [
-                                           -528.1266,
-                                           2.4881,
-                                           141.888
-                                       ],
-                        "stored_view_grid_deg":  309.37045232594915,
-                        "nearest_edges":  [
-                                              {
-                                                  "edge_id":  "w257367428:4075461271-2629251371",
-                                                  "osm_way":  257367428,
-                                                  "name":  "Rondo Krzysztofa Jakuba Putry Wicemarszałka Sejmu RP",
-                                                  "bridge":  null,
-                                                  "distance_m":  7.4212,
-                                                  "northward_axis_grid_deg":  8.9243,
-                                                  "nearest_local_en":  [
-                                                                           -534.289,
-                                                                           -1.647
-                                                                       ]
-                                              },
-                                              {
-                                                  "edge_id":  "w25447143:1166107972-1847263293",
-                                                  "osm_way":  25447143,
-                                                  "name":  "Generała Władysława Andersa",
-                                                  "bridge":  "viaduct",
-                                                  "distance_m":  15.3537,
-                                                  "northward_axis_grid_deg":  304.5391,
-                                                  "nearest_local_en":  [
-                                                                           -539.235,
-                                                                           -8.111
-                                                                       ]
-                                              },
-                                              {
-                                                  "edge_id":  "w173985172:1847263305-1166108055",
-                                                  "osm_way":  173985172,
-                                                  "name":  "Generała Władysława Andersa",
-                                                  "bridge":  "viaduct",
-                                                  "distance_m":  16.3006,
-                                                  "northward_axis_grid_deg":  306.9852,
-                                                  "nearest_local_en":  [
-                                                                           -542.095,
-                                                                           10.890
-                                                                       ]
-                                              },
-                                              {
-                                                  "edge_id":  "w23844386:1166108055-1847263320",
-                                                  "osm_way":  23844386,
-                                                  "name":  "Generała Stanisława Maczka",
-                                                  "bridge":  "viaduct",
-                                                  "distance_m":  16.3006,
-                                                  "northward_axis_grid_deg":  304.3967,
-                                                  "nearest_local_en":  [
-                                                                           -542.095,
-                                                                           10.89
-                                                                       ]
-                                              },
-                                              {
-                                                  "edge_id":  "w173985170:1847263318-1166107972",
-                                                  "osm_way":  173985170,
-                                                  "name":  "Generała Stanisława Maczka",
-                                                  "bridge":  "viaduct",
-                                                  "distance_m":  23.6823,
-                                                  "northward_axis_grid_deg":  303.2585,
-                                                  "nearest_local_en":  [
-                                                                           -551.724,
-                                                                           0.485
-                                                                       ]
-                                              }
-                                          ]
-                    },
-                    {
-                        "camera":  "sbs-g3-b-1801374876712141",
-                        "stored_pos":  [
-                                           -545.1538,
-                                           70.6663,
-                                           137.6178
-                                       ],
-                        "stored_view_grid_deg":  353.06407172963969,
-                        "nearest_edges":  [
-                                              {
-                                                  "edge_id":  "w237183783:2629251371-2466608897",
-                                                  "osm_way":  237183783,
-                                                  "name":  "Aleja Tysiąclecia Państwa Polskiego",
-                                                  "bridge":  null,
-                                                  "distance_m":  6.4067,
-                                                  "northward_axis_grid_deg":  346.8543,
-                                                  "nearest_local_en":  [
-                                                                           -542.979,
-                                                                           64.640
-                                                                       ]
-                                              },
-                                              {
-                                                  "edge_id":  "w174538878:2459040307-2466608900",
-                                                  "osm_way":  174538878,
-                                                  "name":  null,
-                                                  "bridge":  null,
-                                                  "distance_m":  10.0335,
-                                                  "northward_axis_grid_deg":  359.4514,
-                                                  "nearest_local_en":  [
-                                                                           -535.122,
-                                                                           70.482
-                                                                       ]
-                                              },
-                                              {
-                                                  "edge_id":  "w257367424:2629251371-3890183128",
-                                                  "osm_way":  257367424,
-                                                  "name":  "Rondo Krzysztofa Jakuba Putry Wicemarszałka Sejmu RP",
-                                                  "bridge":  null,
-                                                  "distance_m":  16.9585,
-                                                  "northward_axis_grid_deg":  297.6044,
-                                                  "nearest_local_en":  [
-                                                                           -553.843,
-                                                                           56.103
-                                                                       ]
-                                              },
-                                              {
-                                                  "edge_id":  "w237183783:2466608897-2466608891",
-                                                  "osm_way":  237183783,
-                                                  "name":  "Aleja Tysiąclecia Państwa Polskiego",
-                                                  "bridge":  null,
-                                                  "distance_m":  17.0328,
-                                                  "northward_axis_grid_deg":  357.2535,
-                                                  "nearest_local_en":  [
-                                                                           -547.007,
-                                                                           87.598
-                                                                       ]
-                                              },
-                                              {
-                                                  "edge_id":  "w238861878:2466608897-2466608900",
-                                                  "osm_way":  238861878,
-                                                  "name":  null,
-                                                  "bridge":  null,
-                                                  "distance_m":  17.0328,
-                                                  "northward_axis_grid_deg":  85.8591,
-                                                  "nearest_local_en":  [
-                                                                           -547.007,
-                                                                           87.598
-                                                                       ]
-                                              }
-                                          ]
-                    }
-                ]
+{
+  "checked_at": "2026-11-12T03:39:23.2496691+01:00",
+  "graph_sha256": "0bd625e041a6a2ca90a74f1652336c731182c234985352de4d377110f1d42cf6",
+  "camera_sha256": "41686dd5d9a9ef0969ab9d7772e359b150a6f1783b67538d9d8f875880f1ae2e",
+  "projection_sanity": {
+    "fraction": 0.25,
+    "distance_m": 3,
+    "passed": true
+  },
+  "note": "Corrected projection: explicit double coordinates, branch clamp. Earlier Math.Min overload could round Decimal fraction to Int32 and choose endpoints. Graph only, no proof of generated road edge or camera approval.",
+  "cameras": [
+    {
+      "camera": "sbs-g3-b-494288258686575",
+      "stored_pos": [
+        -528.1266,
+        2.4881,
+        141.888
+      ],
+      "stored_view_grid_deg": 309.37045232594926,
+      "nearest_edges": [
+        {
+          "edge_id": "w173985172:1847263305-1166108055",
+          "osm_way": 173985172,
+          "name": "Generała Władysława Andersa",
+          "highway": "trunk",
+          "lanes": 2,
+          "oneway": "yes",
+          "bridge": "viaduct",
+          "distance_m": 1.6921,
+          "segment_fraction": 0.5685790052842966,
+          "segment_heading_grid_deg": 306.9852,
+          "signed_left_of_segment_m": -1.6921,
+          "nearest_local_en": [
+            -529.1446,
+            1.1364
+          ]
+        },
+        {
+          "edge_id": "w257367428:4075461271-2629251371",
+          "osm_way": 257367428,
+          "name": "Rondo Krzysztofa Jakuba Putry Wicemarszałka Sejmu RP",
+          "highway": "trunk",
+          "lanes": 3,
+          "oneway": "yes",
+          "bridge": null,
+          "distance_m": 6.0865,
+          "segment_fraction": 0.357435543921345,
+          "segment_heading_grid_deg": 1.0371,
+          "signed_left_of_segment_m": -6.0865,
+          "nearest_local_en": [
+            -534.2122,
+            2.5983
+          ]
+        },
+        {
+          "edge_id": "w25447143:1166107972-1847263293",
+          "osm_way": 25447143,
+          "name": "Generała Władysława Andersa",
+          "highway": "trunk",
+          "lanes": 2,
+          "oneway": "yes",
+          "bridge": "viaduct",
+          "distance_m": 15.1973,
+          "segment_fraction": 0.1315235262680516,
+          "segment_heading_grid_deg": 128.1586,
+          "signed_left_of_segment_m": 15.1973,
+          "nearest_local_en": [
+            -537.5161,
+            -9.4616
+          ]
+        },
+        {
+          "edge_id": "w23844386:1166108055-1847263320",
+          "osm_way": 23844386,
+          "name": "Generała Stanisława Maczka",
+          "highway": "trunk",
+          "lanes": 3,
+          "oneway": "yes",
+          "bridge": "viaduct",
+          "distance_m": 16.3006,
+          "segment_fraction": 0.0,
+          "segment_heading_grid_deg": 304.3967,
+          "signed_left_of_segment_m": -0.9582,
+          "nearest_local_en": [
+            -542.095,
+            10.89
+          ]
+        },
+        {
+          "edge_id": "w173985170:1847263318-1166107972",
+          "osm_way": 173985170,
+          "name": "Generała Stanisława Maczka",
+          "highway": "trunk",
+          "lanes": 2,
+          "oneway": "yes",
+          "bridge": "viaduct",
+          "distance_m": 23.6823,
+          "segment_fraction": 1.0,
+          "segment_heading_grid_deg": 123.2585,
+          "signed_left_of_segment_m": 14.6162,
+          "nearest_local_en": [
+            -551.724,
+            0.485
+          ]
+        },
+        {
+          "edge_id": "w180144451:2629251364-4075461271",
+          "osm_way": 180144451,
+          "name": "Rondo Krzysztofa Jakuba Putry Wicemarszałka Sejmu RP",
+          "highway": "trunk",
+          "lanes": 2,
+          "oneway": "yes",
+          "bridge": null,
+          "distance_m": 27.0943,
+          "segment_fraction": 0.5496712521406031,
+          "segment_heading_grid_deg": 129.3441,
+          "signed_left_of_segment_m": 27.0943,
+          "nearest_local_en": [
+            -545.3037,
+            -18.4653
+          ]
+        }
+      ]
+    },
+    {
+      "camera": "sbs-g3-b-1801374876712141",
+      "stored_pos": [
+        -545.1538,
+        70.6663,
+        137.6178
+      ],
+      "stored_view_grid_deg": 353.06407172963975,
+      "nearest_edges": [
+        {
+          "edge_id": "w237183783:2629251371-2466608897",
+          "osm_way": 237183783,
+          "name": "Aleja Tysiąclecia Państwa Polskiego",
+          "highway": "trunk",
+          "lanes": 2,
+          "oneway": "yes",
+          "bridge": null,
+          "distance_m": 1.0729,
+          "segment_fraction": 0.4142303713753615,
+          "segment_heading_grid_deg": 349.797,
+          "signed_left_of_segment_m": 1.0729,
+          "nearest_local_en": [
+            -544.0978,
+            70.8564
+          ]
+        },
+        {
+          "edge_id": "w174538878:2459040307-2466608900",
+          "osm_way": 174538878,
+          "name": null,
+          "highway": "living_street",
+          "lanes": 2,
+          "oneway": "no",
+          "bridge": null,
+          "distance_m": 10.0296,
+          "segment_fraction": 0.015604866761359783,
+          "segment_heading_grid_deg": 359.4514,
+          "signed_left_of_segment_m": 10.0296,
+          "nearest_local_en": [
+            -535.1247,
+            70.7623
+          ]
+        },
+        {
+          "edge_id": "w257367424:2629251371-3890183128",
+          "osm_way": 257367424,
+          "name": "Rondo Krzysztofa Jakuba Putry Wicemarszałka Sejmu RP",
+          "highway": "trunk",
+          "lanes": 2,
+          "oneway": "yes",
+          "bridge": null,
+          "distance_m": 16.9318,
+          "segment_fraction": 0.8276226595911874,
+          "segment_heading_grid_deg": 297.6044,
+          "signed_left_of_segment_m": -16.9318,
+          "nearest_local_en": [
+            -552.9994,
+            55.6619
+          ]
+        },
+        {
+          "edge_id": "w238861878:2466608897-2466608900",
+          "osm_way": 238861878,
+          "name": null,
+          "highway": "living_street",
+          "lanes": 2,
+          "oneway": "no",
+          "bridge": null,
+          "distance_m": 17.0213,
+          "segment_fraction": 0.053283046538934654,
+          "segment_heading_grid_deg": 85.8591,
+          "signed_left_of_segment_m": -17.0213,
+          "nearest_local_en": [
+            -546.3829,
+            87.6432
+          ]
+        },
+        {
+          "edge_id": "w237183783:2466608897-2466608891",
+          "osm_way": 237183783,
+          "name": "Aleja Tysiąclecia Państwa Polskiego",
+          "highway": "trunk",
+          "lanes": 2,
+          "oneway": "yes",
+          "bridge": null,
+          "distance_m": 17.0328,
+          "segment_fraction": 0.0,
+          "segment_heading_grid_deg": 357.2535,
+          "signed_left_of_segment_m": -1.0397,
+          "nearest_local_en": [
+            -547.007,
+            87.598
+          ]
+        },
+        {
+          "edge_id": "w174538878:2466608900-2274001379",
+          "osm_way": 174538878,
+          "name": null,
+          "highway": "living_street",
+          "lanes": 2,
+          "oneway": "no",
+          "bridge": null,
+          "distance_m": 20.3306,
+          "segment_fraction": 0.0,
+          "segment_heading_grid_deg": 6.5209,
+          "signed_left_of_segment_m": 7.7769,
+          "nearest_local_en": [
+            -535.294,
+            88.446
+          ]
+        }
+      ]
+    },
+    {
+      "camera": "sbs-g3-b-3281350541967811",
+      "stored_pos": [
+        -249.0174,
+        -233.4495,
+        132.5914
+      ],
+      "stored_view_grid_deg": 120.01866275497423,
+      "nearest_edges": [
+        {
+          "edge_id": "w560802655:12620261936-1946476472",
+          "osm_way": 560802655,
+          "name": "Generała Władysława Andersa",
+          "highway": "trunk",
+          "lanes": 3,
+          "oneway": "yes",
+          "bridge": null,
+          "distance_m": 2.9031,
+          "segment_fraction": 0.6964312569398491,
+          "segment_heading_grid_deg": 125.1453,
+          "signed_left_of_segment_m": 2.9031,
+          "nearest_local_en": [
+            -250.6886,
+            -235.8233
+          ]
+        },
+        {
+          "edge_id": "w266084693:10015785253-12620261934",
+          "osm_way": 266084693,
+          "name": "Generała Władysława Andersa",
+          "highway": "trunk",
+          "lanes": 3,
+          "oneway": "yes",
+          "bridge": null,
+          "distance_m": 10.0726,
+          "segment_fraction": 0.20106134766686937,
+          "segment_heading_grid_deg": 309.0759,
+          "signed_left_of_segment_m": 10.0726,
+          "nearest_local_en": [
+            -242.6682,
+            -225.6301
+          ]
+        },
+        {
+          "edge_id": "w1093579589:2359253621-10015785253",
+          "osm_way": 1093579589,
+          "name": "Generała Władysława Andersa",
+          "highway": "trunk",
+          "lanes": 3,
+          "oneway": "yes",
+          "bridge": null,
+          "distance_m": 15.2599,
+          "segment_fraction": 1.0,
+          "segment_heading_grid_deg": 308.643,
+          "signed_left_of_segment_m": 9.9857,
+          "nearest_local_en": [
+            -233.769,
+            -232.856
+          ]
+        },
+        {
+          "edge_id": "w1093579593:10015785256-10015785253",
+          "osm_way": 1093579593,
+          "name": null,
+          "highway": "service",
+          "lanes": 1,
+          "oneway": "yes",
+          "bridge": null,
+          "distance_m": 15.2599,
+          "segment_fraction": 1.0,
+          "segment_heading_grid_deg": 246.0008,
+          "signed_left_of_segment_m": -5.6597,
+          "nearest_local_en": [
+            -233.769,
+            -232.856
+          ]
+        },
+        {
+          "edge_id": "w266084684:1946476472-4103450292",
+          "osm_way": 266084684,
+          "name": "Generała Władysława Andersa",
+          "highway": "trunk",
+          "lanes": 3,
+          "oneway": "yes",
+          "bridge": null,
+          "distance_m": 28.7773,
+          "segment_fraction": 0.0,
+          "segment_heading_grid_deg": 128.9045,
+          "signed_left_of_segment_m": 1.6155,
+          "nearest_local_en": [
+            -227.673,
+            -252.751
+          ]
+        },
+        {
+          "edge_id": "w1093579592:2359253621-10015785256",
+          "osm_way": 1093579592,
+          "name": null,
+          "highway": "service",
+          "lanes": 1,
+          "oneway": "yes",
+          "bridge": null,
+          "distance_m": 33.4501,
+          "segment_fraction": 0.35478875085714495,
+          "segment_heading_grid_deg": 12.6492,
+          "signed_left_of_segment_m": 33.4501,
+          "nearest_local_en": [
+            -216.3791,
+            -240.7745
+          ]
+        }
+      ]
+    },
+    {
+      "camera": "sbs-g3-b-297817221966185",
+      "stored_pos": [
+        -298.3237,
+        -199.657,
+        132.3836
+      ],
+      "stored_view_grid_deg": 117.24622818558959,
+      "nearest_edges": [
+        {
+          "edge_id": "w560802655:12620261936-1946476472",
+          "osm_way": 560802655,
+          "name": "Generała Władysława Andersa",
+          "highway": "trunk",
+          "lanes": 3,
+          "oneway": "yes",
+          "bridge": null,
+          "distance_m": 0.5044,
+          "segment_fraction": 0.1405266137841371,
+          "segment_heading_grid_deg": 128.4254,
+          "signed_left_of_segment_m": 0.5044,
+          "nearest_local_en": [
+            -298.6372,
+            -200.0522
+          ]
+        },
+        {
+          "edge_id": "w174538877:12620261936-12620261934",
+          "osm_way": 174538877,
+          "name": null,
+          "highway": "service",
+          "lanes": 2,
+          "oneway": "no",
+          "bridge": null,
+          "distance_m": 4.691,
+          "segment_fraction": 0.04356307196834256,
+          "segment_heading_grid_deg": 40.2861,
+          "signed_left_of_segment_m": -4.691,
+          "nearest_local_en": [
+            -301.9021,
+            -196.6238
+          ]
+        },
+        {
+          "edge_id": "w560802655:1847044938-12620261936",
+          "osm_way": 560802655,
+          "name": "Generała Władysława Andersa",
+          "highway": "trunk",
+          "lanes": 3,
+          "oneway": "yes",
+          "bridge": null,
+          "distance_m": 4.7368,
+          "segment_fraction": 1.0,
+          "segment_heading_grid_deg": 128.412,
+          "signed_left_of_segment_m": 0.5033,
+          "nearest_local_en": [
+            -302.327,
+            -197.125
+          ]
+        },
+        {
+          "edge_id": "w266084693:10015785253-12620261934",
+          "osm_way": 266084693,
+          "name": "Generała Władysława Andersa",
+          "highway": "trunk",
+          "lanes": 3,
+          "oneway": "yes",
+          "bridge": null,
+          "distance_m": 14.6133,
+          "segment_fraction": 0.7789395244370181,
+          "segment_heading_grid_deg": 307.8406,
+          "signed_left_of_segment_m": 14.6133,
+          "nearest_local_en": [
+            -289.3589,
+            -188.1165
+          ]
+        },
+        {
+          "edge_id": "w174538882:12620261934-2638975384",
+          "osm_way": 174538882,
+          "name": null,
+          "highway": "service",
+          "lanes": 2,
+          "oneway": "no",
+          "bridge": null,
+          "distance_m": 15.1699,
+          "segment_fraction": 0.0,
+          "segment_heading_grid_deg": 39.4552,
+          "signed_left_of_segment_m": -4.4813,
+          "nearest_local_en": [
+            -292.574,
+            -185.619
+          ]
+        },
+        {
+          "edge_id": "w266084693:12620261934-2840742308",
+          "osm_way": 266084693,
+          "name": "Generała Władysława Andersa",
+          "highway": "trunk",
+          "lanes": 3,
+          "oneway": "yes",
+          "bridge": null,
+          "distance_m": 15.1699,
+          "segment_fraction": 0.0,
+          "segment_heading_grid_deg": 307.8329,
+          "signed_left_of_segment_m": 14.6139,
+          "nearest_local_en": [
+            -292.574,
+            -185.619
+          ]
+        }
+      ]
+    }
+  ]
 }
