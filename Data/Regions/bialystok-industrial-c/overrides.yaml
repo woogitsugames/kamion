@@ -361,7 +361,7 @@ overrides:
     verify: sign code and plate on site
   - id: andersa-elewatorska-island-u4a
     kind: gate3_sign
-    at_en: [-217.3, -240.3]
+    at_en: [-219.9, -234.75]
     travel_bearing_deg: 312
     lower_edge_m: 0.9
     parts: [{face: U-4a}]
@@ -369,8 +369,12 @@ overrides:
     reason: >-
       ADR 0125: red / white chevron board on the nose of the island between Andersa (northbound) and the right-turn
       slip into the side road, the main orientation mark of frames 381800493259507 (szurek 2017) and
-      837235577143499 (grobin 2019). Position = island nose on the GUGiK orthophoto 2024 (+- 1.5 m); the 2024 frame
-      (kino 1056932506043672) shows U-21 posts there instead, so the board is the 2017-2019 state. Board size
+      837235577143499 (grobin 2019): a kerbed paved island with P-21 hatching in front of its nose. ADR 0128: the
+      0.08 m GUGiK orthophoto (cell c_06_06, artifacts/biezenstwa-island/ortho/and_hr7.jpg) has that nose at
+      E -219.6 N -235.3 (= the authored island n10015785253-island) with the P-21 triangle down to E -216.3 N -238.7;
+      the ADR 0125 position E -217.3 N -240.3 (read on the 0.25 m sheet) is worn paint on the carriageway, so the
+      board was snapped 5.4 m to the far verge of the slip lane. Now 0.6 m behind the nose, on the island. The 2024
+      frame (kino 1056932506043672) shows U-21 posts instead, so the board is the 2017-2019 state. Board size
       0.75 x 1.35 m and its designation (U-4a; the review calls it U-3) are WORKING_VALUE / UNVERIFIED.
     confidence: low
     verify: present state of the island nose on site
@@ -402,30 +406,63 @@ overrides:
       (2020). Same method and accuracy as biezenstwa-street-name-east (+- 5 m, WORKING_VALUE).
     confidence: low
     verify: plate position on site
+  - id: biezenstwa-n-slip-nose
+    kind: traffic_island
+    surface: island_gravel
+    polygon_en: [[529.80, -686.19], [540.32, -691.46], [540.47, -691.56], [540.58, -691.71], [540.64, -691.87],
+                 [540.65, -692.05], [540.61, -692.23], [540.51, -692.38], [533.14, -701.20], [533.26, -700.96],
+                 [533.78, -700.17], [534.23, -699.34], [534.59, -698.47], [534.87, -697.57], [535.06, -696.65],
+                 [535.16, -695.72], [535.18, -694.78], [535.11, -693.84], [534.94, -692.91], [534.69, -692.00],
+                 [534.36, -691.12], [533.95, -690.28], [533.45, -689.48], [532.89, -688.72], [532.25, -688.03],
+                 [531.56, -687.40], [530.80, -686.83], [530.00, -686.34]]
+    patches:
+      - surface: sidewalk_paving
+        polygon_en: [[528.0, -685.0], [537.4, -689.2], [534.4, -695.2], [533.0, -696.0], [530.0, -690.0]]
+    reason: >-
+      ADR 0128 (gate 3 G3-B blocker 2, REVIEW s11-sbs-r1 #11): kerbed nose between the northern slip road and the
+      ring carriageway that turns under the viaduct. The generator rounds this corner with a 12 m kerb return
+      (j:n1882953899 corner2), which puts carriageway where the real kerbs run straight to a nose: the zebra ended
+      on asphalt and D-3 / D-6 had nowhere to stand. 0.08 m GUGiK orthophoto (cell c_12_02, crops
+      artifacts/biezenstwa-island/ortho/bz_hr7.jpg and plan_b5/bz_corner.jpg): light kerb band along the slip from
+      the zebra end (E 537.1 N -690.0) to the nose at E 540.6 N -691.9 +- 0.5 m, where the dashed edge line starts;
+      Mapillary 320326319617139 (richlv, 2020; reference only): pointed gravel patch with weeds, kerb on both sides,
+      the ring-side kerb leaving at bearing ~217 deg (photo geometry, +- 10 deg) - the line from the nose to the
+      start of the generated ring kerb (E 533.1 N -701.2) is 218 deg. Polygon = those two kerb lines, a 0.6 m nose
+      radius (WORKING_VALUE) and the road face of the generated kerb return (coordinates of build b5; re-trace if the
+      junction generator moves that kerb). Patch = paved landing of the crossing (the footpath continues SSW under
+      the viaduct on what the generator has as verge: not built, OPEN); the tactile slab and the W-beam along the
+      ring kerb are not modelled.
+    confidence: medium
+    verify: nose position and surfaces on site
   - id: biezenstwa-n-slip-d6
     kind: gate3_sign
-    at_en: [540.0, -690.6]
-    travel_bearing_deg: 300
-    lower_edge_m: 2.2
+    at_en: [537.3, -691.0]
+    travel_bearing_deg: 297
+    lower_edge_m: 2.4
     parts: [{face: D-6}]
     mapillary: ["320326319617139"]
     reason: >-
-      ADR 0125: D-6 on its own post at the left end of the pedestrian crossing of the northern slip road, on the
-      small island beside the viaduct (richlv 320326319617139, 2020). Crossing read on the GUGiK orthophoto 2024 at
-      E 533-539, N -681..-689; the post +- 3 m, WORKING_VALUE (the frame's own pose is WORKING_VALUE).
-    confidence: low
-    verify: post positions on site
+      ADR 0125 / 0128: D-6 on its own post at the left end of the pedestrian crossing of the northern slip road, on
+      the gravel nose beside the viaduct (richlv 320326319617139, 2020). Position: the blue plate is visible on the
+      0.08 m orthophoto at E 537.2 N -690.7 (bz_hr7.jpg) and the photo geometry (zenith vanishing point -> pitch
+      18 deg, post bases on the ground plane, camera ~0.9 m above the road, anchored on the zebra corner) gives
+      E 537.5 N -691.2; mean, +- 0.7 m. Faces the traffic leaving the ring (slip axis 297 deg; plate aspect 0.83 in
+      the frame = 35 deg off its normal). Lower edge from the same geometry (2.4-2.7 m), WORKING_VALUE.
+    confidence: medium
+    verify: post position on site
   - id: biezenstwa-n-slip-d3
     kind: gate3_sign
-    at_en: [543.6, -691.8]
-    travel_bearing_deg: 300
-    lower_edge_m: 2.4
+    at_en: [539.3, -692.4]
+    travel_bearing_deg: 285
+    lower_edge_m: 2.5
     parts: [{face: D-3}]
     mapillary: ["320326319617139"]
     reason: >-
-      ADR 0125: D-3 (one-way road) on a taller post ~3.5 m before the D-6 on the same island (same frame). +- 3 m.
-    confidence: low
-    verify: post positions on site
+      ADR 0125 / 0128: D-3 (one-way road) 2.4 m east of the D-6 on the same nose, 1 m behind its tip (same frame;
+      plate on the orthophoto at E 539.1 N -692.1, photo geometry E 539.6 N -692.6; +- 0.7 m). The plate is seen
+      ~50 deg off its normal in the frame, i.e. turned towards the ring: bearing 285 deg +- 15, WORKING_VALUE.
+    confidence: medium
+    verify: post position and plate direction on site
   - id: ec-bialystok-chimney-1
     kind: landmark
     osm_way: 628899553

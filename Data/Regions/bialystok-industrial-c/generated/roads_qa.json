@@ -11533,6 +11533,13 @@
    ],
    "islands": [
     {
+     "area_m2": 36.9,
+     "built": true,
+     "id": "biezenstwa-n-slip-nose",
+     "note": "z 139.58",
+     "surface": "island_gravel"
+    },
+    {
      "area_m2": 73.1,
      "built": true,
      "id": "s1440-merge-separator-strip",
@@ -12071,6 +12078,12 @@
     ]
    },
    {
+    "id": "biezenstwa-n-slip-nose",
+    "targets": [
+     "island"
+    ]
+   },
+   {
     "id": "s1440-merge-separator-strip",
     "targets": [
      "island"
@@ -12446,7 +12459,7 @@
    "n100-se-arrows-clear-4": 5,
    "n10015785253-edge-line-clear": 63
   },
-  "paint_erased_in_zones_tris": 93,
+  "paint_erased_in_zones_tris": 95,
   "painted_zones": [
    {
     "area_m2": 159.3,
@@ -12789,7 +12802,7 @@
   },
   "verge_strips": {
    "chunks": 37,
-   "tris": 49407
+   "tris": 49484
   },
   "walled_ramps": [
    {

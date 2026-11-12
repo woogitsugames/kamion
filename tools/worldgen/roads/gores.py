@@ -78,6 +78,15 @@ class Island:
     surface: str = "sidewalk_paving"
     built: bool = False
     note: str = ""
+    patches: list = field(default_factory=list)      # [(Polygon, surface)]: parts of the top with another surface (ADR 0128)
+    ring: object = None                              # kerb line (n, 2) and its top heights, set when built
+    ring_top: object = None
+
+    def top_z(self, p):
+        """Height of the island top at p (kerb top at the nearest kerb-line vertex), None before the island is built."""
+        if self.ring is None:
+            return None
+        return float(self.ring_top[int(np.argmin(np.hypot(self.ring[:, 0] - p[0], self.ring[:, 1] - p[1])))])
 
 
 @dataclass
@@ -319,7 +328,14 @@ def plan(net, juncs, overrides, origin) -> GorePlan:
         if not pg.is_valid or not pg.intersects(U.buffer(8.0)):
             gp.overrides_stale.append(o["id"])
             continue
-        gp.islands.append(Island(o["id"], pg, o.get("surface", "sidewalk_paving")))
+        isl = Island(o["id"], pg, o.get("surface", "sidewalk_paving"))
+        # ADR 0128: `patches: [{surface, polygon_en}]` - parts of the island top with another surface inside the one
+        # kerb ring (a footpath crossing a gravel nose); only the part inside the island counts
+        for pt in o.get("patches", []):
+            pp = Polygon(np.array(pt["polygon_en"], float)).buffer(0)
+            if pp.is_valid and pp.intersects(pg):
+                isl.patches.append((pp, pt["surface"]))
+        gp.islands.append(isl)
         gp.overrides_applied.append({"id": o["id"], "targets": ["island"]})
     if gp.gores:
         _drop_kerbs(net, gp)
@@ -485,10 +501,19 @@ def _build_island(buf, isl: Island, ms, cs):
         top(Polygon(ring), "curb_concrete", "collision_curb", 0.0)
     else:
         top(Polygon(ring).difference(inner_pg), "curb_concrete", "collision_curb", 0.0)
-        for part in _parts(inner_pg):
+        rest = inner_pg
+        for pp, surf in isl.patches:            # ADR 0128: authored sub-surfaces, first listed wins where they overlap
+            for part in _parts(rest.intersection(pp)):
+                if part.area >= 0.05:
+                    top(part, surf, "collision_grass" if surf == "verge_grass" else "collision_paving", 0.0)
+            rest = rest.difference(pp)
+        for part in _parts(rest):
+            if part.area < 0.05:
+                continue
             grass = isl.surface == "verge_grass"
             top(part, isl.surface, "collision_grass" if grass else "collision_paving", 0.0)
     isl.built = True
+    isl.ring, isl.ring_top = ring, zr + h
     isl.note = f"z {zmean:.2f}"
 
 
