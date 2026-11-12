@@ -1882,7 +1882,7 @@
     "z_max_evrf2007": 146.83,
     "z_min_evrf2007": 129.91
    },
-   "bytes": 14037648,
+   "bytes": 13962076,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_1_3.glb",
    "forest_cells": [
     {
@@ -1989,14 +1989,15 @@
     "sha256": "53e40e8b675f74dffd0a0f303339eaceb17d1e38923fb6346a14e51d98323286"
    },
    "low": {
-    "bytes": 8737596,
+    "bytes": 8674020,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_1_3.low.glb",
-    "sha256": "31cc210251be83e6f06bc173101df27a2a8933557c19c996cd00fe2158f2e3fd"
+    "sha256": "fdf22d2f424810c325205763152f45625bb675d25787480e531735263d9955b5"
    },
    "materials": [
     "apron_sett",
     "barrier_steel",
     "brick_red",
+    "bridge_cap_red",
     "bridge_concrete",
     "bridge_fascia_green",
     "bridge_fascia_red",
@@ -2060,19 +2061,19 @@
     "wood_planks_green",
     "yard_paving"
    ],
-   "sha256": "4aca13d34e13bba6c8a9f3aae2d218ca689c173f13f4b5d9999ff4d03e051f13",
+   "sha256": "84d57898b8f745d4a7043eb978fc7b8ac31d010a8cb4279a4198dae5335ecb01",
    "triangles": {
     "bridge": 29711,
     "buildings": 4033,
     "buildings_lod1": 608,
     "forest_hlod": 1046,
-    "furniture": 21060,
+    "furniture": 18858,
     "markings": 4220,
     "paved": 1099,
     "plot_ground": 1503,
     "plots": 1471,
     "road": 24609,
-    "road_collision": 17495,
+    "road_collision": 17237,
     "terrain_lod0": 137591,
     "terrain_lod1": 36215,
     "terrain_lod2": 8704,
@@ -2088,7 +2089,7 @@
     "z_max_evrf2007": 159.23,
     "z_min_evrf2007": 123.95
    },
-   "bytes": 14239200,
+   "bytes": 14229828,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_1_4.glb",
    "forest_cells": [],
    "id": "1_4",
@@ -2098,9 +2099,9 @@
     "sha256": "bb59f834be0ea081b1cce28a7210023b2cc1e97ba2c961fbc9b3b768bef43df2"
    },
    "low": {
-    "bytes": 7721612,
+    "bytes": 7714256,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_1_4.low.glb",
-    "sha256": "2089bc9794a1c2ccb645f16fd820c2f33264968b3077b02bd413b7b344e05d14"
+    "sha256": "16da65474b61b81ea41a6be83bcc5bc7ce304dde5c35acb3d85027d9156d2224"
    },
    "materials": [
     "apron_sett",
@@ -2109,9 +2110,9 @@
     "brick_red",
     "brick_red__far_office",
     "brick_red__far_ribbon",
+    "bridge_cap_red",
     "bridge_concrete",
     "bridge_fascia_green",
-    "bridge_fascia_red",
     "bridge_kerb",
     "bridge_soffit",
     "canopy_fascia",
@@ -2185,18 +2186,18 @@
     "yard_paving",
     "yard_slabs"
    ],
-   "sha256": "2e2903e233f3ac077282b814373ece6b88118535d32d2538474e481e81c22302",
+   "sha256": "120305c3ffe944ef21f33d4aee871fcbd2794e3873b4b3026ad61ee3e323ff6a",
    "triangles": {
     "bridge": 4666,
     "buildings": 22385,
     "buildings_lod1": 3807,
-    "furniture": 5256,
+    "furniture": 4996,
     "markings": 1611,
     "paved": 2561,
     "plot_ground": 6499,
     "plots": 7580,
     "road": 19406,
-    "road_collision": 13646,
+    "road_collision": 13617,
     "terrain_lod0": 137838,
     "terrain_lod1": 36462,
     "terrain_lod2": 8704,
@@ -3563,7 +3564,7 @@
     "z_max_evrf2007": 163.43,
     "z_min_evrf2007": 123.95
    },
-   "bytes": 13683256,
+   "bytes": 13559260,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_2_4.glb",
    "forest_cells": [
     {
@@ -3679,16 +3680,17 @@
    "instances": {
     "count": 1469,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_2_4.json",
-    "sha256": "b9788a29ef5b4ebb822ebf870e3e95d46467954d98dd22f2e0ddb5d762e92b7a"
+    "sha256": "5d8146592a4241f0e1ee2f07b9a4eb0624689cb8ac6d7de25e7154da840f8690"
    },
    "low": {
-    "bytes": 8281412,
+    "bytes": 8180640,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_2_4.low.glb",
-    "sha256": "5a6ee028b552e7e026a16f63f5c9e5ccbd45ed17ffa809bab22abee564271bb2"
+    "sha256": "bc01d1e417589ec4db08d72bbf9052d626b3a9aa47c8e6478c3c2cb8089ced5f"
    },
    "materials": [
     "balcony_slab",
     "barrier_steel",
+    "bridge_cap_red",
     "bridge_concrete",
     "bridge_fascia_green",
     "bridge_fascia_red",
@@ -3760,19 +3762,19 @@
     "yard_concrete",
     "yard_paving"
    ],
-   "sha256": "67d33107ca3dc6a50f866bd2e3f1ce74d556089b5478a5e84357fb5627cbae85",
+   "sha256": "8804260039d6c9f676b8adfd8b9a7d1d1a27e58ff9bcf73b90f9c02c453ad7dc",
    "triangles": {
     "bridge": 20549,
     "buildings": 7179,
     "buildings_lod1": 898,
     "forest_hlod": 1083,
-    "furniture": 16682,
+    "furniture": 13408,
     "markings": 6500,
     "paved": 4159,
     "plot_ground": 511,
     "plots": 400,
     "road": 20249,
-    "road_collision": 14493,
+    "road_collision": 14250,
     "terrain_lod0": 137082,
     "terrain_lod1": 35706,
     "terrain_lod2": 8704,
@@ -11581,6 +11583,27 @@
    "texture_set": "facade_far",
    "tint_linear": true
   },
+  "bridge_cap_red": {
+   "color": [
+    0.19,
+    0.04,
+    0.032
+   ],
+   "rough": 0.85,
+   "sky_occ": [
+    0.5,
+    0.0
+   ],
+   "surface": "concrete",
+   "texture_set": "concrete_precast",
+   "uv": "planar",
+   "vertex_grime": [
+    0.07,
+    0.062,
+    0.055,
+    0.3
+   ]
+  },
   "bridge_concrete": {
    "color": [
     0.26,
@@ -16004,7 +16027,7 @@
  "sources_sha256": {
   "generated/osm_context.json": "27b824f9303be887c054d527e1e9e80a423cd3ecf719c628ff51b775ee6b672b",
   "heightmap.r16 (Data/raw)": "37b2d3c033a215e4ba17361ffe571088f8181feef6078ac316e75d683bcca091",
-  "overrides.yaml": "7c362f4df38ae3cb39767a5388fb6f1cd6862441fcb590871386768284992937",
+  "overrides.yaml": "632da6ded982ce585956facf701ce27e26c9129b873ece67fde0a134702c5212",
   "roads.graph.json": "0bd625e041a6a2ca90a74f1652336c731182c234985352de4d377110f1d42cf6",
   "terrain.json": "52ee459e40fa0aaf59ac6d53223d604c3a01dbeb7099e84c77e02d27dbb1f234"
  },

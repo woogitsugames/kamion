@@ -11788,6 +11788,18 @@
    "P-8 skipped (off carriageway)": 66
   },
   "markings_overlap_removed_tris": 104,
+  "median_fills": [
+   {
+    "dz_edges_max_m": 0.03,
+    "filled_m": 82.1,
+    "id": "dk8-putry-se-ramp-twin-level",
+    "stations": 42,
+    "width_m": [
+     3.57,
+     4.11
+    ]
+   }
+  ],
   "nmt_nodes_replaced_under_decks": 2294,
   "overrides_applied": [
    {
@@ -12770,6 +12782,18 @@
      -801.4,
      54.2
     ]
+   }
+  ],
+  "profile_ties": [
+   {
+    "chain": "c:w1101181473:10076968415-1847263305",
+    "dz_max_m": 1.5,
+    "follows": "c:w173956078:1847263293-5749429982",
+    "id": "dk8-putry-se-ramp-twin-level",
+    "residual_max_m": 0.007,
+    "s_from": 439.1,
+    "s_to": 596.2,
+    "stations": 315
    }
   ],
   "roundabout_junctions": 12,
