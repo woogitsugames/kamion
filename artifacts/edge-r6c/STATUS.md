@@ -36,13 +36,22 @@ Gałąź `edge-r6c`, worktree `.claude/worktrees/edge-r6c`, baza main 76c88d4fd.
 - ADR szkic: docs/adr/0141-edge-skyline-closures.md (placeholdery @@...@@).
 - NASTĘPNY KROK: po łańcuchu `bash artifacts/edge-r6c/make-pairs.sh Low-clear baseline merged; python artifacts/edge-r6c/stats-diff.py baseline merged Low-clear | tail -7`, uzupełnić ADR, commit generated, robocopy do main.
 
-## 2026-11-12 20:45 — wznowienie: łańcuch merged zielony, pary obejrzane, ADR uzupełniony
+## 2026-11-12 ~20:33 (godzina szacowana) — wznowienie: łańcuch merged zielony, pary obejrzane, ADR uzupełniony
 - run-merged.log: build_all/build_world/fidelity/pytest/import/editmode/vqa exit=0. pytest 853 passed 1 xfailed; EditMode 412/412; IMPORT_RESULT OK.
 - Pary merged Low clear+overcast 101+101 (pairs-merged). Kominy EC widoczne w 297817 i 150280 na pozach z main (0140/0143), clear i overcast; dół zasłonięty lasem (poprawna głębia w edytorze). Cropy: crops/ec-*.jpg.
 - Budżet merged vs baseline: draws -51/-13/+140, shadow -28, trisK +434/33055; outlier +140 = 494288 (poza z 0143, main). merged vs after na edge/route: 0.
 - Otwarte: głębia skyline na GLES/A16 UNVERIFIED (ADR ryzyko 1).
 - NASTĘPNY KROK: `git fetch origin; git merge origin/main` (generated -> ours), commit, robocopy dowodów do main artifacts/edge-r6c.
 
-## 2026-11-12 20:55 — merge origin/main 830698a90
+## 2026-11-12 ~20:36 (godzina szacowana) — merge origin/main 830698a90
 - Bez konfliktów (main: lint importów w generatorach, testy, audio, fizyka; żaden plik tej gałęzi poza far_field.py — tylko usunięte nieużywane importy). pytest tests/gis/test_far_field*.py: 55 passed. Bez ponownej regeneracji i bez Unity (PHONE_RUN aktywny) — EditMode 412/412 dotyczy stanu sprzed tego merge.
 - NASTĘPNY KROK (lider): scalić edge-r6c, regeneracja w integracji; pomiar skyline na A16 (ADR 0141 ryzyko 1); visual-critic na artifacts/edge-r6c/pairs-merged + crops/ec-*.jpg.
+
+## 2026-11-12 20:57 — r6d (gałąź edge-r6d od main ca0bc16e0), recenzja s15-0141
+- P1 zdublowane B-1: MergeOverlappingClosures (jezdnia + łącznica Maczka, 0,5–0,9 m) -> 36 zapór, 34 widoczne, 8060 tris; kolidery bez zmian.
+- P1 szara biel: albedo było już 0,62 lin. (sRGB 0,81), bez dodatkowej mgły/AO; szarość = tablice w cieniu własnym. Biel 0,80 lin., czerwień 0,52 lin.
+- P2 las: wysokości z zakresów gatunkowych, brak NMPT w pipeline -> nie zmieniane (otwarte).
+- ADR: wycofane twierdzenie o dk8-dk19-exit; sekcja "Revision r6d".
+- EditMode 423/423. pytest tests/gis 886 passed, 1 xfailed, 1 failed (test_report_not_stale — raport fidelity na main nieaktualny po lincie roads/*.py; nie z tej gałęzi).
+- Dowody: artifacts/edge-r6c/crops/r6d-*.png|jpg, r6d/Low-{clear,overcast}.
+- NASTĘPNY KROK (lider): `git merge edge-r6d`; `uv run --project tools/worldgen tools/worldgen/fidelity/run.py --region bialystok-industrial-c` na main; visual-critic na crops/r6d-*.
