@@ -96,3 +96,5 @@ Po budowie A (2026-11-12T10:10:37.9511531+01:00): zapisz 492 kontrolowane kadry 
 Po budowie A (2026-11-12T10:10:44.9366314+01:00): przygotuj podglądy i pomiar czerni A. Następny etap w post-a.ps1; po kompletach obejrzeć obrazy i zdecydować o kolejnej ablacji.
 
 Po budowie A (2026-11-12T10:11:06.7452241+01:00): potwierdź natywne UV1 i osad A na GPU edytora. Następny etap w post-a.ps1; po kompletach obejrzeć obrazy i zdecydować o kolejnej ablacji.
+
+Krok 29: GPU A 1005 instancji, poziomy CPU/GPU identyczne 99/366/331/209, 81 LOD, maks. błąd opacity 0,00004215, UV1 wysokość 0,0009156 / oś 0,0006471 (Direct3D12). Oba nowe główne cele black/white mają potwierdzony GPU poziom 2, zapis a-target-gpu-identities.json. Budżet trasy Low +0,067613%, High +0,155216%; wszystkie 123 Low +0,323992%, High +0,164056%, draws obu kategorii +0, pozy identyczne. Przygotowano porównania obrazów do następnego sekwencyjnego batcha, bez kolizji z kanonicznym a-budget-summary. Dodano RGB tego samego ROI jako kontrolę neutralności przed późniejszą próbą czerni. Następny krok: dokończyć oględziny A, decyzja o B; nie uruchamiać dwóch własnych heavy.

@@ -1,4 +1,4 @@
-param([Parameter(Mandatory)][ValidatePattern('^[a-z][a-z0-9-]*$')][string]$Stage)
+param([Parameter(Mandatory)][ValidatePattern('^[a-z][a-z0-9-]*$')][string]$Stage,[ValidatePattern('^$|^[a-z][a-z0-9-]*$')][string]$ReviewStage='')
 $ErrorActionPreference='Stop'
 Set-Location ([IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..')))
 $owner=(git branch --show-current).Trim()
@@ -19,6 +19,12 @@ try {
  if(!(Test-Path artifacts/life-r3/BASELINE-INSPECTED.json)){throw 'Inspect baseline first'}
  & pwsh -NoProfile -File scripts/unity-slot.ps1 -Acquire -Pool heavy -Owner $owner -StaleHours 1000000 -PollSeconds 1
  if($LASTEXITCODE){throw 'Acquire failed'}; $held=$true
+ if($ReviewStage) {
+  $phase="review-$ReviewStage"
+  & uv run --project tools/worldgen python artifacts/life-r3/compare.py --before before --after "after-$ReviewStage" --tag "$ReviewStage-images" --exact *> "$prefix-review-$ReviewStage.log"
+  if($LASTEXITCODE){throw 'Historical image comparison failed'}
+  Checkpoint "zapisz plansze wariantu $ReviewStage" @("artifacts/life-r3/$ReviewStage-images-all-camera-budget.json","artifacts/life-r3/$ReviewStage-images-budget-summary.json")
+ }
  $phase='early-rim-test'
  & uv run --project tools/worldgen python -m pytest tests/gis/test_car_rim_facets.py -q *> "$prefix-test_car_rim_facets.log"
  $testCode=$LASTEXITCODE
