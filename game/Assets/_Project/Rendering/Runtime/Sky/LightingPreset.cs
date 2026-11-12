@@ -50,6 +50,8 @@ namespace Game.Rendering
         [Range(0, 3)] public int highSunShadowFilter;
         [Tooltip("ADR 0108: display-only blue-sky chroma multiplier above the haze horizon; 0/1 keep the analytic colour.")]
         [Range(1f, 4f)] public float clearSkySaturation = 1f;
+        [Tooltip("Photographic source horizon clamp in degrees after rotation. 0 keeps legacy sampling; positive values extend a valid upper-hemisphere row instead of sampling the cut lower hemisphere.")]
+        [Range(0f, 5f)] public float clearCloudSourceMinElevationDeg;
         [Tooltip("ADR 0108 r2: opt-in diffuse low-beam projection on world surfaces, in the existing pass. No occlusion.")]
         public bool projectedHeadlamps;
         [Tooltip("WORKING_VALUE beam peak cd per head; independent of emissive lens nits. Used only when projection is enabled.")]
@@ -131,6 +133,8 @@ namespace Game.Rendering
             // ADR 0108 r1 WORKING_VALUE: the route reference photos show scattered cumulus in blue sky.
             p.clearCloudCover = 1f;
             p.clearSkySaturation = 2f; // ADR 0108: 1/2/3/4 ablation against the daytime reference skies.
+            // ADR 0108 r3: 0/0.5/1 degree ablation; extend the valid HDRI horizon after sun-alignment pitch.
+            p.clearCloudSourceMinElevationDeg = 0.5f;
             return p;
         }
 

@@ -16,6 +16,10 @@ namespace Game.Rendering.Editor
             public Vector3 position, forward;
             public float sunElevation, skyHorizontalLux, exposure, lampsOn;
             public float presetExposureCompensation, skyDisplayGain, skyDisplayDesaturation;
+            public float actualWetness, actualPuddleShare;
+            public float actualWetFilmSmoothness;
+            public float clearCloudSourceMinElevationDeg;
+            public Vector4 cloudSourceLimits;
             public int pools, enabledPointLights;
             public Vector4[] headsAndWeights;
             public Vector4 exposedPoolColor;
@@ -46,6 +50,11 @@ namespace Game.Rendering.Editor
                 exposure = model.Exposure, lampsOn = StreetLamps.On,
                 presetExposureCompensation = environment.Active.exposureCompensation,
                 skyDisplayGain = environment.Active.skyDisplayGain, skyDisplayDesaturation = environment.Active.skyDisplayDesaturation,
+                actualWetness = Shader.GetGlobalVector("_KamionWet").x,
+                actualPuddleShare = Shader.GetGlobalVector("_KamionWet").y,
+                actualWetFilmSmoothness = Shader.GetGlobalVector("_KamionWet").w > 0f ? Shader.GetGlobalVector("_KamionWet").w : 0.52f,
+                clearCloudSourceMinElevationDeg = environment.Active.clearCloudSourceMinElevationDeg,
+                cloudSourceLimits = Shader.GetGlobalVector("_KamionClearCloudSourceLimits"),
                 pools = count, headsAndWeights = positions,
                 projectedHeadlamps = KamionHeadlamps.Enabled, headlampDiagnostics = KamionHeadlamps.Diagnostics,
                 headlampLeft = Shader.GetGlobalVector("_KamionHeadlampLeft"),
@@ -57,12 +66,14 @@ namespace Game.Rendering.Editor
             };
         }
 
-        public void Write(string folder, int expected, int expectedHeadlamps = 0)
+        public void Write(string folder, int expected, int expectedHeadlamps = 0, float? expectedWetness = null)
         {
             if (m_Cameras.Count != expected)
                 throw new InvalidOperationException($"Incomplete lamp probes: {m_Cameras.Count}, expected {expected}");
             if (expectedHeadlamps > 0 && m_Cameras.Values.Any(s => s.projectedHeadlamps != (expectedHeadlamps == 2)))
                 throw new InvalidOperationException("Projected headlamp state does not match the requested on/off proof");
+            if (expectedWetness.HasValue && m_Cameras.Values.Any(s => Mathf.Abs(s.actualWetness-expectedWetness.Value) > 0.0001f))
+                throw new InvalidOperationException("Actual per-camera wetness does not match the requested proof");
             File.WriteAllText(Path.Combine(folder, "lamp-probes.json"), JsonUtility.ToJson(new Document {
                 cameras = m_Cameras.OrderBy(p => p.Key, StringComparer.Ordinal).Select(p => p.Value).ToArray()
             }, true));

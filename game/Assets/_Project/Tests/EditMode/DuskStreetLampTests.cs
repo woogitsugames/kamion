@@ -43,11 +43,20 @@ namespace Game.Tests
             var night = LightingPreset.CreateNight();
             try
             {
+                // Compare genuinely different input grades even after Night's factory defaults were selected.
+                night.skyDisplayGain = 1f; night.skyDisplayDesaturation = 0f;
                 var before = night.CreateModel();
                 night.skyDisplayGain = 0.125f; night.skyDisplayDesaturation = 0.85f;
                 var after = night.CreateModel();
                 Assert.AreEqual(before.Exposure, after.Exposure);
                 Assert.AreEqual(before.HorizontalIlluminanceLux, after.HorizontalIlluminanceLux);
+                Assert.AreEqual(before.SunNormalIlluminanceLux, after.SunNormalIlluminanceLux);
+                Assert.AreEqual(before.SunColor, after.SunColor);
+                var shBefore = before.AmbientProbe(night.groundAlbedo, 24, night.ambientSkySaturation, night.lowSunAmbientCool);
+                var shAfter = after.AmbientProbe(night.groundAlbedo, 24, night.ambientSkySaturation, night.lowSunAmbientCool);
+                for (int channel = 0; channel < 3; channel++)
+                    for (int coefficient = 0; coefficient < 9; coefficient++)
+                        Assert.AreEqual(shBefore[channel, coefficient], shAfter[channel, coefficient], "sky appearance must not alter ambient SH");
                 var fog = before.HorizonColorExposed();
                 var display = WorldAtmosphere.DisplaySkyFog(night, fog);
                 Assert.Less(display.maxColorComponent, fog.maxColorComponent);

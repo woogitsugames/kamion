@@ -1,0 +1,38 @@
+{
+  "jobs": [
+    {
+      "width": 1280,
+      "lighting": "clear",
+      "verifyWetness": true,
+      "cameras": "light-sky-y0-p0,light-sky-y45-p0,light-sky-y90-p0,light-sky-y135-p0,light-sky-y180-p0,light-sky-y225-p0,light-sky-y270-p0,light-sky-y315-p0,light-sky-y0-p20,light-sky-y45-p20,light-sky-y90-p20,light-sky-y135-p20,light-sky-y180-p20,light-sky-y225-p20,light-sky-y270-p20,light-sky-y315-p20,light-sky-y0-p60,light-sky-y45-p60,light-sky-y90-p60,light-sky-y135-p60,light-sky-y180-p60,light-sky-y225-p60,light-sky-y270-p60,light-sky-y315-p60",
+      "tier": "Low",
+      "expectedWetness": 0,
+      "output": "artifacts/light-r3/sky-direction/Low",
+      "lampProbe": true,
+      "rq": "rq_wet=0,rq_headlamps=0",
+      "scene": "WorldC",
+      "height": 720,
+      "expectedHeadlamps": 1,
+      "overrideCloudSourceMin": false,
+      "cloudSourceMinElevationDeg": 0.5,
+      "skyOnly": true
+    },
+    {
+      "width": 1280,
+      "lighting": "clear",
+      "verifyWetness": true,
+      "cameras": "light-sky-y0-p0,light-sky-y45-p0,light-sky-y90-p0,light-sky-y135-p0,light-sky-y180-p0,light-sky-y225-p0,light-sky-y270-p0,light-sky-y315-p0,light-sky-y0-p20,light-sky-y45-p20,light-sky-y90-p20,light-sky-y135-p20,light-sky-y180-p20,light-sky-y225-p20,light-sky-y270-p20,light-sky-y315-p20,light-sky-y0-p60,light-sky-y45-p60,light-sky-y90-p60,light-sky-y135-p60,light-sky-y180-p60,light-sky-y225-p60,light-sky-y270-p60,light-sky-y315-p60",
+      "tier": "High",
+      "expectedWetness": 0,
+      "output": "artifacts/light-r3/sky-direction/High",
+      "lampProbe": true,
+      "rq": "rq_wet=0,rq_headlamps=0",
+      "scene": "WorldC_High",
+      "height": 720,
+      "expectedHeadlamps": 1,
+      "overrideCloudSourceMin": false,
+      "cloudSourceMinElevationDeg": 0.5,
+      "skyOnly": true
+    }
+  ]
+}
