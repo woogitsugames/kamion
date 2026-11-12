@@ -55,8 +55,10 @@ def apply_runtime_maps(output):
         if not entry or not entry['enabled']:
             continue
         alpha = Path(output) / f'High/T_Cab_{profile.title()}_Detail.png'
-        if importlib.util.find_spec('PIL') is None:
-            # Blender's bundled Python has NumPy but no Pillow. The caller's heavy lease covers
+        missing_image_library = importlib.util.find_spec('PIL') is None
+        missing_filter_library = entry.get('normal_highpass_mm', 0) != 0 and importlib.util.find_spec('scipy') is None
+        if missing_image_library or missing_filter_library:
+            # Blender may lack Pillow or the optional SciPy filter. The caller's heavy lease covers
             # this sequential project-Python conversion; Blender waits and does no concurrent work.
             subprocess.run(['uv', 'run', '--project', str(ROOT / 'tools/worldgen'), 'python', str(Path(__file__).resolve()),
                             '--profile', profile, '--output', str(output), '--alpha-source', str(alpha)], cwd=ROOT, check=True)

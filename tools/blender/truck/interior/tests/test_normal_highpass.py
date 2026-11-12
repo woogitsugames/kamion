@@ -1,5 +1,6 @@
 """Small numerical tests: no Blender, world build, downloads or game-map writes."""
 import importlib.util
+import json
 from pathlib import Path
 
 import numpy as np
@@ -63,3 +64,26 @@ def test_rejects_invalid_filter_and_backfacing_normals():
             cab.highpass_normals(normals, .1, sigma)
     with pytest.raises(ValueError):
         cab.highpass_normals(np.broadcast_to([.5, .5, 0.], (8, 8, 3)), .1, 1.5)
+
+
+@pytest.mark.parametrize('sigma,project_python', [(0, False), (1.5, True)])
+def test_blender_without_scipy_uses_project_python_only_for_active_filter(tmp_path, monkeypatch, sigma, project_python):
+    config = tmp_path / 'scan.json'
+    config.write_text(json.dumps({'plastic': {'enabled': True, 'normal_highpass_mm': sigma}}))
+    monkeypatch.setattr(cab, 'CONFIG', config)
+    monkeypatch.setattr(cab.importlib.util, 'find_spec', lambda name: None if name == 'scipy' else object())
+    subprocesses, local_calls = [], []
+    monkeypatch.setattr(cab.subprocess, 'run', lambda command, **kwargs: subprocesses.append((command, kwargs)))
+    monkeypatch.setattr(cab, 'config_args', lambda *args, **kwargs: ('local-args', {}))
+    monkeypatch.setattr(cab, 'prepare', lambda args: local_calls.append(args))
+    cab.apply_runtime_maps(tmp_path / 'output')
+    if project_python:
+        assert not local_calls
+        assert len(subprocesses) == 1
+        command, settings = subprocesses[0]
+        assert command[0:2] == ['uv', 'run']
+        assert command[command.index('--profile') + 1] == 'plastic'
+        assert settings['check'] is True
+    else:
+        assert not subprocesses
+        assert local_calls == ['local-args']
