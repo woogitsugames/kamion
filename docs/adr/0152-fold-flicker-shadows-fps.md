@@ -74,6 +74,11 @@ dowód działania mechanizmu).
 | Ultra/60 po (capture) | 25,6 | 33,3 / 66,7 / 66,7 | 29,8 / 41,9 | 1845 MB | **0** | 0 / 1590 |
 | High/30 | 29,98 | 33,3 / 33,3 / 33,3 | 23,8 / 27,8 | 1471 MB | 0 | — |
 
+**Fold High/30, 300 s (APK `550a353f48`)**: 29,97 FPS, klatka p50/p95/p99 33,3/33,3/33,3 ms, GPU p50/p95 24,7/28,8 ms,
+PSS 1460 MB, thermal 0, bateria 27,0 °C po biegu; FPS/min: 29,5 / 29,9 / 30,0 / 30,0 / 27,8 (ostatnia minuta niepełna — zbieranie
+metryk). Ultra/60 300 s z nową siatką bezpieczeństwa — NIE zmierzone (przerwane na polecenie lidera, limit sesji).
+A16 Low z nowym APK — NIE zmierzone (A16 offline w adb od 22:09, wymaga przełożenia kabla).
+
 Ciemne klatki: 1 vs 0 zdarzeń — zgodne z hipotezą, za mało zdarzeń na dowód (UNVERIFIED).
 
 ## Otwarte
