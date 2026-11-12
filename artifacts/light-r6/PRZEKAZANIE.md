@@ -63,3 +63,5 @@ Ciężki Python: centralny `scripts/unity-slot.ps1 -Acquire -Pool heavy -Owner g
 Worktree: `C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-light\artifacts\light-r6`.
 Kopia dla właściciela: `C:\Users\matma\Documents\Claude\kamion\artifacts\light-r6`.
 Własny bieżący STATUS, szczegóły wznowienia CONTINUE i ADR `docs/adr/0108-light-sky-exposure-post.md` są zapisane. Ta kopia jest przekazaniem przerwanej rundy, nie REPORT końcowym ani zgodą na integrację.
+
+Skrypt zapisu końcowego uruchomiono jako PID 76116. Stan w chwili utworzenia przekazania: 2026-11-12 16:29:02.
