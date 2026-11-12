@@ -10,7 +10,7 @@ Write-Output "Waiting on real GIS controller PID $GisProcessId, created $($ident
 while(-not $process.WaitForExit(1000)){}
 $code=$process.ExitCode
 if($null -eq $code -or $code -ne 0){throw "GIS controller not terminal0 ($code); inspect original session, do not close"}
-$logs=@(Get-ChildItem -LiteralPath $PSScriptRoot -Filter 'heavy-GisFinal-*.log')
+$logs=@(Get-ChildItem -LiteralPath $PSScriptRoot -Filter 'heavy-GisFinal-*.log'|Where-Object Name -Match '^heavy-GisFinal-\d{8}-\d{6}\.log$')
 if($logs.Count -ne 1){throw 'Require unique round5 final GIS log'}
 & pwsh -NoProfile -File "$PSScriptRoot/close-round.ps1" -GisExitCode $code -GisLog $logs[0].FullName
 if($LASTEXITCODE){throw 'Round5 guarded close failed; inspect state, never blindly repeat mutations'}
