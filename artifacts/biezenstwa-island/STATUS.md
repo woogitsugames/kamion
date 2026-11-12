@@ -30,3 +30,7 @@
   dłuższa (nos ok. -210,-242 wg promowanej pozy), przebudowana przed 2024. Decyzja lidera: świat 2024 czy stan ze zdjęć.
   Uwaga: dwa łańcuchy importu wystartowały naraz (stary w tle + ręczny), jeden import rc 1, rendery ręcznego szły ~2 min bez pliku slotu.
   NASTĘPNY KROK: `git merge junctions-r6` (generated/* → ours) → `bash artifacts/biezenstwa-island/scripts/build.sh i2 && bash artifacts/biezenstwa-island/scripts/imp_sbs.sh i2 && bash artifacts/biezenstwa-island/scripts/pairs.sh i2 b5 && bash artifacts/biezenstwa-island/scripts/post.sh i2 full`
+- krok 7 (16:05): `git merge junctions-r6` (605182b7, b6: nasyp żwirowy wyspy centralnej) bez konfliktów. Uruchomione `all.sh i2` (jeden slot heavy:
+  build → fidelity/swept/pytest pełny; równolegle w puli unity import + SBS + EditMode). Wynik: `logs/i2_all.out`.
+  NASTĘPNY KROK: jeśli `logs/i2_all.out` nie kończy się „all done” → `bash artifacts/biezenstwa-island/scripts/all.sh i2 > artifacts/biezenstwa-island/logs/i2_all.out 2>&1`;
+  potem obejrzeć `pairs_i2/`, uzupełnić „Result” w ADR 0128, `robocopy artifacts\biezenstwa-island C:\Users\matma\Documents\Claude\kamion\artifacts\biezenstwa-island /E /XF *.pkl`
