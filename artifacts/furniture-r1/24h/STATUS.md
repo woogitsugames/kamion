@@ -185,3 +185,5 @@ NASTĘPNY KROK: uv run --project tools/worldgen tools/worldgen/roads/build_world
 2026-11-12T00:59:45.9660466+01:00: pobrano i obejrzano cztery dalsze zdjęcia Commons z metadanymi autorów/licencji/hashami (references-lamps). Dwa pokazują smukłe srebrne latarnie dwuramienne, dwa ozdobne czarne latarnie; żadne nie potwierdza rodziny istniejącego betonu. Zapisano jawne kwalifikacje i brak użycia pikseli w grze. NASTĘPNY KROK: sprawdzić działający pipeline after4 i wynik porównania eksportu.
 
 2026-11-12T01:01:09.6706135+01:00: after4 uzyskał heavy; zachowano 80 rzeczywistych payloadów kolizji ogrodzeń przed generatorem. Python PID79472 działa, zapisany world-context-after4.json. Punkt odniesienia zachowano w WIP, bo bieżący wrapper został załadowany przed dodaniem automatycznego commitu tego kroku. NASTĘPNY KROK: sukces generatora, kontrola6833 chronionych payloadów i porównanie80 kolizji przed/po, potem import i rendery.
+
+2026-11-12T01:10:30.3461906+01:00: heavy world after4; sukces=True; slot gpt-furniture-r1 zwolniony. NASTĘPNY KROK: sprawdzić log i kontynuować walidację rundy.
