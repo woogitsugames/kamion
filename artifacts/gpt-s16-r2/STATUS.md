@@ -22,3 +22,5 @@ Szkice sprawdzone na niezależnej sztucznej posesji: brama otwarta, oba poziomy 
 Pozy uliczne użyją scalonych po nazwie linii OSM, aby krótkie odcinki grafu między skrzyżowaniami nie ograniczały dwóch ujęć tej samej ulicy. Nadal wyłącznie rzeczywiste osie, bez przesuwania domów lub źródeł.
 
 Świat baseline wygenerowany: 598.9563807 s, bez fallback=True. NASTĘPNY KROK: import i kamery baseline.
+
+Baseline:597.2s bezfallback; audyt2151chronionych węzłów,32grupplots,116drzewogrodowych. Sześć ulic: Skidelska,Racławicka,Grodzieńska,Wileńska,Olsztyńska,Michała Motoszko; Brzeska/Wołkowyska nie miały dostępnych bram w zebranym planie, więc nie użyto zmyślonych póz. 12rzeczywistychpozycji +30G3.

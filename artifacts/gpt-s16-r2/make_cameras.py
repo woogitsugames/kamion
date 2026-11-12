@@ -14,7 +14,7 @@ hf=profile.load_heightfield(json.loads((region/'terrain.json').read_text()),ROOT
 graph=json.loads((region/'roads.graph.json').read_text())
 edges=[(LineString(np.asarray(e['geometry'])-o),e) for e in graph['edges']]
 canonical=json.loads((region/'gate3_cameras.json').read_text());cameras=list(canonical['cameras']);selected=[]
-streets=[('Skidelska','P08'),('Racławicka','P10'),('Grodzieńska','P07'),('Wileńska','P12'),('Brzeska','P14'),('Wołkowyska','P17')]
+streets=[('Skidelska','P08'),('Racławicka','P10'),('Grodzieńska','P07'),('Wileńska','P12'),('Olsztyńska','P14'),('Michała Motoszko','P17')]
 for index,(name,ref) in enumerate(streets):
  merged=shapely.line_merge(shapely.union_all([line for line,e in edges if e['attrs'].get('name',{}).get('v')==name]))
  components=list(getattr(merged,'geoms',[merged]))
@@ -40,3 +40,4 @@ for index,(name,ref) in enumerate(streets):
 (r/'qa-cameras.json').write_text(json.dumps({'cameras':cameras},ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 (r/'street-views.json').write_text(json.dumps(selected,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 print(json.dumps({'gate3_and_extra':len(cameras),'house_streets':len(selected),'new_poses':12,'streets':[x['street'] for x in selected]},ensure_ascii=False))
+
