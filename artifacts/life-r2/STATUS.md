@@ -137,3 +137,5 @@ Krok 49: zapisano NEXT-R3.md z nowymi uwagami lidera i ustaleniami lektury źró
 Końcowy GIS (2026-11-12T03:38:41.3665756+01:00) zakończony kodem 0, heavy zwolnione. Liczby w artifacts/life-r2/pytest-gis-final-rerun.log; REPORT i kopia do main dopiero po sprawdzeniu wyniku. Następny krok: odczytać log/wynik, uzupełnić ADR i REPORT, robocopy artefaktów bez .cache, następnie gpt-life-r3 i git merge main do własnej gałęzi.
 
 Krok 50: końcowy GIS 585 passed, 1 xfailed w 612,19 s; walidacja native C przeszła. ADR i REPORT gotowe. Produkcja C bez zmian od capture. Następny krok: pełne robocopy bez .cache/__pycache__, sprawdzenie zgodności, REPORT publikowany ostatni; potem natychmiast gałąź r3 i merge main do niej.
+
+Krok 51: robocopy 1, wszystkie 4653 plików dowodowych zgodne co do rozmiaru, osiem krytycznych SHA zgodnych. REPORT jest publikowany jako ostatni plik; main bez operacji git. Następny krok: git switch -c gpt-life-r3; git merge main (wyłącznie do własnej gałęzi), świeży baseline według NEXT-R3.md.
