@@ -99,3 +99,5 @@ Krok 38: zapisano preflight materiału palet: brak deklarowanego zestawu euro_pa
 Iteracja B (2026-11-12T02:43:50.2747314+01:00): Test_streetscape zakończony 0. Pełny GIS nadal dopiero po końcowych oględzinach. Następne etapy w run-b-after-world.ps1, REPORT po oględzinach i testach końcowych.
 
 Iteracja B (2026-11-12T02:47:53.4151677+01:00): PreparedImport B zakończony 0 pod Unity; native library B. Następne etapy w run-b-after-world.ps1, REPORT po oględzinach i testach końcowych.
+
+B przerwane na etapie native-validation: Native material/payload validation failed. Sprawdzić istniejący log; nie restartować całego ciągu.
