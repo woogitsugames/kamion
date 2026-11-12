@@ -6,6 +6,13 @@ Inputs (all in git, no network):
   Data/Regions/<id>/turn_restrictions.json OSM type=restriction relations touching the region's ways
                                            (refreshed from the cached Geofabrik extract with --refresh-restrictions;
                                            needs pyosmium, run through `uv run --project tools/worldgen`)
+  Data/Regions/<id>/overrides.yaml         authored placements (center_offset etc.); together with roads.graph.json
+                                           it rebuilds the GENERATED carriageway axes via roads.pipeline.build_network
+                                           (the same chain centre lines the world meshes are built from, after
+                                           align_forks / abreast_forks shifts - ADR 0144 open item). Edge geometry is
+                                           taken from that axis when available (fallback: the raw OSM axis); the
+                                           stored length_m (the A* cost) always stays the OSM polyline length.
+                                           --no-carriageway-axis disables this.
 Output:
   game/Assets/_Project/UI/Resources/CabDisplay/Nav/<id>_route.bytes  (little endian)
 
@@ -225,8 +232,83 @@ def polyline_length(pts) -> float:
     return sum(math.hypot(b[0] - a[0], b[1] - a[1]) for a, b in zip(pts, pts[1:]))
 
 
-def build(graph: dict, origin: tuple[float, float], restrictions: list[dict]) -> dict:
-    """Pure transform: road graph JSON -> routing graph tables (lists), deterministic order."""
+AXIS_DP_TOL_M = 0.05   # WORKING_VALUE: Douglas-Peucker tolerance when thinning the dense (0.5 m) carriageway axis
+
+
+def _dp(points, tol):
+    """Douglas-Peucker on a list of (x, y); endpoints always kept."""
+    if len(points) < 3:
+        return list(points)
+    keep = [False] * len(points)
+    keep[0] = keep[-1] = True
+    stack = [(0, len(points) - 1)]
+    while stack:
+        a, b = stack.pop()
+        ax, ay = points[a]
+        bx, by = points[b]
+        dx, dy = bx - ax, by - ay
+        ll = math.hypot(dx, dy)
+        best, bi = -1.0, -1
+        for i in range(a + 1, b):
+            if ll < 1e-12:      # closed loop: first == last point, measure distance to the point itself
+                d = math.hypot(points[i][0] - ax, points[i][1] - ay)
+            else:
+                d = abs(dy * points[i][0] - dx * points[i][1] + bx * ay - by * ax) / ll
+            if d > best:
+                best, bi = d, i
+        if best > tol:
+            keep[bi] = True
+            stack.append((a, bi))
+            stack.append((bi, b))
+    return [p for p, k in zip(points, keep) if k]
+
+
+def load_carriageway_axes(region: str, graph: dict) -> dict:
+    """{graph edge id -> [(e, n), ...]} final carriageway centre line per edge, region-local, in the edge's
+    stored from -> to orientation.
+
+    The generated world (chunk meshes, roads_qa) is built from roads.pipeline.build_network: each chain's
+    `line` after taper_forks / align_forks / abreast_forks (ADR 0074/0076) and the authored center_offset
+    overrides IS the carriageway axis the player sees. Chain `raw_spans` map every graph edge id onto its span
+    of the chain (edge id w<way>:<a>-<b> = chain c:w<way>:<a>-<b> + osm_way). The axis is not persisted as a
+    polyline in generated/*.json (only QA stats and the glb meshes), so it is rebuilt deterministically from
+    roads.graph.json + overrides.yaml. Any failure -> {} (the caller falls back to the raw OSM axis).
+    """
+    try:
+        sys.path.insert(0, os.path.join(REPO, "tools", "worldgen"))
+        import numpy as np
+        from roads import pipeline          # numpy/shapely/yaml come with the tools/worldgen project
+        net, _, _, _ = pipeline.build_network(region, graph)
+    except Exception as exc:               # ImportError or a pipeline failure: OSM axes for all edges
+        print(f"WARNING: carriageway axes unavailable ({exc!r}); all edges fall back to the raw OSM axis")
+        return {}
+    axes = {}
+    for c in net.chains:
+        if c.line is None:
+            continue
+        k = c.length / max(c.raw_spans[-1][1], 1e-9)      # raw span arc length -> dense line arc length
+        s, p = c.line.s, c.line.p
+        for s0, s1, eid, rev in c.raw_spans:
+            i0 = int(np.searchsorted(s, s0 * k))
+            i1 = int(np.searchsorted(s, s1 * k, side="right"))
+            seg = p[i0:i1]
+            if len(seg) < 2:
+                continue
+            if rev:                                        # edge runs against the chain: keep from -> to
+                seg = seg[::-1]
+            ax = _dp([(round(float(x), 3), round(float(y), 3)) for x, y in seg], AXIS_DP_TOL_M)
+            if polyline_length(ax) < 1e-3:                 # degenerate span: keep the raw OSM axis
+                continue
+            axes[eid] = ax
+    return axes
+
+
+def build(graph: dict, origin: tuple[float, float], restrictions: list[dict], axes: dict | None = None) -> dict:
+    """Pure transform: road graph JSON -> routing graph tables (lists), deterministic order.
+
+    axes (optional): {edge id -> carriageway axis pts, from -> to}, see load_carriageway_axes. When an edge has
+    an axis, its stored geometry is the axis (the line the player sees on the minimap / GPS); the stored length
+    stays the OSM polyline length, so topology AND the A* cost are unchanged (ADR 0144 open item)."""
     ox, oy = origin
     names = [""]
     name_idx = {"": 0}
@@ -256,7 +338,8 @@ def build(graph: dict, origin: tuple[float, float], restrictions: list[dict]) ->
         geom = e["geometry"]
         if isinstance(geom, str):
             geom = json.loads(geom)
-        pts = [(round(x - ox, 3), round(y - oy, 3)) for x, y in geom]
+        geom_pts = [(round(x - ox, 3), round(y - oy, 3)) for x, y in geom]
+        pts = list(geom_pts)
         a, b = node_index[e["from"]], node_index[e["to"]]
         ow = str(attr(e, "oneway", "no"))
         flags = 0
@@ -265,6 +348,9 @@ def build(graph: dict, origin: tuple[float, float], restrictions: list[dict]) ->
         if ow == "-1":
             pts.reverse()
             a, b = b, a
+        ax = axes.get(e["id"]) if axes else None
+        if ax is not None:
+            pts = list(reversed(ax)) if ow == "-1" else list(ax)   # axis is stored from -> to like the edge
         if attr(e, "junction") in ("roundabout", "circular"):
             flags |= F_ROUNDABOUT | F_ONEWAY   # OSM: roundabouts imply oneway
         # the backward direction of a one-way edge (roundabouts included) is never driven: no backward lanes
@@ -288,7 +374,7 @@ def build(graph: dict, origin: tuple[float, float], restrictions: list[dict]) ->
         mw = parse_weight_t(osm_attr(e, "maxweight:hgv"))
         if mw is None:
             mw = parse_weight_t(osm_attr(e, "maxweight"))
-        length = round(polyline_length(pts), 3)
+        length = round(polyline_length(geom_pts), 3)   # A* cost: OSM polyline length, not the shifted axis length
         edges.append({
             "id": e["id"], "osm_way": e.get("osm_way"), "from": a, "to": b, "length": length, "class": cls,
             "flags": flags, "name": name_id(attr(e, "name", "") or ""), "maxspeed": max(0, min(255, ms)),
@@ -460,6 +546,8 @@ def main(argv=None) -> int:
     ap.add_argument("--refresh-restrictions", action="store_true")
     ap.add_argument("--out-dir", default=OUT_DIR)
     ap.add_argument("--pbf", help="extract to read restrictions from (default: newest Data/raw/osm/*.osm.pbf)")
+    ap.add_argument("--no-carriageway-axis", action="store_true",
+                    help="keep the raw OSM axes as edge geometry (debug / comparison)")
     args = ap.parse_args(argv)
     rdir = os.path.join(REPO, "Data", "Regions", args.region)
     graph = json.load(open(os.path.join(rdir, "roads.graph.json"), encoding="utf-8"))
@@ -471,7 +559,9 @@ def main(argv=None) -> int:
     else:
         rows = []
         print("WARNING: no turn_restrictions.json - all turns treated as allowed (UNVERIFIED)")
-    t = build(graph, read_origin(rdir), rows)
+    origin = read_origin(rdir)
+    axes = {} if args.no_carriageway_axis else load_carriageway_axes(args.region, graph)
+    t = build(graph, origin, rows, axes)
     data = serialize(t)
     os.makedirs(args.out_dir, exist_ok=True)
     path = os.path.join(args.out_dir, args.region + "_route.bytes")
@@ -483,7 +573,8 @@ def main(argv=None) -> int:
     lane_blocks = sum(1 for e in t["edges"] if e["lanes"][0] or e["lanes"][1])
     lane_dir = sum(1 for e in t["edges"] if any(e["lanes"][0]) or any(e["lanes"][1]))
     print(f"KRTG v{VERSION} {path}: {len(data) / 1024:.1f} KB, nodes {len(t['nodes'])}, edges {len(t['edges'])} "
-          f"(oneway {oneway}, skipped {t['skipped_edges']}), names {len(t['names'])}, "
+          f"(oneway {oneway}, skipped {t['skipped_edges']}, carriageway-axis geometry {len(axes)}), "
+          f"names {len(t['names'])}, "
           f"restrictions {len(t['restrictions'])} (OSM relations {len(rows)}, unmapped {len(t['unmapped_restrictions'])}), "
           f"limit-tagged edges {limited}, hgv=destination {hgv_dest}, lane blocks {lane_blocks} (with turn directions {lane_dir})")
     return 0
