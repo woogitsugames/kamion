@@ -73,3 +73,4 @@ Uściślono etykietę provenance: pierwotny helper nazwał bieżący WIP 4cc183a
 Zamknięcie odrzuconej r3: generator przywróconego kodu kod 0. Kod produkcyjny przywrócony do r1; brak akceptowanej korekty B8.
 Zamknięcie odrzuconej r3: migawka przywróconego świata kod 0. Kod produkcyjny przywrócony do r1; brak akceptowanej korekty B8.
 Pełny generator przywróconego kodu zakończony: 455,7 s, kod 0. Ręczny verify_restored world: 130/130 GLB, 64/64 pliki instancji i 7/7 pinów źródeł zgodne z baseline; Megascans 15, fallback false, eksperymentalne QA ortofoto nieobecne. Pełny GIS czeka na nowy slot heavy. Następny krok: GIS, import/probe/EditMode i ponowna kontrola po testach.
+Rozpoznano przed kolejną rundą kontrakt materiałów berberysu: rdzeń PBR, shell/sprig chunków URP Lit alpha clip, bez automatycznej podmiany WorldInstances.simpleFoliage. Zapisałem to w CLOSING-NOTES, aby nie testować błędnego shadera. Produkcja pozostaje zamrożona; końcowy GIS nadal czeka heavy.
