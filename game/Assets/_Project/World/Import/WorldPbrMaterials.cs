@@ -581,11 +581,12 @@ namespace Game.World.Import
                 string source = palette[i] as string;
                 if (source == null || !r.MaterialDefs.TryGetValue(source, out var recipe) ||
                     recipe.Get("surface") != null || recipe.Get("texture") != null || recipe.Get("texture_set") != null ||
+                    recipe.Get("emissive") != null || (recipe.Get("blend") is bool blend && blend) ||
                     (recipe.Get("metal") != null && Num(recipe.Get("metal")) > 0.5))
                     throw new InvalidOperationException("Shelter palette cannot replace a textured or metallic surface: " + source);
                 var rgb = Arr(recipe.Get("color"));
                 float rough = recipe.Get("rough") != null ? (float)Num(recipe.Get("rough")) : 0.9f;
-                values[i] = new Color((float)Num(rgb[0]), (float)Num(rgb[1]), (float)Num(rgb[2]), 1f - rough);
+                values[i] = new Color((float)Num(rgb[0]), (float)Num(rgb[1]), (float)Num(rgb[2]), Mathf.Clamp01(1f - rough));
             }
             // All supported sources already use this same untextured World Surface style.
             var mat = LookDevAssets.WorldMaterial(path, null, Color.white, 0.5f, 0f, false);

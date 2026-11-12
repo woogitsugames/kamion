@@ -49,7 +49,7 @@ def test_new_family_leaves_entrance_open_and_has_a_closed_curved_roof():
 
 def test_shared_frame_roof_and_one_glazing_slot_bound_prototype_cost():
     high, low, _ = props.bus_shelter_red_0120()
-    expected = {'shelter_red_frame_0120', 'shelter_clear_glass_0120', 'bench_wood'}
+    expected = {'shelter_opaque_0120', 'shelter_clear_glass_0120'}
     assert {p['mat'] for p in high.out()} == expected
     assert {p['mat'] for p in low.out()} == expected
     hi = sum(len(p['T']) for p in high.out())
@@ -62,3 +62,35 @@ def test_generic_glass_stays_opaque_and_only_photo_family_opts_into_transmission
     clear = materials.M['shelter_clear_glass_0120']
     assert clear['blend'] is True and 0 < clear['alpha'] < .3
     assert 'shader' not in clear  # existing generic transparent-Lit recipe, no car/truck shader change
+
+
+@pytest.mark.parametrize('family', ['generic', 'red-high', 'red-low'])
+def test_palette_batch_retains_every_triangle_and_exported_normal(family):
+    from streetscape.export import crease_normals
+    mesh = props.bus_shelter()[0] if family == 'generic' else props.bus_shelter_red_0120()[family == 'red-low']
+
+    def triangles(primitives):
+        rows = []
+        for primitive in crease_normals(primitives):
+            indices = primitive['T']
+            values = np.concatenate([primitive['V'][indices], primitive['N'][indices]], axis=2)
+            rows.extend(map(tuple, np.round(values.reshape(-1, 18), 5)))
+        return sorted(rows)
+
+    assert triangles(props.Mesh.out(mesh)) == triangles(mesh.out())
+    assert len(mesh.out()) == 2
+    opaque = next(p for p in mesh.out() if p['mat'] == 'shelter_opaque_0120')
+    slots = opaque['UV'][:, 0]
+    assert set(slots) <= {0., 1., 2., 3.}
+    # A constant slot per face avoids interpolation between distinct surface recipes.
+    assert (np.ptp(slots[opaque['T']], axis=1) == 0).all()
+
+
+def test_palette_uses_existing_compatible_surface_recipes():
+    sources = materials.M['shelter_opaque_0120']['furniture_shelter_palette']
+    assert sources == ['steel_painted', 'shelter_roof', 'bench_wood', 'shelter_red_frame_0120']
+    for source in sources:
+        recipe = materials.M[source]
+        assert recipe.get('metal', 0) <= .5
+        assert not recipe.get('blend', False)
+        assert not any(recipe.get(key) for key in ('texture', 'texture_set', 'surface', 'emissive'))
