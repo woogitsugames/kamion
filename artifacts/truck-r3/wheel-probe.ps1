@@ -10,7 +10,7 @@ if ($LASTEXITCODE -ne 0) { throw 'Nie przygotowano adaptera.' }
 . scripts/env.ps1
 $slot='C:/Users/matma/Documents/Claude/kamion/scripts/unity-slot.ps1'
 function Fingerprint {
-    ((Get-FileHash -LiteralPath @('game/Assets/_Project/Rendering/Shaders/TruckExterior.shader','game/Assets/_Generated/TruckQa0115/Editor/TruckWheelProbe0115.cs',$PSCommandPath) -Algorithm SHA256).Hash -join "`n")
+    ((Get-FileHash -LiteralPath @('game/Assets/_Project/Rendering/Shaders/TruckExterior.shader','game/Assets/_Generated/TruckQa0115/Editor/TruckWheelProbe0115.cs','game/Assets/_Generated/TruckQa0115/Editor/TruckWheelMeshAudit0115.cs',$PSCommandPath) -Algorithm SHA256).Hash -join "`n")
 }
 foreach($mode in $Modes) {
     $name="$Prefix-$mode"
@@ -26,7 +26,7 @@ foreach($mode in $Modes) {
     $start=Get-Date
     try {
         $log="artifacts/truck-r3/$name-$(Get-Timestamp).log"
-        $code=Invoke-UnityBatch -LogFile $log -Arguments @('-executeMethod','Game.Editor.VisualQA.TruckWheelProbe0115.RunBatch','-truckRound',$name,'-truckOutputRoot','artifacts/truck-r3','-truckCameras','truck-wheel-detail,truck-mudguard-detail','-truckTiers','Low,High','-truckLights','overcast','-truckMeshProbe',$mode)
+        $code=Invoke-UnityBatch -LogFile $log -Arguments @('-executeMethod','Game.Editor.VisualQA.TruckWheelProbe0115.RunBatch','-truckRound',$name,'-truckOutputRoot','artifacts/truck-r3','-truckCameras','truck-wheel-detail,truck-mudguard-detail','-truckTiers','Low,High','-truckLights','overcast','-truckMeshProbe',$mode,'-wheelAuditOutput','artifacts/truck-r3/wheel-mesh-before.json')
         $result=Select-String -LiteralPath $log -SimpleMatch "TRUCK_ROUND_RESULT: OK $name count=4" | Select-Object -Last 1
         $sha=(Get-FileHash game/Assets/_Project/Rendering/Shaders/TruckExterior.shader -Algorithm SHA256).Hash.ToLowerInvariant()
         $cleanup=Select-String -LiteralPath $log -SimpleMatch "TRUCK_ABLATION_CLEANUP: productionSHA=$sha" -Quiet

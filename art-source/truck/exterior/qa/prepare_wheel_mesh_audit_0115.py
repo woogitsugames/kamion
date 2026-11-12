@@ -58,7 +58,7 @@ namespace Game.Editor.VisualQA
                 }
             }
             if(packet.rows.Count!=6)throw new InvalidOperationException("Expected 3 tractor and 3 trailer wheel LODs; got "+packet.rows.Count);
-            string full=Path.GetFullPath(Path.Combine(EditorTools.RepoRoot,output));
+            string full=Path.GetFullPath(Path.Combine(Path.GetDirectoryName(Path.GetDirectoryName(Application.dataPath)),output));
             Directory.CreateDirectory(Path.GetDirectoryName(full));
             File.WriteAllText(full,JsonUtility.ToJson(packet,true));
             Debug.Log("TRUCK_WHEEL_MESH_RESULT: OK rows="+packet.rows.Count+" file="+full);
@@ -66,8 +66,6 @@ namespace Game.Editor.VisualQA
     }
 }
 '''
-# RepoRoot is not part of the established EditorTools contract; derive from Application.dataPath.
-text = text.replace('EditorTools.RepoRoot', 'Path.GetDirectoryName(Path.GetDirectoryName(Application.dataPath))')
 target.parent.mkdir(parents=True, exist_ok=True)
 if not target.exists() or target.read_text(encoding='utf8') != text:
     target.write_text(text, encoding='utf8')

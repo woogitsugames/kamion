@@ -4,6 +4,7 @@ import runpy
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[3]
+runpy.run_path(str(HERE / 'prepare_wheel_mesh_audit_0115.py'))
 runpy.run_path(str(HERE / 'prepare_detail_0115.py'))
 source = ROOT / 'game/Assets/_Generated/TruckQa0115/Editor/TruckDetail0115.cs'
 text = source.read_text(encoding='utf8')
@@ -15,6 +16,9 @@ def replace_once(old, new):
     text = text.replace(old, new, 1)
 
 replace_once('public static class TruckDetail0115', 'public static class TruckWheelProbe0115')
+replace_once('public static void RunBatch()\n        {', '''public static void RunBatch()
+        {
+            if (EditorTools.Arg("-truckMeshProbe", "") == "flat") TruckWheelMeshAudit0115.RunBatch();''')
 replace_once('string fields=mode=="mask"?"float3(coat,dirt,m.r)":',
              'string fields=mode=="albedo"?"c.rgb":mode=="flat"?"float3(0.5,0.5,0.5)":mode=="geonormal"?"normalize(i.normalWS)*0.5+0.5":mode=="mappednormal"?"nWS*0.5+0.5":mode=="atlas-mask"?"m.rgb":mode=="uv"?"float3(frac(i.uv01.xy),0)":mode=="mask"?"float3(coat,dirt,m.r)":')
 replace_once('if(mode=="crown")source=source.Replace("sampler_CMap","sampler_MMap");',
