@@ -942,7 +942,7 @@
     2
    ],
    "length_m": 616.1,
-   "max_grade": 0.0528,
+   "max_grade": 0.0533,
    "overrides": [
     "dk8-viaduct-w-xsec-w1101181473",
     "dk8-viaduct-w-xsec-w173985169",
@@ -951,7 +951,7 @@
     "dk8-viaduct-w-xsec-w490398851",
     "dk8-viaduct-w-xsec-w490398852"
    ],
-   "profile_rms_vs_nmt_m": 0.45,
+   "profile_rms_vs_nmt_m": 0.307,
    "sidewalk_frac": 1.0,
    "width_m": [
     7.1,
@@ -10361,7 +10361,7 @@
   "crossings_skipped": [],
   "crossings_snapped": 71,
   "decals": {
-   "gullies": 768,
+   "gullies": 767,
    "oil": 286,
    "patches": 316
   },
@@ -10370,7 +10370,7 @@
    "j:n1847044938",
    "j:n2840742308"
   ],
-  "footprint_nodes": 565442,
+  "footprint_nodes": 565731,
   "fork_abreast": [
    {
     "alongside_run_m": 125.0,
@@ -11267,6 +11267,17 @@
      ]
     },
     {
+     "area_m2": 102.9,
+     "built": true,
+     "hatch": false,
+     "note": "",
+     "why": "merge",
+     "xy": [
+      -353.0,
+      -131.9
+     ]
+    },
+    {
      "area_m2": 72.2,
      "built": true,
      "hatch": false,
@@ -11374,17 +11385,6 @@
      "xy": [
       -566.9,
       140.8
-     ]
-    },
-    {
-     "area_m2": 5.9,
-     "built": true,
-     "hatch": false,
-     "note": "",
-     "why": "sliver",
-     "xy": [
-      -340.9,
-      -142.5
      ]
     },
     {
@@ -11589,27 +11589,27 @@
      "surface": "sidewalk_paving"
     }
    ],
-   "kerb_dropped_m": 646.0,
+   "kerb_dropped_m": 705.5,
    "kerb_tris_in_fill": 0,
    "paved": {
     "merge": {
-     "area_m2": 180.7,
-     "count": 5
+     "area_m2": 283.6,
+     "count": 6
     },
     "override": {
      "area_m2": 393.5,
      "count": 7
     },
     "sliver": {
-     "area_m2": 106.8,
-     "count": 19
+     "area_m2": 100.9,
+     "count": 18
     }
    },
    "rejected": [
     {
      "area_m2": 160.8,
      "reason": "carriageways at different heights",
-     "step_m": 0.68,
+     "step_m": 0.65,
      "why": "merge",
      "xy": [
       -713.6,
@@ -11624,16 +11624,6 @@
      "xy": [
       724.7,
       -823.0
-     ]
-    },
-    {
-     "area_m2": 102.9,
-     "reason": "carriageways at different heights",
-     "step_m": 1.03,
-     "why": "merge",
-     "xy": [
-      -353.0,
-      -131.9
      ]
     },
     {
@@ -11798,7 +11788,7 @@
    "P-8 skipped (off carriageway)": 66
   },
   "markings_overlap_removed_tris": 104,
-  "nmt_nodes_replaced_under_decks": 2171,
+  "nmt_nodes_replaced_under_decks": 2294,
   "overrides_applied": [
    {
     "id": "kwadrat-park-yard-access-width",
@@ -12497,13 +12487,13 @@
      ]
     ],
     "id": "s1440-diverge-p21",
-    "max_lift_m": 0.0261,
+    "max_lift_m": 0.0209,
     "mode": "chevron",
     "stripe_cover": 0.35,
     "stripes": 25,
-    "stripes_built": 18,
-    "tris": 350,
-    "tris_off_carriageway": 178,
+    "stripes_built": 25,
+    "tris": 528,
+    "tris_off_carriageway": 0,
     "xy": [
      -341.1,
      -141.3
@@ -12546,8 +12536,8 @@
     "stripe_cover": 0.437,
     "stripes": 34,
     "stripes_built": 34,
-    "tris": 1448,
-    "tris_off_carriageway": 10,
+    "tris": 1449,
+    "tris_off_carriageway": 9,
     "xy": [
      343.9,
      -566.1
@@ -12721,13 +12711,13 @@
      ]
     ],
     "id": "s1440-diverge-p21-band",
-    "max_lift_m": 0.0007,
+    "max_lift_m": 0.0036,
     "mode": "axis",
     "stripe_cover": 0.434,
     "stripes": 47,
-    "stripes_built": 41,
-    "tris": 950,
-    "tris_off_carriageway": 438,
+    "stripes_built": 47,
+    "tris": 1291,
+    "tris_off_carriageway": 97,
     "xy": [
      -363.3,
      -119.7
@@ -12784,8 +12774,8 @@
   ],
   "roundabout_junctions": 12,
   "sides_on_carriageway_culled": {
-   "kerb_tris": 4532,
-   "parts": 629,
+   "kerb_tris": 4857,
+   "parts": 631,
    "side_tris": 834
   },
   "signalised_junctions": 11,
@@ -12802,21 +12792,21 @@
   },
   "verge_strips": {
    "chunks": 37,
-   "tris": 49484
+   "tris": 49448
   },
   "walled_ramps": [
    {
     "chain": "c:w1101181473:10076968415-1847263305",
     "confidence": "medium",
-    "max_wall_h_m": 5.15,
-    "nmt_fill_max_m": 0.75,
-    "walled_m": 155.9
+    "max_wall_h_m": 4.41,
+    "nmt_fill_max_m": 0.5,
+    "walled_m": 132.4
    },
    {
     "chain": "c:w173956078:1847263293-5749429982",
     "confidence": "medium",
     "max_wall_h_m": 4.87,
-    "nmt_fill_max_m": 0.58,
+    "nmt_fill_max_m": 0.59,
     "walled_m": 141.5
    },
    {

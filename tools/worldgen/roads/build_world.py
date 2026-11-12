@@ -1078,6 +1078,8 @@ def qa_report(w, mk_report, mask):
             "crossings_in_junction": mk_report.get("crossings_in_junction", []),
             "bridges": w.bridges,
             "walled_ramps": w.profiles.get("walled_ramps", []),
+            "profile_ties": w.profiles.get("profile_ties", []),          # ADR 0146
+            "median_fills": w.stats.get("median_fills", []),
             "clearance_by_class_m": S.CLEARANCE_BY_CLASS,
             "fork_tapers": w.stats.get("fork_tapers", []),
             "fork_abreast": w.stats.get("fork_abreast", []),

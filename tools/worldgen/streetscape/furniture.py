@@ -432,8 +432,8 @@ def lamp_rows(pl, parts, path, report):
             placed.append({"k": k, "p": proto, "at": [round(float(q[0]), 2), round(float(q[1]), 2)], "z": round(zb, 2),
                            "shift_m": round(float(np.hypot(*(np.asarray(q) - p))), 2)})
         out[row["id"]] = {"rule_lamps_removed": removed, "placed": sum(1 for x in placed if "p" in x),
-                          "console": sum(1 for x in placed if x.get("p") == row.get("proto_console")),
-                          "mast": sum(1 for x in placed if x.get("p") == row.get("proto_mast")), "items": placed}
+                          "console": sum(1 for x in placed if "p" in x and x["p"] == row.get("proto_console")),
+                          "mast": sum(1 for x in placed if "p" in x and x["p"] == row.get("proto_mast")), "items": placed}
     report["lamp_rows"] = out
 
 
