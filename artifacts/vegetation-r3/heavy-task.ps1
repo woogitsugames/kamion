@@ -12,7 +12,7 @@ if ($LASTEXITCODE -ne 0 -or $heavyOwner -notlike 'gpt-vegetation-r*') { throw 'W
 if ($Task -eq 'GisFocused' -and ($TaskArgs.Count -eq 0 -or @($TaskArgs | Where-Object {
     $_ -notlike 'tests/gis/*.py'
 }).Count -gt 0)) { throw 'GisFocused requires explicit individual test files' }
-pwsh $slotScript -Acquire -Pool heavy -Owner $heavyOwner -StaleHours 1000000 -PollSeconds 10
+pwsh $slotScript -Acquire -Pool heavy -Owner $heavyOwner -StaleHours 1000000 -PollSeconds 2
 if ($LASTEXITCODE -ne 0) { throw 'Heavy slot acquisition failed' }
 $jobExit = 1
 try {
