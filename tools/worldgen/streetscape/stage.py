@@ -226,6 +226,7 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     FU.clear_narrow_islands(pl, w.buf.parts, w.net, frep)        # ADR 0093: no lamp on a separation < ~2 m
     FU.clear_under_decks(pl, w.buf.parts, frep)
     FU.clear_level_carriageways(pl, w.buf.parts, frep)
+    FU.lamp_rows(pl, w.buf.parts, pipeline.REGIONS / rid / "lamp_rows.json", frep)   # ADR 0133: authored rows
     frep["poles_reseated"] = pl.reseated
     frep["pole_footing_steps"] = {"count": len(pl.seat_log), "max_m": max([r["step_m"] for r in pl.seat_log], default=0.0),
                                   "worst": sorted(pl.seat_log, key=lambda r: -r["step_m"])[:20]}
