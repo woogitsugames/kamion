@@ -68,3 +68,5 @@ Krok 9h: przygotowano niewykonane skrypty końcowych testów. Wymagają FINAL-CA
 Krok 9i: końcowe skrypty wymagają konkretnych powiązań SHA buildera/dims/GLB/meta/spec/manifestu/kamer, nie tylko flagi przeglądu. Brak FINAL-CANDIDATE jest obecnie prawidłowy: B nie ma jeszcze renderu. Skrypty testów nieuruchomione; aktualny proces B czeka bez własnego slotu na PHONE_RUN.
 
 Krok 9k: przygotowano capture-full.ps1 (niewykonany). Pełne244 obrazy będą wiązane SHA z wybranym podglądem B/C i dokładnym inwentarzem baseline; skrypt nie ruszy bez ukończonego preview. Każda seria ma własny slot Unity, bez heavy. Odczytano wyłącznie repozytoryjne czasy logów głównego pomiaru: B był aktualizowany15:05, integracja run-f zakończona14:19; blokada PHONE_RUN ma aktywny pomiar, nie jest usuwana.
+
+Krok 10: World B i wszystkie3 audyty zaliczone; brak fallback=True. Trwa zapis modelu i podgląd8 PNG przed decyzją wizualną. Żaden pełny GIS nie został jeszcze uruchomiony w r4.
