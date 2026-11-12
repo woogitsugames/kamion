@@ -1,0 +1,129 @@
+[fidelity    0.1s] osm: 1594 ways, snapshot 261108
+[fidelity   84.1s] generated: 275808 carriageway tris, 75 arrows
+[fidelity   84.6s] axis done
+[fidelity  100.7s] route edge profiles done
+[fidelity  153.8s] tile edge profiles done (122 chains)
+[fidelity  161.4s] lanes done
+[fidelity  173.7s] lane-into-island candidates: 34
+[fidelity  178.7s] site 01_gate: IoU 0.7166, islands 0, missing 0
+[fidelity  180.5s] site 02_s230_approach: IoU 0.7824, islands 3, missing 2
+[fidelity  205.8s] site 03_rondo_biezenstwa: IoU 0.7665, islands 22, missing 5
+[fidelity  209.1s] site 04_s610_ramps: IoU 0.739, islands 4, missing 5
+[fidelity  210.5s] site 05_s900: IoU 0.7322, islands 10, missing 0
+[fidelity  212.2s] site 06_s1060_merge: IoU 0.8017, islands 5, missing 1
+[fidelity  215.3s] site 07_s1270: IoU 0.8434, islands 6, missing 2
+[fidelity  216.2s] site 08_signals: IoU 0.8236, islands 6, missing 2
+[fidelity  218.7s] site 09_s1600: IoU 0.7646, islands 6, missing 2
+[fidelity  244.3s] site 10_rondo_putry: IoU 0.7151, islands 21, missing 13
+[fidelity  245.4s] site 11_dk8: IoU 0.6668, islands 5, missing 1
+[fidelity  260.4s] tile junction windows: 75
+[fidelity  260.4s] roundabouts / connectivity done
+[fidelity  260.4s] wrote C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-cab\Data\Regions\bialystok-industrial-c\generated\fidelity_qa.json
+{
+ "osm_snapshot": "261108",
+ "osm_sha256": "0ff26cd42f175a5711c69b6d3087a9dcd3bb93367eda16809c75a11ce6c3869d",
+ "route": {
+  "edges": 29,
+  "axis_vs_osm_m": {
+   "n": 2420,
+   "p50": 0.0,
+   "p95": 0.04,
+   "max": 1.954
+  },
+  "edge_vs_ortho_m": {
+   "n": 595,
+   "p50": 0.36,
+   "p95": 2.304,
+   "max": 5.18,
+   "signed_p50": 0.2,
+   "all_sides": {
+    "n": 1764,
+    "p50": 0.44,
+    "p95": 4.554,
+    "max": 6.28
+   },
+   "stations": 1010,
+   "valid_sides": 595,
+   "detected_sides": 1764
+  },
+  "lanes": {
+   "segments": 29,
+   "verified": 25,
+   "match": 25,
+   "mismatch": [],
+   "unverified": [
+    "w1090234585:8722811971-391997446",
+    "w188397874:1882887381-391997446",
+    "w188397869:1882954023-1882887368",
+    "w188397870:1882887368-1882953956"
+   ]
+  },
+  "sites_iou": {
+   "01_gate": 0.717,
+   "02_s230_approach": 0.782,
+   "03_rondo_biezenstwa": 0.766,
+   "04_s610_ramps": 0.739,
+   "05_s900": 0.732,
+   "06_s1060_merge": 0.802,
+   "07_s1270": 0.843,
+   "08_signals": 0.824,
+   "09_s1600": 0.765,
+   "10_rondo_putry": 0.715,
+   "11_dk8": 0.667
+  },
+  "gen_islands_absent_on_ortho": 0,
+  "gen_islands_absent_on_ortho_windows": 13,
+  "ortho_islands_missing_in_gen": 16,
+  "lane_into_island": 0,
+  "lane_into_island_generator_bug": 0,
+  "arrows_checked": 29,
+  "arrows_not_on_ortho": 23,
+  "stop_lines_checked": 16,
+  "stop_lines_not_on_ortho": 12
+ },
+ "tile": {
+  "axis_vs_osm_m": {
+   "n": 542,
+   "p50": 0.032,
+   "p95": 0.701,
+   "max": 6.0
+  },
+  "graph_vs_fresh_osm_max_m": {
+   "n": 542,
+   "p50": 0.0,
+   "p95": 0.0,
+   "max": 0.001
+  },
+  "edge_vs_ortho_m": {
+   "n": 875,
+   "p50": 0.625,
+   "p95": 1.875,
+   "max": 4.92,
+   "signed_p50": 0.2,
+   "all_sides": {
+    "n": 4392,
+    "p50": 0.68,
+    "p95": 3.4,
+    "max": 7.375
+   },
+   "stations": 2531,
+   "valid_sides": 875,
+   "detected_sides": 4392
+  },
+  "junction_windows": 75,
+  "junction_iou": {
+   "n": 75,
+   "p50": 0.672,
+   "p95": 0.794,
+   "max": 0.854
+  },
+  "lane_into_island": 34,
+  "lane_issue_counts": {
+   "lane_tags_ignored_by_generator": 3,
+   "lanes_default": 454,
+   "lanes_mismatch": 6,
+   "turn_lanes_count_mismatch_arrows_dropped": 7
+  },
+  "osm_drivable_ways_missing_in_graph": 102
+ }
+}
