@@ -168,3 +168,5 @@ Plan wejścia w r3 zapisano w NEXT-ROUND.md po odczycie sześciu pozycji. Nie zm
 Wstępnie skopiowano statyczne evidence/history/counters do main przez robocopy (trzy kody 1). SHA ZIP, kamer, referencji i CSV zgodne; receipt PRESTAGE_NOT_FINAL_DELIVERY. Nie skopiowano REPORT (brak końcowego GIS). Pełna końcowa dostawa nadal wymagana.
 
 Doprecyzowano REPORT-DRAFT: 42 klatki w każdym stanie i jawna granica względem nowych scaleń main. Ponownie odczytano capture-summary, AUDIT i niezależny przegląd: 168 zerowych delt, trend tylko dla trzech Low-clear, bez nowego zaliczenia D51. Źródła nadal zamrożone.
+
+Kontrola zakresu przed zamknięciem: scope-audit.json zapisuje listę źródeł względem początkowego main oraz pusty diff kodu/danych od zamrożenia GIS e386b929. Zmiany produkcyjne wyłącznie SBS, testy i dokumentacja; osiem pochodnych generatora nadal niestaged.
