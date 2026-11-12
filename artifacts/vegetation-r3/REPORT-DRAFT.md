@@ -4,6 +4,8 @@ Gałąź gpt-vegetation-r3, baza po merge main 49de5a4e. Runda badała brak duż
 
 Na lokalnym ortofoto GUGiK 2024 potwierdzono obszar czterech koron. Pin źródła 19d7c3ca5d2192b1d0367c8d039e41aa60221927755b45c6a6763e933d96258b. Odczytane punkty są środkami koron, nie pomierzonymi pniami. Niepewność około 3 m, wysokości 12,5–15 m i zastępcze gatunki były WORKING_VALUE. Fotografia zsolt z 2017-07-29, CC BY-SA 4.0, potwierdza charakter zieleni, lecz poza klasy B wymaga obecnie korekty przez sesję SBS.
 
+Odczytane korony leżą w pasie przed JRG2. Nie potwierdzono ich tożsamości z drzewami pasa dzielącego wskazanymi w B8. Źródłowe potwierdzenie tych koron nie dowodzi więc poprawnego wyboru obiektów dla konkretnego blokera. Po korekcie pozy SBS trzeba ponownie zidentyfikować docelowe nasadzenia; odrzuconych punktów nie traktować jako gotowych danych B8.
+
 Wariant A przeszedł blocked dla dwóch z czterech punktów i dodał dwa drzewa. W próbie B/120 Low-overcast wywołania instancji wzrosły 205 do 209, łączne 665 do 669. Został odrzucony. Ablacja po usunięciu dodatków dała ponownie 205 wywołań instancji i obraz identyczny z baseline, więc przyrost kosztu nie pochodził z samego importu.
 
 B1 zastępował pobliski syntetyczny samosiew, zachowując prototyp, wariant i komórkę 64 m. Pełny producent zamienił tylko jedną brzozę; trzy punkty odłożono, liczba rekordów nie wzrosła. W próbie Low koszt wyniósł nadal 460 wywołań statycznych i 205 instancji oraz raportowane 547 tys. i 28 tys. trójkątów. Brak zmiany kosztu nie zamknął celu wizualnego. Obraz różnił się 5307 pikselami, ale żaden nie leżał w stałym obszarze koron. B1 również odrzucono.

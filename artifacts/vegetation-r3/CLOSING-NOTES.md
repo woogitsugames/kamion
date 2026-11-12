@@ -2,6 +2,8 @@
 
 Produkcja została przywrócona do stanu r1. Brak zaakceptowanej zmiany r3. Nie przenosić patchy kandydatów do main jako naprawy B8. Pozostają dowodami prób.
 
+Istotne ograniczenie identyfikacji: propozycja czterech koron dotyczy pasa przed JRG2. Nie udowodniono, że to te same drzewa pasa dzielącego, których brak nazywa B8. Poprawa pozy SBS musi poprzedzić nowe przypisanie źródłowych koron do konkretnego blokera.
+
 Źródłowo potwierdzono rejon brakujących koron na ortofoto, ale środków koron nie można utożsamiać z pomierzonymi pniami. Cztery punkty mają niepewność około 3 m. Wysokości i gatunki zastępcze były robocze. A dodało dwa drzewa oraz cztery wywołania Low; B1 zamieniło jeden samosiew bez wzrostu wywołań, ale nie odtworzyło zespołu koron. Osobna zmiana wysokości istniejącego klonu uwydatniła jego rzadką sylwetkę. Krytyk potwierdził odrzucenie.
 
 Pełny końcowy generator, GIS i Unity są w finish-rejected.ps1. Podczas uruchomienia helpera początkowy checkpoint otrzymał listę ścieżek jako jeden argument z przecinkami; nie dodał plików. Naprawiono wywołanie przez pwsh -Command z jawną tablicą, commit f5f60b64 zachował przywrócenie i helpery. Nie uruchomiono przez to dodatkowego generatora.
