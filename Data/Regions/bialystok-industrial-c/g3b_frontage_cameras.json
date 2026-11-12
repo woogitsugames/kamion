@@ -1,0 +1,93 @@
+{
+ "schema": "kamion/sbs-cameras/1",
+ "frame": "E,N,absolute U",
+ "cameras": [
+  {
+   "id": "g3b-frontage-2024-469512365899192",
+   "kind": "photo_match",
+   "seat": "file",
+   "type": "persp",
+   "pos": [
+    -202.3,
+    -275.4,
+    133.0
+   ],
+   "look_at": [
+    -171.7853,
+    -300.1103,
+    140.6324
+   ],
+   "fov_deg": 43.5,
+   "segment": "G3-B",
+   "pose_confidence": "C",
+   "pose_reason": "ADR 0126 control view, pose estimated by hand (WORKING_VALUE)",
+   "note": "strudel 2024-08-15 (CC BY-SA 4.0). GPS -247,-238 lags: banner ~1 m wide subtends 0.85 deg -> camera ~67 m from the flag row; pose = that point on the right lane (WORKING_VALUE).",
+   "photo": "Data/raw/mapillary/bialystok-industrial-c/469512365899192.jpg"
+  },
+  {
+   "id": "g3b-frontage-2024-490210580292738",
+   "kind": "photo_match",
+   "seat": "file",
+   "type": "persp",
+   "pos": [
+    -271.5,
+    -223.8,
+    131.6
+   ],
+   "look_at": [
+    -240.5074,
+    -248.0141,
+    138.8894
+   ],
+   "fov_deg": 43.5,
+   "segment": "G3-B",
+   "pose_confidence": "C",
+   "pose_reason": "ADR 0126 control view, pose estimated by hand (WORKING_VALUE)",
+   "note": "strudel 2024-08-15 (CC BY-SA 4.0), previous frame of the same sequence; GPS -290,-207 moved 25 m along the road (WORKING_VALUE).",
+   "photo": "Data/raw/mapillary/fire-station/490210580292738.jpg"
+  },
+  {
+   "id": "g3b-frontage-block-from-se",
+   "kind": "photo_match",
+   "seat": "file",
+   "type": "persp",
+   "pos": [
+    -170.0,
+    -275.0,
+    133.4
+   ],
+   "look_at": [
+    -208.4254,
+    -264.704,
+    137.5811
+   ],
+   "fov_deg": 43.5,
+   "segment": "G3-B",
+   "pose_confidence": "C",
+   "pose_reason": "ADR 0126 control view; not a photo pose",
+   "note": "Opposite carriageway looking WNW at the block and the furniture showroom; reference for colour / window rhythm only: kino 806036451686717 (2024-07-26, CC BY-SA 4.0), taken from a different point.",
+   "photo": "Data/raw/mapillary/bialystok-industrial-c/806036451686717.jpg"
+  },
+  {
+   "id": "g3b-frontage-near-showroom",
+   "kind": "photo_match",
+   "seat": "file",
+   "type": "persp",
+   "pos": [
+    -172.0,
+    -296.0,
+    133.8
+   ],
+   "look_at": [
+    -203.5012,
+    -320.6115,
+    135.196
+   ],
+   "fov_deg": 50.0,
+   "segment": "G3-B",
+   "pose_confidence": "C",
+   "pose_reason": "ADR 0126 control view, pose estimated by hand (WORKING_VALUE)",
+   "note": "No photo: close control view of the car showroom front (glazing, fascia, flags, totem, mast) for LOD / z-fighting checks."
+  }
+ ]
+}

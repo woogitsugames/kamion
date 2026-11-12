@@ -30,6 +30,7 @@ from roads import standards as S
 
 from . import facade_atlas as FA
 from . import facade_kit as FK
+from . import frontage as FR
 from . import roofs as RF
 
 HALL_FUNCS = {"magazyn", "produkcyjny", "warsztat remontowo-naprawczy", "elektrociepłownia", "spalarnia śmieci",
@@ -945,6 +946,8 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
     roof_kinds = {}
     canopy_skipped = 0
     bal_count = 0
+    frontages = 0
+    frontage_props = []
     btree = shapely.STRtree([b["poly"] for b in blds])
     house_pal = house_palette(blds)
     Acc.runoff_tris = {"with_uv1": 0, "without_uv1": 0}
@@ -989,13 +992,18 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
         if typ == "hall":
             wall = b["ovr"].get("wall_material") or hpick(key, HALL_WALLS)
         elif typ == "block":
-            wall = hpick(key, BLOCK_WALLS)
+            wall = b["ovr"].get("wall_material") or hpick(key, BLOCK_WALLS)
         elif typ == "house":
             wall = house_pal[key][0]
         elif typ == "shed":
             wall = hpick(key, ["plaster_grey", "plaster_light", "brick_red", "hall_wall_silver"])
         else:
-            wall = hpick(key, OFFICE_WALLS)
+            wall = b["ovr"].get("wall_material") or hpick(key, OFFICE_WALLS)
+        # ADR 0126: authored frontage of a trade pavilion (override `frontage`): its own walls on both LODs
+        front = FR.plan(b["ovr"].get("frontage")) if typ in ("office", "hall", "shed") else None
+        if front:
+            wall = front["wall"]
+            frontages += 1
         hero = b["ovr"].get("hero")
         docks = []
         if typ == "hall" and (p.get("function") in WAREHOUSE_FUNCS or b["ovr"].get("docks")) and poly.area > 800:
@@ -1035,7 +1043,7 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
         # long edges farthest from a road, not the entrance side) instead of adding to them - both rules now apply, so
         # no facade loses its balconies; the CC0 photos of the Putry blocks show galleries on whole long sides
         bal_edges = set()
-        if typ == "block" and storeys >= 3 and lens:
+        if typ == "block" and storeys >= 3 and lens and b["ovr"].get("balconies", True):
             rn = np.array([rect_along[1], -rect_along[0]])
             sun = rn if float(rn @ BALCONY_SUN) >= 0 else -rn
             # ADR 0097 (review 0094 P1-d "gołe długie elewacje"): both long sides of every block (the CC0 photos of the
@@ -1060,7 +1068,7 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
         variant = {"ribbon": typ == "office" and FK.hfloat(key, "ribbon") < 0.5,
                    "drive_door": typ == "hall" and FK.hfloat(key, "drive") < 0.5, "basement": typ == "block"}
         scheme = FK.hall_scheme(key, wall) if typ == "hall" else None
-        insulated = typ == "block" and FK.hfloat(key, "etics") < 0.7
+        insulated = typ == "block" and (FK.hfloat(key, "etics") < 0.7 or bool(b["ovr"].get("wall_material")))
         # v3.1 horizontal bands: insulated blocks (35 %) get the window rows in the accent colour from the 1st
         # floor up; punched-window offices with >= 2 storeys (40 %) get darker spandrel bands between the rows
         # ribbon-window offices of >= 3 storeys (60 %): dark spandrel panels between the ribbons (1970s office
@@ -1068,6 +1076,9 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
         bands = ((insulated and storeys >= 3 and FK.hfloat(key, "bands") < 0.35) or
                  (typ == "office" and not variant["ribbon"] and storeys >= 2 and FK.hfloat(key, "spandrel") < 0.4) or
                  (typ == "office" and variant["ribbon"] and storeys >= 3 and FK.hfloat(key, "spandrel") < 0.6))
+        if b["ovr"].get("bands") is not None:        # ADR 0126: authored (a photographed facade has them or not);
+            bands = bool(b["ovr"]["bands"])          # false = one wall colour: no accent gable / stairwell field either
+        one_tone = b["ovr"].get("bands") is False
         if typ == "block" and not insulated:
             wall = "panel_concrete"
         accent = FK.hpick(FK.ACCENT_PLASTER, key, "accent")
@@ -1105,7 +1116,17 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
                 for dock in dk["docks"]:
                     ops.append((dock["u"] - S.DOCK_DOOR_W / 2, dock["u"] + S.DOCK_DOOR_W / 2, zf, zf + S.DOCK_DOOR_H,
                                 0.25, "dock", "dock_door"))
-            if typ == "hall":
+            if front:
+                def gfn(uabs, a=a, d=d, ua0=u_acc):
+                    q_ = a + d * (uabs - ua0)
+                    return float(hf.sample(np.array([q_[0]]), np.array([q_[1]]))[0])
+                FR.wall(acc, wall_with_openings, front, a, c_, nout, L, zbot, zref, zt, u_acc, ground=gfn)
+                sg = front["sign"]                     # functional fascia sign (facade_sign_<code>, no brands)
+                if sg and not signed and L >= 8 and FR.faces(nout, sg["facing"]):
+                    signs.append(FK.sign_instance(sg["code"], a, d, nout, L * float(sg.get("u", 0.5)),
+                                                  zref + float(sg["z_m"]), f"{key}:{ei}"))
+                    signed = True
+            elif typ == "hall":
                 # plinth (concrete, up to dock floor) + cladding scheme + coping on top
                 zpl = (dk["yard_z"] + S.DOCK_FLOOR_H) if dk else zref + 0.6
                 zlow = FK.safe_z(zref + scheme["low"][1], ops, zpl, zt - 0.4, 0.45) if scheme["low"] else None
@@ -1185,7 +1206,7 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
                 zpl = zref + (zbase - 0.1 if typ == "block" else PLINTH_H.get(typ, 0.35) + (
                     0.15 * round(FK.hfloat(key, "plh")) if typ == "house" else 0.0))
                 usplits = []
-                if insulated and ei == main and L > 12:              # accent field on the stairwell axis
+                if insulated and ei == main and L > 12 and not one_tone:   # accent field on the stairwell axis
                     door = [o for o in ops if o[5] == "door"]
                     if door:
                         um = (door[0][0] + door[0][1]) / 2
@@ -1200,7 +1221,7 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
                 # accent colour on the gable ends only: an edge across the long axis, about as long as the block is
                 # deep (before r10 every edge < 16 m qualified, so stepped blocks came out accent-coloured all round)
                 gable_accent = (insulated and L < 16 and FK.hfloat(key, "gable") < 0.6 and L > 0.7 * rect_short and
-                                abs(float(d @ rect_along)) < 0.3)
+                                abs(float(d @ rect_along)) < 0.3 and not one_tone)
                 band_z = []                                            # (z0, z1) of each band
                 if bands and ei not in bal_edges and not gable_accent and typ in ("block", "office"):
                     kk_ = sh / FA.FAR_ROW_H                               # sill 0.9 k, head 2.35 k / 2.5 k (facade_openings)
@@ -1314,14 +1335,18 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
                      [a[0], a[1], zt])
             # LOD1 (v3.1): plinth band, window zone with the far facade material (window grid in UV1), wall above,
             # projecting coping at the attic; pitched houses keep the plain wall
-            lod1_wall(acc, typ, lod1_main, a, c_, nout, L, zbot, zref, zt, u_acc, storeys, sh, zbase,
-                      "ribbon" if variant["ribbon"] else typ, pitched, zone_wall=lod1_zone, runoff=lod1_ro,
-                      pieces=lod1_pieces, fkey=f"{key}:{ei}", balcony=bal_group if ei in bal_edges else False, plinth=plinth,
-                      ground=lod1_gfn)
+            if not front:            # a frontage drew its LOD1 wall itself (FR.wall)
+                lod1_wall(acc, typ, lod1_main, a, c_, nout, L, zbot, zref, zt, u_acc, storeys, sh, zbase,
+                          "ribbon" if variant["ribbon"] else typ, pitched, zone_wall=lod1_zone, runoff=lod1_ro,
+                          pieces=lod1_pieces, fkey=f"{key}:{ei}", balcony=bal_group if ei in bal_edges else False,
+                          plinth=plinth, ground=lod1_gfn)
             u_acc += L
         if typ == "block" and BLOCK_APRON:                         # ADR 0097 (P2-g): paved apron
             FK.wall_apron(acc, poly, hf)
-        if typ == "hall" and len(edges) >= 3:                       # corner flashings
+        if front:
+            frontage_props += [dict(q_, building=key) for q_ in FR.props(
+                acc, front, edges, lambda e_, n_: float(hf.sample(np.array([e_]), np.array([n_]))[0]))]
+        if typ == "hall" and not front and len(edges) >= 3:         # corner flashings
             for i, (a, c_) in enumerate(edges):
                 FK.corner_trim(acc, a, nouts[i - 1], nouts[i], zref + 0.6, zeave - 0.4)
         # courtyard walls (holes), plain
@@ -1369,7 +1394,7 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
                            apron=lambda q_: float(roof.z(q_)) + RF.T_TOP)
         else:
             roof_flat(acc, "buildings", poly, zeave, attic=0.3 if typ in ("hall", "office", "block") else 0.15,
-                      skylights=typ == "hall", key=key)
+                      skylights=typ == "hall" and not front, key=key)
             # LOD1 roof stays one flat polygon (an attic inset is invisible from the road and cost 1.3 MiB in Low);
             # the coping ledge (5 cm above the roof) reads as the attic rim
             roof_flat(acc, "buildings_low", poly, zeave, attic=0.0)
@@ -1377,7 +1402,7 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
             if typ == "block" or tall_office:
                 FK.machine_rooms(acc, poly, zeave, "buildings_low")
             roof_flat(acc, "collision", poly, zeave, mat="collision_building", attic=0.0)
-            if typ == "hall" and poly.area > 600:
+            if typ == "hall" and poly.area > 600 and not front:
                 FK.roof_vents(acc, poly, zeave - 0.3, key, "hall")
             elif typ == "block":
                 FK.roof_vents(acc, poly, zeave - 0.3, key, "block")
@@ -1391,7 +1416,8 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
                    "dock_facades": [d["id"] for d in all_docks], "facade_signs": len(signs),
                    "hall_wall_runoff_tris": dict(Acc.runoff_tris),
                    "house_roofs": dict(sorted(roof_kinds.items())),
-                   "house_canopies_under_eave_skipped": canopy_skipped, "balconies": bal_count})
+                   "house_canopies_under_eave_skipped": canopy_skipped, "balconies": bal_count,
+                   "frontages": frontages, "frontage_props": frontage_props})
     if sign_out is not None:
         sign_out.extend(signs)
     return all_docks
