@@ -1,8 +1,13 @@
-param([switch]$SkipGenerators)
+param([switch]$SkipGenerators,[switch]$SkipMaterials)
 $ErrorActionPreference = 'Stop'
 Set-Location (Resolve-Path "$PSScriptRoot/../..")
 $other = @(Get-CimInstance Win32_Process -Filter "Name='pwsh.exe'" | Where-Object { $_.ProcessId -ne $PID -and $_.CommandLine -match 'truck-r3[/\\]prepare-baseline\.ps1' })
 if ($other.Count) { throw 'Poprzednia procedura nadal działa; nie wolno współdzielić jej Owner heavy.' }
+if ($SkipMaterials) {
+    $materialLog=Get-Item artifacts/truck-r3/baseline-materials.log
+    $lastSource=(Get-ChildItem art-source/world/materials/_src -Filter '*.py' | Measure-Object LastWriteTimeUtc -Maximum).Maximum
+    if ($materialLog.LastWriteTimeUtc -lt $lastSource -or !(Select-String -LiteralPath artifacts/truck-r3/STATUS.md -SimpleMatch 'Generator materials zakończony pod heavy' -Quiet)) { throw 'Brak potwierdzonej świeżej regeneracji materiałów.' }
+}
 if ($SkipGenerators -and (!(Select-String -LiteralPath artifacts/truck-r3/STATUS.md -SimpleMatch 'Generator materials zakończony pod heavy' -Quiet) -or !(Select-String -LiteralPath artifacts/truck-r3/STATUS.md -SimpleMatch 'Generator world zakończony pod heavy' -Quiet))) { throw 'Brak potwierdzenia ukończenia obu generatorów przed wznowieniem.' }
 $slotScript = 'C:/Users/matma/Documents/Claude/kamion/scripts/unity-slot.ps1'
 $env:OPENBLAS_NUM_THREADS = '1'
@@ -14,6 +19,7 @@ foreach ($job in @(
     @{id='world';args=@('run','--project','tools/worldgen','tools/worldgen/roads/build_world.py','--region','bialystok-industrial-c')}
 )) {
     if ($SkipGenerators) { continue }
+    if ($SkipMaterials -and $job.id -eq 'materials') { continue }
     pwsh $slotScript -Acquire -Pool heavy -Owner gpt-truck-r3 -StaleHours 100000 -PollSeconds 1
     if ($LASTEXITCODE -ne 0) { throw 'Nie uzyskano slotu heavy.' }
     try {
