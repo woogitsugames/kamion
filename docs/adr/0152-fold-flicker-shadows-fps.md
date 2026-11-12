@@ -77,7 +77,15 @@ dowód działania mechanizmu).
 **Fold High/30, 300 s (APK `550a353f48`)**: 29,97 FPS, klatka p50/p95/p99 33,3/33,3/33,3 ms, GPU p50/p95 24,7/28,8 ms,
 PSS 1460 MB, thermal 0, bateria 27,0 °C po biegu; FPS/min: 29,5 / 29,9 / 30,0 / 30,0 / 27,8 (ostatnia minuta niepełna — zbieranie
 metryk). Ultra/60 300 s z nową siatką bezpieczeństwa — NIE zmierzone (przerwane na polecenie lidera, limit sesji).
-A16 Low z nowym APK — NIE zmierzone (A16 offline w adb od 22:09, wymaga przełożenia kabla).
+**A16 Low/30, regresja (ten sam skrypt `fold-run.ps1`, trasa route_s=12, 60 km/h, 200 s, start 28–29 °C; statystyki po 25 s
+rozgrzewki, `ft.py`)**:
+
+| APK | FPS | klatka p50/p95/p99 | GPU p50/p95 | skala | PSS | hitch > 100 ms | thermal |
+|---|---|---|---|---|---|---|---|
+| main `e364975f12` (`r1/low`) | 29,28 | 33,3 / 33,6 / 50,1 | 32,3 / 39,0 | 0,75 | 972 MB | 0 | 0 |
+| gałąź `550a353f48` (`a16low2/low_new`) | 29,28 | 33,3 / 33,6 / 50,1 | 32,3 / 38,9 | 0,75 | 945 MB | 0 | 0 |
+
+Brak regresji (różnice w szumie). Logcat bez błędów gry (65 dopasowań = szum systemowy Samsunga).
 
 Ciemne klatki: 1 vs 0 zdarzeń — zgodne z hipotezą, za mało zdarzeń na dowód (UNVERIFIED).
 
