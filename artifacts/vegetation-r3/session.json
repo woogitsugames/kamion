@@ -5,12 +5,16 @@
   "started_at": "2026-11-12T00:08:00+01:00",
   "deadline_at": "2026-11-12T21:30:50+01:00",
   "base_merge_sha": "49de5a4e",
-  "phase": "baseline_photos_and_red_test_queued",
+  "phase": "candidate_b_focused_tests_waiting_heavy",
   "objective": "D51 blocker B8: four orthophoto-confirmed roadside broadleaf crowns, no road edits",
   "baseline_control_frames_reused": 268,
   "baseline_photo_frames_planned": 100,
   "unity_owner": "gpt-vegetation",
   "heavy_owner": "gpt-vegetation-r3",
-  "next_step": "finish before photos and red test before source edit",
-  "phone_timing": "UNVERIFIED, forbidden in this session"
+  "next_step": "finish pytest-b.log before starting B generation",
+  "phone_timing": "UNVERIFIED, forbidden in this session",
+  "candidate_a": "rejected: Low instanced draws +4; zero ablation confirmed baseline",
+  "candidate_b": "replace nearby synthetic broadleaf, retain prototype/variant and 64m cell, no new instance records",
+  "unity_state": "zero-tree ablation imported",
+  "raw_inputs": "candidate A restored; candidate B not generated yet"
 }
