@@ -23,3 +23,5 @@ Krok 6c: przygotowano odczyt rzeczywistych macierzy WorldInstances.SyncOrigin w 
 Krok 7: świeży baseline świata po merge main ukończony bez fallback=True. Zachowano manifest, QA i własną bibliotekę proceduralną do porównań kominów. NASTĘPNY KROK: import przygotowanych danych i pełne cztery zestawy QA, pod Unity.
 
 Krok 6d: dopisano test integracji rejestracji landmarków z hero apply: dla zweryfikowanego assetu i dla fallbacku musi pozostać dokładnie jedna instancja danego źródła. Testy nadal są szkicem, nie raportuję ich jako PASS. Poprawiono też zwalnianie slotu sondy: kontrola istniejącego pliku następuje przed acquire.
+
+Krok 6e: ADR 0116 rozszerzony o r3 z pełnymi ograniczeniami źródeł, pozy i roboczych wymiarów; bez deklaracji wyniku nieuruchomionego wariantu. Przygotowano baseline_sheets.py do przeglądu całego faktycznego spisu kamer.

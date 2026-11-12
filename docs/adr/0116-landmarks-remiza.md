@@ -92,3 +92,41 @@ proceduralną sylwetkę; nie jest to fotograficzny PASS. Po wiadukcie i kominach
 należy wrócić do organicznej budowy koron. Zacieki podążają za obróbką, pigment
 tynku D48 pozostaje bez zmian; odwzorowanie zabrudzeń jest nadal przybliżeniem.
 Telefon i niezależna recenzja pozostają po stronie lidera. Nie deklaruje się zamknięcia bramki 3.
+
+## r3 — kominy EC Białystok (w toku)
+
+Świeży baseline po merge main 14ccbaf1 odtwarza świat bez fallback=True (575,6 s).
+Runda obejmuje wyłącznie dwa landmarki istniejących overrides; life_props.py,
+props.py, roads, źródła budynków i overrides.yaml pozostają poza zmianą.
+Przygotowany wariant używa własnej biblioteki GLB i konfiguracji regionu,
+podłączanej do istniejącego plan/apply hero. Zweryfikowana zgodność spec,
+konfiguracji, wersji buildera i GLB jest warunkiem pominięcia starej instancji.
+Brak lub niezgodność oznacza zachowanie starego komina. Nie dodaje się shaderów,
+przebiegów ani pól QualityProfile. Plan materiałów: Low 3, High 4 jak w baseline.
+
+Źródła: Rakoon, zdjęcie 20200711 073128 Elektrociepłownia Białystok, CC BY 3.0
+(lokalna kopia pomniejszona 3840×2160, oryginał 4608×2592 niezweryfikowany lokalnie);
+OSM ways 628899553/554 (© OpenStreetMap contributors, ODbL);
+zapytanie ENEA z maja 2025 o komin jednoprzewodowy nr 2: 120 m, góra 4,80 m,
+podstawa 7,65 m; rekord wykonawcy EMKA: komin wieloprzewodowy 120 m.
+Linki i atrybucja w candidate_ec_chimneys.json oraz chimney-technical-sources.json r2.
+Zdjęcie EMKA obejrzano wyłącznie w cache TEMP, nie reprodukuje się go w artefaktach.
+Numery zakładowe nie są numerami override. Rozpoznanie jednego/trzech wylotów
+opiera się na fotografii i położeniach OSM; szczegółowe wymiary głowic są robocze.
+
+GPS zdjęcia nie pozwalał odtworzyć obu zwieńczeń przy H=120 m. Dopasowanie
+perspektywy dwóch pionowych osi i technicznej średnicy komina jednoprzewodowego
+zapisuje fit_photo_pose.py/json. Roboczy najlepszy wynik: lokalnie E546,00/N−756,75,
+U140,70, heading134,28°, pitch1,08°, roll0,14°, f2724 px w zdjęciu3840 px.
+Nie jest to geodezyjna poza: ręczne piksele głowic, niepewna wysokość wylotów,
+brak dystorsji i interpretacja obrysu OSM ograniczają wnioskowanie.
+W QA pomija się mały roll, zachowuje całą wysokość zdjęcia i centralny poziomy
+kadr renderu 2340→1920. Nie prostuje się kominów na podstawie ich wyglądu.
+
+Hipoteza pełnego malowania od ziemi co15 m została odrzucona w przygotowaniu r2.
+Wariant do renderu ma biały dół i pasy co12 m: pojedynczy od36 m,
+wieloprzewodowy od60 m. To WORKING_VALUE z dopasowania, nie pomiar budowli.
+Wysokość120 m obu i położenia poziome pozostają bez zmian. Trzon wieloprzewodowy
+8,27 m przy ziemi i u góry jest WORKING_VALUE (OSM obrys + szerokość na zdjęciu),
+zamiast starej roboczej góry4,8 m. Galerie i trzy wyloty mają autorskie wymiary
+robocze. Wdrożenie, ocena PNG, budżety oraz testy są jeszcze przed tą rundą.
