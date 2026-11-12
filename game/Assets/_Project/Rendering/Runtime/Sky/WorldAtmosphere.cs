@@ -102,6 +102,7 @@ namespace Game.Rendering
         {
             var p = env.Active;
             if (p == null) { KamionHeadlamps.Reset(); return; }
+            Shader.SetGlobalFloat("_KamionDimColourDesaturation",Mathf.Clamp01(p.dimColourDesaturation));
             bool hasTier = QualityProfileApplier.HasCurrent;
             var t = hasTier ? QualityProfileApplier.Current : default;
             KamionHeadlamps.Push(env.Model, HeadlampsOverride ?? p.projectedHeadlamps, p.projectedHeadlampPeakCd, env.gameObject.scene);

@@ -1,0 +1,159 @@
+{
+ "anchor": [
+  718.26,
+  -1133.29,
+  137.252
+ ],
+ "asset": "ec_chimney_multi",
+ "builder_sha256": "1e7cf9ec5aa5ca69d67e48b1690d472a95129af5010a32de6e975f31d758c8b7",
+ "buildings": [],
+ "chimney": {
+  "asset": "ec_chimney_multi",
+  "band_boundaries_m": [
+   60,
+   72,
+   84,
+   96,
+   108,
+   120
+  ],
+  "base_d_m": 8.27,
+  "galleries_m": [
+   113.5,
+   116.5
+  ],
+  "height_m": 120,
+  "outlets": 3,
+  "paint_start_m": 60,
+  "top_d_m": 8.27
+ },
+ "confidence": {
+  "bands": "WORKING_VALUE 12m spacing, different lower limits 36m/60m; photographic resection with known 120m and technical single-flue diameter, pose/intrinsics and outlet-height ambiguity remain",
+  "heads": "One outlet versus three outlets and distinct gallery patterns visible on Rakoon 2020 photo; detailed head dimensions/azimuth WORKING_VALUE",
+  "height": "120m both: OSM, ENEA single-flue procurement, EMKA multi-flue project record",
+  "lower_body": "Long white lower body supported by open Hiuppo 2007 photo; its old checkerboard marking is not applied to the 2020 reference epoch",
+  "materials": "Existing shared chimney materials, three on both LODs; pale galleries reuse chimney_white. No measured reflectance or new shader path",
+  "multi_diameters": "8.27m base from OSM outline area, interpretation uncertain; 8.27m top is WORKING_VALUE near photographic resection, not a survey",
+  "single_diameters": "7.65m base / 4.80m top from ENEA technical notice; single-outlet identity assigned from 2020 Commons photograph, plant nr2 is not override index"
+ },
+ "configuration": {
+  "confidence": {
+   "bands": "WORKING_VALUE 12m spacing, different lower limits 36m/60m; photographic resection with known 120m and technical single-flue diameter, pose/intrinsics and outlet-height ambiguity remain",
+   "heads": "One outlet versus three outlets and distinct gallery patterns visible on Rakoon 2020 photo; detailed head dimensions/azimuth WORKING_VALUE",
+   "height": "120m both: OSM, ENEA single-flue procurement, EMKA multi-flue project record",
+   "lower_body": "Long white lower body supported by open Hiuppo 2007 photo; its old checkerboard marking is not applied to the 2020 reference epoch",
+   "materials": "Existing shared chimney materials, three on both LODs; pale galleries reuse chimney_white. No measured reflectance or new shader path",
+   "multi_diameters": "8.27m base from OSM outline area, interpretation uncertain; 8.27m top is WORKING_VALUE near photographic resection, not a survey",
+   "single_diameters": "7.65m base / 4.80m top from ENEA technical notice; single-outlet identity assigned from 2020 Commons photograph, plant nr2 is not override index"
+  },
+  "enabled": true,
+  "schema": "truck-sim-pl/ec-chimneys/1",
+  "sources": [
+   {
+    "author": "Rakoon",
+    "license": "CC BY 3.0",
+    "license_url": "https://creativecommons.org/licenses/by/3.0/",
+    "title": "20200711 073128 Elektrociepłownia Białystok",
+    "url": "https://commons.wikimedia.org/wiki/File:20200711_073128_Elektrociep%C5%82ownia_Bia%C5%82ystok.jpg",
+    "use": "Reference for our procedural reconstruction; resized local photo, no full-original verification claimed"
+   },
+   {
+    "title": "ENEA technical assessment of chimney nr2, May 2025",
+    "url": "https://oneplace.marketplanet.pl/zapytania-ofertowe-przetargi/-/rfp/view/3057683/wykonanie-ekspertyzy-technicznej-komina-nr-2-w-enea-cieplo-sp-z-o-o-oddzial-elektrocieplownia-bialystok-znak-sprawy-",
+    "use": "Technical dimensions only, no copied photographs or notice text"
+   },
+   {
+    "title": "EMKA multi-flue chimney H120m",
+    "url": "https://www.emka.krakow.pl/realizacje/enea-wytwarzanie-elektrocieplownia-bialystok-komin-wieloprzewodowy-h120m/",
+    "use": "Textual project-record height only. Contractor photograph is not an open D43 asset reference and is not distributed; model parameters use the open Commons photographs and OSM"
+   },
+   {
+    "author": "Hiuppo",
+    "license": "CC BY-SA 2.5",
+    "license_url": "https://creativecommons.org/licenses/by-sa/2.5/",
+    "title": "EC Białystok (2007)",
+    "url": "https://commons.wikimedia.org/wiki/File:EC_Bia%C5%82ystok.jpg",
+    "use": "Long pale lower shafts only; historical checkerboard head, logos and image pixels are not copied into the model"
+   },
+   {
+    "attribution": "© OpenStreetMap contributors, ODbL",
+    "title": "OpenStreetMap ways 628899553 / 628899554",
+    "url": "https://www.openstreetmap.org/copyright",
+    "use": "Existing positions, height tags and footprint area; no changes to overrides.yaml"
+   }
+  ],
+  "stacks": {
+   "628899553": {
+    "asset": "ec_chimney_single",
+    "band_boundaries_m": [
+     36,
+     48,
+     60,
+     72,
+     84,
+     96,
+     108,
+     120
+    ],
+    "base_d_m": 7.65,
+    "galleries_m": [
+     84,
+     115
+    ],
+    "height_m": 120,
+    "outlets": 1,
+    "paint_start_m": 36,
+    "top_d_m": 4.8
+   },
+   "628899554": {
+    "asset": "ec_chimney_multi",
+    "band_boundaries_m": [
+     60,
+     72,
+     84,
+     96,
+     108,
+     120
+    ],
+    "base_d_m": 8.27,
+    "galleries_m": [
+     113.5,
+     116.5
+    ],
+    "height_m": 120,
+    "outlets": 3,
+    "paint_start_m": 60,
+    "top_d_m": 8.27
+   }
+  }
+ },
+ "dims": {},
+ "footprints": {},
+ "ground": {
+  "fence": [],
+  "flagpoles": [],
+  "gate": [],
+  "spruce": [],
+  "thuja": []
+ },
+ "id": "ec-bialystok-chimney-2",
+ "lod_ends_m": [
+  650.0,
+  20000.0
+ ],
+ "osm_way": 628899554,
+ "region": "bialystok-industrial-c",
+ "schema": "truck-sim-pl/ec-chimney-spec/1",
+ "source_override": {
+  "base_d_m": 8.3,
+  "epsg2180": [
+   778713.26,
+   595089.71
+  ],
+  "height_m": 120,
+  "id": "ec-bialystok-chimney-2",
+  "kind": "landmark",
+  "osm_way": 628899554,
+  "top_d_m": 4.8
+ }
+}

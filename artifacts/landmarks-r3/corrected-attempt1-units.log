@@ -1,0 +1,38 @@
+..F..............                                                        [100%]
+================================== FAILURES ===================================
+______ test_lods_use_existing_material_budgets_and_have_vertical_axes[0] ______
+
+index = 0
+
+    @pytest.mark.parametrize('index',[0,1])
+    def test_lods_use_existing_material_budgets_and_have_vertical_axes(index):
+        cfg=EC.config(); d=EC.entry(overrides()[index],cfg)
+        lods=EC.meshes(d)
+        assert len(lods)==2
+        assert {p['mat'] for p in lods[0]}=={'chimney_white','chimney_red','chimney_concrete'}
+        assert {p['mat'] for p in lods[1]}=={'chimney_white','chimney_red','chimney_concrete'}
+        for lod in lods:
+            V=np.concatenate([p['V'] for p in lod])
+            assert np.isfinite(V).all()
+            assert V[:,2].min()==-1 and V[:,2].max()==120
+            for p in lod:
+                assert np.isfinite(p['UV']).all()
+                assert p['T'].min()>=0 and p['T'].max()<len(p['V'])
+            # The shaft's opposite vertices have the same centre at every paint seam.
+            for z in d['band_boundaries_m'][:-1]:
+                shell=V[np.isclose(V[:,2],z)]
+>               assert np.max(np.abs((shell[:,:2].min(0)+shell[:,:2].max(0))/2))<1e-8
+E               AssertionError: assert np.float64(0.007000000000000117) < 1e-08
+E                +  where np.float64(0.007000000000000117) = <function max at 0x000001F433C36370>(array([0.   , 0.007]))
+E                +    where <function max at 0x000001F433C36370> = np.max
+E                +    and   array([0.   , 0.007]) = <ufunc 'absolute'>(((array([-3.60174871, -3.5915    ]) + array([3.60174871, 3.6055    ])) / 2))
+E                +      where <ufunc 'absolute'> = np.abs
+E                +      and   array([-3.60174871, -3.5915    ]) = <built-in method min of numpy.ndarray object at 0x000001F43555AA30>(0)
+E                +        where <built-in method min of numpy.ndarray object at 0x000001F43555AA30> = array([[ 0.00000000e+00,  2.82750000e+00],\n       [-8.73745552e-01,  2.68911230e+00],\n       [-1.66196280e+00,  2.2874....42487113e-02, -3.59150000e+00],\n       [ 2.42487113e-02, -3.59150000e+00],\n       [-6.50318067e-16, -3.54950000e+00]]).min
+E                +      and   array([3.60174871, 3.6055    ]) = <built-in method max of numpy.ndarray object at 0x000001F43555B090>(0)
+E                +        where <built-in method max of numpy.ndarray object at 0x000001F43555B090> = array([[ 0.00000000e+00,  2.82750000e+00],\n       [-8.73745552e-01,  2.68911230e+00],\n       [-1.66196280e+00,  2.2874....42487113e-02, -3.59150000e+00],\n       [ 2.42487113e-02, -3.59150000e+00],\n       [-6.50318067e-16, -3.54950000e+00]]).max
+
+tests\gis\test_ec_chimneys.py:48: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/gis/test_ec_chimneys.py::test_lods_use_existing_material_budgets_and_have_vertical_axes[0]
+1 failed, 16 passed, 1 deselected in 2.01s

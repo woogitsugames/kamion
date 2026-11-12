@@ -1,0 +1,29 @@
+........................................................................ [ 11%]
+........................................................................ [ 22%]
+........................................................................ [ 33%]
+........................................................................ [ 44%]
+........................................................................ [ 55%]
+............................F......x.................................... [ 66%]
+........................................................................ [ 78%]
+........................................................................ [ 89%]
+.....................................................................    [100%]
+================================== FAILURES ===================================
+____________________________ test_report_not_stale ____________________________
+
+qa = {'adr': '0075', 'connectivity': {'missing_in_graph': [{'access': None, 'highway': 'service', 'length_in_tile_m': 33.1,...948309:1883101800-1883101801', 'dist_m': 10.5, 'junction': 'j:n1883101800', 'lane_index_from_left': 0, ...}, ...], ...}
+
+    def test_report_not_stale(qa):
+        """The report must describe the current graph, overrides, route and road generator."""
+        stale = []
+        for k, v in qa["inputs_sha256"].items():
+            p = (REGION_DIR / k) if "/" not in k else (REPO / k)
+            if not p.exists() or _sha(p) != v:
+                stale.append(k)
+>       assert not stale, f"fidelity_qa.json is stale for {stale}: rerun tools/worldgen/fidelity/run.py"
+E       AssertionError: fidelity_qa.json is stale for ['overrides.yaml', 'tools/worldgen/roads/meshing.py']: rerun tools/worldgen/fidelity/run.py
+E       assert not ['overrides.yaml', 'tools/worldgen/roads/meshing.py']
+
+tests\gis\test_road_fidelity.py:51: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/gis/test_road_fidelity.py::test_report_not_stale - AssertionErro...
+1 failed, 643 passed, 1 xfailed in 720.55s (0:12:00)

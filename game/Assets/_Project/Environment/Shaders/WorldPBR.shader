@@ -68,6 +68,7 @@ Shader "Kamion/World PBR"
         _AgeTint ("Patch age target / base albedo ratio", Float) = 2.0
         _PatchSeam ("Repair: seam width m, darkening, fresh tone, aged tone (ADR0118)", Vector) = (0, 0, 1, 1)
         _DecalAlpha ("Decal opacity", Range(0, 1)) = 1
+        _DecalCells ("Decal atlas cells per side (_DECAL_ALPHA): 2 oil atlas, 1 whole UV", Float) = 2
         _SplashHeight ("Splash zone height (m)", Float) = 0.6
         _RunoffMap ("Parapet run-off (R soot, G rust; _RUNOFF)", 2D) = "black" {}
         _RunoffStrength ("Parapet run-off strength", Range(0, 1)) = 0.5
@@ -105,7 +106,7 @@ Shader "Kamion/World PBR"
             float4 _Tile;
             float _AlbedoScale, _NormalStrength, _SmoothnessScale, _MetallicScale;
             float _ElementJitter, _ElementSize, _MacroSize, _MacroStrength, _MacroWear, _CrackStrength, _DetailFade;
-            float _WheelPolish, _GutterDirt, _AgeTint, _DecalAlpha, _SplashHeight, _GroundTint, _RunoffStrength;
+            float _WheelPolish, _GutterDirt, _AgeTint, _DecalAlpha, _DecalCells, _SplashHeight, _GroundTint, _RunoffStrength;
             float4 _PanelTone;
             float4 _Stripe, _StripeA, _StripeB;
             float4 _GrassFill;
@@ -477,7 +478,11 @@ Shader "Kamion/World PBR"
                     albedo *= lerp(1.0, 0.35, cm.r * amount);
                     albedo = lerp(albedo, half3(0.03, 0.03, 0.03), cm.g * amount);
                     albedo *= 1.0 - cm.a * amount * 0.12;
-                    smooth = lerp(smooth, 0.55, cm.g * amount);
+                    // ADR 0131: aged, dust-filmed bitumen sealant - a dark band only slightly smoother than the asphalt
+                    // around it (+0.06, WORKING_VALUE). At 0.55 the env term at grazing NoV (grazing = smooth)
+                    // out-reflected the 0.03 albedo and the sealant read as white chalk, also under an overcast sky;
+                    // at 0.24 it cancelled the dark albedo exactly (invisible from the driver's eye height).
+                    smooth = lerp(smooth, smooth + 0.06, cm.g * amount);
                 #if defined(_KAMION_WORLD_DETAIL)
                     half3 cn = UnpackNormalScale(SAMPLE_TEXTURE2D(_CrackNormal, sampler_CrackMap, uc), amount);
                     tn = normalize(half3(tn.xy + cn.xy, tn.z * cn.z));
@@ -610,10 +615,12 @@ Shader "Kamion/World PBR"
             #endif
             #if defined(_DECAL_ALPHA)
                 {
-                    // 2x2 atlas, one stain per cell, centre 0.5/0.5 of the radial UV; cell from TEXCOORD_1.y
-                    float cell = floor(saturate(i.uv.w) * 3.999);
-                    float2 cxy = float2(fmod(cell, 2.0), floor(cell * 0.5));
-                    float2 ua = (saturate(i.uv.xy) + cxy) * 0.5;
+                    // 2x2 atlas, one stain per cell, centre 0.5/0.5 of the radial UV; cell from TEXCOORD_1.y.
+                    // ADR 0131: _DecalCells 1 = the whole UV (Fab manhole / drain covers, their own atlas rects).
+                    float cells = max(_DecalCells, 1.0);
+                    float cell = floor(saturate(i.uv.w) * (cells * cells - 0.001));
+                    float2 cxy = float2(fmod(cell, cells), floor(cell / cells));
+                    float2 ua = (saturate(i.uv.xy) + cxy) / cells;
                     half4 st = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, ua);
                     half4 sm = SAMPLE_TEXTURE2D(_MaskMap, sampler_MaskMap, ua);
                     albedo = st.rgb * _Tint.rgb * _AlbedoScale;
@@ -788,16 +795,34 @@ Shader "Kamion/World PBR"
                         // 0.55-1.0 scale lengths; the wet band under the drip edge lives inside the sill only and is gone
                         // 0.25 scale lengths down. Strength floor 0.5: the plaster factor of the parapet layer (x 0.6)
                         // left a sill mark at ~3 levels. WORKING_VALUE, measured from 5 m and 20 m (ADR 0114 table).
+                        // ADR 0124 (review 0114 P1-r8-g: "dwie identyczne nóżki o twardej górnej krawędzi, symetryczne";
+                        // weakest 10 % of the marks ~5 sRGB levels from 20 m). Per END of the sill (hash of rnd and side):
+                        // 28 % of the ends shed nothing, the rest get their own length (0.35-1.0 scale lengths) and
+                        // strength (0.6-1.0). Shape of run-off water: a stain 15 cm wide right under the end cap that
+                        // narrows to 3.6 cm at its tip, flanks feathered over 5-9 cm and broken by the run-off map,
+                        // fading in over the first 3 cm (no hard top line) and wandering sideways on its way down.
+                        // One sill in five also drips somewhere along its length (a short streak inside the sill).
+                        // Strength floor 0.62. WORKING_VALUE; measured from 5 m and 20 m (ADR 0124 table).
                         float au = abs(i.uv.z);
                         half outside = step(1.5, au);
                         float sde = au - 2.0 * outside;                       // metres from the sill end
-                        half slen = 0.55 + 0.45 * frac(srnd * lerp(0.37, 0.61, sside) + lerp(0.1, 0.5, sside));
-                        float hw = lerp(0.045, 0.02, saturate(depth / slen));
-                        half whisk = (1.0 - smoothstep(hw, hw + 0.03, sde)) * (1.0 - smoothstep(0.3 * slen, slen, depth)) * (0.8 + 0.2 * ro.r);
+                        half h1 = frac(srnd * 0.618 + sside * 0.37 + 0.13);
+                        half h2 = frac(srnd * 0.377 + sside * 0.71 + 0.29);
+                        half present = step(0.28, h1);
+                        half slen = 0.35 + 0.65 * h2;
+                        half sstr = 0.6 + 0.4 * frac(h1 * 7.3);
+                        float sdw = sde + (macro.a - 0.5) * 0.07 * saturate(depth * 1.5) * (1.0 - 2.0 * outside);
+                        float hw = lerp(0.075, 0.018, saturate(depth / slen));
+                        half fadeIn = smoothstep(-0.01, 0.03 + 0.05 * h2, depth);
+                        half whisk = present * sstr * (1.0 - smoothstep(hw, hw + 0.05 + 0.04 * ro.r, abs(sdw)))
+                                   * (1.0 - smoothstep(0.2 * slen, slen, depth)) * fadeIn * (0.72 + 0.28 * ro.r);
                         half band = (1.0 - outside) * (0.3 + 0.5 * ro.r) * (1.0 - smoothstep(0.03, 0.25, depth)) * 0.5;
-                        ro.r = saturate(max(whisk, band));
+                        half dripAt = 0.22 + 0.25 * frac(srnd * 0.291 + 0.05);
+                        half drip = step(0.8, frac(srnd * 0.459 + 0.21)) * (1.0 - outside) * (1.0 - sside)
+                                  * (1.0 - smoothstep(0.012, 0.045, abs(au - dripAt))) * (1.0 - smoothstep(0.12, 0.55, depth)) * 0.7;
+                        ro.r = saturate(max(max(whisk, band), drip));
                         ro.g *= whisk * 0.5;
-                        k = max(k, 0.5);
+                        k = max(k, 0.62);
                     }
                     albedo = lerp(albedo, albedo * half3(0.22, 0.21, 0.2), ro.r * k);
                     albedo = lerp(albedo, half3(0.075, 0.042, 0.022), ro.g * k * 0.8);

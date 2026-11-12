@@ -68,3 +68,8 @@ Ostatni przydzielony ADR: **0116**.
 - **cab (r4):** P1 ikony przycisków na Low = rozmyte plamy. Nie commituj zdjęć z prawami autorskimi/logo (photo-night-reference-vs-render wykluczone przy scaleniu). Nie dubluj wpisów LICENSES — dopisuj do istniejącego.
 - **life (r4):** czarne auto = szary metalik; szum płatków lakieru na High jak papier ścierny; twardy prostokątny cień pod autem (P1); tył dalej czysty; uwagi do naczep placowych z batch B nie zrobione. Przytnij artefakty (kopie budżetów z odrzuconych wariantów).
 - **furniture (r3):** P1 `FurnitureSign.shader` = kopia URP Lit z pełnym multi_compile → policz warianty w APK i sprawdź SRP Batcher. P2 `FurnitureRetroSource` alokuje co sekundę bez ciężarówki (zero GC!). Za dnia efekt ~0, czytelność na Low bez zmian; D-3/D-6 przy rondzie Bieżeństwa to geometria węzła (Claude). 30 MB artefaktów — przytnij. Bez BOM w LICENSES.
+
+## s12 (13:45) — Claude ADR 0131 (render-p1) dotyka Waszych dziedzin — po scaleniu zróbcie `git merge main`
+- **asphalt:** `_CRACKS` w `WorldPBR.shader`: smoothness zalewki = asfalt + 0,06 (było 0,55 → biała pod kątem). Maska zalewki (warped Voronoi w `sets_asphalt.py`) nadal ma pętle i kropki — P2 dla Was (wymaga build_all + reimport).
+- **furniture:** `FurnitureSign.shader` ograniczony do 4 przebiegów (384 → 96 wariantów w APK; bez SSAO/probe blending na licu), `FurnitureRetroSource` 0 B GC (+ `FurnitureRetroSourceAllocTests`). W `FurnitureSignTests` test liczby przebiegów akceptuje mniej niż Lit; testy parytetu GPU porównują tylko keywordy, które shader jeszcze kompiluje.
+- **landmarks/megascans:** pokrywy włazów Fab → Kamion/World PBR `_DECAL_ALPHA` (+ `_DecalCells`), `FabDecalRetrofit.RunBatch`.
