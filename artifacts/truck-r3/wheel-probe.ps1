@@ -4,7 +4,7 @@ $ErrorActionPreference='Stop'
 Set-Location (Resolve-Path "$PSScriptRoot/../..")
 if ($Prefix -notmatch '^[a-z0-9-]+$') { throw 'Nieprawidłowy Prefix.' }
 $Modes=@($Modes | ForEach-Object {$_.Split(',')})
-if (@($Modes | Where-Object {$_ -notin @('flat','albedo','geonormal','mappednormal','atlas-mask','uv')}).Count) { throw 'Nieznany kanał.' }
+if (@($Modes | Where-Object {$_ -notin @('flat','flat-twosided','albedo','geonormal','mappednormal','atlas-mask','uv')}).Count) { throw 'Nieznany kanał.' }
 uv run --project tools/worldgen python art-source/truck/exterior/qa/prepare_wheel_probe_0115.py
 if ($LASTEXITCODE -ne 0) { throw 'Nie przygotowano adaptera.' }
 . scripts/env.ps1
