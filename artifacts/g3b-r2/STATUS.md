@@ -7,3 +7,8 @@ Kod: ekran wiaduktu `noise_glass_lined` haze 0.06->0.02, linie 22->44/v (okres 0
 Testy: `tests/gis/test_g3b_r2.py` 4 passed 1 skipped (przed buildem), test_g3b_lowread zielony.
 OTWARTE: artefakt "duchow" drzew na szybie - diagnoza wymaga Unity (PHONE_RUN aktywny od 17:34).
 NASTEPNY KROK: `pwsh artifacts/g3b-r2/run-all-2.ps1 -Name after -Tag 1` (build -> fidelity -> pytest || import -> SBS Low overcast+clear -> EditMode), potem `cd artifacts/g3b-r2; BASE=../../../g3b-lowread/artifacts/g3b-lowread/final ...make-pairs`.
+
+## 2. Build 1 OK (~17:55)
+build_world 527 s exit 0; portal Andersa 14 m / H 6,1 m (tablice dolem 5,2-5,5 m), strefy stale 0; test_g3b_r2 5 passed. Regeneracja generated/* jeszcze nie scommitowana (po zielonym cyklu).
+W TLE: import-1 -> SBS Low overcast -> SBS Low clear do `artifacts/g3b-r2/after/renders` (czeka na slot Unity / PHONE_RUN), znacznik `artifacts/g3b-r2/cycle1.done`.
+NASTEPNY KROK: po `cycle1.done`: `cd artifacts/g3b-r2; BASE=../../../g3b-lowread/artifacts/g3b-lowread/final OUT=pairs-after bash make-pairs.sh after; BASE=../../../g3b-lowread/artifacts/g3b-lowread/final LIGHT=Low-clear OUT=pairs-after-clear bash make-pairs.sh after` -> obejrzec 494288 (duchy!), 810525, 1801374, 275528, 3678296.
