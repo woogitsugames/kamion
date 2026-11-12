@@ -16,6 +16,10 @@ namespace NavRunner
             const string region = "bialystok-industrial-c";
             var g = RouteGraph.Load(region);
             if (g == null) { Console.WriteLine("FAIL: region graph not loaded"); return 1; }
+            // --write-golden [file]: re-record length, cost and manoeuvres of every golden pair from the C# planner (after a
+            // graph regeneration); ids, endpoints and justifications stay. Review the diff before committing.
+            if (args.Length > 0 && args[0] == "--write-golden")
+                return GoldenWriter.Write(g, args.Length > 1 ? args[1] : "tools/nav-runner/Golden/golden_routes.json");
             Console.WriteLine($"region {region}: v{g.Version}, {g.NodeCount} nodes, {g.EdgeCount} edges, {g.RestrFrom.Length} restrictions");
 
             Console.WriteLine("--- graph quality report ---");
@@ -64,8 +68,9 @@ namespace NavRunner
             Vector2 A = new Vector2(-1.7f, -897.8f), B = new Vector2(-172f, -298f);
             planner.Plan(A, float.NaN, B, p);
             for (int i = 0; i < 50; i++) tr.Update(p, p.Points[i % p.Count], 0f, 10f, 0.02f, ref gd);
+            var sw = new Stopwatch();   // created outside the measured window (a Stopwatch is a 40 B object)
             long before = GC.GetAllocatedBytesForCurrentThread();
-            var sw = Stopwatch.StartNew();
+            sw.Start();
             for (int i = 0; i < 20; i++) planner.Plan(i % 2 == 0 ? A : B, float.NaN, i % 2 == 0 ? B : A, p);
             sw.Stop();
             for (int i = 0; i < 2000; i++) tr.Update(p, p.Points[(i / 3) % p.Count] + new Vector2(1f, 0f), i * 0.5f, 10f, 0.02f, ref gd);

@@ -39,11 +39,12 @@ namespace NavRunner.Sim
                     r.RestrictionsOutOfRange++;
                     r.SuspiciousRestrictions.Add($"restriction {i}: from {f} via {v} to {t} out of range");
                 }
-                else if (g.StartNode(t) != v && g.EndNode(t) != v)
+                // restrictions hold undirected edge indices (KRTG); StartNode/EndNode take directed ids (edge << 1)
+                else if (g.EdgeFrom[t] != v && g.EdgeTo[t] != v)
                 {
                     r.SuspiciousRestrictions.Add($"restriction {i}: via node {v} is not an endpoint of to-edge {t}");
                 }
-                else if (g.EndNode(f) != v && g.StartNode(f) != v)
+                else if (g.EdgeFrom[f] != v && g.EdgeTo[f] != v)
                 {
                     r.SuspiciousRestrictions.Add($"restriction {i}: via node {v} is not an endpoint of from-edge {f}");
                 }

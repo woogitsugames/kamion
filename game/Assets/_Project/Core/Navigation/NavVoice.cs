@@ -33,14 +33,16 @@ namespace Game.Core.Navigation
         public static readonly byte[] BandBlock = { 6, 6, 5, 4, 3, 2, 1 };
         public const int NowBand = 6;
 
-        /// <summary>Band index (0 = 2000 m .. 5 = 100 m, 6 = "now") for a manoeuvre at <paramref name="distM"/> at <paramref name="speedMs"/>; -1 = too far.</summary>
+        /// <summary>Band index (0 = 2000 m .. 5 = 100 m, 6 = "now") for a manoeuvre at <paramref name="distM"/> at <paramref name="speedMs"/>; -1 = too far.
+        /// The band is the smallest one that still contains the distance (450 m -> "500 m"); "now" when the band or the distance
+        /// is below the reaction + braking distance.</summary>
         public static int BandFor(float distM, float speedMs)
         {
             float safe = SafeAnnounceM(speedMs);
             int b = -1;
-            for (int i = 0; i < BandM.Length; i++) if (distM <= BandM[i]) { b = i; break; }
+            for (int i = BandM.Length - 1; i >= 0; i--) if (distM <= BandM[i]) { b = i; break; }
             if (b < 0) return -1;
-            if (BandM[b] < safe) return NowBand;
+            if (BandM[b] < safe || distM < safe) return NowBand;
             return b;
         }
 
@@ -104,8 +106,8 @@ namespace Game.Core.Navigation
         /// <summary>Roundabout-name clip (B14) when the ring is one of the named roundabouts of the region; (0,0) otherwise.</summary>
         public static VoiceClip RoundaboutNameClip(string ringName)
         {
-            if (ringName != null && ringName.StartsWith("Rondo Krzysztofa Jakuba Putry")) return new VoiceClip(14, 1);
-            if (ringName != null && ringName.StartsWith("Rondo Pamięci Bieżeństwa")) return new VoiceClip(14, 2);
+            if (ringName != null && ringName.StartsWith("Rondo Krzysztofa Jakuba Putry", System.StringComparison.Ordinal)) return new VoiceClip(14, 1);
+            if (ringName != null && ringName.StartsWith("Rondo Pamięci Bieżeństwa", System.StringComparison.Ordinal)) return new VoiceClip(14, 2);
             return new VoiceClip(0, 0);
         }
 
@@ -172,7 +174,9 @@ namespace Game.Core.Navigation
                 if (m == Maneuver.Roundabout && n < buf.Length)
                 {
                     buf[n++] = RoundaboutExitClip(p.ManTurn[gd.Next], gd.NextExit);
-                    string ring = g.Names[p.ManName[gd.Next]];
+                    // ManName of a roundabout manoeuvre is the exit street; the ring's name is on the path segment that
+                    // starts at the manoeuvre point (the first ring edge).
+                    string ring = g.Names[p.Name[p.ManPoint[gd.Next]]];
                     VoiceClip rc = RoundaboutNameClip(ring);
                     if (rc.Block != 0 && n < buf.Length) buf[n++] = rc;
                 }

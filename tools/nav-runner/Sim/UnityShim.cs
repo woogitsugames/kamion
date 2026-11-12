@@ -1,7 +1,7 @@
 // Minimal UnityEngine stand-in so the game's navigation sources (Game.Core.Navigation: RouteGraph, RoutePlanner,
 // RoutePath, RouteTracker, NavEta, NavVoice) compile in the .NET runner unchanged (ADR 0150). Only what those files
-// use; semantics copied from the Unity scripting reference (SignedAngle: + = clockwise from `from` to `to` in a
-// y-up frame, i.e. + = right for x-east/y-north). Resources.Load reads the real files under
+// use; semantics copied from the Unity scripting reference (SignedAngle: + = counter-clockwise from `from` to `to`,
+// i.e. + = left for x-east/y-north). Resources.Load reads the real files under
 // game/Assets/_Project/UI/Resources (repo root found by walking up from the assembly location), so the runner
 // tests the committed <region>_route.bytes.
 using System;
@@ -55,7 +55,8 @@ namespace UnityEngine
         public static Vector2 Min(Vector2 a, Vector2 b) => new Vector2(Math.Min(a.x, b.x), Math.Min(a.y, b.y));
         public static Vector2 Max(Vector2 a, Vector2 b) => new Vector2(Math.Max(a.x, b.x), Math.Max(a.y, b.y));
         public static Vector2 Lerp(Vector2 a, Vector2 b, float t) => a + (b - a) * Mathf.Clamp01(t);
-        // Unity: angle in degrees from `from` to `to`, + clockwise in the y-up screen/world frame (+ = right for x-east/y-north).
+        // Unity: signed angle in degrees from `from` to `to`, + = COUNTER-clockwise (Unity: Angle * Sign(from.x*to.y - from.y*to.x));
+        // for x-east/y-north + = left. RoutePlanner.SignedTurn swaps the arguments (+ = right).
         public static float SignedAngle(Vector2 from, Vector2 to)
         {
             float dot = Dot(from, to);
@@ -91,17 +92,22 @@ namespace UnityEngine
         public static string Find()
         {
             if (s_Root != null) return s_Root;
-            var dir = new DirectoryInfo(AppContext.BaseDirectory);
-            while (dir != null)
+            // assembly location first (tests, runner), then the working directory (tools built outside the repo)
+            foreach (string start in new[] { AppContext.BaseDirectory, Directory.GetCurrentDirectory() })
             {
-                if (Directory.Exists(Path.Combine(dir.FullName, "game", "Assets", "_Project", "UI", "Resources")))
+                var dir = new DirectoryInfo(start);
+                while (dir != null)
                 {
-                    s_Root = dir.FullName;
-                    return s_Root;
+                    if (Directory.Exists(Path.Combine(dir.FullName, "game", "Assets", "_Project", "UI", "Resources")))
+                    {
+                        s_Root = dir.FullName;
+                        return s_Root;
+                    }
+                    dir = dir.Parent;
                 }
-                dir = dir.Parent;
             }
-            throw new DirectoryNotFoundException("repo root (game/Assets/_Project/UI/Resources) not found above " + AppContext.BaseDirectory);
+            throw new DirectoryNotFoundException("repo root (game/Assets/_Project/UI/Resources) not found above " + AppContext.BaseDirectory
+                                                 + " or " + Directory.GetCurrentDirectory());
         }
     }
 

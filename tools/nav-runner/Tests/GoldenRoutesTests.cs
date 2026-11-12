@@ -89,6 +89,25 @@ namespace NavRunner.Tests
             }
         }
 
+        /// <summary>Counterfactual (integration r6): the G02 detour over Rondo Pamięci Bieżeństwa exists only because the
+        /// median crossing of Andersa is flagged no-truck - without the flag the planner takes it (1706 m vs 3785 m).</summary>
+        [Fact]
+        public void NoTruckMedian_ForcesRoundaboutDetour()
+        {
+            var g = RouteGraph.Load(Region);
+            var a = new Vector2(-1.7f, -897.8f); var b = new Vector2(-457.95f, -55.97f);
+            var p = RoutePath.For(g);
+            Assert.Equal(PlanStatus.Ok, new RoutePlanner(g).Plan(a, float.NaN, b, p));
+            float withBan = p.Length;
+            bool ring = false;
+            for (int i = 0; i < p.DirectedCount; i++) if (g.IsRoundabout(p.Directed[i] >> 1)) ring = true;
+            Assert.True(ring, "G02 turns round on a roundabout");
+            for (int e = 0; e < g.EdgeCount; e++) g.EdgeFlags[e] = (byte)(g.EdgeFlags[e] & ~RouteGraph.FlagNoTruck);
+            var q = RoutePath.For(g);
+            Assert.Equal(PlanStatus.Ok, new RoutePlanner(g).Plan(a, float.NaN, b, q));
+            Assert.True(q.Length < withBan - 1000f, $"without no-truck flags the route is much shorter ({q.Length:F0} vs {withBan:F0} m)");
+        }
+
         public static IEnumerable<object[]> GoldenCases()
         {
             foreach (var r in Load().routes) yield return new object[] { r };

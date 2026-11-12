@@ -61,23 +61,25 @@ namespace NavRunner.Tests
         {
             var q = new NavVoiceQueue();
             var a = new VoiceClip(4, 1); var b = new VoiceClip(12, 10); var c = new VoiceClip(3, 2); var d = new VoiceClip(5, 1);
+            // Only the queue calls are inside the measured window (xUnit asserts allocate); results checked afterwards.
+            var ok = new bool[12]; var outs = new VoiceClip[5];
+            q.Enqueue(a); q.Clear(); q.TryDequeue(out _);   // JIT warm-up
             long before = System.GC.GetAllocatedBytesForCurrentThread();
-            Assert.True(q.Enqueue(a));
-            Assert.False(q.Enqueue(a), "immediate repeat dropped");
-            Assert.True(q.Enqueue(b));
-            Assert.False(q.Enqueue(b));
-            Assert.False(q.Enqueue(a), "repeat inside the 3-clip window dropped");
-            Assert.True(q.Enqueue(c));
-            Assert.True(q.Enqueue(d));
-            Assert.True(q.Enqueue(a), "repeat after 3 different clips allowed");
-            Assert.Equal(5, q.Count);
-            Assert.True(q.TryDequeue(out var c1)); Assert.Equal(a, c1);
-            Assert.True(q.TryDequeue(out var c2)); Assert.Equal(b, c2);
-            Assert.True(q.TryDequeue(out var c3)); Assert.Equal(c, c3);
-            Assert.True(q.TryDequeue(out var c4)); Assert.Equal(d, c4);
-            Assert.True(q.TryDequeue(out var c5)); Assert.Equal(a, c5);
-            Assert.False(q.TryDequeue(out _));
+            ok[0] = q.Enqueue(a);
+            ok[1] = !q.Enqueue(a);   // immediate repeat dropped
+            ok[2] = q.Enqueue(b);
+            ok[3] = !q.Enqueue(b);
+            ok[4] = !q.Enqueue(a);   // repeat inside the 3-clip window dropped
+            ok[5] = q.Enqueue(c);
+            ok[6] = q.Enqueue(d);
+            ok[7] = q.Enqueue(a);    // repeat after 3 different clips allowed
+            int count = q.Count;
+            for (int i = 0; i < 5; i++) q.TryDequeue(out outs[i]);
+            ok[8] = !q.TryDequeue(out _);
             long bytes = System.GC.GetAllocatedBytesForCurrentThread() - before;
+            for (int i = 0; i <= 8; i++) Assert.True(ok[i], "queue step " + i);
+            Assert.Equal(5, count);
+            Assert.Equal(new[] { a, b, c, d, a }, outs);
             Assert.Equal(0, bytes);
         }
 

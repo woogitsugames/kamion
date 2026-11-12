@@ -23,9 +23,10 @@ namespace NavRunner.Tests
         public void RemainingSeconds_OnSyntheticPath()
         {
             var p = new RoutePath(8, 4);
-            p.Add(new Vector2(0, 0), 0, 0, 3);          // class 3, no OSM limit -> 80 km/h
-            p.Add(new Vector2(100, 0), 0, 0, 3);
-            p.Add(new Vector2(200, 0), 0, 50, 1);       // class 1 with OSM limit 50 -> 50 km/h
+            // Name/limit/class of a point describe the segment that STARTS at it (RoutePath), so the last point's are unused.
+            p.Add(new Vector2(0, 0), 0, 0, 3);          // segment 0-100: class 3, no OSM limit -> 80 km/h
+            p.Add(new Vector2(100, 0), 0, 50, 3);       // segment 100-200: OSM limit 50 caps class 3 -> 50 km/h
+            p.Add(new Vector2(200, 0), 0, 0, 0);
             // full: 100 m @ 80 km/h + 100 m @ 50 km/h = 4.5 + 7.2 = 11.7 s
             Assert.Equal(11.7, NavEta.RemainingSeconds(p, 0f), 0.01);
             Assert.Equal(7.2, NavEta.RemainingSeconds(p, 100f), 0.01);
