@@ -35,7 +35,7 @@ from .markings import _lanes_continue, lane_layout
 
 CARRIAGEWAY = {"road_asphalt", "road_asphalt_new", "road_concrete", "road_paving", "road_sett", "road_gravel"}
 OBSTACLE = {"curb_concrete": "kerb", "sidewalk_paving": "sidewalk", "verge_grass": "verge_grass",
-            "shoulder_gravel": "shoulder", "bridge_concrete": "bridge_kerb"}
+            "shoulder_gravel": "shoulder", "bridge_concrete": "bridge_kerb", "bridge_cap_red": "bridge_kerb"}
 DRIVABLE = ["carriageway", "yard", "apron"]     # a lane may run onto a flush yard or a roundabout apron
 PAINT = ("lane", "centre", "P-4", "P-7b", "P-8", "P-10", "P-13", "P-14")
 GROUND_PROPS = ("lamp_", "sign_post", "signal_pole", "signal_mast", "power_pole", "pylon", "bollard", "bus_shelter",

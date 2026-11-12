@@ -165,11 +165,10 @@ namespace Game.Tests
                 var engUpdate = (Action)Delegate.CreateDelegate(typeof(Action), audio.Engine, engMi);
                 for (int i = 0; i < 20; i++) { update(); engUpdate(); }
                 AudioCues.HornHeld = true;
-                long before = GC.GetAllocatedBytesForCurrentThread();
-                for (int i = 0; i < 300; i++) { update(); engUpdate(); }
-                long allocated = GC.GetAllocatedBytesForCurrentThread() - before;
+                GcAllocCounter.AssertZero(
+                    () => { for (int i = 0; i < 300; i++) { update(); engUpdate(); } },
+                    message: "TruckAudioController + EngineAudio update must not allocate (ElevenLabs set)");
                 AudioCues.HornHeld = false;
-                Assert.AreEqual(0, allocated, "TruckAudioController + EngineAudio update must not allocate (ElevenLabs set)");
             }
             finally { AudioPreferences.EngineSource = saved; AudioCues.HornHeld = false; }
         }

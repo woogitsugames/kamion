@@ -102,8 +102,7 @@ namespace PhysicsRunner.Sim
                 var ts = s.Body.State;
                 var trs = s.TrailerBody != null ? s.TrailerBody.State : default;
                 s.Combo.Step(dt, ts, trs, inp, s.Ground);
-                s.Body.Integrate(dt, s.Combo.TractorForce, s.Combo.TractorTorque);
-                s.TrailerBody?.Integrate(dt, s.Combo.TrailerForce, s.Combo.TrailerTorque);
+                ScenarioRunner.StepBodies(s, dt);
                 t += dt;
                 var smp = ScenarioRunner.MakeSample(t, s, inp);
                 if (double.IsNaN(tr.ManoeuvreEndT) && Vec3.Dot(s.Body.Position - p0, f0) >= xEnd) tr.ManoeuvreEndT = t;

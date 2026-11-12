@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "id": "fuzz_gravel_cargo24",
+  "description": "M34 fuzz: seeded random inputs, gravel flat, 24 t cargo, 60 s",
+  "spec": "docs/04 s6.12/s6.14 (M34 fuzz)",
+  "combination": "cargo24",
+  "ground": {
+    "gradePercent": 0,
+    "surface": "gravel"
+  },
+  "initial": {},
+  "duration": 60,
+  "dt": 0.01,
+  "substeps": 4,
+  "driver": {
+    "type": "fuzz",
+    "seed": 16,
+    "holdMinS": 0.4,
+    "holdMaxS": 2.0,
+    "touchChain": false
+  },
+  "checks": [
+    {
+      "metric": "nan_detected",
+      "status": "WORKING_VALUE",
+      "source": "M34 fuzz invariant: no NaN/Inf in any body state (docs/04 s6.14)",
+      "max": 0
+    },
+    {
+      "metric": "max_pos_jump_m",
+      "status": "WORKING_VALUE",
+      "source": "M34 fuzz invariant: no teleportation; |dx_com - v*dt| residual must stay at numerical-noise level (k=1: any real motion is v*dt; threshold 1e-4 m = 0.1 mm slack)",
+      "max": 0.0001
+    },
+    {
+      "metric": "max_dv_step_ms",
+      "status": "WORKING_VALUE",
+      "source": "M34 fuzz invariant: per-step velocity change of either body <= 0.35 m/s (same ceiling as kerb scenarios; solver impulse spikes would exceed it)",
+      "max": 0.35
+    },
+    {
+      "metric": "max_tire_friction_ratio",
+      "status": "WORKING_VALUE",
+      "source": "M34 fuzz invariant: sqrt(Fx^2+Fy^2) <= mu*Fz on every loaded wheel; combined-slip model bounds it by construction, margin 0.001 for float rounding",
+      "max": 1.001
+    },
+    {
+      "metric": "articulation_limit_excess_deg",
+      "status": "WORKING_VALUE",
+      "source": "M34 fuzz invariant: articulation angle stays inside the fifth-wheel yaw hard stop (yawLimitDeg = 90, tractor_4x2_generic.vehicle.json)",
+      "max": 0
+    },
+    {
+      "metric": "max_fifth_wheel_error_mm",
+      "status": "WORKING_VALUE",
+      "source": "M34 fuzz invariant: kingpin/saddle constraint position error <= 5 mm (same as soak)",
+      "max": 5
+    },
+    {
+      "metric": "min_air_all_bar",
+      "status": "WORKING_VALUE",
+      "source": "M34 fuzz invariant: no negative air pressure in any reservoir/line (physical impossibility)",
+      "min": 0
+    }
+  ]
+}

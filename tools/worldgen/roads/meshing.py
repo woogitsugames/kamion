@@ -6,6 +6,7 @@ simplified collision mesh. Coordinates: local E, N, U (metres). Triangles CCW se
 from __future__ import annotations
 
 import math
+import re
 from dataclasses import dataclass, field
 
 import numpy as np
@@ -162,6 +163,10 @@ def _profile_rows(kind, h, w, depth, mat, coarse):
 
 def build_side_strip(buf, c, st, side, sgn, P, N, hw, br, coarse):
     params = [side_params(c, side, s) for s in st]
+    _wl = c.meta.get("walled")      # ADR 0146: stations of the spans proper (coated cap), not of the walled ramps
+    capm = np.asarray(br, bool) if br is not None else np.zeros(len(st), bool)
+    if _wl is not None:
+        capm = capm & ~(c.interp(_wl.astype(float), st) > 0.5)
     kinds = {p[0] for p in params}
     # inner side of curves: compress the profile so it does not fold
     kap = c.line.curvature(st) * sgn
@@ -202,10 +207,10 @@ def build_side_strip(buf, c, st, side, sgn, P, N, hw, br, coarse):
                 prm[0] = (kr, prm[1][1], *prm[0][2:])
             _emit_strip(buf, G[sl], (N * sgn)[sl], zg[sl], prm, kap[sl], hw[sl], side == "R",
                         br[sl] if br is not None else None, coarse, f"{c.id}:{side}:{r}",
-                        noflange=None if nofl is None else nofl[sl])
+                        noflange=None if nofl is None else nofl[sl], capm=capm[sl])
         return
     _emit_strip(buf, G, N * sgn, zg, params, kap, hw, side == "R",
-                br, coarse, c.id + ":" + side, noflange=nofl)
+                br, coarse, c.id + ":" + side, noflange=nofl, capm=capm)
 
 
 def _emit_verge(buf, G, OUT, zg, H, VW, kap_toward, hw, flip, src):
@@ -265,7 +270,7 @@ def _emit_verge(buf, G, OUT, zg, H, VW, kap_toward, hw, flip, src):
 KERB_TOP_UV_MAX_W = 0.4
 
 
-def _emit_strip(buf, G, OUT, zg, params, kap_toward, hw, flip, br, coarse, src, noflange=None):
+def _emit_strip(buf, G, OUT, zg, params, kap_toward, hw, flip, br, coarse, src, noflange=None, capm=None):
     """G: gutter points (n,2), OUT: unit outward vectors (n,2) (may be miter-scaled), zg gutter z,
     params: per-point side params, kap_toward: curvature toward this side (>0 = side is inside)."""
     n = len(G)
@@ -293,6 +298,8 @@ def _emit_strip(buf, G, OUT, zg, params, kap_toward, hw, flip, br, coarse, src, 
     # (REVIEW r4 W-H5, Andersa slip lane, ADR 0033). The bottom skirt keeps its full depth.
     vscale = np.where(np.array([p[0] in (RURAL, MEDIAN_RURAL) for p in params]), scale, 1.0)
     layer = "collision" if coarse else "road"
+    _w = re.search(r"w(\d+)", str(src))
+    cap_mat = BRIDGE_STYLES.get(_w.group(1), {}).get("cap_mat") if _w else None
     for k in range(nseg):
         mats = [pr[k][4] for pr in profs]
         # majority material; a tie goes to the one met first along the strip. `max(set(mats), ...)` broke ties by
@@ -355,24 +362,37 @@ def _emit_strip(buf, G, OUT, zg, params, kap_toward, hw, flip, br, coarse, src, 
                 Vg[1::2, :2] += np.asarray(OUT, float) * (dep * S.VERGE_SKIRT_SLOPE)[:, None]
                 buf.add("road", "verge_grass", Vg, Vg[:, :2].copy(), T[one], footprint=False, src=src + ":vg")     # ":vg" = merged into the terrain mesh
             T = T[~(both | one)]
-        cmat = ("collision_" + ("curb" if mat == "curb_concrete" else "asphalt" if mat.startswith("road_") else
-                                "paving" if mat in ("sidewalk_paving", "apron_sett", "bridge_concrete") else
-                                "grass")) if coarse else mat
-        # ADR 0123 (REVIEW s10-0117 P1-3): the top of a bridge cap (kapa: the concrete strip behind the kerb of a deck
-        # or a walled ramp) carries road film in COLOR_0.r (Kamion/World PBR _VERTEX_GRIME, manifest `vertex_grime` of
-        # bridge_concrete): heaviest at the kerb, where spray and grit land - same material, no extra draw call
-        COL = None
-        if not coarse and not vertical and mat == "bridge_concrete":
-            COL = np.zeros((2 * n, 4))
-            COL[0::2, 0], COL[1::2, 0] = S.CAP_GRIME[0], S.CAP_GRIME[1]
-        if br is not None and np.any(br):
-            tri_st = np.minimum(T.min(1) // 2, n - 2)
-            onb = br[tri_st] | br[np.minimum(tri_st + 1, n - 1)]
-            buf.add(layer, cmat, V, UV, T[~onb], footprint=(not coarse and not vertical), src=src, UV1=UV1, COL=COL)
-            buf.add("collision" if coarse else "bridge", cmat, V, UV, T[onb], footprint=False, src=src, UV1=UV1, COL=COL)
-        else:
-            buf.add(layer, cmat, V, UV, T, footprint=(not coarse and not vertical and not is_flange), src=src, UV1=UV1,
-                    COL=COL)
+        # ADR 0146: coated deck cap (bridge_style `cap_mat`) on the SPANS only (`capm`: bridge and not a walled ramp;
+        # Mapillary 494288258686575 on the deck: red-brown coat, 810896133189484 on the ramp: bare light concrete).
+        # Kerb and fascia stay concrete. The coat keeps a lighter road film (CAP_COAT_GRIME).
+        groups = [(mat, T)]
+        if not coarse and not vertical and mat == "bridge_concrete" and cap_mat and capm is not None and len(T):
+            ts = np.minimum(T.min(1) // 2, n - 2)
+            on = capm[ts] & capm[np.minimum(ts + 1, n - 1)]
+            groups = [(cap_mat, T[on]), (mat, T[~on])]
+        for mat, T in groups:
+            cmat = ("collision_" + ("curb" if mat == "curb_concrete" else "asphalt" if mat.startswith("road_") else
+                                    "paving" if mat in ("sidewalk_paving", "apron_sett", "bridge_concrete") else
+                                    "grass")) if coarse else mat
+            # ADR 0123 (REVIEW s10-0117 P1-3): the top of a bridge cap (kapa: the concrete strip behind the kerb of a
+            # deck or a walled ramp) carries road film in COLOR_0.r (Kamion/World PBR _VERTEX_GRIME, manifest
+            # `vertex_grime` of the material): heaviest at the kerb, where spray and grit land - no extra draw call
+            COL = None
+            if not coarse and not vertical and mat in ("bridge_concrete", cap_mat):
+                g0, g1 = S.CAP_GRIME if mat == "bridge_concrete" else S.CAP_COAT_GRIME
+                COL = np.zeros((2 * n, 4))
+                COL[0::2, 0], COL[1::2, 0] = g0, g1
+            if not len(T):
+                continue
+            if br is not None and np.any(br):
+                tri_st = np.minimum(T.min(1) // 2, n - 2)
+                onb = br[tri_st] | br[np.minimum(tri_st + 1, n - 1)]
+                buf.add(layer, cmat, V, UV, T[~onb], footprint=(not coarse and not vertical), src=src, UV1=UV1, COL=COL)
+                buf.add("collision" if coarse else "bridge", cmat, V, UV, T[onb], footprint=False, src=src, UV1=UV1,
+                        COL=COL)
+            else:
+                buf.add(layer, cmat, V, UV, T, footprint=(not coarse and not vertical and not is_flange), src=src,
+                        UV1=UV1, COL=COL)
 
 
 # Per-bridge look from authored overrides `kind: bridge_style` (keyed by OSM way id, set by roads.pipeline):
@@ -487,6 +507,21 @@ def build_bridge_extras(buf, c, st, P, N, hw, br):
                 # winding: the strip faces outward (left side reversed)
                 if sgn > 0:
                     buf.parts[-1].T = buf.parts[-1].T[:, [0, 2, 1]]
+                # ADR 0146 (REVIEW s14-0139 P2-3): `ramp_fascia` - the band on top of the retaining walls of the
+                # ramps has its own colour (Mapillary 810525063224609 / 209622370971977: green on the spans over the
+                # roundabout, red on the block-faced ramp walls)
+                wl_ = c.meta.get("walled")
+                if style.get("ramp_fascia") and wl_ is not None:
+                    prt = buf.parts[-1]
+                    wk = c.interp(wl_.astype(float), 0.5 * (ss[:-1] + ss[1:])) > 0.5
+                    wt = np.tile(wk, 2)
+                    if wt.any() and len(prt.T) == len(wt):
+                        buf.add("bridge", f"bridge_fascia_{style['ramp_fascia']}", prt.V, prt.UV, prt.T[wt],
+                                src=c.id + ":fascia")
+                        if (~wt).any():
+                            prt.T = prt.T[~wt]
+                        else:
+                            buf.parts.remove(prt)
             if side in screen_sides(c, style) and not hero:    # transparent noise screen on posts at the deck edge
                 e = top - np.column_stack([nn0 * sgn * 0.05, np.zeros(len(ss))])
                 _strip(buf, "bridge", "noise_glass_lined", e + [0, 0, 0.25], e + [0, 0, style["screen_h"]],
@@ -503,9 +538,15 @@ def build_bridge_extras(buf, c, st, P, N, hw, br):
                     s_p = float(ss[0]) + SCREEN_POST_M * k
                     pi = np.interp(s_p, ss, np.arange(len(ss)))
                     p3 = np.array([np.interp(pi, np.arange(len(ss)), e[:, d]) for d in range(3)])
-                    box(buf, "bridge", "barrier_steel", p3[:2] + c.line.frame(s_p)[1] * sgn * 0.06,
-                        c.line.frame(s_p)[0], SCREEN_POST_W / 2, 0.09, p3[2] - 0.05, p3[2] + style["screen_h"] + 0.1,
+                    # ADR 0146 (REVIEW s14-0139 P2-2): H-section, not a deep square box - road-side flange
+                    # SCREEN_POST_W wide + web behind it. The 0.18 m deep box showed its dark side through the glass
+                    # (a ~30 px band behind every near post on 494288). Two boxes, 20 triangles per post.
+                    t_p, n_p = c.line.frame(s_p)
+                    pm = style.get("screen_post_mat") or "barrier_steel"
+                    z0p, z1p = p3[2] - 0.05, p3[2] + style["screen_h"] + 0.1
+                    box(buf, "bridge", pm, p3[:2] - n_p * sgn * 0.03, t_p, SCREEN_POST_W / 2, 0.008, z0p, z1p,
                         c.id + ":screen")
+                    box(buf, "bridge", pm, p3[:2] + n_p * sgn * 0.06, t_p, 0.006, 0.09, z0p, z1p, c.id + ":screen")
         # retaining walls of a walled ramp (profile.mark_walled_ramps): block-faced wall from the deck edge down to
         # 0.5 m below the NMT beside it, facing outward; also a collision wall
         wl = c.meta.get("walled")
@@ -522,8 +563,18 @@ def build_bridge_extras(buf, c, st, P, N, hw, br):
                     bot = top.copy()
                     bot[:, 2] = np.minimum(zg, top[:, 2] - 0.3)
                     off = np.column_stack([nn0[wr] * sgn * 0.02, np.zeros(len(wr))])
+                    # ADR 0146 r2: the block facing ends under the painted band of the cap edge. It ran up to the cap
+                    # top 5 mm in front of the band, so the red band of `ramp_fascia` was never seen (slab section
+                    # at E -428 N -79: ramp_wall_blocks to 135.24, bridge_fascia_red 134.69-135.26 behind it).
+                    vtop = top.copy()
+                    if style["fascia"] and not hero:
+                        vtop[:, 2] -= FASCIA_BAND_H - 0.02
+                    vbot = bot.copy()
+                    vbot[:, 2] = np.minimum(vbot[:, 2], vtop[:, 2] - 0.05)
                     for layer, mat in (("bridge", "ramp_wall_blocks"), ("collision", "collision_fence")):
-                        _strip(buf, layer, mat, bot + off, top + off, c.id + ":ramp_wall", both=False)
+                        vis = layer == "bridge"
+                        _strip(buf, layer, mat, (vbot if vis else bot) + off, (vtop if vis else top) + off,
+                               c.id + ":ramp_wall", both=False)
                         if sgn > 0:
                             buf.parts[-1].T = buf.parts[-1].T[:, [0, 2, 1]]
         # balustrade on both cap edges (WORKING_VALUE geometry, low confidence): open steel railing =
@@ -554,6 +605,86 @@ def build_bridge_extras(buf, c, st, P, N, hw, br):
                 t2 = c.line.frame(s_p)[0]
                 box(buf, "bridge", "barrier_steel", p3[:2] - c.line.frame(s_p)[1] * sgn * 0.03, t2, 0.04, 0.03,
                     p3[2], p3[2] + S.BRIDGE_PARAPET_H, c.id + ":parapet")
+
+
+MEDIAN_FILL_MAX_GAP_M = 14.0     # WORKING_VALUE: widest gap between the inner cap edges that is filled
+
+
+def build_median_fills(buf, net):
+    """ADR 0146: grass median between the two carriageways of a dual road on a shared retained embankment
+    (`median_fill` of a profile tie, `<region>/profile_ties.json`). Each carriageway is its own walled ramp
+    (profile.mark_walled_ramps); without the fill the median was a slot down to the NMT between two retaining walls,
+    and from one carriageway the other stood on a wall (Mapillary 810896133189484: both carriageways level, grass
+    median with a guardrail; orthophoto 0.08 m: grass from the abutment at E -462 to the junction).
+    The strip joins the inner cap edges of both chains over the tied stretch where both are walled, with an end
+    wall at each end. Returns the report rows."""
+    out = []
+    for tie in getattr(net, "profile_ties", []) or []:
+        if not tie.get("median_fill"):
+            continue
+        c = next((x for x in net.chains if any(str(e) == tie["chain_edge"] for e, _ in x.edges)), None)
+        g = next((x for x in net.chains if any(str(e) == tie["follow_edge"] for e, _ in x.edges)), None)
+        wc = None if c is None else c.meta.get("walled")
+        wg = None if g is None else g.meta.get("walled")
+        if wc is None or wg is None:
+            out.append({"id": tie.get("id"), "filled_m": 0.0, "why": "chain not found or not walled"})
+            continue
+        sa = c.line.project(np.asarray(tie["from_en"], float))[0]
+        sb = c.line.project(np.asarray(tie["to_en"], float))[0]
+        sa, sb = min(sa, sb), max(sa, sb)
+
+        def edge(ch, s, sgn):
+            side = "L" if sgn > 0 else "R"
+            kind, kh, w, depth, mat = side_params(ch, side, s)
+            prof = side_profile(kind, kh, w, depth, mat)
+            h = float(ch.hw_at(s))
+            q = ch.line.point(s) + ch.line.frame(s)[1] * sgn * (h + prof[-1][2])
+            return np.array([q[0], q[1], float(ch.crossfall_z(s, sgn * h)) + prof[-1][1]])
+
+        A, B, low = [], [], []
+        for s_c in np.arange(sa, sb + 1e-6, 2.0):
+            if c.interp(wc.astype(float), s_c) < 0.5:
+                continue
+            p = c.line.point(s_c)
+            s_g, lat = g.line.project(p)
+            if not (0.0 < s_g < g.length) or g.interp(wg.astype(float), s_g) < 0.5:
+                continue
+            sg_c = 1.0 if c.line.project(g.line.point(s_g))[1] > 0 else -1.0      # side of c that faces g
+            sg_g = 1.0 if lat > 0 else -1.0                                        # side of g that faces c
+            a, b = edge(c, s_c, sg_c), edge(g, s_g, sg_g)
+            if not (0.3 < np.hypot(*(a[:2] - b[:2])) < MEDIAN_FILL_MAX_GAP_M):
+                continue
+            A.append(a); B.append(b)
+            low.append(min(float(c.interp(c.meta["walled_zg"]["L" if sg_c > 0 else "R"], s_c)),
+                           float(g.interp(g.meta["walled_zg"]["L" if sg_g > 0 else "R"], s_g))) - 0.5)
+        if len(A) < 2:
+            out.append({"id": tie.get("id"), "filled_m": 0.0, "why": "no station where both chains are walled"})
+            continue
+        A, B = np.array(A), np.array(B)
+        n = len(A)
+        V = np.concatenate([A[:, None, :], B[:, None, :]], axis=1).reshape(-1, 3)
+        up = np.cross(A[1] - A[0], B[0] - A[0])[2] > 0            # (A0, A1, B0) faces up?
+        T = grid_tris(n, 2, flip=False)
+        t0 = V[T[0]]
+        if np.cross(t0[1] - t0[0], t0[2] - t0[0])[2] < 0:
+            T = T[:, [0, 2, 1]]
+        src = f"{c.id}:median_fill"
+        buf.add("bridge", "verge_grass", V, V[:, :2].copy(), T, src=src)
+        buf.add("collision", "collision_grass", V, V[:, :2].copy(), T, src=src)
+        for k, o in ((0, -1.0), (n - 1, 1.0)):                    # end walls (both windings: seen from either side)
+            a, b = A[k], B[k]
+            zb = min(low[k], a[2] - 0.3, b[2] - 0.3)
+            W = np.array([[a[0], a[1], zb], [b[0], b[1], zb], [b[0], b[1], b[2]], [a[0], a[1], a[2]]])
+            wd = float(np.hypot(*(a[:2] - b[:2])))
+            UVw = np.array([[0, 0], [wd, 0], [wd, b[2] - zb], [0, a[2] - zb]])
+            buf.add("bridge", "ramp_wall_blocks", W, UVw, np.array([[0, 1, 2], [0, 2, 3], [0, 2, 1], [0, 3, 2]]),
+                    src=src + ":end")
+        L = float(np.hypot(*np.diff(A[:, :2], axis=0).T).sum())
+        out.append({"id": tie.get("id"), "filled_m": round(L, 1), "stations": n,
+                    "width_m": [round(float(np.hypot(*(A - B)[:, :2].T).min()), 2),
+                                round(float(np.hypot(*(A - B)[:, :2].T).max()), 2)],
+                    "dz_edges_max_m": round(float(np.abs(A[:, 2] - B[:, 2]).max()), 2)})
+    return out
 
 
 def box(buf, layer, mat, center_xy, along, half_l, half_w, z0, z1, src):

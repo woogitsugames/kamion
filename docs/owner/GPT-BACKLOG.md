@@ -139,3 +139,11 @@ Procesy GPT pozostawione bez ubijania (odczyt 16:30; sprawdzać PID **razem z Cr
 - Blokady STOP (nie usuwać — usuwa tylko sesja GPT po wznowieniu przez właściciela): `gpt-edge/artifacts/edge-r6/STOP.requested`, `gpt-furniture/artifacts/furniture-r3/24h/STOP_REQUESTED`, `gpt-life/artifacts/life-r5/STOP-REQUESTED.json` (+`STOP-DRAINED.json`), `gpt-light/artifacts/light-r6/STOP-REQUESTED.txt`.
 - Nie ruszać: worktree `gpt-*` (brudne celowo: cab 5 plików, sbs 7, vegetation 7 — kopie w `preserved-world-state/`, `pause-generated/`, `owner-pause-backup-20261112/`), nie przełączać gałęzi, nie `git add -A`/reset, nie kasować `Data/raw/derived`. Kopie artefaktów w main (`artifacts/<dziedzina>-rN/`) to migawki z chwili przekazania — autorytatywny stan w worktree.
 - Zadanie przejmowane przez Claude: nowa gałąź od main + `git checkout gpt-<…>-rN -- <ścieżki>` (nie merge całej gałęzi WIP z generated). Wszystkie liczby GPU A16 w przekazaniach = niezmierzone.
+
+## s16 (2026-11-12 23:5x, lider)
+- **Codex gpt-s16** (`docs/owner/CODEX-S16-12H.md`): r1 ADR 0153 LOD1/LOD2 aut w toku — baseline 114 kamer × 4 warunki, regeneracja B → import after; sha `0f3b14ef6`; gotowe do recenzji: NIE. Przekazanie: `artifacts/gpt-s16/PRZEKAZANIE.md`.
+- **ChatGPT 6 Pro G1–G10** (`docs/owner/GPT-PRO-RESEARCH-01.md`) zlecone; wyniki: ZIP → `research/gptpro/` albo gałęzie `gptpro/*` (brak na 23:5x).
+
+## s16 :07 (2026-11-13 00:4x)
+- **ChatGPT 6 Pro:** oddane na gałęziach: **G2** `gptpro/2-next-regions` (38 plików), **G3** `gptpro/3-s8-signs` (187 plików). Gałęzie G4, G6, G7, G8, G9 utworzone, ale **puste** (sesje padły z błędem). G1, G5, G10 — brak. Do przeglądu lidera: G2, G3 (licencje, współrzędne, wyrywkowo 20 %). Pozostałe 8 zleceń → rano przydzielić innym (priorytet G10, G1, G7, G5).
+- **Codex gpt-s16 r1** (0153 LOD aut): render after High-overcast, EditMode exit 0; recenzja otwarta; gotowe: NIE.

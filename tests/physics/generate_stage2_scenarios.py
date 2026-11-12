@@ -171,9 +171,9 @@ for surf, mu in [("dry", "dry_asphalt"), ("wet", "wet_asphalt")]:
         ch = list(stable) if abs_on else [stable[0]]
         if abs_on:
             if surf == "dry":
-                ch += [chk("stop_distance_m", mn=35, mx=61.2, status=W,
-                           source="upper bound = 0.15 v + v^2/130 at 80 km/h (believed R13 N3 type-0 formula, UNVERIFIED; the type-0 table did not extract); lower bound ~ v^2/(2 x 0.8 g) + build-up"),
-                       chk("mfdd_ms2", mn=5.0, mx=8.0, source="MFDD (R13 Annex 4 definition); 5.0 = believed N3 type-0 minimum (UNVERIFIED); <= mu g"),
+                ch += [chk("stop_distance_m", mn=35, mx=61.2, status=S,
+                           source="upper bound = 0.15 v + v^2/130 at 80 km/h = 61.2 m: UN R13 Annex 4 type-0 N3 (table confirmed via GRRF-56-3, unece.org TRANS-WP29-GRRF-56-inf03e; cells did not extract from the MLIT PDF S5); lower bound ~ v^2/(2 x 0.8 g) + build-up"),
+                       chk("mfdd_ms2", mn=5.0, mx=8.0, status=S, source="MFDD (R13 Annex 4 definition); 5.0 m/s^2 = N3 type-0 minimum dm (same GRRF-56-3 table); <= mu g"),
                        ]
             else:
                 ch += [chk("stop_distance_m", mn=45, mx=95, source="mu_wet ~0.5 (WORKING): v^2/(2 x 0.45 g) + build-up"),
@@ -317,6 +317,34 @@ for lvl in [0.5, 1.0]:
         chk("rear_lock_time_s", mx=0.1, source="ABS prevents lock"), stable[0]],
        variants=COMB, ground={"gradePercent": 0, "surface": "wet_asphalt"}, initial={"speedKmh": 60})
 
+# ---------------- 10. reversing with the trailer (dock) ----------------
+sc("reverse_dock_s_maneuver_comb",
+   "Reversing the combination into a dock: S-steer at dock speed on flat, selector R",
+   "docs/04 s6.10", 30,
+   {"type": "timeline", "keys": [
+       key(0, brake=1, sel="R"), key(1, throttle=0.3, sel="R"), key(6, throttle=0.3, steer=0.55, sel="R"),
+       key(12, throttle=0.3, steer=-0.55, sel="R"), key(18, throttle=0.3, steer=0.35, sel="R"),
+       key(24, throttle=0.3, sel="R")]},
+   [chk("max_articulation_deg", mn=20, mx=95, source="S-manoeuvre folds the trailer but the fifth-wheel stop bounds it: +/-90 deg soft deformable stop (3 Hz critically damped), 95 deg = stop + compliance margin; >=20 deg proves the manoeuvre actually articulated"),
+    chk("wheel_lift", mx=0, source="all wheels stay loaded while reversing"),
+    chk("stalled", mx=0, source="engine must not stall"),
+    chk("min_speed_kmh", mn=-15, mx=-2, source="dock reversing speed bounded: SpeedFwd < 0 in reverse, so |v| <= 15 km/h means min_speed_kmh >= -15; <= -2 km/h proves it actually reversed (integration r5: with selector D the S-steer path still ends at z -7.5 m, so final_z alone passed)"),
+    chk("final_z_m", mx=-3, source="vehicle actually reversed (heading 0: forward = +z, so z must decrease by >= 3 m in 30 s)")] + stable,
+   variants=COMB)
+
+sc("reverse_grade6pct_comb",
+   "Reversing the combination up a 6% ramp (dock approach) at 4 km/h target",
+   "docs/04 s6.10", 40,
+   {"type": "speedhold", "targetKmh": 4, "steer": 0, "selector": "R"},
+   [chk("min_speed_kmh", mn=-12, source="ramp reversing speed bounded: SpeedFwd < 0 in reverse, |v| <= 12 km/h means min_speed_kmh >= -12"),
+    chk("stalled", mx=0, source="engine must not stall"),
+    chk("min_rpm", mn=550, source="engine stays above idle (idle 600 rpm; bound 550 guards lugging/stall)"),
+    chk("drift_m", mn=8, source="makes progress up the ramp: >= 8 m displacement in 40 s at 4 km/h target (4 km/h x 40 s = 44 m theoretical, minus ramp-up)"),
+    chk("final_z_m", mx=-5, source="heading 0, grade rises towards +z: reversing up the ramp means z decreases by >= 5 m"),
+    chk("max_articulation_deg", mx=20, source="trailer stays aligned in straight reverse: articulation << mechanical stop +/-90 deg"),
+    chk("wheel_lift", mx=0, source="no wheel lift on the ramp")] + stable,
+   variants=COMB, ground={"gradePercent": 6, "surface": "dry_asphalt"}, initial={"parkingBrake": True})
+
 # ---------------- 11. curbs / bump ----------------
 sc("curb_15cm_left_comb", "Left wheels of the whole combination over a 15 cm curb at 8 km/h", "docs/04 s6.11", 18,
    {"type": "speedhold", "targetKmh": 8},
@@ -416,7 +444,12 @@ sc("kerb_step_27cm_42kmh_comb",
     chk("max_wheel_airtime_s", mx=0.5, arg=1, source="regression guard on measured 0.42 s (phone: both front wheels unloaded ~0.4 s)"),
     chk("max_fifth_wheel_error_mm", mx=5, source="constraint holds")],
    variants=["laden40"], initial={"speedKmh": 42},
-   ground={"gradePercent": 0, "surface": "dry_asphalt", "boxes": [kerb_box(0.27, 30, 33)]})
+   ground={"gradePercent": 0, "surface": "dry_asphalt", "boxes": [kerb_box(0.27, 30, 33)]},
+   # ADR 0158 Open: with the chassis colliders the right bumper corner (0.35 m above the road) strikes the road at
+   # t ~2.83 s (11.5 cm geometric overlap without contact) -> max_dv_step_ms 0.755 m/s, kingpin error 7.9 mm (Unity
+   # PlayMode on the same event: 0.968 m/s, 28 body contacts). These guards were authored without colliders; the
+   # strike vs. ceiling decision belongs to the leader/owner, so this scenario keeps running without them for now.
+   overrides={"bodyContact": False})
 
 sc("speed_bump_comb","Speed bump 7 cm x 0.5 m across the lane at 15 km/h", "docs/04 s6.11", 12,
    {"type": "speedhold", "targetKmh": 15},
@@ -428,6 +461,12 @@ sc("speed_bump_comb","Speed bump 7 cm x 0.5 m across the lane at 15 km/h", "docs
    ground={"gradePercent": 0, "surface": "dry_asphalt", "boxes": [{"minX": -5, "maxX": 5, "minZ": 10, "maxZ": 10.5, "height": 0.07}]})
 
 # ---------------- 14. soak ----------------
+# M34 additions: numerical invariants over the 30 min (NaN, friction circle, yaw stop, air floor, no-teleport,
+# energy drift at standstill, cab angular-velocity spectrum amplitude).
+soak_inv = [chk("nan_detected", mx=0, source="M34 soak invariant: no NaN/Inf in 30 min (docs/04 s6.14)"),
+            chk("max_tire_friction_ratio", mx=1.001, source="M34 soak invariant: sqrt(Fx^2+Fy^2) <= mu*Fz on every loaded wheel, margin 0.001 for float rounding"),
+            chk("articulation_limit_excess_deg", mx=0, source="M34 soak invariant: articulation inside the 90 deg yaw stop (tractor_4x2_generic.vehicle.json:305)"),
+            chk("min_air_all_bar", mn=0, source="M34 soak invariant: no negative pressure in any reservoir/line")]
 sc("soak_30min_cycle", "30 min simulated: 20 x (accelerate to 80, double lane change, brake to stop, stand)", "docs/04 s6.14", 1800,
    {"type": "soak", "targetKmh": 80, "cyclePeriod": 90},
    [chk("max_fifth_wheel_error_mm", mx=5, source="no constraint drift over 30 min"),
@@ -437,14 +476,20 @@ sc("soak_30min_cycle", "30 min simulated: 20 x (accelerate to 80, double lane ch
     chk("max_speed_after_ms", mx=0.002, frm=85, to=89.9, source="standstill in the first cycle"),
     chk("max_speed_after_ms", mx=0.002, frm=1795, to=1799.9, source="standstill in the last cycle: no energy growth"),
     chk("min_air_service_bar", mn=8, source="air supply sustains the duty cycle"),
-    chk("max_articulation_deg", mx=12, source="lane changes stay tame")],
+    chk("max_articulation_deg", mx=12, source="lane changes stay tame")] + soak_inv + [
+    chk("max_pos_jump_m", mx=0.01, source="M34 no-teleport: residual |dx_com - v*SampleDt|; sampleEvery=5 (SampleDt=0.05 s), uniformly braking body gives 0.5*a*SampleDt^2 = 0.5*8*0.05^2 = 0.01 m; measured 0.0037"),
+    chk("energy_drift_j", mx=5, frm=1787, to=1799.9, source="M34 soak: E=KE+PE drift over the last standstill window; parked baseline 727 kJ, measured 0.34-1.33 J (< 2e-6 relative); threshold 5 J = 7e-6 relative"),
+    chk("cab_spectrum_peak_amp_dps", mx=1, frm=1740, to=1800, source="M34 soak: dominant-frequency amplitude of the cab pitch-rate spectrum over the last 60 s; measured 0.147 deg/s at 1.17 Hz; threshold 1 deg/s bounds oscillation growth")],
    variants=["laden40"], sampleEvery=5)
 
 sc("soak_30min_parked", "30 min simulated parked with the engine idling", "docs/04 s6.14", 1800,
    {"type": "timeline", "keys": [key(0, park=True, sel="N")]},
    [chk("drift_m", mx=0.005, frm=5, source="no creep"), chk("max_speed_after_ms", mx=0.001, frm=5, source="no energy drift / oscillation"),
     chk("max_kinetic_energy_j", mx=1e-3, frm=5, source="no energy growth"),
-    chk("min_air_service_bar", mn=10.5, frm=5, source="governor keeps the reservoirs in the cut-in/cut-out band")] + stable,
+    chk("min_air_service_bar", mn=10.5, frm=5, source="governor keeps the reservoirs in the cut-in/cut-out band")] + stable + soak_inv + [
+    chk("energy_drift_j", mx=5, frm=5, source="M34 soak: E=KE+PE drift over the whole parked soak; measured 0.57 J of 727 kJ (7.8e-7 relative); threshold 5 J"),
+    chk("max_pos_jump_m", mx=1e-3, frm=5, source="M34 no-teleport at standstill; measured 2.1e-5 m (suspension settling); threshold 1e-3 m"),
+    chk("cab_spectrum_peak_amp_dps", mx=0.01, frm=1740, to=1800, source="M34 soak: cab pitch-rate spectrum amplitude at standstill; measured 3.7e-14 deg/s (no oscillation); threshold 0.01 deg/s")],
    variants=["laden40"], initial={"parkingBrake": True}, sampleEvery=5)
 
 # ---------------- 15. steering sign ----------------

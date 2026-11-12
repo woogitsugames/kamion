@@ -28,6 +28,10 @@ namespace Game.Rendering
         /// <summary>ADR 0062: where a predictive step-down aims (14 ms at 60 FPS, middle of the 13-15 ms band).</summary>
         public float TargetFraction = 14f / (1000f / 60f);           // 0.84
         public int MinSamples = 30;
+        /// <summary>ADR 0152: longest window while waiting for <see cref="MinSamples"/> (slow frames)...</summary>
+        public float MaxWindowS = 6f;
+        /// <summary>... and the fewest GPU samples it then decides on (6 s at ~1.5 FPS).</summary>
+        public int MinSamplesSlow = 8;
         /// <summary>First step down from <see cref="MaxScale"/> (ADR 0046: 1.00 → 0.85; deeper only when the load needs it).</summary>
         public float FirstStepScale = 0.85f;
 
@@ -64,11 +68,16 @@ namespace Game.Rendering
         {
             if (m_WindowStart < 0f) m_WindowStart = timeS;
             if (gpuMs > 0f && m_Count < m_Samples.Length) m_Samples[m_Count++] = gpuMs;
-            if (timeS - m_WindowStart < WindowS) return false;
+            float elapsed = timeS - m_WindowStart;
+            if (elapsed < WindowS) return false;
+            // ADR 0152: below 15 FPS a 2 s window never held MinSamples (30) GPU samples, so the scale never moved exactly
+            // when the GPU was most overloaded (A16 High 8-10 FPS, scale stuck at 1.00). Slow frames: the window grows
+            // until it holds MinSamples, up to MaxWindowS; a device without GPU timings still never adapts.
+            if (m_Count < MinSamples && elapsed < MaxWindowS) return false;
             int n = m_Count;
             m_Count = 0;
             m_WindowStart = timeS;
-            if (n < MinSamples) return false;
+            if (n < MinSamplesSlow) return false;
             Array.Copy(m_Samples, m_Scratch, n);
             Array.Sort(m_Scratch, 0, n);
             float p90 = m_Scratch[Math.Min(n - 1, (int)Math.Ceiling(0.9 * n) - 1)];

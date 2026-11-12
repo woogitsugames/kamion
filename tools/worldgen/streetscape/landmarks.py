@@ -158,7 +158,11 @@ def build(pl, net, graph, overrides, origin, boards, report):
                     q = ctr + np.array([math.cos(yaw), math.sin(yaw)]) * sx * int(span) / 2
                     pl.add("gantry_footing", q, yaw, z=z, src=f"override:{o['id']}")
             for key, lat, hm in items:
-                p = c.line.offset_point(s, lat) - travel * 0.45
+                p = c.line.offset_point(s, lat)
+                # ADR 0146: the boards hang on the beam, wherever the columns stand. With `columns_en` (ADR 0127)
+                # the beam left the chain station: the Andersa portal boards floated 2.0 m in front of it, and from
+                # the driver's eye 15 m away that parallax read as "boards 0.6-0.8 m too high" (REVIEW s14-0139).
+                p = p - travel * float(np.dot(p - ctr, travel)) - travel * 0.45
                 pl.add(f"board_{key}", p, _yaw(-travel), z=z + H + top_off - hm / 2,
                        src=f"override:{o['id']}")
             rep["gantries"].append({"id": o["id"], "form": o.get("form", "portal"), "span_m": int(span), "height_m": H,

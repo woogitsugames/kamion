@@ -184,8 +184,7 @@ namespace PhysicsRunner.Tests
                 tractorState = s.Body.State;
                 if (s.TrailerBody != null) trailerState = s.TrailerBody.State;
                 s.Combo.Step(dt, tractorState, trailerState, inp, s.Ground);
-                s.Body.Integrate(dt, s.Combo.TractorForce, s.Combo.TractorTorque);
-                s.TrailerBody?.Integrate(dt, s.Combo.TrailerForce, s.Combo.TrailerTorque);
+                ScenarioRunner.StepBodies(s, dt);
                 t += dt;
             }
         }
@@ -283,8 +282,7 @@ namespace PhysicsRunner.Tests
             for (int i = 0; i < 500; i++)
             {
                 s.Combo.Step(0.01, s.Body.State, s.TrailerBody.State, inp, s.Ground);
-                s.Body.Integrate(0.01, s.Combo.TractorForce, s.Combo.TractorTorque);
-                s.TrailerBody.Integrate(0.01, s.Combo.TrailerForce, s.Combo.TrailerTorque);
+                ScenarioRunner.StepBodies(s, 0.01);
             }
             long bytes = GC.GetAllocatedBytesForCurrentThread() - before;
             _out.WriteLine($"allocated in 500 steps: {bytes} B");

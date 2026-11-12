@@ -1177,7 +1177,7 @@ def side_profile(kind: int, h: float, w: float, depth: float, mat: int):
     if kind == RURAL:
         ps = S.PAVED_SHOULDER
         zp = -S.CROSSFALL * ps
-        sw = 0.75
+        sw = S.SHOULDER_W["GP"]      # gravel part next to the opaska zewnętrzna (PTB2022 § 23 ust. 10 pkt 2), 0.75 m
         z1 = zp - S.SHOULDER_CROSSFALL * sw
         d = h if 0.05 < h < 1.5 else S.DITCH_DEPTH       # ditch depth per station (swale next to a path)
         u0 = ps + sw

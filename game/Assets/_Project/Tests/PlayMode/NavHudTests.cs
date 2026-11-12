@@ -111,20 +111,58 @@ namespace Game.Tests
             var path = nav.Path;
             for (int i = 0; i < 30; i++) { nav.StepForTest(path.Points[i % path.Count], 270f, 8f, 0.033f); mini.Draw(0.033f); }
             mini.ResetStats();
-            long before = System.GC.GetAllocatedBytesForCurrentThread();
-            for (int i = 0; i < 300; i++)
+            GcAllocCounter.AssertZero(() =>
             {
-                int k = (i / 4) % (path.Count - 1);
-                Vector2 dir = path.Points[k + 1] - path.Points[k];
-                nav.StepForTest(path.Points[k], Mathf.Atan2(dir.x, dir.y) * Mathf.Rad2Deg, 10f, 0.033f);
-                mini.Draw(0.033f);
-            }
-            long bytes = System.GC.GetAllocatedBytesForCurrentThread() - before;
+                for (int i = 0; i < 300; i++)
+                {
+                    int k = (i / 4) % (path.Count - 1);
+                    Vector2 dir = path.Points[k + 1] - path.Points[k];
+                    nav.StepForTest(path.Points[k], Mathf.Atan2(dir.x, dir.y) * Mathf.Rad2Deg, 10f, 0.033f);
+                    mini.Draw(0.033f);
+                }
+            }, message: "minimap refresh + guidance allocate nothing");
             Debug.Log($"[NAV] minimap refresh: avg {mini.AverageCpuMs:F3} ms CPU over {mini.RefreshCount} refreshes, last {mini.LastCpuMs:F3} ms; " +
                       $"canvas {mini.Canvas.DesignWidth}x{mini.Canvas.DesignHeight} design px, {mini.Canvas.VertexCount} verts, overflow {mini.Canvas.Overflow}");
-            Assert.AreEqual(0, bytes, "minimap refresh + guidance allocate nothing");
             Assert.AreEqual(0, mini.Canvas.Overflow);
             Object.Destroy(mini.gameObject); Object.Destroy(hud.gameObject); Object.Destroy(navGo); Object.Destroy(camGo);
+            yield return null;
+        }
+
+        /// <summary>The lane bar under the manoeuvre banner (turn:lanes): draws arrows per lane, no GC, no overflow.</summary>
+        [UnityTest]
+        public IEnumerator LaneBar_DrawsZeroGc()
+        {
+            var g = new RouteGraph();
+            g.NodePos = new[] { new Vector2(0, 0), new Vector2(100, 0) };
+            g.NodeFlags = new byte[2];
+            g.EdgeFrom = new[] { 0 }; g.EdgeTo = new[] { 1 }; g.EdgeLength = new[] { 100f };
+            g.EdgeClass = new byte[1]; g.EdgeFlags = new byte[1]; g.EdgeName = new ushort[1];
+            g.EdgeMaxSpeed = new byte[1]; g.EdgeMaxSpeedOsm = new bool[1];
+            g.EdgeStart = new[] { 0, 2 }; g.Points = new[] { new Vector2(0, 0), new Vector2(100, 0) };
+            g.Names = new[] { "" };
+            g.BuildAdjacency();
+            // left;through | through | right | reverse (lane order left to right, as in OSM turn:lanes).
+            var fwd = new byte[1][];
+            fwd[0] = new byte[] { RouteGraph.LaneLeft | RouteGraph.LaneThrough, RouteGraph.LaneThrough, RouteGraph.LaneRight, RouteGraph.LaneReverse };
+            g.BuildLaneIndex(fwd, null);
+            var dc = new Game.UI.CabDisplays.DisplayCanvas("LaneBarTest", 340, 30, 1f, 2500, Game.UI.UiFonts.Default, 1f);
+            var pal = Game.UI.CabDisplays.DisplayPalette.NavDay;
+            dc.Begin();
+            Game.UI.Navigation.NavDraw.LaneBar(dc, g, 0, 4, RouteGraph.LaneLeft, 0b0001u, 0b0001u, 0f, 0f, 340f, 30f, pal);
+            dc.End(pal.Bg);
+            Assert.AreEqual(0, dc.Overflow);
+            GcAllocCounter.AssertZero(() =>
+            {
+                for (int i = 0; i < 300; i++)
+                {
+                    uint allowed = (uint)(1 << (i % 4));
+                    dc.Begin();
+                    Game.UI.Navigation.NavDraw.LaneBar(dc, g, 0, 4, RouteGraph.LaneLeft, allowed, allowed, 0f, 0f, 340f, 30f, pal);
+                    dc.End(pal.Bg);
+                }
+            }, message: "lane bar redraw allocates nothing");
+            Assert.AreEqual(0, dc.Overflow);
+            dc.Dispose();
             yield return null;
         }
 

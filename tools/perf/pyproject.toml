@@ -1,0 +1,24 @@
+[project]
+name = "perfgate"
+version = "0.1.0"
+description = "Powtarzalny raport bramki wydajności z surowych pomiarów telefonu (kamion M38)"
+requires-python = "==3.12.*"
+dependencies = [
+    "matplotlib>=3.11.2",
+    "numpy>=2.5.4",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.2.0",
+]
+
+[project.scripts]
+perfgate = "perfgate.cli:main"
+
+[build-system]
+requires = ["uv_build>=0.8.0"]
+build-backend = "uv_build"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

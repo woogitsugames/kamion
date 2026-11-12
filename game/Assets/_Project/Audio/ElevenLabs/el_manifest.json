@@ -374,17 +374,29 @@
    "rpm": 1200,
    "layer": "off",
    "load": 0.0,
-   "rpm_exact": 1199.997959233476,
-   "cycles": 60,
-   "samples": 290312,
-   "source": "ENG_CAB_OFF_1800 (3).wav",
-   "source_rpm_measured": 1217.7496068966334,
-   "pitch_ratio": 0.9854225798451322,
-   "gain_db": 6.225450163398197,
+   "rpm_exact": 1200.0,
+   "cycles": 79,
+   "samples": 379534,
+   "source": "ENG_CAB_IDLE_STEADY (4).wav",
+   "source_rpm_measured": 1467.1343925697295,
+   "pitch_ratio": 0.8179209798893504,
+   "gain_db": 9.746689919181865,
    "target_lufs": -31.238249396183658,
    "limit_db": 0.0,
    "lufs": -31.238249396183658,
-   "source_prompt_id": "ENG_CAB_OFF_1800"
+   "source_prompt_id": "ENG_CAB_IDLE_STEADY",
+   "sweep_segment": {
+    "seg_t0": 1.75,
+    "seg_t1": 8.25,
+    "seg_len_s": 6.5,
+    "warp_min": 0.8067558176843217,
+    "warp_max": 0.8507192893323992,
+    "rpm_measured_mean": 1467.1343925697295,
+    "level_flatten_db": 1.1827817416191637,
+    "stretch": 1.0,
+    "segment_kind": "steady",
+    "batch": "REGEN-04"
+   }
   },
   {
    "name": "el_engine_cab_off_1500",
@@ -394,17 +406,29 @@
    "rpm": 1500,
    "layer": "off",
    "load": 0.0,
-   "rpm_exact": 1500.0013241864933,
-   "cycles": 60,
-   "samples": 232249,
-   "source": "ENG_CAB_OFF_1800 (3).wav",
-   "source_rpm_measured": 1217.7496068966334,
-   "pitch_ratio": 1.2317814070243576,
-   "gain_db": 6.307612907795765,
+   "rpm_exact": 1500.0,
+   "cycles": 79,
+   "samples": 303243,
+   "source": "ENG_CAB_IDLE_STEADY (4).wav",
+   "source_rpm_measured": 1467.1343925697295,
+   "pitch_ratio": 1.022401224861688,
+   "gain_db": 9.777016461865948,
    "target_lufs": -30.861144144904237,
    "limit_db": 0.0,
-   "lufs": -30.861144144904234,
-   "source_prompt_id": "ENG_CAB_OFF_1800"
+   "lufs": -30.861144144904237,
+   "source_prompt_id": "ENG_CAB_IDLE_STEADY",
+   "sweep_segment": {
+    "seg_t0": 1.75,
+    "seg_t1": 8.25,
+    "seg_len_s": 6.5,
+    "warp_min": 1.008444772105402,
+    "warp_max": 1.0633991116654988,
+    "rpm_measured_mean": 1467.1343925697295,
+    "level_flatten_db": 1.0149999247627073,
+    "stretch": 1.0,
+    "segment_kind": "steady",
+    "batch": "REGEN-04"
+   }
   },
   {
    "name": "el_engine_cab_off_1800",
@@ -1471,13 +1495,6 @@
    "influence": 70,
    "loop": true
   },
-  "ENG_CAB_OFF_1800": {
-   "id": "ENG_CAB_OFF_1800",
-   "prompt": "Interior of a heavy truck cab, inline-six diesel engine heard through the floor, steady constant 1800 rpm with no load while coasting, quiet muffled low rumble, light mechanical ticking, no road noise, no revving, no pitch change, seamless loop, no music, no voices",
-   "duration": 6,
-   "influence": 70,
-   "loop": true
-  },
   "ENG_CAB_OFF_2100": {
    "id": "ENG_CAB_OFF_2100",
    "prompt": "Interior of a heavy truck cab, inline-six diesel engine heard through the floor, steady constant 2100 rpm with no load while coasting, quiet muffled low rumble, light mechanical ticking, no road noise, no revving, no pitch change, seamless loop, no music, no voices",
@@ -1812,6 +1829,18 @@
    "influence": 80,
    "loop": true,
    "variants": 4
+  },
+  "ENG_CAB_IDLE_STEADY": {
+   "id": "ENG_CAB_IDLE_STEADY",
+   "prompt": "Inside the closed cab of a stationary heavy truck, the inline-six diesel idling smoothly and evenly, a clear low regular throb from the engine through the floor and seat, every firing pulse even, faint injector ticking, no air compressor, no air hiss, no revving, no road noise, no music, no voices",
+   "batch": "REGEN-04",
+   "model": "v3",
+   "duration": 12,
+   "influence": 80,
+   "loop": false,
+   "variants": 4,
+   "generated": "2026-11-12",
+   "plan": "ElevenCreative Pro"
   }
  },
  "fx_generator": "tools/audio/el_fx.py (ADR 0142)"
