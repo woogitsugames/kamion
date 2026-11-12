@@ -38,3 +38,5 @@ Krok 6: wdrożono jawne wyłączenie schodów przy planowaniu i emisji starego s
 Krok 6a: przygotowano audyt generatora porównujący deck SHA obu łańcuchów z własnym świeżym baseline, pełne spec.decks, liczbę stopni i semantyczną identyczność roads_qa. Uruchomienie dopiero po zakończeniu candidate World; wrapper nadal respektuje kolejkę heavy.
 
 Krok 6b: ADR 0119 uzupełniono o rzeczywisty baseline 232 PNG, zachowanie starej pozy kamery, wdrożone flagi i zachowany komplet kolizji. Wyniki po zmianie nadal UNVERIFIED. Generator kandydata pracuje pod heavy, bez równoległego uruchamiania testów z tej sesji.
+
+Krok 6c: audyt geometry-audit.json potwierdził 69 -> 0 stopni, 4 -> 0 biegów, łącznie -690 tris. Spec.decks obu łańcuchów, ich deck SHA przed/po i roads_qa są zgodne z własnym świeżym baseline. CANDIDATE.md opisuje osobno niewdrożoną możliwość zabrudzenia dołu/zacieków; nie jest ona częścią aktualnego wariantu. Pojedynczy test nadal oczekuje heavy.

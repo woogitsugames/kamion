@@ -1,6 +1,7 @@
 # Kandydat po obejrzeniu baseline
 
-Nie zastosowano. Źródła muszą pozostać bez zmian do ukończenia baseline.
+Plan zapisany przed wdrożeniem. Pierwszy wariant zastosowano w d56c3db7,
+po ukończeniu baseline i kontroli pozy. Wyniki wykonania śledzi STATUS.md.
 
 W konfiguracji underdeck jawne `set.stairs_enabled=false` z uzasadnieniem braku
 potwierdzonego dojścia. Plan zapisuje dwie puste listy zamiast biegu. Emisja wymaga
@@ -31,3 +32,20 @@ pod heavy po regeneracji, a pełny GIS dopiero na końcu rundy.
 Budżet: pełny kontrolny inwentarz + 10 własnych kamer, Low i High w obu światłach;
 draws mesh +0 i draws instancji osobno, suma tris <=+2% w KAŻDEJ kamerze Low.
 Materiały ścięć są już obecne w głowicach, ale +0 draws trzeba zmierzyć w Unity.
+
+## Ewentualna następna iteracja po obejrzeniu after
+
+Recenzja HIL L2 wymienia również ciemniejszy dół 0,5–0,8 m i pionowe zacieki.
+Nie są jeszcze wdrożone w pierwszym wariancie pigmentu/faz. Istniejący
+WorldPBR obsługuje splash_h i runoff bez zmian shaderów (WorldPbrMaterials
+wiersze około 302/328, WorldPBR około 635/648). UV0.y oznacza metry ponad
+gruntem; UV1=(u w metrach, 1+głębokość poniżej głowicy/skala długości).
+Kandydat może użyć istniejącego concrete_precast jako modulacji pod pigmentem,
+splash_h=0,8 m i krótszego runoff, wyłącznie za kolejną własną flagą danych.
+Zachować kontrakt _Tile, tint liniowy i weather lub runoff. Nie zmieniać
+materiałów betonu ani innych fasad. Kolizja powinna zachować stare V/UV/T,
+nawet gdy wizualny pigment dostanie UV pogody. Nie mnożyć czarnych geometrycznych
+zacieków i teksturowych w tym samym miejscu; rozważyć zastąpienie tylko własnych
+krótkich zacieków kolumn. Sprawdzić na Low/High przed wyborem rozwiązania.
+Koszt dodatkowych próbek PBR na Low pozostaje UNVERIFIED bez telefonu;
+nowych przebiegów i draws nie wolno dodawać. Najpierw ocenić pierwszy wariant.
