@@ -224,3 +224,5 @@ potem poprawić największe udokumentowane odstępstwo wiaty. WIP po każdym kro
 2026-11-12T15:31:44.0704610+01:00: przygotowano, ale NIE uruchomiono final-python-tests.ps1. Po zakończeniu producer/consumers oraz potwierdzeniu 236/118 i budżetu Low wykona pełny GIS i physics/gate3 sekwencyjnie w jednym heavy; zachowa osobne exit/XML i zwolni slot także po błędzie. Bieżący proces nadal czeka w kolejce, bez kolejnego Pythona.
 
 2026-11-12T16:06:18.6374451+01:00: ponownie potwierdzono żywy parent 68124 oraz Acquire child 73712. Manager przesunął kolejkę do ahead=1; obecnie 0/3 heavy, phone=True. To oczekiwanie na zewnętrzną blokadę według protokołu, nie terminalna awaria własnego zadania. Nie uruchomiono Pythona ani duplikatu, nie dotykano cudzych markerów. Źródła produktu nadal zamrożone; po uzyskaniu slotu istniejący proces wykona focused -> generator -> pomiary.
+
+2026-11-12T16:15:54.2170209+01:00: Focused test geometrii/palety przeszedł w heavy. Następny etap to generator w tym samym slocie, bez równoległego Pythona.
