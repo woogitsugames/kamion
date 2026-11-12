@@ -24,3 +24,5 @@ potem poprawić największe udokumentowane odstępstwo wiaty. WIP po każdym kro
 2026-11-12T11:03:05.7729976+01:00: oprava usunięcia etapuPBR:poprzednia zamiana tekstowa nie pasowała do końców linii. Ponownie zatrzymano tylko własne procesy oczekujące, bez pracyPython, usunięto obie linie etapupbr i jawnie sprawdzono ich brak. Właściwe wznowienie odworld następuje teraz.
 
 2026-11-12T11:04:47.8512498+01:00: przygotowano mały helper kamer wiat z wygenerowanych instancji, uruchamiany po zakończeniu world przed importem baseline. Cztery kadry(front/corner dla dwóch potwierdzonych referencjami przystanków) są WORKING_VALUE, nie dopasowaniem zdjęcia. Zachowuje55 dotychczasowych kamer; docelowo59×4=236 baseline. Nie uruchamiano helpera na starych instancjach przed przebudową świata.
+
+2026-11-12T11:06:14.7676534+01:00: obejrzano crop450px referencji2024:potwierdzony czerwony szkielet,szkło i profil dachu; zapisano OBSERVATIONS z ograniczeniami metrycznymi i zakazem globalnego kolorowania wszystkichwiat. Prototyp produkcyjny nadal niezmieniony; czekamy baseline po merge.
