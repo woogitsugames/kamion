@@ -156,3 +156,13 @@ Niezmienność odpowiednich wejść od bazy sesji potwierdzają audyty w artefak
 Nie zmieniano cudzych źródeł w celu uzyskania PASS. Otwarte I3/I5, aliasing Low,
 rodzina słupa i konstrukcja sztywnego panelu są opisane w REPORT i PACKET.
 Brak pomiaru telefonu/GPU/PSS; obrazy statyczne nie potwierdzają zachowania w ruchu.
+
+### r2, znaki pionowe
+
+Gałąź gpt-furniture-r2 powstała z r1, następnie scalono main 522361aa.
+Generated i street_props.glb przyjęto z main do regeneracji, wspólne dopiski
+materiałów/licencji połączono. Kod i shadery zachowują flagę podmurówki r1.
+Cel: miejscowe zużycie lica, mocowania także w Low i odblask sterowany rzeczywistym
+stanem świateł. Siłę efektu należy oznaczać WORKING_VALUE, dopóki nie ma
+kalibracji zdjęcia nocnego. Bez nowych świateł URP/przebiegów ani zmian TruckLights.
+Przed zmianą: spójny generator i import oraz komplet bazowych kamer po scaleniu.
