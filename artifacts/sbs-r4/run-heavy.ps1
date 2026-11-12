@@ -1,7 +1,8 @@
 param(
     [Parameter(Mandatory)][ValidateSet('PrepareControls','ComposeControls','TestFile','Audit','Fidelity','FinalGis')][string]$Task,
     [string]$TestFile,
-    [switch]$EndOfRound
+    [switch]$EndOfRound,
+    [string]$ResumeOwnWaitFrom
 )
 $ErrorActionPreference='Stop'
 $root=[IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..'))
@@ -16,7 +17,23 @@ try {
     $lease='C:/Users/matma/Documents/Claude/kamion/artifacts/locks/heavy-slots/'+$owner+'.slot'
     if(Test-Path -LiteralPath $lease){throw 'Another task already owns this heavy lease'}
     $ticket='C:/Users/matma/Documents/Claude/kamion/artifacts/locks/heavy-slots/queue/'+$owner+'.wait'
-    if(Test-Path -LiteralPath $ticket){throw 'Another task with this owner is already queued'}
+    if($ResumeOwnWaitFrom){
+        $resume=Get-Content -LiteralPath $ResumeOwnWaitFrom -Raw | ConvertFrom-Json
+        if($resume.status -ne 'OWN_WAIT_STOPPED_BEFORE_WORK' -or $resume.owner -ne $owner -or $resume.task -ne $Task -or $resume.test_file -ne $TestFile){throw 'Resume receipt does not identify this stopped task'}
+        if($resume.worktree -ne $root -or $resume.queue_ticks -notmatch '^\d+$'){throw 'Resume receipt worktree/ticket mismatch'}
+        foreach($priorPid in @($resume.old_acquire_pid,$resume.old_runheavy_pid)){
+            if(Get-Process -Id $priorPid -ErrorAction SilentlyContinue){throw 'Prior queued process is still alive; do not resume'}
+        }
+        $others=@(Get-CimInstance Win32_Process | Where-Object {$_.Name -match '^pwsh' -and $_.CommandLine -match 'unity-slot\.ps1' -and $_.CommandLine -match '-Acquire' -and $_.CommandLine -match ('-Owner\s+'+[regex]::Escape($owner)+'(\s|$)')})
+        if($others.Count){throw 'Another acquire with this owner is alive'}
+        if((Get-FileHash -LiteralPath $slot).Hash.ToLowerInvariant() -ne $resume.new_canonical_sha256){throw 'Canonical slot policy changed again; revalidate resume'}
+        if(Test-Path -LiteralPath $ticket){
+            if((Get-Content -LiteralPath $ticket -Raw).Trim() -ne $resume.queue_ticks){throw 'Own ticket changed; do not take another job ticket'}
+        }else{
+            # Restore only this verified stopped job's first-wait tick, preserving FIFO order.
+            Set-Content -LiteralPath $ticket -Value $resume.queue_ticks -Encoding utf8
+        }
+    }elseif(Test-Path -LiteralPath $ticket){throw 'Another task with this owner is already queued'}
     pwsh -NoProfile -File $slot -Acquire -Pool heavy -Owner $owner -PollSeconds 5 -StaleHours 87600
     if($LASTEXITCODE -ne 0){throw 'Heavy lease failed'}
     try {
