@@ -53,8 +53,8 @@ SEAM_S = 0.040
 ENGINE_PICK: dict[tuple[str, str, int], str | None] = {
     # ext/off 1800-2100 keep EXT_OFF_900 (4): the GPT pick EXT_OFF_1200 (2) has no usable firing line (its 20-120 Hz line
     # wanders 18.8 %, the strong 133 Hz line is ambiguous k=2/k=3) and failed el_verify pitch (> 4 %) when tried.
-    ("cab", "off", 1200): "ENG_CAB_OFF_1800 (3).wav",   # GPT: best of its ID; measured 1218 rpm
-    ("cab", "off", 1500): "ENG_CAB_OFF_1800 (3).wav",
+    # cab/off 1200/1500 were ENG_CAB_OFF_1800 (3) (GPT pick, 1218 rpm; line only ~8 dB, ADR 0148); since ADR 0156 they
+    # are cut from REGEN-04 (el_regen04.CELLS, below)
 }
 # ADR 0138: rows cut from one REGEN-01 sweep (one machine, consistent timbre across the row) instead of picking loops.
 # rise = (t0, t1, start band Hz, harmonic number of the followed line), steady = windows for targets outside the rise
@@ -242,6 +242,7 @@ def sweep_cell(src: Path, cfg: dict, rpm: int) -> tuple[np.ndarray, dict]:
 
 
 def main() -> None:
+    from el_regen04 import CELLS as R04_CELLS, cut_cell as r04_cut, prompt_entry as r04_prompt  # noqa: N811
     ap = argparse.ArgumentParser()
     ap.add_argument("--src", default=str(MAIN / "art-source" / "audio" / "elevenlabs"))
     a = ap.parse_args()
@@ -278,6 +279,28 @@ def main() -> None:
                                   f"measured {info['rpm_measured_mean']:6.0f} rpm  warp {info['warp_min']:.3f}-{info['warp_max']:.3f}  "
                                   f"level flat {info['level_flatten_db']:.1f} dB  stretch x{info['stretch']:.2f}  "
                                   f"{gain:+.1f} dB -> {target:.1f} LUFS  limit {lim:.1f} dB")
+                    continue
+                if (persp, layer) == ("cab", "off") and rpm in R04_CELLS:  # ADR 0156: REGEN-04 steady cab take
+                    take, w0, w1, band = R04_CELLS[rpm]
+                    y, info = r04_cut(src, take, w0, w1, band, rpm)
+                    target = ref[(persp, layer, rpm)]
+                    y, gain = to_lufs(y, target)
+                    y, lim = soft_limit(y)
+                    name = f"el_engine_{persp}_{layer}_{rpm:04d}"
+                    f = write(name, f"engine/{persp}", y)
+                    seg = {k: info[k] for k in ("seg_t0", "seg_t1", "seg_len_s", "warp_min", "warp_max", "rpm_measured_mean",
+                                                "level_flatten_db", "stretch")}
+                    seg.update({"segment_kind": "steady", "batch": "REGEN-04"})
+                    clips.append({"name": name, "file": f, "kind": "engine", "perspective": persp, "rpm": rpm, "layer": layer,
+                                  "load": load, "rpm_exact": float(rpm), "cycles": max(1, int(round(len(y) / FS * rpm / 120))),
+                                  "samples": len(y), "source": take, "source_rpm_measured": info["rpm_measured_mean"],
+                                  "pitch_ratio": rpm / info["rpm_measured_mean"], "gain_db": gain, "target_lufs": target,
+                                  "limit_db": lim, "lufs": lufs(y, FS), "source_prompt_id": take.split(" (")[0],
+                                  "sweep_segment": seg})
+                    prompt_of[take.split(" (")[0]] = r04_prompt(take.split(" (")[0])
+                    report.append(f"{name:28s} <- {take:28s} steady {w0:5.2f}-{w1:5.2f} s measured {info['rpm_measured_mean']:6.0f} rpm  "
+                                  f"warp {info['warp_min']:.3f}-{info['warp_max']:.3f}  {gain:+.1f} dB -> {target:.1f} LUFS  limit {lim:.1f} dB")
+                    prev = take
                     continue
                 pick = ENGINE_PICK.get((persp, layer, rpm))
                 if pick:
