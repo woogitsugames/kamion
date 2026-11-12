@@ -9,7 +9,7 @@ Set-Location $repo
 $env:KAMION_ARTIFACTS_DIR = Join-Path $repo 'artifacts'
 $slotScript = 'C:\Users\matma\Documents\Claude\kamion\scripts\unity-slot.ps1'
 $importStatePath='artifacts/asphalt-r3/current-import-state.json'
-if($Stage -in @('Probe','Capture')){
+function Assert-ImportedWorld {
     if(-not(Test-Path $importStatePath)){throw 'No recorded fresh import; run Import first.'}
     $importState=Get-Content $importStatePath -Raw|ConvertFrom-Json
     if(-not $importState.complete){throw 'Import is incomplete; do not render the old scene.'}
@@ -19,6 +19,19 @@ if($Stage -in @('Probe','Capture')){
         @('materials_spec_sha256','art-source/world/materials/materials_spec.json'))){
         if($importState.($entry[0]) -ne (Get-FileHash $entry[1]).Hash){throw "Import/source mismatch: $($entry[1])"}
     }
+    return $importState
+}
+if($Stage -in @('Probe','Capture')){Assert-ImportedWorld|Out-Null}
+function Write-CaptureContext([string]$OutputDir,[string]$Tier,[string]$Lighting,[string]$RequestedIds){
+    # Run after acquiring the slot too: imports/sources may have changed during a long queue wait.
+    $state=Assert-ImportedWorld
+    New-Item -ItemType Directory -Force $OutputDir|Out-Null
+    [ordered]@{schema=1;started_at=(Get-Date -Format o);label=$Label;tier=$Tier;lighting=$Lighting;
+        requested_ids=$RequestedIds;ablation=$Ablation;import=$state;
+        fixture_sha256=(Get-FileHash artifacts/asphalt-r3/cameras.json).Hash;
+        qa_probe_sha256=(Get-FileHash game/Assets/_Project/Editor/VisualQA/AsphaltQaStateProbe.cs).Hash;
+        shader_sha256=(Get-FileHash game/Assets/_Project/Environment/Shaders/WorldPBR.shader).Hash
+    }|ConvertTo-Json -Depth 8|Set-Content "$OutputDir/capture-context.json"
 }
 if ($Stage -ne 'Probe' -and ($Ablation -ne 'none' -or $env:KAMION_ASPHALT_QA_ABLATION)) {
     throw 'Ablations are permitted only for explicit Probe captures, never import/test/full capture.'
@@ -77,6 +90,7 @@ if ($Stage -eq 'Import') {
     $env:KAMION_ASPHALT_QA_ABLATION_MATERIALS = $AblationMaterials
     try {
         Invoke-Slotted {
+            Write-CaptureContext $out $ProbeTier $ProbeLighting $Cameras
             & pwsh scripts/visual-qa.ps1 -Scene WorldC -Tier $ProbeTier -Lighting $ProbeLighting -Cameras $Cameras -Gate3 artifacts/asphalt-r3/cameras.json -OutputDir $out
         }
     } finally {
@@ -100,6 +114,7 @@ if ($Stage -eq 'Import') {
             $env:KAMION_ASPHALT_QA_DIRECTORY = [IO.Path]::GetFullPath($out, $repo)
             try {
                 Invoke-Slotted {
+                    Write-CaptureContext $out $tier $lighting ''
                     & pwsh scripts/visual-qa.ps1 -Scene WorldC -Tier $tier -Lighting $lighting -Gate3 artifacts/asphalt-r3/cameras.json -OutputDir $out
                 }
             } finally {
