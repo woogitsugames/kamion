@@ -136,3 +136,5 @@ Zapisano kompletną niezależną ocenę baseline w REVIEW-D51-BASELINE.md: G3-A 
 2026-11-12T11:37:25.6983236+01:00: nowa i jedyna aktywna sesja końcowego GIS to80208 (queued HEADa1187a92, produkcyjny freeze bcc65bbb). Oficjalny skrypt potwierdza reserved=gpt-sbs-r3; poprzednia11437 jest terminalna przed uruchomieniem pytest. Nie zgłaszam jeszcze wyniku testów.
 
 2026-11-12T11:41:05.0613982+01:00: GIS80208 uzyskał heavy i rzeczywiście ruszył (10%). Zapisałem gis-started.json z rekordem slotu i HEAD obserwowanym po Acquire. Kod produkcyjny nadal zgodny z bcc65bbb; późniejsze commity tylko dokumenty/artefakty. Wynik końcowy jeszcze nieznany.
+
+2026-11-12T11:42:31.2053813+01:00: projekt raportu zawiera teraz cztery konkretne, wcześniej obejrzane i audytowane pary960px, z rozdzieleniem bazowej oceny od diagnostykiC i ich epok renderu. Pełny GIS działa w sesji80208; brak jeszcze końcowego wyniku.

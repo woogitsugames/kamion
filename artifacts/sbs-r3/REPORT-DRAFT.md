@@ -23,3 +23,21 @@ Przerwa w wykonaniu 03:42–09:04 miała nieustaloną przyczynę. Pełne odświe
 Dowody: evidence/sheets i diagnostics; REVIEW-D51-BASELINE.md, REVIEW-LOW-CLEAR.md, REVIEW-HIGH.md; REVIEW-REFINEMENT1.md i pose-refinement1/pairs; AUDIT.json, audit-completed.json, counters; ui-history-review; MAIN-DRIFT-AND-R4.md oraz ROAD-PROJECTION-NOTES.md. Zdjęcia pozostają referencjami z atrybucją i SHA, poza buildem i gitem.
 
 
+
+Pary kontrolne poniżej mają po 960 px szerokości. Dwie pierwsze należą do bazowej serii z renderu 62d45b92. Dwie kolejne to osobna diagnostyka C z dd92f5c7, na tym samym świecie, bez awansu produkcyjnej pozy. Pełną serię i historię zawiera ../sbs-gate3/latest/index.html; plan i powody odrzucenia prób są w pose-refinement1/inputs/probe_plan.json.
+
+A201270, baza Low-overcast: tablica ronda i dalsze podpory już istnieją, najbliższa podpora, nasyp i bariera łuku nadal nie pasują.
+
+![A201270 — zdjęcie i bazowy render Low-overcast](evidence/sheets/Low-overcast/sbs-g3-a-201270605169291.png)
+
+B328135, baza Low-overcast: ostatnia niezależna ocena NOT_RECOGNISABLE. Ten kadr jest częścią wyniku 13/11/1.
+
+![B328135 — zdjęcie i bazowy render Low-overcast](evidence/sheets/Low-overcast/sbs-g3-b-3281350541967811.png)
+
+B328135, diagnostyczny wariant 21: portal jest w kadrze, ale konflikt jego projekcji z dalszą jezdnią pozostaje. To C, nie nowa ocena D51.
+
+![B328135 — wariant 21, diagnostyka C](pose-refinement1/pairs/sbs-refine1-3281350541967811-21.png)
+
+B275528, diagnostyczny wariant 04: skala portalu jest bliższa zdjęciu, lecz zbieżność jezdni i boczne znaki nadal nie potwierdzają pozy. To C.
+
+![B275528 — wariant 04, diagnostyka C](pose-refinement1/pairs/sbs-refine1-275528677534382-04.png)
