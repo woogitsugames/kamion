@@ -96,6 +96,7 @@ namespace Game.Tests.EditMode
                 for (int i = 0; i < keys.Length; i++) Shader.SetGlobalVector(keys[i], Vector4.zero);
                 Shader.SetGlobalFloat("_CabGain", 1f); Shader.SetGlobalFloat("_CabEnclosure", 1f);
                 material.EnableKeyword("_KAMION_CAB_DECAL");
+                material.SetFloat("_IsDecal", 1f);
                 material.SetTexture("_DecalAtlas", Texture2D.whiteTexture);
                 material.SetTexture("_AO", Texture2D.whiteTexture);
                 material.SetFloat("_LegendLuminance", 8f); material.SetFloat("_LegendMaxDisplay", .06f);
@@ -126,12 +127,14 @@ namespace Game.Tests.EditMode
                 Vector2 Draw(string name, bool enabled, float elevation, float exposure)
                 {
                     if (enabled) material.EnableKeyword("_KAMION_CAB_BACKLIGHT"); else material.DisableKeyword("_KAMION_CAB_BACKLIGHT");
+                    material.SetFloat("_IsBacklit", enabled ? 1f : 0f);
                     Shader.SetGlobalVector(EnvironmentKey, new Vector4(elevation, exposure, 1f, 0f));
-                    camera.Render(); RenderTexture.active = rt;
+                    material.SetPass(0);
+                    camera.Render(); camera.Render(); RenderTexture.active = rt;
                     pixels.ReadPixels(new Rect(0, 0, 128, 64), 0, 0); pixels.Apply();
                     File.WriteAllBytes(Path.Combine(output, name + ".png"), pixels.EncodeToPNG());
                     var result = new Vector2(pixels.GetPixel(45, 32).r, pixels.GetPixel(83, 32).r);
-                    Debug.Log($"CAB_BACKLIGHT_FIXTURE {name}: icon={result.x:F5} stitch={result.y:F5}");
+                    Debug.Log($"CAB_BACKLIGHT_FIXTURE {name}: icon={result.x:F5} stitch={result.y:F5}, environment={Shader.GetGlobalVector(EnvironmentKey)}, keywords={string.Join(",", material.shaderKeywords)}");
                     return result;
                 }
                 var off = Draw("night-off", false, -5f, .01f);
