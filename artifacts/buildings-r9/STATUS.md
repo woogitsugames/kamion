@@ -21,3 +21,13 @@
 - NASTĘPNY KROK: `Get-Content artifacts/buildings-r9/r1/round.log` (czekać na `ROUND DONE`; jeśli proces zginął:
   `pwsh artifacts/buildings-r9/round.ps1 -Round r1`) → `cat artifacts/buildings-r9/r1/plan_dry.txt` → obejrzeć
   `r1/extra_hc/960/r1[567]_*.jpg`, `r1/extra_low/960/*.jpg` → `bash artifacts/buildings-r9/pairs.sh r1` (SUB=extra_hc OUT=pairs_r1).
+
+## krok 2 — swiat r1 zbudowany (14:31), import + rendery w toku
+- `build_world` r1: exit 0, 554 s; High 4071 submeshy / 14,293 mln tris, Low 3053 / 4,646 mln (r2c z 0124: 4073 / 14,184; 3054 / 4,532).
+- Dzialki 99: drzewa-instancje 119 na 60 dzialkach (brzoza 35, lipa 30, klon 26, sosna 17, olcha 11; h 11-19 m), drzewka kitu 192,
+  swierki 53, tuje 521, krzewy 213 + zarastanie plotow, zywoplot 477 m; kit 93 941 tris (0124: 52 022); odcinki plotu usuniete 4;
+  podjazdy "dwa pasy" 11; bramy 43 / obnizenia 43; plot nie przecina stref drzwi (0).
+- Testy czastkowe: `test_buildings_r8/r9` 12 passed (pelny pytest gis, fidelity, EditMode - po rundzie wizualnej).
+- NASTEPNY KROK: `Get-Content artifacts/buildings-r9/r1/round.log` (czekac na `ROUND DONE`; jesli zginelo:
+  `pwsh artifacts/buildings-r9/round.ps1 -Round r1 -SkipWorld`) -> `grep -n "error CS\|Shader error" artifacts/buildings-r9/r1/import.log`
+  -> obejrzec `r1/extra_hc/960/*.jpg`.
