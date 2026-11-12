@@ -86,6 +86,56 @@ namespace Game.Tests
             Assert.That(failures, Is.Empty, $"{tier}: " + string.Join("\n", failures));
         }
 
+        [TestCase(0, "WHEEL_FL"), TestCase(1, "WHEEL_FL"), TestCase(2, "WHEEL_FL")]
+        [TestCase(0, "WHEEL_FR"), TestCase(1, "WHEEL_FR"), TestCase(2, "WHEEL_FR")]
+        public void FrontAxleCentre_IsCoveredByAnOutwardFace(int lod, string role)
+        {
+            var root = Import(lod);
+            var node = root.GetComponentsInChildren<Transform>(true)
+                .First(x => x.name == $"{role}_LOD{lod}");
+            var mesh = node.GetComponent<MeshFilter>().sharedMesh;
+            var toRoot = root.transform.worldToLocalMatrix * node.localToWorldMatrix;
+            Vector3 pivot = root.transform.InverseTransformPoint(node.position);
+            var points = mesh.vertices.Select(v => toRoot.MultiplyPoint3x4(v) - pivot).ToArray();
+            var indices = mesh.triangles;
+            float outward = role.EndsWith("L", System.StringComparison.Ordinal) ? -1f : 1f;
+            var missing = new List<Vector2>();
+            // The annular disc is open at the axle. Its cover must provide real geometry;
+            // UV, normal maps, material brightness and two-sided rendering cannot satisfy this test.
+            var samples = new List<Vector2> { Vector2.zero };
+            foreach (float radius in new[] { 0.035f, 0.070f })
+                for (int i = 0; i < 16; i++)
+                    samples.Add(new Vector2(Mathf.Cos(i * Mathf.PI / 8), Mathf.Sin(i * Mathf.PI / 8)) * radius);
+            foreach (var sample in samples)
+                if (!HasFrontCover(sample, points, indices, outward)) missing.Add(sample);
+            Assert.That(missing, Is.Empty,
+                $"{role}_LOD{lod}: {missing.Count}/{samples.Count} axle-cover samples expose the wheel centre");
+        }
+
+        static float Cross2(Vector2 a, Vector2 b) => a.x * b.y - a.y * b.x;
+
+        static bool HasFrontCover(Vector2 sample, Vector3[] points, int[] indices, float outward)
+        {
+            for (int i = 0; i < indices.Length; i += 3)
+            {
+                Vector3 a = points[indices[i]], b = points[indices[i + 1]], c = points[indices[i + 2]];
+                if (Vector3.Cross(b - a, c - a).x * outward <= 1e-10f) continue;
+                var ab = new Vector2(b.y - a.y, b.z - a.z);
+                var ac = new Vector2(c.y - a.y, c.z - a.z);
+                float determinant = Cross2(ab, ac);
+                if (Mathf.Abs(determinant) < 1e-10f) continue;
+                var offset = sample - new Vector2(a.y, a.z);
+                float u = Cross2(offset, ac) / determinant;
+                float v = Cross2(ab, offset) / determinant;
+                if (u < -1e-5f || v < -1e-5f || u + v > 1.00001f) continue;
+                // The original cap extends 0.226 m outboard of the pivot. A 0.15 m floor
+                // excludes the annular disc and inner backing; it permits a much simpler dome.
+                float outboard = (a.x + u * (b.x - a.x) + v * (c.x - a.x)) * outward;
+                if (outboard > 0.15f) return true;
+            }
+            return false;
+        }
+
         /// <summary>Geometry in the FBX root frame (vehicle axes: spin axis X), centred on the wheel pivot.</summary>
         static void Check(string name, Mesh mesh, Matrix4x4 toRoot, Vector3 pivotWorld, Transform root, float r0, float w0,
                           List<string> failures)
