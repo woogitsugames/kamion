@@ -66,3 +66,5 @@ Krok 9g: podczas PHONE_RUN przeanalizowano wyłącznie mały model propozycji C 
 Krok 9h: przygotowano niewykonane skrypty końcowych testów. Wymagają FINAL-CANDIDATE.json po rzeczywistym przeglądzie244 par; GIS i physics/gate3 mają osobne Acquire/Release heavy. Kontrola192 plików runtime oraz źródeł, GLB/meta i map Medium remizy przed/po każdym zestawie. EditMode osobno pod Unity. Żadnego z tych testów jeszcze nie uruchomiono; B nadal blokuje PHONE_RUN.
 
 Krok 9i: końcowe skrypty wymagają konkretnych powiązań SHA buildera/dims/GLB/meta/spec/manifestu/kamer, nie tylko flagi przeglądu. Brak FINAL-CANDIDATE jest obecnie prawidłowy: B nie ma jeszcze renderu. Skrypty testów nieuruchomione; aktualny proces B czeka bez własnego slotu na PHONE_RUN.
+
+Krok 9k: przygotowano capture-full.ps1 (niewykonany). Pełne244 obrazy będą wiązane SHA z wybranym podglądem B/C i dokładnym inwentarzem baseline; skrypt nie ruszy bez ukończonego preview. Każda seria ma własny slot Unity, bez heavy. Odczytano wyłącznie repozytoryjne czasy logów głównego pomiaru: B był aktualizowany15:05, integracja run-f zakończona14:19; blokada PHONE_RUN ma aktywny pomiar, nie jest usuwana.
