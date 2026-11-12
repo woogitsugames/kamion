@@ -1,0 +1,43 @@
+{
+  "observed_at": "2026-11-12T16:11:06.1044655+01:00",
+  "own_head": "0c32e76ab806f9e70deef29525a40650778a1962",
+  "main_head": "7d99a2e6a26c208141caae2748e4693129e2e014",
+  "exit_code": 0,
+  "mode": "git merge-tree only; no branch, index or worktree mutation",
+  "output": "r5-merge-preflight.txt",
+  "output_sha256": "a0555e5dc87d10635be4e66deeef228f4940f80e4023edb6b878497663c9d056",
+  "note": "Prospective merge only. Repeat actual merge on r5 after closing r4; incoming main may change.",
+  "proposed_tree": "9d1c3b1f6e6cec1e53cff576587fc0d07edacf2f",
+  "verified_blob_bindings": [
+    {
+      "path": "Data/Regions/bialystok-industrial-c/sbs_cameras.json",
+      "blob": "2477d784375b9137d463b1596e691d6e7754333b",
+      "expected_source": "7d99a2e6a26c208141caae2748e4693129e2e014"
+    },
+    {
+      "path": "Data/Regions/bialystok-industrial-c/sbs_references.json",
+      "blob": "a144da7b173a94a02300bde01463a71471dc1925",
+      "expected_source": "7d99a2e6a26c208141caae2748e4693129e2e014"
+    },
+    {
+      "path": "Data/Regions/bialystok-industrial-c/generated/world_manifest.json",
+      "blob": "640d2df318affb6b9f58eada1f07633cacef9809",
+      "expected_source": "7d99a2e6a26c208141caae2748e4693129e2e014"
+    },
+    {
+      "path": "Data/Regions/bialystok-industrial-c/sbs_recognition.json",
+      "blob": "c0f9da4c4d5b1bbc75a3e4a6e0a3db94a42dadb5",
+      "expected_source": "0c32e76ab806f9e70deef29525a40650778a1962"
+    },
+    {
+      "path": "tools/refs/sbs_gate3.py",
+      "blob": "1ee11321d9ebc64df6dd2303fb31d23229142a28",
+      "expected_source": "0c32e76ab806f9e70deef29525a40650778a1962"
+    },
+    {
+      "path": "scripts/sbs-gate3.ps1",
+      "blob": "e0c997152af652547640177773d0e4cecf6ca082",
+      "expected_source": "0c32e76ab806f9e70deef29525a40650778a1962"
+    }
+  ]
+}
