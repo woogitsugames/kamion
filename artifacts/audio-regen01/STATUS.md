@@ -1,0 +1,5 @@
+# audio-regen01 STATUS (ADR 0138)
+
+- 2026-11-12 krok 1: tools/audio/el_regen01.py — analiza 56 WAV REGEN-01 (artifacts/audio-regen01/analysis: regen01.csv/json, picks.json, sheets/*.png). Wynik: SWEEP ext (4) uzyteczny (904->1772 rpm, monotonicznie 91 %, linia 22.7 dB), cab sweep nie (66-77 %). HIGH: tylko EXT_OFF_HIGH (1) stabilny, ale drabina dwuznaczna (linia 1.5x 24.9 dB -> okres 930 rpm) -> odrzucony; CAB_ON_HIGH (3) za slaba linia (8.2 dB < 9). IDLE_SLOW: CAB (4) 723 rpm wchodzi do cab_off_0600. TURBO_WHISTLE: brak linii tonalnej (4.5 dB) -> synteza zostaje. STOP_CAB: brak wybiegu (-9.7 dB) -> filtr ext zostaje. R6: GEAR_UPSHIFT (6), BRAKE_HISS (7), DOOR (7) spelniaja; WIPERS nie (okres 0.37 s).
+- krok 2: el_sweepcut.py + el_prepare.py: wiersz ext/on w calosci z ENG_EXT_ON_SWEEP (4) (wycinanie + prostowanie tonu, warp <= 1.31), filtr dwuznacznej drabiny, okno YIN w el_verify (0 octave-low, 0 FAIL), A/B artifacts/audio-regen01/ab/*.ogg.
+  NASTEPNY KROK: pwsh scripts/unity-slot.ps1 -Acquire -Owner claude-audio-regen01 ; import ElevenLabs + testy PlayMode/EditMode
