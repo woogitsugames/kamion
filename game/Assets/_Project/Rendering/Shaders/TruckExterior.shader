@@ -353,10 +353,10 @@ Shader "Kamion/Truck Exterior"
                         half spray = 1.0 - smoothstep(0.5 * _GrimeHeight, 1.1 * _GrimeHeight, lp.y);
                         proc *= lerp(shed, 1.0, spray);
                     }
-                    // Cavities hold more. Exposed upward-facing metal treads/edges shed deposits;
-                    // this is material exposure, not a semantic boot-print mask (ADR 0115 r2).
+                    // AO still controls cavity retention. The whole recessed tread has low AO;
+                    // its raised metal faces must shed independently of that broad cavity shadow.
                     half exposedMetalTop = _IsPaint < 0.5 ? m.b * (1.0 - isTyre) * smoothstep(0.55, 0.9, normalize(i.normalWS).y) : 0.0;
-                    proc *= lerp(1.4, lerp(0.85, 0.22, exposedMetalTop), m.r);
+                    proc *= lerp(1.4, 0.85, m.r) * lerp(1.0, 0.25, exposedMetalTop);
                     grime = max(grime * 0.8, proc);
                 }
                 if (_CurtainGrime.x > 0.5)
