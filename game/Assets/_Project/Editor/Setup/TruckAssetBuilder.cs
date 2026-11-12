@@ -1028,6 +1028,7 @@ namespace Game.Editor.Setup
             material.SetColor("_LegendColor", new Color(color.x, color.y, color.z, 1f));
             material.SetFloat("_LegendStartSunDeg", start); material.SetFloat("_LegendFullSunDeg", full);
             material.EnableKeyword("_KAMION_CAB_BACKLIGHT");
+            Debug.Log($"CAB_BACKLIGHT_CONFIG: enabled, luminance={luminance} cd/m2, cap={cap}, fade={start}..{full} deg (WORKING_VALUE)");
         }
 
         static void MapCabLeatherRim(Renderer renderer, Transform column, string[] slots)

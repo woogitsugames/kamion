@@ -1,7 +1,6 @@
 using System.IO;
 using Game.Rendering;
 using NUnit.Framework;
-using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -160,21 +159,6 @@ namespace Game.Tests.EditMode
                 var day = Draw("day-on", true, 42f, .01f);
                 var night = Draw("night-on", true, -5f, .01f);
                 var cap = Draw("night-high-exposure", true, -5f, 1f);
-                if (night.x < .001f)
-                {
-                    // Temporary in-memory probes distinguish attributes/emission from invalid PBR state. No asset writes.
-                    string source = File.ReadAllText(Path.Combine(Application.dataPath, "_Project/Rendering/Shaders/CabInterior.shader"))
-                        .Replace("Shader \"Kamion/Cab Interior\"", "Shader \"Hidden/Kamion/BacklightFixtureProbe\"")
-                        .Replace("\"KamionToeParity.hlsl\"", "\"Assets/_Project/Rendering/Shaders/KamionToeParity.hlsl\"");
-                    foreach (var probeOutput in new[] {
-                        ("vertex", "i.color.rgb"), ("uv", "half3(i.uv01.y, 0, 0)"),
-                        ("emission", "_LegendColor.rgb * min(_LegendLuminance * _CabBacklightEnvironment.y, _LegendMaxDisplay) * _CabBacklightEnvironment.z") })
-                    {
-                        var diagnostic = ShaderUtil.CreateShaderAsset(source.Replace("return half4(col.rgb, 1);", "return half4(" + probeOutput.Item2 + ", 1);"), true);
-                        try { material.shader = diagnostic; material.EnableKeyword("_KAMION_CAB_DECAL"); Draw("probe-" + probeOutput.Item1, true, -5f, .01f); }
-                        finally { material.shader = shader; Object.DestroyImmediate(diagnostic); material.EnableKeyword("_KAMION_CAB_DECAL"); }
-                    }
-                }
                 Assert.That(off.x, Is.LessThan(.003f)); Assert.That(off.y, Is.LessThan(.003f));
                 Assert.That(day.x, Is.LessThan(.003f)); Assert.That(day.y, Is.LessThan(.003f));
                 Assert.That(night.x, Is.GreaterThan(.02f), "test must actually render the emissive icon");
