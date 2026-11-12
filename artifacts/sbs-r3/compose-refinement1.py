@@ -46,7 +46,8 @@ for p in plan['probes']:
     draw.text((498,25),'Render Low-overcast — ten sam FOV i proporcje',font=small,fill='#ddd')
     canvas.paste(ImageOps.contain(photo_image,(470,pane_height)),(0,44))
     canvas.paste(ImageOps.contain(render,(470,pane_height)),(490,44))
-    parameters=f'Oś: {p["translation_axis"]}; przesunięcie {p["offset_m"]:+g} m; w lewo {p["left_delta_m"]:+g} m; h {p["horizon_y_fraction"]:.3f}; oko {p["nominal_eye_m"]:g} m'
+    axis_label={'road':'oś jezdni','view':'kierunek spojrzenia'}[p['translation_axis']]
+    parameters=f'Oś: {axis_label}; przesunięcie {p["offset_m"]:+g} m; w lewo {p["left_delta_m"]:+g} m; h {p["horizon_y_fraction"]:.3f}; oko {p["nominal_eye_m"]:g} m'
     footer=[parameters,f'{p["author"]} | {p["license"]} | {p["page_url"]}',
             f'Photo SHA {p["photo_sha256"][:16]}… | Render SHA {capture["render_sha256"][camera][:16]}… | kod {capture["git_sha"][:8]}',
             'Poza i nominalne oko WORKING_VALUE. Portal + niezależna trwała kotwica; brak automatycznej promocji.']
@@ -65,8 +66,9 @@ for p in plan['probes']:
                  f'<p><a href="photos/{html.escape(photo_name)}">Natywne zdjęcie</a> · '
                  f'<a href="../renders/1280x{p["height"]}/{html.escape(camera)}.png">Natywny render</a> · '
                  f'<a href="{html.escape(p["page_url"],quote=True)}">Źródło: {html.escape(p["author"])}</a></p></article>')
-body='<!doctype html><html lang="pl"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>SBS r3 — hipotezy przy bramownicy</title><style>body{background:#181c20;color:#eee;font:16px Arial;max-width:960px;margin:auto;padding:12px}img{max-width:100%;height:auto}a{color:#9df}h2{font-size:18px;overflow-wrap:anywhere}article{margin:24px 0}</style><h1>Hipotezy C — druga partia — zdjęcie i render</h1><p>Diagnostyka Low-overcast. FOV pozostaje stały; warianty pozycji, pitch i nominalnego oka opisano w planie i nagłówkach. To nie ocena D51 ani awans produkcyjnej pozy. Ujemne przesunięcie oznacza cofnięcie wzdłuż oryginalnego kierunku spojrzenia.</p>'+''.join(cards)+'</html>'
+body='<!doctype html><html lang="pl"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>SBS r3 — hipotezy przy bramownicy</title><style>body{background:#181c20;color:#eee;font:16px Arial;max-width:960px;margin:auto;padding:12px}img{max-width:100%;height:auto}a{color:#9df}h2{font-size:18px;overflow-wrap:anywhere}article{margin:24px 0}</style><h1>Hipotezy C — druga partia — zdjęcie i render</h1><p>Diagnostyka Low-overcast. FOV pozostaje stały; warianty pozycji, pitch i nominalnego oka opisano w planie i nagłówkach. To nie ocena D51 ani awans produkcyjnej pozy. Ujemne przesunięcie oznacza cofnięcie po wskazanej osi jezdni lub spojrzenia.</p>'+''.join(cards)+'</html>'
 (OUT/'index.html').write_text(body,encoding='utf-8')
 (OUT/'audit.json').write_text(json.dumps({'diagnostic_only':True,'gate_status':'UNVERIFIED','pose_confidence':'C','count':len(rows),'capture_git_sha':next(iter(captures.values()))['git_sha'],'input_sha256':{key:sha(INPUT/name) for key,name in input_files.items()},'pairs':rows},indent=2)+'\n',encoding='utf-8')
-print('Composed and SHA-verified diagnostic refinement pairs at width960; no production source writes')
+print(f'Composed and SHA-verified {len(rows)} diagnostic refinement pairs at width960; no production source writes')
+
 
