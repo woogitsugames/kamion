@@ -69,3 +69,5 @@ NASTĘPNY KROK: przygotować własne skrypty r2 z ownerem heavy gpt-furniture-r2
 2026-11-12T02:57:23.9113856+01:00: Unity render before Low dusk; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
 
 2026-11-12T02:57:52.5156759+01:00: Unity render before High dusk; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
+
+2026-11-12T02:57:52.9274336+01:00: bazowy zmierzch Low/High ukończony. Preset dusk ma słońce -5 stopni: to zmierzch, nie dowód pełnej nocy ani kalibracji folii. NASTĘPNY KROK: snapshot geometrii w heavy, wdrożenie własnego zużycia/mocowań/flagi i pojedyncze testy; potem generator kandydata.
