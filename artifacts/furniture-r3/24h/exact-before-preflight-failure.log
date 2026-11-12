@@ -1,0 +1,10 @@
+Exception: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-furniture\artifacts\furniture-r3\24h\exact-stats.ps1:12
+Line |
+  12 |  …  $source).Hash) { throw 'Different owned diagnostic already exists' }
+     |                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | Different owned diagnostic already exists
+Exception: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-furniture\artifacts\furniture-r3\24h\exact-before-chain.ps1:8
+Line |
+   8 |  … if($LASTEXITCODE -ne 0){throw "Baseline exact counter failed:$light"}
+     |                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | Baseline exact counter failed:clear
