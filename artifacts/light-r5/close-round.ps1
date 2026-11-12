@@ -39,20 +39,21 @@ $sha=(git rev-parse HEAD).Trim()
 Add-Content docs/adr/0108-light-sky-exposure-post.md "Zamknięcie r5: czysty bakev6 (65PNG, pięć presetów), finalv2 (654PNG,109kamer), oględziny wszystkich327Low i327High oraz10par956px. Budżet327Low draws/tris0, instancing osobno. EditMode341/341, pełnyGIS $passed passed/$xfailed xfailed w $seconds s, kod0 podheavy. Własne8 efektówgeneratora zarchiwizowano i przywrócono. Natywna LUT pozostaje eksperymentem Editor OFF, kosztGPU/runtime i całejklatki niezatwierdzone; regresje Overcastkabiny oraz nocneźródła nadalotwarte."
 @(
 "Gałąź gpt-light-r5; stan dowodów $sha, baza main 889201d5 (merge 8a76b69b).",
-'Runda diagnostyczna spójności tonów Low/High: natywna kostka High URP32³ w RGBAHalf, domena LogC, bez runtime bindera i domyślnego włączenia.',
+'Runda diagnostyczna spójności tonów Low/High: natywna kostka High URP 32³ w RGBAHalf, domena LogC, bez bindera runtime i domyślnego włączenia.',
 'Wykryto ograniczenie dotychczasowego QA: High mimo HDR=true zapisuje kolor R8 sRGB już przed post. Jawna referencja HDR zachowuje R16 half-float przed post przy końcowym ARGB32; telefonu nie badano.',
-'Czysty bake v6:65PNG, pięć presetów; holdout192/preset max1 RGB, rampy12288/preset max3/2/3/3/3. Pięć kostek po256KiB, physical-capture bypass max0.',
-'Pierwsza racjonalna LUT miała błąd zieleni max14/15; natywna usuwa duże odchylenie. Białe chmury odrzuconej v3 naprawiono przez zachowanie tego samego sky cap co High.',
-'Nieudany shader_feature v6 oraz observer v4/v5 z wyjątkiem inicjalizacji pozostają odrzuconą diagnostyką. Końcowy native v6 jest czysty,65/65PNG identyczne z wcześniej obejrzanymi.',
-'Final-native-v2:654PNG,109kamer x3presety x2tiery, wszystkie obejrzane przez rodzica i krytyka. Pierwszy final402PNG odrzucono; poprawiony spec wymaga109kamer/job.',
-'Budżet wszystkich327Low: draws/tris+0, instancing osobno. W36parach statycznych kostek ablation mip0 RGBmean/max0; nie rozszerzamy tego na niezmierzone capture całej trasy.',
-'W12kamerowej ablation błąd całych klatek wobec HDR maleje w34/36; Overcast cab-dash4,731→5,648 i cab-driver6,694→9,245 pozostają regresjami. To różne tiery/geometria/skala/alpha, bez fotometrycznego gate.',
-'Pary foto|render: reference-day (4) i reference-night (6), po956px, hasze i licencje w sources.json. Inne warunki/miejsca/pory, bez zaliczenia pozy lub fotometrii.',
-"Pełny EditMode341/341; końcowy GIS $passed passed/$xfailed xfailed w $seconds s, kod0. Ciężki Python tylko przez heavy, pełnyGIS wyłącznie na końcu rundy.",
+'Czysty bake v6: 65 PNG, pięć presetów; 192 pola testowe na preset, maksimum błędu 1 poziom RGB; rampy po 12288 próbek, maksima 3/2/3/3/3. Pięć kostek po 256 KiB, fizyczny capture bez różnic.',
+'Pierwsza racjonalna LUT miała błąd zieleni do 14/15 poziomów; natywna usuwa duże odchylenie. Białe chmury odrzuconej v3 naprawiono przez zachowanie tego samego ograniczenia jasności nieba co High.',
+'Nieudany shader_feature v6 oraz obserwator v4/v5 z wyjątkiem inicjalizacji pozostają odrzuconą diagnostyką. Końcowy native v6 jest czysty; 65/65 PNG jest identycznych z wcześniej obejrzanymi.',
+'Final-native-v2: 654 PNG, 109 kamer × 3 presety × 2 tiery, wszystkie obejrzane przez rodzica i krytyka. Pierwszy final z 402 PNG odrzucono; poprawiona specyfikacja wymaga 109 kamer na zadanie.',
+'Budżet wszystkich 327 Low: draws/tris +0, instancing osobno. W 36 parach statycznych kostek z ablacji mip0 średnia i maksimum różnicy RGB wynoszą 0; nie rozszerzamy tego na niezmierzony capture całej trasy.',
+'W ablacji 12 kamer błąd całych klatek wobec HDR maleje w 34/36; Overcast cab-dash 4,731→5,648 i cab-driver 6,694→9,245 pozostają regresjami. Różnią się tiery, geometria, skala i alpha; to nie fotometryczne kryterium akceptacji.',
+'Dodatkowe 24 ręczne ROI zawężają problem Overcast: deska i kierownica poprawiają zgodność, badane obszary za szybą pogarszają. To nie dowód wyłącznej winy szkła; szczegóły w cab-roi-comparison.json i niezależnej recenzji.',
+'Pary foto|render: reference-day (4) i reference-night (6), po 956 px; hasze i licencje w sources.json. Inne warunki, miejsca i pory, bez zaliczenia pozy lub fotometrii.',
+"Pełny EditMode 341/341; końcowy GIS: $passed passed / $xfailed xfailed w $seconds s, kod 0. Ciężki Python tylko przez heavy; pełny GIS wyłącznie na końcu rundy.",
 'Pozostają: gładkie chmury Overcast Low, szkło i instrumenty, płaski detal białych aut, nierówny Night, ciemne doki/okna i brak halo. Brak GPU/A16, runtime i pełnego Night/wholeframe PASS.',
-'Konflikty możliwe w KamionAtmosphere.hlsl, Sky.shader, EnvironmentLighting, LightQaBatch i ADR0108. Cab/Truck/Vegetation/WorldPBR/WorldSurface oraz Claude bez edycji w tej rundzie.',
+'Konflikty możliwe w KamionAtmosphere.hlsl, Sky.shader, EnvironmentLighting, LightQaBatch i ADR 0108. Pliki Cab, Truck, Vegetation, WorldPBR, WorldSurface oraz Claude bez edycji w tej rundzie.',
 'Własne efekty generatora zachowano w patch i GLB, następnie przywrócono. Odtworzenie wymaga generatora/fidelity/importu w slotach; artefakty dostarczone do main bez merge/push.',
-'Następna runda: kandydat native grade runtime domyślnie OFF, według NEXT-ROUND-CANDIDATE.md; najpierw nowa gałąź z poprzedniej i merge aktualnego main.'
+'Następna runda: izolacja przyczyny Overcast i kandydat native grade runtime domyślnie OFF według NEXT-ROUND-CANDIDATE.md; najpierw nowa gałąź z poprzedniej i merge aktualnego main.'
 )|Set-Content "$PSScriptRoot/REPORT.md" -Encoding utf8
 Add-Content "$PSScriptRoot/STATUS.md" "Krok końcowy: EditMode341/341,GIS $passed/$xfailed xfailed/$seconds s. REPORT, ADR i własnegeneratedarchive/restore gotowe. Następny krok: dostawa/verify, r6 i merge aktualnego main. Cel24h aktywny do21:30:47Warszawa."
 git add docs/adr/0108-light-sky-exposure-post.md
