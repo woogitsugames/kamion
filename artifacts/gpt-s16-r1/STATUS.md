@@ -18,3 +18,5 @@ Sprzątnięto trzy własne, zastąpione pliki diagnostyki linii widzenia (C#,met
 Dodatkowe kamery: before/Low-overcast zapisane.
 
 Dodatkowe kamery: before/High-clear zapisane.
+
+Dodatkowe kamery: before/High-overcast zapisane.
