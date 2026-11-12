@@ -35,3 +35,4 @@ Zapisano before Low clear, kod wejściowy zgodny z fingerprintem. Następny krok
 Zapisano before High overcast, kod wejściowy zgodny z fingerprintem. Następny krok: pomiary i oględziny par przed/po.
 Zapisano before High clear, kod wejściowy zgodny z fingerprintem. Następny krok: pomiary i oględziny par przed/po.
 Zapisano wszystkie kamery: before-all Low overcast. Następny krok: zestawić liczniki rendererów i instancji osobno dla każdej kamery.
+Zapisano wszystkie kamery: before-all High overcast. Następny krok: zestawić liczniki rendererów i instancji osobno dla każdej kamery.
