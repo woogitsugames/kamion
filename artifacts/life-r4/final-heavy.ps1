@@ -8,7 +8,18 @@ if($running){
  Wait-Process -Id $WaitFor -ErrorAction SilentlyContinue
 }
 $edit=Get-Content artifacts/life-r4/final-editmode-result.json -Raw|ConvertFrom-Json
-if($edit.exit_code -ne 0 -or $edit.failed -ne 0){throw 'Inspect terminal EditMode before GIS'}
+if($edit.failed -ne 0 -or $edit.result -ne 'Passed'){throw 'Inspect terminal EditMode before GIS'}
+if($edit.exit_code -ne 0){
+ # The NUnit/Unity command passed; the additional byte guard caught a known
+ # test-side cache normalisation. Require documented exact restoration, never
+ # bypass a failed test or accept changed native inputs.
+ $restored=Get-Content artifacts/life-r4/final-editmode-restored.json -Raw|ConvertFrom-Json
+ if(!$restored.accepted -or !$restored.restored_exact_baseline -or !$restored.selected_inputs_unchanged){throw 'EditMode restoration not accepted'}
+ if((Get-FileHash artifacts/life-r4/final-editmode-result.json).Hash -ne $restored.raw_result_sha -or
+    (Get-FileHash artifacts/life-r4/final-editmode.xml).Hash -ne $restored.xml_sha){throw 'EditMode evidence changed'}
+ & pwsh -NoProfile -File artifacts/life-r4/validate-native-materials.ps1 -Tag final-pre-gis *> artifacts/life-r4/final-pre-gis-native.log
+ if($LASTEXITCODE){throw 'Restored native materials no longer match baseline'}
+}
 . artifacts/life-r4/assert-selected.ps1
 if(Test-Path artifacts/life-r4/final-gis.log){throw 'GIS evidence exists'}
 if(Test-Path 'C:/Users/matma/Documents/Claude/kamion/artifacts/locks/heavy-slots/gpt-life-r4.slot'){throw 'Own heavy already held'}
