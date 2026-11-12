@@ -25,3 +25,4 @@ Add-Content "$PSScriptRoot/STATUS.md" "$(Get-Date -Format o) Identyfikacja C061 
 git add -f artifacts/edge-r5/STATUS.md artifacts/edge-r5/hall-identification.json artifacts/edge-r5/hall-identification-receipt.json
 git commit -m 'WIP edge r5: match source hall geometry to frozen production meshes'
 if($LASTEXITCODE -ne 0){throw 'Identification checkpoint failed'}
+(Get-Date -Format o)|Set-Content "$PSScriptRoot/Identification.ready"
