@@ -1,0 +1,16 @@
+{
+  "inspected_at": "2026-11-12T15:35:14.4865015+01:00",
+  "camera": "sbs-g3-b-150280503737744",
+  "state": "Low-overcast",
+  "render_head": "80159a70e7cea39146a465208da5471cb9beb915",
+  "photo": "artifacts/sbs-gate3/rectified/150280503737744.png",
+  "photo_sha256": "087e595a45f7654b6b01c9f95790edfcd04512ce8b18fb382bb71b2e3c3ab668",
+  "raw": "artifacts/sbs-r4/evidence/renders/Low-overcast/sbs-g3-b-150280503737744.png",
+  "raw_sha256": "fcbd047dd909649280b8cf7a69952233b1f4d3af602218139a0b5f09a40a1bca",
+  "viewed_native_files": 2,
+  "pitch_deg": 4.992054516543918,
+  "fov_deg": 39.99889,
+  "observation": "Zbieg jezdni na zdjęciu około y=340/720, w renderze około y=430/720. Ręczne przybliżenie, nie pomiar segmentacji. Render ma inny profil zabudowy i brak identycznych lamp/kominów; nie korygować geometrii przez dopasowanie kamery.",
+  "confidence": "VISUAL_ESTIMATE",
+  "next": "Świeży main i pełna seria r5, następnie prywatna C próba wyłącznie pitch, zachowane XYZ, kurs, FOV. Rozdzielić krawędzie jezdni od zabudowy. Bez produkcyjnej korekty i bez zmiany D51."
+}
