@@ -11,7 +11,6 @@ import math
 
 import numpy as np
 import pytest
-import shapely
 from shapely.geometry import Polygon
 
 from conftest import REGION_DIR, REGION_ID, REPO

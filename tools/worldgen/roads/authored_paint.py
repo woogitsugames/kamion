@@ -24,7 +24,7 @@ import zlib
 import numpy as np
 import shapely
 from shapely import affinity
-from shapely.geometry import LineString, Polygon
+from shapely.geometry import Polygon
 
 from . import standards as S
 

@@ -49,7 +49,6 @@ class Mesh:
         T = [(i, i + 1, n + i + 1) for i in range(seg)] + [(i, n + i + 1, n + i) for i in range(seg)]
         self.add(mat, V, T, UV)
         if cap:
-            c = len(V)
             self.add(mat, np.concatenate([[p1], p1 + ring[:-1] * r1]),
                      [(0, 1 + (i + 1) % seg, 1 + i) for i in range(seg)][::1])
 

@@ -71,7 +71,6 @@ def test_wheel_styles_and_paint_types():
 
 def test_lod2_keeps_the_silhouette():
     """LOD2 follows the LOD0 side outline: bonnet lower than the belt, nose narrower than the body, lamps present."""
-    from streetscape import life_cars as LC
     for name, d, P in _protos():
         m2 = _by(P[3])
         paint = next(v for k, v in m2.items() if k.startswith("car_paint_"))["V"]

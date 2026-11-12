@@ -4,7 +4,6 @@ Albedo values are linear and kept in physically plausible ranges for automotive 
 (black/anthracite plastics 0.03-0.06, light headliner 0.25-0.35, white paint ~0.7).
 WORKING_VALUE: there is no measured albedo table yet (docs/06 §3) — these are class-typical.
 """
-import math
 import os
 
 import bpy
@@ -317,7 +316,6 @@ def thin_glass(name, tint=(0.88, 0.92, 0.90), grime=0.0, sunstrip=None, rough=0.
         mr.inputs[1].default_value = sunstrip[0]
         mr.inputs[2].default_value = sunstrip[1]
         nt.links.new(sep.outputs["Z"], mr.inputs[0])
-        sm = nt.nodes.new("ShaderNodeFloatCurve") if False else None
         tint_sock = _mix_rgb(nt, mr.outputs[0], tint, sunstrip[2])
     if isinstance(tint_sock, tuple):
         tr.inputs["Color"].default_value = (*tint_sock, 1)

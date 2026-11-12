@@ -38,7 +38,7 @@ def test_fresh_overpass_does_not_reclassify_old_road_below():
 
 
 def test_fresh_road_above_an_old_underpass_is_supported():
-    buf=MeshBuf(); road(buf,"road_asphalt",z=-5); road(buf,"road_asphalt_new"); p=paint(buf)
+    buf=MeshBuf(); road(buf,"road_asphalt",z=-5); road(buf,"road_asphalt_new"); paint(buf)
     assert mark_fresh_road_paint(buf,True)["fresh_parts"] == 1
 
 

@@ -24,7 +24,6 @@ import math
 import sys
 from pathlib import Path
 
-import bmesh
 import bpy
 import numpy as np
 
@@ -773,7 +772,7 @@ def build_garage(mb, lod):
 
 
 def build_middle(mb, lod):
-    m, t, lk, g, hl = D["middle"], D["tower"], D["link"], D["garage"], D["hall"]
+    m, t, lk, g, _hl = D["middle"], D["tower"], D["link"], D["garage"], D["hall"]
     ua, ub = m["u"]
     us, vs, vr, vn = m["u_step"], m["v_sw"], m["v_sw_recess"], m["v_ne"]
     zs, zn = zl(m["eave_sw_z"]), zl(m["eave_ne_z"])
@@ -789,7 +788,6 @@ def build_middle(mb, lod):
     w1 = [(s, z, 1.5, 1.5, "plain") for s in np.linspace(1.7, L1 - 1.7, 3) for z in (0.95, 0.95 + sh)]
     wall(mb, (ua, vs), (us, vs), 0.0, zs, lod, w1, key="m1")
     wall(mb, (us, vs), (us, vr), 0.0, zs2, lod, key="m1s", top=[(0.0, zs), (vr - vs, zs2)])
-    L2 = ub - us
     w2 = [(1.6, 0.0, 1.1, 2.2, "entry")] + [(s, 0.95, 1.5, 1.5, "plain") for s in (4.2, 6.9)] + \
          [(s + ds, 0.95 + sh + 0.75, 1.2, 0.8, "ribbon") for s in (1.9, 4.6, 7.0) for ds in (-0.6, 0.6)]
     wall(mb, (us, vr), (ub, vr), 0.0, zs2, lod, w2, key="m2")

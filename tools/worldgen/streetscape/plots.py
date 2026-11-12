@@ -360,7 +360,6 @@ def layout(plot, cut=None, near=None, garages=(), gate_s=None, no_gate=False, ga
     has no way to the carriageway); no_gate: wicket only.
     Returns dict(runs=[dict(style, h, a, b, n, front)], gate=dict(m, n, t, w, kind)|None, wicket=dict|None,
     wickets=[dict], segs=[(a, b)])."""
-    key = plot["key"]
     c, eu, ev = plot["frame"]
     front = plot["front"]
     bb = plot["bbox"]

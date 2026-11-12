@@ -35,7 +35,7 @@ import math
 import numpy as np
 import shapely
 from scipy.spatial import cKDTree
-from shapely.geometry import LineString, box
+from shapely.geometry import box
 
 from roads import pipeline
 from terrain_mesh import chunks as CH
