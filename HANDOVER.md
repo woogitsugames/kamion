@@ -1,3 +1,19 @@
+# HANDOVER — kamion, SESJA 12 (start 2026-11-12 09:11, nowe konto)
+
+## Stan na żywo (s12)
+- 09:11 start. Usage: 5 h 0 % (reset 14:10), tydzień 17 %, **Fable 25 %** (reset 13.11 23:00). Trigger godzinny :17 (CronCreate, tylko w sesji lidera).
+- Watchdog (pid 33400), `regen.sh b2` (log `artifacts/logs/s11-regen-b2.log`) i `integration-s11/run.ps1` (czeka na END regeneracji) — żyją od 09:04, nie restartowane.
+- Sesje GPT (Codex) wznowione przez właściciela: life-r3, landmarks-r3, edge-r3, furniture-r2, asphalt-r2, vegetation-r4, light-r3, sbs-r3 … (procesy widoczne).
+- Agenci Claude Fable (3/3), wznowieni 09:13 z STATUS.md (każdy najpierw `git merge main`):
+| zadanie | ADR | worktree / gałąź | STATUS | stan |
+|---|---|---|---|---|
+| węzły r6 bariery + D51 B2/B7 | 0123 | `.claude/worktrees/junctions-r6` / `junctions-r6` | `artifacts/junctions-r6/STATUS.md` | w toku: merge main → b4_all.sh |
+| zabudowa r8 r2 | 0124 | `.claude/worktrees/buildings-r8` / `buildings-r8` | `artifacts/buildings-r16/STATUS.md` | w toku: merge main → full_round r2 |
+| pierzeja handlowa G3-B | 0126 | `.claude/worktrees/g3b-frontage` / `g3b-frontage` | `artifacts/g3b-frontage/STATUS.md` | w toku: merge main → build 2 |
+- Następne: integracja s11 (vqa Low → klin far-field g3-a 2948/303305) → krytyk 0123/0124/0126 → scalenie → regeneracja → nowi Fable na blokery G3-B (wysepka + D-3/D-6 ronda Bieżeństwa, LOD bramownicy, słup WN/ekrany na Low) → sbs na main → APK Low → gate3 A16.
+- Ostatni przydzielony ADR: 0126.
+
+---
 # HANDOVER — kamion, ZAMKNIĘCIE sesji 11 (2026-11-12 09:10) → start s12 na koncie z czystym limitem
 
 ## Prawda o stanie (czytaj to; niżej dziennik s11)
