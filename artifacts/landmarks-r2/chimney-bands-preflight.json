@@ -1,0 +1,64 @@
+{
+  "source_page": "https://commons.wikimedia.org/wiki/File:20200711_073128_Elektrociep%C5%82ownia_Bia%C5%82ystok.jpg",
+  "author": "Rakoon",
+  "license": "CC BY 3.0",
+  "attribution": "20200711 073128 Elektrociep\u0142ownia Bia\u0142ystok \u2014 Rakoon, CC BY 3.0, Wikimedia Commons. Reference crops/resizing indicated separately.",
+  "source_size_used": [
+    3840,
+    2160
+  ],
+  "source_status": "Resized reference; original download HTTP 429 twice, no local original claimed",
+  "heading_WORKING_VALUE_deg": 146.9132967399459,
+  "focal_pixels_assuming_36mm_equivalent_width": 2880.0,
+  "assumptions": "Rectilinear projection, small camera pitch, same stripe height; GPS rounded and equivalent focal/crop uncertain",
+  "estimated_uncertainty_m_WORKING_VALUE": 2.0,
+  "observations": {
+    "left": {
+      "osm_way": "628899554",
+      "source_x_WORKING_VALUE": 2962,
+      "boundaries_y_source_WORKING_VALUE": [
+        400,
+        482,
+        567,
+        650,
+        735
+      ],
+      "clean_spacings_px": [
+        82,
+        85,
+        83,
+        85
+      ],
+      "visible_head": "three separate outlets, two close head galleries",
+      "depth_at_inferred_heading_m": 502.97100808314707,
+      "mean_clean_spacing_px": 83.75,
+      "estimated_pitch_m_WORKING_VALUE": 14.62632705797346
+    },
+    "right": {
+      "osm_way": "628899553",
+      "source_x_WORKING_VALUE": 3662,
+      "boundaries_y_source_WORKING_VALUE": [
+        150,
+        256,
+        478,
+        584,
+        689
+      ],
+      "clean_spacings_px": [
+        106,
+        106,
+        105
+      ],
+      "visible_head": "one large outlet, head gallery and a lower shaft gallery",
+      "depth_at_inferred_heading_m": 410.3193256741069,
+      "mean_clean_spacing_px": 105.66666666666667,
+      "estimated_pitch_m_WORKING_VALUE": 15.054540073922674
+    }
+  },
+  "candidate_only": {
+    "pitch_m": 15.0,
+    "height_m_retained_from_OSM": 120,
+    "alternating_phase": "white 0..15 m, red 15..30 m, continuing to red 105..120 m",
+    "status": "WORKING_VALUE. Check with photo-aligned r3 renders before choosing; no mesh/source changes applied"
+  }
+}

@@ -40,3 +40,5 @@ Krok 6a: przygotowano audyt generatora porównujący deck SHA obu łańcuchów z
 Krok 6b: ADR 0119 uzupełniono o rzeczywisty baseline 232 PNG, zachowanie starej pozy kamery, wdrożone flagi i zachowany komplet kolizji. Wyniki po zmianie nadal UNVERIFIED. Generator kandydata pracuje pod heavy, bez równoległego uruchamiania testów z tej sesji.
 
 Krok 6c: audyt geometry-audit.json potwierdził 69 -> 0 stopni, 4 -> 0 biegów, łącznie -690 tris. Spec.decks obu łańcuchów, ich deck SHA przed/po i roads_qa są zgodne z własnym świeżym baseline. CANDIDATE.md opisuje osobno niewdrożoną możliwość zabrudzenia dołu/zacieków; nie jest ona częścią aktualnego wariantu. Pojedynczy test nadal oczekuje heavy.
+
+Krok 6d: do przygotowania r3 zapisano przybliżone granice pasów w lokalnej kopii 3840x2160 (CC BY 3.0, Rakoon). Optyka i odległości wskazują rytm około 15 m, z roboczą niepewnością 2 m i niepotwierdzoną pozą. To hipoteza do renderów r3, bez zmian wysokości lub modeli. Ponowna próba pobrania oryginału po przerwie także zwróciła HTTP 429; nie obchodzono ograniczenia. Test r2 nadal czeka na heavy.
