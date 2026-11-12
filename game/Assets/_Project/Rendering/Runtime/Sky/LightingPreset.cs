@@ -196,7 +196,9 @@ namespace Game.Rendering
             var p = CreateDusk();
             p.name = "LP_Night";
             p.sunElevationDeg = SkyModel.MinTwilightElevationDeg;
-            p.exposureCompensation = -3f; // second-stage candidate: preserve lamp/cab visibility; grade sky separately.
+            p.exposureCompensation = -3f; // reviewed Night appearance; preserve lamp/cab visibility.
+            p.skyDisplayGain = 0.125f;
+            p.skyDisplayDesaturation = 0.85f;
             return p;
         }
     }

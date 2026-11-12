@@ -1,4 +1,4 @@
-param([string]$Filter)
+﻿param([string]$Filter)
 $ErrorActionPreference = 'Stop'
 $repo = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..'))
 Set-Location $repo
@@ -23,6 +23,7 @@ finally {
 Get-Content $log -Tail 18
 Add-Content artifacts/light-r2/STATUS.md "EditMode (filtr='$Filter'): kod $code; szczegóły $log i XML artifacts/tests. Następny krok: odczytać liczbę testów i ewentualne porażki."
 git add -f artifacts/light-r2/STATUS.md
-git commit -m 'WIP light r1: record final EditMode exit'
+git commit -m 'WIP light r2: record EditMode exit'
 exit $code
+
 

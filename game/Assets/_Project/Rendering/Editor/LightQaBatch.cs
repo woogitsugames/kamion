@@ -4,7 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
@@ -27,6 +29,7 @@ namespace Game.Rendering.Editor
             public bool shadowWallProbe; // hall3: establish a physical 10 m span for the PNG edge measurement.
             public float clearSkySaturation; // 0 leaves preset unchanged; diagnostic display-only chroma.
             public bool lampProbe;
+            public bool actualDriverEye; // QA only: cab-dash eye, horizontal actual cab forward. Never a light source.
             public int expectedHeadlamps; // 0 unchecked, 1 off, 2 on. Requires per-camera probes.
             public bool overrideSkyDisplay;
             public float skyDisplayGain = 1f, skyDisplayDesaturation;
@@ -116,13 +119,39 @@ namespace Game.Rendering.Editor
                         lampProbe?.Capture(camera);
                     };
                     int count;
+                    void AddDriverEye(Scene scene, OpenSceneMode mode)
+                    {
+                        var eye = UnityEngine.Object.FindObjectsByType<ControlCamera>(FindObjectsInactive.Include, FindObjectsSortMode.None)
+                            .Single(c => c.gameObject.scene == scene && c.id == "cab-dash");
+                        var cab = UnityEngine.Object.FindObjectsByType<CabInteriorLighting>(FindObjectsInactive.Exclude, FindObjectsSortMode.None)
+                            .Single(c => c.gameObject.scene == scene && c.cab != null).cab;
+                        var go = new GameObject("Light QA actual driver eye");
+                        SceneManager.MoveGameObjectToScene(go, scene);
+                        go.transform.SetPositionAndRotation(eye.transform.position, Quaternion.LookRotation(cab.forward, cab.up));
+                        var camera = go.AddComponent<Camera>();
+                        camera.CopyFrom(eye.GetComponent<Camera>());
+                        camera.fieldOfView = 60f;
+                        camera.enabled = false;
+                        var control = go.AddComponent<ControlCamera>();
+                        control.id = "light-night-driver";
+                        control.note = "QA-only actual cab-dash eye; actual cab forward; FOV60. Not a matched photo pose.";
+                        go.SetActive(false);
+                        File.WriteAllText(Path.Combine(job.output, "actual-eye.json"), JsonUtility.ToJson(new EyeProof {
+                            position = go.transform.position, forward = go.transform.forward, up = go.transform.up,
+                            source = "cab-dash.position + CabInteriorLighting.cab.forward/up", fieldOfView = camera.fieldOfView
+                        }, true));
+                    }
+                    if (job.actualDriverEye) EditorSceneManager.sceneOpened += AddDriverEye;
                     RenderPipelineManager.beginCameraRendering += filter;
                     try
                     {
                         count = (int)renderer.Invoke(null, new object[] {
                             job.scene, job.width, job.height, job.tier, job.output, job.lighting, job.cameras });
                     }
-                    finally { RenderPipelineManager.beginCameraRendering -= filter; }
+                    finally {
+                        RenderPipelineManager.beginCameraRendering -= filter;
+                        if (job.actualDriverEye) EditorSceneManager.sceneOpened -= AddDriverEye;
+                    }
                     if (count <= 0) throw new InvalidOperationException("Job rendered no cameras: " + job.output);
                     int expected = string.IsNullOrEmpty(job.cameras) ? count : job.cameras.Split(',')
                         .Select(id => id.Trim()).Where(id => id.Length > 0).Distinct(StringComparer.OrdinalIgnoreCase).Count();
@@ -164,6 +193,13 @@ namespace Game.Rendering.Editor
                 RenderOverrides.Parse(_ => null);
             }
             if (Application.isBatchMode) EditorApplication.Exit(exit);
+        }
+
+        [Serializable] sealed class EyeProof
+        {
+            public Vector3 position, forward, up;
+            public float fieldOfView;
+            public string source;
         }
 
         [Serializable] sealed class ShadowWallProbe
