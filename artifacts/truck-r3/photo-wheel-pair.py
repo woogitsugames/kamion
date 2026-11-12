@@ -20,7 +20,7 @@ for tier in ('Low','High'):
     with Image.open(root/stage/condition/'truck-wheel-detail.png') as source:
         if source.size!=(2340,1080):
             raise ValueError('Changed QA camera resolution')
-        render=source.convert('RGB').crop((900,450,1650,1065))
+        render=source.convert('RGB').crop((850,260,1660,1080))
     render.thumbnail((440,340),Image.Resampling.LANCZOS)
     sheet=Image.new('RGB',(960,430),(24,24,24))
     draw=ImageDraw.Draw(sheet)
