@@ -45,3 +45,5 @@ NASTĘPNY KROK: przygotować własne skrypty r2 z ownerem heavy gpt-furniture-r2
 2026-11-12T02:50:55.7468006+01:00: próba rodziny 12 passed, 1 failed. Niezależny odczyt danych wyjaśnił 43 vs36: regex testu liczył 7 nazw prototypów (sign_post, gantry i g3), nie materiały. Fabryka poprawnie czytała wyłącznie listy materials. Poprawiono parser oczekiwanego zestawu, bez osłabiania wymogu pokrycia wszystkich rzeczywistych lic. Test GUID/wycofania do Lit i high-only przeszedł. NASTĘPNY KROK: ponowić FurnitureSignTests -Phase family-final.
 
 2026-11-12T02:51:18.2860778+01:00: Unity sign-probe family-final Low overcast; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
+
+2026-11-12T02:51:40.9599394+01:00: heavy world before; sukces=True; slot gpt-furniture-r2 zwolniony. NASTĘPNY KROK: sprawdzić log i kontynuować walidację rundy.
