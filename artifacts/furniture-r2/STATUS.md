@@ -185,3 +185,5 @@ NASTĘPNY KROK: przygotować własne skrypty r2 z ownerem heavy gpt-furniture-r2
 2026-11-12T09:46:04.7305971+01:00: komplet standardowych obrazów po zmianie i dokładne liczniki Low zapisane. NASTĘPNY KROK: odczytać wszystkie delty, kontrolowany night-rig Low/High i arkusze porównawcze w heavy; geometrię raportować osobno według jej wyniku.
 
 2026-11-12T09:46:31.4002977+01:00: finalne330 obrazów standardowych i165 dokładnych liczników Low zapisane, walidacja SHA/statystyk wszystkich trzech wariantów oświetlenia zakończona. Rozpoczęto końcowe EditMode. Przygotowując r3 obejrzano5 referencji≤960; najbliższe zdjęcie często patrzy za przystanek, dlatego shortlistę uzupełniono o kierunek patrzenia. Zdjęcie214816220453640 pokazuje czerwoną wiatę przy OSM5802408812; pozostałe nocne referencje nie dowodzą braku wiaty.
+
+2026-11-12T09:47:03.1907625+01:00: Unity editmode final3 Low overcast; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
