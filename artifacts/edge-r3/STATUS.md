@@ -23,3 +23,4 @@ Dodano BuildAsphaltDetailCache, uruchamiające build_all --only asphalt_detail_p
 Następny krok po zakończeniu prepare-baseline: heavy.ps1 -Task BuildAsphaltDetailCache, następnie import-baseline.ps1.
 Krok 8: odczyt WorldSceneBuilder potwierdził, że pełny import świata korzysta z istniejącego prefab pojazdu. Do przygotowania bazy po merge cab dodano standardowy WorldTruckInstaller.InstallBatch, z osobnym Acquire/Release Unity i znacznikiem TRUCK_RESULT. Odtwarza wyłącznie generowane zasoby; nie edytujemy źródeł cab/truck ani ich parametrów.
 Następny krok po build_world: pojedyncza warstwa detalu asfaltu pod heavy, potem import bazy i cztery serie Before.
+2026-11-12T01:22:08.8510520+01:00 Zregenerowano pełny świat bazowy r3 bez fallback=True; następnie pełny import Unity i rendery Before.
