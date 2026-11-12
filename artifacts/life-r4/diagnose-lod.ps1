@@ -1,3 +1,4 @@
+param([ValidateSet('Low','High')][string[]]$Tiers=@('Low','High'),[ValidatePattern('^[a-z0-9-]*$')][string]$Suffix='')
 $ErrorActionPreference='Stop'
 Set-Location ([IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..')))
 if((git branch --show-current).Trim() -ne 'gpt-life-r4'){throw 'Wrong branch'}
@@ -40,11 +41,12 @@ $ids=@(foreach($item in $wanted){
 })
 $selected=$ids -join ','
 $result=@()
-foreach($tier in @('Low','High')) {
+foreach($tier in $Tiers) {
  Assert-Frozen
  if((Get-FileHash game/Assets/_Generated/Editor/Life4YardLodProbe.cs).Hash -ne $probeHash){throw 'Installed diagnostic probe changed'}
  $scene=if($tier -eq 'High'){'WorldC_High'}else{'WorldC'}
- $dir=[IO.Path]::GetFullPath("artifacts/life-r4/baseline-lod/$tier-overcast")
+ $extra=if($Suffix){"-$Suffix"}else{''}
+ $dir=[IO.Path]::GetFullPath("artifacts/life-r4/baseline-lod/$tier-overcast$extra")
  if(Test-Path $dir){throw 'Diagnostic evidence exists; inspect instead of overwrite'}
  $canonical=Get-Content "artifacts/life-r4/before/$tier-overcast/exact-stats.json" -Raw|ConvertFrom-Json
  New-Item -ItemType Directory -Path $dir|Out-Null
@@ -55,7 +57,8 @@ foreach($tier in @('Low','High')) {
    '-qaScene',$scene,'-qaWidth','2340','-qaHeight','1080','-qaTier',$tier,'-qaOutput',$dir,'-qaLighting','overcast',
    '-qaGate3',[IO.Path]::GetFullPath('artifacts/life-r4/cameras.json'),'-qaCameras',$selected,
    '-qaLifeExact',"$dir/exact-stats.json",'-qaLifeYardLod',"$dir/native-lod.json",'-qaLifeYardTargets',[IO.Path]::GetFullPath('artifacts/life-r4/yard-native-targets.json'))
-  if($code){throw "Diagnostic Unity failed: $tier"}
+  @{tier=$tier;exit_code=$code;finished=(Get-Date -Format o);probe_sha=$probeHash}|ConvertTo-Json|Set-Content "$dir/unity-result.json"
+  if($code){throw "Diagnostic Unity failed: $tier ($code)"}
  } finally {
   & pwsh -NoProfile -File scripts/unity-slot.ps1 -Release -Owner gpt-life
   git restore -- game/Assets/_Project/Rendering/Settings game/ProjectSettings
@@ -80,4 +83,5 @@ foreach($tier in @('Low','High')) {
  git commit -m "wip(life): potwierdź natywny LOD placu $tier"
  if($LASTEXITCODE){throw 'WIP failed'}
 }
-@{finished=(Get-Date -Format o);rows=$result;probe_sha=$probeHash;saved_scenes_unchanged=$true}|ConvertTo-Json -Depth 8|Set-Content artifacts/life-r4/baseline-lod-result.json
+$extra=if($Suffix){"-$Suffix"}else{''}
+@{finished=(Get-Date -Format o);rows=$result;probe_sha=$probeHash;saved_scenes_unchanged=$true}|ConvertTo-Json -Depth 8|Set-Content "artifacts/life-r4/baseline-lod-result$extra.json"

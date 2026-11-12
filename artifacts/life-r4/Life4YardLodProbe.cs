@@ -61,6 +61,17 @@ namespace Game.Editor.VisualQA
             EditorSceneManager.sceneOpened += Opened;
             RenderPipelineManager.beginCameraRendering += Begin;
             RenderPipelineManager.endCameraRendering += End;
+            EditorApplication.quitting += Cleanup;
+        }
+        static void Cleanup()
+        {
+            RenderPipelineManager.beginCameraRendering -= Begin;
+            RenderPipelineManager.endCameraRendering -= End;
+            if (Current == null) return;
+            // Diagnostic rendering can create material/forest buffers while the
+            // component is disabled. Restore its lifecycle before editor exit.
+            typeof(WorldInstances).GetMethod("ReleaseMaterials", Private).Invoke(Current, null);
+            Current.enabled = true;
         }
         static void Opened(Scene scene, OpenSceneMode mode)
         {
