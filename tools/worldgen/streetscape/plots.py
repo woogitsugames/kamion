@@ -81,11 +81,13 @@ GROUND_LAYER = "plot_ground"
 # `furniture` (same draw count: one submesh either way) - the engine can then shorten the range of the plots in the
 # mirror cameras (Game.World.PlotViewCull) without touching barriers, lamps and street fences.
 KIT_LAYER = "plots"
+KIT_LAYER_LOW = "plots_low"     # ADR 0132: the same kit without the parts marked High-only (Kit.low), Low / Medium chunk variant
 PATH_W_M = 1.1
 DROP_H_M = 0.03               # lowered kerb at a driveway, m above the gutter (WORKING_VALUE: 2-4 cm in practice)
 DROP_RAMP_M = 1.0             # kerb ramps down over this length on either side of the driveway
 DROP_REACH_M = 14.0           # a gate further than this from the carriageway gets no access
 DITCH_FILL_M = 0.06           # roadside ditch depth left over a driveway (culvert), m
+STUB_M = 3.2                  # a fence stretch shorter than this with a free end is not built (ADR 0132)
 SEG_M = 2 * PK.BAY_M          # fence panels follow the ground in steps of two post pitches of the atlas (5.12 m)
 STEP_ZONE_M = (1.6, 2.1)      # door steps of a house: width, depth from the wall (facade_kit.door_steps: landing 1.0 m
                               # + up to 3 goings of 0.3 m), m - no fence, no plant and no bin stands in it
@@ -130,6 +132,9 @@ SIDE_OF_BRICK = {"brick_picket": "picket", "brick_boards": "boards_rust", "brick
 GATE_FRAME = {"picket": "wood_brown", "boards_rust": "wood_rust", "boards_brown": "wood_brown", "boards_grey": "wood_grey",
               "chainlink": "steel_green", "bars": "steel_black", "lamella": "steel_graphite"}
 GATE_ROW = {"wall": "lamella", "concrete": "bars"}          # a wall / concrete fence has a steel gate
+TRACKS_SHARE = {"old": 0.6, "prl": 0.25, "new": 0.0}      # share of garage-less driveways that are two wheel tracks
+TRACK_W_M = 0.75              # one wheel track (two rows of 35 cm slabs / a poured strip; WORKING_VALUE)
+TRACK_GAP_M = 0.9             # grass between the tracks
 SURFACE_BY_AGE = {"old": 0.25, "prl": 0.6, "new": 0.9}      # share of block-paved driveways (the rest: gravel, P20)
 THUJA_ROW_MAX = 12            # plants per row (triangle budget: every plant is 36-60 triangles of the chunk mesh)
 THUJA_ROW_SHARE = {"old": 0.2, "prl": 0.45, "new": 0.65}
@@ -230,6 +235,16 @@ class _Near:
         d = np.hypot(*(self.A + ab * k[:, None] - m).T)
         par = np.abs(ab @ t) / np.sqrt(L2) > 0.90
         return bool(np.any((d < r) & par))
+
+    def touches(self, m, r=0.8):
+        """Is point m within r of any existing fence segment?"""
+        self._flush()
+        if not len(self.A):
+            return False
+        ab = self.B - self.A
+        L2 = np.maximum((ab * ab).sum(1), 1e-9)
+        k = np.clip(((m - self.A) * ab).sum(1) / L2, 0.0, 1.0)
+        return bool(np.any(np.hypot(*(self.A + ab * k[:, None] - m).T) < r))
 
 
 def plan(houses, roads_poly, obstacles, barriers=(), seed=""):
@@ -351,6 +366,20 @@ def _post_half(style):
     return 0.19 if STYLES[style][4] else 0.05
 
 
+CORNER_SNAP_M = 0.9           # a gate group closer than this to the end of the front edge moves onto the corner
+
+
+def _snap_corner(g0, w, L):
+    """ADR 0132 (review 0124 P1-d, r16_drive_3): a gate 0.3 m short of the plot corner left a gap no fence panel fits
+    (stretches under 0.6 m are not built) - the side fence then started in the air beside the gate post. The outer
+    gate post IS the corner post now."""
+    if g0 < CORNER_SNAP_M:
+        return 0.0
+    if L - (g0 + w) < CORNER_SNAP_M:
+        return L - w
+    return g0
+
+
 def layout(plot, cut=None, near=None, garages=(), gate_s=None, no_gate=False, garage_doors=()):
     """Fence runs, gate and wicket(s) of one plot.
     cut: polygon the fence does not cross (roads, buildings, door steps, garage doors); near: _Near of existing fences
@@ -408,6 +437,14 @@ def layout(plot, cut=None, near=None, garages=(), gate_s=None, no_gate=False, ga
         if gate_s is not None:
             sg = float(gate_s)
         out["gate_s"], out["gate_range"] = sg, (gslot / 2 + 0.3, L - gslot / 2 - 0.3)
+
+        def snap(g0, w):
+            # onto the corner, unless the gate would then count as closed by the neighbour's fence that ends at that
+            # corner (collinear street fronts: _Near.parallel within PARALLEL_SKIP_M of the gate's middle)
+            g1 = _snap_corner(g0, w, L)
+            if g1 != g0 and near is not None and any(near.parallel(a + t * (g1 + f * w), t) for f in (0.25, 0.5, 0.75)):
+                return g0
+            return g1
         if no_gate:                                          # no way to a carriageway (ADR 0124): a wicket only,
             if L >= wslot + 0.6:                             # in front of the house door when it is known
                 st = plot.get("steps") or []
@@ -427,13 +464,13 @@ def layout(plot, cut=None, near=None, garages=(), gate_s=None, no_gate=False, ga
         elif L >= gslot + wslot + 0.6:
             grp = gslot + wslot - 2 * ph                     # gate + wicket share the post between them
             g0 = sg - (gslot / 2 if w_side > 0 else gslot / 2 + wslot - 2 * ph)
-            g0 = min(max(g0, 0.3), L - grp - 0.3)
+            g0 = snap(min(max(g0, 0.3), L - grp - 0.3), grp)
             if w_side > 0:
                 gate_iv["gate"], gate_iv["wicket"] = (g0, g0 + gslot), (g0 + gslot - 2 * ph, g0 + grp)
             else:
                 gate_iv["wicket"], gate_iv["gate"] = (g0, g0 + wslot), (g0 + wslot - 2 * ph, g0 + grp)
         elif L >= gslot + 0.6:
-            g0 = min(max(sg - gslot / 2, 0.3), L - gslot - 0.3)
+            g0 = snap(min(max(sg - gslot / 2, 0.3), L - gslot - 0.3), gslot)
             gate_iv["gate"] = (g0, g0 + gslot)
         elif L >= wslot + 0.6:
             w0 = min(max(sg - wslot / 2, 0.3), L - wslot - 0.3)
@@ -484,6 +521,29 @@ def layout(plot, cut=None, near=None, garages=(), gate_s=None, no_gate=False, ga
                         out["runs"].append({"style": style, "h": h, "a": q0, "b": q1, "n": n, "front": is_front})
                         out["segs"].append((q0, q1))
                     k = k1
+    # ADR 0132 (review 0124 P1-d, `r16_drive_3`: a lone panel of the side fence stood at an angle beside the gate, the
+    # rest of that edge being closed by the neighbour's fence): a stretch shorter than STUB_M that joins nothing at one
+    # of its ends - no other run, no gate post, no wall / road edge that cut it, no existing fence - is not built.
+    posts = [g["m"] + g["t"] * (sx * (g["w"] / 2 + 2 * g["ph"])) for g in
+             ([out["gate"]] if out["gate"] is not None else []) + ([out["wicket"]] if out["wicket"] is not None else []) + out["wickets"]
+             for sx in (-1.0, 1.0)]
+    while True:
+        drop = None
+        for i, r in enumerate(out["runs"]):
+            if r["front"] or np.hypot(*(r["b"] - r["a"])) >= STUB_M:      # the street front stays closed up to its corner
+                continue
+            for e in (r["a"], r["b"]):
+                joined = any(np.hypot(*(e - q)) < 0.7 for j, o in enumerate(out["runs"]) if j != i for q in (o["a"], o["b"]))                     or any(np.hypot(*(e - q)) < 0.9 for q in posts)                     or (cut is not None and cut.distance(Point(*e)) < 0.8)                     or (near is not None and near.touches(e))
+                if not joined:
+                    drop = i
+                    break
+            if drop is not None:
+                break
+        if drop is None:
+            break
+        del out["runs"][drop]
+        out["stubs_dropped"] = out.get("stubs_dropped", 0) + 1
+    out["segs"] = [(r["a"], r["b"]) for r in out["runs"]]
     return out
 
 
@@ -768,7 +828,7 @@ def region_plan(blds, roads_poly, carriage, yards, src, origin, bpoly, net=None,
                 p["access"] = None
             gone = {p["id"] for p in bad}
             drops = [d for d in drops if d["plot"] not in gone]
-    return {"plots": plots, "drops": drops, "roads_poly": roads_poly, "carriage": carriage, "access_stats": astats}
+    return {"plots": plots, "drops": drops, "roads_poly": roads_poly, "carriage": carriage, "access_stats": astats, "bpoly": bpoly}
 
 
 # ------------------------------------------------------------------------------------------------- ground
@@ -820,6 +880,16 @@ def paved_items(rp, roads_poly, bpoly, paved):
                 hit = LineString([g["m"], g["m"] + g["n"] * 8.0]).intersection(roads_poly)
                 d_out = float(Point(*g["m"]).distance(hit)) + 0.3 if not hit.is_empty else 0.6
             apron = LineString([g["m"] - g["n"] * 0.3, g["m"] + g["n"] * d_out]).buffer(g["w"] / 2, cap_style="flat")
+            # ADR 0132 (review 0124 P2-e "zroznicowanie wieku dzialek": every driveway was a new block-paved slab):
+            # on older plots without a garage the driveway is two wheel tracks with grass between them (refs P10, P20 -
+            # the same paving material, so no extra draw); the apron outside the gate stays a full slab
+            if lay.get("garage") is None and hfloat(plot["key"], "tracks") < TRACKS_SHARE[plot["age"]]:
+                e_ = np.asarray(ax.coords[-1])
+                d_ = (e_ - g["m"]) / max(float(np.hypot(*(e_ - g["m"]))), 1e-6)
+                mid = LineString([g["m"] + d_ * 1.0, e_ + d_ * 1.5]).buffer(TRACK_GAP_M / 2, cap_style="flat")
+                drive = ax.buffer(TRACK_GAP_M / 2 + TRACK_W_M, cap_style="flat", join_style="mitre").intersection(inner.union(
+                    LineString([g["m"] - g["n"] * 0.5, g["m"] + g["n"] * 0.5]).buffer(g["w"] / 2, cap_style="flat"))).difference(mid)
+                plot["tracks"] = True
             plot["drive"] = shapely.unary_union([drive, apron]).buffer(0.01).difference(others[i])
             hard.append(plot["drive"])
         # paved depth in front of every garage door (review 0114 P2-r8-b: the garage opened onto the lawn)
@@ -871,10 +941,11 @@ def _polys(g, min_area, simplify=0.05):
 
 
 # ------------------------------------------------------------------------------------------------- geometry
-def _fol(n):
-    """COLOR_0 of a foliage vertex: normal * 0.5 + 0.5 (generator axes), a = 1 (Kamion/World PlotKit)."""
+def _fol(n, occ=1.0):
+    """COLOR_0 of a foliage vertex: normal * 0.5 + 0.5 (generator axes), a = 1 (Kamion/World PlotKit). ADR 0132: the
+    LENGTH of the normal is the plant's own occlusion (1 = lit skin, ~0.5 = foot / inside of a hedge or crown)."""
     n = np.asarray(n, float)
-    n = n / max(float(np.linalg.norm(n)), 1e-9)
+    n = n / max(float(np.linalg.norm(n)), 1e-9) * min(max(float(occ), 0.05), 1.0)
     return [n[0] * 0.5 + 0.5, n[1] * 0.5 + 0.5, n[2] * 0.5 + 0.5, 1.0]
 
 
@@ -885,16 +956,24 @@ class Kit:
 
     def __init__(self, tint=(1.0, 1.0, 1.0)):
         self.V, self.UV, self.T, self.C = [], [], [], []
-        self.n = 0
+        self.L = []                 # per part: True = both chunk variants, False = High only, "only" = Low / Medium only
+        self.low = True             # state for the parts added now (ADR 0132: the Low kit must not cost more than 0124)
+        self.tag = "other"          # state: accounting class of the parts added now
+        self.by, self.by_low = {}, {}
         self.tint = [min(max(float(c) * 0.5, 0.0), 1.0) for c in tint] + [0.0]
 
     def tris(self, V, UV, T, col=None):
         V = np.asarray(V, float).reshape(-1, 3)
+        T = np.asarray(T, np.int64).reshape(-1, 3)
         self.V.append(V)
         self.UV.append(np.asarray(UV, float).reshape(-1, 2))
-        self.T.append(np.asarray(T, np.int64).reshape(-1, 3) + self.n)
+        self.T.append(T)
         self.C.append(np.tile(self.tint, (len(V), 1)) if col is None else np.asarray(col, float).reshape(-1, 4))
-        self.n += len(V)
+        self.L.append(self.low)
+        if self.low != "only":
+            self.by[self.tag] = self.by.get(self.tag, 0) + len(T)
+        if self.low is not False:
+            self.by_low[self.tag] = self.by_low.get(self.tag, 0) + len(T)
 
     def quad(self, P, UV, col=None):
         self.tris(P, UV, [(0, 1, 2), (0, 2, 3)], col)
@@ -913,10 +992,14 @@ class Kit:
             P = [[*(cs[0] + sh), z1], [*(cs[1] + sh), z1], [*(cs[2] + sh), z1], [*(cs[3] + sh), z1]]
             self.quad(P, [uv(4, j) for j in range(4)] if callable(uv) else [uv] * 4)
 
-    def out(self):
-        if not self.V:
+    def out(self, low=False):
+        """(V, UV, T, C) of the plot; low=True: only the parts of the Low / Medium variant. None when empty."""
+        idx = [i for i in range(len(self.V)) if (self.L[i] is not False if low else self.L[i] != "only")]
+        if not idx:
             return None
-        return np.concatenate(self.V), np.concatenate(self.UV), np.concatenate(self.T), np.concatenate(self.C)
+        off = np.cumsum([0] + [len(self.V[i]) for i in idx[:-1]])
+        return (np.concatenate([self.V[i] for i in idx]), np.concatenate([self.UV[i] for i in idx]),
+                np.concatenate([self.T[i] + o for i, o in zip(idx, off)]), np.concatenate([self.C[i] for i in idx]))
 
 
 def _brick_uv(u0, w, h):
@@ -938,7 +1021,7 @@ def brick_post(kit, p, t, z, h, key):
     kit.box(p, t, 0.23, 0.23, z + h, z + h + 0.07, PK.SWATCH["concrete"])
 
 
-LEAN_DEG = {"old": 3.0, "prl": 1.2, "new": 0.0}     # largest lean of a fence post by age class (review 0114 P2-r8-e)
+LEAN_DEG = {"old": 4.5, "prl": 1.5, "new": 0.0}     # largest lean of a fence post by age class (review 0114 P2-r8-e)
 
 
 def fence_run(kit, style, a, b, n, h, zf, key, col=None, ends=(True, True), lean_deg=0.0):
@@ -1050,10 +1133,20 @@ def gate_geo(kit, g, style, h, z, key, col=None):
                  [[u0, v0 + 0.06 * (v1 - v0)], [u1, v0 + 0.06 * (v1 - v0)], [u1, v1 - 0.04 * (v1 - v0)], [u0, v1 - 0.04 * (v1 - v0)]])
         if kind == "slide":                                  # ground beam of the cantilever gate
             kit.box(m + t * 0.5 * (x0 + x1) + o, t, (x1 - x0) / 2, 0.04, z + 0.02, z + 0.09, frame)
-    if kind == "wicket":                                     # letter box on the post, street side
-        box = PK.SWATCH[hpick(["galv", "steel_black", "steel_green", "wood_brown"], key, "mail")]
-        p = m + t * (W / 2 + ph) + n * (ph + 0.05)
-        kit.box(p, t, 0.13, 0.05, z + 0.95, z + 1.29, box)
+    if kind == "wicket":
+        # Letter box on the wicket post, street side. ADR 0132 (review 0124 P1-d: a black 26 x 34 cm box on a 10 cm
+        # black post in front of black lamellae read as a square hanging on the infill): the box never has the colour
+        # of the fence frame, is 24 x 32 x 9 cm, and a steel / wooden fence gets a 12 x 12 cm post with a cap to carry it.
+        frame_name = GATE_FRAME.get(rowname, "steel_graphite")
+        box = PK.SWATCH[hpick([c for c in ("galv", "steel_green", "wood_brown", "steel_black", "lid_brown") if c != frame_name
+                               and not (c == "steel_black" and frame_name == "steel_graphite")], key, "mail")]
+        pp = m + t * (W / 2 + ph)
+        if not brick:
+            kit.box(pp, t, 0.06, 0.06, z - 0.1, z + hg + 0.12, frame, top=False)
+            kit.box(pp, t, 0.07, 0.07, z + hg + 0.12, z + hg + 0.145, frame)
+        off = (0.19 if brick else 0.06) + 0.047
+        kit.box(pp + n * off, t, 0.12, 0.045, z + 0.98, z + 1.30, box)
+        kit.box(pp + n * off, t, 0.13, 0.055, z + 1.30, z + 1.315, box)       # lid lip
     if col is not None:
         col.append((m - t * (W / 2), m + t * (W / 2), z - 0.1, z + hg))
 
@@ -1114,6 +1207,69 @@ def thuja(kit, p, z, h, r, key, dead=False):
         card(kit, pc, z - 0.05, sp, 2.5 * r, h * 1.02, a0 + 0.3 + i * math.pi / 2)
 
 
+def thuja_lite(kit, p, z, h, r, key, dead=False, core=True, cards=1):
+    """Low / Medium variant of thuja() (ADR 0132: the Low kit stays within the triangles of ADR 0124): a 4-sided core
+    of two bands closed by a blunt point + ONE silhouette card - 14 triangles; core=False (single plants away from a
+    row): the two crossed silhouette cards only - 4 triangles. Same atlas row, sprites, lean and seed as thuja()."""
+    a0 = hfloat(key, "ta") * 6.2832
+    lean = (np.array([hfloat(key, "tlx"), hfloat(key, "tly")]) - 0.5) * 0.08
+    sp = "thuja_c" if dead or hfloat(key, "tsp") < 0.12 else ("thuja_a" if hfloat(key, "tsp") < 0.56 else "thuja_b")
+    pc = np.asarray(p, float) + lean * h * 0.5
+    if not core:
+        for i in range(2):
+            card(kit, pc, z - 0.05, sp, 2.5 * r, h * 1.02, a0 + 0.3 + i * math.pi / 2)
+        return
+    v0, v1 = PK.row("thuja")
+    sides = 4
+    circ = 2 * math.pi * r
+    span = min(circ / PK.KIT_M, 0.11) if dead else circ / PK.KIT_M
+    u0 = (PK.THUJA_GREEN_U + 0.015 + hfloat(key, "tu") * (1 - PK.THUJA_GREEN_U - 0.03 - span)) if dead else \
+        hfloat(key, "tu") * (PK.THUJA_GREEN_U - span - 0.01)
+    V, UV, C = [], [], []
+    for f, k_, fv in ((0.0, 0.80, 0.02), (0.58, 0.88, 0.62)):
+        zz = f * h
+        for j in range(sides + 1):
+            ang = a0 + 2 * math.pi * j / sides
+            rr = r * 0.84 * k_
+            V.append([p[0] + lean[0] * zz + math.cos(ang) * rr, p[1] + lean[1] * zz + math.sin(ang) * rr, z - 0.05 + zz])
+            UV.append([u0 + span * j / sides, v0 + (v1 - v0) * fv])
+            C.append(_fol([math.cos(ang) * 0.9, math.sin(ang) * 0.9, 0.25 + 0.5 * f]))
+    top = len(V)
+    V.append([p[0] + lean[0] * h * 0.93, p[1] + lean[1] * h * 0.93, z - 0.05 + h * 0.93])
+    UV.append([u0 + span * 0.5, v0 + (v1 - v0) * 0.98])
+    C.append(_fol([0.0, 0.0, 1.0]))
+    m = sides + 1
+    T = []
+    for j in range(sides):
+        T += [(j, j + 1, m + j + 1), (j, m + j + 1, m + j), (m + j, m + j + 1, top)]
+    kit.tris(V, UV, T, C)
+    for i in range(cards):                                   # cards=2 (High, near the street): 16 triangles
+        card(kit, pc, z - 0.05, sp, 2.5 * r, h * 1.02, a0 + 0.3 + i * math.pi / 2)
+
+
+def fruit_tree_lite(kit, p, z, h, key, r=None):
+    """Low / Medium variant of fruit_tree() (ADR 0132): the trunk as two crossed strips and three crossed cards of the
+    crown - 10 triangles; same size, lean, sprite and seed as fruit_tree()."""
+    p = np.asarray(p, float)
+    R = float(r) if r is not None else h * (0.36 + 0.10 * hfloat(key, "fr"))
+    R = min(max(R, 1.0), 0.62 * h)
+    a0 = hfloat(key, "fy") * 6.2832
+    fork = h * (0.28 + 0.08 * hfloat(key, "ff"))
+    zc0 = z + max(h - 1.9 * R, fork * 0.85)
+    hc = z + h - zc0
+    tr = 0.055 + 0.022 * h / 3.4
+    lean = (np.array([hfloat(key, "flx"), hfloat(key, "fly")]) - 0.5) * 0.5
+    top = p + lean * fork / max(h, 1.0)
+    zt = max(z + fork, zc0 + 0.25 * hc)
+    for k in range(2):
+        d = np.array([math.cos(a0 + k * 1.5708), math.sin(a0 + k * 1.5708)]) * tr
+        kit.quad([[*(p - d), z - 0.1], [*(p + d), z - 0.1], [*(top + d), zt], [*(top - d), zt]], [PK.SWATCH["trunk"]] * 4)
+    sp = "apple_a" if hfloat(key, "fa") < 0.5 else "apple_b"
+    cc = top + lean * 0.3
+    for i in range(3):
+        card(kit, cc, zc0 - 0.03 * hc, sp, 2.3 * R, hc * 1.03, a0 + 0.4 + i * math.pi / 3)
+
+
 def spruce(kit, p, z, h, key):
     """Blue spruce (świerk kłujący, refs P02 / P17 / P18). ADR 0124: three crossed silhouette cards of photographed
     twigs (whorls, scalloped outline) and a trunk - 14 triangles (ADR 0114: up to 108 in drooping skirts that showed
@@ -1139,56 +1295,231 @@ def big_tree(kit, p, z, h, key):
         card(kit, p, z, "tree_a", W, H, a0 + i * math.pi / 3, z_off=h - H)
 
 
-def fruit_tree(kit, p, z, h, key):
-    """Small orchard tree (apple): a trunk and three crossed crown cards."""
-    sp = "apple_a" if hfloat(key, "fa") < 0.5 else "apple_b"
-    wm, hm = PK.SPRITE_M[sp]
-    k = h / 3.4
-    a0 = hfloat(key, "fy") * 3.1416
-    tr = 0.05 + 0.02 * k
-    kit.box(np.asarray(p, float), np.array([math.cos(a0), math.sin(a0)]), tr, tr, z - 0.1, z + 0.36 * h, PK.SWATCH["trunk"], top=False)
-    for i in range(3):
-        card(kit, p, z, sp, wm * k, hm * k, a0 + i * math.pi / 3, z_off=h - hm * k)
+def _skin_card(kit, c, z, az, W, H, sprite, tilt, occ=1.0, flip=False):
+    """A plant card that lies ON the skin of a crown / bush: centred on xy c at height z (its foot), facing outward
+    along azimuth az, leaning back by `tilt` (rad) at the top. Normals = radial + up, so every card of one plant shades
+    as one volume."""
+    u0, u1, v0, v1 = PK.sprite(sprite)
+    if flip:
+        u0, u1 = u1, u0
+    out = np.array([math.cos(az), math.sin(az)])
+    side = np.array([-out[1], out[0]]) * (W / 2)
+    back = -out * (math.sin(tilt) * H)
+    hz = math.cos(tilt) * H
+    A, B = np.asarray(c, float) - side, np.asarray(c, float) + side
+    lo = [out[0], out[1], 0.15]
+    hi = [out[0] * 0.55, out[1] * 0.55, 0.85]
+    kit.quad([[*A, z], [*B, z], [*(B + back), z + hz], [*(A + back), z + hz]],
+             [[u0, v0], [u1, v0], [u1, v1], [u0, v1]],
+             [_fol(lo, occ * 0.80), _fol(lo, occ * 0.80), _fol(hi, occ), _fol(hi, occ)])
+
+
+def _core(kit, c, z0, rx, h, key, sides=5, occ=0.26, rings=3):
+    """Dark inner mass of a bush / crown: a lumpy dome of the dense hedge-leaf row, deep in the plant's own shade - it
+    closes the gaps between the skin cards (no sky through the middle of a crown) and is what every real shrub shows
+    between its outer sprays. The row is drawn 1 : 1 (1.5 m of leaves in v), never stretched."""
+    v0, v1 = PK.row("hedge")
+    fr = ((0.0, 0.60), (0.40, 1.0), (0.78, 0.66)) if rings >= 3 else ((0.0, 0.66), (0.52, 0.98))
+    a0 = hfloat(key, "ca") * 6.2832
+    u_off = hfloat(key, "cu")
+    span = 2 * math.pi * rx / PK.KIT_M
+    row_m = PK.ROW_H_M["hedge"]
+    vb = 0.08
+
+    def vfold(zr):                                           # height on the dome -> v, folded back and forth in the row
+        q = (zr / row_m) % 1.32
+        return vb + (q if q <= 0.66 else 1.32 - q)
+    V, UV, C = [], [], []
+    for i, (f, k) in enumerate(fr):
+        for j in range(sides + 1):
+            jj = j % sides
+            ang = a0 + 2 * math.pi * j / sides
+            rr = rx * k * (0.88 + 0.24 * hfloat(key, "cr", i, jj))
+            V.append([c[0] + math.cos(ang) * rr, c[1] + math.sin(ang) * rr, z0 + f * h])
+            UV.append([u_off + span * j / sides, v0 + (v1 - v0) * vfold(f * h)])
+            C.append(_fol([math.cos(ang), math.sin(ang), -0.2 + 0.9 * f], occ * (0.8 + 0.3 * f)))
+    top = len(V)
+    V.append([c[0], c[1], z0 + h * 0.96])
+    UV.append([u_off + span * 0.5, v0 + (v1 - v0) * vfold(h * 0.96)])
+    C.append(_fol([0, 0, 1], occ * 1.15))
+    T = []
+    m = sides + 1
+    for i in range(len(fr) - 1):
+        for j in range(sides):
+            a_, b_, c_, d_ = i * m + j, i * m + j + 1, (i + 1) * m + j + 1, (i + 1) * m + j
+            T += [(a_, b_, c_), (a_, c_, d_)]
+    for j in range(sides):
+        T.append(((len(fr) - 1) * m + j, (len(fr) - 1) * m + j + 1, top))
+    kit.tris(V, UV, T, C)
+
+
+def _tent(kit, c, z, az, r_base, W, H, sprite, occ, tilt=0.82):
+    """Two cards leaning against each other over the middle of a crown: its top, from every side and from above."""
+    for j in range(2):
+        a = az + j * math.pi
+        _skin_card(kit, np.asarray(c, float) + np.array([math.cos(a), math.sin(a)]) * r_base, z, a, W, H, sprite, tilt, occ, flip=j == 1)
+
+
+def bush(kit, p, z, r, h, key, red=False, cards=6):
+    """A grown shrub (lilac, mock orange, elder, hazel; refs P08, P09, P12: they stand against the fences and hang over
+    them). ADR 0132 (review 0124 P1-a / P1-e): a dark core + leaf sprays lying on its skin, overlapping all round, + a
+    tent of two sprays over the top - instead of the two crossed cards of ADR 0114 (a paper cut-out from 5-10 m).
+    12 + 2 * (cards + 2) triangles (r4: the core is one band + a cap - the High frame estimate was over 2.0 M)."""
+    p = np.asarray(p, float)
+    sp = "shrub_b" if red else "shrub_a"
+    occ = 0.86 + 0.14 * hfloat(key, "bo")
+    _core(kit, p, z - 0.05, r * 0.52, h * 0.66, key, sides=4, occ=0.26 * occ, rings=2)
+    a0 = hfloat(key, "ba") * 6.2832
+    for i in range(cards):
+        az = a0 + 2 * math.pi * (i + 0.35 * (hfloat(key, "bj", i) - 0.5)) / cards
+        c = p + np.array([math.cos(az), math.sin(az)]) * r * (0.36 + 0.10 * hfloat(key, "bd", i))
+        W = max(r * (1.75 + 0.35 * hfloat(key, "bk", i)), 0.8)
+        H = h * (0.88 + 0.20 * hfloat(key, "bh", i))
+        _skin_card(kit, c, z - 0.04, az, W, H, sp, 0.16 + 0.16 * hfloat(key, "bt", i), occ, flip=hfloat(key, "bf", i) < 0.5)
+    _tent(kit, p, z + h * 0.44, a0 + 0.9, r * 0.44, 1.55 * r, h * 0.62, sp, occ)
+
+
+def bush_lite(kit, p, z, r, h, key, red=False):
+    """A shrub away from the street (ADR 0132 r4: further than NEAR_FRONT_M from the plot's front edge): two crossed
+    cards, 4 triangles - same sprite, size and seed as bush()."""
+    sp = "shrub_b" if red else "shrub_a"
+    a0 = hfloat(key, "ba") * 6.2832
+    for i in range(2):
+        card(kit, np.asarray(p, float), z - 0.04, sp, max(2.3 * r, 0.9), h * 1.05, a0 + i * math.pi / 2)
+
+
+def fruit_tree(kit, p, z, h, key, r=None):
+    """Small orchard / garden tree (apple, plum, cherry): 3.2-6 m. ADR 0132 (review 0124 P1-e: crossed cards): a
+    trunk that forks into three limbs, a dark core and two tiers of leaf sprays on the crown's skin + a tent over the
+    top (crown radius r - read off the orthophoto when there is one). ~65 triangles."""
+    p = np.asarray(p, float)
+    R = float(r) if r is not None else h * (0.36 + 0.10 * hfloat(key, "fr"))
+    R = min(max(R, 1.0), 0.62 * h)
+    a0 = hfloat(key, "fy") * 6.2832
+    occ = 0.84 + 0.16 * hfloat(key, "fo")
+    fork = h * (0.28 + 0.08 * hfloat(key, "ff"))
+    zc0 = z + max(h - 1.9 * R, fork * 0.85)                  # underside of the crown
+    hc = z + h - zc0
+    tr = 0.055 + 0.022 * h / 3.4
+    lean = (np.array([hfloat(key, "flx"), hfloat(key, "fly")]) - 0.5) * 0.5
+    top = p + lean * fork / max(h, 1.0)
+    t = np.array([math.cos(a0), math.sin(a0)])
+    kit.box(p, t, tr, tr, z - 0.1, z + fork, PK.SWATCH["trunk"], top=False, shift=top - p)
+    for k in range(2):                                       # limbs into the crown (r4: 2, were 3)
+        az = a0 + 3.1416 * k + 0.5 * (hfloat(key, "fl", k) - 0.5)
+        d = np.array([math.cos(az), math.sin(az)])
+        e = top + d * R * 0.5
+        ze = zc0 + hc * 0.40
+        nrm = np.array([-d[1], d[0]]) * tr * 0.7
+        kit.quad([[*(top - nrm), z + fork - 0.05], [*(top + nrm), z + fork - 0.05], [*(e + nrm * 0.5), ze], [*(e - nrm * 0.5), ze]],
+                 [PK.SWATCH["trunk"]] * 4)
+    cc = top + lean * 0.3
+    _core(kit, cc, zc0 + hc * 0.14, R * 0.50, hc * 0.60, key, sides=4, occ=0.26 * occ, rings=2)
+    low = "apple_a" if hfloat(key, "fa") < 0.5 else "apple_b"
+    for i in range(5):                                       # lower tier: sprays hanging out and down
+        az = a0 + 2 * math.pi * (i + 0.4 * (hfloat(key, "tj", i) - 0.5)) / 5
+        c = cc + np.array([math.cos(az), math.sin(az)]) * R * (0.40 + 0.10 * hfloat(key, "td", i))
+        _skin_card(kit, c, zc0 - 0.03 * hc, az, R * (1.45 + 0.3 * hfloat(key, "tw", i)), hc * (0.70 + 0.12 * hfloat(key, "th", i)),
+                   low if i % 2 == 0 else "shrub_a", 0.12 + 0.16 * hfloat(key, "tt", i), occ, flip=hfloat(key, "tf", i) < 0.5)
+    for i in range(4):                                       # upper tier
+        az = a0 + 0.8 + 2 * math.pi * i / 4
+        c = cc + np.array([math.cos(az), math.sin(az)]) * R * 0.24
+        _skin_card(kit, c, zc0 + hc * 0.30, az, R * 1.55, hc * 0.62, "shrub_a", 0.34 + 0.18 * hfloat(key, "ut", i), occ,
+                   flip=i % 2 == 1)
+    _tent(kit, cc, zc0 + hc * 0.58, a0 + 0.3, R * 0.34, R * 1.2, hc * 0.46, "shrub_a", occ)
 
 
 def shrub(kit, p, z, h, key):
-    sp = "shrub_a" if hfloat(key, "sh") < 0.7 else "shrub_b"
-    wm, hm = PK.SPRITE_M[sp]
-    k = h / hm
-    a0 = hfloat(key, "sy") * 3.1416
-    for i in range(2):
-        card(kit, p, z - 0.04, sp, wm * k, h, a0 + i * math.pi / 2)
+    red = hfloat(key, "sh") >= 0.7
+    wm, hm = PK.SPRITE_M["shrub_b" if red else "shrub_a"]
+    bush(kit, p, z, 0.5 * wm * h / hm, h, key, red=red, cards=4)
 
 
-def hedge(kit, a, b, n, zf, h, key, thick=0.6):
-    """Clipped broadleaf hedge a -> b (n: normal towards the street), refs P08 / P12: two leafy sides with a ragged top
-    line and a top, in steps of SEG_M that follow the ground. 6 triangles per step."""
+HEDGE_STEP_M = 1.92           # station pitch of a hedge (r4: 1.28 -> 1.92, -1/3 of the triangles on every tier): the top line and the sides wander between stations
+# cross-section of a clipped hedge, per side: (half-thickness factor, height factor, normal out, normal up, occlusion).
+# Index _HEDGE_SEAM is doubled: the atlas row is 1.5 m of leaves and never tiles in v, so the side is two bands (foot ->
+# seam, seam -> crown), each drawn 1 : 1; the seam between two stretches of random leaves does not show.
+_HEDGE_PROFILE = ((0.76, 0.00, 0.95, 0.05, 0.40), (0.97, 0.26, 1.00, 0.12, 0.66), (1.00, 0.52, 1.00, 0.20, 0.86),
+                  (0.94, 0.80, 0.85, 0.45, 0.97), (0.58, 0.955, 0.45, 0.85, 1.0))
+_HEDGE_SEAM = 2
+
+
+def hedge(kit, a, b, n, zf, h, key, thick=0.7):
+    """Clipped broadleaf hedge a -> b (n: normal towards the street), refs P08 / P12.
+    ADR 0132 (review 0124 P1-b: a box with wallpaper and a flat shelf on top that overhung the sides and read as a
+    board): a rounded cross-section (foot narrower than the shoulders, shoulders rounded into a crown line), stations
+    every HEDGE_STEP_M whose height (+-5 cm, slow wave +-6 cm), thickness (+-12 %) and centre line (+-5 cm) wander, the
+    plant's own occlusion in COLOR_0 (dark, twiggy foot -> lit top; shader Kamion/World PlotKit), narrowed ends with
+    caps, leaves at their true size (two v bands), and a low fringe of loose shoots along the crown line (the ragged
+    top band of the atlas row). ~22 triangles per station (ADR 0124: 6 per 5.12 m)."""
     L = float(np.hypot(*(b - a)))
     if L < 1.5:
         return 0.0
     t = (b - a) / L
-    nb = max(1, int(math.ceil(L / SEG_M - 1e-6)))
-    cuts = [L * k / nb for k in range(nb + 1)]
-    Z = [zf(a + t * s) - 0.03 for s in cuts]
-    H = [h * (0.92 + 0.16 * hfloat(key, "hh", k)) for k in range(nb + 1)]
+    nb = max(2, int(round(L / HEDGE_STEP_M)))
     v0, v1 = PK.row("hedge")
+    dv = v1 - v0
+    row_m = PK.ROW_H_M["hedge"]
     u_off = hfloat(key, "hu") * PK.KIT_M
-    up = np.array([0.0, 0.0, 1.0])
-    for k in range(nb):
-        s0, s1 = cuts[k], cuts[k + 1]
-        u0, u1 = (u_off + s0) / PK.KIT_M, (u_off + s1) / PK.KIT_M
+    ph0, ph1 = hfloat(key, "hp0") * 6.2832, hfloat(key, "hp1") * 6.2832
+    prof = _HEDGE_PROFILE
+    np_ = len(prof)
+    # arc length of the nominal profile -> v of the two bands (constant along the hedge)
+    pts = [(thick / 2 * kw, h * kh) for kw, kh, *_ in prof] + [(0.0, h)]
+    arc = [0.0]
+    for i in range(1, len(pts)):
+        arc.append(arc[-1] + math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]))
+    sc = max(1.0, arc[_HEDGE_SEAM] / (0.70 * row_m), (arc[-1] - arc[_HEDGE_SEAM]) / (0.70 * row_m))
+    v_lo = [0.03 + arc[i] / (row_m * sc) for i in range(_HEDGE_SEAM + 1)]
+    v_hi = [0.78 - (arc[-1] - arc[i]) / (row_m * sc) for i in range(_HEDGE_SEAM, len(pts))]
+    cols = [(i, v_lo[i]) for i in range(_HEDGE_SEAM + 1)] + [(i, v_hi[i - _HEDGE_SEAM]) for i in range(_HEDGE_SEAM, np_)]
+    nc = len(cols)                                           # vertices per side and station
+    V, UV, C = [], [], []
+    for k in range(nb + 1):
+        s = L * k / nb
+        endf = 0.55 if k in (0, nb) else 1.0                 # narrowed ends
+        c = a + t * s + n * (0.05 * (hfloat(key, "ho", k) * 2 - 1))
+        zz = zf(a + t * s) - 0.03
+        hh = (h + 0.06 * math.sin(ph0 + s * 0.55) + 0.05 * (hfloat(key, "hh", k) * 2 - 1)) * (0.93 if k in (0, nb) else 1.0)
+        w = thick / 2 * (1.0 + 0.10 * math.sin(ph1 + s * 0.9) + 0.07 * (hfloat(key, "hw", k) * 2 - 1)) * endf
+        u = (u_off + s) / PK.KIT_M
         for sg in (1.0, -1.0):
-            o = n * (thick / 2 * sg)
-            A, B = a + t * s0 + o, a + t * s1 + o
-            nn = np.array([n[0] * sg * 0.8, n[1] * sg * 0.8, 0.45])
-            top = np.array([n[0] * sg * 0.45, n[1] * sg * 0.45, 0.85])
-            kit.quad([[*A, Z[k]], [*B, Z[k + 1]], [*B, Z[k + 1] + H[k + 1] + 0.12], [*A, Z[k] + H[k] + 0.12]],
-                     [[u0, v0], [u1, v0], [u1, v1], [u0, v1]], [_fol(nn), _fol(nn), _fol(top), _fol(top)])
-        A, B = a + t * s0, a + t * s1
-        o = n * (thick / 2)
-        vm0, vm1 = v0 + (v1 - v0) * 0.30, v0 + (v1 - v0) * 0.62
-        kit.quad([[*(A + o), Z[k] + H[k]], [*(B + o), Z[k + 1] + H[k + 1]], [*(B - o), Z[k + 1] + H[k + 1]], [*(A - o), Z[k] + H[k]]],
-                 [[u0, vm0], [u1, vm0], [u1, vm1], [u0, vm1]], [_fol(up)] * 4)
+            uu = u if sg > 0 else u + 0.37                   # the two sides show different stretches of the row
+            for i, vv in cols:
+                kw, kh, no, nu, occ = prof[i]
+                q = c + n * (sg * w * kw)
+                V.append([q[0], q[1], zz + hh * kh])
+                UV.append([uu, v0 + dv * vv])
+                C.append(_fol([n[0] * sg * no, n[1] * sg * no, nu], occ))
+            V.append([c[0], c[1], zz + hh])                  # crown line (one per side: own u)
+            UV.append([uu, v0 + dv * 0.78])
+            C.append(_fol([0.0, 0.0, 1.0], 1.0))
+    ms = nc + 1                                              # per side
+    m = 2 * ms
+    T = []
+    for k in range(nb):
+        for side in range(2):
+            b0, b1 = k * m + side * ms, (k + 1) * m + side * ms
+            for i in range(ms - 1):
+                if i == _HEDGE_SEAM:                         # the doubled seam vertex: no strip between the two copies
+                    continue
+                q = (b0 + i, b1 + i, b1 + i + 1, b0 + i + 1)
+                T += [(q[0], q[1], q[2]), (q[0], q[2], q[3])] if side == 0 else [(q[1], q[0], q[3]), (q[1], q[3], q[2])]
+    for o, flip in ((0, False), (nb * m, True)):             # end caps: a fan over the profile
+        ring = [o + i for i in range(ms) if i != _HEDGE_SEAM] + [o + ms + i for i in range(ms - 2, -1, -1) if i != _HEDGE_SEAM]
+        for i in range(1, len(ring) - 1):
+            T.append((ring[0], ring[i + 1], ring[i]) if not flip else (ring[0], ring[i], ring[i + 1]))
+    kit.tris(V, UV, T, C)
+    # loose shoots above the crown line: the ragged top band of the row on an upright card along the centre
+    for k in range(nb):
+        s0, s1 = L * k / nb, L * (k + 1) / nb
+        if hfloat(key, "hf", k) < 0.25:
+            continue
+        c0, c1 = np.asarray(V[k * m + ms - 1]), np.asarray(V[(k + 1) * m + ms - 1])
+        fh = 0.10 + 0.06 * hfloat(key, "hfh", k)             # the row is 1.5 m in v: 0.16 of it = 0.24 m, drawn 1 : 1
+        u0, u1 = (u_off * 1.7 + s0) / PK.KIT_M, (u_off * 1.7 + s1) / PK.KIT_M
+        kit.quad([[c0[0], c0[1], c0[2] - 0.10], [c1[0], c1[1], c1[2] - 0.10], [c1[0], c1[1], c1[2] + fh], [c0[0], c0[1], c0[2] + fh]],
+                 [[u0, v0 + dv * 0.74], [u1, v0 + dv * 0.74], [u1, v0 + dv * 0.90], [u0, v0 + dv * 0.90]], [_fol([0, 0, 1], 1.0)] * 4)
     return L
 
 
@@ -1323,7 +1654,22 @@ def _lamp_h(proto):
 SEE_THROUGH = ("picket", "chainlink", "bars", "brick_picket", "brick_bars")
 HEDGE_SHARE = {"old": 0.34, "prl": 0.36, "new": 0.22}
 BIG_TREE_SHARE = {"old": 0.6, "prl": 0.45, "new": 0.15}
-AGE_TINT = {"old": (0.80, 0.14), "prl": (0.92, 0.08), "new": (1.0, 0.04)}      # mean albedo factor, spread (ageing)
+AGE_TINT = {"old": (0.72, 0.16), "prl": (0.90, 0.09), "new": (1.0, 0.04)}      # mean albedo factor, spread (ageing;
+                                                                               # ADR 0132: old 0.80 -> 0.72, review 0124
+                                                                               # "tint starzenia z 5-10 m niewidoczny")
+# ADR 0132: garden trees from the orthophoto crowns (streetscape.plot_canopy)
+STREET_STRIP_M = 6.0          # crowns up to this far in front of the fence belong to the plot's street strip
+STREET_TREE_CW_M = 3.0        # ... and a trunk there keeps this clear of the carriageway (a 2.55 m wide truck passes)
+PC_R_TREE = 1.25              # crown radius from which a crown is a tree (plot_canopy.R_TREE_M)
+NEAR_FRONT_M = 12.0           # ADR 0132 r4: plants up to this far from the plot's front edge are full volumes on High;
+                              # further in they are the lite variants of Low (the truck never gets closer than the street)
+INST_R_M = 2.3                # crown radius from which the tree is an instance of the region's tree library
+INST_SPECIES = [("birch", 0.34), ("linden", 0.26), ("maple", 0.26), ("pine", 0.14)]   # WORKING_VALUE mix
+# one model variant per species (r1 used all 3 x 5 species: every prototype x LOD in view is 1-3 instanced draws, the
+# worst house-street camera on Low gained +17); yaw, height and lean still differ from tree to tree
+INST_VARIANT = {"birch": 1, "linden": 0, "maple": 2, "pine": 1}
+INST_H_M = {"birch": (8.0, 19.0), "linden": (8.0, 18.0), "maple": (7.5, 16.0), "pine": (11.0, 22.0)}
+OVERGROWTH = {"old": (2, 4), "prl": (1, 3), "new": (0, 1)}      # shrubs through / over the fence per plot (min, max)
 
 
 def build(buf, rp, zf, surf_top, report, items=None):
@@ -1335,9 +1681,18 @@ def build(buf, rp, zf, surf_top, report, items=None):
     plots = rp["plots"]
     rep = {"plots": len(plots), "fence_m": {}, "gates": 0, "sliding_gates": 0, "wickets": 0, "drives": 0, "kerb_drops": len(rp["drops"]),
            "verge_overlays": 0, "thujas": 0, "spruces": 0, "fruit_trees": 0, "big_trees": 0, "shrubs": 0, "hedge_m": 0.0,
-           "flower_cards": 0, "bins": 0, "tris": 0, "instances": 0, "plot_m2_median": 0.0, "age": {}, "styles_front": {},
-           "styles_side": {}, "access": rp.get("access_stats", {}), "fence_step_zone_hits": 0}
+           "flower_cards": 0, "bins": 0, "tris": 0, "tris_low": 0, "tris_by": {}, "tris_by_low": {}, "instances": 0, "plot_m2_median": 0.0, "age": {}, "styles_front": {},
+           "styles_side": {}, "access": rp.get("access_stats", {}), "fence_step_zone_hits": 0,
+           "track_drives": sum(1 for p in plots if p.get("tracks")), "inst_trees": 0, "inst_trees_street": 0, "bushes": 0, "overgrowth": 0, "canopy": rp.get("canopy") is not None}
     keepout = []
+    trees = []                                               # ADR 0132: grown garden trees -> region instances
+    canopy = rp.get("canopy")
+    used = np.zeros(len(canopy), bool) if canopy is not None else None
+    all_plots = shapely.unary_union([p["poly"] for p in plots]) if plots else Polygon()
+    shapely.prepare(all_plots)
+    roads_poly = rp.get("roads_poly")
+    bpoly_all = rp.get("bpoly")
+    carriage_all = rp.get("carriage")
     for plot in plots:
         key, lay = plot["key"], plot["lay"]
         age = plot["age"]
@@ -1350,11 +1705,14 @@ def build(buf, rp, zf, surf_top, report, items=None):
         rep["styles_front"][plot["front_style"]] = rep["styles_front"].get(plot["front_style"], 0) + 1
         rep["styles_side"][plot["side_style"]] = rep["styles_side"].get(plot["side_style"], 0) + 1
         zones = shapely.unary_union(plot.get("door_zones") or [Polygon()])
+        kit.tag = "fence"
         for r in lay["runs"]:
             fence_run(kit, r["style"], r["a"], r["b"], r["n"], r["h"], zf, key, col, lean_deg=LEAN_DEG[age])
             rep["fence_m"][r["style"]] = rep["fence_m"].get(r["style"], 0.0) + float(np.hypot(*(r["b"] - r["a"])))
             rep["fence_step_zone_hits"] += int(LineString([r["a"], r["b"]]).intersects(zones))
+        rep["fence_stubs_dropped"] = rep.get("fence_stubs_dropped", 0) + int(lay.get("stubs_dropped", 0))
         gates = ([lay["gate"]] if lay["gate"] is not None else []) + ([lay["wicket"]] if lay["wicket"] is not None else []) + lay["wickets"]
+        kit.tag = "gate"
         for g in gates:
             gate_geo(kit, g, plot["front_style"], plot["front_h"], max(zf(g["m"] - g["t"] * g["w"] / 2), zf(g["m"] + g["t"] * g["w"] / 2)),
                      (key, g["kind"], round(float(g["m"][0]), 1)), col)
@@ -1374,6 +1732,10 @@ def build(buf, rp, zf, surf_top, report, items=None):
         foot = plot["foot"]
         free = poly.buffer(-0.9).difference(foot.buffer(1.0)).difference(hard_u)
         placed = []
+        fr_ls = [LineString([e[0], e[1]]) for e in _edges(poly) if float(e[4] @ plot["front"]) > 0.7]
+
+        def near(q):
+            return bool(fr_ls) and min(l.distance(Point(*q)) for l in fr_ls) <= NEAR_FRONT_M
 
         def spot(tag, k, region, clear):
             if region.is_empty:
@@ -1395,6 +1757,7 @@ def build(buf, rp, zf, surf_top, report, items=None):
                     rows.append(hpick([e for e in sideback if e is not rows[0]], key, "thuja_e2"))
             if age == "new" and hfloat(key, "thuja_f") < 0.35:
                 rows += [e for e in edges if float(e[4] @ plot["front"]) > 0.7][:1]
+            kit.tag = "thuja_row"
             for ri, (a, b, L, t, n) in enumerate(rows):
                 hb = 1.3 + 2.4 * hfloat(key, "thh", ri) ** 1.3          # the row's planting age: 1.3 - 3.7 m
                 pitch = 0.72 + 0.34 * hfloat(key, "thp", ri)
@@ -1413,12 +1776,18 @@ def build(buf, rp, zf, surf_top, report, items=None):
                     dead = hfloat(key, "thx", ri, k) < 0.04
                     hh = hb * (0.7 + 0.6 * hfloat(key, "thz", ri, k)) * (0.75 if dead else 1.0)     # +-30 % height
                     rr = (0.26 + 0.07 * hh) * (0.85 + 0.3 * hfloat(key, "thw", ri, k))
-                    thuja(kit, p, zf(p), hh, rr, (key, ri, k), dead)
+                    if near(p):
+                        kit.low = False
+                        thuja_lite(kit, p, zf(p), hh, rr, (key, ri, k), dead, cards=2)
+                        kit.low = "only"
+                    thuja_lite(kit, p, zf(p), hh, rr, (key, ri, k), dead)
+                    kit.low = True
                     placed.append(p)
                     rep["thujas"] += 1
             # a clipped hedge behind the street fence (refs P08, P12: the hedge stands above the fence)
             fr_runs = [r for r in lay["runs"] if r["front"] and np.hypot(*(r["b"] - r["a"])) > 3.0]
             hedged = None
+            kit.tag = "hedge"
             if fr_runs and plot["front_style"] in SEE_THROUGH and hfloat(key, "hedge") < HEDGE_SHARE[age] * 1.6 or \
                     fr_runs and hfloat(key, "hedge") < HEDGE_SHARE[age] * 0.5:
                 hh = plot["front_h"] + (0.15 + 0.5 * hfloat(key, "hedge_h") if hfloat(key, "hedge_o") < 0.7 else -0.3)
@@ -1432,6 +1801,7 @@ def build(buf, rp, zf, surf_top, report, items=None):
                             rep["hedge_m"] += hedge(kit, q0, q1, r["n"], zf, max(hh, 0.9), (key, "hdg", round(float(q0[0]), 1)))
                             hedged = True
             # perennials along the front wall of the house and, sometimes, behind the street fence
+            kit.tag, kit.low = "flowers", False             # High only (ADR 0132): cards of 0.3 m
             hedge_e = max(_edges(plot["house_polys"][0]), key=lambda e: float(e[4] @ plot["front"]) * 10 + e[2] * 0.01)
             a, b, L, t, n = hedge_e
             if float(n @ plot["front"]) > 0.6 and hfloat(key, "bed") < 0.7:
@@ -1447,39 +1817,198 @@ def build(buf, rp, zf, surf_top, report, items=None):
                 c0, c1 = r["a"] + t * 0.5 - r["n"] * 0.55, r["b"] - t * 0.5 - r["n"] * 0.55
                 if not LineString([c0, c1]).intersects(hard_u) and poly.contains(LineString([c0, c1])):
                     rep["flower_cards"] += flower_bed(kit, c0, c1, zf, (key, "bedf"))
+            kit.low = True
             front_g = free.intersection(Polygon([*(np.asarray(poly.centroid.coords[0]) + plot["front"] * 200 + s * np.array([-plot["front"][1], plot["front"][0]]) * 200 for s in (-1, 1)),
                                                  *(np.asarray(foot.centroid.coords[0]) + s * np.array([-plot["front"][1], plot["front"][0]]) * 200 for s in (1, -1))]))
             back_g = free.difference(front_g).buffer(-1.2)
-            # grown trees first (they need the room): crowns above the roofs are what the reference streets look like
-            if hfloat(key, "big") < BIG_TREE_SHARE[age] and poly.area > 380.0:
-                for k in range(1 + int(hfloat(key, "nbig") < 0.3)):
-                    reg = back_g.buffer(-1.5) if hfloat(key, "big_w", k) < 0.65 else front_g.buffer(-2.2)
-                    reg = reg.difference(foot.buffer(3.5))
-                    p = spot("big", k, reg, 6.0)
-                    if p is not None:
-                        big_tree(kit, p, zf(p), 7.5 + 5.0 * hfloat(key, "big_h", k), (key, "bt", k))
-                        rep["big_trees"] += 1
-            if hfloat(key, "spruce") < SPRUCE_SHARE[age]:
-                for k in range(1 + int(hfloat(key, "nspruce") < 0.3)):
-                    reg = front_g.buffer(-1.6) if hfloat(key, "spr_w", k) < 0.6 else back_g.buffer(-0.6)
-                    p = spot("spruce", k, reg, 4.0)
-                    if p is not None:
-                        hh = (2.5 + 2.5 * hfloat(key, "sprh", k)) if age == "new" else (4.0 + 6.0 * hfloat(key, "sprh", k))
-                        spruce(kit, p, zf(p), hh, (key, "spr", k))
+            # ---- trees and tall shrubs (ADR 0132, review 0124 P1-a: the reference streets are full of crowns taller
+            # than the houses and of shrubs along the fences; ADR 0124 had 15 trees on 99 plots)
+            n_shrub_rule = 4 + int(hfloat(key, "nshrub") * 6)
+            if canopy is not None:
+                # DATA: the crowns the orthophoto shows on this plot and on the strip between its fence and the road
+                # (streetscape.plot_canopy). Radius -> kind: >= INST_R_M a grown tree (instance of the region's tree
+                # library: wind, LODs, impostor), >= R_TREE_M a small tree, below a shrub; conifers stay in the kit.
+                x0, y0, x1, y1 = poly.buffer(STREET_STRIP_M).bounds
+                idx = np.nonzero((canopy[:, 0] >= x0) & (canopy[:, 0] <= x1) & (canopy[:, 1] >= y0) & (canopy[:, 1] <= y1) & ~used)[0]
+                idx = idx[np.argsort(-canopy[idx, 2], kind="stable")]
+                cnt = {"inst": 0, "small": 0, "spruce": 0, "bush": 0}
+                pin = poly.buffer(-0.5)
+                gate_strip = None
+                if lay["gate"] is not None:
+                    g_ = lay["gate"]
+                    gate_strip = LineString([g_["m"] - g_["n"] * 1.0, g_["m"] + g_["n"] * 30.0]).buffer(g_["w"] / 2 + 1.2, cap_style="flat")
+                for ci in idx:
+                    cx_, cy_, cr_, con_ = float(canopy[ci, 0]), float(canopy[ci, 1]), float(canopy[ci, 2]), canopy[ci, 3] > 0.5
+                    p0 = np.array([cx_, cy_])
+                    pt = Point(cx_, cy_)
+                    in_plot = poly.contains(pt)
+                    if not in_plot:
+                        # the strip in front of the fence: outside every plot, towards the street, off the road surfaces
+                        if all_plots.contains(pt) or float((p0 - np.asarray(poly.centroid.coords[0])) @ plot["front"]) < 0 \
+                                or poly.distance(pt) > STREET_STRIP_M or cr_ < PC_R_TREE or con_:
+                            continue
+                        if roads_poly is not None and roads_poly.distance(pt) < 0.8:
+                            continue
+                        if carriage_all is not None and carriage_all.distance(pt) < STREET_TREE_CW_M:
+                            continue
+                        if bpoly_all is not None and bpoly_all.distance(pt) < 2.0:
+                            continue
+                        if gate_strip is not None and gate_strip.contains(pt):
+                            continue
+                        p = p0
+                    else:
+                        clear = 1.8 if cr_ >= PC_R_TREE else 0.8
+                        p = None
+                        for d_ in (0.0, 0.8, 1.6, 2.4):      # the trunk: off the house, the driveway and the fence line
+                            for a_ in range(8 if d_ else 1):
+                                q = p0 + d_ * np.array([math.cos(a_ * 0.7854), math.sin(a_ * 0.7854)])
+                                qp = Point(*q)
+                                if pin.contains(qp) and foot.distance(qp) >= clear and not hard_u.contains(qp) \
+                                        and (bpoly_all is None or bpoly_all.distance(qp) >= clear):
+                                    p = q
+                                    break
+                            if p is not None:
+                                break
+                        if p is None:
+                            continue
+                    if any(np.hypot(*(p - q)) < 1.2 for q in placed):
+                        continue
+                    kk = (key, "cn", round(cx_, 1), round(cy_, 1))
+                    if con_ and cr_ >= PC_R_TREE:
+                        if cnt["spruce"] >= 5:
+                            continue
+                        kit.tag = "spruce"
+                        spruce(kit, p, zf(p), min(3.2 + 3.4 * cr_, 15.0) * (0.9 + 0.2 * hfloat(kk, "h")), kk)
+                        cnt["spruce"] += 1
                         rep["spruces"] += 1
-            if hfloat(key, "tree") < FRUIT_SHARE[age] and poly.area > 250.0:
-                for k in range(1 + int(hfloat(key, "ntree") * (4 if age == "old" else 3))):
-                    p = spot("tree", k, back_g.buffer(-0.8), 4.2)
-                    if p is not None:
-                        fruit_tree(kit, p, zf(p), 3.0 + 1.4 * hfloat(key, "tree_h", k), (key, "ft", k))
+                    elif con_:
+                        if cnt["bush"] >= 10:
+                            continue
+                        hh = 1.8 + 1.6 * hfloat(kk, "h")
+                        kit.tag = "thuja_single"
+                        if near(p):
+                            kit.low = False
+                            thuja(kit, p, zf(p), hh, (0.26 + 0.07 * hh) * (0.9 + 0.3 * hfloat(kk, "w")), kk)
+                            kit.low = "only"
+                        thuja_lite(kit, p, zf(p), hh, (0.26 + 0.07 * hh) * (0.9 + 0.3 * hfloat(kk, "w")), kk, core=False)
+                        kit.low = True
+                        cnt["bush"] += 1
+                        rep["thujas"] += 1
+                    elif cr_ >= INST_R_M:
+                        if cnt["inst"] >= 8:
+                            continue
+                        sp = _pick_w(INST_SPECIES, kk, "sp")
+                        lo_, hi_ = INST_H_M[sp]
+                        trees.append({"p": f"tree_{sp}", "v": INST_VARIANT[sp], "e": round(float(p[0]), 2),
+                                      "n": round(float(p[1]), 2), "z": round(float(zf(p)), 2),
+                                      "h": round(float(min(max(3.6 * cr_ + 3.0, lo_), hi_)), 1),
+                                      "yaw": round(hfloat(kk, "yaw") * 6.2832, 3), "lean": round(hfloat(kk, "lean") * 0.05, 3),
+                                      "src": f"{src_id}:canopy", "tier": "high"})
+                        cnt["inst"] += 1
+                        rep["inst_trees"] += 1
+                        rep["inst_trees_street"] += int(not in_plot)
+                    elif cr_ >= PC_R_TREE:
+                        if cnt["small"] >= 8 or not in_plot:
+                            continue
+                        kit.tag = "small_tree"
+                        if near(p):
+                            kit.low = False
+                            fruit_tree(kit, p, zf(p), min(max(1.7 + 1.5 * cr_, 3.2), 5.6), kk, r=cr_)
+                            kit.low = "only"
+                        fruit_tree_lite(kit, p, zf(p), min(max(1.7 + 1.5 * cr_, 3.2), 5.6), kk, r=cr_)
+                        kit.low = True
+                        cnt["small"] += 1
                         rep["fruit_trees"] += 1
+                    else:
+                        if cnt["bush"] >= 10 or not in_plot:
+                            continue
+                        kit.tag, kit.low = "bush", False     # High only: under-storey of the gardens
+                        (bush if near(p) else bush_lite)(kit, p, zf(p), cr_ * 1.05,
+                                                         min(max(1.0 + 1.2 * cr_ + 0.5 * hfloat(kk, "h"), 1.2), 2.6), kk,
+                                                         red=hfloat(kk, "red") < 0.12)
+                        kit.low = True
+                        cnt["bush"] += 1
+                        rep["bushes"] += 1
+                    used[ci] = True
+                    placed.append(p)
+                n_shrub_rule = 2 + int(hfloat(key, "nshrub") * 3)          # the rest is on the orthophoto
+            else:
+                # RULE (no canopy product for the region): shares by age class, as ADR 0124
+                if hfloat(key, "big") < BIG_TREE_SHARE[age] and poly.area > 380.0:
+                    for k in range(1 + int(hfloat(key, "nbig") < 0.3)):
+                        reg = back_g.buffer(-1.5) if hfloat(key, "big_w", k) < 0.65 else front_g.buffer(-2.2)
+                        reg = reg.difference(foot.buffer(3.5))
+                        p = spot("big", k, reg, 6.0)
+                        if p is not None:
+                            sp = _pick_w(INST_SPECIES, key, "bsp", k)
+                            trees.append({"p": f"tree_{sp}", "v": INST_VARIANT[sp], "e": round(float(p[0]), 2),
+                                          "n": round(float(p[1]), 2), "z": round(float(zf(p)), 2),
+                                          "h": round(9.0 + 7.0 * hfloat(key, "big_h", k), 1),
+                                          "yaw": round(hfloat(key, "byaw", k) * 6.2832, 3), "lean": 0.02, "src": f"{src_id}:rule", "tier": "high"})
+                            rep["inst_trees"] += 1
+                if hfloat(key, "spruce") < SPRUCE_SHARE[age]:
+                    for k in range(1 + int(hfloat(key, "nspruce") < 0.3)):
+                        reg = front_g.buffer(-1.6) if hfloat(key, "spr_w", k) < 0.6 else back_g.buffer(-0.6)
+                        p = spot("spruce", k, reg, 4.0)
+                        if p is not None:
+                            hh = (2.5 + 2.5 * hfloat(key, "sprh", k)) if age == "new" else (4.0 + 6.0 * hfloat(key, "sprh", k))
+                            kit.tag = "spruce"
+                            spruce(kit, p, zf(p), hh, (key, "spr", k))
+                            rep["spruces"] += 1
+                if hfloat(key, "tree") < FRUIT_SHARE[age] and poly.area > 250.0:
+                    for k in range(1 + int(hfloat(key, "ntree") * (4 if age == "old" else 3))):
+                        p = spot("tree", k, back_g.buffer(-0.8), 4.2)
+                        if p is not None:
+                            kit.tag = "small_tree"
+                            if near(p):
+                                kit.low = False
+                                fruit_tree(kit, p, zf(p), 3.0 + 1.4 * hfloat(key, "tree_h", k), (key, "ft", k))
+                                kit.low = "only"
+                            fruit_tree_lite(kit, p, zf(p), 3.0 + 1.4 * hfloat(key, "tree_h", k), (key, "ft", k))
+                            kit.low = True
+                            rep["fruit_trees"] += 1
+            # ---- shrubs growing through and over the fence (refs P08, P09, P12, C04; review 0124 P1-a: "krzewy
+            # zarastajace ploty", at most a third of the spans): a rule by age class, on the runs without a hedge
+            runs_o = [r for r in lay["runs"] if np.hypot(*(r["b"] - r["a"])) > 4.0 and not (hedged and r["front"])]
+            n_over = int(OVERGROWTH[age][0] + hfloat(key, "ovn") * (OVERGROWTH[age][1] - OVERGROWTH[age][0] + 0.999))
+            cover = {}
+            for k in range(n_over if runs_o else 0):
+                fr_o = [r for r in runs_o if r["front"]]
+                r = hpick(fr_o, key, "ovr", k) if fr_o and hfloat(key, "ovf", k) < 0.65 else hpick(runs_o, key, "ovr2", k)
+                Lr = float(np.hypot(*(r["b"] - r["a"])))
+                tr_ = (r["b"] - r["a"]) / Lr
+                rr = 0.75 + 0.6 * hfloat(key, "ovw", k)
+                rid_ = id(r)
+                if cover.get(rid_, 0.0) + 2 * rr > Lr / 3.0:
+                    continue
+                s_ = rr + 0.3 + hfloat(key, "ovs", k) * max(Lr - 2 * rr - 0.6, 0.1)
+                p = r["a"] + tr_ * s_ - r["n"] * (0.30 + 0.25 * hfloat(key, "ovd", k))
+                qp = Point(*p)
+                if not poly.buffer(-0.1).contains(qp) or hard_u.distance(qp) < rr * 0.6 or foot.distance(qp) < rr + 0.3 \
+                        or any(np.hypot(*(p - q)) < rr + 0.5 for q in placed):
+                    continue
+                kit.tag, kit.low = "overgrowth", False       # High only
+                (bush if near(p) else bush_lite)(kit, p, zf(p), rr, r["h"] + 0.25 + 0.9 * hfloat(key, "ovh", k), (key, "ov", k),
+                                                 red=hfloat(key, "ovc", k) < 0.1)
+                kit.low = True
+                cover[rid_] = cover.get(rid_, 0.0) + 2 * rr
+                placed.append(p)
+                rep["overgrowth"] += 1
             near_fence = free.difference(poly.buffer(-2.4))
             near_house = free.intersection(foot.buffer(2.4))
-            for k in range(4 + int(hfloat(key, "nshrub") * 6)):
+            for k in range(n_shrub_rule):
                 reg = near_house if hfloat(key, "shrub_where", k) < 0.4 and not near_house.is_empty else near_fence
                 p = spot("shrub", k, reg, 1.4)
                 if p is not None:
-                    shrub(kit, p, zf(p), 0.8 + 1.1 * hfloat(key, "shrub_h", k), (key, "shr", k))
+                    kit.tag, kit.low = "shrub", False        # High only
+                    if near(p):
+                        shrub(kit, p, zf(p), 0.8 + 1.1 * hfloat(key, "shrub_h", k), (key, "shr", k))
+                    else:
+                        _h = 0.8 + 1.1 * hfloat(key, "shrub_h", k)
+                        _red = hfloat((key, "shr", k), "sh") >= 0.7
+                        _wm, _hm = PK.SPRITE_M["shrub_b" if _red else "shrub_a"]
+                        bush_lite(kit, p, zf(p), 0.5 * _wm * _h / _hm, _h, (key, "shr", k), red=_red)
+                    kit.low = True
                     rep["shrubs"] += 1
         # bins inside the fence next to the gate (collection day is a walk of two metres)
         g = lay["gate"] or lay["wicket"]
@@ -1488,11 +2017,20 @@ def build(buf, rp, zf, surf_top, report, items=None):
             p = g["m"] + g["t"] * (sx * (g["w"] / 2 + 2 * g["ph"] + 0.45)) - g["n"] * 0.55
             ok = poly.buffer(-0.3).contains(Point(*p)) and poly.buffer(-0.3).contains(Point(*(p + g["t"] * sx * 1.4)))
             if ok and not hard_u.buffer(-0.3).contains(Point(*p)):
+                kit.tag = "bins"
                 rep["bins"] += bins(kit, p, g["t"] * sx, zf(p), key)
         o = kit.out()
         if o is not None:
             buf.add(KIT_LAYER, "plot_kit", o[0], o[1], o[2], src=src_id, COL=o[3])
             rep["tris"] += len(o[2])
+        o = kit.out(low=True)
+        if o is not None:
+            buf.add(KIT_LAYER_LOW, "plot_kit", o[0], o[1], o[2], src=src_id, COL=o[3])
+            rep["tris_low"] += len(o[2])
+        for k_, v_ in kit.by.items():
+            rep["tris_by"][k_] = rep["tris_by"].get(k_, 0) + v_
+        for k_, v_ in kit.by_low.items():
+            rep["tris_by_low"][k_] = rep["tris_by_low"].get(k_, 0) + v_
         for a, b, z0, z1 in col:
             V = np.array([[*a, z0], [*b, z0], [*b, z1], [*a, z1]])
             buf.add("collision", "collision_fence", V, V[:, :2], [(0, 1, 2), (0, 2, 3), (0, 2, 1), (0, 3, 2)], src=src_id)
@@ -1516,7 +2054,7 @@ def build(buf, rp, zf, surf_top, report, items=None):
     rep["fence_m"] = {k: round(v) for k, v in sorted(rep["fence_m"].items())}
     rep["plot_m2_median"] = round(float(np.median([p["poly"].area for p in plots])), 1) if plots else 0.0
     report["plots"] = rep
-    return {"keepout": keepout, "lawns": [p["lawn"] for p in plots if p.get("lawn") is not None], "plots": plots}
+    return {"keepout": keepout, "lawns": [p["lawn"] for p in plots if p.get("lawn") is not None], "plots": plots, "trees": trees}
 
 
 def _verge_overlay(buf, plot, surf_top, src_id, zf=None, roads_poly=None, carriage=None):

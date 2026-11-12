@@ -106,6 +106,7 @@ namespace Game.World
         float m_TreeCull, m_TreeCard, m_ThinStart, m_HlodSwitch, m_HlodCull;
         int m_TreeShadowMask;
         bool m_Trees = true;
+        bool m_HighOnly = true;
         bool m_LeafA2C = true;
         bool m_TierRead;
 
@@ -122,6 +123,7 @@ namespace Game.World
             m_HlodSwitch = ok && t.forestHlodM != 0f ? Mathf.Max(t.forestHlodM, 0f) : forestHlodM;
             m_HlodCull = ok && t.forestHlodM != 0f ? t.forestHlodCullM : forestHlodCullM;
             m_Trees = !RenderOverrides.Trees.HasValue || RenderOverrides.Trees.Value;
+            m_HighOnly = DrawsHighOnly(QualityProfileApplier.HasCurrent, t.name);
             // ADR 0136 r2: per-tier vehicle cull (Low 150 m); 0 / no tier = the common VehicleCullM.
             m_TierVehicleCullM = QualityProfileApplier.HasCurrent && t.vehicleCullM > 0f ? t.vehicleCullM : VehicleCullM;
             // Impostor view cross-fade (Kamion/Vegetation _IMPOSTOR): 2 views on Medium and up, the nearest view on Low
@@ -372,6 +374,7 @@ namespace Game.World
                 {
                     var run = runs[ri];
                     if (hlod && run.forest) continue;
+                    if (run.highOnly && !m_HighOnly) continue;   // ADR 0132 p. 17: garden trees are not drawn on Low
                     var p = protos[run.prototype];
                     var ends = m_Ends[run.prototype];
                     if (!trees && m_Thin[run.prototype]) continue;
@@ -485,10 +488,16 @@ namespace Game.World
         /// beside the lane is LOD0 on every tier. WORKING_VALUE; mirrored in build_world.py VEHICLE_LOD0_MIN_M.</summary>
         public const float VehicleLod0MinM = 16f;
 
+        /// <summary>Runs flagged <see cref="WorldInstanceSet.Run.highOnly"/> (instance records with "tier": "high", ADR 0132
+        /// p. 17) are skipped on the Low tier only; Medium and up, and tools without an applied tier, draw them.</summary>
+        public static bool DrawsHighOnly(bool hasTier, string tierName) =>
+            !hasTier || !string.Equals(tierName, "Low", System.StringComparison.OrdinalIgnoreCase);
+
         /// <summary>Vehicle prototypes and their contact-shadow patch prototypes ("contact_&lt;spec hash&gt;", ADR 0050): fixed cull.</summary>
         public static bool IsVehicle(string proto) =>
             proto.StartsWith("car_") || proto.StartsWith("van_") || proto.StartsWith("tractor_") || proto.StartsWith("trailer_") ||
             proto.StartsWith("contact_");
+
         [Tooltip("Cull distance of trees and shrubs (m at lodBias 1), caps the baked impostor distance")]
         public float treeCullM = 600f;
 

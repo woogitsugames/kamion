@@ -43,7 +43,9 @@ from streetscape import export as PR      # noqa: E402
 # only (like `furniture`) and never a shadow caster
 # plots (ADR 0124): the kit geometry of the house plots (fences, gates, garden plants; one material) - LOD0 / LOD1 like
 # `furniture`, a shadow caster, with a shorter range in the mirror cameras (Game.World.PlotViewCull)
-LAYERS = ("road", "bridge", "markings", "paved", "plot_ground", "buildings", "buildings_low", "furniture", "plots", "wires", "collision")
+LAYERS = ("road", "bridge", "markings", "paved", "plot_ground", "buildings", "buildings_low", "furniture", "plots", "plots_low", "wires", "collision")
+# plots_low (ADR 0132): the plot kit of the Low / Medium chunk variant (streetscape.plots.Kit.low) - written there under
+# the node name `plots`; the High GLB carries `plots` only
 NODES = (("road", "road"), ("bridge", "bridge"), ("markings", "markings"), ("paved", "paved"), ("plot_ground", "plot_ground"),
          ("buildings", "buildings"), ("buildings_low", "buildings_lod1"), ("furniture", "furniture"), ("plots", "plots"),
          ("wires", "wires"), ("collision", "road_collision"))
@@ -676,7 +678,7 @@ def build(region_id: str, out_root: Path | None = None, verbose=True):
         w.stats["kerb_tris_dropped_in_fills_hero"] = GO.drop_kerbs_in_fills(w.buf, w.gore_plan)
     w.stats["gores"]["kerb_tris_in_fill"] = GO.kerbs_in_fills(w.buf, w.gore_plan)
     log("kerb triangles inside paved gore fills:", w.stats["gores"]["kerb_tris_in_fill"])
-    log("hero bridges", {k: [x["id"] for x in v] for k, v in w.stats["hero_bridges"].items()})
+    log("hero bridges", {k: [x["id"] if isinstance(x, dict) else x for x in v] for k, v in w.stats["hero_bridges"].items()})
 
     half = w.region["bbox"]["width_m"] / 2
     e0 = w.region["bbox"]["xmin"] - w.origin[0]
@@ -712,6 +714,8 @@ def build(region_id: str, out_root: Path | None = None, verbose=True):
             if prims:
                 glb.add_mesh(node, prims, {"layer": layer, "collision": layer == "collision"})
                 tri[node] = int(sum(len(p["T"]) for p in prims))
+        if layers.get("plots"):
+            tri["plots_low"] = int(sum(len(p["T"]) for p in layers.get("plots_low", [])))
         cells = sorted((cid, c) for cid, c in st["forest_hlod"].items() if c["chunk"] == key)
         cell_meta = []
         for cid, c in cells:
@@ -731,7 +735,7 @@ def build(region_id: str, out_root: Path | None = None, verbose=True):
             if li >= 1:
                 glb_lo.add_mesh(f"terrain_lod{li}", prims, {"lod": li, "spacing_m": CH.LODS[li]})
         for layer, node in NODES:
-            prims = layers.get(layer, [])
+            prims = layers.get("plots_low" if layer == "plots" else layer, [])
             if prims and layer != "buildings":
                 glb_lo.add_mesh(node, prims, {"layer": layer, "collision": layer == "collision"})
         for cid, c in cells:
@@ -945,12 +949,13 @@ def mesh_budget(chunks_meta, inst_by_chunk, props_meta, cams):
     per_chunk = []
     for ch in chunks_meta:
         t = ch["triangles"]
-        stat = sum(t.get(k, 0) for k in ("road", "bridge", "markings", "paved", "plot_ground", "furniture", "plots", "wires"))
+        stat0 = sum(t.get(k, 0) for k in ("road", "bridge", "markings", "paved", "plot_ground", "furniture", "wires"))
+        stat = stat0 + t.get("plots", 0)
         ci, cj = (int(x) for x in ch["id"].split("_"))
         inst = inst_by_chunk.get((ci, cj), [])
         per_chunk.append({"chunk": ch["id"], "materials": len(ch["materials"]),
                           "tris_high_static": stat + t.get("terrain_lod0", 0) + t.get("buildings", 0),
-                          "tris_low_static": stat + t.get("terrain_lod1", 0) + t.get("buildings_lod1", 0),
+                          "tris_low_static": stat0 + t.get("plots_low", t.get("plots", 0)) + t.get("terrain_lod1", 0) + t.get("buildings_lod1", 0),
                           "tris_forest_hlod": t.get("forest_hlod", 0),
                           "instances": len(inst), "trees": sum(1 for i in inst if i["p"].startswith("tree_"))})
     frames = []
@@ -977,7 +982,8 @@ def mesh_budget(chunks_meta, inst_by_chunk, props_meta, cams):
                 lod = next(l for lim, l in pol["terrain"] if d < lim)
                 add("terrain", t.get(f"terrain_lod{lod}", 0))
                 add("roads", sum(t.get(k, 0) for k in ("road", "bridge", "markings", "paved")))
-                add("furniture", (t.get("furniture", 0) + t.get("plots", 0) + t.get("wires", 0)) if d < pol["furn"] else 0)
+                add("furniture", (t.get("furniture", 0) + (t.get("plots", 0) if prof == "High" else t.get("plots_low", t.get("plots", 0)))
+                                  + t.get("wires", 0)) if d < pol["furn"] else 0)
                 add("buildings", t.get("buildings", 0) if d < pol["bld"] else t.get("buildings_lod1", 0))
                 mats |= set(ch["materials"])
                 far_cells = set()

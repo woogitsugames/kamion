@@ -27,6 +27,8 @@ MonoBehaviour:
   clearCloudCover: 1
   highSunShadowFilter: 0
   clearSkySaturation: 2
+  clearCloudSourceMinElevationDeg: 0.5
+  dimColourDesaturation: 0
   projectedHeadlamps: 0
   projectedHeadlampPeakCd: 20000
   skyDisplayGain: 1
@@ -49,5 +51,3 @@ MonoBehaviour:
   lookToe: 0
   lookToeP: 0.12
   lookTonePivot: 0.3
-  clearCloudSourceMinElevationDeg: 0.5
-

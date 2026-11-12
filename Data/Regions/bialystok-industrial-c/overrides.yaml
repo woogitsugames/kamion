@@ -282,8 +282,32 @@ overrides:
       # the centre and rows 31-33 m out, on the far side of the ring carriageway). Rows 2 and 5 below are those two
       # (14 m either side of the ring centre along the viaduct: columns 2 m inside the island kerb, WORKING_VALUE
       # +-2 m); rows 1, 2 from each end keep the stations the rule gave (not measured: no photo shows them usably).
-      pier_lines_en: [[487.5, -688.05], [509.0, -699.85], [540.3, -716.9], [564.8, -730.3], [595.15, -746.85],
-                      [616.65, -758.65]]
+      # ADR 0144 (REVIEW s14-0123 P1-2, "luka w rzedzie filarow"). Sources checked: OSM (podlaskie-261108.osm.pbf)
+      # has no bridge:support near the object, BDOT10k 2061 has no pier geometry, and on the 0.08 m GUGiK orthophoto
+      # the decks hide the supports - the only open evidence is the Mapillary frames (richlv, CC BY-SA 4.0,
+      # reference only). 2818555625124739 and 3970163613102941 (camera on the ring, looking along the north-west half):
+      # FOUR pier rows between the island and the abutment wall - the row on the island and three more at an even
+      # rhythm - where the model had three (spans 35.6 / 24.5 / 24.5 m: the 35.6 m span was the gap). Island row ->
+      # abutment = 84.7 m on the lead deck (generated open range), so 4 equal spans of 21.2 m; the first span read
+      # off 2818555625124739 with the camera pose of sbs_cameras.json is 19.8 m +- 2 m (bearings of the two columns
+      # of the near deck in rows 1 and 2), consistent. South-east half: 83.6 m -> 4 x 20.9 m by symmetry of the
+      # structure (WORKING_VALUE: no open frame looks along that half). North-west island row unchanged (ADR 0123).
+      # r7b check (artifacts/junctions-r7/scripts/cols_check.py): with the columns 1.75 m off the deck axis the outer
+      # column of the south-east island row stood ON the island kerb (0.01 m from the ring asphalt). That row is moved
+      # 1.5 m towards the ring centre (inside the +-2 m of ADR 0123): main span 26.4 m, south-east spans 4 x 21.3 m.
+      pier_lines_en: [[484.54, -686.47], [503.12, -696.62], [521.70, -706.77], [540.3, -716.9], [563.48, -729.59],
+                      [582.16, -739.79], [600.83, -749.99], [619.52, -760.20]]
+      # ADR 0144 (P2-4): oval piers with the red band on their noses instead of chamfered 0.8 x 1.0 m boxes.
+      # 3970163613102941 / 2818555625124739: nose face : side face = 1 : 2.0-2.4 after removing the view angle, i.e.
+      # the long axis lies ALONG the bridge; against the pier height of the model (4.3 m) the nearest pier measures
+      # about 0.5-0.75 m across and 1.1-1.6 m along -> 0.70 x 1.40 m (WORKING_VALUE +-0.2 m). Columns of one deck
+      # stand 3.8 m apart on 178689077481862 (two rays to their feet), 3.6-5.4 m on 2818555625124739 -> 1.75 m either
+      # side of the deck axis (was 1.30 m; WORKING_VALUE +-0.4 m), which keeps them under the box girder (bottom
+      # flange half width 2.0 m).
+      col_shape: stadium
+      col_len_m: 1.40
+      col_wid_m: 0.70
+      col_offset_m: 1.75
     reason: >-
       Landmark object of route G3-A (ADR 0067): the Andersa viaduct over Rondo Pamięci Bieżeństwa 1915 r. gets an
       authored Blender asset (art-source/world/landmarks/viaduct_biezenstwa, tools/blender/world/landmarks/
@@ -415,6 +439,22 @@ overrides:
       read off the frame: +- 5 m, WORKING_VALUE. The name is the official name of the roundabout (OSM).
     confidence: low
     verify: plate position and text layout on site
+  - id: biezenstwa-f10-north
+    kind: gate3_sign
+    at_en: [515.8, -680.3]
+    travel_bearing_deg: 299
+    parts: [{face: F-10}]
+    mapillary: ["482392746429891", "320326319617139"]
+    reason: >-
+      ADR 0144 (ADR 0143 point 4): blue lane-direction board (straight | right turn, dashed lane line, two posts)
+      behind the guardrail north of the viaduct, read on two frames of one sequence (richlv 482392746429891 and
+      320326319617139, 2020-08-15). Position: rays from the two ADR 0143 poses (37 deg right of the optical axis of
+      482392, right frame edge of 320326) cross near E 514-519 N -681; the 0.08 m GUGiK orthophoto has a small object
+      with a shadow in the grass strip at E 515.8 N -680.3 (artifacts/junctions-r7/ortho/board482_r7c.jpg), 6 m north of
+      the deck edge. The ADR 0143 guess (E 495 N -676) was 21 m further and under the deck. Designation F-10, plate
+      0.90 x 0.55 m and lower edge 2.0 m are WORKING_VALUE; present state (after 2020) UNVERIFIED.
+    confidence: medium
+    verify: board still standing, plate size on site
   - id: biezenstwa-street-name-north
     kind: gate3_sign
     at_en: [550.2, -699.7]
@@ -1136,7 +1176,11 @@ overrides:
   - id: dk8-ramp-split-island
     kind: traffic_island
     surface: sidewalk_paving
-    polygon_en: [[-781.9, 76.5], [-781.2, 77.1], [-768.1, 77.3], [-753.0, 76.9], [-753.3, 73.5], [-781.3, 75.6]]
+    # ADR 0144: tongue between the two deck starts (E -753...-751.3, N 75.45...77.15) - the island used to stop 3 m
+    # short of the decks, leaving a strip of grass lower than both (the rails dived into it; orthophoto
+    # artifacts/junctions-r6/ortho/kerb_merge_e.jpg: paved separator up to the expansion joints at E -752)
+    polygon_en: [[-781.9, 76.5], [-781.2, 77.1], [-768.1, 77.3], [-753.0, 76.9], [-751.3, 77.15], [-751.3, 75.45],
+                 [-753.15, 75.3], [-753.3, 73.5], [-781.3, 75.6]]
     reason: >-
       Kerbed concrete separator with barriers between the main carriageway and the ramp from Rondo Putry, rounded nose
       at E -781.9 N 76.5 (the kerb of the owner's video), running east onto the viaduct (xsec/km_trunk.png stations
@@ -1304,11 +1348,22 @@ overrides:
       these points (artifacts/junctions-r2/scripts/fit_offset.py, residual <= 0.15 m). Earlier readings (overview
       plan views; then the lane taken to reach the grass, 6.5 m, which left a hole between the 13.4 m stem and the
       link start under the route) are superseded.
+      ADR 0144 (owner, Fold video 2026-11-12: "the exit lane zigzags"): the knots at t 0.15-0.37 (the 6.0 m reading
+      with the P-21 band at N -132 and the centres at N -138 / -135) put both edges 0.9-1.4 m to the NE over 12 m and
+      back: the NE kerb bulged onto the verge at chain station 161-171 and stepped 1.4 m into the lane at 172-178.
+      On the 0.08 m orthophoto the NE asphalt / concrete-gutter boundary is one smooth line (brightness transects
+      every 6 m, artifacts/junctions-r7/scripts/zz_ortho_edge.py: 0.25 m inside the old kerb at station 143, 0.95 m
+      at 165-185; +-0.15 m). Knots t 0.154-0.704 refitted so the NE edge follows that line and the SW edge keeps the
+      line it had outside the bump (artifacts/junctions-r7/scripts/zz_fit.py, residual <= 0.08 m; edge slope <= 0.14).
     confidence: medium
     verify: owner drive
     set:
-      center_offset: [[0.0, -8.4], [0.05, -6.97], [0.1, -2.45], [0.15, -0.07], [0.222, -1.2], [0.3, -0.58], [0.366, -0.2], [0.5, 0.35], [0.75, 0.45], [1.0, 0.2]]
-      width: [[0.0, 4.2], [0.25, 4.2], [0.3, 6.0], [0.366, 5.35], [0.75, 5.35], [1.0, 6.5]]
+      center_offset: [[0.0, -8.4], [0.05, -6.97], [0.1, -2.45], [0.15, -0.07], [0.154, -0.13], [0.194, -0.14], [0.237, 0.27],
+                      [0.28, 0.46], [0.322, 0.33], [0.365, 0.34], [0.407, 0.41], [0.45, 0.48], [0.492, 0.5], [0.534, 0.53],
+                      [0.577, 0.55], [0.619, 0.54], [0.661, 0.52], [0.704, 0.51], [0.75, 0.45], [1.0, 0.2]]
+      width: [[0.0, 4.2], [0.15, 4.2], [0.154, 4.53], [0.194, 4.47], [0.237, 4.45], [0.28, 4.43], [0.322, 4.49], [0.365, 4.55],
+              [0.407, 4.6], [0.45, 4.65], [0.492, 4.76], [0.534, 4.84], [0.577, 4.98], [0.619, 5.0], [0.661, 5.1], [0.704, 5.17],
+              [0.75, 5.35], [1.0, 6.5]]
   - id: s1440-diverge-p21-band
     kind: painted_zone
     axis: [[-386.6, -98.1], [-344.6, -136.4]]
@@ -1619,7 +1674,9 @@ overrides:
     # b4: carried on to the ramp deck along N 76.65 (orthophoto: rail at N 76.6-76.9). The generated island narrows to
     # N 76.8 at E -755...-753 (xsec_glb.py, build b3), so the b2 line at N 77.05 left it at E -756 and dived; at N 76.65
     # it stays on the paving up to E -753 and the free end swings onto the start of the deck barrier (_join_free_ends).
-    polyline_en: [[-752.3, 76.75], [-753.5, 76.64], [-757.0, 76.68], [-765.0, 76.8], [-775.0, 76.7], [-778.5, 76.7]]
+    # ADR 0144: carried on to the first post of the barrier of the ramp deck (generated at E -750.0 N 77.4, build r7a;
+    # re-trace if the generator moves it) - the deck barrier used to start in the air 2.4 m from the end of this rail
+    polyline_en: [[-750.1, 77.35], [-751.3, 77.0], [-753.5, 76.72], [-757.0, 76.68], [-765.0, 76.8], [-775.0, 76.7], [-778.5, 76.7]]
     free_ends: [false, true]      # east end: stays at the deck joint (no swing onto the south rail, no terminal)
     reason: >-
       ADR 0123 (REVIEW s10-0117 P1-4, p0_kerb_merge_eye): second rail of the separator dk8-ramp-split-island, on its

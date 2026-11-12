@@ -33,6 +33,16 @@ namespace Game.World.Import
         /// </summary>
         public static long DetailCellKey(long cellKey, bool fab) => fab ? cellKey ^ (1L << 50) : cellKey;
 
+        /// <summary>
+        /// Instance records with "tier": "high" (garden trees, ADR 0132 p. 17) get their own cells (bit 51, disjoint
+        /// from the legacy and the Fab cells) and are stored after the legacy matrices, so a tier that skips them
+        /// (Low) draws exactly the set it drew without them: same cell bounds, same runs, same thinning indices.
+        /// </summary>
+        public static long HighOnlyCellKey(long cellKey, bool highOnly) => highOnly ? cellKey ^ (1L << 51) : cellKey;
+
+        /// <summary>True for the instance field "tier": "high"; a missing or any other value = every tier.</summary>
+        public static bool IsHighOnly(object tier) => tier is string s && string.Equals(s, "high", StringComparison.OrdinalIgnoreCase);
+
 
         /// <summary>
         /// Keep every pre-Fab matrix at its legacy sorted index. Runtime forest thinning uses the absolute
@@ -262,7 +272,7 @@ namespace Game.World.Import
             }
 
             // ---- instances ----
-            var items = new List<(long cell, bool forest, int proto, Matrix4x4 m)>();
+            var items = new List<(long cell, bool forest, int proto, Matrix4x4 m, bool highOnly)>();
             colliders = new Colliders();
             var corridor = r.Chunks.Where(c => c.Corridor).ToList();
             float minE = r.Chunks.Min(c => c.Min.x), minN = r.Chunks.Min(c => c.Min.y);
@@ -372,27 +382,29 @@ namespace Game.World.Import
                         colliders.Barriers.Add(bar);
                         continue;
                     }
-                    long drawCellKey = DetailCellKey(cellKey, p.StartsWith("fab_", StringComparison.Ordinal));
-                    items.Add((drawCellKey, forest, pi, m));
-                    if (contactOf.TryGetValue(pi, out int cpi)) items.Add((cellKey, false, cpi, m));
-                    if (colMeshes.TryGetValue(p, out var cb) && cb.HasValue && corridor.Any(c => e >= c.Min.x && e < c.Max.x && n >= c.Min.y && n < c.Max.y))
+                    bool highOnly = IsHighOnly(it.Get("tier"));
+                    long drawCellKey = HighOnlyCellKey(DetailCellKey(cellKey, p.StartsWith("fab_", StringComparison.Ordinal)), highOnly);
+                    items.Add((drawCellKey, forest && !highOnly, pi, m, highOnly));
+                    if (contactOf.TryGetValue(pi, out int cpi)) items.Add((cellKey, false, cpi, m, false));
+                    // no collider for a high-only instance: collision must not depend on the tier (ADR 0132 p. 17)
+                    if (!highOnly && colMeshes.TryGetValue(p, out var cb) && cb.HasValue && corridor.Any(c => e >= c.Min.x && e < c.Max.x && n >= c.Min.y && n < c.Max.y))
                         colliders.Items.Add((p, m, cb.Value));
                 }
             }
 
             var storageOrder = LegacyStorageOrder(items.Select(it => it.cell).ToArray(), items.Select(it => it.forest).ToArray(),
-                items.Select(it => it.proto).ToArray(), items.Select(it => protos[it.proto].name.StartsWith("fab_", StringComparison.Ordinal)).ToArray());
+                items.Select(it => it.proto).ToArray(), items.Select(it => it.highOnly || protos[it.proto].name.StartsWith("fab_", StringComparison.Ordinal)).ToArray());
             var stored = storageOrder.Select(i => items[i]).ToArray();
             var mats = stored.Select(it => it.m).ToArray();
             // Each partition is already sorted. Record its contiguous runs before merging the run order;
             // sorting individual matrices again would reintroduce the unstable equal-key permutation.
-            var orderedRuns = new List<(long cell, bool forest, int proto, int start, int count)>();
+            var orderedRuns = new List<(long cell, bool forest, int proto, int start, int count, bool highOnly)>();
             for (int i = 0; i < stored.Length;)
             {
                 int start = i;
                 var first = stored[i++];
                 while (i < stored.Length && stored[i].cell == first.cell && stored[i].forest == first.forest && stored[i].proto == first.proto) i++;
-                orderedRuns.Add((first.cell, first.forest, first.proto, start, i - start));
+                orderedRuns.Add((first.cell, first.forest, first.proto, start, i - start, first.highOnly));
             }
             orderedRuns.Sort((a, b) => a.cell != b.cell ? a.cell.CompareTo(b.cell) : a.forest != b.forest ? a.forest.CompareTo(b.forest) : a.proto.CompareTo(b.proto));
             var cells = new List<WorldInstanceSet.Cell>();
@@ -412,7 +424,7 @@ namespace Game.World.Import
                         var wb = Transform(protos[pr].lods[0].bounds, mats[i]);
                         if (first) { c.bounds = wb; first = false; } else c.bounds.Encapsulate(wb);
                     }
-                    runs.Add(new WorldInstanceSet.Run { prototype = pr, start = run.start, count = run.count, forest = run.forest });
+                    runs.Add(new WorldInstanceSet.Run { prototype = pr, start = run.start, count = run.count, forest = run.forest, highOnly = run.highOnly });
                     protos[pr].count += run.count;
                 }
                 c.runCount = runs.Count - c.runStart;

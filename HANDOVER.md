@@ -1,4 +1,35 @@
+# HANDOVER — kamion, SESJA 16 (start 2026-11-12 22:23, nowe konto: 5 h 0 %, tydzień 0 %, Fable 0 %; reset 5 h 13.11 03:20)
+
+## STAN S16 (lider) — main `700517b22`
+- Maszyna 22:23: C: 853 GB wolnego, watchdog żyje (pid 73848), PHONE_RUN brak, **A16 RFGL34SJYDZ znów online**, Fold RFGL80RXBPZ online.
+- Triggery CronCreate: **:17** limit/dysk/live/scalenia/HANDOVER/push, **:47** PR-y Mistrala, **:07** przekazania GPT.
+- Agenci (w tle, live nadpisywany po każdym kroku):
+| ADR | zadanie | model | worktree / gałąź | live | stan |
+|---|---|---|---|---|---|
+| 0152 | fold-flicker: A16 Low regresja → Fold Ultra/60 5 min → tier Folda → merge main | Opus | `fold-flicker` | `artifacts/live/fold-flicker.md` | start 22:3x |
+| 0146 | putry-andersa: fidelity+pytest+commit → merge main → import, rendery par 494288/810896/Andersa → `artifacts/putry-andersa/after4` | Fable | `putry-andersa` | `artifacts/live/putry-andersa.md` | start 22:3x (rebuild 22:22 exit 0) |
+| — | Mistral r4 #21–#25 recenzja + integracja (KRTG v2 #21+#23 połączyć) | Opus | `mistral-r4-int` | `artifacts/live/mistral-r4-int.md` | start 22:3x |
+- Dalej (kolejność s16): scalenie 0152 → czysty APK właściciela; scalenie 0146 po visual-critic D51; scalenie Mistral r4; JEDNA integracja świata; krytyk D51 → APK Low → gate3 A16; potem LOD1/LOD2 aut, zieleń ulic domów.
+- **Ostatni przydzielony ADR: 0152.**
+
 # HANDOVER — kamion, SESJA 15 (start 2026-11-12 20:25, nowe konto)
+
+## KONIEC S15 (22:5x, limit 5 h 89 % — reset 13.11 01:20, tydzień 39 %, Fable 63 %) — prompt dla s16: `docs/owner/START-PROMPT-S16.md`
+- **Właściciel 22:5x: agenci zapisują stan i zatrzymują się w bezpiecznym miejscu (NIE zamykać ich ani zadań w tle); lider zapisuje wszystko.** Nowych agentów nie uruchamiać przed resetem.
+- **Scalone w s15 (main `c72e2a6c8`+):** 0141 krawędź/skyline (+r6d), 0149 kierowanie r2, **0151** kierowanie r3 (siodło, AWAR., >60 km/h), 0148 sprężarka (dziwny jałowy), 0150 mapa+minimapa+GPS, 0136 r2 A16 Low, Mistral r3 (#15–#18, #20; #19 zamknięty), 0132 zabudowa r4/r4b, 0144 węzły r7 (+zygzak właściciela).
+- **W toku (worktree + live):**
+| ADR | zadanie | worktree / gałąź | live | stan |
+|---|---|---|---|---|
+| 0152 | Fold: sprężyna głowy `CameraRig` pod-krokami (A16 High naprzemienne klatki 15,6 % → 0 %), odbicia Ultra bez SSAO (4400–4575 błędów/120 s → 0), Ultra dostaje zabezpieczenia High (skala do 0,70, spadek do 30 FPS), adaptacyjna skala działa < 15 FPS (A16 High 10,2 → 13,4 FPS); **Fold High/30 5 min: 29,97 FPS, p95 33,3, GPU p95 28,8, thermal 0**; Ultra/60 chłodny 25,6 FPS. Zmienia `URP_Ultra.asset` (2. renderer bez SSAO). EditMode 446/448 (CarPaint) | `fold-flicker` @ `55474117c` | `artifacts/live/fold-flicker.md` | zatrzymany bezpiecznie, nic w tle. **Brakuje: A16 Low regresja (kabel!)** — `pwsh artifacts/fold-flicker/fold-run.ps1 -SkipLock -Duration 150 -Apk artifacts/apk/kamion-0.1.0-550a353f48.apk -OutTag a16low -Runs "low_new=Low;fps30;camlog=1"` w worktree; potem review i scalenie. APK z poprawkami: `artifacts/fold-flicker/kamion-0.1.0-550a353f48.apk` |
+| 0146 | Putry/Andersa: portal Andersa (przyczyna „+0,6 m” = głębia 2,46 m przed belką → fix), mur 810896 usunięty, latarnie Y 10,3 m, kapa/gzyms `bridge_cap_red`, bez dublowania ekranu/muru z OSM/BDOT | `putry-andersa` @ `ad4a3b201` | `artifacts/live/putry-andersa.md` | rebuild+fidelity w tle (koniec = `artifacts/putry-andersa/logs/build-world-4.log.done`; wznowienie `pwsh artifacts/putry-andersa/tools/run-build.ps1 -Log build-world-4.log`); potem pytest, commit Data/Regions, lider: import, rendery, visual-critic |
+- **Mistral r4: PR #21 (limity ciężarówki), #22 (HUD bez TMP), #23 (pasy), #24 (znaki+concrete_pole) gotowe, niezrecenzowane; M25 (P-11) zlecony ponownie 22:3x** (wcześniej dwie sesje dostały M22). #21 i #23 oba podnoszą KRTG do v2 → połączyć ręcznie. Zadania: `docs/owner/MISTRAL-TASKS-4.md`.
+- **APK właściciela:** `artifacts/apk/kamion-0.1.0-e364975f12.apk` (kierowanie r2+r3, GPS, sprężarka, Low A16; smoke A16 OK 30 fps). Właściciel: „jest spoko, już lepiej się jeździ” (D55). Nowszy main (0132, 0144) bez APK.
+- **Decyzje właściciela s15:** D54 inne pojazdy (osobowe, autobusy, autokary) później — nie kasować odrzuconych ujęć ElevenLabs; D55 kierowanie OK; D56 pełny Windows z kierownicami po bramce 3.
+- **main wymaga JEDNEJ regeneracji świata** (0123, 0128, 0129, 0133, 0139, 0141, 0143, 0144, 0132, CRLF, Mistral #14/M24) + `ImpostorTrimBake` + `navgraph/build_route_graph.py` (nie wpięty w build_world) + `fidelity/run.py` (test_report_not_stale pada na main).
+- **Otwarte bez agenta:** LOD1/LOD2 aut z 1–2 submeshami (A16 brakuje ~0,7 ms); zieleń ulic domów za rzadka (D51 PARTIAL); skośny płot `r16_drive_3`; nakładanie zapór edge-west (P2); NMPT GUGiK dla wysokości lasu; głębia skyline na GLES; blokada obrotu 0147 na A16; ElevenLabs REGEN-04 (opcjonalnie, decyzja właściciela); M20 HUD → teraz #22.
+- Fold podłączony USB: RFGL80RXBPZ (SM-F976B, telefon właściciela — zasady jak S24+: ≥ 40 %, < 36 °C, nigdy < 20 %). Właściciel pytał o debugowanie bezprzewodowe (instrukcja w rozmowie s15: `adb pair` + `adb connect`, serial zmienia się na adres:port).
+- Worktree do usunięcia po scaleniu: `fold-flicker`, `putry-andersa`. `argon-edge` i `gpt-life` (locked) — nie nasze, nie ruszać.
+
 
 ## Stan na żywo (s15) — najświeższe: `artifacts/live/<gałąź>.md`
 - 20:28 usage: 5 h 0 % (reset 01:20), tydzień 24 %, **Fable 46 %** (reset 14.11 17:00) → agenci Fable s14 kontynuują na Fable. Dysk C: 590 → 647 GB wolnego. Watchdog żyje (pid 73848). PHONE_RUN brak.
@@ -34,6 +65,9 @@
 - 22:1x: **Mistral runda 4 zlecona przez właściciela** (M21–M25, `docs/owner/MISTRAL-TASKS-4.md`: GPS limity ciężarówki, pasy ruchu, HUD zero-alloc bez TMP, wymiary znaków + concrete_pole, P-11 + zmiany zał. 2). PR-y `mistral/21..25-*` → recenzja w triggerze :47. Decyzje D54 (inne pojazdy później), D55 (kierowanie OK), D56 (pełny Windows z kierownicami po bramce 3).
 - 22:2x: **Mistral r4: PR #21 (M21 limity), #22 (M23 HUD bez TMP), #23 (M22 pasy), #24 (M24 znaki) — gotowe, NIEZRECENZOWANE; M25 brak PR/gałęzi.** #21 i #23 oba podnoszą format KRTG do v2 → konflikt do ręcznego połączenia. Recenzja + integracja (`mistral-r4-int`, Opus) **po resecie limitu 01:20** (usage 22:2x: 5 h 80 %, tydzień 37 %, Fable 61 %).
 - 0152 fold-flicker: przyczyna „przeskakującego obrazu” = `CameraRig.UpdateCab` całkuje sprężynę kołysania głowy 1 krokiem Eulera/klatkę, niestabilne przy < ~11 FPS (Fold Ultra/60, A16 High) → pod-kroki ≤ 1/60 s; + adaptacyjna skala High < 15 FPS, env capture po wznowieniu. Fold RFGL80RXBPZ podłączony USB (telefon właściciela: ≥ 40 %, < 36 °C); Fold miał Ultra/60 wybrane w menu, 5,65 Mpx przy renderScale 1,0 + MSAA 4x.
+- **22:3x: SCALONE 0132 buildings-r9** `4e76cb328` (r4 decyzja B + r4b: drzewa ogrodowe `tier: high` pomijane na Low; High ≤ 2 M; Low najgorsza kamera +1 draw; EditMode 444/444). Kontrola lidera vs zdjęcia (krytyk wstrzymany: limit 87 %, 3 agentów): lepiej niż main, ale **zieleń ulic domów nadal za rzadka (D51 PARTIAL)** — brak wysokich koron i żywopłotów → zadanie na później. Otwarte: skośny panel płotu `r16_drive_3`. Worktree usunięty. Regeneracja w integracji.
+- 0152: Fold Ultra — capture odbić 4400–4575 błędów/2 min → fix (plain renderer na Ultra) 0; sprężyna głowy A16 High: naprzemienność 100 % klatek ±60 mm → 0 %. A16 offline od 22:09 (adb zerwany przez Unity) — potrzebne przełożenie kabla przez właściciela.
+- **22:4x: SCALONE 0144 junctions-r7** `48905cb7d` (jeden system barier na pomostach, filary owalne z danych, żwir, spód pomostu, F-10 przy 482392 potwierdzona Mapillary+ortofoto, **zygzak łącznicy Putry z filmu właściciela wygładzony**; pytest 959, EditMode 439/439, Low max +3 draws). Kontrola lidera (krytyk wstrzymany limitem). generated/*.json → ours. Otwarte: plamy słońca na wyspie pod wiaduktem, „warstwice” kolein na początku łącznicy Putry, nakładanie P-21, 34 wolne końce barier, trasa GPS po osi OSM zamiast przesuniętej osi łącznicy. Worktree usunięty.
 - **Ostatni przydzielony ADR: 0152.**
 
 
