@@ -16,7 +16,7 @@ def triangles(mesh):
     return p['V'][p['T']]
 
 
-def ray_hits(tris, origin, direction):
+def ray_hits(tris, origin, direction, entering=False):
     """Two-sided Moller-Trumbore, independent of the model's construction."""
     edge1, edge2 = tris[:, 1]-tris[:, 0], tris[:, 2]-tris[:, 0]
     cross = np.cross(np.broadcast_to(direction, edge2.shape), edge2)
@@ -29,7 +29,13 @@ def ray_hits(tris, origin, direction):
     q = np.cross(offset, edge1)
     v = np.einsum('j,ij->i', direction, q)*inv
     distance = np.einsum('ij,ij->i', edge2, q)*inv
-    return bool(np.any(valid & (u >= -1e-8) & (v >= -1e-8) & (u+v <= 1+1e-8) & (distance > 0)))
+    hits = valid & (u >= -1e-8) & (v >= -1e-8) & (u+v <= 1+1e-8) & (distance > 0)
+    if not np.any(hits):
+        return False
+    if not entering:
+        return True
+    first = np.flatnonzero(hits)[np.argmin(distance[hits])]
+    return np.dot(np.cross(edge1[first], edge2[first]), direction) < -1e-10
 
 
 @pytest.mark.parametrize('n', [4, 8, 12, 16])
@@ -48,8 +54,9 @@ def test_four_way_fork_openings_and_load_bearing_blocks(n, lod):
             for sign in (-1, 1):
                 assert not ray_hits(tris, [dx-sign*2, dy+offset, z], [sign, 0, 0]), (n, lod, layer, 'side')
         # A hollow shell with no support blocks must not pass the opening test.
-        assert ray_hits(tris, [dx, dy-2, z], [0, 1, 0])
-        assert ray_hits(tris, [dx-2, dy, z], [1, 0, 0])
+        for sign in (-1, 1):
+            assert ray_hits(tris, [dx, dy-sign*2, z], [0, sign, 0], entering=True)
+            assert ray_hits(tris, [dx-sign*2, dy, z], [sign, 0, 0], entering=True)
 
 
 @pytest.mark.parametrize('n', [4, 8, 12, 16])
