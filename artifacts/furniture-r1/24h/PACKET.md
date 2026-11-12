@@ -76,7 +76,7 @@ Audyt `fidelity-input-audit.json` i `fidelity-baseline-audit.json` dowodzi,
 że wszystkie 23 wejścia oraz raport zachowały bloby Git z bazy sesji;
 normalizacja LF nie usuwa niezgodności. Nie poprawiano źródeł dróg ani
 overrides i nie aktualizowano samych hashy w celu uzyskania PASS.
-Wyniki physics/gate3 i końcowego EditMode należy odczytać z
-`closing-test-exits.json` i ich logów po zakończeniu bieżącej sekwencji.
+Physics/gate3: 47 passed, 1 failed w 306,57 s. Znana porażka: test_generator_reproduces_committed_scenarios, różni się top_speed_flat_comb.json. Test, generator i scenariusz niezmienione od bazy (physics-baseline-audit.json). Końcowy EditMode: 268 passed, 0 failed, 0 skipped; pełne wyniki w editmode-results.xml i editmode-unity.log.
+
 
 

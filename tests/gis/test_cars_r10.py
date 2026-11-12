@@ -95,11 +95,13 @@ def test_door_seams_start_behind_the_front_arch():
         assert len(ahead) == 0, (name, ahead[:3])
 
 
-def test_tail_film_follows_the_shell_columns():
-    """The road film on the tail is cut on the shell's own columns (a quad from g = 0.7 to 2.0 was a chord through the
-    shoulder arc: hard-edged rectangles on the bumper)."""
+def test_tail_film_uses_shell_uv_without_a_floating_skin():
+    """ADR0089 film follows the actual curved painted shell, so its former off-surface alpha chords cannot recur."""
     for name, d, P in _protos():
-        dirt = [p for k, p in _by(P[0]).items() if k.startswith("car_dirt_")]
-        v = np.concatenate([p["V"] for p in dirt])
+        assert not any(k.startswith("car_dirt_") for k in _by(P[0]))
+        paint = [p for k, p in _by(P[0]).items() if k.startswith("car_paint_")]
+        for primitive in paint:
+            assert np.allclose(primitive["UV"], primitive["V"][:, [1, 2]])
+        v = np.concatenate([p["V"] for p in paint])
         tail = v[v[:, 1] < -d["L"] / 2 + 0.25]
         assert len(np.unique(np.round(np.abs(tail[:, 0]), 3))) >= 6, name

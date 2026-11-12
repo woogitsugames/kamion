@@ -1,0 +1,23 @@
+{
+  "stage": "final",
+  "materials": [
+    {
+      "material": "marking_white",
+      "nominal_source_wheel": 0.85,
+      "actual_uniform": [
+        0.425,
+        0.25,
+        0.38,
+        0.12
+      ],
+      "expected_from_fresh_metadata": [
+        0.425,
+        0.25,
+        0.38,
+        0.12
+      ]
+    }
+  ],
+  "repeated_import_matches_first": true,
+  "note": "Actual native material readback, fresh metadata*.5; age/dirt/width exact. No scaling of existing material values. Repeat check uses a later planned canonical import, not an extra round."
+}

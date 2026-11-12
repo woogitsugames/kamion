@@ -8,6 +8,10 @@
       pwsh scripts/unity-slot.ps1 -Acquire -Owner gpt-light-r13      # blocks until a slot is free and no PHONE_RUN
       pwsh scripts/visual-qa.ps1 ...                                  # (any Unity command)
       pwsh scripts/unity-slot.ps1 -Release -Owner gpt-light-r13
+  Heavy Python world jobs (build_world.py, build_all.py, pytest tests/gis|physics|gate3, fidelity/run.py) use -Pool heavy:
+      pwsh scripts/unity-slot.ps1 -Acquire -Pool heavy -Owner gpt-light-r13
+      uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c
+      pwsh scripts/unity-slot.ps1 -Release -Pool heavy -Owner gpt-light-r13
   Slots live in the MAIN repo: artifacts/locks/unity-slots/<owner>.slot (works from any worktree).
   A slot older than -StaleHours (default 3 h) is treated as abandoned and removed.
   PHONE_RUN (a phone measurement; Unity kills the adb daemon) blocks new acquisitions.
@@ -17,13 +21,18 @@ param(
     [switch]$Release,
     [switch]$Status,
     [string]$Owner = $env:USERNAME,
-    [int]$MaxSlots = 4,
+    # Pool: 'unity' (Unity batch: import, tests, renders, builds; max 4) or 'heavy' (Python world jobs:
+    # build_world.py, build_all.py, pytest tests/gis|physics|gate3, fidelity/run.py; max 3 - each takes 1-8 GB and all cores).
+    # 2026-11-11: ~13 parallel pytest/build_world runs froze the PC at 100 % CPU / RAM.
+    [ValidateSet('unity', 'heavy')] [string]$Pool = 'unity',
+    [int]$MaxSlots = 0,
     [double]$StaleHours = 3,
     [int]$PollSeconds = 60
 )
 $ErrorActionPreference = 'Stop'
 $main = 'C:\Users\matma\Documents\Claude\kamion'
-$dir = Join-Path $main 'artifacts\locks\unity-slots'
+if ($MaxSlots -le 0) { $MaxSlots = if ($Pool -eq 'heavy') { 3 } else { 4 } }
+$dir = Join-Path $main ("artifacts\locks\{0}-slots" -f $Pool)
 $phone = Join-Path $main 'artifacts\locks\PHONE_RUN'
 New-Item -ItemType Directory -Force $dir | Out-Null
 $safe = ($Owner -replace '[^A-Za-z0-9._-]', '_')
@@ -50,7 +59,7 @@ if ($Acquire) {
             if (@(Get-LiveSlots).Count -le $MaxSlots) { "acquired slot $safe ($($live.Count + 1)/$MaxSlots)"; exit 0 }
             Remove-Item $mine -Force
         }
-        Write-Host ("waiting for a Unity slot ({0}/{1} busy, phone={2}) ..." -f $live.Count, $MaxSlots, (Test-Path $phone))
+        Write-Host ("waiting for a {3} slot ({0}/{1} busy, phone={2}) ..." -f $live.Count, $MaxSlots, (Test-Path $phone), $Pool)
         Start-Sleep -Seconds $PollSeconds
     }
 }

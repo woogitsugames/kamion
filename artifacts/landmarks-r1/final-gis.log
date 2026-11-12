@@ -1,0 +1,49 @@
+........................................................................ [ 14%]
+........................................................................ [ 29%]
+........................................................................ [ 43%]
+......F.........................................................F......x [ 58%]
+........................................................................ [ 72%]
+........................................................................ [ 87%]
+................................................................         [100%]
+================================== FAILURES ===================================
+_____________________ test_asset_matches_spec_and_budget ______________________
+
+    def test_asset_matches_spec_and_budget():
+        from streetscape import hero_building as HB
+        sp = HB.spec_path(REGION_ID, ASSET)
+        _, glb, meta_p = HB.asset_paths(ASSET)
+        if not (sp.exists() and glb.exists() and meta_p.exists()):
+            pytest.skip("asset or spec missing: run roads/build_world.py with Blender")
+        spec = json.loads(sp.read_text(encoding="utf-8"))
+        meta = json.loads(meta_p.read_text(encoding="utf-8"))
+        assert meta["spec_sha256"] == HB._sha(spec), "asset built from another spec: rebuild with make_fire_station.py"
+        assert meta["glb_sha256"] == hashlib.sha256(glb.read_bytes()).hexdigest()
+        t = meta["tris"]
+        assert t[0] <= 15000 and t[1] <= 0.5 * t[0] and t[2] <= 400, t
+        assert meta["prototype"] == "landmark_fire_station_jrg2"
+        assert set(meta["materials"]) == {"fire_station", "fire_station_alpha", "fire_station_thuja_shell"}
+>       assert t[1] <= 2828, "r7 must retain the original Low geometry budget"
+E       AssertionError: r7 must retain the original Low geometry budget
+E       assert 2860 <= 2828
+
+tests\gis\test_hero_building.py:177: AssertionError
+____________________________ test_report_not_stale ____________________________
+
+qa = {'adr': '0075', 'connectivity': {'missing_in_graph': [{'access': None, 'highway': 'service', 'length_in_tile_m': 33.1,...948309:1883101800-1883101801', 'dist_m': 10.5, 'junction': 'j:n1883101800', 'lane_index_from_left': 0, ...}, ...], ...}
+
+    def test_report_not_stale(qa):
+        """The report must describe the current graph, overrides, route and road generator."""
+        stale = []
+        for k, v in qa["inputs_sha256"].items():
+            p = (REGION_DIR / k) if "/" not in k else (REPO / k)
+            if not p.exists() or _sha(p) != v:
+                stale.append(k)
+>       assert not stale, f"fidelity_qa.json is stale for {stale}: rerun tools/worldgen/fidelity/run.py"
+E       AssertionError: fidelity_qa.json is stale for ['overrides.yaml', 'tools/worldgen/roads/build_world.py', 'tools/worldgen/roads/meshing.py', 'tools/worldgen/roads/network.py', 'tools/worldgen/roads/pipeline.py', 'tools/worldgen/roads/profile.py', 'tools/worldgen/roads/standards.py']: rerun tools/worldgen/fidelity/run.py
+E       assert not ['overrides.yaml', 'tools/worldgen/roads/build_world.py', 'tools/worldgen/roads/meshing.py', 'tools/worldgen/roads/network.py', 'tools/worldgen/roads/pipeline.py', 'tools/worldgen/roads/profile.py', ...]
+
+tests\gis\test_road_fidelity.py:51: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/gis/test_hero_building.py::test_asset_matches_spec_and_budget - ...
+FAILED tests/gis/test_road_fidelity.py::test_report_not_stale - AssertionErro...
+2 failed, 493 passed, 1 xfailed in 662.00s (0:11:01)

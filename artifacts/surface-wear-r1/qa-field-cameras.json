@@ -1,0 +1,78 @@
+{
+  "schema": "truck-sim-pl/gate3-cameras/1",
+  "region": "bialystok-industrial-c",
+  "cameras": [
+    {
+      "id": "d_field_patch_putry",
+      "type": "persp",
+      "kind": "photo_match",
+      "seat": "file",
+      "pos": [
+        -407.74007929799916,
+        -131.58782864985352,
+        137.27673785429974
+      ],
+      "look_at": [
+        -412.74007929799916,
+        -124.58782864985353,
+        131.30673785429974
+      ],
+      "fov_deg": 48,
+      "note": "Actual12.62m2 patch footprint near Putry; visibility/control only, not photo-identical roadworks claim."
+    },
+    {
+      "id": "d_field_patch_large",
+      "type": "persp",
+      "kind": "photo_match",
+      "seat": "file",
+      "pos": [
+        330.7628254857104,
+        -581.2743708164388,
+        149.14820141048915
+      ],
+      "look_at": [
+        323.7628254857104,
+        -572.2743708164388,
+        141.17820141048915
+      ],
+      "fov_deg": 48,
+      "note": "Actual largest27.38m2 existing patch; retain footprint/geometry, assess edge/tone/age."
+    },
+    {
+      "id": "d_field_tyre_near_gate",
+      "type": "persp",
+      "kind": "photo_match",
+      "seat": "file",
+      "pos": [
+        672.4807953950838,
+        -611.3072134040854,
+        149.75469951039895
+      ],
+      "look_at": [
+        664.4807953950838,
+        -601.3072134040854,
+        141.78469951039895
+      ],
+      "fov_deg": 48,
+      "note": "Nearest actual tyre footprint to source gatehouse; distance36.8m, sourceIDnotexported, cannot yet attribute to gate."
+    },
+    {
+      "id": "d_field_signal_oil",
+      "type": "persp",
+      "kind": "photo_match",
+      "seat": "file",
+      "pos": [
+        -280.7723907138094,
+        -175.02022896342635,
+        133.0934263435326
+      ],
+      "look_at": [
+        -282.7723907138094,
+        -172.02022896342635,
+        130.1234263435326
+      ],
+      "fov_deg": 48,
+      "note": "Actual oil footprint nearest source traffic_signal 1847044938; oil-source attribution not exported. Verify roadlane/context before queue claim."
+    }
+  ]
+}

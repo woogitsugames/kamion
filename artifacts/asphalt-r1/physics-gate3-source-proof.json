@@ -1,0 +1,15 @@
+{
+    "base":  "4e019d64",
+    "head":  "1acbff5509722ae92d1331b7bd0c8cdad26e0d25",
+    "unchanged":  true,
+    "paths":  [
+                  "tests/physics",
+                  "tests/gate3",
+                  "game/Assets/_Project/Vehicle/Physics"
+              ],
+    "physics_gate3_passed":  47,
+    "physics_gate3_failed":  1,
+    "failed_test":  "tests/physics/test_scenario_strictness.py::test_generator_reproduces_committed_scenarios",
+    "differing_scenario":  "top_speed_flat_comb.json",
+    "note":  "Kod generatora scenariuszy zakończył się 0, porównanie JSON wykazało różnicę z zapisanym scenariuszem. Instrukcja zadania wskazuje ten test jako znaną porażkę. Nie zmieniano tych źródeł ani scenariuszy."
+}

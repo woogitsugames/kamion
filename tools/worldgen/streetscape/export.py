@@ -203,17 +203,17 @@ def export(codes, boards, out_dir=None):
             cm = PP.Mesh()
             LP.contact_quad(cm, cspec)
             glb.add_mesh(name + ".contact", cm.out(), {"contact": cspec})
-        prims = crease_normals(lod0.out())
+        prims = LC.paint_deposition(crease_normals(lod0.out()), name)
         glb.add_mesh(name, prims, {"lod": 0})
         t0 = sum(len(p["T"]) for p in prims)
-        p1 = crease_normals(lod1.out())
+        p1 = LC.paint_deposition(crease_normals(lod1.out()), name)
         glb.add_mesh(name + ".lod1", p1, {"lod": 1})
         t1 = sum(len(p["T"]) for p in p1)
         if col is not None:
             glb.add_mesh(name + ".col", col.out(), {"collision": True})
         meta[name] = {"tris_lod0": int(t0), "tris_lod1": int(t1), "materials": sorted({p["mat"] for p in prims})}
         if more and more[0] is not None:          # optional third LOD (cars, vans: far parking rows)
-            p2 = crease_normals(more[0].out())
+            p2 = LC.paint_deposition(crease_normals(more[0].out()), name)
             glb.add_mesh(name + ".lod2", p2, {"lod": 2})
             meta[name]["tris_lod2"] = int(sum(len(p["T"]) for p in p2))
         del glb_tris

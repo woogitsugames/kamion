@@ -1,0 +1,33 @@
+....F..                                                                  [100%]
+================================== FAILURES ===================================
+_________ test_glazing_room_visibility_preserves_pvc_and_painted_trim _________
+
+atlas = <module 'test_fire_station_r7_atlas' from 'C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-landmarks\\art-source\\world\\materials\\_src\\sets_fire_station.py'>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000014B32B4E120>
+
+    def test_glazing_room_visibility_preserves_pvc_and_painted_trim(atlas, monkeypatch):
+        def scan_stub(asset, context, mask, *args, **kwargs):
+            return np.ones_like(mask),np.zeros_like(mask),np.zeros_like(mask),np.zeros_like(mask),False
+        monkeypatch.setattr(atlas,"_scan_fields",scan_stub)
+        monkeypatch.setattr(atlas,"_conifer_sprite",lambda: Image.new("RGBA",(32,32),(45,65,30,255)))
+        surface=atlas.fire_station(128)
+        x,y=surface.c.xy(); v=atlas.TILE[1]-y
+        allowed=np.zeros(x.shape,bool)
+        for key in ("win_arch","win_round"):
+            r=atlas.LAYOUT[key]
+            allowed |= ((x>=r["u"][0]-.1)&(x<=r["u"][1]+.1)&(v>=r["v"][0]-.1)&(v<=r["v"][1]+.1))
+        assert np.all(surface.ao_extra[~allowed]==1)
+        assert .64 <= surface.ao_extra.min() < .8
+        blue=allowed&(surface.albedo[...,2]>3*surface.albedo[...,0])
+        white=allowed&(surface.albedo.min(axis=2)>.3)
+        assert blue.any() and white.any()
+>       assert np.all(surface.ao_extra[blue | white]==1), "painted trim and PVC must not inherit the dark room"
+E       AssertionError: painted trim and PVC must not inherit the dark room
+E       assert np.False_
+E        +  where np.False_ = <function all at 0x0000014B2A18FA30>(array([1.       , 1.       , 1.       , 1.       , 1.       , 1.       ,\n       1.       , 1.       , 1.       , 1.   ...       , 1.       , 1.       , 1.       , 1.       ,\n       1.       , 1.       , 1.       , 1.       ], dtype=float32) == 1)
+E        +    where <function all at 0x0000014B2A18FA30> = np.all
+
+tests\gis\test_fire_station_r7.py:100: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/gis/test_fire_station_r7.py::test_glazing_room_visibility_preserves_pvc_and_painted_trim
+1 failed, 6 passed in 4.52s

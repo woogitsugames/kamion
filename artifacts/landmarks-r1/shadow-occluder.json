@@ -1,0 +1,49 @@
+{
+  "scope": "CPU ray against baseline hero opaque mesh; sun from LP_Overcast",
+  "sun_elevation_deg": 41.0,
+  "sun_azimuth_deg": 200.0,
+  "rows": [
+    {
+      "label": "patch",
+      "hit": {
+        "distance_m": 6.757560054693756,
+        "uv_metres": [
+          9.635935081485528,
+          10.633859081439946
+        ],
+        "caster_position": [
+          -237.54367943147605,
+          138.44849505775426,
+          -166.22975001283956
+        ]
+      },
+      "hit_flag_atlas_cell": true
+    },
+    {
+      "label": "above",
+      "hit": null,
+      "hit_flag_atlas_cell": false
+    },
+    {
+      "label": "left",
+      "hit": null,
+      "hit_flag_atlas_cell": false
+    },
+    {
+      "label": "lamp",
+      "hit": {
+        "distance_m": 6.75546289562436,
+        "uv_metres": [
+          8.786284518300489,
+          10.443131931674511
+        ],
+        "caster_position": [
+          -238.21502432391642,
+          138.3108680050738,
+          -165.70897699233308
+        ]
+      },
+      "hit_flag_atlas_cell": true
+    }
+  ]
+}

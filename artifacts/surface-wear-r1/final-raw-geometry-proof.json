@@ -1,0 +1,61 @@
+{
+  "raw_count": 192,
+  "byte_exact_files": 188,
+  "all64_instance_files_exact": true,
+  "changed": [
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_4_5.glb",
+      "all_other_ordered_primitives_exact": 95,
+      "delta": {
+        "material": "decal_oil",
+        "added_vertices": 10,
+        "added_triangles": 9,
+        "original_prefix_exact": true
+      },
+      "material_definitions_node_transforms_exact": true
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_4_5.low.glb",
+      "all_other_ordered_primitives_exact": 57,
+      "delta": {
+        "material": "decal_oil",
+        "added_vertices": 10,
+        "added_triangles": 9,
+        "original_prefix_exact": true
+      },
+      "material_definitions_node_transforms_exact": true
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_6_6.glb",
+      "all_other_ordered_primitives_exact": 109,
+      "delta": {
+        "material": "decal_tyre",
+        "added_vertices": 72,
+        "added_triangles": 64,
+        "all_old_attributes_and_rebased_indices_exact": true,
+        "signed_short_approach_only_new_vertices": true
+      },
+      "material_definitions_node_transforms_exact": true
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_6_6.low.glb",
+      "all_other_ordered_primitives_exact": 68,
+      "delta": {
+        "material": "decal_tyre",
+        "added_vertices": 72,
+        "added_triangles": 64,
+        "all_old_attributes_and_rebased_indices_exact": true,
+        "signed_short_approach_only_new_vertices": true
+      },
+      "material_definitions_node_transforms_exact": true
+    }
+  ],
+  "source_triangles_added_per_tier": 73,
+  "source_vertices_added_per_tier": 82,
+  "new_source_material_groups": 0,
+  "all_road_geometry_normals_indices_UV0_exact": true,
+  "Fab_ready": 15,
+  "Fab_props": 320,
+  "Fab_fallback": false,
+  "note": "Final chosen canonical source versus immutable pristine raw bytes. Ordered primitive lists preserve duplicates; no dictionary keyed only by material. Deliberate marking additions and signed new lengths are isolated from every old attribute."
+}

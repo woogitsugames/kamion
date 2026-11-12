@@ -1,0 +1,1145 @@
+{
+  "note": "Actual matched source/camera pairs; RGB/luma display levels depend on exposure and weather. ROIs are visible context, not measured physical albedo. Human inspection decides wet ribbons and paint legibility. Signal lamp heads are outside the signal-oil closeup; no lamp ROI claim is made.",
+  "rows": [
+    {
+      "condition": "Low-clear",
+      "camera": "d_field_bus464_close",
+      "whole_frame_mean_rgb_delta": [
+        0.021479107312440647,
+        0.03133428300094967,
+        0.04690764482431149
+      ],
+      "whole_frame_mean_abs_rgb_lsb": 0.03461024058246281,
+      "rois": []
+    },
+    {
+      "condition": "Low-clear",
+      "camera": "d_field_glyph_supported",
+      "whole_frame_mean_rgb_delta": [
+        0.01510485913263691,
+        0.017640867363089584,
+        0.021074707185818296
+      ],
+      "whole_frame_mean_abs_rgb_lsb": 0.028523134958320144,
+      "rois": [
+        {
+          "label": "supported_hatch",
+          "roi960": [
+            350,
+            180,
+            620,
+            370
+          ],
+          "before_mean": 106.79629618911946,
+          "after_mean": 106.79796420398222,
+          "mean_luma_delta_lsb": 0.001668014862762343,
+          "before_p99": 183.7754,
+          "after_p99": 183.7754,
+          "mean_abs_luma_lsb": 0.018760833601396982,
+          "fixed_display_threshold": 121.0311,
+          "before_bright_fraction": 0.24070584991498553,
+          "after_bright_fraction": 0.24068615544191116,
+          "note": "Fixed baseline-derived display threshold over visible marking context; not true paint area, glyph topology or independent readability acceptance."
+        }
+      ]
+    },
+    {
+      "condition": "Low-clear",
+      "camera": "d_field_glyph_unknown",
+      "whole_frame_mean_rgb_delta": [
+        0.005156695156695157,
+        0.007350031655587211,
+        0.010421415004748339
+      ],
+      "whole_frame_mean_abs_rgb_lsb": 0.008734304104674476,
+      "rois": [
+        {
+          "label": "unknown_hatch",
+          "roi960": [
+            430,
+            220,
+            540,
+            315
+          ],
+          "before_mean": 123.87376891083377,
+          "after_mean": 123.87376891083377,
+          "mean_luma_delta_lsb": 0.0,
+          "before_p99": 189.4906,
+          "after_p99": 189.4906,
+          "mean_abs_luma_lsb": 0.0,
+          "fixed_display_threshold": 138.3135,
+          "before_bright_fraction": 0.32351711271230055,
+          "after_bright_fraction": 0.32351711271230055,
+          "note": "Fixed baseline-derived display threshold over visible marking context; not true paint area, glyph topology or independent readability acceptance."
+        }
+      ]
+    },
+    {
+      "condition": "Low-clear",
+      "camera": "d_field_p8_turn",
+      "whole_frame_mean_rgb_delta": [
+        -0.0032510288065843622,
+        -0.002163659385881608,
+        0.00038936372269705605
+      ],
+      "whole_frame_mean_abs_rgb_lsb": 0.021558773873588687,
+      "rois": [
+        {
+          "label": "P8_readability",
+          "roi960": [
+            380,
+            175,
+            605,
+            345
+          ],
+          "before_mean": 104.34035962003819,
+          "after_mean": 104.3427071495825,
+          "mean_luma_delta_lsb": 0.0023475295442746103,
+          "before_p99": 180.7754,
+          "after_p99": 180.7754,
+          "mean_abs_luma_lsb": 0.03588445130804361,
+          "fixed_display_threshold": 123.13239999999999,
+          "before_bright_fraction": 0.15176033719630774,
+          "after_bright_fraction": 0.15176033719630774,
+          "note": "Fixed baseline-derived display threshold over visible marking context; not true paint area, glyph topology or independent readability acceptance."
+        }
+      ]
+    },
+    {
+      "condition": "Low-clear",
+      "camera": "d_field_patch_large",
+      "whole_frame_mean_rgb_delta": [
+        0.007653133903133903,
+        0.009941041468819247,
+        0.01264324153213042
+      ],
+      "whole_frame_mean_abs_rgb_lsb": 0.017712883823994933,
+      "rois": []
+    },
+    {
+      "condition": "Low-clear",
+      "camera": "d_field_patch_putry",
+      "whole_frame_mean_rgb_delta": [
+        0.007405033238366571,
+        0.010549620132953467,
+        0.015864988920544477
+      ],
+      "whole_frame_mean_abs_rgb_lsb": 0.016831407618444656,
+      "rois": []
+    },
+    {
+      "condition": "Low-clear",
+      "camera": "d_field_signal_oil",
+      "whole_frame_mean_rgb_delta": [
+        0.006108341247230136,
+        0.009935501741057296,
+        0.016998258942703386
+      ],
+      "whole_frame_mean_abs_rgb_lsb": 0.020159069325735992,
+      "rois": []
+    },
+    {
+      "condition": "Low-clear",
+      "camera": "d_gate_pair_entry",
+      "whole_frame_mean_rgb_delta": [
+        0.0034053497942386833,
+        0.007264957264957265,
+        0.014946976891421335
+      ],
+      "whole_frame_mean_abs_rgb_lsb": 0.03381423446238261,
+      "rois": []
+    },
+    {
+      "condition": "Low-clear",
+      "camera": "d_gate_pair_exit",
+      "whole_frame_mean_rgb_delta": [
+        0.08551123773345995,
+        0.08593740107628997,
+        0.08427746122190567
+      ],
+      "whole_frame_mean_abs_rgb_lsb": 0.11165334494038198,
+      "rois": []
+    },
+    {
+      "condition": "Low-clear",
+      "camera": "d_wear_crossing",
+      "whole_frame_mean_rgb_delta": [
+        0.14275720164609054,
+        0.14166231402342513,
+        0.13300411522633745
+      ],
+      "whole_frame_mean_abs_rgb_lsb": 0.1506635802469136,
+      "rois": [
+        {
+          "label": "P10_readability",
+          "roi960": [
+            200,
+            180,
+            750,
+            400
+          ],
+          "before_mean": 126.49766618066386,
+          "after_mean": 126.85429560063488,
+          "mean_luma_delta_lsb": 0.3566294199710404,
+          "before_p99": 179.5628,
+          "after_p99": 179.5628,
+          "mean_abs_luma_lsb": 0.383519016763199,
+          "fixed_display_threshold": 133.91779999999997,
+          "before_bright_fraction": 0.31667548451770994,
+          "after_bright_fraction": 0.3169177433726888,
+          "note": "Fixed baseline-derived display threshold over visible marking context; not true paint area, glyph topology or independent readability acceptance."
+        }
+      ]
+    },
+    {
+      "condition": "Low-clear",
+      "camera": "d_wear_lane_old",
+      "whole_frame_mean_rgb_delta": [
+        0.039826289965178854,
+        0.04646525799303577,
+        0.05229542576764799
+      ],
+      "whole_frame_mean_abs_rgb_lsb": 0.05522224860187823,
+      "rois": [
+        {
+          "label": "asphalt",
+          "roi960": [
+            470,
+            280,
+            610,
+            400
+          ],
+          "before_mean": 95.45185709367152,
+          "after_mean": 95.48511049613164,
+          "mean_luma_delta_lsb": 0.0332534024601403,
+          "before_p99": 106.71119999999999,
+          "after_p99": 106.7794,
+          "mean_abs_luma_lsb": 0.03364791768838888
+        },
+        {
+          "label": "longitudinal_line",
+          "roi960": [
+            245,
+            285,
+            370,
+            425
+          ],
+          "before_mean": 112.15346818518339,
+          "after_mean": 112.17890361232634,
+          "mean_luma_delta_lsb": 0.025435427142925817,
+          "before_p99": 174.635,
+          "after_p99": 174.635,
+          "mean_abs_luma_lsb": 0.0254823402721023,
+          "fixed_display_threshold": 132.6731,
+          "before_bright_fraction": 0.1822412384019999,
+          "after_bright_fraction": 0.1822412384019999,
+          "note": "Fixed baseline-derived display threshold over visible marking context; not true paint area, glyph topology or independent readability acceptance."
+        }
+      ]
+    },
+    {
+      "condition": "Low-clear",
+      "camera": "d_wear_missing_uv_1",
+      "whole_frame_mean_rgb_delta": [
+        -0.0025882399493510604,
+        -0.0017481798037353594,
+        0.0005555555555555556
+      ],
+      "whole_frame_mean_abs_rgb_lsb": 0.005418249446027224,
+      "rois": []
+    },
+    {
+      "condition": "Low-clear",
+      "camera": "d_wear_missing_uv_2",
+      "whole_frame_mean_rgb_delta": [
+        0.0019072491294713518,
+        0.0033345204178537513,
+        0.005319721430832542
+      ],
+      "whole_frame_mean_abs_rgb_lsb": 0.005112509232879603,
+      "rois": []
+    },
+    {
+      "condition": "Low-clear",
+      "camera": "d_wear_newroad_negative",
+      "whole_frame_mean_rgb_delta": [
+        0.013791943653054764,
+        0.01996043051598607,
+        0.029065764482431148
+      ],
+      "whole_frame_mean_abs_rgb_lsb": 0.028309855439485068,
+      "rois": [
+        {
+          "label": "new_asphalt",
+          "roi960": [
+            800,
+            150,
+            870,
+            230
+          ],
+          "before_mean": 104.73375355225672,
+          "after_mean": 104.78743322837008,
+          "mean_luma_delta_lsb": 0.05367967611336028,
+          "before_p99": 189.56279999999998,
+          "after_p99": 189.56279999999998,
+          "mean_abs_luma_lsb": 0.054162807017543814
+        }
+      ]
+    },
+    {
+      "condition": "Low-overcast",
+      "camera": "d_field_bus464_close",
+      "whole_frame_mean_rgb_delta": [
+        0.11535810383032605,
+        0.11853513770180436,
+        0.12316239316239316
+      ],
+      "whole_frame_mean_abs_rgb_lsb": 0.1198136277302944,
+      "rois": []
+    },
+    {
+      "condition": "Low-overcast",
+      "camera": "d_field_glyph_supported",
+      "whole_frame_mean_rgb_delta": [
+        0.0441377809433365,
+        0.04392291864514087,
+        0.0450221589110478
+      ],
+      "whole_frame_mean_abs_rgb_lsb": 0.05385551862403714,
+      "rois": [
+        {
+          "label": "supported_hatch",
+          "roi960": [
+            350,
+            180,
+            620,
+            370
+          ],
+          "before_mean": 84.62078522389332,
+          "after_mean": 84.65113299874612,
+          "mean_luma_delta_lsb": 0.030347774852783813,
+          "before_p99": 172.7112,
+          "after_p99": 172.7112,
+          "mean_abs_luma_lsb": 0.045856392497718716,
+          "fixed_display_threshold": 110.997,
+          "before_bright_fraction": 0.19340629041469995,
+          "after_bright_fraction": 0.19340629041469995,
+          "note": "Fixed baseline-derived display threshold over visible marking context; not true paint area, glyph topology or independent readability acceptance."
+        }
+      ]
+    },
+    {
+      "condition": "Low-overcast",
+      "camera": "d_field_glyph_unknown",
+      "whole_frame_mean_rgb_delta": [
+        0.021425688509021844,
+        0.022310066476733142,
+        0.023016777461221907
+      ],
+      "whole_frame_mean_abs_rgb_lsb": 0.023119526221378073,
+      "rois": [
+        {
+          "label": "unknown_hatch",
+          "roi960": [
+            430,
+            220,
+            540,
+            315
+          ],
+          "before_mean": 102.48195202007204,
+          "after_mean": 102.48195202007204,
+          "mean_luma_delta_lsb": 0.0,
+          "before_p99": 175.7112,
+          "after_p99": 175.7112,
+          "mean_abs_luma_lsb": 0.0,
+          "fixed_display_threshold": 119.81949999999999,
+          "before_bright_fraction": 0.32288986103962947,
+          "after_bright_fraction": 0.32288986103962947,
+          "note": "Fixed baseline-derived display threshold over visible marking context; not true paint area, glyph topology or independent readability acceptance."
+        }
+      ]
+    },
+    {
+      "condition": "Low-overcast",
+      "camera": "d_field_p8_turn",
+      "whole_frame_mean_rgb_delta": [
+        0.022346074707185817,
+        0.022598528015194682,
+        0.022355571383349163
+      ],
+      "whole_frame_mean_abs_rgb_lsb": 0.032695341352748764,
+      "rois": [
+        {
+          "label": "P8_readability",
+          "roi960": [
+            380,
+            175,
+            605,
+            345
+          ],
+          "before_mean": 80.39026524906947,
+          "after_mean": 80.4216170648434,
+          "mean_luma_delta_lsb": 0.03135181577395881,
+          "before_p99": 167.7112,
+          "after_p99": 167.7112,
+          "mean_abs_luma_lsb": 0.041023163767236,
+          "fixed_display_threshold": 100.7798,
+          "before_bright_fraction": 0.14674463011360137,
+          "after_bright_fraction": 0.14675782934276638,
+          "note": "Fixed baseline-derived display threshold over visible marking context; not true paint area, glyph topology or independent readability acceptance."
+        }
+      ]
+    },
+    {
+      "condition": "Low-overcast",
+      "camera": "d_field_patch_large",
+      "whole_frame_mean_rgb_delta": [
+        0.028664529914529915,
+        0.028796691991136436,
+        0.029189221272554605
+      ],
+      "whole_frame_mean_abs_rgb_lsb": 0.03565856811227182,
+      "rois": []
+    },
+    {
+      "condition": "Low-overcast",
+      "camera": "d_field_patch_putry",
+      "whole_frame_mean_rgb_delta": [
+        0.041826923076923074,
+        0.04280151946818613,
+        0.044353434631212406
+      ],
+      "whole_frame_mean_abs_rgb_lsb": 0.048198928985966026,
+      "rois": []
+    },
+    {
+      "condition": "Low-overcast",
+      "camera": "d_field_signal_oil",
+      "whole_frame_mean_rgb_delta": [
+        0.04339901867679646,
+        0.04551282051282051,
+        0.04927231718898385
+      ],
+      "whole_frame_mean_abs_rgb_lsb": 0.05396473039991558,
+      "rois": []
+    },
+    {
+      "condition": "Low-overcast",
+      "camera": "d_gate_pair_entry",
+      "whole_frame_mean_rgb_delta": [
+        0.034892371003482116,
+        0.03784306742640076,
+        0.04256054131054131
+      ],
+      "whole_frame_mean_abs_rgb_lsb": 0.06190777672259154,
+      "rois": []
+    },
+    {
+      "condition": "Low-overcast",
+      "camera": "d_gate_pair_exit",
+      "whole_frame_mean_rgb_delta": [
+        0.0724002849002849,
+        0.07236546375435264,
+        0.07029756251978474
+      ],
+      "whole_frame_mean_abs_rgb_lsb": 0.09924000211037248,
+      "rois": []
+    },
+    {
+      "condition": "Low-overcast",
+      "camera": "d_wear_crossing",
+      "whole_frame_mean_rgb_delta": [
+        0.1198983064260842,
+        0.11656101614434948,
+        0.1078505856283634
+      ],
+      "whole_frame_mean_abs_rgb_lsb": 0.1281093700538145,
+      "rois": [
+        {
+          "label": "P10_readability",
+          "roi960": [
+            200,
+            180,
+            750,
+            400
+          ],
+          "before_mean": 91.44071242593009,
+          "after_mean": 91.73277028736916,
+          "mean_luma_delta_lsb": 0.2920578614390733,
+          "before_p99": 159.63899999999998,
+          "after_p99": 159.63899999999998,
+          "mean_abs_luma_lsb": 0.3245884272666518,
+          "fixed_display_threshold": 101.2834,
+          "before_bright_fraction": 0.3143865560258409,
+          "after_bright_fraction": 0.31441300957897084,
+          "note": "Fixed baseline-derived display threshold over visible marking context; not true paint area, glyph topology or independent readability acceptance."
+        }
+      ]
+    },
+    {
+      "condition": "Low-overcast",
+      "camera": "d_wear_lane_old",
+      "whole_frame_mean_rgb_delta": [
+        0.11155151946818613,
+        0.11175134536245647,
+        0.10916350110794555
+      ],
+      "whole_frame_mean_abs_rgb_lsb": 0.11902909676057824,
+      "rois": [
+        {
+          "label": "asphalt",
+          "roi960": [
+            470,
+            280,
+            610,
+            400
+          ],
+          "before_mean": 66.9703934182739,
+          "after_mean": 67.12957647353197,
+          "mean_luma_delta_lsb": 0.15918305525807455,
+          "before_p99": 78.1404,
+          "after_p99": 78.353,
+          "mean_abs_luma_lsb": 0.15941135788135682
+        },
+        {
+          "label": "longitudinal_line",
+          "roi960": [
+            245,
+            285,
+            370,
+            425
+          ],
+          "before_mean": 85.84378424498821,
+          "after_mean": 85.93221022258547,
+          "mean_luma_delta_lsb": 0.0884259775972309,
+          "before_p99": 162.7112,
+          "after_p99": 162.7112,
+          "mean_abs_luma_lsb": 0.08844921878755829,
+          "fixed_display_threshold": 112.3195,
+          "before_bright_fraction": 0.18252007115042546,
+          "after_bright_fraction": 0.18252007115042546,
+          "note": "Fixed baseline-derived display threshold over visible marking context; not true paint area, glyph topology or independent readability acceptance."
+        }
+      ]
+    },
+    {
+      "condition": "Low-overcast",
+      "camera": "d_wear_missing_uv_1",
+      "whole_frame_mean_rgb_delta": [
+        0.008101060462171574,
+        0.008533554922443811,
+        0.009133823994935106
+      ],
+      "whole_frame_mean_abs_rgb_lsb": 0.010878706341669304,
+      "rois": []
+    },
+    {
+      "condition": "Low-overcast",
+      "camera": "d_wear_missing_uv_2",
+      "whole_frame_mean_rgb_delta": [
+        0.0122894903450459,
+        0.01283159227603672,
+        0.013791943653054764
+      ],
+      "whole_frame_mean_abs_rgb_lsb": 0.014301598607154162,
+      "rois": []
+    },
+    {
+      "condition": "Low-overcast",
+      "camera": "d_wear_newroad_negative",
+      "whole_frame_mean_rgb_delta": [
+        0.05830840455840456,
+        0.06011593858816081,
+        0.06292141500474834
+      ],
+      "whole_frame_mean_abs_rgb_lsb": 0.06452688086947346,
+      "rois": [
+        {
+          "label": "new_asphalt",
+          "roi960": [
+            800,
+            150,
+            870,
+            230
+          ],
+          "before_mean": 84.02573907932224,
+          "after_mean": 84.19266669665616,
+          "mean_luma_delta_lsb": 0.16692761733393313,
+          "before_p99": 177.7112,
+          "after_p99": 177.7112,
+          "mean_abs_luma_lsb": 0.16742053681211577
+        }
+      ]
+    },
+    {
+      "condition": "High-clear",
+      "camera": "d_field_bus464_close",
+      "whole_frame_mean_rgb_delta": [
+        0.026664292497625832,
+        0.03888968027856917,
+        0.059658515352959796
+      ],
+      "whole_frame_mean_abs_rgb_lsb": 0.14068019943019944,
+      "rois": []
+    },
+    {
+      "condition": "High-clear",
+      "camera": "d_field_glyph_supported",
+      "whole_frame_mean_rgb_delta": [
+        0.015516777461221905,
+        0.01797562519784742,
+        0.023304843304843306
+      ],
+      "whole_frame_mean_abs_rgb_lsb": 0.08696159122085048,
+      "rois": [
+        {
+          "label": "supported_hatch",
+          "roi960": [
+            350,
+            180,
+            620,
+            370
+          ],
+          "before_mean": 113.15868851746569,
+          "after_mean": 113.16276919718763,
+          "mean_luma_delta_lsb": 0.004080679721914039,
+          "before_p99": 200.77540000000002,
+          "after_p99": 200.77540000000002,
+          "mean_abs_luma_lsb": 0.05134879765241881,
+          "fixed_display_threshold": 131.1007,
+          "before_bright_fraction": 0.21723003801033303,
+          "after_bright_fraction": 0.21723003801033303,
+          "note": "Fixed baseline-derived display threshold over visible marking context; not true paint area, glyph topology or independent readability acceptance."
+        }
+      ]
+    },
+    {
+      "condition": "High-clear",
+      "camera": "d_field_glyph_unknown",
+      "whole_frame_mean_rgb_delta": [
+        0.004788303260525483,
+        0.006593463121240899,
+        0.010105650522317189
+      ],
+      "whole_frame_mean_abs_rgb_lsb": 0.021870449509338398,
+      "rois": [
+        {
+          "label": "unknown_hatch",
+          "roi960": [
+            430,
+            220,
+            540,
+            315
+          ],
+          "before_mean": 132.3381840324241,
+          "after_mean": 132.3381840324241,
+          "mean_luma_delta_lsb": 0.0,
+          "before_p99": 213.4866,
+          "after_p99": 213.4866,
+          "mean_abs_luma_lsb": 0.0,
+          "fixed_display_threshold": 148.3502,
+          "before_bright_fraction": 0.3179683479155944,
+          "after_bright_fraction": 0.3179683479155944,
+          "note": "Fixed baseline-derived display threshold over visible marking context; not true paint area, glyph topology or independent readability acceptance."
+        }
+      ]
+    },
+    {
+      "condition": "High-clear",
+      "camera": "d_field_p8_turn",
+      "whole_frame_mean_rgb_delta": [
+        -0.0036419753086419752,
+        -0.0022681228236783794,
+        0.0006275720164609053
+      ],
+      "whole_frame_mean_abs_rgb_lsb": 0.07755196792233829,
+      "rois": [
+        {
+          "label": "P8_readability",
+          "roi960": [
+            380,
+            175,
+            605,
+            345
+          ],
+          "before_mean": 111.4299148984099,
+          "after_mean": 111.43163873093812,
+          "mean_luma_delta_lsb": 0.0017238325281803486,
+          "before_p99": 195.921,
+          "after_p99": 195.921,
+          "mean_abs_luma_lsb": 0.11571368848059273,
+          "fixed_display_threshold": 126.6344,
+          "before_bright_fraction": 0.16085020634794928,
+          "after_bright_fraction": 0.16088980403544434,
+          "note": "Fixed baseline-derived display threshold over visible marking context; not true paint area, glyph topology or independent readability acceptance."
+        }
+      ]
+    },
+    {
+      "condition": "High-clear",
+      "camera": "d_field_patch_large",
+      "whole_frame_mean_rgb_delta": [
+        0.007652342513453625,
+        0.009837369420702754,
+        0.012653133903133903
+      ],
+      "whole_frame_mean_abs_rgb_lsb": 0.05029215469030284,
+      "rois": []
+    },
+    {
+      "condition": "High-clear",
+      "camera": "d_field_patch_putry",
+      "whole_frame_mean_rgb_delta": [
+        0.007390392529281418,
+        0.010327635327635327,
+        0.01551479898702121
+      ],
+      "whole_frame_mean_abs_rgb_lsb": 0.05539041890893743,
+      "rois": []
+    },
+    {
+      "condition": "High-clear",
+      "camera": "d_field_signal_oil",
+      "whole_frame_mean_rgb_delta": [
+        0.006832067109844887,
+        0.01183681544792656,
+        0.021549540993985438
+      ],
+      "whole_frame_mean_abs_rgb_lsb": 0.0736190250079139,
+      "rois": []
+    },
+    {
+      "condition": "High-clear",
+      "camera": "d_gate_pair_entry",
+      "whole_frame_mean_rgb_delta": [
+        0.002983934789490345,
+        0.007890550807217473,
+        0.01670821462488129
+      ],
+      "whole_frame_mean_abs_rgb_lsb": 0.10312031761105835,
+      "rois": []
+    },
+    {
+      "condition": "High-clear",
+      "camera": "d_gate_pair_exit",
+      "whole_frame_mean_rgb_delta": [
+        0.09762899651788541,
+        0.09940724912947135,
+        0.09953901551123773
+      ],
+      "whole_frame_mean_abs_rgb_lsb": 0.2549945921705181,
+      "rois": []
+    },
+    {
+      "condition": "High-clear",
+      "camera": "d_wear_crossing",
+      "whole_frame_mean_rgb_delta": [
+        0.12144863880974992,
+        0.12120884773662552,
+        0.1132553814498259
+      ],
+      "whole_frame_mean_abs_rgb_lsb": 0.1935948876226654,
+      "rois": [
+        {
+          "label": "P10_readability",
+          "roi960": [
+            200,
+            180,
+            750,
+            400
+          ],
+          "before_mean": 132.63150976943638,
+          "after_mean": 132.9341438260192,
+          "mean_luma_delta_lsb": 0.3026340565827578,
+          "before_p99": 203.77383999999995,
+          "after_p99": 203.7754,
+          "mean_abs_luma_lsb": 0.4344133331476943,
+          "fixed_display_threshold": 141.3837,
+          "before_bright_fraction": 0.28196842281131657,
+          "after_bright_fraction": 0.28236104923145466,
+          "note": "Fixed baseline-derived display threshold over visible marking context; not true paint area, glyph topology or independent readability acceptance."
+        }
+      ]
+    },
+    {
+      "condition": "High-clear",
+      "camera": "d_wear_lane_old",
+      "whole_frame_mean_rgb_delta": [
+        0.038911839189616965,
+        0.04568930041152263,
+        0.05433008863564419
+      ],
+      "whole_frame_mean_abs_rgb_lsb": 0.1488576289965179,
+      "rois": [
+        {
+          "label": "asphalt",
+          "roi960": [
+            470,
+            280,
+            610,
+            400
+          ],
+          "before_mean": 99.95328461961908,
+          "after_mean": 99.99448431135086,
+          "mean_luma_delta_lsb": 0.04119969173180664,
+          "before_p99": 125.05249600000029,
+          "after_p99": 125.0642,
+          "mean_abs_luma_lsb": 0.13774885750603022
+        },
+        {
+          "label": "longitudinal_line",
+          "roi960": [
+            245,
+            285,
+            370,
+            425
+          ],
+          "before_mean": 116.38791115234845,
+          "after_mean": 116.4176142762367,
+          "mean_luma_delta_lsb": 0.029703123888274584,
+          "before_p99": 185.5628,
+          "after_p99": 185.5628,
+          "mean_abs_luma_lsb": 0.09710071054276234,
+          "fixed_display_threshold": 135.2814,
+          "before_bright_fraction": 0.18258737560694197,
+          "after_bright_fraction": 0.182606605451661,
+          "note": "Fixed baseline-derived display threshold over visible marking context; not true paint area, glyph topology or independent readability acceptance."
+        }
+      ]
+    },
+    {
+      "condition": "High-clear",
+      "camera": "d_wear_missing_uv_1",
+      "whole_frame_mean_rgb_delta": [
+        -0.0028470243748021525,
+        -0.0017624248179803736,
+        0.0005701962646407091
+      ],
+      "whole_frame_mean_abs_rgb_lsb": 0.01929355281207133,
+      "rois": []
+    },
+    {
+      "condition": "High-clear",
+      "camera": "d_wear_missing_uv_2",
+      "whole_frame_mean_rgb_delta": [
+        0.0018217790440012663,
+        0.0032450933839822727,
+        0.005584836973725862
+      ],
+      "whole_frame_mean_abs_rgb_lsb": 0.015024664978368681,
+      "rois": []
+    },
+    {
+      "condition": "High-clear",
+      "camera": "d_wear_newroad_negative",
+      "whole_frame_mean_rgb_delta": [
+        0.014197530864197531,
+        0.02084718265273821,
+        0.02857787274453941
+      ],
+      "whole_frame_mean_abs_rgb_lsb": 0.080684683971721,
+      "rois": [
+        {
+          "label": "new_asphalt",
+          "roi960": [
+            800,
+            150,
+            870,
+            230
+          ],
+          "before_mean": 112.60217837156995,
+          "after_mean": 112.6522466936572,
+          "mean_luma_delta_lsb": 0.050068322087269475,
+          "before_p99": 213.6362,
+          "after_p99": 213.6362,
+          "mean_abs_luma_lsb": 0.16749990103463788
+        }
+      ]
+    },
+    {
+      "condition": "High-overcast",
+      "camera": "d_field_bus464_close",
+      "whole_frame_mean_rgb_delta": [
+        0.1384085153529598,
+        0.14204257676479898,
+        0.1474264007597341
+      ],
+      "whole_frame_mean_abs_rgb_lsb": 0.3241260419964124,
+      "rois": []
+    },
+    {
+      "condition": "High-overcast",
+      "camera": "d_field_glyph_supported",
+      "whole_frame_mean_rgb_delta": [
+        0.0485193099081988,
+        0.048525641025641025,
+        0.04880025324469769
+      ],
+      "whole_frame_mean_abs_rgb_lsb": 0.1477252822623193,
+      "rois": [
+        {
+          "label": "supported_hatch",
+          "roi960": [
+            350,
+            180,
+            620,
+            370
+          ],
+          "before_mean": 90.37749198172352,
+          "after_mean": 90.41372010017922,
+          "mean_luma_delta_lsb": 0.03622811845569072,
+          "before_p99": 183.639,
+          "after_p99": 183.639,
+          "mean_abs_luma_lsb": 0.12187106422367669,
+          "fixed_display_threshold": 116.423,
+          "before_bright_fraction": 0.19166332954761794,
+          "after_bright_fraction": 0.191666611959797,
+          "note": "Fixed baseline-derived display threshold over visible marking context; not true paint area, glyph topology or independent readability acceptance."
+        }
+      ]
+    },
+    {
+      "condition": "High-overcast",
+      "camera": "d_field_glyph_unknown",
+      "whole_frame_mean_rgb_delta": [
+        0.023742481798037354,
+        0.024743985438429882,
+        0.025522317188983856
+      ],
+      "whole_frame_mean_abs_rgb_lsb": 0.04404782631634484,
+      "rois": [
+        {
+          "label": "unknown_hatch",
+          "roi960": [
+            430,
+            220,
+            540,
+            315
+          ],
+          "before_mean": 108.5783101100103,
+          "after_mean": 108.5783101100103,
+          "mean_luma_delta_lsb": 0.0,
+          "before_p99": 192.7063,
+          "after_p99": 192.7063,
+          "mean_abs_luma_lsb": 0.0,
+          "fixed_display_threshold": 127.03009999999998,
+          "before_bright_fraction": 0.3176788471435924,
+          "after_bright_fraction": 0.3176788471435924,
+          "note": "Fixed baseline-derived display threshold over visible marking context; not true paint area, glyph topology or independent readability acceptance."
+        }
+      ]
+    },
+    {
+      "condition": "High-overcast",
+      "camera": "d_field_p8_turn",
+      "whole_frame_mean_rgb_delta": [
+        0.02441358024691358,
+        0.02432890155112377,
+        0.02414806900918012
+      ],
+      "whole_frame_mean_abs_rgb_lsb": 0.12367455418381344,
+      "rois": [
+        {
+          "label": "P8_readability",
+          "roi960": [
+            380,
+            175,
+            605,
+            345
+          ],
+          "before_mean": 86.61550398704713,
+          "after_mean": 86.64591320186902,
+          "mean_luma_delta_lsb": 0.0304092148218544,
+          "before_p99": 174.4264,
+          "after_p99": 174.4264,
+          "mean_abs_luma_lsb": 0.14033767675967723,
+          "fixed_display_threshold": 103.70859999999999,
+          "before_bright_fraction": 0.1532210518905696,
+          "after_bright_fraction": 0.15327384880722966,
+          "note": "Fixed baseline-derived display threshold over visible marking context; not true paint area, glyph topology or independent readability acceptance."
+        }
+      ]
+    },
+    {
+      "condition": "High-overcast",
+      "camera": "d_field_patch_large",
+      "whole_frame_mean_rgb_delta": [
+        0.028567980373535928,
+        0.02881608103830326,
+        0.029150047483380816
+      ],
+      "whole_frame_mean_abs_rgb_lsb": 0.08718911575393057,
+      "rois": []
+    },
+    {
+      "condition": "High-overcast",
+      "camera": "d_field_patch_putry",
+      "whole_frame_mean_rgb_delta": [
+        0.0409619341563786,
+        0.04255895853118075,
+        0.04392568850902184
+      ],
+      "whole_frame_mean_abs_rgb_lsb": 0.11880117653265801,
+      "rois": []
+    },
+    {
+      "condition": "High-overcast",
+      "camera": "d_field_signal_oil",
+      "whole_frame_mean_rgb_delta": [
+        0.05124050332383666,
+        0.05344689775245331,
+        0.05801123773345995
+      ],
+      "whole_frame_mean_abs_rgb_lsb": 0.1697781470929619,
+      "rois": []
+    },
+    {
+      "condition": "High-overcast",
+      "camera": "d_gate_pair_entry",
+      "whole_frame_mean_rgb_delta": [
+        0.03828980690091801,
+        0.040834124723013614,
+        0.047254273504273504
+      ],
+      "whole_frame_mean_abs_rgb_lsb": 0.18290743378706342,
+      "rois": []
+    },
+    {
+      "condition": "High-overcast",
+      "camera": "d_gate_pair_exit",
+      "whole_frame_mean_rgb_delta": [
+        0.0896474358974359,
+        0.0890471668249446,
+        0.0869167458056347
+      ],
+      "whole_frame_mean_abs_rgb_lsb": 0.26882570961274665,
+      "rois": []
+    },
+    {
+      "condition": "High-overcast",
+      "camera": "d_wear_crossing",
+      "whole_frame_mean_rgb_delta": [
+        0.1130943336498892,
+        0.10960272238050016,
+        0.10064893953782843
+      ],
+      "whole_frame_mean_abs_rgb_lsb": 0.19920729133692097,
+      "rois": [
+        {
+          "label": "P10_readability",
+          "roi960": [
+            200,
+            180,
+            750,
+            400
+          ],
+          "before_mean": 97.39227148112053,
+          "after_mean": 97.66601401453555,
+          "mean_luma_delta_lsb": 0.2737425334150145,
+          "before_p99": 172.71519999999998,
+          "after_p99": 172.71519999999998,
+          "mean_abs_luma_lsb": 0.43990774281577183,
+          "fixed_display_threshold": 107.3149,
+          "before_bright_fraction": 0.28719508799287147,
+          "after_bright_fraction": 0.2875,
+          "note": "Fixed baseline-derived display threshold over visible marking context; not true paint area, glyph topology or independent readability acceptance."
+        }
+      ]
+    },
+    {
+      "condition": "High-overcast",
+      "camera": "d_wear_lane_old",
+      "whole_frame_mean_rgb_delta": [
+        0.12300134536245648,
+        0.12311411839189616,
+        0.1201147515036404
+      ],
+      "whole_frame_mean_abs_rgb_lsb": 0.2546062836340614,
+      "rois": [
+        {
+          "label": "asphalt",
+          "roi960": [
+            470,
+            280,
+            610,
+            400
+          ],
+          "before_mean": 70.98734627726121,
+          "after_mean": 71.17565026573119,
+          "mean_luma_delta_lsb": 0.18830398846996887,
+          "before_p99": 95.99600000000001,
+          "after_p99": 96.1404,
+          "mean_abs_luma_lsb": 0.3424987379019747
+        },
+        {
+          "label": "longitudinal_line",
+          "roi960": [
+            245,
+            285,
+            370,
+            425
+          ],
+          "before_mean": 89.19965798182778,
+          "after_mean": 89.30282565068987,
+          "mean_luma_delta_lsb": 0.10316766886207396,
+          "before_p99": 169.2138,
+          "after_p99": 169.2138,
+          "mean_abs_luma_lsb": 0.20534304119994232,
+          "fixed_display_threshold": 114.49799999999999,
+          "before_bright_fraction": 0.1808182298927936,
+          "after_bright_fraction": 0.1808566895822316,
+          "note": "Fixed baseline-derived display threshold over visible marking context; not true paint area, glyph topology or independent readability acceptance."
+        }
+      ]
+    },
+    {
+      "condition": "High-overcast",
+      "camera": "d_wear_missing_uv_1",
+      "whole_frame_mean_rgb_delta": [
+        0.007934868629313073,
+        0.008494776828110161,
+        0.009379550490661602
+      ],
+      "whole_frame_mean_abs_rgb_lsb": 0.03795570855756041,
+      "rois": []
+    },
+    {
+      "condition": "High-overcast",
+      "camera": "d_wear_missing_uv_2",
+      "whole_frame_mean_rgb_delta": [
+        0.011540440012662235,
+        0.012070671098448876,
+        0.013147356758467869
+      ],
+      "whole_frame_mean_abs_rgb_lsb": 0.026930990819879708,
+      "rois": []
+    },
+    {
+      "condition": "High-overcast",
+      "camera": "d_wear_newroad_negative",
+      "whole_frame_mean_rgb_delta": [
+        0.06204376384931941,
+        0.06429803735359291,
+        0.0670679012345679
+      ],
+      "whole_frame_mean_abs_rgb_lsb": 0.14082977207977207,
+      "rois": [
+        {
+          "label": "new_asphalt",
+          "roi960": [
+            800,
+            150,
+            870,
+            230
+          ],
+          "before_mean": 90.7291615354626,
+          "after_mean": 90.89019776278302,
+          "mean_luma_delta_lsb": 0.16103622732043782,
+          "before_p99": 195.63899999999998,
+          "after_p99": 195.63899999999998,
+          "mean_abs_luma_lsb": 0.34143884240515815
+        }
+      ]
+    }
+  ]
+}

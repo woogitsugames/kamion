@@ -216,6 +216,7 @@ namespace Game.World.Import
             // ---- point instances (props, trees) ----
             var instFiles = chunkDefs.Select(co => Path.Combine(srcDir, Path.GetFileName(Str(Obj(Obj(co).Get("instances")).Get("file"))))).ToList();
             r.Instances = InstanceImporter.Build(r, instFiles, out r.PropColliders);
+            WorldCarPlateMaterials.Configure(r);
 
             AssetDatabase.SaveAssets();
             Debug.Log($"[IMPORT] {region}: sha256 mismatches vs manifest: {r.ShaMismatches}");
@@ -388,6 +389,9 @@ namespace Game.World.Import
                     // Exposed units (ADR 0010): emissive in the manifest is relative radiance; ×0.25 keeps a lit signal
                     // lamp clearly brighter than daylit surfaces without clipping to white on LDR tiers.
                     emission = new Color((float)Num(e[0]), (float)Num(e[1]), (float)Num(e[2])) * 0.25f;
+                if (id == "car_plate")
+                    return WorldCarPlateMaterials.PreserveLitPasses(path,
+                        () => LitMaterial(path, albedo, rough, metal, t, clip, clip ? (float)Num(m.Get("alpha_cutoff")) : 0.5f, clip, emission));
                 return LitMaterial(path, albedo, rough, metal, t, clip, clip ? (float)Num(m.Get("alpha_cutoff")) : 0.5f, clip, emission);
             }
             bool decal = m.Get("decal") is bool dc && dc;
@@ -576,8 +580,14 @@ namespace Game.World.Import
             {
                 var nd = layer == "buildings" && tier != "High" ? extraBuildingsLod0 : g.Find(layer);
                 if (nd == null || nd.Primitives.Count == 0) continue;
+                if (layer == "markings")
+                {
+                    nd = new RoadPaintLaneField(g.Find("road")).Transfer(nd, out var paintLaneStats);
+                    Debug.Log($"[PAINT_LANE] {ch.Id}/{tier}: accepted={paintLaneStats.AcceptedComponents} rejected={paintLaneStats.RejectedComponents} changedVerts={paintLaneStats.ChangedVertices} area={paintLaneStats.AcceptedArea:F3}m2");
+                }
                 var mats = new Material[nd.Primitives.Count];
                 bool uv = false, uv1 = false, colors = false;
+                bool roadWear = false;
                 for (int i = 0; i < mats.Length; i++)
                 {
                     string id = nd.Primitives[i].Material;
@@ -592,11 +602,15 @@ namespace Game.World.Import
                         WorldPbrMaterials.Channels(def, id, out bool p0, out bool p1, out bool pc);
                         uv |= p0 && nd.Primitives[i].Uv0 != null;
                         uv1 |= p1 && nd.Primitives[i].Uv1 != null;
+                        // ADR0099: an all-missing road primitive still needs an explicit no-lane value.
+                        // Zero is valid lane0/edge0 and would incorrectly apply maximum gutter dirt.
+                        if (layer == "road" && p1 && (id == "road_asphalt" || id == "road_asphalt_new"))
+                        { roadWear = true; uv1 = true; }
                         colors |= pc && nd.Primitives[i].Colors != null;
                     }
                 }
                 if (layer == "wires") { uv = true; colors = true; }   // side / half width + tangent (Kamion/World Wire)
-                Add(layer, WorldMeshBake.Compact($"{ch.Id}_{layer}", nd.Primitives, new WorldMeshBake.Options { Uv0 = uv, Uv1 = uv1, Colors = colors }), mats);
+                Add(layer, WorldMeshBake.Compact($"{ch.Id}_{layer}", nd.Primitives, new WorldMeshBake.Options { Uv0 = uv, Uv1 = uv1, Colors = colors, RoadWearSentinel = roadWear }), mats);
             }
         }
 
