@@ -1,0 +1,32 @@
+{
+  "recorded_at": "2026-11-12T16:23:34.7335120+01:00",
+  "root_pids": [
+    54020
+  ],
+  "processes": [
+    {
+      "pid": 54020,
+      "started": "2026-11-12T13:34:24.5905931+01:00",
+      "name": "pwsh"
+    },
+    {
+      "pid": 78320,
+      "started": "2026-11-12T16:16:17.9929019+01:00",
+      "name": "uv"
+    },
+    {
+      "pid": 40584,
+      "started": "2026-11-12T16:16:18.0387657+01:00",
+      "name": "python"
+    },
+    {
+      "pid": 79792,
+      "started": "2026-11-12T16:16:18.0853481+01:00",
+      "name": "python"
+    }
+  ],
+  "tool_session": 69474,
+  "script": "artifacts/truck-r4/prepare-baseline.ps1",
+  "console": "artifacts/truck-r4/prepare-retry-console.log",
+  "world_log": "artifacts/truck-r4/baseline-world.log"
+}
