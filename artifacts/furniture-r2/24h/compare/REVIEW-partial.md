@@ -14,3 +14,5 @@ Proces ma priorytet Windows IDLE, a bufory obrazów są jawnie zamykane.
 Każde z trzech wywołań trwało poniżej1s według narzędzia powłoki.
 Nie jest to generator ani zestaw testów. Pełna partia330 obrazów pozostaje
 zaplanowana w heavy po oczekującym procesie geometrii.
+
+Uzupełnienie: obejrzano także Low-overcast07 i08, kolejnych12 par; łącznie root30/330. Brak oczywistej regresji znaków na dojazdach/odcinkach i pozostałych mebli; subtelne zużycie nie potwierdza szczegółów legendy. Niezależny reviewer potwierdził wcześniej18/330 (strony04–06), bez nowych blokerów; pozostałe pary nie są objęte jego oceną.
