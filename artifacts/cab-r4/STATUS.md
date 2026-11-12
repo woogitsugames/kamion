@@ -16,3 +16,4 @@ Przygotowano review-sheets.py dla r4: 12 macierzy sześciu stanów, 4 pary detal
 World r4 uzyskał slot heavy; obserwacja 2026-11-12T11:48:50.3400955+01:00. Ten sam wrapper 63340, uchwyt sekwencji 76582, bez duplikatu. Baseline i MaterialPrep pozostają sekwencyjne.
 Dodano sekcję r4 do ADR 0112: stan nieaktywny, skala fizyczna filtra, 5 testów i warunki integracji. Nie zgłaszamy poprawy wizualnej przed obrazami i pełnymi budżetami. World nadal aktywny w tej samej sekwencji.
 World r4 exit 0, brak literalnego fallback=True. Snapshot manifestu zapisany; zachować produkty do końcowego GIS. Następny krok import baseline.
+World r4 terminal exit 0, 477,4 s; sekwencja potwierdziła brak fallback=True i zachowała world-cli/world_manifest.json. Import oczekuje teraz według nowej kolejki main unity-slot (queue ahead 6), bez zmiany limitów lub użycia Priority. world-generated-products.json zapisuje aktualne produkty do cofnięcia dopiero po końcowym GIS.
