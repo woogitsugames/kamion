@@ -15,6 +15,11 @@ if ($Step -in @('import','render','sbs-sign')) {
     while (Test-Path "$ev/PAUSE_UNITY") { Start-Sleep -Seconds 2 }
 }
 if ($Step -eq 'import') {
+    if ($Phase -eq 'before') {
+        # Small JSON-only camera preparation, after world generation and before any baseline rendering.
+        & uv run --project tools/worldgen python "$ev/prepare_shelter_cameras.py"
+        if ($LASTEXITCODE -ne 0) { throw 'Shelter diagnostic camera preparation failed' }
+    }
     # import-region can otherwise launch heavy generators implicitly, outside their pool.
     $region='Data/raw/derived/bialystok-industrial-c/world/chunk_0_0.glb'
     if (!(Test-Path $region) -or !(Test-Path Data/Regions/bialystok-industrial-c/route_start.json)) {

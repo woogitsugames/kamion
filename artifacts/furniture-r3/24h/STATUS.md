@@ -22,3 +22,5 @@ potem poprawić największe udokumentowane odstępstwo wiaty. WIP po każdym kro
 2026-11-12T11:02:26.9638208+01:00: korekta pipeline:cachePBRMedium aktualny(0stale), więc wycofano wyłącznie własny oczekujący etapPBR przed rozpoczęciem (PID68624/72788/49776, brak dzieci pracyPython). Nie przebudowywać bez potrzeby. Baseline wznowiony odworld; żaden generator nie był przerwany. Sloty cudzych właścicieli nietknięte.
 
 2026-11-12T11:03:05.7729976+01:00: oprava usunięcia etapuPBR:poprzednia zamiana tekstowa nie pasowała do końców linii. Ponownie zatrzymano tylko własne procesy oczekujące, bez pracyPython, usunięto obie linie etapupbr i jawnie sprawdzono ich brak. Właściwe wznowienie odworld następuje teraz.
+
+2026-11-12T11:04:47.8512498+01:00: przygotowano mały helper kamer wiat z wygenerowanych instancji, uruchamiany po zakończeniu world przed importem baseline. Cztery kadry(front/corner dla dwóch potwierdzonych referencjami przystanków) są WORKING_VALUE, nie dopasowaniem zdjęcia. Zachowuje55 dotychczasowych kamer; docelowo59×4=236 baseline. Nie uruchamiano helpera na starych instancjach przed przebudową świata.
