@@ -28,6 +28,8 @@ namespace Game.Rendering.Editor
             public int shadowFilter; // 0 keeps the light's state; 1/2/3 = URP Low/Medium/High.
             public bool shadowWallProbe; // hall3: establish a physical 10 m span for the PNG edge measurement.
             public float clearSkySaturation; // 0 leaves preset unchanged; diagnostic display-only chroma.
+            public bool overrideDimColour;
+            public float dimColourDesaturation;
             public bool lampProbe;
             public bool actualDriverEye; // QA only: cab-dash eye, horizontal actual cab forward. Never a light source.
             public bool wetRoadViews; // QA only: two external near-road views anchored to the real truck.
@@ -101,6 +103,11 @@ namespace Game.Rendering.Editor
                             throw new ArgumentException("clearSkySaturation outside 1..4");
                         var preset = presetSnapshots.Keys.Single(p => string.Equals(p.name, "LP_" + job.lighting, StringComparison.OrdinalIgnoreCase));
                         preset.clearSkySaturation = job.clearSkySaturation;
+                    }
+                    if(job.overrideDimColour)
+                    {
+                        if(job.dimColourDesaturation<0f || job.dimColourDesaturation>1f)throw new ArgumentException("Dim colour outside0..1");
+                        presetSnapshots.Keys.Single(p=>string.Equals(p.name,"LP_"+job.lighting,StringComparison.OrdinalIgnoreCase)).dimColourDesaturation=job.dimColourDesaturation;
                     }
                     if (job.overrideSkyDisplay)
                     {

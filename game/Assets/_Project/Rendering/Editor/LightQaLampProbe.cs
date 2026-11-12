@@ -17,7 +17,7 @@ namespace Game.Rendering.Editor
             public float sunElevation, skyHorizontalLux, exposure, lampsOn;
             public float presetExposureCompensation, skyDisplayGain, skyDisplayDesaturation;
             public float actualWetness, actualPuddleShare;
-            public float actualWetFilmSmoothness;
+            public float actualWetFilmSmoothness, actualDimColourDesaturation;
             public float clearCloudSourceMinElevationDeg;
             public Vector4 cloudSourceLimits;
             public int pools, enabledPointLights;
@@ -69,7 +69,7 @@ namespace Game.Rendering.Editor
             }
             if(m_LampSurfaces==null)
                 m_LampSurfaces=Resources.FindObjectsOfTypeAll<Material>()
-                    .Where(m=>StreetLamps.IsLampGlass(m) && (m.hideFlags&HideFlags.DontSave)!=0)
+                    .Where(m=>StreetLamps.IsLampGlass(m))
                     .Select(m=>new LampSurface{name=m.name,shader=m.shader!=null?m.shader.name:"missing",
                         emission=m.HasProperty("_Emission")?m.GetVector("_Emission"):Vector4.zero,cull=m.HasProperty("_Cull")?m.GetFloat("_Cull"):-1})
                     .ToArray();
@@ -80,6 +80,7 @@ namespace Game.Rendering.Editor
                 exposure = model.Exposure, lampsOn = StreetLamps.On,
                 presetExposureCompensation = environment.Active.exposureCompensation,
                 skyDisplayGain = environment.Active.skyDisplayGain, skyDisplayDesaturation = environment.Active.skyDisplayDesaturation,
+                actualDimColourDesaturation=Shader.GetGlobalFloat("_KamionDimColourDesaturation"),
                 actualWetness = Shader.GetGlobalVector("_KamionWet").x,
                 actualPuddleShare = Shader.GetGlobalVector("_KamionWet").y,
                 actualWetFilmSmoothness = Shader.GetGlobalVector("_KamionWet").w > 0f ? Shader.GetGlobalVector("_KamionWet").w : 0.52f,
@@ -111,3 +112,4 @@ namespace Game.Rendering.Editor
         }
     }
 }
+
