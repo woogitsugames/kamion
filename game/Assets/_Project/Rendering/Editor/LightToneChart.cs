@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -21,6 +22,8 @@ namespace Game.Rendering.Editor
             public string scope="Exposed-linear chart through actual tier shader toe and environment grading; no lighting/material/photometry fit.";
             public float modelExposure, skyHorizontalLux, renderScale, whiteClip, saturation;
             public bool postProcessing;
+            public bool gradingVerified;
+            public float actualSaturation, actualMasterAt01, requestedMasterAt01;
             public Vector4 shaderToe;
             public Patch[] patches;
         }
@@ -38,6 +41,9 @@ namespace Game.Rendering.Editor
                     new Vector3(0,.5f,.5f),new Vector3(.5f,0,.5f),new Vector3(.05f,.18f,.03f),new Vector3(.08f,.08f,.08f),
                     new Vector3(1.2f,1.2f,1.2f),new Vector3(.8f,.3f,.08f),new Vector3(.08f,.25f,.5f),new Vector3(.18f,.12f,.07f)};
                 int images=0;
+                var renderToPixels=Type.GetType("Game.Editor.VisualQA.VisualQaRunner, Game.Editor",true)
+                    .GetMethod("RenderToPixels",BindingFlags.NonPublic|BindingFlags.Static);
+                if(renderToPixels==null)throw new MissingMethodException("VisualQaRunner.RenderToPixels");
                 foreach(string lighting in new[]{"Clear","Overcast","Dusk","Night"})
                 foreach(string tier in new[]{"Low","High"})
                 {
@@ -69,21 +75,28 @@ namespace Game.Rendering.Editor
                         Vector3 view=camera.WorldToViewportPoint(quad.transform.position);
                         patches.Add(new Patch{id=(row==0?"grey-":"colour-")+col,input=input,centrePixel=new Vector2(view.x*1200,(1-view.y)*400)});
                     }
-                    var rt=new RenderTexture(1200,400,24,RenderTextureFormat.ARGB32);rt.Create();
-                    var request=new UniversalRenderPipeline.SingleCameraRequest{destination=rt};
-                    if(!RenderPipeline.SupportsRenderRequest(camera,request)) throw new InvalidOperationException("Unsupported chart render request");
-                    // First render also warms the real volume stack/LUT. Preserve the second for deterministic sampling.
-                    RenderPipeline.SubmitRenderRequest(camera,request);RenderPipeline.SubmitRenderRequest(camera,request);
-                    var previous=RenderTexture.active;RenderTexture.active=rt;
-                    var png=new Texture2D(1200,400,TextureFormat.RGB24,false);png.ReadPixels(new Rect(0,0,1200,400),0,0);png.Apply();RenderTexture.active=previous;
+                    var profile=QualityProfileApplier.Current;
+                    object[] renderArgs={camera,1200,400,0,null,profile.msaa,profile.renderScale};
+                    // Exactly the existing world QA path: Camera.Render, actual scale/MSAA, sRGB target and upscale.
+                    renderToPixels.Invoke(null,renderArgs);
+                    var pixels=(Color32[])renderToPixels.Invoke(null,renderArgs);
+                    var stack=camera.GetUniversalAdditionalCameraData().volumeStack??VolumeManager.instance.stack;
+                    var actualCurves=stack.GetComponent<ColorCurves>();
+                    var actualAdjustments=stack.GetComponent<ColorAdjustments>();
+                    var look=env.GetComponentInChildren<Volume>();
+                    if(look==null || !look.sharedProfile.TryGet(out ColorCurves requestedCurves))throw new InvalidOperationException("Missing actual environment look volume");
+                    float actualMaster=actualCurves.master.value.Evaluate(.1f), requestedMaster=requestedCurves.master.value.Evaluate(.1f);
+                    bool verified=!profile.postProcessing || (Mathf.Abs(actualMaster-requestedMaster)<.001f && Mathf.Abs(actualAdjustments.saturation.value-preset.lookSaturation)<.01f);
+                    if(!verified)throw new InvalidOperationException($"Actual High grading not verified: master{actualMaster}/{requestedMaster}, saturation{actualAdjustments.saturation.value}/{preset.lookSaturation}");
+                    var png=new Texture2D(1200,400,TextureFormat.RGB24,false);png.SetPixels32(pixels);png.Apply();
                     string stem=Path.Combine(output,tier+"-"+lighting);
                     File.WriteAllBytes(stem+".png",png.EncodeToPNG());
-                    var profile=QualityProfileApplier.Current;
                     File.WriteAllText(stem+".json",JsonUtility.ToJson(new Proof{tier=tier,preset=lighting,
                         modelExposure=env.Model.Exposure,skyHorizontalLux=env.Model.HorizontalIlluminanceLux,renderScale=profile.renderScale,
                         postProcessing=camera.GetUniversalAdditionalCameraData().renderPostProcessing,whiteClip=preset.lookWhiteClip,
-                        saturation=preset.lookSaturation,shaderToe=Shader.GetGlobalVector("_KamionTone"),patches=patches.ToArray()},true));
-                    UnityEngine.Object.DestroyImmediate(png);rt.Release();UnityEngine.Object.DestroyImmediate(rt);images++;
+                        saturation=preset.lookSaturation,shaderToe=Shader.GetGlobalVector("_KamionTone"),gradingVerified=verified,
+                        actualSaturation=actualAdjustments.saturation.value,actualMasterAt01=actualMaster,requestedMasterAt01=requestedMaster,patches=patches.ToArray()},true));
+                    UnityEngine.Object.DestroyImmediate(png);images++;
                 }
                 Debug.Log($"LIGHT_TONE_CHART_RESULT: OK images={images}");exit=0;
             }

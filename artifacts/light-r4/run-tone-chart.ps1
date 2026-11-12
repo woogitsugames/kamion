@@ -18,7 +18,7 @@ try {
     $complete=$result -and $files.Count -eq 8
     foreach($tier in @('Low','High')) {foreach($preset in @('Clear','Overcast','Dusk','Night')) {
         $proof=Get-Content "$output/$tier-$preset.json" -Raw|ConvertFrom-Json
-        if($proof.patches.Count -ne 24 -or $proof.tier -ne $tier -or $proof.preset -ne $preset -or $proof.postProcessing -ne ($tier -eq 'High')){$complete=$false}
+        if($proof.patches.Count -ne 24 -or $proof.tier -ne $tier -or $proof.preset -ne $preset -or $proof.postProcessing -ne ($tier -eq 'High') -or -not $proof.gradingVerified){$complete=$false}
     }}
     if(Select-String -Path $log -Pattern 'Shader error|error CS\d+' -Quiet){$complete=$false}
     if($code -ne 0 -and $complete){
