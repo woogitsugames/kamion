@@ -22,6 +22,69 @@
    "pose_confidence": "B",
    "pose_reason": "ADR 0146 probe: ADR 0143 station and heading; focal length measured in the frame 1900 px of 2048 (vfov 44.0 deg) instead of the SfM 1.27; eye 1.0 m",
    "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+  },
+  {
+   "id": "p146-portal-front-level",
+   "kind": "photo_match",
+   "seat": "file",
+   "type": "persp",
+   "pos": [
+    -243.4,
+    -223.2,
+    135.86
+   ],
+   "look_at": [
+    -262.8,
+    -207.5,
+    135.86
+   ],
+   "fov_deg": 30.0,
+   "segment": "G3-B",
+   "pose_confidence": "C",
+   "pose_reason": "ADR 0146 diagnostic: Andersa portal from the front at beam level (no parallax), 25 m",
+   "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+  },
+  {
+   "id": "p146-portal-back-level",
+   "kind": "photo_match",
+   "seat": "file",
+   "type": "persp",
+   "pos": [
+    -282.2,
+    -191.8,
+    135.86
+   ],
+   "look_at": [
+    -262.8,
+    -207.5,
+    135.86
+   ],
+   "fov_deg": 30.0,
+   "segment": "G3-B",
+   "pose_confidence": "C",
+   "pose_reason": "ADR 0146 diagnostic: Andersa portal from behind at beam level, 25 m",
+   "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+  },
+  {
+   "id": "p146-portal-front-eye",
+   "kind": "photo_match",
+   "seat": "file",
+   "type": "persp",
+   "pos": [
+    -235.6,
+    -229.5,
+    131.3
+   ],
+   "look_at": [
+    -262.8,
+    -207.5,
+    135.3
+   ],
+   "fov_deg": 35.0,
+   "segment": "G3-B",
+   "pose_confidence": "C",
+   "pose_reason": "ADR 0146 diagnostic: Andersa portal from the driver eye 35 m before it",
+   "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
   }
  ]
 }

@@ -16,7 +16,7 @@ try {
     try {
         foreach ($light in 'overcast', 'clear') {
             & pwsh -NoProfile -File scripts/visual-qa.ps1 -Scene WorldC -Tier Low -Lighting $light -Width 1280 -Height 960 `
-                -Gate3 (Join-Path $root 'artifacts\putry-andersa\data\probe_cameras.json') -Cameras 'sbs-p146-494288-native' `
+                -Gate3 (Join-Path $root 'artifacts\putry-andersa\data\probe_cameras.json') -Cameras 'sbs-p146-494288-native,p146-portal-front-level,p146-portal-back-level,p146-portal-front-eye' `
                 -OutputDir (Join-Path $root "artifacts\putry-andersa\$Name\probe\Low-$light") *>> $log
             "probe $light exit=$LASTEXITCODE" | Tee-Object -Append $log
         }
