@@ -1,0 +1,69 @@
+{
+  "phone": false,
+  "baseline_ready": false,
+  "branch": "gpt-edge-r6",
+  "observed": "2026-11-12T16:23:22.4491627+01:00",
+  "checkpoint": "d2bf682a778cbe227c06ad7dc006c13db35e7683",
+  "unity_lease": false,
+  "heavy_lease": false,
+  "prep_last_line": "waiting for a heavy slot (3/3 busy, phone=False, reserved=, queue ahead=2) ...",
+  "exec_sessions": {
+    "baseline": 78151,
+    "ownership": 36754,
+    "preparation": 84068,
+    "contact_before": 55779
+  },
+  "processes": [
+    {
+      "ProcessId": 46048,
+      "ParentProcessId": 71640,
+      "CreationDate": "2026-11-12T14:55:44.05695+01:00",
+      "Name": "pwsh.exe",
+      "CommandLine": "\"C:\\Program Files\\WindowsApps\\OpenAI.CodexPrimaryRuntime.v26-1104-2876-0_26.1104.2876.0_x64__3k8sg7r9htsxt\\dependencies\\native\\powershell\\pwsh.exe\" -File artifacts/edge-r6/prepare-baseline.ps1"
+    },
+    {
+      "ProcessId": 71536,
+      "ParentProcessId": 46048,
+      "CreationDate": "2026-11-12T14:55:44.786606+01:00",
+      "Name": "pwsh.exe",
+      "CommandLine": "\"C:\\Program Files\\WindowsApps\\OpenAI.CodexPrimaryRuntime.v26-1104-2876-0_26.1104.2876.0_x64__3k8sg7r9htsxt\\dependencies\\native\\powershell\\pwsh.exe\" -File C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-edge\\artifacts\\edge-r6/acquire-slot.ps1 -Pool heavy -Owner gpt-edge-r6"
+    },
+    {
+      "ProcessId": 55024,
+      "ParentProcessId": 71536,
+      "CreationDate": "2026-11-12T14:55:45.057364+01:00",
+      "Name": "pwsh.exe",
+      "CommandLine": "\"C:\\Program Files\\WindowsApps\\OpenAI.CodexPrimaryRuntime.v26-1104-2876-0_26.1104.2876.0_x64__3k8sg7r9htsxt\\dependencies\\native\\powershell\\pwsh.exe\" -File C:/Users/matma/Documents/Claude/kamion/scripts/unity-slot.ps1 -Acquire -Pool heavy -Owner gpt-edge-r6 -PollSeconds 7 -StaleHours 100000"
+    },
+    {
+      "ProcessId": 74364,
+      "ParentProcessId": 71544,
+      "CreationDate": "2026-11-12T14:56:07.503856+01:00",
+      "Name": "pwsh.exe",
+      "CommandLine": "\"C:\\Program Files\\WindowsApps\\OpenAI.CodexPrimaryRuntime.v26-1104-2876-0_26.1104.2876.0_x64__3k8sg7r9htsxt\\dependencies\\native\\powershell\\pwsh.exe\" -File artifacts/edge-r6/run-baseline.ps1 -PreparationPid 46048"
+    },
+    {
+      "ProcessId": 65152,
+      "ParentProcessId": 46892,
+      "CreationDate": "2026-11-12T14:56:43.892639+01:00",
+      "Name": "pwsh.exe",
+      "CommandLine": "\"C:\\Program Files\\WindowsApps\\OpenAI.CodexPrimaryRuntime.v26-1104-2876-0_26.1104.2876.0_x64__3k8sg7r9htsxt\\dependencies\\native\\powershell\\pwsh.exe\" -File artifacts/edge-r6/run-ownership.ps1 -BaselinePid 74364"
+    },
+    {
+      "ProcessId": 11680,
+      "ParentProcessId": 72212,
+      "CreationDate": "2026-11-12T14:56:43.894227+01:00",
+      "Name": "pwsh.exe",
+      "CommandLine": "\"C:\\Program Files\\WindowsApps\\OpenAI.CodexPrimaryRuntime.v26-1104-2876-0_26.1104.2876.0_x64__3k8sg7r9htsxt\\dependencies\\native\\powershell\\pwsh.exe\" -File artifacts/edge-r6/audit-contact.ps1 -Phase before -WaitPid 74364"
+    },
+    {
+      "ProcessId": 28720,
+      "ParentProcessId": 65152,
+      "CreationDate": "2026-11-12T14:56:44.122864+01:00",
+      "Name": "pwsh.exe",
+      "CommandLine": "\"C:\\Program Files\\WindowsApps\\OpenAI.CodexPrimaryRuntime.v26-1104-2876-0_26.1104.2876.0_x64__3k8sg7r9htsxt\\dependencies\\native\\powershell\\pwsh.exe\" -File C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-edge\\artifacts\\edge-r6/mask-floor.ps1 -WaitPid 74364 -MaskSpec Apron -OutputName apron"
+    }
+  ],
+  "prep_receipt": false,
+  "stop_requested": true
+}
