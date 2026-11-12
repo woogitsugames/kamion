@@ -36,3 +36,4 @@ Detale baseline | night1 na Low oraz High (maksymalnie 960 px); komplet macierzy
 
 ![Detale podświetlenia High przed i po](backlight-details-High-960.jpg)
 
+Po recenzji s12 batch B uzupełniono docs/LICENSES.md o Brown Leather Roba Tuytela / Poly Haven, CC0 1.0, cztery MD5 i zakres przetwarzania. Jawnie zachowano rozróżnienie skóry i pochodnej Plastic. Jest to uzupełnienie dokumentacji użytego zasobu, nie nowa podmiana map.
