@@ -136,3 +136,5 @@ potem poprawić największe udokumentowane odstępstwo wiaty. WIP po każdym kro
 2026-11-12T13:02:20.1765646+01:00: Unity side-render after-side Low clear; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
 
 2026-11-12T13:02:41.1165723+01:00: Unity side-render after-side Low overcast; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
+
+2026-11-12T13:02:49.9214251+01:00: pełne 236 kadrów standardowych gotowe. Wstępne liczniki: mesh i cienie wszędzie +0; na Low brak wzrostu draws instancji; High route-putry-approach ma +3 w obu światłach. Nie ukrywać tej różnicy High w raporcie. Obejrzano pojedyncze narożniki High-clear Anders i High-overcast Factory: bez mlecznej tafli lub rażącego sortowania w tych ujęciach. Dokładne Low i after-side kończy post-candidate. Przygotowano review-sheets.ps1, który czeka na jego koniec i dopiero potem tworzy 40 arkuszy w heavy. NASTĘPNY KROK: pełny przegląd i rzeczywista wartość maksymalnych tris Low.
