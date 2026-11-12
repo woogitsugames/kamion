@@ -187,3 +187,5 @@ NASTĘPNY KROK: przygotować własne skrypty r2 z ownerem heavy gpt-furniture-r2
 2026-11-12T09:46:31.4002977+01:00: finalne330 obrazów standardowych i165 dokładnych liczników Low zapisane, walidacja SHA/statystyk wszystkich trzech wariantów oświetlenia zakończona. Rozpoczęto końcowe EditMode. Przygotowując r3 obejrzano5 referencji≤960; najbliższe zdjęcie często patrzy za przystanek, dlatego shortlistę uzupełniono o kierunek patrzenia. Zdjęcie214816220453640 pokazuje czerwoną wiatę przy OSM5802408812; pozostałe nocne referencje nie dowodzą braku wiaty.
 
 2026-11-12T09:47:03.1907625+01:00: Unity editmode final3 Low overcast; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
+
+2026-11-12T09:47:23.3125927+01:00: podsumowanie końcowych liczników:330 wariantów, delta draws mesh/instancji/cieni wszędzie0;165 dokładnych Low, max tris +0,189979830474662%. Nie jest to pomiar GPU. Arkusze będą przygotowane dopiero po zakończeniu procesu geometrii PID49828, kolejno w heavy, żeby ten sam właściciel nie współdzielił slotu przez dwa zadania.
