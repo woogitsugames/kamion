@@ -52,3 +52,5 @@ Krok 17: Green potwierdzony: 2/2 zaliczone, 0 pominięć, te same SHA testu co R
 Następny krok: pełny build_world po zmianie pod heavy, potem validate.ps1 -Phase After (wyłącznie przebudowa edge w istniejącej bazie). Pozostałe generatory/źródła bez edycji.
 Krok 19: przed dalszą regeneracją zachowano także oba źródłowe GLB far-field i QA. Przygotowano audyt rzeczywistych dolnych wierzchołków kurtyn lasu względem zamrożonego Before i przyszłego After. Wymaga niezmienionych SHA obu GLB; nie utożsamia wierzchołków z drzewami ani nie ocenia widoczności/alfy tekstury.
 Następny krok po pełnym After: uruchomić audyt kurtyn pod heavy razem z pozostałymi odczytami siatki, przed końcowym GIS. Nadal czeka build_world po zmianie.
+Krok 20: zamrożono 25 zaakceptowanych fotografii B w reference-photos, każdą po kontroli przypiętego SHA; atrybucja i źródło w reference-photos.json. Compare r3 użyje tych niezmiennych plików zamiast podatnego na aktualizacje katalogu sbs main. Bez zmiany obrazu, klasy pozy i kalibracji.
+Następny krok: koniec build_world po poprawce → After; potem odczyty geometrii i porównania pod heavy, EditMode oraz końcowy GIS.

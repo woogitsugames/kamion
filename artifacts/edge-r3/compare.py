@@ -80,7 +80,8 @@ for ref in refs:
     if confidence == 'C':
         excluded.append(dict(camera=camera,reason='pose_confidence C'))
         continue
-    photo = MAIN/ref.get('comparison_photo', ref['photo'])
+    frozen_photo = HERE/'reference-photos'/f'{camera}.png'
+    photo = frozen_photo if frozen_photo.exists() else MAIN/ref.get('comparison_photo', ref['photo'])
     if not photo.exists():
         raise FileNotFoundError(f'Accepted comparison photo unavailable: {photo}')
     expected = ref.get('comparison_sha256') or ref.get('sha256')
