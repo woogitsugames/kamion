@@ -102,3 +102,4 @@ Uaktualniono początkowy stan i tytuł sekcji r4 ADR, aby nie sugerował nadal b
 15:04–15:12: dziesięć kolejnych odczytów CIM w resource-wait-events.jsonl potwierdza oba żywe procesy 45068/67820, MaterialFine waiting/attempt 1 i blokadę PHONE_RUN. Wspólny skrypt nie dopuścił nowego Pythona ani Unity. To zweryfikowane oczekiwanie, nie wynik materiału/testów i nie powód ponawiania żywych zadań. Kolejka zachowana, runda pozostaje otwarta.
 Zakończono Game.Editor.Setup.TruckAssetBuilder.BuildBatch, exit 0. Następny krok: kolejny etap prefab/sceny lub capture-0112 -Stage result-0112.
 Zakończono Game.World.Import.WorldTruckInstaller.InstallBatch, exit 0. Następny krok: kolejny etap prefab/sceny lub capture-0112 -Stage result-0112.
+Zapisano izolowany atlas legend 256 bias -0.75 cutoff 0.4 Low clear: cab-driver/cab-dash. Plastic/Leather bez zmian. To eksperyment czytelności, nie pełny gate budżetów.
