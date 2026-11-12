@@ -75,3 +75,5 @@ NASTĘPNY KROK: przygotować własne skrypty r2 z ownerem heavy gpt-furniture-r2
 2026-11-12T02:58:54.8758979+01:00: heavy geometry before; sukces=True; slot gpt-furniture-r2 zwolniony. NASTĘPNY KROK: sprawdzić log i kontynuować walidację rundy.
 
 2026-11-12T03:02:04.5385767+01:00: baseline kompletny: 330 PNG w sześciu wariantach i zapisane hashe chronionej geometrii. Obejrzano własne miniatury 960px: tył znaku Low, wjazd na rondo Low i High dusk; zmierzch nie jest pełną nocą. Włączono jawną flagę rodziny, przygotowano delikatne zużycie z zachowaniem alpha/legendy i dwa mocowania Low w istniejącym plate_back (do24 dodatkowych tris, bez nowego slotu). Dodano osobny plik regresji. NASTĘPNY KROK: pwsh artifacts/furniture-r2/24h/candidate-build.ps1 — pojedyncze testy w heavy, generator i porównanie chronionych payloadów, jeszcze bez importu.
+
+2026-11-12T03:05:57.2174735+01:00: heavy focused candidate1; sukces=True; slot gpt-furniture-r2 zwolniony. NASTĘPNY KROK: sprawdzić log i kontynuować walidację rundy.
