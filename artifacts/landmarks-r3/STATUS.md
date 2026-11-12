@@ -89,3 +89,5 @@ Krok 21: przygotowano REPORT-DRAFT.md z jednoznacznym statusem szkicu i polami W
 Krok 22: przygotowano copy-main.ps1 (jeszcze niewykonany): tylko własny katalog artifacts/landmarks-r3, robocopy /E bez /MIR, weryfikacja wszystkich244 końcowych PNG i REPORT SHA, receipt bez commitu main. Cache przed testami:192/192 zgodne z manifestem. Pełny GIS działa w przydzielonym heavy.
 
 Krok 23: pełny GIS końca rundy:643 PASS,1 XFAIL,1 FAIL,720,55 s. Jedyna porażka test_report_not_stale: raport fidelity nieaktualny dla overrides.yaml i roads/meshing.py. stale-fidelity-proof.json potwierdza oba wejścia identyczne kanonicznie z bazą14ccbaf1 i pusty git diff; żadnego z nich ani raportu dróg nie zmieniano. Physics/gate3 nadal działa pod tym samym heavy, kontrola cache po testach oczekuje.
+
+Krok 24: końcowa walidacja zakończona. GIS643/1FAIL/1XFAIL z udokumentowanym zastanym stale fidelity; physics/gate3 48/48 w262,32s, EditMode317/317. Cache192/192 zgodny z manifestem i identyczny przed/po, źródła/GLB bez zmian; heavy zwolniony. REPORT.md gotowy (15 linii), następny krok robocopy i244 sumy PNG, potem od razu gpt-landmarks-r4 + merge main.

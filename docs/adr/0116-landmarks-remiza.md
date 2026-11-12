@@ -149,3 +149,11 @@ multi49,0→21,1%, single55,5→0,0%. Próg chromy i poza robocza ograniczają m
 Fotografia nadal PARTIAL: materiał kominów za szary/jednolity, szczegóły głowic
 oraz średnica multi robocze. Zdjęcie Rakoon CC BY3.0, starsze Hiuppo CC BY-SA2.5;
 EMKA tylko tekst H120m jako źródło techniczne, bez zamkniętych fotografii w pakiecie.
+
+Testy końca r3: EC 18/18, podpomost 15/15, EditMode 317/317,
+physics/gate3 48/48 PASS. Pełny GIS 643 PASS, 1 XFAIL, 1 FAIL (720,55 s):
+tylko test_report_not_stale dla overrides.yaml i roads/meshing.py. Dowód
+stale-fidelity-proof.json potwierdza oba pliki niezmienione od bazy 14ccbaf1;
+nie modyfikowano źródeł ani raportu dróg. Nie deklaruje się pełnego GIS PASS.
+192 pliki cache (64 High, 64 Low, 64 instancje) zgodne z manifestem przed i po
+teście; wszystkie źródła i assety objęte kontrolą niezmienione od finalnego renderu.

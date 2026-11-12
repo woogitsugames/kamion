@@ -1,4 +1,4 @@
-﻿# ADR 0119 — DK8 przy Putry, powierzchnie i geometria pod pomostem
+# ADR 0119 — DK8 przy Putry, powierzchnie i geometria pod pomostem
 
 ## Runda r2 — 12 listopada 2026, w toku
 
@@ -90,14 +90,14 @@ wymiary konstrukcyjne, rozbieżne ekrany, spód i wygląd oczepów pozostają ot
 Nie zmieniono dróg, kapy, ekranów, barier, shaderów ani QualityProfile. World Surface
 i World PBR mają ten sam zestaw UniversalForward / ShadowCaster / DepthOnly.
 
-## r3 — korekta po niezależnej recenzji s12 (w trakcie walidacji)
+## r3 — korekta po niezależnej recenzji s12
 
 Recenzja `REVIEW-2026-11-12-s12-gpt-batch-a.md`, sekcja2, odrzuciła interpretację
 szarych faz: na fotografii Commons7204 wszystkie płaszczyzny mają tę samą
 musztardową farbę. W konfiguracji wyłączono unpainted_chamfers, przywrócono
 roboczy pigment liniowy[0.46,0.40,0.17] sprzed zbrązowienia r2 i wyłączono
 paint_blobs. Właśnie ta ostatnia flaga emitowała niepotwierdzony ukośny quad
-:paint_WORKING_VALUE; jego zniknięcie z obrazu trzeba sprawdzić na parze PNG.
+:paint_WORKING_VALUE; jego zniknięcie potwierdzono w finalnych parach PNG.
 Miękkie zacieki i tekstura stopy pozostają. Rura collector/downpipe była już
 w generatorze; nie dodaje się drugiej bez pomiaru jej położenia na zdjęciu.
 
@@ -111,10 +111,19 @@ bridge/bridge_soffit i bridge/bridge_concrete są identyczne bajtowo w128 GLB.
 Kolizja, teren, budynki i reszta materiałów pomostowych nie są wyłączone z kontroli.
 roads_qa i125468 instancji poza dwoma nowymi EC identyczne. To nie jest deklaracja
 identycznych pełnych chunków po zmianie materiału/koloru; pełne SHA zmieniają się.
-Budżety kamer, ocena PNG i pełne testy końca rundy pozostają do wykonania.
+Finalne budżety, ocena PNG i testy końca rundy podano poniżej.
 
 Oględziny finalnego after-corrected: wszystkie32 arkusze/244 pary przejrzane.
 W natywnych wycinkach fazy mają tę samą farbę, ukośny czworokąt zniknął;
 faktura i ciemniejsza stopa pozostały. P1/P2 skorygowane, fotograficzny wynik PARTIAL
 (do niezależnej recenzji, m.in. lokalizacja istniejącego kolektora/rury spustowej).
 Low draws+0 w122 pomiarach, tris całej sceny−0,3185..+0,3718%; brak telefonu.
+
+
+Testy końca r3: EC 18/18, podpomost 15/15, EditMode 317/317,
+physics/gate3 48/48 PASS. Pełny GIS 643 PASS, 1 XFAIL, 1 FAIL (720,55 s):
+tylko test_report_not_stale dla overrides.yaml i roads/meshing.py. Dowód
+stale-fidelity-proof.json potwierdza oba pliki niezmienione od bazy 14ccbaf1;
+nie modyfikowano źródeł ani raportu dróg. Nie deklaruje się pełnego GIS PASS.
+192 pliki cache (64 High, 64 Low, 64 instancje) zgodne z manifestem przed i po
+teście; wszystkie źródła i assety objęte kontrolą niezmienione od finalnego renderu.
