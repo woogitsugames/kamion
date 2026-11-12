@@ -1,6 +1,6 @@
 # ADR 0122 — statyczne pojazdy placowe
 
-Status: life r2, wybrany wariant C; oględziny autora zakończone, końcowy GIS w toku. Brud i realizm PARTIAL. Bez scalenia do main i bez push.
+Status: life r2, wybrany C; końcowy GIS 585 passed, 1 xfailed, EditMode 280/280. Przekazane liderowi, niezależna recenzja S12 SCAL/PARTIAL; lider scalił r2 do main w partii B. Autor nie scalał do main i nie pushował.
 
 ## Runda life r2 — problem i zakres
 
@@ -52,4 +52,7 @@ Obejrzano komplet 56 arkuszy C (część w przeglądach ≤960 px), zbliżenia B
 Przewidywane konflikty: definicje wskazanych materiałów, CARPAINT, fabryka materiałów, biblioteka props i manifest. Zachować inne domeny; generaty przy integracji main wybrać z main i odtworzyć ze złączonych źródeł zgodnie z protokołem. Aktualne uwagi lidera s11 w GPT-FEEDBACK-S10 (~01:50) po scaleniu life r1 0978792e dopisują brud tyłu osobówek, felgi, czerń w słońcu i sheet_far. Zostaną uwzględnione w następnej r3 po dołączeniu aktualnego main do własnej gałęzi. Preflight palet i brak deklarowanego zestawu euro_pallet_side zachowano do dalszego backlogu; palet w r2 nie zmieniano, a brak zestawu PBR sam nie dowodzi braku BaseMap lub wyglądu na renderze.
 
 
+
+
+Uwagi niezależnej recenzji S12 (REVIEW-2026-11-12-s12-gpt-batch-b.md): LOD1 osi poprawiony, lecz LOD0 felg płaski; brak czytelnego osprzętu podwozia, plandeka zbyt regularna, kabiny uproszczone. To otwarty backlog następnych rund life. Lokalny limit LOD1 320 jest strażnikiem regresji złożoności prototypu, nie samodzielnym dowodem wydajności; dopuszczenie wzrostu wymagało pomiaru całej trasy ≤2% i osobno +0 draws świata/instancji. Nie wyprowadza się budżetu telefonu z maksimum prototypu 316.
 
