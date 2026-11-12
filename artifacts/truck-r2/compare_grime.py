@@ -7,7 +7,9 @@ from PIL import Image, ImageDraw, ImageFont
 
 root = Path(__file__).resolve().parent
 stage = sys.argv[1]
-config = json.loads((root / 'grime-rois.json').read_text(encoding='utf-8-sig'))
+config_path = Path(sys.argv[2]) if len(sys.argv) > 2 else root / 'grime-rois.json'
+config = json.loads(config_path.read_text(encoding='utf-8-sig'))
+suffix = '-'+config_path.stem if len(sys.argv) > 2 else '-roi'
 font = ImageFont.truetype('C:/Windows/Fonts/arial.ttf', 16)
 rows = []
 for condition in sorted((root / stage).iterdir()):
@@ -29,7 +31,7 @@ for condition in sorted((root / stage).iterdir()):
             rows.append({'condition': condition.name, 'camera': camera, 'region': name,
                          'before': values[0], 'after': values[1],
                          'mean_delta_points': values[1]['mean_display_y']-values[0]['mean_display_y']})
-        for label, box in (('whole', None), ('curtain', (1100, 135, 2340, 620))):
+        for label, box in (('whole', None), ('curtain', (1100, 135, 2340, 620)), ('runoff-front', (1120, 135, 1490, 430))):
             pictures = [image.crop(box) if box else image for image in (old, new)]
             height = round(pictures[0].height * 480 / pictures[0].width)
             sheet = Image.new('RGB', (960, height+34), '#202020')
@@ -38,5 +40,5 @@ for condition in sorted((root / stage).iterdir()):
                 sheet.paste(picture.resize((480, height), Image.Resampling.LANCZOS), (index*480, 34))
                 draw.text((index*480+8, 8), ('PRZED' if index == 0 else 'PO')+' | '+condition.name, font=font, fill='white')
             sheet.save(condition / f'review-{camera}-{label}.jpg', quality=94)
-(root / f'{stage}-roi-delta.json').write_text(json.dumps(rows, indent=2, ensure_ascii=False), encoding='utf8')
+(root / f'{stage}{suffix}-delta.json').write_text(json.dumps(rows, indent=2, ensure_ascii=False), encoding='utf8')
 print(f'Compared {len(rows)} native ROI rows; sheets width 960 px.')
