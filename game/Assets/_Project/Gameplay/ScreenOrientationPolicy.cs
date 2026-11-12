@@ -60,6 +60,9 @@ namespace Game.Gameplay
     /// Elongated windows (phones, cover screen): landscape L/R only (a phone held upright turns to landscape once, as
     /// in every landscape game); with gyro steering the current landscape is locked after a short settle (the steering
     /// tilt is the motion the orientation sensor reads), unlocked again when gyro is switched off.
+    /// ADR 0147: an elongated window that is portrait (phone flat on a table at launch, fold to the cover screen held
+    /// upright) is first locked to a concrete landscape - AutoRotation alone left the A16 in portrait - and L/R
+    /// auto-rotation is allowed once the window is landscape.
     /// </summary>
     public sealed class ScreenOrientationLock
     {
@@ -82,19 +85,57 @@ namespace Game.Gameplay
 
         static bool IsLandscape(ScreenOrientation o) => o == ScreenOrientation.LandscapeLeft || o == ScreenOrientation.LandscapeRight;
 
+        /// <summary>
+        /// Concrete landscape to force an elongated portrait window into (ADR 0147): the one the device is held in, if
+        /// the sensor knows it; otherwise (flat on a table: FaceUp/FaceDown/Unknown, or held upright) LandscapeLeft,
+        /// the standard landscape (top of the phone to the left). Unity's DeviceOrientation and ScreenOrientation
+        /// landscape names describe the same physical pose.
+        /// </summary>
+        public static ScreenOrientation ForcedLandscape(DeviceOrientation device)
+            => device == DeviceOrientation.LandscapeRight ? ScreenOrientation.LandscapeRight : ScreenOrientation.LandscapeLeft;
+
+        /// <summary>True while an elongated window is being forced out of portrait (ADR 0147).</summary>
+        public bool Forcing => m_Forcing;
+        bool m_Forcing;
+
         public OrientationCommand Step(float time, int width, int height, ScreenOrientation current, bool gyroActive)
+            => Step(time, width, height, current, gyroActive, DeviceOrientation.Unknown);
+
+        public OrientationCommand Step(float time, int width, int height, ScreenOrientation current, bool gyroActive, DeviceOrientation device)
         {
             int shortSide = Mathf.Min(width, height), longSide = Mathf.Max(width, height);
             bool nearSquare = ScreenOrientationPolicy.IsNearSquare(width, height);
             if (shortSide != m_ShortSide || longSide != m_LongSide)
             {
                 m_ShortSide = shortSide; m_LongSide = longSide; m_W = width; m_H = height;
-                m_Locked = false; m_GyroLocked = false; m_Pending = true;
+                m_Locked = false; m_GyroLocked = false; m_Pending = true; m_Forcing = false;
                 m_SettleUntil = time + SettleSeconds;
                 Allowed = ScreenOrientationPolicy.Decide(width, height);
-                if (!nearSquare) { Reason = "elongated: landscape only"; return OrientationCommand.AllowAuto; }
+                if (!nearSquare)
+                {
+                    // ADR 0147: with the manifest fullUser (ADR 0135 r3) a phone lying flat launches in its natural
+                    // portrait, and AutoRotation restricted to L/R does NOT move it out (A16 logcat: AllowAuto
+                    // allowed=--LR orientation=Portrait, no rotation followed). A concrete landscape request rotates
+                    // at once, sensor or not; L/R auto-rotation is allowed once the window is landscape.
+                    if (height > width)
+                    {
+                        m_Forcing = true; m_Locked = true; LockTo = ForcedLandscape(device);
+                        Reason = "elongated portrait window: force landscape";
+                        return OrientationCommand.Lock;
+                    }
+                    Reason = "elongated: landscape only"; return OrientationCommand.AllowAuto;
+                }
             }
             if (width != m_W || height != m_H) { m_W = width; m_H = height; m_SettleUntil = time + SettleSeconds; }
+            if (m_Forcing)
+            {
+                // Wait for the OS to deliver the landscape window (no repeated requests, no loop if it never comes,
+                // e.g. a freeform window that ignores orientation requests).
+                if (height > width) return OrientationCommand.None;
+                m_Forcing = false; m_Locked = false;
+                Reason = "landscape reached: allow L/R";
+                return OrientationCommand.AllowAuto;
+            }
             if (nearSquare)
             {
                 if (m_Pending && Concrete(current))
@@ -151,7 +192,7 @@ namespace Game.Gameplay
         void Update()
         {
             Diagnostics();
-            var cmd = m_Lock.Step(Time.unscaledTime, Screen.width, Screen.height, Screen.orientation, GyroSteeringActive);
+            var cmd = m_Lock.Step(Time.unscaledTime, Screen.width, Screen.height, Screen.orientation, GyroSteeringActive, Input.deviceOrientation);
             if (cmd == OrientationCommand.None) return;
             if (cmd == OrientationCommand.AllowAuto)
             {
@@ -163,7 +204,7 @@ namespace Game.Gameplay
                 Screen.autorotateToPortraitUpsideDown = a.PortraitUpsideDown;
                 Screen.orientation = ScreenOrientation.AutoRotation;
             }
-            else Screen.orientation = m_Lock.LockTo;   // equals the current one: no rotation, no gyro suspend
+            else Screen.orientation = m_Lock.LockTo;   // near-square / gyro: the current one (no rotation); elongated portrait: forced landscape (ADR 0147)
             DeviceDisplay.Invalidate();
             Log(cmd);
         }

@@ -28,6 +28,7 @@ Linear meshes (layer 'furniture' + 'collision'):
 from __future__ import annotations
 
 import hashlib
+import json
 import math
 
 import numpy as np
@@ -37,7 +38,7 @@ from shapely.geometry import LineString, Point
 from roads import standards as S
 from roads.network import MEDIAN_RURAL, RURAL, URBAN, side_params, side_extent
 from roads.geom import dp_keep
-from roads.meshing import bridge_cap_w
+from roads.meshing import bridge_cap_w, bridge_style
 
 from . import facade_atlas as FA
 
@@ -565,6 +566,73 @@ def lamps(pl, net, osm_nodes, origin, report):
                        "support_adjustments": pl.support_moves,
                        "by_family": {k: sum(1 for it in pl.items if it["p"] == k) for k in
                                      sorted({it["p"] for it in pl.items if it["p"].startswith("lamp_")})}}
+
+
+def bridge_median_lamps(pl, net, report):
+    """ADR 0123 (REVIEW s10-0117 P2-1, RING-B): bridge_style `lamps: {side: median, spacing_m, anchor_en}` - the lamps
+    of a twin-deck viaduct stand between the decks with two arms (orthophoto of the Andersa viaduct over Rondo
+    Biezenstwa: twin-arm columns in the gap every ~32 m; Mapillary 454716650857984 / 2948595898752384 from the deck),
+    not one per deck on the outer cap as the one-way rule of lamps() puts them. The rule lamps standing on those decks
+    are removed and twin lamps (two `lamp_<h>m` back to back on one base: no new prototype, no extra draw call) are set
+    on the inner cap edge of the first deck, at stations spacing_m apart through the point of the deck edge nearest
+    to anchor_en (a column read off the orthophoto)."""
+    groups = {}
+    for c in net.chains:
+        if c.meta.get("absorbed") or c.bridge is None or not c.bridge.any():
+            continue
+        st = bridge_style(c).get("lamps")
+        if isinstance(st, dict) and st.get("side") == "median":
+            groups.setdefault(json.dumps(st, sort_keys=True), []).append(c)
+    out = {"removed": 0, "placed": 0}
+    for key, chains in sorted(groups.items()):
+        st = json.loads(key)
+        chains = sorted(chains, key=lambda c: c.id)
+        lead = chains[0]
+        srcs = {f"rule:{c.id}" for c in chains}
+
+        def on_deck(it):
+            for c in chains:
+                if it.get("src") == f"rule:{c.id}":
+                    s_, _ = c.line.project(np.array([it["e"], it["n"]]))
+                    return bool(c.bridge[c.idx(float(s_))])
+            return False
+        drop = [it for it in pl.items if it["p"].startswith("lamp_") and it.get("src") in srcs and on_deck(it)]
+        if drop:
+            ids = {id(it) for it in drop}
+            pl.items[:] = [it for it in pl.items if id(it) not in ids]
+            gone = {(round(it["e"], 3), round(it["n"], 3)) for it in drop}
+            pl.pts["lamp"] = [q for q in pl.pts.get("lamp", []) if (round(float(q[0]), 3), round(float(q[1]), 3)) not in gone]
+            out["removed"] += len(drop)
+        # the median is on the side of the other deck
+        sm = lead.length / 2
+        if len(chains) > 1:
+            other = np.asarray(chains[1].line.point(chains[1].length / 2), float)
+            sm, _ = lead.line.project(other)
+            t, nn = lead.line.frame(float(sm))
+            sgn = 1.0 if float(np.dot(other - np.asarray(lead.line.point(float(sm)), float), nn)) > 0 else -1.0
+        else:
+            sgn = 1.0
+        sec = lead.section(lead.length / 2, net.sec_list)
+        h = int(S.LAMP.get(sec.cls, S.LAMP["GP"])["h"])
+        spacing = float(st.get("spacing_m") or S.LAMP.get(sec.cls, S.LAMP["GP"])["spacing"])
+        s0 = lead.t_a + 4.0
+        if st.get("anchor_en"):
+            s0, _ = lead.line.project(np.asarray(st["anchor_en"], float))
+        s_lo, s_hi = lead.t_a + 4.0, lead.length - lead.t_b - 4.0
+        k0 = int(math.floor((s_lo - s0) / spacing))
+        cw = bridge_cap_w(lead)
+        for k in range(k0, int((s_hi - s0) / spacing) + 2):
+            sx = float(s0 + k * spacing)
+            if not (s_lo <= sx <= s_hi) or not lead.bridge[lead.idx(sx)]:
+                continue
+            hw = float(lead.hw_at(sx))
+            p_ = lead.line.offset_point(sx, sgn * (hw + S.KERB_TOP_W + cw - 0.12))
+            t, nn = lead.line.frame(sx)
+            z = float(lead.crossfall_z(sx, sgn * hw)) + S.BRIDGE_KERB_H
+            for f_ in (-1.0, 1.0):
+                pl.add(f"lamp_{h}m", p_, yaw_of(np.asarray(nn) * sgn * f_), z=z, src=f"rule:median:{lead.id}", group="lamp")
+            out["placed"] += 1
+    report["bridge_median_lamps"] = out
 
 
 # ------------------------------------------------------------------------------------------- signs
@@ -1553,6 +1621,13 @@ def _join_free_ends(queue, m):
         if len(Ps) < GUARDRAIL_JOIN_BLEND + 4:
             continue
         for end in (0, -1):
+            # ADR 0123 (p0_kerb_merge_eye): the end of a DECK barrier stays on its cap - the barrier of the ramp deck
+            # (E -750 N 77.4) was swung 2.5 m across the gap onto the barrier of the DK8 deck beside it (zigzag, a post
+            # left alone, a beam end in the air). Ground rails still come to it.
+            if it["tall"] is not None and bool(np.asarray(it["tall"])[end]):
+                continue
+            if end in it.get("nojoin", ()):
+                continue
             pe = Point(Ps[end])
             # rails at the same level only (a deck rail passes over a ground rail without meeting it)
             others = []
@@ -1671,7 +1746,23 @@ def guardrails(lin, net, zground, report):
         if not np.isfinite(Z).all():
             net.overrides_stale.append(o["id"])
             continue
-        _dedup_guardrail(lin, P, Z, f"authored:{o['id']}", built, m)
+        # ADR 0123: authored rails are not deduplicated against each other (two traced rails of one separator, 1.5 m
+        # apart: the second was cut away by the 2.5 m ground rule) - only the rule runs give way to them
+        own = []
+        _dedup_guardrail(lin, P, Z, f"authored:{o['id']}", own, m)
+        # ADR 0123 b4: `free_ends: [start, end]` (drawing order), False = that end stays where it was traced, without
+        # a turned-down terminal (the east end of dk8-ramp-split-barrier-n stops at the expansion joint of the ramp
+        # deck: _join_free_ends swung its last 8 m onto the OTHER rail of the separator, 1.4 m away)
+        fe = o.get("free_ends")
+        mine = [it for it in lin.rail_queue if it["key"] == f"authored:{o['id']}"]
+        if fe and mine:
+            for it, e_, keep_ in ((mine[0], 0, fe[0]), (mine[-1], -1, fe[1])):
+                if not keep_:
+                    it.setdefault("nojoin", set()).add(e_)
+                    t_ = list(it["term"])
+                    t_[e_] = False
+                    it["term"] = tuple(t_)
+        built.extend(own)
         net.overrides_applied.append({"id": o["id"], "targets": [f"guardrail@{P[0][0]:.0f},{P[0][1]:.0f}"]})
         m["authored"] += float(sq[-1])
     for c in net.chains:
@@ -1701,8 +1792,11 @@ def guardrails(lin, net, zground, report):
             # (bridge_style cap_w, Biezenstwa 1.0 m) the beam face stands BRIDGE_BARRIER_FACE_M behind the kerb face
             # (Mapillary 454716650857984: edge line -> face ~1.25 m, kerb -> face ~0.7 m) but never closer than
             # BRIDGE_BARRIER_EDGE_MIN_M to the cap edge
-            edge = np.clip(kw[br] + S.KERB_TOP_W - (S.BRIDGE_BARRIER_FACE_M + W_BACK + 0.083),
-                           S.BRIDGE_BARRIER_EDGE_MIN_M, S.BRIDGE_BARRIER_EDGE_M)
+            # ADR 0123: on a narrow cap the face distance rules (0.42 m: the post line may stand further than
+            # BRIDGE_BARRIER_EDGE_M from the cap edge); the 1.5 m caps keep BRIDGE_BARRIER_EDGE_M as before
+            edge = kw[br] + S.KERB_TOP_W - (S.BRIDGE_BARRIER_FACE_M + W_BACK + 0.083)
+            edge = np.where(kw[br] < 1.3, np.maximum(edge, S.BRIDGE_BARRIER_EDGE_MIN_M),
+                            np.clip(edge, S.BRIDGE_BARRIER_EDGE_MIN_M, S.BRIDGE_BARRIER_EDGE_M))
             off[br] = hw[br] + S.KERB_TOP_W + kw[br] - edge
             zb[br] = zg[br] + S.BRIDGE_KERB_H
             med = (kinds == MEDIAN_RURAL) & ~br
@@ -1805,7 +1899,10 @@ def pier_guardrails(lin, net, piers, parts, report):
     for p in parts:
         if p.layer != "road" or not len(p.T):
             continue
-        if p.mat.startswith("road_asphalt") and not p.src.endswith(":vg"):
+        # ADR 0123: the truck apron of a roundabout is driven on too - the edge beside a pier on the centre island is
+        # the inner kerb of the apron (Mapillary 177786140912399: W-beam right behind the island kerb), not the
+        # asphalt 2.5 m further out (the run stood on the apron or was not built at all)
+        if (p.mat.startswith("road_asphalt") or p.mat == "apron_sett") and not p.src.endswith(":vg"):
             tri.append(p.V[p.T])
         elif p.mat == "curb_concrete":
             kerb.append(p.V[:, :2])
@@ -1899,6 +1996,8 @@ def _noise_style_overrides(overrides, origin):
                     st["band_m"] = float(z["band_m"])
                 if "height_m" in z:                        # ADR 0127: authored barrier height inside the zone
                     st["height_m"] = float(z["height_m"])
+                if "post_mat" in z:                        # ADR 0139: authored post / rail material of the zone
+                    st["post_mat"] = str(z["post_mat"])
                 st["name"] = z.get("style", NOISE_DEFAULT_STYLE)
                 zones.append((c, float(z.get("radius_m", 30.0)), st, o["id"]))
         elif o.get("kind") == "noise_barrier":

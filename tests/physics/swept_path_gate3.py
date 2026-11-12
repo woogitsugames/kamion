@@ -229,7 +229,7 @@ def surface_raster(lo, hi):
                       (T[:, :, 1].max(1) >= lo[1]) & (T[:, :, 1].min(1) <= hi[1])
                 for tri in T[sel]:
                     _raster_tri(tri, c, cat, zb, lo, nx, ny)
-    return cat, world
+    return cat, world, zb
 
 
 def _raster_tri(tri, c, cat, zb, lo, nx, ny):
@@ -256,7 +256,14 @@ def _raster_tri(tri, c, cat, zb, lo, nx, ny):
     cat[j0:j1 + 1, i0:i1 + 1][upd] = c
 
 
-def props_near(world, lo, hi):
+OVERHEAD_M = 4.5     # a prop standing this far above the road surface under it is on a deck overhead (vehicle 4.0 m)
+
+
+def props_near(world, lo, hi, zb=None, skipped=None):
+    """Prop collider footprints in the window. ADR 0123: with `zb` (top z of the road / paved surfaces per raster
+    cell, bridge decks are another node) a prop whose base stands more than OVERHEAD_M above the road surface under
+    it is on a viaduct overhead (lamps on the Andersa decks above Rondo Biezenstwa, 5.9 m over the ring) and is not
+    an obstacle of the road below - the analysis is 2-D and read them as posts on the truck apron."""
     boxes = RC.prop_boxes(PROPS)
     out = []
     for f in sorted(world.glob("instances_*_*.json")):
@@ -264,6 +271,16 @@ def props_near(world, lo, hi):
             b = boxes.get(it["p"])
             if b is None or not (lo[0] <= it["e"] <= hi[0] and lo[1] <= it["n"] <= hi[1]):
                 continue
+            if zb is not None and "z" in it:
+                i, j = int((it["e"] - lo[0]) / RES), int((it["n"] - lo[1]) / RES)
+                r_ = max(1, int(round(0.6 / RES)))
+                win = zb[max(0, j - r_):j + r_ + 1, max(0, i - r_):i + r_ + 1]
+                win = win[win > -1e8]
+                if win.size and it["z"] - float(win.max()) > OVERHEAD_M:
+                    if skipped is not None:
+                        skipped.append({"p": it["p"], "e": it["e"], "n": it["n"], "z": it["z"],
+                                        "road_z": round(float(win.max()), 2)})
+                    continue
             yaw = it.get("yaw", 0.0)
             ca, sa = math.cos(yaw), math.sin(yaw)
             C = np.array([[x, y] for x in (b[0], b[3]) for y in (b[1], b[4])])
@@ -523,10 +540,13 @@ def run(out: Path, build=True):
     cache = out / "surface.npz"
     if cache.exists() and np.allclose(np.load(cache)["lo"], lo):
         cat, world = np.load(cache)["cat"], WORLD
+        zb = np.load(cache)["zb"] if "zb" in np.load(cache).files else None
     else:
-        cat, world = surface_raster(lo, hi)
-        np.savez_compressed(cache, cat=cat, lo=lo)
-    props = props_near(world, lo, hi)
+        cat, world, zb = surface_raster(lo, hi)
+        np.savez_compressed(cache, cat=cat, lo=lo, zb=zb)
+    overhead = []
+    props = props_near(world, lo, hi, zb, overhead)
+    summary["props_overhead_skipped"] = overhead
     ring_of = {"G3-A": "bieżeństwa", "G3-B": "putry", "RING-B": "bieżeństwa"}
     for (seg, ln), (ss, Q, w) in lines.items():
         for var in VARIANTS:

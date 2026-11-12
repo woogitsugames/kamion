@@ -120,27 +120,71 @@ def tyre_grass_loop(seconds: float = 4.0, seed: int = 46) -> np.ndarray:
     return 0.8 * swish + 0.8 * thud + 0.08 * air
 
 
-def tyre_squeal_loop(seconds: float = 3.0, seed: int = 47, f0: float = 930.0) -> np.ndarray:
-    """Heavy-truck tyre squeal: stick-slip tone ~ 0.9 kHz with harmonics, jittered pitch, noisy formant.
+def tyre_squeal_loop(seconds: float = 4.0, seed: int = 47) -> np.ndarray:
+    """Heavy-truck tyre squeal v2 (ADR 0145): rough, low, wavering rubber squeal, no clean tone.
 
-    Runtime: gain from combined slip (ratio/angle vs. peak slip) above ~0.8, pitch 0.9..1.2."""
+    The v1 loop (ADR 0007..0142) was a stick-slip tone at 930 Hz with harmonics: the owner heard a whistle. v2 builds
+    the squeal from noise: three formant bands (~520 / 1150 / 2100 Hz, Q 4-6) whose level is chopped by irregular
+    stick-slip bursts (15-40 Hz random AM), a wide random wobble of the dominant band (via two overlapping bands
+    cross-faded slowly), grit (HF grains) and tyre roar underneath. The long-term spectrum has no narrow line
+    (el_regen03.measure tone_db < 12 dB). Placeholder until the REGEN-03 recording (el_tyre_squeal_loop) is imported;
+    the runtime uses the recording when it exists.
+
+    Runtime: gain from combined slip above the squeal onset and speed (LayerMath.SquealGain), pitch 0.9..1.15."""
     rng = np.random.default_rng(seed)
     n = int(seconds * FS)
-    fm = 0.025 * dsp.smooth_random_periodic(rng, n, max_cycles=int(26 * seconds), n_terms=7)
-    fm += 0.012 * dsp.periodic_lfo(n, int(round(9 * seconds)), 1.1)  # stick-slip wobble
-    inst = f0 * (1.0 + fm)
-    phase = 2 * np.pi * np.cumsum(inst) / FS
-    cyc = phase[-1] / (2 * np.pi)
-    phase *= np.round(cyc) / cyc
-    stick = 1.0 + 0.35 * dsp.periodic_lfo(n, int(round(19 * seconds)), 0.3)
-    ams = [1.0 + 0.3 * dsp.smooth_random_periodic(rng, n, max_cycles=int(5 * seconds), n_terms=3) for _ in range(4)]
-    tone = (np.sin(phase) * ams[0] + 0.55 * np.sin(2 * phase + 0.6) * ams[1]
-            + 0.28 * np.sin(3 * phase + 1.9) * ams[2] + 0.12 * np.sin(4 * phase + 0.2) * ams[3]) * stick
-    formant = _pf(rng, n, chain(bp(f0 * 2.1, 3.0), bp(f0 * 3.2, 4.0)))
-    rush = _pf(rng, n, chain(hp(1800.0, 0.7), lp(7000.0, 0.7)))
-    # soft saturation: real squeal is slightly rough
-    x = dsp.soft_clip(0.7 * tone + 0.3 * formant + 0.12 * rush, 1.2)
-    return x
+    lo_a = _pf(rng, n, chain(bp(480.0, 5.0), bp(480.0, 3.0)))
+    lo_b = _pf(rng, n, chain(bp(600.0, 5.0), bp(600.0, 3.0)))
+    xf = 0.5 + 0.5 * dsp.smooth_random_periodic(rng, n, max_cycles=int(3 * seconds), n_terms=4)
+    low = lo_a * np.sqrt(xf) + lo_b * np.sqrt(1.0 - xf)
+    mid = _pf(rng, n, chain(bp(1150.0, 4.0), bp(1150.0, 2.5)))
+    high = _pf(rng, n, chain(bp(2100.0, 4.0), lp(4000.0, 0.7)))
+    # stick-slip chatter: irregular AM 15-40 Hz, never fully closed
+    chatter = np.abs(dsp.smooth_random_periodic(rng, n, max_cycles=int(40 * seconds), n_terms=14))
+    chatter = 0.45 + 0.55 * chatter
+    swell = 1.0 + 0.35 * dsp.smooth_random_periodic(rng, n, max_cycles=int(2 * seconds), n_terms=4)
+    grit = np.abs(rng.standard_normal(n)) ** 3
+    grit = periodic_sosfilt(dsp.periodic_noise(rng, n) * _unit(periodic_sosfilt(grit, chain(lp(700.0, 0.7)))),
+                            chain(hp(1500.0, 0.7), lp(6500.0, 0.7)))
+    roar = _pf(rng, n, chain(hp(90.0, 0.7), lp(900.0, 0.7), peak(250.0, 1.0, 3.0)))
+    x = (1.0 * low + 0.55 * mid + 0.25 * high) * chatter * swell + 0.35 * _unit(grit) + 0.45 * roar
+    return dsp.soft_clip(_unit(x), 1.5)
+
+
+def tyre_scrub_loop(seconds: float = 6.0, seed: int = 48) -> np.ndarray:
+    """Tyre scrub (ADR 0145, placeholder synthesis): trailer axles dragged sideways in a tight slow turn.
+
+    Low rubbery groan (noise, formant ~180 / 420 Hz, slow irregular swell) + irregular creaks (Poisson-timed
+    stick-slip bursts: 15-60 ms trains of band noise 500-1800 Hz, random spacing, no rhythm) + faint grit
+    (gravel / tread blocks). Replaced by the REGEN-03 recording (el_tyre_scrub_loop) when it is imported.
+
+    Runtime: gain from the lateral slip angle of the trailer axles at low speed (LayerMath.ScrubGain), pitch by
+    the sliding speed (LayerMath.ScrubPitch)."""
+    rng = np.random.default_rng(seed)
+    n = int(seconds * FS)
+    g1 = _pf(rng, n, chain(hp(60.0, 0.7), bp(180.0, 2.0)))
+    g2 = _pf(rng, n, chain(bp(420.0, 2.5), lp(900.0, 0.7)))
+    swell = 1.0 + 0.45 * dsp.smooth_random_periodic(rng, n, max_cycles=int(1.5 * seconds), n_terms=5)
+    rough = 0.6 + 0.4 * np.abs(dsp.smooth_random_periodic(rng, n, max_cycles=int(25 * seconds), n_terms=12))
+    groan = (g1 + 0.7 * g2) * swell * rough
+    creaks = np.zeros(n)
+    t = 0.0
+    while True:
+        t += rng.exponential(0.35)            # mean 2.9 creaks/s, exponential spacing = no rhythm
+        if t >= seconds:
+            break
+        dur = rng.uniform(0.015, 0.06)
+        fc = rng.uniform(500.0, 1800.0)
+        k = _noise_burst(rng, fc * 0.7, fc * 1.4, dur * 0.5, dur * 2.5)
+        # stick-slip train inside the creak: 60-140 Hz chopping
+        tt = np.arange(len(k)) / FS
+        k *= 0.5 + 0.5 * np.abs(np.sin(np.pi * rng.uniform(60.0, 140.0) * tt))
+        _add_circ(creaks, int(t * FS), k, rng.uniform(0.25, 1.0))
+    grit = np.abs(rng.standard_normal(n)) ** 3
+    grit = periodic_sosfilt(dsp.periodic_noise(rng, n) * _unit(periodic_sosfilt(grit, chain(lp(500.0, 0.7)))),
+                            chain(hp(1200.0, 0.7), lp(5000.0, 0.7)))
+    x = 1.0 * _unit(groan) + 0.55 * _unit(creaks) + 0.12 * _unit(grit)
+    return dsp.soft_clip(_unit(x), 1.3)
 
 
 # =========================================================================== RETARDER

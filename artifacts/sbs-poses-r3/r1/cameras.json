@@ -1,0 +1,405 @@
+{
+ "schema": "kamion/sbs-cameras/1",
+ "frame": "E,N,absolute U",
+ "cameras": [
+  {
+   "id": "sbs-p143-494288-lat",
+   "kind": "photo_match",
+   "seat": "file",
+   "type": "persp",
+   "pos": [
+    -528.4508,
+    1.9949,
+    141.4951
+   ],
+   "look_at": [
+    -557.1066,
+    29.4667,
+    146.4091
+   ],
+   "fov_deg": 31.97862,
+   "segment": "G3-B",
+   "pose_confidence": "C",
+   "pose_reason": "ADR0143 diagnostic probe only",
+   "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+  },
+  {
+   "id": "sbs-p143-494288-f0",
+   "kind": "photo_match",
+   "seat": "file",
+   "type": "persp",
+   "pos": [
+    -486.803,
+    -31.3159,
+    140.0345
+   ],
+   "look_at": [
+    -513.9537,
+    -2.3906,
+    145.1499
+   ],
+   "fov_deg": 31.97862,
+   "segment": "G3-B",
+   "pose_confidence": "C",
+   "pose_reason": "ADR0143 diagnostic probe only",
+   "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+  },
+  {
+   "id": "sbs-p143-494288-f1",
+   "kind": "photo_match",
+   "seat": "file",
+   "type": "persp",
+   "pos": [
+    -486.803,
+    -31.3159,
+    140.3345
+   ],
+   "look_at": [
+    -513.9537,
+    -2.3906,
+    145.4499
+   ],
+   "fov_deg": 31.97862,
+   "segment": "G3-B",
+   "pose_confidence": "C",
+   "pose_reason": "ADR0143 diagnostic probe only",
+   "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+  },
+  {
+   "id": "sbs-p143-494288-f2",
+   "kind": "photo_match",
+   "seat": "file",
+   "type": "persp",
+   "pos": [
+    -496.0874,
+    -23.7133,
+    140.5069
+   ],
+   "look_at": [
+    -523.2381,
+    5.212,
+    145.6223
+   ],
+   "fov_deg": 31.97862,
+   "segment": "G3-B",
+   "pose_confidence": "C",
+   "pose_reason": "ADR0143 diagnostic probe only",
+   "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+  },
+  {
+   "id": "sbs-p143-494288-f3",
+   "kind": "photo_match",
+   "seat": "file",
+   "type": "persp",
+   "pos": [
+    -476.7448,
+    -39.552,
+    139.7995
+   ],
+   "look_at": [
+    -503.8955,
+    -10.6267,
+    144.9149
+   ],
+   "fov_deg": 31.97862,
+   "segment": "G3-B",
+   "pose_confidence": "C",
+   "pose_reason": "ADR0143 diagnostic probe only",
+   "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+  },
+  {
+   "id": "sbs-p143-810896-l0",
+   "kind": "photo_match",
+   "seat": "file",
+   "type": "persp",
+   "pos": [
+    -394.7243,
+    -121.1097,
+    134.367
+   ],
+   "look_at": [
+    -357.7045,
+    -113.6953,
+    147.5791
+   ],
+   "fov_deg": 73.7398,
+   "segment": "G3-B",
+   "pose_confidence": "C",
+   "pose_reason": "ADR0143 diagnostic probe only",
+   "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+  },
+  {
+   "id": "sbs-p143-810896-r0",
+   "kind": "photo_match",
+   "seat": "file",
+   "type": "persp",
+   "pos": [
+    -397.1925,
+    -124.2574,
+    134.2869
+   ],
+   "look_at": [
+    -360.1727,
+    -116.843,
+    147.499
+   ],
+   "fov_deg": 73.7398,
+   "segment": "G3-B",
+   "pose_confidence": "C",
+   "pose_reason": "ADR0143 diagnostic probe only",
+   "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+  },
+  {
+   "id": "sbs-p143-810896-lb",
+   "kind": "photo_match",
+   "seat": "file",
+   "type": "persp",
+   "pos": [
+    -402.5937,
+    -114.9393,
+    134.7734
+   ],
+   "look_at": [
+    -365.5739,
+    -107.5249,
+    147.9855
+   ],
+   "fov_deg": 73.7398,
+   "segment": "G3-B",
+   "pose_confidence": "C",
+   "pose_reason": "ADR0143 diagnostic probe only",
+   "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+  },
+  {
+   "id": "sbs-p143-810896-lf",
+   "kind": "photo_match",
+   "seat": "file",
+   "type": "persp",
+   "pos": [
+    -386.855,
+    -127.28,
+    134.0075
+   ],
+   "look_at": [
+    -349.8352,
+    -119.8656,
+    147.2196
+   ],
+   "fov_deg": 73.7398,
+   "segment": "G3-B",
+   "pose_confidence": "C",
+   "pose_reason": "ADR0143 diagnostic probe only",
+   "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+  },
+  {
+   "id": "sbs-p143-320326-p128",
+   "kind": "photo_match",
+   "seat": "file",
+   "type": "persp",
+   "pos": [
+    541.5,
+    -690.4,
+    140.52
+   ],
+   "look_at": [
+    507.3665,
+    -707.048,
+    153.0798
+   ],
+   "fov_deg": 73.7398,
+   "segment": "G3-A",
+   "pose_confidence": "C",
+   "pose_reason": "ADR0143 diagnostic probe only",
+   "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+  },
+  {
+   "id": "sbs-p143-482392-sa",
+   "kind": "photo_match",
+   "seat": "file",
+   "type": "persp",
+   "pos": [
+    531.5,
+    -685.0,
+    140.5406
+   ],
+   "look_at": [
+    497.2609,
+    -700.1798,
+    154.5855
+   ],
+   "fov_deg": 73.7398,
+   "segment": "G3-A",
+   "pose_confidence": "C",
+   "pose_reason": "ADR0143 diagnostic probe only",
+   "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+  },
+  {
+   "id": "sbs-p143-482392-sb",
+   "kind": "photo_match",
+   "seat": "file",
+   "type": "persp",
+   "pos": [
+    531.5,
+    -685.0,
+    140.5406
+   ],
+   "look_at": [
+    498.2215,
+    -702.1836,
+    154.5855
+   ],
+   "fov_deg": 73.7398,
+   "segment": "G3-A",
+   "pose_confidence": "C",
+   "pose_reason": "ADR0143 diagnostic probe only",
+   "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+  },
+  {
+   "id": "sbs-p143-482392-sc",
+   "kind": "photo_match",
+   "seat": "file",
+   "type": "persp",
+   "pos": [
+    528.2,
+    -682.4,
+    140.5527
+   ],
+   "look_at": [
+    493.9609,
+    -697.5798,
+    154.5976
+   ],
+   "fov_deg": 73.7398,
+   "segment": "G3-A",
+   "pose_confidence": "C",
+   "pose_reason": "ADR0143 diagnostic probe only",
+   "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+  },
+  {
+   "id": "sbs-p143-482392-sd",
+   "kind": "photo_match",
+   "seat": "file",
+   "type": "persp",
+   "pos": [
+    531.5,
+    -685.0,
+    141.1406
+   ],
+   "look_at": [
+    497.2609,
+    -700.1798,
+    155.1855
+   ],
+   "fov_deg": 73.7398,
+   "segment": "G3-A",
+   "pose_confidence": "C",
+   "pose_reason": "ADR0143 diagnostic probe only",
+   "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+  },
+  {
+   "id": "sbs-g3-a-320326319617139",
+   "kind": "photo_match",
+   "seat": "file",
+   "type": "persp",
+   "pos": [
+    538.2126,
+    -687.839,
+    141.2575
+   ],
+   "look_at": [
+    505.3573,
+    -706.3527,
+    154.5907
+   ],
+   "fov_deg": 73.7398,
+   "segment": "G3-A",
+   "pose_confidence": "B",
+   "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+   "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+  },
+  {
+   "id": "sbs-g3-a-482392746429891",
+   "kind": "photo_match",
+   "seat": "file",
+   "type": "persp",
+   "pos": [
+    528.1973,
+    -682.424,
+    141.3375
+   ],
+   "look_at": [
+    494.6899,
+    -699.7295,
+    154.6708
+   ],
+   "fov_deg": 73.7398,
+   "segment": "G3-A",
+   "pose_confidence": "B",
+   "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+   "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+  },
+  {
+   "id": "sbs-g3-b-494288258686575",
+   "kind": "photo_match",
+   "seat": "file",
+   "type": "persp",
+   "pos": [
+    -526.3212,
+    4.884,
+    141.8491
+   ],
+   "look_at": [
+    -557.0007,
+    30.058,
+    146.8527
+   ],
+   "fov_deg": 31.97862,
+   "segment": "G3-B",
+   "pose_confidence": "B",
+   "pose_reason": "ADR 0130 (s12): calibrated from diagnostic probe r2 c1/c2 (between); anchors: dark screen posts close at the right receding to x ~0.2 at the horizon; median barrier and second deck at the left edge; horizon 0.72",
+   "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+  },
+  {
+   "id": "sbs-g3-b-810896133189484",
+   "kind": "photo_match",
+   "seat": "file",
+   "type": "persp",
+   "pos": [
+    -392.8732,
+    -118.7489,
+    133.5241
+   ],
+   "look_at": [
+    -355.8535,
+    -111.3339,
+    146.7362
+   ],
+   "fov_deg": 73.7398,
+   "segment": "G3-B",
+   "pose_confidence": "C",
+   "pose_reason": "J1: camera intersects acoustic screen",
+   "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+  },
+  {
+   "id": "sbs-g3-b-837235577143499",
+   "kind": "photo_match",
+   "seat": "file",
+   "type": "persp",
+   "pos": [
+    -215.3933,
+    -246.9523,
+    132.8904
+   ],
+   "look_at": [
+    -246.7809,
+    -222.173,
+    133.7902
+   ],
+   "fov_deg": 58.71551,
+   "segment": "G3-B",
+   "pose_confidence": "B",
+   "pose_reason": "ADR 0140 (s13): probe sbs-p140-837235-c0; anchors: U-4a chevron at its orthophoto position (overrides at_en) x 0.861 and plate height 155 px; portal west column x 584 px; predicted east column 729 vs photo beam end ~736; road vanishing point consistent with the road axis",
+   "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+  }
+ ]
+}

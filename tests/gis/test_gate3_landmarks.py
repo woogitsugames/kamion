@@ -140,13 +140,25 @@ def test_every_gate3_sign_is_placed(qa):
     rep = qa["furniture"]["gate3_landmarks"]
     ids = {o["id"] for o in pipeline.load_overrides("bialystok-industrial-c") if o.get("kind") == "gate3_sign"}
     stale = {x.split(":")[0] for x in rep["stale"]}
-    # OPEN (ADR 0125): the generated junction at the northern slip of Rondo Bieżeństwa has carriageway where the
-    # orthophoto has the small island with D-3 / D-6 (review #11: "trawiasta wysepka" / missing crossing island), more
-    # than SNAP_MAX_M from any edge. The entries stay in overrides.yaml and are reported stale until the junction
-    # stream builds that island; nothing else may be stale.
-    assert stale <= {"biezenstwa-n-slip-d6", "biezenstwa-n-slip-d3"}
+    # ADR 0128: the kerbed nose at the northern slip of Rondo Bieżeństwa is an authored traffic island now, D-3 / D-6
+    # stand on it (was: carriageway, stale); nothing may be stale.
+    assert stale == set()
     assert {s["id"] for s in rep["signs"]} == ids - stale
     assert all(s["snapped_m"] <= G3.SNAP_MAX_M + G3.SNAP_CLEAR_M for s in rep["signs"])
+
+
+def test_signs_on_authored_islands_stand_where_authored(qa):
+    """ADR 0128: a sign authored on a traffic island (islands lie on the carriageway footprint) is not snapped away."""
+    signs = {s["id"]: s for s in qa["furniture"]["gate3_landmarks"]["signs"]}
+    want = {"biezenstwa-n-slip-d6": "biezenstwa-n-slip-nose", "biezenstwa-n-slip-d3": "biezenstwa-n-slip-nose",
+            "andersa-elewatorska-island-u4a": "n10015785253-island"}
+    for sid, isl in want.items():
+        assert signs[sid].get("island") == isl and signs[sid]["snapped_m"] == 0.0, sid
+    # orthophoto 0.08 m: nose of the Andersa island at E -219.6 N -235.3; the board stands within 1 m of it
+    u = signs["andersa-elewatorska-island-u4a"]["at"]
+    assert math.hypot(u[0] + 219.6, u[1] + 235.3) <= 1.0
+    d6, d3 = signs["biezenstwa-n-slip-d6"]["at"], signs["biezenstwa-n-slip-d3"]["at"]
+    assert 2.0 <= math.hypot(d6[0] - d3[0], d6[1] - d3[1]) <= 3.0          # 2.4 m apart on the orthophoto / photo
 
 
 def test_portal_stands_where_the_orthophoto_has_it(qa):

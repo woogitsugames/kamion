@@ -589,7 +589,7 @@ namespace Game.World
                 {
                     camera = m_Camera,
                     worldBounds = b,
-                    shadowCastingMode = shadows,
+                    shadowCastingMode = set.noShadowMaterials.Length > 0 && Array.IndexOf(set.noShadowMaterials, m0 + s) >= 0 ? ShadowCastingMode.Off : shadows,
                     receiveShadows = true,
                     layer = gameObject.layer,
                     lightProbeUsage = LightProbeUsage.Off,
