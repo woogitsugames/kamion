@@ -1,0 +1,43 @@
+﻿{
+    "verified_sha256":  "a583fe8f775bae5403a984fd38bc843a1de7fc931d87232997325a942fd5e5af",
+    "source":  {
+                   "camera":  "sbs-g3-a-cm92458760",
+                   "segment":  "G3-A",
+                   "photo":  "Data/raw/refs/objects/kwadrat-park/commons-geo/cm92458760.jpg",
+                   "source_id":  "cm92458760",
+                   "page_url":  "https://commons.wikimedia.org/wiki/File:20200711_073128_Elektrociep%C5%82ownia_Bia%C5%82ystok.jpg",
+                   "author":  "Rakoon",
+                   "license":  "CC BY 3.0",
+                   "license_url":  "https://creativecommons.org/licenses/by/3.0",
+                   "captured_at":  "2020-07-11",
+                   "sha256":  "a583fe8f775bae5403a984fd38bc843a1de7fc931d87232997325a942fd5e5af",
+                   "comparison_photo":  "Data/raw/refs/objects/kwadrat-park/commons-geo/cm92458760.jpg",
+                   "comparison_sha256":  "a583fe8f775bae5403a984fd38bc843a1de7fc931d87232997325a942fd5e5af",
+                   "width":  3840,
+                   "height":  2160,
+                   "lon":  23.168333,
+                   "lat":  53.152778,
+                   "heading_grid_deg":  108.66221341254062,
+                   "heading_true_deg":  112,
+                   "route_distance_m":  5.712,
+                   "segment_station_m":  248.704,
+                   "horizon_y_fraction":  0.54,
+                   "pose_status":  "WORKING_VALUE",
+                   "pose_confidence":  "C",
+                   "pose_reason":  "New Commons candidate at station 230/249m; heading, FOV and GPS need fresh photo-render calibration",
+                   "photometric_use":  false,
+                   "photometric_reason":  "Uncalibrated pose/masks; cm92458760 is wet pavement",
+                   "photo_vs_data_age":  "data epoch UNVERIFIED",
+                   "authored_overrides":  {
+                                              "pose_confidence":  "C",
+                                              "pose_reason":  "New Commons candidate at station 230/249m; heading, FOV and GPS need fresh photo-render calibration",
+                                              "photometric_use":  false,
+                                              "photometric_reason":  "Uncalibrated pose/masks; cm92458760 is wet pavement",
+                                              "eye_height_m":  1.7,
+                                              "note":  "Heading/FOV/horizon inferred from image and georeferenced object context, WORKING_VALUE. No EXIF in cached thumbnail."
+                                          },
+                   "assumptions":  "Public cached Commons metadata, thumbnail has no EXIF; no calibrated lens or roll. Heading/FOV/eye/horizon WORKING_VALUE.",
+                   "source_manifest_sha256":  "da83ba4d5e8ec77b807681e5e2208dab6e1517fac9b51a92724a77c4d7b89dd8"
+               },
+    "review":  "Native photo visually inspected: wet asphalt and crossing, local reflections; no calibrated pose or photometric use."
+}

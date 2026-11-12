@@ -9,6 +9,28 @@
 float _KamionLampCount;
 float4 _KamionLampColor;
 float4 _KamionLampPos[8];
+float _KamionHeadlampOn;
+float4 _KamionHeadlampLeft, _KamionHeadlampRight, _KamionHeadlampAxisRight, _KamionHeadlampUp,
+    _KamionHeadlampForward, _KamionHeadlampColor;
+
+// ADR 0108 r2: approximate diffuse dipped-beam lobe, actual source anchors. Beam slope/cutoff/peak are
+// WORKING_VALUE rather than a calibrated optical distribution. Uniform opt-in branch: no new pass or light.
+float KamionHeadlampCone(float3 positionWS, half3 normal, float3 source)
+{
+    float3 ray = positionWS-source;
+    float forward = dot(ray, _KamionHeadlampForward.xyz);
+    if (forward <= 0.0 || forward >= 90.0) return 0.0;
+    float invForward = rcp(max(forward, 1.0));
+    float horizontalSlope = dot(ray, _KamionHeadlampAxisRight.xyz)*invForward;
+    float verticalSlope = dot(ray, _KamionHeadlampUp.xyz)*invForward;
+    float horizontal = saturate(1.0-abs(horizontalSlope)/0.35);
+    float cutoff = saturate((-0.002-verticalSlope)*250.0);
+    float lower = saturate((verticalSlope+0.14)/0.10);
+    float d2 = max(dot(ray, ray), 1.0);
+    float rangeWindow = saturate(1.0-d2*d2/(8100.0*8100.0));
+    return horizontal*horizontal*cutoff*lower*rangeWindow*rangeWindow*
+        saturate(dot(normal, -ray*rsqrt(d2)))/d2;
+}
 
 half3 KamionLampPools(float3 positionWS, half3 n)
 {
@@ -29,7 +51,12 @@ half3 KamionLampPools(float3 positionWS, half3 n)
             pool += lp.w * shape * win * win * saturate(dot(n, l)) / d2;
         }
     }
-    return (half3)(_KamionLampColor.rgb * pool);
+    float3 lighting = _KamionLampColor.rgb * pool;
+    if (_KamionHeadlampOn > 0.5)
+        lighting += _KamionHeadlampColor.rgb *
+            (KamionHeadlampCone(positionWS, n, _KamionHeadlampLeft.xyz)+
+             KamionHeadlampCone(positionWS, n, _KamionHeadlampRight.xyz));
+    return (half3)lighting;
 }
 
 #endif

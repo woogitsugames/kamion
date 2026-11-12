@@ -1,0 +1,70 @@
+{
+  "camera": "sbs-g3-b-297817221966185",
+  "segment": "G3-B",
+  "photo": "Data/raw/mapillary/bialystok-industrial-c/297817221966185.jpg",
+  "source_id": "297817221966185",
+  "page_url": "https://www.mapillary.com/app/?pKey=297817221966185",
+  "author": "zsolt",
+  "license": "CC BY-SA 4.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+  "captured_at": "2017-07-29",
+  "sha256": "a423f0e47ee5aa255e66b0ec94a2ece46c999a8ff79c8780c5089c8e92cf9820",
+  "width": 2048,
+  "height": 1536,
+  "lon": 23.155252137967,
+  "lat": 53.156915404549,
+  "comparison_photo": "artifacts/sbs-gate3/rectified/297817221966185.png",
+  "comparison_sha256": "0db1fb1dc739f82198c4f6f488b74725fd9793bbc4c77fd80191d5a3052464cd",
+  "projection": {
+    "id": "297817221966185",
+    "camera_parameters": [
+      0.91149648466251,
+      0.07459395955721,
+      -0.094079008330183
+    ],
+    "camera_type": "perspective",
+    "computed_compass_angle": 120.57365054172,
+    "exif_orientation": 1,
+    "width": 4032,
+    "height": 3024,
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        23.155276067577,
+        53.156927651775
+      ]
+    },
+    "computed_geometry": {
+      "type": "Point",
+      "coordinates": [
+        23.155252137967,
+        53.156915404549
+      ]
+    },
+    "altitude": 118.983459,
+    "computed_altitude": 1.6238147104159
+  },
+  "rectified_focal": 0.9388413792023853,
+  "heading_grid_deg": 117.24617265740565,
+  "heading_true_deg": 120.57365054172,
+  "route_distance_m": 14.613,
+  "heading_original_deg": 128.33740234375,
+  "segment_station_m": 120.117,
+  "horizon_y_fraction": 0.6851063969284589,
+  "pose_status": "WORKING_VALUE",
+  "pose_confidence": "B",
+  "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+  "photometric_use": false,
+  "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict",
+  "photo_vs_data_age": "pre-2020: historical reference; data epoch UNVERIFIED",
+  "assumptions": "NMT/eye/manual horizon WORKING_VALUE; FOV and radial rectification from Mapillary SfM intrinsics. Roll/GPS/SfM accuracy unverified.",
+  "authored_overrides": {
+    "horizon_y_fraction": 0.68,
+    "pose_status": "WORKING_VALUE",
+    "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose.",
+    "pose_confidence": "B",
+    "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+    "photometric_use": false,
+    "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
+  }
+}

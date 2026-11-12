@@ -12,4 +12,4 @@ Importer: 54 podsiatki tablic LOD0/1 z remapem lokalnych narożników; stan mate
 Nie używano telefonów, nie scalano do main i nie pushowano. Wcześniejsza porażka nieaktualnego fidelity_qa zachowana w initial-gis.log; po regeneracji test i finał GIS zielone.
 Konflikty prawdopodobne: WorldPBR.shader (tylko CARPAINT), WorldPbrMaterials/InstanceImporter/RegionImporter, streetscape/export.py/materials.py, sets_facade.py/materials_spec.json. Zachować zmiany innych dziedzin.
 Integracja przez lidera: niezależny visual-critic → git merge gpt-life-r1; konflikty generatów rozwiązać wersją main, potem regeneracja materiałów/props/world/fidelity w heavy, import i testy Unity ze slotem.
-Status roli: po nowym poleceniu S11 wykryto już aktywnego lidera Claude. Pakiet r1 przekazywany; start r2 lub przejęcie integracji czeka na wyjaśnienie podziału.
+Status roli wyjaśniony przez właściciela: kontynuuję wyłącznie life na gpt-life-r2; jedynym integratorem main pozostaje lider Claude S11. Runda r1 jest przekazana do recenzji.

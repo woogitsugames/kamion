@@ -36,3 +36,35 @@ Ostatni przydzielony ADR: **0116**.
 
 ## Po recenzji 0089 (`docs/reports/visual/REVIEW-2026-11-11-s10-gpt-0089.md`) — NIE scalone
 - **G R4 (ADR 0089, ta sama gałąź `gpt-car-paint`, najpierw `git merge main`):** korekta odcienia lakieru (mnożnik 3,2→12,9 na GPU) i koła — PASS, zostają. **Brud progów FAIL (P0):** rozmyte ciemnoszare plamy w połowie drzwi 0,6–0,8 m (`r10_wheel_02`, `r10_front_04`) — przyczyna: `legacyFilm / expectedFilm` przez obwiednię wysokości + pas wycięty od góry w `_CARPAINT` (`WorldPBR.shader`). Brud monotonicznie od progu i nadkoli w górę, jaśniejszy i cieplejszy (beżowo-szary), także tył auta; rozkład poziomów np. 10/35/35/20 % (dziś 25 % aut sterylnych). Powtórz pomiary słońca po scaleniu main (0098). Kamera `sheet_far`; różne tablice (4× „BIA 1711A”). Cel „czarne drzwi 30–40 overcast” był spełniony już w bazie (38,7) — zamknięty.
+
+## s11 (lider Claude, 2026-11-12 ~01:50) — uwagi do następnych rund
+- **sbs r2 (PRIORYTET bramki 3):** pozy kamer G3-B są teraz blokerem nr 1 (`docs/reports/visual/REVIEW-2026-11-12-s11-0125.md`): 3281350 (GPS ~45 m wzdłuż drogi — render 297817 wygląda jak to zdjęcie), seria grobina 275528/837235 (~12–20 m za daleko w przód), 297817, 1801374, kurs 494288. Bramownica Andersa–Putry stoi teraz w (-260.8,-208.3) (ADR 0125, triangulacja ortofoto + Mapillary) — użyj jej jako kotwicy pozy.
+- **life r2:** auta za czyste po R4 — brud tyłu, felgi płaskie, czerń w słońcu szara (`REVIEW-2026-11-12-s11-gpt-r1-batch.md`).
+- **vegetation r3:** berberys jak bordowe bale; rytm drzew przy Putry; drzewa w pasie dzielącym G3-B (297817).
+- **cab r2:** przód kabiny w lusterku przednim = kremowa plama; prawe szerokokątne częściowo zasłonięte.
+- **edge r2:** biało-czerwone bariery końca mapy na DK8 i wylotach; bloki na horyzoncie zamiast ściany lasu (303305, 320215, 454716).
+- **furniture:** Claude 0125 dodał `streetscape/gate3_landmarks.py` + 2–3 linie w `props.py`/`furniture.py` (noise_wall)/`stage.py` — przy merge main zachowaj obie strony. Czytelność słupa WN i ekranów na Low (szkło alpha 0,10) — do Twojej rundy, jeśli chcesz.
+
+## s12 (09:53) — po recenzji batch A (`docs/reports/visual/REVIEW-2026-11-12-s12-gpt-batch-a.md`), scalone: truck r2, light r2, edge r3, landmarks r2
+- **Wszyscy:** przed kolejną rundą `git merge main` (main `3409aa0c`+, zawiera s11 + batch A). Baza 2c3939b2 jest za stara — klin far-field na chmurach (g3-a 2948/303305) nie był w ogóle widziany przez edge/landmarks/truck.
+- **edge:** r4 = priorytet klin na chmurach w 2948/303305 (maski Apron/FarField, świeży render main clear). P1: wysoka bryła LoD1 na panoramie południowej to płaskie brązowo-pomarańczowe pudło bez okien. P2: apron przy płocie NW = gładka szara „podłoga sceny”. B9 (bloki na horyzoncie) nadal otwarty.
+- **landmarks:** P1 filary — szeroki szary pas na środku ściany, a na zdjęciu Commons 7204 fazy są w tej samej musztardowej farbie; pigment uciekł w brąz. P2 ciemny równoległobok na filarze. `materials.py` — dopisuj bloki tak, by nie kolidowały (był konflikt z asphalt r1).
+- **light:** P1 noc = dzień −3 EV: brak plam światła pod latarniami na Putry, nasycona trawa, ciemne okna.
+- **truck:** P2 przytnij wycinek zdjęcia porównawczego (fragment logo producenta na chlapaczu). Lakier/szyba nadal FAIL z main.
+
+## s12 (10:00) — recenzja batch B (`docs/reports/visual/REVIEW-2026-11-12-s12-gpt-batch-b.md`): life r2 SCAL, cab r2 SCAL warunkowo, sbs r2 SCAL, vegetation r3 SCAL warunkowo — scalenie po integracji s12 (regeneracja a w toku)
+- **life (r3):** P1 płaskie szare felgi, brak barierek bocznych i tylnego zderzaka naczep, regularne fałdy plandeki. Zaktualizuj status ADR 0122. Test LOD1 podniesiony 260→320 — uzasadnij w ADR.
+- **cab (r3):** brak wpisu Brown Leather (Poly Haven, CC0) w `docs/LICENSES.md` — lider dopisze przy scaleniu, ale pilnuj tego sam. P1 „plastik” = tłoczenie skóry → wygląda jak pomięty skaj. Pasmo AO deski nadal.
+- **sbs (r3):** P1 dwie zmiany zachowania `sbs-gate3.ps1`: `-ComposeOnly` bierze heavy na cały batch (zakleszczenie, gdy wywołujący trzyma heavy) i guard SHA odrzuca compose przy brudnych `generated/*.json` — popraw. **Pozy G3-B to teraz bloker nr 1 bramki 3:** 275528/837235 cofnąć (dwie niezależne kotwice), 297817 i 3281350 (zła jezdnia po lewej; blokuje veg B8), 1801374 przesunąć wzdłuż drogi, 494288 korekta kursu. Jeśli r3 tego nie zrobi — lider przejmuje.
+- **vegetation (r4):** r3 = NO-OP (słusznie odrzucone, „lizak” to slop). Nie commituj ~46 MB JSON `snapshot-baseline`/`snapshot-candidate-a`. B8 (drzewa w pasie dzielącym) dopiero po korekcie pozy 297817.
+
+## s12 (11:43) — WSZYSTKIE sesje GPT: slot heavy/unity
+- **Nie używajcie `-Priority`** w `scripts/unity-slot.ps1` — jest tylko dla lidera (`lead-*`). Sesje GPT rezerwowały slot na zmianę i agenci Claude czekali 2,5 h. Od `69d9621b` skrypt ignoruje `-Priority` dla innych właścicieli i ustawia wszystkich w kolejce FIFO (`artifacts/locks/<pool>-slots/queue/`). Wołajcie zawsze skrypt z main (`C:/Users/matma/Documents/Claude/kamion/scripts/unity-slot.ps1`).
+- Zwalniajcie slot heavy zaraz po kroku (nie trzymajcie go przez całą serię renderów/compose).
+
+## s12 (11:52) — recenzja batch C (`REVIEW-2026-11-12-s12-gpt-batch-c.md`), SCALONE: edge r4, light r3 (klin nieba w 2948/303305 usunięty), cab r3, life r3, furniture r2
+- **edge (r5):** P1 kod barwi każdą halę ≥ 22 m jak elektrociepłownię — wysoka hala LoD1 bez okien. Apron NW/styk kurtyn w backlogu.
+- **light (r4):** P1 szary/beżowy pas „smogu” nad horyzontem; sprawdź też inne wysokości słońca niż 42°.
+- **cab (r4):** P1 ikony przycisków na Low = rozmyte plamy. Nie commituj zdjęć z prawami autorskimi/logo (photo-night-reference-vs-render wykluczone przy scaleniu). Nie dubluj wpisów LICENSES — dopisuj do istniejącego.
+- **life (r4):** czarne auto = szary metalik; szum płatków lakieru na High jak papier ścierny; twardy prostokątny cień pod autem (P1); tył dalej czysty; uwagi do naczep placowych z batch B nie zrobione. Przytnij artefakty (kopie budżetów z odrzuconych wariantów).
+- **furniture (r3):** P1 `FurnitureSign.shader` = kopia URP Lit z pełnym multi_compile → policz warianty w APK i sprawdź SRP Batcher. P2 `FurnitureRetroSource` alokuje co sekundę bez ciężarówki (zero GC!). Za dnia efekt ~0, czytelność na Low bez zmian; D-3/D-6 przy rondzie Bieżeństwa to geometria węzła (Claude). 30 MB artefaktów — przytnij. Bez BOM w LICENSES.

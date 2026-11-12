@@ -1,0 +1,44 @@
+{
+    "jobs":  [
+                 {
+                     "cameras":  "driver-andersa-to-putry,r10_block_3,r10_house_2",
+                     "width":  2340,
+                     "lighting":  "clear",
+                     "tier":  "High",
+                     "clearSkySaturation":  1,
+                     "height":  1080,
+                     "output":  "artifacts/light-r1/sky-chroma/sat-1",
+                     "scene":  "WorldC_High"
+                 },
+                 {
+                     "cameras":  "driver-andersa-to-putry,r10_block_3,r10_house_2",
+                     "width":  2340,
+                     "lighting":  "clear",
+                     "tier":  "High",
+                     "clearSkySaturation":  2,
+                     "height":  1080,
+                     "output":  "artifacts/light-r1/sky-chroma/sat-2",
+                     "scene":  "WorldC_High"
+                 },
+                 {
+                     "cameras":  "driver-andersa-to-putry,r10_block_3,r10_house_2",
+                     "width":  2340,
+                     "lighting":  "clear",
+                     "tier":  "High",
+                     "clearSkySaturation":  3,
+                     "height":  1080,
+                     "output":  "artifacts/light-r1/sky-chroma/sat-3",
+                     "scene":  "WorldC_High"
+                 },
+                 {
+                     "cameras":  "driver-andersa-to-putry,r10_block_3,r10_house_2",
+                     "width":  2340,
+                     "lighting":  "clear",
+                     "tier":  "High",
+                     "clearSkySaturation":  4,
+                     "height":  1080,
+                     "output":  "artifacts/light-r1/sky-chroma/sat-4",
+                     "scene":  "WorldC_High"
+                 }
+             ]
+}

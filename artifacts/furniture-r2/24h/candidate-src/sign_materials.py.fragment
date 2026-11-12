@@ -1,0 +1,7 @@
+# Intended additive block in streetscape/materials.py after baseline is frozen.
+# An explicit plate-family recipe registers ACTUAL road-front IDs from props_meta.json,
+# including generated direction boards; no list of stale region-specific sign hashes.
+# The C# factory excludes facade labels and preserves separately authored material definitions.
+M["plate_back"] = {**M["plate_back"], "furniture_sign_fronts": {
+    "gain": 800.0,  # uncalibrated display coefficient, WORKING_VALUE
+}}

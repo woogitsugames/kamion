@@ -1,0 +1,87 @@
+{
+  "scope": "CPU GLB and generated instance audit, not a Unity pose readback",
+  "nodes": [
+    {
+      "node": "landmark_chimney_120_75",
+      "height_groups": 15,
+      "horizontal_axis_drift_m": 0.0,
+      "node_rotation": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "node_matrix": null,
+      "height_bounds_m": [
+        -1.0,
+        120.19999694824219
+      ]
+    },
+    {
+      "node": "landmark_chimney_120_75.lod1",
+      "height_groups": 9,
+      "horizontal_axis_drift_m": 0.0,
+      "node_rotation": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "node_matrix": null,
+      "height_bounds_m": [
+        -1.0,
+        120.0
+      ]
+    },
+    {
+      "node": "landmark_chimney_120_83",
+      "height_groups": 15,
+      "horizontal_axis_drift_m": 0.0,
+      "node_rotation": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "node_matrix": null,
+      "height_bounds_m": [
+        -1.0,
+        120.19999694824219
+      ]
+    },
+    {
+      "node": "landmark_chimney_120_83.lod1",
+      "height_groups": 9,
+      "horizontal_axis_drift_m": 0.0,
+      "node_rotation": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "node_matrix": null,
+      "height_bounds_m": [
+        -1.0,
+        120.0
+      ]
+    }
+  ],
+  "instances": [
+    {
+      "e": 624.25,
+      "n": -1083.96,
+      "p": "landmark_chimney_120_75",
+      "src": "override:ec-bialystok-chimney-1",
+      "yaw": 0.0,
+      "z": 137.262
+    },
+    {
+      "e": 718.26,
+      "n": -1133.29,
+      "p": "landmark_chimney_120_83",
+      "src": "override:ec-bialystok-chimney-2",
+      "yaw": 0.0,
+      "z": 137.243
+    }
+  ]
+}

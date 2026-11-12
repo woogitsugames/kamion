@@ -1,0 +1,122 @@
+"""All-camera CPU estimates, preserving mesh and instance counters separately."""
+import csv
+import argparse
+import json
+import re
+import sys
+import textwrap
+from pathlib import Path
+
+from PIL import Image, ImageDraw, ImageFont
+
+ROOT = Path(__file__).resolve().parent
+parser = argparse.ArgumentParser()
+parser.add_argument('--metrics-only',action='store_true')
+parser.add_argument('--label',default='after3')
+args = parser.parse_args()
+if not re.fullmatch(r'[A-Za-z0-9_-]+',args.label):
+    parser.error('label must be a simple artifact name')
+
+
+def read_stats(path):
+    rows = {}
+    for line in path.read_text(encoding='utf-8-sig').splitlines():
+        match = re.search(r'([^ :]+): objects=(\d+) drawsEst=(\d+) shadowDrawsEst=(\d+) trisK=(\d+)', line)
+        if match:
+            camera, objects, draws, shadows, triangles = match.groups()
+            rows.setdefault(camera, {}).update(mesh_objects=int(objects), mesh_draws=int(draws),
+                                               mesh_shadows=int(shadows), mesh_tris_k=int(triangles))
+        match = re.search(r'([^ :]+) instanced .*: draws (\d+), instances (\d+), triangles (\d+)k', line)
+        if match:
+            camera, draws, instances, triangles = match.groups()
+            rows.setdefault(camera, {}).update(instance_draws=int(draws), instances=int(instances),
+                                               instance_tris_k=int(triangles))
+    for row in rows.values():
+        assert 'mesh_draws' in row
+        row['total_draws'] = row['mesh_draws'] + row.get('instance_draws', 0)
+        row['total_tris_k'] = row['mesh_tris_k'] + row.get('instance_tris_k', 0)
+        row['quantisation_upper'] = 1998 if 'instance_tris_k' in row else 999
+    return rows
+
+
+records = []
+for tier in ('Low', 'High'):
+    for light in ('clear', 'overcast'):
+        key = f'{tier}-{light}'
+        before, after = ROOT/'before'/key, ROOT/'after'/key
+        b, a = read_stats(before/'stats.txt'), read_stats(after/'stats.txt')
+        assert b.keys() == a.keys(), f'Missing camera statistics: {key}'
+        for camera in sorted(b):
+            old, new = b[camera], a[camera]
+            denominator = old['total_tris_k']*1000
+            delta_upper = (100*((new['total_tris_k']*1000+new['quantisation_upper'])/denominator-1)
+                           if denominator else None)
+            records.append(dict(phase=args.label, tier=tier, lighting=light, camera=camera, before=old, after=new,
+                                mesh_draw_delta=new['mesh_draws']-old['mesh_draws'],
+                                instance_draw_delta=new.get('instance_draws',0)-old.get('instance_draws',0),
+                                total_draw_delta=new['total_draws']-old['total_draws'],
+                                tris_delta_upper_percent=delta_upper))
+        names = {p.name for p in before.glob('*.png')}
+        assert names == {p.name for p in after.glob('*.png')}, f'Missing PNG: {key}'
+        if args.metrics_only:
+            continue
+        # Each sheet is at most 960 px wide. All cameras are included, in groups of six.
+        names = sorted(n for n in names if not n.endswith(('_mask.png','_envcube.png')))
+        out = ROOT/'compare'; out.mkdir(exist_ok=True)
+        for page in range(0, len(names), 6):
+            chosen = names[page:page+6]
+            sheet = Image.new('RGB', (960, 250*len(chosen)), '#202020')
+            draw = ImageDraw.Draw(sheet)
+            for row, name in enumerate(chosen):
+                draw.text((6, row*250+5), f'{name} | BEFORE / AFTER | {key}', fill='white')
+                for col, folder in enumerate((before,after)):
+                    with Image.open(folder/name) as im:
+                        im = im.convert('RGB'); im.thumbnail((480,222))
+                        sheet.paste(im, (col*480,row*250+25))
+            sheet.save(out/f'{key}-{page//6+1:02}.jpg', quality=92)
+(ROOT/'frame-budget.json').write_text(json.dumps(records,indent=2)+'\n')
+with (ROOT/'frame-budget.csv').open('w',newline='',encoding='utf-8-sig') as handle:
+    fields = ['phase','tier','lighting','camera','mesh_draw_delta','instance_draw_delta','total_draw_delta',
+              'tris_delta_upper_percent']
+    writer = csv.DictWriter(handle, fieldnames=fields, extrasaction='ignore')
+    writer.writeheader(); writer.writerows(records)
+print(f'Compared {len(records)} camera/tier/lighting combinations; CPU estimates, not GPU measurements.')
+
+if not args.metrics_only:
+    font = ImageFont.truetype('C:/Windows/Fonts/segoeui.ttf', 12)
+    details = ['furniture-fence', 'furniture-concrete-foot-close', 'furniture-concrete-collars',
+               'furniture-footing-slope', 'furniture-sign-back']
+    sheet = Image.new('RGB', (960, 250*len(details)), '#202020')
+    draw = ImageDraw.Draw(sheet)
+    for row, camera in enumerate(details):
+        draw.text((6,row*250+4),f'{camera} | PRZED / PO | High, zachmurzenie',font=font,fill='white')
+        for col, phase in enumerate(('before','after')):
+            with Image.open(ROOT/phase/'High-overcast'/f'{camera}.png') as raw:
+                thumb = raw.convert('RGB'); thumb.thumbnail((480,222))
+                sheet.paste(thumb,(col*480,row*250+25))
+    sheet.save(ROOT/f'{args.label}-detail.jpg',quality=92)
+    sheet = Image.new('RGB',(960,440),'#202020')
+    draw = ImageDraw.Draw(sheet)
+    draw.text((6,4),'Mapillary: zsolt, CC BY-SA 4.0 | Referencja / render; odziedziczona poza WORKING_VALUE',
+              font=font,fill='white')
+    draw.text((6,24),'Zdjęcie nie potwierdza rdzy; różnice pozostałych dziedzin nie są wynikiem tej rundy.',
+              font=font,fill='white')
+    for col, path in enumerate((ROOT/'reference-sign-rectified.png',
+                               ROOT/'after-sbs/High-overcast/sbs-g3-b-297817221966185.png')):
+        with Image.open(path) as raw:
+            thumb = raw.convert('RGB'); thumb.thumbnail((480,380))
+            sheet.paste(thumb,(col*480,52))
+    sheet.save(ROOT/'reference-sign-after.jpg',quality=92)
+    references = json.loads((ROOT/'reference-selection.json').read_text(encoding='utf-8-sig'))
+    sheet = Image.new('RGB',(960,700),'#202020')
+    draw = ImageDraw.Draw(sheet)
+    for index, reference in enumerate(references):
+        x, y = (index%2)*480, (index//2)*350
+        caption = f"{reference['author']} | {reference['license']} | {reference['detail']}"
+        for line, label in enumerate(textwrap.wrap(caption,width=68)):
+            draw.text((x+5,y+3+line*16),label,font=font,fill='white')
+        source = ROOT.parents[2]/reference['file'].replace('\\','/')
+        with Image.open(source) as raw:
+            thumb = raw.convert('RGB'); thumb.thumbnail((475,270))
+            sheet.paste(thumb,(x,y+75))
+    sheet.save(ROOT/'daylight-reference-sheet-final.jpg',quality=92)

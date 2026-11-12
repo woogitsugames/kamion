@@ -121,6 +121,12 @@ def test_generated_far_field_qa_and_manifests():
     assert fc["chimneys"] >= 8
     assert fc["pylons"] >= 150
     assert fc["power_lines"] >= 20
+    # Extraction provenance must describe the actual generated feature inventory.
+    assert qa["building_height_sources"] == src_man["building_height_sources"]
+    assert sum(qa["building_height_sources"].values()) == fc["buildings"]
+    assert qa["lod1_height_audit"] == src_man["lod1_height_audit"]
+    assert qa["lod1_height_audit"]["usable_ids"] > 0
+    assert qa["building_height_sources"]["gugik-lod1-measuredHeight"] > 0
 
     # Performance budget & sector structure checks
     low = qa["tiers"]["Low"]

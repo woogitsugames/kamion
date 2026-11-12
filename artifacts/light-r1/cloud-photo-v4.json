@@ -1,0 +1,55 @@
+{
+    "jobs":  [
+                 {
+                     "scene":  "WorldC_High",
+                     "tier":  "High",
+                     "lighting":  "clear",
+                     "width":  2340,
+                     "height":  1080,
+                     "cameras":  "driver-andersa-to-putry,r10_block_3,r10_house_2",
+                     "output":  "artifacts/light-r1/cloud-photo-v4/High-clear-flat",
+                     "rq":  "rq_clearcover=0"
+                 },
+                 {
+                     "scene":  "WorldC_High",
+                     "tier":  "High",
+                     "lighting":  "clear",
+                     "width":  2340,
+                     "height":  1080,
+                     "cameras":  "driver-andersa-to-putry,r10_block_3,r10_house_2",
+                     "output":  "artifacts/light-r1/cloud-photo-v4/High-clear-clouds",
+                     "rq":  ""
+                 },
+                 {
+                     "scene":  "WorldC_High",
+                     "tier":  "High",
+                     "lighting":  "clear",
+                     "width":  2340,
+                     "height":  1080,
+                     "cameras":  "driver-andersa-to-putry,r10_block_3,r10_house_2",
+                     "output":  "artifacts/light-r1/cloud-photo-v4/High-clear-with-dither",
+                     "rq":  "rq_dither=1"
+                 },
+                 {
+                     "scene":  "WorldC",
+                     "tier":  "Low",
+                     "lighting":  "clear",
+                     "width":  2340,
+                     "height":  1080,
+                     "cameras":  "driver-andersa-to-putry,r10_block_3,r10_house_2",
+                     "output":  "artifacts/light-r1/cloud-photo-v4/Low-clear-flat",
+                     "rq":  "rq_clearcover=0"
+                 },
+                 {
+                     "scene":  "WorldC",
+                     "tier":  "Low",
+                     "lighting":  "clear",
+                     "width":  2340,
+                     "height":  1080,
+                     "cameras":  "driver-andersa-to-putry,r10_block_3,r10_house_2",
+                     "output":  "artifacts/light-r1/cloud-photo-v4/Low-clear-clouds",
+                     "rq":  ""
+                 }
+             ]
+}
+

@@ -1,0 +1,56 @@
+﻿{
+    "jobs":  [
+                 {
+                     "width":  2340,
+                     "lighting":  "night",
+                     "cameras":  "light-night-driver",
+                     "tier":  "Low",
+                     "output":  "artifacts/light-r2/headlamp-level-eye/Low-0",
+                     "lampProbe":  true,
+                     "actualDriverEye":  true,
+                     "rq":  "rq_headlamps=0,rq_lamppools=0",
+                     "scene":  "WorldC",
+                     "height":  1080,
+                     "expectedHeadlamps":  1
+                 },
+                 {
+                     "width":  2340,
+                     "lighting":  "night",
+                     "cameras":  "light-night-driver",
+                     "tier":  "Low",
+                     "output":  "artifacts/light-r2/headlamp-level-eye/Low-1",
+                     "lampProbe":  true,
+                     "actualDriverEye":  true,
+                     "rq":  "rq_headlamps=1,rq_lamppools=0",
+                     "scene":  "WorldC",
+                     "height":  1080,
+                     "expectedHeadlamps":  2
+                 },
+                 {
+                     "width":  2340,
+                     "lighting":  "night",
+                     "cameras":  "light-night-driver",
+                     "tier":  "High",
+                     "output":  "artifacts/light-r2/headlamp-level-eye/High-0",
+                     "lampProbe":  true,
+                     "actualDriverEye":  true,
+                     "rq":  "rq_headlamps=0,rq_lamppools=0",
+                     "scene":  "WorldC_High",
+                     "height":  1080,
+                     "expectedHeadlamps":  1
+                 },
+                 {
+                     "width":  2340,
+                     "lighting":  "night",
+                     "cameras":  "light-night-driver",
+                     "tier":  "High",
+                     "output":  "artifacts/light-r2/headlamp-level-eye/High-1",
+                     "lampProbe":  true,
+                     "actualDriverEye":  true,
+                     "rq":  "rq_headlamps=1,rq_lamppools=0",
+                     "scene":  "WorldC_High",
+                     "height":  1080,
+                     "expectedHeadlamps":  2
+                 }
+             ]
+}

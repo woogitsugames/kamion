@@ -173,7 +173,9 @@ def test_life_prototypes_budget_and_lods():
     assert max(t0 for k, (t0, _) in tris.items() if k.startswith(("car_", "van_"))) <= 4200
     assert max(t1 for k, (_, t1) in tris.items() if k.startswith(("car_", "van_"))) <= 900
     assert max(t0 for k, (t0, _) in tris.items() if k.startswith("trailer_")) <= 1200
-    assert max(t1 for k, (_, t1) in tris.items() if k.startswith("trailer_")) <= 250
+    # ADR 0122: six separate capped distant wheels (measured maximum 316).
+    # The route guard still requires draws +0 and total triangles <= +2%.
+    assert max(t1 for k, (_, t1) in tris.items() if k.startswith("trailer_")) <= 320
 
 
 def test_parked_cars_road_film_glass_mask_and_wheels():

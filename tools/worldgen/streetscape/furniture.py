@@ -119,7 +119,7 @@ class SurfaceTop:
 
 
 # footing radius per pole family (m): the part of the footprint that must stand on the surface
-FOOT_R = {"lamp_arc_": 0.28, "lamp_old_concrete_": 0.12, "lamp_old_steel_": 0.20, "lamp_": 0.25,
+FOOT_R = {"lamp_arc_": 0.28, "lamp_old_concrete_": 0.15, "lamp_old_steel_": 0.20, "lamp_": 0.25,
           "signal_mast": 0.30, "signal_pole": 0.10, "sign_post": 0.04, "power_pole": 0.15, "bollard": 0.06}
 
 
@@ -953,33 +953,131 @@ def concrete_fence(lin, line, key, style_key):
     return nb
 
 
-def panel_fence(lin, line, col, key, flexible=False):
-    """ADR 0102: rigid, level bays step with the plot boundary; only tagged flexible mesh sags.
+class PanelPlinthDetail:
+    """Furniture-only COLOR_0 contract; no new material, and no changes to Lin/barrier helpers.
 
-    Keep corners and place posts at every bay boundary. Concrete plinth follows the ground below each level bay,
-    rather than a long sloping ribbon through the post centres. No extra materials or layers.
+    B=64/255, A=128/255 mark our concrete boards. R is a per-bay scan phase;
+    G encodes height above the sampled ground + 0.25 m. UNorm8 survives mobile mesh packing.
+    Unmarked concrete (gates/noise walls) keeps the old shader path.
+    """
+    def __init__(self, lin, phase):
+        self.lin, self.phase = lin, phase
+
+    def add(self, layer, mat, V, UV, T, **kwargs):
+        assert layer == "furniture" and mat == "concrete_plinth"
+        V = np.asarray(V, float)
+        colors = np.empty((len(V), 4))
+        colors[:, 0] = self.phase
+        colors[:, 1] = np.clip(V[:, 2] - self.lin.z(V[:, :2]) + 0.25, 0, 1)
+        colors[:, 2] = 64 / 255
+        colors[:, 3] = 128 / 255
+        self.lin.buf.add(layer, mat, V, UV, T, COL=colors, **kwargs)
+
+
+def panel_fence(lin, line, col, key, flexible=False):
+    """ADR0120: standard support spacing, low stepped boards and grade-following mesh.
+
+    Splitting a board on a bank must not create another steel post. The continuous mesh is supported
+    at the original <=2.5 m stations; its lower edge sits behind the stepped concrete. Dimensions,
+    the occasional 12–25 mm bow and the 8 mm board joints are WORKING_VALUE.
     """
     P = [np.asarray(line.coords[0], float)]
     for a, b in zip(np.asarray(line.coords)[:-1], np.asarray(line.coords)[1:]):
-        n = max(1, int(math.ceil(np.linalg.norm(b - a) / S.FENCE_PANEL_W)))
-        P.extend(a + (b - a) * k / n for k in range(1, n + 1))
+        count = max(1, int(math.ceil(np.linalg.norm(b-a) / S.FENCE_PANEL_W)))
+        P.extend(a + (b-a)*j/count for j in range(1, count+1))
     P = np.asarray(P)
     Z = lin.z(P)
-    bases = np.maximum(Z[:-1], Z[1:])
-    post_base = np.maximum(np.r_[bases[0], bases], np.r_[bases, bases[-1]])
-    for i, base in enumerate(bases):
-        Q = P[i:i + 2]
-        low = Z[i:i + 2] - 0.2
-        top = np.full(2, base + S.FENCE_PLINTH_H)
-        lin.slab("concrete_plinth", Q, low, top, 0.05, key)
-        if flexible:
-            Q = np.array([Q[0], Q.mean(axis=0), Q[1]])
-            bottom = np.full(3, base + S.FENCE_PLINTH_H)
-            upper = base + S.FENCE_H - np.array([0, 0.045, 0])  # 4.5 cm, WORKING_VALUE
+    for i, ends in enumerate(zip(P[:-1], P[1:])):
+        a, b = ends
+        direction = b-a
+        length = np.linalg.norm(direction)
+        if length < 1e-6:
+            continue
+        direction /= length
+        lateral = np.array([-direction[1], direction[0]])
+        boards = [a]
+
+        def split(p, q, depth=0):
+            sample = np.array([p, (p+q)/2, q])
+            if depth < 10 and np.ptp(lin.z(sample)) > 0.25:
+                mid = (p+q)/2
+                split(p, mid, depth+1); split(mid, q, depth+1)
+            else:
+                boards.append(q)
+
+        split(a, b)
+        boards = np.asarray(boards)
+        ground = lin.z(boards)
+        levels = np.maximum(ground[:-1], ground[1:]) + S.FENCE_PLINTH_H
+        lowest_concrete = float('inf')
+        for j, level in enumerate(levels):
+            segment = boards[j:j+2]
+            inset = min(0.008, np.linalg.norm(segment[1]-segment[0])*.1)
+            board = segment + np.array([direction*inset, -direction*inset])
+            low = lin.z(board)-.2
+            lowest_concrete = min(lowest_concrete, float(np.min(low)))
+            top = np.full(2, level)
+            detail = PanelPlinthDetail(lin, (_h(f"{key}:concrete:{i}:{j}") % 256)/255)
+            Lin(detail, lin.zsurf).slab("concrete_plinth", board, low, top, .05, key)
+            # Closed prefab ends make the small joints readable without a new material.
+            for end in (0,1):
+                q = board[end]
+                v = np.array([[*(q-lateral*.025),low[end]], [*(q+lateral*.025),low[end]],
+                              [*(q+lateral*.025),level], [*(q-lateral*.025),level]])
+                triangles = [(0,1,2),(0,2,3)] if end else [(0,2,1),(0,3,2)]
+                detail.add("furniture", "concrete_plinth", v,
+                           np.array([[0,0],[.05,0],[.05,level-low[end]],[0,level-low[end]]]), triangles, src=key)
+
+        stations = np.linalg.norm(boards-a, axis=1)/length
+        bottom = np.r_[levels[0], np.minimum(levels[:-1], levels[1:]), levels[-1]]
+        seed = _h(f"{key}:bay:{i}")
+        bow = (0.012 + (seed % 14) * 0.001) * (1 if seed & 16 else -1)
+        if flexible or seed % 4 == 0:
+            expanded = np.unique(np.r_[stations, .5])
+            bottom = np.interp(expanded, stations, bottom)
+            stations = expanded
+            offset = np.sin(stations*np.pi)*bow
         else:
-            bottom, upper = top, np.full(2, base + S.FENCE_H)
-        lin.ribbon(f"{col}_mesh", Q, bottom, upper, 0, key, both=True, collision="collision_fence")
-    lin.posts(col, P, None, 0.06, 0.04, S.FENCE_H + 0.05, zb=post_base, src=key, ground_feet=True)
+            offset = np.zeros(len(stations))
+        Q = a + (b-a)*stations[:,None] + lateral*offset[:,None]
+        upper = np.interp(stations, [0,1], Z[i:i+2]+S.FENCE_H)
+        if flexible:
+            upper -= np.sin(stations*np.pi)*.045
+        upper = np.maximum(upper, bottom+.4)
+        n = len(Q)
+        V = np.concatenate([np.column_stack([Q,bottom]), np.column_stack([Q,upper])])
+        s = np.r_[0,np.cumsum(np.linalg.norm(np.diff(Q,axis=0),axis=1))]
+        # Horizontal wires retain their physical height; the ground does not shear the texture grid.
+        UV = np.column_stack([np.tile(s,2),V[:,2]-math.floor(Z[i])])
+        T = np.array([(k,k+1,n+k+1) for k in range(n-1)]+[(k,n+k+1,n+k) for k in range(n-1)])
+        # Collision retains every original station, independently of render simplification.
+        collision = V.copy()
+        collision[:n,2] = lin.z(Q)-.1
+        lin.buf.add("collision","collision_fence",collision,UV,np.concatenate([T,T[:,[0,2,1]]]),src=key)
+        # The concrete/terrain hides the wire's lower boundary. Avoid tessellating the visible
+        # wire at every short concrete step, while keeping its world-height UV pattern.
+        # Preserve the detailed shape on unusual cross-slopes where this would deepen the bounds.
+        indices = ([0,int(np.flatnonzero(np.isclose(stations,.5))[0]),len(Q)-1]
+                   if flexible or seed % 4 == 0 else [0,len(Q)-1])
+        probe_s = np.linspace(0,1,max(2,int(math.ceil(length/.25))+1))
+        probe_q = np.column_stack([np.interp(probe_s,stations[indices],Q[indices,axis]) for axis in (0,1)])
+        render_floor = float(min(np.min(ground),np.min(lin.z(probe_q))))-.1
+        upper_error = np.max(np.abs(np.interp(stations,stations[indices],upper[indices])-upper))
+        # Preserve a raised upper boundary over local terrain humps. Only the flexible mesh's
+        # shallow sine-to-chord difference is allowed (under 1 cm, WORKING_VALUE pending renders).
+        upper_tolerance = .01 if flexible else 1e-6
+        if len(Q) > len(indices) and render_floor >= lowest_concrete and upper_error <= upper_tolerance:
+            reduced_q, reduced_top = Q[indices], upper[indices]
+            count = len(reduced_q)
+            V = np.concatenate([np.column_stack([reduced_q,np.full(count,render_floor)]),
+                                np.column_stack([reduced_q,reduced_top])])
+            s = np.r_[0,np.cumsum(np.linalg.norm(np.diff(reduced_q,axis=0),axis=1))]
+            UV = np.column_stack([np.tile(s,2),V[:,2]-math.floor(Z[i])])
+            T = np.array([(k,k+1,count+k+1) for k in range(count-1)]+
+                         [(k,count+k+1,count+k) for k in range(count-1)])
+        lin.buf.add("furniture",f"{col}_mesh",V,UV,T,src=key)
+        lin.buf.add("furniture",f"{col}_mesh",V,UV,T[:,[0,2,1]],src=key)
+    lin.posts(col,P,None,.06,.04,S.FENCE_H+.05,zb=Z,src=key,ground_feet=True)
 
 
 def fences(lin, src, origin, roads_poly, report):
@@ -1728,6 +1826,9 @@ def noise_wall(lin, P, Z, st, H, key):
             k = len(prt.V) // 2
             prt.UV = np.column_stack([np.zeros(2 * k), np.concatenate([np.ones(k), np.full(k, -0.25)])])
         lin.slab(st["post_mat"], P, Z + H - 0.08, Z + H, 0.10, key + ":rail")        # top rail
+        if Z is not None and H - (zb - Z).max() > 2.0:      # ADR 0125: panel joint rail at mid height of the glazing
+            zm = (zb + Z + H) / 2                           # (frames read at distance where the clear sheet does not)
+            lin.slab(st["post_mat"], P, zm - 0.04, zm + 0.04, 0.08, key + ":rail")
     lin.ribbon("collision_fence", P, Z - 0.2, Z + H, 0.0, key, both=False)
     lin.buf.parts[-1].layer = "collision"
     lin.posts(st["post_mat"], P, S.NOISE_BARRIER_POST, 0.16, 0.16, H + 0.1, src=key)

@@ -1,0 +1,9 @@
+{
+  "owner": "gpt-light-r1",
+  "pool": "heavy (outer run-heavy.ps1 slot, serial after analysis)",
+  "command": "uv run --project tools/worldgen python -m pytest tests/gis -q",
+  "exit_code": 0,
+  "elapsed_seconds": 754.41,
+  "editmode": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-light\\artifacts\\tests\\editmode-20261112-000534.xml",
+  "source_sha": "b5a531d7726e0f64893d6e5cb905c973e87d03e9"
+}

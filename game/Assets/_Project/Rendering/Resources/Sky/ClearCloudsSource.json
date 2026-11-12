@@ -1,0 +1,28 @@
+{
+  "schema": "kamion.photographic-clouds/1",
+  "asset": "kloofendal_48d_partly_cloudy_puresky",
+  "page": "https://polyhaven.com/a/kloofendal_48d_partly_cloudy_puresky",
+  "license": "CC0 1.0 Universal",
+  "license_url": "https://polyhaven.com/license",
+  "authors": {
+    "Greg Zaal": "Original",
+    "Jarod Guest": "Sky edits"
+  },
+  "url": "https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/4k/kloofendal_48d_partly_cloudy_puresky_4k.hdr",
+  "source_md5": "816340c969d2e60d659051d13ac3c4dc",
+  "source_sha256": "3061c00a16ecae748e84fd6c44c04804f539c118bb66325db858bad87b11bf88",
+  "texture_sha256": "b643d037e1ee85027147733415529033bb4e35bba3fe117539eb0113697c4c61",
+  "width": 4096,
+  "height": 2048,
+  "sunDirection": {
+    "x": 0.3774760124257408,
+    "y": 0.7414659866305633,
+    "z": 0.5547432295333827
+  },
+  "measured_sun_elevation_deg": 47.8564453125,
+  "cloud_white_linear": 1.8082187175750732,
+  "source_cloud_pixels": 986549,
+  "processing": "Linear HDRI; chromatic blue-gap matte; sun removed within 1.5 degrees; R opacity, G relative luminance^0.7; lower hemisphere opacity zero",
+  "checked_utc": "2026-11-11T23:02:45.192435+01:00",
+  "sampler_note": "ADR 0108 r3: Clear clamps source latitude to +0.5 degrees after sun-alignment rotation, extending valid horizon data into the cut lower hemisphere. Texture and source hashes unchanged. Default other presets 0 retains legacy sampling."
+}

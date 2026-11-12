@@ -1,0 +1,279 @@
+{
+  "camera": "dk8-under-span",
+  "coordinate_status": "Fixed pixel boxes; inspect crops to validate face selection",
+  "note": "sRGB pixels under QA lighting, not measured material reflectance",
+  "rows": [
+    {
+      "condition": "Low-overcast",
+      "roi": "ochre_broad",
+      "box": [
+        1544,
+        540,
+        1560,
+        590
+      ],
+      "RGB_p50": [
+        85.0,
+        72.0,
+        42.0
+      ],
+      "Y_p50": 72.59779999999999,
+      "Y_std": 3.688691194800671
+    },
+    {
+      "condition": "Low-overcast",
+      "roi": "bare_chamfer",
+      "box": [
+        1517,
+        540,
+        1527,
+        590
+      ],
+      "RGB_p50": [
+        61.0,
+        62.0,
+        61.0
+      ],
+      "Y_p50": 61.7152,
+      "Y_std": 2.500643185667526
+    },
+    {
+      "condition": "Low-overcast",
+      "roi": "ochre_side",
+      "box": [
+        1496,
+        540,
+        1505,
+        590
+      ],
+      "RGB_p50": [
+        102.0,
+        86.0,
+        50.0
+      ],
+      "Y_p50": 86.80239999999999,
+      "Y_std": 2.2482327700553193
+    },
+    {
+      "condition": "Low-overcast",
+      "roi": "mixed_face_band",
+      "box": [
+        1496,
+        520,
+        1560,
+        590
+      ],
+      "RGB_p50": [
+        89.0,
+        76.0,
+        51.0
+      ],
+      "Y_p50": 76.666,
+      "Y_std": 10.272558123685547
+    },
+    {
+      "condition": "Low-clear",
+      "roi": "ochre_broad",
+      "box": [
+        1544,
+        540,
+        1560,
+        590
+      ],
+      "RGB_p50": [
+        76.0,
+        69.0,
+        47.0
+      ],
+      "Y_p50": 68.8998,
+      "Y_std": 1.475521594531826
+    },
+    {
+      "condition": "Low-clear",
+      "roi": "bare_chamfer",
+      "box": [
+        1517,
+        540,
+        1527,
+        590
+      ],
+      "RGB_p50": [
+        65.0,
+        67.0,
+        66.0
+      ],
+      "Y_p50": 66.5026,
+      "Y_std": 1.8939798622177157
+    },
+    {
+      "condition": "Low-clear",
+      "roi": "ochre_side",
+      "box": [
+        1496,
+        540,
+        1505,
+        590
+      ],
+      "RGB_p50": [
+        92.0,
+        84.0,
+        57.0
+      ],
+      "Y_p50": 83.6792,
+      "Y_std": 1.2455407723471186
+    },
+    {
+      "condition": "Low-clear",
+      "roi": "mixed_face_band",
+      "box": [
+        1496,
+        520,
+        1560,
+        590
+      ],
+      "RGB_p50": [
+        75.0,
+        70.0,
+        56.0
+      ],
+      "Y_p50": 69.7594,
+      "Y_std": 6.789663109815773
+    },
+    {
+      "condition": "High-overcast",
+      "roi": "ochre_broad",
+      "box": [
+        1544,
+        540,
+        1560,
+        590
+      ],
+      "RGB_p50": [
+        91.0,
+        76.0,
+        45.0
+      ],
+      "Y_p50": 76.87859999999999,
+      "Y_std": 4.12777623717856
+    },
+    {
+      "condition": "High-overcast",
+      "roi": "bare_chamfer",
+      "box": [
+        1517,
+        540,
+        1527,
+        590
+      ],
+      "RGB_p50": [
+        65.0,
+        67.0,
+        65.0
+      ],
+      "Y_p50": 66.32409999999999,
+      "Y_std": 3.786277075044033
+    },
+    {
+      "condition": "High-overcast",
+      "roi": "ochre_side",
+      "box": [
+        1496,
+        540,
+        1505,
+        590
+      ],
+      "RGB_p50": [
+        97.0,
+        84.0,
+        50.0
+      ],
+      "Y_p50": 84.309,
+      "Y_std": 3.2631605640226145
+    },
+    {
+      "condition": "High-overcast",
+      "roi": "mixed_face_band",
+      "box": [
+        1496,
+        520,
+        1560,
+        590
+      ],
+      "RGB_p50": [
+        93.0,
+        79.0,
+        52.0
+      ],
+      "Y_p50": 79.309,
+      "Y_std": 9.654479852042117
+    },
+    {
+      "condition": "High-clear",
+      "roi": "ochre_broad",
+      "box": [
+        1544,
+        540,
+        1560,
+        590
+      ],
+      "RGB_p50": [
+        81.0,
+        74.0,
+        53.0
+      ],
+      "Y_p50": 73.8998,
+      "Y_std": 1.6824554383637456
+    },
+    {
+      "condition": "High-clear",
+      "roi": "bare_chamfer",
+      "box": [
+        1517,
+        540,
+        1527,
+        590
+      ],
+      "RGB_p50": [
+        69.0,
+        72.0,
+        71.0
+      ],
+      "Y_p50": 71.2178,
+      "Y_std": 2.9160676002932724
+    },
+    {
+      "condition": "High-clear",
+      "roi": "ochre_side",
+      "box": [
+        1496,
+        540,
+        1505,
+        590
+      ],
+      "RGB_p50": [
+        91.0,
+        84.0,
+        58.0
+      ],
+      "Y_p50": 83.5749,
+      "Y_std": 1.871036186164182
+    },
+    {
+      "condition": "High-clear",
+      "roi": "mixed_face_band",
+      "box": [
+        1496,
+        520,
+        1560,
+        590
+      ],
+      "RGB_p50": [
+        81.0,
+        75.0,
+        58.0
+      ],
+      "Y_p50": 74.972,
+      "Y_std": 5.454769055079455
+    }
+  ]
+}

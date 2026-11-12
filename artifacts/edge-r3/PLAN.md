@@ -1,0 +1,10 @@
+Plan rundy 3 — zgodność modelu podłoża, przed zmianą produkcji.
+
+1. Odtworzyć materiały i cały świat na scalonym main pod heavy. ImportBatch Low/High pod Unity, potem komplet Before z dotychczasowymi kamerami i diagnostycznym statywem edge-nw-ground. Własny C# pozostaje bez zmian do zakończenia bazy.
+2. Ponowić pomiar Python−Unity w bazie. R2: maksimum +1,4267 m przy E=−1008, N=1304, d=280; 5676 punktów, 40 przekracza +0,8 m. To nie jest jeszcze dowód widocznego szwu.
+3. Hipoteza źródłowa: C# ma 528 punktów obwodu, w tym pięć wystąpień każdego narożnika, Python ma 512 unikalnych próbek co 16 m. Wachlarze zmieniają więc wagę narożnika w średniej i oknie wygładzania. Nie zmieniać topologii ani liczby materiałów.
+4. Po Before dodać dwa testy rzeczywistego BuildApron na terenie z nachyleniem względem N (+0,025 i −0,025), nie E. Przy północnym punkcie przed NW powtórzenia zastępują próbki zachodniej krawędzi; stok E nie wykryłby tego przypadku, ponieważ zachodnia krawędź ma stałe E.
+5. Niezależny wzorzec dla E=−1008, N=1304: północny obwód ma N=1023,25 po odsunięciu 0,75 m do środka; 13 unikalnych sąsiadów ma średnie N=(8×1023,25+1008+992+976+960+944)/13 = 13066/13. Na terenie Y=140+slope×N daje to znany smoothHeight. Wzór przejścia do d=280 istnieje w Python i C#. Oczekujemy dwóch porażek starego kodu, następnie zaliczenia poprawki. To przewidywanie analityczne, nie wynik uruchomionych testów.
+6. Proponowana poprawka: obliczać średnią i wygładzanie na unikalnym, uporządkowanym pierścieniu; przypisać wynik z powrotem także powielonym wierzchołkom wachlarzy. Okno zgodne z Python (do ±6 unikalnych próbek). Wszystkie trójkąty, kolory, UV i renderery pozostają w tej samej strukturze.
+7. Po poprawce powtórzyć pełny pomiar siatki, prześwit asfaltu z r1, obrazy Low/High clear/overcast i budżet wszystkich kamer z instancjami. Obejrzeć statyw NW i normalne ujęcia; nie ogłaszać poprawy fotograficznej na podstawie samej liczby.
+8. Pełny GIS tylko na końcu, pod heavy; EditMode, ADR 0121 r3, jawny wynik wszystkich testów, REPORT i robocopy do main, potem następna runda. Cudze źródła/ustawienia atmosfery/barier ADR0117 pozostają poza zmianą.

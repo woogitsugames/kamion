@@ -1,0 +1,163 @@
+{
+  "scope": "all cameras in both stats files; CPU estimates, tris rounded to thousands",
+  "before": "artifacts\\light-r1\\rcas\\High-clear-0\\stats.txt",
+  "after": "artifacts\\light-r1\\rcas\\High-clear-0.75\\stats.txt",
+  "camera_count": 5,
+  "cameras": {
+    "cab-dash": {
+      "before": {
+        "objects": 118,
+        "draws": 786,
+        "shadows": 480,
+        "triangles_k": 1389,
+        "instanced_draws": 693,
+        "instances": 704,
+        "instanced_triangles_k": 76
+      },
+      "after": {
+        "objects": 118,
+        "draws": 786,
+        "shadows": 480,
+        "triangles_k": 1389,
+        "instanced_draws": 693,
+        "instances": 704,
+        "instanced_triangles_k": 76
+      },
+      "delta": {
+        "objects": 0,
+        "draws": 0,
+        "shadows": 0,
+        "triangles_k": 0,
+        "instanced_draws": 0,
+        "instances": 0,
+        "instanced_triangles_k": 0
+      },
+      "total_draw_delta": 0,
+      "total_triangle_delta_percent": 0.0
+    },
+    "driver-andersa-to-putry": {
+      "before": {
+        "objects": 97,
+        "draws": 538,
+        "shadows": 339,
+        "triangles_k": 1238,
+        "instanced_draws": 276,
+        "instances": 921,
+        "instanced_triangles_k": 79
+      },
+      "after": {
+        "objects": 97,
+        "draws": 538,
+        "shadows": 339,
+        "triangles_k": 1238,
+        "instanced_draws": 276,
+        "instances": 921,
+        "instanced_triangles_k": 79
+      },
+      "delta": {
+        "objects": 0,
+        "draws": 0,
+        "shadows": 0,
+        "triangles_k": 0,
+        "instanced_draws": 0,
+        "instances": 0,
+        "instanced_triangles_k": 0
+      },
+      "total_draw_delta": 0,
+      "total_triangle_delta_percent": 0.0
+    },
+    "r10_block_3": {
+      "before": {
+        "objects": 78,
+        "draws": 516,
+        "shadows": 297,
+        "triangles_k": 1420,
+        "instanced_draws": 458,
+        "instances": 681,
+        "instanced_triangles_k": 48
+      },
+      "after": {
+        "objects": 78,
+        "draws": 516,
+        "shadows": 297,
+        "triangles_k": 1420,
+        "instanced_draws": 458,
+        "instances": 681,
+        "instanced_triangles_k": 48
+      },
+      "delta": {
+        "objects": 0,
+        "draws": 0,
+        "shadows": 0,
+        "triangles_k": 0,
+        "instanced_draws": 0,
+        "instances": 0,
+        "instanced_triangles_k": 0
+      },
+      "total_draw_delta": 0,
+      "total_triangle_delta_percent": 0.0
+    },
+    "r10_block_4": {
+      "before": {
+        "objects": 71,
+        "draws": 464,
+        "shadows": 210,
+        "triangles_k": 1472,
+        "instanced_draws": 414,
+        "instances": 806,
+        "instanced_triangles_k": 38
+      },
+      "after": {
+        "objects": 71,
+        "draws": 464,
+        "shadows": 210,
+        "triangles_k": 1472,
+        "instanced_draws": 414,
+        "instances": 806,
+        "instanced_triangles_k": 38
+      },
+      "delta": {
+        "objects": 0,
+        "draws": 0,
+        "shadows": 0,
+        "triangles_k": 0,
+        "instanced_draws": 0,
+        "instances": 0,
+        "instanced_triangles_k": 0
+      },
+      "total_draw_delta": 0,
+      "total_triangle_delta_percent": 0.0
+    },
+    "r10_house_2": {
+      "before": {
+        "objects": 68,
+        "draws": 248,
+        "shadows": 210,
+        "triangles_k": 782,
+        "instanced_draws": 299,
+        "instances": 1135,
+        "instanced_triangles_k": 73
+      },
+      "after": {
+        "objects": 68,
+        "draws": 248,
+        "shadows": 210,
+        "triangles_k": 782,
+        "instanced_draws": 299,
+        "instances": 1135,
+        "instanced_triangles_k": 73
+      },
+      "delta": {
+        "objects": 0,
+        "draws": 0,
+        "shadows": 0,
+        "triangles_k": 0,
+        "instanced_draws": 0,
+        "instances": 0,
+        "instanced_triangles_k": 0
+      },
+      "total_draw_delta": 0,
+      "total_triangle_delta_percent": 0.0
+    }
+  }
+}

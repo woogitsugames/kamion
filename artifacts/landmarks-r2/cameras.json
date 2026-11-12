@@ -1,0 +1,180 @@
+{
+  "schema": "truck-sim-pl/gate3-cameras/1",
+  "region": "bialystok-industrial-c",
+  "cameras": [
+    {
+      "id": "dk8-under-span",
+      "type": "persp",
+      "kind": "driver_eye",
+      "seat": "file",
+      "fov_deg": 65,
+      "pos": [
+        -549,
+        2,
+        137.0
+      ],
+      "look_at": [
+        -570,
+        26,
+        139.3
+      ],
+      "note": "WORKING_VALUE camera under DK8 Putry, fixed before/after"
+    },
+    {
+      "id": "dk8-bearing",
+      "type": "persp",
+      "kind": "driver_eye",
+      "seat": "file",
+      "fov_deg": 55,
+      "pos": [
+        -565,
+        12,
+        137.0
+      ],
+      "look_at": [
+        -554,
+        18,
+        139.5
+      ],
+      "note": "WORKING_VALUE detail camera; verify framing after first render"
+    },
+    {
+      "id": "dk8-abutment",
+      "type": "persp",
+      "kind": "detail",
+      "seat": "file",
+      "fov_deg": 62,
+      "pos": [
+        -443,
+        -45,
+        134.8
+      ],
+      "look_at": [
+        -454,
+        -54,
+        135.0
+      ],
+      "note": "WORKING_VALUE camera of east abutment, wing and stairs"
+    },
+    {
+      "id": "dk8-east-north",
+      "type": "persp",
+      "seat": "file",
+      "fov_deg": 65,
+      "pos": [
+        -454,
+        -41,
+        135.0
+      ],
+      "look_at": [
+        -453,
+        -52,
+        135.0
+      ],
+      "note": "WORKING_VALUE detail viewpoint"
+    },
+    {
+      "id": "dk8-west-interior",
+      "type": "persp",
+      "seat": "file",
+      "fov_deg": 65,
+      "pos": [
+        -636,
+        66,
+        139.5
+      ],
+      "look_at": [
+        -644,
+        57,
+        139.0
+      ],
+      "note": "WORKING_VALUE detail viewpoint"
+    },
+    {
+      "id": "dk8-east-interior",
+      "type": "persp",
+      "seat": "file",
+      "fov_deg": 65,
+      "pos": [
+        -464,
+        -52,
+        134.8
+      ],
+      "look_at": [
+        -457,
+        -55,
+        135.3
+      ],
+      "note": "WORKING_VALUE detail viewpoint"
+    },
+    {
+      "id": "dk8-east-south",
+      "type": "persp",
+      "seat": "file",
+      "fov_deg": 65,
+      "pos": [
+        -447,
+        -59,
+        134.3
+      ],
+      "look_at": [
+        -455,
+        -52,
+        135.0
+      ],
+      "note": "WORKING_VALUE detail viewpoint"
+    },
+    {
+      "id": "dk8-west-north",
+      "type": "persp",
+      "seat": "file",
+      "fov_deg": 65,
+      "pos": [
+        -653,
+        64,
+        139.5
+      ],
+      "look_at": [
+        -643,
+        57,
+        139.0
+      ],
+      "note": "WORKING_VALUE detail viewpoint"
+    },
+    {
+      "id": "dk8-west-south",
+      "type": "persp",
+      "seat": "file",
+      "fov_deg": 65,
+      "pos": [
+        -656,
+        30,
+        139.0
+      ],
+      "look_at": [
+        -647,
+        43,
+        139.7
+      ],
+      "note": "WORKING_VALUE detail viewpoint"
+    },
+    {
+      "id": "dk8-ref7204",
+      "type": "persp",
+      "kind": "detail",
+      "seat": "file",
+      "fov_deg": 24.66433834,
+      "pos": [
+        -443.40425752,
+        -31.84654084,
+        134.34353103
+      ],
+      "look_at": [
+        -534.035036223665,
+        10.41528533406996,
+        137.31146174318087
+      ],
+      "note": "Commons camera GPS and 38 mm focal; heading 295 degrees visually selected, pitch 1.7 and eye 1.65 m WORKING_VALUE. Pose UNVERIFIED, screen/deck differences remain."
+    }
+  ]
+}

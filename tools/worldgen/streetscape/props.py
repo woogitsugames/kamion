@@ -105,15 +105,15 @@ def lamp(h, bracket, double=False):
 def lamp_old(h, kind):
     """Second lamp family for side streets (critic R2 #10): older installations still common on Polish residential
     and industrial access roads (shapes typical, no product copied; dimensions WORKING_VALUE).
-      kind "concrete": spun-concrete pole (żerdź wirowana, 0.24 -> 0.14 m) with a steel arm rising in an arc and an
+      kind "concrete": spun-concrete pole (żerdź wirowana, 0.30 -> 0.14 m) with a steel arm rising in an arc and an
         elongated "cobra" sodium luminaire (orange-tinted bowl);
       kind "steel":    thin grey-painted steel pole with a straight arm tilted up 15 deg and a box luminaire."""
     m, l1, col = Mesh(), Mesh(), Mesh()
     m.pole_height = l1.pole_height = h
     for mm, seg in ((m, 10), (l1, 5)):
         if kind == "concrete":
-            mm.tube("concrete_pole", [0, 0, -0.3], [0, 0, 0], 0.12, 0.12, seg, cap=False)
-            mm.tube("concrete_pole", [0, 0, 0], [0, 0, h], 0.12, 0.07, seg)
+            mm.tube("concrete_pole", [0, 0, -0.3], [0, 0, 0], 0.15, 0.15, seg, cap=False)
+            mm.tube("concrete_pole", [0, 0, 0], [0, 0, h], 0.15, 0.07, seg)
             pts = [np.array([0.0, 0.05, h - 1.4])]
             bends = 6 if seg > 5 else 3
             for k in range(1, bends + 1):              # same silhouette, fewer sections on Low
@@ -123,12 +123,18 @@ def lamp_old(h, kind):
             for a_, b_ in zip(pts[:-1], pts[1:]):
                 mm.tube("steel_painted_grey", a_, b_, 0.03, 0.03, max(4, seg // 2), cap=False)
             for zb in (h - 1.4, h - 0.7):               # clamp bands
-                rr = 0.12 - 0.05 * zb / h + 0.004
+                rr = 0.15 - 0.08 * zb / h + 0.004
                 mm.tube("steel_painted_grey", [0, 0, zb], [0, 0, zb + 0.08], rr, rr, seg, cap=False)
             e = pts[-1]
-            mm.box("luminaire_old", e + [0, 0.35, 0.02], 0.15, 0.40, 0.08)
-            mm.quad("lamp_glass_sodium", e + [-0.12, 0.02, -0.065], e + [0.12, 0.02, -0.065],
-                    e + [0.12, 0.66, -0.065], e + [-0.12, 0.66, -0.065])
+            # A sloped, bevelled sodium housing rather than a flat LED box; same 12 housing triangles.
+            # Generic proportions, WORKING_VALUE; no manufacturer's model or branding.
+            housing = e + np.array([[-.11,.06,-.10], [.11,.06,-.10], [-.12,.66,-.10], [.12,.66,-.10],
+                                    [-.17,-.05,.10], [.17,-.05,.10], [-.16,.78,.06], [.16,.78,.06]])
+            faces = [(0,2,3,1), (4,5,7,6), (0,1,5,4), (2,6,7,3), (0,4,6,2), (1,3,7,5)]
+            triangles = [t for a,b,c,d in faces for t in ((a,b,c),(a,c,d))]
+            mm.add("luminaire_old", housing, triangles)
+            mm.quad("lamp_glass_sodium", e + [-.10,.09,-.102], e + [-.11,.63,-.102],
+                    e + [.11,.63,-.102], e + [.10,.09,-.102])
         else:
             mm.box("concrete_base", [0, 0, -0.01], 0.2, 0.2, 0.09)
             mm.tube("steel_painted_grey", [0, 0, 0.06], [0, 0, h - 0.2], 0.075, 0.05, seg)
@@ -140,7 +146,8 @@ def lamp_old(h, kind):
             mm.box("luminaire_old", end + [0, 0.28, 0.0], 0.14, 0.3, 0.07)
             mm.quad("lamp_glass_sodium", end + [-0.11, 0.04, -0.072], end + [0.11, 0.04, -0.072],
                     end + [0.11, 0.52, -0.072], end + [-0.11, 0.52, -0.072])
-    col.tube("collision_steel", [0, 0, 0], [0, 0, h], 0.13, 0.13, 6)
+    col.tube("collision_steel", [0, 0, 0], [0, 0, h],
+             0.16 if kind == "concrete" else 0.13, 0.08 if kind == "concrete" else 0.13, 6)
     return m, l1, col
 
 
@@ -216,6 +223,7 @@ def plate(code):
     if area2 > 0:
         pts2, uvs = pts2[::-1], uvs[::-1]
     k_ = len(pts2)
+    hh = size * (math.sqrt(3) / 2 if shape == "triangle" else 1.0)
     for mm, full in ((m, True), (l1, False)):
         V = [[0, y, 0]] + [[x, y, z] for x, z in pts2]
         # u runs against local +x: seen from the front (+y) in Unity, local +x is on the viewer's left (the C-12 arrows
@@ -226,7 +234,9 @@ def plate(code):
         mm.add(f"sign_{code}", V, T, UV)
         yb = y - rim if full else y - 0.004
         Vb = [[0, yb, 0]] + [[x, yb, z] for x, z in pts2]
-        UVb = [(0.5, 0.5)] + [(0.5 - x / size, 0.5 + z / size) for x, z in pts2]
+        # ADR0120: one 1 m atlas width, with the same normalised clamp heights for every shape.
+        # The 0.6 vertical inset keeps the A-7 centroid-based triangle inside the texture.
+        UVb = [(0.5, 0.5)] + [(0.5 - x, 0.5 + 0.6 * z / hh) for x, z in pts2]
         mm.add("plate_back", Vb, [(0, 1 + (k + 1) % k_, 1 + k) for k in range(k_)], UVb)
         if full:                                    # folded rim (outward normals)
             Vr, Tr, UVr = [], [], []
@@ -234,14 +244,20 @@ def plate(code):
                 (x0, z0), (x1, z1) = pts2[k], pts2[(k + 1) % k_]
                 o = len(Vr)
                 Vr += [[x0, y, z0], [x1, y, z1], [x1, yb, z1], [x0, yb, z0]]
-                L = math.hypot(x1 - x0, z1 - z0)
-                UVr += [(0, 0), (L, 0), (L, rim), (0, rim)]
+                UVr += [(0.05, 0.05), (0.20, 0.05), (0.20, 0.20), (0.05, 0.20)]
                 Tr += [(o, o + 2, o + 1), (o, o + 3, o + 2), (o, o + 1, o + 2), (o, o + 2, o + 3)]   # both sides
             mm.add("plate_back", Vr, Tr, UVr)
-    hh = size * (math.sqrt(3) / 2 if shape == "triangle" else 1.0)
     for zc in (-hh * 0.28, hh * 0.22):              # clamps around the post, behind the plate
         m.box("steel_galv", [0, 0.0, zc], S.SIGN_POST_D / 2 + 0.008, S.SIGN_POST_D / 2 + 0.008, 0.022)
         m.box("steel_galv", [0, (S.SIGN_POST_D / 2 + y - rim) / 2 + 0.004, zc], 0.06, (y - rim - S.SIGN_POST_D / 2) / 2, 0.018)
+    # ADR0120 r2: retain rear mounting hardware on Low without another material slot.
+    # Low reuses its EXISTING plate_back slot. steel_galv would add a draw on every Low sign.
+    # Two simple rear spacers stand in for the High collar/rail assembly: 24 triangles total.
+    hardware = Mesh()
+    for zc in (-hh * 0.28, hh * 0.22):
+        hardware.box("plate_back", [0, 0.012, zc], 0.065, y - 0.004 - 0.012, 0.018)
+    for part in hardware.out():
+        l1.add("plate_back", part["V"], part["T"], np.full((len(part["V"]), 2), 0.10))
     return m, l1, None
 
 
@@ -252,7 +268,8 @@ def board(code, w, h):
     m.quad(f"sign_{code}", [-w / 2, y, -h / 2], [-w / 2, y, h / 2], [w / 2, y, h / 2], [w / 2, y, -h / 2],
            uv=((1, 0), (1, 1), (0, 1), (0, 0)))   # u mirrored as on the plates
     m.quad("plate_back", [w / 2, y - 0.01, -h / 2], [w / 2, y - 0.01, h / 2], [-w / 2, y - 0.01, h / 2],
-           [-w / 2, y - 0.01, -h / 2], uv=((0, 0), (0, h), (w, h), (w, 0)))
+           [-w / 2, y - 0.01, -h / 2],
+           uv=((0.05, 0.05), (0.05, 0.20), (0.20, 0.20), (0.20, 0.05)))
     for sx in (-1, 1):
         m.box("steel_galv", [sx * w / 2 * 0.7, 0.02, 0], 0.03, 0.03, h / 2)   # rails (Z-profile)
     return m, m, None
@@ -448,4 +465,6 @@ def build_all(sign_codes, boards):
     from . import life_props as LP
     P.update(LP.build_all())
     P.update(LP.build_registered())
+    from . import gate3_landmarks as G3          # ADR 0125: sign assemblies registered by gate3_landmarks.build
+    P.update(G3.prototypes())
     return P
