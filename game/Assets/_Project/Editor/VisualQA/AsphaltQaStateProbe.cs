@@ -12,6 +12,13 @@ namespace Game.Editor.VisualQA
     public static class AsphaltQaStateProbe
     {
         static readonly HashSet<string> seen = new HashSet<string>();
+        [Serializable] sealed class GroundSnapshot
+        {
+            public string id, shader, baseMap, maskMap;
+            public bool exists, grimeEnabled;
+            public Vector4 tint, tile, grime, grimeBase, exclusion;
+            public float normalStrength, smoothnessScale;
+        }
         [Serializable] sealed class Snapshot
         {
             public string camera, maskFormat;
@@ -25,6 +32,7 @@ namespace Game.Editor.VisualQA
             public Vector4 roadWear, paintWear, freshPaintWear;
             public Vector4 kerbWear, pavingGrime, yardGrime;
             public Vector4 kerbExclusion, pavingExclusion, pavingGrimeBase;
+            public GroundSnapshot[] grounds;
             public bool detailGlobal, paintUnderlay;
         }
         static AsphaltQaStateProbe()
@@ -57,6 +65,33 @@ namespace Game.Editor.VisualQA
                     $"Assets/_Generated/World/bialystok-industrial-c/Materials/M_{id}.mat");
                 return ground != null && ground.HasProperty(property) ? ground.GetVector(property) : Vector4.zero;
             }
+            GroundSnapshot[] GroundRecords()
+            {
+                string[] ids = { "yard_asphalt", "yard_behaton", "yard_paving", "yard_concrete",
+                    "yard_concrete_worn", "yard_slabs", "decal_yard_patch_light", "decal_yard_patch_dark" };
+                var records = new GroundSnapshot[ids.Length];
+                for (int i = 0; i < ids.Length; i++)
+                {
+                    var ground = AssetDatabase.LoadAssetAtPath<Material>(
+                        $"Assets/_Generated/World/bialystok-industrial-c/Materials/M_{ids[i]}.mat");
+                    var record = new GroundSnapshot { id = ids[i], exists = ground != null };
+                    if (ground != null)
+                    {
+                        Vector4 V(string property) => ground.HasProperty(property) ? ground.GetVector(property) : Vector4.zero;
+                        float F(string property) => ground.HasProperty(property) ? ground.GetFloat(property) : 0f;
+                        string T(string property) => ground.HasProperty(property) && ground.GetTexture(property) != null
+                            ? ground.GetTexture(property).name : "none";
+                        record.shader = ground.shader != null ? ground.shader.name : "none";
+                        record.baseMap = T("_BaseMap"); record.maskMap = T("_MaskMap");
+                        record.grimeEnabled = ground.IsKeywordEnabled("_GRIME");
+                        record.tint = V("_Tint"); record.tile = V("_Tile"); record.grime = V("_Grime");
+                        record.grimeBase = V("_GroundGrimeBase"); record.exclusion = V("_GroundWearExclude");
+                        record.normalStrength = F("_NormalStrength"); record.smoothnessScale = F("_SmoothnessScale");
+                    }
+                    records[i] = record;
+                }
+                return records;
+            }
             var root = UnityEngine.Object.FindAnyObjectByType<Game.World.WorldRegionRoot>();
             var state = new Snapshot {
                 camera = camera.name, width = camera.targetTexture.width, height = camera.targetTexture.height,
@@ -74,6 +109,7 @@ namespace Game.Editor.VisualQA
                 kerbExclusion = GroundState("curb_concrete", "_GroundWearExclude"),
                 pavingExclusion = GroundState("sidewalk_paving", "_GroundWearExclude"),
                 pavingGrimeBase = GroundState("sidewalk_paving", "_GroundGrimeBase"),
+                grounds = GroundRecords(),
                 paintUnderlay = paint != null && paint.IsKeywordEnabled("_ROADWEAR"),
                 maskFormat = mask != null ? mask.format.ToString() : "none"
             };
