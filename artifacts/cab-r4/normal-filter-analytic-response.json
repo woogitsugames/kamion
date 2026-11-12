@@ -1,0 +1,67 @@
+{
+  "scope": "Analytical response of ideal Gaussian slope high-pass; example wavelengths, not measured scan or cab geometry. Excludes crop edges, crossfade, resampling and 8-bit quantization.",
+  "formula": "1-exp(-0.5*(2*pi*sigma/lambda)^2)",
+  "reference_tile_metres": 0.1,
+  "rows": [
+    {
+      "sigma_mm": 1.5,
+      "example_sine_wavelength_mm": 0.3,
+      "ideal_retained_slope_amplitude": 1.0
+    },
+    {
+      "sigma_mm": 1.5,
+      "example_sine_wavelength_mm": 1.0,
+      "ideal_retained_slope_amplitude": 1.0
+    },
+    {
+      "sigma_mm": 1.5,
+      "example_sine_wavelength_mm": 3.0,
+      "ideal_retained_slope_amplitude": 0.9928081166441737
+    },
+    {
+      "sigma_mm": 1.5,
+      "example_sine_wavelength_mm": 10.0,
+      "ideal_retained_slope_amplitude": 0.35861937404484623
+    },
+    {
+      "sigma_mm": 0.6,
+      "example_sine_wavelength_mm": 0.3,
+      "ideal_retained_slope_amplitude": 1.0
+    },
+    {
+      "sigma_mm": 0.6,
+      "example_sine_wavelength_mm": 1.0,
+      "ideal_retained_slope_amplitude": 0.9991799253364853
+    },
+    {
+      "sigma_mm": 0.6,
+      "example_sine_wavelength_mm": 3.0,
+      "ideal_retained_slope_amplitude": 0.5459592612727548
+    },
+    {
+      "sigma_mm": 0.6,
+      "example_sine_wavelength_mm": 10.0,
+      "ideal_retained_slope_amplitude": 0.06859506659769443
+    },
+    {
+      "sigma_mm": 0.3,
+      "example_sine_wavelength_mm": 0.3,
+      "ideal_retained_slope_amplitude": 0.999999997324712
+    },
+    {
+      "sigma_mm": 0.3,
+      "example_sine_wavelength_mm": 1.0,
+      "ideal_retained_slope_amplitude": 0.83077545751755
+    },
+    {
+      "sigma_mm": 0.3,
+      "example_sine_wavelength_mm": 3.0,
+      "ideal_retained_slope_amplitude": 0.1791312825844601
+    },
+    {
+      "sigma_mm": 0.3,
+      "example_sine_wavelength_mm": 10.0,
+      "ideal_retained_slope_amplitude": 0.017608415529201116
+    }
+  ]
+}
