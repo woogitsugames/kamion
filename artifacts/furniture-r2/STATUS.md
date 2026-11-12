@@ -203,3 +203,5 @@ NASTĘPNY KROK: przygotować własne skrypty r2 z ownerem heavy gpt-furniture-r2
 2026-11-12T09:51:15.8423874+01:00: zapisano roboczy PACKET.md z zakresem, rzeczywistymi pomiarami i ograniczeniami. Wyniki geometrii/GIS/physics oraz pełny przegląd obrazów nadal PENDING; pakiet nie jest raportem zamknięcia. NASTĘPNY KROK: dokończyć SBS i kolejkę heavy.
 
 2026-11-12T09:52:51.2521521+01:00: obejrzano parę SBS Low clear i zbliżenie tyłu znaku Low overcast. Para SBS ma duże rozbieżności układu sceny; nie jest dowodem wiernego odtworzenia znaku/uchwytów. Wysłano oba obrazy do niezależnego przeglądu. Zapisano w git małe dokładne liczniki/walidacje oraz rzeczywiste metadane źródeł after3, bez surowych PNG.
+
+2026-11-12T09:53:28.5631635+01:00: niezależny przegląd potwierdził ograniczenie pary SBS i brak oczywistego artefaktu mocowań; wierność konstrukcyjna nadal UNVERIFIED. Zapisuję własne produkty generatora r2 i lica znaków; efekty uboczne raportów far-field/wiaduktu cofnięto do wersji gałęzi. Kod pozostaje zamrożony. Ciężkie porównanie nadal oczekuje, bez omijania slotu.
