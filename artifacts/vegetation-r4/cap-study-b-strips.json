@@ -1,0 +1,505 @@
+{
+  "source_sha256": "eb21d980b41caa8aff75a07f933c24c2f787fd34f234a9e7254bd02fdf0edfa9",
+  "caps": [
+    {
+      "bed": "E1",
+      "spacing_m": 1.0,
+      "boundary_vertices": 63,
+      "interior_vertices": 0,
+      "triangles": 61,
+      "ring_valid": true,
+      "ring_reason": "Valid Geometry",
+      "ring_area_m2": 9.120916908479721,
+      "maximum_triangle_edge_m": 0.7426740961059632
+    },
+    {
+      "bed": "E1",
+      "spacing_m": 0.6,
+      "boundary_vertices": 126,
+      "interior_vertices": 0,
+      "triangles": 124,
+      "ring_valid": true,
+      "ring_reason": "Valid Geometry",
+      "ring_area_m2": 11.505595608285645,
+      "maximum_triangle_edge_m": 0.7275158090695311
+    },
+    {
+      "bed": "E2",
+      "spacing_m": 1.0,
+      "boundary_vertices": 72,
+      "interior_vertices": 0,
+      "triangles": 70,
+      "ring_valid": true,
+      "ring_reason": "Valid Geometry",
+      "ring_area_m2": 12.595144526701693,
+      "maximum_triangle_edge_m": 0.8908434931278787
+    },
+    {
+      "bed": "E2",
+      "spacing_m": 0.6,
+      "boundary_vertices": 143,
+      "interior_vertices": 6,
+      "triangles": 153,
+      "ring_valid": true,
+      "ring_reason": "Valid Geometry",
+      "ring_area_m2": 15.294104024227355,
+      "maximum_triangle_edge_m": 0.8716243911561755
+    },
+    {
+      "bed": "A",
+      "spacing_m": 1.0,
+      "boundary_vertices": 72,
+      "interior_vertices": 0,
+      "triangles": 70,
+      "ring_valid": true,
+      "ring_reason": "Valid Geometry",
+      "ring_area_m2": 15.39236291177188,
+      "maximum_triangle_edge_m": 0.9782447843769144
+    },
+    {
+      "bed": "A",
+      "spacing_m": 0.6,
+      "boundary_vertices": 143,
+      "interior_vertices": 4,
+      "triangles": 149,
+      "ring_valid": true,
+      "ring_reason": "Valid Geometry",
+      "ring_area_m2": 18.128618929955696,
+      "maximum_triangle_edge_m": 0.9723435897566677
+    },
+    {
+      "bed": "C",
+      "spacing_m": 1.0,
+      "boundary_vertices": 60,
+      "interior_vertices": 0,
+      "triangles": 58,
+      "ring_valid": true,
+      "ring_reason": "Valid Geometry",
+      "ring_area_m2": 10.617553807442325,
+      "maximum_triangle_edge_m": 0.8580987235089778
+    },
+    {
+      "bed": "C",
+      "spacing_m": 0.6,
+      "boundary_vertices": 119,
+      "interior_vertices": 1,
+      "triangles": 119,
+      "ring_valid": true,
+      "ring_reason": "Valid Geometry",
+      "ring_area_m2": 12.881017841548498,
+      "maximum_triangle_edge_m": 0.8394395595401716
+    }
+  ],
+  "footprints": [
+    {
+      "bed": "E1",
+      "authored_band_area_m2": 20.121470580259835,
+      "sampled_area_m2": 20.076383283790214,
+      "area_difference_percent": -0.22407555297599968,
+      "boundary_hausdorff_m": 0.08509533431835022
+    },
+    {
+      "bed": "E2",
+      "authored_band_area_m2": 25.141210747652064,
+      "sampled_area_m2": 25.10043970273303,
+      "area_difference_percent": -0.16216818405550004,
+      "boundary_hausdorff_m": 0.0758352182888873
+    },
+    {
+      "bed": "A",
+      "authored_band_area_m2": 27.932527791307063,
+      "sampled_area_m2": 27.888221756103086,
+      "area_difference_percent": -0.15861806541463963,
+      "boundary_hausdorff_m": 0.0716826941031948
+    },
+    {
+      "bed": "C",
+      "authored_band_area_m2": 21.08903967023534,
+      "sampled_area_m2": 21.045415352287066,
+      "area_difference_percent": -0.206857773660718,
+      "boundary_hausdorff_m": 0.060013793675301644
+    }
+  ],
+  "strip_metrics": [
+    {
+      "bed": "E1",
+      "core_outside_shell_m2": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "strips": [
+        {
+          "layer": "core",
+          "band": 0,
+          "invalid_quads": 2,
+          "one_ring_contains_other": false,
+          "smaller_outside_larger_m2": 0.0018088750168329891
+        },
+        {
+          "layer": "core",
+          "band": 1,
+          "invalid_quads": 2,
+          "one_ring_contains_other": false,
+          "smaller_outside_larger_m2": 0.0008952381059749503
+        },
+        {
+          "layer": "core",
+          "band": 2,
+          "invalid_quads": 1,
+          "one_ring_contains_other": false,
+          "smaller_outside_larger_m2": 0.0002377558465922841
+        },
+        {
+          "layer": "core",
+          "band": 3,
+          "invalid_quads": 0,
+          "one_ring_contains_other": true,
+          "smaller_outside_larger_m2": 0.0,
+          "overlap_m2": 4.440892098500626e-16,
+          "annulus_difference_m2": 0.0
+        },
+        {
+          "layer": "core",
+          "band": 4,
+          "invalid_quads": 0,
+          "one_ring_contains_other": true,
+          "smaller_outside_larger_m2": 0.0,
+          "overlap_m2": -7.549516567451064e-15,
+          "annulus_difference_m2": 0.0
+        },
+        {
+          "layer": "shell",
+          "band": 0,
+          "invalid_quads": 0,
+          "one_ring_contains_other": true,
+          "smaller_outside_larger_m2": 0.0,
+          "overlap_m2": 3.6415315207705135e-14,
+          "annulus_difference_m2": 0.0
+        },
+        {
+          "layer": "shell",
+          "band": 1,
+          "invalid_quads": 0,
+          "one_ring_contains_other": true,
+          "smaller_outside_larger_m2": 0.0,
+          "overlap_m2": 4.1300296516055823e-14,
+          "annulus_difference_m2": 0.0
+        },
+        {
+          "layer": "shell",
+          "band": 2,
+          "invalid_quads": 0,
+          "one_ring_contains_other": true,
+          "smaller_outside_larger_m2": 0.0,
+          "overlap_m2": 1.1546319456101628e-14,
+          "annulus_difference_m2": 0.0
+        },
+        {
+          "layer": "shell",
+          "band": 3,
+          "invalid_quads": 0,
+          "one_ring_contains_other": true,
+          "smaller_outside_larger_m2": 0.0,
+          "overlap_m2": 3.1086244689504383e-15,
+          "annulus_difference_m2": 0.0
+        },
+        {
+          "layer": "shell",
+          "band": 4,
+          "invalid_quads": 0,
+          "one_ring_contains_other": true,
+          "smaller_outside_larger_m2": 0.0,
+          "overlap_m2": -2.220446049250313e-14,
+          "annulus_difference_m2": 0.0
+        }
+      ]
+    },
+    {
+      "bed": "E2",
+      "core_outside_shell_m2": [
+        2.1854105467212843e-07,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "strips": [
+        {
+          "layer": "core",
+          "band": 0,
+          "invalid_quads": 2,
+          "one_ring_contains_other": false,
+          "smaller_outside_larger_m2": 7.247011105238241e-05
+        },
+        {
+          "layer": "core",
+          "band": 1,
+          "invalid_quads": 2,
+          "one_ring_contains_other": false,
+          "smaller_outside_larger_m2": 0.0006490728428672794
+        },
+        {
+          "layer": "core",
+          "band": 2,
+          "invalid_quads": 2,
+          "one_ring_contains_other": false,
+          "smaller_outside_larger_m2": 0.0025505224984258383
+        },
+        {
+          "layer": "core",
+          "band": 3,
+          "invalid_quads": 1,
+          "one_ring_contains_other": false,
+          "smaller_outside_larger_m2": 0.003951428066242843
+        },
+        {
+          "layer": "core",
+          "band": 4,
+          "invalid_quads": 0,
+          "one_ring_contains_other": true,
+          "smaller_outside_larger_m2": 0.0,
+          "overlap_m2": 1.0658141036401503e-14,
+          "annulus_difference_m2": 0.0
+        },
+        {
+          "layer": "shell",
+          "band": 0,
+          "invalid_quads": 1,
+          "one_ring_contains_other": false,
+          "smaller_outside_larger_m2": 5.538245443754145e-05
+        },
+        {
+          "layer": "shell",
+          "band": 1,
+          "invalid_quads": 0,
+          "one_ring_contains_other": true,
+          "smaller_outside_larger_m2": 0.0,
+          "overlap_m2": 3.197442310920451e-14,
+          "annulus_difference_m2": 0.0
+        },
+        {
+          "layer": "shell",
+          "band": 2,
+          "invalid_quads": 0,
+          "one_ring_contains_other": true,
+          "smaller_outside_larger_m2": 0.0,
+          "overlap_m2": 2.708944180085382e-14,
+          "annulus_difference_m2": 0.0
+        },
+        {
+          "layer": "shell",
+          "band": 3,
+          "invalid_quads": 0,
+          "one_ring_contains_other": true,
+          "smaller_outside_larger_m2": 0.0,
+          "overlap_m2": 7.993605777301127e-15,
+          "annulus_difference_m2": 0.0
+        },
+        {
+          "layer": "shell",
+          "band": 4,
+          "invalid_quads": 0,
+          "one_ring_contains_other": true,
+          "smaller_outside_larger_m2": 0.0,
+          "overlap_m2": 3.6415315207705135e-14,
+          "annulus_difference_m2": 0.0
+        }
+      ]
+    },
+    {
+      "bed": "A",
+      "core_outside_shell_m2": [
+        0.00070112087239042,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "strips": [
+        {
+          "layer": "core",
+          "band": 0,
+          "invalid_quads": 1,
+          "one_ring_contains_other": false,
+          "smaller_outside_larger_m2": 0.003065640593298855
+        },
+        {
+          "layer": "core",
+          "band": 1,
+          "invalid_quads": 1,
+          "one_ring_contains_other": false,
+          "smaller_outside_larger_m2": 0.005882512373243461
+        },
+        {
+          "layer": "core",
+          "band": 2,
+          "invalid_quads": 0,
+          "one_ring_contains_other": true,
+          "smaller_outside_larger_m2": 0.0,
+          "overlap_m2": -8.881784197001252e-16,
+          "annulus_difference_m2": 0.0
+        },
+        {
+          "layer": "core",
+          "band": 3,
+          "invalid_quads": 2,
+          "one_ring_contains_other": false,
+          "smaller_outside_larger_m2": 0.00024978596485146953
+        },
+        {
+          "layer": "core",
+          "band": 4,
+          "invalid_quads": 1,
+          "one_ring_contains_other": false,
+          "smaller_outside_larger_m2": 0.00010107095630225108
+        },
+        {
+          "layer": "shell",
+          "band": 0,
+          "invalid_quads": 1,
+          "one_ring_contains_other": false,
+          "smaller_outside_larger_m2": 9.617687037067987e-05
+        },
+        {
+          "layer": "shell",
+          "band": 1,
+          "invalid_quads": 1,
+          "one_ring_contains_other": false,
+          "smaller_outside_larger_m2": 2.1999739820254785e-05
+        },
+        {
+          "layer": "shell",
+          "band": 2,
+          "invalid_quads": 1,
+          "one_ring_contains_other": false,
+          "smaller_outside_larger_m2": 4.901649709240528e-06
+        },
+        {
+          "layer": "shell",
+          "band": 3,
+          "invalid_quads": 0,
+          "one_ring_contains_other": true,
+          "smaller_outside_larger_m2": 0.0,
+          "overlap_m2": 7.993605777301127e-15,
+          "annulus_difference_m2": 0.0
+        },
+        {
+          "layer": "shell",
+          "band": 4,
+          "invalid_quads": 0,
+          "one_ring_contains_other": true,
+          "smaller_outside_larger_m2": 0.0,
+          "overlap_m2": -5.329070518200751e-15,
+          "annulus_difference_m2": 0.0
+        }
+      ]
+    },
+    {
+      "bed": "C",
+      "core_outside_shell_m2": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "strips": [
+        {
+          "layer": "core",
+          "band": 0,
+          "invalid_quads": 2,
+          "one_ring_contains_other": false,
+          "smaller_outside_larger_m2": 0.0006851919817552044
+        },
+        {
+          "layer": "core",
+          "band": 1,
+          "invalid_quads": 1,
+          "one_ring_contains_other": false,
+          "smaller_outside_larger_m2": 0.0008702701172268126
+        },
+        {
+          "layer": "core",
+          "band": 2,
+          "invalid_quads": 1,
+          "one_ring_contains_other": false,
+          "smaller_outside_larger_m2": 0.0013735665115125033
+        },
+        {
+          "layer": "core",
+          "band": 3,
+          "invalid_quads": 1,
+          "one_ring_contains_other": false,
+          "smaller_outside_larger_m2": 0.0010142760348120854
+        },
+        {
+          "layer": "core",
+          "band": 4,
+          "invalid_quads": 0,
+          "one_ring_contains_other": true,
+          "smaller_outside_larger_m2": 0.0,
+          "overlap_m2": -1.021405182655144e-14,
+          "annulus_difference_m2": 0.0
+        },
+        {
+          "layer": "shell",
+          "band": 0,
+          "invalid_quads": 0,
+          "one_ring_contains_other": true,
+          "smaller_outside_larger_m2": 0.0,
+          "overlap_m2": 5.329070518200751e-15,
+          "annulus_difference_m2": 0.0
+        },
+        {
+          "layer": "shell",
+          "band": 1,
+          "invalid_quads": 1,
+          "one_ring_contains_other": false,
+          "smaller_outside_larger_m2": 2.3934119909384368e-05
+        },
+        {
+          "layer": "shell",
+          "band": 2,
+          "invalid_quads": 0,
+          "one_ring_contains_other": true,
+          "smaller_outside_larger_m2": 0.0,
+          "overlap_m2": -2.0650148258027912e-14,
+          "annulus_difference_m2": 0.0
+        },
+        {
+          "layer": "shell",
+          "band": 3,
+          "invalid_quads": 0,
+          "one_ring_contains_other": true,
+          "smaller_outside_larger_m2": 0.0,
+          "overlap_m2": 1.687538997430238e-14,
+          "annulus_difference_m2": 0.0
+        },
+        {
+          "layer": "shell",
+          "band": 4,
+          "invalid_quads": 0,
+          "one_ring_contains_other": true,
+          "smaller_outside_larger_m2": 0.0,
+          "overlap_m2": -2.220446049250313e-15,
+          "annulus_difference_m2": 0.0
+        }
+      ]
+    }
+  ],
+  "triangles_by_bed": {
+    "E1": 2749,
+    "E2": 3111,
+    "A": 3121,
+    "C": 2579
+  },
+  "total_triangles": 11560,
+  "note": "Four authored footprints, flat z=0; no World, GIS pytest, Unity, or production write. Internal fill observation only; no visual acceptance."
+}

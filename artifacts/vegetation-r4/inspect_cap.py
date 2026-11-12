@@ -24,6 +24,7 @@ original=pt._fill
 records=[]
 triangle_counts={}
 footprints=[]
+strip_metrics=[]
 active=None
 def capture_fill(ring,spacing):
     vertices,triangles=original(ring,spacing)
@@ -35,8 +36,10 @@ def capture_fill(ring,spacing):
         maximum_triangle_edge_m=float(np.linalg.norm(edges,axis=2).max())))
     return vertices,triangles
 class Capture:
+    def __init__(self): self.parts=[]
     def add(self,layer,material,vertices,uv,triangles,**kwargs):
         triangle_counts[active]=triangle_counts.get(active,0)+len(triangles)
+        self.parts.append(np.asarray(vertices))
 pt._fill=capture_fill
 try:
     for plan in plans:
@@ -59,12 +62,33 @@ try:
                 footprints.append(dict(bed=active,authored_band_area_m2=g.area,
                     sampled_area_m2=sampled.area,area_difference_percent=100*(sampled.area/g.area-1),
                     boundary_hausdorff_m=g.boundary.hausdorff_distance(sampled.boundary)))
-                pt.hedge_mass(Capture(),g,lambda x,y:np.zeros_like(x),key,
+                capture=Capture()
+                pt.hedge_mass(capture,g,lambda x,y:np.zeros_like(x),key,
                     h=bed.get('height_m'),plant=bed.get('plant','berberis_red'))
+                cr=capture.parts[0][:,:2].reshape(6,-1,2)
+                sr=capture.parts[2][:,:2].reshape(6,-1,2)
+                outside=[Polygon(c).difference(Polygon(s)).area for c,s in zip(cr,sr)]
+                strips=[]
+                for name,rings in [('core',cr),('shell',sr)]:
+                    for i,(lo,hi) in enumerate(zip(rings,rings[1:])):
+                        quad_points=np.stack([lo,np.roll(lo,-1,axis=0),np.roll(hi,-1,axis=0),hi],axis=1)
+                        quads=shapely.polygons(quad_points)
+                        invalid=int((~shapely.is_valid(quads)).sum())
+                        lp,hp=Polygon(lo),Polygon(hi)
+                        row=dict(layer=name,band=i,invalid_quads=invalid,
+                            one_ring_contains_other=lp.covers(hp) or hp.covers(lp),
+                            smaller_outside_larger_m2=(lp.difference(hp).area if lp.area<hp.area else hp.difference(lp).area))
+                        if not invalid:
+                            union=shapely.union_all(quads)
+                            row.update(overlap_m2=float(shapely.area(quads).sum()-union.area),
+                                annulus_difference_m2=union.symmetric_difference(Polygon(lo).symmetric_difference(Polygon(hi))).area)
+                        strips.append(row)
+                strip_metrics.append(dict(bed=active,core_outside_shell_m2=outside,strips=strips))
 finally:
     pt._fill=original
 result=dict(source_sha256=hashlib.sha256((root/'tools/worldgen/streetscape/plantings.py').read_bytes()).hexdigest(),
-    caps=records,footprints=footprints,triangles_by_bed=triangle_counts,total_triangles=sum(triangle_counts.values()),
+    caps=records,footprints=footprints,strip_metrics=strip_metrics,
+    triangles_by_bed=triangle_counts,total_triangles=sum(triangle_counts.values()),
     note='Four authored footprints, flat z=0; no World, GIS pytest, Unity, or production write. Internal fill observation only; no visual acceptance.')
 (here/('cap-study-'+args.label+'.json')).write_text(json.dumps(result,indent=2)+'\n',encoding='utf-8')
 print(json.dumps(result,indent=2))

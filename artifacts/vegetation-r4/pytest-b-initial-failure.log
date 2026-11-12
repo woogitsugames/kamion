@@ -1,0 +1,380 @@
+FFFFFFFF...................                                              [100%]
+================================== FAILURES ===================================
+___ test_authored_berberis_has_valid_local_caps_and_uncrossed_strips[0.0-0] ___
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000158F6DD2210>
+bed_index = 0, slope = 0.0
+
+    @pytest.mark.parametrize('bed_index',range(4))
+    @pytest.mark.parametrize('slope',[0.,.03])
+    def test_authored_berberis_has_valid_local_caps_and_uncrossed_strips(monkeypatch,bed_index,slope):
+        from roads import geom
+        # A valid Delaunay result may contain boundary vertices only on a narrow bed.
+        # It must never use the invalid-ring ear-clipping escape route again.
+        monkeypatch.setattr(geom,'ear_clip',lambda *args: pytest.fail('Authored hedge used ear_clip fallback'))
+        original_fill=pt._fill
+        caps=[]
+        def checked_fill(ring,spacing):
+            polygon=Polygon(ring)
+            assert polygon.is_valid
+            vertices,triangles=original_fill(ring,spacing)
+            faces=vertices[triangles]
+            assert np.linalg.norm(faces[:,[1,2,0]]-faces,axis=2).max()<1.5
+            assert all(polygon.buffer(1e-7).covers(Polygon(face)) for face in faces)
+            caps.append((vertices,triangles))
+            return vertices,triangles
+        monkeypatch.setattr(pt,'_fill',checked_fill)
+        class Capture:
+            def __init__(self): self.parts=[]
+            def add(self,layer,material,vertices,uv,triangles,**kwargs):
+                self.parts.append((np.asarray(vertices),np.asarray(triangles)))
+        poly,key,bed=authored_bed(bed_index)
+        buf=Capture()
+        pt.hedge_mass(buf,poly,lambda x,y:slope*x+.5*slope*y,key,h=bed.get('height_m'))
+        assert len(caps)==2, 'Both inner and outer cap must be emitted'
+        # The first and third parts are the two six-ring side strips.
+        for vertices,_ in (buf.parts[0],buf.parts[2]):
+            rings=vertices[:,:2].reshape(6,-1,2)
+            for outer,inner in zip(rings,rings[1:]):
+                quads=[]
+                for i in range(len(outer)):
+                    j=(i+1)%len(outer)
+                    quad=Polygon([outer[i],outer[j],inner[j],inner[i]])
+>                   assert quad.is_valid and quad.area>1e-10, 'Crossed or collapsed side strip'
+E                   AssertionError: Crossed or collapsed side strip
+E                   assert (False)
+E                    +  where False = <POLYGON ((0.659 -0.83, 0.476 -1.277, 0.492 -1.315, 0.648 -0.842, 0.659 -0.83))>.is_valid
+
+tests\gis\test_berberis_0109_rings.py:65: AssertionError
+___ test_authored_berberis_has_valid_local_caps_and_uncrossed_strips[0.0-1] ___
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000158F86771D0>
+bed_index = 1, slope = 0.0
+
+    @pytest.mark.parametrize('bed_index',range(4))
+    @pytest.mark.parametrize('slope',[0.,.03])
+    def test_authored_berberis_has_valid_local_caps_and_uncrossed_strips(monkeypatch,bed_index,slope):
+        from roads import geom
+        # A valid Delaunay result may contain boundary vertices only on a narrow bed.
+        # It must never use the invalid-ring ear-clipping escape route again.
+        monkeypatch.setattr(geom,'ear_clip',lambda *args: pytest.fail('Authored hedge used ear_clip fallback'))
+        original_fill=pt._fill
+        caps=[]
+        def checked_fill(ring,spacing):
+            polygon=Polygon(ring)
+            assert polygon.is_valid
+            vertices,triangles=original_fill(ring,spacing)
+            faces=vertices[triangles]
+            assert np.linalg.norm(faces[:,[1,2,0]]-faces,axis=2).max()<1.5
+            assert all(polygon.buffer(1e-7).covers(Polygon(face)) for face in faces)
+            caps.append((vertices,triangles))
+            return vertices,triangles
+        monkeypatch.setattr(pt,'_fill',checked_fill)
+        class Capture:
+            def __init__(self): self.parts=[]
+            def add(self,layer,material,vertices,uv,triangles,**kwargs):
+                self.parts.append((np.asarray(vertices),np.asarray(triangles)))
+        poly,key,bed=authored_bed(bed_index)
+        buf=Capture()
+        pt.hedge_mass(buf,poly,lambda x,y:slope*x+.5*slope*y,key,h=bed.get('height_m'))
+        assert len(caps)==2, 'Both inner and outer cap must be emitted'
+        # The first and third parts are the two six-ring side strips.
+        for vertices,_ in (buf.parts[0],buf.parts[2]):
+            rings=vertices[:,:2].reshape(6,-1,2)
+            for outer,inner in zip(rings,rings[1:]):
+                quads=[]
+                for i in range(len(outer)):
+                    j=(i+1)%len(outer)
+                    quad=Polygon([outer[i],outer[j],inner[j],inner[i]])
+>                   assert quad.is_valid and quad.area>1e-10, 'Crossed or collapsed side strip'
+E                   AssertionError: Crossed or collapsed side strip
+E                   assert (False)
+E                    +  where False = <POLYGON ((12.331 -16.832, 12.791 -16.634, 12.763 -16.649, 12.296 -16.782, 1...>.is_valid
+
+tests\gis\test_berberis_0109_rings.py:65: AssertionError
+___ test_authored_berberis_has_valid_local_caps_and_uncrossed_strips[0.0-2] ___
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000158F85FEBA0>
+bed_index = 2, slope = 0.0
+
+    @pytest.mark.parametrize('bed_index',range(4))
+    @pytest.mark.parametrize('slope',[0.,.03])
+    def test_authored_berberis_has_valid_local_caps_and_uncrossed_strips(monkeypatch,bed_index,slope):
+        from roads import geom
+        # A valid Delaunay result may contain boundary vertices only on a narrow bed.
+        # It must never use the invalid-ring ear-clipping escape route again.
+        monkeypatch.setattr(geom,'ear_clip',lambda *args: pytest.fail('Authored hedge used ear_clip fallback'))
+        original_fill=pt._fill
+        caps=[]
+        def checked_fill(ring,spacing):
+            polygon=Polygon(ring)
+            assert polygon.is_valid
+            vertices,triangles=original_fill(ring,spacing)
+            faces=vertices[triangles]
+            assert np.linalg.norm(faces[:,[1,2,0]]-faces,axis=2).max()<1.5
+            assert all(polygon.buffer(1e-7).covers(Polygon(face)) for face in faces)
+            caps.append((vertices,triangles))
+            return vertices,triangles
+        monkeypatch.setattr(pt,'_fill',checked_fill)
+        class Capture:
+            def __init__(self): self.parts=[]
+            def add(self,layer,material,vertices,uv,triangles,**kwargs):
+                self.parts.append((np.asarray(vertices),np.asarray(triangles)))
+        poly,key,bed=authored_bed(bed_index)
+        buf=Capture()
+        pt.hedge_mass(buf,poly,lambda x,y:slope*x+.5*slope*y,key,h=bed.get('height_m'))
+        assert len(caps)==2, 'Both inner and outer cap must be emitted'
+        # The first and third parts are the two six-ring side strips.
+        for vertices,_ in (buf.parts[0],buf.parts[2]):
+            rings=vertices[:,:2].reshape(6,-1,2)
+            for outer,inner in zip(rings,rings[1:]):
+                quads=[]
+                for i in range(len(outer)):
+                    j=(i+1)%len(outer)
+                    quad=Polygon([outer[i],outer[j],inner[j],inner[i]])
+>                   assert quad.is_valid and quad.area>1e-10, 'Crossed or collapsed side strip'
+E                   AssertionError: Crossed or collapsed side strip
+E                   assert (False)
+E                    +  where False = <POLYGON ((20.782 0.186, 20.259 0.296, 20.193 0.277, 20.743 0.218, 20.782 0....>.is_valid
+
+tests\gis\test_berberis_0109_rings.py:65: AssertionError
+___ test_authored_berberis_has_valid_local_caps_and_uncrossed_strips[0.0-3] ___
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000158F871F8F0>
+bed_index = 3, slope = 0.0
+
+    @pytest.mark.parametrize('bed_index',range(4))
+    @pytest.mark.parametrize('slope',[0.,.03])
+    def test_authored_berberis_has_valid_local_caps_and_uncrossed_strips(monkeypatch,bed_index,slope):
+        from roads import geom
+        # A valid Delaunay result may contain boundary vertices only on a narrow bed.
+        # It must never use the invalid-ring ear-clipping escape route again.
+        monkeypatch.setattr(geom,'ear_clip',lambda *args: pytest.fail('Authored hedge used ear_clip fallback'))
+        original_fill=pt._fill
+        caps=[]
+        def checked_fill(ring,spacing):
+            polygon=Polygon(ring)
+            assert polygon.is_valid
+            vertices,triangles=original_fill(ring,spacing)
+            faces=vertices[triangles]
+            assert np.linalg.norm(faces[:,[1,2,0]]-faces,axis=2).max()<1.5
+            assert all(polygon.buffer(1e-7).covers(Polygon(face)) for face in faces)
+            caps.append((vertices,triangles))
+            return vertices,triangles
+        monkeypatch.setattr(pt,'_fill',checked_fill)
+        class Capture:
+            def __init__(self): self.parts=[]
+            def add(self,layer,material,vertices,uv,triangles,**kwargs):
+                self.parts.append((np.asarray(vertices),np.asarray(triangles)))
+        poly,key,bed=authored_bed(bed_index)
+        buf=Capture()
+        pt.hedge_mass(buf,poly,lambda x,y:slope*x+.5*slope*y,key,h=bed.get('height_m'))
+        assert len(caps)==2, 'Both inner and outer cap must be emitted'
+        # The first and third parts are the two six-ring side strips.
+        for vertices,_ in (buf.parts[0],buf.parts[2]):
+            rings=vertices[:,:2].reshape(6,-1,2)
+            for outer,inner in zip(rings,rings[1:]):
+                quads=[]
+                for i in range(len(outer)):
+                    j=(i+1)%len(outer)
+                    quad=Polygon([outer[i],outer[j],inner[j],inner[i]])
+>                   assert quad.is_valid and quad.area>1e-10, 'Crossed or collapsed side strip'
+E                   AssertionError: Crossed or collapsed side strip
+E                   assert (False)
+E                    +  where False = <POLYGON ((17.361 -1.248, 17.436 -0.76, 17.435 -0.779, 17.324 -1.265, 17.361...>.is_valid
+
+tests\gis\test_berberis_0109_rings.py:65: AssertionError
+__ test_authored_berberis_has_valid_local_caps_and_uncrossed_strips[0.03-0] ___
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000158F80BFC80>
+bed_index = 0, slope = 0.03
+
+    @pytest.mark.parametrize('bed_index',range(4))
+    @pytest.mark.parametrize('slope',[0.,.03])
+    def test_authored_berberis_has_valid_local_caps_and_uncrossed_strips(monkeypatch,bed_index,slope):
+        from roads import geom
+        # A valid Delaunay result may contain boundary vertices only on a narrow bed.
+        # It must never use the invalid-ring ear-clipping escape route again.
+        monkeypatch.setattr(geom,'ear_clip',lambda *args: pytest.fail('Authored hedge used ear_clip fallback'))
+        original_fill=pt._fill
+        caps=[]
+        def checked_fill(ring,spacing):
+            polygon=Polygon(ring)
+            assert polygon.is_valid
+            vertices,triangles=original_fill(ring,spacing)
+            faces=vertices[triangles]
+            assert np.linalg.norm(faces[:,[1,2,0]]-faces,axis=2).max()<1.5
+            assert all(polygon.buffer(1e-7).covers(Polygon(face)) for face in faces)
+            caps.append((vertices,triangles))
+            return vertices,triangles
+        monkeypatch.setattr(pt,'_fill',checked_fill)
+        class Capture:
+            def __init__(self): self.parts=[]
+            def add(self,layer,material,vertices,uv,triangles,**kwargs):
+                self.parts.append((np.asarray(vertices),np.asarray(triangles)))
+        poly,key,bed=authored_bed(bed_index)
+        buf=Capture()
+        pt.hedge_mass(buf,poly,lambda x,y:slope*x+.5*slope*y,key,h=bed.get('height_m'))
+        assert len(caps)==2, 'Both inner and outer cap must be emitted'
+        # The first and third parts are the two six-ring side strips.
+        for vertices,_ in (buf.parts[0],buf.parts[2]):
+            rings=vertices[:,:2].reshape(6,-1,2)
+            for outer,inner in zip(rings,rings[1:]):
+                quads=[]
+                for i in range(len(outer)):
+                    j=(i+1)%len(outer)
+                    quad=Polygon([outer[i],outer[j],inner[j],inner[i]])
+>                   assert quad.is_valid and quad.area>1e-10, 'Crossed or collapsed side strip'
+E                   AssertionError: Crossed or collapsed side strip
+E                   assert (False)
+E                    +  where False = <POLYGON ((0.659 -0.83, 0.476 -1.277, 0.492 -1.315, 0.648 -0.842, 0.659 -0.83))>.is_valid
+
+tests\gis\test_berberis_0109_rings.py:65: AssertionError
+__ test_authored_berberis_has_valid_local_caps_and_uncrossed_strips[0.03-1] ___
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000158F673A660>
+bed_index = 1, slope = 0.03
+
+    @pytest.mark.parametrize('bed_index',range(4))
+    @pytest.mark.parametrize('slope',[0.,.03])
+    def test_authored_berberis_has_valid_local_caps_and_uncrossed_strips(monkeypatch,bed_index,slope):
+        from roads import geom
+        # A valid Delaunay result may contain boundary vertices only on a narrow bed.
+        # It must never use the invalid-ring ear-clipping escape route again.
+        monkeypatch.setattr(geom,'ear_clip',lambda *args: pytest.fail('Authored hedge used ear_clip fallback'))
+        original_fill=pt._fill
+        caps=[]
+        def checked_fill(ring,spacing):
+            polygon=Polygon(ring)
+            assert polygon.is_valid
+            vertices,triangles=original_fill(ring,spacing)
+            faces=vertices[triangles]
+            assert np.linalg.norm(faces[:,[1,2,0]]-faces,axis=2).max()<1.5
+            assert all(polygon.buffer(1e-7).covers(Polygon(face)) for face in faces)
+            caps.append((vertices,triangles))
+            return vertices,triangles
+        monkeypatch.setattr(pt,'_fill',checked_fill)
+        class Capture:
+            def __init__(self): self.parts=[]
+            def add(self,layer,material,vertices,uv,triangles,**kwargs):
+                self.parts.append((np.asarray(vertices),np.asarray(triangles)))
+        poly,key,bed=authored_bed(bed_index)
+        buf=Capture()
+        pt.hedge_mass(buf,poly,lambda x,y:slope*x+.5*slope*y,key,h=bed.get('height_m'))
+        assert len(caps)==2, 'Both inner and outer cap must be emitted'
+        # The first and third parts are the two six-ring side strips.
+        for vertices,_ in (buf.parts[0],buf.parts[2]):
+            rings=vertices[:,:2].reshape(6,-1,2)
+            for outer,inner in zip(rings,rings[1:]):
+                quads=[]
+                for i in range(len(outer)):
+                    j=(i+1)%len(outer)
+                    quad=Polygon([outer[i],outer[j],inner[j],inner[i]])
+>                   assert quad.is_valid and quad.area>1e-10, 'Crossed or collapsed side strip'
+E                   AssertionError: Crossed or collapsed side strip
+E                   assert (False)
+E                    +  where False = <POLYGON ((12.331 -16.832, 12.791 -16.634, 12.763 -16.649, 12.296 -16.782, 1...>.is_valid
+
+tests\gis\test_berberis_0109_rings.py:65: AssertionError
+__ test_authored_berberis_has_valid_local_caps_and_uncrossed_strips[0.03-2] ___
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000158F67C19A0>
+bed_index = 2, slope = 0.03
+
+    @pytest.mark.parametrize('bed_index',range(4))
+    @pytest.mark.parametrize('slope',[0.,.03])
+    def test_authored_berberis_has_valid_local_caps_and_uncrossed_strips(monkeypatch,bed_index,slope):
+        from roads import geom
+        # A valid Delaunay result may contain boundary vertices only on a narrow bed.
+        # It must never use the invalid-ring ear-clipping escape route again.
+        monkeypatch.setattr(geom,'ear_clip',lambda *args: pytest.fail('Authored hedge used ear_clip fallback'))
+        original_fill=pt._fill
+        caps=[]
+        def checked_fill(ring,spacing):
+            polygon=Polygon(ring)
+            assert polygon.is_valid
+            vertices,triangles=original_fill(ring,spacing)
+            faces=vertices[triangles]
+            assert np.linalg.norm(faces[:,[1,2,0]]-faces,axis=2).max()<1.5
+            assert all(polygon.buffer(1e-7).covers(Polygon(face)) for face in faces)
+            caps.append((vertices,triangles))
+            return vertices,triangles
+        monkeypatch.setattr(pt,'_fill',checked_fill)
+        class Capture:
+            def __init__(self): self.parts=[]
+            def add(self,layer,material,vertices,uv,triangles,**kwargs):
+                self.parts.append((np.asarray(vertices),np.asarray(triangles)))
+        poly,key,bed=authored_bed(bed_index)
+        buf=Capture()
+        pt.hedge_mass(buf,poly,lambda x,y:slope*x+.5*slope*y,key,h=bed.get('height_m'))
+        assert len(caps)==2, 'Both inner and outer cap must be emitted'
+        # The first and third parts are the two six-ring side strips.
+        for vertices,_ in (buf.parts[0],buf.parts[2]):
+            rings=vertices[:,:2].reshape(6,-1,2)
+            for outer,inner in zip(rings,rings[1:]):
+                quads=[]
+                for i in range(len(outer)):
+                    j=(i+1)%len(outer)
+                    quad=Polygon([outer[i],outer[j],inner[j],inner[i]])
+>                   assert quad.is_valid and quad.area>1e-10, 'Crossed or collapsed side strip'
+E                   AssertionError: Crossed or collapsed side strip
+E                   assert (False)
+E                    +  where False = <POLYGON ((20.782 0.186, 20.259 0.296, 20.193 0.277, 20.743 0.218, 20.782 0....>.is_valid
+
+tests\gis\test_berberis_0109_rings.py:65: AssertionError
+__ test_authored_berberis_has_valid_local_caps_and_uncrossed_strips[0.03-3] ___
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000158F85DD250>
+bed_index = 3, slope = 0.03
+
+    @pytest.mark.parametrize('bed_index',range(4))
+    @pytest.mark.parametrize('slope',[0.,.03])
+    def test_authored_berberis_has_valid_local_caps_and_uncrossed_strips(monkeypatch,bed_index,slope):
+        from roads import geom
+        # A valid Delaunay result may contain boundary vertices only on a narrow bed.
+        # It must never use the invalid-ring ear-clipping escape route again.
+        monkeypatch.setattr(geom,'ear_clip',lambda *args: pytest.fail('Authored hedge used ear_clip fallback'))
+        original_fill=pt._fill
+        caps=[]
+        def checked_fill(ring,spacing):
+            polygon=Polygon(ring)
+            assert polygon.is_valid
+            vertices,triangles=original_fill(ring,spacing)
+            faces=vertices[triangles]
+            assert np.linalg.norm(faces[:,[1,2,0]]-faces,axis=2).max()<1.5
+            assert all(polygon.buffer(1e-7).covers(Polygon(face)) for face in faces)
+            caps.append((vertices,triangles))
+            return vertices,triangles
+        monkeypatch.setattr(pt,'_fill',checked_fill)
+        class Capture:
+            def __init__(self): self.parts=[]
+            def add(self,layer,material,vertices,uv,triangles,**kwargs):
+                self.parts.append((np.asarray(vertices),np.asarray(triangles)))
+        poly,key,bed=authored_bed(bed_index)
+        buf=Capture()
+        pt.hedge_mass(buf,poly,lambda x,y:slope*x+.5*slope*y,key,h=bed.get('height_m'))
+        assert len(caps)==2, 'Both inner and outer cap must be emitted'
+        # The first and third parts are the two six-ring side strips.
+        for vertices,_ in (buf.parts[0],buf.parts[2]):
+            rings=vertices[:,:2].reshape(6,-1,2)
+            for outer,inner in zip(rings,rings[1:]):
+                quads=[]
+                for i in range(len(outer)):
+                    j=(i+1)%len(outer)
+                    quad=Polygon([outer[i],outer[j],inner[j],inner[i]])
+>                   assert quad.is_valid and quad.area>1e-10, 'Crossed or collapsed side strip'
+E                   AssertionError: Crossed or collapsed side strip
+E                   assert (False)
+E                    +  where False = <POLYGON ((17.361 -1.248, 17.436 -0.76, 17.435 -0.779, 17.324 -1.265, 17.361...>.is_valid
+
+tests\gis\test_berberis_0109_rings.py:65: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/gis/test_berberis_0109_rings.py::test_authored_berberis_has_valid_local_caps_and_uncrossed_strips[0.0-0]
+FAILED tests/gis/test_berberis_0109_rings.py::test_authored_berberis_has_valid_local_caps_and_uncrossed_strips[0.0-1]
+FAILED tests/gis/test_berberis_0109_rings.py::test_authored_berberis_has_valid_local_caps_and_uncrossed_strips[0.0-2]
+FAILED tests/gis/test_berberis_0109_rings.py::test_authored_berberis_has_valid_local_caps_and_uncrossed_strips[0.0-3]
+FAILED tests/gis/test_berberis_0109_rings.py::test_authored_berberis_has_valid_local_caps_and_uncrossed_strips[0.03-0]
+FAILED tests/gis/test_berberis_0109_rings.py::test_authored_berberis_has_valid_local_caps_and_uncrossed_strips[0.03-1]
+FAILED tests/gis/test_berberis_0109_rings.py::test_authored_berberis_has_valid_local_caps_and_uncrossed_strips[0.03-2]
+FAILED tests/gis/test_berberis_0109_rings.py::test_authored_berberis_has_valid_local_caps_and_uncrossed_strips[0.03-3]
+8 failed, 19 passed in 4.16s

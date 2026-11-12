@@ -1,0 +1,9 @@
+$ErrorActionPreference='Stop'
+. ./artifacts/vegetation-r4/checkpoint.ps1
+$session=Get-Content artifacts/vegetation-r4/session.json -Raw | ConvertFrom-Json
+$session.phase='candidate_b_loft_rejected_before_world'
+$session.next_step='Task73347 terminal exit1:8failed19passed4.16s; no World B. Fix side topology locally in plantings.py: exact nested rings plus annulus CDT, not equal-index loft. PLAN-B.md authoritative. Then focused tests through heavy, World conditional. No active own heavy/Unity job now.'
+$session.state_authority='pytest-b-initial-failure.log, cap-study-b-strips.json, STATUS.md. World on disk remains candidate A. No candidate-b snapshot or probe yet.'
+$session | ConvertTo-Json -Depth 8 | Set-Content -Encoding utf8 artifacts/vegetation-r4/session.json
+Add-Content artifacts/vegetation-r4/STATUS.md '73347 terminalne1:8failed19passed4,16s. Osiem przypadków B odrzuca skrzyżowane quady; capy przeszły wcześniejsze warunki. World B nie wystartował, heavy zwolniony. Diagnostyka0,94s:5/8/8/6niepoprawnychquadów E1/E2/A/C, drobne naruszenia zagnieżdżenia ringów. Pierwszy union diagnostyki odmówił GEOS przy nieważnychquadach; helper teraz zapisuje ich liczbę bez prób naprawy. Krytyk zaleca dokładne niezależne offsety i lokalny CDT annulus zamiastloftu indeksowego, bez bulgeXY w nowejścieżce. PLAN-B uzupełniono. Jeszcze nie wdrożono poprawki; dysk nadal ma wygenerowany A, bez snapshot/probeB. Nie ma obecnie własnego ciężkiego procesu.'
+Save-VegetationCheckpoint -Message 'wip(vegetation): r4 odrzucony loft B po testach i diagnoza pasów' -Paths @('artifacts/vegetation-r4/STATUS.md','artifacts/vegetation-r4/session.json','artifacts/vegetation-r4/PLAN-B.md','artifacts/vegetation-r4/checkpoint-b-failure.ps1','artifacts/vegetation-r4/inspect_cap.py','artifacts/vegetation-r4/cap-study-b-strips.json','artifacts/vegetation-r4/pytest-b-initial-failure.log')
