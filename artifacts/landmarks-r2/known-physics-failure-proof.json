@@ -1,0 +1,32 @@
+﻿{
+    "known_failure":  "test_generator_reproduces_committed_scenarios",
+    "scope":  "Read-only proof; no physics edits or regeneration into committed scenarios",
+    "round_base":  "2c3939b2",
+    "files":  [
+                  {
+                      "file":  "tests/physics/test_scenario_strictness.py",
+                      "base_blob":  "cd9cf543589bd523d96d6d5086a2a3b2224575e6",
+                      "current_canonical_blob":  "cd9cf543589bd523d96d6d5086a2a3b2224575e6",
+                      "unchanged":  true
+                  },
+                  {
+                      "file":  "tests/physics/generate_stage2_scenarios.py",
+                      "base_blob":  "7c0892f182e449123fc01e5613edc40397e7e91c",
+                      "current_canonical_blob":  "7c0892f182e449123fc01e5613edc40397e7e91c",
+                      "unchanged":  true
+                  },
+                  {
+                      "file":  "tests/physics/scenarios/top_speed_flat_comb.json",
+                      "base_blob":  "08809bc103143731df44223885ab913edd9e7d60",
+                      "current_canonical_blob":  "08809bc103143731df44223885ab913edd9e7d60",
+                      "unchanged":  true
+                  },
+                  {
+                      "file":  "art-source/truck/dims.json",
+                      "base_blob":  "23815fee21f37b1b0282e6b0bd90cc130e510ddb",
+                      "current_canonical_blob":  "23815fee21f37b1b0282e6b0bd90cc130e510ddb",
+                      "unchanged":  true
+                  }
+              ],
+    "differing_scenario":  "top_speed_flat_comb.json"
+}

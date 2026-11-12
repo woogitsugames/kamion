@@ -275,3 +275,7 @@ Zdjęcia nie wchodzą do builda ani tekstur. Rejestr: [`docs/refs/posesje-bialys
 
 ## Life r3 — referencje analityczne (nie zasoby gry)
 Greg Schechter, 2200 km Later, oraz Nenad Stojkovic, Dirty back car window: CC BY 2.0; strony źródłowe, licencja i miniatury z atrybucją w artifacts/life-r3/refs/REFERENCES.md. Johann H. Addicks: wyłącznie udostępniona jako PD miniatura 250 px Salt coverd car during winter P1020038, bez oryginału. Brak kopiowania znaków/logo/tablic do gry.
+## Kabina — skan skóry CC0 (Poly Haven), GPT cab r2 (s12)
+| ID | Zasób (rozmiar fizyczny) | URL | Autor | Licencja | Mapy (MD5 w `art-source/truck/interior/cab_material_scans.json`) | Użycie w grze |
+|---|---|---|---|---|---|---|
+| `brown_leather` | Brown Leather (0,40 × 0,40 m; kafel 0,12 m, wieniec kierownicy 0,05 m) | https://polyhaven.com/a/brown_leather | Rob Tuytel | CC0 1.0 (https://polyhaven.com/license) | diffuse/normal GL/roughness/AO 2k | faktura skóry i tłoczenia tworzyw kabiny (ADR cab r2) |

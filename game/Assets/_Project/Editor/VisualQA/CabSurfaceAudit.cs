@@ -19,11 +19,12 @@ namespace Game.Editor.VisualQA
             int exit = 1;
             try
             {
-                string output = EditorTools.Arg("-cabOutput", Path.Combine(EditorTools.RepoRoot, "artifacts/cab-r1/surface-audit"));
+                string output = EditorTools.Arg("-cabOutput", Path.Combine(EditorTools.RepoRoot, "artifacts/cab-surface-audit"));
                 string tier = EditorTools.Arg("-cabTier", "High"), light = EditorTools.Arg("-cabLighting", "clear");
                 foreach (string mode in new[] { "baseline", "roughness-flat", "detail-off", "wear-flat", "ao-flat", "tint-flat" })
                 {
                     var copies = new List<Mesh>();
+                    var originals = new Dictionary<MeshFilter, Mesh>();
                     void Prepare(Scene scene, OpenSceneMode openMode)
                     {
                         if (mode == "baseline") return;
@@ -39,6 +40,7 @@ namespace Game.Editor.VisualQA
                                 if (renderer.sharedMaterials[sub].name.StartsWith("MI_Cab_Plastic", StringComparison.Ordinal))
                                     indices.UnionWith(source.GetTriangles(sub));
                             if (indices.Count == 0) continue;
+                            originals.Add(filter, source);
                             Mesh mesh = UnityEngine.Object.Instantiate(source); copies.Add(mesh);
                             var colors = mesh.colors;
                             var ao = mesh.uv2;
@@ -69,6 +71,8 @@ namespace Game.Editor.VisualQA
                     finally
                     {
                         EditorSceneManager.sceneOpened -= Prepare;
+                        foreach (var pair in originals)
+                            if (pair.Key != null) pair.Key.sharedMesh = pair.Value;
                         foreach (var mesh in copies) UnityEngine.Object.DestroyImmediate(mesh);
                     }
                 }

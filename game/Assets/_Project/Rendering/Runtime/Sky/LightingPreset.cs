@@ -50,6 +50,14 @@ namespace Game.Rendering
         [Range(0, 3)] public int highSunShadowFilter;
         [Tooltip("ADR 0108: display-only blue-sky chroma multiplier above the haze horizon; 0/1 keep the analytic colour.")]
         [Range(1f, 4f)] public float clearSkySaturation = 1f;
+        [Tooltip("ADR 0108 r2: opt-in diffuse low-beam projection on world surfaces, in the existing pass. No occlusion.")]
+        public bool projectedHeadlamps;
+        [Tooltip("WORKING_VALUE beam peak cd per head; independent of emissive lens nits. Used only when projection is enabled.")]
+        [Range(0f, 60000f)] public float projectedHeadlampPeakCd = 20000f;
+        [Tooltip("Display-only sky/fog gain; default1 leaves legacy presets intact. SH, sun and surface exposure are unchanged.")]
+        [Range(0.001f, 1f)] public float skyDisplayGain = 1f;
+        [Tooltip("Display-only sky/fog desaturation, used to suppress the twilight model's orange lobe in Night.")]
+        [Range(0f, 1f)] public float skyDisplayDesaturation;
         [Tooltip("Cloud texture tiles per unit of the cloud plane (plane at height 1; smaller = larger cloud masses)")]
         public float cloudScale = 0.16f;
         [Tooltip("Cloud drift (plane units per second; ~0.004 = 20 km/h at 1500 m)")]
@@ -177,6 +185,20 @@ namespace Game.Rendering
             p.name = "LP_Dusk";
             p.sunElevationDeg = -5f; p.sunAzimuthDeg = 300f; p.turbidity = 4f; p.overcast = 0.2f; p.visibilityKm = 12f;
             p.lookSaturation = -3f;
+            return p;
+        }
+
+        /// <summary>ADR 0108 r2 WORKING_VALUE: a separate night appearance at the existing twilight model's
+        /// lower bound. This is not an astronomical night-sky fit. Extra exposure restraint darkens ambient-lit
+        /// surfaces while fixed-luminance lamps gain contrast against the dimmer sky; dusk remains unchanged.</summary>
+        public static LightingPreset CreateNight()
+        {
+            var p = CreateDusk();
+            p.name = "LP_Night";
+            p.sunElevationDeg = SkyModel.MinTwilightElevationDeg;
+            p.exposureCompensation = -3f; // reviewed Night appearance; preserve lamp/cab visibility.
+            p.skyDisplayGain = 0.125f;
+            p.skyDisplayDesaturation = 0.85f;
             return p;
         }
     }

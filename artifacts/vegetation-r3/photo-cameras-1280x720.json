@@ -1,0 +1,27 @@
+{
+  "schema": "kamion/sbs-cameras/1",
+  "frame": "E,N,absolute U",
+  "cameras": [
+    {
+      "id": "sbs-g3-b-150280503737744",
+      "kind": "photo_match",
+      "seat": "file",
+      "type": "persp",
+      "pos": [
+        -275.2184,
+        -214.0732,
+        132.4223
+      ],
+      "look_at": [
+        -245.9429,
+        -241.107,
+        135.903
+      ],
+      "fov_deg": 39.99889,
+      "segment": "G3-B",
+      "pose_confidence": "B",
+      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+    }
+  ]
+}

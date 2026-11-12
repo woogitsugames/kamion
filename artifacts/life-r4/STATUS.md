@@ -1,0 +1,9 @@
+# Life r4 — koła pojazdów placowych i diagnoza widoczności
+
+Krok 1 (12.11.2026, około 11:42): r3 przekazana (aa2b6947; kod/testy 8cb8462a/ec34b045, REPORT i kopia w main artifacts/life-r3). Utworzono gpt-life-r4 z poprzedniej rundy i dołączono main 8b74c2c5 wyłącznie do własnej gałęzi. Generaty konfliktowe i GLB przyjęto z main do kanonicznej regeneracji; docs/LICENSES zachowuje oba wpisy (kabina i analityczne life). Kod materials.py połączył się automatycznie, wymaga kontroli unii przed buildem. Nie edytowano produkcji innych dziedzin.
+
+Cel: na aktualnym main potwierdzić faktyczny runtime LOD i widoczność istniejącego osprzętu, potem poprawić płaskie koła w life_props bez zmiany progu LOD, rozmieszczenia, kontaktu, kolizji, globalnego rim ani liczby grup. Odbiór fotograficzny PARTIAL z r2/r3 pozostaje otwarty. Palety są kolejnym backlogiem, nie zapomniano ich.
+
+Oryginalna doba kończy się około 12.11.2026 21:31 Warszawa. Jedyny integrator main: lider Claude (kontynuacja S12). Bez scalania do main, pushowania i telefonów. Każde Unity: slot gpt-life; ciężki Python: heavy gpt-life-r4, bez usuwania cudzych slotów/rezerwacji. StaleHours 1000000.
+
+Następny krok: zakończyć merge i sprawdzić wspólną flagę flake_lift; odświeżyć dozwolone źródła raw/CC0/Megascans, kanoniczne materiały → World → fidelity w jednym heavy, nowy import/baseline w czterech warunkach. Dopiero po oględzinach zmiana produkcyjna. Nie używać starego main z r3 jako baseline.
