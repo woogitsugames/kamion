@@ -19,3 +19,5 @@ Krok 6a: skrypt kontynuacji baseline oczekuje wyłącznie na potwierdzony proces
 Krok 6b: przygotowano pary EC 960 px z pełną wysokością zdjęcia CC BY 3.0; tylko centralne przycięcie renderu 2340→1920 i jawne powiększenie detali 2x. Bez osobnego skalowania kominów, przekształcania pozy i korekty barwy. Ograniczenia źródła i atrybucja zapiszą się przy każdej parze. NASTĘPNY KROK po baseline: uv run --project tools/worldgen python artifacts/landmarks-r3/photo_pair.py before.
 
 Krok 6c: przygotowano odczyt rzeczywistych macierzy WorldInstances.SyncOrigin w Unity, do uruchomienia po baseline. Ma odróżnić pochylenie modelu od perspektywy. Tymczasowy skrypt Editor nie zapisuje scen i jest usuwany po uruchomieniu pod slotem. Jeszcze nie wykonany.
+
+Krok 7: świeży baseline świata po merge main ukończony bez fallback=True. Zachowano manifest, QA i własną bibliotekę proceduralną do porównań kominów. NASTĘPNY KROK: import przygotowanych danych i pełne cztery zestawy QA, pod Unity.
