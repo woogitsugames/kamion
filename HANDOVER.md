@@ -9,9 +9,9 @@
 | 0141 | krawędź/tło far_skyline | Fable | `edge-r6c` | regeneracja po merge main, render merged |
 | 0144 | węzły r7 (W-beam, filary, żwir, F-10 482392) | Fable | `junctions-r7` | build r7a |
 | 0146 | Putry/Andersa (latarnie, pobocze, mur 810896, portal Andersa, gzyms) | Fable | `putry-andersa` | build_world w kolejce heavy |
-| — | integracja Mistral r2 #6–#14 | Opus | `mistral-r2-int` | 9/9 + poprawki, pushnięte `1e9a5678`; analiza porażek gis vs main |
+- **20:1x: SCALONE Mistral r2 #6–#14** (`fc500083`, merge `mistral-r2-int`; PR-y zamknięte jako scalone; 7 porażek tests/gis = te same na main, 0 nowych; po scaleniu: `fidelity/run.py` na main w integracji). Worktree `mistral-r2-int` do usunięcia (`scripts/cleanup-disk.ps1`).
 - **Mistral runda 3 + M9: PR #15–#20 gotowe, NIEZRECENZOWANE** (właściciel: Mistral skończył) → s15.
-- Dysk: C: 0,9 GB → ~409 GB wolnego po sprzątaniu (`artifacts/lead-s14/cleanup-disk2.log`); narzędzie `scripts/cleanup-disk.ps1`.
+- Dysk: C: 0,9 GB → 446 GB wolnego; ~600 GB nierozpoznane + artifacts 226 GB, worktree 293 GB, Temp 84 GB, uv 45 GB → **sesja GPT: `docs/owner/GPT-DISK-CLEANUP-PROMPT.md`** (raport `docs/owner/DISK-REPORT-2026-11-12.md`). Wcześniej ~409 GB wolnego po sprzątaniu (`artifacts/lead-s14/cleanup-disk2.log`); narzędzie `scripts/cleanup-disk.ps1`.
 - APK: opony `artifacts/apk/kamion-0.1.0-139dc835cf.apk`; orientacja+opony `artifacts/orientation/kamion-0.1.0-387a492d24.apk` (test Fold właściciela).
 - main wymaga JEDNEJ regeneracji (0123, 0128, 0129, 0133, 0139, 0143, CRLF) + ImpostorTrimBake (0136).
 
