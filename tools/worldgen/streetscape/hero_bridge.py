@@ -360,7 +360,10 @@ def plan(w, region_id, overrides, zground, blocked, log=lambda *a: None) -> list
                     back = t * (-1 if k == 0 else 1)
                     steps = []
                     stair_top = mid[2] - spec["params"]["girder_depth_m"] - .10
-                    for j in range(40):
+                    # ADR 0119: a flight needs an explicitly confirmed landing.
+                    # The former default crossed the noise screen. Keep grass
+                    # sampling independent of this fail-closed structural flag.
+                    for j in range(40 if spec["params"].get("stairs_enabled", False) else 0):
                         xy = mid[:2] + n * (hw + .65) + back * ((j + .5) * spec["params"]["stairs_tread_m"])
                         if blocked(xy):
                             break
@@ -413,7 +416,7 @@ def _quad(buf, points, mat, src, outward):
     buf.add("bridge", mat, v, np.column_stack([v[:, 0] + v[:, 2], v[:, 1] + v[:, 2]]), t, src=src)
 
 
-def _prism(buf, centre, t, hl, hw, bevel, z0, z1, mat, src, collision=False):
+def _prism(buf, centre, t, hl, hw, bevel, z0, z1, mat, src, collision=False, *, bevel_mat=None):
     """Eight-sided concrete column/head; bevel is geometry, never a round normal."""
     t = np.asarray(t, float)
     n = np.array([-t[1], t[0]])
@@ -427,7 +430,15 @@ def _prism(buf, centre, t, hl, hw, bevel, z0, z1, mat, src, collision=False):
         faces += [(i, j, j + 8), (i, j + 8, i + 8)]
     faces += [(8, 8 + i, 9 + i) for i in range(1, 7)]
     uv = np.column_stack([v[:, 0] + v[:, 2], v[:, 1] + v[:, 2]])
-    buf.add("bridge", mat, v, uv, faces, src=src)
+    if bevel_mat and bevel_mat != mat:
+        # ADR 0119: the photo shows bare concrete on the four vertical bevels.
+        # Partition existing triangles only; the collision stays one full solid.
+        painted = [face for i, face in enumerate(faces) if i >= 16 or (i // 2) % 2 == 0]
+        bare = [face for i, face in enumerate(faces) if i < 16 and (i // 2) % 2 == 1]
+        buf.add("bridge", mat, v, uv, painted, src=src)
+        buf.add("bridge", bevel_mat, v, uv, bare, src=src + ":chamfer")
+    else:
+        buf.add("bridge", mat, v, uv, faces, src=src)
     if collision:
         buf.add("collision", "collision_building", v, uv, faces, src=src)
 
@@ -524,7 +535,8 @@ def _apply_underdeck(w, hero, instances=None):
         # The support footprint was checked against the ground-road exclusion mask.
         for qi, q in enumerate(pr["cols"]):
             _prism(buf, q[:2], t, .5, .6, .25, q[2] - .5, cap_bottom,
-                   "pier_yellow", src + ":column", collision=True)
+                   "pier_yellow", src + ":column", collision=True,
+                   bevel_mat="bridge_concrete" if prm.get("unpainted_chamfers", False) else None)
             _prism(buf, q[:2], t, .66, .75, .13, cap_bottom, cap_top,
                    "bridge_concrete", src + ":head", collision=True)
             M.box(buf, "bridge", "bridge_soffit", q[:2], t, .30, .36,
@@ -557,7 +569,8 @@ def _apply_underdeck(w, hero, instances=None):
         _pipe(buf, a, b, .075, src + ":outlet")
         _pipe(buf, b, [*xy, q[2] + .15], .075, src + ":downpipe")
 
-    # Abutments, wing walls and an explicit stair flight down the embankment.
+    # Abutments and wing walls; stairs require a confirmed landing in both
+    # current configuration and generated spec (a stale spec cannot enable them).
     so = dk["s_open"]
     if so:
         for k, end in enumerate(so):
@@ -586,7 +599,10 @@ def _apply_underdeck(w, hero, instances=None):
                       "bridge_soffit", src + ":joint_runoff", np.append(-back, 0))
             # Solid stair flight descending away from the abutment; every riser
             # is supported down to sampled ground, not a floating stack of slabs.
-            for x, y, z, tread in spec.get("stairs", [[], []])[k]:
+            stairs_enabled = (prm.get("stairs_enabled", False) is True and
+                              hero["override"].get("set", {}).get("stairs_enabled", False) is True)
+            steps = spec.get("stairs", [[], []])[k] if stairs_enabled else []
+            for x, y, z, tread in steps:
                 M.box(buf, "bridge", "bridge_concrete", [x, y], t, prm["stairs_tread_m"] / 2,
                       prm["stairs_width_m"] / 2, z - .25, tread, src + ":stairs")
     after = sum(len(p.T) for p in buf.parts if p.layer == "bridge")

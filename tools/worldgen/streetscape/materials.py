@@ -514,3 +514,23 @@ for _k in ("roof_tiles_red", "roof_tiles_brown"):
 #   unmown verge next to it).
 M["plot_kit"] = {"color": [1.0, 1.0, 1.0], "rough": 0.85, "texture": "plot_kit", "alpha_cutoff": 0.5}
 M["plot_lawn"] = {"color": [0.150, 0.200, 0.060], "rough": 0.95, "surface": "grass", "texture_set": "grass_verge"}
+
+
+def _underdeck_pier_paint(default):
+    """ADR 0119: opt-in pigment for the existing DK8 pier material only."""
+    import json
+    import math
+    from pathlib import Path
+    path = Path(__file__).resolve().parents[3] / "Data/Regions/bialystok-industrial-c/viaduct_underdeck.json"
+    try:
+        paint = json.loads(path.read_text(encoding="utf-8")).get("pier_paint", {})
+        color = paint.get("color_linear")
+        if paint.get("enabled") is True and isinstance(color, list) and len(color) == 3:
+            if all(isinstance(c, (int, float)) and not isinstance(c, bool) and math.isfinite(c) and 0 <= c <= 1 for c in color):
+                return list(color)
+    except (OSError, ValueError, TypeError):
+        pass
+    return default
+
+
+M["pier_yellow"]["color"] = _underdeck_pier_paint(M["pier_yellow"]["color"])
