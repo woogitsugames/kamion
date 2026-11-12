@@ -53,11 +53,20 @@ if($Release -and $Pool -eq 'unity'){
         'state' {$c=Get-Content $capture -Raw | ConvertFrom-Json;$c.lighting='clear';$c | ConvertTo-Json -Depth 8 | Set-Content $capture}
         'duplicate' {Copy-Item $capture (Join-Path (Split-Path $capture -Parent) 'capture-extra.json')}
         'missing' {Remove-Item -LiteralPath $capture}
+        'roster' {$c=Get-Content $capture -Raw | ConvertFrom-Json;$c.cameras=@('sbs-test','sbs-test');$c | ConvertTo-Json -Depth 8 | Set-Content $capture}
+        'dimensions' {
+            $raw=Join-Path $root 'out/renders/Low-overcast/sbs-test.png'
+            Copy-Item (Join-Path $root 'different-size.png') $raw -Force
+            $c=Get-Content $capture -Raw | ConvertFrom-Json
+            $c.render_sha256.'sbs-test'=(Get-FileHash $raw).Hash.ToLower()
+            $c | ConvertTo-Json -Depth 8 | Set-Content $capture
+        }
     }
 }
 exit 0
 """,encoding='utf-8')
     Image.new('RGB',(1280,960),'gray').save(root/'template.png')
+    Image.new('RGB',(1280,720),'gray').save(root/'different-size.png')
     (scripts/'visual-qa.ps1').write_text(r"""
 param([string]$Scene,[string]$Tier,[string]$Lighting,[int]$Width,[int]$Height,[string]$Gate3,[string]$Cameras,[string]$OutputDir)
 $root=Split-Path $PSScriptRoot -Parent
@@ -198,7 +207,8 @@ def test_render_only_seals_complete_raw_without_existing_metrics(tmp_path):
 
 @pytest.mark.parametrize('tamper,error',[
     ('raw','Captured raw hash differs'),('state','Capture status or render state differs'),
-    ('duplicate','Incomplete aspect capture roster'),('missing','Cannot snapshot evidence without render captures')])
+    ('duplicate','Incomplete aspect capture roster'),('missing','Cannot snapshot evidence without render captures'),
+    ('roster','Incomplete or duplicate capture cameras'),('dimensions','Raw dimensions differ from capture')])
 def test_render_only_rejects_incomplete_or_changed_capture_before_sealing(tmp_path,tamper,error):
     root,env=fixture_repo(tmp_path)
     original=(root/'out/inputs/world_manifest.json').read_bytes()
@@ -209,3 +219,14 @@ def test_render_only_rejects_incomplete_or_changed_capture_before_sealing(tmp_pa
     assert (root/'out/inputs/world_manifest.json').read_bytes()==original
     assert not (root/'artifacts/locks/unity-slots/gpt-sbs.slot').exists()
     assert not lines(root/'uv-calls.jsonl')
+
+
+def test_snapshot_cannot_publish_mixed_main_bases_between_states(tmp_path):
+    root,env=fixture_repo(tmp_path,('overcast','clear'))
+    original=(root/'out/inputs/world_manifest.json').read_bytes()
+    path=root/'out/renders/Low-clear/capture-4x3.json'
+    capture=json.loads(path.read_text());capture['main_sha']='c'*40;write(path,capture)
+    result=invoke(root,env,('overcast','clear'))
+    assert result.returncode!=0 and 'Cannot snapshot mixed main bases' in result.stderr
+    assert (root/'out/inputs/world_manifest.json').read_bytes()==original
+    assert not (root/'artifacts/locks/heavy-slots/gpt-sbs-test.slot').exists()

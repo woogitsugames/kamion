@@ -114,6 +114,7 @@ function Save-EvidenceInputs([switch]$CaptureOnly) {
         }
     }}
     if(@($captureRows.git_sha | Select-Object -Unique).Count -ne 1){throw 'Cannot snapshot mixed code epochs'}
+    if(@($captureRows.main_sha | Select-Object -Unique).Count -ne 1){throw 'Cannot snapshot mixed main bases'}
     foreach($name in @('sbs_authored_overrides.json','sbs_extra_references.json','sbs_intrinsics.json','sbs_landmarks.json','sbs_photometry.json','sbs_recognition.json')){
         $source=Join-Path $sourceInputRoot $name
         if(Test-Path -LiteralPath $source){$sourceMap[$name]=$source}
