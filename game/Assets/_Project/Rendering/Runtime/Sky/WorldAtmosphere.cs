@@ -84,10 +84,10 @@ namespace Game.Rendering
         public static void Push(EnvironmentLighting env, Color fogExposed)
         {
             var p = env.Active;
-            if (p == null) return;
+            if (p == null) { KamionHeadlamps.Reset(); return; }
             bool hasTier = QualityProfileApplier.HasCurrent;
             var t = hasTier ? QualityProfileApplier.Current : default;
-            KamionHeadlamps.Push(env.Model, HeadlampsOverride ?? p.projectedHeadlamps, p.projectedHeadlampPeakCd);
+            KamionHeadlamps.Push(env.Model, HeadlampsOverride ?? p.projectedHeadlamps, p.projectedHeadlampPeakCd, env.gameObject.scene);
 
             // ---- haze
             bool layer = HazeOverride ?? !(hasTier && t.groundHazeOff);

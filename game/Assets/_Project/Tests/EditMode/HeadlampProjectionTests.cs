@@ -3,6 +3,7 @@ using NUnit.Framework;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.TestTools;
+using UnityEngine.SceneManagement;
 
 namespace Game.Tests
 {
@@ -97,6 +98,48 @@ namespace Game.Tests
             MakeCab("player one"); MakeCab("player two"); LowBeam(true);
             LogAssert.Expect(LogType.Warning, "[HEADLAMP] projection disabled: requires exactly one active player cab; found 2");
             KamionHeadlamps.Push(m_Night.CreateModel(), true, 20000f);
+            Assert.IsFalse(KamionHeadlamps.Enabled);
+        }
+
+        [Test]
+        public void LaterSecondOwnerIsDetectedByBoundedPeriodicRecheck()
+        {
+            MakeCab("first player"); LowBeam(true); var model = m_Night.CreateModel();
+            KamionHeadlamps.Push(model, true, 20000f);
+            Assert.IsTrue(KamionHeadlamps.Enabled);
+            MakeCab("later player");
+            System.Threading.Thread.Sleep(300); // monotonic binding clock; no busy loop, no frame-time dependency
+            LogAssert.Expect(LogType.Warning, "[HEADLAMP] projection disabled: requires exactly one active player cab; found 2");
+            KamionHeadlamps.Push(model, true, 20000f);
+            Assert.IsFalse(KamionHeadlamps.Enabled);
+        }
+
+        [Test]
+        public void PreviewCabCannotStealMainSceneBindingOrPublishAProjection()
+        {
+            MakeCab("real player"); LowBeam(true); var model = m_Night.CreateModel();
+            var preview = EditorSceneManager.NewPreviewScene();
+            try
+            {
+                var other = MakeCab("preview player");
+                SceneManager.MoveGameObjectToScene(other.gameObject, preview);
+                KamionHeadlamps.Push(model, true, 20000f);
+                Assert.IsTrue(KamionHeadlamps.Enabled, "preview must not count as a second real player");
+                KamionHeadlamps.Push(model, true, 20000f, preview);
+                Assert.IsFalse(KamionHeadlamps.Enabled, "preview cannot publish into game lighting globals");
+            }
+            finally { EditorSceneManager.ClosePreviewScene(preview); }
+        }
+
+        [Test]
+        public void ReparentedAnchorInvalidatesSuccessfulCacheImmediately()
+        {
+            var cab = MakeCab("player"); LowBeam(true); var model = m_Night.CreateModel();
+            KamionHeadlamps.Push(model, true, 20000f);
+            Assert.IsTrue(KamionHeadlamps.Enabled);
+            cab.cab.Find("LIGHT_LowBeam_L").SetParent(null, true);
+            LogAssert.Expect(LogType.Warning, "[HEADLAMP] projection disabled: missing or ambiguous actual LIGHT_LowBeam_L/R anchors");
+            KamionHeadlamps.Push(model, true, 20000f);
             Assert.IsFalse(KamionHeadlamps.Enabled);
         }
 

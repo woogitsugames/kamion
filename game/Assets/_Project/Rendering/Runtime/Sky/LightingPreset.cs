@@ -53,7 +53,7 @@ namespace Game.Rendering
         [Tooltip("ADR 0108 r2: opt-in diffuse low-beam projection on world surfaces, in the existing pass. No occlusion.")]
         public bool projectedHeadlamps;
         [Tooltip("WORKING_VALUE beam peak cd per head; independent of emissive lens nits. Used only when projection is enabled.")]
-        [Min(0f)] public float projectedHeadlampPeakCd = 20000f;
+        [Range(0f, 60000f)] public float projectedHeadlampPeakCd = 20000f;
         [Tooltip("Cloud texture tiles per unit of the cloud plane (plane at height 1; smaller = larger cloud masses)")]
         public float cloudScale = 0.16f;
         [Tooltip("Cloud drift (plane units per second; ~0.004 = 20 km/h at 1500 m)")]
