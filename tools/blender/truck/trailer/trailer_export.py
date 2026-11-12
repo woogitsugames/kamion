@@ -84,7 +84,7 @@ LOD2_DROP = LOD1_DROP + ("_nut", "lockcam", "hinge_strap", "buckle_", "strap_", 
                          "curtain_front_strip", "stalk_", "side_reflector", "sideguard_post", "lockbar",
                          "door_frame", "beam_flange", "rup_brace", "tri_reflector", "contour_rear", "toolbox",
                          "leg_gearbox", "front_lamp", "rear_marker", "door_centre_seal", "rear_sill_face",
-                         "coupler_plate", "front_cross", "_hubcap", "crank_hub", "crank_grip", "pallet_rib",
+                         "coupler_plate", "front_cross", "crank_hub", "crank_grip", "pallet_rib",
                          "pallet_strap", "spare_hanger", "spare_clamp", "spare_rod", "spare_carrier", "spare_disc",
                          "chock")
 
@@ -673,7 +673,7 @@ def export_lod(lod, master, a, manifest, coll):
     k = 0.0
     if raw > TRI_TARGET[lod]:
         k = A.decimate_pieces(pieces, TRI_TARGET[lod], floor_tris={0: 60, 1: 24, 2: 8}[lod],
-                              lights_min={0: 0.9, 1: 0.5, 2: 0.2}[lod])
+                              lights_min={0: 0.9, 1: 0.5, 2: 0.2}[lod], keep_wheel_centres=lod >= 2)
     fr = frames()
     parts = join_parts(pieces)
     sfx = f"_LOD{lod}"

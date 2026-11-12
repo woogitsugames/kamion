@@ -110,7 +110,7 @@ LOD2_DROP = LOD1_DROP + ("coil", "damper_", "brake_chamber", "caliper_", "tie_ro
                          "fog_bowl", "battery_lid", "adblue_cap", "diff", "front_axle", "axle_rear", "bellow_",
                          "front_mudflap_clamp", "lamp_gasket", "rear_joint", "air_tank",
                          "fifth_handle", "fifth_lock", "fifth_bracket", "fifth_mount", "plate_holder",
-                         "marker_front_led", "catwalk_grab", "coupling_panel", "_hubcap", "_hub",
+                         "marker_front_led", "catwalk_grab", "coupling_panel",
                          "exhaust_flex", "exhaust_clamp", "exhaust_stay_arm", "proj_bezel", "pos_gasket",
                          "marker_front_gasket", "side_repeater_base", "lane_dash", "proj_shroud", "hb_led", "roof_hatch_glass",
                          "skirt_swage", "skirt_vent", "skirt_flange", "skirt_gap")
@@ -1325,7 +1325,42 @@ def reduce_round(o, target_seg, profile_tol=0.004, tyre_tol=0.02):
             dp(i0, bi)
             dp(bi, i1)
     dp(0, len(pts) - 1)
+    # Atlas islands are a separate constraint from geometric chord error. A coarse cell whose
+    # corners come from different islands interpolates across unrelated atlas content (r3:
+    # WHEEL_FL_LOD2 had 47 triangles spanning > 0.25 UV, versus zero at LOD0/1).
+    # Keep island boundaries on both grid axes; diagonal cuts keep their original cell.
+    atlas = bm.loops.layers.uv.get("Atlas")
+    if atlas is None:
+        bm.free()
+        return nseg, nseg  # no texture contract to preserve: leave the original piece intact
+    parent = {f: f for f in bm.faces}
+
+    def chart(f):
+        while parent[f] != f:
+            parent[f] = parent[parent[f]]
+            f = parent[f]
+        return f
+
+    cuts = set(range(0, nseg, k))
+    for edge in bm.edges:
+        if len(edge.link_faces) != 2:
+            continue
+        a, b = edge.link_faces
+        ua = {lp.vert: lp[atlas].uv.copy() for lp in a.loops}
+        ub = {lp.vert: lp[atlas].uv.copy() for lp in b.loops}
+        seam = a.material_index != b.material_index or any(
+            (ua[v] - ub[v]).length_squared > 1e-10 for v in edge.verts)
+        if not seam:
+            parent[chart(b)] = chart(a)
+            continue
+        ec = {col[v] for v in edge.verts}
+        er = {ring[v] for v in edge.verts}
+        if len(ec) == 1 or len(er) != 1:
+            cuts.update(ec)
+        if len(er) == 1 or len(ec) != 1:
+            keep.update(er)
     rings = sorted(keep)
+    columns = sorted(cuts)
     cells, corner = {}, {}
     for f in bm.faces:
         cs, rs = {col[v] for v in f.verts}, {ring[v] for v in f.verts}
@@ -1339,18 +1374,20 @@ def reduce_round(o, target_seg, profile_tol=0.004, tyre_tol=0.02):
         for lp in f.loops:
             corner[(ci, min(rs), col[lp.vert], ring[lp.vert])] = lp
     kill, made = set(), 0
-    for c0 in range(0, nseg, k):
-        c1 = (c0 + k) % nseg
-        cl = (c0 + k - 1) % nseg
+    for c0, c1 in zip(columns, columns[1:] + columns[:1]):
+        width = (c1 - c0) % nseg
+        cl = (c1 - 1) % nseg
         for r0, r1 in zip(rings, rings[1:]):
-            block = [(c % nseg, r) for c in range(c0, c0 + k) for r in range(r0, r1)]
+            block = [(c % nseg, r) for c in range(c0, c0 + width) for r in range(r0, r1)]
             present = [cells[b] for b in block if b in cells]
-            if not present or (k == 1 and r1 == r0 + 1):
+            if not present or (width == 1 and r1 == r0 + 1):
                 continue
             lps = [corner.get((c0, r0, c0, r0)), corner.get((cl, r0, c1, r0)),
                    corner.get((cl, r1 - 1, c1, r1)), corner.get((c0, r1 - 1, c0, r1))]
             if any(lp is None for lp in lps):
                 continue                      # corner culled: the LOD0 cells of this block stay
+            if len({chart(lp.face) for lp in lps}) != 1:
+                continue                      # disconnected atlas charts must never be bridged
             src = lps[0].face
             try:
                 nf = bm.faces.new([lp.vert for lp in lps], src)
@@ -1372,7 +1409,7 @@ def reduce_round(o, target_seg, profile_tol=0.004, tyre_tol=0.02):
     bm.free()
     o.data.update()
     o.data.set_sharp_from_angle(angle=math.radians(60 if is_tyre else 45))
-    return nseg, nseg // k
+    return nseg, len(columns)
 
 
 # r7c (review r7 N-1: "the front falls apart on Low"): pieces that are surface-following GRIDS are not collapsed. The
@@ -1579,7 +1616,7 @@ def reduce_grid(o, kind, tol_m, open_top=0.0):
     return ncol, len(kc)
 
 
-def decimate_pieces(pieces, target, floor_tris=40, lights_min=0.5, round_seg=0, keep=(), grid_lod=0):
+def decimate_pieces(pieces, target, floor_tris=40, lights_min=0.5, round_seg=0, keep=(), grid_lod=0, keep_wheel_centres=False):
     """Area-weighted budget: each piece wants k * area^0.6 triangles (clamped to [floor, own count]); k is bisected
     on the evaluated (collapsed) meshes until the total meets the target. A uniform global ratio (A6 wip) crushed
     the dense grille / honeycomb pieces into black triangles at LOD2-3 while big smooth panels kept spare tris.
@@ -1611,6 +1648,13 @@ def decimate_pieces(pieces, target, floor_tris=40, lights_min=0.5, round_seg=0, 
         # r6b: the piece floor (MIN_RATIO) applies on its own. It used to count only when it exceeded lights_min, so at
         # LOD1 (lights_min 0.5 > 0.30) the door shells had no floor at all and collapsed to 0.2
         mr = next((m for key, m in MIN_RATIO.items() if key in o.name), 0.0)
+        # The annular disc has a real centre opening. Keep the axle cover instead of dropping it
+        # and exposing the road through the wheel. Working geometry floors, budget still global.
+        if (round_seg or keep_wheel_centres) and o.name.startswith("wheel_"):
+            if "_hubcap" in o.name:
+                mr = max(mr, 0.25)
+            elif "_hub" in o.name:
+                mr = max(mr, 0.20)
         lo = max(lights_min * n, floor_tris) if ("Lights" in sl or "Glass" in sl) else floor_tris
         lo = max(lo, mr * n)
         w = SILHOUETTE_W if any(t in o.name for t in SILHOUETTE_KEYS) else 1.0
