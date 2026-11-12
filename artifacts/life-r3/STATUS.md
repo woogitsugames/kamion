@@ -28,3 +28,5 @@ Krok 9: obejrzano zimową miniaturę PD (250 px); opisano zakres informacji i br
 Krok 10: przeniesiono generator arkuszy porównawczych do r3 z nowymi life3_/sheet_far_ i oddzielną kontrolą obu draws. Nie został jeszcze uruchomiony, baseline nadal w budowie. Następny krok: terminalny wynik 2467 i post-baseline 46468; po capture miniatury ≤960 px i oględziny.
 
 Krok 11: inspekcja eksportera wykazała próg creasing 38°; zapisano hipotezę wygładzania płytkich grzbietów felgi. Nie zmieniono globalnego eksportera ani produkcji. World przeszedł planowanie działek/placu/furniture; trwa jedna instancja. Następny krok: istniejące 2467 i 46468, potem oględziny baseline.
+
+Baseline (2026-11-12T09:22:19.5697821+01:00): wygeneruj i potwierdź świeży baseline r3. Następny etap w baseline-gen.ps1; po generacji nowe kamery i PreparedImport.
