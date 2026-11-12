@@ -54,3 +54,4 @@ session.json wskazuje aktywną sekwencję B oraz 22 zaliczone testy. Bieżący e
 Przygotowano compare_probe.py: odrzuca obraz starszy od QA B, porówna pełne koszty tej samej kamery i zapisze arkusz zdjęcie/przed/B z maską koloru. Metryka koloru nie jest segmentacją drzew ani pomiarem biomasy. Helper nie został uruchomiony na starym A. Następny krok: zakończenie run-b, potem próba i ocena.
 Wariant B, generator zakończone kodem 0. Następny etap zgodnie z run-b.ps1; po probe konieczna ocena obrazów i kosztów.
 Wariant B, QA instancji i GLB zakończone kodem 0. Następny etap zgodnie z run-b.ps1; po probe konieczna ocena obrazów i kosztów.
+Wariant B, migawka zakończone kodem 0. Następny etap zgodnie z run-b.ps1; po probe konieczna ocena obrazów i kosztów.
