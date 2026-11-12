@@ -18,6 +18,7 @@ Shader "Hidden/KamionLightQA/GradeLutLab"
             I vert(V v){I o;o.p=TransformObjectToHClip(v.p);o.uv=v.uv;return o;}
             half4 frag(I i):SV_Target {
                 float3 c=SAMPLE_TEXTURE2D_LOD(_LabInput,sampler_LabInput,i.uv,0).rgb;
+                if(_LabUseLut>1.5)return half4(KamionOpaqueTone(c),1);
                 if(_LabUseLut>.5){
                     // Square-root rational domain: fine sampling near black, finite coverage of HDR values.
                     float3 q=sqrt(saturate(c/(1.0+c)));

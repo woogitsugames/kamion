@@ -21,6 +21,7 @@ namespace Game.Rendering.Editor
             public string preset,scope="Diagnostic only. Actual High response baked into RGBAHalf3D, Low sample in a lab shader. No production feature or GPU budget claim.";
             public string domain="q=sqrt(c/(1+c)); texel centre=(q*(N-1)+0.5)/N; inverse c=q²/(1-q²), last input clamped at9999";
             public float exposure,dimColour,actualHighMaster,requestedMaster,actualHighSaturation;
+            public float sharedPathMeanRgb,sharedPathMaxRgb,captureBypassMaxRgb;
             public Measurement[] measurements;
         }
         static MethodInfo s_Render;
@@ -34,11 +35,11 @@ namespace Game.Rendering.Editor
             QualityTiers.Apply(name);s_Applier.ApplyNow();s_Environment.Apply();
             if(s_Camera.GetUniversalAdditionalCameraData().renderPostProcessing!=(name=="High"))throw new InvalidOperationException("Wrong actual chart camera post state");
         }
-        static Color32[] Render(Color[] values,int columns,int rows,int cellPixels,bool useLut,Texture3D lut=null,int cellHeight=0)
+        static Color32[] Render(Color[] values,int columns,int rows,int cellPixels,bool useLut,Texture3D lut=null,int cellHeight=0,bool useShared=false)
         {
             var map=new Texture2D(columns,rows,TextureFormat.RGBAFloat,false,true){filterMode=FilterMode.Point,wrapMode=TextureWrapMode.Clamp};
             var padded=new Color[columns*rows];Array.Copy(values,padded,values.Length);map.SetPixels(padded);map.Apply();
-            s_Material.SetTexture("_LabInput",map);s_Material.SetFloat("_LabUseLut",useLut?1:0);
+            s_Material.SetTexture("_LabInput",map);s_Material.SetFloat("_LabUseLut",useShared?2:useLut?1:0);
             s_Material.SetTexture("_LabLut",lut);s_Material.SetFloat("_LabLutSize",lut!=null?lut.width:1);
             int width=columns*cellPixels,height=rows*(cellHeight>0?cellHeight:cellPixels);
             s_Camera.aspect=(float)width/height;
@@ -162,13 +163,31 @@ namespace Game.Rendering.Editor
                         var gradient=Render(gradientInputs,1024,12,1,true,cube,32);
                         SaveImage(Path.Combine(folder,$"{presetName}-gradient-Low-lut{cube.width}.png"),gradient,1024,384);imageCount++;
                         gradientMeasurements.Add(Measure("Low lab LUT",cube.width,gradientInputs,gradientReference,GradientCentres(gradient)));}
+                    Measurement shared;
+                    float bypassMax;
+                    using(var probe=new LightGradeLutWorldProbe(folder,presetName,32)){
+                        probe.Apply(s_Camera);
+                        var sharedPixels=Render(inputs,16,12,32,false,null,0,true);
+                        SaveImage(Path.Combine(folder,presetName+"-Low-shared32.png"),sharedPixels,512,384);imageCount++;
+                        shared=Measure("Actual shared opaque path",32,inputs,reference,Centres(sharedPixels,inputs.Length,16,32));
+                        Shader.SetGlobalFloat("_KamionSkyCapOff",1);
+                        try{
+                            var captureReference=Render(inputs,16,12,32,false);
+                            var bypass=Render(inputs,16,12,32,false,null,0,true);
+                            bypassMax=Measure("Physical bypass all pixels",32,new Color[captureReference.Length],captureReference,bypass).maxRgb;
+                            SaveImage(Path.Combine(folder,presetName+"-capture-reference.png"),captureReference,512,384);imageCount++;
+                            SaveImage(Path.Combine(folder,presetName+"-capture-shared-bypass.png"),bypass,512,384);imageCount++;
+                            if(bypassMax!=0)throw new InvalidOperationException("Opaque LUT changed physical capture pixels");
+                        }finally{Shader.SetGlobalFloat("_KamionSkyCapOff",0);}
+                    }
                     File.WriteAllText(Path.Combine(folder,presetName+"-proof.json"),JsonUtility.ToJson(new Proof{preset=presetName,exposure=s_Environment.Model.Exposure,dimColour=preset.dimColourDesaturation,
-                        actualHighMaster=actual,requestedMaster=wanted,actualHighSaturation=adjustment.saturation.value,measurements=measurements.ToArray()},true));
+                        actualHighMaster=actual,requestedMaster=wanted,actualHighSaturation=adjustment.saturation.value,measurements=measurements.ToArray(),
+                        sharedPathMeanRgb=shared.meanAbsoluteRgb,sharedPathMaxRgb=shared.maxRgb,captureBypassMaxRgb=bypassMax},true));
                     File.WriteAllText(Path.Combine(folder,presetName+"-gradient-proof.json"),JsonUtility.ToJson(new Proof{preset=presetName,exposure=s_Environment.Model.Exposure,dimColour=preset.dimColourDesaturation,
                         actualHighMaster=actual,requestedMaster=wanted,actualHighSaturation=adjustment.saturation.value,measurements=gradientMeasurements.ToArray()},true));
                     foreach(var cube in cubes)UnityEngine.Object.DestroyImmediate(cube);UnityEngine.Object.DestroyImmediate(s_Material);
                 }
-                Debug.Log($"LIGHT_GRADE_LAB_RESULT: OK images={imageCount} cubes=6 holdoutPerPreset=192 gradientPerPreset=12288");exit=0;
+                Debug.Log($"LIGHT_GRADE_LAB_RESULT: OK images={imageCount} cubes=6 holdoutPerPreset=192 gradientPerPreset=12288 physicalBypassMax=0");exit=0;
             }catch(Exception ex){Debug.LogException(ex);Debug.Log("LIGHT_GRADE_LAB_RESULT: FAILED");}
             finally{EditorSceneManager.NewScene(NewSceneSetup.EmptyScene,NewSceneMode.Single);}
             if(Application.isBatchMode)EditorApplication.Exit(exit);
