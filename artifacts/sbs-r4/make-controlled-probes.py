@@ -11,11 +11,12 @@ REGION=ROOT/'Data/Regions/bialystok-industrial-c'
 paths={'world':REGION/'generated/world_manifest.json','materials':ROOT/'art-source/world/materials/materials_spec.json',
        'cameras':REGION/'sbs_cameras.json','references':REGION/'sbs_references.json',
        'road_graph':REGION/'roads.graph.json','helper':ROOT/'tests/gis/route_corridor.py',
-       'meshing':ROOT/'tools/worldgen/roads/meshing.py','script':Path(__file__),
+       'meshing':ROOT/'tools/worldgen/roads/meshing.py','script':Path(__file__).resolve(),
        'prior_plan':ROOT/'artifacts/sbs-r3/pose-refinement1/plan.json'}
 bindings={key:sha(path) for key,path in paths.items()}
 baseline=read(ART/'baseline-completed.json')
 if baseline.get('world_exit')!=0 or baseline.get('materials_exit')!=0:raise RuntimeError('Completed successful r4 baseline required')
+if baseline.get('fallback_true') is not False:raise RuntimeError('Baseline must explicitly prove no fallback')
 if bindings['world']!=baseline['world_manifest_sha256'] or bindings['materials']!=baseline['materials_spec_sha256']:
     raise RuntimeError('Baseline bytes changed')
 world=read(paths['world']);prior=read(paths['prior_plan'])
@@ -138,7 +139,6 @@ for key,path in paths.items():
     if sha(path)!=bindings[key]:raise RuntimeError('Preparation input changed: '+key)
 for chunk in loaded:
     if sha(ROOT/chunk['file'])!=chunk['sha256']:raise RuntimeError('Loaded mesh changed')
-if not result:raise RuntimeError('All hypotheses rejected; inspect visible road/bridge classification')
 OUT.mkdir(exist_ok=True)
 sbs.write(OUT/'cameras.json',{'schema':'kamion/sbs-cameras/1','frame':'E,N,absolute U','cameras':result})
 sbs.write(OUT/'plan.json',{'diagnostic_only':True,'all_pose_confidence':'C','attempted_count':15,
@@ -148,4 +148,5 @@ sbs.write(OUT/'plan.json',{'diagnostic_only':True,'all_pose_confidence':'C','att
     'production_source_sha256':{paths[k].relative_to(ROOT).as_posix():bindings[k] for k in ('cameras','references')},
     'preparation_sources_sha256':{paths[k].relative_to(ROOT).as_posix():v for k,v in bindings.items()},
     'verified_low_chunks':loaded,'note':'C only. Controls and pitch variants use the same refreshed visible surface at fixed XY. Bridge node is sampled separately from collision.'})
+if not result:raise RuntimeError('All hypotheses rejected; cameras and rejection plan preserved for inspection')
 print(f'Prepared {len(rows)}/15 C controls; rejected {len(rejected)}; visible road+bridge sampled, production unchanged')

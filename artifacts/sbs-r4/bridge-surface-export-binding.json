@@ -1,0 +1,17 @@
+{
+  "recorded_at": "2026-11-12T12:32:58.1905953+01:00",
+  "source": "tools/worldgen/roads/meshing.py",
+  "source_sha256": "6f0dd16de7b92212812ddc347c356c10dc48485a6735b51f3ad0eda49127fd72",
+  "line": 133,
+  "observation": "build_ribbon exports visual on_bridge carriageway to node bridge; old sampler checked only road and road_collision",
+  "old_sampler": "artifacts/sbs-r3/sample-bridge-surfaces.py",
+  "old_sampler_sha256": "3c998f0da44d151fdb5c7fd79657217f50d03bc3ac56eca034f0da4d2aeac450",
+  "new_nodes": [
+    "road",
+    "bridge",
+    "road_collision"
+  ],
+  "new_sampler": "artifacts/sbs-r4/make-controlled-probes.py",
+  "actual_new_ray_status": "NOT_EXECUTED_PENDING_BASELINE_AND_HEAVY",
+  "production_pose_changed": false
+}
