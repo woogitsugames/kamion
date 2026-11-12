@@ -120,3 +120,5 @@ Krok 36: dodano dokładną kontrolę SHA wszystkich 492 PNG before/A bez dekodow
 
 
 Kandydat b (2026-11-12T10:40:36.2077517+01:00): wygeneruj osobówki r3 b. Następny etap w candidate-build.ps1; po komplecie PreparedVerified, capture i oględziny.
+
+Kandydat b (2026-11-12T10:40:37.6341397+01:00): sprawdź zakres geometrii r3 b. Następny etap w candidate-build.ps1; po komplecie PreparedVerified, capture i oględziny.
