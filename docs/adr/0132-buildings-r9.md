@@ -76,6 +76,18 @@ wszystko, czego nie zmierzono w silniku, jest oznaczone.
     tylko High). Odchudzone rdzenie (1 pas), drzewko ~48 trójkątów, tuja w rzędzie 16, stacje żywopłotu co 1,92 m (było
     1,28 m). Rekordy instancji drzew ogrodowych mają pole `"tier": "high"` (importer ignoruje nieznane pola — bez zmiany
     zachowania do czasu filtra per tier z sekcji niżej). `INST_R_M` 2,3 m bez zmian.
+17. **Drzewa ogrodowe nie są rysowane na Low (r4b, decyzja lidera: +26 draw instancjonowanych na Low nieakceptowalne, A16 Low
+    brakuje ~0,7 ms — ADR 0136; zgoda lidera na zmianę importera)**. Rekord instancji z `"tier": "high"` →
+    `WorldInstanceSet.Run.highOnly`; `WorldInstances.Render` pomija takie runy, gdy aktywny profil to **Low**
+    (`WorldInstances.DrawsHighOnly`). Medium i wyżej oraz narzędzia bez zastosowanego profilu rysują je: Medium ma inny
+    budżet niż A16 Low i bez tych drzew ulice domów nie mają żadnej wysokiej zieleni — koszt na Medium NIE zmierzony
+    na telefonie (UNVERIFIED, WORKING_VALUE; przełącznik to jedna linia w `DrawsHighOnly`). Żeby Low rysował dokładnie to,
+    co bez tych drzew, instancje high-only mają własne komórki (`InstanceImporter.HighOnlyCellKey`, bit 51 — rozłączne
+    z komórkami zwykłymi i Fab) i są zapisywane za macierzami zwykłymi (ten sam mechanizm co detale Fab,
+    `LegacyStorageOrder`): te same obrysy komórek, runy i indeksy przerzedzania lasu. Instancja high-only nie dostaje
+    collidera (kolizja nie może zależeć od profilu). Brak pola `tier` = wszystkie profile (zgodne wstecz, stare assety:
+    `highOnly = false`). Test EditMode `HighOnlyInstanceTests` (5 testów). Na Low ulice domów zostają z zielenią kitu
+    (żywopłot, świerki, tuje i drzewka lite) — świadomy koszt.
 
 WORKING_VALUE: wszystkie progi, udziały i wymiary powyżej.
 
@@ -129,6 +141,19 @@ WORKING_VALUE: wszystkie progi, udziały i wymiary powyżej.
 - Pary r4 obejrzane: `artifacts/buildings-r9/pairs_r4/sheet_base_hc.jpg` (base2 | r4, High, 8 kamer), `sheet_base_low.jpg`,
   `sheet_low.jpg` (kamery kontrolne Low), `sheet_ref.jpg` (r4 | zdjęcie). Z ulicy r4 nie różni się od r3 (pełne bryły
   ≤ 12 m od frontu); z lotu (`r17_over_0`) w głębi działek widać karty.
+- **r4b (pkt 17: drzewa ogrodowe pomijane na Low; ponowny import produktów r4 po scaleniu `origin/main` 41e6fd89f, kod
+  `f49e823ad`)**: import 579 s, 0 `error CS` / `Shader error`; EditMode **444 / 444** (w tym 5 × `HighOnlyInstanceTests`;
+  `artifacts/tests/editmode-20261112-220907.xml`). Kamery kontrolne Low overcast, 67 kamer:
+  (a) **sam filtr** — ten sam import i kod, filtr wyłączony → włączony (`r4b/budget_low_filter_only.txt`): draw MeshRenderer
+  +0, cienie +0, trójkąty siatek +0, draw instancjonowane 14 453 → 14 433 (**−20**; `r10_shed_2` −6, `r10_house_2` −5),
+  instancje −72, trójkąty instancji −6 k; żadna kamera nie zyskała ani jednego draw.
+  (b) r4b vs base2 (`r4b/budget_low.txt`): `r10_house_2` 106 → **107** (+1; r4: 116), `r10_house_1` 148 → 147,
+  `r10_fence_2` 205 → 205, `r10_shed_2` 187 → 113; najgorsza kamera sumy MeshRenderer + instancjonowane **+1**. UWAGA: sumy
+  tego porównania (MeshRenderer −906, instancjonowane −4426) NIE są zasługą 0132 — base2 renderowano kodem C# sprzed
+  scalenia, a `origin/main` wniósł ADR 0136 r2 (cull pojazdów Low 150 m, zmiany `QualityProfile`); czysty wkład 0132 na Low
+  po filtrze = (a) odjęte od r4, czyli brak instancji drzew ogrodowych; zostaje kit Low (trójkąty siatek −9 k względem main).
+- Pary r4b obejrzane (`pairs_r4b/sheet.jpg`): Low base2 | r4b — bez instancji drzew ogrodowych (`r17_over_0`, `r17_street_0a`),
+  kabina bez zmian; Low | High r4b — na High drzewa są.
 - Telefon: NIE mierzone (UNVERIFIED). Koszt GPU instancji drzew ogrodowych na A16 Low nieznany.
 
 ## Koszt drzew ogrodowych na Low i propozycja filtra per tier (poza własnością gałęzi — tylko propozycja)

@@ -136,3 +136,11 @@
   zapas r4 (4 704 / 13 010) obowiazuje po regeneracji, o ile integracja nie doda innych tresci.
 - NASTEPNY KROK (lider): `git merge buildings-r9` (generated -> regeneracja: build_all, build_world, export-route, fidelity, import-region),
   potem `uv run --project tools/worldgen python -m pytest tests/gis -q -p no:cacheprovider`.
+
+## krok 11 — sesja 15 (22:20): r4b - drzewa ogrodowe (`tier=high`) pomijane na Low (decyzja lidera)
+- Kod f49e823ad: `WorldInstanceSet.Run.highOnly`, `InstanceImporter.HighOnlyCellKey / IsHighOnly`, `WorldInstances.DrawsHighOnly`
+  (tylko Low pomija; Medium rysuje - UNVERIFIED na telefonie), bez collidera dla high-only; test `HighOnlyInstanceTests` (5).
+- r4b: import 579 s, EditMode 444/444. Sam filtr (off -> on, 67 kamer Low): instancjonowane -20, instancje -72, reszta +0.
+  r4b vs base2: `r10_house_2` +1 (r4 +10), najgorsza kamera +1; sumy tego porownania zawieraja tez ADR 0136 r2 z main (C#).
+- Skosny panel `r16_drive_3`: NIE zrobiony (wymaga regeneracji swiata ~1 h + przegladu; nie "tanie").
+- NASTEPNY KROK (lider): visual-critic na `artifacts/buildings-r9/pairs_r4/` + `pairs_r4b/sheet.jpg`, potem `git merge buildings-r9` i regeneracja.
