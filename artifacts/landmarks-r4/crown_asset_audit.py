@@ -52,8 +52,15 @@ def read(path):
 before, bp, bt = read(base / "fire_station_jrg2.glb")
 after, ap, at = read(asset)
 assert bt == at
+assert before != after, "Trial asset is unchanged from baseline"
 old_spec = json.loads((base / "fire_station_jrg2.spec.json").read_text(encoding="utf-8-sig"))
 new_spec = json.loads((root / "Data/Regions/bialystok-industrial-c/generated/landmarks/fire_station_jrg2.spec.json").read_text(encoding="utf-8-sig"))
+meta = json.loads(asset.with_name("fire_station_jrg2_meta.json").read_text(encoding="utf-8-sig"))
+current_dims = json.loads((asset.parent / "dims.json").read_text(encoding="utf-8-sig"))
+assert new_spec["dims"] == current_dims
+assert current_dims["spruce"]["lateral_bough_cards_WORKING_VALUE"] is True
+assert meta["glb_sha256"] == hashlib.sha256(asset.read_bytes()).hexdigest()
+assert meta["spec_sha256"] == hashlib.sha256(json.dumps(new_spec, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
 assert old_spec["anchor"] == new_spec["anchor"]
 assert old_spec["ground"] == new_spec["ground"]
 anchor = np.array(old_spec["anchor"])
@@ -82,6 +89,7 @@ summary.update(complete=True, unchanged_oriented_triangles=sum((before & after).
                attributes_compared="All exported attributes, oriented cyclic vertex bytes, material and node",
                scope="Every changed triangle is inside one of the three conifer envelopes; all other triangles exact",
                anchor_and_ground_identical=True, lod2_exact=True,
+               current_spec_config_meta_glb_fresh=True,
                before_sha256=hashlib.sha256((base / "fire_station_jrg2.glb").read_bytes()).hexdigest(),
                after_sha256=hashlib.sha256(asset.read_bytes()).hexdigest())
 (out / "crown-asset-audit.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")

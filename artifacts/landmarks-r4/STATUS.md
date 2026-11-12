@@ -34,3 +34,5 @@ Krok 5b: source_scope.py PASS: poza build_conifer cały AST buildera identyczny 
 Krok 5c: przygotowano samodzielne referencje i photo_pair.py dla r4: pełna kopia7197 CC0 z r1, stałe wycinki szczytu jak r1 oraz foto0,5x|baseline1x|wariant1x koron. Pary≤960px, jawna robocza poza i różne wycinki, bez dopasowywania osobno drzew, warpów i korekcji barwy. Skrypt par jeszcze niewykonany; wariant nie ma renderu.
 
 Krok 5d: pierwszy waiter heavy zakończył się kodem1 przed World, log świata nie powstał. Potwierdzony brak własnego slotu/biletu i procesów candidate/heavy-step; nie usunięto cudzych blokad. Pełna przyczyna z terminala nie zachowała się (outputtruncated), nie zgaduje się jej. Następna próba tej samej kolejki ma pełne przekierowanie stdout/stderr do candidate-run-02.log; poll10s zamiast2s, ten sam FIFO i limity.
+
+Krok 5e: audyt GLB uzupełniono o warunek rzeczywistej zmiany względem baseline oraz zgodność bieżących dims/spec/meta/GLB przez SHA. Zapobiega to pozornemu PASS na starym modelu, gdyby Blender nie przebudował assetu. Audyt nadal nie był wykonany na wariancie; pełny log drugiego waitera potwierdza żywą kolejkę FIFO.
