@@ -1,0 +1,3 @@
+# truck-feel (ADR 0134) STATUS
+- 15:10 Diagnoza baseline (runner, launch_flat_comb, pełny gaz): empty 0-50 10.17 s, 5 zmian 4-5-6-7-8-9, a_long do 2.84 m/s2, pitch oka (podwozie+kabina) max 3.80 deg, p2p 5.5 deg z nodem na każdej zmianie; laden40 0-50 19.5 s, oko 2.87 deg. Domyślny spawn = pusta naczepa (DrivingLabBootstrap PrefSpawn default Empty).
+- NASTĘPNY KROK: zmiany AMT (skip-shift przy lekkim zestawie, łagodny powrót momentu) + tłumienie kabiny; `& $env:LOCALAPPDATA\Microsoft\dotnet\dotnet.exe run -c Release --project tools/physics-runner/Runner -- --only launch_flat_comb --no-multi --out artifacts/truck-feel/after; uv run tests/physics/launch_feel.py artifacts/truck-feel/after/*.csv --png`
