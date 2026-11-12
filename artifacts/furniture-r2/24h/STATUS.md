@@ -51,3 +51,5 @@ NASTĘPNY KROK: przygotować własne skrypty r2 z ownerem heavy gpt-furniture-r2
 2026-11-12T02:52:44.8504475+01:00: końcowa próba znaków 13/13 passed, 0 skipped. Biblioteka ma 36 rzeczywistych lic drogowych; rejestracja obejmuje kierunkowe i pomija fasadowe oraz zachowuje jawne cudze definicje. Generator bazowy zakończył 64 GLB w715,7s, zapisano manifest/QA/props przed zmianami. Własny PAUSE_UNITY usunięty po sukcesie; sekwencja bazowa kontynuuje import i cztery rendery. NASTĘPNY KROK: odczytać sesję72293, po jej zakończeniu dodać baseline Low/High dusk; nie aktywować flagi świata przed kompletem before.
 
 2026-11-12T02:53:06.4803513+01:00: Unity import before Low overcast; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
+
+2026-11-12T02:53:36.9446836+01:00: Unity render before Low overcast; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
