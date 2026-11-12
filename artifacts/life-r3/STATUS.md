@@ -124,3 +124,5 @@ Kandydat b (2026-11-12T10:40:36.2077517+01:00): wygeneruj osobówki r3 b. Nastę
 Kandydat b (2026-11-12T10:40:37.6341397+01:00): sprawdź zakres geometrii r3 b. Następny etap w candidate-build.ps1; po komplecie PreparedVerified, capture i oględziny.
 
 Kandydat b (2026-11-12T10:40:43.9855697+01:00): sprawdź test_cars_r9.py wariantu b. Następny etap w candidate-build.ps1; po komplecie PreparedVerified, capture i oględziny.
+
+Kandydat b (2026-11-12T10:40:46.2674494+01:00): sprawdź test_cars_r11.py wariantu b. Następny etap w candidate-build.ps1; po komplecie PreparedVerified, capture i oględziny.
