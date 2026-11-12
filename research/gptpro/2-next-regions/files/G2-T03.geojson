@@ -1,0 +1,76 @@
+{
+  "type": "Feature",
+  "id": "G2-T03",
+  "properties": {
+    "id": "G2-T03",
+    "name": "Welurowa–Panattoni I",
+    "bbox_epsg2180": [
+      770971,
+      594899,
+      772971,
+      596899
+    ],
+    "lat": "53.158755",
+    "lon": "23.069710",
+    "area_km2": 4.0,
+    "places": [
+      "G2-WL01",
+      "G2-WL07",
+      "G2-RT03"
+    ],
+    "count": 3,
+    "tak_count": 3,
+    "footprints": [
+      {
+        "id": "G2-WL01",
+        "geometry_completely_within": true,
+        "geometry_note": "OSM obiekt może być budynkiem/punktem, nie granicą przedsiębiorstwa"
+      },
+      {
+        "id": "G2-WL07",
+        "geometry_completely_within": true,
+        "geometry_note": "OSM obiekt może być budynkiem/punktem, nie granicą przedsiębiorstwa"
+      },
+      {
+        "id": "G2-RT03",
+        "geometry_completely_within": true,
+        "geometry_note": "OSM obiekt może być budynkiem/punktem, nie granicą przedsiębiorstwa"
+      }
+    ],
+    "status": "ESTIMATED",
+    "method": "Projekt badawczy: dokładny kwadrat EPSG2180 2000×2000 m; pozycja WGS84 reprezentuje środek; wybór autora.",
+    "justification": "3 odrębne cele operacyjne, wszystkie z dowodem fizycznym. Parku jako całości nie doliczono czwarty raz. Północna krawędź przesunięta 300 m na południe względem kafla 2.",
+    "source_ids": [
+      "S164",
+      "S166"
+    ],
+    "license": "Opracowanie własne dla projektu Kamion; wykorzystanie komercyjne dozwolone. Dane źródłowe zachowują odrębne warunki wskazane w manifeście. | Punkty OSM: ODbL 1.0 — © OpenStreetMap contributors; https://www.openstreetmap.org/copyright"
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          23.083780177763536,
+          53.14927436224432
+        ],
+        [
+          23.085485775038837,
+          53.16721241918855
+        ],
+        [
+          23.055634632074913,
+          53.168234184228375
+        ],
+        [
+          23.053941413349424,
+          53.150295464977695
+        ],
+        [
+          23.083780177763536,
+          53.14927436224432
+        ]
+      ]
+    ]
+  }
+}

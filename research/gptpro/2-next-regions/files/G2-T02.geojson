@@ -1,0 +1,70 @@
+{
+  "type": "Feature",
+  "id": "G2-T02",
+  "properties": {
+    "id": "G2-T02",
+    "name": "Produkcyjna–Bunasta–Selgros",
+    "bbox_epsg2180": [
+      772971,
+      595199,
+      774971,
+      597199
+    ],
+    "lat": "53.160421",
+    "lon": "23.099811",
+    "area_km2": 4.0,
+    "places": [
+      "G2-RS11",
+      "G2-RT02"
+    ],
+    "count": 2,
+    "tak_count": 1,
+    "footprints": [
+      {
+        "id": "G2-RS11",
+        "geometry_completely_within": true,
+        "geometry_note": "OSM obiekt może być budynkiem/punktem, nie granicą przedsiębiorstwa"
+      },
+      {
+        "id": "G2-RT02",
+        "geometry_completely_within": true,
+        "geometry_note": "OSM obiekt może być budynkiem/punktem, nie granicą przedsiębiorstwa"
+      }
+    ],
+    "status": "ESTIMATED",
+    "method": "Projekt badawczy: dokładny kwadrat EPSG2180 2000×2000 m; pozycja WGS84 reprezentuje środek; wybór autora.",
+    "justification": "2 cele: 1 TAK funkcjonalne (parking Bunasta), 1 UNVERIFIED 13,6 m (Selgros). Rozpoznawalny rejon handlowy i zjazd na Welurową.",
+    "source_ids": [
+      "S164",
+      "S166"
+    ],
+    "license": "Opracowanie własne dla projektu Kamion; wykorzystanie komercyjne dozwolone. Dane źródłowe zachowują odrębne warunki wskazane w manifeście. | Punkty OSM: ODbL 1.0 — © OpenStreetMap contributors; https://www.openstreetmap.org/copyright"
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          23.11387470043888,
+          53.1509364122503
+        ],
+        [
+          23.115592948961854,
+          53.16887378812846
+        ],
+        [
+          23.08574177183088,
+          53.16990311975511
+        ],
+        [
+          23.08403590121837,
+          53.151965076679595
+        ],
+        [
+          23.11387470043888,
+          53.1509364122503
+        ]
+      ]
+    ]
+  }
+}

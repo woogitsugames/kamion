@@ -1,0 +1,76 @@
+{
+  "type": "Feature",
+  "id": "G2-T04",
+  "properties": {
+    "id": "G2-T04",
+    "name": "Porosły–Elewatorska",
+    "bbox_epsg2180": [
+      770971,
+      592899,
+      772971,
+      594899
+    ],
+    "lat": "53.140817",
+    "lon": "23.068012",
+    "area_km2": 4.0,
+    "places": [
+      "G2-IC14",
+      "G2-IC15",
+      "G2-RT01"
+    ],
+    "count": 3,
+    "tak_count": 1,
+    "footprints": [
+      {
+        "id": "G2-IC14",
+        "geometry_completely_within": true,
+        "geometry_note": "OSM obiekt może być budynkiem/punktem, nie granicą przedsiębiorstwa"
+      },
+      {
+        "id": "G2-IC15",
+        "geometry_completely_within": true,
+        "geometry_note": "OSM obiekt może być budynkiem/punktem, nie granicą przedsiębiorstwa"
+      },
+      {
+        "id": "G2-RT01",
+        "geometry_completely_within": true,
+        "geometry_note": "OSM obiekt może być budynkiem/punktem, nie granicą przedsiębiorstwa"
+      }
+    ],
+    "status": "ESTIMATED",
+    "method": "Projekt badawczy: dokładny kwadrat EPSG2180 2000×2000 m; pozycja WGS84 reprezentuje środek; wybór autora.",
+    "justification": "3 cele, w tym 1 TAK funkcjonalne (PZZ). Połączenie ekspresowego wlotu z zakładami, inne manewry niż sortownie. Obrys OSM PZZ mieści się w oknie.",
+    "source_ids": [
+      "S164",
+      "S166"
+    ],
+    "license": "Opracowanie własne dla projektu Kamion; wykorzystanie komercyjne dozwolone. Dane źródłowe zachowują odrębne warunki wskazane w manifeście. | Punkty OSM: ODbL 1.0 — © OpenStreetMap contributors; https://www.openstreetmap.org/copyright"
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          23.082076401238275,
+          53.13133621286843
+        ],
+        [
+          23.083780177763536,
+          53.14927436224432
+        ],
+        [
+          23.053941413349424,
+          53.150295464977695
+        ],
+        [
+          23.052250002264138,
+          53.13235665384389
+        ],
+        [
+          23.082076401238275,
+          53.13133621286843
+        ]
+      ]
+    ]
+  }
+}

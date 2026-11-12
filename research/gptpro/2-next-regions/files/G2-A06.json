@@ -1,0 +1,65 @@
+{
+  "key": "rosti",
+  "local_id": "IC06",
+  "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/ORTO/WCS/HighResolution?service=WCS&version=1.0.0&request=GetCoverage&coverage=Orthoimagery_High_Resolution&crs=EPSG%3A2180&bbox=780612.354%2C590372.947%2C780772.354%2C590532.947&width=1600&height=1600&format=image%2Fjpeg",
+  "centre_wgs84": [
+    53.10539088245166,
+    23.195069737632977
+  ],
+  "bbox": [
+    780612.354,
+    590372.947,
+    780772.354,
+    590532.947
+  ],
+  "crs": "EPSG:2180",
+  "width": 1600,
+  "height": 1600,
+  "ground_pixel_m": 0.1,
+  "source_capture_resolution_m": 0.05,
+  "capture_date": "2025-04-18",
+  "capture_date_source": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/ORTO/WFS/Skorowidze?service=WFS&version=1.0.0&request=GetFeature&typename=gugik%3ASkorowidzOrtofomapy2024%2Cgugik%3ASkorowidzOrtofomapy2025%2Cgugik%3ASkorowidzOrtofomapy2026&srsname=EPSG%3A2180&bbox=780690.354%2C590450.947%2C780694.354%2C590454.947&maxfeatures=25",
+  "capture_date_feature": {
+    "fid": "SkorowidzOrtofomapy2025.1485578",
+    "godlo": "N-34-107-C-b-4-1",
+    "akt_rok": "2025",
+    "piksel": "0.05",
+    "kolor": "RGB",
+    "zrodlo_danych": "Zdj. cyfrowe",
+    "uklad_xy": "PL-1992",
+    "modul_archiwizacji": "1:5000",
+    "nr_zglosz": "GK-FOTO.6201.5.2025",
+    "akt_data": "2025-04-18",
+    "czy_ark_wypelniony": "TAK",
+    "url_do_pobrania": "https://opendata.geoportal.gov.pl/ortofotomapa/83273/83273_1485578_N-34-107-C-b-4-1.tif",
+    "dt_pzgik": "2025-11-19",
+    "wlk_pliku_mb": "1000"
+  },
+  "temporal_comparison_url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/ORTO/WMS/HighResolutionTime?service=WMS&version=1.1.1&request=GetMap&layers=Image&styles=default&srs=EPSG%3A2180&bbox=780612.354%2C590372.947%2C780772.354%2C590532.947&width=800&height=800&format=image%2Fjpeg&time=2025-12-31T00%3A00%3A00.000Z",
+  "author": "Główny Urząd Geodezji i Kartografii — dysponent/publikujący; indywidualny autor zdjęć UNVERIFIED",
+  "access_date": "2026-11-12",
+  "license": "Otwarte dane PZGIK/GUGiK: bezpłatne pobranie i dowolne ponowne wykorzystanie, w tym komercyjne; warunki GUGiK: podać źródło, czas wytworzenia i pozyskania, przetworzenie oraz twórcę, jeśli znany. Nie oznaczono CC ani automatycznie art. 4.",
+  "license_sources": [
+    "https://www.geoportal.gov.pl/pl/dane/ortofotomapa-orto/",
+    "https://www.gov.pl/web/gugik/ponowne-wykorzystanie-informacji-sektora-publicznego",
+    "https://www.geoportal.gov.pl/pl/usluga/uslugi-pobierania-wcs/"
+  ],
+  "description": "Dwa ciągniki siodłowe z białymi długimi naczepami przy dokach północno-zachodniej ściany magazynu Rosti i kolejny pełny zestaw na wewnętrznej drodze wzdłuż tej ściany.",
+  "viewing_direction": "Nadir; poziomy azymut kierunku patrzenia nie dotyczy. Północ układu EPSG:2180 u góry, nie utożsamiać z dokładnym kierunkiem północy geograficznej.",
+  "modifications": "Wycinek rastrowy i resampling na serwerze WCS, JPEG do 1600×1600 px; bez retuszu, bez generowania lub usuwania obiektów.",
+  "image_sha256": "403ba522183a507a4ee45c4173f1f5ba540eb1ba0e688394aa1554c5f6cf3d36",
+  "length_estimate": {
+    "status": "UNVERIFIED",
+    "method": "Rozpoznanie pełnowymiarowego zestawu na ortofoto; nie uzyskano niezależnego dokładnego pomiaru długości naczepy."
+  },
+  "id": "G2-A06",
+  "file": "files/G2-A06.jpg",
+  "source_ids": [
+    "S018",
+    "S019",
+    "S212",
+    "S155",
+    "S156",
+    "S157"
+  ]
+}

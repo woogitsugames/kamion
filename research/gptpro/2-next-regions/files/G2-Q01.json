@@ -1,0 +1,1068 @@
+{
+  "access_date": "2026-11-12",
+  "seed": 20261112,
+  "method": "Losowanie warstwowe: random.Random(20261112); miejsca: sample(sorted(ids),ceil(57*0.2)); zdjęcia: sample(kolejność evidence_assets,2). Osobny generator: dokumenty 2/7, potem kafle 1/5, potem wsparcie 1/3. Populacje podane poniżej.",
+  "population_counts": {
+    "places": 57,
+    "images": 9,
+    "documents": 7,
+    "tiles": 5,
+    "support": 3
+  },
+  "sample_counts": {
+    "places": 12,
+    "images": 2,
+    "documents": 2,
+    "tiles": 1,
+    "support": 1
+  },
+  "total_population": 81,
+  "total_sample": 18,
+  "sample_share": 0.2222222222222222,
+  "place_sample": {
+    "seed": 20261112,
+    "method": "random.Random(seed).sample(sorted(ids),ceil(N*0.2))",
+    "population": [
+      "IC01",
+      "IC02",
+      "IC03",
+      "IC04",
+      "IC05",
+      "IC06",
+      "IC07",
+      "IC08",
+      "IC09",
+      "IC10",
+      "IC11",
+      "IC12",
+      "IC13",
+      "IC14",
+      "IC15",
+      "IC16",
+      "IC17",
+      "IC18",
+      "IC19",
+      "RS01",
+      "RS02",
+      "RS03",
+      "RS04",
+      "RS05",
+      "RS06",
+      "RS07",
+      "RS08",
+      "RS09",
+      "RS10",
+      "RS11",
+      "RS12",
+      "RS13",
+      "RS14",
+      "RS15",
+      "RS16",
+      "RS17",
+      "RS18",
+      "RS19",
+      "RS20",
+      "RT01",
+      "RT02",
+      "RT03",
+      "WL01",
+      "WL02",
+      "WL03",
+      "WL04",
+      "WL05",
+      "WL06",
+      "WL07",
+      "WL08",
+      "WL09",
+      "WL10",
+      "WL11",
+      "WL12",
+      "WL13",
+      "WL14",
+      "WL15"
+    ],
+    "sample": [
+      "IC08",
+      "IC14",
+      "IC16",
+      "RS04",
+      "RS06",
+      "RS09",
+      "RS14",
+      "RS20",
+      "WL05",
+      "WL09",
+      "WL14",
+      "WL15"
+    ],
+    "n": 57,
+    "sample_n": 12
+  },
+  "image_sample": {
+    "seed": 20261112,
+    "sample": [
+      "browar",
+      "raben_zoltki"
+    ],
+    "population": [
+      "biazet",
+      "kwadrat",
+      "pzz",
+      "browar",
+      "biaform",
+      "rosti",
+      "kan",
+      "panattoni_west",
+      "raben_zoltki"
+    ]
+  },
+  "document_population": [
+    "G2-D02",
+    "G2-D03",
+    "G2-D04",
+    "G2-D05",
+    "G2-D06",
+    "G2-D07",
+    "G2-D09"
+  ],
+  "document_sample": [
+    "G2-D03",
+    "G2-D06"
+  ],
+  "tile_population": [
+    "G2-T01",
+    "G2-T02",
+    "G2-T03",
+    "G2-T04",
+    "G2-T05"
+  ],
+  "tile_sample": [
+    "G2-T02"
+  ],
+  "support_population": [
+    "G2-D01",
+    "G2-D08",
+    "G2-Q01"
+  ],
+  "support_sample": [
+    "G2-D08"
+  ],
+  "place_checks": [
+    {
+      "auditor": "industrial_core — niezależny od autora roads_services",
+      "checked_utc": "2026-11-12T22:37:09.856297+00:00",
+      "access_date": "2026-11-12",
+      "sample_seed": 20261112,
+      "sample_definition": "globalna próbka 12 z57, random.Random(20261112).sample(sorted(ids),ceil(N*0.2))",
+      "audited_source_file": "work/roads_services.json",
+      "audited_snapshot_sha256": "2fa7b029d8152dec8e15e689cdbf83d75feff0fd07f522edbf39ea1d17fb5428",
+      "scope_note": "Kontrola niezależnych pobrań i istniejących plików wskazanych jako include_in_zip w roads_services.json. Końcowy ZIP nie istniał jeszcze podczas kontroli; kontrolę zgodności jego faktycznej listy plików przeprowadza koordynator. Nie zmieniono roads_services.json.",
+      "id": "RS04",
+      "name": "MOP Cibory Północ",
+      "result": "PASS",
+      "link_check": [
+        {
+          "url": "https://www.gov.pl/attachment/8121e13b-00a0-43e8-9d98-28172cd8ec03",
+          "result": "PASS",
+          "http": 200,
+          "details": "Web open nie odczytuje XLSX; niezależny urllib GET zakończony HTTP200. Aktualny link potwierdzony na stronie GDDKiA; plik identyczny SHA256 z kopią autora.",
+          "sha256": "6b345b61708d28542c00293304c734769aaca85493418ea6f4bb97d3ebc8b4f3",
+          "checked_utc": "2026-11-12T22:34:34.511281+00:00"
+        },
+        {
+          "url": "https://www.gov.pl/web/gddkia/wykaz-parkingow-i-mop",
+          "result": "PASS",
+          "details": "Otworzono ponownie. Strona udostępnia tabelę wrzesień2026 i historię wersja25,26.10.2026."
+        },
+        {
+          "url": "https://api.openstreetmap.org/api/0.6/way/1047661815/full",
+          "result": "PASS",
+          "http": 200,
+          "details": "Ponownie pobrano aktualny OSM way/full."
+        }
+      ],
+      "content_check": {
+        "result": "PASS",
+        "locator": "Arkusz1, wiersz 17, kolumny E–N, P, AI",
+        "details": "Potwierdzone: nazwa i miejscowość, kierunek Warszawa, punkt WGS84 identyczny z rekordem, 28 miejsc ciężarowych w kol.P, rampa do odśnieżania AI=tak."
+      },
+      "license_check": {
+        "result": "PASS",
+        "files": [
+          "work/roads_tmp/GDDKIA_MOP_2026_09.xlsx"
+        ],
+        "details": "Oficjalny arkusz GDDKiA opublikowany w części BIP. Zip wewnątrz XLSX nie zawiera katalogu xl/media ani osadzonych zdjęć. Dołączany jako materiał urzędowy; materiały gov.pl z NC/ND nie są dołączane. Dane OSM opisane ODbL z autorstwem contributors.",
+        "sources": [
+          "https://www.gov.pl/web/gov/prawa-autorskie",
+          "https://www.openstreetmap.org/copyright"
+        ]
+      },
+      "geometry_check": {
+        "result": "PASS",
+        "id": "RS04",
+        "tags": {
+          "area": "yes",
+          "full_name": "Miejsce Obsługi Podróżnych Cibory Północ",
+          "highway": "rest_area",
+          "name": "MOP Cibory Północ",
+          "toilets": "yes"
+        },
+        "record_point": [
+          "53.110246",
+          "22.586114"
+        ],
+        "within_osm_polygon": true,
+        "distance_to_osm_polygon_m": 0.0,
+        "bbox_midpoint_latlon": [
+          53.110539349999996,
+          22.58584645
+        ],
+        "bbox": [
+          22.5833716,
+          53.1097753,
+          22.5883213,
+          53.1113034
+        ],
+        "details": "Punkt z tabeli GDDKiA znajduje się wewnątrz wieloboku OSM o właściwej nazwie. Nie pomylono MOP na przeciwległej jezdni."
+      },
+      "truck_13_6_check": {
+        "result": "PASS_WITH_LIMITATION",
+        "details": "TAK funkcjonalne uzasadnione urzędową liczbą miejsc dla ciężarówek i przeznaczeniem MOP. Nie jest to literalny pomiar obwiedni naczepy13,6m; ograniczenie już jawnie zapisane."
+      },
+      "route_check": {
+        "result": "PASS_WITH_LIMITATION",
+        "details": "Kierunek Warszawa zgodny z kol.N; opisuje oddzielny zjazd z właściwej jezdni S8 i legalną zmianę kierunku, nie zawracanie przez pas rozdziału. Końcowej geometrii łącznicy nie symulowano."
+      },
+      "corrections": []
+    },
+    {
+      "auditor": "industrial_core — niezależny od autora roads_services",
+      "checked_utc": "2026-11-12T22:37:09.856297+00:00",
+      "access_date": "2026-11-12",
+      "sample_seed": 20261112,
+      "sample_definition": "globalna próbka 12 z57, random.Random(20261112).sample(sorted(ids),ceil(N*0.2))",
+      "audited_source_file": "work/roads_services.json",
+      "audited_snapshot_sha256": "2fa7b029d8152dec8e15e689cdbf83d75feff0fd07f522edbf39ea1d17fb5428",
+      "scope_note": "Kontrola niezależnych pobrań i istniejących plików wskazanych jako include_in_zip w roads_services.json. Końcowy ZIP nie istniał jeszcze podczas kontroli; kontrolę zgodności jego faktycznej listy plików przeprowadza koordynator. Nie zmieniono roads_services.json.",
+      "id": "RS06",
+      "name": "MOP Kołaki",
+      "result": "PASS",
+      "link_check": [
+        {
+          "url": "https://www.gov.pl/attachment/8121e13b-00a0-43e8-9d98-28172cd8ec03",
+          "result": "PASS",
+          "http": 200,
+          "details": "Web open nie odczytuje XLSX; niezależny urllib GET zakończony HTTP200. Aktualny link potwierdzony na stronie GDDKiA; plik identyczny SHA256 z kopią autora.",
+          "sha256": "6b345b61708d28542c00293304c734769aaca85493418ea6f4bb97d3ebc8b4f3",
+          "checked_utc": "2026-11-12T22:34:34.511281+00:00"
+        },
+        {
+          "url": "https://www.gov.pl/web/gddkia/wykaz-parkingow-i-mop",
+          "result": "PASS",
+          "details": "Otworzono ponownie. Strona udostępnia tabelę wrzesień2026 i historię wersja25,26.10.2026."
+        },
+        {
+          "url": "https://api.openstreetmap.org/api/0.6/way/461139234/full",
+          "result": "PASS",
+          "http": 200,
+          "details": "Ponownie pobrano aktualny OSM way/full."
+        }
+      ],
+      "content_check": {
+        "result": "PASS",
+        "locator": "Arkusz1, wiersz 12, kolumny E–N, P, AI",
+        "details": "Potwierdzone: nazwa i miejscowość, kierunek Warszawa, punkt WGS84 identyczny z rekordem, 20 miejsc ciężarowych w kol.P, rampa do odśnieżania AI=tak."
+      },
+      "license_check": {
+        "result": "PASS",
+        "files": [
+          "work/roads_tmp/GDDKIA_MOP_2026_09.xlsx"
+        ],
+        "details": "Oficjalny arkusz GDDKiA opublikowany w części BIP. Zip wewnątrz XLSX nie zawiera katalogu xl/media ani osadzonych zdjęć. Dołączany jako materiał urzędowy; materiały gov.pl z NC/ND nie są dołączane. Dane OSM opisane ODbL z autorstwem contributors.",
+        "sources": [
+          "https://www.gov.pl/web/gov/prawa-autorskie",
+          "https://www.openstreetmap.org/copyright"
+        ]
+      },
+      "geometry_check": {
+        "result": "PASS",
+        "id": "RS06",
+        "tags": {
+          "area": "yes",
+          "full_name": "Miejsce Obsługi Podróżnych Kołaki",
+          "highway": "services",
+          "name": "MOP Kołaki",
+          "toilets": "yes"
+        },
+        "record_point": [
+          "53.039390",
+          "22.355731"
+        ],
+        "within_osm_polygon": true,
+        "distance_to_osm_polygon_m": 0.0,
+        "bbox_midpoint_latlon": [
+          53.0394966,
+          22.355345
+        ],
+        "bbox": [
+          22.3535944,
+          53.0382831,
+          22.3570956,
+          53.0407101
+        ],
+        "details": "Punkt z tabeli GDDKiA znajduje się wewnątrz wieloboku OSM o właściwej nazwie. Nie pomylono MOP na przeciwległej jezdni."
+      },
+      "truck_13_6_check": {
+        "result": "PASS_WITH_LIMITATION",
+        "details": "TAK funkcjonalne uzasadnione urzędową liczbą miejsc dla ciężarówek i przeznaczeniem MOP. Nie jest to literalny pomiar obwiedni naczepy13,6m; ograniczenie już jawnie zapisane."
+      },
+      "route_check": {
+        "result": "PASS_WITH_LIMITATION",
+        "details": "Kierunek Warszawa zgodny z kol.N; opisuje oddzielny zjazd z właściwej jezdni S8 i legalną zmianę kierunku, nie zawracanie przez pas rozdziału. Końcowej geometrii łącznicy nie symulowano."
+      },
+      "corrections": [],
+      "observations": [
+        "W tabeli nazwa zarządcy ma zapis BP Europe SE, a w rekordzie BP Europa SE. Różnica pisowni nie wpływa na lokalizację ani wniosek ciężarowy; jeśli tekst utrzymuje formułę „w tabeli”, zalecane wierne BP Europe SE."
+      ]
+    },
+    {
+      "auditor": "industrial_core — niezależny od autora roads_services",
+      "checked_utc": "2026-11-12T22:37:09.856297+00:00",
+      "access_date": "2026-11-12",
+      "sample_seed": 20261112,
+      "sample_definition": "globalna próbka 12 z57, random.Random(20261112).sample(sorted(ids),ceil(N*0.2))",
+      "audited_source_file": "work/roads_services.json",
+      "audited_snapshot_sha256": "2fa7b029d8152dec8e15e689cdbf83d75feff0fd07f522edbf39ea1d17fb5428",
+      "scope_note": "Kontrola niezależnych pobrań i istniejących plików wskazanych jako include_in_zip w roads_services.json. Końcowy ZIP nie istniał jeszcze podczas kontroli; kontrolę zgodności jego faktycznej listy plików przeprowadza koordynator. Nie zmieniono roads_services.json.",
+      "id": "RS09",
+      "name": "MOP Haćki Zachód",
+      "result": "PASS_WITH_LIMITATION",
+      "result_reason": "Zamknięto dwie przyczyny pierwotnego FAIL: poprawiono korytarz przejazdu oraz opis geometrii. Trasa pozostaje ESTIMATED i nie jest pełną weryfikacją prawnego dojazdu zestawu.",
+      "link_check": [
+        {
+          "url": "https://www.gov.pl/web/gddkia-bialystok/najpierw-droga-teraz-mop-y",
+          "result": "PASS_WITH_LIMITATION",
+          "web_error": "Dwa odczyty web open:502 Bad Gateway",
+          "http_retry": 200,
+          "details": "Niezależny urllib pobrał pełny HTML z właściwym artykułem; treść także potwierdzona urzędowym wynikiem wyszukiwarki. Nie uznano samych błędów web za sukces.",
+          "checked_utc": "2026-11-12T22:34:34.512255+00:00"
+        },
+        {
+          "url": "https://www.gov.pl/web/gddkia/s19-ploski---hacki",
+          "result": "PASS",
+          "details": "Ponownie otwarta strona obecnie ma tytuł S19 Deniski–Haćki; parametry potwierdzają Haćki Zachód po prawej, projektowo ok.4+700."
+        },
+        {
+          "url": "https://api.openstreetmap.org/api/0.6/way/1569821910/full",
+          "result": "PASS",
+          "http": 200
+        }
+      ],
+      "content_check": {
+        "result": "PASS",
+        "details": "Pełny pobrany HTML potwierdza publikację29.10.2026, udostępnienie obu MOP tego dnia i26 ukośnych miejsc ciężarowych na każdym. OSM start_date=2026-10-30 jest odmienne; pierwszeństwo źródła urzędowego jest właściwe.",
+        "quote_or_page": "26 stanowisk postojowych ukośnych dla samochodów ciężarowych"
+      },
+      "license_check": {
+        "result": "PASS",
+        "files": [
+          "work/roads_tmp/osm_way_1569821910.osm"
+        ],
+        "sources": [
+          "https://www.gov.pl/web/gov/prawa-autorskie",
+          "https://www.openstreetmap.org/copyright"
+        ],
+        "details": "Do archiwum zadeklarowano dane OSM ODbL; artykuł urzędowy pozostaje referencją tekstową CC BY-SA4.0, a zdjęć gov.pl z domyślnym NC-ND nie pobrano do ZIP."
+      },
+      "geometry_check": {
+        "result": "PASS_WITH_LIMITATION",
+        "id": "RS09",
+        "tags": {
+          "addr:city": "Haćki",
+          "highway": "services",
+          "name": "Haćki Zachód",
+          "opening_hours": "24/7",
+          "operator": "GDDKiA",
+          "start_date": "2026-10-30"
+        },
+        "record_point": [
+          "52.843206",
+          "23.171417"
+        ],
+        "within_osm_polygon": true,
+        "distance_to_osm_polygon_m": 0.0,
+        "bbox_midpoint_latlon": [
+          52.8432061,
+          23.17141675
+        ],
+        "bbox": [
+          23.1713362,
+          52.8431308,
+          23.1714973,
+          52.8432814
+        ],
+        "details": "Środek bbox policzony poprawnie, lecz geometria źródła ma tylko ok.11×17m. Nie jest obrysem pełnego MOP. Osobny parking ciężarowy OSM way1569821915 znajduje się ok.35m od tego punktu, ma hgv=designated i orientation=diagonal. Jego capacity=27 różni się od urzędowych26.",
+        "context_source": "https://api.openstreetmap.org/api/0.6/map?bbox=23.166,52.840,23.178,52.847",
+        "osm_heavy_parking": "https://www.openstreetmap.org/way/1569821915",
+        "distance_method": "Odległość punkt–wielobok w EPSG2180, obliczona shapely/pyproj; rozmiar małego obiektu z jego bbox."
+      },
+      "truck_13_6_check": {
+        "result": "PASS_WITH_LIMITATION",
+        "details": "TAK funkcjonalne jest spójne z urzędowym przeznaczeniem26 ukośnych stanowisk dla ciężarówek; bez pomiaru konkretnego zestawu. Liczby27 z OSM nie podstawiać za26 z GDDKiA."
+      },
+      "route_check": {
+        "result": "FAIL",
+        "source_url": "https://www.bialystok.pl/pl/dla_mieszkancow/drogi_i_inwestycje/utrudnienia-drogowe/utrudnienia-w-ruchu-na-wlotach-skrzyzowan-ulic.html",
+        "details": "Audytowany ciąg Sulika→Piastowska→Suchowolca→Zabłudowska wymaga usunięcia przejazdu przez objęty przekierowaniem odcinek Suchowolca/Dojlidy Fabryczne. ZDM1.12.2025 opisuje przekierowanie ruchu>3,5t na Kuronia, Dywizjonu303 i Ciołkowskiego. Dla tranzytu do MOP nie ustalono wyjątku.",
+        "recommended_corridor": "...gen.Nikodema Sulika→Konstantego Ciołkowskiego→Dywizjonu303→Jacka Kuronia→Suchowolca na południe od Kuronia→Zabłudowska/DK19→Deniski→S19. Połączenia lokalne nadal wymagają kontroli geometrii i aktualnych znaków."
+      },
+      "corrections": [
+        {
+          "required": true,
+          "field": "dojazd_od_S8",
+          "action": "Zastąpić stary fragment Piastowska→Suchowolca korytarzem przez Ciołkowskiego, Dywizjonu303 i Kuronia; zachować ESTIMATED."
+        },
+        {
+          "required": true,
+          "field": "sources[OSM].claims / metoda_współrzędnych",
+          "action": "Zamiast „obrys MOP” użyć „mały wielobok oznaczony nazwą MOP, punkt orientacyjny; nie granice całego terenu”."
+        },
+        {
+          "required": false,
+          "field": "uwagi",
+          "action": "Odnotować OSM parking way1569821915 capacity27 wobec urzędowych26; zachować liczbę26."
+        }
+      ],
+      "resolution_status": "Dwie wymagane korekty zamknięte po odczycie work/enriched.json; zachowano pierwotne wyniki, źródła i listę korekt. Redakcyjny ślad słowa „obrys” w sources[].claims przekazano do ujednolicenia.",
+      "initial_result": "FAIL",
+      "initial_result_reason": "Dane MOP, źródło i punkt są poprawne; roboczy dojazd w audytowanym pliku przechodzi przez korytarz Suchowolca/Piastowska wymagający korekty wobec urzędowego przekierowania tranzytu ciężarowego. Opis wieloboku OSM jako obrysu całego MOP również wymaga doprecyzowania.",
+      "resolution": {
+        "checked_utc": "2026-11-12 22:38:14 UTC",
+        "checked_file": "/workspace/scratch/c48b03888f56/work/enriched.json",
+        "checked_file_sha256": "634a317a52aca1a230da17b5eb586f95fb827f170e3d34fa249327c0514c5dcd",
+        "scope": "Ponowny odczyt poprawionych pól rekordu RS09; bez nowych wyszukiwań i bez zmiany pliku autora.",
+        "route_check": {
+          "result": "PASS_WITH_LIMITATION",
+          "value": "S8 → DK8 → węzeł Porosły → al. Jana Pawła II → al. Niepodległości → al. Ignacego Jana Paderewskiego → Wiadukt → Konstantego Ciołkowskiego → Dywizjonu 303 → Jacka Kuronia → Zabłudowska → DK19 (Zabłudów–Deniski) → węzeł Deniski → S19 w kierunku Bielska Podlaskiego → łącznica MOP Haćki Zachód",
+          "finding": "Usunięto Piastowską i północny odcinek Suchowolca. Wpisano al. Niepodległości, Paderewskiego, Wiadukt, Ciołkowskiego, Dywizjonu 303 i Kuronia. Pozostają jawne ograniczenia: korytarz ESTIMATED, bieżący prawny dojazd UNVERIFIED."
+        },
+        "geometry_check": {
+          "result": "PASS",
+          "value": "Środek małego wieloboku OSM highway=services z nazwą Haćki Zachód; nie granice całego MOP ani brama.",
+          "finding": "Opis jednoznacznie odróżnia mały nazwany wielobok OSM od granic całego MOP i bramy. Uwagi zawierają rozbieżność liczby stanowisk 26 GDDKiA / 27 OSM i pierwszeństwo GDDKiA."
+        },
+        "editorial_followup": "W sources[].claims dla way/1569821910 pozostało słowo „Obrys MOP”; zalecono ujednolicić z poprawionym geometry_source przed generacją sources.md. Nie zmienia to zamknięcia dwóch sprawdzanych pól."
+      }
+    },
+    {
+      "auditor": "industrial_core — niezależny od autora roads_services",
+      "checked_utc": "2026-11-12T22:37:09.856297+00:00",
+      "access_date": "2026-11-12",
+      "sample_seed": 20261112,
+      "sample_definition": "globalna próbka 12 z57, random.Random(20261112).sample(sorted(ids),ceil(N*0.2))",
+      "audited_source_file": "work/roads_services.json",
+      "audited_snapshot_sha256": "2fa7b029d8152dec8e15e689cdbf83d75feff0fd07f522edbf39ea1d17fb5428",
+      "scope_note": "Kontrola niezależnych pobrań i istniejących plików wskazanych jako include_in_zip w roads_services.json. Końcowy ZIP nie istniał jeszcze podczas kontroli; kontrolę zgodności jego faktycznej listy plików przeprowadza koordynator. Nie zmieniono roads_services.json.",
+      "id": "RS14",
+      "name": "Pronar Wasilków — stacja i parking",
+      "result": "PASS_WITH_LIMITATION",
+      "link_check": [
+        {
+          "url": "https://holdcargo.com/pl/direction",
+          "result": "PASS",
+          "details": "Ponownie otworzona pełna instrukcja z29.10.2025. Potwierdza parking Pronar dla kierowców oczekujących na załadunek oraz GPS przepisany w rekordzie. Nie otwierano odnośników Google."
+        },
+        {
+          "url": "https://api.openstreetmap.org/api/0.6/node/2183661960",
+          "result": "PASS",
+          "http": 200
+        }
+      ],
+      "content_check": {
+        "result": "PASS",
+        "quote_or_page": "Instrukcja HoldCargo, punkty3 i5; GPS53.22148089427946,23.219062685830217",
+        "details": "Nazwa parkingu i kierowanie kierowców na postój potwierdzone. OSM stacji potwierdza adres Rabczyńskiego1 oraz fuel:HGV_diesel=yes."
+      },
+      "license_check": {
+        "result": "PASS",
+        "files": [
+          "work/roads_tmp/osm_node_2183661960.osm"
+        ],
+        "sources": [
+          "https://holdcargo.com/pl/direction",
+          "https://www.openstreetmap.org/copyright"
+        ],
+        "details": "HoldCargo ma zastrzeżenie praw; jego HTML/zdjęć i kwartalnika Pronar nie ma na liście plików dołączanych. Wyłącznie referencja. Dołączane są dane OSM ODbL z atrybucją."
+      },
+      "geometry_check": {
+        "result": "PASS_WITH_LIMITATION",
+        "id": "RS14",
+        "tags": {
+          "addr:city": "Wasilków",
+          "addr:housenumber": "1",
+          "addr:postcode": "16-010",
+          "addr:street": "Księdza Wacława Rabczyńskiego",
+          "amenity": "fuel",
+          "brand": "Pronar",
+          "fuel:diesel": "yes",
+          "fuel:HGV_diesel": "yes",
+          "fuel:lpg": "yes",
+          "fuel:octane_95": "yes",
+          "fuel:octane_98": "yes"
+        },
+        "record_point": [
+          "53.221481",
+          "23.219063"
+        ],
+        "node_latlon": [
+          53.2208247,
+          23.2180178
+        ],
+        "distance_to_osm_node_m": 101.03785163301612,
+        "details": "GPS dosłownie zgodny z instrukcją przewoźnika, ale jest punktem orientacyjnym parkingu, ok.101m od węzła stacji. Najbliższy obrys parkingu OSM way556589878 jest ok.11m od GPS. Nie przedstawiać GPS jako dokładnego środka stanowiska ani jako współrzędnych node2183661960. Rozdzielenie stacji i parkingu już opisano w rekordzie.",
+        "context_source": "https://api.openstreetmap.org/api/0.6/map?bbox=23.214,53.218,23.224,53.224",
+        "nearby_parking": "https://www.openstreetmap.org/way/556589878",
+        "distance_method": "Geod.WGS84 dla dwóch punktów; EPSG2180 dla punktu i obrysu parkingu."
+      },
+      "truck_13_6_check": {
+        "result": "PASS_WITH_LIMITATION",
+        "details": "Zalecenie przewoźnika dla kierowców magazynu i paliwo HGV wystarczają do funkcjonalnego TAK; dokładnej długości13,6m i geometrii manewru źródło nie specyfikuje, co rekord przyznaje."
+      },
+      "route_check": {
+        "result": "PASS_WITH_LIMITATION",
+        "details": "Tekst HoldCargo potwierdza wjazd od S19 w kierunku Wasilkowa i skręt w lewo na rondzie na parking. Nazwa węzła i wcześniejszy ciąg odS8 pozostają robocze; nie podniesiono ich do SOURCED."
+      },
+      "corrections": [
+        {
+          "required": false,
+          "field": "metoda_współrzędnych",
+          "action": "Dodać „punkt orientacyjny podany przez przewoźnika; nie centroid parkingu ani dokładne stanowisko”."
+        }
+      ]
+    },
+    {
+      "auditor": "industrial_core — niezależny od autora roads_services",
+      "checked_utc": "2026-11-12T22:37:09.856297+00:00",
+      "access_date": "2026-11-12",
+      "sample_seed": 20261112,
+      "sample_definition": "globalna próbka 12 z57, random.Random(20261112).sample(sorted(ids),ceil(N*0.2))",
+      "audited_source_file": "work/roads_services.json",
+      "audited_snapshot_sha256": "2fa7b029d8152dec8e15e689cdbf83d75feff0fd07f522edbf39ea1d17fb5428",
+      "scope_note": "Kontrola niezależnych pobrań i istniejących plików wskazanych jako include_in_zip w roads_services.json. Końcowy ZIP nie istniał jeszcze podczas kontroli; kontrolę zgodności jego faktycznej listy plików przeprowadza koordynator. Nie zmieniono roads_services.json.",
+      "id": "RS20",
+      "name": "Budzisko–Kalvarija — cel trasy",
+      "result": "PASS",
+      "link_check": [
+        {
+          "url": "https://www.openstreetmap.org/node/4464678531",
+          "result": "PASS_WITH_LIMITATION",
+          "details": "Strona obiektu niedostępna w narzędziu web, ale jej urzędowy endpoint OSM API ponownie zwrócił HTTP200."
+        },
+        {
+          "url": "https://api.openstreetmap.org/api/0.6/node/4464678531",
+          "result": "PASS",
+          "http": 200
+        },
+        {
+          "url": "https://eli.gov.pl/api/acts/DU/2026/1253/text/O/D20261253.pdf",
+          "result": "PASS",
+          "http": 200,
+          "details": "PDF odczytany przez web i niezależnie HTTP. Plik identyczny SHA256 z kopią autora.",
+          "sha256": "9f4438a041448b94f251bfbcbfefac1ae7dda2d012cb323e9b0bd977d351150d"
+        }
+      ],
+      "content_check": {
+        "result": "PASS",
+        "quote_or_page": "Dz.U.2026 poz.1253: s.1 §1 pkt1; s.10, granica litewska, wiersz5 Budzisko.",
+        "details": "Potwierdzone: ruch osobowy i towarowy zgodny z parametrami S61; kontrola od2.10.2026 do30.03.2027. Punkt opisany wyłącznie jako cel trasy, bez fikcyjnego zewnętrznego terminala celnego."
+      },
+      "license_check": {
+        "result": "PASS",
+        "files": [
+          "work/roads_tmp/ELI_D20261253.pdf",
+          "work/roads_tmp/osm_budzisko.osm"
+        ],
+        "sources": [
+          "https://eli.gov.pl/api/acts/DU/2026/1253/text/O/D20261253.pdf",
+          "https://www.openstreetmap.org/copyright"
+        ],
+        "details": "PDF jest aktem normatywnym Dziennika Ustaw, art.4 pkt1 prawa autorskiego; dane OSM ODbL. Artykułu SG i jego zdjęć nie zadeklarowano do pobrania. Ogólne pole autora używa art.4 pkt2 dla materiałów urzędowych; w przypadku tego PDF najściślejszą podstawą jest pkt1, co nie zmienia dopuszczalności użycia."
+      },
+      "geometry_check": {
+        "result": "PASS",
+        "id": "RS20",
+        "tags": {
+          "boundary": "country_border",
+          "name": "Budzisko (PL) - Kalvarija (LT)",
+          "tourism": "information"
+        },
+        "record_point": [
+          "54.308895",
+          "23.120786"
+        ],
+        "node_latlon": [
+          54.3088951,
+          23.1207861
+        ],
+        "distance_to_osm_node_m": 0.012894458345371397,
+        "details": "Świeży node zgadza się po zaokrągleniu do6 miejsc. Jest końcowym węzłem jednokierunkowej S61 way1030881659 i początkowym węzłem A5 way917050082, potwierdzając stronę wyjazdu do Litwy.",
+        "context_source": "https://api.openstreetmap.org/api/0.6/node/4464678531/ways"
+      },
+      "truck_13_6_check": {
+        "result": "PASS_WITH_LIMITATION",
+        "details": "TAK funkcjonalne dla celu na S61/A5 zgodne z urzędowym dopuszczeniem ruchu towarowego; nie interpretować jako pozwolenia na pojazd ponadnormatywny."
+      },
+      "route_check": {
+        "result": "PASS_WITH_LIMITATION",
+        "details": "S8→Podborze→S61 jest spójnym korytarzem ekspresowym; rekord wyraźnie nie obiecuje najkrótszej trasy z Białegostoku. Nie odtwarzano bieżącej organizacji stanowisk kontroli."
+      },
+      "corrections": [
+        {
+          "required": false,
+          "field": "licencja dla pliku ELI_D20261253.pdf",
+          "action": "Doprecyzować art.4 pkt1 (akt normatywny), zamiast ogólnego pkt2. Dostępność komercyjna pozostaje taka sama."
+        }
+      ]
+    },
+    {
+      "id": "IC08",
+      "name": "Masterpress — zakład opakowań i etykiet",
+      "url": "https://masterpress.com/contact/",
+      "link_check": {
+        "result": "PASS",
+        "method": "Ponowne otwarcie i odczyt strony narzędziem web, nie tylko kontrola kodu odpowiedzi.",
+        "observed": "Widoczny Masterpress S.A., company’s data i Main Office przy ul. Jacka Kuronia 4, 15-569 Białystok."
+      },
+      "content_check": {
+        "result": "PASS",
+        "quote": "ul. Jacka Kuronia 4, 15-569 Białystok, Poland",
+        "secondary_url": "https://masterpress.elementapp.ai/career/job-offer/f56c5489-4951-4d01-9b0c-e50c19838828",
+        "secondary_link": "HTTP 200, ta sama oferta pracodawcy; ponownie odczytana treść o zaopatrzeniu, transporcie, ciągłości dostaw surowców i współpracy z przewoźnikami.",
+        "secondary_quote": "Nadzór nad współpracą z firmami transportowymi i dostawcami usług logistycznych",
+        "limitation": "Kontakt opisuje także Main Office; sam adres firmy nie jest dowodem bramy logistycznej. Przemysłową funkcję w tym samym miejscu potwierdzają dodatkowo tagi OSM. Data 17.08.2026 umieszczona w tytule źródła nie była widoczna w ponownie odczytanej ofercie ani w surowym HTML."
+      },
+      "rights_check": {
+        "result": "PASS",
+        "observed": "Stopka: © Masterpress S.A. 2024 All rights reserved.",
+        "license_in_record": "Brak jawnej licencji; tylko referencja, nie pobrano",
+        "assessment": "Prawidłowo nie zakwalifikowano fotografii/tekstów jako otwartych zasobów do gry. OSM pozostaje odrębnym źródłem ODbL."
+      },
+      "geometry_check": {
+        "result": "PASS",
+        "osm_id": "way/234838499",
+        "osm_url": "https://www.openstreetmap.org/way/234838499",
+        "url_check": "Bezpośrednie urllib: HTTP 200, zachowany URL, identyfikator obiektu widoczny w HTML. Narzędzie web nie mogło otworzyć strony, dlatego sprawdzono alternatywnym odczytem.",
+        "tags_checked": {
+          "name": "Masterpress",
+          "addr:city": "Białystok",
+          "addr:street": "Jacka Kuronia",
+          "addr:housenumber": "4",
+          "addr:postcode": "15-569",
+          "building": "industrial",
+          "man_made": "works",
+          "product": "stickers"
+        },
+        "computed_lat": "53.105610",
+        "computed_lon": "23.191145",
+        "comparison": "Zgodne do sześciu miejsc z punktem przekazanym przez root. Pełna zgodność nazwy, ulicy, numeru i kodu pocztowego.",
+        "point_role": "Centroid obiektu przemysłowego; nie pozycja bramy lub rampy."
+      },
+      "trailer_13_6_check": {
+        "result": "PASS",
+        "value": "UNVERIFIED",
+        "assessment": "Poprawnie zachowano brak dowodu konkretnej długości pojazdu i geometrii dojazdu. Oferta logistyki nie wystarcza do wpisania TAK."
+      },
+      "conclusion": "PASS_WITH_LIMITATION",
+      "corrections": [
+        "W tytule źródła oferty pracy usunąć datę 17.08.2026 albo oznaczyć datę publikacji UNVERIFIED, chyba że autor źródła zachował odrębny dowód tej daty.",
+        "W finalnym manifeście opisać punkt jako centroid budynku, bez sugerowania sprawdzonego wjazdu."
+      ],
+      "result": "PASS_WITH_LIMITATION"
+    },
+    {
+      "id": "IC14",
+      "name": "PROMOTECH — zakład produkcyjny",
+      "url": "https://www.promotech.eu/pl/skontaktuj-sie/",
+      "link_check": {
+        "result": "PASS",
+        "method": "Ponowne otwarcie i pełny odczyt sekcji kontaktowej.",
+        "observed": "Strona wyraźnie odróżnia dystrybutora ZALCO w Warszawie od siedziby i zakładu produkcyjnego PROMOTECH w Białymstoku."
+      },
+      "content_check": {
+        "result": "PASS",
+        "quote": "Siedziba firmy i zakład produkcyjny; PROMOTECH Sp. z o.o.; ul. Elewatorska 23/1; 15-620 Białystok, Polska",
+        "observed": "W tej samej sekcji znajduje się dział eksportu. Adres i funkcja produkcyjna z rekordu są zgodne; nie pomylono ich z warszawskim serwisem."
+      },
+      "rights_check": {
+        "result": "PASS",
+        "observed": "Stopka: Copyright © 2026 PROMOTECH. Nie znaleziono jawnej licencji na ponowne wykorzystanie fotografii i tekstów.",
+        "license_in_record": "Brak jawnej licencji; tylko referencja, nie pobrano",
+        "assessment": "Oznaczenie referencyjne jest prawidłowe; nie ma podstaw do umieszczania materiałów firmowych w plikach gry."
+      },
+      "geometry_check": {
+        "result": "PASS",
+        "osm_id": "way/221526892",
+        "osm_url": "https://www.openstreetmap.org/way/221526892",
+        "url_check": "Bezpośrednie urllib: HTTP 200, zachowany URL, identyfikator obiektu widoczny w HTML. Narzędzie web nie mogło otworzyć strony.",
+        "tags_checked": {
+          "name": "Promotech",
+          "addr:city": "Białystok",
+          "addr:street": "Elewatorska",
+          "addr:housenumber": "23/1",
+          "building": "yes"
+        },
+        "computed_lat": "53.138518",
+        "computed_lon": "23.073250",
+        "comparison": "Zgodne do sześciu miejsc z punktem przekazanym przez root. Nazwa i pełny numer 23/1 zgodne z operatorem.",
+        "point_role": "Centroid oznaczonego budynku PROMOTECH; nie potwierdzona brama."
+      },
+      "trailer_13_6_check": {
+        "result": "PASS",
+        "value": "UNVERIFIED",
+        "assessment": "Prawidłowo nie wywiedziono obsługi naczepy 13,6 m z samej produkcji i eksportu. Brak dowodu wymiaru i obwiedni manewru."
+      },
+      "conclusion": "PASS",
+      "corrections": [],
+      "result": "PASS"
+    },
+    {
+      "id": "IC16",
+      "name": "MPO — baza i Okręgowa Stacja Kontroli Pojazdów",
+      "url": "https://mpo.bialystok.pl/index.php?Itemid=123&catid=11&id=11%3Aoskp-stacja-kontroli-pojazdow-bi12&option=com_content&view=article",
+      "link_check": {
+        "result": "PASS",
+        "method": "Ponowne otwarcie i odczyt treści operatora; normalizacja %3A do dwukropka w URL nie zmienia artykułu.",
+        "observed": "Aktualna strona OSKP z danymi MPO i adresem ul. 42 Pułku Piechoty 48, 15-950 Białystok."
+      },
+      "content_check": {
+        "result": "PASS_WITH_LIMITATION",
+        "quote": "Przeprowadzamy badania techniczne: ciężarowych; przyczep oraz naczep",
+        "secondary_url": "https://www.mpo.bialystok.pl/index.php?Itemid=124&id=12&option=com_content&view=article",
+        "secondary_quote": "Punkt znajduje się na terenie bazy MPO przy ul. 42. Pułku Piechoty 48 w Białymstoku.",
+        "assessment": "OSKP i fizyczna baza pod bieżącym adresem potwierdzone. Strona opisuje badania także naczep; nie mówi o maksymalnej długości ani przejeździe całego zestawu przez halę.",
+        "limitation": "W dwóch źródłach rekordu nie znaleziono dowodu stwierdzenia, że 27 Lipca 62 jest dawną numeracją tego samego obiektu. Nie traktować tej informacji jako SOURCED bez odrębnego dokumentu."
+      },
+      "rights_check": {
+        "result": "PASS",
+        "observed": "Stopka © mpo.bialystok.pl 2024. Brak jawnej licencji pozwalającej włączyć fotografię firmową do pakietu.",
+        "license_in_record": "Brak jawnej licencji; tylko referencja, nie pobrano",
+        "assessment": "Prawidłowo pozostawiono tylko referencję. Fakt, że spółka działa w usługach komunalnych, nie czyni automatycznie jej zwykłej strony lub fotografii materiałem urzędowym z art. 4."
+      },
+      "geometry_check": {
+        "result": "PASS_WITH_LIMITATION",
+        "osm_id": "way/228040084",
+        "osm_url": "https://www.openstreetmap.org/way/228040084",
+        "url_check": "Bezpośrednie urllib: HTTP 200, zachowany URL, identyfikator obiektu widoczny w HTML. Narzędzie web nie mogło otworzyć strony.",
+        "tags_checked": {
+          "operator": "MPO Sp. z o.o",
+          "addr:city": "Białystok",
+          "addr:street": "42 Pułku Piechoty",
+          "addr:housenumber": "48",
+          "addr:postcode": "15-950",
+          "building": "office",
+          "office": "company",
+          "website": "https://mpo.bialystok.pl/"
+        },
+        "computed_lat": "53.142204",
+        "computed_lon": "23.211142",
+        "comparison": "Zgodny operator i dokładny adres. Obiekt OSM jest biurem, a nie oznaczoną halą OSKP.",
+        "point_role": "Dopuszczalny punkt adresowy bazy MPO. Pozycja diagnostyki, plac manewrowy i brama pozostają UNVERIFIED.",
+        "nearby_false_match": "W pobliżu OSM zawiera osobną OSKP Szorc Auto Serwis, way/1301391545, adres 42 Pułku Piechoty 119. Nie jest to stacja MPO; nie należy podstawiać jej geometrii."
+      },
+      "trailer_13_6_check": {
+        "result": "PASS",
+        "value": "UNVERIFIED",
+        "assessment": "Konserwatywna ocena jest uzasadniona: możliwość badań przyczep/naczep jest silnym dowodem funkcjonalnym, lecz brak informacji o przejeździe kompletnego zestawu 13,6 m, szerokości wjazdu i manewrze."
+      },
+      "conclusion": "PASS_WITH_LIMITATION",
+      "corrections": [
+        "Przy współrzędnych way/228040084 dopisać: centroid budynku biurowego / punkt adresowy bazy MPO; nie ustalona pozycja hali OSKP ani bramy.",
+        "Usunąć zdanie o dawnym adresie 27 Lipca 62 albo dodać pierwotne źródło zmiany numeracji; na podstawie źródeł tego rekordu jest UNVERIFIED.",
+        "Nie przypisywać MPO sąsiedniej OSKP Szorc przy numerze 119."
+      ],
+      "result": "PASS_WITH_LIMITATION"
+    },
+    {
+      "local_id": "WL05",
+      "result": "PASS_WITH_LIMITATION",
+      "access_date": "2026-11-12",
+      "independent_reviewer": "roads_services",
+      "primary_link": {
+        "url": "https://geodis.com/pl-pl/locations/geodis-road-network-i-bialystok",
+        "http": 200,
+        "bytes_read": 97558,
+        "saved_to_zip": false,
+        "expected_text": {
+          "Żółtki 204": true,
+          "Road Network": true
+        },
+        "explicit_reuse_license_seen": false
+      },
+      "license_check": {
+        "result": "PASS",
+        "finding": "Nie znaleziono jawnej licencji umożliwiającej komercyjne kopiowanie materiału firmy. Polityka tylko referencja, nie pobrano do ZIP jest właściwa. OSM wykorzystywany odrębnie jako ODbL 1.0; autor OpenStreetMap contributors."
+      },
+      "coordinate_check": {
+        "osm_id": "way/1525431951",
+        "api_url": "https://api.openstreetmap.org/api/0.6/way/1525431951/full",
+        "api_http": 200,
+        "lat": "53.165216",
+        "lon": "22.991210",
+        "point_within_osm_building": true,
+        "tags": {
+          "addr:housenumber": "204",
+          "addr:place": "Żółtki",
+          "addr:postcode": "16-070",
+          "building": "warehouse",
+          "source:building": "EGiB"
+        },
+        "method": "Test point-in-polygon w płaszczyźnie WGS84 na węzłach obrysu pobranego ponownie z OSM API. Przy tej skali test topologiczny jest wystarczający. Punkt jest punktem reprezentacyjnym budynku, nie potwierdzonym wjazdem."
+      },
+      "content_check": "GEODIS ponownie podaje Żółtki 204, 16-070 Choroszcz i nazwę Road Network. Komunikat Accolade 18.06.2026 ponownie potwierdza przeniesienie z parku I do III. OSM building=warehouse, addr:place=Żółtki, nr204. Nie dublować tego samego parku w liczbie kompleksów.",
+      "secondary_urls": [
+        "https://accolade.eu/pl/aktualnosci/577/accolade-dokoncila-nejvetsi-skladovy-projekt-v-oblasti-belostoku"
+      ],
+      "naczepa_check": "PASS: UNVERIFIED pozostaje uzasadnione przy przyjętym wymogu dowodu dla 13,6 m; strona oddziału potwierdza funkcję, lecz nie parametr naczepy ani tor jazdy. Możliwość realnej obsługi ciężarówek wysoka funkcjonalnie, brak niezależnego pomiaru.",
+      "limitation": "OSM nie wskazuje rozdzielenia ramp najemców; centroid hali parku nie identyfikuje bramy GEODIS.",
+      "id": "WL05"
+    },
+    {
+      "local_id": "WL09",
+      "result": "PASS_WITH_LIMITATION",
+      "access_date": "2026-11-12",
+      "independent_reviewer": "roads_services",
+      "primary_link": {
+        "url": "https://www.dhl.com/content/dam/dhl/local/global/core/documents/pdf/iso-certificate-europe-45001.pdf.coredownload.pdf",
+        "http": 200,
+        "bytes_read": 839654,
+        "saved_to_zip": false,
+        "page6_contains_address": true,
+        "page6_contains_service_center": true,
+        "page6_contains_date": true
+      },
+      "license_check": {
+        "result": "PASS",
+        "finding": "Nie znaleziono jawnej licencji umożliwiającej komercyjne kopiowanie materiału firmy. Polityka tylko referencja, nie pobrano do ZIP jest właściwa. OSM wykorzystywany odrębnie jako ODbL 1.0; autor OpenStreetMap contributors."
+      },
+      "coordinate_check": {
+        "osm_id": "way/649108044",
+        "api_url": "https://api.openstreetmap.org/api/0.6/way/649108044/full",
+        "api_http": 200,
+        "lat": "53.151200",
+        "lon": "23.039991",
+        "point_within_osm_building": true,
+        "tags": {
+          "addr:city": "Łyski",
+          "addr:city:simc": "0025193",
+          "addr:housenumber": "1",
+          "addr:postcode": "16-070",
+          "addr:street": "Ekranowa",
+          "building": "yes",
+          "source:addr": "gugik.gov.pl"
+        },
+        "method": "Test point-in-polygon w płaszczyźnie WGS84 na węzłach obrysu pobranego ponownie z OSM API. Przy tej skali test topologiczny jest wystarczający. Punkt jest punktem reprezentacyjnym budynku, nie potwierdzonym wjazdem."
+      },
+      "content_check": "Certyfikat DNV C565312, wydany 9.02.2026, s.6/14 tabeli DHL Express (Poland): Ekranowa 1, 16-070 Łyski, Service Center. Sprawdzono odczyt PDF w pamięci, bez zapisania do ZIP. OSM ma ten sam adres.",
+      "naczepa_check": "PASS: UNVERIFIED właściwe. Service Center nie stanowi dowodu doków i placu dla naczep 13,6 m; certyfikat dotyczy zarządzania BHP, nie parametrów pojazdów.",
+      "limitation": "Punkt 53.151200,23.039991 leży w budynku adresowym. Sam budynek OSM nie ma operatora DHL w tagach; powiązanie wynika z zgodności adresu z certyfikatem. Centroid nie jest wjazdem.",
+      "id": "WL09"
+    },
+    {
+      "local_id": "WL14",
+      "result": "PASS_WITH_LIMITATION",
+      "access_date": "2026-11-12",
+      "independent_reviewer": "roads_services",
+      "primary_link": {
+        "url": "https://holdcargo.com/pl/direction",
+        "http": 200,
+        "bytes_read": 60221,
+        "saved_to_zip": false,
+        "expected_text": {
+          "53.20332763156885": true,
+          "23.218137405793687": true,
+          "16A": true,
+          "S19": true
+        },
+        "explicit_reuse_license_seen": false
+      },
+      "license_check": {
+        "result": "PASS",
+        "finding": "Nie znaleziono jawnej licencji umożliwiającej komercyjne kopiowanie materiału firmy. Polityka tylko referencja, nie pobrano do ZIP jest właściwa. OSM wykorzystywany odrębnie jako ODbL 1.0; autor OpenStreetMap contributors."
+      },
+      "content_check": "Operator w instrukcji powtarza dokładny GPS magazynu i wjazd tylko od S19. Strona usług potwierdza magazyn oraz przeładunki, a oddzielny komunikat zmianę numeru 16/2 na 16A. Ograniczona przestrzeń, wąski wjazd, awizacja i zakaz oczekiwania/nocowania są bezpośrednio opisane. Nie użyto odnośników Google.",
+      "secondary_urls": [
+        "https://holdcargo.com/pl/mag",
+        "https://holdcargo.com/pl/izmenenie-numeracii-v-adrese-s-16-2-na-16a"
+      ],
+      "coordinate_check": {
+        "lat": "53.203328",
+        "lon": "23.218137",
+        "primary_text_gps": [
+          53.20332763156885,
+          23.218137405793687
+        ],
+        "rounding_correct": true,
+        "osm_cross_check_url": "https://nominatim.openstreetmap.org/search?q=Supra%C5%9Blska+16A+Wasilk%C3%B3w+Polska&format=jsonv2&limit=3&addressdetails=1",
+        "osm_office_id": "node/13609180486",
+        "osm_office_lat": "53.2029025",
+        "osm_office_lon": "23.2179409",
+        "osm_address_building_id": "way/1551348065",
+        "office_distance_m_ESTIMATED": 49.1,
+        "method": "GPS manifestu zgodny z tekstem operatora. Niezależne OSM/Nominatim wskazuje biuro HoldCargo pod Supraślską 16A około 49 m dalej; dystans Haversine R=6371008.8m. Nie zmieniono GPS magazynu na punkt biura."
+      },
+      "naczepa_check": "PASS: UNVERIFIED właściwe z powodu wyraźnego ostrzeżenia o wąskim wjeździe i braku długości 13,6 m. Sam opis przeładunku nie potwierdza całej obwiedni skrętu.",
+      "limitation": "OSM potwierdza biuro/adres, lecz nie potwierdza osobnego obrysu magazynu lub wjazdu w punkcie operatora. Nie używać office jako obrysu hali ani parkingu.",
+      "id": "WL14"
+    },
+    {
+      "local_id": "WL15",
+      "result": "PASS_WITH_LIMITATION",
+      "access_date": "2026-11-12",
+      "independent_reviewer": "roads_services",
+      "primary_link": {
+        "url": "https://www.witraz.eu/kontakt/skontaktuj-sie-z-nami",
+        "http": 200,
+        "bytes_read": 35711,
+        "saved_to_zip": false,
+        "expected_text": {
+          "Warszawska 68": true,
+          "magazyn": true,
+          "LOGISTYKA": true
+        },
+        "explicit_reuse_license_seen": false
+      },
+      "license_check": {
+        "result": "PASS",
+        "finding": "Nie znaleziono jawnej licencji umożliwiającej komercyjne kopiowanie materiału firmy. Polityka tylko referencja, nie pobrano do ZIP jest właściwa. OSM wykorzystywany odrębnie jako ODbL 1.0; autor OpenStreetMap contributors."
+      },
+      "coordinate_check": {
+        "osm_id": "way/297375206",
+        "api_url": "https://api.openstreetmap.org/api/0.6/way/297375206/full",
+        "api_http": 200,
+        "lat": "53.154151",
+        "lon": "23.031196",
+        "point_within_osm_building": true,
+        "tags": {
+          "addr:city": "Łyski",
+          "addr:housenumber": "68",
+          "addr:postcode": "16-070",
+          "addr:street": "Warszawska",
+          "building": "industrial",
+          "man_made": "works",
+          "name": "Witraż. Fabryka Okien",
+          "source:addr": "choroszcz.e-mapa.net"
+        },
+        "method": "Test point-in-polygon w płaszczyźnie WGS84 na węzłach obrysu pobranego ponownie z OSM API. Przy tej skali test topologiczny jest wystarczający. Punkt jest punktem reprezentacyjnym budynku, nie potwierdzonym wjazdem."
+      },
+      "content_check": "Kontakt Witraż ponownie podaje Łyski, Warszawska 68, 16-070 Choroszcz; godziny magazynów oraz dział logistyki. OSM way297375206 ma addr:street=Warszawska,nr 68,building=industrial,man_made=works,name=Witraż. Fabryka Okien.",
+      "naczepa_check": "PASS: UNVERIFIED właściwe. Fakt produkcji, magazynu i działu logistyki nie podaje naczepy 13,6 m ani geometrii bramy.",
+      "limitation": "Punkt należy do oznaczonego budynku przemysłowego; nie potwierdzono miejsca oczekiwania ani ciężarowego wjazdu. Brak jawnej licencji w witrynie firmy — nie kopiować zdjęć.",
+      "id": "WL15"
+    }
+  ],
+  "image_checks": [
+    {
+      "key": "browar",
+      "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/ORTO/WCS/HighResolution?service=WCS&version=1.0.0&request=GetCoverage&coverage=Orthoimagery_High_Resolution&crs=EPSG%3A2180&bbox=781108.237%2C590432.057%2C781268.237%2C590592.057&width=1600&height=1600&format=image%2Fjpeg",
+      "checked_at": "2026-11-12T22:37:25.367975+00:00",
+      "http": 200,
+      "same_bytes": true,
+      "bytes": 294947,
+      "visual_result": "Pełny zestaw przy magazynie browaru; palety/skrzynki nie są liczone jako naczepy. Rzut dachu około 13,8 m z metadanych, nie certyfikat długości.",
+      "license_result": "PASS: źródła praw GUGiK otwarto ponownie 2026-11-12; dowolne wykorzystanie ortofoto, z atrybucją, datą i przetworzeniem.",
+      "geometry_result": "BBOX EPSG2180, WGS84 środka i otoczenie zgodne; obraz nadir, azymut poziomy nie dotyczy."
+    },
+    {
+      "key": "raben_zoltki",
+      "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/ORTO/WCS/HighResolution?service=WCS&version=1.0.0&request=GetCoverage&coverage=Orthoimagery_High_Resolution&crs=EPSG%3A2180&bbox=766889.388%2C595977.175%2C767049.388%2C596137.175&width=1600&height=1600&format=image%2Fjpeg",
+      "checked_at": "2026-11-12T22:37:34.638282+00:00",
+      "http": 200,
+      "same_bytes": true,
+      "bytes": 330183,
+      "visual_result": "Pełny zestaw ciągnik+naczepa potwierdzony w ponownie obejrzanym kadrze; związek z operatorem Raben ESTIMATED na podstawie oddzielnych źródeł.",
+      "license_result": "PASS: źródła praw GUGiK otwarto ponownie 2026-11-12; dowolne wykorzystanie ortofoto, z atrybucją, datą i przetworzeniem.",
+      "geometry_result": "BBOX EPSG2180, WGS84 środka i otoczenie zgodne; obraz nadir, azymut poziomy nie dotyczy."
+    }
+  ],
+  "document_checks": [
+    {
+      "id": "G2-D03",
+      "result": "PASS",
+      "method": "Losowo wybrany dokument; ponowne niezależne pobranie i kontrola w audycie RS04/RS20. Kopia finalna porównana SHA256 z pobraną kopią.",
+      "source_url": "https://www.gov.pl/attachment/8121e13b-00a0-43e8-9d98-28172cd8ec03",
+      "sha256_packaged": "6b345b61708d28542c00293304c734769aaca85493418ea6f4bb97d3ebc8b4f3",
+      "independent_checks": [
+        {
+          "url": "https://www.gov.pl/attachment/8121e13b-00a0-43e8-9d98-28172cd8ec03",
+          "result": "PASS",
+          "http": 200,
+          "details": "Web open nie odczytuje XLSX; niezależny urllib GET zakończony HTTP200. Aktualny link potwierdzony na stronie GDDKiA; plik identyczny SHA256 z kopią autora.",
+          "sha256": "6b345b61708d28542c00293304c734769aaca85493418ea6f4bb97d3ebc8b4f3",
+          "checked_utc": "2026-11-12T22:34:34.511281+00:00"
+        },
+        {
+          "url": "https://www.gov.pl/attachment/8121e13b-00a0-43e8-9d98-28172cd8ec03",
+          "result": "PASS",
+          "http": 200,
+          "details": "Web open nie odczytuje XLSX; niezależny urllib GET zakończony HTTP200. Aktualny link potwierdzony na stronie GDDKiA; plik identyczny SHA256 z kopią autora.",
+          "sha256": "6b345b61708d28542c00293304c734769aaca85493418ea6f4bb97d3ebc8b4f3",
+          "checked_utc": "2026-11-12T22:34:34.511281+00:00"
+        }
+      ],
+      "license": "Materiał urzędowy — art. 4 pkt 2 ustawy o prawie autorskim; bez osadzonych materiałów osób trzecich."
+    },
+    {
+      "id": "G2-D06",
+      "result": "PASS",
+      "method": "Losowo wybrany dokument; ponowne niezależne pobranie i kontrola w audycie RS04/RS20. Kopia finalna porównana SHA256 z pobraną kopią.",
+      "source_url": "https://eli.gov.pl/api/acts/DU/2026/1253/text/O/D20261253.pdf",
+      "sha256_packaged": "9f4438a041448b94f251bfbcbfefac1ae7dda2d012cb323e9b0bd977d351150d",
+      "independent_checks": [
+        {
+          "url": "https://eli.gov.pl/api/acts/DU/2026/1253/text/O/D20261253.pdf",
+          "result": "PASS",
+          "http": 200,
+          "details": "PDF odczytany przez web i niezależnie HTTP. Plik identyczny SHA256 z kopią autora.",
+          "sha256": "9f4438a041448b94f251bfbcbfefac1ae7dda2d012cb323e9b0bd977d351150d"
+        }
+      ],
+      "license": "Akt normatywny — art. 4 pkt 1 ustawy o prawie autorskim."
+    }
+  ],
+  "tile_checks": [
+    {
+      "id": "G2-T02",
+      "result": "PASS",
+      "method": "Losowanie z 5 propozycji; ponowne sprawdzenie różnic bbox=2000 m, transformacji środka i członkostwa Bunasta/Selgros. Źródło bbox repo działało przy pobraniu; atrybucja OSM zachowana.",
+      "width_m": 2000,
+      "height_m": 2000,
+      "places": [
+        "G2-RS11",
+        "G2-RT02"
+      ],
+      "count": 2,
+      "tak_count": 1
+    }
+  ],
+  "support_checks": [
+    {
+      "id": "G2-D08",
+      "result": "PASS",
+      "checked_utc": "2026-11-12T22:43:20.720079+00:00",
+      "method": "Ponownie obejrzano wyrenderowaną mapę po korekcie nakładających się etykiet. Porównano punkty i dokładne bbox z G2-T01–T05 i manifestem; nie ma przesunięcia osi, różnica 2048/2000 m jawna. Źródła danych i atrybucja OSM widoczne; nie użyto zewnętrznych kafelków mapowych.",
+      "license_result": "Własna wizualizacja, dane OSM ODbL z atrybucją.",
+      "dimensions_px": [
+        1550,
+        830
+      ]
+    }
+  ],
+  "corrections_applied": [
+    "RS09/RS10: usunięto dojazd ciężarowy przez niedozwolony odcinek Suchowolca; użyto korytarza Ciołkowskiego–Dywizjonu303–Kuronia.",
+    "RS09/RS10: małe obiekty nazwane MOP nie są obrysami całego terenu.",
+    "IC16: punkt MPO opisany jako biuro, nie hala/brama OSKP; usunięto nieudokumentowany dawny adres.",
+    "IC08: usunięto niepotwierdzoną datę oferty pracy.",
+    "Pronar: GPS operatora opisany jako orientacyjny; Haćki26 vs OSM27 — przyjęto źródło GDDKiA."
+  ],
+  "final_scope_note": "Wyniki dotyczą dowodów i uczciwego oznaczenia niepewności; nie zastępują pomiaru przejazdu standardowym zestawem. SHA audytowanego pliku roboczego zachowano historycznie; finalna kontrola integralności dotyczy zawartości paczki."
+}

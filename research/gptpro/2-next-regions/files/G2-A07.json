@@ -1,0 +1,65 @@
+{
+  "key": "kan",
+  "local_id": "IC07",
+  "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/ORTO/WCS/HighResolution?service=WCS&version=1.0.0&request=GetCoverage&coverage=Orthoimagery_High_Resolution&crs=EPSG%3A2180&bbox=780442.354%2C590197.947%2C780602.354%2C590357.947&width=1600&height=1600&format=image%2Fjpeg",
+  "centre_wgs84": [
+    53.10391090516459,
+    23.19238357675522
+  ],
+  "bbox": [
+    780442.354,
+    590197.947,
+    780602.354,
+    590357.947
+  ],
+  "crs": "EPSG:2180",
+  "width": 1600,
+  "height": 1600,
+  "ground_pixel_m": 0.1,
+  "source_capture_resolution_m": 0.05,
+  "capture_date": "2025-04-18",
+  "capture_date_source": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/ORTO/WFS/Skorowidze?service=WFS&version=1.0.0&request=GetFeature&typename=gugik%3ASkorowidzOrtofomapy2024%2Cgugik%3ASkorowidzOrtofomapy2025%2Cgugik%3ASkorowidzOrtofomapy2026&srsname=EPSG%3A2180&bbox=780520.354%2C590275.947%2C780524.354%2C590279.947&maxfeatures=25",
+  "capture_date_feature": {
+    "fid": "SkorowidzOrtofomapy2025.1485580",
+    "godlo": "N-34-107-C-b-4-3",
+    "akt_rok": "2025",
+    "piksel": "0.05",
+    "kolor": "RGB",
+    "zrodlo_danych": "Zdj. cyfrowe",
+    "uklad_xy": "PL-1992",
+    "modul_archiwizacji": "1:5000",
+    "nr_zglosz": "GK-FOTO.6201.5.2025",
+    "akt_data": "2025-04-18",
+    "czy_ark_wypelniony": "TAK",
+    "url_do_pobrania": "https://opendata.geoportal.gov.pl/ortofotomapa/83273/83273_1485580_N-34-107-C-b-4-3.tif",
+    "dt_pzgik": "2025-11-19",
+    "wlk_pliku_mb": "1081"
+  },
+  "temporal_comparison_url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/ORTO/WMS/HighResolutionTime?service=WMS&version=1.1.1&request=GetMap&layers=Image&styles=default&srs=EPSG%3A2180&bbox=780442.354%2C590197.947%2C780602.354%2C590357.947&width=800&height=800&format=image%2Fjpeg&time=2025-12-31T00%3A00%3A00.000Z",
+  "author": "Główny Urząd Geodezji i Kartografii — dysponent/publikujący; indywidualny autor zdjęć UNVERIFIED",
+  "access_date": "2026-11-12",
+  "license": "Otwarte dane PZGIK/GUGiK: bezpłatne pobranie i dowolne ponowne wykorzystanie, w tym komercyjne; warunki GUGiK: podać źródło, czas wytworzenia i pozyskania, przetworzenie oraz twórcę, jeśli znany. Nie oznaczono CC ani automatycznie art. 4.",
+  "license_sources": [
+    "https://www.geoportal.gov.pl/pl/dane/ortofotomapa-orto/",
+    "https://www.gov.pl/web/gugik/ponowne-wykorzystanie-informacji-sektora-publicznego",
+    "https://www.geoportal.gov.pl/pl/usluga/uslugi-pobierania-wcs/"
+  ],
+  "description": "Dwa pełne zestawy ciągnik+naczepa przy ukośnych dokach po wschodniej stronie hali KAN oraz kolejny na wewnętrznym placu. Przypisanie hali sprawdzono z OSM way/471492581 i oficjalnym adresem CLP.",
+  "viewing_direction": "Nadir; poziomy azymut kierunku patrzenia nie dotyczy. Północ układu EPSG:2180 u góry, nie utożsamiać z dokładnym kierunkiem północy geograficznej.",
+  "modifications": "Wycinek rastrowy i resampling na serwerze WCS, JPEG do 1600×1600 px; bez retuszu, bez generowania lub usuwania obiektów.",
+  "image_sha256": "e5f72e37de3efc6da2d03d2fbbf8c857888b5ac12b98a3b579d31bde10a184cd",
+  "length_estimate": {
+    "status": "UNVERIFIED",
+    "method": "Rozpoznanie pełnowymiarowego zestawu na ortofoto; nie uzyskano niezależnego dokładnego pomiaru długości naczepy."
+  },
+  "id": "G2-A07",
+  "file": "files/G2-A07.jpg",
+  "source_ids": [
+    "S022",
+    "S023",
+    "S213",
+    "S155",
+    "S156",
+    "S157"
+  ]
+}

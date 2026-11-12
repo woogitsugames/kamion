@@ -1,0 +1,82 @@
+{
+  "key": "biazet",
+  "local_id": "IC03",
+  "url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/ORTO/WCS/HighResolution?service=WCS&version=1.0.0&request=GetCoverage&coverage=Orthoimagery_High_Resolution&crs=EPSG%3A2180&bbox=778063.717%2C596084.445%2C778223.717%2C596244.445&width=1600&height=1600&format=image%2Fjpeg",
+  "centre_wgs84": [
+    53.157947546519296,
+    23.162044646596097
+  ],
+  "bbox": [
+    778063.717,
+    596084.445,
+    778223.717,
+    596244.445
+  ],
+  "crs": "EPSG:2180",
+  "width": 1600,
+  "height": 1600,
+  "ground_pixel_m": 0.1,
+  "source_capture_resolution_m": 0.05,
+  "capture_date": "2025-04-18",
+  "capture_date_source": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/ORTO/WFS/Skorowidze?service=WFS&version=1.0.0&request=GetFeature&typename=gugik%3ASkorowidzOrtofomapy2024%2Cgugik%3ASkorowidzOrtofomapy2025%2Cgugik%3ASkorowidzOrtofomapy2026&srsname=EPSG%3A2180&bbox=778141.717%2C596162.445%2C778145.717%2C596166.445&maxfeatures=25",
+  "capture_date_feature": {
+    "fid": "SkorowidzOrtofomapy2025.1485567",
+    "godlo": "N-34-107-C-b-1-2",
+    "akt_rok": "2025",
+    "piksel": "0.05",
+    "kolor": "RGB",
+    "zrodlo_danych": "Zdj. cyfrowe",
+    "uklad_xy": "PL-1992",
+    "modul_archiwizacji": "1:5000",
+    "nr_zglosz": "GK-FOTO.6201.5.2025",
+    "akt_data": "2025-04-18",
+    "czy_ark_wypelniony": "TAK",
+    "url_do_pobrania": "https://opendata.geoportal.gov.pl/ortofotomapa/83273/83273_1485567_N-34-107-C-b-1-2.tif",
+    "dt_pzgik": "2025-11-19",
+    "wlk_pliku_mb": "1050"
+  },
+  "temporal_comparison_url": "https://mapy.geoportal.gov.pl/wss/service/PZGIK/ORTO/WMS/HighResolutionTime?service=WMS&version=1.1.1&request=GetMap&layers=Image&styles=default&srs=EPSG%3A2180&bbox=778063.717%2C596084.445%2C778223.717%2C596244.445&width=800&height=800&format=image%2Fjpeg&time=2025-12-31T00%3A00%3A00.000Z",
+  "author": "Główny Urząd Geodezji i Kartografii — dysponent/publikujący; indywidualny autor zdjęć UNVERIFIED",
+  "access_date": "2026-11-12",
+  "license": "Otwarte dane PZGIK/GUGiK: bezpłatne pobranie i dowolne ponowne wykorzystanie, w tym komercyjne; warunki GUGiK: podać źródło, czas wytworzenia i pozyskania, przetworzenie oraz twórcę, jeśli znany. Nie oznaczono CC ani automatycznie art. 4.",
+  "license_sources": [
+    "https://www.geoportal.gov.pl/pl/dane/ortofotomapa-orto/",
+    "https://www.gov.pl/web/gugik/ponowne-wykorzystanie-informacji-sektora-publicznego",
+    "https://www.geoportal.gov.pl/pl/usluga/uslugi-pobierania-wcs/"
+  ],
+  "description": "Dwa ciągniki siodłowe z zabudowanymi naczepami pod południowymi dokami fabryki Andersa 44. Trzeci pojazd ciężki nie jest podstawą oszacowania zwykłej naczepy.",
+  "viewing_direction": "Nadir; poziomy azymut kierunku patrzenia nie dotyczy. Północ układu EPSG:2180 u góry, nie utożsamiać z dokładnym kierunkiem północy geograficznej.",
+  "modifications": "Wycinek rastrowy i resampling na serwerze WCS, JPEG do 1600×1600 px; bez retuszu, bez generowania lub usuwania obiektów.",
+  "image_sha256": "72996e63c6d3e49346a0504de879c2a3c545ed683816d17b0d932ef9032161bc",
+  "length_estimate": {
+    "length_m": 13.8,
+    "uncertainty_m_heuristic": 1.0,
+    "roi_pixels": [
+      700,
+      660,
+      825,
+      850
+    ],
+    "body_axis_endpoints_pixels": [
+      [
+        794.8,
+        695.8
+      ],
+      [
+        727.0,
+        816.1
+      ]
+    ],
+    "method": "ESTIMATED: próg minimum kanałów RGB>190 i rozrzutu RGB<40 w ręcznie wybranym ROI, spójna maska białej naczepy (bez ciągnika), długość rzutu na główną oś PCA ×0,10m/px. Niepewność ±1m heurystyczna, obejmuje granicę dachu, cień i odwzorowanie; nie jest pomiarem homologacyjnym."
+  },
+  "id": "G2-A01",
+  "file": "files/G2-A01.jpg",
+  "source_ids": [
+    "S010",
+    "S011",
+    "S207",
+    "S155",
+    "S156",
+    "S157"
+  ]
+}
