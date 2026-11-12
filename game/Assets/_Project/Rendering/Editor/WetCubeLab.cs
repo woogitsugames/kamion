@@ -16,6 +16,7 @@ namespace Game.Rendering.Editor
         public static void Run()
         {
             int exit = 1;
+            bool originalPaused = VehicleReflectionCapture.Paused;
             try
             {
                 string[] args = Environment.GetCommandLineArgs();
@@ -39,8 +40,8 @@ namespace Game.Rendering.Editor
                     }
                     // Front faces all at z8. Distinct upper white / lower blue bands establish vertical orientation.
                     Box("known red wall", new Vector3(0,2,8.125f), new Vector3(4,4,0.25f), Color.red);
-                    Box("upper white band", new Vector3(0,3.25f,8.01f), new Vector3(3,0.25f,0.02f), Color.white);
-                    Box("lower blue band", new Vector3(0,1,8.01f), new Vector3(3,0.25f,0.02f), Color.blue);
+                    Box("upper white band", new Vector3(0,3.25f,7.98f), new Vector3(3,0.25f,0.02f), Color.white);
+                    Box("lower blue band", new Vector3(0,1,7.98f), new Vector3(3,0.25f,0.02f), Color.blue);
                     var water=GameObject.CreatePrimitive(PrimitiveType.Plane); water.name="diagnostic mirror plane";
                     water.transform.localScale=new Vector3(4,1,4);
                     var renderer=water.GetComponent<Renderer>(); renderer.enabled=false;
@@ -48,7 +49,7 @@ namespace Game.Rendering.Editor
                     var source=new GameObject("existing cube source").AddComponent<VehicleReflectionCapture>();
                     var cubeCamera=Resources.FindObjectsOfTypeAll<Camera>().Single(c=>c.name=="CaptureCamera" && c.transform.parent!=null && c.transform.parent.name=="VehicleReflectionCapture (runtime)");
                     cubeCamera.clearFlags=CameraClearFlags.SolidColor; cubeCamera.backgroundColor=new Color(0.08f,0.12f,0.18f);
-                    source.RenderAllNow(); source.Paused=true;
+                    source.RenderAllNow(); VehicleReflectionCapture.Paused=true;
                     if (!source.Enabled || source.FacesRendered<6) throw new InvalidOperationException("No complete existing cube");
                     Vector3 origin=cubeCamera.transform.position;
                     material.SetVector("_LabCaptureOrigin", new Vector4(origin.x,origin.y,origin.z,1));
@@ -82,7 +83,7 @@ namespace Game.Rendering.Editor
                 Debug.Log($"WET_CUBE_LAB_RESULT: OK images={images}"); exit=0;
             }
             catch(Exception ex) { Debug.LogException(ex); Debug.Log("WET_CUBE_LAB_RESULT: FAILED"); }
-            finally { EditorSceneManager.NewScene(NewSceneSetup.EmptyScene,NewSceneMode.Single); }
+            finally { VehicleReflectionCapture.Paused=originalPaused; EditorSceneManager.NewScene(NewSceneSetup.EmptyScene,NewSceneMode.Single); }
             if(Application.isBatchMode) EditorApplication.Exit(exit);
         }
     }
