@@ -7,3 +7,5 @@ NASTĘPNY KROK: przygotować własne skrypty r2 z ownerem heavy gpt-furniture-r2
 2026-11-12T02:11:50.7024067+01:00: przygotowano sekwencyjny baseline.ps1 i skrypty bramek r2. PBR oraz world osobno w heavy gpt-furniture-r2; import i każdy render w Unity gpt-furniture, z przywróceniem ustawień. NASTĘPNY KROK: pwsh artifacts/furniture-r2/24h/baseline.ps1.
 
 2026-11-12T02:22:39.3876622+01:00: heavy pbr before; sukces=True; slot gpt-furniture-r2 zwolniony. NASTĘPNY KROK: sprawdzić log i kontynuować walidację rundy.
+
+2026-11-12T02:23:20.1485209+01:00: PBR po scaleniu zakończony w452s; world czeka na osobny slot heavy. Przygotowano poza Assets prototyp materiału znaku zgodnego z URP Lit (9→9 przebiegów) i czytnik istniejącego TruckLights oraz prawdziwych socketów. Zapisano źródła zasad kątów, licencję szkieletu, hashe i ograniczenia (brak kalibracji folii/occlusion). To nie jest wdrożony ani zweryfikowany efekt. NASTĘPNY KROK: dokończyć bazowy world/import/render; przed zmianą wykonać także Low/High dusk, potem przenieść i sprawdzić prototyp GPU oraz rzeczywistym riggiem.
