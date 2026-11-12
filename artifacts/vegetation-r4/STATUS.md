@@ -120,3 +120,4 @@ Sekwencja34215: snapshot/proof C poprawne, tylko plantings.py i chunk6_6 Low/Hig
 Import C kod0. Dalej16prób w tych samych kamerach i warunkach.
 Probe probe-c: Low overcast zapisany. Obejrzeć arkusze i koszt przed dalszą decyzją; to nie pełna macierz.
 Probe probe-c: Low clear zapisany. Obejrzeć arkusze i koszt przed dalszą decyzją; to nie pełna macierz.
+Probe probe-c: High overcast zapisany. Obejrzeć arkusze i koszt przed dalszą decyzją; to nie pełna macierz.
