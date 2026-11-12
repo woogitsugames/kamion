@@ -32,3 +32,5 @@ Dopisano końcowy zakres raportu i ADR; jedyny oczekiwany wynik to końcowy peł
 Audyt zakresu:1051zmienionych plików (w tym dowody),0edycji zakazanych źródeł;960obrazów recenzji ma max960px. Kopia do main/artifacts/gpt-s16-r1:1027plików,52.1MB,bez pełnychPNG ani prywatnych surowców. GIS nadal działa, pozostałe kroki r1 gotowe.
 
 Przygotowano NEXT-ROUND.md: źródłowa przyczyna D51 to cienkie korony, budżet High ma około19kzapasuwstretch_04 na obecnej bazie; r2 będzie rozważać poszerzenie istniejących koron high i żywopłoty w obecnym materiale. Bez zmian produktu r2 przed zakończeniem r1.
+
+Pełny GIS zakończony: exit 0; szczegóły GIS-STATUS.md oraz final-gis.log.
