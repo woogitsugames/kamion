@@ -1,0 +1,61 @@
+{
+  "sources": {
+    "preset_sha256": "0919D20A95D9FB995A13FB80B787D79AB6098CF165CD2F37785E27A155D1E919",
+    "preset": "game/Assets/_Project/Rendering/Settings/Lighting/LP_Clear.asset",
+    "cloud_metadata_sha256": "22993DE6083E026375F4ECCBA508844F4A227BDD316DB808B12F952763F964C9",
+    "cloud_metadata": "game/Assets/_Project/Rendering/Resources/Sky/ClearCloudsSource.json"
+  },
+  "note": "Predicted source opacity cutoff only, from the current SourceRotation rule. World-horizon fade, cloud content, fog and tone mapping also affect the image. Not a cause determination or a photo-pose calibration.",
+  "transformed_source_horizon_normal": [
+    -0.034898490893123316,
+    0.994780669789305,
+    -0.09588281570189912
+  ],
+  "clear_sun_elevation_deg": 42.0,
+  "hypothesis_only": true,
+  "source_sun_elevation_deg": 47.8564453125,
+  "clear_sun_azimuth_deg": 200.0,
+  "cameras": [
+    {
+      "source_horizon_line": [
+        {
+          "y": 426.36319750939026,
+          "x": 0
+        },
+        {
+          "y": 361.5242555024837,
+          "x": 640
+        },
+        {
+          "y": 296.78662434246297,
+          "x": 1279
+        }
+      ],
+      "camera": "sbs-g3-a-2948595898752384",
+      "width": 1280,
+      "height": 720,
+      "world_horizon_center_y": 377.95613469333773
+    },
+    {
+      "source_horizon_line": [
+        {
+          "y": 503.82066117801355,
+          "x": 0
+        },
+        {
+          "y": 437.98085241028963,
+          "x": 640
+        },
+        {
+          "y": 372.2439183437653,
+          "x": 1279
+        }
+      ],
+      "camera": "sbs-g3-a-303305168125936",
+      "width": 1280,
+      "height": 720,
+      "world_horizon_center_y": 432.2921475733186
+    }
+  ],
+  "tilt_deg": 5.8564453125
+}

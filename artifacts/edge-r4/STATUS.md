@@ -21,3 +21,4 @@ Krok 8: porównano wszystkie kamery sbs z proof z aktualnym kanonicznym sbs_came
 2026-11-12T10:28:04.7902733+01:00 Native before Low-clear 1280x720: 11 kamer, każdy PNG ma proporcje źródłowej fotografii; diagnostyczna 2948 pozostaje C.
 2026-11-12T10:28:22.6277632+01:00 Native before Low-clear 1280x960: 15 kamer, każdy PNG ma proporcje źródłowej fotografii; diagnostyczna 2948 pozostaje C.
 2026-11-12T10:28:39.9024852+01:00 Native before Low-overcast 1280x720: 11 kamer, każdy PNG ma proporcje źródłowej fotografii; diagnostyczna 2948 pozostaje C.
+Krok 9: źródła Sky opisują opacity=0 w dolnej półsferze fotografii oraz obrót do słońca sceny. Zapisano odczytową predykcję tej granicy dla bieżących kamer1280×720 (źródłowe słońce47,856°, preset42°). To hipoteza do porównania z maskami, nie rozpoznana przyczyna i nie edycja domeny light. Import i ogólna macierz Before zakończone; native nadal w toku.
