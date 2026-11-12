@@ -14,3 +14,4 @@ Krok 8: porównano wszystkie kamery sbs z proof z aktualnym kanonicznym sbs_came
 2026-11-12T10:23:29.5921151+01:00 Zakończono bazowy World pod osobnym slotem heavy; źródła innych dziedzin bez edycji.
 2026-11-12T10:23:29.9838614+01:00 Świat bazowy r4 gotowy bez fallback=True; następnie import Low/High i pełne Before, bez nowej zmiany produkcyjnej.
 2026-11-12T10:25:15.2125452+01:00 Pełny import bazowy Low/High i odtworzenie generowanych prefabów pojazdów nowego main potwierdzone IMPORT_RESULT/TRUCK_RESULT: OK; sprawdzono 151 gotowych map Medium bez niejawnego build_all. Źródła cab/truck bez edycji. Następnie validate.ps1 -Phase Before.
+2026-11-12T10:25:52.3229231+01:00 Zapisano rendery before/Low-clear wszystkich kamer; ocena PNG i budżetu nadal w toku.
