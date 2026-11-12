@@ -124,3 +124,6 @@ Sprawdzono zbiory wszystkich wartości, nie tylko maksimum: dla 84 Low i 84 High
 
 ## Oba warianty GLB
 Rozszerzono porównanie o chunk.low: manifesty r1/r2 zgadzają się dla 64 High i 64 Low, czyli 128 plików. Dotychczasowy skrót 64 chunków odnosił się do plików głównych High. Audyt końcowy sprawdzi teraz rzeczywiste bajty obu wariantów, a nie wyłącznie High. Wynik metadanych zapisano w capture-summary.json, jawnie odróżniony od przyszłej kontroli plików. Składnia audytu poprawna; nie wykonywano haszowania dużych siatek poza heavy.
+
+## Jedna dzierżawa dla krótkiej kompozycji partii
+ComposeOnly obejmuje teraz cztery sekwencyjne stany jedną dzierżawą heavy. Każdy Python jest wewnątrz Acquire/Release, działa tylko jeden proces obliczeń naszej gałęzi naraz. Release jest w zewnętrznym finally również przy błędzie migawki. Tryb render+compose nadal zwalnia heavy między stanami, a RenderOnly nie zajmuje heavy. To ten sam wzorzec co historyczny recompose-history: krótkie sekwencyjne kompozycje nie wracają wielokrotnie do kolejki, bez zwiększania równoległości. Parser PowerShell potwierdził składnię. Wykonanie całości nastąpi po historycznej kompozycji i zakończeniu post-world.

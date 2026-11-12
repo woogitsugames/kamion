@@ -89,8 +89,16 @@ function Save-EvidenceInputs {
     Move-Item -LiteralPath $staging -Destination $snapshot
     Move-Item -LiteralPath $stagingZip -Destination (Join-Path $output 'inputs.zip') -Force
 }
+$composeBatchLeaseHeld=$false
+$composeBatchOwner=$null
 Push-Location $taskRoot
 try {
+    if($ComposeOnly){
+        $composeBatchOwner=(& git branch --show-current).Trim()
+        & pwsh -NoProfile -File $slotScript -Acquire -Pool heavy -Owner $composeBatchOwner -PollSeconds 7 -StaleHours 87600
+        if($LASTEXITCODE -ne 0){throw 'Heavy batch slot acquisition failed'}
+        $composeBatchLeaseHeld=$true
+    }
     if ($EditMode -and !$ComposeOnly) {
         & pwsh -NoProfile -File $slotScript -Acquire -Owner $SlotOwner -PollSeconds 7 -StaleHours 87600
         if ($LASTEXITCODE -ne 0) { throw 'Unity slot acquisition failed' }
@@ -163,8 +171,12 @@ try {
             }
             if($RenderOnly){continue}
             $heavyOwner = (& git branch --show-current).Trim()
-            & pwsh -NoProfile -File $slotScript -Acquire -Pool heavy -Owner $heavyOwner -PollSeconds 7 -StaleHours 87600
-            if ($LASTEXITCODE -ne 0) { throw 'Heavy slot acquisition failed' }
+            $stateLeaseHeld=$false
+            if(!$composeBatchLeaseHeld){
+                & pwsh -NoProfile -File $slotScript -Acquire -Pool heavy -Owner $heavyOwner -PollSeconds 7 -StaleHours 87600
+                if ($LASTEXITCODE -ne 0) { throw 'Heavy slot acquisition failed' }
+                $stateLeaseHeld=$true
+            }
             try {
                 $composeArgs=@('compose','--renders',$renderDir,'--output',(Join-Path $output "sheets/$tier-$light"))
                 if($Photometry){$composeArgs+=@('--photometry',$Photometry)}
@@ -176,8 +188,14 @@ try {
                     & uv run --project tools/refs python tools/refs/sbs_gate3.py @diagnosticArgs
                     if($LASTEXITCODE -ne 0){throw "Incomplete diagnostic evidence: $tier $light"}
                 }
-            } finally { & pwsh -NoProfile -File $slotScript -Release -Pool heavy -Owner $heavyOwner }
+            } finally {
+                if($stateLeaseHeld){& pwsh -NoProfile -File $slotScript -Release -Pool heavy -Owner $heavyOwner}
+            }
         }
     }
     if(!$RenderOnly){Save-EvidenceInputs}
-} finally { Pop-Location }
+} finally {
+    try {
+        if($composeBatchLeaseHeld){& pwsh -NoProfile -File $slotScript -Release -Pool heavy -Owner $composeBatchOwner}
+    } finally {Pop-Location}
+}
