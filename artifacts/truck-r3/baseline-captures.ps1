@@ -17,6 +17,8 @@ finally {
 Add-Content -Encoding utf8 artifacts/truck-r3/STATUS.md 'Odświeżono oba prefaby i instalację po zmianach main; sam import regionu używałby starych prefabów. Następny krok: baseline r3, wszystkie kamery i kontrole brudu.'
 git add -f artifacts/truck-r3/STATUS.md
 git commit --only artifacts/truck-r3/STATUS.md -m 'wip(truck): aktualne prefaby main przed baseline r3'
+uv run --project tools/worldgen python artifacts/truck-r3/fixture_state.py before
+if ($LASTEXITCODE -ne 0) { throw 'Nie zapisano stanu bazowych siatek i prefabów.' }
 foreach ($job in @(
     @{script='render-phase.ps1';args=@('-Stage','before','-Lighting','overcast,clear')},
     @{script='all-cameras.ps1';args=@('-Stage','before-all')},
