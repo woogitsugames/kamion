@@ -4,7 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
@@ -26,6 +28,11 @@ namespace Game.Rendering.Editor
             public int shadowFilter; // 0 keeps the light's state; 1/2/3 = URP Low/Medium/High.
             public bool shadowWallProbe; // hall3: establish a physical 10 m span for the PNG edge measurement.
             public float clearSkySaturation; // 0 leaves preset unchanged; diagnostic display-only chroma.
+            public bool lampProbe;
+            public bool actualDriverEye; // QA only: cab-dash eye, horizontal actual cab forward. Never a light source.
+            public int expectedHeadlamps; // 0 unchecked, 1 off, 2 on. Requires per-camera probes.
+            public bool overrideSkyDisplay;
+            public float skyDisplayGain = 1f, skyDisplayDesaturation;
         }
 
         static string Arg(string key)
@@ -86,6 +93,14 @@ namespace Game.Rendering.Editor
                         var preset = presetSnapshots.Keys.Single(p => string.Equals(p.name, "LP_" + job.lighting, StringComparison.OrdinalIgnoreCase));
                         preset.clearSkySaturation = job.clearSkySaturation;
                     }
+                    if (job.overrideSkyDisplay)
+                    {
+                        if (job.skyDisplayGain < 0.001f || job.skyDisplayGain > 1f || job.skyDisplayDesaturation < 0f || job.skyDisplayDesaturation > 1f)
+                            throw new ArgumentException("sky display values outside preset bounds");
+                        var preset = presetSnapshots.Keys.Single(p => string.Equals(p.name, "LP_" + job.lighting, StringComparison.OrdinalIgnoreCase));
+                        preset.skyDisplayGain = job.skyDisplayGain;
+                        preset.skyDisplayDesaturation = job.skyDisplayDesaturation;
+                    }
                     profile.tiers = (QualityProfile.Tier[])originalTiers.Clone();
                     var overrides = (job.rq ?? "").Split(',').Where(s => !string.IsNullOrWhiteSpace(s))
                         .Select(s => s.Split('=')).ToDictionary(p => p[0].Trim(), p => p[1].Trim());
@@ -93,24 +108,59 @@ namespace Game.Rendering.Editor
                     profile.tiers[tierIndex] = RenderOverrides.ApplyTo(profile.tiers[tierIndex]);
                     Directory.CreateDirectory(job.output);
                     if (job.shadowFilter < 0 || job.shadowFilter > 3) throw new ArgumentException("shadowFilter must be 0..3");
-                    Action<ScriptableRenderContext, Camera> filter = (_, __) => {
-                        if (job.shadowFilter == 0) return;
-                        foreach (var light in UnityEngine.Object.FindObjectsByType<Light>(FindObjectsSortMode.None))
-                            if (light.type == LightType.Directional)
-                                light.GetUniversalAdditionalLightData().softShadowQuality = (SoftShadowQuality)job.shadowFilter;
+                    var lampProbe = job.lampProbe ? new LightQaLampProbe() : null;
+                    if (job.expectedHeadlamps < 0 || job.expectedHeadlamps > 2 || (job.expectedHeadlamps > 0 && lampProbe == null))
+                        throw new ArgumentException("expectedHeadlamps requires lampProbe and a value0..2");
+                    Action<ScriptableRenderContext, Camera> filter = (_, camera) => {
+                        if (job.shadowFilter > 0)
+                            foreach (var light in UnityEngine.Object.FindObjectsByType<Light>(FindObjectsSortMode.None))
+                                if (light.type == LightType.Directional)
+                                    light.GetUniversalAdditionalLightData().softShadowQuality = (SoftShadowQuality)job.shadowFilter;
+                        lampProbe?.Capture(camera);
                     };
                     int count;
+                    void AddDriverEye(Scene scene, OpenSceneMode mode)
+                    {
+                        var eye = UnityEngine.Object.FindObjectsByType<ControlCamera>(FindObjectsInactive.Include, FindObjectsSortMode.None)
+                            .Single(c => c.gameObject.scene == scene && c.id == "cab-dash");
+                        var cab = UnityEngine.Object.FindObjectsByType<CabInteriorLighting>(FindObjectsInactive.Exclude, FindObjectsSortMode.None)
+                            .Single(c => c.gameObject.scene == scene && c.cab != null).cab;
+                        var go = new GameObject("Light QA actual driver eye");
+                        SceneManager.MoveGameObjectToScene(go, scene);
+                        var camera = go.AddComponent<Camera>();
+                        camera.CopyFrom(eye.GetComponent<Camera>());
+                        // CopyFrom also copies the camera transform in this Unity version. Set the QA pose last.
+                        go.transform.SetPositionAndRotation(eye.transform.position, Quaternion.LookRotation(cab.forward, cab.up));
+                        if (Vector3.Dot(go.transform.forward, cab.forward.normalized) < 0.9999f ||
+                            Mathf.Abs(go.transform.forward.y) > 0.1f)
+                            throw new InvalidOperationException("Actual driver eye must follow the level parked cab frame");
+                        camera.fieldOfView = 60f;
+                        camera.enabled = false;
+                        var control = go.AddComponent<ControlCamera>();
+                        control.id = "light-night-driver";
+                        control.note = "QA-only actual cab-dash eye; actual cab forward; FOV60. Not a matched photo pose.";
+                        go.SetActive(false);
+                        File.WriteAllText(Path.Combine(job.output, "actual-eye.json"), JsonUtility.ToJson(new EyeProof {
+                            position = go.transform.position, forward = go.transform.forward, up = go.transform.up,
+                            source = "cab-dash.position + CabInteriorLighting.cab.forward/up", fieldOfView = camera.fieldOfView
+                        }, true));
+                    }
+                    if (job.actualDriverEye) EditorSceneManager.sceneOpened += AddDriverEye;
                     RenderPipelineManager.beginCameraRendering += filter;
                     try
                     {
                         count = (int)renderer.Invoke(null, new object[] {
                             job.scene, job.width, job.height, job.tier, job.output, job.lighting, job.cameras });
                     }
-                    finally { RenderPipelineManager.beginCameraRendering -= filter; }
+                    finally {
+                        RenderPipelineManager.beginCameraRendering -= filter;
+                        if (job.actualDriverEye) EditorSceneManager.sceneOpened -= AddDriverEye;
+                    }
                     if (count <= 0) throw new InvalidOperationException("Job rendered no cameras: " + job.output);
                     int expected = string.IsNullOrEmpty(job.cameras) ? count : job.cameras.Split(',')
                         .Select(id => id.Trim()).Where(id => id.Length > 0).Distinct(StringComparer.OrdinalIgnoreCase).Count();
                     if (count != expected) throw new InvalidOperationException($"Incomplete lighting QA: expected={expected}, rendered={count}");
+                    lampProbe?.Write(job.output, expected, job.expectedHeadlamps);
                     var environment = UnityEngine.Object.FindAnyObjectByType<EnvironmentLighting>();
                     if (environment == null || environment.Active == null || environment.Model == null)
                         throw new InvalidOperationException("Lighting QA requires a configured EnvironmentLighting");
@@ -121,6 +171,9 @@ namespace Game.Rendering.Editor
                         throw new InvalidOperationException("Requested lighting QA tier was not applied: " + job.tier);
                     if (job.overrideWhiteClip && Mathf.Abs(environment.Active.lookWhiteClip - job.whiteClip) > 0.0001f)
                         throw new InvalidOperationException($"Requested white clip was not retained: requested={job.whiteClip}, actual={environment.Active.lookWhiteClip}");
+                    if (job.overrideSkyDisplay && (Mathf.Abs(environment.Active.skyDisplayGain-job.skyDisplayGain) > 0.0001f ||
+                        Mathf.Abs(environment.Active.skyDisplayDesaturation-job.skyDisplayDesaturation) > 0.0001f))
+                        throw new InvalidOperationException("Requested sky presentation grade was not retained");
                     var actualFilter = environment.sun.GetUniversalAdditionalLightData().softShadowQuality;
                     if (job.shadowFilter > 0 && (int)actualFilter != job.shadowFilter)
                         throw new InvalidOperationException("Requested shadow filter was not retained: " + actualFilter);
@@ -144,6 +197,13 @@ namespace Game.Rendering.Editor
                 RenderOverrides.Parse(_ => null);
             }
             if (Application.isBatchMode) EditorApplication.Exit(exit);
+        }
+
+        [Serializable] sealed class EyeProof
+        {
+            public Vector3 position, forward, up;
+            public float fieldOfView;
+            public string source;
         }
 
         [Serializable] sealed class ShadowWallProbe
