@@ -202,3 +202,5 @@ Krok 56: wykonano wstępną kopię gotowych dowodów do main artifacts/life-r3 (
 Krok 57: dopisano źródłowo potwierdzony próg runtime LOD0 pojazdów 16 m (obejmuje naczepy/ciągniki) oraz obecne liczby prototypów 1102/316 i 766/286 do NEXT-R4. To koryguje zbyt proste przypisanie każdego braku osprzętu do LOD1: w bliskim kadrze trzeba sprawdzić natywny model, przesłonięcie i kontrast, bez zmiany wspólnego progu. R3 produkcja zamrożona; jedyny blok naprawy/testów 90863 nadal czeka. Następny krok: jego wynik, końcowa kopia/REPORT i r4.
 
 Krok 58: ponowny blok 90863 uzyskał heavy i wykonuje kanoniczne fidelity (wyniki kolejnych miejsc w logu), bez duplikatu. Podczas oczekiwania obejrzano bieżący kadr placu i wycinek kół do preflight r4; zapisano potrzebę rzeczywistej diagnostyki LOD zamiast wnioskowania z nazwy side8. Produkcja C nadal zamrożona. Następny krok: wynik tego samego fidelity/testu pojedynczego/GIS, końcowy REPORT i kopia.
+
+Końcowy heavy (2026-11-12T11:27:12.6469592+01:00): odśwież raport fidelity po dołączeniu main. Następny krok: odczyt wyników, oględziny pełnych plansz, EditMode, REPORT/kopia, potem r4.
