@@ -10,3 +10,7 @@ NEXT: wait for regen; then build probes r1 (tools/probes.py) and render: pwsh ar
 - 482392: blue lane-direction board (straight / right arrows, 2 posts) behind the right guardrail under the viaduct end; no such sign in overrides/instances -> world missing; pose also shifted (piers ~ 12-20 deg off). Probes sa-sd (0128 shift of the same richlv sequence).
 - 320326: promotion overrides computed (E 541.5 N -690.4 U 140.52 eye 0.9 heading 244.0 rect horizon 0.7205).
 NEXT: after regen: cd worktree; uv run --project tools/refs python artifacts/sbs-poses-r3/tools/probes.py r1; pwsh artifacts/sbs-poses-r3/tools/render.ps1 -Round r1
+18:43 build_world done 18:40 (606 s); import waits for Unity slot (PHONE_RUN active).
+- 494288 resection (tools/fit494b.py: lamp forks x + 1/d ladder with free height offset, dash line, road VP): s -32 m from A1 = E -487.0 N -31.2 (41 m SE of production), 0.85 m right of the dash, eye ~1.0, heading 316.8, pitch 7.6, roll -3.7 (not renderable), rms 13.8 px. Lamp ladder spacing ~33 m fits the photo; arm span/height: generated lamps ~2x too large / heads ~3.5-5 m too high (world finding, ADR 0133 lamp_y 12 m on deck).
+- r1 probes written (artifacts/sbs-poses-r3/r1).
+NEXT: pwsh artifacts/sbs-poses-r3/tools/render.ps1 -Round r1  (after import finishes)

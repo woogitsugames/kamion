@@ -56,11 +56,11 @@ def deck_pt(s, lat):
     return base[0] + s * ux + lat * uy, base[1] + s * uy - lat * ux, (math.degrees(math.atan2(ux, uy)) % 360)
 K = '494288258686575'
 if RND == 'r1':
-    for s in (21.3, 14.0, 7.0, 0.0, -8.0):
-        e, n, t = deck_pt(s, 1.1)
-        probe(K, f's{int(round(s)):+d}', e, n, 1.3, t + 6.8, 0.716, f'{s} m from A1, 1.1 m right of dash, eye 1.3, heading tangent+6.8 (photo road VP x 441)')
-    e, n, t = deck_pt(7.0, 1.1); probe(K, 'mh', e, n, 1.3, 309.37, 0.716, 's 7, Mapillary heading')
-    e, n, t = deck_pt(7.0, 1.1); probe(K, 'e17', e, n, 1.7, t + 6.8, 0.716, 's 7, eye 1.7')
+    e, n, t = deck_pt(21.3, 1.1)
+    probe(K, 'lat', e, n, 1.3, t + 6.8, 0.716, 'production station, 1.1 m right of the dash (lateral fix only), eye 1.3, heading tangent+6.8')
+    for tag, s_, eye in (('f0', -32.0, 1.0), ('f1', -32.0, 1.3), ('f2', -20.0, 1.15), ('f3', -45.0, 1.15)):
+        e, n, t = deck_pt(s_, 0.85)
+        probe(K, tag, e, n, eye, t + 7.5, 0.725, f'fit494b: s {s_} m, 0.85 m right of the dash, eye {eye}, heading tangent+7.5, horizon 0.725 (roll -3.7 not renderable)')
 
 # ---- 810896 SE-bound Andersa main carriageway (layer 1), camera currently 5.0 m left of its centreline (in the median)
 K = '810896133189484'
