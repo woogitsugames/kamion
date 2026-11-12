@@ -70,3 +70,5 @@ Krok 9i: końcowe skrypty wymagają konkretnych powiązań SHA buildera/dims/GLB
 Krok 9k: przygotowano capture-full.ps1 (niewykonany). Pełne244 obrazy będą wiązane SHA z wybranym podglądem B/C i dokładnym inwentarzem baseline; skrypt nie ruszy bez ukończonego preview. Każda seria ma własny slot Unity, bez heavy. Odczytano wyłącznie repozytoryjne czasy logów głównego pomiaru: B był aktualizowany15:05, integracja run-f zakończona14:19; blokada PHONE_RUN ma aktywny pomiar, nie jest usuwana.
 
 Krok 10: World B i wszystkie3 audyty zaliczone; brak fallback=True. Trwa zapis modelu i podgląd8 PNG przed decyzją wizualną. Żaden pełny GIS nie został jeszcze uruchomiony w r4.
+
+Krok 10a: B wygenerowany w680,0s bez fallback=True, WIP273682bb. Audyty:336/210 zmienionych tris High/Low wewnątrz3 koron,12020 identycznych trójkątów, cała alfa identyczna bajtowo; manifest/materialy i128+64 pliki miasta bez zmian. Import B zakończony, lease zwolniony. Nowy PHONE_RUN ponownie blokuje start CaptureLow/High; terminal13840 nadal żywy, własny marker DIAGNOSTICS_RUNNING należy do preview-b.ps1. Brak obrazów B, więc brak akceptacji i pełnych testów.
