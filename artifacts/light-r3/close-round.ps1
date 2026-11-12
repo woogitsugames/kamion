@@ -3,6 +3,8 @@ $ErrorActionPreference='Stop'
 $repo=[IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..'))
 Set-Location $repo
 if((git branch --show-current).Trim() -ne 'gpt-light-r3'){throw 'Expected round3'}
+git diff --cached --quiet HEAD
+if($LASTEXITCODE){throw 'Preflight requires an empty staging area; resolve staged changes explicitly before closing'}
 if($GisExitCode -ne 0){throw 'Final GIS did not pass'}
 $summary=[regex]::Match((Get-Content -LiteralPath $GisLog -Raw),'(?m)^(\d+) passed, (\d+) xfailed in ([\d.]+)s')
 if(-not $summary.Success){throw 'No complete GIS summary'}
@@ -32,13 +34,13 @@ if($LASTEXITCODE){throw 'Validation commit failed'}
 $sha=(git rev-parse HEAD).Trim()
 $report=@(
 "Runda 3, gałąź gpt-light-r3, SHA wyniku $sha; baza main 522361aa, merge b36e36b2. Naprawiono P1 nieba; mokra nawierzchnia nie została zaakceptowana.",
-'Szary klin nad halami w pozycjach 2948595898752384 i 303305168125936 pochodził z obróconej twardej granicy dolnej półsfery mapy chmur. Maski FarField i Apron go nie barwiły, a izolacja samego nieba zachowała go przy zerze aktywnych rendererów i instancerów.',
+'Szary klin nad halami w pozycjach 2948595898752384 i 303305168125936 pochodził z obróconej twardej granicy dolnej półsfery mapy chmur. Maski FarField i Apron nie zmieniły koloru klina, a izolacja samego nieba zachowała go przy zerze aktywnych rendererów i instancerów.',
 'Clear ogranicza teraz źródłową elewację mapy do 0,5 stopnia po obrocie. Ablacja 0/0,5/1 na 12 PNG wybrała najmniejszy sprawdzony margines; domyślne zero w innych presetach zachowuje starą ścieżkę. Hasz tekstury niezmieniony, bez nowej próbki lub przebiegu.',
-'Końcowy Clear: 122/122 obrazów, 61 kamer na obu poziomach jakości, obejrzanych przez rodzica i niezależnego krytyka. Dodatkowo 48 poprawnych kierunków kamery przy słońcu 42 stopnie i osiem statycznych kostek 64/128 px bez powrotu ostrego klina. Pierwsza błędna seria look_at odrzucona; dowodem jest tylko sky-direction-v2.',
+'Końcowy Clear: 122/122 obrazów, 61 kamer na obu poziomach jakości, obejrzanych przez rodzica i niezależnego krytyka. Dodatkowo 24 kierunki kamery na obu poziomach jakości, czyli 48 obrazów przy słońcu 42 stopnie, i osiem statycznych kostek 64/128 px bez powrotu ostrego klina. Pierwsza błędna seria look_at odrzucona; dowodem jest tylko sky-direction-v2.',
 'Pozostaje miękki szary pas dolnego nieba; inne kąty słońca, ruch, GPU i ekran telefonu niezweryfikowane. Nie deklarujemy zaliczenia bramki lub kalibracji wszystkich zdjęć.',
 'Mokry stan bazowy: 36 PNG przy wet 0/0,5/1 pokazuje globalnie jasne wygładzenie bez wiarygodnej lokalnej treści odbić. Zdjęcie cm92458760: Rakoon, 2020-07-11, CC BY 3.0, zgodny SHA; błędna poza klasy C, tylko odniesienie jakościowe, bez fotometrii.',
 'Eksperyment istniejącej kostki pojazdu: 16 PNG z oka kierowcy i daleka oraz 32 bliskie PNG z 32 zrzutami kostek. Dał ciemny owal w zasięgu 8–12 m zamiast przekonującego odbicia. Usunięto cały mechanizm, shader, flagę i styki wspólnych shaderów; patch i opinie zachowano.',
-'Ablacja filmu: 72 PNG, połysk 0,52/0,35/0,2 oraz udział kałuż 0,3/0,08. Krytyk i rodzic odrzucili wszystkie warianty: mniejszy połysk redukuje plastik, lecz nie daje mokrego wyglądu z odbiciem. Usunięto nieprzyjęty parametr; presety nadal bez nowego mokra.',
+'Ablacja filmu: 72 PNG, połysk 0,52/0,35/0,2 oraz udział kałuż 0,3/0,08. Krytyk i rodzic odrzucili wszystkie warianty: mniejszy połysk redukuje plastik, lecz nie daje mokrego wyglądu z odbiciem. Usunięto nieprzyjęty parametr; nie wprowadzono presetu mokrej nawierzchni.',
 'Scena diagnostyczna v2: 16 PNG i dwie kostki. Surowa kostka i sfera 20 m deformują położenie znanych pasów ściany; znana rzeczywista płaszczyzna pozwala dopasować odbicie. To ograniczenie paralaksy, nie rozwiązanie geometrii i okluzji całego świata. Scena nie jest zapisana ani częścią produktu.',
 'Cztery odległe porównania off/on mokrego eksperymentu miały zerową różnicę pikseli. Suche oko miało śladowe różnice średnie poniżej 0,00004 RGB; nie deklarujemy identyczności całego kadru.',
 'Budżet 122/122 porównany na tych samych kamerach: estymowane draws +0 i tris +0, instancing osobno. To estymaty CPU przed grupowaniem SRP, nie pomiar GPU/A16. Brak nowych kamer lub przebiegów produktu.',
@@ -63,6 +65,7 @@ if((Get-FileHash "$PSScriptRoot/REPORT.md").Hash -ne (Get-FileHash "$destination
 Add-Content "$PSScriptRoot/STATUS.md" "Dostawa r3: robocopy$copyCode,$($files.Count) plików, rozmiary i hashREPORT zgodne. Następny krok: gpt-light-r4 i merge main; bez merge/push do main."
 git add -f artifacts/light-r3/STATUS.md
 git commit -m 'WIP light r3: verify complete artifact delivery'
+if($LASTEXITCODE){throw 'Delivery commit failed'}
 & robocopy $PSScriptRoot $destination STATUS.md /R:1 /W:1 /NFL /NDL /NP /NJH /NJS
 if($LASTEXITCODE -gt 7){throw 'Final status copy failed'}
 git switch -c gpt-light-r4
