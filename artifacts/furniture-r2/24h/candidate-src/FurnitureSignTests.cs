@@ -1,5 +1,7 @@
 using System;
 using System.IO;
+using System.Reflection;
+using System.Collections.Generic;
 using Game.Gameplay.Furniture;
 using Game.Vehicle.Runtime;
 using NUnit.Framework;
@@ -198,6 +200,68 @@ namespace Game.Tests
                 UnityEngine.Object.DestroyImmediate(go); UnityEngine.Object.DestroyImmediate(left); UnityEngine.Object.DestroyImmediate(right);
                 Shader.SetGlobalTexture("_TruckLightState", lampTexture);
                 Shader.SetGlobalFloat("_TruckLightNitsScale", lampScale);
+            }
+        }
+
+        [Test] public void FactoryKeepsFaceUvAndRestoresOrdinaryLitWhenRetroIsRemoved()
+        {
+            var importer = Type.GetType("Game.World.Import.WorldPbrMaterials, Game.World.Import.Editor", true);
+            var resultType = importer.Assembly.GetType("Game.World.Import.RegionImporter+Result", true);
+            const string dir = "Assets/_Generated/FurnitureSignFactoryTests";
+            Directory.CreateDirectory(Path.Combine(Path.GetDirectoryName(Application.dataPath), dir, "Textures"));
+            AssetDatabase.Refresh();
+            var result = Activator.CreateInstance(resultType);
+            resultType.GetField("Dir").SetValue(result, dir);
+            var def = new Dictionary<string, object> {
+                {"color", new List<object>{1.0,1.0,1.0}}, {"rough",.45}, {"furniture_sign_face","B-33_70"},
+                {"furniture_sign_retro",new Dictionary<string,object>{{"gain",800.0}}} };
+            var create = importer.GetMethod("Create", BindingFlags.Public | BindingFlags.Static);
+            var channels = importer.GetMethod("Channels", BindingFlags.Public | BindingFlags.Static);
+            var mat = (Material)create.Invoke(null, new[] {result,(object)"sign_B-33_70",def,dir+"/M_sign.mat"});
+            Assert.AreEqual("Kamion/Furniture Sign",mat.shader.name);
+            Assert.IsTrue(mat.IsKeywordEnabled(Keyword)); Assert.IsFalse(mat.IsKeywordEnabled("_EMISSION"));
+            Assert.That(mat.GetColor("_EmissionColor").r, Is.EqualTo(800).Within(.001f));
+            var texture = mat.GetTexture("_BaseMap"); Assert.NotNull(texture);
+            AssetDatabase.SaveAssets();
+            Assert.IsTrue(AssetDatabase.LoadAssetAtPath<Material>(dir+"/M_sign.mat").IsKeywordEnabled(Keyword));
+            def.Remove("furniture_sign_retro");
+            var restored = (Material)create.Invoke(null, new[] {result,(object)"sign_B-33_70",def,dir+"/M_sign.mat"});
+            Assert.AreSame(mat,restored); Assert.AreEqual("Universal Render Pipeline/Lit",restored.shader.name);
+            Assert.IsFalse(restored.IsKeywordEnabled(Keyword)); Assert.IsFalse(restored.IsKeywordEnabled("_EMISSION"));
+            Assert.AreSame(texture,restored.GetTexture("_BaseMap"));
+            Assert.AreEqual(Color.black,restored.GetColor("_EmissionColor"));
+            var args = new object[] {def,"sign_B-33_70",false,false,false};
+            channels.Invoke(null,args);
+            Assert.IsTrue((bool)args[2]); Assert.IsFalse((bool)args[3]); Assert.IsFalse((bool)args[4]);
+        }
+
+        [Test] public void PublisherUsesHighBeamSocketsWhenLowBeamIsOff()
+        {
+            var go = new GameObject("Furniture high beam source");
+            var left = new GameObject("high-left"); var right = new GameObject("high-right");
+            var sun = RenderSettings.sun;
+            var lampTexture = Shader.GetGlobalTexture("_TruckLightState");
+            var lampScale = Shader.GetGlobalFloat("_TruckLightNitsScale");
+            try
+            {
+                RenderSettings.sun = null;
+                var lamps = go.AddComponent<TruckLights>(); lamps.highBeam = true;
+                left.transform.position = new Vector3(-1,1.4f,5); right.transform.position = new Vector3(1,1.4f,5);
+                FurnitureRetroSource.Publish(lamps,null,null,left.transform,right.transform);
+                Assert.AreEqual(1,Shader.GetGlobalVector("_FurnitureRetroState").x);
+                Assert.AreEqual(0,Shader.GetGlobalVector("_FurnitureRetroHead0").w);
+                var actual = Shader.GetGlobalVector("_FurnitureRetroHead2");
+                Assert.That(new Vector3(actual.x,actual.y,actual.z),Is.EqualTo(left.transform.position));
+                Assert.Greater(actual.w,0);
+                FurnitureRetroSource.Publish(lamps,null,null,null,right.transform);
+                Assert.AreEqual(0,Shader.GetGlobalVector("_FurnitureRetroState").x);
+            }
+            finally
+            {
+                RenderSettings.sun = sun;
+                FurnitureRetroSource.Publish(null,null,null);
+                UnityEngine.Object.DestroyImmediate(go); UnityEngine.Object.DestroyImmediate(left); UnityEngine.Object.DestroyImmediate(right);
+                Shader.SetGlobalTexture("_TruckLightState",lampTexture); Shader.SetGlobalFloat("_TruckLightNitsScale",lampScale);
             }
         }
     }

@@ -84,6 +84,7 @@ namespace Game.World.Import
             uv0 = uv1 = colors = false;
             // ADR0120: the existing World Surface material reads a byte-stable board marker, not UVs.
             if (id == "concrete_plinth" && def.Get("furniture_plinth_detail") is Dictionary<string, object>) { colors = true; return; }
+            if (def.Get("furniture_sign_face") is string) { uv0 = true; return; }
             if (id != null && id.StartsWith("fab_", StringComparison.Ordinal) && FabMaterials.Has(id)) { uv0 = true; return; }
             if (!Has(def, id)) return;
             var s = Set(def.Get("texture_set") as string);
@@ -135,6 +136,7 @@ namespace Game.World.Import
         /// <summary>PBR material for a manifest material, or null when its set is missing (caller falls back).</summary>
         public static Material Create(RegionImporter.Result r, string id, Dictionary<string, object> def, string path)
         {
+            if (def.Get("furniture_sign_face") is string face) return FurnitureSign(r, id, def, face, path);
             // ADR0120 additive, data-gated route: retain the original World Surface factory and material identity.
             if (id == "concrete_plinth")
             {
@@ -555,6 +557,39 @@ namespace Game.World.Import
             if (!AssetDatabase.IsValidFolder(dir)) return Array.Empty<Texture>();
             return AssetDatabase.FindAssets("t:Texture2D", new[] { dir }).Select(AssetDatabase.GUIDToAssetPath)
                 .Where(p => !p.EndsWith("_Var.png")).Select(AssetDatabase.LoadAssetAtPath<Texture>).Where(t => t != null).ToArray();
+        }
+
+        // ADR0120 r2: explicit face data preserves the original Lit texture/UV path. The optional
+        // retro block selects the additive forward shader; removing it restores ordinary URP Lit.
+        static Material FurnitureSign(RegionImporter.Result r, string id, Dictionary<string, object> def,
+            string face, string path)
+        {
+            if (id != "sign_" + face || !System.Text.RegularExpressions.Regex.IsMatch(face, @"^[A-Z]-[0-9]+(?:_[0-9]+)?$"))
+                throw new InvalidOperationException("Invalid explicitly flagged furniture sign face");
+            string png = Path.Combine(EditorTools.RepoRoot, "art-source", "world", "signs", face + ".png");
+            if (!File.Exists(png)) throw new FileNotFoundException("Flagged furniture sign texture missing", png);
+            var tex = InstanceImporter.ImportTexture(r, png, clamp: true);
+            var c = Arr(def.Get("color"));
+            var color = new Color((float)Num(c[0]), (float)Num(c[1]), (float)Num(c[2]));
+            float rough = def.Get("rough") != null ? (float)Num(def.Get("rough")) : 0.45f;
+            var mat = RegionImporter.LitMaterial(path, color, rough, 0f, tex, true, 0.5f, false, null);
+            if (def.Get("furniture_sign_retro") is Dictionary<string, object> retro)
+            {
+                var shader = Shader.Find("Kamion/Furniture Sign") ?? throw new InvalidOperationException("Furniture sign shader missing");
+                mat.shader = shader;
+                mat.shaderKeywords = new[] { "_ALPHATEST_ON", "_FURNITURE_RETRO" };
+                float gain = Mathf.Max(0f, (float)Num(retro.Get("gain")));
+                // HDR Lit property: actual GPU readback receives this linear value directly.
+                // This is not the plain _Tint contract (which continues to use SetLinearTint).
+                mat.SetColor("_EmissionColor", new Color(gain, gain, gain, 1f));
+            }
+            else
+            {
+                mat.shaderKeywords = new[] { "_ALPHATEST_ON" };
+                mat.SetColor("_EmissionColor", Color.black);
+            }
+            EditorUtility.SetDirty(mat);
+            return mat;
         }
 
         static Material FurniturePlinth(RegionImporter.Result r, Dictionary<string, object> def,
