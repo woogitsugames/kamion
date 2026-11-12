@@ -7,5 +7,7 @@
   "schema": 1,
   "pid": 20552,
   "exit_code": null,
-  "status": "waiting"
+  "status": "cancelled-before-start",
+  "finished_at": "2026-11-12T10:24:42.4433895+01:00",
+  "reason": "Confirmed only waiting wrapper+acquire child; retune polling from 5 to 1 second after over one hour without a slot. No uv/python job started."
 }

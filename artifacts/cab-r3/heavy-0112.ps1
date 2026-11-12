@@ -16,7 +16,7 @@ $receipt=Join-Path $PSScriptRoot ("job-{0}-{1}-{2}.json" -f $Job,(Get-Date -Form
 $run=@{schema=1;owner=$owner;job=$Job;pid=$PID;source_sha=(git rev-parse HEAD).Trim();status='waiting';queued_at=(Get-Date -Format o);log=$Log;exit_code=$null}
 $run | ConvertTo-Json | Set-Content -LiteralPath $receipt -Encoding utf8
 try {
-  pwsh $slot -Acquire -Pool heavy -Owner $owner -PollSeconds 5 -StaleHours 1000000
+  pwsh $slot -Acquire -Pool heavy -Owner $owner -PollSeconds 1 -StaleHours 1000000
   if ($LASTEXITCODE -ne 0) { throw 'Nie uzyskano slotu heavy.' }
   $run.status='running'; $run.started_at=Get-Date -Format o
   $run | ConvertTo-Json | Set-Content -LiteralPath $receipt -Encoding utf8
@@ -42,3 +42,4 @@ catch {
 }
 finally { $guard.ReleaseMutex(); $guard.Dispose() }
 exit $code
+
