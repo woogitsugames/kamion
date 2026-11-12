@@ -8,6 +8,7 @@ $expectPath="$PSScriptRoot/material-expectations-$After.json"
 $expect=Get-Content $expectPath -Raw|ConvertFrom-Json -AsHashtable
 $changes=$expect.ground_changes
 if($null -eq $changes){throw 'Explicit ground_changes declaration required, even if empty'}
+$rootChanges=if($expect.ContainsKey('root_changes')){$expect.root_changes}else{@{}}
 $rows=@();$poses=@();$materials=@()
 function Json-Same($A,$B){return ($A|ConvertTo-Json -Compress -Depth 8) -eq ($B|ConvertTo-Json -Compress -Depth 8)}
 function Expected-Value($Actual,$Value){
@@ -30,7 +31,8 @@ function Png-Size([string]$Path){
  return @([Net.IPAddress]::NetworkToHostOrder([BitConverter]::ToInt32($header,16)),[Net.IPAddress]::NetworkToHostOrder([BitConverter]::ToInt32($header,20)))
 }
 $poseFields=@('rootToWorld','view','projection','position','fov','aspect','width','height','anchorZ','originShift')
-$rootMaterialFields=@('roadWear','paintWear','freshPaintWear','kerbWear','pavingGrime','kerbExclusion','pavingExclusion','pavingGrimeBase','detailGlobal','paintUnderlay','maskFormat')
+$rootMaterialFields=@('roadWear','roadExclusion','roadCrackStrength','roadDetailFade','roadCracksEnabled','roadPhotoEnabled','roadSealStrengthProperty','roadSealStrength','paintWear','freshPaintWear','kerbWear','pavingGrime','kerbExclusion','pavingExclusion','pavingGrimeBase','detailGlobal','paintUnderlay','maskFormat')
+foreach($field in $rootChanges.Keys){if($field -notin $rootMaterialFields){throw "Unknown declared root field: $field"}}
 foreach($series in 'Low-overcast','Low-clear','High-overcast','High-clear'){
  $beforeDir="$PSScriptRoot/baseline/$series";$afterDir="$PSScriptRoot/$After/$series"
  $snap=@(Get-ChildItem "$afterDir/runtime-cameras" -Filter '*.json')
@@ -50,7 +52,11 @@ foreach($series in 'Low-overcast','Low-clear','High-overcast','High-clear'){
   foreach($field in 'rootToWorld','view','projection'){if(@($a.$field).Count -ne 16 -or @($b.$field).Count -ne 16){$poses+="$series/${id}:$field length"}}
   if(-not(Json-Same (Png-Size "$beforeDir/$id.png") (Png-Size "$afterDir/$id.png"))){$poses+="$series/${id}:PNG dimensions"}
   $sizes["$($a.width)x$($a.height)"]=$true
-  foreach($field in $rootMaterialFields){if(-not(Json-Same $a.$field $b.$field)){$materials+="$series/${id}:root $field changed"}}
+  foreach($field in $rootMaterialFields){
+   if($field -notin $a.PSObject.Properties.Name -or $field -notin $b.PSObject.Properties.Name){throw "Missing root material field: $field"}
+   $ok=if($rootChanges.ContainsKey($field)){Expected-Value $a.$field $rootChanges[$field]}else{Json-Same $a.$field $b.$field}
+   if(-not $ok){$materials+="$series/${id}:root $field"}
+  }
   $beforeGround=@{};$afterGround=@{}
   foreach($record in @($b.grounds)){if($beforeGround.ContainsKey($record.id)){throw 'Duplicate baseline material'};$beforeGround[$record.id]=$record}
   foreach($record in @($a.grounds)){if($afterGround.ContainsKey($record.id)){throw 'Duplicate candidate material'};$afterGround[$record.id]=$record}

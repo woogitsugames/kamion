@@ -30,6 +30,9 @@ namespace Game.Editor.VisualQA
             public double anchorZ;
             public Vector3 originShift;
             public Vector4 roadWear, paintWear, freshPaintWear;
+            public Vector4 roadExclusion;
+            public float roadCrackStrength, roadDetailFade, roadSealStrength;
+            public bool roadCracksEnabled, roadPhotoEnabled, roadSealStrengthProperty;
             public Vector4 kerbWear, pavingGrime, yardGrime;
             public Vector4 kerbExclusion, pavingExclusion, pavingGrimeBase;
             public GroundSnapshot[] grounds;
@@ -101,6 +104,11 @@ namespace Game.Editor.VisualQA
                 anchorZ = root != null ? root.anchorZ : 0.0,
                 originShift = root != null ? root.originShift : Vector3.zero,
                 roadWear = material.GetVector("_AsphaltWear"), detailGlobal = Shader.IsKeywordEnabled("_KAMION_WORLD_DETAIL"),
+                roadExclusion = GroundState("road_asphalt", "_GroundWearExclude"),
+                roadCrackStrength = material.GetFloat("_CrackStrength"), roadDetailFade = material.GetFloat("_DetailFade"),
+                roadCracksEnabled = material.IsKeywordEnabled("_CRACKS"), roadPhotoEnabled = material.IsKeywordEnabled("_PHOTO_DETAIL"),
+                roadSealStrengthProperty = material.HasProperty("_CrackSealStrength"),
+                roadSealStrength = material.HasProperty("_CrackSealStrength") ? material.GetFloat("_CrackSealStrength") : 0f,
                 paintWear = paint != null ? paint.GetVector("_PaintWear") : Vector4.zero,
                 freshPaintWear = paint != null ? paint.GetVector("_PaintFreshWear") : Vector4.one,
                 kerbWear = GroundState("curb_concrete", "_KerbWear"),
