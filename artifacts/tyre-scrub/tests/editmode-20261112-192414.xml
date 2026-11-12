@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="1" result="Passed" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-11-12 18:24:31Z" end-time="2026-11-12 18:24:31Z" duration="0,0305334">
+  <test-suite type="TestSuite" id="1000" name="Kamion" fullname="Kamion" runstate="Runnable" testcasecount="408" result="Passed" start-time="2026-11-12 18:24:31Z" end-time="2026-11-12 18:24:31Z" duration="0.030533" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1508" name="Game.Tests.EditMode.dll" fullname="C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/tyre-scrub/game/Library/ScriptAssemblies/Game.Tests.EditMode.dll" runstate="Runnable" testcasecount="408" result="Passed" start-time="2026-11-12 18:24:31Z" end-time="2026-11-12 18:24:31Z" duration="0.025465" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="44760" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1509" name="Game" fullname="Game" runstate="Runnable" testcasecount="408" result="Passed" start-time="2026-11-12 18:24:31Z" end-time="2026-11-12 18:24:31Z" duration="0.025138" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1510" name="Tests" fullname="Game.Tests" runstate="Runnable" testcasecount="408" result="Passed" start-time="2026-11-12 18:24:31Z" end-time="2026-11-12 18:24:31Z" duration="0.024994" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1006" name="AudioCuesTests" fullname="Game.Tests.AudioCuesTests" classname="Game.Tests.AudioCuesTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-11-12 18:24:31Z" end-time="2026-11-12 18:24:31Z" duration="0.018704" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1007" name="Request_IsTakenOnce_ThenEmpty" fullname="Game.Tests.AudioCuesTests.Request_IsTakenOnce_ThenEmpty" methodname="Request_IsTakenOnce_ThenEmpty" classname="Game.Tests.AudioCuesTests" runstate="Runnable" seed="1723058475" result="Passed" start-time="2026-11-12 18:24:31Z" end-time="2026-11-12 18:24:31Z" duration="0.009995" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[Saving results to: C:/Users/matma/AppData/LocalLow/woogitsugames/Kamion\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

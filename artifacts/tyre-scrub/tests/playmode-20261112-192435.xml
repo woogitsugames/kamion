@@ -1,0 +1,855 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="27" result="Passed" total="27" passed="27" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-11-12 18:24:56Z" end-time="2026-11-12 18:25:39Z" duration="42,5297243">
+  <test-suite type="TestSuite" id="1171" name="Kamion" fullname="Kamion" runstate="Runnable" testcasecount="130" result="Passed" start-time="2026-11-12 18:24:56Z" end-time="2026-11-12 18:25:39Z" duration="42.529724" total="27" passed="27" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <test-suite type="Assembly" id="1165" name="Game.Tests.PlayMode.dll" fullname="C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/tyre-scrub/game/Library/ScriptAssemblies/Game.Tests.PlayMode.dll" runstate="Runnable" testcasecount="130" result="Passed" start-time="2026-11-12 18:24:56Z" end-time="2026-11-12 18:25:39Z" duration="42.522763" total="27" passed="27" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="55044" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <test-suite type="TestSuite" id="1166" name="Game" fullname="Game" runstate="Runnable" testcasecount="130" result="Passed" start-time="2026-11-12 18:24:56Z" end-time="2026-11-12 18:25:39Z" duration="42.521563" total="27" passed="27" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1167" name="Tests" fullname="Game.Tests" runstate="Runnable" testcasecount="130" result="Passed" start-time="2026-11-12 18:24:56Z" end-time="2026-11-12 18:25:39Z" duration="42.521088" total="27" passed="27" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1001" name="AudioLayersTests" fullname="Game.Tests.AudioLayersTests" classname="Game.Tests.AudioLayersTests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-11-12 18:24:56Z" end-time="2026-11-12 18:24:58Z" duration="1.610193" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1003" name="CombinedSlip_IsOneAtTheReferenceSlips" fullname="Game.Tests.AudioLayersTests.CombinedSlip_IsOneAtTheReferenceSlips" methodname="CombinedSlip_IsOneAtTheReferenceSlips" classname="Game.Tests.AudioLayersTests" runstate="Runnable" seed="1214294986" result="Passed" start-time="2026-11-12 18:24:56Z" end-time="2026-11-12 18:24:56Z" duration="0.008694" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1007" name="DrivingLab_HasTheAudioLayers" fullname="Game.Tests.AudioLayersTests.DrivingLab_HasTheAudioLayers" methodname="DrivingLab_HasTheAudioLayers" classname="Game.Tests.AudioLayersTests" runstate="Runnable" seed="192665240" result="Passed" start-time="2026-11-12 18:24:56Z" end-time="2026-11-12 18:24:58Z" duration="1.588913" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[Detected one or more triangles where the distance between any 2 vertices is greater than 500 units. The resulting Triangle Mesh can impact simulation and query stability. It is recommended to tessellate meshes that have large triangles. Source mesh name: HillRamp
+[CONTROLS] loaded v4 steer=wheel wheelRange=270 wheelSens=1.00 centre=1.00 deadZone=0.010 gyroInvert=off gyroSens=1.00 throttle=progressive brake=progressive lookSens=1.00 cabFov=55 headMotion=on speedSteer=on grab=drag
+[CONTROLS] touch-zones screen=640x480 safe=0,0 640x480 ppu=0.314 dpi=120 wheel=13,10 126x126 grab=0,0 141x138 turn=13,138 126x20 stalk=141,10 33x118 look=rest of screen (px, origin bottom-left; ADR 0135)
+[LAB] DrivingLab ready: vehicle=Tractor4x2_Graybox trailer=Trailer_Curtainsider_Graybox spawn=Cargo24t steer=Wheel270 autopilot=off fixedDt=0,009999993
+[AUDIO] vehicle audio ready (122 engine loops + 49 sfx, tools/audio/render_all.py (procedural synthesis, no recordings); ElevenLabs 89 clips) engine=ElevenLabs elevenlabs=imported fx=imported
+[CONTROLS] touch-zones screen=640x480 safe=0,0 640x480 ppu=0.314 dpi=120 wheel=13,10 126x126 grab=0,0 141x138 turn=13,138 126x20 stalk=141,10 33x118 look=rest of screen (px, origin bottom-left; ADR 0135)
+[DIAG] t=1s tier=Low target=60 fps=1.0 p50=963.60 p95=963.60 p99=963.60 max=963.60ms temp=-1.0C thermal=-1 headroom=-1.00 pss=-1MB scale=1.00 fallback=none mir=0.00/f cpu=0.00 gpu=- cap=0.00/f cpu=0.00 gpu=- shd_gpu=- main_cpu=0.00
+[CONTROLS] touch-zones screen=640x480 safe=0,0 640x480 ppu=0.314 dpi=120 wheel=13,10 126x126 grab=0,0 141x138 turn=13,138 126x20 stalk=141,10 33x118 look=rest of screen (px, origin bottom-left; ADR 0135)
+[TEST] audio layers: surface weights sum 1,000, ambient True, surface 0 weight 1,00
+]]></output>
+            </test-case>
+            <test-case id="1006" name="IndicatorClock_TicksAndTocksAtNinetyPerMinute" fullname="Game.Tests.AudioLayersTests.IndicatorClock_TicksAndTocksAtNinetyPerMinute" methodname="IndicatorClock_TicksAndTocksAtNinetyPerMinute" classname="Game.Tests.AudioLayersTests" runstate="Runnable" seed="518111342" result="Passed" start-time="2026-11-12 18:24:58Z" end-time="2026-11-12 18:24:58Z" duration="0.001072" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1005" name="Pitch_RisesWithSpeedAndRpm" fullname="Game.Tests.AudioLayersTests.Pitch_RisesWithSpeedAndRpm" methodname="Pitch_RisesWithSpeedAndRpm" classname="Game.Tests.AudioLayersTests" runstate="Runnable" seed="2030750880" result="Passed" start-time="2026-11-12 18:24:58Z" end-time="2026-11-12 18:24:58Z" duration="0.001346" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1002" name="Squeal_IsSilentBelowOnsetAndFullWellAboveIt" fullname="Game.Tests.AudioLayersTests.Squeal_IsSilentBelowOnsetAndFullWellAboveIt" methodname="Squeal_IsSilentBelowOnsetAndFullWellAboveIt" classname="Game.Tests.AudioLayersTests" runstate="Runnable" seed="508456095" result="Passed" start-time="2026-11-12 18:24:58Z" end-time="2026-11-12 18:24:58Z" duration="0.000221" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1004" name="SurfaceTables_CoverEverySurfaceKind" fullname="Game.Tests.AudioLayersTests.SurfaceTables_CoverEverySurfaceKind" methodname="SurfaceTables_CoverEverySurfaceKind" classname="Game.Tests.AudioLayersTests" runstate="Runnable" seed="318703237" result="Passed" start-time="2026-11-12 18:24:58Z" end-time="2026-11-12 18:24:58Z" duration="0.000207" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1042" name="ControlSettingsPanelTests" fullname="Game.Tests.ControlSettingsPanelTests" classname="Game.Tests.ControlSettingsPanelTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-11-12 18:24:58Z" end-time="2026-11-12 18:24:58Z" duration="0.194369" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1046" name="Capture_SettingsPanel" fullname="Game.Tests.ControlSettingsPanelTests.Capture_SettingsPanel" methodname="Capture_SettingsPanel" classname="Game.Tests.ControlSettingsPanelTests" runstate="Explicit" seed="818648180" result="Passed" start-time="2026-11-12 18:24:58Z" end-time="2026-11-12 18:24:58Z" duration="0.142926" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="_SKIPREASON" value="visual capture, run on demand" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1043" name="Panel_ButtonsEditSaveAndLog" fullname="Game.Tests.ControlSettingsPanelTests.Panel_ButtonsEditSaveAndLog" methodname="Panel_ButtonsEditSaveAndLog" classname="Game.Tests.ControlSettingsPanelTests" runstate="Runnable" seed="1681083322" result="Passed" start-time="2026-11-12 18:24:58Z" end-time="2026-11-12 18:24:58Z" duration="0.045406" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[CONTROLS] changed v4 steer=wheel wheelRange=360 wheelSens=1.00 centre=1.00 deadZone=0.010 gyroInvert=off gyroSens=1.00 throttle=progressive brake=progressive lookSens=1.00 cabFov=55 headMotion=on speedSteer=on grab=drag
+[CONTROLS] changed v4 steer=gyro wheelRange=360 wheelSens=1.00 centre=1.00 deadZone=0.010 gyroInvert=off gyroSens=1.00 throttle=progressive brake=progressive lookSens=1.00 cabFov=55 headMotion=on speedSteer=on grab=drag
+[CONTROLS] changed v4 steer=gyro wheelRange=360 wheelSens=1.00 centre=1.00 deadZone=0.010 gyroInvert=on gyroSens=1.00 throttle=progressive brake=progressive lookSens=1.00 cabFov=55 headMotion=on speedSteer=on grab=drag
+[CONTROLS] changed v4 steer=gyro wheelRange=360 wheelSens=1.00 centre=1.00 deadZone=0.010 gyroInvert=on gyroSens=1.00 throttle=linear brake=progressive lookSens=1.00 cabFov=55 headMotion=on speedSteer=on grab=drag
+[CONTROLS] reset v4 steer=wheel wheelRange=270 wheelSens=1.00 centre=1.00 deadZone=0.010 gyroInvert=off gyroSens=1.00 throttle=progressive brake=progressive lookSens=1.00 cabFov=55 headMotion=on speedSteer=on grab=drag
+]]></output>
+            </test-case>
+            <test-case id="1045" name="StartRequest_IsConsumedOnce" fullname="Game.Tests.ControlSettingsPanelTests.StartRequest_IsConsumedOnce" methodname="StartRequest_IsConsumedOnce" classname="Game.Tests.ControlSettingsPanelTests" runstate="Runnable" seed="717893793" result="Passed" start-time="2026-11-12 18:24:58Z" end-time="2026-11-12 18:24:58Z" duration="0.000533" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[START] menu choice 'G3-B' route_s=1232 route_end=1718 lighting=
+]]></output>
+            </test-case>
+            <test-case id="1044" name="Step_StaysOnGridAndClamps" fullname="Game.Tests.ControlSettingsPanelTests.Step_StaysOnGridAndClamps" methodname="Step_StaysOnGridAndClamps" classname="Game.Tests.ControlSettingsPanelTests" runstate="Runnable" seed="44586648" result="Passed" start-time="2026-11-12 18:24:58Z" end-time="2026-11-12 18:24:58Z" duration="0.000281" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1051" name="DrivingLabSceneTests" fullname="Game.Tests.DrivingLabSceneTests" classname="Game.Tests.DrivingLabSceneTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-11-12 18:24:58Z" end-time="2026-11-12 18:25:30Z" duration="32.227220" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1053" name="DrivingHud_DiagnosticText_HiddenUnlessDeveloperMode" fullname="Game.Tests.DrivingLabSceneTests.DrivingHud_DiagnosticText_HiddenUnlessDeveloperMode" methodname="DrivingHud_DiagnosticText_HiddenUnlessDeveloperMode" classname="Game.Tests.DrivingLabSceneTests" runstate="Runnable" seed="1566642538" result="Passed" start-time="2026-11-12 18:24:58Z" end-time="2026-11-12 18:24:58Z" duration="0.522880" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[CONTROLS] loaded v4 steer=wheel wheelRange=270 wheelSens=1.00 centre=1.00 deadZone=0.010 gyroInvert=off gyroSens=1.00 throttle=progressive brake=progressive lookSens=1.00 cabFov=55 headMotion=on speedSteer=on grab=drag
+[CONTROLS] touch-zones screen=640x480 safe=0,0 640x480 ppu=0.314 dpi=120 wheel=13,10 126x126 grab=0,0 141x138 turn=13,138 126x20 stalk=141,10 33x118 look=rest of screen (px, origin bottom-left; ADR 0135)
+[LAB] DrivingLab ready: vehicle=Tractor4x2_Graybox trailer=Trailer_Curtainsider_Graybox spawn=Cargo24t steer=Wheel270 autopilot=off fixedDt=0,009999993
+[AUDIO] vehicle audio ready (122 engine loops + 49 sfx, tools/audio/render_all.py (procedural synthesis, no recordings); ElevenLabs 89 clips) engine=ElevenLabs elevenlabs=imported fx=imported
+[CONTROLS] touch-zones screen=640x480 safe=0,0 640x480 ppu=0.314 dpi=120 wheel=13,10 126x126 grab=0,0 141x138 turn=13,138 126x20 stalk=141,10 33x118 look=rest of screen (px, origin bottom-left; ADR 0135)
+]]></output>
+            </test-case>
+            <test-case id="1056" name="DrivingLab_Autopilot_FollowsR50Circle_AndRecordsCsv" fullname="Game.Tests.DrivingLabSceneTests.DrivingLab_Autopilot_FollowsR50Circle_AndRecordsCsv" methodname="DrivingLab_Autopilot_FollowsR50Circle_AndRecordsCsv" classname="Game.Tests.DrivingLabSceneTests" runstate="Runnable" seed="554771662" result="Passed" start-time="2026-11-12 18:24:58Z" end-time="2026-11-12 18:25:06Z" duration="7.534706" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[CONTROLS] loaded v4 steer=wheel wheelRange=270 wheelSens=1.00 centre=1.00 deadZone=0.010 gyroInvert=off gyroSens=1.00 throttle=progressive brake=progressive lookSens=1.00 cabFov=55 headMotion=on speedSteer=on grab=drag
+[CONTROLS] touch-zones screen=640x480 safe=0,0 640x480 ppu=0.314 dpi=120 wheel=13,10 126x126 grab=0,0 141x138 turn=13,138 126x20 stalk=141,10 33x118 look=rest of screen (px, origin bottom-left; ADR 0135)
+[LAB] DrivingLab ready: vehicle=Tractor4x2_Graybox trailer=Trailer_Curtainsider_Graybox spawn=Cargo24t steer=Wheel270 autopilot=off fixedDt=0,009999993
+[AUDIO] vehicle audio ready (122 engine loops + 49 sfx, tools/audio/render_all.py (procedural synthesis, no recordings); ElevenLabs 89 clips) engine=ElevenLabs elevenlabs=imported fx=imported
+[CONTROLS] touch-zones screen=640x480 safe=0,0 640x480 ppu=0.314 dpi=120 wheel=13,10 126x126 grab=0,0 141x138 turn=13,138 126x20 stalk=141,10 33x118 look=rest of screen (px, origin bottom-left; ADR 0135)
+[TELEMETRY] recording → C:/Users/matma/AppData/LocalLow/woogitsugames/Kamion\telemetry\drive-20261112-192459.csv
+[DIAG] t=0s tier=Low target=60 fps=2.2 p50=456.75 p95=456.75 p99=456.75 max=456.75ms temp=-1.0C thermal=-1 headroom=-1.00 pss=-1MB scale=1.00 fallback=none mir=0.00/f cpu=0.00 gpu=- cap=0.00/f cpu=0.00 gpu=- shd_gpu=- main_cpu=0.00
+[CONTROLS] touch-zones screen=640x480 safe=0,0 640x480 ppu=0.314 dpi=120 wheel=13,10 126x126 grab=0,0 141x138 turn=13,138 126x20 stalk=141,10 33x118 look=rest of screen (px, origin bottom-left; ADR 0135)
+[DIAG] t=5s tier=Low target=60 fps=54.7 p50=16.67 p95=16.84 p99=19.13 max=456.75ms temp=-1.0C thermal=-1 headroom=-1.00 pss=-1MB scale=1.00 fallback=none mir=0.00/f cpu=0.00 gpu=- cap=0.00/f cpu=0.00 gpu=- shd_gpu=- main_cpu=0.00
+[TELEMETRY] stopped, 2688 rows (+buffer) → C:/Users/matma/AppData/LocalLow/woogitsugames/Kamion\telemetry\drive-20261112-192459.csv
+[TEST] autopilot R50: sim 28,0 s, speed 39,0 km/h, max radius error after 15 s 0,47 m, CSV rows 2804 → C:/Users/matma/AppData/LocalLow/woogitsugames/Kamion\telemetry\drive-20261112-192459.csv
+]]></output>
+            </test-case>
+            <test-case id="1055" name="DrivingLab_CoupleAndUncouple_ThroughTouchControls" fullname="Game.Tests.DrivingLabSceneTests.DrivingLab_CoupleAndUncouple_ThroughTouchControls" methodname="DrivingLab_CoupleAndUncouple_ThroughTouchControls" classname="Game.Tests.DrivingLabSceneTests" runstate="Runnable" seed="1641691132" result="Passed" start-time="2026-11-12 18:25:06Z" end-time="2026-11-12 18:25:18Z" duration="12.179716" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[CONTROLS] loaded v4 steer=wheel wheelRange=270 wheelSens=1.00 centre=1.00 deadZone=0.010 gyroInvert=off gyroSens=1.00 throttle=progressive brake=progressive lookSens=1.00 cabFov=55 headMotion=on speedSteer=on grab=drag
+[CONTROLS] touch-zones screen=640x480 safe=0,0 640x480 ppu=0.314 dpi=120 wheel=13,10 126x126 grab=0,0 141x138 turn=13,138 126x20 stalk=141,10 33x118 look=rest of screen (px, origin bottom-left; ADR 0135)
+[LAB] DrivingLab ready: vehicle=Tractor4x2_Graybox trailer=Trailer_Curtainsider_Graybox spawn=Cargo24t steer=Wheel270 autopilot=off fixedDt=0,009999993
+[AUDIO] vehicle audio ready (122 engine loops + 49 sfx, tools/audio/render_all.py (procedural synthesis, no recordings); ElevenLabs 89 clips) engine=ElevenLabs elevenlabs=imported fx=imported
+[CONTROLS] touch-zones screen=640x480 safe=0,0 640x480 ppu=0.314 dpi=120 wheel=13,10 126x126 grab=0,0 141x138 turn=13,138 126x20 stalk=141,10 33x118 look=rest of screen (px, origin bottom-left; ADR 0135)
+[DIAG] t=0s tier=Low target=60 fps=2.6 p50=387.42 p95=387.42 p99=387.42 max=387.42ms temp=-1.0C thermal=-1 headroom=-1.00 pss=-1MB scale=1.00 fallback=none mir=0.00/f cpu=0.00 gpu=- cap=0.00/f cpu=0.00 gpu=- shd_gpu=- main_cpu=0.00
+[CONTROLS] touch-zones screen=640x480 safe=0,0 640x480 ppu=0.314 dpi=120 wheel=13,10 126x126 grab=0,0 141x138 turn=13,138 126x20 stalk=141,10 33x118 look=rest of screen (px, origin bottom-left; ADR 0135)
+[CONTROLS] touch-zones screen=640x480 safe=0,0 640x480 ppu=0.314 dpi=120 wheel=13,10 126x126 grab=0,0 141x138 turn=13,138 126x20 stalk=141,10 33x118 look=rest of screen (px, origin bottom-left; ADR 0135)
+[CONTROLS] touch-zones screen=640x480 safe=0,0 640x480 ppu=0.314 dpi=120 wheel=13,10 126x126 grab=0,0 141x138 turn=13,138 126x20 stalk=141,10 33x118 look=rest of screen (px, origin bottom-left; ADR 0135)
+[CONTROLS] touch-zones screen=640x480 safe=0,0 640x480 ppu=0.314 dpi=120 wheel=13,10 126x126 grab=0,0 141x138 turn=13,138 126x20 stalk=141,10 33x118 look=rest of screen (px, origin bottom-left; ADR 0135)
+[DIAG] t=5s tier=Low target=60 fps=55.4 p50=16.67 p95=17.09 p99=21.30 max=387.42ms temp=-1.0C thermal=-1 headroom=-1.00 pss=-1MB scale=1.00 fallback=none mir=0.00/f cpu=0.00 gpu=- cap=0.00/f cpu=0.00 gpu=- shd_gpu=- main_cpu=0.00
+[CONTROLS] touch-zones screen=640x480 safe=0,0 640x480 ppu=0.314 dpi=120 wheel=13,10 126x126 grab=0,0 141x138 turn=13,138 126x20 stalk=141,10 33x118 look=rest of screen (px, origin bottom-left; ADR 0135)
+[DIAG] t=10s tier=Low target=60 fps=57.7 p50=16.67 p95=16.87 p99=18.94 max=387.42ms temp=-1.0C thermal=-1 headroom=-1.00 pss=-1MB scale=1.00 fallback=none mir=0.00/f cpu=0.00 gpu=- cap=0.00/f cpu=0.00 gpu=- shd_gpu=- main_cpu=0.00
+[TEST] touch coupling: coupled after 3,5 s of creep, kingpin load 0,99× static rolling (0,97× at standstill on brakes), drive-off 19,1 km/h, uncouple with legs up refused True, legs load 59 kN, uncoupled True
+[CONTROLS] cmd t=0.40 selector=Reverse parking=toggle coupling=toggle
+[CONTROLS] in t=0.42 steer=+0.00 thr=0.05 brk=0.00 v=0.0 hw=+0
+[CONTROLS] in t=1.29 steer=+0.00 thr=0.00 brk=1.00 v=-1.7 hw=+0
+[CONTROLS] cmd t=1.29 landingGear=toggle
+[CONTROLS] in t=6.29 steer=+0.00 thr=0.38 brk=0.00 v=0.0 hw=+0
+[CONTROLS] cmd t=6.29 selector=Drive
+[CONTROLS] in t=7.81 steer=+0.00 thr=0.00 brk=1.00 v=19.4 hw=+0
+[CONTROLS] cmd t=8.83 coupling=toggle
+[CONTROLS] cmd t=8.84 landingGear=toggle
+[CONTROLS] cmd t=12.11 coupling=toggle
+]]></output>
+            </test-case>
+            <test-case id="1052" name="DrivingLab_Loads_TruckParkedAndStable" fullname="Game.Tests.DrivingLabSceneTests.DrivingLab_Loads_TruckParkedAndStable" methodname="DrivingLab_Loads_TruckParkedAndStable" classname="Game.Tests.DrivingLabSceneTests" runstate="Runnable" seed="1596606551" result="Passed" start-time="2026-11-12 18:25:18Z" end-time="2026-11-12 18:25:22Z" duration="3.471038" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[CONTROLS] loaded v4 steer=wheel wheelRange=270 wheelSens=1.00 centre=1.00 deadZone=0.010 gyroInvert=off gyroSens=1.00 throttle=progressive brake=progressive lookSens=1.00 cabFov=55 headMotion=on speedSteer=on grab=drag
+[CONTROLS] touch-zones screen=640x480 safe=0,0 640x480 ppu=0.314 dpi=120 wheel=13,10 126x126 grab=0,0 141x138 turn=13,138 126x20 stalk=141,10 33x118 look=rest of screen (px, origin bottom-left; ADR 0135)
+[LAB] DrivingLab ready: vehicle=Tractor4x2_Graybox trailer=Trailer_Curtainsider_Graybox spawn=Cargo24t steer=Wheel270 autopilot=off fixedDt=0,009999993
+[AUDIO] vehicle audio ready (122 engine loops + 49 sfx, tools/audio/render_all.py (procedural synthesis, no recordings); ElevenLabs 89 clips) engine=ElevenLabs elevenlabs=imported fx=imported
+[CONTROLS] touch-zones screen=640x480 safe=0,0 640x480 ppu=0.314 dpi=120 wheel=13,10 126x126 grab=0,0 141x138 turn=13,138 126x20 stalk=141,10 33x118 look=rest of screen (px, origin bottom-left; ADR 0135)
+[DIAG] t=0s tier=Low target=60 fps=2.5 p50=408.02 p95=408.02 p99=408.02 max=408.02ms temp=-1.0C thermal=-1 headroom=-1.00 pss=-1MB scale=1.00 fallback=none mir=0.00/f cpu=0.00 gpu=- cap=0.00/f cpu=0.00 gpu=- shd_gpu=- main_cpu=0.00
+[CONTROLS] touch-zones screen=640x480 safe=0,0 640x480 ppu=0.314 dpi=120 wheel=13,10 126x126 grab=0,0 141x138 turn=13,138 126x20 stalk=141,10 33x118 look=rest of screen (px, origin bottom-left; ADR 0135)
+[TEST] DrivingLab: 302 steps, drift 2,6 mm, step 117 µs
+[TEST] audio: 2 engine voices at 600 rpm, interior blend 1,00
+]]></output>
+            </test-case>
+            <test-case id="1054" name="DrivingLab_SpawnPresets_CombinationAtRest" fullname="Game.Tests.DrivingLabSceneTests.DrivingLab_SpawnPresets_CombinationAtRest" methodname="DrivingLab_SpawnPresets_CombinationAtRest" classname="Game.Tests.DrivingLabSceneTests" runstate="Runnable" seed="103558990" result="Passed" start-time="2026-11-12 18:25:22Z" end-time="2026-11-12 18:25:30Z" duration="8.498325" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[CONTROLS] loaded v4 steer=wheel wheelRange=270 wheelSens=1.00 centre=1.00 deadZone=0.010 gyroInvert=off gyroSens=1.00 throttle=progressive brake=progressive lookSens=1.00 cabFov=55 headMotion=on speedSteer=on grab=drag
+[CONTROLS] touch-zones screen=640x480 safe=0,0 640x480 ppu=0.314 dpi=120 wheel=13,10 126x126 grab=0,0 141x138 turn=13,138 126x20 stalk=141,10 33x118 look=rest of screen (px, origin bottom-left; ADR 0135)
+[LAB] DrivingLab ready: vehicle=Tractor4x2_Graybox trailer=Trailer_Curtainsider_Graybox spawn=Cargo24t steer=Wheel270 autopilot=off fixedDt=0,009999993
+[AUDIO] vehicle audio ready (122 engine loops + 49 sfx, tools/audio/render_all.py (procedural synthesis, no recordings); ElevenLabs 89 clips) engine=ElevenLabs elevenlabs=imported fx=imported
+[CONTROLS] touch-zones screen=640x480 safe=0,0 640x480 ppu=0.314 dpi=120 wheel=13,10 126x126 grab=0,0 141x138 turn=13,138 126x20 stalk=141,10 33x118 look=rest of screen (px, origin bottom-left; ADR 0135)
+[DIAG] t=0s tier=Low target=60 fps=2.7 p50=365.62 p95=365.62 p99=365.62 max=365.62ms temp=-1.0C thermal=-1 headroom=-1.00 pss=-1MB scale=1.00 fallback=none mir=0.00/f cpu=0.00 gpu=- cap=0.00/f cpu=0.00 gpu=- shd_gpu=- main_cpu=0.00
+[CONTROLS] touch-zones screen=640x480 safe=0,0 640x480 ppu=0.314 dpi=120 wheel=13,10 126x126 grab=0,0 141x138 turn=13,138 126x20 stalk=141,10 33x118 look=rest of screen (px, origin bottom-left; ADR 0135)
+[TEST] spawn Gross40t: coupled True, mass 40,0 t, drift tractor 6,0 mm trailer 5,5 mm, kingpin err 0,01 mm, legs 0 kN
+[TEST] spawn Cargo24t: coupled True, mass 38,5 t, drift tractor 5,4 mm trailer 4,9 mm, kingpin err 0,01 mm, legs 0 kN
+[DIAG] t=5s tier=Low target=60 fps=55.8 p50=16.67 p95=16.75 p99=18.58 max=365.62ms temp=-1.0C thermal=-1 headroom=-1.00 pss=-1MB scale=1.00 fallback=none mir=0.00/f cpu=0.00 gpu=- cap=0.00/f cpu=0.00 gpu=- shd_gpu=- main_cpu=0.00
+[TEST] spawn Empty: coupled True, mass 14,5 t, drift tractor 0,5 mm trailer 0,6 mm, kingpin err 0,00 mm, legs 0 kN
+[TEST] spawn Solo: coupled False, mass 7,5 t, drift tractor 0,0 mm trailer 0,8 mm, kingpin err 2015,59 mm, legs 23 kN
+]]></output>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1057" name="ElevenLabsEngineAudioTests" fullname="Game.Tests.ElevenLabsEngineAudioTests" classname="Game.Tests.ElevenLabsEngineAudioTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-11-12 18:25:30Z" end-time="2026-11-12 18:25:33Z" duration="3.231298" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1058" name="Banks_CoverTheRpmLoadGrid_WithLoopsPitchedToTheGridPoint" fullname="Game.Tests.ElevenLabsEngineAudioTests.Banks_CoverTheRpmLoadGrid_WithLoopsPitchedToTheGridPoint" methodname="Banks_CoverTheRpmLoadGrid_WithLoopsPitchedToTheGridPoint" classname="Game.Tests.ElevenLabsEngineAudioTests" runstate="Runnable" seed="638190241" result="Passed" start-time="2026-11-12 18:25:30Z" end-time="2026-11-12 18:25:30Z" duration="0.001319" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1059" name="IncoherentGrid_CrossfadesAtConstantPower" fullname="Game.Tests.ElevenLabsEngineAudioTests.IncoherentGrid_CrossfadesAtConstantPower" methodname="IncoherentGrid_CrossfadesAtConstantPower" classname="Game.Tests.ElevenLabsEngineAudioTests" runstate="Runnable" seed="451893693" result="Passed" start-time="2026-11-12 18:25:30Z" end-time="2026-11-12 18:25:30Z" duration="0.001088" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1061" name="Preference_LaunchArgumentAndToggle" fullname="Game.Tests.ElevenLabsEngineAudioTests.Preference_LaunchArgumentAndToggle" methodname="Preference_LaunchArgumentAndToggle" classname="Game.Tests.ElevenLabsEngineAudioTests" runstate="Runnable" seed="254862860" result="Passed" start-time="2026-11-12 18:25:30Z" end-time="2026-11-12 18:25:30Z" duration="0.000887" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[AUDIO] engine source=procedural
+[AUDIO] engine source=elevenlabs
+]]></output>
+            </test-case>
+            <test-case id="1060" name="StartAndStop_PlayTheEventClips_AndGateTheLoops" fullname="Game.Tests.ElevenLabsEngineAudioTests.StartAndStop_PlayTheEventClips_AndGateTheLoops" methodname="StartAndStop_PlayTheEventClips_AndGateTheLoops" classname="Game.Tests.ElevenLabsEngineAudioTests" runstate="Runnable" seed="1865046589" result="Passed" start-time="2026-11-12 18:25:30Z" end-time="2026-11-12 18:25:33Z" duration="3.213502" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+]]></output>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1062" name="ElevenLabsFxAudioTests" fullname="Game.Tests.ElevenLabsFxAudioTests" classname="Game.Tests.ElevenLabsFxAudioTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-11-12 18:25:33Z" end-time="2026-11-12 18:25:38Z" duration="4.604165" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1066" name="DrivingLab_AudioUpdate_DoesNotAllocate" fullname="Game.Tests.ElevenLabsFxAudioTests.DrivingLab_AudioUpdate_DoesNotAllocate" methodname="DrivingLab_AudioUpdate_DoesNotAllocate" classname="Game.Tests.ElevenLabsFxAudioTests" runstate="Runnable" seed="1229442980" result="Passed" start-time="2026-11-12 18:25:33Z" end-time="2026-11-12 18:25:34Z" duration="1.086810" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[CONTROLS] loaded v4 steer=wheel wheelRange=270 wheelSens=1.00 centre=1.00 deadZone=0.010 gyroInvert=off gyroSens=1.00 throttle=progressive brake=progressive lookSens=1.00 cabFov=55 headMotion=on speedSteer=on grab=drag
+[CONTROLS] touch-zones screen=640x480 safe=0,0 640x480 ppu=0.314 dpi=120 wheel=13,10 126x126 grab=0,0 141x138 turn=13,138 126x20 stalk=141,10 33x118 look=rest of screen (px, origin bottom-left; ADR 0135)
+[LAB] DrivingLab ready: vehicle=Tractor4x2_Graybox trailer=Trailer_Curtainsider_Graybox spawn=Cargo24t steer=Wheel270 autopilot=off fixedDt=0,009999993
+[AUDIO] vehicle audio ready (122 engine loops + 49 sfx, tools/audio/render_all.py (procedural synthesis, no recordings); ElevenLabs 89 clips) engine=ElevenLabs elevenlabs=imported fx=imported
+[CONTROLS] touch-zones screen=640x480 safe=0,0 640x480 ppu=0.314 dpi=120 wheel=13,10 126x126 grab=0,0 141x138 turn=13,138 126x20 stalk=141,10 33x118 look=rest of screen (px, origin bottom-left; ADR 0135)
+[DIAG] t=0s tier=Low target=60 fps=2.4 p50=418.18 p95=418.18 p99=418.18 max=418.18ms temp=-1.0C thermal=-1 headroom=-1.00 pss=-1MB scale=1.00 fallback=none mir=0.00/f cpu=0.00 gpu=- cap=0.00/f cpu=0.00 gpu=- shd_gpu=- main_cpu=0.00
+[CONTROLS] touch-zones screen=640x480 safe=0,0 640x480 ppu=0.314 dpi=120 wheel=13,10 126x126 grab=0,0 141x138 turn=13,138 126x20 stalk=141,10 33x118 look=rest of screen (px, origin bottom-left; ADR 0135)
+]]></output>
+            </test-case>
+            <test-case id="1065" name="DrivingLab_EventsAndHorn" fullname="Game.Tests.ElevenLabsFxAudioTests.DrivingLab_EventsAndHorn" methodname="DrivingLab_EventsAndHorn" classname="Game.Tests.ElevenLabsFxAudioTests" runstate="Runnable" seed="418675655" result="Passed" start-time="2026-11-12 18:25:34Z" end-time="2026-11-12 18:25:37Z" duration="2.493223" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[CONTROLS] loaded v4 steer=wheel wheelRange=270 wheelSens=1.00 centre=1.00 deadZone=0.010 gyroInvert=off gyroSens=1.00 throttle=progressive brake=progressive lookSens=1.00 cabFov=55 headMotion=on speedSteer=on grab=drag
+[CONTROLS] touch-zones screen=640x480 safe=0,0 640x480 ppu=0.314 dpi=120 wheel=13,10 126x126 grab=0,0 141x138 turn=13,138 126x20 stalk=141,10 33x118 look=rest of screen (px, origin bottom-left; ADR 0135)
+[LAB] DrivingLab ready: vehicle=Tractor4x2_Graybox trailer=Trailer_Curtainsider_Graybox spawn=Cargo24t steer=Wheel270 autopilot=off fixedDt=0,009999993
+[AUDIO] vehicle audio ready (122 engine loops + 49 sfx, tools/audio/render_all.py (procedural synthesis, no recordings); ElevenLabs 89 clips) engine=ElevenLabs elevenlabs=imported fx=imported
+[CONTROLS] touch-zones screen=640x480 safe=0,0 640x480 ppu=0.314 dpi=120 wheel=13,10 126x126 grab=0,0 141x138 turn=13,138 126x20 stalk=141,10 33x118 look=rest of screen (px, origin bottom-left; ADR 0135)
+[DIAG] t=0s tier=Low target=60 fps=2.5 p50=394.34 p95=394.34 p99=394.34 max=394.34ms temp=-1.0C thermal=-1 headroom=-1.00 pss=-1MB scale=1.00 fallback=none mir=0.00/f cpu=0.00 gpu=- cap=0.00/f cpu=0.00 gpu=- shd_gpu=- main_cpu=0.00
+[CONTROLS] touch-zones screen=640x480 safe=0,0 640x480 ppu=0.314 dpi=120 wheel=13,10 126x126 grab=0,0 141x138 turn=13,138 126x20 stalk=141,10 33x118 look=rest of screen (px, origin bottom-left; ADR 0135)
+[TEST] fx events: selector Drive->R, switch 0->1, beeper True, last=el_cab_switch (UnityEngine.AudioClip), rpm 600
+]]></output>
+            </test-case>
+            <test-case id="1064" name="DrivingLab_SetSwitch_SwapsEffectClips" fullname="Game.Tests.ElevenLabsFxAudioTests.DrivingLab_SetSwitch_SwapsEffectClips" methodname="DrivingLab_SetSwitch_SwapsEffectClips" classname="Game.Tests.ElevenLabsFxAudioTests" runstate="Runnable" seed="221350136" result="Passed" start-time="2026-11-12 18:25:37Z" end-time="2026-11-12 18:25:38Z" duration="1.006603" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[CONTROLS] loaded v4 steer=wheel wheelRange=270 wheelSens=1.00 centre=1.00 deadZone=0.010 gyroInvert=off gyroSens=1.00 throttle=progressive brake=progressive lookSens=1.00 cabFov=55 headMotion=on speedSteer=on grab=drag
+[CONTROLS] touch-zones screen=640x480 safe=0,0 640x480 ppu=0.314 dpi=120 wheel=13,10 126x126 grab=0,0 141x138 turn=13,138 126x20 stalk=141,10 33x118 look=rest of screen (px, origin bottom-left; ADR 0135)
+[LAB] DrivingLab ready: vehicle=Tractor4x2_Graybox trailer=Trailer_Curtainsider_Graybox spawn=Cargo24t steer=Wheel270 autopilot=off fixedDt=0,009999993
+[AUDIO] vehicle audio ready (122 engine loops + 49 sfx, tools/audio/render_all.py (procedural synthesis, no recordings); ElevenLabs 89 clips) engine=ElevenLabs elevenlabs=imported fx=imported
+[CONTROLS] touch-zones screen=640x480 safe=0,0 640x480 ppu=0.314 dpi=120 wheel=13,10 126x126 grab=0,0 141x138 turn=13,138 126x20 stalk=141,10 33x118 look=rest of screen (px, origin bottom-left; ADR 0135)
+[DIAG] t=0s tier=Low target=60 fps=3.3 p50=307.15 p95=307.15 p99=307.15 max=307.15ms temp=-1.0C thermal=-1 headroom=-1.00 pss=-1MB scale=1.00 fallback=none mir=0.00/f cpu=0.00 gpu=- cap=0.00/f cpu=0.00 gpu=- shd_gpu=- main_cpu=0.00
+[CONTROLS] touch-zones screen=640x480 safe=0,0 640x480 ppu=0.314 dpi=120 wheel=13,10 126x126 grab=0,0 141x138 turn=13,138 126x20 stalk=141,10 33x118 look=rest of screen (px, origin bottom-left; ADR 0135)
+[AUDIO] engine source=procedural
+[AUDIO] engine source switched to Procedural
+[AUDIO] engine source=elevenlabs
+]]></output>
+            </test-case>
+            <test-case id="1063" name="Library_HasEveryEffect_MonoAt48k" fullname="Game.Tests.ElevenLabsFxAudioTests.Library_HasEveryEffect_MonoAt48k" methodname="Library_HasEveryEffect_MonoAt48k" classname="Game.Tests.ElevenLabsFxAudioTests" runstate="Runnable" seed="33329274" result="Passed" start-time="2026-11-12 18:25:38Z" end-time="2026-11-12 18:25:38Z" duration="0.001019" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1142" name="TyreScrubTests" fullname="Game.Tests.TyreScrubTests" classname="Game.Tests.TyreScrubTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-11-12 18:25:38Z" end-time="2026-11-12 18:25:39Z" duration="0.650550" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <output><![CDATA[[AUDIO] engine source switched to ElevenLabs
+]]></output>
+            <test-case id="1143" name="Mapping_AtMeasuredOperatingPoints" fullname="Game.Tests.TyreScrubTests.Mapping_AtMeasuredOperatingPoints" methodname="Mapping_AtMeasuredOperatingPoints" classname="Game.Tests.TyreScrubTests" runstate="Runnable" seed="795856159" result="Passed" start-time="2026-11-12 18:25:38Z" end-time="2026-11-12 18:25:38Z" duration="0.001178" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1144" name="Standstill_IsSilent" fullname="Game.Tests.TyreScrubTests.Standstill_IsSilent" methodname="Standstill_IsSilent" classname="Game.Tests.TyreScrubTests" runstate="Runnable" seed="690175767" result="Passed" start-time="2026-11-12 18:25:38Z" end-time="2026-11-12 18:25:38Z" duration="0.087853" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[AUDIO] vehicle audio ready (122 engine loops + 49 sfx, tools/audio/render_all.py (procedural synthesis, no recordings); ElevenLabs 89 clips) engine=ElevenLabs elevenlabs=imported fx=imported
+[TEST] tyre scrub standstill: max scrub 0,0000, squeal 0,0000, slip angle 0,01 deg
+]]></output>
+            </test-case>
+            <test-case id="1145" name="Straight_IsSilent" fullname="Game.Tests.TyreScrubTests.Straight_IsSilent" methodname="Straight_IsSilent" classname="Game.Tests.TyreScrubTests" runstate="Runnable" seed="1581215449" result="Passed" start-time="2026-11-12 18:25:38Z" end-time="2026-11-12 18:25:38Z" duration="0.151245" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[AUDIO] vehicle audio ready (122 engine loops + 49 sfx, tools/audio/render_all.py (procedural synthesis, no recordings); ElevenLabs 89 clips) engine=ElevenLabs elevenlabs=imported fx=imported
+[TEST] tyre scrub straight 30 km/h: max scrub 0,0000, squeal 0,0000, max trailer slip angle 0,00 deg, speed 28,6 km/h
+]]></output>
+            </test-case>
+            <test-case id="1146" name="TightTurn10kmh_Scrubs_DoesNotSqueal_NoGc" fullname="Game.Tests.TyreScrubTests.TightTurn10kmh_Scrubs_DoesNotSqueal_NoGc" methodname="TightTurn10kmh_Scrubs_DoesNotSqueal_NoGc" classname="Game.Tests.TyreScrubTests" runstate="Runnable" seed="2051304891" result="Passed" start-time="2026-11-12 18:25:38Z" end-time="2026-11-12 18:25:39Z" duration="0.394087" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[AUDIO] vehicle audio ready (122 engine loops + 49 sfx, tools/audio/render_all.py (procedural synthesis, no recordings); ElevenLabs 89 clips) engine=ElevenLabs elevenlabs=imported fx=imported
+[TEST] tyre scrub tight turn R 12 m: mean 8,6 km/h, articulation -37,9 deg, max trailer slip angle 9,7 deg, worst combined slip 1,69, scrub min 1,000, squeal max 0,0000, scrub loop el_tyre_scrub_loop, squeal loop el_tyre_squeal_loop
+Saving results to: C:/Users/matma/AppData/LocalLow/woogitsugames/Kamion\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

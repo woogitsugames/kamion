@@ -112,7 +112,6 @@ def main():
             owners.append(obj.name)
         evaluated.to_mesh_clear()
     bvh = BVHTree.FromPolygons(vertices, faces)
-    eye_unity = lod["empties"]["EYE_POINT"]["position_unity_vehicle"]
     # Match the ocular point rather than hard-coding the front-axle offset.
     # Read authored targets from their owning source rather than maintain another target table.
     builder = open(os.path.join(BI.REPO, "game/Assets/_Project/Editor/Setup/TruckAssetBuilder.cs")).read()

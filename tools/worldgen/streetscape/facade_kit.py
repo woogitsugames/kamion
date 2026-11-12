@@ -130,7 +130,7 @@ def plinth_joints(acc, a, d, nout, L, zpl, zbot, ops, ground, phase, mat="hall_f
     2-3 m). Joints = 1.5 cm dark strips 4 mm proud of the plinth face, in the drip profile's material (no new draw),
     never across an opening. ground(u) = terrain height at u along the wall; phase in [0, 1) shifts the joints per
     wall. LOD0, 2 triangles per joint. Returns the triangle count."""
-    d3, n3 = np.append(d, 0.0), np.append(nout, 0.0)
+    d3, _n3 = np.append(d, 0.0), np.append(nout, 0.0)
     w, zj = 0.0075, zpl - PLINTH_BAND_M
     us = [min(max(PLINTH_JOINT_M * (phase * 0.8 + 0.1) + k * PLINTH_JOINT_M, 0.0), L)
           for k in range(int(L / PLINTH_JOINT_M) + 1)]

@@ -748,12 +748,14 @@ namespace Game.UI.Driving
             m_ReverseBtn.color = sel == GearSelector.Reverse ? k_ButtonOn : k_Button;
             m_ParkBtn.color = park ? k_ParkOn : k_Button;
             if (DevDiagnostics && m_Ctx.StatusLine != null) { var s = m_Ctx.StatusLine(); if (!ReferenceEquals(s, m_Status.text)) m_Status.text = s ?? ""; }
-            if (gyro && m_Ctx.Gyro != null && Time.unscaledTime >= m_NextTelemetry)
-                m_GyroLabel.text = "Gyro: " + m_Ctx.Gyro.RelativeTiltDeg.ToString("F1", CultureInfo.InvariantCulture) + "°" + (m_Ctx.Gyro.HasSensor ? "" : "  (brak czujnika)");
-            if (TelemetryVisible && Time.unscaledTime >= m_NextTelemetry)
+            bool gyroTelemetry = gyro && m_Ctx.Gyro != null;
+            if ((gyroTelemetry || TelemetryVisible) && Time.unscaledTime >= m_NextTelemetry)
             {
                 m_NextTelemetry = Time.unscaledTime + 0.2f;
-                m_Telemetry.text = BuildTelemetry();
+                if (gyroTelemetry)
+                    m_GyroLabel.text = "Gyro: " + m_Ctx.Gyro.RelativeTiltDeg.ToString("F1", CultureInfo.InvariantCulture) + "°" + (m_Ctx.Gyro.HasSensor ? "" : "  (brak czujnika)");
+                if (TelemetryVisible)
+                    m_Telemetry.text = BuildTelemetry();
             }
             if (m_RecImage != null) m_RecImage.color = m_Ctx.Recorder != null && m_Ctx.Recorder.IsRecording ? new Color(0.55f, 0.16f, 0.14f, 0.95f) : k_Button;
             RefreshStage2(v);

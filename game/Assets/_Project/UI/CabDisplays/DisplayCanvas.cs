@@ -322,6 +322,37 @@ namespace Game.UI.CabDisplays
         public float Text(TextBuffer b, float x, float baseline, float size, Color32 c, Align align = Align.Left) =>
             Glyphs(null, b.Chars, b.Length, x, baseline, size, c, align);
 
+        /// <summary>
+        /// Text centred on (<paramref name="cx"/>, <paramref name="cy"/>) and rotated by <paramref name="angleDeg"/>
+        /// (design px, clockwise on screen) - street names along roads on the map. Glyph bitmaps are sampled rotated
+        /// (bilinear), so keep it for labels of 14 px and up.
+        /// </summary>
+        public void TextRotated(string s, float cx, float cy, float angleDeg, float size, Color32 c)
+        {
+            if (Font == null || string.IsNullOrEmpty(s)) return;
+            int px = PixelSize(size);
+            float inv = 1f / Scale;
+            float w = Measure(s, 0, s.Length, size, null);
+            float a = angleDeg * Mathf.Deg2Rad, ca = Mathf.Cos(a), sa = Mathf.Sin(a);
+            // Layout in a local frame (origin at the label centre, baseline 0.35 em below it), then rotate.
+            float pen = -w * 0.5f * Scale, by = 0.35f * size * Scale;
+            for (int i = 0; i < s.Length; i++)
+            {
+                char ch = s[i];
+                if (!Font.GetCharacterInfo(ch, out var ci, px, FontStyle.Normal)) continue;
+                if (ch != ' ')
+                {
+                    float x0 = (pen + ci.minX) * inv, x1 = (pen + ci.maxX) * inv;
+                    float y0 = (by - ci.maxY) * inv, y1 = (by - ci.minY) * inv;
+                    Vector2 R(float x, float y) => new Vector2(cx + x * ca - y * sa, cy + x * sa + y * ca);
+                    Quad(R(x0, y0), R(x1, y0), R(x1, y1), R(x0, y1), c,
+                        new Vector4(ci.uvTopLeft.x, ci.uvTopLeft.y, -1f, 0f), new Vector4(ci.uvTopRight.x, ci.uvTopRight.y, -1f, 0f),
+                        new Vector4(ci.uvBottomRight.x, ci.uvBottomRight.y, -1f, 0f), new Vector4(ci.uvBottomLeft.x, ci.uvBottomLeft.y, -1f, 0f));
+                }
+                pen += ci.advance;
+            }
+        }
+
         float Glyphs(string s, char[] buf, int len, float x, float baseline, float size, Color32 c, Align align)
         {
             if (Font == null || len == 0) return 0f;

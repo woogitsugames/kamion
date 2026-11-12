@@ -10,7 +10,7 @@ import numpy as np
 from mathutils import Matrix, Vector
 
 import geom as G
-from geom import EYE, WB, V, link, set_group
+from geom import EYE, WB, link, set_group
 import materials as M
 
 

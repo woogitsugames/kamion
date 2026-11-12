@@ -33,7 +33,6 @@ from pathlib import Path
 import numpy as np
 
 from roads import meshing as M
-from roads import standards as S
 
 REPO = Path(__file__).resolve().parents[3]
 KIND = "hero_bridge"

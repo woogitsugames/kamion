@@ -17,7 +17,6 @@ is the A2/Blender frame: Z up, +Y forward, origin = ground under the front axle)
 Exit code 1 on failure.
 """
 import json
-import math
 import os
 import sys
 

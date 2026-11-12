@@ -36,6 +36,11 @@ namespace PhysicsRunner.Sim
         public DriverSpec driver = new DriverSpec();
         public EventSpec[] events = Array.Empty<EventSpec>();
         public CheckSpec[] checks = Array.Empty<CheckSpec>();
+        /// <summary>Only for tests/physics/scenarios_expected_fail/: why this scenario is a known failure.</summary>
+        public string expectedFailReason = "";
+        /// <summary>Only for tests/physics/scenarios_expected_fail/: metrics that are expected to FAIL
+        /// (ExpectedFailureTests asserts exactly these fail and all other checks pass).</summary>
+        public string[] expectedFailMetrics = Array.Empty<string>();
         /// <summary>Set on expanded variants.</summary>
         public string variant = "";
         public string baseId = "";
@@ -164,6 +169,22 @@ namespace PhysicsRunner.Sim
         /// <summary>path: [x, z, vKmh] per point (sim frame), followed by the steer-axle centre (Stanley gain).</summary>
         public double[][] path;
         public double stanleyGain = 1.5;
+
+        // ---- touch: the game's touch steering chain (TouchSteeringWheel drag -> SteeringColumn) driven by a finger (ADR 0149).
+        /// <summary>touch: "replay" (fingerKeys) or "human" (delayed preview lane keeper moving the thumb, lane change per startDistance/length/offset).</summary>
+        public string touchMode = "human";
+        /// <summary>touch replay: [t s, finger x mm (right +), held 0/1] keys, linear between keys.</summary>
+        public double[][] fingerKeys;
+        /// <summary>touch human: perception-action delay [s] (human ~0.2-0.3 s).</summary>
+        public double humanDelayS = 0.25;
+        /// <summary>touch human: neuromuscular lag of the thumb [s].</summary>
+        public double neuroTauS = 0.1;
+        /// <summary>touch human: preview time [s] (aim point = v x preview ahead).</summary>
+        public double previewS = 1.0;
+        /// <summary>touch human: thumb travel per metre of previewed lateral error [mm/m].</summary>
+        public double fingerGainMmPerM = 2.0;
+        /// <summary>touch: override of SteeringFeel.dragLatAccelMatchKmh (-1 = shipped steering_feel.json, 0 = ADR 0135 curve).</summary>
+        public double touchLatAccelMatchKmh = -1;
     }
 
     public sealed class KeySpec

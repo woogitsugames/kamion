@@ -29,6 +29,8 @@ namespace Game.UI.Layout
         /// <summary>Pixels per canvas unit currently applied.</summary>
         public float PixelsPerUnit { get; private set; } = 1f;
         public RectTransform SafeArea => m_Safe;
+        /// <summary>Canvas size in pixels as last applied (the override in tests / captures).</summary>
+        public Vector2 PixelSize => m_AppliedPx;
 
         /// <summary>Adds the scaler to the canvas object and creates the stretched "SafeArea" child.</summary>
         public UiViewport(Canvas canvas)

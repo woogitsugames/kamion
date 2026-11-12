@@ -156,6 +156,7 @@ namespace Game.Editor.Audio
                 Pair("tyre_gravel_loop", "tyre_gravel_cab_loop"), Pair("tyre_grass_loop", "tyre_grass_cab_loop"),
             };
             lib.tyreSqueal = Pair("tyre_squeal_loop", "tyre_squeal_cab_loop");
+            lib.tyreScrub = Pair("tyre_scrub_loop", "tyre_scrub_cab_loop");
             lib.retarder = Pair("retarder_loop", "retarder_cab_loop");
             lib.compressor = Pair("compressor_loop", "compressor_cab_loop");
             lib.ambientBed = Pair("ambient_bed_loop", "ambient_bed_cab_loop");
@@ -188,6 +189,7 @@ namespace Game.Editor.Audio
             lib.elAmbientBed = lib.elTurboWhine = lib.elTurboRush = default;
             lib.elTyreDryCab = lib.elWindCab = lib.elGearWhineCab = null;
             lib.elTyreSurface = new VehicleAudioLibrary.PerspectivePair[6];
+            lib.elTyreScrub = lib.elTyreSqueal = default;
             if (!File.Exists(ElevenLabsManifestPath)) return 0;
             var man = JsonUtility.FromJson<Manifest>(File.ReadAllText(ElevenLabsManifestPath));
             string AssetPath(string repoRelative) => repoRelative.StartsWith("game/", StringComparison.Ordinal) ? repoRelative.Substring(5) : repoRelative;
@@ -268,6 +270,9 @@ namespace Game.Editor.Audio
                 default, Pair("el_tyre_wet_loop", "el_tyre_wet_cab_loop"), Pair("el_tyre_concrete_loop", "el_tyre_concrete_cab_loop"),
                 default, Pair("el_tyre_gravel_loop", "el_tyre_gravel_cab_loop"), default,
             };
+            // ADR 0145 REGEN-03: absent until el_fx.py found passing takes (fields stay invalid -> procedural loops)
+            lib.elTyreScrub = Pair("el_tyre_scrub_loop", "el_tyre_scrub_cab_loop");
+            lib.elTyreSqueal = Pair("el_tyre_squeal_loop", "el_tyre_squeal_cab_loop");
             Debug.Log($"[AUDIO] ElevenLabs set imported: {man.clips.Length} loops, {man.sfx.Length} sfx ({man.generator})");
             return man.clips.Length + man.sfx.Length;
         }

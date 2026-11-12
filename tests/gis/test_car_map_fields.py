@@ -1,7 +1,6 @@
 """Keep unrelated paint fields and repeat padding while replacing lower film."""
 from pathlib import Path
 import importlib
-import sys
 import numpy as np
 from PIL import Image
 

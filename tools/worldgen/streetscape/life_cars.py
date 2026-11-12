@@ -557,7 +557,7 @@ def _vehicle(d, paint, lod):
     # ---- lamps, grille, plates
     if lod < 2:
         ef = ix["H1"]                                            # lamp / grille band (LOD1: whole front face)
-        za, zb2 = P[ef][1], P[ef + 1][1]
+        za, _zb2 = P[ef][1], P[ef + 1][1]
         zl0 = za - 0.035
         zl1 = zl0 - 0.105
         er = ix["R1"]                                            # tail face
@@ -722,7 +722,7 @@ class _Shell:
         self.seg = {}                                          # control name -> dense edge index of its straight part
         self.emat = []
         for i in range(n - 1):
-            (ka, pa), (kb, pb) = tag[i], tag[i + 1]
+            (ka, _pa), (kb, _pb) = tag[i], tag[i + 1]
             if ka != kb:
                 self.seg[names[ka]] = i
                 self.emat.append(C[ka]["mat"])
@@ -1008,7 +1008,7 @@ def _vehicle2(d, paint, lod, steel=False, style=None):
     m = Mesh()
     sh = _Shell(d, lod)
     L, hw, H = d["L"], d["W"] / 2, d["H"]
-    sill, belt, r = d["sill"], d["belt"], d["r"]
+    sill, _belt, r = d["sill"], d["belt"], d["r"]
     cargo = d.get("cargo", False)
     clad = d.get("clad", False)
     n = len(sh.P)
@@ -1783,7 +1783,7 @@ def _vehicle_far(d, paint, steel=False):
     C = {c["n"]: c for c in sh.C}
     idx = [sh.mid[n_] for n_ in keep]
     P = [sh.P[i] for i in idx]                               # top line (y, z)
-    S = [sh.S[i] for i in idx]                               # side line
+    _S = [sh.S[i] for i in idx]                               # side line
     X = [float(sh.Sx[i]) for i in idx]
     for k in range(len(keep) - 1):
         mat = matname[C[keep[k]]["mat"]]

@@ -1,6 +1,5 @@
 """Actual gate decal footprint, source preservation and pair-atomicity guards."""
 from pathlib import Path
-import importlib.util
 import sys
 from types import SimpleNamespace
 import numpy as np

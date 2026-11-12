@@ -149,7 +149,6 @@ def _right_lane_lat(c, sec, s, trav, lane=None):
 def lane_route(net, path_edges, node_xy, step=2.0):
     """path_edges: [(edge id, from node, to node)] along the path; node_xy: {node id: local (E, N)}.
     Returns (points (n, 2) every `step` m, edge id per point, half carriageway width per point)."""
-    secs = net.sec_list
     pieces = []
     spans = []
     for eid, u, v in path_edges:

@@ -21,6 +21,14 @@ namespace Game.UI.CabDisplays
             return this;
         }
 
+        /// <summary>First <paramref name="count"/> characters of <paramref name="s"/>.</summary>
+        public TextBuffer Append(string s, int count)
+        {
+            if (s == null) return this;
+            for (int i = 0; i < count && i < s.Length; i++) Append(s[i]);
+            return this;
+        }
+
         public TextBuffer Append(string s)
         {
             if (s == null) return this;
