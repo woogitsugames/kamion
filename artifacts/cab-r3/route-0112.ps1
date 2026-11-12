@@ -1,7 +1,7 @@
 ﻿param([ValidatePattern('^(baseline|result-0112(?:-[A-Za-z0-9-]+)?)$')][string]$Stage='baseline')
 $ErrorActionPreference='Stop'
 Set-Location (Resolve-Path "$PSScriptRoot/../..")
-if ((git branch --show-current) -ne 'gpt-cab-r3') { throw 'Tylko runda cab r1.' }
+if ((git branch --show-current) -ne 'gpt-cab-r3') { throw 'Tylko runda cab r3.' }
 $slot='C:/Users/matma/Documents/Claude/kamion/scripts/unity-slot.ps1'
 pwsh $slot -Acquire -Owner gpt-cab -PollSeconds 5 -StaleHours 1000000
 if ($LASTEXITCODE -ne 0) { throw 'Brak slotu Unity.' }
@@ -14,5 +14,6 @@ if ($code -ne 0) { throw "Błąd pełnej macierzy kamer: $code" }
 Add-Content artifacts/cab-r3/STATUS.md "Zapisano ${Stage}: pełna macierz Low overcast z kamerami Gate3, osobne draws instancji w stats.txt. Następny krok: porównać pełne stats baseline/result-0112 i obejrzeć arkusze."
 git add -f artifacts/cab-r3/STATUS.md
 git commit -m "wip(cab): capture $Stage complete Low route camera budget"
+
 
 

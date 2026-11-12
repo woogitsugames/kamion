@@ -10,3 +10,4 @@ Następny krok: świeże baseline Low/High clear/overcast/dusk, inspekcja nocna 
 Przygotowano wrappery r3: baseline obejmuje sześć stanów (Low/High × clear/overcast/dusk), siedem kamer i sześć natywnych RT w każdym stanie. Pojedyncze własne Unity; produkcyjne shadery i materiały nadal bez zmian r3. Kopia wrappera heavy zachowuje mutex.
 Zapisano baseline Low clear, siedem kamer i sześć natywnych RT z identyfikatorem wnętrza. Następny krok: kontynuować macierz lub porównać PNG.
 Zapisano baseline Low overcast, siedem kamer i sześć natywnych RT z identyfikatorem wnętrza. Następny krok: kontynuować macierz lub porównać PNG.
+Porównywarka r3 uwzględnia także dusk i oddzielne statystyki regular/instanced. Wrapper BuildBatch/InstallBatch ograniczony do gałęzi r3. Trwa baseline, brak zmian kodu gry w czasie jego zapisu.
