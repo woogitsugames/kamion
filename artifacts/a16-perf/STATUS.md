@@ -35,3 +35,11 @@
   prop shadows (ps:all) 0.00/+0.04, vehicle shadows -0.46/-0.11, vehicle cull 300->150 m +0.35/+2.41. => koszt = auta osobowe <150 m
   (LOD0 12 / LOD1 11 / LOD2 7 submeshy na prototyp, 24 prototypy). Cienie propsów nic nie kosztują.
   NASTĘPNY KROK: diagA3: contact patch / LOD aut / mirrorlow (klucze w run-diag1.ps1).
+- 19:08 diagA3: cull 100 +0.36/+2.95, LOD aut x0.5 +0.22/+0.66, contact +0.13/+0.41, auta w lusterkach +0.06/+0.86, mirrorlow -0.26/+0.90.
+  Uwaga: GPU p50 dziś ~24.5 (diagA 17:56 ~30) przy tej samej konfiguracji — dryf termiczny/DVFS; porównania tylko przeplatane w 1 APK.
+  Zmiana Low: vehicleCullM 150 m (tier field, rq_vehcull override do przeplatanego before/after). Build r2a w kolejce.
+  NASTĘPNY KROK: `pwsh artifacts/a16-perf/phone-diag.ps1 -Apk <r2a apk> -OutTag r2a -Segment A -Runs "A_before1=rq_vehcull=300;A_after1=;A_before2=rq_vehcull=300;A_after2="`
+- 19:23 ODKRYCIE: od 18:32 A16 (leżący płasko) uruchamiał grę w PORTRECIE 1080x2340 (ADR 0135 AllowAuto) — diagA2/diagA3/baseA w portrecie.
+  Obejście: rq_landscape=1 (DiagLandscape) w phone-diag.ps1. r2b (landscape, capped 30, APK 23dc12142c, przeplatane):
+  before (rq_vehcull=300) GPU p95 35.70/35.93, after (Low vehicleCullM 150) 34.53/34.47 => -1.3 ms; p99 frame 50 bez zmian; >40: 26/40 -> 26/31.
+  NASTĘPNY KROK: landscape uncapped A/B: run-diag1 -Segment A -OutTag diagA4 -Only ab_cc,ab_grime,ab_shadows,ab_shd25,ab_shr512,ab_mirrors,ab_mirres,ab_vc100,ab_veh

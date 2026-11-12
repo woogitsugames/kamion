@@ -164,7 +164,6 @@ def chain_edge_profiles(ctx: Ctx, c, s_from, s_to, res_pref=0.08, step=PROFILE_S
             continue
         dist = I._dist(lab, model["centers"])
         nonroad = ((dist >= model["thr"]) | green).astype(np.float32)
-        paint = ((lab[..., 0] > model["L_med"] + I.PAINT_DL)).astype(np.float32)
         for si in st:
             hw = float(c.hw_at(si))
             p0 = c.line.point(si)

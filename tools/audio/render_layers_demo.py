@@ -129,7 +129,6 @@ class Layers:
 
     def frame(self, t, dt, i0, tel):
         cab = self.p == "cab"
-        ge = 1.0 if cab else 1.0
         v = tel["speed"] / 3.6
         surf = int(step_seg(t, SURFACE))
         k = 1 - math.exp(-dt / 0.15)

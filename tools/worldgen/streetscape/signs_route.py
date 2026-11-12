@@ -319,7 +319,6 @@ def route_audit(items, route_P, net, juncs, report):
     if route_P is None or len(route_P) < 2:
         report["route_signs"] = []
         return
-    import shapely
     from shapely.geometry import LineString, Point
     line = LineString(route_P)
     out = []

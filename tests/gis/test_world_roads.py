@@ -89,7 +89,6 @@ def test_junction_seams_are_watertight(world):
 def test_terrain_chunk_borders_match(world):
     """Neighbouring terrain chunks (LOD0) share identical border vertices (no cracks between chunks)."""
     from terrain_mesh import chunks as CH
-    w = world["w"]
     zc = np.load(world["out"] / "terrain_conformed.npy")
     # the chunk builder samples the same global grid: border column of chunk i == first column of i+1
     per = CH.CHUNK_M

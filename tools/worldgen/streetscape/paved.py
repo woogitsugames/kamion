@@ -21,7 +21,7 @@ import math
 import numpy as np
 import shapely
 from scipy import ndimage
-from shapely.geometry import Polygon, shape
+from shapely.geometry import Polygon
 
 from roads import standards as S
 

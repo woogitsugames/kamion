@@ -4,7 +4,6 @@ removal of markings, yard stand lines and gullies, resurfaced asphalt."""
 from __future__ import annotations
 
 import json
-import math
 
 import numpy as np
 import pytest

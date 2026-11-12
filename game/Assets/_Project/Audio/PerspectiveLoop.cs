@@ -90,6 +90,16 @@ namespace TruckSim.Audio
             s.time = Random.value * clip.length * 0.99f;
         }
 
+        /// <summary>Jumps both sources to one random point of their loop (call when a layer starts from silence, so a short
+        /// recording does not open the same way every time; ADR 0145). No allocation.</summary>
+        public void Rephase()
+        {
+            if (!Valid) return;
+            float r = Random.value * 0.99f;
+            if (m_Ext.clip != null) m_Ext.time = r * m_Ext.clip.length;
+            if (m_Cab.clip != null) m_Cab.time = ((r + 0.37f) % 0.99f) * m_Cab.clip.length;
+        }
+
         /// <param name="gain">linear gain at the exterior (0 = silent).</param>
         /// <param name="pitch">playback pitch.</param>
         /// <param name="interior">0 = outside, 1 = cab.</param>

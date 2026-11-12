@@ -27,7 +27,6 @@ import hashlib
 import numpy as np
 import shapely
 from scipy import ndimage
-from shapely.geometry import Polygon
 
 from . import paved as PV
 from .foliage_policy import metric_patch_field, osm_tree_species

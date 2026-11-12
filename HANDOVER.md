@@ -1,5 +1,20 @@
 # HANDOVER — kamion, SESJA 14 (start 2026-11-12 18:22, nowe konto)
 
+## KONIEC S14 (20:00, limit 5 h 79 %, tydzień 63 %, Fable ~90 %) — prompt dla s15: `docs/owner/START-PROMPT-S15.md`
+- **Właściciel 19:5x: nie uruchamiać nowych agentów — dać działającym skończyć.** Działają (każdy zapisuje `artifacts/live/<gałąź>.md` po każdym kroku):
+| ADR | zadanie | model | worktree | stan 19:5x |
+|---|---|---|---|---|
+| 0132 | zabudowa r9 r4 (budżet High: decyzja B) | Fable | `buildings-r9` | r4_chain w tle |
+| 0136 r2 | GPU A16 G3-A (−1,3 ms, brakuje ~1,2) + weryfikacja 0147 na A16 | Opus | `a16-perf` | diagA4 |
+| 0141 | krawędź/tło far_skyline | Fable | `edge-r6c` | regeneracja po merge main, render merged |
+| 0144 | węzły r7 (W-beam, filary, żwir, F-10 482392) | Fable | `junctions-r7` | build r7a |
+| 0146 | Putry/Andersa (latarnie, pobocze, mur 810896, portal Andersa, gzyms) | Fable | `putry-andersa` | build_world w kolejce heavy |
+- **20:1x: SCALONE Mistral r2 #6–#14** (`fc500083`, merge `mistral-r2-int`; PR-y zamknięte jako scalone; 7 porażek tests/gis = te same na main, 0 nowych; po scaleniu: `fidelity/run.py` na main w integracji). Worktree `mistral-r2-int` do usunięcia (`scripts/cleanup-disk.ps1`).
+- **Mistral runda 3 + M9: PR #15–#20 gotowe, NIEZRECENZOWANE** (właściciel: Mistral skończył) → s15.
+- Dysk: C: 0,9 GB → 446 GB wolnego; ~600 GB nierozpoznane + artifacts 226 GB, worktree 293 GB, Temp 84 GB, uv 45 GB → **sesja GPT: `docs/owner/GPT-DISK-CLEANUP-PROMPT.md`** (raport `docs/owner/DISK-REPORT-2026-11-12.md`). Wcześniej ~409 GB wolnego po sprzątaniu (`artifacts/lead-s14/cleanup-disk2.log`); narzędzie `scripts/cleanup-disk.ps1`.
+- APK: opony `artifacts/apk/kamion-0.1.0-139dc835cf.apk`; orientacja+opony `artifacts/orientation/kamion-0.1.0-387a492d24.apk` (test Fold właściciela).
+- main wymaga JEDNEJ regeneracji (0123, 0128, 0129, 0133, 0139, 0143, CRLF) + ImpostorTrimBake (0136).
+
 ## Stan na żywo (s14)
 - **Najświeższy stan agentów: `artifacts/live/<gałąź>.md`** (każdy agent nadpisuje po każdym kroku: sha, zadania w tle, NASTĘPNY KROK, gotowość). Polecenie właściciela 18:3x: HANDOVER i pliki live aktualizowane na bieżąco, aby inna sesja mogła w każdej chwili przejąć pracę.
 - 18:22 start. Usage: 5 h 0 % (reset 23:19), tydzień 50 %, **Fable 75 %** (reset 15.11 11:59). Właściciel: wszystkie 5 zadań świata zostają na Fable. Triggery CronCreate (tylko w sesji lidera): **:17** agenci/scalenia/HANDOVER, **:47** PR-y Mistrala, **:07** GPT.
@@ -11,7 +26,6 @@
 | zabudowa r9 wysoka zieleń | 0132 | `buildings-r9` | `artifacts/live/buildings-r9.md` | r3: pytest gis 2 czerwone (estymata kadru High > 2 M: kit posesji High 52→94 k) → **decyzja lidera 19:20: wariant B** (r4: pełne bryły roślin ≤ 12 m od frontu, próg bez zmian) |
 | krawędź mapy / tło | 0141 | `edge-r6c` | `artifacts/live/edge-r6c.md` | pary after → merge main → testy |
 | **węzły r7: kolizja W-beam/poręcz (P1-1), filary z danych (P1-2), żwir nasypu/nosa, spód pomostu** | 0144 | `junctions-r7` (Fable) | `artifacts/live/junctions-r7.md` | start 18:37 |
-| **dźwięk opon: szuranie w ciasnym skręcie + pisk (właściciel: pisk zły; był syntezą 930 Hz)** | 0145 | `tyre-scrub` (Opus audio) | `artifacts/live/tyre-scrub.md` | start 18:59; nagrania: `docs/owner/ELEVENLABS-REGEN-03.md` (właściciel generuje) |
 | **świat Putry/Andersa: wysokość latarni Y, prawe pobocze 494288, mur oporowy 810896** | 0146 | `putry-andersa` (Fable) | `artifacts/live/putry-andersa.md` | start 19:18 |
 | **A16 GPU runda 2: props G3-A wg prefiksu** (jedyny agent telefonowy) | 0136 r2 | `a16-perf` (Opus) | `artifacts/live/a16-perf.md` | start 18:4x |
 - Scalone wcześniej (s13): 0129, 0136, 0140, 0142 — patrz niżej. **main wymaga regeneracji** (0129, 0133) + `ImpostorTrimBake.RunBatch` (0136) w jednej integracji.
@@ -24,7 +38,10 @@
 - **Mistral r2 zrecenzowane** (`docs/reports/REVIEW-2026-11-12-s14-mistral-r2.md`, komentarze PL na #6–#14): 3 SCAL, 6 SCAL po drobnych poprawkach, 0 NIE. Agent buduje gałąź `mistral-r2-int` (merge --no-ff PR-ów + poprawki lidera, live `artifacts/live/mistral-r2-int.md`) → lider scala do main. M9 (znaki pionowe) bez PR — właściciel wznawia tylko sesję M9. Osobne zadania z recenzji: oktawa comb_estimate (audio), źródła R13/AMT (fizyka), duplikat `concrete_pole` w materials.py (świat, regeneracja), fidelity run po #14.
 - **19:18: SCALONE 0143 pozy SBS r3** (494288 prosta, 482392, 320326 promowana z 0128, 810896 przestawiona ale świat zły — poza D51 do 0146; 837235 bez zmian: różnica 2019 vs 2024). Błędy świata z 0143 → 0144 (tablica F-10 w 482392, filary) i 0146. Po integracji: przegrade `sbs_recognition.json` dla 494288/482392/320326. Mistral runda 3 (M16–M20) **zlecona przez właściciela** (PR-y `mistral/16..20-*` → recenzja w triggerze :47): `docs/owner/MISTRAL-TASKS-3.md`; M9 wznawiana.
 - **19:20: SCALONE 0139 g3b-r2** `97996ef6` (critic SCAL warunkowo, `REVIEW-…-s14-0139.md`: **G3-B 5/10 RECOGNISABLE, 5 PARTIAL** — 297817 obniżone: kominy EC niewidoczne na Low → 0141; tablice portalu Andersa ~0,6 m za wysoko, gzyms czerwony, dwuteowniki → 0146; pozy 810525/810896 złe → po 0146). Worktree g3b-r2 usunięty.
-- **Ostatni przydzielony ADR: 0146.**
+- **19:4x: SCALONE 0145 tyre-scrub** (szuranie osi naczepy w ciasnym skręcie + pisk tylko przy poślizgu 18–32 km/h; nagrania REGEN-03; PlayMode 27/27, 0 B GC). A/B wysłane właścicielowi (`artifacts/tyre-scrub/ab/`). **APK z oponami w kolejce:** `artifacts/lead-s14/apk-tyres.sh` (log `apk-tyres.log`) czeka na zdjęcie PHONE_RUN (0136 mierzy A16), potem slot Unity → build. `.gitignore`: `art-source/audio/elevenlabs/`.
+- **19:30 trigger:** 5 h **63 %** (reset 23:19), tydzień 60 %, **Fable 90 %** (reset 15.11 11:59) — Fable prawie wyczerpany: 4 agentów Fable (0132 r4, 0141, 0144, 0146); kolejne zadania świata na Opus. 0136 r2: Low vehicleCullM 150 → GPU p95 −1,3 ms (34,5), brakuje ~1,2 ms; diagA4 w toku. Mistral r2: gałąź `mistral-r2-int` 9/9 + poprawki, czeka na pełne tests/gis. 0141: kominy EC widoczne na Low w 297817/150280 (stare pozy), potwierdzenie na pozach 0143 w toku.
+- **19:5x: SCALONE 0147 orientacja** `fee0d940` (wydłużone okno w portrecie → wymuszony landscape, potem L/R; Fold ≤1,25 jak r3; EditMode 24/24). APK gałęzi `artifacts/orientation/kamion-0.1.0-387a492d24.apk` → **test Fold właściciela** (4 punkty w ADR 0147) + weryfikacja A16 przez 0136. **APK z oponami 0145: `artifacts/apk/kamion-0.1.0-139dc835cf.apk`.** **Dysk C: 0,9 GB wolnego (19:45)** — przyczyna ~45 worktree × Library ~9 GB; sprzątanie `artifacts/lead-s14/cleanup-disk.ps1` (log `cleanup-disk2.log`): scalone worktree usuwane, GPT tylko Library. G: (Google Drive) pokazuje wolne miejsce C:.
+- **Ostatni przydzielony ADR: 0147.**
 
 ---
 # HANDOVER — kamion, SESJA 13 (start 2026-11-12 16:41, nowe konto)

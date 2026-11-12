@@ -9,7 +9,7 @@ from __future__ import annotations
 import numpy as np
 
 import dsp
-from dsp import FS, bp, chain, highshelf, hp, lp, peak, periodic_sosfilt
+from dsp import FS, bp, chain, hp, lp, peak, periodic_sosfilt
 from scipy import signal
 
 TURBO_REF_HZ = 3200.0  # whistle centre frequency at runtime pitch 1.0

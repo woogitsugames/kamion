@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="24" result="Passed" total="24" passed="24" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-11-12 18:44:03Z" end-time="2026-11-12 18:44:04Z" duration="0,0834915">
+  <test-suite type="TestSuite" id="1000" name="Kamion" fullname="Kamion" runstate="Runnable" testcasecount="416" result="Passed" start-time="2026-11-12 18:44:03Z" end-time="2026-11-12 18:44:04Z" duration="0.083492" total="24" passed="24" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1517" name="Game.Tests.EditMode.dll" fullname="C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/orientation/game/Library/ScriptAssemblies/Game.Tests.EditMode.dll" runstate="Runnable" testcasecount="416" result="Passed" start-time="2026-11-12 18:44:03Z" end-time="2026-11-12 18:44:04Z" duration="0.073849" total="24" passed="24" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="81528" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1518" name="Game" fullname="Game" runstate="Runnable" testcasecount="416" result="Passed" start-time="2026-11-12 18:44:03Z" end-time="2026-11-12 18:44:04Z" duration="0.068278" total="24" passed="24" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1519" name="Tests" fullname="Game.Tests" runstate="Runnable" testcasecount="416" result="Passed" start-time="2026-11-12 18:44:03Z" end-time="2026-11-12 18:44:04Z" duration="0.064487" total="24" passed="24" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1199" name="OrientationPhoneTests" fullname="Game.Tests.OrientationPhoneTests" classname="Game.Tests.OrientationPhoneTests" runstate="Runnable" testcasecount="8" result="Passed" start-time="2026-11-12 18:44:03Z" end-time="2026-11-12 18:44:03Z" duration="0.035749" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1206" name="Fold_Unfold_Fold_NoRestart_InnerKeepsHolding_CoverForcedLandscape" fullname="Game.Tests.OrientationPhoneTests.Fold_Unfold_Fold_NoRestart_InnerKeepsHolding_CoverForcedLandscape" methodname="Fold_Unfold_Fold_NoRestart_InnerKeepsHolding_CoverForcedLandscape" classname="Game.Tests.OrientationPhoneTests" runstate="Runnable" seed="1079331028" result="Passed" start-time="2026-11-12 18:44:03Z" end-time="2026-11-12 18:44:03Z" duration="0.012770" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1205" name="Phone_ForcedThenGyro_LocksAfterSettle" fullname="Game.Tests.OrientationPhoneTests.Phone_ForcedThenGyro_LocksAfterSettle" methodname="Phone_ForcedThenGyro_LocksAfterSettle" classname="Game.Tests.OrientationPhoneTests" runstate="Runnable" seed="1265173588" result="Passed" start-time="2026-11-12 18:44:03Z" end-time="2026-11-12 18:44:03Z" duration="0.000294" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1202" name="Phone_HeldInLandscapeRight_ForcedToThatLandscape" fullname="Game.Tests.OrientationPhoneTests.Phone_HeldInLandscapeRight_ForcedToThatLandscape" methodname="Phone_HeldInLandscapeRight_ForcedToThatLandscape" classname="Game.Tests.OrientationPhoneTests" runstate="Runnable" seed="2093219171" result="Passed" start-time="2026-11-12 18:44:03Z" end-time="2026-11-12 18:44:03Z" duration="0.000172" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1203" name="Phone_LaunchedLandscape_AllowAutoAtOnce_AsBefore" fullname="Game.Tests.OrientationPhoneTests.Phone_LaunchedLandscape_AllowAutoAtOnce_AsBefore" methodname="Phone_LaunchedLandscape_AllowAutoAtOnce_AsBefore" classname="Game.Tests.OrientationPhoneTests" runstate="Runnable" seed="1567018231" result="Passed" start-time="2026-11-12 18:44:03Z" end-time="2026-11-12 18:44:03Z" duration="0.000090" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1201" name="Phone_LaunchedPortraitFlat_ForcedToLandscape_ThenLR" fullname="Game.Tests.OrientationPhoneTests.Phone_LaunchedPortraitFlat_ForcedToLandscape_ThenLR" methodname="Phone_LaunchedPortraitFlat_ForcedToLandscape_ThenLR" classname="Game.Tests.OrientationPhoneTests" runstate="Runnable" seed="1246895260" result="Passed" start-time="2026-11-12 18:44:03Z" end-time="2026-11-12 18:44:03Z" duration="0.002502" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1204" name="Phone_OrientationRequestIgnored_NoLoop" fullname="Game.Tests.OrientationPhoneTests.Phone_OrientationRequestIgnored_NoLoop" methodname="Phone_OrientationRequestIgnored_NoLoop" classname="Game.Tests.OrientationPhoneTests" runstate="Runnable" seed="1710979952" result="Passed" start-time="2026-11-12 18:44:03Z" end-time="2026-11-12 18:44:03Z" duration="0.001209" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1200" name="Policy_ElongatedLandscapeOnly_NearSquareAll" fullname="Game.Tests.OrientationPhoneTests.Policy_ElongatedLandscapeOnly_NearSquareAll" methodname="Policy_ElongatedLandscapeOnly_NearSquareAll" classname="Game.Tests.OrientationPhoneTests" runstate="Runnable" seed="779309553" result="Passed" start-time="2026-11-12 18:44:03Z" end-time="2026-11-12 18:44:03Z" duration="0.002540" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1207" name="Step_ZeroGcPerFrame" fullname="Game.Tests.OrientationPhoneTests.Step_ZeroGcPerFrame" methodname="Step_ZeroGcPerFrame" classname="Game.Tests.OrientationPhoneTests" runstate="Runnable" seed="606548395" result="Passed" start-time="2026-11-12 18:44:03Z" end-time="2026-11-12 18:44:03Z" duration="0.000948" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1254" name="SteerFoldTests" fullname="Game.Tests.SteerFoldTests" classname="Game.Tests.SteerFoldTests" runstate="Runnable" testcasecount="16" result="Passed" start-time="2026-11-12 18:44:03Z" end-time="2026-11-12 18:44:04Z" duration="0.019610" total="16" passed="16" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1264" name="CabFov_PortraitKeepsHorizontalField_LandscapeUnchanged" fullname="Game.Tests.SteerFoldTests.CabFov_PortraitKeepsHorizontalField_LandscapeUnchanged" methodname="CabFov_PortraitKeepsHorizontalField_LandscapeUnchanged" classname="Game.Tests.SteerFoldTests" runstate="Runnable" seed="613114951" result="Passed" start-time="2026-11-12 18:44:04Z" end-time="2026-11-12 18:44:04Z" duration="0.001366" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1260" name="ColumnMarker_ShowsCabWheel_WhileHeld_AndEqualsDrawingWhenSettled" fullname="Game.Tests.SteerFoldTests.ColumnMarker_ShowsCabWheel_WhileHeld_AndEqualsDrawingWhenSettled" methodname="ColumnMarker_ShowsCabWheel_WhileHeld_AndEqualsDrawingWhenSettled" classname="Game.Tests.SteerFoldTests" runstate="Runnable" seed="707613319" result="Passed" start-time="2026-11-12 18:44:04Z" end-time="2026-11-12 18:44:04Z" duration="0.002253" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1266" name="Dpi_Sanitised_PanelPreferredWhenPlausible" fullname="Game.Tests.SteerFoldTests.Dpi_Sanitised_PanelPreferredWhenPlausible" methodname="Dpi_Sanitised_PanelPreferredWhenPlausible" classname="Game.Tests.SteerFoldTests" runstate="Runnable" seed="179070043" result="Passed" start-time="2026-11-12 18:44:04Z" end-time="2026-11-12 18:44:04Z" duration="0.000413" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1257" name="Drag_AtSpeed_FiveCabDegreesPerMillimetre" fullname="Game.Tests.SteerFoldTests.Drag_AtSpeed_FiveCabDegreesPerMillimetre" methodname="Drag_AtSpeed_FiveCabDegreesPerMillimetre" classname="Game.Tests.SteerFoldTests" runstate="Runnable" seed="1590647674" result="Passed" start-time="2026-11-12 18:44:04Z" end-time="2026-11-12 18:44:04Z" duration="0.000246" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1256" name="Drag_FullLock_Within25mm_WhenManoeuvring" fullname="Game.Tests.SteerFoldTests.Drag_FullLock_Within25mm_WhenManoeuvring" methodname="Drag_FullLock_Within25mm_WhenManoeuvring" classname="Game.Tests.SteerFoldTests" runstate="Runnable" seed="421710029" result="Passed" start-time="2026-11-12 18:44:04Z" end-time="2026-11-12 18:44:04Z" duration="0.000127" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1259" name="Drag_PastTheStop_ReversesImmediately" fullname="Game.Tests.SteerFoldTests.Drag_PastTheStop_ReversesImmediately" methodname="Drag_PastTheStop_ReversesImmediately" classname="Game.Tests.SteerFoldTests" runstate="Runnable" seed="1053771789" result="Passed" start-time="2026-11-12 18:44:04Z" end-time="2026-11-12 18:44:04Z" duration="0.000144" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1255" name="Drag_RightSlideTurnsRight_LeftSlideTurnsLeft_ThroughColumnAndPhysics_AllSpeeds" fullname="Game.Tests.SteerFoldTests.Drag_RightSlideTurnsRight_LeftSlideTurnsLeft_ThroughColumnAndPhysics_AllSpeeds" methodname="Drag_RightSlideTurnsRight_LeftSlideTurnsLeft_ThroughColumnAndPhysics_AllSpeeds" classname="Game.Tests.SteerFoldTests" runstate="Runnable" seed="1825932359" result="Passed" start-time="2026-11-12 18:44:04Z" end-time="2026-11-12 18:44:04Z" duration="0.002145" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1265" name="Drag_SimRange_ScaledTravel_About46mm" fullname="Game.Tests.SteerFoldTests.Drag_SimRange_ScaledTravel_About46mm" methodname="Drag_SimRange_ScaledTravel_About46mm" classname="Game.Tests.SteerFoldTests" runstate="Runnable" seed="706074354" result="Passed" start-time="2026-11-12 18:44:04Z" end-time="2026-11-12 18:44:04Z" duration="0.000429" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1258" name="Drag_TouchDownAnywhere_NoJump_VerticalMotionIgnored" fullname="Game.Tests.SteerFoldTests.Drag_TouchDownAnywhere_NoJump_VerticalMotionIgnored" methodname="Drag_TouchDownAnywhere_NoJump_VerticalMotionIgnored" classname="Game.Tests.SteerFoldTests" runstate="Runnable" seed="1395112351" result="Passed" start-time="2026-11-12 18:44:04Z" end-time="2026-11-12 18:44:04Z" duration="0.000448" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1270" name="Evidence_ReachAndLag_Csv" fullname="Game.Tests.SteerFoldTests.Evidence_ReachAndLag_Csv" methodname="Evidence_ReachAndLag_Csv" classname="Game.Tests.SteerFoldTests" runstate="Runnable" seed="364839089" result="Passed" start-time="2026-11-12 18:44:04Z" end-time="2026-11-12 18:44:04Z" duration="0.002688" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[TEST] ADR 0135 reach/lag
+kmh,before_reach_lock_frac,after_reach_lock_frac,before_t90_full_lock_s,after_t90_full_lock_s,before_cab_deg_per_mm_at_rim_s24,after_cab_deg_per_mm
+5,0.44,1.00,1.46,1.14,19.2,32.0
+10,0.44,1.00,1.55,1.25,19.2,32.0
+20,0.44,1.00,1.90,1.65,19.2,32.0
+40,0.30,0.58,2.92,2.92,12.8,18.5
+60,0.15,0.16,4.11,4.11,6.5,5.0
+80,0.15,0.16,5.56,5.56,6.5,5.0
+
+]]></output>
+            </test-case>
+            <test-case id="1263" name="Orientation_NearSquareFollowsHolding_ElongatedLandscapeOnly" fullname="Game.Tests.SteerFoldTests.Orientation_NearSquareFollowsHolding_ElongatedLandscapeOnly" methodname="Orientation_NearSquareFollowsHolding_ElongatedLandscapeOnly" classname="Game.Tests.SteerFoldTests" runstate="Runnable" seed="238060714" result="Passed" start-time="2026-11-12 18:44:04Z" end-time="2026-11-12 18:44:04Z" duration="0.001212" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1268" name="OrientationLock_FoldUnfold_PhoneLandscape_GyroLock" fullname="Game.Tests.SteerFoldTests.OrientationLock_FoldUnfold_PhoneLandscape_GyroLock" methodname="OrientationLock_FoldUnfold_PhoneLandscape_GyroLock" classname="Game.Tests.SteerFoldTests" runstate="Runnable" seed="843119345" result="Passed" start-time="2026-11-12 18:44:04Z" end-time="2026-11-12 18:44:04Z" duration="0.000365" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1267" name="OrientationLock_NearSquare_KeepsLaunchOrientation_NeverRotates" fullname="Game.Tests.SteerFoldTests.OrientationLock_NearSquare_KeepsLaunchOrientation_NeverRotates" methodname="OrientationLock_NearSquare_KeepsLaunchOrientation_NeverRotates" classname="Game.Tests.SteerFoldTests" runstate="Runnable" seed="136210461" result="Passed" start-time="2026-11-12 18:44:04Z" end-time="2026-11-12 18:44:04Z" duration="0.000431" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1269" name="OrientationLock_PhoneWithGyro_LocksAfterSettle" fullname="Game.Tests.SteerFoldTests.OrientationLock_PhoneWithGyro_LocksAfterSettle" methodname="OrientationLock_PhoneWithGyro_LocksAfterSettle" classname="Game.Tests.SteerFoldTests" runstate="Runnable" seed="615877122" result="Passed" start-time="2026-11-12 18:44:04Z" end-time="2026-11-12 18:44:04Z" duration="0.000154" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1261" name="PixelsToMm_UsesDpi_WithFallback" fullname="Game.Tests.SteerFoldTests.PixelsToMm_UsesDpi_WithFallback" methodname="PixelsToMm_UsesDpi_WithFallback" classname="Game.Tests.SteerFoldTests" runstate="Runnable" seed="1616722416" result="Passed" start-time="2026-11-12 18:44:04Z" end-time="2026-11-12 18:44:04Z" duration="0.000159" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1262" name="Settings_Schema4_MigratesV3ToDrag_KeepsExplicitRotate_AppliesGesture" fullname="Game.Tests.SteerFoldTests.Settings_Schema4_MigratesV3ToDrag_KeepsExplicitRotate_AppliesGesture" methodname="Settings_Schema4_MigratesV3ToDrag_KeepsExplicitRotate_AppliesGesture" classname="Game.Tests.SteerFoldTests" runstate="Runnable" seed="748426192" result="Passed" start-time="2026-11-12 18:44:04Z" end-time="2026-11-12 18:44:04Z" duration="0.001632" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[Saving results to: C:/Users/matma/AppData/LocalLow/woogitsugames/Kamion\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

@@ -243,10 +243,12 @@ namespace Game.Tests
         {
             var l = new ScreenOrientationLock();
             Assert.AreEqual(OrientationCommand.Lock, l.Step(0f, 1968, 2184, ScreenOrientation.Portrait, false));
-            // Fold -> cover screen (elongated): landscape only.
-            Assert.AreEqual(OrientationCommand.AllowAuto, l.Step(10f, 1080, 2520, ScreenOrientation.Portrait, false));
+            // Fold -> cover screen (elongated) held upright: forced to landscape (ADR 0147), then L/R auto-rotation.
+            Assert.AreEqual(OrientationCommand.Lock, l.Step(10f, 1080, 2520, ScreenOrientation.Portrait, false));
+            Assert.AreEqual(ScreenOrientation.LandscapeLeft, l.LockTo);
             Assert.IsFalse(l.Allowed.Portrait);
-            Assert.AreEqual(OrientationCommand.None, l.Step(10.5f, 2520, 1080, ScreenOrientation.LandscapeLeft, false));
+            Assert.AreEqual(OrientationCommand.AllowAuto, l.Step(10.5f, 2520, 1080, ScreenOrientation.LandscapeLeft, false));
+            Assert.AreEqual(OrientationCommand.None, l.Step(11f, 2520, 1080, ScreenOrientation.LandscapeLeft, false));
             Assert.AreEqual(OrientationCommand.None, l.Step(13f, 2520, 1080, ScreenOrientation.LandscapeLeft, false));
             Assert.IsFalse(l.Locked, "phone without gyro: landscape L/R rotate as before");
             Assert.AreEqual(OrientationCommand.Lock, l.Step(14f, 2520, 1080, ScreenOrientation.LandscapeRight, true), "gyro on: lock");

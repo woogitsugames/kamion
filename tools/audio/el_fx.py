@@ -42,6 +42,7 @@ from scipy import signal  # noqa: E402
 from el_analyze import MAIN, lufs, seam  # noqa: E402
 from el_prepare import FS, OUT, ROOT, circular_hp, fade, mono, resample_periodic, seam_loop, soft_limit, synth_lufs, write  # noqa: E402
 from el_regen01 import REGEN01, prompt_entry  # noqa: E402
+import el_regen03  # noqa: E402
 from sfx_layers import cab_filter  # noqa: E402
 import turbo2  # noqa: E402
 
@@ -169,6 +170,43 @@ REGEN02 = {
 }
 REGEN02_FILES = {"ENG_STOP_CAB (7).wav", "TURBO_WHISTLE_LOOP (6).wav"}
 
+# REGEN-03 (ADR 0145): tyre scrub (tight slow turn, trailer axles dragged sideways) and hard squeal, exterior + cabin.
+# Takes are picked automatically by el_regen03.select (6 s steadiest window, no whistle line, no regular creak train,
+# seam); an ID without a passing take (or without files) is skipped and the runtime keeps the procedural loop.
+# Levels: the same clip LUFS as the procedural placeholders (render_all.TYRE_SLIP_LUFS), so LayerMath / the runtime
+# volumes mean the same in both sets; the loudness at the listener lives in TruckAudioController (scrub/squealVolume).
+# Cabin takes carry a diesel idle (prompt): 100 Hz high-pass so the runtime engine is not doubled.
+REGEN03_SLOTS = [  # (prompt id, runtime name, perspective, target)
+    ("TYRE_SCRUB_TIGHT_TURN", "el_tyre_scrub_loop", "ext", -18.0),
+    ("TYRE_SCRUB_TIGHT_TURN_CAB", "el_tyre_scrub_cab_loop", "cab", -22.0),
+    ("TYRE_SQUEAL_HARD", "el_tyre_squeal_loop", "ext", -16.0),
+    ("TYRE_SQUEAL_HARD_CAB", "el_tyre_squeal_cab_loop", "cab", -20.0),
+]
+
+
+def regen03_fx(src: Path) -> list[dict]:
+    picks = el_regen03.select(src)
+    out = []
+    for pid, name, persp, target in REGEN03_SLOTS:
+        f = picks.get(pid)
+        if not f:
+            print(f"REGEN-03 {pid}: no passing take in {src} - procedural loop stays")
+            continue
+        t0 = el_regen03.best_window(circular_hp(mono(src / f)))
+        c = {"name": name, "src": f, "kind": "loop", "persp": persp, "segment": (t0, el_regen03.WIN_S), "target": target,
+             "regen": "REGEN-03"}
+        if persp == "cab":
+            c["hp_loop"] = 100.0
+        else:
+            cab_pid = pid + "_CAB"
+            if picks.get(cab_pid):
+                c["no_cab"] = True       # the cabin take is its own clip
+            else:
+                c["cab"] = "road"        # fallback: prerendered cabin perspective of the exterior take
+        out.append(c)
+    return out
+
+
 HP25 = signal.butter(2, 25, "hp", fs=FS, output="sos")
 
 
@@ -208,7 +246,7 @@ def process(src: Path, c: dict) -> tuple[np.ndarray, dict]:
     x = mono(src / c["src"])
     info: dict = {}
     if c["kind"] == "loop":
-        x = circular_hp(x)
+        x = circular_hp(x, c.get("hp_loop", 25.0))
         if "period_loop" in c:
             t0, approx, cf = c["period_loop"]
             a, L = best_period(x, t0, approx, cf)
@@ -293,7 +331,7 @@ def main() -> None:
     gains: dict[str, float] = {}
     entries, rows, report = [], [], []
     sheet: list[tuple[str, np.ndarray]] = []
-    for c in FX:
+    for c in FX + regen03_fx(src):
         x, info = process(src, c)
         loop = c["kind"] == "loop"
         if "gain_of" in c:
@@ -308,7 +346,7 @@ def main() -> None:
         gain += lim
         gains[c["name"]] = gain
         outs = [(c["name"], y, None, target, lim, soft)]
-        if c["persp"] == "ext":
+        if c["persp"] == "ext" and not c.get("no_cab"):
             cab_name = c["name"].replace("_loop", "_cab_loop") if loop else c["name"] + "_cab"
             z = cab_filter(y, loop, c["cab"])
             # the cabin clip is matched to the procedural cabin clip as well (both perspectives keep the synthesis balance)
@@ -377,6 +415,7 @@ def main() -> None:
     gen = {g["id"]: g for g in json.loads((src / "generation-manifest.json").read_text(encoding="utf-8"))}
     gen.update({k: prompt_entry(k) for k in REGEN01})
     gen.update(REGEN02)
+    gen.update({pid: el_regen03.prompt_entry(pid) for pid in el_regen03.PROMPTS})
     for e in entries:
         pid = e["source_prompt_id"]
         key = pid + " REGEN-02" if e["source"] in REGEN02_FILES else pid

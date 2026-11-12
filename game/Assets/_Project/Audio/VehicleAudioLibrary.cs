@@ -33,6 +33,8 @@ namespace TruckSim.Audio
         public PerspectivePair[] tyreSurface = new PerspectivePair[6];
         public PerspectivePair tyreSqueal, retarder, compressor, ambientBed, forklift, crowCaw, indicatorTick, indicatorTock;
         public AudioClip birdSparrow, birdTit;
+        [Tooltip("ADR 0145: tyre scrub in tight slow turns (procedural placeholder, tools/audio/sfx_layers.tyre_scrub_loop).")]
+        public PerspectivePair tyreScrub;
 
         [Header("ElevenLabs layers (ADR 0137; game/Assets/_Project/Audio/ElevenLabs/el_manifest.json)")]
         public EngineSoundBank elExteriorEngine, elCabEngine, elExteriorEngineBrake, elCabEngineBrake;
@@ -48,6 +50,10 @@ namespace TruckSim.Audio
         public AudioClip elTyreDryCab, elWindCab, elGearWhineCab;
         [Tooltip("Tyre loops by SurfaceKind; invalid entries keep the procedural loop (cobbles, grass; dry = elTyreDryCab).")]
         public PerspectivePair[] elTyreSurface = new PerspectivePair[6];
+
+        [Header("ElevenLabs REGEN-03 (ADR 0145; el_fx.py REGEN03_SLOTS, takes picked by el_regen03.py)")]
+        [Tooltip("Tyre scrub (tight slow turn) and hard squeal, exterior + cabin recordings. Used in both sound sets when imported.")]
+        public PerspectivePair elTyreScrub, elTyreSqueal;
 
         /// <summary>The ElevenLabs effect set is imported (ADR 0142).</summary>
         public bool HasElevenLabsFx => elAirBrakeRelease.IsValid;
