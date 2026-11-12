@@ -259,7 +259,7 @@ namespace Game.Rendering
                 shadowDistance = 150f, shadowResolution = 4096, shadowCascades = 4, cascade2Split = 0.25f,
                 cascade4Split = new Vector3(0.05f, 0.18f, 0.45f), softShadows = true, softShadowQuality = SoftShadowQuality.High,
                 shadowDepthBias = 0.6f, shadowNormalBias = 0.6f,
-                anisotropic = 2, worldTextureAniso = 16, worldMipBias = 0f, lodBias = 2.0f, cameraFarClip = 3500f,
+                anisotropic = 2, worldTextureAniso = 16, worldMipBias = 0f, lodBias = 2.0f, cameraFarClip = 3500f, adaptiveScaleMin = 0.70f, thermalFallbackFps = 30, pacingFallbackFps = 30 /* ADR 0152: Fold Ultra/60 had no safety net */,
                 worldDetail = true, additionalLightsPerObject = 8,
                 treeCardLodScale = 0.5f, treeThinStartM = 90f, treeCullM = 600f, treeShadowLodMask = 3, leafAlphaToCoverage = true, simpleFoliage = true,
                 forestHlodM = 120f, forestHlodCullM = 0f,

@@ -74,6 +74,24 @@ namespace Game.Tests.EditMode
         }
 
         [Test]
+        public void UltraHasTheHighSafetyNet_Adr0152()
+        {
+            // Fold (Adreno 840, 2256x2504) with a saved Ultra/60: 66-183 ms frames when hot and nothing adapted.
+            foreach (var x in QualityProfile.Defaults())
+                if (x.name == "Ultra" || x.name == "High")
+                {
+                    Assert.AreEqual(0.70f, x.adaptiveScaleMin, 1e-4f, x.name);
+                    Assert.AreEqual(30, x.thermalFallbackFps, x.name);
+                    Assert.AreEqual(30, x.pacingFallbackFps, x.name);
+                }
+            var qp = QualityProfile.Load();
+            Assert.IsNotNull(qp);
+            Assert.IsTrue(qp.TryGet("Ultra", out var u));
+            Assert.AreEqual(0.70f, u.adaptiveScaleMin, 1e-4f, "QualityProfile.asset Ultra");
+            Assert.AreEqual(30, u.pacingFallbackFps, "QualityProfile.asset Ultra");
+        }
+
+        [Test]
         public void ChangesAtMostOncePerWindow()
         {
             var c = NewScale(); float t = 0f;
