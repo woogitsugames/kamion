@@ -1,0 +1,94 @@
+{
+  "source_sha256": "2054ac6aa92b00e31dd129b29d77669621416ffd470dbb9ea17f0bde6b59d9d4",
+  "caps": [
+    {
+      "bed": "E1",
+      "spacing_m": 1.0,
+      "boundary_vertices": 111,
+      "interior_vertices": 0,
+      "triangles": 109,
+      "ring_valid": false,
+      "ring_reason": "Self-intersection[590.963620887419 -707.97367084473]",
+      "ring_area_m2": 9.203690062324632,
+      "maximum_triangle_edge_m": 17.38173881495982
+    },
+    {
+      "bed": "E1",
+      "spacing_m": 0.6,
+      "boundary_vertices": 221,
+      "interior_vertices": 0,
+      "triangles": 219,
+      "ring_valid": false,
+      "ring_reason": "Self-intersection[591.021146287473 -708.068297825103]",
+      "ring_area_m2": 11.527047485225289,
+      "maximum_triangle_edge_m": 17.498282750199685
+    },
+    {
+      "bed": "E2",
+      "spacing_m": 1.0,
+      "boundary_vertices": 126,
+      "interior_vertices": 0,
+      "triangles": 124,
+      "ring_valid": false,
+      "ring_reason": "Self-intersection[586.566185340739 -688.455477024821]",
+      "ring_area_m2": 12.67378172037684,
+      "maximum_triangle_edge_m": 19.47890041252571
+    },
+    {
+      "bed": "E2",
+      "spacing_m": 0.6,
+      "boundary_vertices": 251,
+      "interior_vertices": 0,
+      "triangles": 249,
+      "ring_valid": false,
+      "ring_reason": "Self-intersection[598.429304749956 -704.432233228167]",
+      "ring_area_m2": 15.327633789045384,
+      "maximum_triangle_edge_m": 19.48795329454418
+    },
+    {
+      "bed": "A",
+      "spacing_m": 1.0,
+      "boundary_vertices": 133,
+      "interior_vertices": 0,
+      "triangles": 131,
+      "ring_valid": false,
+      "ring_reason": "Self-intersection[562.076249632762 -682.427897811128]",
+      "ring_area_m2": 15.496574838294553,
+      "maximum_triangle_edge_m": 19.694404886498962
+    },
+    {
+      "bed": "A",
+      "spacing_m": 0.6,
+      "boundary_vertices": 265,
+      "interior_vertices": 0,
+      "triangles": 263,
+      "ring_valid": false,
+      "ring_reason": "Self-intersection[562.095038697874 -682.362846546161]",
+      "ring_area_m2": 18.15835672718622,
+      "maximum_triangle_edge_m": 19.723034779151106
+    },
+    {
+      "bed": "C",
+      "spacing_m": 1.0,
+      "boundary_vertices": 105,
+      "interior_vertices": 0,
+      "triangles": 103,
+      "ring_valid": false,
+      "ring_reason": "Self-intersection[561.935053476011 -656.437520517938]",
+      "ring_area_m2": 10.707413624230835,
+      "maximum_triangle_edge_m": 16.215776454933692
+    },
+    {
+      "bed": "C",
+      "spacing_m": 0.6,
+      "boundary_vertices": 210,
+      "interior_vertices": 0,
+      "triangles": 208,
+      "ring_valid": false,
+      "ring_reason": "Self-intersection[578.075759785894 -656.083036670643]",
+      "ring_area_m2": 12.90504194755873,
+      "maximum_triangle_edge_m": 16.257366871490756
+    }
+  ],
+  "note": "Four authored footprints, flat z=0; no World, GIS pytest, Unity, or production write. Internal fill observation only; no visual acceptance."
+}
