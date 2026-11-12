@@ -8,3 +8,5 @@ Pierwotny termin doby około 12.11 21:31 Warszawa. Unity Owner gpt-life, heavy O
 Krok 1: merge zakończony. Skorygowano ścieżki dwóch obrazów w raporcie r2 (są w refs/), a osiem krytycznych SHA sprawdzono ponownie z błędami kończącymi walidację. Następny krok: przygotowanie i kontrola nowego baseline.
 
 Krok 2: odświeżono lokalne CC0/_raw/Megascans z main (bez derived/World i bez cudzych blokad). Przeniesiono pomocniki QA do r3 i dotychczasowe kamery jako punkt wyjścia. Heavy helper zawiera już respektowanie rezerwacji lidera przez nowy unity-slot. Następny krok: baseline-gen.ps1 wykona materiały, World i source-proof sekwencyjnie w jednym heavy; następnie nowe kamery i import.
+
+Krok 3: baseline-gen zapisany; tylko sekwencyjna generacja materiałów/świata/proof pod jednym heavy, checkpoint po każdym etapie. Nie zmieniać produkcji do ukończenia baseline capture. Następny krok: pwsh -NoProfile -File artifacts/life-r3/baseline-gen.ps1.
