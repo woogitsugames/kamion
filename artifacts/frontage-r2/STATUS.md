@@ -37,3 +37,6 @@ NASTĘPNY KROK: po `cycle-2.done` i `heavy2 done`: pary `make-pairs.py merged Lo
 Przebieg 2: build_world OK, fidelity OK, `pytest tests/gis tests/gate3`: 825 passed, 1 xfailed (`pytest-gis-gate3-3.log`); EditMode 403/403 (`editmode.log`); import OK (64 chunki); rendery `merged` Low overcast+clear (20 SBS + 6 kontrolnych); pary `pairs-merged-Low-{overcast,clear}`, `pairs-2024-merged-Low-overcast`; draws `stats-diff-after.txt` (ta sama baza: 0..+39, mediana 0), `stats-diff-merged.txt` (-34..+65, mediana 0, zawiera dryf main).
 ADR 0129 uzupełniony. Otwarte: kominy EC na Low (far clip 900 m < 1187 m), białe ogrodzenie plot_kit sąsiada, kontrast SERWIS.
 NASTĘPNY KROK (lider): `git merge frontage-r2` (generated/*.json, *.glb, *_meta.json -> --ours) ; build_world ; import-region ; fidelity/run.py ; visual-critic na `artifacts/frontage-r2/pairs-merged-Low-overcast` + `pairs-2024-merged-Low-overcast`.
+
+## 8. Drugi merge main (18:0x)
+Main poszedł dalej (g3b-lowread) -> `git merge main` ponownie: LICENSES unia ręczna, pliki generowane = wersja main (do regeneracji przy integracji; do tego czasu `test_world_has_the_frontage` czerwony na starych danych main - oczekiwane). `git merge-tree main frontage-r2` czysto. Pełne testy (825 passed) dotyczą stanu z main f30837474.
