@@ -7,3 +7,4 @@
   NASTEPNY KROK: pwsh scripts/unity-slot.ps1 -Acquire -Owner claude-audio-regen01 ; pwsh scripts/test.ps1 -Platform PlayMode -Filter "ElevenLabsEngineAudioTests|AudioLayersTests|EngineAudio"
 - krok 3-4: Unity import OK, PlayMode 19/19, EditMode audio 20/20 (pelny EditMode 8 FAIL poza audio: CarPaint/Mirror/TruckDoorCrown/LightPost - brak wygenerowanych assetow w worktree). ADR 0138, LICENSES (audio-elevenlabs-sfx-v3-regen01), docs/owner/ELEVENLABS-REGEN-02.md (przejazdy z dluzszym szczytem, przejazdy bez obciazenia, stop kabina, ostatnia proba gwizdu, wycieraczki).
   NASTEPNY KROK (lider): scalic audio-regen01; APK -> odsluch wlasciciela (DZWIEK/Silnik) + A/B artifacts/audio-regen01/ab; wlasciciel generuje REGEN-02
+- merge main (567d9808) bez konfliktow; zmiany main poza audio. Artifacts skopiowane do main/artifacts/audio-regen01.
