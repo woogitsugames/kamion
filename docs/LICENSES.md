@@ -273,7 +273,15 @@ Zdjęcia nie wchodzą do builda ani tekstur. Rejestr: [`docs/refs/posesje-bialys
 - Pochodna: game/Assets/_Project/Rendering/Resources/Sky/T_ClearClouds.png, R = fotograficzna maska chmur, G = względna luminancja; usunięto tarczę słońca, zachowano kształt i cienie chmur. Dokładne metadane i oś słońca: ClearCloudsSource.json. Reprodukcja: artifacts/light-r1/build-photo-clouds.py przez pulę heavy.
 - To tekstura nieba, nie zdjęcie referencyjne Białegostoku. Nie zawiera zabudowy ani oznaczeń; nie jest zasobem Fab/Megascans.
 
-## Kabina — skan skóry CC0 (Poly Haven), GPT cab r2 (s12)
-| ID | Zasób (rozmiar fizyczny) | URL | Autor | Licencja | Mapy (MD5 w `art-source/truck/interior/cab_material_scans.json`) | Użycie w grze |
-|---|---|---|---|---|---|---|
-| `brown_leather` | Brown Leather (0,40 × 0,40 m; kafel 0,12 m, wieniec kierownicy 0,05 m) | https://polyhaven.com/a/brown_leather | Rob Tuytel | CC0 1.0 (https://polyhaven.com/license) | diffuse/normal GL/roughness/AO 2k | faktura skóry i tłoczenia tworzyw kabiny (ADR cab r2) |
+## ADR 0112 — Brown Leather we wnętrzu kabiny (2026-11-12)
+
+[Brown Leather](https://polyhaven.com/a/brown_leather), autor Rob Tuytel, dostawca Poly Haven, [CC0 1.0](https://polyhaven.com/license). Pole źródłowe 40 × 40 cm. Użyte mapy 2K: albedo, normal OpenGL, roughness i AO. Źródłowe adresy pobierania, rozmiary plików i MD5 są zapisane w `art-source/truck/interior/cab_material_scans.json`:
+
+| Mapa źródłowa | MD5 |
+|---|---|
+| brown_leather_albedo_2k.jpg | 1bd381c43817743a2affdd1ce2d193c7 |
+| brown_leather_nor_gl_2k.png | 79e5a78506947a412d2b739a4bec34b4 |
+| brown_leather_rough_2k.jpg | 95b48a5c95b02d87dadee46c26f1cfb5 |
+| brown_leather_ao_2k.jpg | 4ff0006acb807b9ddccd387a093d89b8 |
+
+Pochodne gry: istniejące pary Detail/Normal materiałów `MI_Cab_Leather` oraz `MI_Cab_Plastic`, rozdzielczości High/Medium/Low 1024/512/256. Konwerter `tools/blender/truck/interior/cc0_leather.py` wykonuje kadrowanie, neutralizację wariacji barwy, pakowanie kanałów, normalizację normalnych i łączenie przeciwległych krawędzi. Skóra używa pola około 12 cm. Plastic jest osłabioną i przeskalowaną pochodną tłoczenia skóry (20 cm źródła na kafel 10 cm), **nie skanem tworzywa deski**. Kolor bazowy i dotychczasowa perforacja pozostają projektowe. Oryginały w ignorowanym `art-source/truck/interior/cc0/_raw/brown_leather/`; bez zasobów Fab/Megascans w tym zestawie. Szczegóły przetwarzania i ograniczenia: `art-source/truck/interior/cc0/README.md`.
