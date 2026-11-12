@@ -12,6 +12,20 @@ namespace Game.Tests
     public class DuskStreetLampTests
     {
         [Test]
+        public void SerializedNightPresetKeepsReviewedPresentationFactoryValues()
+        {
+            var expected=LightingPreset.CreateNight();
+            try
+            {
+                var asset=UnityEditor.AssetDatabase.LoadAssetAtPath<LightingPreset>("Assets/_Project/Rendering/Settings/Lighting/LP_Night.asset");
+                Assert.IsNotNull(asset,"Night must exist as an actual scene-referenced preset");
+                Assert.AreEqual(expected.dimColourDesaturation,asset.dimColourDesaturation,.0001f,"YAML/import must not silently drop the reviewed scene grade");
+                Assert.AreEqual(expected.skyDisplayGain,asset.skyDisplayGain,.0001f);
+                Assert.AreEqual(expected.skyDisplayDesaturation,asset.skyDisplayDesaturation,.0001f);
+            }
+            finally{Object.DestroyImmediate(expected);}
+        }
+        [Test]
         public void NightReflectionUsesMappedSkyButPreservesGroundRadiance()
         {
             var night = LightingPreset.CreateNight();

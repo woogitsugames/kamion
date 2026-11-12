@@ -15,7 +15,8 @@ function Read-Budget([string]$Path){
 }
 $entries=@();$pixels=@()
 foreach($preset in @('clear','overcast','night')){foreach($tier in @('Low','High')){
-    $before="$PSScriptRoot/baseline/$tier-$preset";$after="$PSScriptRoot/final-v1/$tier-$preset"
+    $before="$PSScriptRoot/baseline/$tier-$preset"
+    $after=if($preset -eq 'night'){"$PSScriptRoot/final-v2/$tier-$preset"}else{"$PSScriptRoot/final-v1/$tier-$preset"}
     $b=Read-Budget "$before/stats.txt";$a=Read-Budget "$after/stats.txt"
     if($a.Count -ne 109 -or $b.Count -ne 109){throw 'Expected all109 cameras'}
     $probes=(Get-Content "$after/lamp-probes.json" -Raw|ConvertFrom-Json).cameras
