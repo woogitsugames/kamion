@@ -1,0 +1,221 @@
+{
+  "observed_at": "2026-11-12T15:16:21.2220637+01:00",
+  "main_world_manifest_blob": "640d2df318affb6b9f58eada1f07633cacef9809",
+  "same_coordinate_origin": true,
+  "main_commit": "e2107bd559e22ea06515cecb3cf00ecd551f8786",
+  "scope": "Read-only pose-data comparison; no current-main render, acceptance or registry update",
+  "baseline_camera_sha256": "41686dd5d9a9ef0969ab9d7772e359b150a6f1783b67538d9d8f875880f1ae2e",
+  "rows": [
+    {
+      "before_pos": [
+        -255.326,
+        -214.3122,
+        132.2961
+      ],
+      "main_vertical_fov_deg": 58.71551,
+      "delta_pitch_deg": -4.188532771687334,
+      "before_vertical_fov_deg": 58.71551,
+      "delta_absolute_u_m": -0.46699999999998454,
+      "delta_en_m": [
+        8.004599999999982,
+        -5.9938999999999965
+      ],
+      "main_pose_confidence": "B",
+      "delta_yaw_deg": -1.2861142295150785E-05,
+      "camera": "sbs-g3-b-275528677534382",
+      "before_look_at": [
+        -287.198,
+        -190.446,
+        136.1143
+      ],
+      "main_pose_reason": "Promoted by leader s12 from GPT sbs-r3 refinement (REVIEW-2026-11-12-s12-gpt-batch-d)",
+      "main_look_at": [
+        -279.3315,
+        -196.3365,
+        132.7289
+      ],
+      "main_pos": [
+        -247.3214,
+        -220.3061,
+        131.8291
+      ],
+      "horizontal_shift_m": 10.000022918473721
+    },
+    {
+      "before_pos": [
+        -222.4313,
+        -240.6727,
+        132.7129
+      ],
+      "main_vertical_fov_deg": 58.71551,
+      "delta_pitch_deg": -3.503243044071385,
+      "before_vertical_fov_deg": 58.71551,
+      "delta_absolute_u_m": 0.25270000000000437,
+      "delta_en_m": [
+        14.004899999999992,
+        -7.991399999999999
+      ],
+      "main_pose_confidence": "B",
+      "delta_yaw_deg": 5.683345932538941E-05,
+      "camera": "sbs-g3-b-837235577143499",
+      "before_look_at": [
+        -254.3341,
+        -216.7762,
+        136.0546
+      ],
+      "main_pose_reason": "Promoted by leader s12 from GPT sbs-r3 refinement (REVIEW-2026-11-12-s12-gpt-batch-d)",
+      "main_look_at": [
+        -240.433,
+        -224.6898,
+        133.8654
+      ],
+      "main_pos": [
+        -208.4264,
+        -248.6641,
+        132.9656
+      ],
+      "horizontal_shift_m": 16.12450613104165
+    },
+    {
+      "before_pos": [
+        -249.0174,
+        -233.4495,
+        132.5914
+      ],
+      "main_vertical_fov_deg": 43.54635,
+      "delta_pitch_deg": 3.760178002121865,
+      "before_vertical_fov_deg": 43.54635,
+      "delta_absolute_u_m": -0.9367000000000019,
+      "delta_en_m": [
+        -60.98259999999999,
+        40.39949999999999
+      ],
+      "main_pose_confidence": "B",
+      "delta_yaw_deg": -2.4653548734931974E-05,
+      "camera": "sbs-g3-b-3281350541967811",
+      "before_look_at": [
+        -214.7555,
+        -253.2455,
+        138.4427
+      ],
+      "main_pose_reason": "ADR 0130 (s12): calibrated from diagnostic probe r2 a0; anchors: lattice portal behind, over the left (northbound) carriageway: leg x 0.145/0.434 photo vs 0.14/0.43 render; long low hall at the left edge and low white building block right at the horizon; road vanishing point / horizon 0.77",
+      "main_look_at": [
+        -276.1441,
+        -212.6114,
+        140.0884
+      ],
+      "main_pos": [
+        -310.0,
+        -193.05,
+        131.6547
+      ],
+      "horizontal_shift_m": 73.15050992993828
+    },
+    {
+      "before_pos": [
+        -298.3237,
+        -199.657,
+        132.3836
+      ],
+      "main_vertical_fov_deg": 43.54635,
+      "delta_pitch_deg": 2.882674536910937,
+      "before_vertical_fov_deg": 43.54635,
+      "delta_absolute_u_m": 0.4917000000000087,
+      "delta_en_m": [
+        -68.87630000000001,
+        49.557000000000016
+      ],
+      "main_pose_confidence": "B",
+      "delta_yaw_deg": 1.1498960042684985,
+      "camera": "sbs-g3-b-297817221966185",
+      "before_look_at": [
+        -263.1444,
+        -217.7726,
+        138.2349
+      ],
+      "main_pose_reason": "ADR 0130 (s12): calibrated from diagnostic probe r2 b0; anchors: same portal far ahead in the image centre (x 0.445-0.566 photo / 0.44-0.56 render); blue industrial hall at the left edge x 0-0.2 in both; horizon 0.75",
+      "main_look_at": [
+        -332.6942,
+        -168.7542,
+        140.7092
+      ],
+      "main_pos": [
+        -367.2,
+        -150.1,
+        132.8753
+      ],
+      "horizontal_shift_m": 84.85187653016287
+    },
+    {
+      "before_pos": [
+        -545.1538,
+        70.6663,
+        137.6178
+      ],
+      "main_vertical_fov_deg": 58.71551,
+      "delta_pitch_deg": -4.10882341763556,
+      "before_vertical_fov_deg": 58.71551,
+      "delta_absolute_u_m": 0.3089999999999975,
+      "delta_en_m": [
+        -3.4729999999999563,
+        19.69619999999999
+      ],
+      "main_pose_confidence": "B",
+      "delta_yaw_deg": 5.922957143411622E-06,
+      "camera": "sbs-g3-b-1801374876712141",
+      "before_look_at": [
+        -549.9375,
+        109.9899,
+        143.1643
+      ],
+      "main_pose_reason": "ADR 0130 (s12): calibrated from diagnostic probe r1 d3 / r2 d0; anchors: noise screen starts close at the right edge (x 0.75-1.0, top y ~0.3); wide grass median with the opposite carriageway at x 0-0.3 on the left; horizon 0.56",
+      "main_look_at": [
+        -553.4462,
+        129.9796,
+        140.6207
+      ],
+      "main_pos": [
+        -548.6268,
+        90.3625,
+        137.9268
+      ],
+      "horizontal_shift_m": 20.00005058593601
+    },
+    {
+      "before_pos": [
+        -528.1266,
+        2.4881,
+        141.888
+      ],
+      "main_vertical_fov_deg": 31.97862,
+      "delta_pitch_deg": 1.7940601130912004,
+      "before_vertical_fov_deg": 31.97862,
+      "delta_absolute_u_m": -0.03890000000001237,
+      "delta_en_m": [
+        1.805400000000077,
+        2.3959
+      ],
+      "main_pose_confidence": "B",
+      "delta_yaw_deg": 6.688464941362326E-05,
+      "camera": "sbs-g3-b-494288258686575",
+      "before_look_at": [
+        -558.9122,
+        27.7491,
+        145.6467
+      ],
+      "main_pose_reason": "ADR 0130 (s12): calibrated from diagnostic probe r2 c1/c2 (between); anchors: dark screen posts close at the right receding to x ~0.2 at the horizon; median barrier and second deck at the left edge; horizon 0.72",
+      "main_look_at": [
+        -557.0007,
+        30.058,
+        146.8527
+      ],
+      "main_pos": [
+        -526.3212,
+        4.884,
+        141.8491
+      ],
+      "horizontal_shift_m": 2.9999676614924162
+    }
+  ],
+  "main_camera_blob": "2477d784375b9137d463b1596e691d6e7754333b"
+}
