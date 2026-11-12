@@ -1,5 +1,5 @@
 param(
-    [Parameter(Mandatory)][ValidateSet('World','Fidelity','GisFile','GisFinal','Images','MaterialPrep')][string]$Job,
+    [Parameter(Mandatory)][ValidateSet('World','Fidelity','GisFile','GisFinal','Images','MaterialPrep','MaterialFine')][string]$Job,
     [string]$TestFile,
     [string]$Log
 )
@@ -24,6 +24,7 @@ try {
   try {
     $env:UV_PROJECT_ENVIRONMENT='.venv-cab'
     switch ($Job) {
+        'MaterialFine' { uv run --project tools/worldgen python artifacts/cab-r4/prepare-material-fine.py *> $Log }
         'MaterialPrep' { uv run --project tools/worldgen python artifacts/cab-r4/prepare-material-candidate.py *> $Log }
         'Images' { uv run --project tools/worldgen python artifacts/cab-r4/review-sheets.py *> $Log }
         'World' { uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c *> $Log }
@@ -44,5 +45,6 @@ catch {
 }
 finally { $guard.ReleaseMutex(); $guard.Dispose() }
 exit $code
+
 
 
