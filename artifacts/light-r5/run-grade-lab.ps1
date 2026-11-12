@@ -5,6 +5,9 @@ Set-Location $repo
 . "$repo/scripts/env.ps1"
 $slot='C:/Users/matma/Documents/Claude/kamion/scripts/unity-slot.ps1'
 $folder="$PSScriptRoot/$OutputName";$log="$PSScriptRoot/$OutputName.$(Get-Timestamp).log"
+$source=(git rev-parse HEAD).Trim()
+$sourcePaths=@('game/Assets/_Project/Rendering/Editor/LightGradeLutLab.cs','game/Assets/_Project/Rendering/Editor/LightGradeLutLab.shader','game/Assets/_Project/Rendering/Editor/LightGradeLutWorldProbe.cs','game/Assets/_Project/Rendering/Shaders/KamionAtmosphere.hlsl')
+$sourceHashes=@($sourcePaths|ForEach-Object {@{path=$_;sha256=(Get-FileHash -LiteralPath $_).Hash}})
 & pwsh $slot -Acquire -Owner gpt-light -PollSeconds 1 -StaleHours 87600
 if($LASTEXITCODE){throw 'No Unity slot'}
 git diff --quiet HEAD -- game/Assets/_Project/Rendering/Settings game/ProjectSettings
@@ -18,7 +21,15 @@ try{
     foreach($preset in @('Clear','Overcast','Night')){
         $proof=Get-Content "$folder/$preset-proof.json" -Raw|ConvertFrom-Json
         if($proof.captureBypassMaxRgb -ne 0 -or $proof.measurements.Count -ne 3 -or @($proof.measurements|Where-Object {$_.samples.Count -ne 192}).Count){$complete=$false}
-        foreach($size in @(16,32)){if((Get-Item -LiteralPath "$folder/$preset-lut$size-RGBAHalf.raw").Length -ne $size*$size*$size*8){$complete=$false}}
+        foreach($size in @(16,32)){
+            $raw=Get-Item -LiteralPath "$folder/$preset-lut$size-RGBAHalf.raw"
+            if($raw.Length -ne $size*$size*$size*8 -or $raw.LastWriteTime -lt $start){$complete=$false}
+        }
+        foreach($suffix in @('key.json','proof.json','gradient-proof.json')){
+            if((Get-Item -LiteralPath "$folder/$preset-$suffix").LastWriteTime -lt $start){$complete=$false}
+        }
+        $gradient=Get-Content "$folder/$preset-gradient-proof.json" -Raw|ConvertFrom-Json
+        if($gradient.measurements.Count -ne 3 -or @($gradient.measurements|Where-Object {$_.samples.Count -ne 12288}).Count){$complete=$false}
     }
     if(Select-String -Path $log -Pattern 'Shader error|error CS\d+' -Quiet){$complete=$false}
     if($code -ne 0 -and $complete){
@@ -28,6 +39,9 @@ try{
         if($mono -and $abort -and -not $fatal){Write-Warning "Known Mono shutdown after complete lab, original=$code";$code=0}
     }
     if($code -ne 0 -or -not $complete){Show-UnityLogErrors $log;throw "Incomplete grade lab code=$code log=$log"}
+    foreach($item in $sourceHashes){if((Get-FileHash -LiteralPath $item.path).Hash -ne $item.sha256){throw 'Lab source changed during render'}}
+    $outputs=@(Get-ChildItem -LiteralPath $folder -File|Where-Object Name -ne 'manifest.json'|ForEach-Object {@{name=$_.Name;bytes=$_.Length;sha256=(Get-FileHash -LiteralPath $_.FullName).Hash}})
+    @{source_commit=$source;source_files=$sourceHashes;outputs=$outputs;started=$start.ToUniversalTime().ToString('o');log=$log}|ConvertTo-Json -Depth 8|Set-Content "$folder/manifest.json" -Encoding utf8
 }
 finally{git restore -- game/Assets/_Project/Rendering/Settings game/ProjectSettings;& pwsh $slot -Release -Owner gpt-light}
 Add-Content "$PSScriptRoot/STATUS.md" "Lab gradingu33PNG+6kostek,192holdout+12288gradientnaPreset zakończony; log=$log. To diagnostyka, bez wdrożenia lub GPU PASS."
