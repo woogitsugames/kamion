@@ -28,3 +28,4 @@ Zakończono Game.Editor.Setup.TruckAssetBuilder.BuildBatch, exit 0. Następny kr
 Zakończono Game.World.Import.WorldTruckInstaller.InstallBatch, exit 0. Następny krok: kolejny etap prefab/sceny lub capture-0112 -Stage result-0112.
 Zapisano baseline Low clear, siedem kamer i sześć natywnych RT z identyfikatorem wnętrza. Następny krok: kontynuować macierz lub porównać PNG.
 Zapisano baseline Low overcast, siedem kamer i sześć natywnych RT z identyfikatorem wnętrza. Następny krok: kontynuować macierz lub porównać PNG.
+Zapisano baseline Low dusk, siedem kamer i sześć natywnych RT z identyfikatorem wnętrza. Następny krok: kontynuować macierz lub porównać PNG.
