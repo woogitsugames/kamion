@@ -37,8 +37,8 @@ namespace Game.Tests
         {
             var p = new ImpostorTrim.Polygon { Uv = new[] { new Vector2(0.25f, 0f), new Vector2(0.75f, 1f) }, Triangles = new int[0] };
             var pos = ImpostorTrim.Positions(p, 2f, -0.3f, 9.7f);
-            Assert.That(pos[0].x, Is.EqualTo(-1f).Within(1e-5f));
-            Assert.That(pos[1].x, Is.EqualTo(1f).Within(1e-5f));
+            Assert.That(Mathf.Abs(pos[0].x), Is.EqualTo(2f).Within(1e-5f));   // shader: (uv.x * 2 - 1) * |x|
+            Assert.That(Mathf.Abs(pos[1].x), Is.EqualTo(2f).Within(1e-5f));
             Assert.That(pos[0].y, Is.EqualTo(-0.3f).Within(1e-5f));
             Assert.That(pos[1].y, Is.EqualTo(9.7f).Within(1e-5f));
         }

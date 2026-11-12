@@ -12,7 +12,7 @@ try {
         pwsh -NoProfile -File scripts/visual-qa.ps1 -Scene WorldC -Tier Low -Lighting overcast -Gate3 Data/Regions/bialystok-industrial-c/gate3_cameras.json -OutputDir (Join-Path $PSScriptRoot "vqa/$out") *>> $log
         "VQA $out EXIT $LASTEXITCODE" | Add-Content $log
     }
-    Vqa 'before'
+    if (-not (Test-Path (Join-Path $PSScriptRoot 'vqa/before/edge-west.png'))) { Vqa 'before' }
     $ulog = Join-Path $wt "artifacts/logs/imptrim-$Tag.log"
     "$(Get-Date -Format s) bake -> $ulog" | Add-Content $log
     $p = Start-Process $UnityExe -ArgumentList @('-batchmode', '-projectPath', (Join-Path $wt 'game'), '-logFile', $ulog, '-buildTarget', 'Android',

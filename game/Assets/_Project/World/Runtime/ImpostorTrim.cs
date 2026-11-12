@@ -108,7 +108,9 @@ namespace Game.World
         {
             var pos = new Vector3[p.Uv.Length];
             for (int i = 0; i < pos.Length; i++)
-                pos[i] = new Vector3((p.Uv[i].x * 2f - 1f) * halfWidth, yAtV0 + p.Uv[i].y * (yAtV1 - yAtV0), 0f);
+                // |x| must stay the full half width: the shader places the vertex at (uv.x * 2 - 1) * |x| (the sign only
+                // keeps a plain mesh preview on the right side).
+                pos[i] = new Vector3(p.Uv[i].x < 0.5f ? -halfWidth : halfWidth, yAtV0 + p.Uv[i].y * (yAtV1 - yAtV0), 0f);
             return pos;
         }
 
