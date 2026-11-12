@@ -30,13 +30,20 @@ namespace PhysicsRunner.Tests
         }
 
         [Fact]
-        public void GainCurve_UnchangedBelow24AndFrom60_CappedToThe60KmhLateralAccelInBetween()
+        public void GainCurve_UnchangedBelow24_CappedToThe60KmhLateralAccelAbove()
         {
             var ctx = Ctx();
-            foreach (double kmh in new[] { 5.0, 15.0, 20.0, 60.0, 80.0, 100.0 })
+            foreach (double kmh in new[] { 5.0, 15.0, 20.0, 60.0 })
                 Assert.Equal(TouchEvidence.CabDegPerMm(kmh, 0, ctx), TouchEvidence.CabDegPerMm(kmh, -1, ctx), 3);
+            try
+            {
+                TouchEvidence.CapAbove = 0; // ADR 0149 r2: fixed 5 deg/mm from 60 km/h
+                foreach (double kmh in new[] { 70.0, 80.0, 90.0 })
+                    Assert.Equal(5.0, TouchEvidence.CabDegPerMm(kmh, -1, ctx), 2);
+            }
+            finally { TouchEvidence.CapAbove = -1; }
             double ref60 = LatAccelPerMm(ctx, 60, -1);
-            for (double kmh = 20; kmh <= 60; kmh += 2.5)
+            for (double kmh = 20; kmh <= 90; kmh += 2.5)
             {
                 double a = LatAccelPerMm(ctx, kmh, -1);
                 _out.WriteLine($"{kmh,5:F1} km/h: before {TouchEvidence.CabDegPerMm(kmh, 0, ctx),6:F2} after {TouchEvidence.CabDegPerMm(kmh, -1, ctx),6:F2} cab deg/mm, a_y/mm after {a:F3}");
@@ -69,6 +76,23 @@ namespace PhysicsRunner.Tests
                 var tr = TouchEvidence.Run(sc);
                 int n = tr.T.Count;
                 _out.WriteLine($"{combo}: t=8 s yaw {tr.YawRateDps[n * 8 / 20]:F3} deg/s artic {tr.Artic[n * 8 / 20]:F3}; t=20 s yaw {tr.YawRateDps[n - 1]:F3} deg/s artic {tr.Artic[n - 1]:F3} road wheel {tr.RoadWheelDeg[n - 1]:F4}");
+            }
+        }
+
+        [Fact]
+        public void Residual_PlateFrictionSweep_Diagnostic()
+        {
+            foreach (double mu in new[] { 0.0, 0.25, 0.5, 1.0, 2.0, 4.0 })
+            {
+                double keep = 0; FifthWheelDefinition def = null;
+                var sc = TouchEvidence.Replay(35, -1, "laden40"); sc.duration = 20;
+                try
+                {
+                    var tr = TouchEvidence.Run(sc, s => { def = s.Combo.FifthWheel.Def; keep = def.plateFrictionCreepRateDegS; def.plateFrictionCreepRateDegS = mu; });
+                    int n = tr.T.Count;
+                    _out.WriteLine($"creep {mu} deg/s: t=5 artic {tr.Artic[n / 4]:F3} yaw {tr.YawRateDps[n / 4]:F3}; t=10 artic {tr.Artic[n / 2]:F3} yaw {tr.YawRateDps[n / 2]:F3}; t=20 artic {tr.Artic[n - 1]:F3} yaw {tr.YawRateDps[n - 1]:F3}");
+                }
+                finally { if (def != null) def.plateFrictionCreepRateDegS = keep; }
             }
         }
 

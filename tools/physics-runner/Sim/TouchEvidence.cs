@@ -34,6 +34,9 @@ namespace PhysicsRunner.Sim
         /// <summary>Driver preview time [s] for the lane-change human model (driver-model literature uses ~1-2 s; WORKING_VALUE).</summary>
         public static double PreviewS = double.TryParse(Environment.GetEnvironmentVariable("TOUCH_PREVIEW"), NumberStyles.Float, CultureInfo.InvariantCulture, out var p) ? p : 1.5;
 
+        /// <summary>Override of dragLatAccelCapAboveMatch for the scenarios built next (-1 shipped, 0 off = ADR 0149 r2, 1 on).</summary>
+        public static int CapAbove = -1;
+
         public static Scenario LaneChange(double kmh, double fingerGain, double matchKmh, string combination = "laden40", double delayS = 0.25)
         {
             double v = kmh / 3.6;
@@ -45,7 +48,7 @@ namespace PhysicsRunner.Sim
                 {
                     type = "touch", touchMode = "human", targetKmh = kmh, startDistance = v * 4.0, length = Math.Max(20, v * 4.0),
                     offset = 3.5, doubleChange = false, humanDelayS = delayS, neuroTauS = 0.1, previewS = PreviewS,
-                    fingerGainMmPerM = fingerGain, touchLatAccelMatchKmh = matchKmh,
+                    fingerGainMmPerM = fingerGain, touchLatAccelMatchKmh = matchKmh, touchCapAbove = CapAbove,
                 },
             };
         }
@@ -59,7 +62,7 @@ namespace PhysicsRunner.Sim
                 initial = new InitialSpec { speedKmh = kmh },
                 driver = new DriverSpec
                 {
-                    type = "touch", touchMode = "replay", targetKmh = kmh, touchLatAccelMatchKmh = matchKmh,
+                    type = "touch", touchMode = "replay", targetKmh = kmh, touchLatAccelMatchKmh = matchKmh, touchCapAbove = CapAbove,
                     fingerKeys = new[] { new[] { 0.0, 0, 0 }, new[] { 1.0, 0, 1 }, new[] { 1.66, -4.4, 1 }, new[] { 1.67, -4.4, 0 } },
                 },
             };
@@ -70,6 +73,7 @@ namespace PhysicsRunner.Sim
         {
             var feel = Game.Controls.SteeringFeel.FromJson(File.ReadAllText(TouchDriver.FeelPath));
             if (matchKmh >= 0) feel.dragLatAccelMatchKmh = (float)matchKmh;
+            if (CapAbove >= 0) feel.dragLatAccelCapAboveMatch = CapAbove > 0;
             var st = ctx.Tractor.Steering;
             float lockDeg = (float)(st.MaxAngle * MathUtil.Rad2Deg * st.Def.steeringRatio);
             var w = new Game.Controls.TouchSteeringWheel { Feel = feel, Grab = Game.Controls.WheelGrab.Drag, HalfRangeDeg = 270f, DeadZone = 0f };
@@ -80,10 +84,11 @@ namespace PhysicsRunner.Sim
             return intent.Steer * lockDeg;
         }
 
-        public static Trace Run(Scenario sc)
+        public static Trace Run(Scenario sc, Action<SimContext> tweak = null)
         {
             sc.baseId = sc.id; sc.variant = sc.combination;
             var s = ScenarioRunner.Setup(sc, new RunOptions());
+            tweak?.Invoke(s);
             var d = new TouchDriver(sc.driver, s, sc.dt);
             var tr = new Trace();
             double dt = sc.dt, t = 0;
@@ -211,32 +216,43 @@ namespace PhysicsRunner.Sim
                     name, phase, r.Kmh, r.FingerGain, r.MatchKmh, r.PeakRoadWheelDeg, r.PeakLatAccel, r.PeakYawRate, r.PeakArtic, r.OvershootM,
                     r.SettleS, r.ResidualRmsM, r.LatAt5s, r.HeadingAt5s, r.WheelLift, r.Stable ? 1 : 0, OscillationIndex(tr)));
             }
-            foreach (var (phase, match) in new[] { ("before", 0.0), ("after", -1.0) })
+            // Phases: before = ADR 0135 curve, r2 = ADR 0149 (cap 24-60 km/h only), after = shipped (ADR 0151: cap also above 60).
+            var phases = new[] { ("before", 0.0, -1), ("r2", -1.0, 0), ("after", -1.0, -1) };
+            foreach (var (phase, match, capAbove) in phases)
             {
+                CapAbove = capAbove;
                 Add("replay35", phase, Replay(35, match), true);
-                foreach (double kmh in new[] { 20.0, 35.0, 45.0, 60.0, 80.0 })
+                foreach (double kmh in new[] { 20.0, 35.0, 45.0, 60.0, 70.0, 80.0, 90.0 })
                 {
                     { var lc = LaneChange(kmh, 4.0, match); lc.duration = 30; Add($"lc{kmh:F0}", phase, lc, true); }
                     foreach (double g in GainGrid)
                         { var sw = LaneChange(kmh, g, match); sw.duration = 30; Add($"sweep{kmh:F0}", phase, sw, false); }
                 }
             }
+            CapAbove = -1;
             File.WriteAllText(Path.Combine(outDir, "summary.csv"), sum.ToString());
             Console.WriteLine(sum.ToString());
 
             // Gain margin of the thumb loop per speed: the smallest thumb gain at which the driver-vehicle loop weaves (PIO).
-            var crit = new StringBuilder("kmh,cab_deg_per_mm_before,cab_deg_per_mm_after,lat_accel_per_mm_before,lat_accel_per_mm_after,pio_onset_gain_before_mm_per_m,pio_onset_gain_after_mm_per_m\n");
+            var crit = new StringBuilder("kmh,cab_deg_per_mm_before,cab_deg_per_mm_r2,cab_deg_per_mm_after,lat_accel_per_mm_before,lat_accel_per_mm_r2,lat_accel_per_mm_after,pio_onset_gain_before_mm_per_m,pio_onset_gain_r2_mm_per_m,pio_onset_gain_after_mm_per_m\n");
             var probe = Replay(35, 0); probe.baseId = probe.id; probe.variant = probe.combination;
             var ctx = ScenarioRunner.Setup(probe, new RunOptions());
             var st = ctx.Tractor.Steering;
             double ratio = st.Def.steeringRatio;
             double wb = ctx.Tractor.Def.axles[0].positionZ - ctx.Tractor.Def.axles[1].positionZ;
-            foreach (double kmh in new[] { 15.0, 20.0, 25.0, 30.0, 35.0, 40.0, 45.0, 50.0, 60.0, 70.0, 80.0 })
+            foreach (double kmh in new[] { 15.0, 20.0, 25.0, 30.0, 35.0, 40.0, 45.0, 50.0, 60.0, 70.0, 80.0, 90.0 })
             {
-                double b = CabDegPerMm(kmh, 0, ctx), a = CabDegPerMm(kmh, -1, ctx);
                 double v = kmh / 3.6, k = v * v / wb * MathUtil.Deg2Rad / ratio;
-                double gb = PioOnsetGain(kmh, 0), ga = PioOnsetGain(kmh, -1);
-                crit.Append(string.Format(c, "{0:F0},{1:F2},{2:F2},{3:F3},{4:F3},{5:F2},{6:F2}\n", kmh, b, a, b * k, a * k, gb, ga));
+                var cab = new double[3]; var pio = new double[3];
+                for (int p = 0; p < 3; p++)
+                {
+                    CapAbove = phases[p].Item3;
+                    cab[p] = CabDegPerMm(kmh, phases[p].Item2, ctx);
+                    pio[p] = PioOnsetGain(kmh, phases[p].Item2);
+                }
+                CapAbove = -1;
+                crit.Append(string.Format(c, "{0:F0},{1:F2},{2:F2},{3:F2},{4:F3},{5:F3},{6:F3},{7:F2},{8:F2},{9:F2}\n",
+                    kmh, cab[0], cab[1], cab[2], cab[0] * k, cab[1] * k, cab[2] * k, pio[0], pio[1], pio[2]));
             }
             File.WriteAllText(Path.Combine(outDir, "gain_margin.csv"), crit.ToString());
             Console.WriteLine(crit.ToString());
