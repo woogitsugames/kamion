@@ -18,3 +18,4 @@ Odczyt bake_ao w tools/blender/truck/interior/a6_export.py pokazuje bake DIFFUSE
 
 Dodatkowe pierwotne źródła tworzyw: https://ambientcg.com/view?id=Plastic004 oraz https://ambientcg.com/view?id=Plastic003 podają Technique: Prodedural. Są CC0, ale nie spełniają wymagania skanu; nie pobierano map i nie zmieniano materiałów.
 
+Sprawdzono też bezpośrednio https://ambientcg.com/view?id=Plastic012A, https://ambientcg.com/view?id=Plastic016A i https://ambientcg.com/view?id=Plastic018B. Wszystkie mają Technique: Prodedural. Plastic016A nie pozostaje już kandydatem o nieznanej metodzie: źródło pierwotne wskazuje proceduralność. Bez pobierania map.
