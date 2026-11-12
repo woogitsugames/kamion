@@ -10,13 +10,15 @@ root=here.parents[1]
 parser=argparse.ArgumentParser()
 parser.add_argument('--after-root',default='probe-a')
 parser.add_argument('--snapshot',default='candidate-a')
+parser.add_argument('--before-root',default='before',help='Explicit ablation baseline; final budget still uses before')
 args=parser.parse_args()
 snapshot_path=here/('snapshot-'+args.snapshot)/'sha256.json'
 snapshot=json.loads(snapshot_path.read_text())
 stats=runpy.run_path(str(here/'review_images.py'))['stats']
 reference=json.loads((here/'berberis-reference.json').read_text())
 photo=Image.open(root/reference['local_photo']).convert('RGB')
-out=here/('berberis-review-'+args.after_root)
+evidence_label=args.after_root if args.before_root=='before' else args.after_root+'-vs-'+args.before_root
+out=here/('berberis-review-'+evidence_label)
 out.mkdir(exist_ok=True)
 rois={'g3a-rondo-bie-approach':(0,.54,.27,.69),
       'photo-biezenstwa-ground':(.72,.54,1,.73)}
@@ -24,7 +26,7 @@ costs=[]
 for tier in ('Low','High'):
     for lighting in ('overcast','clear'):
         group=tier+'-'+lighting
-        before_dir,after_dir=here/'before'/group,here/args.after_root/group
+        before_dir,after_dir=here/args.before_root/group,here/args.after_root/group
         before_stats,after_stats=stats(before_dir/'stats.txt'),stats(after_dir/'stats.txt')
         for camera,new in after_stats.items():
             old=before_stats[camera]
@@ -53,12 +55,12 @@ for tier in ('Low','High'):
             draw.text((5,1035),'Same render pose before/after. Reference pose/season differ. Not measured dimensions or GPU time.',fill='white')
             sheet.save(out/(group+'-'+camera+'.jpg'),quality=93)
 low=[r for r in costs if r['group'].startswith('Low-')]
-result=dict(snapshot_source_sha=snapshot['source_sha'],after_root=args.after_root,
+result=dict(snapshot_source_sha=snapshot['source_sha'],after_root=args.after_root,before_root=args.before_root,
     reference=reference,fixed_rois=rois,all_probe_costs=costs,
     maximum_low_draw_delta=max(r['delta_draws'] for r in low),
     maximum_low_triangle_delta_percent=max(r['delta_triangles_percent'] for r in low),
-    note='Limited probe only; static/instance draws separate, integer trisK precision. No full-camera acceptance or GPU timing.')
-(here/(args.after_root+'-comparison.json')).write_text(json.dumps(result,indent=2)+'\n',encoding='utf-8')
+    note='Limited probe only; static/instance draws separate, integer trisK precision. No full-camera acceptance or GPU timing. Ablation baseline is not the final budget baseline.')
+(here/(evidence_label+'-comparison.json')).write_text(json.dumps(result,indent=2)+'\n',encoding='utf-8')
 print('Sheets:',len(list(out.glob('*.jpg'))),'Probe camera-condition rows:',len(costs))
 print('Low maximum draws delta:',result['maximum_low_draw_delta'],
       'Low maximum triangle % delta:',result['maximum_low_triangle_delta_percent'])
