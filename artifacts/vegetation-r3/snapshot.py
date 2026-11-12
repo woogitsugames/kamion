@@ -1,0 +1,30 @@
+"""Record provenance and detect test-driven canonical-data changes; no world writes."""
+import argparse
+import hashlib
+import json
+import shutil
+import subprocess
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+ROOT = HERE.parents[1]
+parser = argparse.ArgumentParser()
+parser.add_argument("label")
+args = parser.parse_args()
+dest = HERE/("snapshot-"+args.label)
+dest.mkdir(exist_ok=True)
+files = list((ROOT/"Data/Regions/bialystok-industrial-c/generated").glob("*.json"))
+files += list((ROOT/"Data/raw/derived/bialystok-industrial-c/world").glob("*.glb"))
+hashes = {}
+for path in sorted(files):
+    with path.open("rb") as stream:
+        hashes[str(path.relative_to(ROOT))] = hashlib.file_digest(stream, "sha256").hexdigest()
+    if path.suffix == ".json":
+        shutil.copyfile(path, dest/path.name)
+source_sha = subprocess.check_output(
+    ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
+report = dict(source_sha=source_sha, source_note=(
+    "R3 before source edit; control images reuse r1 B with exact hash proof; SBS freshly rendered."
+    if args.label == "baseline" else "Snapshot of generated outputs; inspect dirty state separately."), files=hashes)
+(dest/"sha256.json").write_text(json.dumps(report, indent=2)+"\n", encoding="utf-8")
+print("Snapshot", args.label, "files", len(files))

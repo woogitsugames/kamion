@@ -961,12 +961,14 @@ def write_rgba(arr, path, size):
     bpy.data.images.remove(im)
 
 
-def build_textures(out_dir):
+def build_textures(out_dir, cab_materials_only=False):
     """Per slot: _Detail (R variation, G micro-AO, B roughness, A perforation/extra) + _Normal (OpenGL, +Y up);
     decal atlas (RGBA, A = coverage); display placeholders; glass grime. Sizes per tier (power of two, ASTC 4x4..8x8)."""
     written = {}
     perf = tex_image("perforation_mask.png")[..., 0]
     for slot, (tset, base) in DETAIL_SET.items():
+        if cab_materials_only and slot not in ("MI_Cab_Plastic", "MI_Cab_Leather"):
+            continue
         var = tex_image(f"{tset}_var.png")
         orm = tex_image(f"{tset}_orm.png")
         nrm = tex_image(f"{tset}_nrm.png")
@@ -988,6 +990,10 @@ def build_textures(out_dir):
             write_rgba(det, p1, size)
             write_rgba(nrm, p2, size)
             written.setdefault(slot, {})[tier] = {"detail": p1, "normal": p2, "size": size}
+    if cab_materials_only:
+        import cc0_leather
+        cc0_leather.apply_runtime_maps(out_dir)
+        return written
     # decal atlas 1024: icons band (bottom), grille band, stitch band (top)
     A = 1024
     atlas = np.zeros((A, A, 4), np.float32)
@@ -1022,6 +1028,10 @@ def build_textures(out_dir):
     os.makedirs(dd, exist_ok=True)
     for f in ("display_cluster.png", "display_infotainment.png", "display_din.png"):
         shutil.copy(os.path.join(M.TEX, f), os.path.join(dd, "T_" + f.replace("display_", "Display_")))
+    # ADR 0112 r2: optional scan keeps this export's sizes, alpha and material slots.
+    # Enabled-but-missing sources fail explicitly; there is no synthetic fallback.
+    import cc0_leather
+    cc0_leather.apply_runtime_maps(out_dir)
     return written
 
 
@@ -1394,6 +1404,7 @@ def main():
     argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
     p = argparse.ArgumentParser()
     p.add_argument("--lods", default="0,1,2")
+    p.add_argument("--textures-only", action="store_true", help="Rebuild only packed Plastic/Leather maps, respecting scan flags; no FBX or AO bake")
     p.add_argument("--out", default=os.path.join(BI.REPO, "art-source", "truck", "interior", "export"))
     p.add_argument("--ao-samples", type=int, default=4096)
     p.add_argument("--ao-distance", type=float, default=0.6)
@@ -1411,6 +1422,10 @@ def main():
     if a.urp_out:   # A6 r3: Blender resolves a relative render path against the drive root, not the cwd
         a.urp_out = os.path.abspath(a.urp_out)
     os.makedirs(out, exist_ok=True)
+    if a.textures_only:
+        build_textures(os.path.join(out, "textures"), cab_materials_only=True)
+        print("CAB_TEXTURES_RESULT: OK (Plastic/Leather only; no geometry or AO bake)")
+        return
     tex = None
     man_path = a.manifest or os.path.join(out, "cab_interior_manifest.json")
     manifest = {"asset": "cab interior (brand-neutral), track A6", "generator": "tools/blender/truck/interior/a6_export.py",

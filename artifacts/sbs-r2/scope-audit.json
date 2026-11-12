@@ -1,0 +1,29 @@
+﻿{
+    "checked_at":  "2026-11-12T02:23:59.1539631+01:00",
+    "checked_head":  "3c173be7960dbf908d5d89f327db36a506ac92a2",
+    "gis_source_head":  "e386b92996c10ef92022508b8ede0c10c7843863",
+    "source_changes_since_freeze":  [
+
+                                    ],
+    "committed_source_paths_vs_initial_main":  [
+                                                   "Data/Regions/bialystok-industrial-c/sbs_authored_overrides.json",
+                                                   "Data/Regions/bialystok-industrial-c/sbs_cameras.json",
+                                                   "Data/Regions/bialystok-industrial-c/sbs_extra_references.json",
+                                                   "Data/Regions/bialystok-industrial-c/sbs_landmarks.json",
+                                                   "Data/Regions/bialystok-industrial-c/sbs_photometry.json",
+                                                   "Data/Regions/bialystok-industrial-c/sbs_pose_probes.json",
+                                                   "Data/Regions/bialystok-industrial-c/sbs_recognition.json",
+                                                   "Data/Regions/bialystok-industrial-c/sbs_references.json",
+                                                   "docs/adr/0111-sbs-evidence-confidence.md",
+                                                   "docs/refs/sbs-gate3-attribution.md",
+                                                   "scripts/sbs-gate3.ps1",
+                                                   "tests/gis/test_sbs_gate3.py",
+                                                   "tests/gis/test_sbs_photometry.py",
+                                                   "tests/gis/test_sbs_report.py",
+                                                   "tools/refs/sbs_gate3.py",
+                                                   "tools/refs/sbs_photometry.py",
+                                                   "tools/refs/sbs_report.py",
+                                                   "tools/refs/sbs_report_template.html"
+                                               ],
+    "note":  "Only SBS code, data, tests and docs. Eight unstaged generator derivatives remain pending restoration after GIS."
+}

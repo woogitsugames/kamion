@@ -1,0 +1,83 @@
+{
+  "status": "REJECTED",
+  "scope": "B1 producer output and separate consumer-input diagnostic",
+  "baseline": {
+    "producer_generated": true,
+    "stats": {
+      "static_draws": 460,
+      "shadow_draws": 34,
+      "static_triangles_k": 547,
+      "instance_draws": 205,
+      "instances": 129,
+      "instance_triangles_k": 28,
+      "total_draws": 665,
+      "total_triangles_k": 575
+    },
+    "changed_pixels": 0,
+    "changed_bbox": null,
+    "fixed_crown_zone": [
+      0,
+      269,
+      461,
+      507
+    ],
+    "changed_pixels_in_fixed_crown_zone": 0,
+    "image_sha256": "958eb031211128d301bc890b41d840ea61d1d7ebda544a11e00f7594a36cce85"
+  },
+  "B1": {
+    "producer_generated": true,
+    "stats": {
+      "static_draws": 460,
+      "shadow_draws": 34,
+      "static_triangles_k": 547,
+      "instance_draws": 205,
+      "instances": 129,
+      "instance_triangles_k": 28,
+      "total_draws": 665,
+      "total_triangles_k": 575
+    },
+    "changed_pixels": 5307,
+    "changed_bbox": [
+      0,
+      535,
+      1020,
+      582
+    ],
+    "fixed_crown_zone": [
+      0,
+      269,
+      461,
+      507
+    ],
+    "changed_pixels_in_fixed_crown_zone": 0,
+    "image_sha256": "764b522745b5662e32ff4acdfa2c57258ed2d2ff0114831cecbb078addecba43"
+  },
+  "maple_height_only": {
+    "producer_generated": false,
+    "stats": {
+      "static_draws": 460,
+      "shadow_draws": 34,
+      "static_triangles_k": 547,
+      "instance_draws": 205,
+      "instances": 129,
+      "instance_triangles_k": 28,
+      "total_draws": 665,
+      "total_triangles_k": 575
+    },
+    "changed_pixels": 11565,
+    "changed_bbox": [
+      0,
+      398,
+      1023,
+      582
+    ],
+    "fixed_crown_zone": [
+      0,
+      269,
+      461,
+      507
+    ],
+    "changed_pixels_in_fixed_crown_zone": 5152,
+    "image_sha256": "e84131ffd218ac76e4ece52aaf1373a70f70e5eb692850ac2fcee6163d9d8861"
+  }
+}

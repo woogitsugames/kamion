@@ -1,0 +1,14 @@
+# Następna runda life r3 — stan przygotowania
+
+Nowe uwagi lidera w aktualnym main: docs/owner/GPT-FEEDBACK-S10.md (s11 ~01:50) i docs/reports/visual/REVIEW-2026-11-12-s11-gpt-r1-batch.md. R1 scalone jako 0978792e, PARTIAL. Po przekazaniu placowego r2: brud tyłu/wachlarzy osobówek widoczny z 5 m overcast, głębia felg, czerń w słońcu i sheet_far 20–45 m. Preflight palet pozostaje dalszym backlogiem, nie jest wykonanym r3.
+
+1. Dopiero po REPORT/kopii r2 utworzyć gpt-life-r3 od r2 i dołączyć main do własnej gałęzi. Main poszedł od 765145c5 do co najmniej 9874d98c: inne GPT r1 i Claude 0125. Generaty konfliktowe brać z main i odtworzyć ze złączonego kodu. Odświeżyć potrzebne nieśledzone CC0/Megascans z main, sprawdzić brak fallback=True. Baseline r3 musi być świeży, nie można liczyć kosztu od obrazów r2 starego main.
+2. Najpierw obejrzeć baseline i potwierdzić rzeczywiste cele kamer po regeneracji. Nie zakładać, że stare nazwy g_current_black/g_dirt_level wskazują nadal ten sam prototyp/poziom po zmianie rozmieszczenia lub GI. Dodać flotę z 20/35/45 m, czytelny tył z 5 m i koło z bliska. Wszystkie 59 kontroli trasy zostają w budżecie, a próbki zmian powinny mieć adekwatne światło/ref.
+3. _wheel2 już ma beczkę felgi 70 mm i dwa czoła grzbietowe szerokich ramion. Cienkie/10 i podwójne ramiona mają jedną płaską twarz. Nie dopisywać ponownie istniejących cech; sprawdzić co faktycznie czyta się płasko. Potencjalna poprawa to fazy/boki w istniejącym rim_dark, bez nowych grup. Globalne rim/rim_dark/rim_steel/rim_dusty są używane też przez inne obiekty — nie przyciemniać ich globalnie dla samych osobówek.
+4. Brud ma pozostać ciągły i monotoniczny od rzeczywistego progu. Rozważyć mocniejszy zanik za osiami/na tylnej ścianie przez już istniejący affine UV1, bez odwrotnego dzielenia starego filmu, oderwanych plam lub nowej próbki tekstury. Statyczne kabiny w=2 mają pozostać zachowane z r2 C; ewentualne parametry osobówek w=1 oddzielić.
+5. Czerń w słońcu najpierw zmierzyć po light r1 na aktualnym main. Cel recenzji: drzwi/asfalt około 0,4–0,7; nie ruszać zamkniętego celu overcast 30–40 ani korekty liniowego Pearl z r1. Wartości pigmentu nie podnosić bez pomiaru. F0/clearcoat to ewentualna ograniczona ablacja danych, nie gotowa diagnoza.
+6. Nie obiecywać unikalnych tablic każdej instancji: jest 27 pól prototypów i znane powtórzenia. sheet_far ma to pokazać.
+
+Pętlę testową warto grupować w sekwencyjny batch pod jednym slotem heavy, zamiast wielokrotnie czekać na slot dla krótkich audytów. Każdy ciężki Python nadal wewnątrz heavy (max 3), każde Unity osobno gpt-life (max 4), bez usuwania cudzych blokad/telefonu. Pełny GIS tylko na końcu. Nie uruchamiać dwóch własnych zadań heavy z tym samym Owner.
+
+Pierwotny horyzont doby: około 12.11.2026 21:31 czasu Warszawy. Wyjaśnienie roli i start r3 nie rozpoczynają nowej doby. Nadal bez merge do main, push i telefonów.

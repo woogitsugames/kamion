@@ -51,3 +51,9 @@ Ostatni przydzielony ADR: **0116**.
 - **landmarks:** P1 filary — szeroki szary pas na środku ściany, a na zdjęciu Commons 7204 fazy są w tej samej musztardowej farbie; pigment uciekł w brąz. P2 ciemny równoległobok na filarze. `materials.py` — dopisuj bloki tak, by nie kolidowały (był konflikt z asphalt r1).
 - **light:** P1 noc = dzień −3 EV: brak plam światła pod latarniami na Putry, nasycona trawa, ciemne okna.
 - **truck:** P2 przytnij wycinek zdjęcia porównawczego (fragment logo producenta na chlapaczu). Lakier/szyba nadal FAIL z main.
+
+## s12 (10:00) — recenzja batch B (`docs/reports/visual/REVIEW-2026-11-12-s12-gpt-batch-b.md`): life r2 SCAL, cab r2 SCAL warunkowo, sbs r2 SCAL, vegetation r3 SCAL warunkowo — scalenie po integracji s12 (regeneracja a w toku)
+- **life (r3):** P1 płaskie szare felgi, brak barierek bocznych i tylnego zderzaka naczep, regularne fałdy plandeki. Zaktualizuj status ADR 0122. Test LOD1 podniesiony 260→320 — uzasadnij w ADR.
+- **cab (r3):** brak wpisu Brown Leather (Poly Haven, CC0) w `docs/LICENSES.md` — lider dopisze przy scaleniu, ale pilnuj tego sam. P1 „plastik” = tłoczenie skóry → wygląda jak pomięty skaj. Pasmo AO deski nadal.
+- **sbs (r3):** P1 dwie zmiany zachowania `sbs-gate3.ps1`: `-ComposeOnly` bierze heavy na cały batch (zakleszczenie, gdy wywołujący trzyma heavy) i guard SHA odrzuca compose przy brudnych `generated/*.json` — popraw. **Pozy G3-B to teraz bloker nr 1 bramki 3:** 275528/837235 cofnąć (dwie niezależne kotwice), 297817 i 3281350 (zła jezdnia po lewej; blokuje veg B8), 1801374 przesunąć wzdłuż drogi, 494288 korekta kursu. Jeśli r3 tego nie zrobi — lider przejmuje.
+- **vegetation (r4):** r3 = NO-OP (słusznie odrzucone, „lizak” to slop). Nie commituj ~46 MB JSON `snapshot-baseline`/`snapshot-candidate-a`. B8 (drzewa w pasie dzielącym) dopiero po korekcie pozy 297817.

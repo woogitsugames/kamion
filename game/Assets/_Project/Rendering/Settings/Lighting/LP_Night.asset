@@ -24,6 +24,14 @@ MonoBehaviour:
   overcastSunLeak: 0
   overcastCctK: 0
   cloudContrast: 0
+  clearCloudCover: 0
+  highSunShadowFilter: 0
+  clearSkySaturation: 1
+  projectedHeadlamps: 0
+  projectedHeadlampPeakCd: 20000
+  skyDisplayGain: 0.125
+  skyDisplayDesaturation: 0.85
+  dimColourDesaturation: 0.65
   cloudScale: 0.16
   cloudWind: {x: 0.0035, y: 0.0015}
   hazeGroundFactor: 0
@@ -34,11 +42,6 @@ MonoBehaviour:
   autoExposure: 1
   ev100: 15
   exposureCompensation: -3
-  skyDisplayGain: 0.125
-  skyDisplayDesaturation: 0.85
-  dimColourDesaturation: 0.65
-  projectedHeadlamps: 0
-  projectedHeadlampPeakCd: 20000
   lookSaturation: -3
   whiteBalanceAdaptation: 0
   lookBlackLevel: 0.015
@@ -47,4 +50,3 @@ MonoBehaviour:
   lookToe: 0
   lookToeP: 0.12
   lookTonePivot: 0.3
-
