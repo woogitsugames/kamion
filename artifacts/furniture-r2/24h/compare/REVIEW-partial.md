@@ -42,3 +42,5 @@ Low-clear przekazano niezależnemu reviewerowi. Trzy wariantyHigh jeszcze nieoce
 Niezależny reviewer zakończył Low-clear55/55. Łącznie165/330 (wszystkieLow) bez nowego widocznego blokera, bez halo/przypadkowej emisji i znikających mebli. Drobne zużycie nie potwierdza poprawy czytelności legendy. WszystkieHigh nadal otwarte, podobnie szczegóły mocowań, zdjęciowa zgodność konstrukcyjna, fotometria, okluzja, ruch/urządzenie/GPU.
 
 Root obejrzał High-overcast01–10,55/55 kamer, pojedyncze arkusze≤960px. Brak nowej oczywistej regresji mebli, utraty obiektów czy halo. Białe drobiny na gruncie występują także w baseline; bez przypisania ich zmianie znaków. Rootłącznie220/330, Highclear/dusk110 otwarte. Przekazano High-overcast do niezależnej oceny.
+
+Niezależny reviewer zakończył High-overcast55/55. Łącznie220/330 (wszystkieLow iHigh-overcast), brak nowego widocznego blokera. Potwierdził kompletność kadrów i obecność białych drobin także w baseline; High-clear/dusk110 nieocenione. Ograniczenia detalu, fotometrii, okluzji, ruchu/urządzenia/GPU zachowane.
