@@ -127,3 +127,6 @@ Rozszerzono porównanie o chunk.low: manifesty r1/r2 zgadzają się dla 64 High 
 
 ## Jedna dzierżawa dla krótkiej kompozycji partii
 ComposeOnly obejmuje teraz cztery sekwencyjne stany jedną dzierżawą heavy. Każdy Python jest wewnątrz Acquire/Release, działa tylko jeden proces obliczeń naszej gałęzi naraz. Release jest w zewnętrznym finally również przy błędzie migawki. Tryb render+compose nadal zwalnia heavy między stanami, a RenderOnly nie zajmuje heavy. To ten sam wzorzec co historyczny recompose-history: krótkie sekwencyjne kompozycje nie wracają wielokrotnie do kolejki, bez zwiększania równoległości. Parser PowerShell potwierdził składnię. Wykonanie całości nastąpi po historycznej kompozycji i zakończeniu post-world.
+
+## Przygotowanie celowanej diagnostyki 182
+Źródłowa najbliższa oś drogi naziemnej znajduje się około 5,72 m na wschód od zapisanej pozy, kurs osi około 352,83 stopnia siatki. To dane grafu, nie dowód faktycznego pasa w GLB. Przygotowano 16 hipotez wyłącznie w artefaktach: przesunięcia E, kurs, dwa warianty horyzontu oraz kontrolne przesunięcia N. Każda ma C i diagnostic_only; nie zmieniono produkcyjnych kamer ani referencji. Render będzie osobny, Low-overcast, przez Unity gpt-sbs, bez kompozycji Pythona i bez wpływu na roster 168 głównych klatek r2. Probe 00 zachowuje bazową geometrię kamery.
