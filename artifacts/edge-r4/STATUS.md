@@ -33,3 +33,4 @@ Krok 9: źródła Sky opisują opacity=0 w dolnej półsferze fotografii oraz ob
 2026-11-12T10:31:31.8216961+01:00 Maska forest-curtains Low-clear gotowa dla 2948/303305 w1280×720; materiały rzeczywiście wybrane, analiza obrazu nadal otwarta.
 2026-11-12T10:31:52.2695174+01:00 Maska forest-curtains High-clear gotowa dla 2948/303305 w1280×720; materiały rzeczywiście wybrane, analiza obrazu nadal otwarta.
 Krok 10: Before ukończone i zamrożone; 368 kadrów telefonu+104 native. Obejrzano klin i maskę nieprzezroczystego edge Low: nie zabarwia klina. Predykcja granicy dolnej półsfery chmur nałożona na obraz trafia w ukośną krawędź. Hipoteza wymaga jeszcze maski kurtyn i diagnostycznego rq_clearcover=0, bez edycji domeny light.
+Krok 11: diagnostyczna ablacja rq_clearcover=0 ukończona pod Unity. Nie jest rozwiązaniem produkcyjnym ani zmianą światła: wyłącznie dodatkowe obrazy do rozdzielenia geometrii i fotografii chmur. Podstawowe Before pozostaje z chmurami.
