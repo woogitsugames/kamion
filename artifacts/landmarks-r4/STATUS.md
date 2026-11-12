@@ -22,3 +22,5 @@ Krok 2d: ADR0116 ma sekcję r4 z hipotezą, policzonym polem kart i jawnym braki
 Krok 2e: przygotowano baseline_snapshot.py do uruchomienia dopiero po zakończeniu capture. Uzupełni rzeczywisty inwentarz czterech warunków, sprawdzi192 hashe runtime i zachowa GLB/spec/meta/dims/builder sprzed zmiany. Narzędzia porównań przeniesione z r3, bez stałej liczby kamer. Snapshot jeszcze niewykonany; baseline wciąż kolejkuje.
 
 Krok 3: świeży baseline świata po merge main wygenerowany pod heavy, bez fallback=True. Agregaty i spec podmostowy zachowane. NASTĘPNY KROK: import i wszystkie kamery trasy wraz z odziedziczonymi kadrami landmarks pod slotem Unity.
+
+Krok 4: baseline kompletny:61 kamer w każdym z4 warunków (244 PNG), World536,3s bez fallback=True, importOK64 chunków. baseline_snapshot.py potwierdził192 sumy runtime; GLB/spec/meta/dims/builder zachowane przed zmianą. Model bazowy9584/2818/164. Obejrzano natywne zbliżenie Low — dominujące pełne półki rdzenia potwierdzone również na świeżym main. Następny krok: wariant koron oraz testy pojedynczych plików pod heavy.
