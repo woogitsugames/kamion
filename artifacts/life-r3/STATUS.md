@@ -166,3 +166,5 @@ Krok 45: skorygowano w post-d.ps1 literę dysku w dodatkowym strażniku own-slot
 Po capture D (2026-11-12T10:54:29.0595903+01:00): potwierdź pełne kadry i budżet D. Następny krok według post-d.ps1, potem oględziny i wybór autora.
 
 Po capture D (2026-11-12T10:54:37.6131117+01:00): przygotuj oględziny mocniejszego tyłu D. Następny krok według post-d.ps1, potem oględziny i wybór autora.
+
+Po capture D (2026-11-12T10:54:59.8978547+01:00): potwierdź ograniczoną obwiednię D na GPU. Następny krok według post-d.ps1, potem oględziny i wybór autora.
