@@ -142,3 +142,13 @@ Uwaga: pełny pytest uruchomiony bez `KAMION_BLENDER` nadpisuje `generated/world
   `bash artifacts/junctions-r6/scripts/pairs.sh b6 && bash artifacts/junctions-r6/scripts/pairs_sbs.sh b6` → obejrzeć pary (krok 4) → ADR → robocopy;
   jeśli brak „b6_all done” i proces nie żyje: `bash artifacts/junctions-r6/scripts/build.sh b6 && bash artifacts/junctions-r6/scripts/b6_all.sh`
   (jeśli jest „world ready”, wystarczy samo `b6_all.sh`). Po buildzie zacommitować `Data/Regions/*/generated`, `art-source`.
+
+## Sesja 13 (wznowienie 16:43)
+- s13 krok 1 (17:01): żywy łańcuch `b6_all.sh` z s12 dobiegł końca sam („b6_all done 17:01”, nic nie zabite / nie zdublowane):
+  **b6** import rc 0, 4 zestawy + SBS, **EditMode 317/317, PlayMode 3/3, pytest gis+physics+gate3 666 passed, 1 xfailed** (16:16 min),
+  fidelity p50 0,36 / p95 2,304, swept = b5 (RING-B prop 2,41 / 2,28; G3-A lane −1,12, wide −0,10; G3-B −0,14).
+  Budżet b6 vs b5 Low clear 102 kamery: draws max **+0**, tris +0,0 %. Pary `pairs_b6/` (24), `pairs_b6sbs/` (20) obejrzane
+  (2818555…, 201270…, 1398898…, 178689…, arkusze `view/b6_{ba,photo}_sheet1.jpg`): nasyp z kruszywa na wyspie jest, bariera i
+  tabliczki ronda stoją na nim (niezakopane), filary + czerwony gzyms czytelne — węzeł rozpoznawalny (D51).
+  NASTĘPNY KROK: `git merge main` (generated/glb → ours; `WorldPBR.shader` CBUFFER: zostawić obie strony) →
+  `bash artifacts/junctions-r6/scripts/build.sh b7 && bash artifacts/junctions-r6/scripts/b7_all.sh`
