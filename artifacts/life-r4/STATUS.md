@@ -37,3 +37,5 @@ Baseline (2026-11-12T12:12:01.6074528+01:00): potwierdź World i fidelity baseli
 Po baseline (2026-11-12T12:13:29.4782379+01:00): zaimportuj świeży baseline r4. Następny krok: kanoniczny capture, diagnostyka LOD, oględziny; produkcja bez zmian przed oceną.
 
 Po baseline (2026-11-12T12:16:22.6599744+01:00): potwierdź pełny baseline r4 w czterech warunkach. Następny krok: kanoniczny capture, diagnostyka LOD, oględziny; produkcja bez zmian przed oceną.
+
+Diagnostyka LOD Low zakończona: rzeczywiste bufory natywnej metody i liczniki/pozy identyczne z kanonicznym baseline, 13 kamer / 5 celów. Następny krok: odczytać native-lod.json i obejrzeć koła, nie wnioskować z nazwy side8.
