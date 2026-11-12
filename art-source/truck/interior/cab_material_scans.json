@@ -1,86 +1,87 @@
-﻿{
-    "schema":  1,
-    "leather":  {
-                    "enabled":  true,
-                    "provider":  "Poly Haven",
-                    "asset":  "brown_leather",
-                    "author":  "Rob Tuytel",
-                    "source_page":  "https://polyhaven.com/a/brown_leather",
-                    "license":  "CC0-1.0",
-                    "license_url":  "https://polyhaven.com/license",
-                    "source_metres":  0.4,
-                    "tile_metres":  0.12,
-                    "wheel_authored_tile_metres":  0.05,
-                    "rim_min_radius_m":  0.19,
-                    "rim_max_radius_m":  0.27,
-                    "maps":  {
-                                 "diffuse":  {
-                                                 "file":  "brown_leather_albedo_2k.jpg",
-                                                 "url":  "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/brown_leather/brown_leather_albedo_2k.jpg",
-                                                 "md5":  "1bd381c43817743a2affdd1ce2d193c7",
-                                                 "bytes":  2137518
-                                             },
-                                 "normal":  {
-                                                "file":  "brown_leather_nor_gl_2k.png",
-                                                "url":  "https://dl.polyhaven.org/file/ph-assets/Textures/png/2k/brown_leather/brown_leather_nor_gl_2k.png",
-                                                "md5":  "79e5a78506947a412d2b739a4bec34b4",
-                                                "bytes":  7284076
-                                            },
-                                 "roughness":  {
-                                                   "file":  "brown_leather_rough_2k.jpg",
-                                                   "url":  "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/brown_leather/brown_leather_rough_2k.jpg",
-                                                   "md5":  "95b48a5c95b02d87dadee46c26f1cfb5",
-                                                   "bytes":  2801956
-                                               },
-                                 "ao":  {
-                                            "file":  "brown_leather_ao_2k.jpg",
-                                            "url":  "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/brown_leather/brown_leather_ao_2k.jpg",
-                                            "md5":  "4ff0006acb807b9ddccd387a093d89b8",
-                                            "bytes":  1541878
-                                        }
-                             }
-                },
-    "plastic":  {
-                    "enabled":  true,
-                    "provider":  "Poly Haven",
-                    "asset":  "brown_leather",
-                    "author":  "Rob Tuytel",
-                    "source_page":  "https://polyhaven.com/a/brown_leather",
-                    "license":  "CC0-1.0",
-                    "license_url":  "https://polyhaven.com/license",
-                    "source_metres":  0.4,
-                    "source_crop_metres":  0.2,
-                    "tile_metres":  0.1,
-                    "variation_gain":  0.35,
-                    "roughness_gain":  0.35,
-                    "ao_gain":  0.35,
-                    "normal_strength":  0.6,
-                    "description":  "Derivative emboss pattern from a leather scan, not a scanned plastic part. Gains and scale are WORKING_VALUE.",
-                    "maps":  {
-                                 "diffuse":  {
-                                                 "file":  "brown_leather_albedo_2k.jpg",
-                                                 "url":  "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/brown_leather/brown_leather_albedo_2k.jpg",
-                                                 "md5":  "1bd381c43817743a2affdd1ce2d193c7",
-                                                 "bytes":  2137518
-                                             },
-                                 "normal":  {
-                                                "file":  "brown_leather_nor_gl_2k.png",
-                                                "url":  "https://dl.polyhaven.org/file/ph-assets/Textures/png/2k/brown_leather/brown_leather_nor_gl_2k.png",
-                                                "md5":  "79e5a78506947a412d2b739a4bec34b4",
-                                                "bytes":  7284076
-                                            },
-                                 "roughness":  {
-                                                   "file":  "brown_leather_rough_2k.jpg",
-                                                   "url":  "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/brown_leather/brown_leather_rough_2k.jpg",
-                                                   "md5":  "95b48a5c95b02d87dadee46c26f1cfb5",
-                                                   "bytes":  2801956
-                                               },
-                                 "ao":  {
-                                            "file":  "brown_leather_ao_2k.jpg",
-                                            "url":  "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/brown_leather/brown_leather_ao_2k.jpg",
-                                            "md5":  "4ff0006acb807b9ddccd387a093d89b8",
-                                            "bytes":  1541878
-                                        }
-                             }
-                }
+{
+  "schema": 1,
+  "leather": {
+    "enabled": true,
+    "provider": "Poly Haven",
+    "asset": "brown_leather",
+    "author": "Rob Tuytel",
+    "source_page": "https://polyhaven.com/a/brown_leather",
+    "license": "CC0-1.0",
+    "license_url": "https://polyhaven.com/license",
+    "source_metres": 0.4,
+    "tile_metres": 0.12,
+    "wheel_authored_tile_metres": 0.05,
+    "rim_min_radius_m": 0.19,
+    "rim_max_radius_m": 0.27,
+    "maps": {
+      "diffuse": {
+        "file": "brown_leather_albedo_2k.jpg",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/brown_leather/brown_leather_albedo_2k.jpg",
+        "md5": "1bd381c43817743a2affdd1ce2d193c7",
+        "bytes": 2137518
+      },
+      "normal": {
+        "file": "brown_leather_nor_gl_2k.png",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/png/2k/brown_leather/brown_leather_nor_gl_2k.png",
+        "md5": "79e5a78506947a412d2b739a4bec34b4",
+        "bytes": 7284076
+      },
+      "roughness": {
+        "file": "brown_leather_rough_2k.jpg",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/brown_leather/brown_leather_rough_2k.jpg",
+        "md5": "95b48a5c95b02d87dadee46c26f1cfb5",
+        "bytes": 2801956
+      },
+      "ao": {
+        "file": "brown_leather_ao_2k.jpg",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/brown_leather/brown_leather_ao_2k.jpg",
+        "md5": "4ff0006acb807b9ddccd387a093d89b8",
+        "bytes": 1541878
+      }
+    }
+  },
+  "plastic": {
+    "enabled": true,
+    "provider": "Poly Haven",
+    "asset": "brown_leather",
+    "author": "Rob Tuytel",
+    "source_page": "https://polyhaven.com/a/brown_leather",
+    "license": "CC0-1.0",
+    "license_url": "https://polyhaven.com/license",
+    "source_metres": 0.4,
+    "source_crop_metres": 0.2,
+    "tile_metres": 0.1,
+    "variation_gain": 0.35,
+    "roughness_gain": 0.35,
+    "ao_gain": 0.35,
+    "normal_strength": 0.6,
+    "description": "Derivative emboss pattern from a leather scan, not a scanned plastic part. Gains and scale are WORKING_VALUE.",
+    "maps": {
+      "diffuse": {
+        "file": "brown_leather_albedo_2k.jpg",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/brown_leather/brown_leather_albedo_2k.jpg",
+        "md5": "1bd381c43817743a2affdd1ce2d193c7",
+        "bytes": 2137518
+      },
+      "normal": {
+        "file": "brown_leather_nor_gl_2k.png",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/png/2k/brown_leather/brown_leather_nor_gl_2k.png",
+        "md5": "79e5a78506947a412d2b739a4bec34b4",
+        "bytes": 7284076
+      },
+      "roughness": {
+        "file": "brown_leather_rough_2k.jpg",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/brown_leather/brown_leather_rough_2k.jpg",
+        "md5": "95b48a5c95b02d87dadee46c26f1cfb5",
+        "bytes": 2801956
+      },
+      "ao": {
+        "file": "brown_leather_ao_2k.jpg",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/brown_leather/brown_leather_ao_2k.jpg",
+        "md5": "4ff0006acb807b9ddccd387a093d89b8",
+        "bytes": 1541878
+      }
+    },
+    "normal_highpass_mm": 1.5
+  }
 }
