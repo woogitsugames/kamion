@@ -15,3 +15,7 @@ NASTĘPNY KROK: przygotować własne skrypty r2 z ownerem heavy gpt-furniture-r2
 2026-11-12T02:34:08.7719984+01:00: nowe pliki prototypu przeniesiono do Assets wyłącznie do izolowanej próby GPU. Żaden materiał świata nie używa nowego shadera, a nowe globale nie są czytane przez dotychczasowe shadery. Python i fabryka materiałów świata bez zmian. Własny PAUSE_UNITY wstrzymuje przyszły import/render bazowy do zakończenia próby; nie dotyka cudzych blokad. NASTĘPNY KROK: pwsh artifacts/furniture-r2/24h/sign-probe.ps1.
 
 2026-11-12T02:34:36.6274164+01:00: Unity sign-probe first Low overcast; sukces=False. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
+
+2026-11-12T02:34:37.1771192+01:00: próba znaków nie przeszła (exit=1). Własny import/render pozostaje wstrzymany przez PAUSE_UNITY do odczytu logu i naprawy. NASTĘPNY KROK: odczytać sign-probe-first.log oraz XML, usunąć marker dopiero po usunięciu błędu kompilacji.
+
+2026-11-12T02:37:07.1255554+01:00: pierwsza próba: 2 passed, 6 failed; ForwardLit niedostępny w fixture bez aktywnego tagu pipeline, licznik passCount sam nie wystarczał. Wzmocniono sprawdzenie obecności ForwardLit i dodano jawny tag URP tylko na czas testu, z przywróceniem globali. Oryginalne nieudane wyniki zachowane w probe-first. NASTĘPNY KROK: ponowić wyłącznie FurnitureSignTests w slocie Unity i sprawdzić rzeczywiste wyniki, PAUSE_UNITY nadal własny.

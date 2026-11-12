@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="8" result="Failed(Child)" total="8" passed="2" failed="6" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-11-12 01:34:32Z" end-time="2026-11-12 01:34:32Z" duration="0,046157">
+  <test-suite type="TestSuite" id="1000" name="Kamion" fullname="Kamion" runstate="Runnable" testcasecount="332" result="Failed" site="Child" start-time="2026-11-12 01:34:32Z" end-time="2026-11-12 01:34:32Z" duration="0.046157" total="8" passed="2" failed="6" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1415" name="Game.Tests.EditMode.dll" fullname="C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-furniture/game/Library/ScriptAssemblies/Game.Tests.EditMode.dll" runstate="Runnable" testcasecount="332" result="Failed" site="Child" start-time="2026-11-12 01:34:32Z" end-time="2026-11-12 01:34:32Z" duration="0.040545" total="8" passed="2" failed="6" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="94960" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1416" name="Game" fullname="Game" runstate="Runnable" testcasecount="332" result="Failed" site="Child" start-time="2026-11-12 01:34:32Z" end-time="2026-11-12 01:34:32Z" duration="0.038988" total="8" passed="2" failed="6" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1417" name="Tests" fullname="Game.Tests" runstate="Runnable" testcasecount="332" result="Failed" site="Child" start-time="2026-11-12 01:34:32Z" end-time="2026-11-12 01:34:32Z" duration="0.037551" total="8" passed="2" failed="6" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1114" name="FurnitureSignTests" fullname="Game.Tests.FurnitureSignTests" classname="Game.Tests.FurnitureSignTests" runstate="Runnable" testcasecount="8" result="Failed" site="Child" start-time="2026-11-12 01:34:32Z" end-time="2026-11-12 01:34:32Z" duration="0.033438" total="8" passed="2" failed="6" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1117" name="AlphaCutoutRemainsEmptyWithHeadlights" fullname="Game.Tests.FurnitureSignTests.AlphaCutoutRemainsEmptyWithHeadlights" methodname="AlphaCutoutRemainsEmptyWithHeadlights" classname="Game.Tests.FurnitureSignTests" runstate="Runnable" seed="761617002" result="Failed" start-time="2026-11-12 01:34:32Z" end-time="2026-11-12 01:34:32Z" duration="0.015722" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: greater than or equal to 0
+  But was:  -1
+]]></message>
+                <stack-trace><![CDATA[at Game.Tests.FurnitureSignTests.Draw (System.Boolean candidate, System.Boolean keyword, System.Boolean sourceOn, System.Single distance, System.Single eyeOffset, System.Boolean back, System.Boolean transparent) [0x004f0] in C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-furniture\game\Assets\_Project\Tests\EditMode\FurnitureSignTests.cs:64
+at Game.Tests.FurnitureSignTests.AlphaCutoutRemainsEmptyWithHeadlights () [0x00000] in C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-furniture\game\Assets\_Project\Tests\EditMode\FurnitureSignTests.cs:91
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1116" name="EnabledKeywordWithNoSourceMatchesInstalledUrpLit" fullname="Game.Tests.FurnitureSignTests.EnabledKeywordWithNoSourceMatchesInstalledUrpLit" methodname="EnabledKeywordWithNoSourceMatchesInstalledUrpLit" classname="Game.Tests.FurnitureSignTests" runstate="Runnable" seed="1361505961" result="Failed" start-time="2026-11-12 01:34:32Z" end-time="2026-11-12 01:34:32Z" duration="0.000609" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: greater than or equal to 0
+  But was:  -1
+]]></message>
+                <stack-trace><![CDATA[at Game.Tests.FurnitureSignTests.Draw (System.Boolean candidate, System.Boolean keyword, System.Boolean sourceOn, System.Single distance, System.Single eyeOffset, System.Boolean back, System.Boolean transparent) [0x004f0] in C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-furniture\game\Assets\_Project\Tests\EditMode\FurnitureSignTests.cs:64
+at Game.Tests.FurnitureSignTests.EnabledKeywordWithNoSourceMatchesInstalledUrpLit () [0x00000] in C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-furniture\game\Assets\_Project\Tests\EditMode\FurnitureSignTests.cs:90
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1115" name="KeywordOffMatchesInstalledUrpLitOnGpu" fullname="Game.Tests.FurnitureSignTests.KeywordOffMatchesInstalledUrpLitOnGpu" methodname="KeywordOffMatchesInstalledUrpLitOnGpu" classname="Game.Tests.FurnitureSignTests" runstate="Runnable" seed="1053646540" result="Failed" start-time="2026-11-12 01:34:32Z" end-time="2026-11-12 01:34:32Z" duration="0.000533" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: greater than or equal to 0
+  But was:  -1
+]]></message>
+                <stack-trace><![CDATA[at Game.Tests.FurnitureSignTests.Draw (System.Boolean candidate, System.Boolean keyword, System.Boolean sourceOn, System.Single distance, System.Single eyeOffset, System.Boolean back, System.Boolean transparent) [0x004f0] in C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-furniture\game\Assets\_Project\Tests\EditMode\FurnitureSignTests.cs:64
+at Game.Tests.FurnitureSignTests.KeywordOffMatchesInstalledUrpLitOnGpu () [0x00000] in C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-furniture\game\Assets\_Project\Tests\EditMode\FurnitureSignTests.cs:89
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1120" name="ObservationAngleSuppressesReturn" fullname="Game.Tests.FurnitureSignTests.ObservationAngleSuppressesReturn" methodname="ObservationAngleSuppressesReturn" classname="Game.Tests.FurnitureSignTests" runstate="Runnable" seed="1527209663" result="Failed" start-time="2026-11-12 01:34:32Z" end-time="2026-11-12 01:34:32Z" duration="0.000502" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: greater than or equal to 0
+  But was:  -1
+]]></message>
+                <stack-trace><![CDATA[at Game.Tests.FurnitureSignTests.Draw (System.Boolean candidate, System.Boolean keyword, System.Boolean sourceOn, System.Single distance, System.Single eyeOffset, System.Boolean back, System.Boolean transparent) [0x004f0] in C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-furniture\game\Assets\_Project\Tests\EditMode\FurnitureSignTests.cs:64
+at Game.Tests.FurnitureSignTests.ObservationAngleSuppressesReturn () [0x00000] in C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-furniture\game\Assets\_Project\Tests\EditMode\FurnitureSignTests.cs:106
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1122" name="PublisherClearsSourceWhenMissingOffOrDisabled" fullname="Game.Tests.FurnitureSignTests.PublisherClearsSourceWhenMissingOffOrDisabled" methodname="PublisherClearsSourceWhenMissingOffOrDisabled" classname="Game.Tests.FurnitureSignTests" runstate="Runnable" seed="146403128" result="Passed" start-time="2026-11-12 01:34:32Z" end-time="2026-11-12 01:34:32Z" duration="0.006602" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1118" name="ReturnDoesNotCreateAdditionalPasses" fullname="Game.Tests.FurnitureSignTests.ReturnDoesNotCreateAdditionalPasses" methodname="ReturnDoesNotCreateAdditionalPasses" classname="Game.Tests.FurnitureSignTests" runstate="Runnable" seed="1050451114" result="Passed" start-time="2026-11-12 01:34:32Z" end-time="2026-11-12 01:34:32Z" duration="0.000467" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1121" name="ReturnFallsWithDistanceAndEndsBeyondRange" fullname="Game.Tests.FurnitureSignTests.ReturnFallsWithDistanceAndEndsBeyondRange" methodname="ReturnFallsWithDistanceAndEndsBeyondRange" classname="Game.Tests.FurnitureSignTests" runstate="Runnable" seed="1563593389" result="Failed" start-time="2026-11-12 01:34:32Z" end-time="2026-11-12 01:34:32Z" duration="0.000590" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: greater than or equal to 0
+  But was:  -1
+]]></message>
+                <stack-trace><![CDATA[at Game.Tests.FurnitureSignTests.Draw (System.Boolean candidate, System.Boolean keyword, System.Boolean sourceOn, System.Single distance, System.Single eyeOffset, System.Boolean back, System.Boolean transparent) [0x004f0] in C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-furniture\game\Assets\_Project\Tests\EditMode\FurnitureSignTests.cs:64
+at Game.Tests.FurnitureSignTests.ReturnFallsWithDistanceAndEndsBeyondRange () [0x00000] in C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-furniture\game\Assets\_Project\Tests\EditMode\FurnitureSignTests.cs:112
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1119" name="SourceBrightensFaceButNotItsBack" fullname="Game.Tests.FurnitureSignTests.SourceBrightensFaceButNotItsBack" methodname="SourceBrightensFaceButNotItsBack" classname="Game.Tests.FurnitureSignTests" runstate="Runnable" seed="699820361" result="Failed" start-time="2026-11-12 01:34:32Z" end-time="2026-11-12 01:34:32Z" duration="0.000495" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: greater than or equal to 0
+  But was:  -1
+]]></message>
+                <stack-trace><![CDATA[at Game.Tests.FurnitureSignTests.Draw (System.Boolean candidate, System.Boolean keyword, System.Boolean sourceOn, System.Single distance, System.Single eyeOffset, System.Boolean back, System.Boolean transparent) [0x004f0] in C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-furniture\game\Assets\_Project\Tests\EditMode\FurnitureSignTests.cs:64
+at Game.Tests.FurnitureSignTests.SourceBrightensFaceButNotItsBack () [0x00000] in C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-furniture\game\Assets\_Project\Tests\EditMode\FurnitureSignTests.cs:101
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[Saving results to: C:/Users/matma/AppData/LocalLow/woogitsugames/Kamion\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

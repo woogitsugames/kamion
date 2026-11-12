@@ -12,6 +12,23 @@ namespace Game.Tests
     public class FurnitureSignTests
     {
         const string Keyword = "_FURNITURE_RETRO";
+        string m_Pipeline;
+        int m_MaxLod;
+
+        [OneTimeSetUp] public void SetUpPipelineTag()
+        {
+            m_Pipeline = Shader.globalRenderPipeline;
+            m_MaxLod = Shader.globalMaximumLOD;
+            Debug.Log($"[FurnitureSignProbe] previous pipeline='{m_Pipeline}', maximumLOD={m_MaxLod}");
+            // These command-buffer tests do not run a camera loop that normally selects the pipeline tag.
+            Shader.globalRenderPipeline = "UniversalPipeline";
+            Shader.globalMaximumLOD = int.MaxValue;
+        }
+        [OneTimeTearDown] public void RestorePipelineTag()
+        {
+            Shader.globalRenderPipeline = m_Pipeline;
+            Shader.globalMaximumLOD = m_MaxLod;
+        }
 
         static Color Draw(bool candidate, bool keyword, bool sourceOn, float distance = 50,
             float eyeOffset = 0, bool back = false, bool transparent = false)
@@ -61,7 +78,7 @@ namespace Game.Tests
                 cb.SetGlobalVector("_FurnitureRetroForward", new Vector4(0, 0, 1, 0));
                 cb.SetGlobalVector("_FurnitureRetroUp", new Vector4(0, 1, 0, 0));
                 cb.SetGlobalVector("_FurnitureRetroState", new Vector4(sourceOn ? 1 : 0, 0, 0, 0));
-                int pass = mat.FindPass("ForwardLit"); Assert.GreaterOrEqual(pass, 0);
+                int pass = mat.FindPass("ForwardLit"); Assert.GreaterOrEqual(pass, 0, shader.name + " has no ForwardLit pass");
                 cb.DrawMesh(mesh, Matrix4x4.identity, mat, 0, pass);
                 Graphics.ExecuteCommandBuffer(cb);
                 RenderTexture.active = rt; pixel.ReadPixels(new Rect(8,8,1,1), 0, 0); pixel.Apply();
@@ -93,7 +110,13 @@ namespace Game.Tests
         {
             var a = new Material(Shader.Find("Universal Render Pipeline/Lit"));
             var b = new Material(Shader.Find("Kamion/Furniture Sign"));
-            try { Assert.AreEqual(a.passCount, b.passCount); }
+            try
+            {
+                Assert.GreaterOrEqual(a.FindPass("ForwardLit"), 0);
+                Assert.GreaterOrEqual(b.FindPass("ForwardLit"), 0);
+                Debug.Log($"[FurnitureSignProbe] actual passes URP={a.passCount}, furniture={b.passCount}");
+                Assert.AreEqual(a.passCount, b.passCount);
+            }
             finally { UnityEngine.Object.DestroyImmediate(a); UnityEngine.Object.DestroyImmediate(b); }
         }
         [Test] public void SourceBrightensFaceButNotItsBack()

@@ -1,8 +1,9 @@
+param([string]$Phase='first')
 $ErrorActionPreference='Continue'
 $PSNativeCommandUseErrorActionPreference=$false
 Set-Location (Resolve-Path "$PSScriptRoot/../../..")
 $ev='artifacts/furniture-r2/24h'
-& pwsh "$ev/unity-step.ps1" -Step sign-probe -Phase first
+& pwsh "$ev/unity-step.ps1" -Step sign-probe -Phase $Phase
 $code=$LASTEXITCODE
 if ($code -eq 0) {
     Remove-Item -LiteralPath "$ev/PAUSE_UNITY" -ErrorAction SilentlyContinue
