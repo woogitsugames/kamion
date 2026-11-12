@@ -41,6 +41,9 @@ def main():
         'tools/worldgen/streetscape/life.py',
         'tools/worldgen/streetscape/depot_yard.py',
         'tools/worldgen/streetscape/materials.py',
+        'game/Assets/_Project/World/Import/WorldPbrMaterials.cs',
+        'game/Assets/_Project/World/Import/InstanceImporter.cs',
+        'game/Assets/_Project/World/Import/WorldMeshBake.cs',
         'game/Assets/_Project/Environment/Shaders/WorldPBR.shader')}
     mode_path=Path(__file__).with_name('SOURCE-MODE.json')
     mode=json.loads(mode_path.read_text(encoding='utf-8-sig')) if mode_path.exists() else None

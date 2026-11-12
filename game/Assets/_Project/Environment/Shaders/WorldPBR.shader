@@ -74,7 +74,7 @@ Shader "Kamion/World PBR"
         _PaintColor ("Paint film albedo (linear, _DECAL_PAINT), a = smoothness", Vector) = (0.6, 0.6, 0.57, 0.35)
         _PaintWear ("Paint wear: x wheel-path, y age, z dirt film, w line width m", Vector) = (0.85, 0.25, 0.3, 0.12)
         _CarPaint ("Car paint (_CARPAINT): x base metal, y flake tilt, z pearl, w base-coat roughness", Vector) = (0, 0, 0, 0.5)
-        _CarFlake ("Car flake: x cells per m, y fade scale (1 = gone when a pixel covers a cell)", Vector) = (400, 1, 0, 0)
+        _CarFlake ("Car flake: x cells/m, y fade, w film mode (0 off, 1 car, 2 yard)", Vector) = (400, 1, 0, 0)
         _PearlTint ("Pearl grazing tint (linear)", Color) = (1, 1, 1, 1)
         _PanelTone ("Panel tone (_PANELTONE): xy cladding module in UV0 m (length, course), z per-panel hash share, w butt-joint line", Vector) = (6, 1, 0.35, 0.3)
         _OffsetFactor ("Depth offset factor", Float) = 0
@@ -284,14 +284,17 @@ Shader "Kamion/World PBR"
                     half amount = 0.08h + 0.92h * i.carFilm.x;
                     half falloff = 0.16h + 0.06h * i.carFilm.x;
                     half vertical = exp2(-max(i.uv.z, 0.0) / falloff * 1.442695h);
-                    half keepUpper = smoothstep(0.45h, 0.85h, abs(n.y)) * smoothstep(0.6, 0.8, um.y);
-                    // Clean-map Mask.R carries removed legacy film, not metal.
-                    // Preserve the existing bonnet/roof response by forward application;
-                    // the monotone sill layer below remains independent of that coverage.
-                    half upperFilm = saturate(mask.r);
-                    half3 legacyMultiplier = (1.0h - 0.30h * upperFilm) * half3(1.0h, 1.0h - 0.08h * upperFilm, 1.0h - 0.22h * upperFilm);
-                    base.rgb *= lerp(half3(1, 1, 1), legacyMultiplier, keepUpper);
-                    mask.a = saturate(mask.a - 0.35h * upperFilm * keepUpper);
+                    half keepUpper = 0.0h;
+                    if (_CarFlake.w < 1.5)
+                    {
+                        // Preserve the existing passenger-car bonnet/roof response.
+                        // Static cabs opt out: their previous plain paint had no such layer.
+                        keepUpper = smoothstep(0.45h, 0.85h, abs(n.y)) * smoothstep(0.6, 0.8, um.y);
+                        half upperFilm = saturate(mask.r);
+                        half3 legacyMultiplier = (1.0h - 0.30h * upperFilm) * half3(1.0h, 1.0h - 0.08h * upperFilm, 1.0h - 0.22h * upperFilm);
+                        base.rgb *= lerp(half3(1, 1, 1), legacyMultiplier, keepUpper);
+                        mask.a = saturate(mask.a - 0.35h * upperFilm * keepUpper);
+                    }
                     half frontTrail = saturate(1.0h - abs(i.uv.w - 0.87h) / 0.28h);
                     half rearTrail = saturate(1.0h - abs(i.uv.w + 0.13h) / 0.28h);
                     half rearFace = saturate((-i.uv.w - 0.20h) * 8.0h);
