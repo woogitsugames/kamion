@@ -59,3 +59,5 @@ Nie wykonano merge do main, push, telefonu ani edycji innych dziedzin. Odśwież
 2026-11-12T12:54:49.3682273+01:00: doprecyzowano ograniczenie EXIF: metadane aktualnej wersji Commons nie są jeszcze związane bajtowo z lokalną miniaturą. Przed wykorzystaniem do kalibracji potrzebna kontrola wersji obrazu i SHA. Odczyt metadanych sam tego nie dowodzi.
 
 2026-11-12T12:58:13.4233885+01:00: zamknięto ograniczenie powiązania EXIF z obrazem: obie aktualne miniatury3840×2160 mają identyczne SHA256 jak lokalne referencje, metadataAPI przed/po identyczne i niezmienne SHA1oryginałów. Odrzucenia preflight(host i rozmiar) zachowane; jedno udane pobranie każdej miniatury,3 686 648B łącznie, bez dekodowania lub nowych obrazów wgit. Nie potwierdza to GPS ani poza/FOV; brak zmian produkcyjnych. World ma1 zgłoszenie przed sobą.
+
+2026-11-12T13:00:40.7790198+01:00: osiem odpowiedzi/receiptów metadanych zamknięto w reference-metadata-evidence.zip z SHA każdego wpisu. Archiwum nie zawiera obrazów i zachowuje dokładne bajty mimo normalizacji końców linii przez Git. To dowód źródłowy, nie ocena pozy lub D51.
