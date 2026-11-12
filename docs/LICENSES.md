@@ -272,3 +272,6 @@ Zdjęcia nie wchodzą do builda ani tekstur. Rejestr: [`docs/refs/posesje-bialys
 - Oryginał 4K HDR poza gitem w Data/raw/cc0/sky/kloofendal_48d_partly_cloudy_puresky/; 20 674 857 B, MD5 816340c969d2e60d659051d13ac3c4dc, SHA256 3061c00a16ecae748e84fd6c44c04804f539c118bb66325db858bad87b11bf88.
 - Pochodna: game/Assets/_Project/Rendering/Resources/Sky/T_ClearClouds.png, R = fotograficzna maska chmur, G = względna luminancja; usunięto tarczę słońca, zachowano kształt i cienie chmur. Dokładne metadane i oś słońca: ClearCloudsSource.json. Reprodukcja: artifacts/light-r1/build-photo-clouds.py przez pulę heavy.
 - To tekstura nieba, nie zdjęcie referencyjne Białegostoku. Nie zawiera zabudowy ani oznaczeń; nie jest zasobem Fab/Megascans.
+
+## Life r3 — referencje analityczne (nie zasoby gry)
+Greg Schechter, 2200 km Later, oraz Nenad Stojkovic, Dirty back car window: CC BY 2.0; strony źródłowe, licencja i miniatury z atrybucją w artifacts/life-r3/refs/REFERENCES.md. Johann H. Addicks: wyłącznie udostępniona jako PD miniatura 250 px Salt coverd car during winter P1020038, bez oryginału. Brak kopiowania znaków/logo/tablic do gry.
