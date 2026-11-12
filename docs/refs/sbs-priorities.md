@@ -1,5 +1,7 @@
 # SBS — priorytety r4 i historia r3
 
+Nowszy main, odczyt około 14:51: scalono ADR 0130 (abf15f9e), który zmienia sześć spornych póz. [Recenzja tej zmiany](../../artifacts/sbs-r4/review-snapshots/REVIEW-2026-11-12-s12-0130-truck-r3.md) wymaga świeżego renderu czterech stanów na main przed kompozycją i aktualizacją rejestru. Jej G3-B 6/10 RECOGNISABLE (3 słabe) dotyczy innej bazy i części kohorty; nie dodajemy tego wyniku do ocen G3-A z r4. Poniższe obrazy r4 nadal przedstawiają main 0023f39d. Przepis 15 starych prób zastąpiono przed wykonaniem; r5 ma sprawdzić scalone pozy na nowym świecie, z zachowaniem zmian Claude. Kolejny wskazany problem kamery to pitch B150280; portal, ekrany i pomost mają także odrębne problemy świata. Te informacje są priorytetami do nowej weryfikacji, nie dowodami naprawy w obrazach r4.
+
 Stan r4, 12.11 około 13:30: bazą nowej generacji jest main 0023f39d po pakietach A+B+C. Materiały i świat zakończone bez fallbacków, import oraz pełne 168 raw gotowe na HEAD 80159a70. [Niezależny świeży przegląd](../../artifacts/sbs-r4/REVIEW-D51-BASELINE.md) wszystkich 25 par B Low-overcast daje D51 FAIL: 13 rozpoznawalnych, 11 częściowych i 1 nierozpoznawalna. Obejrzano 50 natywnych obrazów; przyszłych arkuszy 960 px jeszcze nie oceniano. Sumy są takie jak w r3, ale oceny dotyczą nowych SHA, a historia r3 i r1 pozostaje w rejestrze. Żadnej pozy C nie awansowano.
 
 [Własny punktowy przegląd](../../artifacts/sbs-r4/FRESH-SPOT-REVIEW.md) A294859/A303305 Low-clear i High-clear potwierdza brak ostrego ukośnego klina nad prawym horyzontem w nowej wspólnej bazie. Pozostaje miękki szary pas dolnego nieba; nie utożsamiać go z dawnym twardym klinem ani blokerem D51. W 303305 nadal nie zgadza się sylwetka bloków po lewej. Ta kontrola obejmuje tylko 4 klatki: 294859 jest C, 303305 jest B.
@@ -88,5 +90,6 @@ Odczytano z main 49a9d332 około 11:31. [Migawka recenzji pakietu A](../../artif
 | asphalt | Prostokątne łaty i przetarcia oznakowania jako materiał, po rozwiązaniu blokerów orientacyjnych. | Pakiety A+B nie dają nowej recenzji asfaltu; wcześniejsza ocena pozostaje historyczna. Nie używać niekwalifikowanego histogramu r3 jako albedo. |
 
 Kolejność nadal wynika z rozpoznawalności układu, a dopiero później z materiałów i zużycia. Nowy main trzeba odświeżyć w następnej rundzie SBS. Wspólny wzrost kosztu z bazy r2 do r3 (38/84 Low draws i 22/84 tris ponad 2%) jest jawny w [ograniczeniach budżetu](../../artifacts/sbs-r3/BUDGET-LIMITATIONS.md); nie rozdzielamy go bez pomiaru na poszczególne domeny.
+
 
 
