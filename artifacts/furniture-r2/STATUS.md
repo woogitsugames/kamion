@@ -39,3 +39,7 @@ NASTĘPNY KROK: przygotować własne skrypty r2 z ownerem heavy gpt-furniture-r2
 2026-11-12T02:47:40.1495412+01:00: test rozszerzono na faktyczne lica całej biblioteki props_meta: tablice kierunkowe, komplet tekstur, zachowanie cudzej jawnej definicji i brak rejestracji po usunięciu flagi rodziny. Wciąż brak aktywacji w świecie bazowym. NASTĘPNY KROK: pwsh artifacts/furniture-r2/24h/sign-probe.ps1 -Phase family.
 
 2026-11-12T02:48:08.1939883+01:00: Unity sign-probe family Low overcast; sukces=False. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
+
+2026-11-12T02:48:08.8948054+01:00: próba znaków nie przeszła (exit=1). Własny import/render pozostaje wstrzymany przez PAUSE_UNITY do odczytu logu i naprawy. NASTĘPNY KROK: odczytać sign-probe-first.log oraz XML, usunąć marker dopiero po usunięciu błędu kompilacji.
+
+2026-11-12T02:50:55.7468006+01:00: próba rodziny 12 passed, 1 failed. Niezależny odczyt danych wyjaśnił 43 vs36: regex testu liczył 7 nazw prototypów (sign_post, gantry i g3), nie materiały. Fabryka poprawnie czytała wyłącznie listy materials. Poprawiono parser oczekiwanego zestawu, bez osłabiania wymogu pokrycia wszystkich rzeczywistych lic. Test GUID/wycofania do Lit i high-only przeszedł. NASTĘPNY KROK: ponowić FurnitureSignTests -Phase family-final.

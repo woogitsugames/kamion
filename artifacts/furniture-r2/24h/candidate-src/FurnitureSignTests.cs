@@ -290,8 +290,12 @@ namespace Game.Tests
             Assert.IsNull(create.Invoke(null,new[]{result,(object)"plate_back",def,dir+"/M_back.mat"}));
             string meta = File.ReadAllText(Path.GetFullPath(Path.Combine(root,"../art-source/world/props/props_meta.json")));
             var expected = new HashSet<string>();
-            foreach (System.Text.RegularExpressions.Match match in System.Text.RegularExpressions.Regex.Matches(meta,"\"(sign_[A-Za-z0-9_-]+)\""))
-                if (!match.Groups[1].Value.StartsWith("sign_facade_",StringComparison.Ordinal)) expected.Add(match.Groups[1].Value);
+            var json = importer.Assembly.GetType("Game.World.Import.MiniJson",true);
+            var parsed = (Dictionary<string,object>)json.GetMethod("Parse").Invoke(null,new object[]{meta});
+            var prototypes = (Dictionary<string,object>)parsed["prototypes"];
+            foreach (var proto in prototypes.Values)
+                foreach (string name in (List<object>)((Dictionary<string,object>)proto)["materials"])
+                    if (name.StartsWith("sign_",StringComparison.Ordinal) && !name.StartsWith("sign_facade_",StringComparison.Ordinal)) expected.Add(name);
             Assert.Greater(expected.Count,10,"Fixture must include direction boards, not just a single plate");
             Assert.AreEqual(expected.Count,defs.Count);
             Assert.AreSame(authored,defs["sign_B-33_70"]);
