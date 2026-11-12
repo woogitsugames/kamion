@@ -22,6 +22,8 @@ Aktualizacja około 16:01: [niezależny ogląd pozostałych stanów](../../artif
 
 Koszt skumulowany nie jest zamknięty: [wszystkie liczniki r4](../../artifacts/sbs-r4/BUDGET-LIMITATIONS.md) pokazują względem r3 draws +0 i tris ≤+2%, lecz względem r2 Low nadal ma 38/84 wzrostów draws i już 34/84 przekroczeń +2% tris (r3: 22/84). To estymaty edytora, bez pomiaru GPU A16. Nie resetować oceny budżetu co rundę.
 
+Osobno, [raport pomiaru lidera A16 s12](../../artifacts/sbs-r4/review-snapshots/gate3-a16-s12-REPORT-DATA.md) dla czystego APK 11db0552fd podaje GPU p95 35,54 ms G3-A i 35,17 ms G3-B, wobec 31,80/33,29 ms s10. P99 wynosi 50,01/49,995 ms i przekracza limit raportu 40 ms na obu odcinkach. Raport stwierdza regresję i FAIL; przyczyny per shader nie zmierzono. To zewnętrzny pomiar innej epoki niż raw r4, bez naszego dostępu do telefonu lub ponownej analizy CSV. Nie przypisywać go pojedynczej dziedzinie ani wyprowadzać korelacji z samych liczników r4. Naprawy świata i LOD wymagają ponownego pomiaru lidera; nie zwiększać kosztu Low w celu poprawienia samego zrzutu.
+
 Kolejne cele z [recenzji pakietu C](../reports/visual/REVIEW-2026-11-12-s12-gpt-batch-c.md): edge — kolor i podział hal południowej panoramy; furniture — profil tyłu tarczy i kontrast obejm; life — odbicie otoczenia na czerni, szum płatków i prostokątny cień pod autem. Szczegółów kabiny i naczep nie oceniać z samych kadrów trasy. SBS ma najpierw sprawdzić sześć scalonych korekt na aktualnym main. Historyczny przepis 15 hipotez C nie został wykonany i pozostaje zastąpiony. Własny ogląd B150280 potwierdza hipotezę pitch jako kolejny osobny temat, bez produkcyjnej korekty i bez leczenia braków pierzei kamerą.
 
 ## Historia r3

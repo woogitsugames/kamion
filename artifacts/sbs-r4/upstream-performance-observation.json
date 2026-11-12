@@ -1,0 +1,26 @@
+{
+  "observed_at": "2026-11-12T16:08:18.1551743+01:00",
+  "source_main_head": "e0328ea4683c5545fd06d4845367528371c63877",
+  "source": "artifacts/gate3-a16-s12/REPORT-DATA.md",
+  "source_sha256": "1c0748b8f45855f2d05737720f9e6558ffd7ceebd1ceb7db11e1e8048488265c",
+  "snapshot": "artifacts/sbs-r4/review-snapshots/gate3-a16-s12-REPORT-DATA.md",
+  "snapshot_sha256": "1c0748b8f45855f2d05737720f9e6558ffd7ceebd1ceb7db11e1e8048488265c",
+  "scope": "Reported leader measurement only. No phone, adb, CSV reanalysis or independent verification of aggregate measurement.",
+  "apk": "11db0552fd",
+  "apk_sha256": "fae6e4a71722922c13424717d80bbb2731ab1009c12551e9ee5f7fa999faa886",
+  "different_epoch_than_sbs_r4": true,
+  "gpu_p95_ms": {
+    "G3_A": 35.54,
+    "G3_B": 35.17
+  },
+  "s10_gpu_p95_ms": {
+    "G3_A": 31.8,
+    "G3_B": 33.29
+  },
+  "p99_ms": {
+    "G3_A": 50.01,
+    "G3_B": 49.995
+  },
+  "reported_verdict": "A16 Low FAIL p99 in both segments; performance regressed",
+  "per_shader_cause": "NOT_MEASURED"
+}

@@ -27,3 +27,5 @@ Najwyższa suma draws Low wynosi 810 = 445 statycznych + 365 instancji, w A45471
 Świat i runtime pochodzą z różnych zintegrowanych baz main. To porównanie kosztu całej sceny, nie izolowany koszt narzędzia SBS ani konkretnej dziedziny. Nie mierzono GPU, p95 klatki ani telefonu A16. Wynik telefonu i całego budżetu pozostaje UNVERIFIED; brak nowego przekroczenia względem r3 nie nadaje mu PASS.
 
 Parsowanie objęło tylko 40 388 bajtów bieżących logów tekstowych i historyczne logi tej samej wielkości. Nie dekodowano obrazów ani siatek i nie uruchamiano generatora lub pytest. Ciężki test core w tym czasie nadal miał swój odrębny bilet FIFO.
+
+Zewnętrzny pomiar lidera s12 dotyczy innej epoki, APK 11db0552fd. Według zachowanego review-snapshots/gate3-a16-s12-REPORT-DATA.md GPU p95 to 35,54/35,17 ms (G3-A/B), a p99 50,01/49,995 ms, FAIL wobec limitu 40 ms. Raport stwierdza regresję względem s10, bez ustalenia przyczyny per shader. Sprawdzono bajtową zgodność kopii raportu, nie ponawiano pomiaru lub analizy CSV. Nie łączyć tych danych z licznikami r4 jako jednego pomiaru i nie przypisywać kosztu konkretnej dziedzinie. Brak własnego pomiaru telefonu pozostaje bez zmian.
