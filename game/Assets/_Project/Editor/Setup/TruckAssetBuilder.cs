@@ -735,7 +735,11 @@ namespace Game.Editor.Setup
                         bool flat = disp != null || slotNames.All(s => s == "MI_Cab_Glass");
                         r.shadowCastingMode = flat ? ShadowCastingMode.Off : ShadowCastingMode.On;
                         r.receiveShadows = !flat;
-                        if (n.StartsWith("STEERING_WHEEL", StringComparison.Ordinal)) r.transform.SetParent(column, true);
+                        if (n.StartsWith("STEERING_WHEEL", StringComparison.Ordinal))
+                        {
+                            r.transform.SetParent(column, true);
+                            MapCabLeatherRim(r, column, slotNames);
+                        }
                         interiorLods[lod].Add(r);
                     }
                     foreach (var e in new[] { "EYE_POINT", "H_POINT", "WHEEL_CENTRE", "CAB_MOUNT_REF" })
@@ -1000,6 +1004,31 @@ namespace Game.Editor.Setup
                 filter.sharedMesh = mesh;
                 Debug.Log($"[TRUCK] Mirror bezel {body.name}: addedTris={triangles} slots={source.subMeshCount}->{mesh.subMeshCount} centreDelta={(source.bounds.center - mesh.bounds.center).magnitude:F7} sizeDelta={(source.bounds.size - mesh.bounds.size).magnitude:F7}");
             }
+        }
+
+        static void MapCabLeatherRim(Renderer renderer, Transform column, string[] slots)
+        {
+            var data = Json.Obj(Json.Obj(Json.Parse(File.ReadAllText(Path.Combine(EditorTools.RepoRoot,
+                "art-source/truck/interior/cab_material_scans.json"))))["leather"]);
+            if (!data.TryGetValue("enabled", out var flag) || !(flag is bool enabled) || !enabled) return;
+            var filter = renderer.GetComponent<MeshFilter>();
+            var source = filter.sharedMesh;
+            var selectedSlots = Enumerable.Range(0, slots.Length).Where(i => slots[i] == "MI_Cab_Leather").ToArray();
+            float ratio = (float)(Json.Num(data["wheel_authored_tile_metres"]) / Json.Num(data["tile_metres"]));
+            var mesh = CabLeatherMapping.Apply(source, column.worldToLocalMatrix * renderer.transform.localToWorldMatrix,
+                selectedSlots, (float)Json.Num(data["rim_min_radius_m"]), (float)Json.Num(data["rim_max_radius_m"]), ratio, out int scaled);
+            string dir = Root + "/Meshes";
+            Directory.CreateDirectory(Path.Combine(EditorTools.ProjectRoot, dir));
+            string path = $"{dir}/{mesh.name}.asset";
+            var old = AssetDatabase.LoadAssetAtPath<Mesh>(path);
+            if (old != null)
+            {
+                EditorUtility.CopySerialized(mesh, old); UnityEngine.Object.DestroyImmediate(mesh);
+                EditorUtility.SetDirty(old); mesh = old;
+            }
+            else AssetDatabase.CreateAsset(mesh, path);
+            filter.sharedMesh = mesh;
+            Debug.Log($"[TRUCK] CC0 rim UV {renderer.name}: scaled={scaled} ratio={ratio:F6} vertices={source.vertexCount}->{mesh.vertexCount} indices={source.triangles.Length}->{mesh.triangles.Length}");
         }
 
         static void ClearMirrorSupports(Transform root, Renderer body)

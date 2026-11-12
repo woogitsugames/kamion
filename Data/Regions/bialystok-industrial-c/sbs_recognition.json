@@ -1,0 +1,266 @@
+{
+  "schema": "kamion/sbs-recognition/1",
+  "criterion": "D51",
+  "gate_result": "FAIL",
+  "reviewed_run": "sbs-r1",
+  "reviewed_state": "Low-overcast",
+  "review_date": "2026-11-11",
+  "source_review": "docs/reports/visual/REVIEW-2026-11-11-s11-sbs-r1-D51.md",
+  "counts": {
+    "RECOGNISABLE": 12,
+    "PARTIAL": 11,
+    "NOT_RECOGNISABLE": 2
+  },
+  "assessments": [
+    {
+      "camera": "sbs-g3-a-2818555625124739",
+      "index": 1,
+      "station": "A/340",
+      "result": "RECOGNISABLE",
+      "reason": "Wiadukt z czerwonym pasem, balustrada, rząd filarów i łuk łącznicy są zgodne. Świat: brak tablicy z nazwą ulicy, a nasyp z kruszywa zastąpiono kostką.",
+      "render_sha256": "96de33c566c32e69b3ccf3763e43a25769b8b810f7e1719cf8a931acbfe8ae99",
+      "comparison_sha256": "a749eb65cd4a38889d419d4f137ef162b12f781302597b536726a0d2ae611256",
+      "pose_warning": null
+    },
+    {
+      "camera": "sbs-g3-a-3970163613102941",
+      "index": 2,
+      "station": "A/341",
+      "result": "RECOGNISABLE",
+      "reason": "Tak samo jak #1.",
+      "render_sha256": "9d842ee25fc23f33c2eac29fe7f212d8a873821c7ed2dd5fd15028a1d4bf4d1c",
+      "comparison_sha256": "2655985ab39cd8e6b74d893fbfd74b0a0a548e56d8fbe62acec2e295ff88a70d",
+      "pose_warning": null
+    },
+    {
+      "camera": "sbs-g3-a-149248627179406",
+      "index": 3,
+      "station": "A/342",
+      "result": "RECOGNISABLE",
+      "reason": "Linia pomostu, filary i łuk są zgodne.",
+      "render_sha256": "fade2946ca1671085ce31d605376622c9c369669f06659f40e50901942127d10",
+      "comparison_sha256": "6f92ec21d233062320d4819caffb33d14416f5a8e526057b017f8a26eb4dfb8d",
+      "pose_warning": null
+    },
+    {
+      "camera": "sbs-g3-a-177786140912399",
+      "index": 4,
+      "station": "A/343",
+      "result": "PARTIAL",
+      "reason": "Wieżowiec i filar z czerwonym pasem są na miejscu. W renderze znak C-9 stoi tuż przed kamerą, a na zdjęciu dalej na wysepce: raczej poza (ok. 3-5 m) albo źle ustawiony znak. Świat: brak bariery na kruszywie.",
+      "render_sha256": "49de10929f5b871b80db91a802c6f56bdeda9f020ca1528aceae07ce82718205",
+      "comparison_sha256": "090fc0ee15ab8cb46afcdd14f1d3bcfee30a22eec535aa1e4e47930800f89105",
+      "pose_warning": "Along-road position or C-9 placement requires anchors."
+    },
+    {
+      "camera": "sbs-g3-a-178689077481862",
+      "index": 5,
+      "station": "A/343",
+      "result": "RECOGNISABLE",
+      "reason": "Wieżowiec, filary i wysepka z C-9 się zgadzają. Świat: brak bariery stalowej na nasypie.",
+      "render_sha256": "38f2f19926fc89e1079ea84ebc99124257754424c4e8849ff9a1e40b3cb7b8d9",
+      "comparison_sha256": "109b11aedb75f1a1346fb5243913b2e5985c9746b6a1744631db8c1e6d04f7c2",
+      "pose_warning": null
+    },
+    {
+      "camera": "sbs-g3-a-223210302566110",
+      "index": 6,
+      "station": "A/343",
+      "result": "RECOGNISABLE",
+      "reason": "Na wiadukcie: 2 pasy, bariery i latarnie się zgadzają. Zdjęcie jest pod słońce, więc mało informacji.",
+      "render_sha256": "34135b905a861c7773b3ec11f3945bf348b87e00b3492d20fe203efaa3511771",
+      "comparison_sha256": "be3bc9a41296027e0b9f04847c28f8570f03e9596885737d5ed605e83e0bb63c",
+      "pose_warning": null
+    },
+    {
+      "camera": "sbs-g3-a-309664504075286",
+      "index": 7,
+      "station": "A/343",
+      "result": "RECOGNISABLE",
+      "reason": "Tak samo jak #6.",
+      "render_sha256": "d4f22245a6a16c7fb4b953b5e4b914347b24933dde8be8596523c4fe23af1d1e",
+      "comparison_sha256": "438ddde2184888ff3c54ccf48fd7b3e036c0df36bb35d805a8ce2391e4d028a3",
+      "pose_warning": null
+    },
+    {
+      "camera": "sbs-g3-a-504348097385466",
+      "index": 8,
+      "station": "A/343",
+      "result": "RECOGNISABLE",
+      "reason": "Pomost i filary są zgodne. Świat: brak tablicy z nazwą ulicy i krótkich kresek poziomych na łącznicy.",
+      "render_sha256": "b131c2ddd9af7e25b3252411ce5d2b43e96fedd5cad6c1c4c3c971d2f2f86a69",
+      "comparison_sha256": "81b6841f0b1a4067f161c5211d89529e08588762871dd9d941a3c070d86a644c",
+      "pose_warning": null
+    },
+    {
+      "camera": "sbs-g3-a-201270605169291",
+      "index": 9,
+      "station": "A/351",
+      "result": "PARTIAL",
+      "reason": "Świat: na zdjęciu w środku kadru stoją 3-4 filary, w renderze jest tam pusty prześwit. Brak też bariery na łuku i tablicy z nazwą.",
+      "render_sha256": "5c2a4e62057542f5a4cd6c9b26c455a35e329c866f01cd69e8c90f95229192ed",
+      "comparison_sha256": "9d6455ab20f8bfe4d581d50c3832e266878a24c40195921b7bb3e3cc344d2782",
+      "pose_warning": null
+    },
+    {
+      "camera": "sbs-g3-a-1398898753813071",
+      "index": 10,
+      "station": "A/359",
+      "result": "PARTIAL",
+      "reason": "Świat: brak najbliższej podpory (duży filar w lewej części zdjęcia), pod pomostem pusto. Brak bariery na nasypie. Potwierdzone także w High-clear.",
+      "render_sha256": "16b82bf323c8c0b0386e2711139bec2b27d90736954f7cfed4fbb1f964da14e8",
+      "comparison_sha256": "f323ab061cdbd1f4bfb9abb4c312dbf1dcafc6d2a1108308ed9cc376d614eeea",
+      "pose_warning": null
+    },
+    {
+      "camera": "sbs-g3-a-320326319617139",
+      "index": 11,
+      "station": "A/379",
+      "result": "PARTIAL",
+      "reason": "Świat: brak znaków D-3 i D-6, przejścia i chodnika z kostki, w ich miejscu trawiasta wysepka. Może się do tego dokładać przesunięcie pozy w bok.",
+      "render_sha256": "5e1e0baf7862af216b06e2f1e7b4fbe7a8462d3131c81ae2d609e2b241771307",
+      "comparison_sha256": "3015576aeeea68797c66d0689793b32d17affb27c991a9fa6ddf9f952711aff8",
+      "pose_warning": null
+    },
+    {
+      "camera": "sbs-g3-a-482392746429891",
+      "index": 12,
+      "station": "A/394",
+      "result": "RECOGNISABLE",
+      "reason": "Bariera, filary i skarpa się zgadzają. Brak niebieskiego znaku ze strzałką.",
+      "render_sha256": "3fbf4beee528e1e8a325ee8da75f785260ce214921a322ced7f3da37c6f062ef",
+      "comparison_sha256": "a4bd6fd6fac72eaff9125b21402b065436071f0863f2430a2222947e64338e57",
+      "pose_warning": null
+    },
+    {
+      "camera": "sbs-g3-a-454716650857984",
+      "index": 13,
+      "station": "A/400",
+      "result": "RECOGNISABLE",
+      "reason": "Pomost: pasy, bariery i latarnie są zgodne. Na lewym horyzoncie jest mniej bloków.",
+      "render_sha256": "483d97b327db2bbd413dede1c852bca5f9947f394c78c38a5076be93ac4c2448",
+      "comparison_sha256": "f1c89052fe31a413f87b240f573ed5b33b7d797343b1248cb435905cef501cb9",
+      "pose_warning": null
+    },
+    {
+      "camera": "sbs-g3-a-303305168125936",
+      "index": 14,
+      "station": "A/437",
+      "result": "RECOGNISABLE",
+      "reason": "Układ jest zgodny. Na horyzoncie stoi ściana lasu zamiast bloków mieszkalnych.",
+      "render_sha256": "613bebb399a1f195ae9ec948b5e51c53cda815263432770fe22022dc84ad61dc",
+      "comparison_sha256": "a8bb7d37739164759a15b2193b811d50c4aa7890a528195f0dec9c2bfb1a7efc",
+      "pose_warning": null
+    },
+    {
+      "camera": "sbs-g3-a-320215796381417",
+      "index": 15,
+      "station": "A/437",
+      "result": "RECOGNISABLE",
+      "reason": "Tak samo jak #14.",
+      "render_sha256": "d85b35d44b0150a81430e83033f5732e8b5784254d51f209bbfaa0ea2d688dfe",
+      "comparison_sha256": "4cdbe7483c84e7e96f4b9c6f294753e510c49dd5433337d0ccf64c50ab1a8586",
+      "pose_warning": null
+    },
+    {
+      "camera": "sbs-g3-b-381800493259507",
+      "index": 16,
+      "station": "B/0",
+      "result": "PARTIAL",
+      "reason": "Świat: brak drogowskazów nad jezdnią i tablicy U-3 (czerwono-biała) przy wysepce. Zdjęcie z 2017 r.",
+      "render_sha256": "2e74375ef79a6ac159d88288d1b9e3d73393236d2e637d49ece493af413c44c8",
+      "comparison_sha256": "bb8686f2fe7465ba42ea971dda6547a304768aeaacf82ae9a24b949dcfcd77d3",
+      "pose_warning": null
+    },
+    {
+      "camera": "sbs-g3-b-2279538078845158",
+      "index": 17,
+      "station": "B/16",
+      "result": "RECOGNISABLE",
+      "reason": "Biały budynek po lewej, latarnie, przejście i daleka bramownica się zgadzają.",
+      "render_sha256": "70f00fdacf5b49717ac78694a6bae2b900d7643f2c1550de151b68190671099c",
+      "comparison_sha256": "d7a0c29ce47125e3f1bcc19370906ce2ed7e433302e45887f9568e23aaefb2bf",
+      "pose_warning": null
+    },
+    {
+      "camera": "sbs-g3-b-837235577143499",
+      "index": 18,
+      "station": "B/35",
+      "result": "PARTIAL",
+      "reason": "Świat: brak tablicy U-3 na nosie wysepki po prawej, która jest głównym punktem orientacyjnym w tym kadrze.",
+      "render_sha256": "26b390f76aad4903b1606a627a3f60ef247fcc24ab6599cf99cd24c40ed48b61",
+      "comparison_sha256": "8676ada6ab9b0582d015f708cdc62ee28cb31dfe02dc0db2993d5bd2f093bb3d",
+      "pose_warning": null
+    },
+    {
+      "camera": "sbs-g3-b-3281350541967811",
+      "index": 19,
+      "station": "B/60",
+      "result": "NOT_RECOGNISABLE",
+      "reason": "Świat: brak kratownicowej bramownicy z tablicą (lewa część zdjęcia) i pawilonu handlowego. Poza: kamera stoi raczej na złej jezdni, bo pas zieleni jest po prawej, a na zdjęciu po lewej jest pobocze z drogą serwisową.",
+      "render_sha256": "a2be4c20816979a897d385518d4bc361b065ae04fabe2786ce54faefd0bc21cf",
+      "comparison_sha256": "6cf1e2a6f02736e4d48f9d75809ab4242cccdb7ad017258068eed9ecba078912",
+      "pose_warning": "Carriageway and lateral position require verification."
+    },
+    {
+      "camera": "sbs-g3-b-275528677534382",
+      "index": 20,
+      "station": "B/77",
+      "result": "NOT_RECOGNISABLE",
+      "reason": "Na zdjęciu tuż przed kamerą stoi kratownicowa bramownica z 2 zielonymi tablicami i znakami D-1 po obu stronach. W renderze bramownica jest mała, ok. 200 m dalej, i nie ma D-1. W renderach z s=16/35/77 bramownica ma stałą, dużą odległość, więc to świat (pozycja wzdłuż drogi). Stacja z kamery samochodowej jest jednak niepewna.",
+      "render_sha256": "ef31e757b53b514cd7ea4781d68c98a589de8252fe664d5126c24e4a52106a15",
+      "comparison_sha256": "07f8aceba89a22f0d8ef678b4962d89d6b39715000eb3bf0dd00057ce3159007",
+      "pose_warning": "Dashcam station may lag GPS; triangulation required."
+    },
+    {
+      "camera": "sbs-g3-b-150280503737744",
+      "index": 21,
+      "station": "B/93",
+      "result": "PARTIAL",
+      "reason": "Układ jezdni się zgadza. Świat: brak pierzei handlowo-usługowej po prawej (czerwone fasady, pylony reklamowe), w renderze pusty teren i blok.",
+      "render_sha256": "ba6002c48313fd50c0e77352893a15e6467efe0f50de380eb23ea7fc20118438",
+      "comparison_sha256": "087e595a45f7654b6b01c9f95790edfcd04512ce8b18fb382bb71b2e3c3ab668",
+      "pose_warning": null
+    },
+    {
+      "camera": "sbs-g3-b-297817221966185",
+      "index": 22,
+      "station": "B/120",
+      "result": "PARTIAL",
+      "reason": "Świat: brak dużych drzew liściastych w pasie po lewej i obiektu handlowego po prawej. Render ma po lewej hale, których zdjęcie nie pokazuje.",
+      "render_sha256": "8c4b922c7f71ee7b24dbdf37c04d78fe6f101314de81e70344b7226d8e103b86",
+      "comparison_sha256": "0db1fb1dc739f82198c4f6f488b74725fd9793bbc4c77fd80191d5a3052464cd",
+      "pose_warning": null
+    },
+    {
+      "camera": "sbs-g3-b-3678296072299092",
+      "index": 23,
+      "station": "B/153",
+      "result": "PARTIAL",
+      "reason": "Świat: brak kratownicowego słupa linii WN i ekranu akustycznego po prawej. W osi renderu stoi sygnalizator, którego na zdjęciu nie widać (do sprawdzenia).",
+      "render_sha256": "84aabcd653c4a6738119e8448e9a59e775f99f5cf4114f99a96e751ddc35000c",
+      "comparison_sha256": "d543e0ab31a4482c075c44b8bd6382a9c9cd7802c16fd892a820ae47a03f8afa",
+      "pose_warning": null
+    },
+    {
+      "camera": "sbs-g3-b-494288258686575",
+      "index": 24,
+      "station": "B/428",
+      "result": "PARTIAL",
+      "reason": "Ekran na estakadzie jest obecny (dobrze), ale w renderze stoi też po lewej, a na zdjęciu po lewej jest otwarty widok na drugą jezdnię i latarnie. Łuk w lewo kontra prosta: możliwy błąd kursu pozy.",
+      "render_sha256": "99dbbb51b727181863c3d60ffe964cabc5cac97a8c96397fab932390092ea3e8",
+      "comparison_sha256": "4943df7b00e9a99e18e3487548285155f50e2e1dc6daa19391e24e05cf4e2ced",
+      "pose_warning": "Heading requires verification against both carriageways."
+    },
+    {
+      "camera": "sbs-g3-b-1801374876712141",
+      "index": 25,
+      "station": "B/486",
+      "result": "PARTIAL",
+      "reason": "Świat: brak przezroczystego ekranu akustycznego po prawej, czyli najbardziej charakterystycznego elementu kadru. Brak też billboardu po lewej.",
+      "render_sha256": "9424ddfe39a4befa89738f306eb741a4e05519e731fe9dbb3cbf3b802f8e9975",
+      "comparison_sha256": "ce07076f1c2f18dc6b8ebcc94b17b79e6be18aa28c9345ae29f5e7a5b6f903e7",
+      "pose_warning": null
+    }
+  ]
+}

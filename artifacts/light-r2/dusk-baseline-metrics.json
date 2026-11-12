@@ -1,0 +1,250 @@
+{
+  "method": "original PNG L channel, Gaussian radius20 native px, fixed manually selected ground ROIs, off luma15..179, ratio (on+.5)/(off+.5); diagnostic difference x6 only",
+  "scope": "pools only; High point lights and lens emission remain on in both states; hall3 ROI is grass, house2 paving",
+  "results": {
+    "Low": {
+      "driver-andersa-to-putry": {
+        "roi_native": [
+          1053,
+          670,
+          1521,
+          1004
+        ],
+        "roi_normalized": [
+          0.45,
+          0.62,
+          0.65,
+          0.93
+        ],
+        "eligible_fraction": 1.0,
+        "median_ratio": 1.3614457831325302,
+        "p95_ratio": 1.5185185185185186,
+        "max_ratio": 1.5679012345679013,
+        "frame_positive_change_gt1_fraction": 0.4493047641658753,
+        "frame_negative_change_ltminus1_fraction": 0.0
+      },
+      "cab-dash": {
+        "roi_native": [
+          351,
+          32,
+          1170,
+          238
+        ],
+        "roi_normalized": [
+          0.15,
+          0.03,
+          0.5,
+          0.22
+        ],
+        "eligible_fraction": 1.0,
+        "median_ratio": 1.0,
+        "p95_ratio": 1.2882882882882882,
+        "max_ratio": 1.4190476190476191,
+        "frame_positive_change_gt1_fraction": 0.10674105729661285,
+        "frame_negative_change_ltminus1_fraction": 2.492877492877493e-05
+      },
+      "r10_hall_3": {
+        "roi_native": [
+          234,
+          864,
+          2106,
+          1026
+        ],
+        "roi_normalized": [
+          0.1,
+          0.8,
+          0.9,
+          0.95
+        ],
+        "eligible_fraction": 1.0,
+        "median_ratio": 1.0289855072463767,
+        "p95_ratio": 1.0987654320987654,
+        "max_ratio": 1.1333333333333333,
+        "frame_positive_change_gt1_fraction": 0.22882201646090536,
+        "frame_negative_change_ltminus1_fraction": 0.0
+      },
+      "r10_block_3": {
+        "roi_native": [
+          468,
+          821,
+          1521,
+          1004
+        ],
+        "roi_normalized": [
+          0.2,
+          0.76,
+          0.65,
+          0.93
+        ],
+        "eligible_fraction": 1.0,
+        "median_ratio": 1.619718309859155,
+        "p95_ratio": 1.72,
+        "max_ratio": 1.821917808219178,
+        "frame_positive_change_gt1_fraction": 0.45012147831592275,
+        "frame_negative_change_ltminus1_fraction": 0.0
+      },
+      "r10_house_2": {
+        "roi_native": [
+          234,
+          810,
+          1404,
+          1026
+        ],
+        "roi_normalized": [
+          0.1,
+          0.75,
+          0.6,
+          0.95
+        ],
+        "eligible_fraction": 1.0,
+        "median_ratio": 1.256,
+        "p95_ratio": 1.3739837398373984,
+        "max_ratio": 1.534351145038168,
+        "frame_positive_change_gt1_fraction": 0.38297997784108895,
+        "frame_negative_change_ltminus1_fraction": 0.0
+      },
+      "stretch-05-docks": {
+        "roi_native": [
+          351,
+          756,
+          1989,
+          1026
+        ],
+        "roi_normalized": [
+          0.15,
+          0.7,
+          0.85,
+          0.95
+        ],
+        "eligible_fraction": 1.0,
+        "median_ratio": 1.0347826086956522,
+        "p95_ratio": 1.091743119266055,
+        "max_ratio": 1.1333333333333333,
+        "frame_positive_change_gt1_fraction": 0.2163477366255144,
+        "frame_negative_change_ltminus1_fraction": 0.0
+      }
+    },
+    "High": {
+      "driver-andersa-to-putry": {
+        "roi_native": [
+          1053,
+          670,
+          1521,
+          1004
+        ],
+        "roi_normalized": [
+          0.45,
+          0.62,
+          0.65,
+          0.93
+        ],
+        "eligible_fraction": 1.0,
+        "median_ratio": 1.3434343434343434,
+        "p95_ratio": 1.4719101123595506,
+        "max_ratio": 1.5168539325842696,
+        "frame_positive_change_gt1_fraction": 0.4604138968027857,
+        "frame_negative_change_ltminus1_fraction": 0.001528173472617917
+      },
+      "cab-dash": {
+        "roi_native": [
+          351,
+          32,
+          1170,
+          238
+        ],
+        "roi_normalized": [
+          0.15,
+          0.03,
+          0.5,
+          0.22
+        ],
+        "eligible_fraction": 1.0,
+        "median_ratio": 1.0,
+        "p95_ratio": 1.280373831775701,
+        "max_ratio": 1.393162393162393,
+        "frame_positive_change_gt1_fraction": 0.15565962329851218,
+        "frame_negative_change_ltminus1_fraction": 0.007364672364672364
+      },
+      "r10_hall_3": {
+        "roi_native": [
+          234,
+          864,
+          2106,
+          1026
+        ],
+        "roi_normalized": [
+          0.1,
+          0.8,
+          0.9,
+          0.95
+        ],
+        "eligible_fraction": 1.0,
+        "median_ratio": 1.0240963855421688,
+        "p95_ratio": 1.0963855421686748,
+        "max_ratio": 1.1318681318681318,
+        "frame_positive_change_gt1_fraction": 0.2922843463121241,
+        "frame_negative_change_ltminus1_fraction": 0.010671889838556506
+      },
+      "r10_block_3": {
+        "roi_native": [
+          468,
+          821,
+          1521,
+          1004
+        ],
+        "roi_normalized": [
+          0.2,
+          0.76,
+          0.65,
+          0.93
+        ],
+        "eligible_fraction": 1.0,
+        "median_ratio": 1.5925925925925926,
+        "p95_ratio": 1.6987951807228916,
+        "max_ratio": 1.7469879518072289,
+        "frame_positive_change_gt1_fraction": 0.45731837606837605,
+        "frame_negative_change_ltminus1_fraction": 0.0009342355175688509
+      },
+      "r10_house_2": {
+        "roi_native": [
+          234,
+          810,
+          1404,
+          1026
+        ],
+        "roi_normalized": [
+          0.1,
+          0.75,
+          0.6,
+          0.95
+        ],
+        "eligible_fraction": 1.0,
+        "median_ratio": 1.2406015037593985,
+        "p95_ratio": 1.3458646616541354,
+        "max_ratio": 1.474820143884892,
+        "frame_positive_change_gt1_fraction": 0.40091207660652106,
+        "frame_negative_change_ltminus1_fraction": 0.0037203228869895537
+      },
+      "stretch-05-docks": {
+        "roi_native": [
+          351,
+          756,
+          1989,
+          1026
+        ],
+        "roi_normalized": [
+          0.15,
+          0.7,
+          0.85,
+          0.95
+        ],
+        "eligible_fraction": 1.0,
+        "median_ratio": 1.032520325203252,
+        "p95_ratio": 1.084033613445378,
+        "max_ratio": 1.1217391304347826,
+        "frame_positive_change_gt1_fraction": 0.27855927508705286,
+        "frame_negative_change_ltminus1_fraction": 0.010643004115226338
+      }
+    }
+  }
+}

@@ -1,0 +1,22 @@
+.........F......................................                         [100%]
+================================== FAILURES ===================================
+________________ test_generator_reproduces_committed_scenarios ________________
+
+    def test_generator_reproduces_committed_scenarios():
+        with tempfile.TemporaryDirectory() as tmp:
+            r = subprocess.run([sys.executable, str(GEN), tmp], capture_output=True, text=True)
+            assert r.returncode == 0, f"generator failed: {r.stdout}{r.stderr}"
+            diffs = []
+            for f in sorted(pathlib.Path(tmp).glob("*.json")):
+                committed = SCEN / f.name
+                assert committed.exists(), f"generator emits {f.name} but it is not committed"
+                if _load(f) != _load(committed):
+                    diffs.append(f.name)
+>           assert not diffs, f"regeneration differs from committed scenarios (loosened or hand-edited): {diffs}"
+E           AssertionError: regeneration differs from committed scenarios (loosened or hand-edited): ['top_speed_flat_comb.json']
+E           assert not ['top_speed_flat_comb.json']
+
+tests\physics\test_scenario_strictness.py:59: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/physics/test_scenario_strictness.py::test_generator_reproduces_committed_scenarios
+1 failed, 47 passed in 295.69s (0:04:55)
