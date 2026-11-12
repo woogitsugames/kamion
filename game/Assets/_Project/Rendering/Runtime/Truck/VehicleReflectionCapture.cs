@@ -58,6 +58,8 @@ namespace Game.Rendering
 
         GameObject m_Root;
         Camera m_Cam;
+        UniversalAdditionalCameraData m_CamData;
+        int m_RendererIndex = -1;
         RenderTexture m_Cube, m_FaceRT;
         Vector3 m_LastCubePos;
         float m_LastCubeTime, m_MinMove, m_MaxAge;
@@ -123,7 +125,8 @@ namespace Game.Rendering
                 data.antialiasing = AntialiasingMode.None;
                 data.requiresColorOption = CameraOverrideOption.Off;
                 data.requiresDepthOption = CameraOverrideOption.Off;
-                data.SetRenderer(0);
+                m_CamData = data;
+                m_RendererIndex = -1;   // chosen per face for the active tier asset (ADR 0152)
                 // ADR 0068: lower LOD for the 128 px faces (LODGroups; the instanced world already skips Reflection cameras).
                 var tag = camGo.AddComponent<ExtraViewTag>();
                 tag.kind = Game.Core.ExtraViewKind.Capture;
@@ -188,6 +191,17 @@ namespace Game.Rendering
         void LateUpdate()
         {
             if (!Application.isPlaying || m_Size <= 0 || m_Cube == null || Paused) return;
+            // ADR 0152: after the app returns from the background (Fold, Vulkan/Adreno) the targets can come back released;
+            // a request into a released face RT fails every face ("RenderPass: Fake or uninitialized surface ...",
+            // "EndRenderPass: Not inside a Renderpass", 216 error lines/min on the owner's Fold) and the cube stays stale.
+            if (!m_Cube.IsCreated() || m_FaceRT == null || !m_FaceRT.IsCreated())
+            {
+                m_Cube.Create();
+                if (m_FaceRT != null) m_FaceRT.Create();
+                Debug.Log("[ENVCAP] capture targets were released (app resumed) - recreated, full cube re-rendered");
+                RenderAllNow();
+                return;
+            }
             if (++m_FrameCounter < m_Interval) return;
             m_FrameCounter = 0;
             // ADR 0056 (Low/Medium): a complete cube is kept while the capture point stays within envCaptureMinMove of
@@ -210,6 +224,10 @@ namespace Game.Rendering
         {
             m_Cam.transform.rotation = k_Face[face];
             m_Request.mipLevel = 0;
+            // ADR 0152: a plain renderer (no SSAO) when the tier asset has one at index 1 (Ultra): the render request through
+            // Mobile_Renderer_SSAO failed every face on the Fold (Adreno 840, Vulkan) and the cube stayed garbage.
+            int ri = GraphicsSettings.currentRenderPipeline is UniversalRenderPipelineAsset urp && urp.rendererDataList.Length > 1 ? 1 : 0;
+            if (ri != m_RendererIndex && m_CamData != null) { m_CamData.SetRenderer(ri); m_RendererIndex = ri; }
             if (!RenderPipeline.SupportsRenderRequest(m_Cam, m_Request)) return;
             // r6 L4: the reflection sees the physical sky radiance, not the phone-compressed dome of the main view.
             float skyCapOff = Shader.GetGlobalFloat(k_SkyCapOff), capture = Shader.GetGlobalFloat(k_Capture);

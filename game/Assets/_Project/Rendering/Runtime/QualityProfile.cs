@@ -153,7 +153,7 @@ namespace Game.Rendering
             // Flagships: Galaxy S24+ (Xclipse 940) measured; Adreno 7xx/8xx and Immortalis are the same class (UNMEASURED).
             new DeviceRule { gpuContains = "Xclipse 9", tier = "High", note = "Galaxy S24+ (Exynos 2400): measured, High ~60 FPS" },
             new DeviceRule { gpuContains = "Adreno (TM) 7", tier = "High", note = "Snapdragon 8 Gen 1-3 - UNMEASURED" },
-            new DeviceRule { gpuContains = "Adreno (TM) 8", tier = "High", note = "Snapdragon 8 Elite - UNMEASURED" },
+            new DeviceRule { gpuContains = "Adreno (TM) 8", tier = "High", note = "Galaxy Z Fold (Adreno 840, 5.65 Mpx inner): measured, High/30 GPU p95 29 ms; Ultra/60 ~25 FPS (ADR 0152)" },
             new DeviceRule { gpuContains = "Immortalis", tier = "High", note = "Dimensity 9xxx - UNMEASURED" },
         };
 
@@ -259,7 +259,7 @@ namespace Game.Rendering
                 shadowDistance = 150f, shadowResolution = 4096, shadowCascades = 4, cascade2Split = 0.25f,
                 cascade4Split = new Vector3(0.05f, 0.18f, 0.45f), softShadows = true, softShadowQuality = SoftShadowQuality.High,
                 shadowDepthBias = 0.6f, shadowNormalBias = 0.6f,
-                anisotropic = 2, worldTextureAniso = 16, worldMipBias = 0f, lodBias = 2.0f, cameraFarClip = 3500f,
+                anisotropic = 2, worldTextureAniso = 16, worldMipBias = 0f, lodBias = 2.0f, cameraFarClip = 3500f, adaptiveScaleMin = 0.70f, thermalFallbackFps = 30, pacingFallbackFps = 30 /* ADR 0152: Fold Ultra/60 had no safety net */,
                 worldDetail = true, additionalLightsPerObject = 8,
                 treeCardLodScale = 0.5f, treeThinStartM = 90f, treeCullM = 600f, treeShadowLodMask = 3, leafAlphaToCoverage = true, simpleFoliage = true,
                 forestHlodM = 120f, forestHlodCullM = 0f,

@@ -220,9 +220,9 @@ MonoBehaviour:
     worldMipBias: 0
     lodBias: 2
     cameraFarClip: 3500
-    adaptiveScaleMin: 0
-    thermalFallbackFps: 0
-    pacingFallbackFps: 0
+    adaptiveScaleMin: 0.7
+    thermalFallbackFps: 30
+    pacingFallbackFps: 30
     upscalingFilter: 0
     fsrSharpness: 0
     worldDetail: 1
@@ -302,7 +302,7 @@ MonoBehaviour:
     modelContains: 
     maxRamMb: 0
     tier: High
-    note: Snapdragon 8 Elite - UNMEASURED
+    note: "Galaxy Z Fold (Adreno 840, 5.65 Mpx inner): measured, High/30 GPU p95 29 ms; Ultra/60 ~25 FPS (ADR 0152)"
   - gpuContains: Immortalis
     modelContains: 
     maxRamMb: 0

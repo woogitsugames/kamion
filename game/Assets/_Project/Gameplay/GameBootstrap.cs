@@ -63,6 +63,16 @@ namespace Game.Gameplay
                 }
             }
 
+            // ADR 0152 diagnostics: per-frame camera pose CSV (camlog=1) and the old head-spring integration for A/B (cam_legacy=1).
+            Game.Cameras.CameraRig.LegacyHeadIntegration = Platform.GetLaunchArgument("cam_legacy") == "1";
+            if (Platform.GetLaunchArgument("camlog") == "1")
+            {
+                string dir = System.IO.Path.Combine(Application.persistentDataPath, "diag");
+                System.IO.Directory.CreateDirectory(dir);
+                Game.Cameras.CameraRig.PoseLogPath = System.IO.Path.Combine(dir, "campose.csv");
+                Debug.Log($"[CAM] pose log {Game.Cameras.CameraRig.PoseLogPath} legacyHead={Game.Cameras.CameraRig.LegacyHeadIntegration}");
+            }
+
             string rq = RenderOverrides.Parse(Platform.GetLaunchArgument);
             if (rq != null) Debug.Log("[BOOT] render overrides (profiling): " + rq);
 
