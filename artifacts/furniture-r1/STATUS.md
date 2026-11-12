@@ -225,3 +225,5 @@ NASTĘPNY KROK: uv run --project tools/worldgen tools/worldgen/roads/build_world
 2026-11-12T02:04:45.9162293+01:00: przygotowano PACKET.md z pełnym zakresem obrazów, budżetu, ograniczeń i audytem porażki GIS. Physics/gate3 nadal działa po zdobyciu slotu heavy; bez ponownego GIS. NASTĘPNY KROK: odczytać closing-test-exits.json i końcowe logi, uzupełnić raport rundy.
 
 2026-11-12T02:07:31.0259199+01:00: sprostowanie liczby niezgodności fidelity: 7, nie 8; lista w audycie i log GIS była prawidłowa. Wszystkie 23 wejścia niezmienione od bazy. Poprawiono opis audytu i PACKET.md. NASTĘPNY KROK: zakończyć physics/gate3 i EditMode, zapisać faktyczne wyniki.
+
+2026-11-12T02:07:47.6088341+01:00: heavy physics final4; sukces=False; slot gpt-furniture-r1 zwolniony. NASTĘPNY KROK: sprawdzić log i kontynuować walidację rundy.
