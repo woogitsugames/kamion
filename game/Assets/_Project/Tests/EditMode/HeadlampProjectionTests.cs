@@ -115,6 +115,17 @@ namespace Game.Tests
         }
 
         [Test]
+        public void CabCreatedAfterOffStateCanBindOnTheFirstLitFrame()
+        {
+            var model = m_Night.CreateModel(); LowBeam(false);
+            KamionHeadlamps.Push(model, true, 20000f);
+            Assert.IsFalse(KamionHeadlamps.Enabled);
+            MakeCab("late player"); LowBeam(true);
+            KamionHeadlamps.Push(model, true, 20000f);
+            Assert.IsTrue(KamionHeadlamps.Enabled, "loading retry cache must not suppress the first illuminated frame");
+        }
+
+        [Test]
         public void PreviewCabCannotStealMainSceneBindingOrPublishAProjection()
         {
             MakeCab("real player"); LowBeam(true); var model = m_Night.CreateModel();

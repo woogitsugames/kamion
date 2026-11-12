@@ -54,10 +54,12 @@ namespace Game.Rendering.Editor
             };
         }
 
-        public void Write(string folder, int expected)
+        public void Write(string folder, int expected, int expectedHeadlamps = 0)
         {
             if (m_Cameras.Count != expected)
                 throw new InvalidOperationException($"Incomplete lamp probes: {m_Cameras.Count}, expected {expected}");
+            if (expectedHeadlamps > 0 && m_Cameras.Values.Any(s => s.projectedHeadlamps != (expectedHeadlamps == 2)))
+                throw new InvalidOperationException("Projected headlamp state does not match the requested on/off proof");
             File.WriteAllText(Path.Combine(folder, "lamp-probes.json"), JsonUtility.ToJson(new Document {
                 cameras = m_Cameras.OrderBy(p => p.Key, StringComparer.Ordinal).Select(p => p.Value).ToArray()
             }, true));

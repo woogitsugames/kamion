@@ -16,6 +16,7 @@ namespace Game.Rendering
             k_Forward = Shader.PropertyToID("_KamionHeadlampForward"), k_Color = Shader.PropertyToID("_KamionHeadlampColor");
         static CabInteriorLighting s_Source;
         static Transform s_Frame, s_Left, s_Right;
+        static Texture2D s_State;
         static int s_Scene = -1;
         static double s_NextSearch;
         const double BindingRefreshSeconds = 0.25;
@@ -27,7 +28,7 @@ namespace Game.Rendering
         {
             Enabled = false;
             Shader.SetGlobalFloat(k_On, 0f);
-            s_Source = null; s_Frame = s_Left = s_Right = null; s_Scene = -1; s_NextSearch = 0; s_Warned = null;
+            s_Source = null; s_Frame = s_Left = s_Right = null; s_State = null; s_Scene = -1; s_NextSearch = 0; s_Warned = null;
             Diagnostics = "reset";
         }
 
@@ -80,14 +81,17 @@ namespace Game.Rendering
             Enabled = false; Shader.SetGlobalFloat(k_On, 0f);
             if (!requested || model == null) { Diagnostics = "disabled by preset/override"; return; }
             if (float.IsNaN(peakCd) || float.IsInfinity(peakCd) || peakCd <= 0f) { Diagnostics = "zero/invalid peak cd"; return; }
-            if (!Resolve(ownerScene)) return;
             var state = Shader.GetGlobalTexture("_TruckLightState") as Texture2D;
             if (state == null || !state.isReadable || state.width < 4 || state.height < 1)
-            { Reject("readable player light-state texture unavailable"); return; }
+            { Diagnostics = "readable player light-state texture unavailable"; return; }
             // Existing vehicle contract: texel2 is low-beam lens emission. Read only its on/off state,
             // never reinterpret lens nits as beam intensity. Forced lights therefore work too.
             Color low = state.GetPixel(2, 0);
             if (Mathf.Max(low.r, Mathf.Max(low.g, low.b)) <= 0f) { Diagnostics = "vehicle low beam off"; return; }
+            // Scene loading may enable EnvironmentLighting before the truck. A new vehicle-state texture
+            // invalidates the retry throttle; do not cache a missing cab while its low beam is still off.
+            if (state != s_State) { s_State = state; s_NextSearch = 0; }
+            if (!Resolve(ownerScene)) return;
             var frame = s_Source.cab;
             if (!Finite(s_Left.position) || !Finite(s_Right.position) || !Finite(frame.forward) ||
                 !Finite(frame.right) || !Finite(frame.up) || float.IsNaN(model.Exposure) || float.IsInfinity(model.Exposure))
