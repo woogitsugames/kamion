@@ -1,5 +1,6 @@
 ﻿"""Measure display luma in projected road wheel/centre fields, with inspectable masks."""
 import argparse
+import hashlib
 import json
 import sys
 from pathlib import Path
@@ -12,6 +13,40 @@ sys.path.insert(0, str(ROOT / 'artifacts/surface-wear-r1'))
 from bus_world_proof import read
 
 
+def checked_geometry(label):
+    """Reject stale world data instead of projecting today's geometry onto older captures."""
+    name = 'chunk_3_4.low.glb'
+    baseline = json.loads((OUT / 'geometry-baseline.json').read_text(encoding='utf-8'))
+    expected = next(row for row in baseline['rows'] if row['file'] == name)
+    candidate = json.loads((OUT / f'geometry-{label}.json').read_text(encoding='utf-8'))
+    candidate_row = next(row for row in candidate['rows'] if row['file'] == name)
+    if candidate['label'] != label or candidate_row != expected:
+        raise RuntimeError('Candidate geometry evidence is absent, mislabeled or differs from baseline.')
+    document, nodes = read(ROOT / 'Data/raw/derived/bialystok-industrial-c/world' / name)
+    graph = [{key: node[key] for key in ('name', 'mesh', 'children', 'matrix', 'translation', 'rotation', 'scale') if key in node}
+             for node in document['nodes']]
+    digest = hashlib.sha256(json.dumps(graph, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
+    if digest != expected['scene_graph_sha256']:
+        raise RuntimeError('Current GLB scene graph differs from baseline evidence.')
+    # This projector handles the importer handedness flip and region root, not arbitrary glTF nodes.
+    for node in document['nodes']:
+        if (not np.array_equal(node.get('matrix', np.eye(4).reshape(-1)), np.eye(4).reshape(-1))
+                or node.get('translation', [0, 0, 0]) != [0, 0, 0]
+                or node.get('rotation', [0, 0, 0, 1]) != [0, 0, 0, 1]
+                or node.get('scale', [1, 1, 1]) != [1, 1, 1]):
+            raise RuntimeError('Nonidentity GLB node transform is unsupported by this projector.')
+    observed = []
+    for node, parts in sorted(nodes.items()):
+        for index, (material, attrs) in enumerate(parts):
+            fields = {key: dict(shape=list(value.shape), dtype=value.dtype.str,
+                                sha256=hashlib.sha256(value.tobytes()).hexdigest())
+                      for key, value in sorted(attrs.items())}
+            observed.append(dict(node=node, primitive=index, material=material, fields=fields))
+    if observed != expected['primitives']:
+        raise RuntimeError('Current GLB attributes/indices differ from baseline evidence.')
+    return nodes
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--after', default='candidate')
@@ -19,20 +54,27 @@ def main():
     args = parser.parse_args()
     camera = 'd_wear_lane_old'
     rows = []
+    nodes = checked_geometry(args.after)
     for condition in args.condition or ('Low-overcast', 'Low-clear', 'High-overcast', 'High-clear'):
         directory = OUT / args.after / condition
         state = json.loads((directory / 'runtime-cameras' / ('QA_' + camera + '.json')).read_text())
         if len(state.get('rootToWorld', [])) != 16:
             raise RuntimeError('Runtime rootToWorld is required. Never infer the world anchor from an input camera: seat=road may reseat it.')
+        before_state = json.loads((OUT / 'baseline' / condition / 'runtime-cameras' / ('QA_' + camera + '.json')).read_text())
+        for key in ('view', 'projection', 'rootToWorld'):
+            if len(before_state.get(key, [])) != 16 or before_state[key] != state[key]:
+                raise RuntimeError(f'Baseline/candidate {key} is absent or differs; shared masks are invalid.')
         matrix = (np.array(state['projection']).reshape(4, 4) @ np.array(state['view']).reshape(4, 4)
                   @ np.array(state['rootToWorld']).reshape(4, 4))
         im = Image.open(directory / (camera + '.png')).convert('RGB')
         width, height = im.size
+        with Image.open(OUT / 'baseline' / condition / (camera + '.png')) as before_image:
+            if before_image.size != im.size:
+                raise RuntimeError('Baseline/candidate image sizes differ.')
         # Clear near asphalt, away from the crossing, kerb and white boundary line.
         x0, y0, x1, y1 = [round(v * width / 960) for v in (380, 280, 630, 400)]
         depth = np.full((y1-y0, x1-x0), np.inf)
         uv = np.full((*depth.shape, 2), np.nan)
-        _, nodes = read(ROOT / 'Data/raw/derived/bialystok-industrial-c/world/chunk_3_4.low.glb')
         for material, attrs in nodes['road']:
             if material != 'road_asphalt' or 'TEXCOORD_1' not in attrs:
                 continue
