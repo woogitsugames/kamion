@@ -166,3 +166,28 @@ Cel: miejscowe zużycie lica, mocowania także w Low i odblask sterowany rzeczyw
 stanem świateł. Siłę efektu należy oznaczać WORKING_VALUE, dopóki nie ma
 kalibracji zdjęcia nocnego. Bez nowych świateł URP/przebiegów ani zmian TruckLights.
 Przed zmianą: spójny generator i import oraz komplet bazowych kamer po scaleniu.
+
+### r2, kontrakt odblasku i próby GPU
+
+Przygotowany wariant Kamion/Furniture Sign zachowuje funkcje URP Lit,
+stały układ UnityPerMaterial oraz dziewięć przebiegów (pozostałe przez UsePass).
+Nie dodaje światła URP. Tylko jawna flaga plate_back.furniture_sign_fronts
+uruchomi rejestrację rzeczywistych lic z aktualnego props_meta.json, w tym
+kierunkowych; fasadowe etykiety są wykluczone, cudze jawne definicje pozostają.
+RegionImporter iteruje kopię ToList definicji przed importem prototypów;
+nowe definicje zapewniają im UV0 bez zmiany plików ogólnego importera.
+Ta flaga nie jest jeszcze włączona w świecie: trwa baseline po scaleniu main.
+
+Publisher czyta istniejący TruckLights i cztery prawdziwe sockety mijania/drogowe.
+Brak aktywnej pary/socketów zeruje stan. Pozycje są z riggu, nie przy kamerze.
+Siła i loby kątowe są WORKING_VALUE; formuła nie jest tabelą RA konkretnej folii
+ani kalibracją lokalnej referencji. Brakuje cienia od reflektora/przesłaniania
+na drodze światła: to jawny limit analitycznego modelu wymagający oceny obrazu.
+
+13/13 prób EditMode przeszło bez pominięć: GPU off/no-source versus URP Lit,
+alpha, strony, kąt, dystans, współczynnik HDR 1/800, 9→9 przebiegów,
+stan/sockety high-only, trwały GUID i wycofanie fabryki do Lit oraz komplet
+36 aktualnych lic w bibliotece. Dotychczasowe porażki fixture zachowano w artefaktach.
+HDR _EmissionColor wymaga wartości liniowej bez gamma, co potwierdził odczyt GPU;
+kontrakt zwykłego _Tint i SetLinearTint pozostaje bez zmian.
+Dusk ma słońce -5 stopni; sam ten preset nie dowodzi efektu w pełnej nocy.

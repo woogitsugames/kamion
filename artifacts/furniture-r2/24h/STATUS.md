@@ -57,3 +57,5 @@ NASTĘPNY KROK: przygotować własne skrypty r2 z ownerem heavy gpt-furniture-r2
 2026-11-12T02:54:02.7360427+01:00: Unity render before Low clear; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
 
 2026-11-12T02:54:42.3795780+01:00: Unity render before High overcast; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
+
+2026-11-12T02:54:43.2256959+01:00: zapisano ADR i licencję wariantu URP oraz skrypt dodatkowego baseline dusk po zakończeniu dziennej sekwencji. Wyraźnie rozdzielono zmierzch (-5 stopni), pełną noc i kalibrację folii. NASTĘPNY KROK: odczytać zakończenie sesji72293; dopiero potem pwsh artifacts/furniture-r2/24h/baseline-dusk.ps1.

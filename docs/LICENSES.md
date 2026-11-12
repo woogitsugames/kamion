@@ -282,3 +282,15 @@ w `artifacts/furniture-r1/24h/reference-selection.json`. Nie trafiają do tekstu
 - Pochodna: game/Assets/_Project/Rendering/Resources/Sky/T_ClearClouds.png, R = fotograficzna maska chmur, G = względna luminancja; usunięto tarczę słońca, zachowano kształt i cienie chmur. Dokładne metadane i oś słońca: ClearCloudsSource.json. Reprodukcja: artifacts/light-r1/build-photo-clouds.py przez pulę heavy.
 - To tekstura nieba, nie zdjęcie referencyjne Białegostoku. Nie zawiera zabudowy ani oznaczeń; nie jest zasobem Fab/Megascans.
 
+
+## ADR 0120 r2 — wariant materiału znaków oparty o URP Lit
+
+Szkielet `FurnitureSign.shader` oraz część funkcji Forward w
+`FurnitureSignForward.hlsl` pochodzą z zainstalowanego pakietu Unity URP:
+com.unity.render-pipelines.universal, copyright © 2020 Unity Technologies ApS,
+[Unity Companion License](https://unity.com/legal/licenses/unity-companion-license).
+Pozostałe przebiegi i funkcje są używane bezpośrednio z pakietu.
+Własny dodatek to analityczny odblask i czytnik stanu istniejących reflektorów.
+Wersja źródeł, hashe i skrypt odtworzenia są w
+`artifacts/furniture-r2/24h/candidate-src/provenance.json` oraz
+`artifacts/furniture-r2/24h/prepare-sign-prototype.ps1`. Nie użyto grafiki producentów folii.
