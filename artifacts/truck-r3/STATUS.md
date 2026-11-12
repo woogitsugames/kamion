@@ -105,3 +105,4 @@ Zapisano podgląd wheel-probe-candidate-v3-flat, cztery świeże kadry Low/High 
 Zapisano podgląd wheel-probe-candidate-v3-albedo, cztery świeże kadry Low/High overcast, materiały przywrócone. Następny krok: obejrzeć kanały w arkuszach 960 px, nie wnioskować z samych liczb.
 Zapisano wszystkie kamery: after-all Low overcast. Następny krok: zestawić liczniki rendererów i instancji osobno dla każdej kamery.
 Zapisano wszystkie kamery: after-all High overcast. Następny krok: zestawić liczniki rendererów i instancji osobno dla każdej kamery.
+EditMode final: 326/326, failed 0, skipped 0, exit 0. XML i JSON w pakiecie. Następny krok: przy błędzie odczytać konkretny test; przy powodzeniu kontynuować walidację rundy.
