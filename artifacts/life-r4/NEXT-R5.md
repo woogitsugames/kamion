@@ -11,3 +11,5 @@ Najpierw znaleźć czytelne kadry rzeczywistych istniejących stosów w nowym ra
 Pallet_wood używa dotychczasowego materiału/tekstury; dawny brak euro_pallet_side w spec PBR nie dowodził braku BaseMap. Przed zmianą sprawdzić świeży materiał natywny. Koła/osad/czerń pozostają PARTIAL według rzeczywistych wyników; nie ogłaszać ich przy okazji pełnym PASS.
 
 Przed baseline r5 uaktualnić historyczny docstring tractor LOD0 <=1.5 k do nowego sufitu 1.7 k (r4 ma test 1700, rzeczywiste 1550). W r4 nie zmieniano już bajtów zamrożonej produkcji po capture; doc-only poprawka może wejść przed kolejną kanoniczną generacją.
+
+Main S12 na 13:41: R3 life SCAL/PARTIAL i scalona (REVIEW-2026-11-12-s12-gpt-batch-c.md). Po paletach otwarte P1: odbicia otoczenia czerni zamiast obniżania pigmentu, szum płatków clear, prostokąt cienia/podwozia (najpierw rozdzielić warstwy), brud tyłu. R4 zamyka tylko zmianę płaskiej felgi placowej na przestrzenną; plandeki/kabiny/osprzęt nadal wymagają oceny. Nie ogłaszać ich rozwiązanymi.

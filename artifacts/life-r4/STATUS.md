@@ -97,3 +97,5 @@ Krok 25: przygotowano 18-wierszowy REPORT-DRAFT (wynik GIS jeszcze pusty) i publ
 Końcowy heavy (2026-11-12T13:48:13.7959001+01:00): zapisz końcowy GIS kół placowych. Następny krok: odczyt rzeczywistych wyników, ADR/REPORT i kopia, potem r5 palety.
 
 Końcowy heavy (2026-11-12T13:48:17.4684492+01:00): potwierdź zamrożone koła, bieżnik, raw i materiały po testach. Następny krok: odczyt rzeczywistych wyników, ADR/REPORT i kopia, potem r5 palety.
+
+Krok 26: końcowy GIS terminalny 709 passed, 1 xfailed w 953,02 s, exit 0; final-heavy complete/0. Po nim source-proof, dokładny zakres kół/bieżnika/raw i 408 native zgodne, heavy zwolniony. 20729 zakończony. ADR/ocena/REPORT zawierają wynik; REPORT ma 18 wierszy. Main nowe b4f86e3b zawiera r3 life (SCAL/PARTIAL) i dużą integrację innych dziedzin — dopiero r5 dołączy świeże main. Następny krok: commit, publish.ps1 (REPORT ostatni), potwierdzenie kopii, od razu r5 palety.

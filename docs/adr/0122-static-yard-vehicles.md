@@ -1,6 +1,8 @@
 # ADR 0122 — statyczne pojazdy placowe
 
-Status: life r2, wybrany C; końcowy GIS 585 passed, 1 xfailed, EditMode 280/280. Przekazane liderowi, niezależna recenzja S12 SCAL/PARTIAL; lider scalił r2 do main w partii B. Autor nie scalał do main i nie pushował.
+Status bieżący: life r4 A2 wybrany, PARTIAL; GIS 709 passed, 1 xfailed (953,02 s), EditMode 340/340 passed, 0 skipped, native przywrócone i sprawdzone. Niezależny odbiór należy do lidera.
+
+Status historyczny life r2, wybrany C; końcowy GIS 585 passed, 1 xfailed, EditMode 280/280. Przekazane liderowi, niezależna recenzja S12 SCAL/PARTIAL; lider scalił r2 do main w partii B. Autor nie scalał do main i nie pushował.
 
 ## Runda life r2 — problem i zakres
 
@@ -56,7 +58,7 @@ Przewidywane konflikty: definicje wskazanych materiałów, CARPAINT, fabryka mat
 
 Uwagi niezależnej recenzji S12 (REVIEW-2026-11-12-s12-gpt-batch-b.md): LOD1 osi poprawiony, lecz LOD0 felg płaski; brak czytelnego osprzętu podwozia, plandeka zbyt regularna, kabiny uproszczone. To otwarty backlog następnych rund life. Lokalny limit LOD1 320 jest strażnikiem regresji złożoności prototypu, nie samodzielnym dowodem wydajności; dopuszczenie wzrostu wymagało pomiaru całej trasy ≤2% i osobno +0 draws świata/instancji. Nie wyprowadza się budżetu telefonu z maksimum prototypu 316.
 
-## Runda life r4 — przestrzenne felgi placowe, w toku
+## Runda life r4 — przestrzenne felgi placowe, wybrane A2
 
 Gałąź gpt-life-r4 dołączyła main 8b74c2c5 tylko do własnej gałęzi (71477fbd), zachowując zmiany life r3. Konfliktowe generaty i GLB przyjęto z main i odtworzono kanonicznie; LICENSES zachowuje wpisy obu stron. Lider Claude jest jedynym integratorem, autor nie scala do main i nie pushuje.
 
@@ -74,5 +76,5 @@ Pełne before/after-a2: 524 pary PNG i rekordów, identyczne pozycje, rotacje i 
 
 Po pomiarach i oględzinach wybrano A2 (PARTIAL). Dopiero wtedy zaktualizowano lokalny sufit naczep 1200→2200 i ciągników 1500→1700, przy rzeczywistych maksimach 2032/1550. Zapas około 150 tris; kontenery nadal 1500, odległy LOD i limity ramki/trasy bez zmiany. Zsynchronizowano obie kopie oczekiwania ciągnika. Zmienione pliki testów: 59/59 streetscape i 20/20 world_v31.
 
-EditMode 340/340 passed, 0 skipped. Guard po teście wykrył _SrcBlend 5→1 w dwóch nieużywanych cache car_dirt_1/2. Przywrócono wyłącznie ich dokładne bajty baseline, zweryfikowane SHA; wszystkie 408 materiałów i siedem źródeł/GLB/meta/kamery znów zgodne. Oryginalny wrapper exit 1 zachowany wraz z before/after; final-editmode-restored.json dokumentuje przyjęcie poprawnego NUnit po cleanup, nie pomija nieudanego testu. Końcowy GIS nadal trwa; jego wynik należy uzupełnić przed REPORT. Koszt GPU/A16 pozostaje UNVERIFIED. Następna r5: zaległe palety.
+EditMode 340/340 passed, 0 skipped. Guard po teście wykrył _SrcBlend 5→1 w dwóch nieużywanych cache car_dirt_1/2. Przywrócono wyłącznie ich dokładne bajty baseline, zweryfikowane SHA; wszystkie 408 materiałów i siedem źródeł/GLB/meta/kamery znów zgodne. Oryginalny wrapper exit 1 zachowany wraz z before/after; final-editmode-restored.json dokumentuje przyjęcie poprawnego NUnit po cleanup, nie pomija nieudanego testu. Końcowy GIS zakończony: 709 passed, 1 xfailed w 953,02 s, exit 0. Końcowy source-proof, ścisły audyt kół/bieżnika/raw i wszystkie 408 materiałów ponownie poprawne; heavy zwolniony. Koszt GPU/A16 pozostaje UNVERIFIED. Następna r5: zaległe palety.
 
