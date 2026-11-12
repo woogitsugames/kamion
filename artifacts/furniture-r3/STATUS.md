@@ -142,3 +142,5 @@ potem poprawić największe udokumentowane odstępstwo wiaty. WIP po każdym kro
 2026-11-12T13:03:03.7351088+01:00: Unity side-render after-side High clear; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
 
 2026-11-12T13:03:22.7227178+01:00: Unity side-render after-side High overcast; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
+
+2026-11-12T13:03:23.6017023+01:00: ukończono dokładne liczniki Low, oddzielne rendery narożników after-side i porównanie metryk. To nie dowodzi zgodności wizualnej ani budżetu; wartości trzeba odczytać i obejrzeć kadry. NASTĘPNY KROK: kontrola szkła, analiza wszystkich 236 par oraz niezależna recenzja. Pełny GIS dopiero na końcu rundy.
