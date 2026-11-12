@@ -10,9 +10,12 @@ if ($owner -notmatch '^gpt-cab-r\d+$') { throw 'Uruchom tylko na gałęzi rundy 
 if ($Job -eq 'GisFile' -and (-not (Test-Path $TestFile -PathType Leaf) -or $TestFile -notmatch '^tests[/\\](gis|physics|gate3)[/\\].+\.py$')) { throw 'W trakcie rundy wybierz pojedynczy plik testów.' }
 if (-not $Log) { $Log="$PSScriptRoot/heavy-$Job-$(Get-Date -Format yyyyMMdd-HHmmss).log" }
 $slot='C:/Users/matma/Documents/Claude/kamion/scripts/unity-slot.ps1'
-pwsh $slot -Acquire -Pool heavy -Owner $owner -PollSeconds 5 -StaleHours 1000000
-if ($LASTEXITCODE -ne 0) { throw 'Nie uzyskano slotu heavy.' }
+$guard=[System.Threading.Mutex]::new($false,"Local\kamion-cab-heavy-$owner")
+if (-not $guard.WaitOne(0)) { $guard.Dispose(); throw 'Inne własne zadanie heavy jest już aktywne. Nie pozyskuj ani nie zwalniaj jego slotu.' }
 try {
+  pwsh $slot -Acquire -Pool heavy -Owner $owner -PollSeconds 5 -StaleHours 1000000
+  if ($LASTEXITCODE -ne 0) { throw 'Nie uzyskano slotu heavy.' }
+  try {
     $env:UV_PROJECT_ENVIRONMENT='.venv-cab'
     switch ($Job) {
         'World' { uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c *> $Log }
@@ -20,6 +23,8 @@ try {
         'GisFinal' { uv run --project tools/worldgen python -m pytest tests/gis -q *> $Log }
     }
     $code=$LASTEXITCODE
+  }
+  finally { pwsh $slot -Release -Pool heavy -Owner $owner }
 }
-finally { pwsh $slot -Release -Pool heavy -Owner $owner }
+finally { $guard.ReleaseMutex(); $guard.Dispose() }
 exit $code
