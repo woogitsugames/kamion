@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "id": "circle_r50_50kmh_comb",
+  "description": "Combination on R = 50 m at 50 km/h (a_y = 0.39 g): articulation angle and roll of the trailer",
+  "spec": "docs/04 s6.7",
+  "variants": [
+    "empty",
+    "laden40"
+  ],
+  "ground": {
+    "gradePercent": 0,
+    "surface": "dry_asphalt"
+  },
+  "initial": {},
+  "duration": 70,
+  "driver": {
+    "type": "circle",
+    "targetKmh": 50,
+    "radius": 50,
+    "direction": 1
+  },
+  "checks": [
+    {
+      "metric": "radius_error_m",
+      "status": "WORKING_VALUE",
+      "source": "path following (jak circle_r50_35kmh_comb)",
+      "max": 0.6,
+      "from": 30
+    },
+    {
+      "metric": "lat_accel_ms2",
+      "status": "DERIVED",
+      "source": "v^2/R = (50/3.6)^2/50 = 3.858 m/s^2, +/-10% jak w circle_r50_35kmh_comb",
+      "min": 3.4722222222222223,
+      "max": 4.243827160493827,
+      "from": 30
+    },
+    {
+      "metric": "max_articulation_deg",
+      "status": "WORKING_VALUE",
+      "source": "docs/04 s6.7 kat przegubu w stalym luku; docs nie podaja liczby (UNVERIFIED); limit jak w lane_change_80 (6 deg przy 0.18 g, tu 0.39 g)",
+      "max": 6
+    },
+    {
+      "metric": "max_trailer_roll_deg",
+      "status": "WORKING_VALUE",
+      "source": "docs/04 s6.7 przechyl naczepy; UNVERIFIED — przy 35 km/h (0.19 g) limit 4 deg (circle_r50_35kmh_comb), tu 0.39 g",
+      "max": 8,
+      "from": 30
+    },
+    {
+      "metric": "wheel_lift",
+      "status": "WORKING_VALUE",
+      "source": "docs/04 s6.7 granica przyczepnosci; UNVERIFIED czy 40 t (CoG 2.3 m) na R50 przy 50 km/h (0.39 g) nie unosi kola — prog mierzony osobno w rollover_r50_cog_* (0.341 g dla CoG 2.6 m, 0.462 g dla 1.9 m)",
+      "max": 0
+    },
+    {
+      "metric": "max_dv_step_ms",
+      "status": "WORKING_VALUE",
+      "source": "no solver explosion / impulse spikes (per-step velocity change of either body)",
+      "max": 0.35
+    },
+    {
+      "metric": "max_fifth_wheel_error_mm",
+      "status": "WORKING_VALUE",
+      "source": "kingpin constraint drift (custom fifth-wheel constraint)",
+      "max": 5
+    }
+  ]
+}

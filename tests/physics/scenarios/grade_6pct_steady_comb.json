@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "id": "grade_6pct_steady_comb",
+  "description": "40 t on a 6% climb, full throttle from 50 km/h, steady speed after 150 s without gear hunting",
+  "spec": "docs/04 s6.4",
+  "variants": [
+    "laden40"
+  ],
+  "ground": {
+    "gradePercent": 6,
+    "surface": "dry_asphalt"
+  },
+  "initial": {
+    "speedKmh": 50
+  },
+  "duration": 200,
+  "driver": {
+    "type": "timeline",
+    "keys": [
+      {
+        "t": 0,
+        "throttle": 1,
+        "brake": 0,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D"
+      }
+    ]
+  },
+  "checks": [
+    {
+      "metric": "mean_speed_kmh",
+      "status": "DERIVED",
+      "source": "v = eta P / (m g (sin a + f_r) + aero): 0.92 x 368 kW / (40 t x 9.81 x (0.0599+0.008) + ~0.7 kN) = 12.7 m/s = 46 km/h; pasmo jak w grade_5pct_steady (ok. +/-18%)",
+      "min": 38,
+      "max": 54,
+      "from": 150
+    },
+    {
+      "metric": "speed_range_kmh",
+      "status": "WORKING_VALUE",
+      "source": "no gear hunting on the climb (limit jak w grade_5pct_steady)",
+      "max": 6,
+      "from": 150
+    },
+    {
+      "metric": "downshift_count",
+      "status": "WORKING_VALUE",
+      "source": "docs/04 s6.4 'ustalona predkosc na podjezdzie' — zero redukcji w ustalonym oknie (jak launch_6pct_uphill_comb, ADR 0024)",
+      "max": 0,
+      "from": 150
+    },
+    {
+      "metric": "min_rpm",
+      "status": "WORKING_VALUE",
+      "source": "engine kept in the torque plateau (S1: 980-1270 rpm max torque)",
+      "min": 1000,
+      "from": 150
+    },
+    {
+      "metric": "max_dv_step_ms",
+      "status": "WORKING_VALUE",
+      "source": "no solver explosion / impulse spikes (per-step velocity change of either body)",
+      "max": 0.35
+    },
+    {
+      "metric": "max_fifth_wheel_error_mm",
+      "status": "WORKING_VALUE",
+      "source": "kingpin constraint drift (custom fifth-wheel constraint)",
+      "max": 5
+    }
+  ]
+}
