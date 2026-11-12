@@ -238,3 +238,18 @@ Zamknięcie r2:GIS644passed,1xfailed,1failed (zastane dwa hashe fidelity, niezmi
 
 ### r3, przygotowanie
 Gałąźgpt-furniture-r3 od zamkniętej r2, merge main889201d5. Produkty generatora z main do regeneracji; dopiski materiałów/licencji zachowano addytywnie. Cel:wiaty/przystanki/kosze/słupki według Mapillary, bez barier. Baseline po merge przed zmianą geometrii.
+
+### r3, kandydat 1 po baseline
+
+Baseline162214c3:236PNG(59×Low/High×clear/overcast),importOK,6833 chronione
+payloady. Niezależny przegląd4zbliżeń wskazał ciemne panele i dach jakoP1.
+Kandydat6a50ee4c dodaje wariant tylko dla dwóch referencjiOSM, pozostawiając
+pozostałe prototypy i pozycje. Zachowano source seed i kotwicefab/litter.
+Rama/dach mają jeden slot,cienkie szkło drugi,ławka trzeci. Low ma mniej
+segmentów dachu odHigh. Kolizja zachowuje poprzedni pełnybox; nie deklarować
+nowej fizycznej dostępności wejścia. Obrys4×1,5×2,5m zachowuje wartość zastaną,
+nie jest pomiarem zdjęcia. Barwa,alpha i profil dachu WORKING_VALUE.
+
+Trzy sloty nowej rodziny nie dowodzą braku wzrostu draws po podziale instancji;
+pełna kontrola236kadrów obowiązkowa. Przed generatorem pojedynczy własny
+plik testów w heavy; pełnyGIS dopiero przy zamknięciu rundy.
