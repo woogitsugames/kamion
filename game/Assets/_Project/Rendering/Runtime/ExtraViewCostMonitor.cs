@@ -52,6 +52,7 @@ namespace Game.Rendering
         float m_AbPeriod = 4f, m_AbSwitchAt, m_AbSettleUntil;
         bool m_AbB;
         float m_SavedShadowDistance = -1f;
+        int m_SavedShadowRes = -1;
         int m_SavedCascades = -1;
         float m_SavedLod = -1f, m_SavedScale = -1f, m_SavedFar = -1f;   // ADR 0106 A/B keys
         int m_SavedMask;
@@ -519,6 +520,21 @@ namespace Game.Rendering
                     if (m_AbKey.StartsWith("pp:")) { RenderOverrides.AbPropsPrefix = b ? m_AbKey.Substring(3).Split('/') : null; break; }
                     if (m_AbKey.StartsWith("ps:")) { RenderOverrides.AbPropShadowPrefix = b ? m_AbKey.Substring(3).Split('/') : null; break; }
                     if (m_AbKey.StartsWith("vl:")) { RenderOverrides.AbVehicleLodScale = b ? float.Parse(m_AbKey.Substring(3), System.Globalization.CultureInfo.InvariantCulture) : 1f; break; }
+                    if (m_AbKey == "mirres") { MirrorOverrides.Resolution = b ? 0.75f : (float?)null; break; }
+                    if (m_AbKey.StartsWith("shd:"))   // shadow distance (m) in B
+                    {
+                        if (urp == null) break;
+                        if (b) { m_SavedShadowDistance = urp.shadowDistance; urp.shadowDistance = float.Parse(m_AbKey.Substring(4), System.Globalization.CultureInfo.InvariantCulture); }
+                        else if (m_SavedShadowDistance >= 0f) { urp.shadowDistance = m_SavedShadowDistance; m_SavedShadowDistance = -1f; }
+                        break;
+                    }
+                    if (m_AbKey.StartsWith("shr:"))   // main-light shadow map resolution (px) in B
+                    {
+                        if (urp == null) break;
+                        if (b) { m_SavedShadowRes = urp.mainLightShadowmapResolution; urp.mainLightShadowmapResolution = int.Parse(m_AbKey.Substring(4)); }
+                        else if (m_SavedShadowRes > 0) { urp.mainLightShadowmapResolution = m_SavedShadowRes; m_SavedShadowRes = -1; }
+                        break;
+                    }
                     if (m_AbKey == "vm") { RenderOverrides.AbVehicleNoExtraView = b; break; }
                     if (m_AbKey == "cc") { Shader.SetGlobalFloat("_KamionClearCoatOff", b ? 1f : (QualityProfileApplier.Current.clearCoat ? 0f : 1f)); break; }
                     if (m_AbKey == "grime") { Shader.SetGlobalFloat("_KamionGrimeDetailOff", b ? 1f : (QualityProfileApplier.Current.vehicleGrimeDetail ? 0f : 1f)); break; }

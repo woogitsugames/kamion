@@ -42,6 +42,9 @@ $runs = [ordered]@{
   ab_mirrorlow = 'mirrorlow'
   ab_cc     = 'cc'
   ab_grime  = 'grime'
+  ab_mirres = 'mirres'
+  ab_shd25  = 'shd:25'
+  ab_shr512 = 'shr:512'
 }
 $sel = if ($Only) { $Only -split ',' } else { $runs.Keys }
 $spec = ($sel | ForEach-Object { "$_=rq_ab=$($runs[$_]) $fix" }) -join ';'
