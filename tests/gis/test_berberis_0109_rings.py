@@ -248,7 +248,7 @@ def test_cover_height_selects_actual_face_across_fold():
     np.testing.assert_allclose(pt._cap_surface_height(roots,vertices,triangles),[.3,.2,1.])
 
 
-def test_low_cover_overlaps_in_plan_without_more_cards_or_tall_shoots():
+def test_low_cover_spreads_in_plan_without_more_cards_or_tall_shoots():
     class Capture:
         def add(self,layer,material,vertices,uv,triangles,**kwargs):
             self.vertices=np.asarray(vertices)
