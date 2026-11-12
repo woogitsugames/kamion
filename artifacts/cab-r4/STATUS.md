@@ -25,3 +25,4 @@ Diagnoza przerwy logu importu: watchdog PID 33400 jawnie SUSPEND root Python 609
 Watchdog automatycznie RESUME własny root 60996 o 12:28:54 po pauzie od 12:22:09. Log build_all przeszedł przez kolejne zestawy (beton, krawężnik, behaton), CPU workera wzrósł z 9 do ponad 135 s. Nie wykonywano ręcznego resume/restartu ani zmiany limitów. import-watchdog-resumed.json zachowuje wpisy i pomiar. Diagnostyczna próba odczytu WaitReason wątku Running zgłosiła null; nie dotyczyła procesu budowania i nie zmieniła go.
 Import baseline exit 0; build_all/cc0_fetch i Unity objęte slotami heavy oraz Unity, zwolnionymi w finally. Następny krok przebudowa kabiny i świeże kadry.
 Zakończono Game.Editor.Setup.TruckAssetBuilder.BuildBatch, exit 0. Następny krok: kolejny etap prefab/sceny lub capture-0112 -Stage result-0112.
+Zakończono Game.World.Import.WorldTruckInstaller.InstallBatch, exit 0. Następny krok: kolejny etap prefab/sceny lub capture-0112 -Stage result-0112.
