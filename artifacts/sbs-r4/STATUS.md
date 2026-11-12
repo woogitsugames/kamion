@@ -38,3 +38,7 @@ Nie wykonano merge do main, push, telefonu ani edycji innych dziedzin. Odśwież
 2026-11-12T12:36:16.6686306+01:00: niezależny przegląd samplera PASS w zakresie kodu, bez uruchomienia. Przygotowane również wrappery pełnej serii i EditMode. ComposeOnly będzie korzystać wyłącznie z zapisanych wejść, bez podmiany adnotacji na pliki live. Nowe helpery dodaję jawnie force, ponieważ artifacts jest ignorowane; poprzedni commit45396e97 zapisał tylko śledzony STATUS.
 
 2026-11-12T12:36:49.5422890+01:00: przygotowany run-heavy.ps1 r4, bez Priority, z ochroną przed już zajętym slotem lub własnym biletem kolejki. Każde wywołanie obejmuje jeden testplik lub jeden etap i zapisuje exitcode przed Release. Nie uruchamiano go równolegle z baseline77049.
+
+2026-11-12T12:39:26.9379522+01:00: generator Materials zakończony exit0; osobny heavy zwolniony. Szczegóły i SHA w receipcie kroku.
+
+2026-11-12T12:39:35.4060595+01:00: prywatne próby wiążą teraz także materials_spec z planem i importem, zachowują main_sha i sprawdzają pełny unikalny roster raw przy składaniu. Jest to przygotowanie kodu, nie wynik renderu. Materiały baseline nadal pracują w tym samym slocie.

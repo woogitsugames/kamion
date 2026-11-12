@@ -13,7 +13,12 @@ assert {c['id'] for c in cameras}=={p['probe'] for p in plan['probes']}
 assert all(c['pose_confidence']=='C' for c in cameras)
 assert plan['probe_cameras_sha256']==sha(INPUT/'probe_cameras.json')
 assert plan['world_manifest_sha256']==sha(INPUT/'world_manifest.json')
+assert plan['materials_spec_sha256']==sha(INPUT/'materials_spec.json')
 assert plan['road_graph_sha256']==sha(INPUT/'road_graph.json')
+import_receipt=read(INPUT/'import_receipt.json')
+assert import_receipt['exit_code']==0
+assert import_receipt['world_manifest_sha256']==plan['world_manifest_sha256']
+assert import_receipt['materials_spec_sha256']==plan['materials_spec_sha256']
 input_files={'road_graph':'road_graph.json','probe_cameras':'probe_cameras.json','probe_plan':'probe_plan.json','import_receipt':'import_receipt.json',
              'production_cameras':'production_cameras.json','references':'references.json',
              'world_manifest':'world_manifest.json','materials_spec':'materials_spec.json'}
@@ -24,9 +29,13 @@ for height in sorted({p['height'] for p in plan['probes']}):
     assert capture['diagnostic_only'] and capture['pose_confidence']=='C'
     assert capture['width']==1280 and capture['height']==height
     assert set(capture['cameras'])=={p['probe'] for p in plan['probes'] if p['height']==height}
+    assert len(capture['cameras'])==len(set(capture['cameras']))
+    assert set(capture['render_sha256'])==set(capture['cameras'])
+    assert {p.stem for p in path.parent.glob('*.png')}==set(capture['cameras'])
     for key,name in input_files.items():assert capture['input_sha256'][key]==sha(INPUT/name),(key,height)
     captures[height]=capture
 assert len({c['git_sha'] for c in captures.values()})==1,'mixed capture epoch'
+assert len({c['main_sha'] for c in captures.values()})==1,'mixed main base'
 OUT.mkdir(exist_ok=True);(OUT/'photos').mkdir(exist_ok=True)
 font=ImageFont.truetype('C:/Windows/Fonts/arial.ttf',14)
 small=ImageFont.truetype('C:/Windows/Fonts/arial.ttf',12)
