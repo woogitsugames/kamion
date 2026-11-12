@@ -17,7 +17,8 @@ try {
 finally {
     pwsh $slotScript -Release -Pool heavy -Owner gpt-truck-r3
 }
-Add-Content -Encoding utf8 artifacts/truck-r3/STATUS.md "Końcowy GIS uruchomiono pod slotem heavy; exit $testExit. Wynik w gis-final.log. Następny krok: porównać niepowodzenia z bazowymi pięcioma błędami, zapisać REPORT i skopiować artefakty do main."
+Add-Content -Encoding utf8 artifacts/truck-r3/STATUS.md "Końcowy GIS uruchomiono pod slotem heavy; exit $testExit. Wynik w gis-final.log. Następny krok: ocenić każdy błąd na świeżych wejściach świata, bez przywracania starego manifestu przed testem, zapisać REPORT i skopiować artefakty do main."
 git add -f artifacts/truck-r3/STATUS.md
 git commit --only artifacts/truck-r3/STATUS.md -m 'wip(truck): koncowy GIS pod slotem heavy'
 exit $testExit
+
