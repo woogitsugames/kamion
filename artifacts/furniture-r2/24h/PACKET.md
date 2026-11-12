@@ -114,3 +114,5 @@ physics również zachowały bloby bazy r2. Wyniki pełnych testów nadal PENDIN
 
 Aktualizacja końcowych kontroli:root i niezależny reviewer obejrzeli330/330 par na60 arkuszach≤960px, bez nowego widocznego blokera furniture (compare/REVIEW.md). Chroniona geometria6833→6833,0 różnic (protected-geometry-comparison.json). Wszystkie arkusze powstały jako pojedyncze małe interaktywne przeglądy; zbędny pełny batch anulowano, bez powtórnego dekodowania. KońcoweGIS/physics nadal oczekują na heavy. Kod/zasoby52668015 pozostają bez zmian.
 
+
+KońcowyGIS wykonany raz po zamrożeniu rundy:644passed,1xfailed,1failed w827,24s. Jedyna porażka:test_road_fidelity.py::test_report_not_stale, dokładnieoverrides.yaml iroads/meshing.py. Oba wejścia i raport niezmienione od bazy3fe0c97f potwierdzaexisting-test-input-audit.json. Nie zmieniano cudzych dróg/overrides ani hashy, by uzyskaćPASS. Efekt uboczny wygenerowanej specyfikacji wiaduktu cofnięto po zakończeniu procesu. Physics/gate3 nadal czeka naheavy.
