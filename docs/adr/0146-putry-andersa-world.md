@@ -1,7 +1,7 @@
 # ADR 0146 — G3-B world fixes: Putry deck lamps and verge, Andersa SE ramp level (810896), portal follow-ups
 
-Status: DRAFT on branch `putry-andersa` (base main `1b002a730`, 2026-11-12, s14); not merged. Validation section is
-filled in after the build / import / renders. A visual-critic review is required.
+Status: PROPOSED on branch `putry-andersa` (2026-11-12, s14-s15); not merged. Validation below;
+a visual-critic review is still required.
 Source: ADR 0143 "World findings" 1-3, `docs/reports/visual/REVIEW-2026-11-12-s14-0133.md` P2-4..7,
 `docs/reports/visual/REVIEW-2026-11-12-s14-0139.md` P1-1, P2-2..5 (lead request, s14).
 
@@ -113,8 +113,39 @@ station). `beam_depth_m: 0.6` (the name carries decimetres, 0.55 already built `
 
 ## Validation
 
-TODO.
+Three rebuilds (r1 692 s, r2 544 s, r3 641 s; all exit 0), road consistency 65 after each, the same as before the
+change. Unity import exit 0 after each. Evidence: `artifacts/putry-andersa/` (r1 `after/`, r2 `after2/`, final
+`after3/`: `pairs/Low-{overcast,clear}` photo | before over photo | after, `probe/`, crops in `look/v`, `look/v2`).
+
+| Item | Before | After (r3) | How |
+|---|---|---|---|
+| Lamp luminaires above the deck (494288) | 12.0 m, column on a deck console | 10.3 m, 17 of 18 columns as ground masts / median columns (one skipped: it falls on a carriageway) | `streetscape_qa.json` lamp_rows (`console: 0`); probe `sbs-p146-494288-native`: nearest head at 0.42 of the frame height, photo 0.43 |
+| Carriageways at E -420 (810896) | 1.3-1.9 m apart, 3-4 m wall in the frame | SE 134.4-134.5 / grass 134.75 / NW 134.5-134.4 m | GLB section (`tools/xsec.py`); `profile_ties` residual 0.007 m over 315 stations, `median_fills` 82.1 m, 3.57-4.11 m wide, edges within 0.03 m; pair 810896: no wall, grass median |
+| Portal boards to the beam axis | 2.46 m in front | 0.45 m (test bound 0.3-0.6) | `streetscape_qa.json` board E, N against `columns_en`; pair 275528 (`look/v2/portal-cmp.jpg`): board tops just above the top chord, right board bottom below the bottom chord, as on the photo |
+| Cap colour on the deck (494288, r2 frames) | concrete, then flat red: R/G 1.89-2.05, cap / asphalt 1.14-1.44 | R/G 1.5 (clear) / 1.7 (overcast), cap / asphalt 0.97 / 1.0; photo ~1.4 / ~1.2 (shade) | median of the red pixels of the cap crop against the lane, sRGB |
+| Mapped noise barrier along screened deck edges | built on the ground | 611.9 m not built | `noise_barriers.on_screened_deck_m` |
+| Mapped retaining wall along walled ramps | built 0.5 m in front of the block wall | 274 m not built | `fences.retaining_on_ramp_wall_m` |
+| Red band on the ramp walls (810525, 209622) | hidden behind the block facing / the doubled barrier | visible above the wall, under the screen | pairs `after3/pairs/Low-clear` |
+
+Tests: `tests/gis/test_putry_andersa_r2.py` (4), `tests/gis/test_lamp_rows.py`; EditMode 408 / 408 passed (on the r2
+import; no C# changed in r3). Full pytest (tests/gis + gate3 + swept path): see STATUS / final report of the branch.
+r1 run: 866 passed, 1 failed (`test_report_not_stale`, fixed by rerunning `fidelity/run.py`).
+
+Not validated: no visual-critic review yet (required before the merge; a subagent may not start one), nothing
+measured on the phone (geometry: -10 triangles per screen post pair is the only budget-relevant change, plus the
+removed doubled barrier / wall).
 
 ## Open
 
-TODO.
+- `sbs_cameras.json` of 494288 still uses the SfM focal length (vfov 32.9 deg); the pose stream should take
+  0.93 x width and eye 1.0 m (section 1). The SBS pair therefore still shows lamps and screen 1.37 x too large.
+- Deck barrier: the photo has a dark multi-rail steel barrier with a handrail; generated: galvanised W-beam with an
+  upper beam. Screen posts read pale mint in clear light; the photo's are darker (WORKING_VALUE).
+- `ramp_wall_blocks` reads as flat grey on Low from 15-30 m; the photo shows split-face blocks 0.5 x 1 m.
+- 810896: at the left edge a light concrete wall end of the median fill with the guardrail on it; the photo has the
+  guardrail in grass. B-23 on the median column is not built (no B-23 face in the atlas). Trees behind the screen
+  taller than on the photo.
+- Lamp column 16 of the row is skipped (carriageway); south-east of E -282 the rule lamps stay (UNVERIFIED).
+- Keep-out radii 2.5 m and the cap colour are WORKING_VALUE; cap colour in sun UNVERIFIED (the reference is shaded).
+- After the merge of main (generator changes of the navgraph / Mistral r2 stream) the region has to be regenerated
+  once more on the merged tree; this branch keeps its own generated files (`--ours`).
