@@ -78,3 +78,5 @@ potem poprawić największe udokumentowane odstępstwo wiaty. WIP po każdym kro
 2026-11-12T11:58:19.0427891+01:00: przygotowano osobne dwa kadry przeciwnego narożnika wiat do kontroli szkła. Ich plik kamer i katalogi before-side/after-side nie zmieniają 59 kamer ani dokładnych liczników budżetowych. Własny side-render omija wyłącznie swój lokalny marker harmonogramu; nadal pobiera ten sam wymagany slot Unity. Przyszły import kandydata czeka do zakończenia tej osobnej próby bazowej.
 
 2026-11-12T11:58:51.9886932+01:00: Unity side-render before-side Low clear; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
+
+2026-11-12T11:59:13.6024542+01:00: Unity side-render before-side Low overcast; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
