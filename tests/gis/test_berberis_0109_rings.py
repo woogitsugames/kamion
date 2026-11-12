@@ -186,7 +186,7 @@ def test_surface_cover_is_deterministic_inside_and_separated():
     points=pt._surface_samples(polygon,.28,('cover-test',))
     np.testing.assert_array_equal(points,pt._surface_samples(polygon,.28,('cover-test',)))
     assert len(points)>25
-    assert all(polygon.buffer(-.02).contains(Point) for Point in shapely.points(points))
+    assert all(polygon.buffer(-.02).contains(point) for point in shapely.points(points))
     distances=np.linalg.norm(points[:,None,:]-points[None,:,:],axis=2)
     np.fill_diagonal(distances,np.inf)
     assert distances.min()>=.14-1e-12
@@ -204,8 +204,9 @@ def test_cover_height_uses_cap_planes_and_refuses_outside():
         pt._cap_surface_height(np.array([[3.,1.]]),vertices,triangles)
 
 
-def test_narrow_authored_bed_has_cover_without_interior_mesh_vertices(monkeypatch):
-    poly,key,bed=authored_bed(0)
+@pytest.mark.parametrize('bed_index',range(4))
+def test_authored_bed_cover_uses_actual_cap_without_changing_base(monkeypatch,bed_index):
+    poly,key,bed=authored_bed(bed_index)
     class Capture:
         def __init__(self): self.parts=[]
         def add(self,layer,material,vertices,uv,triangles,**kwargs):
@@ -221,11 +222,14 @@ def test_narrow_authored_bed_has_cover_without_interior_mesh_vertices(monkeypatc
     pt.hedge_mass(buf,poly,ground,key,h=bed.get('height_m'))
     assert len(calls)==1 and len(calls[0][0])>20
     shell,triangles=buf.parts[3][1:]
-    # E1's narrow cap has only boundary vertices; cover must still fill its middle.
-    outline=Polygon(shell[:,:2]).boundary
-    assert all(outline.distance(point)<1e-7 for point in shapely.points(shell[:,:2]))
+    # Reconstruct the cap from its faces, not a polygon through all vertices:
+    # the latter would turn interior mesh samples into bogus boundary points.
+    cap=shapely.union_all(shapely.polygons(shell[triangles][:,:,:2]))
+    assert cap.is_valid and cap.geom_type=='Polygon'
+    if bed_index==0:
+        assert all(cap.boundary.distance(point)<1e-7 for point in shapely.points(shell[:,:2]))
     roots,z=calls[0]
-    assert all(Polygon(shell[:,:2]).buffer(-.019).covers(point) for point in shapely.points(roots))
+    assert all(cap.buffer(-.019).covers(point) for point in shapely.points(roots))
     np.testing.assert_allclose(z,pt._cap_surface_height(roots,shell,triangles))
     monkeypatch.setitem(pt.SPECIES['berberis_red'],'cover_spacing',0.)
     baseline=Capture()
@@ -235,3 +239,10 @@ def test_narrow_authored_bed_has_cover_without_interior_mesh_vertices(monkeypatc
         np.testing.assert_array_equal(actual[1],old[1])
         np.testing.assert_array_equal(actual[2],old[2])
     assert {part[0] for part in buf.parts}=={part[0] for part in baseline.parts}
+
+
+def test_cover_height_selects_actual_face_across_fold():
+    vertices=np.array([[0.,0.,0.],[2.,0.,0.],[2.,2.,2.],[0.,2.,0.]])
+    triangles=np.array([[0,1,2],[0,2,3]])
+    roots=np.array([[1.7,.3],[.2,1.8],[1.,1.]])
+    np.testing.assert_allclose(pt._cap_surface_height(roots,vertices,triangles),[.3,.2,1.])
