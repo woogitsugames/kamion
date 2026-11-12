@@ -35,3 +35,7 @@ NASTĘPNY KROK: gdy istnieje `artifacts/g3b-lowread/all-2.done`: `cd artifacts/g
 Cykl 2 zakonczony: EditMode 382/382, pytest gis+gate3 802 passed / 1 failed (stara asercja "LOD1 = two boxes" w test_street_r9 - poprawiona na budzet kratownicy <= 300 tris), SBS Low overcast+clear 20 kadrow G3-B, draws G3-B min/med/max -17/-1/+11 (stats-diff-after.txt). Scalono main bedc52d12 bez konfliktow (generated ours) -> b69cc5a8d.
 W TLE: `run-all-2.ps1 -Name final -Tag 3` (build 3 -> fidelity -> pytest || import -> SBS -> EditMode), znacznik `all-3.done`.
 NASTEPNY KROK: po `all-3.done`: `cd artifacts/g3b-lowread; BASE=baseline-newpose OUT=pairs-final bash make-pairs.sh final; BASE=baseline-newpose LIGHT=Low-clear OUT=pairs-final-clear bash make-pairs.sh final; BASE=baseline-newpose python stats-diff.py final > stats-diff-final.txt; tail -3 pytest-gis.log editmode.log` -> Results w ADR 0127 -> commit generated -> robocopy do main.
+
+## 7. Cykl 3 zielony - gotowe do scalenia (~17:25)
+Po merge main bedc52d12: build 3 exit 0, fidelity 0, pytest gis+gate3 832 passed / 1 xfailed, import OK (Low 121,9 MB), SBS Low overcast+clear `final/renders`, EditMode 402/402. Draws G3-B vs main sprzed 0127: -17/-1/+11 (`stats-diff-final.txt`). Pary: `pairs-final/`, `pairs-final-clear/`. ADR 0127 Results uzupelnione.
+NASTEPNY KROK (lider): `git merge g3b-lowread` (generated/*.json, *.glb, *_meta.json -> theirs lub regeneracja), pomiar A16 na nastepnej bramce.

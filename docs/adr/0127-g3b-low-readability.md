@@ -72,5 +72,21 @@ no manufacturer drawings in the repo.
 
 ## Results
 
-See `artifacts/g3b-lowread/` (STATUS.md, `pairs-after/`, `stats-diff-after.txt`). Numbers are filled in below after
-the final build.
+Final cycle after `git merge main` (bedc52d12), build 3 + import + render, 2026-11-12. Evidence in
+`artifacts/g3b-lowread/`: `pairs-final/` (Low overcast), `pairs-final-clear/` (Low clear), `stats-diff-final.txt`,
+`pytest-gis.log`, `editmode.log`, `STATUS.md`.
+
+- Tests: pytest `tests/gis tests/gate3` 832 passed, 1 xfailed; EditMode 402 / 402; fidelity exit 0.
+  `test_street_r9::test_cantilever_prototype_reach_and_mirror` budget changed from "LOD1 = two boxes (<= 24 tris)" to
+  "<= 300 tris" (the cantilever LOD1 lattice has 240).
+- Cost on Low, editor estimate, 20 G3-B photo-pose cameras, before = main before this ADR
+  (`artifacts/sbs-poses/final`), so the delta also contains what main merged in between: total draws (static +
+  instanced) min / median / max **-17 / -1 / +11**; static triangles -6k .. +6k, instanced 0 .. +4k per frame.
+  No phone measurement in this stream (A16 GPU budget already FAIL): the change is cost-neutral in the editor
+  estimate, to be confirmed at the next gate run.
+- D51 ("would a driver recognise the place?"), frames viewed in both lightings: 275528 / 837235 / 381800 / 297817 -
+  the Andersa portal reads as a lattice frame with boards on the beam from the far frames on, proportions close to
+  the photo after the 14 m span; 3678296 - the HV tower is a dark three-arm silhouette with conductors (arm
+  orientation open, see above); 494288 - the viaduct screen reads as a light lined sheet between heavy dark posts;
+  1801374 - a tall glazed screen on a dark band instead of the post fence. Remaining differences are pose / FOV
+  (SBS stream) and the daylight boards being brighter than the dusk photos.
