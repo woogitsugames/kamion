@@ -26,13 +26,20 @@ def test_new_family_preserves_existing_collision_payload():
 
 
 def test_new_family_leaves_entrance_open_and_has_a_closed_curved_roof():
-    for mesh in props.bus_shelter_red_0120()[:2]:
+    for mesh, segments in zip(props.bus_shelter_red_0120()[:2], (4, 2)):
         frame = mesh.prims['shelter_red_frame_0120']
         # A full-height post at local x=0,y=+0.75 would split the front entrance.
         assert not any(np.ptp(v[:, 2]) > 2 and np.max(np.abs(v[:, 0])) < .1
                        and np.min(v[:, 1]) > .6 for v in frame[0])
         points = np.concatenate(frame[0])
-        assert points[:, 2].max() > 2.65
+        assert 2.59 < points[:, 2].max() <= 2.600001
+        # All five supports meet the actual polygonal roof underside for their LOD.
+        ys = np.linspace(-.87, .87, segments+1)
+        zs = 2.54+.06*(1-(ys/.87)**2)
+        for x,y in ((-2,-.75),(0,-.75),(2,-.75),(-2,.75),(2,.75)):
+            near = (np.abs(points[:,0]-x) <= .036) & (np.abs(points[:,1]-y) <= .036)
+            assert near.any()
+            assert points[near,2].max() == pytest.approx(np.interp(y,ys,zs)-.045)
         assert any(np.ptp(v[:, 1]) > .1 and np.ptp(v[:, 2]) > .01
                    and np.min(v[:, 2]) > 2.5 for v in frame[0])
         for primitive in mesh.out():

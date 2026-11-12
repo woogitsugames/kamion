@@ -349,17 +349,18 @@ def bus_shelter_red_0120():
     high, low = Mesh(), Mesh()
     frame, glass = "shelter_red_frame_0120", "shelter_clear_glass_0120"
     for m, segments in ((high, 4), (low, 2)):
+        ys = np.linspace(-D/2-.12, D/2+.12, segments+1)
+        zs = H+.04+.06*(1-(ys/(D/2+.12))**2)
+        half_w, thickness = W/2+.10, .045
         # Three rear posts, two front corners: no central post across the entrance.
         for x, y in ((-W/2, -D/2), (0, -D/2), (W/2, -D/2), (-W/2, D/2), (W/2, D/2)):
-            m.box(frame, [x, y, H/2], .035, .035, H/2)
+            top = float(np.interp(y, ys, zs))-thickness
+            m.box(frame, [x, y, top/2], .035, .035, top/2)
         for z in (.65, 1.35):
             m.box(frame, [0, -D/2, z], W/2, .025, .025)
         for x in (-W/2, W/2):
             m.box(frame, [x, 0, .65], .025, D/2, .025)
         # Closed shallow curved sheet with visible front/back fascia and end edges.
-        ys = np.linspace(-D/2-.12, D/2+.12, segments+1)
-        zs = H+.07+.12*(1-(ys/(D/2+.12))**2)
-        half_w, thickness = W/2+.10, .045
         for y0, y1, z0, z1 in zip(ys[:-1], ys[1:], zs[:-1], zs[1:]):
             m.quad(frame, [-half_w,y0,z0], [half_w,y0,z0], [half_w,y1,z1], [-half_w,y1,z1])
             m.quad(frame, [-half_w,y1,z1-thickness], [half_w,y1,z1-thickness],
