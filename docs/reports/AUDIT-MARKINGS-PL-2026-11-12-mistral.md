@@ -10,6 +10,12 @@
     Dz.U. 2021 poz. 2066, Dz.U. 2022 poz. 2377, Dz.U. 2026 poz. 132). Załącznik nr 2 = strony Dz.U. **526–906**
     (PDF `D2019000231102.pdf`); numery stron w tabelach to strony Dziennika Ustaw poz. 2311. Tekst załącznika nr 2
     w części 5 był zmieniony przez Dz.U. 2021 poz. 2066 — czytany tekst jednolity zawiera już te zmiany.
+    **[Poprawka lidera s15]** To zdanie jest błędne: tekst jednolity Dz.U. 2019 poz. 2311 (obwieszczenie z 9.09.2019)
+    NIE zawiera nowelizacji późniejszych (ELI: „Nowelizacje po tekście jednolitym”: Dz.U. 2021 poz. 438, 2021 poz. 2066,
+    2022 poz. 2377, 2026 poz. 132). Statusy poniżej opierają się na tekście z 2019 r.; zmiany z lat 2021–2026 w zał. nr 2
+    są niesprawdzone (UNVERIFIED). Lider sprawdził wyrywkowo w PDF `dziennikustaw.gov.pl/D2019000231102.pdf`:
+    pkt 5.2.7.1 / Tabela 5.3 (P-21a 0,24/0,39 m, P-21b 0,60/0,98 m) na str. Dz.U. 587 i 589 oraz „nie może być większa
+    niż 16,0 m” (P-10) na str. 567 — zgodne z cytatami raportu.
   - **[PTB2022]** rozporządzenie MI z 24.06.2022 r. w sprawie przepisów techniczno-budowlanych dotyczących dróg
     publicznych — **Dz.U. 2022 poz. 1518** (status „obowiązujący”, zmienione m.in. Dz.U. 2025 poz. 1352), tekst HTML z ELI.
 - Statusy: **ZGODNE** (zweryfikowane z treścią przepisu w źródle pierwotnym), **NIEZGODNE** (kod różni się od przepisu),

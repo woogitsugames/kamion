@@ -84,3 +84,21 @@ Zakres stosowalności w całym raporcie: **ciągnik siodłowy 4x2 (kat. N3) + na
 - **P8:** Pacejka był błędnym cytatem; właściwe źródła (VT, Vehicles 2026) dają pasmo 1–4 Hz dla kabiny — wartości repo 1,5–1,8 Hz w paśmie; zostawić, poprawić cytowanie.
 - **P10:** karta Volvo I-Shift potwierdza automatyczny wybór biegu startowego 1.–6. zależny od DMC — rekomendacja: wdrożyć maxLaunchGear = 2.
 - Żadne dane gry ani kod nie zostały zmienione; raport jest jedynym plikiem tego PR.
+
+## Uwagi lidera (recenzja s15, `docs/reports/REVIEW-2026-11-12-s15-mistral-r3.md`)
+
+Sprawdzone wyrywkowo 2026-11-12 w źródłach: FHWA WUS rozdz. VII (zdanie o RA 1,24 i progu 2,0 — zgodne),
+EUR-Lex CELEX 42016X0218(01) par. 5.2.1.13.1 (wymóg funkcyjny, bez progu kPa; 650 kPa w 5.2.1.28.5 — zgodne),
+ZF products_65885 („Approved for engine torques above 3,500 Nm” — zgodne), karta Volvo I-Shift
+(„Automatic selection of correct starting gear (1st – 6th gear)… determined by gross vehicle weight and road gradient”,
+„In HD mode, 1st gear is used as the starting gear” — zgodne). Korekty wniosków:
+
+- **P5 — rekomendacja zmieniona na „zostawić / decyzja projektowa”.** Cytowane źródło 2 mówi, że sprzęgła ZF są
+  dopuszczone dla momentów **powyżej** 3 500 Nm, więc 4 000 Nm w repo **nie** jest „poza klasą producenta”; źródła
+  nie dają górnej granicy klasy. Obniżenie do 3 400 Nm nie wynika ze źródła (UNVERIFIED); ewentualnie zmierzyć
+  w runnerze wpływ na poślizg sprzęgła przy ruszaniu pod górę.
+- **P10 — rekomendacja zmieniona na „zmierzyć”.** Karta Volvo potwierdza automatyczny wybór biegu startowego
+  z zakresu 1.–6. zależny od masy i nachylenia, ale **nie** podaje biegu dla 40 t; zdanie „przy 40 t start z 1.–2.”
+  jest wnioskiem, nie cytatem (UNVERIFIED). Obecne `maxLaunchGear = 4` mieści się w zakresie 1.–6. ze źródła.
+  Zmiana 4 → 2 tylko po decyzji właściciela / teście jazdy (czas 0–80 km/h rośnie o 0,6 s wg raportu).
+- P8: „Gillespie, ζ 0,3–0,5” — bez strony/rozdziału; UNVERIFIED do czasu podania strony.
