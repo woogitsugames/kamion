@@ -116,7 +116,12 @@ LOD aut i ich cienie prawie nic nie dają. Pozostałe propsy (znaki, latarnie, b
 | **r2d po (+ grime off)** ×3 | 2080745dd4 | 29,8–29,9 | 33,3 / 33,5 / 49,9 · 33,9 · 49,9 | 22 / 19 / 23 | 31,4–31,7 / **34,2 / 33,7 / 33,9** / 35,5–36,0 | 21,5–22,2 / 29,4–30,2 | 896–919 | 30,5–30,8 |
 
 Ocena: **GPU p95 G3-A 35,9 → 34,0 ms (−2,0 ms, średnie r2d), klatki > 40 ms 40 → 21, CPU p50 −0,9 ms; cel 33,3 ms nieosiągnięty o ~0,6 ms**;
-p99 klatki 50 ms nadal w 2 z 3 przejazdów (pojedyncze podwójne vsynci). Kamery kontrolne Low przed/po: VQA_PLACEHOLDER
+p99 klatki 50 ms nadal w 2 z 3 przejazdów (pojedyncze podwójne vsynci). Kamery kontrolne Low overcast WorldC + gate3 (78 par, przed = te same override'y):
+mediana PSNR 54,0 dB; najniższe to widoki z góry (`fire-station-above` 32,1, `route-onramp-andersa-above` 32,4, `biezenstwa-above` 34,0 dB):
+znikają zaparkowane ciągniki/naczepy/auta na placach > 150 m od kamery; widoki z drogi (`g3a_*` ≥ 41 dB) — auta i zestawy na placu przy G3-A
+(~100 m) zostają, znaki/latarnie/bariery/landmarki bez zmian (D51). Lusterka (`cab-mirrors-left` 40,3 dB): obraz minimalnie miększy,
+czytelność bez zmian. Ciężarówka (`truck-side` 39,8 dB): bez rozbryzgu przy nadkolach, reszta materiału bez zmian.
+`artifacts/a16-perf/vqa-r2/psnr.txt`, pary `vqa-r2/960/*-before-after.jpg`.
 
 ## Otwarte
 - **G3-A: brakuje ~0,6 ms do GPU p95 33,3** (r2). Kandydaci zmierzeni A/B: cull aut Low 100 m (+1,29 GPU w `diagA4`, szum ±0,7), cienie Low 25 m (+0,39) / 512 px (+0,31).
