@@ -71,3 +71,5 @@ Krok 19: a2 uzyskał heavy; nowy plik testów 9 passed (0,51 s), kontrakt pojazd
 Krok 20: ADR 0122 uzupełniony o R4 w toku: pochodzenie baseline, natywny LOD0 zamiast hipotezy, ograniczenia kadrów, pełny zakres geometrii A2, zachowane błędy i potwierdzony legacy bias. Testy 9+12 są jawnie oddzielone od jeszcze niewykonanych końcowych GIS/EditMode. Limity prototypów nadal bez zmiany, brak raportu końcowego. Następny krok: 58230 World/audyt i 51942 post, odczytać pomiary i obejrzeć A2.
 
 Kandydat a2 (2026-11-12T12:59:48.8368020+01:00): wygeneruj przestrzenne koła placowe a2. Następny etap w candidate-gen.ps1; potem import/capture i oględziny. Limity klatki bez zmiany.
+
+Kandydat a2 (2026-11-12T12:59:52.3674068+01:00): potwierdź zakres GLB, raw i fidelity kół a2. Następny etap w candidate-gen.ps1; potem import/capture i oględziny. Limity klatki bez zmiany.
