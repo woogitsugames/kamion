@@ -22,3 +22,9 @@ NEXT: uv run --project tools/refs python artifacts/sbs-poses-r3/tools/sheets.py 
 19:14 poses written (6b220afb): 494288 g0, 810896 m0, 482392 sa, 320326 p128 promoted; 837235 unchanged (world epoch). ADR 0143 draft.
 - Evidence running bg (artifacts/sbs-poses-r3/evidence.log): r1 clear (old prod), then sbs-low-pairs full Low set -> artifacts/sbs-poses-r3/after.
 NEXT: compose before/after pairs (sbs_pairs.py pairs --before artifacts/sbs-poses-r3/before/renders/Low-x --cameras ...), pytest heavy, robocopy evidence to main.
+19:16 sha 00a626c64. DONE.
+- Full Low set rendered with the tool (after/{renders,pairs}/Low-{overcast,clear}, 42+42, preflight OK on the regenerated world); before/after pairs for the 5 frames: artifacts/sbs-poses-r3/pairs/Low-{overcast,clear}/ (before = old poses on the same world).
+- pytest tests/gis/test_sbs_*.py tests/gate3 (heavy slot): 113 passed.
+- Uncommitted regen outputs (lead regenerates main): generated/{world_manifest,streetscape_qa,far_field_qa}.json, landmarks/viaduct_putry_underdeck.spec.json, SourceManifests far-field, art-source/world/props/{props_meta.json,street_props.glb}.
+Gotowe do scalenia: TAK (data + docs only; merge then regenerate main world + re-grade sbs_recognition 494288/320326/482392).
+NEXT (lead): git merge sbs-poses-r3; uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c; pwsh scripts/import-region.ps1 -Region bialystok-industrial-c; pwsh scripts/sbs-low-pairs.ps1
