@@ -39,3 +39,5 @@ Krok 10c: samokontrola zapisuje pomiar osi runtime, wszystkie 244 obejrzane obra
 Krok 10d: zachowano i zweryfikowano SHA wszystkich 64 plików instancji baseline, przed uruchomieniem kandydata. audit_ec.py sprawdzi 128 meshy chunków, roads_qa, materiały, wszystkie instancje poza dwoma EC oraz faktyczne wierzchołki i macierze GLB. Różnice e/n/z/yaw kominów będą jawnie raportowane, bez utożsamiania innego próbkowania gruntu z identyczną pozycją. NASTĘPNY KROK po generatorze: uv run --project tools/worldgen python artifacts/landmarks-r3/audit_ec.py.
 
 Krok 10e: przygotowano NIEURUCHOMIONE skrypty końca rundy: pełny GIS raz, physics/gate3, EditMode oraz strumieniowe porównanie 192 plików runtime i własnych źródeł/assetów przed i po testach. Nie rozpoczynam pełnego GIS w trakcie iteracji. audit_ec.py także hashuje pliki w blokach 1 MB.
+
+Krok 11: jednostkowe testy pojedynczego pliku test_ec_chimneys.py zakończyły się powodzeniem (wynik artifacts/landmarks-r3/silhouette-world.log.units); celowo wyłączony test wyjścia generatora. Pod tym samym heavy rozpoczyna się kolejno generator, bez równoległego Pythona tej sesji.
