@@ -1,0 +1,44 @@
+{
+  "exec_sessions": {
+    "ownership": 36754,
+    "contact_before": 55779,
+    "preparation": 84068,
+    "baseline": 78151
+  },
+  "branch": "gpt-edge-r6",
+  "observed": "2026-11-12T15:40:37.3498403+01:00",
+  "jobs": [
+    {
+      "pid": 46048,
+      "started": "2026-11-12T14:55:44.0569500+01:00",
+      "command": "\"C:\\Program Files\\WindowsApps\\OpenAI.CodexPrimaryRuntime.v26-1104-2876-0_26.1104.2876.0_x64__3k8sg7r9htsxt\\dependencies\\native\\powershell\\pwsh.exe\" -File artifacts/edge-r6/prepare-baseline.ps1"
+    },
+    {
+      "pid": 71536,
+      "started": "2026-11-12T14:55:44.7866060+01:00",
+      "command": "\"C:\\Program Files\\WindowsApps\\OpenAI.CodexPrimaryRuntime.v26-1104-2876-0_26.1104.2876.0_x64__3k8sg7r9htsxt\\dependencies\\native\\powershell\\pwsh.exe\" -File C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-edge\\artifacts\\edge-r6/acquire-slot.ps1 -Pool heavy -Owner gpt-edge-r6"
+    },
+    {
+      "pid": 74364,
+      "started": "2026-11-12T14:56:07.5038560+01:00",
+      "command": "\"C:\\Program Files\\WindowsApps\\OpenAI.CodexPrimaryRuntime.v26-1104-2876-0_26.1104.2876.0_x64__3k8sg7r9htsxt\\dependencies\\native\\powershell\\pwsh.exe\" -File artifacts/edge-r6/run-baseline.ps1 -PreparationPid 46048"
+    },
+    {
+      "pid": 65152,
+      "started": "2026-11-12T14:56:43.8926390+01:00",
+      "command": "\"C:\\Program Files\\WindowsApps\\OpenAI.CodexPrimaryRuntime.v26-1104-2876-0_26.1104.2876.0_x64__3k8sg7r9htsxt\\dependencies\\native\\powershell\\pwsh.exe\" -File artifacts/edge-r6/run-ownership.ps1 -BaselinePid 74364"
+    },
+    {
+      "pid": 11680,
+      "started": "2026-11-12T14:56:43.8942270+01:00",
+      "command": "\"C:\\Program Files\\WindowsApps\\OpenAI.CodexPrimaryRuntime.v26-1104-2876-0_26.1104.2876.0_x64__3k8sg7r9htsxt\\dependencies\\native\\powershell\\pwsh.exe\" -File artifacts/edge-r6/audit-contact.ps1 -Phase before -WaitPid 74364"
+    },
+    {
+      "pid": 28720,
+      "started": "2026-11-12T14:56:44.1228640+01:00",
+      "command": "\"C:\\Program Files\\WindowsApps\\OpenAI.CodexPrimaryRuntime.v26-1104-2876-0_26.1104.2876.0_x64__3k8sg7r9htsxt\\dependencies\\native\\powershell\\pwsh.exe\" -File C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-edge\\artifacts\\edge-r6/mask-floor.ps1 -WaitPid 74364 -MaskSpec Apron -OutputName apron"
+    }
+  ],
+  "state": "No baseline build completed; production unchanged in R6; candidates outside Assets. Core proof 43, native 26/config. Older failed sessions preserved in logs.",
+  "deadline": "2026-11-12T21:31:27+01:00"
+}
