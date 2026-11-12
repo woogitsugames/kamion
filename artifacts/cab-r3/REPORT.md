@@ -1,4 +1,4 @@
-﻿# Kabina r3 — nocne legendy przycisków, walidacja w toku
+# Kabina r3 — nocne legendy przycisków, walidacja w toku
 
 Gałąź gpt-cab-r3 od zamkniętej r2 d04feba0; merge main 745efd35 bez konfliktów. Kod wariantu 3c7a9ae i 7971f36f, walidacja pełna EditMode i budżetów 63741ed8. Nie scalano do main, nie pushowano i nie używano telefonów.
 
@@ -14,7 +14,7 @@ Trzy testy celowane sprawdzają reset i przejście środowiska bez MainCamera or
 
 Obejrzano wszystkie 12 arkuszy macierzy przed/po, dwa arkusze detali i parę fotograficzną; pełna ocena oraz ograniczenia są w VISUAL-REVIEW.md. Symbole są czytelne, korpusy i szwy nie wyglądają na świecące; efekt jest miejscowy. W pojedynczej parze Low dusk ROI przycisków kierownicy: średnia luminancja kodowa 27,025→27,280, zmienione 418 pikseli, maksimum delty 9,852/255. Kontrolny fragment deski jest identyczny. To analiza 8-bit obrazu, nie fotometria. Część kadrów dnia ma inne hashe, więc nie zgłaszamy ogólnej identyczności pikselowej; na arkuszach nie zauważono istotnej regresji; ograniczone pomiary ROI nie dowodzą identyczności wszystkich pikseli.
 
-World zakończony: exit 0, 436,8 s, kontrola logu potwierdza brak fallback=True. Świeży manifest zachowany w Data i skopiowany do world-cli. Arkusze do 960 px wykonano pod heavy (Images exit 0) i obejrzano. Fidelity (58700) oczekuje na osobny heavy. Końcowy GIS dopiero po przeglądzie obrazów i zamykaniu rundy. Nie zgłaszamy jeszcze zakończenia r3 ani akceptacji wizualnej.
+World zakończony: exit 0, 436,8 s, kontrola logu potwierdza brak fallback=True. Świeży manifest zachowany w Data i skopiowany do world-cli. Arkusze do 960 px wykonano pod heavy (Images exit 0) i obejrzano. Fidelity wznowione po restarcie PC (uchwyt 78038, receipt job-Fidelity-20261112-090747-20552.json) oczekuje na osobny heavy. Końcowy GIS dopiero po przeglądzie obrazów i zamykaniu rundy. Nie zgłaszamy jeszcze zakończenia r3 ani akceptacji wizualnej.
 
 Otwarte: częściowa okluzja prawego wide-angle kanałem drzwi (kolejna runda cab), szerokie pasmo AO deski i zużycie kontaktowe. Ubogi detal zewnętrznego przodu w Front pozostaje poza własnością cab. Przewidywany konflikt integracyjny: addytywny fragment TruckAssetBuilder.cs; zachować zmiany pozostałych dziedzin. Materiałów świata nie modyfikowano.
 Dodatkowa kontrola pojedynczej pary Low overcast: przyciski kierownicy różnią się tylko w 14 pikselach, maksymalna delta luminancji kodowej 0,0722/255 (pojedynczy krok kanału niebieskiego). Kontrolny fragment deski i wybrany fragment zegarów są identyczne. To ograniczony pomiar ROI, nie dowód identyczności całych kadrów ani ustalona przyczyna wszystkich różnic hashów.
@@ -22,3 +22,4 @@ Końcową walidację r3 wykonamy na świeżych produktach World i pełnym raporc
 
 
 Podczas kolejki fidelity wykonano dodatkowy, wyłącznie odczytowy audyt okluzji gotowego modelu do następnej rundy (OCCLUSION-PREFLIGHT.md). Nie zmienia geometrii ani kosztu gry. Względem czterech bocznych szkieł centralny zakres UV nie ma trafień w przednie strony trójkątów; na prawym szerokokątnym 12/2400 próbek przy brzegu trafia w gumę wnętrza, 14/2400 w trim drzwi, pozostałe 101 w CAB_Body/Trim. Pomiar dwustronny wykrywa dodatkowo tyły drzwi, których nie wolno utożsamiać z obrazem przy Cull Back. Wniosek wymaga jeszcze maski GPU z oka kierowcy; nie przesuwano kanału. Po dodaniu helpera ponownie zaliczono pełne EditMode 301/301 (editmode-20261112-033834.xml).
+
