@@ -11,6 +11,10 @@ $ErrorActionPreference='Stop'
 $root=(Resolve-Path "$PSScriptRoot/../../..").Path
 Set-Location $root
 $ev='artifacts/furniture-r3/24h'
+if(Test-Path "$ev/STOP_REQUESTED"){
+    Write-Output 'Owner requested a safe stop; no new Unity process or slot acquisition.'
+    exit 75
+}
 $slotScript='C:/Users/matma/Documents/Claude/kamion/scripts/unity-slot.ps1'
 # Owned scheduling marker: serialize the baseline with a separate, explicitly invoked shader probe.
 if ($OwnedPauseBypass -and ($Step -ne 'import' -or !(Test-Path "$ev/PAUSE_UNITY"))) {

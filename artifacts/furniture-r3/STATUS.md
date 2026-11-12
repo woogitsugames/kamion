@@ -226,3 +226,5 @@ potem poprawić największe udokumentowane odstępstwo wiaty. WIP po każdym kro
 2026-11-12T16:06:18.6374451+01:00: ponownie potwierdzono żywy parent 68124 oraz Acquire child 73712. Manager przesunął kolejkę do ahead=1; obecnie 0/3 heavy, phone=True. To oczekiwanie na zewnętrzną blokadę według protokołu, nie terminalna awaria własnego zadania. Nie uruchomiono Pythona ani duplikatu, nie dotykano cudzych markerów. Źródła produktu nadal zamrożone; po uzyskaniu slotu istniejący proces wykona focused -> generator -> pomiary.
 
 2026-11-12T16:15:54.2170209+01:00: Focused test geometrii/palety przeszedł w heavy. Następny etap to generator w tym samym slocie, bez równoległego Pythona.
+
+2026-11-12T16:22:18.4352464+01:00: WŁAŚCICIEL POLECIŁ BEZPIECZNIE ZAKOŃCZYĆ (limit tygodniowy). Własny STOP_REQUESTED blokuje nowe Unity/heavy przed Acquire. Bieżący generator PID 80828 oraz rodzic 68124 nie są ubijane: dokończą generator i sekwencyjne audyty, a finally zwolni heavy. Nie będzie następnej rundy. R3 pozostaje NIEGOTOWA DO INTEGRACJI, bez końcowego REPORT; powstaje PRZEKAZANIE.md.

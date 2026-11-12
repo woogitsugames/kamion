@@ -7,6 +7,10 @@ $ErrorActionPreference='Stop'
 $root=(Resolve-Path "$PSScriptRoot/../../..").Path
 Set-Location $root
 $ev='artifacts/furniture-r3/24h'
+if(Test-Path "$ev/STOP_REQUESTED"){
+    Write-Output 'Owner requested a safe stop; no new heavy Python process or slot acquisition.'
+    exit 75
+}
 $owner=(& git branch --show-current).Trim()
 if ($owner -notmatch '^gpt-furniture-r\d+$') { throw 'Not an owned furniture round branch' }
 # Use the owning main copy: this worktree predates the newly introduced heavy pool.
