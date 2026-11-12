@@ -1192,6 +1192,228 @@
       ],
       "fov_deg": 60,
       "note": "Actual life:yard:bdot:90f009ed-044d-411a-bde4-fc350e5c630c:0#0#0; 22 m, six clear rays across cab and axles; validate PNG"
+    },
+    {
+      "id": "life3_black_rear5",
+      "type": "persp",
+      "kind": "inspection",
+      "seat": "yard",
+      "pos": [
+        712.274888271504,
+        -441.6209145503477,
+        143.08200000000002
+      ],
+      "look_at": [
+        715.4060592930429,
+        -446.31620666414375,
+        142.532
+      ],
+      "fov_deg": 40,
+      "note": "Actual life:parking:kwadrat-park-units-forecourt#0; 2D obstacle count 0; visual visibility and GPU dirt level UNVERIFIED",
+      "target_instance": {
+        "e": 716.39,
+        "n": -446.808,
+        "p": "car_hatch_black",
+        "src": "life:parking:kwadrat-park-units-forecourt#0",
+        "yaw": -2.0343,
+        "z": 141.782
+      },
+      "obstacle_count": 0,
+      "target_distance_m": 5.67031745143074
+    },
+    {
+      "id": "life3_black_side5",
+      "type": "persp",
+      "kind": "inspection",
+      "seat": "yard",
+      "pos": [
+        713.7074908953297,
+        -452.1749493106755,
+        143.08200000000002
+      ],
+      "look_at": [
+        716.39,
+        -446.808,
+        142.532
+      ],
+      "fov_deg": 40,
+      "note": "Actual life:parking:kwadrat-park-units-forecourt#0; 2D obstacle count 0; visual visibility and GPU dirt level UNVERIFIED",
+      "target_instance": {
+        "e": 716.39,
+        "n": -446.808,
+        "p": "car_hatch_black",
+        "src": "life:parking:kwadrat-park-units-forecourt#0",
+        "yaw": -2.0343,
+        "z": 141.782
+      },
+      "obstacle_count": 0,
+      "target_distance_m": 6.025155599650487
+    },
+    {
+      "id": "life3_black_wheel2",
+      "type": "persp",
+      "kind": "inspection",
+      "seat": "yard",
+      "pos": [
+        715.9432369994441,
+        -449.9385595061161,
+        142.282
+      ],
+      "look_at": [
+        716.9938863987734,
+        -447.83650435943485,
+        142.102
+      ],
+      "fov_deg": 35,
+      "note": "Actual life:parking:kwadrat-park-units-forecourt#0; 2D obstacle count 0; visual visibility and GPU dirt level UNVERIFIED",
+      "target_instance": {
+        "e": 716.39,
+        "n": -446.808,
+        "p": "car_hatch_black",
+        "src": "life:parking:kwadrat-park-units-forecourt#0",
+        "yaw": -2.0343,
+        "z": 141.782
+      },
+      "obstacle_count": 0,
+      "target_distance_m": 2.3568835355189077
+    },
+    {
+      "id": "life3_white_rear5",
+      "type": "persp",
+      "kind": "inspection",
+      "seat": "yard",
+      "pos": [
+        662.3773809501496,
+        -533.9907184795192,
+        143.006
+      ],
+      "look_at": [
+        665.452930820892,
+        -538.7226306714956,
+        142.456
+      ],
+      "fov_deg": 40,
+      "note": "Actual life:parking:kwadrat-park-units-forecourt#0; 2D obstacle count 0; visual visibility and GPU dirt level UNVERIFIED",
+      "target_instance": {
+        "e": 666.431,
+        "n": -539.226,
+        "p": "car_estate_white",
+        "src": "life:parking:kwadrat-park-units-forecourt#0",
+        "yaw": -2.0461,
+        "z": 141.706
+      },
+      "obstacle_count": 0,
+      "target_distance_m": 5.670317451430652
+    },
+    {
+      "id": "life3_white_side5",
+      "type": "persp",
+      "kind": "inspection",
+      "seat": "yard",
+      "pos": [
+        663.6853491172486,
+        -544.5609227951345,
+        143.006
+      ],
+      "look_at": [
+        666.431,
+        -539.226,
+        142.456
+      ],
+      "fov_deg": 40,
+      "note": "Actual life:parking:kwadrat-park-units-forecourt#0; 2D obstacle count 0; visual visibility and GPU dirt level UNVERIFIED",
+      "target_instance": {
+        "e": 666.431,
+        "n": -539.226,
+        "p": "car_estate_white",
+        "src": "life:parking:kwadrat-park-units-forecourt#0",
+        "yaw": -2.0461,
+        "z": 141.706
+      },
+      "obstacle_count": 0,
+      "target_distance_m": 6.025155599650469
+    },
+    {
+      "id": "life3_white_wheel2",
+      "type": "persp",
+      "kind": "inspection",
+      "seat": "yard",
+      "pos": [
+        668.6929792405649,
+        -537.0161470828913,
+        142.206
+      ],
+      "look_at": [
+        667.6175993114872,
+        -539.1056585109857,
+        142.02599999999998
+      ],
+      "fov_deg": 35,
+      "note": "Actual life:parking:kwadrat-park-units-forecourt#0; 2D obstacle count 0; visual visibility and GPU dirt level UNVERIFIED",
+      "target_instance": {
+        "e": 666.431,
+        "n": -539.226,
+        "p": "car_estate_white",
+        "src": "life:parking:kwadrat-park-units-forecourt#0",
+        "yaw": -2.0461,
+        "z": 141.706
+      },
+      "obstacle_count": 0,
+      "target_distance_m": 2.3568835355189437
+    },
+    {
+      "id": "sheet_far_20",
+      "type": "persp",
+      "kind": "inspection",
+      "seat": "yard",
+      "pos": [
+        746.7268835732025,
+        -771.152291313305,
+        146.23163636363637
+      ],
+      "look_at": [
+        756.1554090909092,
+        -753.5141818181818,
+        144.73163636363637
+      ],
+      "fov_deg": 40,
+      "note": "Actual row life:parking:osm:way/1540337259:0, 22 cars/vans, horizontal distance 20 m; 2D obstacles 0; visual review required"
+    },
+    {
+      "id": "sheet_far_35",
+      "type": "persp",
+      "kind": "inspection",
+      "seat": "yard",
+      "pos": [
+        739.6554894349225,
+        -784.3808734346474,
+        146.23163636363637
+      ],
+      "look_at": [
+        756.1554090909092,
+        -753.5141818181818,
+        144.73163636363637
+      ],
+      "fov_deg": 40,
+      "note": "Actual row life:parking:osm:way/1540337259:0, 22 cars/vans, horizontal distance 35 m; 2D obstacles 0; visual review required"
+    },
+    {
+      "id": "sheet_far_45",
+      "type": "persp",
+      "kind": "inspection",
+      "seat": "yard",
+      "pos": [
+        734.9412266760692,
+        -793.1999281822089,
+        146.23163636363637
+      ],
+      "look_at": [
+        756.1554090909092,
+        -753.5141818181818,
+        144.73163636363637
+      ],
+      "fov_deg": 40,
+      "note": "Actual row life:parking:osm:way/1540337259:0, 22 cars/vans, horizontal distance 45 m; 2D obstacles 0; visual review required"
     }
   ],
   "dark_cars": {

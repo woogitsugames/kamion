@@ -38,3 +38,5 @@ Krok 13: odczyt bazowego GLB pokazuje maksimum LOD0 4170 (biały kombi na stalow
 Krok 14: zapisano NIEURUCHOMIONY apply-candidate-a.py. Wymaga kompletnego i obejrzanego baseline oraz zgodnych SHA; proponuje fazy ramion i poszerzenie brudu za osiami/na tyle, zachowuje statyczne w=2. Wraz z aplikacją doda test rzeczywistych normalnych po eksporcie. Nie jest wybranym rozwiązaniem; produkcja nadal bez zmian. Następny krok: 46468 → baseline oględziny, dopiero wtedy rozważyć A.
 
 Krok 15: składnia przygotowanych helperów poprawna. Guard kandydata sprawdza brak nowego testu i parsuje zmieniony Python przed zapisem produkcji; usunięto nadmierne założenie testu o srebrnym materiale stylu ciemnej felgi. A nadal nie zastosowany. Następny krok: istniejący 46468, baseline capture.
+
+Przed zmianą (2026-11-12T09:31:06.3055307+01:00): wybierz rzeczywiste kadry tyłu i floty r3. Następny krok według post-baseline.ps1; po capture obejrzeć kadry i dopiero zmienić produkcję.
