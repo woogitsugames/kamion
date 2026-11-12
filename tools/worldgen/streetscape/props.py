@@ -267,7 +267,9 @@ def board(code, w, h):
     # face normal +y like the plates (the old winding showed every E-2 / gantry board's grey back to the driver)
     m.quad(f"sign_{code}", [-w / 2, y, -h / 2], [-w / 2, y, h / 2], [w / 2, y, h / 2], [w / 2, y, -h / 2],
            uv=((1, 0), (1, 1), (0, 1), (0, 0)))   # u mirrored as on the plates
-    m.quad("plate_back", [w / 2, y - 0.01, -h / 2], [w / 2, y - 0.01, h / 2], [-w / 2, y - 0.01, h / 2],
+    # overhead boards (gantries, "OB_"): plain grey sheet back (ADR 0127), other boards the plate back texture
+    m.quad("board_back" if code.startswith("OB_") else "plate_back",
+           [w / 2, y - 0.01, -h / 2], [w / 2, y - 0.01, h / 2], [-w / 2, y - 0.01, h / 2],
            [-w / 2, y - 0.01, -h / 2],
            uv=((0.05, 0.05), (0.05, 0.20), (0.20, 0.20), (0.20, 0.05)))
     for sx in (-1, 1):
@@ -393,22 +395,62 @@ def power_pole():
     return m, l1, col
 
 
+# 110 kV double-circuit lattice tower (ADR 0127). Shape read off Mapillary 3678296072299092 (grobin 2019, the tower
+# at region-local E,N = -369,-69 beside Andersa): slender square shaft, three cross-arm levels of about equal
+# length, a short peak with the earth wire. BDOT10k OT_BUWT_P carries no height: total 32 m, arm levels and lengths
+# are WORKING_VALUE (typical 110 kV double-circuit series; arm spacing ~4 m, lowest arm ~20 m).
+PYLON_ARM_Z = (20.0, 24.0, 28.0)     # cross-arm levels (m above ground) for h = 32
+PYLON_ARM_L = 3.3                    # arm tip from the axis (m)
+PYLON_INSULATOR_M = 1.3              # suspension string: conductor hangs this far under the arm tip
+PYLON_PANELS = (0.0, 4.5, 8.5, 12.0, 15.0, 17.5, 20.0, 22.0, 24.0, 26.0, 28.0, 30.0)
+PYLON_PANELS_LOD1 = (0.0, 6.5, 12.0, 16.5, 20.0, 22.0, 24.0, 26.0, 28.0, 30.0)
+
+
+def pylon_half_width(z, h=32.0):
+    """Half width of the square shaft at height z: 2.3 m at the foot, 0.75 m under the lowest arm, 0.45 m at the
+    top arm, closing to the peak."""
+    k = h / 32.0
+    return float(np.interp(z, [0.0, 19.0 * k, 29.0 * k, h], [2.3, 0.75, 0.45, 0.08]))
+
+
 def pylon(h=32.0):
-    m, col = Mesh(), Mesh()
-    b, t = 3.2, 0.8
-    for sx in (-1, 1):
-        for sy in (-1, 1):
-            m.tube("steel_galv_dark", [sx * b, sy * b, 0], [sx * t, sy * t, h], 0.08, 0.06, 4)
-    for z in np.arange(3, h - 1, 3.5):
-        f = z / h
-        w = b + (t - b) * f
-        for a, c in (((-w, -w), (w, -w)), ((w, -w), (w, w)), ((w, w), (-w, w)), ((-w, w), (-w, -w))):
-            m.tube("steel_galv_dark", [a[0], a[1], z], [c[0], c[1], z], 0.03, 0.03, 3, cap=False)
-            m.tube("steel_galv_dark", [a[0], a[1], z], [c[0] * 0.95, c[1] * 0.95, z + 3.5], 0.025, 0.025, 3, cap=False)
-    for zz, L in ((h * 0.72, 6.0), (h * 0.86, 4.5)):
-        m.tube("steel_galv_dark", [-L, 0, zz], [L, 0, zz], 0.08, 0.08, 4)
+    """LOD0: legs + horizontal and X lacing per panel, trussed arms, insulator strings. LOD1 (from 80 m x lodBias,
+    i.e. 40 m on Low): the same silhouette with 3-sided members about 1.6 x thicker and no horizontals, so the
+    shaft still reads as a dark lattice at 150-400 m instead of dissolving into single pixels (review s11-0125 P1)."""
+    m, l1, col = Mesh(), Mesh(), Mesh()
+    k = h / 32.0
+    mat = "pylon_steel"
+    faces = (((-1, -1), (1, -1)), ((1, -1), (1, 1)), ((1, 1), (-1, 1)), ((-1, 1), (-1, -1)))
+    for lod, mm in enumerate((m, l1)):
+        r_leg, r_lace, seg = ((0.085, 0.035, 4), (0.13, 0.06, 3))[lod]
+        zs = [z * k for z in (PYLON_PANELS, PYLON_PANELS_LOD1)[lod]] + [h]
+        for z0, z1 in zip(zs[:-1], zs[1:]):
+            w0, w1 = pylon_half_width(z0, h), pylon_half_width(z1, h)
+            for sx, sy in ((-1, -1), (1, -1), (1, 1), (-1, 1)):
+                mm.tube(mat, [sx * w0, sy * w0, z0], [sx * w1, sy * w1, z1], r_leg, None, seg, cap=False)
+            if z1 >= h - 1e-6:
+                continue                                       # peak: legs only
+            for (ax, ay), (bx_, by) in faces:
+                mm.tube(mat, [ax * w0, ay * w0, z0], [bx_ * w1, by * w1, z1], r_lace, None, 3, cap=False)
+                mm.tube(mat, [bx_ * w0, by * w0, z0], [ax * w1, ay * w1, z1], r_lace, None, 3, cap=False)
+                if lod == 0:
+                    mm.tube(mat, [ax * w1, ay * w1, z1], [bx_ * w1, by * w1, z1], r_lace, None, 3, cap=False)
+        for za in PYLON_ARM_Z:
+            za *= k
+            w = pylon_half_width(za, h)
+            wu = pylon_half_width(za + 1.3 * k, h)
+            for sx in (-1, 1):
+                tip = [sx * PYLON_ARM_L, 0.0, za]
+                for sy in (-1, 1):                              # two bottom chords + two ties from 1.3 m above
+                    mm.tube(mat, [sx * w, sy * w, za], tip, r_leg * 0.8, None, seg, cap=False)
+                    mm.tube(mat, [sx * wu, sy * wu, za + 1.3 * k], tip, r_lace * 1.3, None, 3, cap=False)
+                if lod == 0:
+                    mm.tube("insulator", tip, [tip[0], 0.0, za - PYLON_INSULATOR_M], 0.07, None, 6)
+                else:
+                    mm.tube("insulator", tip, [tip[0], 0.0, za - PYLON_INSULATOR_M], 0.08, None, 3, cap=False)
+    b = pylon_half_width(0.0, h)
     col.box("collision_steel", [0, 0, h / 2], b, b, h / 2)
-    return m, m, col
+    return m, l1, col
 
 
 def bench():
