@@ -27,7 +27,9 @@ param(
     [ValidateSet('unity', 'heavy')] [string]$Pool = 'unity',
     [int]$MaxSlots = 0,
     [double]$StaleHours = 3,
-    [int]$PollSeconds = 60
+    [int]$PollSeconds = 60,
+    # Leader integration: reserve the NEXT free slot of this pool (others wait while a reservation by another owner exists).
+    [switch]$Priority
 )
 $ErrorActionPreference = 'Stop'
 $main = 'C:\Users\matma\Documents\Claude\kamion'
@@ -37,6 +39,7 @@ $phone = Join-Path $main 'artifacts\locks\PHONE_RUN'
 New-Item -ItemType Directory -Force $dir | Out-Null
 $safe = ($Owner -replace '[^A-Za-z0-9._-]', '_')
 $mine = Join-Path $dir "$safe.slot"
+$reserve = Join-Path $dir 'RESERVED.lock'   # content = owner; stale after -StaleHours
 
 function Get-LiveSlots {
     Get-ChildItem $dir -Filter *.slot -ErrorAction SilentlyContinue | ForEach-Object {
@@ -53,13 +56,22 @@ if ($Acquire) {
     while ($true) {
         if (Test-Path $mine) { (Get-Item $mine).LastWriteTime = Get-Date; "slot already held by $safe (refreshed)"; exit 0 }
         $live = @(Get-LiveSlots)
-        if (-not (Test-Path $phone) -and $live.Count -lt $MaxSlots) {
+        $resBy = $null
+        if (Test-Path $reserve) {
+            if (((Get-Date) - (Get-Item $reserve).LastWriteTime).TotalHours -gt $StaleHours) { Remove-Item $reserve -Force -ErrorAction SilentlyContinue }
+            else { $resBy = (Get-Content $reserve -Raw).Trim() }
+        }
+        if ($Priority -and -not $resBy) { $safe | Set-Content $reserve; $resBy = $safe; Write-Host "reserved next $Pool slot for $safe" }
+        $blockedByReserve = $resBy -and $resBy -ne $safe
+        if (-not (Test-Path $phone) -and -not $blockedByReserve -and $live.Count -lt $MaxSlots) {
             "$safe $(Get-Date -Format o)" | Set-Content $mine
             Start-Sleep -Milliseconds (Get-Random -Minimum 200 -Maximum 900)   # settle a race between two acquirers
-            if (@(Get-LiveSlots).Count -le $MaxSlots) { "acquired slot $safe ($($live.Count + 1)/$MaxSlots)"; exit 0 }
+            if (@(Get-LiveSlots).Count -le $MaxSlots) {
+                if ($resBy -eq $safe) { Remove-Item $reserve -Force -ErrorAction SilentlyContinue }
+                "acquired slot $safe ($($live.Count + 1)/$MaxSlots)"; exit 0 }
             Remove-Item $mine -Force
         }
-        Write-Host ("waiting for a {3} slot ({0}/{1} busy, phone={2}) ..." -f $live.Count, $MaxSlots, (Test-Path $phone), $Pool)
+        Write-Host ("waiting for a {3} slot ({0}/{1} busy, phone={2}, reserved={4}) ..." -f $live.Count, $MaxSlots, (Test-Path $phone), $Pool, $resBy)
         Start-Sleep -Seconds $PollSeconds
     }
 }
