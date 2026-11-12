@@ -120,13 +120,7 @@ namespace Game.Rendering.Editor
                     if (job.overrideWetLocalReflections && job.wetLocalReflections)
                         throw new ArgumentException("Rejected wet-local experiment removed; see light-r3 archived patch and review. ON jobs require explicitly restoring that experiment.");
                     if (job.overrideWetFilm)
-                    {
-                        if (job.wetFilmSmoothness < 0f || job.wetFilmSmoothness > 0.8f || job.puddleShare < 0f || job.puddleShare > 1f)
-                            throw new ArgumentException("wet film outside0..0.8 or puddles outside0..1");
-                        var preset = presetSnapshots.Keys.Single(p => string.Equals(p.name, "LP_" + job.lighting, StringComparison.OrdinalIgnoreCase));
-                        preset.wetFilmSmoothness = job.wetFilmSmoothness;
-                        preset.puddles = job.puddleShare;
-                    }
+                        throw new ArgumentException("Rejected film-only experiment removed; restore the archived light-r3 patch explicitly to replay its jobs.");
                     profile.tiers = (QualityProfile.Tier[])originalTiers.Clone();
                     var overrides = (job.rq ?? "").Split(',').Where(s => !string.IsNullOrWhiteSpace(s))
                         .Select(s => s.Split('=')).ToDictionary(p => p[0].Trim(), p => p[1].Trim());
