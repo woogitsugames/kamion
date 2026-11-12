@@ -18,3 +18,6 @@ Następny krok nadal: koniec materiałów/świata bazowego → import → Before
 Krok 6: diagnostyka podłoża w r3 zapisze osobne ground-alignment-before/after.json, bez nadpisywania dowodu bazy; dostępna jako heavy.ps1 -Task AuditGround -Phase before|after. Czytanie przyczyny porażki XML w Red oparto na XPath, aby nie pomylić asercji z błędem uruchomienia.
 Następny krok: nadal przygotowanie materiałów pod heavy; po pełnym źródle i imporcie pomiar Before oraz test regresji.
 2026-11-12T01:15:11.7632692+01:00 Zregenerowano zestawy materiałów nowego main pod heavy; bez zmian źródeł innych dziedzin.
+Krok 7: build_all ukończony w 644 s, kod 0. Wykryty SKIP asphalt_detail_photo wynikał z brakującej kopii Data/photos/nowe/Worn_cracked_asphalt_pavement.jpg. Plik istnieje w main, skopiowano wyłącznie tę niezmienną zależność i potwierdzono SHA. Stary wpis spec jest zachowany przez generator, ale przed importem odtworzymy brakujące/nieświeże mapy tej jednej warstwy.
+Dodano BuildAsphaltDetailCache, uruchamiające build_all --only asphalt_detail_photo pod heavy. Bieżącego build_world nie przerywamy i nie uruchamiamy drugiego Pythona z tym samym właścicielem.
+Następny krok po zakończeniu prepare-baseline: heavy.ps1 -Task BuildAsphaltDetailCache, następnie import-baseline.ps1.

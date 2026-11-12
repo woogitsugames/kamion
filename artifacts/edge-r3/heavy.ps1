@@ -1,6 +1,6 @@
 param(
     [Parameter(Mandatory)]
-    [ValidateSet('BuildWorld','BuildMaterials','FarField','GisFile','GisFinal','PhysicsFile','Gate3File','AuditMesh','AuditGround','ScopeGenerated','Compare')]
+    [ValidateSet('BuildWorld','BuildMaterials','BuildAsphaltDetailCache','FarField','GisFile','GisFinal','PhysicsFile','Gate3File','AuditMesh','AuditGround','ScopeGenerated','Compare')]
     [string]$Task,
     [string]$TestFile,
     [switch]$AtRoundEnd,
@@ -29,6 +29,7 @@ try {
     switch ($Task) {
         'BuildWorld' { & uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c }
         'BuildMaterials' { & uv run --project tools/worldgen python art-source/world/materials/_src/build_all.py }
+        'BuildAsphaltDetailCache' { & uv run --project tools/worldgen python art-source/world/materials/_src/build_all.py --only asphalt_detail_photo }
         'FarField' { & uv run --project tools/worldgen tools/worldgen/streetscape/far_field.py --region bialystok-industrial-c }
         'AuditMesh' { & uv run --project tools/worldgen python "$PSScriptRoot/audit_mesh.py" $Phase }
         'AuditGround' { & uv run --project tools/worldgen python "$PSScriptRoot/audit_ground_alignment.py" $Phase }
