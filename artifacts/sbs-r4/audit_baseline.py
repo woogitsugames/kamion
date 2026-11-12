@@ -187,6 +187,9 @@ for inspection in other['inspections']:
     assert inspection['render_sha256']==decoded_by_path[raw_path.relative_to(ROOT).as_posix()]['sha256']
     assert inspection['comparison_sha256']==photos[photo_path.relative_to(ROOT).as_posix()]
 other_archive=read(ART/'other-states-review-evidence.json')
+assert len(other_archive['entries'])==4 and {e['entry'] for e in other_archive['entries']}=={
+    'OTHER-STATES-VISUAL-REVIEW.md','other-states-visual-inspection.json',
+    'recognition-native-request.json','other-states-review-recorded.json'}
 for entry in other_archive['entries']:assert sha(ART/entry['entry'])==entry['sha256']
 for stem in ('native-review-evidence','reference-metadata-evidence','other-states-review-evidence'):
     audit_archive(ART/(stem+'.zip'),read(ART/(stem+'.json')))
