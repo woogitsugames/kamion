@@ -118,3 +118,12 @@
 - [2026-11-12 19:57] WIP na polecenie lidera (limit 79 %): lancuch r4 zyje (PID 59260), etap base2. UWAGA dla przejmujacego: dopoki w
   `r4/round.log` nie ma `BASE2 DONE`, indeks/worktree ma chwilowo sciezki z main - commitowac TYLKO przez
   `git commit --only <plik>`, nigdy `git add -A` / `git commit -a`.
+
+## krok 9 — sesja 15 (21:20): r4 zbudowane, zaimportowane, budzet zmierzony
+- Lancuch r4 (PID 59260): build_world exit 0 616 s, region High 4071 / 14 239 334, Low 3051 / 4 580 678; kit High 59 867 / Low 48 884;
+  fidelity 0; import 601 s, 0 `error CS` / `Shader error`. Estymata kadru HIGH: `stretch_04` 1 995 296 (base2 1 987 612, r3 2 027 946),
+  `route_onramp_andersa_above` 1 986 990 (base2 1 982 699) - oba < 2 000 000. Low 947 654 / 852 975 (base2 947 656 / 852 977).
+- Budzet Low r4 vs base2 (tresc main zbudowana tutaj; 67 kamer, `r4/budget_low.txt`): MR +0, cienie -1, instancjonowane +26
+  (`r10_shed_2` +14, `r10_house_2` +10, reszta <= +3), instancje +126, tris siatek -9 k, tris instancji +12 k.
+- W TLE nadal lancuch: pytest gis -> 8 kamer hc + kamery Low -> EditMode -> `CHAIN DONE`.
+- NASTEPNY KROK: `Get-Content artifacts/buildings-r9/r4/round.log` (po `CHAIN DONE`: pary r4 vs base2, ADR Liczby r4, `git merge origin/main`, robocopy do main).
