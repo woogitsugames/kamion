@@ -14702,7 +14702,15 @@
     0.022
    ],
    "metal": 0.3,
-   "rough": 0.3
+   "paint": [
+    0.3,
+    0.0,
+    0.0,
+    0.5
+   ],
+   "rough": 0.3,
+   "texture_set": "car_grime_clean",
+   "yard_paint": true
   },
   "tractor_paint_blue": {
    "color": [
@@ -14711,7 +14719,15 @@
     0.16
    ],
    "metal": 0.3,
-   "rough": 0.3
+   "paint": [
+    0.3,
+    0.0,
+    0.0,
+    0.5
+   ],
+   "rough": 0.3,
+   "texture_set": "car_grime_clean",
+   "yard_paint": true
   },
   "tractor_paint_green": {
    "color": [
@@ -14720,7 +14736,15 @@
     0.05
    ],
    "metal": 0.3,
-   "rough": 0.3
+   "paint": [
+    0.3,
+    0.0,
+    0.0,
+    0.5
+   ],
+   "rough": 0.3,
+   "texture_set": "car_grime_clean",
+   "yard_paint": true
   },
   "tractor_paint_red": {
    "color": [
@@ -14729,7 +14753,15 @@
     0.02
    ],
    "metal": 0.2,
-   "rough": 0.3
+   "paint": [
+    0.2,
+    0.0,
+    0.0,
+    0.5
+   ],
+   "rough": 0.3,
+   "texture_set": "car_grime_clean",
+   "yard_paint": true
   },
   "tractor_paint_silver": {
    "color": [
@@ -14738,7 +14770,15 @@
     0.42
    ],
    "metal": 0.6,
-   "rough": 0.3
+   "paint": [
+    0.6,
+    0.0,
+    0.0,
+    0.5
+   ],
+   "rough": 0.3,
+   "texture_set": "car_grime_clean",
+   "yard_paint": true
   },
   "tractor_paint_white": {
    "color": [
@@ -14746,7 +14786,15 @@
     0.66,
     0.64
    ],
-   "rough": 0.3
+   "paint": [
+    0.0,
+    0.0,
+    0.0,
+    0.5
+   ],
+   "rough": 0.3,
+   "texture_set": "car_grime_clean",
+   "yard_paint": true
   },
   "trailer_alu": {
    "color": [
@@ -14782,6 +14830,7 @@
     0.0173891
    ],
    "rough": 0.82,
+   "set_tile": true,
    "texture_set": "curtain_folds"
   },
   "trailer_curtain_green": {
@@ -14791,6 +14840,7 @@
     0.00489631
    ],
    "rough": 0.82,
+   "set_tile": true,
    "texture_set": "curtain_folds"
   },
   "trailer_curtain_grey": {
@@ -14800,6 +14850,7 @@
     0.03630648
    ],
    "rough": 0.82,
+   "set_tile": true,
    "texture_set": "curtain_folds"
   },
   "trailer_curtain_red": {
@@ -14809,6 +14860,7 @@
     0.00270898
    ],
    "rough": 0.82,
+   "set_tile": true,
    "texture_set": "curtain_folds"
   },
   "trailer_curtain_silver": {
@@ -14818,6 +14870,7 @@
     0.11280479
    ],
    "rough": 0.72,
+   "set_tile": true,
    "texture_set": "curtain_folds"
   },
   "trailer_curtain_white": {
@@ -14827,6 +14880,7 @@
     0.26327341
    ],
    "rough": 0.82,
+   "set_tile": true,
    "texture_set": "curtain_folds"
   },
   "trailer_doors": {
