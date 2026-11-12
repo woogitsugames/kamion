@@ -176,9 +176,10 @@ P10_GAP = 0.50
 P10_EDGE_MAX = 0.50
 P10_WIDTH = 4.0                     # pkt 4.2.1: crossing width s = 4.0 m (>= 2.5 m in built-up areas)
 P12_W = 0.50                        # rys. 4.2.3.1: STOP line 0.5 m
-# P-11 cycle crossing: two rows of squares. UNVERIFIED against [ZNAKI-Z2] pkt 4.2.2 (not at hand): 0.4 m squares,
-# 0.4 m gaps, rows 2.0 m apart (inner edges) read off the GUGiK 0.08 m orthophoto at Rondo Putry (ADR 0093).
-P11_SQUARE, P11_GAP, P11_CLEAR = 0.40, 0.40, 2.0
+# P-11 cycle crossing: two rows of squares. [ZNAKI-Z2] rys. 4.2.2.1 (Dz.U. 2019 poz. 2311, str. 569, PDF
+# D2019000231102.pdf on isap.sejm.gov.pl): 0.5 m squares with 0.5 m gaps; pkt 4.2.2 (str. 569): crossing
+# width >= 1.8 m (one-way) / 3.0 m (two-way). Rows 2.0 m apart (inner edges) per ADR 0093.
+P11_SQUARE, P11_GAP, P11_CLEAR = 0.50, 0.50, 2.0
 P8_MIN_LANE_W = 2.5                 # ADR 0093: no arrow in a lane narrower than this (taper of a slip lane)
 P13_BASE, P13_GAP, P13_H = 0.50, 0.25, 0.70   # rys. 4.2.4.1: triangles
 P14_LEN, P14_GAP, P14_DEPTH = 0.75, 0.25, 0.50  # rys. 4.2.5.1: rectangles 0.5 deep (0.375 m2/mb)

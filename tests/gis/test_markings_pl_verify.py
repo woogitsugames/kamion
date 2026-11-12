@@ -1,8 +1,9 @@
-"""Weryfikacja M10 z zrodel pierwotnych: NIEZGODNE stale oznakowania poziomego (zadanie 18).
+"""Weryfikacja M10/M25 z zrodel pierwotnych: stale oznakowania poziomego vs rozporzadzenie (zadania 18, 25).
 
-Kazdy test xfail(strict=True) dokumentuje rozbieznosc miedzy wartoscia w generatorze
-a wartoscia z rozporzadzenia (cytat ze zrodla pierwotnego). Generatora NIE zmieniamy;
-testy maja pozostac xfail do czasu decyzji wlasciciela o korekcie stalej.
+P-11 zostalo skorygowane w zadaniu 25 (M25) do wartosci z rys. 4.2.2.1 - test przechodzi.
+Pozostale testy xfail(strict=True) dokumentuja rozbieznosc miedzy wartoscia w generatorze
+a wartoscia z rozporzadzenia (cytat ze zrodla pierwotnego) do czasu decyzji wlasciciela
+(p21_hatch / P-21 czeka na decyzje wlasciciela - NIE zmieniac).
 
 Zrodlo pierwotne: zalacznik nr 2 do rozporzadzenia Ministra Infrastruktury z dnia
 3 lipca 2003 r. w sprawie szczegolowych warunkow technicznych dla znakow i sygnalow
@@ -28,17 +29,11 @@ from roads import standards as S  # noqa: E402
 pytestmark = pytest.mark.unit
 
 
-@pytest.mark.xfail(
-    strict=True,
-    reason=(
-        "NIEZGODNE: standards.py:179 P11_SQUARE/P11_GAP = 0.40/0.40 m, a rys. 4.2.2.1 "
-        "(zal. nr 2, Dz.U. 2019 poz. 2311, str. 569) daje kwadraty 0,5 m z odstepem 0,5 m; "
-        "pkt 4.2.2 (str. 569): \"Powierzchnie przejazdu wyznaczaja dwie linie przerywane, "
-        "poprzeczne do osi jezdni... nie mniejsza niz 1,8 m (jednokierunkowy) / 3,0 m "
-        "(dwukierunkowy)\". Kod mial 0,4/0,4 z odczytu z ortofoto (UNVERIFIED)."
-    ),
-)
 def test_p11_square_and_gap_vs_rys_4_2_2_1():
+    # M25: skorygowane do rys. 4.2.2.1 (zal. nr 2, Dz.U. 2019 poz. 2311, str. 569, PDF
+    # D2019000231102.pdf on isap.sejm.gov.pl): kwadraty 0,5 m, odstep 0,5 m; pkt 4.2.2
+    # (str. 569): "Powierzchnie przejazdu wyznaczaja dwie linie przerywane, poprzeczne
+    # do osi jezdni... nie mniejsza niz 1,8 m (jednokierunkowy) / 3,0 m (dwukierunkowy)".
     assert S.P11_SQUARE == 0.50
     assert S.P11_GAP == 0.50
 
