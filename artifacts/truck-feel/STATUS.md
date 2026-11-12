@@ -9,3 +9,5 @@
 - NASTĘPNY KROK: po testach Unity cofnąć efekty uboczne (M_Sky.mat, QualitySettings, ProjectSettings preloadedAssets, game/Assets/Resources) i commit; komenda: `pwsh -File <scratchpad>/unity_tests.ps1`
 - 16:45 Unity: PlayMode (CombinationLab/KerbStrikeParity/TraktTruckRig/DrivingLabScene/TrailerCargoSwap) 27/27 PASS; EditMode 380/382 (2x CarPaintMaterialTests.DepositionChannel — materiały aut świata, niezwiązane z fizyką). Efekty uboczne Unity: brak zmian w git status.
 - NASTĘPNY KROK (lider): review + merge gałęzi truck-feel, APK i jazda na telefonie (pusta i 40 t, widok z kabiny); decyzja właściciela o domyślnym ładunku.
+- 17:20 D53 Cargo24t default + review P1/P2 (4ce26dd2). Runner 107/107, xUnit 155/155, EditMode 385/387 (2x CarPaint z main), pełny PlayMode 117: 110 pass / 0 fail / 7 skip. M_Sky.mat cofnięty.
+- NASTĘPNY KROK (lider): scalenie truck-feel + APK na telefon (start 24 t, widok z kabiny).
