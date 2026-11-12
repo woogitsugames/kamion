@@ -1,6 +1,6 @@
 # Samokontrola rundy r2
 
-Źródła zakończone, testy końcowe w toku. Nie jest to niezależna akceptacja bramki 3.
+Źródła i walidacja końcowa zakończone. Nie jest to niezależna akceptacja bramki 3.
 Obejrzano wszystkie 32 arkusze po 58 kamer w czterech kombinacjach (232 pary),
 oraz natywne wycinki filarów i parę ze zdjęciem 7204. Pary mają szerokość 960 px.
 
@@ -30,3 +30,9 @@ Budżet jest spełniony na wszystkich kamerach. Koszt dodatkowych próbek istnie
 PBR na A16 pozostaje UNVERIFIED bez telefonu. Nie zmieniono shaderów ani QualityProfile.
 World Surface i World PBR mają ten sam zestaw LightMode: UniversalForward,
 ShadowCaster, DepthOnly. Mapy są istniejące, bez nowego build_all dla filarów.
+
+Testy: pojedynczy plik 14/14, pełny GIS 585 zaliczonych i 1 oczekiwana porażka,
+EditMode 295/295. Physics/gate3: 47 zaliczonych i znana porażka odtwarzania
+top_speed_flat_comb.json. Jej wejścia są niezmienione względem początku rundy;
+nie poprawiano ich w sesji landmarks. Cache 64 High + 64 Low + 64 instancje
+zweryfikowano przed i po testach, manifest i własne źródła nie zmieniły się.

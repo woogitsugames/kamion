@@ -62,5 +62,30 @@ UNVERIFIED bez telefonu. Wariant wymaga pełnego pomiaru kamer Low i High.
 Test pierwszego wariantu nigdy nie uzyskał slotu i został celowo anulowany jako
 nieaktualny. Druga iteracja wykona pojedynczy plik i generator kolejno pod jednym
 slotem heavy; pełny GIS dopiero po akceptacji renderów na końcu rundy.
-Stan: druga iteracja oczekuje heavy. Testy, wygląd weather oraz pełny budżet
-pozostają UNVERIFIED do zakończenia walidacji i obejrzenia porównań.
+## Wynik r2
+
+Końcowy świat: 1226,0 s, w tym obserwowana pauza watchdog 769 s; nie jest to
+benchmark CPU. Bez fallback=True. Usunięto 69 stopni oraz zastąpione geometryczne
+zacieki, łącznie -906 tris. Oba spec.decks i deck SHA są identyczne z własnym
+świeżym baseline; roads_qa także. Payload runoff ma maks. v=16,034, nie wchodzi
+w zarezerwowane zakresy UV dla innych trybów.
+
+Obejrzano 32 arkusze wszystkich 232 par (58 kamer, Low/High, clear/overcast),
+natywne wycinki i pary z fotografią. 116 PNG identycznych pikselowo. We wszystkich
+116 porównaniach Low maks. delta mesh draws=0 i instance draws=0; szacowana suma
+tris od -0,4202% do 0%. W ROI ochry Low-overcast 84/79/47 -> 85/71/41 sRGB,
+sd Y 3,377 -> 4,880; u dołu Y 63,114 -> 54,746. To pomiary obrazu, nie reflektancji.
+W clear inne oświetlenie nie daje tego samego stosunku dół/góra. Zacieki są delikatne.
+
+Pojedynczy plik: 14/14 PASS, 0,29 s. Pełny GIS: 585 passed, 1 xfailed, 983,56 s.
+EditMode: 295/295 PASS. Physics/gate3: 47 passed, 1 failed, 295,69 s; znany
+test_generator_reproduces_committed_scenarios różni top_speed_flat_comb.json.
+Wejścia tej porażki nie zostały zmienione względem początku rundy (2c3939b2).
+Cache 64 High GLB + 64 Low GLB + 64 instancje, manifest i własne źródła są zgodne
+przed i po testach. Walidacja była wstrzymywana przez globalny watchdog.
+
+Stan: gotowe do recenzji w zakresie r2, z jawną znaną porażką physics poza dziedziną.
+Nie ma pomiaru GPU A16 ani niezależnej akceptacji bramki 3. Poza fotografii,
+wymiary konstrukcyjne, rozbieżne ekrany, spód i wygląd oczepów pozostają otwarte.
+Nie zmieniono dróg, kapy, ekranów, barier, shaderów ani QualityProfile. World Surface
+i World PBR mają ten sam zestaw UniversalForward / ShadowCaster / DepthOnly.
