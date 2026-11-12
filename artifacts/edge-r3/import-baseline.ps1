@@ -39,7 +39,21 @@ try {
     git restore -- game/Assets/_Project/Rendering/Settings game/ProjectSettings
     & pwsh $slot -Release -Pool unity -Owner gpt-edge -StaleHours 100000
 }
-Add-Content "$PSScriptRoot/STATUS.md" "$(Get-Date -Format o) Pełny import bazowy Low/High potwierdzony IMPORT_RESULT: OK; sprawdzono $checked gotowych map Medium bez niejawnego build_all. Następnie validate.ps1 -Phase Before."
+# The merged cab source needs its generated prefab rebuilt as well; importing the
+# world alone reuses an existing prefab. This is baseline preparation, not a cab edit.
+& pwsh $slot -Acquire -Pool unity -Owner gpt-edge -PollSeconds 2 -StaleHours 100000
+if ($LASTEXITCODE -ne 0) { throw 'Truck baseline slot failed' }
+try {
+    $truckCode = Invoke-UnityBatch -LogFile "$PSScriptRoot/install-baseline-truck.log" -Arguments @(
+        '-executeMethod','Game.World.Import.WorldTruckInstaller.InstallBatch')
+    if ($truckCode -ne 0 -or -not (Select-String -LiteralPath "$PSScriptRoot/install-baseline-truck.log" -Pattern 'TRUCK_RESULT: OK' -SimpleMatch -Quiet)) {
+        throw "Truck baseline preparation failed: $truckCode"
+    }
+} finally {
+    git restore -- game/Assets/_Project/Rendering/Settings game/ProjectSettings
+    & pwsh $slot -Release -Pool unity -Owner gpt-edge -StaleHours 100000
+}
+Add-Content "$PSScriptRoot/STATUS.md" "$(Get-Date -Format o) Pełny import bazowy Low/High i odtworzenie generowanych prefabów pojazdów nowego main potwierdzone IMPORT_RESULT/TRUCK_RESULT: OK; sprawdzono $checked gotowych map Medium bez niejawnego build_all. Źródła cab/truck bez edycji. Następnie validate.ps1 -Phase Before."
 git add -f artifacts/edge-r3/STATUS.md
 git commit -m 'wip(edge): import integrated baseline before round 3 geometry changes'
 if ($LASTEXITCODE -ne 0) { throw 'Checkpoint failed' }
