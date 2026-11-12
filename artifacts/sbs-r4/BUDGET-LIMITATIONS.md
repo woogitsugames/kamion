@@ -9,7 +9,18 @@ Odczytano wszystkie 168 rekordów: 42 kamery × Low/High × clear/overcast. Każ
 | r2 | Low | 38/84 | 34/84 | −17…+29 | +2…+13 tys. |
 | r2 | High | 48/84 | 26/84 | −33…+49 | +5…+21 tys. |
 
-Względem r3 nowy przyrost liczników mieści się w warunku draws +0 i tris ≤+2%. Nie oznacza to odzyskania wcześniejszego budżetu: skumulowane przekroczenia Low względem r2 wzrosły z 22/84 do 34/84 dla trójkątów. Draws przekracza dawną bazę nadal w 38/84 przypadkach. Nie zerujemy porównania po każdej rundzie, aby ukryć ten przyrost.
+Względem r3 nowy przyrost liczników mieści się w warunku draws +0 i tris ≤+2%. Skumulowane przekroczenia Low względem r2 wzrosły jednak z 22/84 do 34/84 dla trójkątów. Draws przekracza dawną bazę nadal w 38/84 przypadkach. Zestawienie skumulowane zachowuje stałą bazę r2.
+
+Nowe przekroczenia to sześć kamer odcinka G3-B, każda w Low-clear i Low-overcast. Wartości procentowe są przybliżone, obliczone z zaokrąglonych liczników tysiąca trójkątów. [Pełne rekordy i źródłowe powiązanie](new-low-threshold-crossings.json) zachowują także liczby całkowite i sprawdzenie arytmetyki trzech rund.
+
+| Kamera | Przyrost r3→r4 | Skumulowane r3 względem r2 | Skumulowane r4 względem r2 |
+|---|---:|---:|---:|
+| sbs-g3-b-1528935774382039 | +8 tys. | 0,24% | 2,18% |
+| sbs-g3-b-3281350541967811 | +8 tys. | 0,50% | 2,48% |
+| sbs-g3-b-381800493259507 | +6 tys. | 1,83% | 3,39% |
+| sbs-g3-b-494288258686575 | +3 tys. | 1,65% | 2,64% |
+| sbs-g3-b-810896133189484 | +3 tys. | 1,73% | 3,03% |
+| sbs-g3-b-962702164479831 | +4 tys. | 0,78% | 2,33% |
 
 Najwyższa suma draws Low wynosi 810 = 445 statycznych + 365 instancji, w A454716 Low-clear. High osiąga 1376 = 945 + 431 w A320215 High-overcast. To estymaty edytora przed batchingiem, a liczby trójkątów są zaokrąglone do tysięcy. Nie służą do pomiaru małych zmian poniżej tej rozdzielczości. Obejmują także kamery C, żeby ich pominięcie nie zaniżyło kosztu; C nadal nie są zaliczanymi parami bramki.
 
