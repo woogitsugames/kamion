@@ -21,12 +21,12 @@
     "W obejrzanych pełnych kadrach nie stwierdzono nowej wyraźnej anomalii kolorystycznej lub sylwetki. Nie jest to przegląd każdego piksela całej trasy."
   ],
   "estimated_features": ["wall_colour", "cladding_modules", "glazing_band", "roof_fascia"],
-  "budget_and_buffer_audits": "PENDING",
-  "native_photo_review": "Four spot comparisons reviewed; full 100-pair composition pending",
+  "budget_and_buffer_audits": "VERIFIED: 472 pairs, 236 Low, all draws/shadow/rounded trisK deltas zero; raw and imported geometry audit passed",
+  "native_photo_review": "100 native-aspect photograph pairs composed; four spot comparisons reviewed",
   "native_observations": [
     "303305 High-clear i 320215 Low-clear: panorama bloków przy DK8 nadal jest słabiej czytelna niż na zdjęciu i częściowo zasłonięta lasem. R5 nie zamyka B9.",
     "397016 High-overcast i 275528 Low-overcast zachowują duże różnice fotografii i renderu, także światła/pozy. Nie zmieniano kamer, światła ani regionalnej geometrii, żeby zaliczyć te pary.",
     "Te fotografie nie potwierdzają tożsamości ani wykończenia południowej hali. Indeks native-review zapisuje źródła, autorów, licencje, wymiary i SHA."
   ],
-  "acceptance": "PENDING measured budgets, independent buffers, native comparisons and final GIS"
+  "acceptance": "PARTIAL visual improvement; final GIS and leader integration review pending"
 }
