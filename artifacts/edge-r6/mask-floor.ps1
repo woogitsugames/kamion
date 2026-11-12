@@ -28,10 +28,11 @@ try{
         'game/Assets/_Project/Rendering/Resources/Sky/T_ClearClouds.png',
         'game/Assets/_Project/Rendering/Resources/Sky/ClearCloudsSource.json',
         'game/Assets/_Project/World/Import/WorldEdgeBuilder.cs',
-        'tools/worldgen/streetscape/far_field.py','artifacts/edge-r6/proof-cameras.json')
+        'tools/worldgen/streetscape/far_field.py','artifacts/edge-r6/proof-cameras.json',
+        'artifacts/edge-r6/ownership-cameras.json')
     $hashes=@{};foreach($file in $inputs){$hashes[$file]=(Get-FileHash $file -Algorithm SHA256).Hash}
     & pwsh scripts/visual-qa.ps1 -Scene $scene -Tier High -Lighting clear -Width 1280 -Height 720 `
-        -Gate3 "$PSScriptRoot/proof-cameras.json" -Cameras ($ids -join ',') -Mask $MaskSpec -OutputDir $output
+        -Gate3 "$PSScriptRoot/ownership-cameras.json" -Cameras ($ids -join ',') -Mask $MaskSpec -OutputDir $output
     if($LASTEXITCODE -ne0){throw 'Ownership mask capture failed'}
     $log=Get-ChildItem artifacts/logs -Filter 'visual-qa-WorldC_High-*.log'|Sort-Object LastWriteTime -Descending|Select-Object -First 1
     $hits=@(Select-String -LiteralPath $log.FullName -SimpleMatch "[VISUALQA] mask '$MaskSpec':")
