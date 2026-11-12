@@ -15,3 +15,7 @@
   (las przy G3-B s≈1300-1450) = źródło pików p99. Atlasy impostorów pokrywają tylko 6-13 % quada (90 % fragmentów = discard).
   Poprawka: ImpostorTrim (Game.World) + ImpostorTrimBake (import + batch in place): wielokąt 6 pasm wokół sumy alfy 6 widoków, ~34 % quada.
   NASTĘPNY KROK: `pwsh artifacts/a16-perf/trim.ps1 -Tag trim1` (vqa before -> bake -> vqa after -> EditMode -> APK Low).
+- 17:35 trim2: 18 impostorów, śr. 37 % quada; vqa Low overcast 78 kamer PSNR ≥ 58 dB (pojedyncze piksele, `vqa/before|after`).
+  EditMode 471/8 fail — tylko CarPaintMaterialTests.DepositionChannel (środowiskowe, też w audio-regen01; main zielony). APK `kamion-0.1.0-0e68ff8c5e-dirty.apk`.
+  NASTĘPNY KROK: (w toku) `pwsh artifacts/a16-perf/run-final.ps1 -Before artifacts/apk/kamion-0.1.0-24ab345392.apk -After artifacts/apk/kamion-0.1.0-0e68ff8c5e-dirty.apk`
+  potem `python artifacts/a16-perf/summarize.py 'artifacts/a16-perf/final1/*'`.
