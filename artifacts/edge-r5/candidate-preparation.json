@@ -1,0 +1,14 @@
+{
+  "production_edited": false,
+  "validation": "Python AST only; shader not compiled, no rendered gain claim",
+  "source_files": {
+    "tools/worldgen/streetscape/far_field.py": "96861f1b1dafe85185ef4567192e1ac9192cbf597bb6deb99c106563f2f75ea4",
+    "game/Assets/_Project/Rendering/Shaders/WorldSurface.shader": "ee59f6aed44a1f6602d8d272ac8aca838adc21f3343ae5573f885a56ded75f5c"
+  },
+  "candidate_files": {
+    "tools/worldgen/streetscape/far_field.py": "18fb745c660f14aca82f74a6d0182aacb1306ff36e64886f0bd488d0d2b0212c",
+    "game/Assets/_Project/Rendering/Shaders/WorldSurface.shader": "bfb4032d7a2bfe20fd9887ac610b6c1ebfd9e0f5187d1d38b3edee7534825755"
+  },
+  "patch_sha256": "bbe04630e5146c2b4efdd08b01d0ca5721e2b381982227a92497dd1728122cbc",
+  "gate": "Apply only after baseline geometry identification and verified Red of the unchanged source"
+}
