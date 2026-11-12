@@ -38,6 +38,10 @@ def pair(left, right, target, titles):
     sheet.save(target, quality=93)
 
 rows = []
+for frozen in json.loads((HERE/'evidence-inputs.json').read_text(encoding='utf-8-sig'))['files']:
+    actual = hashlib.sha256((ROOT/frozen['path']).read_bytes()).hexdigest()
+    if actual.lower() != frozen['sha256'].lower():
+        raise RuntimeError(f"Camera/reference input changed: {frozen['path']}")
 if not (HERE/'After.complete').exists():
     raise RuntimeError('After matrix has not completed')
 pairs = HERE / 'pairs'
@@ -100,7 +104,7 @@ for ref in refs:
         excluded.append(dict(camera=camera,reason='pose_confidence C'))
         continue
     frozen_photo = HERE/'reference-photos'/f'{camera}.png'
-    photo = frozen_photo if frozen_photo.exists() else MAIN/ref.get('comparison_photo', ref['photo'])
+    photo = frozen_photo
     if not photo.exists():
         raise FileNotFoundError(f'Accepted comparison photo unavailable: {photo}')
     expected = ref.get('comparison_sha256') or ref.get('sha256')

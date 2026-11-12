@@ -1,6 +1,8 @@
 param([ValidateSet('before','after')][string]$Phase)
 $ErrorActionPreference='Stop'
 Set-Location (Resolve-Path "$PSScriptRoot/../..")
+. "$PSScriptRoot/evidence.ps1"
+Assert-EdgeEvidenceInputs
 if((git branch --show-current).Trim() -ne 'gpt-edge-r4'){throw 'Wrong round'}
 $slot='C:/Users/matma/Documents/Claude/kamion/scripts/unity-slot.ps1'
 $groups=(Get-Content "$PSScriptRoot/native-camera-groups.json" -Raw|ConvertFrom-Json).groups

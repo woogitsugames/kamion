@@ -2,6 +2,8 @@ param([ValidateSet('Before','After','Tests')][string]$Phase, [switch]$SkipRebuil
 $ErrorActionPreference = 'Stop'
 $edgeRoot = (Resolve-Path "$PSScriptRoot/../..").Path
 Set-Location $edgeRoot
+. "$PSScriptRoot/evidence.ps1"
+Assert-EdgeEvidenceInputs
 . scripts/env.ps1
 $out = $PSScriptRoot
 $statusRelative = 'artifacts/' + (Split-Path $out -Leaf) + '/STATUS.md'
