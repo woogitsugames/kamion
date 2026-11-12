@@ -221,3 +221,5 @@ NASTĘPNY KROK: uv run --project tools/worldgen tools/worldgen/roads/build_world
 2026-11-12T01:51:25.4791724+01:00: heavy gis final4; sukces=False; slot gpt-furniture-r1 zwolniony. NASTĘPNY KROK: sprawdzić log i kontynuować walidację rundy.
 
 2026-11-12T02:00:23.3649339+01:00: końcowyGIS: 509passed, 1xfailed, 1failed (test_road_fidelity::test_report_not_stale). Audyt dowodzi niezgodności8hashy niezmienionych wejść spoza furniture; sam raport też niezmieniony od bazy5f2aa277. Nie zmieniano źródeł dróg/overrides. Nadrzędny WindowsPowerShell przerwał sekwencję na stderr ostrzeżeniaGit poGIS; procesy zakończone, brakPhysics/EditMode. Poprawiono zapis częściowych wyników i wznowienie bez ponownegoGIS. NASTĘPNY KROK: uruchomić tylko dwa brakujące zestawy przez pwsh7 i wymagane sloty.
+
+2026-11-12T02:04:45.9162293+01:00: przygotowano PACKET.md z pełnym zakresem obrazów, budżetu, ograniczeń i audytem porażki GIS. Physics/gate3 nadal działa po zdobyciu slotu heavy; bez ponownego GIS. NASTĘPNY KROK: odczytać closing-test-exits.json i końcowe logi, uzupełnić raport rundy.
