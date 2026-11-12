@@ -680,6 +680,78 @@
       ],
       "fov_deg": 60.0,
       "note": "house bdot:2BE4B431-C793-1BF0-E053-CC2BA8C0D140 (budynek jednorodzinny, h 5.3 m, storeys 2), 29 m from the start route, view +25 deg off the route side"
+    },
+    {
+      "id": "asphalt_pcrt_front_context",
+      "type": "persp",
+      "kind": "material_inspection",
+      "pos": [
+        345.0,
+        -490.0,
+        150.0
+      ],
+      "look_at": [
+        365.0,
+        -437.0,
+        153.0
+      ],
+      "note": "Inspection only, not a fitted photograph. Initial file U150 is WORKING_VALUE for raycast start; seat=road uses actual Unity collision plus default2.5m for material_inspection. Confirm source surface/elevation before final baseline.",
+      "seat": "road",
+      "fov_deg": 65.0
+    },
+    {
+      "id": "asphalt_pcrt_long_context",
+      "type": "persp",
+      "kind": "material_inspection",
+      "pos": [
+        405.0,
+        -410.0,
+        150.0
+      ],
+      "look_at": [
+        375.0,
+        -383.0,
+        153.0
+      ],
+      "note": "Inspection only, not a fitted photograph. Initial file U150 is WORKING_VALUE for raycast start; seat=road uses actual Unity collision plus default2.5m for material_inspection. Confirm source surface/elevation before final baseline.",
+      "seat": "road",
+      "fov_deg": 65.0
+    },
+    {
+      "id": "asphalt_pcrt_surface_west",
+      "type": "persp",
+      "kind": "material_inspection",
+      "pos": [
+        345.0,
+        -490.0,
+        150.0
+      ],
+      "look_at": [
+        345.0,
+        -484.0,
+        147.6
+      ],
+      "note": "Inspection only, not a fitted photograph. Initial file U150 is WORKING_VALUE for raycast start; seat=road uses actual Unity collision plus default2.5m for material_inspection. Confirm source surface/elevation before final baseline.",
+      "seat": "road",
+      "fov_deg": 65.0
+    },
+    {
+      "id": "asphalt_pcrt_surface_east",
+      "type": "persp",
+      "kind": "material_inspection",
+      "pos": [
+        405.0,
+        -430.0,
+        150.0
+      ],
+      "look_at": [
+        401.0,
+        -425.0,
+        147.6
+      ],
+      "note": "Inspection only, not a fitted photograph. Initial file U150 is WORKING_VALUE for raycast start; seat=road uses actual Unity collision plus default2.5m for material_inspection. Confirm source surface/elevation before final baseline.",
+      "seat": "road",
+      "fov_deg": 65.0
     }
   ]
 }

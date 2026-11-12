@@ -1,7 +1,7 @@
 {
   "created_at": "2026-11-12T12:34:45.3830378+01:00",
   "round_main": "0023f39de1bf2cadb870d865147ab8b5a19bbe32",
-  "supplemental_count": 35,
+  "supplemental_count": 39,
   "source_sha": {
     "sbs": "41686DD5D9A9EF0969AB9D7772E359B150A6F1783B67538D9D8F875880F1AE2E",
     "gate3": "E1D550D8A8EDEB4252128DE65B060783C45D2FC9A4C0694164A12C311DFF2C76"
@@ -184,8 +184,79 @@
       "id": "asphalt_r10_house2_material",
       "source_id": "r10_house_2",
       "purpose": "Leader batchD: estate paving damp-cloud regression check"
+    },
+    {
+      "id": "asphalt_pcrt_front_context",
+      "seat": "road",
+      "initial_u_working": 150.0,
+      "runtime_height_above_collision_m": 2.5,
+      "source": "source-map inspection, not fitted photo",
+      "kind": "material_inspection",
+      "source_point_en": [
+        345.0,
+        -490.0
+      ],
+      "map_sha256": "2C07D39AE010AF3A2D02B7561CAEE9CDBF68C378B6B2A5E9944D975C38B273D6",
+      "pose_status": "Pending new import/visual inspection and fresh GLB surface/elevation check.",
+      "map_file": "artifacts/asphalt-r3/reference/context-map.json"
+    },
+    {
+      "id": "asphalt_pcrt_long_context",
+      "seat": "road",
+      "initial_u_working": 150.0,
+      "runtime_height_above_collision_m": 2.5,
+      "source": "source-map inspection, not fitted photo",
+      "kind": "material_inspection",
+      "source_point_en": [
+        405.0,
+        -410.0
+      ],
+      "map_sha256": "2C07D39AE010AF3A2D02B7561CAEE9CDBF68C378B6B2A5E9944D975C38B273D6",
+      "pose_status": "Pending new import/visual inspection and fresh GLB surface/elevation check.",
+      "map_file": "artifacts/asphalt-r3/reference/context-map.json"
+    },
+    {
+      "id": "asphalt_pcrt_surface_west",
+      "seat": "road",
+      "initial_u_working": 150.0,
+      "runtime_height_above_collision_m": 2.5,
+      "source": "source-map inspection, not fitted photo",
+      "kind": "material_inspection",
+      "source_point_en": [
+        345.0,
+        -490.0
+      ],
+      "map_sha256": "2C07D39AE010AF3A2D02B7561CAEE9CDBF68C378B6B2A5E9944D975C38B273D6",
+      "pose_status": "Pending new import/visual inspection and fresh GLB surface/elevation check.",
+      "map_file": "artifacts/asphalt-r3/reference/context-map.json"
+    },
+    {
+      "id": "asphalt_pcrt_surface_east",
+      "seat": "road",
+      "initial_u_working": 150.0,
+      "runtime_height_above_collision_m": 2.5,
+      "source": "source-map inspection, not fitted photo",
+      "kind": "material_inspection",
+      "source_point_en": [
+        405.0,
+        -430.0
+      ],
+      "map_sha256": "2C07D39AE010AF3A2D02B7561CAEE9CDBF68C378B6B2A5E9944D975C38B273D6",
+      "pose_status": "Pending new import/visual inspection and fresh GLB surface/elevation check.",
+      "map_file": "artifacts/asphalt-r3/reference/context-map.json"
     }
   ],
-  "new_yard_probes": "Pending fresh GLB query; no fitted photo camera claimed",
+  "new_yard_probes": {
+    "scope": "East probes cross the conservative r2 envelope for read-only context; no material protection changed.",
+    "added_at": "2026-11-12T15:32:50.3796644+01:00",
+    "status": "Prepared for pose trials after fresh import. Not fitted to photo3. Full baseline requires accepted views and source-height confirmation.",
+    "ids": [
+      "asphalt_pcrt_front_context",
+      "asphalt_pcrt_long_context",
+      "asphalt_pcrt_surface_west",
+      "asphalt_pcrt_surface_east"
+    ],
+    "root_contract": "WorldRegionRoot.LocalToUnity: (E-shift.x,U-anchorZ-shift.y,N-shift.z). Actual U=anchorZ+camera.position.y+shift.y, recorded by QA."
+  },
   "native_count": "To derive after World/import; do not assume82/328"
 }
