@@ -16,7 +16,7 @@ def tile(im, label, w=480):
 
 def sheet(base_key, items, out):
     """items: list of (label, image path)."""
-    R = P.refs(); ref = R['sbs-g3-b-' + base_key] if ('sbs-g3-b-' + base_key) in R else R[base_key]
+    R = P.refs(); ref = next(v for k, v in R.items() if k.endswith(base_key))
     photo = Image.open(P.ROOT / ref['comparison_photo'])
     tiles = [tile(photo, f"PHOTO {ref['source_id']} {ref['author']} {ref['captured_at']} {ref['license']}")]
     tiles += [tile(Image.open(p), l) for l, p in items if Path(p).exists()]
@@ -36,9 +36,9 @@ if __name__ == '__main__':
         groups.setdefault(p['base'].split('-')[-1], []).append(p)
     rd = base / 'renders' / sub
     for key, ps in groups.items():
-        items = [('PRODUCTION (before)', rd / ('sbs-g3-b-' + key + '.png'))]
+        items = [('PRODUCTION (before)', rd / (ps[0]['base'] + '.png'))]
         for p in ps:
-            lab = f"{p['probe'][-2:]}: {p.get('note', '')[:60]}"
+            lab = f"{p['probe'].split('-')[-1]}: {p.get('note', '')[:60]}"
             items.append((lab, rd / (p['probe'] + '.png')))
         sheet(key, items, base / f'sheet-{key[:6]}-{sub}.jpg')
         print('sheet', key, len(items))
