@@ -62,6 +62,25 @@ def test_authored_berberis_has_valid_local_caps_and_uncrossed_strips(monkeypatch
                 j=(i+1)%len(outer)
                 quad=Polygon([outer[i],outer[j],inner[j],inner[i]])
                 assert quad.is_valid and quad.area>1e-10, 'Crossed or collapsed side strip'
+    # Compare the actual triangulated cap, not the interpolated boundary field.
+    # Both flat and sloping ground use exactly the same shell geometry as export.
+    core=buf.parts[1][0]
+    shell_vertices,shell_indices=buf.parts[3]
+    triangles=shell_vertices[shell_indices]
+    a,b,c=(triangles[:,i,:2] for i in range(3))
+    ab,ac=b-a,c-a
+    ap=core[:,None,:2]-a[None,:,:]
+    cross=lambda x,y:x[...,0]*y[...,1]-x[...,1]*y[...,0]
+    den=cross(ab,ac)
+    valid=abs(den)>1e-10
+    w1=cross(ap,ac)/np.where(valid,den,1)
+    w2=cross(ab,ap)/np.where(valid,den,1)
+    w0=1-w1-w2
+    inside=valid & (w0>=-1e-7) & (w1>=-1e-7) & (w2>=-1e-7)
+    height=w0*triangles[:,0,2]+w1*triangles[:,1,2]+w2*triangles[:,2,2]
+    shell_top=np.where(inside,height,-np.inf).max(axis=1)
+    assert np.isfinite(shell_top).all(), 'Inner cap leaves the shell footprint'
+    assert np.max(core[:,2]-shell_top)<=.005, 'Inner cap protrudes through the triangulated shell'
 
 
 def test_offset_refuses_disconnected_or_empty_geometry_instead_of_dropping_a_piece():
