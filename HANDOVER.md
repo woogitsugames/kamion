@@ -22,6 +22,7 @@
 - Zygzak krawędzi zjazdu (film t≈17–19 s, przed bramownicą Warszawa/Ełk/Augustów) → dopisany do 0144 junctions-r7 (r7c albo r7d).
 - 21:5x: 0136 r2 (a16-perf @7ebb18cf1): r2e na A16 — żaden kandydat nie domyka (cull 100 m −0,17 ms, cienie 25 m/512 px w szumie); Low zostaje r2, GPU p95 34,0 vs 33,3 (brak ~0,7 ms). **Otwarte bez agenta: LOD1/LOD2 aut z 1–2 submeshami (world-builder)** — start, gdy zwolnią się sloty Unity. Agent czeka na `prep-r2f` (import Low z 0141 + EditMode po fixie MirrorCostTests + APK) → skyline 0141 na A16. Uwaga: lokalna niezacommitowana zmiana `gate3_cameras.json` w worktree a16-perf — nie commitować.
 - 21:5x usage: 5 h 38 %, tydzień 30 %, Fable 54 %. Mistral r3: #15 #16 #17 #18 #20 na gałęzi, #19 czeka na Unity (HudTextAllocTests).
+- **22:0x: SCALONE 0141 r6d** `3fbf7eee8` (jeden B-1 na jezdnię, biel 0,80 lin.; EditMode 423/423). Sprawdzenie lidera: duplikaty zniknęły; P2: dwa rzędy zapór nachodzą ~2 m w środku edge-west. Worktree edge-r6c usunięty. Otwarte: NMPT GUGiK dla wysokości lasu (P2), `test_report_not_stale` → `fidelity/run.py` w integracji.
 - **Ostatni przydzielony ADR: 0150.**
 - Ścieżka bramki 3 bez zmian (patrz KONIEC S14 niżej).
 
