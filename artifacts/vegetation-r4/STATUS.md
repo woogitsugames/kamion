@@ -39,3 +39,4 @@ Zapisano pary foto before Low-clear-photo-1280x720. Następny krok: porównać z
 Zapisano pary foto before Low-clear-photo-2048x1152. Następny krok: porównać z photo-references.json.
 Zapisano pary foto before Low-clear-photo-2048x1536. Następny krok: porównać z photo-references.json.
 Zapisano pary foto before Low-overcast-photo-1280x720. Następny krok: porównać z photo-references.json.
+Zapisano pary foto before Low-overcast-photo-2048x1152. Następny krok: porównać z photo-references.json.
