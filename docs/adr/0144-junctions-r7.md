@@ -139,6 +139,9 @@ Build `r7d` (2026-11-12, `logs/r7d_*`; `r7c` = to samo bez pkt 10–12). Rendery
   fidelity bez zmian (0,38 / 2,29 m); swept path (`swept_r7e/`): G3-B opona min −0,14 → +0,10 m (r7c → r7e; łącznica Putry leży na
   G3-B), G3-A i RING-B bez zmian (G3-A „lane” −1,12 m = znane ścięcie zjazdu przez kierowcę trzymającego środek pasa, test tego
   oczekuje).
+- drugie scalenie `origin/main` fddc56b5 (bez zmian generatora i danych świata): EditMode 439 / 439
+  (`logs/r7f_editmode.log`), pytest wybranych plików (gate3_landmarks, guardrail_overlap, hero_bridge, scenario_strictness) 31 passed;
+  pełny pytest nie był powtarzany po tym scaleniu.
 - nowe / zmienione testy: `tests/gis/test_guardrail_overlap.py` (8), istniejący `test_gate3_landmarks.py::test_every_gate3_sign_is_placed` obejmuje `biezenstwa-f10-north` (zestaw znaków z overrides).
 
 ## Otwarte / niezrobione (uczciwie)
