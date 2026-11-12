@@ -1,6 +1,6 @@
 # ADR 0143 — SBS poses r3: Putry deck 494288 re-resected, 810896 off the median, 482392 / 320326 (G3-A), 837235 pose vs world
 
-Status: implemented on branch `sbs-poses-r3` (base main `9a1961db`, 2026-11-12, s14); not merged. Data + analysis tools only:
+Status: implemented on branch `sbs-poses-r3` (base main `9a1961db`, 2026-11-12, s14); not merged. Ready to merge. Data + analysis tools only:
 no world geometry, no generator, no C#. Gate 3 is not re-judged here (visual-critic + `sbs_recognition.json` re-grade).
 Source: `docs/reports/visual/REVIEW-2026-11-12-s14-0133.md` P1-1..3 (494288 bends right, wide light strip, 810896 behind a
 retaining wall), `REVIEW-2026-11-12-s14-0128.md` P1-1 (320326 production pose shows only a cut edge of D-3) and P1-3
@@ -82,7 +82,12 @@ decision.
   `artifacts/sbs-poses-r3/pairs/Low-{overcast,clear}/` (photo | before over photo | after; before = old production
   poses rendered on the same regenerated world).
 - `pytest tests/gis/test_sbs_gate3.py test_sbs_pairs.py test_sbs_photometry.py test_sbs_report.py tests/gate3`
-  (heavy slot): see STATUS.
+  (heavy slot): 113 passed (`artifacts/sbs-poses-r3/pytest.log`).
+- Author's look (D51 not re-graded): 494288 now a straight deck with the left bend far ahead, dash and edge line where
+  the photo has them, screen right, lamp row left (lamps larger than on the photo, finding 1; right verge wider,
+  finding 2); 320326 production now shows the nose / zebra corner under the viaduct as the 0128-reviewed probe;
+  482392 kerb geometry as on the photo, no board (finding 4); 810896 camera on the carriageway, but the generated
+  wall still fills the view (finding 3).
 
 ## Consequences / open
 
