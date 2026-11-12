@@ -22,6 +22,7 @@ origin=np.array([origin['x'],origin['y']])
 plans=yaml.safe_load((root/'Data/Regions/bialystok-industrial-c/overrides.yaml').read_text(encoding='utf-8'))['overrides']
 original=pt._fill
 records=[]
+triangle_counts={}
 active=None
 def capture_fill(ring,spacing):
     vertices,triangles=original(ring,spacing)
@@ -33,7 +34,8 @@ def capture_fill(ring,spacing):
         maximum_triangle_edge_m=float(np.linalg.norm(edges,axis=2).max())))
     return vertices,triangles
 class Capture:
-    def add(self,*args,**kwargs): pass
+    def add(self,layer,material,vertices,uv,triangles,**kwargs):
+        triangle_counts[active]=triangle_counts.get(active,0)+len(triangles)
 pt._fill=capture_fill
 try:
     for plan in plans:
@@ -56,6 +58,7 @@ try:
 finally:
     pt._fill=original
 result=dict(source_sha256=hashlib.sha256((root/'tools/worldgen/streetscape/plantings.py').read_bytes()).hexdigest(),
-    caps=records,note='Four authored footprints, flat z=0; no World, GIS pytest, Unity, or production write. Internal fill observation only; no visual acceptance.')
+    caps=records,triangles_by_bed=triangle_counts,total_triangles=sum(triangle_counts.values()),
+    note='Four authored footprints, flat z=0; no World, GIS pytest, Unity, or production write. Internal fill observation only; no visual acceptance.')
 (here/('cap-study-'+args.label+'.json')).write_text(json.dumps(result,indent=2)+'\n',encoding='utf-8')
 print(json.dumps(result,indent=2))
