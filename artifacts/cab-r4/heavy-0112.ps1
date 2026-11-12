@@ -13,11 +13,12 @@ $slot='C:/Users/matma/Documents/Claude/kamion/scripts/unity-slot.ps1'
 $guard=[System.Threading.Mutex]::new($false,"Local\kamion-cab-heavy-$owner")
 if (-not $guard.WaitOne(0)) { $guard.Dispose(); throw 'Inne własne zadanie heavy jest już aktywne. Nie pozyskuj ani nie zwalniaj jego slotu.' }
 $receipt=Join-Path $PSScriptRoot ("job-{0}-{1}-{2}.json" -f $Job,(Get-Date -Format yyyyMMdd-HHmmss),$PID)
-$run=@{schema=1;owner=$owner;job=$Job;pid=$PID;source_sha=(git rev-parse HEAD).Trim();status='waiting';queued_at=(Get-Date -Format o);log=$Log;exit_code=$null}
+$acquireLog=[IO.Path]::ChangeExtension($receipt,'.acquire.log')
+$run=@{schema=1;owner=$owner;job=$Job;pid=$PID;source_sha=(git rev-parse HEAD).Trim();status='waiting';queued_at=(Get-Date -Format o);log=$Log;acquire_log=$acquireLog;exit_code=$null}
 $run | ConvertTo-Json | Set-Content -LiteralPath $receipt -Encoding utf8
 try {
-  pwsh $slot -Acquire -Pool heavy -Owner $owner -PollSeconds 1 -StaleHours 1000000
-  if ($LASTEXITCODE -ne 0) { throw 'Nie uzyskano slotu heavy.' }
+  pwsh $slot -Acquire -Pool heavy -Owner $owner -PollSeconds 1 -StaleHours 1000000 *> $acquireLog
+  if ($LASTEXITCODE -ne 0) { throw "Nie uzyskano slotu heavy; pełny log: $acquireLog" }
   $run.status='running'; $run.started_at=Get-Date -Format o
   $run | ConvertTo-Json | Set-Content -LiteralPath $receipt -Encoding utf8
   try {
