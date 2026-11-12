@@ -1,4 +1,4 @@
-﻿# ADR 0112 — Kabina: lusterka i wnętrze
+# ADR 0112 — Kabina: lusterka i wnętrze
 
 ## r1 — Lusterka V/VI i mocowanie ramion
 
@@ -39,6 +39,9 @@ K4: UV centralnej deski bez potwierdzonego szerokiego rozciągnięcia, wariant A
 
 ## r3 — Nocne legendy przycisków
 
-Stan: rozpoznanie i baseline. Od r2 d04feba0, merge main bez konfliktów. Nocne palety ekranów istnieją i działają; legendy przycisków mają albedo/AO, bez osobnego podświetlenia. Zdjęcie Volvo Trucks (Jonatan Fernström, 2017) jest odniesieniem jakościowym, nie CC0 ani pomiarem intensywności. Zmiana będzie ograniczona do wnętrza, za flagą danych, bez nowych draw/pass i bez zmiany świata. Najpierw świeży baseline po merge; zachować dzień oraz alarmy zegarów.
+Stan: wariant night1 wdrożony i zweryfikowany w Unity; końcowa walidacja GIS/Fidelity oczekuje na heavy. Od r2 d04feba0, merge main bez konfliktów. Nocne palety ekranów istniały już wcześniej; nowe podświetlenie dotyczy legend przycisków. Zdjęcie Volvo Trucks (Jonatan Fernström, 2017) jest odniesieniem jakościowym, nie CC0 ani pomiarem intensywności. Zmiana ogranicza się do wnętrza, za flagą danych, bez nowych draw/pass i bez zmiany świata. Baseline wykonano po merge; zachowano palety ekranów i alarmy zegarów.
 
-Wariant night1: flaga danych cab_backlight.json i lokalny keyword tylko w istniejącym paśmie ikon Decal. 8 cd/m2, cap 0,06 i fade 6→0 stopni to WORKING_VALUE. Brak nowych pass/fetch/draw, bez zmian QualityProfile. Stan środowiska zerowany bez modelu i po OnDisable; emisja dodana po cab-view lift. Trzy testy celowane i pełne EditMode 301/301 zaliczone. comparison-0112-night1 PASS sześciu stanów, 36 RT i 78 kamer Low; wszystkie maksymalne delty regular/instanced draws/tris 0. To CPU visibility, GPU A16 UNVERIFIED. World, arkusze i końcowy GIS jeszcze w toku; REPORT r3 opisuje miejscowy efekt, różnice hashów dnia i ograniczenia referencji.
+Wariant night1: flaga danych cab_backlight.json i lokalny keyword tylko w istniejącym paśmie ikon Decal. 8 cd/m2, cap 0,06 i fade 6→0 stopni to WORKING_VALUE. Brak nowych pass/fetch/draw, bez zmian QualityProfile. Stan środowiska zerowany bez modelu i po OnDisable; emisja dodana po cab-view lift. Trzy testy celowane i pełne EditMode 301/301 zaliczone. comparison-0112-night1 PASS sześciu stanów, 36 RT i 78 kamer Low; wszystkie maksymalne delty regular/instanced draws/tris 0. To CPU visibility, GPU A16 UNVERIFIED. World zakończony exit 0 w 436,8 s, brak fallback=True; obejrzano wszystkie 15 arkuszy do 960 px. Fidelity i końcowy GIS pozostają otwarte. REPORT r3 opisuje miejscowy efekt, różnice hashów dnia i ograniczenia referencji. Po dodaniu odczytowego audytu geometrii powtórzono pełne EditMode: nadal 301/301, XML 033834.
+
+Dodatkowy pomiar prawego szerokokątnego z DriverEyePoint rozdzielił geometrię od treści odbicia. Raycast przednich stron: centralnie 0/1944 trafień, 127/2400 na brzegach. Maska GPU szkła obejmuje szeroki ciemny obszar widoczny w normalnym renderze: w tej pozycji jest to treść RT, nie szerokie zasłonięcie kanałem drzwi. Low exit 0; High ma komplet PNG i marker OK, ale proces zamknął się kodem -1073741819, więc dodatkowy High opisano z ograniczeniem. Nie zmieniono geometrii, oka ani optyki.
+
