@@ -18,3 +18,5 @@ Krok 5: rozszerzono wyłącznie opt-in LifeExactStats o rzeczywistą pozycję/ro
 Krok 6: zapisano projekt r3 bez zmiany produkcji. Audyt GLB będzie chronił wszystkie węzły poza car_/van_ i 192 produkty raw względem nowego baseline; budżet wymaga osobno worldDraws i instanceDraws +0. Skorygowano kontrolę kamer: packet jest dodatkiem, część trasy istnieje w scenach. Następny krok: 2467, kamery, PreparedImport i przed-zmianą capture.
 
 Krok 7: pomocniki PS/Python parsują się poprawnie; inwentarz aktualnej sceny odnajduje 48 kamer bazowych. Zapisano post-baseline.ps1: czeka na JEDEN istniejący generator, potem heavy-kamery, guarded import i cztery capture. Brak automatycznej zmiany produkcji bez oględzin. Następny krok: uruchomić raz pwsh -NoProfile -File artifacts/life-r3/post-baseline.ps1 (2467 pozostaje generatorem).
+
+Baseline (2026-11-12T09:13:02.3950166+01:00): odtwórz materiały świeżego baseline r3. Następny etap w baseline-gen.ps1; po generacji nowe kamery i PreparedImport.
