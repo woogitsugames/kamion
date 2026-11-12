@@ -1,6 +1,5 @@
 """Report regression checks: matched cohorts, pixel-bound reviews and offline HTML."""
 from pathlib import Path
-import copy
 import json
 import sys
 import pytest

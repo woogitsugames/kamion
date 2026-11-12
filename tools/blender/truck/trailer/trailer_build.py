@@ -16,14 +16,14 @@ import sys
 
 import bmesh
 import bpy
-from mathutils import Matrix, Vector
+from mathutils import Matrix
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 EXT = os.path.join(HERE, "..", "exterior")
 sys.path.insert(0, os.path.abspath(EXT))
 import geom as G  # noqa: E402
 import materials as M  # noqa: E402
-from geom import V, cyl, rod, tube, lathe, extrude_poly, bevel, boolean  # noqa: E402
+from geom import V, cyl, rod, tube, lathe, extrude_poly, boolean  # noqa: E402
 
 D = G.D
 # ---------------------------------------------------------------- dimensions (dims.json, trailer_* keys)
@@ -370,7 +370,7 @@ def _curtain_wear(nt):
 def materials():
     """Trailer authoring library on top of the TRAKT library (rubber, chassis, steel, lenses, plate, ...)."""
     M.build_library("white")
-    P, N, L, mn = M.principled, M.N, M.L, M.math_node
+    P, N, L, _mn = M.principled, M.N, M.L, M.math_node
     # body paint (front wall, front posts/header, door panels): white, the game tints by _PaintColor
     m, nt, b = P("trl_paint", "PAINT", (0.80, 0.80, 0.79), 0.36, coat=0.6)
     M.micro_bump(nt, b, 240.0, 0.02, 0.0002, target="Coat Normal")
@@ -903,8 +903,7 @@ def side_guards():
     for s in (-1, 1):
         x = s * 1.215
         for zc in (0.50, 0.90):
-            sec = [(-0.012, -0.05), (0.012, -0.05), (0.012, 0.05), (-0.012, 0.05)]
-            ob = box_mm(f"sideguard_{s}_{zc}", x - 0.012, x + 0.012, y1, y0, zc - 0.05, zc + 0.05, "alu_extr", bev=0.004)
+            box_mm(f"sideguard_{s}_{zc}", x - 0.012, x + 0.012, y1, y0, zc - 0.05, zc + 0.05, "alu_extr", bev=0.004)
             box_mm(f"sideguard_groove_{s}_{zc}", x + s * 0.0125 - 0.001, x + s * 0.0125 + 0.001, y1 + 0.02, y0 - 0.02,
                    zc - 0.004, zc + 0.004, "gap")
             # black plastic end caps closing the hollow extrusion (real guards never end in a raw saw cut)
@@ -971,7 +970,6 @@ def landing_gear():
 def front_wall():
     part("CHASSIS", "body")
     # corrugated steel bulkhead (vertical trapezoid ribs, pitch 0.30 m, depth 18 mm)
-    xs = []
     x = -1.165
     pitch = 0.30
     n = int(round(2 * 1.165 / pitch))

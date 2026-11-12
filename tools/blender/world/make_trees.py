@@ -24,7 +24,7 @@ from pathlib import Path
 
 import bpy
 import numpy as np
-from mathutils import Matrix, Vector
+from mathutils import Vector
 
 REPO = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(REPO / "tools/worldgen"))
@@ -52,7 +52,6 @@ class Geo:
         V, F, UV, N = self._p(mat)
         base = len(V)
         L = 0.0
-        frames = []
         for i, p in enumerate(pts):
             t = (pts[min(i + 1, len(pts) - 1)] - pts[max(i - 1, 0)]).normalized()
             ref = Vector((0, 0, 1)) if abs(t.z) < 0.95 else Vector((1, 0, 0))

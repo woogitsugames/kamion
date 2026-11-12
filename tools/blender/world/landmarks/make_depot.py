@@ -23,7 +23,6 @@ import math
 import sys
 from pathlib import Path
 
-import bmesh
 import bpy
 import numpy as np
 from mathutils import Vector
@@ -685,7 +684,6 @@ def build_segment(seg, lod):
     annexes = [ax for ax in SPEC["annexes"] if ax["edge"] == e["i"]]
     ops = edge_openings(e, annexes, lod)
     mb = MB()
-    seg_ops = [o for o in ops if ua - 1e-6 <= (o[0] + o[1]) / 2 < ub + 1e-6]
     # an opening belongs to the segment that holds its centre; the wall of both neighbours is cut to its edges
     build_wall(mb, e, fr, ua, ub, ops, lod)
     for o in ops:
@@ -772,7 +770,6 @@ def build_roof(lod):
     mb = MB()
     ring = [np.asarray(p, float) for p in SPEC["ring"]]
     holes = [[np.asarray(p, float) for p in h] for h in SPEC["holes"]]
-    t = PRM["parapet_t_m"]
     import_ring = [Vector((p[0], p[1], 0)) for p in ring]
     hole_rings = [[Vector((p[0], p[1], 0)) for p in h] for h in holes]
     allp = ring + [p for h in holes for p in h]

@@ -240,7 +240,6 @@ def main(argv=None):
 
     # ---------------- (a) axis
     axis, graph_vs_osm = Mx.axis_metrics(ctx)
-    r_axis = [axis[e] for e in r_edges if e in axis and axis[e].get("n")]
     log("axis done")
 
     # ---------------- (b) edges on route chains (hi-res) + tile (sheet)

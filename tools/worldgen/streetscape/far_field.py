@@ -28,7 +28,6 @@ import argparse
 import hashlib
 import json
 import math
-import re
 import sys
 import time
 import xml.etree.ElementTree as ET
@@ -37,12 +36,12 @@ from pathlib import Path
 
 import numpy as np
 import shapely
-from shapely.geometry import LineString, MultiPolygon, Point, Polygon, box, shape
+from shapely.geometry import LineString, Point, Polygon, box, shape
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from roads import pipeline                # noqa: E402
-from terrain_mesh.gltf import GLB, GLTF_AXES, smooth_normals  # noqa: E402
+from terrain_mesh.gltf import GLB, GLTF_AXES  # noqa: E402
 
 from streetscape import forest_hlod as FH  # noqa: E402
 from streetscape import materials as SM    # noqa: E402

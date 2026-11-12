@@ -337,7 +337,6 @@ def honey_material(name, cell, rgb=(0.030, 0.031, 0.033)):
 def render_text_texture(name, items, w, h, bg=(0, 0, 0), shapes=None, colorspace="Non-Color"):
     """Render 2D text items into an image with an orthographic Cycles camera in a scratch scene.
     items: [(text, x, y, size, rot_deg, rgb, bold, align)] in pixel coords (origin bottom-left)."""
-    cur = bpy.context.window.scene if bpy.context.window else bpy.context.scene
     sc = bpy.data.scenes.new("texgen_" + name)
     sc.render.engine = "CYCLES"
     sc.cycles.device = bpy.context.scene.cycles.device

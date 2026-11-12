@@ -82,3 +82,11 @@ def require_lfs(*paths) -> None:
     for path in paths:
         if is_lfs_pointer(path):
             pytest.skip(f"{path} is a git-lfs pointer, not the real file (checkout without lfs)")
+
+
+def pytest_configure(config):
+    config.addinivalue_line(
+        "markers",
+        "unit: fast pure-function unit tests on small synthetic data; run in CI without Data/raw "
+        "(`pytest tests/gis -m unit`)",
+    )
