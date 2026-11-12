@@ -30,3 +30,4 @@ BuildBatch/InstallBatch night1 exit 0, oba sloty Unity zwolnione. Baseline-evide
 Zapisano result-0112-night1 Low clear, siedem kamer i sześć natywnych RT z identyfikatorem wnętrza. Następny krok: kontynuować macierz lub porównać PNG.
 Dokumentacja BACKLIGHT.md opisuje flagę wypieku, istniejące pasma atlasu, ekspozycję, ograniczenia i poprawny stan fixture. Wrapper testów domyślnie wskazuje CabBacklightTests. Builder loguje włączenie profilu i zachowuje liczby/UV z r2. Ocena pełnych kadrów night1 nadal trwa.
 Zapisano result-0112-night1 Low overcast, siedem kamer i sześć natywnych RT z identyfikatorem wnętrza. Następny krok: kontynuować macierz lub porównać PNG.
+Zapisano result-0112-night1 Low dusk, siedem kamer i sześć natywnych RT z identyfikatorem wnętrza. Następny krok: kontynuować macierz lub porównać PNG.
