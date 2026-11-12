@@ -26,3 +26,5 @@ Pozy uliczne użyją scalonych po nazwie linii OSM, aby krótkie odcinki grafu m
 Baseline:597.2s bezfallback; audyt2151chronionych węzłów,32grupplots,116drzewogrodowych. Sześć ulic: Skidelska,Racławicka,Grodzieńska,Wileńska,Olsztyńska,Michała Motoszko; Brzeska/Wołkowyska nie miały dostępnych bram w zebranym planie, więc nie użyto zmyślonych póz. 12rzeczywistychpozycji +30G3.
 
 Import baseline zakończony.
+
+Zapisano before/High-clear; każda kamera w stats.txt. Oględziny pozostają wymagane.
