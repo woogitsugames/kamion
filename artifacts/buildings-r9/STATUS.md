@@ -102,3 +102,16 @@
   `uv run --project tools/worldgen python -m pytest tests/gis/test_hero_bridge.py tests/gis/test_world_v31.py -q -p no:cacheprovider`;
   wariant B -> edycja `tools/worldgen/streetscape/plots.py` (thuja/bush/fruit_tree + front <= 12 m), potem
   `pwsh artifacts/buildings-r9/r3_chain.ps1 -Round r4`.
+
+## krok 8 — decyzja lidera B: r4 w toku (19:29)
+- `git merge main` 6d511d49c (generated ours). Kod r4 (7d675d793, `artifacts/buildings-r9/p_r4.py`): pelne bryly roslin tylko <= 12 m
+  od frontu dzialki (`NEAR_FRONT_M`), dalej wersje lite (wspolne z Low; krzew daleki 2 karty tylko High); rdzenie 1 pas; drzewko ~48;
+  tuja w rzedzie 16; zywoplot stacje 1,92 m; `"tier": "high"` w rekordach drzew ogrodowych (importer ignoruje nieznane pola).
+- Suchy przebieg na danych (`r4/plan_dry.txt`): kit High 59 867 (r3 94 172; main 52 406), Low 48 884 (r3 51 508).
+- W TLE: `r4_chain.ps1 -Round r4` (pwsh PID 59260; logi `r4/round.log`, `base2/round.log`, `r4.chain.out`): base2 = TRESC main zbudowana
+  i zaimportowana w tym worktree (checkout sciezek z main, potem przywrocenie HEAD) -> rendery Low; potem r4: build_all, build_world,
+  export-route, fidelity, import + rendery, PELNY pytest gis, EditMode; koniec = `CHAIN DONE`.
+- NASTEPNY KROK: `Get-Content artifacts/buildings-r9/r4/round.log`; jesli lancuch zginal w base2: `git checkout HEAD -- tools/worldgen art-source/world Data/Regions Data/SourceManifests scripts/export-route.py`,
+  potem `pwsh artifacts/buildings-r9/r4_chain.ps1 -Round r4 -SkipBase`. Po `CHAIN DONE`:
+  `python artifacts/buildings-r9/budget2.py artifacts/buildings-r9/base2/Low-overcast artifacts/buildings-r9/r4/Low-overcast`, zapas testow High
+  (stretch_04, route_onramp_andersa_above w `generated/streetscape_qa.json`), pary r4, ADR, commit, robocopy do main.
