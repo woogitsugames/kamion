@@ -381,6 +381,7 @@ namespace Game.Editor.Setup
                 dec.SetFloat("_Cutoff", 0.5f);
                 dec.SetFloat("_IsDecal", 1f);
                 dec.EnableKeyword("_KAMION_CAB_DECAL");
+                ConfigureCabBacklight(dec);
                 dec.renderQueue = (int)RenderQueue.AlphaTest;
                 Add("MI_Cab_Decal", dec);
                 var cg = Mat(dir, "MI_Cab_Glass", glass);
@@ -1004,6 +1005,29 @@ namespace Game.Editor.Setup
                 filter.sharedMesh = mesh;
                 Debug.Log($"[TRUCK] Mirror bezel {body.name}: addedTris={triangles} slots={source.subMeshCount}->{mesh.subMeshCount} centreDelta={(source.bounds.center - mesh.bounds.center).magnitude:F7} sizeDelta={(source.bounds.size - mesh.bounds.size).magnitude:F7}");
             }
+        }
+
+        static void ConfigureCabBacklight(Material material)
+        {
+            var data = Json.Obj(Json.Parse(File.ReadAllText(Path.Combine(EditorTools.RepoRoot,
+                "art-source/truck/interior/cab_backlight.json"))));
+            bool enabled = data.TryGetValue("enabled", out var flag) && flag is bool value && value;
+            material.SetFloat("_IsBacklit", enabled ? 1f : 0f);
+            material.DisableKeyword("_KAMION_CAB_BACKLIGHT");
+            material.SetFloat("_LegendLuminance", 0f);
+            if (!enabled) return;
+            float luminance = (float)Json.Num(data["legend_luminance_cd_m2"]);
+            float cap = (float)Json.Num(data["max_exposed_linear"]);
+            float start = (float)Json.Num(data["start_sun_deg"]), full = (float)Json.Num(data["full_sun_deg"]);
+            Vector3 color = V3(data["color_linear"]);
+            if (!(luminance > 0f && luminance <= 100f && cap > 0f && cap <= 1f && full < start &&
+                full >= -20f && start <= 30f && color.x >= 0f && color.x <= 1f && color.y >= 0f && color.y <= 1f && color.z >= 0f && color.z <= 1f))
+                throw new InvalidDataException("Invalid cab_backlight.json photometric values or fade range");
+            material.SetFloat("_LegendLuminance", luminance);
+            material.SetFloat("_LegendMaxDisplay", cap);
+            material.SetColor("_LegendColor", new Color(color.x, color.y, color.z, 1f));
+            material.SetFloat("_LegendStartSunDeg", start); material.SetFloat("_LegendFullSunDeg", full);
+            material.EnableKeyword("_KAMION_CAB_BACKLIGHT");
         }
 
         static void MapCabLeatherRim(Renderer renderer, Transform column, string[] slots)
