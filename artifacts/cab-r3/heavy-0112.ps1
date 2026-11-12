@@ -1,5 +1,5 @@
 param(
-    [Parameter(Mandatory)][ValidateSet('World','GisFile','GisFinal')][string]$Job,
+    [Parameter(Mandatory)][ValidateSet('World','GisFile','GisFinal','Images')][string]$Job,
     [string]$TestFile,
     [string]$Log
 )
@@ -18,6 +18,7 @@ try {
   try {
     $env:UV_PROJECT_ENVIRONMENT='.venv-cab'
     switch ($Job) {
+        'Images' { uv run --project tools/worldgen python artifacts/cab-r3/review-sheets.py *> $Log }
         'World' { uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c *> $Log }
         'GisFile' { uv run --project tools/worldgen python -m pytest $TestFile -q *> $Log }
         'GisFinal' { uv run --project tools/worldgen python -m pytest tests/gis -q *> $Log }
