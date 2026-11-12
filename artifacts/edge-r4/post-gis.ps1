@@ -35,7 +35,7 @@ $base=(git show "HEAD:$manifestPath") -join "`n"|ConvertFrom-Json
 $fresh=Get-Content "$PSScriptRoot/regenerated-world-manifest.json" -Raw|ConvertFrom-Json
 if(($base.far_field|ConvertTo-Json -Depth 30 -Compress) -ne ($fresh.far_field|ConvertTo-Json -Depth 30 -Compress)){throw 'Own far field needs preservation'}
 if(($base.materials.far_field_buildings|ConvertTo-Json -Depth 30 -Compress) -ne ($fresh.materials.far_field_buildings|ConvertTo-Json -Depth 30 -Compress)){throw 'Own far material needs preservation'}
-git restore -- $manifestPath Data/Regions/bialystok-industrial-c/generated/landmarks/viaduct_putry_underdeck.spec.json Data/Regions/bialystok-industrial-c/generated/roads_qa.json Data/Regions/bialystok-industrial-c/generated/streetscape_qa.json art-source/world/props/props_meta.json
+git restore -- $manifestPath Data/Regions/bialystok-industrial-c/generated/landmarks/viaduct_putry_underdeck.spec.json Data/Regions/bialystok-industrial-c/generated/roads_qa.json Data/Regions/bialystok-industrial-c/generated/streetscape_qa.json art-source/world/props/props_meta.json art-source/world/props/street_props.glb
 if($LASTEXITCODE -ne 0){throw 'Generated scope restore failed'}
 @{own_far_output_unchanged=$checks;world_manifest_far_fields_equal_to_base=$true;gis_exit_code=$receipt.exit_code;
     cli_vs_regenerated_matches=@($rows|Where-Object cli_matches_regenerated).Count;
