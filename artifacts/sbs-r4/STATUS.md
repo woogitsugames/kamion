@@ -67,3 +67,5 @@ Nie wykonano merge do main, push, telefonu ani edycji innych dziedzin. Odśwież
 2026-11-12T13:06:15.5316847+01:00: generator World zakończony exit0; osobny heavy zwolniony. Szczegóły i SHA w receipcie kroku.
 
 2026-11-12T13:07:38.6749324+01:00: baseline77049 terminal exit0, świat505,9s,64chunkiHigh+Low,bezfallbackTrue; pełny receipt5f90bdb1/c552a473. Pojedynczy testcore uruchomiono przez FIFOheavy w sesji55690, obecnie8 wcześniejszych zgłoszeń. Import świeżego świata uruchamiam niezależnie przez Unitygpt-sbs; testcore pisze wyłącznie do tmp i czyta repo, nie zmienia świata. Nie uruchamiam drugiego heavy z tym ownerem.
+
+2026-11-12T13:09:35.9178668+01:00: importUnity79443 zakończony exit0, źródła5f90bdb1/c552a473 zachowane; slotgpt-sbs zwolniony, efekty Rendering/Settings iProjectSettings cofnięte. Uruchamiam pełne168raw Low/High×overcast/clear na jednymHEAD, bez commitów w trakcie capture. Nowe testycore iPSpozostają do wykonania; same raw nie oznaczają akceptacji narzędzia ani świata.
