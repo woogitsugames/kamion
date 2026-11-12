@@ -1,0 +1,13 @@
+Gałąź gpt-truck-r2, baza main 2c3939b22162659ea3ca42fb42be3d9a19cef2c2. Końcowy stan kodu produkcyjnego: aab97e89 (sam zaakceptowany shed-025 po wycofaniu prób). ADR 0115, runda 2; wyłącznie zewnętrze ciągnika i naczepy.
+
+Poprawiono retencję brudu na skierowanych w górę metalowych grzbietach stopni. Diagnostyka wykazała dominację maski proceduralnej i niskie AO całej wnęki; osłabienie niezależne od AO przywraca kratkę, zachowując wypiekaną maskę, cień wnęki, lakier i koła. Mnożnik 0,25 jest WORKING_VALUE, bez udawania fizycznego modelu śladów butów.
+
+Stałe natywne ROI stopnia [800,810,1080,855]: sigma wyświetlanej luminancji overcast Low 2,090 → 8,351 i High 2,482 → 9,754 pkt; clear Low 2,925 → 5,722 i High 3,157 → 6,742. To miara grzbietów/otworów/cieni w obrazie, nie procent pokrycia brudem. Niezależna ocena potwierdza czytelniejszy ciemnoszary stopień bez sterylnego srebra i halo. Dowody: final-step-roi.json, final-pairs/*truck-step-detail.jpg, FINAL-REVIEW.md.
+
+Odrzucono zacieki plandeki i jaśniejszy suchy plastik jako niewidoczną korzyść przy dodatkowym koszcie. Krótszy rozbryzg poprawiał charakter smug, lecz przygaszał dolny pomarańczowy element, więc też go wycofano. Błotniki, regularność plandeki, lakier i szyba pozostają otwarte. Skorygowano błędne założenie robocze: aktualny main ma szczegółowy brud również na Low; nie zmieniano profili.
+
+Po kanonicznym rebuildzie zapisano 40 końcowych par i wszystkie kamery obu profili. Wszystkie 96 wierszy mają identyczne estymaty rendererów/cieni, raportowane tysiące trójkątów oraz osobne instancje (all-cameras-counters.csv). Bez nowych tekstur, przebiegów, słów kluczowych i źródeł geometrii. Dodatkowa arytmetyka na A16 jest UNVERIFIED. Zdjęcia|render 960 px: photo-render-curtain-yellow-working.jpg, photo-render-curtain-blue-working.jpg, photo-render-tractor-rear-working.jpg; inne modele/pozy/światło, porównanie jakościowe, licencje w references/CREDITS.md.
+
+Pełny EditMode: 300/300 passed, zero failed/skipped, exit 0. Android Low+High: Succeeded, 0 errors, 12 warnings, 191 s, APK 384474361 bajtów; build/result.json zawiera SHA256 i wejściowy commit 0b4b6237969c42cfce7ad9112ef4be44708946ef. Bez instalowania ani uruchamiania telefonu. GIS końcowy nadal oczekuje na wolny slot heavy; wynik zostanie dopisany przed przekazaniem rundy.
+
+Integracja przez lidera: scalić gpt-truck-r2 i uruchomić Game.World.Import.WorldTruckInstaller.InstallBatch pod slotem Unity; ignorowanych materiałów i prefabów nie przenosić ręcznie. Możliwe konflikty tylko z późniejszymi zmianami TruckExterior.shader i ADR 0115. Nie scalałem do main ani nie pushowałem. Po zapisaniu GIS pakiet trafi robocopy do main/artifacts/truck-r2; następna gałąź gpt-truck-r3, opony i felgi z bliska.
