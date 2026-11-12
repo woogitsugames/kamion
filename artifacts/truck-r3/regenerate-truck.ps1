@@ -34,7 +34,8 @@ try {
     $code=$LASTEXITCODE
     if($code -ne 0 -or !(Select-String -LiteralPath $log -SimpleMatch "TRUCK_GENERATOR_AND_CHECK: OK $Domain" -Quiet)){throw "Nieudana regeneracja/validator $Domain, exit $code. Nie importuj częściowego eksportu."}
     if(((Get-FileHash -LiteralPath $inputs -Algorithm SHA256).Hash -join "`n") -ne $fp){throw 'Źródła zmienione podczas generowania.'}
-    [ordered]@{domain=$Domain;result='Passed';seconds=((Get-Date)-$start).TotalSeconds;source_fingerprint=$fp;log=$log;threads=2;pool='heavy';owner='gpt-truck-r3';validated=$true;cache="artifacts/truck-r3/cache/$Domain.blend"} | ConvertTo-Json | Set-Content -Encoding utf8 "artifacts/truck-r3/generate-$Domain-result.json"
+    $outputs=@(Get-ChildItem $source -Recurse -File | Where-Object {$_.Extension -in @('.fbx','.png','.json')} | Sort-Object FullName | Get-FileHash -Algorithm SHA256 | ForEach-Object {[ordered]@{path=$_.Path;sha256=$_.Hash}})
+    [ordered]@{domain=$Domain;result='Passed';seconds=((Get-Date)-$start).TotalSeconds;source_fingerprint=$fp;log=$log;threads=2;pool='heavy';owner='gpt-truck-r3';validated=$true;cache="artifacts/truck-r3/cache/$Domain.blend";outputs=$outputs} | ConvertTo-Json -Depth 5 | Set-Content -Encoding utf8 "artifacts/truck-r3/generate-$Domain-result.json"
 } finally {
     pwsh $slot -Release -Pool heavy -Owner gpt-truck-r3
 }

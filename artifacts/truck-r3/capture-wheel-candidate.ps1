@@ -5,6 +5,10 @@ Set-Location (Resolve-Path "$PSScriptRoot/../..")
 foreach($domain in @('exterior','trailer')) {
     $record=Get-Content "artifacts/truck-r3/generate-$domain-result.json" -Raw | ConvertFrom-Json
     if($record.result -ne 'Passed' -or !$record.validated){throw "Brak walidacji FBX: $domain"}
+    if(!$record.outputs -or !$record.outputs.Count){throw "Brak SHA zwalidowanych plików: $domain"}
+    foreach($file in $record.outputs) {
+        if(!(Test-Path -LiteralPath $file.path) -or (Get-FileHash -LiteralPath $file.path -Algorithm SHA256).Hash -ne $file.sha256){throw "Plik różni się od zwalidowanego eksportu: $($file.path)"}
+    }
 }
 if(Test-Path "artifacts/truck-r3/$Stage-fleet"){throw 'Etap już istnieje; wybierz nowy Stage, aby nie nadpisać dowodów.'}
 . scripts/env.ps1
