@@ -1,5 +1,5 @@
 param(
-    [Parameter(Mandatory)][ValidateSet('World','Fidelity','GisFile','GisFinal','Images')][string]$Job,
+    [Parameter(Mandatory)][ValidateSet('World','Fidelity','GisFile','GisFinal','Images','MaterialPrep')][string]$Job,
     [string]$TestFile,
     [string]$Log
 )
@@ -23,6 +23,7 @@ try {
   try {
     $env:UV_PROJECT_ENVIRONMENT='.venv-cab'
     switch ($Job) {
+        'MaterialPrep' { uv run --project tools/worldgen python artifacts/cab-r4/prepare-material-candidate.py *> $Log }
         'Images' { uv run --project tools/worldgen python artifacts/cab-r4/review-sheets.py *> $Log }
         'World' { uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c *> $Log }
         'Fidelity' { uv run --project tools/worldgen python tools/worldgen/fidelity/run.py --region bialystok-industrial-c --art artifacts/cab-r4/fidelity *> $Log }
