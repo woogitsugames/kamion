@@ -5,12 +5,21 @@ using UnityEngine.EventSystems;
 
 namespace Game.UI.Driving
 {
-    /// <summary>On-screen steering wheel: forwards pointer positions (relative to its centre) to <see cref="TouchSteeringWheel"/>.</summary>
+    /// <summary>
+    /// On-screen steering wheel: forwards pointer positions (relative to its centre, and in millimetres on the screen for
+    /// the drag gesture) to <see cref="TouchSteeringWheel"/>. Touches anywhere on this object or its children (the
+    /// invisible grab area that extends the drawing to the safe-area edges, ADR 0135) grab the wheel. Draws the command
+    /// (<see cref="rotating"/>) and where the cab wheel actually is (<see cref="columnMark"/>).
+    /// </summary>
     public sealed class SteeringWheelWidget : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler
     {
         public TouchSteeringWheel wheel;
         public RectTransform rotating;
+        /// <summary>Optional: marker rotated to the cab-wheel angle in on-screen degrees (lags the finger like the heavy wheel).</summary>
+        public RectTransform columnMark;
         int m_Pointer = int.MinValue;
+
+        static Vector2 Mm(PointerEventData e) => SteeringMath.PixelsToMm(e.position, DeviceDisplay.Dpi);
 
         Vector2 FromCentre(PointerEventData e)
         {
@@ -24,13 +33,13 @@ namespace Game.UI.Driving
         {
             if (wheel == null || m_Pointer != int.MinValue) return;
             m_Pointer = e.pointerId;
-            wheel.PointerDown(FromCentre(e));
+            wheel.PointerDown(FromCentre(e), Mm(e));
         }
 
         public void OnDrag(PointerEventData e)
         {
             if (wheel == null || e.pointerId != m_Pointer) return;
-            wheel.PointerDrag(FromCentre(e));
+            wheel.PointerDrag(FromCentre(e), Mm(e));
         }
 
         public void OnPointerUp(PointerEventData e)
@@ -47,8 +56,9 @@ namespace Game.UI.Driving
 
         void LateUpdate()
         {
-            if (wheel != null && rotating != null)
-                rotating.localRotation = Quaternion.Euler(0f, 0f, -wheel.WheelDeg); // UI z+ is counter-clockwise
+            if (wheel == null) return;
+            if (rotating != null) rotating.localRotation = Quaternion.Euler(0f, 0f, -wheel.WheelDeg); // UI z+ is counter-clockwise
+            if (columnMark != null) columnMark.localRotation = Quaternion.Euler(0f, 0f, -wheel.ColumnScreenDeg);
         }
     }
 

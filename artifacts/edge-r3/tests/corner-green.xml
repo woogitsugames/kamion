@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="2" result="Passed" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-11-12 00:51:26Z" end-time="2026-11-12 00:51:26Z" duration="0,0595624">
+  <test-suite type="TestSuite" id="1000" name="Kamion" fullname="Kamion" runstate="Runnable" testcasecount="297" result="Passed" start-time="2026-11-12 00:51:26Z" end-time="2026-11-12 00:51:26Z" duration="0.059562" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1375" name="Game.Tests.EditMode.dll" fullname="C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-edge/game/Library/ScriptAssemblies/Game.Tests.EditMode.dll" runstate="Runnable" testcasecount="297" result="Passed" start-time="2026-11-12 00:51:26Z" end-time="2026-11-12 00:51:26Z" duration="0.053346" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="92416" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1376" name="Game" fullname="Game" runstate="Runnable" testcasecount="297" result="Passed" start-time="2026-11-12 00:51:26Z" end-time="2026-11-12 00:51:26Z" duration="0.051886" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1377" name="Tests" fullname="Game.Tests" runstate="Runnable" testcasecount="297" result="Passed" start-time="2026-11-12 00:51:26Z" end-time="2026-11-12 00:51:26Z" duration="0.050648" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1378" name="EditMode" fullname="Game.Tests.EditMode" runstate="Runnable" testcasecount="86" result="Passed" start-time="2026-11-12 00:51:26Z" end-time="2026-11-12 00:51:26Z" duration="0.047202" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1363" name="WorldEdgeApronGradeTests" fullname="Game.Tests.EditMode.WorldEdgeApronGradeTests" classname="Game.Tests.EditMode.WorldEdgeApronGradeTests" runstate="Runnable" testcasecount="8" result="Passed" start-time="2026-11-12 00:51:26Z" end-time="2026-11-12 00:51:26Z" duration="0.045354" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-suite type="ParameterizedMethod" id="1371" name="CornerFan_DoesNotBiasUniformPerimeterSmoothing" fullname="Game.Tests.EditMode.WorldEdgeApronGradeTests.CornerFan_DoesNotBiasUniformPerimeterSmoothing" classname="Game.Tests.EditMode.WorldEdgeApronGradeTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-11-12 00:51:26Z" end-time="2026-11-12 00:51:26Z" duration="0.041978" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1369" name="CornerFan_DoesNotBiasUniformPerimeterSmoothing(0.025f)" fullname="Game.Tests.EditMode.WorldEdgeApronGradeTests.CornerFan_DoesNotBiasUniformPerimeterSmoothing(0.025f)" methodname="CornerFan_DoesNotBiasUniformPerimeterSmoothing" classname="Game.Tests.EditMode.WorldEdgeApronGradeTests" runstate="Runnable" seed="1267709764" result="Passed" start-time="2026-11-12 00:51:26Z" end-time="2026-11-12 00:51:26Z" duration="0.030478" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[Detected one or more triangles where the distance between any 2 vertices is greater than 500 units. The resulting Triangle Mesh can impact simulation and query stability. It is recommended to tessellate meshes that have large triangles. Source mesh name: 
+]]></output>
+                </test-case>
+                <test-case id="1370" name="CornerFan_DoesNotBiasUniformPerimeterSmoothing(-0.025f)" fullname="Game.Tests.EditMode.WorldEdgeApronGradeTests.CornerFan_DoesNotBiasUniformPerimeterSmoothing(-0.025f)" methodname="CornerFan_DoesNotBiasUniformPerimeterSmoothing" classname="Game.Tests.EditMode.WorldEdgeApronGradeTests" runstate="Runnable" seed="574217186" result="Passed" start-time="2026-11-12 00:51:26Z" end-time="2026-11-12 00:51:26Z" duration="0.003503" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[Detected one or more triangles where the distance between any 2 vertices is greater than 500 units. The resulting Triangle Mesh can impact simulation and query stability. It is recommended to tessellate meshes that have large triangles. Source mesh name: 
+Saving results to: C:/Users/matma/AppData/LocalLow/woogitsugames/Kamion\TestResults.xml
+]]></output>
+                </test-case>
+              </test-suite>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

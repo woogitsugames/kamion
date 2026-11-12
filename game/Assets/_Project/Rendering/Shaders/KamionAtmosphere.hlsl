@@ -30,8 +30,17 @@ half KamionFogTau(float3 pw, float viewDepth)
     return (half)(_KamionHaze.x * max(viewDepth, 0.0) * (1.0 + _KamionHaze.y * m));
 }
 
+float _KamionDimColourDesaturation;
+float _KamionSkyCapOff; // Existing physical-capture bypass.
+
 half3 KamionTone(half3 c)
 {
+    if (_KamionDimColourDesaturation > 0.0 && _KamionSkyCapOff < 0.5)
+    {
+        half y = dot(c,half3(0.2126h,0.7152h,0.0722h));
+        half amount = (half)_KamionDimColourDesaturation * (1.0h-smoothstep(0.02h,0.25h,y));
+        c = lerp(c,y.xxx,amount);
+    }
     half3 k = 1.0h - (half)_KamionTone.x * (half)_KamionTone.y / (c + (half)_KamionTone.y + 1e-4h);
     return c * k * (1.0h + (half)_KamionTone.z);
 }
@@ -63,3 +72,4 @@ void KamionWetSurface(half3 n, half pool, half puddles, half film, inout half3 a
 }
 
 #endif
+

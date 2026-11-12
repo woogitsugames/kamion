@@ -50,6 +50,18 @@ namespace Game.Rendering
         [Range(0, 3)] public int highSunShadowFilter;
         [Tooltip("ADR 0108: display-only blue-sky chroma multiplier above the haze horizon; 0/1 keep the analytic colour.")]
         [Range(1f, 4f)] public float clearSkySaturation = 1f;
+        [Tooltip("Photographic source horizon clamp in degrees after rotation. 0 keeps legacy sampling; positive values extend a valid upper-hemisphere row instead of sampling the cut lower hemisphere.")]
+        [Range(0f, 5f)] public float clearCloudSourceMinElevationDeg;
+        [Tooltip("Optional presentation desaturation of dim scene colours; keeps luminance and bypasses physical capture. Working appearance, not physiological vision.")]
+        [Range(0f,1f)] public float dimColourDesaturation;
+        [Tooltip("ADR 0108 r2: opt-in diffuse low-beam projection on world surfaces, in the existing pass. No occlusion.")]
+        public bool projectedHeadlamps;
+        [Tooltip("WORKING_VALUE beam peak cd per head; independent of emissive lens nits. Used only when projection is enabled.")]
+        [Range(0f, 60000f)] public float projectedHeadlampPeakCd = 20000f;
+        [Tooltip("Display-only sky/fog gain; default1 leaves legacy presets intact. SH, sun and surface exposure are unchanged.")]
+        [Range(0.001f, 1f)] public float skyDisplayGain = 1f;
+        [Tooltip("Display-only sky/fog desaturation, used to suppress the twilight model's orange lobe in Night.")]
+        [Range(0f, 1f)] public float skyDisplayDesaturation;
         [Tooltip("Cloud texture tiles per unit of the cloud plane (plane at height 1; smaller = larger cloud masses)")]
         public float cloudScale = 0.16f;
         [Tooltip("Cloud drift (plane units per second; ~0.004 = 20 km/h at 1500 m)")]
@@ -123,6 +135,8 @@ namespace Game.Rendering
             // ADR 0108 r1 WORKING_VALUE: the route reference photos show scattered cumulus in blue sky.
             p.clearCloudCover = 1f;
             p.clearSkySaturation = 2f; // ADR 0108: 1/2/3/4 ablation against the daytime reference skies.
+            // ADR 0108 r3: 0/0.5/1 degree ablation; extend the valid HDRI horizon after sun-alignment pitch.
+            p.clearCloudSourceMinElevationDeg = 0.5f;
             return p;
         }
 
@@ -177,6 +191,21 @@ namespace Game.Rendering
             p.name = "LP_Dusk";
             p.sunElevationDeg = -5f; p.sunAzimuthDeg = 300f; p.turbidity = 4f; p.overcast = 0.2f; p.visibilityKm = 12f;
             p.lookSaturation = -3f;
+            return p;
+        }
+
+        /// <summary>ADR 0108 r2 WORKING_VALUE: a separate night appearance at the existing twilight model's
+        /// lower bound. This is not an astronomical night-sky fit. Extra exposure restraint darkens ambient-lit
+        /// surfaces while fixed-luminance lamps gain contrast against the dimmer sky; dusk remains unchanged.</summary>
+        public static LightingPreset CreateNight()
+        {
+            var p = CreateDusk();
+            p.name = "LP_Night";
+            p.sunElevationDeg = SkyModel.MinTwilightElevationDeg;
+            p.exposureCompensation = -3f; // reviewed Night appearance; preserve lamp/cab visibility.
+            p.skyDisplayGain = 0.125f;
+            p.skyDisplayDesaturation = 0.85f;
+            p.dimColourDesaturation = 0.65f; // ADR 0108 r4: reviewed 0/.35/.65/1 appearance ablation.
             return p;
         }
     }

@@ -1,0 +1,105 @@
+{
+  "building": {
+    "area": 1526.4,
+    "func": "produkcyjny",
+    "h": 23.91,
+    "height_source": "gugik-lod1-measuredHeight",
+    "id": "2BE4B431-C061-1BF0-E053-CC2BA8C0D140",
+    "rect": [
+      [
+        -36.2,
+        -1169.4
+      ],
+      [
+        -6.0,
+        -1229.4
+      ],
+      [
+        -45.3,
+        -1249.2
+      ],
+      [
+        -75.5,
+        -1189.2
+      ]
+    ],
+    "src": "bdot10k+lod1",
+    "storeys": null,
+    "typ": "hall"
+  },
+  "cache_sha256": "15bd1bfe124abae278a810a7e23fd0aebee1db59601673d9f08bc984b9177d24",
+  "generator_sha256": "96861F1B1DAFE85185EF4567192E1AC9192CBF597BB6DEB99C106563F2F75EA4",
+  "note": "Exact source-to-production triangle match; no photographic identity claim.",
+  "tiers": {
+    "High": {
+      "triangles": 18,
+      "matched": 18,
+      "source_sha256": "a38ae38ee249fe6186044fe50f6362a97d16ded9f768773184742e829beba8d4",
+      "colors": [
+        [
+          0.14,
+          0.14,
+          0.145,
+          0.0
+        ],
+        [
+          0.24,
+          0.1,
+          0.07,
+          0.0
+        ],
+        [
+          0.44,
+          0.24,
+          0.04,
+          0.0
+        ]
+      ]
+    },
+    "Low": {
+      "triangles": 16,
+      "matched": 16,
+      "source_sha256": "8758975811917023433566a37677bbf073af5d96f76603ca96b76820421b6076",
+      "colors": [
+        [
+          0.24,
+          0.1,
+          0.07,
+          0.0
+        ],
+        [
+          0.44,
+          0.24,
+          0.04,
+          0.0
+        ]
+      ]
+    }
+  },
+  "camera": {
+    "position": [
+      -267.6,
+      -2.3776627,
+      -965.9
+    ],
+    "rotation_xyzw": [
+      0.00049221533,
+      0.9716866,
+      -0.0020243395,
+      0.23626424
+    ],
+    "fov_deg": 60.0,
+    "anchor_z": 131.14,
+    "scene_sha256": "652d181bf221ba079c60522f850751408676ac0058ec3964214c31b16683e20d",
+    "projected_bounds_px": [
+      [
+        753.5955433805013,
+        446.60977190901275
+      ],
+      [
+        949.3057989888589,
+        530.3974025400003
+      ]
+    ]
+  }
+}

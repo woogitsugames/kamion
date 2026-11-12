@@ -1,0 +1,11 @@
+$ErrorActionPreference='Stop'
+Set-Location (Resolve-Path "$PSScriptRoot/../..")
+. ./scripts/env.ps1
+$slot='C:/Users/matma/Documents/Claude/kamion/scripts/unity-slot.ps1'
+pwsh $slot -Acquire -Owner gpt-cab -PollSeconds 5 -StaleHours 1000000
+if ($LASTEXITCODE -ne 0) { throw 'Brak slotu Unity.' }
+try {
+    $code=Invoke-UnityBatch -LogFile "$PWD/artifacts/cab-r2/clearance-inspection.log" -Arguments @('-executeMethod','Game.Editor.VisualQA.CabClearanceInspection.Run','-cabOutput',"$PWD/artifacts/cab-r2/clearance-inspection")
+}
+finally { pwsh $slot -Release -Owner gpt-cab; git restore -- game/Assets/_Project/Rendering/Settings game/ProjectSettings }
+exit $code

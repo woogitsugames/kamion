@@ -74,5 +74,24 @@ MonoBehaviour:
     cab: {fileID: 8300000, guid: 6530a8dedebe0dd40949f03563d2efaf, type: 3}
   birdSparrow: {fileID: 8300000, guid: 533c8327a01ea9b479150c4583e11920, type: 3}
   birdTit: {fileID: 8300000, guid: c0bd8caf01432ad4499810eac0b988b9, type: 3}
+  elExteriorEngine: {fileID: 11400000, guid: bc5729a9a99bd9f49867644ca1388e17, type: 2}
+  elCabEngine: {fileID: 11400000, guid: 3dacf83062954de408d8cc31b40798a3, type: 2}
+  elExteriorEngineBrake: {fileID: 11400000, guid: a44c5bec5a4653e46bf1980408df3df3, type: 2}
+  elCabEngineBrake: {fileID: 11400000, guid: 1622e6479e6cac94291a71ab1bba52ed, type: 2}
+  elEngineStart:
+    ext: {fileID: 8300000, guid: f46f4fb20c7dc3a4db7c3e3b4fc78701, type: 3}
+    cab: {fileID: 8300000, guid: 4dc38d5369a55fa4e8783643a884fdc6, type: 3}
+  elEngineStop:
+    ext: {fileID: 8300000, guid: fd2e64e222e99a34e837c7e424c80f7b, type: 3}
+    cab: {fileID: 8300000, guid: 4a9939099d26b4144b91f4f6fd121859, type: 3}
+  elIdleClatter:
+    ext: {fileID: 8300000, guid: 1a8f4236ee992e145a62a8bf914670cc, type: 3}
+    cab: {fileID: 8300000, guid: ed2824c125d0db34f8efd8927e45f788, type: 3}
+  elRetarder:
+    ext: {fileID: 8300000, guid: 4539d1baa391f0a49a37ebe523b141dd, type: 3}
+    cab: {fileID: 8300000, guid: 197e4efe89b3d4d48b8c90fe18c4caf7, type: 3}
+  elTurboWastegate:
+    ext: {fileID: 8300000, guid: 1118de61a3aea8b4993d8da5f4f619ed, type: 3}
+    cab: {fileID: 8300000, guid: 7a9890a339b3c574ba790ac5fa7e8db7, type: 3}
   sourceInfo: 122 engine loops + 47 sfx, tools/audio/render_all.py (procedural synthesis,
-    no recordings)
+    no recordings); ElevenLabs 42 clips

@@ -1,0 +1,58 @@
+{
+  "orthophoto_qa": {
+    "already_mapped": 0,
+    "blocked": 0,
+    "candidates": 4,
+    "deferred_budget": 3,
+    "height_species_status": "WORKING_VALUE: 12.5-15m; existing broadleaf proxy retained",
+    "new_instances": 0,
+    "placed": 1,
+    "position_status": "WORKING_VALUE: crown centres +/-3m, not surveyed trunks",
+    "replaced_self_seeded": 1,
+    "replacements": [
+      {
+        "crown_centre_local": [
+          -233.0,
+          -202.0
+        ],
+        "previous_position": [
+          -229.7,
+          -209.61
+        ],
+        "previous_source": "bdot:1c9f9f80-5762-11f0-b0e8-480fcf3c9bd7:0:self",
+        "prototype": "tree_birch",
+        "root_local": [
+          -235.0,
+          -203.0
+        ],
+        "source": "ortho:gugik-2024:g3-b-120:3",
+        "variant": 2
+      }
+    ]
+  },
+  "mapped_instances": [
+    {
+      "e": -235.0,
+      "h": 14.2,
+      "lean": 0.005,
+      "n": -203.0,
+      "p": "tree_birch",
+      "src": "ortho:gugik-2024:g3-b-120:3",
+      "v": 2,
+      "yaw": 4.063,
+      "z": 130.46
+    }
+  ],
+  "available_megascans": 15,
+  "fallback": false,
+  "existing_instances_added": 0,
+  "existing_instances_removed": 1,
+  "existing_delta_examples": {
+    "added": [],
+    "removed": [
+      "{\"e\": -229.7, \"h\": 4.6, \"lean\": 0.005, \"n\": -209.61, \"p\": \"tree_birch\", \"src\": \"bdot:1c9f9f80-5762-11f0-b0e8-480fcf3c9bd7:0:self\", \"v\": 2, \"yaw\": 4.063, \"z\": 130.51}"
+    ]
+  },
+  "raw_glbs_changed": [],
+  "note": "Full GLB hashes are generator inputs, not Unity asset hashes. Inspect any drift before claiming unchanged physics."
+}

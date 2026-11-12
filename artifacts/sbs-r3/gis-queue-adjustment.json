@@ -1,0 +1,14 @@
+{
+  "changed_at": "2026-11-12T11:35:49.2375890+01:00",
+  "reason": "About45min of live queue wait; multiple slot races lost. Intentional next-slot reservation, not an observation timeout restart.",
+  "previous_session": 11437,
+  "previous_wrapper_pid": 29772,
+  "stopped_waiting_acquirer_pid": 57760,
+  "previous_wrapper_exit_code": 1,
+  "pytest_started_before_change": false,
+  "own_slot_present_before_stop": false,
+  "foreign_reservation_present_before_change": false,
+  "new_action": "Canonical unity-slot Acquire -Pool heavy -Owner gpt-sbs-r3 -Priority, then exactly one FinalGis",
+  "limit_unchanged": 3,
+  "foreign_slots_removed": 0
+}

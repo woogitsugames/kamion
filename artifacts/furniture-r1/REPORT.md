@@ -1,17 +1,18 @@
-# Strumień I — ADR 0102 — gotowe do recenzji lidera (R2)
-
-Gałąź: `gpt-furniture-r1`; SHA zweryfikowanego kodu: `b087967ceafd5a1222c1f7e880bab2ab36c49ef5`; baza: `9e6e9fde`.
-
-- Osadzanie na osi stopy z zachowaniem poziomu kolizji; 20 lokalnych korekt lamp do 1,05 m. Relief QA: 147→107, max 1,087→0,411 m.
-- Rodziny starych lamp, dopasowane obejmy, hatch, skany CC0 z brudem/korozją i neutralnymi naklejkami; szary tył znaków; U-prototyp; schodkowe ogrodzenia.
-- Gate3Audit, korytarz 40 m: 223 podpory; floating 4→0, sunk 0→0 (`audit-before.json`, `audit-after.json`, `final-metrics.json`).
-- GIS: **379 passed, 1 xfailed**, 649,86 s; EditMode: **226/226**, 0 failed, 0 skipped (`pytest-after.log`, `editmode.xml`).
-- Low, 8 ujęć trasy: draws delta max **0**, tris delta konserwatywnie **≤+1,183%** z błędem zaokrąglenia SceneStats (`frame-budget*.json`); CPU estimate, GPU/telefon UNVERIFIED.
-- Pamięć siatek Low 111,3→112,3 MB; High 239,7→240,7 MB. Low betonowej lampy 105→91 tris, stalowej 53→53; sloty istniejących modeli bez wzrostu.
-- 806 prymitywów dróg/mostów/barier/krawężników/kolizji/oznakowania identycznych bajtowo (`protected-geometry.json`); w generacji 0 `fallback=True`.
-- PNG przed/po: `before/{Low,High}-{overcast,clear}/`, `after/{Low,High}-{overcast,clear}/` — po 36; obejrzano 8 arkuszy `compare/`. `after-r1/` jest odrzuconą rundą.
-- Samokrytyka: `SELF_REVIEW.md`; ADR: `ADR-0102.md` (kanoniczne pliki w `docs/` ga??zi); logi Unity: `unity-logs/`.
-- Otwarte: niezależna recenzja/telefon lidera; dokładne przypisanie rodzin do ulic, zmienna metaliczność rdzy, różnorodność papieru, ciężka podmurówka na skarpach. U: 0 instancji w danych regionu.
-- Przewidywane konflikty: addytywne `materials.py`, `export.py`, props GLB/metadata, generated QA/manifest, `LICENSES.md`; po integracji regeneracja produktów.
-- Dla lidera: `git merge gpt-furniture-r1`, następnie `uv run --project tools/worldgen python tools/worldgen/roads/build_world.py --region bialystok-industrial-c` i `pwsh scripts/import-region.ps1 -Region bialystok-industrial-c` po sprawdzeniu PHONE_RUN.
-- Artefakty skopiowane do głównego `artifacts/furniture-r1/`; gałąź pozostawiona do integracji, bez scalania ani pushu main przez autora.
+﻿# Raport furniture r1 — ADR 0120
+Gałąź gpt-furniture-r1; zweryfikowany kod i zasoby: 7adbe982. Baza: 5f2aa277; końcowy commit raportu wskazuje historia gałęzi.
+Obniżono podmurówkę względem terenu, dodano zamknięte deski, fugi, skan CC0 i osad. Słupki zachowują moduł do 2,5 m; siatka ma małe odkształcenia.
+Betonowy słup ma większą zbieżność i skan w skali metrycznej; oprawa ścięte narożniki. Tył znaku otrzymał poprawione UV i miejscowe zacieki pod mocowaniami.
+Dowody: [40 arkuszy przed/po](24h/compare/) obejmuje 220 par Low/High, clear/overcast. [Referencja i render](24h/reference-sign-after.jpg) oraz [zbliżenia](24h/after4-detail.jpg) mają do 960 px.
+Niezależny przegląd 40/40 arkuszy nie wykazał nowej istotnej regresji furniture; pełna [ocena](24h/iteration4/REVIEW.md) zachowuje ograniczenia.
+We wszystkich 220 wariantach CPU DrawEst mesh +0, instancji osobno +0. To estymacje, nie czas GPU ani rzeczywiste wywołania GPU.
+Low: 102/110 wariantów ma udowodnioną górną granicę tris ≤+2%; driver ≤1,68194%, route ≤1,70853%, abeam ≤1,60041%, w obu oświetleniach.
+Niepotwierdzone: above ≤2,10065%, edge-east ≤2,67349%, north ≤3,10753%, west ≤3,01395%, po dwa oświetlenia. [Wszystkie liczniki](24h/frame-budget.csv), [dokładne Low](24h/exact-after4/) i [metoda](24h/PACKET.md) są zachowane.
+Chroniona geometria: 6833→6833, 0 różnic; kolizje ogrodzeń 80→80, 0 różnic wyłącznie dla optymalizacji iteracja 3→4.
+Import mesh/instancji/kolizji: Low 117,0→120,0 MB, High 259,1→262,1 MB; nie PSS. Generator: 64 chunki, bez fallback=True.
+Własne testy Python 17/17 i 9/9; FurniturePlinthTests 7/7. Końcowy EditMode 268/268, bez pominięć.
+Pełny GIS na końcu rundy: 509 passed, 1 xfailed, 1 failed — zastany fidelity_qa.json nie odpowiada 7 hashom niezmienionych wejść dróg/overrides. Audyt i logi w [pakiecie](24h/PACKET.md).
+Physics/gate3: 47 passed, 1 failed — znana niezgodność top_speed_flat_comb.json; test, generator i scenariusz niezmienione od bazy. Nie poprawiano cudzych źródeł ani tolerancji.
+Otwarte: ostry cokół/styk z gruntem, aliasing siatki Low, niepotwierdzony lokalnym zbliżeniem typ latarni i ukośny sztywny panel. Brak pomiarów telefonu/GPU/PSS, ruchu i nocnego odblasku.
+Wspólne pliki: materials.py, WorldPbrMaterials.cs, WorldSurface.shader — addytywna flaga furniture_plinth_detail i lokalny keyword; bez nowego przebiegu, QualityProfile i zmian kontraktów _Tint/_Tile.
+Lider: scalać wyłącznie do własnej gałęzi integracyjnej; zachować unie flag w trzech wspólnych plikach, po połączeniu zmian regenerować produkty świata. Ta sesja nie scala do main i nie pushuje.
+Pełne źródła, ograniczenia, wyniki i instrukcje odtworzenia: [PACKET.md](24h/PACKET.md). Stary raport ADR 0102 zachowano w legacy-0102/.

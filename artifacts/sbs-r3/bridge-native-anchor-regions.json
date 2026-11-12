@@ -1,0 +1,111 @@
+{
+  "recorded_at": "2026-11-12T11:28:06.4008737+01:00",
+  "status": "WORKING_VALUE native visual regions, not strict VP or level horizon",
+  "reviewers": [
+    "parent",
+    "independent sbs_visual_review"
+  ],
+  "cameras": [
+    {
+      "camera": "sbs-g3-b-494288258686575",
+      "size_px": [
+        1280,
+        960
+      ],
+      "photo": "artifacts/sbs-gate3/rectified/494288258686575.png",
+      "photo_sha256": "4943df7b00e9a99e18e3487548285155f50e2e1dc6daa19391e24e05cf4e2ced",
+      "raw": "artifacts/sbs-r3/evidence/renders/Low-overcast/sbs-g3-b-494288258686575.png",
+      "raw_sha256": "346e711092f6022b7196decb3167cba7bd7e1c8e1085784dd6382fda78dc3791",
+      "road_vanishing_region_photo_px": {
+        "y": [
+          690,
+          725
+        ],
+        "x": [
+          250,
+          335
+        ]
+      },
+      "road_vanishing_region_raw_px": {
+        "y": [
+          625,
+          665
+        ],
+        "x": [
+          245,
+          325
+        ]
+      },
+      "current_authored_horizon_y_fraction": 0.6646960445519393,
+      "next_diagnostic_hypotheses": [
+        0.72,
+        0.75
+      ],
+      "nominal_eye_m": 1.7,
+      "existing_surface_hits": [
+        {
+          "u_m": 140.188354,
+          "node": "road_collision",
+          "material": "collision_asphalt",
+          "chunk": "1_3"
+        }
+      ],
+      "pose_confidence": "C for future probes",
+      "production_accepted": false
+    },
+    {
+      "camera": "sbs-g3-b-1801374876712141",
+      "size_px": [
+        1280,
+        720
+      ],
+      "photo": "artifacts/sbs-gate3/rectified/1801374876712141.png",
+      "photo_sha256": "ce07076f1c2f18dc6b8ebcc94b17b79e6be18aa28c9345ae29f5e7a5b6f903e7",
+      "raw": "artifacts/sbs-r3/evidence/renders/Low-overcast/sbs-g3-b-1801374876712141.png",
+      "raw_sha256": "ceabdf0b29e8c820f0d976fd5ca551c781d85e04f702a7ee86eb74410bece86c",
+      "road_vanishing_region_photo_px": {
+        "y": [
+          375,
+          410
+        ],
+        "x": [
+          725,
+          785
+        ]
+      },
+      "road_vanishing_region_raw_px": {
+        "y": [
+          435,
+          470
+        ],
+        "x": [
+          705,
+          775
+        ]
+      },
+      "current_authored_horizon_y_fraction": 0.6244581280072967,
+      "next_diagnostic_hypotheses": [
+        0.54,
+        0.57
+      ],
+      "nominal_eye_m": 2.2,
+      "existing_surface_hits": [
+        {
+          "u_m": 135.41381,
+          "node": "road",
+          "material": "road_asphalt",
+          "chunk": "1_3"
+        },
+        {
+          "u_m": 135.413445,
+          "node": "road_collision",
+          "material": "collision_asphalt",
+          "chunk": "1_3"
+        }
+      ],
+      "pose_confidence": "C for future probes",
+      "production_accepted": false
+    }
+  ],
+  "constraint": "New-world surface resampling must distinguish visible carriageway material from collision. Control and pitch variants must use identical new U; record U delta. No terrain fallback or automatic pose approval."
+}

@@ -14,15 +14,38 @@ ROOT = Path(__file__).resolve().parents[3]
 
 
 def pole_texture(kind):
-    concrete = kind == "concrete"
+    concrete = kind in ("concrete", "footing")
     aid = "brushed_concrete" if concrete else "corrugated_iron_03"
     raw = ROOT / "art-source/world/cc0/_raw" / aid / f"{aid}_diff_2k.jpg"
     w, h = 256, 512
     if raw.exists():
-        photo = np.asarray(Image.open(raw).convert("RGB").resize((w, h), Image.Resampling.LANCZOS), float)
+        with Image.open(raw) as original:
+            if kind == "concrete":
+                # The CC0 tile covers 2.5 m, whereas this atlas spans a complete 9 m shaft.
+                # Stretching the full square scan over it turned concrete into long wood-like fibres.
+                # Crop/repeat at metric scale; circumference is the mean of our working pole taper.
+                circumference_m = np.pi * (.15 + .07)
+                tile = original.convert("RGB").resize((512, 512), Image.Resampling.LANCZOS)
+                tile_height = int(np.ceil(9 / 2.5 * 512))
+                repeated = Image.new("RGB", (512, int(np.ceil(tile_height / 512)) * 512))
+                for row in range(0, repeated.height, 512):
+                    repeated.paste(tile, (0, row))
+                metric = repeated.crop((0, 0, int(round(circumference_m / 2.5 * 512)), tile_height))
+                photo = np.asarray(metric.resize((w, h), Image.Resampling.LANCZOS), float)
+            else:
+                photo = np.asarray(original.convert("RGB").resize((w, h), Image.Resampling.LANCZOS), float)
         lum = photo.mean(axis=2)
         # Remove large lighting / corrugation: the pole must not acquire sheet-metal ribs.
-        ratio = np.clip(lum / np.maximum(gaussian_filter(lum, 12), 1), 0.8, 1.2)
+        sigma = (.04 * h / 9, .04 * w / circumference_m) if kind == "concrete" else 12
+        ratio = np.clip(lum / np.maximum(gaussian_filter(lum, sigma), 1), 0.8, 1.2)
+        if kind == "concrete":
+            # Close the cropped cylindrical seam over a small sector, retaining the scan grain.
+            for edge in range(8):
+                left, right = ratio[:, edge].copy(), ratio[:, -1-edge].copy()
+                blend = 1-edge/8
+                mean = (left+right)/2
+                ratio[:, edge] = left*(1-blend)+mean*blend
+                ratio[:, -1-edge] = right*(1-blend)+mean*blend
         if not concrete:
             # Corrugation survives a spatial high-pass. Remove its persistent column profile too; a round pole
             # must keep the scan grain without acquiring the source sheet's vertical ribs (close-up review r1).
@@ -30,12 +53,14 @@ def pole_texture(kind):
     else:
         warnings.warn(f"ADR0102 scan missing: {aid}; flat furniture texture fallback", stacklevel=2)
         ratio = np.ones((h, w))
-    rgb = np.repeat((245 * (1 + 0.3 * (ratio - 1)))[..., None], 3, axis=2)
+    # ADR0120: retain concrete scan relief instead of compressing it to nearly white.
+    level, grain = (228, 0.65) if kind == "concrete" else ((245, 1.05) if kind == "footing" else (245, 0.3))
+    rgb = np.repeat((level * (1 + grain * (ratio - 1)))[..., None], 3, axis=2)
     z = (1 - (np.arange(h) + 0.5) / h)[:, None]
     u = (np.arange(w) + 0.5)[None, :] / w
     height = 0.9 if kind == "bollard" else 9.0
     # Salt / road splash at the foot; asymmetric dirt, no all-over random noise.
-    foot = np.clip(1 - z * height / (0.22 if concrete else 0.30), 0, 1)
+    foot = np.clip(1 - z * height / (0.65 if concrete else 0.30), 0, 1)
     foot = foot * (0.65 + 0.35 * np.sin(u * 2 * np.pi + 0.7) ** 2)
     dirt = np.array([133, 126, 109]) if concrete else np.array([157, 112, 77])
     # Galvanised poles get road film, painted steel gets small rust islands at the ground line.
@@ -43,13 +68,50 @@ def pole_texture(kind):
         dirt = np.array([162, 157, 140])
     islands = np.clip((ratio - 0.94) * 8, 0, 1) if not concrete else np.ones((h, w))
     mask = foot * (0.35 + 0.65 * islands)
+    if kind == "concrete":
+        mask *= .5           # translucent road film, avoiding an almost black band around the shaft
+    if kind == "footing":
+        # A shallow concrete cap is not the salt-soaked bottom of a nine-metre pole (review I3).
+        mask *= 0.12
     rgb = rgb * (1 - mask[..., None]) + dirt * mask[..., None]
     if kind in ("grey", "bollard"):
         # One torn, unbranded paper remnant on the rear sector, with no text or invented logo.
         paper = (u > 0.63) & (u < 0.78) & (z * height > 0.63) & (z * height < 0.76)
         rgb[paper] = (211, 207, 184)
+    if kind == "concrete":
+        # Dirt runs below the two steel arm collars; no uniform all-over noise.
+        metres = z * height
+        runoff = np.zeros((h, w))
+        for collar, sector in ((7.6, 0.22), (8.3, 0.73)):
+            below = collar - metres
+            streak = np.exp(-((u-sector) / 0.055) ** 2)
+            streak = streak * np.clip(below / 0.12, 0, 1) * np.clip(1-below / 2.6, 0, 1)
+            runoff = np.maximum(runoff, streak * 0.28)
+        rgb = rgb * (1-runoff[..., None]) + np.array([125, 117, 99]) * runoff[..., None]
     return Image.fromarray(np.clip(rgb, 0, 255).astype(np.uint8), "RGB")
 
 
 def textures():
-    return {f"furniture_{k}": pole_texture(k) for k in ("galv", "grey", "concrete", "bollard")}
+    return {**{f"furniture_{k}": pole_texture(k) for k in ("galv", "grey", "concrete", "bollard", "footing")},
+            "furniture_plinth": plinth_texture()}
+
+
+def plinth_texture():
+    """CC0 scan modulation, mean 0.5 linear. The 1 m grain tile is WORKING_VALUE.
+
+    Lighting is removed from the source; the surface shader applies the existing concrete pigment once.
+    Dirt height/strength belongs to marked board geometry, never to unmarked gates or noise walls.
+    """
+    raw = ROOT / "art-source/world/cc0/_raw/brushed_concrete/brushed_concrete_diff_2k.jpg"
+    if raw.exists():
+        im = np.asarray(Image.open(raw).convert("RGB").resize((256, 256), Image.Resampling.LANCZOS), float)
+        lum = im.mean(axis=2)
+        ratio = np.clip(lum / np.maximum(gaussian_filter(lum, 16), 1), 0.65, 1.35)
+        ratio /= ratio.mean()
+    else:
+        warnings.warn("ADR0120 concrete scan missing; neutral plinth fallback", stacklevel=2)
+        ratio = np.ones((256, 256))
+    linear = np.clip(0.5 * ratio, 0, 1)
+    srgb = np.where(linear <= 0.0031308, linear * 12.92, 1.055 * linear ** (1/2.4) - 0.055)
+    rgb = np.repeat(np.round(srgb * 255).astype(np.uint8)[..., None], 3, axis=2)
+    return Image.fromarray(rgb, "RGB")

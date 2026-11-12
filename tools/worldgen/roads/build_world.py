@@ -41,9 +41,11 @@ from streetscape import export as PR      # noqa: E402
 
 # plot_ground (ADR 0114): lawn / driveway of the house plots - ground like `paved`, but shown with the chunk's LOD0 / LOD1
 # only (like `furniture`) and never a shadow caster
-LAYERS = ("road", "bridge", "markings", "paved", "plot_ground", "buildings", "buildings_low", "furniture", "wires", "collision")
+# plots (ADR 0124): the kit geometry of the house plots (fences, gates, garden plants; one material) - LOD0 / LOD1 like
+# `furniture`, a shadow caster, with a shorter range in the mirror cameras (Game.World.PlotViewCull)
+LAYERS = ("road", "bridge", "markings", "paved", "plot_ground", "buildings", "buildings_low", "furniture", "plots", "wires", "collision")
 NODES = (("road", "road"), ("bridge", "bridge"), ("markings", "markings"), ("paved", "paved"), ("plot_ground", "plot_ground"),
-         ("buildings", "buildings"), ("buildings_low", "buildings_lod1"), ("furniture", "furniture"),
+         ("buildings", "buildings"), ("buildings_low", "buildings_lod1"), ("furniture", "furniture"), ("plots", "plots"),
          ("wires", "wires"), ("collision", "road_collision"))
 
 
@@ -592,7 +594,12 @@ def build(region_id: str, out_root: Path | None = None, verbose=True):
     plot_plan = SS0.plan_plots(w0, region_id)
     log(f"plots planned: {len(plot_plan['plots'])}, kerb drops {len(plot_plan['drops'])}")
     # pass 2: final geometry on the cleaned ground model
-    w = pipeline.build(region_id, hf=hf, side_edit=lambda net: PLT.apply_drops(net, plot_plan["drops"]))
+    # ADR 0124: the kerbs of the house streets are 10 cm (apply_house_kerbs), then lowered at the driveways
+    def _plot_side_edit(net):
+        hk = PLT.apply_house_kerbs(net, plot_plan["plots"])
+        log(f"house-street kerbs {PLT.HOUSE_KERB_M} m: {len(hk)} chains, {round(sum(hk.values()))} m of kerb")
+        return PLT.apply_drops(net, plot_plan["drops"])
+    w = pipeline.build(region_id, hf=hf, side_edit=_plot_side_edit)
     w.plot_plan = plot_plan
     log(f"kerb drops applied: {w.stats.get('side_edit')}")
     w.stats["nmt_replaced_under_decks"] = int(bad.sum())
@@ -927,7 +934,7 @@ def mesh_budget(chunks_meta, inst_by_chunk, props_meta, cams):
     per_chunk = []
     for ch in chunks_meta:
         t = ch["triangles"]
-        stat = sum(t.get(k, 0) for k in ("road", "bridge", "markings", "paved", "plot_ground", "furniture", "wires"))
+        stat = sum(t.get(k, 0) for k in ("road", "bridge", "markings", "paved", "plot_ground", "furniture", "plots", "wires"))
         ci, cj = (int(x) for x in ch["id"].split("_"))
         inst = inst_by_chunk.get((ci, cj), [])
         per_chunk.append({"chunk": ch["id"], "materials": len(ch["materials"]),
@@ -959,7 +966,7 @@ def mesh_budget(chunks_meta, inst_by_chunk, props_meta, cams):
                 lod = next(l for lim, l in pol["terrain"] if d < lim)
                 add("terrain", t.get(f"terrain_lod{lod}", 0))
                 add("roads", sum(t.get(k, 0) for k in ("road", "bridge", "markings", "paved")))
-                add("furniture", (t.get("furniture", 0) + t.get("wires", 0)) if d < pol["furn"] else 0)
+                add("furniture", (t.get("furniture", 0) + t.get("plots", 0) + t.get("wires", 0)) if d < pol["furn"] else 0)
                 add("buildings", t.get("buildings", 0) if d < pol["bld"] else t.get("buildings_lod1", 0))
                 mats |= set(ch["materials"])
                 far_cells = set()

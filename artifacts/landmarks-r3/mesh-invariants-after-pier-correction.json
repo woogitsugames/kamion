@@ -1,0 +1,30 @@
+{
+  "complete": true,
+  "all_non_underdeck_primitives_identical": true,
+  "files_checked": 128,
+  "current_manifest_sha256": "e3714bcb82722cf3e9aba9f9bdb8e9c678e62a92003c8822837f1ca34b90a5a1",
+  "exact_primitives_checked": 7283,
+  "changed_chunk_files": [
+    "1_3/High",
+    "1_3/Low",
+    "1_4/High",
+    "1_4/Low",
+    "2_4/High",
+    "2_4/Low"
+  ],
+  "exclusions": [
+    {
+      "node": "bridge",
+      "material": "bridge_concrete"
+    },
+    {
+      "node": "bridge",
+      "material": "bridge_soffit"
+    },
+    {
+      "node": "bridge",
+      "material": "pier_yellow"
+    }
+  ],
+  "limitation": "Underdeck paint material groups excluded only in bridge node; deck-buffer hashes and collision tests are separate evidence"
+}

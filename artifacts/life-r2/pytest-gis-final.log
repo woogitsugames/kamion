@@ -1,0 +1,35 @@
+........................................................................ [ 12%]
+........................................................................ [ 24%]
+........................................................................ [ 36%]
+........................................................................ [ 49%]
+...............................................x........................ [ 61%]
+........................................................................ [ 73%]
+........................................................................ [ 86%]
+........................................................................ [ 98%]
+.....F....                                                               [100%]
+================================== FAILURES ===================================
+_______________________ test_trailer_detail_and_budget ________________________
+
+    def test_trailer_detail_and_budget():
+        """Review A4: landing gear, mudguards, side markers, pallet box, spare wheel, road film - within the LOD budget."""
+        for kind in ("curtain", "box", "reefer"):
+            l0, l1, col = LP.trailer(kind, "grey")
+            # the detail costs one extra submesh (draw) on LOD0 of box bodies - the road film - and none on LOD1; a curtain
+            # carries no film overlay (ADR 0092: the blended sheet read as a mirror on the dark tarpaulin)
+            assert any(k.startswith("car_dirt_") for k in l0.prims) == (kind != "curtain")
+            assert not any(k.startswith("car_dirt_") for k in l1.prims)
+            known = {"trailer_alu", "trailer_chassis", "trailer_doors", "trailer_strap", "trailer_front", "trailer_front_dark",
+                     "trailer_box_white", "trailer_curtain_grey", "coupling_red", "coupling_yellow", "car_trim", "car_light_head",
+                     "car_light_tail", "reflector_red", "plate_pl", "tyre", "rim", "reefer_unit", "reefer_grille"}
+            assert {k for k in l0.prims if not k.startswith("car_dirt_")} <= known, set(l0.prims) - known
+            assert set(l1.prims) <= known, set(l1.prims) - known
+>           assert _tris(l0) <= 2600 and _tris(l1) <= 260, (kind, _tris(l0), _tris(l1))
+E           AssertionError: ('curtain', 1102, 316)
+E           assert (1102 <= 2600 and 316 <= 260)
+E            +  where 1102 = _tris(<streetscape.props.Mesh object at 0x0000027B333CE840>)
+E            +  and   316 = _tris(<streetscape.props.Mesh object at 0x0000027B36373D70>)
+
+tests\gis\test_yard_wear.py:155: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/gis/test_yard_wear.py::test_trailer_detail_and_budget - Assertio...
+1 failed, 584 passed, 1 xfailed in 619.59s (0:10:19)

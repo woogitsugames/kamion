@@ -20,6 +20,7 @@ namespace Game.Rendering
         public static int? CloudOverride;
         /// <summary>rq_clearcover: clear cloud coverage ablation (null = preset).</summary>
         public static float? ClearCloudCoverOverride;
+        public static bool? HeadlampsOverride;
         /// <summary>rq_haze: false = uniform fog only (null = the tier's).</summary>
         public static bool? HazeOverride;
         /// <summary>rq_grassvar: lawn variation strength 0..1 (null = the preset's).</summary>
@@ -65,9 +66,11 @@ namespace Game.Rendering
             k_CloudSun = Shader.PropertyToID("_KamionCloudSun"), k_CloudTex = Shader.PropertyToID("_KamionCloudTex"),
             k_ClearCloudCover = Shader.PropertyToID("_KamionClearCloudCover"),
             k_ClearSkySaturation = Shader.PropertyToID("_KamionClearSkySaturation"),
+            k_SkyDisplay = Shader.PropertyToID("_KamionSkyDisplay"),
             k_ClearCloudPhoto = Shader.PropertyToID("_KamionClearCloudPhoto"),
             k_ClearCloudTex = Shader.PropertyToID("_KamionClearCloudTex"),
             k_ClearCloudRotation = Shader.PropertyToID("_KamionClearCloudRotation"),
+            k_ClearCloudSourceLimits = Shader.PropertyToID("_KamionClearCloudSourceLimits"),
             k_LeafAmb = Shader.PropertyToID("_KamionLeafAmbient");
 
         /// <summary>Ground haze: extinction at height y = beta (1 + a exp(-(y - y0) / H)). Mirror of KamionFogTau.</summary>
@@ -80,12 +83,32 @@ namespace Game.Rendering
             return beta * Mathf.Max(viewDepth, 0f) * (1f + a * m);
         }
 
+        /// <summary>Same presentation grade as the sky shader, also applied to fog so the horizon keeps one colour.
+        /// This does not change the model's illuminance, SH, sun intensity or scene exposure.</summary>
+        public static Color DisplaySkyFog(LightingPreset p, Color physical)
+        {
+            float gain = SkyDisplayGain(p), desaturation = Mathf.Clamp01(p.skyDisplayDesaturation);
+            if (gain == 1f && desaturation == 0f) return physical;
+            float y = physical.r*0.2126f+physical.g*0.7152f+physical.b*0.0722f;
+            var display = Color.Lerp(physical, new Color(y, y, y, physical.a), desaturation)*gain;
+            display.a = physical.a;
+            return display;
+        }
+
+        // Zero is reserved for legacy serialized assets that predate this optional field.
+        static float SkyDisplayGain(LightingPreset p) => p.skyDisplayGain > 0f ? Mathf.Clamp(p.skyDisplayGain, 0.001f, 1f) : 1f;
+
         public static void Push(EnvironmentLighting env, Color fogExposed)
         {
             var p = env.Active;
-            if (p == null) return;
+            if (p == null) { KamionHeadlamps.Reset(); return; }
+            Shader.SetGlobalFloat("_KamionDimColourDesaturation",Mathf.Clamp01(p.dimColourDesaturation));
             bool hasTier = QualityProfileApplier.HasCurrent;
             var t = hasTier ? QualityProfileApplier.Current : default;
+            KamionHeadlamps.Push(env.Model, HeadlampsOverride ?? p.projectedHeadlamps, p.projectedHeadlampPeakCd, env.gameObject.scene);
+            float skyGain = SkyDisplayGain(p), skyDesat = Mathf.Clamp01(p.skyDisplayDesaturation);
+            Shader.SetGlobalVector(k_SkyDisplay, new Vector4(skyGain, skyDesat,
+                skyGain < 1f || skyDesat > 0f ? 1f : 0f, 0f));
 
             // ---- haze
             bool layer = HazeOverride ?? !(hasTier && t.groundHazeOff);
@@ -98,7 +121,8 @@ namespace Game.Rendering
             // r11: diffuse sky light transmitted through the leaves (Kamion/Vegetation; per vertex, no fragment cost)
             float leaf = Mathf.Clamp01(LeafAmbientOverride ?? 1f);
             Shader.SetGlobalVector(k_LeafAmb, new Vector4(leaf, leaf * LeafSheen, 0f, 0f));
-            Shader.SetGlobalVector(k_HazeColor, new Vector4(Mathf.Min(fogExposed.r, 1f), Mathf.Min(fogExposed.g, 1f), Mathf.Min(fogExposed.b, 1f), 1f));
+            var displayFog = DisplaySkyFog(p, fogExposed);
+            Shader.SetGlobalVector(k_HazeColor, new Vector4(Mathf.Min(displayFog.r, 1f), Mathf.Min(displayFog.g, 1f), Mathf.Min(displayFog.b, 1f), 1f));
 
             // ---- tone toe in the shaders: only where no grading LUT runs
             ResolveLook(p, out float toe, out float toeP, out float pivot);
@@ -117,6 +141,9 @@ namespace Game.Rendering
             Shader.SetGlobalFloat(k_ClearSkySaturation, Mathf.Clamp(p.clearSkySaturation, 1f, 4f));
             bool photo = clearCover > 0f && PhotographicClouds.TryGet(out _, out _);
             Shader.SetGlobalFloat(k_ClearCloudPhoto, photo ? 1f : 0f);
+            float sourceMinElevation = Mathf.Clamp(p.clearCloudSourceMinElevationDeg, 0f, 5f);
+            Shader.SetGlobalVector(k_ClearCloudSourceLimits,
+                new Vector4(0.5f + sourceMinElevation/180f, sourceMinElevation > 0f ? 1f : 0f, 0f, 0f));
             if (photo && PhotographicClouds.TryGet(out var texture, out var sourceSun))
             {
                 Shader.SetGlobalTexture(k_ClearCloudTex, texture);

@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ebb5f2c9cd8fb448904925716220ba2, type: 3}
+  m_Name: LP_Night
+  m_EditorClassIdentifier: Game.Rendering::Game.Rendering.LightingPreset
+  sunElevationDeg: -8
+  sunAzimuthDeg: 300
+  turbidity: 4
+  overcast: 0.2
+  visibilityKm: 12
+  groundAlbedo: {r: 0.15, g: 0.155, b: 0.135, a: 1}
+  ambientSkySaturation: 0.55
+  lowSunAmbientCool: 0.8
+  overcastDirectional: 0
+  overcastSunLeak: 0
+  overcastCctK: 0
+  cloudContrast: 0
+  clearCloudCover: 0
+  highSunShadowFilter: 0
+  clearSkySaturation: 1
+  dimColourDesaturation: 0.65
+  projectedHeadlamps: 0
+  projectedHeadlampPeakCd: 20000
+  skyDisplayGain: 0.125
+  skyDisplayDesaturation: 0.85
+  cloudScale: 0.16
+  cloudWind: {x: 0.0035, y: 0.0015}
+  hazeGroundFactor: 0
+  hazeScaleHeightM: 60
+  wetness: 0
+  puddles: 0.3
+  grassVariation: 1
+  autoExposure: 1
+  ev100: 15
+  exposureCompensation: -3
+  lookSaturation: -3
+  whiteBalanceAdaptation: 0
+  lookBlackLevel: 0.015
+  lookWhiteClip: 0.7
+  lookHighlightDesaturation: 0.4
+  lookToe: 0
+  lookToeP: 0.12
+  lookTonePivot: 0.3

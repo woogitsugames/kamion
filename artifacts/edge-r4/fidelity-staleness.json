@@ -1,0 +1,20 @@
+{
+  "count": 2,
+  "report_sha256": "80637C7CCD9C3EE0E13A0342E6A7AAC0C233135F85856D2719E88DA5D0A3DBC4",
+  "stale_inputs": [
+    {
+      "expected": "bab8ec77f157bb8f478a5faa16ead67e02ab15578d36ed41b81f22a2979831f7",
+      "actual": "08f1397f057e32536ed7df0617f157b03696c8fc467d5c4aef01fde4efe5adf1",
+      "unchanged_from_round_base": true,
+      "path": "Data/Regions/bialystok-industrial-c/overrides.yaml"
+    },
+    {
+      "expected": "cd44e9f6ef4d89bc4cb323dbf1dfe269d1812422761c6f0a323e2c58080faa04",
+      "actual": "6f0dd16de7b92212812ddc347c356c10dc48485a6735b51f3ad0eda49127fd72",
+      "unchanged_from_round_base": true,
+      "path": "tools/worldgen/roads/meshing.py"
+    }
+  ],
+  "report": "Data/Regions/bialystok-industrial-c/generated/fidelity_qa.json",
+  "note": "Read-only source audit; actual test failure is not inferred from this alone."
+}

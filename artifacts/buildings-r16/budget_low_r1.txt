@@ -1,0 +1,9 @@
+== artifacts/buildings-r16/r1/Low-overcast vs artifacts/buildings-r16/base/Low-overcast: 67 cameras
+  MeshRenderer draws             18309 ->   18303 (-6); worst: g3b-eye-s1482 287->289 (+2), r10_block_2 383->385 (+2), r10_block_4 353->355 (+2), fire-station-route 212->213 (+1)
+  shadow draws (MeshRenderer)     4674 ->    4642 (-32); worst: putry-above 0->1 (+1), biezenstwa-above 49->49 (+0), cab-dash 105->105 (+0), cab-driver 105->105 (+0)
+  instanced draws                19236 ->   19230 (-6); worst: r10_block_3 312->314 (+2), cab-dash 447->448 (+1), cab-materials 183->184 (+1), cab-mirrors-right 303->304 (+1)
+  instances                      18616 ->   18572 (-44); worst: dk8-dk19-exit 928->941 (+13), edge-west 375->381 (+6), r10_block_5 392->397 (+5), route-onramp-andersa 962->965 (+3)
+  mesh tris k                    17519 ->   17511 (-8); worst: r10_fence_2 309->311 (+2), r10_block_1 337->338 (+1), r10_block_2 403->404 (+1), r10_block_4 398->399 (+1)
+  instanced tris k                1979 ->    1977 (-2); worst: r10_house_1 36->37 (+1), biezenstwa-above 43->43 (+0), cab-dash 32->32 (+0), cab-driver 35->35 (+0)
+  MeshRenderer + instanced     sum -12; worst: r10_block_3 +3, r10_block_4 +3, g3b-eye-s1482 +2, cab-dash +1, cab-materials +1, cab-mirrors-right +1
+                               best: edge-north -9, r10_house_1 -4, r10_house_2 -4

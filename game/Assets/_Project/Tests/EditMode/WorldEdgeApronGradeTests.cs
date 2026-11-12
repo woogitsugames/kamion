@@ -40,6 +40,58 @@ namespace Game.Tests.EditMode
 
         [TestCase(0.025f)]
         [TestCase(-0.025f)]
+        public void CornerFan_DoesNotBiasUniformPerimeterSmoothing(float slope)
+        {
+            var root = new GameObject("edge_corner_fixture");
+            root.transform.position = new Vector3(100000f, 0f, 100000f);
+            var terrain = new Mesh();
+            var apron = new Mesh();
+            try
+            {
+                const float half = 1024f, baseY = 140f;
+                terrain.vertices = new[] {
+                    new Vector3(-half, baseY-slope*half, -half),
+                    new Vector3(-half, baseY+slope*half, half),
+                    new Vector3(half, baseY+slope*half, half),
+                    new Vector3(half, baseY-slope*half, -half)
+                };
+                terrain.triangles = new[] { 0, 1, 2, 0, 2, 3 };
+                terrain.RecalculateBounds();
+                var source = new GameObject("col_terrain");
+                source.transform.SetParent(root.transform, false);
+                source.AddComponent<MeshCollider>().sharedMesh = terrain;
+                Physics.SyncTransforms();
+                var type = Type.GetType("Game.World.Import.WorldEdgeBuilder, Game.World.Import.Editor", true);
+                var build = type.GetMethod("BuildApron", BindingFlags.NonPublic | BindingFlags.Static);
+                Assert.NotNull(build);
+                build.Invoke(null, new object[] { apron, root.transform,
+                    new Vector2(-half, -half), new Vector2(half, half),
+                    new List<(Vector3 start, Vector2 dir, float width)>() });
+
+                var vertices = apron.vertices;
+                int index = Array.FindIndex(vertices,
+                    p => Mathf.Abs(p.x + 1008f) < 0.01f && Mathf.Abs(p.z - 1304f) < 0.01f);
+                Assert.GreaterOrEqual(index, 0, "diagnostic apron vertex must exist");
+                // Independent uniform 16 m perimeter: 8 north/corner samples at
+                // N=1023.25 plus west samples 1008, 992, 976, 960, 944 (inside offset 0.75 m).
+                float smooth = baseY + slope * (13066f / 13f);
+                float t = (280f - 220f) / 1400f;
+                float blend = t * t * (3f - 2f * t);
+                float expected = Mathf.Lerp(smooth - 0.15f,
+                    smooth - 0.25f + 0.08f * (baseY - smooth), blend);
+                Assert.AreEqual(expected, vertices[index].y, 0.01f,
+                    $"uniform perimeter at NW; corner fan copies must not bias the source profile (slope {slope})");
+            }
+            finally
+            {
+                Object.DestroyImmediate(root);
+                Object.DestroyImmediate(terrain);
+                Object.DestroyImmediate(apron);
+            }
+        }
+
+        [TestCase(0.025f)]
+        [TestCase(-0.025f)]
         public void ObliqueContinuation_StaysAboveApron_OnTransverseTerrainSlope(float slope)
         {
             var root = new GameObject("edge_grade_fixture");

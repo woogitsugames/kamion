@@ -1,0 +1,20 @@
+{
+  "base": "14ccbaf1",
+  "stale_inputs": [
+    {
+      "path": "Data/Regions/bialystok-industrial-c/overrides.yaml",
+      "report_sha256": "bab8ec77f157bb8f478a5faa16ead67e02ab15578d36ed41b81f22a2979831f7",
+      "current_sha256": "08f1397f057e32536ed7df0617f157b03696c8fc467d5c4aef01fde4efe5adf1",
+      "unchanged_since_round_base": true,
+      "canonical_bytes_equal": true
+    },
+    {
+      "path": "tools/worldgen/roads/meshing.py",
+      "report_sha256": "cd44e9f6ef4d89bc4cb323dbf1dfe269d1812422761c6f0a323e2c58080faa04",
+      "current_sha256": "6f0dd16de7b92212812ddc347c356c10dc48485a6735b51f3ad0eda49127fd72",
+      "unchanged_since_round_base": true,
+      "canonical_bytes_equal": true
+    }
+  ],
+  "action": "No road source or fidelity report modified"
+}

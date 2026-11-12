@@ -1,0 +1,14 @@
+[
+  {
+    "ProcessId": 20552,
+    "ParentProcessId": 56120,
+    "Name": "pwsh.exe",
+    "CommandLine": "\"C:\\Program Files\\WindowsApps\\OpenAI.CodexPrimaryRuntime.v26-1104-2876-0_26.1104.2876.0_x64__3k8sg7r9htsxt\\dependencies\\native\\powershell\\pwsh.exe\" -NoProfile -ExecutionPolicy Bypass -File artifacts/cab-r3/heavy-0112.ps1 -Job Fidelity -Log artifacts/cab-r3/fidelity-r3.log"
+  },
+  {
+    "ProcessId": 54700,
+    "ParentProcessId": 20552,
+    "Name": "pwsh.exe",
+    "CommandLine": "\"C:\\Program Files\\WindowsApps\\OpenAI.CodexPrimaryRuntime.v26-1104-2876-0_26.1104.2876.0_x64__3k8sg7r9htsxt\\dependencies\\native\\powershell\\pwsh.exe\" C:/Users/matma/Documents/Claude/kamion/scripts/unity-slot.ps1 -Acquire -Pool heavy -Owner gpt-cab-r3 -PollSeconds 5 -StaleHours 1000000"
+  }
+]

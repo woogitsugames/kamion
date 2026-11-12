@@ -1,0 +1,42 @@
+acquired slot gpt-sbs (1/4)
+unity: C:\Program Files\Unity\Hub\Editor\6000.3.28f1\Editor\Unity.exe -batchmode -projectPath C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-sbs\game -logFile C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-sbs\artifacts\logs\visual-qa-WorldC-20261112-094711.log -buildTarget Android -quit -executeMethod Game.Editor.VisualQA.VisualQaRunner.RenderControlCameras -qaScene WorldC -qaWidth 1280 -qaHeight 720 -qaTier Low -qaOutput C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-sbs\artifacts\sbs-r3\pose-refinement1\renders\1280x720 -qaLighting overcast -qaCameras sbs-refine1-275528677534382-00,sbs-refine1-275528677534382-01,sbs-refine1-275528677534382-02,sbs-refine1-275528677534382-03,sbs-refine1-275528677534382-04,sbs-refine1-275528677534382-05,sbs-refine1-275528677534382-06,sbs-refine1-275528677534382-07,sbs-refine1-275528677534382-08,sbs-refine1-275528677534382-09,sbs-refine1-275528677534382-10,sbs-refine1-275528677534382-11,sbs-refine1-837235577143499-12,sbs-refine1-837235577143499-13,sbs-refine1-837235577143499-14,sbs-refine1-837235577143499-15,sbs-refine1-837235577143499-16,sbs-refine1-837235577143499-17 -qaGate3 C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-sbs\artifacts\sbs-r3\pose-refinement1\cameras.json
+VBCSCompilerServerWatchdog: watching VBCSCompiler (PID 8132)
+shutdown crash NOT accepted: signature=False freshPng=18 expected=18
+WARNING: Unity exited with code -1073741819 during mono cleanup (abort_threads, no crash stack) AFTER writing all 18 frames; accepted (ADR 0083).
+VISUALQA_RESULT: OK rendered=18 dir=C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-sbs\artifacts\sbs-r3\pose-refinement1\renders\1280x720
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-sbs\artifacts\sbs-r3\pose-refinement1\renders\1280x720\sbs-refine1-275528677534382-00.png  1 001 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-sbs\artifacts\sbs-r3\pose-refinement1\renders\1280x720\sbs-refine1-275528677534382-01.png  1 007 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-sbs\artifacts\sbs-r3\pose-refinement1\renders\1280x720\sbs-refine1-275528677534382-02.png  987 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-sbs\artifacts\sbs-r3\pose-refinement1\renders\1280x720\sbs-refine1-275528677534382-03.png  993 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-sbs\artifacts\sbs-r3\pose-refinement1\renders\1280x720\sbs-refine1-275528677534382-04.png  993 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-sbs\artifacts\sbs-r3\pose-refinement1\renders\1280x720\sbs-refine1-275528677534382-05.png  999 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-sbs\artifacts\sbs-r3\pose-refinement1\renders\1280x720\sbs-refine1-275528677534382-06.png  976 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-sbs\artifacts\sbs-r3\pose-refinement1\renders\1280x720\sbs-refine1-275528677534382-07.png  985 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-sbs\artifacts\sbs-r3\pose-refinement1\renders\1280x720\sbs-refine1-275528677534382-08.png  988 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-sbs\artifacts\sbs-r3\pose-refinement1\renders\1280x720\sbs-refine1-275528677534382-09.png  995 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-sbs\artifacts\sbs-r3\pose-refinement1\renders\1280x720\sbs-refine1-275528677534382-10.png  972 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-sbs\artifacts\sbs-r3\pose-refinement1\renders\1280x720\sbs-refine1-275528677534382-11.png  979 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-sbs\artifacts\sbs-r3\pose-refinement1\renders\1280x720\sbs-refine1-837235577143499-12.png  937 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-sbs\artifacts\sbs-r3\pose-refinement1\renders\1280x720\sbs-refine1-837235577143499-13.png  924 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-sbs\artifacts\sbs-r3\pose-refinement1\renders\1280x720\sbs-refine1-837235577143499-14.png  934 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-sbs\artifacts\sbs-r3\pose-refinement1\renders\1280x720\sbs-refine1-837235577143499-15.png  941 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-sbs\artifacts\sbs-r3\pose-refinement1\renders\1280x720\sbs-refine1-837235577143499-16.png  929 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-sbs\artifacts\sbs-r3\pose-refinement1\renders\1280x720\sbs-refine1-837235577143499-17.png  938 KB
+log: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-sbs\artifacts\logs\visual-qa-WorldC-20261112-094711.log
+released gpt-sbs
+acquired slot gpt-sbs (2/4)
+unity: C:\Program Files\Unity\Hub\Editor\6000.3.28f1\Editor\Unity.exe -batchmode -projectPath C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-sbs\game -logFile C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-sbs\artifacts\logs\visual-qa-WorldC-20261112-094737.log -buildTarget Android -quit -executeMethod Game.Editor.VisualQA.VisualQaRunner.RenderControlCameras -qaScene WorldC -qaWidth 1280 -qaHeight 960 -qaTier Low -qaOutput C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-sbs\artifacts\sbs-r3\pose-refinement1\renders\1280x960 -qaLighting overcast -qaCameras sbs-refine1-3281350541967811-18,sbs-refine1-3281350541967811-19,sbs-refine1-3281350541967811-21,sbs-refine1-3281350541967811-22,sbs-refine1-297817221966185-24,sbs-refine1-297817221966185-25,sbs-refine1-297817221966185-26,sbs-refine1-297817221966185-27,sbs-refine1-297817221966185-28,sbs-refine1-297817221966185-29 -qaGate3 C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-sbs\artifacts\sbs-r3\pose-refinement1\cameras.json
+VBCSCompilerServerWatchdog: watching VBCSCompiler (PID 65720)
+VISUALQA_RESULT: OK rendered=10 dir=C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-sbs\artifacts\sbs-r3\pose-refinement1\renders\1280x960
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-sbs\artifacts\sbs-r3\pose-refinement1\renders\1280x960\sbs-refine1-297817221966185-24.png  1 064 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-sbs\artifacts\sbs-r3\pose-refinement1\renders\1280x960\sbs-refine1-297817221966185-25.png  1 060 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-sbs\artifacts\sbs-r3\pose-refinement1\renders\1280x960\sbs-refine1-297817221966185-26.png  1 066 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-sbs\artifacts\sbs-r3\pose-refinement1\renders\1280x960\sbs-refine1-297817221966185-27.png  1 065 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-sbs\artifacts\sbs-r3\pose-refinement1\renders\1280x960\sbs-refine1-297817221966185-28.png  1 078 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-sbs\artifacts\sbs-r3\pose-refinement1\renders\1280x960\sbs-refine1-297817221966185-29.png  1 078 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-sbs\artifacts\sbs-r3\pose-refinement1\renders\1280x960\sbs-refine1-3281350541967811-18.png  1 044 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-sbs\artifacts\sbs-r3\pose-refinement1\renders\1280x960\sbs-refine1-3281350541967811-19.png  1 046 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-sbs\artifacts\sbs-r3\pose-refinement1\renders\1280x960\sbs-refine1-3281350541967811-21.png  992 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-sbs\artifacts\sbs-r3\pose-refinement1\renders\1280x960\sbs-refine1-3281350541967811-22.png  971 KB
+log: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-sbs\artifacts\logs\visual-qa-WorldC-20261112-094737.log
+released gpt-sbs

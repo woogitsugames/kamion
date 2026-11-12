@@ -34,6 +34,13 @@ namespace TruckSim.Audio
         public PerspectivePair tyreSqueal, retarder, compressor, ambientBed, forklift, crowCaw, indicatorTick, indicatorTock;
         public AudioClip birdSparrow, birdTit;
 
+        [Header("ElevenLabs layers (ADR 0137; game/Assets/_Project/Audio/ElevenLabs/el_manifest.json)")]
+        public EngineSoundBank elExteriorEngine, elCabEngine, elExteriorEngineBrake, elCabEngineBrake;
+        public PerspectivePair elEngineStart, elEngineStop, elIdleClatter, elRetarder, elTurboWastegate;
+
+        /// <summary>The ElevenLabs engine set is imported (both perspectives of the rpm x load grid).</summary>
+        public bool HasElevenLabs => elExteriorEngine != null && elCabEngine != null;
+
         [Tooltip("manifest.json generator line and clip count, for the log.")]
         public string sourceInfo;
 

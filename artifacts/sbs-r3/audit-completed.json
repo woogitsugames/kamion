@@ -1,0 +1,49 @@
+{
+  "verified_at": "2026-11-12T10:42:00.9153215+01:00",
+  "audit_exit_code": 0,
+  "render_head": "62d45b92a59ba78f7e3ec44b65a014baa3bf6b00",
+  "main_base": "14ccbaf12578fddd8f6e95658067ea0bd7c9cca0",
+  "verified_glb_files": {
+    "High": 64,
+    "Low": 64
+  },
+  "counter_rows": 168,
+  "states": {
+    "Low-overcast": {
+      "renders": 42,
+      "gate_sheets": 25,
+      "rejected_poses": 17,
+      "overview_pages": 0
+    },
+    "Low-clear": {
+      "renders": 42,
+      "gate_sheets": 25,
+      "rejected_poses": 17,
+      "overview_pages": 0
+    },
+    "High-overcast": {
+      "renders": 42,
+      "gate_sheets": 25,
+      "rejected_poses": 17,
+      "overview_pages": 0
+    },
+    "High-clear": {
+      "renders": 42,
+      "gate_sheets": 25,
+      "rejected_poses": 17,
+      "overview_pages": 0
+    }
+  },
+  "current_review": {
+    "path": "recognition-r3-baseline.json",
+    "sha256": "48c04adaf30092a409edbf165e62ae8f79be84835adebc9ffaf14227d5542628",
+    "counts": {
+      "PARTIAL": 11,
+      "NOT_RECOGNISABLE": 1,
+      "RECOGNISABLE": 13
+    },
+    "gate_result": "FAIL"
+  },
+  "low_draw_increase_rows": 38,
+  "low_triangle_over_2percent_rows": 22
+}

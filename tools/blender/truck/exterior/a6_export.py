@@ -110,7 +110,7 @@ LOD2_DROP = LOD1_DROP + ("coil", "damper_", "brake_chamber", "caliper_", "tie_ro
                          "fog_bowl", "battery_lid", "adblue_cap", "diff", "front_axle", "axle_rear", "bellow_",
                          "front_mudflap_clamp", "lamp_gasket", "rear_joint", "air_tank",
                          "fifth_handle", "fifth_lock", "fifth_bracket", "fifth_mount", "plate_holder",
-                         "marker_front_led", "catwalk_grab", "coupling_panel", "_hubcap", "_hub",
+                         "marker_front_led", "catwalk_grab", "coupling_panel",
                          "exhaust_flex", "exhaust_clamp", "exhaust_stay_arm", "proj_bezel", "pos_gasket",
                          "marker_front_gasket", "side_repeater_base", "lane_dash", "proj_shroud", "hb_led", "roof_hatch_glass",
                          "skirt_swage", "skirt_vent", "skirt_flange", "skirt_gap")
@@ -496,7 +496,10 @@ def to_game_piece(o, gm):
     colour 'Col' (glass tint; white elsewhere), face attribute 'prio' (texel priority)."""
     me = o.data
     names = [m.name if m else "" for m in me.materials]
-    keep_uv = [tuple(d.uv) for d in me.uv_layers[0].data] if o.name.startswith("MIRROR_") else None
+    cylindrical = is_round_wheel_piece(o)
+    keep_uv = [tuple(d.uv) for d in me.uv_layers[0].data] if o.name.startswith("MIRROR_") or cylindrical else None
+    if cylindrical:
+        o["cylindrical_atlas"] = True
     for uvl in list(me.uv_layers):
         me.uv_layers.remove(uvl)
     me.uv_layers.new(name="Atlas")
@@ -785,6 +788,53 @@ def widen_thin_islands(objs, mname):
     print(f"  thin islands widened: {n} ({mname})")
 
 
+def normalize_cylindrical_atlas_density(objs, mname):
+    """Keep lathe UV continuous and match the surrounding slot's pre-pack texel density."""
+    def areas(o):
+        me = o.data
+        mi = [m.name for m in me.materials].index(mname)
+        uv = me.uv_layers["Atlas"].data
+        physical, mapped = 0.0, 0.0
+        for face in me.polygons:
+            if face.material_index != mi:
+                continue
+            physical += face.area
+            q = [uv[i].uv for i in face.loop_indices]
+            mapped += abs(sum(a.x*b.y-b.x*a.y for a,b in zip(q,q[1:]+q[:1]))) * 0.5
+        return physical, mapped
+
+    body = [areas(o) for o in objs if not o.get("cylindrical_atlas", False)]
+    physical = sum(a for a,b in body)
+    target = sum(b for a,b in body)/physical if physical > 1e-10 else 1.0
+    for o in objs:
+        if not o.get("cylindrical_atlas", False):
+            continue
+        me = o.data
+        uv = me.uv_layers["Atlas"].data
+        # The original lathe stores angle and normalized profile arc length. Recover their
+        # metric aspect ratio before uniform density matching; no new atlas or resolution.
+        metric_u, metric_v = 0.0, 0.0
+        for face in me.polygons:
+            loops = list(face.loop_indices)
+            for a,b in zip(loops,loops[1:]+loops[:1]):
+                duv = uv[b].uv-uv[a].uv
+                distance = (me.vertices[me.loops[b].vertex_index].co-me.vertices[me.loops[a].vertex_index].co).length
+                if abs(duv.y) < 1e-6 and abs(duv.x) > 1e-8:
+                    metric_u = max(metric_u,distance/abs(duv.x))
+                if abs(duv.x) < 1e-6 and abs(duv.y) > 1e-8:
+                    metric_v = max(metric_v,distance/abs(duv.y))
+        if metric_u <= 0 or metric_v <= 0:
+            raise RuntimeError("Missing parametric lathe UV metric: "+o.name)
+        for loop in uv:
+            loop.uv = (loop.uv.x*metric_u,loop.uv.y*metric_v)
+        real, mapped = areas(o)
+        scale = math.sqrt(target*real/mapped) if mapped > 1e-14 else 0
+        if scale <= 0:
+            raise RuntimeError("Invalid cylindrical atlas area: "+o.name)
+        for loop in uv:
+            loop.uv *= scale
+
+
 def unwrap_atlases(pieces):
     t0 = time.time()
     for slot in BAKED:
@@ -795,16 +845,18 @@ def unwrap_atlases(pieces):
         for o in objs:
             o.data.uv_layers.active = o.data.uv_layers["Atlas"]
         select(objs)
-        bpy.ops.object.mode_set(mode="EDIT")
-        for o in objs:
-            bm = bmesh.from_edit_mesh(o.data)
-            mi = [m.name for m in o.data.materials].index(mname)
-            for f in bm.faces:
-                f.select = f.material_index == mi
-            bmesh.update_edit_mesh(o.data)
-        bpy.ops.uv.smart_project(angle_limit=math.radians(62), island_margin=0.0, area_weight=0.0,
-                                 correct_aspect=True, scale_to_bounds=False)
-        bpy.ops.object.mode_set(mode="OBJECT")
+        if any(not o.get("cylindrical_atlas", False) for o in objs):
+            bpy.ops.object.mode_set(mode="EDIT")
+            for o in objs:
+                bm = bmesh.from_edit_mesh(o.data)
+                mi = [m.name for m in o.data.materials].index(mname)
+                for f in bm.faces:
+                    f.select = f.material_index == mi and not o.get("cylindrical_atlas", False)
+                bmesh.update_edit_mesh(o.data)
+            bpy.ops.uv.smart_project(angle_limit=math.radians(62), island_margin=0.0, area_weight=0.0,
+                                     correct_aspect=True, scale_to_bounds=False)
+            bpy.ops.object.mode_set(mode="OBJECT")
+        normalize_cylindrical_atlas_density(objs,mname)
         # texel priority: scale islands about their centre (interior skin, chassis underside, inner duals smaller)
         for o in objs:
             me = o.data
@@ -1257,6 +1309,10 @@ NO_DECIMATE = ("sill_clad_", "door_skirt_clad_", "grille_bar_endcap", "badge_tra
 NO_DECIMATE_FAR = ("grille_bar_mask",)
 ROUND_KEYS = ("_tyre", "_rim")
 ROUND_SEGMENTS = {2: 24, 3: 16}
+TRACTOR_FRONT_DISC_LOW_MIN_RATIO = 0.35   # WORKING_VALUES r3, validated against the unchanged global targets
+TRAILER_DISC_LOW_MIN_RATIO = 0.25
+TRAILER_TYRE_LOW_MIN_RATIO = 0.06          # preserve approximately the v2 tyre budget while improving the disc
+TRAILER_RIM_LOW_MIN_RATIO = 0.10
 
 
 def is_round_wheel_piece(o):
@@ -1325,7 +1381,42 @@ def reduce_round(o, target_seg, profile_tol=0.004, tyre_tol=0.02):
             dp(i0, bi)
             dp(bi, i1)
     dp(0, len(pts) - 1)
+    # Atlas islands are a separate constraint from geometric chord error. A coarse cell whose
+    # corners come from different islands interpolates across unrelated atlas content (r3:
+    # WHEEL_FL_LOD2 had 47 triangles spanning > 0.25 UV, versus zero at LOD0/1).
+    # Keep island boundaries on both grid axes; diagonal cuts keep their original cell.
+    atlas = bm.loops.layers.uv.get("Atlas")
+    if atlas is None:
+        bm.free()
+        return nseg, nseg  # no texture contract to preserve: leave the original piece intact
+    parent = {f: f for f in bm.faces}
+
+    def chart(f):
+        while parent[f] != f:
+            parent[f] = parent[parent[f]]
+            f = parent[f]
+        return f
+
+    cuts = set(range(0, nseg, k))
+    for edge in bm.edges:
+        if len(edge.link_faces) != 2:
+            continue
+        a, b = edge.link_faces
+        ua = {lp.vert: lp[atlas].uv.copy() for lp in a.loops}
+        ub = {lp.vert: lp[atlas].uv.copy() for lp in b.loops}
+        seam = a.material_index != b.material_index or any(
+            (ua[v] - ub[v]).length_squared > 1e-10 for v in edge.verts)
+        if not seam:
+            parent[chart(b)] = chart(a)
+            continue
+        ec = {col[v] for v in edge.verts}
+        er = {ring[v] for v in edge.verts}
+        if len(ec) == 1 or len(er) != 1:
+            cuts.update(ec)
+        if len(er) == 1 or len(ec) != 1:
+            keep.update(er)
     rings = sorted(keep)
+    columns = sorted(cuts)
     cells, corner = {}, {}
     for f in bm.faces:
         cs, rs = {col[v] for v in f.verts}, {ring[v] for v in f.verts}
@@ -1339,18 +1430,20 @@ def reduce_round(o, target_seg, profile_tol=0.004, tyre_tol=0.02):
         for lp in f.loops:
             corner[(ci, min(rs), col[lp.vert], ring[lp.vert])] = lp
     kill, made = set(), 0
-    for c0 in range(0, nseg, k):
-        c1 = (c0 + k) % nseg
-        cl = (c0 + k - 1) % nseg
+    for c0, c1 in zip(columns, columns[1:] + columns[:1]):
+        width = (c1 - c0) % nseg
+        cl = (c1 - 1) % nseg
         for r0, r1 in zip(rings, rings[1:]):
-            block = [(c % nseg, r) for c in range(c0, c0 + k) for r in range(r0, r1)]
+            block = [(c % nseg, r) for c in range(c0, c0 + width) for r in range(r0, r1)]
             present = [cells[b] for b in block if b in cells]
-            if not present or (k == 1 and r1 == r0 + 1):
+            if not present or (width == 1 and r1 == r0 + 1):
                 continue
             lps = [corner.get((c0, r0, c0, r0)), corner.get((cl, r0, c1, r0)),
                    corner.get((cl, r1 - 1, c1, r1)), corner.get((c0, r1 - 1, c0, r1))]
             if any(lp is None for lp in lps):
                 continue                      # corner culled: the LOD0 cells of this block stay
+            if len({chart(lp.face) for lp in lps}) != 1:
+                continue                      # disconnected atlas charts must never be bridged
             src = lps[0].face
             try:
                 nf = bm.faces.new([lp.vert for lp in lps], src)
@@ -1372,7 +1465,7 @@ def reduce_round(o, target_seg, profile_tol=0.004, tyre_tol=0.02):
     bm.free()
     o.data.update()
     o.data.set_sharp_from_angle(angle=math.radians(60 if is_tyre else 45))
-    return nseg, nseg // k
+    return nseg, len(columns)
 
 
 # r7c (review r7 N-1: "the front falls apart on Low"): pieces that are surface-following GRIDS are not collapsed. The
@@ -1579,7 +1672,7 @@ def reduce_grid(o, kind, tol_m, open_top=0.0):
     return ncol, len(kc)
 
 
-def decimate_pieces(pieces, target, floor_tris=40, lights_min=0.5, round_seg=0, keep=(), grid_lod=0):
+def decimate_pieces(pieces, target, floor_tris=40, lights_min=0.5, round_seg=0, keep=(), grid_lod=0, keep_wheel_centres=False):
     """Area-weighted budget: each piece wants k * area^0.6 triangles (clamped to [floor, own count]); k is bisected
     on the evaluated (collapsed) meshes until the total meets the target. A uniform global ratio (A6 wip) crushed
     the dense grille / honeycomb pieces into black triangles at LOD2-3 while big smooth panels kept spare tris.
@@ -1611,6 +1704,22 @@ def decimate_pieces(pieces, target, floor_tris=40, lights_min=0.5, round_seg=0, 
         # r6b: the piece floor (MIN_RATIO) applies on its own. It used to count only when it exceeded lights_min, so at
         # LOD1 (lights_min 0.5 > 0.30) the door shells had no floor at all and collapsed to 0.2
         mr = next((m for key, m in MIN_RATIO.items() if key in o.name), 0.0)
+        # The annular disc has a real centre opening. Keep the axle cover instead of dropping it
+        # and exposing the road through the wheel. Working geometry floors, budget still global.
+        if (round_seg or keep_wheel_centres) and o.name.startswith("wheel_"):
+            if "_hubcap" in o.name:
+                mr = max(mr, 0.25)
+            elif "_hub" in o.name:
+                mr = max(mr, 0.20)
+            elif "_disc" in o.name:
+                if keep_wheel_centres:
+                    mr = max(mr, TRAILER_DISC_LOW_MIN_RATIO)
+                elif o.name.startswith(("wheel_FL_disc", "wheel_FR_disc")):
+                    mr = max(mr, TRACTOR_FRONT_DISC_LOW_MIN_RATIO)
+            elif keep_wheel_centres and "_tyre" in o.name:
+                mr = max(mr, TRAILER_TYRE_LOW_MIN_RATIO)
+            elif keep_wheel_centres and "_rim" in o.name:
+                mr = max(mr, TRAILER_RIM_LOW_MIN_RATIO)
         lo = max(lights_min * n, floor_tris) if ("Lights" in sl or "Glass" in sl) else floor_tris
         lo = max(lo, mr * n)
         w = SILHOUETTE_W if any(t in o.name for t in SILHOUETTE_KEYS) else 1.0

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="13" result="Passed" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-11-12 08:24:59Z" end-time="2026-11-12 08:25:01Z" duration="2,0388151">
+  <test-suite type="TestSuite" id="1000" name="Kamion" fullname="Kamion" runstate="Runnable" testcasecount="310" result="Passed" start-time="2026-11-12 08:24:59Z" end-time="2026-11-12 08:25:01Z" duration="2.038815" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1388" name="Game.Tests.EditMode.dll" fullname="C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-light/game/Library/ScriptAssemblies/Game.Tests.EditMode.dll" runstate="Runnable" testcasecount="310" result="Passed" start-time="2026-11-12 08:24:59Z" end-time="2026-11-12 08:25:01Z" duration="2.033094" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="59864" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1389" name="Game" fullname="Game" runstate="Runnable" testcasecount="310" result="Passed" start-time="2026-11-12 08:24:59Z" end-time="2026-11-12 08:25:01Z" duration="2.031499" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1390" name="Tests" fullname="Game.Tests" runstate="Runnable" testcasecount="310" result="Passed" start-time="2026-11-12 08:24:59Z" end-time="2026-11-12 08:25:01Z" duration="2.030088" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1068" name="DuskStreetLampTests" fullname="Game.Tests.DuskStreetLampTests" classname="Game.Tests.DuskStreetLampTests" runstate="Runnable" testcasecount="7" result="Passed" start-time="2026-11-12 08:24:59Z" end-time="2026-11-12 08:25:01Z" duration="2.013570" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1075" name="DuskExposure_FollowsTheTwilight_ScreenBrightnessContinuous" fullname="Game.Tests.DuskStreetLampTests.DuskExposure_FollowsTheTwilight_ScreenBrightnessContinuous" methodname="DuskExposure_FollowsTheTwilight_ScreenBrightnessContinuous" classname="Game.Tests.DuskStreetLampTests" runstate="Runnable" seed="322404731" result="Passed" start-time="2026-11-12 08:24:59Z" end-time="2026-11-12 08:24:59Z" duration="0.192571" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1074" name="DuskPreset_IsCivilTwilight_LampsOn_PoolsReadOnTheRoad" fullname="Game.Tests.DuskStreetLampTests.DuskPreset_IsCivilTwilight_LampsOn_PoolsReadOnTheRoad" methodname="DuskPreset_IsCivilTwilight_LampsOn_PoolsReadOnTheRoad" classname="Game.Tests.DuskStreetLampTests" runstate="Runnable" seed="1358965585" result="Passed" start-time="2026-11-12 08:24:59Z" end-time="2026-11-12 08:24:59Z" duration="0.269038" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1071" name="LegacyPresetsKeepTheirSkyAndFogPresentation" fullname="Game.Tests.DuskStreetLampTests.LegacyPresetsKeepTheirSkyAndFogPresentation" methodname="LegacyPresetsKeepTheirSkyAndFogPresentation" classname="Game.Tests.DuskStreetLampTests" runstate="Runnable" seed="1227077276" result="Passed" start-time="2026-11-12 08:24:59Z" end-time="2026-11-12 08:25:00Z" duration="0.544144" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1069" name="NightReflectionUsesMappedSkyButPreservesGroundRadiance" fullname="Game.Tests.DuskStreetLampTests.NightReflectionUsesMappedSkyButPreservesGroundRadiance" methodname="NightReflectionUsesMappedSkyButPreservesGroundRadiance" classname="Game.Tests.DuskStreetLampTests" runstate="Runnable" seed="2094920573" result="Passed" start-time="2026-11-12 08:25:00Z" end-time="2026-11-12 08:25:00Z" duration="0.180767" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1072" name="NightSeparatesDarkAmbientFromFixedLampPhotometryWithoutChangingDusk" fullname="Game.Tests.DuskStreetLampTests.NightSeparatesDarkAmbientFromFixedLampPhotometryWithoutChangingDusk" methodname="NightSeparatesDarkAmbientFromFixedLampPhotometryWithoutChangingDusk" classname="Game.Tests.DuskStreetLampTests" runstate="Runnable" seed="1423282312" result="Passed" start-time="2026-11-12 08:25:00Z" end-time="2026-11-12 08:25:00Z" duration="0.359959" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1070" name="NightSkyPresentationChangesFogColourWithoutChangingScenePhotometry" fullname="Game.Tests.DuskStreetLampTests.NightSkyPresentationChangesFogColourWithoutChangingScenePhotometry" methodname="NightSkyPresentationChangesFogColourWithoutChangingScenePhotometry" classname="Game.Tests.DuskStreetLampTests" runstate="Runnable" seed="1441325649" result="Passed" start-time="2026-11-12 08:25:00Z" end-time="2026-11-12 08:25:00Z" duration="0.365518" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1073" name="TwilightFactor_IsOneAboveHalfDegree_MonotoneAndEndsAtCivilTwilight" fullname="Game.Tests.DuskStreetLampTests.TwilightFactor_IsOneAboveHalfDegree_MonotoneAndEndsAtCivilTwilight" methodname="TwilightFactor_IsOneAboveHalfDegree_MonotoneAndEndsAtCivilTwilight" classname="Game.Tests.DuskStreetLampTests" runstate="Runnable" seed="1491541626" result="Passed" start-time="2026-11-12 08:25:00Z" end-time="2026-11-12 08:25:01Z" duration="0.091620" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1136" name="LookToeTests" fullname="Game.Tests.LookToeTests" classname="Game.Tests.LookToeTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-11-12 08:25:01Z" end-time="2026-11-12 08:25:01Z" duration="0.005959" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1140" name="FogTau_UniformLimit_LayerThickerNearGround_ContinuousAcrossLevelRays" fullname="Game.Tests.LookToeTests.FogTau_UniformLimit_LayerThickerNearGround_ContinuousAcrossLevelRays" methodname="FogTau_UniformLimit_LayerThickerNearGround_ContinuousAcrossLevelRays" classname="Game.Tests.LookToeTests" runstate="Runnable" seed="1876761217" result="Passed" start-time="2026-11-12 08:25:01Z" end-time="2026-11-12 08:25:01Z" duration="0.000422" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1138" name="InverseToe_RoundTrip_AndClosedFormOfTheCabShader" fullname="Game.Tests.LookToeTests.InverseToe_RoundTrip_AndClosedFormOfTheCabShader" methodname="InverseToe_RoundTrip_AndClosedFormOfTheCabShader" classname="Game.Tests.LookToeTests" runstate="Runnable" seed="1902128354" result="Passed" start-time="2026-11-12 08:25:01Z" end-time="2026-11-12 08:25:01Z" duration="0.000369" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1139" name="OvercastPreset_IsOwnerVariant3_ClearHasNoToe" fullname="Game.Tests.LookToeTests.OvercastPreset_IsOwnerVariant3_ClearHasNoToe" methodname="OvercastPreset_IsOwnerVariant3_ClearHasNoToe" classname="Game.Tests.LookToeTests" runstate="Runnable" seed="467805648" result="Passed" start-time="2026-11-12 08:25:01Z" end-time="2026-11-12 08:25:01Z" duration="0.001655" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1137" name="Toe_PivotFixed_Monotone_ShadowsDown" fullname="Game.Tests.LookToeTests.Toe_PivotFixed_Monotone_ShadowsDown" methodname="Toe_PivotFixed_Monotone_ShadowsDown" classname="Game.Tests.LookToeTests" runstate="Runnable" seed="421875054" result="Passed" start-time="2026-11-12 08:25:01Z" end-time="2026-11-12 08:25:01Z" duration="0.001811" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1149" name="SkyDisplayCapTests" fullname="Game.Tests.SkyDisplayCapTests" classname="Game.Tests.SkyDisplayCapTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-11-12 08:25:01Z" end-time="2026-11-12 08:25:01Z" duration="0.001654" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="ParameterizedMethod" id="1152" name="InverseDisplay_RoundTrips_AndZenithCapBelowHorizonCap" fullname="Game.Tests.SkyDisplayCapTests.InverseDisplay_RoundTrips_AndZenithCapBelowHorizonCap" classname="Game.Tests.SkyDisplayCapTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-11-12 08:25:01Z" end-time="2026-11-12 08:25:01Z" duration="0.001207" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1150" name="InverseDisplay_RoundTrips_AndZenithCapBelowHorizonCap(0.7f)" fullname="Game.Tests.SkyDisplayCapTests.InverseDisplay_RoundTrips_AndZenithCapBelowHorizonCap(0.7f)" methodname="InverseDisplay_RoundTrips_AndZenithCapBelowHorizonCap" classname="Game.Tests.SkyDisplayCapTests" runstate="Runnable" seed="1220924694" result="Passed" start-time="2026-11-12 08:25:01Z" end-time="2026-11-12 08:25:01Z" duration="0.000625" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1151" name="InverseDisplay_RoundTrips_AndZenithCapBelowHorizonCap(1.0f)" fullname="Game.Tests.SkyDisplayCapTests.InverseDisplay_RoundTrips_AndZenithCapBelowHorizonCap(1.0f)" methodname="InverseDisplay_RoundTrips_AndZenithCapBelowHorizonCap" classname="Game.Tests.SkyDisplayCapTests" runstate="Runnable" seed="212444920" result="Passed" start-time="2026-11-12 08:25:01Z" end-time="2026-11-12 08:25:01Z" duration="0.000067" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Saving results to: C:/Users/matma/AppData/LocalLow/woogitsugames/Kamion\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

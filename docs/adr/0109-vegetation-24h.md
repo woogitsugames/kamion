@@ -39,3 +39,37 @@ Zapisano 322 obrazy przed i 322 po: 67 kamer Low/High razy clear/overcast oraz 2
 Niezależna recenzja: docs/reports/visual/2026-11-11-vegetation-0109-r1.md. Brak nowej regresji B blokującej ograniczoną korektę. Sosny, tuje, skład nasadzeń Putry i dalszy realizm berberysu pozostają backlogiem. EditMode 261/261; testy celowane 12/12. Pełny GIS na końcu rundy: 495 passed, 1 xfailed, 1 failed w 612,15 s. Jedyny błąd to test_road_fidelity.py::test_report_not_stale: siedem hashy raportu drogowego nie odpowiada źródłom. fidelity-stale-baseline-proof.json potwierdza nieaktualność także względem blobów bazowego 4c9905b1 oraz brak zmian tych źródeł. Raportu cudzej dziedziny nie regenerowano. Audyt posttests-audit.json: brak zmian źródeł po renderach i brak zmian wyjść kanonicznych po testach.
 
 Do integracji dostarczamy kod i pełne migawki wyników w artefaktach. Wspólne metadane po własnej regeneracji, zawierające też różnice bazowe spoza vegetation, przywracamy w indeksie roboczym przed kolejną rundą; lider musi regenerować świat na swoim aktualnym main. Nie przenosimy do commita cudzych zmian dróg ani budynków. Potencjalne konflikty: addytywne wywołania w WorldPBR/WorldSurface oraz dane generowane, dla których obowiązuje main i regeneracja.
+
+## Runda r3 — rozpoznawalność zieleni G3-B, D51 B8
+
+Druga runda bieżącego cyklu używa gpt-vegetation-r3, ponieważ dawna r2 jest zajęta przez inny worktree. Po merge main bez konfliktów nowy HANDOVER skierował do vegetation bloker B8 z recenzji D51: brak dużych drzew w kadrze sbs-g3-b-297817221966185. Ten priorytet poprzedza dalszą kalibrację palet.
+
+Ortofoto GUGiK 2024, pin 19d7c3ca5d2192b1d0367c8d039e41aa60221927755b45c6a6763e933d96258b z ortho.json, potwierdza cztery odczytane korony przy Andersa. Zdjęcie zsolt z 2017-07-29 (CC BY-SA 4.0) pokazuje charakter tej zieleni. Punkty są środkami koron, nie pomierzonymi pniami: niepewność około 3 m, WORKING_VALUE. Wysokość 12,5–15 m i lipa jako zastępnik liściastego również pozostają WORKING_VALUE, bez deklaracji gatunku botanicznego.
+
+Dane umieszczono w posiadanym vegetation.py, bez zmiany overrides.yaml, geometrii dróg ani landmarku JRG2. Wariant A zaakceptował dwa z czterech punktów, dwa odrzucił blocked. Pozostałe instancje i 130 GLB były identyczne z bazą. Próba B/120 Low dodała jednak 4 wywołania instancji (205 do 209), więc A odrzucono. Ablacja bez nowych drzew po świeżym imporcie dała ponownie 205 wywołań, 129 instancji oraz PNG identyczny z pierwotnym baseline. Przyrost A pochodzi z danych drzew, nie z samego importu.
+
+B jest próbą zastąpienia pobliskiego, losowego samosiewu dojrzałym drzewem w potwierdzonej koronie. Zachowuje jego prototyp, wariant, yaw/lean, liczbę rekordów i komórkę 64 m zgodną z InstanceImporter.CellM. Donorem może być wyłącznie syntetyczny liściasty z końcówką źródła :self, w roboczym promieniu 10 m; nigdy mapowane OSM/BDOT, sosna ani krzew. Korzeń musi przejść blocked/zc, pozostać do 3 m od niepewnego środka korony i co najmniej 1,8 m od innych pni. Brak dawcy odkłada punkt zamiast tworzyć nowy bank. Liczba zaakceptowanych zamian i koszt B wymagają aktualnej generacji oraz renderów.
+
+Baseline: 268 kontrolnych obrazów z r1 B ponownie wykorzystanych po zgodności siedmiu hashy źródeł/kamer i 130 GLB; nie opisujemy ich jako świeże. Dodatkowo wyrenderowano 100 nowych obrazów dla 25 póz B w Low/High clear/overcast. Klasy C są pominięte. Metadane kanoniczne przed rundą oraz metadane wcześniejszego importu B są zapisane osobno: snapshot-baseline i snapshot-baseline/imported-world. Korektę błędu separatorów Windows w pierwszym helperze ujawnia STATUS i baseline-provenance.json; nie dotyczy zgodności kodu, GLB ani PNG.
+
+Test przed funkcją A: 3 failed i 1 passed; po A: 16/16 testów celowanych. Przejście testów nie uchroniło A przed odrzuceniem wizualnym/budżetowym. Testy zmienionej polityki B czekają na heavy; wynik jest w STATUS. Pełny GIS i EditMode będą dopiero na końcu rundy. Stan wizualny B, budżet i D51 pozostają niepotwierdzone do aktualnych renderów i niezależnego krytyka. Telefony są poza zakresem tej sesji.
+
+### R3 — decyzja o odrzuceniu prób, walidacja przywrócenia w toku
+
+Wcześniejszy opis A i B jest dziennikiem eksperymentów, nie przyjętą decyzją produkcyjną. A odrzucono po wzroście łącznych wywołań Low 665 do 669. B1 przeszedł pełny generator i 22 testy celowane, zastąpił jeden samosiew, odłożył trzy punkty i nie dodał rekordów. Próba Low zachowała 460 wywołań statycznych i 205 instancji, ale nie zmieniła żadnego piksela w stałym obszarze koron. Różnice 5307 pikseli leżą w niższym pasie obrazu. Nie certyfikowano B1 na pełnej macierzy kamer.
+
+Diagnostyka wysokości istniejącego klonu 8 do 13,8 m była tylko zmianą wejścia renderera. Nie nazywamy jej wyprodukowanym B2. Powiększyła rzadką sylwetkę, bez odtworzenia zespołu gęstych koron. Odrzucono ją wraz z B1; niezależny krytyk potwierdził oba werdykty. Dowody są w rejected-comparison.jpg oraz VISUAL-CRITIC-B.md.
+
+Produkcję vegetation.py i testy przywrócono do r1 w f5f60b64. Generator przywróconego kodu zakończył się w 455,7 s. Kontrola restored-world-proof.json potwierdziła 130 zgodnych GLB, 64 pliki instancji i siedem pinów źródeł względem baseline; 15 Megascans, fallback false. Końcowy GIS, import, probe i EditMode są nadal w sekwencji walidacji. Nie jest to jeszcze zamknięta runda.
+
+Dodatkowe ograniczenie: cztery odczytane korony leżą przed JRG2; nie dowiedziono, że są tymi samymi drzewami pasa dzielącego, których dotyczy B8. Nowy feedback lidera wskazuje korekty pozy G3-B jako główny bloker. Przed następnym przypisaniem nasadzeń potrzebna jest poprawiona poza SBS. B8 pozostaje otwarte, a odrzuconych punktów nie należy integrować jako jego naprawy.
+
+Następna próba po zakończeniu walidacji i merge main będzie dotyczyć berberysu wyglądającego jak bordowe bale, zgodnie z feedbackiem s11 i recenzją zbiorczą r1. Hipoteza rdzenia i kontrakt materiałów są zapisane w CLOSING-NOTES.md; nie zmieniono ich podczas bieżącej walidacji. Nie edytowano dróg, landmarków ani overrides.yaml.
+
+### R3 — końcowe dowody i zamknięcie
+
+Pełny GIS: 525 passed, 1 xfailed, 1 failed w 1390,34 s (wliczone wstrzymanie watchdog). Jedyna porażka to test_road_fidelity::test_report_not_stale: raport i siedem jego źródeł są niezmienione względem bazy, raport był nieaktualny już tam. Nie traktujemy tego jako zielonego GIS i nie regenerujemy cudzej dziedziny.
+
+Import przywróconego świata przeszedł. Probe B/120 Low-overcast ma SHA identyczny z baseline, co potwierdził niezależny krytyk po obejrzeniu obu PNG. EditMode 261/261. Po GIS i Unity nadal zgodne 130 GLB, 64 pliki instancji i siedem pinów źródeł; posttests-audit nie wykazał driftu. Krytyk akceptuje tylko przywrócenie obrazu. B8 pozostaje otwarte, bez pełnej macierzy after i bez akceptowanej zmiany produkcyjnej r3.
+
+Siedem wspólnych skutków ubocznych generatora zachowano w artefaktach, po czym przywrócono z HEAD. Snapshot-restored oraz generator-side-effects opisują wynik użyty do importu; kanoniczne metadane wróciły do stanu sprzed rundy. Lider musi regenerować po integracji. REPORT oraz docs/reports/visual/2026-11-12-vegetation-0109-r3.md podają pełny zakres dowodów. Następna runda: berberys, z odizolowaną propozycją, która nie została jeszcze wdrożona ani wyrenderowana.

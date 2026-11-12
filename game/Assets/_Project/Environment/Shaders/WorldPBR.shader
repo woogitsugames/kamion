@@ -61,12 +61,16 @@ Shader "Kamion/World PBR"
         _GutterDirt ("Gutter grime (_ROADWEAR)", Range(0, 1)) = 0.5
         _DripBand ("Lane-centre oil / soot drip band between the wheel paths (_ROADWEAR)", Range(0, 1)) = 0
         _Grime ("Ground grime (_GRIME): x damp darkening, y damp threshold (macro pool), z joint dirt, w damp gloss", Vector) = (0.45, 0.62, 0.3, 0.5)
+        _KerbWear ("Kerb wear: joint dirt, mineral film, film threshold, enabled (ADR0118)", Vector) = (0, 0, 0.55, 0)
+        _GroundWearExclude ("Ground wear exclusion: object-local E/N bounds, min/max (ADR0118)", Vector) = (0, 0, 0, 0)
+        _GroundGrimeBase ("Ground grime inside exclusion: original coefficients (ADR0118)", Vector) = (0.45, 0.62, 0.3, 0.5)
         _SkyOcc ("Sky occlusion: x down-facing ambient, y horizon reflection (0 = off; ADR 0060)", Vector) = (0, 0, 0, 0)
         _LowNoShadow ("No shadow casting below the world-detail tier (Low; ADR 0123)", Float) = 0
         _VertexGrime ("Vertex grime (_VERTEX_GRIME, COLOR_0.r): rgb grime albedo (linear), w roughness gain (ADR 0123)", Vector) = (0.1, 0.1, 0.09, 0.3)
         _AgeTint ("Patch age target / base albedo ratio", Float) = 2.0
         _PatchSeam ("Repair: seam width m, darkening, fresh tone, aged tone (ADR0118)", Vector) = (0, 0, 1, 1)
         _DecalAlpha ("Decal opacity", Range(0, 1)) = 1
+        _DecalCells ("Decal atlas cells per side (_DECAL_ALPHA): 2 oil atlas, 1 whole UV", Float) = 2
         _SplashHeight ("Splash zone height (m)", Float) = 0.6
         _RunoffMap ("Parapet run-off (R soot, G rust; _RUNOFF)", 2D) = "black" {}
         _RunoffStrength ("Parapet run-off strength", Range(0, 1)) = 0.5
@@ -79,7 +83,7 @@ Shader "Kamion/World PBR"
         _PaintWear ("Paint wear: x wheel-path, y age, z dirt film, w line width m", Vector) = (0.85, 0.25, 0.3, 0.12)
         _PaintFreshWear ("Fresh road paint: wheel, weather, dirt, substrate multipliers (ADR0118)", Vector) = (1, 1, 1, 1)
         _CarPaint ("Car paint (_CARPAINT): x base metal, y flake tilt, z pearl, w base-coat roughness", Vector) = (0, 0, 0, 0.5)
-        _CarFlake ("Car flake: x cells per m, y fade scale (1 = gone when a pixel covers a cell)", Vector) = (400, 1, 0, 0)
+        _CarFlake ("Car flake: x cells/m, y fade, w film mode (0 off, 1 car, 2 yard)", Vector) = (400, 1, 0, 0)
         _PearlTint ("Pearl grazing tint (linear)", Color) = (1, 1, 1, 1)
         _PanelTone ("Panel tone (_PANELTONE): xy cladding module in UV0 m (length, course), z per-panel hash share, w butt-joint line", Vector) = (6, 1, 0.35, 0.3)
         _OffsetFactor ("Depth offset factor", Float) = 0
@@ -104,7 +108,7 @@ Shader "Kamion/World PBR"
             float4 _Tile;
             float _AlbedoScale, _NormalStrength, _SmoothnessScale, _MetallicScale;
             float _ElementJitter, _ElementSize, _MacroSize, _MacroStrength, _MacroWear, _CrackStrength, _DetailFade;
-            float _WheelPolish, _GutterDirt, _AgeTint, _DecalAlpha, _SplashHeight, _GroundTint, _RunoffStrength;
+            float _WheelPolish, _GutterDirt, _AgeTint, _DecalAlpha, _DecalCells, _SplashHeight, _GroundTint, _RunoffStrength;
             float4 _PanelTone;
             float4 _Stripe, _StripeA, _StripeB;
             float4 _GrassFill;
@@ -115,6 +119,8 @@ Shader "Kamion/World PBR"
             float4 _Grime, _SkyOcc;
             float4 _VertexGrime;
             float _LowNoShadow;
+            float4 _KerbWear;
+            float4 _GroundWearExclude, _GroundGrimeBase;
             float _DripBand;
             float4 _CarPaint, _CarFlake, _PearlTint;
             float _OffsetFactor, _OffsetUnits, _SrcBlend, _DstBlend, _ZWrite, _Cull, _ReceiveShadows;
@@ -298,21 +304,43 @@ Shader "Kamion/World PBR"
                 {
                     // WORKING_VALUE: source UV1 is height above the actual class sill
                     // and an affine rear=0/front=1 axle coordinate. No film inversion.
-                    half amount = 0.08h + 0.92h * i.carFilm.x;
-                    half falloff = 0.16h + 0.06h * i.carFilm.x;
-                    half vertical = exp2(-max(i.uv.z, 0.0) / falloff * 1.442695h);
-                    half keepUpper = smoothstep(0.45h, 0.85h, abs(n.y)) * smoothstep(0.6, 0.8, um.y);
-                    // Clean-map Mask.R carries removed legacy film, not metal.
-                    // Preserve the existing bonnet/roof response by forward application;
-                    // the monotone sill layer below remains independent of that coverage.
-                    half upperFilm = saturate(mask.r);
-                    half3 legacyMultiplier = (1.0h - 0.30h * upperFilm) * half3(1.0h, 1.0h - 0.08h * upperFilm, 1.0h - 0.22h * upperFilm);
-                    base.rgb *= lerp(half3(1, 1, 1), legacyMultiplier, keepUpper);
-                    mask.a = saturate(mask.a - 0.35h * upperFilm * keepUpper);
                     half frontTrail = saturate(1.0h - abs(i.uv.w - 0.87h) / 0.28h);
                     half rearTrail = saturate(1.0h - abs(i.uv.w + 0.13h) / 0.28h);
                     half rearFace = saturate((-i.uv.w - 0.20h) * 8.0h);
                     half deposition = max(max(frontTrail, rearTrail), rearFace);
+                    half amount, falloff;
+                    half keepUpper = 0.0h;
+                    if (_CarFlake.w < 1.5)
+                    {
+                        amount = 0.08h + 0.92h * i.carFilm.x;
+                        falloff = 0.16h + 0.06h * i.carFilm.x;
+                        // ADR0089 life r3 A, WORKING_VALUE: broader only behind
+                        // axles and on the rear. Still monotone above the sill,
+                        // bounded by the existing 0.5 opacity, no new sampling.
+                        falloff += deposition * (0.12h + 0.12h * i.carFilm.x)
+                                 + rearFace * 0.10h * (0.25h + 0.75h * i.carFilm.x);
+                        // ADR0089 life r3 C, WORKING_VALUE: the level-2 rear
+                        // still looked freshly washed from 5.7 m. Broaden the
+                        // rear-quarter/tail only, never detach film from the sill.
+                        amount = saturate(amount + rearFace * 0.16h * (0.25h + 0.75h * i.carFilm.x));
+                        falloff += rearFace * (0.18h + 0.18h * i.carFilm.x);
+                        // Preserve the existing passenger-car bonnet/roof response.
+                        // Static cabs opt out: their previous plain paint had no such layer.
+                        keepUpper = smoothstep(0.45h, 0.85h, abs(n.y)) * smoothstep(0.6, 0.8, um.y);
+                        half upperFilm = saturate(mask.r);
+                        half3 legacyMultiplier = (1.0h - 0.30h * upperFilm) * half3(1.0h, 1.0h - 0.08h * upperFilm, 1.0h - 0.22h * upperFilm);
+                        base.rgb *= lerp(half3(1, 1, 1), legacyMultiplier, keepUpper);
+                        mask.a = saturate(mask.a - 0.35h * upperFilm * keepUpper);
+                    }
+                    else
+                    {
+                        // ADR 0122 C, WORKING_VALUE: yard-cab film was almost
+                        // invisible with the passenger-car sill envelope.
+                        // Keep the four instance levels, broaden only static cabs.
+                        amount = 0.25h + 0.75h * i.carFilm.x;
+                        falloff = 0.32h + 0.16h * i.carFilm.x;
+                    }
+                    half vertical = exp2(-max(i.uv.z, 0.0) / falloff * 1.442695h);
                     carFilmOpacity = 0.5h * amount * vertical * (0.72h + 0.28h * deposition) * (1.0h - keepUpper);
                     mask.a = lerp(mask.a, 0.25h, carFilmOpacity);
                 }
@@ -455,7 +483,11 @@ Shader "Kamion/World PBR"
                     albedo *= lerp(1.0, 0.35, cm.r * amount);
                     albedo = lerp(albedo, half3(0.03, 0.03, 0.03), cm.g * amount);
                     albedo *= 1.0 - cm.a * amount * 0.12;
-                    smooth = lerp(smooth, 0.55, cm.g * amount);
+                    // ADR 0131: aged, dust-filmed bitumen sealant - a dark band only slightly smoother than the asphalt
+                    // around it (+0.06, WORKING_VALUE). At 0.55 the env term at grazing NoV (grazing = smooth)
+                    // out-reflected the 0.03 albedo and the sealant read as white chalk, also under an overcast sky;
+                    // at 0.24 it cancelled the dark albedo exactly (invisible from the driver's eye height).
+                    smooth = lerp(smooth, smooth + 0.06, cm.g * amount);
                 #if defined(_KAMION_WORLD_DETAIL)
                     half3 cn = UnpackNormalScale(SAMPLE_TEXTURE2D(_CrackNormal, sampler_CrackMap, uc), amount);
                     tn = normalize(half3(tn.xy + cn.xy, tn.z * cn.z));
@@ -522,6 +554,17 @@ Shader "Kamion/World PBR"
                 }
             #endif
 
+                // ADR0118: leave a separately owned site at its original material response.
+                // World chunk mesh coordinates are authoring E/N; object space survives origin shifts.
+                // Inside the bounds: exactly zero new wear. Outside: an 8 m transition avoids a visible seam.
+                half groundWear = 1.0;
+                if (_GroundWearExclude.z > _GroundWearExclude.x && _GroundWearExclude.w > _GroundWearExclude.y)
+                {
+                    float2 localEN = TransformWorldToObject(pw).xz;
+                    float2 outside = max(_GroundWearExclude.xy - localEN, localEN - _GroundWearExclude.zw);
+                    groundWear = saturate(max(outside.x, outside.y) * 0.125);
+                }
+
                 // ---- ground grime (ADR 0060, review r7 N-2): dirty joints on every tier (Var.B, the Medium+ element jitter
                 // only adds tone) and damp / oily hollows: water and fines stay in the low points (Var.R height) of the
                 // 1.5-24 m wear patches (macro B) broken by the 0.5-4 m mottling (macro A). Paving, yard concrete, yard and
@@ -529,14 +572,26 @@ Shader "Kamion/World PBR"
             #if defined(_GRIME)
                 {
                     half4 gv = SAMPLE_TEXTURE2D(_VarMap, sampler_BaseMap, uvb);
+                    float4 grime = _Grime;
+                    if (groundWear < 1.0) grime = lerp(_GroundGrimeBase, _Grime, groundWear);
                     half jfade = saturate(0.012 / max(footprint, 1e-4));             // joints resolved: full dirt
-                    albedo *= 1.0 - _Grime.z * gv.b * lerp(0.5, 1.0, jfade);
+                    albedo *= 1.0 - grime.z * gv.b * lerp(0.5, 1.0, jfade);
                     half pool = macro.b * 0.65 + macro.a * 0.35 - (gv.r - 0.7) * 0.06;
-                    half wet = smoothstep(_Grime.y, _Grime.y + 0.025, pool);
-                    albedo *= 1.0 - _Grime.x * wet;
-                    smooth = lerp(smooth, max(smooth, 0.62), wet * _Grime.w);
+                    half wet = smoothstep(grime.y, grime.y + 0.025, pool);
+                    albedo *= 1.0 - grime.x * wet;
+                    smooth = lerp(smooth, max(smooth, 0.62), wet * grime.w);
                 }
             #endif
+
+                // ADR0118 r2: opt-in kerb mineral dirt, using already fetched masks only.
+                // The kerb scan stores 1-joints in Mask.B (source PNG contract checked).
+                // No new texture, UV channel or keyword variant on Low.
+                if (_KerbWear.w > 0.5)
+                {
+                    half joints = saturate(1.0 - mask.b);
+                    half film = smoothstep(_KerbWear.z, _KerbWear.z + 0.18, macro.b * 0.6 + macro.a * 0.4);
+                    albedo *= (1.0 - groundWear * _KerbWear.x * joints) * (1.0 - groundWear * _KerbWear.y * film);
+                }
 
                 // ---- decals
             #if defined(_DECAL_PATCH)
@@ -565,10 +620,12 @@ Shader "Kamion/World PBR"
             #endif
             #if defined(_DECAL_ALPHA)
                 {
-                    // 2x2 atlas, one stain per cell, centre 0.5/0.5 of the radial UV; cell from TEXCOORD_1.y
-                    float cell = floor(saturate(i.uv.w) * 3.999);
-                    float2 cxy = float2(fmod(cell, 2.0), floor(cell * 0.5));
-                    float2 ua = (saturate(i.uv.xy) + cxy) * 0.5;
+                    // 2x2 atlas, one stain per cell, centre 0.5/0.5 of the radial UV; cell from TEXCOORD_1.y.
+                    // ADR 0131: _DecalCells 1 = the whole UV (Fab manhole / drain covers, their own atlas rects).
+                    float cells = max(_DecalCells, 1.0);
+                    float cell = floor(saturate(i.uv.w) * (cells * cells - 0.001));
+                    float2 cxy = float2(fmod(cell, cells), floor(cell / cells));
+                    float2 ua = (saturate(i.uv.xy) + cxy) / cells;
                     half4 st = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, ua);
                     half4 sm = SAMPLE_TEXTURE2D(_MaskMap, sampler_MaskMap, ua);
                     albedo = st.rgb * _Tint.rgb * _AlbedoScale;
@@ -743,16 +800,34 @@ Shader "Kamion/World PBR"
                         // 0.55-1.0 scale lengths; the wet band under the drip edge lives inside the sill only and is gone
                         // 0.25 scale lengths down. Strength floor 0.5: the plaster factor of the parapet layer (x 0.6)
                         // left a sill mark at ~3 levels. WORKING_VALUE, measured from 5 m and 20 m (ADR 0114 table).
+                        // ADR 0124 (review 0114 P1-r8-g: "dwie identyczne nóżki o twardej górnej krawędzi, symetryczne";
+                        // weakest 10 % of the marks ~5 sRGB levels from 20 m). Per END of the sill (hash of rnd and side):
+                        // 28 % of the ends shed nothing, the rest get their own length (0.35-1.0 scale lengths) and
+                        // strength (0.6-1.0). Shape of run-off water: a stain 15 cm wide right under the end cap that
+                        // narrows to 3.6 cm at its tip, flanks feathered over 5-9 cm and broken by the run-off map,
+                        // fading in over the first 3 cm (no hard top line) and wandering sideways on its way down.
+                        // One sill in five also drips somewhere along its length (a short streak inside the sill).
+                        // Strength floor 0.62. WORKING_VALUE; measured from 5 m and 20 m (ADR 0124 table).
                         float au = abs(i.uv.z);
                         half outside = step(1.5, au);
                         float sde = au - 2.0 * outside;                       // metres from the sill end
-                        half slen = 0.55 + 0.45 * frac(srnd * lerp(0.37, 0.61, sside) + lerp(0.1, 0.5, sside));
-                        float hw = lerp(0.045, 0.02, saturate(depth / slen));
-                        half whisk = (1.0 - smoothstep(hw, hw + 0.03, sde)) * (1.0 - smoothstep(0.3 * slen, slen, depth)) * (0.8 + 0.2 * ro.r);
+                        half h1 = frac(srnd * 0.618 + sside * 0.37 + 0.13);
+                        half h2 = frac(srnd * 0.377 + sside * 0.71 + 0.29);
+                        half present = step(0.28, h1);
+                        half slen = 0.35 + 0.65 * h2;
+                        half sstr = 0.6 + 0.4 * frac(h1 * 7.3);
+                        float sdw = sde + (macro.a - 0.5) * 0.07 * saturate(depth * 1.5) * (1.0 - 2.0 * outside);
+                        float hw = lerp(0.075, 0.018, saturate(depth / slen));
+                        half fadeIn = smoothstep(-0.01, 0.03 + 0.05 * h2, depth);
+                        half whisk = present * sstr * (1.0 - smoothstep(hw, hw + 0.05 + 0.04 * ro.r, abs(sdw)))
+                                   * (1.0 - smoothstep(0.2 * slen, slen, depth)) * fadeIn * (0.72 + 0.28 * ro.r);
                         half band = (1.0 - outside) * (0.3 + 0.5 * ro.r) * (1.0 - smoothstep(0.03, 0.25, depth)) * 0.5;
-                        ro.r = saturate(max(whisk, band));
+                        half dripAt = 0.22 + 0.25 * frac(srnd * 0.291 + 0.05);
+                        half drip = step(0.8, frac(srnd * 0.459 + 0.21)) * (1.0 - outside) * (1.0 - sside)
+                                  * (1.0 - smoothstep(0.012, 0.045, abs(au - dripAt))) * (1.0 - smoothstep(0.12, 0.55, depth)) * 0.7;
+                        ro.r = saturate(max(max(whisk, band), drip));
                         ro.g *= whisk * 0.5;
-                        k = max(k, 0.5);
+                        k = max(k, 0.62);
                     }
                     albedo = lerp(albedo, albedo * half3(0.22, 0.21, 0.2), ro.r * k);
                     albedo = lerp(albedo, half3(0.075, 0.042, 0.022), ro.g * k * 0.8);

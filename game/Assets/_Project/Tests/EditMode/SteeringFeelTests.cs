@@ -52,17 +52,17 @@ namespace Game.Tests
                 prevRate = c.RateDegS;
             }
             Debug.Log($"[TEST] step to lock at 0 km/h: max rate {maxRate:F0} deg/s, max accel {maxAcc:F0} deg/s2");
-            Assert.LessOrEqual(maxRate, feel.HandRate(0f) + 1e-3f, "hand rate limit (540 deg/s when manoeuvring)");
+            Assert.LessOrEqual(maxRate, feel.HandRate(0f) + 1e-3f, "hand rate limit (720 deg/s when manoeuvring, ADR 0135)");
             Assert.Greater(maxRate, 0.95f * feel.HandRate(0f), "uses the quick hand speed for a full swipe");
             Assert.LessOrEqual(maxAcc, 2f * feel.HandRate(0f) / feel.rateRiseTimeS + 1f, "no instant snap (acceleration limited)");
             Assert.AreEqual(Lock, c.AngleDeg, 0.01f, "reaches the target");
             Assert.LessOrEqual(maxAngle, Lock + 1e-3f, "no overshoot");
 
-            // Full lock-to-lock takes a realistic time (~4.4 turns, hand-over-hand ~ 1.5 s one way).
+            // Full lock-to-lock takes a realistic time (~4.4 turns at 2 rev/s palm-spinning, ADR 0135; was 2.9-3.6 s at 540 deg/s).
             int steps = 0;
             c.SnapTo(-Lock);
             while (c.AngleDeg < Lock - 0.5f && steps < 1000) { c.Step(Dt, Lock, true, 0f, 0f); steps++; }
-            Assert.That(steps * Dt, Is.InRange(2.9f, 3.6f), "lock to lock at standstill");
+            Assert.That(steps * Dt, Is.InRange(2.1f, 2.7f), "lock to lock at standstill");
         }
 
         [Test]
@@ -79,7 +79,7 @@ namespace Game.Tests
         public void HandRate_FallsWithSpeed()
         {
             var f = SteeringFeel.Defaults();
-            Assert.AreEqual(540f, f.HandRate(0f), 1e-3f);
+            Assert.AreEqual(720f, f.HandRate(0f), 1e-3f);
             Assert.AreEqual(130f, f.HandRate(80f), 1e-3f);
             Assert.AreEqual(110f, f.HandRate(150f), 1e-3f);
             for (float v = 0f; v < 120f; v += 5f) Assert.GreaterOrEqual(f.HandRate(v), f.HandRate(v + 5f), "monotonic at " + v);
@@ -272,14 +272,14 @@ namespace Game.Tests
             Assert.IsNotNull(json, "Resources/Controls/steering_feel.json");
             Assert.AreEqual(JsonUtility.ToJson(SteeringFeel.Defaults()), JsonUtility.ToJson(SteeringFeel.FromJson(json.text)));
             var broken = SteeringFeel.FromJson("{\"handRateSpeedsKmh\":[0,10],\"handRateDegS\":[1]}");
-            Assert.AreEqual(540f, broken.HandRate(0f), 1e-3f, "mismatched table falls back to the defaults");
+            Assert.AreEqual(720f, broken.HandRate(0f), 1e-3f, "mismatched table falls back to the defaults");
         }
 
         [Test]
         public void Migration_V2Save_GetsSpeedSensitiveSteering_KeepsOwnerChoices()
         {
             var v2 = ControlSettings.FromJson("{\"schema\":2,\"wheelRangeDeg\":450,\"centreStrength\":0.7,\"gyroEnabled\":true,\"cabFov\":60}");
-            Assert.AreEqual(3, v2.schema);
+            Assert.AreEqual(ControlSettings.CurrentSchema, v2.schema);
             Assert.IsTrue(v2.speedSensitiveSteering);
             Assert.AreEqual(450f, v2.wheelRangeDeg); Assert.AreEqual(0.7f, v2.centreStrength, 1e-6f); Assert.IsTrue(v2.gyroEnabled); Assert.AreEqual(60f, v2.cabFov);
             var v3 = ControlSettings.FromJson("{\"schema\":3,\"speedSensitiveSteering\":false}");

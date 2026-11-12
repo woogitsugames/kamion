@@ -381,6 +381,7 @@ namespace Game.Editor.Setup
                 dec.SetFloat("_Cutoff", 0.5f);
                 dec.SetFloat("_IsDecal", 1f);
                 dec.EnableKeyword("_KAMION_CAB_DECAL");
+                ConfigureCabBacklight(dec);
                 dec.renderQueue = (int)RenderQueue.AlphaTest;
                 Add("MI_Cab_Decal", dec);
                 var cg = Mat(dir, "MI_Cab_Glass", glass);
@@ -735,7 +736,11 @@ namespace Game.Editor.Setup
                         bool flat = disp != null || slotNames.All(s => s == "MI_Cab_Glass");
                         r.shadowCastingMode = flat ? ShadowCastingMode.Off : ShadowCastingMode.On;
                         r.receiveShadows = !flat;
-                        if (n.StartsWith("STEERING_WHEEL", StringComparison.Ordinal)) r.transform.SetParent(column, true);
+                        if (n.StartsWith("STEERING_WHEEL", StringComparison.Ordinal))
+                        {
+                            r.transform.SetParent(column, true);
+                            MapCabLeatherRim(r, column, slotNames);
+                        }
                         interiorLods[lod].Add(r);
                     }
                     foreach (var e in new[] { "EYE_POINT", "H_POINT", "WHEEL_CENTRE", "CAB_MOUNT_REF" })
@@ -1000,6 +1005,55 @@ namespace Game.Editor.Setup
                 filter.sharedMesh = mesh;
                 Debug.Log($"[TRUCK] Mirror bezel {body.name}: addedTris={triangles} slots={source.subMeshCount}->{mesh.subMeshCount} centreDelta={(source.bounds.center - mesh.bounds.center).magnitude:F7} sizeDelta={(source.bounds.size - mesh.bounds.size).magnitude:F7}");
             }
+        }
+
+        static void ConfigureCabBacklight(Material material)
+        {
+            var data = Json.Obj(Json.Parse(File.ReadAllText(Path.Combine(EditorTools.RepoRoot,
+                "art-source/truck/interior/cab_backlight.json"))));
+            bool enabled = data.TryGetValue("enabled", out var flag) && flag is bool value && value;
+            material.SetFloat("_IsBacklit", enabled ? 1f : 0f);
+            material.DisableKeyword("_KAMION_CAB_BACKLIGHT");
+            material.SetFloat("_LegendLuminance", 0f);
+            if (!enabled) return;
+            float luminance = (float)Json.Num(data["legend_luminance_cd_m2"]);
+            float cap = (float)Json.Num(data["max_exposed_linear"]);
+            float start = (float)Json.Num(data["start_sun_deg"]), full = (float)Json.Num(data["full_sun_deg"]);
+            Vector3 color = V3(data["color_linear"]);
+            if (!(luminance > 0f && luminance <= 100f && cap > 0f && cap <= 1f && full < start &&
+                full >= -20f && start <= 30f && color.x >= 0f && color.x <= 1f && color.y >= 0f && color.y <= 1f && color.z >= 0f && color.z <= 1f))
+                throw new InvalidDataException("Invalid cab_backlight.json photometric values or fade range");
+            material.SetFloat("_LegendLuminance", luminance);
+            material.SetFloat("_LegendMaxDisplay", cap);
+            material.SetColor("_LegendColor", new Color(color.x, color.y, color.z, 1f));
+            material.SetFloat("_LegendStartSunDeg", start); material.SetFloat("_LegendFullSunDeg", full);
+            material.EnableKeyword("_KAMION_CAB_BACKLIGHT");
+            Debug.Log($"CAB_BACKLIGHT_CONFIG: enabled, luminance={luminance} cd/m2, cap={cap}, fade={start}..{full} deg (WORKING_VALUE)");
+        }
+
+        static void MapCabLeatherRim(Renderer renderer, Transform column, string[] slots)
+        {
+            var data = Json.Obj(Json.Obj(Json.Parse(File.ReadAllText(Path.Combine(EditorTools.RepoRoot,
+                "art-source/truck/interior/cab_material_scans.json"))))["leather"]);
+            if (!data.TryGetValue("enabled", out var flag) || !(flag is bool enabled) || !enabled) return;
+            var filter = renderer.GetComponent<MeshFilter>();
+            var source = filter.sharedMesh;
+            var selectedSlots = Enumerable.Range(0, slots.Length).Where(i => slots[i] == "MI_Cab_Leather").ToArray();
+            float ratio = (float)(Json.Num(data["wheel_authored_tile_metres"]) / Json.Num(data["tile_metres"]));
+            var mesh = CabLeatherMapping.Apply(source, column.worldToLocalMatrix * renderer.transform.localToWorldMatrix,
+                selectedSlots, (float)Json.Num(data["rim_min_radius_m"]), (float)Json.Num(data["rim_max_radius_m"]), ratio, out int scaled);
+            string dir = Root + "/Meshes";
+            Directory.CreateDirectory(Path.Combine(EditorTools.ProjectRoot, dir));
+            string path = $"{dir}/{mesh.name}.asset";
+            var old = AssetDatabase.LoadAssetAtPath<Mesh>(path);
+            if (old != null)
+            {
+                EditorUtility.CopySerialized(mesh, old); UnityEngine.Object.DestroyImmediate(mesh);
+                EditorUtility.SetDirty(old); mesh = old;
+            }
+            else AssetDatabase.CreateAsset(mesh, path);
+            filter.sharedMesh = mesh;
+            Debug.Log($"[TRUCK] CC0 rim UV {renderer.name}: scaled={scaled} ratio={ratio:F6} vertices={source.vertexCount}->{mesh.vertexCount} indices={source.triangles.Length}->{mesh.triangles.Length}");
         }
 
         static void ClearMirrorSupports(Transform root, Renderer body)

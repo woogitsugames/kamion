@@ -1,0 +1,20 @@
+[
+  {
+    "ProcessId": 62944,
+    "ParentProcessId": 79812,
+    "Name": "pwsh.exe",
+    "CommandLine": "\"C:\\Program Files\\WindowsApps\\OpenAI.CodexPrimaryRuntime.v26-1104-2876-0_26.1104.2876.0_x64__3k8sg7r9htsxt\\dependencies\\native\\powershell\\pwsh.exe\" artifacts/asphalt-r2/finish-remaining.ps1"
+  },
+  {
+    "ProcessId": 21728,
+    "ParentProcessId": 62944,
+    "Name": "pwsh.exe",
+    "CommandLine": "\"C:\\Program Files\\WindowsApps\\OpenAI.CodexPrimaryRuntime.v26-1104-2876-0_26.1104.2876.0_x64__3k8sg7r9htsxt\\dependencies\\native\\powershell\\pwsh.exe\" artifacts/asphalt-r2/run-heavy.ps1 -Stage Fidelity -Label candidate2-final -ReserveNext"
+  },
+  {
+    "ProcessId": 79580,
+    "ParentProcessId": 21728,
+    "Name": "pwsh.exe",
+    "CommandLine": "\"C:\\Program Files\\WindowsApps\\OpenAI.CodexPrimaryRuntime.v26-1104-2876-0_26.1104.2876.0_x64__3k8sg7r9htsxt\\dependencies\\native\\powershell\\pwsh.exe\" C:\\Users\\matma\\Documents\\Claude\\kamion\\scripts\\unity-slot.ps1 -Acquire -Pool heavy -Owner gpt-asphalt-r2 -PollSeconds 5 -Priority"
+  }
+]

@@ -1,0 +1,42 @@
+{
+  "pass": true,
+  "pose_projection_equal": true,
+  "source": "native exact-stats.json, metadata only; no image decode",
+  "native_mesh_counts_match_glb": true,
+  "violations": [],
+  "conditions": {
+    "High-overcast": {
+      "cameras": 131,
+      "max_route_tris_percent": 0.585729008044545,
+      "max_world_draw_delta": 0.0,
+      "max_all_tris_percent": 2.6397015831864064,
+      "route_cameras": 59,
+      "max_instance_draw_delta": 0.0
+    },
+    "High-clear": {
+      "cameras": 131,
+      "max_route_tris_percent": 0.585729008044545,
+      "max_world_draw_delta": 0.0,
+      "max_all_tris_percent": 2.6397015831864064,
+      "route_cameras": 59,
+      "max_instance_draw_delta": 0.0
+    },
+    "Low-clear": {
+      "cameras": 131,
+      "max_route_tris_percent": 0.3658086082153766,
+      "max_world_draw_delta": 0.0,
+      "max_all_tris_percent": 3.4964737267812294,
+      "route_cameras": 59,
+      "max_instance_draw_delta": 0.0
+    },
+    "Low-overcast": {
+      "cameras": 131,
+      "max_route_tris_percent": 0.3658086082153766,
+      "max_world_draw_delta": 0.0,
+      "max_all_tris_percent": 3.4964737267812294,
+      "route_cameras": 59,
+      "max_instance_draw_delta": 0.0
+    }
+  },
+  "checked": 524
+}

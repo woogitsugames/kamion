@@ -332,9 +332,27 @@ namespace Game.UI.Driving
             img.sprite = WheelSprite();
             img.color = new Color(0.55f, 0.58f, 0.60f, 0.34f);   // toned down (visual review r2): a guide, not a disc over the road
             img.raycastTarget = false;
+            // Cab-wheel marker (ADR 0135): a thin tick on the rim at the angle the heavy cab wheel has actually reached; the
+            // drawing (orange top marker) is the finger command, so the hand-speed lag reads at a glance.
+            var colRt = Rect("ColumnMark", root);
+            Stretch(colRt);
+            var tick = Rect("Tick", colRt);
+            tick.anchorMin = tick.anchorMax = new Vector2(0.5f, 1f); tick.pivot = new Vector2(0.5f, 1f);
+            tick.sizeDelta = new Vector2(7f, 30f); tick.anchoredPosition = Vector2.zero;
+            var tickImg = tick.gameObject.AddComponent<Image>();
+            tickImg.color = new Color(k_Text.r, k_Text.g, k_Text.b, 0.8f);
+            tickImg.raycastTarget = false;
+            // Grab area (ADR 0135): the drag gesture does not need the finger on the drawing, so the touch target also
+            // covers the free margin to the safe-area edges left of and below the wheel (no other control is there).
+            var grab = Rect("GrabArea", root);
+            grab.anchorMin = Vector2.zero; grab.anchorMax = Vector2.one;
+            grab.offsetMin = new Vector2(-HudLayout.WheelLeft, -HudLayout.ControlsBottom); grab.offsetMax = Vector2.zero;
+            grab.gameObject.AddComponent<Image>().color = new Color(0, 0, 0, 0);
+            grab.SetAsFirstSibling();
             var w = root.gameObject.AddComponent<SteeringWheelWidget>();
             w.wheel = m_Ctx.Wheel;
             w.rotating = rot;
+            w.columnMark = colRt;
             m_WheelGo = root.gameObject;
         }
 

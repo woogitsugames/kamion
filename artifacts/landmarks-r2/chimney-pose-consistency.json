@@ -1,0 +1,25 @@
+{
+  "camera_ground_NMT_m": 140.52852538723775,
+  "eye_height_WORKING_VALUE_m": 1.65,
+  "focal_pixels_assuming_equivalent_width": 2880.0,
+  "height_m": 120,
+  "rows": [
+    {
+      "osm_way": "628899554",
+      "head_top_y_WORKING_VALUE": 320,
+      "world_top_angle_deg": 12.872420622697515,
+      "image_top_angle_deg": 14.782726042615677,
+      "implied_camera_pitch_deg": -1.9103054199181617
+    },
+    {
+      "osm_way": "628899553",
+      "head_top_y_WORKING_VALUE": 22,
+      "world_top_angle_deg": 15.64237765489918,
+      "image_top_angle_deg": 20.171368875743788,
+      "implied_camera_pitch_deg": -4.528991220844608
+    }
+  ],
+  "pitch_disagreement_deg": 2.618685800926446,
+  "assumptions": "Source GPS, approximate head pixels, no roll, equivalent width 36 mm, both heights 120 m",
+  "decision": "A common camera pitch must explain both known tops. This unsolved pose cannot calibrate stripe heights or justify widening/shortening the shafts."
+}

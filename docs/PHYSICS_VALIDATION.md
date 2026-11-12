@@ -271,6 +271,24 @@ phone and 16.9 km/h in the runner. Each up-shift then fell at -1.55 m/s². New s
 
 Evidence: `artifacts/physics/shift-brake/` (before/, after/ CSV + PNG, suite-before/, suite-after/ summaries).
 
+### 6d. Truck feel after the Fold test, ADR 0134 (2026-11-12)
+
+Owner: rocking "like a sports car" when accelerating, gears change "very quickly". Diagnosis: the free-drive default is the
+empty trailer (14.5 t, 25 kW/t), the acceleration matches that mass (0-50 km/h 10.2 s empty / 19.5 s 40 t at full pedal),
+and the nod came from each shift (clutch closing 200-300 rpm off synchronous speed, linear 0.12/0.15 s torque ramps, cab
+ζ 0.35). Changes: light-load skip shift, smoothstep torque fade 0.20 s out / 0.35 s in, engine-brake up-shift sync, cab
+ζ 0.5. New metric `max_shift_eye_pitch_swing_deg`, new scenario `launch_flat_comb_part60`.
+
+| launch on flat | 0-50 km/h | up-shifts to 50 | per-shift eye nod max |
+|---|---|---|---|
+| empty, full pedal | 10.17 -> 9.85 s | 5 -> 3 | 5.39 -> 3.83° |
+| 40 t, full pedal | 19.51 -> 20.41 s | 5 -> 5 | 4.57 -> 3.40° |
+| empty, 60 % | 13.91 -> 14.90 s | 5 -> 5 | 4.50 -> 3.62° |
+| 40 t, 60 % | 32.89 -> 33.97 s | 5 -> 5 | 3.23 -> 2.34° |
+
+Runner 107 scenarios / 550 checks green, xUnit 155/155, 9 goldens regenerated (shift timing). Plots reviewed:
+`artifacts/truck-feel/before_after_overlay.png`, `artifacts/truck-feel/{before,after}/*.feel.png`.
+
 ## 7. Known gaps / not modelled
 
 - **Not run in Unity or on the phone.** PhysX integration of two bodies with this constraint, cost on the Samsung A, and the feel test (docs/03 Stage 2 gate) are still open.

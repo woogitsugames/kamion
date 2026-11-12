@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using Game.Editor.Build;
+using Game.Rendering.Editor;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -77,10 +78,20 @@ namespace Game.World.Import
             return s != null && FilesFor(s) != null;
         }
 
+        // ADR 0122: static cab paint is opt-in data, never a blanket extension to yard props.
+        static bool YardPaint(Dictionary<string, object> def, string id) =>
+            id != null && id.StartsWith("tractor_paint_", StringComparison.Ordinal)
+            && def.Get("yard_paint") is bool enabled && enabled
+            && def.Get("texture_set") as string == "car_grime_clean"
+            && def.Get("paint") is List<object> paint && paint.Count >= 4;
+
         /// <summary>Vertex channels the material needs (mesh baking keeps TEXCOORD_0 / TEXCOORD_1 only where read).</summary>
         public static void Channels(Dictionary<string, object> def, string id, out bool uv0, out bool uv1, out bool colors)
         {
             uv0 = uv1 = colors = false;
+            // ADR0120: the existing World Surface material reads a byte-stable board marker, not UVs.
+            if (id == "concrete_plinth" && def.Get("furniture_plinth_detail") is Dictionary<string, object>) { colors = true; return; }
+            if (def.Get("furniture_sign_face") is string) { uv0 = true; return; }
             if (id != null && id.StartsWith("fab_", StringComparison.Ordinal) && FabMaterials.Has(id)) { uv0 = true; return; }
             if (!Has(def, id)) return;
             var s = Set(def.Get("texture_set") as string);
@@ -88,7 +99,7 @@ namespace Game.World.Import
             string uv = s != null ? Str(s.Get("uv")) ?? "" : "";
             if ((kind == "modulation_set" || uv.StartsWith("mesh_uv0")) && def.Get("uv") as string != "planar") uv0 = true;
             if (def.Get("uv1") as string == "along_m") uv1 = true;
-            if (id.StartsWith("car_paint_") && def.Get("paint") is List<object>) uv1 = true; // R4 source deposition payload
+            if ((id.StartsWith("car_paint_") && def.Get("paint") is List<object>) || YardPaint(def, id)) uv1 = true; // source deposition payload
             if (id == "road_asphalt" || id == "road_asphalt_new") uv1 = true;           // _ROADWEAR
             if ((id.StartsWith("hall_wall") || Runoff(def) || (def.Get("runoff") is bool ro && ro)) && Set("parapet_runoff") != null) uv1 = true;   // _RUNOFF (wall-top space): 0071 `weather` + 0081 `runoff`
             if (id == "decal_patch" || id == "decal_oil" || id == "decal_tyre") { uv0 = true; uv1 = true; }
@@ -133,6 +144,22 @@ namespace Game.World.Import
         /// <summary>PBR material for a manifest material, or null when its set is missing (caller falls back).</summary>
         public static Material Create(RegionImporter.Result r, string id, Dictionary<string, object> def, string path)
         {
+            if (id == "plate_back" && def.Get("furniture_sign_fronts") is Dictionary<string, object> fronts)
+                FurnitureSignFronts(r, fronts);
+            if (def.Get("furniture_sign_face") is string face) return FurnitureSign(r, id, def, face, path);
+            // ADR0120 additive, data-gated route: retain the original World Surface factory and material identity.
+            if (id == "concrete_plinth")
+            {
+                if (def.Get("furniture_plinth_detail") is Dictionary<string, object> detail)
+                    return FurniturePlinth(r, def, detail, path);
+                var previous = AssetDatabase.LoadAssetAtPath<Material>(path);
+                if (previous != null && previous.IsKeywordEnabled("_FURNITURE_PLINTH"))
+                {
+                    previous.DisableKeyword("_FURNITURE_PLINTH");
+                    previous.SetTexture("_FurnitureMap", null);
+                    EditorUtility.SetDirty(previous);
+                }
+            }
             if (!Has(def, id)) return null;
             var shader = Shader.Find(ShaderName) ?? throw new InvalidOperationException(ShaderName + " not found (compile error?)");
             var mat = AssetDatabase.LoadAssetAtPath<Material>(path);
@@ -203,7 +230,7 @@ namespace Game.World.Import
             // Parked-car paint (ADR 0073): the car_grime set carries clean paint at roughness 0.32 (smoothness 0.68) plus
             // film / dust; the manifest "rough" of the colour is the CLEAN clear coat, so scale the set to it. Before, the
             // manifest value was ignored and every paint rendered at 0.59 mean smoothness ("primer", REVIEW r8).
-            if (id.StartsWith("car_paint_") && def.Get("rough") != null)
+            if ((id.StartsWith("car_paint_") || YardPaint(def, id)) && def.Get("rough") != null)
                 mat.SetFloat("_SmoothnessScale", Mathf.Clamp((1f - (float)Num(def.Get("rough"))) / 0.68f, 0.5f, 1.4f));
             // ADR 0092 (review s9 par. 4, "firanka odbija jak polerowana blacha"): the curtain set carried smoothness 0.36
             // whatever the manifest said; in the shade of the hall the grazing-angle environment term (smoothness + F0)
@@ -215,11 +242,15 @@ namespace Game.World.Import
             mat.SetFloat("_MetallicScale", 0f);
             // Parked-car paint r10 (ADR 0078): clear coat over a base coat. Manifest "paint": [base metal, flake tilt,
             // pearl, base-coat roughness] (+ optional "pearl_tint"); solid colours have metal 0 and no flake.
-            if (id.StartsWith("car_paint_") && def.Get("paint") is List<object> cp && cp.Count >= 4)
+            if ((id.StartsWith("car_paint_") || YardPaint(def, id)) && def.Get("paint") is List<object> cp && cp.Count >= 4)
             {
                 mat.EnableKeyword("_CARPAINT");
                 mat.SetVector("_CarPaint", new Vector4((float)Num(cp[0]), (float)Num(cp[1]), (float)Num(cp[2]), (float)Num(cp[3])));
-                mat.SetVector("_CarFlake", new Vector4(400f, 1f, 0.08f, 1f));   // x:2.5mm flake cells,z:reflectance above pigment; w:ADR0089 per-instance road film (WORKING_VALUE)
+                // ADR0089 life r3 B: optional per-car flake reflectance lift.
+                // Existing paints and static cabs retain their original 0.08.
+                float flakeLift = id.StartsWith("car_paint_") && def.Get("flake_lift") != null
+                    ? Mathf.Clamp((float)Num(def.Get("flake_lift")), 0f, 0.08f) : 0.08f;
+                mat.SetVector("_CarFlake", new Vector4(400f, 1f, flakeLift, YardPaint(def, id) ? 2f : 1f)); // existing paint pass
                 var pt = def.Get("pearl_tint") as List<object>;
                 SetLinearPearlTint(mat, pt != null && pt.Count >= 3
                     ? new Vector3((float)Num(pt[0]), (float)Num(pt[1]), (float)Num(pt[2])) : Vector3.one);
@@ -271,6 +302,19 @@ namespace Game.World.Import
                 mat.SetVector("_PatchSeam", new Vector4(P("width_m", 0f), P("darkening", 0f),
                     P("fresh_tone", 1f), P("aged_tone", 1f)));
             }
+            // ADR0118 r2: material-local dirt; reset on every Apply to prevent reuse leaking it.
+            mat.SetVector("_KerbWear", new Vector4(0f, 0f, 0.55f, 0f));
+            mat.SetVector("_GroundWearExclude", Vector4.zero);
+            mat.SetVector("_GroundGrimeBase", Vector4.zero);
+            if (def.Get("ground_wear_exclude_local_en") is List<object> bounds && bounds.Count == 4)
+                mat.SetVector("_GroundWearExclude", new Vector4((float)Num(bounds[0]), (float)Num(bounds[1]),
+                    (float)Num(bounds[2]), (float)Num(bounds[3])));
+            if (setName == "kerb_concrete_1m" && def.Get("kerb_wear") is Dictionary<string, object> kw)
+            {
+                float K(string key, float fallback) => kw.Get(key) != null ? (float)Num(kw.Get(key)) : fallback;
+                mat.SetVector("_KerbWear", new Vector4(Mathf.Clamp01(K("joint_dirt", 0f)),
+                    Mathf.Clamp01(K("mineral_film", 0f)), Mathf.Clamp01(K("film_threshold", 0.55f)), 1f));
+            }
             bool asphalt = setName == "asphalt_worn" || setName == "asphalt_sma_fresh" || setName == "asphalt_patch";
             if (id == "road_asphalt" || id == "road_asphalt_new")
             {
@@ -289,6 +333,14 @@ namespace Game.World.Import
                 mat.EnableKeyword("_GRIME");
                 // x damp darkening, y macro-pool threshold (~0.62 = 16 % of the area), z joint dirt, w damp gloss
                 mat.SetVector("_Grime", new Vector4(blocks ? 0.42f : 0.38f, 0.62f, blocks ? 0.45f : 0.3f, 0.5f));
+                mat.SetVector("_GroundGrimeBase", mat.GetVector("_Grime"));
+                if (def.Get("ground_grime") is Dictionary<string, object> gg)
+                {
+                    var defaults = mat.GetVector("_Grime");
+                    float G(string key, float fallback) => gg.Get(key) != null ? Mathf.Clamp01((float)Num(gg.Get(key))) : fallback;
+                    mat.SetVector("_Grime", new Vector4(G("damp_darkening", defaults.x), G("damp_threshold", defaults.y),
+                        G("joint_dirt", defaults.z), G("damp_gloss", defaults.w)));
+                }
             }
             // ADR 0071 r11: manifest "cracks": strength = the 16 m crack layer on a non-asphalt set (worn dock apron)
             if (setName == "asphalt_worn" || def.Get("cracks") != null)
@@ -540,6 +592,88 @@ namespace Game.World.Import
             if (!AssetDatabase.IsValidFolder(dir)) return Array.Empty<Texture>();
             return AssetDatabase.FindAssets("t:Texture2D", new[] { dir }).Select(AssetDatabase.GUIDToAssetPath)
                 .Where(p => !p.EndsWith("_Var.png")).Select(AssetDatabase.LoadAssetAtPath<Texture>).Where(t => t != null).ToArray();
+        }
+
+        // A plate assembly's explicit data flag registers only its actual front IDs. RegionImporter
+        // iterates a ToList snapshot of MaterialDefs before importing prototypes, so these additions
+        // safely provide their existing texture/UV path without editing the generic prototype importer.
+        static void FurnitureSignFronts(RegionImporter.Result r, Dictionary<string, object> settings)
+        {
+            string meta = Path.Combine(EditorTools.RepoRoot, "art-source", "world", "props", "props_meta.json");
+            var prototypes = Obj(Obj(Parse(File.ReadAllText(meta))).Get("prototypes"));
+            var faces = new HashSet<string>(StringComparer.Ordinal);
+            foreach (var proto in prototypes.Values)
+                foreach (var material in Arr(Obj(proto).Get("materials")))
+                    if (material is string name && name.StartsWith("sign_", StringComparison.Ordinal)
+                        && !name.StartsWith("sign_facade_", StringComparison.Ordinal)) faces.Add(name);
+            foreach (string name in faces.OrderBy(x => x, StringComparer.Ordinal))
+            {
+                // An explicitly authored material definition from another domain retains ownership.
+                if (r.MaterialDefs.ContainsKey(name)) continue;
+                var face = new Dictionary<string, object> {
+                    { "color", new List<object> { 1.0, 1.0, 1.0 } }, { "rough", 0.45 },
+                    { "furniture_sign_face", name.Substring(5) },
+                    { "furniture_sign_retro", new Dictionary<string, object> { { "gain", Num(settings.Get("gain")) } } }
+                };
+                r.MaterialDefs[name] = face;
+                r.Materials[name] = FurnitureSign(r, name, face, name.Substring(5), $"{r.Dir}/Materials/M_{name}.mat");
+            }
+        }
+
+        // ADR0120 r2: explicit face data preserves the original Lit texture/UV path. The optional
+        // retro block selects the additive forward shader; removing it restores ordinary URP Lit.
+        static Material FurnitureSign(RegionImporter.Result r, string id, Dictionary<string, object> def,
+            string face, string path)
+        {
+            if (id != "sign_" + face || !System.Text.RegularExpressions.Regex.IsMatch(face, @"^[A-Z][A-Za-z0-9_-]*$"))
+                throw new InvalidOperationException("Invalid explicitly flagged furniture sign face");
+            string png = Path.Combine(EditorTools.RepoRoot, "art-source", "world", "signs", face + ".png");
+            if (!File.Exists(png)) throw new FileNotFoundException("Flagged furniture sign texture missing", png);
+            var tex = InstanceImporter.ImportTexture(r, png, clamp: true);
+            var c = Arr(def.Get("color"));
+            var color = new Color((float)Num(c[0]), (float)Num(c[1]), (float)Num(c[2]));
+            float rough = def.Get("rough") != null ? (float)Num(def.Get("rough")) : 0.45f;
+            var mat = RegionImporter.LitMaterial(path, color, rough, 0f, tex, true, 0.5f, false, null);
+            if (def.Get("furniture_sign_retro") is Dictionary<string, object> retro)
+            {
+                var shader = Shader.Find("Kamion/Furniture Sign") ?? throw new InvalidOperationException("Furniture sign shader missing");
+                mat.shader = shader;
+                mat.shaderKeywords = new[] { "_ALPHATEST_ON", "_FURNITURE_RETRO" };
+                float gain = Mathf.Max(0f, (float)Num(retro.Get("gain")));
+                // HDR Lit property: actual GPU readback receives this linear value directly.
+                // This is not the plain _Tint contract (which continues to use SetLinearTint).
+                mat.SetColor("_EmissionColor", new Color(gain, gain, gain, 1f));
+            }
+            else
+            {
+                mat.shaderKeywords = new[] { "_ALPHATEST_ON" };
+                mat.SetColor("_EmissionColor", Color.black);
+            }
+            EditorUtility.SetDirty(mat);
+            return mat;
+        }
+
+        static Material FurniturePlinth(RegionImporter.Result r, Dictionary<string, object> def,
+            Dictionary<string, object> detail, string path)
+        {
+            var c = Arr(def.Get("color"));
+            var albedo = new Color((float)Num(c[0]), (float)Num(c[1]), (float)Num(c[2]));
+            float rough = def.Get("rough") != null ? (float)Num(def.Get("rough")) : 0.9f;
+            float metal = def.Get("metal") != null ? (float)Num(def.Get("metal")) : 0f;
+            var mat = LookDevAssets.WorldMaterial(path, Str(def.Get("surface")), albedo, rough, metal, false);
+            mat.SetFloat("_GroundMasks", 0f); // same final state as RegionImporter's original fallback
+            string texture = detail.Get("texture") as string ?? "furniture_plinth";
+            if (texture != "furniture_plinth") throw new InvalidOperationException("Unexpected furniture plinth texture");
+            var scan = InstanceImporter.ImportTexture(r,
+                Path.Combine(EditorTools.RepoRoot, "art-source", "world", "textures", texture + ".png"), clamp: false);
+            mat.SetTexture("_FurnitureMap", scan);
+            mat.SetVector("_FurnitureDetail", new Vector4(
+                Mathf.Max(0.01f, (float)Num(detail.Get("tile_m"))),
+                Mathf.Max(0.01f, (float)Num(detail.Get("dirt_h"))),
+                Mathf.Clamp01((float)Num(detail.Get("dirt_strength"))), 0f));
+            mat.EnableKeyword("_FURNITURE_PLINTH");
+            EditorUtility.SetDirty(mat); // persisted scene material retains the build-time variant reference
+            return mat;
         }
 
         /// <summary>Estimated GPU bytes of the imported PBR textures (Android ASTC with mips, from the spec).</summary>
