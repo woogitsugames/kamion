@@ -71,6 +71,11 @@ wszystko, czego nie zmierzono w silniku, jest oznaczone.
     +31 432 trójkąty w wariancie Low regionu (najgorsza kamera uliczki +29 k, 0 draw), a A16 Low nie mieści się w budżecie
     GPU. Wizualnie ramki poprawiają domy na Low (`r2/sheet_low_a.jpg` vs `base/sheet_low_a.jpg`) — do włączenia, gdy Low
     odzyska zapas.
+16. **r4 — budżet High, decyzja lidera B** (`plots.NEAR_FRONT_M = 12`): pełne bryły roślin (krzew, drzewko, tuja) tylko
+    ≤ 12 m od frontu działki — tam, skąd patrzy kierowca; głębiej w działce wersje lite wspólne z Low (krzew daleki: 2 karty,
+    tylko High). Odchudzone rdzenie (1 pas), drzewko ~48 trójkątów, tuja w rzędzie 16, stacje żywopłotu co 1,92 m (było
+    1,28 m). Rekordy instancji drzew ogrodowych mają pole `"tier": "high"` (importer ignoruje nieznane pola — bez zmiany
+    zachowania do czasu filtra per tier z sekcji niżej). `INST_R_M` 2,3 m bez zmian.
 
 WORKING_VALUE: wszystkie progi, udziały i wymiary powyżej.
 
@@ -105,6 +110,25 @@ WORKING_VALUE: wszystkie progi, udziały i wymiary powyżej.
   `r10_house_2` +10), instancje +81, trójkąty instancji +10 k; trójkąty siatek po wyłączeniu ramek ≈ 0** (kit −0,9 k,
   grunt działek +0,6 k w regionie). Estymata kadru generatora, Low (`streetscape_qa.json`, 23 kamery): −1,7 k…+1,4 k
   trójkątów na kamerę względem main (`stretch_04` 946 528 → 946 920).
+- **r4 (decyzja B, po scaleniu main `6d511d49c`; kod `7d675d793`; baza = `base2`, czyli TREŚĆ main `1b002a730` zbudowana
+  i zaimportowana w tym samym worktree tego samego dnia — różnica to wyłącznie 0132)**: `build_world` exit 0 (616 s), region
+  High 4071 submeshy / 14 239 334 trójkąty, **Low 3051 / 4 580 678**; kit posesji **High 59 867** (r3 94 172; 0124 52 406:
+  płot 20,6 k, bramy 11,9 k, żywopłot 6,6 k, tuje w rzędach 6,5 k, drzewka 4,0 k, krzewy 2,9 k + 1,8 k, zarastanie 1,9 k,
+  byliny 1,2 k, tuje pojedyncze 1,1 k, świerki 0,7 k, kosze 0,6 k) / **Low 48 884** (r3 51 508). Fidelity exit 0. Import
+  601 s, 0 `error CS` / `Shader error`.
+- **Estymata kadru HIGH r4** (`r4/streetscape_qa.json`, próg 2 000 000): `stretch_04` **1 995 296** (base2 1 987 612, r3
+  2 027 946; zapas 4 704), `route_onramp_andersa_above` **1 986 990** (base2 1 982 699; zapas 13 010). Low: 947 654 /
+  852 975 (base2 947 656 / 852 977).
+- **Kamery kontrolne Low overcast, 67 kamer, r4 vs base2** (`r4/budget_low.txt`): draw MeshRenderer 18 282 → 18 282 (**+0**),
+  cienie 4603 → 4602 (−1), draw instancjonowane 18 859 → 18 885 (**+26**: `r10_shed_2` 187 → 201, `r10_house_2` 106 → 116,
+  pozostałe ≤ +3; najlepsze −3), instancje 18 220 → 18 346 (+126), trójkąty siatek 17 823 k → 17 814 k (**−9 k**), trójkąty
+  instancji 2190 k → 2202 k (+12 k, najw. kamera +6 k). Cały przyrost to 117 instancji drzew ogrodowych (wspólny
+  `WorldInstanceSet`, pkt 14); geometria siatek Low jest lżejsza niż w main.
+- **Testy r4**: pytest `tests/gis` **837 passed, 1 xfailed** (1060 s; oba testy budżetu High zielone); EditMode
+  **408 / 408** (`artifacts/tests/editmode-20261112-213413.xml`).
+- Pary r4 obejrzane: `artifacts/buildings-r9/pairs_r4/sheet_base_hc.jpg` (base2 | r4, High, 8 kamer), `sheet_base_low.jpg`,
+  `sheet_low.jpg` (kamery kontrolne Low), `sheet_ref.jpg` (r4 | zdjęcie). Z ulicy r4 nie różni się od r3 (pełne bryły
+  ≤ 12 m od frontu); z lotu (`r17_over_0`) w głębi działek widać karty.
 - Telefon: NIE mierzone (UNVERIFIED). Koszt GPU instancji drzew ogrodowych na A16 Low nieznany.
 
 ## Koszt drzew ogrodowych na Low i propozycja filtra per tier (poza własnością gałęzi — tylko propozycja)
@@ -126,7 +150,7 @@ WORKING_VALUE: wszystkie progi, udziały i wymiary powyżej.
   (b) Low tylko pas przed płotem (34 instancje) — wymaga jednak pola tier. Zalecenie: pole `tier` + pomiar
   `rq_ab off:` drzew ogrodowych na A16 przed decyzją; do tego czasu 117 wspólnych.
 
-## Otwarte: budżet High (2 testy pytest gis czerwone)
+## Budżet High — ZAMKNIĘTE w r4 wariantem B (decyzja lidera; historia poniżej, liczby r4 w sekcji „Liczby”)
 - `tests/gis/test_hero_bridge.py::test_asset_lods_and_budget` i `tests/gis/test_world_v31.py::test_frame_budget_with_forest_hlod`:
   estymata kadru HIGH ≤ 2 000 000 trójkątów. r3: `stretch_04` **2 027 946** (main 1 986 709), `route_onramp_andersa_above`
   **2 009 629** (main 1 981 768). Przyczyna: kit posesji High 52,4 k → 94,2 k (+41,8 k; krzewy / drzewka jako bryły, tuje,
