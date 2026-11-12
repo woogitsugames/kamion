@@ -1,5 +1,7 @@
 # Skany materiałów wnętrza
 
+Pochodzenie fotograficzne: [FAQ dostawcy](https://docs.polyhaven.com/en/faq?q=commercial) potwierdza, że tekstury powstają metodami fotograficznymi (fotogrametria lub photometric stereo), bez generowania proceduralnego i AI. [Wymagania tekstur](https://docs.polyhaven.com/technical-standards/textures) opisują te dwie metody. To potwierdzenie procesu biblioteki; konkretna metoda przechwycenia Brown Leather pozostaje UNVERIFIED. Profil Plastic jest pochodną skóry i nie stanowi skanu tworzywa.
+
 Manifest `../cab_material_scans.json` wskazuje źródło, autora, licencję, fizyczny rozmiar oraz rozmiary plików i MD5. Brown Leather: Rob Tuytel / [Poly Haven](https://polyhaven.com/a/brown_leather), [CC0](https://polyhaven.com/license), 40 × 40 cm. `_raw/` jest ignorowany; żaden zasób Fab/Megascans nie jest częścią tego zestawu.
 
 Flaga `leather.enabled` steruje nadpisaniem dwóch istniejących map Leather w eksporterze `a6_export.py` oraz korektą UV obręczy w `TruckAssetBuilder`. Brak lub uszkodzenie źródła przy aktywnej fladze przerywa eksport. Nie ma cichego zastępowania skanu teksturą proceduralną.

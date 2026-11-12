@@ -1,4 +1,4 @@
-# Kabina r2 — praca w toku, bez zgłoszenia do scalenia
+# Kabina r2 — materiały CC0, końcowa walidacja GIS w toku
 
 Gałąź gpt-cab-r2, start od r1 a8651008 i merge aktualnego main bez konfliktów. Poprawki K1–K3 pozostają w baseline. Nie scalano do main, nie pushowano i nie używano telefonów.
 
@@ -10,4 +10,14 @@ Korekta UV obręczy 5 cm→12 cm jest pod tą samą flagą skóry. Trzy testy Ed
 
 K4: wariant AO bez mipów zakończył się exit 0 i nie zmienił widocznie smugi High clear. UV atlasu AO w centralnym rzutowanym obszarze: 170 trójkątów, minimum 314,41 texeli/m, mediana 577,12 texeli/m, p95 anizotropii 1,344. To pomiar geometrii bez testu okluzji i bez dokładnego wyboru części. Nie zgłoszono naprawy smugi. Przygotowano wyłączony profil ziarna tworzywa: rekonstrukcja tłoczenia oparta na skanie skóry, nie skan elementu deski. Crop 20 cm→kafel 10 cm i amplitudy są WORKING_VALUE; profil nie jest jeszcze przetworzony ani zintegrowany.
 
-Do wykonania: ocena profilu tworzywa po kontrolnym World pod heavy, dalsza diagnoza K4 i czytelność zużycia K6, ocena prześwitów K5, budżety wszystkich kamer przed/po i końcowe testy. Pełny GIS dopiero przy zamknięciu rundy. Przewidywane konflikty: addytywny fragment TruckAssetBuilder.cs; reszta plików należy do wnętrza kabiny. Nie zmieniano shaderów szyb ani zewnętrza.
+Powyższe akapity opisują etap scan1. Końcowy wariant scan2 włącza również profil Plastic. Jest to pochodna skanu skóry, rekonstrukcja tłoczenia, a nie skan konkretnej deski: crop 20 cm na kafel 10 cm, amplitudy albedo/roughness/AO 0,35 i normal 0,6 są WORKING_VALUE. FAQ Poly Haven potwierdza fotograficzny proces tekstur biblioteki; konkretna metoda przechwycenia Brown Leather pozostaje UNVERIFIED. Źródła: https://polyhaven.com/a/brown_leather oraz https://docs.polyhaven.com/en/faq?q=commercial .
+
+Scan2: obejrzano wszystkie 28 kadrów Low/High × clear/overcast. Sześć odbić w każdym stanie ma zero pikseli identyfikatora wnętrza; konfiguracja optyki jest niezmieniona. comparison-0112-scan2.json daje PASS dla pełnych 78 kamer Low/Gate3: maksymalny przyrost zwykłych drawów 0, instancji 0, zwykłych trójkątów 0 i trójkątów instancji 0. Są to estymaty widoczności CPU edytora, bez pomiaru GPU A16. Nie dodano przebiegów shaderów gry.
+
+Eksporter otrzymał tryb --textures-only dla par Plastic/Leather. Reprodukcja pod heavy zakończona exit 0; 12/12 SHA256 identycznych z mapami zainstalowanymi w grze, dowód material-reproduction.json. Brak Pillow w Blenderze obsługuje sekwencyjne wywołanie Pythona projektu w tym samym slocie heavy. Nie zmieniano globalnej instalacji Blendera. Pełne EditMode: 279/279, XML artifacts/tests/editmode-20261112-013807.xml. World: exit 0, 416,4 s, brak fallback=True; własne produkty poza cab cofnięte.
+
+K4: po ziarnie scan2 powierzchnia jest bardziej ciągła, ale nie zgłaszamy pełnej naprawy szerokiego pasma AO. Wariant ograniczenia tłumienia diffuse fill odrzucono; shader CabInterior wrócił do stanu r1. K5: poprawione przekroje zaimportowanego modelu pokazują prześwity kierownica–poduszka i podłokietnik–siedzisko. Nie odtworzono penetracji i nie przesuwano arbitralnie geometrii. To inspekcja wizualna z wyciętym otoczeniem, nie test zawierania brył. K6: zmieniono mikroziarno; zużycia w skali dłoni/kontaktu nie zwiększano, istniejące szwy 3D zachowano.
+
+Dowody do obejrzenia (arkusze do 960 px): scan2-Low-clear-960.jpg, scan2-Low-overcast-960.jpg, scan2-High-clear-960.jpg, scan2-High-overcast-960.jpg, plastic-grain-Low-clear-before-after-960.jpg, plastic-grain-High-clear-before-after-960.jpg oraz clearance-sections-960.jpg. Pary zdjęcie/render i licencje referencji z r1 pozostają aktualne; zdjęcia DAF/Scania są odniesieniem materiałowym, nie dowodem zgodności fikcyjnej kabiny z konkretnym modelem.
+
+Końcowy GIS pod heavy jest w kolejce. Przewidywane konflikty: addytywny fragment TruckAssetBuilder.cs; reszta plików należy do wnętrza kabiny. Nie zmieniano shaderów szyb ani zewnętrza. Następna runda: noc i podświetlenie zegarów; zużycie kontaktowe i pasmo AO pozostają otwarte do dalszej oceny.
