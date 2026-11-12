@@ -1,9 +1,10 @@
 param(
-    [ValidateSet('import','render','sbs-sign','editmode','plinth-probe','sign-probe','night-rig')] [string]$Step,
+    [ValidateSet('import','render','side-render','sbs-sign','editmode','plinth-probe','sign-probe','night-rig')] [string]$Step,
     [string]$Phase='before',
     [ValidateSet('Low','High')] [string]$Tier='Low',
     [ValidateSet('clear','overcast','dusk')] [string]$Lighting='overcast',
-    [string]$Cameras=''
+    [string]$Cameras='',
+    [string]$CameraFile=''
 )
 $ErrorActionPreference='Stop'
 $root=(Resolve-Path "$PSScriptRoot/../../..").Path
@@ -48,15 +49,16 @@ try {
         'import' {
             & pwsh scripts/import-region.ps1 -Region bialystok-industrial-c *> "$ev/import-$Phase.log"
         }
-        'render' {
+        {$_ -in @('render','side-render')} {
             $scene=if ($Tier -eq 'High') { 'WorldC_High' } else { 'WorldC' }
+            $cameraInput=if($CameraFile){$CameraFile}else{"$ev/cameras.json"}
             $renderDir="$ev/$Phase/$Tier-$Lighting"
             $priorStats=@()
             if ($Cameras -and (Test-Path "$renderDir/stats.txt")) {
                 $priorStats=@(Get-Content "$renderDir/stats.txt")
                 Copy-Item "$renderDir/stats.txt" "$renderDir/stats-before-diagnostic-correction.txt"
             }
-            & pwsh scripts/visual-qa.ps1 -Scene $scene -Tier $Tier -Lighting $Lighting -Gate3 "$ev/cameras.json" -Cameras $Cameras -OutputDir $renderDir *> "$ev/render-$Phase-$Tier-$Lighting.log"
+            & pwsh scripts/visual-qa.ps1 -Scene $scene -Tier $Tier -Lighting $Lighting -Gate3 $cameraInput -Cameras $Cameras -OutputDir $renderDir *> "$ev/render-$Phase-$Tier-$Lighting.log"
             $renderCode=$LASTEXITCODE
             if ($renderCode -eq 0 -and $priorStats.Count) {
                 $ids=$Cameras.Split(',') | ForEach-Object { [regex]::Escape($_) }

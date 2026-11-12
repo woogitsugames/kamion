@@ -74,3 +74,5 @@ potem poprawić największe udokumentowane odstępstwo wiaty. WIP po każdym kro
 2026-11-12T11:56:36.7394836+01:00: heavy focused candidate1; sukces=True; slot gpt-furniture-r3 zwolniony. NASTĘPNY KROK: sprawdzić log i kontynuować walidację rundy.
 
 2026-11-12T11:56:58.8857809+01:00: pojedynczy plik test_furniture_shelters_0120.py: 10 passed w 0,27 s. Weryfikuje zakres wyboru źródeł, niezmienną kolizję, przejście, połączenie słupków z dachem oraz sloty prototypu. Nie dowodzi budżetu sceny. Slot testów zwolniony; generator after1 czeka w aktualnej kolejce heavy (queue ahead=7), bez omijania kolejności. NASTĘPNY KROK: generator, geometry, import i 236 renderów; kod kandydata zamrożony.
+
+2026-11-12T11:58:19.0427891+01:00: przygotowano osobne dwa kadry przeciwnego narożnika wiat do kontroli szkła. Ich plik kamer i katalogi before-side/after-side nie zmieniają 59 kamer ani dokładnych liczników budżetowych. Własny side-render omija wyłącznie swój lokalny marker harmonogramu; nadal pobiera ten sam wymagany slot Unity. Przyszły import kandydata czeka do zakończenia tej osobnej próby bazowej.
