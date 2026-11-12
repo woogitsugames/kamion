@@ -8,3 +8,5 @@ Po analizie ograniczono porównanie do reszty; obie nowe funkcje landmarków zac
 LICENSES: unia referencji EC i kabiny. Następny krok: zakończyć merge i świeży baseline.
 Cel r4: nieregularne korony trzech iglaków remizy, bez globalnej roślinności i pigmentu D48.
 Heavy i Unity wyłącznie przez slot z main; bez Priority, heavy zwalniany po kroku.
+
+Krok 2: kolejka baseline gotowa: World pod heavy, po zwolnieniu import i cztery serie PNG pod osobnymi slotami Unity gpt-landmarks. Każdy Acquire/Release wskazuje skrypt absolutny main, bez Priority i bez czyszczenia cudzych slotów. Model r4 jeszcze nie zmieniony; odziedziczone13 kamer dodatkowych, pełny inwentarz zostanie zmierzony.
