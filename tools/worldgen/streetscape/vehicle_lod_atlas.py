@@ -69,11 +69,11 @@ def consolidate(prims, name):
     return out
 
 
-def generate(root=None):
+def generate(root=None, texture_dir=None):
     from .materials import M
     from .life_cars import plate_atlas
     root = Path(root) if root else Path(__file__).resolve().parents[3]
-    dest = root / "art-source/world/textures"
+    dest = Path(texture_dir) if texture_dir is not None else root / "art-source/world/textures"
     dest.mkdir(parents=True, exist_ok=True)
     base = np.zeros((512, 1024, 3), np.uint8)
     mask = np.zeros((512, 1024, 4), np.uint8)

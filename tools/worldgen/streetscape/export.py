@@ -158,10 +158,10 @@ def glb_materials():
 
 
 def export(codes, boards, out_dir=None):
-    VLA.generate()
     out_dir = Path(out_dir) if out_dir else ART / "props"
     sign_dir = (out_dir.parent / "signs") if out_dir != ART / "props" else ART / "signs"
     tex_dir = (out_dir.parent / "textures") if out_dir != ART / "props" else ART / "textures"
+    VLA.generate(texture_dir=tex_dir)
     for d in (out_dir, sign_dir, tex_dir):
         d.mkdir(parents=True, exist_ok=True)
     mats = dict(glb_materials())
