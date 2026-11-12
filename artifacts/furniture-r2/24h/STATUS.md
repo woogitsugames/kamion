@@ -137,3 +137,5 @@ NASTĘPNY KROK: przygotować własne skrypty r2 z ownerem heavy gpt-furniture-r2
 2026-11-12T09:20:11.0381226+01:00: próba znaków nie przeszła (exit=1). Własny import/render pozostaje wstrzymany przez PAUSE_UNITY do odczytu logu i naprawy. NASTĘPNY KROK: odczytać sign-probe-first.log oraz XML, usunąć marker dopiero po usunięciu błędu kompilacji.
 
 2026-11-12T09:20:28.7516724+01:00: nowa regresja miała niejednoznaczne Object w sprzątaniu; poprawiono pełną nazwę UnityEngine.Object. Próba nie przeszła kompilacji, nie uznano testów za wykonane. NASTĘPNY KROK: ponowić tylko FurnitureSignTests -Phase cache2-fixed.
+
+2026-11-12T09:20:55.9119220+01:00: Unity sign-probe cache2-fixed Low overcast; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
