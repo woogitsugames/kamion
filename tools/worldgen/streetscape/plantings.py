@@ -81,7 +81,7 @@ SPECIES = {
     # with a small rounded arris; shoots grow out lighter (copper) above the cut. Lumps 0.015 m, dome 0.05.
     "berberis_red": dict(tex="berberis", h=HEDGE_H, plant=(0.55, 0.85), bulge=0.025, dome=0.10, gap_p=0.09, sigma=0.5,
                          sprig=0.13, sprig_wh=((0.16, 0.28), (0.10, 0.20)), prof="clipped", band=BAND_M,
-                         local_top=True, leaf_core=True),
+                         local_top=True, leaf_core=True, offset_rings=True),
     "privet": dict(tex="privet", h=(1.2, 1.7), plant=(0.45, 0.65), bulge=0.08, dome=0.12, gap_p=0.10, sigma=0.36,
                    sprig=0.30, sprig_wh=((0.14, 0.24), (0.10, 0.18))),
     "hornbeam": dict(tex="hornbeam", h=(1.4, 2.0), plant=(0.5, 0.7), bulge=0.08, dome=0.10, gap_p=0.09, sigma=0.38,
@@ -184,9 +184,29 @@ def _local_top_height(points, boundary, heights):
     return (weights @ heights) / weights.sum(1)
 
 
+def _offset_ring(poly, inset, count, anchor):
+    """Sample a real polygon offset with stable CCW winding and start point.
+
+    Normal displacement can cross itself at the small corners of a traced bed.
+    Do not repair such a ring after the fact or silently discard polygon pieces.
+    """
+    from shapely.geometry import LineString
+    offset = poly.buffer(-inset, quad_segs=4)
+    if offset.geom_type != "Polygon" or offset.is_empty or not offset.is_valid:
+        raise ValueError(f"Hedge offset {inset:.4f} m is not one valid polygon")
+    boundary = _ccw_ring(offset, max(offset.length, 1.0))
+    line = LineString(np.vstack([boundary, boundary[:1]]))
+    start = line.project(Point(anchor))
+    at = (start + np.arange(count) * line.length / count) % line.length
+    result = shapely.get_coordinates(shapely.line_interpolate_point(line, at))
+    if not Polygon(result).is_valid:
+        raise ValueError("Sampled hedge offset self-intersects")
+    return result
+
+
 def hedge_mass(buf, poly, zground, key, h=None, src="", plant="berberis_red", stats=None):
     """Clipped hedge over plan polygon `poly` (local metres) standing on zground (review r6 W-N12, ADR 0049 addendum):
-    an opaque dark core (interior shade, stems visible at the foot), an alpha leaf shell SHELL_D outside it (silhouette
+    an inner layer (opaque for most species, leaf alpha for berberis), an alpha leaf shell SHELL_D outside it (silhouette
     and surface broken into leaves, open below SHELL_FOOT so the base reads dark), per-plant lumps and dips along the
     perimeter (thin / missing plants), a lumpy crown and loose shoot cards on the top edge, sides and top."""
     from .hedge_textures import HEDGE_TILE_M
@@ -195,7 +215,10 @@ def hedge_mass(buf, poly, zground, key, h=None, src="", plant="berberis_red", st
     leaf_core = S.get("leaf_core", False)
     core_draw_m = shell_m if leaf_core else core_m
     h = h if h is not None else S["h"][0] + _h(key, "h") * (S["h"][1] - S["h"][0])
-    R = _ccw_ring(poly.buffer(0), 0.3)
+    offset_rings = S.get("offset_rings", False)
+    R = (_offset_ring(poly, 0.0, max(16, math.ceil(poly.length / 0.3)),
+                      np.asarray(poly.exterior.coords)[0]) if offset_rings
+         else _ccw_ring(poly.buffer(0), 0.3))
     if len(R) < 3:
         return 0
     N = _ring_normals(R)
@@ -213,8 +236,23 @@ def hedge_mass(buf, poly, zground, key, h=None, src="", plant="berberis_red", st
     n = len(R)
     nt = 0
 
-    def rings(R0, hh, prof_, sel=slice(None)):
-        return [(R0[sel] + N[sel] * (b * bulge[sel] - d * k)[:, None], zg[sel] + f * hh[sel]) for d, f, b in prof_]
+    def rings(R0, hh, prof_, sel=slice(None), inset=0.0):
+        if not offset_rings:
+            return [(R0[sel] + N[sel] * (b * bulge[sel] - d * k)[:, None], zg[sel] + f * hh[sel]) for d, f, b in prof_]
+        result = []
+        for d, f, b in prof_:
+            base = _offset_ring(poly, inset + d * k, len(R), R[0])[sel]
+            normals = _ring_normals(base)
+            # Keep small per-plant variation only while the outline stays valid.
+            for scale in (1.0, 0.5, 0.0):
+                points = base + normals * (scale * b * bulge[sel])[:, None]
+                if Polygon(points).is_valid:
+                    break
+            else:
+                raise ValueError("Hedge plant variation self-intersects")
+            ground = zground(points[:, 0], points[:, 1])
+            result.append((points, ground + f * hh[sel]))
+        return result
 
     def strip(rg, mat, UV):
         n = len(rg[0][0])
@@ -237,7 +275,7 @@ def hedge_mass(buf, poly, zground, key, h=None, src="", plant="berberis_red", st
     # core: inset and lowered by SHELL_D, dark interior material (modulation set hedge_foliage)
     # (half the perimeter vertices: it only shows through the leaf gaps; 1.3 x SHELL_D keeps the chords inside)
     cs = slice(None, None, 2) if n >= 16 else slice(None)
-    core = rings(R - N * 1.3 * SHELL_D, hl - SHELL_D, prof, cs)
+    core = rings(R - N * 1.3 * SHELL_D, hl - SHELL_D, prof, cs, inset=1.3 * SHELL_D)
     nc = len(core[0][0])
     core_uv = np.column_stack([np.tile(per[cs], len(core)),
                                np.concatenate([np.full(nc, f * h) for _, f, _ in prof])])

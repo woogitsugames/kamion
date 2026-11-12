@@ -1,10 +1,14 @@
 """Small, read-only four-bed geometry study on flat ground; no build or tests."""
 import hashlib
+import argparse
 import json
 import sys
 from pathlib import Path
 
 here=Path(__file__).resolve().parent
+parser=argparse.ArgumentParser()
+parser.add_argument('--label',default='a')
+args=parser.parse_args()
 root=here.parents[1]
 sys.path.insert(0,str(root/'tools/worldgen'))
 import numpy as np
@@ -53,5 +57,5 @@ finally:
     pt._fill=original
 result=dict(source_sha256=hashlib.sha256((root/'tools/worldgen/streetscape/plantings.py').read_bytes()).hexdigest(),
     caps=records,note='Four authored footprints, flat z=0; no World, GIS pytest, Unity, or production write. Internal fill observation only; no visual acceptance.')
-(here/'cap-study-a.json').write_text(json.dumps(result,indent=2)+'\n',encoding='utf-8')
+(here/('cap-study-'+args.label+'.json')).write_text(json.dumps(result,indent=2)+'\n',encoding='utf-8')
 print(json.dumps(result,indent=2))

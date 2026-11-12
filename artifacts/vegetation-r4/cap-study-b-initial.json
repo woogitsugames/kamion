@@ -1,0 +1,94 @@
+{
+  "source_sha256": "1928f1694d22befc2df6c2812d84d598f741d860ff502d3953ce2ead50e83998",
+  "caps": [
+    {
+      "bed": "E1",
+      "spacing_m": 1.0,
+      "boundary_vertices": 63,
+      "interior_vertices": 0,
+      "triangles": 61,
+      "ring_valid": true,
+      "ring_reason": "Valid Geometry",
+      "ring_area_m2": 9.120916908479721,
+      "maximum_triangle_edge_m": 0.7426740961059632
+    },
+    {
+      "bed": "E1",
+      "spacing_m": 0.6,
+      "boundary_vertices": 126,
+      "interior_vertices": 0,
+      "triangles": 124,
+      "ring_valid": true,
+      "ring_reason": "Valid Geometry",
+      "ring_area_m2": 11.505595608285645,
+      "maximum_triangle_edge_m": 0.7275158090695311
+    },
+    {
+      "bed": "E2",
+      "spacing_m": 1.0,
+      "boundary_vertices": 72,
+      "interior_vertices": 0,
+      "triangles": 70,
+      "ring_valid": true,
+      "ring_reason": "Valid Geometry",
+      "ring_area_m2": 12.595144526701693,
+      "maximum_triangle_edge_m": 0.8908434931278787
+    },
+    {
+      "bed": "E2",
+      "spacing_m": 0.6,
+      "boundary_vertices": 143,
+      "interior_vertices": 6,
+      "triangles": 153,
+      "ring_valid": true,
+      "ring_reason": "Valid Geometry",
+      "ring_area_m2": 15.294104024227355,
+      "maximum_triangle_edge_m": 0.8716243911561755
+    },
+    {
+      "bed": "A",
+      "spacing_m": 1.0,
+      "boundary_vertices": 72,
+      "interior_vertices": 0,
+      "triangles": 70,
+      "ring_valid": true,
+      "ring_reason": "Valid Geometry",
+      "ring_area_m2": 15.39236291177188,
+      "maximum_triangle_edge_m": 0.9782447843769144
+    },
+    {
+      "bed": "A",
+      "spacing_m": 0.6,
+      "boundary_vertices": 143,
+      "interior_vertices": 4,
+      "triangles": 149,
+      "ring_valid": true,
+      "ring_reason": "Valid Geometry",
+      "ring_area_m2": 18.128618929955696,
+      "maximum_triangle_edge_m": 0.9723435897566677
+    },
+    {
+      "bed": "C",
+      "spacing_m": 1.0,
+      "boundary_vertices": 60,
+      "interior_vertices": 0,
+      "triangles": 58,
+      "ring_valid": true,
+      "ring_reason": "Valid Geometry",
+      "ring_area_m2": 10.617553807442325,
+      "maximum_triangle_edge_m": 0.8580987235089778
+    },
+    {
+      "bed": "C",
+      "spacing_m": 0.6,
+      "boundary_vertices": 119,
+      "interior_vertices": 1,
+      "triangles": 119,
+      "ring_valid": true,
+      "ring_reason": "Valid Geometry",
+      "ring_area_m2": 12.881017841548498,
+      "maximum_triangle_edge_m": 0.8394395595401716
+    }
+  ],
+  "note": "Four authored footprints, flat z=0; no World, GIS pytest, Unity, or production write. Internal fill observation only; no visual acceptance."
+}
