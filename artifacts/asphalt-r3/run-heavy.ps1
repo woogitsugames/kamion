@@ -1,5 +1,5 @@
 param(
-    [Parameter(Mandatory)][ValidateSet('World','Materials','FocusedTests','Fidelity','PhysicsGate3','Compare','Inventory','WheelMetrics','GeometryAudit')][string]$Stage,
+    [Parameter(Mandatory)][ValidateSet('World','Materials','FocusedTests','Fidelity','PhysicsGate3','Compare','Inventory','WheelMetrics','GeometryAudit','YardProbe')][string]$Stage,
     [string]$Label = 'candidate', [string[]]$Tests = @(), [string]$Only = '', [switch]$EndOfRound
 )
 $ErrorActionPreference = 'Stop'
@@ -34,6 +34,7 @@ try {
         'WheelMetrics' { & uv run --project tools/worldgen python artifacts/asphalt-r3/wheel_contrast.py --after $Label *> $log }
         'GeometryAudit' { & uv run --project tools/worldgen python artifacts/asphalt-r3/surface_geometry_audit.py --label $Label *> $log }
         'Inventory' { & uv run --project tools/worldgen python artifacts/asphalt-r3/patch_inventory.py *> $log }
+        'YardProbe' { & uv run --project tools/worldgen python artifacts/asphalt-r3/yard_probe.py --label $Label *> $log }
     }
     $code = $LASTEXITCODE
 } finally {
