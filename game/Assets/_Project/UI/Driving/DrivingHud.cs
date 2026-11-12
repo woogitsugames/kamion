@@ -93,6 +93,8 @@ namespace Game.UI.Driving
         HudLayoutInput m_In;
         HudLayoutResult m_L;
         bool m_LayoutValid, m_DevOpen, m_LabOpen;
+        RectTransform m_GrabRt;
+        bool m_LogGrab;
         RectTransform m_ClusterRt, m_ParkWarnRt, m_ReverseRt, m_DevToggleRt, m_DevPanelRt, m_LabRt, m_TelemetryRt, m_WheelRt, m_GyroRt,
             m_TurnRt, m_StalkRt, m_BrakeRt, m_ThrottleRt, m_GearsRt, m_DevTextRt;
         Text m_DevToggleLabel;
@@ -346,7 +348,8 @@ namespace Game.UI.Driving
             // covers the free margin to the safe-area edges left of and below the wheel (no other control is there).
             var grab = Rect("GrabArea", root);
             grab.anchorMin = Vector2.zero; grab.anchorMax = Vector2.one;
-            grab.offsetMin = new Vector2(-HudLayout.WheelLeft, -HudLayout.ControlsBottom); grab.offsetMax = Vector2.zero;
+            grab.offsetMin = grab.offsetMax = Vector2.zero;   // sized by UpdateLayout (HudLayout.WheelGrabRect)
+            m_GrabRt = grab;
             grab.gameObject.AddComponent<Image>().color = new Color(0, 0, 0, 0);
             grab.SetAsFirstSibling();
             var w = root.gameObject.AddComponent<SteeringWheelWidget>();
@@ -581,6 +584,13 @@ namespace Game.UI.Driving
             SetRect(m_LabRt, m_L.DevPanel);
             if (s.Telemetry) SetRect(m_TelemetryRt, m_L.Telemetry);
             SetRect(m_WheelRt, new Rect(m_L.Steering.x, m_L.Steering.y, HudLayout.WheelSize, HudLayout.WheelSize));
+            if (m_GrabRt != null)
+            {
+                Rect g = HudLayout.WheelGrabRect(m_L, s.Width, s.Height, HudLayout.GrabMarginUnits(m_View.PixelsPerUnit, DeviceDisplay.Dpi));
+                m_GrabRt.offsetMin = new Vector2(g.xMin - m_L.Steering.x, g.yMin - m_L.Steering.y);
+                m_GrabRt.offsetMax = new Vector2(g.xMax - (m_L.Steering.x + HudLayout.WheelSize), g.yMax - (m_L.Steering.y + HudLayout.WheelSize));
+                m_LogGrab = true;
+            }
             SetRect(m_GyroRt, new Rect(m_L.Steering.x, m_L.Steering.y, HudLayout.GyroSize.x, HudLayout.GyroSize.y));
             SetRect(m_TurnRt, m_L.TurnSignals);
             SetRect(m_StalkRt, m_L.Stalk);
@@ -589,12 +599,30 @@ namespace Game.UI.Driving
             SetRect(m_GearsRt, m_L.Gears);
             SetRect(m_DevTextRt, m_L.DevText);
 
+            if (m_LogGrab) { m_LogGrab = false; LogTouchZones(s.Width, s.Height); }
+
             bool grid = m_DevOpen && !m_LabOpen, lab = m_DevOpen && m_LabOpen;
             if (m_DevPanelRt.gameObject.activeSelf != grid) m_DevPanelRt.gameObject.SetActive(grid);
             if (m_LabPanel.activeSelf != lab) m_LabPanel.SetActive(lab);
             m_DevToggleImage.color = m_DevOpen ? k_ButtonOn : k_Button;
             string tl = m_DevOpen ? "Zamknij" : "Panel";
             if (!ReferenceEquals(m_DevToggleLabel.text, tl)) m_DevToggleLabel.text = tl;
+        }
+
+        /// <summary>ADR 0135 r2: one [CONTROLS] line per layout with the touch geometry in screen pixels (safe-area origin
+        /// + units x px/unit): wheel drawing, wheel grab area, the look pad (everything else outside the HUD zones).</summary>
+        void LogTouchZones(float widthUnits, float heightUnits)
+        {
+            var ci = CultureInfo.InvariantCulture;
+            float ppu = m_View.PixelsPerUnit;
+            Rect safe = Screen.safeArea;
+            Rect g = HudLayout.WheelGrabRect(m_L, widthUnits, heightUnits, HudLayout.GrabMarginUnits(ppu, DeviceDisplay.Dpi));
+            string Px(Rect r) => (safe.x + r.x * ppu).ToString("F0", ci) + "," + (safe.y + r.y * ppu).ToString("F0", ci) + " "
+                                 + (r.width * ppu).ToString("F0", ci) + "x" + (r.height * ppu).ToString("F0", ci);
+            ControlInputLogger.WriteNoStack("[CONTROLS] touch-zones screen=" + Screen.width + "x" + Screen.height + " safe=" + Px(new Rect(0, 0, safe.width / Mathf.Max(1e-4f, ppu), safe.height / Mathf.Max(1e-4f, ppu)))
+                + " ppu=" + ppu.ToString("F3", ci) + " dpi=" + DeviceDisplay.Dpi.ToString("F0", ci)
+                + " wheel=" + Px(new Rect(m_L.Steering.x, m_L.Steering.y, HudLayout.WheelSize, HudLayout.WheelSize)) + " grab=" + Px(g)
+                + " turn=" + Px(m_L.TurnSignals) + " stalk=" + Px(m_L.Stalk) + " look=rest of screen (px, origin bottom-left; ADR 0135)");
         }
 
         static void HalfOf(RectTransform rt, float y0, float y1)

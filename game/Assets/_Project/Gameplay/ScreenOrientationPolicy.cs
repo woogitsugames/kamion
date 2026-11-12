@@ -51,25 +51,25 @@ namespace Game.Gameplay
     public enum OrientationCommand { None, AllowAuto, Lock }
 
     /// <summary>
-    /// Settle-then-lock state machine (ADR 0135, review 0134-0135 P1). Pure logic, unit-tested.
-    /// - A new screen configuration (first frame, fold / unfold, multi-window: the sorted window size changes) starts a
-    ///   short settle: the allowed orientations (<see cref="ScreenOrientationPolicy.Decide"/>) rotate freely so the picture
-    ///   turns to how the device is held at that moment. A rotation during the settle (width/height swap) restarts it.
-    /// - After <see cref="SettleSeconds"/> the CURRENT concrete orientation is locked: tilting the phone while driving
-    ///   never rotates the picture again (nor suspends gyro steering, which recalibrates on every orientation change).
-    /// - Elongated screens (phones): landscape L/R keep rotating as before, unless gyro steering is on (then locked
-    ///   too: the steering tilt is the very motion the orientation sensor reads). Near-square screens: always locked.
+    /// Orientation state machine (ADR 0135 r3). Pure logic, unit-tested.
+    /// Owner, Fold, r2: "dalej obraca obraz" - the r2 settle (rotate freely 1.2 s, then lock) itself turned the picture:
+    /// the activity started in landscape and then rotated to the held portrait. r3: the game NEVER asks for a rotation on
+    /// a near-square screen. Player Settings allow all four orientations (activity launches in the orientation the
+    /// display already has, no launch rotation), and on a near-square window the current concrete orientation is locked
+    /// at once - at start and after every fold / unfold (a new sorted window size).
+    /// Elongated windows (phones, cover screen): landscape L/R only (a phone held upright turns to landscape once, as
+    /// in every landscape game); with gyro steering the current landscape is locked after a short settle (the steering
+    /// tilt is the motion the orientation sensor reads), unlocked again when gyro is switched off.
     /// </summary>
     public sealed class ScreenOrientationLock
     {
-        /// <summary>Time for the OS to turn the picture to the held orientation after a configuration change [s]. WORKING_VALUE.</summary>
+        /// <summary>Elongated screen with gyro: time for the OS to finish turning to landscape before the lock [s]. WORKING_VALUE.</summary>
         public const float SettleSeconds = 1.2f;
 
         int m_ShortSide = -1, m_LongSide = -1, m_W, m_H;
         float m_SettleUntil;
-        bool m_Settling, m_Locked, m_GyroLocked;
+        bool m_Pending, m_Locked, m_GyroLocked;
 
-        public bool Settling => m_Settling;
         public bool Locked => m_Locked;
         public ScreenOrientationPolicy.Allowed Allowed { get; private set; }
         /// <summary>Orientation to lock to with <see cref="OrientationCommand.Lock"/>.</summary>
@@ -77,47 +77,47 @@ namespace Game.Gameplay
         /// <summary>Short reason for the last command (log).</summary>
         public string Reason { get; private set; } = "";
 
-        static bool Concrete(ScreenOrientation o) => o == ScreenOrientation.Portrait || o == ScreenOrientation.PortraitUpsideDown
-                                                    || o == ScreenOrientation.LandscapeLeft || o == ScreenOrientation.LandscapeRight;
+        public static bool Concrete(ScreenOrientation o) => o == ScreenOrientation.Portrait || o == ScreenOrientation.PortraitUpsideDown
+                                                           || o == ScreenOrientation.LandscapeLeft || o == ScreenOrientation.LandscapeRight;
+
+        static bool IsLandscape(ScreenOrientation o) => o == ScreenOrientation.LandscapeLeft || o == ScreenOrientation.LandscapeRight;
 
         public OrientationCommand Step(float time, int width, int height, ScreenOrientation current, bool gyroActive)
         {
             int shortSide = Mathf.Min(width, height), longSide = Mathf.Max(width, height);
+            bool nearSquare = ScreenOrientationPolicy.IsNearSquare(width, height);
             if (shortSide != m_ShortSide || longSide != m_LongSide)
             {
                 m_ShortSide = shortSide; m_LongSide = longSide; m_W = width; m_H = height;
-                m_Settling = true; m_Locked = false; m_GyroLocked = false;
+                m_Locked = false; m_GyroLocked = false; m_Pending = true;
                 m_SettleUntil = time + SettleSeconds;
                 Allowed = ScreenOrientationPolicy.Decide(width, height);
-                Reason = "new screen configuration: settle";
+                if (!nearSquare) { Reason = "elongated: landscape only"; return OrientationCommand.AllowAuto; }
+            }
+            if (width != m_W || height != m_H) { m_W = width; m_H = height; m_SettleUntil = time + SettleSeconds; }
+            if (nearSquare)
+            {
+                if (m_Pending && Concrete(current))
+                {
+                    m_Pending = false; m_Locked = true; LockTo = current; Reason = "near-square: keep current orientation";
+                    return OrientationCommand.Lock;
+                }
+                return OrientationCommand.None;
+            }
+            if (m_Pending)
+            {
+                if (time < m_SettleUntil || !IsLandscape(current)) return OrientationCommand.None;
+                m_Pending = false;
+            }
+            if (gyroActive && !m_Locked && IsLandscape(current))
+            {
+                m_Locked = true; m_GyroLocked = true; LockTo = current; Reason = "gyro steering: lock current landscape";
+                return OrientationCommand.Lock;
+            }
+            if (!gyroActive && m_Locked && m_GyroLocked)
+            {
+                m_Locked = false; m_GyroLocked = false; Allowed = ScreenOrientationPolicy.Decide(width, height); Reason = "gyro steering off: unlock";
                 return OrientationCommand.AllowAuto;
-            }
-            if (width != m_W || height != m_H) { m_W = width; m_H = height; if (m_Settling) m_SettleUntil = time + SettleSeconds; }
-            bool nearSquare = ScreenOrientationPolicy.IsNearSquare(width, height);
-            if (m_Settling)
-            {
-                if (time < m_SettleUntil || !Concrete(current)) return OrientationCommand.None;
-                m_Settling = false;
-                if (nearSquare || gyroActive)
-                {
-                    m_Locked = true; m_GyroLocked = !nearSquare; LockTo = current;
-                    Reason = nearSquare ? "near-square: lock held orientation" : "gyro steering: lock held orientation";
-                    return OrientationCommand.Lock;
-                }
-                return OrientationCommand.None;   // phone without gyro: landscape L/R keep rotating
-            }
-            if (!nearSquare)
-            {
-                if (gyroActive && !m_Locked && Concrete(current))
-                {
-                    m_Locked = true; m_GyroLocked = true; LockTo = current; Reason = "gyro steering on: lock";
-                    return OrientationCommand.Lock;
-                }
-                if (!gyroActive && m_Locked && m_GyroLocked)
-                {
-                    m_Locked = false; m_GyroLocked = false; Allowed = ScreenOrientationPolicy.Decide(width, height); Reason = "gyro steering off: unlock";
-                    return OrientationCommand.AllowAuto;
-                }
             }
             return OrientationCommand.None;
         }
@@ -145,8 +145,12 @@ namespace Game.Gameplay
             go.AddComponent<ScreenOrientationGuard>();
         }
 
+        ScreenOrientation m_LastOrientation = ScreenOrientation.AutoRotation;
+        bool m_RollLogged;
+
         void Update()
         {
+            Diagnostics();
             var cmd = m_Lock.Step(Time.unscaledTime, Screen.width, Screen.height, Screen.orientation, GyroSteeringActive);
             if (cmd == OrientationCommand.None) return;
             if (cmd == OrientationCommand.AllowAuto)
@@ -162,6 +166,35 @@ namespace Game.Gameplay
             else Screen.orientation = m_Lock.LockTo;   // equals the current one: no rotation, no gyro suspend
             DeviceDisplay.Invalidate();
             Log(cmd);
+        }
+
+        /// <summary>
+        /// Owner r2 "dalej obraca obraz o 45°": logs every actual orientation change (who rotated: the OS) and a camera
+        /// roll over 10 deg (cab roll / head motion), once per episode. Strings only on such an edge.
+        /// </summary>
+        void Diagnostics()
+        {
+            var o = Screen.orientation;
+            if (o != m_LastOrientation)
+            {
+                if (m_LastOrientation != ScreenOrientation.AutoRotation)
+                {
+                    DeviceDisplay.Invalidate();
+                    Debug.Log("[SCREEN] orientation changed " + m_LastOrientation + " -> " + o + " window=" + Screen.width + "x" + Screen.height
+                              + " rotation=" + DeviceDisplay.Rotation + " device=" + Input.deviceOrientation + " locked=" + m_Lock.Locked
+                              + " gyro=" + (GyroSteeringActive ? "on" : "off") + " t=" + Time.unscaledTime.ToString("F1", System.Globalization.CultureInfo.InvariantCulture));
+                }
+                m_LastOrientation = o;
+            }
+            var cam = Camera.main;
+            if (cam == null) return;
+            float roll = Mathf.DeltaAngle(0f, cam.transform.eulerAngles.z);
+            if (!m_RollLogged && Mathf.Abs(roll) > 10f)
+            {
+                m_RollLogged = true;
+                Debug.Log("[SCREEN] camera roll " + roll.ToString("F1", System.Globalization.CultureInfo.InvariantCulture) + " deg (" + cam.name + ") gyro=" + (GyroSteeringActive ? "on" : "off"));
+            }
+            else if (m_RollLogged && Mathf.Abs(roll) < 5f) m_RollLogged = false;
         }
 
         void Log(OrientationCommand cmd)

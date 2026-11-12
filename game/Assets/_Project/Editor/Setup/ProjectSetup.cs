@@ -227,8 +227,11 @@ namespace Game.Editor.Setup
             PlayerSettings.Android.targetSdkVersion = (AndroidSdkVersions)TargetSdk;
 
             PlayerSettings.defaultInterfaceOrientation = UIOrientation.AutoRotation;
-            PlayerSettings.allowedAutorotateToPortrait = false;
-            PlayerSettings.allowedAutorotateToPortraitUpsideDown = false;
+            // ADR 0135 r3: all four allowed so the activity launches in the orientation the display already has (no launch
+            // rotation on a foldable's near-square inner screen); Game.Gameplay.ScreenOrientationGuard restricts elongated
+            // screens to landscape L/R in the first frame and locks near-square screens to their current orientation.
+            PlayerSettings.allowedAutorotateToPortrait = true;
+            PlayerSettings.allowedAutorotateToPortraitUpsideDown = true;
             PlayerSettings.allowedAutorotateToLandscapeLeft = true;
             PlayerSettings.allowedAutorotateToLandscapeRight = true;
             ApplyFoldableOrientationSettings();
