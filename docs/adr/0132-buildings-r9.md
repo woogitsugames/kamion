@@ -50,5 +50,22 @@ wszystko, czego nie zmierzono w silniku, jest oznaczone.
     (`plaster_white` → `plaster_light` → `downpipe`).
 11. **Zjazd nie szerszy od bramy** (P2-c): płyta zjazdu ma szerokość otworu bramy (3,5 / 4,0 m) — trapez w `r16_drive_0/3`
     wynika ze skosu drogi względem bramy i z dojścia od furtki przyległego do zjazdu; bez zmiany w tej rundzie.
+12. **r2 (po obejrzeniu r1)**: instancje drzew ogrodowych — 4 gatunki × JEDEN wariant modelu (`INST_VARIANT`; r1: 5 × 3,
+    każdy prototyp × LOD w kadrze to 1–3 instancjonowane draw — najgorsza kamera Low +19); grupa brama + furtka bliżej
+    niż 0,9 m od narożnika frontu jest dosuwana do narożnika (słupek bramy = słupek narożny; `r16_drive_3`), chyba że
+    stanęłaby wtedy w zasięgu ogrodzenia sąsiada o współliniowym froncie (`_Near.parallel` skasowałby bramę — wykryte testem
+    r7); ramka LOD1 12 cm i tylko tam, gdzie KAŻDA komórka chunka dotknięta przez dom ma już ten materiał (r1: +1 submesh).
+13. **Kit posesji dla Low / Medium (sesja 13, polecenie lidera: A16 Low nie mieści się w GPU, zieleń nie może go pogorszyć)**:
+    `Kit.low` — każda część kitu jest wspólna, tylko-High albo tylko-Low; generator pisze drugą warstwę `plots_low`, która w
+    `chunk_*.low.glb` trafia pod węzeł `plots` (High GLB bez zmian; importer i scena bez zmian — ta sama nazwa węzła, ten sam
+    materiał, ten sam jeden draw na chunk). W Low: ogrodzenia, bramy, żywopłot, świerki, kosze 1 : 1; tuje w rzędach
+    `thuja_lite` (rdzeń 4-boczny + jedna karta sylwetki, 14 trójkątów zamiast 39); tuje pojedyncze 2 karty (4);
+    drzewka `fruit_tree_lite` (pień z dwóch pasków + 3 karty korony, 10 zamiast 65); krzewy ogrodowe, krzewy zarastające
+    płot i byliny — tylko High. Wysokość i obrys roślin lite = pełnych (ten sam hasz), więc sylwetka ulicy z kabiny jest ta
+    sama; z bliska na Low widać skrzyżowane karty (świadomy koszt).
+14. **Instancje dużych drzew ogrodowych są wspólne dla Low i High** (jeden `WorldInstanceSet`; filtr per tier wymagałby
+    zmian w `World/Import/InstanceImporter` i `World/Runtime/WorldInstances` — poza własnością tej gałęzi). Koszt na Low
+    zmierzony niżej; jeśli lider uzna go za za duży: `plots.INST_ON = False` NIE istnieje — decyzja do podjęcia w importerze
+    (pole `hi` w instancji) albo przez próg `INST_R_M`.
 
 WORKING_VALUE: wszystkie progi, udziały i wymiary powyżej.
