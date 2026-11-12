@@ -2,7 +2,7 @@
 import argparse,json,re
 from pathlib import Path
 ROOT=Path(__file__).resolve().parent
-parser=argparse.ArgumentParser();parser.add_argument('--before',default='baseline');parser.add_argument('--after',default='result-0112-scan1');parser.add_argument('--output',default='comparison-0112-r2.json');options=parser.parse_args()
+parser=argparse.ArgumentParser();parser.add_argument('--before',default='baseline');parser.add_argument('--after',default='result-0112-hp15');parser.add_argument('--output',default='comparison-0112-r4.json');options=parser.parse_args()
 AFTER=ROOT/options.after
 failures=[]
 
@@ -72,5 +72,6 @@ except (FileNotFoundError,KeyError,ValueError) as e:
 result['failures']=failures;result['result']='FAIL' if failures else 'PASS'
 (ROOT/options.output).write_text(json.dumps(result,indent=2),encoding='utf-8')
 print(result['result']);print('\n'.join(failures));raise SystemExit(bool(failures))
+
 
 
