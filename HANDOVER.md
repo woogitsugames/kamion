@@ -1,3 +1,25 @@
+# HANDOVER — kamion, SESJA 15 (start 2026-11-12 20:25, nowe konto)
+
+## Stan na żywo (s15) — najświeższe: `artifacts/live/<gałąź>.md`
+- 20:28 usage: 5 h 0 % (reset 01:20), tydzień 24 %, **Fable 46 %** (reset 14.11 17:00) → agenci Fable s14 kontynuują na Fable. Dysk C: 590 → 647 GB wolnego. Watchdog żyje (pid 73848). PHONE_RUN brak.
+- Triggery CronCreate (sesja lidera): **:17** agenci/scalenia/HANDOVER, **:47** Mistral r3, **:07** GPT.
+- Sesja GPT (Codex) sprząta dysk: usuwa tylko worktree `gpt-*` (z kopią do `artifacts/_disk-rescue-2026-11-12`, ochrona zajętych i commitów < 2 h). Nasze worktree nietknięte.
+- 20:3x: worktree `mistral-r2-int` usunięty (scalone w s14 `fc500083`).
+- Agenci (wszyscy w tle, każdy nadpisuje live po kroku):
+| ADR | zadanie | model | worktree / gałąź | live | stan 20:35 |
+|---|---|---|---|---|---|
+| 0132 | zabudowa r9 r4 (decyzja B) | Fable | `buildings-r9` | `artifacts/live/buildings-r9.md` | czeka na `r4_chain` (PID 59260) |
+| 0136 r2 | GPU A16 G3-A (brakuje ~0,6 ms) + 0147 na A16; jedyny telefonowy | Opus | `a16-perf` | `artifacts/live/a16-perf.md` | vqa/testy w tle |
+| 0141 | krawędź/tło far_skyline | Fable | `edge-r6c` | `artifacts/live/edge-r6c.md` | łańcuch merged skończony → pary, ADR |
+| 0144 | węzły r7 | Fable | `junctions-r7` | `artifacts/live/junctions-r7.md` | chain r7c + pytest w tle |
+| 0146 | Putry/Andersa | Fable | `putry-andersa` | `artifacts/live/putry-andersa.md` | rendery + pytest w tle |
+| — | **Mistral r3 #15–#20** recenzja + integracja | Opus | `mistral-r3-int` | `artifacts/live/mistral-r3-int.md` | start 20:33 |
+| 0148 | **dźwięk jałowy / niskie obroty** (film właściciela z Folda 20:03) | Opus | `audio-idle` | `artifacts/live/audio-idle.md` | start 20:40 |
+| 0149 | **kierowanie r2: „ciężko, szybko traci się kontrolę”** (ten sam film) | Opus | `steer-r2` | `artifacts/live/steer-r2.md` | start 20:40 |
+- Film właściciela: `artifacts/owner-feedback/2026-11-12-fold-video/` (mp4, audio.wav, spec.png, contact.jpg). Obserwacje lidera: od 15 s (gaz puszczony, D9, ~900–1000 obr/min) widmo szumowe z trzepotaniem; stałe wycięcie ~110 Hz (podejrzenie filtra grzebieniowego); przy 34–38 km/h zjazd na wyspę z kreskowaniem.
+- **Ostatni przydzielony ADR: 0149.**
+- Ścieżka bramki 3 bez zmian (patrz KONIEC S14 niżej).
+
 # HANDOVER — kamion, SESJA 14 (start 2026-11-12 18:22, nowe konto)
 
 ## KONIEC S14 (20:00, limit 5 h 79 %, tydzień 63 %, Fable ~90 %) — prompt dla s15: `docs/owner/START-PROMPT-S15.md`
