@@ -9,7 +9,7 @@
 | zadanie | ADR | worktree / gałąź | live | stan |
 |---|---|---|---|---|
 | zabudowa r9 wysoka zieleń | 0132 | `buildings-r9` | `artifacts/live/buildings-r9.md` | r3_chain w tle |
-| poprawki G3-B z 0127 | 0139 | `g3b-r2` | `artifacts/live/g3b-r2.md` | pary after → merge main → final |
+| poprawki G3-B z 0127 | 0139 | `g3b-r2` | `artifacts/live/g3b-r2.md` | **GOTOWE** `052bd210` (pytest 849/1x, EditMode 408/408; Low 0..+1 draw); visual-critic w toku. Uwaga: +45..+47 instanced draws w 150280/1528935/297817/3281350 vs baseline 0140 — przypisane treści main (0133/0123/0128?), UNVERIFIED → sprawdzić w integracji/0136 |
 | krawędź mapy / tło | 0141 | `edge-r6c` | `artifacts/live/edge-r6c.md` | pary after → merge main → testy |
 | **węzły r7: kolizja W-beam/poręcz (P1-1), filary z danych (P1-2), żwir nasypu/nosa, spód pomostu** | 0144 | `junctions-r7` (Fable) | `artifacts/live/junctions-r7.md` | start 18:37 |
 | **dźwięk opon: szuranie w ciasnym skręcie + pisk (właściciel: pisk zły; był syntezą 930 Hz)** | 0145 | `tyre-scrub` (Opus audio) | `artifacts/live/tyre-scrub.md` | start 18:59; nagrania: `docs/owner/ELEVENLABS-REGEN-03.md` (właściciel generuje) |
