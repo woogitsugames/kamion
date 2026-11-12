@@ -72,3 +72,5 @@ Krok 26: przyszły capture A sprawdzi siedem SHA produkcji, GLB/meta i packet pr
 Kandydat a (2026-11-12T09:57:33.6815587+01:00): sprawdź normalne faz wariantu a. Następny etap w candidate-build.ps1; po komplecie PreparedVerified, capture i oględziny.
 
 Krok 27: post-a.ps1 zapisany: czeka na jeden istniejący build A, następnie PreparedVerified → cztery capture → dokładne liczniki/pozy → ograniczone podglądy/ROI → liczbowy GPU proof, osobny WIP po etapach. Bez automatycznego wyboru jakości i bez pełnego GIS w trakcie. Następny krok: uruchomić raz post-a.ps1; 86769 pozostaje jedynym oczekiwaniem na ciężką budowę A.
+
+Krok 28: zapisano plan późniejszej ablacji czerni (bez zastosowania): ewentualne opt-in flake_lift tylko dla car_paint_, istniejący _CarFlake.z i kontrola natywnych wartości/ROI. Pigment/Pearl/światło bez zmiany. R3 A nadal jedyny aktywny kandydat; 86769 ma heavy, test faz 10/10 passed, World w toku. Następny krok: automatyczny post-a 97361 po sukcesie budowy, potem oględziny A.
