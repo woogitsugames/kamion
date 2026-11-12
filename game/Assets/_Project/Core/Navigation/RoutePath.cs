@@ -33,6 +33,8 @@ namespace Game.Core.Navigation
         public readonly float[] ManTurn;
         public readonly byte[] ManExit;
         public readonly ushort[] ManName;
+        /// <summary>Ring name (street-name index of the roundabout edges) for Roundabout manoeuvres; 0 otherwise.</summary>
+        public readonly ushort[] ManRing;
         /// <summary>Directed edge the truck arrives on for this manoeuvre (-1: none, e.g. Arrive).</summary>
         public readonly int[] ManIn;
         /// <summary>Lane guidance for the manoeuvre: lane count of the incoming edge, direction class and the
@@ -59,6 +61,7 @@ namespace Game.Core.Navigation
             Directed = new int[edgeCapacity];
             int m = edgeCapacity + 4;
             ManPoint = new int[m]; ManType = new Maneuver[m]; ManTurn = new float[m]; ManExit = new byte[m]; ManName = new ushort[m];
+            ManRing = new ushort[m];
             ManIn = new int[m]; ManLaneCount = new byte[m]; ManLaneCls = new byte[m];
             ManLanesAllowed = new uint[m]; ManLanesRec = new uint[m];
         }
@@ -88,7 +91,7 @@ namespace Game.Core.Navigation
         {
             if (ManCount >= ManPoint.Length) return;
             ManPoint[ManCount] = point; ManType[ManCount] = type; ManTurn[ManCount] = turnDeg; ManExit[ManCount] = (byte)Mathf.Clamp(exit, 0, 255);
-            ManName[ManCount] = name; ManIn[ManCount] = inDirected;
+            ManName[ManCount] = name; ManRing[ManCount] = 0; ManIn[ManCount] = inDirected;
             ManLaneCount[ManCount] = 0; ManLaneCls[ManCount] = 0; ManLanesAllowed[ManCount] = 0; ManLanesRec[ManCount] = 0;
             ManCount++;
         }
@@ -122,7 +125,8 @@ namespace Game.Core.Navigation
             System.Array.Copy(o.Directed, Directed, o.DirectedCount); DirectedCount = o.DirectedCount;
             System.Array.Copy(o.ManPoint, ManPoint, o.ManCount); System.Array.Copy(o.ManType, ManType, o.ManCount);
             System.Array.Copy(o.ManTurn, ManTurn, o.ManCount); System.Array.Copy(o.ManExit, ManExit, o.ManCount);
-            System.Array.Copy(o.ManName, ManName, o.ManCount); System.Array.Copy(o.ManIn, ManIn, o.ManCount);
+            System.Array.Copy(o.ManName, ManName, o.ManCount); System.Array.Copy(o.ManRing, ManRing, o.ManCount);
+            System.Array.Copy(o.ManIn, ManIn, o.ManCount);
             System.Array.Copy(o.ManLaneCount, ManLaneCount, o.ManCount); System.Array.Copy(o.ManLaneCls, ManLaneCls, o.ManCount);
             System.Array.Copy(o.ManLanesAllowed, ManLanesAllowed, o.ManCount); System.Array.Copy(o.ManLanesRec, ManLanesRec, o.ManCount);
             ManCount = o.ManCount;

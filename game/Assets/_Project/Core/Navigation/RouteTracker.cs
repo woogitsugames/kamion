@@ -15,6 +15,8 @@ namespace Game.Core.Navigation
         public float NextM;
         /// <summary>Exit number of the next manoeuvre when it is a roundabout (1-based, in the driving direction; 0 otherwise).</summary>
         public byte NextExit;
+        /// <summary>Ring name (street-name index) of the next manoeuvre when it is a roundabout; 0 otherwise.</summary>
+        public ushort NextRing;
         /// <summary>The manoeuvre after the next when it follows closely ("then ..."), -1 otherwise.</summary>
         public int Then;
         public ushort CurrentName;
@@ -55,7 +57,7 @@ namespace Game.Core.Navigation
         /// <param name="speedMs">Forward speed (driving against the route counts only when moving).</param>
         public void Update(RoutePath p, Vector2 pos, float headingDeg, float speedMs, float dt, ref NavGuidance g)
         {
-            g.Next = -1; g.Then = -1; g.NeedsReroute = false; g.NextExit = 0; g.RemainingSeconds = 0f;
+            g.Next = -1; g.Then = -1; g.NeedsReroute = false; g.NextExit = 0; g.NextRing = 0; g.RemainingSeconds = 0f;
             g.NextLaneCount = 0; g.NextLaneCls = 0; g.NextLanesAllowed = 0; g.NextLanesRec = 0; g.NextLaneSrc = -1;
             g.HasRoute = p != null && p.HasRoute;
             if (!g.HasRoute) { g.OnRoute = false; g.Arrived = false; g.RemainingM = 0f; g.NextM = float.NaN; m_Seg = -1; return; }
@@ -87,7 +89,7 @@ namespace Game.Core.Navigation
                 float ms = p.S[p.ManPoint[k]];
                 if (ms > s + 1f || p.ManType[k] == Maneuver.Arrive)
                 {
-                    g.Next = k; g.NextM = Mathf.Max(0f, ms - s); g.NextExit = p.ManExit[k];
+                    g.Next = k; g.NextM = Mathf.Max(0f, ms - s); g.NextExit = p.ManExit[k]; g.NextRing = p.ManRing[k];
                     g.NextLaneCount = p.ManLaneCount[k]; g.NextLaneCls = p.ManLaneCls[k];
                     g.NextLanesAllowed = p.ManLanesAllowed[k]; g.NextLanesRec = p.ManLanesRec[k];
                     g.NextLaneSrc = p.ManIn[k];
