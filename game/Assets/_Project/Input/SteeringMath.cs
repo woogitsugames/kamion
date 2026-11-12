@@ -35,6 +35,12 @@ namespace Game.Controls
         /// <summary>On-screen wheel degrees for a horizontal finger travel [mm] (drag gesture, ADR 0135): right = clockwise.</summary>
         public static float DragDeg(float dxMm, float degPerMm) => dxMm * degPerMm;
 
+        /// <summary>DPI used when the platform reports none (Screen.dpi = 0). WORKING_VALUE (typical phone 400-500).</summary>
+        public const float FallbackDpi = 420f;
+
+        /// <summary>Screen pixels to millimetres (physical finger travel; the drag gesture does not depend on the canvas scale).</summary>
+        public static Vector2 PixelsToMm(Vector2 px, float dpi) => px * (25.4f / (dpi > 1f ? dpi : FallbackDpi));
+
         /// <summary>Exponential smoothing factor for a first-order filter with time constant tau.</summary>
         public static float SmoothingAlpha(float dt, float tau) => tau <= 1e-5f ? 1f : 1f - Mathf.Exp(-dt / tau);
     }

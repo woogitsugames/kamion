@@ -136,8 +136,8 @@ namespace Game.Tests
         [Test]
         public void PixelsToMm_UsesDpi_WithFallback()
         {
-            Assert.AreEqual(25.4f, Game.UI.Driving.SteeringWheelWidget.PixelsToMm(new Vector2(400f, 0f), 400f).x, 1e-4f);
-            Assert.AreEqual(25.4f, Game.UI.Driving.SteeringWheelWidget.PixelsToMm(new Vector2(Game.UI.Driving.SteeringWheelWidget.FallbackDpi, 0f), 0f).x, 1e-4f);
+            Assert.AreEqual(25.4f, SteeringMath.PixelsToMm(new Vector2(400f, 0f), 400f).x, 1e-4f);
+            Assert.AreEqual(25.4f, SteeringMath.PixelsToMm(new Vector2(SteeringMath.FallbackDpi, 0f), 0f).x, 1e-4f);
         }
 
         // ---------------------------------------------------------------- settings
