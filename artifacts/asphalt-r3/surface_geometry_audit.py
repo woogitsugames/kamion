@@ -60,6 +60,11 @@ def main():
             print(json.dumps(summary))
             raise SystemExit(1)
     print(json.dumps(summary))
+    if args.label == 'baseline':
+        # Optional source-image context, in the same heavy slot. Its explicit available/unavailable
+        # sidecar is separate from the required mesh proof; no image result is implied by exit0.
+        from ortho_context import generate
+        print(json.dumps(generate()))
 
 
 if __name__ == '__main__':
