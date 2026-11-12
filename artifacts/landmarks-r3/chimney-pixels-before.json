@@ -1,7 +1,7 @@
 {
   "phase": "before",
   "status": "Measured sRGB red/non-red classification at fixed photo-centreline windows; pose WORKING_VALUE, not physical reflectance",
-  "red_threshold": "R-G>25 and R-B>25; non-red is not proof of a white material",
+  "red_threshold": "R-G>25, R-B>25, B-G>-8 (exclude ochre/brown dirt); non-red is not proof of a white material",
   "excluded": "Head/galleries and occluded shaft base are outside the row windows",
   "windows": [
     {
@@ -96,8 +96,8 @@
       "condition": "Low-overcast",
       "stack": "single",
       "sampled_rows": 200,
-      "red_white_disagreement_fraction": 0.675,
-      "photo_red_rows": 153,
+      "red_white_disagreement_fraction": 0.555,
+      "photo_red_rows": 105,
       "render_red_rows": 26,
       "red_photo_median_rgb": [
         140.0,
@@ -152,8 +152,8 @@
       "condition": "Low-clear",
       "stack": "single",
       "sampled_rows": 200,
-      "red_white_disagreement_fraction": 0.685,
-      "photo_red_rows": 153,
+      "red_white_disagreement_fraction": 0.545,
+      "photo_red_rows": 105,
       "render_red_rows": 24,
       "red_photo_median_rgb": [
         140.0,
@@ -208,8 +208,8 @@
       "condition": "High-overcast",
       "stack": "single",
       "sampled_rows": 200,
-      "red_white_disagreement_fraction": 0.655,
-      "photo_red_rows": 153,
+      "red_white_disagreement_fraction": 0.555,
+      "photo_red_rows": 105,
       "render_red_rows": 30,
       "red_photo_median_rgb": [
         140.0,
@@ -264,8 +264,8 @@
       "condition": "High-clear",
       "stack": "single",
       "sampled_rows": 200,
-      "red_white_disagreement_fraction": 0.66,
-      "photo_red_rows": 153,
+      "red_white_disagreement_fraction": 0.56,
+      "photo_red_rows": 105,
       "render_red_rows": 29,
       "red_photo_median_rgb": [
         140.0,

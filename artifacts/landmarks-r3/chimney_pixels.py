@@ -27,7 +27,7 @@ def extract(image,index,ranges):
 
 def red_mask(p):
     # Dirty cream paint is not red: the photograph's white often has R-G12.
-    return (p[:,0]-p[:,1]>25)&(p[:,0]-p[:,2]>25)
+    return (p[:,0]-p[:,1]>25)&(p[:,0]-p[:,2]>25)&(p[:,2]-p[:,1]>-8)
 
 rows=[]
 for condition in ['Low-overcast','Low-clear','High-overcast','High-clear']:
@@ -48,7 +48,7 @@ for condition in ['Low-overcast','Low-clear','High-overcast','High-clear']:
             item[label+'_render_median_rgb']=np.median(qq,axis=0).tolist()
         rows.append(item)
 result=dict(phase=phase,status='Measured sRGB red/non-red classification at fixed photo-centreline windows; pose WORKING_VALUE, not physical reflectance',
-            red_threshold='R-G>25 and R-B>25; non-red is not proof of a white material',
+            red_threshold='R-G>25, R-B>25, B-G>-8 (exclude ochre/brown dirt); non-red is not proof of a white material',
             excluded='Head/galleries and occluded shaft base are outside the row windows',
             windows=windows,rows=rows)
 (root/f'chimney-pixels-{phase}.json').write_text(json.dumps(result,indent=2),encoding='utf-8')

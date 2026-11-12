@@ -102,7 +102,7 @@ Przygotowany wariant używa własnej biblioteki GLB i konfiguracji regionu,
 podłączanej do istniejącego plan/apply hero. Zweryfikowana zgodność spec,
 konfiguracji, wersji buildera i GLB jest warunkiem pominięcia starej instancji.
 Brak lub niezgodność oznacza zachowanie starego komina. Nie dodaje się shaderów,
-przebiegów ani pól QualityProfile. Plan materiałów: Low 3, High 4 jak w baseline.
+przebiegów ani pól QualityProfile. Plan materiałów: LOD0 4, LOD1 3 jak w baseline; Low z bliska także używa LOD0.
 
 Źródła: Rakoon, zdjęcie 20200711 073128 Elektrociepłownia Białystok, CC BY 3.0
 (lokalna kopia pomniejszona 3840×2160, oryginał 4608×2592 niezweryfikowany lokalnie);
