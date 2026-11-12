@@ -1309,7 +1309,10 @@ NO_DECIMATE = ("sill_clad_", "door_skirt_clad_", "grille_bar_endcap", "badge_tra
 NO_DECIMATE_FAR = ("grille_bar_mask",)
 ROUND_KEYS = ("_tyre", "_rim")
 ROUND_SEGMENTS = {2: 24, 3: 16}
-WHEEL_DISC_LOW_MIN_RATIO = 0.40   # WORKING_VALUE r3: retain the stamped disc and hand holes, within the global target
+TRACTOR_FRONT_DISC_LOW_MIN_RATIO = 0.35   # WORKING_VALUES r3, validated against the unchanged global targets
+TRAILER_DISC_LOW_MIN_RATIO = 0.25
+TRAILER_TYRE_LOW_MIN_RATIO = 0.06          # preserve approximately the v2 tyre budget while improving the disc
+TRAILER_RIM_LOW_MIN_RATIO = 0.10
 
 
 def is_round_wheel_piece(o):
@@ -1708,8 +1711,15 @@ def decimate_pieces(pieces, target, floor_tris=40, lights_min=0.5, round_seg=0, 
                 mr = max(mr, 0.25)
             elif "_hub" in o.name:
                 mr = max(mr, 0.20)
-            elif "_disc" in o.name and not o.name.startswith(("wheel_RLi_", "wheel_RRi_")):
-                mr = max(mr, WHEEL_DISC_LOW_MIN_RATIO)
+            elif "_disc" in o.name:
+                if keep_wheel_centres:
+                    mr = max(mr, TRAILER_DISC_LOW_MIN_RATIO)
+                elif o.name.startswith(("wheel_FL_disc", "wheel_FR_disc")):
+                    mr = max(mr, TRACTOR_FRONT_DISC_LOW_MIN_RATIO)
+            elif keep_wheel_centres and "_tyre" in o.name:
+                mr = max(mr, TRAILER_TYRE_LOW_MIN_RATIO)
+            elif keep_wheel_centres and "_rim" in o.name:
+                mr = max(mr, TRAILER_RIM_LOW_MIN_RATIO)
         lo = max(lights_min * n, floor_tris) if ("Lights" in sl or "Glass" in sl) else floor_tris
         lo = max(lo, mr * n)
         w = SILHOUETTE_W if any(t in o.name for t in SILHOUETTE_KEYS) else 1.0
