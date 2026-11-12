@@ -1,5 +1,6 @@
 """Small metadata-only reference shortlist; no generation, mesh or image processing."""
 import json
+import math
 from pathlib import Path
 from pyproj import Transformer
 
@@ -16,7 +17,18 @@ result = []
 for stop in stops:
     e, n = stop['geometry']['coordinates']
     ordered = sorted(photos, key=lambda p: (p['_en'][0]-e)**2+(p['_en'][1]-n)**2)[:3]
+    approach = []
+    for photo in photos:
+        de, dn = e-photo['_en'][0], n-photo['_en'][1]
+        distance = math.hypot(de, dn)
+        bearing = math.degrees(math.atan2(de, dn)) % 360
+        angle = abs((bearing-photo.get('compass_angle', 0)+180) % 360-180)
+        if 15 <= distance <= 120 and angle <= 55:
+            approach.append(dict(id=photo['id'], file=photo['file'], distance_m=round(distance,1),
+                                 target_angle_deg=round(angle,1), page_url=photo['page_url']))
+    approach.sort(key=lambda p: p['distance_m']+p['target_angle_deg']*.4)
     result.append(dict(osm_node=stop['osm_node'], tags=stop['tags'], source_en=[e,n],
+        approach_photos=approach[:3],
         photos=[dict(id=p['id'], file=p['file'], distance_m=round(((p['_en'][0]-e)**2+(p['_en'][1]-n)**2)**.5,1),
                      compass_angle=p.get('compass_angle'), author=p['author'], license=p['license'],
                      page_url=p['page_url'], captured_at=p['captured_at'], sha256=p['sha256']) for p in ordered]))
