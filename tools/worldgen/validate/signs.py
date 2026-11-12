@@ -24,7 +24,7 @@ import numpy as np
 import shapely
 from shapely.geometry import LineString, Point
 
-from .common import DRIVER_EYE_M, RECOG_DIST_M, Finding, World
+from .common import RECOG_DIST_M, Finding, World
 
 SIGN_BOTTOM_BAND_M = (1.80, 2.20)   # WORKING_VALUE regulatory band for the sign bottom edge above ground
 LAMP_BLOCK_R_M = 0.35               # WORKING_VALUE: lamp pole radius for the occlusion corridor
@@ -68,18 +68,14 @@ def check(w: World) -> list[Finding]:
     blocker_tree = shapely.STRtree(blockers) if blockers else None
     for s in w.signs:
         sp = Point(s["e"], s["n"])
-        best = None
+        # any driver position within the recognition distance whose sight corridor is blocked counts
         for d in drivers:
             dist = float(d.distance(sp))
-            if dist > RECOG_DIST_M:
+            if dist > RECOG_DIST_M or dist < 1.0:
                 continue
-            if best is None or dist < best[0]:
-                best = (dist, d)
-        if best is None:
-            continue
-        dist, d = best
-        corridor = LineString([d, sp]).buffer(max(0.4, dist * math.tan(math.radians(2.0))))  # ~2 deg half-angle
-        if blocker_tree is not None:
+            corridor = LineString([d, sp]).buffer(max(0.4, dist * math.tan(math.radians(2.0))))  # ~2 deg half-angle
+            if blocker_tree is None:
+                break
             _pi, ti = blocker_tree.query([corridor], predicate="intersects")
             for b in set(np.atleast_1d(ti).tolist()):
                 blk = blockers[b]
@@ -92,4 +88,7 @@ def check(w: World) -> list[Finding]:
                                         f"(< recognition {RECOG_DIST_M:.0f} m)", severity="warn",
                                         extra={"code": s.get("code"), "blocker": who, "dist_m": round(dist, 1)}))
                 break
+            else:
+                continue
+            break  # occluded from this driver position: reported once per sign
     return findings

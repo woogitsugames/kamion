@@ -62,7 +62,7 @@ def check(w: World) -> list[Finding]:
 
     # ---- duplicate parallel features (different source ids, any linear kinds)
     if len(lines) >= 2:
-        bufs = [l["line"].buffer(DUPLICATE_PARALLEL_M / 2.0) for l in lines]
+        bufs = [l["line"].buffer(DUPLICATE_PARALLEL_M) for l in lines]
         tree = shapely.STRtree(bufs)
         pi, ti = tree.query([l["line"] for l in lines], predicate="intersects")
         seen = set()
@@ -77,7 +77,7 @@ def check(w: World) -> list[Finding]:
                 continue
             seen.add(key)
             run = float(la["line"].intersection(bufs[b]).length)
-            if run >= DUPLICATE_RUN_M:
+            if run >= DUPLICATE_RUN_M and float(la["line"].distance(lb["line"])) < DUPLICATE_PARALLEL_M:
                 inter = la["line"].intersection(bufs[b])
                 c = inter.interpolate(0.5, normalized=True) if not inter.is_empty else la["line"].centroid
                 fam_a = "osm" if la["source_id"].startswith("osm:") else "bdot"

@@ -14,7 +14,7 @@ import html
 import json
 from pathlib import Path
 
-from .common import DRIVER_EYE_M, PARAMS, SEVERITY_ORDER, Finding, World, summarize
+from .common import DRIVER_EYE_M, PARAMS, Finding, World, summarize
 
 SCHEMA = "truck-sim-pl/world-validator/1"
 CAMERA_SCHEMA = "truck-sim-pl/world-validator-cameras/1"
