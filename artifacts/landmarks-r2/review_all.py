@@ -9,6 +9,7 @@ from PIL import Image, ImageDraw
 ROOT = Path(__file__).resolve().parent
 phase = sys.argv[1] if len(sys.argv) > 1 else "after"
 base = sys.argv[2] if len(sys.argv) > 2 else "before"
+focus = "--focus" in sys.argv[3:]
 out = ROOT / "review" / f"{phase}-from-{base}"
 out.mkdir(parents=True, exist_ok=True)
 details = {c["id"] for c in json.loads((ROOT / "cameras.json").read_text(encoding="utf-8-sig"))["cameras"]}
@@ -19,7 +20,11 @@ rows, inventories = [], {}
 for condition in ("Low-overcast", "Low-clear", "High-overcast", "High-clear"):
     before = {p.name: p for p in (ROOT / base / condition).glob("*.png")}
     after = {p.name: p for p in (ROOT / phase / condition).glob("*.png")}
-    assert before.keys() == after.keys() == expected, (condition, expected - before.keys(), expected - after.keys())
+    assert before.keys() == expected, (condition, expected - before.keys())
+    if focus:
+        assert after and after.keys() <= expected, condition
+        before = {name: before[name] for name in after}
+    assert before.keys() == after.keys(), (condition, before.keys() - after.keys(), after.keys() - before.keys())
     inventories[condition] = sorted(before)
     sheet = None
     for index, name in enumerate(sorted(before)):
@@ -46,6 +51,7 @@ for condition in ("Low-overcast", "Low-clear", "High-overcast", "High-clear"):
             sheet.save(out / f"{condition}-{page + 1:02d}.jpg", quality=91)
             sheet.close()
 result = dict(base=base, phase=phase, inventories=inventories, camera_conditions=len(rows),
+              scope="diagnostic subset only" if focus else "all captured cameras",
               exact=sum(row["exact"] for row in rows), rows=rows)
 (ROOT / f"pixel-diff-{phase}-from-{base}.json").write_text(json.dumps(result, indent=2), encoding="utf-8")
 print(f"{len(rows)} camera conditions; {result['exact']} identical; sheets: {out}")
