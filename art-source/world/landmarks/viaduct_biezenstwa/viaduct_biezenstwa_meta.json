@@ -3,7 +3,7 @@
  "axes": "glTF (x, y, z) = (-dE, dU, dN) relative to the segment anchor (local E, N, U)",
  "blender": "4.2.9 LTS",
  "camera_station_m": 297.613,
- "glb_sha256": "61b460bd391bcab83fa7785eac1ccc63d8f868b956813575e95eb37de36a6ed9",
+ "glb_sha256": "b8e3e84e76111a008906e981d7270566a304a60333bb8d35455fb37d8f3b26d0",
  "materials": [
   "viaduct_concrete",
   "viaduct_steel"
@@ -29,70 +29,70 @@
   },
   {
    "anchor": [
-    487.49,
-    -688.079,
-    144.925
+    493.836,
+    -691.546,
+    144.995
    ],
    "name": "landmark_viaduct_biezenstwa_01",
    "s_lead": [
     192.256,
-    241.297
+    255.76
    ],
    "tris": [
-    2402,
-    1100,
-    332
+    3364,
+    1480,
+    480
    ]
   },
   {
    "anchor": [
-    536.902,
-    -715.071,
-    145.779
+    542.591,
+    -718.178,
+    145.846
    ],
    "name": "landmark_viaduct_biezenstwa_02",
    "s_lead": [
-    241.297,
-    304.864
+    255.76,
+    303.366
    ],
    "tris": [
-    3004,
-    1216,
-    356
+    2442,
+    1064,
+    352
    ]
   },
   {
    "anchor": [
-    590.727,
-    -744.471,
-    145.77
+    591.501,
+    -744.893,
+    145.731
    ],
    "name": "landmark_viaduct_biezenstwa_03",
    "s_lead": [
-    304.864,
-    363.959
+    303.366,
+    367.22
    ],
    "tris": [
-    2828,
-    1240,
-    376
+    3312,
+    1384,
+    436
    ]
   },
   {
    "anchor": [
-    627.433,
-    -764.512,
-    145.226
+    628.864,
+    -765.294,
+    145.19
    ],
    "name": "landmark_viaduct_biezenstwa_04",
    "s_lead": [
-    363.959,
+    367.22,
     388.506
    ],
    "tris": [
-    1168,
-    532,
-    132
+    1052,
+    488,
+    136
    ]
   },
   {
@@ -114,10 +114,10 @@
   }
  ],
  "spec": "Data/Regions/bialystok-industrial-c/generated/landmarks/viaduct_biezenstwa.spec.json",
- "spec_sha256": "617380f8dc851756ee361676012b1db8c6afa894ebddc940f1c698798c66c9d0",
+ "spec_sha256": "678b864d50bf32dd15263490e2429510454c273543edb8beec48621d20185a78",
  "tris_total": [
-  11206,
-  4796,
-  1364
+  11974,
+  5124,
+  1572
  ]
 }
