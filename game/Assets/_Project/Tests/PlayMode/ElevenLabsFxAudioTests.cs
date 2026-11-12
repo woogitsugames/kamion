@@ -129,12 +129,11 @@ namespace Game.Tests
 
                 // selector change = cab switch click; selector R with the engine running = reversing beeper
                 int sw = audio.SwitchEvents;
-                var inp = body.Input;
-                inp.Selector = GearSelector.Reverse;
-                body.Input = inp;
-                // the lab bootstrap rewrites Input from its own selector state every frame: drive it through the
-                // controller's own view by holding the value for the audio update of this frame
-                yield return new WaitForEndOfFrame();
+                // the lab bootstrap rewrites Input from its own selector state every frame: stop it, drive Input directly
+                var boot = Object.FindAnyObjectByType<DrivingLabBootstrap>();
+                if (boot != null) boot.enabled = false;
+                GearSelector before = body.Input.Selector;
+                Game.Vehicle.Physics.DriverInput inp;
                 bool beeperHeard = false;
                 for (int i = 0; i < 10 && !beeperHeard; i++)
                 {
@@ -142,7 +141,7 @@ namespace Game.Tests
                     yield return null;
                     beeperHeard = audio.BeeperLoop != null && audio.BeeperLoop.ExtVolume + audio.BeeperLoop.CabVolume > 0.01f;
                 }
-                Debug.Log($"[TEST] fx events: switch {sw}->{audio.SwitchEvents}, beeper {beeperHeard}, last={audio.LastOneShot}, rpm {audio.Rpm:F0}");
+                Debug.Log($"[TEST] fx events: selector {before}->R, switch {sw}->{audio.SwitchEvents}, beeper {beeperHeard}, last={audio.LastOneShot}, rpm {audio.Rpm:F0}");
                 if (audio.Rpm > 300f) Assert.IsTrue(beeperHeard, "reversing beeper with selector R and the engine running");
                 Assert.Greater(audio.SwitchEvents, sw, "selector change clicks the cab switch");
             }
