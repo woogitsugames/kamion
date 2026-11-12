@@ -204,3 +204,5 @@ Krok 57: dopisano źródłowo potwierdzony próg runtime LOD0 pojazdów 16 m (ob
 Krok 58: ponowny blok 90863 uzyskał heavy i wykonuje kanoniczne fidelity (wyniki kolejnych miejsc w logu), bez duplikatu. Podczas oczekiwania obejrzano bieżący kadr placu i wycinek kół do preflight r4; zapisano potrzebę rzeczywistej diagnostyki LOD zamiast wnioskowania z nazwy side8. Produkcja C nadal zamrożona. Następny krok: wynik tego samego fidelity/testu pojedynczego/GIS, końcowy REPORT i kopia.
 
 Końcowy heavy (2026-11-12T11:27:12.6469592+01:00): odśwież raport fidelity po dołączeniu main. Następny krok: odczyt wyników, oględziny pełnych plansz, EditMode, REPORT/kopia, potem r4.
+
+Końcowy heavy (2026-11-12T11:27:13.8942058+01:00): sprawdź pojedynczy test odświeżonego fidelity. Następny krok: odczyt wyników, oględziny pełnych plansz, EditMode, REPORT/kopia, potem r4.
