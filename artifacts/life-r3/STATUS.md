@@ -152,3 +152,5 @@ Krok 41: przygotowano NIEURUCHOMIONY final-heavy.ps1; wymaga C-SELECTED po oglę
 Po capture C (2026-11-12T10:49:28.0727242+01:00): potwierdź pełne kadry i budżet C. Następny krok według post-c.ps1, potem oględziny i wybór autora.
 
 Po capture C (2026-11-12T10:49:37.2942785+01:00): przygotuj oględziny mocniejszego tyłu C. Następny krok według post-c.ps1, potem oględziny i wybór autora.
+
+Po capture C (2026-11-12T10:50:01.0741034+01:00): potwierdź ograniczoną obwiednię C na GPU. Następny krok według post-c.ps1, potem oględziny i wybór autora.
