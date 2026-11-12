@@ -1,6 +1,6 @@
-﻿# SBS r3 — ranking i kalibracja G3-B
+# SBS r3 — ranking i kalibracja G3-B
 
-Stan 12.11.2026 około 03:34 Europe/Warsaw. Worktree .claude/worktrees/gpt-sbs, gałąź gpt-sbs-r3. Runda zaczęła od zamkniętej r2 962ad111 i merge main 9874d98c jako 31988772. R2 jest dostarczona do main, z końcowym GIS 561 passed, 1 xfailed. Nie scalano naszych gałęzi do main i nie pushowano. Sesja 24 h trwa do około 12.11, 21:31.
+Stan 12.11.2026 około 09:17 Europe/Warsaw. Worktree .claude/worktrees/gpt-sbs, gałąź gpt-sbs-r3. Runda zaczęła od zamkniętej r2 962ad111 i merge main 9874d98c jako 31988772. R2 jest dostarczona do main, z końcowym GIS 561 passed, 1 xfailed. Nie scalano naszych gałęzi do main i nie pushowano. Sesja 24 h trwa do około 12.11, 21:31.
 
 ## Zakończone
 
@@ -35,8 +35,13 @@ Nie ma aktywnego Unity ani ciężkiego Pythona naszej sesji. Ostatnie uchwyty za
 Pozostają niezatwierdzone pochodne generatora poza SBS: far_field_qa.json, viaduct_putry_underdeck.spec.json, streetscape_qa.json, world_manifest.json, far-field manifest, props_meta.json i street_props.glb. Przywrócić dokładne pliki po końcowej walidacji, zachowując migawki dowodów. Świat, runtime, shadery, znaki i pliki Claude są poza zakresem edycji SBS.
 
 
-Niezależny przegląd18/18 zapisany w REVIEW-GANTRY-INITIAL.md: wszystkie C. Wskazuje grobin275528 −8…−12m i kontrolę pionowego kadru,837235 −16…−20m z bocznym położeniem, zsolt po właściwej osi jezdni. Naprawiono pomocniczą projekcję PowerShell na odcinki: pierwotna mogła zaokrąglać do końców. Sanity (u=0,25, odległość3m) poprawne; nowe odległości:4942881,69m od osi wiaduktu,3281352,90m od osi trunk,2978170,50m. Kamery i18raw nie korzystały z błędnego pomocnika; własne skrypty NumPy były niezależne. Nowy inspect-road-topology.ps1 i poprawiony JSON są dowodem do kolejnej rodziny prób.
+Niezależny przegląd 18/18 zapisany w REVIEW-GANTRY-INITIAL.md: wszystkie C. Wskazuje grobin 275528 −8…−12 m i kontrolę pionowego kadru,837235 −16…−20 m z bocznym położeniem, zsolt po właściwej osi jezdni. Naprawiono pomocniczą projekcję PowerShell na odcinki: pierwotna mogła zaokrąglać do końców. Sanity (u=0,25, odległość 3 m) poprawne; nowe odległości:494288 — 1,69 m od osi wiaduktu,328135 — 2,90 m od osi trunk,297817 — 0,50 m. Kamery i 18 raw nie korzystały z błędnego pomocnika; własne skrypty NumPy były niezależne. Nowy inspect-road-topology.ps1 i poprawiony JSON są dowodem do kolejnej rodziny prób.
 
 Wznowienie 12.11 o 09:04: od ostatniego zapisu około 03:42 nie ma nowych wykonanych zadań w repo; przyczyna przerwy nieustalona. Pełne odświeżenie nie odbyło się w planowanym terminie około 06:19. Main przeszedł z9874d98c do14ccbaf1 tylko przez obsługę priorytetowych slotów, integracyjne wrappery i handover, bez zmiany źródeł świata/materialów. Merge do r3 jako0c4afdaa. Aktualna wygenerowana i zaimportowana migawka nadal odpowiada źródłom świata main. Najpierw pełne168raw w czterech stanach, potem dalsza kalibracja. Nie usuwamy cudzych slotów ani rezerwacji, używamy canonical slot script z main.
 
 Pełne odświeżenie około 09:06–09:09 zakończone kodem 0: wszystkie168 PNG sprawdzone po SHA,8grup,42klatki w każdym z4stanów, jeden HEAD62d45b92. full-capture-audit.json i full-render-completed.json zachowują dane. Produkcyjne kamery bez zmian, świat odpowiada aktualnemu main14ccbaf1 (od poprzedniej generacji tylko zmiany ops). Następnie pełna kompozycja przez jedną dzierżawę heavy, z diagnostyką C i jawną kwalifikacją starych masek.
+
+Druga rodzina przygotowana jako osobne artefakty make-refinement1.py, render-refinement1.ps1 i compose-refinement1.py. Maksymalnie 30 prób: 12 dla 275528 (−8/−10/−12 m, h 0,52/0,55, oko 1,7/2,2 m), 6 dla 837235 (−16/−20 m, lewo −2/0/+2 m, h 0,52), po 6 dla obu kamer zsolta na osi właściwej jezdni. Kamera 328135: −60/−75 m i lewo −2/0/+2 m; 297817: −60/−75/−90 m i lewo 0/+2 m. Wysokość z rzeczywistego road_asphalt i ciągłego profilu; brak trafienia lub skok ponad 1 m powoduje jawne odrzucenie. Rzeczywista liczba klatek może być mniejsza niż 30. Wszystkie C, bez zapisu produkcyjnych kamer. Składnia dwóch Pythonów i wrapperów PS sprawdzona; niezależny przegląd kodu w toku. Nie uruchamiać PrepareRefinement, dopóki ComposeOnly 95614 nie skończy, ponieważ używają tej samej nazwy dzierżawy heavy.
+
+Lekkie parsowanie tekstowych statystyk dało 168 wierszy liczników z oddzielnymi instancjami w counters/. Nie jest to ciężka generacja ani wynik GPU. Pełna kompozycja 100 B i diagnostyki nadal czeka na heavy. Pełny render 41521 zakończony kodem 0, slot Unity zwolniony.
+
