@@ -376,7 +376,12 @@ namespace Game.Editor.Setup
                     Add("MI_Cab_" + slot, m);
                 }
                 var dec = Mat(dir, "MI_Cab_Decal", cab);
-                dec.SetTexture("_DecalAtlas", Tex<Texture2D>($"{it}/T_Cab_Decal.png"));
+                string decalTier = CabDecalAtlasTier(tier);
+                var decalAtlas = Tex<Texture2D>($"{SrcInt}/Textures/{decalTier}/T_Cab_Decal.png");
+                if (decalTier != tier && (decalAtlas.width != 512 || decalAtlas.height != 512))
+                    throw new InvalidDataException("Cab Low legend candidate requires the existing 512x512 Medium atlas");
+                dec.SetTexture("_DecalAtlas", decalAtlas);
+                Debug.Log($"CAB_LEGEND_ATLAS_CONFIG: tier={tier} source={decalTier} size={decalAtlas.width}x{decalAtlas.height} mips={decalAtlas.mipmapCount}");
                 dec.SetTexture("_AO", ao);
                 dec.SetFloat("_Cutoff", 0.5f);
                 dec.SetFloat("_IsDecal", 1f);
@@ -1005,6 +1010,21 @@ namespace Game.Editor.Setup
                 filter.sharedMesh = mesh;
                 Debug.Log($"[TRUCK] Mirror bezel {body.name}: addedTris={triangles} slots={source.subMeshCount}->{mesh.subMeshCount} centreDelta={(source.bounds.center - mesh.bounds.center).magnitude:F7} sizeDelta={(source.bounds.size - mesh.bounds.size).magnitude:F7}");
             }
+        }
+
+        static string CabDecalAtlasTier(string tier)
+        {
+            // ADR 0112 r4: optional bake-time reference change, only for the existing Low Decal material.
+            if (tier != "Low") return tier;
+            string path = Path.Combine(EditorTools.RepoRoot, "art-source/truck/interior/cab_legend_atlas.json");
+            if (!File.Exists(path)) return tier;
+            var data = Json.Obj(Json.Parse(File.ReadAllText(path)));
+            if (Json.Num(data["schema"]) != 1) throw new InvalidDataException("Unknown cab legend atlas schema");
+            bool enabled = data.TryGetValue("enabled", out var flag) && flag is bool value && value;
+            if (!enabled) return tier;
+            string source = Json.Str(data["low_atlas_tier"]);
+            if (source != "Medium") throw new InvalidDataException("Cab Low legend atlas override supports Medium only");
+            return source;
         }
 
         static void ConfigureCabBacklight(Material material)

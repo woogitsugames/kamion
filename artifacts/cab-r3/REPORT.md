@@ -14,7 +14,7 @@ Obejrzano wszystkie 15 arkuszy do 960 px: 12 macierzy przed/po, dwa detale i par
 
 Referencja nocna: Volvo Trucks Magazine, Jonatan Fernström, 2017; źródło i ograniczenia w `artifacts/cab-r2/NIGHT-REFERENCE.md`. Inny pojazd, poza i ekspozycja, pełniejsza noc niż nasz dusk: porównanie jakościowe, bez celu RGB/cd/m². Zdjęcie ma prawa autorskie, służy prywatnemu QA i nie trafia do materiałów gry. Nie kopiowano brandingu.
 
-![Zdjęcie Volvo i render night1, porównanie jakościowe do 960 px](photo-night-reference-vs-render-960.jpg)
+Prywatna para zdjęcie–render pozostaje lokalnie poza gitem zgodnie z recenzją s12 batch C. Źródło i ograniczenia: [NIGHT-REFERENCE.md](../cab-r2/NIGHT-REFERENCE.md).
 
 ![Detale podświetlenia Low przed i po, do 960 px](backlight-details-Low-960.jpg)
 
@@ -29,5 +29,6 @@ W czasie kolejki wykonano dodatkową odczytową kontrolę prawego szerokokątneg
 Po niezależnej recenzji s12 batch B uzupełniono `docs/LICENSES.md` o Brown Leather Roba Tuytela / Poly Haven, CC0 1.0, cztery MD5 i przetwarzanie. Lokalne oryginały mają zgodne rozmiary i MD5 4/4 (`license-source-verification.json`). Plastic nadal jest pochodną tłoczenia skóry, nie skanem tworzywa deski. Recenzja wskazuje zbyt duże fale normalnych, brak nowego zużycia kontaktowego i pasmo wypieku deski; przechodzą do r4. Wcześniejsze porażki GIS powtarzały się w linii cab, co nie dowodzi wyniku czystego main. Bieżący GIS na świeżym stanie przeszedł bez tych porażek; nie zmieniano implementacji ani testów świata i nie przypisujemy tego naprawie kabiny. Osobny pomiar czystego main pozostaje po stronie lidera.
 
 Nie dodano odbić paneli na szybach, nowego światła świata ani zużycia kontaktowego. Pasmo deski pozostaje otwarte. Ubogi detal zewnętrznego przodu w Front leży poza własnością cab. Przewidywane konflikty: addytywne fragmenty TruckAssetBuilder i rejestru LICENSES; zachować zmiany pozostałych dziedzin. Po terminalnym GIS cofnięto sześć wygenerowanych produktów świata spoza cab; kopie raportu i manifestów zachowano w artefaktach. Slot heavy zwolniony, procesy zakończone. Pełna kopia artefaktów do main jest ostatnim krokiem przekazania. Następna runda: gpt-cab-r4, merge main, drobniejsze tłoczenie Plastic według niezależnej recenzji i ocena pasma deski.
+
 
 
