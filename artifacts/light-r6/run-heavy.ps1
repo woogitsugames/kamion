@@ -11,6 +11,14 @@ Set-Location $repo
 $slot = 'C:/Users/matma/Documents/Claude/kamion/scripts/unity-slot.ps1'
 $owner = (& git branch --show-current).Trim()
 if ($owner -notmatch '^gpt-light-r\d+$') { throw "Niewłaściwa gałąź light: $owner" }
+$stopFile=Join-Path $PSScriptRoot 'STOP-REQUESTED.txt'
+if(Test-Path -LiteralPath $stopFile){
+    @{time=(Get-Date).ToString('o');task=$Task;owner=$owner;reason='User requested stop; no slot acquired and no new Python started';markerSha=(Get-FileHash -LiteralPath $stopFile).Hash}|ConvertTo-Json|Set-Content "$PSScriptRoot/STOP-ACK.json" -Encoding utf8
+    Add-Content "$PSScriptRoot/STATUS.md" "Zatrzymanie na życzenie użytkownika przed fazą $Task. Bez Acquire i bez nowego Pythona; poprzednia faza nie była przerywana. Kod130 oznacza żądane zatrzymanie, nie porażkę testu."
+    git add -f artifacts/light-r6/STATUS.md artifacts/light-r6/STOP-ACK.json
+    git commit -m 'wip(light): acknowledge requested stop before next heavy phase'
+    exit 130
+}
 if ($Task -eq 'GisFinal' -and -not $RoundEnd) { throw 'Pełny GIS wolno uruchomić tylko na końcu rundy: -RoundEnd' }
 if ($Task -eq 'TestFile' -and ($TestFile -notmatch '^tests[/\\](gis|physics|gate3)[/\\][^/\\]+\.py$' -or -not (Test-Path -LiteralPath $TestFile -PathType Leaf))) {
     throw 'Podaj jeden istniejący plik testów przez -TestFile; pełne katalogi są zabronione w trakcie rundy'

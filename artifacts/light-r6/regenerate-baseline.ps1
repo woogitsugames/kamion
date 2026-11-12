@@ -1,6 +1,7 @@
 param([ValidateSet('Materials','World','Fidelity','Import','Baseline')][string]$StartAt='Materials')
 $ErrorActionPreference='Stop'
 $repo=[IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..'));Set-Location $repo
+if(Test-Path -LiteralPath "$PSScriptRoot/STOP-REQUESTED.txt"){throw 'User requested pause; read PRZEKAZANIE.md before explicitly resuming'}
 if((git branch --show-current).Trim() -ne 'gpt-light-r6'){throw 'Expected round6'}
 . "$repo/scripts/env.ps1"
 $slot='C:/Users/matma/Documents/Claude/kamion/scripts/unity-slot.ps1'

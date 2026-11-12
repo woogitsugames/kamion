@@ -2,6 +2,7 @@ param([Parameter(Mandatory)][string]$Jobs, [string]$Gate3 = 'Data/Regions/bialys
 $ErrorActionPreference = 'Stop'
 $repo = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..'))
 Set-Location $repo
+if(Test-Path -LiteralPath "$PSScriptRoot/STOP-REQUESTED.txt"){throw 'User requested pause; no new Unity batch'}
 . "$repo/scripts/env.ps1"
 $slot = 'C:/Users/matma/Documents/Claude/kamion/scripts/unity-slot.ps1'
 $jobPath = [IO.Path]::GetFullPath($Jobs, $repo)
