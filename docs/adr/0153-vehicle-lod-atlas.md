@@ -1,6 +1,7 @@
 # ADR 0153 — LOD1/LOD2 aut
 
-Status: WIP, gpt-s16-r1. Baza: origin/main 421f1b4fb (12.11.2026).
+Status: implementacja i statyczna recenzja edytora PASS; końcowy GIS w toku.
+Gałąź gpt-s16-r1. Baza: origin/main 421f1b4fb (12.11.2026).
 
 ## Problem i granice
 
@@ -25,7 +26,7 @@ extras zawierają trzy pasma i jawny alias. Importer obsługuje je wyłącznie z
 `vehicle_lod_atlas`; stare gałęzie polityki pozostają bez zmian. Szacunek Python
 w chronionym `roads/build_world.py` nadal używa LOD1 placowych daleko; ponieważ
 alias ma identyczną liczbę trójkątów, nie zaniża z tego powodu budżetu geometrii.
-Progi 40/100/300 m dla placowych są WORKING_VALUE do weryfikacji w edytorze;
+Progi 40/100/300 m dla placowych są WORKING_VALUE zweryfikowane w edytorze;
 osobówki zachowują 25/85/300 m, floor LOD0 16 m i cull Low 150 m.
 
 Generator: `tools/worldgen/streetscape/vehicle_lod_atlas.py`. Łączenie zachowuje
@@ -44,20 +45,53 @@ z osobną tablicą. LOD0 zawsze wymaga pełnych, poprawnych natywnych rogów UV0
 Nowy test importu wymaga nadal shadera World Car Plate i aktywnego remapu LOD0.
 Adaptacja nie zmienia rygorów starych bibliotek ani ich 54 tablic.
 
-## Weryfikacja dotychczasowa
+## Pomiary w edytorze
 
-8/8 testów `tests/gis/test_vehicle_lod_atlas.py`: niezmienność geometrii
-i normalnych sześciu rodzin/prototypów, dwie podsiatki oraz liniowe parametry
-atlasu oraz wzór żaluzji. Z deposition/yard: 37 passed. Baseline ma 114 kamer
-× Low/High × clear/overcast. Wariant A: 420 chronionych węzłów GLB oraz 68
-dalekich LOD bez błędów audytu, 14 nowych aliasów poprawnych; kod atlasu został
-potem poprawiony po niezależnym preflight, trwa regeneracja B. Render after, dobór progów z edytora,
-pełne GIS, EditMode oraz niezależna recenzja pozostają otwarte.
+Natywny odczyt 72 pozycji potwierdza rzeczywiste pasma. Osobówki Low:
+15,9 m LOD0, 16,1 m LOD1, 42,4 m LOD1, 42,6 m LOD2; High: 37,4/37,6
+i 127,4/127,6 m. Placowe Low: 19,9/20,1 i 49,9/50,1 m; High: 59,9/60,1
+i 149,9/150,1 m. Cull Low nadal 150 m. Przykład hatch: LOD0 14 podsiatek,
+4092 tris; LOD1 2 podsiatki, 816 tris; LOD2 2 podsiatki, 86 tris.
+Tractor LOD1/2: 2 podsiatki, 286 tris, ten sam natywny mesh i materiały.
+`artifacts/gpt-s16-r1/projection-probe.json` jest pomiarem, a nie dowodem widoczności.
 
-## Pomiary i przyjęcie
+114 kamer × 4 warunki = 456 porównań; dodatkowo 40 odsłoniętych pozycji
+× 4 = 160. Wszystkie mają osobne statystyki przed/po w `CAMERAS.md` oraz
+`clear/CAMERAS.md`. W podstawowym zestawie delta batchy instancji Low wynosi
+−312..0, High −395..0; w dodatkowym Low −310..−34, High −381..−97.
+Żadna kamera Low nie zwiększa draws ani tris. Liczba instancji i geometria
+pozostają identyczne. Cab-dash Low: batche instancji 307 → 190, tris 17k → 17k;
+osobne estymaty sceny 388 draws / 344k tris bez zmian.
 
-Raport każdej kamery Low/High, clear/overcast będzie zawierał osobno draws
-sceny i instancji, trójkąty oraz dostępne liczniki batchy. SceneStats to estymata
-CPU przed SRP batching; nie należy jej podpisywać jako pomiaru GPU lub telefonu.
-Brak widocznego przełączenia wymaga oględzin PNG i porównań blisko progów.
-Pomiar na A16 i scalenie do main należą do lidera.
+SceneStats to estymata CPU przed SRP batching. TrisK są ucięte do tysięcy;
+dokładną niezmienność geometrii potwierdza osobny audyt GLB. Instanced draws
+liczą zgłoszenia batchy instancji, a nie wszystkie przebiegi GPU/SRP.
+Nie wyprowadzamy z tych liczb oszczędności milisekund.
+
+## Weryfikacja i ograniczenia
+
+Ostateczny wariant B: 420 chronionych węzłów GLB identycznych buforowo,
+68 istniejących odległych LOD z identycznymi trójkątami, 14 nowych aliasów
+placowych identycznych z LOD1, zero błędów (`glb-audit.json`). 456 wcześniejszych
+materiałów natywnych ma po sprzątnięciu cache identyczny SHA256; dodano tylko
+`M_vehicle_lod_details`. Siedem ubocznych zapisów Unity cofnięto z bazowej kopii:
+dwa nieużywane stare car_dirt `_SrcBlend` oraz pięć ukrytych `_MainTex` znaków.
+Jawne różnice są w `native-cleanup-ledger.json`; nie zmieniono generatora znaków.
+
+8 testów atlasu wraz z deposition/yard: 37 passed. Końcowy EditMode:
+452 passed, 0 failed, 0 skipped. Pierwszy pełny GIS wykrył wyłącznie nieaktualny
+raport fidelity (926 passed, 3 xfailed, 1 failed); odświeżono go bez edycji
+roads/* i jego 9 testów przechodzi z 1 xfail. Pełne powtórzenie GIS trwa;
+wynik zostanie dopisany przed push.
+
+Autor obejrzał wszystkie porównania i lokalne zdjęcia konstrukcji aut/kół;
+niezależny visual-critic ocenił 456 podstawowych i 160 dodatkowych par:
+PASS dla braku nowej widocznej regresji w statycznych obrazach edytora.
+Wyszukiwanie dodatkowych pozycji porównuje maskę solo z głębią świata,
+ale końcowa recenzja używa zwykłych renderów. Wcześniejsze zasłonięte próby
+są odrzucone. SUV przy 127,5 m jest za mały do oceny detali koloru;
+można ocenić brak widocznej plamy w całym kadrze. Istniejące przejścia
+okrągłych kół w wielokąty oraz cull Low są widoczne także w baseline.
+
+PASS nie obejmuje przejazdu w ruchu, kompresji ASTC ani telefonu. Pomiar GPU
+p95 na A16, ocena celu 33,3 ms i scalenie do main należą do lidera.

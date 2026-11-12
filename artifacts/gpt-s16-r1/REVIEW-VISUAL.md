@@ -1,38 +1,38 @@
 # ADR0153 — niezależna ocena wizualna B
 
-**Wynik bieżący: PARTIAL.** W obejrzanych widocznych celach nie stwierdziłem nowej blokującej regresji od konsolidacji materiałów. Pełna akceptacja wszystkich przejść pozostaje otwarta z powodu zasłoniętych celów i braku czytelnego kadru kratki agregatu. Raport czeka na zapowiedziane uzupełnienie kamer. To ocena statycznych renderów edytora, bez orzeczenia o telefonie ani dynamicznym przejeździe.
+**Werdykt końcowy: PASS w zakresie statycznych porównań edytora przed/po dla optymalizacji ADR0153.** Nie znalazłem nowej widocznej regresji wymagającej poprawki przed akceptacją tego zakresu. To nie jest PASS dla telefonu, dynamicznego przejazdu ani fotograficznej jakości całego świata. Wcześniejsze PARTIAL z powodu zasłoniętych kamer zastępuje niniejsza ocena po obejrzeniu dodatkowych 160 par.
 
-## Zakres rzeczywiście obejrzany
+## Obejrzany materiał
 
-- Wszystkie **40 arkuszy overviews**: po10 dla Low-clear, Low-overcast, High-clear i High-overcast; pokazują114kamer na warunek, łącznie456par przed/po.
-- Szczegółowe target-crops: Low SUV15.9/16.1 i42.4/42.6m, tractor19.9/20.1 i49.9/50.1m, trailer19.9/20.1 i49.9/50.1m; High SUV37.4/37.6 i127.4/127.6m, tractor59.9/60.1 i149.9/150.1m, trailer59.9/60.1 i149.9/150.1m. Te zestawy obejrzano w obu pogodach. Dodatkowo bliskie8m hatch/SUV/trailer we wszystkich czterech warunkach.
-- Pełne pary najwyższych MAE, w szczególności Low-overcast: stretch-05-docks, trailer049p9/050p1/059p9/060p1, tractor008p0/019p9/020p1, g3a_eye_s0112, hatch127p4/127p6, g3a_ext34_s0338; również High-clear hatch008p0 i High-overcast route-onramp-andersa-above.
-- Lokalne fotografie real-cars-contact.jpg, r4-reference-review.jpg oraz wheel-photo-crop.png, wraz z opisem pochodzenia. Oglądanie wyłącznie do oceny; nie kopiowałem referencji do worktree.
-- Sprawdzono metadane projection-probe.json, glb-audit.json, CAMERAS.md, image-metrics.json i nagłówek final-editmode.xml. XML podaje452passed/0failed/0skipped; nie uruchamiałem testów.
+- Wszystkie **40 arkuszy overviews**: po 10 dla Low-clear, Low-overcast, High-clear i High-overcast. Obejmują 114 kamer na warunek, łącznie 456 par przed/po.
+- Szczegółowe oryginalne target-crops przy przejściach: auta 16 / 42,5 m Low i 37,5 / 127,5 m High; pojazdy placowe 20 / 50 m Low i 60 / 150 m High. Sprawdzono obie pogody, widoki bliskie 8 m oraz pełne pary najwyższego MAE.
+- **Wszystkie 160 dodatkowych plików** w `clear/target-crops/{Low-clear,Low-overcast,High-clear,High-overcast}`: 40 kamer na warunek. Crop obejmuje 480 × 340 natywnych pikseli na stronę. To zwykły render świata, nie obraz maski. Nazwa kamery zawierająca High lub Low określa przygotowany dystans; rzeczywisty profil wynika z katalogu warunku.
+- Obejrzano lokalne `real-cars-contact.jpg`, `r4-reference-review.jpg` i `wheel-photo-crop.png` oraz ich opisy pochodzenia. Fotografie służą ocenie konstrukcji i ogólnego wyglądu; inne światło, perspektywa i model pojazdu wykluczają kalibrację albedo. Nie kopiowałem referencji do worktree.
+- Przeczytano metadane `projection-probe.json`, `glb-audit.json`, `CAMERAS.md`, `image-metrics.json`, dodatkowe `clear/CAMERAS.md` i `clear/camera-counts.json`. Nagłówek `final-editmode.xml` podaje 452 passed, 0 failed, 0 skipped. Nie uruchamiałem Unity, adb, generatora ani testów.
 
-## Wyniki dla widocznych celów
+## Ustalenia dotyczące optymalizacji
 
-1. **Bliski LOD0 i tablice — brak zaobserwowanej regresji.** W lod_car_hatch_white_008p0 w obu tierach/pogodach przedni van zachowuje czytelną tablicę BI3G87, pasek i położenie znaków; biały samochód obok zachowuje lakier i reflektory. SUV008p0 zachowuje ciemny lakier, okna, lampę tylną i położenie kół. Nie jest to pełny test zmienności wszystkich tablic na instancjach.
-2. **SUV0→1 — bez nowego pogorszenia widocznego na parach.** Low015p9/016p1 i High037p4/037p6 pokazują ten sam pojazd z częściowo zasłoniętym przodem. Nowy LOD1 utrzymuje sylwetkę, ciemne szyby, lampę i podobny kolor. Wyraźna zmiana felg na jaśniejsze występuje już w baseline.
-3. **Ciągnik Low0→1 — bez nowego ubytku geometrii.** Tractor019p9/020p1 zachowuje kabinę, zbiornik, czarne podwozie i oddzielne koła. Skok szczegółowej okrągłej felgi do jasnego wielokąta jest taki sam w baseline. Kolor niebieski i lokalizacja okien pozostają spójne przed/po.
-4. **Naczepy w dokach — drobne różnice odpowiedzi, bez błędów atlasu.** W stretch-05-docks i trailer049p9/050p1 Low-overcast widać małe zmiany jasności dolnych ram/podpór i drzwi. Nie znalazłem nowych kolorowych plam, czarnych prostokątów na karoserii, odwróconych powierzchni ani znikających kół. Najwyższy MAE0.269 w stretch-05-docks nie oznacza dużej widocznej degradacji całego kadru.
-5. **Widoki drogowe i kabinowe — brak widocznej zmiany kompozycji.** Wszystkie overviews zachowują ten sam układ obiektów. Pary kabiny i lusterek nie ujawniają pogorszenia elementów bliskich. Mała skala overview ogranicza ocenę drobnych detali.
-6. **Kratka agregatu — niepotwierdzona obrazem.** W obecnym zestawie nie rozpoznaję wystarczająco dużego i niezasłoniętego frontu reefer_grille. Poprawka kodu ma statyczny przegląd, lecz nie dostaje tutaj PASS wizualnego.
+**Bliski LOD0 i tablice: brak zaobserwowanej regresji.** Oryginalne `lod_car_hatch_white_008p0` we wszystkich czterech warunkach zachowuje tablicę BI3G87 na vanie na pierwszym planie; biały hatch obok zachowuje lakier i reflektory. Dodatkowe `clear_car_hatch_white_Low_015p9/016p1` renderowane High pokazują nadal odrębne, czytelne tablice vana i hatcha. SUV przy 8 m i w bliskich dodatkowych widokach utrzymuje ciemny lakier, okna, lampy i koła. Nie jest to pełny obrazowy test wszystkich numerów tablic na wszystkich instancjach.
 
-## Luki dowodowe wymagające uzupełnienia
+**Auta Low 0→1 i 1→2: bez nowego pogorszenia względem baseline.** Dodatkowe `clear_car_hatch_white_Low_015p9/016p1` i `_042p4/042p6` oraz analogiczne SUV pokazują cele, które wcześniej zasłaniał budynek. Kontur i położenie kół są zgodne przed/po. W LOD2 widać uproszczenie nadwozia do bardziej pryzmatycznej bryły i uproszczenie kół, jednak występuje ono po obu stronach porównania. Brak nowych kolorowych plam UV, czarnych prostokątów na lakierze lub utraty całej bryły.
 
-- **Hatch:**015p9/016p1 oraz037p4/037p6 i042p4/042p6 mają cel zasłonięty budynkiem; crop pokazuje ścianę/okna.127p4/127p6 również nie pokazuje auta.
-- **SUV1→2:**042p4/042p6 Low pokazuje ścianę,127p4/127p6 High pokazuje fragment trawnika/budynku. Nie można ocenić poppingu sylwetki ani kolorów tego przejścia.
-- **Tractor:**049p9/050p1 Low oraz059p9/060p1 i149p9/150p1 High pokazują zasłaniającą zabudowę/plac zamiast pojazdu. Native selectedLod nie dowodzi widoczności.
-- **Trailer High1→2:**149p9/150p1 pokazuje okno budynku zamiast celu. Przy19.9/20.1Low crop obejmuje bardzo wąski fragment boku naczepy; nadaje się do lokalnej odpowiedzi materiału, nie do oceny całej sylwetki.
-- Potrzebny wyraźny widok agregatu oraz przynajmniej jedna para widocznego końcowego LOD aut. Zapowiedziane dodatkowe kamery mogą zamknąć te luki.
+**Auta High: brak nowego artefaktu w natywnym kadrze.** `clear_car_hatch_white_High_037p4/037p6` i `_127p4/127p6` zachowują układ i kolor samochodów w obu pogodach. SUV przy 37,5 m jest dostatecznie widoczny do porównania konturu i kół. SUV przy 127,5 m jest bardzo mały: ocena `clear_car_suv_black_High_127p4/127p6` ogranicza się do braku widocznego artefaktu w natywnym kadrze. Nie deklaruję weryfikacji drobnego koloru ani szczegółowej sylwetki tego SUV-a na podstawie małej projekcji. Audyt zachowania geometrii jest osobnym dowodem technicznym.
+
+**Ciągnik i plandeka: brak dodatkowego poppingu od atlasu.** Widoczne `clear_tractor_blue_Low_019p9/020p1` i `_049p9/050p1` oraz `clear_tractor_blue_High_059p9/060p1` i `_149p9/150p1` utrzymują kontur, osobne koła, zbiornik i kolor kabiny przed/po w obu pogodach. Analogiczne kamery `clear_trailer_curtain_0_*` zachowują plandekę, ramy, podpory i koła. Przy High 149,9/150,1 m naczepa i ciągnik pozostają obecne i nie pojawia się dodatkowy skok wyglądu przy aliasie LOD2.
+
+**Agregat chłodni: wzór kratki zachowany w granicach rozdzielczości.** `clear_trailer_reefer_0_Low_020p1` w Low-clear pokazuje subtelne poziome żaluzje po zmianie, z prawidłowo ciemnym polem w jasnej obudowie. High `clear_trailer_reefer_0_High_060p1` w obu pogodach zachowuje ciemną kratkę oraz obrys agregatu; przy tym dystansie jest ona za mała do oceny każdej listewki. Nie widzę zamiany na jednolitą jasną plamę, fragment tablicy ani plamę innej komórki atlasu. Usunięcie dolnego panelu kontrolnego przy LOD1 występuje również w baseline. Alias przy High 150 m nie zmienia widocznego wyglądu chłodni.
+
+**Najwyższy MAE i widoki ogólne: bez nowego blokera.** Sprawdzono szczegółowo Low-overcast `stretch-05-docks` (MAE 0,269), `lod_trailer_curtain_0_049p9/050p1/059p9/060p1`, `lod_tractor_blue_008p0/019p9/020p1`, `g3a_eye_s0112`, `g3a_ext34_s0338` i hatch przy 127,5 m. Widać małe różnice jasności dolnych ram, podpór i detali naczep. Nie znalazłem nowych dziur, odwróconych powierzchni, wyraźnego znikania geometrii ani dużej degradacji całego kadru. Widoki kabiny, lusterek i dróg zachowują kompozycję oraz bliskie elementy.
 
 ## Problemy obecne już w baseline
 
-- SUV i ciągnik zmieniają jasność i geometrię felg przy0→1; szczególnie Low016p1 i020p1. Referencja koła ma ciemną zagłębioną miskę i drobny osprzęt, którego jasne uproszczone wielokąty LOD1 nie oddają. To istniejący koszt uproszczenia, nie nowa regresja atlasu.
-- Bliskie SUV008p0 ma wyraźnie płaskie powierzchnie i uproszczone koła; fotografia samochodów pokazuje bardziej złożone odbicia i kształt obręczy. Przed/po nie wykazuje pogorszenia od tej zmiany.
-- Szklane powierzchnie pojazdów są bardzo ciemne, a auta/plandeki bywają podobne między instancjami. Sam ten pakiet nie potwierdza fotograficznej jakości całego świata; fotografie nie mają zgodnego światła/perspektywy do kalibracji albedo.
+1. Koła SUV-a i ciągnika wyraźnie zmieniają jasność i szczegółowość przy 0→1. Ciągnik otrzymuje jasne wielokątne felgi i płaski szary zbiornik; plandeka traci część drobnego osprzętu. Widać to przed oraz po, szczególnie przy Low 20 m. Fotografia koła pokazuje ciemną zagłębioną miskę i drobny osprzęt, których uproszczenie nie zachowuje.
+2. Bliskie SUV-y mają płaskie powierzchnie, uproszczone koła i ciemne szyby. Referencje aut pokazują bogatsze odbicia i konstrukcję obręczy. Ten pakiet nie ustanawia fotograficznej jakości całego modelu.
+3. W dodatkowych renderach Low kamery nazwane `*_High_149p9/150p1` pokazują zniknięcie odległego ciągnika/naczepy przy 150,1 m po obu stronach. To zastane zachowanie tego Low kadru, nie nowa regresja atlasu ani test High 150 m. W rzeczywistych renderach High cele są obecne po obu stronach tego przejścia.
+4. Nad odległym światem widoczne są zawieszone prostokątne elementy oraz uproszczona roślinność, np. w dodatkowych High kadrach SUV-a przy 127,5 m. Występują już w baseline, poza zakresem tej optymalizacji.
 
-## Ograniczenia
+## Granice akceptacji
 
-Obrazy są statycznymi renderami edytora. Nie oceniam migotania w ruchu, temporalnego poppingu, ASTC na telefonie, FPS ani kosztu GPU na A16. Liczniki SceneStats to estymacja CPU; spadek batchy instancji i brak wzrostu trójkątów nie są pomiarem telefonu. Testy i audyt geometrii wspierają integralność danych, lecz nie zastępują oglądania widocznego celu.
+Pierwotnych zasłoniętych kamer hatcha, SUV-a i ciągnika nie uznano za dowód widoczności. Ich użyteczne przejścia uzupełniają nowe kamery. Maska GPU posłużyła autorowi do wyboru pozycji; sama nie jest podstawą niniejszego PASS.
+
+PASS dotyczy **braku zaobserwowanego pogorszenia względem baseline w dostarczonych statycznych renderach edytora**. Nie obejmuje migotania w ruchu, temporalnego poppingu, urządzeniowej kompresji ASTC, FPS, temperatur ani kosztu GPU na A16. SceneStats jest estymacją CPU; spadek batchy instancji nie zastępuje pomiaru telefonu. Nie stwierdzono konkretnej nowej regresji wizualnej wymagającej poprawki kodu w ocenionym pakiecie.

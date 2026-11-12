@@ -24,3 +24,5 @@ Dodatkowe kamery: before/High-overcast zapisane.
 Przywrócono bibliotekę i import kandydata B po dodatkowym baseline.
 
 EditMode zakończony: exit 0; szczegóły EDITMODE-STATUS.md i final-editmode.xml.
+
+Końcowy EditMode: 452 passed,0failed,0skipped. Audyt GLB B ponowiony:420chronionych,68dalekich,14aliasów,0błędów. Przywrócono7ubocznych zapisów materiałów Unity; finalguard:456oryginalnych identycznych SHA256+dodany1atlas. Autor obejrzał160dodatkowych par we wszystkich warunkach. Niezależny visual-critic: PASS statycznego edytora; ruch,ASTC iGPUtelefon pozostają UNVERIFIED. Pełny GIS w tle.
