@@ -43,6 +43,8 @@ namespace Game.Tests
             var night = LightingPreset.CreateNight();
             try
             {
+                // Compare genuinely different input grades even after Night's factory defaults were selected.
+                night.skyDisplayGain = 1f; night.skyDisplayDesaturation = 0f;
                 var before = night.CreateModel();
                 night.skyDisplayGain = 0.125f; night.skyDisplayDesaturation = 0.85f;
                 var after = night.CreateModel();
