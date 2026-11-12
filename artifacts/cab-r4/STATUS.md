@@ -59,3 +59,4 @@ Izolowana sekwencja legend uruchomiona, uchwyt 40355; PID i etap w legend-sequen
 Zakończono Game.World.Import.WorldTruckInstaller.InstallBatch, exit 0. Następny krok: kolejny etap prefab/sceny lub capture-0112 -Stage result-0112.
 Zapisano izolowany atlas legend 2x Low clear: cab-driver/cab-dash. Plastic/Leather bez zmian. To eksperyment czytelności, nie pełny gate budżetów.
 Zapisano izolowany atlas legend 2x Low overcast: cab-driver/cab-dash. Plastic/Leather bez zmian. To eksperyment czytelności, nie pełny gate budżetów.
+Zapisano izolowany atlas legend 2x Low dusk: cab-driver/cab-dash. Plastic/Leather bez zmian. To eksperyment czytelności, nie pełny gate budżetów.
