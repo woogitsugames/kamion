@@ -20,6 +20,34 @@ namespace Game.Core.Navigation
         /// <summary>Penalties [s]. WORKING_VALUES.</summary>
         public const float RightTurnS = 6f, LeftTurnS = 10f, SharpTurnS = 20f, DeadEndUTurnS = 240f, AgainstHeadingS = 300f, RestrictedS = 600f;
 
+        // Truck limits of the player's combination (tractor 4x2 + 13.6 m curtainsider, docs/VEHICLE_REFERENCE_DATA.md):
+        // GCW 40.0 t (laden40 preset; legal max 40 t per Directive 96/53/EC - quoted, UNVERIFIED), height 4.00 m (trailer
+        // roof top), combination length 16.47 m (kingpin 0.68 m ahead of the drive axle), max axle load 11.5 t (drive-axle
+        // legal max, quoted UNVERIFIED; the laden40 drive axle actually carries 10.76 t).
+        /// <summary>Max total weight of the combination [0.01 t] = 40.00 t.</summary>
+        public const int TruckMaxWeightCt = 4000;
+        /// <summary>Max axle load [0.01 t] = 11.50 t.</summary>
+        public const int TruckMaxAxleLoadCt = 1150;
+        /// <summary>Max height [cm] = 4.00 m.</summary>
+        public const int TruckMaxHeightCm = 400;
+        /// <summary>Max vehicle (combination) length [cm] = 16.47 m.</summary>
+        public const int TruckMaxLengthCm = 1647;
+
+        /// <summary>
+        /// May the truck use edge <paramref name="e"/>? An OSM limit below the truck's parameters forbids the edge
+        /// (a limit equal to the parameter is allowed); hgv=destination is allowed only as the goal edge
+        /// (<paramref name="isGoal"/>), like the no-truck access edges.
+        /// </summary>
+        public static bool EdgeAllowed(RouteGraph g, int e, bool isGoal)
+        {
+            if ((g.EdgeFlags[e] & RouteGraph.FlagHgvDestination) != 0 && !isGoal) return false;
+            if (g.EdgeMaxWeightC[e] != 0 && g.EdgeMaxWeightC[e] < TruckMaxWeightCt) return false;
+            if (g.EdgeMaxAxleLoadC[e] != 0 && g.EdgeMaxAxleLoadC[e] < TruckMaxAxleLoadCt) return false;
+            if (g.EdgeMaxHeightCm[e] != 0 && g.EdgeMaxHeightCm[e] < TruckMaxHeightCm) return false;
+            if (g.EdgeMaxLengthCm[e] != 0 && g.EdgeMaxLengthCm[e] < TruckMaxLengthCm) return false;
+            return true;
+        }
+
         readonly RouteGraph m_G;
         readonly float[] m_Cost;
         readonly int[] m_Parent, m_Stamp;
@@ -200,6 +228,7 @@ namespace Game.Core.Navigation
                         extra = TurnCost(s, d);
                     }
                     if ((g.EdgeFlags[e] & RouteGraph.FlagNoTruck) != 0 && e != ge) continue;
+                    if (!EdgeAllowed(g, e, e == ge)) continue;   // OSM weight / height / length limits below the truck's, hgv=destination off-goal
                     if ((g.EdgeFlags[e] & RouteGraph.FlagRestricted) != 0 && e != ge && e != se) extra += RestrictedS;
                     float v = SpeedMs(g, e), len = g.GeomLength(e);
                     if (e == ge)
