@@ -17,3 +17,4 @@ Krok 5: przygotowano test-corner.ps1 z obowiązkowym Before.complete i filtrem t
 Następny krok nadal: koniec materiałów/świata bazowego → import → Before, dopiero potem dodanie testu i Red.
 Krok 6: diagnostyka podłoża w r3 zapisze osobne ground-alignment-before/after.json, bez nadpisywania dowodu bazy; dostępna jako heavy.ps1 -Task AuditGround -Phase before|after. Czytanie przyczyny porażki XML w Red oparto na XPath, aby nie pomylić asercji z błędem uruchomienia.
 Następny krok: nadal przygotowanie materiałów pod heavy; po pełnym źródle i imporcie pomiar Before oraz test regresji.
+2026-11-12T01:15:11.7632692+01:00 Zregenerowano zestawy materiałów nowego main pod heavy; bez zmian źródeł innych dziedzin.
