@@ -73,3 +73,25 @@ Pełny GIS: 525 passed, 1 xfailed, 1 failed w 1390,34 s (wliczone wstrzymanie wa
 Import przywróconego świata przeszedł. Probe B/120 Low-overcast ma SHA identyczny z baseline, co potwierdził niezależny krytyk po obejrzeniu obu PNG. EditMode 261/261. Po GIS i Unity nadal zgodne 130 GLB, 64 pliki instancji i siedem pinów źródeł; posttests-audit nie wykazał driftu. Krytyk akceptuje tylko przywrócenie obrazu. B8 pozostaje otwarte, bez pełnej macierzy after i bez akceptowanej zmiany produkcyjnej r3.
 
 Siedem wspólnych skutków ubocznych generatora zachowano w artefaktach, po czym przywrócono z HEAD. Snapshot-restored oraz generator-side-effects opisują wynik użyty do importu; kanoniczne metadane wróciły do stanu sprzed rundy. Lider musi regenerować po integracji. REPORT oraz docs/reports/visual/2026-11-12-vegetation-0109-r3.md podają pełny zakres dowodów. Następna runda: berberys, z odizolowaną propozycją, która nie została jeszcze wdrożona ani wyrenderowana.
+
+## Runda r4 — berberys, w toku; brak decyzji o integracji
+
+Gałąź gpt-vegetation-r4, baza po merge main c3cf303d (pierwotnie 7c9b4ca6). Po zmianach światła i innych dziedzin wykonano całkowicie świeży baseline: 368 obrazów, 67 kamer kontrolnych i 25 fotograficznych B w Low/High clear/overcast. Autor obejrzał wszystkie 40 arkuszy. Nie wykorzystano PNG z r1 ani r3. Materiały wygenerowano raz, 446 s; World baseline 614,8 s. Piny obejmują 130 GLB, 64 pliki instancji, 617 wejść produkcji i dekodowane wejścia kolizji 64 Low chunków. Megascans: 15 dostępnych, fallback false.
+
+### R4 A — odrzucony materiał warstwy wewnętrznej
+
+Berberys otrzymał na istniejącym rdzeniu ten sam materiał alpha liści co shell, UV w skali HEDGE_TILE_M i osobną fazę. Pozostałe rodziny nie zmieniły tej ścieżki. Oczekiwany test RED: 1 failed, 4 passed; po dostosowaniu dawnych selektorów materiałów zachowano testy geometrii, a 18 celowanych testów przeszło w 3,27 s. Pierwsza próba GREEN dała 16 passed i 2 failed; zachowano ją osobno, a generator nie został wtedy uruchomiony.
+
+World A zakończył się poprawnie w 538,6 s. Jedyną zmianą źródłową był plantings.py; wszystkie 64 pliki instancji, dane kolizji i far_field GLB pozostały identyczne. Zmieniły się tylko chunk_6_6 Low/High i metadane świata. Nasadzenia: cztery, 94,3 m², 18 402 trójkąty przed i po. Import oraz 16 próbnych ujęć zakończono. W dwóch kadrach berberysu wywołania spadły o jeden, w pozostałych bez zmian; raportowane trisK bez zmian. Osiem kontroli fence_2/remiza ma identyczne bajtowo PNG.
+
+Autor i niezależny krytyk obejrzeli wszystkie osiem porównań ze zdjęciem Rakoon, CC0, 2020-11-02. Boki stały się drobniejsze, ale duży płaski wierzch nadal wygląda jak pełna bryła. A odrzucono jako wersję końcową. Nie ma pełnej macierzy after A ani końcowego GIS dla A. Dowody: artifacts/vegetation-r4/SELF-REVIEW-probe-a.md, VISUAL-CRITIC-probe-a.md, probe-a-comparison.json i osiem arkuszy berberis-review-probe-a o szerokości 960 px. Zdjęcie jest odniesieniem wyglądu, poza i sezon nie są kalibracją wymiarów. Koszt GPU i migotanie w ruchu pozostają UNVERIFIED.
+
+### R4 B — naprawa obrysów, jeszcze bez wyniku testów i renderów
+
+Mała analiza czterech rzeczywistych obrysów na płaskim gruncie ujawniła osiem samoprzecinających ringów core/shell. _delaunay_fill prawidłowo je odrzucał, po czym _fill przechodził do awaryjnego ear_clip: zero punktów wewnętrznych, maksymalne krawędzie 16,2–19,7 m. To konkretna przyczyna dużych płaszczyzn i niewykonywania kodu reliefu oraz pędów wewnątrz góry. Wycofano pierwotną hipotezę zmiany samych wysokości istniejących punktów.
+
+B, za flagą offset_rings wyłącznie berberysu, tworzy prawidłowe offsety Shapely z orientacją CCW i stabilnym początkiem. Nie edytuje triangulatora roads ani override. Odmawia pustych, rozłącznych obszarów i otworów, nie wybiera największego fragmentu po cichu. Drobna wariacja ringa jest ograniczana, jeśli narusza jego poprawność. Cap berberysu propaguje błąd zamiast znikać po wyjątku. Tekstury A pozostają bez zmian.
+
+Analiza B: osiem poprawnych capów, maksymalna krawędź poniżej 0,98 m. Wąski cap może poprawnie nie mieć punktów wewnętrznych. Łącznie 11 560 tris w analizie płaskich obrysów wobec 18 402 w A. Równomierne próbkowanie aproksymuje wejściowy band: różnica powierzchni −0,159 do −0,224%, Hausdorff brzegu 0,060–0,0851 m. To zmiana siatki, nie globalnej skali świata ani danych źródłowych; nie deklarujemy zachowania każdego dawnego wierzchołka.
+
+Niezależna recenzja kodu wymaga testów globalnego nakładania pasów, przynależności core do shell i rzeczywistego prześwitu względem triangulowanej góry. Dodano te kontrole na czterech obrysach, na płaskim i nachylonym gruncie, oraz kontrolę braku awaryjnego ear_clip. W momencie tego zapisu 27 celowanych testów B czeka na heavy w sekwencji 73347; World, import i probe-b jeszcze nie wykonane. Nie ma PASS geometrii, budżetu ani wyglądu. Przy akceptacji obowiązuje +0 draws i ≤+2% tris w każdej kamerze Low, pełna macierz i niezależny krytyk, potem końcowy GIS/EditMode. Runda pozostaje otwarta.
