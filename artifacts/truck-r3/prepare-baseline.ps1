@@ -69,6 +69,6 @@ finally {
     pwsh $slotScript -Release -Owner gpt-truck
     git restore -- game/Assets/_Project/Rendering/Settings game/ProjectSettings
 }
-Add-Content -Encoding utf8 artifacts/truck-r3/STATUS.md 'Import bieżącej bazy zakończony. Zmiany generated innych dziedzin zachować jako dowód i cofnąć przed kodem r3. Następny krok: render-phase.ps1 -Stage before -Lighting overcast,clear oraz all-cameras.ps1 -Stage before-all.'
+Add-Content -Encoding utf8 artifacts/truck-r3/STATUS.md 'Import bieżącej bazy zakończony. Zachować patch wygenerowanych danych, lecz nie przywracać starego world_manifest przed końcowym GIS: test deterministyczności musi porównać świeżą regenerację z tą samą wersją źródeł. Plików innych dziedzin nie commitować; przywrócić je dopiero po konsumentach i testach. Następny krok: baseline-captures.ps1.'
 git add -f artifacts/truck-r3/STATUS.md
 git commit --only artifacts/truck-r3/STATUS.md -m 'wip(truck): import aktualnej bazy r3'
