@@ -1,3 +1,5 @@
 # STATUS putry-deck (ADR 0133)
 - s12 step 1: GUGiK 0.08 m ortho -> 14 double-arm (Y) median lamps measured (data/sheet1.jpg, sheet2.jpg, median_lamps_ortho.json, plan_before.jpg); generated decks match the ortho in plan (no deck-curve change justified by plan data). Authored row Data/Regions/bialystok-industrial-c/lamp_rows.json, FU.lamp_rows + props.lamp_y, tests/gis/test_lamp_rows.py 4/4.
 - NEXT: pwsh scripts/unity-slot.ps1 -Acquire -Pool heavy -Owner claude-putry-deck; uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c; release; then import-region -SkipCopy + SBS render.
+- step 2: ADR draft, render_putry.ps1/build_world.ps1/pairs.py; before render + build_world queued (PHONE_RUN active, heavy queue 13).
+- NEXT: wait for logs artifacts/putry-deck/render_before.log + logs/build_world.log; then pwsh scripts/import-region.ps1 -Region bialystok-industrial-c -SkipCopy (unity slot), render_putry.ps1 -OutDir artifacts/putry-deck/after, python artifacts/putry-deck/tools/pairs.py
