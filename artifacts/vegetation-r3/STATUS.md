@@ -55,3 +55,4 @@ Przygotowano compare_probe.py: odrzuca obraz starszy od QA B, porówna pełne ko
 Wariant B, generator zakończone kodem 0. Następny etap zgodnie z run-b.ps1; po probe konieczna ocena obrazów i kosztów.
 Wariant B, QA instancji i GLB zakończone kodem 0. Następny etap zgodnie z run-b.ps1; po probe konieczna ocena obrazów i kosztów.
 Wariant B, migawka zakończone kodem 0. Następny etap zgodnie z run-b.ps1; po probe konieczna ocena obrazów i kosztów.
+Wariant B, import zakończone kodem 0. Następny etap zgodnie z run-b.ps1; po probe konieczna ocena obrazów i kosztów.
