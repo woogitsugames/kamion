@@ -188,6 +188,17 @@ namespace Game.Rendering
         void LateUpdate()
         {
             if (!Application.isPlaying || m_Size <= 0 || m_Cube == null || Paused) return;
+            // ADR 0152: after the app returns from the background (Fold, Vulkan/Adreno) the targets can come back released;
+            // a request into a released face RT fails every face ("RenderPass: Fake or uninitialized surface ...",
+            // "EndRenderPass: Not inside a Renderpass", 216 error lines/min on the owner's Fold) and the cube stays stale.
+            if (!m_Cube.IsCreated() || m_FaceRT == null || !m_FaceRT.IsCreated())
+            {
+                m_Cube.Create();
+                if (m_FaceRT != null) m_FaceRT.Create();
+                Debug.Log("[ENVCAP] capture targets were released (app resumed) - recreated, full cube re-rendered");
+                RenderAllNow();
+                return;
+            }
             if (++m_FrameCounter < m_Interval) return;
             m_FrameCounter = 0;
             // ADR 0056 (Low/Medium): a complete cube is kept while the capture point stays within envCaptureMinMove of
