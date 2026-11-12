@@ -19,6 +19,8 @@ namespace PhysicsRunner
     ///   --no-multi           skip the multi-run checks (repeatability, dt / substep sweeps)
     ///   --update-golden      rewrite tests/golden/*.csv from this run (then review the diff!)
     ///   --bench              cost per step of the full 40 t combination (no CSV)
+    ///   --robustness         M34: soak metrics, bit-determinism, dt 1/50..1/120 + substep tables, CPU step
+    ///                        profile, cargo-CoG 5x5 grid, mass x surface matrix, seeded kerb fuzz -> robustness.md
     /// </summary>
     public static class Program
     {
@@ -27,7 +29,7 @@ namespace PhysicsRunner
             CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
             CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
             string only = null, outDir = null, scenDir = RepoPaths.ScenariosDir;
-            bool multi = true, updateGolden = false, bench = false;
+            bool multi = true, updateGolden = false, bench = false, robustness = false;
             for (int i = 0; i < args.Length; i++)
             {
                 if (args[i] == "--only" && i + 1 < args.Length) only = args[++i];
@@ -36,8 +38,19 @@ namespace PhysicsRunner
                 else if (args[i] == "--no-multi") multi = false;
                 else if (args[i] == "--update-golden") updateGolden = true;
                 else if (args[i] == "--bench") bench = true;
+                else if (args[i] == "--robustness") robustness = true;
             }
             if (bench) { Bench(); return 0; }
+            if (robustness)
+            {
+                outDir ??= Path.Combine(RepoPaths.ArtifactsDir, "physics", DateTime.Now.ToString("yyyyMMdd-HHmmss") + "-robustness");
+                Directory.CreateDirectory(outDir);
+                var report = Robustness.RunAll();
+                File.WriteAllText(Path.Combine(outDir, "robustness.md"), report);
+                Console.WriteLine(report);
+                Console.WriteLine($"written {Path.Combine(outDir, "robustness.md")}");
+                return 0;
+            }
             // ADR 0149: finger-in-the-loop evidence (touch drag gesture -> column -> physics), before/after CSVs + summary.
             for (int i = 0; i < args.Length; i++)
                 if (args[i] == "--touch-evidence")
@@ -85,12 +98,12 @@ namespace PhysicsRunner
                 foreach (var s in rep) { Console.WriteLine("  repeatability " + s); md.AppendLine($"- repeatability {s}"); }
                 var sweeps = new List<Suites.SpreadResult>
                 {
-                    Suites.DtSweep("launch_0_80_flat", "time_to_kmh", 80, new[] { 1 / 50.0, 1 / 100.0, 1 / 120.0 }),
-                    Suites.DtSweep("brake_80_0_dry", "stop_distance_m", 0, new[] { 1 / 50.0, 1 / 100.0, 1 / 120.0 }),
-                    Suites.DtSweep("circle_r25_20kmh", "lat_accel_ms2", 0, new[] { 1 / 50.0, 1 / 100.0, 1 / 120.0 }),
-                    Suites.DtSweep("brake_80_0_dry_abs_comb@laden40", "stop_distance_m", 0, new[] { 1 / 50.0, 1 / 100.0, 1 / 120.0 }),
-                    Suites.DtSweep("lane_change_80@laden40", "max_articulation_deg", 0, new[] { 1 / 50.0, 1 / 100.0, 1 / 120.0 }),
-                    Suites.DtSweep("launch_flat_comb@laden40", "time_to_kmh", 60, new[] { 1 / 50.0, 1 / 100.0, 1 / 120.0 }),
+                    Suites.DtSweep("launch_0_80_flat", "time_to_kmh", 80, new[] { 1 / 50.0, 1 / 60.0, 1 / 100.0, 1 / 120.0 }),
+                    Suites.DtSweep("brake_80_0_dry", "stop_distance_m", 0, new[] { 1 / 50.0, 1 / 60.0, 1 / 100.0, 1 / 120.0 }),
+                    Suites.DtSweep("circle_r25_20kmh", "lat_accel_ms2", 0, new[] { 1 / 50.0, 1 / 60.0, 1 / 100.0, 1 / 120.0 }),
+                    Suites.DtSweep("brake_80_0_dry_abs_comb@laden40", "stop_distance_m", 0, new[] { 1 / 50.0, 1 / 60.0, 1 / 100.0, 1 / 120.0 }),
+                    Suites.DtSweep("lane_change_80@laden40", "max_articulation_deg", 0, new[] { 1 / 50.0, 1 / 60.0, 1 / 100.0, 1 / 120.0 }),
+                    Suites.DtSweep("launch_flat_comb@laden40", "time_to_kmh", 60, new[] { 1 / 50.0, 1 / 60.0, 1 / 100.0, 1 / 120.0 }),
                     Suites.SubstepSweep("brake_80_0_dry", "stop_distance_m", 0, new[] { 2, 4, 8 }),
                     Suites.SubstepSweep("brake_80_0_dry_abs_comb@laden40", "stop_distance_m", 0, new[] { 2, 4, 8 }),
                 };

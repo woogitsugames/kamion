@@ -456,6 +456,12 @@ sc("speed_bump_comb","Speed bump 7 cm x 0.5 m across the lane at 15 km/h", "docs
    ground={"gradePercent": 0, "surface": "dry_asphalt", "boxes": [{"minX": -5, "maxX": 5, "minZ": 10, "maxZ": 10.5, "height": 0.07}]})
 
 # ---------------- 14. soak ----------------
+# M34 additions: numerical invariants over the 30 min (NaN, friction circle, yaw stop, air floor, no-teleport,
+# energy drift at standstill, cab angular-velocity spectrum amplitude).
+soak_inv = [chk("nan_detected", mx=0, source="M34 soak invariant: no NaN/Inf in 30 min (docs/04 s6.14)"),
+            chk("max_tire_friction_ratio", mx=1.001, source="M34 soak invariant: sqrt(Fx^2+Fy^2) <= mu*Fz on every loaded wheel, margin 0.001 for float rounding"),
+            chk("articulation_limit_excess_deg", mx=0, source="M34 soak invariant: articulation inside the 90 deg yaw stop (tractor_4x2_generic.vehicle.json:305)"),
+            chk("min_air_all_bar", mn=0, source="M34 soak invariant: no negative pressure in any reservoir/line")]
 sc("soak_30min_cycle", "30 min simulated: 20 x (accelerate to 80, double lane change, brake to stop, stand)", "docs/04 s6.14", 1800,
    {"type": "soak", "targetKmh": 80, "cyclePeriod": 90},
    [chk("max_fifth_wheel_error_mm", mx=5, source="no constraint drift over 30 min"),
@@ -465,14 +471,20 @@ sc("soak_30min_cycle", "30 min simulated: 20 x (accelerate to 80, double lane ch
     chk("max_speed_after_ms", mx=0.002, frm=85, to=89.9, source="standstill in the first cycle"),
     chk("max_speed_after_ms", mx=0.002, frm=1795, to=1799.9, source="standstill in the last cycle: no energy growth"),
     chk("min_air_service_bar", mn=8, source="air supply sustains the duty cycle"),
-    chk("max_articulation_deg", mx=12, source="lane changes stay tame")],
+    chk("max_articulation_deg", mx=12, source="lane changes stay tame")] + soak_inv + [
+    chk("max_pos_jump_m", mx=0.01, source="M34 no-teleport: residual |dx_com - v*SampleDt|; sampleEvery=5 (SampleDt=0.05 s), uniformly braking body gives 0.5*a*SampleDt^2 = 0.5*8*0.05^2 = 0.01 m; measured 0.0037"),
+    chk("energy_drift_j", mx=5, frm=1787, to=1799.9, source="M34 soak: E=KE+PE drift over the last standstill window; parked baseline 727 kJ, measured 0.34-1.33 J (< 2e-6 relative); threshold 5 J = 7e-6 relative"),
+    chk("cab_spectrum_peak_amp_dps", mx=1, frm=1740, to=1800, source="M34 soak: dominant-frequency amplitude of the cab pitch-rate spectrum over the last 60 s; measured 0.147 deg/s at 1.17 Hz; threshold 1 deg/s bounds oscillation growth")],
    variants=["laden40"], sampleEvery=5)
 
 sc("soak_30min_parked", "30 min simulated parked with the engine idling", "docs/04 s6.14", 1800,
    {"type": "timeline", "keys": [key(0, park=True, sel="N")]},
    [chk("drift_m", mx=0.005, frm=5, source="no creep"), chk("max_speed_after_ms", mx=0.001, frm=5, source="no energy drift / oscillation"),
     chk("max_kinetic_energy_j", mx=1e-3, frm=5, source="no energy growth"),
-    chk("min_air_service_bar", mn=10.5, frm=5, source="governor keeps the reservoirs in the cut-in/cut-out band")] + stable,
+    chk("min_air_service_bar", mn=10.5, frm=5, source="governor keeps the reservoirs in the cut-in/cut-out band")] + stable + soak_inv + [
+    chk("energy_drift_j", mx=5, frm=5, source="M34 soak: E=KE+PE drift over the whole parked soak; measured 0.57 J of 727 kJ (7.8e-7 relative); threshold 5 J"),
+    chk("max_pos_jump_m", mx=1e-3, frm=5, source="M34 no-teleport at standstill; measured 2.1e-5 m (suspension settling); threshold 1e-3 m"),
+    chk("cab_spectrum_peak_amp_dps", mx=0.01, frm=1740, to=1800, source="M34 soak: cab pitch-rate spectrum amplitude at standstill; measured 3.7e-14 deg/s (no oscillation); threshold 0.01 deg/s")],
    variants=["laden40"], initial={"parkingBrake": True}, sampleEvery=5)
 
 # ---------------- 15. steering sign ----------------

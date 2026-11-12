@@ -76,6 +76,52 @@
       "status": "WORKING_VALUE",
       "source": "lane changes stay tame",
       "max": 12
+    },
+    {
+      "metric": "nan_detected",
+      "status": "WORKING_VALUE",
+      "source": "M34 soak invariant: no NaN/Inf in 30 min (docs/04 s6.14)",
+      "max": 0
+    },
+    {
+      "metric": "max_tire_friction_ratio",
+      "status": "WORKING_VALUE",
+      "source": "M34 soak invariant: sqrt(Fx^2+Fy^2) <= mu*Fz on every loaded wheel, margin 0.001 for float rounding",
+      "max": 1.001
+    },
+    {
+      "metric": "articulation_limit_excess_deg",
+      "status": "WORKING_VALUE",
+      "source": "M34 soak invariant: articulation inside the 90 deg yaw stop (tractor_4x2_generic.vehicle.json:305)",
+      "max": 0
+    },
+    {
+      "metric": "min_air_all_bar",
+      "status": "WORKING_VALUE",
+      "source": "M34 soak invariant: no negative pressure in any reservoir/line",
+      "min": 0
+    },
+    {
+      "metric": "max_pos_jump_m",
+      "status": "WORKING_VALUE",
+      "source": "M34 no-teleport: residual |dx_com - v*SampleDt|; sampleEvery=5 (SampleDt=0.05 s), uniformly braking body gives 0.5*a*SampleDt^2 = 0.5*8*0.05^2 = 0.01 m; measured 0.0037",
+      "max": 0.01
+    },
+    {
+      "metric": "energy_drift_j",
+      "status": "WORKING_VALUE",
+      "source": "M34 soak: E=KE+PE drift over the last standstill window; parked baseline 727 kJ, measured 0.34-1.33 J (< 2e-6 relative); threshold 5 J = 7e-6 relative",
+      "max": 5,
+      "from": 1787,
+      "to": 1799.9
+    },
+    {
+      "metric": "cab_spectrum_peak_amp_dps",
+      "status": "WORKING_VALUE",
+      "source": "M34 soak: dominant-frequency amplitude of the cab pitch-rate spectrum over the last 60 s; measured 0.147 deg/s at 1.17 Hz; threshold 1 deg/s bounds oscillation growth",
+      "max": 1,
+      "from": 1740,
+      "to": 1800
     }
   ]
 }
