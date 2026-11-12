@@ -17,3 +17,7 @@ NASTEPNY KROK: po `cycle1.done`: `cd artifacts/g3b-r2; BASE=../../../g3b-lowread
 Pary `pairs-after(+clear)` (20+20): 494288/810525 szklo czyste z cienkimi liniami, 1801374 slupy ciemne, 275528 tablice nizsze/wezsze jak na zdjeciu, 3678296 ramiona dluzsze (poza bez zmian).
 "Duchy" drzew: `run-ghost.ps1` (ablacje Low overcast 494288): rq_a2c=0 i rq_msaa=1 bez zmiany, rq_hlod=0 usuwa -> to przeswity nieba w sylwetce lesnego HLOD (karty krawedzi) widziane przez szybe, NIE blad kolejnosci/alfy szyby. Przed 0139 mleczny film + grube linie robily z nich jasne plamy; po 0139 czytaja sie jak luki w koronach. Dowod: `crops/ghost-ablation-494288.jpg`.
 NASTEPNY KROK: `git merge main` (generated/glb/meta --ours) -> `pwsh artifacts/g3b-r2/run-all-2.ps1 -Name final -Tag 2`.
+
+## 4. Cykl final po merge main (s14, 19:10)
+Merge main 9a1961db0 bez konfliktow; `run-all-2 -Name final -Tag 2`: build 588 s exit 0, fidelity 0, pytest gis+gate3 849 passed 1 xfailed, EditMode 408/408, SBS Low overcast+clear 42+42. Pary `pairs-final`, `pairs-final-clear` (before = main `artifacts/sbs-poses-r2/after`). Stats Low: sama galaz 0..+1 draw/kadr (`stats-diff-after-premerge.txt`); vs baseline 0140 -6/+3/+47 (+47 = tresc main scalona po baseline, nie ta galaz). ADR 0139 uzupelniony.
+GOTOWE DO SCALENIA: TAK (czeka na visual-critic). NASTEPNY KROK (lider): visual-critic na `artifacts/g3b-r2/pairs-final{,-clear}` -> `git merge g3b-r2` (generated/glb/meta: --theirs lub regeneracja).

@@ -43,4 +43,19 @@ All sizes are WORKING_VALUE read off the cited Mapillary frames (CC BY-SA, refer
 
 ## Results
 
-(filled in after the final cycle)
+Final cycle after merging main `9a1961db0` (0129 frontage, 0133 Putry deck, 0136 ImpostorTrim, 0140 SBS poses), 2026-11-12:
+
+- `build_world` exit 0 (588 s), fidelity exit 0, `pytest tests/gis tests/gate3`: **849 passed, 1 xfailed**;
+  EditMode **408 / 408**.
+- SBS Low overcast + clear, 42 cameras each: `artifacts/g3b-r2/final/renders/`; before / after grids of the 20 G3-B
+  frames: `artifacts/g3b-r2/pairs-final/`, `pairs-final-clear/` ("before" = `artifacts/sbs-poses-r2/after`, the 0140
+  poses on main before 0133 / 0123 b7 / 0128 i3). Same change on the pre-0140 poses: `pairs-after/`, `pairs-after-clear/`
+  ("before" = `g3b-lowread/final`).
+- Looked at: 494288 / 810525 the sheet is clear (clouds, lamp posts and the forest show through), lines thin and gone
+  a few bays on; 1801374 posts dark; 275528 boards 3.75 x 0.82 and 3.8 x 1.2 m on a 0.55 m beam, portal top 6.1 m;
+  3678296 arms 4.3 m, still seen nearly end-on (pose).
+- Low cost (editor estimates, `stats-diff-after-premerge.txt`, same poses and same main): total draws per G3-B frame
+  **0..+1** (median 0), triangles unchanged. Against the 0140 baseline (`stats-diff-final.txt`) the G3-B frames move
+  -6 / +3 / +47 (min / median / max; +45..+47 instanced draws in 150280, 1528935, 297817, 3281350), G3-A 0 / +2 / +4:
+  that baseline predates the main merges listed above, so the +47 is main content, not this branch (not isolated
+  further - UNVERIFIED which merge). Phone numbers: next gate.
