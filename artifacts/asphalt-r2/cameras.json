@@ -589,7 +589,7 @@
                         "id":  "asphalt_kerb_andersa_close",
                         "type":  "persp",
                         "kind":  "material_probe",
-                        "seat":  "road",
+                        "seat":  "file",
                         "pos":  [
                                     -200.37618662804581602450047851,
                                     -246.14562825939543375226091034,
@@ -601,25 +601,25 @@
                                         130.93514245737197
                                     ],
                         "fov_deg":  42,
-                        "note":  "WORKING_VALUE pose 2.5 m from measured right-hand kerb top, 0.75 m above it; inspect image. Not a photo pose."
+                        "note":  "WORKING_VALUE measured kerb probe; file height retained, 2.5 m from the measured kerb top, 0.75 m above it. Not a photo pose."
                     },
                     {
                         "id":  "asphalt_paving_andersa_close",
                         "type":  "persp",
                         "kind":  "material_probe",
-                        "seat":  "road",
+                        "seat":  "file",
                         "pos":  [
                                     -198.506,
                                     -243.434,
-                                    132.784
+                                    132.0006431180718
                                 ],
                         "look_at":  [
                                         -200.6,
                                         -241.9,
-                                        131.82
+                                        130.8106431180718
                                     ],
                         "fov_deg":  50,
-                        "note":  "WORKING_VALUE footway detail outside Kwadrat, derived from existing road view; inspect coverage. Not a photo pose."
+                        "note":  "WORKING_VALUE measured paving probe, file height retained, target at the sampled surface. Not a photo pose."
                     },
                     {
                         "id":  "sbs-g3-a-3970163613102941",
