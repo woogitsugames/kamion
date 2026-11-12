@@ -9,3 +9,5 @@ Oryginalny termin doby około 12.11.2026 21:31 Warszawa. Jedyny integrator main:
 Następny krok: zakończyć merge, przygotować aktualne źródła/fixture i helpery rundy, kanoniczny World/fidelity (materiały tylko jeśli wejścia się zmieniły), kamery rzeczywistych palet, import i baseline czterech warunków. Nie używać kadrów starego main z r4 do budżetu r5.
 
 Krok 2: odświeżono raw CC0, źródła CC0/Megascans i natywne Truck/Trailer z main; źródła fixture przed/po kopiowaniu oraz wszystkie kopie zgodne SHA. Nie kopiowano świata z aktywnego main. Następny krok: baseline-gen.ps1 pod jednym heavy.
+
+Krok 2: odświeżono dozwolone raw CC0/Megascans i stabilne fixture Truck/Trailer (pre/post źródeł i kopii SHA zgodne). Wszystkie 151 map Medium nadal identyczne z końcowym r4, git diff generatora materiałów/spec względem 71477fbd pusty; build_all niepotrzebny dla tego baseline. Następny krok: baseline World → fidelity → test pojedynczy → source-proof/kamery, jeden heavy gpt-life-r5.
