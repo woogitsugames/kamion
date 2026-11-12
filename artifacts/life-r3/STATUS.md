@@ -136,3 +136,5 @@ Kandydat b (2026-11-12T10:41:02.4909014+01:00): zamroź wejścia importu r3 b. N
 Po budowie B (2026-11-12T10:42:29.8958663+01:00): potwierdź natywną zmianę tylko odbicia czerni B. Następny etap w post-b.ps1; po kompletach oględziny i decyzja.
 
 Po budowie B (2026-11-12T10:45:17.9668810+01:00): zapisz 492 kadry i budżet czerni B. Następny etap w post-b.ps1; po kompletach oględziny i decyzja.
+
+Po budowie B (2026-11-12T10:45:26.2889658+01:00): zmierz barwę i kontrast czerni B. Następny etap w post-b.ps1; po kompletach oględziny i decyzja.
