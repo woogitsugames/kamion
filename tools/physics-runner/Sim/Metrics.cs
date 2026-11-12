@@ -369,7 +369,7 @@ namespace PhysicsRunner.Sim
                     return m;
                 }
                 case "max_body_penetration_m": return Max(s, i0, i1, x => x.BodyPenetration);
-                case "min_com_height_m": return Min(s, i0, i1, x => x.HasTrailer ? Math.Min(x.ComPos.y, x.TrailerComPos.y) : x.ComPos.y);
+                case "min_com_height_m": return Min(s, i0, i1, x => x.ComHeightAboveGround); // above the ground below each CoM (grades, kerb boxes)
                 case "body_contact_s":
                 {
                     double tc = 0;

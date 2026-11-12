@@ -28,7 +28,9 @@ namespace PhysicsRunner.Tests
             var sc = Load("fuzz_shrink_speed_runaway_fulllock");
             var off = ScenarioRunner.Run(sc, new RunOptions { DisableBodyContact = true });
             foreach (var c in off.Checks) _out.WriteLine("without contact: " + c);
-            string[] mustFail = { "max_speed_kmh", "min_com_height_m", "body_contact_s", "max_speed_after_ms" };
+            // max_speed_kmh (forward-axis projection of the free-fall velocity) is not a reliable detector: it depends on
+            // the chaotic tumble orientation (275 km/h with the explicit gyroscopic update, 85 km/h with the implicit one).
+            string[] mustFail = { "min_com_height_m", "body_contact_s", "max_speed_after_ms" };
             foreach (var m in mustFail)
                 Assert.Contains(off.Checks, c => c.Spec.metric == m && !c.Passed);
             // Energy is NOT injected even without the colliders: the run is a free fall, E = KE + PE never grows.
@@ -98,6 +100,34 @@ namespace PhysicsRunner.Tests
             Assert.True(body.Velocity.Magnitude < 0.01, $"still moving {body.Velocity.Magnitude} m/s");
             Assert.True(contact.MaxPenetration < 0.02);
             Assert.True(contact.ActiveContacts > 0);
+        }
+
+        /// <summary>
+        /// Torque-free tumble of a lone trailer body (no gravity) for 30 s at dt 10 ms: the implicit gyroscopic update never
+        /// raises the kinetic energy; the old explicit update (mutation) gains > 50 % (measured +136 %).
+        /// </summary>
+        [Fact]
+        public void TorqueFreeTumble_ImplicitGyroscopic_NeverGainsEnergy_ExplicitDoes()
+        {
+            var tr = ScenarioRunner.Defs.CreateTrailer("curtainsider_tridem_13_6", null, new SolverSettings());
+            double Run(bool implicitGyro, out double maxStepGain)
+            {
+                var b = new RigidBody6Dof(tr.MassProps) { Gravity = Vec3.Zero, AngularVelocity = new Vec3(1.5, 0.3, 2.0), ImplicitGyroscopic = implicitGyro };
+                double e0 = b.KineticEnergy, prev = e0, mx = e0;
+                maxStepGain = 0;
+                for (int i = 0; i < 3000; i++)
+                {
+                    b.Integrate(0.01, Vec3.Zero, Vec3.Zero);
+                    maxStepGain = Math.Max(maxStepGain, b.KineticEnergy - prev);
+                    prev = b.KineticEnergy; mx = Math.Max(mx, prev);
+                }
+                return mx / e0 - 1;
+            }
+            double gainImplicit = Run(true, out double stepImplicit);
+            double gainExplicit = Run(false, out _);
+            _out.WriteLine($"max KE gain: implicit {gainImplicit * 100:F3} % (max step {stepImplicit:E2} J), explicit {gainExplicit * 100:F1} %");
+            Assert.True(stepImplicit <= 1e-6, $"implicit gyroscopic step gained {stepImplicit} J");
+            Assert.True(gainExplicit > 0.5, "mutation (explicit gyroscopic) should gain energy");
         }
 
         [Fact]

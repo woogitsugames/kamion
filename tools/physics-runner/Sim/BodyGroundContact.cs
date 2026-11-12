@@ -108,10 +108,7 @@ namespace PhysicsRunner.Sim
 
             // Velocity at the end of the step without contact (same update as RigidBody6Dof.Integrate).
             Vec3 v = b.Velocity + (force / b.Mass + b.Gravity) * dt;
-            Vec3 wB = q.InverseRotate(b.AngularVelocity);
-            Vec3 tB = q.InverseRotate(torque);
-            wB += (b.InvInertiaLocal * (tB - Vec3.Cross(wB, b.InertiaLocal * wB))) * dt;
-            Vec3 w = q * wB;
+            Vec3 w = b.PredictAngularVelocity(torque, dt);
 
             Vec3 jLin = Vec3.Zero, jAng = Vec3.Zero;
             for (int it = 0; it < Iterations; it++)

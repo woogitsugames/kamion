@@ -289,6 +289,18 @@ and the nod came from each shift (clutch closing 200-300 rpm off synchronous spe
 Runner 107 scenarios / 550 checks green, xUnit 155/155, 9 goldens regenerated (shift timing). Plots reviewed:
 `artifacts/truck-feel/before_after_overlay.png`, `artifacts/truck-feel/{before,after}/*.feel.png`.
 
+### 6e. Chassis colliders in the runner, F2 (ADR 0158, 2026-11-13)
+F2 ("275 km/h airborne", M34 fuzz) was a free fall through the road, not energy injection. With all wheels off the ground
+after a rollover, E = KE + PE never grew (largest step gain 0.000 kJ), the CoM fell to −3070 m, and `max_speed_kmh`
+(SpeedFwd) was the fall velocity projected on the tumbling tractor's forward axis. The runner's stand-in bodies had no
+chassis colliders (Unity has the graybox BoxColliders). `Sim/BodyGroundContact.cs` now adds them: box corners vs ground,
+PGS non-penetration + Coulomb friction 0.6 (Unity default material), restitution 0, zero GC. `RigidBody6Dof` uses an
+implicit gyroscopic update (the explicit one gained +136 % KE in a 30 s torque-free tumble). The F2 repro moved to
+`scenarios/` with fall-through, rest and energy checks. `free_fall_drop_comb` checks free-flight ballistics:
+|a_CoM − g| 0.0077 m/s², E gain 0. Runner: 129 scenarios / 730 checks green; the 707 pre-existing values unchanged except 33 at
+≤ 0.15 %. `kerb_step_27cm_42kmh_comb` runs without colliders for now: its bumper corner strikes the road (dv 0.755 m/s;
+Unity PlayMode on the same event 0.968 m/s), which is a decision for the leader (ADR 0158 Open 1).
+
 ## 7. Known gaps / not modelled
 
 - **Not run in Unity or on the phone.** PhysX integration of two bodies with this constraint, cost on the Samsung A, and the feel test (docs/03 Stage 2 gate) are still open.

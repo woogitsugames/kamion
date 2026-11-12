@@ -55,6 +55,8 @@ namespace PhysicsRunner.Sim
         public double BodyPenetration;
         /// <summary>Wheels whose suspension ray touched the ground (strict Contact flag, any load), tractor + trailer.</summary>
         public int WheelsTouching;
+        /// <summary>Lowest height of the tractor / trailer CoM above the ground directly below it [m].</summary>
+        public double ComHeightAboveGround;
         /// <summary>Velocity of the combined centre of mass (momentum / total mass) [m/s].</summary>
         public Vec3 SystemVel;
     }

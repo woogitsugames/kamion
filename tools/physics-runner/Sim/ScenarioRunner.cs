@@ -15,6 +15,8 @@ namespace PhysicsRunner.Sim
         public double? Duration;
         /// <summary>Mutation switch (ADR 0158 tests only): run without the chassis-to-ground colliders, i.e. the pre-F2-fix runner.</summary>
         public bool DisableBodyContact;
+        /// <summary>Mutation switch (ADR 0158 tests only): the old explicit gyroscopic update in <see cref="RigidBody6Dof"/>.</summary>
+        public bool ExplicitGyroscopic;
     }
 
     public sealed class CheckResult
@@ -238,6 +240,8 @@ namespace PhysicsRunner.Sim
             tractor.InitParking(park0);
             if (trailer != null) trailer.Brakes.InitSpringChambers(trailer.Group);
             if (trailer != null && sc.overrides.coupled) trailer.Brakes.InitServiceChambers(trailer.Group, tractor.Air.TrailerControlLine);
+            ctx.Body.ImplicitGyroscopic = !opt.ExplicitGyroscopic;
+            if (ctx.TrailerBody != null) ctx.TrailerBody.ImplicitGyroscopic = !opt.ExplicitGyroscopic;
             if (!opt.DisableBodyContact && sc.overrides.bodyContact)
             {
                 ctx.TractorContact = new BodyGroundContact(BodyGroundContact.TractorColliders(tractor.Def));
@@ -508,6 +512,13 @@ namespace PhysicsRunner.Sim
             if (s.Trailer != null && s.Trailer.LandingGearLoad > 0) smp.WheelsTouching++; // landing gear is a solver ground contact too
             if (s.TractorContact != null) { smp.BodyContacts += s.TractorContact.ActiveContacts; smp.BodyPenetration = s.TractorContact.MaxPenetration; }
             if (s.TrailerContact != null) { smp.BodyContacts += s.TrailerContact.ActiveContacts; smp.BodyPenetration = Math.Max(smp.BodyPenetration, s.TrailerContact.MaxPenetration); }
+            Vec3 cT = b.CenterOfMassWorld;
+            smp.ComHeightAboveGround = cT.y - s.Ground.HeightAt(cT.x, cT.z);
+            if (s.TrailerBody != null)
+            {
+                Vec3 cR = s.TrailerBody.CenterOfMassWorld;
+                smp.ComHeightAboveGround = Math.Min(smp.ComHeightAboveGround, cR.y - s.Ground.HeightAt(cR.x, cR.z));
+            }
             double mT = b.Mass + (s.TrailerBody != null ? s.TrailerBody.Mass : 0);
             smp.SystemVel = (b.Velocity * b.Mass + (s.TrailerBody != null ? s.TrailerBody.Velocity * s.TrailerBody.Mass : Vec3.Zero)) / mT;
             smp.TractorWheelCount = m.Wheels.Length;
