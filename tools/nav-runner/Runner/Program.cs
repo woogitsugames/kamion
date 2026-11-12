@@ -77,8 +77,8 @@ namespace NavRunner
             long bytes = GC.GetAllocatedBytesForCurrentThread() - before;
             Console.WriteLine($"plan: {sw.Elapsed.TotalMilliseconds / 20.0:F3} ms/plan, expanded {planner.LastExpanded}; 10 plans + 2000 updates: {bytes} B GC");
 
-            Console.WriteLine(failed == 0 ? "ALL OK" : "FAILURES PRESENT");
-            return failed == 0 ? 0 : 2;   // the strict 0 B GC check lives in the xUnit ZeroGc_* tests
+            Console.WriteLine(failed == 0 && bytes == 0 ? "ALL OK" : "FAILURES PRESENT");
+            return failed == 0 && bytes == 0 ? 0 : 2;
         }
     }
 }

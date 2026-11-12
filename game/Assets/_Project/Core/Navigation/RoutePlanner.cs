@@ -356,7 +356,6 @@ namespace Game.Core.Navigation
                         nm = NameFrom(g, p, j);
                     }
                     p.AddManeuver(m_EdgeFirstPoint[i], Maneuver.Roundabout, turn, exits, nm, prev);
-                    p.ManRing[p.ManCount - 1] = g.EdgeName[ec];
                     p.SetLaneGuidance(g, p.ManCount - 1, prev, turn);
                     i = j;   // the exit transition belongs to this manoeuvre
                     continue;
