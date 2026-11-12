@@ -3,3 +3,4 @@ Zakres: wyłącznie edge. Najpierw nowy pełny baseline i maska problemu apron N
 Main wnosi recenzowane pozy G3-B i poprawki światła; macierz dowodowa zostanie odtworzona z bieżących kanonicznych plików, bez zmiany kalibracji.
 Źródła generatora map materiałów i materials_spec są identyczne z r5, więc wykorzystujemy sprawdzony cache R4; import sprawdzi wszystkie mapy. Zmiany materials.py zostaną uwzględnione przez pełny build_world.
 Każdy ciężki Python pod centralnym heavy z właścicielem gpt-edge-r6; Unity pod centralnym slotem gpt-edge. FIFO bez Priority, bez kasowania cudzych slotów. Deadline bez zmian: 12.11.2026 21:31:27 CET.
+2026-11-12T14:22:01.0284065+01:00 Odświeżono niezmienne cache i wejściowe fotografie materiałów; nie kopiowano aktywnych derived/scen main.
