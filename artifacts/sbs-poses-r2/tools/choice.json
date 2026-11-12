@@ -1,0 +1,20 @@
+{
+ "275528677534382": {"probe": "sbs-p140-275528-s0",
+  "anchors": "portal columns x 0.295/0.753 photo vs render (14 m portal, ADR 0127); camera in the middle lane (dashes both sides) in both; beam top y 160 px photo vs 151-157 model",
+  "how": "re-resection against the 14 m portal (columns x measured on the rectified photo, lateral lane kept): 4.9 m closer than the 16 m resection (20.1 -> 15.2 m from the portal centre), heading +0.56 deg. The warning triangles (overrides 46 m before the node, photo estimate) then fall behind the camera: their station, not the pose, is off."},
+ "837235577143499": {"probe": "sbs-p140-837235-c0",
+  "anchors": "U-4a chevron at its orthophoto position (overrides at_en) x 0.861 and plate height 155 px; portal west column x 584 px; predicted east column 729 vs photo beam end ~736; road vanishing point consistent with the road axis",
+  "how": "resection on the island-nose chevron (orthophoto at_en, plate 1.35 m) + portal west column: 7 m forward, 3.1 m right (right lane at the gore line), heading 308.3 (was 306.8); 61.7 m from the portal (was 68.2). The generated chevron is snapped 5.4 m from its at_en (gate3_landmarks SNAP_MAX_M), so in the render it stands behind the camera."},
+ "3281350541967811": {"probe": "sbs-p140-328135-s0",
+  "anchors": "portal columns x 189/560 px (beam level) photo vs render; EC chimneys x 910/936 px (heading); horizon 0.77 kept (left kerb vanishing ~0.78)",
+  "how": "re-resection against the 14 m portal + EC chimney bearings: 5.0 m closer (49.4 -> 44.4 m). Chimney tops say the horizon is ~0.04 lower, the portal top says ~0.03 higher (2017 portal taller than the 7.0 m rule, or a different 2017 structure): horizon kept, conflict UNVERIFIED."},
+ "297817221966185": {"probe": "sbs-p140-297817-s0",
+  "anchors": "portal columns x 571/722 px photo vs render; EC chimneys x 950 (chimney-2) / 976 (chimney-1) px",
+  "how": "re-resection against the 14 m portal + EC chimney bearings (ADR 0130 had the two chimneys paired the other way round, 0.7 deg): 8.3 m closer (119.1 -> 110.8 m), heading -0.54 deg."},
+ "150280503737744": {"probe": "sbs-p140-150280-s0",
+  "anchors": "road vanishing point (lane dash + left kerb) y 356 / x 555 px photo vs y 439 / x 514 px render before; far road end 340 vs 430 px",
+  "how": "pitch / heading only (review P2, GPT sbs-r4): rectified horizon 0.62 -> 0.50, heading -2.2 deg; position unchanged."},
+ "3678296072299092": {"probe": "sbs-p140-367829-s0",
+  "anchors": "near-road vanishing point y 384 px photo vs 403 px render before (x within 6 px)",
+  "how": "pitch only: rectified horizon 0.585 -> 0.559; position unchanged."}
+}
