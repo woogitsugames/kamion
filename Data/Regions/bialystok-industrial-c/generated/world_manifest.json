@@ -5069,7 +5069,7 @@
    "instances": {
     "count": 659,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_3_4.json",
-    "sha256": "6321918fee67a148b44f0c1bf8c9d0b1426a836d9dcc2a8290a3a94f62695fd3"
+    "sha256": "af5d17b89dd1ff0e7295e2025997ba081ebc7eccc88424c48ac24d5d0fcb1aa1"
    },
    "low": {
     "bytes": 1938852,
@@ -7785,7 +7785,7 @@
     "z_max_evrf2007": 159.77,
     "z_min_evrf2007": 134.15
    },
-   "bytes": 7218540,
+   "bytes": 7218700,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_5_6.glb",
    "forest_cells": [
     {
@@ -7808,9 +7808,9 @@
     "sha256": "94f0761acf7712318c4d8c5cea6faec8826d5b379908a03d4c937fdf057f7ad2"
    },
    "low": {
-    "bytes": 2514492,
+    "bytes": 2514532,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_5_6.low.glb",
-    "sha256": "7a44b26a8ace95f28537c7166c516a14686b636b9513d3b60521e43c4c5bc361"
+    "sha256": "971f94deb279abcb638a2e4cdfc3830332cae4448e732af928b535605762d4e7"
    },
    "materials": [
     "barrier_steel",
@@ -7870,7 +7870,7 @@
     "yard_concrete",
     "yard_slabs"
    ],
-   "sha256": "694d8571f940025dd10d391a86d8cd34183f9868f38d807b1dbcf1bab671089b",
+   "sha256": "9c3f21dcbe1b64f6c6fb2877338feb44450e774c9346b33ec463854946a900a8",
    "triangles": {
     "bridge": 8045,
     "buildings": 2980,
@@ -9249,19 +9249,19 @@
     "z_max_evrf2007": 185.5,
     "z_min_evrf2007": 137.09
    },
-   "bytes": 10071572,
+   "bytes": 10112096,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_6_6.glb",
    "forest_cells": [],
    "id": "6_6",
    "instances": {
-    "count": 337,
+    "count": 339,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_6_6.json",
-    "sha256": "98639fafa0727d733c783baf87240439f9f8c3f472f221c3452618fe4151f4e5"
+    "sha256": "2e4c16400873a1130f49fd087619761749ee51807ecfe1fc8392b4ed1dece1a5"
    },
    "low": {
-    "bytes": 3787980,
+    "bytes": 3808032,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_6_6.low.glb",
-    "sha256": "59815002c8a3006b2960010e89f582ea4833fc9a088ff8ca3ea8d3931c60ca5d"
+    "sha256": "6851c2f36cf147645f9da5126365aae8cbd17fe6bd11ff14d9c36f0a5388be2b"
    },
    "materials": [
     "balcony_slab",
@@ -9346,18 +9346,18 @@
     "yard_concrete_worn",
     "yard_slabs"
    ],
-   "sha256": "fbcaf2c2a4efaee46c438c51564c406900ca59eefed34d6f34b2355b6f68fee7",
+   "sha256": "86e7ae448b7f4955c3fd29d7a78b01a8d42895e8c043c1b63413517137b0f4ac",
    "triangles": {
     "bridge": 11045,
     "buildings": 21101,
     "buildings_lod1": 2644,
     "furniture": 19225,
-    "markings": 7409,
+    "markings": 7407,
     "paved": 11823,
-    "road": 16203,
-    "road_collision": 14696,
-    "terrain_lod0": 136608,
-    "terrain_lod1": 35232,
+    "road": 16432,
+    "road_collision": 14925,
+    "terrain_lod0": 136685,
+    "terrain_lod1": 35309,
     "terrain_lod2": 8704,
     "terrain_lod3": 2304,
     "wires": 60
@@ -15432,6 +15432,12 @@
    ]
   },
   {
+   "id": "biezenstwa-n-slip-nose",
+   "targets": [
+    "island"
+   ]
+  },
+  {
    "id": "s1440-merge-separator-strip",
    "targets": [
     "island"
@@ -15799,7 +15805,7 @@
  "sources_sha256": {
   "generated/osm_context.json": "27b824f9303be887c054d527e1e9e80a423cd3ecf719c628ff51b775ee6b672b",
   "heightmap.r16 (Data/raw)": "37b2d3c033a215e4ba17361ffe571088f8181feef6078ac316e75d683bcca091",
-  "overrides.yaml": "18861667601bf61ecb5226180078f1966d307e88ce63726650bcd66bdde2827a",
+  "overrides.yaml": "382c85c2111922ff73b5f99f85a8fbc79d33eb39eae3d87ae16b75f12aaea011",
   "roads.graph.json": "0bd625e041a6a2ca90a74f1652336c731182c234985352de4d377110f1d42cf6",
   "terrain.json": "52ee459e40fa0aaf59ac6d53223d604c3a01dbeb7099e84c77e02d27dbb1f234"
  },
