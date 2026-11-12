@@ -29,3 +29,5 @@ Po niezależnym odczycie dopracowano proweniencję narzędzia powierzchni: SHA h
 Przygotowano compose-gantry-probes.py do późniejszej dzierżawy heavy: galeria 18 par960px, źródła/licencje, offsety, C i brak D51; kontroluje dwie grupy capture, wszystkie siedem migawek wejść, oba SHA obrazu i jeden HEAD. Kopiuje cztery natywne zdjęcia do lokalnej galerii dla przenośności, bez zapisu produkcyjnych źródeł. Skrypt jeszcze nie wykonany; build_all nadal postępuje.
 
 Materiały zakończone: build_all total456s, kod0 potwierdzony przejściem sekwencyjnego wrappera do build_world. Receipt materials-completed.json zapisuje SHA logu i materials_spec. Świat ruszył w tej samej dzierżawie; pierwszy log pass1:16261węzłówpokładu. To licznik generatora, nie ocena obrazu ani nowy wynik bramki.
+
+Przygotowano własny run-heavy.ps1 r3: sekwencyjne PrepareDiagnostics (dwa narzędzia, bez równoległego Pythona), kompozycja, pojedynczy plik testu, fidelity i końcowy GIS wymagający EndOfRound. Każda ścieżka Acquire/Release heavy w finally; parser poprawny. Nie uruchomiono go podczas bieżącej generacji, aby nie odświeżyć tej samej dzierżawy i nie dopuścić drugiego zadania.
