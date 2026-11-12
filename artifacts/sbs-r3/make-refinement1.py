@@ -16,7 +16,7 @@ camera_path=REGION/'sbs_cameras.json';ref_path=REGION/'sbs_references.json'
 world_hash=sha(world_path);graph_hash=sha(graph_path)
 source_hashes={p.relative_to(ROOT).as_posix():sha(p) for p in (camera_path,ref_path)}
 world=read(world_path);baseline=read(ART/'baseline-completed.json')
-if world_hash!=baseline['world_manifest_sha256']:raise RuntimeError('Completed baseline required')
+if baseline.get('world_exit')!=0 or baseline.get('materials_exit')!=0 or world_hash!=baseline['world_manifest_sha256']:raise RuntimeError('Successful completed baseline required')
 graph=read(graph_path);cameras=read(camera_path)['cameras'];refs=read(ref_path)['references']
 origin=np.array([world['origin_epsg2180']['x'],world['origin_epsg2180']['y']])
 edge_ids=['w606396460:5749429982-1847044938','w560802655:1847044938-12620261936','w560802655:12620261936-1946476472']

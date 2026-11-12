@@ -45,3 +45,5 @@ Druga rodzina przygotowana jako osobne artefakty make-refinement1.py, render-ref
 
 Lekkie parsowanie tekstowych statystyk dało 168 wierszy liczników z oddzielnymi instancjami w counters/. Nie jest to ciężka generacja ani wynik GPU. Pełna kompozycja 100 B i diagnostyki nadal czeka na heavy. Pełny render 41521 zakończony kodem 0, slot Unity zwolniony.
 
+
+Niezależny odczyt drugiej rodziny potwierdził kierunki i poziomy; uzupełniono guard kodów zakończenia baseline. summary.json w counters/ opisuje wszystkie 168 wierszy, osobne statyczne i instancje oraz zakres delty wobec r2. Nie jest to izolowany koszt SBS ani wynik telefonu. Nowe przygotowanie nadal nie zostało uruchomione, ponieważ pełna kompozycja czeka na tę samą pulę heavy.
