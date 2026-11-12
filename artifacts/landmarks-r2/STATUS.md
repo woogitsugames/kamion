@@ -16,3 +16,5 @@ Krok 2c: przygotowano porównanie kompletnego inwentarza 48 kamer kontrolnych i 
 Krok 2d: do dowodów r2 skopiowano natywne kadry filarów i zapis ROI z oryginału 5520x3680. Referencja rozdziela szare ścięcie od ochrowej płaszczyzny, bez traktowania jasności zdjęcia jako odbicia materiału. Stan wykonania baseline pozostaje WAITING_HEAVY, bez uruchamiania dodatkowego ciężkiego zadania.
 
 Krok 2e: preflight kolejnej rundy wykrył błędny opis referencji kominów w NEXT-R3 z r1. Strona autora podaje CC BY 3.0 (Rakoon), oryginał 4608x2592, a lokalny plik ma 3840x2160. Korekta z atrybucją zapisana w chimney-source-correction.json. Próba pobrania oryginału zwróciła HTTP 429; nie zapisano pliku i nie potwierdzono jego lokalnego SHA. Nie zmieniono modeli kominów ani źródeł r2.
+
+Krok 2f: lekki odczyt GPS zdjęcia i istniejących pozycji kominów przewiduje kolejność lewo-prawo: w628899554, w628899553, separacja kątowa 9,817 stopnia. Wynik jest wstępnym przypisaniem przestrzennym, bez potwierdzenia pozy i proporcji malowania. Generator baseline r2 właśnie uzyskał heavy, więc do jego ukończenia nie zmieniam źródeł.
