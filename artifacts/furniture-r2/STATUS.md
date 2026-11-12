@@ -159,3 +159,5 @@ NASTĘPNY KROK: przygotować własne skrypty r2 z ownerem heavy gpt-furniture-r2
 2026-11-12T09:41:47.1226030+01:00: night after3 High również zgłosił FURNITURE_NIGHT_QA OK; łącznie48 PNG, źródła dla obu tierów zapisane. ADR uaktualniono do16 prób i aktualnych ograniczeń. NASTĘPNY KROK: końcowa seria330 obrazów standardowych oraz dokładne liczniki Low, a następnie niezależny przegląd.
 
 2026-11-12T09:42:14.0251183+01:00: niezależny przegląd czterech podglądów Low25m potwierdził miejscową reakcję znaku i jej wyłączenie, bez oczywistego halo. Realizm i praktyczna czytelność pozostają niepotwierdzone. Rozpoczęto nową serię standardowych kadrów po wszystkich korektach.
+
+2026-11-12T09:42:32.6570918+01:00: Unity render after Low clear; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
