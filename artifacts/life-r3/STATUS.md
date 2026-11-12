@@ -118,3 +118,5 @@ Krok 35: inspekcja GLB wykazała, że extras materiału zawiera wszystkie dodatk
 
 Krok 36: dodano dokładną kontrolę SHA wszystkich 492 PNG before/A bez dekodowania obrazów; lista zmienionych kamer i liczby w a-image-identity.json. Nie oznacza to identyczności wszystkich pikseli aut ani regresji przy zmienionym SHA całego obrazu. Identyczne kadry: Low clear 48/123 (trasa 23/59), Low overcast 50/123 (26/59), High clear 48/123 (24/59), High overcast 48/123 (23/59). Następny krok: działający B 13271 → 42312; potem obejrzeć B i poprawiać na podstawie wyników.
 
+
+Kandydat b (2026-11-12T10:40:36.2077517+01:00): wygeneruj osobówki r3 b. Następny etap w candidate-build.ps1; po komplecie PreparedVerified, capture i oględziny.
