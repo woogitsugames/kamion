@@ -96,3 +96,5 @@ Zapisano kompletną niezależną ocenę baseline w REVIEW-D51-BASELINE.md: G3-A 
 2026-11-12T10:39:36.2720646+01:00: sprawdziłem aktualny main f560cbd19362d32f5916a988436145efa580c435 i nowe recenzje s12. Main ma już kolejne domeny i regenerację; r3 ich nie przedstawia. Zapisany jawny zakres dowodów oraz plan odświeżenia r4. Nie mieszam nowych wejść z capture r3 podczas końcowej walidacji. Testy raportu34PASS, audyt nadal ta sama żywa sesja75884 w kolejce heavy.
 
 2026-11-12T10:42:00.9307748+01:00: audyt główny zakończony exit0, 168 raw, 100 B, 168 diagnostycznych, 128 rzeczywistych GLB i168 liczników zweryfikowane. Heavy oddany. Uruchomiłem następny task Fidelity, który najpierw wykona uzupełniony audyt arkuszy, następnie fidelity w jednej dzierżawie; nie uruchamiam równoległego zadania heavy.
+
+2026-11-12T10:42:33.1801662+01:00: audyt pokazał 38/84 Low ze wzrostem draws i22/84 z delta tris>2% versus r2. Zapisałem BUDGET-LIMITATIONS.md; r3 nie deklaruje PASS budżetu wspólnego świata. Kamer produkcyjnych ani runtime SBS nie zmieniono, wzrost dotyczy nowej zintegrowanej bazy. Nie przypisuję go bez analizy konkretnej domenie ani nie poprawiam cudzych plików.
