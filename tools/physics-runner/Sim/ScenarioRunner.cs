@@ -36,6 +36,11 @@ namespace PhysicsRunner.Sim
         public double MeanStepMicros;
         public double StaticKingpinLoad;
         public double TotalMass;
+        /// <summary>Articulation (yaw) hard-stop angle from the fifth-wheel definition [deg].</summary>
+        public double ArticulationLimitDeg;
+        /// <summary>True when a NaN was seen in any body state (run aborted at that step).</summary>
+        public bool NanDetected;
+        public double NanT;
         public int CouplingEvents, UncouplingEvents, ShiftCount, RejectedShifts;
         public bool Passed { get { foreach (var c in Checks) if (!c.Passed) return false; return true; } }
         public double Metric(string name, double arg = 0, double from = 0, double to = 0) => Metrics.Compute(this, name, arg, from, to);
@@ -291,6 +296,7 @@ namespace PhysicsRunner.Sim
                     return new PathDriver(d, wb);
                 }
                 case "touch": return new TouchDriver(d, s, sc.dt);
+                case "fuzz": return new FuzzDriver(d);
                 default: throw new ArgumentException($"Unknown driver type '{d.type}'");
             }
         }
@@ -339,7 +345,11 @@ namespace PhysicsRunner.Sim
                     var smp = MakeSample(t, s, inp);
                     if (i % every == 0 || i == steps - 1) res.Samples.Add(smp);
                     if (double.IsNaN(s.Body.Position.x) || double.IsNaN(s.Body.Velocity.x) || (s.TrailerBody != null && double.IsNaN(s.TrailerBody.Position.x)))
-                        throw new InvalidOperationException($"{sc.id}: NaN at t={t}");
+                    {
+                        // Recorded as a metric (nan_detected) instead of thrown, so fuzz runs report it as an
+                        // invariant violation rather than crashing the harness.
+                        res.NanDetected = true; res.NanT = t; break;
+                    }
                     if (sc.endCondition == "wheel_lift")
                     {
                         if (liftTime < 0 && smp.WheelsOffGround > 0) liftTime = t;
@@ -349,6 +359,7 @@ namespace PhysicsRunner.Sim
             }
             finally { csv?.Dispose(); }
             res.MeanStepMicros = steps > 0 ? ticks * 1e6 / Stopwatch.Frequency / Math.Max(1, res.Samples.Count * every) : 0;
+            res.ArticulationLimitDeg = s.Tractor.Def.fifthWheel.yawLimitDeg;
             res.CouplingEvents = s.Combo.FifthWheel.CouplingEvents;
             res.UncouplingEvents = s.Combo.FifthWheel.UncouplingEvents;
             res.ShiftCount = s.Tractor.Amt.ShiftCount;
@@ -391,7 +402,7 @@ namespace PhysicsRunner.Sim
             var m = s.Tractor; var b = s.Body;
             Vec3 fwd = b.Rotation * Vec3.Forward;
             Vec3 right = b.Rotation * Vec3.Right;
-            double maxRatio = 0, sumFz = 0, minFz = double.MaxValue, rearSlip = 0;
+            double maxRatio = 0, sumFz = 0, minFz = double.MaxValue, rearSlip = 0, maxFric = 0;
             int off = 0, bit = 0;
             ulong offMask = 0;
             foreach (var w in m.Wheels)
@@ -402,6 +413,8 @@ namespace PhysicsRunner.Sim
                 if (!w.Contact || w.Fz < 500) { off++; if (bit < 64) offMask |= 1UL << bit; }
                 bit++;
                 if (w.Driven && Math.Abs(w.Vx) > 2.0) rearSlip = Math.Min(rearSlip, w.KinematicSlip * Math.Sign(w.Vx));
+                if (w.Contact && w.Fz > 500 && w.Mu > 1e-6)
+                    maxFric = Math.Max(maxFric, Math.Sqrt(w.Fx * w.Fx + w.Fy * w.Fy) / (w.Mu * w.Fz));
             }
             var smp = new Sample
             {
@@ -434,6 +447,8 @@ namespace PhysicsRunner.Sim
                     if (!w.Contact || w.Fz < 500) { off++; if (bit < 64) offMask |= 1UL << bit; }
                     bit++;
                     if (Math.Abs(w.Vx) > 2.0) tSlip = Math.Min(tSlip, w.KinematicSlip * Math.Sign(w.Vx));
+                    if (w.Contact && w.Fz > 500 && w.Mu > 1e-6)
+                        maxFric = Math.Max(maxFric, Math.Sqrt(w.Fx * w.Fx + w.Fy * w.Fy) / (w.Mu * w.Fz));
                 }
                 Vec3 tright = tb.Rotation * Vec3.Right;
                 smp.HasTrailer = true; smp.Coupled = fw.Coupled;
@@ -449,6 +464,8 @@ namespace PhysicsRunner.Sim
                 smp.KineticEnergy += tb.KineticEnergy;
             }
             smp.MinFz = minFz;
+            smp.MaxFrictionRatio = maxFric;
+            smp.PotentialEnergy = 9.81 * (b.Mass * b.CenterOfMassWorld.y + (s.TrailerBody != null ? s.TrailerBody.Mass * s.TrailerBody.CenterOfMassWorld.y : 0));
             smp.WheelsOffGround = off;
             smp.OffMask = offMask;
             smp.TractorWheelCount = m.Wheels.Length;

@@ -23,6 +23,10 @@ namespace PhysicsRunner.Sim
         public ulong OffMask;
         public int TractorWheelCount;
         public double KineticEnergy;
+        /// <summary>Gravitational potential energy of both bodies (world frame, G = 9.81) [J].</summary>
+        public double PotentialEnergy;
+        /// <summary>Worst wheel friction-circle usage sqrt(Fx^2+Fy^2)/(Mu*Fz), Fz &gt; 500 N [-].</summary>
+        public double MaxFrictionRatio;
         // combination
         public bool HasTrailer, Coupled;
         public Vec3 TrailerPos, TrailerComPos, TrailerVel, TrailerAxlePos;
