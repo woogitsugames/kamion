@@ -1,6 +1,6 @@
 # ADR 0128 — kerbed nose with the crossing landing and D-3 / D-6 at the northern slip of Rondo Bieżeństwa; U-4a on the Andersa island nose
 
-Status: implemented on branch `biezenstwa-island` (base `junctions-r6`, merged with `junctions-r6` 61f8eda5 and `main` bedc52d1 on 2026-11-12); not merged to main. Gate 3 is NOT
+Status: implemented on branch `biezenstwa-island` (base `junctions-r6`, merged with `junctions-r6` ac0f01d6 (b7) and `main` d395272d on 2026-11-12, build i3); not merged to main. Gate 3 is NOT
 re-judged here (visual-critic).
 Source: `docs/reports/visual/REVIEW-2026-11-11-s11-sbs-r1-D51.md` (#11: no D-3 / D-6, no crossing landing, "grass
 island"), `REVIEW-2026-11-12-s11-0125.md` (open blocker 2; P2: chevron board ~5 m off), owner decision D51.
@@ -33,6 +33,11 @@ Two different places were mixed under "island at the roundabout":
    0.6 m behind the orthophoto nose.
 5. `tests/gis/test_gate3_landmarks.py`: `stale` must be empty; signs on islands are not snapped; new synthetic test of
    the patches in `tests/gis/test_gores.py`.
+6. **U-4a at Andersa stays in the 2024 world** (leader decision, 2026-11-12): the board stands on the island nose of
+   the 2024 orthophoto (shorter island, present state), not on the longer 2017-2019 island of the Mapillary frames.
+   Consistent with the earlier decisions that the world follows the current state where sources differ in time
+   (e.g. frame 3281350 = state 2019-2024). Consequence: frames 381800 / 837235 will keep reading the board farther
+   from the camera than the photos; that difference is accepted and is not a defect of this ADR.
 
 ## Result
 
@@ -50,6 +55,21 @@ b5 (`junctions-r6` 21aef33f, before the main merge), so the deltas below also co
 | Budget, Low overcast, 43 SBS cameras + control set | draws max +3 (381800: 366 -> 369), tris max +2.7 % vs b5; probe frame 457 -> 457 draws, 317k -> 320k tris (`logs/i2_stats_low_overcast_vs_b5.txt`); i1 alone (same base): draws max +1, tris max +0.3 % |
 | Frame 320326 with the probe pose | D-3 left and D-6 right of the landing on a kerbed nose under the viaduct, as on the photo (`pairs_i2/sbs-g3-a-p0128-320326319617139_low_*.jpg`, `pairs_i2/probe_i2_low_clear_960.jpg`). With the registered SBS pose both signs are still outside the frame (pose ~4 m off, see Findings) |
 | Frames 381800 / 837235 (U-4a) | board on the island nose of the 2024 orthophoto, on the correct side of the slip lane; it reads 18 / 39 m from the camera, on the 2017-2019 photos ~6.5 m (the island was longer then). Layout matches 2024, not the photo year |
+
+### i3 (final): re-merged with `junctions-r6` ac0f01d6 (b7) and `main` d395272d (ADR 0127 changed worldgen inputs)
+
+Regenerated 2026-11-12 17:46-18:25 (`logs/i3_*`); "before" is still b5.
+
+| Check | Result (measured) |
+|---|---|
+| `build_world` | rc 0, 64 GLB; `gate3_landmarks.stale == []`; D-6 / D-3 `island: biezenstwa-n-slip-nose`, U-4a `island: n10015785253-island`, all `snapped_m 0.0`; road consistency 65 |
+| Fidelity vs orthophoto | edge p50 0.36 m, p95 2.304 m, n 595; `lane_into_island` 0 |
+| Swept path | rc 0; G3-A wide tyre -0.10 m / prop 0.70 m, G3-B wide tyre -0.14 m / prop 0.86 m, RING-B tyre +1.56 m (same as i2) |
+| pytest `tests/gis tests/physics tests/gate3` | 860 passed, 1 xfailed (17 min 35 s) |
+| Unity import | rc 0, 64 chunks, Low 122.6 MB / High 264.7 MB |
+| EditMode | 403 / 403 passed |
+| Budget, Low overcast, 91 cameras (SBS + control set) | vs b5: draws max +3 (381800: 366 -> 369), tris max +3.4 % (837235: 261k -> 270k); probe frame 457 -> 457 draws, 317k -> 321k tris (`logs/i3_stats_low_overcast_vs_b5.txt`). vs i2: draws max +1, tris max +1.3 % (`logs/i3_stats_low_overcast_vs_i2.txt`); the b5 deltas include what main and b7 brought in |
+| Frames | `pairs_i3/` (82 pairs, photo / b5 / i3): 320326 probe pose shows D-3 left and D-6 right on the kerbed nose with the paved landing; 381800 / 837235 show U-4a on the 2024 island nose (decision 6) |
 
 D51 self-assessment (layout / signs roughly like the photo; not a visual-critic verdict): blocker #11 (no D-3 / D-6, no
 landing, grass island) is closed for the probe pose. Remaining visible differences: the gravel part of the nose reads

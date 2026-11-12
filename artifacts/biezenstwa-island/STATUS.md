@@ -69,3 +69,9 @@
   `nohup bash artifacts/biezenstwa-island/scripts/all.sh i3 > artifacts/biezenstwa-island/logs/i3_all.out 2>&1 &`
   NASTĘPNY KROK: `tail -30 artifacts/biezenstwa-island/logs/i3_all.out` — po „all done”: `git add -A Data art-source/world/props art-source/world/signs`, commit,
   liczby i3 do ADR 0128 „Result”, robocopy do main. Brak procesu i brak „all done” → powtórzyć komendę wyżej.
+- krok 13 (18:28): `all.sh i3` „all done” 18:25 (drzewo: junctions-r6 ac0f01d6 b7 + main d395272d): build rc 0, gate3 stale=[], fidelity p50 0,36 / p95 2,304,
+  swept rc 0, pytest 860 passed 1 xfailed, import rc 0 (64 chunki, Low 122,6 MB), EditMode 403/403, Low overcast vs b5 draws max +3 / tris max +3,4 %
+  (vs i2: +1 / +1,3 %). Generated zacommitowane (ed1981f07), ADR 0128: Result i3 + decyzja 6 (U-4a = świat 2024, decyzja lidera). Pary `pairs_i3/` (82).
+  junctions-r6 fd734548 = tylko docs/STATUS (wejścia worldgen bez zmian) → bez merge. main ruszył dalej (0133 putry-deck, 0140 sbs-poses: streetscape + overrides)
+  → przy scalaniu lider: generated → ours/theirs + regeneracja na main.
+  NASTĘPNY KROK (lider): scalić `biezenstwa-island` po 0123; potem `uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c` + `pwsh scripts/import-region.ps1 -Region bialystok-industrial-c`.
