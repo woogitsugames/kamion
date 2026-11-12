@@ -105,6 +105,29 @@ def test_authored_berberis_has_valid_local_caps_and_uncrossed_strips(monkeypatch
     shell_top=np.where(inside,height,-np.inf).max(axis=1)
     assert np.isfinite(shell_top).all(), 'Inner cap leaves the shell footprint'
     assert np.max(core[:,2]-shell_top)<=.005, 'Inner cap protrudes through the triangulated shell'
+    # Different cap tessellations need their common planar refinement: maxima
+    # can occur where edges cross, between the inner cap's own vertices.
+    core_vertices,core_indices=buf.parts[1]
+    shell_faces=shapely.polygons(triangles[:,:,:2])
+    tree=shapely.STRtree(shell_faces)
+    def plane_height(face,points):
+        a,b,c=face
+        ab,ac=b[:2]-a[:2],c[:2]-a[:2]
+        delta=points-a[:2]
+        den=cross(ab,ac)
+        wb,wc=cross(delta,ac)/den,cross(ab,delta)/den
+        return (1.-wb-wc)*a[2]+wb*b[2]+wc*c[2]
+    for face in core_vertices[core_indices]:
+        polygon=Polygon(face[:,:2])
+        covered=0.
+        for hit in tree.query(polygon,predicate='intersects'):
+            cut=polygon.intersection(shell_faces[hit])
+            if cut.area<1e-12: continue
+            covered+=cut.area
+            points=shapely.get_coordinates(cut)
+            difference=plane_height(face,points)-plane_height(triangles[hit],points)
+            assert difference.max()<=.005, 'Cap surfaces cross between inner vertices'
+        assert abs(covered-polygon.area)<1e-7, 'A complete inner face must lie under the shell'
 
 
 def test_offset_refuses_disconnected_or_empty_geometry_instead_of_dropping_a_piece():
@@ -126,13 +149,14 @@ def test_annulus_refuses_crossing_outlines():
         pt._annulus_triangles(lower,lower+[1.,0.])
 
 
-def test_cap_samples_on_an_internal_edge_split_both_neighbours_without_a_crack():
-    ring=np.array([[0.,0.],[2.,0.],[2.,2.],[0.,2.]])
+@pytest.mark.parametrize('width',[2.,2.+1e-11,2.-1e-11])
+def test_cap_samples_on_or_near_an_internal_edge_do_not_open_a_crack(width):
+    ring=np.array([[0.,0.],[width,0.],[width,2.],[0.,2.]])
     points,triangles=pt._hedge_cap(ring,.5)
     assert len(points)>len(ring)
     polygons=shapely.polygons(points[triangles])
     union=shapely.union_all(polygons)
-    assert abs(shapely.area(polygons).sum()-4.)<1e-9
+    assert abs(shapely.area(polygons).sum()-2.*width)<1e-9
     assert union.symmetric_difference(Polygon(ring)).area<1e-9
     for face in triangles:
         for i,j in zip(face,np.roll(face,-1)):
@@ -143,3 +167,14 @@ def test_cap_samples_on_an_internal_edge_split_both_neighbours_without_a_crack()
                 cross=delta[0]*(p-a)[1]-delta[1]*(p-a)[0]
                 station=np.dot(p-a,delta)/np.dot(delta,delta)
                 assert not (abs(cross)<1e-10 and 1e-9<station<1.-1e-9), 'Unsplit T junction'
+
+
+def test_several_shoots_on_one_mesh_edge_keep_distinct_interpolated_roots():
+    ring=np.array([[0.,0.],[.45,0.],[.45,1.],[0.,1.]])
+    stations=np.array([.065,.13,.26,.39])
+    xy,normals,z=pt._ring_samples(ring,np.array([0.,.45,1.,1.]),stations)
+    np.testing.assert_allclose(xy[:,0],stations)
+    np.testing.assert_allclose(xy[:,1],0.)
+    np.testing.assert_allclose(z,stations)
+    np.testing.assert_allclose(np.linalg.norm(normals,axis=1),1.)
+    assert len(np.unique(xy,axis=0))==len(stations)

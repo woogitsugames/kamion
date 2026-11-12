@@ -309,6 +309,22 @@ def _hedge_ring_strip(rings, zground, tile, phase=(0., 0.)):
     return np.asarray(vertices), np.asarray(uv), np.asarray(faces, dtype=int)
 
 
+def _ring_samples(ring, heights, stations):
+    """Continuous shoot roots along edges, rather than piles on mesh vertices."""
+    lengths = np.linalg.norm(np.roll(ring, -1, axis=0)-ring, axis=1)
+    arc = np.r_[0., np.cumsum(lengths)[:-1]]
+    indices = np.searchsorted(arc, stations, side='right')-1
+    indices = np.clip(indices, 0, len(ring)-1)
+    following = (indices+1) % len(ring)
+    share = np.clip((stations-arc[indices])/lengths[indices], 0., 1.)
+    xy = ring[indices]*(1.-share[:, None])+ring[following]*share[:, None]
+    z = heights[indices]*(1.-share)+heights[following]*share
+    normals = _ring_normals(ring)
+    normals = normals[indices]*(1.-share[:, None])+normals[following]*share[:, None]
+    normals /= np.maximum(np.linalg.norm(normals, axis=1, keepdims=True), 1e-9)
+    return xy, normals, z
+
+
 def _offset_hedge_mass(buf, poly, zground, key, h, src, plant, stats):
     """ADR0109: photographed berberis; exact offsets, no XY bulge, closed ring strips."""
     from .hedge_textures import HEDGE_TILE_M
@@ -376,16 +392,14 @@ def _offset_hedge_mass(buf, poly, zground, key, h, src, plant, stats):
     for row, label, tilt, share in ((-2, 'edge', (.5, 1.1), 1.), (-3, 'side', (1., 1.35), .12)):
         ring, ring_z = shell[row]
         lengths = np.linalg.norm(np.roll(ring, -1, axis=0)-ring, axis=1)
-        arc = np.r_[0., np.cumsum(lengths)[:-1]]
-        indices, station, j = [], 0., 0
+        stations, station, j = [], 0., 0
         while station < lengths.sum():
-            indices.append(int(np.searchsorted(arc, station)) % len(ring))
+            stations.append(station)
             station += S['sprig']*(.5+_h(key, 'ss', j))
             j += 1
-        indices = np.asarray(indices, dtype=int)
-        normals = _ring_normals(ring)[indices]
-        positions = ring[indices]+normals*(.02 if label=='side' else 0.)
-        card_z = ring_z[indices]-(.12*h if label=='side' else 0.)
+        positions, normals, card_z = _ring_samples(ring, ring_z, np.asarray(stations))
+        positions += normals*(.02 if label=='side' else 0.)
+        card_z -= .12*h if label=='side' else 0.
         nt += _sprig_cards(buf, sprig_m, positions, normals, card_z, (*key, label), S, src, tilt=tilt, share=share)
     if stats is not None:
         stats['tris'] = stats.get('tris', 0)+nt
