@@ -100,3 +100,5 @@ furniture_sign_fronts w plikach wspólnych, a produkty świata regenerować
 po połączeniu zmian. Źródła CC0/Megascans/Fab nie trafiają do gita.
 Przyszła r3: referencje przystanków są w bus-reference-preview i shortliście;
 bliskość oraz brak tagu nie dowodzą obecności lub braku wiaty/kosza.
+
+Oględziny pary SBS: znacząca rozbieżność układu sceny i brak porównywalnego zbliżenia znaków. Ta para nie dowodzi zgodności lic ani uchwytów ze zdjęciem; zachowano ją z tym ograniczeniem, bez poprawiania wspólnych kamer i cudzych obiektów. Własny kadr diagnostyczny tyłu znaku pokazuje mocowania, ale nie zastępuje dopasowanego zdjęcia.
