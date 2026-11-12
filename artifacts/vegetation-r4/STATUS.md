@@ -114,3 +114,4 @@ Helper arkuszy przyjmuje teraz jawne before-root. Po probie C powstana osobno po
 Celowane testy C kod0. World i dekodowanie kolizji dalej sekwencyjnie w tym samym heavy.
 C uzyskało heavy około 13:48 po kolejce FIFO. Wszystkie 40 celowanych testów przeszło w 11,56 s. Sekwencja 4178 uruchomiła następnie World C i ma zdekodować kolizję w tym samym slocie, po czym go zwolnić. Nie uruchamiać importu podczas generacji; dane mogą być częściowo nadpisane. Zaimportowana scena nadal przedstawia B2. Brak jeszcze wyniku World C i oceny wyglądu C.
 World C i dekodowana kolizja zakończone0. Lekkie piny i porównanie potem, bez kolejnego oczekiwania heavy.
+Sekwencja4178 terminalna0:40testow/11.56s, World515.6s, kolizja64Low. Heavy zwolnione. Dalej piny/import/probe C, jeszcze bez akceptacji wizualnej.

@@ -10,7 +10,7 @@ uv run --project tools/worldgen python artifacts/vegetation-r4/snapshot.py candi
 if ($LASTEXITCODE -ne 0) { throw 'Snapshot C failed' }
 uv run --project tools/worldgen python artifacts/vegetation-r4/compare_candidate.py candidate-c --allow-plantings-triangle-change *> artifacts/vegetation-r4/compare-candidate-c.log
 if ($LASTEXITCODE -ne 0) { throw 'Candidate C provenance mismatch' }
-Add-Content artifacts/vegetation-r4/STATUS.md 'Piny C przeszły: poza jawną zmianą tris nasadzeń reszta kontraktów danych zachowana. Budżet kamer jeszcze niepotwierdzony. Następny import i16prób B.'
+Add-Content artifacts/vegetation-r4/STATUS.md 'Piny C przeszły: poza jawną zmianą tris nasadzeń reszta kontraktów danych zachowana. Budżet kamer jeszcze niepotwierdzony. Następny import i 16 prób C.'
 Save-VegetationCheckpoint -Message 'wip(vegetation): r4 pochodzenie C sprawdzone' -Paths @('artifacts/vegetation-r4/STATUS.md','artifacts/vegetation-r4/candidate-c-input-proof.json')
 pwsh artifacts/vegetation-r4/import-safe.ps1 -Log artifacts/vegetation-r4/import-candidate-c.log
 if ($LASTEXITCODE -ne 0) { throw 'Import C failed' }
