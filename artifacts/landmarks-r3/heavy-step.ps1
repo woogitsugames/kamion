@@ -3,7 +3,7 @@ param(
     [ValidateSet('World','WorldWithFocusedGIS','Materials','FinalGIS','FocusedGIS','PhysicsGate3','Fidelity')][string]$Step,
     [string]$Only = 'fire_station',
     [string]$Tiers = 'Medium',
-    [string]$TestFile = 'tests/gis/test_viaduct_underdeck.py',
+    [string]$TestFile = 'tests/gis/test_ec_chimneys.py',
     [string]$Log = 'artifacts/landmarks-r3/heavy-step.log'
 )
 $ErrorActionPreference = 'Stop'
@@ -24,13 +24,15 @@ if ($LASTEXITCODE -ne 0) { throw 'Heavy slot acquisition failed' }
 try {
     switch ($Step) {
         'WorldWithFocusedGIS' {
-            & uv run --project tools/worldgen python -m pytest tests/gis/test_viaduct_underdeck.py -q *> "$Log.focused"
-            if($LASTEXITCODE -ne 0){throw "Focused underdeck tests failed, log: $Log.focused"}
-            Add-Content -Encoding utf8 "$PSScriptRoot/STATUS.md" "`nKrok 7: pojedynczy plik test_viaduct_underdeck.py dla wariantu weather zakończył się powodzeniem; dokładna liczba i czas w $Log.focused. Pod tym samym slotem heavy rozpoczyna się kolejno generator, bez równoległego Pythona tej sesji."
+            & uv run --project tools/worldgen python -m pytest tests/gis/test_ec_chimneys.py -k 'not generated_world' -q *> "$Log.units"
+            if($LASTEXITCODE -ne 0){throw "Focused EC units failed, log: $Log.units"}
+            Add-Content -Encoding utf8 "$PSScriptRoot/STATUS.md" "`nKrok 11: jednostkowe testy pojedynczego pliku test_ec_chimneys.py zakończyły się powodzeniem (wynik $Log.units); celowo wyłączony test wyjścia generatora. Pod tym samym heavy rozpoczyna się kolejno generator, bez równoległego Pythona tej sesji."
             & git add -f artifacts/landmarks-r3/STATUS.md
-            & git commit -m 'wip(landmarks): testy pojedynczego pliku przed generacją weather'
+            & git commit -m 'wip(landmarks): jednostkowe testy EC przed regeneracją świata'
             if($LASTEXITCODE -ne 0){throw 'Focused checkpoint failed'}
             & uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c *> $Log
+            if($LASTEXITCODE -ne 0){throw "EC world generation failed: $Log"}
+            & uv run --project tools/worldgen python -m pytest tests/gis/test_ec_chimneys.py -q *> "$Log.focused"
         }
         'World' { & uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c *> $Log }
         'Materials' {
