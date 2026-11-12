@@ -564,7 +564,10 @@ namespace Game.World.Import
             mat.SetFloat("_ScreenSheet", screen != null ? 1f : 0f);
             mat.SetFloat("_HorizonSky", Scr("horizon_sky", 0f));
             mat.SetFloat("_Haze", Scr("haze", 0f));
-            mat.SetColor("_HazeColor", new Color(0.50f, 0.52f, 0.52f, 1f));
+            var hazeCol = screen != null ? screen.Get("haze_color") as List<object> : null;      // ADR 0139
+            mat.SetColor("_HazeColor", hazeCol != null && hazeCol.Count >= 3
+                ? new Color((float)Num(hazeCol[0]), (float)Num(hazeCol[1]), (float)Num(hazeCol[2]), 1f).gamma   // manifest: linear
+                : new Color(0.50f, 0.52f, 0.52f, 1f));
             mat.SetVector("_Stripe", stripe != null && stripe.Count >= 3
                 ? new Vector4((float)Num(stripe[0]), (float)Num(stripe[1]), (float)Num(stripe[2]), 0f) : new Vector4(0f, 0f, 0.25f, 0f));
             if (screen != null) mat.EnableKeyword("_SCREEN_SHEET");
