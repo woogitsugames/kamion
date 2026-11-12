@@ -1,5 +1,5 @@
 """Compare actual GLB node payloads, independent of changed buffer offsets."""
-import hashlib,json,struct
+import hashlib,json,struct,sys
 from pathlib import Path
 import numpy as np
 root=Path(__file__).resolve().parents[2]; out=Path(__file__).parent
@@ -39,7 +39,8 @@ protected=[n for n in changed if not n.startswith(('trailer_','tractor_'))]
 old=json.loads((root/'artifacts/life-r1/prepared-import-20261111-225727-source-proof.json').read_text())
 raw_changed=[p['file'] for p in old['products'] if hashlib.sha256((root/p['file']).read_bytes()).hexdigest()!=p['actual']]
 report=dict(before_nodes=len(before),after_nodes=len(after),changed=changed,changed_outside_static_vehicles=protected,raw_products_checked=len(old['products']),raw_products_changed=raw_changed)
-(out/'nonlife-glb-audit.json').write_text(json.dumps(report,indent=2),encoding='utf-8')
+suffix='-'+sys.argv[1] if len(sys.argv)>1 else ''
+(out/f'nonlife-glb-audit{suffix}.json').write_text(json.dumps(report,indent=2),encoding='utf-8')
 print(json.dumps(dict(nodes=len(after),changed=len(changed),protected_changed=len(protected),raw_changed=len(raw_changed))))
 assert not protected,protected
 assert not raw_changed,raw_changed

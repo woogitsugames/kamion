@@ -1,5 +1,6 @@
 """Small metadata-only validation; no geometry build, image decode or test suite."""
 import json
+import hashlib
 import re
 import sys
 from pathlib import Path
@@ -21,6 +22,8 @@ def legacy(path):
 
 def validate(stage, condition, reference=None):
     folder = ROOT / stage / condition
+    inputs = json.loads((ROOT / f'{stage}-inputs.json').read_text(encoding='utf-8-sig'))
+    assert inputs['cameras_sha'].lower() == hashlib.sha256((ROOT / 'cameras.json').read_bytes()).hexdigest()
     dump = json.loads((folder / 'exact-stats.json').read_text(encoding='utf-8-sig'))
     assert dump['schema'] == 'kamion/life-exact-cpu/1'
     assert not dump['errors'], dump['errors']
