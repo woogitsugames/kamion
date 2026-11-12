@@ -95,3 +95,5 @@ Krok 24: dwie pary CC0 foto/render 960×360 przygotowane i obejrzane; skorygowan
 Krok 25: przygotowano 18-wierszowy REPORT-DRAFT (wynik GIS jeszcze pusty) i publish.ps1 z guardem final-heavy complete/0, NUnit Passed + udokumentowanym cleanup, czystą gałęzią, weryfikacją rozmiarów całego zbioru oraz 12 krytycznych SHA. REPORT będzie ostatnim plikiem w main artifacts/life-r4; brak publikacji teraz. Uzupełniono NEXT-R5 o korektę starego docstringa przed nową generacją. Następny krok: istniejący GIS 20729, końcowe liczby/ADR/REPORT i kopia, r5.
 
 Końcowy heavy (2026-11-12T13:48:13.7959001+01:00): zapisz końcowy GIS kół placowych. Następny krok: odczyt rzeczywistych wyników, ADR/REPORT i kopia, potem r5 palety.
+
+Końcowy heavy (2026-11-12T13:48:17.4684492+01:00): potwierdź zamrożone koła, bieżnik, raw i materiały po testach. Następny krok: odczyt rzeczywistych wyników, ADR/REPORT i kopia, potem r5 palety.
