@@ -106,8 +106,8 @@ bedc52d1 (s13)** — stan do scalenia. Dowody: `artifacts/junctions-r6/` (`rende
 | miara | wynik |
 |---|---|
 | EditMode / PlayMode (`WorldCRouteTests|WorldCBarrierTests`) | b7: **403/403**, **3/3** (b6: 317/317, 3/3) |
-| pytest `tests/gis tests/physics tests/gate3` | b6: 666 passed, 1 xfailed; b7: B7_PYTEST |
-| fidelity krawędzi p50 / p95 | b6: 0,36 / 2,304 (= main); b7: B7_FID |
+| pytest `tests/gis tests/physics tests/gate3` | b6: 666 passed, 1 xfailed; b7: **847 passed, 1 xfailed** (18:17 min; wzrost liczby = testy scalone z main) |
+| fidelity krawędzi p50 / p95 | b6: 0,36 / 2,304 (= main); b7: 0,36 / 2,304 (bez zmian) |
 | swept path (min opona / prop) | b6: G3-A lane −1,12 / 0,70, wide −0,10 / 0,69; G3-B −0,14 / 0,86–0,88; RING-B +1,75 / 2,41 (v15), +1,61 / 2,28 (v25) — opony = main, RING-B prop 1,31 → 2,41 / 1,79 → 2,28; b7: B7_SWEPT |
 | budżet Low clear, 102 kamery (drawsEst edytora, bez telefonu) | b3 vs m0 +0 draws / tris ≤ +0,7 %; b6 vs b5 **+0 / +0,0 %**; b7 vs b6 max +4 draws, tris ≤ +3,7 % (treść scalona z main, nie ta gałąź) |
 | szachownica cienia na kapie (`r4_deck_bz_eye2`) | nie ma (b3…b7 obejrzane) |
