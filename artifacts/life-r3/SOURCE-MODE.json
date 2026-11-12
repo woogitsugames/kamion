@@ -1,8 +1,8 @@
 {
-  "mode": "candidate-d-shader-applied",
-  "note": "D changes tail film roof mask, preserves legacy restoration, material B and geometry A",
+  "requires_reimport": false,
+  "requires_generation": false,
   "native_library": "candidate-b",
   "requires_shader_compile": true,
-  "requires_reimport": false,
-  "requires_generation": false
+  "note": "Restored exact captured C shader; final EditMode recompiles. after-c images/proof remain canonical, D rejected.",
+  "mode": "candidate-c-selected"
 }

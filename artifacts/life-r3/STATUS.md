@@ -168,3 +168,5 @@ Po capture D (2026-11-12T10:54:29.0595903+01:00): potwierdź pełne kadry i bud�
 Po capture D (2026-11-12T10:54:37.6131117+01:00): przygotuj oględziny mocniejszego tyłu D. Następny krok według post-d.ps1, potem oględziny i wybór autora.
 
 Po capture D (2026-11-12T10:54:59.8978547+01:00): potwierdź ograniczoną obwiednię D na GPU. Następny krok według post-d.ps1, potem oględziny i wybór autora.
+
+Krok 46: capture i GPU D zakończone 0. Obejrzano cztery siatki nowych kamer oraz detale tyłu; przyrost wyglądu względem C niewielki, hipoteza maski nie rozwiązała problemu. Wybrano C, ocena PARTIAL: fazy lepsze, czerń częściowo poprawiona, osad nadal zbyt gładki/subtelny. Przywrócenie git zmieniło LF na CRLF i strażnik SHA zatrzymał krok przed testami; przywrócono dokładne bajty blobu 9c7c8c53 po potwierdzeniu, że jedyną różnicą były zakończenia linii. Siedem SHA i GLB zgodne z after-c. D zachowane jako odrzucony eksperyment. Następny krok: final-heavy.ps1, EditMode przez Unity slot, oględziny wszystkich par, REPORT i kopia; potem r4.
