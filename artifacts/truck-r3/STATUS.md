@@ -95,3 +95,4 @@ Reexport LOD2 trailer disc-v3 i natywny validator przeszły. Mapy i LOD0/1 byte-
 Krok 62: v3b oba natywne validatory PASS: ciągnik LOD2 17690/17900, naczepa 7849/8000. Wszystkie mapy i LOD0/1 byte-identyczne z v2, dowody lod2-*-preserved.json. Reexport 35110 exit0, slot heavy zwolniony. Zapisano wyłącznie cztery własne pliki eksportu Low, bez wygenerowanych danych świata. Następny krok: capture detail-wheels-v3, 12 testów i 12 zbliżeń, ocena widocznej poprawy tarcz.
 Instalacja kandydata detail-wheels-v3 zakończona. Następny krok: test rzeczywistego eksportu, 12 zbliżeń na tej samej bazie oraz porównanie z baseline.
 EditMode detail-wheels-v3: 12/12, failed 0, skipped 0, exit 0. XML i JSON w pakiecie. Następny krok: przy błędzie odczytać konkretny test; przy powodzeniu kontynuować walidację rundy.
+Zapisano detail-wheels-v3-fleet, ilość brudu 0.5, 12 świeżych kadrów. Materiały przywrócone. Następny krok: porównać pas zabrudzenia, błotniki i plandekę ze zdjęciami.
