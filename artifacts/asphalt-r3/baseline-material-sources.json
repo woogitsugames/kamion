@@ -1,0 +1,102 @@
+{
+  "checked_at": "2026-11-12T12:58:09.7005793+01:00",
+  "stage": "baseline Materials",
+  "seconds": 515,
+  "exit": 0,
+  "spec_sha256": "C552A473F4E2849CD6AEDCD839210F39416292CA16C422AECC46517E23D60AFB",
+  "surfaces": [
+    {
+      "source": {
+        "source": "asphalt_04",
+        "source_dimensions_m": [
+          4.04,
+          4.04
+        ],
+        "assets": [
+          {
+            "id": "asphalt_04",
+            "page": "https://polyhaven.com/a/asphalt_04",
+            "authors": {
+              "Jenelle van Heerden": "Processing",
+              "Sergej Majboroda": "Photography"
+            },
+            "license": "CC0 1.0"
+          }
+        ]
+      },
+      "medium": "asphalt_worn/Medium",
+      "id": "asphalt_worn"
+    },
+    {
+      "source": {
+        "source": "concrete_pavers",
+        "source_dimensions_m": [
+          1.92,
+          1.92
+        ],
+        "elements_per_tile": 106,
+        "assets": [
+          {
+            "id": "concrete_pavers",
+            "page": "https://polyhaven.com/a/concrete_pavers",
+            "authors": {
+              "Amal Kumar": "All"
+            },
+            "license": "CC0 1.0"
+          }
+        ]
+      },
+      "medium": "behaton_i_grey/Medium",
+      "id": "behaton_i_grey"
+    },
+    {
+      "source": {
+        "source": "pavement_04",
+        "source_dimensions_m": [
+          3.1,
+          3.1
+        ],
+        "measured_period_m": [
+          0.1408
+        ],
+        "scale_to_standard_xy": [
+          0.7352,
+          0.7352
+        ],
+        "elements_per_tile": 239,
+        "assets": [
+          {
+            "id": "pavement_04",
+            "page": "https://polyhaven.com/a/pavement_04",
+            "authors": {
+              "Jan Burghardt": "All"
+            },
+            "license": "CC0 1.0"
+          }
+        ]
+      },
+      "medium": "paving_20x10_grey/Medium",
+      "id": "paving_20x10_grey"
+    },
+    {
+      "source": {
+        "source": "concrete_floor_worn_001",
+        "mode": "hybrid (procedural layout + scan micro-detail)",
+        "assets": [
+          {
+            "id": "concrete_floor_worn_001",
+            "page": "https://polyhaven.com/a/concrete_floor_worn_001",
+            "authors": {
+              "Dimitrios Savva": "Photography",
+              "Rico Cilliers": "Processing"
+            },
+            "license": "CC0 1.0"
+          }
+        ]
+      },
+      "medium": "kerb_concrete_1m/Medium",
+      "id": "kerb_concrete_1m"
+    }
+  ],
+  "note": "Read source metadata after successful rebuild. Native render/material assignment remains pending."
+}
