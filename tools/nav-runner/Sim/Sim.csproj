@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Plain .NET 8 host for the Unity-independent navigation core (ADR 0150).
+    The navigation sources are NOT copied: they are compiled straight from the Unity project folder,
+    so the .NET runner and Unity always build the same code (same pattern as tools/physics-runner, ADR 0004).
+    The Resources shim reads the real game/Assets/_Project/UI/Resources/CabDisplay/Nav/<region>_route.bytes.
+  -->
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>NavRunner.Sim</RootNamespace>
+    <AssemblyName>NavRunner.Sim</AssemblyName>
+    <!-- Unity 6 compiles C# 9; keep the shared sources within that language version. -->
+    <LangVersion>9.0</LangVersion>
+    <Nullable>disable</Nullable>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="../../../game/Assets/_Project/Core/Navigation/*.cs" LinkBase="Navigation" />
+    <Compile Include="*.cs" />
+  </ItemGroup>
+
+</Project>
