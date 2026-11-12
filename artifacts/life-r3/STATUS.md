@@ -88,3 +88,5 @@ Kandydat a (2026-11-12T10:06:14.6356831+01:00): sprawdź test_car_deposition.py 
 Kandydat a (2026-11-12T10:06:26.5450471+01:00): sprawdź test_car_plate_payload.py wariantu a. Następny etap w candidate-build.ps1; po komplecie PreparedVerified, capture i oględziny.
 
 Kandydat a (2026-11-12T10:06:28.3699796+01:00): zamroź wejścia importu r3 a. Następny etap w candidate-build.ps1; po komplecie PreparedVerified, capture i oględziny.
+
+Po budowie A (2026-11-12T10:07:47.1656820+01:00): zaimportuj spójny natywny kandydat A. Następny etap w post-a.ps1; po kompletach obejrzeć obrazy i zdecydować o kolejnej ablacji.
