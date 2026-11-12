@@ -102,3 +102,12 @@ Przyszła r3: referencje przystanków są w bus-reference-preview i shortliście
 bliskość oraz brak tagu nie dowodzą obecności lub braku wiaty/kosza.
 
 Oględziny pary SBS: znacząca rozbieżność układu sceny i brak porównywalnego zbliżenia znaków. Ta para nie dowodzi zgodności lic ani uchwytów ze zdjęciem; zachowano ją z tym ograniczeniem, bez poprawiania wspólnych kamer i cudzych obiektów. Własny kadr diagnostyczny tyłu znaku pokazuje mocowania, ale nie zastępuje dopasowanego zdjęcia.
+
+Przed końcowymi zestawami wykonano wyłącznie mały audyt hashy wejść,
+bez uruchamiania pytest ani fidelity/run.py. existing-test-input-audit.json:
+23 wejścia raportu i sam raport są niezmienione od bazy r2 po merge main
+3fe0c97f, wraz z roboczymi blobami. Dwa rzeczywiste hashe nie odpowiadają
+raportowi. Jest to nowy odczyt r2, nie wolno kopiować liczby siedmiu z r1.
+Normalizacja LF zmienia także poprawnie pasujące pliki; nie jest naprawą
+raportu ani zamiennikiem testu. Trzy wejścia znanej niezgodności scenariusza
+physics również zachowały bloby bazy r2. Wyniki pełnych testów nadal PENDING.
