@@ -192,6 +192,7 @@ namespace Game.Gameplay
                 ToggleMirrorInsets = () => { m_MirrorInsets = !m_MirrorInsets; PlayerPrefs.SetInt(PrefMirrorInsets, m_MirrorInsets ? 1 : 0); },
             }, overlay: true);
             m_Hud.transform.SetParent(transform, false);
+            NavigationInstaller.Install(m_Hud, vehicle, gameObject);   // GPS: minimap, full map, cab route (ADR 0150)
 
             string ap = platform.GetLaunchArgument("autopilot");
             string tr = platform.GetLaunchArgument("trailer");
@@ -564,7 +565,8 @@ namespace Game.Gameplay
             var kb = UnityEngine.InputSystem.Keyboard.current;   // Android back key arrives as Escape
             if (kb != null && kb.escapeKey.wasPressedThisFrame)
             {
-                if (m_SettingsPanel != null) m_SettingsPanel.Close(); else ReturnToMenu();
+                if (Game.UI.Navigation.FullMapView.HandleBack()) { }   // back closes the map first (ADR 0150)
+                else if (m_SettingsPanel != null) m_SettingsPanel.Close(); else ReturnToMenu();
             }
             Game.Core.AudioCues.HornHeld = kb != null && kb.kKey.isPressed;   // horn (ADR 0142; touch button: gameplay-ui TODO)
             ApplyCommands(intent);
