@@ -178,3 +178,60 @@ def test_several_shoots_on_one_mesh_edge_keep_distinct_interpolated_roots():
     np.testing.assert_allclose(z,stations)
     np.testing.assert_allclose(np.linalg.norm(normals,axis=1),1.)
     assert len(np.unique(xy,axis=0))==len(stations)
+
+
+def test_surface_cover_is_deterministic_inside_and_separated():
+    from shapely.geometry import box
+    polygon=box(0,0,8,.7)
+    points=pt._surface_samples(polygon,.28,('cover-test',))
+    np.testing.assert_array_equal(points,pt._surface_samples(polygon,.28,('cover-test',)))
+    assert len(points)>25
+    assert all(polygon.buffer(-.02).contains(Point) for Point in shapely.points(points))
+    distances=np.linalg.norm(points[:,None,:]-points[None,:,:],axis=2)
+    np.fill_diagonal(distances,np.inf)
+    assert distances.min()>=.14-1e-12
+    assert np.ptp(np.mod(points[:,0],.28))>.1, 'Cover must not form straight rows'
+
+
+def test_cover_height_uses_cap_planes_and_refuses_outside():
+    xy=np.array([[0.,0.],[2.,0.],[2.,2.],[0.,2.]])
+    vertices=np.column_stack([xy,2*xy[:,0]+3*xy[:,1]+5])
+    triangles=np.array([[0,1,2],[0,2,3]])
+    roots=np.array([[.2,.8],[1.7,.3],[1.,1.]])
+    np.testing.assert_allclose(pt._cap_surface_height(roots,vertices,triangles),
+                               2*roots[:,0]+3*roots[:,1]+5)
+    with pytest.raises(ValueError,match='outside triangulated'):
+        pt._cap_surface_height(np.array([[3.,1.]]),vertices,triangles)
+
+
+def test_narrow_authored_bed_has_cover_without_interior_mesh_vertices(monkeypatch):
+    poly,key,bed=authored_bed(0)
+    class Capture:
+        def __init__(self): self.parts=[]
+        def add(self,layer,material,vertices,uv,triangles,**kwargs):
+            self.parts.append((material,np.asarray(vertices).copy(),np.asarray(triangles).copy()))
+    calls=[]
+    original=pt._sprig_cards
+    def capture(buf,mat,roots,normals,z,card_key,*args,**kwargs):
+        if card_key[-1]=='cover': calls.append((roots.copy(),z.copy()))
+        return original(buf,mat,roots,normals,z,card_key,*args,**kwargs)
+    monkeypatch.setattr(pt,'_sprig_cards',capture)
+    buf=Capture()
+    ground=lambda x,y:.03*x+.015*y
+    pt.hedge_mass(buf,poly,ground,key,h=bed.get('height_m'))
+    assert len(calls)==1 and len(calls[0][0])>20
+    shell,triangles=buf.parts[3][1:]
+    # E1's narrow cap has only boundary vertices; cover must still fill its middle.
+    outline=Polygon(shell[:,:2]).boundary
+    assert all(outline.distance(point)<1e-7 for point in shapely.points(shell[:,:2]))
+    roots,z=calls[0]
+    assert all(Polygon(shell[:,:2]).buffer(-.019).covers(point) for point in shapely.points(roots))
+    np.testing.assert_allclose(z,pt._cap_surface_height(roots,shell,triangles))
+    monkeypatch.setitem(pt.SPECIES['berberis_red'],'cover_spacing',0.)
+    baseline=Capture()
+    pt.hedge_mass(baseline,poly,ground,key,h=bed.get('height_m'))
+    for actual,old in zip(buf.parts[:4],baseline.parts[:4]):
+        assert actual[0]==old[0]
+        np.testing.assert_array_equal(actual[1],old[1])
+        np.testing.assert_array_equal(actual[2],old[2])
+    assert {part[0] for part in buf.parts}=={part[0] for part in baseline.parts}

@@ -81,7 +81,8 @@ SPECIES = {
     # with a small rounded arris; shoots grow out lighter (copper) above the cut. Lumps 0.015 m, dome 0.05.
     "berberis_red": dict(tex="berberis", h=HEDGE_H, plant=(0.55, 0.85), bulge=0.025, dome=0.10, gap_p=0.09, sigma=0.5,
                          sprig=0.13, sprig_wh=((0.16, 0.28), (0.10, 0.20)), prof="clipped", band=BAND_M,
-                         local_top=True, leaf_core=True, offset_rings=True, ring_step=0.45),
+                         local_top=True, leaf_core=True, offset_rings=True, ring_step=0.45,
+                         cover_spacing=0.28, cover_wh=((0.12, 0.22), (0.07, 0.14))),
     "privet": dict(tex="privet", h=(1.2, 1.7), plant=(0.45, 0.65), bulge=0.08, dome=0.12, gap_p=0.10, sigma=0.36,
                    sprig=0.30, sprig_wh=((0.14, 0.24), (0.10, 0.18))),
     "hornbeam": dict(tex="hornbeam", h=(1.4, 2.0), plant=(0.5, 0.7), bulge=0.08, dome=0.10, gap_p=0.09, sigma=0.38,
@@ -339,6 +340,56 @@ def _ring_samples(ring, heights, stations):
     return xy, normals, z
 
 
+def _surface_samples(poly, spacing, key):
+    """Deterministic jittered cover, independent of the cap's mesh vertices."""
+    if spacing <= 0.:
+        return np.empty((0, 2))
+    inner = poly.buffer(-.02)
+    if inner.is_empty:
+        return np.empty((0, 2))
+    x0, y0, x1, y1 = inner.bounds
+    candidates = []
+    for i, x in enumerate(np.arange(x0, x1, spacing)):
+        for j, y in enumerate(np.arange(y0, y1, spacing)):
+            p = np.array([x+spacing*(.5+.7*(_h(key, i, j, 'cx')-.5)),
+                          y+spacing*(.5+.7*(_h(key, i, j, 'cy')-.5))])
+            if inner.contains(Point(*p)):
+                candidates.append((_h(key, i, j, 'order'), p))
+    gap = .5*spacing
+    buckets, accepted = {}, []
+    for _, p in sorted(candidates, key=lambda item: item[0]):
+        cell = tuple(np.floor(p/gap).astype(int))
+        neighbours = (q for dx in (-1, 0, 1) for dy in (-1, 0, 1)
+                      for q in buckets.get((cell[0]+dx, cell[1]+dy), []))
+        if any(np.linalg.norm(p-q) < gap for q in neighbours):
+            continue
+        buckets.setdefault(cell, []).append(p)
+        accepted.append(p)
+    return np.asarray(accepted).reshape(-1, 2)
+
+
+def _cap_surface_height(samples, vertices, triangles):
+    """Root shoots on the actual triangulated cap, including its local relief."""
+    if not len(samples):
+        return np.empty(0)
+    faces = vertices[triangles]
+    a, b, c = (faces[:, i, :2] for i in range(3))
+    ab, ac = b-a, c-a
+    delta = samples[:, None, :]-a[None, :, :]
+    cross = lambda x, y: x[..., 0]*y[..., 1]-x[..., 1]*y[..., 0]
+    den = cross(ab, ac)
+    valid = abs(den) > 1e-12
+    wb = cross(delta, ac)/np.where(valid, den, 1.)
+    wc = cross(ab, delta)/np.where(valid, den, 1.)
+    wa = 1.-wb-wc
+    inside = valid & (wa >= -1e-8) & (wb >= -1e-8) & (wc >= -1e-8)
+    heights = wa*faces[:, 0, 2]+wb*faces[:, 1, 2]+wc*faces[:, 2, 2]
+    result = np.where(inside, heights, -np.inf).max(axis=1)
+    if not np.isfinite(result).all():
+        raise ValueError('Cover root outside triangulated hedge cap')
+    return result
+
+
 def _offset_hedge_mass(buf, poly, zground, key, h, src, plant, stats):
     """ADR0109: photographed berberis; exact offsets, no XY bulge, closed ring strips."""
     from .hedge_textures import HEDGE_TILE_M
@@ -397,7 +448,14 @@ def _offset_hedge_mass(buf, poly, zground, key, h, src, plant, stats):
     uv = np.column_stack([c*points[:, 0]-s*points[:, 1], s*points[:, 0]+c*points[:, 1]])/HEDGE_TILE_M
     buf.add('furniture', shell_m, np.column_stack([points, z]), uv, triangles, src=src)
     nt += len(triangles)
-    if len(points) > n:
+    if S.get('cover_spacing', 0.) > 0.:
+        roots = _surface_samples(Polygon(stop), S['cover_spacing'], key)
+        heights = _cap_surface_height(roots, np.column_stack([points, z]), triangles)
+        angles = np.array([_h(key, 'ca', j)*math.tau for j in range(len(roots))])
+        cover = dict(S, sprig_wh=S['cover_wh'])
+        nt += _sprig_cards(buf, sprig_m, roots, np.column_stack([np.cos(angles), np.sin(angles)]),
+                           heights, (*key, 'cover'), cover, src, tilt=(.15, .65))
+    elif len(points) > n:
         selected = np.array([j for j in range(len(points)-n) if _h(key, 'tc', j)<.45], dtype=int)
         if len(selected):
             angles = np.array([_h(key, 'ta', j)*6.283 for j in selected])
