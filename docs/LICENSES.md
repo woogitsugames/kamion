@@ -272,3 +272,8 @@ Zdjęcia nie wchodzą do builda ani tekstur. Rejestr: [`docs/refs/posesje-bialys
 - Oryginał 4K HDR poza gitem w Data/raw/cc0/sky/kloofendal_48d_partly_cloudy_puresky/; 20 674 857 B, MD5 816340c969d2e60d659051d13ac3c4dc, SHA256 3061c00a16ecae748e84fd6c44c04804f539c118bb66325db858bad87b11bf88.
 - Pochodna: game/Assets/_Project/Rendering/Resources/Sky/T_ClearClouds.png, R = fotograficzna maska chmur, G = względna luminancja; usunięto tarczę słońca, zachowano kształt i cienie chmur. Dokładne metadane i oś słońca: ClearCloudsSource.json. Reprodukcja: artifacts/light-r1/build-photo-clouds.py przez pulę heavy.
 - To tekstura nieba, nie zdjęcie referencyjne Białegostoku. Nie zawiera zabudowy ani oznaczeń; nie jest zasobem Fab/Megascans.
+
+## Kabina — skan skóry CC0 (Poly Haven), GPT cab r2 (s12)
+| ID | Zasób (rozmiar fizyczny) | URL | Autor | Licencja | Mapy (MD5 w `art-source/truck/interior/cab_material_scans.json`) | Użycie w grze |
+|---|---|---|---|---|---|---|
+| `brown_leather` | Brown Leather (0,40 × 0,40 m; kafel 0,12 m, wieniec kierownicy 0,05 m) | https://polyhaven.com/a/brown_leather | Rob Tuytel | CC0 1.0 (https://polyhaven.com/license) | diffuse/normal GL/roughness/AO 2k | faktura skóry i tłoczenia tworzyw kabiny (ADR cab r2) |
