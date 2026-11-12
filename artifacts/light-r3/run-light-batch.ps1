@@ -1,4 +1,4 @@
-﻿param([Parameter(Mandatory)][string]$Jobs, [string]$Gate3 = 'Data/Regions/bialystok-industrial-c/buildings_r10_cameras.json', [string]$Mask)
+param([Parameter(Mandatory)][string]$Jobs, [string]$Gate3 = 'Data/Regions/bialystok-industrial-c/buildings_r10_cameras.json', [string]$Mask, [switch]$EnvDump)
 $ErrorActionPreference = 'Stop'
 $repo = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..'))
 Set-Location $repo
@@ -13,6 +13,7 @@ $log = [IO.Path]::ChangeExtension($jobPath, ".$(Get-Timestamp).log")
 $unityArguments = @('-executeMethod', 'Game.Rendering.Editor.LightQaBatch.Run', '-lightQaJobs', $resolved)
 if ($Gate3) { $unityArguments += @('-qaGate3', [IO.Path]::GetFullPath($Gate3, $repo)) }
 if ($Mask) { $unityArguments += @('-qaMask', $Mask) }
+if ($EnvDump) { $unityArguments += @('-qaEnvDump', '1') }
 & pwsh $slot -Acquire -Owner gpt-light -PollSeconds 1 -StaleHours 87600
 if ($LASTEXITCODE -ne 0) { throw 'Nie uzyskano slotu Unity' }
 git diff --quiet HEAD -- game/Assets/_Project/Rendering/Settings game/ProjectSettings
@@ -28,12 +29,18 @@ try {
     $complete = $null -ne $result
     foreach ($job in $spec.jobs) {
         $files = @(Get-ChildItem -LiteralPath $job.output -Filter '*.png' -ErrorAction SilentlyContinue |
-            Where-Object { $_.LastWriteTime -ge $runStart -and $_.Length -gt 0 -and $_.Name -notlike '*_mask.png' })
+            Where-Object { $_.LastWriteTime -ge $runStart -and $_.Length -gt 0 -and $_.Name -notlike '*_mask.png' -and $_.Name -notlike '*_envcube.png' })
         $fresh += $files
         if ($job.cameras) {
             $ids = @($job.cameras.Split(',') | ForEach-Object { $_.Trim() } | Where-Object { $_ } | Select-Object -Unique)
             if ($ids.Count -ne $files.Count) { $complete = $false }
             foreach ($id in $ids) { if ($files.Name -notcontains "$id.png") { $complete = $false } }
+        }
+        if ($EnvDump) {
+            $cubes = @(Get-ChildItem -LiteralPath $job.output -Filter '*_envcube.png' -ErrorAction SilentlyContinue |
+                Where-Object { $_.LastWriteTime -ge $runStart -and $_.Length -gt 0 })
+            if ($cubes.Count -ne $files.Count) { $complete = $false }
+            foreach ($file in $files) { if ($cubes.Name -notcontains ($file.BaseName + '_envcube.png')) { $complete = $false } }
         }
         if ($Mask) {
             $masks = @(Get-ChildItem -LiteralPath $job.output -Filter '*_mask.png' -ErrorAction SilentlyContinue |
@@ -78,6 +85,7 @@ finally {
 Add-Content artifacts/light-r3/STATUS.md "Batch światła zakończony: $Jobs; log $log. Następny krok: obejrzeć PNG i policzyć metryki, nie deklarować PASS z samego kodu wyjścia."
 git add -f artifacts/light-r3/STATUS.md
 git commit -m "wip(light): zapisz wykonanie batcha $([IO.Path]::GetFileNameWithoutExtension($jobPath))"
+
 
 
 
