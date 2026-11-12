@@ -32,3 +32,5 @@ Krok 11: inspekcja eksportera wykazała próg creasing 38°; zapisano hipotezę 
 Baseline (2026-11-12T09:22:19.5697821+01:00): wygeneruj i potwierdź świeży baseline r3. Następny etap w baseline-gen.ps1; po generacji nowe kamery i PreparedImport.
 
 Krok 12: World ukończony 0 (552,1 s), raw 192/192 zgodne, 15 Fab ready, 151 map. Zapisano lekki odczyt nagłówka GLB baseline (liczby trójkątów/grup aut) bez budowania modeli. Następny krok: istniejący post-baseline 46468 czeka na heavy dla wyboru kamer; nie duplikować pracy, później guarded import/capture.
+
+Krok 13: odczyt bazowego GLB pokazuje maksimum LOD0 4170 (biały kombi na stalowych kołach). Roboczy rachunek dodania drugiej powierzchni tylko cienkich ramion daje maks. 4150 dla zmienianych aut i 4170 ogółem, nadal pod istniejącym 4200; to prognoza topologii, NIE wynik wygenerowanego kandydata. Dane w rim-topology-plan.json. Następny krok: czekający 46468, baseline capture i oględziny; nie zmieniać limitu testu 4200.
