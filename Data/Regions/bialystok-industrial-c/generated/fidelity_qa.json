@@ -1230,9 +1230,9 @@
   "osm_drivable_ways_in_tile": 553
  },
  "inputs_sha256": {
-  "overrides.yaml": "0e5b0b928cb2048cf733ef305e44c8988eb66ef44d038c10b49c77606a325b31",
+  "overrides.yaml": "3e2689af8e99abcd54b7fc8dd573d0a607592ca6fc7e03324192529d6a5290c3",
   "roads.graph.json": "a18a4ceab78f91d41516eaef33122521a083d3f150ce3a3bff915f564431984f",
-  "route_start.json": "82501495eef51d93bd92b13de8edb7a9c40b74809262ef6e37b54a8702931600",
+  "route_start.json": "1b3e14b27db64b30c310616a3325686d238f9453a6a23376d82c2a43da71cbdc",
   "tools/worldgen/roads/__init__.py": "0c26fa3038394a956286b47576ce1d6a0725f8dc0a2e7682901a055d264a6e40",
   "tools/worldgen/roads/aprons.py": "790b409e810cb5a80c9d2525eb34c80e994b9d7dc229ccb18983ee6a18736729",
   "tools/worldgen/roads/authored_paint.py": "e93fe9fbe14978adb222deca064bcb01c43b6550a122e713a3be0ac7625248a4",
@@ -3953,27 +3953,27 @@
   {
    "axis": {
     "authored_center_offset_m": 7.91,
-    "max": 2.005,
-    "n": 68,
+    "max": 2.325,
+    "n": 69,
     "p50": 0.0,
-    "p95": 1.205
+    "p95": 1.248
    },
    "edge": "w606396463:2840742308-2840742310",
    "edges": {
     "all_sides": {
-     "max": 4.44,
+     "max": 3.48,
      "n": 39,
-     "p50": 0.882,
+     "p50": 0.989,
      "p95": 2.848
     },
     "detected_sides": 39,
-    "max": 1.102,
-    "n": 25,
-    "p50": 0.84,
-    "p95": 1.054,
-    "signed_p50": 0.84,
+    "max": 1.251,
+    "n": 28,
+    "p50": 0.917,
+    "p95": 1.219,
+    "signed_p50": 0.917,
     "stations": 24,
-    "valid_sides": 25
+    "valid_sides": 28
    },
    "lanes": {
     "edge": "w606396463:2840742308-2840742310",
@@ -3990,7 +3990,7 @@
     },
     "highway": "trunk_link",
     "issues": [],
-    "length_m": 70.8,
+    "length_m": 70.7,
     "match": true,
     "name": null,
     "ortho": {
@@ -3998,13 +3998,13 @@
      "lanes": 2,
      "strips": [
       {
-       "frac_max": 0.524,
+       "frac_max": 0.502,
        "lines": [
-        -1.78
+        -1.57
        ],
        "n_sep": 1,
        "s": 135.4,
-       "width": 8.59
+       "width": 8.41
       }
      ]
     },
@@ -4021,7 +4021,7 @@
   },
   {
    "axis": {
-    "authored_center_offset_m": 0.2,
+    "authored_center_offset_m": 0.18,
     "max": 1.267,
     "n": 120,
     "p50": 0.0,
@@ -5408,7 +5408,7 @@
      "half_width_m": 2.55,
      "ortho_green_frac": 0.088,
      "ortho_road_frac": 0.461,
-     "route_dist_m": 31.7,
+     "route_dist_m": 31.6,
      "verdict": "outline_notch",
      "xy": [
       536.681,
@@ -7421,27 +7421,27 @@
   {
    "area_diffs_top": [
     {
-     "area_m2": 217.1,
+     "area_m2": 216.6,
      "kind": "ortho_only",
      "xy": [
-      -303.1,
-      -158.952
+      -303.127,
+      -158.947
      ]
     },
     {
-     "area_m2": 151.6,
+     "area_m2": 151.2,
      "kind": "ortho_only",
      "xy": [
-      -324.154,
-      -171.424
+      -324.197,
+      -171.395
      ]
     },
     {
-     "area_m2": 91.6,
+     "area_m2": 91.4,
      "kind": "ortho_only",
      "xy": [
-      -276.376,
-      -176.165
+      -276.389,
+      -176.173
      ]
     },
     {
@@ -7456,8 +7456,8 @@
      "area_m2": 54.2,
      "kind": "gen_only",
      "xy": [
-      -261.237,
-      -235.754
+      -261.23,
+      -235.757
      ]
     },
     {
@@ -7477,11 +7477,27 @@
      ]
     },
     {
-     "area_m2": 32.6,
+     "area_m2": 32.8,
      "kind": "ortho_only",
      "xy": [
-      -326.733,
-      -193.118
+      -358.343,
+      -127.855
+     ]
+    },
+    {
+     "area_m2": 31.9,
+     "kind": "ortho_only",
+     "xy": [
+      -326.692,
+      -193.174
+     ]
+    },
+    {
+     "area_m2": 30.2,
+     "kind": "ortho_only",
+     "xy": [
+      -362.793,
+      -112.729
      ]
     },
     {
@@ -7493,27 +7509,11 @@
      ]
     },
     {
-     "area_m2": 25.1,
-     "kind": "ortho_only",
-     "xy": [
-      -357.112,
-      -128.326
-     ]
-    },
-    {
      "area_m2": 24.8,
      "kind": "gen_only",
      "xy": [
       -335.476,
       -150.845
-     ]
-    },
-    {
-     "area_m2": 23.5,
-     "kind": "ortho_only",
-     "xy": [
-      -372.927,
-      -112.863
      ]
     }
    ],
@@ -7524,47 +7524,47 @@
    ],
    "gen_islands": [
     {
-     "area_m2": 214.8,
+     "area_m2": 217.4,
      "half_width_m": 2.92,
      "ortho_green_frac": 0.0,
-     "ortho_road_frac": 0.418,
-     "route_dist_m": 5.2,
+     "ortho_road_frac": 0.434,
+     "route_dist_m": 5.4,
      "verdict": "partial",
      "xy": [
-      -367.327,
-      -119.268
+      -367.857,
+      -118.997
      ]
     },
     {
-     "area_m2": 384.1,
+     "area_m2": 412.9,
      "half_width_m": 3.89,
      "ortho_green_frac": 0.006,
-     "ortho_road_frac": 0.098,
+     "ortho_road_frac": 0.142,
      "route_dist_m": 5.0,
      "verdict": "present",
      "xy": [
-      -347.819,
-      -123.243
+      -347.946,
+      -123.45
      ]
     },
     {
-     "area_m2": 562.2,
+     "area_m2": 557.8,
      "half_width_m": 3.13,
      "ortho_green_frac": 0.0,
-     "ortho_road_frac": 0.347,
+     "ortho_road_frac": 0.341,
      "route_dist_m": 14.9,
      "verdict": "partial",
      "xy": [
-      -347.025,
-      -151.997
+      -346.83,
+      -152.176
      ]
     },
     {
      "area_m2": 29.1,
      "half_width_m": 2.15,
      "ortho_green_frac": 0.0,
-     "ortho_road_frac": 0.826,
-     "route_dist_m": 32.8,
+     "ortho_road_frac": 0.739,
+     "route_dist_m": 32.7,
      "verdict": "absent_on_ortho",
      "xy": [
       -388.703,
@@ -7587,7 +7587,7 @@
      "area_m2": 247.2,
      "half_width_m": 3.05,
      "ortho_green_frac": 0.0,
-     "ortho_road_frac": 0.01,
+     "ortho_road_frac": 0.009,
      "route_dist_m": 12.2,
      "verdict": "present",
      "xy": [
@@ -7599,9 +7599,9 @@
    "half_m": 70,
    "id": "08_signals",
    "iou": {
-    "gen_m2": 5643.1,
-    "iou": 0.824,
-    "ortho_m2": 5891.9
+    "gen_m2": 5616.1,
+    "iou": 0.821,
+    "ortho_m2": 5882.8
    },
    "lane_into_island": [],
    "name": "Skrzyżowanie z sygnalizacją s 1355-1415",
@@ -8795,7 +8795,7 @@
    "arrows_checked": 29,
    "arrows_not_on_ortho": 23,
    "axis_vs_osm_m": {
-    "max": 1.954,
+    "max": 1.961,
     "n": 2420,
     "p50": 0.0,
     "p95": 0.04
@@ -8809,12 +8809,12 @@
     },
     "detected_sides": 1764,
     "max": 5.18,
-    "n": 595,
-    "p50": 0.36,
-    "p95": 2.304,
+    "n": 598,
+    "p50": 0.38,
+    "p95": 2.292,
     "signed_p50": 0.2,
     "stations": 1010,
-    "valid_sides": 595
+    "valid_sides": 598
    },
    "edges": 29,
    "gen_islands_absent_on_ortho": 0,
@@ -8842,7 +8842,7 @@
     "05_s900": 0.732,
     "06_s1060_merge": 0.802,
     "07_s1270": 0.843,
-    "08_signals": 0.824,
+    "08_signals": 0.821,
     "09_s1600": 0.765,
     "10_rondo_putry": 0.716,
     "11_dk8": 0.668
@@ -8860,18 +8860,18 @@
    "edge_vs_ortho_m": {
     "all_sides": {
      "max": 7.375,
-     "n": 4392,
+     "n": 4396,
      "p50": 0.68,
      "p95": 3.4
     },
-    "detected_sides": 4392,
+    "detected_sides": 4396,
     "max": 4.92,
-    "n": 875,
+    "n": 877,
     "p50": 0.625,
     "p95": 1.875,
     "signed_p50": 0.2,
-    "stations": 2531,
-    "valid_sides": 875
+    "stations": 2533,
+    "valid_sides": 877
    },
    "graph_vs_fresh_osm_max_m": {
     "max": 0.001,
