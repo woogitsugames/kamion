@@ -98,3 +98,5 @@ potem poprawić największe udokumentowane odstępstwo wiaty. WIP po każdym kro
 2026-11-12T12:37:32.6545950+01:00: heavy world after1; sukces=True; slot gpt-furniture-r3 zwolniony. NASTĘPNY KROK: sprawdzić log i kontynuować walidację rundy.
 
 2026-11-12T12:39:42.2388754+01:00: generator after1 zakończony w 546,9 s, 64 GLB, bez fallback=True w logu. Audyt JSON: 64 identyczne znormalizowane multizbiory instancji; 23 wiaty, dokładnie dwa wybrane czerwone warianty, pozycje i wszystkie pozostałe pola bez zmian. Przygotowano wczesny podgląd czterech kamer Low-clear podczas kolejki kontroli geometrii. Lokalny marker zatrzyma tylko własny standardowy import; bypass dotyczy wyłącznie tego markera, nigdy slotu maszyny. NASTĘPNY KROK: wczesny import/render i oględziny, potem pełna walidacja.
+
+2026-11-12T12:41:12.9344817+01:00: Unity import early-after1 Low overcast; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
