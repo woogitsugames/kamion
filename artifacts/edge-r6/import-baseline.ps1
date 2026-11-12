@@ -31,7 +31,7 @@ foreach ($set in $spec.sets.PSObject.Properties) {
 }
 $slot = 'C:/Users/matma/Documents/Claude/kamion/scripts/unity-slot.ps1'
 if (-not $ResumeVehicle) {
-    & pwsh $slot -Acquire -Pool unity -Owner gpt-edge -PollSeconds 2 -StaleHours 100000
+    & pwsh -File "$PSScriptRoot/acquire-slot.ps1" -Pool unity -Owner gpt-edge
     if ($LASTEXITCODE -ne 0) { throw 'Unity slot failed' }
     try {
         $code = Invoke-UnityBatch -LogFile "$PSScriptRoot/import-baseline.log" -Arguments @(
@@ -49,7 +49,7 @@ if (-not $ResumeVehicle) {
 }
 # The merged cab source needs its generated prefab rebuilt as well; importing the
 # world alone reuses an existing prefab. This is baseline preparation, not a cab edit.
-& pwsh $slot -Acquire -Pool unity -Owner gpt-edge -PollSeconds 2 -StaleHours 100000
+& pwsh -File "$PSScriptRoot/acquire-slot.ps1" -Pool unity -Owner gpt-edge
 if ($LASTEXITCODE -ne 0) { throw 'Truck baseline slot failed' }
 try {
     $truckCode = Invoke-UnityBatch -LogFile "$PSScriptRoot/install-baseline-truck.log" -Arguments @(

@@ -21,7 +21,7 @@ $slot=Join-Path $main 'scripts/unity-slot.ps1'
 $codes=@{Materials=0;World=1}
 $started=Get-Date -Format o
 foreach($task in @('World')){
-    & pwsh -File $slot -Acquire -Pool heavy -Owner $owner -PollSeconds 7 -StaleHours 100000
+    & pwsh -File "$PSScriptRoot/acquire-slot.ps1" -Pool heavy -Owner $owner
     if($LASTEXITCODE -ne 0){throw "Heavy acquisition failed: $task"}
     $acquired=Get-Date -Format o
     try{

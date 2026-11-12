@@ -11,7 +11,7 @@ foreach($tier in @('Low','High')){
         foreach($group in $groups){
             $output="$PSScriptRoot/$Phase-photo/$tier-$lighting/$($group.id)"
             $scene=if($tier -eq 'High'){'WorldC_High'}else{'WorldC'}
-            & pwsh -File $slot -Acquire -Pool unity -Owner gpt-edge -PollSeconds 7 -StaleHours 100000
+            & pwsh -File "$PSScriptRoot/acquire-slot.ps1" -Pool unity -Owner gpt-edge
             if($LASTEXITCODE -ne 0){throw 'Native capture slot failed'}
             try{
                 $inputs=@('Data/Regions/bialystok-industrial-c/sbs_references.json',

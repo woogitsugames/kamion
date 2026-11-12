@@ -12,7 +12,7 @@ if(Test-Path "$PSScriptRoot/$done"){throw 'Contact phase already measured; prese
 $env:OMP_NUM_THREADS='1';$env:OPENBLAS_NUM_THREADS='1';$env:MKL_NUM_THREADS='1';$env:NUMEXPR_NUM_THREADS='1'
 $slot='C:/Users/matma/Documents/Claude/kamion/scripts/unity-slot.ps1'
 if(Test-Path 'C:/Users/matma/Documents/Claude/kamion/artifacts/locks/heavy-slots/gpt-edge-r6.slot'){throw 'Another own heavy lease exists; do not silently reuse it'}
-& pwsh -File $slot -Acquire -Pool heavy -Owner gpt-edge-r6 -PollSeconds 7 -StaleHours 100000
+& pwsh -File "$PSScriptRoot/acquire-slot.ps1" -Pool heavy -Owner gpt-edge-r6
 if($LASTEXITCODE -ne0){throw 'Contact heavy acquisition failed'}
 $acquired=Get-Date -Format o
 $tag=Get-Date -Format 'yyyyMMdd-HHmmss'

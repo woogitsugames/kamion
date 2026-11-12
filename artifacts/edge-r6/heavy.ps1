@@ -25,7 +25,7 @@ if ($Task -in @('GisFile','PhysicsFile','Gate3File')) {
 # Use the current central protocol, even before the next round merges updated main.
 $slot = 'C:\Users\matma\Documents\Claude\kamion\scripts\unity-slot.ps1'
 $started = Get-Date -Format o
-& pwsh $slot -Acquire -Pool heavy -Owner $owner -PollSeconds 2 -StaleHours 100000
+& pwsh -File "$PSScriptRoot/acquire-slot.ps1" -Pool heavy -Owner $owner
 if ($LASTEXITCODE -ne 0) { throw 'Heavy slot acquisition failed' }
 $acquired = Get-Date -Format o
 $code = 1

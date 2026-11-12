@@ -14,7 +14,7 @@ $scene='WorldC_High'
 $ids=@('edge-nw-ground','edge-north')
 $output="$PSScriptRoot/ownership-mask/$OutputName/High-clear"
 $slot='C:/Users/matma/Documents/Claude/kamion/scripts/unity-slot.ps1'
-& pwsh -File $slot -Acquire -Pool unity -Owner gpt-edge -PollSeconds 7 -StaleHours 100000
+& pwsh -File "$PSScriptRoot/acquire-slot.ps1" -Pool unity -Owner gpt-edge
 if($LASTEXITCODE -ne0){throw 'Mask Unity acquisition failed'}
 try{
     $inputs=@("game/Assets/_Generated/World/bialystok-industrial-c/$scene.unity",

@@ -20,7 +20,7 @@ $inputs=@('artifacts/edge-r6/height-cameras.json',
     'game/Assets/_Project/Rendering/Settings/Lighting/LP_Clear.asset',
     'game/Assets/_Project/Rendering/Resources/QualityProfile.asset',
     'Data/raw/derived/bialystok-industrial-c/world/terrain_conformed.npy')
-& pwsh -File $slot -Acquire -Pool unity -Owner gpt-edge -PollSeconds 7 -StaleHours 100000
+& pwsh -File "$PSScriptRoot/acquire-slot.ps1" -Pool unity -Owner gpt-edge
 if($LASTEXITCODE -ne0){throw 'Height diagnostic Unity acquisition failed'}
 try{
     $hashes=@{};foreach($file in $inputs){$hashes[$file]=(Get-FileHash $file -Algorithm SHA256).Hash}
