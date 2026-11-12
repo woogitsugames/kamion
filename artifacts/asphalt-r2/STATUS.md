@@ -62,3 +62,4 @@
 2026-11-12T02:55:53.9047062+01:00: Zaplanowano post-capture-validation po zweryfikowanym własnym PID62480 (World/import/capture candidate2). Po terminalnym procesie sprawdzi 328 kamer i flag, liczniki, GLB i obrazy, przygotuje arkusze, potem uruchomi kolejno końcowy GIS/physics/fidelity/EditMode. Każdy ciężki etap osobno ma Acquire/Release, bez równoległego własnego heavy. Parser PS bez błędów. Końcowy raport i kopia wymagają ręcznego odczytu wyników i krytyka.
 2026-11-12T02:58:52.4397501+01:00: heavy World owner=gpt-asphalt-r2 exit=0; log artifacts/asphalt-r2/candidate2-World.log. Slot zwolniony po zakończeniu procesu.
 2026-11-12T02:58:54.3955978+01:00: World candidate2 exit 0 i audyt odwołań exit 0, brak fallback. Następny krok: import i capture wykluczenia Kwadrat.
+2026-11-12T03:00:14.3371088+01:00: Import scoped candidate2 exit 0, raport pamięci zachowany. Następny krok: cztery serie capture.
