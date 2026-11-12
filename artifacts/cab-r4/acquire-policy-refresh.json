@@ -1,0 +1,30 @@
+{
+  "at": "2026-11-12T15:52:19.8184776+01:00",
+  "reason": "Refresh acquisition only after main policy changed PHONE_RUN to Unity-only",
+  "root_pid": 45068,
+  "acquisition_pid": 28908,
+  "acquisition_created": "2026-11-12T14:30:49.202113+01:00",
+  "new_main_script_at": "2026-11-12T14:49:36.1615115+01:00",
+  "receipt_before": {
+    "queued_at": "2026-11-12T14:30:49.1827888+01:00",
+    "log": "artifacts/cab-r4/material-fine.log",
+    "acquire_attempt": 1,
+    "exit_code": null,
+    "acquire_log": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-cab\\artifacts\\cab-r4\\job-MaterialFine-20261112-143049-45068.acquire.log",
+    "pid": 45068,
+    "status": "waiting",
+    "schema": 1,
+    "job": "MaterialFine",
+    "owner": "gpt-cab-r4",
+    "source_sha": "b979c1da35f713f2d7063f29b2e4b3ea425ac9b2"
+  },
+  "children_before": [
+    {
+      "ProcessId": 28908,
+      "ParentProcessId": 45068,
+      "Name": "pwsh.exe",
+      "CommandLine": "\"C:\\Program Files\\WindowsApps\\OpenAI.CodexPrimaryRuntime.v26-1104-2876-0_26.1104.2876.0_x64__3k8sg7r9htsxt\\dependencies\\native\\powershell\\pwsh.exe\" C:/Users/matma/Documents/Claude/kamion/scripts/unity-slot.ps1 -Acquire -Pool heavy -Owner gpt-cab-r4 -PollSeconds 5 -StaleHours 1000000"
+    }
+  ],
+  "own_slot_before": false
+}
