@@ -1,0 +1,73 @@
+{
+  "read_at": "2026-11-12T14:49:10.7928446+01:00",
+  "building_source": "Data/Regions/bialystok-industrial-c/buildings.geojson",
+  "building_source_sha256": "FC62F0BE4C39546471B2D3EC437EAEBE2BF0C068F12D5E617C89CDAE996D9333",
+  "building_id": "bdot:2BE4B431-C92B-1BF0-E053-CC2BA8C0D140",
+  "properties": {
+    "area_m2": 7784.5,
+    "footprint_source": "bdot10k",
+    "function": "obiekt handlowo-usługowy",
+    "ground_z_evrf2007": 135.49,
+    "height_confidence": "high",
+    "height_lod1_2024_m": 15.34,
+    "height_lod2_2017_m": 15.64,
+    "height_m": 15.34,
+    "height_source": "gugik_lod1_2024",
+    "id": "bdot:2BE4B431-C92B-1BF0-E053-CC2BA8C0D140",
+    "lod2_eave_rel_m": 15.23,
+    "name": null,
+    "roof_type_lod2": "1130",
+    "state": "eksploatowany",
+    "storeys": 1
+  },
+  "photo_points_source": "artifacts/asphalt-r2/backlog-r3-references/pcrt-coordinate-precheck.json",
+  "photo_points_sha256": "064960870F80926284F2116BBB0EF21DB00774354EF45726FC20293AC9121438",
+  "rows": [
+    {
+      "title": "File:20200711 065629 Podlaskie Centrum Rolno – Towarowe.jpg",
+      "has_point": true,
+      "inside": false,
+      "local_en": [
+        359.042,
+        -551.708
+      ],
+      "epsg2180": [
+        778354.042,
+        595671.292
+      ]
+    },
+    {
+      "title": "File:20200711 065632 Podlaskie Centrum Rolno–Towarowe, Andersa Street.jpg",
+      "has_point": true,
+      "inside": false,
+      "local_en": [
+        355.635,
+        -530.051
+      ],
+      "epsg2180": [
+        778350.635,
+        595692.949
+      ]
+    },
+    {
+      "title": "File:20200711 065732 Podlaskie Centrum Rolno–Towarowe July 2020.jpg",
+      "has_point": false,
+      "inside": null
+    },
+    {
+      "title": "File:20200711 070229 Podlaskie Centrum Rolno–Towarowe July 2020.jpg",
+      "has_point": true,
+      "inside": true,
+      "local_en": [
+        381.569,
+        -388.488
+      ],
+      "epsg2180": [
+        778376.569,
+        595834.512
+      ]
+    }
+  ],
+  "method": "Even-odd ray crossing on all MultiPolygon outer rings minus holes, double precision EPSG2180.",
+  "note": "Containment of declared approximate metadata points only. GPS accuracy and a fitted camera pose are not established. Photo3 has no point; this does not identify its ground material or authorize model edits."
+}
