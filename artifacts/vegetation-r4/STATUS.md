@@ -71,3 +71,4 @@ Migawka A: kontrola źródeł, wszystkich instancji, dekodowanej kolizji i nasad
 Po lekkiej kontroli kod 0: 617 pinów źródeł z jedyną zmianą plantings.py; wszystkie 64 instancje i 64 chunki dekodowanej kolizji identyczne, far_field GLB bez zmian, nasadzenia bez zmian, 15 Megascans bez fallback. Wyjścia zmienione tylko streetscape_qa/world_manifest oraz chunk_6_6 Low/High. Sekwencja 12586 importuje przez slot Unity od 11:08:28. Poprzednią anulowaną kolejkę zatrzymano około 11:08, nie 11:09 jak oszacowano w poprzednim wpisie.
 Import kandydata A kod 0; następny krok to 16 próbnych kadrów.
 Probe probe-a: Low overcast zapisany. Obejrzeć arkusze i koszt przed dalszą decyzją; to nie pełna macierz.
+Probe probe-a: Low clear zapisany. Obejrzeć arkusze i koszt przed dalszą decyzją; to nie pełna macierz.
