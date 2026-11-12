@@ -160,3 +160,54 @@ def test_generated_far_field_qa_and_manifests():
 
     assert "far_field_buildings" in wm["materials"]
     assert wm["materials"]["far_field_buildings"].get("vertex_color") is True
+
+
+def test_skyline_node_flags_and_landmark_stand_ins():
+    """ADR 0141: tall ring objects and the stand-ins of region landmark stacks go to the far_skyline builder with the
+    TEXCOORD_1.x flag; ordinary sector geometry keeps TEXCOORD_1.x >= 0."""
+    from streetscape import far_field as FF
+
+    elev = FF.BorderElevation(1024.0, [135.0, 135.0], [135.0, 135.0], [135.0, 135.0], [135.0, 135.0])
+    sectors = {s: FF.SectorBuilder(s) for s in FF.SECTORS}
+    skyline = FF.SectorBuilder(FF.SKYLINE, uv1_flag=FF.SKYLINE_FLAG_CLAMP)
+    tall = {"id": "tall", "typ": "block", "area": 720.0, "h": 31.0, "storeys": 10, "func": "budynek wielorodzinny",
+            "rect": [[-500.0, -1150.0], [-440.0, -1150.0], [-440.0, -1138.0], [-500.0, -1138.0]]}
+    low = dict(tall, id="low", h=14.0, storeys=4,
+               rect=[[-300.0, -1150.0], [-240.0, -1150.0], [-240.0, -1138.0], [-300.0, -1138.0]])
+    FF._add_building(sectors, tall, elev, 1024.0, "Low", skyline=skyline)
+    FF._add_building(sectors, low, elev, 1024.0, "Low", skyline=skyline)
+    FF._add_chimney(sectors, {"id": "c", "e": -380.0, "n": -1250.0, "h": 113.0}, elev, 1024.0, "Low", skyline=skyline)
+    FF._add_chimney(sectors, {"id": "s", "e": -200.0, "n": -1250.0, "h": 20.0}, elev, 1024.0, "Low", skyline=skyline)
+    n_clamp = skyline.count0
+    stack = {"id": "ec", "e": 624.0, "n": -1084.0, "h": 120.0, "base_d": 7.65, "top_d": 4.8,
+             "band_boundaries": [36.0, 48.0, 60.0, 72.0, 84.0, 96.0, 108.0, 120.0]}
+    FF._add_landmark_stack_proxy(skyline, stack, elev, "Low")
+    skyline.sort_far_to_near()
+
+    south = sectors["far_south"].primitives()[0]
+    assert south["UV1"][:, 0].min() >= 0.0, "ordinary far-field geometry carries no skyline flag"
+    assert south["V"][:, 2].max() < 135.0 + 25.0, "the 31 m block and the 113 m chimney left the sector mesh"
+
+    sky = skyline.primitives()[0]
+    u = sky["UV1"][:, 0]
+    assert u.max() <= -FF.SKYLINE_FLAG_CLAMP, "every skyline vertex is flagged"
+    beyond = u <= -FF.SKYLINE_FLAG_BEYOND
+    assert int(beyond.sum()) == skyline.count0 - n_clamp == 8 * 6 * 4, "shaft + 7 bands, 6 sides: the stack stand-in"
+    assert sky["V"][beyond][:, 2].max() == pytest.approx(135.0 + 120.0, abs=1.0), "source height, no foreshortening"
+    # Window-grid coordinate survives the flag: -(x + 16) with x >= 0.
+    assert (-(u[~beyond]) - FF.SKYLINE_FLAG_CLAMP).min() >= 0.0
+    # Painter order: face centroids never get farther from the tile centre along the index buffer.
+    tri = sky["T"]
+    assert tri.min() == 0 and tri.max() == len(sky["V"]) - 1
+    d = np.hypot(*sky["V"][tri].mean(axis=1)[:, :2].T)
+    assert d[0] == d.max() and d[-1] <= d.min() + 12.0, "farthest face first, nearest object last"
+
+
+def test_generated_far_field_skyline_budget():
+    qa = json.loads((REGION_DIR / "generated" / "far_field_qa.json").read_text(encoding="utf-8"))
+    for tier in ("Low", "High"):
+        sky = qa["tiers"][tier]["skyline"]
+        assert sky["node"] == "far_skyline" and sky["submeshes"] == 1
+        assert 0 < sky["triangles"] <= (3000 if tier == "Low" else 8000)
+        assert sum(s["triangles"] for s in qa["tiers"][tier]["sectors"].values()) + sky["triangles"] == qa["tiers"][tier]["total_triangles"]
+    assert len(qa["tiers"]["Low"]["skyline"]["landmark_stack_proxies"]) == 2
