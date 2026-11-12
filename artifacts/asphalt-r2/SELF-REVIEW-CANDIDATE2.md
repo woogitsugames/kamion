@@ -10,3 +10,6 @@ Niezależny krytyk dał PASS przyrostu materiałowego candidate2 z ograniczeniam
 
 Full Compare zakończony exit0:328 par i wszystkie 9 kategorii liczników bez zmian. Pomiary całych PNG bramy Kwadrat (2340x1080) przy progu dowolnego kanału RGB >2: candidate1 miał 9996/9240/8820/8828 zmienionych pikseli (Low overcast/clear, High overcast/clear), scoped candidate2 ma 0/7/4/6. Pozostałych różnic nie wyjaśniamy bez dowodu i nie nazywamy obrazów identycznymi. CSV całych 328 ujęć pozostaje kompletnym dowodem budżetu, osobne scope-image-comparison to kontrola własności. Rozdzielczości targetów RT także porównano przed/po we wszystkich snapshotach: Low1755x810, High2340x1080, bez zmian. PNG Low jest wyjściem2340x1080 po skalowaniu odziedziczonym z main; nie zmieniano profili/skali. D50 zabrania obniżania do70 procent; sesja niczego nie obniżyła. GPU A16 nadal UNVERIFIED.
 
+
+Obejrzano wszystkie28 kontaktów obejmujących328 par kamer; wraz z16 parami materiałów,12 parami Kwadrat i4 referencyjnymi daje to60 arkuszy (SHA w SELF-INSPECTED-CANDIDATE2.json). Nie widzę nowej dużej regresji układu/palety na trasie. Drobne prostokątne łaty i problemy starej farby r1 pozostają, nie są naprawą r2. Kontakty nie dowodzą jakości mikrowzoru ani stabilności w ruchu. Audyt źródeł względem4992c434: brak zmian roads/overrides, źródeł budynków/Kwadrat i profili jakości.
+
