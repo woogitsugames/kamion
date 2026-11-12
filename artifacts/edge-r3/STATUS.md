@@ -61,3 +61,5 @@ Krok 18: build_world po poprawce zakończony kodem 0 bez fallback=True; wynik w 
 2026-11-12T02:16:58.1495123+01:00 Zapisano rendery after/High-clear wszystkich kamer; ocena PNG i budżetu nadal w toku.
 2026-11-12T02:17:34.3818877+01:00 Zapisano rendery after/High-overcast wszystkich kamer; ocena PNG i budżetu nadal w toku.
 2026-11-12T02:19:56.4806783+01:00 Zakończono testy EditMode; szczegółowy wynik w artifacts/tests.
+Krok 21: pełne EditMode po poprawce: 297/297, 0 failed, 0 skipped, 12,8626 s; kopię XML zachowano w tests/full-editmode.xml. Cała macierz After 368 PNG ukończona. Pomiary geometrii/kurtyn, prześwitu i Compare oczekują pod heavy; nie uruchamiamy innego Pythona tej sesji.
+Następny krok: ocena par zwykłych kamer i wyników pomiarów, potem pełny GIS tylko na zakończenie rundy.
