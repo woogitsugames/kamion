@@ -1,0 +1,14 @@
+# Referencje osobówek r3
+
+Pliki służą analizie powierzchni, nie teksturom gry. Nie przenosi się marek, znaków, tablic ani napisów. Wszystkie podglądy ≤960 px. Nie są parami GPS, wzorcami albedo ani dowodem pogody w Białymstoku.
+
+- road-film-after-trip.jpg: Greg Schechter, [2200 km Later](https://commons.wikimedia.org/wiki/File:2200_km_Later_-_Flickr_-_GregTheBusker.jpg), [CC BY 2.0](https://creativecommons.org/licenses/by/2.0/). Pobrana miniatura 960×720, oryginał 13.06.2009 w Australii. Obejrzano: ciągły jasny osad na zderzaku, nalot całej klapy, pionowe ścieżki spływu; to silne zabrudzenie po podróży w słońcu, nie kalibracja listopadowego overcast.
+- dirty-rear.jpg: Nenad Stojkovic, [Dirty back car window](https://commons.wikimedia.org/wiki/File:Dirty_back_car_window_-_49757773438.jpg), [CC BY 2.0](https://creativecommons.org/licenses/by/2.0/). Miniatura 960×641. Obejrzano: drobny jasny pył na szybie; zdjęcie nie pokazuje lakieru/progu i nie jest jego kalibracją. Szkło pozostaje poza zmianą brudu lakieru r3.
+- winter-salt-thumb.jpg: Johann H. Addicks, [Salt coverd car during winter P1020038](https://commons.wikimedia.org/wiki/File:Salt_coverd_car_during_winter_P1020038.jpg), 02.01.2008. Używana wyłącznie miniatura 250 px; autor wyraźnie udostępnia public domain dla rozdzielczości poniżej 251 px największego wymiaru. Nie pobierano oryginału ani większej pochodnej. To zdjęcie z błyskiem (EXIF), więc nie jest fotometrią pochmurnego światła.
+- Istniejące lokalne zdjęcia Mapillary osobówek: provenance.json i refs/r4-reference-review.jpg rundy life-r1. Pozostają kontrolą czytelności czerni i budowy koła, a nie wzorcem zimowego brudu. R3 zmierzy drzwi/asfalt w świeżych renderach clear/overcast; cel stosunku 0,4–0,7 pochodzi z recenzji lidera i ma ograniczenia różnych ekspozycji/pozy.
+
+Metadane API i licencje dwóch CC BY zapisano w *-source.json. Zmiany plików: serwerowe miniatury, bez retuszu. Brak nowego otwartego zdjęcia z dopasowanym listopadowym overcast; dopóki nie ma takiej pary, dopasowanie sezonowej fotometrii pozostaje UNVERIFIED.
+
+Obejrzano także miniaturę zimową 250×187: na czarnym aucie osad jest jaśniejszy od lakieru i obejmuje dolną klapę/zderzak. Mała rozdzielczość i błysk wykluczają ilościowy pomiar koloru; nie jest wzorem drobnych smug.
+
+Finalne pary r3: sbs-black-c.jpg (istniejące zdjęcie Mapillary 513486983365569, SHA z provenance r1; inny model, miejsce, obiektyw i pogoda, tylko ogólna czytelność czerni; crop renderu 1650×900+(450,180)); sbs-tail-c.jpg (Greg Schechter, CC BY 2.0 powyżej, miniatura i crop renderu 1150×700+(650,300), inna pogoda/kraj/model i znacznie silniejszy brud po podróży). Pary ≤960 px, oznaczone; NIE służą kalibracji sezonowej lub albedo. Referencja pyłu tylnej szyby nie przeniesiona do lakieru. Miniaturę PD 250 px zostawiono jako osobny plik bez powiększania i bez włączania do większej planszy.

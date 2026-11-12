@@ -19,7 +19,12 @@ namespace Game.Editor.VisualQA
             public float fov, aspect;
             public Vector3 position;
             public float[] view, projection;
+            public float[] rootToWorld;
+            public double anchorZ;
+            public Vector3 originShift;
             public Vector4 roadWear, paintWear, freshPaintWear;
+            public Vector4 kerbWear, pavingGrime, yardGrime;
+            public Vector4 kerbExclusion, pavingExclusion, pavingGrimeBase;
             public bool detailGlobal, paintUnderlay;
         }
         static AsphaltQaStateProbe()
@@ -46,13 +51,29 @@ namespace Game.Editor.VisualQA
             var paint = AssetDatabase.LoadAssetAtPath<Material>(
                 "Assets/_Generated/World/bialystok-industrial-c/Materials/M_marking_white.mat");
             var mask = material.GetTexture("_MaskMap") as Texture2D;
+            Vector4 GroundState(string id, string property)
+            {
+                var ground = AssetDatabase.LoadAssetAtPath<Material>(
+                    $"Assets/_Generated/World/bialystok-industrial-c/Materials/M_{id}.mat");
+                return ground != null && ground.HasProperty(property) ? ground.GetVector(property) : Vector4.zero;
+            }
+            var root = UnityEngine.Object.FindAnyObjectByType<Game.World.WorldRegionRoot>();
             var state = new Snapshot {
                 camera = camera.name, width = camera.targetTexture.width, height = camera.targetTexture.height,
                 fov = camera.fieldOfView, aspect = camera.aspect, position = camera.transform.position,
                 view = RowMajor(camera.worldToCameraMatrix), projection = RowMajor(camera.projectionMatrix),
+                rootToWorld = root != null ? RowMajor(root.transform.localToWorldMatrix) : Array.Empty<float>(),
+                anchorZ = root != null ? root.anchorZ : 0.0,
+                originShift = root != null ? root.originShift : Vector3.zero,
                 roadWear = material.GetVector("_AsphaltWear"), detailGlobal = Shader.IsKeywordEnabled("_KAMION_WORLD_DETAIL"),
                 paintWear = paint != null ? paint.GetVector("_PaintWear") : Vector4.zero,
                 freshPaintWear = paint != null ? paint.GetVector("_PaintFreshWear") : Vector4.one,
+                kerbWear = GroundState("curb_concrete", "_KerbWear"),
+                pavingGrime = GroundState("sidewalk_paving", "_Grime"),
+                yardGrime = GroundState("yard_paving", "_Grime"),
+                kerbExclusion = GroundState("curb_concrete", "_GroundWearExclude"),
+                pavingExclusion = GroundState("sidewalk_paving", "_GroundWearExclude"),
+                pavingGrimeBase = GroundState("sidewalk_paving", "_GroundGrimeBase"),
                 paintUnderlay = paint != null && paint.IsKeywordEnabled("_ROADWEAR"),
                 maskFormat = mask != null ? mask.format.ToString() : "none"
             };

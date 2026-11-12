@@ -1,0 +1,68 @@
+{
+  "jobs": [
+    {
+      "width": 1920,
+      "lighting": "clear",
+      "verifyWetness": true,
+      "cameras": "sbs-g3-a-2948595898752384,sbs-g3-a-303305168125936",
+      "tier": "Low",
+      "expectedWetness": 0,
+      "output": "artifacts/light-r3/cloud-horizon-capture/Low-min0",
+      "lampProbe": true,
+      "rq": "rq_wet=0,rq_headlamps=0,rq_envcap=64",
+      "scene": "WorldC",
+      "height": 1080,
+      "expectedHeadlamps": 1,
+      "overrideCloudSourceMin": true,
+      "cloudSourceMinElevationDeg": 0
+    },
+    {
+      "width": 1920,
+      "lighting": "clear",
+      "verifyWetness": true,
+      "cameras": "sbs-g3-a-2948595898752384,sbs-g3-a-303305168125936",
+      "tier": "Low",
+      "expectedWetness": 0,
+      "output": "artifacts/light-r3/cloud-horizon-capture/Low-min0.5",
+      "lampProbe": true,
+      "rq": "rq_wet=0,rq_headlamps=0,rq_envcap=64",
+      "scene": "WorldC",
+      "height": 1080,
+      "expectedHeadlamps": 1,
+      "overrideCloudSourceMin": true,
+      "cloudSourceMinElevationDeg": 0.5
+    },
+    {
+      "width": 1920,
+      "lighting": "clear",
+      "verifyWetness": true,
+      "cameras": "sbs-g3-a-2948595898752384,sbs-g3-a-303305168125936",
+      "tier": "High",
+      "expectedWetness": 0,
+      "output": "artifacts/light-r3/cloud-horizon-capture/High-min0",
+      "lampProbe": true,
+      "rq": "rq_wet=0,rq_headlamps=0,rq_envcap=128",
+      "scene": "WorldC_High",
+      "height": 1080,
+      "expectedHeadlamps": 1,
+      "overrideCloudSourceMin": true,
+      "cloudSourceMinElevationDeg": 0
+    },
+    {
+      "width": 1920,
+      "lighting": "clear",
+      "verifyWetness": true,
+      "cameras": "sbs-g3-a-2948595898752384,sbs-g3-a-303305168125936",
+      "tier": "High",
+      "expectedWetness": 0,
+      "output": "artifacts/light-r3/cloud-horizon-capture/High-min0.5",
+      "lampProbe": true,
+      "rq": "rq_wet=0,rq_headlamps=0,rq_envcap=128",
+      "scene": "WorldC_High",
+      "height": 1080,
+      "expectedHeadlamps": 1,
+      "overrideCloudSourceMin": true,
+      "cloudSourceMinElevationDeg": 0.5
+    }
+  ]
+}

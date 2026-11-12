@@ -1,0 +1,44 @@
+{
+  "orthophoto_qa": {
+    "blocked": 2,
+    "candidates": 4,
+    "deduplicated": 0,
+    "height_species_status": "WORKING_VALUE: 12.5-15m, linden proxy for broadleaf",
+    "placed": 2,
+    "position_status": "WORKING_VALUE: crown centres +/-3m, not surveyed trunks"
+  },
+  "mapped_instances": [
+    {
+      "e": -263.0,
+      "h": 14.4,
+      "lean": 0.021,
+      "n": -185.0,
+      "p": "tree_linden",
+      "src": "ortho:gugik-2024:g3-b-120:1",
+      "v": 2,
+      "yaw": 0.93,
+      "z": 130.27
+    },
+    {
+      "e": -251.0,
+      "h": 14.3,
+      "lean": 0.034,
+      "n": -193.0,
+      "p": "tree_linden",
+      "src": "ortho:gugik-2024:g3-b-120:2",
+      "v": 1,
+      "yaw": 6.178,
+      "z": 130.31
+    }
+  ],
+  "available_megascans": 15,
+  "fallback": false,
+  "existing_instances_added": 0,
+  "existing_instances_removed": 0,
+  "existing_delta_examples": {
+    "added": [],
+    "removed": []
+  },
+  "raw_glbs_changed": [],
+  "note": "Full GLB hashes are generator inputs, not Unity asset hashes. Inspect any drift before claiming unchanged physics."
+}

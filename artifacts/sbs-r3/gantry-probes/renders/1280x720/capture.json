@@ -1,0 +1,44 @@
+{
+  "git_sha": "01b4d2158b365cc292ee25c11c59792431642637",
+  "captured_at_utc": "2026-11-12T02:24:06.8811001Z",
+  "tier": "Low",
+  "lighting": "overcast",
+  "width": 1280,
+  "height": 720,
+  "diagnostic_only": true,
+  "pose_confidence": "C",
+  "cameras": [
+    "sbs-probe-gantry-837235577143499-b000",
+    "sbs-probe-gantry-837235577143499-b012",
+    "sbs-probe-gantry-837235577143499-b016",
+    "sbs-probe-gantry-837235577143499-b020",
+    "sbs-probe-gantry-837235577143499-b028",
+    "sbs-probe-gantry-275528677534382-b000",
+    "sbs-probe-gantry-275528677534382-b012",
+    "sbs-probe-gantry-275528677534382-b016",
+    "sbs-probe-gantry-275528677534382-b020",
+    "sbs-probe-gantry-275528677534382-b028"
+  ],
+  "status": "OK",
+  "input_sha256": {
+    "probe_cameras": "b7ac612af98a1343f9c51285bcbd4aaedadb93433972ba7c3f97dfdd7a8e6e80",
+    "probe_plan": "11825fef11866fb424cab0ee69357e0da076e058448f107d910db6f30dd74db9",
+    "import_receipt": "07e0a2d65b296f061e649a8545bc82aa2bfd72381004c120af7fac61c71b4814",
+    "production_cameras": "41686dd5d9a9ef0969ab9d7772e359b150a6f1783b67538d9d8f875880f1ae2e",
+    "references": "f7991691c5868e67658ff9879c6b736c372b4ac02f1be9b84cebca4cd51b40af",
+    "world_manifest": "2d486ac202829ca711b2d72fabc2299b6c637f1059f7adc9c42e1ad6b8aba489",
+    "materials_spec": "c552a473f4e2849cd6aedcd839210f39416292ca16c422aecc46517e23d60afb"
+  },
+  "render_sha256": {
+    "sbs-probe-gantry-837235577143499-b000": "0508a3f7a9be7a8af9fd7fb2391de643dcdf0e3e69aac30ba95104c398738f7c",
+    "sbs-probe-gantry-837235577143499-b012": "2b91d545e496a8807bb3a308fbf0dfa2c03b000b46bb1ba8f3ffe5fa3eac0c4d",
+    "sbs-probe-gantry-837235577143499-b016": "d54c60dbbe4ab0a361f7ed88dde49f3bc523b9de7557fbd577efaad40e8de6c7",
+    "sbs-probe-gantry-837235577143499-b020": "71ba75e049ed2e66448c926a41a8a39d1da51c09599947d53aaa1f50fe63ed39",
+    "sbs-probe-gantry-837235577143499-b028": "6e8564282262ea71929a8567182c31f9519f96477768c4ba5f786f60b5c972e4",
+    "sbs-probe-gantry-275528677534382-b000": "2faea89901c3d929029519aa96099dd2695510cc296e545be33491f02c338d0f",
+    "sbs-probe-gantry-275528677534382-b012": "b93e9ac8a43ede50c61770c5e284e2d7b08c830e7ac29d24686012b6af5caf63",
+    "sbs-probe-gantry-275528677534382-b016": "a6d98ef8067bb07cd0600465dc5eecccf308386638f913427930c2d841d10bed",
+    "sbs-probe-gantry-275528677534382-b020": "8cbb5cfbc8eaba507b6d426b5d569a41e7271af2c827b0aae19e6934a7dbc545",
+    "sbs-probe-gantry-275528677534382-b028": "8818651d02d82f31363e82f6a1d1e9672f02ee00b2fdb6c8192d67cdfb198da9"
+  }
+}

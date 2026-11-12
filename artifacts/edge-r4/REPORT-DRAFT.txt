@@ -1,0 +1,15 @@
+Runda 4, edge, gałąź gpt-edge-r4. Baza: merge 432d5675 z main c882f81c; brak nowych zmian produkcyjnych w tej rundzie.
+Odtworzono materiały (486 s), cały świat (503 s, bez fallback=True), import Low/High i generowane prefaby. Każdy ciężki krok miał osobny slot; biblioteki numeryczne ograniczono do jednego wątku.
+Rozpoznano szary klin w clear 2948/303305. Maska Apron i nieprzezroczystego far-field wybrała 6 slotów 5 rendererów, maska kurtyn 4 sloty 4 rendererów; żadna nie objęła klina.
+Obliczona przed ablacją granica dolnej półsfery fotografii chmur trafia w krawędź klina do 1,46 px w dziesięciu z góry wybranych kolumnach obu obrazów 1280×720.
+Istniejąca ablacja rq_clearcover=0 usuwa klin wraz z fotografią chmur. W dziewięciu kolumnach największy sąsiedni skok szarości spada z 6–10/255 do 1/255; dziesiątą przecina dach (17→14/255) i pozostawiono ją w danych.
+Wniosek: nie ukrywać artefaktu fotografii chmur zmianą wysokości lub koloru edge. Pakiet wedge-diagnosis z obrazami, maskami, predykcją i SHA jest w artifacts main do naprawy przez light. Światła i shaderów nie edytowano.
+Ablacja jest diagnostyką, nie rozwiązaniem produkcyjnym. Klin pozostaje w normalnym renderze. Kamera 2948 ma klasę C i nie zalicza podobieństwa fotograficznego.
+Baza: 368 PNG telefonu i 104 PNG native. Wszystkie 472 kamery są w baseline-all-cameras.csv, z osobnymi licznikami statycznymi, instancji i cieni. Brak zmiany produkcji, więc nie deklarujemy fikcyjnej delty przed/po ani poprawy budżetu lub GPU.
+Poprawiono procedurę dowodową: 100 par zdjęcie–render dla 25 fotografii B ma teraz zgodne proporcje 1280×720 lub 1280×960 i szerokość arkusza 960 px, z atrybucją. Fotometria i dokładna poza B nadal UNVERIFIED.
+Errata r3: tamte zdjęciowe pary miały render telefonu 13:6 wobec zdjęć 16:9/4:3; są poglądowe, nie dowodzą identycznego kadru. Budżety r3 przed/po nadal są ważne. Erratę skopiowano do artifacts main bez zmiany starej paczki.
+Kanoniczne pozy, FOV i seat są zgodne z sbs_cameras.json. Kamery, zdjęcia i przypisania zamrożono przez SHA; brak modyfikacji SBS.
+EditMode nowej bazy: 319/319, 0 failed, 0 skipped; XML i SHA zachowane. Końcowy GIS: WYNIK DO UZUPEŁNIENIA, nie uznawać tego szkicu za REPORT.
+Nie poprawiono jeszcze regionalnej panoramy bloków za lasem ani resztkowego styku kurtyn. Nie dublowano regionalnych budynków i nie edytowano roślinności, dróg, barier ani cudzych źródeł.
+Przewidywane konflikty: sekcja r4 ADR 0121; brak nowego kodu produkcji edge do scalania. Artefakty obejmują pełne źródła dowodowe i logi, bez push, merge do main, adb i telefonów.
+Następna runda: merge bieżącego main, sprawdzenie i poprawa kontaktu dolnych końców własnych kurtyn z rzeczywistymi trójkątami apron; korony, XY, topologia i regionalne drzewa bez zmian. Wynik oceni audyt zapisanych siatek Unity oraz pełna pętla jakości.

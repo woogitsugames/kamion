@@ -1,0 +1,45 @@
+{
+  "camera": "sbs-g3-b-297817221966185",
+  "group": "Low-overcast-photo-2048x1536",
+  "before": {
+    "static_draws": 460,
+    "shadow_draws": 34,
+    "static_triangles_k": 547,
+    "instance_draws": 205,
+    "instances": 129,
+    "instance_triangles_k": 28,
+    "total_draws": 665,
+    "total_triangles_k": 575
+  },
+  "after": {
+    "static_draws": 460,
+    "shadow_draws": 34,
+    "static_triangles_k": 547,
+    "instance_draws": 205,
+    "instances": 129,
+    "instance_triangles_k": 28,
+    "total_draws": 665,
+    "total_triangles_k": 575
+  },
+  "delta_draws": 0,
+  "delta_triangles_percent": 0.0,
+  "apparent_greenery": {
+    "before": {
+      "green_like_pixels": 5516,
+      "roi_pixels": 109718,
+      "fraction": 0.050274339670792395
+    },
+    "B": {
+      "green_like_pixels": 5516,
+      "roi_pixels": 109718,
+      "fraction": 0.050274339670792395
+    }
+  },
+  "fixed_roi": [
+    0.0,
+    0.35,
+    0.45,
+    0.66
+  ],
+  "method": "Original 1024x768; fixed ROI and colour threshold, NOT semantic tree segmentation or biomass. Triangles have integer trisK precision. One Low probe does not certify all cameras."
+}

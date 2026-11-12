@@ -1,0 +1,112 @@
+{
+    "jobs":  [
+                 {
+                     "cameras":  "driver-andersa-to-putry,cab-dash,r10_hall_3,r10_block_3,r10_house_2,stretch-05-docks",
+                     "width":  2340,
+                     "lighting":  "dusk",
+                     "tier":  "Low",
+                     "height":  1080,
+                     "output":  "artifacts/light-r2/fresh-dusk/Low",
+                     "lampProbe":  true,
+                     "scene":  "WorldC"
+                 },
+                 {
+                     "width":  2340,
+                     "lighting":  "night",
+                     "cameras":  "driver-andersa-to-putry,cab-dash,r10_hall_3,r10_block_3,r10_house_2,stretch-05-docks",
+                     "tier":  "Low",
+                     "output":  "artifacts/light-r2/night-ablation/Low-bias-2",
+                     "lampProbe":  true,
+                     "rq":  "rq_ev=2",
+                     "scene":  "WorldC",
+                     "height":  1080
+                 },
+                 {
+                     "width":  2340,
+                     "lighting":  "night",
+                     "cameras":  "driver-andersa-to-putry,cab-dash,r10_hall_3,r10_block_3,r10_house_2,stretch-05-docks",
+                     "tier":  "Low",
+                     "output":  "artifacts/light-r2/night-ablation/Low-bias-3",
+                     "lampProbe":  true,
+                     "rq":  "rq_ev=1",
+                     "scene":  "WorldC",
+                     "height":  1080
+                 },
+                 {
+                     "width":  2340,
+                     "lighting":  "night",
+                     "cameras":  "driver-andersa-to-putry,cab-dash,r10_hall_3,r10_block_3,r10_house_2,stretch-05-docks",
+                     "tier":  "Low",
+                     "output":  "artifacts/light-r2/night-ablation/Low-bias-4",
+                     "lampProbe":  true,
+                     "rq":  "rq_ev=0",
+                     "scene":  "WorldC",
+                     "height":  1080
+                 },
+                 {
+                     "width":  2340,
+                     "lighting":  "night",
+                     "cameras":  "driver-andersa-to-putry,cab-dash,r10_hall_3,r10_block_3,r10_house_2,stretch-05-docks",
+                     "tier":  "Low",
+                     "output":  "artifacts/light-r2/night-ablation/Low-bias-5",
+                     "lampProbe":  true,
+                     "rq":  "rq_ev=-1",
+                     "scene":  "WorldC",
+                     "height":  1080
+                 },
+                 {
+                     "cameras":  "driver-andersa-to-putry,cab-dash,r10_hall_3,r10_block_3,r10_house_2,stretch-05-docks",
+                     "width":  2340,
+                     "lighting":  "dusk",
+                     "tier":  "High",
+                     "height":  1080,
+                     "output":  "artifacts/light-r2/fresh-dusk/High",
+                     "lampProbe":  true,
+                     "scene":  "WorldC_High"
+                 },
+                 {
+                     "width":  2340,
+                     "lighting":  "night",
+                     "cameras":  "driver-andersa-to-putry,cab-dash,r10_hall_3,r10_block_3,r10_house_2,stretch-05-docks",
+                     "tier":  "High",
+                     "output":  "artifacts/light-r2/night-ablation/High-bias-2",
+                     "lampProbe":  true,
+                     "rq":  "rq_ev=2",
+                     "scene":  "WorldC_High",
+                     "height":  1080
+                 },
+                 {
+                     "width":  2340,
+                     "lighting":  "night",
+                     "cameras":  "driver-andersa-to-putry,cab-dash,r10_hall_3,r10_block_3,r10_house_2,stretch-05-docks",
+                     "tier":  "High",
+                     "output":  "artifacts/light-r2/night-ablation/High-bias-3",
+                     "lampProbe":  true,
+                     "rq":  "rq_ev=1",
+                     "scene":  "WorldC_High",
+                     "height":  1080
+                 },
+                 {
+                     "width":  2340,
+                     "lighting":  "night",
+                     "cameras":  "driver-andersa-to-putry,cab-dash,r10_hall_3,r10_block_3,r10_house_2,stretch-05-docks",
+                     "tier":  "High",
+                     "output":  "artifacts/light-r2/night-ablation/High-bias-4",
+                     "lampProbe":  true,
+                     "rq":  "rq_ev=0",
+                     "scene":  "WorldC_High",
+                     "height":  1080
+                 },
+                 {
+                     "width":  2340,
+                     "lighting":  "night",
+                     "cameras":  "driver-andersa-to-putry,cab-dash,r10_hall_3,r10_block_3,r10_house_2,stretch-05-docks",
+                     "tier":  "High",
+                     "output":  "artifacts/light-r2/night-ablation/High-bias-5",
+                     "lampProbe":  true,
+                     "rq":  "rq_ev=-1",
+                     "scene":  "WorldC_High",
+                     "height":  1080
+                 }
+             ]
+}

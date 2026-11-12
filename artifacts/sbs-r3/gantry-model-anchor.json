@@ -1,0 +1,58 @@
+﻿{
+    "world_manifest_sha256":  "2d486ac202829ca711b2d72fabc2299b6c637f1059f7adc9c42e1ad6b8aba489",
+    "files":  [
+                  {
+                      "file":  "Data/raw/derived/bialystok-industrial-c/world/instances_3_4.json",
+                      "sha256":  "6321918fee67a148b44f0c1bf8c9d0b1426a836d9dcc2a8290a3a94f62695fd3"
+                  },
+                  {
+                      "file":  "Data/raw/derived/bialystok-industrial-c/world/instances_2_4.json",
+                      "sha256":  "c89fcf7a0d8f134be307983a031d5079e124671802b83fb0f15f38e3f347e94f"
+                  }
+              ],
+    "instances":  [
+                      {
+                          "p":  "gantry_footing",
+                          "e":  -255.728,
+                          "n":  -202.082,
+                          "z":  130.059,
+                          "yaw":  -2.2528,
+                          "src":  "override:andersa-putry-approach-gantry"
+                      },
+                      {
+                          "p":  "board_OB_0a31f00e",
+                          "e":  -258.845,
+                          "n":  -206.634,
+                          "z":  136.278,
+                          "yaw":  -2.2528,
+                          "src":  "override:andersa-putry-approach-gantry"
+                      },
+                      {
+                          "p":  "board_OB_b7134a83",
+                          "e":  -262.123,
+                          "n":  -210.671,
+                          "z":  135.968,
+                          "yaw":  -2.2528,
+                          "src":  "override:andersa-putry-approach-gantry"
+                      },
+                      {
+                          "p":  "gantry_footing",
+                          "e":  -265.814,
+                          "n":  -214.503,
+                          "z":  130.059,
+                          "yaw":  -2.2528,
+                          "src":  "override:andersa-putry-approach-gantry"
+                      },
+                      {
+                          "p":  "sign_gantry_16_74",
+                          "e":  -260.771,
+                          "n":  -208.292,
+                          "z":  130.059,
+                          "yaw":  -2.2528,
+                          "src":  "override:andersa-putry-approach-gantry"
+                      }
+                  ],
+    "model_span_m":  16,
+    "model_top_height_above_base_m":  7.4,
+    "note":  "Dimensions decoded from generated prototype sign_gantry_16_74 and checked against its generator contract. These are model WORKING_VALUE dimensions, not measurements of the real portal."
+}

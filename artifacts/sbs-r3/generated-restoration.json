@@ -1,0 +1,75 @@
+{
+  "restored_at": "2026-11-12T11:53:12.9175936+01:00",
+  "source": "HEAD",
+  "count": 8,
+  "before": [
+    {
+      "path": "Data/Regions/bialystok-industrial-c/generated/far_field_qa.json",
+      "sha256": "e9b94f22b937a3b92d6584017e6d0360789437e56427fc84e8992f748dc4716b"
+    },
+    {
+      "path": "Data/Regions/bialystok-industrial-c/generated/fidelity_qa.json",
+      "sha256": "8c3ea05f9cb63588a3eb93ffae77bfbec70d7c4148efc827eb8fe258e286e091"
+    },
+    {
+      "path": "Data/Regions/bialystok-industrial-c/generated/landmarks/viaduct_putry_underdeck.spec.json",
+      "sha256": "633a75f466a9d8497c39b6e6bd255f7e4526adfcfa504e2f3ec95c3b4d682e18"
+    },
+    {
+      "path": "Data/Regions/bialystok-industrial-c/generated/streetscape_qa.json",
+      "sha256": "30a03c9f82e3c0e11c740c69f261f8fa73f1a62c03704e4fa4ef59eb90a955f5"
+    },
+    {
+      "path": "Data/Regions/bialystok-industrial-c/generated/world_manifest.json",
+      "sha256": "2d486ac202829ca711b2d72fabc2299b6c637f1059f7adc9c42e1ad6b8aba489"
+    },
+    {
+      "path": "Data/SourceManifests/bialystok-industrial-c-far-field.manifest.json",
+      "sha256": "7171d1c26d0a8e0c03ac520fe994c31a5f477d2b906b0b025016bfda3300e036"
+    },
+    {
+      "path": "art-source/world/props/props_meta.json",
+      "sha256": "c96577b84793420b6d33c347a746c6e89f024f2f96b8da9cb2282c900ec7d218"
+    },
+    {
+      "path": "art-source/world/props/street_props.glb",
+      "sha256": "fcdfa2fbfe07cafa68ef942767961b48fc0fb0897b1386099390661c08da5718"
+    }
+  ],
+  "after": [
+    {
+      "path": "Data/Regions/bialystok-industrial-c/generated/far_field_qa.json",
+      "sha256": "2aebf4d17ad149df0721990b1438e0ebc07e4592495b90811b7eb1915af52f12"
+    },
+    {
+      "path": "Data/Regions/bialystok-industrial-c/generated/fidelity_qa.json",
+      "sha256": "80637c7ccd9c3ee0e13a0342e6a7aac0c233135f85856d2719e88da5d0a3dbc4"
+    },
+    {
+      "path": "Data/Regions/bialystok-industrial-c/generated/landmarks/viaduct_putry_underdeck.spec.json",
+      "sha256": "da8bed2d4355adc8746d77b5a979764186fbbbaf0a80c676a0d57a8cfad3c145"
+    },
+    {
+      "path": "Data/Regions/bialystok-industrial-c/generated/streetscape_qa.json",
+      "sha256": "d8db34f676389d1c7d898dd4092e3bf57f436820210e5e2310213100ded25f38"
+    },
+    {
+      "path": "Data/Regions/bialystok-industrial-c/generated/world_manifest.json",
+      "sha256": "9700cd3fe964886a15046ac8469ecc78f0028776be41e0df79d35ad779decfa2"
+    },
+    {
+      "path": "Data/SourceManifests/bialystok-industrial-c-far-field.manifest.json",
+      "sha256": "43ca94babb842caeb7224b18d07bfdbe71e5c1bf4390671101823607d7c698fe"
+    },
+    {
+      "path": "art-source/world/props/props_meta.json",
+      "sha256": "125c74e8ae066482a360edde20b5a8ae69116b8216b99cb9b7eb6228bb4bc193"
+    },
+    {
+      "path": "art-source/world/props/street_props.glb",
+      "sha256": "c56cbe59b99b61d8cf15c605c6b0b78697c45e76af8bdaea404de7f5602d3cfd"
+    }
+  ],
+  "production_dirty_after": [],
+  "note": "Exact eight known generator side effects only; SBS sources and preserved capture inputs unchanged. No main checkout mutation."
+}

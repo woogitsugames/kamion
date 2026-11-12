@@ -1,0 +1,29 @@
+{
+  "note": "All168 camera rows included. Editor estimates before batching; combined main integration delta against r2 with same production poses, not isolated SBS cost or phone budget.",
+  "tiers": [
+    {
+      "tier": "Low",
+      "rows": 84,
+      "max_draws_total_est": 810,
+      "max_draws_static_est": 445,
+      "max_draws_instanced_est": 365,
+      "max_camera": "sbs-g3-a-454716650857984",
+      "historical_delta_total_min": -17.0,
+      "historical_delta_total_max": 29.0,
+      "historical_delta_tris_k_min": 0.0,
+      "historical_delta_tris_k_max": 10.0
+    },
+    {
+      "tier": "High",
+      "rows": 84,
+      "max_draws_total_est": 1376,
+      "max_draws_static_est": 945,
+      "max_draws_instanced_est": 431,
+      "max_camera": "sbs-g3-a-320215796381417",
+      "historical_delta_total_min": -33.0,
+      "historical_delta_total_max": 49.0,
+      "historical_delta_tris_k_min": -2.0,
+      "historical_delta_tris_k_max": 10.0
+    }
+  ]
+}

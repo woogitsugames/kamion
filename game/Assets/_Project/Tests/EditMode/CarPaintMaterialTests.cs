@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using NUnit.Framework;
 using UnityEngine;
@@ -8,6 +9,26 @@ namespace Game.Tests
 {
     public class CarPaintMaterialTests
     {
+        [TestCase("tractor_paint_blue", true, "car_grime_clean", 4, true)]
+        [TestCase("tractor_paint_blue", false, "car_grime_clean", 4, false)]
+        [TestCase("tractor_paint_blue", true, "car_grime", 4, false)]
+        [TestCase("tractor_paint_blue", true, "car_grime_clean", 3, false)]
+        [TestCase("container_rust", true, "car_grime_clean", 4, false)]
+        [TestCase("car_paint_blue", false, "car_grime_clean", 4, true)]
+        public void DepositionChannel_RequiresScopedYardOptInOrExistingCar(string id, bool flag, string set, int count, bool expected)
+        {
+            var def = new Dictionary<string, object> {
+                { "texture_set", set }, { "yard_paint", flag },
+                { "paint", new List<object>(new object[count]) }
+            };
+            var type = Type.GetType("Game.World.Import.WorldPbrMaterials, Game.World.Import.Editor", true);
+            var method = type.GetMethod("Channels", BindingFlags.Static | BindingFlags.Public);
+            Assert.NotNull(method);
+            var args = new object[] { def, id, false, false, false };
+            method.Invoke(null, args);
+            Assert.That((bool)args[3], Is.EqualTo(expected), "UV1 must survive baking only for the intended deposition materials");
+        }
+
         static void ApplyPearl(Material material, Vector3 linear)
         {
             var type = Type.GetType("Game.World.Import.WorldPbrMaterials, Game.World.Import.Editor", true);

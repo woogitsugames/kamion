@@ -1,0 +1,23 @@
+{
+  "stage": "FINAL_ROUND_DELIVERY",
+  "delivered_at": "2026-11-12T11:54:31.1158301+01:00",
+  "source_head": "9b4590bdff0d27a4d4eb4428d2e4d48c508f637b",
+  "gis_source_head": "bcc65bbb3cea94a5355036ac293d1b9209a892d0",
+  "copies": [
+    {
+      "label": "r3",
+      "robocopy_exit_code": 1,
+      "files_length_verified": 1264,
+      "png_sha_verified": 1047,
+      "critical_sha_verified": 13
+    },
+    {
+      "label": "latest",
+      "robocopy_exit_code": 1,
+      "files_length_verified": 506,
+      "png_sha_verified": 504,
+      "critical_sha_verified": 2
+    }
+  ],
+  "note": "No main commit, merge or push; only authorized artifact copy. Extra existing destination files were not removed."
+}
