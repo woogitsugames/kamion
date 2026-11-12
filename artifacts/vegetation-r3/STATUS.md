@@ -51,3 +51,4 @@ Niezależny krytyk odrzucił A także wizualnie i potwierdził źródłową zasa
 Ponowione testy B po kolejce heavy: kod 0. Log pytest-b.log.
 Właściwe testy B po nabyciu heavy: 22/22 w 1,60 s. run-b.ps1 wykona generator w heavy, QA rzeczywistej zamiany/GLB/Megascans, migawkę, import przez Unity slot i jeden probe Low. Każdy etap zapisuje STATUS i WIP, błąd przerywa zależne etapy. Nie uruchamia pełnego GIS przed końcem rundy.
 session.json wskazuje aktywną sekwencję B oraz 22 zaliczone testy. Bieżący etap wynika z run-b.log i STATUS, nie z dawnych flag A. Następny krok: wynik generatora B, potem zależne etapy skryptu.
+Przygotowano compare_probe.py: odrzuca obraz starszy od QA B, porówna pełne koszty tej samej kamery i zapisze arkusz zdjęcie/przed/B z maską koloru. Metryka koloru nie jest segmentacją drzew ani pomiarem biomasy. Helper nie został uruchomiony na starym A. Następny krok: zakończenie run-b, potem próba i ocena.
