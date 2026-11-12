@@ -1,0 +1,149 @@
+{
+  "schema": 1,
+  "checked_at": "2026-11-12T12:16:58.3722508+01:00",
+  "scope": "Input freshness only; final full GIS still required",
+  "report_sha256": "a697bfa50c42899b5bb754c99a471602d56321da39da143a4578fbbb3e7a0101",
+  "inputs": [
+    {
+      "input": "overrides.yaml",
+      "expected": "08f1397f057e32536ed7df0617f157b03696c8fc467d5c4aef01fde4efe5adf1",
+      "actual": "08f1397f057e32536ed7df0617f157b03696c8fc467d5c4aef01fde4efe5adf1",
+      "matches": true
+    },
+    {
+      "input": "roads.graph.json",
+      "expected": "0bd625e041a6a2ca90a74f1652336c731182c234985352de4d377110f1d42cf6",
+      "actual": "0bd625e041a6a2ca90a74f1652336c731182c234985352de4d377110f1d42cf6",
+      "matches": true
+    },
+    {
+      "input": "route_start.json",
+      "expected": "c7ddb34ae01729cdf76c05f40edbcffe70f99d68852c32dc4325ca802f5f9d8a",
+      "actual": "c7ddb34ae01729cdf76c05f40edbcffe70f99d68852c32dc4325ca802f5f9d8a",
+      "matches": true
+    },
+    {
+      "input": "tools/worldgen/roads/__init__.py",
+      "expected": "328cd6e70845296ce7e67aee4b775c310c3fb318b638111b8ea4d4ad9ca0157b",
+      "actual": "328cd6e70845296ce7e67aee4b775c310c3fb318b638111b8ea4d4ad9ca0157b",
+      "matches": true
+    },
+    {
+      "input": "tools/worldgen/roads/aprons.py",
+      "expected": "d25db7889d8805ea77e360148224cc820c9dbc459edc0441d9eef3429e0f320f",
+      "actual": "d25db7889d8805ea77e360148224cc820c9dbc459edc0441d9eef3429e0f320f",
+      "matches": true
+    },
+    {
+      "input": "tools/worldgen/roads/authored_paint.py",
+      "expected": "9a4c11f8a7d02bc427e546a4aaa355b5ed9bd394ab801611e89373a0ecc7d3a8",
+      "actual": "9a4c11f8a7d02bc427e546a4aaa355b5ed9bd394ab801611e89373a0ecc7d3a8",
+      "matches": true
+    },
+    {
+      "input": "tools/worldgen/roads/build_world.py",
+      "expected": "17610e90c69610e14e8bd34f040e73b65795a241408bc3befcbb824e221e6c0a",
+      "actual": "17610e90c69610e14e8bd34f040e73b65795a241408bc3befcbb824e221e6c0a",
+      "matches": true
+    },
+    {
+      "input": "tools/worldgen/roads/consistency.py",
+      "expected": "8acdbef67038fd66c7df6a8374115867f6a86bd580c2729a7af8d43295b4c726",
+      "actual": "8acdbef67038fd66c7df6a8374115867f6a86bd580c2729a7af8d43295b4c726",
+      "matches": true
+    },
+    {
+      "input": "tools/worldgen/roads/context.py",
+      "expected": "c89b7fe82daaebd9d0c85bca4049fa33f1c38e250a74e7fcd043765a55d8a78c",
+      "actual": "c89b7fe82daaebd9d0c85bca4049fa33f1c38e250a74e7fcd043765a55d8a78c",
+      "matches": true
+    },
+    {
+      "input": "tools/worldgen/roads/decals.py",
+      "expected": "5c63f4a5bf69b6a6e801e18a27f8b1569b6f1a773f4ce54627642c39590b4a6f",
+      "actual": "5c63f4a5bf69b6a6e801e18a27f8b1569b6f1a773f4ce54627642c39590b4a6f",
+      "matches": true
+    },
+    {
+      "input": "tools/worldgen/roads/geom.py",
+      "expected": "7e43689419909242550ff62e16c6baffa9343dac5d1a160dc0279a9bd49b8646",
+      "actual": "7e43689419909242550ff62e16c6baffa9343dac5d1a160dc0279a9bd49b8646",
+      "matches": true
+    },
+    {
+      "input": "tools/worldgen/roads/gores.py",
+      "expected": "f16d45d1e402e6e93be5fd2c98412e05b264296895b468eebb59af1fe9cbffa3",
+      "actual": "f16d45d1e402e6e93be5fd2c98412e05b264296895b468eebb59af1fe9cbffa3",
+      "matches": true
+    },
+    {
+      "input": "tools/worldgen/roads/junctions.py",
+      "expected": "52f9dc56e2531fc2afae061cdd9143111751857d708875764f952a3cd07244d1",
+      "actual": "52f9dc56e2531fc2afae061cdd9143111751857d708875764f952a3cd07244d1",
+      "matches": true
+    },
+    {
+      "input": "tools/worldgen/roads/markings.py",
+      "expected": "5c8bd786c58becfe731b17e2f049a90f5eecbd5584bfa8ec55c1757a18b36fab",
+      "actual": "5c8bd786c58becfe731b17e2f049a90f5eecbd5584bfa8ec55c1757a18b36fab",
+      "matches": true
+    },
+    {
+      "input": "tools/worldgen/roads/meshing.py",
+      "expected": "6f0dd16de7b92212812ddc347c356c10dc48485a6735b51f3ad0eda49127fd72",
+      "actual": "6f0dd16de7b92212812ddc347c356c10dc48485a6735b51f3ad0eda49127fd72",
+      "matches": true
+    },
+    {
+      "input": "tools/worldgen/roads/network.py",
+      "expected": "db415c54ee264d40be493b371b43ec9f386decf31048d3ba5070634d5c4d5f40",
+      "actual": "db415c54ee264d40be493b371b43ec9f386decf31048d3ba5070634d5c4d5f40",
+      "matches": true
+    },
+    {
+      "input": "tools/worldgen/roads/p21_hatch.py",
+      "expected": "8f6347af587c2f02d918e2d2ab49e52b7d7ecbf6cdc90e8c90f1c901b15cefa5",
+      "actual": "8f6347af587c2f02d918e2d2ab49e52b7d7ecbf6cdc90e8c90f1c901b15cefa5",
+      "matches": true
+    },
+    {
+      "input": "tools/worldgen/roads/pipeline.py",
+      "expected": "6353f7bb5f3551d6675e545334f7e65616c8a24928c2fc8bcf52f4a7453b83e0",
+      "actual": "6353f7bb5f3551d6675e545334f7e65616c8a24928c2fc8bcf52f4a7453b83e0",
+      "matches": true
+    },
+    {
+      "input": "tools/worldgen/roads/profile.py",
+      "expected": "ffa9663b56509b1245bd24bd5a9d135c41a598f38a125755616cc6e16b7307fc",
+      "actual": "ffa9663b56509b1245bd24bd5a9d135c41a598f38a125755616cc6e16b7307fc",
+      "matches": true
+    },
+    {
+      "input": "tools/worldgen/roads/qa_ortho.py",
+      "expected": "3173a1dcac1107bcb905bc6062460818ab03e8286c9de397aa0c5ed3835a9d8d",
+      "actual": "3173a1dcac1107bcb905bc6062460818ab03e8286c9de397aa0c5ed3835a9d8d",
+      "matches": true
+    },
+    {
+      "input": "tools/worldgen/roads/route.py",
+      "expected": "8cbcff1de5bf8e43e1f62cd24f19d82bc212ea07d1c2efc1f1f0ec7c6b195782",
+      "actual": "8cbcff1de5bf8e43e1f62cd24f19d82bc212ea07d1c2efc1f1f0ec7c6b195782",
+      "matches": true
+    },
+    {
+      "input": "tools/worldgen/roads/standards.py",
+      "expected": "d26369bfa3ea95e2bb732991b33ff7afb0a185cab32d35fb49e49ab68e561a5e",
+      "actual": "d26369bfa3ea95e2bb732991b33ff7afb0a185cab32d35fb49e49ab68e561a5e",
+      "matches": true
+    },
+    {
+      "input": "tools/worldgen/roads/through_lines.py",
+      "expected": "25909812a15b31a63698b6630f4bff1b98caaa534dae8308e016ec0247fbd20a",
+      "actual": "25909812a15b31a63698b6630f4bff1b98caaa534dae8308e016ec0247fbd20a",
+      "matches": true
+    }
+  ],
+  "input_count": 23,
+  "mismatch_count": 0,
+  "requires_fidelity_rerun": false
+}
