@@ -24,3 +24,30 @@ wyklucza żółtobrązowy brud z klasy czerwonej farby. Stałe okna omijają gal
 Baseline Low-overcast: rozbieżność czerwone/nie-czerwone49,0% /55,5% (multi/single).
 Te liczby są diagnozą układu barw przy roboczej pozie, nie bramką jakości geometrii,
 odbiciem fizycznym ani niezależną oceną fotograficzną. Wynik kandydata jest jeszcze nieznany.
+
+## Pierwszy wariant EC — świadomie niekońcowy
+Wszystkie32 arkusze przed/after-silhouette obejrzane (244 pary), 123 PNG identyczne.
+Widać poprawę grubości trzonu wieloprzewodowego, liczby wylotów i rytmu pasów.
+Z trasy zmiana czytelna w g3a-eye-s0262, rondo-bie-approach, photo-biezenstwa-ground,
+stretch-03; remiza/kabina bez widocznej regresji. Brak niezależnego fotograficznego PASS.
+Pierwszy układ galerii Low jest zbyt słabo widoczny od dołu, same płaskie annulusy
+nie niosą sylwetki; dodano w następnym wariancie pionowe obrzeże0,25 m.
+High miał za dużo drobnych rurek, co podniosło tris dwóch nowych kamer Low z bliska.
+Draws+0; wyłącznie ec-multi-head i ec-single-head przekroczyły +2% (3,57%/6,90%).
+Wariant poprawiony ogranicza oba LOD0 do700 tris starych prototypów; test przed buildem.
+
+Pierwszy audyt: wszystkie128 chunków High/Low i125468 nie-EC instancji identyczne;
+roads_qa i definicje materiałów identyczne. Dwa kominy zamiast dwóch, XY/yaw identyczne,
+Z+3/+9 mm przez różne próbkowanie tego samego gruntu. Nie nazywać pozycji3D identycznymi.
+Unity after-silhouette nadal ma dwie pionowe osie (0°).
+Kolory i faktura kominów nadal są zbyt szare/jednolite w zestawieniu z fotografią;
+nie korygować całego oświetlenia w tej dziedzinie. Zabrudzenia i szczegóły głowic otwarte.
+Pomiar czerwone/nie-czerwone Low-overcast poprawił się49,0→21,1% (multi),55,5→0,0%
+(single), ale próg chromy i robocza poza nie są geodezyjną walidacją pasów.
+
+## Korekta filarów z niezależnej recenzji s12 — w trakcie
+Własne szare fazy r2 okazały się błędną interpretacją cienia. Recenzja main wskazuje
+jedną musztardową farbę na całym filarze. Przywrócono pigment sprzed brązowej korekty,
+wyłączono unpainted_chamfers oraz niepotwierdzoną plamę paint_blobs.
+Nie ma jeszcze PNG nowego wariantu: nie deklarować zamknięcia P1 ani P2.
+Collector/downpipe istnieją w generatorze; nie dodano drugiej rury bez pomiaru położenia.

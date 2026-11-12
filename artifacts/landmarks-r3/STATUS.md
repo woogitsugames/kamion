@@ -59,3 +59,5 @@ Krok 14b: obejrzano wszystkie 32 arkusze pierwszego wariantu (244 pary, 123 PNG 
 Krok 14c: przed uzyskaniem slotu (potwierdzony brak własnego heavy) porównano budżet starych prototypów: LOD0 700, LOD1 204 tris każdy. Dalsze uproszczenie drobnych barierek i trzonu (20 stron, galerie 8 boków i 4 słupki) ma utrzymać oba nowe LOD0 poniżej 700 bez usuwania wylotów ani obrzeży galerii. Ostateczne liczby i wygląd po generatorze, bez deklaracji PASS.
 
 Krok 14d: test geometrii EC wymaga LOD0 ≤700 tris, czyli rzeczywistego budżetu poprzedniego komina. Kontrola pionowej fascii sprawdza obecność zamkniętego obrzeża z normalnymi na zewnątrz, bez wymuszania poprzedniej liczby segmentów.
+
+Krok 14e: samokontrola uzupełniona o pełne oględziny pierwszego wariantu, realne przekroczenia budżetu i nieidentyczne Z podstawy. Wprost oddzielono potwierdzone dowody pierwszego wariantu od nieobejrzanej jeszcze korekty filarów i galerii.
