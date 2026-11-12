@@ -48,3 +48,5 @@ Krok 17: przyszłe importy mogą użyć PreparedVerified z proof utworzonym w ty
 Krok 18: candidate-build.ps1 zapisany, NIE uruchomiony. World → audyt GLB/192 raw → pięć pojedynczych plików testów → source-proof sekwencyjnie w jednym heavy, WIP po każdym etapie. Osobny tag chroni stare logi; pełny GIS nadal tylko na końcu rundy. Następny krok: ukończenie istniejącego 46468 i oględziny baseline, dopiero potem aplikacja/uruchomienie kandydata.
 
 Przed zmianą (2026-11-12T09:38:56.1022191+01:00): zapisz przerwany baseline przed zmianą r3 na etapie import. Następny krok według post-baseline.ps1; po capture obejrzeć kadry i dopiero zmienić produkcję.
+
+Krok 19: po identyfikacji łańcucha własnych PID 65020→67604→21548→53280, przy braku własnego heavy, zatrzymano WYŁĄCZNIE oczekiwanie 53280 na powtórny proof. Post-baseline zakończył się kontrolowanym błędem import (Unity nie ruszyło), dowód wyniku zachowany. Wznowienie użyje istniejącego baseline-generated-source-proof i niezależnie ponownie zahaszuje każdy plik w PowerShell. Cudze sloty/procesy nietknięte. Następny krok: pwsh -NoProfile -File artifacts/life-r3/resume-baseline.ps1.
