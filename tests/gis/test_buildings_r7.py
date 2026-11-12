@@ -187,10 +187,12 @@ def test_plot_is_one_material_and_no_instances():
     PL.paved_items(rp, road, shapely.union_all([h["poly"] for h in houses]), [])
     buf, rep = _Buf(), {}
     PL.build(buf, rp, lambda q: 100.0, None, rep)
-    assert {(p.layer, p.mat) for p in buf.parts} == {(PL.KIT_LAYER, "plot_kit"), ("collision", "collision_fence")}
+    assert {(p.layer, p.mat) for p in buf.parts} == {(PL.KIT_LAYER, "plot_kit"), (PL.KIT_LAYER_LOW, "plot_kit"), ("collision", "collision_fence")}
     r = rep["plots"]
     assert r["instances"] == 0 and r["gates"] == 4 and r["wickets"] == 4
-    kit = [p for p in buf.parts if p.mat == "plot_kit"]
+    kit = [p for p in buf.parts if p.mat == "plot_kit" and p.layer == PL.KIT_LAYER]
+    low = [p for p in buf.parts if p.layer == PL.KIT_LAYER_LOW]
+    assert len(low) == 4 and sum(len(p.T) for p in low) <= sum(len(p.T) for p in kit)   # ADR 0132: the Low / Medium kit
     assert len(kit) == 4                                                        # one mesh part per plot
     for p in kit:
         assert len(p.T) < 6000

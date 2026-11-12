@@ -173,3 +173,28 @@ def test_plots_report_of_the_built_region():
     assert qa["overgrowth"] >= 0.5 * qa["plots"] and qa["bushes"] + qa["shrubs"] >= 2 * qa["plots"]
     assert qa["fence_step_zone_hits"] == 0
     assert qa["tris"] <= 120_000 and qa["inst_trees_kept"] <= 3 * qa["plots"]                               # kit triangles of the whole region (ADR 0124: 52 k)
+
+
+def test_low_kit_variant_is_lighter_and_selfcontained():
+    """ADR 0132: the Low / Medium chunk variant gets its own plot kit (Kit.low): High-only parts are left out, lite
+    variants replace the expensive plants, indices stay valid."""
+    PL, kit = _kit()
+    p = np.array([0.0, 0.0])
+    kit.tag = "fence"
+    kit.box(p, np.array([1.0, 0.0]), 0.1, 0.1, 0.0, 1.0, PL.PK.SWATCH["trunk"])
+    kit.low = False
+    PL.thuja(kit, p + 2, 0.0, 2.4, 0.4, ("t", 1))
+    PL.fruit_tree(kit, p + 5, 0.0, 4.0, ("f", 1), r=1.6)
+    PL.bush(kit, p + 8, 0.0, 0.9, 1.6, ("b", 1))
+    kit.low = "only"
+    PL.thuja_lite(kit, p + 2, 0.0, 2.4, 0.4, ("t", 1))
+    PL.fruit_tree_lite(kit, p + 5, 0.0, 4.0, ("f", 1), r=1.6)
+    kit.low = True
+    hi, lo = kit.out(), kit.out(low=True)
+    assert len(lo[2]) == 10 + 14 + 10 and len(hi[2]) > 10 + 39 + 60
+    for V, UV, T, C in (hi, lo):
+        assert T.min() == 0 and T.max() == len(V) - 1 and len(UV) == len(V) == len(C)
+    assert sum(kit.by.values()) == len(hi[2]) and sum(kit.by_low.values()) == len(lo[2])
+    # the lite plants keep the height and the footprint of the full ones (same silhouette from the cab)
+    zh, zl = hi[0][:, 2].max(), lo[0][:, 2].max()
+    assert abs(zh - zl) < 0.35
