@@ -107,11 +107,43 @@ for label,variants in cases:
 if not any(case['baseline_cross_total'] for case in results):
     raise AssertionError('No fixture reproduced the previous reducer defect')
 
+# Test the authoring path as well: the original parametric map must survive the
+# material conversion and packing as one chart, so the geometry guard stays cheap.
+obj = make_rim('wheel_FL_rim',None,None)
+mesh = obj.data
+original_uv = [tuple(value.uv) for value in mesh.uv_layers['Atlas'].data]
+mesh.uv_layers['Atlas'].name = 'UVMap'
+material = bpy.data.materials.get('alu_wheel') or bpy.data.materials.new('alu_wheel')
+mesh.materials.append(material)
+obj['group']='wheels'
+obj['part']='WHEEL_FL'
+gm = {slot:bpy.data.materials.get(name) or bpy.data.materials.new(name)
+      for slot,name in A.SLOT_MAT.items()}
+A.to_game_piece(obj,gm)
+if [tuple(value.uv) for value in mesh.uv_layers['Atlas'].data] != original_uv:
+    raise AssertionError('Authoring conversion discarded parametric lathe UV')
+if not obj.get('cylindrical_atlas',False):
+    raise AssertionError('Missing cylindrical atlas contract')
+A.unwrap_atlases([obj])
+def islands():
+    return len(A.uv_islands(obj.data,obj.data.uv_layers['Atlas'].data,
+                           [face.index for face in obj.data.polygons]))
+before_islands=islands()
+if before_islands != 1:
+    raise AssertionError(f'Packing split cylindrical atlas into {before_islands} charts')
+A.reduce_round(obj,24)
+after_islands=islands()
+if after_islands != 1:
+    raise AssertionError(f'Reduction split cylindrical atlas into {after_islands} charts')
+authoring = {'parametric_uv_preserved':True,'packed_charts':before_islands,
+             'reduced_charts':after_islands,'reduced_triangles':len(obj.data.loop_triangles)}
+print('ATLAS_AUTHORING:',json.dumps(authoring))
+
 source = ROOT/'tools/blender/truck/exterior/a6_export.py'
 output = ROOT/'artifacts/truck-r3/atlas-seam-regression.json'
 output.parent.mkdir(parents=True,exist_ok=True)
 output.write_text(json.dumps({'result':'Passed','baseline_commit':'e35eb7e5',
     'candidate_source_sha256':hashlib.sha256(source.read_bytes()).hexdigest(),
     'note':'Exhaustive seam locations in four groups on the real reducer; at least one must reproduce the old defect. Not an FBX, budget or visual acceptance.',
-    'cases':results},indent=2),encoding='utf8')
+    'cases':results,'authoring':authoring},indent=2),encoding='utf8')
 print('TRUCK_ATLAS_SEAM_TEST: OK cases=4 '+str(output))
