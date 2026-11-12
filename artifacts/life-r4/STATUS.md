@@ -9,3 +9,5 @@ Oryginalna doba kończy się około 12.11.2026 21:31 Warszawa. Jedyny integrator
 Następny krok: zakończyć merge i sprawdzić wspólną flagę flake_lift; odświeżyć dozwolone źródła raw/CC0/Megascans, kanoniczne materiały → World → fidelity w jednym heavy, nowy import/baseline w czterech warunkach. Dopiero po oględzinach zmiana produkcyjna. Nie używać starego main z r3 jako baseline.
 
 Krok 2: odświeżono raw CC0, źródła CC0/Megascans i natywne Truck/Trailer z main; źródła fixture przed/po kopiowaniu oraz wszystkie kopie zgodne SHA. Nie kopiowano świata z aktywnego main. Następny krok: baseline-gen.ps1 pod jednym heavy.
+
+Krok 3: przygotowanie zakończone (6ae1f931), fixture Truck/Trailer skopiowane ze stabilnego main i sprawdzone. Uruchomiono JEDEN baseline-gen.ps1 w sesji exec 92152; czeka na heavy 3/3 i respektuje rezerwację gpt-truck-r3. Nie uruchamiać duplikatu. Po uzyskaniu slotu sekwencja materiały → World → fidelity → pojedynczy test → source-proof; pełny GIS dopiero na końcu rundy. Następny krok: odbierać 92152 i przygotować opt-in diagnostykę rzeczywistych danych natywnych LOD; import dopiero po complete/0 baseline.
