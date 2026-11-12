@@ -172,3 +172,5 @@ Doprecyzowano REPORT-DRAFT: 42 klatki w każdym stanie i jawna granica względem
 Kontrola zakresu przed zamknięciem: scope-audit.json zapisuje listę źródeł względem początkowego main oraz pusty diff kodu/danych od zamrożenia GIS e386b929. Zmiany produkcyjne wyłącznie SBS, testy i dokumentacja; osiem pochodnych generatora nadal niestaged.
 
 Korekta oczekiwania: po ponad 30 minutach i zmianach właścicieli slotów potwierdzono własny proces Acquire PID 110744, rodzic 33232, nadal przed startem pytest. Zatrzymano wyłącznie ten waiter, który zakończył wrapper kodem 1; test GIS nie wystartował. Log zachowano jako pytest-gis-wait-poll7.log. Runner artefaktu otrzymał PollSeconds 1 zamiast 7, aby nie pomijać krótkich wolnych okien. Limity 3, cudze sloty i kod zamrożony e386 bez zmian. Nastąpi ponowne oczekiwanie na tę samą końcową walidację, nie drugi równoległy test.
+
+Końcowy GIS uzyskał slot gpt-sbs-r2 (3/3) i wystartował; o 02:30 log osiągnął 12% bez zgłoszonego błędu. To pierwszy start pełnego pytest tej rundy; poprzedni log dokumentuje wyłącznie oczekiwanie. Źródła kodu/danych bez zmian od e386b929. Nowy uchwyt procesu wykonania 48940.
