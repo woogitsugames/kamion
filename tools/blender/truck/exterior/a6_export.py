@@ -1309,6 +1309,7 @@ NO_DECIMATE = ("sill_clad_", "door_skirt_clad_", "grille_bar_endcap", "badge_tra
 NO_DECIMATE_FAR = ("grille_bar_mask",)
 ROUND_KEYS = ("_tyre", "_rim")
 ROUND_SEGMENTS = {2: 24, 3: 16}
+WHEEL_DISC_LOW_MIN_RATIO = 0.40   # WORKING_VALUE r3: retain the stamped disc and hand holes, within the global target
 
 
 def is_round_wheel_piece(o):
@@ -1707,6 +1708,8 @@ def decimate_pieces(pieces, target, floor_tris=40, lights_min=0.5, round_seg=0, 
                 mr = max(mr, 0.25)
             elif "_hub" in o.name:
                 mr = max(mr, 0.20)
+            elif "_disc" in o.name and not o.name.startswith(("wheel_RLi_", "wheel_RRi_")):
+                mr = max(mr, WHEEL_DISC_LOW_MIN_RATIO)
         lo = max(lights_min * n, floor_tris) if ("Lights" in sl or "Glass" in sl) else floor_tris
         lo = max(lo, mr * n)
         w = SILHOUETTE_W if any(t in o.name for t in SILHOUETTE_KEYS) else 1.0
