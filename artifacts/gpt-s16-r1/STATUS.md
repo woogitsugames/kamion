@@ -1,6 +1,6 @@
 # STATUS — gpt-s16 r1
-2026-11-12T23:14:27.6737139+01:00
+2026-11-12T23:15:20.6763694+01:00
 Gałąź: gpt-s16-r1
-Kandydat wygenerowany; audyt GLB zakończony poprawnie. Import after dopiero po ukończeniu kamer before.
-NASTĘPNY KROK: pwsh artifacts/gpt-s16-r1/import-render.ps1 -Stage after
+Zapisano render before/Low-clear; liczby w stats.txt. Oględziny i recenzja pozostają otwarte.
+NASTĘPNY KROK: Get-Content artifacts/gpt-s16-r1/STATUS.md
 Gotowe do recenzji: NIE
