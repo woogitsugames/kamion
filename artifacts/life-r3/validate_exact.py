@@ -29,7 +29,12 @@ def validate(stage, condition, reference=None):
     assert not dump['errors'], dump['errors']
     assert len(dump['models']) == 14
     rows = {r['id']: r for r in dump['rows']}
-    assert len(rows) == len(dump['rows']) == 114
+    packet = json.loads((ROOT / 'cameras.json').read_text(encoding='utf-8-sig'))
+    expected_ids = {camera['id'] for camera in packet['cameras']}
+    scene = 'WorldC_High' if condition.startswith('High') else 'WorldC'
+    expected_ids.update(inputs['scene_controls'][scene]['ids'])
+    assert len(rows) == len(dump['rows']) == len(expected_ids)
+    assert rows.keys() == expected_ids
     old = legacy(folder / 'stats.txt')
     assert rows.keys() == old.keys()
     if reference:

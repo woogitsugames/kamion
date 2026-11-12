@@ -14,6 +14,8 @@ for condition in ('Low-clear', 'Low-overcast', 'High-clear', 'High-overcast'):
     for camera, b in before.items():
         a = after[camera]
         assert b['aspect'] == a['aspect'] and b['fov'] == a['fov']
+        for key in ('position', 'rotation', 'orthographic', 'orthographicSize'):
+            assert b[key] == a[key], (camera, key, 'Capture poses differ')
         total_b = b['worldTriangles'] + b['instanceTriangles']
         total_a = a['worldTriangles'] + a['instanceTriangles']
         delta = {k: a[k] - b[k] for k in ('worldTriangles', 'instanceTriangles', 'worldDraws', 'instanceDraws')}

@@ -24,6 +24,10 @@ namespace Game.Editor.VisualQA
             public long worldTriangles, instanceTriangles;
             public int worldDraws, objects, instanceDraws, instances, cells, hlodCells;
             public float aspect, fov;
+            public Vector3 position;
+            public Quaternion rotation;
+            public bool orthographic;
+            public float orthographicSize;
         }
         [Serializable] public class Payload { public bool present; public int vertices; public float heightError, axleError; }
         [Serializable] public class Model { public string name; public long[] triangles; public Payload[] payloads; }
@@ -80,6 +84,8 @@ namespace Game.Editor.VisualQA
                 row.id = id; row.instanceTriangles = wi.Triangles; row.instanceDraws = wi.Draws;
                 row.instances = wi.Instances; row.cells = wi.VisibleCells; row.hlodCells = wi.HlodCells;
                 row.aspect = camera.aspect; row.fov = camera.fieldOfView;
+                row.position = camera.transform.position; row.rotation = camera.transform.rotation;
+                row.orthographic = camera.orthographic; row.orthographicSize = camera.orthographicSize;
                 Rows[id] = row;
                 if (Models == null) ReadModels();
             }
