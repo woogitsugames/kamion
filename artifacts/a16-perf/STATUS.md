@@ -48,3 +48,7 @@
   Zmiana Low #2: mirrorResolutionScale 0.75 (lusterko klasy II 224 -> 168 px = skala renderu Low). Build r2c + przeplatane capped x3 w tle.
   NASTĘPNY KROK: `python artifacts/a16-perf/summarize.py 'artifacts/a16-perf/r2c/*'`, potem `pwsh artifacts/a16-perf/vqa-r2.ps1 -Before 'rq_vehcull=300,rq_mirror_res=1'`
 - 19:58 r2c (APK 56b0df6b91, 3x przeplatane capped) w toku; po nim merge main (ADR 0147) + weryfikacja orientacji. NASTĘPNY KROK: `python artifacts/a16-perf/summarize.py 'artifacts/a16-perf/r2c/*'`
+- 20:04 r2c (APK 56b0df6b91, landscape, capped 30, 3x przeplatane): before GPU p95 36.09/35.51/35.62 -> after (vehcull 150 + lusterka x0.75)
+  34.02/34.18/34.22 (-1.6 ms); frame p99 50/50/50 -> 50/33.75/33.77; >40 46/28/38 -> 26/16/18. Brak ~0.8 ms do 33.3 -> Low grime detail off (diagA4 +0.68).
+  Merge main 2080745dd (ADR 0147 orientacja; generated ours). Build r2d + przeplatane BEZ rq_landscape (weryfikacja 0147) w tle.
+  NASTĘPNY KROK: `python artifacts/a16-perf/summarize.py 'artifacts/a16-perf/r2d/*'`; potem `pwsh artifacts/a16-perf/vqa-r2.ps1 -Before 'rq_vehcull=300,rq_mirror_res=1,rq_grime=1'` + `pwsh scripts/test.ps1 -Platform EditMode`
