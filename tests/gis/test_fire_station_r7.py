@@ -133,16 +133,25 @@ def test_new_geometry_keeps_two_low_slots_and_original_plant_budget(geometry_nam
             np.testing.assert_array_equal(shared[position], normal)
         shared[position] = normal
     for e,n,z,height,radius,key in namespace["SPEC"]["ground"]["spruce"]:
+        previous_normals = len(mb.core_normals)
         namespace["build_conifer"](mb,namespace["en_to_uvz"]([e,n,z]),height,radius,key,1)
+        assert len(mb.core_normals) > previous_normals, "each conifer needs an opaque core with radial normals"
     assert set(mb.M) == {"fire_station", "fire_station_alpha"}
     assert sum(len(face)-2 for face in mb.F) <= 888
-    assert len(mb.core_normals) - thuja_normal_corners >= 216, "three conifer cores retain their radial normals"
     core = namespace["LAY"]["conifer_core"]
+    shared_core = {}
     for face,uv,material in zip(mb.F,mb.UV,mb.M):
         a = np.array(uv)
         if (material == "fire_station" and (a[:,0]>=core["u"][0]).all() and (a[:,0]<=core["u"][1]).all()
                 and (a[:,1]>=core["v"][0]).all() and (a[:,1]<=core["v"][1]).all()):
             assert all(index in mb.core_normals for index in face), "every opaque needle-core corner needs a smooth normal"
+            for index in face:
+                normal = mb.core_normals[index]
+                assert np.isfinite(normal).all() and np.linalg.norm(normal) > 0
+                position = tuple(mb.V[index])
+                if position in shared_core:
+                    np.testing.assert_array_equal(shared_core[position], normal)
+                shared_core[position] = normal
     r = namespace["ALAY"]["conifer_bough"]; u0,v0,u1,v1 = r["inner_uv"]
     for material, uv in zip(mb.M, mb.UV):
         if material == "fire_station_alpha":

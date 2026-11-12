@@ -1,11 +1,11 @@
 {
  "schema": "truck-sim-pl/hero-building-dims/1",
  "asset": "fire_station_jrg2",
- "object": "Jednostka Ratowniczo-Ga\u015bnicza nr 2 PSP, ul. Gen. Andersa 46, Bia\u0142ystok (OSM way 211035271)",
+ "object": "Jednostka Ratowniczo-Gaśnicza nr 2 PSP, ul. Gen. Andersa 46, Białystok (OSM way 211035271)",
  "sources": {
   "plan": "BDOT10k footprints bdot:2BE4B431-C784-1BF0-E053-CC2BA8C0D140 (1317.7 m2) and bdot:2BE4B431-C7B4-1BF0-E053-CC2BA8C0D140 (245.2 m2); GUGiK orthophoto 0.25 m (2024)",
   "heights": "GUGiK LoD2 2017 roof planes (lod2_roofs.json, CC BY 4.0), relative to the lowest LoD2 vertex of each building",
-  "facades": "by eye from CC0 photos (Wikimedia Commons, Rakoon: '7197 May 2021 in Bia\u0142ystok', '20240626 103137 June 2024 in Bia\u0142ystok') and CC BY-SA 4.0 street-level frames used as pattern only (Mapillary 767523907280643, 171742518208129 richlv; 471355742447021 strudel; 2934972690092373 grobin; KartaView kv993066550): WORKING_VALUE unless a LoD2 / BDOT source is named",
+  "facades": "by eye from CC0 photos (Wikimedia Commons, Rakoon: '7197 May 2021 in Białystok', '20240626 103137 June 2024 in Białystok') and CC BY-SA 4.0 street-level frames used as pattern only (Mapillary 767523907280643, 171742518208129 richlv; 471355742447021 strudel; 2934972690092373 grobin; KartaView kv993066550): WORKING_VALUE unless a LoD2 / BDOT source is named",
   "unverified": "NE and NW facades, garage rear doors, hall SE wall, outbuilding facades, gate position, thuja count: not visible in any open photo - WORKING_VALUE"
  },
  "axis": {
@@ -285,13 +285,56 @@
    ]
   ],
   "note": "r7: first two foreground conifers shifted+4u m screen-right in ref7197; wing conifer unchanged. Tiered root-connected boughs, CC0 short-needle fir/conifer proxy (not verified Picea). Placement WORKING_VALUE?3m from one photo; ground re-sampled by planner.",
-  "inner_core_fill_r_WORKING_VALUE": 0.95,
-  "core_profile_WORKING_VALUE": [[0.045, 0.64], [0.13, 1.0], [0.27, 0.68], [0.33, 0.85], [0.48, 0.48], [0.54, 0.65], [0.74, 0.28], [0.975, 0.025]],
-  "low_bough_counts": [2, 1, 1, 2, 1, 1, 2, 1, 1],
+  "inner_core_fill_r_WORKING_VALUE": 0.55,
+  "core_profile_WORKING_VALUE": [
+   [
+    0.045,
+    0.5
+   ],
+   [
+    0.27,
+    1.0
+   ],
+   [
+    0.6,
+    0.58
+   ],
+   [
+    0.975,
+    0.025
+   ]
+  ],
+  "low_bough_counts": [
+   5,
+   4,
+   4,
+   4,
+   4,
+   3,
+   3,
+   3,
+   2
+  ],
   "low_core_sides": 5,
-  "low_core_budget_note": "ADR 0116 r1: five smooth-normal sides retain all twelve Low bough cards and all eight crown tiers; 42 triangles saved across three trees pay for the 32-triangle curved gable runoff strip. Whole Low hero remains below the original 2828 triangles. Authored WORKING_VALUE.",
-  "core_shape_note": "ADR 0116 r1 variant 2: tiered crown from photograph 7197. On Low, 24 fewer bough quads pay for four extra six-sided core segments, keeping plant triangles unchanged. Authored WORKING_VALUE, not scanned geometry.",
-  "inner_core_note": "ADR 0116 r1: dense opaque inner canopy remains readable when sparse needle cards disappear in Low mips. First two crown radii broadened to a height-to-width envelope near 2:1. Tiered core and fewer Low cards preserve the original Low plant triangle budget and material counts; authored WORKING_VALUE, not scanned tree geometry.",
-  "bough_uv_revision": "r7-bundle2-root-content-16px"
+  "low_core_budget_note": "ADR 0116 r4 candidate: five smooth-normal sides x three segments =30 core triangles, 32 cards =64, trunk4; 98 per tree, same as r1. Whole Low hero limit2828 unchanged; atlas/material slots unchanged.",
+  "core_shape_note": "ADR 0116 r4 candidate: four tapered inner rings, no full alternating skirts; 32 Low / 86 High narrower lateral bough cards. Triangle totals per tree stay 98/224. Authored WORKING_VALUE, pending rendered comparison with CC0 photo7197.",
+  "inner_core_note": "ADR 0116 r4 candidate: narrower continuous opaque core, branch gaps carried by smaller lateral CC0 needle cards. Species remains an unverified fir proxy, not scanned spruce geometry.",
+  "bough_uv_revision": "r7-bundle2-root-content-16px",
+  "high_bough_counts_WORKING_VALUE": [
+   12,
+   11,
+   10,
+   10,
+   10,
+   9,
+   9,
+   8,
+   7
+  ],
+  "lateral_bough_cards_WORKING_VALUE": true,
+  "bough_width_r_WORKING_VALUE": {
+   "High": 0.24,
+   "Low": 0.16
+  }
  }
 }

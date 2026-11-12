@@ -1107,7 +1107,7 @@ def build_thuja(mb, c, height, radius, key, lod):
 
 
 def build_conifer(mb, c, height, radius, key, lod):
-    """Root-attached short-needle boughs and a tiered opaque inner crown.
+    """Root-attached short-needle boughs and a continuous opaque inner crown.
 
     Low trades sparse cards for the core silhouette within the original plant budget.
 
@@ -1116,7 +1116,7 @@ def build_conifer(mb, c, height, radius, key, lod):
     """
     u0,v0,u1,v1 = ALAY["conifer_bough"]["inner_uv"]
     for j,base_f in enumerate((.08,.17,.27,.36,.45,.55,.65,.76,.87)):
-        count = 6 if lod == 0 else D["spruce"].get("low_bough_counts", [4]*9)[j]
+        count = D["spruce"].get("high_bough_counts_WORKING_VALUE", [6]*9)[j] if lod == 0 else D["spruce"].get("low_bough_counts", [4]*9)[j]
         for i in range(count):
             angle = key*.63+j*1.69+i*2*math.pi/count+.35*(h01(key,j,i,"azimuth")-.5)
             f = base_f+.04*(h01(key,j,i,"level")-.5)
@@ -1124,8 +1124,13 @@ def build_conifer(mb, c, height, radius, key, lod):
             root = c + np.array([0,0,height*f])
             length = radius*(1-f)**.7*(1.03+.30*h01(key,j,i))
             tip = c + np.r_[direction*length,height*(f-.04)]
-            roll = .50*(h01(key,j,i,"roll")-.5)
-            side = (UP*math.cos(roll)+np.r_[-direction[1],direction[0],0]*math.sin(roll))*min(length*.65,height*f*.90)
+            if D["spruce"].get("lateral_bough_cards_WORKING_VALUE", False):
+                roll = .45+.35*(h01(key,j,i,"roll")-.5)
+                width = D["spruce"]["bough_width_r_WORKING_VALUE"]["High" if lod == 0 else "Low"]
+                side = (UP*math.sin(roll)+np.r_[-direction[1],direction[0],0]*math.cos(roll))*min(length*width,height*f*.90)
+            else:
+                roll = .50*(h01(key,j,i,"roll")-.5)
+                side = (UP*math.cos(roll)+np.r_[-direction[1],direction[0],0]*math.sin(roll))*min(length*.65,height*f*.90)
             mb.face([root-side,root+side,tip+side,tip-side],[(u0,v0),(u1,v0),(u1,v1),(u0,v1)],ALPHA)
     # Continuous inner mass instead of four isolated diamonds. The broader lower third
     # and asymmetric radii carry the envelope; clipped outer sprays keep branch gaps.
