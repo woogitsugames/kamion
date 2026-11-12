@@ -1,0 +1,9 @@
+# Status edge r3
+Start: 12 listopada 2026, około 01:00 CET. Pierwotny koniec sesji: 12 listopada około 21:31 CET; zegar 24 h nie jest resetowany.
+R2 zakończona: ddce3c7a; REPORT i 953 pliki (2197733931 bajtów bez kwitu) dostarczone do main artifacts/edge-r2, SHA raportu potwierdzone. GIS 536/2 fail/1 xfail, wszystkie własne testy oraz budżet Low zaliczone; obie porażki opisano jawnie.
+Gałąź gpt-edge-r3 utworzona od r2. Merge main 2c3939b2 → 45c1921b, bez konfliktów. Nowy main zawiera life/vegetation/cab/edge r1, zmiany shaderów/importera i odświeżone fidelity. Trzeba odtworzyć pełną bazę świata przed porównaniem własnej zmiany.
+R3: zgodność podłoża region↔tło. Diagnoza r2: 5676 punktów, max Python−Unity +1,4267 m, 40 punktów >0,8 m przy NW. Hipoteza do sprawdzenia: powielone próbki narożników/fanów w średniej i wygładzaniu C#; bez stwierdzania przyczyny przed testem.
+Przeczytano nową recenzję s11 batch: r1 technicznie poprawna, wizualnie neutralna; P1 bariery końca mapy, wysokości LoD1 priorytet. R2 realizuje LoD1, r3 realizuje pomiar/szew. Bariery/drogi ADR0117 i źródła Claude bez zmian; kwestia czytelnych zakończeń pozostaje otwarta.
+Przygotowano skrypty r3 i dodatkową kamerę edge-nw-ground (diagnostyczny statyw, nie zweryfikowana poza drogi/zdjęcia). Pozostałe 43 kamery dowodowe z r2, plus natywne sceny. Produkcyjnego C# jeszcze nie zmieniano.
+Ciężkie Python wyłącznie centralny Pool heavy, Owner gpt-edge-r3, max 3. Unity przed każdym startem Pool unity, Owner gpt-edge, release w finally. Pełny GIS dopiero na końcu rundy; w trakcie pojedyncze pliki. Bez telefonów, push i merge do main.
+Następny krok: git lfs checkout, aktualizacja tylko niezmiennych cache CC0/Megascans, build_all i build_world pod heavy; potem pełny import Unity pod slotem i bazowe 4 serie renderów przed edycją C#.
