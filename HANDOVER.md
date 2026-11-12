@@ -21,6 +21,7 @@
 - **APK main (0152+0146+r4): `artifacts/apk/kamion-0.1.0-fbb610dd30.apk`** (225 MB, przed regeneracją świata).
 - APK `kamion-0.1.0-fbb610dd30.apk` smoke A16 23:20: Low 30 fps p95 33,48 ms, PSS 375 MB, bez wyjątków.
 - **Gemini 4 (Antigravity, lokalnie) próba:** ADR 0157 testy zero-GC na `Recorder("GC.Alloc")` — `docs/owner/GEMINI-TASK-01.md`, worktree `gemini-0157`, live `artifacts/live/gemini-0157.md`.
+- **23:5x: SCALONE 0156 audio-regen04** `81ab77881` (kabina/bez obc. 1200/1500 z `ENG_CAB_IDLE_STEADY (4)`: linia 8 → 21 dB; zjazdy OVERRUN_SWEEP odrzucone; 1800/2100 nadal słabe 10,6 dB; dołek ~1050 obr/min 9,9 dB). A/B do odsłuchu: `artifacts/audio-regen04/ab/`. Worktree usunięty.
 - **Ostatni przydzielony ADR: 0157** (0153–0155 → Codex).
 
 # HANDOVER — kamion, SESJA 15 (start 2026-11-12 20:25, nowe konto)
