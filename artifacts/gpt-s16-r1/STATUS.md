@@ -6,3 +6,5 @@ NASTĘPNY KROK: Get-Content artifacts/gpt-s16-r1/STATUS.md
 Gotowe do recenzji: NIE
 
 Bazowe 48 kamer ×4 wyrenderowane. Rozszerzam baseline o kanoniczne 30 kamer G3 oraz 36 prób blisko przełączeń wokół faktycznych instancji; stare, węższe logi zachowane jako baseline-base-*.log. NASTĘPNY KROK: pwsh artifacts/gpt-s16-r1/render.ps1 -Stage before
+
+Wpięto konsolidację tylko LOD1/LOD2; LOD0 eksportuje te same bufory. Wspólne materials.py i WorldPbrMaterials.cs: wyłącznie nowy opt-in vehicle_lod_atlas. Importer obsługuje jawne końce LOD i alias LOD2 pojazdów placowych (ta sama geometria i jeden natywny mesh). 36/36 testów atlas/deposition/yard. Baseline rozszerzony nadal czeka na PHONE_RUN; manifest bazowy nie ma flag atlasu, więc nowy kod nie zmienia jego wyglądu.

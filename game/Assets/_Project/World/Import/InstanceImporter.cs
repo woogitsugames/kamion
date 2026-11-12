@@ -181,6 +181,15 @@ namespace Game.World.Import
                 var starts = new List<int>();
                 foreach (var (g, n) in lodNodes)
                 {
+                    // ADR0153: a data-flagged yard LOD2 can reuse its LOD1 mesh/material slots.
+                    // No duplicate native mesh or material allocation for the identical silhouette.
+                    if (n0.Extras != null && n0.Extras.Get("vehicle_lod_atlas") is bool atlas && atlas
+                        && n.Extras != null && n.Extras.Get("vehicle_lod_alias") != null)
+                    {
+                        int alias = (int)Num(n.Extras.Get("vehicle_lod_alias"));
+                        if (alias < 0 || alias >= lods.Count) throw new InvalidOperationException("Invalid vehicle LOD alias: " + name);
+                        lods.Add(lods[alias]); starts.Add(starts[alias]); continue;
+                    }
                     starts.Add(materials.Count);
                     bool uv = false, uv1 = false;
                     foreach (var prim in n.Primitives)
@@ -212,6 +221,9 @@ namespace Game.World.Import
                 p.lods = lods.ToArray();
                 p.materialStart = starts.ToArray();
                 var (ends, mask) = Policy(name, p.lods.Length);
+                // ADR0153: explicit opt-in data leaves all existing policy branches unchanged.
+                if (n0.Extras != null && n0.Extras.Get("vehicle_lod_atlas") is bool atlasPolicy && atlasPolicy)
+                    ends = VehicleLodAtlasMaterials.LodEnds(n0.Extras, p.lods.Length);
                 p.lodEndM = ends;
                 p.shadowLodMask = mask;
                 // Prop collider = box around the part of the .col mesh below 2.6 m (the post / foot), extended to 2.6 m.

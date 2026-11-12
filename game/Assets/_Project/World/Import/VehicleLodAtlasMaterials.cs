@@ -1,14 +1,32 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using Game.Editor.Build;
 using UnityEditor;
 using UnityEngine;
+using static Game.World.Import.MiniJson;
 
 namespace Game.World.Import
 {
     /// <summary>ADR0153 opt-in palette atlas. Reuses World PBR and its existing instanced pass.</summary>
     public static class VehicleLodAtlasMaterials
     {
+        public static float[] LodEnds(Dictionary<string, object> extras, int count)
+        {
+            var values = Arr(extras.Get("vehicle_lod_ends_m"));
+            if (values == null || values.Count != count) throw new InvalidOperationException("Vehicle LOD distance count mismatch");
+            var result = new float[count];
+            for (int i = 0; i < count; i++)
+            {
+                result[i] = (float)Num(values[i]);
+                if (float.IsNaN(result[i]) || float.IsInfinity(result[i]) || result[i] <= (i == 0 ? 0 : result[i - 1]))
+                    throw new InvalidOperationException("Vehicle LOD distances must be positive, finite and increasing");
+            }
+            if (!Mathf.Approximately(result[count - 1], WorldInstances.VehicleCullM))
+                throw new InvalidOperationException("Vehicle atlas must preserve cull distance");
+            return result;
+        }
+
         public static Material Create(RegionImporter.Result region, string path)
         {
             var shader = Shader.Find("Kamion/World PBR")
@@ -24,6 +42,8 @@ namespace Game.World.Import
             var mask = InstanceImporter.ImportTexture(region, Path.Combine(dir, "vehicle_lod_details_MaskMap.png"), true, true);
             mat.SetTexture("_BaseMap", albedo);
             mat.SetTexture("_MaskMap", mask);
+            if (!WorldPbrMaterials.Imported.Contains(albedo)) WorldPbrMaterials.Imported.Add(albedo);
+            if (!WorldPbrMaterials.Imported.Contains(mask)) WorldPbrMaterials.Imported.Add(mask);
             WorldPbrMaterials.SetLinearTint(mat, Vector3.one);
             mat.SetVector("_Tile", new Vector4(1, 1, 16, 1));
             mat.SetFloat("_AlbedoScale", 1);

@@ -19,6 +19,7 @@ from terrain_mesh.gltf import GLB
 
 from . import props as PP
 from . import life_cars as LC
+from . import vehicle_lod_atlas as VLA
 from . import signs as SG
 from . import hedge_textures as HT
 from . import furniture_textures as FT
@@ -157,6 +158,7 @@ def glb_materials():
 
 
 def export(codes, boards, out_dir=None):
+    VLA.generate()
     out_dir = Path(out_dir) if out_dir else ART / "props"
     sign_dir = (out_dir.parent / "signs") if out_dir != ART / "props" else ART / "signs"
     tex_dir = (out_dir.parent / "textures") if out_dir != ART / "props" else ART / "textures"
@@ -204,18 +206,36 @@ def export(codes, boards, out_dir=None):
             LP.contact_quad(cm, cspec)
             glb.add_mesh(name + ".contact", cm.out(), {"contact": cspec})
         prims = LC.paint_deposition(crease_normals(lod0.out()), name)
-        glb.add_mesh(name, prims, {"lod": 0})
+        extras = {"lod": 0}
+        vehicle = name.startswith(VLA.PREFIXES)
+        if vehicle:
+            extras.update(vehicle_lod_atlas=True, vehicle_lod_ends_m=(
+                [25.0, 85.0, 300.0] if name.startswith(("car_", "van_")) else [40.0, 100.0, 300.0]))
+        glb.add_mesh(name, prims, extras)
         t0 = sum(len(p["T"]) for p in prims)
         p1 = LC.paint_deposition(crease_normals(lod1.out()), name)
+        p1 = VLA.consolidate(p1, name)
         glb.add_mesh(name + ".lod1", p1, {"lod": 1})
         t1 = sum(len(p["T"]) for p in p1)
         if col is not None:
             glb.add_mesh(name + ".col", col.out(), {"collision": True})
         meta[name] = {"tris_lod0": int(t0), "tris_lod1": int(t1), "materials": sorted({p["mat"] for p in prims})}
+        if vehicle:
+            meta[name]["materials_lod1"] = [p["mat"] for p in p1]
         if more and more[0] is not None:          # optional third LOD (cars, vans: far parking rows)
             p2 = LC.paint_deposition(crease_normals(more[0].out()), name)
+            p2 = VLA.consolidate(p2, name)
             glb.add_mesh(name + ".lod2", p2, {"lod": 2})
             meta[name]["tris_lod2"] = int(sum(len(p["T"]) for p in p2))
+            if vehicle:
+                meta[name]["materials_lod2"] = [p["mat"] for p in p2]
+        elif name.startswith(("tractor_", "trailer_")):
+            # The existing 276–316-triangle yard silhouette is already small. LOD2
+            # aliases it rather than losing separate wheels/supports in another decimation.
+            glb.add_mesh(name + ".lod2", p1, {"lod": 2, "vehicle_lod_alias": 1})
+            meta[name]["tris_lod2"] = t1
+            meta[name]["materials_lod2"] = [p["mat"] for p in p1]
+            meta[name]["lod2_alias"] = 1
         del glb_tris
     data = glb.bytes({"library": "street_props", "frame": "x right, y front, z up (glTF: x=-x, y=z, z=y)"})
     (out_dir / "street_props.glb").write_bytes(data)

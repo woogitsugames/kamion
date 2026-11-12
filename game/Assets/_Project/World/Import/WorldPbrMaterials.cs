@@ -71,6 +71,7 @@ namespace Game.World.Import
         /// <summary>True when the manifest material has a generated set whose files exist for the tier.</summary>
         public static bool Has(Dictionary<string, object> def, string id)
         {
+            if (def.Get("vehicle_lod_atlas") is bool vehicleAtlas && vehicleAtlas) return true; // ADR0153 opt-in
             if (id == "decal_tyre") return true;   // procedural strip profile, no set
             if (def.Get("procedural") as string == "grate") return true;   // gully grates (drain_grate)
             if (Stripes(def) != null) return true;                         // painted bands (boom, hazard)
@@ -89,6 +90,7 @@ namespace Game.World.Import
         public static void Channels(Dictionary<string, object> def, string id, out bool uv0, out bool uv1, out bool colors)
         {
             uv0 = uv1 = colors = false;
+            if (def.Get("vehicle_lod_atlas") is bool vehicleAtlas && vehicleAtlas) { uv0 = true; return; }
             // ADR0120: the existing World Surface material reads a byte-stable board marker, not UVs.
             if (id == "concrete_plinth" && def.Get("furniture_plinth_detail") is Dictionary<string, object>) { colors = true; return; }
             if (def.Get("furniture_sign_face") is string) { uv0 = true; return; }
@@ -144,6 +146,8 @@ namespace Game.World.Import
         /// <summary>PBR material for a manifest material, or null when its set is missing (caller falls back).</summary>
         public static Material Create(RegionImporter.Result r, string id, Dictionary<string, object> def, string path)
         {
+            if (def.Get("vehicle_lod_atlas") is bool vehicleAtlas && vehicleAtlas)
+                return VehicleLodAtlasMaterials.Create(r, path);
             if (id == "plate_back" && def.Get("furniture_sign_fronts") is Dictionary<string, object> fronts)
                 FurnitureSignFronts(r, fronts);
             if (def.Get("furniture_sign_face") is string face) return FurnitureSign(r, id, def, face, path);
