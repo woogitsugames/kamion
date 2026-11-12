@@ -73,3 +73,5 @@ Krok 10: EditMode 295/295 PASS, bez skipów, XML zachowany. Cache przed testami:
 Krok 11: walidacja końcowa zakończona. Pełny GIS 585 passed + 1 xfailed (983.56 s), EditMode 295/295 PASS. Physics/gate3 47 passed + 1 znana porażka odtwarzania top_speed_flat_comb.json (295.69 s). Cztery wejścia tej porażki są kanonicznie identyczne z 2c3939b2, proof zapisany, bez zmian fizyki. Cache po testach: wszystkie 192 pliki oraz manifest i własne źródła identyczne z checkpointem przed testami. Trzy pliki z samą zmianą stat/newline odświeżono w indeksie po sprawdzeniu identycznych blobów, bez zmiany bajtów na dysku. NASTĘPNY KROK: końcowy WIP wygenerowanych danych, REPORT, robocopy i r3.
 
 Krok 12: REPORT gotowy; checkpoint walidacji 73170057. Następnie kopia artifacts do main z kontrolą liczby obrazów i sum raportu.
+
+Krok 13: robocopy do main zakończony, raport i wszystkie 232 obrazy after-weather zgodne SHA256. COPY-RECEIPT zapisany. Runda r2 zamknięta; natychmiast rozpoczynam r3 w tym samym worktree.
