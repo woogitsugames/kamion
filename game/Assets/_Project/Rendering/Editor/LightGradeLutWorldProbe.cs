@@ -52,7 +52,10 @@ namespace Game.Rendering.Editor
             m_Key=JsonUtility.ToJson(JsonUtility.FromJson<Key>(File.ReadAllText(Path.Combine(folder,preset+"-key.json"))));
             var bytes=File.ReadAllBytes(Path.Combine(folder,$"{preset}-lut{size}-RGBAHalf.raw"));
             if(bytes.Length!=size*size*size*8)throw new InvalidDataException("LUT byte count");
-            m_Lut=new Texture3D(size,size,size,TextureFormat.RGBAHalf,false){filterMode=FilterMode.Bilinear,wrapMode=TextureWrapMode.Clamp,name="Editor-only opaque look experiment"};
+            // The QA runner unloads unused assets while opening its scene. This managed diagnostic owner is
+            // not a scene component; retain the transient texture explicitly until Dispose releases it.
+            m_Lut=new Texture3D(size,size,size,TextureFormat.RGBAHalf,false){filterMode=FilterMode.Bilinear,wrapMode=TextureWrapMode.Clamp,
+                hideFlags=HideFlags.HideAndDontSave,name="Editor-only opaque look experiment"};
             m_Lut.SetPixelData(bytes,0);m_Lut.Apply(false,false);
         }
         float InverseGrey(float display)
@@ -69,6 +72,7 @@ namespace Game.Rendering.Editor
         public void Apply(Camera camera)
         {
             Shader.SetGlobalFloat("_KamionOpaqueGradeEnabled",0);
+            if(m_Lut==null){m_Error="Diagnostic LUT unloaded before rendering";return;}
             if(!QualityProfileApplier.HasCurrent || QualityProfileApplier.Current.name!="Low" || QualityProfileApplier.Current.postProcessing){m_Error="LUT probe requires actual Low without post";return;}
             var env=EnvironmentLighting.Instance;
             if(env==null || env.Active==null){m_Error="Missing active environment";return;}
