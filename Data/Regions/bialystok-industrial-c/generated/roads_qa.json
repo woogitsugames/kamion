@@ -1766,7 +1766,7 @@
     1,
     2
    ],
-   "length_m": 190.2,
+   "length_m": 190.1,
    "max_grade": 0.0174,
    "overrides": [
     "putry-link-fork-placement"
@@ -10259,7 +10259,7 @@
   "axis_smoothing_deviation_m": {
    "max": 6.0,
    "p50": 0.0,
-   "p95": 0.253
+   "p95": 0.254
   },
   "bridges": [
    {
@@ -10361,7 +10361,7 @@
   "crossings_skipped": [],
   "crossings_snapped": 71,
   "decals": {
-   "gullies": 767,
+   "gullies": 768,
    "oil": 286,
    "patches": 316
   },
@@ -10370,7 +10370,7 @@
    "j:n1847044938",
    "j:n2840742308"
   ],
-  "footprint_nodes": 565731,
+  "footprint_nodes": 565674,
   "fork_abreast": [
    {
     "alongside_run_m": 125.0,
@@ -10616,7 +10616,7 @@
    },
    {
     "chain": "c:w1101181473:10076968415-1847263305",
-    "hold_m": 12.0,
+    "hold_m": 22.0,
     "lanes": [
      4.31,
      0.76
@@ -11267,14 +11267,14 @@
      ]
     },
     {
-     "area_m2": 102.9,
+     "area_m2": 80.6,
      "built": true,
      "hatch": false,
      "note": "",
      "why": "merge",
      "xy": [
-      -353.0,
-      -131.9
+      -351.9,
+      -133.1
      ]
     },
     {
@@ -11561,7 +11561,7 @@
      "surface": "sidewalk_paving"
     },
     {
-     "area_m2": 73.7,
+     "area_m2": 76.6,
      "built": true,
      "id": "dk8-ramp-split-island",
      "note": "z 140.52",
@@ -11589,11 +11589,11 @@
      "surface": "sidewalk_paving"
     }
    ],
-   "kerb_dropped_m": 705.5,
+   "kerb_dropped_m": 698.0,
    "kerb_tris_in_fill": 0,
    "paved": {
     "merge": {
-     "area_m2": 283.6,
+     "area_m2": 261.3,
      "count": 6
     },
     "override": {
@@ -11609,7 +11609,7 @@
     {
      "area_m2": 160.8,
      "reason": "carriageways at different heights",
-     "step_m": 0.65,
+     "step_m": 0.66,
      "why": "merge",
      "xy": [
       -713.6,
@@ -12430,7 +12430,7 @@
    {
     "id": "dk8-ramp-split-barrier-n",
     "targets": [
-     "guardrail@-752,77"
+     "guardrail@-750,77"
     ]
    },
    {
@@ -12499,7 +12499,7 @@
      ]
     ],
     "id": "s1440-diverge-p21",
-    "max_lift_m": 0.0209,
+    "max_lift_m": 0.0149,
     "mode": "chevron",
     "stripe_cover": 0.35,
     "stripes": 25,
@@ -12723,13 +12723,13 @@
      ]
     ],
     "id": "s1440-diverge-p21-band",
-    "max_lift_m": 0.0036,
+    "max_lift_m": 0.0044,
     "mode": "axis",
     "stripe_cover": 0.434,
     "stripes": 47,
     "stripes_built": 47,
-    "tris": 1291,
-    "tris_off_carriageway": 97,
+    "tris": 1284,
+    "tris_off_carriageway": 104,
     "xy": [
      -363.3,
      -119.7
@@ -12798,9 +12798,9 @@
   ],
   "roundabout_junctions": 12,
   "sides_on_carriageway_culled": {
-   "kerb_tris": 4857,
-   "parts": 631,
-   "side_tris": 834
+   "kerb_tris": 4748,
+   "parts": 628,
+   "side_tris": 831
   },
   "signalised_junctions": 11,
   "through_lines": {
@@ -12816,7 +12816,7 @@
   },
   "verge_strips": {
    "chunks": 37,
-   "tris": 49448
+   "tris": 49478
   },
   "walled_ramps": [
    {
