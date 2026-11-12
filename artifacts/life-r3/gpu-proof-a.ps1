@@ -27,9 +27,18 @@ $code=1
 if($LASTEXITCODE){throw 'Acquire failed'}
 try {
  $log=[IO.Path]::GetFullPath('artifacts/life-r3/gpu-a.log')
- $code=Invoke-UnityBatch -LogFile $log -Arguments @('-executeMethod','Game.Editor.VisualQA.Life3ProbeRunner.RunBatch')
- if($code){throw 'GPU probe failed'}
+ $unityCode=Invoke-UnityBatch -LogFile $log -Arguments @('-executeMethod','Game.Editor.VisualQA.Life3ProbeRunner.RunBatch')
+ if($unityCode){throw 'GPU probe failed'}
  if(!(Test-Path artifacts/life-r3/gpu-a/opacity-uv-proof.json)){throw 'Opacity evidence missing'}
+ $film=Get-Content artifacts/life-r3/gpu-a/instanced-film-gpu-proof.json -Raw|ConvertFrom-Json
+ $opacity=Get-Content artifacts/life-r3/gpu-a/opacity-uv-proof.json -Raw|ConvertFrom-Json
+ if(@($opacity.cases).Count -ne 81 -or @($film.cases|Where-Object {!$_.pass}).Count){throw 'GPU case coverage failed'}
+ if(($film.cpuCounts -join ',') -ne ($film.gpuCounts -join ',')){throw 'GPU distribution mismatch'}
+ if((Get-FileHash $plate).Hash -ne $plateHash){throw 'Native plate changed during numeric probe'}
+ foreach($entry in $inputs.source_sha.PSObject.Properties) {
+  if((Get-FileHash $entry.Name).Hash -ne $entry.Value){throw "Source changed during GPU proof: $($entry.Name)"}
+ }
+ $code=0
 } finally {
  & pwsh -NoProfile -File scripts/unity-slot.ps1 -Release -Owner gpt-life
  git restore -- game/Assets/_Project/Rendering/Settings game/ProjectSettings
