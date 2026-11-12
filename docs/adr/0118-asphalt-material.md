@@ -35,3 +35,7 @@ Zakres pozostaje materiałowy. Istniejący generator zapisuje UV1 długości i o
 Przed wyborem parametrów potrzebne są cztery serie baseline, oględziny roboczych zbliżeń poza Kwadratem i referencje w aktualnych pozach SBS z main. Mierzymy zmiany w tych samych polach obrazu Low/High clear/overcast oraz wszystkie liczniki kamer i instancji. Wartości wizualne będą WORKING_VALUE, koszt A16 bez telefonu pozostaje UNVERIFIED. Kontrakty _Tile, liniowego _Tint i weather/runoff zostają zachowane.
 
 
+
+### r2a — kandydat materiałowy
+Oględziny poprawionego zbliżenia wykazały już czytelne fugi kostki i duże mokro wyglądające plamy. Parametry ground_grime dotyczą tylko sidewalk_paving: damp_darkening 0,42 → 0,18, threshold 0,62 → 0,65, joint_dirt bez zmian 0,45, gloss 0,5 → 0,15. Krawężnik opt-in kerb_wear: joint_dirt 0,35, mineral_film 0,16, threshold 0,55. Wartości WORKING_VALUE. Oba efekty używają już próbkowanych tekstur: brak nowych odczytów, wariantów słów kluczowych, przebiegów lub kanałów UV. Nie wykorzystujemy niepełnego UV1 (0,50) do udawania brudu przy brzegu. Profile, pozycje, indeksy i dane geometrii bez zmian; wymagany audyt wszystkich GLB oraz liczników kamer. Zdjęcia SBS mają niedopasowaną pozę i służą tu wyłącznie za przykład materiału, bez kalibracji fotometrycznej.
+

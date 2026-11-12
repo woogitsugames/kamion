@@ -66,7 +66,7 @@ def main():
                 ImageDraw.Draw(contact).text((x+3,y+2),camera[:58],fill='white')
                 if index%12 == 11 or index == len(bfiles)-1:
                     contact.save(pages/f'{condition}-contact-{index//12:02}.jpg')
-                if camera.startswith(('d_wear_','sbs-')):
+                if camera.startswith(('d_wear_','sbs-', 'asphalt_')):
                     pair = Image.new('RGB',(960,250),'#202020')
                     pair.paste(thumb(bdir/name,(480,225)),(0,24))
                     pair.paste(thumb(adir/name,(480,225)),(480,24))

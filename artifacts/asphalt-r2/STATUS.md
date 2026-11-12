@@ -30,3 +30,4 @@
 2026-11-12T02:01:06.8075474+01:00: zapisano artifacts/asphalt-r2/baseline/High-clear. Następny krok: pozostałe serie lub porównanie wariantu.
 2026-11-12T02:01:07.2648644+01:00: Baseline odświeżony po korekcie kadru i rzeczywistej macierzy regionu. Obrazy/metryki sprzed korekty nie służą do porównania nowego kandydata.
 2026-11-12T02:09:18.9398543+01:00: Kandydat r2: addytywne kerb_wear i ground_grime. Krawężnik używa istniejących Mask.B/macro; chodnik zachowuje siłę fug 0,45, osłabia ciemne mokre plamy i ich połysk. Brak nowych UV/tekstur/przebiegów, geometria bez zmian. Wartości WORKING_VALUE, wymagają renderu i budżetu.
+2026-11-12T02:10:39.7349373+01:00: Audyt odświeżonego baseline: 82 PNG i 82 snapshoty w każdej z 4 serii, wszystkie macierze rootToWorld mają 16 pól. Zachowano 3 materiały bazowe przed importem. Probe kandydata zapisze kerbWear, pavingGrime i yardGrime. World czeka na wolny slot heavy, nie uruchamiamy drugiego producenta.
