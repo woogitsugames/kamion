@@ -6,3 +6,5 @@
   NASTEPNY KROK: wpiecie w VehicleAudioImporter + EngineAudio/TruckAudioController (przelacznik audio.engineSource)
 - krok 3 (kod): AudioPreferences (Game.Core, PlayerPrefs audio.engineSource, arg engine_audio=el|synth), przelacznik DZWIEK/Silnik w ControlSettingsPanel, EngineAudio: zestaw ElevenLabs + start/stop/klekot/wastegate, bramka hamulca silnikowego na zmianie biegu, importer el_manifest, testy PlayMode ElevenLabsEngineAudioTests. NIE skompilowane jeszcze (PHONE_RUN).
   NASTEPNY KROK: pwsh scripts/unity-slot.ps1 -Acquire -Owner claude-audio-el ; import + testy PlayMode -Filter ElevenLabs
+- krok 4-5: ADR 0137, LICENSES (audio-elevenlabs-sfx-v3, Pro 99 USD), docs/owner/ELEVENLABS-REGEN-01.md (10 promptow x4), demo A/B artifacts/audio-el/demo/{el,synth}_{cab,ext}.mp3 (tools/audio/el_demo.py). Unity czeka na PHONE_RUN.
+  NASTEPNY KROK: pwsh scripts/unity-slot.ps1 -Acquire -Owner claude-audio-el ; Unity -executeMethod Game.Editor.Audio.VehicleAudioImporter.ImportBatch ; pwsh scripts/test.ps1 -Platform PlayMode -Filter "ElevenLabsEngineAudioTests|AudioLayersTests"

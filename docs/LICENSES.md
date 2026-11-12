@@ -109,7 +109,7 @@ Modyfikacje (wszystkie w kodzie, odtwarzalne): częściowe usunięcie cieniowani
 
 ## Audio
 
-Wszystkie dźwięki poniżej są **w 100% syntetyzowane naszym kodem** (numpy/scipy) — bez nagrań, sampli, banków dźwięków ani generatorów AI. Brak praw osób trzecich; licencja = licencja projektu. Opis modelu: `docs/AUDIO_DESIGN.md`.
+Dźwięki z tabeli syntezy są **w 100% syntetyzowane naszym kodem** (numpy/scipy) — bez nagrań, sampli, banków dźwięków ani generatorów AI. Brak praw osób trzecich; licencja = licencja projektu. Opis modelu: `docs/AUDIO_DESIGN.md`. Wyjątek: zestaw **ElevenLabs** (tabela niżej, ADR 0137).
 
 | ID | Źródło | Autor | Licencja | Data | W gicie? | Użycie / modyfikacje |
 |---|---|---|---|---|---|---|
@@ -119,6 +119,12 @@ Wszystkie dźwięki poniżej są **w 100% syntetyzowane naszym kodem** (numpy/sc
 | `audio-previews` | render powyższych (`art-source/audio/previews/*.ogg`) | projekt | własna (projekt) | 2026-11-09 | tak | podglądy do odsłuchu (każda pętla 2× pod rząd) |
 | `audio-drive-demo` | `tools/audio/render_demo.py` (lustro runtime, skryptowana telemetria) | projekt | własna (projekt) | 2026-11-09 | tak (`art-source/audio/demo/`) | demo 30 s kabina + zewnątrz do oceny właściciela |
 | `cluster-chime-procedural` | `game/Assets/_Project/Gameplay/ClusterChime.cs` (synteza w czasie działania: sinus 1,0 kHz + 2,4× , zanik wykładniczy, 0,45 s; brak pliku) | projekt (agent gameplay-ui) | własna (projekt) | 2026-11-10 | kod tak; brak pliku audio | pojedynczy sygnał zegarów przy próbie ruszenia z zaciągniętym hamulcem postojowym (ADR 0004 dodatek) |
+
+### Audio z generatora AI — ElevenLabs (ADR 0137)
+
+| ID | Źródło | Autor | Licencja / warunki | Data | W gicie? | Użycie / modyfikacje |
+|---|---|---|---|---|---|---|
+| `audio-elevenlabs-sfx-v3` | ElevenLabs Sound Effects, model **v3**, wygenerowane przez właściciela na jego koncie, plan **ElevenCreative Pro, 99 USD/mies.** (bieżący plan, odnowienie 2026-12-04; 600 tys. kredytów/mies.; potwierdzenie: zrzut z konta właściciela, przekazany przez lidera 2026-11-12). Prompty i ustawienia: `art-source/audio/elevenlabs/generation-manifest.json` (kopia użytych promptów w `game/Assets/_Project/Audio/ElevenLabs/el_manifest.json` → `prompts`) i `docs/owner/ELEVENLABS-PROMPTS.md` | właściciel (generator AI ElevenLabs) | **Użytek komercyjny dozwolony na planie płatnym.** Terms of Service ElevenLabs (stan na 2026-11-12, „last updated 09 October 2026”, <https://elevenlabs.io/terms-of-use>): §1(c) plan płatny pozwala na cele komercyjne (plan darmowy tylko niekomercyjne); §4(c)(ii) prawa do Output zostają przy użytkowniku; brak wymogu atrybucji; §10 Output może nie być unikalny (podobny dźwięk może dostać inny użytkownik); obowiązuje Prohibited Use Policy. Cennik (<https://elevenlabs.io/pricing>, 2026-11-12): Pro zawiera licencję komercyjną. Service-Specific Terms dla SFX nie zostały przeczytane — `UNVERIFIED`, do sprawdzenia przed wydaniem | 2026-11-12 | **wybrane i przetworzone tak** (`game/Assets/_Project/Audio/ElevenLabs/Clips/**`, LFS, 48 kHz mono 16-bit); surowe 248 plików WAV (48 kHz stereo) nie — `art-source/audio/elevenlabs/` u właściciela | pętle silnika 6 rpm × 2 obciążenia × ext/cab (24 komórki z 13 nagrań), hamulec wydechowy 4 rpm × ext/cab, start ext/cab, stop, klekot jałowy, wastegate, retarder. Modyfikacje: downmix mono, HP 25 Hz, szew pętli (crossfade 40 ms), przestrojenie okresowym resamplingiem FFT do obrotów siatki (×0,68–×1,90), głośność wg LUFS komórki syntezy, miękki limiter (≤ 1,1 dB), wersje kabinowe stop/wastegate/klekot/retarder/hamulec przez `cab_filter` (ADR 0017). Narzędzia: `tools/audio/el_analyze.py`, `el_prepare.py`, `el_verify.py`. Bez nazw marek w promptach i plikach |
 
 ### Narzędzia audio (biblioteki Pythona w `tools/audio`, wersje w `tools/audio/uv.lock`)
 Tylko pipeline, nie trafiają do buildu: numpy (BSD-3), scipy (BSD-3), soundfile (BSD-3; dołączony libsndfile LGPL-2.1, z koderem Vorbis BSD-3 — używany tylko do zapisu plików offline), matplotlib (licencja matplotlib), Pillow (MIT-CMU, kwantyzacja PNG raportów). Formuły biquadów: RBJ Audio EQ Cookbook (wzory publiczne). K-weighting LUFS: ITU-R BS.1770-4 (współczynniki normy).
