@@ -197,6 +197,68 @@ namespace Game.Tests
             Assert.LessOrEqual(CameraRig.CabVerticalFov(75f, 0.3f), 90f);
         }
 
+        [Test]
+        public void Drag_SimRange_ScaledTravel_About46mm()
+        {
+            var w = DragWheel(900f);
+            Assert.AreEqual(900f / w.DragDegPerMm, 25f * Mathf.Sqrt(900f / 270f), 1e-3f);
+            Assert.That(900f / w.DragDegPerMm, Is.InRange(44f, 48f), "900 deg sim range: ~46 mm (was 83 mm)");
+            Assert.AreEqual(SteeringFeel.Defaults().dragScreenDegPerMm, DragWheel(180f).DragDegPerMm, 1e-5f, "short ranges keep 10.8 deg/mm");
+        }
+
+        [Test]
+        public void Dpi_Sanitised_PanelPreferredWhenPlausible()
+        {
+            Assert.AreEqual(SteeringMath.FallbackDpi, SteeringMath.SanitizeDpi(0f), 1e-4f);
+            Assert.AreEqual(SteeringMath.FallbackDpi, SteeringMath.SanitizeDpi(float.NaN), 1e-4f);
+            Assert.AreEqual(120f, SteeringMath.SanitizeDpi(40f), 1e-4f);
+            Assert.AreEqual(900f, SteeringMath.SanitizeDpi(4000f), 1e-4f);
+            Assert.AreEqual(374f, DeviceDisplay.Choose(420f, 374f), 1e-4f, "panel xdpi within 0.6-1.6x of the bucket");
+            Assert.AreEqual(480f, DeviceDisplay.Choose(480f, 60f), 1e-4f, "implausible panel value: bucket");
+            Assert.AreEqual(374f, DeviceDisplay.Choose(0f, 374f), 1e-4f, "no bucket: panel");
+            Assert.AreEqual("portrait", DeviceDisplay.NaturalOrientation(2184, 1968, 1), "landscape window at rotation 90: natural portrait");
+            Assert.AreEqual("landscape", DeviceDisplay.NaturalOrientation(2184, 1968, 0));
+            Assert.AreEqual("portrait", DeviceDisplay.NaturalOrientation(1968, 2184, 0));
+            Assert.AreEqual("unknown", DeviceDisplay.NaturalOrientation(1968, 2184, -1));
+        }
+
+        [Test]
+        public void OrientationLock_NearSquare_SettlesThenLocks_NoRotationWhileDriving()
+        {
+            var l = new ScreenOrientationLock();
+            Assert.AreEqual(OrientationCommand.AllowAuto, l.Step(0f, 2184, 1968, ScreenOrientation.LandscapeLeft, false), "start: settle");
+            Assert.IsTrue(l.Allowed.Portrait);
+            // The OS turns the picture to the held (portrait) orientation during the settle: the settle restarts.
+            Assert.AreEqual(OrientationCommand.None, l.Step(0.5f, 1968, 2184, ScreenOrientation.Portrait, false));
+            Assert.AreEqual(OrientationCommand.None, l.Step(1.5f, 1968, 2184, ScreenOrientation.Portrait, false), "still settling after the rotation");
+            Assert.AreEqual(OrientationCommand.Lock, l.Step(1.8f, 1968, 2184, ScreenOrientation.Portrait, false));
+            Assert.AreEqual(ScreenOrientation.Portrait, l.LockTo, "locks the held orientation");
+            for (float t = 2f; t < 60f; t += 0.5f) Assert.AreEqual(OrientationCommand.None, l.Step(t, 1968, 2184, ScreenOrientation.Portrait, true), "locked while driving");
+            // Fold -> cover screen (elongated): settle again with landscape only, then free L/R without gyro.
+            Assert.AreEqual(OrientationCommand.AllowAuto, l.Step(61f, 2520, 1080, ScreenOrientation.LandscapeLeft, false));
+            Assert.IsFalse(l.Allowed.Portrait);
+            Assert.AreEqual(OrientationCommand.None, l.Step(63f, 2520, 1080, ScreenOrientation.LandscapeLeft, false));
+            Assert.IsFalse(l.Locked, "phone without gyro: landscape L/R rotate as before");
+            // Gyro switched on: lock; off: unlock.
+            Assert.AreEqual(OrientationCommand.Lock, l.Step(64f, 2520, 1080, ScreenOrientation.LandscapeRight, true));
+            Assert.AreEqual(ScreenOrientation.LandscapeRight, l.LockTo);
+            Assert.AreEqual(OrientationCommand.None, l.Step(70f, 2520, 1080, ScreenOrientation.LandscapeRight, true));
+            Assert.AreEqual(OrientationCommand.AllowAuto, l.Step(71f, 2520, 1080, ScreenOrientation.LandscapeRight, false));
+            // Unfold again: settle, lock.
+            Assert.AreEqual(OrientationCommand.AllowAuto, l.Step(80f, 2184, 1968, ScreenOrientation.LandscapeRight, true));
+            Assert.AreEqual(OrientationCommand.Lock, l.Step(81.3f, 2184, 1968, ScreenOrientation.LandscapeRight, true));
+        }
+
+        [Test]
+        public void OrientationLock_PhoneWithGyro_LocksAfterSettle()
+        {
+            var l = new ScreenOrientationLock();
+            Assert.AreEqual(OrientationCommand.AllowAuto, l.Step(0f, 2340, 1080, ScreenOrientation.LandscapeLeft, true));
+            Assert.AreEqual(OrientationCommand.None, l.Step(1f, 2340, 1080, ScreenOrientation.LandscapeLeft, true));
+            Assert.AreEqual(OrientationCommand.Lock, l.Step(1.3f, 2340, 1080, ScreenOrientation.LandscapeLeft, true));
+            Assert.AreEqual(OrientationCommand.None, l.Step(1.4f, 2340, 1080, ScreenOrientation.AutoRotation, true), "no repeat");
+        }
+
         // ---------------------------------------------------------------- evidence
 
         /// <summary>

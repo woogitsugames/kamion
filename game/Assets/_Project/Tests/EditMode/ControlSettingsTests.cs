@@ -168,8 +168,8 @@ namespace Game.Tests
         {
             var wheel = new TouchSteeringWheel(); s.ApplyTo(wheel, null, null);
             // Both gestures get the same 60 deg (ADR 0135): clockwise around the centre (rotate) and a slide to the right
-            // of 60 / dragScreenDegPerMm millimetres (drag); only the active gesture's coordinates are used.
-            float mmPer10 = 10f / wheel.Feel.dragScreenDegPerMm;
+            // of 60 / DragDegPerMm millimetres (drag); only the active gesture's coordinates are used.
+            float mmPer10 = 10f / wheel.DragDegPerMm;
             wheel.PointerDown(new Vector2(0, 100), new Vector2(20f, 10f));
             for (int i = 1; i <= 6; i++) { float a = i * 10f * Mathf.Deg2Rad; wheel.PointerDrag(new Vector2(Mathf.Sin(a), Mathf.Cos(a)) * 100f, new Vector2(20f + i * mmPer10, 10f)); }
             var it = new DriverIntent();

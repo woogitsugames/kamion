@@ -1,3 +1,4 @@
+using Game.Controls;
 using UnityEngine;
 
 namespace Game.Gameplay
@@ -46,16 +47,94 @@ namespace Game.Gameplay
         }
     }
 
+    /// <summary>What <see cref="ScreenOrientationLock"/> asks the screen to do this frame.</summary>
+    public enum OrientationCommand { None, AllowAuto, Lock }
+
     /// <summary>
-    /// Applies <see cref="ScreenOrientationPolicy"/> on the device at start and whenever the window size changes (fold /
-    /// unfold, multi-window): the activity declares every configChanges flag (Unity default), so a fold is a resolution
-    /// change inside the running game, not a restart. Lives for the whole process (all scenes). Allocation-free per frame.
+    /// Settle-then-lock state machine (ADR 0135, review 0134-0135 P1). Pure logic, unit-tested.
+    /// - A new screen configuration (first frame, fold / unfold, multi-window: the sorted window size changes) starts a
+    ///   short settle: the allowed orientations (<see cref="ScreenOrientationPolicy.Decide"/>) rotate freely so the picture
+    ///   turns to how the device is held at that moment. A rotation during the settle (width/height swap) restarts it.
+    /// - After <see cref="SettleSeconds"/> the CURRENT concrete orientation is locked: tilting the phone while driving
+    ///   never rotates the picture again (nor suspends gyro steering, which recalibrates on every orientation change).
+    /// - Elongated screens (phones): landscape L/R keep rotating as before, unless gyro steering is on (then locked
+    ///   too: the steering tilt is the very motion the orientation sensor reads). Near-square screens: always locked.
+    /// </summary>
+    public sealed class ScreenOrientationLock
+    {
+        /// <summary>Time for the OS to turn the picture to the held orientation after a configuration change [s]. WORKING_VALUE.</summary>
+        public const float SettleSeconds = 1.2f;
+
+        int m_ShortSide = -1, m_LongSide = -1, m_W, m_H;
+        float m_SettleUntil;
+        bool m_Settling, m_Locked, m_GyroLocked;
+
+        public bool Settling => m_Settling;
+        public bool Locked => m_Locked;
+        public ScreenOrientationPolicy.Allowed Allowed { get; private set; }
+        /// <summary>Orientation to lock to with <see cref="OrientationCommand.Lock"/>.</summary>
+        public ScreenOrientation LockTo { get; private set; }
+        /// <summary>Short reason for the last command (log).</summary>
+        public string Reason { get; private set; } = "";
+
+        static bool Concrete(ScreenOrientation o) => o == ScreenOrientation.Portrait || o == ScreenOrientation.PortraitUpsideDown
+                                                    || o == ScreenOrientation.LandscapeLeft || o == ScreenOrientation.LandscapeRight;
+
+        public OrientationCommand Step(float time, int width, int height, ScreenOrientation current, bool gyroActive)
+        {
+            int shortSide = Mathf.Min(width, height), longSide = Mathf.Max(width, height);
+            if (shortSide != m_ShortSide || longSide != m_LongSide)
+            {
+                m_ShortSide = shortSide; m_LongSide = longSide; m_W = width; m_H = height;
+                m_Settling = true; m_Locked = false; m_GyroLocked = false;
+                m_SettleUntil = time + SettleSeconds;
+                Allowed = ScreenOrientationPolicy.Decide(width, height);
+                Reason = "new screen configuration: settle";
+                return OrientationCommand.AllowAuto;
+            }
+            if (width != m_W || height != m_H) { m_W = width; m_H = height; if (m_Settling) m_SettleUntil = time + SettleSeconds; }
+            bool nearSquare = ScreenOrientationPolicy.IsNearSquare(width, height);
+            if (m_Settling)
+            {
+                if (time < m_SettleUntil || !Concrete(current)) return OrientationCommand.None;
+                m_Settling = false;
+                if (nearSquare || gyroActive)
+                {
+                    m_Locked = true; m_GyroLocked = !nearSquare; LockTo = current;
+                    Reason = nearSquare ? "near-square: lock held orientation" : "gyro steering: lock held orientation";
+                    return OrientationCommand.Lock;
+                }
+                return OrientationCommand.None;   // phone without gyro: landscape L/R keep rotating
+            }
+            if (!nearSquare)
+            {
+                if (gyroActive && !m_Locked && Concrete(current))
+                {
+                    m_Locked = true; m_GyroLocked = true; LockTo = current; Reason = "gyro steering on: lock";
+                    return OrientationCommand.Lock;
+                }
+                if (!gyroActive && m_Locked && m_GyroLocked)
+                {
+                    m_Locked = false; m_GyroLocked = false; Allowed = ScreenOrientationPolicy.Decide(width, height); Reason = "gyro steering off: unlock";
+                    return OrientationCommand.AllowAuto;
+                }
+            }
+            return OrientationCommand.None;
+        }
+    }
+
+    /// <summary>
+    /// Applies <see cref="ScreenOrientationLock"/> on the device for the whole process (all scenes). The activity declares
+    /// every configChanges flag (Unity default), so a fold is a size change inside the running game, not a restart.
+    /// Logs one <c>[SCREEN]</c> line per command: window, aspect, orientation, device orientation, natural panel
+    /// orientation, DPI (reported / panel / used), safe area. Allocation-free per frame (strings only on a command).
     /// </summary>
     public sealed class ScreenOrientationGuard : MonoBehaviour
     {
-        int m_W = -1, m_H = -1;
-        bool m_HasApplied;
-        ScreenOrientationPolicy.Allowed m_Applied;
+        /// <summary>Set by the driving scene while gyro steering is selected (locks the orientation on phones too).</summary>
+        public static bool GyroSteeringActive;
+
+        readonly ScreenOrientationLock m_Lock = new ScreenOrientationLock();
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         static void Install()
@@ -66,27 +145,38 @@ namespace Game.Gameplay
             go.AddComponent<ScreenOrientationGuard>();
         }
 
-        void Start() => Check();
-
-        void Update() => Check();
-
-        void Check()
+        void Update()
         {
+            var cmd = m_Lock.Step(Time.unscaledTime, Screen.width, Screen.height, Screen.orientation, GyroSteeringActive);
+            if (cmd == OrientationCommand.None) return;
+            if (cmd == OrientationCommand.AllowAuto)
+            {
+                var a = m_Lock.Allowed;
+                // Allow first, then AutoRotation: Unity re-requests the orientation from these flags.
+                Screen.autorotateToLandscapeLeft = a.LandscapeLeft;
+                Screen.autorotateToLandscapeRight = a.LandscapeRight;
+                Screen.autorotateToPortrait = a.Portrait;
+                Screen.autorotateToPortraitUpsideDown = a.PortraitUpsideDown;
+                Screen.orientation = ScreenOrientation.AutoRotation;
+            }
+            else Screen.orientation = m_Lock.LockTo;   // equals the current one: no rotation, no gyro suspend
+            DeviceDisplay.Invalidate();
+            Log(cmd);
+        }
+
+        void Log(OrientationCommand cmd)
+        {
+            var ci = System.Globalization.CultureInfo.InvariantCulture;
             int w = Screen.width, h = Screen.height;
-            if (w == m_W && h == m_H) return;
-            m_W = w; m_H = h;
-            var a = ScreenOrientationPolicy.Decide(w, h);
-            if (m_HasApplied && a.Equals(m_Applied)) return;
-            m_HasApplied = true; m_Applied = a;
-            // Allow first, then (only if needed) forbid: Unity re-requests the orientation from these flags while
-            // Screen.orientation is AutoRotation, and an orientation that is currently shown stays valid in between.
-            Screen.autorotateToLandscapeLeft = a.LandscapeLeft;
-            Screen.autorotateToLandscapeRight = a.LandscapeRight;
-            Screen.autorotateToPortrait = a.Portrait;
-            Screen.autorotateToPortraitUpsideDown = a.PortraitUpsideDown;
-            if (Screen.orientation != ScreenOrientation.AutoRotation) Screen.orientation = ScreenOrientation.AutoRotation;
-            Debug.Log("[SCREEN] " + w + "x" + h + " aspect " + ScreenOrientationPolicy.Aspect(w, h).ToString("F2", System.Globalization.CultureInfo.InvariantCulture)
-                      + " -> orientations " + a + " (ADR 0135)");
+            var sa = Screen.safeArea;
+            Debug.Log("[SCREEN] " + cmd + " (" + m_Lock.Reason + ") window=" + w + "x" + h
+                      + " aspect=" + ScreenOrientationPolicy.Aspect(w, h).ToString("F2", ci)
+                      + " allowed=" + m_Lock.Allowed + (cmd == OrientationCommand.Lock ? " lockTo=" + m_Lock.LockTo : "")
+                      + " orientation=" + Screen.orientation + " device=" + Input.deviceOrientation
+                      + " rotation=" + DeviceDisplay.Rotation + " natural=" + DeviceDisplay.NaturalOrientation(w, h, DeviceDisplay.Rotation)
+                      + " dpi=" + DeviceDisplay.ReportedDpi.ToString("F0", ci) + "/" + DeviceDisplay.PanelXDpi.ToString("F0", ci) + "/" + DeviceDisplay.Dpi.ToString("F0", ci)
+                      + " safe=" + sa.x.ToString("F0", ci) + "," + sa.y.ToString("F0", ci) + "," + sa.width.ToString("F0", ci) + "x" + sa.height.ToString("F0", ci)
+                      + " gyro=" + (GyroSteeringActive ? "on" : "off") + " (ADR 0135)");
         }
     }
 }

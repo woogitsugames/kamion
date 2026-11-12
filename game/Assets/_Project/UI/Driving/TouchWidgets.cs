@@ -19,7 +19,7 @@ namespace Game.UI.Driving
         public RectTransform columnMark;
         int m_Pointer = int.MinValue;
 
-        static Vector2 Mm(PointerEventData e) => SteeringMath.PixelsToMm(e.position, Screen.dpi);
+        static Vector2 Mm(PointerEventData e) => SteeringMath.PixelsToMm(e.position, DeviceDisplay.Dpi);
 
         Vector2 FromCentre(PointerEventData e)
         {

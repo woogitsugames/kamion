@@ -90,7 +90,7 @@ namespace Game.Controls
                 if (float.IsNaN(screenMm.x)) return;
                 if (!m_HasFinger) { m_LastMmX = screenMm.x; m_HasFinger = true; return; }
                 // Incremental: after the wheel hits its stop, reversing the finger turns it back at once (no dead travel).
-                WheelDeg = Mathf.Clamp(WheelDeg + SteeringMath.DragDeg(screenMm.x - m_LastMmX, Feel.dragScreenDegPerMm), -HalfRangeDeg, HalfRangeDeg);
+                WheelDeg = Mathf.Clamp(WheelDeg + SteeringMath.DragDeg(screenMm.x - m_LastMmX, DragDegPerMm), -HalfRangeDeg, HalfRangeDeg);
                 m_LastMmX = screenMm.x;
                 return;
             }
@@ -111,9 +111,16 @@ namespace Game.Controls
         public float Target(float wheelDeg, float gain)
             => Mathf.Clamp(SteeringMath.DeadZone(wheelDeg / Mathf.Max(1f, HalfRangeDeg), DeadZone) * Sensitivity * gain, -1f, 1f);
 
+        /// <summary>
+        /// Drag gesture: on-screen degrees per millimetre for the current range. The comfort range (270 deg) takes
+        /// 25 mm; longer ranges take longer, but only with the square root of the range (900 deg sim: ~46 mm instead of
+        /// 83 mm, two thumb strokes at standstill) so the sim range stays usable with a thumb (review 0134-0135 P2).
+        /// </summary>
+        public float DragDegPerMm => Feel.dragScreenDegPerMm * Mathf.Sqrt(Mathf.Max(1f, HalfRangeDeg / 270f));
+
         /// <summary>Cab-wheel degrees per on-screen degree at speed for the current gesture (see <see cref="SteeringFeel"/>).</summary>
         public float HighSpeedScreenToHandwheel
-            => Grab == WheelGrab.Drag ? Feel.dragHighSpeedHandwheelDegPerMm / Mathf.Max(1e-3f, Feel.dragScreenDegPerMm) : Feel.highSpeedScreenToHandwheel;
+            => Grab == WheelGrab.Drag ? Feel.dragHighSpeedHandwheelDegPerMm / Mathf.Max(1e-3f, DragDegPerMm) : Feel.highSpeedScreenToHandwheel;
 
         /// <summary>
         /// Every fixed step: records where the cab wheel is in on-screen degrees (<see cref="ColumnScreenDeg"/>); while
