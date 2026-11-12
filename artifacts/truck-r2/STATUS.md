@@ -24,3 +24,4 @@ Zapisano before High clear, kod wejściowy zgodny z fingerprintem. Następny kro
 Zapisano wszystkie kamery: before-all Low overcast. Następny krok: zestawić liczniki rendererów i instancji osobno dla każdej kamery.
 Zapisano wszystkie kamery: before-all High overcast. Następny krok: zestawić liczniki rendererów i instancji osobno dla każdej kamery.
 Zapisano dirt-before-washed, ilość brudu 0, 16 świeżych kadrów. Materiały przywrócone. Następny krok: porównać pas zabrudzenia, błotniki i plandekę ze zdjęciami.
+Zapisano dirt-before-fleet, ilość brudu 0.5, 16 świeżych kadrów. Materiały przywrócone. Następny krok: porównać pas zabrudzenia, błotniki i plandekę ze zdjęciami.
