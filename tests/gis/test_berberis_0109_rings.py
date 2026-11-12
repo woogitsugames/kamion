@@ -1,5 +1,6 @@
 """Photographed bed caps must not fall back to metre-long crossing triangles."""
 import json
+import warnings
 from pathlib import Path
 
 import numpy as np
@@ -14,13 +15,14 @@ ROOT=Path(__file__).resolve().parents[2]
 REGION=ROOT/'Data/Regions/bialystok-industrial-c'
 
 
-def authored_bed(index):
+def authored_bed(index,origin=None):
     plans=yaml.safe_load((REGION/'overrides.yaml').read_text(encoding='utf-8'))['overrides']
     plan=next(p for p in plans if p.get('id')=='biezenstwa-plantings')
     bed=plan['beds'][index]
-    # Translation cannot change polygon validity; use local coordinates here.
+    # Synthetic cases use bed-relative coordinates. Recorded terrain cases
+    # retain region-local XY, including the coordinate-dependent crown phase.
     ring=np.asarray(bed['ring'],float)
-    poly=Polygon(ring-ring[0])
+    poly=Polygon(ring-(ring[0] if origin is None else np.asarray(origin,float)))
     poly=shapely.make_valid(poly).buffer(-float(bed.get('rim_m',.6))).buffer(.25)
     key=(plan['id'],index,0)
     preset=pt.species(bed.get('plant','berberis_red'))
@@ -40,7 +42,7 @@ def conformed_ground_fixture():
 
 @pytest.mark.parametrize('bed_index',range(4))
 @pytest.mark.parametrize('ground_case',['flat','slope','frozen-c-conformed-1mm'])
-def test_authored_berberis_has_valid_local_caps_and_uncrossed_strips(monkeypatch,bed_index,ground_case,conformed_ground_fixture):
+def test_authored_berberis_has_valid_local_caps_and_uncrossed_strips(monkeypatch,bed_index,ground_case,conformed_ground_fixture,record_property):
     from roads import geom
     # A valid Delaunay result may contain boundary vertices only on a narrow bed.
     # It must never use the invalid-ring ear-clipping escape route again.
@@ -90,17 +92,17 @@ def test_authored_berberis_has_valid_local_caps_and_uncrossed_strips(monkeypatch
         def __init__(self): self.parts=[]
         def add(self,layer,material,vertices,uv,triangles,**kwargs):
             self.parts.append((np.asarray(vertices),np.asarray(triangles)))
-    poly,key,bed=authored_bed(bed_index)
-    if ground_case=='frozen-c-conformed-1mm':
+    origin=conformed_ground_fixture['origin_epsg2180']
+    recorded=ground_case=='frozen-c-conformed-1mm'
+    poly,key,bed=authored_bed(bed_index,(origin['x'],origin['y']) if recorded else None)
+    if recorded:
         field=next(f for f in conformed_ground_fixture['beds'] if f['index']==bed_index)
         np.testing.assert_array_equal(field['anchor_epsg2180'],bed['ring'][0],
                                       err_msg='Captured ground anchor changed; deliberately refresh the real-ground fixture')
         grid=np.asarray(field['heights_m'],float)
-        origin=conformed_ground_fixture['origin_epsg2180']
-        offset=np.asarray(bed['ring'][0])-np.array([origin['x'],origin['y']])
         def ground(x,y):
-            fi=np.asarray(x)+offset[0]-field['x0']
-            fj=np.asarray(y)+offset[1]-field['y0']
+            fi=np.asarray(x)-field['x0']
+            fj=np.asarray(y)-field['y0']
             i,j=np.floor(fi).astype(int),np.floor(fj).astype(int)
             assert ((i>=0)&(i<grid.shape[1]-1)&(j>=0)&(j<grid.shape[0]-1)).all(), 'Ground query outside frozen sample patch'
             a,b=fi-i,fj-j
@@ -134,7 +136,9 @@ def test_authored_berberis_has_valid_local_caps_and_uncrossed_strips(monkeypatch
     height=w0*triangles[:,0,2]+w1*triangles[:,1,2]+w2*triangles[:,2,2]
     shell_top=np.where(inside,height,-np.inf).max(axis=1)
     assert np.isfinite(shell_top).all(), 'Inner cap leaves the shell footprint'
-    assert np.max(core[:,2]-shell_top)<=.005, 'Inner cap protrudes through the triangulated shell'
+    vertex_max=float(np.max(core[:,2]-shell_top))
+    record_property('vertex_max_core_minus_shell_m',vertex_max)
+    assert vertex_max<=.005, f'Inner cap protrudes through the triangulated shell: {vertex_max:.9f}m'
     # Different cap tessellations need their common planar refinement: maxima
     # can occur where edges cross, between the inner cap's own vertices.
     core_vertices,core_indices=buf.parts[1]
@@ -147,6 +151,7 @@ def test_authored_berberis_has_valid_local_caps_and_uncrossed_strips(monkeypatch
         den=cross(ab,ac)
         wb,wc=cross(delta,ac)/den,cross(ab,delta)/den
         return (1.-wb-wc)*a[2]+wb*b[2]+wc*c[2]
+    refined_max=-np.inf
     for face in core_vertices[core_indices]:
         polygon=Polygon(face[:,:2])
         covered=0.
@@ -156,8 +161,15 @@ def test_authored_berberis_has_valid_local_caps_and_uncrossed_strips(monkeypatch
             covered+=cut.area
             points=shapely.get_coordinates(cut)
             difference=plane_height(face,points)-plane_height(triangles[hit],points)
-            assert difference.max()<=.005, 'Cap surfaces cross between inner vertices'
+            refined_max=max(refined_max,float(difference.max()))
         assert abs(covered-polygon.area)<1e-7, 'A complete inner face must lie under the shell'
+    record_property('maximum_core_minus_shell_m',refined_max)
+    record_property('minimum_shell_above_core_m',-refined_max)
+    record_property('ground_case',ground_case)
+    record_property('ground_quantization_m',.001 if recorded else 0.)
+    assert np.isfinite(refined_max) and refined_max<=.005, f'Cap surfaces cross between inner vertices: {refined_max:.9f}m'
+    if recorded and refined_max>=.004:
+        warnings.warn(f'Recorded1mm terrain is near the5mm clearance limit ({refined_max:.9f}m core-minus-shell); verify more precise geometry before acceptance',UserWarning)
 
 
 def test_offset_refuses_disconnected_or_empty_geometry_instead_of_dropping_a_piece():

@@ -24,7 +24,7 @@ try {
             }
         }
         'Materials' { uv run --project tools/worldgen python -u art-source/world/materials/_src/build_all.py @TaskArgs }
-        'GisFinal' { uv run --project tools/worldgen python -m pytest tests/gis -q @TaskArgs }
+        'GisFinal' { uv run --project tools/worldgen python -m pytest tests/gis -q --junitxml artifacts/vegetation-r4/gis-final.xml -o junit_family=xunit1 @TaskArgs }
         'GisFocused' { uv run --project tools/worldgen python -m pytest @TaskArgs -q }
     }
     $jobExit = $LASTEXITCODE
