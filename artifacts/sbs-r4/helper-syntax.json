@@ -1,0 +1,46 @@
+{
+  "scripts": [
+    {
+      "sha256": "d7679e605b1f927af743731ae98281fac82d80c5374303078e9ccb411e7d7ce1",
+      "path": "build-baseline.ps1",
+      "parse_errors": 0
+    },
+    {
+      "sha256": "e428d25cc1190172f976aefe6173c032222e3979180d59313cc4e7eac8d7db06",
+      "path": "compose-all.ps1",
+      "parse_errors": 0
+    },
+    {
+      "sha256": "5bcf51c726944ae4cb7204b6a0ce48b02622dfce3de8d289150592cb593764c5",
+      "path": "import-region.ps1",
+      "parse_errors": 0
+    },
+    {
+      "sha256": "a07fe61b127d2c2ad2cb9dba33331e75fcb6f3a8b200989d6db4c0f7bc48c13a",
+      "path": "prepare.ps1",
+      "parse_errors": 0
+    },
+    {
+      "sha256": "f0ed4cad75de692ed1dc008f23d777efa2b7495faad198fdd182562be1698432",
+      "path": "render-all.ps1",
+      "parse_errors": 0
+    },
+    {
+      "sha256": "570a6a6b345ed704e16129ef25842dda2e0459531e8758590a42850c4f42cbdb",
+      "path": "render-controlled.ps1",
+      "parse_errors": 0
+    },
+    {
+      "sha256": "d88730eaa2d8ffab6e1451d260fe109e59b932e787aa550ba4b8469b330c7479",
+      "path": "run-heavy.ps1",
+      "parse_errors": 0
+    },
+    {
+      "sha256": "db3373599e689acfb19e6a98541f496bef7db8e06a508102504ef19eca242376",
+      "path": "test-editmode.ps1",
+      "parse_errors": 0
+    }
+  ],
+  "scope": "Syntax only, no Unity or Python task execution",
+  "checked_at": "2026-11-12T12:48:56.6335175+01:00"
+}

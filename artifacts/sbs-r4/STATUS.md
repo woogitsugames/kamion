@@ -49,3 +49,5 @@ Nie wykonano merge do main, push, telefonu ani edycji innych dziedzin. Odśwież
 2026-11-12T12:40:28.0841969+01:00: zapisałem protokół kontroli 15 prób: oddzielna ocena zbiegu jezdni i portalu/ekranu, historyczne regiony tylko WORKING_VALUE. Pitch poprawiający jezdnię kosztem ekranu nie oznacza zaliczenia. Nowe obrazy r4 jeszcze nie powstały; World nadal w FIFO.
 
 2026-11-12T12:44:49.3771232+01:00: zapisano migawkę recenzji pakietu C i SHA. W sbs-priorities jawnie rozdzielono historyczny ostry klin r3 od poprawki light i pozostałego miękkiego pasa nieba. Nowy wspólny dowód SBS pozostaje pending; bez przenoszenia werdyktu z cudzych kadrów. World nadal kolejkaFIFO.
+
+2026-11-12T12:48:56.8311771+01:00: wszystkie prywatne wrapperyPSr4 bez błędów parsera; oba nowe skrypty kontrolowanych prób bez błędówAST. To wyłącznie lekka kontrola składni, bez wykonania generatora, rayów, pytest ani Unity. World77049 pozostaje aktywny i czeka w FIFO, obecnie2 zgłoszenia przed nim.
