@@ -117,9 +117,8 @@ namespace Game.Rendering.Editor
                         var preset = presetSnapshots.Keys.Single(p => string.Equals(p.name, "LP_" + job.lighting, StringComparison.OrdinalIgnoreCase));
                         preset.clearCloudSourceMinElevationDeg = job.cloudSourceMinElevationDeg;
                     }
-                    if (job.overrideWetLocalReflections)
-                        presetSnapshots.Keys.Single(p => string.Equals(p.name, "LP_" + job.lighting, StringComparison.OrdinalIgnoreCase))
-                            .wetLocalReflections = job.wetLocalReflections;
+                    if (job.overrideWetLocalReflections && job.wetLocalReflections)
+                        throw new ArgumentException("Rejected wet-local experiment removed; see light-r3 archived patch and review. ON jobs require explicitly restoring that experiment.");
                     if (job.overrideWetFilm)
                     {
                         if (job.wetFilmSmoothness < 0f || job.wetFilmSmoothness > 0.8f || job.puddleShare < 0f || job.puddleShare > 1f)
@@ -146,8 +145,6 @@ namespace Game.Rendering.Editor
                             foreach (var light in UnityEngine.Object.FindObjectsByType<Light>(FindObjectsSortMode.None))
                                 if (light.type == LightType.Directional)
                                     light.GetUniversalAdditionalLightData().softShadowQuality = (SoftShadowQuality)job.shadowFilter;
-                        if (EnvironmentLighting.Instance != null && EnvironmentLighting.Instance.Active != null)
-                            KamionWetReflections.Push(EnvironmentLighting.Instance.Active.wetLocalReflections);
                         lampProbe?.Capture(camera);
                     };
                     int count;

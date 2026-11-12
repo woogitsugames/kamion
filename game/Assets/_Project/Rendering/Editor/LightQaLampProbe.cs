@@ -20,10 +20,6 @@ namespace Game.Rendering.Editor
             public float actualWetFilmSmoothness;
             public float clearCloudSourceMinElevationDeg;
             public Vector4 cloudSourceLimits;
-            public bool wetLocalReflections;
-            public Vector4 wetCaptureOrigin;
-            public int captureFacesRendered;
-            public string wetReflectionDiagnostics;
             public int pools, enabledPointLights;
             public Vector4[] headsAndWeights;
             public Vector4 exposedPoolColor;
@@ -59,10 +55,6 @@ namespace Game.Rendering.Editor
                 actualWetFilmSmoothness = Shader.GetGlobalVector("_KamionWet").w > 0f ? Shader.GetGlobalVector("_KamionWet").w : 0.52f,
                 clearCloudSourceMinElevationDeg = environment.Active.clearCloudSourceMinElevationDeg,
                 cloudSourceLimits = Shader.GetGlobalVector("_KamionClearCloudSourceLimits"),
-                wetLocalReflections = environment.Active.wetLocalReflections,
-                wetCaptureOrigin = Shader.GetGlobalVector("_KamionWetCaptureOrigin"),
-                captureFacesRendered = VehicleReflectionCapture.Active != null ? VehicleReflectionCapture.Active.FacesRendered : 0,
-                wetReflectionDiagnostics = KamionWetReflections.Diagnostics,
                 pools = count, headsAndWeights = positions,
                 projectedHeadlamps = KamionHeadlamps.Enabled, headlampDiagnostics = KamionHeadlamps.Diagnostics,
                 headlampLeft = Shader.GetGlobalVector("_KamionHeadlampLeft"),

@@ -69,7 +69,6 @@ namespace Game.Rendering
         void OnDisable()
         {
             KamionHeadlamps.Reset();
-            KamionWetReflections.Reset();
             QualityProfileApplier.Applied -= OnTierApplied;
             RenderPipelineManager.beginContextRendering -= OnBeginRendering;
             if (Instance == this) Instance = null;

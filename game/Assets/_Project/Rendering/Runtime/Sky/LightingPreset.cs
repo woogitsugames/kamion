@@ -52,8 +52,6 @@ namespace Game.Rendering
         [Range(1f, 4f)] public float clearSkySaturation = 1f;
         [Tooltip("Photographic source horizon clamp in degrees after rotation. 0 keeps legacy sampling; positive values extend a valid upper-hemisphere row instead of sampling the cut lower hemisphere.")]
         [Range(0f, 5f)] public float clearCloudSourceMinElevationDeg;
-        [Tooltip("ADR 0108 r3 experimental wet-world reflections from the existing stable truck cube, within 12m. No extra capture. Default off.")]
-        public bool wetLocalReflections;
         [Tooltip("Optional wet-film smoothness floor. 0 retains the legacy 0.52 floor; standing-water smoothness is separate. WORKING_VALUE, not a material albedo override.")]
         [Range(0f, 0.8f)] public float wetFilmSmoothness;
         [Tooltip("ADR 0108 r2: opt-in diffuse low-beam projection on world surfaces, in the existing pass. No occlusion.")]

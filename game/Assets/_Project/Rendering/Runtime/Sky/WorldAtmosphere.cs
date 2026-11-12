@@ -101,7 +101,7 @@ namespace Game.Rendering
         public static void Push(EnvironmentLighting env, Color fogExposed)
         {
             var p = env.Active;
-            if (p == null) { KamionHeadlamps.Reset(); KamionWetReflections.Reset(); return; }
+            if (p == null) { KamionHeadlamps.Reset(); return; }
             bool hasTier = QualityProfileApplier.HasCurrent;
             var t = hasTier ? QualityProfileApplier.Current : default;
             KamionHeadlamps.Push(env.Model, HeadlampsOverride ?? p.projectedHeadlamps, p.projectedHeadlampPeakCd, env.gameObject.scene);
@@ -131,7 +131,6 @@ namespace Game.Rendering
             // ---- wet surfaces, lawn variation
             Shader.SetGlobalVector(k_Wet, new Vector4(Mathf.Clamp01(WetOverride ?? p.wetness), p.puddles, Mathf.Clamp01(GrassOverride ?? p.grassVariation),
                 p.wetFilmSmoothness > 0f ? Mathf.Clamp(p.wetFilmSmoothness, 0.01f, 0.8f) : 0f));
-            KamionWetReflections.Push(p.wetLocalReflections);
 
             // ---- cloud deck
             int q = CloudOverride ?? (hasTier ? (t.cloudsOff ? -1 : t.cloudQuality) : 1);
