@@ -78,6 +78,7 @@ LAYOUT = {
     "win_small": _r(12.45, 7.35, 0.9, 0.9),
     "door_entry": _r(12.45, 8.35, 1.1, 2.2),
     "flag": _r(8.35, 9.85, 1.6, 1.0),
+    "conifer_core": _r(8.35, 10.95, 1.6, 0.4),  # ADR 0116: unused atlas gap, same opaque material
     "steel_galv": _r(10.10, 9.90, 0.9, 1.4),
     "pvc_white": _r(11.20, 9.90, 0.9, 1.4),
     "membrane": _r(0.05, 12.60, 7.9, 1.35),
@@ -96,6 +97,9 @@ LAYOUT = {
     # Hero-local intended leaf palette, shared by opaque cores/far foliage and clipped boughs.
     # Retains the previous far-LOD starting palette; lit Low/High calibration remains WORKING_VALUE.
     "foliage_linear": [0.040, 0.068, 0.030],
+    "conifer_linear": [0.030, 0.051, 0.0225],  # darker evergreen needles/core; WORKING_VALUE from 7197
+    "hall_room_visibility_WORKING_VALUE": [0.35, 1.0],  # opaque glazing proxy: dark room below / sky above
+    "hall_room_height_range_WORKING_VALUE": [0.25, 0.70],
 }
 
 
@@ -194,6 +198,7 @@ def fire_station(nx=2048):
     joint = np.zeros((c.ny, c.nx), np.float32)
     eid = np.zeros((c.ny, c.nx), np.float32)
     sources = []
+    room_visibility = np.ones((c.ny, c.nx), np.float32)
 
     def put(mask, col, r_=None, m_=None):
         nonlocal alb, rough, metal
@@ -224,18 +229,19 @@ def fire_station(nx=2048):
     splash = np.clip(splash, 0, 0.8)
     # run-off under the top edge (flashing / sills above): streaks hanging 0.3-1.1 m below the top
     g_top = P["h"] - pv
-    streak = ss(0.25, 1.1, n_run) * np.clip(1 - g_top / (0.5 + 0.6 * ss(-1, 1, n_big)), 0, 1) ** 1.4
+    streak = ss(0.25, 1.1, n_run) * np.clip(1 - g_top / (0.5 + 0.4 * ss(-1, 1, n_big)), 0, 1) ** 1.4
     streak += 0.25 * ss(0.10, 0.0, g_top)
-    # r7: discrete runoff below the flashing only, 7-16 cm wide and 0.35-1.0 m long.
+    # ADR 0116: discrete runoff below flashing, ending inside the 1 m gable band.
     # Metric authored WORKING_VALUE, not general wall noise. Hashing does not advance old material RNGs.
-    drip_cell = np.floor(X / 0.78).astype(np.int64)
-    drip_centre = (drip_cell + 0.20 + 0.60 * K.hash01(drip_cell, 73)) * 0.78
-    drip_halfwidth = 0.035 + 0.045 * K.hash01(drip_cell, 79)
-    drip_length = 0.35 + 0.65 * K.hash01(drip_cell, 83)
+    drip_pitch = TILE[0] / 18
+    drip_cell = np.floor(X / drip_pitch).astype(np.int64)
+    drip_centre = (drip_cell + 0.20 + 0.60 * K.hash01(drip_cell, 73)) * drip_pitch
+    drip_halfwidth = 0.05 + 0.045 * K.hash01(drip_cell, 79)
+    drip_length = 0.40 + 0.50 * K.hash01(drip_cell, 83)
     drip = ss(drip_halfwidth * 1.7, drip_halfwidth, np.abs(X - drip_centre))
     drip *= np.clip(1 - g_top / drip_length, 0, 1) ** 1.2
     drip *= K.hash01(drip_cell, 89) > 0.30
-    streak += 0.32 * drip
+    streak += 0.65 * drip
     streak = np.clip(streak, 0, 0.7) * (pv > P["base_h"])
     # hairline shrinkage cracks, sparse
     crk = ss(0.012, 0.004, np.abs(noise(c, 7, 0.5, 4.0, beta=1.4))) * ss(0.2, 0.9, noise(c, 8, 1.5, 6.0, beta=1.0))
@@ -364,7 +370,7 @@ def fire_station(nx=2048):
     def glazing(mask, gu, gv, wpane, hpane, bar=0.06, frame=0.10, wtot=None, htot=None, shape=None, trim=None,
                 blind_seed=0, glass=None):
         """Window in a rect: gu/gv = local metres, panes of wpane x hpane, PVC frame, glass with blinds in some."""
-        nonlocal alb, h, rough
+        nonlocal alb, h, rough, room_visibility
         inside = shape if shape is not None else np.ones_like(mask)
         fr = np.zeros_like(mask)
         if shape is None:
@@ -381,10 +387,20 @@ def fire_station(nx=2048):
         gmax = float(gv[mask & inside].max()) if (mask & inside).any() else 1.0
         sky = (0.55 + 0.9 * np.clip(gv / max(gmax, 1e-3), 0, 1) ** 1.3)[..., None]
         if glass is not None:                      # big hall glazing: grey daylight reflection, no blinds (photo 7197)
-            # r7: the old strong gradient made upper glass ~100-113 sRGB while mid panes were83-94.
-            # Hall-local soft gradient; a second .60 scalar after the measured83-86 High overshoot targets60-75.
-            sky = (0.90 + 0.06 * np.clip(gv / max(gmax, 1e-3), 0, 1) ** 1.3)[..., None]
+            # ADR 0116 r1: hall-only sky at the head and dark interior below,
+            # as in CC0 7197. WORKING_VALUE until the paired Unity capture.
+            sky = (0.43 + 0.57 * np.clip(gv / max(gmax, 1e-3), 0, 1) ** 1.3)[..., None]
             gcol = glass[None, None, :] * sky * (0.85 + 0.3 * K.hash01(pane, 19))[..., None] * (1 + 0.10 * n_big)[..., None]
+            # This opaque proxy combines a reflected sky and a recessed room.
+            # Store the lower room's ambient visibility in the existing AO channel,
+            # excluding frames, so reducing albedo does not hit a bright specular floor.
+            low, high = L["hall_room_visibility_WORKING_VALUE"]
+            room_low,room_high = L["hall_room_height_range_WORKING_VALUE"]
+            visibility = low+(high-low)*ss(room_low,room_high,np.clip(gv/max(gmax,1e-3),0,1))
+            cavity_mask = mask & inside & ~(fr | bars)
+            if trim is not None:
+                cavity_mask &= ~trim[0]
+            room_visibility = np.where(cavity_mask,visibility,room_visibility)
         else:                                      # three states: blind / net curtain / dark interior
             curtain = np.array([0.36, 0.36, 0.34], np.float32) * (0.85 + 0.15 * np.cos(2 * np.pi * gu / 0.11))[..., None]
             gcol = np.where((hsh > 0.66)[..., None], blind * 0.75 + glass_col * 0.25,
@@ -405,7 +421,7 @@ def fire_station(nx=2048):
     # than the office glazing. Linear albedo WORKING_VALUE by eye.
     # r5: measured on the Unity r4b render (High overcast) the glass was 0.27-0.34 x the wall (linearised sRGB), on the
     # photo 0.45-1.0 x (mean ~0.7): doubled. Still a WORKING_VALUE (one overcast photo).
-    hall_glass = np.array([0.0612, 0.0648, 0.0702], np.float32)  # r7 measured second WORKING_VALUE; office panes unchanged
+    hall_glass = np.array([0.0459, 0.0486, 0.05265], np.float32)  # ADR 0116 r1 WORKING_VALUE; office panes unchanged
     # arched window 3.4 x 3.4: segmental arch (rise 1.0 m above the 2.4 m springing), blue trim band 0.16 m
     A = L["win_arch"]
     ga = L["arch"]
@@ -421,6 +437,7 @@ def fire_station(nx=2048):
     glazing(in_a, au, av, ga["col"], ga["row"], bar=ga["bar"], shape=in_shape, trim=(trim_m, tblue * 1.0), blind_seed=3, glass=hall_glass)
     sill_a = in_a & in_shape & (av < 0.06)
     alb = np.where(sill_a[..., None], pvc * 0.8, alb)
+    room_visibility = np.where(sill_a,1.0,room_visibility)
     out_a = in_a & ~in_shape
     alb = np.where(out_a[..., None], base * (det ** 0.8)[..., None], alb)
     rough = np.where(out_a, 0.9, rough)
@@ -441,6 +458,7 @@ def fire_station(nx=2048):
     glazing(in_rw, ru + R0, rv2 + R0, 9.0, 9.0, shape=in_circ, trim=(ring | cross, tblue), blind_seed=5, glass=hall_glass)
     transom = in_rw & in_circ & ~ring & ~cross & (np.abs(rv2) < 0.035)
     alb = np.where(transom[..., None], pvc, alb)
+    room_visibility = np.where(transom,1.0,room_visibility)
     rough = np.where(transom, 0.45, rough)
     h = np.where(transom, 0.0, h)
     out_r = in_rw & ~in_circ
@@ -524,11 +542,34 @@ def fire_station(nx=2048):
     rough = np.where(in_tf, 0.9, rough)
     h = np.where(in_tf, 0.004 * n_mid, h)
 
+    # ADR 0116: evergreen inner mass is darker than the thuja shell. Reuse an
+    # unused opaque-atlas cell; the hero keeps its existing material slots.
+    in_cf = _gut(X, v, L["conifer_core"])
+    # Real CC0 needle RGB supplies the clumps; the opaque inter-needle shadow
+    # fills the gaps that disappear from alpha cards at road-view mip levels.
+    needle = np.array(_conifer_sprite())
+    iy, ix = np.nonzero(in_cf)
+    rect = L["conifer_core"]
+    nx = np.floor((X[iy,ix]-rect["u"][0])/(rect["u"][1]-rect["u"][0])*needle.shape[1]*3).astype(int)%needle.shape[1]
+    ny = np.floor((rect["v"][1]-v[iy,ix])/(rect["v"][1]-rect["v"][0])*needle.shape[0]).astype(int)%needle.shape[0]
+    covered = needle[ny,nx,3].astype(np.float32)/255
+    target = np.array(L["conifer_linear"],np.float32)
+    ccol = _lin(needle[ny,nx,:3].astype(np.float32)/255)*covered[:,None]+target*.55*(1-covered[:,None])
+    ccol *= target/np.maximum(ccol.mean(0,dtype=np.float64),1e-6)
+    alb[iy,ix] = ccol*(1+.12*n_mid[iy,ix])[:,None]
+    rough[iy,ix] = .97-.06*covered
+    h[iy,ix] = .002*(.6*covered+.4*n_mid[iy,ix])
+    conifer_meta = LANDMARK/"conifer_foliage_meta.json"
+    conifer_applied = conifer_meta.exists() and json.loads(conifer_meta.read_text()).get("applied",False)
+    sources.append("polyhaven:fir_tree_01 needle RGB (CC0; authored opaque canopy derivative)" if conifer_applied
+                   else "fir_tree_01: authored fallback, source maps not verified")
+
     alb = np.clip(alb, 0.012, 0.9).astype(np.float32)
     s = K.SurfaceSet("fire_station", c, alb, h.astype(np.float32), np.clip(rough, 0.05, 1).astype(np.float32),
                      eid.astype(np.float32), np.clip(joint, 0, 1).astype(np.float32), metal=metal.astype(np.float32),
                      ao_scales=(0.01, 0.03, 0.08), ao_k=0.5)
     s.source = "; ".join(sources)
+    s.ao_extra = room_visibility
     s.concrete_mean = [round(float(x), 4) for x in alb[render_mask].mean(0)]      # clean render mean (name kept for build_all)
     return s
 
@@ -602,7 +643,7 @@ def _conifer_sprite(log=print):
         alpha = np.array(im); rgb = np.full((*alpha.shape, 3), 128, np.uint8); applied = False
     covered = alpha >= 128
     linear = _lin(rgb.astype(np.float32) / 255)
-    linear *= np.array(LAYOUT["foliage_linear"], np.float32) / np.maximum(linear[covered].mean(0, dtype=np.float64), 1e-6)
+    linear *= np.array(LAYOUT["conifer_linear"], np.float32) / np.maximum(linear[covered].mean(0, dtype=np.float64), 1e-6)
     rgb = np.clip(np.rint(K.srgb_encode(np.clip(linear, 0, 1)) * 255), 0, 255).astype(np.uint8)
     rgba = np.dstack([rgb, alpha]); yy, xx = np.where(alpha > 32)
     rgba = rgba[yy.min():yy.max() + 1, xx.min():xx.max() + 1]
@@ -612,7 +653,7 @@ def _conifer_sprite(log=print):
     centred.alpha_composite(Image.fromarray(rgba), (round(half - root_x), 0))
     status = {"id": manifest["id"], "applied": applied, "species_status": manifest["species_status"],
               "source_sha256": {f["map"]: f["sha256"] for f in manifest["files"]},
-              "intended_mean_rgb_linear_WORKING_VALUE": LAYOUT["foliage_linear"]}
+              "intended_mean_rgb_linear_WORKING_VALUE": LAYOUT["conifer_linear"]}
     (LANDMARK / "conifer_foliage_meta.json").write_text(json.dumps(status, indent=1) + "\n", encoding="utf-8")
     return centred
 
@@ -632,7 +673,7 @@ def _conifer_patch():
     reference = sprite.copy(); reference.thumbnail((width-2*gap, height-2*gap), Image.Resampling.LANCZOS)
     ref = np.array(reference); ref_keep = ref[..., 3] >= 128
     target = (_lin(ref[..., :3].astype(np.float64)/255)[ref_keep].mean(0)
-              if ref_keep.any() else np.array(LAYOUT["foliage_linear"]))
+              if ref_keep.any() else np.array(LAYOUT["conifer_linear"]))
     canvas = Image.new("RGBA", (1200, 900)); layer = Image.new("RGBA", canvas.size)
     root = (600, 840)
     layer.alpha_composite(sprite, (round(root[0]-sprite.width/2), root[1]-sprite.height))
