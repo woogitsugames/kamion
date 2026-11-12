@@ -17,11 +17,17 @@ float FurnitureHeadReturn(float4 source, float3 positionWS, float3 normalWS, flo
     float axial = dot(toSign, _FurnitureRetroForward.xyz);
     float3 right = cross(_FurnitureRetroUp.xyz, _FurnitureRetroForward.xyz);
     float horizontal = abs(dot(toSign, right)) / max(axial, 0.001);
+    float signedHorizontal = dot(toSign, right) / max(axial, 0.001);
     float vertical = dot(toSign, _FurnitureRetroUp.xyz) / max(axial, 0.001);
     // Horizontal beam 15..25 degrees. Vertical upper cut is wider on high beam.
     float beam = (1.0 - smoothstep(0.26795, 0.46631, horizontal)) * step(0.0, axial);
     float upperInner = lerp(0.01, 0.08, highBeam);
     float upperOuter = lerp(0.025, 0.16, highBeam);
+    // Right-hand-traffic asymmetric low beam: qualitative 15-degree upsweep on a beam screen.
+    // Working approximation, not a measured/approved lamp photometry; high beam keeps its own lobe.
+    float rightUpsweep = (1.0 - highBeam) * min(max(signedHorizontal, 0.0) * 0.267949, 0.06);
+    upperInner += rightUpsweep;
+    upperOuter += rightUpsweep;
     beam *= smoothstep(-0.15, -0.05, vertical) * (1.0 - smoothstep(upperInner, upperOuter, vertical));
     // 1-cos(angle), avoiding acos. Roughly a two-degree working observation lobe.
     float observation = max(0.0, 1.0 - dot(L, viewWS));

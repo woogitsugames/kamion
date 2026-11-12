@@ -33,6 +33,7 @@ namespace Game.World.Import
             public Vector4 state, lowLeft, lowRight, highLeft, highRight;
             public bool actualLightEnabled, actualLightActive, actualLowOn, actualHighOn;
             public int actualLightId;
+            public float diagnosticManualEv100=5;
         }
         [Serializable] sealed class Evidence
         {
@@ -196,6 +197,8 @@ namespace Game.World.Import
             var preset=Object.Instantiate(dusk); preset.name="LP_FurnitureNight";
             // Existing model stops at -8°. Do not silently claim -12° or astronomical night.
             preset.sunElevationDeg=SkyModel.MinTwilightElevationDeg;
+            // A controlled manual camera exposure, not a change to the game's light presets.
+            preset.autoExposure=false; preset.ev100=5; preset.exposureCompensation=0;
             preset=SaveOwned(preset,$"{Dir}/Night_{tier}.asset");
             env.presets=new[]{preset};env.activeIndex=0;
             env.skyMaterial=SaveOwned(new Material(env.skyMaterial),$"{Dir}/Sky_{label}.mat");
@@ -211,6 +214,8 @@ namespace Game.World.Import
                     draw.set=SaveOwned(set,$"{Dir}/OffSet_{label}.asset");
                 }
             foreach (var c in Object.FindObjectsByType<ControlCamera>(FindObjectsInactive.Include,FindObjectsSortMode.None)) Object.DestroyImmediate(c);
+            var modeController=new GameObject("FurnitureQaLampMode").AddComponent<FurnitureSignQaRigMode>();
+            modeController.mode=mode;modeController.Apply();
             foreach (var pair in new[]{("furniture-night-driver",55f),("furniture-night-detail",15f)})
             {
                 var go=new GameObject(pair.Item1);

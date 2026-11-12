@@ -56,7 +56,8 @@ namespace Game.Tests
 
         static Color Draw(bool candidate, bool keyword, bool sourceOn, float distance = 50,
             float eyeOffset = 0, bool back = false, bool transparent = false,
-            float gain = 800, bool coefficientOnly = false, float lampHalfWidth = 1, float exposureScale = 1)
+            float gain = 800, bool coefficientOnly = false, float lampHalfWidth = 1, float exposureScale = 1,
+            float sourceX=0,float sourceY=0)
         {
             if (SystemInfo.graphicsDeviceType == GraphicsDeviceType.Null) Assert.Ignore("GPU required");
             var shader = coefficientOnly ? CoefficientProbe() : Shader.Find(candidate ? "Kamion/Furniture Sign" : "Universal Render Pipeline/Lit");
@@ -97,8 +98,8 @@ namespace Game.Tests
                 cb.SetGlobalVector("_WorldSpaceCameraPos", new Vector4(eyeOffset, 0, -distance, 1));
                 cb.SetGlobalVector("_MainLightPosition", new Vector4(0, 0, -1, 0));
                 cb.SetGlobalVector("_MainLightColor", new Vector4(.25f, .25f, .25f, 1));
-                cb.SetGlobalVector("_FurnitureRetroHead0", new Vector4(-lampHalfWidth, 0, -distance, 1));
-                cb.SetGlobalVector("_FurnitureRetroHead1", new Vector4(lampHalfWidth, 0, -distance, 1));
+                cb.SetGlobalVector("_FurnitureRetroHead0", new Vector4(sourceX-lampHalfWidth, sourceY, -distance, 1));
+                cb.SetGlobalVector("_FurnitureRetroHead1", new Vector4(sourceX+lampHalfWidth, sourceY, -distance, 1));
                 cb.SetGlobalVector("_FurnitureRetroHead2", Vector4.zero);
                 cb.SetGlobalVector("_FurnitureRetroHead3", Vector4.zero);
                 cb.SetGlobalVector("_FurnitureRetroForward", new Vector4(0, 0, 1, 0));
@@ -172,6 +173,15 @@ namespace Game.Tests
             Assert.Greater(full,.005f);
             Assert.That(half,Is.EqualTo(full * .5f).Within(.0003f));
             Same(Draw(true,true,false,exposureScale:0),Draw(true,true,true,exposureScale:0));
+        }
+        [Test] public void LowBeamUpsweepIlluminatesTheRightShoulderRatherThanOncomingSide()
+        {
+            float right=Draw(true,true,true,distance:25,eyeOffset:-3.5f,sourceX:-3.5f,sourceY:-1).r
+                       -Draw(true,true,false,distance:25,eyeOffset:-3.5f,sourceX:-3.5f,sourceY:-1).r;
+            float left=Draw(true,true,true,distance:25,eyeOffset:3.5f,sourceX:3.5f,sourceY:-1).r
+                      -Draw(true,true,false,distance:25,eyeOffset:3.5f,sourceX:3.5f,sourceY:-1).r;
+            Assert.Greater(right,.005f);
+            Assert.Less(left,right*.01f);
         }
         [Test] public void ReturnFallsWithDistanceAndEndsBeyondRange()
         {
