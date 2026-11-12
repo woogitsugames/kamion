@@ -129,7 +129,17 @@ Build `r7d` (2026-11-12, `logs/r7d_*`; `r7c` = to samo bez pkt 10–12). Rendery
   materiały 146 → 147 (tekstura tablicy F-10: 1 draw).
 - fidelity (`logs/r7d_fidelity_summary.txt`): `lane_into_island` 0, krawędź p50 0,38 m / p95 2,29 m (r7c: 0,36 / 2,30).
 
-**Testy:** @@TESTS@@
+**Testy:** 
+- r7d (przed scaleniem main): pytest `tests/gis tests/physics tests/gate3` 885 passed, 1 xfailed (`logs/r7d_pytest.log`); EditMode
+  408 / 408 (`artifacts/tests/editmode-20261112-211600.xml`). Przebieg r7c tego samego pakietu w czasie importu Unity miał 7 porażek
+  i 14 błędów: 2 prawdziwe (`test_hero_bridge` — księgowanie balustrady, pkt 12), reszta środowiskowa (0xC0000142 przy starcie
+  `dotnet` / `git`, brak uprawnień do symlinków) — w r7d i r7e nie wystąpiły.
+- r7e (po scaleniu `origin/main` 63bf93dc, generated → ours, świat zregenerowany na scalonym kodzie, bez ponownego importu i
+  renderów): pytest 959 passed, 3 xfailed (`logs/r7e_pytest.log`); EditMode 438 / 438 (`artifacts/tests/editmode-20261112-213710.xml`);
+  fidelity bez zmian (0,38 / 2,29 m); swept path (`swept_r7e/`): G3-B opona min −0,14 → +0,10 m (r7c → r7e; łącznica Putry leży na
+  G3-B), G3-A i RING-B bez zmian (G3-A „lane” −1,12 m = znane ścięcie zjazdu przez kierowcę trzymającego środek pasa, test tego
+  oczekuje).
+- nowe / zmienione testy: `tests/gis/test_guardrail_overlap.py` (8), istniejący `test_gate3_landmarks.py::test_every_gate3_sign_is_placed` obejmuje `biezenstwa-f10-north` (zestaw znaków z overrides).
 
 ## Otwarte / niezrobione (uczciwie)
 1. **Telefon** — brak pomiaru (agent nie używa adb); koszt tylko z edytora.
