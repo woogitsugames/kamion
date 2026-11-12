@@ -2,15 +2,17 @@ $ErrorActionPreference='Stop'
 Set-Location (Resolve-Path "$PSScriptRoot/../..")
 if((git branch --show-current).Trim() -ne 'gpt-cab-r4'){throw 'Wrong branch'}
 $record=Join-Path $PSScriptRoot 'material-prep-sequence.json'
-$state=@{schema=1;pid=$PID;baseline_pid=77492;status='waiting-baseline';started_at=(Get-Date -Format o)}
+$baseline=Get-Content artifacts/cab-r4/baseline-sequence.json -Raw | ConvertFrom-Json
+$baselinePid=[int]$baseline.pid
+$state=@{schema=1;pid=$PID;baseline_pid=$baselinePid;status='waiting-baseline';started_at=(Get-Date -Format o)}
 function Save-State {$state.updated_at=Get-Date -Format o;$state | ConvertTo-Json | Set-Content $record -Encoding utf8}
 Save-State
 try {
   $baseline=Get-Content artifacts/cab-r4/baseline-sequence.json -Raw | ConvertFrom-Json
-  if($baseline.pid -ne 77492){throw 'Unexpected baseline identity'}
-  if(Get-Process -Id 77492 -ErrorAction SilentlyContinue){Wait-Process -Id 77492}
+  if($baseline.pid -ne $baselinePid){throw 'Unexpected baseline identity'}
+  if(Get-Process -Id $baselinePid -ErrorAction SilentlyContinue){Wait-Process -Id $baselinePid}
   $baseline=Get-Content artifacts/cab-r4/baseline-sequence.json -Raw | ConvertFrom-Json
-  if($baseline.status -ne 'finished'){throw ('Baseline not complete: '+$baseline.status)}
+  if($baseline.pid -ne $baselinePid -or $baseline.status -ne 'finished'){throw ('Baseline not complete: '+$baseline.status)}
   if((git branch --show-current).Trim() -ne 'gpt-cab-r4'){throw 'Branch changed'}
   $state.status='material-prep';Save-State
   pwsh -NoProfile -ExecutionPolicy Bypass -File artifacts/cab-r4/heavy-0112.ps1 -Job MaterialPrep -Log artifacts/cab-r4/material-prep.log
