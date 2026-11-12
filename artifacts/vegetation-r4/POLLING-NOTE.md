@@ -1,0 +1,5 @@
+# Odczyt aktywnej sekwencji D
+
+Aktualny uchwyt to 68527; 24975 zakończył się na Acquire przed pracą. Każdy odczyt write_stdin należy zachować w functions.store pod vegetation_d_latest_poll w pełnej postaci, zanim skróci się output do ostatnich kilku linii dla widoku. Jeżeli wynik jest terminalny, najpierw odczytać cały zachowany output i zapisać go do artefaktu. To zapobiega utracie szczegółowej przyczyny, jaka wystąpiła przy skróceniu końcowego odczytu 24975.
+
+Start-Transcript w green-d-pipeline-resume.log jest aktywny, ale odczyt z 15:26 pokazywał tylko nagłówek mimo wielu komunikatów potomnego pwsh. Transcript nie gwarantuje więc pełnego przechwycenia natywnego stdout/stderr tego procesu. Nie restartować żywego oczekiwania tylko po to, aby zmienić logowanie. Pełny zwrot narzędzia jest zachowywany osobno. Właściwe pytest, World i collision_digest mają już jawne pliki logów, gdy ruszą. Przy ewentualnym kolejnym błędzie Acquire poprawić jawne przekierowanie jego natywnego strumienia dopiero po potwierdzeniu stanu terminalnego, bez ślepych ponowień.

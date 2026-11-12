@@ -1,5 +1,7 @@
 # Diagnostyka oczekiwania — r4 otwarta, nie scalać
 
+**Aktualizacja 15:26:15: zastój zwolniony normalnie.** PHONE_RUN nie istnieje, trzy sloty heavy są zajęte, FIFO ruszyło i D ma dziewięć zgłoszeń przed sobą. Świeże artefakty pomiaru powstawały do 15:25:52. Nie ma potrzeby ingerować w cudze procesy na podstawie poniższego historycznego odczytu. Sekwencja D 68527 nadal czeka; testy i World nie ruszyły, więc runda nie jest gotowa.
+
 To wyłącznie bieżąca diagnostyka zasobów, nie REPORT gotowej rundy. Kod D nie przeszedł jeszcze 41 testów ani generatora i nie ma renderów D. Wygenerowany i zaimportowany świat nadal przedstawia odrzucone C. Nie ma akceptacji do integracji.
 
 Odczyt 12 listopada o 15:20:37: zero zajętych slotów heavy, aktywny PHONE_RUN, 13 żywych zgłoszeń kolejki; gpt-vegetation-r4 ma 12 przed sobą. Wszystkie metadane są w resource-wait-snapshot.json. Odczyt obejmował wyłącznie pliki kolejki i metadane procesów na komputerze. Nie wykonywano żadnej operacji na urządzeniu ani na cudzych procesach, slotach lub biletach.
