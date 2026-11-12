@@ -39,3 +39,5 @@ Dla kolejnych wywołań pwsh z przekierowaniem zewnętrzna powłoka używa Conti
 2026-11-12T01:37:23.0215331+01:00 Zapisano rendery before/High-overcast wszystkich kamer; ocena PNG i budżetu nadal w toku.
 Krok 13: ukończono Before: 92 kamery × 4 = 368 PNG; wszystkie 44 ID dowodowe oraz 92 statystyki na serię spełniły kontrolę kompletności. Zamrożono siatkę apron i profil źródłowy w before-source; pomiar before korzysta z tej kopii, więc kolejka heavy nie zagrozi bazie.
 Następny krok: AuditGround before pod heavy oraz dodanie/uruchomienie dwóch testów starego C#. Kod produkcyjny nadal bez zmian.
+Krok 14: obejrzano bazowy statyw NW w 960 px. Kadr zasłaniają regionalny płot i drzewa, więc nie dowodzi widoczności szwu. Zachowano before-nw-preview.jpg. Przed edycją C# sprawdzimy pojedynczy statyw poza drivable tile, bliżej punktu audytu; normalne kamery pozostają bez zmian. To kalibracja diagnostyki, nie zdjęcie ani widok gracza.
+Następny krok: probe-nw.ps1; jeśli czytelny, przyjąć pozę i ponowić całą bazę Before z identycznymi późniejszymi kamerami.
