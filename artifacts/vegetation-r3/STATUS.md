@@ -90,3 +90,4 @@ Watchdog sam wznowił GIS root 11512 o 02:39:38 (dwa wpisy RESUME). W logu pytes
 Wznowiony stan GIS przekopiowano także do własnego katalogu artefaktów na main: STATUS i wycinek watchdog, robocopy bez błędu i zgodny hash STATUS przed dopisaniem tej notatki. Nadal bez REPORT.md i bez commita na main.
 Pełny końcowy GIS kod 1; szczegóły pytest-final.log. Znana porażka starego fidelity wymaga osobnej weryfikacji, nie naprawiania cudzej dziedziny.
 Zamknięcie odrzuconej r3: import przywróconego świata kod 0. Kod produkcyjny przywrócony do r1; brak akceptowanej korekty B8.
+Zamknięcie odrzuconej r3: probe przywróconego świata kod 1. Kod produkcyjny przywrócony do r1; brak akceptowanej korekty B8.
