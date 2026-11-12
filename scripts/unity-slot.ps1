@@ -85,7 +85,9 @@ if ($Acquire) {
                 }
             }
             $free = $MaxSlots - $live.Count
-            if (-not (Test-Path $phone) -and -not $blockedByReserve -and $free -gt 0 -and $ahead -lt $free) {
+            # PHONE_RUN blocks only the Unity pool (Unity kills the adb daemon); heavy Python jobs do not touch adb.
+            $phoneBlocks = ($Pool -eq 'unity') -and (Test-Path $phone)
+            if (-not $phoneBlocks -and -not $blockedByReserve -and $free -gt 0 -and $ahead -lt $free) {
                 "$safe $(Get-Date -Format o)" | Set-Content $mine
                 Start-Sleep -Milliseconds (Get-Random -Minimum 200 -Maximum 900)   # settle a race between two acquirers
                 if (@(Get-LiveSlots).Count -le $MaxSlots) {
