@@ -1,0 +1,3 @@
+# Fotografie referencyjne — tylko lokalnie
+
+Zgodnie z recenzją s12 batch C fotografie z logo i materiał Volvo objęty prawami autorskimi pozostają lokalnie poza gitem. Usunięto z indeksu pięć wcześniejszych obrazów cab r1/r3, bez usuwania plików z dysku i bez przepisywania historii. Surowe zdjęcie Volvo i oryginał DAF już wcześniej nie były śledzone. Źródła/licencje opisują cab-r1/REFERENCES-0112.md i cab-r2/NIGHT-REFERENCE.md. R4 może przygotować prywatne pary do przeglądu, ale nie wolno wymuszać dodania fotograficznych paneli do gita. Renderowane kadry fikcyjnego TRAKT pozostają oddzielnymi dowodami gry.
