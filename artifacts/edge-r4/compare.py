@@ -27,10 +27,12 @@ def read_stats(path):
     return result
 
 def pair(left, right, target, titles):
-    sheet = Image.new('RGB', (960, 256), 'white')
+    frames = [Image.open(path).convert('RGB') for path in (left, right)]
+    height = min(360, max(round(frame.height * 480 / frame.width) for frame in frames))
+    sheet = Image.new('RGB', (960, height + 34), 'white')
     draw = ImageDraw.Draw(sheet)
-    for column, (path, title) in enumerate(zip((left, right), titles)):
-        frame = ImageOps.contain(Image.open(path).convert('RGB'), (480, 222))
+    for column, (source, title) in enumerate(zip(frames, titles)):
+        frame = ImageOps.contain(source, (480, height))
         sheet.paste(frame, (column*480, 30))
         draw.text((column*480+3, 5), title[:72], fill='black')
     sheet.save(target, quality=93)
@@ -40,32 +42,49 @@ if not (HERE/'After.complete').exists():
     raise RuntimeError('After matrix has not completed')
 pairs = HERE / 'pairs'
 pairs.mkdir(exist_ok=True)
-for tier in ('Low', 'High'):
-    for lighting in ('clear', 'overcast'):
-        config = f'{tier}-{lighting}'
-        before = read_stats(HERE / 'before' / config / 'stats.txt')
-        after = read_stats(HERE / 'after' / config / 'stats.txt')
+
+def append_matrix(config, before_dir, after_dir, expected_ids=None):
+        before = read_stats(before_dir / 'stats.txt')
+        after = read_stats(after_dir / 'stats.txt')
         assert before.keys() == after.keys(), (config, before.keys() ^ after.keys())
+        if expected_ids is not None:
+            assert set(before) == set(expected_ids), (config, set(before) ^ set(expected_ids))
         for camera in before:
             b, a = before[camera], after[camera]
             draws = a['static_draws']+a['instanced_draws']-b['static_draws']-b['instanced_draws']
             bt = b['static_tris_k']+b['instanced_tris_k']
             at = a['static_tris_k']+a['instanced_tris_k']
+            shadows = a['shadow_draws'] - b['shadow_draws']
             row = dict(configuration=config, camera=camera, before=b, after=a,
                        delta_draws=draws, delta_tris_k=at-bt,
-                       low_budget_pass=(draws <= 0 and at <= bt*1.02) if tier == 'Low' else None)
+                       delta_static_draws=a['static_draws']-b['static_draws'],
+                       delta_instanced_draws=a['instanced_draws']-b['instanced_draws'],
+                       delta_shadow_draws=shadows,
+                       low_budget_pass=(draws <= 0 and shadows <= 0 and at <= bt*1.02) if config.startswith('Low') else None)
             rows.append(row)
             if camera.startswith('edge-'):
-                pair(HERE/'before'/config/f'{camera}.png', HERE/'after'/config/f'{camera}.png',
+                pair(before_dir/f'{camera}.png', after_dir/f'{camera}.png',
                      pairs/f'{config}-{camera}.jpg', (f'Przed | {camera} | {config}', f'Po | {camera} | {config}'))
+
+native_groups = json.loads((HERE/'native-camera-groups.json').read_text(encoding='utf-8-sig'))['groups']
+for tier in ('Low','High'):
+    for lighting in ('clear','overcast'):
+        config = f'{tier}-{lighting}'
+        append_matrix(config, HERE/'before'/config, HERE/'after'/config)
+        for group in native_groups:
+            name = group['id']
+            append_matrix(f'{config}-photo-{name}', HERE/'before-photo'/config/name,
+                          HERE/'after-photo'/config/name, group['camera_ids'])
 (HERE/'measurements.json').write_text(json.dumps(rows, indent=2), encoding='utf-8')
 with (HERE/'all-cameras.csv').open('w', newline='', encoding='utf-8-sig') as stream:
-    fields = ['configuration', 'camera', 'delta_draws', 'delta_tris_k', 'low_budget_pass']
+    base_fields = ['configuration', 'camera', 'delta_draws', 'delta_tris_k', 'low_budget_pass',
+                   'delta_static_draws','delta_instanced_draws','delta_shadow_draws']
+    fields = list(base_fields)
     fields += [f'{phase}_{key}' for phase in ('before', 'after') for key in rows[0]['before']]
     writer = csv.DictWriter(stream, fieldnames=fields)
     writer.writeheader()
     for row in rows:
-        flat = {key:row[key] for key in fields[:5]}
+        flat = {key:row[key] for key in base_fields}
         flat.update({f'{phase}_{key}':value for phase in ('before','after') for key,value in row[phase].items()})
         writer.writerow(flat)
 
@@ -87,14 +106,21 @@ for ref in refs:
     expected = ref.get('comparison_sha256') or ref.get('sha256')
     if not expected or hashlib.sha256(photo.read_bytes()).hexdigest() != expected:
         raise RuntimeError(f'Reference photo hash mismatch: {camera}')
+    with Image.open(photo) as source_image:
+        source_size = source_image.size
+    group = f'{source_size[0]}x{source_size[1]}'
     for config in ('Low-clear','High-clear','Low-overcast','High-overcast'):
-        render = HERE/'after'/config/f'{camera}.png'
-        if not render.exists() or not photo.exists():
-            continue
+        render = HERE/'after-photo'/config/group/f'{camera}.png'
+        if not render.exists():
+            raise FileNotFoundError(f'Photographic comparison requires the native-aspect render: {render}')
+        with Image.open(render) as render_image:
+            if render_image.size != source_size:
+                raise RuntimeError(f'Photograph/render dimensions differ: {camera}')
         target = pairs/f'photo-{config}-{camera}.jpg'
         pair(photo, render, target, (f"Zdjecie | {ref['author']} | {ref['license']}", f'Render | {config} | poza {confidence}/WORKING_VALUE'))
         photo_index.append(dict(camera=camera, configuration=config, pair=target.name,
-                                photo=str(photo), source=ref['page_url'], author=ref['author'],
+                                photo=str(photo), render=str(render), source=ref['page_url'], author=ref['author'],
+                                source_dimensions=source_size, matching_dimensions=True,
                                 license=ref['license'], pose=confidence, photometry='UNVERIFIED'))
 (HERE/'photo-index.json').write_text(json.dumps(photo_index, indent=2), encoding='utf-8')
 (HERE/'excluded-references.json').write_text(json.dumps(excluded,indent=2),encoding='utf-8')
