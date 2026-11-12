@@ -12,7 +12,6 @@
 | krawędź mapy / tło | 0141 | `edge-r6c` | `artifacts/live/edge-r6c.md` | pary after → merge main → testy |
 | **węzły r7: kolizja W-beam/poręcz (P1-1), filary z danych (P1-2), żwir nasypu/nosa, spód pomostu** | 0144 | `junctions-r7` (Fable) | `artifacts/live/junctions-r7.md` | start 18:37 |
 | **świat Putry/Andersa: wysokość latarni Y, prawe pobocze 494288, mur oporowy 810896** | 0146 | `putry-andersa` (Fable) | `artifacts/live/putry-andersa.md` | start 19:18 |
-| **orientacja: telefony landscape, Fold bez regresji** (A16 płasko startuje w portrecie po 0135) | 0147 | `orientation` (Opus gameplay-ui) | `artifacts/live/orientation.md` | start 19:3x |
 | **A16 GPU runda 2: props G3-A wg prefiksu** (jedyny agent telefonowy) | 0136 r2 | `a16-perf` (Opus) | `artifacts/live/a16-perf.md` | start 18:4x |
 - Scalone wcześniej (s13): 0129, 0136, 0140, 0142 — patrz niżej. **main wymaga regeneracji** (0129, 0133) + `ImpostorTrimBake.RunBatch` (0136) w jednej integracji.
 - Ścieżka bramki 3: krytyk D51 dla gotowych → scal 0123→0128, 0139, 0141, 0132 → jedna integracja (regen, import, ImpostorTrimBake, testy, vqa, `pwsh scripts/sbs-low-pairs.ps1 -Before artifacts/sbs-poses-r2/after`) → krytyk D51 → czysty APK Low → gate3 A16 A+B → pakiet zdjęcie|render.
@@ -26,6 +25,7 @@
 - **19:20: SCALONE 0139 g3b-r2** `97996ef6` (critic SCAL warunkowo, `REVIEW-…-s14-0139.md`: **G3-B 5/10 RECOGNISABLE, 5 PARTIAL** — 297817 obniżone: kominy EC niewidoczne na Low → 0141; tablice portalu Andersa ~0,6 m za wysoko, gzyms czerwony, dwuteowniki → 0146; pozy 810525/810896 złe → po 0146). Worktree g3b-r2 usunięty.
 - **19:4x: SCALONE 0145 tyre-scrub** (szuranie osi naczepy w ciasnym skręcie + pisk tylko przy poślizgu 18–32 km/h; nagrania REGEN-03; PlayMode 27/27, 0 B GC). A/B wysłane właścicielowi (`artifacts/tyre-scrub/ab/`). **APK z oponami w kolejce:** `artifacts/lead-s14/apk-tyres.sh` (log `apk-tyres.log`) czeka na zdjęcie PHONE_RUN (0136 mierzy A16), potem slot Unity → build. `.gitignore`: `art-source/audio/elevenlabs/`.
 - **19:30 trigger:** 5 h **63 %** (reset 23:19), tydzień 60 %, **Fable 90 %** (reset 15.11 11:59) — Fable prawie wyczerpany: 4 agentów Fable (0132 r4, 0141, 0144, 0146); kolejne zadania świata na Opus. 0136 r2: Low vehicleCullM 150 → GPU p95 −1,3 ms (34,5), brakuje ~1,2 ms; diagA4 w toku. Mistral r2: gałąź `mistral-r2-int` 9/9 + poprawki, czeka na pełne tests/gis. 0141: kominy EC widoczne na Low w 297817/150280 (stare pozy), potwierdzenie na pozach 0143 w toku.
+- **19:5x: SCALONE 0147 orientacja** `fee0d940` (wydłużone okno w portrecie → wymuszony landscape, potem L/R; Fold ≤1,25 jak r3; EditMode 24/24). APK gałęzi `artifacts/orientation/kamion-0.1.0-387a492d24.apk` → **test Fold właściciela** (4 punkty w ADR 0147) + weryfikacja A16 przez 0136. **APK z oponami 0145: `artifacts/apk/kamion-0.1.0-139dc835cf.apk`.** **Dysk C: 0,9 GB wolnego (19:45)** — przyczyna ~45 worktree × Library ~9 GB; sprzątanie `artifacts/lead-s14/cleanup-disk.ps1` (log `cleanup-disk2.log`): scalone worktree usuwane, GPT tylko Library. G: (Google Drive) pokazuje wolne miejsce C:.
 - **Ostatni przydzielony ADR: 0147.**
 
 ---
