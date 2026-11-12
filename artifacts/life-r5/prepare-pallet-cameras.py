@@ -49,7 +49,8 @@ def views(item, index, height):
         ('side3', [(0, -3.5), (0, 3.5)], 3.5),
         ('end3', [(-3.5, 0), (3.5, 0)], 3.5),
         ('oblique4', [(sx*3.2, sy*2.5) for sx in (-1, 1) for sy in (-1, 1)], 4.06),
-        ('far15', [(-15, 0), (15, 0), (0, -15), (0, 15)], 15)):
+        ('far15', [(-15, 0), (15, 0), (0, -15), (0, 15)], 15),
+        ('far50', [(-50, 0), (50, 0), (0, -50), (0, 50)], 50)):
         options = []
         for x, y in offsets:
             pos = xy(item, x, y)
@@ -73,7 +74,7 @@ for proto in ('pallets_empty_4', 'pallets_empty_8', 'pallets_empty_12', 'pallets
         if item['p'] != proto: continue
         cameras = views(item, index, .144*int(proto.rsplit('_', 1)[1]))
         # Near inspection has priority; the far pose still gets explicit obstacles.
-        score = sum(c['obstacle_count']*(1 if c['id'].endswith('far15') else 4) for c in cameras)
+        score = sum(c['obstacle_count']*(1 if '_prop_far' in c['id'] else 4) for c in cameras)
         candidates.append((score, str(item['src']), item['e'], item['n'], item, cameras))
     if not candidates:
         missing.append(proto)
@@ -99,7 +100,7 @@ new = [c for entry in selected+controls for c in entry['cameras']]
 old_ids = {c['id'] for c in packet['cameras']}
 assert not (old_ids & {c['id'] for c in new})
 packet['cameras'].extend(new)
-packet['life_r5_note'] = 'Actual empty pallet targets, four views per available stack class; contextual existing bin/container controls. Poses and occlusion remain subject to render inspection.'
+packet['life_r5_note'] = 'Actual empty pallet targets, five views per available stack class; 50m probe beyond High 30m*1.5 LOD0 threshold, within Low 120m*.5 cull. Contextual existing bin/container controls. Actual submitted LOD and visibility still require diagnostics/render.'
 (OUT / 'cameras.json').write_text(json.dumps(packet, indent=2), encoding='utf-8')
 report = dict(selected=selected, controls=controls, missing_prototypes=missing, added_cameras=len(new),
               packet_cameras=len(packet['cameras']), candidate_instances=len(instances),
