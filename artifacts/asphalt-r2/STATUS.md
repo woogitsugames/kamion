@@ -16,3 +16,4 @@
 2026-11-12T01:21:10.6439340+01:00: zapisano artifacts/asphalt-r2/baseline/High-overcast. Następny krok: pozostałe serie lub porównanie wariantu.
 2026-11-12T01:21:44.0107697+01:00: zapisano artifacts/asphalt-r2/baseline/High-clear. Następny krok: pozostałe serie lub porównanie wariantu.
 2026-11-12T01:21:44.5453075+01:00: Pełny baseline r2 zakończony. Obejrzeć nowe zbliżenia krawężnika/kostki i referencje przed zmianą materiału.
+2026-11-12T01:25:46.8214044+01:00: Baseline sceny ma cztery serie gotowe (87802 exit 0). Obejrzano nowe zbliżenia Low: chodnik trafiony, kadr krawężnika obejmuje głównie trawę/słup i wymaga korekty. Przygotowano read-only surface_probe.py: alias materiału/UV1 w polu chodnika i najbliższy prawy wierzch krawężnika z chunk_3_4.low.glb. Dodano go do jeszcze oczekującego GeometryAudit baseline; jeśli stara wersja zdążyła się wykonać, uruchomić osobno dopiero po terminalnym 11713. Nie zmienia geometrii ani źródeł produktu.

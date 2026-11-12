@@ -37,6 +37,9 @@ def main():
                   note='Exact accessor values/types/shapes and scene graph for every chunk GLB, both tiers. Material definitions, indirect instance files and GPU draw costs are not covered.')
     target = OUT / f'geometry-{args.label}.json'
     target.write_text(json.dumps(report, indent=2)+'\n', encoding='utf-8')
+    if args.label == 'baseline':
+        from surface_probe import capture
+        capture()
     summary = dict(label=args.label, files=len(rows), primitives=sum(len(row['primitives']) for row in rows))
     baseline_path = OUT / 'geometry-baseline.json'
     if args.label != 'baseline' and baseline_path.exists():
