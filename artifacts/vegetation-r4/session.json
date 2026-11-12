@@ -12,7 +12,7 @@
   "next_step": "STOP requested by owner dueweeklylimit. No further agent stages/rounds until explicitresume. Existing job68527 was NOTterminated: pending45tests thenconditionalWorld/collision, automaticWIP/release andstop. Beforefutureaction verify liveprocess/logs/done; never rerun blindly.",
   "materials": "completed exit0,446s",
   "pipeline_log": "baseline-resume.log",
-  "state_authority": "At16:21:41 own68527 queuedahead4, noDtest/Worldlogs. PIDs60052/57980/64772 checkedstart15:15. SourceD, generated/importedC. NineSHAverified pausebackups saved16:25:27; OWNER-PAUSE-SNAPSHOT and handoff describe state. BackgroundjobmayadvanceHEAD/outputs afterthis snapshot.",
+  "state_authority": "Ownerstop. Finalcheck16:31:13:68527livequeuedahead1, noDtest/Worldlogs. No jobs killed. SourceD/importedC. Ninebackups SHAverified, allartifacts copiedmain1116files/1113copied/3skipped/0failed. Backgroundjob maylateradvanceHEAD andoutputs; worktree authoritative. No further stages untilownerresume.",
   "initial_base_merge_sha": "7c9b4ca6",
   "interruption": "Old execution handle missing and own process absent; old World log stopped waiting at03:44:51. Resumed09:06 after source-only checks; no World had run.",
   "world": "candidate C completed exit0,515.6s; D not started",

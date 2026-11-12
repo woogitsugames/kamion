@@ -14,7 +14,7 @@ Oryginalne zlecenie 24-godzinne rozpoczęto 11 listopada około 21:30:50, z term
 
 ## Pozostawione zadanie — nie zostało ubite
 
-Ostatnia kontrola o **16:21:41** potwierdziła żywe oczekiwanie na heavy: **uchwyt narzędzia 68527**, cztery zgłoszenia przed nim, trzy zajęte sloty, PHONE_RUN nieaktywny. Nie było jeszcze logu testów ani World D. Procesy w tym odczycie:
+Kontrola o **16:21:41** potwierdziła żywe oczekiwanie na heavy: **uchwyt narzędzia 68527**, cztery zgłoszenia przed nim, trzy zajęte sloty, PHONE_RUN nieaktywny. Aktualizacja przy końcowym zapisie **16:31:13**: ten sam uchwyt nadal żyje, przed nim zostało **jedno zgłoszenie**; nadal brak logów testów i World D. Nie ponawiano zadania. Procesy w odczycie z 16:21:
 
 | Rola | PID | Początek |
 |---|---:|---|
@@ -72,7 +72,7 @@ Autor obejrzał również osiem wycinków C w skali pikseli PNG; gładki blat po
 
 Siedem brudnych plików to metadane far-field, underdeck, streetscape/world, manifest far-field oraz props_meta i street_props.glb. **Nie wykonywać `git add -A`, masowego resetu ani przywracania ich podczas aktywnej generacji.** Po zakończeniu zadania porównać je z kopią i jawnie przywrócić skutki uboczne cudzych dziedzin przy zamykaniu rundy. Szczegółowe ścieżki są w manifeście kopii. Repo pozostaje celowo brudne w tych siedmiu plikach; nie jest to niezapisana praca utracona przy pauzie.
 
-Cały katalog `artifacts/vegetation-r4/` ma zostać skopiowany do `C:\Users\matma\Documents\Claude\kamion\artifacts\vegetation-r4`. Kopia jest migawką przy przekazaniu. Jeżeli pozostawiony proces dopisze później logi lub STATUS, **najnowszy stan jest w źródłowym worktree**, dopóki nie wykona się kolejnego robocopy. Nie ma końcowego REPORT.md r4; `REPORT-DRAFT.md` jest wyłącznie szkicem. ADR: `docs/adr/0109-vegetation-24h.md`.
+Cały katalog `artifacts/vegetation-r4/` skopiowano do `C:\Users\matma\Documents\Claude\kamion\artifacts\vegetation-r4`: 1116 plików w zestawie, 1113 skopiowanych, trzy pominięte jako istniejące, około 1,252 GB, zero błędów. Sprawdzono SHA przekazania i wszystkich dziewięciu kopii bezpieczeństwa; dowód to `OWNER-PAUSE-COPY-PROOF.json`, log `OWNER-PAUSE-COPY.log`. Kopia jest migawką przy przekazaniu. Jeżeli pozostawiony proces dopisze później logi lub STATUS, **najnowszy stan jest w źródłowym worktree**, dopóki nie wykona się kolejnego robocopy. Nie ma końcowego REPORT.md r4; `REPORT-DRAFT.md` jest wyłącznie szkicem. ADR: `docs/adr/0109-vegetation-24h.md`.
 
 ## Wznowienie — dopiero po nowym poleceniu właściciela
 
