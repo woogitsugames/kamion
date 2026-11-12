@@ -20,3 +20,5 @@ Przygotowano niepodłączone szkice algorytmów w artifacts: poszerzenie istniej
 Szkice sprawdzone na niezależnej sztucznej posesji: brama otwarta, oba poziomy w tym samym materiale, niezmienione części bazowe, deterministyczne bufory, limit0blokuje dodanie, Low/las bez zmiany. To sprawdzenie algorytmu, nie dowód świata/wyglądu.
 
 Pozy uliczne użyją scalonych po nazwie linii OSM, aby krótkie odcinki grafu między skrzyżowaniami nie ograniczały dwóch ujęć tej samej ulicy. Nadal wyłącznie rzeczywiste osie, bez przesuwania domów lub źródeł.
+
+Świat baseline wygenerowany: 598.9563807 s, bez fallback=True. NASTĘPNY KROK: import i kamery baseline.
