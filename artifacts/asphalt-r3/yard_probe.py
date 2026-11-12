@@ -60,10 +60,16 @@ def main():
         document, nodes = read(path)
         identity_nodes(document)
         files.append(dict(file=source['file'], sha256=digest, bounds=chunk['bounds_local_m']))
-        material_defs = {material['name']: material for material in document['materials']}
+        mesh_nodes = [node for node in document['nodes'] if 'mesh' in node]
+        node_defs = {node['name']: node for node in mesh_nodes}
+        if len(node_defs) != len(mesh_nodes):
+            raise RuntimeError('Duplicate mesh node names are unsupported by the reader.')
         for node, parts in nodes.items():
             if node not in ('paved', 'road', 'plot_ground'):
                 continue
+            document_parts = document['meshes'][node_defs[node]['mesh']]['primitives']
+            if len(document_parts) != len(parts):
+                raise RuntimeError('Primitive order/count differs from the glTF document.')
             for primitive, (material, attrs) in enumerate(parts):
                 positions = attrs['POSITION'].astype(float)
                 en = np.column_stack((-positions[:, 0], positions[:, 2]))
@@ -81,8 +87,14 @@ def main():
                     xy, heights, tri_ids = xy[top], heights[top], tri_ids[top]
                 if not len(xy):
                     continue
-                definitions[material] = material_defs[material]
+                material_index = document_parts[primitive]['material']
+                definition = document['materials'][material_index]
+                if definition['name'] != material:
+                    raise RuntimeError('Material index/name mismatch.')
+                definition_key = f'{path.name}:{node}:{primitive}'
+                definitions[definition_key] = dict(gltf_material_index=material_index, definition=definition)
                 inventory.append(dict(file=path.name, node=node, material=material, primitive=primitive,
+                                      definition_key=definition_key,
                                       top_triangles_with_bbox_overlap=len(xy),
                                       elevation_range_u=[float(heights.min()), float(heights.max())]))
                 a, b, c = xy[:, 0], xy[:, 1], xy[:, 2]
@@ -97,6 +109,7 @@ def main():
                     weights = np.column_stack((wa, wb, 1-wa-wb))
                     for hit in np.flatnonzero(usable & (weights.min(axis=1) >= -1e-7)):
                         point['hits'].append(dict(file=path.name, node=node, material=material,
+                                                  primitive=primitive, definition_key=definition_key,
                                                   triangle=int(tri_ids[hit]),
                                                   elevation_u=float(weights[hit] @ heights[hit])))
     if not files:
