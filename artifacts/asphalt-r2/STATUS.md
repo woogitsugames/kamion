@@ -26,3 +26,4 @@
 2026-11-12T01:58:54.6537848+01:00: Korekta R1 przekazana robocopy do main, exit=1; 12 plików sprawdzonych SHA. Receipt CORRECTION-DELIVERY.json zachowuje poprzedni przekaz 2c921825 i wskazuje commit korekty. Bez commitu ani scalania do main. Następny krok: odświeżyć cztery baseline z rootToWorld i właściwymi seat=file przed materiałami r2.
 2026-11-12T01:59:26.5083083+01:00: zapisano artifacts/asphalt-r2/baseline/Low-overcast. Następny krok: pozostałe serie lub porównanie wariantu.
 2026-11-12T01:59:58.5600975+01:00: zapisano artifacts/asphalt-r2/baseline/Low-clear. Następny krok: pozostałe serie lub porównanie wariantu.
+2026-11-12T02:00:33.1632889+01:00: zapisano artifacts/asphalt-r2/baseline/High-overcast. Następny krok: pozostałe serie lub porównanie wariantu.
