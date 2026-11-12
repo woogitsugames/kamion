@@ -4,7 +4,9 @@ using Game.Core;
 using Game.Platform;
 using Game.Rendering;
 using Game.Telemetry;
+using Game.UI.CabDisplays;
 using Game.UI.Layout;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.UI;
@@ -30,14 +32,14 @@ namespace Game.UI
         Canvas m_Canvas;
         RectTransform m_SafeArea;
         GameObject m_Panel;
-        Text m_Body;
+        TextMeshProUGUI m_Body;
         Text m_FpsButtonLabel;
         Text m_TierButtonLabel;
         Text m_HideButtonLabel;
         UiViewport m_View;
         float m_NextRefresh;
         string m_Header;
-        readonly StringBuilder m_Sb = new StringBuilder(1024);
+        readonly TextBuffer m_Buf = new TextBuffer(1024);
 
         public static DiagnosticsOverlay Create(Camera camera, IPlatformServices platform, DiagnosticsSampler sampler)
         {
@@ -88,14 +90,13 @@ namespace Game.UI
             fitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
 
             var bodyRt = NewRect("Body", panelRt);
-            m_Body = bodyRt.gameObject.AddComponent<Text>();
-            m_Body.font = font;
+            m_Body = bodyRt.gameObject.AddComponent<TextMeshProUGUI>();
+            m_Body.font = UiFonts.DefaultTmp;
             m_Body.fontSize = FontSize;
             m_Body.lineSpacing = 1.1f;
             m_Body.color = k_TextColor;
-            m_Body.alignment = TextAnchor.UpperLeft;
-            m_Body.horizontalOverflow = HorizontalWrapMode.Overflow;
-            m_Body.verticalOverflow = VerticalWrapMode.Overflow;
+            m_Body.alignment = TextAlignmentOptions.TopLeft;
+            m_Body.overflowMode = TextOverflowModes.Overflow;
             m_Body.raycastTarget = false;
 
             // Buttons column, top-right of the safe area.
@@ -197,34 +198,40 @@ namespace Game.UI
 
             var snap = m_Sampler != null ? m_Sampler.Snapshot : default;
             var f = snap.Frames;
-            var sb = m_Sb;
+            var sb = m_Buf;
             sb.Clear();
             sb.Append(m_Header).Append('\n');
             sb.Append("Screen: ").Append(Screen.width).Append('x').Append(Screen.height)
-              .Append(" @ ").Append(Screen.currentResolution.refreshRateRatio.value.ToString("F0", ci)).Append(" Hz")
-              .Append("  ·  safe ").Append(Screen.safeArea.width.ToString("F0", ci)).Append('x').Append(Screen.safeArea.height.ToString("F0", ci))
+              .Append(" @ ").AppendFixed(Screen.currentResolution.refreshRateRatio.value, 0, false, '.').Append(" Hz")
+              .Append("  ·  safe ").AppendFixed(Screen.safeArea.width, 0, false, '.').Append('x').AppendFixed(Screen.safeArea.height, 0, false, '.')
               .Append("  ·  quality ").Append(QualityTiers.Current)
-              .Append("  ·  target ").Append(targetFps > 0 ? targetFps.ToString(ci) : "auto").Append(" fps\n");
+              .Append("  ·  target ");
+            if (targetFps > 0) sb.Append(targetFps); else sb.Append("auto");
+            sb.Append(" fps\n");
             if (f.Samples > 0)
             {
-                sb.Append("FPS ").Append(f.MeanFps.ToString("F1", ci))
-                  .Append("   frame p50 ").Append(f.P50Ms.ToString("F1", ci))
-                  .Append(" · p95 ").Append(f.P95Ms.ToString("F1", ci))
-                  .Append(" · p99 ").Append(f.P99Ms.ToString("F1", ci))
+                sb.Append("FPS ").AppendFixed(f.MeanFps, 1, false, '.')
+                  .Append("   frame p50 ").AppendFixed(f.P50Ms, 1, false, '.')
+                  .Append(" · p95 ").AppendFixed(f.P95Ms, 1, false, '.')
+                  .Append(" · p99 ").AppendFixed(f.P99Ms, 1, false, '.')
                   .Append(" ms  (").Append(f.Samples).Append(" frames)\n");
             }
             else
             {
                 sb.Append("FPS —   frame p50 — · p95 — · p99 — ms\n");
             }
-            sb.Append("Battery ").Append(snap.BatteryTempC.HasValue ? snap.BatteryTempC.Value.ToString("F1", ci) + " °C" : "n/a")
-              .Append("  ·  thermal ").Append(ThermalStatusNames.Get(snap.ThermalStatus))
-              .Append("  ·  headroom ").Append(snap.ThermalHeadroom.HasValue ? snap.ThermalHeadroom.Value.ToString("F2", ci) : "n/a").Append('\n');
-            sb.Append("Memory: PSS ").Append(snap.PssKb.HasValue ? (snap.PssKb.Value / 1024).ToString(ci) + " MB" : "n/a")
-              .Append("  ·  Unity alloc ").Append((snap.UnityAllocatedBytes >> 20).ToString(ci))
-              .Append(" / reserved ").Append((snap.UnityReservedBytes >> 20).ToString(ci)).Append(" MB")
-              .Append("  ·  session ").Append(snap.SessionSeconds.ToString("F0", ci)).Append(" s");
-            m_Body.text = sb.ToString();
+            sb.Append("Battery ");
+            if (snap.BatteryTempC.HasValue) sb.AppendFixed(snap.BatteryTempC.Value, 1, false, '.').Append(" °C"); else sb.Append("n/a");
+            sb.Append("  ·  thermal ").Append(ThermalStatusNames.Get(snap.ThermalStatus))
+              .Append("  ·  headroom ");
+            if (snap.ThermalHeadroom.HasValue) sb.AppendFixed(snap.ThermalHeadroom.Value, 2, false, '.'); else sb.Append("n/a");
+            sb.Append('\n');
+            sb.Append("Memory: PSS ");
+            if (snap.PssKb.HasValue) sb.Append(snap.PssKb.Value / 1024).Append(" MB"); else sb.Append("n/a");
+            sb.Append("  ·  Unity alloc ").Append(snap.UnityAllocatedBytes >> 20)
+              .Append(" / reserved ").Append(snap.UnityReservedBytes >> 20).Append(" MB")
+              .Append("  ·  session ").AppendFixed(snap.SessionSeconds, 0, false, '.').Append(" s");
+            m_Body.SetCharArray(sb.Chars, 0, sb.Length);   // zero-alloc: reused char buffer
         }
     }
 }
