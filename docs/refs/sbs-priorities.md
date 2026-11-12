@@ -1,4 +1,4 @@
-﻿# SBS — priorytety odstępstw od zdjęć, r3
+# SBS — priorytety odstępstw od zdjęć, r3
 
 Aktualizacja: 12.11.2026 około 02:43, gałąź gpt-sbs-r3. Baza main 9874d98c, merge 31988772. Jest to ranking wejściowy z recenzji i obejrzanych dowodów ADR 0125, przed własnym renderem nowego świata r3. Nie należy czytać go jako nowego wyniku bramki ani dowodu, że stare braki nadal występują po scaleniach. Po renderach każda pozycja otrzyma potwierdzenie albo zmianę statusu.
 
@@ -11,13 +11,13 @@ Kryterium D51: rozpoznanie miejsca przez kierowcę znającego trasę. Niebo, eks
 | 1 | Pozy G3-B: 275528, 837235, 328135, 297817, 180137, 494288 | sbs | Recenzja 0125 wskazuje pozę jako główny bloker; sześć par po 0125 obejrzano. Nowy portal istnieje. | Na nowej bazie warianty pozy, zgodność portalu i drugiej trwałej kotwicy; C do niezależnego przeglądu. |
 | 2 | Wysepka, D-3/D-6, przejście i kostka: A320326 | Claude — węzły 0123; furniture tylko znaki | 0125 zgłasza stale: jezdnia zajmuje obszar wysepki. Nie leczyć tego przesuwaniem samego znaku. | Świeży kadr A320326 oraz geometria nosa względem ortofoto. |
 | 3 | Pierzeja handlowo-usługowa: B150280, B297817, częściowo B328135 | Claude — zabudowa 0126 | Na r2 są hale i blok, brak charakterystycznej czerwonej pierzei; nie jest to całkowicie pusty teren. Prace 0126 nie są dowodem efektu na naszej bazie. | Ten sam kadr po potwierdzeniu pozy i integracji zabudowy; bryły, kolor dominujący i rytm, bez marek. |
-| 4 | Podpory przy rondzie: A201270 i A139889 | Claude — wiadukty/węzły 0123 | R1/r2 mają pusty prześwit; lider zgłosił filary w gałęzi 0123, nie wolno zakładać ich braku po przyszłym merge. | Dwa świeże kadry na faktycznie scalonym świecie, w tym najbliższa podpora. |
+| 4 | Podpory przy rondzie: A201270 i A139889 | Claude — wiadukty/węzły 0123 | R3 Low-overcast A201270/A139889 nadal pokazuje brak najbliższych podpór. Tablica z nazwą ronda już jest. Nie przenosić tego wyniku na przyszłe scalenie 0123 bez nowego renderu. | Dwa świeże kadry na faktycznie scalonym świecie, w tym najbliższa podpora. |
 | 5 | Czytelność ekranów i słupa WN: B367829, B494288, B180137 | furniture / Claude 0125; sbs osobno poza | Obiekty istnieją po 0125. Lewy ekran B494288 usunięty; problemem pozostaje sylwetka i ciągłość prawego, a nie rzekomy brak obu. | Low-overcast i Low-clear; po potwierdzeniu pozy porównać masywność słupów, dolny pas i płaszczyznę szkła. |
 | 6 | LOD kratownicowej bramownicy: B837235, B381800, B297817 | Claude — oznakowanie/portal | Recenzja 0125: z daleka pełna szara rama zamiast czytelnej kratownicy; bliska geometria jest. | Te same dystanse w Low i High, osobne draws instancji, bez awansu kadru na podstawie samego zbliżenia. |
 | 7 | Nos wyspy/szewron: B381800, B837235; znak C-9 A177786 | Claude — geometria węzłów; furniture — znak; sbs — poza | Możliwy snap szewronu do niewłaściwego nosa; A177786 ma także niepewną odległość kamery. | Co najmniej dwie kotwice; sprawdzić osobno geometrię nosa i pozę, nie przesuwać obu naraz. |
-| 8 | Nasyp/bariera łuku: A281855/A397016/A177786/A178689/A201270/A139889 | Claude — węzły/teren | Historyczna recenzja wskazuje kostkę zamiast kruszywa i brak szyny. W 0123 trwają poprawki; stan nowego renderu oczekuje. | Prześwit pod mostem i łuk w świeżej parze, bez sugerowania zmian tekstur jako zamknięcia geometrii. |
-| 9 | Drzewa i panorama: B297817; A454716/A303305/A320215 | vegetation / edge | R1/r2: brak rytmu dużych drzew, las zamiast bloków. R1 domen scalone, wymagają sprawdzenia wspólnego stanu. | Sylwetki w tych samych kadrach, po kalibracji B297817. |
-| 10 | Koniec świata: DK8 i wyloty; klin tła A294859/A303305 clear | edge + light | Recenzje batch1/batch2 wskazują bariery końca mapy i odsłonięty szary klin po nowych chmurach. Klin to artefakt geometrii, nie sam kolor nieba. | Nowy wspólny Low-clear i High-clear; widocznego klina nie używać jako zaliczonego dowodu clear. |
+| 8 | Nasyp/bariera łuku: A281855/A397016/A177786/A178689/A201270/A139889 | Claude — węzły/teren | Świeży A139889 Low-overcast potwierdza brak bariery łuku i różny nasyp. Wynik dotyczy naszej bazy main 14ccbaf1, nie niescalonych poprawek 0123. | Prześwit pod mostem i łuk w świeżej parze, bez sugerowania zmian tekstur jako zamknięcia geometrii. |
+| 9 | Drzewa i panorama: B297817; A454716/A303305/A320215 | vegetation / edge | R3 A303305 clear w obu tierach nadal ma drzewa zamiast wyraźnej grupy bloków po lewej. B297817 i pozostałe kadry panoramy wymagają osobnego sprawdzenia. | Sylwetki w tych samych kadrach, po kalibracji B297817. |
+| 10 | Koniec świata: DK8 i wyloty; klin tła A294859/A303305 clear | edge + light | Klin nad halami potwierdzony w świeżym A303305 Low-clear i High-clear. Bariery końca mapy nadal opierają się na recenzji batch1 i wymagają nowej kontroli. | Nowy wspólny Low-clear i High-clear; widocznego klina nie używać jako zaliczonego dowodu clear. |
 
 ## Zadania dla dziesięciu dziedzin
 
@@ -41,4 +41,7 @@ Kryterium D51: rozpoznanie miejsca przez kierowcę znającego trasę. Niebo, eks
 - [Recenzja life/vegetation/cab/edge](../reports/visual/REVIEW-2026-11-12-s11-gpt-r1-batch.md) oraz [asphalt/landmarks/light/truck](../reports/visual/REVIEW-2026-11-12-s11-gpt-r1-batch2.md): tematy dla dziedzin, brak pomiaru wspólnego A16.
 - [Zamknięty raport SBS r2](../../artifacts/sbs-r2/REPORT.md), [audyt](../../artifacts/sbs-r2/AUDIT.json), [przegląd sześciu par 0125](../../artifacts/sbs-r2/PRE-R3-VISUAL.md), [HTML](../../artifacts/sbs-gate3/latest/index.html).
 
-Do czasu nowych renderów r3 wszystkie stwierdzenia o obecnej bazie mają status oczekuje potwierdzenia. Nowa poza unieważnia porównywalność trendu; każda nowa ocena D51 wymaga związania z SHA zdjęcia i renderu. C nie są usuwane z historii, ale nie liczą się jako zaliczone pary.
+Pełna seria r3 powstała około 09:06–09:09 na źródłach aktualnego main 14ccbaf1. Własny natywny przegląd potwierdził dotąd A201270 i A139889 Low-overcast oraz A303305 Low/High-clear; pozostałe wiersze oczekują pełnego przeglądu. Nowa poza unieważnia porównywalność trendu; każda nowa ocena D51 wymaga związania z SHA zdjęcia i renderu. C nie są usuwane z historii, ale nie liczą się jako zaliczone pary.
+
+[Dokładny zakres świeżego przeglądu czterech klatek](../../artifacts/sbs-r3/FRESH-SPOT-REVIEW.md) i [SHA](../../artifacts/sbs-r3/fresh-spot-inspection.json). Nie jest to nowy pełny werdykt D51.
+

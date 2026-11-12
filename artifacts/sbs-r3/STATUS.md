@@ -47,3 +47,5 @@ Lekkie parsowanie tekstowych statystyk dało 168 wierszy liczników z oddzielnym
 
 
 Niezależny odczyt drugiej rodziny potwierdził kierunki i poziomy; uzupełniono guard kodów zakończenia baseline. summary.json w counters/ opisuje wszystkie 168 wierszy, osobne statyczne i instancje oraz zakres delty wobec r2. Nie jest to izolowany koszt SBS ani wynik telefonu. Nowe przygotowanie nadal nie zostało uruchomione, ponieważ pełna kompozycja czeka na tę samą pulę heavy.
+
+Obejrzano cztery natywne raw świeżej serii i trzy odpowiadające zdjęcia: A201270/A139889 Low-overcast oraz A303305 Low/High-clear. Zapisano FRESH-SPOT-REVIEW.md i ledger SHA. Potwierdzono brak najbliższych podpór i bariery/nasypu; tablica z nazwą ronda już jest. Klin nad halami i brak grupy bloków po lewej nadal widać w A303305 w obu tierach. Zaktualizowano tylko te wiersze rankingu; bez nowego formalnego D51 i bez twierdzenia o obejrzeniu całej serii.
