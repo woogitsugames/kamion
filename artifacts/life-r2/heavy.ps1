@@ -20,7 +20,7 @@ if(Test-Path -LiteralPath $ownSlot){throw 'This branch already holds a heavy slo
 $log="artifacts/life-r2/$Tag.log"
 if(Test-Path -LiteralPath $log){throw "Refuse overwriting evidence: $log"}
 # Never let the common slot helper prune another session's old slot.
-& pwsh scripts/unity-slot.ps1 -Acquire -Pool heavy -Owner $owner -StaleHours 1000000 -PollSeconds 5
+& pwsh scripts/unity-slot.ps1 -Acquire -Pool heavy -Owner $owner -StaleHours 1000000 -PollSeconds 1
 if($LASTEXITCODE -ne 0){throw 'Heavy slot acquisition failed'}
 $code=1
 try {
