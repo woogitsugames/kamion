@@ -19,5 +19,8 @@ try {
     }
     & git lfs checkout *> artifacts/sbs-r4/lfs-checkout.log
     if($LASTEXITCODE -ne 0){throw 'LFS checkout failed'}
-    [ordered]@{completed_at=(Get-Date -Format o);source_head=(& git rev-parse HEAD).Trim();merged_main=(& git rev-parse HEAD^2).Trim();copies=$rows;lfs_checkout_exit_code=0;note='Caches refreshed read-only from main; no Library copy, no junction target writes.'} | ConvertTo-Json -Depth 6 | Set-Content artifacts/sbs-r4/preparation-completed.json -Encoding utf8
+    $mergeHead=(& git log -1 --merges --format=%H).Trim()
+    $mergedMain=(& git rev-parse "$mergeHead^2").Trim()
+    if($LASTEXITCODE -ne 0 -or $mergedMain -notmatch '^[a-f0-9]{40}$'){throw 'Cannot bind merged main'}
+    [ordered]@{completed_at=(Get-Date -Format o);source_head=(& git rev-parse HEAD).Trim();merge_commit=$mergeHead;merged_main=$mergedMain;copies=$rows;lfs_checkout_exit_code=0;note='Caches refreshed read-only from main; no Library copy, no junction target writes.'} | ConvertTo-Json -Depth 6 | Set-Content artifacts/sbs-r4/preparation-completed.json -Encoding utf8
 } finally {Pop-Location}

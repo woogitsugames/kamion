@@ -1,0 +1,36 @@
+{
+  "completed_at": "2026-11-12T11:58:54.3681641+01:00",
+  "source_head": "b4621ece5f31892de57c4e06eb058bc0f6793e0e",
+  "merged_main": "0023f39de1bf2cadb870d865147ab8b5a19bbe32",
+  "copies": [
+    {
+      "path": "Data/raw/derived",
+      "robocopy_exit_code": 1,
+      "private_destination": true
+    },
+    {
+      "path": "Data/raw/cc0",
+      "robocopy_exit_code": 0,
+      "private_destination": true
+    },
+    {
+      "path": "art-source/world/cc0/_raw",
+      "robocopy_exit_code": 0,
+      "private_destination": true
+    },
+    {
+      "path": "art-source/world/megascans",
+      "robocopy_exit_code": 0,
+      "private_destination": true
+    },
+    {
+      "path": "game/Assets/_Generated",
+      "robocopy_exit_code": 1,
+      "private_destination": true
+    }
+  ],
+  "lfs_checkout_exit_code": 0,
+  "note": "Caches refreshed read-only from main; no Library copy, no junction target writes.",
+  "merge_commit": "664fd272ac5623249c626064ba71727436d806aa",
+  "provenance_correction": "Initial helper queried second parent of later WIP commit; cache copies and LFS succeeded. Corrected to actual merge commit second parent without repeating copies."
+}
