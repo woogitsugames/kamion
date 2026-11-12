@@ -48,6 +48,8 @@ def test_measured_height_does_not_invent_a_power_plant(tier):
     p = render(building(),tier)
     colors = np.asarray(p['COL'])
     assert panel_mask(p).any(), 'A declared industrial facade must carry its explicit data marker'
+    assert np.isclose(colors[:,3],0.65).any(), (
+        'The tall production typology must explicitly encode its WORKING_VALUE upper glazing band, not random omission')
     assert not np.any(np.all(np.isclose(colors[:,:3],[0.24,0.10,0.07]),axis=1)), (
         'A 23.91 m production building is not a power plant merely because it is tall')
 
