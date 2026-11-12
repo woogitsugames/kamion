@@ -193,3 +193,5 @@ NASTĘPNY KROK: przygotować własne skrypty r2 z ownerem heavy gpt-furniture-r2
 2026-11-12T09:47:59.0867929+01:00: końcowe EditMode340/340 passed,0 failed,0 skipped; skopiowano XML i log do artefaktów rundy. NASTĘPNY KROK: oczekujące geometry/arkusze w heavy, niezależny przegląd wszystkich kamer, końcowy GIS i physics/gate3.
 
 2026-11-12T09:48:35.9196099+01:00: zapisano opis pięciu obejrzanych referencji przystanków i pełne istniejące metadane autor/licencja/hash. Czerwona rodzina wiaty potwierdzona tylko zdjęciem214816220453640; bez wymiarów i bez wnioskowania o nieobecności obiektów z nocnych ujęć.
+
+2026-11-12T09:50:23.8703616+01:00: uzupełniam r2 o bezpośredni kadr zdjęcie/render znaku i uchwytów: istniejąca kamera sbs-g3-b-297817221966185, Low/High clear. Rektyfikowaną referencję skopiowano z main po potwierdzeniu SHA256. Poza roboczą pozą B, historyczne zdjęcie z2017, bez kalibracji fotometrycznej; nie zmieniano kamer wspólnej dziedziny.
