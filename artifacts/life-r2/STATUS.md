@@ -109,3 +109,5 @@ Krok 40: wariant C zmienia wyłącznie współczynniki w istniejącej gałęzi _
 Krok 41: przygotowano run-c-after-capture.ps1, który czeka na istniejącą sesję capture C, sprawdza jej SHA i dowody native, a przed compare C czeka na terminalny compare B. Zapobiega to dwóm własnym zadaniom heavy z tym samym właścicielem. Pełny GIS nadal dopiero po oględzinach/wyborze C. Następny krok: uruchomić ten follow-up jeden raz i monitorować istniejące 71360 (capture C) oraz 82148 (compare B).
 
 Iteracja C (2026-11-12T02:57:28.7192836+01:00): Capture C, siedem SHA źródeł, natywny payload/materiały i wszystkie liczniki zweryfikowane. Brak odbioru wizualnego; następna kontrola plansz.
+
+Iteracja C (2026-11-12T02:59:14.9157077+01:00): Compare B zakończony 0 pod heavy; wynik ramek osobówek w passenger-car-frame-check-b.json.
