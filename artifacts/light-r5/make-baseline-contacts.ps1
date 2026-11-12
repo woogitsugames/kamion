@@ -1,11 +1,12 @@
+param([ValidateSet('baseline','final-native')][string]$Series='baseline')
 $ErrorActionPreference='Stop'
 $repo=[IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..'))
 Set-Location $repo
 $limits=@('-limit','thread','1','-limit','memory','64MiB','-limit','map','64MiB')
 $index=@()
 foreach($tier in 'Low','High'){foreach($preset in 'clear','overcast','night'){
-    $inputFolder="$PSScriptRoot/baseline/$tier-$preset"
-    $outputFolder="$PSScriptRoot/review/baseline/$tier-$preset"
+    $inputFolder="$PSScriptRoot/$Series/$tier-$preset"
+    $outputFolder="$PSScriptRoot/review/$Series/$tier-$preset"
     $thumbFolder="$outputFolder/thumbs"
     New-Item -ItemType Directory -Force $thumbFolder|Out-Null
     $files=@(Get-ChildItem -LiteralPath $inputFolder -Filter '*.png'|Sort-Object Name)
@@ -26,4 +27,5 @@ foreach($tier in 'Low','High'){foreach($preset in 'clear','overcast','night'){
     }
     Write-Output "Contact sheets ready: $tier-$preset ($($files.Count) images)"
 }}
-$index|ConvertTo-Json -Depth 5|Set-Content "$PSScriptRoot/review/baseline/index.json" -Encoding utf8
+$index|ConvertTo-Json -Depth 5|Set-Content "$PSScriptRoot/review/$Series/index.json" -Encoding utf8
+
