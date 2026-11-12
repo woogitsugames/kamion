@@ -14,11 +14,17 @@ function Checkpoint([string]$Message,[string[]]$Files=@()) {
  if($LASTEXITCODE){throw 'WIP failed'}
 }
 try {
- if(Test-Path "$prefix-world.log"){throw 'Evidence exists; use a new stage'}
+ if((Test-Path "$prefix-world.log") -or (Test-Path "$prefix-build-result.json")){throw 'Evidence exists; use a new stage'}
  if(Test-Path "C:/Users/matma/Documents/Claude/kamion/artifacts/locks/heavy-slots/$owner.slot"){throw 'Own heavy already active'}
  if(!(Test-Path artifacts/life-r3/BASELINE-INSPECTED.json)){throw 'Inspect baseline first'}
  & pwsh -NoProfile -File scripts/unity-slot.ps1 -Acquire -Pool heavy -Owner $owner -StaleHours 1000000 -PollSeconds 1
  if($LASTEXITCODE){throw 'Acquire failed'}; $held=$true
+ $phase='early-rim-test'
+ & uv run --project tools/worldgen python -m pytest tests/gis/test_car_rim_facets.py -q *> "$prefix-test_car_rim_facets.log"
+ $testCode=$LASTEXITCODE
+ @{file='tests/gis/test_car_rim_facets.py';file_sha=(Get-FileHash tests/gis/test_car_rim_facets.py).Hash;exit_code=$testCode;finished=(Get-Date -Format o)}|ConvertTo-Json|Set-Content "$prefix-test_car_rim_facets.log.result.json"
+ Checkpoint "sprawdź normalne faz wariantu $Stage" @("$prefix-test_car_rim_facets.log","$prefix-test_car_rim_facets.log.result.json")
+ if($testCode){throw 'Rim export test failed; skip expensive world generation'}
  $phase='world'
  & uv run --project tools/worldgen python -u tools/worldgen/roads/build_world.py --region bialystok-industrial-c *> "$prefix-world.log"
  if($LASTEXITCODE){throw 'World failed'}
@@ -28,7 +34,7 @@ try {
  & uv run --project tools/worldgen python artifacts/life-r3/check-nonlife.py $Stage *> "$prefix-scope.log"
  if($LASTEXITCODE){throw 'Nonlife/primitive audit failed'}
  Checkpoint "sprawdź zakres geometrii r3 $Stage" @("artifacts/life-r3/nonlife-glb-audit-$Stage.json")
- foreach($test in @('test_car_rim_facets.py','test_cars_r9.py','test_cars_r11.py','test_car_deposition.py','test_car_plate_payload.py')) {
+ foreach($test in @('test_cars_r9.py','test_cars_r11.py','test_car_deposition.py','test_car_plate_payload.py')) {
   $phase="test-$test"
   $log="$prefix-$($test.Replace('.py','')).log"
   & uv run --project tools/worldgen python -m pytest "tests/gis/$test" -q *> $log

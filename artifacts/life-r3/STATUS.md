@@ -54,3 +54,5 @@ Krok 19: po identyfikacji łańcucha własnych PID 65020→67604→21548→53280
 Wznowienie baseline (2026-11-12T09:40:59.0014536+01:00): zaimportuj baseline r3 po ponownej kontroli SHA. Następny krok: capture i oględziny; produkcja bez zmian.
 
 Wznowienie baseline (2026-11-12T09:43:58.1372787+01:00): zapisz komplet kontrolowanych kadrów baseline r3. Następny krok: capture i oględziny; produkcja bez zmian.
+
+Krok 20: baseline 492 PNG / 123 kamery × 4, walidacja legacy/native i inwentarza OK, Unity zwolnione (32998 zakończony 0). Obejrzano cztery siatki nowych kamer i zbliżenia. Tył czysty, felgi płaskie; flota 22 aut widoczna, kadr 45 m z częściowym słupem, czarny tył z vanem z lewej. Nowe stałe ROI: drzwi/asfalt Low-clear 0,9703, High-clear 0,9769, overcast 0,7252/0,7433; nie są dawnym ROI celu 30–40. BASELINE-INSPECTED zapisany; A może zostać zastosowany. Następny krok: uv run --project tools/worldgen python artifacts/life-r3/apply-candidate-a.py; WIP, potem candidate-build.ps1 -Stage a.
