@@ -203,3 +203,5 @@ NASTĘPNY KROK: uv run --project tools/worldgen tools/worldgen/roads/build_world
 2026-11-12T01:14:01.4358400+01:00: Unity sbs-sign after High overcast; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
 
 2026-11-12T01:18:32.8808525+01:00: heavy compare after4; sukces=True; slot gpt-furniture-r1 zwolniony. NASTĘPNY KROK: sprawdzić log i kontynuować walidację rundy.
+
+2026-11-12T01:28:41.4475038+01:00: niezależna ocena iteracji4 potwierdziła lepszy beton i brak nowej regresji siatki w sprawdzonych kadrach. Metryki220: mesh draws i instancje delta0; driver i fire-station-route spełniają konserwatywne<=2%, abeam2,065% i above2,287% nadal niepotwierdzone przez zaokrąglenie. Przygotowano tymczasowy licznik edytorowy bez zaokrągleń: przechwytuje kwalifikację rendererów i instancje w klatce, używa projekcji po przywróceniu celu jak SceneStats; porównuje wszystkie55 rekordów z licznikiem runnera i zamrożonymi wynikami4. NASTĘPNY KROK: pomiary Low overcast/clear w slotach Unity, bez zmiany geometrii.
