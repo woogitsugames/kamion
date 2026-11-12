@@ -93,6 +93,8 @@ kluczach powinien być pusty. Żadnych plików `ProjectSettings/*.asset` w tej g
 - Zaktualizowane: `SteeringFeelTests` (720°/s, od oporu do oporu 2,1–2,7 s, schemat), `ControlSettingsTests`
   (kierunek w obu gestach, `grab=drag`, domyślny przesuw).
 
+Wynik CSV (Lock 800°): zasięg jednym gestem przy 5–20 km/h **0,44 → 1,00** skrętu, przy 40 km/h 0,30 → 0,58; czas do 90 % pełnego skrętu przy 5/10/20 km/h 1,46/1,55/1,90 s → 1,14/1,25/1,65 s (od 30 km/h bez zmian); czułość przy ≥ 60 km/h 6,5 → 5,0° w kabinie na mm. Wyniki testów: EditMode filtr steer/feel/settings/stage1 wszystkie zielone; pełny EditMode 390/393 przed poprawką LogLine — pozostałe 2 porażki `CarPaintMaterialTests.DepositionChannel_*` dotyczą kodu świata z main (`WorldPbrMaterials.Channels`), nietkniętego w tej gałęzi; PlayMode `HudLayoutTests|ControlSettingsPanelTests` 35/35 (reguła testu: niewidoczny `GrabArea` może wyjść poza kwadrat koła, ale musi być w safe area i nie nachodzić na inną strefę).
+
 ## Do sprawdzenia przez właściciela na Foldzie (UNVERIFIED do tego czasu)
 1. Rozłożony, trzymany jak książka: obraz nie obraca się; obrót telefonu obraca obraz tylko gdy blokada obrotu wyłączona.
    Złożenie → ekran zewnętrzny poziomo; ponowne rozłożenie — gra działa dalej bez restartu.
