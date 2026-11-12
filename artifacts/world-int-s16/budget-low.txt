@@ -1,0 +1,99 @@
+camera                                draws b>a  shadow b>a    trisK b>a  inst.draws b>a inst.trisK b>a
+biezenstwa-above                     339>340     49>49      273>273      210>215        26>29    <<
+cab-dash                             429>388    105>105     344>343      322>323        18>21    <<
+cab-driver                           436>393    105>105     351>351      331>332        21>25    <<
+cab-gate                             415>372    105>105     361>360      319>320        19>22    <<
+cab-grain                            111>112    108>108     197>199       99>99          6>6     <<
+cab-left                             200>179    105>105     260>260      196>199        15>20    <<
+cab-materials                        118>119    108>108     212>214      181>181         8>8     <<
+cab-mirror-front                     421>424    108>108     480>482      281>281        15>16    <<
+cab-mirrors-left                     208>191    108>108     325>326      126>127        12>16    <<
+cab-mirrors-right                    311>314    108>108     403>406      184>185        13>14    <<
+cab-right                            415>418    105>105     354>355      362>361        24>25    <<
+cab-seat                             156>157    108>108     212>214      157>158        16>19    <<
+cab-seat-entry                        93>94     108>108     197>198       68>68          6>6     <<
+chase                                453>416     89>89      301>300      235>236        13>15    <<
+dk8-dk19-exit                         86>73       9>9       107>106       76>76         55>63   
+driver-andersa-to-putry              335>324     41>41      280>264      157>172        35>40    <<
+edge-east                             48>43      18>20       84>85        41>41          1>2    
+edge-north                            45>40      20>18       67>69        86>86         25>30    <<
+edge-south                           107>102     61>63      138>138       17>17          0>0    
+edge-west                             46>33      14>12       75>76        72>72         14>17   
+fire-station-abeam                   202>203     38>38      197>193      242>231        44>46    <<
+fire-station-above                   279>280     21>21      278>274      175>180        27>31    <<
+fire-station-ref7197                 121>122     97>95      333>330      159>146        29>30    <<
+fire-station-route                   214>218     72>68      216>206      210>223        49>52    <<
+g3a-eye-s0262                        342>295     51>51      290>289      378>381        29>31    <<
+g3a-rondo-bie-approach               312>271     48>48      281>280      150>153        15>17    <<
+g3b-eye-s1482                        290>281     44>47      269>253      169>183        37>41    <<
+g3b-rondo-putry-approach             298>289     73>76      283>265      129>132        24>25    <<
+kwadrat-park-gate                    232>233     51>51      193>195      495>490        45>45    <<
+photo-biezenstwa-ground              341>298     48>48      291>290      149>154        14>15    <<
+putry-above                          302>312      1>0       331>314       97>104        11>15    <<
+route-onramp-andersa                 384>387     32>32      247>249      348>342        29>32    <<
+route-onramp-andersa-above           300>292     32>32      251>235      333>340        32>35    <<
+route-putry-approach                 307>298     45>48      290>272      178>188        29>29    <<
+route-putry-entry-signs              202>191    138>147     187>178      135>138        22>23    <<
+stretch-01                           379>336    103>103     236>236      370>357        20>24   
+stretch-02                           360>319     64>64      292>291      558>501        53>48   
+stretch-03                           342>295     51>51      290>289      379>381        29>31    <<
+stretch-04                           457>460     48>48      311>311      172>179        16>18    <<
+stretch-05-docks                     252>253     64>64      236>238      586>563        82>61    <<
+trailer-34                           477>450     89>89      329>329      284>285        21>23    <<
+trailer-side                         251>254     89>89      197>199      237>239        20>22    <<
+truck-34                             229>230    130>130     299>302      190>191        29>31    <<
+truck-34r                            148>149    100>100     215>216      128>129        14>16    <<
+truck-at-gate                        150>151    100>100     219>221      129>130        15>17    <<
+truck-front                          188>189    108>108     253>255      120>121        15>17    <<
+truck-rear34                         460>445    108>108     454>456      310>313        19>21    <<
+truck-side                           321>324    108>108     360>363      206>207        17>18    <<
+
+RAZEM (draws+shadow+instanced, trisK+inst.trisK):
+biezenstwa-above                   draws   598>604   (+6)  trisK  299>302  (+1.0 %)
+cab-dash                           draws   856>816   (-40)  trisK  362>364  (+0.6 %)
+cab-driver                         draws   872>830   (-42)  trisK  372>376  (+1.1 %)
+cab-gate                           draws   839>797   (-42)  trisK  380>382  (+0.5 %)
+cab-grain                          draws   318>319   (+1)  trisK  203>205  (+1.0 %)
+cab-left                           draws   501>483   (-18)  trisK  275>280  (+1.8 %)
+cab-materials                      draws   407>408   (+1)  trisK  220>222  (+0.9 %)
+cab-mirror-front                   draws   810>813   (+3)  trisK  495>498  (+0.6 %)
+cab-mirrors-left                   draws   442>426   (-16)  trisK  337>342  (+1.5 %)
+cab-mirrors-right                  draws   603>607   (+4)  trisK  416>420  (+1.0 %)
+cab-right                          draws   882>884   (+2)  trisK  378>380  (+0.5 %)
+cab-seat                           draws   421>423   (+2)  trisK  228>233  (+2.2 %)
+cab-seat-entry                     draws   269>270   (+1)  trisK  203>204  (+0.5 %)
+chase                              draws   777>741   (-36)  trisK  314>315  (+0.3 %)
+dk8-dk19-exit                      draws   171>158   (-13)  trisK  162>169  (+4.3 %)
+driver-andersa-to-putry            draws   533>537   (+4)  trisK  315>304  (-3.5 %)
+edge-east                          draws   107>104   (-3)  trisK   85>87   (+2.4 %)
+edge-north                         draws   151>144   (-7)  trisK   92>99   (+7.6 %)
+edge-south                         draws   185>182   (-3)  trisK  138>138  (+0.0 %)
+edge-west                          draws   132>117   (-15)  trisK   89>93   (+4.5 %)
+fire-station-abeam                 draws   482>472   (-10)  trisK  241>239  (-0.8 %)
+fire-station-above                 draws   475>481   (+6)  trisK  305>305  (+0.0 %)
+fire-station-ref7197               draws   377>363   (-14)  trisK  362>360  (-0.6 %)
+fire-station-route                 draws   496>509   (+13)  trisK  265>258  (-2.6 %)
+g3a-eye-s0262                      draws   771>727   (-44)  trisK  319>320  (+0.3 %)
+g3a-rondo-bie-approach             draws   510>472   (-38)  trisK  296>297  (+0.3 %)
+g3b-eye-s1482                      draws   503>511   (+8)  trisK  306>294  (-3.9 %)
+g3b-rondo-putry-approach           draws   500>497   (-3)  trisK  307>290  (-5.5 %)
+kwadrat-park-gate                  draws   778>774   (-4)  trisK  238>240  (+0.8 %)
+photo-biezenstwa-ground            draws   538>500   (-38)  trisK  305>305  (+0.0 %)
+putry-above                        draws   400>416   (+16)  trisK  342>329  (-3.8 %)
+route-onramp-andersa               draws   764>761   (-3)  trisK  276>281  (+1.8 %)
+route-onramp-andersa-above         draws   665>664   (-1)  trisK  283>270  (-4.6 %)
+route-putry-approach               draws   530>534   (+4)  trisK  319>301  (-5.6 %)
+route-putry-entry-signs            draws   475>476   (+1)  trisK  209>201  (-3.8 %)
+stretch-01                         draws   852>796   (-56)  trisK  256>260  (+1.6 %)
+stretch-02                         draws   982>884   (-98)  trisK  345>339  (-1.7 %)
+stretch-03                         draws   772>727   (-45)  trisK  319>320  (+0.3 %)
+stretch-04                         draws   677>687   (+10)  trisK  327>329  (+0.6 %)
+stretch-05-docks                   draws   902>880   (-22)  trisK  318>299  (-6.0 %)
+trailer-34                         draws   850>824   (-26)  trisK  350>352  (+0.6 %)
+trailer-side                       draws   577>582   (+5)  trisK  217>221  (+1.8 %)
+truck-34                           draws   549>551   (+2)  trisK  328>333  (+1.5 %)
+truck-34r                          draws   376>378   (+2)  trisK  229>232  (+1.3 %)
+truck-at-gate                      draws   379>381   (+2)  trisK  234>238  (+1.7 %)
+truck-front                        draws   416>418   (+2)  trisK  268>272  (+1.5 %)
+truck-rear34                       draws   878>866   (-12)  trisK  473>477  (+0.8 %)
+truck-side                         draws   635>639   (+4)  trisK  377>381  (+1.1 %)
