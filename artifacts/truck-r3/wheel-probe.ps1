@@ -10,7 +10,10 @@ if ($LASTEXITCODE -ne 0) { throw 'Nie przygotowano adaptera.' }
 . scripts/env.ps1
 $slot='C:/Users/matma/Documents/Claude/kamion/scripts/unity-slot.ps1'
 function Fingerprint {
-    ((Get-FileHash -LiteralPath @('game/Assets/_Project/Rendering/Shaders/TruckExterior.shader','game/Assets/_Generated/TruckQa0115/Editor/TruckWheelProbe0115.cs','game/Assets/_Generated/TruckQa0115/Editor/TruckWheelMeshAudit0115.cs',$PSCommandPath) -Algorithm SHA256).Hash -join "`n")
+    $files=@('game/Assets/_Project/Rendering/Shaders/TruckExterior.shader','game/Assets/_Generated/TruckQa0115/Editor/TruckWheelProbe0115.cs','game/Assets/_Generated/TruckQa0115/Editor/TruckWheelMeshAudit0115.cs',$PSCommandPath)
+    $files+=@(Get-ChildItem art-source/truck/exterior/export -Filter '*.fbx' | Sort-Object Name | ForEach-Object FullName)
+    $files+=@(Get-ChildItem art-source/truck/trailer/export -Filter '*.fbx' | Sort-Object Name | ForEach-Object FullName)
+    ((Get-FileHash -LiteralPath $files -Algorithm SHA256).Hash -join "`n")
 }
 foreach($mode in $Modes) {
     $name="$Prefix-$mode"
