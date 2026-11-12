@@ -52,3 +52,5 @@ Krok 9: obejrzano wszystkie8 pełnych PNG A oraz2 natywne pary ze zdjęciem; odr
 Krok 9a: kolejka B uproszczona do World →3 audyty → WIP wszystkich wyjść → podgląd8PNG, zanim dojdą długie kolejki testów. ADR wyraźnie oddziela odrzucone A od nieobejrzanego B. Pełny GIS dopiero na końcu ustalonej rundy. Ścieżki logów i obrazów B osobne, dowody A zachowane.
 
 Krok 9b: audyt B dodatkowo wymaga bajtowej identyczności wszystkich trójkątów fire_station_alpha i ich atrybutów względem baseline. Pozwala to potwierdzić zachowanie kart/UV/normalnych i braku wzrostu powierzchni alfa zamiast opierania się na samym planie. Jeszcze niewykonany na GLB B; World B czeka FIFO9.
+
+Krok 9c: lekka analiza6 izolowanych koron B (bez Blender/world/pytest) potwierdza98/224 tris,12/54 identyczne karty i UV, skończone niezerowe normalne na zewnątrz i identyczne na połączeniach. Wyłączona flaga danych odtwarza geometrię baseline dokładnie. To nie jest PASS GIS ani dowód GLB/renderu B; World B nadal czekaFIFO.
