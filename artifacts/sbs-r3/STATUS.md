@@ -118,3 +118,5 @@ Zapisano kompletną niezależną ocenę baseline w REVIEW-D51-BASELINE.md: G3-A 
 2026-11-12T10:58:35.6433604+01:00: niezależny przegląd pomocnika dostawy znalazł dwie luki: stare receipty bez związania ze stanem i pominięcie stagingu generatów. Poprawiłem je: porównanie źródeł produkcyjnych z commitami GIS/fidelity, git diff HEAD obejmujący indeks i worktree, kontrola receipt głównego audytu oraz SHA wejść,268 arkuszy, fidelity i rejestru. Późniejsze zmiany dokumentów/artefaktów są dopuszczone jawnie. ParserPS bez błędów; faktycznej dostawy nie wykonano.
 
 2026-11-12T10:59:05.7405868+01:00: końcowa dostawa zweryfikuje również168 raw względem zapisanych capture z audytu, zanim zacznie kopiowanie. To wiąże obie grupy obrazów (raw i arkusze) z wynikami walidacji, a nie tylko z identyczną kopią celu.
+
+2026-11-12T10:59:57.3193245+01:00: niezależny przegląd poprawek helpera dostawy PASS: obie zgłoszone luki zamknięte, źródła i istotne artefakty związane z walidacją, staging uwzględniony. To nie potwierdza zakończenia GIS. Sesja11437 nadal żywa i oczekuje na zajęty heavy; nie restartowano i nie uruchomiono duplikatu.
