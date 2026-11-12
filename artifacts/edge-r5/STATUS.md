@@ -33,3 +33,4 @@ Krok 14: korekta wykonania watcherów: działający PowerShell ma już wczytany 
 2026-11-12T11:34:34.1359223+01:00 Native before High-clear 1280x960: 15 kamer, każdy PNG ma proporcje źródłowej fotografii; diagnostyczna 2948 pozostaje C.
 2026-11-12T11:34:51.6990281+01:00 Native before High-overcast 1280x720: 11 kamer, każdy PNG ma proporcje źródłowej fotografii; diagnostyczna 2948 pozostaje C.
 2026-11-12T11:35:09.7911792+01:00 Native before High-overcast 1280x960: 15 kamer, każdy PNG ma proporcje źródłowej fotografii; diagnostyczna 2948 pozostaje C.
+2026-11-12T11:35:10.3493693+01:00 Pełne Before i native ukończone; siatki apron/far, źródłowe GLB i profil zamrożone z SHA. Następnie maski klina; kod produkcyjny r5 jeszcze bez zmiany.
