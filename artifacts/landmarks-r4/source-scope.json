@@ -1,0 +1,30 @@
+{
+  "complete": true,
+  "only_geometry_function_changed": "build_conifer",
+  "non_conifer_dims_identical": true,
+  "conifer_positions_heights_radii_identical": true,
+  "changed_conifer_keys": [
+    "bough_width_r_WORKING_VALUE",
+    "core_profile_WORKING_VALUE",
+    "core_shape_note",
+    "high_bough_counts_WORKING_VALUE",
+    "inner_core_fill_r_WORKING_VALUE",
+    "inner_core_note",
+    "lateral_bough_cards_WORKING_VALUE",
+    "low_bough_counts",
+    "low_core_budget_note"
+  ],
+  "protected_paths_unchanged_since_round_base": [
+    "art-source/world/materials/_src/sets_fire_station.py",
+    "art-source/world/textures/fire_station_alpha.png",
+    "art-source/world/landmarks/fire_station_jrg2/atlas_layout.json",
+    "tools/worldgen/streetscape/materials.py",
+    "tools/worldgen/streetscape/hero_bridge.py",
+    "tools/worldgen/streetscape/ec_chimneys.py",
+    "tools/worldgen/streetscape/hero_building.py",
+    "tools/worldgen/streetscape/landmarks.py",
+    "Data/Regions/bialystok-industrial-c/viaduct_underdeck.json",
+    "Data/Regions/bialystok-industrial-c/ec_chimneys.json",
+    "Data/Regions/bialystok-industrial-c/overrides.yaml"
+  ]
+}
