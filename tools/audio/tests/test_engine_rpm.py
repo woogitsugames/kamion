@@ -75,13 +75,10 @@ def test_analyse_end_to_end_on_synthetic_wav(tmp_path):
     assert r["ladder_n"] >= 3, f"ladder_n={r['ladder_n']}"
 
 
-@pytest.mark.skip(reason="KNOWN BUG (not fixed per task): el_analyze.py:146-160 comb_estimate computes the octave "
-                          "check (comb_half/comb_double) but never applies it, so on a synthetic 1500 rpm "
-                          "harmonic ladder (75 Hz firing line) read back from a float32 WAV it returns "
-                          "comb_f = 149 Hz -> comb_rpm = 2980 (octave up). Expected comb_rpm = 1500 +- 3 %. "
-                          "The same signal in float64 scores 75.0 vs 149.0 only marginally, so the pick "
-                          "flips with quantization noise. Listed in the PR description bug list.")
 def test_comb_estimate_no_octave_error_on_wav_roundtrip(tmp_path):
+    # Regression for the octave bug: comb_estimate used to compute the octave check
+    # (comb_half/comb_double) but never apply it, so this 1500 rpm ladder (75 Hz firing
+    # line) read back from a float32 WAV returned comb_f = 149 Hz -> comb_rpm = 2980.
     rpm = 1500
     x = harmonic_engine(FS, rpm, dur_s=6.0)
     p = tmp_path / "ENG_EXT_ON_1500 (1).wav"
