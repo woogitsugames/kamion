@@ -28,6 +28,8 @@ namespace Game.Rendering.Editor
             public float clearSkySaturation; // 0 leaves preset unchanged; diagnostic display-only chroma.
             public bool lampProbe;
             public int expectedHeadlamps; // 0 unchecked, 1 off, 2 on. Requires per-camera probes.
+            public float skyDisplayGain; // 0 keeps preset
+            public float skyDisplayDesaturation = -1f; // -1 keeps preset
         }
 
         static string Arg(string key)
@@ -87,6 +89,14 @@ namespace Game.Rendering.Editor
                             throw new ArgumentException("clearSkySaturation outside 1..4");
                         var preset = presetSnapshots.Keys.Single(p => string.Equals(p.name, "LP_" + job.lighting, StringComparison.OrdinalIgnoreCase));
                         preset.clearSkySaturation = job.clearSkySaturation;
+                    }
+                    if (job.skyDisplayGain > 0f || job.skyDisplayDesaturation >= 0f)
+                    {
+                        if (job.skyDisplayGain > 1f || job.skyDisplayDesaturation > 1f)
+                            throw new ArgumentException("sky display values outside preset bounds");
+                        var preset = presetSnapshots.Keys.Single(p => string.Equals(p.name, "LP_" + job.lighting, StringComparison.OrdinalIgnoreCase));
+                        if (job.skyDisplayGain > 0f) preset.skyDisplayGain = job.skyDisplayGain;
+                        if (job.skyDisplayDesaturation >= 0f) preset.skyDisplayDesaturation = job.skyDisplayDesaturation;
                     }
                     profile.tiers = (QualityProfile.Tier[])originalTiers.Clone();
                     var overrides = (job.rq ?? "").Split(',').Where(s => !string.IsNullOrWhiteSpace(s))

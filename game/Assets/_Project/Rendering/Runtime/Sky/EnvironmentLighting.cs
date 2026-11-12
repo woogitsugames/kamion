@@ -168,7 +168,8 @@ namespace Game.Rendering
             RenderSettings.fogMode = FogMode.Exponential;
             RenderSettings.fogDensity = 3.912f / Mathf.Max(0.5f, p.visibilityKm * 1000f) * fogDensityScale;
             // RenderSettings.fogColor is specified in sRGB like other colours and linearised by Unity.
-            var fogClamped = new Color(Mathf.Min(fog.r, 1f), Mathf.Min(fog.g, 1f), Mathf.Min(fog.b, 1f), 1f);
+            var displayFog = WorldAtmosphere.DisplaySkyFog(p, fog);
+            var fogClamped = new Color(Mathf.Min(displayFog.r, 1f), Mathf.Min(displayFog.g, 1f), Mathf.Min(displayFog.b, 1f), 1f);
             RenderSettings.fogColor = fogClamped.gamma;
 
             // ---- vehicle reflections (r6 E1/E2, KamionVehicleEnv.hlsl): ground plane + horizon for the analytic env ----

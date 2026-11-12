@@ -53,6 +53,7 @@ Shader "Kamion/Sky"
             float4 _KamionCloudSun;    // xy unit XZ towards the sun's azimuth, z relief strength, w relief step (uv)
             float _KamionClearCloudCover; // ADR 0108: zero retains the original clear dome.
             float _KamionClearSkySaturation;
+            float4 _KamionSkyDisplay; // gain, desaturation, active (Night opt-in); sky/fog presentation only.
             float _KamionClearCloudPhoto;
             float4x4 _KamionClearCloudRotation;
             TEXTURE2D(_KamionClearCloudTex); SAMPLER(sampler_KamionClearCloudTex); // R opacity, G photographic relative luminance.
@@ -203,6 +204,11 @@ Shader "Kamion/Sky"
                 // Below the horizon: distant ground seen through the full aerial perspective = fog colour.
                 float below = smoothstep(0.0, 0.03, -d.y);
                 c = lerp(c, _SkyFogColor.rgb, below);
+                if (_KamionSkyDisplay.z > 0.5 && _KamionSkyCapOff < 0.5)
+                {
+                    float y = dot(c, float3(0.2126, 0.7152, 0.0722));
+                    c = lerp(c, y.xxx, _KamionSkyDisplay.y)*_KamionSkyDisplay.x;
+                }
                 c = KamionTone(c);
                 // Banding: ±0.5 LSB of 8-bit sRGB in linear space (interleaved gradient noise, Jimenez 2014).
                 float n = frac(52.9829189 * frac(dot(i.positionCS.xy, float2(0.06711056, 0.00583715)))) - 0.5;

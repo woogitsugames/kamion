@@ -12,6 +12,37 @@ namespace Game.Tests
     public class DuskStreetLampTests
     {
         [Test]
+        public void NightSkyPresentationChangesFogColourWithoutChangingScenePhotometry()
+        {
+            var night = LightingPreset.CreateNight();
+            try
+            {
+                var before = night.CreateModel();
+                night.skyDisplayGain = 0.125f; night.skyDisplayDesaturation = 0.85f;
+                var after = night.CreateModel();
+                Assert.AreEqual(before.Exposure, after.Exposure);
+                Assert.AreEqual(before.HorizontalIlluminanceLux, after.HorizontalIlluminanceLux);
+                var fog = before.HorizonColorExposed();
+                var display = WorldAtmosphere.DisplaySkyFog(night, fog);
+                Assert.Less(display.maxColorComponent, fog.maxColorComponent);
+                Assert.AreEqual(fog.a, display.a);
+            }
+            finally { Object.DestroyImmediate(night); }
+        }
+
+        [Test]
+        public void LegacyPresetsKeepTheirSkyAndFogPresentation()
+        {
+            foreach (var preset in new[] { LightingPreset.CreateClear(), LightingPreset.CreateOvercast(), LightingPreset.CreateLowSun(), LightingPreset.CreateDusk() })
+                try
+                {
+                    var fog = preset.CreateModel().HorizonColorExposed();
+                    Assert.AreEqual(fog, WorldAtmosphere.DisplaySkyFog(preset, fog));
+                }
+                finally { Object.DestroyImmediate(preset); }
+        }
+
+        [Test]
         public void NightSeparatesDarkAmbientFromFixedLampPhotometryWithoutChangingDusk()
         {
             var dusk = LightingPreset.CreateDusk();

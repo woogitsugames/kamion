@@ -54,6 +54,10 @@ namespace Game.Rendering
         public bool projectedHeadlamps;
         [Tooltip("WORKING_VALUE beam peak cd per head; independent of emissive lens nits. Used only when projection is enabled.")]
         [Range(0f, 60000f)] public float projectedHeadlampPeakCd = 20000f;
+        [Tooltip("Display-only sky/fog gain; default1 leaves legacy presets intact. SH, sun and surface exposure are unchanged.")]
+        [Range(0.001f, 1f)] public float skyDisplayGain = 1f;
+        [Tooltip("Display-only sky/fog desaturation, used to suppress the twilight model's orange lobe in Night.")]
+        [Range(0f, 1f)] public float skyDisplayDesaturation;
         [Tooltip("Cloud texture tiles per unit of the cloud plane (plane at height 1; smaller = larger cloud masses)")]
         public float cloudScale = 0.16f;
         [Tooltip("Cloud drift (plane units per second; ~0.004 = 20 km/h at 1500 m)")]
@@ -192,7 +196,7 @@ namespace Game.Rendering
             var p = CreateDusk();
             p.name = "LP_Night";
             p.sunElevationDeg = SkyModel.MinTwilightElevationDeg;
-            p.exposureCompensation = -4f; // provisional; image ablation -2/-3/-4/-5 EV before choosing.
+            p.exposureCompensation = -3f; // second-stage candidate: preserve lamp/cab visibility; grade sky separately.
             return p;
         }
     }
