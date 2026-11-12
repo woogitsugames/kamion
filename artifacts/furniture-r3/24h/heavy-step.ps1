@@ -11,8 +11,13 @@ $owner=(& git branch --show-current).Trim()
 if ($owner -notmatch '^gpt-furniture-r\d+$') { throw 'Not an owned furniture round branch' }
 # Use the owning main copy: this worktree predates the newly introduced heavy pool.
 $slotScript='C:/Users/matma/Documents/Claude/kamion/scripts/unity-slot.ps1'
-& pwsh $slotScript -Acquire -Pool heavy -Owner $owner -StaleHours 876000 -PollSeconds 1
-if ($LASTEXITCODE -ne 0) { throw 'Could not acquire heavy slot' }
+$acquired=$false
+for($attempt=1;$attempt -le 3;$attempt++){
+    & pwsh $slotScript -Acquire -Pool heavy -Owner $owner -StaleHours 876000 -PollSeconds 1
+    if($LASTEXITCODE -eq 0){$acquired=$true;break}
+    if($attempt -lt 3){Start-Sleep -Seconds 1}
+}
+if (!$acquired) { throw 'Could not acquire heavy slot; no heavy Python was started' }
 $ok=$false
 try {
     switch ($Step) {
@@ -38,7 +43,14 @@ try {
                 & uv run --project tools/worldgen python "$ev/snapshot_fence_collision.py" after4 --compare before4 *> "$ev/fence-collision-after4.log"
             }
         }
-        'compare' { & uv run --project tools/worldgen python "$ev/compare_frames.py" --label $Phase *> "$ev/compare-$Phase.log" }
+        'compare' {
+            if($Phase -in @('after2','after3')){
+                $metrics=if($Phase -eq 'after3'){'iteration3'}else{'iteration2'}
+                & uv run --project tools/worldgen python "$ev/compare_frames.py" --label $Phase --after-phase $Phase --output-subdir $metrics *> "$ev/compare-$Phase.log"
+            }else{
+                & uv run --project tools/worldgen python "$ev/compare_frames.py" --label $Phase *> "$ev/compare-$Phase.log"
+            }
+        }
         'focused' {
             if ($TestFile -notmatch '^tests/gis/test_furniture[^/\\]*\.py$') { throw 'Use one owned furniture test file during the round' }
             $testName=[IO.Path]::GetFileNameWithoutExtension($TestFile)
