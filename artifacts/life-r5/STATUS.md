@@ -63,3 +63,5 @@ Uruchomiono wyłącznie lekki skrypt kończący PID 54980, czeka na już istniej
 Wznowienie baseline (2026-11-12T16:27:44.9772023+01:00): potwierdź pełny baseline palet po poprawce snapshotu. Następny krok capture/LOD/oględziny; oryginalny błąd snapshotu zachowany.
 
 Wznowienie baseline (2026-11-12T16:27:46.0931039+01:00): zapisz przerwane wznowienie baseline native-lod. Następny krok capture/LOD/oględziny; oryginalny błąd snapshotu zachowany.
+
+Dokończenie tła 2026-11-12T16:27:47.7956473+01:00: batch 72932 wyszedł naturalnie; wynik phase=native-lod, exit=1, kontrolowane STOP=True. Faktyczne liczniki capture w DRAIN-RESULT.json; bez diagnostyki LOD, kandydata, nowych testów lub kolejnej rundy. Sloty own Unity=False, heavy=False. Nie wznawiać bez polecenia właściciela.

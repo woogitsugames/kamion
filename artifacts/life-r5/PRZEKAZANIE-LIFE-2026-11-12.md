@@ -56,3 +56,7 @@ Nie ma innego mojego aktywnego generatora lub pełnego pytest. Baseline heavy za
 Każde Unity: scripts/unity-slot.ps1 -Acquire/-Release -Owner gpt-life. Ciężki Python: -Pool heavy -Owner gpt-life-r5. StaleHours 1000000, żadnego Priority/zmiany limitów/usuwania cudzych blokad. Bez telefonów, adb, push i merge do main. Własność produkcji: life.py, life_cars.py, life_props.py, depot_yard.py oraz _CARPAINT; wspólne flagi wyłącznie addytywnie w zatwierdzonym zakresie.
 
 Otwarte P1 po paletach: czerń clear, szum płatków, czysty tył i prostokąt pod autem. NEXT-R6-PREFLIGHT.md dokumentuje wyłącznie odczyt kodu, nie wykonaną poprawkę. Odbicia dla statycznych aut pochodzą z modelu sky/ground; nie udawać brakujących lokalnych odbić losowymi pasami lub samym obniżeniem albedo. Do rozdzielenia kontakt i podwozie. A16/GPU oraz wygląd r5 pozostają niezweryfikowane.
+
+## Dokończenie pozostawionego batcha
+
+Stan z 2026-11-12T16:27:47.7956473+01:00: proces 72932 zakończył się naturalnie. Phase: native-lod, exit: 1, kontrolowane zatrzymanie przed LOD: True. Dokładne wyniki czterech warunków oraz stan własnych slotów są w DRAIN-RESULT.json. Diagnostyki LOD ani kandydata palet nie uruchomiono. Bez nowych buildów, renderów i testów po tym batchu.

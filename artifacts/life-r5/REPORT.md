@@ -13,3 +13,4 @@ Przekazanie: PRZEKAZANIE-LIFE-2026-11-12.md. Stan tła: DRAIN-RESULT.json i fini
 Brak nowych źródeł/licencji runtime, brak telefonów i nowych przebiegów shaderów. GPU/A16 i wygląd r5 UNVERIFIED.
 Po wznowieniu: dokończyć diagnostykę/ocenę baseline, dopiero potem kandydat. Nie powtarzać zakończonego World/importu bez powodu.
 Integracja ewentualnych zmian r5: generaty i GLB z main + regeneracja, life_props unia z r4; decyzja wyłącznie lidera po ukończeniu i review.
+Stan tła po zakończeniu: DRAIN-RESULT.json (2026-11-12T16:27:47.7956473+01:00); wynik native-lod/1, STOP=True; nie kontynuowano rundy.
