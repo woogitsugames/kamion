@@ -18,3 +18,14 @@ zaplanowana w heavy po oczekującym procesie geometrii.
 Uzupełnienie: obejrzano także Low-overcast07 i08, kolejnych12 par; łącznie root30/330. Brak oczywistej regresji znaków na dojazdach/odcinkach i pozostałych mebli; subtelne zużycie nie potwierdza szczegółów legendy. Niezależny reviewer potwierdził wcześniej18/330 (strony04–06), bez nowych blokerów; pozostałe pary nie są objęte jego oceną.
 
 Root obejrzał pozostałe strony Low-overcast01–03 oraz09–10; łącznie wszystkie55/55 kamer tego wariantu, czyli55/330 par standardowej serii. Brak nowego oczywistego artefaktu znaków/furniture i brak pustych kadrów; w kabinie i przy ciężarówce nie widać skutku ubocznego tej zmiany. Pozostałe pięć wariantów nie jest objęte tą oceną. Niezależnemu reviewerowi przekazano37 pozostałych par tego wariantu, bez powtarzania pierwszych18.
+
+Niezależny reviewer uzupełnił Low-overcast:55/55 par i10/10 arkuszy,
+bez nowego widocznego blokera, brak pustych/niekompletnych obrazów. Śruby,
+fotometria, zgodność zdjęciowa, urządzenie/ruch i GPU pozostają nierozstrzygnięte.
+
+Root obejrzał następnie wszystkie55 Low-dusk, strony01–10, pojedynczo≤960px.
+Nie widzi nowej oczywistej regresji mebli ani zawsze świecącego lica. Ciemność
+kadru i małe tarcze ograniczają ocenę detalu. Dusk to słońce-5, nie pełna noc.
+Rzeczywista ciężarówka nie przemieszcza się do każdej kamery diagnostycznej;
+reakcję na źródło bada osobno night-rig. Rootłącznie110/330 standardowych par.
+Low-dusk przekazano niezależnemu reviewerowi; jego ocena tego wariantu trwa.

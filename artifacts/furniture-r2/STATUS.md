@@ -217,3 +217,5 @@ NASTĘPNY KROK: przygotować własne skrypty r2 z ownerem heavy gpt-furniture-r2
 2026-11-12T10:14:55.1239140+01:00: root obejrzał dalsze12 par Low-overcast (strony07/08), łącznie30/330; bez nowego oczywistego artefaktu furniture. Niezależna ocena18/330 potwierdziła brak nowego blokera tylko dla04–06. Pełny przegląd i geometrię nadal oznaczamy jako nieukończone.
 
 2026-11-12T10:16:01.4383740+01:00: zakończono interaktywne oględziny root wszystkich55 Low-overcast (10 pojedynczych małych arkuszy, bez batcha/generatora). Bez nowej oczywistej regresji; łącznie55/330, nie cała seria. Reviewer uzupełnia37 par do własnego kompletu55 Low-overcast. Geometria/full-batch i końcowe Python nadal czekają na heavy.
+
+2026-11-12T10:18:25.3144973+01:00: niezależny Low-overcast55/55 bez nowego blokera. Root zakończył Low-dusk55/55 bez oczywistej regresji; łącznie110/330. Dusk nie dowodzi pełnej nocy. Wariant przekazano reviewerowi. Nadal brak wyników geometrii/GIS/physics; proces oczekujący zachowany.
