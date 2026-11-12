@@ -32,3 +32,8 @@ NASTĘPNY KROK (po `cycle-2.done`): `python artifacts/frontage-r2/make-pairs.py 
 build_world OK (518 s), fidelity OK, pytest gis+gate3: 823 passed, 1 xfailed, 2 failed: `test_world_has_the_frontage` (stara lista propów bez car_row - poprawiona) i `test_cars_v4::test_parking_mix_and_neighbours` (2 x van_white obok siebie w rzędzie dealera - drugi to teraz `van_white2`).
 W tle: Unity (import -> rendery `merged` -> EditMode, `cycle-2.done`) oraz `run-final-heavy2.ps1` (rebuild + fidelity + pytest, `final-heavy2.status`).
 NASTĘPNY KROK: po `cycle-2.done` i `heavy2 done`: pary `make-pairs.py merged Low-overcast|Low-clear`, `stats-diff.py merged`, ADR, commit generated, kopia do main.
+
+## 7. Koniec (17:58) - gotowe do scalenia
+Przebieg 2: build_world OK, fidelity OK, `pytest tests/gis tests/gate3`: 825 passed, 1 xfailed (`pytest-gis-gate3-3.log`); EditMode 403/403 (`editmode.log`); import OK (64 chunki); rendery `merged` Low overcast+clear (20 SBS + 6 kontrolnych); pary `pairs-merged-Low-{overcast,clear}`, `pairs-2024-merged-Low-overcast`; draws `stats-diff-after.txt` (ta sama baza: 0..+39, mediana 0), `stats-diff-merged.txt` (-34..+65, mediana 0, zawiera dryf main).
+ADR 0129 uzupełniony. Otwarte: kominy EC na Low (far clip 900 m < 1187 m), białe ogrodzenie plot_kit sąsiada, kontrast SERWIS.
+NASTĘPNY KROK (lider): `git merge frontage-r2` (generated/*.json, *.glb, *_meta.json -> --ours) ; build_world ; import-region ; fidelity/run.py ; visual-critic na `artifacts/frontage-r2/pairs-merged-Low-overcast` + `pairs-2024-merged-Low-overcast`.
