@@ -58,3 +58,18 @@
   powtorzy baze; aby pominac baze uzyj `pwsh artifacts/buildings-r9/round.ps1 -Round r2`), po nim ->
   `pwsh artifacts/buildings-r9/round.ps1 -Round r2 -SkipWorld`) ->
   `python artifacts/buildings-r9/budget2.py artifacts/buildings-r9/base/Low-overcast artifacts/buildings-r9/r2/Low-overcast`
+
+## krok 5 — sesja 13 (17:25): lancuch r2 zyje (kolejka heavy), kit Low/Medium (e553c32a2)
+- Lancuch `r2_chain.ps1` z s12 zyje (PID pwsh 16:28), `r2.world.out`: "queue ahead=1"; build_world r2 wezmie JUZ kod e553c32a2.
+- Polecenie lidera: zielen nie moze pogorszyc Low (A16 Low FAIL GPU p95 35,2-35,5 ms; drzewa +2,53 ms). Zrobione:
+  `Kit.low` (True / False = tylko High / "only" = tylko Low) + warstwa `plots_low` -> w `chunk_*.low.glb` jako wezel `plots`
+  (High bez zmian). Low: ploty, bramy, zywoplot, swierki, kosze 1:1; tuje w rzedach `thuja_lite` 14 tris (39), tuje pojedyncze
+  4 tris, drzewka `fruit_tree_lite` 10 tris (65); krzewy / zarastanie plotow / byliny tylko High. Kit r1/r2 = 94 170 tris
+  (0124: 52 406); rozbicie: plot 20,6k, bramy 11,9k, tuje rzedy 17,2k, drzewka 12,5k, zywoplot 9,3k, krzewy 17,0k, byliny 1,2k.
+- Naprawa: brama dosuwana do naroznika (r2) znikala, gdy front sasiada jest wspolliniowy (`_Near.parallel`) -> `snap()` w `layout`
+  (test r7 3 failed -> 26 passed r7+r8+r9).
+- Instancje drzew ogrodowych (117) sa wspolne dla Low i High (jeden `WorldInstanceSet`) - filtr per tier wymaga zmiany
+  `World/Import/InstanceImporter` + `World/Runtime/WorldInstances` (poza wlasnoscia) -> zmierzyc na r2 i zglosic liderowi.
+- NASTEPNY KROK: `Get-Content artifacts/buildings-r9/r2/round.log` (po `build_world exit 0`: `grep tris_low r2/build_world.log`,
+  czekac na `ROUND DONE`) -> `python artifacts/buildings-r9/budget2.py artifacts/buildings-r9/base/Low-overcast artifacts/buildings-r9/r2/Low-overcast`
+  -> `git merge main` (generated --ours) -> `pwsh artifacts/buildings-r9/round.ps1 -Round r3` + pytest gis + fidelity + EditMode.
