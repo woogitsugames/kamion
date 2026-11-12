@@ -99,3 +99,5 @@ NASTĘPNY KROK: przygotować własne skrypty r2 z ownerem heavy gpt-furniture-r2
 2026-11-12T03:41:17.8313083+01:00: Unity poprawnie zapisało dokładny baseline Low-clear (55 kamer). Błąd skryptu sprawdzającego polegał na pozycyjnych argumentach Select-String; poprawiono LiteralPath. Osobny lekki weryfikator potwierdził zgodność całego zapisu z zamrożonym baseline. Nie powtarzamy udanego renderu; sekwencja -Resume zweryfikuje i pominie gotowy clear, zbierze dwa brakujące warianty. Nowy helper nocny skompilował się w tej próbie, jego działania jeszcze nie potwierdzono. NASTĘPNY KROK: exact-before-chain.ps1 -Resume, bez importu przed końcem.
 
 2026-11-12T03:41:43.3521740+01:00: dokładny licznik CPU before Low overcast; sukces=True, slot Unity zwolniony. NASTĘPNY KROK: pozostałe warianty i porównanie przed/po, bez deklaracji czasu GPU.
+
+2026-11-12T03:42:08.5800792+01:00: dokładny licznik CPU before Low dusk; sukces=True, slot Unity zwolniony. NASTĘPNY KROK: pozostałe warianty i porównanie przed/po, bez deklaracji czasu GPU.
