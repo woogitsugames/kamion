@@ -13,7 +13,7 @@ pre-0127 portal (`sign_gantry_16_74` at (-260.8, -208.3)); the committed `world_
 have "calibrated" against the wrong portal. The derived world, `_Generated/World` and `Library` were copied from the
 merged `g3b-lowread` worktree (manifest identical to main modulo EOL). The new preflight (below) catches this case.
 
-## Method (TBD results)
+## Method
 
 `artifacts/sbs-poses-r2/tools/resect.py`: unknowns E, N, heading; observations = photo x of both portal columns
 (rectified photo, 1280 px, measured on ruler crops `look/z*.png`, at beam level; projection at 6 m above the footing)
@@ -24,6 +24,38 @@ merged `g3b-lowread` worktree (manifest identical to main modulo EOL). The new p
   `look/z328ch.png`, `look/z297ch.png` (chimney-2 left, chimney-1 right; ADR 0130 had them paired the other way
   for 297817, which left the heading 0.7 deg off).
 Eye height and rectified horizon kept; U = generated road asphalt under the new position (chunk GLB ray) + eye.
+Diagnostic probes (`pose_confidence` C, `sbs-p140-*`) rendered Low-overcast (r1: 29, r2: 3), sheets photo | before |
+probes `artifacts/sbs-poses-r2/r{1,2}/sheet-*.jpg`; `tools/finalize.py r1 r2 --write` writes the chosen probe as
+explicit authored overrides + the formula-identical `sbs_cameras.json` / `sbs_references.json` entries
+(`poselib.verify_all()`: 0 mismatches). The `sbs_references.json` entries of 275528/837235 already existed (ADR 0130
+follow-up); they are rewritten here with the new pose fields.
+
+## Decision (authored overrides, WORKING_VALUE, confidence B)
+
+| Camera | Change | Anchors (photo vs model/render) |
+|---|---|---|
+| 275528 grobin 2019 | 20.1 -> 15.2 m from the portal centre, heading +0.56 deg | columns x 0.295/0.753 (resid < 0.1 px); middle lane; beam top y 160 px photo vs 151-157 model (world portal 7.0 m by rule, photo ~6.5 m) |
+| 837235 grobin 2019 | 7.0 m forward, 3.1 m right (right lane at the gore line), heading 306.8 -> 308.3; 68.2 -> 61.7 m from the portal | chevron at its **orthophoto** position (x 0.861, plate 155 px), portal west column x 584, predicted east column 729 vs photo beam end ~736, white block at the left edge in both; road VP agrees with the road axis (309.1) |
+| 3281350 zsolt 2017 | 49.4 -> 44.4 m, heading +0.02 deg | columns x 189/560 px; EC chimneys x 910/936 px |
+| 297817 zsolt 2017 | 119.1 -> 110.8 m, heading -0.54 deg | columns x 571/722 px; EC chimneys x 950/976 px (pairing fixed) |
+| 150280 picturehoover 2020 | rectified horizon 0.62 -> 0.50, heading -2.2 deg | road VP y 356 / x 555 px photo vs 439 / 514 render (lane dash + left kerb), far road end |
+| 3678296 grobin 2019 | rectified horizon 0.585 -> 0.559 | near-road VP y 384 px photo vs 403 px render |
+
+Rejected: placing 837235 against the generated chevron (heading 304.6, VP 4.5 deg off the road axis, lateral 1.6 m
+further left - inconsistent); 1801374 1.0-2.5 m right (r1 l1-l3: the lane dash then runs under / left of the camera,
+the photo has it right of the camera as production does).
+
+## World findings for other streams (not changed here)
+
+- `andersa-elewatorska-island-u4a` (chevron): generated 5.4 m from its orthophoto `at_en` (snapped by
+  `gate3_landmarks.SNAP_MAX_M` to the generated island) -> after the correct pose it stands behind the camera in
+  837235; D51 for 837235 loses its main mark until the sign is placed at `at_en` (or the island nose moved).
+- `andersa-gantry-warning-left/right`: 46 m before the node = 7 m before the portal (photo guess, ADR 0125); 275528
+  shows them clearly in front of the portal -> after the correct pose they fall behind the camera. Station to be
+  re-measured (orthophoto / 1056932506043672).
+- 3281350/297817: chimney tops put the horizon ~0.04 lower than the portal top allows (66 px conflict in 3281350):
+  either the 2017 portal is ~2 m taller than the 7.0 m rule (and 2019 is not) or it is another structure (one board
+  in 2017, review P2-2). UNVERIFIED; horizon kept at ADR 0130 values.
 
 ## PARTIAL frames: pose or world (photo vs post-0127 Low render, ruler crops `artifacts/sbs-poses-r2/look/`)
 
