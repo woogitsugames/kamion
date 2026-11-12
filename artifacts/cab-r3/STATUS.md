@@ -9,3 +9,4 @@ Nowy backlog recenzji: okluzja prawego wide-angle kanałem drzwi wymaga pomiaru 
 Następny krok: świeże baseline Low/High clear/overcast/dusk, inspekcja nocna z odciętym otoczeniem wyłącznie w QA; dopiero potem flaga danych i wariant podświetlenia. Każde Unity owner gpt-cab, heavy owner gpt-cab-r3. Pojedynczy własny heavy, mutex wrappera; pełny GIS dopiero na końcu rundy.
 Przygotowano wrappery r3: baseline obejmuje sześć stanów (Low/High × clear/overcast/dusk), siedem kamer i sześć natywnych RT w każdym stanie. Pojedyncze własne Unity; produkcyjne shadery i materiały nadal bez zmian r3. Kopia wrappera heavy zachowuje mutex.
 Zapisano baseline Low clear, siedem kamer i sześć natywnych RT z identyfikatorem wnętrza. Następny krok: kontynuować macierz lub porównać PNG.
+Zapisano baseline Low overcast, siedem kamer i sześć natywnych RT z identyfikatorem wnętrza. Następny krok: kontynuować macierz lub porównać PNG.
