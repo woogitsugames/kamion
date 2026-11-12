@@ -31,3 +31,4 @@ Krok 10: dodano osobny ignorowany adapter TruckDetail0115 z kamerami progów, ty
 Zapisano detail-before-fleet, ilość brudu 0.5, 12 świeżych kadrów. Materiały przywrócone. Następny krok: porównać pas zabrudzenia, błotniki i plandekę ze zdjęciami.
 Krok 11: kompilacja i pierwszy zestaw detail-before-fleet przeszły: 12/12 świeżych kadrów. Obejrzano trzy zbliżenia High-overcast w wersji 960 px; progi, błotnik i koło są trafione bez zapisywania kamer w scenie. Progi są bardzo ciemne, górny błotnik słabo zróżnicowany; koło pozostaje do r3. Następny krok: detail-controls.ps1 -Cases washed,dirty, potem wybór pierwszej korekty rozkładu brudu.
 Zapisano detail-before-washed, ilość brudu 0, 12 świeżych kadrów. Materiały przywrócone. Następny krok: porównać pas zabrudzenia, błotniki i plandekę ze zdjęciami.
+Zapisano detail-before-dirty, ilość brudu 1, 12 świeżych kadrów. Materiały przywrócone. Następny krok: porównać pas zabrudzenia, błotniki i plandekę ze zdjęciami.
