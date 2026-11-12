@@ -1,3 +1,25 @@
+# HANDOVER — kamion, SESJA 14 (start 2026-11-12 18:22, nowe konto)
+
+## Stan na żywo (s14)
+- **Najświeższy stan agentów: `artifacts/live/<gałąź>.md`** (każdy agent nadpisuje po każdym kroku: sha, zadania w tle, NASTĘPNY KROK, gotowość). Polecenie właściciela 18:3x: HANDOVER i pliki live aktualizowane na bieżąco, aby inna sesja mogła w każdej chwili przejąć pracę.
+- 18:22 start. Usage: 5 h 0 % (reset 23:19), tydzień 50 %, **Fable 75 %** (reset 15.11 11:59). Właściciel: wszystkie 5 zadań świata zostają na Fable. Triggery CronCreate (tylko w sesji lidera): **:17** agenci/scalenia/HANDOVER, **:47** PR-y Mistrala, **:07** GPT.
+- Watchdog żyje (pid 73848, MaxHeavy=4). Heavy 3/4 zajęte przez żywe łańcuchy agentów (0123, 0128, 0132); Unity sloty wolne; PHONE_RUN brak.
+- **18:27: SCALONE 0133 putry-deck** `09d0e355` (visual-critic SCAL, `docs/reports/visual/REVIEW-2026-11-12-s14-0133.md`; generated/street_props.glb → ours, **regeneracja w integracji**). Otwarte z recenzji: P1 poza 494288 (łuk + jasny pas + teren za ekranem za nisko), P1 poza 810896 (kamera za murem), P2 ramiona Y proste i znikają na Low, P2 szew latarni na E od −396 (brak ortofoto).
+- Agenci (5, Fable, wznowieni 18:3x z live; łańcuchy w tle s13 przejęte, nie dublowane):
+| zadanie | ADR | worktree / gałąź | live | stan |
+|---|---|---|---|---|
+| węzły r6 b7 | 0123 | `junctions-r6` | `artifacts/live/junctions-r6.md` | b7_all/post.sh w tle; swept do powtórki (MemoryError) |
+| wysepka + D-3/D-6 Bieżeństwa (**scalać PO 0123**) | 0128 | `biezenstwa-island` | `artifacts/live/biezenstwa-island.md` | all.sh i3 w tle; U-4a = świat 2024 (decyzja lidera) |
+| zabudowa r9 wysoka zieleń | 0132 | `buildings-r9` | `artifacts/live/buildings-r9.md` | r3_chain w tle |
+| poprawki G3-B z 0127 | 0139 | `g3b-r2` | `artifacts/live/g3b-r2.md` | pary after → merge main → final |
+| krawędź mapy / tło | 0141 | `edge-r6c` | `artifacts/live/edge-r6c.md` | pary after → merge main → testy |
+- Scalone wcześniej (s13): 0129, 0136, 0140, 0142 — patrz niżej. **main wymaga regeneracji** (0129, 0133) + `ImpostorTrimBake.RunBatch` (0136) w jednej integracji.
+- Ścieżka bramki 3: krytyk D51 dla gotowych → scal 0123→0128, 0139, 0141, 0132 → jedna integracja (regen, import, ImpostorTrimBake, testy, vqa, `pwsh scripts/sbs-low-pairs.ps1 -Before artifacts/sbs-poses-r2/after`) → krytyk D51 → czysty APK Low → gate3 A16 A+B → pakiet zdjęcie|render.
+- Otwarte bez agenta: 0136 runda 2 (props G3-A wg prefiksu), hashe fidelity CRLF (M1), pozy 494288/810896 (0140 r3), UI Fold (po bramce 3), audio (wycieraczki, deszcz, klakson HUD).
+- **Jeśli sesja padnie:** wznów agentów z `artifacts/live/*.md` (NASTĘPNY KROK); nie dubluj procesów w tle (sprawdź `Get-CimInstance Win32_Process` bash/pwsh/Unity).
+- **Ostatni przydzielony ADR: 0142.**
+
+---
 # HANDOVER — kamion, SESJA 13 (start 2026-11-12 16:41, nowe konto)
 
 ## Stan na żywo (s13)
