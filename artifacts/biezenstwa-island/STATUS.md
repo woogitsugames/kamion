@@ -9,3 +9,7 @@
 - krok 2: kod — `traffic_island.patches` (gores.py), znaki gate3 na wyspach autorskich (gate3_landmarks.py, stage.py), overrides:
   `biezenstwa-n-slip-nose` (wyspa żwir + płyta chodnika), D-6/D-3 z ortofoto+geometrii zdjęcia, U-4a na nos wyspy; test gate3: stale == ∅.
   NASTĘPNY KROK: `bash artifacts/biezenstwa-island/scripts/build.sh i1 && bash artifacts/biezenstwa-island/scripts/imp_sbs.sh i1`
+- krok 3 (13:30–13:45): baza b5 = `_Generated` + `Library` skopiowane z junctions-r6 (b5 po imporcie), render SBS 43 kamer Low overcast/clear
+  → `renders_b5sbs_*` (+ `stats.txt`), pary `pairs_b5/`; kamera-sonda pozy 320326 (`cams_sbs.json`, `sbs-g3-a-p0128-…`); test syntetyczny
+  `patches` zielony; szkic ADR 0128. Build i1 w kolejce FIFO puli heavy (9. miejsce o 13:34), po nim automatycznie import + SBS.
+  NASTĘPNY KROK (gdy `logs/i1_build.out` ma „build done”): `bash artifacts/biezenstwa-island/scripts/imp_sbs.sh i1 && bash artifacts/biezenstwa-island/scripts/pairs.sh i1 b5`
