@@ -24,3 +24,9 @@
   NASTĘPNY KROK (po „build done” w `logs/i1_build.out`; import + SBS i1 odpali łańcuch w tle, inaczej ręcznie):
   `bash artifacts/biezenstwa-island/scripts/imp_sbs.sh i1 && bash artifacts/biezenstwa-island/scripts/pairs.sh i1 b5` → obejrzeć pary →
   `git merge junctions-r6` (generated/* → ours) → `bash artifacts/biezenstwa-island/scripts/build.sh i2 && bash artifacts/biezenstwa-island/scripts/imp_sbs.sh i2 && bash artifacts/biezenstwa-island/scripts/post.sh i2 full`
+- krok 6 (15:28–15:58): import i1 rc 0 (64 chunki), SBS Low overcast/clear, pary `pairs_i1/` (zdjęcie | b5 | i1). Budżet Low overcast, 43 kamery
+  SBS: draws max +1, tris max +0,3 % (`logs/i1_stats_low_overcast.txt`). 320326 z pozą-sondą: D-3 z lewej, D-6 z prawej na wysepce jak na zdjęciu.
+  U-4a stoi na nosie wyspy z ortofoto 2024, ale w kadrach 837235/381800 jest 18/39 m od kamery (zdjęcie 2019: ~6,5 m) — wyspa w 2017–2019 była
+  dłuższa (nos ok. -210,-242 wg promowanej pozy), przebudowana przed 2024. Decyzja lidera: świat 2024 czy stan ze zdjęć.
+  Uwaga: dwa łańcuchy importu wystartowały naraz (stary w tle + ręczny), jeden import rc 1, rendery ręcznego szły ~2 min bez pliku slotu.
+  NASTĘPNY KROK: `git merge junctions-r6` (generated/* → ours) → `bash artifacts/biezenstwa-island/scripts/build.sh i2 && bash artifacts/biezenstwa-island/scripts/imp_sbs.sh i2 && bash artifacts/biezenstwa-island/scripts/pairs.sh i2 b5 && bash artifacts/biezenstwa-island/scripts/post.sh i2 full`

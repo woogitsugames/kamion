@@ -80,9 +80,17 @@
    0.807,
    1.35
   ],
+  "G390e84fe0": [
+   0.657,
+   0.6
+  ],
   "G3ae1e4f1d": [
    0.957,
    1.229
+  ],
+  "G3d34c990e": [
+   0.657,
+   0.6
   ],
   "OB_0a31f00e": [
    4.025,
@@ -375,10 +383,28 @@
    "tris_lod0": 28,
    "tris_lod1": 28
   },
+  "board_G390e84fe0": {
+   "materials": [
+    "plate_back",
+    "sign_G390e84fe0",
+    "steel_galv"
+   ],
+   "tris_lod0": 28,
+   "tris_lod1": 28
+  },
   "board_G3ae1e4f1d": {
    "materials": [
     "plate_back",
     "sign_G3ae1e4f1d",
+    "steel_galv"
+   ],
+   "tris_lod0": 28,
+   "tris_lod1": 28
+  },
+  "board_G3d34c990e": {
+   "materials": [
+    "plate_back",
+    "sign_G3d34c990e",
     "steel_galv"
    ],
    "tris_lod0": 28,
@@ -1433,12 +1459,26 @@
    "tris_lod0": 28,
    "tris_lod1": 16
   },
+  "sign_g3_G390e84fe0": {
+   "materials": [
+    "sign_G390e84fe0"
+   ],
+   "tris_lod0": 28,
+   "tris_lod1": 16
+  },
   "sign_g3_G3ae1e4f1d": {
    "materials": [
     "sign_G3ae1e4f1d"
    ],
    "tris_lod0": 30,
    "tris_lod1": 18
+  },
+  "sign_g3_G3d34c990e": {
+   "materials": [
+    "sign_G3d34c990e"
+   ],
+   "tris_lod0": 28,
+   "tris_lod1": 16
   },
   "sign_gantry_10_74": {
    "materials": [
