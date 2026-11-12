@@ -2219,60 +2219,14 @@
    "file": "art-source/truck/exterior/export/SM_TruckExterior_LOD2.fbx",
    "root": "TruckExterior_LOD2",
    "objects": {
-    "CHASSIS_LOD2": {
-     "role": "CHASSIS",
-     "rig_parent": "TruckExterior_LOD2",
-     "fbx_parent": "TruckExterior_LOD2",
-     "tris": 4487,
-     "materials": [
-      "MI_Ext_Trim",
-      "MI_Ext_Paint",
-      "MI_Ext_Metal",
-      "MI_Ext_Lights",
-      "MI_Ext_Glass"
-     ],
-     "pivot_unity_vehicle": [
-      0.0,
-      0.0,
-      0.0
-     ],
-     "rig_local_position_unity": [
-      0.0,
-      0.0,
-      0.0
-     ]
-    },
-    "CAB_Body_LOD2": {
-     "role": "CAB_Body",
-     "rig_parent": "TruckExterior_LOD2",
-     "fbx_parent": "TruckExterior_LOD2",
-     "tris": 6237,
-     "materials": [
-      "MI_Ext_Metal",
-      "MI_Ext_Trim",
-      "MI_Ext_Paint",
-      "MI_Ext_Lights",
-      "MI_Ext_Glass"
-     ],
-     "pivot_unity_vehicle": [
-      0.0,
-      1.15,
-      3.925
-     ],
-     "rig_local_position_unity": [
-      0.0,
-      1.15,
-      3.925
-     ]
-    },
     "DOOR_L_LOD2": {
      "role": "DOOR_L",
      "rig_parent": "CAB_Body_LOD2",
      "fbx_parent": "TruckExterior_LOD2",
      "tris": 694,
      "materials": [
-      "MI_Ext_Trim",
-      "MI_Ext_Paint"
+      "MI_Ext_Paint",
+      "MI_Ext_Trim"
      ],
      "pivot_unity_vehicle": [
       -1.245,
@@ -2303,8 +2257,8 @@
      "fbx_parent": "TruckExterior_LOD2",
      "tris": 693,
      "materials": [
-      "MI_Ext_Trim",
-      "MI_Ext_Paint"
+      "MI_Ext_Paint",
+      "MI_Ext_Trim"
      ],
      "pivot_unity_vehicle": [
       1.245,
@@ -2328,6 +2282,52 @@
        "convention": "open = -80 deg about local +Y (Unity)"
       }
      }
+    },
+    "CHASSIS_LOD2": {
+     "role": "CHASSIS",
+     "rig_parent": "TruckExterior_LOD2",
+     "fbx_parent": "TruckExterior_LOD2",
+     "tris": 4169,
+     "materials": [
+      "MI_Ext_Trim",
+      "MI_Ext_Paint",
+      "MI_Ext_Metal",
+      "MI_Ext_Lights",
+      "MI_Ext_Glass"
+     ],
+     "pivot_unity_vehicle": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "rig_local_position_unity": [
+      0.0,
+      0.0,
+      0.0
+     ]
+    },
+    "CAB_Body_LOD2": {
+     "role": "CAB_Body",
+     "rig_parent": "TruckExterior_LOD2",
+     "fbx_parent": "TruckExterior_LOD2",
+     "tris": 6156,
+     "materials": [
+      "MI_Ext_Metal",
+      "MI_Ext_Trim",
+      "MI_Ext_Paint",
+      "MI_Ext_Lights",
+      "MI_Ext_Glass"
+     ],
+     "pivot_unity_vehicle": [
+      0.0,
+      1.15,
+      3.925
+     ],
+     "rig_local_position_unity": [
+      0.0,
+      1.15,
+      3.925
+     ]
     },
     "MUDFLAP_FL_LOD2": {
      "role": "MUDFLAP_FL",
@@ -2395,7 +2395,7 @@
      "role": "MUDFLAP_RL",
      "rig_parent": "TruckExterior_LOD2",
      "fbx_parent": "TruckExterior_LOD2",
-     "tris": 24,
+     "tris": 16,
      "materials": [
       "MI_Ext_Trim"
      ],
@@ -2426,7 +2426,7 @@
      "role": "MUDFLAP_RR",
      "rig_parent": "TruckExterior_LOD2",
      "fbx_parent": "TruckExterior_LOD2",
-     "tris": 24,
+     "tris": 16,
      "materials": [
       "MI_Ext_Trim"
      ],
@@ -2495,7 +2495,7 @@
      "role": "WHEEL_FL",
      "rig_parent": "STEER_FL_LOD2",
      "fbx_parent": "TruckExterior_LOD2",
-     "tris": 977,
+     "tris": 1186,
      "materials": [
       "MI_Ext_Metal",
       "MI_Ext_Trim"
@@ -2529,7 +2529,7 @@
      "role": "WHEEL_FR",
      "rig_parent": "STEER_FR_LOD2",
      "fbx_parent": "TruckExterior_LOD2",
-     "tris": 980,
+     "tris": 1187,
      "materials": [
       "MI_Ext_Metal",
       "MI_Ext_Trim"
@@ -3028,11 +3028,11 @@
     }
    },
    "collision": {},
-   "tris_total": 17689,
+   "tris_total": 17690,
    "tris_before_decimation": 83589,
-   "decimate_area_budget_k": 26.24,
-   "file_bytes": 1799676,
-   "build_s": 2.8
+   "decimate_area_budget_k": 8.34,
+   "file_bytes": 1791164,
+   "build_s": 3.4
   }
  },
  "tri_budget": {

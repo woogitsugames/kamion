@@ -1399,7 +1399,7 @@
      "role": "CHASSIS",
      "rig_parent": "Trailer_LOD2",
      "fbx_parent": "Trailer_LOD2",
-     "tris": 3571,
+     "tris": 2895,
      "materials": [
       "MI_Trl_Trim",
       "MI_Trl_Paint",
@@ -1453,7 +1453,7 @@
      "role": "CURTAIN_L",
      "rig_parent": "Trailer_LOD2",
      "fbx_parent": "Trailer_LOD2",
-     "tris": 426,
+     "tris": 302,
      "materials": [
       "MI_Trl_Curtain"
      ],
@@ -1472,7 +1472,7 @@
      "role": "CURTAIN_R",
      "rig_parent": "Trailer_LOD2",
      "fbx_parent": "Trailer_LOD2",
-     "tris": 427,
+     "tris": 301,
      "materials": [
       "MI_Trl_Curtain"
      ],
@@ -1553,7 +1553,7 @@
      "role": "LEG_L",
      "rig_parent": "Trailer_LOD2",
      "fbx_parent": "Trailer_LOD2",
-     "tris": 22,
+     "tris": 18,
      "materials": [
       "MI_Trl_Trim"
      ],
@@ -1584,7 +1584,7 @@
      "role": "LEG_R",
      "rig_parent": "Trailer_LOD2",
      "fbx_parent": "Trailer_LOD2",
-     "tris": 22,
+     "tris": 18,
      "materials": [
       "MI_Trl_Trim"
      ],
@@ -1677,7 +1677,7 @@
      "role": "WHEEL_1L",
      "rig_parent": "Trailer_LOD2",
      "fbx_parent": "Trailer_LOD2",
-     "tris": 554,
+     "tris": 709,
      "materials": [
       "MI_Trl_Metal",
       "MI_Trl_Trim"
@@ -1711,7 +1711,7 @@
      "role": "WHEEL_1R",
      "rig_parent": "Trailer_LOD2",
      "fbx_parent": "Trailer_LOD2",
-     "tris": 557,
+     "tris": 710,
      "materials": [
       "MI_Trl_Metal",
       "MI_Trl_Trim"
@@ -1738,14 +1738,14 @@
        "convention": "forward roll = positive angle about local +X"
       }
      },
-     "tyre_outer_radius_m": 0.5494,
+     "tyre_outer_radius_m": 0.5473,
      "width_m": 0.3944
     },
     "WHEEL_2L_LOD2": {
      "role": "WHEEL_2L",
      "rig_parent": "Trailer_LOD2",
      "fbx_parent": "Trailer_LOD2",
-     "tris": 556,
+     "tris": 710,
      "materials": [
       "MI_Trl_Metal",
       "MI_Trl_Trim"
@@ -1772,14 +1772,14 @@
        "convention": "forward roll = positive angle about local +X"
       }
      },
-     "tyre_outer_radius_m": 0.5447,
+     "tyre_outer_radius_m": 0.549,
      "width_m": 0.3939
     },
     "WHEEL_2R_LOD2": {
      "role": "WHEEL_2R",
      "rig_parent": "Trailer_LOD2",
      "fbx_parent": "Trailer_LOD2",
-     "tris": 550,
+     "tris": 710,
      "materials": [
       "MI_Trl_Metal",
       "MI_Trl_Trim"
@@ -1813,7 +1813,7 @@
      "role": "WHEEL_3L",
      "rig_parent": "Trailer_LOD2",
      "fbx_parent": "Trailer_LOD2",
-     "tris": 552,
+     "tris": 711,
      "materials": [
       "MI_Trl_Metal",
       "MI_Trl_Trim"
@@ -1847,7 +1847,7 @@
      "role": "WHEEL_3R",
      "rig_parent": "Trailer_LOD2",
      "fbx_parent": "Trailer_LOD2",
-     "tris": 551,
+     "tris": 709,
      "materials": [
       "MI_Trl_Metal",
       "MI_Trl_Trim"
@@ -2063,11 +2063,11 @@
     }
    },
    "collision": {},
-   "tris_total": 7844,
+   "tris_total": 7849,
    "tris_before_decimation": 73834,
-   "decimate_area_budget_k": 28.83,
-   "file_bytes": 843468,
-   "build_s": 4.9
+   "decimate_area_budget_k": 20.47,
+   "file_bytes": 873532,
+   "build_s": 3.9
   }
  },
  "units": "metres",
