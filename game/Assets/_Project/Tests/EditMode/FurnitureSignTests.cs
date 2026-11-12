@@ -104,7 +104,7 @@ namespace Game.Tests
                 cb.SetGlobalVector("_FurnitureRetroForward", new Vector4(0, 0, 1, 0));
                 cb.SetGlobalVector("_FurnitureRetroUp", new Vector4(0, 1, 0, 0));
                 cb.SetGlobalVector("_FurnitureRetroState", new Vector4(sourceOn ? 1 : 0, 0, 0, 0));
-                cb.SetGlobalFloat("_KamionExposure", exposureScale / 512f);
+                cb.SetGlobalFloat("_KamionExposure", exposureScale);
                 int pass = mat.FindPass("ForwardLit"); Assert.GreaterOrEqual(pass, 0, shader.name + " has no ForwardLit pass");
                 cb.DrawMesh(mesh, Matrix4x4.identity, mat, 0, pass);
                 Graphics.ExecuteCommandBuffer(cb);
@@ -327,6 +327,36 @@ namespace Game.Tests
             Assert.IsNull(create.Invoke(null,new[]{disabledResult,(object)"plate_back",def,dir+"/M_back.mat"}));
             Assert.AreEqual(0,((Dictionary<string,Material>)resultType.GetField("Materials").GetValue(disabledResult)).Count);
             Debug.Log($"[FurnitureSignProbe] current road fronts={expected.Count}; facade labels excluded; authored definition retained");
+        }
+
+        [Test] public void AutomaticBridgeResolvesSocketsAddedAfterItsFirstLookup()
+        {
+            var go=new GameObject("Late furniture rig");
+            var sun=RenderSettings.sun;
+            var texture=Shader.GetGlobalTexture("_TruckLightState");
+            var scale=Shader.GetGlobalFloat("_TruckLightNitsScale");
+            var type=typeof(FurnitureRetroSource);
+            var initialize=type.GetMethod("Initialize",BindingFlags.NonPublic|BindingFlags.Static);
+            var begin=type.GetMethod("BeginCamera",BindingFlags.NonPublic|BindingFlags.Static);
+            try
+            {
+                RenderSettings.sun=null;
+                var lamps=go.AddComponent<TruckLights>();lamps.forceLowBeam=true;
+                initialize.Invoke(null,null);
+                begin.Invoke(null,new object[]{default(ScriptableRenderContext),null});
+                Assert.AreEqual(0,Shader.GetGlobalVector("_FurnitureRetroState").x);
+                type.GetField("s_FastRetryUntil",BindingFlags.NonPublic|BindingFlags.Static).SetValue(null,0f);
+                type.GetField("s_NextFind",BindingFlags.NonPublic|BindingFlags.Static).SetValue(null,Time.realtimeSinceStartup+1000);
+                foreach(string name in new[]{"LIGHT_LowBeam_L","LIGHT_LowBeam_R","LIGHT_HighBeam_L","LIGHT_HighBeam_R"})
+                    new GameObject(name).transform.SetParent(go.transform,false);
+                begin.Invoke(null,new object[]{default(ScriptableRenderContext),null});
+                Assert.AreEqual(1,Shader.GetGlobalVector("_FurnitureRetroState").x,"Hierarchy completion must bypass idle retry delay");
+            }
+            finally
+            {
+                Object.DestroyImmediate(go); RenderSettings.sun=sun;initialize.Invoke(null,null);
+                Shader.SetGlobalTexture("_TruckLightState",texture);Shader.SetGlobalFloat("_TruckLightNitsScale",scale);
+            }
         }
     }
 }

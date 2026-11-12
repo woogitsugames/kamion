@@ -129,3 +129,5 @@ NASTĘPNY KROK: przygotować własne skrypty r2 z ownerem heavy gpt-furniture-r2
 2026-11-12T09:12:37.8482646+01:00: komplet standardowych obrazów po zmianie i dokładne liczniki Low zapisane. NASTĘPNY KROK: odczytać wszystkie delty, kontrolowany night-rig Low/High i arkusze porównawcze w heavy; geometrię raportować osobno według jej wyniku.
 
 2026-11-12T09:13:02.8850630+01:00: Unity night-rig after1 Low overcast; sukces=False. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
+
+2026-11-12T09:20:01.7701223+01:00: komplet330 kadrów i dokładnych165 liczników Low: draws mesh0, instancje0; maksymalna delta tris0,18998%. Nocny fixture wykrył źródło0 po przeładowaniu sceny. Poprawiono unieważnianie cache przy zmianie sceny/riggu oraz szybkie rozpoznanie dobudowanych socketów, dodano regresję automatycznego hooka. Rzeczywista ekspozycja nocnego modelu wyniosła1,4167; usunięto nieuzasadniony mnożnik512, współczynnik jest teraz odniesiony do ekspozycji1. Geometria bez zmian; wymagany ponowny obraz po korekcie shadera. NASTĘPNY KROK: FurnitureSignTests -Phase cache2, potem ponowna walidacja nocnego źródła i obrazów.

@@ -40,7 +40,7 @@ half3 FurnitureReturnedLight(float3 positionWS, half3 normalWS, half3 viewWS)
                          + FurnitureHeadReturn(_FurnitureRetroHead1, positionWS, normalWS, viewWS, 0.0)
                          + FurnitureHeadReturn(_FurnitureRetroHead2, positionWS, normalWS, viewWS, 1.0)
                          + FurnitureHeadReturn(_FurnitureRetroHead3, positionWS, normalWS, viewWS, 1.0));
-    // The display coefficient is authored at reference exposure 1/512 (WORKING_VALUE),
+    // The display coefficient is authored at reference exposure 1 (WORKING_VALUE),
     // not as a measured RA table. Follow the SAME exposed scene units as the world's sun/lamp light.
-    return (half3)(_EmissionColor.rgb * response * max(_KamionExposure, 0.0) * 512.0);
+    return (half3)(_EmissionColor.rgb * response * max(_KamionExposure, 0.0));
 }

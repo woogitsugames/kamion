@@ -1,6 +1,7 @@
 using Game.Vehicle.Runtime;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.SceneManagement;
 
 namespace Game.Gameplay.Furniture
 {
@@ -18,6 +19,8 @@ namespace Game.Gameplay.Furniture
         static TruckLights s_Lights;
         static Transform s_Left, s_Right, s_HighLeft, s_HighRight;
         static float s_NextFind;
+        static float s_FastRetryUntil;
+        static int s_SceneHandle=int.MinValue, s_RootId, s_HierarchyCount;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         static void Initialize()
@@ -27,6 +30,9 @@ namespace Game.Gameplay.Furniture
             s_Left = s_Right = null;
             s_HighLeft = s_HighRight = null;
             s_NextFind = 0;
+            s_FastRetryUntil = 0;
+            s_SceneHandle = int.MinValue;
+            s_RootId = s_HierarchyCount = 0;
             Install();
         }
 
@@ -55,9 +61,25 @@ namespace Game.Gameplay.Furniture
 
         static void BeginCamera(ScriptableRenderContext context, Camera camera)
         {
+            float now=Time.realtimeSinceStartup;
+            int scene=SceneManager.GetActiveScene().handle;
+            if (scene!=s_SceneHandle)
+            {
+                s_SceneHandle=scene; s_Lights=null;
+                s_Left=s_Right=s_HighLeft=s_HighRight=null;
+                s_NextFind=0; s_FastRetryUntil=now+2f;
+                s_RootId=s_HierarchyCount=0;
+            }
+            // A newly created/rebuilt rig must not inherit the missing-source retry delay.
+            if (!ReferenceEquals(s_Lights,null) && s_Lights==null) s_NextFind=0;
+            if (s_Lights!=null)
+            {
+                var root=s_Lights.body!=null?s_Lights.body.transform:s_Lights.transform;
+                if(root.GetInstanceID()!=s_RootId || root.hierarchyCount!=s_HierarchyCount) s_NextFind=0;
+            }
             if ((s_Lights == null || !s_Lights.isActiveAndEnabled || s_Left == null || s_Right == null
                 || s_HighLeft == null || s_HighRight == null)
-                && Time.realtimeSinceStartup >= s_NextFind)
+                && (now >= s_NextFind || now < s_FastRetryUntil))
             {
                 s_NextFind = Time.realtimeSinceStartup + 1f;
                 s_Lights = Object.FindAnyObjectByType<TruckLights>();
@@ -66,6 +88,7 @@ namespace Game.Gameplay.Furniture
                 if (s_Lights != null)
                 {
                     var root = s_Lights.body != null ? s_Lights.body.transform : s_Lights.transform;
+                    s_RootId=root.GetInstanceID(); s_HierarchyCount=root.hierarchyCount;
                     // One discovery allocation, at most once a second while the rig is unavailable.
                     foreach (var socket in root.GetComponentsInChildren<Transform>(true))
                     {
