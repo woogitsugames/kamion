@@ -45,3 +45,5 @@ Krok 11: jednostkowe testy pojedynczego pliku test_ec_chimneys.py zakończyły s
 Krok 11a: recenzja s12 zaakceptowała/scaliła r2, lecz zgłosiła P1 błędnych szarych faz i zbrązowienia pigmentu oraz P2 ciemnego równoległoboku. Plan korekty w P1-FEEDBACK-PLAN.md, do wykonania po bieżącym izolowanym przebiegu EC. Próba anulowania kolejki nie wykonała Stop-Process (waiter już nie istniał); slot był już przydzielony. Jednostki EC 15 PASS, 1 deselected, 1.92 s; działa generator. Kandydat równoległoboku w kodzie to paint_blobs, wymaga potwierdzenia PNG.
 
 Krok 11b: przygotowano odczyt semantycznych hashy prymitywów GLB. Po pierwszym wariancie EC snapshot jest dopuszczony tylko przy identycznych 128 SHA względem baseline. Po korekcie filarów porównanie wyłączy tylko trzy własne materiały w node bridge, zachowując dokładne bajty dróg, barier, budynków, terenu i kolizji; nie będzie fałszywej deklaracji identyczności całych chunków po zmianie farby.
+
+Krok 12: generator EC i cały pojedynczy plik test_ec_chimneys.py zakończone; brak fallback=True. Następny krok: import i pełny zestaw czterech warunków after-silhouette, bez zmiany kamer baseline.
