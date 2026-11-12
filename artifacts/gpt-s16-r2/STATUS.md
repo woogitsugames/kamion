@@ -10,3 +10,5 @@ Sprzątanie: jedenworktree, kompaktowedowody, odrzuconePNG r1pozostały po bloka
 Limit całej sesji około10:34 13.11.2026.
 
 Dodano recepty importu/renderów i generator12pozna6rzeczywistych ulicach OSM. Referencje zdjęciowe będą oznaczone jako typologiczne, bo repo dokumentuje brak zdjęć bocznych ulic regionu. Generator baseline w tle; kod produktu nadal bez r2.
+
+Dodano audyt semantyczny świata: hashe wszystkich węzłów poza plots, identyczność rekordów instancji nie-high i tożsamości/pozycji drzew ogrodowych. To ma wykrywać uboczne zmiany po generatorze, a nie tylko liczyć przyrost trójkątów.
