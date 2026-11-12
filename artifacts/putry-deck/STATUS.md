@@ -10,3 +10,4 @@
 - s13 step 4: build_world done (1011 s); frep lamp_rows: 14 items, 11 console, 3 ground. Heavy slot released manually (release pipe error).
 - NEXT: pwsh scripts/unity-slot.ps1 -Acquire -Owner claude-putry-deck; pwsh scripts/import-region.ps1 -Region bialystok-industrial-c; release; render_putry.ps1 -OutDir artifacts/putry-deck/after
 - step 5: import-region OK (Low 121.0 MB, High 263.1 MB). NEXT: pwsh artifacts/putry-deck/tools/render_putry.ps1 -OutDir artifacts/putry-deck/after
+- step 6: merged main (clean). Regenerating: build_world (heavy) -> import -> render after (single cycle on merged state). NEXT: pwsh artifacts/putry-deck/tools/build_world.ps1
