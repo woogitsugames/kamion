@@ -1,6 +1,7 @@
 $ErrorActionPreference='Stop'
 [Diagnostics.Process]::GetCurrentProcess().PriorityClass='BelowNormal'
 Set-Location (Resolve-Path "$PSScriptRoot/../..")
+if(Test-Path artifacts/truck-r3/wheel-mesh-before.json){throw 'Bazowy zrzut już istnieje; nie wolno go nadpisać kandydatem.'}
 foreach($pair in @(
     @('art-source/truck/exterior/export','game/Assets/_Generated/Truck/Source/Exterior','SM_TruckExterior_LOD'),
     @('art-source/truck/trailer/export','game/Assets/_Generated/Trailer/Source','SM_Trailer_LOD')

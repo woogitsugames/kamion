@@ -1,4 +1,4 @@
-param([string]$Prefix='wheel-probe-v1',[string[]]$Modes=@('flat','albedo','geonormal'))
+param([string]$Prefix='wheel-probe-v1',[string[]]$Modes=@('flat','albedo','geonormal'),[ValidatePattern('^[a-z0-9-]+$')][string]$AuditLabel='before')
 $ErrorActionPreference='Stop'
 [Diagnostics.Process]::GetCurrentProcess().PriorityClass='BelowNormal'
 Set-Location (Resolve-Path "$PSScriptRoot/../..")
@@ -29,7 +29,7 @@ foreach($mode in $Modes) {
     $start=Get-Date
     try {
         $log="artifacts/truck-r3/$name-$(Get-Timestamp).log"
-        $code=Invoke-UnityBatch -LogFile $log -Arguments @('-executeMethod','Game.Editor.VisualQA.TruckWheelProbe0115.RunBatch','-truckRound',$name,'-truckOutputRoot','artifacts/truck-r3','-truckCameras','truck-wheel-detail,truck-mudguard-detail','-truckTiers','Low,High','-truckLights','overcast','-truckMeshProbe',$mode,'-wheelAuditOutput','artifacts/truck-r3/wheel-mesh-before.json')
+        $code=Invoke-UnityBatch -LogFile $log -Arguments @('-executeMethod','Game.Editor.VisualQA.TruckWheelProbe0115.RunBatch','-truckRound',$name,'-truckOutputRoot','artifacts/truck-r3','-truckCameras','truck-wheel-detail,truck-mudguard-detail','-truckTiers','Low,High','-truckLights','overcast','-truckMeshProbe',$mode,'-wheelAuditOutput',"artifacts/truck-r3/wheel-mesh-$AuditLabel.json")
         $result=Select-String -LiteralPath $log -SimpleMatch "TRUCK_ROUND_RESULT: OK $name count=4" | Select-Object -Last 1
         $sha=(Get-FileHash game/Assets/_Project/Rendering/Shaders/TruckExterior.shader -Algorithm SHA256).Hash.ToLowerInvariant()
         $cleanup=Select-String -LiteralPath $log -SimpleMatch "TRUCK_ABLATION_CLEANUP: productionSHA=$sha" -Quiet
