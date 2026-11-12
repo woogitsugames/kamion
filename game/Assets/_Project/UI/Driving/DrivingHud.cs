@@ -381,6 +381,8 @@ namespace Game.UI.Driving
             Button(turn, "TurnLeft", Vector2.zero, new Vector2(0f, 0f), new Vector2(124f, th), 30, () => m_Ctx.Touch?.RequestTurnSignal(TurnSignalRequest.Left), out m_TurnLeftBtn).text = "←";
             Button(turn, "Hazard", Vector2.zero, new Vector2(132f, 0f), new Vector2(136f, th), 24, () => m_Ctx.Touch?.RequestTurnSignal(TurnSignalRequest.Hazard), out m_HazardBtn).text = "AWAR.";
             Button(turn, "TurnRight", Vector2.zero, new Vector2(276f, 0f), new Vector2(124f, th), 30, () => m_Ctx.Touch?.RequestTurnSignal(TurnSignalRequest.Right), out m_TurnRightBtn).text = "→";
+            // ADR 0151: a sideways thumb slide that starts on the bar (right above the rim) steers instead of being lost.
+            if (m_WheelGo != null) turn.gameObject.AddComponent<WheelDragRelay>().target = m_WheelGo.GetComponent<SteeringWheelWidget>();
 
             var stalk = Zone("Stalk", HudLayout.StalkSize);
             m_StalkRt = stalk;

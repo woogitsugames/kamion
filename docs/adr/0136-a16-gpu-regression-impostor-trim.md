@@ -1,6 +1,6 @@
 # ADR 0136: Regresja GPU A16 Low s10 → s12 — rozkład kosztu, ciasne impostory drzew
 
-Status: propozycja (rendering-perf, gałąź `a16-perf`, z main `8b0d6ec7`), 2026-11-12.
+Status: propozycja (rendering-perf, gałąź `a16-perf`, z main `8b0d6ec7`), 2026-11-12; runda 1 scalona, runda 2 (s14) — sekcja „Runda 2”.
 Powiązane: ADR 0106 (rozkład GPU A16, `rq_ab`), 0113 (las szybki, PSO), 0023 (impostory), D49 (A16 = Low), D50 (bez obniżania
 skali renderu), D51 (rozpoznawalność).
 
@@ -71,8 +71,78 @@ w G3-B +0,27), far field +0,36, płoty −0,44 (szum), ciężarówka +4,14 (bez 
 (na G3-B tylko +0,16), cienie +1,44, lusterka +1,32 (propsy także w lusterkach i cieniach). Główny kandydat regresji G3-A = instancjonowane
 propsy na placach/podwórzach (s11–s12: gpt-life r1–r3, furniture r2, static yard vehicles 0122). Do dalszej rundy: rozbicie `rq_ab off:m.<prefiks>` per prototyp na G3-A.
 
+## Runda 2 (s14, 2026-11-12): G3-A — zaparkowane auta, lusterka, brud pojazdów na Low
+**Uwaga pomiarowa.** Od 18:32 A16 leżący płasko uruchamiał grę w **portrecie 1080×2340** (ADR 0135 AllowAuto, `[SCREEN] ... orientation=Portrait`,
+pionowy `screen.png`) — `diagA2`, `diagA3`, `baseA` są w portrecie (węższy kadr, GPU p50 ~24,5 zamiast ~29–32 ms) i służą tylko jako
+rozbicie względne. Obejście pomiarowe `rq_landscape=1` (`Game.Rendering.DiagLandscape`, tylko z argumentem) w `r2b`/`r2c`/`diagA4`;
+po ADR 0147 (main) A16 płasko sam przechodzi do landscape (`Lock (elongated portrait window: force landscape)` →
+`Portrait -> LandscapeLeft 2340x1080` t = 7,5 s → `AllowAuto (landscape reached)`), więc `r2d` jest bez obejścia.
+Porównania tylko **przeplatane w jednym APK**: zmiany Low mają override launch-arg przywracający stan sprzed rundy
+(`rq_vehcull=300 rq_mirror_res=1 rq_grime=1`), bo starszego release'u nie da się zainstalować (versionCode) i dryf termiczny/DVFS
+między sesjami sięga kilku ms.
+
+**Rozbicie propsów G3-A** (nowe klucze A/B `rq_ab pp:<prefiksy>` = nie rysuj, `ps:<prefiksy|all>` = bez cienia, `vc:<m>` = cull aut,
+`vl:<x>` = skala LOD aut, `vm` = auta poza lusterkami; `WorldInstances.SyncAbMasks`, tylko diagnostyka; Δ A−B p50 GPU / CPU ms, bez limitu,
+skala 0,75; `diagA2`/`diagA3` portret, `diagA4` landscape po cull 150):
+
+| B | GPU | CPU | | B | GPU | CPU |
+|---|---|---|---|---|---|---|
+| auta osobowe + vany + contact (`diagA2`) | +1,29 | +4,44 | | lampy / znaki / fab | −0,15 / −0,13 / −0,04 | +0,65 / +0,30 / +0,13 |
+| ciągniki/naczepy/bus | +0,10 | +1,13 | | landmark/fasady / drobne | +0,21 / −0,66 | +0,93 / −0,72 |
+| cull aut 300 → 150 m | +0,35 | +2,41 | | cienie propsów (`ps:all`) / aut | 0,00 / −0,46 | +0,04 / −0,11 |
+| LOD aut ×0,5 / contact / auta w lusterkach | +0,22 / +0,13 / +0,06 | +0,66 / +0,41 / +0,86 | | (landscape) lusterka całe / tekstura ×0,75 | +1,46 / +0,47 | +2,74 / +0,26 |
+| (landscape) brud pojazdów (grime) / clear coat | +0,68 / +0,15 | +0,61 / −0,03 | | (landscape) cienie całe / 25 m / 512 px | +1,11 / +0,39 / +0,31 | +2,37 / −0,53 / +0,15 |
+
+Koszt propsów G3-A = **zaparkowane auta** (~370 w promieniu 300 m trasy wobec ~50 na G3-B; 24 prototypy × 12/11/7 submeshy LOD0/1/2 =
+setki wywołań `RenderMeshInstanced` na kamerę). Koszt jest głównie po stronie CPU/sterownika (zgłaszanie), GPU-czas Mali rośnie razem z nim;
+LOD aut i ich cienie prawie nic nie dają. Pozostałe propsy (znaki, latarnie, bariery, landmarki) ≈ 0 — zostają bez zmian (D51).
+
+**Decyzja r2 (tylko Low; Medium/High/Ultra bez zmian, każdy przełącznik w `QualityProfile`):**
+1. `Tier.vehicleCullM` = **150 m** na Low (0 = wspólne `WorldInstances.VehicleCullM` 300 m; dotyczy aut i ich plam kontaktowych;
+   override `rq_vehcull`). Auto 4,4 m w 150 m ≈ 20 px w kadrze Low — świadome odejście od „te same pojazdy na każdym tierze” (REVIEW r6 W-N6) tylko na Low.
+2. `Tier.mirrorResolutionScale` = **0,75** na Low → `MirrorOverrides.TierResolution` (lusterko klasy II 224 → 168 px, wypukłe proporcjonalnie):
+   ta sama gęstość pikseli co główny widok Low (skala renderu 0,75). Pole widzenia R46, odświeżanie i far clip bez zmian; override `rq_mirror_res`.
+3. `vehicleGrimeDetail` = **off** na Low (rozbryzg przy nadkolach + smugi; zostaje gradient wysokości), override `rq_grime`.
+
+**Wynik (A16, G3-A, limit 30 FPS, landscape, przeplatane w jednym APK):**
+
+| przejazd | APK | FPS | p50 / p95 / p99 (ms) | >40 | GPU p50 / p95 / p99 | CPU p50 / p95 | PSS MB | T °C |
+|---|---|---|---|---|---|---|---|---|
+| r2b przed (cull 300) ×2 | 23dc12142c | 29,7–29,8 | 33,3 / 33,5 / 50,0 | 26 / 40 | 32,5 / **35,7–35,9** / 36,9–37,5 | 22,8–23,0 / 29,4–30,0 | 880–898 | 29,6 |
+| r2b po (cull 150) ×2 | 23dc12142c | 29,7–29,8 | 33,3 / 33,5 / 50,0 | 26 / 31 | 31,7–31,8 / **34,5** / 36,5–36,8 | 21,9–22,3 / 29,8–30,0 | 884–903 | 29,6 |
+| r2c przed ×3 | 56b0df6b91 | 29,6–29,8 | 33,3 / 33,5 / 50,0 ×3 | 46 / 28 / 38 | 32,5 / **36,1 / 35,5 / 35,6** / 36,9–49,4 | 22,8–23,0 / 29,0–29,3 | 863–901 | 29,9–30,4 |
+| r2c po (+ lusterka ×0,75) ×3 | 56b0df6b91 | 29,8–29,9 | 33,3 / 33,5 / 50,0 · 33,8 · 33,8 | 26 / 16 / 18 | 31,7–31,8 / **34,0 / 34,2 / 34,2** / 35,7–35,8 | 21,6 / 29,5 | 855–873 | 29,9–30,8 |
+| **r2d przed** ×2 | 2080745dd4 | 29,6–29,8 | 33,3 / 33,5 / 50,0 | 30 / 50 | 32,4–32,5 / **35,7 / 36,1** / 36,8–39,7 | 22,7–23,0 / 29,2–30,1 | 906–934 | 30,6 |
+| **r2d po (+ grime off)** ×3 | 2080745dd4 | 29,8–29,9 | 33,3 / 33,5 / 49,9 · 33,9 · 49,9 | 22 / 19 / 23 | 31,4–31,7 / **34,2 / 33,7 / 33,9** / 35,5–36,0 | 21,5–22,2 / 29,4–30,2 | 896–919 | 30,5–30,8 |
+
+Ocena: **GPU p95 G3-A 35,9 → 34,0 ms (−2,0 ms, średnie r2d), klatki > 40 ms 40 → 21, CPU p50 −0,9 ms; cel 33,3 ms nieosiągnięty o ~0,6 ms**;
+p99 klatki 50 ms nadal w 2 z 3 przejazdów (pojedyncze podwójne vsynci). Kamery kontrolne Low overcast WorldC + gate3 (78 par, przed = te same override'y):
+mediana PSNR 54,0 dB; najniższe to widoki z góry (`fire-station-above` 32,1, `route-onramp-andersa-above` 32,4, `biezenstwa-above` 34,0 dB):
+znikają zaparkowane ciągniki/naczepy/auta na placach > 150 m od kamery; widoki z drogi (`g3a_*` ≥ 41 dB) — auta i zestawy na placu przy G3-A
+(~100 m) zostają, znaki/latarnie/bariery/landmarki bez zmian (D51). Lusterka (`cab-mirrors-left` 40,3 dB): obraz minimalnie miększy,
+czytelność bez zmian. Ciężarówka (`truck-side` 39,8 dB): bez rozbryzgu przy nadkolach, reszta materiału bez zmian.
+`artifacts/a16-perf/vqa-r2/psnr.txt`, pary `vqa-r2/960/*-before-after.jpg`.
+
+**Runda 2c — kandydaci na brakujące ~0,6 ms** (A16, G3-A, limit 30 FPS, landscape, 12 przejazdów przeplatanych w jednym APK
+`2080745dd4` = Low r2, kolejność base / cull 100 / cienie 25 / cienie 25 + 512 ×3; `artifacts/a16-perf/r2e`, `r2e/summary.txt`):
+
+| wariant (launch arg) | GPU p95 ×3 (ms) | śr. | GPU p50 śr. | GPU p99 | p99 klatki | >40 ms |
+|---|---|---|---|---|---|---|
+| Low r2 (bez zmian) | 34,03 / 33,93 / 34,05 | **34,00** | 31,49 | 35,7–35,8 | 33,6 / 49,9 / 33,9 | 16 / 21 / 17 |
+| cull aut 100 m (`rq_vehcull=100`) | 33,84 / 33,79 / 33,86 | **33,83** (−0,17) | 31,49 | 35,4–35,7 | 33,7 / 33,8 / 33,7 | 18 / 18 / 15 |
+| cienie 25 m (`rq_shadow=25`) | 33,91 / 33,87 / 34,45 | 34,08 (+0,08) | 31,52 | 35,3–43,8 | 33,7 / 33,7 / 50,0 | 16 / 18 / 26 |
+| cienie 25 m + 512 px (`rq_shadowres=512`) | 33,76 / 34,19 / 33,88 | 33,94 (−0,06) | 31,48 | 35,3–41,5 | 33,9 / 50,0 / 33,7 | 17 / 29 / 15 |
+
+Wynik: żaden kandydat nie zamyka luki. Cienie 25 m / 512 px = szum (±0,3 ms). Cull 100 m daje powtarzalne, ale tylko −0,17 ms
+(bez limitu w `diagA4` +1,29 ms; przy limicie 30 FPS governor Mali zjada większość zysku), a kosztuje auta na placach 100–150 m.
+**Low bez dalszych zmian.** Low r2 w tej sesji: GPU p95 34,0 ms (cel 33,3, brakuje 0,7 ms), klatka p50/p95 33,3/33,5 ms, FPS 29,8–29,9,
+p99 klatki 33,6–33,9 w 2 z 3 przejazdów, PSS 875–906 MB, bateria 29–30 °C. Kolejne ~0,7 ms wymaga zmiany treści, nie cięcia profilu (Otwarte).
+
 ## Otwarte
-- **G3-A: propsy +2,48 ms GPU / +7 ms CPU** — rozbić per prototyp (auta `car_`/`van_`/`trailer_`/`contact_`, meble), potem LOD/cull/cienie propsów na Low.
+- **G3-A: brakuje ~0,6–0,7 ms do GPU p95 33,3** (r2, r2c). Cull aut 100 m i cienie 25 m / 512 px zmierzone przy limicie 30 FPS (r2c): −0,17 ms / szum — odrzucone.
+  Trwała poprawka zamiast cięcia: **LOD1/LOD2 aut z 1–2 submeshami** (atlas/kolor wierzchołka) w generatorze (`build_world.py`/`InstanceImporter`, world-builder) —
+  7–12 submeshy × 24 prototypy to źródło kosztu CPU; wtedy Low może wrócić do 300 m.
+- Blokada obrotu (rotation lock) przy ADR 0147 na A16 nie sprawdzona w r2 (wymaga zmiany ustawienia telefonu).
 - Karty liści LOD0/LOD1 (`leaves_*.png` pokrycie 23–48 %) — ta sama technika na kartach w `trees.glb` (osobna siatka per karta).
 - Ściany HLOD: górne ~12 % atlasu puste — przycięcie w `forest_hlod.py` (mały zysk).
 - Treść s11–s12 (+1,5–2 ms rozproszone): budżet per runda dla agentów treści (pomiar `rq_ab off:m.<prefix>` na A16 przed scaleniem).

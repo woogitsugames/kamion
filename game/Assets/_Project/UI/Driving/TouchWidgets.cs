@@ -21,10 +21,12 @@ namespace Game.UI.Driving
 
         static Vector2 Mm(PointerEventData e) => SteeringMath.PixelsToMm(e.position, DeviceDisplay.Dpi);
 
-        Vector2 FromCentre(PointerEventData e)
+        Vector2 FromCentre(PointerEventData e) => FromCentre(e.position, e.pressEventCamera);
+
+        Vector2 FromCentre(Vector2 screen, Camera cam)
         {
             var rt = (RectTransform)transform;
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(rt, e.position, e.pressEventCamera, out Vector2 local);
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(rt, screen, cam, out Vector2 local);
             // Local coordinates are canvas units; the angle does not depend on scale, the min radius is in px-equivalents.
             return local - rt.rect.center;
         }
@@ -49,17 +51,69 @@ namespace Game.UI.Driving
             wheel.PointerUp();
         }
 
+        /// <summary>Releases a relayed grab (relay disabled mid-gesture).</summary>
+        public void ReleaseRelayed() { if (m_Pointer != int.MinValue) { m_Pointer = int.MinValue; wheel?.PointerUp(); } }
+
         void OnDisable()
         {
             if (m_Pointer != int.MinValue) { m_Pointer = int.MinValue; wheel?.PointerUp(); }
         }
 
+        /// <summary>
+        /// ADR 0151: a thumb that lands on a neighbouring control (turn-signal bar right above the rim) and slides sideways
+        /// steers: the press position starts the gesture, so the travel before the drag threshold is not lost.
+        /// False when the wheel is already held by another finger or inactive.
+        /// </summary>
+        public bool BeginRelayed(PointerEventData e)
+        {
+            if (wheel == null || !isActiveAndEnabled || m_Pointer != int.MinValue) return false;
+            m_Pointer = e.pointerId;
+            wheel.PointerDown(FromCentre(e.pressPosition, e.pressEventCamera), SteeringMath.PixelsToMm(e.pressPosition, DeviceDisplay.Dpi));
+            wheel.PointerDrag(FromCentre(e), Mm(e));
+            return true;
+        }
         void LateUpdate()
         {
             if (wheel == null) return;
             if (rotating != null) rotating.localRotation = Quaternion.Euler(0f, 0f, -wheel.WheelDeg); // UI z+ is counter-clockwise
             if (columnMark != null) columnMark.localRotation = Quaternion.Euler(0f, 0f, -wheel.ColumnScreenDeg);
         }
+    }
+
+    /// <summary>
+    /// ADR 0151 (owner Fold video 2026-11-12, 20.1 s: the thumb landed on "AWAR." 2.5 mm above the rim and 12.6 mm of
+    /// sideways travel steered nothing): on the turn-signal bar a press that turns into a mostly sideways drag is handed to
+    /// the steering wheel and the button does not fire; a tap still works as a button. Buttons have no drag handler, so
+    /// the drag bubbles up to this component on the bar.
+    /// </summary>
+    public sealed class WheelDragRelay : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
+    {
+        public SteeringWheelWidget target;
+        bool m_Active;
+
+        public void OnBeginDrag(PointerEventData e)
+        {
+            Vector2 d = e.position - e.pressPosition;
+            if (target == null || Mathf.Abs(d.x) < Mathf.Abs(d.y)) return;   // vertical = not a steering slide
+            m_Active = target.BeginRelayed(e);
+            if (m_Active) e.eligibleForClick = false;                           // no turn signal on release
+        }
+
+        public void OnDrag(PointerEventData e) { if (m_Active) target.OnDrag(e); }
+
+        public void OnEndDrag(PointerEventData e)
+        {
+            if (!m_Active) return;
+            m_Active = false;
+            target.OnPointerUp(e);
+        }
+
+        void OnDisable()
+        {
+            if (m_Active && target != null) target.ReleaseRelayed();
+            m_Active = false;
+        }
+
     }
 
     /// <summary>

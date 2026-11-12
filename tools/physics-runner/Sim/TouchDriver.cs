@@ -46,6 +46,7 @@ namespace PhysicsRunner.Sim
             _l0 = new Vec3(-_f0.z, 0, _f0.x);
             var feel = SteeringFeel.FromJson(File.Exists(FeelPath) ? File.ReadAllText(FeelPath) : null);
             if (d.touchLatAccelMatchKmh >= 0) feel.dragLatAccelMatchKmh = (float)d.touchLatAccelMatchKmh;
+            if (d.touchCapAbove >= 0) feel.dragLatAccelCapAboveMatch = d.touchCapAbove > 0;
             var st = s.Tractor.Steering;
             float lockDeg = (float)(st.MaxAngle * MathUtil.Rad2Deg * st.Def.steeringRatio);
             Column = new SteeringColumn(feel, lockDeg);

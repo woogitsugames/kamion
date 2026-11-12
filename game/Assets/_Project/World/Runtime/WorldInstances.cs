@@ -122,6 +122,8 @@ namespace Game.World
             m_HlodSwitch = ok && t.forestHlodM != 0f ? Mathf.Max(t.forestHlodM, 0f) : forestHlodM;
             m_HlodCull = ok && t.forestHlodM != 0f ? t.forestHlodCullM : forestHlodCullM;
             m_Trees = !RenderOverrides.Trees.HasValue || RenderOverrides.Trees.Value;
+            // ADR 0136 r2: per-tier vehicle cull (Low 150 m); 0 / no tier = the common VehicleCullM.
+            m_TierVehicleCullM = QualityProfileApplier.HasCurrent && t.vehicleCullM > 0f ? t.vehicleCullM : VehicleCullM;
             // Impostor view cross-fade (Kamion/Vegetation _IMPOSTOR): 2 views on Medium and up, the nearest view on Low
             // (half the texture fetches; ADR 0023 cost table). Tier = LOD bias (Low 0.5).
             Shader.SetGlobalFloat(k_ImpostorBlend, TierLodBias >= 0.75f ? 1f : 0f);
@@ -305,6 +307,8 @@ namespace Game.World
             // ADR 0106 GPU breakdown (rq_props, rq_ab trees|props): diagnostics only, shipping state = both on.
             bool trees = m_Trees && !RenderOverrides.AbTreesOff;
             bool props = RenderOverrides.Props != false && !RenderOverrides.AbPropsOff;
+            SyncAbMasks();
+            bool skipVehicles = RenderOverrides.AbVehicleNoExtraView && cam.TryGetComponent(out IExtraViewCamera _);   // ADR 0136 r2 A/B (diagnostics)
             GeometryUtility.CalculateFrustumPlanes(cam, m_Planes);
             Vector3 cp = cam.transform.position;
             // ADR 0068: extra views (mirrors) use their own LOD scale on the tier bias (Game.Core.ExtraViewLod), whatever
@@ -372,9 +376,12 @@ namespace Game.World
                     var ends = m_Ends[run.prototype];
                     if (!trees && m_Thin[run.prototype]) continue;
                     if (!props && !m_Thin[run.prototype]) continue;
+                    if (m_AbHide != null && m_AbHide[run.prototype]) continue;   // ADR 0136 r2 A/B (diagnostics)
+                    if (skipVehicles && m_FixedCull[run.prototype]) continue;
                     float ls = thinnableProto(run.prototype) ? Mathf.Min(scale, m_TreeCard) * RenderOverrides.AbTreeCardScale : scale;
-                    float cs = m_FixedCull[run.prototype] ? distanceScale : scale;   // vehicles: same cull on every tier
+                    float cs = m_FixedCull[run.prototype] ? distanceScale * VehicleCullFactor : scale;   // vehicles: same cull on every tier
                     float l0 = m_Lod0Min[run.prototype] * distanceScale;   // vehicles: LOD0 floor on every tier
+                    if (m_FixedCull[run.prototype] && RenderOverrides.AbVehicleLodScale != 1f) { ls *= RenderOverrides.AbVehicleLodScale; l0 *= RenderOverrides.AbVehicleLodScale; }
                     int ln = LodAt(ends, dNear, ls, cs, l0), lf = LodAt(ends, dFar, ls, cs, l0);
                     bool thinnable = m_Thin[run.prototype];
                     int stride = thinnable ? ThinStride(dNear, scale) : 1;
@@ -426,6 +433,43 @@ namespace Game.World
         public float treeLodScaleMax = 0.5f;
 
         bool[] m_Thin;
+
+        // ADR 0136 r2 diagnostics: per-prototype masks of the prefix A/B (RenderOverrides.AbPropsPrefix / AbPropShadowPrefix),
+        // rebuilt only when the override array changes (A/B window switch), null in the shipping state.
+        bool[] m_AbHide, m_AbNoShadow;
+        string[] m_AbHideSrc, m_AbShadowSrc;
+        float m_VehicleCullFactor = 1f;
+        float m_TierVehicleCullM = VehicleCullM;
+        float VehicleCullFactor => m_VehicleCullFactor;
+
+        void SyncAbMasks()
+        {
+            if (!ReferenceEquals(m_AbHideSrc, RenderOverrides.AbPropsPrefix) || (m_AbHide != null && m_AbHide.Length != set.prototypes.Length))
+            {
+                m_AbHideSrc = RenderOverrides.AbPropsPrefix;
+                m_AbHide = PrefixMask(m_AbHideSrc);
+            }
+            if (!ReferenceEquals(m_AbShadowSrc, RenderOverrides.AbPropShadowPrefix) || (m_AbNoShadow != null && m_AbNoShadow.Length != set.prototypes.Length))
+            {
+                m_AbShadowSrc = RenderOverrides.AbPropShadowPrefix;
+                m_AbNoShadow = PrefixMask(m_AbShadowSrc);
+            }
+            m_VehicleCullFactor = (RenderOverrides.AbVehicleCullM > 0f ? RenderOverrides.AbVehicleCullM : m_TierVehicleCullM) / VehicleCullM;
+        }
+
+        bool[] PrefixMask(string[] prefixes)
+        {
+            if (prefixes == null || prefixes.Length == 0) return null;
+            var m = new bool[set.prototypes.Length];
+            for (int p = 0; p < m.Length; p++)
+            {
+                string n = set.prototypes[p].name;
+                if (n.StartsWith("tree_")) continue;
+                foreach (var x in prefixes)
+                    if (x == "all" || (x.Length > 0 && n.StartsWith(x))) { m[p] = true; break; }
+            }
+            return m;
+        }
         bool[] m_FixedCull;
         float[][] m_Ends;
         float[] m_Lod0Min;
@@ -534,6 +578,7 @@ namespace Game.World
             // Tree casters per tier (QualityProfile.treeShadowLodMask): LOD1 tree cards in the shadow pass doubled the
             // forest cost on the A16 (Low/Medium cast from LOD0 only).
             int mask = m_Thin[proto] ? (RenderOverrides.AbTreeShadowOff ? 0 : p.shadowLodMask & m_TreeShadowMask) : p.shadowLodMask;
+            if (m_AbNoShadow != null && m_AbNoShadow[proto]) mask = 0;   // ADR 0136 r2 A/B (diagnostics)
             var shadows = (mask & (1 << lod)) != 0 ? ShadowCastingMode.On : ShadowCastingMode.Off;
             int m0 = p.materialStart[lod];
             for (int s = 0; s < mesh.subMeshCount; s++)

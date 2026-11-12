@@ -32,7 +32,7 @@ namespace Game.Tests
             Assert.AreEqual(5f * (60f / 35f) * (60f / 35f), CabDegPerMm(WheelGrab.Drag, 35f), 0.05f);
             Assert.AreEqual(5f * (60f / 45f) * (60f / 45f), CabDegPerMm(WheelGrab.Drag, 45f), 0.05f);
             Assert.AreEqual(5f, CabDegPerMm(WheelGrab.Drag, 60f), 0.01f);
-            for (float kmh = 21f; kmh < 60f; kmh += 1f)
+            for (float kmh = 21f; kmh < 100f; kmh += 1f)
             {
                 float a = CabDegPerMm(WheelGrab.Drag, kmh), b = 5f * (60f / kmh) * (60f / kmh);
                 Assert.LessOrEqual(a, b + 1e-3f, kmh + " km/h");
@@ -45,7 +45,7 @@ namespace Game.Tests
         {
             var old = SteeringFeel.Defaults();
             old.dragLatAccelMatchKmh = 0f; // ADR 0135 curve
-            foreach (float kmh in new[] { 0f, 5f, 15f, 20f, 60f, 80f, 100f })
+            foreach (float kmh in new[] { 0f, 5f, 15f, 20f, 60f })
                 Assert.AreEqual(CabDegPerMm(WheelGrab.Drag, kmh, old), CabDegPerMm(WheelGrab.Drag, kmh), 1e-3f, kmh + " km/h");
             Assert.AreEqual(32f, CabDegPerMm(WheelGrab.Drag, 15f), 0.01f, "full lock (800 deg) in 25 mm when manoeuvring");
             foreach (float kmh in new[] { 30f, 35f, 45f })
@@ -53,6 +53,17 @@ namespace Game.Tests
                 Assert.Less(CabDegPerMm(WheelGrab.Drag, kmh), CabDegPerMm(WheelGrab.Drag, kmh, old), kmh + " km/h: drag is calmer");
                 Assert.AreEqual(CabDegPerMm(WheelGrab.Rotate, kmh, old), CabDegPerMm(WheelGrab.Rotate, kmh), 1e-4f, kmh + " km/h: rotate gesture untouched");
             }
+        }
+
+        [Test]
+        public void Drag_Above60_ConstantLateralAccelPerMm_ADR0151_OrFixed5WhenOff()
+        {
+            foreach (float kmh in new[] { 70f, 80f, 90f })
+                Assert.AreEqual(5f * (60f / kmh) * (60f / kmh), CabDegPerMm(WheelGrab.Drag, kmh), 0.02f, kmh + " km/h");
+            var r2 = SteeringFeel.Defaults();
+            r2.dragLatAccelCapAboveMatch = false; // ADR 0149 r2
+            foreach (float kmh in new[] { 70f, 80f, 90f })
+                Assert.AreEqual(5f, CabDegPerMm(WheelGrab.Drag, kmh, r2), 0.01f, kmh + " km/h, cap above off");
         }
 
         [Test]
@@ -73,6 +84,7 @@ namespace Game.Tests
             Assert.IsNotNull(json);
             Assert.AreEqual(60f, SteeringFeel.FromJson(json.text).dragLatAccelMatchKmh, 1e-4f);
             Assert.AreEqual(SteeringFeel.Defaults().dragLatAccelMatchKmh, SteeringFeel.FromJson(json.text).dragLatAccelMatchKmh, 1e-4f);
+            Assert.IsTrue(SteeringFeel.FromJson(json.text).dragLatAccelCapAboveMatch);
         }
     }
 }

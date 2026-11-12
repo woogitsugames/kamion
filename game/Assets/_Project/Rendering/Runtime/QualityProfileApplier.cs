@@ -159,6 +159,7 @@ namespace Game.Rendering
             // A8: truck paint clear coat switch (Kamion/Truck Exterior reads 0 = on, so an unset global keeps it on).
             Shader.SetGlobalFloat(k_ClearCoatOff, t.clearCoat ? 0f : 1f);
             Shader.SetGlobalFloat(k_GrimeDetailOff, t.vehicleGrimeDetail ? 0f : 1f);   // ADR 0038
+            Game.Core.MirrorOverrides.TierResolution = t.mirrorResolutionScale > 0f ? t.mirrorResolutionScale : 1f;   // ADR 0136 r2
             if (worldTextures != null)
                 foreach (var tex in worldTextures)
                 {

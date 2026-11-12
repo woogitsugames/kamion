@@ -83,7 +83,9 @@ namespace Game.Tests
                 var w = DragWheel(range);
                 w.PointerDown(Vector2.zero, new Vector2(10f, 15f));
                 Slide(w, 10f, 4f);
-                Assert.AreEqual(4f * f.dragHighSpeedHandwheelDegPerMm, TargetDeg(w, 80f), 0.05f, "4 mm at 80 km/h, range " + range);
+                Assert.AreEqual(4f * f.dragHighSpeedHandwheelDegPerMm, TargetDeg(w, 60f), 0.05f, "4 mm at 60 km/h, range " + range);
+                // ADR 0151: above 60 km/h the lateral acceleration per mm stays at the 60 km/h value (5 x (60/80)^2 deg/mm).
+                Assert.AreEqual(4f * f.dragHighSpeedHandwheelDegPerMm * 0.5625f, TargetDeg(w, 80f), 0.05f, "4 mm at 80 km/h, range " + range);
             }
         }
 
