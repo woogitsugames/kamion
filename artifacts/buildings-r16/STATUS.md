@@ -102,3 +102,8 @@ NASTĘPNY KROK (kolejna sesja, slot heavy / unity):
   +1 submesh `buildings_lod1|hall_flashing` w chunkach 0_5 i 1_0 (zgodnie z przewidywaniem), poza tym zestawy materiałów bez zmian.
 - NASTĘPNY KROK: `pwsh artifacts/buildings-r16/full_round.ps1 -Round r2` → `python artifacts/buildings-r16/budget2.py artifacts/buildings-r16/r1/Low-overcast artifacts/buildings-r16/r2/Low-overcast`
   (i High-overcast, i `r1/extra_hc` vs `r2/extra_hc` dla prawdziwej treści High) → obejrzeć `r2/extra_hc/960`, `r2/extra_low/960`.
+
+## s12 — wznowienie po restarcie 03:44: stan zastany
+- Zastane niezapisane: runda `r2b` (świat z kodu c294f85c, build 516 s, import 523 s, rendery Low/High/extra/extra_low/extra_hc gotowe 02:39),
+  `generated/{streetscape_qa,world_manifest}.json` z r2b niezacommitowane → commit teraz. r2 vs r1: Low razem +3 (najg. +1), High(-treść Low) +15 (najg. +2).
+- NASTĘPNY KROK: `git merge main` → `pwsh artifacts/buildings-r16/world.ps1 -Round r2c` → `pwsh artifacts/buildings-r16/full_round.ps1 -Round r2c`
