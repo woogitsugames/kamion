@@ -93,7 +93,7 @@ def unit_normals(encoded, strength=1.0):
 
 
 def highpass_normals(encoded, tile_metres, sigma_mm):
-    """Remove broad slope variation in game-space millimetres; zero preserves the old path.
+    """Remove broad slope variation at the supplied reference tile scale; zero preserves the old path.
 
     This is an authored derivative of the scan, not a scan of moulded plastic.
     Filter tangent slopes rather than RGB or normal Z, then reconstruct unit vectors.
@@ -180,6 +180,9 @@ def prepare(args):
                            'Derivative emboss pattern based on a leather scan, not a scanned plastic part. Source crop and game tile intentionally differ; this is an authored working value for moulded grain.'),
         'required_unity_rim_uv_scale': args.rim_uv_scale,
         'working_values': {key: getattr(args, key) for key in ('variation_gain', 'roughness_gain', 'ao_gain', 'normal_strength', 'normal_highpass_mm')},
+        'normal_filter_scale_limits': ('Sigma uses the profile reference tile. Existing per-part UV tiling is retained; '
+                                       'the physical surface cutoff scales with each part UV tile/reference tile. '
+                                       'Plastic dash_soft uses 10 cm; dash_lower/dash_mid use 8 cm, dash_dark 6 cm.'),
         'perforation_alpha_source': str(args.preserve_alpha),
         'perforation_alpha_source_sha256': alpha_source_sha,
         'perforation_alpha_pixels_sha256': alpha_pixels_sha,

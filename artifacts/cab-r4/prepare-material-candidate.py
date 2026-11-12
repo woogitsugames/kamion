@@ -30,6 +30,8 @@ def sha(path):
 
 report = {'scope': 'Offline candidate; no game-map writes or visual acceptance',
           'baseline': [], 'candidate': [], 'normal_highpass_mm': 1.5,
+          'reference_tile_metres': config['plastic']['tile_metres'],
+          'uv_limits': 'Nominal 10 cm tile; inherited per-part UV sizes remain. Not a uniform physical cutoff over every part.',
           'parameter_status': 'WORKING_VALUE', 'status': 'incomplete'}
 record = output / 'verification.json'
 try:
