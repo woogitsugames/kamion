@@ -1,0 +1,42 @@
+el_gearshift_up              <- GEAR_UPSHIFT_CAB (6).wav        0.58 s  -28.2 LUFS pk  -8.7 edges 0.0000/0.00000  OK
+el_gearshift_down            <- GEAR_DOWNSHIFT_CAB (3).wav      0.86 s  -29.6 LUFS pk  -1.5 edges 0.0030/0.00001  gain-limited -1.4 dB  OK
+el_gear_whine_cab_loop       <- GEARBOX_WHINE_LOOP (4).wav      5.96 s  -15.4 LUFS pk  -2.6 seam 0.24 hf +3.2 dB  OK
+el_air_brake_release         <- BRAKE_SERVICE_HISS (7).wav      1.00 s  -20.9 LUFS pk  -2.9 edges 0.0007/0.00000  OK
+el_air_brake_release_cab     <- BRAKE_SERVICE_HISS (7).wav      1.12 s  -27.7 LUFS pk  -5.8 edges 0.0002/0.00000  OK
+el_parking_brake_set         <- AIR_PARKING_APPLY (4).wav       1.48 s  -20.4 LUFS pk  -2.2 edges 0.0001/0.00000  OK
+el_parking_brake_set_cab     <- AIR_PARKING_APPLY (4).wav       1.60 s  -30.1 LUFS pk  -8.9 edges 0.0000/0.00000  OK
+el_parking_brake_release     <- AIR_PARKING_RELEASE (4).wav     1.48 s  -21.2 LUFS pk  -6.7 edges 0.0003/0.00000  OK
+el_parking_brake_release_cab <- AIR_PARKING_RELEASE (4).wav     1.60 s  -28.1 LUFS pk  -1.5 edges 0.0000/0.00000  gain-limited -4.9 dB  OK
+el_air_dryer_purge           <- AIR_DRYER_PURGE (4).wav         1.87 s  -22.5 LUFS pk  -8.3 edges 0.0000/0.00000  OK
+el_air_dryer_purge_cab       <- AIR_DRYER_PURGE (4).wav         1.99 s  -25.1 LUFS pk  -9.7 edges 0.0000/0.00000  OK
+el_air_dryer_purge_b         <- AIR_DRYER_PURGE (1).wav         2.00 s  -19.7 LUFS pk  -4.1 edges 0.0000/0.00000  OK
+el_air_dryer_purge_b_cab     <- AIR_DRYER_PURGE (1).wav         2.12 s  -26.4 LUFS pk  -8.6 edges 0.0000/0.00000  OK
+el_compressor_loop           <- AIR_COMPRESSOR_LOOP (2).wav     4.96 s  -22.0 LUFS pk  -7.6 seam 0.34 hf +0.8 dB  OK
+el_compressor_cab_loop       <- AIR_COMPRESSOR_LOOP (2).wav     4.96 s  -20.6 LUFS pk  -6.7 seam 0.07 hf +0.6 dB  OK
+el_trailer_couple            <- TRAILER_COUPLE (1).wav          2.30 s  -24.0 LUFS pk  -4.4 edges 0.0013/0.00000  OK
+el_trailer_couple_cab        <- TRAILER_COUPLE (1).wav          2.42 s  -26.4 LUFS pk  -7.8 edges 0.0000/0.00000  OK
+el_tyre_dry_cab_loop         <- TYRE_ASPHALT_50 (1).wav         6.46 s  -19.2 LUFS pk  -4.4 seam 0.78 hf +0.8 dB  OK
+el_tyre_wet_loop             <- TYRE_WET_60 (4).wav             6.85 s  -17.8 LUFS pk  -4.5 seam 0.31 hf +1.2 dB  OK
+el_tyre_wet_cab_loop         <- TYRE_WET_60 (4).wav             6.85 s  -19.7 LUFS pk  -5.9 seam 0.26 hf +2.2 dB  OK
+el_tyre_concrete_loop        <- TYRE_PAVERS_20 (2).wav          5.26 s  -20.5 LUFS pk  -1.6 seam 0.07 hf -1.2 dB  gain-limited -1.5 dB  soft-limit 4.1 dB  OK
+el_tyre_concrete_cab_loop    <- TYRE_PAVERS_20 (2).wav          5.26 s  -19.7 LUFS pk  -1.9 seam 0.04 hf +0.5 dB  soft-limit 1.8 dB  OK
+el_tyre_gravel_loop          <- TYRE_GRAVEL_15 (3).wav          5.07 s  -20.2 LUFS pk  -1.6 seam 0.17 hf +1.0 dB  gain-limited -2.2 dB  soft-limit 4.1 dB  OK
+el_tyre_gravel_cab_loop      <- TYRE_GRAVEL_15 (3).wav          5.07 s  -19.8 LUFS pk  -1.8 seam 0.07 hf +1.6 dB  soft-limit 2.3 dB  OK
+el_susp_bump                 <- SUSP_BUMP (4).wav               1.10 s  -30.0 LUFS pk  -6.9 edges 0.0015/0.00000  OK
+el_susp_bump_cab             <- SUSP_BUMP (4).wav               1.22 s  -31.0 LUFS pk  -7.2 edges 0.0000/0.00000  OK
+el_indicator_tick            <- CAB_INDICATOR_LOOP (3).wav      0.17 s  -23.2 LUFS pk  -5.5 edges 0.0000/0.00001  OK
+el_indicator_tock            <- CAB_INDICATOR_LOOP (3).wav      0.17 s  -29.7 LUFS pk -10.7 edges 0.0000/0.00001  OK
+el_cab_switch                <- CAB_SWITCH (2).wav              0.32 s  -23.6 LUFS pk  -1.5 edges 0.0000/0.00001  gain-limited -3.4 dB  OK
+el_door_open                 <- CAB_DOOR_OPEN (7).wav           2.00 s  -33.0 LUFS pk  -1.5 edges 0.0006/0.00000  gain-limited -5.0 dB  OK
+el_door_close                <- CAB_DOOR_CLOSE (1).wav          1.28 s  -26.0 LUFS pk  -4.9 edges 0.0000/0.00000  OK
+el_horn_loop                 <- HORN_AIR (2).wav                0.88 s  -20.0 LUFS pk  -8.9 seam 0.12 hf +1.5 dB  OK
+el_horn_cab_loop             <- HORN_AIR (2).wav                0.88 s  -21.8 LUFS pk -11.4 seam 0.02 hf +0.4 dB  OK
+el_reverse_beeper_loop       <- REVERSE_BEEPER_LOOP (4).wav     1.00 s  -26.0 LUFS pk -19.2 seam 0.00 hf -0.4 dB  OK
+el_reverse_beeper_cab_loop   <- REVERSE_BEEPER_LOOP (4).wav     1.00 s  -41.8 LUFS pk -32.8 seam 0.03 hf -3.8 dB  OK
+el_wind_cab_loop             <- AMB_WIND_CAB_80 (3).wav         7.96 s  -22.8 LUFS pk  -5.0 seam 0.05 hf +3.2 dB  OK
+el_ambient_bed_loop          <- AMB_INDUSTRIAL_DAY (2).wav     19.96 s  -20.0 LUFS pk  -5.3 seam 0.07 hf +0.4 dB  OK
+el_ambient_bed_cab_loop      <- AMB_INDUSTRIAL_DAY (2).wav     19.96 s  -22.2 LUFS pk  -6.7 seam 0.03 hf +0.9 dB  OK
+el_turbo_whine_loop          <- procedural turbo2.whine_loop    4.00 s  -14.0 LUFS pk  -7.7 seam 0.24 hf +0.4 dB  OK
+el_turbo_whine_cab_loop      <- procedural turbo2.whine_loop    4.00 s  -29.6 LUFS pk -22.8 seam 0.36 hf +3.7 dB  OK
+el_turbo_rush_loop           <- procedural turbo2.rush_loop     4.00 s  -12.0 LUFS pk  -1.6 seam 0.29 hf +1.6 dB  OK
+el_turbo_rush_cab_loop       <- procedural turbo2.rush_loop     4.00 s  -27.6 LUFS pk -14.7 seam 0.10 hf +1.9 dB  OK
