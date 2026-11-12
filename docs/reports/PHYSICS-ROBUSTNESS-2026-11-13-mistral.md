@@ -10,12 +10,16 @@ pochodzą z uruchomień na tej gałęzi; komendy odtwarzalne — sekcja „Weryf
 
 ## 0. Liczby przed / po (weryfikacja C)
 
-| pakiet | przed (origin/main abe711ad) | po (ta gałąź) |
-|---|---|---|
-| `dotnet test tools/physics-runner/PhysicsRunner.sln -c Release` | 230 passed, 0 failed | **252 passed, 0 failed** |
-| `dotnet run -c Release --project tools/physics-runner/Runner` | 115 scenariuszy, 607 checków, ALL PASSED (63 s) | **123 scenariusze, 675 checków, ALL PASSED, exit 0** |
-| `pytest tests/physics` | 12 passed, 14 skipped | 12 passed, 14 skipped |
-| `python3 tests/physics/test_dims_sync.py` | ok | ok |
+| pakiet | przed (origin/main abe711ad) | po (ta gałąź, PRZED rebase) | po rebase na origin/main 16c6b421 (końcowe) |
+|---|---|---|---|
+| `dotnet test tools/physics-runner/PhysicsRunner.sln -c Release` | 230 passed, 0 failed | 252 passed, 0 failed | **256 passed, 0 failed** |
+| `dotnet run -c Release --project tools/physics-runner/Runner` | 115 scenariuszy, 607 checków, ALL PASSED (63 s) | 123 scenariusze, 675 checków, ALL PASSED, exit 0 | **127 scenariuszy, 707 checków, ALL PASSED, exit 0** |
+| `pytest tests/physics` | 12 passed, 14 skipped | 12 passed, 14 skipped | 12 passed, 14 skipped |
+| `python3 tests/physics/test_dims_sync.py` | ok | ok | ok |
+
+(Różnica 252→256 testów i 123→127 scenariuszy po rebase to scenariusze/testy dołożone na main przez inne
+zadania między abe711ad a 16c6b421 — nie moje; mój wkład to +22 testy i +8 scenariuszy fuzz +
+4 expected_fail + rozszerzone soaki.)
 
 Nowe: 8 scenariuszy fuzz w `tests/physics/scenarios/fuzz_*` (inwarianty), 4 pliki w
 `tests/physics/scenarios_expected_fail/` (2 znaleziska fuzza + 2 pełne scenariusze fuzz, które złamały
@@ -207,8 +211,8 @@ Wysokość 2–30 cm × prędkość 10–90 km/h × dry/wet × empty/laden40 (se
   M7 pos_jump+1 m → FAIL; M8 dv_step+1 → 1.0004 FAIL; M9 seed z `Environment.TickCount` →
   `SameScenario_Twice_IsBitIdentical` Failed (DIFFERS, 6000 sampli); M10 substepy wymuszone=1 w DtSweep →
   max dev 17.6% > 5%, Failed. **10/10 mutacji → FAIL.** Drzewo po mutacjach czyste (`git status` pusty).
-- **C. Pełne uruchomienie**: tabela w §0 (przed/po): dotnet test 252/0, runner 123/675 ALL PASSED exit 0,
-  pytest 12/14, dims ok.
+- **C. Pełne uruchomienie**: tabela w §0 (przed/po; końcowe liczby po rebase na origin/main 16c6b421):
+  dotnet test 256/0, runner 127 scenariuszy / 707 checków ALL PASSED exit 0, pytest 12/14, dims ok.
 - **D. Przed PR**: `git fetch && git rebase origin/main` (fast-forward, bez konfliktów), ponowione C,
   `git diff --name-only origin/main` — wyłącznie `tools/physics-runner/**`, `tests/physics/**`,
   `docs/reports/**`; `game/Assets/**`, `Data/**`, `*.glb`, `*_meta.json`, `ProjectSettings`, `Packages`,
