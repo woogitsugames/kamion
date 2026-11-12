@@ -19,7 +19,7 @@ Koło LOD1 ma sześciokątny bieżnik, zamknięte zewnętrzne czoło i felgę; j
 | Chłodnia | 194 | 290 | 7/7 |
 | Ciągnik | 254 | 286 | 7/7 |
 
-Wszystkie hashe kolizji są zachowane; LOD0 nie ma nowej geometrii. Nominalny odstęp opony od płaszczyzny gruntu: naczepa 0,12→0 m, ciągnik około 0,0683→0 m. To wynik prototypu, nie pomiar każdej instancji na terenie. Historyczny limit pojedynczego LOD1 naczepy w test_streetscape podniesiono 250→320 po pomiarze maksimum 316. Limit kamer trasy pozostaje draws +0 i tris najwyżej +2%.
+Wszystkie hashe kolizji są zachowane; LOD0 nie ma nowej geometrii. Nominalny odstęp opony od płaszczyzny gruntu: naczepa 0,12→0 m, ciągnik około 0,0683→0 m. To wynik prototypu, nie pomiar każdej instancji na terenie. Historyczne limity pojedynczego LOD1 naczepy w test_streetscape i test_yard_wear ujednolicono odpowiednio 250→320 i 260→320 po pomiarze maksimum 316. Limit kamer trasy pozostaje draws +0 i tris najwyżej +2%.
 
 Plandeki mają UV0 w metrach, wysokość 2,53 m i różną fazę poziomą między kolorami/stronami. Sześć trailer_curtain_* dostaje set_tile=true, dając natywne _Tile 4,8×2,7 m. Wcześniejsza hipoteza o zawijaniu starego UV 2,75 m przy kaflu 2,7 m była błędna: pierwotny materiał miał domyślne _Tile 4×4 m. Korektę i dowód zachowano w tile-baseline-proof.json; sama granica UV nie dowodziła skali runtime.
 
@@ -43,11 +43,12 @@ Native sprawdza sześć materiałów kabin, siedem lakierów aut, sześć plande
 
 Kontrola ramek osobówek A/C: 59/76 PNG identycznych bajtowo. Obejrzano wszystkie 17 różnych na pięciu arkuszach z maskami; duże obszary zmian są w tle pojazdów placowych, występują też drobne punkty przy krawędziach/połyskach. Nie stwierdzono widocznej na arkuszach regresji sylwetki/lakieru, ale nie deklarujemy identyczności każdego piksela osobówek. Źródłowe węzły GLB aut są identyczne. Metryki i lokalizacje: protected-c-pixel-audit.json.
 
-Testy: pojedynczy test_yard_vehicle_lod 12 passed, test_streetscape 59 passed; EditMode 280/280. Końcowy pełny GIS trwa na zamrożonym C, pod heavy. Wynik będzie dopisany przed REPORT.
+Testy: pojedynczy test_yard_vehicle_lod 12 passed, test_streetscape 59 passed; EditMode 280/280. Pierwszy końcowy GIS: 584 passed, 1 xfailed, 1 failed w 619,59 s — drugi historyczny limit 260 w test_yard_wear nie był zsynchronizowany z opisanym limitem 320. Produkcja C pozostała bez zmian; po ujednoliceniu oczekiwania następuje test jednego pliku i pełny GIS z nowym tagiem. Wynik będzie dopisany przed REPORT.
 
 ## Ocena i przekazanie
 
 Obejrzano komplet 56 arkuszy C (część w przeglądach ≤960 px), zbliżenia B/C i dwie pary zdjęcie/render. Największa poprawa to czytelne oddzielne koła dalszego LOD Low. Brud jest nadal delikatny; felgi pozostają płaskie, bryły i szkło kabin uproszczone, ciemne plandeki tracą detal. Ocena autora: geometria poprawiona, brud/realizm PARTIAL. Niezależną recenzję i pomiar urządzenia zleca lider Claude S11; autor nie scala do main, nie pushuje i nie używa telefonu.
 
 Przewidywane konflikty: definicje wskazanych materiałów, CARPAINT, fabryka materiałów, biblioteka props i manifest. Zachować inne domeny; generaty przy integracji main wybrać z main i odtworzyć ze złączonych źródeł zgodnie z protokołem. Aktualne uwagi lidera s11 w GPT-FEEDBACK-S10 (~01:50) po scaleniu life r1 0978792e dopisują brud tyłu osobówek, felgi, czerń w słońcu i sheet_far. Zostaną uwzględnione w następnej r3 po dołączeniu aktualnego main do własnej gałęzi. Preflight palet i brak deklarowanego zestawu euro_pallet_side zachowano do dalszego backlogu; palet w r2 nie zmieniano, a brak zestawu PBR sam nie dowodzi braku BaseMap lub wyglądu na renderze.
+
 

@@ -1,3 +1,4 @@
+param([ValidatePattern('^[a-z0-9-]+$')][string]$Tag='pytest-gis-final')
 $ErrorActionPreference='Stop'
 Set-Location ([IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..')))
 $owner=(git branch --show-current).Trim()
@@ -11,13 +12,15 @@ function Assert-Frozen {
  if((Get-FileHash art-source/world/props/props_meta.json).Hash -ne $proof.meta_sha){throw 'Changed C metadata'}
 }
 Assert-Frozen
-if(Test-Path artifacts/life-r2/pytest-gis-final.log){throw 'Final GIS evidence exists; inspect instead of overwriting'}
+$log="artifacts/life-r2/$Tag.log"
+$resultPath="artifacts/life-r2/$Tag-result.json"
+if(Test-Path $log){throw 'Final GIS evidence exists; inspect instead of overwriting'}
 if(Test-Path "C:/Users/matma/Documents/Claude/kamion/artifacts/locks/heavy-slots/$owner.slot"){throw 'Do not overlap own heavy jobs'}
 & pwsh -NoProfile -File scripts/unity-slot.ps1 -Acquire -Pool heavy -Owner $owner -StaleHours 1000000 -PollSeconds 1
 if($LASTEXITCODE -ne 0){throw 'Heavy acquire failed'}
 $code=1
 try {
- & uv run --project tools/worldgen python -m pytest tests/gis -q *> artifacts/life-r2/pytest-gis-final.log
+ & uv run --project tools/worldgen python -m pytest tests/gis -q *> $log
  $code=$LASTEXITCODE
  Assert-Frozen
  if($code -eq 0){
@@ -29,9 +32,9 @@ try {
  throw
 } finally {
  & pwsh -NoProfile -File scripts/unity-slot.ps1 -Release -Pool heavy -Owner $owner
- @{exit_code=$code;owner=$owner;pool='heavy';finished=(Get-Date -Format o);selection='C';source_capture='after-c-exact-inputs.json'}|ConvertTo-Json|Set-Content artifacts/life-r2/pytest-gis-final-result.json
- Add-Content artifacts/life-r2/STATUS.md ("`nKońcowy GIS ({0}) zakończony kodem {1}, heavy zwolnione. Liczby w pytest-gis-final.log; REPORT i kopia do main dopiero po sprawdzeniu wyniku. Następny krok: odczytać log/wynik, uzupełnić ADR i REPORT, robocopy artefaktów bez .cache, następnie gpt-life-r3 i git merge main do własnej gałęzi." -f (Get-Date -Format o),$code)
- git add -f -- artifacts/life-r2/STATUS.md artifacts/life-r2/pytest-gis-final.log artifacts/life-r2/pytest-gis-final-result.json
+ @{exit_code=$code;owner=$owner;pool='heavy';finished=(Get-Date -Format o);selection='C';source_capture='after-c-exact-inputs.json';log=$log}|ConvertTo-Json|Set-Content $resultPath
+ Add-Content artifacts/life-r2/STATUS.md ("`nKońcowy GIS ({0}) zakończony kodem {1}, heavy zwolnione. Liczby w {2}; REPORT i kopia do main dopiero po sprawdzeniu wyniku. Następny krok: odczytać log/wynik, uzupełnić ADR i REPORT, robocopy artefaktów bez .cache, następnie gpt-life-r3 i git merge main do własnej gałęzi." -f (Get-Date -Format o),$code,$log)
+ git add -f -- artifacts/life-r2/STATUS.md $log $resultPath
  git commit -m "wip(life): zapisz końcowy GIS zamrożonego wariantu C"
 }
 if($code -ne 0){throw "Final GIS/guard failed: $code"}
