@@ -1,4 +1,4 @@
-﻿param([Parameter(Mandatory)][string]$Jobs, [string]$Gate3 = 'Data/Regions/bialystok-industrial-c/buildings_r10_cameras.json')
+param([Parameter(Mandatory)][string]$Jobs, [string]$Gate3 = 'Data/Regions/bialystok-industrial-c/buildings_r10_cameras.json', [string]$Mask)
 $ErrorActionPreference = 'Stop'
 $repo = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..'))
 Set-Location $repo
@@ -12,6 +12,7 @@ $spec | ConvertTo-Json -Depth 10 | Set-Content $resolved -Encoding utf8
 $log = [IO.Path]::ChangeExtension($jobPath, ".$(Get-Timestamp).log")
 $unityArguments = @('-executeMethod', 'Game.Rendering.Editor.LightQaBatch.Run', '-lightQaJobs', $resolved)
 if ($Gate3) { $unityArguments += @('-qaGate3', [IO.Path]::GetFullPath($Gate3, $repo)) }
+if ($Mask) { $unityArguments += @('-qaMask', $Mask) }
 & pwsh $slot -Acquire -Owner gpt-light
 if ($LASTEXITCODE -ne 0) { throw 'Nie uzyskano slotu Unity' }
 git diff --quiet HEAD -- game/Assets/_Project/Rendering/Settings game/ProjectSettings
@@ -34,12 +35,24 @@ try {
             if ($ids.Count -ne $files.Count) { $complete = $false }
             foreach ($id in $ids) { if ($files.Name -notcontains "$id.png") { $complete = $false } }
         }
+        if ($Mask) {
+            $masks = @(Get-ChildItem -LiteralPath $job.output -Filter '*_mask.png' -ErrorAction SilentlyContinue |
+                Where-Object { $_.LastWriteTime -ge $runStart -and $_.Length -gt 0 })
+            if ($masks.Count -ne $files.Count) { $complete = $false }
+            foreach ($file in $files) { if ($masks.Name -notcontains ($file.BaseName + '_mask.png')) { $complete = $false } }
+        }
     }
     if ($result) {
         $match = [regex]::Match($result.Line, 'jobs=(\d+) rendered=(\d+)')
         $complete = $complete -and [int]$match.Groups[1].Value -eq $spec.jobs.Count -and [int]$match.Groups[2].Value -eq $fresh.Count
     }
     # Same narrowly evidenced shutdown exceptions as scripts/visual-qa.ps1 (ADR 0051 / 0083).
+    if ($Mask) {
+        $maskLines = @(Select-String -Path $log -SimpleMatch "[VISUALQA] mask '$Mask':")
+        if ($maskLines.Count -ne $fresh.Count -or @($maskLines | Where-Object { $_.Line -notmatch ': [1-9]\d* slots on [1-9]\d* renderers' }).Count) {
+            $complete = $false
+        }
+    }
     $knownD3D = $code -eq -1073741819 -and (Select-String -Path $log -SimpleMatch -Pattern 'D3D12PipelineCacheLibrary::SaveCache' -Quiet)
     $knownMono = $false
     if ($result) {
