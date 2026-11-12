@@ -1,6 +1,6 @@
 # ADR 0140 — SBS poses r2: re-resection against the 14 m Andersa portal, PARTIAL diagnosis, one-command Low pairs
 
-Status: implemented on branch `sbs-poses-r2` (base main `76c88d4f`, 2026-11-12, s13); not merged. Data + tool only:
+Status: implemented on branch `sbs-poses-r2` (base main `76c88d4f`, merged main `b596efe9`, 2026-11-12, s13); not merged. Data + tool only:
 no world geometry, no C#. Gate 3 is not re-judged here (visual-critic).
 Source: `docs/reports/visual/REVIEW-2026-11-12-s13-0127.md` P1-2 (poses resected from a 16 m portal stand too far),
 ADR 0127 (portal span 16 -> 14 m, `columns_en`), ADR 0130 (method), GPT backlog "SBS r4" (P2 pitch 150280).
@@ -65,3 +65,34 @@ the photo has it right of the camera as production does).
 | 3678296 grobin 2019 | minor: horizon 0.585 -> 0.559 (near-road VP photo 384 px vs render 403 px of 720; VP x within 6 px) | HV tower seen end-on (arms along the view axis, ADR 0127 open point: BDOT10k line direction vs photo broadside); two signal heads in the frame centre that the photo does not have; left treeline sparse |
 | 494288 szurek 2017 | none: horizon (photo VP ~0.70-0.71 vs render 0.70) and screen post run agree | lamp row on the right kerb (photo: in the median, ADR 0130); deck curve tighter; screen milky/lined instead of clear PMMA (review P1-1); tube railing + concrete parapet instead of a guardrail |
 | 1801374 gpsmapper 2019 | uncertain: horizon agrees (0.555 vs 0.565); render camera hugs the left edge line (left kerb leaves the frame at the bottom, x 0.31) while on the photo the left kerb leaves at the left edge, y 0.80 (camera several m from it); probes l1-l3 test 1-2.5 m right / lower eye | left: opposite carriageway is followed by a tall dark screen + houses in the render, a low mesh fence + billboard on the photo; the opposite carriageway reads ~2x farther on the photo (median width / its far geometry: check on the orthophoto); right: paved sidewalk/service strip between kerb and screen on the photo, grass verge in the render |
+
+## Tool: one command for the Low SBS set
+
+`pwsh scripts/sbs-low-pairs.ps1 [-Before <older OutputRoot>] [-OutputRoot artifacts/sbs-low/<sha>] [-SlotOwner <o>]`:
+preflight (`tools/refs/sbs_pairs.py preflight`: derived chunk sizes vs the committed `world_manifest.json`,
+`overrides.yaml` hash vs the manifest sources, Unity `Instances.asset` not older than the GLBs) -> `sbs-gate3.ps1
+-RenderOnly -Tiers Low` once per lighting (overcast, clear; slot + PHONE_RUN + capture hashes + side-effect restore
+inside) -> attributed photo | render pairs, 960 px (with `-Before`: photo | before over photo | after) in
+`<OutputRoot>/pairs/Low-<light>/`, exit 1 if any of the 42 cameras has no pair. `-SkipRender` re-composes,
+`-SkipPreflight` only for a deliberate historical render. Test: `tests/gis/test_sbs_pairs.py`.
+After `git merge main` (b596efe9) the preflight reports main itself as stale: main's `overrides.yaml` changed
+(frontage merge) without a regenerated world -> regenerate + import before the integration SBS render.
+
+## Validation
+
+- Full Low set rendered with the tool on this branch before the merge (e3a25c28 data, world = main a6cfe38):
+  `artifacts/sbs-poses-r2/after/{renders,pairs}/Low-{overcast,clear}` (42 + 42, pairs photo | before | after,
+  before = g3b-lowread final renders, same world). The first run exposed the `pwsh -File` array flattening (only
+  overcast rendered); fixed, clear re-run.
+- `pytest tests/gis/test_sbs_gate3.py test_sbs_pairs.py test_sbs_photometry.py test_sbs_report.py tests/gate3`
+  (heavy slot, after merge main): 113 passed.
+- Author's look (D51 not re-graded; visual-critic + `sbs_recognition.json` re-grade required): 275528 portal size and
+  column positions now as on the photo; 3281350 / 297817 portal slightly larger, as measured; 837235 lane geometry,
+  gore line and left white block as on the photo, but the chevron (its main mark) is gone until the sign is placed at
+  its orthophoto position; 150280 / 3678296 horizon now at the photo's vanishing point.
+
+## Consequences / open
+
+- World follow-ups above (chevron snap, warning-triangle station, 2017 portal height; 494288 lamps / screen / railing;
+  1801374 cross-section and left side; 3678296 tower orientation, signal heads).
+- `sbs_recognition.json` not touched: re-grade after the integration render on a regenerated main.
