@@ -20,7 +20,19 @@
 - **11:52:** batch C (`REVIEW-2026-11-12-s12-gpt-batch-c.md`) SCALONE: edge r4, light r3 (klin nieba usunięty), cab r3 (LICENSES dedup, bez zdjęcia z logo), life r3, furniture r2 (unia `materials.py` 0118+0119+0120, LICENSES bez BOM) → `1f95455e`. `run-c` (SBS + APK) zatrzymany przed startem (czekał na heavy) → zastąpiony `artifacts/integration-s12/run-d.ps1` (log `run-d.log`): regen d → commit generated → import → testy → vqa-d → SBS Low (`sbs-d/`) → czysty APK Low. Brudne `artifacts/furniture-r1`, `firestation-r10` z main zbackupowane (`scratchpad/main-dirty-1200`) i cofnięte. 0123/0124 w kolejce FIFO heavy.
 - **12:42 trigger:** 5 h 24 % (reset 14:10), tydzień 21 %, Fable 31 %. Integracja d: regen 775 passed, generated `333c7ca3`, import, truck, EditMode 366/366, PlayMode 110/0/7, vqa-d Low/High OK; SBS Low-overcast wyrenderowany (`artifacts/integration-s12/sbs-d/renders/Low-overcast`), dalej czeka w kolejce FIFO heavy (3 przed nim) → Low-clear (klin 2948/303305) → czysty APK. FIFO działa: 0124 i 0126 dostały heavy; 0123 → `b5_all.sh` (12:22), 0124 świat r2c zbudowany (12:18), 0126 w cyklu. Krytyk batch D (sbs r3 — pozy G3-B, landmarks r3, asphalt r2, light r4) w toku.
 - **12:43:** **0126 GOTOWE** `g3b-frontage` `c8ede8fc` (build 3: flagi 167°, maszt kratowy grubszy; pytest gis 626/1 fail stale fidelity→po fidelity 18/18; EditMode 317/317; draws G3-B −30…+11, mediana 0; pary `artifacts/g3b-frontage/pairs-after`, `pairs-2024`) → krytyk po batch D. Otwarte z 0126: kominy EC za pierzeją, szkło czarne na Low-overcast, zdjęcia 2017/2020 vs stan 2024. **Start 0127 (Fable) czytelność G3-B na Low** (LOD bramownicy, słup WN, ekrany): worktree `.claude/worktrees/g3b-lowread`, gałąź `g3b-lowread`, STATUS `artifacts/g3b-lowread/STATUS.md`. Agenci: 0123, 0124, 0127 (3/3) + krytyk D.
-- Ostatni przydzielony ADR: 0127.
+- **13:13:** **Właściciel: do 10 agentów (5 Fable + 5 Opus), nie oszczędzać limitu — gdy konto się skończy, przeniesie pracę na inne konto (kontynuacja z tego HANDOVER).** Scalone: GPT batch D (sbs r3, light r4 [LP_Night unia], landmarks r3 [LICENSES unia], asphalt r2 [materials.py unia, bez 29 MB geometry/PCRT]) + **0126 pierzeja** + **0124 zabudowa r2** (`buildings_mesh.py` unia: strażnik LOD1 pierzei + otwory LOD1 domów) + **awans póz SBS G3-B 275528-04 i 837235-12** (`5e3552a2`; lider przejął od GPT). Klin far-field w g3-a 2948/303305 na main Low-clear: **NIE widać** (warunek light r1 spełniony). `run-d` zatrzymany (SBS compose czekał na heavy), zastąpiony **`artifacts/integration-s12/run-e.ps1`** (log `run-e.log`: regen e → generated → import → testy → vqa-e → SBS Low render-only `sbs-e/` → czysty APK Low). Recenzje: `REVIEW-2026-11-12-s12-{gpt-batch-d,0126,0124}.md`.
+- **Agenci (8):**
+| zadanie | ADR | model | worktree / gałąź | STATUS |
+|---|---|---|---|---|
+| węzły r6 bariery b5 | 0123 | Fable | `junctions-r6` | `artifacts/junctions-r6/STATUS.md` |
+| czytelność G3-B Low (LOD bramownicy, słup WN, ekrany) | 0127 | Fable | `g3b-lowread` | `artifacts/g3b-lowread/STATUS.md` |
+| wysepka + D-3/D-6 ronda Bieżeństwa (od `junctions-r6`!) | 0128 | Fable | `biezenstwa-island` | `artifacts/biezenstwa-island/STATUS.md` |
+| pierzeja r2 (P1/P2 z 0126) | 0129 | Fable | `frontage-r2` | `artifacts/frontage-r2/STATUS.md` |
+| pozy SBS G3-B pozostałe (297817, 3281350, 1801374, 494288) | 0130 | Opus | `sbs-poses` | `artifacts/sbs-poses/STATUS.md` |
+| P1 render: biała zalewka rys, czarna elipsa Putry, warianty FurnitureSign, GC FurnitureRetroSource | 0131 | Opus | `render-p1` | `artifacts/render-p1/STATUS.md` |
+| zabudowa r9 (wysoka zieleń, żywopłot, wiata, jabłonie) | 0132 | Fable | `buildings-r9` | `artifacts/buildings-r9/STATUS.md` |
+| pomiar gate3 A16 Low A+B po czystym APK z run-e (jedyny agent telefonowy) | — | Opus build-qa | main (tylko odczyt) | `artifacts/gate3-a16-s12/REPORT-DATA.md` |
+- Kolejność scalania: 0123 → 0128 (bazuje na junctions-r6) ; reszta niezależnie. Ostatni przydzielony ADR: 0132.
 
 ---
 # HANDOVER — kamion, ZAMKNIĘCIE sesji 11 (2026-11-12 09:10) → start s12 na koncie z czystym limitem
