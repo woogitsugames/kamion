@@ -1,0 +1,15 @@
+{
+  "recorded_at": "2026-11-12T16:10:03.8786510+01:00",
+  "reviewed_commit": "c485d5635b061aac5817b83a9a5f9099de15eaba",
+  "audit_code_sha256": "1653cedbc3bfd0debf2e0ee0518de90c0673b842ecf013bfb758892ce6d8161f",
+  "reviewer": "sbs_visual_review",
+  "scope": "Additional 75-state review binding and exact four-entry archive roster",
+  "verdict": "SCOPED_CODE_REVIEW_PASS",
+  "blocker": "Closed: audit now requires four exact archive names, current file hashes and archive-to-manifest verification",
+  "not_executed": [
+    "full audit",
+    "pytest",
+    "Unity"
+  ],
+  "note": "Code review only. Does not confer execution PASS, world fidelity or D51."
+}
