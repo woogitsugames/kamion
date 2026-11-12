@@ -64,3 +64,4 @@ Obejrzano legend2x-Low-overcast-left-ROI-960.png: atlas 512 praktycznie identycz
 Zakończono Game.Editor.Setup.TruckAssetBuilder.BuildBatch, exit 0. Następny krok: kolejny etap prefab/sceny lub capture-0112 -Stage result-0112.
 Zakończono Game.World.Import.WorldTruckInstaller.InstallBatch, exit 0. Następny krok: kolejny etap prefab/sceny lub capture-0112 -Stage result-0112.
 Uogólniono mały odczyt ROI do porównania tych samych 240×200 pikseli dla kolejnego wariantu, bez pełnej obróbki macierzy. Przebudowa legendbias trwa jako jedyna własna sekwencja Unity, uchwyt 21376, PID 55016. MaterialPrep nadal czeka w istniejącej kolejce, bez nowego uruchomienia.
+Zapisano izolowany atlas legend 256 z bias -0.75 Low clear: cab-driver/cab-dash. Plastic/Leather bez zmian. To eksperyment czytelności, nie pełny gate budżetów.
