@@ -4,7 +4,9 @@ using System.Text;
 using Game.Cameras;
 using Game.Controls;
 using Game.Telemetry;
+using Game.UI.CabDisplays;
 using Game.UI.Layout;
+using TMPro;
 using Game.Vehicle.Physics;
 using Game.Vehicle.Runtime;
 using UnityEngine;
@@ -118,7 +120,11 @@ namespace Game.UI.Driving
         CanvasGroup m_ParkWarnGroup;
         ParkingBrakeWarningTracker m_ParkWarnTracker;
         float m_LastParkWarnAlpha = -1f;
-        Text m_Speed, m_Gear, m_Rpm, m_Park, m_Status, m_Telemetry, m_GyroLabel;
+        Text m_Speed, m_Gear, m_Rpm, m_Park, m_Status, m_Telemetry;
+        TextMeshProUGUI m_GyroLabel;
+        readonly TextBuffer m_GyroBuf = new TextBuffer(64);
+        long m_LastGyroTenth = long.MinValue;
+        bool m_LastGyroSensor = true;
         Text m_CamLabel, m_SteerLabel, m_TelLabel, m_RecLabel;
         Image m_RpmBar, m_RecImage, m_DriveBtn, m_NeutralBtn, m_ReverseBtn, m_ParkBtn, m_ManualBtn;
         int m_LastSpeed = int.MinValue, m_LastRpmBucket = int.MinValue;
@@ -364,7 +370,7 @@ namespace Game.UI.Driving
         {
             var p = ZonePanel("Gyro", HudLayout.GyroSize);
             m_GyroRt = p;
-            m_GyroLabel = Label(p, "Tilt", "Gyro", Font, TextAnchor.MiddleCenter, new Vector2(10f, 120f), new Vector2(380f, 100f));
+            m_GyroLabel = TmpLabel(p, "Tilt", "Gyro", Font, TextAlignmentOptions.Center, new Vector2(10f, 120f), new Vector2(380f, 100f));
             Button(p, "Calibrate", Vector2.zero, new Vector2(20f, 18f), new Vector2(360f, 88f), 26, () => m_Ctx.Gyro?.Calibrate(), out _).text = "Kalibruj (trzymaj prosto)";
             m_GyroGo = p.gameObject;
             m_GyroGo.SetActive(false);
@@ -750,7 +756,24 @@ namespace Game.UI.Driving
             m_ParkBtn.color = park ? k_ParkOn : k_Button;
             if (DevDiagnostics && m_Ctx.StatusLine != null) { var s = m_Ctx.StatusLine(); if (!ReferenceEquals(s, m_Status.text)) m_Status.text = s ?? ""; }
             if (gyro && m_Ctx.Gyro != null && Time.unscaledTime >= m_NextTelemetry)
-                m_GyroLabel.text = "Gyro: " + m_Ctx.Gyro.RelativeTiltDeg.ToString("F1", CultureInfo.InvariantCulture) + "°" + (m_Ctx.Gyro.HasSensor ? "" : "  (brak czujnika)");
+            {
+                var g = m_Ctx.Gyro;
+                double tilt = g.RelativeTiltDeg;
+                // Update only when the displayed (rounded to 0.1) value or the sensor suffix changes; format into the reused buffer: no string allocation.
+                long tenth = (long)Math.Round(tilt * 10.0, MidpointRounding.AwayFromZero);
+                bool sensor = g.HasSensor;
+                if (tenth != m_LastGyroTenth || sensor != m_LastGyroSensor)
+                {
+                    m_LastGyroTenth = tenth; m_LastGyroSensor = sensor;
+                    var b = m_GyroBuf; b.Clear();
+                    b.Append("Gyro: ");
+                    if (tilt < 0) b.Append('-');
+                    b.AppendFixed(Math.Abs(tilt), 1, false, '.');
+                    b.Append('°');
+                    if (!sensor) b.Append("  (brak czujnika)");
+                    m_GyroLabel.SetCharArray(b.Chars, 0, b.Length);
+                }
+            }
             if (TelemetryVisible && Time.unscaledTime >= m_NextTelemetry)
             {
                 m_NextTelemetry = Time.unscaledTime + 0.2f;
@@ -988,6 +1011,22 @@ namespace Game.UI.Driving
             t.text = text;
             t.horizontalOverflow = HorizontalWrapMode.Overflow;
             t.verticalOverflow = VerticalWrapMode.Overflow;
+            t.raycastTarget = false;
+            return t;
+        }
+
+        /// <summary>TMP label (SetCharArray / numeric SetText — zero GC) with the same Inter typeface as <see cref="Label"/>.</summary>
+        TextMeshProUGUI TmpLabel(Transform parent, string name, string text, int size, TextAlignmentOptions align, Vector2 bottomLeft, Vector2 box)
+        {
+            var rt = Rect(name, parent);
+            Place(rt, Vector2.zero, bottomLeft, box);
+            var t = rt.gameObject.AddComponent<TextMeshProUGUI>();
+            t.font = UiFonts.DefaultTmp;
+            t.fontSize = size;
+            t.color = k_Text;
+            t.alignment = align;
+            t.text = text;
+            t.overflowMode = TextOverflowModes.Overflow;
             t.raycastTarget = false;
             return t;
         }
