@@ -15,3 +15,10 @@ Gałąź `edge-r6c`, worktree `.claude/worktrees/edge-r6c`, baza main 76c88d4fd.
 - WorldEdgeBuilder.BuildFarField: renderer `WorldEdge/FarSkyline` (bounds = cały kafel). Zapory (grupy, 2 materiały, U-20b + B-1) — patch jeszcze NIE zastosowany.
 - Baseline (run-vqa.ps1 -Name baseline) czeka w kolejce Unity (PHONE_RUN).
 - NASTĘPNY KROK: zastosować patch zapór w WorldEdgeBuilder.cs, potem `pwsh scripts/unity-slot.ps1 -Acquire -Owner claude-edge-r6c; Unity -executeMethod Game.World.Import.WorldEdgeBuilder.RebuildEdgeBatch; pwsh artifacts/edge-r6c/run-vqa.ps1 -Name after`.
+
+## 2026-11-12 ~18:15 — pierwszy After, poprawka głębi
+- RebuildEdge OK: 36 zapór w 6 grupach renderu (8588 tris), far-field Low 24548 / High 118588. EditMode 405/407 (2 porażki CarPaintMaterialTests — cudza domena, te same w logach a16-perf); 4 nowe testy WorldEdgeClosureSkylineTests zaliczone. pytest tests/gis/test_far_field*.py 55 passed.
+- Budżet Low (120 kamer, pierwszy After): draws mediana -13, min -51, max +3; shadow suma 0; trisK suma +116 z 33055 (+0,35 %).
+- Skyline nie był widoczny za far plane: skybox Unity rysuje ~1e-6 NDC przed far, moje 3–6 m = 3,7e-7. Poprawka: 40..30 m + minimum 4e-6 NDC (dbg1 potwierdził kominy EC w 297817).
+- W tle: `pwsh artifacts/edge-r6c/run-vqa.ps1 -Name after` (log after2.log).
+- NASTĘPNY KROK: `bash artifacts/edge-r6c/make-pairs.sh Low-clear; bash artifacts/edge-r6c/make-pairs.sh Low-overcast; python artifacts/edge-r6c/stats-diff.py baseline after Low-clear`, potem `git merge main` (generated --ours) + build_world (-Pool heavy) + import-region + rendery + pytest gis+gate3 + ADR 0141.
