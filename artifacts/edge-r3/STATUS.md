@@ -54,3 +54,4 @@ Krok 19: przed dalszą regeneracją zachowano także oba źródłowe GLB far-fie
 Następny krok po pełnym After: uruchomić audyt kurtyn pod heavy razem z pozostałymi odczytami siatki, przed końcowym GIS. Nadal czeka build_world po zmianie.
 Krok 20: zamrożono 25 zaakceptowanych fotografii B w reference-photos, każdą po kontroli przypiętego SHA; atrybucja i źródło w reference-photos.json. Compare r3 użyje tych niezmiennych plików zamiast podatnego na aktualizacje katalogu sbs main. Bez zmiany obrazu, klasy pozy i kalibracji.
 Następny krok: koniec build_world po poprawce → After; potem odczyty geometrii i porównania pod heavy, EditMode oraz końcowy GIS.
+Krok 18: build_world po poprawce zakończony kodem 0 bez fallback=True; wynik w build-world-after.log. Następna komenda: validate.ps1 -Phase After pod Unity.
