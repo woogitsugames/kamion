@@ -116,7 +116,20 @@ Run on the branch after `git merge main` (`611f116c9`, no conflicts) and a full 
    measurement. There is no canopy height source in the pipeline (no NMPT / lidar DSM in `Data/raw/gugik`), so the
    data cannot be called wrong or right here; lowering the trees to fit one photo would be a guess. Open: ingest
    GUGiK NMPT and derive forest heights from NMPT - NMT (separate task).
-@@R6D@@
+
+Validation r6d (branch from main `ca0bc16e0`; `RebuildEdgeBatch` on the scene imported for this ADR, no reimport):
+
+- Rebuild log, both tiers: 36 closures, 34 visible after merging overlaps, 6 render groups, 8060 tris (was 8588).
+  Render groups, materials and colliders unchanged, so draws are unchanged.
+- EditMode: 423 total, 423 passed, 0 failed (`artifacts/edge-r6c/editmode-r6d.log`).
+- `pytest tests/gis`: 886 passed, 1 xfailed, 1 failed = `test_road_fidelity::test_report_not_stale`. The report on
+  main is stale for `tools/worldgen/roads/*.py` (import clean-up merged to main); this branch changes no Python and
+  no data. Needs `tools/worldgen/fidelity/run.py` on main (integration).
+- Renders Low clear + overcast, before = `merged`, after = `r6d` (`artifacts/edge-r6c/crops/r6d-*.png|jpg`):
+  `edge-west` one B-1 per carriageway, no overlapping board rows; the white fields are clearly lighter than the
+  concrete in overcast and on sunlit boards (`edge-north`); in `edge-west` clear the boards are still in their own
+  shade and read light grey, lighter than before - that is lighting, not albedo. 297817: stacks unchanged
+  (full-frame RMSE 0.0002 against `merged`).
 
 ## Risks / open
 
