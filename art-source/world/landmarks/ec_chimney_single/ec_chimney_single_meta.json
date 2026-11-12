@@ -1,24 +1,22 @@
 {
   "prototype": "landmark_ec_chimney_single",
-  "spec_sha256": "f542852787d2e01e61236190036d2b0be841e44560b46f7aaa6284b8e7b52629",
-  "glb_sha256": "271cefa4056c16f5dffd830e2b77861f792fd3c99400cceeee80eef881b9c335",
+  "spec_sha256": "d09a492571ac9d069a13c0bfaa032d9455b01a1ed0faef583c9d32240c540b5a",
+  "glb_sha256": "29a5c41c2a3d7b99bf68e02d00bbd902c33ac1b2ad465712a3e8e40fd3f3ef6b",
   "tris": [
-    1820,
-    300,
-    300
+    676,
+    292,
+    292
   ],
   "materials": [
     "chimney_concrete",
     "chimney_red",
-    "chimney_white",
-    "gantry_steel"
+    "chimney_white"
   ],
   "materials_per_lod": [
     [
       "chimney_concrete",
       "chimney_red",
-      "chimney_white",
-      "gantry_steel"
+      "chimney_white"
     ],
     [
       "chimney_concrete",
@@ -33,6 +31,7 @@
     "multi_diameters": "8.27m base from OSM outline area, interpretation uncertain; 8.27m top is WORKING_VALUE near photographic resection, not a survey",
     "bands": "WORKING_VALUE 12m spacing, different lower limits 36m/60m; photographic resection with known 120m and technical single-flue diameter, pose/intrinsics and outlet-height ambiguity remain",
     "heads": "One outlet versus three outlets and distinct gallery patterns visible on Rakoon 2020 photo; detailed head dimensions/azimuth WORKING_VALUE",
-    "materials": "Existing shared chimney materials, no measured reflectance or new shader path"
+    "materials": "Existing shared chimney materials, three on both LODs; pale galleries reuse chimney_white. No measured reflectance or new shader path",
+    "lower_body": "Long white lower body supported by open Hiuppo 2007 photo; its old checkerboard marking is not applied to the 2020 reference epoch"
   }
 }
