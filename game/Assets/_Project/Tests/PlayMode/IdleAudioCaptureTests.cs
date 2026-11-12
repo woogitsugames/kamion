@@ -76,6 +76,8 @@ namespace Game.Tests
             m_Trailer.SetPose(tp, tq);
             Physics.SyncTransforms();
             m_Body.Model.InitParking(false);
+            // owner's HUD: 11.1 / 11.4 bar, i.e. just above cut-in (11.0) and charging -> the air compressor is loaded
+            m_Body.Model.Air.Charge(10.9);
             m_Body.Input = new DriverInput { Selector = GearSelector.Drive };
             var audio = m_Body.gameObject.AddComponent<TruckAudioController>();
             audio.vehicle = m_Body;
@@ -112,13 +114,17 @@ namespace Game.Tests
             yield return null;
             if (!audio.HasAudio) Assert.Ignore("VehicleAudioLibrary not generated");
             yield return null;
-            var sources = m_Body.GetComponentsInChildren<AudioSource>(true);
+            var sources = Object.FindObjectsByType<AudioSource>(FindObjectsInactive.Include, FindObjectsSortMode.None);
             var sb = new StringBuilder(1 << 20);
             var ci = CultureInfo.InvariantCulture;
             sb.Append("# sources");
-            for (int s = 0; s < sources.Length; s++) sb.Append(';').Append(sources[s].gameObject.name);
+            for (int s = 0; s < sources.Length; s++)
+            {
+                var tr = sources[s].transform;
+                sb.Append(';').Append(tr.parent != null ? tr.parent.name + "/" : "").Append(tr.name);
+            }
             sb.Append('\n');
-            sb.Append("t;phase;rpm;load;throttle;ebrake;boost;gear;kmh;src:clip|vol|pitch|playing|timeSamples|spatial...\n");
+            sb.Append("t;phase;rpm;load;throttle;ebrake;boost;gear;kmh;airSupply|compressorLoaded;src:clip|vol|pitch|playing|timeSamples|spatial...\n");
 
             float coastRpmMax = 0f, coastRpmMin = 1e9f, coastLoadMax = 0f;
             int frames = 0;
@@ -146,7 +152,8 @@ namespace Game.Tests
                   .Append(((float)e.EngineBrakeState).ToString("F3", ci)).Append(';')
                   .Append(((float)e.Boost).ToString("F3", ci)).Append(';')
                   .Append(m_Body.Model.Amt.Gear).Append(';')
-                  .Append(((float)m_Body.Model.SpeedForward * 3.6f).ToString("F2", ci));
+                  .Append(((float)m_Body.Model.SpeedForward * 3.6f).ToString("F2", ci)).Append(';')
+                  .Append(((float)m_Body.Model.Air.Supply).ToString("F2", ci)).Append('|').Append(m_Body.Model.Air.CompressorLoaded ? '1' : '0');
                 for (int s = 0; s < sources.Length; s++)
                 {
                     var a = sources[s];
