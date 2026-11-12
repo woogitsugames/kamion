@@ -125,3 +125,5 @@ NASTĘPNY KROK: przygotować własne skrypty r2 z ownerem heavy gpt-furniture-r2
 2026-11-12T09:12:01.2235844+01:00: dokładny licznik CPU after Low overcast; sukces=True, slot Unity zwolniony. NASTĘPNY KROK: pozostałe warianty i porównanie przed/po, bez deklaracji czasu GPU.
 
 2026-11-12T09:12:37.1135472+01:00: dokładny licznik CPU after Low dusk; sukces=True, slot Unity zwolniony. NASTĘPNY KROK: pozostałe warianty i porównanie przed/po, bez deklaracji czasu GPU.
+
+2026-11-12T09:12:37.8482646+01:00: komplet standardowych obrazów po zmianie i dokładne liczniki Low zapisane. NASTĘPNY KROK: odczytać wszystkie delty, kontrolowany night-rig Low/High i arkusze porównawcze w heavy; geometrię raportować osobno według jej wyniku.
