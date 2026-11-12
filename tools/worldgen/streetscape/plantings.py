@@ -477,6 +477,13 @@ def build(buf, overrides, origin, roads_poly, road_parts, zground, deck_mask_at,
             z += dz
             if fill != "paving":            # a mounded centre island: the bed follows the terrain where it is higher
                 z = np.maximum(z, zground(P2[:, 0], P2[:, 1]) + 0.05)
+            # ADR 0123 (D51 B7): authored mound - the bed rises behind a flat rim (kerb + barrier strip), e.g. the
+            # crushed-stone embankment around the piers of Rondo Biezenstwa. `mound: {setback_m, slope, max_m}`.
+            mound = isl.get("mound")
+            if mound and fill != "paving":
+                dk = np.sqrt(d2.min(axis=1))
+                z += np.clip((dk - float(mound.get("setback_m", 1.5))) * float(mound.get("slope", 0.2)),
+                             0.0, float(mound.get("max_m", 0.6)))
             # stones (ADR 0060) / gravel: light crushed-stone bed under the viaduct (ADR 0067)
             mat = {"paving": "sidewalk_paving", "stones": "bed_stones", "gravel": "island_gravel"}.get(fill, "bed_soil")
             V = np.column_stack([P2, z])

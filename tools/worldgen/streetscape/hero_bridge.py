@@ -173,7 +173,24 @@ def build_spec(w, o, zground, blocked) -> dict | None:
         shifts += [k, -k]
         k += 2.0
     lines, skipped = [], 0
-    for i in range(1, nsp):
+    # ADR 0123 (REVIEW s10-0117 P1-5): `pier_lines_en` of the override = measured pier rows (a point of each row on
+    # or near the lead deck, read off photos / the orthophoto) instead of the span rule; no keep-out search - a
+    # measured row stands where it stands (decks on their ramp walls at that station get no columns, as below)
+    fixed = prm.get("pier_lines_en")
+    for q_ in (fixed or []):
+        sl = on(lead, q_)
+        pl_ = np.asarray(lead.line.point(sl), float)
+        per = {}
+        for c in chains:
+            sc = sl if c is lead else on(c, pl_)
+            oc = opens[c.id]
+            per[c.id] = None if (oc is None or not (oc[0] + 3.0 < sc < oc[1] - 3.0)) else (sc, cols_at(c, sc))
+        if any(v is not None for v in per.values()):
+            lines.append({"s_lead": sl, "per": per})
+        else:
+            skipped += 1
+    lines.sort(key=lambda ln: ln["s_lead"])
+    for i in (range(1, nsp) if not fixed else ()):
         s0 = lop[0] + span * i / nsp
         for sh in shifts:
             sl = s0 + sh
