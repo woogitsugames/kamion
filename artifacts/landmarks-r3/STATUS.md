@@ -75,3 +75,5 @@ Krok 15: jednostki podpomostu i EC wykonane kolejno, osobne pliki i logi artifac
 Krok 16: generator korekty i dwa osobno wykonane pliki testów EC/podpomostu zakończone; brak fallback=True. Następny krok: import i pełny zestaw czterech warunków after-corrected, bez zmiany kamer baseline.
 
 Krok 17: audyt poprawionego wariantu gotowy. 7283 niepodpomostowe prymitywy zachowane bajtowo we wszystkich128 plikach; roads_qa i125468 nie-EC instancji identyczne. Zmiana definicji materiałów ograniczona do color pier_yellow. Osobny audit_piers.py potwierdza baseline spec przez jego SHA z zachowanego QA; pomosty/decks i brak schodów zachowane, plamy/fazy wyłączone, weather zostaje. EC LOD0 676/636, LOD1 292/274; końcowy budżet kamer nadal do oceny po renderze.
+
+Krok 17a: ADR0119 ma osobną sekcję r3 z korektą P1/P2 i zmierzonym -16 tris bez deklaracji wyniku nieobejrzanych PNG. Kontrola cache przed/po końcowymi testami obejmie także config i test podpomostu oraz hero_bridge.py, poza wszystkimi źródłami/assetami EC.

@@ -89,3 +89,26 @@ Nie ma pomiaru GPU A16 ani niezależnej akceptacji bramki 3. Poza fotografii,
 wymiary konstrukcyjne, rozbieżne ekrany, spód i wygląd oczepów pozostają otwarte.
 Nie zmieniono dróg, kapy, ekranów, barier, shaderów ani QualityProfile. World Surface
 i World PBR mają ten sam zestaw UniversalForward / ShadowCaster / DepthOnly.
+
+## r3 — korekta po niezależnej recenzji s12 (w trakcie walidacji)
+
+Recenzja `REVIEW-2026-11-12-s12-gpt-batch-a.md`, sekcja2, odrzuciła interpretację
+szarych faz: na fotografii Commons7204 wszystkie płaszczyzny mają tę samą
+musztardową farbę. W konfiguracji wyłączono unpainted_chamfers, przywrócono
+roboczy pigment liniowy[0.46,0.40,0.17] sprzed zbrązowienia r2 i wyłączono
+paint_blobs. Właśnie ta ostatnia flaga emitowała niepotwierdzony ukośny quad
+:paint_WORKING_VALUE; jego zniknięcie z obrazu trzeba sprawdzić na parze PNG.
+Miękkie zacieki i tekstura stopy pozostają. Rura collector/downpipe była już
+w generatorze; nie dodaje się drugiej bez pomiaru jej położenia na zdjęciu.
+
+Generator korekty:472,9s, bez fallback=True. Celowany plik podpomostu15/15 PASS.
+Audyt zachowanego baseline spec przez SHA z QA potwierdza identyczne decks
+oraz hashe V/T/UV obu pomostów. Nadal brak schodów; brak nowych materiałów.
+Usunięcie abstrakcyjnych plam zmniejsza netto geometrię o16 tris:1664→1654
+na pierwszym łańcuchu oraz1364→1358 na drugim.
+Wszystkie7283 prymitywy poza trzema dopuszczonymi grupami bridge/pier_yellow,
+bridge/bridge_soffit i bridge/bridge_concrete są identyczne bajtowo w128 GLB.
+Kolizja, teren, budynki i reszta materiałów pomostowych nie są wyłączone z kontroli.
+roads_qa i125468 instancji poza dwoma nowymi EC identyczne. To nie jest deklaracja
+identycznych pełnych chunków po zmianie materiału/koloru; pełne SHA zmieniają się.
+Budżety kamer, ocena PNG i pełne testy końca rundy pozostają do wykonania.
