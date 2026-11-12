@@ -1,7 +1,15 @@
 param([switch]$SkipGenerators,[switch]$SkipMaterials)
 $ErrorActionPreference = 'Stop'
 Set-Location (Resolve-Path "$PSScriptRoot/../..")
-$other = @(Get-CimInstance Win32_Process -Filter "Name='pwsh.exe'" | Where-Object { $_.ProcessId -ne $PID -and $_.CommandLine -match 'truck-r3[/\\]prepare-baseline\.ps1' })
+$snapshot = @(Get-CimInstance Win32_Process)
+$ancestors = [System.Collections.Generic.HashSet[int]]::new()
+$cursor = [int]$PID
+while ($cursor -gt 0 -and $ancestors.Add($cursor)) {
+    $parent = $snapshot | Where-Object ProcessId -eq $cursor | Select-Object -First 1
+    if (!$parent) { break }
+    $cursor = [int]$parent.ParentProcessId
+}
+$other = @($snapshot | Where-Object { $_.Name -eq 'pwsh.exe' -and !$ancestors.Contains([int]$_.ProcessId) -and $_.CommandLine -match 'truck-r3[/\\]prepare-baseline\.ps1' })
 if ($other.Count) { throw 'Poprzednia procedura nadal działa; nie wolno współdzielić jej Owner heavy.' }
 if ($SkipMaterials) {
     $materialLog=Get-Item artifacts/truck-r3/baseline-materials.log
