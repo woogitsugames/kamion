@@ -86,3 +86,5 @@ Zapisano kompletną niezależną ocenę baseline w REVIEW-D51-BASELINE.md: G3-A 
 2026-11-12T10:33:00.3547736+01:00: dodałem sekcję r3 do ADR 0111 z jawnym statusem trwającej walidacji. Wymienia wykonane dowody, brak awansu C, nową ocenę bazową, ograniczenie trendu i pozostałe testy. Nie oznacza zamknięcia rundy.
 
 2026-11-12T10:33:35.8799391+01:00: pojedynczy pytest tests/gis/test_sbs_report.py zakończony exit0, 34 passed in0.31s, heavy zwolniony. Następny task Audit (sesja75884) czeka na heavy. Po testach wprowadziłem wersjonowany rejestr ocen do Data/sbs_recognition.json i odbudowałem własny latest z trzech rund; historyczne wejścia renderów pozostały bez zmian. Wynik r3 FAIL13/11/1, brak akceptacji C.
+
+2026-11-12T10:33:55.7096293+01:00: własny latest porównałem strukturalnie z podglądem faktycznie sprawdzonym w przeglądarce. Jedynymi różnicami są czas generacji i niewyświetlana notatka rejestru; rundy, oceny par, trendy i werdykt identyczne. Zapisałem SHA latest i wynik równoważności, bez sugerowania ponownego renderu świata.
