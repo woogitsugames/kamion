@@ -42,3 +42,19 @@
 - NASTEPNY KROK: `Get-Content artifacts/buildings-r9/r2/round.log` (czekac na `CHAIN DONE`; jesli zginelo po `build_world exit 0`:
   `pwsh artifacts/buildings-r9/round.ps1 -Round r2 -SkipWorld`, potem pytest/fidelity/EditMode jak w `r2_chain.ps1`) ->
   `python artifacts/buildings-r9/budget2.py artifacts/buildings-r9/base/Low-overcast artifacts/buildings-r9/r2/Low-overcast`
+
+## krok 4 — stop na limit sesji (ok. 16:40); w tle dziala lancuch r2
+- Budzet r1 vs main (base = import main 14:03, Low overcast, 67 kamer): MR +8 (najg. +1; +1 submesh `chunk_2_5 buildings_lod1|plaster_white`
+  z ramek LOD1 - poprawione w 848ff8945), instancjonowane +52 (najg. `r10_shed_2` +19, `r10_house_2` +11), tris siatek +322 k
+  (najg. +34 k), tris instancji +10 k. Region Low: 3053 submeshy / 4,646 mln (main 3052 / 4,572).
+- W TLE (nie zabijac): `artifacts/buildings-r9/r2_chain.ps1 -Round r2` - czeka w kolejce slotu heavy na `build_world` r2
+  (kod 848ff8945: brama do naroznika, 4 gatunki x 1 wariant drzew, ramka LOD1 12 cm), potem import + rendery + fidelity +
+  pelny pytest gis + EditMode. Logi: `artifacts/buildings-r9/r2/round.log`, `r2.world.out`, `r2.round.out`, `r2/plan_dry.txt`,
+  `r2/{build_world,import,fidelity,pytest_gis,editmode}.log`.
+- Otwarte: obejrzec r2, budzet r2 vs base, pary render | Mapillary (`pairs.sh`), ADR 0132 sekcja Liczby + samokrytyka,
+  LICENSES (bez nowych zasobow; ortofoto GUGiK jako zrodlo pozycji), kopia dowodow do main `artifacts/buildings-r9/`, visual-critic.
+- NASTEPNY KROK: `Get-Content artifacts/buildings-r9/r2/round.log` (czekac na `CHAIN DONE`; jesli lancuch zginal:
+  przed `build_world exit 0` -> `pwsh artifacts/buildings-r9/r2_chain.ps1 -Round r2` (UWAGA: nadpisze `_Generated` kopia z main i
+  powtorzy baze; aby pominac baze uzyj `pwsh artifacts/buildings-r9/round.ps1 -Round r2`), po nim ->
+  `pwsh artifacts/buildings-r9/round.ps1 -Round r2 -SkipWorld`) ->
+  `python artifacts/buildings-r9/budget2.py artifacts/buildings-r9/base/Low-overcast artifacts/buildings-r9/r2/Low-overcast`
