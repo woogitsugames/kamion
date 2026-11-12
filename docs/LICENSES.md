@@ -265,3 +265,10 @@ Zdjęcia nie wchodzą do builda ani tekstur. Rejestr: [`docs/refs/posesje-bialys
 - Wikimedia Commons, 7 zdjęć: C01 Rakoon (CC0 1.0), C02-C05 i C07 Krzysztof Popławski (CC BY 4.0), C06 Jacek Fink-Finowicki (CC BY-SA 4.0). Licencje z extmetadata Commons w dniu pobrania; strony plików w rejestrze.
 - Odrzucone: `Wysoki stoczek 58 Bialystok.jpg` (wygląd jak zrzut z panoramy Google; usunięty z dysku i manifestu).
 - Google Maps/Street View/Earth/3D Tiles: nie użyte.
+
+## Niebo fotograficzne — ADR 0108, light r1
+- Zasób: Kloofendal 48d Partly Cloudy (Pure Sky), Poly Haven: https://polyhaven.com/a/kloofendal_48d_partly_cloudy_puresky
+- Autorzy: Greg Zaal (oryginał), Jarod Guest (edycja czystego nieba). Licencja CC0 1.0: https://polyhaven.com/license (sprawdzono 2026-11-11).
+- Oryginał 4K HDR poza gitem w Data/raw/cc0/sky/kloofendal_48d_partly_cloudy_puresky/; 20 674 857 B, MD5 816340c969d2e60d659051d13ac3c4dc, SHA256 3061c00a16ecae748e84fd6c44c04804f539c118bb66325db858bad87b11bf88.
+- Pochodna: game/Assets/_Project/Rendering/Resources/Sky/T_ClearClouds.png, R = fotograficzna maska chmur, G = względna luminancja; usunięto tarczę słońca, zachowano kształt i cienie chmur. Dokładne metadane i oś słońca: ClearCloudsSource.json. Reprodukcja: artifacts/light-r1/build-photo-clouds.py przez pulę heavy.
+- To tekstura nieba, nie zdjęcie referencyjne Białegostoku. Nie zawiera zabudowy ani oznaczeń; nie jest zasobem Fab/Megascans.

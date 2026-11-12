@@ -1,0 +1,23 @@
+{
+    "jobs":  [
+                 {
+                     "cameras":  "r10_hall_3,r10_hall_2,r10_block_3,stretch-05-docks",
+                     "width":  2340,
+                     "lighting":  "lowsun",
+                     "tier":  "High",
+                     "shadowFilter":  1,
+                     "height":  1080,
+                     "output":  "artifacts/light-r1/shadow-check/legacy",
+                     "scene":  "WorldC_High"
+                 },
+                 {
+                     "cameras":  "r10_hall_3,r10_hall_2,r10_block_3,stretch-05-docks",
+                     "lighting":  "lowsun",
+                     "output":  "artifacts/light-r1/shadow-check/policy",
+                     "width":  2340,
+                     "tier":  "High",
+                     "scene":  "WorldC_High",
+                     "height":  1080
+                 }
+             ]
+}
