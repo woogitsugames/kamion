@@ -267,5 +267,51 @@ namespace Game.Tests
                 Shader.SetGlobalTexture("_TruckLightState",lampTexture); Shader.SetGlobalFloat("_TruckLightNitsScale",lampScale);
             }
         }
+
+        [Test] public void AssemblyFlagCoversCurrentRoadFrontsWithoutOverridingAuthoredMaterials()
+        {
+            var importer = Type.GetType("Game.World.Import.WorldPbrMaterials, Game.World.Import.Editor", true);
+            var resultType = importer.Assembly.GetType("Game.World.Import.RegionImporter+Result", true);
+            const string dir = "Assets/_Generated/FurnitureSignFamilyTests";
+            string root = Path.GetDirectoryName(Application.dataPath);
+            Directory.CreateDirectory(Path.Combine(root,dir,"Textures"));
+            Directory.CreateDirectory(Path.Combine(root,dir,"Materials"));
+            AssetDatabase.Refresh();
+            var result = Activator.CreateInstance(resultType);
+            resultType.GetField("Dir").SetValue(result,dir);
+            var defs = (Dictionary<string,Dictionary<string,object>>)resultType.GetField("MaterialDefs").GetValue(result);
+            var materials = (Dictionary<string,Material>)resultType.GetField("Materials").GetValue(result);
+            var authored = new Dictionary<string,object>{{"test_owner","retained"}};
+            defs["sign_B-33_70"] = authored;
+            var def = new Dictionary<string,object> {
+                {"color",new List<object>{1.0,1.0,1.0}}, {"rough",.5},
+                {"furniture_sign_fronts",new Dictionary<string,object>{{"gain",800.0}}} };
+            var create = importer.GetMethod("Create",BindingFlags.Public|BindingFlags.Static);
+            Assert.IsNull(create.Invoke(null,new[]{result,(object)"plate_back",def,dir+"/M_back.mat"}));
+            string meta = File.ReadAllText(Path.GetFullPath(Path.Combine(root,"../art-source/world/props/props_meta.json")));
+            var expected = new HashSet<string>();
+            foreach (System.Text.RegularExpressions.Match match in System.Text.RegularExpressions.Regex.Matches(meta,"\"(sign_[A-Za-z0-9_-]+)\""))
+                if (!match.Groups[1].Value.StartsWith("sign_facade_",StringComparison.Ordinal)) expected.Add(match.Groups[1].Value);
+            Assert.Greater(expected.Count,10,"Fixture must include direction boards, not just a single plate");
+            Assert.AreEqual(expected.Count,defs.Count);
+            Assert.AreSame(authored,defs["sign_B-33_70"]);
+            Assert.IsFalse(materials.ContainsKey("sign_B-33_70"));
+            bool directionBoard = false;
+            foreach (string name in expected)
+            {
+                if (name=="sign_B-33_70") continue;
+                Assert.AreEqual(name.Substring(5),defs[name]["furniture_sign_face"]);
+                Assert.IsTrue(materials[name].IsKeywordEnabled(Keyword),name);
+                Assert.NotNull(materials[name].GetTexture("_BaseMap"),name);
+                directionBoard |= name.StartsWith("sign_E-",StringComparison.Ordinal);
+            }
+            Assert.IsTrue(directionBoard);
+            var disabledResult = Activator.CreateInstance(resultType);
+            resultType.GetField("Dir").SetValue(disabledResult,dir);
+            def.Remove("furniture_sign_fronts");
+            Assert.IsNull(create.Invoke(null,new[]{disabledResult,(object)"plate_back",def,dir+"/M_back.mat"}));
+            Assert.AreEqual(0,((Dictionary<string,Material>)resultType.GetField("Materials").GetValue(disabledResult)).Count);
+            Debug.Log($"[FurnitureSignProbe] current road fronts={expected.Count}; facade labels excluded; authored definition retained");
+        }
     }
 }
