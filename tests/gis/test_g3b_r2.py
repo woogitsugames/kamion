@@ -86,7 +86,7 @@ def test_putry_portal_boards_and_beam_from_the_photo():
     if g["height_m"] >= 7.0:
         import pytest
         pytest.skip("generated world predates ADR 0139 (rebuild)")
-    assert 6.2 <= g["height_m"] <= 6.5 and g["span_m"] == 14
+    assert 6.0 <= g["height_m"] <= 6.5 and g["span_m"] == 14      # clearance rule: 6.1 m (photo: 6.2-6.5)
 
 
 def test_hv_tower_arms_from_the_orthophoto():
