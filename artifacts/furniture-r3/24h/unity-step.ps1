@@ -1,5 +1,5 @@
 param(
-    [ValidateSet('import','render','side-render','sbs-sign','editmode','plinth-probe','sign-probe','night-rig')] [string]$Step,
+    [ValidateSet('import','render','side-render','sbs-sign','editmode','plinth-probe','sign-probe','shelter-policy-probe','night-rig')] [string]$Step,
     [string]$Phase='before',
     [ValidateSet('Low','High')] [string]$Tier='Low',
     [ValidateSet('clear','overcast','dusk')] [string]$Lighting='overcast',
@@ -80,6 +80,9 @@ try {
         }
         'sign-probe' {
             & pwsh scripts/test.ps1 -Platform EditMode -Filter Game.Tests.FurnitureSignTests *> "$ev/sign-probe-$Phase.log"
+        }
+        'shelter-policy-probe' {
+            & pwsh scripts/test.ps1 -Platform EditMode -Filter Game.Tests.FurnitureShelterPolicyTests *> "$ev/shelter-policy-probe-$Phase.log"
         }
         'night-rig' {
             . ./scripts/env.ps1
