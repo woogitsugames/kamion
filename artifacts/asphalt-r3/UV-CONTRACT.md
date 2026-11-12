@@ -1,0 +1,7 @@
+# Kontrakty UV odczytane przed wyborem zmiany
+
+paved.build_meshes ustawia UV0 w metrach, obracając osie według dominant_angle wielokąta (najdłuższy bok minimalnego obróconego prostokąta). Kierunek nie jest więc bezwarunkowo globalnym E/N. Sama regularność wzoru w renderze nie uzasadnia ponownego obracania UV bez porównania z tym źródłem i fotografią.
+
+TEXCOORD_1 w surowym paved niesie odległość do zewnętrznej krawędzi i do ściany, ograniczone do50m. To inna semantyka niż dane pasa jezdni. Importer odwraca glTF V, a WorldMeshBake pakuje zatrzymany kanał w Half. RegionImporter zachowuje UV1 według WorldPbrMaterials.Channels i obecności kanału w prymitywie; sama obecność UV1 w GLB nie dowodzi obecności w rendererze. Zwykłe definicje yard_paving/yard_behaton nie mają obecnie osobnego czytelnika tych odległości w shaderze. Przed ewentualnym użyciem brudu przy brzegu potrzebne jest potwierdzenie retencji i poprawnego wartownika. Nie wolno użyć wartości domyślnej0 jako dowodu bycia przy krawędzi.
+
+Ten dokument opisuje odczyt źródeł. Nie zmieniono paved.py, RegionImporter, WorldMeshBake ani geometrii. Nie wybrano efektu brzegu. Baseline w Unity i sonda GLB są nadal wymagane. Referencje kodu: tools/worldgen/streetscape/paved.py build_meshes/dominant_angle; game/Assets/_Project/World/Import/{GlbReader,RegionImporter,WorldMeshBake,WorldPbrMaterials}.cs.
