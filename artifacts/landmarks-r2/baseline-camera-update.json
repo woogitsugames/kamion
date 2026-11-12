@@ -1,0 +1,52 @@
+{
+  "camera": "dk8-ref7204",
+  "heading_before": 280,
+  "heading_after": 295,
+  "pose_confidence": "UNVERIFIED",
+  "rows": [
+    {
+      "condition": "Low-overcast",
+      "source": "pose-final\\Low-overcast\\dk8-ref7204.png",
+      "sha256": "a638e4df00a2e8e8857a8ac6c73a4e9dded893948c3bdec94101ea4658eb0fed",
+      "replaced_stats_lines": [
+        "dk8-ref7204: objects=50 drawsEst=312 shadowDrawsEst=73 trisK=402 (estimate, before SRP batching)",
+        "  dk8-ref7204 instanced (props+trees): draws 96, instances 89, triangles 9k, cells 67, forest HLOD cells 27"
+      ],
+      "archived_original": "pose-initial-gps280\\Low-overcast",
+      "baseline_png_count": 58
+    },
+    {
+      "condition": "Low-clear",
+      "source": "pose-final\\Low-clear\\dk8-ref7204.png",
+      "sha256": "904a2a4181e5b50007ab67051a4144fe127ecb5047c3093fdba760cb10df19ff",
+      "replaced_stats_lines": [
+        "dk8-ref7204: objects=50 drawsEst=312 shadowDrawsEst=73 trisK=402 (estimate, before SRP batching)",
+        "  dk8-ref7204 instanced (props+trees): draws 96, instances 89, triangles 9k, cells 67, forest HLOD cells 27"
+      ],
+      "archived_original": "pose-initial-gps280\\Low-clear",
+      "baseline_png_count": 58
+    },
+    {
+      "condition": "High-overcast",
+      "source": "pose-final\\High-overcast\\dk8-ref7204.png",
+      "sha256": "a65f467c3c4d36230890e95445adeccd469c45577199305ded64353ca3d3985d",
+      "replaced_stats_lines": [
+        "dk8-ref7204: objects=50 drawsEst=316 shadowDrawsEst=426 trisK=881 (estimate, before SRP batching)",
+        "  dk8-ref7204 instanced (props+trees): draws 128, instances 296, triangles 16k, cells 67, forest HLOD cells 27"
+      ],
+      "archived_original": "pose-initial-gps280\\High-overcast",
+      "baseline_png_count": 58
+    },
+    {
+      "condition": "High-clear",
+      "source": "pose-final\\High-clear\\dk8-ref7204.png",
+      "sha256": "b81a2b559990fb79006150233d026ae0bf64410b2f711930c980f19ac776ff32",
+      "replaced_stats_lines": [
+        "dk8-ref7204: objects=50 drawsEst=316 shadowDrawsEst=426 trisK=881 (estimate, before SRP batching)",
+        "  dk8-ref7204 instanced (props+trees): draws 128, instances 296, triangles 16k, cells 67, forest HLOD cells 27"
+      ],
+      "archived_original": "pose-initial-gps280\\High-clear",
+      "baseline_png_count": 58
+    }
+  ]
+}

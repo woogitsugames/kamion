@@ -1,0 +1,15 @@
+{
+  "world_manifest_far_fields_equal_to_base": true,
+  "note": "This scope restore does not change a failing GIS test into a pass. All original logs are retained.",
+  "actual_vs_regenerated_matches": 64,
+  "own_far_output_unchanged": {
+    "Data/raw/derived/bialystok-industrial-c/world/far_field.low.glb": true,
+    "Data/raw/derived/bialystok-industrial-c/world/far_field.glb": true,
+    "Data/SourceManifests/bialystok-industrial-c-far-field.manifest.json": true,
+    "Data/Regions/bialystok-industrial-c/generated/far_field_qa.json": true
+  },
+  "independent_pytest_paths": 0,
+  "finished": "2026-11-12T09:36:53.5130770+01:00",
+  "cli_vs_regenerated_matches": 64,
+  "gis_exit_code": 0
+}

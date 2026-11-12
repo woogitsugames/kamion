@@ -152,7 +152,9 @@ def test_trailer_detail_and_budget():
                  "car_light_tail", "reflector_red", "plate_pl", "tyre", "rim", "reefer_unit", "reefer_grille"}
         assert {k for k in l0.prims if not k.startswith("car_dirt_")} <= known, set(l0.prims) - known
         assert set(l1.prims) <= known, set(l1.prims) - known
-        assert _tris(l0) <= 2600 and _tris(l1) <= 260, (kind, _tris(l0), _tris(l1))
+        # ADR 0122: three separate, closed LOD1 wheels cost at most 316 tris.
+        # This prototype cap matches test_streetscape; route guard remains +2% / +0 draws.
+        assert _tris(l0) <= 2600 and _tris(l1) <= 320, (kind, _tris(l0), _tris(l1))
         # landing legs: slim (<= 0.12 m) telescopic legs with a sand shoe on the ground
         V = np.concatenate(l1.prims["trailer_chassis"][0])
         leg = V[(np.abs(V[:, 1] - 11.525) < 0.15) & (V[:, 2] < 0.05)]

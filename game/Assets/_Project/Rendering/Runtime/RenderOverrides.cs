@@ -110,8 +110,10 @@ namespace Game.Rendering
             // ADR 0080: sky / atmosphere switches and the owner A/B look overrides (rq_look 0|1|2 contrast variant A|B|C,
             // rq_ev exposure bias in stops, rq_wet wetness 0..1, rq_grassvar lawn variation 0..1).
             Clouds = I(arg("rq_clouds")); GroundHaze = B(arg("rq_haze")); Ssao = B(arg("rq_ssao"));
+            WorldAtmosphere.ClearCloudCoverOverride = F(arg("rq_clearcover")); // ADR 0108, null restores the preset.
+            WorldAtmosphere.HeadlampsOverride = B(arg("rq_headlamps")); // ADR 0108 r2; null restores preset opt-in.
             int? look = I(arg("rq_look")); float? ev = F(arg("rq_ev")); float? wet = F(arg("rq_wet")); float? gvar = F(arg("rq_grassvar"));
-            Look = look.HasValue || ev.HasValue || wet.HasValue || gvar.HasValue;
+            Look = look.HasValue || ev.HasValue || wet.HasValue || gvar.HasValue || WorldAtmosphere.ClearCloudCoverOverride.HasValue || WorldAtmosphere.HeadlampsOverride.HasValue;
             WorldAtmosphere.LookVariant = look ?? -1;
             CabToe = F(arg("rq_cabtoe"));
             // ADR 0080 r11 A/B: rq_skycct overcast dome colour temperature K (0 = achromatic, the r10 dome), rq_hazegf /

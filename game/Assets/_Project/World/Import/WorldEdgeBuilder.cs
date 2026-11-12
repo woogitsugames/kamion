@@ -402,6 +402,41 @@ namespace Game.World.Import
                 (byte)Mathf.Clamp(Mathf.RoundToInt(aF * 255f), 0, 255));
         }
 
+        static float[] SmoothPerimeterHeights(List<Vector2> points, float[] heights, out float mean)
+        {
+            // Corner fans duplicate a position for topology, not extra terrain samples.
+            // Match Python BorderElevation's uniformly sampled, circular perimeter.
+            var ids = new Dictionary<Vector2, int>(points.Count);
+            var unique = new List<float>(points.Count);
+            var sample = new int[points.Count];
+            mean = 0f;
+            for (int i = 0; i < points.Count; i++)
+            {
+                if (!ids.TryGetValue(points[i], out int id))
+                {
+                    id = unique.Count;
+                    ids.Add(points[i], id);
+                    unique.Add(heights[i]);
+                    mean += heights[i];
+                }
+                sample[i] = id;
+            }
+            var result = new float[points.Count];
+            int count = unique.Count;
+            if (count == 0) return result;
+            mean /= count;
+            int win = Mathf.Min(6, Mathf.Max(1, count / 16));
+            var smooth = new float[count];
+            for (int i = 0; i < count; i++)
+            {
+                float sum = 0f;
+                for (int dj = -win; dj <= win; dj++) sum += unique[(i + dj + count) % count];
+                smooth[i] = sum / (2 * win + 1);
+            }
+            for (int i = 0; i < points.Count; i++) result[i] = smooth[sample[i]];
+            return result;
+        }
+
         static void BuildApron(Mesh mesh, Transform root, Vector2 min, Vector2 max, List<(Vector3 start, Vector2 dir, float width)> stubs)
         {
             // Perimeter samples, counter-clockwise seen from above: south side (west to east), SE corner fan, east side, ...
@@ -419,24 +454,15 @@ namespace Game.World.Import
             }
             int np = basePt.Count, nr = k_RingDist.Length;
             var height = new float[np];
-            float mean = 0f, last = 0f;
+            float last = 0f;
             for (int i = 0; i < np; i++)
             {
                 Vector2 inside = basePt[i] - normal[i] * 0.75f;
                 inside.x = Mathf.Clamp(inside.x, min.x + 0.75f, max.x - 0.75f);
                 inside.y = Mathf.Clamp(inside.y, min.y + 0.75f, max.y - 0.75f);
                 height[i] = last = TerrainY(root, inside, last);
-                mean += height[i];
             }
-            mean /= np;
-            var smoothHeight = new float[np];
-            const int win = 6;
-            for (int i = 0; i < np; i++)
-            {
-                float s = 0f;
-                for (int dj = -win; dj <= win; dj++) s += height[(i + dj + np) % np];
-                smoothHeight[i] = s / (2 * win + 1);
-            }
+            var smoothHeight = SmoothPerimeterHeights(basePt, height, out float mean);
             float ApronHeightAt(float z0, float zSm, float d)
             {
                 float s1 = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(d / 220f));

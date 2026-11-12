@@ -195,8 +195,11 @@ Shader "Kamion/Truck Glass"
                 half3 body = i.tint * amb * (1.0 - tAbs) * 0.25 * (1.0 - i.inside)
                            + (grime * amb + grime * L.color * saturate(dot(nOut, L.direction)) * phase) * 0.18;
                 half3 col = body + env * lerp(F, F1, i.inside) + L.color * spec * (1.0 - i.inside * 0.7);
-                col = KamionTone(lerp(_KamionHazeColor.rgb, col, i.fogFactor));   // KamionMixFog with exp(-tau) per vertex
-                return half4(col, saturate(1.0 - trans));
+                // ADR 0115: premultiplied glass contributes only its coverage share of atmospheric in-scatter.
+                // The vertex already supplied exp(-tau); keep the fast path's transmittance and sampling policy.
+                half4 pane = half4(col, saturate(1.0 - trans));
+                pane.rgb = KamionTone(lerp(_KamionHazeColor.rgb * pane.a, pane.rgb, i.fogFactor));
+                return pane;
             }
         #endif
 

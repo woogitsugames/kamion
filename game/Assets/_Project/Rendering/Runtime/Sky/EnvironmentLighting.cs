@@ -68,6 +68,7 @@ namespace Game.Rendering
 
         void OnDisable()
         {
+            KamionHeadlamps.Reset();
             QualityProfileApplier.Applied -= OnTierApplied;
             RenderPipelineManager.beginContextRendering -= OnBeginRendering;
             if (Instance == this) Instance = null;
@@ -125,6 +126,7 @@ namespace Game.Rendering
                 sun.intensity = m.SunLightIntensity * max;
                 sun.enabled = m.SunNormalIlluminanceLux > 1f;
                 sun.shadows = LightShadows.Soft;   // URP asset decides whether soft filtering is supported per tier
+                ApplySunShadowFilter();
                 RenderSettings.sun = sun;
             }
 
@@ -153,7 +155,10 @@ namespace Game.Rendering
 
             // ---- specular environment ----
             if (m_Reflection != null) { if (Application.isPlaying) Destroy(m_Reflection); else DestroyImmediate(m_Reflection); }
-            m_Reflection = m.ReflectionCubemap(p.groundAlbedo);
+            bool gradeReflectedSky = (p.skyDisplayGain > 0f && p.skyDisplayGain < 1f) || p.skyDisplayDesaturation > 0f;
+            m_Reflection = gradeReflectedSky
+                ? m.ReflectionCubemap(p.groundAlbedo, skyPresentation: c => WorldAtmosphere.DisplaySkyFog(p, c))
+                : m.ReflectionCubemap(p.groundAlbedo);
             m_Reflection.hideFlags = HideFlags.DontSave;
             RenderSettings.defaultReflectionMode = DefaultReflectionMode.Custom;
             RenderSettings.customReflectionTexture = m_Reflection;
@@ -166,13 +171,14 @@ namespace Game.Rendering
             RenderSettings.fogMode = FogMode.Exponential;
             RenderSettings.fogDensity = 3.912f / Mathf.Max(0.5f, p.visibilityKm * 1000f) * fogDensityScale;
             // RenderSettings.fogColor is specified in sRGB like other colours and linearised by Unity.
-            var fogClamped = new Color(Mathf.Min(fog.r, 1f), Mathf.Min(fog.g, 1f), Mathf.Min(fog.b, 1f), 1f);
+            var displayFog = WorldAtmosphere.DisplaySkyFog(p, fog);
+            var fogClamped = new Color(Mathf.Min(displayFog.r, 1f), Mathf.Min(displayFog.g, 1f), Mathf.Min(displayFog.b, 1f), 1f);
             RenderSettings.fogColor = fogClamped.gamma;
 
             // ---- vehicle reflections (r6 E1/E2, KamionVehicleEnv.hlsl): ground plane + horizon for the analytic env ----
             Color g = p.groundAlbedo * m.AdaptedWhite * (m.HorizontalIlluminanceLux * m.Exposure / Mathf.PI);
             Shader.SetGlobalVector(k_GroundEnv, new Vector4(g.r, g.g, g.b, RenderSettings.fogDensity));
-            Shader.SetGlobalVector(k_HorizonEnv, new Vector4(fog.r, fog.g, fog.b, 1f));
+            Shader.SetGlobalVector(k_HorizonEnv, new Vector4(displayFog.r, displayFog.g, displayFog.b, 1f));
             ApplySkyCap();
             WorldAtmosphere.Push(this, m_FogExposed);
         }
@@ -183,7 +189,25 @@ namespace Game.Rendering
         /// <summary>Display caps of the sky dome at the horizon and towards the zenith (review r6 L4: phone local tone mapping).</summary>
         public const float SkyCapHorizonDisplay = 0.98f, SkyCapZenithDisplay = 0.875f;
 
-        void OnTierApplied(QualityProfile.Tier t) => ApplySkyCap();
+        void OnTierApplied(QualityProfile.Tier t)
+        {
+            ApplySkyCap();
+            ApplySunShadowFilter();
+        }
+
+        /// <summary>ADR 0108: the preset explicitly opts High into a smoother filter, without raising atlas size.
+        /// Returning to another preset/tier restores pipeline inheritance, including Low's disabled soft shadows.</summary>
+        public static SoftShadowQuality SunShadowFilter(LightingPreset preset, string tier) =>
+            preset != null && tier == "High" && preset.highSunShadowFilter > 0
+                ? (SoftShadowQuality)Mathf.Clamp(preset.highSunShadowFilter, 1, 3)
+                : SoftShadowQuality.UsePipelineSettings;
+
+        void ApplySunShadowFilter()
+        {
+            if (sun != null)
+                sun.GetUniversalAdditionalLightData().softShadowQuality = SunShadowFilter(Active,
+                    QualityProfileApplier.HasCurrent ? QualityProfileApplier.Current.name : null);
+        }
 
         /// <summary>
         /// Review r6 L4: the overcast dome clipped to 254/254/254 on the post-processing tiers (the D23 curve clips at

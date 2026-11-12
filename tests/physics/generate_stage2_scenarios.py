@@ -133,7 +133,7 @@ sc("launch_6pct_uphill_light_comb", "6% hill start with 35 % throttle (gentle dr
 sc("top_speed_flat_comb", "Full throttle on flat from 60 km/h, 120 s", "docs/04 s6.4", 120,
    {"type": "timeline", "keys": [key(0, throttle=1)]},
    [chk("max_speed_kmh", mx=90.5, status=S, source="S3: 90 km/h speed limiter (N3)"),
-    chk("mean_speed_kmh", mn=87, mx=90, frm=90, status=S, source="settles at the limiter"),
+    chk("mean_speed_kmh", mn=88, mx=90, frm=90, status=S, source="settles at the limiter: 89 +/- 1 km/h (set speed 90 km/h, 2 km/h fuelling fade band)"),
     chk("final_gear", mn=12, mx=12, source="top gear at cruise")] + stable,
    variants=COMB, initial={"speedKmh": 60})
 

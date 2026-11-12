@@ -1,0 +1,129 @@
+{
+  "count": 16,
+  "files": [
+    {
+      "condition": "Low-clear",
+      "camera": "d_gate_kerb_nose",
+      "sha256": "f2a8fd73def03de2535e0d3268c81c03ce0d694218a98ae9be6bdba0228df965"
+    },
+    {
+      "condition": "Low-clear",
+      "camera": "d_gate_kerb_outer",
+      "sha256": "15a6482ded72b52ed813b2805d8fb3e63e69ed273baa77a8ed4017c28b69ee98"
+    },
+    {
+      "condition": "Low-clear",
+      "camera": "d_gate_pair_entry",
+      "sha256": "12cffd25662d2f8f88d163e0a5e8b835d2db8965f758ebde66581ae97aabe041"
+    },
+    {
+      "condition": "Low-clear",
+      "camera": "d_gate_pair_exit",
+      "sha256": "47c1470bdc200b5c086c9bf59b43b261e5f5f6290c68c7b9a425fe08830b0bfb"
+    },
+    {
+      "condition": "Low-overcast",
+      "camera": "d_gate_kerb_nose",
+      "sha256": "d3fb1c68da3e2c6108c9a682ddd36c962515adde73cb0403c717ebe3231dfda2"
+    },
+    {
+      "condition": "Low-overcast",
+      "camera": "d_gate_kerb_outer",
+      "sha256": "6a2a3b6f02fdb0f529bb6a91bf4b3c9c6e1600b1bf07fc1c08b5883e0a7981bc"
+    },
+    {
+      "condition": "Low-overcast",
+      "camera": "d_gate_pair_entry",
+      "sha256": "323b14b68fe0df23f691687d0bdbb0a2e42b7c41c0e15f17b951c344850d7047"
+    },
+    {
+      "condition": "Low-overcast",
+      "camera": "d_gate_pair_exit",
+      "sha256": "4a1eec14433a69045fe7c0e2b8fb403ee1d5ae5cf413b13a373d39e1cff8a99f"
+    },
+    {
+      "condition": "High-clear",
+      "camera": "d_gate_kerb_nose",
+      "sha256": "c1abdfd96556648ab9733f8e4bfb35d711d36ffae9b0148bf6991ed0abdd8dc8"
+    },
+    {
+      "condition": "High-clear",
+      "camera": "d_gate_kerb_outer",
+      "sha256": "9f3e7a945034d256c374060d95810a3fa18c729d2beba681be84199bfb6f53ad"
+    },
+    {
+      "condition": "High-clear",
+      "camera": "d_gate_pair_entry",
+      "sha256": "0ec03b0772cc827876d34b0f779f13125788a6401494ae0a03982c2e3d3014a8"
+    },
+    {
+      "condition": "High-clear",
+      "camera": "d_gate_pair_exit",
+      "sha256": "6ffaf8931fe4e4b113adcf153d83c5fa94c952c83d6eac29d2a7e39857c90ebc"
+    },
+    {
+      "condition": "High-overcast",
+      "camera": "d_gate_kerb_nose",
+      "sha256": "7173a9f39afeb9835db2756963bd3d19c32ff92ba82870a958b3ef18fc9b2fe5"
+    },
+    {
+      "condition": "High-overcast",
+      "camera": "d_gate_kerb_outer",
+      "sha256": "048692dbb873718d8e6f465e775a8458691e423933f231847041de9bd78e1b6a"
+    },
+    {
+      "condition": "High-overcast",
+      "camera": "d_gate_pair_entry",
+      "sha256": "06c9e539ff1ae1b4a5c95be5ef6450715854eaeff9bf30001ee395cbe8d02d81"
+    },
+    {
+      "condition": "High-overcast",
+      "camera": "d_gate_pair_exit",
+      "sha256": "073098aa8b7fa05460f2b153489e12efb2f2f9ac811dab7cb4242c0d12f31a58"
+    }
+  ],
+  "gate_runtime_comparisons": [
+    {
+      "condition": "Low-clear",
+      "camera": "d_gate_pair_entry",
+      "actual_runtime_camera_and_vehicle_pose_exact": true
+    },
+    {
+      "condition": "Low-clear",
+      "camera": "d_gate_pair_exit",
+      "actual_runtime_camera_and_vehicle_pose_exact": true
+    },
+    {
+      "condition": "Low-overcast",
+      "camera": "d_gate_pair_entry",
+      "actual_runtime_camera_and_vehicle_pose_exact": true
+    },
+    {
+      "condition": "Low-overcast",
+      "camera": "d_gate_pair_exit",
+      "actual_runtime_camera_and_vehicle_pose_exact": true
+    },
+    {
+      "condition": "High-clear",
+      "camera": "d_gate_pair_entry",
+      "actual_runtime_camera_and_vehicle_pose_exact": true
+    },
+    {
+      "condition": "High-clear",
+      "camera": "d_gate_pair_exit",
+      "actual_runtime_camera_and_vehicle_pose_exact": true
+    },
+    {
+      "condition": "High-overcast",
+      "camera": "d_gate_pair_entry",
+      "actual_runtime_camera_and_vehicle_pose_exact": true
+    },
+    {
+      "condition": "High-overcast",
+      "camera": "d_gate_pair_exit",
+      "actual_runtime_camera_and_vehicle_pose_exact": true
+    }
+  ],
+  "all16_rounded_counter_rows_equal": true,
+  "note": "Gate8 have actual matched runtime camera/vehicle packets. Older kerb8 have matching authored cameras and rounded counters but no historical runtime packet. Counters are preSRP estimates, not GPU timing. No overall visual acceptance implied."
+}

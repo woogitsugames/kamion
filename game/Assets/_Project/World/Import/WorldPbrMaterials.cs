@@ -77,6 +77,13 @@ namespace Game.World.Import
             return s != null && FilesFor(s) != null;
         }
 
+        // ADR 0122: static cab paint is opt-in data, never a blanket extension to yard props.
+        static bool YardPaint(Dictionary<string, object> def, string id) =>
+            id != null && id.StartsWith("tractor_paint_", StringComparison.Ordinal)
+            && def.Get("yard_paint") is bool enabled && enabled
+            && def.Get("texture_set") as string == "car_grime_clean"
+            && def.Get("paint") is List<object> paint && paint.Count >= 4;
+
         /// <summary>Vertex channels the material needs (mesh baking keeps TEXCOORD_0 / TEXCOORD_1 only where read).</summary>
         public static void Channels(Dictionary<string, object> def, string id, out bool uv0, out bool uv1, out bool colors)
         {
@@ -88,7 +95,7 @@ namespace Game.World.Import
             string uv = s != null ? Str(s.Get("uv")) ?? "" : "";
             if ((kind == "modulation_set" || uv.StartsWith("mesh_uv0")) && def.Get("uv") as string != "planar") uv0 = true;
             if (def.Get("uv1") as string == "along_m") uv1 = true;
-            if (id.StartsWith("car_paint_") && def.Get("paint") is List<object>) uv1 = true; // R4 source deposition payload
+            if ((id.StartsWith("car_paint_") && def.Get("paint") is List<object>) || YardPaint(def, id)) uv1 = true; // source deposition payload
             if (id == "road_asphalt" || id == "road_asphalt_new") uv1 = true;           // _ROADWEAR
             if ((id.StartsWith("hall_wall") || Runoff(def) || (def.Get("runoff") is bool ro && ro)) && Set("parapet_runoff") != null) uv1 = true;   // _RUNOFF (wall-top space): 0071 `weather` + 0081 `runoff`
             if (id == "decal_patch" || id == "decal_oil" || id == "decal_tyre") { uv0 = true; uv1 = true; }
@@ -202,7 +209,7 @@ namespace Game.World.Import
             // Parked-car paint (ADR 0073): the car_grime set carries clean paint at roughness 0.32 (smoothness 0.68) plus
             // film / dust; the manifest "rough" of the colour is the CLEAN clear coat, so scale the set to it. Before, the
             // manifest value was ignored and every paint rendered at 0.59 mean smoothness ("primer", REVIEW r8).
-            if (id.StartsWith("car_paint_") && def.Get("rough") != null)
+            if ((id.StartsWith("car_paint_") || YardPaint(def, id)) && def.Get("rough") != null)
                 mat.SetFloat("_SmoothnessScale", Mathf.Clamp((1f - (float)Num(def.Get("rough"))) / 0.68f, 0.5f, 1.4f));
             // ADR 0092 (review s9 par. 4, "firanka odbija jak polerowana blacha"): the curtain set carried smoothness 0.36
             // whatever the manifest said; in the shade of the hall the grazing-angle environment term (smoothness + F0)
@@ -214,11 +221,11 @@ namespace Game.World.Import
             mat.SetFloat("_MetallicScale", 0f);
             // Parked-car paint r10 (ADR 0078): clear coat over a base coat. Manifest "paint": [base metal, flake tilt,
             // pearl, base-coat roughness] (+ optional "pearl_tint"); solid colours have metal 0 and no flake.
-            if (id.StartsWith("car_paint_") && def.Get("paint") is List<object> cp && cp.Count >= 4)
+            if ((id.StartsWith("car_paint_") || YardPaint(def, id)) && def.Get("paint") is List<object> cp && cp.Count >= 4)
             {
                 mat.EnableKeyword("_CARPAINT");
                 mat.SetVector("_CarPaint", new Vector4((float)Num(cp[0]), (float)Num(cp[1]), (float)Num(cp[2]), (float)Num(cp[3])));
-                mat.SetVector("_CarFlake", new Vector4(400f, 1f, 0.08f, 1f));   // x:2.5mm flake cells,z:reflectance above pigment; w:ADR0089 per-instance road film (WORKING_VALUE)
+                mat.SetVector("_CarFlake", new Vector4(400f, 1f, 0.08f, YardPaint(def, id) ? 2f : 1f)); // w: 1 legacy car, 2 static cab; existing paint pass
                 var pt = def.Get("pearl_tint") as List<object>;
                 SetLinearPearlTint(mat, pt != null && pt.Count >= 3
                     ? new Vector3((float)Num(pt[0]), (float)Num(pt[1]), (float)Num(pt[2])) : Vector3.one);
@@ -248,6 +255,28 @@ namespace Game.World.Import
             else if (set != null && set.Get("source") is Dictionary<string, object> src2 && src2.Get("elements_per_tile") != null)
                 mat.SetFloat("_ElementJitter", mat.GetFloat("_ElementJitter") * 0.5f);   // scan tone + half the jitter
 
+            // ADR0118: explicit opt-in data. Reset on every import so removing a block is idempotent.
+            mat.SetVector("_AsphaltWear", new Vector4(1f, 0f, 0f, 0f));
+            if (def.Get("asphalt_wear") is Dictionary<string, object> aw)
+            {
+                float A(string key, float fallback) => aw.Get(key) != null ? (float)Num(aw.Get(key)) : fallback;
+                mat.SetVector("_AsphaltWear", new Vector4(A("tone", 1f), A("wheel_darkening", 0f),
+                    A("low_cracks", 0f), A("low_photo_detail", 0f)));
+                if (def.Get("paint") is Dictionary<string, object> underlayDef
+                    && underlayDef.Get("asphalt_underlay") is bool underlayEnabled && underlayEnabled)
+                {
+                    mat.EnableKeyword("_ROADWEAR");
+                    mat.SetFloat("_WheelPolish", A("wheel_polish", 0.5f));
+                    mat.SetFloat("_DripBand", A("drip_band", 0f));
+                }
+            }
+            mat.SetVector("_PatchSeam", new Vector4(0f, 0f, 1f, 1f));
+            if (id == "decal_patch" && def.Get("asphalt_patch_seam") is Dictionary<string, object> ps)
+            {
+                float P(string key, float fallback) => ps.Get(key) != null ? (float)Num(ps.Get(key)) : fallback;
+                mat.SetVector("_PatchSeam", new Vector4(P("width_m", 0f), P("darkening", 0f),
+                    P("fresh_tone", 1f), P("aged_tone", 1f)));
+            }
             bool asphalt = setName == "asphalt_worn" || setName == "asphalt_sma_fresh" || setName == "asphalt_patch";
             if (id == "road_asphalt" || id == "road_asphalt_new")
             {
@@ -394,7 +423,12 @@ namespace Game.World.Import
                     float rough = def.Get("rough") != null ? (float)Num(def.Get("rough")) : 0.65f;
                     mat.SetVector("_PaintColor", new Vector4(col.x, col.y, col.z, Mathf.Clamp01(1f - rough)));
                     float P(string k, float d) => pd.Get(k) != null ? (float)Num(pd.Get(k)) : d;
-                    mat.SetVector("_PaintWear", new Vector4(P("wheel_wear", 0.85f), P("age_wear", 0.25f), P("dirt", 0.3f), P("line_w_m", 0.12f)));
+                    // ADR0099 WORKING_VALUE: narrower contact wear remains legible on P8/P10.
+                    // Always calibrate fresh metadata, never the existing material (reimports must be idempotent).
+                    float wheelWear = P("wheel_wear", 0.85f); // ADR0118: strength belongs to material data
+                    mat.SetVector("_PaintWear", new Vector4(wheelWear, P("age_wear", 0.25f), P("dirt", 0.3f), P("line_w_m", 0.12f)));
+                    mat.SetVector("_PaintFreshWear", new Vector4(P("fresh_wheel_scale", 1f), P("fresh_age_scale", 1f),
+                        P("fresh_dirt_scale", 1f), P("fresh_underlay_scale", 1f)));
                 }
                 else if (id == "decal_tyre")
                 {

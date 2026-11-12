@@ -44,6 +44,20 @@ namespace Game.Rendering
         [Range(0f, 12000f)] public float overcastCctK;
         [Tooltip("Cloud deck contrast of the overcast dome (0 = flat dome): thick parts darker, thin parts lighter, mean 1")]
         [Range(0f, 0.6f)] public float cloudContrast;
+        [Tooltip("ADR 0108: opacity of the photographic clear-cloud mask (0 = analytic blue sky). Sun/ambient metering stay unchanged.")]
+        [Range(0f, 1f)] public float clearCloudCover;
+        [Tooltip("ADR 0108: opt-in smoother sun-shadow filter on High only; 0 inherits the tier. Low unchanged.")]
+        [Range(0, 3)] public int highSunShadowFilter;
+        [Tooltip("ADR 0108: display-only blue-sky chroma multiplier above the haze horizon; 0/1 keep the analytic colour.")]
+        [Range(1f, 4f)] public float clearSkySaturation = 1f;
+        [Tooltip("ADR 0108 r2: opt-in diffuse low-beam projection on world surfaces, in the existing pass. No occlusion.")]
+        public bool projectedHeadlamps;
+        [Tooltip("WORKING_VALUE beam peak cd per head; independent of emissive lens nits. Used only when projection is enabled.")]
+        [Range(0f, 60000f)] public float projectedHeadlampPeakCd = 20000f;
+        [Tooltip("Display-only sky/fog gain; default1 leaves legacy presets intact. SH, sun and surface exposure are unchanged.")]
+        [Range(0.001f, 1f)] public float skyDisplayGain = 1f;
+        [Tooltip("Display-only sky/fog desaturation, used to suppress the twilight model's orange lobe in Night.")]
+        [Range(0f, 1f)] public float skyDisplayDesaturation;
         [Tooltip("Cloud texture tiles per unit of the cloud plane (plane at height 1; smaller = larger cloud masses)")]
         public float cloudScale = 0.16f;
         [Tooltip("Cloud drift (plane units per second; ~0.004 = 20 km/h at 1500 m)")]
@@ -111,8 +125,12 @@ namespace Game.Rendering
             var p = CreateInstance<LightingPreset>();
             p.name = "LP_Clear";
             p.sunElevationDeg = 42f; p.sunAzimuthDeg = 200f; p.turbidity = 2.5f; p.overcast = 0f; p.visibilityKm = 20f;
-            // ADR0098 WORKING_VALUE: highlight shoulder above the fixed asphalt/mid-grey anchors, no EV change.
-            p.lookWhiteClip = 1.2f;
+            // ADR 0108 r1 WORKING_VALUE: measured 1.2/1.8 ablation removes the white-van plateau
+            // above the fixed asphalt/mid-grey anchors, without changing exposure.
+            p.lookWhiteClip = 1.8f;
+            // ADR 0108 r1 WORKING_VALUE: the route reference photos show scattered cumulus in blue sky.
+            p.clearCloudCover = 1f;
+            p.clearSkySaturation = 2f; // ADR 0108: 1/2/3/4 ablation against the daytime reference skies.
             return p;
         }
 
@@ -147,6 +165,7 @@ namespace Game.Rendering
             var p = CreateInstance<LightingPreset>();
             p.name = "LP_LowSun";
             p.sunElevationDeg = 9f; p.sunAzimuthDeg = 60f; p.turbidity = 3f; p.overcast = 0f; p.visibilityKm = 15f;
+            p.highSunShadowFilter = 3;
             p.lookSaturation = -3f;
             p.whiteBalanceAdaptation = 0.5f; // owner decision D27 (2026-11-10): phone-style WB at low sun, ADR 0043
             return p;
@@ -166,6 +185,20 @@ namespace Game.Rendering
             p.name = "LP_Dusk";
             p.sunElevationDeg = -5f; p.sunAzimuthDeg = 300f; p.turbidity = 4f; p.overcast = 0.2f; p.visibilityKm = 12f;
             p.lookSaturation = -3f;
+            return p;
+        }
+
+        /// <summary>ADR 0108 r2 WORKING_VALUE: a separate night appearance at the existing twilight model's
+        /// lower bound. This is not an astronomical night-sky fit. Extra exposure restraint darkens ambient-lit
+        /// surfaces while fixed-luminance lamps gain contrast against the dimmer sky; dusk remains unchanged.</summary>
+        public static LightingPreset CreateNight()
+        {
+            var p = CreateDusk();
+            p.name = "LP_Night";
+            p.sunElevationDeg = SkyModel.MinTwilightElevationDeg;
+            p.exposureCompensation = -3f; // reviewed Night appearance; preserve lamp/cab visibility.
+            p.skyDisplayGain = 0.125f;
+            p.skyDisplayDesaturation = 0.85f;
             return p;
         }
     }

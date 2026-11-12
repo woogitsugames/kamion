@@ -24,6 +24,13 @@ MonoBehaviour:
   overcastSunLeak: 0
   overcastCctK: 0
   cloudContrast: 0
+  clearCloudCover: 1
+  highSunShadowFilter: 0
+  clearSkySaturation: 2
+  projectedHeadlamps: 0
+  projectedHeadlampPeakCd: 20000
+  skyDisplayGain: 1
+  skyDisplayDesaturation: 0
   cloudScale: 0.16
   cloudWind: {x: 0.0035, y: 0.0015}
   hazeGroundFactor: 0
@@ -37,7 +44,7 @@ MonoBehaviour:
   lookSaturation: 0
   whiteBalanceAdaptation: 0
   lookBlackLevel: 0.015
-  lookWhiteClip: 1.2
+  lookWhiteClip: 1.8
   lookHighlightDesaturation: 0.4
   lookToe: 0
   lookToeP: 0.12

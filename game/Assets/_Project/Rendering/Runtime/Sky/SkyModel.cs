@@ -365,11 +365,13 @@ namespace Game.Rendering
         }
 
         /// <summary>Exposed radiance cubemap (sky + ground + no sun) for specular environment reflections.</summary>
-        public Cubemap ReflectionCubemap(Color groundAlbedo, int size = 64)
+        public Cubemap ReflectionCubemap(Color groundAlbedo, int size = 64, System.Func<Color, Color> skyPresentation = null)
         {
             var cube = new Cubemap(size, TextureFormat.RGBAHalf, true) { name = "SkyReflection", filterMode = FilterMode.Trilinear, wrapMode = TextureWrapMode.Clamp };
             Color ground = groundAlbedo * AdaptedWhite * (HorizontalIlluminanceLux * Exposure / Mathf.PI);
             Color horizon = HorizonColorExposed();
+            // Optional appearance mapping affects reflected sky/horizon only, never analytic SH or ground irradiance.
+            if (skyPresentation != null) horizon = skyPresentation(horizon);
             var px = new Color[size * size];
             for (int f = 0; f < 6; f++)
             {
@@ -379,7 +381,12 @@ namespace Game.Rendering
                 {
                     float u = (x + 0.5f) / size * 2f - 1f, v = (y + 0.5f) / size * 2f - 1f;
                     Vector3 d = FaceDirection(face, u, v).normalized;
-                    Color c = d.y >= 0f ? ExposedRadiance(d) : Color.Lerp(horizon, ground, Mathf.SmoothStep(0f, 1f, -d.y * 4f));
+                    Color c;
+                    if (d.y >= 0f) {
+                        c = ExposedRadiance(d);
+                        if (skyPresentation != null) c = skyPresentation(c);
+                    }
+                    else c = Color.Lerp(horizon, ground, Mathf.SmoothStep(0f, 1f, -d.y * 4f));
                     c.a = 1f;
                     px[y * size + x] = c;
                 }

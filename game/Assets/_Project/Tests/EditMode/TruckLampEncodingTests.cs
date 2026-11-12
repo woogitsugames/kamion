@@ -56,5 +56,24 @@ namespace Game.Tests.EditMode
             Assert.That(float.IsNaN(value)||float.IsInfinity(value),Is.False);
             Assert.That(value,Is.EqualTo(expected).Within(0.01f));
         }
+        [TestCase(0f)] [TestCase(0.00001f)] [TestCase(0.0001f)] [TestCase(1f)]
+        public void DrlHighlightRemainsFiniteAndBoundedBeforeHalfConversion(float exposure)
+        {
+            if(SystemInfo.graphicsDeviceType==GraphicsDeviceType.Null) Assert.Ignore("Actual GPU readback requires graphics device");
+            lights.Refresh(); Shader.SetGlobalFloat("_KamionExposure",exposure);
+            const string raw="TruckLampRadiance(SAMPLE_TEXTURE2D_LOD(_TruckLightState, sampler_point_clamp, float2(1.5/16.0,0.5),0).rgb)";
+            var shader=TruckPaintProbe.BuildProbeShader("dot(TruckDrlHighlight("+raw+", _DrlHighlightShoulder),float3(0.2126,0.7152,0.0722)).xxx");
+            float value=TruckPaintProbe.Read(shader,1f,false,true,out _);
+            Assert.That(float.IsNaN(value)||float.IsInfinity(value),Is.False);
+            Assert.That(value,Is.InRange(0f,0.801f));
+            if(exposure>0f) Assert.That(value,Is.GreaterThan(0f));
+            else Assert.That(value,Is.EqualTo(0f));
+        }
+        [Test] public void DisabledDrlHighlightPreservesUncompressedRadiance()
+        {
+            if(SystemInfo.graphicsDeviceType==GraphicsDeviceType.Null) Assert.Ignore("Actual GPU readback requires graphics device");
+            var shader=TruckPaintProbe.BuildProbeShader("TruckDrlHighlight(float3(16,15.52,14.72),0)");
+            Assert.That(TruckPaintProbe.Read(shader,1f,false,true,out _),Is.EqualTo(16f).Within(0.01f));
+        }
     }
 }
