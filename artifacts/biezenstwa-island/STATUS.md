@@ -19,3 +19,8 @@
   po „build done” → `bash artifacts/biezenstwa-island/scripts/imp_sbs.sh i1 && bash artifacts/biezenstwa-island/scripts/pairs.sh i1 b5`
   → obejrzeć `pairs_i1/sbs-g3-a-p0128-320326319617139_low_overcast.jpg`, `sbs-g3-b-381800493259507_*`, `sbs-g3-b-837235577143499_*`
   → `bash artifacts/biezenstwa-island/scripts/post.sh i1 full` → uzupełnić „Result” w `docs/adr/0128-biezenstwa-island.md`.
+- krok 5 (14:14): build i1 działa od 14:02 (slot heavy), na bazie junctions-r6 21aef33f (b5). junctions-r6 ma 3 nowe commity (b6: nasyp żwirowy
+  na wyspie centralnej) — merge PO końcu i1 (nie zmieniam źródeł w trakcie buildu), kolejny build i2 będzie już z b6.
+  NASTĘPNY KROK (po „build done” w `logs/i1_build.out`; import + SBS i1 odpali łańcuch w tle, inaczej ręcznie):
+  `bash artifacts/biezenstwa-island/scripts/imp_sbs.sh i1 && bash artifacts/biezenstwa-island/scripts/pairs.sh i1 b5` → obejrzeć pary →
+  `git merge junctions-r6` (generated/* → ours) → `bash artifacts/biezenstwa-island/scripts/build.sh i2 && bash artifacts/biezenstwa-island/scripts/imp_sbs.sh i2 && bash artifacts/biezenstwa-island/scripts/post.sh i2 full`
