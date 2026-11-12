@@ -139,3 +139,5 @@ NASTĘPNY KROK: przygotować własne skrypty r2 z ownerem heavy gpt-furniture-r2
 2026-11-12T09:20:28.7516724+01:00: nowa regresja miała niejednoznaczne Object w sprzątaniu; poprawiono pełną nazwę UnityEngine.Object. Próba nie przeszła kompilacji, nie uznano testów za wykonane. NASTĘPNY KROK: ponowić tylko FurnitureSignTests -Phase cache2-fixed.
 
 2026-11-12T09:20:55.9119220+01:00: Unity sign-probe cache2-fixed Low overcast; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
+
+2026-11-12T09:24:05.1412882+01:00: poprawione próby15/15 passed, bez pominięć; nowa regresja automatycznego hooka wykrywa sockety dobudowane po pierwszym wyszukaniu mimo odległego terminu ponowienia. Zapisano diagnostykę faktycznego komponentu świateł przy każdej nocnej próbce. Przed ponownym pełnym renderem sprawdzamy kontrolowany night-rig Low; porażka poprzedniego after1 pozostaje zachowana. NASTĘPNY KROK: unity-step.ps1 -Step night-rig -Phase after2 -Tier Low.

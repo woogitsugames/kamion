@@ -31,6 +31,8 @@ namespace Game.World.Import
             public float requestedHorizontalM, cameraFov, exposure, trueSunElevation;
             public Vector3 sign, normal, eye, vehicle;
             public Vector4 state, lowLeft, lowRight, highLeft, highRight;
+            public bool actualLightEnabled, actualLightActive, actualLowOn, actualHighOn;
+            public int actualLightId;
         }
         [Serializable] sealed class Evidence
         {
@@ -227,11 +229,15 @@ namespace Game.World.Import
             {
                 var control=camera.GetComponent<ControlCamera>();
                 if(control==null || !control.id.StartsWith("furniture-night-",StringComparison.Ordinal)) return;
+                var actual=Object.FindAnyObjectByType<TruckLights>();
                 samples.Add(new Sample {tier=tier,mode=mode,camera=control.id,ground=ground,requestedHorizontalM=distance,
                     cameraFov=camera.fieldOfView,sign=target.point,normal=target.normal,eye=camera.transform.position,vehicle=position,
                     state=Shader.GetGlobalVector("_FurnitureRetroState"),lowLeft=Shader.GetGlobalVector("_FurnitureRetroHead0"),
                     lowRight=Shader.GetGlobalVector("_FurnitureRetroHead1"),highLeft=Shader.GetGlobalVector("_FurnitureRetroHead2"),
                     highRight=Shader.GetGlobalVector("_FurnitureRetroHead3"),exposure=Shader.GetGlobalFloat("_KamionExposure"),
+                    actualLightEnabled=actual!=null && actual.enabled,actualLightActive=actual!=null && actual.gameObject.activeInHierarchy,
+                    actualLowOn=actual!=null && actual.LowBeamOn,actualHighOn=actual!=null && actual.highBeam,
+                    actualLightId=actual!=null?actual.GetInstanceID():0,
                     trueSunElevation=EnvironmentLighting.Instance?.Model?.TrueSunElevationDeg ?? 999});
             }
             RenderPipelineManager.beginCameraRendering+=Observe;
