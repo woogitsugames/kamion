@@ -33,6 +33,16 @@ try {
     foreach($entry in $sheets.files) {
         if((Get-FileHash -LiteralPath (Join-Path $root $entry.path)).Hash.ToLower() -ne $entry.sha256){throw "Audited sheet changed: $($entry.path)"}
     }
+    $rawCount=0
+    foreach($capture in $audit.captures) {
+        $state=$capture.tier+'-'+$capture.lighting
+        foreach($entry in $capture.render_sha256.PSObject.Properties) {
+            $path=Join-Path $art ('evidence/renders/'+$state+'/'+$entry.Name+'.png')
+            if((Get-FileHash -LiteralPath $path).Hash.ToLower() -ne $entry.Value){throw "Audited raw changed: $($entry.Name)"}
+            $rawCount++
+        }
+    }
+    if($rawCount -ne 168){throw 'Incomplete audited raw roster'}
     foreach($binding in @(@{path='fidelity/fidelity_summary.json';sha=$fidelity.summary_sha256},@{path='fidelity/fidelity_qa.json';sha=$fidelity.qa_sha256},@{path='recognition-r3-baseline.json';sha=$audit.current_review.sha256})) {
         if((Get-FileHash -LiteralPath (Join-Path $art $binding.path)).Hash.ToLower() -ne $binding.sha){throw "Validated artifact changed: $($binding.path)"}
     }
