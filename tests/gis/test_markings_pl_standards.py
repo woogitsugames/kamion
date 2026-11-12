@@ -14,6 +14,10 @@ Wartości przepisowe:
               warunkach), § 23 ust. 10 (pobocze gruntowe 1,25/1,00/0,75 m), § 80 ust. 1 (skrajnia 5,00 m
               A/S, 4,50 m pozostałe). WT 1999 § 43 ust. 5: krawężnik 6-16 cm ponad jezdnię.
 
+Uwaga: testy przypinają stałe do tych samych liczb co raport docs/reports/AUDIT-MARKINGS-PL-2026-11-12-mistral.md,
+więc pilnują regresji, a nie są niezależną weryfikacją przepisu. Część wymiarów (P-10 max 16 m, P-13 h = 0,70 m,
+progi 70 km/h) i numery paragrafów są UNVERIFIED (źródła wtórne) — do sprawdzenia z PDF ISAP.
+
 Uruchomienie: uv run --project tools/worldgen pytest tests/gis/test_markings_pl_standards.py -q
 """
 
@@ -27,6 +31,8 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools" / "worldgen"))
 from roads import standards as S  # noqa: E402
 from roads.markings import arrow_glyph  # noqa: E402
+
+pytestmark = pytest.mark.unit
 
 
 # --- szerokości pasów wg klasy drogi (PTB2022 § 17 ust. 1: standardowo / w trudnych warunkach) ----------
