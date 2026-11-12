@@ -30,18 +30,51 @@ kamery głównej, nie kompozycja. Nagrywarka Samsunga rejestruje ~co drugą klat
 2. **Za ciężki tier na ekranie 5,65 Mpx**: Ultra/60 na Foldzie = 66–183 ms/klatkę → dt > 0,09 s → (1).
 3. **Adaptacyjna skala nie działa poniżej 15 FPS**: okno 2 s wymagało 30 próbek GPU; przy 10 FPS ~20 → okno odrzucane, skala
    zostaje 1,00 (A16 High: GPU p50 91 ms, `scale=1.00` cały przebieg). Dotyczy High (Ultra adaptacji nie ma).
-4. **Przechwyt odbić po powrocie z tła**: `VehicleReflectionCapture.RenderFace` → „RenderPass: Fake or uninitialized surface…”,
-   „EndRenderPass: Not inside a Renderpass” — 108+108 linii błędów w 2 min po wznowieniu (Fold 21:36:33–21:37:20).
+4. **Przechwyt odbić na Ultra pada na każdej ścianie** (Fold, Adreno 840, Vulkan): `VehicleReflectionCapture.RenderFace` →
+   „RenderPass: Fake or uninitialized surface is not supported for attachment 0/1”, „EndRenderPass: Not inside a Renderpass” —
+   4575 / 4398 linii w 120 s, od pierwszej klatki (nie tylko po wznowieniu); High na tym samym Foldzie: 0. Ultra ma jedyny
+   renderer z SSAO (`Mobile_Renderer_SSAO`, ADR 0080); render request przechwytu przez niego się nie składa. Cube odbić = śmieci,
+   a zepsuty render pass co 2. klatkę zbiega się z pojedynczymi **przyciemnionymi klatkami** widoku 3D (Fold Ultra przed:
+   klatka 970 jezdnia 86→51, niebo 186→178, lusterka/UI bez zmian — ta sama sygnatura co 124,90 s u właściciela).
 
 ## Decyzja (najmniejsze zmiany)
 - `CameraRig.StepHeadSpring`: pod-kroki ≤ 1/60 s (maks. 12; dt i tak ≤ 0,1 s przez `Time.maximumDeltaTime`). Ta sama odpowiedź
   co przy 60 FPS, stabilna przy każdym dt. Diagnostyka: `cam_legacy=1` (stary krok, tylko A/B), `camlog=1` (CSV pozy kamery na
   klatkę `diag/campose.csv`, poza pętlą jazdy domyślnie wyłączone).
 - `AdaptiveRenderScaleController`: okno rośnie do 30 próbek (maks. 6 s), decyzja od 8 próbek.
-- `VehicleReflectionCapture`: zwolnione cele (IsCreated == false) → odtworzenie + pełny cube.
+- `VehicleReflectionCapture`: renderer bez SSAO dla przechwytu, gdy aktywny asset tieru ma go pod indeksem 1 (Ultra:
+  `URP_Ultra.m_RendererDataList[1] = Mobile_Renderer`, także w `SsaoRendererSetup.Ensure`); zwolnione cele po wznowieniu
+  (IsCreated == false) → odtworzenie + pełny cube. Lusterka bez zmian (nie sypią błędów; koszt SSAO w 6 renderach lusterek/klatkę
+  na Ultra — osobny temat).
+- Ultra dostaje siatkę bezpieczeństwa High: adaptacyjna skala 0,70–1,00, fallback termiczny 30 FPS, pacing 30 FPS
+  (`QualityProfile.asset` + `Defaults()`; test `UltraHasTheHighSafetyNet_Adr0152`). Zapisany wybór gracza (Ultra/60) nie jest
+  nadpisywany; reguły auto-tieru bez zmian (Adreno 8xx → High, domyślnie 30 FPS).
 
-## Wyniki
-(uzupełniane — patrz niżej)
+## Wyniki (telefony, `artifacts/fold-flicker/`)
+**Sprężyna głowy, A16 SM-A165F, High/30, `rq_scale=1` (skala stała, ~10 FPS), trasa route_s=12, 60 km/h, 150 s, `campose.py`:**
+
+| przebieg | dt p50 | head_z: krok p95 | head_z: |x| p95 | klatki naprzemienne head_z / head_x |
+|---|---|---|---|---|
+| przed (`cam_legacy=1`) | 100 ms | 48,96 mm | 26,1 mm | 15,6 % / 10,6 % (okna 10 s do 85–100 %, ±53–60 mm) |
+| po | 100 ms | 1,51 mm | 9,3 mm | 0,0 % / 0,0 % |
+
+Wykres: `a16_head_offset_before_after.png`. Pochylenie/odchylenie kamery względem ciężarówki bez zmian (krok p95 0,3° / 0,01°).
+Fold (chłodny, Ultra/60, ~25 FPS, dt 33 ms): naprzemienności 0 % w obu wariantach — błąd pojawia się dopiero < ~11 FPS
+(u właściciela po nagrzaniu, thermal=2).
+
+**Adaptacyjna skala, A16 High/30, 150 s:** przed: skala 1,00 cały czas, 10,2 FPS, GPU p50 91,0 ms; po: 0,70 od pierwszego
+okna (1744/1777 klatek), **13,4 FPS**, klatka p50 66,8 / p95 116,6 ms, GPU p50 68,6 / p95 95,7 ms. (A16 = Low wg D49; to tylko
+dowód działania mechanizmu).
+
+**Fold SM-F976B (Adreno 840, 2256×2504), trasa jak wyżej, 120 s, start < 30 °C:**
+
+| przebieg | FPS | klatka p50/p95/p99 | GPU p50/p95 | PSS | błędy capture | ciemne klatki (screenrecord 60 s) |
+|---|---|---|---|---|---|---|
+| Ultra/60 przed | 25,2–25,6 | 33,3 / 66,7 / 66,7 | 29,1–29,4 / 37,1 | 1837–1872 MB | 4398–4575 | 1 / 1595 |
+| Ultra/60 po (capture) | 25,6 | 33,3 / 66,7 / 66,7 | 29,8 / 41,9 | 1845 MB | **0** | 0 / 1590 |
+| High/30 | 29,98 | 33,3 / 33,3 / 33,3 | 23,8 / 27,8 | 1471 MB | 0 | — |
+
+Ciemne klatki: 1 vs 0 zdarzeń — zgodne z hipotezą, za mało zdarzeń na dowód (UNVERIFIED).
 
 ## Otwarte
 - Tier Folda (Ultra/60 zapisany przez gracza) — patrz Wyniki/Fold.
