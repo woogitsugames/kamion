@@ -1,0 +1,35 @@
+param([ValidatePattern('^grade-lab(?:-v\d+)?$')][string]$OutputName='grade-lab')
+$ErrorActionPreference='Stop'
+$repo=[IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..'))
+Set-Location $repo
+. "$repo/scripts/env.ps1"
+$slot='C:/Users/matma/Documents/Claude/kamion/scripts/unity-slot.ps1'
+$folder="$PSScriptRoot/$OutputName";$log="$PSScriptRoot/$OutputName.$(Get-Timestamp).log"
+& pwsh $slot -Acquire -Owner gpt-light -PollSeconds 1 -StaleHours 87600
+if($LASTEXITCODE){throw 'No Unity slot'}
+git diff --quiet HEAD -- game/Assets/_Project/Rendering/Settings game/ProjectSettings
+if($LASTEXITCODE){& pwsh $slot -Release -Owner gpt-light;throw 'Commit own settings before lab'}
+try{
+    $start=Get-Date
+    $code=Invoke-UnityBatch -LogFile $log -Arguments @('-executeMethod','Game.Rendering.Editor.LightGradeLutLab.Run','-lightGradeLabOut',$folder)
+    $result=Select-String -Path $log -SimpleMatch 'LIGHT_GRADE_LAB_RESULT: OK images=12 cubes=6 holdoutPerPreset=192'|Select-Object -Last 1
+    $files=@(Get-ChildItem -LiteralPath $folder -Filter '*.png' -ErrorAction SilentlyContinue|Where-Object {$_.LastWriteTime -ge $start -and $_.Length -gt 0})
+    $complete=$result -and $files.Count -eq 12
+    foreach($preset in @('Clear','Overcast','Night')){
+        $proof=Get-Content "$folder/$preset-proof.json" -Raw|ConvertFrom-Json
+        if($proof.measurements.Count -ne 3 -or @($proof.measurements|Where-Object {$_.samples.Count -ne 192}).Count){$complete=$false}
+        foreach($size in @(16,32)){if((Get-Item -LiteralPath "$folder/$preset-lut$size-RGBAHalf.raw").Length -ne $size*$size*$size*8){$complete=$false}}
+    }
+    if(Select-String -Path $log -Pattern 'Shader error|error CS\d+' -Quiet){$complete=$false}
+    if($code -ne 0 -and $complete){
+        $mono=Select-String -Path $log -SimpleMatch 'Cleanup mono'|Where-Object LineNumber -GT $result.LineNumber
+        $abort=Select-String -Path $log -SimpleMatch 'abort_threads: Failed aborting'|Where-Object LineNumber -GT $result.LineNumber
+        $fatal=Select-String -Path $log -Pattern 'Crash!!!|Obtained \d+ stack frames|Fatal Error' -Quiet
+        if($mono -and $abort -and -not $fatal){Write-Warning "Known Mono shutdown after complete lab, original=$code";$code=0}
+    }
+    if($code -ne 0 -or -not $complete){Show-UnityLogErrors $log;throw "Incomplete grade lab code=$code log=$log"}
+}
+finally{git restore -- game/Assets/_Project/Rendering/Settings game/ProjectSettings;& pwsh $slot -Release -Owner gpt-light}
+Add-Content "$PSScriptRoot/STATUS.md" "Lab gradingu12PNG+6kostek,192holdoutnaPreset zakończony; log=$log. To diagnostyka, bez wdrożenia lub GPU PASS."
+git add -f artifacts/light-r5/STATUS.md
+git commit -m 'WIP light r5: record actual High-baked LUT laboratory evidence'
