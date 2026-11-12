@@ -71,3 +71,4 @@ REPORT-DRAFT.md przygotowany z jawnym statusem oczekującej walidacji. Nie utwor
 Końcowy generator uzyskał heavy około 02:04:50. Przygotowano read-only dowód nieaktualności fidelity względem bazy r3 49de5a4e, z kontrolą źródeł po normalizacji LF i CRLF. To atrybucja, nie zaliczony test ani regeneracja cudzej dziedziny. Ponowić dowód po końcowym GIS.
 Uściślono etykietę provenance: pierwotny helper nazwał bieżący WIP 4cc183a0 merge_commit; faktyczny merge to 49de5a4e. Między nimi zmieniły się tylko trzy własne pliki artefaktów, żadne źródło świata. Weryfikator przywrócenia sprawdzi też siedem pinów kodu/shaderów/kamer baseline.
 Zamknięcie odrzuconej r3: generator przywróconego kodu kod 0. Kod produkcyjny przywrócony do r1; brak akceptowanej korekty B8.
+Zamknięcie odrzuconej r3: migawka przywróconego świata kod 0. Kod produkcyjny przywrócony do r1; brak akceptowanej korekty B8.
