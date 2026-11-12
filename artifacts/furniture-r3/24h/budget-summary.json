@@ -1,0 +1,41 @@
+{
+  "cameras": 236,
+  "low_count": 118,
+  "low_exact": 118,
+  "low_max_exact_percent": 0.03301347905599883,
+  "low_mesh_delta_min": 0.0,
+  "low_mesh_delta_max": 0.0,
+  "low_instance_delta_min": -1.0,
+  "low_instance_delta_max": 0.0,
+  "all_mesh_shadow_delta_min": 0.0,
+  "all_mesh_shadow_delta_max": 0.0,
+  "high_positive_draws": [
+    {
+      "camera": "route-putry-approach",
+      "lighting": "clear",
+      "instance_draw_delta": 3
+    },
+    {
+      "camera": "route-putry-approach",
+      "lighting": "overcast",
+      "instance_draw_delta": 3
+    }
+  ],
+  "max_low_rows": [
+    {
+      "camera": "furniture-shelter-anders-1000-front",
+      "lighting": "clear",
+      "before_exact_triangles": 230209,
+      "after_exact_triangles": 230285,
+      "tris_delta_exact_percent": 0.03301347905599883
+    },
+    {
+      "camera": "furniture-shelter-anders-1000-front",
+      "lighting": "overcast",
+      "before_exact_triangles": 230209,
+      "after_exact_triangles": 230285,
+      "tris_delta_exact_percent": 0.03301347905599883
+    }
+  ],
+  "method": "CPU estimates and exact CPU triangle counters, not GPU time or device acceptance"
+}
