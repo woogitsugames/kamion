@@ -426,7 +426,8 @@ def power_pole():
 # length, a short peak with the earth wire. BDOT10k OT_BUWT_P carries no height: total 32 m, arm levels and lengths
 # are WORKING_VALUE (typical 110 kV double-circuit series; arm spacing ~4 m, lowest arm ~20 m).
 PYLON_ARM_Z = (20.0, 24.0, 28.0)     # cross-arm levels (m above ground) for h = 32
-PYLON_ARM_L = 3.3                    # arm tip from the axis (m)
+PYLON_ARM_L = 4.3                    # arm tip from the axis (m): 8.6 m tip to tip on the GUGiK hi-res orthophoto of
+#                                      the tower at Andersa (ADR 0139, artifacts/g3b-r2/crops/ortho-pylon-hr.jpg); was 3.3
 PYLON_INSULATOR_M = 1.3              # suspension string: conductor hangs this far under the arm tip
 PYLON_PANELS = (0.0, 4.5, 8.5, 12.0, 15.0, 17.5, 20.0, 22.0, 24.0, 26.0, 28.0, 30.0)
 PYLON_PANELS_LOD1 = (0.0, 6.5, 12.0, 16.5, 20.0, 22.0, 24.0, 26.0, 28.0, 30.0)

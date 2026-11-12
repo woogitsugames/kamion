@@ -319,10 +319,18 @@ overrides:
     # artifacts/g3b-lowread/crops/ortho-gantry-hr.jpg): the beam is 14.0 m long, the feet stand ~0.5 m behind the
     # kerbs. The rule (carriageway + side strips + 1 m) gave a 16 m span.
     columns_en: [[-267.0, -212.8], [-258.6, -202.2]]
+    # ADR 0139 (review s13-0127 P2): sizes read off the frontal frame 275528677534382 (2048 px wide, column axes
+    # 797 px apart = the 14 m beam): left board 214 x 46 px -> 3.75 x 0.82 m, right board 216 x 67 px -> 3.8 x 1.2 m,
+    # beam chords 30 px apart -> 0.55 m, board tops ~0.3 m above the top chord, bottoms at the bottom chord.
+    # The rule gave 4.06 x 1.42 m and 4.03 x 2.04 m on a 1.0 m beam. With the 5.0 + 0.2 m clearance the portal top comes
+    # to 6.1 m, board bottoms 5.2-5.5 m (ADR 0127 read 6.2-6.5 m / ~5.5 m off the same frame; the rule gave 7.0 m). WORKING_VALUE (+-5 %).
+    beam_depth_m: 0.55
     boards:
       - lanes: [0, 1]
+        size_m: [3.75, 0.82]
         rows: [[["8", E67], Warszawa], [["65"], Ełk]]
       - lanes: [2]
+        size_m: [3.8, 1.2]
         rows: [[["8", E67], Augustów], [["19"], Kuźnica], [["675"], Centrum]]
     mapillary: ["468708117568850", "143559297695026", "275528677534382", "1056932506043672", "3281350541967811"]
     reason: >-
@@ -600,15 +608,17 @@ overrides:
       - {center_epsg2180: [777582.0, 596169.0], radius_m: 25.0, style: glazed, band_m: 1.0}
       - {center_epsg2180: [777535.0, 596208.0], radius_m: 45.0, style: glazed, band_m: 1.6}
       - {center_epsg2180: [777625.0, 596121.0], radius_m: 75.0, style: glazed, band_m: 1.0}   # MA-008 link
-      - {center_epsg2180: [777445.0, 596353.0], radius_m: 45.0, style: glazed, band_m: 2.2, height_m: 5.2}   # MA-008/021 Tysiaclecia; ADR 0127 height
-      - {center_epsg2180: [777445.0, 596438.0], radius_m: 45.0, style: glazed, band_m: 1.8}
-      - {center_epsg2180: [777445.0, 596523.0], radius_m: 60.0, style: glazed, band_m: 1.8}
+      - {center_epsg2180: [777445.0, 596353.0], radius_m: 45.0, style: glazed, band_m: 2.2, height_m: 5.2, post_mat: noise_post_dark}   # MA-008/021 Tysiaclecia; ADR 0127 height
+      - {center_epsg2180: [777445.0, 596438.0], radius_m: 45.0, style: glazed, band_m: 1.8, post_mat: noise_post_dark}
+      - {center_epsg2180: [777445.0, 596523.0], radius_m: 60.0, style: glazed, band_m: 1.8, post_mat: noise_post_dark}
       # ADR 0127: the set-back barrier along the house plots east of al. Tysiaclecia (BDOT10k OT_OIKM_L ...C0D140 /
       # OSM 319142226, N = 60..111 local) is glazed above a dark band from its south corner on Mapillary
       # 1801374876712141 (gpsmapper 2019); it was "solid" south of N ~ 90 (outside the zones above).
       # Height (review s12-0130: "ekran-plot nizszy"): read off the same frame against the 0.6 m plinth - dark band
       # ~1.6 m, glazing ~3.1 m -> 5.2 m to the top, band top 2.2 m (WORKING_VALUE; was the generic 4.0 m / 1.8 m).
-      - {center_epsg2180: [777466.0, 596303.0], radius_m: 30.0, style: glazed, band_m: 2.2, height_m: 5.2}
+      # ADR 0139: `post_mat: noise_post_dark` on the four al. Tysiaclecia zones - dark green posts / rails on the same
+      # frame (review s13-0127 P2: "slupy jasnozielone vs ciemne na zdjeciu"); the Andersa link zones keep noise_post.
+      - {center_epsg2180: [777466.0, 596303.0], radius_m: 30.0, style: glazed, band_m: 2.2, height_m: 5.2, post_mat: noise_post_dark}
     mapillary: ["1911352299378570", "1783751488818497", "1240467703063612", "1424981177846267", "995780104564541",
                 "312705613662497", "1340597302993462", "1801374876712141"]
     reason: >-
