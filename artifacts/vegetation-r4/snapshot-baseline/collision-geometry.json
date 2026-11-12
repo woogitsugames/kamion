@@ -1,0 +1,3166 @@
+{
+  "chunk_count": 64,
+  "chunks": {
+    "chunk_0_0.low.glb": {
+      "terrain_lod2": {
+        "sha256": "511fb1f45e4e1ce7e5313ce390fe2e9e7d86c03e64de8a30d7e6874d9c828a12",
+        "triangles": 8704,
+        "primitives": [
+          {
+            "material": "terrain_grass",
+            "surface": "grass",
+            "vertices": 4485,
+            "triangles": 8704,
+            "position_array": "chunk_0_0_low__terrain_lod2__0_positions",
+            "index_array": "chunk_0_0_low__terrain_lod2__0_indices"
+          }
+        ]
+      },
+      "road_collision": {
+        "sha256": "b12359c06bc4d325969cc74b5af28d0276c4b7bd2032cfa8c1016e13bcf3e1ae",
+        "triangles": 6602,
+        "primitives": [
+          {
+            "material": "collision_asphalt",
+            "surface": "asphalt",
+            "vertices": 1589,
+            "triangles": 2357,
+            "position_array": "chunk_0_0_low__road_collision__0_positions",
+            "index_array": "chunk_0_0_low__road_collision__0_indices"
+          },
+          {
+            "material": "collision_building",
+            "surface": "concrete",
+            "vertices": 275,
+            "triangles": 121,
+            "position_array": "chunk_0_0_low__road_collision__1_positions",
+            "index_array": "chunk_0_0_low__road_collision__1_indices"
+          },
+          {
+            "material": "collision_curb",
+            "surface": "concrete_kerb",
+            "vertices": 1828,
+            "triangles": 1736,
+            "position_array": "chunk_0_0_low__road_collision__2_positions",
+            "index_array": "chunk_0_0_low__road_collision__2_indices"
+          },
+          {
+            "material": "collision_fence",
+            "surface": "steel",
+            "vertices": 716,
+            "triangles": 716,
+            "position_array": "chunk_0_0_low__road_collision__3_positions",
+            "index_array": "chunk_0_0_low__road_collision__3_indices"
+          },
+          {
+            "material": "collision_grass",
+            "surface": "grass",
+            "vertices": 1158,
+            "triangles": 1102,
+            "position_array": "chunk_0_0_low__road_collision__4_positions",
+            "index_array": "chunk_0_0_low__road_collision__4_indices"
+          },
+          {
+            "material": "collision_paving",
+            "surface": "paving_stones",
+            "vertices": 142,
+            "triangles": 200,
+            "position_array": "chunk_0_0_low__road_collision__5_positions",
+            "index_array": "chunk_0_0_low__road_collision__5_indices"
+          },
+          {
+            "material": "collision_steel",
+            "surface": "steel",
+            "vertices": 125,
+            "triangles": 370,
+            "position_array": "chunk_0_0_low__road_collision__6_positions",
+            "index_array": "chunk_0_0_low__road_collision__6_indices"
+          }
+        ]
+      }
+    },
+    "chunk_0_1.low.glb": {
+      "terrain_lod2": {
+        "sha256": "69f2269e884f8649fabea1d2240abafe7216a5f0ade78d66636ace3f527fb582",
+        "triangles": 8704,
+        "primitives": [
+          {
+            "material": "terrain_grass",
+            "surface": "grass",
+            "vertices": 4485,
+            "triangles": 8704,
+            "position_array": "chunk_0_1_low__terrain_lod2__0_positions",
+            "index_array": "chunk_0_1_low__terrain_lod2__0_indices"
+          }
+        ]
+      },
+      "road_collision": {
+        "sha256": "82e054f522e5344ad5d38fcaddd3a4d9fbc69a0d59f2be71178d74446064f249",
+        "triangles": 2641,
+        "primitives": [
+          {
+            "material": "collision_asphalt",
+            "surface": "asphalt",
+            "vertices": 698,
+            "triangles": 1036,
+            "position_array": "chunk_0_1_low__road_collision__0_positions",
+            "index_array": "chunk_0_1_low__road_collision__0_indices"
+          },
+          {
+            "material": "collision_building",
+            "surface": "concrete",
+            "vertices": 355,
+            "triangles": 157,
+            "position_array": "chunk_0_1_low__road_collision__1_positions",
+            "index_array": "chunk_0_1_low__road_collision__1_indices"
+          },
+          {
+            "material": "collision_curb",
+            "surface": "concrete_kerb",
+            "vertices": 1304,
+            "triangles": 1200,
+            "position_array": "chunk_0_1_low__road_collision__2_positions",
+            "index_array": "chunk_0_1_low__road_collision__2_indices"
+          },
+          {
+            "material": "collision_fence",
+            "surface": "steel",
+            "vertices": 4,
+            "triangles": 4,
+            "position_array": "chunk_0_1_low__road_collision__3_positions",
+            "index_array": "chunk_0_1_low__road_collision__3_indices"
+          },
+          {
+            "material": "collision_grass",
+            "surface": "grass",
+            "vertices": 113,
+            "triangles": 99,
+            "position_array": "chunk_0_1_low__road_collision__4_positions",
+            "index_array": "chunk_0_1_low__road_collision__4_indices"
+          },
+          {
+            "material": "collision_paving",
+            "surface": "paving_stones",
+            "vertices": 37,
+            "triangles": 35,
+            "position_array": "chunk_0_1_low__road_collision__5_positions",
+            "index_array": "chunk_0_1_low__road_collision__5_indices"
+          },
+          {
+            "material": "collision_steel",
+            "surface": "steel",
+            "vertices": 41,
+            "triangles": 110,
+            "position_array": "chunk_0_1_low__road_collision__6_positions",
+            "index_array": "chunk_0_1_low__road_collision__6_indices"
+          }
+        ]
+      }
+    },
+    "chunk_0_2.low.glb": {
+      "terrain_lod2": {
+        "sha256": "674822f9cb48cecdc40450f1ef5c955ec55086ffee2900f599671fcfa10b3b58",
+        "triangles": 8704,
+        "primitives": [
+          {
+            "material": "terrain_grass",
+            "surface": "grass",
+            "vertices": 4485,
+            "triangles": 8704,
+            "position_array": "chunk_0_2_low__terrain_lod2__0_positions",
+            "index_array": "chunk_0_2_low__terrain_lod2__0_indices"
+          }
+        ]
+      },
+      "road_collision": {
+        "sha256": "010b2c1e88e175dd624f02d28b3082e3fc5fea56334b0a7dfdb93e3e39473e0f",
+        "triangles": 3363,
+        "primitives": [
+          {
+            "material": "collision_asphalt",
+            "surface": "asphalt",
+            "vertices": 627,
+            "triangles": 871,
+            "position_array": "chunk_0_2_low__road_collision__0_positions",
+            "index_array": "chunk_0_2_low__road_collision__0_indices"
+          },
+          {
+            "material": "collision_building",
+            "surface": "concrete",
+            "vertices": 482,
+            "triangles": 208,
+            "position_array": "chunk_0_2_low__road_collision__1_positions",
+            "index_array": "chunk_0_2_low__road_collision__1_indices"
+          },
+          {
+            "material": "collision_curb",
+            "surface": "concrete_kerb",
+            "vertices": 1604,
+            "triangles": 1488,
+            "position_array": "chunk_0_2_low__road_collision__2_positions",
+            "index_array": "chunk_0_2_low__road_collision__2_indices"
+          },
+          {
+            "material": "collision_fence",
+            "surface": "steel",
+            "vertices": 568,
+            "triangles": 568,
+            "position_array": "chunk_0_2_low__road_collision__3_positions",
+            "index_array": "chunk_0_2_low__road_collision__3_indices"
+          },
+          {
+            "material": "collision_grass",
+            "surface": "grass",
+            "vertices": 168,
+            "triangles": 228,
+            "position_array": "chunk_0_2_low__road_collision__4_positions",
+            "index_array": "chunk_0_2_low__road_collision__4_indices"
+          }
+        ]
+      }
+    },
+    "chunk_0_3.low.glb": {
+      "terrain_lod2": {
+        "sha256": "c11bda6bd794ab44052818a6f55cc7b46c0af835c94b72426c49b95db7873868",
+        "triangles": 8704,
+        "primitives": [
+          {
+            "material": "terrain_grass",
+            "surface": "grass",
+            "vertices": 4485,
+            "triangles": 8704,
+            "position_array": "chunk_0_3_low__terrain_lod2__0_positions",
+            "index_array": "chunk_0_3_low__terrain_lod2__0_indices"
+          }
+        ]
+      },
+      "road_collision": {
+        "sha256": "91a8fa6d702a5b7cf8636274aee12efea2340085f5bf3de66d2881197004f575",
+        "triangles": 6562,
+        "primitives": [
+          {
+            "material": "collision_asphalt",
+            "surface": "asphalt",
+            "vertices": 1690,
+            "triangles": 2562,
+            "position_array": "chunk_0_3_low__road_collision__0_positions",
+            "index_array": "chunk_0_3_low__road_collision__0_indices"
+          },
+          {
+            "material": "collision_building",
+            "surface": "concrete",
+            "vertices": 22,
+            "triangles": 10,
+            "position_array": "chunk_0_3_low__road_collision__1_positions",
+            "index_array": "chunk_0_3_low__road_collision__1_indices"
+          },
+          {
+            "material": "collision_curb",
+            "surface": "concrete_kerb",
+            "vertices": 1480,
+            "triangles": 1370,
+            "position_array": "chunk_0_3_low__road_collision__2_positions",
+            "index_array": "chunk_0_3_low__road_collision__2_indices"
+          },
+          {
+            "material": "collision_fence",
+            "surface": "steel",
+            "vertices": 1793,
+            "triangles": 1783,
+            "position_array": "chunk_0_3_low__road_collision__3_positions",
+            "index_array": "chunk_0_3_low__road_collision__3_indices"
+          },
+          {
+            "material": "collision_grass",
+            "surface": "grass",
+            "vertices": 469,
+            "triangles": 439,
+            "position_array": "chunk_0_3_low__road_collision__4_positions",
+            "index_array": "chunk_0_3_low__road_collision__4_indices"
+          },
+          {
+            "material": "collision_paving",
+            "surface": "paving_stones",
+            "vertices": 108,
+            "triangles": 98,
+            "position_array": "chunk_0_3_low__road_collision__5_positions",
+            "index_array": "chunk_0_3_low__road_collision__5_indices"
+          },
+          {
+            "material": "collision_steel",
+            "surface": "steel",
+            "vertices": 114,
+            "triangles": 300,
+            "position_array": "chunk_0_3_low__road_collision__6_positions",
+            "index_array": "chunk_0_3_low__road_collision__6_indices"
+          }
+        ]
+      }
+    },
+    "chunk_0_4.low.glb": {
+      "terrain_lod2": {
+        "sha256": "dc940bf989b9739a9348250853f867fd2d040ada859a4270b68ea57492a0d2e2",
+        "triangles": 8704,
+        "primitives": [
+          {
+            "material": "terrain_grass",
+            "surface": "grass",
+            "vertices": 4485,
+            "triangles": 8704,
+            "position_array": "chunk_0_4_low__terrain_lod2__0_positions",
+            "index_array": "chunk_0_4_low__terrain_lod2__0_indices"
+          }
+        ]
+      },
+      "road_collision": {
+        "sha256": "f56b3734f648e901582f84892d711980b2bdb698f447882b0a83ac4a8cdb0036",
+        "triangles": 862,
+        "primitives": [
+          {
+            "material": "collision_fence",
+            "surface": "steel",
+            "vertices": 680,
+            "triangles": 680,
+            "position_array": "chunk_0_4_low__road_collision__0_positions",
+            "index_array": "chunk_0_4_low__road_collision__0_indices"
+          },
+          {
+            "material": "collision_grass",
+            "surface": "grass",
+            "vertices": 117,
+            "triangles": 182,
+            "position_array": "chunk_0_4_low__road_collision__1_positions",
+            "index_array": "chunk_0_4_low__road_collision__1_indices"
+          }
+        ]
+      }
+    },
+    "chunk_0_5.low.glb": {
+      "terrain_lod2": {
+        "sha256": "f7472f221060384e2e6c89b6f374cfd08e94d1f7e0e71d109a66b646d9c89ade",
+        "triangles": 8704,
+        "primitives": [
+          {
+            "material": "terrain_grass",
+            "surface": "grass",
+            "vertices": 4485,
+            "triangles": 8704,
+            "position_array": "chunk_0_5_low__terrain_lod2__0_positions",
+            "index_array": "chunk_0_5_low__terrain_lod2__0_indices"
+          }
+        ]
+      },
+      "road_collision": {
+        "sha256": "607b79609f1376dfd30696b4af778ed811d78c5bcfee569bdce247393ce2d1f5",
+        "triangles": 1683,
+        "primitives": [
+          {
+            "material": "collision_building",
+            "surface": "concrete",
+            "vertices": 63,
+            "triangles": 25,
+            "position_array": "chunk_0_5_low__road_collision__0_positions",
+            "index_array": "chunk_0_5_low__road_collision__0_indices"
+          },
+          {
+            "material": "collision_fence",
+            "surface": "steel",
+            "vertices": 1598,
+            "triangles": 1596,
+            "position_array": "chunk_0_5_low__road_collision__1_positions",
+            "index_array": "chunk_0_5_low__road_collision__1_indices"
+          },
+          {
+            "material": "collision_grass",
+            "surface": "grass",
+            "vertices": 50,
+            "triangles": 62,
+            "position_array": "chunk_0_5_low__road_collision__2_positions",
+            "index_array": "chunk_0_5_low__road_collision__2_indices"
+          }
+        ]
+      }
+    },
+    "chunk_0_6.low.glb": {
+      "terrain_lod2": {
+        "sha256": "318db036d2e25755a10fafabece3b3c483c7e263ff6e07b69e5be1e48b2186b8",
+        "triangles": 8704,
+        "primitives": [
+          {
+            "material": "terrain_grass",
+            "surface": "grass",
+            "vertices": 4485,
+            "triangles": 8704,
+            "position_array": "chunk_0_6_low__terrain_lod2__0_positions",
+            "index_array": "chunk_0_6_low__terrain_lod2__0_indices"
+          }
+        ]
+      },
+      "road_collision": {
+        "sha256": "3a1545eccf19d50de8068c8b64d71411a705783079ac8c0be5d15b01b419e853",
+        "triangles": 1273,
+        "primitives": [
+          {
+            "material": "collision_asphalt",
+            "surface": "asphalt",
+            "vertices": 135,
+            "triangles": 142,
+            "position_array": "chunk_0_6_low__road_collision__0_positions",
+            "index_array": "chunk_0_6_low__road_collision__0_indices"
+          },
+          {
+            "material": "collision_building",
+            "surface": "concrete",
+            "vertices": 103,
+            "triangles": 43,
+            "position_array": "chunk_0_6_low__road_collision__1_positions",
+            "index_array": "chunk_0_6_low__road_collision__1_indices"
+          },
+          {
+            "material": "collision_curb",
+            "surface": "concrete_kerb",
+            "vertices": 348,
+            "triangles": 264,
+            "position_array": "chunk_0_6_low__road_collision__2_positions",
+            "index_array": "chunk_0_6_low__road_collision__2_indices"
+          },
+          {
+            "material": "collision_fence",
+            "surface": "steel",
+            "vertices": 826,
+            "triangles": 824,
+            "position_array": "chunk_0_6_low__road_collision__3_positions",
+            "index_array": "chunk_0_6_low__road_collision__3_indices"
+          }
+        ]
+      }
+    },
+    "chunk_0_7.low.glb": {
+      "terrain_lod2": {
+        "sha256": "22f49a4d4eac9b9c52507fb17b21b7f8b5d7f556fcf7c210b9c22ba9ef2672d9",
+        "triangles": 8704,
+        "primitives": [
+          {
+            "material": "terrain_grass",
+            "surface": "grass",
+            "vertices": 4485,
+            "triangles": 8704,
+            "position_array": "chunk_0_7_low__terrain_lod2__0_positions",
+            "index_array": "chunk_0_7_low__terrain_lod2__0_indices"
+          }
+        ]
+      },
+      "road_collision": {
+        "sha256": "95db1ef27e170a68d1c6ec5a691e457d09a48966c2b1aabca990779ceb6aec8d",
+        "triangles": 2593,
+        "primitives": [
+          {
+            "material": "collision_asphalt",
+            "surface": "asphalt",
+            "vertices": 300,
+            "triangles": 370,
+            "position_array": "chunk_0_7_low__road_collision__0_positions",
+            "index_array": "chunk_0_7_low__road_collision__0_indices"
+          },
+          {
+            "material": "collision_building",
+            "surface": "concrete",
+            "vertices": 829,
+            "triangles": 333,
+            "position_array": "chunk_0_7_low__road_collision__1_positions",
+            "index_array": "chunk_0_7_low__road_collision__1_indices"
+          },
+          {
+            "material": "collision_curb",
+            "surface": "concrete_kerb",
+            "vertices": 613,
+            "triangles": 527,
+            "position_array": "chunk_0_7_low__road_collision__2_positions",
+            "index_array": "chunk_0_7_low__road_collision__2_indices"
+          },
+          {
+            "material": "collision_fence",
+            "surface": "steel",
+            "vertices": 602,
+            "triangles": 600,
+            "position_array": "chunk_0_7_low__road_collision__3_positions",
+            "index_array": "chunk_0_7_low__road_collision__3_indices"
+          },
+          {
+            "material": "collision_grass",
+            "surface": "grass",
+            "vertices": 505,
+            "triangles": 596,
+            "position_array": "chunk_0_7_low__road_collision__4_positions",
+            "index_array": "chunk_0_7_low__road_collision__4_indices"
+          },
+          {
+            "material": "collision_paving",
+            "surface": "paving_stones",
+            "vertices": 173,
+            "triangles": 167,
+            "position_array": "chunk_0_7_low__road_collision__5_positions",
+            "index_array": "chunk_0_7_low__road_collision__5_indices"
+          }
+        ]
+      }
+    },
+    "chunk_1_0.low.glb": {
+      "terrain_lod2": {
+        "sha256": "3e2a690b9128c743b7e227349d7fe6471a8ce199c14d6cfd10c1254e7fd02b99",
+        "triangles": 8704,
+        "primitives": [
+          {
+            "material": "terrain_grass",
+            "surface": "grass",
+            "vertices": 4485,
+            "triangles": 8704,
+            "position_array": "chunk_1_0_low__terrain_lod2__0_positions",
+            "index_array": "chunk_1_0_low__terrain_lod2__0_indices"
+          }
+        ]
+      },
+      "road_collision": {
+        "sha256": "77bb35a999490e84f0c23a00b2353584519f702954f1e5040a96955946a3df9c",
+        "triangles": 706,
+        "primitives": [
+          {
+            "material": "collision_asphalt",
+            "surface": "asphalt",
+            "vertices": 107,
+            "triangles": 138,
+            "position_array": "chunk_1_0_low__road_collision__0_positions",
+            "index_array": "chunk_1_0_low__road_collision__0_indices"
+          },
+          {
+            "material": "collision_building",
+            "surface": "concrete",
+            "vertices": 193,
+            "triangles": 83,
+            "position_array": "chunk_1_0_low__road_collision__1_positions",
+            "index_array": "chunk_1_0_low__road_collision__1_indices"
+          },
+          {
+            "material": "collision_curb",
+            "surface": "concrete_kerb",
+            "vertices": 282,
+            "triangles": 274,
+            "position_array": "chunk_1_0_low__road_collision__2_positions",
+            "index_array": "chunk_1_0_low__road_collision__2_indices"
+          },
+          {
+            "material": "collision_fence",
+            "surface": "steel",
+            "vertices": 48,
+            "triangles": 48,
+            "position_array": "chunk_1_0_low__road_collision__3_positions",
+            "index_array": "chunk_1_0_low__road_collision__3_indices"
+          },
+          {
+            "material": "collision_grass",
+            "surface": "grass",
+            "vertices": 116,
+            "triangles": 153,
+            "position_array": "chunk_1_0_low__road_collision__4_positions",
+            "index_array": "chunk_1_0_low__road_collision__4_indices"
+          },
+          {
+            "material": "collision_paving",
+            "surface": "paving_stones",
+            "vertices": 14,
+            "triangles": 10,
+            "position_array": "chunk_1_0_low__road_collision__5_positions",
+            "index_array": "chunk_1_0_low__road_collision__5_indices"
+          }
+        ]
+      }
+    },
+    "chunk_1_1.low.glb": {
+      "terrain_lod2": {
+        "sha256": "a3a1316d3a4517ec63458ad15f3225a9ffb47969376e69065eccd08a6eb68a46",
+        "triangles": 8704,
+        "primitives": [
+          {
+            "material": "terrain_grass",
+            "surface": "grass",
+            "vertices": 4485,
+            "triangles": 8704,
+            "position_array": "chunk_1_1_low__terrain_lod2__0_positions",
+            "index_array": "chunk_1_1_low__terrain_lod2__0_indices"
+          }
+        ]
+      },
+      "road_collision": {
+        "sha256": "e35a5a1183170e8695ae962ed6d63cd089f83abe723801eb22767954b454aae9",
+        "triangles": 4831,
+        "primitives": [
+          {
+            "material": "collision_asphalt",
+            "surface": "asphalt",
+            "vertices": 846,
+            "triangles": 1154,
+            "position_array": "chunk_1_1_low__road_collision__0_positions",
+            "index_array": "chunk_1_1_low__road_collision__0_indices"
+          },
+          {
+            "material": "collision_curb",
+            "surface": "concrete_kerb",
+            "vertices": 474,
+            "triangles": 434,
+            "position_array": "chunk_1_1_low__road_collision__1_positions",
+            "index_array": "chunk_1_1_low__road_collision__1_indices"
+          },
+          {
+            "material": "collision_grass",
+            "surface": "grass",
+            "vertices": 1130,
+            "triangles": 1058,
+            "position_array": "chunk_1_1_low__road_collision__2_positions",
+            "index_array": "chunk_1_1_low__road_collision__2_indices"
+          },
+          {
+            "material": "collision_paving",
+            "surface": "paving_stones",
+            "vertices": 129,
+            "triangles": 115,
+            "position_array": "chunk_1_1_low__road_collision__3_positions",
+            "index_array": "chunk_1_1_low__road_collision__3_indices"
+          },
+          {
+            "material": "collision_steel",
+            "surface": "steel",
+            "vertices": 665,
+            "triangles": 2070,
+            "position_array": "chunk_1_1_low__road_collision__4_positions",
+            "index_array": "chunk_1_1_low__road_collision__4_indices"
+          }
+        ]
+      }
+    },
+    "chunk_1_2.low.glb": {
+      "terrain_lod2": {
+        "sha256": "1481691c1bf4d9b24bf4f9a891cff2ebad90b7053e038063b6134aa2ac49be65",
+        "triangles": 8704,
+        "primitives": [
+          {
+            "material": "terrain_grass",
+            "surface": "grass",
+            "vertices": 4485,
+            "triangles": 8704,
+            "position_array": "chunk_1_2_low__terrain_lod2__0_positions",
+            "index_array": "chunk_1_2_low__terrain_lod2__0_indices"
+          }
+        ]
+      },
+      "road_collision": {
+        "sha256": "cbd73f9f4583caf10b42f450b311cfabb8d70de851c74e80890df4623d80823c",
+        "triangles": 5430,
+        "primitives": [
+          {
+            "material": "collision_asphalt",
+            "surface": "asphalt",
+            "vertices": 1232,
+            "triangles": 1864,
+            "position_array": "chunk_1_2_low__road_collision__0_positions",
+            "index_array": "chunk_1_2_low__road_collision__0_indices"
+          },
+          {
+            "material": "collision_building",
+            "surface": "concrete",
+            "vertices": 36,
+            "triangles": 16,
+            "position_array": "chunk_1_2_low__road_collision__1_positions",
+            "index_array": "chunk_1_2_low__road_collision__1_indices"
+          },
+          {
+            "material": "collision_curb",
+            "surface": "concrete_kerb",
+            "vertices": 270,
+            "triangles": 254,
+            "position_array": "chunk_1_2_low__road_collision__2_positions",
+            "index_array": "chunk_1_2_low__road_collision__2_indices"
+          },
+          {
+            "material": "collision_fence",
+            "surface": "steel",
+            "vertices": 352,
+            "triangles": 350,
+            "position_array": "chunk_1_2_low__road_collision__3_positions",
+            "index_array": "chunk_1_2_low__road_collision__3_indices"
+          },
+          {
+            "material": "collision_grass",
+            "surface": "grass",
+            "vertices": 1360,
+            "triangles": 1336,
+            "position_array": "chunk_1_2_low__road_collision__4_positions",
+            "index_array": "chunk_1_2_low__road_collision__4_indices"
+          },
+          {
+            "material": "collision_steel",
+            "surface": "steel",
+            "vertices": 509,
+            "triangles": 1610,
+            "position_array": "chunk_1_2_low__road_collision__5_positions",
+            "index_array": "chunk_1_2_low__road_collision__5_indices"
+          }
+        ]
+      }
+    },
+    "chunk_1_3.low.glb": {
+      "terrain_lod2": {
+        "sha256": "b1d6eb0ebbf14a4b3642bf7cea40e203db735b9329fe99d1d3f8e753fa564bec",
+        "triangles": 8704,
+        "primitives": [
+          {
+            "material": "terrain_grass",
+            "surface": "grass",
+            "vertices": 4485,
+            "triangles": 8704,
+            "position_array": "chunk_1_3_low__terrain_lod2__0_positions",
+            "index_array": "chunk_1_3_low__terrain_lod2__0_indices"
+          }
+        ]
+      },
+      "road_collision": {
+        "sha256": "3f2e83322dcb3e74ebeb4ec75b83c57c84b669a13b70251ffc389777c4128fad",
+        "triangles": 17384,
+        "primitives": [
+          {
+            "material": "collision_asphalt",
+            "surface": "asphalt",
+            "vertices": 2478,
+            "triangles": 3525,
+            "position_array": "chunk_1_3_low__road_collision__0_positions",
+            "index_array": "chunk_1_3_low__road_collision__0_indices"
+          },
+          {
+            "material": "collision_building",
+            "surface": "concrete",
+            "vertices": 940,
+            "triangles": 760,
+            "position_array": "chunk_1_3_low__road_collision__1_positions",
+            "index_array": "chunk_1_3_low__road_collision__1_indices"
+          },
+          {
+            "material": "collision_curb",
+            "surface": "concrete_kerb",
+            "vertices": 4676,
+            "triangles": 4326,
+            "position_array": "chunk_1_3_low__road_collision__2_positions",
+            "index_array": "chunk_1_3_low__road_collision__2_indices"
+          },
+          {
+            "material": "collision_fence",
+            "surface": "steel",
+            "vertices": 2165,
+            "triangles": 2104,
+            "position_array": "chunk_1_3_low__road_collision__3_positions",
+            "index_array": "chunk_1_3_low__road_collision__3_indices"
+          },
+          {
+            "material": "collision_grass",
+            "surface": "grass",
+            "vertices": 920,
+            "triangles": 924,
+            "position_array": "chunk_1_3_low__road_collision__4_positions",
+            "index_array": "chunk_1_3_low__road_collision__4_indices"
+          },
+          {
+            "material": "collision_paving",
+            "surface": "paving_stones",
+            "vertices": 1074,
+            "triangles": 985,
+            "position_array": "chunk_1_3_low__road_collision__5_positions",
+            "index_array": "chunk_1_3_low__road_collision__5_indices"
+          },
+          {
+            "material": "collision_steel",
+            "surface": "steel",
+            "vertices": 1528,
+            "triangles": 4760,
+            "position_array": "chunk_1_3_low__road_collision__6_positions",
+            "index_array": "chunk_1_3_low__road_collision__6_indices"
+          }
+        ]
+      }
+    },
+    "chunk_1_4.low.glb": {
+      "terrain_lod2": {
+        "sha256": "4fca7d43a819a958d3ada25f1e5b74c4c504882e3aa8e19f68e593e5b9cadf56",
+        "triangles": 8704,
+        "primitives": [
+          {
+            "material": "terrain_grass",
+            "surface": "grass",
+            "vertices": 4485,
+            "triangles": 8704,
+            "position_array": "chunk_1_4_low__terrain_lod2__0_positions",
+            "index_array": "chunk_1_4_low__terrain_lod2__0_indices"
+          }
+        ]
+      },
+      "road_collision": {
+        "sha256": "2db7c1461d612ea82710d7bbbfb97c2b6ae72181984988eae5cd5dbc7672c8af",
+        "triangles": 13185,
+        "primitives": [
+          {
+            "material": "collision_asphalt",
+            "surface": "asphalt",
+            "vertices": 2669,
+            "triangles": 3906,
+            "position_array": "chunk_1_4_low__road_collision__0_positions",
+            "index_array": "chunk_1_4_low__road_collision__0_indices"
+          },
+          {
+            "material": "collision_building",
+            "surface": "concrete",
+            "vertices": 3089,
+            "triangles": 1379,
+            "position_array": "chunk_1_4_low__road_collision__1_positions",
+            "index_array": "chunk_1_4_low__road_collision__1_indices"
+          },
+          {
+            "material": "collision_curb",
+            "surface": "concrete_kerb",
+            "vertices": 4109,
+            "triangles": 3753,
+            "position_array": "chunk_1_4_low__road_collision__2_positions",
+            "index_array": "chunk_1_4_low__road_collision__2_indices"
+          },
+          {
+            "material": "collision_fence",
+            "surface": "steel",
+            "vertices": 1234,
+            "triangles": 1222,
+            "position_array": "chunk_1_4_low__road_collision__3_positions",
+            "index_array": "chunk_1_4_low__road_collision__3_indices"
+          },
+          {
+            "material": "collision_grass",
+            "surface": "grass",
+            "vertices": 1407,
+            "triangles": 1638,
+            "position_array": "chunk_1_4_low__road_collision__4_positions",
+            "index_array": "chunk_1_4_low__road_collision__4_indices"
+          },
+          {
+            "material": "collision_paving",
+            "surface": "paving_stones",
+            "vertices": 938,
+            "triangles": 907,
+            "position_array": "chunk_1_4_low__road_collision__5_positions",
+            "index_array": "chunk_1_4_low__road_collision__5_indices"
+          },
+          {
+            "material": "collision_steel",
+            "surface": "steel",
+            "vertices": 136,
+            "triangles": 380,
+            "position_array": "chunk_1_4_low__road_collision__6_positions",
+            "index_array": "chunk_1_4_low__road_collision__6_indices"
+          }
+        ]
+      }
+    },
+    "chunk_1_5.low.glb": {
+      "terrain_lod2": {
+        "sha256": "01ec39caea8978e586a9fe4da6f43e0c67fc54164563d23566ff2d8a7a4a6219",
+        "triangles": 8704,
+        "primitives": [
+          {
+            "material": "terrain_grass",
+            "surface": "grass",
+            "vertices": 4485,
+            "triangles": 8704,
+            "position_array": "chunk_1_5_low__terrain_lod2__0_positions",
+            "index_array": "chunk_1_5_low__terrain_lod2__0_indices"
+          }
+        ]
+      },
+      "road_collision": {
+        "sha256": "913a383099da8c3d01cc239fd43d79acbb46b86f4266879df044bef2119fde22",
+        "triangles": 15228,
+        "primitives": [
+          {
+            "material": "collision_asphalt",
+            "surface": "asphalt",
+            "vertices": 2593,
+            "triangles": 4246,
+            "position_array": "chunk_1_5_low__road_collision__0_positions",
+            "index_array": "chunk_1_5_low__road_collision__0_indices"
+          },
+          {
+            "material": "collision_building",
+            "surface": "concrete",
+            "vertices": 6595,
+            "triangles": 2665,
+            "position_array": "chunk_1_5_low__road_collision__1_positions",
+            "index_array": "chunk_1_5_low__road_collision__1_indices"
+          },
+          {
+            "material": "collision_curb",
+            "surface": "concrete_kerb",
+            "vertices": 3690,
+            "triangles": 3376,
+            "position_array": "chunk_1_5_low__road_collision__2_positions",
+            "index_array": "chunk_1_5_low__road_collision__2_indices"
+          },
+          {
+            "material": "collision_fence",
+            "surface": "steel",
+            "vertices": 1384,
+            "triangles": 1376,
+            "position_array": "chunk_1_5_low__road_collision__3_positions",
+            "index_array": "chunk_1_5_low__road_collision__3_indices"
+          },
+          {
+            "material": "collision_grass",
+            "surface": "grass",
+            "vertices": 2395,
+            "triangles": 2744,
+            "position_array": "chunk_1_5_low__road_collision__4_positions",
+            "index_array": "chunk_1_5_low__road_collision__4_indices"
+          },
+          {
+            "material": "collision_paving",
+            "surface": "paving_stones",
+            "vertices": 802,
+            "triangles": 821,
+            "position_array": "chunk_1_5_low__road_collision__5_positions",
+            "index_array": "chunk_1_5_low__road_collision__5_indices"
+          }
+        ]
+      }
+    },
+    "chunk_1_6.low.glb": {
+      "terrain_lod2": {
+        "sha256": "939ab7021464f9e3fa59c02cbeae016debc47e20267df5d726164ff0a04d4dd1",
+        "triangles": 8704,
+        "primitives": [
+          {
+            "material": "terrain_grass",
+            "surface": "grass",
+            "vertices": 4485,
+            "triangles": 8704,
+            "position_array": "chunk_1_6_low__terrain_lod2__0_positions",
+            "index_array": "chunk_1_6_low__terrain_lod2__0_indices"
+          }
+        ]
+      },
+      "road_collision": {
+        "sha256": "fa8ca11efca3b95bb3a0c1e560660fb50b0fee2a7361aab28d34d4c5e32f0093",
+        "triangles": 9651,
+        "primitives": [
+          {
+            "material": "collision_asphalt",
+            "surface": "asphalt",
+            "vertices": 2230,
+            "triangles": 3509,
+            "position_array": "chunk_1_6_low__road_collision__0_positions",
+            "index_array": "chunk_1_6_low__road_collision__0_indices"
+          },
+          {
+            "material": "collision_building",
+            "surface": "concrete",
+            "vertices": 4368,
+            "triangles": 1794,
+            "position_array": "chunk_1_6_low__road_collision__1_positions",
+            "index_array": "chunk_1_6_low__road_collision__1_indices"
+          },
+          {
+            "material": "collision_curb",
+            "surface": "concrete_kerb",
+            "vertices": 2590,
+            "triangles": 2334,
+            "position_array": "chunk_1_6_low__road_collision__2_positions",
+            "index_array": "chunk_1_6_low__road_collision__2_indices"
+          },
+          {
+            "material": "collision_fence",
+            "surface": "steel",
+            "vertices": 219,
+            "triangles": 214,
+            "position_array": "chunk_1_6_low__road_collision__3_positions",
+            "index_array": "chunk_1_6_low__road_collision__3_indices"
+          },
+          {
+            "material": "collision_grass",
+            "surface": "grass",
+            "vertices": 1380,
+            "triangles": 1702,
+            "position_array": "chunk_1_6_low__road_collision__4_positions",
+            "index_array": "chunk_1_6_low__road_collision__4_indices"
+          },
+          {
+            "material": "collision_paving",
+            "surface": "paving_stones",
+            "vertices": 117,
+            "triangles": 98,
+            "position_array": "chunk_1_6_low__road_collision__5_positions",
+            "index_array": "chunk_1_6_low__road_collision__5_indices"
+          }
+        ]
+      }
+    },
+    "chunk_1_7.low.glb": {
+      "terrain_lod2": {
+        "sha256": "62a839fad9d6768d36154934bcf040d39f8523d7d6971d4c4a09ac7a4e2645cc",
+        "triangles": 8704,
+        "primitives": [
+          {
+            "material": "terrain_grass",
+            "surface": "grass",
+            "vertices": 4485,
+            "triangles": 8704,
+            "position_array": "chunk_1_7_low__terrain_lod2__0_positions",
+            "index_array": "chunk_1_7_low__terrain_lod2__0_indices"
+          }
+        ]
+      },
+      "road_collision": {
+        "sha256": "1250530192418d8948ae4d172107f557171da953bd0c67dd3d3027e1fa269a29",
+        "triangles": 17302,
+        "primitives": [
+          {
+            "material": "collision_asphalt",
+            "surface": "asphalt",
+            "vertices": 3680,
+            "triangles": 5541,
+            "position_array": "chunk_1_7_low__road_collision__0_positions",
+            "index_array": "chunk_1_7_low__road_collision__0_indices"
+          },
+          {
+            "material": "collision_building",
+            "surface": "concrete",
+            "vertices": 6954,
+            "triangles": 2876,
+            "position_array": "chunk_1_7_low__road_collision__1_positions",
+            "index_array": "chunk_1_7_low__road_collision__1_indices"
+          },
+          {
+            "material": "collision_curb",
+            "surface": "concrete_kerb",
+            "vertices": 4703,
+            "triangles": 4212,
+            "position_array": "chunk_1_7_low__road_collision__2_positions",
+            "index_array": "chunk_1_7_low__road_collision__2_indices"
+          },
+          {
+            "material": "collision_fence",
+            "surface": "steel",
+            "vertices": 460,
+            "triangles": 456,
+            "position_array": "chunk_1_7_low__road_collision__3_positions",
+            "index_array": "chunk_1_7_low__road_collision__3_indices"
+          },
+          {
+            "material": "collision_grass",
+            "surface": "grass",
+            "vertices": 2350,
+            "triangles": 2823,
+            "position_array": "chunk_1_7_low__road_collision__4_positions",
+            "index_array": "chunk_1_7_low__road_collision__4_indices"
+          },
+          {
+            "material": "collision_paving",
+            "surface": "paving_stones",
+            "vertices": 1385,
+            "triangles": 1394,
+            "position_array": "chunk_1_7_low__road_collision__5_positions",
+            "index_array": "chunk_1_7_low__road_collision__5_indices"
+          }
+        ]
+      }
+    },
+    "chunk_2_0.low.glb": {
+      "terrain_lod2": {
+        "sha256": "4f9dc1ba4eb4825509baf400f0faa4e4e03ca0ad8ac78d7dfca2245e0892348e",
+        "triangles": 8704,
+        "primitives": [
+          {
+            "material": "terrain_grass",
+            "surface": "grass",
+            "vertices": 4485,
+            "triangles": 8704,
+            "position_array": "chunk_2_0_low__terrain_lod2__0_positions",
+            "index_array": "chunk_2_0_low__terrain_lod2__0_indices"
+          }
+        ]
+      }
+    },
+    "chunk_2_1.low.glb": {
+      "terrain_lod2": {
+        "sha256": "c28609f31384c7e8f7ff2c876259e6366c952da1ab07bf281d97f15cb70c7d20",
+        "triangles": 8704,
+        "primitives": [
+          {
+            "material": "terrain_grass",
+            "surface": "grass",
+            "vertices": 4485,
+            "triangles": 8704,
+            "position_array": "chunk_2_1_low__terrain_lod2__0_positions",
+            "index_array": "chunk_2_1_low__terrain_lod2__0_indices"
+          }
+        ]
+      }
+    },
+    "chunk_2_2.low.glb": {
+      "terrain_lod2": {
+        "sha256": "e98240f2fcdbdb4791ab943ce353abb6d064800958ef9588ea9f6d90e7c01461",
+        "triangles": 8704,
+        "primitives": [
+          {
+            "material": "terrain_grass",
+            "surface": "grass",
+            "vertices": 4485,
+            "triangles": 8704,
+            "position_array": "chunk_2_2_low__terrain_lod2__0_positions",
+            "index_array": "chunk_2_2_low__terrain_lod2__0_indices"
+          }
+        ]
+      }
+    },
+    "chunk_2_3.low.glb": {
+      "terrain_lod2": {
+        "sha256": "cf9b68f1dbdd4c607f8b8cec4c1c7b84d657d9eb13f30523b8b18f1a22758dfd",
+        "triangles": 8704,
+        "primitives": [
+          {
+            "material": "terrain_grass",
+            "surface": "grass",
+            "vertices": 4485,
+            "triangles": 8704,
+            "position_array": "chunk_2_3_low__terrain_lod2__0_positions",
+            "index_array": "chunk_2_3_low__terrain_lod2__0_indices"
+          }
+        ]
+      },
+      "road_collision": {
+        "sha256": "7e230d4bb8a5b5385da494952c5e1b17a435ab4d1700548e1dbb26985b6285cd",
+        "triangles": 2583,
+        "primitives": [
+          {
+            "material": "collision_asphalt",
+            "surface": "asphalt",
+            "vertices": 205,
+            "triangles": 282,
+            "position_array": "chunk_2_3_low__road_collision__0_positions",
+            "index_array": "chunk_2_3_low__road_collision__0_indices"
+          },
+          {
+            "material": "collision_building",
+            "surface": "concrete",
+            "vertices": 1437,
+            "triangles": 567,
+            "position_array": "chunk_2_3_low__road_collision__1_positions",
+            "index_array": "chunk_2_3_low__road_collision__1_indices"
+          },
+          {
+            "material": "collision_curb",
+            "surface": "concrete_kerb",
+            "vertices": 476,
+            "triangles": 436,
+            "position_array": "chunk_2_3_low__road_collision__2_positions",
+            "index_array": "chunk_2_3_low__road_collision__2_indices"
+          },
+          {
+            "material": "collision_fence",
+            "surface": "steel",
+            "vertices": 249,
+            "triangles": 240,
+            "position_array": "chunk_2_3_low__road_collision__3_positions",
+            "index_array": "chunk_2_3_low__road_collision__3_indices"
+          },
+          {
+            "material": "collision_grass",
+            "surface": "grass",
+            "vertices": 779,
+            "triangles": 1002,
+            "position_array": "chunk_2_3_low__road_collision__4_positions",
+            "index_array": "chunk_2_3_low__road_collision__4_indices"
+          },
+          {
+            "material": "collision_paving",
+            "surface": "paving_stones",
+            "vertices": 69,
+            "triangles": 56,
+            "position_array": "chunk_2_3_low__road_collision__5_positions",
+            "index_array": "chunk_2_3_low__road_collision__5_indices"
+          }
+        ]
+      }
+    },
+    "chunk_2_4.low.glb": {
+      "terrain_lod2": {
+        "sha256": "930ba17eef970206ffecf92ac49490c45b0e6b42185d744304e394f2dd5a10d8",
+        "triangles": 8704,
+        "primitives": [
+          {
+            "material": "terrain_grass",
+            "surface": "grass",
+            "vertices": 4485,
+            "triangles": 8704,
+            "position_array": "chunk_2_4_low__terrain_lod2__0_positions",
+            "index_array": "chunk_2_4_low__terrain_lod2__0_indices"
+          }
+        ]
+      },
+      "road_collision": {
+        "sha256": "b9ba581ac466e357d746b9225d54e8db46c38e30128a53fff1f0b394685917e0",
+        "triangles": 14119,
+        "primitives": [
+          {
+            "material": "collision_asphalt",
+            "surface": "asphalt",
+            "vertices": 3028,
+            "triangles": 4546,
+            "position_array": "chunk_2_4_low__road_collision__0_positions",
+            "index_array": "chunk_2_4_low__road_collision__0_indices"
+          },
+          {
+            "material": "collision_building",
+            "surface": "concrete",
+            "vertices": 785,
+            "triangles": 583,
+            "position_array": "chunk_2_4_low__road_collision__1_positions",
+            "index_array": "chunk_2_4_low__road_collision__1_indices"
+          },
+          {
+            "material": "collision_curb",
+            "surface": "concrete_kerb",
+            "vertices": 3800,
+            "triangles": 3518,
+            "position_array": "chunk_2_4_low__road_collision__2_positions",
+            "index_array": "chunk_2_4_low__road_collision__2_indices"
+          },
+          {
+            "material": "collision_fence",
+            "surface": "steel",
+            "vertices": 2544,
+            "triangles": 2309,
+            "position_array": "chunk_2_4_low__road_collision__3_positions",
+            "index_array": "chunk_2_4_low__road_collision__3_indices"
+          },
+          {
+            "material": "collision_grass",
+            "surface": "grass",
+            "vertices": 580,
+            "triangles": 509,
+            "position_array": "chunk_2_4_low__road_collision__4_positions",
+            "index_array": "chunk_2_4_low__road_collision__4_indices"
+          },
+          {
+            "material": "collision_paving",
+            "surface": "paving_stones",
+            "vertices": 812,
+            "triangles": 814,
+            "position_array": "chunk_2_4_low__road_collision__5_positions",
+            "index_array": "chunk_2_4_low__road_collision__5_indices"
+          },
+          {
+            "material": "collision_steel",
+            "surface": "steel",
+            "vertices": 606,
+            "triangles": 1840,
+            "position_array": "chunk_2_4_low__road_collision__6_positions",
+            "index_array": "chunk_2_4_low__road_collision__6_indices"
+          }
+        ]
+      }
+    },
+    "chunk_2_5.low.glb": {
+      "terrain_lod2": {
+        "sha256": "108d60689e12c98b2cba4d86dc0db3e5ba05db14bea36c8c764b6f83cdc0c5ce",
+        "triangles": 8704,
+        "primitives": [
+          {
+            "material": "terrain_grass",
+            "surface": "grass",
+            "vertices": 4485,
+            "triangles": 8704,
+            "position_array": "chunk_2_5_low__terrain_lod2__0_positions",
+            "index_array": "chunk_2_5_low__terrain_lod2__0_indices"
+          }
+        ]
+      },
+      "road_collision": {
+        "sha256": "bd6c3d248b161250689b5dbe5b22fd70fb4cfdbafb630d363bc2bb71c7dd5980",
+        "triangles": 15277,
+        "primitives": [
+          {
+            "material": "collision_asphalt",
+            "surface": "asphalt",
+            "vertices": 3099,
+            "triangles": 4793,
+            "position_array": "chunk_2_5_low__road_collision__0_positions",
+            "index_array": "chunk_2_5_low__road_collision__0_indices"
+          },
+          {
+            "material": "collision_building",
+            "surface": "concrete",
+            "vertices": 4033,
+            "triangles": 1701,
+            "position_array": "chunk_2_5_low__road_collision__1_positions",
+            "index_array": "chunk_2_5_low__road_collision__1_indices"
+          },
+          {
+            "material": "collision_curb",
+            "surface": "concrete_kerb",
+            "vertices": 4433,
+            "triangles": 3959,
+            "position_array": "chunk_2_5_low__road_collision__2_positions",
+            "index_array": "chunk_2_5_low__road_collision__2_indices"
+          },
+          {
+            "material": "collision_fence",
+            "surface": "steel",
+            "vertices": 1061,
+            "triangles": 1054,
+            "position_array": "chunk_2_5_low__road_collision__3_positions",
+            "index_array": "chunk_2_5_low__road_collision__3_indices"
+          },
+          {
+            "material": "collision_grass",
+            "surface": "grass",
+            "vertices": 470,
+            "triangles": 523,
+            "position_array": "chunk_2_5_low__road_collision__4_positions",
+            "index_array": "chunk_2_5_low__road_collision__4_indices"
+          },
+          {
+            "material": "collision_paving",
+            "surface": "paving_stones",
+            "vertices": 2687,
+            "triangles": 3247,
+            "position_array": "chunk_2_5_low__road_collision__5_positions",
+            "index_array": "chunk_2_5_low__road_collision__5_indices"
+          }
+        ]
+      }
+    },
+    "chunk_2_6.low.glb": {
+      "terrain_lod2": {
+        "sha256": "2f5981d3e869a4b5f60c9fd3979163727e31fdd3bc564d42f54b5ce64e025618",
+        "triangles": 8704,
+        "primitives": [
+          {
+            "material": "terrain_grass",
+            "surface": "grass",
+            "vertices": 4485,
+            "triangles": 8704,
+            "position_array": "chunk_2_6_low__terrain_lod2__0_positions",
+            "index_array": "chunk_2_6_low__terrain_lod2__0_indices"
+          }
+        ]
+      },
+      "road_collision": {
+        "sha256": "e30a48f2ad2d3c2b2512be1e81b34a8ef8021538087939f2e1b1fe1888ca02f0",
+        "triangles": 15711,
+        "primitives": [
+          {
+            "material": "collision_asphalt",
+            "surface": "asphalt",
+            "vertices": 2312,
+            "triangles": 3437,
+            "position_array": "chunk_2_6_low__road_collision__0_positions",
+            "index_array": "chunk_2_6_low__road_collision__0_indices"
+          },
+          {
+            "material": "collision_building",
+            "surface": "concrete",
+            "vertices": 4327,
+            "triangles": 1751,
+            "position_array": "chunk_2_6_low__road_collision__1_positions",
+            "index_array": "chunk_2_6_low__road_collision__1_indices"
+          },
+          {
+            "material": "collision_curb",
+            "surface": "concrete_kerb",
+            "vertices": 3713,
+            "triangles": 3459,
+            "position_array": "chunk_2_6_low__road_collision__2_positions",
+            "index_array": "chunk_2_6_low__road_collision__2_indices"
+          },
+          {
+            "material": "collision_fence",
+            "surface": "steel",
+            "vertices": 1810,
+            "triangles": 1796,
+            "position_array": "chunk_2_6_low__road_collision__3_positions",
+            "index_array": "chunk_2_6_low__road_collision__3_indices"
+          },
+          {
+            "material": "collision_grass",
+            "surface": "grass",
+            "vertices": 2620,
+            "triangles": 3277,
+            "position_array": "chunk_2_6_low__road_collision__4_positions",
+            "index_array": "chunk_2_6_low__road_collision__4_indices"
+          },
+          {
+            "material": "collision_paving",
+            "surface": "paving_stones",
+            "vertices": 1848,
+            "triangles": 1991,
+            "position_array": "chunk_2_6_low__road_collision__5_positions",
+            "index_array": "chunk_2_6_low__road_collision__5_indices"
+          }
+        ]
+      }
+    },
+    "chunk_2_7.low.glb": {
+      "terrain_lod2": {
+        "sha256": "e4c7ac0bdb763a9db4b9291acc47f0fa37b13e09decb06ba29f16384e417fea2",
+        "triangles": 8704,
+        "primitives": [
+          {
+            "material": "terrain_grass",
+            "surface": "grass",
+            "vertices": 4485,
+            "triangles": 8704,
+            "position_array": "chunk_2_7_low__terrain_lod2__0_positions",
+            "index_array": "chunk_2_7_low__terrain_lod2__0_indices"
+          }
+        ]
+      },
+      "road_collision": {
+        "sha256": "49cc181f769d42ce5ddeb89784da4ccf5a414f58699b736aff3a8a855fe3c4e6",
+        "triangles": 10690,
+        "primitives": [
+          {
+            "material": "collision_asphalt",
+            "surface": "asphalt",
+            "vertices": 2098,
+            "triangles": 3196,
+            "position_array": "chunk_2_7_low__road_collision__0_positions",
+            "index_array": "chunk_2_7_low__road_collision__0_indices"
+          },
+          {
+            "material": "collision_building",
+            "surface": "concrete",
+            "vertices": 1291,
+            "triangles": 527,
+            "position_array": "chunk_2_7_low__road_collision__1_positions",
+            "index_array": "chunk_2_7_low__road_collision__1_indices"
+          },
+          {
+            "material": "collision_curb",
+            "surface": "concrete_kerb",
+            "vertices": 3339,
+            "triangles": 3045,
+            "position_array": "chunk_2_7_low__road_collision__2_positions",
+            "index_array": "chunk_2_7_low__road_collision__2_indices"
+          },
+          {
+            "material": "collision_fence",
+            "surface": "steel",
+            "vertices": 1353,
+            "triangles": 1348,
+            "position_array": "chunk_2_7_low__road_collision__3_positions",
+            "index_array": "chunk_2_7_low__road_collision__3_indices"
+          },
+          {
+            "material": "collision_grass",
+            "surface": "grass",
+            "vertices": 820,
+            "triangles": 1084,
+            "position_array": "chunk_2_7_low__road_collision__4_positions",
+            "index_array": "chunk_2_7_low__road_collision__4_indices"
+          },
+          {
+            "material": "collision_paving",
+            "surface": "paving_stones",
+            "vertices": 1269,
+            "triangles": 1270,
+            "position_array": "chunk_2_7_low__road_collision__5_positions",
+            "index_array": "chunk_2_7_low__road_collision__5_indices"
+          },
+          {
+            "material": "collision_steel",
+            "surface": "steel",
+            "vertices": 78,
+            "triangles": 220,
+            "position_array": "chunk_2_7_low__road_collision__6_positions",
+            "index_array": "chunk_2_7_low__road_collision__6_indices"
+          }
+        ]
+      }
+    },
+    "chunk_3_0.low.glb": {
+      "terrain_lod2": {
+        "sha256": "d4efe7f6d467587f7fba9168857757bd2a1201c3e2a6a65d15ee3a404c64c36d",
+        "triangles": 8704,
+        "primitives": [
+          {
+            "material": "terrain_grass",
+            "surface": "grass",
+            "vertices": 4485,
+            "triangles": 8704,
+            "position_array": "chunk_3_0_low__terrain_lod2__0_positions",
+            "index_array": "chunk_3_0_low__terrain_lod2__0_indices"
+          }
+        ]
+      }
+    },
+    "chunk_3_1.low.glb": {
+      "terrain_lod2": {
+        "sha256": "b8f32643230a05ccbd47fae782eeb57a055cc030fcf4d738559708764b538b15",
+        "triangles": 8704,
+        "primitives": [
+          {
+            "material": "terrain_grass",
+            "surface": "grass",
+            "vertices": 4485,
+            "triangles": 8704,
+            "position_array": "chunk_3_1_low__terrain_lod2__0_positions",
+            "index_array": "chunk_3_1_low__terrain_lod2__0_indices"
+          }
+        ]
+      }
+    },
+    "chunk_3_2.low.glb": {
+      "terrain_lod2": {
+        "sha256": "be3db3c70d98f169fcd1d9761bffe61c3b80229ff4a6f84e1e6b772c60851476",
+        "triangles": 8704,
+        "primitives": [
+          {
+            "material": "terrain_grass",
+            "surface": "grass",
+            "vertices": 4485,
+            "triangles": 8704,
+            "position_array": "chunk_3_2_low__terrain_lod2__0_positions",
+            "index_array": "chunk_3_2_low__terrain_lod2__0_indices"
+          }
+        ]
+      }
+    },
+    "chunk_3_3.low.glb": {
+      "terrain_lod2": {
+        "sha256": "4bbc9fcff771302ac5a8044d7d4971fae7e824854e982b9e634b3dee895f88af",
+        "triangles": 8704,
+        "primitives": [
+          {
+            "material": "terrain_grass",
+            "surface": "grass",
+            "vertices": 4485,
+            "triangles": 8704,
+            "position_array": "chunk_3_3_low__terrain_lod2__0_positions",
+            "index_array": "chunk_3_3_low__terrain_lod2__0_indices"
+          }
+        ]
+      },
+      "road_collision": {
+        "sha256": "9f0665273229afb29267af53695d7cd6a0889c52fbface27b7b0486000b64c8d",
+        "triangles": 216,
+        "primitives": [
+          {
+            "material": "collision_fence",
+            "surface": "steel",
+            "vertices": 216,
+            "triangles": 216,
+            "position_array": "chunk_3_3_low__road_collision__0_positions",
+            "index_array": "chunk_3_3_low__road_collision__0_indices"
+          }
+        ]
+      }
+    },
+    "chunk_3_4.low.glb": {
+      "terrain_lod2": {
+        "sha256": "ef9c8c1a6b4a8b9506db5d3472ffde592b059832b5b06f8a48ed3af46ffbf815",
+        "triangles": 8704,
+        "primitives": [
+          {
+            "material": "terrain_grass",
+            "surface": "grass",
+            "vertices": 4485,
+            "triangles": 8704,
+            "position_array": "chunk_3_4_low__terrain_lod2__0_positions",
+            "index_array": "chunk_3_4_low__terrain_lod2__0_indices"
+          }
+        ]
+      },
+      "road_collision": {
+        "sha256": "749d683328fbb966499a37270a34a90d5e1081134366467df31b34613dcf6178",
+        "triangles": 8607,
+        "primitives": [
+          {
+            "material": "collision_asphalt",
+            "surface": "asphalt",
+            "vertices": 1906,
+            "triangles": 2823,
+            "position_array": "chunk_3_4_low__road_collision__0_positions",
+            "index_array": "chunk_3_4_low__road_collision__0_indices"
+          },
+          {
+            "material": "collision_building",
+            "surface": "concrete",
+            "vertices": 335,
+            "triangles": 143,
+            "position_array": "chunk_3_4_low__road_collision__1_positions",
+            "index_array": "chunk_3_4_low__road_collision__1_indices"
+          },
+          {
+            "material": "collision_curb",
+            "surface": "concrete_kerb",
+            "vertices": 2832,
+            "triangles": 2726,
+            "position_array": "chunk_3_4_low__road_collision__2_positions",
+            "index_array": "chunk_3_4_low__road_collision__2_indices"
+          },
+          {
+            "material": "collision_fence",
+            "surface": "steel",
+            "vertices": 1916,
+            "triangles": 1708,
+            "position_array": "chunk_3_4_low__road_collision__3_positions",
+            "index_array": "chunk_3_4_low__road_collision__3_indices"
+          },
+          {
+            "material": "collision_grass",
+            "surface": "grass",
+            "vertices": 179,
+            "triangles": 155,
+            "position_array": "chunk_3_4_low__road_collision__4_positions",
+            "index_array": "chunk_3_4_low__road_collision__4_indices"
+          },
+          {
+            "material": "collision_paving",
+            "surface": "paving_stones",
+            "vertices": 782,
+            "triangles": 1052,
+            "position_array": "chunk_3_4_low__road_collision__5_positions",
+            "index_array": "chunk_3_4_low__road_collision__5_indices"
+          }
+        ]
+      }
+    },
+    "chunk_3_5.low.glb": {
+      "terrain_lod2": {
+        "sha256": "68725fc2b46c74027648572b061efcc9ff10d53e72712ce2968b5cc17d57f605",
+        "triangles": 8704,
+        "primitives": [
+          {
+            "material": "terrain_grass",
+            "surface": "grass",
+            "vertices": 4485,
+            "triangles": 8704,
+            "position_array": "chunk_3_5_low__terrain_lod2__0_positions",
+            "index_array": "chunk_3_5_low__terrain_lod2__0_indices"
+          }
+        ]
+      },
+      "road_collision": {
+        "sha256": "6bc592f89b306faf94113ff9b17c9ac05ea85be20ce8dcd2ccab69093064a0e5",
+        "triangles": 9536,
+        "primitives": [
+          {
+            "material": "collision_asphalt",
+            "surface": "asphalt",
+            "vertices": 2580,
+            "triangles": 3510,
+            "position_array": "chunk_3_5_low__road_collision__0_positions",
+            "index_array": "chunk_3_5_low__road_collision__0_indices"
+          },
+          {
+            "material": "collision_building",
+            "surface": "concrete",
+            "vertices": 307,
+            "triangles": 133,
+            "position_array": "chunk_3_5_low__road_collision__1_positions",
+            "index_array": "chunk_3_5_low__road_collision__1_indices"
+          },
+          {
+            "material": "collision_curb",
+            "surface": "concrete_kerb",
+            "vertices": 3197,
+            "triangles": 3012,
+            "position_array": "chunk_3_5_low__road_collision__2_positions",
+            "index_array": "chunk_3_5_low__road_collision__2_indices"
+          },
+          {
+            "material": "collision_fence",
+            "surface": "steel",
+            "vertices": 1548,
+            "triangles": 1544,
+            "position_array": "chunk_3_5_low__road_collision__3_positions",
+            "index_array": "chunk_3_5_low__road_collision__3_indices"
+          },
+          {
+            "material": "collision_grass",
+            "surface": "grass",
+            "vertices": 773,
+            "triangles": 717,
+            "position_array": "chunk_3_5_low__road_collision__4_positions",
+            "index_array": "chunk_3_5_low__road_collision__4_indices"
+          },
+          {
+            "material": "collision_paving",
+            "surface": "paving_stones",
+            "vertices": 604,
+            "triangles": 620,
+            "position_array": "chunk_3_5_low__road_collision__5_positions",
+            "index_array": "chunk_3_5_low__road_collision__5_indices"
+          }
+        ]
+      }
+    },
+    "chunk_3_6.low.glb": {
+      "terrain_lod2": {
+        "sha256": "70a050ddd0408ca7a12cc13a9a49bce86a99959e96b1a03eb237bdf7d124b32b",
+        "triangles": 8704,
+        "primitives": [
+          {
+            "material": "terrain_grass",
+            "surface": "grass",
+            "vertices": 4485,
+            "triangles": 8704,
+            "position_array": "chunk_3_6_low__terrain_lod2__0_positions",
+            "index_array": "chunk_3_6_low__terrain_lod2__0_indices"
+          }
+        ]
+      },
+      "road_collision": {
+        "sha256": "f720661b69e81ce250036245200876f8dce9ed25bbd492e89b53ec61ed67542e",
+        "triangles": 10885,
+        "primitives": [
+          {
+            "material": "collision_asphalt",
+            "surface": "asphalt",
+            "vertices": 2571,
+            "triangles": 3952,
+            "position_array": "chunk_3_6_low__road_collision__0_positions",
+            "index_array": "chunk_3_6_low__road_collision__0_indices"
+          },
+          {
+            "material": "collision_building",
+            "surface": "concrete",
+            "vertices": 2090,
+            "triangles": 896,
+            "position_array": "chunk_3_6_low__road_collision__1_positions",
+            "index_array": "chunk_3_6_low__road_collision__1_indices"
+          },
+          {
+            "material": "collision_curb",
+            "surface": "concrete_kerb",
+            "vertices": 2883,
+            "triangles": 2591,
+            "position_array": "chunk_3_6_low__road_collision__2_positions",
+            "index_array": "chunk_3_6_low__road_collision__2_indices"
+          },
+          {
+            "material": "collision_fence",
+            "surface": "steel",
+            "vertices": 932,
+            "triangles": 928,
+            "position_array": "chunk_3_6_low__road_collision__3_positions",
+            "index_array": "chunk_3_6_low__road_collision__3_indices"
+          },
+          {
+            "material": "collision_paving",
+            "surface": "paving_stones",
+            "vertices": 2175,
+            "triangles": 2518,
+            "position_array": "chunk_3_6_low__road_collision__4_positions",
+            "index_array": "chunk_3_6_low__road_collision__4_indices"
+          }
+        ]
+      }
+    },
+    "chunk_3_7.low.glb": {
+      "terrain_lod2": {
+        "sha256": "6f790489aee458943e945ededbe4948a8df6627e33cb1f7b00d2aff9336b8ad6",
+        "triangles": 8704,
+        "primitives": [
+          {
+            "material": "terrain_grass",
+            "surface": "grass",
+            "vertices": 4485,
+            "triangles": 8704,
+            "position_array": "chunk_3_7_low__terrain_lod2__0_positions",
+            "index_array": "chunk_3_7_low__terrain_lod2__0_indices"
+          }
+        ]
+      },
+      "road_collision": {
+        "sha256": "b3fd921332395cd99e7c97eb8155122ad25c826deb31e4cdb71bf4a68be2c6ea",
+        "triangles": 13823,
+        "primitives": [
+          {
+            "material": "collision_asphalt",
+            "surface": "asphalt",
+            "vertices": 4675,
+            "triangles": 7092,
+            "position_array": "chunk_3_7_low__road_collision__0_positions",
+            "index_array": "chunk_3_7_low__road_collision__0_indices"
+          },
+          {
+            "material": "collision_building",
+            "surface": "concrete",
+            "vertices": 922,
+            "triangles": 400,
+            "position_array": "chunk_3_7_low__road_collision__1_positions",
+            "index_array": "chunk_3_7_low__road_collision__1_indices"
+          },
+          {
+            "material": "collision_curb",
+            "surface": "concrete_kerb",
+            "vertices": 3773,
+            "triangles": 3383,
+            "position_array": "chunk_3_7_low__road_collision__2_positions",
+            "index_array": "chunk_3_7_low__road_collision__2_indices"
+          },
+          {
+            "material": "collision_fence",
+            "surface": "steel",
+            "vertices": 980,
+            "triangles": 980,
+            "position_array": "chunk_3_7_low__road_collision__3_positions",
+            "index_array": "chunk_3_7_low__road_collision__3_indices"
+          },
+          {
+            "material": "collision_paving",
+            "surface": "paving_stones",
+            "vertices": 1764,
+            "triangles": 1968,
+            "position_array": "chunk_3_7_low__road_collision__4_positions",
+            "index_array": "chunk_3_7_low__road_collision__4_indices"
+          }
+        ]
+      }
+    },
+    "chunk_4_0.low.glb": {
+      "terrain_lod2": {
+        "sha256": "4c0a21cf8a2af4773bd50e5008bb9471af3568e63fbdffb3a7a5e6e53327055a",
+        "triangles": 8704,
+        "primitives": [
+          {
+            "material": "terrain_grass",
+            "surface": "grass",
+            "vertices": 4485,
+            "triangles": 8704,
+            "position_array": "chunk_4_0_low__terrain_lod2__0_positions",
+            "index_array": "chunk_4_0_low__terrain_lod2__0_indices"
+          }
+        ]
+      }
+    },
+    "chunk_4_1.low.glb": {
+      "terrain_lod2": {
+        "sha256": "d1a1db3a40985426291f053949adbaf586ea898964f69aadfe3cbe0e28e56cb6",
+        "triangles": 8704,
+        "primitives": [
+          {
+            "material": "terrain_grass",
+            "surface": "grass",
+            "vertices": 4485,
+            "triangles": 8704,
+            "position_array": "chunk_4_1_low__terrain_lod2__0_positions",
+            "index_array": "chunk_4_1_low__terrain_lod2__0_indices"
+          }
+        ]
+      }
+    },
+    "chunk_4_2.low.glb": {
+      "terrain_lod2": {
+        "sha256": "a5d07e254233d33b91177726867f882f0d2276a766d2edcbbb891f04190c204f",
+        "triangles": 8704,
+        "primitives": [
+          {
+            "material": "terrain_grass",
+            "surface": "grass",
+            "vertices": 4485,
+            "triangles": 8704,
+            "position_array": "chunk_4_2_low__terrain_lod2__0_positions",
+            "index_array": "chunk_4_2_low__terrain_lod2__0_indices"
+          }
+        ]
+      }
+    },
+    "chunk_4_3.low.glb": {
+      "terrain_lod2": {
+        "sha256": "77ff67fed1eb5c67803396d6477edd4a7f16d58e8ec2dcbc4f89beaf910134e7",
+        "triangles": 8704,
+        "primitives": [
+          {
+            "material": "terrain_grass",
+            "surface": "grass",
+            "vertices": 4485,
+            "triangles": 8704,
+            "position_array": "chunk_4_3_low__terrain_lod2__0_positions",
+            "index_array": "chunk_4_3_low__terrain_lod2__0_indices"
+          }
+        ]
+      },
+      "road_collision": {
+        "sha256": "6f69a50d0cd17a809e1f88ebf004b60a69046a69d00724b149db0ebc1b34223e",
+        "triangles": 363,
+        "primitives": [
+          {
+            "material": "collision_building",
+            "surface": "concrete",
+            "vertices": 83,
+            "triangles": 35,
+            "position_array": "chunk_4_3_low__road_collision__0_positions",
+            "index_array": "chunk_4_3_low__road_collision__0_indices"
+          },
+          {
+            "material": "collision_grass",
+            "surface": "grass",
+            "vertices": 198,
+            "triangles": 328,
+            "position_array": "chunk_4_3_low__road_collision__1_positions",
+            "index_array": "chunk_4_3_low__road_collision__1_indices"
+          }
+        ]
+      }
+    },
+    "chunk_4_4.low.glb": {
+      "terrain_lod2": {
+        "sha256": "7b0f8a714a58d97c63e783d8cc6154093f2ec94059f9d3be43bf5f0e95bf8526",
+        "triangles": 8704,
+        "primitives": [
+          {
+            "material": "terrain_grass",
+            "surface": "grass",
+            "vertices": 4485,
+            "triangles": 8704,
+            "position_array": "chunk_4_4_low__terrain_lod2__0_positions",
+            "index_array": "chunk_4_4_low__terrain_lod2__0_indices"
+          }
+        ]
+      },
+      "road_collision": {
+        "sha256": "f1997d6e538fdcdf6121a66e665ea9fc920890c1a6f00789fa0fe6f9095242d6",
+        "triangles": 3300,
+        "primitives": [
+          {
+            "material": "collision_asphalt",
+            "surface": "asphalt",
+            "vertices": 829,
+            "triangles": 1206,
+            "position_array": "chunk_4_4_low__road_collision__0_positions",
+            "index_array": "chunk_4_4_low__road_collision__0_indices"
+          },
+          {
+            "material": "collision_building",
+            "surface": "concrete",
+            "vertices": 125,
+            "triangles": 51,
+            "position_array": "chunk_4_4_low__road_collision__1_positions",
+            "index_array": "chunk_4_4_low__road_collision__1_indices"
+          },
+          {
+            "material": "collision_curb",
+            "surface": "concrete_kerb",
+            "vertices": 1063,
+            "triangles": 1027,
+            "position_array": "chunk_4_4_low__road_collision__2_positions",
+            "index_array": "chunk_4_4_low__road_collision__2_indices"
+          },
+          {
+            "material": "collision_paving",
+            "surface": "paving_stones",
+            "vertices": 698,
+            "triangles": 1016,
+            "position_array": "chunk_4_4_low__road_collision__3_positions",
+            "index_array": "chunk_4_4_low__road_collision__3_indices"
+          }
+        ]
+      }
+    },
+    "chunk_4_5.low.glb": {
+      "terrain_lod2": {
+        "sha256": "2e77b3be6dd66bb79aebd4cdc13d911018de5bdfdc0551277592567a0f5f0119",
+        "triangles": 8704,
+        "primitives": [
+          {
+            "material": "terrain_grass",
+            "surface": "grass",
+            "vertices": 4485,
+            "triangles": 8704,
+            "position_array": "chunk_4_5_low__terrain_lod2__0_positions",
+            "index_array": "chunk_4_5_low__terrain_lod2__0_indices"
+          }
+        ]
+      },
+      "road_collision": {
+        "sha256": "e5f94cdfe9e9acb6635838bc7c2ae110709d84d2bbc9ecb6073f9088e51cee1b",
+        "triangles": 12417,
+        "primitives": [
+          {
+            "material": "collision_asphalt",
+            "surface": "asphalt",
+            "vertices": 3817,
+            "triangles": 5604,
+            "position_array": "chunk_4_5_low__road_collision__0_positions",
+            "index_array": "chunk_4_5_low__road_collision__0_indices"
+          },
+          {
+            "material": "collision_building",
+            "surface": "concrete",
+            "vertices": 378,
+            "triangles": 164,
+            "position_array": "chunk_4_5_low__road_collision__1_positions",
+            "index_array": "chunk_4_5_low__road_collision__1_indices"
+          },
+          {
+            "material": "collision_curb",
+            "surface": "concrete_kerb",
+            "vertices": 2995,
+            "triangles": 2723,
+            "position_array": "chunk_4_5_low__road_collision__2_positions",
+            "index_array": "chunk_4_5_low__road_collision__2_indices"
+          },
+          {
+            "material": "collision_fence",
+            "surface": "steel",
+            "vertices": 295,
+            "triangles": 294,
+            "position_array": "chunk_4_5_low__road_collision__3_positions",
+            "index_array": "chunk_4_5_low__road_collision__3_indices"
+          },
+          {
+            "material": "collision_grass",
+            "surface": "grass",
+            "vertices": 845,
+            "triangles": 850,
+            "position_array": "chunk_4_5_low__road_collision__4_positions",
+            "index_array": "chunk_4_5_low__road_collision__4_indices"
+          },
+          {
+            "material": "collision_paving",
+            "surface": "paving_stones",
+            "vertices": 1880,
+            "triangles": 2782,
+            "position_array": "chunk_4_5_low__road_collision__5_positions",
+            "index_array": "chunk_4_5_low__road_collision__5_indices"
+          }
+        ]
+      }
+    },
+    "chunk_4_6.low.glb": {
+      "terrain_lod2": {
+        "sha256": "3925b9be6dd07d44967232f7c325d1a3fd9b75d52de7414a9588213138e8f5af",
+        "triangles": 8704,
+        "primitives": [
+          {
+            "material": "terrain_grass",
+            "surface": "grass",
+            "vertices": 4485,
+            "triangles": 8704,
+            "position_array": "chunk_4_6_low__terrain_lod2__0_positions",
+            "index_array": "chunk_4_6_low__terrain_lod2__0_indices"
+          }
+        ]
+      },
+      "road_collision": {
+        "sha256": "e9ba806f4c8fbc4d1fbe5dac9dbad32dffb2600c84f29a254fa6de0ef2c4f61f",
+        "triangles": 5501,
+        "primitives": [
+          {
+            "material": "collision_asphalt",
+            "surface": "asphalt",
+            "vertices": 2019,
+            "triangles": 3044,
+            "position_array": "chunk_4_6_low__road_collision__0_positions",
+            "index_array": "chunk_4_6_low__road_collision__0_indices"
+          },
+          {
+            "material": "collision_building",
+            "surface": "concrete",
+            "vertices": 214,
+            "triangles": 96,
+            "position_array": "chunk_4_6_low__road_collision__1_positions",
+            "index_array": "chunk_4_6_low__road_collision__1_indices"
+          },
+          {
+            "material": "collision_curb",
+            "surface": "concrete_kerb",
+            "vertices": 915,
+            "triangles": 853,
+            "position_array": "chunk_4_6_low__road_collision__2_positions",
+            "index_array": "chunk_4_6_low__road_collision__2_indices"
+          },
+          {
+            "material": "collision_fence",
+            "surface": "steel",
+            "vertices": 982,
+            "triangles": 976,
+            "position_array": "chunk_4_6_low__road_collision__3_positions",
+            "index_array": "chunk_4_6_low__road_collision__3_indices"
+          },
+          {
+            "material": "collision_grass",
+            "surface": "grass",
+            "vertices": 372,
+            "triangles": 356,
+            "position_array": "chunk_4_6_low__road_collision__4_positions",
+            "index_array": "chunk_4_6_low__road_collision__4_indices"
+          },
+          {
+            "material": "collision_paving",
+            "surface": "paving_stones",
+            "vertices": 163,
+            "triangles": 176,
+            "position_array": "chunk_4_6_low__road_collision__5_positions",
+            "index_array": "chunk_4_6_low__road_collision__5_indices"
+          }
+        ]
+      }
+    },
+    "chunk_4_7.low.glb": {
+      "terrain_lod2": {
+        "sha256": "30f52ae04c650b8f37b942a2d4034c158494dacc55bba6d17c32e24f0f53fef2",
+        "triangles": 8704,
+        "primitives": [
+          {
+            "material": "terrain_grass",
+            "surface": "grass",
+            "vertices": 4485,
+            "triangles": 8704,
+            "position_array": "chunk_4_7_low__terrain_lod2__0_positions",
+            "index_array": "chunk_4_7_low__terrain_lod2__0_indices"
+          }
+        ]
+      },
+      "road_collision": {
+        "sha256": "876f5da6bf57a15788894245a6cf1a81182db9ed13a5777bc8a08d81fa9b85f9",
+        "triangles": 9566,
+        "primitives": [
+          {
+            "material": "collision_asphalt",
+            "surface": "asphalt",
+            "vertices": 3004,
+            "triangles": 4517,
+            "position_array": "chunk_4_7_low__road_collision__0_positions",
+            "index_array": "chunk_4_7_low__road_collision__0_indices"
+          },
+          {
+            "material": "collision_building",
+            "surface": "concrete",
+            "vertices": 1704,
+            "triangles": 738,
+            "position_array": "chunk_4_7_low__road_collision__1_positions",
+            "index_array": "chunk_4_7_low__road_collision__1_indices"
+          },
+          {
+            "material": "collision_curb",
+            "surface": "concrete_kerb",
+            "vertices": 3265,
+            "triangles": 3037,
+            "position_array": "chunk_4_7_low__road_collision__2_positions",
+            "index_array": "chunk_4_7_low__road_collision__2_indices"
+          },
+          {
+            "material": "collision_fence",
+            "surface": "steel",
+            "vertices": 1264,
+            "triangles": 1260,
+            "position_array": "chunk_4_7_low__road_collision__3_positions",
+            "index_array": "chunk_4_7_low__road_collision__3_indices"
+          },
+          {
+            "material": "collision_paving",
+            "surface": "paving_stones",
+            "vertices": 18,
+            "triangles": 14,
+            "position_array": "chunk_4_7_low__road_collision__4_positions",
+            "index_array": "chunk_4_7_low__road_collision__4_indices"
+          }
+        ]
+      }
+    },
+    "chunk_5_0.low.glb": {
+      "terrain_lod2": {
+        "sha256": "8b7ebe9593a1d4c875d041915c3219e0dc2bb9240943c0af62b2e63e6587f975",
+        "triangles": 8704,
+        "primitives": [
+          {
+            "material": "terrain_grass",
+            "surface": "grass",
+            "vertices": 4485,
+            "triangles": 8704,
+            "position_array": "chunk_5_0_low__terrain_lod2__0_positions",
+            "index_array": "chunk_5_0_low__terrain_lod2__0_indices"
+          }
+        ]
+      }
+    },
+    "chunk_5_1.low.glb": {
+      "terrain_lod2": {
+        "sha256": "c4bdaa54015f49ec1ef28f773786754e93f05bab0f06964cb51dcbe34df67027",
+        "triangles": 8704,
+        "primitives": [
+          {
+            "material": "terrain_grass",
+            "surface": "grass",
+            "vertices": 4485,
+            "triangles": 8704,
+            "position_array": "chunk_5_1_low__terrain_lod2__0_positions",
+            "index_array": "chunk_5_1_low__terrain_lod2__0_indices"
+          }
+        ]
+      }
+    },
+    "chunk_5_2.low.glb": {
+      "terrain_lod2": {
+        "sha256": "63fdbf1ef429e2af7326ea40c1369ce93da18ddaf48ed01bf5c733568271bf29",
+        "triangles": 8704,
+        "primitives": [
+          {
+            "material": "terrain_grass",
+            "surface": "grass",
+            "vertices": 4485,
+            "triangles": 8704,
+            "position_array": "chunk_5_2_low__terrain_lod2__0_positions",
+            "index_array": "chunk_5_2_low__terrain_lod2__0_indices"
+          }
+        ]
+      }
+    },
+    "chunk_5_3.low.glb": {
+      "terrain_lod2": {
+        "sha256": "bc799266473c0bea417cee942f439889f3a9abcb320d89072169aa9aae8970ad",
+        "triangles": 8704,
+        "primitives": [
+          {
+            "material": "terrain_grass",
+            "surface": "grass",
+            "vertices": 4485,
+            "triangles": 8704,
+            "position_array": "chunk_5_3_low__terrain_lod2__0_positions",
+            "index_array": "chunk_5_3_low__terrain_lod2__0_indices"
+          }
+        ]
+      },
+      "road_collision": {
+        "sha256": "349b2be6ebf1ae90713b4ba4d12e5b204cd305ece3f5f560f43bbefc16e815ac",
+        "triangles": 2094,
+        "primitives": [
+          {
+            "material": "collision_asphalt",
+            "surface": "asphalt",
+            "vertices": 437,
+            "triangles": 631,
+            "position_array": "chunk_5_3_low__road_collision__0_positions",
+            "index_array": "chunk_5_3_low__road_collision__0_indices"
+          },
+          {
+            "material": "collision_building",
+            "surface": "concrete",
+            "vertices": 91,
+            "triangles": 39,
+            "position_array": "chunk_5_3_low__road_collision__1_positions",
+            "index_array": "chunk_5_3_low__road_collision__1_indices"
+          },
+          {
+            "material": "collision_curb",
+            "surface": "concrete_kerb",
+            "vertices": 351,
+            "triangles": 319,
+            "position_array": "chunk_5_3_low__road_collision__2_positions",
+            "index_array": "chunk_5_3_low__road_collision__2_indices"
+          },
+          {
+            "material": "collision_fence",
+            "surface": "steel",
+            "vertices": 902,
+            "triangles": 900,
+            "position_array": "chunk_5_3_low__road_collision__3_positions",
+            "index_array": "chunk_5_3_low__road_collision__3_indices"
+          },
+          {
+            "material": "collision_paving",
+            "surface": "paving_stones",
+            "vertices": 153,
+            "triangles": 205,
+            "position_array": "chunk_5_3_low__road_collision__4_positions",
+            "index_array": "chunk_5_3_low__road_collision__4_indices"
+          }
+        ]
+      }
+    },
+    "chunk_5_4.low.glb": {
+      "terrain_lod2": {
+        "sha256": "62c7a38617eec35c2788791f786f93c609c832f2c68e2d7411b7d491aa2e112b",
+        "triangles": 8704,
+        "primitives": [
+          {
+            "material": "terrain_grass",
+            "surface": "grass",
+            "vertices": 4485,
+            "triangles": 8704,
+            "position_array": "chunk_5_4_low__terrain_lod2__0_positions",
+            "index_array": "chunk_5_4_low__terrain_lod2__0_indices"
+          }
+        ]
+      },
+      "road_collision": {
+        "sha256": "e2fc1d4549cedd29d125983872b6a339312a97f109a16b401cba6f4352c44fbc",
+        "triangles": 5624,
+        "primitives": [
+          {
+            "material": "collision_asphalt",
+            "surface": "asphalt",
+            "vertices": 1299,
+            "triangles": 1783,
+            "position_array": "chunk_5_4_low__road_collision__0_positions",
+            "index_array": "chunk_5_4_low__road_collision__0_indices"
+          },
+          {
+            "material": "collision_building",
+            "surface": "concrete",
+            "vertices": 118,
+            "triangles": 50,
+            "position_array": "chunk_5_4_low__road_collision__1_positions",
+            "index_array": "chunk_5_4_low__road_collision__1_indices"
+          },
+          {
+            "material": "collision_curb",
+            "surface": "concrete_kerb",
+            "vertices": 2028,
+            "triangles": 1954,
+            "position_array": "chunk_5_4_low__road_collision__2_positions",
+            "index_array": "chunk_5_4_low__road_collision__2_indices"
+          },
+          {
+            "material": "collision_fence",
+            "surface": "steel",
+            "vertices": 863,
+            "triangles": 874,
+            "position_array": "chunk_5_4_low__road_collision__3_positions",
+            "index_array": "chunk_5_4_low__road_collision__3_indices"
+          },
+          {
+            "material": "collision_paving",
+            "surface": "paving_stones",
+            "vertices": 688,
+            "triangles": 963,
+            "position_array": "chunk_5_4_low__road_collision__4_positions",
+            "index_array": "chunk_5_4_low__road_collision__4_indices"
+          }
+        ]
+      }
+    },
+    "chunk_5_5.low.glb": {
+      "terrain_lod2": {
+        "sha256": "483576a56671eb5f88d91035a06c1031ccdec20ea553e0834fd1e06c01d153b8",
+        "triangles": 8704,
+        "primitives": [
+          {
+            "material": "terrain_grass",
+            "surface": "grass",
+            "vertices": 4485,
+            "triangles": 8704,
+            "position_array": "chunk_5_5_low__terrain_lod2__0_positions",
+            "index_array": "chunk_5_5_low__terrain_lod2__0_indices"
+          }
+        ]
+      },
+      "road_collision": {
+        "sha256": "615654c2dc81bef777a1a08749b0c7d627a3f82d94ea23c28607ed16440555b6",
+        "triangles": 7189,
+        "primitives": [
+          {
+            "material": "collision_asphalt",
+            "surface": "asphalt",
+            "vertices": 2477,
+            "triangles": 3786,
+            "position_array": "chunk_5_5_low__road_collision__0_positions",
+            "index_array": "chunk_5_5_low__road_collision__0_indices"
+          },
+          {
+            "material": "collision_building",
+            "surface": "concrete",
+            "vertices": 712,
+            "triangles": 310,
+            "position_array": "chunk_5_5_low__road_collision__1_positions",
+            "index_array": "chunk_5_5_low__road_collision__1_indices"
+          },
+          {
+            "material": "collision_curb",
+            "surface": "concrete_kerb",
+            "vertices": 2089,
+            "triangles": 1955,
+            "position_array": "chunk_5_5_low__road_collision__2_positions",
+            "index_array": "chunk_5_5_low__road_collision__2_indices"
+          },
+          {
+            "material": "collision_fence",
+            "surface": "steel",
+            "vertices": 708,
+            "triangles": 918,
+            "position_array": "chunk_5_5_low__road_collision__3_positions",
+            "index_array": "chunk_5_5_low__road_collision__3_indices"
+          },
+          {
+            "material": "collision_paving",
+            "surface": "paving_stones",
+            "vertices": 172,
+            "triangles": 220,
+            "position_array": "chunk_5_5_low__road_collision__4_positions",
+            "index_array": "chunk_5_5_low__road_collision__4_indices"
+          }
+        ]
+      }
+    },
+    "chunk_5_6.low.glb": {
+      "terrain_lod2": {
+        "sha256": "24a951349a1da879950dd3ec4d4cc9bc97bc32f11b92501b15c48316479849f4",
+        "triangles": 8704,
+        "primitives": [
+          {
+            "material": "terrain_grass",
+            "surface": "grass",
+            "vertices": 4485,
+            "triangles": 8704,
+            "position_array": "chunk_5_6_low__terrain_lod2__0_positions",
+            "index_array": "chunk_5_6_low__terrain_lod2__0_indices"
+          }
+        ]
+      },
+      "road_collision": {
+        "sha256": "e615f767fb54242fbd2c08244af27e7d3e53c751dd666493403262a89122484d",
+        "triangles": 11076,
+        "primitives": [
+          {
+            "material": "collision_asphalt",
+            "surface": "asphalt",
+            "vertices": 2966,
+            "triangles": 3911,
+            "position_array": "chunk_5_6_low__road_collision__0_positions",
+            "index_array": "chunk_5_6_low__road_collision__0_indices"
+          },
+          {
+            "material": "collision_building",
+            "surface": "concrete",
+            "vertices": 360,
+            "triangles": 168,
+            "position_array": "chunk_5_6_low__road_collision__1_positions",
+            "index_array": "chunk_5_6_low__road_collision__1_indices"
+          },
+          {
+            "material": "collision_curb",
+            "surface": "concrete_kerb",
+            "vertices": 3044,
+            "triangles": 2872,
+            "position_array": "chunk_5_6_low__road_collision__2_positions",
+            "index_array": "chunk_5_6_low__road_collision__2_indices"
+          },
+          {
+            "material": "collision_fence",
+            "surface": "steel",
+            "vertices": 1361,
+            "triangles": 1514,
+            "position_array": "chunk_5_6_low__road_collision__3_positions",
+            "index_array": "chunk_5_6_low__road_collision__3_indices"
+          },
+          {
+            "material": "collision_grass",
+            "surface": "grass",
+            "vertices": 495,
+            "triangles": 455,
+            "position_array": "chunk_5_6_low__road_collision__4_positions",
+            "index_array": "chunk_5_6_low__road_collision__4_indices"
+          },
+          {
+            "material": "collision_paving",
+            "surface": "paving_stones",
+            "vertices": 677,
+            "triangles": 676,
+            "position_array": "chunk_5_6_low__road_collision__5_positions",
+            "index_array": "chunk_5_6_low__road_collision__5_indices"
+          },
+          {
+            "material": "collision_steel",
+            "surface": "steel",
+            "vertices": 484,
+            "triangles": 1480,
+            "position_array": "chunk_5_6_low__road_collision__6_positions",
+            "index_array": "chunk_5_6_low__road_collision__6_indices"
+          }
+        ]
+      }
+    },
+    "chunk_5_7.low.glb": {
+      "terrain_lod2": {
+        "sha256": "f37a6580d15507e8b0f2a3c164dbccc0b8bd8eb652785a3fc56f0e967d136ab4",
+        "triangles": 8704,
+        "primitives": [
+          {
+            "material": "terrain_grass",
+            "surface": "grass",
+            "vertices": 4485,
+            "triangles": 8704,
+            "position_array": "chunk_5_7_low__terrain_lod2__0_positions",
+            "index_array": "chunk_5_7_low__terrain_lod2__0_indices"
+          }
+        ]
+      },
+      "road_collision": {
+        "sha256": "406c47773f71220f2914d40aa96aa572df795593b62ad305b5f2954aa602b7df",
+        "triangles": 13080,
+        "primitives": [
+          {
+            "material": "collision_asphalt",
+            "surface": "asphalt",
+            "vertices": 4931,
+            "triangles": 7558,
+            "position_array": "chunk_5_7_low__road_collision__0_positions",
+            "index_array": "chunk_5_7_low__road_collision__0_indices"
+          },
+          {
+            "material": "collision_building",
+            "surface": "concrete",
+            "vertices": 3026,
+            "triangles": 1290,
+            "position_array": "chunk_5_7_low__road_collision__1_positions",
+            "index_array": "chunk_5_7_low__road_collision__1_indices"
+          },
+          {
+            "material": "collision_curb",
+            "surface": "concrete_kerb",
+            "vertices": 3401,
+            "triangles": 3077,
+            "position_array": "chunk_5_7_low__road_collision__2_positions",
+            "index_array": "chunk_5_7_low__road_collision__2_indices"
+          },
+          {
+            "material": "collision_fence",
+            "surface": "steel",
+            "vertices": 918,
+            "triangles": 916,
+            "position_array": "chunk_5_7_low__road_collision__3_positions",
+            "index_array": "chunk_5_7_low__road_collision__3_indices"
+          },
+          {
+            "material": "collision_paving",
+            "surface": "paving_stones",
+            "vertices": 210,
+            "triangles": 239,
+            "position_array": "chunk_5_7_low__road_collision__4_positions",
+            "index_array": "chunk_5_7_low__road_collision__4_indices"
+          }
+        ]
+      }
+    },
+    "chunk_6_0.low.glb": {
+      "terrain_lod2": {
+        "sha256": "99265f12eec0a89d654efc844316b6488e9a62276920b88425179c4e5e05db5c",
+        "triangles": 8704,
+        "primitives": [
+          {
+            "material": "terrain_grass",
+            "surface": "grass",
+            "vertices": 4485,
+            "triangles": 8704,
+            "position_array": "chunk_6_0_low__terrain_lod2__0_positions",
+            "index_array": "chunk_6_0_low__terrain_lod2__0_indices"
+          }
+        ]
+      }
+    },
+    "chunk_6_1.low.glb": {
+      "terrain_lod2": {
+        "sha256": "88185e9c7a2ed4ca5a0b31d4149aab19096529a2fb517cdde0780375402abe79",
+        "triangles": 8704,
+        "primitives": [
+          {
+            "material": "terrain_grass",
+            "surface": "grass",
+            "vertices": 4485,
+            "triangles": 8704,
+            "position_array": "chunk_6_1_low__terrain_lod2__0_positions",
+            "index_array": "chunk_6_1_low__terrain_lod2__0_indices"
+          }
+        ]
+      }
+    },
+    "chunk_6_2.low.glb": {
+      "terrain_lod2": {
+        "sha256": "239491bdeeaf49c84feacaaa8e3cdfd69f132c186887be4665fcf22c579ac757",
+        "triangles": 8704,
+        "primitives": [
+          {
+            "material": "terrain_grass",
+            "surface": "grass",
+            "vertices": 4485,
+            "triangles": 8704,
+            "position_array": "chunk_6_2_low__terrain_lod2__0_positions",
+            "index_array": "chunk_6_2_low__terrain_lod2__0_indices"
+          }
+        ]
+      }
+    },
+    "chunk_6_3.low.glb": {
+      "terrain_lod2": {
+        "sha256": "bf456596b3a6ee7ae5b256881ce91e62d01dcb3bea5be9a918101b655e57cf54",
+        "triangles": 8704,
+        "primitives": [
+          {
+            "material": "terrain_grass",
+            "surface": "grass",
+            "vertices": 4485,
+            "triangles": 8704,
+            "position_array": "chunk_6_3_low__terrain_lod2__0_positions",
+            "index_array": "chunk_6_3_low__terrain_lod2__0_indices"
+          }
+        ]
+      },
+      "road_collision": {
+        "sha256": "9a5ace18a1c812bca419439cbe551a26fc9d90978b7ec2f2316a3637b5e923ac",
+        "triangles": 1965,
+        "primitives": [
+          {
+            "material": "collision_asphalt",
+            "surface": "asphalt",
+            "vertices": 591,
+            "triangles": 897,
+            "position_array": "chunk_6_3_low__road_collision__0_positions",
+            "index_array": "chunk_6_3_low__road_collision__0_indices"
+          },
+          {
+            "material": "collision_building",
+            "surface": "concrete",
+            "vertices": 156,
+            "triangles": 64,
+            "position_array": "chunk_6_3_low__road_collision__1_positions",
+            "index_array": "chunk_6_3_low__road_collision__1_indices"
+          },
+          {
+            "material": "collision_fence",
+            "surface": "steel",
+            "vertices": 1006,
+            "triangles": 1004,
+            "position_array": "chunk_6_3_low__road_collision__2_positions",
+            "index_array": "chunk_6_3_low__road_collision__2_indices"
+          }
+        ]
+      }
+    },
+    "chunk_6_4.low.glb": {
+      "terrain_lod2": {
+        "sha256": "ec05389dee042f49b9c277514b24a7915e706c06c9494acbc1cdd0a98a9bb54e",
+        "triangles": 8704,
+        "primitives": [
+          {
+            "material": "terrain_grass",
+            "surface": "grass",
+            "vertices": 4485,
+            "triangles": 8704,
+            "position_array": "chunk_6_4_low__terrain_lod2__0_positions",
+            "index_array": "chunk_6_4_low__terrain_lod2__0_indices"
+          }
+        ]
+      },
+      "road_collision": {
+        "sha256": "8d6650c5e84ecfa9fc0202d42e4f7083e06e6c0d9e79233d713dc817613c3b6b",
+        "triangles": 4906,
+        "primitives": [
+          {
+            "material": "collision_asphalt",
+            "surface": "asphalt",
+            "vertices": 1641,
+            "triangles": 2470,
+            "position_array": "chunk_6_4_low__road_collision__0_positions",
+            "index_array": "chunk_6_4_low__road_collision__0_indices"
+          },
+          {
+            "material": "collision_building",
+            "surface": "concrete",
+            "vertices": 409,
+            "triangles": 177,
+            "position_array": "chunk_6_4_low__road_collision__1_positions",
+            "index_array": "chunk_6_4_low__road_collision__1_indices"
+          },
+          {
+            "material": "collision_curb",
+            "surface": "concrete_kerb",
+            "vertices": 1073,
+            "triangles": 971,
+            "position_array": "chunk_6_4_low__road_collision__2_positions",
+            "index_array": "chunk_6_4_low__road_collision__2_indices"
+          },
+          {
+            "material": "collision_fence",
+            "surface": "steel",
+            "vertices": 1069,
+            "triangles": 1066,
+            "position_array": "chunk_6_4_low__road_collision__3_positions",
+            "index_array": "chunk_6_4_low__road_collision__3_indices"
+          },
+          {
+            "material": "collision_paving",
+            "surface": "paving_stones",
+            "vertices": 186,
+            "triangles": 222,
+            "position_array": "chunk_6_4_low__road_collision__4_positions",
+            "index_array": "chunk_6_4_low__road_collision__4_indices"
+          }
+        ]
+      }
+    },
+    "chunk_6_5.low.glb": {
+      "terrain_lod2": {
+        "sha256": "8b00dea513586fbb98cf53bab7b153498d3e772ecd00422ae9303f7de1b0c06a",
+        "triangles": 8704,
+        "primitives": [
+          {
+            "material": "terrain_grass",
+            "surface": "grass",
+            "vertices": 4485,
+            "triangles": 8704,
+            "position_array": "chunk_6_5_low__terrain_lod2__0_positions",
+            "index_array": "chunk_6_5_low__terrain_lod2__0_indices"
+          }
+        ]
+      },
+      "road_collision": {
+        "sha256": "e4c374790cc6412ba01221b863017ad7e53d0c428882e62303b9f62ae263586d",
+        "triangles": 4137,
+        "primitives": [
+          {
+            "material": "collision_asphalt",
+            "surface": "asphalt",
+            "vertices": 1109,
+            "triangles": 1702,
+            "position_array": "chunk_6_5_low__road_collision__0_positions",
+            "index_array": "chunk_6_5_low__road_collision__0_indices"
+          },
+          {
+            "material": "collision_building",
+            "surface": "concrete",
+            "vertices": 721,
+            "triangles": 323,
+            "position_array": "chunk_6_5_low__road_collision__1_positions",
+            "index_array": "chunk_6_5_low__road_collision__1_indices"
+          },
+          {
+            "material": "collision_curb",
+            "surface": "concrete_kerb",
+            "vertices": 702,
+            "triangles": 646,
+            "position_array": "chunk_6_5_low__road_collision__2_positions",
+            "index_array": "chunk_6_5_low__road_collision__2_indices"
+          },
+          {
+            "material": "collision_fence",
+            "surface": "steel",
+            "vertices": 302,
+            "triangles": 298,
+            "position_array": "chunk_6_5_low__road_collision__3_positions",
+            "index_array": "chunk_6_5_low__road_collision__3_indices"
+          },
+          {
+            "material": "collision_paving",
+            "surface": "paving_stones",
+            "vertices": 699,
+            "triangles": 1168,
+            "position_array": "chunk_6_5_low__road_collision__4_positions",
+            "index_array": "chunk_6_5_low__road_collision__4_indices"
+          }
+        ]
+      }
+    },
+    "chunk_6_6.low.glb": {
+      "terrain_lod2": {
+        "sha256": "c290f52aa0ed9cf09d54c7a656b2c50e232d5e42e282bc0f36613b4dd54ea7a4",
+        "triangles": 8704,
+        "primitives": [
+          {
+            "material": "terrain_grass",
+            "surface": "grass",
+            "vertices": 4485,
+            "triangles": 8704,
+            "position_array": "chunk_6_6_low__terrain_lod2__0_positions",
+            "index_array": "chunk_6_6_low__terrain_lod2__0_indices"
+          }
+        ]
+      },
+      "road_collision": {
+        "sha256": "b161200397619ecc8bc06e780df0cadd6d99351c0f530eee3f9d1e6e23c59ed0",
+        "triangles": 14720,
+        "primitives": [
+          {
+            "material": "collision_asphalt",
+            "surface": "asphalt",
+            "vertices": 3030,
+            "triangles": 4409,
+            "position_array": "chunk_6_6_low__road_collision__0_positions",
+            "index_array": "chunk_6_6_low__road_collision__0_indices"
+          },
+          {
+            "material": "collision_building",
+            "surface": "concrete",
+            "vertices": 970,
+            "triangles": 454,
+            "position_array": "chunk_6_6_low__road_collision__1_positions",
+            "index_array": "chunk_6_6_low__road_collision__1_indices"
+          },
+          {
+            "material": "collision_curb",
+            "surface": "concrete_kerb",
+            "vertices": 3828,
+            "triangles": 3522,
+            "position_array": "chunk_6_6_low__road_collision__2_positions",
+            "index_array": "chunk_6_6_low__road_collision__2_indices"
+          },
+          {
+            "material": "collision_fence",
+            "surface": "steel",
+            "vertices": 371,
+            "triangles": 438,
+            "position_array": "chunk_6_6_low__road_collision__3_positions",
+            "index_array": "chunk_6_6_low__road_collision__3_indices"
+          },
+          {
+            "material": "collision_grass",
+            "surface": "grass",
+            "vertices": 597,
+            "triangles": 1006,
+            "position_array": "chunk_6_6_low__road_collision__4_positions",
+            "index_array": "chunk_6_6_low__road_collision__4_indices"
+          },
+          {
+            "material": "collision_paving",
+            "surface": "paving_stones",
+            "vertices": 2347,
+            "triangles": 3031,
+            "position_array": "chunk_6_6_low__road_collision__5_positions",
+            "index_array": "chunk_6_6_low__road_collision__5_indices"
+          },
+          {
+            "material": "collision_steel",
+            "surface": "steel",
+            "vertices": 620,
+            "triangles": 1860,
+            "position_array": "chunk_6_6_low__road_collision__6_positions",
+            "index_array": "chunk_6_6_low__road_collision__6_indices"
+          }
+        ]
+      }
+    },
+    "chunk_6_7.low.glb": {
+      "terrain_lod2": {
+        "sha256": "d4cff7848f9afc2186f8cc098db25700fe48ae22747b1daeced93a0a7a6cc3bf",
+        "triangles": 8704,
+        "primitives": [
+          {
+            "material": "terrain_grass",
+            "surface": "grass",
+            "vertices": 4485,
+            "triangles": 8704,
+            "position_array": "chunk_6_7_low__terrain_lod2__0_positions",
+            "index_array": "chunk_6_7_low__terrain_lod2__0_indices"
+          }
+        ]
+      },
+      "road_collision": {
+        "sha256": "2edc919421e84b42fd083805c2be5728f0ad8f81224d28ffd68a7a3d82dd8e1d",
+        "triangles": 11768,
+        "primitives": [
+          {
+            "material": "collision_asphalt",
+            "surface": "asphalt",
+            "vertices": 2482,
+            "triangles": 3598,
+            "position_array": "chunk_6_7_low__road_collision__0_positions",
+            "index_array": "chunk_6_7_low__road_collision__0_indices"
+          },
+          {
+            "material": "collision_building",
+            "surface": "concrete",
+            "vertices": 5331,
+            "triangles": 2259,
+            "position_array": "chunk_6_7_low__road_collision__1_positions",
+            "index_array": "chunk_6_7_low__road_collision__1_indices"
+          },
+          {
+            "material": "collision_curb",
+            "surface": "concrete_kerb",
+            "vertices": 4196,
+            "triangles": 3928,
+            "position_array": "chunk_6_7_low__road_collision__2_positions",
+            "index_array": "chunk_6_7_low__road_collision__2_indices"
+          },
+          {
+            "material": "collision_fence",
+            "surface": "steel",
+            "vertices": 726,
+            "triangles": 716,
+            "position_array": "chunk_6_7_low__road_collision__3_positions",
+            "index_array": "chunk_6_7_low__road_collision__3_indices"
+          },
+          {
+            "material": "collision_grass",
+            "surface": "grass",
+            "vertices": 422,
+            "triangles": 398,
+            "position_array": "chunk_6_7_low__road_collision__4_positions",
+            "index_array": "chunk_6_7_low__road_collision__4_indices"
+          },
+          {
+            "material": "collision_paving",
+            "surface": "paving_stones",
+            "vertices": 364,
+            "triangles": 349,
+            "position_array": "chunk_6_7_low__road_collision__5_positions",
+            "index_array": "chunk_6_7_low__road_collision__5_indices"
+          },
+          {
+            "material": "collision_steel",
+            "surface": "steel",
+            "vertices": 190,
+            "triangles": 520,
+            "position_array": "chunk_6_7_low__road_collision__6_positions",
+            "index_array": "chunk_6_7_low__road_collision__6_indices"
+          }
+        ]
+      }
+    },
+    "chunk_7_0.low.glb": {
+      "terrain_lod2": {
+        "sha256": "5437a1a717a38610e417808ef73366994c139bc2b127738646a28ff1c8316103",
+        "triangles": 8704,
+        "primitives": [
+          {
+            "material": "terrain_grass",
+            "surface": "grass",
+            "vertices": 4485,
+            "triangles": 8704,
+            "position_array": "chunk_7_0_low__terrain_lod2__0_positions",
+            "index_array": "chunk_7_0_low__terrain_lod2__0_indices"
+          }
+        ]
+      }
+    },
+    "chunk_7_1.low.glb": {
+      "terrain_lod2": {
+        "sha256": "0117c22aeda1cfcabc7e30e7504186086f4fa8bd3e5a6d941942b91870f7dd82",
+        "triangles": 8704,
+        "primitives": [
+          {
+            "material": "terrain_grass",
+            "surface": "grass",
+            "vertices": 4485,
+            "triangles": 8704,
+            "position_array": "chunk_7_1_low__terrain_lod2__0_positions",
+            "index_array": "chunk_7_1_low__terrain_lod2__0_indices"
+          }
+        ]
+      }
+    },
+    "chunk_7_2.low.glb": {
+      "terrain_lod2": {
+        "sha256": "ca6f7953592b751fcd3d4a6f06beee23a07e2f3e0a25bfab97986db78caecc03",
+        "triangles": 8704,
+        "primitives": [
+          {
+            "material": "terrain_grass",
+            "surface": "grass",
+            "vertices": 4485,
+            "triangles": 8704,
+            "position_array": "chunk_7_2_low__terrain_lod2__0_positions",
+            "index_array": "chunk_7_2_low__terrain_lod2__0_indices"
+          }
+        ]
+      }
+    },
+    "chunk_7_3.low.glb": {
+      "terrain_lod2": {
+        "sha256": "88e6b299bb4527c124461e868a457a19662270142aef6ab6f5f74046117c6d26",
+        "triangles": 8704,
+        "primitives": [
+          {
+            "material": "terrain_grass",
+            "surface": "grass",
+            "vertices": 4485,
+            "triangles": 8704,
+            "position_array": "chunk_7_3_low__terrain_lod2__0_positions",
+            "index_array": "chunk_7_3_low__terrain_lod2__0_indices"
+          }
+        ]
+      }
+    },
+    "chunk_7_4.low.glb": {
+      "terrain_lod2": {
+        "sha256": "7bc3f1506577df55c77d7850e269db69cc42a0fac6e5879cf524dad4be68979c",
+        "triangles": 8704,
+        "primitives": [
+          {
+            "material": "terrain_grass",
+            "surface": "grass",
+            "vertices": 4485,
+            "triangles": 8704,
+            "position_array": "chunk_7_4_low__terrain_lod2__0_positions",
+            "index_array": "chunk_7_4_low__terrain_lod2__0_indices"
+          }
+        ]
+      }
+    },
+    "chunk_7_5.low.glb": {
+      "terrain_lod2": {
+        "sha256": "4ef4c9cd094fc487b17f241affa74ca7794c91924af3bf311e4c33a86f787f3a",
+        "triangles": 8704,
+        "primitives": [
+          {
+            "material": "terrain_grass",
+            "surface": "grass",
+            "vertices": 4485,
+            "triangles": 8704,
+            "position_array": "chunk_7_5_low__terrain_lod2__0_positions",
+            "index_array": "chunk_7_5_low__terrain_lod2__0_indices"
+          }
+        ]
+      },
+      "road_collision": {
+        "sha256": "0c67e2030a88b54e40c4237ae645fa522c84144308ae9230df2c5446cc6e22bc",
+        "triangles": 474,
+        "primitives": [
+          {
+            "material": "collision_building",
+            "surface": "concrete",
+            "vertices": 17,
+            "triangles": 7,
+            "position_array": "chunk_7_5_low__road_collision__0_positions",
+            "index_array": "chunk_7_5_low__road_collision__0_indices"
+          },
+          {
+            "material": "collision_fence",
+            "surface": "steel",
+            "vertices": 32,
+            "triangles": 30,
+            "position_array": "chunk_7_5_low__road_collision__1_positions",
+            "index_array": "chunk_7_5_low__road_collision__1_indices"
+          },
+          {
+            "material": "collision_paving",
+            "surface": "paving_stones",
+            "vertices": 258,
+            "triangles": 437,
+            "position_array": "chunk_7_5_low__road_collision__2_positions",
+            "index_array": "chunk_7_5_low__road_collision__2_indices"
+          }
+        ]
+      }
+    },
+    "chunk_7_6.low.glb": {
+      "terrain_lod2": {
+        "sha256": "1fc35efd2c3e337340d556064266d1521c1a749b8cefbb13095c83b0201adecd",
+        "triangles": 8704,
+        "primitives": [
+          {
+            "material": "terrain_grass",
+            "surface": "grass",
+            "vertices": 4485,
+            "triangles": 8704,
+            "position_array": "chunk_7_6_low__terrain_lod2__0_positions",
+            "index_array": "chunk_7_6_low__terrain_lod2__0_indices"
+          }
+        ]
+      },
+      "road_collision": {
+        "sha256": "b44443f150a566ed454c4e3b32f1a6425e6c7280767ade5d823e1dd067cce61a",
+        "triangles": 685,
+        "primitives": [
+          {
+            "material": "collision_asphalt",
+            "surface": "asphalt",
+            "vertices": 215,
+            "triangles": 313,
+            "position_array": "chunk_7_6_low__road_collision__0_positions",
+            "index_array": "chunk_7_6_low__road_collision__0_indices"
+          },
+          {
+            "material": "collision_building",
+            "surface": "concrete",
+            "vertices": 78,
+            "triangles": 34,
+            "position_array": "chunk_7_6_low__road_collision__1_positions",
+            "index_array": "chunk_7_6_low__road_collision__1_indices"
+          },
+          {
+            "material": "collision_paving",
+            "surface": "paving_stones",
+            "vertices": 239,
+            "triangles": 338,
+            "position_array": "chunk_7_6_low__road_collision__2_positions",
+            "index_array": "chunk_7_6_low__road_collision__2_indices"
+          }
+        ]
+      }
+    },
+    "chunk_7_7.low.glb": {
+      "terrain_lod2": {
+        "sha256": "35e25f40367285fa1870138912bf2433f1b9447d0e2bcbedfc55364f0e69fc4f",
+        "triangles": 8704,
+        "primitives": [
+          {
+            "material": "terrain_grass",
+            "surface": "grass",
+            "vertices": 4485,
+            "triangles": 8704,
+            "position_array": "chunk_7_7_low__terrain_lod2__0_positions",
+            "index_array": "chunk_7_7_low__terrain_lod2__0_indices"
+          }
+        ]
+      },
+      "road_collision": {
+        "sha256": "491bb84de56cc337d5b74d3fdae6f4c64faee2ed3c6cd867cff7ef58a9806463",
+        "triangles": 8766,
+        "primitives": [
+          {
+            "material": "collision_asphalt",
+            "surface": "asphalt",
+            "vertices": 2731,
+            "triangles": 4156,
+            "position_array": "chunk_7_7_low__road_collision__0_positions",
+            "index_array": "chunk_7_7_low__road_collision__0_indices"
+          },
+          {
+            "material": "collision_building",
+            "surface": "concrete",
+            "vertices": 427,
+            "triangles": 187,
+            "position_array": "chunk_7_7_low__road_collision__1_positions",
+            "index_array": "chunk_7_7_low__road_collision__1_indices"
+          },
+          {
+            "material": "collision_curb",
+            "surface": "concrete_kerb",
+            "vertices": 2591,
+            "triangles": 2337,
+            "position_array": "chunk_7_7_low__road_collision__2_positions",
+            "index_array": "chunk_7_7_low__road_collision__2_indices"
+          },
+          {
+            "material": "collision_fence",
+            "surface": "steel",
+            "vertices": 635,
+            "triangles": 634,
+            "position_array": "chunk_7_7_low__road_collision__3_positions",
+            "index_array": "chunk_7_7_low__road_collision__3_indices"
+          },
+          {
+            "material": "collision_grass",
+            "surface": "grass",
+            "vertices": 954,
+            "triangles": 906,
+            "position_array": "chunk_7_7_low__road_collision__4_positions",
+            "index_array": "chunk_7_7_low__road_collision__4_indices"
+          },
+          {
+            "material": "collision_paving",
+            "surface": "paving_stones",
+            "vertices": 546,
+            "triangles": 546,
+            "position_array": "chunk_7_7_low__road_collision__5_positions",
+            "index_array": "chunk_7_7_low__road_collision__5_indices"
+          }
+        ]
+      }
+    }
+  },
+  "method": "Exact decoded float32 positions, uint32 triangle indices, material/surface names, transform ancestry and region origin for road_collision and terrain_lod2. Includes referenced buffers as exported; conservative about vertex ordering. Not a hash of Unity files or a PhysX/runtime test."
+}

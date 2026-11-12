@@ -48,3 +48,4 @@ Zapisano pary foto before High-overcast-photo-1280x720. Następny krok: porówna
 Zapisano pary foto before High-overcast-photo-2048x1152. Następny krok: porównać z photo-references.json.
 Zapisano pary foto before High-overcast-photo-2048x1536. Następny krok: porównać z photo-references.json.
 Świeży baseline r4: świeże kamery fotograficzne B kod 0. Produkcja bez zmian; kolejny etap zgodnie z baseline.ps1.
+Świeży baseline ukończony: 268 kontrolnych + 100 fotograficznych PNG, 16 grup, bez ponownego użycia obrazów. World614,8 s; 15 Megascans bez fallback, 130 GLB, 64 pliki instancji, 617 pinów wejść, 64 chunki kolizji. Dwa świeże kadry berberysu obejrzano: pełny rdzeń nadal tworzy płaski brązowy wierzch i bryłowe boki. Następny krok: wszystkie arkusze baseline i oczekiwany RED w jednym heavy; sama produkcja pozostaje niezmieniona do pełnego przeglądu.
