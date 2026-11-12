@@ -9,3 +9,5 @@ Nie stwierdzono wyraźnego nawrotu pleśni; pewność średnia ze względu na s�
 Progi i błotnik: szerokie pionowe smugi na jasnej osłonie i nadkolu są słabo powiązane z rozbryzgiem od kół oraz stawianiem butów, a wnęki stopni pozostają bardzo czarne. Następna poprawka powinna dotyczyć rozmieszczenia i charakteru osadu, nie globalnego przyciemnienia. Koła pozostają osobnym zakresem r3.
 
 Drugi wariant, runoff-trails-044: recenzent nadal nie widzi przekonującej poprawy w całym boku i zaleca jedną próbę większego kontrastu miejscowych śladów, bez wzmacniania całego górnego pasa. Nie stwierdza wyraźnej pleśni ani rozjazdu Low/High. Porównanie stopni washed/fleet potwierdza utratę czytelności kratki pod brudem; selektywne odsłonięcie wystających powierzchni jest zasadne, ale sam AO i normalna nie identyfikują ścierania butami.
+
+Próba trails-088 również odrzucona przez recenzenta: w sześciu parach nadal brak czytelnej poprawy całego boku, także po podwojeniu kontrastu. Brak nowej pleśni nie uzasadnia dodatkowego kosztu. Zalecono usunięcie wzorca, bez kolejnego zwiększania tej samej maski.
