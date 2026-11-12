@@ -1,5 +1,20 @@
 # HANDOVER — kamion, SESJA 14 (start 2026-11-12 18:22, nowe konto)
 
+## KONIEC S14 (20:00, limit 5 h 79 %, tydzień 63 %, Fable ~90 %) — prompt dla s15: `docs/owner/START-PROMPT-S15.md`
+- **Właściciel 19:5x: nie uruchamiać nowych agentów — dać działającym skończyć.** Działają (każdy zapisuje `artifacts/live/<gałąź>.md` po każdym kroku):
+| ADR | zadanie | model | worktree | stan 19:5x |
+|---|---|---|---|---|
+| 0132 | zabudowa r9 r4 (budżet High: decyzja B) | Fable | `buildings-r9` | r4_chain w tle |
+| 0136 r2 | GPU A16 G3-A (−1,3 ms, brakuje ~1,2) + weryfikacja 0147 na A16 | Opus | `a16-perf` | diagA4 |
+| 0141 | krawędź/tło far_skyline | Fable | `edge-r6c` | regeneracja po merge main, render merged |
+| 0144 | węzły r7 (W-beam, filary, żwir, F-10 482392) | Fable | `junctions-r7` | build r7a |
+| 0146 | Putry/Andersa (latarnie, pobocze, mur 810896, portal Andersa, gzyms) | Fable | `putry-andersa` | build_world w kolejce heavy |
+| — | integracja Mistral r2 #6–#14 | Opus | `mistral-r2-int` | 9/9 + poprawki, pushnięte `1e9a5678`; analiza porażek gis vs main |
+- **Mistral runda 3 + M9: PR #15–#20 gotowe, NIEZRECENZOWANE** (właściciel: Mistral skończył) → s15.
+- Dysk: C: 0,9 GB → ~409 GB wolnego po sprzątaniu (`artifacts/lead-s14/cleanup-disk2.log`); narzędzie `scripts/cleanup-disk.ps1`.
+- APK: opony `artifacts/apk/kamion-0.1.0-139dc835cf.apk`; orientacja+opony `artifacts/orientation/kamion-0.1.0-387a492d24.apk` (test Fold właściciela).
+- main wymaga JEDNEJ regeneracji (0123, 0128, 0129, 0133, 0139, 0143, CRLF) + ImpostorTrimBake (0136).
+
 ## Stan na żywo (s14)
 - **Najświeższy stan agentów: `artifacts/live/<gałąź>.md`** (każdy agent nadpisuje po każdym kroku: sha, zadania w tle, NASTĘPNY KROK, gotowość). Polecenie właściciela 18:3x: HANDOVER i pliki live aktualizowane na bieżąco, aby inna sesja mogła w każdej chwili przejąć pracę.
 - 18:22 start. Usage: 5 h 0 % (reset 23:19), tydzień 50 %, **Fable 75 %** (reset 15.11 11:59). Właściciel: wszystkie 5 zadań świata zostają na Fable. Triggery CronCreate (tylko w sesji lidera): **:17** agenci/scalenia/HANDOVER, **:47** PR-y Mistrala, **:07** GPT.
