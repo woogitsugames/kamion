@@ -145,3 +145,5 @@ NASTĘPNY KROK: przygotować własne skrypty r2 z ownerem heavy gpt-furniture-r2
 2026-11-12T09:24:33.0941407+01:00: Unity night-rig after2 Low overcast; sukces=False. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
 
 2026-11-12T09:29:51.0652504+01:00: night after2 Low potwierdził automatyczne źródło dla low, lecz high pozostało false po ponownym wczytaniu sceny testowej. Dodano trwały własny sterownik fixture, ustawiający prawdziwy TruckLights przed kontekstem renderowania (bez sztucznej lampy). Zbliżenia25m ujawniły zbyt niskie prawe odcięcie; dodano robocze asymetryczne wzniesienie wiązki i regresję GPU prawa/lewa. Źródło jakościowe HELLA light-distribution, nie kalibracja konkretnej oprawy. Fixture ma teraz jawne manualne EV100=5, by nie mylić adaptacji jasności nieba z nocnym odblaskiem; presety gry niezmienione. NASTĘPNY KROK: FurnitureSignTests -Phase asymmetric, potem night-rig after3.
+
+2026-11-12T09:30:16.8561505+01:00: Unity sign-probe asymmetric Low overcast; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
