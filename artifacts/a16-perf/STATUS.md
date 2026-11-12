@@ -19,3 +19,7 @@
   EditMode 471/8 fail — tylko CarPaintMaterialTests.DepositionChannel (środowiskowe, też w audio-regen01; main zielony). APK `kamion-0.1.0-0e68ff8c5e-dirty.apk`.
   NASTĘPNY KROK: (w toku) `pwsh artifacts/a16-perf/run-final.ps1 -Before artifacts/apk/kamion-0.1.0-24ab345392.apk -After artifacts/apk/kamion-0.1.0-0e68ff8c5e-dirty.apk`
   potem `python artifacts/a16-perf/summarize.py 'artifacts/a16-perf/final1/*'`.
+- 17:32 final1 (APK trim 0e68ff8c, limit 30): G3-B GPU p50/p95 31.42/33.86, p99 33.73, >40 16 (s12: 31.77/35.17, p99 50, >40 41; s10 p99 33.69).
+  G3-A 32.44/35.53, p99 49.95, >40 26 (s12 32.32/35.54, 42) — G3-A bez zmiany GPU. Impostor A/B uncapped 1.37 -> 0.51 ms (okna lasu 6.6/4.8 -> 1.9/2.3).
+  „before” na tym samym dniu niemożliwy: INSTALL_FAILED_VERSION_DOWNGRADE (4097 < 4105, -d nie działa na release) — baza = gate3 s12.
+  Merge main 4c25ff20 (czysty). NASTĘPNY KROK: (w toku) ablacje G3-A `pwsh artifacts/a16-perf/run-diag1.ps1 -Segment A -OutTag diagA -Only ...`
