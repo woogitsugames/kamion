@@ -111,3 +111,5 @@ raportowi. Jest to nowy odczyt r2, nie wolno kopiować liczby siedmiu z r1.
 Normalizacja LF zmienia także poprawnie pasujące pliki; nie jest naprawą
 raportu ani zamiennikiem testu. Trzy wejścia znanej niezgodności scenariusza
 physics również zachowały bloby bazy r2. Wyniki pełnych testów nadal PENDING.
+
+Aktualizacja końcowych kontroli:root i niezależny reviewer obejrzeli330/330 par na60 arkuszach≤960px, bez nowego widocznego blokera furniture (compare/REVIEW.md). Chroniona geometria6833→6833,0 różnic (protected-geometry-comparison.json). Wszystkie arkusze powstały jako pojedyncze małe interaktywne przeglądy; zbędny pełny batch anulowano, bez powtórnego dekodowania. KońcoweGIS/physics nadal oczekują na heavy. Kod/zasoby52668015 pozostają bez zmian.
