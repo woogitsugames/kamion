@@ -11,6 +11,7 @@
 | zabudowa r8 r2 | 0124 | `.claude/worktrees/buildings-r8` / `buildings-r8` | `artifacts/buildings-r16/STATUS.md` | w toku: merge main → full_round r2 |
 | pierzeja handlowa G3-B | 0126 | `.claude/worktrees/g3b-frontage` / `g3b-frontage` | `artifacts/g3b-frontage/STATUS.md` | w toku: merge main → build 2 |
 - Następne: integracja s11 (vqa Low → klin far-field g3-a 2948/303305) → krytyk 0123/0124/0126 → scalenie → regeneracja → nowi Fable na blokery G3-B (wysepka + D-3/D-6 ronda Bieżeństwa, LOD bramownicy, słup WN/ekrany na Low) → sbs na main → APK Low → gate3 A16.
+- **09:42 trigger:** 5 h 7 %, tydzień 18 %, Fable 27 %. Watchdog żyje (RAM chwilami 6 GB wolne → SUSPEND/RESUME działa). Regeneracja b2 po fidelity (pytest dalej), `run.ps1` czeka. Agenci: 0123 po `merge main` (85cdd0b6) → b5; 0124 r2c czeka na heavy; 0126 po merge, grubszy maszt (18797dbe) → run-cycle after 2. **Zaległe gotowe rundy GPT (nie scalone):** edge r3, landmarks r2, light r2, truck r2, life r2, cab r2, sbs r2 (pozy produkcyjne bez zmian), vegetation r3. Krytyk zbiorczy A (Opus, 4. agent tylko-odczyt): edge r3, landmarks r2, light r2, truck r2 → `REVIEW-2026-11-12-s12-gpt-batch-a.md`. Batch B (life r2, cab r2, sbs r2, veg r3) po nim. Scalenie GPT dopiero po zakończeniu integracji s11.
 - Ostatni przydzielony ADR: 0126.
 
 ---
