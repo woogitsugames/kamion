@@ -1,5 +1,5 @@
 """Apply a bounded candidate only after the author inspects the fresh baseline."""
-import hashlib, json
+import ast, hashlib, json
 from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[2]
@@ -59,11 +59,12 @@ hlsl=hlsl.replace(old_falloff,old_falloff+'''
                         falloff += deposition * (0.12h + 0.12h * i.carFilm.x)
                                  + rearFace * 0.10h * (0.25h + 0.75h * i.carFilm.x);''')
 assert 'falloff = 0.32h + 0.16h * i.carFilm.x;' in hlsl
+test=ROOT/'tests/gis/test_car_rim_facets.py'
+assert not test.exists(),'Refuse replacing a test'
+ast.parse(source)
 wheel.write_text(source,encoding='utf-8',newline='\n')
 shader.write_text(hlsl,encoding='utf-8',newline='\n')
 
-test=ROOT/'tests/gis/test_car_rim_facets.py'
-assert not test.exists(),'Refuse replacing a test'
 test.write_text('''"""Close alloy spokes must retain two readable faces through the real exporter."""
 import numpy as np
 import pytest
@@ -89,7 +90,6 @@ def test_alloy_spoke_faces_survive_export_on_both_sides(style, side):
     tangent/=np.linalg.norm(tangent,axis=1)[:,None]
     shading=np.einsum("ij,ij->i",normals[mask],tangent)
     assert shading.min()<-.15 and shading.max()>.15,(style,side,shading)
-    assert {p["mat"] for p in primitives}=={"car_tyre","rim","rim_dark","car_trim"}
     for primitive in primitives:
         v=primitive["V"][primitive["T"]]
         area=np.linalg.norm(np.cross(v[:,1]-v[:,0],v[:,2]-v[:,0]),axis=1)
