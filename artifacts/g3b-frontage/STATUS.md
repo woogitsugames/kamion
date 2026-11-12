@@ -21,3 +21,10 @@ NASTĘPNY KROK: `pwsh artifacts/g3b-frontage/run-cycle.ps1 -Name after -Tag 2` p
 Scalono main (76b3fb76) -> 5a4f0dd7; konflikt tylko `generated/world_manifest.json` (ours, regeneracja w buildzie 2). Build 2 sprzed restartu: build_world OK, import zabity restartem (exit 1073807364) - cały cykl od nowa na kodzie po scaleniu.
 Poprawki builda 2 w kodzie: rząd flag (rotate 10 deg, baner 1x4 m, maszt 8,5 m - już w b89e4ced), maszt kratowy: nogi 0,16 m (było 0,10), rygle 0,10, skratowania 0,11.
 NASTĘPNY KROK: `pwsh artifacts/g3b-frontage/run-cycle.ps1 -Name after -Tag 2; bash artifacts/g3b-frontage/make-pairs.sh after; python artifacts/g3b-frontage/stats-diff.py after`
+
+## 5. Build 2 + build 3 (sesja 12)
+Build 2 (po scaleniu main): nogi masztu OK, ale 3 flagi nadal zlewały się w jeden żółty blok (rząd 142 deg = na wprost z jezdni). Build 3: rząd obrócony na ~167 deg (rotate_deg 35), baner 0,8 m -> 3 osobne flagi jak na zdjęciach 2024.
+Build 3: build_world 492 s, import OK (64 chunki), 40 SBS + 4 kontrolne Low-overcast. pytest gis: 626 passed, 1 xfailed, 1 failed (fidelity stale) -> po `fidelity/run.py` test_road_fidelity + test_g3b_frontage 18 passed, 1 xfailed. EditMode 317/317.
+Low-overcast G3-B (20 kamer, vs baseline 1d4674ab, zawiera scalenia s11): draws razem -30..+11, mediana 0; 150280 +6, 297817 -4, 3281350 +11.
+ADR 0126 uzupełniony (Results), LICENSES wiersz `world-g3b-frontage`. Dowody skopiowane do main `artifacts/g3b-frontage/`.
+NASTĘPNY KROK (lider): visual-critic na `artifacts/g3b-frontage/pairs-after/sbs-g3-b-{150280503737744,297817221966185,3281350541967811}.jpg` + `pairs-2024/`; potem `git merge g3b-frontage` i regeneracja (build_world -> import -> fidelity/run.py).

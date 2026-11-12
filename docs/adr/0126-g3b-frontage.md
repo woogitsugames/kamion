@@ -1,6 +1,6 @@
 # ADR 0126 — G3-B trade frontage (recognisability): authored facades of the showroom row
 
-Status: implemented on branch `g3b-frontage` (base main `1d4674ab`, 2026-11-12); not merged. Gate 3 is NOT re-judged
+Status: implemented on branch `g3b-frontage` (base main `1d4674ab`, main `76b3fb76` merged in, 2026-11-12); not merged. Gate 3 is NOT re-judged
 here (visual-critic's job).
 Source: `docs/reports/visual/REVIEW-2026-11-11-s11-sbs-r1-D51.md` blocker 6 ("pierzeja handlowo-usługowa wzdłuż G3-B",
 frames #21 `sbs-g3-b-150280503737744`, #22 `-297817221966185`, partly #19 `-3281350541967811`), owner decision D51.
@@ -54,7 +54,27 @@ agent), signs / props / landmarks modules (GPT sessions). The advertising struct
 
 ## Results
 
-RESULTS_PLACEHOLDER
+Branch state: main `76b3fb76` merged in (s12), build 3. Region rebuilt (`build_world` 492 s), imported (64 chunks,
+Low + High), rendered Low-overcast: 40 SBS photo poses + 4 control cameras.
+
+- Tests: `pytest tests/gis` 626 passed, 1 xfailed, 1 failed (`test_report_not_stale`: fidelity report stale after
+  the merge and the override edit); after `fidelity/run.py` that file and `test_g3b_frontage.py` were rerun:
+  18 passed, 1 xfailed (the full suite was not repeated). EditMode 317 / 317.
+- Budget, Low-overcast, editor estimate before SRP batching, 20 G3-B photo poses, against the isolated baseline
+  (main `1d4674ab`; the delta therefore also contains the s11 merges): total draws -30 ... +11, median 0. The three
+  frontage frames: 150280 +6 (static 482 -> 481, 573k tris), 297817 -4 (460 -> 452, 545k), 3281350 +11
+  (376 -> 374, 381k). No phone number yet (leader's gate run).
+- Builds 2-3 after looking at the pairs: lattice mast members thickened (legs 0.16 m, was 0.10: they vanished at
+  80 m on Low); flag row turned from ~142 deg to ~167 deg and the banner narrowed to 0.8 m: at 142 deg the row is
+  end-on from the carriageway and the three banners merged into one yellow block, while both 2024 photos show three
+  separate banners (the shadow-derived bearing has +-20 deg). `WORKING_VALUE`.
+- Read of the pairs (author, not the critic): 150280 - red-brown showroom with the dark glazing band and roof edge,
+  dark car showroom, oval on the lattice mast and the light block are where the photo has them; the car showroom is
+  dark (2024) where the 2020 photo is white and red. 3281350 - oval mast, three yellow flags, glazed dark showroom
+  on the right edge. 297817 - the row is small on the right (pose lag as in ADR 0125). 2024 control pairs
+  (`pairs-2024/`): flags, oval and black fascia match strudel 469512365899192.
+- Evidence: `artifacts/g3b-frontage/pairs-after/` (photo | before over photo | after), `pairs-2024/`,
+  `stats-diff-after.txt`, `after/renders/Low-overcast/`, `after/control-Low-overcast/`.
 
 ## Open
 
@@ -63,3 +83,6 @@ RESULTS_PLACEHOLDER
 - Rear walls of the showrooms are not visible in any open photo (dark grey assumed).
 - The glass roof of `bdot:3c5cd1c0` and the low annexes in front of the furniture showroom are not modelled.
 - SBS poses of the zsolt frames (GPS lag) are unchanged.
+- The white-and-red striped chimneys of the heat and power plant stand behind the row on every photo of this stretch
+  and are absent in the render (far field / landmarks domain).
+- Glass reads black on Low-overcast (no reflection); the SERWIS fascia board is barely legible from the road.
