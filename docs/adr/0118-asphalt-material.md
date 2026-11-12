@@ -54,3 +54,11 @@ Końcowy GIS: 604 passed, 1 oczekiwany xfailed, exit 0, 1224,78 s; po odtworzeni
 ### Wynik końcowy r2 / candidate2
 
 Końcowy EditMode312/312 passed, bez pominięć i porażek. GIS604 passed,1 oczekiwany xfailed,exit0. Physics/gate3:47 passed,1 znana porażka odtwarzalności top_speed_flat_comb.json,exit1; wejścia tego testu i dims.json bez zmian względem bazy. Fidelityexit0 po229,3s; wygenerowane zmiany obejmują tylko17 ścieżek nakładek, bez zmian metryk. Wskaźniki narzędzia nadal wykazują niezweryfikowane pasy i brakujące wyspy/drogi, więc exit0 nie jest zatwierdzeniem Gate3. Końcowy audyt196 odwołań/SHA bez rozbieżności. Wszystkie60 obejrzanych arkuszy ponownie zgodne SHA. Ustawienia Unity przywrócone, własne sloty zwolnione. Pełny raport i wszystkie328 par/2952 liczniki w artifacts/asphalt-r2/REPORT.md; przekazanie wyłącznie przez robocopy artifacts, bez merge do main i bez push. Następna runda obejmuje materiały placów przemysłowych poza Kwadratem po świeżym merge main i nowym baseline.
+
+## r3 — place przemysłowe poza Kwadratem
+
+Runda rozpoczęta po przekazaniu r2, od gałęzi gpt-asphalt-r3 i merge main0023f39d. Zachowano unię wspólnych materiałów0118/0119/0120. Baseline wymaga nowej generacji materiałów i świata; poprzednie GLB oraz kamery r2 nie są dowodem nowego main. Własne źródła produktu r3 nie zostały jeszcze wybrane.
+
+Referencja zewnętrznego placu PCRT: Rakoon, 2020-07-11, CC BY3.0, oryginał i SHA w backlog-r3-references odziedziczonego r2. Pokazuje zazębiającą się kostkę i umiarkowane spoiny. Nie ma GPS tej fotografii ani dopasowanej pozy; sąsiednie geotagi i pobliski obrys BDOT z opisem asfaltu wymagają wyjaśnienia. Nie traktujemy tego jako licencji na globalną zmianę asfaltu albo geometrii.
+
+Sonda materiału jest tylko do odczytu, obejmuje lokalne E280–395/N−560 do−300 poza konserwatywną granicą Kwadrat, wymaga świeżego producenta i SHA GLB. Wybór wyglądu nastąpi po odczycie i renderze. Plan capture będzie zawierał rzeczywiste native i pomocnicze ID; audyty muszą sprawdzać cały ten zbiór oraz dziewięć liczników każdej kamery, w tym instancje. Wartości materiału WORKING_VALUE, GPU A16 UNVERIFIED, bez telefonu.
