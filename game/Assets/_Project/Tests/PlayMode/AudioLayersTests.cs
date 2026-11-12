@@ -14,11 +14,13 @@ namespace Game.Tests
         [Test]
         public void Squeal_IsSilentBelowOnsetAndFullWellAboveIt()
         {
-            Assert.AreEqual(0f, LayerMath.SquealGain(0.5f, 15f), 1e-6f);
+            // ADR 0145: onset 1.3, full 2.0 (combined slip, normalised), and only at speed (5 -> 9 m/s)
             Assert.AreEqual(0f, LayerMath.SquealGain(0.8f, 15f), 1e-6f);
-            Assert.AreEqual(1f, LayerMath.SquealGain(1.5f, 15f), 1e-6f);
-            Assert.Greater(LayerMath.SquealGain(1.1f, 15f), 0.2f);
-            Assert.Less(LayerMath.SquealGain(1.1f, 15f), 0.9f);
+            Assert.AreEqual(0f, LayerMath.SquealGain(1.3f, 15f), 1e-6f);
+            Assert.AreEqual(1f, LayerMath.SquealGain(2.1f, 15f), 1e-6f);
+            Assert.Greater(LayerMath.SquealGain(1.65f, 15f), 0.2f);
+            Assert.Less(LayerMath.SquealGain(1.65f, 15f), 0.9f);
+            Assert.AreEqual(0f, LayerMath.SquealGain(3f, 4.0f), 1e-6f, "slow slides are scrub, not squeal");
             Assert.AreEqual(0f, LayerMath.SquealGain(2f, 1.0f), 1e-6f, "no squeal when (almost) stationary");
         }
 
@@ -97,6 +99,8 @@ namespace Game.Tests
             for (int i = 0; i < LayerMath.SurfaceCount; i++) sum += audio.SurfaceWeight(i);
             Assert.AreEqual(1f, sum, 0.02f, "surface weights must sum to 1 when the truck stands on the ground");
             Assert.AreEqual(0f, audio.SquealLevel, 0.01f, "parked truck must not squeal");
+            Assert.AreEqual(0f, audio.ScrubLevel, 0.01f, "parked truck must not scrub");
+            Assert.IsTrue(lib.tyreScrub.IsValid, "procedural scrub placeholder (ADR 0145) missing (re-run render_all.py + import)");
             Debug.Log($"[TEST] audio layers: surface weights sum {sum:F3}, ambient {audio.AmbientReady}, surface 0 weight {audio.SurfaceWeight(0):F2}");
         }
     }
