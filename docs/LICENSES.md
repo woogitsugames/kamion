@@ -272,3 +272,21 @@ Zdjęcia nie wchodzą do builda ani tekstur. Rejestr: [`docs/refs/posesje-bialys
 - Oryginał 4K HDR poza gitem w Data/raw/cc0/sky/kloofendal_48d_partly_cloudy_puresky/; 20 674 857 B, MD5 816340c969d2e60d659051d13ac3c4dc, SHA256 3061c00a16ecae748e84fd6c44c04804f539c118bb66325db858bad87b11bf88.
 - Pochodna: game/Assets/_Project/Rendering/Resources/Sky/T_ClearClouds.png, R = fotograficzna maska chmur, G = względna luminancja; usunięto tarczę słońca, zachowano kształt i cienie chmur. Dokładne metadane i oś słońca: ClearCloudsSource.json. Reprodukcja: artifacts/light-r1/build-photo-clouds.py przez pulę heavy.
 - To tekstura nieba, nie zdjęcie referencyjne Białegostoku. Nie zawiera zabudowy ani oznaczeń; nie jest zasobem Fab/Megascans.
+
+### Kominy EC — uzupełnienie referencji ADR 0116 r3
+
+`20200711 073128 Elektrociepłownia Białystok` — Rakoon, [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:20200711_073128_Elektrociep%C5%82ownia_Bia%C5%82ystok.jpg), [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/).
+Lokalna referencja jest pomniejszoną kopią3840×2160; pary w artifacts/landmarks-r3
+jawnie opisują kadrowanie, zmianę rozmiaru i autora. Oryginał4608×2592 nie został
+lokalnie zweryfikowany. Starsze `EC_Białystok.jpg` — Hiuppo, CC BY-SA2.5
+([strona pliku](https://commons.wikimedia.org/wiki/File:EC_Bia%C5%82ystok.jpg)) —
+pozostaje osobną referencją z2007r.; jej szachownicy i logo nie przeniesiono do modelu.
+
+`art-source/world/landmarks/ec_chimney_single/` i `ec_chimney_multi/` powstają
+z własnego kodu `tools/worldgen/streetscape/ec_chimneys.py` i danych
+`Data/Regions/bialystok-industrial-c/ec_chimneys.json`. Nie zawierają pikseli zdjęć,
+logo ani cudzej geometrii. Odwołania do źródeł i robocze wymiary są w konfiguracji.
+Położenia i obrysy: © OpenStreetMap contributors, ODbL; wysokości gruntu: istniejący NMT GUGiK.
+Wymiary techniczne jednoprzewodowego komina pochodzą z opisu zamówienia ENEA2025,
+H120m wieloprzewodowego potwierdza tekstowy rekord EMKA. Zamknięta fotografia EMKA
+nie jest dystrybuowanym assetem ani otwartą referencją obrazową D43.

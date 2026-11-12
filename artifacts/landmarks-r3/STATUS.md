@@ -63,3 +63,5 @@ Krok 14d: test geometrii EC wymaga LOD0 ≤700 tris, czyli rzeczywistego budżet
 Krok 14e: samokontrola uzupełniona o pełne oględziny pierwszego wariantu, realne przekroczenia budżetu i nieidentyczne Z podstawy. Wprost oddzielono potwierdzone dowody pierwszego wariantu od nieobejrzanej jeszcze korekty filarów i galerii.
 
 Krok 14f: zapisano stałe ROI i wycinki filara z baseline tej rundy (nie starego oświetlenia r2). Obszar fazy nazwano neutralnie chamfer_same_paint — w wyniku kandydata różnicę od szerokiej ściany ma dawać światło/normalna, nie drugi pigment. NASTĘPNY KROK po renderze: ten sam pier_metrics.py after-corrected i ocena natywnego wycinka.
+
+Krok 14g: dodano atrybucję nowego zdjęcia Rakoon CC BY3.0 i zakres użycia starszego zdjęcia Hiuppo w docs/LICENSES.md. Własne GLB nie zawierają cudzych pikseli, marek ani geometrii; konfiguracja zachowuje źródła OSM/GUGiK i techniczne. Kolejka korekty nadal czeka pod potwierdzonym żywym procesem.
