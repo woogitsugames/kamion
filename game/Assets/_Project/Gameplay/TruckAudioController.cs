@@ -15,7 +15,8 @@ namespace Game.Gameplay
     /// - pneumatic one-shots from model events: service-brake release hiss, spring parking brake set / release,
     ///   air-dryer purge at governor cut-out, AMT shift cylinder;
     /// - tyre rolling per surface (six loops cross-faded by the contact load on each SurfaceKind, tractor + trailer wheels),
-    ///   tyre squeal from combined slip, wind by speed; every loop in an exterior and a prerendered cabin perspective;
+    ///   tyre scrub from the trailer axles' slip angle at low speed and tyre squeal from combined slip at speed (ADR 0145),
+    ///   wind by speed; every loop in an exterior and a prerendered cabin perspective;
     /// - retarder whine (Retarder.Fill), air compressor (Air.CompressorLoaded, pitch by rpm), parking-brake release,
     ///   flasher relay tick/tock (<see cref="OnFlasherEdge"/>, driven by the turn-signal stalk's flasher so the click and the lamps share one phase), industrial-yard ambience
     ///   (<see cref="AmbientAudio"/>).
@@ -42,7 +43,10 @@ namespace Game.Gameplay
         [Range(0f, 1f)] public float pneumaticsVolume = 0.55f;
         [Range(0f, 1f)] public float roadVolume = 0.45f, windVolume = 0.30f;
         [Range(0f, 1f)] public float cabRoadFactor = 0.55f, cabWindFactor = 0.35f, cabPneumaticsFactor = 0.6f;
-        [Range(0f, 1f)] public float squealVolume = 0.55f, retarderVolume = 0.50f, compressorVolume = 0.35f, relayVolume = 0.55f;
+        [Tooltip("ADR 0145: full-scale squeal / scrub loops (clips at -16 / -18 LUFS ext): squeal ~ -20 LUFS, ~12 dB over the dry " +
+                 "road roll at 50 km/h; scrub ~ -30 LUFS, about the loaded engine at 600 rpm (WORKING_VALUE, owner listening test).")]
+        [Range(0f, 1f)] public float scrubVolume = 0.25f, cabScrubFactor = 1.0f;
+        [Range(0f, 1f)] public float squealVolume = 0.60f, retarderVolume = 0.50f, compressorVolume = 0.35f, relayVolume = 0.55f;
         [Range(0f, 1f)] public float cabSquealFactor = 1.0f, cabRetarderFactor = 0.85f, cabCompressorFactor = 0.75f, extRelayFactor = 0.25f;
         [Header("ElevenLabs set (ADR 0142). Cabin balance: ADR 0142 table (levels at idle / 50 / 80 km/h)")]
         [Range(0f, 2f)] public float elCabRoadFactor = 1.35f, elCabWindFactor = 1.45f, elCabBedFactor = 0.35f;
@@ -57,7 +61,7 @@ namespace Game.Gameplay
         VehicleAudioLibrary m_Lib;
         EngineAudio m_Engine;
         AudioSource m_OneShot;
-        PerspectiveLoop m_Wind, m_Squeal, m_Retarder, m_Compressor, m_RetarderSynth, m_RetarderEl;
+        PerspectiveLoop m_Wind, m_Squeal, m_Scrub, m_Retarder, m_Compressor, m_RetarderSynth, m_RetarderEl;
         int m_PrefVersion = -1;
         readonly PerspectiveLoop[] m_Tyre = new PerspectiveLoop[LayerMath.SurfaceCount];
         readonly float[] m_SurfaceTarget = new float[LayerMath.SurfaceCount];
@@ -65,7 +69,7 @@ namespace Game.Gameplay
         AmbientAudio m_Ambient;
         int m_RelayEdge;
         bool m_PurgeAlt, m_SurfaceInit;
-        float m_SquealGain, m_RetarderGain, m_CompressorGain;
+        float m_SquealGain, m_ScrubGain, m_RetarderGain, m_CompressorGain;
         float m_Interior = 1f;
         float m_BrakePeak, m_BrakeHeld;
         bool m_PrevPark, m_PrevCompressor, m_HasPrev;
@@ -86,6 +90,13 @@ namespace Game.Gameplay
         /// <summary>Smoothed share of the tyre contact load on a SurfaceKind (sums to 1); for tests and diagnostics.</summary>
         public float SurfaceWeight(int surface) => m_SurfaceWeight[surface];
         public float SquealLevel => m_SquealGain;
+        /// <summary>Smoothed tyre-scrub gain 0..1 (ADR 0145).</summary>
+        public float ScrubLevel => m_ScrubGain;
+        /// <summary>Last raw inputs of the tyre slip layers: largest scrub slip angle [rad] and worst combined slip (norm.).</summary>
+        public float ScrubSlipAngle { get; private set; }
+        public float WorstCombinedSlip { get; private set; }
+        public PerspectiveLoop ScrubLoop => m_Scrub;
+        public PerspectiveLoop SquealLoop => m_Squeal;
         public bool AmbientReady => m_Ambient != null && m_Ambient.Ready;
         /// <summary>The ElevenLabs effect set is active (ADR 0142).</summary>
         public bool ElevenLabsFx => m_El;
@@ -156,6 +167,8 @@ namespace Game.Gameplay
             }
             m_Wind = new PerspectiveLoop(t, "Wind", m_Lib.windLoop, m_Lib.windLoopCab, new Vector3(0f, 3.0f, wb + 1.0f), 96, 1f);
             m_Squeal = new PerspectiveLoop(t, "TyreSqueal", m_Lib.tyreSqueal.ext, m_Lib.tyreSqueal.cab, road, 60, 1f);
+            // scrub sits at the trailer axles when coupled (they do the dragging), clips set in ApplySoundSet
+            m_Scrub = new PerspectiveLoop(t, "TyreScrub", m_Lib.tyreScrub.ext, m_Lib.tyreScrub.cab, new Vector3(0f, 0.5f, -6.0f), 62, 1f);
             m_RetarderSynth = new PerspectiveLoop(t, "Retarder", m_Lib.retarder.ext, m_Lib.retarder.cab, new Vector3(0f, 0.7f, wb * 0.6f), 70, 1f);
             m_RetarderEl = m_Lib.elRetarder.IsValid
                 ? new PerspectiveLoop(t, "RetarderEL", m_Lib.elRetarder.ext, m_Lib.elRetarder.cab, new Vector3(0f, 0.7f, wb * 0.6f), 70, 1f)
@@ -207,6 +220,12 @@ namespace Game.Gameplay
                 else if (m_El && i == 0 && m_Lib.elTyreDryCab != null) m_Tyre[i].SetClips(syn.ext, m_Lib.elTyreDryCab, 1f);
                 else m_Tyre[i].SetClips(syn.ext, syn.cab, 1f);
             }
+            // ADR 0145: the REGEN-03 recordings replace the procedural scrub / squeal in both sets (the procedural squeal was
+            // the owner's complaint; its v2 and the scrub synthesis are placeholders for a library without REGEN-03)
+            var scrub = m_Lib.elTyreScrub.IsValid ? m_Lib.elTyreScrub : m_Lib.tyreScrub;
+            var squeal = m_Lib.elTyreSqueal.IsValid ? m_Lib.elTyreSqueal : m_Lib.tyreSqueal;
+            m_Scrub.SetClips(scrub.ext, scrub.cab, 1f);
+            m_Squeal.SetClips(squeal.ext, squeal.cab, 1f);
             m_Wind.SetClips(m_Lib.windLoop, m_El && m_Lib.elWindCab != null ? m_Lib.elWindCab : m_Lib.windLoopCab, 1f);
             if (m_El && m_Lib.elCompressor.IsValid) m_Compressor.SetClips(m_Lib.elCompressor.ext, m_Lib.elCompressor.cab, 1f);
             else m_Compressor.SetClips(m_Lib.compressor.ext, m_Lib.compressor.cab, 1f);
@@ -254,11 +273,14 @@ namespace Game.Gameplay
             return s;
         }
 
-        void Update()
+        void Update() => AudioStep(Time.deltaTime);
+
+        /// <summary>One audio update with an explicit time step (Update uses the frame time; tests drive it with the physics
+        /// step in script simulation mode). No allocation.</summary>
+        public void AudioStep(float dt)
         {
             if (m_Engine == null || vehicle == null || !vehicle.Initialized) return;
             ApplyEngineSourceIfChanged();
-            float dt = Time.deltaTime;
             float target = rig == null || rig.mode == CameraMode.Cab ? 1f : 0f;
             m_Interior = Mathf.MoveTowards(m_Interior, target, dt / 0.15f);
             m_Engine.InteriorBlend = m_Interior;
@@ -434,10 +456,15 @@ namespace Game.Gameplay
         {
             // contact load per surface under the tractor and (when coupled) the trailer, and the worst slip
             for (int i = 0; i < m_SurfaceTarget.Length; i++) m_SurfaceTarget[i] = 0f;
-            float total = 0f, slip = 0f;
-            Accumulate(m.Wheels, ref total, ref slip);
-            if (vehicle.Trailer != null && vehicle.Coupled && vehicle.Trailer.Model != null) Accumulate(vehicle.Trailer.Model.Wheels, ref total, ref slip);
-            float squealable = 0f;
+            float total = 0f, slip = 0f, alphaTractor = 0f, alphaTrailer = 0f;
+            Accumulate(m.Wheels, ref total, ref slip, ref alphaTractor);
+            bool coupled = vehicle.Trailer != null && vehicle.Coupled && vehicle.Trailer.Model != null;
+            if (coupled) Accumulate(vehicle.Trailer.Model.Wheels, ref total, ref slip, ref alphaTrailer);
+            // scrub: the trailer axles are dragged sideways in a tight turn; solo, the tractor's own axles
+            float alpha = coupled ? alphaTrailer : alphaTractor;
+            ScrubSlipAngle = alpha;
+            WorstCombinedSlip = slip;
+            float squealable = 0f, scrubbable = 0f;
             float k = 1f - Mathf.Exp(-dt / 0.15f);
             float pitch = LayerMath.TyrePitch(v);
             for (int i = 0; i < m_SurfaceTarget.Length; i++)
@@ -445,6 +472,7 @@ namespace Game.Gameplay
                 float target = total > 1f ? m_SurfaceTarget[i] / total : (i == 0 ? 1f : 0f);
                 m_SurfaceWeight[i] = m_SurfaceInit ? m_SurfaceWeight[i] + (target - m_SurfaceWeight[i]) * k : target; // first frame snaps (no fade-in from silence)
                 squealable += m_SurfaceWeight[i] * LayerMath.SurfaceSquealable[i];
+                scrubbable += m_SurfaceWeight[i] * LayerMath.SurfaceScrubbable[i];
                 if (m_Tyre[i].Valid)
                     m_Tyre[i].Set(LayerMath.TyreGain(v, i, roadVolume) * m_SurfaceWeight[i] * Mathf.Lerp(1f, m_El ? elCabRoadFactor : cabRoadFactor, m_Interior), pitch, m_Interior);
             }
@@ -452,10 +480,17 @@ namespace Game.Gameplay
             float sg = LayerMath.SquealGain(slip, v) * squealable;
             m_SquealGain = LayerMath.ExponentialStep(m_SquealGain, sg, dt, 0.05f, 0.15f);
             if (m_Squeal.Valid)
-                m_Squeal.Set(squealVolume * m_SquealGain * Mathf.Lerp(1f, cabSquealFactor, m_Interior), 0.9f + 0.3f * Mathf.Clamp01(slip - 0.8f), m_Interior);
+                m_Squeal.Set(squealVolume * m_SquealGain * Mathf.Lerp(1f, cabSquealFactor, m_Interior),
+                    0.9f + 0.25f * Mathf.Clamp01(slip - LayerMath.SquealOnset), m_Interior);
+            float cg = LayerMath.ScrubGain(alpha, v) * scrubbable;
+            // a new scrub after silence starts at a random point of the loop (6 s recording: no identical opening each turn)
+            if (m_ScrubGain < 0.002f && cg > 0.002f) m_Scrub.Rephase();
+            m_ScrubGain = LayerMath.ExponentialStep(m_ScrubGain, cg, dt, 0.12f, 0.25f);
+            if (m_Scrub.Valid)
+                m_Scrub.Set(scrubVolume * m_ScrubGain * Mathf.Lerp(1f, cabScrubFactor, m_Interior), LayerMath.ScrubPitch(alpha, v), m_Interior);
         }
 
-        void Accumulate(Game.Vehicle.Physics.WheelState[] wheels, ref float total, ref float slip)
+        void Accumulate(Game.Vehicle.Physics.WheelState[] wheels, ref float total, ref float slip, ref float alpha)
         {
             for (int i = 0; i < wheels.Length; i++)
             {
@@ -466,8 +501,10 @@ namespace Game.Gameplay
                 if (sid < 0 || sid >= m_SurfaceTarget.Length) sid = 0;
                 m_SurfaceTarget[sid] += fz;
                 total += fz;
-                float s = LayerMath.CombinedSlip(Mathf.Abs((float)w.SlipRatio), Mathf.Abs((float)w.SlipAngle));
+                float a = Mathf.Abs((float)w.SlipAngle);
+                float s = LayerMath.CombinedSlip(Mathf.Abs((float)w.SlipRatio), a);
                 if (s > slip) slip = s;
+                if (a > alpha) alpha = a;
             }
         }
 

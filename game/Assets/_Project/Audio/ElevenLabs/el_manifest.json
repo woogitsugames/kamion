@@ -1352,6 +1352,59 @@
    "target_lufs": -22.157819309337594
   },
   {
+   "name": "el_tyre_scrub_loop",
+   "file": "game/Assets/_Project/Audio/ElevenLabs/Clips/sfx/el_tyre_scrub_loop.wav",
+   "loop": true,
+   "samples": 288000,
+   "source": "TYRE_SCRUB_TIGHT_TURN (2).wav",
+   "gain_db": 5.357861381897049,
+   "lufs": -18.036462777324694,
+   "source_prompt_id": "TYRE_SCRUB_TIGHT_TURN",
+   "group": "fx",
+   "perspective": "ext",
+   "target_lufs": -18.0,
+   "soft_limit_db": 3.948890893851702
+  },
+  {
+   "name": "el_tyre_scrub_cab_loop",
+   "file": "game/Assets/_Project/Audio/ElevenLabs/Clips/sfx/el_tyre_scrub_cab_loop.wav",
+   "loop": true,
+   "samples": 288000,
+   "source": "TYRE_SCRUB_TIGHT_TURN_CAB (3).wav",
+   "gain_db": 17.75131557868466,
+   "lufs": -22.000000000000007,
+   "source_prompt_id": "TYRE_SCRUB_TIGHT_TURN_CAB",
+   "group": "fx",
+   "perspective": "cab",
+   "target_lufs": -22.0
+  },
+  {
+   "name": "el_tyre_squeal_loop",
+   "file": "game/Assets/_Project/Audio/ElevenLabs/Clips/sfx/el_tyre_squeal_loop.wav",
+   "loop": true,
+   "samples": 288000,
+   "source": "TYRE_SQUEAL_HARD (2).wav",
+   "gain_db": -2.3652854598460546,
+   "lufs": -16.00000000000001,
+   "source_prompt_id": "TYRE_SQUEAL_HARD",
+   "group": "fx",
+   "perspective": "ext",
+   "target_lufs": -16.0
+  },
+  {
+   "name": "el_tyre_squeal_cab_loop",
+   "file": "game/Assets/_Project/Audio/ElevenLabs/Clips/sfx/el_tyre_squeal_cab_loop.wav",
+   "loop": true,
+   "samples": 288000,
+   "source": "TYRE_SQUEAL_HARD_CAB (3).wav",
+   "gain_db": 17.739638133881982,
+   "lufs": -19.999999999999996,
+   "source_prompt_id": "TYRE_SQUEAL_HARD_CAB",
+   "group": "fx",
+   "perspective": "cab",
+   "target_lufs": -20.0
+  },
+  {
    "name": "el_turbo_whine_loop",
    "file": "game/Assets/_Project/Audio/ElevenLabs/Clips/sfx/el_turbo_whine_loop.wav",
    "loop": true,
@@ -1719,6 +1772,46 @@
    "influence": 90,
    "loop": true,
    "prompt": "A single pure steady high-pitched whine, like a small turbine spinning at constant speed, one clean tone with almost no noise, no engine, no rumble, no air rush, no pitch change, seamless loop, no music, no voices"
+  },
+  "TYRE_SCRUB_TIGHT_TURN": {
+   "id": "TYRE_SCRUB_TIGHT_TURN",
+   "prompt": "Close outside recording of a heavy articulated truck making a very tight slow turn on dry asphalt at walking speed: the trailer's multi-axle tyres are dragged sideways, producing a continuous low rubbery scrubbing and groaning with irregular creaks and short chirps, gravel crunch faintly under the rubber, no engine roar in the foreground, no squeal whistle, no music, no voices",
+   "batch": "REGEN-03",
+   "model": "v3",
+   "duration": 10,
+   "influence": 80,
+   "loop": true,
+   "variants": 4
+  },
+  "TYRE_SCRUB_TIGHT_TURN_CAB": {
+   "id": "TYRE_SCRUB_TIGHT_TURN_CAB",
+   "prompt": "Inside the closed cab of a heavy truck during a very tight slow turn, heard through the floor and the rear wall: muffled low rubber scrubbing and groaning from the trailer tyres dragged sideways on asphalt, irregular dull creaks, quiet diesel idle in the background, no squeal whistle, no music, no voices",
+   "batch": "REGEN-03",
+   "model": "v3",
+   "duration": 10,
+   "influence": 80,
+   "loop": true,
+   "variants": 4
+  },
+  "TYRE_SQUEAL_HARD": {
+   "id": "TYRE_SQUEAL_HARD",
+   "prompt": "Outside recording of a heavy truck's large tyres squealing on dry asphalt while cornering too fast: a rough, low-pitched, wavering rubber squeal with grit and texture, not a thin whistle, varying in intensity, tyre roar underneath, no engine in the foreground, no music, no voices",
+   "batch": "REGEN-03",
+   "model": "v3",
+   "duration": 10,
+   "influence": 80,
+   "loop": true,
+   "variants": 4
+  },
+  "TYRE_SQUEAL_HARD_CAB": {
+   "id": "TYRE_SQUEAL_HARD_CAB",
+   "prompt": "Inside the closed cab of a heavy truck cornering too fast: muffled low rubber squeal from the tyres heard through the cab, rough and wavering, tyre and road roar underneath, steady diesel in the background, no music, no voices",
+   "batch": "REGEN-03",
+   "model": "v3",
+   "duration": 10,
+   "influence": 80,
+   "loop": true,
+   "variants": 4
   }
  },
  "fx_generator": "tools/audio/el_fx.py (ADR 0142)"

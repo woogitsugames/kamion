@@ -27,13 +27,50 @@ namespace TruckSim.Audio
             return Mathf.Sqrt(k * k + a * a);
         }
 
-        /// <summary>Squeal gain 0..1: silent below 0.8 of the onset, full at 1.4; none when (almost) stationary.</summary>
+        // ---- ADR 0145: tyre scrub vs squeal ----
+        // Measured (tools/physics-runner circles with the tridem semi-trailer, tools/audio/tyre_slip_scan.py): in a tight
+        // slow turn the outer trailer axles are dragged sideways at 8-10 deg (R 12 m) to 18-22 deg (R 9 m) slip angle
+        // while the tractor stays under 2 deg. The old squeal (onset 0.8 x AlphaRef = 4.6 deg) therefore whistled at
+        // full level in every tight turn above 15 km/h. That geometric drag is scrub (low groan, creaks), not squeal.
+
+        /// <summary>Share of a surface that scrubs audibly (rubber dragged sideways; loose ground mostly shifts).</summary>
+        public static readonly float[] SurfaceScrubbable = { 1.0f, 0.7f, 1.0f, 0.8f, 0.5f, 0.3f };
+
+        public const float ScrubAlphaOn = 1.0f * Mathf.Deg2Rad, ScrubAlphaFull = 5.0f * Mathf.Deg2Rad;
+        public const float ScrubSpeedOn = 0.3f, ScrubSpeedFull = 1.2f, ScrubFadeStart = 6.0f, ScrubFadeEnd = 11.0f;
+        public const float SquealOnset = 1.3f, SquealFull = 2.0f, SquealSpeedOn = 5.0f, SquealSpeedFull = 9.0f;
+
+        static float Smooth01(float x)
+        {
+            x = Mathf.Clamp01(x);
+            return x * x * (3f - 2f * x);
+        }
+
+        /// <summary>
+        /// Scrub gain 0..1 from the largest lateral slip angle of the scrubbing axles (trailer axles when coupled, else the
+        /// tractor's) [rad] and the road speed [m/s]: on from 1 deg, full at 5 deg; fades in over 0.3-1.2 m/s (none at a
+        /// standstill) and out over 6-11 m/s (22-40 km/h), where a real slide becomes a squeal.
+        /// </summary>
+        public static float ScrubGain(float slipAngleRad, float speedMs)
+        {
+            float a = Smooth01((slipAngleRad - ScrubAlphaOn) / (ScrubAlphaFull - ScrubAlphaOn));
+            float on = Smooth01((speedMs - ScrubSpeedOn) / (ScrubSpeedFull - ScrubSpeedOn));
+            float off = 1f - Smooth01((speedMs - ScrubFadeStart) / (ScrubFadeEnd - ScrubFadeStart));
+            return a * on * off;
+        }
+
+        /// <summary>Scrub pitch from the sliding speed of the tread across the road (v sin alpha): 0.85..1.15.</summary>
+        public static float ScrubPitch(float slipAngleRad, float speedMs) =>
+            0.85f + 0.3f * Mathf.Clamp01(speedMs * Mathf.Sin(Mathf.Abs(slipAngleRad)) / 1.0f);
+
+        /// <summary>
+        /// Squeal gain 0..1 (ADR 0145): combined slip (normalised, 1 = KappaRef / AlphaRef) on from 1.3, full at 2.0, and only
+        /// at speed (on from 5 m/s = 18 km/h, full at 9 m/s = 32 km/h). Below that the slip is heard as scrub.
+        /// </summary>
         public static float SquealGain(float combinedSlipNorm, float speedMs)
         {
-            if (speedMs < 1.5f) return 0f;
-            float g = Mathf.Clamp01((combinedSlipNorm - 0.8f) / 0.6f);
-            g = g * g * (3f - 2f * g);
-            return g * Mathf.Clamp01((speedMs - 1.5f) / 2.5f);
+            return Smooth01((combinedSlipNorm - SquealOnset) / (SquealFull - SquealOnset)) *
+                   Smooth01((speedMs - SquealSpeedOn) / (SquealSpeedFull - SquealSpeedOn));
         }
 
         public static float TyreGain(float speedMs, int surface, float volume)

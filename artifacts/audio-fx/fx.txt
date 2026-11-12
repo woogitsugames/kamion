@@ -37,6 +37,10 @@ el_engine_stop_cab           <- ENG_STOP_CAB (7).wav            4.92 s  -34.5 LU
 el_wind_cab_loop             <- AMB_WIND_CAB_80 (3).wav         7.96 s  -22.8 LUFS pk  -5.0 seam 0.05 hf +3.2 dB  OK
 el_ambient_bed_loop          <- AMB_INDUSTRIAL_DAY (2).wav     19.96 s  -20.0 LUFS pk  -5.3 seam 0.07 hf +0.4 dB  OK
 el_ambient_bed_cab_loop      <- AMB_INDUSTRIAL_DAY (2).wav     19.96 s  -22.2 LUFS pk  -6.7 seam 0.03 hf +0.9 dB  OK
+el_tyre_scrub_loop           <- TYRE_SCRUB_TIGHT_TURN (2).wav   6.00 s  -18.0 LUFS pk  -1.6 seam 0.00 hf -1.0 dB  soft-limit 3.9 dB  OK
+el_tyre_scrub_cab_loop       <- TYRE_SCRUB_TIGHT_TURN_CAB (3).wav  6.00 s  -22.0 LUFS pk  -2.0 seam 0.08 hf -0.1 dB  OK
+el_tyre_squeal_loop          <- TYRE_SQUEAL_HARD (2).wav        6.00 s  -16.0 LUFS pk  -3.9 seam 0.21 hf +2.8 dB  OK
+el_tyre_squeal_cab_loop      <- TYRE_SQUEAL_HARD_CAB (3).wav    6.00 s  -20.0 LUFS pk  -4.5 seam 0.08 hf +0.4 dB  OK
 el_turbo_whine_loop          <- TURBO_WHISTLE_LOOP (6).wav      5.26 s  -14.0 LUFS pk  -2.5 seam 0.17 hf +1.5 dB  OK
 el_turbo_whine_cab_loop      <- TURBO_WHISTLE_LOOP (6).wav      5.26 s  -29.7 LUFS pk -17.6 seam 0.01 hf +3.4 dB  OK
 el_turbo_rush_loop           <- procedural turbo2.rush_loop     4.00 s  -12.0 LUFS pk  -1.6 seam 0.29 hf +1.6 dB  OK

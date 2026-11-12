@@ -1,0 +1,20 @@
+TYRE_SCRUB_TIGHT_TURN (1).wav      win 0.75 s LUFS  -23.1 pk  -0.9 drift  3.7 dB seam 0.07/+2.0 dB tone   4.3 dB @   2019 Hz frac 0.02 acf 0.17 LF 0.09 centroid  1241 Hz cost 4.03 PASS
+TYRE_SCRUB_TIGHT_TURN (2).wav      win 0.75 s LUFS  -24.1 pk  -2.9 drift  3.3 dB seam 0.00/-1.0 dB tone   3.5 dB @    653 Hz frac 0.01 acf 0.17 LF 0.10 centroid   999 Hz cost 3.68 PASS  << PICK
+TYRE_SCRUB_TIGHT_TURN (3).wav      win 2.00 s LUFS  -26.3 pk  -1.4 drift  2.0 dB seam 0.02/+0.3 dB tone   3.4 dB @   3170 Hz frac 0.04 acf 0.49 LF 0.37 centroid   627 Hz cost 5.07 FAIL
+TYRE_SCRUB_TIGHT_TURN (4).wav      win 3.25 s LUFS  -25.7 pk  -5.8 drift  2.0 dB seam 0.20/+6.3 dB tone   4.1 dB @   5235 Hz frac 0.01 acf 0.16 LF 0.28 centroid   914 Hz cost 3.07 FAIL
+  -> TYRE_SCRUB_TIGHT_TURN: TYRE_SCRUB_TIGHT_TURN (2).wav
+TYRE_SCRUB_TIGHT_TURN_CAB (1).wav  win 0.00 s LUFS  -30.1 pk  -3.1 drift  3.2 dB seam 0.01/-3.3 dB tone   3.2 dB @   5868 Hz frac 0.00 acf 0.15 LF 0.39 centroid   367 Hz cost 4.72 PASS
+TYRE_SCRUB_TIGHT_TURN_CAB (2).wav  win 2.50 s LUFS  -37.7 pk  -8.5 drift  2.9 dB seam 0.09/+3.6 dB tone   2.7 dB @   3296 Hz frac 0.01 acf 0.12 LF 0.36 centroid   448 Hz cost 4.33 PASS
+TYRE_SCRUB_TIGHT_TURN_CAB (3).wav  win 0.00 s LUFS  -38.3 pk -16.2 drift  2.7 dB seam 0.07/-0.1 dB tone   3.8 dB @    460 Hz frac 0.01 acf 0.14 LF 0.27 centroid   439 Hz cost 3.75 PASS  << PICK
+TYRE_SCRUB_TIGHT_TURN_CAB (4).wav  win 3.00 s LUFS  -40.1 pk -20.5 drift  3.6 dB seam 0.03/+3.4 dB tone   3.9 dB @   2326 Hz frac 0.03 acf 0.12 LF 0.54 centroid   311 Hz cost 5.70 PASS
+  -> TYRE_SCRUB_TIGHT_TURN_CAB: TYRE_SCRUB_TIGHT_TURN_CAB (3).wav
+TYRE_SQUEAL_HARD (1).wav           win 3.50 s LUFS  -17.2 pk  -0.9 drift  5.7 dB seam 0.03/+9.2 dB tone   4.5 dB @   4315 Hz frac 0.06 acf 0.28 LF 0.21 centroid  1116 Hz cost 6.52 FAIL
+TYRE_SQUEAL_HARD (2).wav           win 3.50 s LUFS  -14.1 pk  -1.5 drift  3.5 dB seam 0.21/+2.8 dB tone   7.4 dB @    741 Hz frac 0.48 acf 0.15 LF 0.06 centroid   869 Hz cost 4.47 PASS  << PICK
+TYRE_SQUEAL_HARD (3).wav           win 3.50 s LUFS  -14.8 pk  -1.0 drift  7.1 dB seam 0.05/+2.1 dB tone   5.6 dB @    688 Hz frac 0.28 acf 0.15 LF 0.05 centroid   962 Hz cost 7.31 PASS
+TYRE_SQUEAL_HARD (4).wav           win 3.50 s LUFS  -16.0 pk  -2.9 drift  6.7 dB seam 0.12/+5.5 dB tone  10.1 dB @   1547 Hz frac 0.51 acf 0.14 LF 0.02 centroid   885 Hz cost 8.82 FAIL
+  -> TYRE_SQUEAL_HARD: TYRE_SQUEAL_HARD (2).wav
+TYRE_SQUEAL_HARD_CAB (1).wav       win 0.00 s LUFS  -26.9 pk  -7.4 drift  0.8 dB seam 0.02/+6.3 dB tone   6.0 dB @   2244 Hz frac 0.02 acf 0.08 LF 0.89 centroid   136 Hz cost 4.36 FAIL
+TYRE_SQUEAL_HARD_CAB (2).wav       win 2.25 s LUFS  -28.7 pk  -8.6 drift  5.3 dB seam 0.00/+0.3 dB tone   4.8 dB @   2273 Hz frac 0.02 acf 0.19 LF 0.32 centroid   354 Hz cost 6.55 PASS
+TYRE_SQUEAL_HARD_CAB (3).wav       win 2.00 s LUFS  -33.1 pk -14.0 drift  0.7 dB seam 0.08/+0.4 dB tone   7.4 dB @    935 Hz frac 0.07 acf 0.42 LF 0.59 centroid   305 Hz cost 4.69 PASS  << PICK
+TYRE_SQUEAL_HARD_CAB (4).wav       win 0.50 s LUFS  -32.4 pk  -6.8 drift  3.3 dB seam 0.01/+6.5 dB tone   3.4 dB @   4400 Hz frac 0.02 acf 0.16 LF 0.59 centroid   260 Hz cost 5.62 FAIL
+  -> TYRE_SQUEAL_HARD_CAB: TYRE_SQUEAL_HARD_CAB (3).wav
