@@ -3,7 +3,7 @@
 ## Stan na żywo (s13)
 - 16:41 start. Usage: 5 h 0 % (reset 21:40), tydzień 0 %, Fable 0 % (reset 19.11 16:00). Triggery CronCreate (tylko w sesji lidera): **:17** agenci/scalenia/HANDOVER, **:47** PR-y Mistrala, **:07** przekazania GPT.
 - Watchdog zrestartowany 16:42 z **MaxHeavy=4**; `unity-slot.ps1` heavy domyślnie **4** (cała maszyna dla Claude, RAM wolny ~23 GB przy 3 heavy). Zadania w tle agentów s12 (build_world putry-deck, pytest g3b-lowread, swept junctions-r6, Unity frontage-r2) przeżyły — agenci je przejmują.
-- Czysty APK z run-h: `artifacts/apk/kamion-0.1.0-39068ac2c0.apk` (0134+0135 r2+0137) — **ale test Folda (16:3x) wykazał 2 błędy 0135** → APK z r3 po testach.
+- **APK do testu Folda (16:47): `artifacts/apk/kamion-0.1.0-f308374749.apk`** — czysty, Low, zawiera 0134 (24 t), 0135 r3 (orientacja: manifest `fullUser`, chwyt kierownicy z marginesem), 0137 (ElevenLabs). Poprzedni `39068ac2c0` miał 2 błędy Folda.
 - **ElevenLabs REGEN-01: 56 nowych WAV** (właściciel 16:4x, `art-source/audio/elevenlabs/`, notatka `C:/Users/matma/Documents/Claude/kamion-audio-regenerations-01-20261112/notes.txt`) → agent 0138.
 - Agenci (9), wszyscy wznowieni 16:45 (każdy: `git merge main`, generated → ours + regeneracja):
 | zadanie | ADR | model | worktree / gałąź | STATUS |
