@@ -194,3 +194,17 @@ zależą od azymutu, a wysokości narożników są przesunięte wewnątrz bezpie
 części odstępu poziomów. Normalne wynikają z rzeczywistej powierzchni.
 Konfiguracja jest WORKING_VALUE; trójkąty planowane jak w baseline, wynik obrazu
 jeszcze nieznany. Atlas, tynk i rozmieszczenie zieleni pozostają bez zmian.
+
+### r4 — wcześniejsze zakończenie na polecenie właściciela
+
+Wariant B wygenerowany w680,0s bez fallback, checkpoint273682bb. Osiem
+podglądów obejrzanych w obu tierach: usunięcie szerokich równych półek jest
+częściową poprawą, ale Low nadal zbyt pełny wobec fotografii. Nie uznano
+technicznego audytu za końcową akceptację obrazu. A odrzucony, C niewdrożony.
+Budżet modelu9584/2818/164 bez zmian; cała alfa i12020 pozostałych trójkątów
+identyczne. Manifest/materialy/192 pliki miasta identyczne z baseline r4.
+Na polecenie właściciela nie rozpoczynano nowych testów ani rund. Wcześniej
+uruchomiony pełny capture dokończono naturalnie; wynik w HANDOFF i REPORT r4.
+Pełny przegląd244 ujęć, końcowy GIS/physics/EditMode i akceptacja pozostają
+niewykonane. Brak FINAL-CANDIDATE jest prawidłowy. Kontynuacja dopiero po
+wznowieniu zadania, według artifacts/landmarks-r4/HANDOFF.md.

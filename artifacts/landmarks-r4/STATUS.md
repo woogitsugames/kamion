@@ -77,3 +77,5 @@ Krok 10b: statycznie sprawdzono składnię wszystkich skryptów PowerShell r4 i1
 
 Krok 10c: 16:18CET PHONE_RUN zwolniony; podgląd B przesuwa się w kolejce Unity (2 przede mną). Własny terminal13840 nadal aktywny, ciężkie zadania i import zakończone. Nadal brak oceny wizualnej B i brak pełnego GIS.
 `nKrok 11: obejrzano8 PNG B i2 natywne pary; częściowa poprawa obrysu i usunięcie półek. B przechodzi do pełnych244 ujęć, bez końcowej akceptacji. Low nadal zbyt pełny; C niewdrożone. Preview zakończony0, własny marker usunięty i slot zwolniony.
+
+Krok 12: właściciel polecił zakończyć wcześniej z powodu limitu tygodniowego. Nie startuję nowych generatorów/testów/rundy. Trwający capture terminal1460 dokończy się naturalnie; przygotowane HANDOFF.md. R4 pozostaje częściowa, bez finalnej walidacji.
