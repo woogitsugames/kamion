@@ -6,6 +6,7 @@ Set-Location $repo
 $slot = 'C:/Users/matma/Documents/Claude/kamion/scripts/unity-slot.ps1'
 $jobPath = [IO.Path]::GetFullPath($Jobs, $repo)
 $spec = Get-Content $jobPath -Raw | ConvertFrom-Json
+if($spec.gate3){$Gate3=$spec.gate3}
 if($spec.preflightGradeLab){
     # This runs before acquiring this batch's slot. It is serial with the prior baseline and this render.
     & pwsh "$PSScriptRoot/run-grade-lab.ps1" -OutputName $spec.preflightGradeLab
@@ -32,11 +33,12 @@ try {
     $result = Select-String -Path $log -Pattern 'LIGHT_QA_RESULT: OK jobs=(\d+) rendered=(\d+)' | Select-Object -Last 1
     $fresh = @()
     $complete = $null -ne $result
-    if(Select-String -Path $log -Pattern 'Shader error|error CS\d+' -Quiet){$complete=$false}
+    if(Select-String -Path $log -Pattern 'Shader error|error CS\d+|\w+Exception:' -Quiet){$complete=$false}
     foreach ($job in $spec.jobs) {
         $files = @(Get-ChildItem -LiteralPath $job.output -Filter '*.png' -ErrorAction SilentlyContinue |
             Where-Object { $_.LastWriteTime -ge $runStart -and $_.Length -gt 0 -and $_.Name -notlike '*_mask.png' -and $_.Name -notlike '*_envcube.png' })
         $fresh += $files
+        if($spec.expectedCamerasPerJob -and $files.Count -ne [int]$spec.expectedCamerasPerJob){$complete=$false}
         if ($job.cameras) {
             $ids = @($job.cameras.Split(',') | ForEach-Object { $_.Trim() } | Where-Object { $_ } | Select-Object -Unique)
             if ($ids.Count -ne $files.Count) { $complete = $false }
@@ -91,6 +93,7 @@ finally {
 Add-Content artifacts/light-r5/STATUS.md "Batch światła zakończony: $Jobs; log $log. Następny krok: obejrzeć PNG i policzyć metryki, nie deklarować PASS z samego kodu wyjścia."
 git add -f artifacts/light-r5/STATUS.md
 git commit -m "wip(light): zapisz wykonanie batcha $([IO.Path]::GetFileNameWithoutExtension($jobPath))"
+
 
 
 

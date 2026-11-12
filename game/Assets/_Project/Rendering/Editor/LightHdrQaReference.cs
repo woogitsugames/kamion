@@ -64,7 +64,7 @@ namespace Game.Rendering.Editor
         {
             internal LightHdrQaReference owner;
             ReferencePass m_Pass;
-            public override void Create(){m_Pass=new ReferencePass(owner);}
+            public override void Create(){if(owner!=null)m_Pass=new ReferencePass(owner);}
             public override void OnCameraPreCull(ScriptableRenderer renderer,in CameraData cameraData)
             {
                 if(owner==null || !owner.Matches(cameraData.camera))return;

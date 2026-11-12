@@ -32,7 +32,7 @@ try{
         $gradient=Get-Content "$folder/$preset-gradient-proof.json" -Raw|ConvertFrom-Json
         if($gradient.measurements.Count -ne 2 -or @($gradient.measurements|Where-Object {$_.samples.Count -ne 12288}).Count){$complete=$false}
     }
-    if(Select-String -Path $log -Pattern 'Shader error|error CS\d+' -Quiet){$complete=$false}
+    if(Select-String -Path $log -Pattern 'Shader error|error CS\d+|\w+Exception:' -Quiet){$complete=$false}
     if($code -ne 0 -and $complete){
         $mono=Select-String -Path $log -SimpleMatch 'Cleanup mono'|Where-Object LineNumber -GT $result.LineNumber
         $abort=Select-String -Path $log -SimpleMatch 'abort_threads: Failed aborting'|Where-Object LineNumber -GT $result.LineNumber
@@ -48,6 +48,7 @@ finally{git restore -- game/Assets/_Project/Rendering/Settings game/ProjectSetti
 Add-Content "$PSScriptRoot/STATUS.md" "Lab natywnego gradingu65PNG+5kostek,192holdout+12288gradientnaPreset zakończony; log=$log. To diagnostyka, bez wdrożenia lub GPU PASS."
 git add -f artifacts/light-r5/STATUS.md
 git commit -m 'WIP light r5: record actual High-baked LUT laboratory evidence'
+
 
 
 
