@@ -50,3 +50,5 @@ potem poprawić największe udokumentowane odstępstwo wiaty. WIP po każdym kro
 2026-11-12T11:26:32.5077208+01:00: Unity render before High overcast; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
 
 2026-11-12T11:27:10.3131906+01:00: baseline kompletny:236PNG,po59Low/High×clear/overcast,statystyki powiązaneSHA256. Zapisano manifest/props/QA przed zmianąr3 i własne produkty generatora. Efekty uboczne raportówfar-field/wiaduktu przywrócono. Obejrzano4zbliżeniaLowclear; niezależny przegląd w toku. NASTĘPNY KROK:korekta potwierdzonych rodzin wiat, z osobną oceną osadzenia i pełnym budżetem kamer.
+
+2026-11-12T11:27:33.7948057+01:00: niezależny przegląd4/4 zbliżeń potwierdzaP1:skrzyniowy odczyt, szkło/rama i dach;P2:ciężki front/ławka. Czerwony wariant tylko w2potwierdzonych lokalizacjach, bez wymyślonej platformy. Budżet wymaga pomiaru. NASTĘPNY KROK:implementacja własnego wariantu wiaty po kompletnym baseline162214c3.
