@@ -99,3 +99,5 @@ Końcowy heavy (2026-11-12T13:48:13.7959001+01:00): zapisz końcowy GIS kół pl
 Końcowy heavy (2026-11-12T13:48:17.4684492+01:00): potwierdź zamrożone koła, bieżnik, raw i materiały po testach. Następny krok: odczyt rzeczywistych wyników, ADR/REPORT i kopia, potem r5 palety.
 
 Krok 26: końcowy GIS terminalny 709 passed, 1 xfailed w 953,02 s, exit 0; final-heavy complete/0. Po nim source-proof, dokładny zakres kół/bieżnika/raw i 408 native zgodne, heavy zwolniony. 20729 zakończony. ADR/ocena/REPORT zawierają wynik; REPORT ma 18 wierszy. Main nowe b4f86e3b zawiera r3 life (SCAL/PARTIAL) i dużą integrację innych dziedzin — dopiero r5 dołączy świeże main. Następny krok: commit, publish.ps1 (REPORT ostatni), potwierdzenie kopii, od razu r5 palety.
+
+Krok 27: r4 przekazana do main artifacts/life-r4 o 13:50:03, robocopy 1: 2001 plików / 3 697 107 143 bajty przed receipt/REPORT; rozmiary wszystkich plików i 12 krytycznych SHA zgodne. REPORT opublikowany ostatni, źródła/testy zamknięte w 56021edf. Bez operacji git na main, bez push. Następny krok natychmiast: gpt-life-r5, merge aktualnego main wyłącznie do własnej gałęzi, zaległe palety.
