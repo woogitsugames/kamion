@@ -73,3 +73,18 @@
 - NASTEPNY KROK: `Get-Content artifacts/buildings-r9/r2/round.log` (po `build_world exit 0`: `grep tris_low r2/build_world.log`,
   czekac na `ROUND DONE`) -> `python artifacts/buildings-r9/budget2.py artifacts/buildings-r9/base/Low-overcast artifacts/buildings-r9/r2/Low-overcast`
   -> `git merge main` (generated --ours) -> `pwsh artifacts/buildings-r9/round.ps1 -Round r3` + pytest gis + fidelity + EditMode.
+
+## krok 6 — r2 zmierzone i obejrzane, merge main, r3 w toku (18:02)
+- r2 (kod e553c32a2, przed merge): build_world exit 0 792 s; region Low 3052 submeshy / 4 603 634 tris (main 3052 / 4 572 k);
+  `plots` Low 51 508 (main 52 406), High 94 172; `buildings_lod1` +31 432 (ramki okien). Import 576 s, 0 bledow.
+- Budzet Low r2 vs base (67 kamer, `r2/budget_low.txt`): MR draws +0, shadow -1, instancjonowane +23 (najg. `r10_shed_2` +14,
+  `r10_house_2` +10; kamery trasy/kabiny -2..+3), instancje +81, tris siatek +258 k (najg. +29 k - ramki LOD1), tris instancji +10 k.
+- Decyzja: ramki LOD1 WYLACZONE (`buildings_mesh.LOD1_HOUSE_FRAME_M = 0.0`, 0.12 wlacza) -> Low tris siatek ~ base w r3.
+- Obejrzane: `r2/sheet_hc_{a,b}.jpg`, `r2/sheet_low_a.jpg` vs `base/sheet_low_a.jpg`, `pairs_r2/low_*.jpg`.
+- `git merge main` b2f86cb7c (konflikty: 2x generated json + street_props.glb -> ours). Lancuch r2 zabity po ROUND DONE.
+- W TLE: `r3_chain.ps1 -Round r3` (pwsh PID 60960; log `r3/round.log`, `r3.chain.out`): build_all, build_world, export-route,
+  fidelity, pytest gis (slot heavy wziety 18:02), potem import + Low overcast + 8 kamer hc + EditMode; koniec = `CHAIN DONE`.
+- NASTEPNY KROK: `Get-Content artifacts/buildings-r9/r3/round.log` (czekac na `CHAIN DONE`; jesli zginelo po `pytest(gis) exit`:
+  `pwsh artifacts/buildings-r9/round.ps1 -Round r3 -SkipWorld; pwsh artifacts/buildings-r9/editmode.ps1 -Round r3`) ->
+  `python artifacts/buildings-r9/budget2.py artifacts/buildings-r9/base/Low-overcast artifacts/buildings-r9/r3/Low-overcast`
+  -> commit generated -> ADR Liczby -> kopia `artifacts/buildings-r9` do main.
