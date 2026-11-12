@@ -23,9 +23,13 @@ for item in evidence['instances_inputs']:
             instance['p'] = 'bus_shelter'
         if instance['p'] == 'bus_shelter':
             shelters.append(dict(instance))
+    # The exporter sorts by prototype before writing. A legitimate prototype change
+    # can therefore move a row: compare the full multiset, preserving duplicates.
+    packet['instances'].sort(key=lambda row: json.dumps(row, sort_keys=True, separators=(',', ':'), ensure_ascii=False))
     canonical = json.dumps(packet, sort_keys=True, separators=(',', ':'), ensure_ascii=False).encode()
     chunks[item['file']] = hashlib.sha256(canonical).hexdigest()
 result = dict(phase=phase, normalized_chunks=chunks, shelters=shelters, red_variants=variants,
+              comparison='Full instance multisets per chunk, preserving duplicates; export order is not identity',
               caveat='JSON instance identity only; does not measure mesh, collision, draws or GPU')
 if phase == 'after':
     before = json.loads((EV / 'instances-before.json').read_text())
