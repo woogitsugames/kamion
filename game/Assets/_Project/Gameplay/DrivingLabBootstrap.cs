@@ -152,6 +152,8 @@ namespace Game.Gameplay
                 else if (mir.phase == 0) m_MirrorL = mir; else m_MirrorR = mir;
             m_MirrorInsets = PlayerPrefs.GetInt(PrefMirrorInsets, 1) != 0;
 
+            // engine_audio=el|synth: engine sound set for the owner's A/B (ADR 0137); saved like the settings-panel choice.
+            Game.Core.AudioPreferences.ApplyArgument(platform.GetLaunchArgument("engine_audio"));
             m_Audio = gameObject.AddComponent<TruckAudioController>();
             m_Audio.vehicle = vehicle;
             m_Audio.rig = m_Rig;
