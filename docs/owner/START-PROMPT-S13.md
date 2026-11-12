@@ -32,6 +32,8 @@ Pamięć projektu jest w `C:\Users\matma\.claude\projects\C--Users-matma-Documen
    - Daj właścicielowi ścieżkę APK i listę kontrolną: obraz się nie obraca, przesuw kciukiem, jazda 24 t, dźwięk synteza/ElevenLabs, a z logcat linie `[SCREEN]` i `[CONTROLS]`.
    - **Nie uruchamiaj `setup-project.ps1` przed buildem:** przepisuje sceny i prefaby (ok. 17 tys. linii samych identyfikatorów).
 
+**Maszyna tylko dla Claude (od 12.11 16:40):** wszystkie sesje GPT zakończone, a ich procesy, sloty i bilety usunięte za zgodą właściciela. Cały CPU i RAM idzie dla agentów Claude, do 10 naraz. Liczbę slotów heavy (3) możesz podnieść do 4, jeśli watchdog nie zgłasza braku RAM. Nowe sesje GPT uruchomi tylko właściciel. Przed scaleniem ich zaległych rund patrz `docs/owner/GPT-BACKLOG.md`.
+
 **Zasady:**
 - Do 10 agentów naraz (5 Fable + 5 Opus). Fable dostaje geometrię i modelowanie (world-builder, truck-artist), Opus rendering, kalibrację, fizykę, UI, audio i krytyka. Jakość jest ważniejsza niż oszczędzanie limitu.
 - Od 85 % limitu 5-godzinnego nowy agent tylko wtedy, gdy działa mniej niż 2. Od 95 % żadnych nowych: agenci zapisują WIP, ty aktualizujesz HANDOVER i pushujesz. Właściciel przenosi pracę na inne konto, gdy limit się skończy.
