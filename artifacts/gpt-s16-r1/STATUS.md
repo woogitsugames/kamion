@@ -32,3 +32,5 @@ Dodatkowe kamery: after/Low-clear zapisane.
 Dodatkowe kamery: after/Low-overcast zapisane.
 
 Dodatkowe kamery: after/High-clear zapisane.
+
+Dodatkowe kamery: after/High-overcast zapisane.
