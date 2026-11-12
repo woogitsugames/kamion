@@ -35,3 +35,4 @@ Zapisano before WorldC Low clear. Następny krok: obejrzenie arkuszy i porównan
 Zapisano before WorldC_High High overcast. Następny krok: obejrzenie arkuszy i porównanie statystyk.
 Zapisano before WorldC_High High clear. Następny krok: obejrzenie arkuszy i porównanie statystyk.
 Świeży baseline r4: świeże kamery kontrolne kod 0. Produkcja bez zmian; kolejny etap zgodnie z baseline.ps1.
+Zapisano pary foto before Low-clear-photo-1280x720. Następny krok: porównać z photo-references.json.
