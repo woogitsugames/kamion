@@ -313,8 +313,13 @@ def barrier_galv(n=1024):
         alb = alb * (1 - k) + alb * brown * k
         r = np.clip(rust, 0, 1)[..., None]
         return alb * (1 - 0.8 * r) + r * rc * float(alb.mean()) * 0.8
-    rough = 0.62 + 0.12 * dirt + 0.15 * rust - 0.06 * foldm + 0.04 * cloud
-    return _finish("barrier_galv", c, lum, h, rough, np.zeros_like(X), np.maximum(lap_edge, bolt), extra=tint, ao_k=0.4)
+    # ADR 0123 (REVIEW s10-0117 P1-2): zinc is a metal - MaskMap.r carries bare zinc 1, road film / run-off / rust 0
+    # (dielectric dirt on top), scaled per material by the manifest key `set_metal`; roughness of the weathered sheet
+    # 0.56 (was 0.62; task brief 0.5-0.6, WORKING_VALUE - no gloss measurement), dirt and rust rougher
+    rough = 0.56 + 0.14 * dirt + 0.20 * rust - 0.06 * foldm + 0.04 * cloud
+    metal = np.clip(1.0 - 0.75 * dirt - 1.0 * rust - 0.5 * runs, 0.0, 1.0)
+    return _finish("barrier_galv", c, lum, h, rough, np.zeros_like(X), np.maximum(lap_edge, bolt), extra=tint, ao_k=0.4,
+                   metal=metal)
 
 
 def box_panel(n=1024):

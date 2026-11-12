@@ -260,19 +260,19 @@
       "seat": "file",
       "type": "persp",
       "pos": [
-        538.2126,
-        -687.839,
-        141.2575
+        541.5,
+        -690.4,
+        140.52
       ],
       "look_at": [
-        505.3573,
-        -706.3527,
-        154.5907
+        507.3665,
+        -707.048,
+        153.0798
       ],
       "fov_deg": 73.7398,
       "segment": "G3-A",
       "pose_confidence": "B",
-      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "pose_reason": "ADR 0143 (s14): probe sbs-p143-320326-p128; anchors: ADR 0128 probe (zenith VP pitch 18.3 deg, zebra corner anchor, eye 0.9 m), accepted by REVIEW s14-0128 (D-3 left, D-6 right on the kerbed nose); re-rendered here on the regenerated main world: viaduct fascia line and roundabout kerb as on the photo",
       "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
     },
     {
@@ -281,19 +281,19 @@
       "seat": "file",
       "type": "persp",
       "pos": [
-        528.1973,
-        -682.424,
-        141.3375
+        531.5,
+        -685.0,
+        140.5406
       ],
       "look_at": [
-        494.6899,
-        -699.7295,
-        154.6708
+        497.2609,
+        -700.1798,
+        154.5855
       ],
       "fov_deg": 73.7398,
       "segment": "G3-A",
       "pose_confidence": "B",
-      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "pose_reason": "ADR 0143 (s14): probe sbs-p143-482392-sa; anchors: near kerb line from the bottom (x 0.62) to the right edge (y 0.83) as on the photo; far pier pair and abutment within ~30 px; same richlv 2020-08-15 sequence as 320326 (ADR 0128 shift +3.3/-2.6 m, +3.4 deg, eye 0.9)",
       "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
     },
     {
@@ -470,19 +470,19 @@
       "seat": "file",
       "type": "persp",
       "pos": [
-        -208.4264,
-        -248.6641,
-        132.9656
+        -215.3933,
+        -246.9523,
+        132.8904
       ],
       "look_at": [
-        -240.433,
-        -224.6898,
-        133.8654
+        -246.7809,
+        -222.173,
+        133.7902
       ],
       "fov_deg": 58.71551,
       "segment": "G3-B",
       "pose_confidence": "B",
-      "pose_reason": "Promoted by leader s12 from GPT sbs-r3 refinement (REVIEW-2026-11-12-s12-gpt-batch-d)",
+      "pose_reason": "ADR 0140 (s13): probe sbs-p140-837235-c0; anchors: U-4a chevron at its orthophoto position (overrides at_en) x 0.861 and plate height 155 px; portal west column x 584 px; predicted east column 729 vs photo beam end ~736; road vanishing point consistent with the road axis",
       "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
     },
     {
@@ -491,19 +491,19 @@
       "seat": "file",
       "type": "persp",
       "pos": [
-        -310.0,
-        -193.05,
-        131.6547
+        -305.1459,
+        -194.2418,
+        131.647
       ],
       "look_at": [
-        -276.1441,
-        -212.6114,
-        140.0884
+        -271.2972,
+        -213.8156,
+        140.0807
       ],
       "fov_deg": 43.54635,
       "segment": "G3-B",
       "pose_confidence": "B",
-      "pose_reason": "ADR 0130 (s12): calibrated from diagnostic probe r2 a0; anchors: lattice portal behind, over the left (northbound) carriageway: leg x 0.145/0.434 photo vs 0.14/0.43 render; long low hall at the left edge and low white building block right at the horizon; road vanishing point / horizon 0.77",
+      "pose_reason": "ADR 0140 (s13): probe sbs-p140-328135-s0; anchors: portal columns x 189/560 px (beam level) photo vs render; EC chimneys x 910/936 px (heading); horizon 0.77 kept (left kerb vanishing ~0.78)",
       "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
     },
     {
@@ -512,19 +512,19 @@
       "seat": "file",
       "type": "persp",
       "pos": [
-        -247.3214,
-        -220.3061,
-        131.8291
+        -251.1175,
+        -217.2239,
+        131.8
       ],
       "look_at": [
-        -279.3315,
-        -196.3365,
-        132.7289
+        -282.8927,
+        -192.9437,
+        132.6998
       ],
       "fov_deg": 58.71551,
       "segment": "G3-B",
       "pose_confidence": "B",
-      "pose_reason": "Promoted by leader s12 from GPT sbs-r3 refinement (REVIEW-2026-11-12-s12-gpt-batch-d)",
+      "pose_reason": "ADR 0140 (s13): probe sbs-p140-275528-s0; anchors: portal columns x 0.295/0.753 photo vs render (14 m portal, ADR 0127); camera in the middle lane (dashes both sides) in both; beam top y 160 px photo vs 151-157 model",
       "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
     },
     {
@@ -538,14 +538,14 @@
         132.4223
       ],
       "look_at": [
-        -245.9429,
-        -241.107,
-        135.903
+        -244.8114,
+        -240.0619,
+        132.4223
       ],
       "fov_deg": 39.99889,
       "segment": "G3-B",
       "pose_confidence": "B",
-      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "pose_reason": "ADR 0140 (s13): probe sbs-p140-150280-s0; anchors: road vanishing point (lane dash + left kerb) y 356 / x 555 px photo vs y 439 / x 514 px render before; far road end 340 vs 430 px",
       "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
     },
     {
@@ -554,19 +554,19 @@
       "seat": "file",
       "type": "persp",
       "pos": [
-        -367.2,
-        -150.1,
-        132.8753
+        -360.5239,
+        -155.2852,
+        132.7506
       ],
       "look_at": [
-        -332.6942,
-        -168.7542,
-        140.7092
+        -325.8429,
+        -173.6116,
+        140.5845
       ],
       "fov_deg": 43.54635,
       "segment": "G3-B",
       "pose_confidence": "B",
-      "pose_reason": "ADR 0130 (s12): calibrated from diagnostic probe r2 b0; anchors: same portal far ahead in the image centre (x 0.445-0.566 photo / 0.44-0.56 render); blue industrial hall at the left edge x 0-0.2 in both; horizon 0.75",
+      "pose_reason": "ADR 0140 (s13): probe sbs-p140-297817-s0; anchors: portal columns x 571/722 px photo vs render; EC chimneys x 950 (chimney-2) / 976 (chimney-1) px",
       "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
     },
     {
@@ -580,14 +580,14 @@
         132.7372
       ],
       "look_at": [
-        -347.8836,
-        -144.3928,
-        136.5554
+        -347.9607,
+        -144.3376,
+        135.3864
       ],
       "fov_deg": 58.71551,
       "segment": "G3-B",
       "pose_confidence": "B",
-      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "pose_reason": "ADR 0140 (s13): probe sbs-p140-367829-s0; anchors: near-road vanishing point y 384 px photo vs 403 px render before (x within 6 px)",
       "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
     },
     {
@@ -638,19 +638,19 @@
       "seat": "file",
       "type": "persp",
       "pos": [
-        -392.8732,
-        -118.7489,
-        133.5241
+        -395.0329,
+        -121.5031,
+        133.657
       ],
       "look_at": [
-        -355.8535,
-        -111.3339,
-        146.7362
+        -358.0131,
+        -114.0887,
+        146.8691
       ],
       "fov_deg": 73.7398,
       "segment": "G3-B",
       "pose_confidence": "C",
-      "pose_reason": "J1: camera intersects acoustic screen",
+      "pose_reason": "ADR 0143 (s14): probe sbs-p143-810896-m0; anchors: photo = car on SE-bound Andersa looking ~51 deg left of the road (kerb vanishing point x ~1440 px), kerb 2.5 x eye height left of the camera, guardrail top below the horizon (eye ~1.0 m)",
       "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
     },
     {
@@ -785,19 +785,19 @@
       "seat": "file",
       "type": "persp",
       "pos": [
-        -526.3212,
-        4.884,
-        141.8491
+        -486.2645,
+        -30.6583,
+        140.1677
       ],
       "look_at": [
-        -557.0007,
-        30.058,
-        146.8527
+        -513.4152,
+        -1.733,
+        145.2831
       ],
       "fov_deg": 31.97862,
       "segment": "G3-B",
       "pose_confidence": "B",
-      "pose_reason": "ADR 0130 (s12): calibrated from diagnostic probe r2 c1/c2 (between); anchors: dark screen posts close at the right receding to x ~0.2 at the horizon; median barrier and second deck at the left edge; horizon 0.72",
+      "pose_reason": "ADR 0143 (s14): probe sbs-p143-494288-g0; anchors: median lamp ladder x + 1/d spacing (nearest lamp ~35-40 m ahead, ~33 m pitch), lane dash line, near road vanishing point x 441 / y 687 of 1280x960 (heading = road tangent + 7.5 deg); rendered: dash slanting from the lower left, right edge line, screen receding to x ~0.2 at the far left bend as on the photo",
       "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
     },
     {

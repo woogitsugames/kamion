@@ -193,12 +193,17 @@ def direction_board(dests, refs, green):
     return im, W * px / 64 * 0.36, H * px / 64 * 0.36
 
 
-def overhead_board(rows, row_m=0.62):
+def overhead_board(rows, row_m=0.62, size_m=None, arrows=1):
     """Overhead direction board on a gantry (our own schematic drawing after the CC0 photo of the gantry at the
     Andersa / Rondo Putry approach): green field, white border, one row per destination with route shields
     (E-roads: green shield with a white border, national roads: red shield) and a downward lane arrow on the
-    left. rows = [(refs, destination)]. Returns (image, width_m, height_m); row height `row_m` (WORKING_VALUE)."""
+    left. rows = [(refs, destination)]. Returns (image, width_m, height_m); row height `row_m` (WORKING_VALUE).
+    ADR 0139: `size_m` = (width, height) measured on a photo - the rows fill that height (row = height / (rows +
+    0.3)), the field is widened to the width with the rows centred, and with `arrows` >= 2 a second lane arrow
+    stands at the right end (a board over two lanes, Mapillary 275528677534382)."""
     px_m = 160                                     # pixels per metre
+    if size_m:
+        row_m = float(size_m[1]) / (len(rows) + 0.3)
     rh = int(row_m * px_m)
     f = _font(int(rh * 0.52))
     fs = _font(int(rh * 0.36))
@@ -206,17 +211,21 @@ def overhead_board(rows, row_m=0.62):
     shield_w = int(rh * 0.95)
     nsh = max(len(r[0]) for r in rows)
     tw = max(probe.textbbox((0, 0), d, font=f)[2] for _, d in rows)
-    W = int(rh * 0.9 + nsh * (shield_w + 12) + tw + rh * 0.6)
+    W0 = int(rh * 0.9 + nsh * (shield_w + 12) + tw + rh * 0.6)
     H = int(rh * len(rows) + rh * 0.3)
+    W = max(W0, int(float(size_m[0]) * px_m)) if size_m else W0
+    two = bool(size_m) and arrows >= 2 and W - W0 >= rh * 0.5
+    # authored width: the rows sit centred between the arrow(s); rule width: flush after the left arrow (as before)
+    shift = int((W - W0 - (rh * 0.5 if two else 0.0)) / 2) if size_m else 0
     im = Image.new("RGBA", (W, H), (*GREEN, 255))
     d = ImageDraw.Draw(im)
     d.rectangle([5, 5, W - 6, H - 6], outline=WHITE, width=8)
-    ax = int(rh * 0.45)                             # downward arrow (lane assignment)
-    d.line([(ax, H * 0.22), (ax, H * 0.72)], fill=WHITE, width=max(10, rh // 9))
-    d.polygon([(ax - rh * 0.22, H * 0.66), (ax + rh * 0.22, H * 0.66), (ax, H * 0.84)], fill=WHITE)
+    for ax in [int(rh * 0.45)] + ([W - int(rh * 0.45)] if two else []):       # downward arrow (lane assignment)
+        d.line([(ax, H * 0.22), (ax, H * 0.72)], fill=WHITE, width=max(10, rh // 9))
+        d.polygon([(ax - rh * 0.22, H * 0.66), (ax + rh * 0.22, H * 0.66), (ax, H * 0.84)], fill=WHITE)
     for i, (refs, dest) in enumerate(rows):
         y0 = int(rh * 0.15 + i * rh)
-        x = int(rh * 0.9)
+        x = int(rh * 0.9) + shift
         for r in refs:
             e = r.upper().startswith("E")
             w3 = r.isdigit() and len(r) == 3        # voivodeship road: yellow shield, black digits (ADR 0069, p37 "675")
@@ -226,7 +235,7 @@ def overhead_board(rows, row_m=0.62):
             d.text((x + shield_w / 2 - (bb[2] - bb[0]) / 2 - bb[0], y0 + rh / 2 - (bb[3] - bb[1]) / 2 - bb[1]), r,
                    font=fs, fill=BLACK if w3 else WHITE)
             x += shield_w + 12
-        x = int(rh * 0.9 + nsh * (shield_w + 12) + rh * 0.15)
+        x = int(rh * 0.9 + nsh * (shield_w + 12) + rh * 0.15) + shift
         bb = d.textbbox((0, 0), dest, font=f)
         d.text((x - bb[0], y0 + rh / 2 - (bb[3] - bb[1]) / 2 - bb[1]), dest, font=f, fill=WHITE)
     return im, W / px_m, H / px_m

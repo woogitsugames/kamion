@@ -197,6 +197,7 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     LM.build(pl, w.net, graph, overrides, origin, boards, frep)
     FU.misc_points(pl, w.net, src, origin, frep, codes)
     FU.lamps(pl, w.net, src["osm"]["nodes"], origin, frep)
+    FU.bridge_median_lamps(pl, w.net, frep)          # ADR 0123: twin-arm lamps between the decks (bridge_style `lamps`)
     lin = FU.Lin(w.buf, zsurf)
     # authored fences of hero buildings replace the generic panel fence of the same OSM way (ADR 0070 r3)
     FU.fences(lin, src, origin, shapely.union_all([roads_poly] + HBD.fence_cut(heroes)), frep,
@@ -227,11 +228,13 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     YW.apply(w.buf, overrides, origin, docks, paved, roads_poly, zsurf, frep)     # authored yard wear (ADR 0071 r11)
     FD.apply(w, pl, roads_poly, bpoly, paved, park_polys, route_P, frep, log, overrides=overrides, deck_at=deck_at)   # Fab Megascans (ADR 0084)
     carriage = PV.road_footprint_polygon([p for p in road_parts if p.mat.startswith("road_")])
-    G3.build(pl, w.net, graph, overrides, origin, boards, frep, carriage=carriage)   # ADR 0125 gate 3 signs
+    G3.build(pl, w.net, graph, overrides, origin, boards, frep, carriage=carriage,   # ADR 0125 gate 3 signs
+             islands=[i for i in getattr(getattr(w, "gore_plan", None), "islands", []) if i.built])   # ADR 0128
     FU.clear_carriageway(pl, carriage, zsurf, frep)
     FU.clear_narrow_islands(pl, w.buf.parts, w.net, frep)        # ADR 0093: no lamp on a separation < ~2 m
     FU.clear_under_decks(pl, w.buf.parts, frep)
     FU.clear_level_carriageways(pl, w.buf.parts, frep)
+    FU.lamp_rows(pl, w.buf.parts, pipeline.REGIONS / rid / "lamp_rows.json", frep)   # ADR 0133: authored rows
     frep["poles_reseated"] = pl.reseated
     frep["pole_footing_steps"] = {"count": len(pl.seat_log), "max_m": max([r["step_m"] for r in pl.seat_log], default=0.0),
                                   "worst": sorted(pl.seat_log, key=lambda r: -r["step_m"])[:20]}

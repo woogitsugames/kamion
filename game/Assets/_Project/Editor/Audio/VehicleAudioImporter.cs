@@ -182,6 +182,12 @@ namespace Game.Editor.Audio
         {
             lib.elExteriorEngine = lib.elCabEngine = lib.elExteriorEngineBrake = lib.elCabEngineBrake = null;
             lib.elEngineStart = lib.elEngineStop = lib.elIdleClatter = lib.elRetarder = lib.elTurboWastegate = default;
+            lib.elAirBrakeRelease = lib.elParkingBrakeSet = lib.elParkingBrakeRelease = lib.elAirDryerPurge = lib.elAirDryerPurgeB = default;
+            lib.elGearshiftUp = lib.elGearshiftDown = lib.elTrailerCouple = lib.elSuspBump = lib.elIndicatorTick = lib.elIndicatorTock = default;
+            lib.elCabSwitch = lib.elDoorOpen = lib.elDoorClose = lib.elCompressor = lib.elHorn = lib.elReverseBeeper = default;
+            lib.elAmbientBed = lib.elTurboWhine = lib.elTurboRush = default;
+            lib.elTyreDryCab = lib.elWindCab = lib.elGearWhineCab = null;
+            lib.elTyreSurface = new VehicleAudioLibrary.PerspectivePair[6];
             if (!File.Exists(ElevenLabsManifestPath)) return 0;
             var man = JsonUtility.FromJson<Manifest>(File.ReadAllText(ElevenLabsManifestPath));
             string AssetPath(string repoRelative) => repoRelative.StartsWith("game/", StringComparison.Ordinal) ? repoRelative.Substring(5) : repoRelative;
@@ -232,6 +238,36 @@ namespace Game.Editor.Audio
             lib.elIdleClatter = Pair("el_idle_clatter_loop", "el_idle_clatter_cab_loop");
             lib.elRetarder = Pair("el_retarder_loop", "el_retarder_cab_loop");
             lib.elTurboWastegate = Pair("el_turbo_wastegate", "el_turbo_wastegate_cab");
+            // ADR 0142 effects (tools/audio/el_fx.py). "Both" sounds: one clip for both perspectives.
+            VehicleAudioLibrary.PerspectivePair Both(string name) { var c = Sfx(name); return new VehicleAudioLibrary.PerspectivePair { ext = c, cab = c }; }
+            lib.elAirBrakeRelease = Pair("el_air_brake_release", "el_air_brake_release_cab");
+            lib.elParkingBrakeSet = Pair("el_parking_brake_set", "el_parking_brake_set_cab");
+            lib.elParkingBrakeRelease = Pair("el_parking_brake_release", "el_parking_brake_release_cab");
+            lib.elAirDryerPurge = Pair("el_air_dryer_purge", "el_air_dryer_purge_cab");
+            lib.elAirDryerPurgeB = Pair("el_air_dryer_purge_b", "el_air_dryer_purge_b_cab");
+            lib.elGearshiftUp = Both("el_gearshift_up");
+            lib.elGearshiftDown = Both("el_gearshift_down");
+            lib.elTrailerCouple = Pair("el_trailer_couple", "el_trailer_couple_cab");
+            lib.elSuspBump = Pair("el_susp_bump", "el_susp_bump_cab");
+            lib.elIndicatorTick = Both("el_indicator_tick");
+            lib.elIndicatorTock = Both("el_indicator_tock");
+            lib.elCabSwitch = Both("el_cab_switch");
+            lib.elDoorOpen = Both("el_door_open");
+            lib.elDoorClose = Both("el_door_close");
+            lib.elCompressor = Pair("el_compressor_loop", "el_compressor_cab_loop");
+            lib.elHorn = Pair("el_horn_loop", "el_horn_cab_loop");
+            lib.elReverseBeeper = Pair("el_reverse_beeper_loop", "el_reverse_beeper_cab_loop");
+            lib.elAmbientBed = Pair("el_ambient_bed_loop", "el_ambient_bed_cab_loop");
+            lib.elTurboWhine = Pair("el_turbo_whine_loop", "el_turbo_whine_cab_loop");
+            lib.elTurboRush = Pair("el_turbo_rush_loop", "el_turbo_rush_cab_loop");
+            lib.elTyreDryCab = Sfx("el_tyre_dry_cab_loop");
+            lib.elWindCab = Sfx("el_wind_cab_loop");
+            lib.elGearWhineCab = Sfx("el_gear_whine_cab_loop");
+            lib.elTyreSurface = new[]
+            {
+                default, Pair("el_tyre_wet_loop", "el_tyre_wet_cab_loop"), Pair("el_tyre_concrete_loop", "el_tyre_concrete_cab_loop"),
+                default, Pair("el_tyre_gravel_loop", "el_tyre_gravel_cab_loop"), default,
+            };
             Debug.Log($"[AUDIO] ElevenLabs set imported: {man.clips.Length} loops, {man.sfx.Length} sfx ({man.generator})");
             return man.clips.Length + man.sfx.Length;
         }

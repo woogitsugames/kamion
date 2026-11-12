@@ -566,6 +566,7 @@ namespace Game.Gameplay
             {
                 if (m_SettingsPanel != null) m_SettingsPanel.Close(); else ReturnToMenu();
             }
+            Game.Core.AudioCues.HornHeld = kb != null && kb.kKey.isPressed;   // horn (ADR 0142; touch button: gameplay-ui TODO)
             ApplyCommands(intent);
             UpdateTurnSignals(intent, fb.RoadWheelAngleNormalized);
 

@@ -66,6 +66,8 @@ namespace Game.World
 
         public Prototype[] prototypes = Array.Empty<Prototype>();
         public Material[] materials = Array.Empty<Material>();
+        [Tooltip("Indices into materials of prototype submeshes that never cast shadows (manifest \"cast_shadows\": false, ADR 0123)")]
+        public int[] noShadowMaterials = Array.Empty<int>();
         public Cell[] cells = Array.Empty<Cell>();
         public Run[] runs = Array.Empty<Run>();
         [Tooltip("Full matrices: only for sets that cannot be packed (shear / mirror) and for assets imported before ADR 0025")]

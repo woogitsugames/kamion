@@ -1,0 +1,30 @@
+# sbs-poses-r3 (ADR 0143) STATUS
+2026-11-12 18:32
+- Worktree created; preflight STALE (derived chunks + overrides.yaml) -> regen running (artifacts/sbs-poses-r3/regen.log; build_world heavy slot then import-region unity slot).
+- 494288 photo measured: road VP (441,687) = horizon 0.716; lane dash X=-0.83H, edge X=+2.66H -> camera ~1 m right of the lane dash (left half of the right lane). Production camera stands ~0.3 m left of the right edge line (ADR 0130 moved it 3 m right): main cause of the "curve right" + wide light strip.
+- Lead added frames: 320326319617139 (promote probe from artifacts/biezenstwa-island/cams_sbs.json; island D-3/D-6 not on main), 482392746429891 (blue board right under viaduct end: pose vs world).
+NEXT: wait for regen; then build probes r1 (tools/probes.py) and render: pwsh artifacts/sbs-poses-r3/tools/render.ps1 -Round r1
+18:38 sha 787061126
+- 810896: camera stands in the median between the carriageways (5.0 m left of SE-bound Andersa centreline, layer 1) beside the generated ramp wall; photo = car on SE-bound Andersa (guardrail+median+NW-bound+screens to the left). Probes: 3/7 m SW, +-10 m along.
+- 837235: ADR 0128 (biezenstwa-island branch) puts U-4a on the 2024 island nose (decision 6); 0140 pose anchored on the 2019 nose (worn paint at -217.3,-240.3, 6.9 m from camera = photo ~6.5 m): pose consistent, difference = world epoch.
+- 482392: blue lane-direction board (straight / right arrows, 2 posts) behind the right guardrail under the viaduct end; no such sign in overrides/instances -> world missing; pose also shifted (piers ~ 12-20 deg off). Probes sa-sd (0128 shift of the same richlv sequence).
+- 320326: promotion overrides computed (E 541.5 N -690.4 U 140.52 eye 0.9 heading 244.0 rect horizon 0.7205).
+NEXT: after regen: cd worktree; uv run --project tools/refs python artifacts/sbs-poses-r3/tools/probes.py r1; pwsh artifacts/sbs-poses-r3/tools/render.ps1 -Round r1
+18:43 build_world done 18:40 (606 s); import waits for Unity slot (PHONE_RUN active).
+- 494288 resection (tools/fit494b.py: lamp forks x + 1/d ladder with free height offset, dash line, road VP): s -32 m from A1 = E -487.0 N -31.2 (41 m SE of production), 0.85 m right of the dash, eye ~1.0, heading 316.8, pitch 7.6, roll -3.7 (not renderable), rms 13.8 px. Lamp ladder spacing ~33 m fits the photo; arm span/height: generated lamps ~2x too large / heads ~3.5-5 m too high (world finding, ADR 0133 lamp_y 12 m on deck).
+- r1 probes written (artifacts/sbs-poses-r3/r1).
+NEXT: pwsh artifacts/sbs-poses-r3/tools/render.ps1 -Round r1  (after import finishes)
+19:03 import done 19:03; preflight OK. r1 render Low-overcast started (bg, log artifacts/sbs-poses-r3/r1-render.log; waits for PHONE_RUN a16-perf 18:54). Note: the import's Unity slot was taken before PHONE_RUN appeared.
+NEXT: uv run --project tools/refs python artifacts/sbs-poses-r3/tools/sheets.py r1 Low-overcast ; look at sheets
+19:10 sha f8412e9c5. r1 rendered (sheets r1/sheet-*.jpg): 494288 f0-f3 straight road + left bend as photo, but generated dash ~0.85 m right of the graph centreline; 810896 l0/r0: in the world the NW-bound carriageway stands on a ~3-4 m retaining wall next to SE-bound (photo: at grade, grass median + guardrail) = world; 482392 sa kerb line matches the photo, guardrail starts later in the world; 320326 p128 ok vs photo (piers ~0.1 off, piers low-confidence spec).
+- r2 render waiting for PHONE_RUN (bg, log r2-render.log).
+NEXT: uv run --project tools/refs python artifacts/sbs-poses-r3/tools/sheets.py r2 Low-overcast
+19:14 poses written (6b220afb): 494288 g0, 810896 m0, 482392 sa, 320326 p128 promoted; 837235 unchanged (world epoch). ADR 0143 draft.
+- Evidence running bg (artifacts/sbs-poses-r3/evidence.log): r1 clear (old prod), then sbs-low-pairs full Low set -> artifacts/sbs-poses-r3/after.
+NEXT: compose before/after pairs (sbs_pairs.py pairs --before artifacts/sbs-poses-r3/before/renders/Low-x --cameras ...), pytest heavy, robocopy evidence to main.
+19:16 sha 00a626c64. DONE.
+- Full Low set rendered with the tool (after/{renders,pairs}/Low-{overcast,clear}, 42+42, preflight OK on the regenerated world); before/after pairs for the 5 frames: artifacts/sbs-poses-r3/pairs/Low-{overcast,clear}/ (before = old poses on the same world).
+- pytest tests/gis/test_sbs_*.py tests/gate3 (heavy slot): 113 passed.
+- Uncommitted regen outputs (lead regenerates main): generated/{world_manifest,streetscape_qa,far_field_qa}.json, landmarks/viaduct_putry_underdeck.spec.json, SourceManifests far-field, art-source/world/props/{props_meta.json,street_props.glb}.
+Gotowe do scalenia: TAK (data + docs only; merge then regenerate main world + re-grade sbs_recognition 494288/320326/482392).
+NEXT (lead): git merge sbs-poses-r3; uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c; pwsh scripts/import-region.ps1 -Region bialystok-industrial-c; pwsh scripts/sbs-low-pairs.ps1

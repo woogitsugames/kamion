@@ -108,7 +108,7 @@ def test_noise_screen_posts_and_sheet():
         assert m["shader"] == "car_glass" and m["alpha"] <= 0.2 and m["blend"]
         assert 0.5 <= m["screen"]["horizon_sky"] <= 1.0 and 0.0 < m["screen"]["haze"] <= 0.2
     lines, strength, duty = MT.M["noise_glass_lined"]["screen"]["stripe"]
-    assert 15 <= lines <= 30 and 0 < strength <= 0.6 and 0 < duty < 0.5
+    assert 35 <= lines <= 60 and 0 < strength <= 0.35 and 0 < duty <= 0.15      # ADR 0139: thin, dense, faint
     sh = (ROOT / "game/Assets/_Project/Environment/Shaders/WorldCarGlass.shader").read_text(encoding="utf-8")
     assert "shader_feature_local_fragment _SCREEN_SHEET" in sh       # car panes compile without the screen code
 

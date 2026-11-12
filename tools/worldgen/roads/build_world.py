@@ -79,6 +79,11 @@ MATERIALS = {
                       "texture_set": "kerb_concrete_1m"},
     "sidewalk_paving": {"color": [0.26, 0.255, 0.245], "rough": 0.85, "surface": "paving_stones",
                         "texture_set": "paving_20x10_grey"},
+    # ADR 0123: kerb of a bridge deck (curb_concrete triangles of the bridge layer, renamed in assemble()). Mapillary
+    # 454716650857984: kerb / asphalt sRGB luminance 1.40 (overcast); 2948595898752384 (sun): 1.35. The plain kerb
+    # (0.28) read 1.6. WORKING_VALUE, matched in the frames r4_deck_bz_eye / _eye2.
+    "bridge_kerb": {"color": [0.19, 0.186, 0.176], "rough": 0.9, "surface": "concrete_kerb",
+                    "texture_set": "kerb_concrete_1m"},
     "apron_sett": {"color": [0.27, 0.24, 0.21], "rough": 0.9, "surface": "sett"},
     # viaducts: precast-concrete modulation map projected in world metres (the deck / pier meshes have no metric UV);
     # albedo from the CC0 Bieżeństwa photo (piers mid grey, soffit in its own shadow, REVIEW r3 W4). WORKING_VALUE
@@ -86,8 +91,13 @@ MATERIALS = {
     # ADR0101 (r2): 0.42 was tuned under the old gamma upload (GPU ~0.15); under the linear _Tint (0086) the girder
     # faces read 1.10-1.38 x the asphalt of the same frame, the Bieżeństwa photo has lit pier / road 0.95-1.02, and
     # from above the cornices read near-white. 0.26/0.26/0.25 (WORKING_VALUE) targets that ratio (tint_ratio.py).
+    # ADR 0123 (REVIEW s10-0117 P1-3, "kapa = jasny chodnik"): vertex_grime = [linear albedo of the road film, roughness
+    # gain] applied where the mesh carries COLOR_0.r (cap tops, roads.meshing._emit_strip). Target: cap / asphalt sRGB
+    # luminance 1.2-1.5 (Mapillary 454716650857984 overcast 1.48, 2948595898752384 sunny 1.43-1.56; it was 1.65 Low
+    # clear / 1.96 High overcast). WORKING_VALUE, matched in the frames r4_deck_bz_eye / _eye2.
     "bridge_concrete": {"color": [0.26, 0.26, 0.25], "rough": 0.85, "surface": "concrete",
-                        "texture_set": "concrete_precast", "uv": "planar", "sky_occ": [0.5, 0.0]},
+                        "texture_set": "concrete_precast", "uv": "planar", "sky_occ": [0.5, 0.0],
+                        "vertex_grime": [0.165, 0.158, 0.145, 0.3]},   # t1: cap / asphalt 1.35 (Low clear), 1.46-1.50 (High overcast)
     "bridge_soffit": {"color": [0.15, 0.15, 0.145], "rough": 0.9, "surface": "concrete",
                       "texture_set": "concrete_precast", "uv": "planar", "sky_occ": [0.6, 0.0]},
     # ADR 0117 (REVIEW s10-0110 P1-2, "bialy plotek"): weathered hot-dip zinc is a dull grey patina, not a mirror -
@@ -96,8 +106,18 @@ MATERIALS = {
     # from Mapillary 454716650857984 (overcast): beam / asphalt luminance 1.3-2.4, beam / cap 0.7-1.2 against the
     # generated asphalt 0.08 and cap 0.26, vertical faces seeing about half the sky. Set barrier_galv: UV0 metres
     # (u along the beam, v unrolled across the profile), 4.0 x 0.5 m tile.
-    "barrier_steel": {"color": [0.13, 0.132, 0.135], "rough": 0.65, "metal": 0.0, "surface": "steel",
-                      "texture_set": "barrier_galv", "set_tile": True},
+    # ADR 0123 (REVIEW s10-0117 P1-2): 0.13 / metal 0 was a dark paint - right on the overcast deck, 2 x too dark in the
+    # sun from below. Zinc as a metal: albedo (= specular colour) 0.50, set_metal scales the metal mask of the set
+    # (bare zinc 1, road film / rust 0), roughness 0.56 from the set. WORKING_VALUE, matched in the same frames on an
+    # overcast photo (454716650857984: beam / asphalt 1.4-1.5) and sunny ones (2948595898752384: sunlit beam 1.5 x
+    # asphalt, shaded 0.6 x; 500263111404933 from below: beam / grass 3-4).
+    "barrier_steel": {"color": [0.50, 0.505, 0.51], "rough": 0.56, "metal": 1.0, "surface": "steel",
+                      "texture_set": "barrier_galv", "set_tile": True, "set_metal": 0.9, "shadow_low": False,
+                      # horizon occlusion of the environment term: a beam face reflects the road and the far bank, not
+                      # the sky. Iterated on the generated .mat (artifacts/junctions-r6 t1 / t2 / b2, lum_set.sh):
+                      # metal 0.9 + 0 -> beam / asphalt 1.43-1.48 sun, 1.51-1.64 overcast, 0.98 in shade (photo 0.58);
+                      # 0.65 -> 1.28 / 1.07 / 0.70; metal 0.7 + 0.35 -> 1.65 / 1.57 / 0.88. 0.25 = between (WORKING_VALUE)
+                      "sky_occ": [0.0, 0.25]},
     "verge_grass": {"color": [0.08, 0.105, 0.038], "rough": 0.95, "surface": "grass", "texture_set": "grass_verge"},
     "shoulder_gravel": {"color": [0.20, 0.19, 0.17], "rough": 0.95, "surface": "gravel", "texture_set": "gravel_compacted"},
     "terrain_grass": {"color": [0.08, 0.105, 0.038], "rough": 0.95, "surface": "grass", "texture_set": "grass_verge"},
@@ -169,7 +189,11 @@ def assemble(parts, layers, half):
         ci, cj = chunk_of(cen[:, 0], cen[:, 1], half)
         for key in sorted(set(zip(ci.tolist(), cj.tolist()))):
             sel = (ci == key[0]) & (cj == key[1])
-            g = groups.setdefault((key, p.layer, p.mat), [])
+            # ADR 0123: kerbs on a deck are exported as `bridge_kerb` (same kerb set, darker: road film, REVIEW
+            # s10-0117 P1-3) - a rename at export only, so every QA / fidelity rule keyed on curb_concrete still
+            # sees them; the bridge mesh had a curb_concrete primitive for exactly these triangles (no extra draw)
+            mat_out = "bridge_kerb" if (p.layer == "bridge" and p.mat == "curb_concrete") else p.mat
+            g = groups.setdefault((key, p.layer, mat_out), [])
             g.append((pi, p.V, N, p.UV, p.T[sel], p.UV1, p.COL))
     out = {}
     for (key, layer, mat), items in sorted(groups.items()):

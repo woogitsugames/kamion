@@ -102,6 +102,32 @@ def lamp(h, bracket, double=False):
     return m, l1, col
 
 
+def lamp_y(h=12.0, reach=2.4, rise=1.1, console=False):
+    """Median double-arm column (ADR 0133): straight galvanised column, two straight arms rising in a Y to `reach`
+    on both sides (+y and -y, across both carriageways), flat LED housings at h. Photo Mapillary 494288258686575
+    scaled on the visible column above the median barrier: arm reach ~2.4 m, rise ~1.1 m (WORKING_VALUE).
+    console=True: the column stands on a steel console bolted to the deck fascia on its +y side (the 4.2 m gap
+    between the two DK8 decks over Rondo Putry, GUGiK ortho 0.08 m), no concrete footing (WORKING_VALUE)."""
+    m, l1, col = Mesh(), Mesh(), Mesh()
+    m.pole_height = l1.pole_height = h
+    hj = h - rise
+    for mm, seg in ((m, 12), (l1, 6)):
+        if console:
+            mm.box("steel_galv", [0, 0, 0.015], 0.17, 0.17, 0.015)                      # base plate on the console
+            mm.box("steel_galv", [0, 0.105, -0.17], 0.13, 0.255, 0.17)                 # console into the fascia
+        else:
+            mm.box("concrete_base", [0, 0, -0.01], 0.25, 0.25, 0.09)
+        mm.tube("steel_galv", [0, 0, 0.03 if console else 0.06], [0, 0, hj + 0.15], 0.095, 0.055, seg)
+        for sgn in (1, -1):
+            end = np.array([0, sgn * reach, h])
+            mm.tube("steel_galv", [0, 0, hj], end, 0.045, 0.035, seg // 2)
+            mm.box("luminaire_housing", end + [0, sgn * 0.32, -0.03], 0.16, 0.34, 0.05)
+            mm.quad("lamp_glass", end + [-0.13, sgn * 0.04, -0.081], end + [0.13, sgn * 0.04, -0.081],
+                    end + [0.13, sgn * 0.6, -0.081], end + [-0.13, sgn * 0.6, -0.081])
+    col.tube("collision_steel", [0, 0, 0], [0, 0, hj], 0.12, 0.12, 6)
+    return m, l1, col
+
+
 def lamp_old(h, kind):
     """Second lamp family for side streets (critic R2 #10): older installations still common on Polish residential
     and industrial access roads (shapes typical, no product copied; dimensions WORKING_VALUE).
@@ -400,7 +426,8 @@ def power_pole():
 # length, a short peak with the earth wire. BDOT10k OT_BUWT_P carries no height: total 32 m, arm levels and lengths
 # are WORKING_VALUE (typical 110 kV double-circuit series; arm spacing ~4 m, lowest arm ~20 m).
 PYLON_ARM_Z = (20.0, 24.0, 28.0)     # cross-arm levels (m above ground) for h = 32
-PYLON_ARM_L = 3.3                    # arm tip from the axis (m)
+PYLON_ARM_L = 4.3                    # arm tip from the axis (m): 8.6 m tip to tip on the GUGiK hi-res orthophoto of
+#                                      the tower at Andersa (ADR 0139, artifacts/g3b-r2/crops/ortho-pylon-hr.jpg); was 3.3
 PYLON_INSULATOR_M = 1.3              # suspension string: conductor hangs this far under the arm tip
 PYLON_PANELS = (0.0, 4.5, 8.5, 12.0, 15.0, 17.5, 20.0, 22.0, 24.0, 26.0, 28.0, 30.0)
 PYLON_PANELS_LOD1 = (0.0, 6.5, 12.0, 16.5, 20.0, 22.0, 24.0, 26.0, 28.0, 30.0)
@@ -485,6 +512,8 @@ def build_all(sign_codes, boards):
         P[f"lamp_old_{kind}_{hh}m"] = lamp_old(float(hh), kind)
     P["lamp_arc_9m"] = lamp_arc(9.0)
     P["lamp_arc_9m_double"] = lamp_arc(9.0, double=True)
+    P["lamp_double_12m"] = lamp_y(12.0)                     # ADR 0133: DK8 median row (authored lamp_rows.json)
+    P["lamp_double_console_12m"] = lamp_y(12.0, console=True)
     P["sign_post"] = sign_post()
     for c in sorted(sign_codes):
         P[f"plate_{c}"] = plate(c)

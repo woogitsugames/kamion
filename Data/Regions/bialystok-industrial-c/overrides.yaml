@@ -249,7 +249,14 @@ overrides:
   - id: andersa-viaduct-biezenstwa-style
     kind: bridge_style
     target: {osm_way: [175157461, 177895177]}
-    set: {fascia: red, pier_mat: bridge_concrete, noise_screen: null, cap_w: 1.0}
+    set:
+      fascia: red
+      pier_mat: bridge_concrete
+      noise_screen: null
+      cap_w: 1.0
+      # ADR 0123: twin-arm lamps between the decks (orthophoto 0.08 m: column at E 554.5 N -715.5, next ones ~32 m
+      # apart along the gap), none on the outer caps
+      lamps: {side: median, spacing_m: 32.0, anchor_en: [554.5, -715.5]}
     reason: >-
       Andersa viaduct over Rondo Pamięci Bieżeństwa 1915 r.: red-painted deck edge, plain grey cylindrical
       concrete piers, steel railing, no noise screen (CC0 photo 20201102_152339, Rakoon, docs/REFERENCES.md).
@@ -264,7 +271,19 @@ overrides:
     kind: hero_bridge
     target: {osm_way: [175157461, 177895177]}
     asset: viaduct_biezenstwa
-    set: {rail_h_m: 1.10, rail_inset_m: 0.08}   # ADR 0117: deck-edge railing with horizontal bars in the asset
+    set:
+      rail_h_m: 1.10          # ADR 0117: deck-edge railing with horizontal bars in the asset
+      rail_inset_m: 0.08
+      # ADR 0123 (REVIEW s10-0117 P1-5): pier rows by measurement instead of the 25 m span rule. Mapillary
+      # 177786140912399 (richlv, CC BY-SA 4.0, reference only; taken on the ring at its east point): a pier stands on
+      # the centre island right behind its kerb, with a W-beam between it and the ring, and the next row is ~35 m
+      # further (ratio of the pier heights in the frame ~8) - i.e. a row at each edge of the island (kerb radius
+      # 17.3 m on the 0.08 m orthophoto at E 558 N -734) and no row in the middle of the island (the rule had one at
+      # the centre and rows 31-33 m out, on the far side of the ring carriageway). Rows 2 and 5 below are those two
+      # (14 m either side of the ring centre along the viaduct: columns 2 m inside the island kerb, WORKING_VALUE
+      # +-2 m); rows 1, 2 from each end keep the stations the rule gave (not measured: no photo shows them usably).
+      pier_lines_en: [[487.5, -688.05], [509.0, -699.85], [540.3, -716.9], [564.8, -730.3], [595.15, -746.85],
+                      [616.65, -758.65]]
     reason: >-
       Landmark object of route G3-A (ADR 0067): the Andersa viaduct over Rondo Pamięci Bieżeństwa 1915 r. gets an
       authored Blender asset (art-source/world/landmarks/viaduct_biezenstwa, tools/blender/world/landmarks/
@@ -300,10 +319,18 @@ overrides:
     # artifacts/g3b-lowread/crops/ortho-gantry-hr.jpg): the beam is 14.0 m long, the feet stand ~0.5 m behind the
     # kerbs. The rule (carriageway + side strips + 1 m) gave a 16 m span.
     columns_en: [[-267.0, -212.8], [-258.6, -202.2]]
+    # ADR 0139 (review s13-0127 P2): sizes read off the frontal frame 275528677534382 (2048 px wide, column axes
+    # 797 px apart = the 14 m beam): left board 214 x 46 px -> 3.75 x 0.82 m, right board 216 x 67 px -> 3.8 x 1.2 m,
+    # beam chords 30 px apart -> 0.55 m, board tops ~0.3 m above the top chord, bottoms at the bottom chord.
+    # The rule gave 4.06 x 1.42 m and 4.03 x 2.04 m on a 1.0 m beam. With the 5.0 + 0.2 m clearance the portal top comes
+    # to 6.1 m, board bottoms 5.2-5.5 m (ADR 0127 read 6.2-6.5 m / ~5.5 m off the same frame; the rule gave 7.0 m). WORKING_VALUE (+-5 %).
+    beam_depth_m: 0.55
     boards:
       - lanes: [0, 1]
+        size_m: [3.75, 0.82]
         rows: [[["8", E67], Warszawa], [["65"], Ełk]]
       - lanes: [2]
+        size_m: [3.8, 1.2]
         rows: [[["8", E67], Augustów], [["19"], Kuźnica], [["675"], Centrum]]
     mapillary: ["468708117568850", "143559297695026", "275528677534382", "1056932506043672", "3281350541967811"]
     reason: >-
@@ -342,7 +369,7 @@ overrides:
     verify: sign code and plate on site
   - id: andersa-elewatorska-island-u4a
     kind: gate3_sign
-    at_en: [-217.3, -240.3]
+    at_en: [-219.9, -234.75]
     travel_bearing_deg: 312
     lower_edge_m: 0.9
     parts: [{face: U-4a}]
@@ -350,8 +377,12 @@ overrides:
     reason: >-
       ADR 0125: red / white chevron board on the nose of the island between Andersa (northbound) and the right-turn
       slip into the side road, the main orientation mark of frames 381800493259507 (szurek 2017) and
-      837235577143499 (grobin 2019). Position = island nose on the GUGiK orthophoto 2024 (+- 1.5 m); the 2024 frame
-      (kino 1056932506043672) shows U-21 posts there instead, so the board is the 2017-2019 state. Board size
+      837235577143499 (grobin 2019): a kerbed paved island with P-21 hatching in front of its nose. ADR 0128: the
+      0.08 m GUGiK orthophoto (cell c_06_06, artifacts/biezenstwa-island/ortho/and_hr7.jpg) has that nose at
+      E -219.6 N -235.3 (= the authored island n10015785253-island) with the P-21 triangle down to E -216.3 N -238.7;
+      the ADR 0125 position E -217.3 N -240.3 (read on the 0.25 m sheet) is worn paint on the carriageway, so the
+      board was snapped 5.4 m to the far verge of the slip lane. Now 0.6 m behind the nose, on the island. The 2024
+      frame (kino 1056932506043672) shows U-21 posts instead, so the board is the 2017-2019 state. Board size
       0.75 x 1.35 m and its designation (U-4a; the review calls it U-3) are WORKING_VALUE / UNVERIFIED.
     confidence: low
     verify: present state of the island nose on site
@@ -383,30 +414,63 @@ overrides:
       (2020). Same method and accuracy as biezenstwa-street-name-east (+- 5 m, WORKING_VALUE).
     confidence: low
     verify: plate position on site
+  - id: biezenstwa-n-slip-nose
+    kind: traffic_island
+    surface: island_gravel
+    polygon_en: [[529.80, -686.19], [540.32, -691.46], [540.47, -691.56], [540.58, -691.71], [540.64, -691.87],
+                 [540.65, -692.05], [540.61, -692.23], [540.51, -692.38], [533.14, -701.20], [533.26, -700.96],
+                 [533.78, -700.17], [534.23, -699.34], [534.59, -698.47], [534.87, -697.57], [535.06, -696.65],
+                 [535.16, -695.72], [535.18, -694.78], [535.11, -693.84], [534.94, -692.91], [534.69, -692.00],
+                 [534.36, -691.12], [533.95, -690.28], [533.45, -689.48], [532.89, -688.72], [532.25, -688.03],
+                 [531.56, -687.40], [530.80, -686.83], [530.00, -686.34]]
+    patches:
+      - surface: sidewalk_paving
+        polygon_en: [[528.0, -685.0], [537.4, -689.2], [534.4, -695.2], [533.0, -696.0], [530.0, -690.0]]
+    reason: >-
+      ADR 0128 (gate 3 G3-B blocker 2, REVIEW s11-sbs-r1 #11): kerbed nose between the northern slip road and the
+      ring carriageway that turns under the viaduct. The generator rounds this corner with a 12 m kerb return
+      (j:n1882953899 corner2), which puts carriageway where the real kerbs run straight to a nose: the zebra ended
+      on asphalt and D-3 / D-6 had nowhere to stand. 0.08 m GUGiK orthophoto (cell c_12_02, crops
+      artifacts/biezenstwa-island/ortho/bz_hr7.jpg and plan_b5/bz_corner.jpg): light kerb band along the slip from
+      the zebra end (E 537.1 N -690.0) to the nose at E 540.6 N -691.9 +- 0.5 m, where the dashed edge line starts;
+      Mapillary 320326319617139 (richlv, 2020; reference only): pointed gravel patch with weeds, kerb on both sides,
+      the ring-side kerb leaving at bearing ~217 deg (photo geometry, +- 10 deg) - the line from the nose to the
+      start of the generated ring kerb (E 533.1 N -701.2) is 218 deg. Polygon = those two kerb lines, a 0.6 m nose
+      radius (WORKING_VALUE) and the road face of the generated kerb return (coordinates of build b5; re-trace if the
+      junction generator moves that kerb). Patch = paved landing of the crossing (the footpath continues SSW under
+      the viaduct on what the generator has as verge: not built, OPEN); the tactile slab and the W-beam along the
+      ring kerb are not modelled.
+    confidence: medium
+    verify: nose position and surfaces on site
   - id: biezenstwa-n-slip-d6
     kind: gate3_sign
-    at_en: [540.0, -690.6]
-    travel_bearing_deg: 300
-    lower_edge_m: 2.2
+    at_en: [537.3, -691.0]
+    travel_bearing_deg: 297
+    lower_edge_m: 2.4
     parts: [{face: D-6}]
     mapillary: ["320326319617139"]
     reason: >-
-      ADR 0125: D-6 on its own post at the left end of the pedestrian crossing of the northern slip road, on the
-      small island beside the viaduct (richlv 320326319617139, 2020). Crossing read on the GUGiK orthophoto 2024 at
-      E 533-539, N -681..-689; the post +- 3 m, WORKING_VALUE (the frame's own pose is WORKING_VALUE).
-    confidence: low
-    verify: post positions on site
+      ADR 0125 / 0128: D-6 on its own post at the left end of the pedestrian crossing of the northern slip road, on
+      the gravel nose beside the viaduct (richlv 320326319617139, 2020). Position: the blue plate is visible on the
+      0.08 m orthophoto at E 537.2 N -690.7 (bz_hr7.jpg) and the photo geometry (zenith vanishing point -> pitch
+      18 deg, post bases on the ground plane, camera ~0.9 m above the road, anchored on the zebra corner) gives
+      E 537.5 N -691.2; mean, +- 0.7 m. Faces the traffic leaving the ring (slip axis 297 deg; plate aspect 0.83 in
+      the frame = 35 deg off its normal). Lower edge from the same geometry (2.4-2.7 m), WORKING_VALUE.
+    confidence: medium
+    verify: post position on site
   - id: biezenstwa-n-slip-d3
     kind: gate3_sign
-    at_en: [543.6, -691.8]
-    travel_bearing_deg: 300
-    lower_edge_m: 2.4
+    at_en: [539.3, -692.4]
+    travel_bearing_deg: 285
+    lower_edge_m: 2.5
     parts: [{face: D-3}]
     mapillary: ["320326319617139"]
     reason: >-
-      ADR 0125: D-3 (one-way road) on a taller post ~3.5 m before the D-6 on the same island (same frame). +- 3 m.
-    confidence: low
-    verify: post positions on site
+      ADR 0125 / 0128: D-3 (one-way road) 2.4 m east of the D-6 on the same nose, 1 m behind its tip (same frame;
+      plate on the orthophoto at E 539.1 N -692.1, photo geometry E 539.6 N -692.6; +- 0.7 m). The plate is seen
+      ~50 deg off its normal in the frame, i.e. turned towards the ring: bearing 285 deg +- 15, WORKING_VALUE.
+    confidence: medium
+    verify: post position and plate direction on site
   - id: ec-bialystok-chimney-1
     kind: landmark
     osm_way: 628899553
@@ -451,6 +515,20 @@ overrides:
       facade; no emblem.
     confidence: medium
     verify: yard-side facades, fence line and gate position, thuja count from a site visit
+  # ---------------------------------------------------------------- ADR 0123 b4 (REVIEW s11 SBS r1 D51, blocker 7)
+  - id: biezenstwa-ring-no-apron
+    target: {osm_way: [177895161, 536419678, 536419680, 536419699, 552161978, 553285004, 553285005]}
+    reason: >-
+      Rondo Pamieci Biezenstwa 1915 r. has no mountable sett apron: on the 0.08 m orthophoto
+      (artifacts/junctions-r6/plan_b3/ringb.jpg) and Mapillary 1398898753813071, 201270605169291, 2818555625124739
+      (richlv, CC BY-SA 4.0, reference only) the two-lane ring carriageway (BDOT10k width 8.0 m) runs to the kerb of
+      the gravel centre island (kerb radius ~17.3 m), with the W-beam about 1 m behind the kerb. The generated ring is
+      6.75 m of asphalt + the rule's 2.0 m sett apron (island kerb radius 17.75 m): the apron strip becomes asphalt
+      flush with the ring (same footprint and kerb), so the frames under the viaduct no longer show flat setts where
+      the photos have asphalt up to the gravel island. Lane layout not rebuilt (WORKING_VALUE).
+    confidence: medium
+    verify: owner drive
+    set: {apron: asphalt}
   # ---------------------------------------------------------------- plantings (streetscape.plantings, review r6 W-N12)
   - id: biezenstwa-plantings
     kind: plantings
@@ -473,7 +551,11 @@ overrides:
       # ADR 0067 / REFS-MAPILLARY-FINDINGS #1: Mapillary frames 2818555625124739 and 504348097385466 (richlv, 2020-08-15,
       # CC BY-SA 4.0, reference only) show light crushed stone inside the kerb of the centre island under the viaduct,
       # no shrubs (was: fill soil + berberis_red from the CC0 photo read; world-builder to confirm)
-      - {name: ring-centre, at: [778549.7, 595506.5], fill: gravel}
+      # ADR 0123 b6 (D51 B7): the crushed stone is an embankment, not a flat bed - on Mapillary 2818555625124739,
+      # 201270605169291 and 1398898753813071 (richlv, CC BY-SA 4.0, reference only) it rises from the paved rim behind
+      # the kerb and hides the pier feet from a car-roof camera. Rim 1.6 m, slope 1:5, crest 0.7 m: WORKING_VALUE
+      # (read off the photos, no survey).
+      - {name: ring-centre, at: [778549.7, 595506.5], fill: gravel, mound: {setback_m: 1.6, slope: 0.2, max_m: 0.7}}
   # ---------------------------------------------------------------- road furniture after Mapillary (ADR 0069)
   # Mapillary photos (CC BY-SA 4.0, D42, ADR 0065) are references only: positions and forms read off them, no pixels.
   # `mapillary` lists the image ids (Data/raw/mapillary/<region>/manifest.jsonl: author, date, lat/lon, compass).
@@ -526,15 +608,17 @@ overrides:
       - {center_epsg2180: [777582.0, 596169.0], radius_m: 25.0, style: glazed, band_m: 1.0}
       - {center_epsg2180: [777535.0, 596208.0], radius_m: 45.0, style: glazed, band_m: 1.6}
       - {center_epsg2180: [777625.0, 596121.0], radius_m: 75.0, style: glazed, band_m: 1.0}   # MA-008 link
-      - {center_epsg2180: [777445.0, 596353.0], radius_m: 45.0, style: glazed, band_m: 2.2, height_m: 5.2}   # MA-008/021 Tysiaclecia; ADR 0127 height
-      - {center_epsg2180: [777445.0, 596438.0], radius_m: 45.0, style: glazed, band_m: 1.8}
-      - {center_epsg2180: [777445.0, 596523.0], radius_m: 60.0, style: glazed, band_m: 1.8}
+      - {center_epsg2180: [777445.0, 596353.0], radius_m: 45.0, style: glazed, band_m: 2.2, height_m: 5.2, post_mat: noise_post_dark}   # MA-008/021 Tysiaclecia; ADR 0127 height
+      - {center_epsg2180: [777445.0, 596438.0], radius_m: 45.0, style: glazed, band_m: 1.8, post_mat: noise_post_dark}
+      - {center_epsg2180: [777445.0, 596523.0], radius_m: 60.0, style: glazed, band_m: 1.8, post_mat: noise_post_dark}
       # ADR 0127: the set-back barrier along the house plots east of al. Tysiaclecia (BDOT10k OT_OIKM_L ...C0D140 /
       # OSM 319142226, N = 60..111 local) is glazed above a dark band from its south corner on Mapillary
       # 1801374876712141 (gpsmapper 2019); it was "solid" south of N ~ 90 (outside the zones above).
       # Height (review s12-0130: "ekran-plot nizszy"): read off the same frame against the 0.6 m plinth - dark band
       # ~1.6 m, glazing ~3.1 m -> 5.2 m to the top, band top 2.2 m (WORKING_VALUE; was the generic 4.0 m / 1.8 m).
-      - {center_epsg2180: [777466.0, 596303.0], radius_m: 30.0, style: glazed, band_m: 2.2, height_m: 5.2}
+      # ADR 0139: `post_mat: noise_post_dark` on the four al. Tysiaclecia zones - dark green posts / rails on the same
+      # frame (review s13-0127 P2: "slupy jasnozielone vs ciemne na zdjeciu"); the Andersa link zones keep noise_post.
+      - {center_epsg2180: [777466.0, 596303.0], radius_m: 30.0, style: glazed, band_m: 2.2, height_m: 5.2, post_mat: noise_post_dark}
     mapillary: ["1911352299378570", "1783751488818497", "1240467703063612", "1424981177846267", "995780104564541",
                 "312705613662497", "1340597302993462", "1801374876712141"]
     reason: >-
@@ -1260,9 +1344,15 @@ overrides:
     surface: sidewalk_paving
     # ADR 0117 (REVIEW s10-0110 P1-9, "placek-cokol"): smooth half ellipse (12 segments, was a half octagon), grey
     # setts as on the orthophoto (was beige apron_sett), tip N 128.8 (was 128.2)
-    polygon_en: [[-555.6, 130.7], [-555.56, 130.21], [-555.3, 129.75], [-554.89, 129.36], [-554.35, 129.05],
-                 [-553.72, 128.86], [-553.05, 128.8], [-552.38, 128.86], [-551.75, 129.05], [-551.21, 129.36],
-                 [-550.8, 129.75], [-550.54, 130.21], [-550.5, 130.7]]
+    # ADR 0123 (REVIEW s10-0117 P2-6, "cokol z czarna szczelina"): the half ellipse sat on the square end of the
+    # median like a plinth and the ground behind it lay bare (plan probe artifacts/junctions-r6: no surface at
+    # E -556...-553.5 N 130-133.5 - the kerbed west strip and the low east shoulder of the median do not meet there;
+    # terrain 0.15-0.2 m below the kerb top = the black slot). The paved collar now covers the whole end of the
+    # median up to N 134 (orthophoto artifacts/junctions-r6/ortho/putry_nose.jpg: sett collar around the planted
+    # bed, bed ends at N 133.6), full median width, rounded tip as before (N 128.35).
+    polygon_en: [[-555.75, 134.0], [-556.1, 133.0], [-556.5, 131.0], [-556.6, 130.0], [-556.3, 129.3],
+                 [-555.5, 128.75], [-554.5, 128.45], [-553.4, 128.35], [-552.3, 128.45], [-551.3, 128.75],
+                 [-550.6, 129.3], [-550.3, 130.0], [-550.3, 134.0]]
     reason: >-
       ADR 0110 (REVIEW s10-0100 P1-1a): the north median of the Putry N arm ended square at the crossover plate (open
       kerb end and a blunt face at N 129.6-130, the first thing the driver sees in eye_putry_n). The 0.08 m orthophoto
@@ -1501,10 +1591,31 @@ overrides:
     verify: owner drive
   - id: dk8-ramp-split-barrier
     kind: guardrail
-    polyline_en: [[-780.5, 76.35], [-753.5, 75.2]]
+    # ADR 0123 b4: carried on to the start of the DK8 deck barrier (E -749 N 75.9 in the generated world) and kept
+    # there (free_ends): with the north rail now reaching E -752 its free end swung onto that rail instead
+    polyline_en: [[-780.5, 76.35], [-753.5, 75.2], [-750.2, 75.65]]
+    free_ends: [true, false]
     reason: >-
       Steel barrier on the westbound separator dk8-ramp-split-island (REVIEW s10-0095 P1-3: "na wyspie brak bariery";
       artifacts/junctions-r2/xsec/km_sheet.png, dk8_front.jpg x 960-1000 y 490-530: barrier end at the nose ~E -781, along the island centre).
+    confidence: medium
+    verify: owner drive
+  - id: dk8-ramp-split-barrier-n
+    kind: guardrail
+    # b4: carried on to the ramp deck along N 76.65 (orthophoto: rail at N 76.6-76.9). The generated island narrows to
+    # N 76.8 at E -755...-753 (xsec_glb.py, build b3), so the b2 line at N 77.05 left it at E -756 and dived; at N 76.65
+    # it stays on the paving up to E -753 and the free end swings onto the start of the deck barrier (_join_free_ends).
+    polyline_en: [[-752.3, 76.75], [-753.5, 76.64], [-757.0, 76.68], [-765.0, 76.8], [-775.0, 76.7], [-778.5, 76.7]]
+    free_ends: [false, true]      # east end: stays at the deck joint (no swing onto the south rail, no terminal)
+    reason: >-
+      ADR 0123 (REVIEW s10-0117 P1-4, p0_kerb_merge_eye): second rail of the separator dk8-ramp-split-island, on its
+      ramp side. The 0.08 m orthophoto (artifacts/junctions-r6/ortho/kerb_merge.jpg, kerb_merge_e.jpg) has two rails
+      from the nose at E -779.5 N 76.4: the north one at N 76.6-76.9 running into the barrier of the ramp deck
+      (expansion joint at E -752), the south one at N 75.0-74.5 into the barrier of the DK8 deck (that is
+      dk8-ramp-split-barrier). Drawn east to west (ramp carriageway on the right); starts at the east end of the
+      generated island (E -756): the generated ground between the island and the ramp deck (E -755...-750) lies
+      lower than both, a rail carried across it dived and twisted (build b2) - 6 m of the real rail are missing there.
+      Meets the south rail before the nose.
     confidence: medium
     verify: owner drive
   - id: dk8-e-split-p21-side

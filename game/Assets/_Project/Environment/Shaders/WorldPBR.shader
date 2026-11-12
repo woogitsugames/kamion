@@ -65,6 +65,8 @@ Shader "Kamion/World PBR"
         _GroundWearExclude ("Ground wear exclusion: object-local E/N bounds, min/max (ADR0118)", Vector) = (0, 0, 0, 0)
         _GroundGrimeBase ("Ground grime inside exclusion: original coefficients (ADR0118)", Vector) = (0.45, 0.62, 0.3, 0.5)
         _SkyOcc ("Sky occlusion: x down-facing ambient, y horizon reflection (0 = off; ADR 0060)", Vector) = (0, 0, 0, 0)
+        _LowNoShadow ("No shadow casting below the world-detail tier (Low; ADR 0123)", Float) = 0
+        _VertexGrime ("Vertex grime (_VERTEX_GRIME, COLOR_0.r): rgb grime albedo (linear), w roughness gain (ADR 0123)", Vector) = (0.1, 0.1, 0.09, 0.3)
         _AgeTint ("Patch age target / base albedo ratio", Float) = 2.0
         _PatchSeam ("Repair: seam width m, darkening, fresh tone, aged tone (ADR0118)", Vector) = (0, 0, 1, 1)
         _DecalAlpha ("Decal opacity", Range(0, 1)) = 1
@@ -115,6 +117,8 @@ Shader "Kamion/World PBR"
             float4 _AsphaltWear;
             float4 _PatchSeam;
             float4 _Grime, _SkyOcc;
+            float4 _VertexGrime;
+            float _LowNoShadow;
             float4 _KerbWear;
             float4 _GroundWearExclude, _GroundGrimeBase;
             float _DripBand;
@@ -153,6 +157,7 @@ Shader "Kamion/World PBR"
             #pragma shader_feature_local _RUNOFF
             #pragma shader_feature_local _STRIPES
             #pragma shader_feature_local _GRIME
+            #pragma shader_feature_local _VERTEX_GRIME
             #pragma shader_feature_local _CARPAINT
             #pragma shader_feature_local _PANELTONE
 
@@ -837,6 +842,17 @@ Shader "Kamion/World PBR"
             #else
                 KamionWetSurface(n, macro.b * 0.6 + macro.a * 0.4, step(0.95, n.y), 1.0, albedo, smooth, tn);
             #endif
+            #if defined(_VERTEX_GRIME)
+                {
+                    // ADR 0123: road film on authored parts of a mesh (COLOR_0.r, 0 where the generator wrote none): bridge
+                    // caps behind the barrier read as a clean bright footway (REVIEW s10-0117 P1-3). The grime keeps 40 %
+                    // of the set's own mottling, so panel joints fade with it instead of printing through.
+                    half vg = i.masks.r;
+                    half tone = 0.6 + 0.8 * dot(base.rgb, half3(0.3333, 0.3333, 0.3333));
+                    albedo = lerp(albedo, _VertexGrime.rgb * tone, vg);
+                    smooth *= 1.0 - _VertexGrime.w * vg;
+                }
+            #endif
                 albedo = saturate(albedo);
                 smooth = saturate(smooth);
                 half3 nw = normalize(tn.x * T + tn.y * B + tn.z * n);
@@ -956,6 +972,7 @@ Shader "Kamion/World PBR"
             #pragma fragment ShadowFrag
             #pragma multi_compile_instancing
             #pragma multi_compile_vertex _ _CASTING_PUNCTUAL_LIGHT_SHADOW
+            #pragma multi_compile_vertex _ _KAMION_WORLD_DETAIL
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Shadows.hlsl"
 
             float3 _LightDirection;
@@ -980,6 +997,12 @@ Shader "Kamion/World PBR"
                 cs.z = min(cs.z, UNITY_NEAR_CLIP_VALUE);
             #else
                 cs.z = max(cs.z, UNITY_NEAR_CLIP_VALUE);
+            #endif
+            #if !defined(_KAMION_WORLD_DETAIL)
+                // ADR 0123 (REVIEW s10-0117 P1-1): on the Low tier the shadow map cannot resolve the two beams of a
+                // deck barrier 0.2 m apart - their shadow fell on the cap as a checkerboard (r4_deck_bz_eye2). Materials
+                // flagged _LowNoShadow (manifest "shadow_low": false) cast nothing there: all vertices collapse.
+                if (_LowNoShadow > 0.5) cs = float4(-2.0, -2.0, -2.0, 1.0);
             #endif
                 o.positionCS = cs;
                 return o;

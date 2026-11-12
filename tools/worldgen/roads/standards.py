@@ -245,11 +245,15 @@ GUARDRAIL_OFFSET = 0.60     # behind the kerb face / edge WORKING_VALUE
 GUARDRAIL_TERMINAL_M = 4    # WORKING_VALUE (ADR 0110): free ground end of a W-beam turned down to the ground over this length
 GUARDRAIL_POST_SPACING_GROUND = 4.0   # WORKING_VALUE (ADR 0117): ground runs, posts every 4 m (SP-05/4 class; Mapillary
 #                                       500263111404933 / 1259231227807789: 2-4 m read by eye); decks keep 2.0 m
+CAP_GRIME = (1.0, 0.85)     # ADR 0123: road film on a bridge cap, COLOR_0.r at the kerb / at the outer edge (WORKING_VALUE)
 BRIDGE_BARRIER_H = 0.98     # WORKING_VALUE (ADR 0117): top of the deck posts and of the upper box beam above the W-beam
 #                             (Mapillary 454716650857984: W-beam low, a second beam above it; 1.10 with a handrail in 0110)
 BRIDGE_BARRIER_EDGE_M = 0.40  # WORKING_VALUE: barrier post line in from the outer edge of the cap (orthophoto 0.2-0.4 m)
 BRIDGE_BARRIER_EDGE_MIN_M = 0.32  # ... on a narrow cap (ADR 0117: cap 1.0 m -> beam face 0.70 m behind the kerb face)
-BRIDGE_BARRIER_FACE_M = 0.70  # Mapillary 454716650857984: kerb face -> beam face 0.7 m (+-0.2, REVIEW s10-0110)
+# ADR 0123 (REVIEW s10-0117 P1-3): 0.70 -> 0.42. Measured in the exported world (xsec_glb.py, deck station E 490 N -675):
+# edge-line centre -> beam face was 1.02 m, -> post feet 1.37 m; the same image-row method of the review reads 1.69 m
+# for those 1.37 m and 1.47 m on Mapillary 454716650857984, i.e. the photo has the barrier ~0.25-0.3 m closer.
+BRIDGE_BARRIER_FACE_M = 0.42  # kerb face -> beam face on a narrow cap (bridge_style cap_w < 1.3 m), WORKING_VALUE +-0.2
 RAILING_H = 1.10            # pedestrian railing U-12a WORKING_VALUE (catalogue 1.0-1.1 m)
 # Fences (industrial plots) – catalogue values of 3D welded panel fences WORKING_VALUE
 FENCE_PANEL_W = 2.50
