@@ -13,3 +13,9 @@ Obejrzano pięć rzeczywistych fotografii wskazanych w recenzji s10-gpt-JK. Arku
 Zdjęcia nie dowodzą chemicznej natury jasnych śladów przy krawężniku. Sól pozostaje UNVERIFIED. Zestaw obejmuje lato 2020 i 2024, więc nie jest dowodem wariantu listopadowego. Widocznych różnic między miejscami nie należy zastępować jedną globalną regułą brudu lub wysokości trawy.
 
 To przygotowanie backlogu. R4 nadal dotyczy berberysu, a produkcja czeka na ukończenie świeżego baseline. Badanie nie uruchamia GIS, World ani Unity i nie zastępuje ich walidacji.
+
+## Kontrola na świeżym baseline r4, około 10:27
+
+Obejrzano pełny wyprostowany obraz `references/sbs-g3-a-320326319617139.png` oraz świeży `before/Low-overcast-photo-2048x1536/sbs-g3-a-320326319617139.png`. Na fotografii przed słupkami widać jasny, ziarnisty trójkąt z drobnymi roślinami, połączony z przebiegiem chodnika pod wiaduktem. Render pokazuje w tym obszarze dużą trawiastą wyspę; nie odtwarza tego samego układu chodnika i narożnika. Różnią się także skala i położenie podpór oraz wysokość pomostu w kadrze. To podważa użycie nawet oznaczonej jako B kamery do bezpośredniego przeniesienia obrysu z pikseli na teren.
+
+Aktualne QA plantings już zawiera wyspę `biezenstwa-plantings:island1` o `fill: gravel`, 996,9 m². Sama obecność zieleni w tym renderze nie dowodzi więc braku reguły żwiru w generatorze. Przed kolejną zmianą potrzebne jest zidentyfikowanie tej konkretnej wyspy w danych i ortofoto oraz zgodność pozy. Nie wolno zamieniać całej widocznej trawy na żwir ani poprawiać geometrii chodników należącej do Claude na podstawie tego kadru. Dokładny obrys i udział pokrywy pozostają UNVERIFIED; sól nie ma dowodu.
