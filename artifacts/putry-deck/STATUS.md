@@ -1,0 +1,18 @@
+# STATUS putry-deck (ADR 0133)
+- s12 step 1: GUGiK 0.08 m ortho -> 14 double-arm (Y) median lamps measured (data/sheet1.jpg, sheet2.jpg, median_lamps_ortho.json, plan_before.jpg); generated decks match the ortho in plan (no deck-curve change justified by plan data). Authored row Data/Regions/bialystok-industrial-c/lamp_rows.json, FU.lamp_rows + props.lamp_y, tests/gis/test_lamp_rows.py 4/4.
+- NEXT: pwsh scripts/unity-slot.ps1 -Acquire -Pool heavy -Owner claude-putry-deck; uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c; release; then import-region -SkipCopy + SBS render.
+- step 2: ADR draft, render_putry.ps1/build_world.ps1/pairs.py; before render + build_world queued (PHONE_RUN active, heavy queue 13).
+- NEXT: wait for logs artifacts/putry-deck/render_before.log + logs/build_world.log; then pwsh scripts/import-region.ps1 -Region bialystok-industrial-c -SkipCopy (unity slot), render_putry.ps1 -OutDir artifacts/putry-deck/after, python artifacts/putry-deck/tools/pairs.py
+- step 3: before renders Low overcast/clear (10 frames) in artifacts/putry-deck/before; build_world queued (heavy).
+- NEXT: after build: pwsh scripts/unity-slot.ps1 -Acquire -Owner claude-putry-deck; pwsh scripts/import-region.ps1 -Region bialystok-industrial-c; release; render_putry.ps1 -OutDir artifacts/putry-deck/after; python artifacts/putry-deck/tools/pairs.py
+- PAUSED (lead, limit): code+data+tests done (lamp_rows.json, FU.lamp_rows, props.lamp_y, test_lamp_rows 4/4); before renders done. RUNNING in background: build_world.ps1 (heavy queue; log artifacts/putry-deck/build_world_outer.log + logs/build_world.log) - if dead, rerun: pwsh artifacts/putry-deck/tools/build_world.ps1
+- NEXT: pwsh scripts/unity-slot.ps1 -Acquire -Owner claude-putry-deck; pwsh scripts/import-region.ps1 -Region bialystok-industrial-c; pwsh scripts/unity-slot.ps1 -Release -Owner claude-putry-deck; pwsh artifacts/putry-deck/tools/render_putry.ps1 -OutDir artifacts/putry-deck/after; uv run --project tools/worldgen python artifacts/putry-deck/tools/pairs.py; check frep lamp_rows in generated/streetscape_qa.json; then pytest gis+gate3 (heavy), EditMode, draws Low before/after (stats-*.txt), finish ADR 0133 Validation/D51.
+- s13 step 4: build_world done (1011 s); frep lamp_rows: 14 items, 11 console, 3 ground. Heavy slot released manually (release pipe error).
+- NEXT: pwsh scripts/unity-slot.ps1 -Acquire -Owner claude-putry-deck; pwsh scripts/import-region.ps1 -Region bialystok-industrial-c; release; render_putry.ps1 -OutDir artifacts/putry-deck/after
+- step 5: import-region OK (Low 121.0 MB, High 263.1 MB). NEXT: pwsh artifacts/putry-deck/tools/render_putry.ps1 -OutDir artifacts/putry-deck/after
+- step 6: merged main (clean). Regenerating: build_world (heavy) -> import -> render after (single cycle on merged state). NEXT: pwsh artifacts/putry-deck/tools/build_world.ps1
+- step 7: regen on merged main OK (582 s); lamp_rows placed 14, console 11, rule lamps removed 23. NEXT: import-region (slot) -> render_putry.ps1 -OutDir artifacts/putry-deck/after
+- step 8: pytest gis+gate3 825 passed 1 xfailed (17 min, heavy). import2 OK. Render after in progress.
+- step 9: after renders 20 frames + pairs/*.jpg; instanced draws delta -1..+6 per frame, instances -7..+1. NEXT: EditMode (unity slot), ADR Validation, visual-critic
+- step 10: ADR 0133 Validation + D51 filled. EditMode running (log artifacts/putry-deck/logs/editmode.log).
+- step 11 DONE: EditMode 403/403. Ready for lead: visual-critic on artifacts/putry-deck/pairs, then merge putry-deck. Open: SBS pose 494288 (curve), right strip.

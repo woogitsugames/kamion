@@ -48,7 +48,8 @@ ROUTE_SITES = [
 
 
 def sha_file(p: Path):
-    return hashlib.sha256(p.read_bytes()).hexdigest()
+    # CRLF-normalised: Windows checkouts and Linux CI must agree (Mistral M1 review)
+    return hashlib.sha256(p.read_bytes().replace(b"\r\n", b"\n")).hexdigest()
 
 
 def route_edges(rdir):

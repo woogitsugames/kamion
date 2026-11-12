@@ -57,6 +57,14 @@ namespace TruckSim.Audio
         [SerializeField] float startLoopDelay = 1.2f;
         [SerializeField] float startLoopFade = 1.0f;
 
+        [Header("Turbo v2 (ADR 0142, ElevenLabs set; null = v1 whistle)")]
+        [SerializeField] AudioClip turboWhineExt;
+        [SerializeField] AudioClip turboWhineCab, turboRushExt, turboRushCab;
+        [Tooltip("WORKING_VALUE: v2 layer gains outside / in the cab (the cabin clips are already firewall-filtered, -15 dB).")]
+        [SerializeField] float turboWhineExtMix = 0.10f, turboRushExtMix = 0.18f, turboWhineCabMix = 0.20f, turboRushCabMix = 0.30f;
+        [Tooltip("Whine pitch at zero boost / added at full boost (v2 loop rendered at 2.6 kHz). Turbo shaft idles at ~half speed.")]
+        [SerializeField] float turboWhinePitchBase = 0.55f, turboWhinePitchRange = 0.9f;
+
         [Header("Mix")]
         [SerializeField, Range(0f, 1f)] float interiorBlend = 1f;
         [SerializeField] PerspectiveMix exteriorMix = PerspectiveMix.Exterior;
@@ -77,6 +85,7 @@ namespace TruckSim.Audio
         [SerializeField] float liftoffCooldown = 1f;
 
         EngineLayerGrid _extEngine, _cabEngine, _extBrake, _cabBrake;
+        PerspectiveLoop _turboWhine, _turboRush;
         AudioSource _turbo, _oneShot, _events;
         PerspectiveLoop _clatter;
         bool _running, _hasEvents;
@@ -95,7 +104,18 @@ namespace TruckSim.Audio
             set => interiorBlend = Mathf.Clamp01(value);
         }
 
-        /// <summary>Engine voices currently playing (both perspectives + engine brake). For the perf HUD.</summary>
+        /// <summary>
+        /// Extra gain of the cabin engine and engine-brake banks (ADR 0142: the cab mix of the ElevenLabs set puts the engine
+        /// ~3 dB lower so tyres and wind are heard at cruise). 1 = unchanged.
+        /// </summary>
+        public float CabEngineScale { get; set; } = 1f;
+
+        /// <summary>Turbo v2 layers in use (ElevenLabs set).</summary>
+        public bool TurboV2 => _turboWhine != null;
+        /// <summary>Current whine / rush output gain (before the perspective split). For tests.</summary>
+        public float TurboWhineGain { get; private set; }
+        public float TurboRushGain { get; private set; }
+
         /// <summary>Set the banks come from (<see cref="Configure"/>).</summary>
         public EngineSoundSource Source { get; private set; }
 
@@ -137,6 +157,8 @@ namespace TruckSim.Audio
                 startExt = lib.elEngineStart.ext; startCab = lib.elEngineStart.cab;
                 stopExt = lib.elEngineStop.ext; stopCab = lib.elEngineStop.cab;
                 clatterExt = lib.elIdleClatter.ext; clatterCab = lib.elIdleClatter.cab;
+                turboWhineExt = lib.elTurboWhine.ext; turboWhineCab = lib.elTurboWhine.cab;
+                turboRushExt = lib.elTurboRush.ext; turboRushCab = lib.elTurboRush.cab;
             }
             else
             {
@@ -144,6 +166,7 @@ namespace TruckSim.Audio
                 exteriorEngineBrake = lib.exteriorEngineBrake; cabEngineBrake = lib.cabEngineBrake;
                 turboLiftoff = lib.turboLiftoff; turboLiftoffCab = null;
                 startExt = startCab = stopExt = stopCab = clatterExt = clatterCab = null;
+                turboWhineExt = turboWhineCab = turboRushExt = turboRushCab = null;
             }
             if (provider != null) stateProvider = provider;
             if (!_initialised) return;
@@ -170,6 +193,9 @@ namespace TruckSim.Audio
             _clatter = clatterExt != null
                 ? new PerspectiveLoop(transform, "idleClatter", clatterExt, clatterCab, Vector3.zero, 40, 1f)
                 : null;
+            bool v2 = turboWhineExt != null && turboRushExt != null;
+            _turboWhine = v2 ? new PerspectiveLoop(transform, "turboWhine", turboWhineExt, turboWhineCab, Vector3.zero, 36, 1f) : null;
+            _turboRush = v2 ? new PerspectiveLoop(transform, "turboRush", turboRushExt, turboRushCab, Vector3.zero, 36, 1f) : null;
             _runGate = 1f;
             _startHold = 0f;
             StartEvents = StopEvents = 0;
@@ -212,6 +238,8 @@ namespace TruckSim.Audio
             _cabBrake?.StopAll();
             if (_turbo != null) _turbo.Stop();
             _clatter?.Set(0f, 1f, interiorBlend);
+            _turboWhine?.Set(0f, 1f, interiorBlend);
+            _turboRush?.Set(0f, 1f, interiorBlend);
             _primed = false;
         }
 
@@ -248,10 +276,11 @@ namespace TruckSim.Audio
             float runGain = Mathf.Clamp01((_rpm - 80f) / 300f) * _runGate;
 
             Tick(_extEngine, exteriorMix.engine * extW * runGain, _load, dt);
-            Tick(_cabEngine, cabMix.engine * cabW * runGain, _load, dt);
+            Tick(_cabEngine, cabMix.engine * CabEngineScale * cabW * runGain, _load, dt);
             Tick(_extBrake, exteriorMix.engineBrake * extW * _brake * runGain, 0f, dt);
-            Tick(_cabBrake, cabMix.engineBrake * cabW * _brake * runGain, 0f, dt);
+            Tick(_cabBrake, cabMix.engineBrake * CabEngineScale * cabW * _brake * runGain, 0f, dt);
 
+            if (_turboWhine != null) UpdateTurboV2(runGain);
             UpdateTurbo(extW, cabW, dt);
 
             if (_clatter != null)
@@ -309,11 +338,28 @@ namespace TruckSim.Audio
             g.Tick(_rpm, load, gain, dt);
         }
 
+        /// <summary>
+        /// Turbo v2 (ADR 0142). Whine: shaft speed follows boost (physics first-order lag, Engine.Boost), gain ~boost^1.5
+        /// and opens with the throttle (compressor loading). Rush: mass flow ~ boost x rpm, audible as an airy intake hiss
+        /// that also follows rpm off boost. Cabin clips are prerendered through the firewall filter, the mix factors only
+        /// set the balance. Pitch mapping and gains are WORKING_VALUE (owner listening test).
+        /// </summary>
+        void UpdateTurboV2(float runGain)
+        {
+            float rpmN = Mathf.Clamp01((_rpm - 600f) / 1500f);
+            TurboWhineGain = runGain * Mathf.Pow(_boost, 1.5f) * (0.35f + 0.65f * _throttle);
+            TurboRushGain = runGain * (0.15f * rpmN + 0.85f * Mathf.Pow(_boost, 1.2f) * (0.4f + 0.6f * rpmN)) * (0.5f + 0.5f * _throttle);
+            _turboWhine.SetMix(turboWhineExtMix, turboWhineCabMix);
+            _turboRush.SetMix(turboRushExtMix, turboRushCabMix);
+            _turboWhine.Set(TurboWhineGain, turboWhinePitchBase + turboWhinePitchRange * _boost, interiorBlend);
+            _turboRush.Set(TurboRushGain, 0.85f + 0.3f * _boost + 0.1f * rpmN, interiorBlend);
+        }
+
         void UpdateTurbo(float extW, float cabW, float dt)
         {
             if (_turbo == null || turboWhistleLoop == null) return;
             float mixT = exteriorMix.turbo * extW + cabMix.turbo * cabW;
-            float vol = mixT * Mathf.Pow(_boost, 1.5f) * (0.35f + 0.65f * _throttle);
+            float vol = _turboWhine != null ? 0f : mixT * Mathf.Pow(_boost, 1.5f) * (0.35f + 0.65f * _throttle);
             if (vol > 1e-4f)
             {
                 if (!_turbo.isPlaying) _turbo.Play();

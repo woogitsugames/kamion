@@ -1,0 +1,368 @@
+{
+ "275528677534382": {
+  "cid": "sbs-g3-b-275528677534382",
+  "ov": {
+   "horizon_y_fraction": 0.52,
+   "pose_status": "WORKING_VALUE",
+   "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. S12: promoted sbs-refine1-275528677534382-04 (-10 m along view axis, eye 1.7 m on road-asphalt height); WORKING_VALUE. ADR 0130: rectified_horizon_y_fraction 0.52 made explicit (the promoted probe used 0.52 as the rectified horizon; keeps the reviewed pitch, cameras now formula-consistent).",
+   "pose_confidence": "B",
+   "pose_reason": "Promoted by leader s12 from GPT sbs-r3 refinement after review REVIEW-2026-11-12-s12-gpt-batch-d (two independent anchors: portal/warning triangles resp. chevron/portal/white block)",
+   "photometric_use": false,
+   "photometric_reason": "Sunset/backlit exposure",
+   "east_delta_m": 4.2085,
+   "north_delta_m": -2.9117,
+   "eye_height_m": 1.7,
+   "absolute_u_m": 131.8,
+   "rectified_horizon_y_fraction": 0.52,
+   "heading_delta_deg": 0.558
+  },
+  "cam": {
+   "id": "sbs-g3-b-275528677534382",
+   "kind": "photo_match",
+   "seat": "file",
+   "type": "persp",
+   "pos": [
+    -251.1175,
+    -217.2239,
+    131.8
+   ],
+   "look_at": [
+    -282.8927,
+    -192.9437,
+    132.6998
+   ],
+   "fov_deg": 58.71551,
+   "segment": "G3-B",
+   "pose_confidence": "B",
+   "pose_reason": "Promoted by leader s12 from GPT sbs-r3 refinement after review REVIEW-2026-11-12-s12-gpt-batch-d (two independent anchors: portal/warning triangles resp. chevron/portal/white block)",
+   "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+  },
+  "info": {
+   "gps_en": [
+    -255.32598317961674,
+    -214.31218596361578
+   ],
+   "heading": 307.38429395760136,
+   "pitch": 1.2889375601868966,
+   "hfov": 90.0,
+   "horizon_rect": 0.52,
+   "terrain_u": 130.0926669335788
+  },
+  "before": {
+   "id": "sbs-g3-b-275528677534382",
+   "kind": "photo_match",
+   "seat": "file",
+   "type": "persp",
+   "pos": [
+    -247.3214,
+    -220.3061,
+    131.8291
+   ],
+   "look_at": [
+    -279.3315,
+    -196.3365,
+    132.7289
+   ],
+   "fov_deg": 58.71551,
+   "segment": "G3-B",
+   "pose_confidence": "B",
+   "pose_reason": "Promoted by leader s12 from GPT sbs-r3 refinement after review REVIEW-2026-11-12-s12-gpt-batch-d (two independent anchors: portal/warning triangles resp. chevron/portal/white block)",
+   "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+  },
+  "road_u": 130.1,
+  "dist_before": 20.08938165225595,
+  "dist_after": 15.199836757676001,
+  "move": [
+   -3.796,
+   3.082,
+   -0.029
+  ],
+  "heading_before": 306.826,
+  "heading_after": 307.384,
+  "resid_px": [
+   0.0,
+   -0.02,
+   -0.0
+  ],
+  "top_y_model": [
+   157.3,
+   151.4
+  ],
+  "top_y_photo": 160
+ },
+ "837235577143499": {
+  "cid": "sbs-g3-b-837235577143499",
+  "ov": {
+   "horizon_y_fraction": 0.52,
+   "pose_status": "WORKING_VALUE",
+   "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. S12: promoted sbs-refine1-837235577143499-12 (-16 m along view axis, -2 m left, eye 2.2 m on road-asphalt height); WORKING_VALUE. ADR 0130: rectified_horizon_y_fraction 0.52 made explicit (the promoted probe used 0.52 as the rectified horizon; keeps the reviewed pitch, cameras now formula-consistent).",
+   "pose_confidence": "B",
+   "pose_reason": "Promoted by leader s12 from GPT sbs-r3 refinement after review REVIEW-2026-11-12-s12-gpt-batch-d (two independent anchors: portal/warning triangles resp. chevron/portal/white block)",
+   "photometric_use": false,
+   "photometric_reason": "Sunset/backlit exposure",
+   "east_delta_m": 6.7829,
+   "north_delta_m": -2.1276,
+   "eye_height_m": 2.2,
+   "absolute_u_m": 132.7556,
+   "rectified_horizon_y_fraction": 0.52,
+   "heading_delta_deg": -1.749
+  },
+  "cam": {
+   "id": "sbs-g3-b-837235577143499",
+   "kind": "photo_match",
+   "seat": "file",
+   "type": "persp",
+   "pos": [
+    -215.6484,
+    -242.8003,
+    132.7556
+   ],
+   "look_at": [
+    -248.3719,
+    -219.8141,
+    133.6554
+   ],
+   "fov_deg": 58.71551,
+   "segment": "G3-B",
+   "pose_confidence": "B",
+   "pose_reason": "Promoted by leader s12 from GPT sbs-r3 refinement after review REVIEW-2026-11-12-s12-gpt-batch-d (two independent anchors: portal/warning triangles resp. chevron/portal/white block)",
+   "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+  },
+  "info": {
+   "gps_en": [
+    -222.4312842944637,
+    -240.6726624276489
+   ],
+   "heading": 305.08563853706534,
+   "pitch": 1.2889375601868966,
+   "hfov": 90.0,
+   "horizon_rect": 0.52,
+   "terrain_u": 130.57996389042577
+  },
+  "before": {
+   "id": "sbs-g3-b-837235577143499",
+   "kind": "photo_match",
+   "seat": "file",
+   "type": "persp",
+   "pos": [
+    -208.4264,
+    -248.6641,
+    132.9656
+   ],
+   "look_at": [
+    -240.433,
+    -224.6898,
+    133.8654
+   ],
+   "fov_deg": 58.71551,
+   "segment": "G3-B",
+   "pose_confidence": "B",
+   "pose_reason": "Promoted by leader s12 from GPT sbs-r3 refinement after review REVIEW-2026-11-12-s12-gpt-batch-d (two independent anchors: portal/warning triangles resp. chevron/portal/white block)",
+   "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+  },
+  "road_u": 130.5556,
+  "dist_before": 68.19803153882079,
+  "dist_after": 58.90148183747158,
+  "move": [
+   -7.222,
+   5.864,
+   -0.21
+  ],
+  "heading_before": 306.835,
+  "heading_after": 305.086,
+  "resid_px": [
+   -0.0,
+   -0.01,
+   -0.0
+  ],
+  "top_y_model": [
+   328.1,
+   327.3
+  ],
+  "top_y_photo": 332
+ },
+ "3281350541967811": {
+  "cid": "sbs-g3-b-3281350541967811",
+  "ov": {
+   "horizon_y_fraction": 0.68,
+   "pose_status": "WORKING_VALUE",
+   "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. ADR 0130: resection: GUGiK/generated portal (-260.8,-208.3) span 16 m, leg bearings + EC chimney bearings (heading = SfM within 0.1 deg); GPS of zsolt 2017 sequence ~73 m ahead along Andersa. Generated road asphalt U 130.2547 m (chunk GLB ray) + eye 1.4 m; rectified horizon 0.77 measured on the rectified photo (supersedes horizon_y_fraction). WORKING_VALUE, not surveyed.",
+   "pose_confidence": "B",
+   "pose_reason": "ADR 0130 (s12): calibrated from diagnostic probe r2 a0; anchors: lattice portal behind, over the left (northbound) carriageway: leg x 0.145/0.434 photo vs 0.14/0.43 render; long low hall at the left edge and low white building block right at the horizon; road vanishing point / horizon 0.77",
+   "photometric_use": false,
+   "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict",
+   "east_delta_m": -56.1285,
+   "north_delta_m": 39.2077,
+   "eye_height_m": 1.4,
+   "absolute_u_m": 131.647,
+   "rectified_horizon_y_fraction": 0.77,
+   "heading_delta_deg": 0.021
+  },
+  "cam": {
+   "id": "sbs-g3-b-3281350541967811",
+   "kind": "photo_match",
+   "seat": "file",
+   "type": "persp",
+   "pos": [
+    -305.1459,
+    -194.2418,
+    131.647
+   ],
+   "look_at": [
+    -271.2972,
+    -213.8156,
+    140.0807
+   ],
+   "fov_deg": 43.54635,
+   "segment": "G3-B",
+   "pose_confidence": "B",
+   "pose_reason": "ADR 0130 (s12): calibrated from diagnostic probe r2 a0; anchors: lattice portal behind, over the left (northbound) carriageway: leg x 0.145/0.434 photo vs 0.14/0.43 render; long low hall at the left edge and low white building block right at the horizon; road vanishing point / horizon 0.77",
+   "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+  },
+  "info": {
+   "gps_en": [
+    -249.01744260755368,
+    -233.44953203387558
+   ],
+   "heading": 120.03952823519104,
+   "pitch": 12.171738154715175,
+   "hfov": 56.0769701376658,
+   "horizon_rect": 0.77,
+   "terrain_u": 130.23564598958131
+  },
+  "before": {
+   "id": "sbs-g3-b-3281350541967811",
+   "kind": "photo_match",
+   "seat": "file",
+   "type": "persp",
+   "pos": [
+    -310.0,
+    -193.05,
+    131.6547
+   ],
+   "look_at": [
+    -276.1441,
+    -212.6114,
+    140.0884
+   ],
+   "fov_deg": 43.54635,
+   "segment": "G3-B",
+   "pose_confidence": "B",
+   "pose_reason": "ADR 0130 (s12): calibrated from diagnostic probe r2 a0; anchors: lattice portal behind, over the left (northbound) carriageway: leg x 0.145/0.434 photo vs 0.14/0.43 render; long low hall at the left edge and low white building block right at the horizon; road vanishing point / horizon 0.77",
+   "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+  },
+  "road_u": 130.247,
+  "dist_before": 49.36235914135389,
+  "dist_after": 44.37290968654188,
+  "move": [
+   4.854,
+   -1.192,
+   -0.008
+  ],
+  "heading_before": 120.019,
+  "heading_after": 120.04,
+  "resid_px": [
+   0.05,
+   -0.01,
+   1.3,
+   -1.24
+  ],
+  "top_y_model": [
+   582.2,
+   589.8
+  ],
+  "top_y_photo": 556
+ },
+ "297817221966185": {
+  "cid": "sbs-g3-b-297817221966185",
+  "ov": {
+   "horizon_y_fraction": 0.68,
+   "pose_status": "WORKING_VALUE",
+   "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. ADR 0130: resection: portal legs + EC chimneys x 0.742/0.762 -> heading +1.15 deg; position ~85 m back from GPS (same sequence offset as 3281350, 2.7 s earlier). Generated road asphalt U 131.4753 m (chunk GLB ray) + eye 1.4 m; rectified horizon 0.75 measured on the rectified photo (supersedes horizon_y_fraction). WORKING_VALUE, not surveyed.",
+   "pose_confidence": "B",
+   "pose_reason": "ADR 0130 (s12): calibrated from diagnostic probe r2 b0; anchors: same portal far ahead in the image centre (x 0.445-0.566 photo / 0.44-0.56 render); blue industrial hall at the left edge x 0-0.2 in both; horizon 0.75",
+   "photometric_use": false,
+   "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict",
+   "east_delta_m": -62.2002,
+   "north_delta_m": 44.3718,
+   "eye_height_m": 1.4,
+   "absolute_u_m": 132.7506,
+   "rectified_horizon_y_fraction": 0.75,
+   "heading_delta_deg": 0.607
+  },
+  "cam": {
+   "id": "sbs-g3-b-297817221966185",
+   "kind": "photo_match",
+   "seat": "file",
+   "type": "persp",
+   "pos": [
+    -360.5239,
+    -155.2852,
+    132.7506
+   ],
+   "look_at": [
+    -325.8429,
+    -173.6116,
+    140.5845
+   ],
+   "fov_deg": 43.54635,
+   "segment": "G3-B",
+   "pose_confidence": "B",
+   "pose_reason": "ADR 0130 (s12): calibrated from diagnostic probe r2 b0; anchors: same portal far ahead in the image centre (x 0.445-0.566 photo / 0.44-0.56 render); blue industrial hall at the left edge x 0-0.2 in both; horizon 0.75",
+   "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+  },
+  "info": {
+   "gps_en": [
+    -298.32372216449585,
+    -199.65698942821473
+   ],
+   "heading": 117.85317265740565,
+   "pitch": 11.294188930475674,
+   "hfov": 56.0769701376658,
+   "horizon_rect": 0.75,
+   "terrain_u": 131.44532656489136
+  },
+  "before": {
+   "id": "sbs-g3-b-297817221966185",
+   "kind": "photo_match",
+   "seat": "file",
+   "type": "persp",
+   "pos": [
+    -367.2,
+    -150.1,
+    132.8753
+   ],
+   "look_at": [
+    -332.6942,
+    -168.7542,
+    140.7092
+   ],
+   "fov_deg": 43.54635,
+   "segment": "G3-B",
+   "pose_confidence": "B",
+   "pose_reason": "ADR 0130 (s12): calibrated from diagnostic probe r2 b0; anchors: same portal far ahead in the image centre (x 0.445-0.566 photo / 0.44-0.56 render); blue industrial hall at the left edge x 0-0.2 in both; horizon 0.75",
+   "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+  },
+  "road_u": 131.3506,
+  "dist_before": 119.13907839160083,
+  "dist_after": 110.798673143003,
+  "move": [
+   6.676,
+   -5.185,
+   -0.125
+  ],
+  "heading_before": 118.396,
+  "heading_after": 117.853,
+  "resid_px": [
+   -0.06,
+   0.08,
+   -1.07,
+   1.07
+  ],
+  "top_y_model": [
+   671.2,
+   672.4
+  ],
+  "top_y_photo": 670
+ }
+}

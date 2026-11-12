@@ -1,0 +1,98 @@
+{
+ "TURBO_WHISTLE_LOOP": {
+  "pick": "TURBO_WHISTLE_LOOP (6).wav",
+  "score": 11.96,
+  "meets_prompt": true,
+  "why": "line 2757 Hz at 13.8 dB over floor (>= 12), span 1.7 %",
+  "ranking": [
+   [
+    "TURBO_WHISTLE_LOOP (6).wav",
+    11.96
+   ],
+   [
+    "TURBO_WHISTLE_LOOP (7).wav",
+    8.61
+   ],
+   [
+    "TURBO_WHISTLE_LOOP (8).wav",
+    7.24
+   ],
+   [
+    "TURBO_WHISTLE_LOOP (5).wav",
+    6.68
+   ]
+  ],
+  "prompt": {
+   "id": "TURBO_WHISTLE_LOOP",
+   "prompt": "Steady high-pitched whistle of a heavy truck turbocharger at constant boost, close to the engine, clean continuous tone with soft air rush, no engine rumble, no pitch change, seamless loop, no music, no voices",
+   "duration": 5,
+   "influence": 80,
+   "loop": true,
+   "batch": "REGEN-02 (prompt text: docs/owner/ELEVENLABS-REGEN-02.md)"
+  }
+ },
+ "ENG_STOP_CAB": {
+  "pick": "ENG_STOP_CAB (7).wav",
+  "score": 33.91,
+  "meets_prompt": true,
+  "why": "tail vs head -33.9 dB (<= -15 for a run-down), line +14.5 %",
+  "ranking": [
+   [
+    "ENG_STOP_CAB (7).wav",
+    33.91
+   ],
+   [
+    "ENG_STOP_CAB (8).wav",
+    32.38
+   ],
+   [
+    "ENG_STOP_CAB (5).wav",
+    27.23
+   ],
+   [
+    "ENG_STOP_CAB (6).wav",
+    23.24
+   ]
+  ],
+  "prompt": {
+   "id": "ENG_STOP_CAB",
+   "prompt": "Inside a heavy truck cab, the idling diesel engine is switched off, the cab shudders once and the engine runs down to silence, a soft dashboard click at the end, no music, no voices",
+   "duration": 3,
+   "influence": 60,
+   "loop": false,
+   "batch": "REGEN-02 (prompt text: docs/owner/ELEVENLABS-REGEN-02.md)"
+  }
+ },
+ "CAB_WIPERS_LOOP": {
+  "pick": "CAB_WIPERS_LOOP (11).wav",
+  "score": -26.99,
+  "meets_prompt": false,
+  "why": "period 0.33 s (asked 1.0), CV 8.6 %, wrap 0.25 s (-23 %)",
+  "ranking": [
+   [
+    "CAB_WIPERS_LOOP (11).wav",
+    -26.99
+   ],
+   [
+    "CAB_WIPERS_LOOP (12).wav",
+    -37.26
+   ],
+   [
+    "CAB_WIPERS_LOOP (10).wav",
+    -38.67
+   ],
+   [
+    "CAB_WIPERS_LOOP (9).wav",
+    -55.07
+   ]
+  ],
+  "prompt": {
+   "id": "CAB_WIPERS_LOOP",
+   "prompt": "Truck windscreen wipers sweeping at a perfectly even slow rhythm, exactly one sweep every second, rubber squeak on wet glass and soft motor hum, steady, seamless loop, no music, no voices",
+   "duration": 6,
+   "influence": 70,
+   "loop": true,
+   "batch": "REGEN-02 (prompt text: docs/owner/ELEVENLABS-REGEN-02.md)"
+  }
+ }
+}

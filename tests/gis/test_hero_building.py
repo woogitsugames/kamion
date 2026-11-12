@@ -11,7 +11,7 @@ import math
 import numpy as np
 import pytest
 
-from conftest import REGION_DIR, REGION_ID, REPO
+from conftest import REGION_DIR, REGION_ID, REPO, require_lfs
 
 OVERRIDE = "andersa-jrg2-fire-station-hero"
 ASSET = "fire_station_jrg2"
@@ -166,6 +166,7 @@ def test_asset_matches_spec_and_budget():
     _, glb, meta_p = HB.asset_paths(ASSET)
     if not (sp.exists() and glb.exists() and meta_p.exists()):
         pytest.skip("asset or spec missing: run roads/build_world.py with Blender")
+    require_lfs(glb)
     spec = json.loads(sp.read_text(encoding="utf-8"))
     meta = json.loads(meta_p.read_text(encoding="utf-8"))
     assert meta["spec_sha256"] == HB._sha(spec), "asset built from another spec: rebuild with make_fire_station.py"

@@ -342,6 +342,92 @@ def clear_level_carriageways(pl, parts, report):
     report["props_on_level_carriageway"] = {"removed": len(removed), "items": removed[:40]}
 
 
+# ------------------------------------------------------------------------------------------- authored lamp rows
+CONSOLE_OUT_M = 0.30       # WORKING_VALUE: column axis outside the deck fascia on a console (ADR 0133)
+CAP_IN_M = 0.35            # deck-top sample this far inside the fascia edge (cap top = console top)
+
+
+def lamp_rows(pl, parts, path, report):
+    """Authored lamp rows (ADR 0133, `<region>/lamp_rows.json`, survives every regeneration): positions measured
+    on the GUGiK 0.08 m orthophoto replace the rule lamps of the named chains within `within_m` of the row.
+    Runs after the carriageway / island / deck clearing passes: the row is authored, and a column on a console in
+    the gap between two decks stands above the ground roads under it (clear_carriageway would push it away).
+    A point within `deck_snap_m` of a bridge deck goes on a console at the nearest deck edge (fascia), on the
+    cap-top height, arms across the road (+y toward the deck); otherwise it is a ground column on the terrain."""
+    import json
+    from pathlib import Path
+    from shapely.ops import nearest_points
+    from roads import consistency as CQ
+    path = Path(path)
+    if not path.exists():
+        return
+    rows = json.loads(path.read_text(encoding="utf-8")).get("rows", [])
+    tops = [p for p in parts if p.layer == "bridge" and p.mat not in ("barrier_steel", "noise_glass")
+            and not p.src.endswith(":parapet")]
+    deck = SurfaceTop(tops, layers=("bridge",))
+    idx = CQ.SurfaceIndex(parts)
+    out = {}
+    for row in rows:
+        P = np.asarray(row["points_en"], float)
+        line = LineString(P)
+        sup = row.get("suppress_rule_lamps", {})
+        pre = tuple(f"rule:c:w{w}:" for w in sup.get("osm_way", []))
+        zone = line.buffer(float(sup.get("within_m", 0.0)))
+        groups = {}
+        for it in pl.items:
+            groups.setdefault((round(it["e"], 2), round(it["n"], 2)), []).append(it)
+        drop, removed = set(), 0
+        for (e, n), items in groups.items():
+            b = [it for it in items if it["p"].startswith("lamp_") and it.get("src", "").startswith(pre)] if pre else []
+            if b and zone.contains(Point(e, n)):
+                drop.update(id(it) for it in items)
+                removed += 1
+        if drop:
+            pl.items[:] = [it for it in pl.items if id(it) not in drop]
+        # deck plan footprint near the row (upward faces of the bridge layer)
+        box = line.buffer(row.get("deck_snap_m", 2.6) + 2.0)
+        A = deck.A
+        if len(A):
+            x0, y0, x1, y1 = box.bounds
+            lo, hi = A[:, :, :2].min(1), A[:, :, :2].max(1)
+            cand = A[(hi[:, 0] >= x0) & (lo[:, 0] <= x1) & (hi[:, 1] >= y0) & (lo[:, 1] <= y1)]
+            polys = shapely.polygons(np.concatenate([cand[:, :, :2], cand[:, :1, :2]], axis=1)) if len(cand) else []
+            polys = [g for g in polys if g.intersects(box)]
+            foot = shapely.union_all(polys).buffer(0.02).buffer(-0.02) if polys else None
+        else:
+            foot = None
+        placed = []
+        for k, p in enumerate(P):
+            t = P[min(k + 1, len(P) - 1)] - P[max(k - 1, 0)]
+            t = t / np.linalg.norm(t)
+            nrm = np.array([-t[1], t[0]])
+            q, z, proto, u = p, None, row["proto"], nrm
+            if foot is not None and not foot.is_empty:
+                inside = foot.contains(Point(*p))
+                a, _ = nearest_points(foot.boundary if inside else foot, Point(*p))
+                edge = np.array([a.x, a.y])
+                d = float(np.hypot(*(edge - p)))
+                if not inside and d <= float(row.get("deck_snap_m", 2.6)):
+                    u = (edge - p) / max(d, 1e-9)                 # toward the deck, across the road
+                    u = u if abs(float(u @ nrm)) > 0.7 else nrm * np.sign(float((edge - p) @ nrm) or 1.0)
+                    zc = deck.top(*(edge + u * CAP_IN_M))
+                    if math.isfinite(zc):
+                        q, z, proto = edge - u * CONSOLE_OUT_M, float(zc), row["proto_console"]
+                elif inside:
+                    zc = deck.top(*p)
+                    z = float(zc) if math.isfinite(zc) else None
+            lab = idx.classify(np.array([[q[0], q[1], z if z is not None else float(pl.seat(proto, q)[0])]]))[0]
+            if lab == "carriageway":
+                placed.append({"k": k, "at": [round(float(q[0]), 1), round(float(q[1]), 1)], "skipped": "carriageway"})
+                continue
+            zb = pl.add(proto, q, yaw_of(u), z=z, src=f"authored:{row['id']}:{k}", group="lamp")
+            placed.append({"k": k, "p": proto, "at": [round(float(q[0]), 2), round(float(q[1]), 2)], "z": round(zb, 2),
+                           "shift_m": round(float(np.hypot(*(np.asarray(q) - p))), 2)})
+        out[row["id"]] = {"rule_lamps_removed": removed, "placed": sum(1 for x in placed if "p" in x),
+                          "console": sum(1 for x in placed if x.get("p") == row["proto_console"]), "items": placed}
+    report["lamp_rows"] = out
+
+
 NARROW_ISLAND_R = 1.0      # WORKING_VALUE: carriageway within this distance on two opposite sides = separation < ~2 m
 
 
@@ -1080,8 +1166,30 @@ def panel_fence(lin, line, col, key, flexible=False):
     lin.posts(col,P,None,.06,.04,S.FENCE_H+.05,zb=Z,src=key,ground_feet=True)
 
 
-def fences(lin, src, origin, roads_poly, report):
+FENCE_COLOURS = ("fence_green", "fence_anthracite", "fence_galv")
+
+
+def fence_styles(overrides):
+    """kind: fence_style -> {osm way id: panel fence colour} (authored: the colour of an OSM fence is not in the data,
+    the rule hashes it; ADR 0129)."""
+    out = {}
+    for o in overrides or []:
+        if o.get("kind") != "fence_style":
+            continue
+        col = f"fence_{o['colour']}"
+        if col not in FENCE_COLOURS:
+            raise ValueError(f"override {o.get('id')}: fence colour {o['colour']!r}, expected one of "
+                             f"{[c[6:] for c in FENCE_COLOURS]}")
+        for w in o["osm_way"]:
+            out[int(w)] = col
+    return out
+
+
+def fences(lin, src, origin, roads_poly, report, styles=None):
+    """styles: {osm way id: colour material} of the authored fence_style overrides (fence_styles)."""
     n = {"panel_m": 0.0, "concrete_m": 0.0, "retaining_m": 0.0}
+    styles = styles or {}
+    seen = set()
     cutter = roads_poly.buffer(0.3) if roads_poly is not None else None
     for f in src["osm"]["ways"]:
         b = f["tags"].get("barrier")
@@ -1093,7 +1201,10 @@ def fences(lin, src, origin, roads_poly, report):
             P = lin.dens(part, 2.0)              # 2 m: the Low terrain band is 2 m, posts sample the ground themselves
             Z = lin.z(P)
             if b in ("fence", "yes"):
-                col = ["fence_green", "fence_anthracite", "fence_galv"][_h(key) % 3]
+                col = FENCE_COLOURS[_h(key) % 3]
+                if int(f["osm_way"]) in styles:
+                    col = styles[int(f["osm_way"])]
+                    seen.add(int(f["osm_way"]))
                 panel_fence(lin, part, col, key, flexible=f["tags"].get("fence_type") in ("chain_link", "wire"))
                 n["panel_m"] += part.length
             elif b == "wall":
@@ -1112,6 +1223,9 @@ def fences(lin, src, origin, roads_poly, report):
             retaining(lin, lin.dens(part, 1.0), f"bdot:{f['id']}")
             n["retaining_m"] += part.length
     report["fences"] = {k: round(v) for k, v in n.items()}
+    if styles:      # a styled way that is no longer in the data is reported, never silently dropped
+        report["fences"]["styled_ways"] = sorted(seen)
+        report["fences"]["style_stale"] = sorted(set(styles) - seen)
 
 
 def retaining(lin, P, key):

@@ -58,3 +58,27 @@ def raw_available() -> bool:
 
 
 needs_raw = pytest.mark.skipif(not raw_available(), reason="raw data not ingested (Data/raw is gitignored)")
+
+
+LFS_POINTER_MAGIC = b"version https://git-lfs.github.com/spec/v1"
+
+
+def is_lfs_pointer(path) -> bool:
+    """True when a tracked binary file is only a git-lfs pointer (CI checks out with lfs: false)."""
+    try:
+        with Path(path).open("rb") as fh:
+            return fh.read(len(LFS_POINTER_MAGIC)) == LFS_POINTER_MAGIC
+    except OSError:
+        return False
+
+
+def require_lfs(*paths) -> None:
+    """Skip the test when any given file is a git-lfs pointer instead of the real binary.
+
+    CI runs with lfs: false (LFS transfer budget), so tracked binaries (.glb, .png, ...) are
+    pointer files there; tests that read their bytes must skip, not fail. Locally, with real
+    LFS content pulled, the tests run unchanged.
+    """
+    for path in paths:
+        if is_lfs_pointer(path):
+            pytest.skip(f"{path} is a git-lfs pointer, not the real file (checkout without lfs)")

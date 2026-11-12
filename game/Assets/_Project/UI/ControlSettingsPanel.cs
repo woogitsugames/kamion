@@ -188,8 +188,18 @@ namespace Game.UI
             y += 18f;
             Header(content, "DŹWIĘK", right, ref y);
             // ADR 0137: owner A/B of the engine sound (ElevenLabs layers vs procedural synthesis); applied live.
-            Segment(content, right, ref y, "Silnik", "synteza", "ElevenLabs", () => Game.Core.AudioPreferences.ElevenLabsEngine,
+            // ADR 0142: the choice now covers the whole vehicle sound set (engine + effects + cabin mix).
+            Segment(content, right, ref y, "Zestaw dźwięków", "synteza", "ElevenLabs", () => Game.Core.AudioPreferences.ElevenLabsEngine,
                 v => Game.Core.AudioPreferences.ElevenLabsEngine = v);
+            // ADR 0142: preview of the sounds that have no driving control yet (horn button, cab door interaction).
+            float bw = (ColW - 2f * 12f) / 3f;
+            var b1 = TextButton(content, "Klakson", Vector2.zero, new Vector2(bw, 64f), () => Game.Core.AudioCues.Request(Game.Core.AudioCue.HornTap));
+            PlaceTop((RectTransform)b1.transform, right, y, new Vector2(bw, 64f));
+            var b2 = TextButton(content, "Drzwi: otwórz", Vector2.zero, new Vector2(bw, 64f), () => Game.Core.AudioCues.Request(Game.Core.AudioCue.DoorOpen));
+            PlaceTop((RectTransform)b2.transform, right + bw + 12f, y, new Vector2(bw, 64f));
+            var b3 = TextButton(content, "Drzwi: zamknij", Vector2.zero, new Vector2(bw, 64f), () => Game.Core.AudioCues.Request(Game.Core.AudioCue.DoorClose));
+            PlaceTop((RectTransform)b3.transform, right + 2f * (bw + 12f), y, new Vector2(bw, 64f));
+            y += 64f + 8f;
 
             float contentH = Mathf.Max(leftEnd, y) + 8f;
             float panelH = Mathf.Min(avail.y, HeaderH + contentH + FooterH);

@@ -38,7 +38,8 @@ def qa():
 
 
 def _sha(p):
-    return hashlib.sha256(p.read_bytes()).hexdigest()
+    # CRLF-normalised, same as tools/worldgen/fidelity/run.py sha_file
+    return hashlib.sha256(p.read_bytes().replace(b"\r\n", b"\n")).hexdigest()
 
 
 def test_report_not_stale(qa):
