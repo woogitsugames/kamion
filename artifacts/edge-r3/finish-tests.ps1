@@ -12,7 +12,7 @@ $chunks = foreach ($chunk in $manifest.chunks) {
     @{id=$chunk.id;file=$chunk.file;sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $chunk.file).Hash.ToLowerInvariant();manifest_sha256=$chunk.sha256}
 }
 $chunks | ConvertTo-Json -Depth 5 | Set-Content "$PSScriptRoot/cli-chunks-before-gis.json"
-& pwsh -File $slot -Acquire -Pool heavy -Owner $owner -PollSeconds 2 -StaleHours 100000
+& pwsh -File $slot -Acquire -Pool heavy -Owner $owner -PollSeconds 1 -StaleHours 100000
 if ($LASTEXITCODE -ne 0) { throw 'Heavy acquisition failed' }
 $code = 1
 try {
