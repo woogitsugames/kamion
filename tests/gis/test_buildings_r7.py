@@ -153,7 +153,7 @@ def test_ground_is_one_continuous_driveway_a_path_and_a_lawn():
         assert drive
         d = shapely.union_all(drive)
         assert d.distance(road) < 0.1                                           # reaches the road footprint ...
-        assert d.buffer(0.1).contains(shapely.Point(*(g["m"] - g["n"] * 4.0)))  # ... and runs in through the gate
+        assert d.buffer(0.1 + PL.TRACK_GAP_M / 2).contains(shapely.Point(*(g["m"] - g["n"] * 4.0)))  # ... and runs in through the gate
         assert max(q.area for q in drive) > PL.DRIVE_W_M * 6.0                  # one slab, not tiles
         lawn = p["lawn"]
         assert lawn is not None and lawn.area > 0.45 * (p["poly"].area - p["foot"].area)
@@ -187,10 +187,12 @@ def test_plot_is_one_material_and_no_instances():
     PL.paved_items(rp, road, shapely.union_all([h["poly"] for h in houses]), [])
     buf, rep = _Buf(), {}
     PL.build(buf, rp, lambda q: 100.0, None, rep)
-    assert {(p.layer, p.mat) for p in buf.parts} == {(PL.KIT_LAYER, "plot_kit"), ("collision", "collision_fence")}
+    assert {(p.layer, p.mat) for p in buf.parts} == {(PL.KIT_LAYER, "plot_kit"), (PL.KIT_LAYER_LOW, "plot_kit"), ("collision", "collision_fence")}
     r = rep["plots"]
     assert r["instances"] == 0 and r["gates"] == 4 and r["wickets"] == 4
-    kit = [p for p in buf.parts if p.mat == "plot_kit"]
+    kit = [p for p in buf.parts if p.mat == "plot_kit" and p.layer == PL.KIT_LAYER]
+    low = [p for p in buf.parts if p.layer == PL.KIT_LAYER_LOW]
+    assert len(low) == 4 and sum(len(p.T) for p in low) <= sum(len(p.T) for p in kit)   # ADR 0132: the Low / Medium kit
     assert len(kit) == 4                                                        # one mesh part per plot
     for p in kit:
         assert len(p.T) < 6000

@@ -13,6 +13,8 @@
 //             correct two-sided panel; rgb * 2 = albedo tint (per-plot ageing: faded, greyed, darkened).
 //      a = 1  foliage: rgb = normal * 0.5 + 0.5 in generator axes (x east, y north, z up), pointing away from the
 //             plant's axis - all cards of one plant shade as one volume, no flip; back-lit transmission.
+//             ADR 0132: the LENGTH of that vector (1 = open, shorter = deeper) is the plant's own occlusion - the foot
+//             and the inside of a hedge / crown are darker than its lit skin (albedo factor, sun and ambient alike).
 // 3. Lambert + main-light shadow + SH ambient (per vertex, both faces) + project fog. No specular, no reflection
 //    probe: every surface of the kit is matt (rough 0.85 in ADR 0114).
 Shader "Kamion/World PlotKit"
@@ -132,6 +134,9 @@ Shader "Kamion/World PlotKit"
                 half fol = step(0.5h, v.color.a);
                 // foliage normal: generator axes (east, north, up) -> mesh axes (x east, y up, z north)
                 half3 nf = v.color.rgb * 2.0h - 1.0h;
+                half nlen = max(length(nf), 0.001h);
+                half occ = saturate(nlen * 1.02h);              // 8-bit colour: a unit vector reads 0.98-1.0
+                nf /= nlen;
                 float3 nOS = lerp(v.normalOS, float3(nf.x, nf.z, nf.y), fol);
                 half3 n = TransformObjectToWorldNormal(nOS);
                 o.normalWS = half4(n, fol);
@@ -141,7 +146,7 @@ Shader "Kamion/World PlotKit"
                 o.positionWS = TransformObjectToWorld(v.positionOS.xyz);
                 o.positionCS = TransformWorldToHClip(o.positionWS);
                 o.uv = TRANSFORM_TEX(v.uv, _BaseMap);
-                o.tintFog = half4(lerp(v.color.rgb * 2.0h, half3(1.0h, 1.0h, 1.0h), fol), KamionFogTau(o.positionWS, o.positionCS.w));
+                o.tintFog = half4(lerp(v.color.rgb * 2.0h, half3(occ, occ, occ), fol), KamionFogTau(o.positionWS, o.positionCS.w));
                 return o;
             }
             half4 frag(V i, bool front : SV_IsFrontFace) : SV_Target
