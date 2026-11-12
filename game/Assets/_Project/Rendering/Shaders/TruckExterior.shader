@@ -51,6 +51,7 @@ Shader "Kamion/Truck Exterior"
         _DecalRoughness ("Decal roughness", Range(0, 1)) = 0.3
         _DirtColor ("Dirt colour (linear)", Color) = (0.15, 0.135, 0.11, 1)
         _Dirt ("Dirt amount (0 washed, 0.5 fleet, 1 very dirty)", Range(0, 1)) = 0.5
+        _DryDustColor ("Dry matte-plastic dust: linear RGB, W strength (working)", Vector) = (0.07, 0.065, 0.055, 1)
         _CoatedBaseRoughness ("Base roughness under a full clear coat", Range(0, 1)) = 0.6
         _OrangePeel ("Orange peel slope (coat normal)", Range(0, 0.05)) = 0.012
         _GrimeHeight ("Road grime height above the wheel contact (m)", Range(0, 2)) = 0.8
@@ -69,7 +70,7 @@ Shader "Kamion/Truck Exterior"
         #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
         CBUFFER_START(UnityPerMaterial)
             float4 _CMap_ST;
-            float4 _PaintColor, _DecalColor, _DirtColor;
+            float4 _PaintColor, _DecalColor, _DirtColor, _DryDustColor;
             float _NormalStrength, _IsPaint, _PaintRoughness, _PaintMetallic, _DecalMetallic, _DecalRoughness, _Dirt, _Lamps;
             float _ClearCoat, _ClearCoatRoughness, _Flake, _FlakeScale;
             float _DrlHighlightShoulder;
@@ -303,6 +304,7 @@ Shader "Kamion/Truck Exterior"
 
                 uint renderingLayer = GetMeshRenderingLayer();
                 half isTyre = (renderingLayer & ((1u << 8) | (1u << 9))) != 0u ? 1.0 : 0.0;
+                half geometricUp = normalize(i.normalWS).y;
                 uint slot = unity_RendererUserValue;
                 bool hasFrame = slot >= 1u && slot <= 4u;
                 float3 lp = i.positionWS;
@@ -355,7 +357,7 @@ Shader "Kamion/Truck Exterior"
                     }
                     // AO still controls cavity retention. The whole recessed tread has low AO;
                     // its raised metal faces must shed independently of that broad cavity shadow.
-                    half exposedMetalTop = _IsPaint < 0.5 ? m.b * (1.0 - isTyre) * smoothstep(0.55, 0.9, normalize(i.normalWS).y) : 0.0;
+                    half exposedMetalTop = _IsPaint < 0.5 ? m.b * (1.0 - isTyre) * smoothstep(0.55, 0.9, geometricUp) : 0.0;
                     proc *= lerp(1.4, 0.85, m.r) * lerp(1.0, 0.25, exposedMetalTop);
                     grime = max(grime * 0.8, proc);
                 }
@@ -367,12 +369,21 @@ Shader "Kamion/Truck Exterior"
                     // tops): nobody washes a cab roof. Scales with _Dirt; at the fleet 0.5 it takes ~13 % off the white
                     // and ~25 % off the coat there (review r7 N-17: roof pixels at 100 % on High overcast 4.8 -> 1.8 %;
                     // the rest is the D23 white clip at 0.7, LookGrading). WORKING_VALUE.
-                    half up = smoothstep(0.35, 0.9, normalize(i.normalWS).y);
+                    half up = smoothstep(0.35, 0.9, geometricUp);
                     grime = max(grime, 0.18 * up);
                 }
                 half dirt = saturate(grime * _Dirt * 1.8);
                 coat *= 1.0 - saturate(dirt * 1.5);
-                albedo = lerp(albedo, _DirtColor.rgb, dirt);
+                half3 soilColor = _DirtColor.rgb;
+                if (hasFrame && _IsPaint < 0.5 && _Lamps < 0.5 && isTyre < 0.5)
+                {
+                    // Dry deposits on the upper matte-plastic mudguard differ from dark wet splash below.
+                    // Linear vector data, not another sRGB tint; tyres, paint, lamps and metal remain excluded.
+                    half dry = (1.0 - m.b) * smoothstep(0.35, 0.60, c.a) * smoothstep(0.35, 0.9, geometricUp)
+                             * smoothstep(_GrimeHeight * 0.75, _GrimeHeight * 1.4, lp.y) * saturate(_DryDustColor.w);
+                    soilColor = lerp(soilColor, _DryDustColor.rgb, dry);
+                }
+                albedo = lerp(albedo, soilColor, dirt);
                 rough = lerp(rough, max(rough, 0.88), dirt);
                 metal *= 1.0 - dirt;
 
