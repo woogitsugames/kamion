@@ -17,6 +17,12 @@ $runs = [ordered]@{
   ab_hedge  = 'off:m.hedge'
   ab_noise  = 'off:m.noise_+off:m.gantry'
   ab_carfilm = 'vec:s.worldpbr:_carflake:3:0'
+  ab_mirrors = 'mirrors'
+  ab_envcap = 'envcap'
+  ab_shadows = 'shadows'
+  ab_hlodedge = 'hlodedge'
+  ab_hlodcanopy = 'hlodcanopy'
+  ab_impostor = 'impostor'
 }
 $sel = if ($Only) { $Only -split ',' } else { $runs.Keys }
 $spec = ($sel | ForEach-Object { "$_=rq_ab=$($runs[$_]) $fix" }) -join ';'
