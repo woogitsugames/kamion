@@ -109,3 +109,4 @@ PHONE_RUN zwolniony przed 15:26:27, po obserwowanym oczekiwaniu od 14:20. Sekwen
 Zakończono Game.Editor.Setup.TruckAssetBuilder.BuildBatch, exit 0. Następny krok: kolejny etap prefab/sceny lub capture-0112 -Stage result-0112.
 Zakończono Game.World.Import.WorldTruckInstaller.InstallBatch, exit 0. Następny krok: kolejny etap prefab/sceny lub capture-0112 -Stage result-0112.
 Zapisano izolowany atlas legend 256 bias -0.75 icon clip 0.28 Low clear: cab-driver/cab-dash. Plastic/Leather bez zmian. To eksperyment czytelności, nie pełny gate budżetów.
+Zapisano izolowany atlas legend 256 bias -0.75 icon clip 0.28 Low overcast: cab-driver/cab-dash. Plastic/Leather bez zmian. To eksperyment czytelności, nie pełny gate budżetów.
