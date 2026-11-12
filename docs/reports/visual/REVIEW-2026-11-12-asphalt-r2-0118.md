@@ -11,3 +11,6 @@ Kierunek poprawy jest zgodny w czterech warunkach. Low bardziej wygładza drobny
 Pozostałe kwestie P2: powtarzalny układ i podobieństwo kostek stały się bardziej zauważalne, High-overcast ma intensywne jasne punkty, a przednia listwa krawężnika pozostaje dość gładka. Bez wyraźnego pogorszenia przez R2.
 
 PASS dotyczy tej zmiany kostki i krawężnika, nie pełnego fotorealizmu, stabilności w ruchu ani Gate3. Bez kalibracji jasności z niedopasowanych fotografii; wycofane proporcje R1 nieużywane. Liczniki i 128 GLB nie były częścią niezależnej oceny. Źródło: niezależny agent asphalt_visual_critic, 2026-11-12, read-only.
+
+Aktualizacja autora sesji: ocena powyżej dotyczy candidate1. Przed publikacją wykryto współdzielony sidewalk_paving na wysepce Kwadrat i dodano candidate2 z wykluczeniem obszaru. Candidate2 wymaga własnego renderu/oceny; PASS nie jest automatycznie przeniesiony.
+
