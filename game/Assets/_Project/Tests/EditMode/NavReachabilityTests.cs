@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Game.Core.Navigation;
-using Game.UI.Navigation;
 using NUnit.Framework;
 using UnityEngine;
 
@@ -10,7 +9,7 @@ namespace Game.Tests
     /// strongly connected component of the directed graph (node flag bit1, edge flag bit6 - plain flag bits, no
     /// format change). A tap in such a part snaps the destination pin to the nearest node of the main component and
     /// reports <see cref="PlanStatus.GoalOffReach"/> (HUD: NavText.OffReach) instead of a later "Brak dojazdu".</summary>
-    public class NavReachabilityTests
+    public class NavReachabilityTests  // NavigationService (Game.UI) parts: PlayMode NavReachabilityServiceTests
     {
         const string Region = "bialystok-industrial-c";
 
@@ -18,7 +17,7 @@ namespace Game.Tests
         //   |      |
         //   0 ---- 1 --(oneway)--> 4     spur: own SCC but drivable to - NOT off-reach (integration r5)
         //   5 ---- 6                     off-reach pair (connected only "outside the tile")
-        static RouteGraph BuildWithOffReach()
+        internal static RouteGraph BuildWithOffReach()
         {
             var nodes = new[] { new Vector2(0, 0), new Vector2(200, 0), new Vector2(200, 200), new Vector2(0, 200),
                                 new Vector2(400, 0), new Vector2(600, 0), new Vector2(700, 0) };
@@ -75,40 +74,6 @@ namespace Game.Tests
         }
 
         [Test]
-        public void Synthetic_SetPin_OffReachTap_SnapsToNearestMainNodeAndReports()
-        {
-            var g = BuildWithOffReach();
-            var go = new GameObject("NavReachTest");
-            var nav = go.AddComponent<NavigationService>();
-            nav.SetGraphForTest(g);
-            Assert.IsTrue(nav.SetPin(new Vector2(650, 0)), "tap in the off-reach part still sets the pin");
-            Assert.AreEqual(PlanStatus.GoalOffReach, nav.LastStatus, "clear status instead of a later NoPath");
-            // Integration r5: the one-way spur end (400, 0) is reachable, so it is the nearest reachable node.
-            Assert.AreEqual(new Vector2(400, 0), nav.PinOnRoad, "pin snapped to the nearest reachable node (node 4)");
-            Assert.AreEqual(System.Array.IndexOf(g.Names, "Slepa"), nav.PinName, "spur end named from its incoming edge");
-            // ...and the route to that node plans fine.
-            nav.SetPoseForTest(new Vector2(20, 0), 90f, 0f);
-            Assert.AreEqual(PlanStatus.Ok, nav.PlanToPin());
-            Assert.IsTrue(nav.Path.HasRoute);
-            Object.DestroyImmediate(go);
-        }
-
-        [Test]
-        public void Synthetic_SetPin_MainPart_Unchanged()
-        {
-            var g = BuildWithOffReach();
-            var go = new GameObject("NavReachTest");
-            var nav = go.AddComponent<NavigationService>();
-            nav.SetGraphForTest(g);
-            Assert.IsTrue(nav.SetPin(new Vector2(100, 5)));
-            Assert.AreEqual(PlanStatus.Ok, nav.LastStatus);
-            Assert.AreEqual(System.Array.IndexOf(g.Names, "Dolna"), nav.PinName);
-            Assert.IsFalse(nav.SetPin(new Vector2(650, 2000)), "no road within reach at all");
-            Assert.AreEqual(PlanStatus.GoalOffRoad, nav.LastStatus);
-            Object.DestroyImmediate(go);
-        }
-
-        [Test]
         public void Synthetic_Planner_NeverRoutesThroughOffReach()
         {
             var g = BuildWithOffReach();
@@ -121,32 +86,5 @@ namespace Game.Tests
             Assert.AreEqual(PlanStatus.Ok, planner.Plan(new Vector2(20, 0), 90f, new Vector2(350, 0), p));
         }
 
-        [Test]
-        public void Region_ReachabilityFlags_AndersaRoutable_BuskaSnapped()
-        {
-            // Works with a .bytes with or without the M27 flags (older files: every node reachable).
-            var g = RouteGraph.Load(Region);
-            Assert.NotNull(g);
-            int offE = 0;
-            for (int e = 0; e < g.EdgeCount; e++) if (g.EdgeOffReach(e)) offE++;
-            Assert.IsTrue(offE == 0 || offE == 115, "115 off-reach edges after regeneration (forward closure of the main SCC), 0 before: " + offE);
-            var go = new GameObject("NavReachTest");
-            var nav = go.AddComponent<NavigationService>();
-            nav.regionId = Region;
-            nav.Init();
-            Assert.IsTrue(nav.Ready);
-            Assert.IsTrue(nav.SetPin(new Vector2(-172f, -298f)));   // Andersa SE - a main road, never off-reach
-            Assert.AreEqual(PlanStatus.Ok, nav.LastStatus);
-            Assert.IsTrue(nav.SetPin(new Vector2(-758.6f, -753.6f)));   // Buska (connected only outside the tile)
-            Assert.AreEqual(offE > 0 ? PlanStatus.GoalOffReach : PlanStatus.Ok, nav.LastStatus);
-            if (offE > 0)
-            {
-                int n = g.NearestMainNode(nav.PinOnRoad);
-                Assert.GreaterOrEqual(n, 0);
-                nav.SetPoseForTest(new Vector2(-1.7f, -897.8f), float.NaN, 0f);
-                Assert.AreEqual(PlanStatus.Ok, nav.PlanToPin(), "the snapped pin is routable");
-            }
-            Object.DestroyImmediate(go);
-        }
     }
 }
