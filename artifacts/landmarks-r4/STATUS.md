@@ -32,3 +32,5 @@ Krok 5a: zapisano agregaty/library props świeżego baseline (EC odzyskane po we
 Krok 5b: source_scope.py PASS: poza build_conifer cały AST buildera identyczny z baseline; poza spruce całe dims identyczne; pozycje/wysokości/promienie iglaków identyczne. Atlas, tynk, materiały, podpomost, EC i integracja hero niezmienione od bazy rundy. Generator wariantu czeka FIFO6 właścicieli, żaden slot nie jest trzymany przez oczekiwanie.
 
 Krok 5c: przygotowano samodzielne referencje i photo_pair.py dla r4: pełna kopia7197 CC0 z r1, stałe wycinki szczytu jak r1 oraz foto0,5x|baseline1x|wariant1x koron. Pary≤960px, jawna robocza poza i różne wycinki, bez dopasowywania osobno drzew, warpów i korekcji barwy. Skrypt par jeszcze niewykonany; wariant nie ma renderu.
+
+Krok 5d: pierwszy waiter heavy zakończył się kodem1 przed World, log świata nie powstał. Potwierdzony brak własnego slotu/biletu i procesów candidate/heavy-step; nie usunięto cudzych blokad. Pełna przyczyna z terminala nie zachowała się (outputtruncated), nie zgaduje się jej. Następna próba tej samej kolejki ma pełne przekierowanie stdout/stderr do candidate-run-02.log; poll10s zamiast2s, ten sam FIFO i limity.

@@ -19,7 +19,7 @@ $env:OMP_NUM_THREADS = '1'
 $env:MKL_NUM_THREADS = '1'
 $env:PYTHONUNBUFFERED = '1'
 $env:KAMION_BLENDER = 'C:\Users\matma\AppData\Local\Programs\Blender4.2\blender-4.2.9-windows-x64\blender.exe'
-& pwsh $slotScript -Acquire -Pool heavy -Owner $owner -PollSeconds 2 -StaleHours 876000
+& pwsh $slotScript -Acquire -Pool heavy -Owner $owner -PollSeconds 10 -StaleHours 876000
 if ($LASTEXITCODE -ne 0) { throw 'Heavy slot acquisition failed' }
 try {
     switch ($Step) {
@@ -59,5 +59,6 @@ try {
 } finally {
     & pwsh $slotScript -Release -Pool heavy -Owner $owner
 }
+
 
 
