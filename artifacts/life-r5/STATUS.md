@@ -61,3 +61,5 @@ PRZEKAZANIE na prośbę właściciela: zapisano PRZEKAZANIE-LIFE-2026-11-12.md i
 Uruchomiono wyłącznie lekki skrypt kończący PID 54980, czeka na już istniejący batch 72932. Bez nowych Unity/Python. Przekazanie i REPORT będą dostępne od razu w main; po wyjściu batcha skrypt uzupełni kopię, STATUS i wynik. Praca autora zakończona na polecenie właściciela.
 
 Wznowienie baseline (2026-11-12T16:27:44.9772023+01:00): potwierdź pełny baseline palet po poprawce snapshotu. Następny krok capture/LOD/oględziny; oryginalny błąd snapshotu zachowany.
+
+Wznowienie baseline (2026-11-12T16:27:46.0931039+01:00): zapisz przerwane wznowienie baseline native-lod. Następny krok capture/LOD/oględziny; oryginalny błąd snapshotu zachowany.
