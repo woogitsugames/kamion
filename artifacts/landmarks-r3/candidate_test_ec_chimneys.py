@@ -101,6 +101,27 @@ def test_authored_assets_are_byte_deterministic_and_fresh(tmp_path,monkeypatch):
     assert first['materials_per_lod'][1]==['chimney_concrete','chimney_red','chimney_white']
 
 
+@pytest.mark.parametrize('verified',[False,True])
+def test_landmark_registration_and_hero_application_never_duplicate_a_chimney(monkeypatch,verified):
+    from streetscape import landmarks as LM
+    cfg=EC.config(); o=overrides()[0]; d=EC.entry(o,cfg)
+    meta=dict(prototype='landmark_'+d['asset'],tris=[100,50,50],glb_sha256='fixture',materials=[])
+    monkeypatch.setattr(EC,'active',lambda *a:meta if verified else None)
+    monkeypatch.setattr(LM.LP,'LANDMARKS',{})
+    class Placer:
+        def __init__(self): self.items=[]
+        def add(self,name,p,yaw,**kw): self.items.append(dict(p=name,src=kw['src']))
+    placer=Placer(); report={}
+    LM.build(placer,None,dict(nodes=[]),[o],[777995,596223],{},report)
+    instances=placer.items
+    if verified:
+        spec=EC.make_spec(o,d,cfg,[777995,596223],lambda e,n:137.)
+        HB.apply(None,[dict(override=o,spec=spec,meta=meta,sha='fixture')],instances,{})
+    assert len(instances)==1
+    assert instances[0]['src']=='override:'+o['id']
+    assert instances[0]['p']==(meta['prototype'] if verified else 'landmark_chimney_120_75')
+
+
 def test_generated_world_has_exactly_one_authored_instance_per_chimney():
     folder=REPO/'Data/Regions'/REGION_ID/'generated'
     qa=json.loads((folder/'streetscape_qa.json').read_text())

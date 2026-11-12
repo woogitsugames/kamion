@@ -21,3 +21,5 @@ Krok 6b: przygotowano pary EC 960 px z pełną wysokością zdjęcia CC BY 3.0; 
 Krok 6c: przygotowano odczyt rzeczywistych macierzy WorldInstances.SyncOrigin w Unity, do uruchomienia po baseline. Ma odróżnić pochylenie modelu od perspektywy. Tymczasowy skrypt Editor nie zapisuje scen i jest usuwany po uruchomieniu pod slotem. Jeszcze nie wykonany.
 
 Krok 7: świeży baseline świata po merge main ukończony bez fallback=True. Zachowano manifest, QA i własną bibliotekę proceduralną do porównań kominów. NASTĘPNY KROK: import przygotowanych danych i pełne cztery zestawy QA, pod Unity.
+
+Krok 6d: dopisano test integracji rejestracji landmarków z hero apply: dla zweryfikowanego assetu i dla fallbacku musi pozostać dokładnie jedna instancja danego źródła. Testy nadal są szkicem, nie raportuję ich jako PASS. Poprawiono też zwalnianie slotu sondy: kontrola istniejącego pliku następuje przed acquire.
