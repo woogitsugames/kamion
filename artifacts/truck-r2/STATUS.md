@@ -52,3 +52,4 @@ Zapisano runoff-trails-088 Low overcast, kod wejściowy zgodny z fingerprintem. 
 Zapisano runoff-trails-088 Low clear, kod wejściowy zgodny z fingerprintem. Następny krok: pomiary i oględziny par przed/po.
 Zapisano runoff-trails-088 High overcast, kod wejściowy zgodny z fingerprintem. Następny krok: pomiary i oględziny par przed/po.
 Zapisano runoff-trails-088 High clear, kod wejściowy zgodny z fingerprintem. Następny krok: pomiary i oględziny par przed/po.
+Krok 19: runoff-trails-088 zapisany w czterech warunkach, przekazany do ostatecznej decyzji recenzenta; nadal bez pełnej akceptacji. Osobny wariant metal-retention-022 ogranicza retencję osadu na odsłoniętych, poziomych metalowych powierzchniach według AO i normalnej, zachowując retencję w zagłębieniach. Wyklucza lakier i koła; nie udaje maski śladów butów. Stała 0,22 jest WORKING_VALUE. Następny krok: detail-controls.ps1 -Prefix detail-metal-022 -Cases fleet, porównanie z detail-before-fleet.
