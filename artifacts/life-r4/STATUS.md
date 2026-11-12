@@ -77,3 +77,5 @@ Kandydat a2 (2026-11-12T12:59:52.3674068+01:00): potwierdź zakres GLB, raw i fi
 Po kandydacie a2 (2026-11-12T13:01:15.8550455+01:00): zaimportuj geometrię felgi a2. Następny krok: oględziny przed decyzją, bez deklaracji finalnego PASS.
 
 Po kandydacie a2 (2026-11-12T13:03:57.2182940+01:00): potwierdź pełny capture felgi a2. Następny krok: oględziny przed decyzją, bez deklaracji finalnego PASS.
+
+Po kandydacie a2 (2026-11-12T13:07:17.3009715+01:00): zapisz pełne budżety i pary felgi a2. Następny krok: oględziny przed decyzją, bez deklaracji finalnego PASS.
