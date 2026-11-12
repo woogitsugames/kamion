@@ -60,9 +60,14 @@ namespace Game.Editor.VisualQA
                     selected.UnionWith(rig.glassLods[0].renderers);
                     var mirrorSurfaces = new HashSet<Renderer>(mirrors.Select(m => m.glass));
                     selected.UnionWith(mirrorSurfaces);
-                    var temporary = SceneManager.CreateScene("CabMirrorOcclusionTemporary", new CreateSceneParameters(LocalPhysicsMode.Physics3D));
-                    var physics = temporary.GetPhysicsScene();
-                    if (!physics.IsValid()) throw new InvalidOperationException("Temporary physics scene unavailable");
+                    // Runtime local-physics scene creation is unavailable in EditMode. Reserve an unused query layer
+                    // in an unsaved additive editor scene, and reject any hit outside our collider registry.
+                    var usedLayers = new HashSet<int>(UnityEngine.Object.FindObjectsByType<Collider>(FindObjectsInactive.Include,
+                        FindObjectsSortMode.None).Select(c => c.gameObject.layer));
+                    int isolationLayer = Enumerable.Range(0, 32).Reverse().First(layer => !usedLayers.Contains(layer));
+                    int queryMask = 1 << isolationLayer;
+                    var temporary = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Additive);
+                    var physics = Physics.defaultPhysicsScene;
                     var root = new GameObject("CabMirrorOcclusionTemporary");
                     SceneManager.MoveGameObjectToScene(root, temporary);
                     var meshes = new List<Mesh>();
@@ -92,6 +97,7 @@ namespace Game.Editor.VisualQA
                                 mesh.vertices = worldVertices; mesh.SetTriangles(indices, 0); meshes.Add(mesh);
                                 var go = new GameObject(renderer.name + "_slot" + slot);
                                 SceneManager.MoveGameObjectToScene(go, temporary); go.transform.SetParent(root.transform, false);
+                                go.layer = isolationLayer;
                                 var collider = go.AddComponent<MeshCollider>(); collider.sharedMesh = mesh;
                                 owners.Add(collider.GetInstanceID(), new Owner { renderer = renderer.name, material = material.name,
                                     slot = slot, asset = AssetDatabase.GetAssetPath(source) });
@@ -118,7 +124,7 @@ namespace Game.Editor.VisualQA
                                     Vector3 ray = target - eye.position;
                                     bool central = point.x >= .05f && point.x <= .95f && point.y >= .05f && point.y <= .95f;
                                     samples++; if (central) centralSamples++;
-                                    if (!physics.Raycast(eye.position, ray.normalized, out var hit, ray.magnitude-.002f, ~0, QueryTriggerInteraction.Ignore)) continue;
+                                    if (!physics.Raycast(eye.position, ray.normalized, out var hit, ray.magnitude-.002f, queryMask, QueryTriggerInteraction.Ignore)) continue;
                                     if (!owners.TryGetValue(hit.collider.GetInstanceID(), out var owner)) throw new InvalidOperationException("Foreign collider in isolated audit");
                                     blocked++; if (central) centralBlocked++;
                                     if (!counts.TryGetValue(hit.collider.GetInstanceID(), out var count)) counts.Add(hit.collider.GetInstanceID(), count = new Counts());
