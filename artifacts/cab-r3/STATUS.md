@@ -27,3 +27,4 @@ Testy 3/3 PASS, XML editmode-20261112-021903.xml. Źródłem czerni fixture był
 Zakończono Game.Editor.Setup.TruckAssetBuilder.BuildBatch, exit 0. Następny krok: kolejny etap prefab/sceny lub capture-0112 -Stage result-0112.
 Zakończono Game.World.Import.WorldTruckInstaller.InstallBatch, exit 0. Następny krok: kolejny etap prefab/sceny lub capture-0112 -Stage result-0112.
 BuildBatch/InstallBatch night1 exit 0, oba sloty Unity zwolnione. Baseline-evidence.json potwierdza sześć stanów po siedem kadrów i sześć luster, wszędzie zero pikseli wnętrza. Następny krok pełna macierz night1 i obejrzenie A/B. World r3 czeka na heavy, uchwyt 26738.
+Zapisano result-0112-night1 Low clear, siedem kamer i sześć natywnych RT z identyfikatorem wnętrza. Następny krok: kontynuować macierz lub porównać PNG.
