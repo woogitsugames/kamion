@@ -1,5 +1,7 @@
 # Propozycje parametrów fizyki — 2026-11-12 (mistral)
 
+> **Nic nie wdrażać bez weryfikacji źródła.** Statusy źródeł poprawione przy scaleniu (recenzja s14, `docs/reports/REVIEW-2026-11-12-s14-mistral-r2.md`): P2, P3, P5 i P10 są UNVERIFIED, a P8 nie ma źródła dla kabin. Zanim jakakolwiek wartość trafi do JSON-a pojazdu, trzeba znaleźć i zacytować paragraf/tabelę źródła (osobne zadanie vehicle-physics).
+
 Zakres: tylko propozycje. **Żaden JSON pojazdu ani żaden plik kodu fizyki nie został zmieniony w tym PR.**
 Wejście: `docs/reports/AUDIT-PHYSICS-SOURCES-2026-11-12-mistral.md` (gałąź `mistral/4-physics-sources`), sekcja 9 „dziesięć najważniejszych rozbieżności".
 Zadanie: dla każdej pozycji **ROZBIEŻNE** i **BRAK ŹRÓDŁA** z top 10 — obecna wartość (`plik:klucz`), propozycja, źródło, pewność, przewidywany wpływ na jazdę.
@@ -8,7 +10,7 @@ Pozycje 6 (0–80 km/h = 46,2 s, status POTWIERDZONE) i 7 (nadwyżka ogranicznik
 
 Wszystkie liczby „wpływu na jazdę" pochodzą z runnera .NET (`tools/physics-runner`, test `ParamComparisonTests.PhysicsParams_Comparison_2026_11_12`): produkcyjne JSON-y są ładowane i mutowane **w pamięci jako dane testu**, te same scenariusze z `tests/physics/scenarios` przebiegają dla każdego wariantu. Komenda (ta sama co CI): `dotnet test tools/physics-runner/PhysicsRunner.sln -c Release`. Wyniki poniżej z lokalnego uruchomienia tej komendy (pełna tabela w `artifacts/physics/param-comparison-2026-11-12/summary.md`, artefakt CI `physics-results`).
 
-Skala pewności: **wysoka** = norma prawna otwarta w audicie / **średnia** = karta producenta klasy / **niska** = tylko literatura klasowa lub brak źródła.
+Skala pewności: **wysoka** = norma prawna otwarta w audicie z paragrafem / **średnia** = karta producenta klasy / **niska** = tylko literatura klasowa / **UNVERIFIED** = brak źródła lub brak paragrafu.
 
 ---
 
@@ -24,17 +26,17 @@ Skala pewności: **wysoka** = norma prawna otwarta w audicie / **średnia** = ka
 
 - **Obecnie:** metryka wynikowa, nie pojedynczy klucz; bieżący wynik `lane_change_80@laden40`: **RA = 0.998** (audyt: 0.96–0.99)
 - **Propozycja:** brak zmiany parametru w tym PR; przyjąć jako pasmo walidacji **1.0–1.24** i monitorować metrykę `rearward_amplification`
-- **Źródło:** FHWA Truck Size & Weight study (A10), https://www.fhwa.dot.gov/reports/tswstudy/vehiclsaf.htm — cytat: „dla tractor-semitrailers około 1,0", typowo 1,24
-- **Pewność:** średnia (raport FHWA; RA zależy od geometrii i opon, nie da się ustawić jednym kluczem)
+- **Źródło:** FHWA Truck Size & Weight study (A10), https://www.fhwa.dot.gov/reports/tswstudy/vehiclsaf.htm — „dla tractor-semitrailers około 1,0”. **UNVERIFIED:** górna granica „typowo 1,24” nie ma źródła (audyt l. 161), więc pasmo 1.0–1.24 jest niezweryfikowane
+- **Pewność:** UNVERIFIED (wartość 1,24 bez źródła; RA zależy od geometrii i opon, nie da się ustawić jednym kluczem)
 - **Wpływ na jazdę (runner):** RA 0.998 przy zmianie pasa 80 km/h @40 t — na dolnej granicy pasma FHWA; `max_articulation_deg` 0.779°. Zmiana pasa 60–80 km/h w symulacji „macha” naczepą minimalnie słabiej niż w danych FHWA — akceptowalne, bez zmiany kodu.
 
 ## P3 (audyt #3, ROZBIEŻNE) — Ostrzeżenie niskiego ciśnienia powietrza
 
 - **Obecnie:** `game/Assets/_Project/Vehicle/Physics/Definitions/Data/tractor_4x2_generic.vehicle.json` → `air.lowPressureWarningBar` = **5.5 bar**
 - **Propozycja:** **6.5 bar**
-- **Źródło:** UN R13 (wersja 02, A4/S5 w audicie), https://www.mlit.go.jp/jidosha/un/UN_R013_02.pdf — cytat: ostrzeżenie niskiego ciśnienia przy **6,5 bar** (audyt §7: „ostrzeżenie R13 6,5 bar (nie 5,5)")
-- **Pewność:** wysoka (regulamin ONZ, tekst normy)
-- **Wpływ na jazdę (runner, wariant `p3`):** scenariusz `air_leak_rear_circuit@laden40` — ostrzeżenie przy wycieku obwodu tylnego po **10.770 → 9.620 s** (o 1.15 s wcześniej); `min_air_service_bar` 0.0 bar bez zmiany; hamowanie/przyspieszenie bez zmian. Kierowca dostaje ostrzeżenie wcześniej — zgodnie z normą.
+- **Źródło:** UN R13 (wersja 02, A4/S5 w audicie), https://www.mlit.go.jp/jidosha/un/UN_R013_02.pdf — **UNVERIFIED: brak paragrafu.** Wartość 6,5 bar nie ma wskazanego paragrafu/załącznika R13 (audyt na `main` l. 164: „bez cytatu”)
+- **Pewność:** UNVERIFIED — brak paragrafu R13 (do znalezienia przed zmianą `lowPressureWarningBar`)
+- **Wpływ na jazdę (runner, wariant `p3`):** scenariusz `air_leak_rear_circuit@laden40` — ostrzeżenie przy wycieku obwodu tylnego po **10.770 → 9.620 s** (o 1.15 s wcześniej); `min_air_service_bar` 0.0 bar bez zmiany; hamowanie/przyspieszenie bez zmian. Kierowca dostaje ostrzeżenie wcześniej (zgodność z normą UNVERIFIED do czasu znalezienia paragrafu).
 
 ## P4 (audyt #4, ROZBIEŻNE) — Średnica opony 315/80 R22.5
 
@@ -49,15 +51,15 @@ Skala pewności: **wysoka** = norma prawna otwarta w audicie / **średnia** = ka
 - **Obecnie:** `game/Assets/_Project/Vehicle/Physics/Definitions/Data/amt12_od_traxon_class.gearbox.json` → `clutchMaxTorque` = **4000 Nm**
 - **Propozycja:** zakres klasy **2600–3400 Nm**, proponowana wartość **3400 Nm** (górna granica klasy sprzęgieł AMT przy 2500 Nm)
 - **Źródło:** karta ZF TraXon (A6/S2), https://www.zf.com/public/org/Product-data-sheet_TraXon-Torque_71520.pdf — cytat: „12 TX 2611 SO max. 2,600” Nm (wejście skrzyni); klasa sprzęgieł 2500–3400 Nm
-- **Pewność:** średnia (karta producenta klasy; 4000 Nm to „bezpieczny nadmiar”, nie błąd fizyki — jak w audicie)
+- **Pewność:** UNVERIFIED (karta podaje moment wejściowy skrzyni, nie moment sprzęgła; „klasa sprzęgieł 2500–3400 Nm” bez źródła; 4000 Nm to „bezpieczny nadmiar”, nie błąd fizyki — jak w audicie)
 - **Wpływ na jazdę (runner, wariant `p5`):** ruszanie 6% pod górę @40 t — temperatura sprzęgła **36.876 → 36.563 °C**, 0–80 km/h @40 t 47.520 → 47.522 s (różnica zaniedbywalna, bo przy starcie z biegu 4 sprzęgło się nie ślizga). Różnica ujawniłaby się dopiero przy ruszaniu z 1.–2. biegu pod obciążeniem (ślizg) — patrz P10.
 
 ## P8 (audyt #8, BRAK ŹRÓDŁA) — Zawieszenie kabiny (częstotliwości, zakresy)
 
 - **Obecnie:** `tractor_4x2_generic.vehicle.json` → `cab.pitchFrequencyHz` = **1.5**, `cab.rollFrequencyHz` = **1.6**, `cab.heaveFrequencyHz` = **1.8**, `cab.dampingRatio` = **0.5**, `cab.maxPitchDeg` = **4**, `cab.maxRollDeg` = **4**, `cab.maxHeaveM` = **0.05**
 - **Propozycja:** **bez zmiany wartości** — zaproponować jawne zakresy klasy: częstotliwości **1–2 Hz**, tłumienie **ζ 0.3–0.5**, zakresy ruchu jak obecnie; oznaczyć jako WORKING_VALUE z podanym źródłem klasy
-- **Źródło:** literatura klasowa zawieszeń kabin ciężarowych (Gillespie, „Fundamentals of Vehicle Dynamics”; Pacejka, „Tire and Vehicle Dynamics") — pasmo 1–2 Hz, ζ 0.3–0.5; w audicie bez otwartego URL (stąd BRAK ŹRÓDŁA w repo)
-- **Pewność:** niska (brak otwartego źródła; wartości już leżą w paśmie klasy)
+- **Źródło:** brak. Wymieniony wcześniej Gillespie („Fundamentals of Vehicle Dynamics”) bez strony/rozdziału — UNVERIFIED; Pacejka („Tire and Vehicle Dynamics”) usunięty jako źródło, bo dotyczy opon, nie zawieszeń kabin. Pasmo 1–2 Hz, ζ 0.3–0.5 — UNVERIFIED
+- **Pewność:** UNVERIFIED (brak źródła; zgodność z „pasmem klasy” niepotwierdzona)
 - **Wpływ na jazdę (runner, `current` jako baza):** próg 7 cm @15 km/h — kołysanie kabiny `max_cab_heave_mm` **45.0 mm**, `max_cab_pitch_deg` **1.53°**; hamowanie 80→0 @40 t — pitch kabiny **3.23°** (audyt: ~3° pitch w hamowaniu ABS — zgodne); „oko kierowcy” przy zmianie biegu `max_shift_eye_pitch_swing_deg` **3.40°**.
 
 ## P9 (audyt #9, BRAK ŹRÓDŁA) — Brak modelu temperatury hamulców (fade)
@@ -73,7 +75,7 @@ Skala pewności: **wysoka** = norma prawna otwarta w audicie / **średnia** = ka
 - **Obecnie:** `amt12_od_traxon_class.gearbox.json` → `maxLaunchGear` = **4**, `upshiftRpmLight/Full` = 1250/1750, `downshiftRpmLight/Full` = 850/1100, `launchRpmLight/Full` = 800/1100 obr/min
 - **Propozycja:** `maxLaunchGear` **4 → 2** (zakres 1–2; realne AMT tej klasy startują z 1.–2. biegu); progi zmiany biegów bez zmiany (brak źródła publicznego — design)
 - **Źródło:** brak publicznego źródła strategii OEM (stąd BRAK ŹRÓDŁA w audicie); klasa opisana w docs/04 i VEHICLE_REFERENCE_DATA.md
-- **Pewność:** niska (decyzja projektowa oznaczona WORKING_VALUE, nie norma)
+- **Pewność:** UNVERIFIED (brak źródła strategii biegu startowego AMT; twierdzenie „realne AMT tej klasy startują z 1.–2. biegu” niezweryfikowane)
 - **Wpływ na jazdę (runner, wariant `p10` vs `current`):** 0–80 km/h @40 t **47.520 → 48.123 s**, 0–50 @40 t 20.428 → 21.030 s, 0–80 @24 t 45.877 → 46.493 s; liczba zmian biegów 0–80: **8 → 9** (także 8 → 9 przy 24 t); ruszanie 6% @40 t: 0–30 km/h 18.978 → 19.923 s, temperatura sprzęgła **36.876 → 32.546 °C**; „oko kierowcy” przy zmianie biegu 3.404 → 3.667°. Start z niższego biegu = wolniejsze 0–80, więcej zmian biegów, mniejsze obciążenie cieplne sprzęgła.
 
 ---
