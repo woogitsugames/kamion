@@ -1,4 +1,4 @@
-param([ValidatePattern('^[a-z0-9-]+$')][string]$Tag='final')
+param([ValidatePattern('^[a-z0-9-]+$')][string]$Tag='final',[switch]$SkipImages,[switch]$RefreshFidelity)
 $ErrorActionPreference='Stop'
 Set-Location ([IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..')))
 $owner=(git branch --show-current).Trim()
@@ -21,15 +21,35 @@ function Save-Step([string]$Message,[string[]]$Files=@()) {
 Assert-Frozen
 $prefix="artifacts/life-r3/$Tag"
 if(Test-Path "$prefix-gis.log"){throw 'Evidence already exists'}
+if($SkipImages -and !(Test-Path artifacts/life-r3/final-c-images-budget-summary.json)){throw 'Original image evidence missing'}
+if($RefreshFidelity) {
+ $prior=Get-Content artifacts/life-r3/final-heavy-result.json -Raw|ConvertFrom-Json
+ $failure=Get-Content artifacts/life-r3/final-gis.log -Raw
+ if($prior.phase -ne 'gis' -or $prior.exit_code -ne 1 -or $failure -notmatch '1 failed,' -or $failure -notmatch 'test_report_not_stale'){throw 'Inspect the actual GIS failure before refreshing fidelity'}
+}
 if(Test-Path "C:/Users/matma/Documents/Claude/kamion/artifacts/locks/heavy-slots/$owner.slot"){throw 'Own heavy already held'}
 & pwsh -NoProfile -File scripts/unity-slot.ps1 -Acquire -Pool heavy -Owner $owner -StaleHours 1000000 -PollSeconds 1
 if($LASTEXITCODE){throw 'Acquire failed'}
 $phase='images';$code=1
 try {
  Assert-Frozen
- & uv run --project tools/worldgen python artifacts/life-r3/compare.py --before before --after after-c --tag "$Tag-c-images" --exact --all-cameras *> "$prefix-images.log"
- if($LASTEXITCODE){throw 'Full image pages failed'}
- Save-Step 'przygotuj wszystkie pary obrazów C do kontroli' @("$prefix-c-images-all-camera-budget.json","$prefix-c-images-budget-summary.json")
+ if(!$SkipImages) {
+  & uv run --project tools/worldgen python artifacts/life-r3/compare.py --before before --after after-c --tag "$Tag-c-images" --exact --all-cameras *> "$prefix-images.log"
+  if($LASTEXITCODE){throw 'Full image pages failed'}
+  Save-Step 'przygotuj wszystkie pary obrazów C do kontroli' @("$prefix-c-images-all-camera-budget.json","$prefix-c-images-budget-summary.json")
+ }
+ if($RefreshFidelity) {
+  $phase='fidelity'
+  Copy-Item Data/Regions/bialystok-industrial-c/generated/fidelity_qa.json "$prefix-fidelity-before.json"
+  & uv run --project tools/worldgen python -u tools/worldgen/fidelity/run.py --region bialystok-industrial-c --art "$prefix-fidelity" *> "$prefix-fidelity.log"
+  if($LASTEXITCODE){throw 'Fidelity refresh failed'}
+  git add Data/Regions/bialystok-industrial-c/generated/fidelity_qa.json
+  Save-Step 'odśwież raport fidelity po dołączeniu main' @("$prefix-fidelity/fidelity_summary.json")
+  & uv run --project tools/worldgen python -m pytest tests/gis/test_road_fidelity.py -q *> "$prefix-test-road-fidelity.log"
+  if($LASTEXITCODE){throw 'Refreshed fidelity test failed'}
+  Assert-Frozen
+  Save-Step 'sprawdź pojedynczy test odświeżonego fidelity' @("$prefix-test-road-fidelity.log")
+ }
  $phase='gis'
  & uv run --project tools/worldgen python -m pytest tests/gis -q *> "$prefix-gis.log"
  $gisCode=$LASTEXITCODE
