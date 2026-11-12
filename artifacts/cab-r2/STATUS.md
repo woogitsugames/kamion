@@ -35,3 +35,4 @@ Zapisano result-0112-scan2 Low clear, siedem kamer i sześć natywnych RT z iden
 Zapisano result-0112-scan2 Low overcast, siedem kamer i sześć natywnych RT z identyfikatorem wnętrza. Następny krok: kontynuować macierz lub porównać PNG.
 Zapisano result-0112-scan2 High clear, siedem kamer i sześć natywnych RT z identyfikatorem wnętrza. Następny krok: kontynuować macierz lub porównać PNG.
 Zapisano result-0112-scan2 High overcast, siedem kamer i sześć natywnych RT z identyfikatorem wnętrza. Następny krok: kontynuować macierz lub porównać PNG.
+Scan2 pełna macierz zakończona; obejrzano grain Low/High clear oraz driver/dash Low overcast. Reprodukcja wykryła ModuleNotFoundError PIL w Blenderze; poprawiono delegowanie samej konwersji do uv/Pythona projektu w tym samym heavy, bez modyfikacji globalnych pakietów Blendera. Następny krok: ponowna reprodukcja, końcowa trasa scan2, porównanie i testy.

@@ -5,12 +5,13 @@ Keeps existing packed-map sizes, vertex tint/base roughness and perforation cont
 """
 import argparse
 import hashlib
+import importlib.util
 import json
+import subprocess
 from pathlib import Path
 from urllib.request import urlretrieve
 
 import numpy as np
-from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[4]
 CONFIG = ROOT / 'art-source/truck/interior/cab_material_scans.json'
@@ -52,8 +53,15 @@ def apply_runtime_maps(output):
         entry = document.get(profile)
         if not entry or not entry['enabled']:
             continue
-        args, _ = config_args(output, Path(output) / f'High/T_Cab_{profile.title()}_Detail.png', profile=profile)
-        prepare(args)
+        alpha = Path(output) / f'High/T_Cab_{profile.title()}_Detail.png'
+        if importlib.util.find_spec('PIL') is None:
+            # Blender's bundled Python has NumPy but no Pillow. The caller's heavy lease covers
+            # this sequential project-Python conversion; Blender waits and does no concurrent work.
+            subprocess.run(['uv', 'run', '--project', str(ROOT / 'tools/worldgen'), 'python', str(Path(__file__).resolve()),
+                            '--profile', profile, '--output', str(output), '--alpha-source', str(alpha)], cwd=ROOT, check=True)
+        else:
+            args, _ = config_args(output, alpha, profile=profile)
+            prepare(args)
         print(f'CAB_CC0 profile={profile} source=brown_leather maps=verified fallback=False')
 
 
@@ -82,10 +90,12 @@ def unit_normals(encoded, strength=1.0):
 
 
 def image8(array):
+    from PIL import Image
     return Image.fromarray(np.rint(np.clip(array, 0, 1) * 255).astype(np.uint8))
 
 
 def prepare(args):
+    from PIL import Image
     if not 0 < args.source_crop_metres <= args.source_metres or not args.tile_metres > 0:
         raise ValueError('Source crop must fit the physical field and game tile must be positive')
     files = {role: getattr(args, role) for role in ('diffuse', 'normal', 'roughness', 'ao')}
