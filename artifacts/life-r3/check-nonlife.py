@@ -1,5 +1,5 @@
 """Compare actual GLB node payloads, independent of changed buffer offsets."""
-import hashlib,json,struct,sys
+import copy,hashlib,json,struct,sys
 from pathlib import Path
 import numpy as np
 root=Path(__file__).resolve().parents[2]; out=Path(__file__).parent
@@ -39,6 +39,7 @@ changed=[n for n in sorted(before.keys()|after.keys()) if before.get(n)!=after.g
 protected=[n for n in changed if not n.startswith(('car_','van_'))]
 collision_changed=[n for n in changed if n.endswith(('.col','.contact'))]
 primitive_changes=[]; unexpected_primitives=[]
+stage=sys.argv[1] if len(sys.argv)>1 else ''
 for name in changed:
     if not name.startswith(('car_','van_')): continue
     old,new=bd[name],ad[name]
@@ -50,7 +51,14 @@ for name in changed:
         entry=dict(node=name,material=material,triangles_before=b.get('indices',{}).get('count',0)//3,
                    triangles_after=a.get('indices',{}).get('count',0)//3)
         primitive_changes.append(entry)
-        if material not in ('rim','rim_dark','rim_dusty'): unexpected_primitives.append(entry)
+        if material not in ('rim','rim_dark','rim_dusty'):
+            scoped_black=False
+            if stage=='b' and material=='car_paint_black':
+                normalized=copy.deepcopy(a)
+                lift=normalized['material'].get('extras',{}).pop('flake_lift',None)
+                scoped_black=lift==.025 and normalized==b
+                entry['black_lift_only']=scoped_black
+            if not scoped_black: unexpected_primitives.append(entry)
 old=json.loads((out/'baseline-generated-source-proof.json').read_text())
 raw_changed=[p['file'] for p in old['products'] if hashlib.sha256((root/p['file']).read_bytes()).hexdigest()!=p['actual']]
 report=dict(before_nodes=len(before),after_nodes=len(after),changed=changed,changed_outside_passenger_vehicles=protected,
