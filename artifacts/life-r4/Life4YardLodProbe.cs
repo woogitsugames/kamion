@@ -61,16 +61,22 @@ namespace Game.Editor.VisualQA
             EditorSceneManager.sceneOpened += Opened;
             RenderPipelineManager.beginCameraRendering += Begin;
             RenderPipelineManager.endCameraRendering += End;
+            Application.logMessageReceived += Finished;
             EditorApplication.quitting += Cleanup;
+        }
+        static void Finished(string message, string stack, LogType type)
+        {
+            if (message.StartsWith("VISUALQA_RESULT: OK", StringComparison.Ordinal)) Cleanup();
         }
         static void Cleanup()
         {
             RenderPipelineManager.beginCameraRendering -= Begin;
             RenderPipelineManager.endCameraRendering -= End;
+            Application.logMessageReceived -= Finished;
             if (Current == null) return;
-            // Diagnostic rendering can create material/forest buffers while the
-            // component is disabled. Restore its lifecycle before editor exit.
-            typeof(WorldInstances).GetMethod("ReleaseMaterials", Private).Invoke(Current, null);
+            // Restore the ordinary lifecycle as soon as capture ends. Native
+            // resources remain alive until Unity invokes the normal OnDisable;
+            // do not DestroyImmediate materials in an editor-quitting callback.
             Current.enabled = true;
         }
         static void Opened(Scene scene, OpenSceneMode mode)
