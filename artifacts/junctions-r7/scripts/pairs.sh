@@ -18,8 +18,12 @@ for tl in low_clear low_overcast; do
         if [ -f $SBS/$id.png ]; then
           wh=$(magick identify -format "%w %h" $SBS/$id.png); w=${wh% *}; h=${wh#* }; cw=$(( 1080 * w / h ))
           magick \( $SBS/$id.png -resize 480x \) \( $f -gravity center -crop ${cw}x1080+0+0 +repage -resize 480x \) +append -quality 90 $O/photo_${n}_$tl.jpg
-          [ -f $B ] && magick \( $SBS/$id.png -resize 320x \) \( $B -gravity center -crop ${cw}x1080+0+0 +repage -resize 320x \) \( $f -gravity center -crop ${cw}x1080+0+0 +repage -resize 320x \) +append -quality 90 $O/tri_${n}_$tl.jpg
-        fi ;;
+          if [ -f $B ]; then
+            bw=$(magick identify -format "%w" $B); bc="-gravity center -crop ${cw}x1080+0+0 +repage"; [ "$bw" = 2340 ] || bc=""
+            magick \( $SBS/$id.png -resize 320x \) \( $B $bc -resize 320x \) \( $f -gravity center -crop ${cw}x1080+0+0 +repage -resize 320x \) +append -quality 90 $O/tri_${n}_$tl.jpg
+          fi
+        fi
+        continue ;;
       *) B=$MA/junctions-r6/renders_b7_$tl/$n.png ;;
     esac
     [ -f $B ] && magick \( $B -resize 480x \) \( $f -resize 480x \) +append -quality 88 $O/ba_${n}_$tl.jpg

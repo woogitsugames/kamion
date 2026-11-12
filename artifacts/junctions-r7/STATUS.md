@@ -9,5 +9,6 @@
 - W TLE: build r7b (bash artifacts/junctions-r7/scripts/build.sh r7b -> logs/r7b_build.out / r7b_build.log).
 - NASTĘPNY KROK: `CAMS=artifacts/junctions-r7/cams_r7.json bash artifacts/junctions-r7/scripts/imp.sh r7b`; cams_r7.json odświeżyć z sbs_cameras.json (pozy 0143).
 - 19:34 sha 71da3f00f: build r7b rc 0 (logs/r7b_*): testy regionu 7/8 (szyna S separatora 0,86 m za nisko na końcu -> poprawka poziomowania końca), cols_check: 1 z 32 kolumn na krawężniku wyspy (rząd SE) -> rząd przesunięty 1,5 m do środka; guardrails_m: parapet_tris_dropped 28510, deck_free_ends 34; rail_far: 0 biegów > 3 m od jezdni (max 1,76 m).
-- W TLE: `bash artifacts/junctions-r7/scripts/chain.sh r7c` (build -> import -> Low clear + Low overcast 75 kamer -> pary); logi logs/r7c_build.out, r7c_imp.out.
+- 19:47 W TLE: chain.sh r7c, 2. próba (1.: MemoryError w clear_level_carriageways przy 4/4 slotach heavy) -> logs/r7c_build.out, r7c_imp.out.
 - NASTĘPNY KROK po chain: obejrzeć pairs_r7c, `bash artifacts/junctions-r7/scripts/post.sh r7c full`, EditMode (scripts/test.ps1 -Platform EditMode w slocie unity).
+- 20:05 live nadpisany (artifacts/live/junctions-r7.md); build r7c rc 0, chain w toku (import/rendery).
