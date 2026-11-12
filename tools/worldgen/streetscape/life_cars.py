@@ -329,6 +329,19 @@ def longitudinal_weight(axle_coordinate):
 
 def paint_deposition(primitives, prototype):
     """R4 data-only adapter after normal splitting; leave every existing array intact."""
+    if prototype.startswith('tractor_'):
+        # Lazy import: life_props builds its meshes using this module. Export
+        # calls the adapter only after both modules have finished initialising.
+        from .life_props import TRACTOR, TRACTOR_SILL_Z
+        result = []
+        for primitive in primitives:
+            if primitive['mat'].startswith('tractor_paint_'):
+                v = np.asarray(primitive['V'])
+                uv1 = np.column_stack([v[:, 2] - TRACTOR_SILL_Z,
+                                       (v[:, 1] + TRACTOR['fw_ahead']) / TRACTOR['wb']])
+                primitive = dict(primitive, UV1=uv1)
+            result.append(primitive)
+        return result
     name = prototype.removeprefix('car_')
     body = name.split('_')[0]
     dimensions = VAN if body == 'van' else CARS.get(body)
@@ -353,10 +366,10 @@ def paint_deposition(primitives, prototype):
     return result
 
 def _paint_uv(m):
-    """UV of every car_paint_* primitive = (y, z) in metres (side projection), so the car_grime set puts road
+    """UV of vehicle paint = (y, z) in metres (side projection), so the car_grime set puts road
     film on the sills and bumpers and dust on the roof whatever helper built the part."""
     for mat, p in m.prims.items():
-        if mat.startswith("car_paint_"):
+        if mat.startswith(("car_paint_", "tractor_paint_")):
             p[2] = [np.asarray(V, float)[:, [1, 2]] for V in p[0]]
     return m
 

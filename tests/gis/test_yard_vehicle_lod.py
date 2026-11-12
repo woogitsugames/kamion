@@ -2,6 +2,9 @@
 import numpy as np
 import pytest
 from streetscape import life_props as LP
+from streetscape import life_cars as LC
+from streetscape.export import crease_normals
+from streetscape.materials import M
 
 
 @pytest.mark.parametrize('kind,colour', [('curtain','grey'), ('box',None), ('reefer',None)])
@@ -40,5 +43,33 @@ def test_curtain_road_grime_stays_in_one_vertical_tile_and_varies_by_fleet():
             uv, vertices = p['UV'], p['V']
             assert 0 <= uv[:, 1].min() < uv[:, 1].max() < 2.7
             assert np.isclose(np.ptp(uv[:, 1]), np.ptp(vertices[:, 2]))
+            assert M[p['mat']]['set_tile'] is True
         phases.append(float(uv[:, 0].min()))
     assert len(set(phases)) == len(LP.CURTAIN_COLOURS)
+
+
+@pytest.mark.parametrize('colour', LP.TRACTOR_COLOURS)
+def test_static_cab_deposition_survives_export_splitting_without_geometry_changes(colour):
+    for mesh in LP.tractor(colour)[:2]:
+        before = crease_normals(mesh.out())
+        after = LC.paint_deposition(before, f'tractor_{colour}')
+        for b, a in zip(before, after):
+            for key in ('V', 'T', 'N', 'UV'):
+                assert np.array_equal(b[key], a[key])
+            if b['mat'].startswith('tractor_paint_'):
+                v = a['V']
+                assert np.allclose(a['UV'][:, 1], v[:, 2])
+                # The frame uses actual cab bottom and both real axle stations,
+                # not a generic passenger-car sill or a normalised texture UV.
+                assert np.allclose(a['UV1'][:, 0], v[:, 2] - LP.TRACTOR_SILL_Z)
+                assert np.allclose(a['UV1'][:, 1] * LP.TRACTOR['wb'] - LP.TRACTOR['fw_ahead'], v[:, 1])
+                assert np.max(a['UV'][:, 1]) < 4.0
+                assert M[b['mat']]['yard_paint'] is True
+                assert M[b['mat']]['texture_set'] == 'car_grime_clean'
+            else:
+                assert 'UV1' not in a
+
+
+def test_static_cab_adapter_does_not_add_payload_to_other_yard_objects():
+    primitive = dict(mat='container_rust', V=np.array([[0., 0., 0.]]))
+    assert LC.paint_deposition([primitive], 'container_20_rust')[0] is primitive

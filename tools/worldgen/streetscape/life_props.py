@@ -150,8 +150,8 @@ def trailer(kind, colour):
             for sx in (-1, 1):
                 x = sx * hw
                 q = [[x, 0.05, zb + 0.10], [x, L - 0.05, zb + 0.10], [x, L - 0.05, H - 0.12], [x, 0.05, H - 0.12]]
-                # Metre UVs, below the 2.7 m tile edge: no lower grime wrapped
-                # onto the top rail. Existing fleet colours also vary wear phase.
+                # Physical-height UVs for the explicit 2.7 m material tile.
+                # Existing fleet colours also vary the horizontal wear phase.
                 phase = 0.61 * CURTAIN_COLOURS.index(colour) + (0.37 if sx < 0 else 0.0)
                 u0, u1 = phase, phase + L - 0.10
                 v0, v1 = 0.02, 0.02 + H - 0.12 - (zb + 0.10)
@@ -299,6 +299,7 @@ def trailer(kind, colour):
 # ------------------------------------------------------------------------------------------- yard props
 # ------------------------------------------------------------------------------------------- tractor unit
 TRACTOR = dict(wb=3.70, fh=1.45, cab_l=2.30, W=2.49, H=3.85, floor=1.30, fw_ahead=0.55, rear_oh=1.05)  # WORKING_VALUE
+TRACTOR_SILL_Z = 1.05           # actual lowest cab-shell row; UV1 film frame (ADR 0122)
 TRAILER_KINGPIN = 12.40          # rear edge -> kingpin of the 13.6 m trailer (WORKING_VALUE)
 
 
@@ -348,7 +349,7 @@ def tractor(colour):
         m = Mesh()
         n = 3 if lod == 0 else 2
         # cab: plan sections from the cab floor to the roof; the windscreen is raked back, roof edge rounded
-        rows = [(1.05, 0.0, 0.0, 0.16), (2.05, 0.0, 0.0, 0.18), (3.00, 0.20, 0.02, 0.22), (3.20, 0.32, 0.06, 0.26),
+        rows = [(TRACTOR_SILL_Z, 0.0, 0.0, 0.16), (2.05, 0.0, 0.0, 0.18), (3.00, 0.20, 0.02, 0.22), (3.20, 0.32, 0.06, 0.26),
                 (z_roof, 0.50, 0.16, 0.26)]
         if lod:
             rows = [rows[0], rows[1], rows[2], rows[4]]
@@ -425,7 +426,7 @@ def tractor(colour):
             for sx in (-1, 1):
                 wheel(m, [sx * (hw - 0.18 - (0.12 if wdt > 0.5 else 0.0)), ya, 0.51], 0.51, wdt, 14 if lod == 0 else 6,
                       out_sign=sx, simple=lod > 0)
-        out.append(m)
+        out.append(_paint_uv(m))
     col = Mesh()
     col.box("collision_vehicle", [0, (y_ra - t["rear_oh"] + y_front) / 2, t["H"] / 2], hw,
             (y_front - y_ra + t["rear_oh"]) / 2, t["H"] / 2)
