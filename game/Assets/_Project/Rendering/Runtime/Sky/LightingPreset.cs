@@ -54,6 +54,8 @@ namespace Game.Rendering
         [Range(0f, 5f)] public float clearCloudSourceMinElevationDeg;
         [Tooltip("ADR 0108 r3 experimental wet-world reflections from the existing stable truck cube, within 12m. No extra capture. Default off.")]
         public bool wetLocalReflections;
+        [Tooltip("Optional wet-film smoothness floor. 0 retains the legacy 0.52 floor; standing-water smoothness is separate. WORKING_VALUE, not a material albedo override.")]
+        [Range(0f, 0.8f)] public float wetFilmSmoothness;
         [Tooltip("ADR 0108 r2: opt-in diffuse low-beam projection on world surfaces, in the existing pass. No occlusion.")]
         public bool projectedHeadlamps;
         [Tooltip("WORKING_VALUE beam peak cd per head; independent of emissive lens nits. Used only when projection is enabled.")]

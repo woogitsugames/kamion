@@ -17,6 +17,7 @@ namespace Game.Rendering.Editor
             public float sunElevation, skyHorizontalLux, exposure, lampsOn;
             public float presetExposureCompensation, skyDisplayGain, skyDisplayDesaturation;
             public float actualWetness, actualPuddleShare;
+            public float actualWetFilmSmoothness;
             public float clearCloudSourceMinElevationDeg;
             public Vector4 cloudSourceLimits;
             public bool wetLocalReflections;
@@ -55,6 +56,7 @@ namespace Game.Rendering.Editor
                 skyDisplayGain = environment.Active.skyDisplayGain, skyDisplayDesaturation = environment.Active.skyDisplayDesaturation,
                 actualWetness = Shader.GetGlobalVector("_KamionWet").x,
                 actualPuddleShare = Shader.GetGlobalVector("_KamionWet").y,
+                actualWetFilmSmoothness = Shader.GetGlobalVector("_KamionWet").w > 0f ? Shader.GetGlobalVector("_KamionWet").w : 0.52f,
                 clearCloudSourceMinElevationDeg = environment.Active.clearCloudSourceMinElevationDeg,
                 cloudSourceLimits = Shader.GetGlobalVector("_KamionClearCloudSourceLimits"),
                 wetLocalReflections = environment.Active.wetLocalReflections,

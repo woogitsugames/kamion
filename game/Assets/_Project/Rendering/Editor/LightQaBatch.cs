@@ -37,6 +37,8 @@ namespace Game.Rendering.Editor
             public bool overrideCloudSourceMin;
             public float cloudSourceMinElevationDeg;
             public bool overrideWetLocalReflections, wetLocalReflections;
+            public bool overrideWetFilm;
+            public float wetFilmSmoothness, puddleShare;
             public int expectedHeadlamps; // 0 unchecked, 1 off, 2 on. Requires per-camera probes.
             public bool overrideSkyDisplay;
             public float skyDisplayGain = 1f, skyDisplayDesaturation;
@@ -118,6 +120,14 @@ namespace Game.Rendering.Editor
                     if (job.overrideWetLocalReflections)
                         presetSnapshots.Keys.Single(p => string.Equals(p.name, "LP_" + job.lighting, StringComparison.OrdinalIgnoreCase))
                             .wetLocalReflections = job.wetLocalReflections;
+                    if (job.overrideWetFilm)
+                    {
+                        if (job.wetFilmSmoothness < 0f || job.wetFilmSmoothness > 0.8f || job.puddleShare < 0f || job.puddleShare > 1f)
+                            throw new ArgumentException("wet film outside0..0.8 or puddles outside0..1");
+                        var preset = presetSnapshots.Keys.Single(p => string.Equals(p.name, "LP_" + job.lighting, StringComparison.OrdinalIgnoreCase));
+                        preset.wetFilmSmoothness = job.wetFilmSmoothness;
+                        preset.puddles = job.puddleShare;
+                    }
                     profile.tiers = (QualityProfile.Tier[])originalTiers.Clone();
                     var overrides = (job.rq ?? "").Split(',').Where(s => !string.IsNullOrWhiteSpace(s))
                         .Select(s => s.Split('=')).ToDictionary(p => p[0].Trim(), p => p[1].Trim());

@@ -16,7 +16,7 @@
 float4 _KamionHaze;        // x beta (1/m), y ground-layer factor a, z 1 / H (1/m), w layer base height y0 (world)
 float4 _KamionHazeColor;   // rgb exposed in-scatter colour (horizon)
 float4 _KamionTone;        // x toe strength s (0 = off), y p, z g - 1
-float4 _KamionWet;         // x wetness, y puddle share, z grass variation strength (ADR 0080), w unused
+float4 _KamionWet;         // x wetness, y puddle share, z grass variation strength; w optional film floor (0 = legacy 0.52)
 
 // Optical depth from the camera to a world position; viewDepth = positionCS.w of a perspective camera.
 half KamionFogTau(float3 pw, float viewDepth)
@@ -54,7 +54,8 @@ void KamionWetSurface(half3 n, half pool, half puddles, half film, inout half3 a
     half w = (half)_KamionWet.x * lerp(0.33h, 1.0h, up);
     half porous = saturate(1.0h - smooth * 1.6h);
     albedo *= lerp(1.0h, lerp(0.82h, 0.58h, porous), w * lerp(0.4h, 1.0h, film));
-    smooth = lerp(smooth, max(smooth, 0.52h), w * up * film);   // film: 1 paved, ~0.15 grass / soil (no water sheet)
+    half filmFloor = _KamionWet.w > 0.0 ? (half)_KamionWet.w : 0.52h;
+    smooth = lerp(smooth, max(smooth, filmFloor), w * up * film);   // film: 1 paved, ~0.15 grass / soil (no water sheet)
     half t = 1.0h - (half)_KamionWet.y * (half)_KamionWet.x;
     half pud = smoothstep(t, t + 0.05h, pool) * up * puddles;
     smooth = lerp(smooth, 0.96h, pud);
