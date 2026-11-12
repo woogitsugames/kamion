@@ -115,3 +115,10 @@ NASTĘPNY KROK (kolejna sesja, slot heavy / unity):
 - W toku (tło): `world.ps1 -Round r2c` (czeka na slot heavy 3/3) → `s12_chain.ps1 -Round r2c` (fidelity + pełny pytest w heavy ‖ full_round + EditMode).
 - NASTĘPNY KROK: `Get-Content artifacts/buildings-r16/r2c/round.log` → jeśli brak `CHAIN DONE`: `pwsh artifacts/buildings-r16/s12_chain.ps1 -Round r2c`
   → `python artifacts/buildings-r16/budget2.py artifacts/buildings-r16/r1/Low-overcast artifacts/buildings-r16/r2c/Low-overcast` (i High-overcast, extra_hc)
+
+## s12 — krok 2: świat r2c (po merge main)
+- 2,5 h w kolejce slotu heavy (stary skrypt bez FIFO; restart wg lidera 11:43). `build_world` r2c: exit 0, 531 s; High 4073 submeshy / 14,184 mln tris,
+  Low 3054 / 4,532 mln (r2b 4073 / 14,176; 3054 / 4,524 — przyrost z treści main s11).
+- W toku: `s12_chain.ps1 -Round r2c` (fidelity + pytest ‖ import + rendery + EditMode).
+- NASTĘPNY KROK: `Get-Content artifacts/buildings-r16/r2c/round.log` (czekać na `CHAIN DONE`; jeśli proces zginął: `pwsh artifacts/buildings-r16/s12_chain.ps1 -Round r2c`)
+  → `python artifacts/buildings-r16/budget2.py artifacts/buildings-r16/r1/Low-overcast artifacts/buildings-r16/r2c/Low-overcast`
