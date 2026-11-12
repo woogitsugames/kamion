@@ -58,10 +58,20 @@ def test_authored_berberis_has_valid_local_caps_and_uncrossed_strips(monkeypatch
     for vertices,_ in (buf.parts[0],buf.parts[2]):
         rings=vertices[:,:2].reshape(6,-1,2)
         for outer,inner in zip(rings,rings[1:]):
+            quads=[]
             for i in range(len(outer)):
                 j=(i+1)%len(outer)
                 quad=Polygon([outer[i],outer[j],inner[j],inner[i]])
                 assert quad.is_valid and quad.area>1e-10, 'Crossed or collapsed side strip'
+                quads.append(quad)
+            union=shapely.union_all(quads)
+            assert abs(sum(q.area for q in quads)-union.area)<1e-7, 'Side quads overlap globally'
+            annulus=Polygon(outer).symmetric_difference(Polygon(inner))
+            assert union.symmetric_difference(annulus).area<1e-7, 'Side strip leaves its annulus'
+    core_rings=buf.parts[0][0][:,:2].reshape(6,-1,2)
+    shell_rings=buf.parts[2][0][:,:2].reshape(6,-1,2)
+    for core_ring,shell_ring in zip(core_rings,shell_rings):
+        assert Polygon(shell_ring).buffer(1e-7).covers(Polygon(core_ring)), 'Inner ring leaves the shell'
     # Compare the actual triangulated cap, not the interpolated boundary field.
     # Both flat and sloping ground use exactly the same shell geometry as export.
     core=buf.parts[1][0]

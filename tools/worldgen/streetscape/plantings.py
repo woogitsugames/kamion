@@ -192,7 +192,7 @@ def _offset_ring(poly, inset, count, anchor):
     """
     from shapely.geometry import LineString
     offset = poly.buffer(-inset, quad_segs=4)
-    if offset.geom_type != "Polygon" or offset.is_empty or not offset.is_valid:
+    if offset.geom_type != "Polygon" or offset.is_empty or not offset.is_valid or len(offset.interiors):
         raise ValueError(f"Hedge offset {inset:.4f} m is not one valid polygon")
     boundary = _ccw_ring(offset, max(offset.length, 1.0))
     line = LineString(np.vstack([boundary, boundary[:1]]))
@@ -293,7 +293,8 @@ def hedge_mass(buf, poly, zground, key, h=None, src="", plant="berberis_red", st
         buf.add("furniture", core_draw_m, np.column_stack([P2, z2]), core_top_uv, Tt, src=src)
         nt += len(Tt)
     except Exception:
-        pass
+        if offset_rings:
+            raise  # a photographed bed must not silently lose its inner cap
     # shell: open foot; UV in shell tiles with a per-hedge offset / rotation (no aligned repeats between beds)
     sprof = [(0.02, SHELL_FOOT, 0.6)] + prof[1:]
     shell = rings(R, hl, sprof)
@@ -326,7 +327,8 @@ def hedge_mass(buf, poly, zground, key, h=None, src="", plant="berberis_red", st
                 nt += _sprig_cards(buf, sprig_m, P2[n:][sel], np.column_stack([np.cos(a2), np.sin(a2)]),
                                    z2[n:][sel], (*key, "top"), S, src, tilt=(0.0, 0.35))
     except Exception:
-        pass
+        if offset_rings:
+            raise  # retain the original failure-tolerant path for other species
     # loose shoots along the top edge (shoulder ring) and a few on the upper sides: ragged silhouette
     idx, s, j = [], 0.0, 0
     while s < P:
