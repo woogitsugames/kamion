@@ -168,3 +168,5 @@ potem poprawić największe udokumentowane odstępstwo wiaty. WIP po każdym kro
 2026-11-12T13:25:18.7430213+01:00: Unity render after2 Low overcast; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
 
 2026-11-12T13:25:51.4830627+01:00: Unity render after2 High clear; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
+
+2026-11-12T13:25:52.7891682+01:00: zapisano niezależny przegląd hooka i ograniczenia kontraktu, pełny log rzeczywistego importu oraz uzupełniony ADR/PACKET. Historia iteracji 1 pozostaje jawnie wycofana jako końcowy budżet. Nowa seria after2 działa w osobnych katalogach; stary queued compare ma niezmienione wejścia i nie koliduje z nowymi metrykami iteration2. NASTĘPNY KROK: odczytać poprawione delty Low i ocenić nową serię.

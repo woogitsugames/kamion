@@ -292,3 +292,24 @@ testów; wyników r2 nie przedstawiono jako wyników r3.
 Kontrola geometrii po generatorze zakończyła się zgodnością 6833/6833
 chronionych payloadów, bez różnic. Skan pracował w slocie heavy, zwolnionym
 po zakończeniu. Pozostałe bramki pełnego renderu i testów nadal są otwarte.
+
+### r3, korekta polityki widoczności wariantu
+
+Przegląd rzeczywistego Instances.asset ujawnił fallback 30/120 m nowej
+rodziny zamiast 60/300 m generic. Wcześniejszych liczników iteracji 1
+nie uznaje się za końcowy dowód budżetu przy właściwym zasięgu.
+Własny edytorowy FurnitureShelterPolicySave dziedziczy politykę i maskę
+cieni generic wyłącznie nowemu wariantowi podczas SaveAssets. Bez edycji
+InstanceImporter, roads lub innych dziedzin i bez kosztu callbacku runtime.
+
+Focused EditMode 7/7, w tym rzeczywisty save/unload/reload. Normalny
+import candidate2 OK; audyt 196 polityk wykazał zmianę wyłącznie progów
+nowego wariantu na 60/300 m, bez zmian innych polityk i liczebności.
+Hook wymaga dawcy generic, zaufanej polityki i zwykłej ścieżki SaveAssets;
+nie jest uniwersalnym rozwiązaniem dla wszystkich regionów/importerów.
+
+Estymator Python w zakazanym roads nadal nie zna nowej rodziny.
+Pozostawiono go bez zmian; luka wymaga jawnego zgłoszenia integratorowi.
+Rzeczywiste 236 kadrów, dokładne Low i drugi narożnik są powtarzane
+w oddzielnych katalogach after2/exact-after2/after2-side, z metrykami
+iteration2. Wyniki krótszego zasięgu zachowano jako historyczną iterację.

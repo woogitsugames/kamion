@@ -2,6 +2,10 @@
 
 **Iteracja 1 została wycofana jako dowód końcowego budżetu:** nowy wariant odziedziczył fallback LOD/cull 30/120 m zamiast 60/300 m generic. Wcześniejsze 236 kadrów i 118 liczników opisują krótszy zasięg. Wynik +0,033014% nie jest końcowym wynikiem poprawionej rodziny. Własny hook zapisu przywraca dziedziczenie polityki; 7 testów, w tym save/reload, przeszło. Po normalnym imporcie konieczne są ponowne pełne rendery i pomiary.
 
+Kandydat 2 dodaje własny `Editor/Furniture/FurnitureShelterPolicySave.cs`. Normalny import candidate2 przeszedł, a audyt polityk wszystkich 196 prototypów potwierdził wyłącznie zmianę nowego wariantu na 60/300 m; liczby LOD/instancji i pozostałe polityki bez zmian. Zapisany asset używany w grze ma właściwy zasięg, bez callbacku runtime. Ograniczenia, niezależna recenzja kodu i rzeczywiste dowody: [policy-code-review.md](policy-code-review.md). Estymator roads nie zna tej rodziny i nie został zmieniony; jego prognozy nie zastępują faktycznych pomiarów Unity.
+
+Poprawiona seria trafia do `after2`, `exact-after2`, `after2-side`, z metrykami w `iteration2`. Dotychczasowe ścieżki `after`, `exact-after`, `after-side` oraz główne pliki frame-budget opisują historyczną iterację 1 i nie zostają nadpisane.
+
 Gałąź `gpt-furniture-r3`, jeden worktree sesji. Merge main: `889201d5`, baseline po merge: `162214c3`. Kod kandydata po poprawce dachu: `973a50be6bb0965f397bb21d9d75fcd8ae8ca56c`. Późniejsze commity zapisują diagnostykę i dowody. Nie scalano do main ani nie pushowano.
 
 ## Zakres i pochodzenie
