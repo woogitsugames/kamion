@@ -10,6 +10,8 @@ from pathlib import Path
 
 import pytest
 
+from conftest import require_lfs
+
 REPO = Path(__file__).resolve().parents[2]
 REGION = "bialystok-industrial-c"
 GEN = REPO / "Data" / "Regions" / REGION / "generated"
@@ -33,6 +35,7 @@ def spec():
 
 @pytest.fixture(scope="module")
 def meta():
+    require_lfs(ADIR / f"{ASSET}.glb")
     return _json(ADIR / f"{ASSET}_meta.json")
 
 
