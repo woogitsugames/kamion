@@ -302,7 +302,7 @@ def props(pl, net, assets, roads_poly, bpoly, paved, park_polys, route, report, 
     def occupied_radius(proto):
         # Conservative footprints for large existing point objects, not just the
         # point at their origin (notably gatehouses and parked trailers).
-        if proto in ("gatehouse", "bus_shelter"):
+        if proto in ("gatehouse", "bus_shelter", "bus_shelter_red_0120"):
             return 3.5
         if proto.startswith(("trailer_", "tractor_")):
             return 15.0  # some trailer origins are at the rear, not the centre
@@ -349,7 +349,7 @@ def props(pl, net, assets, roads_poly, bpoly, paved, park_polys, route, report, 
             if it["p"] == "waste_bin":
                 it["p"] = key("trash-can")
                 counts["trash-can"] = counts.get("trash-can", 0) + 1
-    anchors = [it for it in pl.items if it["p"] in ("bus_shelter", "gatehouse", "waste_bin", key("trash-can"))]
+    anchors = [it for it in pl.items if it["p"] in ("bus_shelter", "bus_shelter_red_0120", "gatehouse", "waste_bin", key("trash-can"))]
     for i, it in enumerate(anchors):
         for aid, radius in (("trash-bag-pack", 0.45), ("urban-trash", 0.5)):
             theta = hf(it.get("src", ""), i, aid) * 2 * math.pi

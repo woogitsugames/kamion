@@ -713,6 +713,18 @@ def signals(pl, net, juncs, report):
 
 
 # ------------------------------------------------------------------------------------------- misc points
+# ADR0120 r3: only the two stops with an inspected red-family photograph.
+# Mapillary attribution and hashes are in artifacts/furniture-r3/24h/reference/ and r2 provenance.
+SHELTER_RED_REFERENCES_0120 = {
+    5802408812: "1911352299378570",  # kino, 2024-07-26, CC BY-SA4.0; also 2018 photo214816220453640
+    5802408814: "5726790167361670",  # grobin, 2019-10-20, CC BY-SA4.0; partial distant view
+}
+
+
+def shelter_prototype_0120(osm_node):
+    return "bus_shelter_red_0120" if osm_node in SHELTER_RED_REFERENCES_0120 else "bus_shelter"
+
+
 def misc_points(pl, net, src, origin, report, codes):
     cnt = {}
     # JSON-safe source metadata only. Actual road/whole-footprint validation happens before decal emission.
@@ -722,13 +734,13 @@ def misc_points(pl, net, src, origin, report, codes):
          "half_m": (src["bbox"][2] - src["bbox"][0]) * .5}
         for nd in src["osm"]["nodes"] if nd["tags"].get("public_transport") == "stop_position"
     ]
-    stops = [np.asarray(nd["geometry"]["coordinates"]) - origin for nd in src["osm"]["nodes"]
+    stops = [(np.asarray(nd["geometry"]["coordinates"]) - origin, nd["osm_node"]) for nd in src["osm"]["nodes"]
              if nd["tags"].get("highway") == "bus_stop"]
     for f in src["bdot10k"]["OT_OIKM_P"]:
         q = np.asarray(f["geometry"]["coordinates"]) - origin
-        if all(np.hypot(*(q - s)) > 30 for s in stops):
-            stops.append(q)
-    for q in stops:
+        if all(np.hypot(*(q - s)) > 30 for s, _ in stops):
+            stops.append((q, None))
+    for q, osm_node in stops:
         hit = nearest_chain(net, q, 20.0)
         if not hit:
             continue
@@ -739,7 +751,13 @@ def misc_points(pl, net, src, origin, report, codes):
         hw = float(c.hw_at(s))
         t, nn = c.line.frame(s)
         p = c.line.offset_point(s, sgn * (hw + max(ext, 2.2) + 1.0))
-        pl.add("bus_shelter", p, yaw_of(-nn * sgn), src="bus_stop")
+        shelter = shelter_prototype_0120(osm_node)
+        # Keep source seed, position, yaw and height rules: the variant alone changes.
+        pl.add(shelter, p, yaw_of(-nn * sgn), src="bus_stop")
+        if shelter != "bus_shelter":
+            report.setdefault("shelter_reference_variants_0120", []).append({
+                "osm_node": osm_node, "photo": SHELTER_RED_REFERENCES_0120[osm_node],
+                "prototype": shelter, "dimensions": "WORKING_VALUE; existing envelope retained"})
         pb = c.line.offset_point(s + (2.9 if hash(round(float(s), 1)) % 2 else -2.9), sgn * (hw + max(ext, 2.2) + 0.4))
         pl.add("waste_bin", pb, yaw_of(-nn * sgn), src="bus_stop:bin")
         dn = -1 if side == "L" else 1          # traffic on this side travels +s on the right side

@@ -338,6 +338,56 @@ def bus_shelter():
     return m, m, col
 
 
+def bus_shelter_red_0120():
+    """Photo-supported red family at two authored OSM stops, ADR0120 r3.
+
+    Existing 4 x 1.5 x 2.5 m envelope retained: dimensions, roof rise and profile
+    thicknesses are WORKING_VALUE, not measurements from the small photographs.
+    Frame and roof share one material; no separate dirt/trim/glass overlay.
+    """
+    W, D, H = 4.0, 1.5, 2.5
+    high, low = Mesh(), Mesh()
+    frame, glass = "shelter_red_frame_0120", "shelter_clear_glass_0120"
+    for m, segments in ((high, 4), (low, 2)):
+        # Three rear posts, two front corners: no central post across the entrance.
+        for x, y in ((-W/2, -D/2), (0, -D/2), (W/2, -D/2), (-W/2, D/2), (W/2, D/2)):
+            m.box(frame, [x, y, H/2], .035, .035, H/2)
+        for z in (.65, 1.35):
+            m.box(frame, [0, -D/2, z], W/2, .025, .025)
+        for x in (-W/2, W/2):
+            m.box(frame, [x, 0, .65], .025, D/2, .025)
+        # Closed shallow curved sheet with visible front/back fascia and end edges.
+        ys = np.linspace(-D/2-.12, D/2+.12, segments+1)
+        zs = H+.07+.12*(1-(ys/(D/2+.12))**2)
+        half_w, thickness = W/2+.10, .045
+        for y0, y1, z0, z1 in zip(ys[:-1], ys[1:], zs[:-1], zs[1:]):
+            m.quad(frame, [-half_w,y0,z0], [half_w,y0,z0], [half_w,y1,z1], [-half_w,y1,z1])
+            m.quad(frame, [-half_w,y1,z1-thickness], [half_w,y1,z1-thickness],
+                   [half_w,y0,z0-thickness], [-half_w,y0,z0-thickness])
+            m.quad(frame, [-half_w,y0,z0-thickness], [-half_w,y0,z0],
+                   [-half_w,y1,z1], [-half_w,y1,z1-thickness])
+            m.quad(frame, [half_w,y1,z1-thickness], [half_w,y1,z1],
+                   [half_w,y0,z0], [half_w,y0,z0-thickness])
+        for y, z, reverse in ((ys[0],zs[0],False), (ys[-1],zs[-1],True)):
+            points = [[-half_w,y,z-thickness], [half_w,y,z-thickness], [half_w,y,z], [-half_w,y,z]]
+            m.quad(frame, *(points[::-1] if reverse else points))
+        # One physical sheet, explicitly wound on both sides like the existing shelter.
+        panes = []
+        for x0,x1 in ((-W/2+.045,-.045),(.045,W/2-.045)):
+            panes.append([[x0,-D/2,.15],[x1,-D/2,.15],[x1,-D/2,H-.10],[x0,-D/2,H-.10]])
+        for x in (-W/2,W/2):
+            panes.append([[x,-D/2+.045,.15],[x,D/2-.045,.15],
+                          [x,D/2-.045,H-.10],[x,-D/2+.045,H-.10]])
+        for points in panes:
+            m.quad(glass, *points)
+            m.quad(glass, *points[::-1])
+        m.box("bench_wood", [0,-D/2+.30,.45], 1.2,.20,.03)
+        for x in (-.85,.85):
+            m.box(frame, [x,-D/2+.30,.22], .035,.15,.22)
+    # Preserve the existing authored collision volume until a separate collision review.
+    return high, low, bus_shelter()[2]
+
+
 def lift_gate():
     m, col = Mesh(), Mesh()
     m.box("steel_painted", [0, 0, 0.5], 0.17, 0.17, 0.5)
@@ -453,6 +503,7 @@ def build_all(sign_codes, boards):
     P["signal_pole"] = signal_pole()
     P["signal_mast"] = signal_pole(S.SIGNAL_MAST_H, 6.0)
     P["bus_shelter"] = bus_shelter()
+    P["bus_shelter_red_0120"] = bus_shelter_red_0120()
     P["lift_gate"] = lift_gate()
     P["sliding_gate"] = sliding_gate()
     P["bollard"] = bollard()
