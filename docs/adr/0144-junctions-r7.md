@@ -1,6 +1,6 @@
 # ADR 0144: Węzły r7 — jeden system barier na krawędzi pomostu, zakończenia taśm, rzędy filarów z danych, kruszywo i spód pomostu
 
-Status: w toku (world-builder, gałąź `junctions-r7`, baza main e79c5cc3 + scalony main 70b67fc7 z ADR 0143 / 0139), 2026-11-12.
+Status: do review lidera (world-builder, gałąź `junctions-r7`, baza main e79c5cc3 + scalony main 70b67fc7 z ADR 0143 / 0139), 2026-11-12.
 Wynika z `docs/reports/visual/REVIEW-2026-11-12-s14-0123.md` (P1-1, P1-2, P2-3…5) i `REVIEW-2026-11-12-s14-0128.md` (P1-2)
 oraz z „world findings” 4–5 ADR 0143. Powiązane: ADR 0123 (bariery r6), 0128 (nos wysepki), 0117, 0110, 0067 (wiadukt hero),
 0060 (`sky_occ`). Dowody: `artifacts/junctions-r7/` (STATUS.md, `logs/`, `ortho/`, `plan_r7c/`, `renders_r7c_low_{clear,overcast}/`,
@@ -102,7 +102,34 @@ oraz z „world findings” 4–5 ADR 0143. Powiązane: ADR 0123 (bariery r6), 0
 - asset `art-source/world/landmarks/viaduct_biezenstwa/` przebudowany przez Blender z nowej specyfikacji.
 
 ## Wynik
-@@RESULT@@
+Build `r7d` (2026-11-12, `logs/r7d_*`; `r7c` = to samo bez pkt 10–12). Rendery Low clear + Low overcast, 76 kamer
+(`renders_r7d_low_*`), pary ≤ 960 px w `pairs_r7c/`, `pairs_r7d/` (`ba_*` = b7 | r7, `tri_*` = zdjęcie | main z pozami 0143 | r7).
+
+**Obejrzane (pętla wizualna, własna ocena — recenzja `visual-critic` po stronie lidera):**
+- `p0_kerb_merge_eye` (P1-1): jedna bariera na krawędzi pomostu, balustrada nie przecina taśmy, koniec taśmy schodzi do gruntu,
+  białych płytek brak. Generator: `parapet_tris_dropped` 28 510, `deck_free_ends` 34, bieg autorski 65 → 67 m.
+- `sbs-g3-a-1398…`, `2818…`, `3970…`, `320326…` (P1-2): luki w rzędzie filarów nie ma; położenia rzędów w kadrze 4:3 zgadzają się
+  ze zdjęciem do ok. 20 px przy 320 px (1398: 110 / 195–285 px na zdjęciu, 105 / 205–285 w renderze). W `482392…` skrajny lewy
+  filar (rząd 3, 44° od osi przy półkącie 45°) jest w renderze, a na zdjęciu tuż poza kadrem — w granicach pozy klasy B.
+- kruszywo nasypu jaśniejsze i cieplejsze, czytelne jako żwir w 2818 / 3970 / 201270; spód pomostu jaśniejszy, szary zamiast
+  zielonkawego (clear nadal ciemniejszy niż zdjęcie; overcast zgodny).
+- `biezenstwa-above`: 8 rzędów podpór, żadna kolumna na jezdni ronda (`cols_check.py`: 0 z 32).
+- tablica F-10 widoczna w `482392…` po prawej nad barierą (zdjęcie: x 0,88 szer. kadru, render: 0,93; w renderze mniejsza — poza
+  i/lub wymiar tablicy, patrz Otwarte 4).
+- zygzak łącznicy Putry: `pairs_r7d/zigzag_top_r7c_r7d.jpg`, `zigzag_owner_vs_r7d.jpg`, `zigzag_r2_fork_link_eye_r7c_r7d.jpg` —
+  krawężnik NE i krawężnik nosa wyspy biegną bez wcięcia; `zz_edges.py` na siatce r7d: krawężnik NE od −0,25 do −0,90 m
+  względem linii odniesienia na 36 m, falowanie ≤ 0,08 m (było: +0,57 → −0,85 m na 9–12 m).
+
+**Koszt (Low clear, edytor, `stats.txt` — szacunek przed SRP batchingiem; telefon bez pomiaru):**
+- kamery węzła vs b7 (`logs/r7d_stats_vs_b7.txt`): draws max +3, trójkąty max +1,3 % (większość kadrów −1…−5 %: balustrady);
+- kamery SBS vs main z pozami 0143 (`artifacts/sbs-poses-r3/after`): draws +0, trójkąty max −0,3 %; vs i3 (`logs/r7d_stats_vs_i3.txt`)
+  draws max +2 (482392: +19 = inna poza), trójkąty max +1,0 %;
+- asset wiaduktu: LOD0 11 206 → 11 974, LOD1 4 796 → 5 124, LOD2 1 364 → 1 572 trójkątów (2 rzędy filarów więcej, przekrój owalny);
+  kolizja 28 → 36 prostopadłościanów; `mesh_budget` stretch_04: Low 947 656 → 933 861, High 1 987 660 → 1 973 371 trójkątów;
+  materiały 146 → 147 (tekstura tablicy F-10: 1 draw).
+- fidelity (`logs/r7d_fidelity_summary.txt`): `lane_into_island` 0, krawędź p50 0,38 m / p95 2,29 m (r7c: 0,36 / 2,30).
+
+**Testy:** @@TESTS@@
 
 ## Otwarte / niezrobione (uczciwie)
 1. **Telefon** — brak pomiaru (agent nie używa adb); koszt tylko z edytora.
@@ -113,3 +140,11 @@ oraz z „world findings” 4–5 ADR 0143. Powiązane: ADR 0123 (bariery r6), 0
    łącznicy zaczyna się później niż na zdjęciu” (0143) — nie ruszone.
 5. Generyczne spody pomostów (`bridge_soffit`, DK8 / Putry) zostają na `sky_occ` — poza zakresem (0105).
 6. Mur oporowy, profil W z bliska, latarnie, C-9 (P2-6…11 recenzji 0123), chodnik SSW i płyta dotykowa (0128 P2-4…6) — nie ruszone.
+7. **Plamy słońca na wyspie pod wiaduktem** (2818 / 3970, clear): światło przechodzi szczeliną między pomostami i rysuje rząd
+   jasnych plam na żwirze; na zdjęciu cień jest jednolity. Było przed tą gałęzią (i3), nie ruszone.
+8. **„Warstwice” na asfalcie na początku łącznicy Putry** (`r7_exit_zigzag_eye`, też w r7c): tekstura kolein / zużycia idzie po UV
+   łańcucha, który na pierwszych 10 m przesuwa oś o 8,4 m (profil autorski) — schodkowe ciemne linie w poprzek pasa. Do osobnego
+   kroku (UV zużycia po osi pasa, nie po osi łańcucha).
+9. **Nakładanie pasów P-21** (pas `s1440-diverge-p21-band` i nos `s1440-diverge-p21`) oraz wyspa pod częścią pasa — stan sprzed
+   gałęzi, po wyprostowaniu krawędzi bez zmian; do przeglądu z ortofoto.
+
