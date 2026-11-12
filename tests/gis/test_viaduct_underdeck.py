@@ -186,6 +186,8 @@ def test_generated_specs_have_grounded_stair_flights_and_unchanged_decks():
     flights = 0
     for spec in specs:
         assert spec['params']['stairs_enabled'] is enabled
+        for key in ('unpainted_chamfers','paint_blobs'):
+            assert spec['params'][key] is cfg['set'][key]
         if not enabled:
             assert spec['stairs'] == [[], []]
         for steps in spec['stairs']:

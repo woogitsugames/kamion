@@ -24,15 +24,19 @@ if ($LASTEXITCODE -ne 0) { throw 'Heavy slot acquisition failed' }
 try {
     switch ($Step) {
         'WorldWithFocusedGIS' {
+            & uv run --project tools/worldgen python -m pytest tests/gis/test_viaduct_underdeck.py -k 'not generated_specs' -q *> "$Log.pier-units"
+            if($LASTEXITCODE -ne 0){throw "Focused pier units failed, log: $Log.pier-units"}
             & uv run --project tools/worldgen python -m pytest tests/gis/test_ec_chimneys.py -k 'not generated_world' -q *> "$Log.units"
             if($LASTEXITCODE -ne 0){throw "Focused EC units failed, log: $Log.units"}
-            Add-Content -Encoding utf8 "$PSScriptRoot/STATUS.md" "`nKrok 11: jednostkowe testy pojedynczego pliku test_ec_chimneys.py zakończyły się powodzeniem (wynik $Log.units); celowo wyłączony test wyjścia generatora. Pod tym samym heavy rozpoczyna się kolejno generator, bez równoległego Pythona tej sesji."
+            Add-Content -Encoding utf8 "$PSScriptRoot/STATUS.md" "`nKrok 15: jednostki podpomostu i EC wykonane kolejno, osobne pliki i logi $Log.pier-units oraz $Log.units; testy wygenerowanych wyjść celowo wyłączone do czasu regeneracji. Pod tym samym heavy rozpoczyna się generator, bez równoległego Pythona tej sesji."
             & git add -f artifacts/landmarks-r3/STATUS.md
             & git commit -m 'wip(landmarks): jednostkowe testy EC przed regeneracją świata'
             if($LASTEXITCODE -ne 0){throw 'Focused checkpoint failed'}
             & uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c *> $Log
             if($LASTEXITCODE -ne 0){throw "EC world generation failed: $Log"}
             & uv run --project tools/worldgen python -m pytest tests/gis/test_ec_chimneys.py -q *> "$Log.focused"
+            if($LASTEXITCODE -ne 0){throw "Focused EC output tests failed: $Log.focused"}
+            & uv run --project tools/worldgen python -m pytest tests/gis/test_viaduct_underdeck.py -q *> "$Log.pier-focused"
         }
         'World' { & uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c *> $Log }
         'Materials' {
