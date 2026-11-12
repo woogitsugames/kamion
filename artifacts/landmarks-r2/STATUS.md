@@ -12,3 +12,5 @@ Korekta kroku 2: preflight cache nie zakończył się — wykrył nowy zestaw ca
 Krok 2b: dodano dziesiątą własną kamerę dk8-ref7204, opartą na GPS i ogniskowej 38 mm z fotografii Commons. Wysokość oczu, kierunek 280° i pitch 1,7° są WORKING_VALUE; dopasowanie kadru pozostaje UNVERIFIED do obejrzenia baseline. FOV pionowy 24,664° dla QA 2340x1080 zachowuje fotograficzne pole poziome. Nie zmieniono kamer sbs ani danych produkcyjnych.
 
 Krok 2c: przygotowano porównanie kompletnego inwentarza 48 kamer kontrolnych i 10 własnych. Narzędzie wymaga zgodności obu zbiorów i rozmiarów obrazów, przetwarza po jednej parze PNG, zapisuje arkusze o szerokości 960 px. Nie uruchomiono renderów ani ciężkiego Pythona poza kolejką baseline; kod wiaduktu nadal bez zmian.
+
+Krok 2d: do dowodów r2 skopiowano natywne kadry filarów i zapis ROI z oryginału 5520x3680. Referencja rozdziela szare ścięcie od ochrowej płaszczyzny, bez traktowania jasności zdjęcia jako odbicia materiału. Stan wykonania baseline pozostaje WAITING_HEAVY, bez uruchamiania dodatkowego ciężkiego zadania.
