@@ -53,3 +53,5 @@ Krok 23: po ponad 30 minutach oczekiwania na pojedynczy test potwierdzono brak w
 Etap po generatorze (2026-11-12 01:25:47): Pojedynczy test_streetscape.py zakończony 0 na świeżych generatach; liczba testów w pytest-streetscape.log. Pełny GIS pozostaje na koniec rundy. Następne etapy wykonuje run-after-world.ps1; REPORT dopiero po oględzinach autora i końcowych testach.
 
 Etap po generatorze (2026-11-12 01:29:49): Fidelity zakończone kodem 0 pod heavy; raporty odświeżone. Następne: weryfikacja wejść i import Unity. Następne etapy wykonuje run-after-world.ps1; REPORT dopiero po oględzinach autora i końcowych testach.
+
+Etap po generatorze (2026-11-12 01:31:23): PreparedImport zakończony kodem 0; helper zweryfikował wejścia pod heavy, potem osobno importował w Unity gpt-life. Następne: AFTER przy zamrożonych kamerach. Następne etapy wykonuje run-after-world.ps1; REPORT dopiero po oględzinach autora i końcowych testach.
