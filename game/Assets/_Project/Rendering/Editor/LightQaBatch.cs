@@ -30,6 +30,8 @@ namespace Game.Rendering.Editor
             public float clearSkySaturation; // 0 leaves preset unchanged; diagnostic display-only chroma.
             public bool overrideDimColour;
             public float dimColourDesaturation;
+            public bool verifyDimColour;
+            public float expectedDimColour;
             public bool lampProbe;
             public bool actualDriverEye; // QA only: cab-dash eye, horizontal actual cab forward. Never a light source.
             public bool wetRoadViews; // QA only: two external near-road views anchored to the real truck.
@@ -69,7 +71,10 @@ namespace Game.Rendering.Editor
                 if (profile == null) throw new InvalidOperationException("Missing QualityProfile");
                 originalTiers = (QualityProfile.Tier[])profile.tiers.Clone();
                 foreach (var preset in LookDevAssets.Presets())
-                    if (preset != null) presetSnapshots[preset] = EditorJsonUtility.ToJson(preset);
+                    if (preset != null) {
+                        presetSnapshots[preset] = EditorJsonUtility.ToJson(preset);
+                        Debug.Log($"LIGHT_QA_PRESET: {preset.name} path={AssetDatabase.GetAssetPath(preset)} dim={preset.dimColourDesaturation}");
+                    }
                 foreach (var t in originalTiers)
                 {
                     var pipeline = AssetDatabase.LoadAssetAtPath<UniversalRenderPipelineAsset>(
@@ -147,6 +152,9 @@ namespace Game.Rendering.Editor
                                 if (light.type == LightType.Directional)
                                     light.GetUniversalAdditionalLightData().softShadowQuality = (SoftShadowQuality)job.shadowFilter;
                         lampProbe?.Capture(camera);
+                        if(job.verifyDimColour && camera.GetComponent<ControlCamera>()!=null &&
+                            Mathf.Abs(Shader.GetGlobalFloat("_KamionDimColourDesaturation")-job.expectedDimColour)>.0001f)
+                            throw new InvalidOperationException($"Actual per-camera dim colour mismatch: requested{job.expectedDimColour}, global{Shader.GetGlobalFloat("_KamionDimColourDesaturation")}, preset{EnvironmentLighting.Instance?.Active?.dimColourDesaturation}, path{AssetDatabase.GetAssetPath(EnvironmentLighting.Instance?.Active)}");
                     };
                     int count;
                     SkyOnlyProof skyProof = null;

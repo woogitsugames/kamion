@@ -19,6 +19,7 @@ namespace Game.Rendering.Editor
             public float presetExposureCompensation, skyDisplayGain, skyDisplayDesaturation;
             public float actualWetness, actualPuddleShare;
             public float actualWetFilmSmoothness, actualDimColourDesaturation;
+            public float presetDimColourDesaturation;
             public float clearCloudSourceMinElevationDeg;
             public Vector4 cloudSourceLimits;
             public int pools, enabledPointLights;
@@ -81,6 +82,7 @@ namespace Game.Rendering.Editor
                 presetExposureCompensation = environment.Active.exposureCompensation,
                 skyDisplayGain = environment.Active.skyDisplayGain, skyDisplayDesaturation = environment.Active.skyDisplayDesaturation,
                 actualDimColourDesaturation=Shader.GetGlobalFloat("_KamionDimColourDesaturation"),
+                presetDimColourDesaturation=environment.Active.dimColourDesaturation,
                 actualWetness = Shader.GetGlobalVector("_KamionWet").x,
                 actualPuddleShare = Shader.GetGlobalVector("_KamionWet").y,
                 actualWetFilmSmoothness = Shader.GetGlobalVector("_KamionWet").w > 0f ? Shader.GetGlobalVector("_KamionWet").w : 0.52f,
