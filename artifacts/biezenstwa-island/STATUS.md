@@ -64,3 +64,8 @@
   ADR 0128 „Result” uzupełniony. Dowody skopiowane do main `artifacts/biezenstwa-island`.
   NASTĘPNY KROK (lider): scalić po 0123; jeśli junctions-r6 doda commity wejściowe → `git merge junctions-r6` (generated → ours) +
   `bash artifacts/biezenstwa-island/scripts/all.sh i3 > artifacts/biezenstwa-island/logs/i3_all.out 2>&1`. Decyzja: U-4a świat 2024 vs zdjęcia 2017–2019.
+- krok 12 (17:50): junctions-r6 (ac0f01d6, b7) i main (7b5749c3: 0127 g3b-lowread, steer-fold) ruszyły → ponowny merge obu (generated/glb/_meta → ours),
+  HEAD 6020d170. main zmienił wejścia worldgen (meshing, furniture, props, life_props, materials, overrides.yaml) → regeneracja i3 uruchomiona:
+  `nohup bash artifacts/biezenstwa-island/scripts/all.sh i3 > artifacts/biezenstwa-island/logs/i3_all.out 2>&1 &`
+  NASTĘPNY KROK: `tail -30 artifacts/biezenstwa-island/logs/i3_all.out` — po „all done”: `git add -A Data art-source/world/props art-source/world/signs`, commit,
+  liczby i3 do ADR 0128 „Result”, robocopy do main. Brak procesu i brak „all done” → powtórzyć komendę wyżej.
