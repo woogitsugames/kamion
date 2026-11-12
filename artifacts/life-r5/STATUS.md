@@ -33,3 +33,5 @@ Krok 11: odczyt natywnej polityki wykazał koniec LOD0 palet 30 m × lodBias, Hi
 Krok 12: lekka kontrola AST siedmiu helperów Python oraz parser wszystkich PS rundy bez błędów. Bez generatora/testów GIS/dekodowania obrazów, nie jest to dowód działania. Zapisano helper-syntax.json. Ten sam baseline 73412 nadal czeka, przed nim dwa zgłoszenia i aktywny PHONE_RUN; post-baseline 63528 nadal oczekuje na proces 64152. Następny krok niezmiennie fresh baseline/capture, nie restartować pracy.
 
 Krok 13: podczas PHONE_RUN przygotowano wyłącznie preflight kolejnej rundy po paletach: źródło globalnych odbić sky/ground, wyłączone lokalne probe w WorldInstances, komórki płatków 400/m oraz osobny węzeł contact. Fakty z odczytu kodu, bez zmian produkcji ani uruchamiania eksperymentu. R5 nadal dotyczy palet; nie podszywać lokalnych odbić szumem lub obniżeniem albedo. Następny krok: ten sam baseline po zwolnieniu blokady pomiaru.
+
+Baseline (2026-11-12T15:38:33.8001836+01:00): wygeneruj świeży World palet r5. Następny etap World/fidelity/kamery; potem świeży import i oględziny przed zmianą palet.
