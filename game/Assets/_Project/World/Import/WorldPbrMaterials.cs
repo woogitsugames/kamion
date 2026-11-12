@@ -301,6 +301,19 @@ namespace Game.World.Import
                 mat.SetVector("_PatchSeam", new Vector4(P("width_m", 0f), P("darkening", 0f),
                     P("fresh_tone", 1f), P("aged_tone", 1f)));
             }
+            // ADR0118 r2: material-local dirt; reset on every Apply to prevent reuse leaking it.
+            mat.SetVector("_KerbWear", new Vector4(0f, 0f, 0.55f, 0f));
+            mat.SetVector("_GroundWearExclude", Vector4.zero);
+            mat.SetVector("_GroundGrimeBase", Vector4.zero);
+            if (def.Get("ground_wear_exclude_local_en") is List<object> bounds && bounds.Count == 4)
+                mat.SetVector("_GroundWearExclude", new Vector4((float)Num(bounds[0]), (float)Num(bounds[1]),
+                    (float)Num(bounds[2]), (float)Num(bounds[3])));
+            if (setName == "kerb_concrete_1m" && def.Get("kerb_wear") is Dictionary<string, object> kw)
+            {
+                float K(string key, float fallback) => kw.Get(key) != null ? (float)Num(kw.Get(key)) : fallback;
+                mat.SetVector("_KerbWear", new Vector4(Mathf.Clamp01(K("joint_dirt", 0f)),
+                    Mathf.Clamp01(K("mineral_film", 0f)), Mathf.Clamp01(K("film_threshold", 0.55f)), 1f));
+            }
             bool asphalt = setName == "asphalt_worn" || setName == "asphalt_sma_fresh" || setName == "asphalt_patch";
             if (id == "road_asphalt" || id == "road_asphalt_new")
             {
@@ -319,6 +332,14 @@ namespace Game.World.Import
                 mat.EnableKeyword("_GRIME");
                 // x damp darkening, y macro-pool threshold (~0.62 = 16 % of the area), z joint dirt, w damp gloss
                 mat.SetVector("_Grime", new Vector4(blocks ? 0.42f : 0.38f, 0.62f, blocks ? 0.45f : 0.3f, 0.5f));
+                mat.SetVector("_GroundGrimeBase", mat.GetVector("_Grime"));
+                if (def.Get("ground_grime") is Dictionary<string, object> gg)
+                {
+                    var defaults = mat.GetVector("_Grime");
+                    float G(string key, float fallback) => gg.Get(key) != null ? Mathf.Clamp01((float)Num(gg.Get(key))) : fallback;
+                    mat.SetVector("_Grime", new Vector4(G("damp_darkening", defaults.x), G("damp_threshold", defaults.y),
+                        G("joint_dirt", defaults.z), G("damp_gloss", defaults.w)));
+                }
             }
             // ADR 0071 r11: manifest "cracks": strength = the 16 m crack layer on a non-asphalt set (worn dock apron)
             if (setName == "asphalt_worn" || def.Get("cracks") != null)

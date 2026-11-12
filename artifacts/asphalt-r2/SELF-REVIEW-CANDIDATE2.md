@@ -1,0 +1,15 @@
+# Samokontrola r2 / candidate2
+
+Obejrzano 16 par materiałowych (osiem pełnych kadrów i osiem natywnych wycinków), 12 par kontekstu Kwadrat i cztery zestawienia zdjęcie/render. Publiczne zbliżenia zachowują czytelne fugi i kruszywo przy mniejszych plamach wilgoci. Obrzeże ma bardziej czytelne podziały; Low pozostaje miększy niż High, High ma nadal silne jasne punkty. W kadrach Kwadrat lokalnie nie dostrzegam zmiany materiału; nie twierdzę jeszcze, że całe pliki są pikselowo identyczne. Zdjęcia SBS jawnie ujawniają rozbieżną pozę/model i nie służą do dopasowania jasności.
+
+Audyt 328 rzeczywistych snapshotów: pozy, FOV, view, projection i rootToWorld identyczne z baseline; wszystkie flagi zakresu i współczynniki bazowego grime poprawne, yardGrime bez zmiany. GPU readback rzeczywistego fragmentu zakresu potwierdził ochronę punktu Kwadrat i aktywny publiczny probe również po przesunięciu obiektu; EditMode 312/312, bez pominiętych testów. Źródła importera potwierdzają zachowanie lokalnych E/N w chunkach.
+
+Lekki audyt 2952 liczników ze wszystkich 328 kamera/warunków: zero różnic, instancje osobno. Geometria 128 GLB/7315 prymitywów dokładnie identyczna z baseline. Import: 22 kategorie bajtów bez zmiany, ASTC 40 910 657 B, 126 992 instancji, 2674 collidery props. Te dane nie są pomiarem GPU. Trzy float4 zwiększają deklarację stałych o 48 B przed wyrównaniem, dodają kontrolę zakresu i ALU; brak nowych fetchów, przebiegów, UV i wariantów keyword. Koszt A16 UNVERIFIED.
+
+Niezależny krytyk dał PASS przyrostu materiałowego candidate2 z ograniczeniami P2. Pełne arkusze wszystkich kamer i testy końcowe wymagają jeszcze odczytania. D51: ocena materiału nie jest blokadą route Gate3. Wycofane proporcje renderu r1 nie są używane.
+
+Full Compare zakończony exit0:328 par i wszystkie 9 kategorii liczników bez zmian. Pomiary całych PNG bramy Kwadrat (2340x1080) przy progu dowolnego kanału RGB >2: candidate1 miał 9996/9240/8820/8828 zmienionych pikseli (Low overcast/clear, High overcast/clear), scoped candidate2 ma 0/7/4/6. Pozostałych różnic nie wyjaśniamy bez dowodu i nie nazywamy obrazów identycznymi. CSV całych 328 ujęć pozostaje kompletnym dowodem budżetu, osobne scope-image-comparison to kontrola własności. Rozdzielczości targetów RT także porównano przed/po we wszystkich snapshotach: Low1755x810, High2340x1080, bez zmian. PNG Low jest wyjściem2340x1080 po skalowaniu odziedziczonym z main; nie zmieniano profili/skali. D50 zabrania obniżania do70 procent; sesja niczego nie obniżyła. GPU A16 nadal UNVERIFIED.
+
+
+Obejrzano wszystkie28 kontaktów obejmujących328 par kamer; wraz z16 parami materiałów,12 parami Kwadrat i4 referencyjnymi daje to60 arkuszy (SHA w SELF-INSPECTED-CANDIDATE2.json). Nie widzę nowej dużej regresji układu/palety na trasie. Drobne prostokątne łaty i problemy starej farby r1 pozostają, nie są naprawą r2. Kontakty nie dowodzą jakości mikrowzoru ani stabilności w ruchu. Audyt źródeł względem4992c434: brak zmian roads/overrides, źródeł budynków/Kwadrat i profili jakości.
+

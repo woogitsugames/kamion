@@ -1,0 +1,114 @@
+{
+    "method":  "Full native PNG RGB (2340x1080), any channel absolute difference \u003e2 vs baseline. Whole frames include public background. Not albedo or physical material contrast.",
+    "rows":  [
+                 {
+                     "condition":  "Low-overcast",
+                     "camera":  "cab-gate",
+                     "native_png_pixels":  2527200,
+                     "candidate1_rmse_rgb":  0.28711445514180756,
+                     "candidate2_rmse_rgb":  0.021757364892988094,
+                     "candidate1_changed_pixels_gt_2":  6370,
+                     "candidate2_changed_pixels_gt_2":  51
+                 },
+                 {
+                     "condition":  "Low-overcast",
+                     "camera":  "kwadrat-park-gate",
+                     "native_png_pixels":  2527200,
+                     "candidate1_rmse_rgb":  0.39081381555656763,
+                     "candidate2_rmse_rgb":  0.0042197473628486108,
+                     "candidate1_changed_pixels_gt_2":  9996,
+                     "candidate2_changed_pixels_gt_2":  0
+                 },
+                 {
+                     "condition":  "Low-overcast",
+                     "camera":  "stretch-05-docks",
+                     "native_png_pixels":  2527200,
+                     "candidate1_rmse_rgb":  0.19293950237704935,
+                     "candidate2_rmse_rgb":  0.015201506064904956,
+                     "candidate1_changed_pixels_gt_2":  3438,
+                     "candidate2_changed_pixels_gt_2":  4
+                 },
+                 {
+                     "condition":  "Low-clear",
+                     "camera":  "cab-gate",
+                     "native_png_pixels":  2527200,
+                     "candidate1_rmse_rgb":  0.1922958210960814,
+                     "candidate2_rmse_rgb":  0.016921913780089875,
+                     "candidate1_changed_pixels_gt_2":  4353,
+                     "candidate2_changed_pixels_gt_2":  21
+                 },
+                 {
+                     "condition":  "Low-clear",
+                     "camera":  "kwadrat-park-gate",
+                     "native_png_pixels":  2527200,
+                     "candidate1_rmse_rgb":  0.34205123933759352,
+                     "candidate2_rmse_rgb":  0.0073717088506755624,
+                     "candidate1_changed_pixels_gt_2":  9240,
+                     "candidate2_changed_pixels_gt_2":  7
+                 },
+                 {
+                     "condition":  "Low-clear",
+                     "camera":  "stretch-05-docks",
+                     "native_png_pixels":  2527200,
+                     "candidate1_rmse_rgb":  0.16742743432134186,
+                     "candidate2_rmse_rgb":  0.019931824289307832,
+                     "candidate1_changed_pixels_gt_2":  3245,
+                     "candidate2_changed_pixels_gt_2":  15
+                 },
+                 {
+                     "condition":  "High-overcast",
+                     "camera":  "cab-gate",
+                     "native_png_pixels":  2527200,
+                     "candidate1_rmse_rgb":  0.1597950306822716,
+                     "candidate2_rmse_rgb":  0.024839890379331209,
+                     "candidate1_changed_pixels_gt_2":  2557,
+                     "candidate2_changed_pixels_gt_2":  11
+                 },
+                 {
+                     "condition":  "High-overcast",
+                     "camera":  "kwadrat-park-gate",
+                     "native_png_pixels":  2527200,
+                     "candidate1_rmse_rgb":  0.35271860553165107,
+                     "candidate2_rmse_rgb":  0.0094496103407194464,
+                     "candidate1_changed_pixels_gt_2":  8820,
+                     "candidate2_changed_pixels_gt_2":  4
+                 },
+                 {
+                     "condition":  "High-overcast",
+                     "camera":  "stretch-05-docks",
+                     "native_png_pixels":  2527200,
+                     "candidate1_rmse_rgb":  0.14339600505634029,
+                     "candidate2_rmse_rgb":  0.024810668531433818,
+                     "candidate1_changed_pixels_gt_2":  2235,
+                     "candidate2_changed_pixels_gt_2":  56
+                 },
+                 {
+                     "condition":  "High-clear",
+                     "camera":  "cab-gate",
+                     "native_png_pixels":  2527200,
+                     "candidate1_rmse_rgb":  0.14267350721589911,
+                     "candidate2_rmse_rgb":  0.0020862989338855855,
+                     "candidate1_changed_pixels_gt_2":  1858,
+                     "candidate2_changed_pixels_gt_2":  0
+                 },
+                 {
+                     "condition":  "High-clear",
+                     "camera":  "kwadrat-park-gate",
+                     "native_png_pixels":  2527200,
+                     "candidate1_rmse_rgb":  0.34859793942646194,
+                     "candidate2_rmse_rgb":  0.025315879260764274,
+                     "candidate1_changed_pixels_gt_2":  8828,
+                     "candidate2_changed_pixels_gt_2":  6
+                 },
+                 {
+                     "condition":  "High-clear",
+                     "camera":  "stretch-05-docks",
+                     "native_png_pixels":  2527200,
+                     "candidate1_rmse_rgb":  0.127637831617176,
+                     "candidate2_rmse_rgb":  0.25807395918171205,
+                     "candidate1_changed_pixels_gt_2":  1923,
+                     "candidate2_changed_pixels_gt_2":  722
+                 }
+             ],
+    "note":  "Residual pixels are not claimed explained or byte-identical. Ownership uniforms/GPU scope and geometry are separate evidence."
+}

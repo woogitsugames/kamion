@@ -1,0 +1,12 @@
+﻿{
+    "valid":  false,
+    "camera":  "d_wear_lane_old",
+    "input_u":  133.334,
+    "runtime_camera_y":  1.3933136463165284,
+    "incorrect_inferred_anchor":  131.9406863536834716,
+    "configured_anchor":  131.14,
+    "anchor_error_m":  0.8006863536834716,
+    "frame_sources_unchanged_since_r1":  true,
+    "reason":  "seat=road moves camera and look-at, so input minus runtime position is not the region transform",
+    "correction":  "CORRECTION-2026-11-12.md"
+}
