@@ -193,7 +193,8 @@ def test_tractor_silhouette_budget():
     p0 = m0.out()
     t0 = sum(len(p["T"]) for p in p0)
     t1 = sum(len(p["T"]) for p in m1.out())
-    assert 600 < t0 <= 1500 and t1 <= 320
+    # ADR 0122 life r4: actual near tractor 1550, distant mesh unchanged.
+    assert 600 < t0 <= 1700 and t1 <= 320
     V = [v for p in p0 for v in p["V"]]
     import numpy as np
     V = np.array(V)

@@ -81,9 +81,9 @@
     {
       "metric": "time_to_kmh",
       "status": "WORKING_VALUE",
-      "source": "regression guard = PlayMode CombinationLabTests.HillStart_6pct_40t (runner 4.5 s +-10 %); 6.2 s after ADR 0019 was a 3-2-3 shift, ADR 0024",
-      "min": 4.05,
-      "max": 4.95,
+      "source": "regression guard = PlayMode CombinationLabTests.HillStart_6pct_40t (runner 4.84 s +-0.45 s after ADR 0134 smooth shift ramps; was 4.5 s); 6.2 s after ADR 0019 was a 3-2-3 shift, ADR 0024",
+      "min": 4.39,
+      "max": 5.29,
       "arg": 15,
       "variant": "laden40"
     },

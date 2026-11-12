@@ -1,0 +1,53 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4595eb7b062092e4cb9aab41a7156859, type: 3}
+  m_Name: EngineBank_el_ext
+  m_EditorClassIdentifier: Game.Audio::TruckSim.Audio.EngineSoundBank
+  rpmPoints:
+  - 600
+  - 900
+  - 1200
+  - 1500
+  - 1800
+  - 2100
+  loadPoints:
+  - 0
+  - 1
+  clips:
+  - {fileID: 8300000, guid: c47f4479d3d56674b86a8ccd2d8359ce, type: 3}
+  - {fileID: 8300000, guid: 6cd66f276f4e39d4fb30b950d6a3590f, type: 3}
+  - {fileID: 8300000, guid: 9e722d51f33d6c845a200fdedfc9382f, type: 3}
+  - {fileID: 8300000, guid: 52e370b93a864824db25b8a8e70ee2f1, type: 3}
+  - {fileID: 8300000, guid: dd248a9658a3b6e4b8da14b2d0426cb2, type: 3}
+  - {fileID: 8300000, guid: dda21627eed1e9c43be06f721f57125e, type: 3}
+  - {fileID: 8300000, guid: f7f9390c69c9da24b907a6dbec2dce63, type: 3}
+  - {fileID: 8300000, guid: 1149b28137347ee48a948fdbae516da8, type: 3}
+  - {fileID: 8300000, guid: 792a2f080026618428215f64185e3670, type: 3}
+  - {fileID: 8300000, guid: 9bf1516078431ae4894fcb62420cda63, type: 3}
+  - {fileID: 8300000, guid: 0a1ff8c6707ea204da57e3bb0fb40b40, type: 3}
+  - {fileID: 8300000, guid: a94606a5a5913b445bd467f7f379a6df, type: 3}
+  clipRpmExact:
+  - 599.9993
+  - 899.99963
+  - 1200.0015
+  - 1500.0011
+  - 1800.0016
+  - 2100.0017
+  - 600
+  - 900
+  - 1200.0005
+  - 1500.0002
+  - 1800.0039
+  - 2100.0037
+  clipCycles: 2c0000002e0000002c0000002e00000037000000370000003a0000003a0000003b000000410000003b00000041000000
+  spatialBlend: 1
+  incoherent: 1

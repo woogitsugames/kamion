@@ -282,6 +282,19 @@ namespace Game.Tests
                         if (g.transform.parent != null && g.transform.parent.name == "Rotating") continue;
                         if (g.name == "Rotating") continue;   // the wheel sprite turns inside its square
                         Rect gr = RectIn(g.rectTransform, safe);
+                        if (g.name == "GrabArea")
+                        {
+                            // ADR 0135: invisible touch target of the wheel, extended over the empty margin to the
+                            // safe-area edges left of and below the wheel; it must stay inside the safe area and must not
+                            // reach any other zone (checked against every zone below).
+                            Assert.AreEqual(0f, g.color.a, 1e-6f, $"{what}: GrabArea is invisible");
+                            Assert.IsTrue(Contains(bounds, gr, 0.6f), $"{what}: GrabArea {gr} outside the safe area");
+                            for (int j = 0; j < HudLayoutResult.ZoneCount; j++)
+                                if (j != i && layout.Zone(j, out Rect other) && other.Overlaps(gr) && Rect.MinMaxRect(Mathf.Max(other.xMin, gr.xMin), Mathf.Max(other.yMin, gr.yMin), Mathf.Min(other.xMax, gr.xMax), Mathf.Min(other.yMax, gr.yMax)).width > 0.6f
+                                    && Rect.MinMaxRect(Mathf.Max(other.xMin, gr.xMin), Mathf.Max(other.yMin, gr.yMin), Mathf.Min(other.xMax, gr.xMax), Mathf.Min(other.yMax, gr.yMax)).height > 0.6f)
+                                    Assert.Fail($"{what}: GrabArea {gr} overlaps {HudLayoutResult.ZoneName(j)} {other}");
+                            continue;
+                        }
                         Assert.IsTrue(Contains(real, gr, 2.5f), $"{what}: {zn}/{g.name} {gr} sticks out of its zone {real}");
                     }
                 }

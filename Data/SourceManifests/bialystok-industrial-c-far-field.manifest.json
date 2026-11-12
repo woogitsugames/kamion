@@ -1,5 +1,25 @@
 {
   "adr": "0085-far-field-backdrop",
+  "appearance_policy": {
+    "classification": "declared function; height alone does not imply an energy plant",
+    "industrial_panel_min_height_m": 12.0,
+    "not_measured": [
+      "wall_colour",
+      "cladding_modules",
+      "glazing_band",
+      "roof_fascia"
+    ],
+    "panel_alpha": 0.25,
+    "panel_ribbon_alpha": 0.65,
+    "schema": "far-field-appearance/1",
+    "source_hall_counts": {
+      "energy": 5,
+      "industrial": 283,
+      "other": 1314
+    },
+    "source_panel_hall_count": 18,
+    "status": "WORKING_VALUE"
+  },
   "building_height_sources": {
     "WORKING_VALUE-bdot-storeys-typology": 97,
     "WORKING_VALUE-osm-storeys-typology": 2921,

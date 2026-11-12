@@ -4,6 +4,9 @@ using UnityEngine.Audio;
 
 namespace TruckSim.Audio
 {
+    /// <summary>Which recordings play the engine (ADR 0137): procedural synthesis (ADR 0007) or the ElevenLabs layers.</summary>
+    public enum EngineSoundSource { Procedural = 0, ElevenLabs = 1 }
+
     /// <summary>
     /// Engine sound controller for the player truck: rpm x load loop grids (exterior + cab),
     /// engine-brake layer, turbo whistle and lift-off sigh, all driven by <see cref="IEngineAudioState"/>.
@@ -41,7 +44,18 @@ namespace TruckSim.Audio
         [SerializeField] EngineSoundBank cabEngineBrake;
         [SerializeField] AudioClip turboWhistleLoop;
         [SerializeField] AudioClip turboLiftoff;
+        [SerializeField] AudioClip turboLiftoffCab;
         [SerializeField] AudioMixerGroup output;
+
+        [Header("ElevenLabs events (ADR 0137; null in the procedural set)")]
+        [SerializeField] AudioClip startExt;
+        [SerializeField] AudioClip startCab, stopExt, stopCab, clatterExt, clatterCab;
+        [Tooltip("WORKING_VALUE (owner listening test): start/stop one-shot level, idle clatter level.")]
+        [SerializeField, Range(0f, 1f)] float startStopVolume = 1f;
+        [SerializeField, Range(0f, 1f)] float clatterVolume = 0.6f;
+        [Tooltip("Engine loops stay silent this long after a start (the start clip carries crank + catch), then fade in [s].")]
+        [SerializeField] float startLoopDelay = 1.2f;
+        [SerializeField] float startLoopFade = 1.0f;
 
         [Header("Mix")]
         [SerializeField, Range(0f, 1f)] float interiorBlend = 1f;
@@ -63,7 +77,10 @@ namespace TruckSim.Audio
         [SerializeField] float liftoffCooldown = 1f;
 
         EngineLayerGrid _extEngine, _cabEngine, _extBrake, _cabBrake;
-        AudioSource _turbo, _oneShot;
+        AudioSource _turbo, _oneShot, _events;
+        PerspectiveLoop _clatter;
+        bool _running, _hasEvents;
+        float _startHold, _runGate = 1f;
         IEngineAudioState _state;
         EngineAudioInput _pushed;
         bool _hasPushed;
@@ -79,6 +96,16 @@ namespace TruckSim.Audio
         }
 
         /// <summary>Engine voices currently playing (both perspectives + engine brake). For the perf HUD.</summary>
+        /// <summary>Set the banks come from (<see cref="Configure"/>).</summary>
+        public EngineSoundSource Source { get; private set; }
+
+        /// <summary>0..1 gate of the engine loops around start/stop events (1 = normal running). For tests.</summary>
+        public float RunGate => _runGate;
+
+        /// <summary>Engine start / stop one-shots played since the component was configured. For tests.</summary>
+        public int StartEvents { get; private set; }
+        public int StopEvents { get; private set; }
+
         public int ActiveEngineVoices =>
             (_extEngine?.ActiveVoices ?? 0) + (_cabEngine?.ActiveVoices ?? 0) +
             (_extBrake?.ActiveVoices ?? 0) + (_cabBrake?.ActiveVoices ?? 0);
@@ -94,11 +121,30 @@ namespace TruckSim.Audio
         /// Runtime wiring (banks from <see cref="VehicleAudioLibrary"/>). Call on an inactive GameObject before it is
         /// activated, or later: an already initialised component rebuilds its voice pools (allocates, not per frame).
         /// </summary>
-        public void Configure(VehicleAudioLibrary lib, MonoBehaviour provider = null)
+        public void Configure(VehicleAudioLibrary lib, MonoBehaviour provider = null,
+                              EngineSoundSource source = EngineSoundSource.Procedural)
         {
-            exteriorEngine = lib.exteriorEngine; cabEngine = lib.cabEngine;
-            exteriorEngineBrake = lib.exteriorEngineBrake; cabEngineBrake = lib.cabEngineBrake;
-            turboWhistleLoop = lib.turboWhistleLoop; turboLiftoff = lib.turboLiftoff;
+            if (source == EngineSoundSource.ElevenLabs && !lib.HasElevenLabs) source = EngineSoundSource.Procedural;
+            Source = source;
+            turboWhistleLoop = lib.turboWhistleLoop; // physics-driven whistle stays procedural in both sets (ADR 0137)
+            if (source == EngineSoundSource.ElevenLabs)
+            {
+                exteriorEngine = lib.elExteriorEngine; cabEngine = lib.elCabEngine;
+                exteriorEngineBrake = lib.elExteriorEngineBrake != null ? lib.elExteriorEngineBrake : lib.exteriorEngineBrake;
+                cabEngineBrake = lib.elCabEngineBrake != null ? lib.elCabEngineBrake : lib.cabEngineBrake;
+                turboLiftoff = lib.elTurboWastegate.IsValid ? lib.elTurboWastegate.ext : lib.turboLiftoff;
+                turboLiftoffCab = lib.elTurboWastegate.IsValid ? lib.elTurboWastegate.cab : null;
+                startExt = lib.elEngineStart.ext; startCab = lib.elEngineStart.cab;
+                stopExt = lib.elEngineStop.ext; stopCab = lib.elEngineStop.cab;
+                clatterExt = lib.elIdleClatter.ext; clatterCab = lib.elIdleClatter.cab;
+            }
+            else
+            {
+                exteriorEngine = lib.exteriorEngine; cabEngine = lib.cabEngine;
+                exteriorEngineBrake = lib.exteriorEngineBrake; cabEngineBrake = lib.cabEngineBrake;
+                turboLiftoff = lib.turboLiftoff; turboLiftoffCab = null;
+                startExt = startCab = stopExt = stopCab = clatterExt = clatterCab = null;
+            }
             if (provider != null) stateProvider = provider;
             if (!_initialised) return;
             OnDisable();
@@ -119,6 +165,14 @@ namespace TruckSim.Audio
 
             _turbo = MakeSource("turbo", turboWhistleLoop, true, exteriorEngine != null ? exteriorEngine.spatialBlend : 1f);
             _oneShot = MakeSource("turboLiftoff", null, false, 0f);
+            _events = MakeSource("engineEvents", null, false, 0f);
+            _hasEvents = startExt != null || stopExt != null;
+            _clatter = clatterExt != null
+                ? new PerspectiveLoop(transform, "idleClatter", clatterExt, clatterCab, Vector3.zero, 40, 1f)
+                : null;
+            _runGate = 1f;
+            _startHold = 0f;
+            StartEvents = StopEvents = 0;
             _initialised = true;
         }
 
@@ -157,6 +211,7 @@ namespace TruckSim.Audio
             _extBrake?.StopAll();
             _cabBrake?.StopAll();
             if (_turbo != null) _turbo.Stop();
+            _clatter?.Set(0f, 1f, interiorBlend);
             _primed = false;
         }
 
@@ -176,8 +231,10 @@ namespace TruckSim.Audio
             if (!_primed)
             {
                 _rpm = x.Rpm; _load = x.Load; _brake = x.EngineBrake; _boost = x.TurboBoost;
+                _running = x.Rpm > StartRpm; // already running at spawn: no start one-shot
                 _primed = true;
             }
+            else UpdateEvents(x.Rpm, dt);
             _rpm = Smooth(_rpm, Mathf.Max(0f, x.Rpm), rpmTau, dt);
             _load = Smooth(_load, Mathf.Clamp01(x.Load), loadTau, dt);
             _brake = Smooth(_brake, Mathf.Clamp01(x.EngineBrake), engineBrakeTau, dt);
@@ -187,8 +244,8 @@ namespace TruckSim.Audio
             // perspective blend (different banks are incoherent -> equal power)
             float b = interiorBlend * Mathf.PI * 0.5f;
             float extW = Mathf.Cos(b), cabW = Mathf.Sin(b);
-            // fades the loops out while the engine stalls / is switched off (start/stop one-shots: TODO)
-            float runGain = Mathf.Clamp01((_rpm - 80f) / 300f);
+            // fades the loops out while the engine stalls / is switched off; _runGate adds the start/stop gating (ADR 0137)
+            float runGain = Mathf.Clamp01((_rpm - 80f) / 300f) * _runGate;
 
             Tick(_extEngine, exteriorMix.engine * extW * runGain, _load, dt);
             Tick(_cabEngine, cabMix.engine * cabW * runGain, _load, dt);
@@ -196,12 +253,59 @@ namespace TruckSim.Audio
             Tick(_cabBrake, cabMix.engineBrake * cabW * _brake * runGain, 0f, dt);
 
             UpdateTurbo(extW, cabW, dt);
+
+            if (_clatter != null)
+            {
+                // injector / valve-train clatter: audible at idle, masked by combustion above ~1300 rpm
+                float idle = 1f - Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(700f, 1300f, _rpm));
+                _clatter.Set(clatterVolume * runGain * idle * (0.75f + 0.25f * _load), Mathf.Clamp(_rpm / 600f, 0.7f, 2f), interiorBlend);
+            }
+        }
+
+        const float StartRpm = 400f, StopRpm = 250f;
+
+        /// <summary>
+        /// Start / stop from the rpm (the physics restarts a stalled engine by jumping to idle, Engine.Restart; a stall
+        /// drops below the stall speed). With event clips (ElevenLabs) the loops are gated: silent while the start clip
+        /// cranks, faded in after <see cref="startLoopDelay"/>, cut in 0.2 s when the engine stops (the stop clip carries
+        /// the run-down). Procedural set: no clips, gate stays 1 (unchanged ADR 0007 behaviour).
+        /// </summary>
+        void UpdateEvents(float rpm, float dt)
+        {
+            if (!_running && rpm > StartRpm)
+            {
+                _running = true;
+                if (_hasEvents && startExt != null)
+                {
+                    PlayEvent(startExt, startCab);
+                    _startHold = startLoopDelay + startLoopFade;
+                    _runGate = 0f;
+                    StartEvents++;
+                }
+            }
+            else if (_running && rpm < StopRpm)
+            {
+                _running = false;
+                if (_hasEvents && stopExt != null) { PlayEvent(stopExt, stopCab); StopEvents++; }
+            }
+            if (!_hasEvents) { _runGate = 1f; return; }
+            _startHold = Mathf.Max(0f, _startHold - dt);
+            float target = _running ? 1f - Mathf.Clamp01(_startHold / Mathf.Max(1e-3f, startLoopFade)) : 0f;
+            _runGate = target >= _runGate ? target : Mathf.MoveTowards(_runGate, target, dt / 0.2f);
+        }
+
+        void PlayEvent(AudioClip ext, AudioClip cab)
+        {
+            bool cabView = interiorBlend > 0.5f;
+            var clip = cabView && cab != null ? cab : ext;
+            _events.spatialBlend = cabView ? 0f : (exteriorEngine != null ? exteriorEngine.spatialBlend : 1f);
+            _events.PlayOneShot(clip, startStopVolume);
         }
 
         void Tick(EngineLayerGrid g, float gain, float load, float dt)
         {
             if (g == null) return;
-            g.Coherence = crossfadeCoherence;
+            g.Coherence = g.Incoherent ? 0f : crossfadeCoherence;
             g.Tick(_rpm, load, gain, dt);
         }
 
@@ -228,7 +332,8 @@ namespace TruckSim.Audio
             if (turboLiftoff != null && _liftoffTimer <= 0f && _throttleHold - _throttle > 0.5f && _boost > liftoffMinBoost)
             {
                 float mixL = exteriorMix.turboLiftoff * extW + cabMix.turboLiftoff * cabW;
-                _oneShot.PlayOneShot(turboLiftoff, mixL * _boost);
+                var clip = interiorBlend > 0.5f && turboLiftoffCab != null ? turboLiftoffCab : turboLiftoff;
+                _oneShot.PlayOneShot(clip, mixL * _boost);
                 _liftoffTimer = liftoffCooldown;
             }
         }

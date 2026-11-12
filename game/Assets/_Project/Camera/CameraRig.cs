@@ -187,8 +187,21 @@ namespace Game.Cameras
             Quaternion rot = anchor.rotation * DriverHead.LookRotation(m_LookYaw, m_LookPitch);
             if (!IsFinite(eyeWorld) || float.IsNaN(rot.x + rot.y + rot.z + rot.w)) return;   // never feed a broken pose to the renderer
             cam.transform.SetPositionAndRotation(eyeWorld, rot);
-            cam.fieldOfView = cabFov;
+            cam.fieldOfView = CabVerticalFov(cabFov, cam.aspect);
             cam.nearClipPlane = 0.05f;
+        }
+
+        /// <summary>
+        /// Vertical FOV of the cab camera for the settings FOV and the screen aspect (ADR 0135). Landscape (aspect &gt;= 1):
+        /// the setting itself. A portrait window (near-square foldable held upright): the vertical FOV opens so the
+        /// horizontal FOV stays what it is on a square screen (= the setting), i.e. the road ahead and the mirrors do not
+        /// shrink out of view; capped at 90 deg.
+        /// </summary>
+        public static float CabVerticalFov(float settingDeg, float aspect)
+        {
+            if (!(aspect > 0f) || aspect >= 1f) return settingDeg;
+            float v = 2f * Mathf.Atan(Mathf.Tan(settingDeg * 0.5f * Mathf.Deg2Rad) / aspect) * Mathf.Rad2Deg;
+            return Mathf.Min(v, 90f);
         }
 
         static bool IsFinite(Vector3 v) => !(float.IsNaN(v.x) || float.IsNaN(v.y) || float.IsNaN(v.z) || float.IsInfinity(v.x) || float.IsInfinity(v.y) || float.IsInfinity(v.z));

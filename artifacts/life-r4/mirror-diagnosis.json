@@ -1,0 +1,36 @@
+{
+  "baseline_sha": "847684a872d439d7568b2b2a9cb05fa432eab2cd5cd9c75244054fc3cbc56dbd",
+  "cases": [
+    {
+      "radius": 0.535,
+      "width": 0.385,
+      "segments": 10,
+      "baseline_rim_mirror_mismatches": 0,
+      "baseline_tyre_mirror_mismatches": 44,
+      "candidate_rim_mirror_mismatches": 0,
+      "candidate_tyre_mirror_mismatches": 44,
+      "candidate_backing_mirror_mismatches": 0
+    },
+    {
+      "radius": 0.51,
+      "width": 0.32,
+      "segments": 14,
+      "baseline_rim_mirror_mismatches": 0,
+      "baseline_tyre_mirror_mismatches": 60,
+      "candidate_rim_mirror_mismatches": 0,
+      "candidate_tyre_mirror_mismatches": 60,
+      "candidate_backing_mirror_mismatches": 0
+    },
+    {
+      "radius": 0.51,
+      "width": 0.62,
+      "segments": 14,
+      "baseline_rim_mirror_mismatches": 0,
+      "baseline_tyre_mirror_mismatches": 60,
+      "candidate_rim_mirror_mismatches": 0,
+      "candidate_tyre_mirror_mismatches": 60,
+      "candidate_backing_mirror_mismatches": 0
+    }
+  ],
+  "note": "Exact frozen baseline source versus current, post-crease vertex/normal multisets at 1e-5. This diagnoses legacy tread asymmetry; it does not relax the near-rim invariant."
+}

@@ -32,6 +32,19 @@ namespace Game.Controls
         /// </summary>
         public static float ClockwiseAngleFromUp(Vector2 fromCentre) => Mathf.Atan2(fromCentre.x, fromCentre.y) * Mathf.Rad2Deg;
 
+        /// <summary>On-screen wheel degrees for a horizontal finger travel [mm] (drag gesture, ADR 0135): right = clockwise.</summary>
+        public static float DragDeg(float dxMm, float degPerMm) => dxMm * degPerMm;
+
+        /// <summary>DPI used when the platform reports none (Screen.dpi = 0). WORKING_VALUE (typical phone 400-500).</summary>
+        public const float FallbackDpi = 420f;
+
+        /// <summary>Screen pixels to millimetres (physical finger travel; the drag gesture does not depend on the canvas scale).</summary>
+        public static Vector2 PixelsToMm(Vector2 px, float dpi) => px * (25.4f / SanitizeDpi(dpi));
+
+        /// <summary>Usable DPI: unknown (&lt;= 1) gives <see cref="FallbackDpi"/>; otherwise clamped to 120-900 (no phone or
+        /// tablet panel is outside; a wrong report must not make the wheel 5x too fast or slow).</summary>
+        public static float SanitizeDpi(float dpi) => float.IsNaN(dpi) || dpi <= 1f ? FallbackDpi : Mathf.Clamp(dpi, 120f, 900f);
+
         /// <summary>Exponential smoothing factor for a first-order filter with time constant tau.</summary>
         public static float SmoothingAlpha(float dt, float tau) => tau <= 1e-5f ? 1f : 1f - Mathf.Exp(-dt / tau);
     }
