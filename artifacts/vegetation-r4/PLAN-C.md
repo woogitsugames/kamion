@@ -1,0 +1,9 @@
+# B3 — pokrywa powierzchni, artefakty candidate-c / probe-c
+
+B2 pozostaje odrzucony wizualnie; 33 testy i poprawna geometria stanowią bazę następnej próby. Snapshot-candidate-b i probe-b zachowują B2. Nie wykonywać pełnego GIS ani macierzy after B2 jako zaakceptowanej poprawy. Brak aktywnego własnego ciężkiego zadania; 87809 i 9518 zakończone kodem 0.
+
+Eksperyment B3 na tej samej gałęzi r4 użyje nowych nazw candidate-c, probe-c, green-c-and-world.ps1, aby nie nadpisać B2. Zmiana wyłącznie plantings.py, za danymi berberysu: powierzchniowe próbki z deterministycznym jitterem i minimalnym odstępem, niezależne od wierzchołków capu. Punkt początkowy próby: spacing 0,28 m, wysokość karty 0,07–0,14 m i szerokość około 0,12–0,22 m, wszystkie WORKING_VALUE do oglądania. Wykorzystać istniejący materiał/atlas sprig, nie zmieniać tekstur, shaderów ani innych rodzin.
+
+Podstawy próbek muszą mieć wysokość z rzeczywistych trójkątów shell cap, a _sprig_cards zagłębia ich dolną część jak dotychczas. Zastąpić dotychczasowe top-cards zależne od punktów wnętrza, bez dodawania drugiej równoległej metody pokrywy. Zachować karty krawędzi/boków. Proponowana liczba ma być zmierzona, nie przyjęta jako budżet. Dane wyłączające pokrywę muszą pozwolić porównać geometrię bazową B2. Unikać rzędów, wielkich garbów, szczotki i wyraźnych prostokątów.
+
+Dodać znaczące testy: pokrywa istnieje w rzeczywistym wąskim E1 mimo zera wewnętrznych punktów capu; próbki są deterministyczne, wewnątrz obrysu i mają minimalny odstęp; wysokość barycentryczna zgadza się ze znaną płaszczyzną i odmawia punktu poza capem. Wszystkie testy GIS przez heavy, potem World i kolizja w tym samym slocie. Lekkie piny/JSON bez dodatkowej kolejki. Import przez slot Unity i ta sama próba 16 ujęć. Autor ogląda wszystkie osiem arkuszy; niezależny krytyk ocenia, zanim ruszy pełna macierz, końcowy GIS/EditMode i REPORT. Nie obniżać skali ani nie edytować innych dziedzin.
