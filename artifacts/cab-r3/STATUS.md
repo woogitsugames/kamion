@@ -65,3 +65,4 @@ Rano 12 listopada: uporządkowano raport po kontroli GPU: usunięto nieaktualne 
 Rozpoznanie r4: mapa nazwana AO jest wypiekiem DIFFUSE DIRECT+INDIRECT; argument ao-distance nie steruje bake. Źródła ambientCG Plastic003/004 proceduralne, odrzucone jako dowód skanu. Bez zmian shaderów i map. Fidelity nadal pojedynczy proces w kolejce.
 
 Zapisano odczytowy plan r4 po obejrzeniu natywnego cab-grain Low overcast i ponownym obejrzeniu DAF XF: najpierw izolacja źródła pasma z istniejącym QA, potem ewentualna korekta danych. To plan, nie zgłoszenie poprawy. W czasie kolejki brak zmian gry.
+Ponownie obejrzano istniejącą macierz ablacji r2: ao-flat usuwa pasmo, detail-off i roughness-flat nie. Plan r4 doprecyzowany o wykorzystanie gotowych wyników zamiast powtarzania tych samych eksperymentów. Fidelity nadal czeka.

@@ -9,3 +9,5 @@ Pierwszy pomiar r4 po merge main: świeży baseline, kontrolowane obrazy tej sam
 Jeśli pasmo okaże się uzasadnioną formą/geometrią, przejść do lokalnego zużycia kontaktowego: źródło już ma maski dłoni 10/2, podłokietników i uchwytów. Sama zmiana mnożnika nie jest dowodem poprawy. Wymagane oglądanie przed/po i kontrola, by czarne części nie stały się beżowymi lub chromowanymi. Low bez dodatkowych draws/pass/fetch; foto i render do 960 px, parametry WORKING_VALUE.
 
 Szeroki ciemny obszar WideR z bieżącego oka jest zawartością RT, nie fizyczną osłoną. Nie przesuwać kanału, oka lub optyki w celu jego ukrycia.
+
+Doprecyzowanie po ponownym obejrzeniu istniejącego k4-channel-crops-960.jpg z r2: ablacja ao-flat usuwa szerokie ciemne pasmo; roughness-flat i detail-off go nie usuwają. Istnieją już wyniki CabSurfaceAudit (r1/surface-audit-High-clear) i nie należy bez potrzeby powtarzać całego rozpoznania. R4 ma zacząć od odczytu tych wyników i atlasu/bake, a świeży baseline po merge służy sprawdzeniu aktualnego stanu. Nie zgłaszamy jeszcze zmiany mapy ani wizualnej poprawy.
