@@ -31,3 +31,4 @@ Odrzucono eksperyment odzysku diffuse fill: brak wyraźnego usunięcia pasma w H
 Zakończono Game.Editor.Setup.TruckAssetBuilder.BuildBatch, exit 0. Następny krok: kolejny etap prefab/sceny lub capture-0112 -Stage result-0112.
 Zakończono Game.World.Import.WorldTruckInstaller.InstallBatch, exit 0. Następny krok: kolejny etap prefab/sceny lub capture-0112 -Stage result-0112.
 Scan2 BuildBatch/InstallBatch zakończone. Dodano --textures-only do kanonicznego eksportera: odtwarza tylko Plastic/Leather z bazowych map i aktywnych flag, bez geometrii, AO i obcych materiałów. Zapewnia poprawne odtwarzanie także po zmianie flag; kontrola zapisze wynik poza grą. Następny krok: rendery scan2 i reprodukcja pod heavy, porównanie hashów.
+Zapisano result-0112-scan2 Low clear, siedem kamer i sześć natywnych RT z identyfikatorem wnętrza. Następny krok: kontynuować macierz lub porównać PNG.
