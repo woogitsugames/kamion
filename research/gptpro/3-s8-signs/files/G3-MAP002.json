@@ -1,0 +1,1381 @@
+{
+  "data_dostępu": "2026-11-12",
+  "projection": "EPSG:2180",
+  "camera_photo_count": 89,
+  "camera_observation_count": 140,
+  "manifest_record_count": 152,
+  "boundary_extension_photos": [
+    {
+      "source": "Mapillary",
+      "key": "503886228724826",
+      "lat": 53.324651,
+      "lon": 23.123476,
+      "x": 774497.4614051676,
+      "y": 614541.0405661324,
+      "ids": [
+        "MX002",
+        "MX003"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=503886228724826",
+      "autor": "kino",
+      "data_zdjęcia": "2024-07-26",
+      "boundary_exception": true,
+      "distance_to_city_m_ESTIMATED": 15177,
+      "distance_method": "Najkrótsza odległość punktu geometry Mapillary od poligonu granicy Białegostoku OSM relation2910925, po przeliczeniu obu geometrii WGS84→EPSG2180; zaokrąglenie do1m. Granica z files/G3-OSM004.geojson, kind=city_boundary; ESTIMATED, nie pomiar terenowy.",
+      "distance_to_city_calculated_m_ESTIMATED": 15176.577,
+      "outside_15000m_by_m_ESTIMATED": 177
+    }
+  ],
+  "counts_by_provider": {
+    "Commons": 11,
+    "Mapillary": 78
+  },
+  "unmapped_missing_camera_coordinates": [
+    "G3-C023",
+    "G3-C024",
+    "G3-C028",
+    "G3-C029"
+  ],
+  "nonphoto_records_excluded": [
+    "G3-MUN-001",
+    "G3-MUN-002",
+    "G3-MUN-003",
+    "G3-MUN-004",
+    "G3-MUN-005",
+    "G3-MUN-006",
+    "G3-MUN-007",
+    "G3-MUN-008"
+  ],
+  "putry_center_estimated": {
+    "lat": 53.159038270019686,
+    "lon": 23.151612964879778,
+    "source_osm_ways": [
+      "180144451",
+      "257367424",
+      "257367425",
+      "257367428"
+    ],
+    "method": "centroid of polygon assembled from OSM roundabout ways in EPSG4326; angular coordinates negligible distortion at ~80m"
+  },
+  "user_point": {
+    "lat": 53.152,
+    "lon": 23.168
+  },
+  "geodesic_distance_m_estimated": 1347.3074075326178,
+  "zoom_extent_epsg2180": [
+    776589.8850031944,
+    594686.43001257,
+    779230.0524549603,
+    597115.3840681945
+  ],
+  "sources_sha256": {
+    "files/G3-OSM003.geojson": "9b786a674c448ce64ad3d67b46da040b443dea8757293021f8e2202c955e8efc",
+    "files/G3-OSM004.geojson": "d881fff913f34fa052d26ffbee3a81c127cd0594c1c4d6c4056282c7141863c2",
+    "files/G3-OSM007.json": "3fd3fd5e90e6b06c2fe5f1d983c494b89f8ed64cc1d43e0f411cdb838b0b8117",
+    "records.json": "3e4954248b47df22b5a80e9f7e7b24f5bac0fa42d945a441e4cf7f4ee346fd1a"
+  },
+  "camera_photos": [
+    {
+      "source": "Commons",
+      "key": "104868647",
+      "lat": 53.158496,
+      "lon": 23.153233,
+      "x": 777551.5957424804,
+      "y": 596191.1534591597,
+      "ids": [
+        "G3-C001",
+        "G3-C002",
+        "G3-C003",
+        "G3-C004"
+      ],
+      "url": "https://commons.wikimedia.org/wiki/File:7204_May_2021_in_Bia%C5%82ystok.jpg",
+      "autor": "Rakoon",
+      "data_zdjęcia": "2021-05-03 12:34:33"
+    },
+    {
+      "source": "Commons",
+      "key": "104868639",
+      "lat": 53.155804,
+      "lon": 23.158026,
+      "x": 777889.1482927497,
+      "y": 595910.6101515479,
+      "ids": [
+        "G3-C005"
+      ],
+      "url": "https://commons.wikimedia.org/wiki/File:7202_May_2021_in_Bia%C5%82ystok.jpg",
+      "autor": "Rakoon",
+      "data_zdjęcia": "2021-05-03 12:28:10"
+    },
+    {
+      "source": "Commons",
+      "key": "121537442",
+      "lat": 53.156717,
+      "lon": 23.151565,
+      "x": 777451.666131123,
+      "y": 595986.9812884703,
+      "ids": [
+        "G3-C006"
+      ],
+      "url": "https://commons.wikimedia.org/wiki/File:20220725_132610_July_2022_in_Bia%C5%82ystok.jpg",
+      "autor": "Rakoon",
+      "data_zdjęcia": "2022-07-25 13:26:10"
+    },
+    {
+      "source": "Commons",
+      "key": "121537448",
+      "lat": 53.156667,
+      "lon": 23.151389,
+      "x": 777440.2324956909,
+      "y": 595980.7419281118,
+      "ids": [
+        "G3-C007",
+        "G3-C008",
+        "G3-C009",
+        "G3-C010",
+        "G3-C011"
+      ],
+      "url": "https://commons.wikimedia.org/wiki/File:20220725_132640_July_2022_in_Bia%C5%82ystok.jpg",
+      "autor": "Rakoon",
+      "data_zdjęcia": "2022-07-25 13:26:40"
+    },
+    {
+      "source": "Commons",
+      "key": "106091698",
+      "lat": 53.151915,
+      "lon": 23.07246,
+      "x": 772197.9680396679,
+      "y": 595149.3106510052,
+      "ids": [
+        "G3-C012",
+        "G3-C013"
+      ],
+      "url": "https://commons.wikimedia.org/wiki/File:20210526_145138_May_2021_in_Bia%C5%82ystok.jpg",
+      "autor": "Rakoon",
+      "data_zdjęcia": "2021-05-26 14:51:38"
+    },
+    {
+      "source": "Commons",
+      "key": "106091653",
+      "lat": 53.148363,
+      "lon": 23.060901,
+      "x": 771448.1699080567,
+      "y": 594710.6328026755,
+      "ids": [
+        "G3-C014",
+        "G3-C015",
+        "G3-C016"
+      ],
+      "url": "https://commons.wikimedia.org/wiki/File:20210526_163909_2021_in_Podlaskie_Voivodeship.jpg",
+      "autor": "Rakoon",
+      "data_zdjęcia": "2021-05-26 08:07:04"
+    },
+    {
+      "source": "Commons",
+      "key": "106091697",
+      "lat": 53.150833,
+      "lon": 23.068611,
+      "x": 771947.6720267117,
+      "y": 595014.421854292,
+      "ids": [
+        "G3-C017",
+        "G3-C018",
+        "G3-C019",
+        "G3-C020",
+        "G3-C021",
+        "G3-C022"
+      ],
+      "url": "https://commons.wikimedia.org/wiki/File:20210526_174045_May_2021_in_Bia%C5%82ystok.jpg",
+      "autor": "Rakoon",
+      "data_zdjęcia": "2021-05-26 14:51:29"
+    },
+    {
+      "source": "Commons",
+      "key": "115339687",
+      "lat": 53.148912,
+      "lon": 23.059387,
+      "x": 771343.5504714708,
+      "y": 594765.899159926,
+      "ids": [
+        "G3-C025"
+      ],
+      "url": "https://commons.wikimedia.org/wiki/File:8010_February_2022_in_Podlaskie_Voivodeship.jpg",
+      "autor": "Rakoon",
+      "data_zdjęcia": "2022-02-15 08:53:03"
+    },
+    {
+      "source": "Commons",
+      "key": "115339666",
+      "lat": 53.147883,
+      "lon": 23.063094,
+      "x": 771597.7224572541,
+      "y": 594665.6152292024,
+      "ids": [
+        "G3-C026",
+        "G3-C027"
+      ],
+      "url": "https://commons.wikimedia.org/wiki/File:8009_February_2022_in_Podlaskie_Voivodeship.jpg",
+      "autor": "Rakoon",
+      "data_zdjęcia": "2022-02-15 08:52:39"
+    },
+    {
+      "source": "Commons",
+      "key": "90595421",
+      "lat": 53.164444,
+      "lon": 22.923611,
+      "x": 762177.1214132269,
+      "y": 595985.5663775848,
+      "ids": [
+        "G3-C030"
+      ],
+      "url": "https://commons.wikimedia.org/wiki/File:20200523_215725_Expressway_S8_(Poland)_Podlaskie_Voivodeship.jpg",
+      "autor": "Rakoon",
+      "data_zdjęcia": "2020-05-20 12:10:19"
+    },
+    {
+      "source": "Commons",
+      "key": "104134845",
+      "lat": 53.149444,
+      "lon": 23.053611,
+      "x": 770954.2911895222,
+      "y": 594803.1222879943,
+      "ids": [
+        "G3-C031"
+      ],
+      "url": "https://commons.wikimedia.org/wiki/File:20180810_112432_August_2018_in_Podlaskie_Voivodeship.jpg",
+      "autor": "Rakoon",
+      "data_zdjęcia": "2018-08-10 11:24:32"
+    },
+    {
+      "source": "Mapillary",
+      "key": "1354063529862825",
+      "lat": 53.152652,
+      "lon": 23.078094,
+      "x": 772569.6854634418,
+      "y": 595252.674576303,
+      "ids": [
+        "G3-MC001"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=1354063529862825",
+      "autor": "Janusz221",
+      "data_zdjęcia": "2026-03-10T12:45:23.632Z"
+    },
+    {
+      "source": "Mapillary",
+      "key": "1255447476083948",
+      "lat": 53.153892,
+      "lon": 23.077156,
+      "x": 772499.1611098759,
+      "y": 595386.9035091009,
+      "ids": [
+        "G3-MC002"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=1255447476083948",
+      "autor": "Janusz221",
+      "data_zdjęcia": "2026-03-10T12:45:46.504Z"
+    },
+    {
+      "source": "Mapillary",
+      "key": "1289084176615027",
+      "lat": 53.154146,
+      "lon": 23.07688,
+      "x": 772479.113198129,
+      "y": 595414.0793597819,
+      "ids": [
+        "G3-MC003"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=1289084176615027",
+      "autor": "Janusz221",
+      "data_zdjęcia": "2026-03-10T12:45:49.574Z"
+    },
+    {
+      "source": "Mapillary",
+      "key": "393034956901017",
+      "lat": 53.149272,
+      "lon": 23.056573,
+      "x": 771153.2709616933,
+      "y": 594795.2338459538,
+      "ids": [
+        "G3-MC004"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=393034956901017",
+      "autor": "d3mol3k",
+      "data_zdjęcia": "2024-04-19T07:40:08.812Z"
+    },
+    {
+      "source": "Mapillary",
+      "key": "1027731969354042",
+      "lat": 53.147177,
+      "lon": 23.066651,
+      "x": 771839.8415675131,
+      "y": 594600.670074367,
+      "ids": [
+        "G3-MC005",
+        "G3-MC006",
+        "G3-MC007",
+        "G3-MC008"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=1027731969354042",
+      "autor": "kino",
+      "data_zdjęcia": "2024-07-26T12:23:39.911Z"
+    },
+    {
+      "source": "Mapillary",
+      "key": "490521135728838",
+      "lat": 53.156765,
+      "lon": 23.089864,
+      "x": 773329.8325596366,
+      "y": 595754.6857033977,
+      "ids": [
+        "G3-MC009",
+        "G3-MC010"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=490521135728838",
+      "autor": "picturehoover",
+      "data_zdjęcia": "2020-06-27T17:53:15.014Z"
+    },
+    {
+      "source": "Mapillary",
+      "key": "312983250472123",
+      "lat": 53.15719,
+      "lon": 23.090777,
+      "x": 773388.1167985831,
+      "y": 595805.4068808956,
+      "ids": [
+        "G3-MC011",
+        "G3-MC012"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=312983250472123",
+      "autor": "gpsmapper",
+      "data_zdjęcia": "2019-08-25T11:55:14.000Z"
+    },
+    {
+      "source": "Mapillary",
+      "key": "626871662047244",
+      "lat": 53.159363,
+      "lon": 23.135925,
+      "x": 776389.9309076706,
+      "y": 596220.4588701045,
+      "ids": [
+        "G3-MC013",
+        "G3-MC014"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=626871662047244",
+      "autor": "picturehoover",
+      "data_zdjęcia": "2020-06-27T17:55:31.001Z"
+    },
+    {
+      "source": "Mapillary",
+      "key": "1179003265881976",
+      "lat": 53.159344,
+      "lon": 23.137094,
+      "x": 776468.135212779,
+      "y": 596222.8667593179,
+      "ids": [
+        "G3-MC015"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=1179003265881976",
+      "autor": "gpsmapper",
+      "data_zdjęcia": "2019-08-04T05:30:22.000Z"
+    },
+    {
+      "source": "Mapillary",
+      "key": "371076474333574",
+      "lat": 53.159399,
+      "lon": 23.137976,
+      "x": 776526.6935497299,
+      "y": 596232.3895548163,
+      "ids": [
+        "G3-MC016"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=371076474333574",
+      "autor": "picturehoover",
+      "data_zdjęcia": "2020-06-27T17:55:37.017Z"
+    },
+    {
+      "source": "Mapillary",
+      "key": "954652628630622",
+      "lat": 53.159419,
+      "lon": 23.139347,
+      "x": 776618.1391175326,
+      "y": 596239.9151963145,
+      "ids": [
+        "G3-MC017",
+        "G3-MC018"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=954652628630622",
+      "autor": "picturehoover",
+      "data_zdjęcia": "2020-06-27T17:55:41.010Z"
+    },
+    {
+      "source": "Mapillary",
+      "key": "1112251929259464",
+      "lat": 53.15424,
+      "lon": 23.076728,
+      "x": 772468.3632488959,
+      "y": 595423.9466119437,
+      "ids": [
+        "G3-MC019"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=1112251929259464",
+      "autor": "picturehoover",
+      "data_zdjęcia": "2020-06-27T17:52:08.025Z"
+    },
+    {
+      "source": "Mapillary",
+      "key": "383395866246236",
+      "lat": 53.15467,
+      "lon": 23.076392,
+      "x": 772443.1919696429,
+      "y": 595470.4532380188,
+      "ids": [
+        "G3-MC020"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=383395866246236",
+      "autor": "picturehoover",
+      "data_zdjęcia": "2020-06-27T17:52:04.002Z"
+    },
+    {
+      "source": "Mapillary",
+      "key": "377784193573775",
+      "lat": 53.15717,
+      "lon": 23.091202,
+      "x": 773416.6333334267,
+      "y": 595804.8092195373,
+      "ids": [
+        "G3-MC021"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=377784193573775",
+      "autor": "picturehoover",
+      "data_zdjęcia": "2020-06-27T17:53:19.017Z"
+    },
+    {
+      "source": "Mapillary",
+      "key": "725709236426138",
+      "lat": 53.158019,
+      "lon": 23.00543,
+      "x": 767681.8278520934,
+      "y": 595574.6444561481,
+      "ids": [
+        "G3-MLY-S8-001",
+        "G3-MLY-S8-002"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=725709236426138&focus=photo",
+      "autor": "d3mol3k",
+      "data_zdjęcia": "2024-04-19"
+    },
+    {
+      "source": "Mapillary",
+      "key": "7402726476513263",
+      "lat": 53.164302,
+      "lon": 22.952344,
+      "x": 764097.0885615194,
+      "y": 596075.5198501172,
+      "ids": [
+        "G3-MLY-S8-003",
+        "G3-MLY-S8-004",
+        "G3-MLY-S8-005"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=7402726476513263&focus=photo",
+      "autor": "d3mol3k",
+      "data_zdjęcia": "2024-04-19"
+    },
+    {
+      "source": "Mapillary",
+      "key": "2036249496776401",
+      "lat": 53.156729,
+      "lon": 23.013008,
+      "x": 768196.0796026927,
+      "y": 595459.6745166946,
+      "ids": [
+        "G3-MLY-S8-006"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=2036249496776401&focus=photo",
+      "autor": "d3mol3k",
+      "data_zdjęcia": "2024-04-19"
+    },
+    {
+      "source": "Mapillary",
+      "key": "801264181452550",
+      "lat": 53.160462,
+      "lon": 22.992019,
+      "x": 766770.8196618956,
+      "y": 595796.0309504354,
+      "ids": [
+        "G3-MLY-S8-007"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=801264181452550&focus=photo",
+      "autor": "d3mol3k",
+      "data_zdjęcia": "2024-04-19"
+    },
+    {
+      "source": "Mapillary",
+      "key": "442992931532020",
+      "lat": 53.157309,
+      "lon": 23.009366,
+      "x": 767949.1749041553,
+      "y": 595510.4797136309,
+      "ids": [
+        "G3-MLY-S8-008"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=442992931532020&focus=photo",
+      "autor": "d3mol3k",
+      "data_zdjęcia": "2024-04-19"
+    },
+    {
+      "source": "Mapillary",
+      "key": "2109410972791881",
+      "lat": 53.163728,
+      "lon": 22.967244,
+      "x": 765095.8053937627,
+      "y": 596066.8626522673,
+      "ids": [
+        "G3-MLY-S8-009"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=2109410972791881&focus=photo",
+      "autor": "d3mol3k",
+      "data_zdjęcia": "2024-04-19"
+    },
+    {
+      "source": "Mapillary",
+      "key": "456208566839517",
+      "lat": 53.164206,
+      "lon": 22.958932,
+      "x": 764537.6948511027,
+      "y": 596089.2029457651,
+      "ids": [
+        "G3-MLY-S8-010",
+        "G3-MLY-S8-011"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=456208566839517&focus=photo",
+      "autor": "d3mol3k",
+      "data_zdjęcia": "2024-04-19"
+    },
+    {
+      "source": "Mapillary",
+      "key": "395176806726905",
+      "lat": 53.164249,
+      "lon": 22.947249,
+      "x": 763757.1159630984,
+      "y": 596050.8240247639,
+      "ids": [
+        "G3-MLY-S8-012",
+        "G3-MLY-S8-013",
+        "G3-MLY-S8-014"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=395176806726905&focus=photo",
+      "autor": "d3mol3k",
+      "data_zdjęcia": "2024-04-19"
+    },
+    {
+      "source": "Mapillary",
+      "key": "3876432582641669",
+      "lat": 53.164307,
+      "lon": 22.940584,
+      "x": 763311.6000656034,
+      "y": 596032.7062728051,
+      "ids": [
+        "G3-MLY-S8-015",
+        "G3-MLY-S8-016"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=3876432582641669&focus=photo",
+      "autor": "d3mol3k",
+      "data_zdjęcia": "2024-04-19"
+    },
+    {
+      "source": "Mapillary",
+      "key": "1109500016998751",
+      "lat": 53.156933,
+      "lon": 22.876963,
+      "x": 759106.7093138479,
+      "y": 594980.7810086347,
+      "ids": [
+        "G3-MLY-S8-017"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=1109500016998751&focus=photo",
+      "autor": "d3mol3k",
+      "data_zdjęcia": "2024-04-19"
+    },
+    {
+      "source": "Mapillary",
+      "key": "733439788861219",
+      "lat": 53.155861,
+      "lon": 22.869703,
+      "x": 758628.1634780425,
+      "y": 594835.3601043979,
+      "ids": [
+        "G3-MLY-S8-018",
+        "G3-MLY-S8-019"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=733439788861219&focus=photo",
+      "autor": "d3mol3k",
+      "data_zdjęcia": "2024-04-19"
+    },
+    {
+      "source": "Mapillary",
+      "key": "882010093766468",
+      "lat": 53.153544,
+      "lon": 22.856043,
+      "x": 757729.4882655593,
+      "y": 594528.5360903386,
+      "ids": [
+        "G3-MLY-S8-020"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=882010093766468&focus=photo",
+      "autor": "d3mol3k",
+      "data_zdjęcia": "2024-04-19"
+    },
+    {
+      "source": "Mapillary",
+      "key": "1155885512219318",
+      "lat": 53.157107,
+      "lon": 22.878107,
+      "x": 759182.0835878858,
+      "y": 595004.2647213554,
+      "ids": [
+        "G3-MLY-S8-021"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=1155885512219318&focus=photo",
+      "autor": "d3mol3k",
+      "data_zdjęcia": "2024-04-19"
+    },
+    {
+      "source": "Mapillary",
+      "key": "516085510768603",
+      "lat": 53.152051,
+      "lon": 22.847212,
+      "x": 757148.4229894765,
+      "y": 594330.8158994727,
+      "ids": [
+        "G3-MLY-S8-022"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=516085510768603&focus=photo",
+      "autor": "kino",
+      "data_zdjęcia": "2024-07-26"
+    },
+    {
+      "source": "Mapillary",
+      "key": "1542345516492100",
+      "lat": 53.153082,
+      "lon": 22.853633,
+      "x": 757571.2453418566,
+      "y": 594468.5071669929,
+      "ids": [
+        "G3-MLY-S8-023",
+        "G3-MLY-S8-024"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=1542345516492100&focus=photo",
+      "autor": "kino",
+      "data_zdjęcia": "2024-07-26"
+    },
+    {
+      "source": "Mapillary",
+      "key": "1155151249045878",
+      "lat": 53.156669,
+      "lon": 22.875544,
+      "x": 759013.5055802506,
+      "y": 594946.2999101542,
+      "ids": [
+        "G3-MLY-S8-025"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=1155151249045878&focus=photo",
+      "autor": "kino",
+      "data_zdjęcia": "2024-07-26"
+    },
+    {
+      "source": "Mapillary",
+      "key": "865725722091164",
+      "lat": 53.157962,
+      "lon": 22.884139,
+      "x": 759579.8779572865,
+      "y": 595121.1667910982,
+      "ids": [
+        "G3-MLY-S8-026"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=865725722091164&focus=photo",
+      "autor": "kino",
+      "data_zdjęcia": "2024-07-26"
+    },
+    {
+      "source": "Mapillary",
+      "key": "1626711668177199",
+      "lat": 53.16446,
+      "lon": 22.928465,
+      "x": 762501.2265899009,
+      "y": 596005.1526230834,
+      "ids": [
+        "G3-MLY-S8-027"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=1626711668177199&focus=photo",
+      "autor": "kino",
+      "data_zdjęcia": "2024-07-26"
+    },
+    {
+      "source": "Mapillary",
+      "key": "1658669941618735",
+      "lat": 53.164341,
+      "lon": 22.935114,
+      "x": 762946.0462302144,
+      "y": 596016.3564612241,
+      "ids": [
+        "G3-MLY-S8-028",
+        "G3-MLY-S8-029"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=1658669941618735&focus=photo",
+      "autor": "kino",
+      "data_zdjęcia": "2024-07-26"
+    },
+    {
+      "source": "Mapillary",
+      "key": "388980377140966",
+      "lat": 53.164211,
+      "lon": 22.942318,
+      "x": 763428.0036901087,
+      "y": 596028.4237028155,
+      "ids": [
+        "G3-MLY-S8-030",
+        "G3-MLY-S8-031",
+        "G3-MLY-S8-032"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=388980377140966&focus=photo",
+      "autor": "kino",
+      "data_zdjęcia": "2024-07-26"
+    },
+    {
+      "source": "Mapillary",
+      "key": "408986471596687",
+      "lat": 53.164131,
+      "lon": 22.956707,
+      "x": 764389.5473629328,
+      "y": 596072.6385290902,
+      "ids": [
+        "G3-MLY-S8-033"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=408986471596687&focus=photo",
+      "autor": "kino",
+      "data_zdjęcia": "2024-07-26"
+    },
+    {
+      "source": "Mapillary",
+      "key": "4038684246365853",
+      "lat": 53.161063,
+      "lon": 22.981178,
+      "x": 766042.9671332107,
+      "y": 595822.4345376687,
+      "ids": [
+        "G3-MLY-S8-034"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=4038684246365853&focus=photo",
+      "autor": "kino",
+      "data_zdjęcia": "2024-07-26"
+    },
+    {
+      "source": "Mapillary",
+      "key": "1384633595537126",
+      "lat": 53.160695,
+      "lon": 22.989736,
+      "x": 766616.8798699727,
+      "y": 595813.4108707597,
+      "ids": [
+        "G3-MLY-S8-035",
+        "G3-MLY-S8-036"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=1384633595537126&focus=photo",
+      "autor": "kino",
+      "data_zdjęcia": "2024-07-26"
+    },
+    {
+      "source": "Mapillary",
+      "key": "1231462688231948",
+      "lat": 53.159027,
+      "lon": 22.999558,
+      "x": 767283.3148425332,
+      "y": 595664.7040851125,
+      "ids": [
+        "G3-MLY-S8-037"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=1231462688231948&focus=photo",
+      "autor": "kino",
+      "data_zdjęcia": "2024-07-26"
+    },
+    {
+      "source": "Mapillary",
+      "key": "286619497848050",
+      "lat": 53.156515,
+      "lon": 23.014153,
+      "x": 768273.9022621294,
+      "y": 595440.1866092803,
+      "ids": [
+        "G3-MLY-S8-038"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=286619497848050&focus=photo",
+      "autor": "kino",
+      "data_zdjęcia": "2024-07-26"
+    },
+    {
+      "source": "Mapillary",
+      "key": "974040544501188",
+      "lat": 53.153589,
+      "lon": 23.030591,
+      "x": 769390.3140536781,
+      "y": 595176.8030759981,
+      "ids": [
+        "G3-MLY-S8-039",
+        "G3-MLY-S8-040"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=974040544501188&focus=photo",
+      "autor": "kino",
+      "data_zdjęcia": "2024-07-26"
+    },
+    {
+      "source": "Mapillary",
+      "key": "4049053151843387",
+      "lat": 53.153527,
+      "lon": 22.863729,
+      "x": 758243.0869263789,
+      "y": 594554.3717348678,
+      "ids": [
+        "G3-MLY-S8-041"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=4049053151843387&focus=photo",
+      "autor": "grobin",
+      "data_zdjęcia": "2020-09-20"
+    },
+    {
+      "source": "Mapillary",
+      "key": "2980222608886176",
+      "lat": 53.156448,
+      "lon": 22.863826,
+      "x": 758232.020955378,
+      "y": 594879.3624784965,
+      "ids": [
+        "G3-MLY-S8-042"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=2980222608886176&focus=photo",
+      "autor": "picturehoover",
+      "data_zdjęcia": "2020-06-28"
+    },
+    {
+      "source": "Mapillary",
+      "key": "2336560356476563",
+      "lat": 53.155464,
+      "lon": 22.863809,
+      "x": 758236.7962203698,
+      "y": 594769.9391392302,
+      "ids": [
+        "G3-MLY-S8-043"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=2336560356476563&focus=photo",
+      "autor": "grobin",
+      "data_zdjęcia": "2020-09-20"
+    },
+    {
+      "source": "Mapillary",
+      "key": "1116782768816266",
+      "lat": 53.15725,
+      "lon": 22.99416,
+      "x": 766933.7765066635,
+      "y": 595447.0537668345,
+      "ids": [
+        "G3-MLY-S8-044"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=1116782768816266&focus=photo",
+      "autor": "picturehoover",
+      "data_zdjęcia": "2020-06-28"
+    },
+    {
+      "source": "Mapillary",
+      "key": "778715096345882",
+      "lat": 53.160389,
+      "lon": 22.997597,
+      "x": 767143.858778445,
+      "y": 595808.7422609767,
+      "ids": [
+        "G3-MLY-S8-045"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=778715096345882&focus=photo",
+      "autor": "picturehoover",
+      "data_zdjęcia": "2020-06-28"
+    },
+    {
+      "source": "Mapillary",
+      "key": "465521806237924",
+      "lat": 53.1586,
+      "lon": 23.153038,
+      "x": 777537.8991307621,
+      "y": 596201.9539751457,
+      "ids": [
+        "G3-P001",
+        "G3-P002",
+        "G3-P003",
+        "G3-P004"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=465521806237924",
+      "autor": "kino",
+      "data_zdjęcia": "2024-07-26T13:36:22.600Z"
+    },
+    {
+      "source": "Mapillary",
+      "key": "398536382868438",
+      "lat": 53.160136,
+      "lon": 23.151701,
+      "x": 777438.6784669482,
+      "y": 596367.4596630074,
+      "ids": [
+        "G3-P005",
+        "G3-P006",
+        "G3-P007",
+        "G3-P008"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=398536382868438",
+      "autor": "strudel",
+      "data_zdjęcia": "2024-08-15T13:02:03.053Z"
+    },
+    {
+      "source": "Mapillary",
+      "key": "1217401006105441",
+      "lat": 53.161814,
+      "lon": 23.151879,
+      "x": 777439.7339564463,
+      "y": 596554.6251392355,
+      "ids": [
+        "G3-P009"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=1217401006105441",
+      "autor": "strudel",
+      "data_zdjęcia": "2024-08-15T13:01:50.943Z"
+    },
+    {
+      "source": "Mapillary",
+      "key": "814105944186182",
+      "lat": 53.161139,
+      "lon": 23.151859,
+      "x": 777442.7561220438,
+      "y": 596479.535324432,
+      "ids": [
+        "G3-P010"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=814105944186182",
+      "autor": "strudel",
+      "data_zdjęcia": "2024-08-15T13:01:55.494Z"
+    },
+    {
+      "source": "Mapillary",
+      "key": "1580999649297610",
+      "lat": 53.156104,
+      "lon": 23.157147,
+      "x": 777828.4928145846,
+      "y": 595940.5331436442,
+      "ids": [
+        "G3-P011"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=1580999649297610",
+      "autor": "kino",
+      "data_zdjęcia": "2024-07-26T13:35:54.672Z"
+    },
+    {
+      "source": "Mapillary",
+      "key": "1634385190678528",
+      "lat": 53.156685,
+      "lon": 23.156067,
+      "x": 777752.5957971106,
+      "y": 596000.9033363061,
+      "ids": [
+        "G3-P012",
+        "G3-P013"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=1634385190678528",
+      "autor": "kino",
+      "data_zdjęcia": "2024-07-26T13:36:00.671Z"
+    },
+    {
+      "source": "Mapillary",
+      "key": "473957713884485",
+      "lat": 53.159468,
+      "lon": 23.145216,
+      "x": 777009.8353973548,
+      "y": 596268.0818084404,
+      "ids": [
+        "G3-P014"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=473957713884485",
+      "autor": "richlv",
+      "data_zdjęcia": "2020-08-15T09:54:21.000Z"
+    },
+    {
+      "source": "Mapillary",
+      "key": "771725180195104",
+      "lat": 53.159511,
+      "lon": 23.146083,
+      "x": 777067.4681598505,
+      "y": 596276.2196131889,
+      "ids": [
+        "G3-P015",
+        "G3-P016"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=771725180195104",
+      "autor": "richlv",
+      "data_zdjęcia": "2020-08-15T09:54:24.000Z"
+    },
+    {
+      "source": "Mapillary",
+      "key": "2748010005509143",
+      "lat": 53.159204,
+      "lon": 23.150241,
+      "x": 777347.1763455432,
+      "y": 596258.2231159098,
+      "ids": [
+        "G3-P017",
+        "G3-P018",
+        "G3-P019",
+        "G3-P020"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=2748010005509143",
+      "autor": "gpsmapper",
+      "data_zdjęcia": "2019-08-04T05:31:08.000Z"
+    },
+    {
+      "source": "Mapillary",
+      "key": "2899614616862562",
+      "lat": 53.178827,
+      "lon": 23.147562,
+      "x": 777041.6636924916,
+      "y": 598428.5279412419,
+      "ids": [
+        "MN001"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=2899614616862562",
+      "autor": "kino",
+      "data_zdjęcia": "2024-07-26"
+    },
+    {
+      "source": "Mapillary",
+      "key": "3523237787821711",
+      "lat": 53.194551,
+      "lon": 23.154938,
+      "x": 777432.4822342177,
+      "y": 600204.536809451,
+      "ids": [
+        "MN002"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=3523237787821711",
+      "autor": "kino",
+      "data_zdjęcia": "2024-07-26"
+    },
+    {
+      "source": "Mapillary",
+      "key": "1031690505235562",
+      "lat": 53.196723,
+      "lon": 23.155641,
+      "x": 777465.3574309199,
+      "y": 600448.6389416251,
+      "ids": [
+        "MN003"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=1031690505235562",
+      "autor": "kino",
+      "data_zdjęcia": "2024-07-26"
+    },
+    {
+      "source": "Mapillary",
+      "key": "876869244252986",
+      "lat": 53.203779,
+      "lon": 23.153748,
+      "x": 777293.4283948573,
+      "y": 601225.4207325783,
+      "ids": [
+        "MN004"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=876869244252986",
+      "autor": "kino",
+      "data_zdjęcia": "2024-07-26"
+    },
+    {
+      "source": "Mapillary",
+      "key": "1032545491784283",
+      "lat": 53.211177,
+      "lon": 23.154715,
+      "x": 777310.1256783993,
+      "y": 602051.3095086515,
+      "ids": [
+        "MN005"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=1032545491784283",
+      "autor": "kino",
+      "data_zdjęcia": "2024-07-26"
+    },
+    {
+      "source": "Mapillary",
+      "key": "891035626424901",
+      "lat": 53.213173,
+      "lon": 23.155841,
+      "x": 777372.3365443482,
+      "y": 602277.4945566021,
+      "ids": [
+        "MN006",
+        "MN007"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=891035626424901",
+      "autor": "kino",
+      "data_zdjęcia": "2024-07-26"
+    },
+    {
+      "source": "Mapillary",
+      "key": "3951939065092236",
+      "lat": 53.222603,
+      "lon": 23.155771,
+      "x": 777306.6818827167,
+      "y": 603325.1744583119,
+      "ids": [
+        "MN008"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=3951939065092236",
+      "autor": "kino",
+      "data_zdjęcia": "2024-07-26"
+    },
+    {
+      "source": "Mapillary",
+      "key": "1009127457582864",
+      "lat": 53.227675,
+      "lon": 23.153849,
+      "x": 777145.7051202551,
+      "y": 603881.36570895,
+      "ids": [
+        "MN009"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=1009127457582864",
+      "autor": "kino",
+      "data_zdjęcia": "2024-07-26"
+    },
+    {
+      "source": "Mapillary",
+      "key": "462061296628384",
+      "lat": 53.236843,
+      "lon": 23.148417,
+      "x": 776724.2643118782,
+      "y": 604879.1456010863,
+      "ids": [
+        "MN010"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=462061296628384",
+      "autor": "kino",
+      "data_zdjęcia": "2024-07-26"
+    },
+    {
+      "source": "Mapillary",
+      "key": "1581330189177322",
+      "lat": 53.263208,
+      "lon": 23.132779,
+      "x": 775511.9994817624,
+      "y": 607748.639936164,
+      "ids": [
+        "MN011"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=1581330189177322",
+      "autor": "kino",
+      "data_zdjęcia": "2024-07-26"
+    },
+    {
+      "source": "Mapillary",
+      "key": "546473934478330",
+      "lat": 53.237435,
+      "lon": 23.147886,
+      "x": 776685.0388065102,
+      "y": 604942.8775898609,
+      "ids": [
+        "MN012"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=546473934478330",
+      "autor": "strudel",
+      "data_zdjęcia": "2024-08-15"
+    },
+    {
+      "source": "Mapillary",
+      "key": "3902888486700137",
+      "lat": 53.236316,
+      "lon": 23.148807,
+      "x": 776753.6700039317,
+      "y": 604822.0910477024,
+      "ids": [
+        "MN013"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=3902888486700137",
+      "autor": "strudel",
+      "data_zdjęcia": "2024-08-15"
+    },
+    {
+      "source": "Mapillary",
+      "key": "1157387411982440",
+      "lat": 53.222094,
+      "lon": 23.155593,
+      "x": 777298.1020138592,
+      "y": 603267.9186002938,
+      "ids": [
+        "MN014"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=1157387411982440",
+      "autor": "strudel",
+      "data_zdjęcia": "2024-08-15"
+    },
+    {
+      "source": "Mapillary",
+      "key": "380984394792296",
+      "lat": 53.219069,
+      "lon": 23.155739,
+      "x": 777327.40317586,
+      "y": 602932.3183305329,
+      "ids": [
+        "MN015",
+        "MN016"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=380984394792296",
+      "autor": "strudel",
+      "data_zdjęcia": "2024-08-15"
+    },
+    {
+      "source": "Mapillary",
+      "key": "1622960618287216",
+      "lat": 53.212457,
+      "lon": 23.155331,
+      "x": 777342.9443215745,
+      "y": 602195.9461448668,
+      "ids": [
+        "MN017"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=1622960618287216",
+      "autor": "strudel",
+      "data_zdjęcia": "2024-08-15"
+    },
+    {
+      "source": "Mapillary",
+      "key": "193638549280421",
+      "lat": 53.212358,
+      "lon": 23.15529,
+      "x": 777340.8493079133,
+      "y": 602184.7851816006,
+      "ids": [
+        "MN018"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=193638549280421",
+      "autor": "szurek",
+      "data_zdjęcia": "2017-08-16"
+    },
+    {
+      "source": "Mapillary",
+      "key": "816295107157388",
+      "lat": 53.201822,
+      "lon": 23.153804,
+      "x": 777309.812609463,
+      "y": 601008.1576199569,
+      "ids": [
+        "MN019"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=816295107157388",
+      "autor": "strudel",
+      "data_zdjęcia": "2024-08-15"
+    },
+    {
+      "source": "Mapillary",
+      "key": "856484332687938",
+      "lat": 53.19985,
+      "lon": 23.154951,
+      "x": 777399.0966226589,
+      "y": 600793.4619403481,
+      "ids": [
+        "MN020"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=856484332687938",
+      "autor": "strudel",
+      "data_zdjęcia": "2024-08-15"
+    },
+    {
+      "source": "Mapillary",
+      "key": "1600170667206591",
+      "lat": 53.184791,
+      "lon": 23.148394,
+      "x": 777058.7276736038,
+      "y": 599094.5291976817,
+      "ids": [
+        "MN021"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=1600170667206591",
+      "autor": "strudel",
+      "data_zdjęcia": "2024-08-15"
+    },
+    {
+      "source": "Mapillary",
+      "key": "1467798283935431",
+      "lat": 53.182465,
+      "lon": 23.147808,
+      "x": 777034.6167235925,
+      "y": 598833.7705991874,
+      "ids": [
+        "MN022"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=1467798283935431",
+      "autor": "strudel",
+      "data_zdjęcia": "2024-08-15"
+    },
+    {
+      "source": "Mapillary",
+      "key": "529998729367213",
+      "lat": 53.174393,
+      "lon": 23.146704,
+      "x": 777012.9777927676,
+      "y": 597932.4546616469,
+      "ids": [
+        "MN023"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=529998729367213",
+      "autor": "strudel",
+      "data_zdjęcia": "2024-08-15"
+    },
+    {
+      "source": "Mapillary",
+      "key": "2940883439528148",
+      "lat": 53.221742,
+      "lon": 23.1556,
+      "x": 777300.8453382053,
+      "y": 603228.8281539185,
+      "ids": [
+        "MN024"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=2940883439528148",
+      "autor": "richlv",
+      "data_zdjęcia": "2017-07-15"
+    },
+    {
+      "source": "Mapillary",
+      "key": "1027551232176688",
+      "lat": 53.271119,
+      "lon": 23.120348,
+      "x": 774632.9368983328,
+      "y": 608579.9094110522,
+      "ids": [
+        "MX001"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=1027551232176688",
+      "autor": "strudel",
+      "data_zdjęcia": "2024-08-15"
+    },
+    {
+      "source": "Mapillary",
+      "key": "503886228724826",
+      "lat": 53.324651,
+      "lon": 23.123476,
+      "x": 774497.4614051676,
+      "y": 614541.0405661324,
+      "ids": [
+        "MX002",
+        "MX003"
+      ],
+      "url": "https://www.mapillary.com/app/?pKey=503886228724826",
+      "autor": "kino",
+      "data_zdjęcia": "2024-07-26",
+      "boundary_exception": true,
+      "distance_to_city_m_ESTIMATED": 15177,
+      "distance_method": "Najkrótsza odległość punktu geometry Mapillary od poligonu granicy Białegostoku OSM relation2910925, po przeliczeniu obu geometrii WGS84→EPSG2180; zaokrąglenie do1m. Granica z files/G3-OSM004.geojson, kind=city_boundary; ESTIMATED, nie pomiar terenowy.",
+      "distance_to_city_calculated_m_ESTIMATED": 15176.577,
+      "outside_15000m_by_m_ESTIMATED": 177
+    }
+  ]
+}

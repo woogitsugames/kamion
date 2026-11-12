@@ -1,0 +1,9 @@
+{
+  "url": "https://maps.mail.ru/osm/tools/overpass/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A120%5D%3B%28way%2853.04%2C22.75%2C53.36%2C23.23%29%5Bhighway%5D%5B~%22%5Edestination%28%3A.%2A%29%3F%24%22~%22.%22%5D%3Bnode%2853.04%2C22.75%2C53.36%2C23.23%29%5Bhighway%3Dmotorway_junction%5D%3Bnwr%2853.04%2C22.75%2C53.36%2C23.23%29%5Bmapillary%5D%3Bnwr%2853.04%2C22.75%2C53.36%2C23.23%29%5Bimage%5D%3Bnwr%2853.04%2C22.75%2C53.36%2C23.23%29%5Btraffic_sign%5D%3Bnode%2853.04%2C22.75%2C53.36%2C23.23%29%5Binformation%3Dguidepost%5D%3B%29%3Bout+meta+geom%3B",
+  "query": "[out:json][timeout:120];(way(53.04,22.75,53.36,23.23)[highway][~\"^destination(:.*)?$\"~\".\"];node(53.04,22.75,53.36,23.23)[highway=motorway_junction];nwr(53.04,22.75,53.36,23.23)[mapillary];nwr(53.04,22.75,53.36,23.23)[image];nwr(53.04,22.75,53.36,23.23)[traffic_sign];node(53.04,22.75,53.36,23.23)[information=guidepost];);out meta geom;",
+  "data_dostepu": "2026-11-12T22:19:59.977524+00:00",
+  "copyright": "© OpenStreetMap contributors",
+  "license": "ODbL 1.0",
+  "license_url": "https://opendatacommons.org/licenses/odbl/1-0/",
+  "osm_timestamp": "2026-11-12T22:17:12Z"
+}

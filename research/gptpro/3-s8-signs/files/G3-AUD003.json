@@ -1,0 +1,253 @@
+{
+  "title": "Szybka krytyczna kontrola spójności 149 obserwacji G3",
+  "auditor": "municipal_signs",
+  "date": "2026-11-12",
+  "scope": "Spójność pól wszystkich sześciu aktualnych plików źródłowych znalezionych przez population.json. Użyto aktualnego records.json (część MN przed integracją). Nie wykonywano ponownej pełnej weryfikacji fotografii, URL ani licencji. Nie edytowano plików źródłowych.",
+  "sources": [
+    {
+      "path": "records.json",
+      "records": 31,
+      "sha256": "42f0deb235ede67d250893bb9d32651beebab57c363b863a4732d91ad9b290f1"
+    },
+    {
+      "path": "records.json",
+      "records": 21,
+      "sha256": "c90305000e549266739023a15baa8fc80371ce3f3db72bba9e39cbfcdf191ded"
+    },
+    {
+      "path": "mapillary_s8_records.json",
+      "records": 45,
+      "sha256": "06325c2a27f41026b417e0ff0499b9b8c77dad24d05097d82248979002f8c0a9"
+    },
+    {
+      "path": "municipal_records.json",
+      "records": 8,
+      "sha256": "f2f550fe96bbac58ebb7f87148dcfd16327deb361a0f421b70f039336810dc74"
+    },
+    {
+      "path": "records.json",
+      "records": 20,
+      "sha256": "18b1c04f2b76c6cc6c3a5fe6e59e3627d85ace5b5353d77aabb1251e640c87ee"
+    },
+    {
+      "path": "MN_RECORDS.json",
+      "records": 24,
+      "sha256": "5b48a5626d8cc04f7c34c64ff7f40456e66873892c55901ca4acb37007e2b6dd"
+    }
+  ],
+  "checks": {
+    "record_count": 149,
+    "unique_ids": 149,
+    "required_field_missing": [],
+    "status_counts": {
+      "ESTIMATED": 38,
+      "UNVERIFIED": 15,
+      "SOURCED": 96
+    },
+    "inline_unverified_text_count": 15,
+    "inline_unverified_text_ids": [
+      "G3-C002",
+      "G3-MC002",
+      "G3-MC015",
+      "G3-MC016",
+      "G3-MC017",
+      "G3-MC020",
+      "G3-MC021",
+      "G3-P013",
+      "G3-P020",
+      "MN005",
+      "MN013",
+      "MN014",
+      "MN016",
+      "MN017",
+      "MN022"
+    ],
+    "inline_unverified_with_sourced_text_status": [],
+    "coordinate_format": "Wszystkie podane lat/lon mają 6 miejsc po przecinku; brak wykrytych wartości spoza szerokiego korytarza regionu. To kontrola formatu i zakresu, nie dowód pozycji tarczy.",
+    "mapillary_key_url": "Nie wykryto niezgodności mapillary_key z podstawowym URL źródła.",
+    "distance_text": "Nie wykryto liczby odległości zadeklarowanej w odległości, której brak w tekst_wiersze w rekordach z pełnym odczytem.",
+    "same_frame_same_text": "Powtórzenia w obrębie tego samego zdjęcia są uzasadnione lewym/prawym lub górnym/dolnym panelem: C001/C003, C007/C009, C008/C010, C019/C021, C020/C022, MC007/MC008, P001/P003, P005/P007, P017/P019. Nie usuwać automatycznie.",
+    "same_frame_same_crop": "Powtarzanie tego samego szerszego kadru w C007–C011 i kilku grupach P dokumentuje różne pola tej samej bramownicy; opisy paneli je rozróżniają. Nie jest samo w sobie fałszywym duplikatem obiektu.",
+    "historical_conflicts": "Rozbieżności numerów, taśm i odległości z różnych dat/kadrów mają opisy. MN004 Suwałki114 kontra MN009 Suwałki119 jest jawnie zachowane i zweryfikowane przez autorów; nie normalizować obliczeniowo."
+  },
+  "blocking_errors": [],
+  "summary": "Nie wykryto błędu blokującego integrację ani nieoznaczonego niepełnego tekstu w 15 rekordach z jawnym UNVERIFIED. Dwie konkretne korekty redakcyjne zwiększą rygor: oznaczyć sześć pól elektronicznych S8-038 także w tekst_wiersze i ograniczyć stwierdzenia o braku odległości do widocznej części niepełnych tablic. Pozostałe zalecenia dotyczą zachowania znaczenia danych przy integracji.",
+  "findings": [
+    {
+      "id": "CONS-001",
+      "severity": "WARNING",
+      "records": [
+        "G3-MLY-S8-038"
+      ],
+      "issue": "Niepewność sześciu wartości wyświetlaczy zapisana wyłącznie w uwagach; główne pole tekstu wygląda jak kompletna transkrypcja pustych pól, a status to SOURCED.",
+      "evidence": {
+        "tekst_wiersze": "CZAS OCZEKIWANIA|PRZEJŚCIA GRANICZNE|Bobrowniki h h|Kuźnica h h|Kukuryki h h",
+        "uwagi": "Cyfr nie odczytano: wartości oczekiwania UNVERIFIED."
+      },
+      "recommendation": "W warstwie integracyjnej zapisać: CZAS OCZEKIWANIA|PRZEJŚCIA GRANICZNE|Bobrowniki [UNVERIFIED] h [UNVERIFIED] h|Kuźnica [UNVERIFIED] h [UNVERIFIED] h|Kukuryki [UNVERIFIED] h [UNVERIFIED] h. Dodać tekst_status UNVERIFIED: wartości wyświetlaczy; dla zgodności z MC015 i MC021 zalecany status ogólny UNVERIFIED. Stałe nazwy i symbole pozostają odczytane."
+    },
+    {
+      "id": "CONS-002",
+      "severity": "WARNING",
+      "records": [
+        "G3-MC016",
+        "G3-MC017",
+        "MN005",
+        "MN014",
+        "MN016",
+        "MN022"
+      ],
+      "issue": "Pole odległości stwierdza brak na całej tablicy albo samo brak, choć odpowiednio mały napis, dolny wiersz lub pole turystyczne jest nieodczytane lub zasłonięte.",
+      "evidence": "Każdy z wymienionych rekordów zawiera UNVERIFIED w tekst_wiersze oraz odległości = brak / brak na opisanej tablicy.",
+      "recommendation": "Doprecyzować zakres: brak w widocznej/odczytanej części; nieczytelne pole UNVERIFIED. Nie wymaga ponownego badania zdjęć ani domyślania się, czy pole zawiera odległość. To samo zalecenie dla MC020 jest już przyjęte przez root i nie jest tu liczone jako nowa uwaga."
+    },
+    {
+      "id": "CONS-003",
+      "severity": "INTEGRATION",
+      "records": [
+        "G3-C001",
+        "G3-C002",
+        "G3-C003",
+        "G3-C004",
+        "G3-P001",
+        "G3-P002",
+        "G3-P003",
+        "G3-P004",
+        "G3-C005",
+        "G3-P011",
+        "G3-C025",
+        "G3-MC004",
+        "G3-C028",
+        "G3-MC005",
+        "G3-C029",
+        "G3-MC006",
+        "G3-MC002",
+        "G3-MC019",
+        "MN014",
+        "MN024",
+        "MN017",
+        "MN018"
+      ],
+      "issue": "149 to liczba rekordów/obserwacji pól oznakowania, a nie potwierdzona liczba odrębnych fizycznych tablic. Zbiory zawierają powtórne obserwacje tych samych lokalizacji i paneli z różnych dat.",
+      "evidence": "Zgodne opisy lokalizacji/panelu, treści i daty historyczne. Przykłady par: C001/P001, C002/P002, C003/P003, C004/P004 (Putry Andersa 2021/2024); C005/P011 (przeddrogowskazowa Andersa); C025/MC004 (Porosły E-1); C028/MC005 oraz C029/MC006 (Porosły wjazd); MC002/MC019 (Chodakowskiego północ); MN014/MN024 i MN017/MN018 już mają wspólny obiekt_grupa.",
+      "recommendation": "W README podać 149 obserwacji/pól, nie 149 unikalnych znaków. Dodać cross-reference między wymienionymi parami albo wspólny identyfikator lokalizacji/panelu; nie scalać treści z różnych lat. Fizycznej ciągłości tej samej tarczy przez lata nie da się dowieść samą zgodnością miejsca i tekstu."
+    },
+    {
+      "id": "CONS-004",
+      "severity": "INTEGRATION",
+      "records": [
+        "G3-MUN-004",
+        "G3-MUN-006",
+        "G3-MUN-007",
+        "G3-MUN-008"
+      ],
+      "issue": "Kody E-1/E-15 są podane bez osobnego statusu klasyfikacji, podczas gdy pozostałe strumienie zaznaczają rozpoznanie typu jako ESTIMATED albo opisują źródło klasyfikacji.",
+      "evidence": "Rekordy wskazują fotografie raportu na stronach 19, 21 i 22, a pola typ_status/źródło_klasyfikacji nie występują.",
+      "recommendation": "Ujednolicić w integracji jako typ_status = ESTIMATED: rozpoznanie wizualne z przywołanej fotografii dokumentu. Nie oznaczać kodu jako urzędowo zatwierdzonego oznakowania bez takiego dowodu. Pozostałe rekordy MUN z wariantem E-2 UNVERIFIED już ujawniają niepewność wariantu."
+    },
+    {
+      "id": "CONS-005",
+      "severity": "INTEGRATION",
+      "records": [
+        "MN001",
+        "MN002",
+        "MN003",
+        "MN004",
+        "MN005",
+        "MN006",
+        "MN007",
+        "MN008",
+        "MN009",
+        "MN010",
+        "MN011",
+        "MN012",
+        "MN013",
+        "MN014",
+        "MN015",
+        "MN016",
+        "MN017",
+        "MN018",
+        "MN019",
+        "MN020",
+        "MN021",
+        "MN022",
+        "MN023",
+        "MN024"
+      ],
+      "issue": "Północny strumień przechowuje metodę kierunku w uwagach, a nie w polu kierunek_status/metoda_kierunku; nie wolno utracić jej przy normalizacji.",
+      "evidence": "W każdym MN uwagi mówią: Kierunek z compass_angle Mapillary; ogólny zwrot jazdy sprawdzony na obrazie, brak niezależnej kalibracji azymutu.",
+      "recommendation": "Przenieść tę informację do wspólnego pola metody lub zachować w uwagach. Jeśli dodawany jest kierunek_status, użyć SOURCED: metadane Mapillary; dokładność terenowa UNVERIFIED, bez nadawania mu statusu pomiaru orientacji lica tarczy."
+    },
+    {
+      "id": "CONS-006",
+      "severity": "INTEGRATION",
+      "records": "wszystkie sześć strumieni",
+      "issue": "Schematy różnią się znaczeniem statusu ogólnego, zapisem statusu tekstu i przypisaniem tarcz z numerami do tekst_wiersze. Same statusy SOURCED nie oznaczają potwierdzonych współrzędnych tarczy ani pełnej klasyfikacji typu.",
+      "evidence": "Np. C024 ma SOURCED przy współrzędnych i kierunku UNVERIFIED, S8-003 ma SOURCED przy kierunek_deg UNVERIFIED, C014 ma ESTIMATED mimo tekst_status SOURCED. Numery dróg są częścią tekst_wiersze w C/MC/P/MN, ale w S8/MUN są zwykle zapisane osobno w numery_dróg.",
+      "recommendation": "Zdefiniować zakres statusu w README i zachować pola składowe lub ich treść w uwagach. Rekonstrukcja grafiki musi korzystać jednocześnie z tekst_wiersze, numery_dróg, piktogramy i strzałki. Nie usuwać tarcz dlatego, że nie występują również w tekst_wiersze; nie dodawać ich drugi raz tam, gdzie są w obu polach."
+    }
+  ],
+  "rozwiązanie_integracyjne": {
+    "zastosowane_korekty": [
+      {
+        "id": "G3-MC016",
+        "pole": "odległości",
+        "przed": "brak na opisanej tablicy",
+        "po": "brak w widocznej/odczytanej części; nieczytelne pole UNVERIFIED",
+        "powód": "Ograniczono twierdzenie o braku odległości do dostępnego odczytu."
+      },
+      {
+        "id": "G3-MC017",
+        "pole": "odległości",
+        "przed": "brak na opisanej tablicy",
+        "po": "brak w widocznej/odczytanej części; nieczytelne pole UNVERIFIED",
+        "powód": "Ograniczono twierdzenie o braku odległości do dostępnego odczytu."
+      },
+      {
+        "id": "G3-MC020",
+        "pole": "odległości",
+        "przed": "brak na opisanej tablicy",
+        "po": "brak w widocznej części; prawa część tablicy UNVERIFIED",
+        "powód": "Niezależny audyt zauważył uciętą prawą część tablicy."
+      },
+      {
+        "id": "G3-MLY-S8-038",
+        "pole": "tekst_wiersze / status",
+        "przed": "CZAS OCZEKIWANIA|PRZEJŚCIA GRANICZNE|Bobrowniki h h|Kuźnica h h|Kukuryki h h",
+        "po": "CZAS OCZEKIWANIA|PRZEJŚCIA GRANICZNE|Bobrowniki [UNVERIFIED] h [UNVERIFIED] h|Kuźnica [UNVERIFIED] h [UNVERIFIED] h|Kukuryki [UNVERIFIED] h [UNVERIFIED] h",
+        "powód": "Nieczytelne wartości wyświetlaczy były dotąd oznaczone tylko w uwagach."
+      },
+      {
+        "id": "MN005",
+        "pole": "odległości",
+        "przed": "brak",
+        "po": "brak w widocznej/odczytanej części; nieczytelne pole UNVERIFIED",
+        "powód": "Ograniczono twierdzenie o braku odległości do dostępnego odczytu."
+      },
+      {
+        "id": "MN014",
+        "pole": "odległości",
+        "przed": "brak",
+        "po": "brak w widocznej/odczytanej części; nieczytelne pole UNVERIFIED",
+        "powód": "Ograniczono twierdzenie o braku odległości do dostępnego odczytu."
+      },
+      {
+        "id": "MN016",
+        "pole": "odległości",
+        "przed": "brak",
+        "po": "brak w widocznej/odczytanej części; nieczytelne pole UNVERIFIED",
+        "powód": "Ograniczono twierdzenie o braku odległości do dostępnego odczytu."
+      },
+      {
+        "id": "MN022",
+        "pole": "odległości",
+        "przed": "brak",
+        "po": "brak w widocznej/odczytanej części; nieczytelne pole UNVERIFIED",
+        "powód": "Ograniczono twierdzenie o braku odległości do dostępnego odczytu."
+      }
+    ],
+    "metody_kierunku": "Ujednolicono pola metoda_kierunku i kierunek_status; zachowano pola źródłowe.",
+    "typy": "Wszystkie typy z fotografii oznaczono jako klasyfikację wizualną ESTIMATED.",
+    "liczba_obiektów": "149 opisuje datowane obserwacje paneli, nie liczbę unikalnych tablic w terenie."
+  }
+}
