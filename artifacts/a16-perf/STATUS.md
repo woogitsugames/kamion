@@ -27,3 +27,6 @@
   truck +4.14, trees/impostor/hlod ≈ 0, fsign −0.03, plot −0.44. G3-A regresja = instancjonowane propsy (auta/meble z s11–s12).
   NASTĘPNY KROK: dodać rozbicie propsów per prefiks (RenderOverrides.AbPropsOff -> filtr prefiksu) i zmierzyć na G3-A:
   `pwsh artifacts/a16-perf/run-diag1.ps1 -Segment A -OutTag diagA2 -Only <nowe klucze>`. Gałąź gotowa do scalenia warunkowo (G3-B).
+- 18:29 (s14) r2 start: merge main (FF 9a1961db0). Klucze A/B per prefiks: rq_ab pp:/ps:/vc: (WorldInstances.SyncAbMasks). G3-A ≤300 m: ~600 pojazdów
+  (stały cull 300 m na wszystkich tierach) vs G3-B ~50. Build APK diagA2 w tle.
+  NASTĘPNY KROK: `pwsh artifacts/a16-perf/run-diag1.ps1 -Segment A -OutTag diagA2 -Apk <apk> -Only ab_veh,ab_vcar,ab_vtruck,ab_lamp,ab_signs,ab_fabp,ab_lmk,ab_misc,ab_pshadow,ab_vshadow,ab_vc150`
