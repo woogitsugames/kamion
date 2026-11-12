@@ -6,7 +6,7 @@ Prompty są po angielsku, bo ElevenLabs tak zaleca. Każdy opisuje **fikcyjny** 
 ## Jak generować
 
 - **Pętla (∞):** **Włączone** tylko tam, gdzie w tabeli jest `LOOP`. Dla dźwięków jednorazowych (`ONE-SHOT`) wyłączone.
-- **Czas trwania:** wartość z kolumny „Czas” (ręcznie, nie Auto).
+- **Czas trwania:** zawsze **ręcznie** (suwak), wartość z opisu/tabeli — **nie Auto**.
 - **Wpływ podpowiedzi:** wartość z kolumny „Wpływ”. Wyższy daje dosłowniejszy wynik, potrzebny dla pętli o stałych obrotach. Niższy zostawia więcej swobody, przydatny dla otoczenia.
 - **Auto-poprawa podpowiedzi (różdżka):** **Wyłączone**, bo prompty są już dokładne, a auto-poprawka dopisuje efekty.
 - Każdy prompt wygeneruj **2–4 razy**. Zachowaj wszystkie warianty, z których wybiorę (porównam spektrogramy z modelem fizyki).
@@ -15,27 +15,149 @@ Prompty są po angielsku, bo ElevenLabs tak zaleca. Każdy opisuje **fikcyjny** 
 - Pętle silnika muszą mieć **stałe obroty**: bez wkręcania, bez zmiany wysokości tonu, bez zmiany biegu. Silnik w grze składa się z wielu takich pętli, przenikanych zależnie od obrotów i obciążenia z fizyki. Wahania wewnątrz pętli psują efekt.
 
 ## A. Silnik — pętle stałych obrotów (najważniejsze)
+Zakres silnika w grze: jałowy 600 obr/min, odcięcie 2100. Wszystkie 24 pozycje mają **te same ustawienia**:
+| Ustawienie w ElevenLabs | Wartość |
+|---|---|
+| Model | **v3** |
+| Pętla (∞) | **Włączone** |
+| Czas trwania | **ręcznie, 6 s** (jałowy 600: **8 s**) — NIE Auto |
+| Wpływ podpowiedzi | **70 %** |
+| Auto-poprawa (różdżka) | **Wyłączone** |
+| Ile razy | 2–4 warianty każdej pozycji |
+Nazwa pliku: `<ID>_v1.mp3`, `<ID>_v2.mp3`… w `art-source/audio/elevenlabs/`.
+**Zacznij od 4 pozycji 1200 obr/min (A9–A12)** i daj mi znać — sprawdzę, czy trzymają stałe obroty, zanim wygenerujesz resztę.
 
-Zakres silnika w grze: jałowy 600 obr/min, odcięcie 2100, zielone pole 1100–1500, zmiana biegów zwykle 1250–1850.
-Dla każdego punktu obrotów generujemy **4 warianty**: zewnątrz/kabina × pod obciążeniem/bez obciążenia.
+### 600 obr/min
 
-**Szablon (wstaw obroty i wariant):**
+**A1. `ENG_EXT_ON_600`** — zewnątrz, pod obciążeniem · Pętla: Włączone · Czas: 8 s · Wpływ: 70 %
+```
+Heavy truck 13-litre inline-six diesel engine idling at a steady 600 rpm recorded from outside near the exhaust stack, deep slow firing pulse, air compressor and fan running, no revving, no pitch change, seamless loop, no music, no voices
+```
 
-- **EXT ON-LOAD:** `Heavy truck 13-litre inline-six turbo diesel engine recorded from outside near the exhaust stack, steady constant {RPM} rpm under heavy load pulling a 40-tonne trailer, deep low-frequency firing pulse, gritty combustion, faint turbo whistle, no revving, no gear change, no pitch change, seamless loop, no music, no voices`
-- **EXT OFF-LOAD:** `Heavy truck 13-litre inline-six diesel engine recorded from outside, steady constant {RPM} rpm with no load while coasting, softer lighter firing pulse, slight injector clatter, no turbo whistle, no revving, no pitch change, seamless loop, no music, no voices`
-- **CAB ON-LOAD:** `Interior of a heavy truck cab, inline-six diesel engine heard through the floor and firewall, steady constant {RPM} rpm under heavy load, muffled deep low-end rumble, subtle cab vibration hum, faint turbo whine, no road noise, no revving, no pitch change, seamless loop, no music, no voices`
-- **CAB OFF-LOAD:** `Interior of a heavy truck cab, inline-six diesel engine heard through the floor, steady constant {RPM} rpm with no load while coasting, quiet muffled low rumble, light mechanical ticking, no road noise, no revving, no pitch change, seamless loop, no music, no voices`
+**A2. `ENG_EXT_OFF_600`** — zewnątrz, bez obciążenia · Pętla: Włączone · Czas: 8 s · Wpływ: 70 %
+```
+Heavy truck 13-litre inline-six diesel engine idling at a steady 600 rpm recorded from outside, quiet slow firing pulse, light injector clatter, no revving, no pitch change, seamless loop, no music, no voices
+```
 
-| ID | Obroty | Typ | Czas | Wpływ |
-|---|---|---|---|---|
-| ENG_{EXT,CAB}_{ON,OFF}_600 | 600 (jałowy) | LOOP | 8 s | 70 % |
-| ENG_{EXT,CAB}_{ON,OFF}_900 | 900 | LOOP | 6 s | 70 % |
-| ENG_{EXT,CAB}_{ON,OFF}_1200 | 1200 | LOOP | 6 s | 70 % |
-| ENG_{EXT,CAB}_{ON,OFF}_1500 | 1500 | LOOP | 6 s | 70 % |
-| ENG_{EXT,CAB}_{ON,OFF}_1800 | 1800 | LOOP | 6 s | 70 % |
-| ENG_{EXT,CAB}_{ON,OFF}_2100 | 2100 (odcięcie) | LOOP | 6 s | 70 % |
+**A3. `ENG_CAB_ON_600`** — kabina, pod obciążeniem · Pętla: Włączone · Czas: 8 s · Wpływ: 70 %
+```
+Interior of a heavy truck cab with the engine idling at a steady 600 rpm, muffled deep slow rumble through the floor, faint fan and compressor hum, no road noise, no revving, no pitch change, seamless loop, no music, no voices
+```
 
-To 24 pętle. Dla 600 obr/min wariant ON-LOAD znaczy „jałowy, wszystkie odbiorniki włączone”, bo to nadal jałowy, nie obciążenie.
+**A4. `ENG_CAB_OFF_600`** — kabina, bez obciążenia · Pętla: Włączone · Czas: 8 s · Wpływ: 70 %
+```
+Interior of a heavy truck cab with the engine idling at a steady 600 rpm, very quiet muffled slow rumble, light ticking, no road noise, no revving, no pitch change, seamless loop, no music, no voices
+```
+
+### 900 obr/min
+
+**A5. `ENG_EXT_ON_900`** — zewnątrz, pod obciążeniem · Pętla: Włączone · Czas: 6 s · Wpływ: 70 %
+```
+Heavy truck 13-litre inline-six turbo diesel engine recorded from outside near the exhaust stack, steady constant 900 rpm under heavy load pulling a 40-tonne trailer, deep low-frequency firing pulse, gritty combustion, faint turbo whistle, no revving, no gear change, no pitch change, seamless loop, no music, no voices
+```
+
+**A6. `ENG_EXT_OFF_900`** — zewnątrz, bez obciążenia · Pętla: Włączone · Czas: 6 s · Wpływ: 70 %
+```
+Heavy truck 13-litre inline-six diesel engine recorded from outside, steady constant 900 rpm with no load while coasting, softer lighter firing pulse, slight injector clatter, no turbo whistle, no revving, no pitch change, seamless loop, no music, no voices
+```
+
+**A7. `ENG_CAB_ON_900`** — kabina, pod obciążeniem · Pętla: Włączone · Czas: 6 s · Wpływ: 70 %
+```
+Interior of a heavy truck cab, inline-six diesel engine heard through the floor and firewall, steady constant 900 rpm under heavy load, muffled deep low-end rumble, subtle cab vibration hum, faint turbo whine, no road noise, no revving, no pitch change, seamless loop, no music, no voices
+```
+
+**A8. `ENG_CAB_OFF_900`** — kabina, bez obciążenia · Pętla: Włączone · Czas: 6 s · Wpływ: 70 %
+```
+Interior of a heavy truck cab, inline-six diesel engine heard through the floor, steady constant 900 rpm with no load while coasting, quiet muffled low rumble, light mechanical ticking, no road noise, no revving, no pitch change, seamless loop, no music, no voices
+```
+
+### 1200 obr/min
+
+**A9. `ENG_EXT_ON_1200`** — zewnątrz, pod obciążeniem · Pętla: Włączone · Czas: 6 s · Wpływ: 70 %
+```
+Heavy truck 13-litre inline-six turbo diesel engine recorded from outside near the exhaust stack, steady constant 1200 rpm under heavy load pulling a 40-tonne trailer, deep low-frequency firing pulse, gritty combustion, faint turbo whistle, no revving, no gear change, no pitch change, seamless loop, no music, no voices
+```
+
+**A10. `ENG_EXT_OFF_1200`** — zewnątrz, bez obciążenia · Pętla: Włączone · Czas: 6 s · Wpływ: 70 %
+```
+Heavy truck 13-litre inline-six diesel engine recorded from outside, steady constant 1200 rpm with no load while coasting, softer lighter firing pulse, slight injector clatter, no turbo whistle, no revving, no pitch change, seamless loop, no music, no voices
+```
+
+**A11. `ENG_CAB_ON_1200`** — kabina, pod obciążeniem · Pętla: Włączone · Czas: 6 s · Wpływ: 70 %
+```
+Interior of a heavy truck cab, inline-six diesel engine heard through the floor and firewall, steady constant 1200 rpm under heavy load, muffled deep low-end rumble, subtle cab vibration hum, faint turbo whine, no road noise, no revving, no pitch change, seamless loop, no music, no voices
+```
+
+**A12. `ENG_CAB_OFF_1200`** — kabina, bez obciążenia · Pętla: Włączone · Czas: 6 s · Wpływ: 70 %
+```
+Interior of a heavy truck cab, inline-six diesel engine heard through the floor, steady constant 1200 rpm with no load while coasting, quiet muffled low rumble, light mechanical ticking, no road noise, no revving, no pitch change, seamless loop, no music, no voices
+```
+
+### 1500 obr/min
+
+**A13. `ENG_EXT_ON_1500`** — zewnątrz, pod obciążeniem · Pętla: Włączone · Czas: 6 s · Wpływ: 70 %
+```
+Heavy truck 13-litre inline-six turbo diesel engine recorded from outside near the exhaust stack, steady constant 1500 rpm under heavy load pulling a 40-tonne trailer, deep low-frequency firing pulse, gritty combustion, faint turbo whistle, no revving, no gear change, no pitch change, seamless loop, no music, no voices
+```
+
+**A14. `ENG_EXT_OFF_1500`** — zewnątrz, bez obciążenia · Pętla: Włączone · Czas: 6 s · Wpływ: 70 %
+```
+Heavy truck 13-litre inline-six diesel engine recorded from outside, steady constant 1500 rpm with no load while coasting, softer lighter firing pulse, slight injector clatter, no turbo whistle, no revving, no pitch change, seamless loop, no music, no voices
+```
+
+**A15. `ENG_CAB_ON_1500`** — kabina, pod obciążeniem · Pętla: Włączone · Czas: 6 s · Wpływ: 70 %
+```
+Interior of a heavy truck cab, inline-six diesel engine heard through the floor and firewall, steady constant 1500 rpm under heavy load, muffled deep low-end rumble, subtle cab vibration hum, faint turbo whine, no road noise, no revving, no pitch change, seamless loop, no music, no voices
+```
+
+**A16. `ENG_CAB_OFF_1500`** — kabina, bez obciążenia · Pętla: Włączone · Czas: 6 s · Wpływ: 70 %
+```
+Interior of a heavy truck cab, inline-six diesel engine heard through the floor, steady constant 1500 rpm with no load while coasting, quiet muffled low rumble, light mechanical ticking, no road noise, no revving, no pitch change, seamless loop, no music, no voices
+```
+
+### 1800 obr/min
+
+**A17. `ENG_EXT_ON_1800`** — zewnątrz, pod obciążeniem · Pętla: Włączone · Czas: 6 s · Wpływ: 70 %
+```
+Heavy truck 13-litre inline-six turbo diesel engine recorded from outside near the exhaust stack, steady constant 1800 rpm under heavy load pulling a 40-tonne trailer, deep low-frequency firing pulse, gritty combustion, faint turbo whistle, no revving, no gear change, no pitch change, seamless loop, no music, no voices
+```
+
+**A18. `ENG_EXT_OFF_1800`** — zewnątrz, bez obciążenia · Pętla: Włączone · Czas: 6 s · Wpływ: 70 %
+```
+Heavy truck 13-litre inline-six diesel engine recorded from outside, steady constant 1800 rpm with no load while coasting, softer lighter firing pulse, slight injector clatter, no turbo whistle, no revving, no pitch change, seamless loop, no music, no voices
+```
+
+**A19. `ENG_CAB_ON_1800`** — kabina, pod obciążeniem · Pętla: Włączone · Czas: 6 s · Wpływ: 70 %
+```
+Interior of a heavy truck cab, inline-six diesel engine heard through the floor and firewall, steady constant 1800 rpm under heavy load, muffled deep low-end rumble, subtle cab vibration hum, faint turbo whine, no road noise, no revving, no pitch change, seamless loop, no music, no voices
+```
+
+**A20. `ENG_CAB_OFF_1800`** — kabina, bez obciążenia · Pętla: Włączone · Czas: 6 s · Wpływ: 70 %
+```
+Interior of a heavy truck cab, inline-six diesel engine heard through the floor, steady constant 1800 rpm with no load while coasting, quiet muffled low rumble, light mechanical ticking, no road noise, no revving, no pitch change, seamless loop, no music, no voices
+```
+
+### 2100 obr/min
+
+**A21. `ENG_EXT_ON_2100`** — zewnątrz, pod obciążeniem · Pętla: Włączone · Czas: 6 s · Wpływ: 70 %
+```
+Heavy truck 13-litre inline-six turbo diesel engine recorded from outside near the exhaust stack, steady constant 2100 rpm under heavy load pulling a 40-tonne trailer, deep low-frequency firing pulse, gritty combustion, faint turbo whistle, no revving, no gear change, no pitch change, seamless loop, no music, no voices
+```
+
+**A22. `ENG_EXT_OFF_2100`** — zewnątrz, bez obciążenia · Pętla: Włączone · Czas: 6 s · Wpływ: 70 %
+```
+Heavy truck 13-litre inline-six diesel engine recorded from outside, steady constant 2100 rpm with no load while coasting, softer lighter firing pulse, slight injector clatter, no turbo whistle, no revving, no pitch change, seamless loop, no music, no voices
+```
+
+**A23. `ENG_CAB_ON_2100`** — kabina, pod obciążeniem · Pętla: Włączone · Czas: 6 s · Wpływ: 70 %
+```
+Interior of a heavy truck cab, inline-six diesel engine heard through the floor and firewall, steady constant 2100 rpm under heavy load, muffled deep low-end rumble, subtle cab vibration hum, faint turbo whine, no road noise, no revving, no pitch change, seamless loop, no music, no voices
+```
+
+**A24. `ENG_CAB_OFF_2100`** — kabina, bez obciążenia · Pętla: Włączone · Czas: 6 s · Wpływ: 70 %
+```
+Interior of a heavy truck cab, inline-six diesel engine heard through the floor, steady constant 2100 rpm with no load while coasting, quiet muffled low rumble, light mechanical ticking, no road noise, no revving, no pitch change, seamless loop, no music, no voices
+```
 
 ## B. Silnik — zdarzenia
 
@@ -107,7 +229,7 @@ To 24 pętle. Dla 600 obr/min wariant ON-LOAD znaczy „jałowy, wszystkie odbio
 
 ## Kolejność generacji
 
-Wygeneruj najpierw blok A dla 1200 obr/min (wszystkie 4 warianty), potem `ENG_START_EXT`, `GEAR_UPSHIFT_CAB`, `AIR_PARKING_RELEASE` i `TYRE_ASPHALT_50`. Sprawdzę, czy ElevenLabs trzyma stałe obroty i czysto zapętla. Jeśli tak, robimy resztę. Jeśli nie, poprawię prompty.
+Wygeneruj najpierw A9–A12 (1200 obr/min), potem `ENG_START_EXT`, `GEAR_UPSHIFT_CAB`, `AIR_PARKING_RELEASE` i `TYRE_ASPHALT_50`. Sprawdzę, czy ElevenLabs trzyma stałe obroty i czysto zapętla. Jeśli tak, robimy resztę. Jeśli nie, poprawię prompty.
 
 ## Co zrobię z plikami
 
