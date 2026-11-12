@@ -13,7 +13,12 @@ sys.path.insert(0,str(root/'tools/worldgen'))
 from streetscape import ec_chimneys as EC,hero_building as HB
 
 def load(p): return json.loads(p.read_text(encoding='utf-8-sig'))
-def sha(p): return hashlib.sha256(p.read_bytes()).hexdigest()
+def sha(p):
+    digest=hashlib.sha256()
+    with p.open('rb') as stream:
+        for block in iter(lambda:stream.read(1024*1024),b''):
+            digest.update(block)
+    return digest.hexdigest()
 def canonical(rows): return sorted(json.dumps(r,sort_keys=True,separators=(',',':')) for r in rows)
 
 baseline=out/'baseline-generated'
