@@ -141,8 +141,11 @@ def build(pl, net, graph, overrides, origin, boards, report):
                 pl.add("gantry_footing", q, yaw, z=z, src=f"override:{o['id']}")
                 ctr, span = q, reach
             else:
-                LP.GANTRIES.add((int(span), int(round(H * 10))))
                 ctr = c.line.offset_point(s, 0.5 * (lat_l + lat_r))
+                if o.get("columns_en"):       # ADR 0127: column feet read off the orthophoto (region-local E, N)
+                    ca, cb = (np.asarray(v, float) for v in o["columns_en"])
+                    ctr, span = (ca + cb) / 2, round(float(np.hypot(*(cb - ca))))
+                LP.GANTRIES.add((int(span), int(round(H * 10))))
                 pl.add(f"sign_gantry_{int(span)}_{int(round(H * 10))}", ctr, yaw, z=z, src=f"override:{o['id']}")
                 for sx in (-1, 1):            # column footings + colliders (local x of the gantry = (cos yaw, sin yaw))
                     q = ctr + np.array([math.cos(yaw), math.sin(yaw)]) * sx * int(span) / 2

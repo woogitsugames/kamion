@@ -111,3 +111,46 @@ def test_noise_screen_posts_and_sheet():
     assert 15 <= lines <= 30 and 0 < strength <= 0.6 and 0 < duty < 0.5
     sh = (ROOT / "game/Assets/_Project/Environment/Shaders/WorldCarGlass.shader").read_text(encoding="utf-8")
     assert "shader_feature_local_fragment _SCREEN_SHEET" in sh       # car panes compile without the screen code
+
+
+def _overrides():
+    import yaml
+    return yaml.safe_load((ROOT / "Data/Regions/bialystok-industrial-c/overrides.yaml").read_text(encoding="utf-8"))
+
+
+def _find(node, oid):
+    if isinstance(node, dict):
+        if node.get("id") == oid:
+            return node
+        node = list(node.values())
+    if isinstance(node, list):
+        for v in node:
+            r = _find(v, oid)
+            if r:
+                return r
+    return None
+
+
+def test_portal_span_from_the_orthophoto():
+    o = _find(_overrides(), "andersa-putry-approach-gantry")
+    a, b = (np.asarray(v, float) for v in o["columns_en"])
+    assert 13.0 <= np.hypot(*(b - a)) <= 14.5                    # beam 14.0 m on the hi-res orthophoto (rule: 16 m)
+    assert np.hypot(*((a + b) / 2 - [-261.0, -208.0])) <= 3.0    # ADR 0125 position kept
+    qa_f = ROOT / "Data/Regions/bialystok-industrial-c/generated/streetscape_qa.json"
+    import json
+    qa = json.loads(qa_f.read_text(encoding="utf-8"))
+    g = {x["id"]: x for x in qa["furniture"]["landmarks"]["gantries"]}[o["id"]]
+    if g["span_m"] == 16:
+        import pytest
+        pytest.skip("generated world predates ADR 0127 (rebuild)")
+    assert g["span_m"] in (13, 14) and 6.0 <= g["height_m"] <= 7.5
+
+
+def test_tysiaclecia_barrier_is_a_tall_glazed_screen():
+    o = _find(_overrides(), "andersa-ne-noise-barrier-glazed")
+    tall = [z for z in o["zones"] if z.get("height_m")]
+    assert len(tall) == 2 and all(z["style"] == "glazed" and 5.0 <= z["height_m"] <= 5.5 for z in tall)
+    zones, _ = F._noise_style_overrides([o], np.array([777995.0, 596223.0]))
+    assert sum(1 for z in zones if z[2].get("height_m") == 5.2) == 2
+    # the set-back barrier beside camera 1801374 (local E,N ~ -530, 75) falls inside a tall glazed zone
+    assert any(np.hypot(*(np.array([-530.0, 75.0]) - z[0])) <= z[1] and z[2].get("height_m") for z in zones)

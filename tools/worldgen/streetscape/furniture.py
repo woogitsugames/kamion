@@ -1783,6 +1783,8 @@ def _noise_style_overrides(overrides, origin):
                 st = dict(NOISE_STYLES[z.get("style", NOISE_DEFAULT_STYLE)])
                 if "band_m" in z:
                     st["band_m"] = float(z["band_m"])
+                if "height_m" in z:                        # ADR 0127: authored barrier height inside the zone
+                    st["height_m"] = float(z["height_m"])
                 st["name"] = z.get("style", NOISE_DEFAULT_STYLE)
                 zones.append((c, float(z.get("radius_m", 30.0)), st, o["id"]))
         elif o.get("kind") == "noise_barrier":
@@ -1864,7 +1866,7 @@ def noise_barriers(lin, src, origin, roads_poly, report, overrides=None, pl=None
             P = lin.dens(part, 2.0)
             Z = lin.z(P)
             for sl, st in _noise_runs(P, zones, default):
-                noise_wall(lin, P[sl], Z[sl], st, H, key)
+                noise_wall(lin, P[sl], Z[sl], st, st.get("height_m", H), key)
                 seg = float(np.sum(np.hypot(*np.diff(P[sl], axis=0).T)))
                 by_style[st["name"]] = by_style.get(st["name"], 0.0) + seg
             for c, r, s, oid in zones:
