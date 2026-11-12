@@ -17,8 +17,25 @@ $acquireLog=[IO.Path]::ChangeExtension($receipt,'.acquire.log')
 $run=@{schema=1;owner=$owner;job=$Job;pid=$PID;source_sha=(git rev-parse HEAD).Trim();status='waiting';queued_at=(Get-Date -Format o);log=$Log;acquire_log=$acquireLog;exit_code=$null}
 $run | ConvertTo-Json | Set-Content -LiteralPath $receipt -Encoding utf8
 try {
-  pwsh $slot -Acquire -Pool heavy -Owner $owner -PollSeconds 1 -StaleHours 1000000 *> $acquireLog
-  if ($LASTEXITCODE -ne 0) { throw "Nie uzyskano slotu heavy; pełny log: $acquireLog" }
+  for($attempt=1;$attempt -le 3;$attempt++) {
+    $attemptLog=[IO.Path]::ChangeExtension($receipt,".acquire-attempt-$attempt.log")
+    $run.acquire_attempt=$attempt
+    $run | ConvertTo-Json | Set-Content -LiteralPath $receipt -Encoding utf8
+    pwsh $slot -Acquire -Pool heavy -Owner $owner -PollSeconds 5 -StaleHours 1000000 *> $attemptLog
+    $acquireCode=$LASTEXITCODE
+    Get-Content -LiteralPath $attemptLog | Add-Content -LiteralPath $acquireLog
+    if($acquireCode -eq 0){break}
+    $details=Get-Content -LiteralPath $attemptLog -Raw
+    $ownSlot="C:/Users/matma/Documents/Claude/kamion/artifacts/locks/heavy-slots/$owner.slot"
+    $sharingRace=$details.Contains("\queue\$owner.wait") -and $details -match 'because it is being\s+used by another process'
+    if($attempt -eq 3 -or -not $sharingRace -or (Test-Path $ownSlot)) {
+      throw "Nie uzyskano slotu heavy; pełny log: $attemptLog"
+    }
+    # The acquisition subprocess is terminal; no heavy worker has started. Retry only this observed sharing race.
+    Add-Content -LiteralPath $acquireLog "Transient queue sharing violation; acquisition-only retry $($attempt+1)/3 after 5 s."
+    Start-Sleep -Seconds 5
+  }
+  $run.source_sha_running=(git rev-parse HEAD).Trim()
   $run.status='running'; $run.started_at=Get-Date -Format o
   $run | ConvertTo-Json | Set-Content -LiteralPath $receipt -Encoding utf8
   try {
@@ -45,6 +62,7 @@ catch {
 }
 finally { $guard.ReleaseMutex(); $guard.Dispose() }
 exit $code
+
 
 
 
