@@ -1,0 +1,46 @@
+{
+  "textures": [
+    {
+      "name": "hedge_shell_berberis",
+      "size": [
+        512,
+        512
+      ],
+      "sha256": "6449dbb593d602e3079129ac76b7c225f70b7f776136eba5375194f356114a1f",
+      "alpha_coverage_at_127": 0.7278938293457031,
+      "cells": []
+    },
+    {
+      "name": "hedge_sprig_berberis",
+      "size": [
+        512,
+        512
+      ],
+      "sha256": "7493e92d0026117cd49a949b54f4830d4e459244aaa023fc4a1d9500e87c35b6",
+      "alpha_coverage_at_127": 0.3277702331542969,
+      "cells": [
+        {
+          "all": 0.3016357421875,
+          "above_c_bury25": 0.24464925130208334,
+          "above_d_bury45": 0.20237699468085107
+        },
+        {
+          "all": 0.334136962890625,
+          "above_c_bury25": 0.2967325846354167,
+          "above_d_bury45": 0.2531859485815603
+        },
+        {
+          "all": 0.3398590087890625,
+          "above_c_bury25": 0.3036702473958333,
+          "above_d_bury45": 0.25944703014184395
+        },
+        {
+          "all": 0.33544921875,
+          "above_c_bury25": 0.2910970052083333,
+          "above_d_bury45": 0.23462433510638298
+        }
+      ]
+    }
+  ],
+  "note": "Read-only texel alpha counts, not screen coverage. Above-bury bands assume locally flat cap and no card yaw/tilt intersection correction. Geometry, perspective, clipping and mips are excluded; no D visual verdict."
+}
