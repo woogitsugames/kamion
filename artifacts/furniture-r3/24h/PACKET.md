@@ -1,5 +1,7 @@
 # Pakiet furniture r3 — stan przed pełną walidacją
 
+**Iteracja 1 została wycofana jako dowód końcowego budżetu:** nowy wariant odziedziczył fallback LOD/cull 30/120 m zamiast 60/300 m generic. Wcześniejsze 236 kadrów i 118 liczników opisują krótszy zasięg. Wynik +0,033014% nie jest końcowym wynikiem poprawionej rodziny. Własny hook zapisu przywraca dziedziczenie polityki; 7 testów, w tym save/reload, przeszło. Po normalnym imporcie konieczne są ponowne pełne rendery i pomiary.
+
 Gałąź `gpt-furniture-r3`, jeden worktree sesji. Merge main: `889201d5`, baseline po merge: `162214c3`. Kod kandydata po poprawce dachu: `973a50be6bb0965f397bb21d9d75fcd8ae8ca56c`. Późniejsze commity zapisują diagnostykę i dowody. Nie scalano do main ani nie pushowano.
 
 ## Zakres i pochodzenie

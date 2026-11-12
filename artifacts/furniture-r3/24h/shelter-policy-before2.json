@@ -1,0 +1,1835 @@
+{
+  "phase": "before2",
+  "policies": {
+    "bin_1100_blue": {
+      "lodEndM": [
+        30.0,
+        120.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 14
+    },
+    "bin_1100_grey": {
+      "lodEndM": [
+        30.0,
+        120.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 20
+    },
+    "bus_shelter": {
+      "lodEndM": [
+        60.0,
+        300.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 21
+    },
+    "fab_elderberry": {
+      "lodEndM": [
+        12.0,
+        30.0,
+        65.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 1,
+      "count": 44
+    },
+    "fab_grass_clumps": {
+      "lodEndM": [
+        12.0,
+        30.0,
+        65.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 1,
+      "count": 156
+    },
+    "fab_wild_grass": {
+      "lodEndM": [
+        12.0,
+        30.0,
+        65.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 1,
+      "count": 43
+    },
+    "facade_sign_biuro": {
+      "lodEndM": [
+        30.0,
+        120.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 27
+    },
+    "facade_sign_recepcja": {
+      "lodEndM": [
+        30.0,
+        120.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 21
+    },
+    "lamp_12m": {
+      "lodEndM": [
+        60.0,
+        400.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 161
+    },
+    "lamp_8m": {
+      "lodEndM": [
+        60.0,
+        400.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 269
+    },
+    "lamp_old_steel_8m": {
+      "lodEndM": [
+        60.0,
+        400.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 80
+    },
+    "plate_B-33_70": {
+      "lodEndM": [
+        50.0,
+        250.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 19
+    },
+    "plate_D-15": {
+      "lodEndM": [
+        50.0,
+        250.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 23
+    },
+    "plate_D-6": {
+      "lodEndM": [
+        50.0,
+        250.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 81
+    },
+    "power_pole": {
+      "lodEndM": [
+        80.0,
+        1500.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 61
+    },
+    "sign_post": {
+      "lodEndM": [
+        50.0,
+        250.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 211
+    },
+    "sliding_gate": {
+      "lodEndM": [
+        60.0,
+        300.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 36
+    },
+    "tree_alder_0": {
+      "lodEndM": [
+        20.0,
+        60.0,
+        1000.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 3,
+      "count": 4745
+    },
+    "tree_alder_2": {
+      "lodEndM": [
+        20.0,
+        60.0,
+        1000.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 3,
+      "count": 4645
+    },
+    "tree_alder_1": {
+      "lodEndM": [
+        20.0,
+        60.0,
+        1000.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 3,
+      "count": 4691
+    },
+    "tree_birch_1": {
+      "lodEndM": [
+        20.0,
+        60.0,
+        1000.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 3,
+      "count": 9645
+    },
+    "tree_birch_0": {
+      "lodEndM": [
+        20.0,
+        60.0,
+        1000.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 3,
+      "count": 9584
+    },
+    "tree_birch_2": {
+      "lodEndM": [
+        20.0,
+        60.0,
+        1000.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 3,
+      "count": 9520
+    },
+    "tree_linden_2": {
+      "lodEndM": [
+        20.0,
+        60.0,
+        1000.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 3,
+      "count": 2771
+    },
+    "tree_linden_1": {
+      "lodEndM": [
+        20.0,
+        60.0,
+        1000.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 3,
+      "count": 2748
+    },
+    "tree_linden_0": {
+      "lodEndM": [
+        20.0,
+        60.0,
+        1000.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 3,
+      "count": 2781
+    },
+    "tree_maple_2": {
+      "lodEndM": [
+        20.0,
+        60.0,
+        1000.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 3,
+      "count": 3760
+    },
+    "tree_maple_0": {
+      "lodEndM": [
+        20.0,
+        60.0,
+        1000.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 3,
+      "count": 3655
+    },
+    "tree_maple_1": {
+      "lodEndM": [
+        20.0,
+        60.0,
+        1000.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 3,
+      "count": 3724
+    },
+    "tree_pine_1": {
+      "lodEndM": [
+        20.0,
+        60.0,
+        1000.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 3,
+      "count": 12975
+    },
+    "tree_pine_2": {
+      "lodEndM": [
+        20.0,
+        60.0,
+        1000.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 3,
+      "count": 13020
+    },
+    "tree_pine_0": {
+      "lodEndM": [
+        20.0,
+        60.0,
+        1000.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 3,
+      "count": 13111
+    },
+    "tree_shrub_0": {
+      "lodEndM": [
+        12.0,
+        40.0,
+        300.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 3,
+      "count": 6786
+    },
+    "tree_shrub_2": {
+      "lodEndM": [
+        12.0,
+        40.0,
+        300.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 3,
+      "count": 6829
+    },
+    "tree_shrub_1": {
+      "lodEndM": [
+        12.0,
+        40.0,
+        300.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 3,
+      "count": 6752
+    },
+    "waste_bin": {
+      "lodEndM": [
+        30.0,
+        120.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 28
+    },
+    "fab_granite_rock": {
+      "lodEndM": [
+        12.0,
+        30.0,
+        65.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 1,
+      "count": 23
+    },
+    "fab_small_granite_rock": {
+      "lodEndM": [
+        12.0,
+        30.0,
+        65.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 1,
+      "count": 33
+    },
+    "bollard": {
+      "lodEndM": [
+        30.0,
+        120.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 7
+    },
+    "board_E-2_76988": {
+      "lodEndM": [
+        50.0,
+        250.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 1
+    },
+    "pylon": {
+      "lodEndM": [
+        80.0,
+        1500.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 33
+    },
+    "lamp_old_concrete_9m": {
+      "lodEndM": [
+        60.0,
+        400.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 118
+    },
+    "lift_gate": {
+      "lodEndM": [
+        60.0,
+        300.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 22
+    },
+    "tractor_blue": {
+      "lodEndM": [
+        40.0,
+        300.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 34
+    },
+    "contact_e3704b746d": {
+      "lodEndM": [
+        300.0
+      ],
+      "lod_count": 1,
+      "shadowLodMask": 0,
+      "count": 171
+    },
+    "trailer_curtain_1": {
+      "lodEndM": [
+        40.0,
+        300.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 33
+    },
+    "contact_12b4852f20": {
+      "lodEndM": [
+        300.0
+      ],
+      "lod_count": 1,
+      "shadowLodMask": 0,
+      "count": 338
+    },
+    "trailer_curtain_2": {
+      "lodEndM": [
+        40.0,
+        300.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 46
+    },
+    "trailer_reefer_0": {
+      "lodEndM": [
+        40.0,
+        300.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 53
+    },
+    "board_E-1_92106": {
+      "lodEndM": [
+        50.0,
+        250.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 1
+    },
+    "board_E-2_60520": {
+      "lodEndM": [
+        50.0,
+        250.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 1
+    },
+    "board_E-2_65161": {
+      "lodEndM": [
+        50.0,
+        250.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 1
+    },
+    "board_E-2_90339": {
+      "lodEndM": [
+        50.0,
+        250.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 2
+    },
+    "board_E-2a_60520": {
+      "lodEndM": [
+        50.0,
+        250.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 1
+    },
+    "board_E-2a_71003": {
+      "lodEndM": [
+        50.0,
+        250.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 1
+    },
+    "board_E-2a_90339": {
+      "lodEndM": [
+        50.0,
+        250.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 2
+    },
+    "plate_A-7": {
+      "lodEndM": [
+        50.0,
+        250.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 13
+    },
+    "plate_C-12": {
+      "lodEndM": [
+        50.0,
+        250.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 8
+    },
+    "plate_C-9": {
+      "lodEndM": [
+        50.0,
+        250.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 4
+    },
+    "signal_head_red": {
+      "lodEndM": [
+        50.0,
+        250.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 25
+    },
+    "signal_mast": {
+      "lodEndM": [
+        50.0,
+        250.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 13
+    },
+    "signal_pole": {
+      "lodEndM": [
+        50.0,
+        250.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 37
+    },
+    "bin_1100_green": {
+      "lodEndM": [
+        30.0,
+        120.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 11
+    },
+    "board_E-2_57737": {
+      "lodEndM": [
+        50.0,
+        250.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 1
+    },
+    "board_E-2_80201": {
+      "lodEndM": [
+        50.0,
+        250.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 2
+    },
+    "board_E-2a_32638": {
+      "lodEndM": [
+        50.0,
+        250.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 1
+    },
+    "car_hatch_silver": {
+      "lodEndM": [
+        25.0,
+        85.0,
+        300.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 1,
+      "count": 52
+    },
+    "contact_3b556841aa": {
+      "lodEndM": [
+        300.0
+      ],
+      "lod_count": 1,
+      "shadowLodMask": 0,
+      "count": 294
+    },
+    "car_sedan_white": {
+      "lodEndM": [
+        25.0,
+        85.0,
+        300.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 1,
+      "count": 38
+    },
+    "contact_08ff46d042": {
+      "lodEndM": [
+        300.0
+      ],
+      "lod_count": 1,
+      "shadowLodMask": 0,
+      "count": 144
+    },
+    "car_suv_silver": {
+      "lodEndM": [
+        25.0,
+        85.0,
+        300.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 1,
+      "count": 50
+    },
+    "contact_35e5c7ba9a": {
+      "lodEndM": [
+        300.0
+      ],
+      "lod_count": 1,
+      "shadowLodMask": 0,
+      "count": 253
+    },
+    "facade_sign_serwis": {
+      "lodEndM": [
+        30.0,
+        120.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 18
+    },
+    "lamp_10m": {
+      "lodEndM": [
+        60.0,
+        400.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 57
+    },
+    "signal_head_green": {
+      "lodEndM": [
+        50.0,
+        250.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 30
+    },
+    "plate_B-33_20": {
+      "lodEndM": [
+        50.0,
+        250.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 37
+    },
+    "board_OB_0bfe6830": {
+      "lodEndM": [
+        50.0,
+        250.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 1
+    },
+    "board_OB_f99035fb": {
+      "lodEndM": [
+        50.0,
+        250.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 1
+    },
+    "gantry_footing": {
+      "lodEndM": [
+        30.0,
+        120.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 5
+    },
+    "sign_gantry_10_74": {
+      "lodEndM": [
+        50.0,
+        250.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 1
+    },
+    "bench": {
+      "lodEndM": [
+        30.0,
+        120.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 6
+    },
+    "bin_1100_yellow": {
+      "lodEndM": [
+        30.0,
+        120.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 14
+    },
+    "board_E-1_79161": {
+      "lodEndM": [
+        50.0,
+        250.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 1
+    },
+    "board_OB_0a31f00e": {
+      "lodEndM": [
+        50.0,
+        250.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 1
+    },
+    "board_OB_6bbf26a1": {
+      "lodEndM": [
+        50.0,
+        250.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 1
+    },
+    "board_OB_b7134a83": {
+      "lodEndM": [
+        50.0,
+        250.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 1
+    },
+    "bus_shelter_red_0120": {
+      "lodEndM": [
+        30.0,
+        120.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 2
+    },
+    "car_estate_silver": {
+      "lodEndM": [
+        25.0,
+        85.0,
+        300.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 1,
+      "count": 45
+    },
+    "contact_aa0029a0c4": {
+      "lodEndM": [
+        300.0
+      ],
+      "lod_count": 1,
+      "shadowLodMask": 0,
+      "count": 202
+    },
+    "car_estate_white": {
+      "lodEndM": [
+        25.0,
+        85.0,
+        300.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 1,
+      "count": 38
+    },
+    "car_hatch_blue": {
+      "lodEndM": [
+        25.0,
+        85.0,
+        300.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 1,
+      "count": 33
+    },
+    "car_hatch_white": {
+      "lodEndM": [
+        25.0,
+        85.0,
+        300.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 1,
+      "count": 59
+    },
+    "car_sedan_silver": {
+      "lodEndM": [
+        25.0,
+        85.0,
+        300.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 1,
+      "count": 41
+    },
+    "car_suv_black": {
+      "lodEndM": [
+        25.0,
+        85.0,
+        300.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 1,
+      "count": 51
+    },
+    "fab_trash_bag_pack": {
+      "lodEndM": [
+        12.0,
+        30.0,
+        65.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 1,
+      "count": 16
+    },
+    "facade_sign_hala_b": {
+      "lodEndM": [
+        30.0,
+        120.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 2
+    },
+    "landmark_fire_station_jrg2": {
+      "lodEndM": [
+        150.0,
+        450.0,
+        20000.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 1,
+      "count": 1
+    },
+    "pallets_empty_12": {
+      "lodEndM": [
+        30.0,
+        120.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 37
+    },
+    "pallets_empty_4": {
+      "lodEndM": [
+        30.0,
+        120.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 37
+    },
+    "sign_cantilever_L8_86": {
+      "lodEndM": [
+        50.0,
+        250.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 1
+    },
+    "sign_g3_G3ae1e4f1d": {
+      "lodEndM": [
+        50.0,
+        250.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 2
+    },
+    "sign_gantry_16_74": {
+      "lodEndM": [
+        50.0,
+        250.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 1
+    },
+    "signal_head_off": {
+      "lodEndM": [
+        50.0,
+        250.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 10
+    },
+    "tractor_black": {
+      "lodEndM": [
+        40.0,
+        300.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 28
+    },
+    "tractor_red": {
+      "lodEndM": [
+        40.0,
+        300.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 37
+    },
+    "trailer_curtain_0": {
+      "lodEndM": [
+        40.0,
+        300.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 36
+    },
+    "van_white2": {
+      "lodEndM": [
+        25.0,
+        85.0,
+        300.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 1,
+      "count": 35
+    },
+    "contact_cb0ceac02e": {
+      "lodEndM": [
+        300.0
+      ],
+      "lod_count": 1,
+      "shadowLodMask": 0,
+      "count": 112
+    },
+    "car_estate_grey": {
+      "lodEndM": [
+        25.0,
+        85.0,
+        300.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 1,
+      "count": 40
+    },
+    "car_hatch_black": {
+      "lodEndM": [
+        25.0,
+        85.0,
+        300.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 1,
+      "count": 60
+    },
+    "car_hatch_grey": {
+      "lodEndM": [
+        25.0,
+        85.0,
+        300.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 1,
+      "count": 59
+    },
+    "car_hatch_red": {
+      "lodEndM": [
+        25.0,
+        85.0,
+        300.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 1,
+      "count": 31
+    },
+    "car_sedan_grey": {
+      "lodEndM": [
+        25.0,
+        85.0,
+        300.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 1,
+      "count": 24
+    },
+    "car_suv_grey": {
+      "lodEndM": [
+        25.0,
+        85.0,
+        300.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 1,
+      "count": 48
+    },
+    "tractor_silver": {
+      "lodEndM": [
+        40.0,
+        300.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 26
+    },
+    "tractor_white": {
+      "lodEndM": [
+        40.0,
+        300.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 19
+    },
+    "trailer_box_0": {
+      "lodEndM": [
+        40.0,
+        300.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 60
+    },
+    "trailer_curtain_3": {
+      "lodEndM": [
+        40.0,
+        300.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 32
+    },
+    "trailer_curtain_4": {
+      "lodEndM": [
+        40.0,
+        300.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 31
+    },
+    "trailer_curtain_5": {
+      "lodEndM": [
+        40.0,
+        300.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 47
+    },
+    "van_white": {
+      "lodEndM": [
+        25.0,
+        85.0,
+        300.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 1,
+      "count": 44
+    },
+    "car_estate_black": {
+      "lodEndM": [
+        25.0,
+        85.0,
+        300.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 1,
+      "count": 39
+    },
+    "car_estate_blue": {
+      "lodEndM": [
+        25.0,
+        85.0,
+        300.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 1,
+      "count": 24
+    },
+    "car_estate_red": {
+      "lodEndM": [
+        25.0,
+        85.0,
+        300.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 1,
+      "count": 16
+    },
+    "car_sedan_blue": {
+      "lodEndM": [
+        25.0,
+        85.0,
+        300.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 1,
+      "count": 15
+    },
+    "car_suv_blue": {
+      "lodEndM": [
+        25.0,
+        85.0,
+        300.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 1,
+      "count": 28
+    },
+    "car_suv_red": {
+      "lodEndM": [
+        25.0,
+        85.0,
+        300.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 1,
+      "count": 26
+    },
+    "car_suv_white": {
+      "lodEndM": [
+        25.0,
+        85.0,
+        300.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 1,
+      "count": 50
+    },
+    "plate_D-1": {
+      "lodEndM": [
+        50.0,
+        250.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 3
+    },
+    "van_silver": {
+      "lodEndM": [
+        25.0,
+        85.0,
+        300.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 1,
+      "count": 33
+    },
+    "container_20_2": {
+      "lodEndM": [
+        30.0,
+        120.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 2
+    },
+    "propcontact_b5143813fb": {
+      "lodEndM": [
+        120.0
+      ],
+      "lod_count": 1,
+      "shadowLodMask": 0,
+      "count": 9
+    },
+    "container_20_3": {
+      "lodEndM": [
+        30.0,
+        120.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 2
+    },
+    "fab_boxwood": {
+      "lodEndM": [
+        12.0,
+        30.0,
+        65.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 1,
+      "count": 5
+    },
+    "container_20_0": {
+      "lodEndM": [
+        30.0,
+        120.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 2
+    },
+    "container_20_1": {
+      "lodEndM": [
+        30.0,
+        120.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 1
+    },
+    "facade_sign_hala_c": {
+      "lodEndM": [
+        30.0,
+        120.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 8
+    },
+    "sign_g3_G3518e7fb6": {
+      "lodEndM": [
+        50.0,
+        250.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 1
+    },
+    "tractor_green": {
+      "lodEndM": [
+        40.0,
+        300.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 27
+    },
+    "car_sedan_black": {
+      "lodEndM": [
+        25.0,
+        85.0,
+        300.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 1,
+      "count": 18
+    },
+    "container_20_5": {
+      "lodEndM": [
+        30.0,
+        120.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 1
+    },
+    "pallet_load": {
+      "lodEndM": [
+        30.0,
+        120.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 47
+    },
+    "container_20_4": {
+      "lodEndM": [
+        30.0,
+        120.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 1
+    },
+    "container_40_5": {
+      "lodEndM": [
+        30.0,
+        120.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 1
+    },
+    "propcontact_1bea3aec92": {
+      "lodEndM": [
+        120.0
+      ],
+      "lod_count": 1,
+      "shadowLodMask": 0,
+      "count": 3
+    },
+    "pallets_empty_16": {
+      "lodEndM": [
+        30.0,
+        120.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 40
+    },
+    "pallets_empty_8": {
+      "lodEndM": [
+        30.0,
+        120.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 36
+    },
+    "plate_B-33_40": {
+      "lodEndM": [
+        50.0,
+        250.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 4
+    },
+    "skip_kp7": {
+      "lodEndM": [
+        30.0,
+        120.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 4
+    },
+    "cone": {
+      "lodEndM": [
+        30.0,
+        120.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 25
+    },
+    "car_sedan_red": {
+      "lodEndM": [
+        25.0,
+        85.0,
+        300.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 1,
+      "count": 8
+    },
+    "facade_sign_magazyn": {
+      "lodEndM": [
+        30.0,
+        120.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 5
+    },
+    "facade_sign_hala_a": {
+      "lodEndM": [
+        30.0,
+        120.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 1
+    },
+    "facade_sign_hala_d": {
+      "lodEndM": [
+        30.0,
+        120.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 6
+    },
+    "landmark_depot_kwadrat_park_00": {
+      "lodEndM": [
+        100.0,
+        400.0,
+        20000.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 3,
+      "count": 1
+    },
+    "landmark_depot_kwadrat_park_14": {
+      "lodEndM": [
+        100.0,
+        400.0,
+        20000.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 3,
+      "count": 1
+    },
+    "landmark_depot_kwadrat_park_15": {
+      "lodEndM": [
+        100.0,
+        400.0,
+        20000.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 3,
+      "count": 1
+    },
+    "plate_B-33_30": {
+      "lodEndM": [
+        50.0,
+        250.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 3
+    },
+    "board_E-1_57412": {
+      "lodEndM": [
+        50.0,
+        250.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 1
+    },
+    "board_E-2_41037": {
+      "lodEndM": [
+        50.0,
+        250.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 1
+    },
+    "lamp_9m": {
+      "lodEndM": [
+        60.0,
+        400.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 11
+    },
+    "landmark_viaduct_biezenstwa_00": {
+      "lodEndM": [
+        90.0,
+        300.0,
+        20000.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 3,
+      "count": 1
+    },
+    "landmark_viaduct_biezenstwa_01": {
+      "lodEndM": [
+        90.0,
+        300.0,
+        20000.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 3,
+      "count": 1
+    },
+    "container_40_2": {
+      "lodEndM": [
+        30.0,
+        120.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 1
+    },
+    "container_40_3": {
+      "lodEndM": [
+        30.0,
+        120.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 1
+    },
+    "facade_sign_dostawy": {
+      "lodEndM": [
+        30.0,
+        120.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 1
+    },
+    "lamp_arc_9m": {
+      "lodEndM": [
+        60.0,
+        400.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 6
+    },
+    "landmark_depot_kwadrat_park_01": {
+      "lodEndM": [
+        100.0,
+        400.0,
+        20000.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 3,
+      "count": 1
+    },
+    "landmark_depot_kwadrat_park_02": {
+      "lodEndM": [
+        100.0,
+        400.0,
+        20000.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 3,
+      "count": 1
+    },
+    "landmark_depot_kwadrat_park_03": {
+      "lodEndM": [
+        100.0,
+        400.0,
+        20000.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 3,
+      "count": 1
+    },
+    "landmark_depot_kwadrat_park_04": {
+      "lodEndM": [
+        100.0,
+        400.0,
+        20000.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 3,
+      "count": 1
+    },
+    "landmark_depot_kwadrat_park_05": {
+      "lodEndM": [
+        100.0,
+        400.0,
+        20000.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 3,
+      "count": 1
+    },
+    "landmark_depot_kwadrat_park_06": {
+      "lodEndM": [
+        100.0,
+        400.0,
+        20000.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 3,
+      "count": 1
+    },
+    "landmark_depot_kwadrat_park_07": {
+      "lodEndM": [
+        100.0,
+        400.0,
+        20000.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 3,
+      "count": 1
+    },
+    "landmark_depot_kwadrat_park_08": {
+      "lodEndM": [
+        100.0,
+        400.0,
+        20000.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 3,
+      "count": 1
+    },
+    "landmark_depot_kwadrat_park_09": {
+      "lodEndM": [
+        100.0,
+        400.0,
+        20000.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 3,
+      "count": 1
+    },
+    "landmark_depot_kwadrat_park_10": {
+      "lodEndM": [
+        100.0,
+        400.0,
+        20000.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 3,
+      "count": 1
+    },
+    "landmark_depot_kwadrat_park_11": {
+      "lodEndM": [
+        100.0,
+        400.0,
+        20000.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 3,
+      "count": 1
+    },
+    "landmark_depot_kwadrat_park_12": {
+      "lodEndM": [
+        100.0,
+        400.0,
+        20000.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 3,
+      "count": 1
+    },
+    "landmark_depot_kwadrat_park_13": {
+      "lodEndM": [
+        100.0,
+        400.0,
+        20000.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 3,
+      "count": 1
+    },
+    "landmark_depot_kwadrat_park_roof": {
+      "lodEndM": [
+        100.0,
+        400.0,
+        20000.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 3,
+      "count": 1
+    },
+    "barrier_base": {
+      "lodEndM": [
+        30.0,
+        120.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 2
+    },
+    "propcontact_bbc039ced6": {
+      "lodEndM": [
+        120.0
+      ],
+      "lod_count": 1,
+      "shadowLodMask": 0,
+      "count": 2
+    },
+    "barrier_boom": {
+      "lodEndM": [
+        30.0,
+        120.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 0
+    },
+    "board_E-1_82686": {
+      "lodEndM": [
+        50.0,
+        250.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 1
+    },
+    "board_E-2a_41037": {
+      "lodEndM": [
+        50.0,
+        250.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 1
+    },
+    "board_E-2a_80201": {
+      "lodEndM": [
+        50.0,
+        250.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 1
+    },
+    "gatehouse": {
+      "lodEndM": [
+        30.0,
+        120.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 1
+    },
+    "propcontact_2673e2ce12": {
+      "lodEndM": [
+        120.0
+      ],
+      "lod_count": 1,
+      "shadowLodMask": 0,
+      "count": 1
+    },
+    "landmark_viaduct_biezenstwa_02": {
+      "lodEndM": [
+        90.0,
+        300.0,
+        20000.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 3,
+      "count": 1
+    },
+    "landmark_viaduct_biezenstwa_03": {
+      "lodEndM": [
+        90.0,
+        300.0,
+        20000.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 3,
+      "count": 1
+    },
+    "landmark_viaduct_biezenstwa_04": {
+      "lodEndM": [
+        90.0,
+        300.0,
+        20000.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 3,
+      "count": 1
+    },
+    "sign_g3_G33c600842": {
+      "lodEndM": [
+        50.0,
+        250.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 2
+    },
+    "landmark_chimney_120_75": {
+      "lodEndM": [
+        650.0,
+        20000.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 1
+    },
+    "landmark_chimney_120_83": {
+      "lodEndM": [
+        650.0,
+        20000.0
+      ],
+      "lod_count": 2,
+      "shadowLodMask": 1,
+      "count": 1
+    },
+    "landmark_viaduct_biezenstwa_05": {
+      "lodEndM": [
+        90.0,
+        300.0,
+        20000.0
+      ],
+      "lod_count": 3,
+      "shadowLodMask": 3,
+      "count": 1
+    }
+  },
+  "scope": "Visibility policy, shadow mask, LOD count and instance count only; not mesh payloads"
+}
