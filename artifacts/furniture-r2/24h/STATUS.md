@@ -197,3 +197,5 @@ NASTĘPNY KROK: przygotować własne skrypty r2 z ownerem heavy gpt-furniture-r2
 2026-11-12T09:50:23.8703616+01:00: uzupełniam r2 o bezpośredni kadr zdjęcie/render znaku i uchwytów: istniejąca kamera sbs-g3-b-297817221966185, Low/High clear. Rektyfikowaną referencję skopiowano z main po potwierdzeniu SHA256. Poza roboczą pozą B, historyczne zdjęcie z2017, bez kalibracji fotometrycznej; nie zmieniano kamer wspólnej dziedziny.
 
 2026-11-12T09:50:32.0600270+01:00: Unity sbs-sign after3 Low clear; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
+
+2026-11-12T09:50:49.3750270+01:00: Unity sbs-sign after3 High clear; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
