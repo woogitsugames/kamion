@@ -1,6 +1,8 @@
 # Próby materiałów przed wyborem zmiany rundy 3
 
-Stan źródeł: po merge lokalnego main i świeżej kanonicznej regeneracji. To próby diagnostyczne, a nie pełne porównanie baseline/candidate ani dowód budżetu GPU.
+Stan źródeł tych prób: baza main `0023f39d`, przed ADR 0131, po świeżej kanonicznej regeneracji i imporcie z 13:40. To próby diagnostyczne, a nie pełne porównanie baseline/candidate ani dowód budżetu GPU.
+
+O 14:15 włączono świeży main `11db0552` przez merge `e5eb5902`. Zawiera naprawę lidera ADR 0131: smoothness zalewki = smoothness asfaltu +0.06. Poniższe obserwacje białych śladów dotyczą wcześniejszego stanu. Nie traktujemy ich jako wyniku aktualnego produktu ani własnej naprawy. Oczekuje świeża regeneracja/import i pełny baseline. Pętle maski oraz widoczność ciemnej zalewki z kabiny pozostają P2 według recenzji lidera.
 
 ## Jasne ślady przed rondem
 
