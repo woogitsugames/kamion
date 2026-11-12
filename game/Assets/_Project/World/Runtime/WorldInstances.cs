@@ -531,16 +531,6 @@ namespace Game.World
         bool[] m_GroupFar;
 
 
-        // One RenderParams reused for every draw of every camera (Graphics.RenderMesh/RenderMeshInstanced consume it
-        // synchronously): a `new RenderParams` per draw allocated per camera per frame.
-        RenderParams m_Rp;
-        RenderParams Params(Material mat)
-        {
-            if (m_Rp == null) m_Rp = new RenderParams(mat);
-            m_Rp.material = mat;
-            return m_Rp;
-        }
-
         /// <summary>A forest HLOD mesh (cell or chunk merge), region-root space, no shadows (beyond every tier's shadow distance).</summary>
         void DrawMesh(Mesh mesh, int materialStart, Bounds b)
         {
@@ -554,14 +544,16 @@ namespace Game.World
                 // ADR 0106 A/B (diagnostics): 1 = no canopy (opaque) submeshes, 2 = no edge-wall (Kamion/Vegetation) submeshes.
                 if (RenderOverrides.AbHlodPart != 0 && (RenderOverrides.AbHlodPart == 2) == (mat.shader == m_FoliageShader)) continue;
 
-                var rp = Params(mat);
-                rp.camera = m_Camera;
-                rp.worldBounds = b;
-                rp.shadowCastingMode = ShadowCastingMode.Off;
-                rp.receiveShadows = true;
-                rp.layer = gameObject.layer;
-                rp.lightProbeUsage = LightProbeUsage.Off;
-                rp.reflectionProbeUsage = ReflectionProbeUsage.Off;
+                var rp = new RenderParams(mat)
+                {
+                    camera = m_Camera,
+                    worldBounds = b,
+                    shadowCastingMode = ShadowCastingMode.Off,
+                    receiveShadows = true,
+                    layer = gameObject.layer,
+                    lightProbeUsage = LightProbeUsage.Off,
+                    reflectionProbeUsage = ReflectionProbeUsage.Off,
+                };
                 Graphics.RenderMesh(rp, mesh, s, trs);
                 Last.Draws++;
                 Last.Triangles += (int)(mesh.GetIndexCount(s) / 3);
@@ -602,15 +594,17 @@ namespace Game.World
             {
                 var mat = (m_Mats ?? set.materials)[m0 + s];
                 if (mat == null) continue;
-                var rp = Params(mat);
-                rp.camera = m_Camera;
-                rp.worldBounds = b;
-                rp.shadowCastingMode = set.noShadowMaterials.Length > 0 && Array.IndexOf(set.noShadowMaterials, m0 + s) >= 0 ? ShadowCastingMode.Off : shadows;
-                rp.receiveShadows = true;
-                rp.layer = gameObject.layer;
-                rp.lightProbeUsage = LightProbeUsage.Off;
-                rp.reflectionProbeUsage = ReflectionProbeUsage.Off;
-                rp.motionVectorMode = MotionVectorGenerationMode.Camera;
+                var rp = new RenderParams(mat)
+                {
+                    camera = m_Camera,
+                    worldBounds = b,
+                    shadowCastingMode = set.noShadowMaterials.Length > 0 && Array.IndexOf(set.noShadowMaterials, m0 + s) >= 0 ? ShadowCastingMode.Off : shadows,
+                    receiveShadows = true,
+                    layer = gameObject.layer,
+                    lightProbeUsage = LightProbeUsage.Off,
+                    reflectionProbeUsage = ReflectionProbeUsage.Off,
+                    motionVectorMode = MotionVectorGenerationMode.Camera,
+                };
                 Graphics.RenderMeshInstanced(rp, mesh, s, m_Batch[slot], n);
                 Last.Draws++;
                 Last.Triangles += (int)(mesh.GetIndexCount(s) / 3) * n;
