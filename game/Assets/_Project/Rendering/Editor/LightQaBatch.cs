@@ -28,8 +28,8 @@ namespace Game.Rendering.Editor
             public float clearSkySaturation; // 0 leaves preset unchanged; diagnostic display-only chroma.
             public bool lampProbe;
             public int expectedHeadlamps; // 0 unchecked, 1 off, 2 on. Requires per-camera probes.
-            public float skyDisplayGain; // 0 keeps preset
-            public float skyDisplayDesaturation = -1f; // -1 keeps preset
+            public bool overrideSkyDisplay;
+            public float skyDisplayGain = 1f, skyDisplayDesaturation;
         }
 
         static string Arg(string key)
@@ -90,13 +90,13 @@ namespace Game.Rendering.Editor
                         var preset = presetSnapshots.Keys.Single(p => string.Equals(p.name, "LP_" + job.lighting, StringComparison.OrdinalIgnoreCase));
                         preset.clearSkySaturation = job.clearSkySaturation;
                     }
-                    if (job.skyDisplayGain > 0f || job.skyDisplayDesaturation >= 0f)
+                    if (job.overrideSkyDisplay)
                     {
-                        if (job.skyDisplayGain > 1f || job.skyDisplayDesaturation > 1f)
+                        if (job.skyDisplayGain < 0.001f || job.skyDisplayGain > 1f || job.skyDisplayDesaturation < 0f || job.skyDisplayDesaturation > 1f)
                             throw new ArgumentException("sky display values outside preset bounds");
                         var preset = presetSnapshots.Keys.Single(p => string.Equals(p.name, "LP_" + job.lighting, StringComparison.OrdinalIgnoreCase));
-                        if (job.skyDisplayGain > 0f) preset.skyDisplayGain = job.skyDisplayGain;
-                        if (job.skyDisplayDesaturation >= 0f) preset.skyDisplayDesaturation = job.skyDisplayDesaturation;
+                        preset.skyDisplayGain = job.skyDisplayGain;
+                        preset.skyDisplayDesaturation = job.skyDisplayDesaturation;
                     }
                     profile.tiers = (QualityProfile.Tier[])originalTiers.Clone();
                     var overrides = (job.rq ?? "").Split(',').Where(s => !string.IsNullOrWhiteSpace(s))
@@ -138,6 +138,9 @@ namespace Game.Rendering.Editor
                         throw new InvalidOperationException("Requested lighting QA tier was not applied: " + job.tier);
                     if (job.overrideWhiteClip && Mathf.Abs(environment.Active.lookWhiteClip - job.whiteClip) > 0.0001f)
                         throw new InvalidOperationException($"Requested white clip was not retained: requested={job.whiteClip}, actual={environment.Active.lookWhiteClip}");
+                    if (job.overrideSkyDisplay && (Mathf.Abs(environment.Active.skyDisplayGain-job.skyDisplayGain) > 0.0001f ||
+                        Mathf.Abs(environment.Active.skyDisplayDesaturation-job.skyDisplayDesaturation) > 0.0001f))
+                        throw new InvalidOperationException("Requested sky presentation grade was not retained");
                     var actualFilter = environment.sun.GetUniversalAdditionalLightData().softShadowQuality;
                     if (job.shadowFilter > 0 && (int)actualFilter != job.shadowFilter)
                         throw new InvalidOperationException("Requested shadow filter was not retained: " + actualFilter);

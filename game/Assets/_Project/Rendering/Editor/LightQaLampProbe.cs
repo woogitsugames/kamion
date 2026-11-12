@@ -15,6 +15,7 @@ namespace Game.Rendering.Editor
             public string camera, diagnostics;
             public Vector3 position, forward;
             public float sunElevation, skyHorizontalLux, exposure, lampsOn;
+            public float presetExposureCompensation, skyDisplayGain, skyDisplayDesaturation;
             public int pools, enabledPointLights;
             public Vector4[] headsAndWeights;
             public Vector4 exposedPoolColor;
@@ -43,6 +44,8 @@ namespace Game.Rendering.Editor
                 position = camera.transform.position, forward = camera.transform.forward,
                 sunElevation = model.TrueSunElevationDeg, skyHorizontalLux = model.HorizontalIlluminanceLux,
                 exposure = model.Exposure, lampsOn = StreetLamps.On,
+                presetExposureCompensation = environment.Active.exposureCompensation,
+                skyDisplayGain = environment.Active.skyDisplayGain, skyDisplayDesaturation = environment.Active.skyDisplayDesaturation,
                 pools = count, headsAndWeights = positions,
                 projectedHeadlamps = KamionHeadlamps.Enabled, headlampDiagnostics = KamionHeadlamps.Diagnostics,
                 headlampLeft = Shader.GetGlobalVector("_KamionHeadlampLeft"),

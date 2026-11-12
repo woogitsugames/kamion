@@ -86,13 +86,16 @@ namespace Game.Rendering
         /// This does not change the model's illuminance, SH, sun intensity or scene exposure.</summary>
         public static Color DisplaySkyFog(LightingPreset p, Color physical)
         {
-            float gain = Mathf.Clamp(p.skyDisplayGain, 0.001f, 1f), desaturation = Mathf.Clamp01(p.skyDisplayDesaturation);
+            float gain = SkyDisplayGain(p), desaturation = Mathf.Clamp01(p.skyDisplayDesaturation);
             if (gain == 1f && desaturation == 0f) return physical;
             float y = physical.r*0.2126f+physical.g*0.7152f+physical.b*0.0722f;
             var display = Color.Lerp(physical, new Color(y, y, y, physical.a), desaturation)*gain;
             display.a = physical.a;
             return display;
         }
+
+        // Zero is reserved for legacy serialized assets that predate this optional field.
+        static float SkyDisplayGain(LightingPreset p) => p.skyDisplayGain > 0f ? Mathf.Clamp(p.skyDisplayGain, 0.001f, 1f) : 1f;
 
         public static void Push(EnvironmentLighting env, Color fogExposed)
         {
@@ -101,7 +104,7 @@ namespace Game.Rendering
             bool hasTier = QualityProfileApplier.HasCurrent;
             var t = hasTier ? QualityProfileApplier.Current : default;
             KamionHeadlamps.Push(env.Model, HeadlampsOverride ?? p.projectedHeadlamps, p.projectedHeadlampPeakCd, env.gameObject.scene);
-            float skyGain = Mathf.Clamp(p.skyDisplayGain, 0.001f, 1f), skyDesat = Mathf.Clamp01(p.skyDisplayDesaturation);
+            float skyGain = SkyDisplayGain(p), skyDesat = Mathf.Clamp01(p.skyDisplayDesaturation);
             Shader.SetGlobalVector(k_SkyDisplay, new Vector4(skyGain, skyDesat,
                 skyGain < 1f || skyDesat > 0f ? 1f : 0f, 0f));
 

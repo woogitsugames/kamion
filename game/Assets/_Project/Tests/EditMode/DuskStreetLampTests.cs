@@ -38,6 +38,8 @@ namespace Game.Tests
                 {
                     var fog = preset.CreateModel().HorizonColorExposed();
                     Assert.AreEqual(fog, WorldAtmosphere.DisplaySkyFog(preset, fog));
+                    preset.skyDisplayGain = 0f; // missing legacy serialized field
+                    Assert.AreEqual(fog, WorldAtmosphere.DisplaySkyFog(preset, fog));
                 }
                 finally { Object.DestroyImmediate(preset); }
         }
