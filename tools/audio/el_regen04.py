@@ -212,12 +212,169 @@ def cmd_analyse(src: Path) -> None:
         sheet(fid, rows, tracks, src, out)
 
 
+# ------------------------------------------------------------------------------------------------------- cut
+# Authored after artifacts/audio-regen04/analysis (sheets + regen04.json) and `cut --dry` (candidate table):
+# cell rpm -> (take, window t0-t1 s, line band Hz searched in every frame). None of the four OVERRUN_SWEEP takes falls
+# monotonically (rise to 1750-2000 rpm, then a 1.5 s drop to a ~900 rpm plateau), so the steady IDLE takes are cut.
+# Pick (artifacts/audio-regen04/cut/dry.txt): IDLE_STEADY (4) is a steady 1467 rpm cab take with a 20 dB line and a
+# consistent period (YIN 0.95); both weak cells come from it (warp x0.81-0.85 / x1.01-1.06). Alternatives: 1200 from
+# IDLE_STEADY (3) has 17.7 dB and a 5.1 dB timbre step to the 900 cell (IDLE (4): 3.1 dB). 600/900 keep their sources
+# (21.2 / 22.3 dB, no candidate is better). Steps 1200-1500 3.5 dB (was 3.55), 1500-1800 3.6 dB (was 2.8).
+CELLS: dict[int, tuple[str, float, float, tuple[float, float]]] = {
+    1200: ("ENG_CAB_IDLE_STEADY (4).wav", 1.75, 8.25, (66, 80)),
+    1500: ("ENG_CAB_IDLE_STEADY (4).wav", 1.75, 8.25, (66, 80)),
+}
+# windows from `scan` (best 6.5 s: 2 x level std - line dB, no clicks); OVERRUN (4): its ~900 rpm plateau after the drop
+CANDIDATES: list[tuple[int, str, float, float, tuple[float, float]]] = [
+    (600, "ENG_CAB_IDLE_STEADY (1).wav", 0.0, 6.5, (34, 42)),
+    (900, "ENG_CAB_IDLE_STEADY (1).wav", 0.0, 6.5, (34, 42)),
+    (900, "ENG_CAB_IDLE_STEADY (3).wav", 1.0, 7.5, (46, 56)),
+    (900, "ENG_CAB_OVERRUN_SWEEP (4).wav", 7.1, 11.9, (40, 50)),
+    (1200, "ENG_CAB_IDLE_STEADY (3).wav", 1.0, 7.5, (46, 56)),
+    (1200, "ENG_CAB_IDLE_STEADY (4).wav", 1.75, 8.25, (66, 80)),
+    (1500, "ENG_CAB_IDLE_STEADY (4).wav", 1.75, 8.25, (66, 80)),
+]
+WIN_S = 6.5
+
+
+def scan_window(x: np.ndarray, f_line: float, t_lo: float, t_hi: float, win_s: float = WIN_S) -> tuple[float, float, dict]:
+    """Best win_s window inside [t_lo, t_hi]: cost = 2 x level std (250 ms, dB) - line_db, clicks excluded."""
+    cl = clicks(x, FS)
+    best = None
+    for t0 in np.arange(t_lo, max(t_lo, t_hi - win_s) + 1e-6, 0.25):
+        t1 = t0 + win_s
+        if any(t0 <= c <= t1 for c in cl):
+            continue
+        seg = x[int(t0 * FS):int(t1 * FS)]
+        ld = line_db_at(seg, FS, f_line, 0.05)
+        sd = float(np.std(env_db(seg, FS)))
+        c = 2 * sd - ld
+        if best is None or c < best[0]:
+            best = (c, float(t0), float(t1), {"line_db": round(ld, 1), "level_std_db": round(sd, 2)})
+    return best[1], best[2], best[3]
+
+
+def cut_cell(src: Path, take: str, t0: float, t1: float, band: tuple[float, float], rpm: int) -> tuple[np.ndarray, dict]:
+    from el_prepare import LOOP_MIN_S, mono, seam_loop
+    from el_sweepcut import flatten_level, smooth_track, stretch_psola, warp_to_constant
+    sos = signal.butter(2, 25.0, "hp", fs=FS, output="sos")
+    x = signal.sosfiltfilt(sos, mono(src / take))
+    tr = line_follow(x, FS, max(0.0, t0 - 0.2), min(len(x) / FS, t1 + 0.2), band, fixed=True)
+    t, fsm = tr["t"], smooth_track(tr["t"], tr["f0"])
+    y, info = warp_to_constant(x, FS, t, fsm, t0, t1, rpm / 20.0)
+    y, info["level_flatten_db"] = flatten_level(y, FS)
+    info["stretch"] = 1.0
+    if len(y) < int(LOOP_MIN_S * FS):
+        info["stretch"] = LOOP_MIN_S * FS / len(y)
+        y = stretch_psola(y, FS, rpm / 20.0, int(LOOP_MIN_S * FS))
+    info["line_sal_med_db"] = float(np.median(tr["sal"]))
+    return seam_loop(y), info
+
+
+def band_steps(cells: dict[int, np.ndarray]) -> dict:
+    from el_verify import band_levels
+    ks = sorted(cells)
+    bl = {k: band_levels(cells[k], FS) for k in ks}
+    return {f"{a}-{b}": round(float(np.mean(np.abs(bl[b] - bl[a]))), 2) for a, b in zip(ks, ks[1:])}
+
+
+def manifest_path(root: Path = ROOT) -> Path:
+    return root / "game" / "Assets" / "_Project" / "Audio" / "ElevenLabs" / "el_manifest.json"
+
+
+def current_cells(root: Path = ROOT) -> tuple[dict, dict[int, np.ndarray], dict[int, str]]:
+    man = json.loads(manifest_path(root).read_text(encoding="utf-8"))
+    cells = {c["rpm"]: c for c in man["clips"] if c["kind"] == "engine" and c["perspective"] == "cab" and c["layer"] == "off"}
+    return man, {r: sf.read(root / c["file"])[0] for r, c in cells.items()}, {r: c["source"] for r, c in cells.items()}
+
+
+def cell_row(x: np.ndarray, rpm: int) -> dict:
+    fy, ap = yin_f0(x, FS)
+    return {"line_db": round(cell_line_db(x, FS, rpm), 1), "yin_ratio": round(fy / (rpm / 20), 2), "yin_ap": round(ap, 2),
+            "lufs": round(lufs(x, FS), 1), "len_s": round(len(x) / FS, 2)}
+
+
+def cmd_cut(src: Path, dry: bool) -> None:
+    from el_prepare import soft_limit, synth_lufs, to_lufs, write
+    out = ART / "cut"
+    out.mkdir(parents=True, exist_ok=True)
+    man, cur, cur_src = current_cells()
+    ref = synth_lufs()
+    lines = ["current cab/off cells: line_db at rpm/20 (loop x2), YIN period / line, LUFS, source"]
+    for r, x in sorted(cur.items()):
+        lines.append(f"  {r:5d}  {cell_row(x, r)}  src {cur_src[r]}")
+    lines.append("timbre steps (mean |d| 1/3-oct, dB): " + json.dumps(band_steps(cur)))
+    todo = CANDIDATES if dry else [(r, *v) for r, v in CELLS.items()]
+    made, infos = {}, {}
+    for rpm, take, t0, t1, band in todo:
+        y, info = cut_cell(src, take, t0, t1, band, rpm)
+        y, gain = to_lufs(y, ref[("cab", "off", rpm)])
+        y, lim = soft_limit(y)
+        info.update({"gain_db": gain, "limit_db": lim, **cell_row(y, rpm), "seam": seam(y, FS)})
+        key = (rpm, take, t0)
+        made[key], infos[key] = y, info
+        lines.append(f"  cand {rpm:5d} <- {take:30s} {t0:5.2f}-{t1:5.2f} s  measured {info['rpm_measured_mean']:6.0f} rpm  "
+                     f"warp {info['warp_min']:.3f}-{info['warp_max']:.3f}  flat {info['level_flatten_db']:.1f} dB  "
+                     f"line {info['line_db']:5.1f} dB  yin {info['yin_ratio']:.2f} ap {info['yin_ap']:.2f}  "
+                     f"{info['lufs']:6.1f} LUFS ({gain:+.1f} dB, limit {lim:.1f})  seam {info['seam']['seam_jump_ratio']:.2f} / "
+                     f"{info['seam']['seam_hf_spike_db']:.1f} dB  len {info['len_s']:.2f} s")
+        tag = take.replace(" ", "").replace(".wav", "").replace("(", "_").replace(")", "")
+        sf.write(out / f"cand_{rpm}_{tag}_{t0:.2f}.wav", np.tile(y, 2).astype(np.float32), FS, subtype="PCM_16")
+    if dry:
+        import itertools
+        rpms = sorted({k[0] for k in made})
+        opts = [[k for k in made if k[0] == r] + [None] for r in rpms]
+        for combo in itertools.product(*opts):
+            cells = dict(cur)
+            for k in combo:
+                if k is not None:
+                    cells[k[0]] = made[k]
+            tag = ", ".join(f"{r}:{k[1].split('(')[0][8:12]}{k[1][-6:-5]}@{k[2]}" if k else f"{r}:keep" for r, k in zip(rpms, combo))
+            lines.append(f"  steps [{tag}] " + json.dumps(band_steps(cells)))
+    else:
+        for key, y in made.items():
+            rpm, take, t0 = key
+            info = infos[key]
+            name = f"el_engine_cab_off_{rpm:04d}"
+            f = write(name, "engine/cab", y)
+            pid = take.split(" (")[0]
+            seg = {k: info[k] for k in ("seg_t0", "seg_t1", "seg_len_s", "warp_min", "warp_max", "rpm_measured_mean",
+                                        "level_flatten_db", "stretch")}
+            seg.update({"segment_kind": "steady", "batch": "REGEN-04"})
+            entry = {"name": name, "file": f, "kind": "engine", "perspective": "cab", "rpm": rpm, "layer": "off", "load": 0.0,
+                     "rpm_exact": float(rpm), "cycles": max(1, int(round(len(y) / FS * rpm / 120))), "samples": len(y),
+                     "source": take, "source_rpm_measured": info["rpm_measured_mean"],
+                     "pitch_ratio": rpm / info["rpm_measured_mean"], "gain_db": info["gain_db"],
+                     "target_lufs": ref[("cab", "off", rpm)], "limit_db": info["limit_db"], "lufs": lufs(y, FS),
+                     "source_prompt_id": pid, "sweep_segment": seg}
+            i = next(i for i, c in enumerate(man["clips"]) if c["name"] == name)
+            man["clips"][i] = entry
+            man["prompts"][pid] = prompt_entry(pid)
+        used = {c["source_prompt_id"] for c in man["clips"]} | {s["source_prompt_id"] for s in man["sfx"]}
+        # drop only plain-ID prompts no cell uses any more ("<ID> REGEN-0n" keys are kept as they are)
+        man["prompts"] = {k: v for k, v in man["prompts"].items() if " " in k or k in used}
+        manifest_path().write_text(json.dumps(man, indent=1), encoding="utf-8")
+        _, new, new_src = current_cells()
+        lines.append("after: line_db / YIN / LUFS")
+        for r, x in sorted(new.items()):
+            lines.append(f"  {r:5d}  {cell_row(x, r)}  src {new_src[r]}")
+        lines.append("timbre steps after: " + json.dumps(band_steps(new)))
+    (out / ("dry.txt" if dry else "cut.txt")).write_text("\n".join(lines) + "\n", encoding="utf-8")
+    print("\n".join(lines))
+
+
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
-    ap.add_argument("cmd", choices=["analyse", "cut"])
+    ap.add_argument("cmd", choices=["analyse", "scan", "cut"])
     ap.add_argument("--src", default=str(SRC))
+    ap.add_argument("--dry", action="store_true", help="cut: evaluate CANDIDATES, write nothing to the game")
     a = ap.parse_args()
     if a.cmd == "analyse":
         cmd_analyse(Path(a.src))
+    elif a.cmd == "scan":
+        from el_prepare import mono
+        for take, f_line, lo, hi in (("ENG_CAB_IDLE_STEADY (3).wav", 50.8, 0.0, 12.0), ("ENG_CAB_IDLE_STEADY (4).wav", 73.0, 0.0, 8.3),
+                                     ("ENG_CAB_IDLE_STEADY (1).wav", 37.9, 0.0, 10.1), ("ENG_CAB_OVERRUN_SWEEP (4).wav", 45.2, 6.8, 12.0)):
+            print(take, scan_window(mono(Path(a.src) / take), f_line, lo, hi))
     else:
-        cmd_cut(Path(a.src))  # noqa: F821  (defined below once the picks are made)
+        cmd_cut(Path(a.src), a.dry)
