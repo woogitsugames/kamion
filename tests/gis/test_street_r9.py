@@ -65,7 +65,7 @@ def test_cantilever_prototype_reach_and_mirror():
             assert V[:, 0].max() == pytest.approx(9.0, abs=0.07) and V[:, 0].min() > -0.4
         n0 = sum(len(p["T"]) for p in m.out())
         n1 = sum(len(p["T"]) for p in l1.out())
-        assert n1 <= 24 and n0 < 2500                          # LOD1 = two boxes; LOD0 lattice budget
+        assert n1 <= 300 and n0 < 2500                         # LOD1 = coarse lattice (ADR 0127; was two boxes)
 
 
 def test_signal_mast_curved_arm():

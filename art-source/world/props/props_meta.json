@@ -386,7 +386,7 @@
   },
   "board_OB_0a31f00e": {
    "materials": [
-    "plate_back",
+    "board_back",
     "sign_OB_0a31f00e",
     "steel_galv"
    ],
@@ -395,7 +395,7 @@
   },
   "board_OB_0bfe6830": {
    "materials": [
-    "plate_back",
+    "board_back",
     "sign_OB_0bfe6830",
     "steel_galv"
    ],
@@ -404,7 +404,7 @@
   },
   "board_OB_6bbf26a1": {
    "materials": [
-    "plate_back",
+    "board_back",
     "sign_OB_6bbf26a1",
     "steel_galv"
    ],
@@ -413,7 +413,7 @@
   },
   "board_OB_b7134a83": {
    "materials": [
-    "plate_back",
+    "board_back",
     "sign_OB_b7134a83",
     "steel_galv"
    ],
@@ -422,7 +422,7 @@
   },
   "board_OB_f99035fb": {
    "materials": [
-    "plate_back",
+    "board_back",
     "sign_OB_f99035fb",
     "steel_galv"
    ],
@@ -1387,17 +1387,18 @@
   },
   "pylon": {
    "materials": [
-    "steel_galv_dark"
+    "insulator",
+    "pylon_steel"
    ],
-   "tris_lod0": 456,
-   "tris_lod1": 456
+   "tris_lod0": 1452,
+   "tris_lod1": 852
   },
   "sign_cantilever_L8_86": {
    "materials": [
     "gantry_steel"
    ],
    "tris_lod0": 528,
-   "tris_lod1": 24
+   "tris_lod1": 240
   },
   "sign_g3_G33c600842": {
    "materials": [
@@ -1420,19 +1421,19 @@
    "tris_lod0": 30,
    "tris_lod1": 18
   },
-  "sign_gantry_10_74": {
+  "sign_gantry_10_70": {
    "materials": [
     "gantry_steel"
    ],
-   "tris_lod0": 688,
-   "tris_lod1": 36
+   "tris_lod0": 1072,
+   "tris_lod1": 480
   },
-  "sign_gantry_16_74": {
+  "sign_gantry_14_70": {
    "materials": [
     "gantry_steel"
    ],
-   "tris_lod0": 784,
-   "tris_lod1": 36
+   "tris_lod0": 1136,
+   "tris_lod1": 528
   },
   "sign_post": {
    "materials": [
