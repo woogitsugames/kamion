@@ -1208,7 +1208,7 @@ def thuja(kit, p, z, h, r, key, dead=False):
         card(kit, pc, z - 0.05, sp, 2.5 * r, h * 1.02, a0 + 0.3 + i * math.pi / 2)
 
 
-def thuja_lite(kit, p, z, h, r, key, dead=False, core=True):
+def thuja_lite(kit, p, z, h, r, key, dead=False, core=True, cards=1):
     """Low / Medium variant of thuja() (ADR 0132: the Low kit stays within the triangles of ADR 0124): a 4-sided core
     of two bands closed by a blunt point + ONE silhouette card - 14 triangles; core=False (single plants away from a
     row): the two crossed silhouette cards only - 4 triangles. Same atlas row, sprites, lean and seed as thuja()."""
@@ -1244,7 +1244,8 @@ def thuja_lite(kit, p, z, h, r, key, dead=False, core=True):
     for j in range(sides):
         T += [(j, j + 1, m + j + 1), (j, m + j + 1, m + j), (m + j, m + j + 1, top)]
     kit.tris(V, UV, T, C)
-    card(kit, pc, z - 0.05, sp, 2.5 * r, h * 1.02, a0 + 0.3)
+    for i in range(cards):                                   # cards=2 (High, near the street): 16 triangles
+        card(kit, pc, z - 0.05, sp, 2.5 * r, h * 1.02, a0 + 0.3 + i * math.pi / 2)
 
 
 def fruit_tree_lite(kit, p, z, h, key, r=None):
@@ -1314,12 +1315,12 @@ def _skin_card(kit, c, z, az, W, H, sprite, tilt, occ=1.0, flip=False):
              [_fol(lo, occ * 0.80), _fol(lo, occ * 0.80), _fol(hi, occ), _fol(hi, occ)])
 
 
-def _core(kit, c, z0, rx, h, key, sides=5, occ=0.26):
+def _core(kit, c, z0, rx, h, key, sides=5, occ=0.26, rings=3):
     """Dark inner mass of a bush / crown: a lumpy dome of the dense hedge-leaf row, deep in the plant's own shade - it
     closes the gaps between the skin cards (no sky through the middle of a crown) and is what every real shrub shows
     between its outer sprays. The row is drawn 1 : 1 (1.5 m of leaves in v), never stretched."""
     v0, v1 = PK.row("hedge")
-    fr = ((0.0, 0.60), (0.40, 1.0), (0.78, 0.66))
+    fr = ((0.0, 0.60), (0.40, 1.0), (0.78, 0.66)) if rings >= 3 else ((0.0, 0.66), (0.52, 0.98))
     a0 = hfloat(key, "ca") * 6.2832
     u_off = hfloat(key, "cu")
     span = 2 * math.pi * rx / PK.KIT_M
@@ -1364,11 +1365,11 @@ def bush(kit, p, z, r, h, key, red=False, cards=6):
     """A grown shrub (lilac, mock orange, elder, hazel; refs P08, P09, P12: they stand against the fences and hang over
     them). ADR 0132 (review 0124 P1-a / P1-e): a dark core + leaf sprays lying on its skin, overlapping all round, + a
     tent of two sprays over the top - instead of the two crossed cards of ADR 0114 (a paper cut-out from 5-10 m).
-    20 + 2 * (cards + 2) triangles."""
+    12 + 2 * (cards + 2) triangles (r4: the core is one band + a cap - the High frame estimate was over 2.0 M)."""
     p = np.asarray(p, float)
     sp = "shrub_b" if red else "shrub_a"
     occ = 0.86 + 0.14 * hfloat(key, "bo")
-    _core(kit, p, z - 0.05, r * 0.52, h * 0.66, key, sides=4, occ=0.26 * occ)
+    _core(kit, p, z - 0.05, r * 0.52, h * 0.66, key, sides=4, occ=0.26 * occ, rings=2)
     a0 = hfloat(key, "ba") * 6.2832
     for i in range(cards):
         az = a0 + 2 * math.pi * (i + 0.35 * (hfloat(key, "bj", i) - 0.5)) / cards
@@ -1377,6 +1378,15 @@ def bush(kit, p, z, r, h, key, red=False, cards=6):
         H = h * (0.88 + 0.20 * hfloat(key, "bh", i))
         _skin_card(kit, c, z - 0.04, az, W, H, sp, 0.16 + 0.16 * hfloat(key, "bt", i), occ, flip=hfloat(key, "bf", i) < 0.5)
     _tent(kit, p, z + h * 0.44, a0 + 0.9, r * 0.44, 1.55 * r, h * 0.62, sp, occ)
+
+
+def bush_lite(kit, p, z, r, h, key, red=False):
+    """A shrub away from the street (ADR 0132 r4: further than NEAR_FRONT_M from the plot's front edge): two crossed
+    cards, 4 triangles - same sprite, size and seed as bush()."""
+    sp = "shrub_b" if red else "shrub_a"
+    a0 = hfloat(key, "ba") * 6.2832
+    for i in range(2):
+        card(kit, np.asarray(p, float), z - 0.04, sp, max(2.3 * r, 0.9), h * 1.05, a0 + i * math.pi / 2)
 
 
 def fruit_tree(kit, p, z, h, key, r=None):
@@ -1396,8 +1406,8 @@ def fruit_tree(kit, p, z, h, key, r=None):
     top = p + lean * fork / max(h, 1.0)
     t = np.array([math.cos(a0), math.sin(a0)])
     kit.box(p, t, tr, tr, z - 0.1, z + fork, PK.SWATCH["trunk"], top=False, shift=top - p)
-    for k in range(3):                                       # limbs into the crown
-        az = a0 + 2.0944 * k + 0.5 * (hfloat(key, "fl", k) - 0.5)
+    for k in range(2):                                       # limbs into the crown (r4: 2, were 3)
+        az = a0 + 3.1416 * k + 0.5 * (hfloat(key, "fl", k) - 0.5)
         d = np.array([math.cos(az), math.sin(az)])
         e = top + d * R * 0.5
         ze = zc0 + hc * 0.40
@@ -1405,15 +1415,15 @@ def fruit_tree(kit, p, z, h, key, r=None):
         kit.quad([[*(top - nrm), z + fork - 0.05], [*(top + nrm), z + fork - 0.05], [*(e + nrm * 0.5), ze], [*(e - nrm * 0.5), ze]],
                  [PK.SWATCH["trunk"]] * 4)
     cc = top + lean * 0.3
-    _core(kit, cc, zc0 + hc * 0.14, R * 0.50, hc * 0.60, key, sides=5, occ=0.26 * occ)
+    _core(kit, cc, zc0 + hc * 0.14, R * 0.50, hc * 0.60, key, sides=4, occ=0.26 * occ, rings=2)
     low = "apple_a" if hfloat(key, "fa") < 0.5 else "apple_b"
-    for i in range(6):                                       # lower tier: sprays hanging out and down
-        az = a0 + 2 * math.pi * (i + 0.4 * (hfloat(key, "tj", i) - 0.5)) / 6
+    for i in range(5):                                       # lower tier: sprays hanging out and down
+        az = a0 + 2 * math.pi * (i + 0.4 * (hfloat(key, "tj", i) - 0.5)) / 5
         c = cc + np.array([math.cos(az), math.sin(az)]) * R * (0.40 + 0.10 * hfloat(key, "td", i))
         _skin_card(kit, c, zc0 - 0.03 * hc, az, R * (1.45 + 0.3 * hfloat(key, "tw", i)), hc * (0.70 + 0.12 * hfloat(key, "th", i)),
                    low if i % 2 == 0 else "shrub_a", 0.12 + 0.16 * hfloat(key, "tt", i), occ, flip=hfloat(key, "tf", i) < 0.5)
-    for i in range(5):                                       # upper tier
-        az = a0 + 0.8 + 2 * math.pi * i / 5
+    for i in range(4):                                       # upper tier
+        az = a0 + 0.8 + 2 * math.pi * i / 4
         c = cc + np.array([math.cos(az), math.sin(az)]) * R * 0.24
         _skin_card(kit, c, zc0 + hc * 0.30, az, R * 1.55, hc * 0.62, "shrub_a", 0.34 + 0.18 * hfloat(key, "ut", i), occ,
                    flip=i % 2 == 1)
@@ -1423,10 +1433,10 @@ def fruit_tree(kit, p, z, h, key, r=None):
 def shrub(kit, p, z, h, key):
     red = hfloat(key, "sh") >= 0.7
     wm, hm = PK.SPRITE_M["shrub_b" if red else "shrub_a"]
-    bush(kit, p, z, 0.5 * wm * h / hm, h, key, red=red, cards=5)
+    bush(kit, p, z, 0.5 * wm * h / hm, h, key, red=red, cards=4)
 
 
-HEDGE_STEP_M = 1.28           # station pitch of a hedge (SEG_M / 4): the top line and the sides wander between stations
+HEDGE_STEP_M = 1.92           # station pitch of a hedge (r4: 1.28 -> 1.92, -1/3 of the triangles on every tier): the top line and the sides wander between stations
 # cross-section of a clipped hedge, per side: (half-thickness factor, height factor, normal out, normal up, occlusion).
 # Index _HEDGE_SEAM is doubled: the atlas row is 1.5 m of leaves and never tiles in v, so the side is two bands (foot ->
 # seam, seam -> crown), each drawn 1 : 1; the seam between two stretches of random leaves does not show.
@@ -1652,6 +1662,8 @@ AGE_TINT = {"old": (0.72, 0.16), "prl": (0.90, 0.09), "new": (1.0, 0.04)}      #
 STREET_STRIP_M = 6.0          # crowns up to this far in front of the fence belong to the plot's street strip
 STREET_TREE_CW_M = 3.0        # ... and a trunk there keeps this clear of the carriageway (a 2.55 m wide truck passes)
 PC_R_TREE = 1.25              # crown radius from which a crown is a tree (plot_canopy.R_TREE_M)
+NEAR_FRONT_M = 12.0           # ADR 0132 r4: plants up to this far from the plot's front edge are full volumes on High;
+                              # further in they are the lite variants of Low (the truck never gets closer than the street)
 INST_R_M = 2.3                # crown radius from which the tree is an instance of the region's tree library
 INST_SPECIES = [("birch", 0.34), ("linden", 0.26), ("maple", 0.26), ("pine", 0.14)]   # WORKING_VALUE mix
 # one model variant per species (r1 used all 3 x 5 species: every prototype x LOD in view is 1-3 instanced draws, the
@@ -1721,6 +1733,10 @@ def build(buf, rp, zf, surf_top, report, items=None):
         foot = plot["foot"]
         free = poly.buffer(-0.9).difference(foot.buffer(1.0)).difference(hard_u)
         placed = []
+        fr_ls = [LineString([e[0], e[1]]) for e in _edges(poly) if float(e[4] @ plot["front"]) > 0.7]
+
+        def near(q):
+            return bool(fr_ls) and min(l.distance(Point(*q)) for l in fr_ls) <= NEAR_FRONT_M
 
         def spot(tag, k, region, clear):
             if region.is_empty:
@@ -1761,9 +1777,10 @@ def build(buf, rp, zf, surf_top, report, items=None):
                     dead = hfloat(key, "thx", ri, k) < 0.04
                     hh = hb * (0.7 + 0.6 * hfloat(key, "thz", ri, k)) * (0.75 if dead else 1.0)     # +-30 % height
                     rr = (0.26 + 0.07 * hh) * (0.85 + 0.3 * hfloat(key, "thw", ri, k))
-                    kit.low = False
-                    thuja(kit, p, zf(p), hh, rr, (key, ri, k), dead)
-                    kit.low = "only"
+                    if near(p):
+                        kit.low = False
+                        thuja_lite(kit, p, zf(p), hh, rr, (key, ri, k), dead, cards=2)
+                        kit.low = "only"
                     thuja_lite(kit, p, zf(p), hh, rr, (key, ri, k), dead)
                     kit.low = True
                     placed.append(p)
@@ -1869,9 +1886,11 @@ def build(buf, rp, zf, surf_top, report, items=None):
                         if cnt["bush"] >= 10:
                             continue
                         hh = 1.8 + 1.6 * hfloat(kk, "h")
-                        kit.tag, kit.low = "thuja_single", False
-                        thuja(kit, p, zf(p), hh, (0.26 + 0.07 * hh) * (0.9 + 0.3 * hfloat(kk, "w")), kk)
-                        kit.low = "only"
+                        kit.tag = "thuja_single"
+                        if near(p):
+                            kit.low = False
+                            thuja(kit, p, zf(p), hh, (0.26 + 0.07 * hh) * (0.9 + 0.3 * hfloat(kk, "w")), kk)
+                            kit.low = "only"
                         thuja_lite(kit, p, zf(p), hh, (0.26 + 0.07 * hh) * (0.9 + 0.3 * hfloat(kk, "w")), kk, core=False)
                         kit.low = True
                         cnt["bush"] += 1
@@ -1885,16 +1904,18 @@ def build(buf, rp, zf, surf_top, report, items=None):
                                       "n": round(float(p[1]), 2), "z": round(float(zf(p)), 2),
                                       "h": round(float(min(max(3.6 * cr_ + 3.0, lo_), hi_)), 1),
                                       "yaw": round(hfloat(kk, "yaw") * 6.2832, 3), "lean": round(hfloat(kk, "lean") * 0.05, 3),
-                                      "src": f"{src_id}:canopy"})
+                                      "src": f"{src_id}:canopy", "tier": "high"})
                         cnt["inst"] += 1
                         rep["inst_trees"] += 1
                         rep["inst_trees_street"] += int(not in_plot)
                     elif cr_ >= PC_R_TREE:
                         if cnt["small"] >= 8 or not in_plot:
                             continue
-                        kit.tag, kit.low = "small_tree", False
-                        fruit_tree(kit, p, zf(p), min(max(1.7 + 1.5 * cr_, 3.2), 5.6), kk, r=cr_)
-                        kit.low = "only"
+                        kit.tag = "small_tree"
+                        if near(p):
+                            kit.low = False
+                            fruit_tree(kit, p, zf(p), min(max(1.7 + 1.5 * cr_, 3.2), 5.6), kk, r=cr_)
+                            kit.low = "only"
                         fruit_tree_lite(kit, p, zf(p), min(max(1.7 + 1.5 * cr_, 3.2), 5.6), kk, r=cr_)
                         kit.low = True
                         cnt["small"] += 1
@@ -1903,8 +1924,9 @@ def build(buf, rp, zf, surf_top, report, items=None):
                         if cnt["bush"] >= 10 or not in_plot:
                             continue
                         kit.tag, kit.low = "bush", False     # High only: under-storey of the gardens
-                        bush(kit, p, zf(p), cr_ * 1.05, min(max(1.0 + 1.2 * cr_ + 0.5 * hfloat(kk, "h"), 1.2), 2.6), kk,
-                             red=hfloat(kk, "red") < 0.12)
+                        (bush if near(p) else bush_lite)(kit, p, zf(p), cr_ * 1.05,
+                                                         min(max(1.0 + 1.2 * cr_ + 0.5 * hfloat(kk, "h"), 1.2), 2.6), kk,
+                                                         red=hfloat(kk, "red") < 0.12)
                         kit.low = True
                         cnt["bush"] += 1
                         rep["bushes"] += 1
@@ -1923,7 +1945,7 @@ def build(buf, rp, zf, surf_top, report, items=None):
                             trees.append({"p": f"tree_{sp}", "v": INST_VARIANT[sp], "e": round(float(p[0]), 2),
                                           "n": round(float(p[1]), 2), "z": round(float(zf(p)), 2),
                                           "h": round(9.0 + 7.0 * hfloat(key, "big_h", k), 1),
-                                          "yaw": round(hfloat(key, "byaw", k) * 6.2832, 3), "lean": 0.02, "src": f"{src_id}:rule"})
+                                          "yaw": round(hfloat(key, "byaw", k) * 6.2832, 3), "lean": 0.02, "src": f"{src_id}:rule", "tier": "high"})
                             rep["inst_trees"] += 1
                 if hfloat(key, "spruce") < SPRUCE_SHARE[age]:
                     for k in range(1 + int(hfloat(key, "nspruce") < 0.3)):
@@ -1938,9 +1960,11 @@ def build(buf, rp, zf, surf_top, report, items=None):
                     for k in range(1 + int(hfloat(key, "ntree") * (4 if age == "old" else 3))):
                         p = spot("tree", k, back_g.buffer(-0.8), 4.2)
                         if p is not None:
-                            kit.tag, kit.low = "small_tree", False
-                            fruit_tree(kit, p, zf(p), 3.0 + 1.4 * hfloat(key, "tree_h", k), (key, "ft", k))
-                            kit.low = "only"
+                            kit.tag = "small_tree"
+                            if near(p):
+                                kit.low = False
+                                fruit_tree(kit, p, zf(p), 3.0 + 1.4 * hfloat(key, "tree_h", k), (key, "ft", k))
+                                kit.low = "only"
                             fruit_tree_lite(kit, p, zf(p), 3.0 + 1.4 * hfloat(key, "tree_h", k), (key, "ft", k))
                             kit.low = True
                             rep["fruit_trees"] += 1
@@ -1965,7 +1989,8 @@ def build(buf, rp, zf, surf_top, report, items=None):
                         or any(np.hypot(*(p - q)) < rr + 0.5 for q in placed):
                     continue
                 kit.tag, kit.low = "overgrowth", False       # High only
-                bush(kit, p, zf(p), rr, r["h"] + 0.25 + 0.9 * hfloat(key, "ovh", k), (key, "ov", k), red=hfloat(key, "ovc", k) < 0.1)
+                (bush if near(p) else bush_lite)(kit, p, zf(p), rr, r["h"] + 0.25 + 0.9 * hfloat(key, "ovh", k), (key, "ov", k),
+                                                 red=hfloat(key, "ovc", k) < 0.1)
                 kit.low = True
                 cover[rid_] = cover.get(rid_, 0.0) + 2 * rr
                 placed.append(p)
@@ -1977,7 +2002,13 @@ def build(buf, rp, zf, surf_top, report, items=None):
                 p = spot("shrub", k, reg, 1.4)
                 if p is not None:
                     kit.tag, kit.low = "shrub", False        # High only
-                    shrub(kit, p, zf(p), 0.8 + 1.1 * hfloat(key, "shrub_h", k), (key, "shr", k))
+                    if near(p):
+                        shrub(kit, p, zf(p), 0.8 + 1.1 * hfloat(key, "shrub_h", k), (key, "shr", k))
+                    else:
+                        _h = 0.8 + 1.1 * hfloat(key, "shrub_h", k)
+                        _red = hfloat((key, "shr", k), "sh") >= 0.7
+                        _wm, _hm = PK.SPRITE_M["shrub_b" if _red else "shrub_a"]
+                        bush_lite(kit, p, zf(p), 0.5 * _wm * _h / _hm, _h, (key, "shr", k), red=_red)
                     kit.low = True
                     rep["shrubs"] += 1
         # bins inside the fence next to the gate (collection day is a walk of two metres)
