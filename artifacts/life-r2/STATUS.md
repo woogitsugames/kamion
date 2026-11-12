@@ -57,3 +57,5 @@ Etap po generatorze (2026-11-12 01:29:49): Fidelity zakończone kodem 0 pod heav
 Etap po generatorze (2026-11-12 01:31:23): PreparedImport zakończony kodem 0; helper zweryfikował wejścia pod heavy, potem osobno importował w Unity gpt-life. Następne: AFTER przy zamrożonych kamerach. Następne etapy wykonuje run-after-world.ps1; REPORT dopiero po oględzinach autora i końcowych testach.
 
 Etap po generatorze (2026-11-12 01:34:19): AFTER zakończony kodem 0, liczby PNG zgodne z baseline (114 × 4); każdy Unity miał osobny slot gpt-life, zwolniony po wywołaniu. Następne: porównanie CPU i plansze. Następne etapy wykonuje run-after-world.ps1; REPORT dopiero po oględzinach autora i końcowych testach.
+
+Etap po generatorze (2026-11-12 01:46:53): compare.py zakończony 0; all-camera-budget.json i budget-summary.json obejmują wszystkie kamery i draws instancji osobno. Plansze jeszcze wymagają oględzin autora; nie ma odbioru wizualnego ani REPORT. Następne etapy wykonuje run-after-world.ps1; REPORT dopiero po oględzinach autora i końcowych testach.
