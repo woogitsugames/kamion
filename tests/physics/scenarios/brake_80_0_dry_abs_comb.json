@@ -55,15 +55,15 @@
     },
     {
       "metric": "stop_distance_m",
-      "status": "WORKING_VALUE",
-      "source": "upper bound = 0.15 v + v^2/130 at 80 km/h (believed R13 N3 type-0 formula, UNVERIFIED; the type-0 table did not extract); lower bound ~ v^2/(2 x 0.8 g) + build-up",
+      "status": "SOURCED",
+      "source": "upper bound = 0.15 v + v^2/130 at 80 km/h = 61.2 m: UN R13 Annex 4 type-0 N3 (table confirmed via GRRF-56-3, unece.org TRANS-WP29-GRRF-56-inf03e; cells did not extract from the MLIT PDF S5); lower bound ~ v^2/(2 x 0.8 g) + build-up",
       "min": 35,
       "max": 61.2
     },
     {
       "metric": "mfdd_ms2",
-      "status": "WORKING_VALUE",
-      "source": "MFDD (R13 Annex 4 definition); 5.0 = believed N3 type-0 minimum (UNVERIFIED); <= mu g",
+      "status": "SOURCED",
+      "source": "MFDD (R13 Annex 4 definition); 5.0 m/s^2 = N3 type-0 minimum dm (same GRRF-56-3 table); <= mu g",
       "min": 5.0,
       "max": 8.0
     },
