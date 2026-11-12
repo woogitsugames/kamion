@@ -6,3 +6,5 @@ Następny krok: sprawdź git diff HEAD^ w blokach CARPAINT/fabryce i nowe life.p
 Pierwotny termin doby około 12.11 21:31 Warszawa. Unity Owner gpt-life, heavy Owner gpt-life-r3; -StaleHours 1000000, respektuj rezerwacje lidera i PHONE_RUN.
 
 Krok 1: merge zakończony. Skorygowano ścieżki dwóch obrazów w raporcie r2 (są w refs/), a osiem krytycznych SHA sprawdzono ponownie z błędami kończącymi walidację. Następny krok: przygotowanie i kontrola nowego baseline.
+
+Krok 2: odświeżono lokalne CC0/_raw/Megascans z main (bez derived/World i bez cudzych blokad). Przeniesiono pomocniki QA do r3 i dotychczasowe kamery jako punkt wyjścia. Heavy helper zawiera już respektowanie rezerwacji lidera przez nowy unity-slot. Następny krok: baseline-gen.ps1 wykona materiały, World i source-proof sekwencyjnie w jednym heavy; następnie nowe kamery i import.
