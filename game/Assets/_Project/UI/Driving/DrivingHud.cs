@@ -126,6 +126,7 @@ namespace Game.UI.Driving
         float m_NextTelemetry;
         readonly StringBuilder m_Sb = new StringBuilder(2048);
         static readonly string[] k_SpeedStrings = BuildNumbers(200);
+        static readonly string[] k_RpmStrings = BuildRpmStrings();
 
         /// <summary>Developer diagnostic text (status line, coupling line). Off by default in every build; toggled by launch argument
         /// devhud=1 (context) or by holding four fingers on the screen for 0.8 s.</summary>
@@ -728,11 +729,11 @@ namespace Game.UI.Driving
             }
             if (speed != m_LastSpeed) { m_LastSpeed = speed; m_Speed.text = k_SpeedStrings[speed]; }
             if (!ReferenceEquals(gear, m_LastGear)) { m_LastGear = gear; m_Gear.text = gear; }
-            int bucket = Mathf.RoundToInt(rpm / 50f);
+            int bucket = Mathf.Clamp(Mathf.RoundToInt(rpm / 50f), 0, k_RpmStrings.Length - 1);
             if (bucket != m_LastRpmBucket)
             {
                 m_LastRpmBucket = bucket;
-                m_Rpm.text = (bucket * 50).ToString(CultureInfo.InvariantCulture) + " obr/min";
+                m_Rpm.text = k_RpmStrings[bucket];   // cached string, no per-frame allocation
                 m_RpmBar.rectTransform.anchorMax = new Vector2(Mathf.Clamp01(rpm / rpmMax), 1f);
                 m_RpmBar.color = rpm > 1900f ? k_Amber : k_Muted;
             }
@@ -918,6 +919,14 @@ namespace Game.UI.Driving
         {
             var a = new string[n];
             for (int i = 0; i < n; i++) a[i] = i.ToString(CultureInfo.InvariantCulture);
+            return a;
+        }
+
+        static string[] BuildRpmStrings()
+        {
+            // Displayed rpm is quantized to 50 rpm buckets (unchanged): 0 .. 20000 obr/min.
+            var a = new string[401];
+            for (int i = 0; i < a.Length; i++) a[i] = (i * 50).ToString(CultureInfo.InvariantCulture) + " obr/min";
             return a;
         }
 
