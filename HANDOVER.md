@@ -20,6 +20,8 @@
 | 0150 | **mapa + minimapa + GPS** (polecenie właściciela 20:5x; zakres etapu 5 przyspieszony decyzją właściciela) | Opus | `gps-map` | `artifacts/live/gps-map.md` | start 20:55 |
 - **21:0x: SCALONE 0141 edge-r6c** `ca0bc16e0` (critic SCAL warunkowo, `REVIEW-2026-11-12-s15-0141.md`: 297817 PARTIAL→RECOGNISABLE, 150280 trafione). Dalej: r6d (gałąź `edge-r6d`, ten sam worktree `edge-r6c`): B-1 zdublowane edge-west, szara biel U-20/B-1, las przy kominach. Test głębi skyline na A16 → agent a16-perf (`artifacts/a16-perf/skyline-0141/`). Worktree edge-r6c usunąć po r6d.
 - Zygzak krawędzi zjazdu (film t≈17–19 s, przed bramownicą Warszawa/Ełk/Augustów) → dopisany do 0144 junctions-r7 (r7c albo r7d).
+- 21:5x: 0136 r2 (a16-perf @7ebb18cf1): r2e na A16 — żaden kandydat nie domyka (cull 100 m −0,17 ms, cienie 25 m/512 px w szumie); Low zostaje r2, GPU p95 34,0 vs 33,3 (brak ~0,7 ms). **Otwarte bez agenta: LOD1/LOD2 aut z 1–2 submeshami (world-builder)** — start, gdy zwolnią się sloty Unity. Agent czeka na `prep-r2f` (import Low z 0141 + EditMode po fixie MirrorCostTests + APK) → skyline 0141 na A16. Uwaga: lokalna niezacommitowana zmiana `gate3_cameras.json` w worktree a16-perf — nie commitować.
+- 21:5x usage: 5 h 38 %, tydzień 30 %, Fable 54 %. Mistral r3: #15 #16 #17 #18 #20 na gałęzi, #19 czeka na Unity (HudTextAllocTests).
 - **Ostatni przydzielony ADR: 0150.**
 - Ścieżka bramki 3 bez zmian (patrz KONIEC S14 niżej).
 
