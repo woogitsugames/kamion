@@ -126,3 +126,5 @@ potem poprawić największe udokumentowane odstępstwo wiaty. WIP po każdym kro
 2026-11-12T13:00:36.7639987+01:00: Unity render after High clear; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
 
 2026-11-12T13:01:08.7835697+01:00: Unity render after High overcast; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
+
+2026-11-12T13:01:10.2625814+01:00: dokonano kontroli kompletności czterech wariantów renderu i audytu instancji po generacji. Logi i JSON zawierają wynik; to nie jest jeszcze przegląd wizualny ani pomiar GPU. NASTĘPNY KROK: dokładne liczniki Low i dodatkowe narożniki szkła.
