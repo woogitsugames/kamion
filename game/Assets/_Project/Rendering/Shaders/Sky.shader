@@ -204,7 +204,9 @@ Shader "Kamion/Sky"
                 // Below the horizon: distant ground seen through the full aerial perspective = fog colour.
                 float below = smoothstep(0.0, 0.03, -d.y);
                 c = lerp(c, _SkyFogColor.rgb, below);
-                if (_KamionSkyDisplay.z > 0.5 && _KamionSkyCapOff < 0.5)
+                // Night's appearance must also be present in the captured sky, or glass reflects an orange sunset.
+                // This is independent of the display-only compression cap (which captures still bypass).
+                if (_KamionSkyDisplay.z > 0.5)
                 {
                     float y = dot(c, float3(0.2126, 0.7152, 0.0722));
                     c = lerp(c, y.xxx, _KamionSkyDisplay.y)*_KamionSkyDisplay.x;

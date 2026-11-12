@@ -155,7 +155,10 @@ namespace Game.Rendering
 
             // ---- specular environment ----
             if (m_Reflection != null) { if (Application.isPlaying) Destroy(m_Reflection); else DestroyImmediate(m_Reflection); }
-            m_Reflection = m.ReflectionCubemap(p.groundAlbedo);
+            bool gradeReflectedSky = (p.skyDisplayGain > 0f && p.skyDisplayGain < 1f) || p.skyDisplayDesaturation > 0f;
+            m_Reflection = gradeReflectedSky
+                ? m.ReflectionCubemap(p.groundAlbedo, skyPresentation: c => WorldAtmosphere.DisplaySkyFog(p, c))
+                : m.ReflectionCubemap(p.groundAlbedo);
             m_Reflection.hideFlags = HideFlags.DontSave;
             RenderSettings.defaultReflectionMode = DefaultReflectionMode.Custom;
             RenderSettings.customReflectionTexture = m_Reflection;
@@ -175,7 +178,7 @@ namespace Game.Rendering
             // ---- vehicle reflections (r6 E1/E2, KamionVehicleEnv.hlsl): ground plane + horizon for the analytic env ----
             Color g = p.groundAlbedo * m.AdaptedWhite * (m.HorizontalIlluminanceLux * m.Exposure / Mathf.PI);
             Shader.SetGlobalVector(k_GroundEnv, new Vector4(g.r, g.g, g.b, RenderSettings.fogDensity));
-            Shader.SetGlobalVector(k_HorizonEnv, new Vector4(fog.r, fog.g, fog.b, 1f));
+            Shader.SetGlobalVector(k_HorizonEnv, new Vector4(displayFog.r, displayFog.g, displayFog.b, 1f));
             ApplySkyCap();
             WorldAtmosphere.Push(this, m_FogExposed);
         }
