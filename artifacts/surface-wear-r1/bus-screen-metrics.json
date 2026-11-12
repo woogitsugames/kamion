@@ -1,0 +1,94 @@
+{
+  "note": "Actual source fan projected through captured runtime view/projection; screen RGB is weather/exposure-dependent, NOT physicaloil/albedo measurement or ownerPASS. Background ring includes AA/dither; originalimages untouched.",
+  "camera": "d_field_bus464_close",
+  "native_bbox": [
+    1094,
+    486,
+    1234,
+    614
+  ],
+  "fan_pixels": 14081,
+  "anchor_z_inferred": 131.1399938684957,
+  "results": [
+    {
+      "condition": "Low-clear",
+      "before_rgb": [
+        95.99829557559832,
+        95.12428094595555,
+        91.72587174206377
+      ],
+      "after_rgb": [
+        91.5404445706981,
+        90.66721113557276,
+        87.52474966266601
+      ],
+      "mean_rgb_delta": [
+        -4.4578510049002205,
+        -4.4570698103827855,
+        -4.20112207939777
+      ],
+      "background_mean_abs_lsb": 0.0009313027281691684,
+      "darkened_pixels_over3lsb": 3484
+    },
+    {
+      "condition": "Low-overcast",
+      "before_rgb": [
+        67.05454158085364,
+        66.85285135998863,
+        66.4440025566366
+      ],
+      "after_rgb": [
+        64.19323911654001,
+        63.91215112563028,
+        63.46587600312478
+      ],
+      "mean_rgb_delta": [
+        -2.861302464313614,
+        -2.940700234358355,
+        -2.9781265535118244
+      ],
+      "background_mean_abs_lsb": 0.0007486943500967825,
+      "darkened_pixels_over3lsb": 3334
+    },
+    {
+      "condition": "High-clear",
+      "before_rgb": [
+        101.34471983523898,
+        100.50408351679569,
+        97.13109864356225
+      ],
+      "after_rgb": [
+        96.76734606917123,
+        95.91690931041829,
+        92.8160641999858
+      ],
+      "mean_rgb_delta": [
+        -4.577373766067751,
+        -4.587174206377388,
+        -4.315034443576451
+      ],
+      "background_mean_abs_lsb": 0.4467422665351886,
+      "darkened_pixels_over3lsb": 3173
+    },
+    {
+      "condition": "High-overcast",
+      "before_rgb": [
+        72.08429799019956,
+        71.9014274554364,
+        71.47951139833819
+      ],
+      "after_rgb": [
+        68.8544847667069,
+        68.55116824089198,
+        68.08152830054684
+      ],
+      "mean_rgb_delta": [
+        -3.2298132234926498,
+        -3.3502592145444217,
+        -3.39798309779135
+      ],
+      "background_mean_abs_lsb": 0.44728096125050215,
+      "darkened_pixels_over3lsb": 3176
+    }
+  ]
+}

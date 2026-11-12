@@ -10,6 +10,72 @@ namespace Game.Tests
     public class LightPostPolicyTests
     {
         [Test]
+        public void LowSunFilterOptInIsRestrictedToHighAndResetsForOtherPresets()
+        {
+            var lowSun = LightingPreset.CreateLowSun();
+            var clear = LightingPreset.CreateClear();
+            try
+            {
+                Assert.AreEqual(SoftShadowQuality.High, EnvironmentLighting.SunShadowFilter(lowSun, "High"));
+                foreach (string tier in new[] { "Low", "Medium", "Ultra", null })
+                    Assert.AreEqual(SoftShadowQuality.UsePipelineSettings, EnvironmentLighting.SunShadowFilter(lowSun, tier));
+                Assert.AreEqual(SoftShadowQuality.UsePipelineSettings, EnvironmentLighting.SunShadowFilter(clear, "High"));
+                lowSun.highSunShadowFilter = 0;
+                Assert.AreEqual(SoftShadowQuality.UsePipelineSettings, EnvironmentLighting.SunShadowFilter(lowSun, "High"));
+            }
+            finally { Object.DestroyImmediate(lowSun); Object.DestroyImmediate(clear); }
+        }
+
+        [Test]
+        public void PhotographicSkyAlignsSunWithoutAzimuthInducedHorizonRoll()
+        {
+            var preset = LightingPreset.CreateClear();
+            try
+            {
+                Vector3 sun = preset.CreateModel().SunDirection;
+                for (int azimuth = 0; azimuth < 360; azimuth += 30)
+                {
+                    float a = azimuth * Mathf.Deg2Rad, elevation = 48f * Mathf.Deg2Rad;
+                    var sourceSun = new Vector3(Mathf.Sin(a)*Mathf.Cos(elevation), Mathf.Sin(elevation), Mathf.Cos(a)*Mathf.Cos(elevation));
+                    var rotation = PhotographicClouds.SourceRotation(sun, sourceSun);
+                    Assert.Less(Vector3.Angle(rotation*sun, sourceSun), 0.03f, "source sun alignment");
+                    Assert.LessOrEqual(Vector3.Angle(rotation*Vector3.up, Vector3.up), 6.03f,
+                        "changing azimuth must not roll the horizon; only the 42 to 48 degree elevation difference remains");
+                }
+            }
+            finally { Object.DestroyImmediate(preset); }
+        }
+
+        [Test]
+        public void HighRcasRestoresLegacyZeroButHonoursExplicitZeroAndOtherTiers()
+        {
+            var saved = RenderOverrides.FsrSharpness;
+            try
+            {
+                RenderOverrides.FsrSharpness = null;
+                foreach (var tier in QualityProfile.Defaults())
+                {
+                    var resolved = QualityProfileApplier.ApplyLightPolicy(tier);
+                    Assert.AreEqual(tier.name == "High" ? 0.75f : tier.fsrSharpness, resolved.fsrSharpness, tier.name);
+                    Assert.AreEqual(tier.renderScale, resolved.renderScale);
+                    Assert.AreEqual(tier.postProcessing, resolved.postProcessing);
+                }
+                var high = QualityProfile.Defaults().Single(t => t.name == "High");
+                foreach (float sharpness in new[] { 0f, 0.25f, 0.5f, 0.75f })
+                {
+                    RenderOverrides.FsrSharpness = sharpness;
+                    Assert.AreEqual(sharpness,
+                        QualityProfileApplier.ApplyLightPolicy(RenderOverrides.ApplyTo(high)).fsrSharpness,
+                        "diagnostic zero must still disable RCAS");
+                }
+                RenderOverrides.FsrSharpness = null;
+                high.upscalingFilter = UpscalingFilterSelection.Linear;
+                Assert.AreEqual(0f, QualityProfileApplier.ApplyLightPolicy(high).fsrSharpness);
+            }
+            finally { RenderOverrides.FsrSharpness = saved; }
+        }
+
+        [Test]
         public void ClearShoulderPreservesAsphaltAndMidGreyAnchors()
         {
             var preset = LightingPreset.CreateClear();

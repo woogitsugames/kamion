@@ -1,0 +1,34 @@
+
+-------------------------------------------------------------------------------
+   ROBOCOPY     ::     Robust File Copy for Windows                              
+-------------------------------------------------------------------------------
+
+  Started : czwartek, 12 listopada 2026 00:43:50
+   Source : C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-asphalt\artifacts\asphalt-r1\
+     Dest : C:\Users\matma\Documents\Claude\kamion\artifacts\asphalt-r1\
+
+    Files : *.*
+	    
+Exc Files : REPORT.md
+	    STATUS.md
+	    DELIVERED.json
+	    copy-to-main.log
+	    
+  Options : *.* /NDL /NFL /S /E /DCOPY:DA /COPY:DAT /NP /XJ /MT:2 /R:2 /W:2 
+
+------------------------------------------------------------------------------
+
+
+------------------------------------------------------------------------------
+
+               Total    Copied   Skipped  Mismatch    FAILED    Extras
+    Dirs :        55        55         2         0         0         0
+   Files :      1620      1596        24         0         0         0
+   Bytes :   2.825 g   2.824 g   269.1 k         0         0         0
+   Times :   0:00:27   0:00:06                       0:00:00   0:00:03
+
+
+   Speed :           494 244 658 Bytes/sec.
+   Speed :             28280,906 MegaBytes/min.
+   Ended : czwartek, 12 listopada 2026 00:43:59
+

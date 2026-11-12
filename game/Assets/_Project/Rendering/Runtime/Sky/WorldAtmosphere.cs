@@ -18,6 +18,8 @@ namespace Game.Rendering
         public static float? WetOverride;
         /// <summary>rq_clouds: -1 = flat dome, 0..2 = quality (null = the tier's).</summary>
         public static int? CloudOverride;
+        /// <summary>rq_clearcover: clear cloud coverage ablation (null = preset).</summary>
+        public static float? ClearCloudCoverOverride;
         /// <summary>rq_haze: false = uniform fog only (null = the tier's).</summary>
         public static bool? HazeOverride;
         /// <summary>rq_grassvar: lawn variation strength 0..1 (null = the preset's).</summary>
@@ -61,6 +63,11 @@ namespace Game.Rendering
             k_Tone = Shader.PropertyToID("_KamionTone"), k_Wet = Shader.PropertyToID("_KamionWet"),
             k_Cloud = Shader.PropertyToID("_KamionCloud"), k_CloudWind = Shader.PropertyToID("_KamionCloudWind"),
             k_CloudSun = Shader.PropertyToID("_KamionCloudSun"), k_CloudTex = Shader.PropertyToID("_KamionCloudTex"),
+            k_ClearCloudCover = Shader.PropertyToID("_KamionClearCloudCover"),
+            k_ClearSkySaturation = Shader.PropertyToID("_KamionClearSkySaturation"),
+            k_ClearCloudPhoto = Shader.PropertyToID("_KamionClearCloudPhoto"),
+            k_ClearCloudTex = Shader.PropertyToID("_KamionClearCloudTex"),
+            k_ClearCloudRotation = Shader.PropertyToID("_KamionClearCloudRotation"),
             k_LeafAmb = Shader.PropertyToID("_KamionLeafAmbient");
 
         /// <summary>Ground haze: extinction at height y = beta (1 + a exp(-(y - y0) / H)). Mirror of KamionFogTau.</summary>
@@ -104,8 +111,20 @@ namespace Game.Rendering
             // ---- cloud deck
             int q = CloudOverride ?? (hasTier ? (t.cloudsOff ? -1 : t.cloudQuality) : 1);
             float contrast = q < 0 ? 0f : p.cloudContrast;
+            // Clear clouds share the existing noise texture and sky pass. A zero coverage keeps the legacy dome.
+            float clearCover = q < 0 ? 0f : Mathf.Clamp01(ClearCloudCoverOverride ?? p.clearCloudCover);
+            Shader.SetGlobalFloat(k_ClearCloudCover, clearCover);
+            Shader.SetGlobalFloat(k_ClearSkySaturation, Mathf.Clamp(p.clearSkySaturation, 1f, 4f));
+            bool photo = clearCover > 0f && PhotographicClouds.TryGet(out _, out _);
+            Shader.SetGlobalFloat(k_ClearCloudPhoto, photo ? 1f : 0f);
+            if (photo && PhotographicClouds.TryGet(out var texture, out var sourceSun))
+            {
+                Shader.SetGlobalTexture(k_ClearCloudTex, texture);
+                Vector3 sun = env.Model != null ? env.Model.SunDirection : Vector3.up;
+                Shader.SetGlobalMatrix(k_ClearCloudRotation, Matrix4x4.Rotate(PhotographicClouds.SourceRotation(sun, sourceSun)));
+            }
             Shader.SetGlobalVector(k_Cloud, new Vector4(contrast, Mathf.Max(q, 0), p.cloudScale, 5f));
-            if (contrast > 0f)
+            if (contrast > 0f || (clearCover > 0f && !photo))
             {
                 Shader.SetGlobalTexture(k_CloudTex, CloudNoise.Texture);
                 float time = Application.isPlaying ? Time.time : 0f;
@@ -116,6 +135,47 @@ namespace Game.Rendering
                 az = az.sqrMagnitude > 1e-6f ? az.normalized : Vector2.right;
                 Shader.SetGlobalVector(k_CloudSun, new Vector4(az.x, az.y, 1.6f, 0.035f));
             }
+        }
+    }
+
+    /// <summary>CC0 photographic cloud opacity and self-shadowing. Cached once; no frame allocations.</summary>
+    public static class PhotographicClouds
+    {
+        [System.Serializable] sealed class Source { public Vector3 sunDirection = Vector3.zero; }
+        static bool s_Loaded;
+        static Texture2D s_Texture;
+        static Vector3 s_Sun;
+
+        public static void ResetCache() { s_Loaded = false; s_Texture = null; }
+
+        /// <summary>Align azimuth first, then elevation. A single minimum-angle rotation between suns can roll
+        /// the entire sky by tens of degrees when their azimuths differ, despite similar sun altitudes.</summary>
+        public static Quaternion SourceRotation(Vector3 sun, Vector3 sourceSun)
+        {
+            float azimuth = Mathf.Atan2(sun.x, sun.z) * Mathf.Rad2Deg;
+            float sourceAzimuth = Mathf.Atan2(sourceSun.x, sourceSun.z) * Mathf.Rad2Deg;
+            var yaw = Quaternion.AngleAxis(sourceAzimuth - azimuth, Vector3.up);
+            return Quaternion.FromToRotation(yaw * sun, sourceSun) * yaw;
+        }
+
+        public static bool TryGet(out Texture2D texture, out Vector3 sunDirection)
+        {
+            if (!s_Loaded)
+            {
+                s_Loaded = true;
+                s_Texture = Resources.Load<Texture2D>("Sky/T_ClearClouds");
+                var metadata = Resources.Load<TextAsset>("Sky/ClearCloudsSource");
+                var source = metadata != null ? JsonUtility.FromJson<Source>(metadata.text) : null;
+                s_Sun = source != null ? source.sunDirection.normalized : Vector3.zero;
+                if (s_Texture == null || s_Sun.sqrMagnitude < 0.9f)
+                {
+                    s_Texture = null;
+                    Debug.LogWarning("[SKY_CLOUDS] Missing photographic cloud map/source axis; using the procedural diagnostic fallback.");
+                }
+            }
+            texture = s_Texture;
+            sunDirection = s_Sun;
+            return texture != null;
         }
     }
 

@@ -1,0 +1,24 @@
+{
+  "note": "CPU patch applicability/scope only, not C# compilation, NUnit execution, visual result or GPU budget. Predicted extra UV1 buffer assumes source ROADWEAR channel policy; actual import must verify.",
+  "production_source_unchanged": true,
+  "sandbox_only": true,
+  "nunit_cases_prepared": 3,
+  "expected_new_uv1_allocations": [
+    {
+      "tier": "High",
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_5_4.glb",
+      "road_layer_vertices": 9031,
+      "predicted_extra_uv1_bytes": 36124
+    },
+    {
+      "tier": "Low",
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_5_4.low.glb",
+      "road_layer_vertices": 9031,
+      "predicted_extra_uv1_bytes": 36124
+    }
+  ],
+  "predicted_extra_bytes_by_tier": {
+    "Low": 36124,
+    "High": 36124
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "complete": true,
+  "tier": "Low",
+  "lighting": "clear",
+  "raw_exit_code": -1073741819,
+  "accepted_ADR0083_Mono_cleanup": true,
+  "fresh_frames": 4,
+  "finally_restored": true,
+  "freshness_lower_bound_commit": "98434a3d, before the first launch",
+  "log_sha256": "102a408d6a4a3791535d11bc06069415d9d904e11257507268ee81c63d79fccf",
+  "note": "First strict wrapper correctly halted on nonzero exit. All4freshframes, result, finallyrestore and later Mono cleanup verified before accepting; no rerender.",
+  "expected_stats_and_pose_ids_verified": true,
+  "no_prior_CS_shader_renderer_errors": true,
+  "production_2441_and_raw192_exact": true,
+  "restored_renderer_count": 44,
+  "restored_clone_count": 1
+}

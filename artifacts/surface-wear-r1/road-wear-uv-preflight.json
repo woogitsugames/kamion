@@ -1,0 +1,81 @@
+{
+  "scope": "vertex coverage, not area/pixel coverage; read-only own D baseline products",
+  "manifest_sha256": "0f8551f49904309ce4192f76067f4c5bc1a823d5e3f072d1aad9a849ce243fcd",
+  "coverage": {
+    "High/road_asphalt": {
+      "primitives": 43,
+      "vertices": 121022,
+      "active_lane_vertices": 75570,
+      "missing_uv1_primitives": 2,
+      "active_vertex_percent": 62.443
+    },
+    "High/road_asphalt_new": {
+      "primitives": 14,
+      "vertices": 3365,
+      "active_lane_vertices": 3365,
+      "missing_uv1_primitives": 0,
+      "active_vertex_percent": 100.0
+    },
+    "Low/road_asphalt": {
+      "primitives": 43,
+      "vertices": 121022,
+      "active_lane_vertices": 75570,
+      "missing_uv1_primitives": 2,
+      "active_vertex_percent": 62.443
+    },
+    "Low/road_asphalt_new": {
+      "primitives": 14,
+      "vertices": 3365,
+      "active_lane_vertices": 3365,
+      "missing_uv1_primitives": 0,
+      "active_vertex_percent": 100.0
+    }
+  },
+  "glb_manifest_mismatches": [],
+  "missing_uv1": [
+    {
+      "tier": "High",
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_2_3.glb",
+      "material": "road_asphalt",
+      "vertices": 9,
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "tier": "Low",
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_2_3.low.glb",
+      "material": "road_asphalt",
+      "vertices": 9,
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "tier": "High",
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_5_4.glb",
+      "material": "road_asphalt",
+      "vertices": 162,
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    },
+    {
+      "tier": "Low",
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_5_4.low.glb",
+      "material": "road_asphalt",
+      "vertices": 162,
+      "attributes": [
+        "NORMAL",
+        "POSITION",
+        "TEXCOORD_0"
+      ]
+    }
+  ]
+}
