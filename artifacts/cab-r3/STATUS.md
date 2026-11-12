@@ -64,3 +64,4 @@ Obejrzano normalny i maskowany WideR Low after oraz maskę High after. Magenta w
 Rano 12 listopada: uporządkowano raport po kontroli GPU: usunięto nieaktualne twierdzenie o szerokiej okluzji kanałem. Fidelity PID 20552 nadal żyje i oczekuje na heavy; bez duplikowania kolejki. Rozpoznanie zużycia kontaktowego do r4 prowadzone wyłącznie odczytowo.
 Rozpoznanie r4: mapa nazwana AO jest wypiekiem DIFFUSE DIRECT+INDIRECT; argument ao-distance nie steruje bake. Źródła ambientCG Plastic003/004 proceduralne, odrzucone jako dowód skanu. Bez zmian shaderów i map. Fidelity nadal pojedynczy proces w kolejce.
 
+Zapisano odczytowy plan r4 po obejrzeniu natywnego cab-grain Low overcast i ponownym obejrzeniu DAF XF: najpierw izolacja źródła pasma z istniejącym QA, potem ewentualna korekta danych. To plan, nie zgłoszenie poprawy. W czasie kolejki brak zmian gry.
