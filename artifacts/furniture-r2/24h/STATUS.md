@@ -149,3 +149,5 @@ NASTĘPNY KROK: przygotować własne skrypty r2 z ownerem heavy gpt-furniture-r2
 2026-11-12T09:30:16.8561505+01:00: Unity sign-probe asymmetric Low overcast; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
 
 2026-11-12T09:34:07.4431245+01:00: asymetryczna wiązka przeszła16/16 prób GPU/fabryki, bez pominięć. Sterownik fixture jest editorowym callbackiem przed kamerami, utrzymującym żądany tryb podczas ponownego ładowania sceny; nie dodaje komponentu do produktu ani nowego źródła światła. NASTĘPNY KROK: kontrolowany night-rig after3 Low, po sukcesie High.
+
+2026-11-12T09:35:05.2796608+01:00: Unity night-rig after3 Low overcast; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
