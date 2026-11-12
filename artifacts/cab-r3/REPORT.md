@@ -1,0 +1,19 @@
+﻿# Kabina r3 — nocne legendy przycisków, walidacja w toku
+
+Gałąź gpt-cab-r3 od zamkniętej r2 d04feba0; merge main 745efd35 bez konfliktów. Kod wariantu 3c7a9ae i 7971f36f, walidacja pełna EditMode i budżetów 63741ed8. Nie scalano do main, nie pushowano i nie używano telefonów.
+
+Istniejące nocne palety zegarów i mapy pozostają bez zmian. Dodano _KAMION_CAB_BACKLIGHT na dotychczasowym materiale Decal. Emitują wyłącznie ikony w paśmie UV v < 0,5, bez nowych próbek tekstury, materiałów, geometrii, świateł i przebiegów. Szwy oraz kratki pozostają poza tą gałęzią. Dane cab_backlight.json: enabled, 8 cd/m2, limit 0,06 exposed linear, ciepła biel i przejście wysokości słońca 6→0 stopni. Wszystkie parametry są WORKING_VALUE, a nie zmierzoną fotometrią panelu. Wyłączenie flagi i ponowny BuildBatch zeruje luminancję oraz usuwa keyword.
+
+CabInteriorLighting przekazuje prawdziwą wysokość słońca, ekspozycję oraz ważność modelu. Brak środowiska i OnDisable zerują stan. Emisja jest dodana po lokalnym lift, więc nie mnoży jej cabViewEv ani rozjaśnianie cieni; pozostaje dotychczasowy kontrakt toe i fog. Nie zmieniano shaderów ekranów, szyb, zewnętrza ani QualityProfile.
+
+Rzeczywista referencja nocna: Volvo Trucks Magazine, Jonatan Fernström, 2017. To inne auto i inne warunki, bez znanej ekspozycji; odniesienie jakościowe, nie cel RGB/cd/m2. Zdjęcie ma prawa autorskie, nie jest CC0 i nie jest materiałem gry. Źródło oraz ograniczenia: artifacts/cab-r2/NIGHT-REFERENCE.md. Nie kopiowano brandingu ani układu panelu.
+
+Baseline i night1 mają po 42 kadry (Low/High × clear/overcast/dusk × siedem kamer), 36 natywnych odbić i pełne 78 kamer Low/Gate3. comparison-0112-night1.json: PASS. Optyka bez zmian, maski wnętrza 0. Maksymalny przyrost regular draws 0, instanced draws 0, regular triangles 0, instanced triangles 0 na całej trasie. To estymaty widoczności CPU edytora, nie koszt GPU A16. Pełne EditMode 301/301; XML i log są w validation.
+
+Trzy testy celowane sprawdzają reset i przejście środowiska bez MainCamera oraz rzeczywisty render ikon/szwów. Przy nocnym gain test daje ikona 0,05882, szwy 0; dzień i wyłączenie 0, a duża ekspozycja nadal 0,05882. Wcześniejsze próby poprawnie odrzuciły czarny obraz: fixture zerowała również knee shadow-lift, w odróżnieniu od kabiny. Dodatnie knee 0,004 przy sile 0 usunęło nieokreślony stan idealnej czerni. Ścieżki lift gry nie zmieniano. Tymczasowe sondy usunięto, zachowano niezależną kontrolę URP/Unlit.
+
+Obejrzano na razie kab-dash Low i High dusk. Symbole są czytelne, korpusy i szwy nie wyglądają na świecące; efekt jest miejscowy. W pojedynczej parze Low dusk ROI przycisków kierownicy: średnia luminancja kodowa 27,025→27,280, zmienione 418 pikseli, maksimum delty 9,852/255. Kontrolny fragment deski jest identyczny. To analiza 8-bit obrazu, nie fotometria. Część kadrów dnia ma inne hashe, więc nie zgłaszamy ogólnej identyczności pikselowej; pozostaje przegląd arkuszy i ocena wielkości tych różnic.
+
+World oczekuje na heavy (aktywny uchwyt 26738). Arkusze do 960 px są przygotowane w review-sheets.py; Images dopiero po zakończeniu World. Końcowy GIS dopiero po przeglądzie obrazów i zamykaniu rundy. Nie zgłaszamy jeszcze zakończenia r3 ani akceptacji wizualnej.
+
+Otwarte: częściowa okluzja prawego wide-angle kanałem drzwi (kolejna runda cab), szerokie pasmo AO deski i zużycie kontaktowe. Ubogi detal zewnętrznego przodu w Front pozostaje poza własnością cab. Przewidywany konflikt integracyjny: addytywny fragment TruckAssetBuilder.cs; zachować zmiany pozostałych dziedzin. Materiałów świata nie modyfikowano.
