@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "observed_at": "2026-11-12T12:28:33.0191788+01:00",
+  "coordinator_pid": 77492,
+  "python_root_pid": 60996,
+  "python_worker_pid": 27776,
+  "worker_cpu_seconds": 9.0,
+  "worker_thread_states": [
+    {
+      "Name": "Wait",
+      "Count": 53
+    }
+  ],
+  "worker_wait_reasons": [
+    {
+      "Name": "Suspended",
+      "Count": 53
+    }
+  ],
+  "watchdog_pid": 33400,
+  "watchdog_events": [
+    "12:22:09 SUSPEND pid 60996 (25,2 GB free): \"C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-cab\\tools\\worldgen\\.venv-cab\\Scripts\\python.exe\" C:\\Users\\matma\\Documents\\Clau"
+  ],
+  "action": "Respect watchdog; keep one live import process and wait for automatic resume"
+}
