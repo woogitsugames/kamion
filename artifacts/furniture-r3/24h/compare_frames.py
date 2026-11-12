@@ -1,4 +1,4 @@
-"""Complete six-variant furniture comparison; exact Low CPU budgets when captures are validated."""
+"""Complete four-variant furniture comparison; exact Low CPU budgets when captures are validated."""
 import argparse
 import csv
 import hashlib
@@ -11,9 +11,15 @@ ROOT = Path(__file__).resolve().parent
 p = argparse.ArgumentParser()
 p.add_argument('--metrics-only', action='store_true')
 p.add_argument('--label', default='after1')
+p.add_argument('--after-phase', default='after')
+p.add_argument('--output-subdir', default='.')
 p.add_argument('--review-page', help='One small interactive PNG review page, e.g. Low-clear:1; full batch remains heavy')
 args = p.parse_args()
 assert re.fullmatch(r'[A-Za-z0-9_-]+', args.label)
+assert re.fullmatch(r'[A-Za-z0-9_-]+', args.after_phase)
+assert args.output_subdir == '.' or re.fullmatch(r'[A-Za-z0-9_-]+', args.output_subdir)
+OUTPUT = ROOT / args.output_subdir
+OUTPUT.mkdir(exist_ok=True)
 review = None
 if args.review_page:
     match = re.fullmatch(r'((?:Low|High)-(?:clear|overcast|dusk)):(10|[1-9])', args.review_page)
@@ -69,13 +75,13 @@ variants = []
 for tier in ('Low', 'High'):
     for light in ('clear', 'overcast'):
         key = f'{tier}-{light}'
-        before, after = ROOT / 'before' / key, ROOT / 'after' / key
+        before, after = ROOT / 'before' / key, ROOT / args.after_phase / key
         old, new = stats(before / 'stats.txt'), stats(after / 'stats.txt')
         assert old.keys() == new.keys(), ('Missing camera stats', key)
         old_png = {f.stem for f in before.glob('*.png')}
         new_png = {f.stem for f in after.glob('*.png')}
         assert old_png == new_png == old.keys(), ('Missing or extra images', key)
-        ex_old, ex_new = exact('before', key, old), exact('after', key, new)
+        ex_old, ex_new = exact('before', key, old), exact(args.after_phase, key, new)
         variants.append(dict(tier=tier, lighting=light, cameras=len(old), exact_before=ex_old is not None, exact_after=ex_new is not None))
         for camera in sorted(old):
             a, b = old[camera], new[camera]
@@ -94,7 +100,7 @@ for tier in ('Low', 'High'):
                     tris_delta_exact_percent=100 * (total_new / total_old - 1) if total_old else None)
             records.append(row)
         if not args.metrics_only and (review is None or key == review[0]):
-            out = ROOT / 'compare'
+            out = OUTPUT / 'compare'
             out.mkdir(exist_ok=True)
             names = sorted(old)
             for start in range(0, len(names), 6):
@@ -115,9 +121,9 @@ for tier in ('Low', 'High'):
                 sheet.save(out / f'{key}-{start // 6 + 1:02}.jpg', quality=92)
                 sheet.close()
 
-(ROOT / 'frame-budget.json').write_text(json.dumps(records, indent=2) + '\n')
-(ROOT / 'frame-coverage.json').write_text(json.dumps(variants, indent=2) + '\n')
-with (ROOT / 'frame-budget.csv').open('w', newline='', encoding='utf-8-sig') as handle:
+(OUTPUT / 'frame-budget.json').write_text(json.dumps(records, indent=2) + '\n')
+(OUTPUT / 'frame-coverage.json').write_text(json.dumps(variants, indent=2) + '\n')
+with (OUTPUT / 'frame-budget.csv').open('w', newline='', encoding='utf-8-sig') as handle:
     fields = ['phase', 'tier', 'lighting', 'camera', 'mesh_draw_delta', 'instance_draw_delta',
               'total_draw_delta', 'mesh_shadow_draw_delta', 'tris_delta_upper_percent',
               'before_exact_triangles', 'after_exact_triangles', 'tris_delta_exact_percent']

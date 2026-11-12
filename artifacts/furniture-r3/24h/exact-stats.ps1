@@ -1,4 +1,4 @@
-param([ValidateSet('before','after')][string]$Phase='before',
+param([ValidateSet('before','after','after2')][string]$Phase='before',
     [ValidateSet('Low','High')][string]$Tier='Low',
     [ValidateSet('clear','overcast','dusk')][string]$Lighting='overcast')
 $ErrorActionPreference='Stop'
