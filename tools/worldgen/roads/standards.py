@@ -267,6 +267,11 @@ GUARDRAIL_TERMINAL_M = 4    # WORKING_VALUE (ADR 0110): free ground end of a W-b
 # odcinki końcowe zagłębione i zakotwione poniżej poziomu gruntu lub inne zakończenia spełniające wymagania normy
 # przenoszącej normę EN 1317." Dz.U. 2019 poz. 2311 załącznik nr 4 pkt 7.1 (drogowe bariery ochronne): on obiektach
 # mostowych dopuszcza się odległość lica bariery od krawędzi pasa ruchu min. 0,50 m przy a > 0,20 m (rys. 7.3-7.9).
+# Integration r5 (2026-11-13): both acts quoted above (MTiGM 30.05.2000 on drogowe obiekty inżynierskie and MTiGM
+# 2.03.1999 on drogi publiczne) were REPEALED by § 117 of PTB 2022 (Dz.U. 2022 poz. 1518, in force 21.09.2022), which
+# has no explicit "bridge barrier continues onto the road" clause (§ 88-90: when a barrier is required, 0.50 m from
+# the hard shoulder). The quotes are historical context, not a current rule - the transition is engineering practice,
+# UNVERIFIED against GDDKiA guidelines; the zał. 4 pkt 7.1 reference was not checked by the integrator.
 DECK_APPROACH_TRANSITION_M = 12.0  # WORKING_VALUE: ground length the deck barrier is extended onto past the structure end
 GUARDRAIL_POST_SPACING_GROUND = 4.0   # WORKING_VALUE (ADR 0117): ground runs, posts every 4 m (SP-05/4 class; Mapillary
 #                                       500263111404933 / 1259231227807789: 2-4 m read by eye); decks keep 2.0 m

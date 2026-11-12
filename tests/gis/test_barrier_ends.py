@@ -15,6 +15,8 @@ from conftest import REGION_ID
 from roads import barrier_audit as BA
 from streetscape import furniture as FU
 
+pytestmark = pytest.mark.unit   # integration r5: no Data/raw needed (graph reconstruction) - run in the -m unit set
+
 
 # ------------------------------------------------------------------------------------------ units
 def test_approach_transition_mask_marks_ground_past_bridge_ends():
