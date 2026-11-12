@@ -27,7 +27,11 @@ if($found.Count -ne $wanted.Count){throw 'Historical yard targets changed; find 
 $targets=@(foreach($item in $wanted){@{prototype=$item.p;localPosition=@{x=$item.e;y=$item.z;z=$item.n}}})
 @{targets=$targets}|ConvertTo-Json -Depth 5|Set-Content artifacts/life-r4/yard-native-targets.json
 Copy-Item artifacts/life-r4/Life4YardLodProbe.cs game/Assets/_Generated/Editor/Life4YardLodProbe.cs
-$ids=@($wanted|ForEach-Object {"yard_$($_.p)_side8"})
+$ids=@(foreach($item in $wanted){
+ "yard_$($item.p)_side8"
+ "yard_$($item.p)_wheel2"
+ if($item.p.StartsWith('trailer_')){"yard_$($item.p)_supports5"}
+})
 $selected=$ids -join ','
 $result=@()
 foreach($tier in @('Low','High')) {
@@ -64,7 +68,7 @@ foreach($tier in @('Low','High')) {
   }
  }
  $result+=@{tier=$tier;rows=$dump.rows.Count;dispatch_parity=$true;lods=$dump.rows|Select-Object camera,observedLods,distance,meshTriangles}
- Add-Content artifacts/life-r4/STATUS.md "`nDiagnostyka LOD $tier zakończona: rzeczywiste bufory natywnej metody i liczniki/pozy identyczne z kanonicznym baseline, 5 celów. Następny krok: odczytać native-lod.json i obejrzeć koła, nie wnioskować z nazwy side8."
+ Add-Content artifacts/life-r4/STATUS.md "`nDiagnostyka LOD $tier zakończona: rzeczywiste bufory natywnej metody i liczniki/pozy identyczne z kanonicznym baseline, $($ids.Count) kamer / 5 celów. Następny krok: odczytać native-lod.json i obejrzeć koła, nie wnioskować z nazwy side8."
  git add -f artifacts/life-r4/STATUS.md "$dir/native-lod.json" "$dir/exact-stats.json"
  git commit -m "wip(life): potwierdź natywny LOD placu $tier"
  if($LASTEXITCODE){throw 'WIP failed'}
