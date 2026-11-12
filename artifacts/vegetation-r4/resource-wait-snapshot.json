@@ -1,0 +1,167 @@
+{
+  "observed_at": "2026-11-12T15:20:37.1777079+01:00",
+  "main_policy_commit": "f7d0e5a0fb6b7f357144452b03677a4ace9dcbed",
+  "heavy_slots": 0,
+  "phone_run": true,
+  "queue": [
+    {
+      "owner": "gpt-landmarks-r4",
+      "first_wait": "2026-11-12T13:53:36.9617287",
+      "ticks": 639300884169617287,
+      "heartbeat": "2026-11-12T15:20:29.5210996+01:00"
+    },
+    {
+      "owner": "gpt-life-r5",
+      "first_wait": "2026-11-12T13:58:39.3364907",
+      "ticks": 639300887193364907,
+      "heartbeat": "2026-11-12T15:20:35.9574508+01:00"
+    },
+    {
+      "owner": "gpt-light-r6",
+      "first_wait": "2026-11-12T14:06:10.8690242",
+      "ticks": 639300891708690242,
+      "heartbeat": "2026-11-12T15:20:35.2369472+01:00"
+    },
+    {
+      "owner": "claude-frontage-r2",
+      "first_wait": "2026-11-12T14:14:57.2815562",
+      "ticks": 639300896972815562,
+      "heartbeat": "2026-11-12T15:20:36.2906625+01:00"
+    },
+    {
+      "owner": "gpt-asphalt-r3",
+      "first_wait": "2026-11-12T14:16:39.2205416",
+      "ticks": 639300897992205416,
+      "heartbeat": "2026-11-12T15:20:35.2369472+01:00"
+    },
+    {
+      "owner": "claude-g3b-lowread",
+      "first_wait": "2026-11-12T14:25:29.8374098",
+      "ticks": 639300903298374098,
+      "heartbeat": "2026-11-12T15:20:35.0257291+01:00"
+    },
+    {
+      "owner": "gpt-furniture-r3",
+      "first_wait": "2026-11-12T14:26:08.3248248",
+      "ticks": 639300903683248248,
+      "heartbeat": "2026-11-12T15:20:35.9574508+01:00"
+    },
+    {
+      "owner": "gpt-truck-r4",
+      "first_wait": "2026-11-12T14:26:15.5432369",
+      "ticks": 639300903755432369,
+      "heartbeat": "2026-11-12T15:20:16.3409778+01:00"
+    },
+    {
+      "owner": "gpt-cab-r4",
+      "first_wait": "2026-11-12T14:30:49.4735997",
+      "ticks": 639300906494735997,
+      "heartbeat": "2026-11-12T15:20:35.2359440+01:00"
+    },
+    {
+      "owner": "claude-putry-deck",
+      "first_wait": "2026-11-12T14:36:35.1157722",
+      "ticks": 639300909951157722,
+      "heartbeat": "2026-11-12T15:19:38.9991789+01:00"
+    },
+    {
+      "owner": "gpt-edge-r6",
+      "first_wait": "2026-11-12T14:55:45.2936728",
+      "ticks": 639300921452936728,
+      "heartbeat": "2026-11-12T15:20:31.8078242+01:00"
+    },
+    {
+      "owner": "gpt-sbs-r4",
+      "first_wait": "2026-11-12T15:02:07.8350142",
+      "ticks": 639300925278350142,
+      "heartbeat": "2026-11-12T15:20:31.8078242+01:00"
+    },
+    {
+      "owner": "gpt-vegetation-r4",
+      "first_wait": "2026-11-12T15:15:17.5670608",
+      "ticks": 639300933175670608,
+      "heartbeat": "2026-11-12T15:20:35.5272091+01:00"
+    }
+  ],
+  "heavy_acquirers": [
+    {
+      "pid": 60064,
+      "parent_pid": 72180,
+      "created": "2026-11-12T13:53:36.6651910+01:00",
+      "owner": "gpt-landmarks-r4"
+    },
+    {
+      "pid": 56620,
+      "parent_pid": 64152,
+      "created": "2026-11-12T13:58:39.0680410+01:00",
+      "owner": "gpt-life-r5"
+    },
+    {
+      "pid": 59100,
+      "parent_pid": 48144,
+      "created": "2026-11-12T14:06:10.6185880+01:00",
+      "owner": "gpt-light-r6"
+    },
+    {
+      "pid": 71332,
+      "parent_pid": 79448,
+      "created": "2026-11-12T14:14:57.0151780+01:00",
+      "owner": "claude-frontage-r2"
+    },
+    {
+      "pid": 79060,
+      "parent_pid": 18940,
+      "created": "2026-11-12T14:16:38.8985980+01:00",
+      "owner": "gpt-asphalt-r3"
+    },
+    {
+      "pid": 69788,
+      "parent_pid": 47084,
+      "created": "2026-11-12T14:25:29.5368000+01:00",
+      "owner": "claude-g3b-lowread"
+    },
+    {
+      "pid": 73712,
+      "parent_pid": 68124,
+      "created": "2026-11-12T14:26:08.0350430+01:00",
+      "owner": "gpt-furniture-r3"
+    },
+    {
+      "pid": 54632,
+      "parent_pid": 54020,
+      "created": "2026-11-12T14:26:15.1767090+01:00",
+      "owner": "gpt-truck-r4"
+    },
+    {
+      "pid": 28908,
+      "parent_pid": 45068,
+      "created": "2026-11-12T14:30:49.2021130+01:00",
+      "owner": "gpt-cab-r4"
+    },
+    {
+      "pid": 77812,
+      "parent_pid": 57268,
+      "created": "2026-11-12T14:36:34.9048340+01:00",
+      "owner": "claude-putry-deck"
+    },
+    {
+      "pid": 55024,
+      "parent_pid": 71536,
+      "created": "2026-11-12T14:55:45.0573640+01:00",
+      "owner": "gpt-edge-r6"
+    },
+    {
+      "pid": 59180,
+      "parent_pid": 70780,
+      "created": "2026-11-12T15:02:07.5994160+01:00",
+      "owner": "gpt-sbs-r4"
+    },
+    {
+      "pid": 64772,
+      "parent_pid": 57980,
+      "created": "2026-11-12T15:15:17.2965710+01:00",
+      "owner": "gpt-vegetation-r4"
+    }
+  ],
+  "note": "Read-only metadata. Process creation before a policy change suggests loaded old code; no process or foreign slot/ticket was changed."
+}

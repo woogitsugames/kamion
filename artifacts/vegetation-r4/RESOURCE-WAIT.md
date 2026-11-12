@@ -1,0 +1,11 @@
+# Diagnostyka oczekiwania — r4 otwarta, nie scalać
+
+To wyłącznie bieżąca diagnostyka zasobów, nie REPORT gotowej rundy. Kod D nie przeszedł jeszcze 41 testów ani generatora i nie ma renderów D. Wygenerowany i zaimportowany świat nadal przedstawia odrzucone C. Nie ma akceptacji do integracji.
+
+Odczyt 12 listopada o 15:20:37: zero zajętych slotów heavy, aktywny PHONE_RUN, 13 żywych zgłoszeń kolejki; gpt-vegetation-r4 ma 12 przed sobą. Wszystkie metadane są w resource-wait-snapshot.json. Odczyt obejmował wyłącznie pliki kolejki i metadane procesów na komputerze. Nie wykonywano żadnej operacji na urządzeniu ani na cudzych procesach, slotach lub biletach.
+
+Main od f7d0e5a0, 14:49:36, blokuje przez PHONE_RUN tylko Unity, a nie heavy. Pierwsze trzy procesy Acquire uruchomiono jednak o 13:53:36, 13:58:39 i 14:06:10; nadal żyją i odświeżają bilety. Są to gpt-landmarks-r4, gpt-life-r5 i gpt-light-r6. Skrypt PowerShell wczytany przy ich uruchomieniu ma starą pętlę blokującą także heavy przez PHONE_RUN; sama zmiana pliku na dysku nie wymienia treści działającej pętli. Wniosek z kodu i metadanych: starsze oczekiwania wstrzymują czoło FIFO, a nowsze procesy używające już nowej reguły nie mogą ich wyprzedzić. To wyjaśnia brak przydziałów mimo wolnych slotów; nie dowodzi, że pomiar urządzenia zakończono.
+
+Kolejka ruszy po normalnym zwolnieniu PHONE_RUN po pomiarze albo po wznowieniu przez właścicieli ich własnych starych oczekiwań aktualnym skryptem, po sprawdzeniu braku uruchomionej pracy. Vegetation nie steruje cudzymi procesami i nie zmienia zasad FIFO, limitu, blokady telefonu ani wspólnego skryptu. Nie wolno wyciągać z tej notatki wniosku, że należy usunąć cudze bilety lub uruchomić zadania bez slotu.
+
+Własna sekwencja vegetation 24975 zakończyła się wcześniej kodem 1 na Acquire, przed testami i World. Sprawdzono brak własnego procesu wykonawczego, slotu i biletu; szczegół pierwotnego błędu pozostaje nieustalony. Kontrolowane wznowienie ma uchwyt 68527, PID Acquire 64772 przy tym odczycie i pełny green-d-pipeline-resume.log. Dołączyło do FIFO od nowa o 15:15:17, bez odtwarzania lub cofania czasu biletu. To nie jest ponowienie uruchomionych testów ani World, ponieważ nie ruszyły. Źródła D pozostają bez zmian.
