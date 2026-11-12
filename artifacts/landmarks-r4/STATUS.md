@@ -38,3 +38,5 @@ Krok 5d: pierwszy waiter heavy zakończył się kodem1 przed World, log świata 
 Krok 5e: audyt GLB uzupełniono o warunek rzeczywistej zmiany względem baseline oraz zgodność bieżących dims/spec/meta/GLB przez SHA. Zapobiega to pozornemu PASS na starym modelu, gdyby Blender nie przebudował assetu. Audyt nadal nie był wykonany na wariancie; pełny log drugiego waitera potwierdza żywą kolejkę FIFO.
 
 Krok 5f: przygotowano analyze.ps1 — także duże porównanie244 PNG i składanie arkuszy będzie pod heavy z main (bez dodatkowych zagnieżdżonych Acquire), zwalnianym przed oględzinami. Obsługuje jawny podzbiór16 diagnostycznych obrazów i późniejszy pełny inwentarz. Jeszcze niewykonany; nie ma renderu wariantu.
+
+Krok 6: generator wariantu zakończony bez fallback=True; audyt GLB zaliczony. Następnie dwa pojedyncze pliki testów, każdy w osobnym heavy, bez trzymania heavy przez import/render.
