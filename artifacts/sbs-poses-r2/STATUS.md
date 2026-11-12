@@ -7,3 +7,5 @@
 - PARTIAL diagnosis started; probes for 150280 (horizon 0.50, heading -2.2), 3678296 (horizon 0.559), 1801374 (lateral/eye) added to r1.
 - Tool: scripts/sbs-low-pairs.ps1 + tools/refs/sbs_pairs.py (preflight + pairs <= 960), test tests/gis/test_sbs_pairs.py (not yet run, heavy).
 - NEXT: wait r1 render (PHONE_RUN): `pwsh artifacts/sbs-poses-r2/tools/render.ps1 -Round r1` (running in background), then sheets.
+- r1 (29 probes) + r2 (837235 chevron) rendered; choices in tools/choice.json; finalize.py r1 r2 --write -> overrides/cameras/references for 275528, 837235, 3281350, 297817, 150280, 3678296 (formula mismatches: none). 1801374/494288 unchanged (world).
+- NEXT: full tool run `pwsh scripts/sbs-low-pairs.ps1 -OutputRoot artifacts/sbs-poses-r2/after -Before artifacts/sbs-poses-r2/before -SlotOwner claude-sbs-poses-r2` (background), then pytest heavy, merge main.

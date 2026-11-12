@@ -1,6 +1,6 @@
 """ADR 0140: write the chosen probe overrides as explicit authored overrides + matching sbs_cameras.json /
 sbs_references.json entries (prepare() camera formula via poselib; prepare itself is NOT run).
-usage: finalize.py r1 [--write]"""
+usage: finalize.py r1 r2 [--write]"""
 import json, sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
@@ -10,10 +10,12 @@ import poselib as P
 CHOICE = json.loads((Path(__file__).parent / 'choice.json').read_text(encoding='utf-8'))
 
 
-def build(rnd):
-    base = Path(__file__).resolve().parents[1] / rnd
-    probes = {c['id']: c for c in json.loads((base / 'cameras.json').read_text(encoding='utf-8'))['cameras']}
-    plan = {p['probe']: p for p in json.loads((base / 'plan.json').read_text(encoding='utf-8'))}
+def build(rounds):
+    probes, plan = {}, {}
+    for rnd in rounds:
+        base = Path(__file__).resolve().parents[1] / rnd
+        probes.update({c['id']: c for c in json.loads((base / 'cameras.json').read_text(encoding='utf-8'))['cameras']})
+        plan.update({p['probe']: p for p in json.loads((base / 'plan.json').read_text(encoding='utf-8'))})
     R, O = P.refs(), P.overrides()
     out = {}
     for key, ch in CHOICE.items():
@@ -45,7 +47,7 @@ def build(rnd):
 
 
 if __name__ == '__main__':
-    res = build(sys.argv[1])
+    res = build([a for a in sys.argv[1:] if not a.startswith('--')])
     reg = P.REGION
     od = P.S.read(reg / 'sbs_authored_overrides.json')
     cd = P.S.read(reg / 'sbs_cameras.json')
