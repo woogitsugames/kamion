@@ -1,0 +1,60 @@
+{
+  "rows": [
+    {
+      "render_git_sha": "80159a70e7cea39146a465208da5471cb9beb915",
+      "pose_confidence": "C",
+      "photo": "artifacts/sbs-gate3/rectified/2948595898752384.png",
+      "photo_sha256": "8049e87d6a6b1ed43cbd4aa4de3c61d4d599805c3e3d78029c01990aacb62562",
+      "raw_sha256": "4154534b4e9915b548470ef6fd128dc4daf2cdc7e39fc5da73220deb73b5a061",
+      "finding": "Hard diagonal sky wedge absent; soft gray lower sky remains. No D51 or pose acceptance.",
+      "raw": "artifacts/sbs-r4/evidence/renders/Low-clear/sbs-g3-a-2948595898752384.png",
+      "state": "Low-clear",
+      "camera": "sbs-g3-a-2948595898752384"
+    },
+    {
+      "render_git_sha": "80159a70e7cea39146a465208da5471cb9beb915",
+      "pose_confidence": "C",
+      "photo": "artifacts/sbs-gate3/rectified/2948595898752384.png",
+      "photo_sha256": "8049e87d6a6b1ed43cbd4aa4de3c61d4d599805c3e3d78029c01990aacb62562",
+      "raw_sha256": "26397e6848ec73c60571950a397a0a31a5bcbb137dda3a2a4b1e021184fcc4be",
+      "finding": "Hard diagonal sky wedge absent; soft gray lower sky remains. No D51 or pose acceptance.",
+      "raw": "artifacts/sbs-r4/evidence/renders/High-clear/sbs-g3-a-2948595898752384.png",
+      "state": "High-clear",
+      "camera": "sbs-g3-a-2948595898752384"
+    },
+    {
+      "render_git_sha": "80159a70e7cea39146a465208da5471cb9beb915",
+      "pose_confidence": "B",
+      "photo": "artifacts/sbs-gate3/rectified/303305168125936.png",
+      "photo_sha256": "a8bb7d37739164759a15b2193b811d50c4aa7890a528195f0dec9c2bfb1a7efc",
+      "raw_sha256": "4fb439e748c53469480b647d042fd5bd822f4f12b44a3a93311045e279041a67",
+      "finding": "Hard diagonal sky wedge absent; soft gray lower sky remains. No D51 or pose acceptance.",
+      "raw": "artifacts/sbs-r4/evidence/renders/Low-clear/sbs-g3-a-303305168125936.png",
+      "state": "Low-clear",
+      "camera": "sbs-g3-a-303305168125936"
+    },
+    {
+      "render_git_sha": "80159a70e7cea39146a465208da5471cb9beb915",
+      "pose_confidence": "B",
+      "photo": "artifacts/sbs-gate3/rectified/303305168125936.png",
+      "photo_sha256": "a8bb7d37739164759a15b2193b811d50c4aa7890a528195f0dec9c2bfb1a7efc",
+      "raw_sha256": "81eeef730e9e297c42c290cfb7649a93f44fc3d80fcf2a0d9f5596b10caa6ca0",
+      "finding": "Hard diagonal sky wedge absent; soft gray lower sky remains. No D51 or pose acceptance.",
+      "raw": "artifacts/sbs-r4/evidence/renders/High-clear/sbs-g3-a-303305168125936.png",
+      "state": "High-clear",
+      "camera": "sbs-g3-a-303305168125936"
+    }
+  ],
+  "reviewed_at": "2026-11-12T13:16:18.7466525+01:00",
+  "scope": "Root native inspection of 4 current raw frames, 2 corresponding photos and 2 historical Low-clear frames. Not full D51.",
+  "historical_low_clear": [
+    {
+      "sha256": "b64a08877dc205b54ddc38585db1bbc80fb925a745d45fdc28ed4bf5943e6371",
+      "path": "artifacts/sbs-r3/evidence/renders/Low-clear/sbs-g3-a-2948595898752384.png"
+    },
+    {
+      "sha256": "ea3a27884991deba0a127e033ddfff7fd63d8c33987808248ea3cabc3a843555",
+      "path": "artifacts/sbs-r3/evidence/renders/Low-clear/sbs-g3-a-303305168125936.png"
+    }
+  ]
+}
