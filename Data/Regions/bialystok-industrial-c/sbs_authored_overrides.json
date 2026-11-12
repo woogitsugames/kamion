@@ -293,7 +293,7 @@
     "sbs-g3-b-837235577143499": {
       "horizon_y_fraction": 0.52,
       "pose_status": "WORKING_VALUE",
-      "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. S12: promoted sbs-refine1-837235577143499-12 (-16 m along view axis, -2 m left, eye 2.2 m on road-asphalt height); WORKING_VALUE.",
+      "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. S12: promoted sbs-refine1-837235577143499-12 (-16 m along view axis, -2 m left, eye 2.2 m on road-asphalt height); WORKING_VALUE. ADR 0130: rectified_horizon_y_fraction 0.52 made explicit (the promoted probe used 0.52 as the rectified horizon; keeps the reviewed pitch, cameras now formula-consistent).",
       "pose_confidence": "B",
       "pose_reason": "Promoted by leader s12 from GPT sbs-r3 refinement after review REVIEW-2026-11-12-s12-gpt-batch-d (two independent anchors: portal/warning triangles resp. chevron/portal/white block)",
       "photometric_use": false,
@@ -301,7 +301,8 @@
       "east_delta_m": 14.0049,
       "north_delta_m": -7.9914,
       "eye_height_m": 2.2,
-      "absolute_u_m": 132.9656
+      "absolute_u_m": 132.9656,
+      "rectified_horizon_y_fraction": 0.52
     },
     "sbs-g3-b-3281350541967811": {
       "horizon_y_fraction": 0.68,
@@ -320,7 +321,7 @@
     "sbs-g3-b-275528677534382": {
       "horizon_y_fraction": 0.52,
       "pose_status": "WORKING_VALUE",
-      "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. S12: promoted sbs-refine1-275528677534382-04 (-10 m along view axis, eye 1.7 m on road-asphalt height); WORKING_VALUE.",
+      "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. S12: promoted sbs-refine1-275528677534382-04 (-10 m along view axis, eye 1.7 m on road-asphalt height); WORKING_VALUE. ADR 0130: rectified_horizon_y_fraction 0.52 made explicit (the promoted probe used 0.52 as the rectified horizon; keeps the reviewed pitch, cameras now formula-consistent).",
       "pose_confidence": "B",
       "pose_reason": "Promoted by leader s12 from GPT sbs-r3 refinement after review REVIEW-2026-11-12-s12-gpt-batch-d (two independent anchors: portal/warning triangles resp. chevron/portal/white block)",
       "photometric_use": false,
@@ -328,7 +329,8 @@
       "east_delta_m": 8.0046,
       "north_delta_m": -5.9939,
       "eye_height_m": 1.7,
-      "absolute_u_m": 131.8291
+      "absolute_u_m": 131.8291,
+      "rectified_horizon_y_fraction": 0.52
     },
     "sbs-g3-b-150280503737744": {
       "horizon_y_fraction": 0.62,

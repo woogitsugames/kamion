@@ -12,3 +12,4 @@
 - WIP checkpoint (lead 91 % limit). Data + ADR + evidence committed. Only pytest pending (heavy FIFO, background).
 - NEXT: `pwsh C:/Users/matma/Documents/Claude/kamion/scripts/unity-slot.ps1 -Acquire -Pool heavy -Owner claude-sbs-poses-py; uv run --project tools/refs python -m pytest tests/gate3 tests/gis/test_sbs_gate3.py tests/gis/test_sbs_photometry.py tests/gis/test_sbs_report.py -q; pwsh C:/Users/matma/Documents/Claude/kamion/scripts/unity-slot.ps1 -Release -Pool heavy -Owner claude-sbs-poses-py`
 - pytest tests/gate3 + tests/gis/test_sbs_{gate3,photometry,report}: 109 passed (heavy slot). NEXT: lead review/merge of branch sbs-poses.
+- 275528/837235: rectified_horizon 0.52 explicit + references entries; all Mapillary cameras now match formula (0 mismatches). NEXT: pytest rerun under heavy, commit, final report.

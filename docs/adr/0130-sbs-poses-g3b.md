@@ -19,8 +19,9 @@ rectifies photos), so the poses are written as explicit `authored_overrides` and
 
 1. `artifacts/sbs-poses/tools/poselib.py` re-implements the Mapillary branch of `prepare()` by importing
    `tools/refs/sbs_gate3.py` (grid heading, rectified horizon, vfov, pose). Check: it reproduces every committed
-   Mapillary camera of `sbs_cameras.json` to < 2 mm, except the two lead-promoted cameras (look_at differs by 0.056 m:
-   `5e3552a2` used the unrectified 0.52 as the rectified horizon; < 0.1 deg pitch, left as is, P2).
+   Mapillary camera of `sbs_cameras.json` to < 2 mm. The two lead-promoted cameras (`5e3552a2`) differed by 0.056 m
+   (0.52 was used as the rectified horizon): fixed by making `rectified_horizon_y_fraction: 0.52` explicit in their
+   overrides (keeps the reviewed pitch; look_at changes 0.1 mm) and writing their `sbs_references.json` entries.
 2. Photo resection where the photo shows the portal: generated/orthophoto portal `andersa-putry-approach-gantry` at
    E,N (-260.8, -208.3), span 16 m (ADR 0125); leg bearings measured on the rectified photo; absolute heading from the
    two EC chimneys (overrides.yaml EPSG:2180 positions, ~1.3 km away, so their bearing barely depends on position).
@@ -58,6 +59,10 @@ recorded; left open.
 | 494288 | PARTIAL | PARTIAL | **lamps: world, not pose.** On the photo the lamp row stands in the median (left); the generated deck puts the lamps on the right kerb next to the screen. No pose puts them left without faking it with a heading turn (r2 c6 +3 deg does, rejected). Screen in the world is lighter and lower |
 
 G3-B by this grade: 6/10 RECOGNISABLE (2 weak), 4 PARTIAL, 0 NOT (from 4/5/1) — still FAIL.
+
+## Validation
+
+`uv run --project tools/refs python -m pytest tests/gate3 tests/gis/test_sbs_gate3.py tests/gis/test_sbs_photometry.py tests/gis/test_sbs_report.py -q` (heavy slot): 109 passed. 4-state render (`sbs-gate3.ps1 -RenderOnly`, Low/High x overcast/clear, 42 cameras) at `a300b826`-epoch data; the later 275528/837235 consistency fix moves a look_at by 0.1 mm, so `cameras_sha256` of that capture is stale -> rerender before any compose.
 
 ## Consequences / open
 
