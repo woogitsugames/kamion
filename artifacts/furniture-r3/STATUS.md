@@ -230,3 +230,5 @@ potem poprawić największe udokumentowane odstępstwo wiaty. WIP po każdym kro
 2026-11-12T16:22:18.4352464+01:00: WŁAŚCICIEL POLECIŁ BEZPIECZNIE ZAKOŃCZYĆ (limit tygodniowy). Własny STOP_REQUESTED blokuje nowe Unity/heavy przed Acquire. Bieżący generator PID 80828 oraz rodzic 68124 nie są ubijane: dokończą generator i sekwencyjne audyty, a finally zwolni heavy. Nie będzie następnej rundy. R3 pozostaje NIEGOTOWA DO INTEGRACJI, bez końcowego REPORT; powstaje PRZEKAZANIE.md.
 
 2026-11-12T16:26:40.9634835+01:00: Generator after3 zakończony. Slot nadal obejmuje wyłącznie sekwencyjny skan chronionej geometrii, nie Unity.
+
+2026-11-12T16:26:44.0261666+01:00: Pakiet heavy candidate3 zakończony; etap=protected geometry after3, sukces=True, slot zwolniony. Następny krok: normalny import i faktyczne pomiary, bez deklaracji budżetu z liczby slotów.
