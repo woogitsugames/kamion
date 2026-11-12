@@ -23,6 +23,7 @@ plans=yaml.safe_load((root/'Data/Regions/bialystok-industrial-c/overrides.yaml')
 original=pt._fill
 records=[]
 triangle_counts={}
+footprints=[]
 active=None
 def capture_fill(ring,spacing):
     vertices,triangles=original(ring,spacing)
@@ -53,12 +54,17 @@ try:
                 if width: g=pt.band_of(g,float(width))
                 if g.geom_type!='Polygon' or g.area<.5: continue
                 active=bed.get('name',str(bi))
+                count=max(16,int(np.ceil(g.length/.3)))
+                sampled=Polygon(pt._offset_ring(g,0.0,count,np.asarray(g.exterior.coords)[0]))
+                footprints.append(dict(bed=active,authored_band_area_m2=g.area,
+                    sampled_area_m2=sampled.area,area_difference_percent=100*(sampled.area/g.area-1),
+                    boundary_hausdorff_m=g.boundary.hausdorff_distance(sampled.boundary)))
                 pt.hedge_mass(Capture(),g,lambda x,y:np.zeros_like(x),key,
                     h=bed.get('height_m'),plant=bed.get('plant','berberis_red'))
 finally:
     pt._fill=original
 result=dict(source_sha256=hashlib.sha256((root/'tools/worldgen/streetscape/plantings.py').read_bytes()).hexdigest(),
-    caps=records,triangles_by_bed=triangle_counts,total_triangles=sum(triangle_counts.values()),
+    caps=records,footprints=footprints,triangles_by_bed=triangle_counts,total_triangles=sum(triangle_counts.values()),
     note='Four authored footprints, flat z=0; no World, GIS pytest, Unity, or production write. Internal fill observation only; no visual acceptance.')
 (here/('cap-study-'+args.label+'.json')).write_text(json.dumps(result,indent=2)+'\n',encoding='utf-8')
 print(json.dumps(result,indent=2))
