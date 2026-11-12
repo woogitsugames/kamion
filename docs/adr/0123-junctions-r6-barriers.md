@@ -64,6 +64,15 @@ worktree, `renders_b*_*`, `renders_t*_*` = iteracja materiału, `ortho/`, `refs/
 9. **Nos Putry N**: kołnierz z kostki na całą szerokość końca mediany do N 134; pasy trawy są CIĘTE na obrysie wyspy / wypełnienia
    (`gores._clip_tris`) zamiast kasowania całych trójkątów dotykających strefy.
 
+10. **Rondo Bieżeństwa bez fartucha z kostki** (b4, REVIEW s11 SBS D51 B7): override `biezenstwa-ring-no-apron` (`apron: asphalt`) —
+    pas fartucha reguły (2,0 m) zostaje w tym samym obrysie, ale jako asfalt w poziomie jezdni; krawężnik wyspy bez zmian. Ortofoto
+    0,08 m (`plan_b3/ringb.jpg`) i zdjęcia 1398898753813071 / 201270605169291 / 2818555625124739: jezdnia dochodzi do krawężnika wyspy.
+11. **Szyny separatora DK8 do barier pomostów** (b4): `dk8-ramp-split-barrier` / `-n` przedłużone do początku barier swoich pomostów,
+    nowy klucz autorskiej szyny `free_ends: [bool, bool]` (koniec, który ma zostać w miejscu zamiast dociągać się do sąsiedniej szyny).
+12. **Nasyp z kruszywa na wyspie ronda** (b6, D51 B7): `plantings` — klucz wyspy `mound: {setback_m, slope, max_m}`; `ring-centre`:
+    płaski pas 1,6 m za krawężnikiem (bariera stoi na nim), potem 1:5 do 0,7 m (WORKING_VALUE, odczyt ze zdjęć, bez pomiaru) —
+    zasłania stopy filarów z kamery na wysokości dachu auta, jak na zdjęciach.
+
 ## Otwarte / niezrobione (uczciwie)
 1. **Telefon** — brak (agent nie używa adb). Budżet tylko z edytora.
 2. **Filar w kadrze `r4_pier_bz`** — nadal go nie ma: bariera przy wyspie jest w kadrze, ale żeby filar wszedł w kadr tak jak na
