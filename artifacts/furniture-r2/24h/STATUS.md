@@ -233,3 +233,5 @@ NASTĘPNY KROK: przygotować własne skrypty r2 z ownerem heavy gpt-furniture-r2
 2026-11-12T10:30:06.7596085+01:00: root330/330 obejrzane; niezależny High-clear w toku. Wszystkie60 małych arkuszy istnieje, dlatego anulowano własny zbędny waiter compare PID69076 (bez dzieci), aby nie powtarzać całej partii po geometrii. Geometry PID49828 nadal oczekuje w heavy. NASTĘPNY KROK: końcowy GIS iphysics kolejno po geometrii; EditMode340/340 bez powtarzania.
 
 2026-11-12T10:30:25.1417083+01:00: heavy geometry after; sukces=True; slot gpt-furniture-r2 zwolniony. NASTĘPNY KROK: sprawdzić log i kontynuować walidację rundy.
+
+2026-11-12T10:30:43.9523199+01:00: uruchomiono własny serialny waiter closing-after-geometry.ps1. Po terminalnym PID49828 wykona po jednym końcowym GIS iphysics/gate3 w heavy pod gpt-furniture-r2, zapisując kody i zachowując porażki. Nie powtarza EditMode ani generatora. Procesy tego samego właściciela nie wykonają ciężkiej pracy równolegle.
