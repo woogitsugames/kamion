@@ -53,3 +53,5 @@ Obejrzano cztery natywne raw świeżej serii i trzy odpowiadające zdjęcia: A20
 Przygotowano wstępne udostępnienie świeżej serii: cztery podstawowe migawki wejść w prestage-source-bindings mają SHA zgodne z capture. Kopia raw, liczników i przeglądu czterech klatek do main będzie oznaczona jako częściowa, bez REPORT i bez ukończonego GIS r3. Pełna kompozycja nadal czeka na heavy; nie uruchamiamy drugiej dzierżawy o tej samej nazwie.
 
 Wstępna kopia do main zakończona: raw, liczniki i cztery migawki wejść, trzy kody robocopy 1. Sprawdzono SHA wszystkich 168 PNG w docelowym main oraz siedmiu kluczowych plików. prestage-receipt.json ma jawny stan PRESTAGE_NOT_FINAL_DELIVERY; brak REPORT i końcowego GIS r3. Bieżący STATUS skopiowano jako informację o postępie.
+
+Pełna kompozycja zakończona kodem 0: 100 arkuszy B i 168 diagnostycznych, bez brakujących renderów. Każdy stan ma 25 B i 42 diagnostyczne. Migawka inputs i ZIP zapisane, slot heavy zwolniony. Podczas sprawdzania odpytywania kolejka sama uzyskała slot; nie zatrzymano żadnego procesu i nie zmieniono interwału. Teraz można uruchomić PrepareRefinement w nowej, osobnej dzierżawie tej samej gałęzi.
