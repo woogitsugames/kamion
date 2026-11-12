@@ -1,0 +1,3747 @@
+{
+  "scope": "Editor CPU visibility estimates, regular and instanced draws separately; rounded regular triangles. Device times UNVERIFIED.",
+  "stage_after": "result-0112-p2",
+  "states": {
+    "Low-clear": {
+      "before": {
+        "cab-dash": {
+          "regular_draws": 426,
+          "shadow_draws": 105,
+          "regular_triangles": 335000,
+          "instanced_draws": 441,
+          "instanced_triangles": 30000
+        },
+        "cab-driver": {
+          "regular_draws": 433,
+          "shadow_draws": 105,
+          "regular_triangles": 342000,
+          "instanced_draws": 429,
+          "instanced_triangles": 31000
+        },
+        "cab-grain": {
+          "regular_draws": 111,
+          "shadow_draws": 108,
+          "regular_triangles": 195000,
+          "instanced_draws": 102,
+          "instanced_triangles": 6000
+        },
+        "cab-mirror-front": {
+          "regular_draws": 422,
+          "shadow_draws": 108,
+          "regular_triangles": 489000,
+          "instanced_draws": 331,
+          "instanced_triangles": 15000
+        },
+        "cab-mirrors-left": {
+          "regular_draws": 209,
+          "shadow_draws": 108,
+          "regular_triangles": 324000,
+          "instanced_draws": 256,
+          "instanced_triangles": 15000
+        },
+        "cab-mirrors-right": {
+          "regular_draws": 312,
+          "shadow_draws": 108,
+          "regular_triangles": 410000,
+          "instanced_draws": 292,
+          "instanced_triangles": 16000
+        },
+        "cab-seat-entry": {
+          "regular_draws": 93,
+          "shadow_draws": 108,
+          "regular_triangles": 195000,
+          "instanced_draws": 71,
+          "instanced_triangles": 6000
+        }
+      },
+      "after": {
+        "cab-dash": {
+          "regular_draws": 426,
+          "shadow_draws": 105,
+          "regular_triangles": 335000,
+          "instanced_draws": 441,
+          "instanced_triangles": 30000
+        },
+        "cab-driver": {
+          "regular_draws": 433,
+          "shadow_draws": 105,
+          "regular_triangles": 342000,
+          "instanced_draws": 429,
+          "instanced_triangles": 31000
+        },
+        "cab-grain": {
+          "regular_draws": 111,
+          "shadow_draws": 108,
+          "regular_triangles": 195000,
+          "instanced_draws": 102,
+          "instanced_triangles": 6000
+        },
+        "cab-mirror-front": {
+          "regular_draws": 422,
+          "shadow_draws": 108,
+          "regular_triangles": 490000,
+          "instanced_draws": 331,
+          "instanced_triangles": 15000
+        },
+        "cab-mirrors-left": {
+          "regular_draws": 209,
+          "shadow_draws": 108,
+          "regular_triangles": 324000,
+          "instanced_draws": 256,
+          "instanced_triangles": 15000
+        },
+        "cab-mirrors-right": {
+          "regular_draws": 312,
+          "shadow_draws": 108,
+          "regular_triangles": 410000,
+          "instanced_draws": 292,
+          "instanced_triangles": 16000
+        },
+        "cab-seat-entry": {
+          "regular_draws": 93,
+          "shadow_draws": 108,
+          "regular_triangles": 196000,
+          "instanced_draws": 71,
+          "instanced_triangles": 6000
+        }
+      },
+      "delta": {
+        "cab-dash": {
+          "regular_draws": 0,
+          "shadow_draws": 0,
+          "regular_triangles": 0,
+          "instanced_draws": 0,
+          "instanced_triangles": 0
+        },
+        "cab-driver": {
+          "regular_draws": 0,
+          "shadow_draws": 0,
+          "regular_triangles": 0,
+          "instanced_draws": 0,
+          "instanced_triangles": 0
+        },
+        "cab-grain": {
+          "regular_draws": 0,
+          "shadow_draws": 0,
+          "regular_triangles": 0,
+          "instanced_draws": 0,
+          "instanced_triangles": 0
+        },
+        "cab-mirror-front": {
+          "regular_draws": 0,
+          "shadow_draws": 0,
+          "regular_triangles": 1000,
+          "instanced_draws": 0,
+          "instanced_triangles": 0
+        },
+        "cab-mirrors-left": {
+          "regular_draws": 0,
+          "shadow_draws": 0,
+          "regular_triangles": 0,
+          "instanced_draws": 0,
+          "instanced_triangles": 0
+        },
+        "cab-mirrors-right": {
+          "regular_draws": 0,
+          "shadow_draws": 0,
+          "regular_triangles": 0,
+          "instanced_draws": 0,
+          "instanced_triangles": 0
+        },
+        "cab-seat-entry": {
+          "regular_draws": 0,
+          "shadow_draws": 0,
+          "regular_triangles": 1000,
+          "instanced_draws": 0,
+          "instanced_triangles": 0
+        }
+      },
+      "mirror_configuration_before": {
+        "MIRROR_MainL_Camera": {
+          "mirror": "MIRROR_MainL_Camera",
+          "class": "2",
+          "width": "100",
+          "height": "224",
+          "fovV": "50.391",
+          "aspect": "0.42333",
+          "near": "1.067",
+          "far": "150.0",
+          "lodScale": "1.00",
+          "cap": "1",
+          "intervalDrivingFrames": "4",
+          "intervalStandingFrames": "4"
+        },
+        "MIRROR_MainR_Camera": {
+          "mirror": "MIRROR_MainR_Camera",
+          "class": "2",
+          "width": "100",
+          "height": "224",
+          "fovV": "39.595",
+          "aspect": "0.43088",
+          "near": "2.061",
+          "far": "150.0",
+          "lodScale": "1.00",
+          "cap": "1",
+          "intervalDrivingFrames": "4",
+          "intervalStandingFrames": "4"
+        },
+        "MIRROR_WideL_Camera": {
+          "mirror": "MIRROR_WideL_Camera",
+          "class": "4",
+          "width": "133",
+          "height": "134",
+          "fovV": "74.017",
+          "aspect": "0.98636",
+          "near": "1.115",
+          "far": "75.0",
+          "lodScale": "1.00",
+          "cap": "1",
+          "intervalDrivingFrames": "8",
+          "intervalStandingFrames": "16"
+        },
+        "MIRROR_WideR_Camera": {
+          "mirror": "MIRROR_WideR_Camera",
+          "class": "4",
+          "width": "133",
+          "height": "134",
+          "fovV": "69.440",
+          "aspect": "0.98685",
+          "near": "2.087",
+          "far": "75.0",
+          "lodScale": "1.00",
+          "cap": "1",
+          "intervalDrivingFrames": "8",
+          "intervalStandingFrames": "16"
+        },
+        "MIRROR_Kerb_Camera": {
+          "mirror": "MIRROR_Kerb_Camera",
+          "class": "5",
+          "width": "143",
+          "height": "94",
+          "fovV": "47.609",
+          "aspect": "1.65398",
+          "near": "1.973",
+          "far": "75.0",
+          "lodScale": "1.00",
+          "cap": "1",
+          "intervalDrivingFrames": "8",
+          "intervalStandingFrames": "32"
+        },
+        "MIRROR_Front_Camera": {
+          "mirror": "MIRROR_Front_Camera",
+          "class": "6",
+          "width": "192",
+          "height": "119",
+          "fovV": "60.124",
+          "aspect": "1.95907",
+          "near": "1.881",
+          "far": "75.0",
+          "lodScale": "1.00",
+          "cap": "1",
+          "intervalDrivingFrames": "8",
+          "intervalStandingFrames": "32"
+        }
+      },
+      "mirror_configuration_after": {
+        "MIRROR_MainL_Camera": {
+          "mirror": "MIRROR_MainL_Camera",
+          "class": "2",
+          "width": "100",
+          "height": "224",
+          "fovV": "50.391",
+          "aspect": "0.42333",
+          "near": "1.067",
+          "far": "150.0",
+          "lodScale": "1.00",
+          "cap": "1",
+          "intervalDrivingFrames": "4",
+          "intervalStandingFrames": "4"
+        },
+        "MIRROR_MainR_Camera": {
+          "mirror": "MIRROR_MainR_Camera",
+          "class": "2",
+          "width": "100",
+          "height": "224",
+          "fovV": "39.595",
+          "aspect": "0.43088",
+          "near": "2.061",
+          "far": "150.0",
+          "lodScale": "1.00",
+          "cap": "1",
+          "intervalDrivingFrames": "4",
+          "intervalStandingFrames": "4"
+        },
+        "MIRROR_WideL_Camera": {
+          "mirror": "MIRROR_WideL_Camera",
+          "class": "4",
+          "width": "133",
+          "height": "134",
+          "fovV": "74.017",
+          "aspect": "0.98636",
+          "near": "1.115",
+          "far": "75.0",
+          "lodScale": "1.00",
+          "cap": "1",
+          "intervalDrivingFrames": "8",
+          "intervalStandingFrames": "16"
+        },
+        "MIRROR_WideR_Camera": {
+          "mirror": "MIRROR_WideR_Camera",
+          "class": "4",
+          "width": "133",
+          "height": "134",
+          "fovV": "69.440",
+          "aspect": "0.98685",
+          "near": "2.087",
+          "far": "75.0",
+          "lodScale": "1.00",
+          "cap": "1",
+          "intervalDrivingFrames": "8",
+          "intervalStandingFrames": "16"
+        },
+        "MIRROR_Kerb_Camera": {
+          "mirror": "MIRROR_Kerb_Camera",
+          "class": "5",
+          "width": "143",
+          "height": "94",
+          "fovV": "47.609",
+          "aspect": "1.65398",
+          "near": "0.100",
+          "far": "75.0",
+          "lodScale": "1.00",
+          "cap": "1",
+          "intervalDrivingFrames": "8",
+          "intervalStandingFrames": "32"
+        },
+        "MIRROR_Front_Camera": {
+          "mirror": "MIRROR_Front_Camera",
+          "class": "6",
+          "width": "192",
+          "height": "119",
+          "fovV": "60.124",
+          "aspect": "1.95907",
+          "near": "0.100",
+          "far": "75.0",
+          "lodScale": "1.00",
+          "cap": "1",
+          "intervalDrivingFrames": "8",
+          "intervalStandingFrames": "32"
+        }
+      },
+      "interior_before": {
+        "MIRROR_MainL_Camera": {
+          "mirror": "MIRROR_MainL_Camera",
+          "interiorPixels": "0",
+          "totalPixels": "22400"
+        },
+        "MIRROR_MainR_Camera": {
+          "mirror": "MIRROR_MainR_Camera",
+          "interiorPixels": "0",
+          "totalPixels": "22400"
+        },
+        "MIRROR_WideL_Camera": {
+          "mirror": "MIRROR_WideL_Camera",
+          "interiorPixels": "0",
+          "totalPixels": "17822"
+        },
+        "MIRROR_WideR_Camera": {
+          "mirror": "MIRROR_WideR_Camera",
+          "interiorPixels": "0",
+          "totalPixels": "17822"
+        },
+        "MIRROR_Kerb_Camera": {
+          "mirror": "MIRROR_Kerb_Camera",
+          "interiorPixels": "3366",
+          "totalPixels": "13442"
+        },
+        "MIRROR_Front_Camera": {
+          "mirror": "MIRROR_Front_Camera",
+          "interiorPixels": "5364",
+          "totalPixels": "22848"
+        }
+      },
+      "interior_after": {
+        "MIRROR_MainL_Camera": {
+          "mirror": "MIRROR_MainL_Camera",
+          "interiorPixels": "0",
+          "totalPixels": "22400"
+        },
+        "MIRROR_MainR_Camera": {
+          "mirror": "MIRROR_MainR_Camera",
+          "interiorPixels": "0",
+          "totalPixels": "22400"
+        },
+        "MIRROR_WideL_Camera": {
+          "mirror": "MIRROR_WideL_Camera",
+          "interiorPixels": "0",
+          "totalPixels": "17822"
+        },
+        "MIRROR_WideR_Camera": {
+          "mirror": "MIRROR_WideR_Camera",
+          "interiorPixels": "0",
+          "totalPixels": "17822"
+        },
+        "MIRROR_Kerb_Camera": {
+          "mirror": "MIRROR_Kerb_Camera",
+          "interiorPixels": "0",
+          "totalPixels": "13442"
+        },
+        "MIRROR_Front_Camera": {
+          "mirror": "MIRROR_Front_Camera",
+          "interiorPixels": "0",
+          "totalPixels": "22848"
+        }
+      },
+      "native_budget_before": {
+        "MIRROR_MainL_Camera": {
+          "regular_draws": 94,
+          "shadow_draws": 0,
+          "regular_triangles": 94000,
+          "instanced_draws": 98,
+          "instanced_triangles": 4741
+        },
+        "MIRROR_MainR_Camera": {
+          "regular_draws": 88,
+          "shadow_draws": 0,
+          "regular_triangles": 102000,
+          "instanced_draws": 97,
+          "instanced_triangles": 6083
+        },
+        "MIRROR_WideL_Camera": {
+          "regular_draws": 107,
+          "shadow_draws": 0,
+          "regular_triangles": 95000,
+          "instanced_draws": 91,
+          "instanced_triangles": 4472
+        },
+        "MIRROR_WideR_Camera": {
+          "regular_draws": 106,
+          "shadow_draws": 0,
+          "regular_triangles": 95000,
+          "instanced_draws": 75,
+          "instanced_triangles": 4374
+        },
+        "MIRROR_Kerb_Camera": {
+          "regular_draws": 83,
+          "shadow_draws": 0,
+          "regular_triangles": 172000,
+          "instanced_draws": 79,
+          "instanced_triangles": 7526
+        },
+        "MIRROR_Front_Camera": {
+          "regular_draws": 120,
+          "shadow_draws": 0,
+          "regular_triangles": 178000,
+          "instanced_draws": 102,
+          "instanced_triangles": 6660
+        }
+      },
+      "native_budget_after": {
+        "MIRROR_MainL_Camera": {
+          "regular_draws": 94,
+          "shadow_draws": 0,
+          "regular_triangles": 95000,
+          "instanced_draws": 98,
+          "instanced_triangles": 4741
+        },
+        "MIRROR_MainR_Camera": {
+          "regular_draws": 88,
+          "shadow_draws": 0,
+          "regular_triangles": 103000,
+          "instanced_draws": 97,
+          "instanced_triangles": 6083
+        },
+        "MIRROR_WideL_Camera": {
+          "regular_draws": 107,
+          "shadow_draws": 0,
+          "regular_triangles": 95000,
+          "instanced_draws": 91,
+          "instanced_triangles": 4472
+        },
+        "MIRROR_WideR_Camera": {
+          "regular_draws": 106,
+          "shadow_draws": 0,
+          "regular_triangles": 95000,
+          "instanced_draws": 75,
+          "instanced_triangles": 4374
+        },
+        "MIRROR_Kerb_Camera": {
+          "regular_draws": 77,
+          "shadow_draws": 0,
+          "regular_triangles": 91000,
+          "instanced_draws": 79,
+          "instanced_triangles": 7526
+        },
+        "MIRROR_Front_Camera": {
+          "regular_draws": 100,
+          "shadow_draws": 0,
+          "regular_triangles": 82000,
+          "instanced_draws": 102,
+          "instanced_triangles": 6660
+        }
+      },
+      "native_budget_delta": {
+        "MIRROR_MainL_Camera": {
+          "regular_draws": 0,
+          "shadow_draws": 0,
+          "regular_triangles": 1000,
+          "instanced_draws": 0,
+          "instanced_triangles": 0
+        },
+        "MIRROR_MainR_Camera": {
+          "regular_draws": 0,
+          "shadow_draws": 0,
+          "regular_triangles": 1000,
+          "instanced_draws": 0,
+          "instanced_triangles": 0
+        },
+        "MIRROR_WideL_Camera": {
+          "regular_draws": 0,
+          "shadow_draws": 0,
+          "regular_triangles": 0,
+          "instanced_draws": 0,
+          "instanced_triangles": 0
+        },
+        "MIRROR_WideR_Camera": {
+          "regular_draws": 0,
+          "shadow_draws": 0,
+          "regular_triangles": 0,
+          "instanced_draws": 0,
+          "instanced_triangles": 0
+        },
+        "MIRROR_Kerb_Camera": {
+          "regular_draws": -6,
+          "shadow_draws": 0,
+          "regular_triangles": -81000,
+          "instanced_draws": 0,
+          "instanced_triangles": 0
+        },
+        "MIRROR_Front_Camera": {
+          "regular_draws": -20,
+          "shadow_draws": 0,
+          "regular_triangles": -96000,
+          "instanced_draws": 0,
+          "instanced_triangles": 0
+        }
+      }
+    },
+    "Low-overcast": {
+      "before": {
+        "cab-dash": {
+          "regular_draws": 426,
+          "shadow_draws": 105,
+          "regular_triangles": 335000,
+          "instanced_draws": 441,
+          "instanced_triangles": 30000
+        },
+        "cab-driver": {
+          "regular_draws": 433,
+          "shadow_draws": 105,
+          "regular_triangles": 342000,
+          "instanced_draws": 429,
+          "instanced_triangles": 31000
+        },
+        "cab-grain": {
+          "regular_draws": 111,
+          "shadow_draws": 108,
+          "regular_triangles": 195000,
+          "instanced_draws": 102,
+          "instanced_triangles": 6000
+        },
+        "cab-mirror-front": {
+          "regular_draws": 422,
+          "shadow_draws": 108,
+          "regular_triangles": 489000,
+          "instanced_draws": 331,
+          "instanced_triangles": 15000
+        },
+        "cab-mirrors-left": {
+          "regular_draws": 209,
+          "shadow_draws": 108,
+          "regular_triangles": 324000,
+          "instanced_draws": 256,
+          "instanced_triangles": 15000
+        },
+        "cab-mirrors-right": {
+          "regular_draws": 312,
+          "shadow_draws": 108,
+          "regular_triangles": 410000,
+          "instanced_draws": 292,
+          "instanced_triangles": 16000
+        },
+        "cab-seat-entry": {
+          "regular_draws": 93,
+          "shadow_draws": 108,
+          "regular_triangles": 195000,
+          "instanced_draws": 71,
+          "instanced_triangles": 6000
+        }
+      },
+      "after": {
+        "cab-dash": {
+          "regular_draws": 426,
+          "shadow_draws": 105,
+          "regular_triangles": 335000,
+          "instanced_draws": 441,
+          "instanced_triangles": 30000
+        },
+        "cab-driver": {
+          "regular_draws": 433,
+          "shadow_draws": 105,
+          "regular_triangles": 342000,
+          "instanced_draws": 429,
+          "instanced_triangles": 31000
+        },
+        "cab-grain": {
+          "regular_draws": 111,
+          "shadow_draws": 108,
+          "regular_triangles": 195000,
+          "instanced_draws": 102,
+          "instanced_triangles": 6000
+        },
+        "cab-mirror-front": {
+          "regular_draws": 422,
+          "shadow_draws": 108,
+          "regular_triangles": 490000,
+          "instanced_draws": 331,
+          "instanced_triangles": 15000
+        },
+        "cab-mirrors-left": {
+          "regular_draws": 209,
+          "shadow_draws": 108,
+          "regular_triangles": 324000,
+          "instanced_draws": 256,
+          "instanced_triangles": 15000
+        },
+        "cab-mirrors-right": {
+          "regular_draws": 312,
+          "shadow_draws": 108,
+          "regular_triangles": 410000,
+          "instanced_draws": 292,
+          "instanced_triangles": 16000
+        },
+        "cab-seat-entry": {
+          "regular_draws": 93,
+          "shadow_draws": 108,
+          "regular_triangles": 196000,
+          "instanced_draws": 71,
+          "instanced_triangles": 6000
+        }
+      },
+      "delta": {
+        "cab-dash": {
+          "regular_draws": 0,
+          "shadow_draws": 0,
+          "regular_triangles": 0,
+          "instanced_draws": 0,
+          "instanced_triangles": 0
+        },
+        "cab-driver": {
+          "regular_draws": 0,
+          "shadow_draws": 0,
+          "regular_triangles": 0,
+          "instanced_draws": 0,
+          "instanced_triangles": 0
+        },
+        "cab-grain": {
+          "regular_draws": 0,
+          "shadow_draws": 0,
+          "regular_triangles": 0,
+          "instanced_draws": 0,
+          "instanced_triangles": 0
+        },
+        "cab-mirror-front": {
+          "regular_draws": 0,
+          "shadow_draws": 0,
+          "regular_triangles": 1000,
+          "instanced_draws": 0,
+          "instanced_triangles": 0
+        },
+        "cab-mirrors-left": {
+          "regular_draws": 0,
+          "shadow_draws": 0,
+          "regular_triangles": 0,
+          "instanced_draws": 0,
+          "instanced_triangles": 0
+        },
+        "cab-mirrors-right": {
+          "regular_draws": 0,
+          "shadow_draws": 0,
+          "regular_triangles": 0,
+          "instanced_draws": 0,
+          "instanced_triangles": 0
+        },
+        "cab-seat-entry": {
+          "regular_draws": 0,
+          "shadow_draws": 0,
+          "regular_triangles": 1000,
+          "instanced_draws": 0,
+          "instanced_triangles": 0
+        }
+      },
+      "mirror_configuration_before": {
+        "MIRROR_MainL_Camera": {
+          "mirror": "MIRROR_MainL_Camera",
+          "class": "2",
+          "width": "100",
+          "height": "224",
+          "fovV": "50.391",
+          "aspect": "0.42333",
+          "near": "1.067",
+          "far": "150.0",
+          "lodScale": "1.00",
+          "cap": "1",
+          "intervalDrivingFrames": "4",
+          "intervalStandingFrames": "4"
+        },
+        "MIRROR_MainR_Camera": {
+          "mirror": "MIRROR_MainR_Camera",
+          "class": "2",
+          "width": "100",
+          "height": "224",
+          "fovV": "39.595",
+          "aspect": "0.43088",
+          "near": "2.061",
+          "far": "150.0",
+          "lodScale": "1.00",
+          "cap": "1",
+          "intervalDrivingFrames": "4",
+          "intervalStandingFrames": "4"
+        },
+        "MIRROR_WideL_Camera": {
+          "mirror": "MIRROR_WideL_Camera",
+          "class": "4",
+          "width": "133",
+          "height": "134",
+          "fovV": "74.017",
+          "aspect": "0.98636",
+          "near": "1.115",
+          "far": "75.0",
+          "lodScale": "1.00",
+          "cap": "1",
+          "intervalDrivingFrames": "8",
+          "intervalStandingFrames": "16"
+        },
+        "MIRROR_WideR_Camera": {
+          "mirror": "MIRROR_WideR_Camera",
+          "class": "4",
+          "width": "133",
+          "height": "134",
+          "fovV": "69.440",
+          "aspect": "0.98685",
+          "near": "2.087",
+          "far": "75.0",
+          "lodScale": "1.00",
+          "cap": "1",
+          "intervalDrivingFrames": "8",
+          "intervalStandingFrames": "16"
+        },
+        "MIRROR_Kerb_Camera": {
+          "mirror": "MIRROR_Kerb_Camera",
+          "class": "5",
+          "width": "143",
+          "height": "94",
+          "fovV": "47.609",
+          "aspect": "1.65398",
+          "near": "1.973",
+          "far": "75.0",
+          "lodScale": "1.00",
+          "cap": "1",
+          "intervalDrivingFrames": "8",
+          "intervalStandingFrames": "32"
+        },
+        "MIRROR_Front_Camera": {
+          "mirror": "MIRROR_Front_Camera",
+          "class": "6",
+          "width": "192",
+          "height": "119",
+          "fovV": "60.124",
+          "aspect": "1.95907",
+          "near": "1.881",
+          "far": "75.0",
+          "lodScale": "1.00",
+          "cap": "1",
+          "intervalDrivingFrames": "8",
+          "intervalStandingFrames": "32"
+        }
+      },
+      "mirror_configuration_after": {
+        "MIRROR_MainL_Camera": {
+          "mirror": "MIRROR_MainL_Camera",
+          "class": "2",
+          "width": "100",
+          "height": "224",
+          "fovV": "50.391",
+          "aspect": "0.42333",
+          "near": "1.067",
+          "far": "150.0",
+          "lodScale": "1.00",
+          "cap": "1",
+          "intervalDrivingFrames": "4",
+          "intervalStandingFrames": "4"
+        },
+        "MIRROR_MainR_Camera": {
+          "mirror": "MIRROR_MainR_Camera",
+          "class": "2",
+          "width": "100",
+          "height": "224",
+          "fovV": "39.595",
+          "aspect": "0.43088",
+          "near": "2.061",
+          "far": "150.0",
+          "lodScale": "1.00",
+          "cap": "1",
+          "intervalDrivingFrames": "4",
+          "intervalStandingFrames": "4"
+        },
+        "MIRROR_WideL_Camera": {
+          "mirror": "MIRROR_WideL_Camera",
+          "class": "4",
+          "width": "133",
+          "height": "134",
+          "fovV": "74.017",
+          "aspect": "0.98636",
+          "near": "1.115",
+          "far": "75.0",
+          "lodScale": "1.00",
+          "cap": "1",
+          "intervalDrivingFrames": "8",
+          "intervalStandingFrames": "16"
+        },
+        "MIRROR_WideR_Camera": {
+          "mirror": "MIRROR_WideR_Camera",
+          "class": "4",
+          "width": "133",
+          "height": "134",
+          "fovV": "69.440",
+          "aspect": "0.98685",
+          "near": "2.087",
+          "far": "75.0",
+          "lodScale": "1.00",
+          "cap": "1",
+          "intervalDrivingFrames": "8",
+          "intervalStandingFrames": "16"
+        },
+        "MIRROR_Kerb_Camera": {
+          "mirror": "MIRROR_Kerb_Camera",
+          "class": "5",
+          "width": "143",
+          "height": "94",
+          "fovV": "47.609",
+          "aspect": "1.65398",
+          "near": "0.100",
+          "far": "75.0",
+          "lodScale": "1.00",
+          "cap": "1",
+          "intervalDrivingFrames": "8",
+          "intervalStandingFrames": "32"
+        },
+        "MIRROR_Front_Camera": {
+          "mirror": "MIRROR_Front_Camera",
+          "class": "6",
+          "width": "192",
+          "height": "119",
+          "fovV": "60.124",
+          "aspect": "1.95907",
+          "near": "0.100",
+          "far": "75.0",
+          "lodScale": "1.00",
+          "cap": "1",
+          "intervalDrivingFrames": "8",
+          "intervalStandingFrames": "32"
+        }
+      },
+      "interior_before": {
+        "MIRROR_MainL_Camera": {
+          "mirror": "MIRROR_MainL_Camera",
+          "interiorPixels": "0",
+          "totalPixels": "22400"
+        },
+        "MIRROR_MainR_Camera": {
+          "mirror": "MIRROR_MainR_Camera",
+          "interiorPixels": "0",
+          "totalPixels": "22400"
+        },
+        "MIRROR_WideL_Camera": {
+          "mirror": "MIRROR_WideL_Camera",
+          "interiorPixels": "0",
+          "totalPixels": "17822"
+        },
+        "MIRROR_WideR_Camera": {
+          "mirror": "MIRROR_WideR_Camera",
+          "interiorPixels": "0",
+          "totalPixels": "17822"
+        },
+        "MIRROR_Kerb_Camera": {
+          "mirror": "MIRROR_Kerb_Camera",
+          "interiorPixels": "3372",
+          "totalPixels": "13442"
+        },
+        "MIRROR_Front_Camera": {
+          "mirror": "MIRROR_Front_Camera",
+          "interiorPixels": "5364",
+          "totalPixels": "22848"
+        }
+      },
+      "interior_after": {
+        "MIRROR_MainL_Camera": {
+          "mirror": "MIRROR_MainL_Camera",
+          "interiorPixels": "0",
+          "totalPixels": "22400"
+        },
+        "MIRROR_MainR_Camera": {
+          "mirror": "MIRROR_MainR_Camera",
+          "interiorPixels": "0",
+          "totalPixels": "22400"
+        },
+        "MIRROR_WideL_Camera": {
+          "mirror": "MIRROR_WideL_Camera",
+          "interiorPixels": "0",
+          "totalPixels": "17822"
+        },
+        "MIRROR_WideR_Camera": {
+          "mirror": "MIRROR_WideR_Camera",
+          "interiorPixels": "0",
+          "totalPixels": "17822"
+        },
+        "MIRROR_Kerb_Camera": {
+          "mirror": "MIRROR_Kerb_Camera",
+          "interiorPixels": "0",
+          "totalPixels": "13442"
+        },
+        "MIRROR_Front_Camera": {
+          "mirror": "MIRROR_Front_Camera",
+          "interiorPixels": "0",
+          "totalPixels": "22848"
+        }
+      },
+      "native_budget_before": {
+        "MIRROR_MainL_Camera": {
+          "regular_draws": 94,
+          "shadow_draws": 0,
+          "regular_triangles": 94000,
+          "instanced_draws": 98,
+          "instanced_triangles": 4741
+        },
+        "MIRROR_MainR_Camera": {
+          "regular_draws": 88,
+          "shadow_draws": 0,
+          "regular_triangles": 102000,
+          "instanced_draws": 97,
+          "instanced_triangles": 6083
+        },
+        "MIRROR_WideL_Camera": {
+          "regular_draws": 107,
+          "shadow_draws": 0,
+          "regular_triangles": 95000,
+          "instanced_draws": 91,
+          "instanced_triangles": 4472
+        },
+        "MIRROR_WideR_Camera": {
+          "regular_draws": 106,
+          "shadow_draws": 0,
+          "regular_triangles": 95000,
+          "instanced_draws": 75,
+          "instanced_triangles": 4374
+        },
+        "MIRROR_Kerb_Camera": {
+          "regular_draws": 83,
+          "shadow_draws": 0,
+          "regular_triangles": 172000,
+          "instanced_draws": 79,
+          "instanced_triangles": 7526
+        },
+        "MIRROR_Front_Camera": {
+          "regular_draws": 120,
+          "shadow_draws": 0,
+          "regular_triangles": 178000,
+          "instanced_draws": 102,
+          "instanced_triangles": 6660
+        }
+      },
+      "native_budget_after": {
+        "MIRROR_MainL_Camera": {
+          "regular_draws": 94,
+          "shadow_draws": 0,
+          "regular_triangles": 95000,
+          "instanced_draws": 98,
+          "instanced_triangles": 4741
+        },
+        "MIRROR_MainR_Camera": {
+          "regular_draws": 88,
+          "shadow_draws": 0,
+          "regular_triangles": 103000,
+          "instanced_draws": 97,
+          "instanced_triangles": 6083
+        },
+        "MIRROR_WideL_Camera": {
+          "regular_draws": 107,
+          "shadow_draws": 0,
+          "regular_triangles": 95000,
+          "instanced_draws": 91,
+          "instanced_triangles": 4472
+        },
+        "MIRROR_WideR_Camera": {
+          "regular_draws": 106,
+          "shadow_draws": 0,
+          "regular_triangles": 95000,
+          "instanced_draws": 75,
+          "instanced_triangles": 4374
+        },
+        "MIRROR_Kerb_Camera": {
+          "regular_draws": 77,
+          "shadow_draws": 0,
+          "regular_triangles": 91000,
+          "instanced_draws": 79,
+          "instanced_triangles": 7526
+        },
+        "MIRROR_Front_Camera": {
+          "regular_draws": 100,
+          "shadow_draws": 0,
+          "regular_triangles": 82000,
+          "instanced_draws": 102,
+          "instanced_triangles": 6660
+        }
+      },
+      "native_budget_delta": {
+        "MIRROR_MainL_Camera": {
+          "regular_draws": 0,
+          "shadow_draws": 0,
+          "regular_triangles": 1000,
+          "instanced_draws": 0,
+          "instanced_triangles": 0
+        },
+        "MIRROR_MainR_Camera": {
+          "regular_draws": 0,
+          "shadow_draws": 0,
+          "regular_triangles": 1000,
+          "instanced_draws": 0,
+          "instanced_triangles": 0
+        },
+        "MIRROR_WideL_Camera": {
+          "regular_draws": 0,
+          "shadow_draws": 0,
+          "regular_triangles": 0,
+          "instanced_draws": 0,
+          "instanced_triangles": 0
+        },
+        "MIRROR_WideR_Camera": {
+          "regular_draws": 0,
+          "shadow_draws": 0,
+          "regular_triangles": 0,
+          "instanced_draws": 0,
+          "instanced_triangles": 0
+        },
+        "MIRROR_Kerb_Camera": {
+          "regular_draws": -6,
+          "shadow_draws": 0,
+          "regular_triangles": -81000,
+          "instanced_draws": 0,
+          "instanced_triangles": 0
+        },
+        "MIRROR_Front_Camera": {
+          "regular_draws": -20,
+          "shadow_draws": 0,
+          "regular_triangles": -96000,
+          "instanced_draws": 0,
+          "instanced_triangles": 0
+        }
+      }
+    },
+    "High-clear": {
+      "before": {
+        "cab-dash": {
+          "regular_draws": 786,
+          "shadow_draws": 480,
+          "regular_triangles": 1389000,
+          "instanced_draws": 687,
+          "instanced_triangles": 72000
+        },
+        "cab-driver": {
+          "regular_draws": 747,
+          "shadow_draws": 480,
+          "regular_triangles": 1371000,
+          "instanced_draws": 669,
+          "instanced_triangles": 71000
+        },
+        "cab-grain": {
+          "regular_draws": 112,
+          "shadow_draws": 480,
+          "regular_triangles": 420000,
+          "instanced_draws": 120,
+          "instanced_triangles": 16000
+        },
+        "cab-mirror-front": {
+          "regular_draws": 980,
+          "shadow_draws": 480,
+          "regular_triangles": 2498000,
+          "instanced_draws": 489,
+          "instanced_triangles": 47000
+        },
+        "cab-mirrors-left": {
+          "regular_draws": 241,
+          "shadow_draws": 480,
+          "regular_triangles": 827000,
+          "instanced_draws": 333,
+          "instanced_triangles": 30000
+        },
+        "cab-mirrors-right": {
+          "regular_draws": 853,
+          "shadow_draws": 480,
+          "regular_triangles": 2308000,
+          "instanced_draws": 377,
+          "instanced_triangles": 46000
+        },
+        "cab-seat-entry": {
+          "regular_draws": 98,
+          "shadow_draws": 480,
+          "regular_triangles": 451000,
+          "instanced_draws": 84,
+          "instanced_triangles": 14000
+        }
+      },
+      "after": {
+        "cab-dash": {
+          "regular_draws": 786,
+          "shadow_draws": 480,
+          "regular_triangles": 1390000,
+          "instanced_draws": 687,
+          "instanced_triangles": 72000
+        },
+        "cab-driver": {
+          "regular_draws": 747,
+          "shadow_draws": 480,
+          "regular_triangles": 1371000,
+          "instanced_draws": 669,
+          "instanced_triangles": 71000
+        },
+        "cab-grain": {
+          "regular_draws": 112,
+          "shadow_draws": 480,
+          "regular_triangles": 420000,
+          "instanced_draws": 120,
+          "instanced_triangles": 16000
+        },
+        "cab-mirror-front": {
+          "regular_draws": 980,
+          "shadow_draws": 480,
+          "regular_triangles": 2498000,
+          "instanced_draws": 489,
+          "instanced_triangles": 47000
+        },
+        "cab-mirrors-left": {
+          "regular_draws": 241,
+          "shadow_draws": 480,
+          "regular_triangles": 828000,
+          "instanced_draws": 333,
+          "instanced_triangles": 30000
+        },
+        "cab-mirrors-right": {
+          "regular_draws": 853,
+          "shadow_draws": 480,
+          "regular_triangles": 2308000,
+          "instanced_draws": 377,
+          "instanced_triangles": 46000
+        },
+        "cab-seat-entry": {
+          "regular_draws": 98,
+          "shadow_draws": 480,
+          "regular_triangles": 451000,
+          "instanced_draws": 84,
+          "instanced_triangles": 14000
+        }
+      },
+      "delta": {
+        "cab-dash": {
+          "regular_draws": 0,
+          "shadow_draws": 0,
+          "regular_triangles": 1000,
+          "instanced_draws": 0,
+          "instanced_triangles": 0
+        },
+        "cab-driver": {
+          "regular_draws": 0,
+          "shadow_draws": 0,
+          "regular_triangles": 0,
+          "instanced_draws": 0,
+          "instanced_triangles": 0
+        },
+        "cab-grain": {
+          "regular_draws": 0,
+          "shadow_draws": 0,
+          "regular_triangles": 0,
+          "instanced_draws": 0,
+          "instanced_triangles": 0
+        },
+        "cab-mirror-front": {
+          "regular_draws": 0,
+          "shadow_draws": 0,
+          "regular_triangles": 0,
+          "instanced_draws": 0,
+          "instanced_triangles": 0
+        },
+        "cab-mirrors-left": {
+          "regular_draws": 0,
+          "shadow_draws": 0,
+          "regular_triangles": 1000,
+          "instanced_draws": 0,
+          "instanced_triangles": 0
+        },
+        "cab-mirrors-right": {
+          "regular_draws": 0,
+          "shadow_draws": 0,
+          "regular_triangles": 0,
+          "instanced_draws": 0,
+          "instanced_triangles": 0
+        },
+        "cab-seat-entry": {
+          "regular_draws": 0,
+          "shadow_draws": 0,
+          "regular_triangles": 0,
+          "instanced_draws": 0,
+          "instanced_triangles": 0
+        }
+      },
+      "mirror_configuration_before": {
+        "MIRROR_MainL_Camera": {
+          "mirror": "MIRROR_MainL_Camera",
+          "class": "2",
+          "width": "171",
+          "height": "384",
+          "fovV": "50.391",
+          "aspect": "0.42333",
+          "near": "1.067",
+          "far": "400.0",
+          "lodScale": "0.50",
+          "cap": "2",
+          "intervalDrivingFrames": "2",
+          "intervalStandingFrames": "2"
+        },
+        "MIRROR_MainR_Camera": {
+          "mirror": "MIRROR_MainR_Camera",
+          "class": "2",
+          "width": "171",
+          "height": "384",
+          "fovV": "39.595",
+          "aspect": "0.43088",
+          "near": "2.061",
+          "far": "400.0",
+          "lodScale": "0.50",
+          "cap": "2",
+          "intervalDrivingFrames": "2",
+          "intervalStandingFrames": "2"
+        },
+        "MIRROR_WideL_Camera": {
+          "mirror": "MIRROR_WideL_Camera",
+          "class": "4",
+          "width": "228",
+          "height": "230",
+          "fovV": "74.017",
+          "aspect": "0.98636",
+          "near": "1.115",
+          "far": "200.0",
+          "lodScale": "0.30",
+          "cap": "2",
+          "intervalDrivingFrames": "4",
+          "intervalStandingFrames": "8"
+        },
+        "MIRROR_WideR_Camera": {
+          "mirror": "MIRROR_WideR_Camera",
+          "class": "4",
+          "width": "228",
+          "height": "230",
+          "fovV": "69.440",
+          "aspect": "0.98685",
+          "near": "2.087",
+          "far": "200.0",
+          "lodScale": "0.30",
+          "cap": "2",
+          "intervalDrivingFrames": "4",
+          "intervalStandingFrames": "8"
+        },
+        "MIRROR_Kerb_Camera": {
+          "mirror": "MIRROR_Kerb_Camera",
+          "class": "5",
+          "width": "246",
+          "height": "162",
+          "fovV": "47.609",
+          "aspect": "1.65398",
+          "near": "1.973",
+          "far": "200.0",
+          "lodScale": "0.30",
+          "cap": "2",
+          "intervalDrivingFrames": "4",
+          "intervalStandingFrames": "16"
+        },
+        "MIRROR_Front_Camera": {
+          "mirror": "MIRROR_Front_Camera",
+          "class": "6",
+          "width": "328",
+          "height": "203",
+          "fovV": "60.124",
+          "aspect": "1.95907",
+          "near": "1.881",
+          "far": "200.0",
+          "lodScale": "0.30",
+          "cap": "2",
+          "intervalDrivingFrames": "4",
+          "intervalStandingFrames": "16"
+        }
+      },
+      "mirror_configuration_after": {
+        "MIRROR_MainL_Camera": {
+          "mirror": "MIRROR_MainL_Camera",
+          "class": "2",
+          "width": "171",
+          "height": "384",
+          "fovV": "50.391",
+          "aspect": "0.42333",
+          "near": "1.067",
+          "far": "400.0",
+          "lodScale": "0.50",
+          "cap": "2",
+          "intervalDrivingFrames": "2",
+          "intervalStandingFrames": "2"
+        },
+        "MIRROR_MainR_Camera": {
+          "mirror": "MIRROR_MainR_Camera",
+          "class": "2",
+          "width": "171",
+          "height": "384",
+          "fovV": "39.595",
+          "aspect": "0.43088",
+          "near": "2.061",
+          "far": "400.0",
+          "lodScale": "0.50",
+          "cap": "2",
+          "intervalDrivingFrames": "2",
+          "intervalStandingFrames": "2"
+        },
+        "MIRROR_WideL_Camera": {
+          "mirror": "MIRROR_WideL_Camera",
+          "class": "4",
+          "width": "228",
+          "height": "230",
+          "fovV": "74.017",
+          "aspect": "0.98636",
+          "near": "1.115",
+          "far": "200.0",
+          "lodScale": "0.30",
+          "cap": "2",
+          "intervalDrivingFrames": "4",
+          "intervalStandingFrames": "8"
+        },
+        "MIRROR_WideR_Camera": {
+          "mirror": "MIRROR_WideR_Camera",
+          "class": "4",
+          "width": "228",
+          "height": "230",
+          "fovV": "69.440",
+          "aspect": "0.98685",
+          "near": "2.087",
+          "far": "200.0",
+          "lodScale": "0.30",
+          "cap": "2",
+          "intervalDrivingFrames": "4",
+          "intervalStandingFrames": "8"
+        },
+        "MIRROR_Kerb_Camera": {
+          "mirror": "MIRROR_Kerb_Camera",
+          "class": "5",
+          "width": "246",
+          "height": "162",
+          "fovV": "47.609",
+          "aspect": "1.65398",
+          "near": "0.100",
+          "far": "200.0",
+          "lodScale": "0.30",
+          "cap": "2",
+          "intervalDrivingFrames": "4",
+          "intervalStandingFrames": "16"
+        },
+        "MIRROR_Front_Camera": {
+          "mirror": "MIRROR_Front_Camera",
+          "class": "6",
+          "width": "328",
+          "height": "203",
+          "fovV": "60.124",
+          "aspect": "1.95907",
+          "near": "0.100",
+          "far": "200.0",
+          "lodScale": "0.30",
+          "cap": "2",
+          "intervalDrivingFrames": "4",
+          "intervalStandingFrames": "16"
+        }
+      },
+      "interior_before": {
+        "MIRROR_MainL_Camera": {
+          "mirror": "MIRROR_MainL_Camera",
+          "interiorPixels": "0",
+          "totalPixels": "65664"
+        },
+        "MIRROR_MainR_Camera": {
+          "mirror": "MIRROR_MainR_Camera",
+          "interiorPixels": "0",
+          "totalPixels": "65664"
+        },
+        "MIRROR_WideL_Camera": {
+          "mirror": "MIRROR_WideL_Camera",
+          "interiorPixels": "0",
+          "totalPixels": "52440"
+        },
+        "MIRROR_WideR_Camera": {
+          "mirror": "MIRROR_WideR_Camera",
+          "interiorPixels": "0",
+          "totalPixels": "52440"
+        },
+        "MIRROR_Kerb_Camera": {
+          "mirror": "MIRROR_Kerb_Camera",
+          "interiorPixels": "9992",
+          "totalPixels": "39852"
+        },
+        "MIRROR_Front_Camera": {
+          "mirror": "MIRROR_Front_Camera",
+          "interiorPixels": "15648",
+          "totalPixels": "66584"
+        }
+      },
+      "interior_after": {
+        "MIRROR_MainL_Camera": {
+          "mirror": "MIRROR_MainL_Camera",
+          "interiorPixels": "0",
+          "totalPixels": "65664"
+        },
+        "MIRROR_MainR_Camera": {
+          "mirror": "MIRROR_MainR_Camera",
+          "interiorPixels": "0",
+          "totalPixels": "65664"
+        },
+        "MIRROR_WideL_Camera": {
+          "mirror": "MIRROR_WideL_Camera",
+          "interiorPixels": "0",
+          "totalPixels": "52440"
+        },
+        "MIRROR_WideR_Camera": {
+          "mirror": "MIRROR_WideR_Camera",
+          "interiorPixels": "0",
+          "totalPixels": "52440"
+        },
+        "MIRROR_Kerb_Camera": {
+          "mirror": "MIRROR_Kerb_Camera",
+          "interiorPixels": "0",
+          "totalPixels": "39852"
+        },
+        "MIRROR_Front_Camera": {
+          "mirror": "MIRROR_Front_Camera",
+          "interiorPixels": "0",
+          "totalPixels": "66584"
+        }
+      },
+      "native_budget_before": {
+        "MIRROR_MainL_Camera": {
+          "regular_draws": 142,
+          "shadow_draws": 0,
+          "regular_triangles": 426000,
+          "instanced_draws": 133,
+          "instanced_triangles": 15700
+        },
+        "MIRROR_MainR_Camera": {
+          "regular_draws": 100,
+          "shadow_draws": 0,
+          "regular_triangles": 490000,
+          "instanced_draws": 131,
+          "instanced_triangles": 16706
+        },
+        "MIRROR_WideL_Camera": {
+          "regular_draws": 114,
+          "shadow_draws": 0,
+          "regular_triangles": 277000,
+          "instanced_draws": 109,
+          "instanced_triangles": 9026
+        },
+        "MIRROR_WideR_Camera": {
+          "regular_draws": 139,
+          "shadow_draws": 0,
+          "regular_triangles": 265000,
+          "instanced_draws": 136,
+          "instanced_triangles": 10303
+        },
+        "MIRROR_Kerb_Camera": {
+          "regular_draws": 108,
+          "shadow_draws": 0,
+          "regular_triangles": 394000,
+          "instanced_draws": 79,
+          "instanced_triangles": 8888
+        },
+        "MIRROR_Front_Camera": {
+          "regular_draws": 126,
+          "shadow_draws": 0,
+          "regular_triangles": 359000,
+          "instanced_draws": 102,
+          "instanced_triangles": 6658
+        }
+      },
+      "native_budget_after": {
+        "MIRROR_MainL_Camera": {
+          "regular_draws": 142,
+          "shadow_draws": 0,
+          "regular_triangles": 427000,
+          "instanced_draws": 133,
+          "instanced_triangles": 15700
+        },
+        "MIRROR_MainR_Camera": {
+          "regular_draws": 100,
+          "shadow_draws": 0,
+          "regular_triangles": 490000,
+          "instanced_draws": 131,
+          "instanced_triangles": 16706
+        },
+        "MIRROR_WideL_Camera": {
+          "regular_draws": 114,
+          "shadow_draws": 0,
+          "regular_triangles": 278000,
+          "instanced_draws": 109,
+          "instanced_triangles": 9026
+        },
+        "MIRROR_WideR_Camera": {
+          "regular_draws": 139,
+          "shadow_draws": 0,
+          "regular_triangles": 265000,
+          "instanced_draws": 136,
+          "instanced_triangles": 10303
+        },
+        "MIRROR_Kerb_Camera": {
+          "regular_draws": 102,
+          "shadow_draws": 0,
+          "regular_triangles": 314000,
+          "instanced_draws": 79,
+          "instanced_triangles": 8888
+        },
+        "MIRROR_Front_Camera": {
+          "regular_draws": 106,
+          "shadow_draws": 0,
+          "regular_triangles": 263000,
+          "instanced_draws": 102,
+          "instanced_triangles": 6658
+        }
+      },
+      "native_budget_delta": {
+        "MIRROR_MainL_Camera": {
+          "regular_draws": 0,
+          "shadow_draws": 0,
+          "regular_triangles": 1000,
+          "instanced_draws": 0,
+          "instanced_triangles": 0
+        },
+        "MIRROR_MainR_Camera": {
+          "regular_draws": 0,
+          "shadow_draws": 0,
+          "regular_triangles": 0,
+          "instanced_draws": 0,
+          "instanced_triangles": 0
+        },
+        "MIRROR_WideL_Camera": {
+          "regular_draws": 0,
+          "shadow_draws": 0,
+          "regular_triangles": 1000,
+          "instanced_draws": 0,
+          "instanced_triangles": 0
+        },
+        "MIRROR_WideR_Camera": {
+          "regular_draws": 0,
+          "shadow_draws": 0,
+          "regular_triangles": 0,
+          "instanced_draws": 0,
+          "instanced_triangles": 0
+        },
+        "MIRROR_Kerb_Camera": {
+          "regular_draws": -6,
+          "shadow_draws": 0,
+          "regular_triangles": -80000,
+          "instanced_draws": 0,
+          "instanced_triangles": 0
+        },
+        "MIRROR_Front_Camera": {
+          "regular_draws": -20,
+          "shadow_draws": 0,
+          "regular_triangles": -96000,
+          "instanced_draws": 0,
+          "instanced_triangles": 0
+        }
+      }
+    },
+    "High-overcast": {
+      "before": {
+        "cab-dash": {
+          "regular_draws": 786,
+          "shadow_draws": 480,
+          "regular_triangles": 1389000,
+          "instanced_draws": 687,
+          "instanced_triangles": 72000
+        },
+        "cab-driver": {
+          "regular_draws": 747,
+          "shadow_draws": 480,
+          "regular_triangles": 1371000,
+          "instanced_draws": 669,
+          "instanced_triangles": 71000
+        },
+        "cab-grain": {
+          "regular_draws": 112,
+          "shadow_draws": 480,
+          "regular_triangles": 420000,
+          "instanced_draws": 120,
+          "instanced_triangles": 16000
+        },
+        "cab-mirror-front": {
+          "regular_draws": 980,
+          "shadow_draws": 480,
+          "regular_triangles": 2498000,
+          "instanced_draws": 489,
+          "instanced_triangles": 47000
+        },
+        "cab-mirrors-left": {
+          "regular_draws": 241,
+          "shadow_draws": 480,
+          "regular_triangles": 827000,
+          "instanced_draws": 333,
+          "instanced_triangles": 30000
+        },
+        "cab-mirrors-right": {
+          "regular_draws": 853,
+          "shadow_draws": 480,
+          "regular_triangles": 2308000,
+          "instanced_draws": 377,
+          "instanced_triangles": 46000
+        },
+        "cab-seat-entry": {
+          "regular_draws": 98,
+          "shadow_draws": 480,
+          "regular_triangles": 451000,
+          "instanced_draws": 84,
+          "instanced_triangles": 14000
+        }
+      },
+      "after": {
+        "cab-dash": {
+          "regular_draws": 786,
+          "shadow_draws": 480,
+          "regular_triangles": 1390000,
+          "instanced_draws": 687,
+          "instanced_triangles": 72000
+        },
+        "cab-driver": {
+          "regular_draws": 747,
+          "shadow_draws": 480,
+          "regular_triangles": 1371000,
+          "instanced_draws": 669,
+          "instanced_triangles": 71000
+        },
+        "cab-grain": {
+          "regular_draws": 112,
+          "shadow_draws": 480,
+          "regular_triangles": 420000,
+          "instanced_draws": 120,
+          "instanced_triangles": 16000
+        },
+        "cab-mirror-front": {
+          "regular_draws": 980,
+          "shadow_draws": 480,
+          "regular_triangles": 2498000,
+          "instanced_draws": 489,
+          "instanced_triangles": 47000
+        },
+        "cab-mirrors-left": {
+          "regular_draws": 241,
+          "shadow_draws": 480,
+          "regular_triangles": 828000,
+          "instanced_draws": 333,
+          "instanced_triangles": 30000
+        },
+        "cab-mirrors-right": {
+          "regular_draws": 853,
+          "shadow_draws": 480,
+          "regular_triangles": 2308000,
+          "instanced_draws": 377,
+          "instanced_triangles": 46000
+        },
+        "cab-seat-entry": {
+          "regular_draws": 98,
+          "shadow_draws": 480,
+          "regular_triangles": 451000,
+          "instanced_draws": 84,
+          "instanced_triangles": 14000
+        }
+      },
+      "delta": {
+        "cab-dash": {
+          "regular_draws": 0,
+          "shadow_draws": 0,
+          "regular_triangles": 1000,
+          "instanced_draws": 0,
+          "instanced_triangles": 0
+        },
+        "cab-driver": {
+          "regular_draws": 0,
+          "shadow_draws": 0,
+          "regular_triangles": 0,
+          "instanced_draws": 0,
+          "instanced_triangles": 0
+        },
+        "cab-grain": {
+          "regular_draws": 0,
+          "shadow_draws": 0,
+          "regular_triangles": 0,
+          "instanced_draws": 0,
+          "instanced_triangles": 0
+        },
+        "cab-mirror-front": {
+          "regular_draws": 0,
+          "shadow_draws": 0,
+          "regular_triangles": 0,
+          "instanced_draws": 0,
+          "instanced_triangles": 0
+        },
+        "cab-mirrors-left": {
+          "regular_draws": 0,
+          "shadow_draws": 0,
+          "regular_triangles": 1000,
+          "instanced_draws": 0,
+          "instanced_triangles": 0
+        },
+        "cab-mirrors-right": {
+          "regular_draws": 0,
+          "shadow_draws": 0,
+          "regular_triangles": 0,
+          "instanced_draws": 0,
+          "instanced_triangles": 0
+        },
+        "cab-seat-entry": {
+          "regular_draws": 0,
+          "shadow_draws": 0,
+          "regular_triangles": 0,
+          "instanced_draws": 0,
+          "instanced_triangles": 0
+        }
+      },
+      "mirror_configuration_before": {
+        "MIRROR_MainL_Camera": {
+          "mirror": "MIRROR_MainL_Camera",
+          "class": "2",
+          "width": "171",
+          "height": "384",
+          "fovV": "50.391",
+          "aspect": "0.42333",
+          "near": "1.067",
+          "far": "400.0",
+          "lodScale": "0.50",
+          "cap": "2",
+          "intervalDrivingFrames": "2",
+          "intervalStandingFrames": "2"
+        },
+        "MIRROR_MainR_Camera": {
+          "mirror": "MIRROR_MainR_Camera",
+          "class": "2",
+          "width": "171",
+          "height": "384",
+          "fovV": "39.595",
+          "aspect": "0.43088",
+          "near": "2.061",
+          "far": "400.0",
+          "lodScale": "0.50",
+          "cap": "2",
+          "intervalDrivingFrames": "2",
+          "intervalStandingFrames": "2"
+        },
+        "MIRROR_WideL_Camera": {
+          "mirror": "MIRROR_WideL_Camera",
+          "class": "4",
+          "width": "228",
+          "height": "230",
+          "fovV": "74.017",
+          "aspect": "0.98636",
+          "near": "1.115",
+          "far": "200.0",
+          "lodScale": "0.30",
+          "cap": "2",
+          "intervalDrivingFrames": "4",
+          "intervalStandingFrames": "8"
+        },
+        "MIRROR_WideR_Camera": {
+          "mirror": "MIRROR_WideR_Camera",
+          "class": "4",
+          "width": "228",
+          "height": "230",
+          "fovV": "69.440",
+          "aspect": "0.98685",
+          "near": "2.087",
+          "far": "200.0",
+          "lodScale": "0.30",
+          "cap": "2",
+          "intervalDrivingFrames": "4",
+          "intervalStandingFrames": "8"
+        },
+        "MIRROR_Kerb_Camera": {
+          "mirror": "MIRROR_Kerb_Camera",
+          "class": "5",
+          "width": "246",
+          "height": "162",
+          "fovV": "47.609",
+          "aspect": "1.65398",
+          "near": "1.973",
+          "far": "200.0",
+          "lodScale": "0.30",
+          "cap": "2",
+          "intervalDrivingFrames": "4",
+          "intervalStandingFrames": "16"
+        },
+        "MIRROR_Front_Camera": {
+          "mirror": "MIRROR_Front_Camera",
+          "class": "6",
+          "width": "328",
+          "height": "203",
+          "fovV": "60.124",
+          "aspect": "1.95907",
+          "near": "1.881",
+          "far": "200.0",
+          "lodScale": "0.30",
+          "cap": "2",
+          "intervalDrivingFrames": "4",
+          "intervalStandingFrames": "16"
+        }
+      },
+      "mirror_configuration_after": {
+        "MIRROR_MainL_Camera": {
+          "mirror": "MIRROR_MainL_Camera",
+          "class": "2",
+          "width": "171",
+          "height": "384",
+          "fovV": "50.391",
+          "aspect": "0.42333",
+          "near": "1.067",
+          "far": "400.0",
+          "lodScale": "0.50",
+          "cap": "2",
+          "intervalDrivingFrames": "2",
+          "intervalStandingFrames": "2"
+        },
+        "MIRROR_MainR_Camera": {
+          "mirror": "MIRROR_MainR_Camera",
+          "class": "2",
+          "width": "171",
+          "height": "384",
+          "fovV": "39.595",
+          "aspect": "0.43088",
+          "near": "2.061",
+          "far": "400.0",
+          "lodScale": "0.50",
+          "cap": "2",
+          "intervalDrivingFrames": "2",
+          "intervalStandingFrames": "2"
+        },
+        "MIRROR_WideL_Camera": {
+          "mirror": "MIRROR_WideL_Camera",
+          "class": "4",
+          "width": "228",
+          "height": "230",
+          "fovV": "74.017",
+          "aspect": "0.98636",
+          "near": "1.115",
+          "far": "200.0",
+          "lodScale": "0.30",
+          "cap": "2",
+          "intervalDrivingFrames": "4",
+          "intervalStandingFrames": "8"
+        },
+        "MIRROR_WideR_Camera": {
+          "mirror": "MIRROR_WideR_Camera",
+          "class": "4",
+          "width": "228",
+          "height": "230",
+          "fovV": "69.440",
+          "aspect": "0.98685",
+          "near": "2.087",
+          "far": "200.0",
+          "lodScale": "0.30",
+          "cap": "2",
+          "intervalDrivingFrames": "4",
+          "intervalStandingFrames": "8"
+        },
+        "MIRROR_Kerb_Camera": {
+          "mirror": "MIRROR_Kerb_Camera",
+          "class": "5",
+          "width": "246",
+          "height": "162",
+          "fovV": "47.609",
+          "aspect": "1.65398",
+          "near": "0.100",
+          "far": "200.0",
+          "lodScale": "0.30",
+          "cap": "2",
+          "intervalDrivingFrames": "4",
+          "intervalStandingFrames": "16"
+        },
+        "MIRROR_Front_Camera": {
+          "mirror": "MIRROR_Front_Camera",
+          "class": "6",
+          "width": "328",
+          "height": "203",
+          "fovV": "60.124",
+          "aspect": "1.95907",
+          "near": "0.100",
+          "far": "200.0",
+          "lodScale": "0.30",
+          "cap": "2",
+          "intervalDrivingFrames": "4",
+          "intervalStandingFrames": "16"
+        }
+      },
+      "interior_before": {
+        "MIRROR_MainL_Camera": {
+          "mirror": "MIRROR_MainL_Camera",
+          "interiorPixels": "0",
+          "totalPixels": "65664"
+        },
+        "MIRROR_MainR_Camera": {
+          "mirror": "MIRROR_MainR_Camera",
+          "interiorPixels": "0",
+          "totalPixels": "65664"
+        },
+        "MIRROR_WideL_Camera": {
+          "mirror": "MIRROR_WideL_Camera",
+          "interiorPixels": "0",
+          "totalPixels": "52440"
+        },
+        "MIRROR_WideR_Camera": {
+          "mirror": "MIRROR_WideR_Camera",
+          "interiorPixels": "0",
+          "totalPixels": "52440"
+        },
+        "MIRROR_Kerb_Camera": {
+          "mirror": "MIRROR_Kerb_Camera",
+          "interiorPixels": "10010",
+          "totalPixels": "39852"
+        },
+        "MIRROR_Front_Camera": {
+          "mirror": "MIRROR_Front_Camera",
+          "interiorPixels": "15648",
+          "totalPixels": "66584"
+        }
+      },
+      "interior_after": {
+        "MIRROR_MainL_Camera": {
+          "mirror": "MIRROR_MainL_Camera",
+          "interiorPixels": "0",
+          "totalPixels": "65664"
+        },
+        "MIRROR_MainR_Camera": {
+          "mirror": "MIRROR_MainR_Camera",
+          "interiorPixels": "0",
+          "totalPixels": "65664"
+        },
+        "MIRROR_WideL_Camera": {
+          "mirror": "MIRROR_WideL_Camera",
+          "interiorPixels": "0",
+          "totalPixels": "52440"
+        },
+        "MIRROR_WideR_Camera": {
+          "mirror": "MIRROR_WideR_Camera",
+          "interiorPixels": "0",
+          "totalPixels": "52440"
+        },
+        "MIRROR_Kerb_Camera": {
+          "mirror": "MIRROR_Kerb_Camera",
+          "interiorPixels": "0",
+          "totalPixels": "39852"
+        },
+        "MIRROR_Front_Camera": {
+          "mirror": "MIRROR_Front_Camera",
+          "interiorPixels": "0",
+          "totalPixels": "66584"
+        }
+      },
+      "native_budget_before": {
+        "MIRROR_MainL_Camera": {
+          "regular_draws": 142,
+          "shadow_draws": 0,
+          "regular_triangles": 426000,
+          "instanced_draws": 133,
+          "instanced_triangles": 15700
+        },
+        "MIRROR_MainR_Camera": {
+          "regular_draws": 100,
+          "shadow_draws": 0,
+          "regular_triangles": 490000,
+          "instanced_draws": 131,
+          "instanced_triangles": 16706
+        },
+        "MIRROR_WideL_Camera": {
+          "regular_draws": 114,
+          "shadow_draws": 0,
+          "regular_triangles": 277000,
+          "instanced_draws": 109,
+          "instanced_triangles": 9026
+        },
+        "MIRROR_WideR_Camera": {
+          "regular_draws": 139,
+          "shadow_draws": 0,
+          "regular_triangles": 265000,
+          "instanced_draws": 136,
+          "instanced_triangles": 10303
+        },
+        "MIRROR_Kerb_Camera": {
+          "regular_draws": 108,
+          "shadow_draws": 0,
+          "regular_triangles": 394000,
+          "instanced_draws": 79,
+          "instanced_triangles": 8888
+        },
+        "MIRROR_Front_Camera": {
+          "regular_draws": 126,
+          "shadow_draws": 0,
+          "regular_triangles": 359000,
+          "instanced_draws": 102,
+          "instanced_triangles": 6658
+        }
+      },
+      "native_budget_after": {
+        "MIRROR_MainL_Camera": {
+          "regular_draws": 142,
+          "shadow_draws": 0,
+          "regular_triangles": 427000,
+          "instanced_draws": 133,
+          "instanced_triangles": 15700
+        },
+        "MIRROR_MainR_Camera": {
+          "regular_draws": 100,
+          "shadow_draws": 0,
+          "regular_triangles": 490000,
+          "instanced_draws": 131,
+          "instanced_triangles": 16706
+        },
+        "MIRROR_WideL_Camera": {
+          "regular_draws": 114,
+          "shadow_draws": 0,
+          "regular_triangles": 278000,
+          "instanced_draws": 109,
+          "instanced_triangles": 9026
+        },
+        "MIRROR_WideR_Camera": {
+          "regular_draws": 139,
+          "shadow_draws": 0,
+          "regular_triangles": 265000,
+          "instanced_draws": 136,
+          "instanced_triangles": 10303
+        },
+        "MIRROR_Kerb_Camera": {
+          "regular_draws": 102,
+          "shadow_draws": 0,
+          "regular_triangles": 314000,
+          "instanced_draws": 79,
+          "instanced_triangles": 8888
+        },
+        "MIRROR_Front_Camera": {
+          "regular_draws": 106,
+          "shadow_draws": 0,
+          "regular_triangles": 263000,
+          "instanced_draws": 102,
+          "instanced_triangles": 6658
+        }
+      },
+      "native_budget_delta": {
+        "MIRROR_MainL_Camera": {
+          "regular_draws": 0,
+          "shadow_draws": 0,
+          "regular_triangles": 1000,
+          "instanced_draws": 0,
+          "instanced_triangles": 0
+        },
+        "MIRROR_MainR_Camera": {
+          "regular_draws": 0,
+          "shadow_draws": 0,
+          "regular_triangles": 0,
+          "instanced_draws": 0,
+          "instanced_triangles": 0
+        },
+        "MIRROR_WideL_Camera": {
+          "regular_draws": 0,
+          "shadow_draws": 0,
+          "regular_triangles": 1000,
+          "instanced_draws": 0,
+          "instanced_triangles": 0
+        },
+        "MIRROR_WideR_Camera": {
+          "regular_draws": 0,
+          "shadow_draws": 0,
+          "regular_triangles": 0,
+          "instanced_draws": 0,
+          "instanced_triangles": 0
+        },
+        "MIRROR_Kerb_Camera": {
+          "regular_draws": -6,
+          "shadow_draws": 0,
+          "regular_triangles": -80000,
+          "instanced_draws": 0,
+          "instanced_triangles": 0
+        },
+        "MIRROR_Front_Camera": {
+          "regular_draws": -20,
+          "shadow_draws": 0,
+          "regular_triangles": -96000,
+          "instanced_draws": 0,
+          "instanced_triangles": 0
+        }
+      }
+    }
+  },
+  "all_route_cameras": {
+    "count": 78,
+    "before": {
+      "biezenstwa-above": {
+        "regular_draws": 338,
+        "shadow_draws": 49,
+        "regular_triangles": 264000,
+        "instanced_draws": 429,
+        "instanced_triangles": 41000
+      },
+      "cab-dash": {
+        "regular_draws": 426,
+        "shadow_draws": 105,
+        "regular_triangles": 335000,
+        "instanced_draws": 441,
+        "instanced_triangles": 30000
+      },
+      "cab-driver": {
+        "regular_draws": 433,
+        "shadow_draws": 105,
+        "regular_triangles": 342000,
+        "instanced_draws": 429,
+        "instanced_triangles": 31000
+      },
+      "cab-gate": {
+        "regular_draws": 412,
+        "shadow_draws": 105,
+        "regular_triangles": 351000,
+        "instanced_draws": 429,
+        "instanced_triangles": 31000
+      },
+      "cab-grain": {
+        "regular_draws": 111,
+        "shadow_draws": 108,
+        "regular_triangles": 195000,
+        "instanced_draws": 102,
+        "instanced_triangles": 6000
+      },
+      "cab-left": {
+        "regular_draws": 200,
+        "shadow_draws": 105,
+        "regular_triangles": 260000,
+        "instanced_draws": 288,
+        "instanced_triangles": 19000
+      },
+      "cab-materials": {
+        "regular_draws": 118,
+        "shadow_draws": 108,
+        "regular_triangles": 212000,
+        "instanced_draws": 183,
+        "instanced_triangles": 8000
+      },
+      "cab-mirror-front": {
+        "regular_draws": 422,
+        "shadow_draws": 108,
+        "regular_triangles": 489000,
+        "instanced_draws": 331,
+        "instanced_triangles": 15000
+      },
+      "cab-mirrors-left": {
+        "regular_draws": 209,
+        "shadow_draws": 108,
+        "regular_triangles": 324000,
+        "instanced_draws": 256,
+        "instanced_triangles": 15000
+      },
+      "cab-mirrors-right": {
+        "regular_draws": 312,
+        "shadow_draws": 108,
+        "regular_triangles": 410000,
+        "instanced_draws": 292,
+        "instanced_triangles": 16000
+      },
+      "cab-right": {
+        "regular_draws": 414,
+        "shadow_draws": 105,
+        "regular_triangles": 353000,
+        "instanced_draws": 461,
+        "instanced_triangles": 33000
+      },
+      "cab-seat": {
+        "regular_draws": 156,
+        "shadow_draws": 108,
+        "regular_triangles": 210000,
+        "instanced_draws": 174,
+        "instanced_triangles": 16000
+      },
+      "cab-seat-entry": {
+        "regular_draws": 93,
+        "shadow_draws": 108,
+        "regular_triangles": 195000,
+        "instanced_draws": 71,
+        "instanced_triangles": 6000
+      },
+      "chase": {
+        "regular_draws": 451,
+        "shadow_draws": 89,
+        "regular_triangles": 295000,
+        "instanced_draws": 375,
+        "instanced_triangles": 22000
+      },
+      "dk8-dk19-exit": {
+        "regular_draws": 86,
+        "shadow_draws": 2,
+        "regular_triangles": 118000,
+        "instanced_draws": 72,
+        "instanced_triangles": 54000
+      },
+      "driver-andersa-to-putry": {
+        "regular_draws": 333,
+        "shadow_draws": 41,
+        "regular_triangles": 280000,
+        "instanced_draws": 177,
+        "instanced_triangles": 31000
+      },
+      "edge-east": {
+        "regular_draws": 49,
+        "shadow_draws": 18,
+        "regular_triangles": 84000,
+        "instanced_draws": 27,
+        "instanced_triangles": 0
+      },
+      "edge-north": {
+        "regular_draws": 47,
+        "shadow_draws": 21,
+        "regular_triangles": 71000,
+        "instanced_draws": 89,
+        "instanced_triangles": 26000
+      },
+      "edge-south": {
+        "regular_draws": 110,
+        "shadow_draws": 63,
+        "regular_triangles": 140000,
+        "instanced_draws": 33,
+        "instanced_triangles": 0
+      },
+      "edge-west": {
+        "regular_draws": 48,
+        "shadow_draws": 15,
+        "regular_triangles": 75000,
+        "instanced_draws": 68,
+        "instanced_triangles": 13000
+      },
+      "fire-station-abeam": {
+        "regular_draws": 204,
+        "shadow_draws": 39,
+        "regular_triangles": 212000,
+        "instanced_draws": 229,
+        "instanced_triangles": 44000
+      },
+      "fire-station-above": {
+        "regular_draws": 281,
+        "shadow_draws": 21,
+        "regular_triangles": 293000,
+        "instanced_draws": 212,
+        "instanced_triangles": 29000
+      },
+      "fire-station-ref7197": {
+        "regular_draws": 126,
+        "shadow_draws": 99,
+        "regular_triangles": 342000,
+        "instanced_draws": 168,
+        "instanced_triangles": 28000
+      },
+      "fire-station-route": {
+        "regular_draws": 205,
+        "shadow_draws": 74,
+        "regular_triangles": 221000,
+        "instanced_draws": 212,
+        "instanced_triangles": 48000
+      },
+      "g3a-eye-s0262": {
+        "regular_draws": 341,
+        "shadow_draws": 51,
+        "regular_triangles": 283000,
+        "instanced_draws": 339,
+        "instanced_triangles": 27000
+      },
+      "g3a-rondo-bie-approach": {
+        "regular_draws": 312,
+        "shadow_draws": 47,
+        "regular_triangles": 275000,
+        "instanced_draws": 156,
+        "instanced_triangles": 13000
+      },
+      "g3a_ext34_s0040": {
+        "regular_draws": 217,
+        "shadow_draws": 49,
+        "regular_triangles": 174000,
+        "instanced_draws": 267,
+        "instanced_triangles": 46000
+      },
+      "g3a_ext34_s0214": {
+        "regular_draws": 281,
+        "shadow_draws": 45,
+        "regular_triangles": 278000,
+        "instanced_draws": 519,
+        "instanced_triangles": 45000
+      },
+      "g3a_ext34_s0338": {
+        "regular_draws": 336,
+        "shadow_draws": 47,
+        "regular_triangles": 279000,
+        "instanced_draws": 447,
+        "instanced_triangles": 36000
+      },
+      "g3a_eye_s0012": {
+        "regular_draws": 376,
+        "shadow_draws": 103,
+        "regular_triangles": 227000,
+        "instanced_draws": 449,
+        "instanced_triangles": 31000
+      },
+      "g3a_eye_s0062": {
+        "regular_draws": 380,
+        "shadow_draws": 49,
+        "regular_triangles": 223000,
+        "instanced_draws": 443,
+        "instanced_triangles": 33000
+      },
+      "g3a_eye_s0112": {
+        "regular_draws": 388,
+        "shadow_draws": 49,
+        "regular_triangles": 252000,
+        "instanced_draws": 532,
+        "instanced_triangles": 53000
+      },
+      "g3a_eye_s0162": {
+        "regular_draws": 389,
+        "shadow_draws": 64,
+        "regular_triangles": 287000,
+        "instanced_draws": 589,
+        "instanced_triangles": 60000
+      },
+      "g3a_eye_s0212": {
+        "regular_draws": 359,
+        "shadow_draws": 59,
+        "regular_triangles": 272000,
+        "instanced_draws": 334,
+        "instanced_triangles": 18000
+      },
+      "g3a_eye_s0262": {
+        "regular_draws": 341,
+        "shadow_draws": 51,
+        "regular_triangles": 283000,
+        "instanced_draws": 339,
+        "instanced_triangles": 27000
+      },
+      "g3a_eye_s0312": {
+        "regular_draws": 329,
+        "shadow_draws": 47,
+        "regular_triangles": 277000,
+        "instanced_draws": 141,
+        "instanced_triangles": 12000
+      },
+      "g3a_eye_s0362": {
+        "regular_draws": 456,
+        "shadow_draws": 47,
+        "regular_triangles": 300000,
+        "instanced_draws": 372,
+        "instanced_triangles": 25000
+      },
+      "g3a_eye_s0412": {
+        "regular_draws": 426,
+        "shadow_draws": 41,
+        "regular_triangles": 304000,
+        "instanced_draws": 377,
+        "instanced_triangles": 44000
+      },
+      "g3a_rondo_bie_above": {
+        "regular_draws": 237,
+        "shadow_draws": 37,
+        "regular_triangles": 269000,
+        "instanced_draws": 124,
+        "instanced_triangles": 11000
+      },
+      "g3a_rondo_bie_approach": {
+        "regular_draws": 312,
+        "shadow_draws": 47,
+        "regular_triangles": 275000,
+        "instanced_draws": 156,
+        "instanced_triangles": 13000
+      },
+      "g3b-eye-s1482": {
+        "regular_draws": 286,
+        "shadow_draws": 45,
+        "regular_triangles": 272000,
+        "instanced_draws": 169,
+        "instanced_triangles": 37000
+      },
+      "g3b-rondo-putry-approach": {
+        "regular_draws": 296,
+        "shadow_draws": 72,
+        "regular_triangles": 274000,
+        "instanced_draws": 142,
+        "instanced_triangles": 22000
+      },
+      "g3b_ext34_s1272": {
+        "regular_draws": 340,
+        "shadow_draws": 60,
+        "regular_triangles": 243000,
+        "instanced_draws": 321,
+        "instanced_triangles": 25000
+      },
+      "g3b_ext34_s1482": {
+        "regular_draws": 375,
+        "shadow_draws": 45,
+        "regular_triangles": 299000,
+        "instanced_draws": 202,
+        "instanced_triangles": 24000
+      },
+      "g3b_ext34_s1658": {
+        "regular_draws": 350,
+        "shadow_draws": 141,
+        "regular_triangles": 374000,
+        "instanced_draws": 143,
+        "instanced_triangles": 16000
+      },
+      "g3b_eye_s1232": {
+        "regular_draws": 369,
+        "shadow_draws": 36,
+        "regular_triangles": 323000,
+        "instanced_draws": 176,
+        "instanced_triangles": 34000
+      },
+      "g3b_eye_s1282": {
+        "regular_draws": 263,
+        "shadow_draws": 74,
+        "regular_triangles": 262000,
+        "instanced_draws": 241,
+        "instanced_triangles": 31000
+      },
+      "g3b_eye_s1332": {
+        "regular_draws": 249,
+        "shadow_draws": 39,
+        "regular_triangles": 234000,
+        "instanced_draws": 229,
+        "instanced_triangles": 33000
+      },
+      "g3b_eye_s1382": {
+        "regular_draws": 264,
+        "shadow_draws": 34,
+        "regular_triangles": 234000,
+        "instanced_draws": 188,
+        "instanced_triangles": 32000
+      },
+      "g3b_eye_s1432": {
+        "regular_draws": 277,
+        "shadow_draws": 45,
+        "regular_triangles": 269000,
+        "instanced_draws": 205,
+        "instanced_triangles": 35000
+      },
+      "g3b_eye_s1482": {
+        "regular_draws": 286,
+        "shadow_draws": 45,
+        "regular_triangles": 272000,
+        "instanced_draws": 169,
+        "instanced_triangles": 37000
+      },
+      "g3b_eye_s1532": {
+        "regular_draws": 302,
+        "shadow_draws": 45,
+        "regular_triangles": 281000,
+        "instanced_draws": 146,
+        "instanced_triangles": 22000
+      },
+      "g3b_eye_s1582": {
+        "regular_draws": 296,
+        "shadow_draws": 72,
+        "regular_triangles": 281000,
+        "instanced_draws": 125,
+        "instanced_triangles": 24000
+      },
+      "g3b_eye_s1632": {
+        "regular_draws": 254,
+        "shadow_draws": 141,
+        "regular_triangles": 279000,
+        "instanced_draws": 129,
+        "instanced_triangles": 25000
+      },
+      "g3b_eye_s1682": {
+        "regular_draws": 187,
+        "shadow_draws": 67,
+        "regular_triangles": 210000,
+        "instanced_draws": 145,
+        "instanced_triangles": 27000
+      },
+      "g3b_rondo_put_above": {
+        "regular_draws": 180,
+        "shadow_draws": 0,
+        "regular_triangles": 229000,
+        "instanced_draws": 88,
+        "instanced_triangles": 6000
+      },
+      "g3b_rondo_put_approach": {
+        "regular_draws": 215,
+        "shadow_draws": 141,
+        "regular_triangles": 217000,
+        "instanced_draws": 128,
+        "instanced_triangles": 11000
+      },
+      "g3b_rondo_putry_approach": {
+        "regular_draws": 296,
+        "shadow_draws": 72,
+        "regular_triangles": 274000,
+        "instanced_draws": 142,
+        "instanced_triangles": 22000
+      },
+      "kwadrat-park-gate": {
+        "regular_draws": 232,
+        "shadow_draws": 51,
+        "regular_triangles": 193000,
+        "instanced_draws": 495,
+        "instanced_triangles": 45000
+      },
+      "photo-biezenstwa-ground": {
+        "regular_draws": 341,
+        "shadow_draws": 47,
+        "regular_triangles": 284000,
+        "instanced_draws": 154,
+        "instanced_triangles": 12000
+      },
+      "putry-above": {
+        "regular_draws": 300,
+        "shadow_draws": 0,
+        "regular_triangles": 344000,
+        "instanced_draws": 178,
+        "instanced_triangles": 12000
+      },
+      "route-onramp-andersa": {
+        "regular_draws": 385,
+        "shadow_draws": 31,
+        "regular_triangles": 248000,
+        "instanced_draws": 373,
+        "instanced_triangles": 60000
+      },
+      "route-onramp-andersa-above": {
+        "regular_draws": 301,
+        "shadow_draws": 31,
+        "regular_triangles": 250000,
+        "instanced_draws": 375,
+        "instanced_triangles": 72000
+      },
+      "route-putry-approach": {
+        "regular_draws": 302,
+        "shadow_draws": 45,
+        "regular_triangles": 281000,
+        "instanced_draws": 139,
+        "instanced_triangles": 27000
+      },
+      "route-putry-entry-signs": {
+        "regular_draws": 197,
+        "shadow_draws": 141,
+        "regular_triangles": 191000,
+        "instanced_draws": 149,
+        "instanced_triangles": 19000
+      },
+      "stretch-01": {
+        "regular_draws": 376,
+        "shadow_draws": 103,
+        "regular_triangles": 227000,
+        "instanced_draws": 449,
+        "instanced_triangles": 31000
+      },
+      "stretch-02": {
+        "regular_draws": 358,
+        "shadow_draws": 64,
+        "regular_triangles": 283000,
+        "instanced_draws": 588,
+        "instanced_triangles": 58000
+      },
+      "stretch-03": {
+        "regular_draws": 341,
+        "shadow_draws": 51,
+        "regular_triangles": 283000,
+        "instanced_draws": 339,
+        "instanced_triangles": 26000
+      },
+      "stretch-04": {
+        "regular_draws": 456,
+        "shadow_draws": 47,
+        "regular_triangles": 300000,
+        "instanced_draws": 368,
+        "instanced_triangles": 26000
+      },
+      "stretch-05-docks": {
+        "regular_draws": 252,
+        "shadow_draws": 64,
+        "regular_triangles": 238000,
+        "instanced_draws": 760,
+        "instanced_triangles": 100000
+      },
+      "trailer-34": {
+        "regular_draws": 476,
+        "shadow_draws": 89,
+        "regular_triangles": 324000,
+        "instanced_draws": 399,
+        "instanced_triangles": 30000
+      },
+      "trailer-side": {
+        "regular_draws": 251,
+        "shadow_draws": 89,
+        "regular_triangles": 199000,
+        "instanced_draws": 318,
+        "instanced_triangles": 28000
+      },
+      "truck-34": {
+        "regular_draws": 229,
+        "shadow_draws": 130,
+        "regular_triangles": 299000,
+        "instanced_draws": 262,
+        "instanced_triangles": 34000
+      },
+      "truck-34r": {
+        "regular_draws": 148,
+        "shadow_draws": 100,
+        "regular_triangles": 213000,
+        "instanced_draws": 128,
+        "instanced_triangles": 11000
+      },
+      "truck-at-gate": {
+        "regular_draws": 150,
+        "shadow_draws": 100,
+        "regular_triangles": 218000,
+        "instanced_draws": 129,
+        "instanced_triangles": 15000
+      },
+      "truck-front": {
+        "regular_draws": 188,
+        "shadow_draws": 108,
+        "regular_triangles": 251000,
+        "instanced_draws": 125,
+        "instanced_triangles": 15000
+      },
+      "truck-rear34": {
+        "regular_draws": 460,
+        "shadow_draws": 108,
+        "regular_triangles": 456000,
+        "instanced_draws": 388,
+        "instanced_triangles": 20000
+      },
+      "truck-side": {
+        "regular_draws": 321,
+        "shadow_draws": 108,
+        "regular_triangles": 363000,
+        "instanced_draws": 305,
+        "instanced_triangles": 25000
+      }
+    },
+    "after": {
+      "biezenstwa-above": {
+        "regular_draws": 338,
+        "shadow_draws": 49,
+        "regular_triangles": 265000,
+        "instanced_draws": 429,
+        "instanced_triangles": 41000
+      },
+      "cab-dash": {
+        "regular_draws": 426,
+        "shadow_draws": 105,
+        "regular_triangles": 335000,
+        "instanced_draws": 441,
+        "instanced_triangles": 30000
+      },
+      "cab-driver": {
+        "regular_draws": 433,
+        "shadow_draws": 105,
+        "regular_triangles": 342000,
+        "instanced_draws": 429,
+        "instanced_triangles": 31000
+      },
+      "cab-gate": {
+        "regular_draws": 412,
+        "shadow_draws": 105,
+        "regular_triangles": 351000,
+        "instanced_draws": 429,
+        "instanced_triangles": 31000
+      },
+      "cab-grain": {
+        "regular_draws": 111,
+        "shadow_draws": 108,
+        "regular_triangles": 195000,
+        "instanced_draws": 102,
+        "instanced_triangles": 6000
+      },
+      "cab-left": {
+        "regular_draws": 200,
+        "shadow_draws": 105,
+        "regular_triangles": 260000,
+        "instanced_draws": 288,
+        "instanced_triangles": 19000
+      },
+      "cab-materials": {
+        "regular_draws": 118,
+        "shadow_draws": 108,
+        "regular_triangles": 213000,
+        "instanced_draws": 183,
+        "instanced_triangles": 8000
+      },
+      "cab-mirror-front": {
+        "regular_draws": 422,
+        "shadow_draws": 108,
+        "regular_triangles": 490000,
+        "instanced_draws": 331,
+        "instanced_triangles": 15000
+      },
+      "cab-mirrors-left": {
+        "regular_draws": 209,
+        "shadow_draws": 108,
+        "regular_triangles": 324000,
+        "instanced_draws": 256,
+        "instanced_triangles": 15000
+      },
+      "cab-mirrors-right": {
+        "regular_draws": 312,
+        "shadow_draws": 108,
+        "regular_triangles": 410000,
+        "instanced_draws": 292,
+        "instanced_triangles": 16000
+      },
+      "cab-right": {
+        "regular_draws": 414,
+        "shadow_draws": 105,
+        "regular_triangles": 353000,
+        "instanced_draws": 461,
+        "instanced_triangles": 33000
+      },
+      "cab-seat": {
+        "regular_draws": 156,
+        "shadow_draws": 108,
+        "regular_triangles": 211000,
+        "instanced_draws": 174,
+        "instanced_triangles": 16000
+      },
+      "cab-seat-entry": {
+        "regular_draws": 93,
+        "shadow_draws": 108,
+        "regular_triangles": 196000,
+        "instanced_draws": 71,
+        "instanced_triangles": 6000
+      },
+      "chase": {
+        "regular_draws": 451,
+        "shadow_draws": 89,
+        "regular_triangles": 295000,
+        "instanced_draws": 375,
+        "instanced_triangles": 22000
+      },
+      "dk8-dk19-exit": {
+        "regular_draws": 86,
+        "shadow_draws": 2,
+        "regular_triangles": 118000,
+        "instanced_draws": 72,
+        "instanced_triangles": 54000
+      },
+      "driver-andersa-to-putry": {
+        "regular_draws": 333,
+        "shadow_draws": 41,
+        "regular_triangles": 280000,
+        "instanced_draws": 177,
+        "instanced_triangles": 31000
+      },
+      "edge-east": {
+        "regular_draws": 49,
+        "shadow_draws": 18,
+        "regular_triangles": 84000,
+        "instanced_draws": 27,
+        "instanced_triangles": 0
+      },
+      "edge-north": {
+        "regular_draws": 47,
+        "shadow_draws": 21,
+        "regular_triangles": 71000,
+        "instanced_draws": 89,
+        "instanced_triangles": 26000
+      },
+      "edge-south": {
+        "regular_draws": 110,
+        "shadow_draws": 63,
+        "regular_triangles": 140000,
+        "instanced_draws": 33,
+        "instanced_triangles": 0
+      },
+      "edge-west": {
+        "regular_draws": 48,
+        "shadow_draws": 15,
+        "regular_triangles": 75000,
+        "instanced_draws": 68,
+        "instanced_triangles": 13000
+      },
+      "fire-station-abeam": {
+        "regular_draws": 204,
+        "shadow_draws": 39,
+        "regular_triangles": 212000,
+        "instanced_draws": 229,
+        "instanced_triangles": 44000
+      },
+      "fire-station-above": {
+        "regular_draws": 281,
+        "shadow_draws": 21,
+        "regular_triangles": 293000,
+        "instanced_draws": 212,
+        "instanced_triangles": 29000
+      },
+      "fire-station-ref7197": {
+        "regular_draws": 126,
+        "shadow_draws": 99,
+        "regular_triangles": 342000,
+        "instanced_draws": 168,
+        "instanced_triangles": 28000
+      },
+      "fire-station-route": {
+        "regular_draws": 205,
+        "shadow_draws": 74,
+        "regular_triangles": 221000,
+        "instanced_draws": 212,
+        "instanced_triangles": 48000
+      },
+      "g3a-eye-s0262": {
+        "regular_draws": 341,
+        "shadow_draws": 51,
+        "regular_triangles": 283000,
+        "instanced_draws": 339,
+        "instanced_triangles": 27000
+      },
+      "g3a-rondo-bie-approach": {
+        "regular_draws": 312,
+        "shadow_draws": 47,
+        "regular_triangles": 275000,
+        "instanced_draws": 156,
+        "instanced_triangles": 13000
+      },
+      "g3a_ext34_s0040": {
+        "regular_draws": 217,
+        "shadow_draws": 49,
+        "regular_triangles": 175000,
+        "instanced_draws": 267,
+        "instanced_triangles": 46000
+      },
+      "g3a_ext34_s0214": {
+        "regular_draws": 281,
+        "shadow_draws": 45,
+        "regular_triangles": 278000,
+        "instanced_draws": 519,
+        "instanced_triangles": 45000
+      },
+      "g3a_ext34_s0338": {
+        "regular_draws": 336,
+        "shadow_draws": 47,
+        "regular_triangles": 279000,
+        "instanced_draws": 447,
+        "instanced_triangles": 36000
+      },
+      "g3a_eye_s0012": {
+        "regular_draws": 376,
+        "shadow_draws": 103,
+        "regular_triangles": 227000,
+        "instanced_draws": 449,
+        "instanced_triangles": 31000
+      },
+      "g3a_eye_s0062": {
+        "regular_draws": 380,
+        "shadow_draws": 49,
+        "regular_triangles": 223000,
+        "instanced_draws": 443,
+        "instanced_triangles": 33000
+      },
+      "g3a_eye_s0112": {
+        "regular_draws": 388,
+        "shadow_draws": 49,
+        "regular_triangles": 252000,
+        "instanced_draws": 532,
+        "instanced_triangles": 53000
+      },
+      "g3a_eye_s0162": {
+        "regular_draws": 389,
+        "shadow_draws": 64,
+        "regular_triangles": 287000,
+        "instanced_draws": 589,
+        "instanced_triangles": 60000
+      },
+      "g3a_eye_s0212": {
+        "regular_draws": 359,
+        "shadow_draws": 59,
+        "regular_triangles": 272000,
+        "instanced_draws": 334,
+        "instanced_triangles": 18000
+      },
+      "g3a_eye_s0262": {
+        "regular_draws": 341,
+        "shadow_draws": 51,
+        "regular_triangles": 283000,
+        "instanced_draws": 339,
+        "instanced_triangles": 27000
+      },
+      "g3a_eye_s0312": {
+        "regular_draws": 329,
+        "shadow_draws": 47,
+        "regular_triangles": 277000,
+        "instanced_draws": 141,
+        "instanced_triangles": 12000
+      },
+      "g3a_eye_s0362": {
+        "regular_draws": 456,
+        "shadow_draws": 47,
+        "regular_triangles": 300000,
+        "instanced_draws": 372,
+        "instanced_triangles": 25000
+      },
+      "g3a_eye_s0412": {
+        "regular_draws": 426,
+        "shadow_draws": 41,
+        "regular_triangles": 304000,
+        "instanced_draws": 377,
+        "instanced_triangles": 44000
+      },
+      "g3a_rondo_bie_above": {
+        "regular_draws": 237,
+        "shadow_draws": 37,
+        "regular_triangles": 269000,
+        "instanced_draws": 124,
+        "instanced_triangles": 11000
+      },
+      "g3a_rondo_bie_approach": {
+        "regular_draws": 312,
+        "shadow_draws": 47,
+        "regular_triangles": 275000,
+        "instanced_draws": 156,
+        "instanced_triangles": 13000
+      },
+      "g3b-eye-s1482": {
+        "regular_draws": 286,
+        "shadow_draws": 45,
+        "regular_triangles": 272000,
+        "instanced_draws": 169,
+        "instanced_triangles": 37000
+      },
+      "g3b-rondo-putry-approach": {
+        "regular_draws": 296,
+        "shadow_draws": 72,
+        "regular_triangles": 274000,
+        "instanced_draws": 142,
+        "instanced_triangles": 22000
+      },
+      "g3b_ext34_s1272": {
+        "regular_draws": 340,
+        "shadow_draws": 60,
+        "regular_triangles": 243000,
+        "instanced_draws": 321,
+        "instanced_triangles": 25000
+      },
+      "g3b_ext34_s1482": {
+        "regular_draws": 375,
+        "shadow_draws": 45,
+        "regular_triangles": 299000,
+        "instanced_draws": 202,
+        "instanced_triangles": 24000
+      },
+      "g3b_ext34_s1658": {
+        "regular_draws": 350,
+        "shadow_draws": 141,
+        "regular_triangles": 374000,
+        "instanced_draws": 143,
+        "instanced_triangles": 16000
+      },
+      "g3b_eye_s1232": {
+        "regular_draws": 369,
+        "shadow_draws": 36,
+        "regular_triangles": 323000,
+        "instanced_draws": 176,
+        "instanced_triangles": 34000
+      },
+      "g3b_eye_s1282": {
+        "regular_draws": 263,
+        "shadow_draws": 74,
+        "regular_triangles": 262000,
+        "instanced_draws": 241,
+        "instanced_triangles": 31000
+      },
+      "g3b_eye_s1332": {
+        "regular_draws": 249,
+        "shadow_draws": 39,
+        "regular_triangles": 234000,
+        "instanced_draws": 229,
+        "instanced_triangles": 33000
+      },
+      "g3b_eye_s1382": {
+        "regular_draws": 264,
+        "shadow_draws": 34,
+        "regular_triangles": 234000,
+        "instanced_draws": 188,
+        "instanced_triangles": 32000
+      },
+      "g3b_eye_s1432": {
+        "regular_draws": 277,
+        "shadow_draws": 45,
+        "regular_triangles": 269000,
+        "instanced_draws": 205,
+        "instanced_triangles": 35000
+      },
+      "g3b_eye_s1482": {
+        "regular_draws": 286,
+        "shadow_draws": 45,
+        "regular_triangles": 272000,
+        "instanced_draws": 169,
+        "instanced_triangles": 37000
+      },
+      "g3b_eye_s1532": {
+        "regular_draws": 302,
+        "shadow_draws": 45,
+        "regular_triangles": 281000,
+        "instanced_draws": 146,
+        "instanced_triangles": 22000
+      },
+      "g3b_eye_s1582": {
+        "regular_draws": 296,
+        "shadow_draws": 72,
+        "regular_triangles": 281000,
+        "instanced_draws": 125,
+        "instanced_triangles": 24000
+      },
+      "g3b_eye_s1632": {
+        "regular_draws": 254,
+        "shadow_draws": 141,
+        "regular_triangles": 279000,
+        "instanced_draws": 129,
+        "instanced_triangles": 25000
+      },
+      "g3b_eye_s1682": {
+        "regular_draws": 187,
+        "shadow_draws": 67,
+        "regular_triangles": 210000,
+        "instanced_draws": 145,
+        "instanced_triangles": 27000
+      },
+      "g3b_rondo_put_above": {
+        "regular_draws": 180,
+        "shadow_draws": 0,
+        "regular_triangles": 229000,
+        "instanced_draws": 88,
+        "instanced_triangles": 6000
+      },
+      "g3b_rondo_put_approach": {
+        "regular_draws": 215,
+        "shadow_draws": 141,
+        "regular_triangles": 217000,
+        "instanced_draws": 128,
+        "instanced_triangles": 11000
+      },
+      "g3b_rondo_putry_approach": {
+        "regular_draws": 296,
+        "shadow_draws": 72,
+        "regular_triangles": 274000,
+        "instanced_draws": 142,
+        "instanced_triangles": 22000
+      },
+      "kwadrat-park-gate": {
+        "regular_draws": 232,
+        "shadow_draws": 51,
+        "regular_triangles": 193000,
+        "instanced_draws": 495,
+        "instanced_triangles": 45000
+      },
+      "photo-biezenstwa-ground": {
+        "regular_draws": 341,
+        "shadow_draws": 47,
+        "regular_triangles": 284000,
+        "instanced_draws": 154,
+        "instanced_triangles": 12000
+      },
+      "putry-above": {
+        "regular_draws": 300,
+        "shadow_draws": 0,
+        "regular_triangles": 344000,
+        "instanced_draws": 178,
+        "instanced_triangles": 12000
+      },
+      "route-onramp-andersa": {
+        "regular_draws": 385,
+        "shadow_draws": 31,
+        "regular_triangles": 248000,
+        "instanced_draws": 373,
+        "instanced_triangles": 60000
+      },
+      "route-onramp-andersa-above": {
+        "regular_draws": 301,
+        "shadow_draws": 31,
+        "regular_triangles": 250000,
+        "instanced_draws": 375,
+        "instanced_triangles": 72000
+      },
+      "route-putry-approach": {
+        "regular_draws": 302,
+        "shadow_draws": 45,
+        "regular_triangles": 281000,
+        "instanced_draws": 139,
+        "instanced_triangles": 27000
+      },
+      "route-putry-entry-signs": {
+        "regular_draws": 197,
+        "shadow_draws": 141,
+        "regular_triangles": 191000,
+        "instanced_draws": 149,
+        "instanced_triangles": 19000
+      },
+      "stretch-01": {
+        "regular_draws": 376,
+        "shadow_draws": 103,
+        "regular_triangles": 227000,
+        "instanced_draws": 449,
+        "instanced_triangles": 31000
+      },
+      "stretch-02": {
+        "regular_draws": 358,
+        "shadow_draws": 64,
+        "regular_triangles": 283000,
+        "instanced_draws": 588,
+        "instanced_triangles": 58000
+      },
+      "stretch-03": {
+        "regular_draws": 341,
+        "shadow_draws": 51,
+        "regular_triangles": 283000,
+        "instanced_draws": 339,
+        "instanced_triangles": 26000
+      },
+      "stretch-04": {
+        "regular_draws": 456,
+        "shadow_draws": 47,
+        "regular_triangles": 300000,
+        "instanced_draws": 368,
+        "instanced_triangles": 26000
+      },
+      "stretch-05-docks": {
+        "regular_draws": 252,
+        "shadow_draws": 64,
+        "regular_triangles": 238000,
+        "instanced_draws": 760,
+        "instanced_triangles": 100000
+      },
+      "trailer-34": {
+        "regular_draws": 476,
+        "shadow_draws": 89,
+        "regular_triangles": 325000,
+        "instanced_draws": 399,
+        "instanced_triangles": 30000
+      },
+      "trailer-side": {
+        "regular_draws": 251,
+        "shadow_draws": 89,
+        "regular_triangles": 199000,
+        "instanced_draws": 318,
+        "instanced_triangles": 28000
+      },
+      "truck-34": {
+        "regular_draws": 229,
+        "shadow_draws": 130,
+        "regular_triangles": 299000,
+        "instanced_draws": 262,
+        "instanced_triangles": 34000
+      },
+      "truck-34r": {
+        "regular_draws": 148,
+        "shadow_draws": 100,
+        "regular_triangles": 214000,
+        "instanced_draws": 128,
+        "instanced_triangles": 11000
+      },
+      "truck-at-gate": {
+        "regular_draws": 150,
+        "shadow_draws": 100,
+        "regular_triangles": 218000,
+        "instanced_draws": 129,
+        "instanced_triangles": 15000
+      },
+      "truck-front": {
+        "regular_draws": 188,
+        "shadow_draws": 108,
+        "regular_triangles": 251000,
+        "instanced_draws": 125,
+        "instanced_triangles": 15000
+      },
+      "truck-rear34": {
+        "regular_draws": 460,
+        "shadow_draws": 108,
+        "regular_triangles": 456000,
+        "instanced_draws": 388,
+        "instanced_triangles": 20000
+      },
+      "truck-side": {
+        "regular_draws": 321,
+        "shadow_draws": 108,
+        "regular_triangles": 363000,
+        "instanced_draws": 305,
+        "instanced_triangles": 25000
+      }
+    },
+    "delta": {
+      "biezenstwa-above": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 1000,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "cab-dash": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 0,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "cab-driver": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 0,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "cab-gate": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 0,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "cab-grain": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 0,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "cab-left": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 0,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "cab-materials": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 1000,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "cab-mirror-front": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 1000,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "cab-mirrors-left": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 0,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "cab-mirrors-right": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 0,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "cab-right": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 0,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "cab-seat": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 1000,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "cab-seat-entry": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 1000,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "chase": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 0,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "dk8-dk19-exit": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 0,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "driver-andersa-to-putry": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 0,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "edge-east": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 0,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "edge-north": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 0,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "edge-south": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 0,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "edge-west": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 0,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "fire-station-abeam": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 0,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "fire-station-above": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 0,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "fire-station-ref7197": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 0,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "fire-station-route": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 0,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "g3a-eye-s0262": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 0,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "g3a-rondo-bie-approach": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 0,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "g3a_ext34_s0040": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 1000,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "g3a_ext34_s0214": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 0,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "g3a_ext34_s0338": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 0,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "g3a_eye_s0012": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 0,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "g3a_eye_s0062": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 0,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "g3a_eye_s0112": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 0,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "g3a_eye_s0162": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 0,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "g3a_eye_s0212": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 0,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "g3a_eye_s0262": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 0,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "g3a_eye_s0312": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 0,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "g3a_eye_s0362": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 0,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "g3a_eye_s0412": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 0,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "g3a_rondo_bie_above": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 0,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "g3a_rondo_bie_approach": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 0,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "g3b-eye-s1482": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 0,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "g3b-rondo-putry-approach": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 0,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "g3b_ext34_s1272": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 0,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "g3b_ext34_s1482": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 0,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "g3b_ext34_s1658": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 0,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "g3b_eye_s1232": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 0,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "g3b_eye_s1282": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 0,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "g3b_eye_s1332": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 0,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "g3b_eye_s1382": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 0,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "g3b_eye_s1432": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 0,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "g3b_eye_s1482": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 0,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "g3b_eye_s1532": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 0,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "g3b_eye_s1582": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 0,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "g3b_eye_s1632": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 0,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "g3b_eye_s1682": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 0,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "g3b_rondo_put_above": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 0,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "g3b_rondo_put_approach": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 0,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "g3b_rondo_putry_approach": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 0,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "kwadrat-park-gate": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 0,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "photo-biezenstwa-ground": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 0,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "putry-above": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 0,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "route-onramp-andersa": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 0,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "route-onramp-andersa-above": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 0,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "route-putry-approach": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 0,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "route-putry-entry-signs": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 0,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "stretch-01": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 0,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "stretch-02": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 0,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "stretch-03": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 0,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "stretch-04": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 0,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "stretch-05-docks": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 0,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "trailer-34": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 1000,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "trailer-side": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 0,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "truck-34": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 0,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "truck-34r": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 1000,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "truck-at-gate": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 0,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "truck-front": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 0,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "truck-rear34": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 0,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      },
+      "truck-side": {
+        "regular_draws": 0,
+        "shadow_draws": 0,
+        "regular_triangles": 0,
+        "instanced_draws": 0,
+        "instanced_triangles": 0
+      }
+    }
+  },
+  "failures": [],
+  "result": "PASS"
+}

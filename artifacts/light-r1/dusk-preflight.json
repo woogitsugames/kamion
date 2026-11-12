@@ -1,0 +1,22 @@
+{
+    "jobs":  [
+                 {
+                     "cameras":  "driver-andersa-to-putry,cab-dash,r10_hall_3,r10_block_3,r10_house_2,stretch-05-docks",
+                     "lighting":  "dusk",
+                     "output":  "artifacts/light-r1/dusk-preflight/Low",
+                     "width":  2340,
+                     "tier":  "Low",
+                     "scene":  "WorldC",
+                     "height":  1080
+                 },
+                 {
+                     "cameras":  "driver-andersa-to-putry,cab-dash,r10_hall_3,r10_block_3,r10_house_2,stretch-05-docks",
+                     "lighting":  "dusk",
+                     "output":  "artifacts/light-r1/dusk-preflight/High",
+                     "width":  2340,
+                     "tier":  "High",
+                     "scene":  "WorldC_High",
+                     "height":  1080
+                 }
+             ]
+}

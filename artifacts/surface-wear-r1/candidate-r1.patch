@@ -1,0 +1,151 @@
+diff --git a/game/Assets/_Project/World/Import/WorldMeshBake.cs b/game/Assets/_Project/World/Import/WorldMeshBake.cs
+--- a/game/Assets/_Project/World/Import/WorldMeshBake.cs
++++ b/game/Assets/_Project/World/Import/WorldMeshBake.cs
+@@ -22,6 +22,8 @@
+             public bool Uv0;
+             /// <summary>TEXCOORD_1 float16×2: LOD1 far-facade window grid (ADR 0015). Zero where a primitive has none.</summary>
+             public bool Uv1;
++            /// <summary>Road-only missing data: preserve the shader no-lane sentinel; other layers keep zero defaults.</summary>
++            public bool RoadWearSentinel;
+             public bool Colors;
+         }
+ 
+@@ -63,7 +65,12 @@
+                 if (p.Normals != null) Array.Copy(p.Normals, 0, nrm, b, p.Normals.Length);
+                 else for (int i = 0; i < p.Positions.Length; i++) nrm[b + i] = Vector3.up;
+                 if (uv != null && p.Uv0 != null) Array.Copy(p.Uv0, 0, uv, b, p.Uv0.Length);
+-                if (uv1 != null && p.Uv1 != null) Array.Copy(p.Uv1, 0, uv1, b, p.Uv1.Length);
++                if (uv1 != null)
++                {
++                    if (p.Uv1 != null) Array.Copy(p.Uv1, 0, uv1, b, p.Uv1.Length);
++                    else if (o.RoadWearSentinel)
++                        for (int i = 0; i < p.Positions.Length; i++) uv1[b + i] = new Vector2(-1f, 5f);
++                }
+                 if (col != null)
+                 {
+                     if (p.Colors != null) Array.Copy(p.Colors, 0, col, b, p.Colors.Length);
+diff --git a/game/Assets/_Project/World/Import/RegionImporter.cs b/game/Assets/_Project/World/Import/RegionImporter.cs
+--- a/game/Assets/_Project/World/Import/RegionImporter.cs
++++ b/game/Assets/_Project/World/Import/RegionImporter.cs
+@@ -525,6 +525,7 @@
+                 if (nd == null || nd.Primitives.Count == 0) continue;
+                 var mats = new Material[nd.Primitives.Count];
+                 bool uv = false, uv1 = false, colors = false;
++                bool roadWear = false;
+                 for (int i = 0; i < mats.Length; i++)
+                 {
+                     string id = nd.Primitives[i].Material;
+@@ -538,11 +539,15 @@
+                         WorldPbrMaterials.Channels(def, id, out bool p0, out bool p1, out bool pc);
+                         uv |= p0 && nd.Primitives[i].Uv0 != null;
+                         uv1 |= p1 && nd.Primitives[i].Uv1 != null;
++                        // ADR0099: an all-missing road primitive still needs an explicit no-lane value.
++                        // Zero is valid lane0/edge0 and would incorrectly apply maximum gutter dirt.
++                        if (layer == "road" && p1 && (id == "road_asphalt" || id == "road_asphalt_new"))
++                        { roadWear = true; uv1 = true; }
+                         colors |= pc && nd.Primitives[i].Colors != null;
+                     }
+                 }
+                 if (layer == "wires") { uv = true; colors = true; }   // side / half width + tangent (Kamion/World Wire)
+-                Add(layer, WorldMeshBake.Compact($"{ch.Id}_{layer}", nd.Primitives, new WorldMeshBake.Options { Uv0 = uv, Uv1 = uv1, Colors = colors }), mats);
++                Add(layer, WorldMeshBake.Compact($"{ch.Id}_{layer}", nd.Primitives, new WorldMeshBake.Options { Uv0 = uv, Uv1 = uv1, Colors = colors, RoadWearSentinel = roadWear }), mats);
+             }
+         }
+ 
+diff --git a/game/Assets/_Project/Tests/EditMode/RoadWearUvContractTests.cs b/game/Assets/_Project/Tests/EditMode/RoadWearUvContractTests.cs
+new file mode 100644
+--- /dev/null
++++ b/game/Assets/_Project/Tests/EditMode/RoadWearUvContractTests.cs
+@@ -0,0 +1,85 @@
++using System;
++using System.Collections;
++using System.Collections.Generic;
++using System.Reflection;
++using NUnit.Framework;
++using UnityEditor;
++using UnityEngine;
++using UnityEngine.Rendering;
++
++namespace Game.Tests
++{
++    public class RoadWearUvContractTests
++    {
++        static Mesh Build(bool sentinel)
++        {
++            var bake=Type.GetType("Game.World.Import.WorldMeshBake, Game.World.Import.Editor",true);
++            var optionsType=bake.GetNestedType("Options");
++            var primitiveType=Type.GetType("Game.World.Import.GlbReader+Primitive, Game.World.Import.Editor",true);
++            var list=(IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(primitiveType));
++            for(int j=0;j<2;j++)
++            {
++                var primitive=Activator.CreateInstance(primitiveType);
++                primitiveType.GetField("Positions").SetValue(primitive,new[]{new Vector3(j*2,0,0),new Vector3(j*2+1,0,0),new Vector3(j*2,0,1)});
++                primitiveType.GetField("Normals").SetValue(primitive,new[]{Vector3.up,Vector3.up,Vector3.up});
++                primitiveType.GetField("Indices").SetValue(primitive,new[]{0,1,2});
++                primitiveType.GetField("Material").SetValue(primitive,"road_asphalt");
++                if(j==0)primitiveType.GetField("Uv1").SetValue(primitive,new[]{Vector2.zero,new Vector2(.5f,.25f),new Vector2(-1,5)});
++                list.Add(primitive);
++            }
++            object options=Activator.CreateInstance(optionsType);
++            optionsType.GetField("Uv1").SetValue(options,true);
++            var policy=optionsType.GetField("RoadWearSentinel");Assert.NotNull(policy);
++            policy.SetValue(options,sentinel);
++            return (Mesh)bake.GetMethod("Compact",BindingFlags.Public|BindingFlags.Static).Invoke(null,new object[]{"road-uv-contract",list,options});
++        }
++
++        static byte[] Bytes(Mesh mesh)
++        {
++            using(var data=MeshUtility.AcquireReadOnlyMeshData(mesh))return data[0].GetVertexData<byte>().ToArray();
++        }
++        static Vector2 Uv(Mesh mesh,byte[] bytes,int vertex)
++        {
++            int at=vertex*mesh.GetVertexBufferStride(0)+mesh.GetVertexAttributeOffset(VertexAttribute.TexCoord1);
++            return new Vector2(Mathf.HalfToFloat((ushort)(bytes[at]|bytes[at+1]<<8)),Mathf.HalfToFloat((ushort)(bytes[at+2]|bytes[at+3]<<8)));
++        }
++
++        [Test]
++        public void MissingRoadUvUsesSentinelButValidZeroAndExistingDataSurvive()
++        {
++            var mesh=Build(true);
++            try
++            {
++                var bytes=Bytes(mesh);
++                Assert.That(Uv(mesh,bytes,0),Is.EqualTo(Vector2.zero));
++                Assert.That(Uv(mesh,bytes,1),Is.EqualTo(new Vector2(.5f,.25f)));
++                Assert.That(Uv(mesh,bytes,2),Is.EqualTo(new Vector2(-1,5)));
++                for(int i=3;i<6;i++)Assert.That(Uv(mesh,bytes,i),Is.EqualTo(new Vector2(-1,5)));
++            }
++            finally{UnityEngine.Object.DestroyImmediate(mesh);}
++        }
++        [Test]
++        public void OtherLayersKeepTheirLegacyZeroFallback()
++        {
++            var mesh=Build(false);
++            try{var bytes=Bytes(mesh);for(int i=3;i<6;i++)Assert.That(Uv(mesh,bytes,i),Is.EqualTo(Vector2.zero));}
++            finally{UnityEngine.Object.DestroyImmediate(mesh);}
++        }
++        [Test]
++        public void PolicyChangesOnlyMissingUvBytesNotGeometryOrSubmeshes()
++        {
++            var before=Build(false);var after=Build(true);
++            try
++            {
++                Assert.That(before.vertexCount,Is.EqualTo(after.vertexCount));Assert.That(before.subMeshCount,Is.EqualTo(after.subMeshCount));
++                Assert.That(before.bounds,Is.EqualTo(after.bounds));
++                var a=Bytes(before);var b=Bytes(after);int stride=before.GetVertexBufferStride(0),offset=before.GetVertexAttributeOffset(VertexAttribute.TexCoord1);
++                for(int i=0;i<before.vertexCount;i++)for(int j=0;j<stride;j++)
++                    if(i<3||j<offset||j>=offset+4)Assert.That(a[i*stride+j],Is.EqualTo(b[i*stride+j]));
++                using(var da=MeshUtility.AcquireReadOnlyMeshData(before))using(var db=MeshUtility.AcquireReadOnlyMeshData(after))
++                    CollectionAssert.AreEqual(da[0].GetIndexData<ushort>().ToArray(),db[0].GetIndexData<ushort>().ToArray());
++            }
++            finally{UnityEngine.Object.DestroyImmediate(before);UnityEngine.Object.DestroyImmediate(after);}
++        }
++    }
++}
+diff --git a/game/Assets/_Project/Tests/EditMode/RoadWearUvContractTests.cs.meta b/game/Assets/_Project/Tests/EditMode/RoadWearUvContractTests.cs.meta
+new file mode 100644
+--- /dev/null
++++ b/game/Assets/_Project/Tests/EditMode/RoadWearUvContractTests.cs.meta
+@@ -0,0 +1,2 @@
++fileFormatVersion: 2
++guid: b7ceaebe826f541f99e7537cb3710953

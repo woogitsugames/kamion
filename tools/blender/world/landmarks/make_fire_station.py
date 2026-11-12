@@ -519,7 +519,28 @@ def wall(mb, p0, p1, z0, z1, lod, openings=(), ground=True, top=None, plinth=Non
     holes = [(o[0] - o[2] / 2, o[0] + o[2] / 2, o[1], o[1] + o[3]) for o in ops]
     segs = bands(ztop - zb, "plaster", ground=ground, lod=lod)
     u0 = round(h01(ASSET, "wall", key) * 13.0, 2)
-    surface(mb, O, S, UP, poly, segs, u0, MAT, nout, holes, t_base=zb)
+    runoff_depth = float(D["hall"].get("gable_runoff_depth_m_WORKING_VALUE", 0)) if top and key in ("hsw", "hne") and lod < 2 else 0
+    if runoff_depth > 0:
+        # The old horizontal atlas band put the drip origin at the crown even
+        # near the lower curved edges. Keep the strip attached to the flashing
+        # at every station, in the same opaque material and draw group.
+        if max((hole[3] for hole in holes), default=zb) >= min(z for _, z in top) - runoff_depth:
+            raise ValueError("Gable runoff strip intersects an opening")
+        lower_top = [(s, z-runoff_depth) for s,z in top]
+        base_poly = [(0.0,zb),(L,zb)] + list(reversed(lower_top))
+        p = LAY["plaster"]
+        clean_segs = [(a,b,p["v0"]+p["mid"][0]+.05,p["v0"]+p["mid"][1]-.05)
+                      if max(va,vb) > p["v0"]+p["base_h"]+.001 else (a,b,va,vb)
+                      for a,b,va,vb in segs]
+        surface(mb, O, S, UP, base_poly, clean_segs, u0, MAT, nout, holes, t_base=zb)
+        root_v = p["v0"]+p["h"]
+        for (sa,za),(sb,zzb) in zip(top[:-1],top[1:]):
+            mb.face([O+S*sa+UP*(za-runoff_depth),O+S*sb+UP*(zzb-runoff_depth),
+                     O+S*sb+UP*zzb,O+S*sa+UP*za],
+                    [(u0+sa,root_v-runoff_depth),(u0+sb,root_v-runoff_depth),
+                     (u0+sb,root_v),(u0+sa,root_v)],MAT,nout)
+    else:
+        surface(mb, O, S, UP, poly, segs, u0, MAT, nout, holes, t_base=zb)
     pm = LAY["plaster"]["v0"] + LAY["plaster"]["mid"][0]
     for o, h in zip(ops, holes):
         if lod == 0 and o[4] in ("arch", "round"):
@@ -1036,6 +1057,13 @@ def foliage_uv(key=0, level=0):
     return [(u,v),(u+.48,v),(u+.48,v+.38),(u,v+.38)]
 
 
+def conifer_core_uv(key=0, level=0):
+    r = LAY["conifer_core"]
+    u = r["u"][0]+.08+(key%3)*.30
+    v = r["v"][0]+.06+(level%2)*.02
+    return [(u,v),(u+.48,v),(u+.48,v+.28),(u,v+.28)]
+
+
 def build_thuja(mb, c, height, radius, key, lod):
     habit = key % 3
     profile = THUJA_HABITS[habit]
@@ -1048,15 +1076,22 @@ def build_thuja(mb, c, height, radius, key, lod):
     for layer,grow,mat in ((0,0,MAT),(1,.07,HERO_SHELL)):
         if layer and lod:
             continue
-        rings = []
+        rings, ring_normals = [], []
         for j,(f,rr) in enumerate(profile):
-            ring = []
+            ring, normals = [], []
+            lo, hi = max(0,j-1), min(len(profile)-1,j+1)
+            radius_slope = radius*(profile[hi][1]-profile[lo][1])/(height*(profile[hi][0]-profile[lo][0]))
             for i in range(sides):
                 angle = i*2*math.pi/sides + key + .24*math.sin(j)
+                direction = np.array([math.cos(angle),math.sin(angle)])
                 rad = radius*rr*(.86+.28*h01(key,j,i)) + grow
-                ring.append(c + np.r_[lean*f*f + np.array([math.cos(angle),math.sin(angle)])*rad,
+                ring.append(c + np.r_[lean*f*f + direction*rad,
                                       height*f + (grow if j == len(profile)-1 else 0)])
+                # Mesh soup duplicates corners. Join Low shading at the same
+                # positions without adding sides, triangles or material slots.
+                normals.append(np.r_[direction,-radius_slope-np.dot(direction,2*f*lean/height)])
             rings.append(ring)
+            ring_normals.append(normals)
         for j in range(1 if layer else 0,len(rings)-1):
             for i in range(sides):
                 ii = (i+1)%sides
@@ -1066,19 +1101,22 @@ def build_thuja(mb, c, height, radius, key, lod):
                     u0,u1 = (i*per+key*.37),(i+1)*per+key*.37
                     v0,v1 = profile[j][0]*height/.6,profile[j+1][0]*height/.6
                     uv = [(u0,v0),(u1,v0),(u1,v1),(u0,v1)]
+                normals = [ring_normals[j][i],ring_normals[j][ii],ring_normals[j+1][ii],ring_normals[j+1][i]] if lod else None
                 mb.face([rings[j][i],rings[j][ii],rings[j+1][ii],rings[j+1][i]],uv,mat,
-                        np.append((rings[j][i]+rings[j][ii])[:2]/2-c[:2],.15))
+                        np.append((rings[j][i]+rings[j][ii])[:2]/2-c[:2],.15),normals=normals)
 
 
 def build_conifer(mb, c, height, radius, key, lod):
-    """Root-attached short-needle boughs; Low36cards fits the original whole-plant budget.
+    """Root-attached short-needle boughs and a tiered opaque inner crown.
+
+    Low trades sparse cards for the core silhouette within the original plant budget.
 
     The scan is fir/conifer, NOT a verified Picea. Existing fire_station_alpha is already
     CullOff: one quad per bough, no mirrored duplicate and no extra Low material/batch.
     """
     u0,v0,u1,v1 = ALAY["conifer_bough"]["inner_uv"]
     for j,base_f in enumerate((.08,.17,.27,.36,.45,.55,.65,.76,.87)):
-        count = 6 if lod == 0 else 4
+        count = 6 if lod == 0 else D["spruce"].get("low_bough_counts", [4]*9)[j]
         for i in range(count):
             angle = key*.63+j*1.69+i*2*math.pi/count+.35*(h01(key,j,i,"azimuth")-.5)
             f = base_f+.04*(h01(key,j,i,"level")-.5)
@@ -1092,8 +1130,8 @@ def build_conifer(mb, c, height, radius, key, lod):
     # Continuous inner mass instead of four isolated diamonds. The broader lower third
     # and asymmetric radii carry the envelope; clipped outer sprays keep branch gaps.
     fill = D["spruce"].get("inner_core_fill_r_WORKING_VALUE", .55)
-    profile = ((.055,.42),(.27,1.0),(.60,.58),(.975,.03))
-    sides = 8 if lod == 0 else 6
+    profile = D["spruce"].get("core_profile_WORKING_VALUE", ((.055,.42),(.27,1.0),(.60,.58),(.975,.03)))
+    sides = 8 if lod == 0 else int(D["spruce"].get("low_core_sides", 5))
     rings, normals = [], []
     for j,(f,shape) in enumerate(profile):
         ring, nr = [], []
@@ -1109,7 +1147,7 @@ def build_conifer(mb, c, height, radius, key, lod):
     for j in range(len(rings)-1):
         for i in range(sides):
             ii = (i+1)%sides
-            mb.face([rings[j][i],rings[j][ii],rings[j+1][ii],rings[j+1][i]],foliage_uv(key+i,j),MAT,
+            mb.face([rings[j][i],rings[j][ii],rings[j+1][ii],rings[j+1][i]],conifer_core_uv(key+i,j),MAT,
                     np.r_[(rings[j][i]+rings[j][ii])[:2]/2-c[:2],.15],
                     normals=[normals[j][i],normals[j][ii],normals[j+1][ii],normals[j+1][i]])
     # A plain dark atlas swatch is a WORKING_VALUE trunk colour, not a claimed bark scan.

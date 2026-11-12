@@ -405,6 +405,7 @@ def build(pl, lin, net, graph, overrides, roads_poly, bpoly, origin, report, pav
                 rep["stale"].append(o["id"] + ":island")
         # --- barriers: housing on the median kerb, boom over each lane, raised (MA-003)
         bars = []
+        wear_cases = []
         strips = {}
         clos = {}
         for (c, s0, g), name in (((ce, se, ge), "entry"), ((cx, sx, gx), "exit")):
@@ -428,6 +429,7 @@ def build(pl, lin, net, graph, overrides, roads_poly, bpoly, origin, report, pav
             side_y = np.array([-math.sin(yaw_b), math.cos(yaw_b)])            # prototype +y in E, N
             t_lane = c.line.frame(s)[0] * g                                   # away from the split node along the lane
             travel_dir = t_lane if name == "exit" else -t_lane                # entry traffic runs toward the node
+            wear_cases.append({"chain": c, "station": s, "travel": travel_dir, "name": name, "src": src})
             pl.add("barrier_boom", base + side_y * LP.BOOM_SIDE, yaw_b, z=zb + LP.BOOM_HINGE[2], src=f"{src}:{name}:boom")
             pl.items[-1]["barrier"] = {"L": LP.BOOM_L, "open_deg": LP.BOOM_OPEN_DEG, "lane": name,
                                        "travel": 1.0 if float(np.dot(travel_dir, side_y)) >= 0 else -1.0}
@@ -558,6 +560,9 @@ def build(pl, lin, net, graph, overrides, roads_poly, bpoly, origin, report, pav
                     if not (p_.mat == "decal_patch" and float(np.hypot(*(p_.V[:, :2].mean(axis=0) - m))) < 14.0)]
             rep["patches_removed_at_gate"] = len(lin.buf.parts) - len(keep)
             lin.buf.parts[:] = keep
+        from .gate_wear import emit as paired_tyre_tracks
+        paired_tyre_tracks(lin.buf, wear_cases, (graph["bbox"][2]-graph["bbox"][0])*.5,
+                           [isl_poly]+[st_["poly"] for st_ in strips.values()], rep)
         rep["applied"].append({"id": o["id"], "node": o["node"], "fence_m": round(total, 1),
                                "island_m2": round(float(isl_poly.area), 1) if isl_poly is not None else 0.0,
                                "gatehouse": [round(float(v), 2) for v in placed[0]] if placed is not None else None,
