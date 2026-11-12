@@ -28,3 +28,5 @@ Krok 3a: zapisano CANDIDATE.md z dokładnym planem flag schodów, podziału ści
 Krok 4: brakujące nowe cache PBR po merge main przygotowano osobno pod heavy i zweryfikowano PNG. Zachowano własny fire_station. Własny marker zwalnia import; żaden generator nie startował po cichu z Unity.
 
 Krok 4a: import Low+High zakończony IMPORT_RESULT OK; baseline 58 kamer rozpoczęty w Low-overcast pod Unity. Przygotowano photo_pair.py, zapisujące pary 960 px i jawny status pozy UNVERIFIED, z opisem centralnego kadrowania referencji. Nie twierdzę jeszcze, że kadr odpowiada fotografii.
+
+Krok 5: baseline zakończony 58/58 w każdej z czterech kombinacji, kod wyjścia 0. Obejrzano pary referencyjne oraz detale schodów i filarów. Schody przecinają ekran; żółty pigment obejmuje również fazy. Kierunek kamery GPS 280 stopni jest niedopasowany, dlatego przed zmianą źródeł wykonuję trzy próby 295/305/315 stopni z tej samej pozycji i FOV. Bazowe 232 PNG pozostają zachowane.
