@@ -29,3 +29,12 @@ kadru i małe tarcze ograniczają ocenę detalu. Dusk to słońce-5, nie pełna 
 Rzeczywista ciężarówka nie przemieszcza się do każdej kamery diagnostycznej;
 reakcję na źródło bada osobno night-rig. Rootłącznie110/330 standardowych par.
 Low-dusk przekazano niezależnemu reviewerowi; jego ocena tego wariantu trwa.
+
+Niezależny reviewer zakończył także Low-dusk:55/55, brak nowego blokera,
+łącznie110/330. Potwierdził brak zawsze świecących tarcz i pustych obrazów;
+zmierzch, brak źródła przy kamerze i ograniczenia fotometrii pozostają jawne.
+
+Root obejrzał Low-clear01–10, wszystkie55 par. Bez oczywistej nowej regresji
+sylwetek, znikających obiektów ani halo tarcz. Drobne zużycie i mocowania są
+za małe do potwierdzenia wierności konstrukcyjnej. Rootłącznie165/330:całyLow.
+Low-clear przekazano niezależnemu reviewerowi. Trzy wariantyHigh jeszcze nieocenione.
