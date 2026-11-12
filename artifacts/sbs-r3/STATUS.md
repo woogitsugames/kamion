@@ -31,3 +31,5 @@ Przygotowano compose-gantry-probes.py do późniejszej dzierżawy heavy: galeria
 Materiały zakończone: build_all total456s, kod0 potwierdzony przejściem sekwencyjnego wrappera do build_world. Receipt materials-completed.json zapisuje SHA logu i materials_spec. Świat ruszył w tej samej dzierżawie; pierwszy log pass1:16261węzłówpokładu. To licznik generatora, nie ocena obrazu ani nowy wynik bramki.
 
 Przygotowano własny run-heavy.ps1 r3: sekwencyjne PrepareDiagnostics (dwa narzędzia, bez równoległego Pythona), kompozycja, pojedynczy plik testu, fidelity i końcowy GIS wymagający EndOfRound. Każda ścieżka Acquire/Release heavy w finally; parser poprawny. Nie uruchomiono go podczas bieżącej generacji, aby nie odświeżyć tej samej dzierżawy i nie dopuścić drugiego zadania.
+
+Bazowa generacja zakończona kodem 0 i zwolniła heavy: materiały 456 s, świat 413,7 s, brak fallback=True. baseline-completed.json wiąże SHA świata i materiałów; potwierdzono zgodność bieżącego manifestu. Następne niezależne odczyty tej samej migawki: PrepareDiagnostics w heavy oraz import w osobnej puli Unity. Nie ma drugiej generacji ani dwóch ciężkich Pythonów naszej gałęzi.
