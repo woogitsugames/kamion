@@ -28,6 +28,7 @@ namespace Game.Rendering.Editor
                     EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
                     RenderSettings.skybox = null;
                     QualityTiers.Apply(tier);
+                    new GameObject("lab tier binding").AddComponent<QualityProfileApplier>().ApplyNow();
                     var unlit = Shader.Find("Universal Render Pipeline/Unlit");
                     var waterShader = Shader.Find("Hidden/KamionLightQA/WetCubeLab");
                     if (unlit == null || waterShader == null) throw new InvalidOperationException("Missing lab shaders");
@@ -47,6 +48,7 @@ namespace Game.Rendering.Editor
                     var renderer=water.GetComponent<Renderer>(); renderer.enabled=false;
                     var material=new Material(waterShader); renderer.sharedMaterial=material;
                     var source=new GameObject("existing cube source").AddComponent<VehicleReflectionCapture>();
+                    if (!source.Enabled) throw new InvalidOperationException("Lab tier did not enable the existing capture");
                     var cubeCamera=Resources.FindObjectsOfTypeAll<Camera>().Single(c=>c.name=="CaptureCamera" && c.transform.parent!=null && c.transform.parent.name=="VehicleReflectionCapture (runtime)");
                     cubeCamera.clearFlags=CameraClearFlags.SolidColor; cubeCamera.backgroundColor=new Color(0.08f,0.12f,0.18f);
                     source.RenderAllNow(); VehicleReflectionCapture.Paused=true;
