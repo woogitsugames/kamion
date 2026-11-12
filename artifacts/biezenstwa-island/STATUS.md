@@ -34,3 +34,9 @@
   build → fidelity/swept/pytest pełny; równolegle w puli unity import + SBS + EditMode). Wynik: `logs/i2_all.out`.
   NASTĘPNY KROK: jeśli `logs/i2_all.out` nie kończy się „all done” → `bash artifacts/biezenstwa-island/scripts/all.sh i2 > artifacts/biezenstwa-island/logs/i2_all.out 2>&1`;
   potem obejrzeć `pairs_i2/`, uzupełnić „Result” w ADR 0128, `robocopy artifacts\biezenstwa-island C:\Users\matma\Documents\Claude\kamion\artifacts\biezenstwa-island /E /XF *.pkl`
+- krok 8 (16:1x): i1 obejrzane natywnie (`pairs_i1/probe_i1_low_clear_960.jpg`: D-3 z lewej, D-6 z prawej, płyta chodnika, żwirowy nos — układ jak na
+  zdjęciu 320326; żwir ciemniejszy niż na zdjęciu). `all.sh i2` w tle (nohup), czeka / działa w puli heavy.
+  NASTĘPNY KROK: `tail artifacts/biezenstwa-island/logs/i2_all.out` — gdy „all done”: obejrzeć `pairs_i2/sbs-g3-a-p0128-320326319617139_low_*.jpg`,
+  sprawdzić `logs/i2_pytest.log`, `logs/i2_editmode.log`, `swept_i2`, wpisać liczby do „Result” w `docs/adr/0128-biezenstwa-island.md`, commit, potem
+  `robocopy artifacts\biezenstwa-island C:\Users\matma\Documents\Claude\kamion\artifacts\biezenstwa-island /E /XF *.pkl`. Jeśli brak procesu i brak „all done”:
+  `bash artifacts/biezenstwa-island/scripts/all.sh i2 > artifacts/biezenstwa-island/logs/i2_all.out 2>&1`
