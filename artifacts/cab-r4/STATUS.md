@@ -62,3 +62,4 @@ Zapisano izolowany atlas legend 2x Low overcast: cab-driver/cab-dash. Plastic/Le
 Zapisano izolowany atlas legend 2x Low dusk: cab-driver/cab-dash. Plastic/Leather bez zmian. To eksperyment czytelności, nie pełny gate budżetów.
 Obejrzano legend2x-Low-overcast-left-ROI-960.png: atlas 512 praktycznie identyczny, zmiana 16/48000 pikseli. To brak potwierdzenia poprawy, nie sukces. Następna izolowana próba: oryginalny atlas Low 256 z mip bias -0,75 (WORKING_VALUE), tylko jego importer. Medium/High bez zmian; brak nowego atlasu, samplera lub przebiegu. Konfiguracja waliduje zakres [-1,0] i wymaga oddzielnego atlasu Low. MaterialPrep nadal w pojedynczej kolejce heavy.
 Zakończono Game.Editor.Setup.TruckAssetBuilder.BuildBatch, exit 0. Następny krok: kolejny etap prefab/sceny lub capture-0112 -Stage result-0112.
+Zakończono Game.World.Import.WorldTruckInstaller.InstallBatch, exit 0. Następny krok: kolejny etap prefab/sceny lub capture-0112 -Stage result-0112.
