@@ -29,3 +29,4 @@ Około 09:37 World otrzymał heavy. Log pokazuje pass1 po 76,6 s i planowanie dz
 Świeży baseline r4: świat przez heavy kod 0. Produkcja bez zmian; kolejny etap zgodnie z baseline.ps1.
 Świeży baseline r4: migawka świata i źródeł kod 0. Produkcja bez zmian; kolejny etap zgodnie z baseline.ps1.
 Świeży baseline r4: QA Megascans i wejść kod 0. Produkcja bez zmian; kolejny etap zgodnie z baseline.ps1.
+Świeży baseline r4: import przez Unity slot kod 0. Produkcja bez zmian; kolejny etap zgodnie z baseline.ps1.
