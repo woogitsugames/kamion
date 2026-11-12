@@ -238,7 +238,7 @@ namespace PhysicsRunner.Sim
             tractor.InitParking(park0);
             if (trailer != null) trailer.Brakes.InitSpringChambers(trailer.Group);
             if (trailer != null && sc.overrides.coupled) trailer.Brakes.InitServiceChambers(trailer.Group, tractor.Air.TrailerControlLine);
-            if (!opt.DisableBodyContact)
+            if (!opt.DisableBodyContact && sc.overrides.bodyContact)
             {
                 ctx.TractorContact = new BodyGroundContact(BodyGroundContact.TractorColliders(tractor.Def));
                 if (trailer != null) ctx.TrailerContact = new BodyGroundContact(BodyGroundContact.TrailerColliders(trailer.Def));
