@@ -1,4 +1,4 @@
-# ADR 0112 — Kabina: lusterka i wnętrze
+﻿# ADR 0112 — Kabina: lusterka i wnętrze
 
 ## r1 — Lusterka V/VI i mocowanie ramion
 
@@ -23,3 +23,16 @@ K3: `MirrorGlassBezel` dokłada do istniejącego submeshu Trim cztery zaokrąglo
 `comparison-0112-p2.json`: PASS czterech stanów kabiny, sześciu natywnych RT i pełnych 78 kamer Low/Gate3. Zwykłe draws i instancje są raportowane oddzielnie: wzrost drawów +0, maksymalny wzrost sumy tris 0,498%. Testy lusterek 36/36, XML `editmode-20261111-233900.xml`; pełne EditMode 276/276, XML `editmode-20261111-234613.xml`. To estymaty widoczności CPU w edytorze, nie pomiary GPU telefonu ani niezależna akceptacja wizualna.
 
 Końcowy GIS r1 pod heavy: 491 pass, 2 fail, 1 xfailed, 673,09 s. Nieaktualny raport fidelity i hash eksportu chunk 0_0 zawodziły również w pomiarze bazowym; brak zmian naprawczych poza cab. Produkty testów cofnięte, slot zwolniony. K4–K6 przechodzą do r2 z audytem UV i wariantami kanałów materiału; r1 nie zgłasza ich naprawy.
+
+## r2 — Materiały ze skanów CC0 i czytelność zużycia
+
+Stan: r2 zakończona, z otwartymi ograniczeniami K4–K6. Gałąź `gpt-cab-r2` od r1, następnie scalono aktualny main bez konfliktów. Baseline obejmuje poprawki K1–K3; budżety kolejnych wariantów liczymy względem nowego baseline, bez przypisywania zmian main materiałom kabiny. Pozostają własność plików cab oraz zakaz zmian szyb i zewnętrza.
+
+Przed obróbką skanów poprawiono sprzątanie audytu powierzchni: oryginalne referencje MeshFilter są przywracane przed zniszczeniem tymczasowych kopii. Nie zakłada to, że poprzednia awaria D3D12 była spowodowana tym błędem. Przygotowanie skanów i eksport obejmujemy heavy, owner `gpt-cab-r2`; Unity nadal pod owner `gpt-cab` zgodnie z poleceniem sesji.
+
+Końcowy wariant scan2 wykorzystuje Brown Leather Roba Tuytela z Poly Haven (CC0, pole 40 cm). FAQ dostawcy potwierdza fotograficzne metody tworzenia tekstur; konkretna metoda tego zasobu pozostaje UNVERIFIED. Skóra: crop około 12 cm; Plastic: pochodna tłoczenia ze skóry, crop 20 cm na kafel 10 cm, nie skan tworzywa deski. Amplitudy profilu są WORKING_VALUE. Kontrakt kanałów, rozdzielczości i perforacja pozostają zachowane. Obręcz ma korektę UV 5/12, piasta i atlas AO bez zmian. Nie zmienia się geometria.
+
+Tryb eksportera --textures-only odtwarza wyłącznie Plastic/Leather. Reprodukcja 12/12 SHA256 zgodna, pełne EditMode 279/279. World exit 0, 416,4 s, bez fallback=True. comparison-0112-scan2.json: PASS 28 kadrów kabiny, sześciu natywnych RT w czterech stanach i 78 kamer Low; maksymalne delty regular/instanced draws i tris wynoszą 0. To estymaty CPU edytora, nie wynik GPU telefonu. Końcowy GIS pod heavy: 521 pass, 2 fail, 1 xfailed w 663,06 s; te same dwie porażki fidelity stale i deterministyczność chunk 0_0 co w r1. Slot zwolniony, własne produkty spoza cab cofnięte.
+
+K4: UV centralnej deski bez potwierdzonego szerokiego rozciągnięcia, wariant AO bez mipów i eksperyment diffuse fill nie usunęły pasma. Eksperyment shaderowy wycofany. K5 nie odtworzono w poprawionych przekrojach zaimportowanego modelu; bez przesuwania geometrii. K6 poprawia mikroziarno, nie dodaje zużycia kontaktowego. Materiał Plastic nie zastępuje brakującego skanu konkretnego tworzywa. Otwarte ograniczenia i arkusze opisuje REPORT r2; następny backlog to nocne zegary.
+
