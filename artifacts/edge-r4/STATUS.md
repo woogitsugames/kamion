@@ -18,3 +18,4 @@ Krok 8: porównano wszystkie kamery sbs z proof z aktualnym kanonicznym sbs_came
 2026-11-12T10:26:23.2407605+01:00 Zapisano rendery before/Low-overcast wszystkich kamer; ocena PNG i budżetu nadal w toku.
 2026-11-12T10:27:10.7223688+01:00 Zapisano rendery before/High-clear wszystkich kamer; ocena PNG i budżetu nadal w toku.
 2026-11-12T10:27:46.1821887+01:00 Zapisano rendery before/High-overcast wszystkich kamer; ocena PNG i budżetu nadal w toku.
+2026-11-12T10:28:04.7902733+01:00 Native before Low-clear 1280x720: 11 kamer, każdy PNG ma proporcje źródłowej fotografii; diagnostyczna 2948 pozostaje C.
