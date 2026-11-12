@@ -880,7 +880,12 @@ def build_all():
 
 
 # ------------------------------------------------------------------------------------------- gantries, landmarks
-GANTRIES = set()        # (span_m, height_dm) registered by streetscape.landmarks before export
+GANTRIES = set()        # (span_m, height_dm[, beam_dm]) registered by streetscape.landmarks before export
+
+
+def gantry_name(span, hdm, bdm=None):
+    """Prototype name of a portal; an authored beam depth (dm) is part of the name."""
+    return f"sign_gantry_{int(span)}_{int(hdm)}" + (f"_b{int(bdm)}" if bdm else "")
 LANDMARKS = {}          # name -> (height, base_d, top_d) registered by streetscape.landmarks
 
 
@@ -892,12 +897,16 @@ GANTRY_CHORD_R = (0.06, 0.08)       # LOD0, LOD1
 GANTRY_LACE_R = (0.03, 0.045)
 
 
-def sign_gantry(span, H):
+GANTRY_BEAM_M = 1.0     # beam depth (chord to chord) by rule; an override may author `beam_depth_m` (ADR 0139)
+
+
+def sign_gantry(span, H, beam=GANTRY_BEAM_M):
     """Steel lattice sign gantry: two 0.6 x 0.6 m lattice columns at x = +-span/2 on concrete footings and a
-    0.8 m deep lattice beam whose top is at H; +y = front (boards stand there). Typical Polish overhead-sign
-    structure (CC0 photo, docs/REFERENCES.md); member sizes WORKING_VALUE. LOD1 = the same lattice, fewer sides."""
+    0.8 m wide, `beam` m deep lattice beam whose top is at H; +y = front (boards stand there). Typical Polish
+    overhead-sign structure (CC0 photo, docs/REFERENCES.md); member sizes WORKING_VALUE. LOD1 = the same lattice,
+    fewer sides."""
     m, l1 = Mesh(), Mesh()
-    zb0, zb1 = H - 1.0, H
+    zb0, zb1 = H - beam, H
     faces = (((-0.3, -0.3), (0.3, -0.3)), ((0.3, -0.3), (0.3, 0.3)), ((0.3, 0.3), (-0.3, 0.3)),
              ((-0.3, 0.3), (-0.3, -0.3)))
     for lod, mm in enumerate((m, l1)):
@@ -997,8 +1006,9 @@ def chimney(H, d0, d1):
 
 def build_registered():
     P = {}
-    for span, hdm in sorted(GANTRIES):
-        P[f"sign_gantry_{span}_{hdm}"] = sign_gantry(float(span), hdm / 10.0)
+    for span, hdm, *bdm in sorted(GANTRIES):          # (span, height dm) or (span, height dm, beam depth dm)
+        P[gantry_name(span, hdm, bdm[0] if bdm else None)] = sign_gantry(
+            float(span), hdm / 10.0, bdm[0] / 10.0 if bdm else GANTRY_BEAM_M)
     for side, reach, hdm in sorted(CANTILEVERS):
         P[f"sign_cantilever_{side}{reach}_{hdm}"] = sign_cantilever(float(reach), hdm / 10.0, mirror=side == "L")
     if GANTRIES or CANTILEVERS:

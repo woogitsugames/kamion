@@ -1995,6 +1995,8 @@ def _noise_style_overrides(overrides, origin):
                     st["band_m"] = float(z["band_m"])
                 if "height_m" in z:                        # ADR 0127: authored barrier height inside the zone
                     st["height_m"] = float(z["height_m"])
+                if "post_mat" in z:                        # ADR 0139: authored post / rail material of the zone
+                    st["post_mat"] = str(z["post_mat"])
                 st["name"] = z.get("style", NOISE_DEFAULT_STYLE)
                 zones.append((c, float(z.get("radius_m", 30.0)), st, o["id"]))
         elif o.get("kind") == "noise_barrier":

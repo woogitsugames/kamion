@@ -155,6 +155,10 @@ M = {
     # checked as a ratio to the plinth on 2 cameras (tools/worldgen/qa/tint_ratio.py).
     "noise_panel_dark": {"color": [0.039, 0.041, 0.040], "rough": 0.7, "metal": 0.05, "texture_set": "noise_cassette"},
     "noise_post": {"color": [0.17, 0.21, 0.18], "rough": 0.55, "metal": 0.3},
+    # ADR 0139 (review s13-0127 P2): posts and rails of the tall glazed screens along al. Tysiąclecia are dark green
+    # (Mapillary 1801374876712141: posts 55-80 / 66-95 / 66-100 sRGB against the sky, cassette band 33-37), not the
+    # light green-grey of the Andersa / Putry barriers. Used through the zone key `post_mat`. WORKING_VALUE
+    "noise_post_dark": {"color": [0.055, 0.080, 0.066], "rough": 0.6, "metal": 0.2},
     "car_sill": {"color": [0.035, 0.033, 0.03], "rough": 0.8},
     # contact shadow / AO patch under parked vehicles (ADR 0050): Kamion/World Vehicle Contact, parameters per
     # prototype from the LOD0 node extras ("contact", life_props.contact_spec)
@@ -352,9 +356,15 @@ M = {
     # ~0.1 m: stripe = [lines per UV0 v unit (v spans 1.25 over the 2.75 m sheet -> 22), strength, duty]. WORKING_VALUE
     "noise_glass": {"color": [0.030, 0.042, 0.040], "rough": 0.04, "alpha": 0.10, "blend": True, "shader": "car_glass",
                     "dust": 0.75, "screen": {"horizon_sky": 0.85, "haze": 0.10}},
+    # ADR 0139 (review s13-0127 P1: "milky blind"): the photo's sheet is clear - clouds and lamp posts show through
+    # it - and its lines are thin, dense and faint: ~50 lines over the 2.75 m sheet of the nearest bay (period
+    # ~0.055 m -> 44 per v unit), each a few mm wide. Film 0.06 -> 0.02, line strength 0.45 -> 0.30, duty 0.25 ->
+    # 0.12, film colour darker (`haze_color`, linear; default 0.21: a grey print instead of a sunlit white veil). Mean extra opacity of the
+    # sheet 0.17 -> 0.056. WORKING_VALUE read off Mapillary 494288258686575.
     "noise_glass_lined": {"color": [0.030, 0.042, 0.040], "rough": 0.04, "alpha": 0.10, "blend": True,
                           "shader": "car_glass", "dust": 0.75,
-                          "screen": {"horizon_sky": 0.85, "haze": 0.06, "stripe": [22.0, 0.45, 0.25]}},
+                          "screen": {"horizon_sky": 0.85, "haze": 0.02, "stripe": [44.0, 0.30, 0.12],
+                                     "haze_color": [0.14, 0.145, 0.145]}},
     # authored plantings (streetscape.plantings, review r6 W-N12): red berberis hedge, island bed soil / bark mulch.
     # Linear albedo WORKING_VALUE from the CC0 Bieżeństwa photo (hedge vs asphalt luminance ratio, overcast).
     # Clipped hedges = opaque dark core (interior shade + stems, hedge_foliage set) + alpha leaf shell + loose shoot
