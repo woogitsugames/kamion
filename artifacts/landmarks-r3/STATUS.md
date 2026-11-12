@@ -83,3 +83,5 @@ Krok 18: obejrzano wszystkie 32 arkusze finalnej korekty, 244 pary / 95 PNG iden
 Krok 19: ADR0116/0119 i SELF_REVIEW uaktualnione o finalne obrazy, budżet i jawne ograniczenia. EditMode ma aktywny slot Unity gpt-landmarks; końcowy Python czeka na heavy gpt-landmarks-r3. Bez zmiany modelu podczas testów.
 
 Krok 20: EditMode 317/317 PASS, slot Unity zwolniony. Natywna para filarów czterech warunków obejrzana i zapisana w review/pier-final-native-pair.jpg (840 px). Python wciąż czeka w żywej kolejce heavy; przygotowano notatkę następnej rundy remizy, bez mutowania modelu r3.
+
+Krok 21: przygotowano REPORT-DRAFT.md z jednoznacznym statusem szkicu i polami W TOKU. Finalny REPORT powstanie dopiero po odczycie wyników Pythona i cache; nie kopiuje się szkicu jako zamknięcia rundy. Kolejka heavy nadal żywa, bez trzymania dodatkowego slotu.
