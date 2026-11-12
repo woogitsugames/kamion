@@ -11,3 +11,7 @@
   carfilm -0.12, mirrors +0.93 (=0106). Drzewa per okno: 6.6-8.7 ms w oknach 3-4 (s≈1300-1450, las przy drodze) vs ~2.5 dalej -> piki p99.
   Uncapped dziś ≈ s10 capped; realna regresja ~+3 ms rozproszona (sum. małych +1.7 + drzewa). Ustawienia jakości/URP bez zmian s10->s12.
   NASTĘPNY KROK: czekaj na envcap/shadows/hlodedge/hlodcanopy/impostor (`python artifacts/a16-perf/abwin.py artifacts/a16-perf/diag1/ab_*`).
+- 17:20 diag1 koniec: envcap +0.05, shadows +0.64 (=0106), hlodedge +1.81, hlodcanopy +0.16, impostor +1.37 śr., ale 6.6/4.8 ms w oknach 3-4
+  (las przy G3-B s≈1300-1450) = źródło pików p99. Atlasy impostorów pokrywają tylko 6-13 % quada (90 % fragmentów = discard).
+  Poprawka: ImpostorTrim (Game.World) + ImpostorTrimBake (import + batch in place): wielokąt 6 pasm wokół sumy alfy 6 widoków, ~34 % quada.
+  NASTĘPNY KROK: `pwsh artifacts/a16-perf/trim.ps1 -Tag trim1` (vqa before -> bake -> vqa after -> EditMode -> APK Low).
