@@ -4,7 +4,7 @@ $slot = 'C:\Users\matma\Documents\Claude\kamion\scripts\unity-slot.ps1'
 try {
     if (Test-Path 'C:/Users/matma/Documents/Claude/kamion/artifacts/locks/PHONE_RUN') { throw 'PHONE_RUN appeared' }
     . scripts/env.ps1
-    $code = Invoke-UnityBatch -LogFile (Join-Path $RepoRoot 'artifacts/gpt-s16-r1/clear-view-search.log') -Arguments @('-nographics', '-executeMethod', 'Game.World.Import.VehicleLodClearViews.RunBatch')
+    $code = Invoke-UnityBatch -LogFile (Join-Path $RepoRoot 'artifacts/gpt-s16-r1/clear-view-search.log') -Arguments @('-executeMethod', 'Game.World.Import.VehicleLodVisibilityRenderSearch.RunBatch')
     if ($code -ne 0) { throw "Clear-view search failed: $code" }
 } finally {
     git checkout -- game/Assets/_Project/Rendering/Settings game/ProjectSettings

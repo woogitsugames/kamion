@@ -38,3 +38,5 @@ Dodatkowe kamery: after/High-overcast zapisane.
 Kolizje sceny nie pokrywają wszystkich widocznych ścian, dlatego same promienie nie dały pełnej widoczności — druga próba nie jest zaliczona. Nowe40kamer: prześwity z643obrysami budynków i1488obrysami pozostałych pojazdów, wysokość2.5m nad NMT. Sprawdzenie Low-clear przed resztą warunków. Narzędzie nie zmienia geometrii/rozmieszczenia.
 
 Dodatkowe kamery: after/Low-clear zapisane.
+
+Dalsze kadry z obrysów nadal miejscami zasłonięte przez złożone obiekty sceny. Dodano docelowe GPUsprawdzenie widoczności: maska tego samego natywnego modelu/grilla solo i z rzeczywistą głębią świata, próg>=90%, bez zapisywania sceny/assetów. Maska służy tylko do szukania pozy, nie jest dowodem końcowego wyglądu. Pozycje końcowe będą zwykłym VQA bez maski.
