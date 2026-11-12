@@ -205,6 +205,7 @@ namespace Game.Rendering
             p.exposureCompensation = -3f; // reviewed Night appearance; preserve lamp/cab visibility.
             p.skyDisplayGain = 0.125f;
             p.skyDisplayDesaturation = 0.85f;
+            p.dimColourDesaturation = 0.65f; // ADR 0108 r4: reviewed 0/.35/.65/1 appearance ablation.
             return p;
         }
     }
