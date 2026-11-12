@@ -112,3 +112,12 @@ Uwaga: pełny pytest uruchomiony bez `KAMION_BLENDER` nadpisuje `generated/world
   separatora DK8 dochodzą do barier swoich pomostów (`view/rails_b4.png`; nowy klucz `free_ends` autorskiej szyny), fartuch ronda
   Bieżeństwa = asfalt (xsec: `apron_sett` zniknął, krawężnik wyspy bez zmian), `overrides_stale` puste.
   NASTĘPNY KROK: `bash artifacts/junctions-r6/scripts/b4_all.sh` (import + 4 zestawy + SBS + PlayMode + post full)
+
+## Sesja 12 (wznowienie po restarcie PC 03:44)
+- s12 krok 1 (09:13): b4 landmark Bieżeństwa zacommitowany, `git merge main` (743 commity s11) → `85cdd0b6`; konflikty tylko
+  `generated/{fidelity_qa,roads_qa,streetscape_qa,world_manifest}.json` → ours + regeneracja; kod scalił się automatycznie.
+- s12 krok 2 (12:12–12:21, slot heavy z kolejki FIFO): build **b5** = b4 po scaleniu, build_world rc 0, trasa 2398 m, Megascans
+  dostępne (bez fallbacku), `overrides_stale` puste; `gate3_landmarks.stale` = D-3/D-6 `biezenstwa-n-slip` (znany bloker G3-B nr 2,
+  brak wysepki — poza zakresem 0123). Commit `31b10c65`.
+  NASTĘPNY KROK: `bash artifacts/junctions-r6/scripts/b5_all.sh` (import + 4 zestawy + SBS + PlayMode + EditMode + post full; w toku od 12:23)
+  → `bash artifacts/junctions-r6/scripts/pairs.sh b5`
