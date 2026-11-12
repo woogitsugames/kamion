@@ -68,6 +68,30 @@ oraz z „world findings” 4–5 ADR 0143. Powiązane: ADR 0123 (bariery r6), 0
    w dół światło otoczenia = naświetlenie płaszczyzny poziomej × albedo podłoża × współczynnik widoczności, zamiast dolnej
    półkuli sondy. Model roboczy (bez składowej słońca odbitej od jezdni), wartość WORKING_VALUE.
 
+10. **Tablica F-10 przy 482392** (ADR 0143, pkt 4): `gate3_sign` `biezenstwa-f10-north` w E 515,8 N −680,3, czoło do ruchu o
+    kursie 299°. Potwierdzenie w źródłach otwartych: dwie klatki jednej sekwencji Mapillary (richlv 482392746429891 i
+    320326319617139, 2020-08-15: niebieska tablica „prosto | w prawo” z linią przerywaną, dwa słupki, za barierą); promienie z
+    póz ADR 0143 przecinają się przy E 514–519 N −681, a ortofoto 0,08 m ma w pasie trawy obiekt z cieniem w E 515,8 N −680,3
+    (`ortho/board482_r7c.jpg`), 6 m na północ od krawędzi pomostu. Szacunek z 0143 (E 495 N −676) był 21 m dalej, pod pomostem.
+    Nowa twarz `F-10` w `streetscape.gate3_landmarks` (własny rysunek, 0,90 × 0,55 m, dwa słupki ±0,3 szerokości) — oznaczenie,
+    wymiar i dolna krawędź 2,0 m WORKING_VALUE; stan po 2020 r. UNVERIFIED.
+11. **„Pas zjazdu idzie zygzakiem”** (zgłoszenie właściciela, film z Folda 2026-11-12, t 17–19 s; `artifacts/owner-feedback/
+    2026-11-12-fold-video/ramp_zigzag_19…22.jpg`): to łącznica do Ronda Putry tuż za rozwidleniem z Andersa (E −345 N −133,
+    łańcuch `c:w173956083:2840742310-1852129066`, stacje 161–178; wysięgnik p37 w kadrze). Przyczyna: węzły profilu autorskiego
+    `putry-link-fork-placement` (ADR 0095/0100) przy t 0,15–0,37 — odczyt „6,0 m z pasem P-21” i środki pasa przy N −138 / −135 —
+    przesuwały OBIE krawędzie o 0,9–1,4 m na NE na odcinku 12 m i z powrotem: krawężnik NE wychodził 0,6 m na trawnik (stacje
+    161–171) i cofał się 1,4 m w pas (172–178), krawężnik nosa wyspy miał garb 0,9 m (`scripts/zz_edges.py`, `zz_net.py`).
+    Na ortofoto 0,08 m granica asfalt / ściek betonowy po stronie NE jest jedną gładką linią (przekroje jasności co 6 m,
+    `scripts/zz_ortho_edge.py`; ±0,15 m). Węzły t 0,154–0,704 dopasowane na nowo (`scripts/zz_fit.py`): krawędź NE po tej
+    granicy, krawędź SW po linii, którą miała poza garbem; odchyłka od celu ≤ 0,08 m, nachylenie krawędzi względem osi ≤ 0,14
+    (było: skok 1,4 m na 6 m). Szerokość jezdni łącznicy na tym odcinku 4,3–5,3 m (było 4,4–5,4 m z garbem). To poprawka danych
+    (override), nie reguły: generator odtwarzał profil wiernie; `smooth_1d` 2,5 m nie maskuje błędnych węzłów i tak ma zostać.
+    Kamera kontrolna `r7_exit_zigzag_eye` (`junctions_cameras.json`).
+12. **Księgowanie poręczy wiaduktu hero**: trójkąty balustrady zdjęte przy barierach (pkt 1) są liczone do
+    `generic_tris_removed.parapet` wiaduktu hero (`buf.parapet_dropped`), bo budżet assetu („nie więcej trójkątów niż dekoracja,
+    którą zastępuje”, `test_hero_bridge`) porównuje z całą zastąpioną dekoracją. Pkt 1 w praktyce zdejmuje balustradę także z
+    łańcuchów hero (bariera pomostowa biegnie tam < 1 m od niej) — geometria końcowa ta sama, bo asset niesie własną poręcz.
+
 ## Pliki wspólne (addytywnie)
 - `game/`: `Environment/Shaders/WorldPBR.shader` (`_VertexWeed`, `_GroundBounce`), `World/Import/RegionImporter.cs` (klucze manifestu
   `vertex_weed`, `ground_bounce`, `set_tile_m`).
@@ -85,8 +109,7 @@ oraz z „world findings” 4–5 ADR 0143. Powiązane: ADR 0123 (bariery r6), 0
 2. **Połowa SE wiaduktu** — rytm rzędów przez symetrię, bez zdjęcia. Rzędy są pomiarem ze zdjęć o pozach klasy B, nie z projektu.
 3. **Luki barier na pomostach przy wlotach** — 34 końce biegów pomostowych nie mają kontynuacji w 2,5 m (m.in. wiadukt Putry
    E −740…−690); dostają teraz odgięcie zamiast końca w powietrzu, ale w rzeczywistości bariera biegnie tam ciągle.
-4. **Tablica kierunków na pasach przy 482392** (ADR 0143, pkt 4): szacowany punkt E 495 N −676 leży na ortofoto pod pomostem
-   wiaduktu (`ortho/board482.jpg`) — nie da się potwierdzić położenia, tablica NIE została dodana. Potrzebna druga klatka.
-   „Bariera wzdłuż łącznicy zaczyna się później niż na zdjęciu” — nie ruszone.
+4. **Tablica F-10** dodana (pkt 10), ale położenie ±2 m, wymiar i stan po 2020 r. niezweryfikowane w terenie. „Bariera wzdłuż
+   łącznicy zaczyna się później niż na zdjęciu” (0143) — nie ruszone.
 5. Generyczne spody pomostów (`bridge_soffit`, DK8 / Putry) zostają na `sky_occ` — poza zakresem (0105).
 6. Mur oporowy, profil W z bliska, latarnie, C-9 (P2-6…11 recenzji 0123), chodnik SSW i płyta dotykowa (0128 P2-4…6) — nie ruszone.
