@@ -52,3 +52,4 @@ Krok 26: przygotowano stałe diagnostyczne wycinki hali Before/After w4konfigura
 2026-11-12T12:50:54.2309729+01:00 Po Green wykonano wymagany pełny build_world pod heavy bez fallback=True. Surowe GLB/profile/cache oraz QA i manifest After zachowane. Następnie przebudowa edge i obie macierze renderów, bez pełnego GIS przed oceną obrazu.
 2026-11-12T12:51:16.2750420+01:00 Przebudowano wyłącznie WorldEdge w scenach Low i High; wynik wizualny do sprawdzenia.
 2026-11-12T12:51:48.9386599+01:00 Zapisano rendery after/Low-clear wszystkich kamer; ocena PNG i budżetu nadal w toku.
+2026-11-12T12:52:19.1485272+01:00 Zapisano rendery after/Low-overcast wszystkich kamer; ocena PNG i budżetu nadal w toku.
