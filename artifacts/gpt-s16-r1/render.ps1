@@ -13,5 +13,13 @@ foreach ($tier in @('Low','High')) {
             git checkout -- game/Assets/_Project/Rendering/Settings game/ProjectSettings
             & pwsh $slot -Release -Owner gpt-s16
         }
+        @("# STATUS — gpt-s16 r1", (Get-Date -Format o), "Gałąź: $(git branch --show-current)",
+          "Zapisano render $Stage/$tier-$light; liczby w stats.txt. Oględziny i recenzja pozostają otwarte.",
+          'NASTĘPNY KROK: Get-Content artifacts/gpt-s16-r1/STATUS.md', 'Gotowe do recenzji: NIE') |
+            Set-Content artifacts/gpt-s16-r1/STATUS.md
+        git add -f artifacts/gpt-s16-r1/STATUS.md "artifacts/gpt-s16-r1/$Stage/$tier-$light/stats.txt"
+        git commit -m "wip(s16): record $Stage $tier $light camera capture"
+        Copy-Item artifacts/gpt-s16-r1/STATUS.md "$root/artifacts/gpt-s16/PRZEKAZANIE.md"
+        Add-Content "$root/artifacts/gpt-s16/PRZEKAZANIE.md" "SHA: $(git rev-parse HEAD)"
     }
 }
