@@ -32,7 +32,6 @@ import shapely
 from shapely.geometry import LineString, Point, Polygon
 
 from roads import decals as DC
-from roads import standards as S
 
 KIND = "depot_yard"
 LIFT_PATCH = 0.002

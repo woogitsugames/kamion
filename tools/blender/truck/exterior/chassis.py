@@ -12,7 +12,7 @@ from mathutils import Matrix, Vector
 
 import geom as G
 from geom import (WB, WHEEL_Z, TYRE_R, FRONT_TRACK, REAR_TRACK, DUAL_SPACING, FIFTH_H, FIFTH_LEAD, REAR_OH,
-                  CAB_BACK_Y, CAB_HALF_W, FRAME_HALF_W, FRAME_TOP, PCD_R, V, box, box_mm, cyl, rod, sphere, tube,
+                  CAB_BACK_Y, CAB_HALF_W, FRAME_HALF_W, FRAME_TOP, PCD_R, V, box, box_mm, cyl, rod, tube,
                   lathe, arch, extrude_poly, rrect, boolean, bevel, set_group)
 
 Y_END = -WB - REAR_OH

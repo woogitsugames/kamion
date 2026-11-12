@@ -18,6 +18,8 @@
 
   <ItemGroup>
     <Compile Include="../../../game/Assets/_Project/Vehicle/Physics/**/*.cs" LinkBase="VehiclePhysics" />
+    <!-- Touch steering chain of the game (finger -> on-screen wheel -> hands/column), same sources as Unity (ADR 0149). -->
+    <Compile Include="../../../game/Assets/_Project/Input/TouchSteeringWheel.cs;../../../game/Assets/_Project/Input/SteeringColumn.cs;../../../game/Assets/_Project/Input/SteeringMath.cs;../../../game/Assets/_Project/Input/DriverIntent.cs" LinkBase="Controls" />
     <Compile Include="*.cs" />
   </ItemGroup>
 

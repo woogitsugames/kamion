@@ -68,7 +68,6 @@ def test_balustrade_rows_one_type_per_group():
 
 def test_lod0_balconies_follow_the_building_type():
     from streetscape import buildings_mesh as B
-    from streetscape import facade_atlas as FA
     vs = []
     for k in range(40):
         ops = B.facade_openings("block", 40.0, 100.0, 100.0 + 1.0 + 5 * 2.8 + 0.6, 5, f"b{k}:3", False, False,

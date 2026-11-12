@@ -190,6 +190,15 @@ namespace Game.Vehicle.Physics
             double yawLim = Def.yawLimitDeg * MathUtil.Deg2Rad;
             double prevVertical = Math.Max(0, KingpinLoadLocal.y);
             double frictionCap = Def.plateFrictionCoeff * prevVertical * Def.plateFrictionRadius * dt;
+            // Creep: damper c = break-away torque / creep rate, as a soft constraint (gamma = 1 / (dt c), no spring).
+            double creep = Def.plateFrictionCreepRateDegS * MathUtil.Deg2Rad;
+            double gammaF = 0, mFricSoft = 0;
+            if (creep > 0 && frictionCap > 0)
+            {
+                double cF = (frictionCap / dt) / creep;
+                gammaF = 1.0 / (dt * cF);
+                mFricSoft = 1.0 / (1.0 / mYaw + gammaF);
+            }
 
             Vec3 P = Vec3.Zero;
             double accRoll = 0, accRollLim = 0, accPitch = 0, accYaw = 0, accFric = 0;
@@ -217,7 +226,10 @@ namespace Game.Vehicle.Physics
                 if (frictionCap > 0)
                 {
                     double ydot = Vec3.Dot(nYaw, B.W - A.W);
-                    double lf = -mYaw * ydot;
+                    // ADR 0151: below the break-away torque the plate creeps (viscous, slip rate proportional to torque, the
+                    // full cap at plateFrictionCreepRateDegS) instead of sticking: an ideal stick held a released
+                    // combination at a fixed articulation and a steady yaw rate with straight wheels. 0 = ideal Coulomb.
+                    double lf = gammaF > 0 ? -mFricSoft * (ydot + gammaF * accFric) : -mYaw * ydot;
                     double nacc = MathUtil.Clamp(accFric + lf, -frictionCap, frictionCap);
                     lf = nacc - accFric; accFric = nacc;
                     ApplyAngular(ref A, ref B, nYaw, lf); angImpulse += nYaw * lf;

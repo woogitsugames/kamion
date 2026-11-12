@@ -152,11 +152,15 @@ def comb_estimate(x: np.ndarray, fs: int) -> dict:
     pk, _ = signal.find_peaks(sc, distance=int(2.0 / 0.05))
     pk = pk[np.argsort(sc[pk])[::-1]][:4]
     tops = [(float(cands[i]), float(sc[i])) for i in pk]
-    best = tops[0][0]
+    best, s_best = tops[0]
     # octave correction: prefer f/2 if its comb is nearly as good (half orders present), else 2f if better
     s_half = comb_score(f, prom, best / 2)
     s_dbl = comb_score(f, prom, best * 2)
-    return {"comb_f": best, "comb_score": tops[0][1], "comb_top": tops, "comb_half": s_half, "comb_double": s_dbl,
+    if s_half >= s_best - 3.0:
+        best, s_best = best / 2, s_half
+    elif s_dbl > s_best:
+        best, s_best = best * 2, s_dbl
+    return {"comb_f": best, "comb_score": s_best, "comb_top": tops, "comb_half": s_half, "comb_double": s_dbl,
             "_f": f, "_prom": prom}
 
 

@@ -30,6 +30,9 @@ namespace Game.UI.CabDisplays
         DisplayCanvas m_StaticFor;
 
         public NavMapData Map { get => m_Map; set { m_Map = value; m_RouteHint = -1; ReleaseStatic(); } }
+        /// <summary>The truck's GPS (ADR 0150). When set, the screen shows its route and guidance (the player's destination)
+        /// instead of the fixed start route of the map data.</summary>
+        public Game.UI.Navigation.NavigationService Live;
         public Mesh StaticMap => m_Static;
 
         public void ReleaseStatic()
@@ -72,6 +75,11 @@ namespace Game.UI.CabDisplays
             m_Zoom = dt <= 0f ? target : Mathf.Lerp(m_Zoom, target, 1f - Mathf.Exp(-dt / 1.5f));
             float h = s.HeadingDeg * Mathf.Deg2Rad;
             m_Cos = Mathf.Cos(h); m_Sin = Mathf.Sin(h); m_E = s.PosE; m_N = s.PosN;
+            if (Live != null && Live.Ready)
+            {
+                DrawLive(d, s, pal);
+                return;
+            }
 
             var pos = new Vector2(s.PosE, s.PosN);
             RouteIndex = m_Map.NearestRouteIndex(pos, m_RouteHint, out float off);
@@ -89,6 +97,87 @@ namespace Game.UI.CabDisplays
             Maneuver(d, pal, onRoute);
             SpeedLimit(d, pal, onRoute);
             Bar(d, s, pal, onRoute ? m_Map.RouteLength - m_Map.RouteS[RouteIndex] : float.NaN, onRoute ? RouteIndex : -1);
+            d.End(pal.Bg);
+        }
+
+        /// <summary>GPS route and guidance of <see cref="Live"/> (same look as the start-route mode).</summary>
+        void DrawLive(DisplayCanvas d, in CabDisplayState s, in P.Nav pal)
+        {
+            var g = Live.Guidance;
+            var path = Live.Path;
+            EnsureStatic(d, s.Night, pal);
+            d.DrawUnderlay(MapMatrix(), m_Zoom * d.Scale);
+            var xf = Game.UI.Navigation.MapXf.Make(new Vector2(m_E, m_N), s.HeadingDeg, m_Zoom, ArrowX, ArrowY);
+            bool route = g.HasRoute;
+            if (route)
+            {
+                Vector2 from = g.Segment >= 1 ? Vector2.Lerp(path.Points[g.Segment - 1], path.Points[g.Segment],
+                    Mathf.Clamp01((g.RouteS - path.S[g.Segment - 1]) / Mathf.Max(1e-4f, path.S[g.Segment] - path.S[g.Segment - 1]))) : path.Points[0];
+                Game.UI.Navigation.NavDraw.Route(d, path, g.Segment, from, xf, 11f, pal.RouteCasing, g.OnRoute ? pal.Route : pal.RoutePassed, Width, MapH);
+                Vector2 fp = xf.ToScreen(path.Points[path.Count - 1]);
+                Game.UI.Navigation.NavDraw.Flag(d, fp.x, fp.y, 44f, pal.Arrow, P.TellRed);
+            }
+            TruckArrow(d, pal);
+            RouteIndex = -1; RouteDistance = g.OffRouteM;
+            const float bh = 130f;
+            if (route && g.Arrived)
+            {
+                d.Rect(0f, 0f, 460f, bh, pal.Box);
+                Game.UI.Navigation.NavDraw.ManeuverIcon(d, 75f, 65f, 110f, Game.Core.Navigation.Maneuver.Arrive, 0f, pal.BoxText, pal.Box);
+                d.Text(Game.UI.Navigation.NavText.Arrived, 150f, 80f, 32f, pal.BoxText);
+                NextManeuverM = 0f; NextTurnDeg = 0f;
+            }
+            else if (route && g.OnRoute && g.Next >= 0)
+            {
+                int k = g.Next;
+                string nm = Live.NameOf(path.ManName[k]);
+                string sub = nm.Length > 0 ? Abbreviate(nm) : T.Straight;
+                float bw = Mathf.Clamp(150f + d.Measure(sub, 26f) + 36f, 420f, Width * 0.6f);
+                d.Rect(0f, 0f, bw, bh, pal.Box);
+                Game.UI.Navigation.NavDraw.ManeuverIcon(d, 75f, 65f, 110f, path.ManType[k], path.ManTurn[k], pal.BoxText, pal.Box);
+                m_B.Clear();
+                AppendDistance(m_B, g.NextM);
+                d.Text(m_B, 150f, 72f, 46f, pal.BoxText);
+                d.Text(sub, 150f, 112f, 26f, pal.BoxSub);
+                NextManeuverM = g.NextM; NextTurnDeg = path.ManTurn[k];
+            }
+            else if (route)
+            {
+                d.Rect(0f, 0f, 420f, bh, pal.Box);
+                d.Text(T.OffRoute, 30f, 80f, 44f, pal.BoxText);
+                NextManeuverM = float.NaN;
+            }
+            else NextManeuverM = float.NaN;
+            if (route && g.OnRoute && g.CurrentLimit > 0)
+            {
+                const float cx = 70f, cy = MapH - 70f;
+                d.Disc(cx, cy, 44f, pal.LimitFace);
+                d.Ring(cx, cy, 33f, 44f, pal.Limit);
+                m_B.Clear().Append(g.CurrentLimit);
+                d.Text(m_B, cx, cy + 11f, 30f, pal.LimitText, DisplayCanvas.Align.Center);
+            }
+            // Bottom bar: clock, remaining distance, arrival (planner travel-time model), destination street.
+            d.Rect(0f, MapH, Width, BarH, pal.Bar);
+            const float by = Height - 38f;
+            m_B.Clear().AppendClock(s.ClockMinutes);
+            d.Text(m_B, 40f, by, 44f, pal.BarText);
+            if (route)
+            {
+                m_B.Clear();
+                AppendDistance(m_B, g.RemainingM);
+                d.Text(m_B, 220f, by, 44f, pal.BarText);
+                float frac = path.Length > 1f ? g.RemainingM / path.Length : 0f;
+                int eta = s.ClockMinutes + Mathf.CeilToInt(path.CostSeconds * frac / 60f);
+                m_B.Clear().Append(T.Arrive).Append(' ').AppendClock(eta);
+                d.Text(m_B, 470f, by - 2f, 32f, pal.BarSub);
+                string dest = Live.NameOf(path.DestinationName);
+                if (dest.Length > 0) d.Text(Abbreviate(dest), Width - 30f, by - 2f, 30f, pal.BarSub, DisplayCanvas.Align.Right);
+            }
+            else
+            {
+                string street = Live.NameOf(Live.CurrentStreet);
+                if (street.Length > 0) d.Text(Abbreviate(street), Width - 30f, by - 2f, 30f, pal.BarSub, DisplayCanvas.Align.Right);
+            }
             d.End(pal.Bg);
         }
 

@@ -301,7 +301,7 @@ def telltale_row(d, W, y=12, s=44, pitch=72):
     the control frames (driving at 82 km/h, engine warm, dipped beam on, retarder in auto) lights only dipped beam and
     retarder-ready, both green. Order follows a typical EU truck: brakes/air first, then powertrain, then lamps."""
     off = (36, 37, 38)
-    red, amber, green = (205, 52, 38), (226, 150, 28), (74, 168, 92)
+    _, _, green = (205, 52, 38), (226, 150, 28), (74, 168, 92)
     lit = {"retarder": green, "beam": green}
     names = ["park", "brake", "air", "abs", "trailer", "retarder", "mil", "preheat", "battery", "oil", "coolant",
              "belt", "beam"]

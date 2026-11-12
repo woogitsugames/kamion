@@ -745,7 +745,6 @@ def kerb_mirror(cab):
 
 def cam_mirrors(cab):
     for s in (-1, 1):
-        x0 = s * (CAB_HALF_W - 0.03)
         y0 = lerp_tab(cab.front, 2.95) - 0.40
         box(f"cam_arm_{s}", (s * (CAB_HALF_W + 0.10), y0, 2.96), (0.26, 0.07, 0.05), "trim", bev=0.02)
         box(f"cam_pod_{s}", (s * (CAB_HALF_W + 0.24), y0 - 0.02, 2.95), (0.09, 0.16, 0.10), "trim", bev=0.035, seg=3)

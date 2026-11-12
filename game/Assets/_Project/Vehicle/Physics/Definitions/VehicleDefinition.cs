@@ -317,6 +317,12 @@ namespace Game.Vehicle.Physics
         /// <summary>Plate friction (greased): Coulomb yaw torque = coeff * kingpin vertical load * radius.</summary>
         public double plateFrictionCoeff = 0.08;
         public double plateFrictionRadius = 0.35;
+        /// <summary>
+        /// Plate creep (ADR 0151): relative yaw rate [deg/s] at which the friction reaches its break-away torque; below it
+        /// the torque is proportional to the rate (regularised Coulomb). A real plate under road vibration and kingpin play
+        /// does not hold a fixed articulation against the trailer axle's straightening torque. 0 = ideal stick. WORKING_VALUE.
+        /// </summary>
+        public double plateFrictionCreepRateDegS = 1.0;
         /// <summary>Coupling capture window: horizontal / vertical distance [m] and max relative speed [m/s].</summary>
         public double captureDistance = 0.05;
         public double captureHeight = 0.12;

@@ -91,6 +91,9 @@ namespace Game.Core
         public static float? FarClip;
         /// <summary>rq_mirror_res: render-texture height multiplier.</summary>
         public static float? Resolution;
+        /// <summary>ADR 0136 r2: the active quality tier's mirror texture height multiplier (QualityProfile.Tier.mirrorResolutionScale,
+        /// set by QualityProfileApplier; Low 0.75 = the Low main-view render scale). rq_mirror_res replaces it.</summary>
+        public static float TierResolution = 1f;
         /// <summary>rq_mirror_rate 0: the ADR 0046 fill-the-cap schedule instead of the due-based one on High.</summary>
         public static bool? DueSchedule;
         /// <summary>rq_mirror_legacy 1 (or the A/B toggler): the complete pre-ADR 0068 mirror configuration.</summary>

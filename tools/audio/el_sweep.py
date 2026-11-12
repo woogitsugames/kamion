@@ -5,7 +5,6 @@ Max 100 ms RMS step between adjacent windows and the largest deviation of the RM
 (timbre/level seams between cells show up as steps/bumps).
 """
 import json
-from pathlib import Path
 
 import matplotlib
 

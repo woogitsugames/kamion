@@ -40,7 +40,7 @@ def crease_normals(prims, angle_deg=CREASE_DEG):
     if not prims:
         return prims
     cs = float(np.cos(np.radians(angle_deg)))
-    P, F, own = [], [], []
+    P, _F, own = [], [], []
     for k, p in enumerate(prims):
         V, T = np.asarray(p["V"], float), np.asarray(p["T"], np.int64).reshape(-1, 3)
         P.append(V[T])                                   # (m, 3, 3)

@@ -17,7 +17,7 @@ from pathlib import Path
 
 import numpy as np
 import yaml
-from shapely.geometry import LineString, Point, shape
+from shapely.geometry import LineString, Point
 from shapely.strtree import STRtree
 
 REPO = Path(__file__).resolve().parents[3]

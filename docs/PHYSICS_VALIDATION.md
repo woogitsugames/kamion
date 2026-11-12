@@ -336,3 +336,34 @@ Max articulation 32.8° (G3-A), steer 27°. Conclusion: the geometry can be driv
 driver has to take a wide line; the AI or assist path should swing out there. The 2 m apron is never used because the
 ring is wide for this vehicle. Guidance: WR-D-31-3 "Ronda" (Ministerstwo Infrastruktury, valid from 2022-11-30),
 chapter "Jezdnia i pierścień". Its numeric widths and the design-vehicle definition were not read (UNVERIFIED).
+
+## Touch steering in the loop (ADR 0149)
+
+The runner also compiles the game's touch chain (`Input/TouchSteeringWheel.cs`, `SteeringColumn.cs`, `SteeringMath.cs`,
+`DriverIntent.cs`; UnityEngine shim `tools/physics-runner/Sim/UnityShim.cs`). Driver type `touch` (`TouchDriver`):
+replay of a measured thumb (`fingerKeys` [t, mm, held]) or a human model (preview 1.5 s with heading and heading rate,
+perception delay 0.25 s, thumb lag 0.1 s, fixed thumb gain mm per m of lateral error; all WORKING_VALUE).
+
+```powershell
+dotnet run -c Release --project tools/physics-runner/Runner -- --touch-evidence artifacts/steer-r2/evidence
+uv run tests/physics/plot_touch_feel.py artifacts/steer-r2/evidence
+dotnet test tools/physics-runner -c Release --filter "FullyQualifiedName~TouchSteeringTests"
+```
+
+| metric (40 t, 35 km/h) | ADR 0135 curve | ADR 0149 | check |
+|---|---|---|---|
+| cab-wheel deg per mm | 23.5 | 14.7 | a_y per mm ≤ 60 km/h value (0.33 m/s²) between 20 and 60 km/h |
+| replay of the owner's 4.4 mm flick: road wheel / heading at 5 s | 4.76° / 8.9° | 2.97° / 5.7° | ≤ 0.7× before |
+| lane change, thumb 4 mm/m: PIO index (yaw-rate weave RMS) | 10.2 °/s | 0.06 °/s | < 0.75 °/s after, > 0.75 before |
+| PIO onset thumb gain 30/35/40/50 km/h | 4/3/3/4 mm/m | 5/5/5/6 mm/m | no worse anywhere, ≥ 5 at 30-50 km/h |
+
+Open (diagnostic only): after a released steering pulse the combination keeps a small articulation (40 t: −0.41°) and a
+steady yaw rate (0.43 °/s) with straight wheels; solo returns to zero. Plate friction μ 0.08 is a WORKING_VALUE.
+
+### Straight running after a released steering pulse (ADR 0151)
+
+`straight_after_steer_pulse` (solo / empty / laden40): the owner's thumb flick replayed through the touch chain at
+35 km/h, then released. From 10 to 14 s: max |articulation| ≤ 0.05° and max |yaw rate| ≤ 0.05 °/s. With the former
+ideal-stick plate friction it failed (40 t: 0.413° / 0.426 °/s held for 20 s); with plate creep 1 °/s it passes
+(0.0027° / 0.0011 °/s). Drag gesture above 60 km/h: lateral acceleration per mm held at the 60 km/h value; PIO onset
+thumb gain at 70/80/90 km/h 6/6/5 → 8/10/10 mm/m.

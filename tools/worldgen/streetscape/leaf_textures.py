@@ -19,7 +19,7 @@ import sys
 from pathlib import Path
 
 import numpy as np
-from PIL import Image, ImageDraw, ImageFilter
+from PIL import Image, ImageDraw
 
 REPO = Path(__file__).resolve().parents[3]
 OUT = REPO / "art-source" / "world" / "vegetation"

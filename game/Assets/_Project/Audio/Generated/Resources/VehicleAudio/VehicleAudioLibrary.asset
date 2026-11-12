@@ -74,6 +74,9 @@ MonoBehaviour:
     cab: {fileID: 8300000, guid: 6530a8dedebe0dd40949f03563d2efaf, type: 3}
   birdSparrow: {fileID: 8300000, guid: 533c8327a01ea9b479150c4583e11920, type: 3}
   birdTit: {fileID: 8300000, guid: c0bd8caf01432ad4499810eac0b988b9, type: 3}
+  tyreScrub:
+    ext: {fileID: 8300000, guid: 22d62bb26c86f7749a6b9d3a48a75615, type: 3}
+    cab: {fileID: 8300000, guid: d5efe913515f89245babe9b054d2c15c, type: 3}
   elExteriorEngine: {fileID: 11400000, guid: bc5729a9a99bd9f49867644ca1388e17, type: 2}
   elCabEngine: {fileID: 11400000, guid: 3dacf83062954de408d8cc31b40798a3, type: 2}
   elExteriorEngineBrake: {fileID: 11400000, guid: a44c5bec5a4653e46bf1980408df3df3, type: 2}
@@ -169,5 +172,11 @@ MonoBehaviour:
     cab: {fileID: 8300000, guid: 6796ce03803c76b4b80c3b1d3a230a95, type: 3}
   - ext: {fileID: 0}
     cab: {fileID: 0}
-  sourceInfo: 122 engine loops + 47 sfx, tools/audio/render_all.py (procedural synthesis,
-    no recordings); ElevenLabs 85 clips
+  elTyreScrub:
+    ext: {fileID: 8300000, guid: 8fd9c676c52ec44419ddc8387318f6d8, type: 3}
+    cab: {fileID: 8300000, guid: b813791ea033ed044944d13504bdef6d, type: 3}
+  elTyreSqueal:
+    ext: {fileID: 8300000, guid: 834a43603d20cf544a4bb31bd8d472d6, type: 3}
+    cab: {fileID: 8300000, guid: 9bb74ad85d69adc46a2b56c9fa6084d1, type: 3}
+  sourceInfo: 122 engine loops + 49 sfx, tools/audio/render_all.py (procedural synthesis,
+    no recordings); ElevenLabs 89 clips

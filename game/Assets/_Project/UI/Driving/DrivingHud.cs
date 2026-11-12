@@ -381,6 +381,8 @@ namespace Game.UI.Driving
             Button(turn, "TurnLeft", Vector2.zero, new Vector2(0f, 0f), new Vector2(124f, th), 30, () => m_Ctx.Touch?.RequestTurnSignal(TurnSignalRequest.Left), out m_TurnLeftBtn).text = "←";
             Button(turn, "Hazard", Vector2.zero, new Vector2(132f, 0f), new Vector2(136f, th), 24, () => m_Ctx.Touch?.RequestTurnSignal(TurnSignalRequest.Hazard), out m_HazardBtn).text = "AWAR.";
             Button(turn, "TurnRight", Vector2.zero, new Vector2(276f, 0f), new Vector2(124f, th), 30, () => m_Ctx.Touch?.RequestTurnSignal(TurnSignalRequest.Right), out m_TurnRightBtn).text = "→";
+            // ADR 0151: a sideways thumb slide that starts on the bar (right above the rim) steers instead of being lost.
+            if (m_WheelGo != null) turn.gameObject.AddComponent<WheelDragRelay>().target = m_WheelGo.GetComponent<SteeringWheelWidget>();
 
             var stalk = Zone("Stalk", HudLayout.StalkSize);
             m_StalkRt = stalk;
@@ -748,12 +750,14 @@ namespace Game.UI.Driving
             m_ReverseBtn.color = sel == GearSelector.Reverse ? k_ButtonOn : k_Button;
             m_ParkBtn.color = park ? k_ParkOn : k_Button;
             if (DevDiagnostics && m_Ctx.StatusLine != null) { var s = m_Ctx.StatusLine(); if (!ReferenceEquals(s, m_Status.text)) m_Status.text = s ?? ""; }
-            if (gyro && m_Ctx.Gyro != null && Time.unscaledTime >= m_NextTelemetry)
-                m_GyroLabel.text = "Gyro: " + m_Ctx.Gyro.RelativeTiltDeg.ToString("F1", CultureInfo.InvariantCulture) + "°" + (m_Ctx.Gyro.HasSensor ? "" : "  (brak czujnika)");
-            if (TelemetryVisible && Time.unscaledTime >= m_NextTelemetry)
+            bool gyroTelemetry = gyro && m_Ctx.Gyro != null;
+            if ((gyroTelemetry || TelemetryVisible) && Time.unscaledTime >= m_NextTelemetry)
             {
                 m_NextTelemetry = Time.unscaledTime + 0.2f;
-                m_Telemetry.text = BuildTelemetry();
+                if (gyroTelemetry)
+                    m_GyroLabel.text = "Gyro: " + m_Ctx.Gyro.RelativeTiltDeg.ToString("F1", CultureInfo.InvariantCulture) + "°" + (m_Ctx.Gyro.HasSensor ? "" : "  (brak czujnika)");
+                if (TelemetryVisible)
+                    m_Telemetry.text = BuildTelemetry();
             }
             if (m_RecImage != null) m_RecImage.color = m_Ctx.Recorder != null && m_Ctx.Recorder.IsRecording ? new Color(0.55f, 0.16f, 0.14f, 0.95f) : k_Button;
             RefreshStage2(v);
