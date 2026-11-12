@@ -164,3 +164,5 @@ potem poprawić największe udokumentowane odstępstwo wiaty. WIP po każdym kro
 2026-11-12T13:24:19.8364948+01:00: normalny import candidate2 OK. Audyt wszystkich 196 prototypów wykazał zmianę wyłącznie bus_shelter_red_0120: LOD/cull [60,300] m jak generic, liczby LOD/instancji i pozostałe polityki bez zmian. Dodano odrębne ścieżki after2, exact-after2, after2-side oraz iteration2, aby nie nadpisać starej serii czy wejść oczekującego porównania. Nowy pipeline używa wyłącznie slotów Unity i małych kontroli metadanych; nie rozpoczyna drugiego heavy z tym samym właścicielem. NASTĘPNY KROK: pełne ponowne pomiary przy właściwym zasięgu.
 
 2026-11-12T13:24:51.0389905+01:00: Unity render after2 Low clear; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
+
+2026-11-12T13:25:18.7430213+01:00: Unity render after2 Low overcast; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
