@@ -162,3 +162,5 @@ Przygotowano REPORT-DRAFT.md z potwierdzonymi liczbami, dwiema parami 960 px, og
 
 ## Nowe scalenia main podczas końcowej kolejki
 Odczytano main 3ebd95d4 i recenzję REVIEW-2026-11-12-s11-0125.md. Main zawiera teraz gate3-signs oraz kolejne rundy light/asphalt/landmarks/truck. Nie włączono ich do zamrożonej r2 w trakcie końcowego GIS. R2 dokumentuje wcześniejszy stan; nie jest dowodem obrazu po 0125. R3 zacznie się od merge aktualnego main i nowych renderów. Recenzja 0125 wskazuje hipotezy cofnięcia 837235/275528, korekty sekwencji 328135/297817, przesunięcia 180137 i kursu 494288; liczby z recenzji pozostają hipotezami do weryfikacji. Ranking r3 musi uwzględniać już poprawioną geometrię portali, zamiast powtarzać historyczny brak obiektu. Pełny GIS r2 nadal czeka w tej samej kolejce heavy, bez dodatkowego zadania naszej gałęzi.
+
+Plan wejścia w r3 zapisano w NEXT-ROUND.md po odczycie sześciu pozycji. Nie zmieniono kamer ani kodu w trakcie końcowej walidacji.
