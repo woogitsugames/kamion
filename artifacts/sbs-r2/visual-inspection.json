@@ -1,0 +1,721 @@
+﻿{
+    "schema":  "kamion/sbs-visual-inspection/1",
+    "reviewer":  "primary SBS session",
+    "note":  "100 A/B pairs personally viewed: 25 native Low-clear and 75 on 21 overview pages. No automatic world PASS or confidence promotion.",
+    "states":  {
+                   "Low-clear":  {
+                                     "reviewed_at_utc":  "2026-11-12T00:35:11.1070366Z",
+                                     "format":  "native composites",
+                                     "pairs":  [
+                                                   {
+                                                       "camera":  "sbs-g3-a-2818555625124739",
+                                                       "comparison_sha256":  "a749eb65cd4a38889d419d4f137ef162b12f781302597b536726a0d2ae611256",
+                                                       "render_sha256":  "148d967b8587dfaeb46a84cdc1f4f1c493dc6c87efb70663c5d606c6e2e0dd44",
+                                                       "sheet_sha256":  "9324b568cadb4b945bea953f77318ccc0e19331247a553305f34019788e3140c"
+                                                   },
+                                                   {
+                                                       "camera":  "sbs-g3-a-3970163613102941",
+                                                       "comparison_sha256":  "2655985ab39cd8e6b74d893fbfd74b0a0a548e56d8fbe62acec2e295ff88a70d",
+                                                       "render_sha256":  "c28905e62c21086d42601caae93c2b4b2e98a76e2c7e754dd0de7e81263b4b3d",
+                                                       "sheet_sha256":  "0fcabf6bc61b659e04e0991d0f7d6c0a7d0a80b16e49c3d1ae4130194ab3ae1e"
+                                                   },
+                                                   {
+                                                       "camera":  "sbs-g3-a-149248627179406",
+                                                       "comparison_sha256":  "6f92ec21d233062320d4819caffb33d14416f5a8e526057b017f8a26eb4dfb8d",
+                                                       "render_sha256":  "24a0b32b28abb3b45242e3d41fdefbab7d5f2b571331173d3eaa003209c44932",
+                                                       "sheet_sha256":  "529a56951a4b8e40eebb0ad2523b4b0a83388aebf855f9ec6ff55ec40918c20d"
+                                                   },
+                                                   {
+                                                       "camera":  "sbs-g3-a-177786140912399",
+                                                       "comparison_sha256":  "090fc0ee15ab8cb46afcdd14f1d3bcfee30a22eec535aa1e4e47930800f89105",
+                                                       "render_sha256":  "d29597111013f7f340cdfae05b8aebee086ee66901aa3612b7ad4dcb1c932af2",
+                                                       "sheet_sha256":  "f5e50cae3aa7bd365809b6235d48d097b6ea70c05cd76e3a39f7d37eab7d1414"
+                                                   },
+                                                   {
+                                                       "camera":  "sbs-g3-a-178689077481862",
+                                                       "comparison_sha256":  "109b11aedb75f1a1346fb5243913b2e5985c9746b6a1744631db8c1e6d04f7c2",
+                                                       "render_sha256":  "a4f5f5493e4d23b8c8303c7046ec908cac8b4f8c684d05c5366bdacd8d10f343",
+                                                       "sheet_sha256":  "c608fd8744bf4365c2dcbc769536f0ce1f7ff15c668a1a6c0e430fa1d0192c42"
+                                                   },
+                                                   {
+                                                       "camera":  "sbs-g3-a-223210302566110",
+                                                       "comparison_sha256":  "be3bc9a41296027e0b9f04847c28f8570f03e9596885737d5ed605e83e0bb63c",
+                                                       "render_sha256":  "b635a04c8f0618501573903dadded649f769914826202d3e5f82fa1d1054e19c",
+                                                       "sheet_sha256":  "13e6970fd6ea981d803e142f67d9d5a62b0442f4184282656c01edbfa1314d9e"
+                                                   },
+                                                   {
+                                                       "camera":  "sbs-g3-a-309664504075286",
+                                                       "comparison_sha256":  "438ddde2184888ff3c54ccf48fd7b3e036c0df36bb35d805a8ce2391e4d028a3",
+                                                       "render_sha256":  "b47711ea132efce8d8be3eb27637cab18ca7c46ec07a1b3fa42fa0087d604df6",
+                                                       "sheet_sha256":  "953d77db33293b98882383997c59e2dd109501487048b210077427607d24e56a"
+                                                   },
+                                                   {
+                                                       "camera":  "sbs-g3-a-504348097385466",
+                                                       "comparison_sha256":  "81b6841f0b1a4067f161c5211d89529e08588762871dd9d941a3c070d86a644c",
+                                                       "render_sha256":  "19d6bf40d485b6c039313090ce05838e4e7f02da84b7b23551156166e1c618b1",
+                                                       "sheet_sha256":  "4a1a5e6a75c193451dd1ea674583bf28642327f9148cec55157bacbc05e912ff"
+                                                   },
+                                                   {
+                                                       "camera":  "sbs-g3-a-201270605169291",
+                                                       "comparison_sha256":  "9d6455ab20f8bfe4d581d50c3832e266878a24c40195921b7bb3e3cc344d2782",
+                                                       "render_sha256":  "f252a5bf726392593672594959d38bd25bae3fa0abbd410dbf6d84a7dfd4df80",
+                                                       "sheet_sha256":  "05465f53fb5dec4401ced31a2f77f87d6ebe469696bf376568bbb01b01585004"
+                                                   },
+                                                   {
+                                                       "camera":  "sbs-g3-a-1398898753813071",
+                                                       "comparison_sha256":  "f323ab061cdbd1f4bfb9abb4c312dbf1dcafc6d2a1108308ed9cc376d614eeea",
+                                                       "render_sha256":  "b40e92ff4d8d07b313e147fd06f79d1fa4ff22c87084a7e7a8136867e68af886",
+                                                       "sheet_sha256":  "418be3dc93af187ed386990a9ede97b7545faee00148cda34fd585f6bf77adc1"
+                                                   },
+                                                   {
+                                                       "camera":  "sbs-g3-a-320326319617139",
+                                                       "comparison_sha256":  "3015576aeeea68797c66d0689793b32d17affb27c991a9fa6ddf9f952711aff8",
+                                                       "render_sha256":  "2c2ed688c6a6d55fe2efff0831259802e9752e3d16ca85ddbfc1145c4a7472e4",
+                                                       "sheet_sha256":  "85fc5c178fd63c89638841e4b6c8ec23ef384f3363520d05e5cc9c3548b678bd"
+                                                   },
+                                                   {
+                                                       "camera":  "sbs-g3-a-482392746429891",
+                                                       "comparison_sha256":  "a4bd6fd6fac72eaff9125b21402b065436071f0863f2430a2222947e64338e57",
+                                                       "render_sha256":  "3ce4059b944f803d9eddd0ec64251fe64d3997805265e8f181a17f4a449b2b03",
+                                                       "sheet_sha256":  "9fbfcda44dc8c7d74bacb01a8337f91d5148ba194a4bb01ee7e65399ce301b04"
+                                                   },
+                                                   {
+                                                       "camera":  "sbs-g3-a-454716650857984",
+                                                       "comparison_sha256":  "f1c89052fe31a413f87b240f573ed5b33b7d797343b1248cb435905cef501cb9",
+                                                       "render_sha256":  "721fd976a5cc5b93923b73d453f0d48eaed569be18d4425525a69a30546c8677",
+                                                       "sheet_sha256":  "12ab1c1ff8640621f3d3f22f7a7aa08f1e526fa86132b89716d21ecfa5063fca"
+                                                   },
+                                                   {
+                                                       "camera":  "sbs-g3-a-303305168125936",
+                                                       "comparison_sha256":  "a8bb7d37739164759a15b2193b811d50c4aa7890a528195f0dec9c2bfb1a7efc",
+                                                       "render_sha256":  "9ef6f1085d06e0a5e5089734f806a50682c7b9ddfb078e7fee556a3ec84eea69",
+                                                       "sheet_sha256":  "8a6f9f9222265315e0264981d82dc792b6baf6f0562a165e32c60765d5335327"
+                                                   },
+                                                   {
+                                                       "camera":  "sbs-g3-a-320215796381417",
+                                                       "comparison_sha256":  "4cdbe7483c84e7e96f4b9c6f294753e510c49dd5433337d0ccf64c50ab1a8586",
+                                                       "render_sha256":  "a3a444b8d5dc833ab429d514bf10cf15cf903a6389ccdc98607abe4d5549d38e",
+                                                       "sheet_sha256":  "b8df8ebd3d01ecdfde21e53813e4e27241a35e30e194f2bad01a0884aab18207"
+                                                   },
+                                                   {
+                                                       "camera":  "sbs-g3-b-381800493259507",
+                                                       "comparison_sha256":  "bb8686f2fe7465ba42ea971dda6547a304768aeaacf82ae9a24b949dcfcd77d3",
+                                                       "render_sha256":  "1be8cf2378825f1ca8b028f1a26285f6a5d309441181872b87140854357a9aed",
+                                                       "sheet_sha256":  "05c75f6744ae6b16df91bac27044b556a230e5882e1f47715684cac04eb9b167"
+                                                   },
+                                                   {
+                                                       "camera":  "sbs-g3-b-2279538078845158",
+                                                       "comparison_sha256":  "d7a0c29ce47125e3f1bcc19370906ce2ed7e433302e45887f9568e23aaefb2bf",
+                                                       "render_sha256":  "4deb1665dae851299fa50c98681c4c775a7a1230cc5467de5ef149b9cea43b79",
+                                                       "sheet_sha256":  "27b349e4488478de6dca5cdc5028e8a3d24cdb8e5846506900ca31ef41c83d9f"
+                                                   },
+                                                   {
+                                                       "camera":  "sbs-g3-b-837235577143499",
+                                                       "comparison_sha256":  "8676ada6ab9b0582d015f708cdc62ee28cb31dfe02dc0db2993d5bd2f093bb3d",
+                                                       "render_sha256":  "dd2382ab7de8d8170938da19298c880e2acec810efda09df7a80978f91051044",
+                                                       "sheet_sha256":  "678c96f536f4585750ca9b92d884a2c93cee0e94e2a28ae1198512ae48bec3dd"
+                                                   },
+                                                   {
+                                                       "camera":  "sbs-g3-b-3281350541967811",
+                                                       "comparison_sha256":  "6cf1e2a6f02736e4d48f9d75809ab4242cccdb7ad017258068eed9ecba078912",
+                                                       "render_sha256":  "94b6b1e821de5b6dcc61f8b1dcd25ca6ac5d75573398939f02352a331a8efdb1",
+                                                       "sheet_sha256":  "da1445d6e4042e71c8c5602a850e4e194ba0555d83e206d1f48e026761885bc8"
+                                                   },
+                                                   {
+                                                       "camera":  "sbs-g3-b-275528677534382",
+                                                       "comparison_sha256":  "07f8aceba89a22f0d8ef678b4962d89d6b39715000eb3bf0dd00057ce3159007",
+                                                       "render_sha256":  "3e7c7dc06d5d84e272417bb870d8c3a7f32f32b7dc7b40d744ba1847e915c89d",
+                                                       "sheet_sha256":  "39f22d22d9d92959ae0c2b115ada314ec6448005aa5421b5e8e696f65fa5d6da"
+                                                   },
+                                                   {
+                                                       "camera":  "sbs-g3-b-150280503737744",
+                                                       "comparison_sha256":  "087e595a45f7654b6b01c9f95790edfcd04512ce8b18fb382bb71b2e3c3ab668",
+                                                       "render_sha256":  "6629b4eea4327163908e598f6966c46910061fa1abe7ff1d4e5977ed50411620",
+                                                       "sheet_sha256":  "a3232cf96f6ed6d3bff30b17b9feaddcb09628ec402abe3162a4d79a8dd16904"
+                                                   },
+                                                   {
+                                                       "camera":  "sbs-g3-b-297817221966185",
+                                                       "comparison_sha256":  "0db1fb1dc739f82198c4f6f488b74725fd9793bbc4c77fd80191d5a3052464cd",
+                                                       "render_sha256":  "d07cabb6767b69e1ac6bfe3d11ca19d7936079ec0b3e64a0c3a85127a5dc7643",
+                                                       "sheet_sha256":  "3591411197a9a96ff03543d874f0fe862615f7f3e3f0ea2fc280271c020cd64c"
+                                                   },
+                                                   {
+                                                       "camera":  "sbs-g3-b-3678296072299092",
+                                                       "comparison_sha256":  "d543e0ab31a4482c075c44b8bd6382a9c9cd7802c16fd892a820ae47a03f8afa",
+                                                       "render_sha256":  "0194513c0a9bb104c6f1c7ac5900ca517bfc6e20ff26ff9df5a6877b70ea4d35",
+                                                       "sheet_sha256":  "62e676d041bd4095fe92da9526556530fde3370d88e01563681919cfea2a6901"
+                                                   },
+                                                   {
+                                                       "camera":  "sbs-g3-b-494288258686575",
+                                                       "comparison_sha256":  "4943df7b00e9a99e18e3487548285155f50e2e1dc6daa19391e24e05cf4e2ced",
+                                                       "render_sha256":  "b2f6a9d1023fe725feaaa2c5a89a8d040f57c1306b0fcbcdd381fad7a913d375",
+                                                       "sheet_sha256":  "3dbb4f5d8294c483fa80abefae6438e1e081d6cb51eee4c616724f8b468b92c5"
+                                                   },
+                                                   {
+                                                       "camera":  "sbs-g3-b-1801374876712141",
+                                                       "comparison_sha256":  "ce07076f1c2f18dc6b8ebcc94b17b79e6be18aa28c9345ae29f5e7a5b6f903e7",
+                                                       "render_sha256":  "be3f117bf029d6f7200741763801f142b772ab2adf80b3574d5f06d1c010f91b",
+                                                       "sheet_sha256":  "4e0ab27baf6dc32ddd1f0b8024f1bfa68c811a910079590e8295abfe98a43954"
+                                                   }
+                                               ]
+                                 },
+                   "Low-overcast":  {
+                                        "reviewed_at_utc":  "2026-11-12T00:46:09.2224922Z",
+                                        "format":  "all seven overview pages",
+                                        "pairs":  [
+                                                      {
+                                                          "camera":  "sbs-g3-a-2818555625124739",
+                                                          "comparison_sha256":  "a749eb65cd4a38889d419d4f137ef162b12f781302597b536726a0d2ae611256",
+                                                          "render_sha256":  "96de33c566c32e69b3ccf3763e43a25769b8b810f7e1719cf8a931acbfe8ae99",
+                                                          "sheet_sha256":  "5efcbd8413f117350e4301c1f1b0676a5a9e7e3b013ea4aa15de1811ef555b7d"
+                                                      },
+                                                      {
+                                                          "camera":  "sbs-g3-a-3970163613102941",
+                                                          "comparison_sha256":  "2655985ab39cd8e6b74d893fbfd74b0a0a548e56d8fbe62acec2e295ff88a70d",
+                                                          "render_sha256":  "9d842ee25fc23f33c2eac29fe7f212d8a873821c7ed2dd5fd15028a1d4bf4d1c",
+                                                          "sheet_sha256":  "b155394f9710ec080c5ae20a2b0416cb5a9648b5ffdb16134668f223ea12dfe4"
+                                                      },
+                                                      {
+                                                          "camera":  "sbs-g3-a-149248627179406",
+                                                          "comparison_sha256":  "6f92ec21d233062320d4819caffb33d14416f5a8e526057b017f8a26eb4dfb8d",
+                                                          "render_sha256":  "fade2946ca1671085ce31d605376622c9c369669f06659f40e50901942127d10",
+                                                          "sheet_sha256":  "44ac7a8d6c8acc8c87b6904c817d6fe3da2d91f8d63327a2b6b1f7494d62c494"
+                                                      },
+                                                      {
+                                                          "camera":  "sbs-g3-a-177786140912399",
+                                                          "comparison_sha256":  "090fc0ee15ab8cb46afcdd14f1d3bcfee30a22eec535aa1e4e47930800f89105",
+                                                          "render_sha256":  "49de10929f5b871b80db91a802c6f56bdeda9f020ca1528aceae07ce82718205",
+                                                          "sheet_sha256":  "ce612b4d87e68c103df2ca579a1098df61a6387f7ada93e0c65a81062a73253b"
+                                                      },
+                                                      {
+                                                          "camera":  "sbs-g3-a-178689077481862",
+                                                          "comparison_sha256":  "109b11aedb75f1a1346fb5243913b2e5985c9746b6a1744631db8c1e6d04f7c2",
+                                                          "render_sha256":  "38f2f19926fc89e1079ea84ebc99124257754424c4e8849ff9a1e40b3cb7b8d9",
+                                                          "sheet_sha256":  "86a110028c7875eb96554d37f7a5fc2d1966b6f413aa8dff879cde98be4dbb7c"
+                                                      },
+                                                      {
+                                                          "camera":  "sbs-g3-a-223210302566110",
+                                                          "comparison_sha256":  "be3bc9a41296027e0b9f04847c28f8570f03e9596885737d5ed605e83e0bb63c",
+                                                          "render_sha256":  "34135b905a861c7773b3ec11f3945bf348b87e00b3492d20fe203efaa3511771",
+                                                          "sheet_sha256":  "ecb1c8d583d5d140228bc25b7f57caec4f85dcf5067dfcfb6b3f4b7c60f41625"
+                                                      },
+                                                      {
+                                                          "camera":  "sbs-g3-a-309664504075286",
+                                                          "comparison_sha256":  "438ddde2184888ff3c54ccf48fd7b3e036c0df36bb35d805a8ce2391e4d028a3",
+                                                          "render_sha256":  "d4f22245a6a16c7fb4b953b5e4b914347b24933dde8be8596523c4fe23af1d1e",
+                                                          "sheet_sha256":  "44d42bb686189130f293f6766eb5cafdcdc40bf9f8b9d479247b29bc5460b142"
+                                                      },
+                                                      {
+                                                          "camera":  "sbs-g3-a-504348097385466",
+                                                          "comparison_sha256":  "81b6841f0b1a4067f161c5211d89529e08588762871dd9d941a3c070d86a644c",
+                                                          "render_sha256":  "b131c2ddd9af7e25b3252411ce5d2b43e96fedd5cad6c1c4c3c971d2f2f86a69",
+                                                          "sheet_sha256":  "45e5796ea912374d47d8d8589174eb8fe27524775e11c424f2fc48f5e1660342"
+                                                      },
+                                                      {
+                                                          "camera":  "sbs-g3-a-201270605169291",
+                                                          "comparison_sha256":  "9d6455ab20f8bfe4d581d50c3832e266878a24c40195921b7bb3e3cc344d2782",
+                                                          "render_sha256":  "5c2a4e62057542f5a4cd6c9b26c455a35e329c866f01cd69e8c90f95229192ed",
+                                                          "sheet_sha256":  "45c3c387ca7f4799c225dc1b501372f3d89538870b5f4d2bdb85e56e074e6475"
+                                                      },
+                                                      {
+                                                          "camera":  "sbs-g3-a-1398898753813071",
+                                                          "comparison_sha256":  "f323ab061cdbd1f4bfb9abb4c312dbf1dcafc6d2a1108308ed9cc376d614eeea",
+                                                          "render_sha256":  "16b82bf323c8c0b0386e2711139bec2b27d90736954f7cfed4fbb1f964da14e8",
+                                                          "sheet_sha256":  "4af6b706913b84b31e697bd1b4b86085bb553b7697fcbd13be52745c0b821616"
+                                                      },
+                                                      {
+                                                          "camera":  "sbs-g3-a-320326319617139",
+                                                          "comparison_sha256":  "3015576aeeea68797c66d0689793b32d17affb27c991a9fa6ddf9f952711aff8",
+                                                          "render_sha256":  "5e1e0baf7862af216b06e2f1e7b4fbe7a8462d3131c81ae2d609e2b241771307",
+                                                          "sheet_sha256":  "7f37f7dd89135d6ffd0a27caa0d8ca3990f6e0e0af866b1f1ef40af88ca7d429"
+                                                      },
+                                                      {
+                                                          "camera":  "sbs-g3-a-482392746429891",
+                                                          "comparison_sha256":  "a4bd6fd6fac72eaff9125b21402b065436071f0863f2430a2222947e64338e57",
+                                                          "render_sha256":  "3fbf4beee528e1e8a325ee8da75f785260ce214921a322ced7f3da37c6f062ef",
+                                                          "sheet_sha256":  "2df6d2d18b80bbadc54c7a1536d75168507854d84872757c4fc4d24ca076e5d4"
+                                                      },
+                                                      {
+                                                          "camera":  "sbs-g3-a-454716650857984",
+                                                          "comparison_sha256":  "f1c89052fe31a413f87b240f573ed5b33b7d797343b1248cb435905cef501cb9",
+                                                          "render_sha256":  "483d97b327db2bbd413dede1c852bca5f9947f394c78c38a5076be93ac4c2448",
+                                                          "sheet_sha256":  "bf8e4157fdce6b5b3cef08d25582b4b4ed1cd8d64fd53af5a9823b9b47c74a3e"
+                                                      },
+                                                      {
+                                                          "camera":  "sbs-g3-a-303305168125936",
+                                                          "comparison_sha256":  "a8bb7d37739164759a15b2193b811d50c4aa7890a528195f0dec9c2bfb1a7efc",
+                                                          "render_sha256":  "613bebb399a1f195ae9ec948b5e51c53cda815263432770fe22022dc84ad61dc",
+                                                          "sheet_sha256":  "7f5a6a986ffb143184a3e429c120bbfa149eb2e8dc6d8c0c578a24feaa8f5da4"
+                                                      },
+                                                      {
+                                                          "camera":  "sbs-g3-a-320215796381417",
+                                                          "comparison_sha256":  "4cdbe7483c84e7e96f4b9c6f294753e510c49dd5433337d0ccf64c50ab1a8586",
+                                                          "render_sha256":  "93fccf0f93a45916710abc3faa4b52674e4e76033f8d976ab8a3cf88298c6427",
+                                                          "sheet_sha256":  "f7042c29f4f8e3d2659ce64f0795228ac3aabb36cabb8bd5768cf5a577b2e829"
+                                                      },
+                                                      {
+                                                          "camera":  "sbs-g3-b-381800493259507",
+                                                          "comparison_sha256":  "bb8686f2fe7465ba42ea971dda6547a304768aeaacf82ae9a24b949dcfcd77d3",
+                                                          "render_sha256":  "2e74375ef79a6ac159d88288d1b9e3d73393236d2e637d49ece493af413c44c8",
+                                                          "sheet_sha256":  "ce15c3ce9306076985b1809adcef34ce6ffce62a8bda5f2abe583d003646ad3f"
+                                                      },
+                                                      {
+                                                          "camera":  "sbs-g3-b-2279538078845158",
+                                                          "comparison_sha256":  "d7a0c29ce47125e3f1bcc19370906ce2ed7e433302e45887f9568e23aaefb2bf",
+                                                          "render_sha256":  "ecefcb5bf542a95dfe0bdcf39518d982a6096a0c0cd98d50eb22f84489b1ee22",
+                                                          "sheet_sha256":  "5558f61825dcb88e296e40ab50952b31423a10ed0a044241ce65e49c248288bf"
+                                                      },
+                                                      {
+                                                          "camera":  "sbs-g3-b-837235577143499",
+                                                          "comparison_sha256":  "8676ada6ab9b0582d015f708cdc62ee28cb31dfe02dc0db2993d5bd2f093bb3d",
+                                                          "render_sha256":  "8f8290657de93e819ce3b5b1ddd30fa6e543f441dde5792ad3c3feca533fbd44",
+                                                          "sheet_sha256":  "376d5e57d10078e49aa52ea1dafb66402c2e8357789a872a6e123e1d38e552c7"
+                                                      },
+                                                      {
+                                                          "camera":  "sbs-g3-b-3281350541967811",
+                                                          "comparison_sha256":  "6cf1e2a6f02736e4d48f9d75809ab4242cccdb7ad017258068eed9ecba078912",
+                                                          "render_sha256":  "a2be4c20816979a897d385518d4bc361b065ae04fabe2786ce54faefd0bc21cf",
+                                                          "sheet_sha256":  "0b1462874b0a36b10bfeb297f81987e3f7e078d54e6c878a31e14c98bcb96c65"
+                                                      },
+                                                      {
+                                                          "camera":  "sbs-g3-b-275528677534382",
+                                                          "comparison_sha256":  "07f8aceba89a22f0d8ef678b4962d89d6b39715000eb3bf0dd00057ce3159007",
+                                                          "render_sha256":  "3ec200551a594df13a5b4e44e2b4b9eb5609a8f9c8cae573d4c4cda5c8c142c0",
+                                                          "sheet_sha256":  "5e44366129f8baef912d4a3f43ba407672c2682628966ee5cdce70f083b00f23"
+                                                      },
+                                                      {
+                                                          "camera":  "sbs-g3-b-150280503737744",
+                                                          "comparison_sha256":  "087e595a45f7654b6b01c9f95790edfcd04512ce8b18fb382bb71b2e3c3ab668",
+                                                          "render_sha256":  "24bc131ae372bfd94d46341f0d1c010e362d4c48c3283aa6d26e062278ab3799",
+                                                          "sheet_sha256":  "98142547709d4fa1067336846adec6d5892fc3d68ea299b671363cf7f1c50978"
+                                                      },
+                                                      {
+                                                          "camera":  "sbs-g3-b-297817221966185",
+                                                          "comparison_sha256":  "0db1fb1dc739f82198c4f6f488b74725fd9793bbc4c77fd80191d5a3052464cd",
+                                                          "render_sha256":  "8c4b922c7f71ee7b24dbdf37c04d78fe6f101314de81e70344b7226d8e103b86",
+                                                          "sheet_sha256":  "833c27bf33c2e9e7ee34bc3a2d604feb94272a88de1c4e5d610c9e6ea29e2910"
+                                                      },
+                                                      {
+                                                          "camera":  "sbs-g3-b-3678296072299092",
+                                                          "comparison_sha256":  "d543e0ab31a4482c075c44b8bd6382a9c9cd7802c16fd892a820ae47a03f8afa",
+                                                          "render_sha256":  "84aabcd653c4a6738119e8448e9a59e775f99f5cf4114f99a96e751ddc35000c",
+                                                          "sheet_sha256":  "ee204ff843355376648cfe6628a1efde66a0a40fde8e48eeb5a736f651e8dccf"
+                                                      },
+                                                      {
+                                                          "camera":  "sbs-g3-b-494288258686575",
+                                                          "comparison_sha256":  "4943df7b00e9a99e18e3487548285155f50e2e1dc6daa19391e24e05cf4e2ced",
+                                                          "render_sha256":  "99dbbb51b727181863c3d60ffe964cabc5cac97a8c96397fab932390092ea3e8",
+                                                          "sheet_sha256":  "e24186920806d793cbeff855f0fc02372d3fa72351c0a3f506cdabaa6d4f7b2d"
+                                                      },
+                                                      {
+                                                          "camera":  "sbs-g3-b-1801374876712141",
+                                                          "comparison_sha256":  "ce07076f1c2f18dc6b8ebcc94b17b79e6be18aa28c9345ae29f5e7a5b6f903e7",
+                                                          "render_sha256":  "144e0f0ab8351b3b1b3aa81f5f0bcb177814c07f7ae29b0f83628c6d00e04643",
+                                                          "sheet_sha256":  "4e09fdd80789067827a4f34e9c4c34071ec9347e4d74bf3dd659371e793413d4"
+                                                      }
+                                                  ],
+                                        "pages":  [
+                                                      {
+                                                          "file":  "page-01.png",
+                                                          "sha256":  "5c2e0fbbb1b6391f1c16d37cbdd5d189b64cba91e1a39c55a5151c3b85baf21d"
+                                                      },
+                                                      {
+                                                          "file":  "page-02.png",
+                                                          "sha256":  "6e5f604d1a0102d93219fccc05eb6a12c7aae56fa88429ae0eff08da92798626"
+                                                      },
+                                                      {
+                                                          "file":  "page-03.png",
+                                                          "sha256":  "732aa48482aae7e8c8264ba9b2267e0a1ba93cba4346d9b990e8dc399582b049"
+                                                      },
+                                                      {
+                                                          "file":  "page-04.png",
+                                                          "sha256":  "9d40767caa2018916cd040d387bb724191e99151add29a33c08b59a3f75a9860"
+                                                      },
+                                                      {
+                                                          "file":  "page-05.png",
+                                                          "sha256":  "d4c3d00923b88533ba89fb1e314fd66fefbe24ad0b49d6c85cd1ea1ab4d2a29a"
+                                                      },
+                                                      {
+                                                          "file":  "page-06.png",
+                                                          "sha256":  "c5d46b974df798636f7d5f73ef9041b665b6072ba0345f250b91b1a0e0be56c9"
+                                                      },
+                                                      {
+                                                          "file":  "page-07.png",
+                                                          "sha256":  "2204c82098650168f1e2f18b7220c3989beab1fa403b5e1629425e18001f5c72"
+                                                      }
+                                                  ]
+                                    },
+                   "High-overcast":  {
+                                         "reviewed_at_utc":  "2026-11-12T00:46:09.2795663Z",
+                                         "format":  "all seven overview pages",
+                                         "pairs":  [
+                                                       {
+                                                           "camera":  "sbs-g3-a-2818555625124739",
+                                                           "comparison_sha256":  "a749eb65cd4a38889d419d4f137ef162b12f781302597b536726a0d2ae611256",
+                                                           "render_sha256":  "c7419c1e25ca76b73a3dcd00c5973e148fe52cf64eab09a085e50b615fb17ac1",
+                                                           "sheet_sha256":  "0c491d079f42072cb2de11d601b01bb5c732217c5820167cd881a7d74579aba2"
+                                                       },
+                                                       {
+                                                           "camera":  "sbs-g3-a-3970163613102941",
+                                                           "comparison_sha256":  "2655985ab39cd8e6b74d893fbfd74b0a0a548e56d8fbe62acec2e295ff88a70d",
+                                                           "render_sha256":  "5e4b57003507795e7ee793c439c1eb719649fc7c5a9ecde5fe1f861d45b1e980",
+                                                           "sheet_sha256":  "419ca364c305e3c8c2340950d54de7bf7923468caa3d843dfc48aef77c38f21b"
+                                                       },
+                                                       {
+                                                           "camera":  "sbs-g3-a-149248627179406",
+                                                           "comparison_sha256":  "6f92ec21d233062320d4819caffb33d14416f5a8e526057b017f8a26eb4dfb8d",
+                                                           "render_sha256":  "aed31f3a5ef95619955a1972d0d779c7beb583dbe9dbc8b4dff4fbd747fa482e",
+                                                           "sheet_sha256":  "66add507433434c7d04fe8d54e39cbc42b1dd880c56368267690f75d0bac8391"
+                                                       },
+                                                       {
+                                                           "camera":  "sbs-g3-a-177786140912399",
+                                                           "comparison_sha256":  "090fc0ee15ab8cb46afcdd14f1d3bcfee30a22eec535aa1e4e47930800f89105",
+                                                           "render_sha256":  "64e1943b961f276424143cfbdc71bbdfda42e8cf4341654ec6ed7518b5bda7ac",
+                                                           "sheet_sha256":  "6cab9344043285bf02e00ed5b6485e090320d49b085340c67e1604d6fdde6472"
+                                                       },
+                                                       {
+                                                           "camera":  "sbs-g3-a-178689077481862",
+                                                           "comparison_sha256":  "109b11aedb75f1a1346fb5243913b2e5985c9746b6a1744631db8c1e6d04f7c2",
+                                                           "render_sha256":  "bf7299c715670040d15843128ded0a05508971c0abc7ec7759de4609c6cbcd83",
+                                                           "sheet_sha256":  "ff32f3daa1692b00a22745e2aed06a767f20da0ab724903cd34c4fde9c8e4fbe"
+                                                       },
+                                                       {
+                                                           "camera":  "sbs-g3-a-223210302566110",
+                                                           "comparison_sha256":  "be3bc9a41296027e0b9f04847c28f8570f03e9596885737d5ed605e83e0bb63c",
+                                                           "render_sha256":  "db08ba0f4f5748ddc4e9608882ccb44e6567a37322daed416cc581de18e3d48c",
+                                                           "sheet_sha256":  "348e896cc811e004c20a9cdc575e34f8464c187d60a8327d8fa4ae53b9f81cc2"
+                                                       },
+                                                       {
+                                                           "camera":  "sbs-g3-a-309664504075286",
+                                                           "comparison_sha256":  "438ddde2184888ff3c54ccf48fd7b3e036c0df36bb35d805a8ce2391e4d028a3",
+                                                           "render_sha256":  "2ec5def00e1cfdc587b680f81dad712f237b4c7451562fd64964153789b1ecbd",
+                                                           "sheet_sha256":  "381bb6632079e7d672f652249adf79d6f304208e67c0ed50478c8fa3016c2571"
+                                                       },
+                                                       {
+                                                           "camera":  "sbs-g3-a-504348097385466",
+                                                           "comparison_sha256":  "81b6841f0b1a4067f161c5211d89529e08588762871dd9d941a3c070d86a644c",
+                                                           "render_sha256":  "691b425a83d4dd7493e68636ba9427e28f4a003e87da489394c6cdafd1a7c2dc",
+                                                           "sheet_sha256":  "9bd61fb52e8534788eff2be087263f95d242044ce7bfcd2f59687256be7557c3"
+                                                       },
+                                                       {
+                                                           "camera":  "sbs-g3-a-201270605169291",
+                                                           "comparison_sha256":  "9d6455ab20f8bfe4d581d50c3832e266878a24c40195921b7bb3e3cc344d2782",
+                                                           "render_sha256":  "2c12cb95125887cb9cf17ffbe947be117ae17d12ddca8f79b19057b002a53e89",
+                                                           "sheet_sha256":  "644a8d706cae28ef2ad47a82e158d755db14f2ed51b92d869528bc05d5d44d1c"
+                                                       },
+                                                       {
+                                                           "camera":  "sbs-g3-a-1398898753813071",
+                                                           "comparison_sha256":  "f323ab061cdbd1f4bfb9abb4c312dbf1dcafc6d2a1108308ed9cc376d614eeea",
+                                                           "render_sha256":  "aae89416a4af0483f0c9fb8eabc5a8bed1b98bf029c0e2b1ab3e867f82e488ca",
+                                                           "sheet_sha256":  "2733f2ffb5e37ae47a9a0f16e318f97dea649e6300b50e8da9c1ac608320b876"
+                                                       },
+                                                       {
+                                                           "camera":  "sbs-g3-a-320326319617139",
+                                                           "comparison_sha256":  "3015576aeeea68797c66d0689793b32d17affb27c991a9fa6ddf9f952711aff8",
+                                                           "render_sha256":  "5db42a57a8088aba70ad80a9058a725c70cd1c63c8946fce6660072833c4bfcc",
+                                                           "sheet_sha256":  "cbba6ecec73a196f94e6bdd612c5242980c63f350e67d833b2588ef976791fad"
+                                                       },
+                                                       {
+                                                           "camera":  "sbs-g3-a-482392746429891",
+                                                           "comparison_sha256":  "a4bd6fd6fac72eaff9125b21402b065436071f0863f2430a2222947e64338e57",
+                                                           "render_sha256":  "b091937e9dfaaf49f14d98a5160cb123a7d29f1d6e9a94d3b5c544b3f385fd2c",
+                                                           "sheet_sha256":  "2d31d808f0989b12b1928c3d8f0ef8368fb67952d84a0afdc52fd37e27044199"
+                                                       },
+                                                       {
+                                                           "camera":  "sbs-g3-a-454716650857984",
+                                                           "comparison_sha256":  "f1c89052fe31a413f87b240f573ed5b33b7d797343b1248cb435905cef501cb9",
+                                                           "render_sha256":  "46fda7222541ed564d6ee4572f22a9d50a31d0ee6fdb2e0d5fe6a98c6b4249e7",
+                                                           "sheet_sha256":  "553911177f7ed64a00f5c7f66f32a2e55d0a7eb1b6ef909a946e1a50325435fa"
+                                                       },
+                                                       {
+                                                           "camera":  "sbs-g3-a-303305168125936",
+                                                           "comparison_sha256":  "a8bb7d37739164759a15b2193b811d50c4aa7890a528195f0dec9c2bfb1a7efc",
+                                                           "render_sha256":  "a2bd3af2383078413b668de1c09e090e04d071096f786cf406eac47a965c28f8",
+                                                           "sheet_sha256":  "07b470a526f0585c0f377a527771ee467de235e7caee49666b032ac7bddac4b3"
+                                                       },
+                                                       {
+                                                           "camera":  "sbs-g3-a-320215796381417",
+                                                           "comparison_sha256":  "4cdbe7483c84e7e96f4b9c6f294753e510c49dd5433337d0ccf64c50ab1a8586",
+                                                           "render_sha256":  "929bfdfd1dc5ee529c47d58709de6d8a030bdccb5dee43b4c284583065388a47",
+                                                           "sheet_sha256":  "fb4a4555a1f93e7451e692f1cfc81f0f61ff6baeb1153df4d12a843b944c401d"
+                                                       },
+                                                       {
+                                                           "camera":  "sbs-g3-b-381800493259507",
+                                                           "comparison_sha256":  "bb8686f2fe7465ba42ea971dda6547a304768aeaacf82ae9a24b949dcfcd77d3",
+                                                           "render_sha256":  "fa043ae397f84c47af068abd22998603256aa0fff2b8b8dcb4cdbadd8f95ee2b",
+                                                           "sheet_sha256":  "65c4cd6992c241ab5df7a1e117df6df33963f132813eeab94d6470004cb7da5e"
+                                                       },
+                                                       {
+                                                           "camera":  "sbs-g3-b-2279538078845158",
+                                                           "comparison_sha256":  "d7a0c29ce47125e3f1bcc19370906ce2ed7e433302e45887f9568e23aaefb2bf",
+                                                           "render_sha256":  "f2d943d6b20a39c83f561bf3dfd437a4c5c72b969dc63ef6840c7b241f0bb625",
+                                                           "sheet_sha256":  "e6307f176ae99e345caefc89347a8f7e160d4eee5c840aeb1ea1dc1a8f63d042"
+                                                       },
+                                                       {
+                                                           "camera":  "sbs-g3-b-837235577143499",
+                                                           "comparison_sha256":  "8676ada6ab9b0582d015f708cdc62ee28cb31dfe02dc0db2993d5bd2f093bb3d",
+                                                           "render_sha256":  "bf330f9b43d51bb24603df88a26482d75d7af6ee8903d1930332a0f455b06f40",
+                                                           "sheet_sha256":  "1a5446b20fa9ba9819f28d525aa6f32c18d4d80e7a25cc20ea74de20d7bca0c3"
+                                                       },
+                                                       {
+                                                           "camera":  "sbs-g3-b-3281350541967811",
+                                                           "comparison_sha256":  "6cf1e2a6f02736e4d48f9d75809ab4242cccdb7ad017258068eed9ecba078912",
+                                                           "render_sha256":  "640848d545ec3fcce359a0445365ce01bd82987fc1bc38fd2c12a928259349fa",
+                                                           "sheet_sha256":  "d1e5336877fb36a6b32bd5295c31598f00b2bd014b69d182518d34839ffa0090"
+                                                       },
+                                                       {
+                                                           "camera":  "sbs-g3-b-275528677534382",
+                                                           "comparison_sha256":  "07f8aceba89a22f0d8ef678b4962d89d6b39715000eb3bf0dd00057ce3159007",
+                                                           "render_sha256":  "8c09a366b4f6b8c19474f0e0d0aa84b5957304f767821fdfab2ab411f397e9d1",
+                                                           "sheet_sha256":  "3ee8fef685bb0d66551edcf3cb23b8a32e626e4b6fe8c401abbcbef546b488c0"
+                                                       },
+                                                       {
+                                                           "camera":  "sbs-g3-b-150280503737744",
+                                                           "comparison_sha256":  "087e595a45f7654b6b01c9f95790edfcd04512ce8b18fb382bb71b2e3c3ab668",
+                                                           "render_sha256":  "2ecf6b7ff728f20b1afe7f4f6ee2f0d571aed5ee349d579d419267fb97e332c4",
+                                                           "sheet_sha256":  "63d537a84f39f3e3db44d34b5eba340a8d47fe26fff2532d1ea31bbd4268a762"
+                                                       },
+                                                       {
+                                                           "camera":  "sbs-g3-b-297817221966185",
+                                                           "comparison_sha256":  "0db1fb1dc739f82198c4f6f488b74725fd9793bbc4c77fd80191d5a3052464cd",
+                                                           "render_sha256":  "cdee7061845b1a74c8a5ba0904ad9764caa515b585af1a5c2eee76fb061c9759",
+                                                           "sheet_sha256":  "aaf310c4e61dbb3cfef683ec4373850ef8746d9e35df0e2d838ffd1c9cb0b2d0"
+                                                       },
+                                                       {
+                                                           "camera":  "sbs-g3-b-3678296072299092",
+                                                           "comparison_sha256":  "d543e0ab31a4482c075c44b8bd6382a9c9cd7802c16fd892a820ae47a03f8afa",
+                                                           "render_sha256":  "f173ab3abcde6b47994a95e3f4a26bd1c414cd49eb52182063ffbdb7de0d980e",
+                                                           "sheet_sha256":  "288ef7e86ff60220dc1b1f72519e0191e41ab83e7672021f026bf60306228422"
+                                                       },
+                                                       {
+                                                           "camera":  "sbs-g3-b-494288258686575",
+                                                           "comparison_sha256":  "4943df7b00e9a99e18e3487548285155f50e2e1dc6daa19391e24e05cf4e2ced",
+                                                           "render_sha256":  "01cb4d20237c947fcd91abc754ac4f43866c67619e5ce3cc74f97dcf9434576c",
+                                                           "sheet_sha256":  "77ca70d87625548bce8004a160cdbee5947909a214fc363ac85af25282085291"
+                                                       },
+                                                       {
+                                                           "camera":  "sbs-g3-b-1801374876712141",
+                                                           "comparison_sha256":  "ce07076f1c2f18dc6b8ebcc94b17b79e6be18aa28c9345ae29f5e7a5b6f903e7",
+                                                           "render_sha256":  "195a3bbf78a7d89731f5d3bca11ba674a22feb1f7f1b16fe483828ccbbee6273",
+                                                           "sheet_sha256":  "05682fa37a2e61f23b97d211f120d26d84e36135dfbbc053929d7b9faf5d4b01"
+                                                       }
+                                                   ],
+                                         "pages":  [
+                                                       {
+                                                           "file":  "page-01.png",
+                                                           "sha256":  "260e93af85f06452876299d6a5d239de3e7624d13d8f73292554d4dd893a308a"
+                                                       },
+                                                       {
+                                                           "file":  "page-02.png",
+                                                           "sha256":  "575798afa17a5d95be0be3639be7cdcad6710079201152bbe428d670c94a2502"
+                                                       },
+                                                       {
+                                                           "file":  "page-03.png",
+                                                           "sha256":  "996b0def785d4e08b803b0fdceebcb647f93552ba8f90b06a9beee49554c3d34"
+                                                       },
+                                                       {
+                                                           "file":  "page-04.png",
+                                                           "sha256":  "cfab64da24e2359649d744ae1601ea4d16add8df954d8d1f1756de37589cab58"
+                                                       },
+                                                       {
+                                                           "file":  "page-05.png",
+                                                           "sha256":  "9cac4f3c60a899e1d4a66e2357cb14c84a3102c99de8693a49a78a4c155bcd97"
+                                                       },
+                                                       {
+                                                           "file":  "page-06.png",
+                                                           "sha256":  "aae54bf3da3bbace43916112bb2916e7418721084fa3b119031fa7d5c5808da4"
+                                                       },
+                                                       {
+                                                           "file":  "page-07.png",
+                                                           "sha256":  "6f2f522d8af8f1fd21c9bc25a322d409e258bed133a0a8a7183f8a91ea52ab64"
+                                                       }
+                                                   ]
+                                     },
+                   "High-clear":  {
+                                      "reviewed_at_utc":  "2026-11-12T00:46:09.3225145Z",
+                                      "format":  "all seven overview pages",
+                                      "pairs":  [
+                                                    {
+                                                        "camera":  "sbs-g3-a-2818555625124739",
+                                                        "comparison_sha256":  "a749eb65cd4a38889d419d4f137ef162b12f781302597b536726a0d2ae611256",
+                                                        "render_sha256":  "ae1101b37ed47033b8c20f45575bc8d3bb69f1fc6f59a7a637b6dc3dd4c36489",
+                                                        "sheet_sha256":  "73e79ebb925f2604a0a0f254131de425b833fee41e7e40fded263023dbeccebe"
+                                                    },
+                                                    {
+                                                        "camera":  "sbs-g3-a-3970163613102941",
+                                                        "comparison_sha256":  "2655985ab39cd8e6b74d893fbfd74b0a0a548e56d8fbe62acec2e295ff88a70d",
+                                                        "render_sha256":  "894a77ba809bb8cd5f3775ea9c7a95208a67bfcaa57f28103dde5ba39cf7f5a5",
+                                                        "sheet_sha256":  "231941d689e61227a88b4905f4754acd591f98ab1d042e25785e7dd911ed95c2"
+                                                    },
+                                                    {
+                                                        "camera":  "sbs-g3-a-149248627179406",
+                                                        "comparison_sha256":  "6f92ec21d233062320d4819caffb33d14416f5a8e526057b017f8a26eb4dfb8d",
+                                                        "render_sha256":  "ad472a83f201f95c5ecc7f50d8ad7ec6b4524d79065a7b972ecd00af6f9dd86e",
+                                                        "sheet_sha256":  "a33aaf36294638704cc6cd6e7f675d597ea86be74aeb9558ac4f1dfd1d36ef77"
+                                                    },
+                                                    {
+                                                        "camera":  "sbs-g3-a-177786140912399",
+                                                        "comparison_sha256":  "090fc0ee15ab8cb46afcdd14f1d3bcfee30a22eec535aa1e4e47930800f89105",
+                                                        "render_sha256":  "6474dd8cbaa7f60de3b5f6c14bda92bb303ad1d79d07bff916d540b5be98af9a",
+                                                        "sheet_sha256":  "2e240a80306b0e2730c7ec3c6e5d26728b7667814dce590dcf8b9ec920b73530"
+                                                    },
+                                                    {
+                                                        "camera":  "sbs-g3-a-178689077481862",
+                                                        "comparison_sha256":  "109b11aedb75f1a1346fb5243913b2e5985c9746b6a1744631db8c1e6d04f7c2",
+                                                        "render_sha256":  "91165a1ee0564614ea2017cf49f61e3a26a65b26b004e44b3919c49e807cd197",
+                                                        "sheet_sha256":  "7fd5463c96a58f3021c444ba517349759aeb4d52163823950bbe0bb88642830c"
+                                                    },
+                                                    {
+                                                        "camera":  "sbs-g3-a-223210302566110",
+                                                        "comparison_sha256":  "be3bc9a41296027e0b9f04847c28f8570f03e9596885737d5ed605e83e0bb63c",
+                                                        "render_sha256":  "faffb7192dbaeea4ebf3dd424001b07a85f61acff656d707f098814e17591aa7",
+                                                        "sheet_sha256":  "0cbbf4691336d89aa661d715a5495b653d6ef3757c7dee16200e75aeb0caae8c"
+                                                    },
+                                                    {
+                                                        "camera":  "sbs-g3-a-309664504075286",
+                                                        "comparison_sha256":  "438ddde2184888ff3c54ccf48fd7b3e036c0df36bb35d805a8ce2391e4d028a3",
+                                                        "render_sha256":  "67afe6cab2707c82132ebfb7e9e59d56f7cb53f5dbf539026401db39ab77360b",
+                                                        "sheet_sha256":  "883ee470774b6399aed38e073ca577aa35290fcbe0a0b7f9e4b8a0f8dbd5d531"
+                                                    },
+                                                    {
+                                                        "camera":  "sbs-g3-a-504348097385466",
+                                                        "comparison_sha256":  "81b6841f0b1a4067f161c5211d89529e08588762871dd9d941a3c070d86a644c",
+                                                        "render_sha256":  "5db7a0012d28e21a33392ea91c535cbf3103c645437b414f2341421bdd05d813",
+                                                        "sheet_sha256":  "4bdaabeae40dc2a380400b0bbb770636c2de5fadeb93b4d3ef73a83332ffaea4"
+                                                    },
+                                                    {
+                                                        "camera":  "sbs-g3-a-201270605169291",
+                                                        "comparison_sha256":  "9d6455ab20f8bfe4d581d50c3832e266878a24c40195921b7bb3e3cc344d2782",
+                                                        "render_sha256":  "a31d9d64bdedf4d714f501ac31809b70e870c429c8bc42ae6596e261664086b4",
+                                                        "sheet_sha256":  "968074d56e784dccbaf20643962117ac63b6378dee0c1e324739dcf9f47b8296"
+                                                    },
+                                                    {
+                                                        "camera":  "sbs-g3-a-1398898753813071",
+                                                        "comparison_sha256":  "f323ab061cdbd1f4bfb9abb4c312dbf1dcafc6d2a1108308ed9cc376d614eeea",
+                                                        "render_sha256":  "6bd162087d329cba7422bd31953f7acfab6f81a1f47993227f88f8f867e0e09c",
+                                                        "sheet_sha256":  "b2b4cacd1603c74ce68b9edf61e1b928975a686a298b24697f3583cb564d5462"
+                                                    },
+                                                    {
+                                                        "camera":  "sbs-g3-a-320326319617139",
+                                                        "comparison_sha256":  "3015576aeeea68797c66d0689793b32d17affb27c991a9fa6ddf9f952711aff8",
+                                                        "render_sha256":  "4296f2fd5381079b608facd7a549d5f72345ff26848d1e330a5fa4624ec6d23a",
+                                                        "sheet_sha256":  "80d2b3e26b368cfdef244ba942243b32956fa7e23840a4c28a237e67342b38b0"
+                                                    },
+                                                    {
+                                                        "camera":  "sbs-g3-a-482392746429891",
+                                                        "comparison_sha256":  "a4bd6fd6fac72eaff9125b21402b065436071f0863f2430a2222947e64338e57",
+                                                        "render_sha256":  "a2b066541057cde59d8a7000e487a41f918a5240642cc1d6fc5be0b7ca7e10ed",
+                                                        "sheet_sha256":  "8f9db154c9b102800bb7aac7d239933b775e914b3f827ad04304d1aa7f6325c1"
+                                                    },
+                                                    {
+                                                        "camera":  "sbs-g3-a-454716650857984",
+                                                        "comparison_sha256":  "f1c89052fe31a413f87b240f573ed5b33b7d797343b1248cb435905cef501cb9",
+                                                        "render_sha256":  "d0f7885f06b583ca02bcce57adfe4c06f79a1170d313c1a9bac86de86ed7e4c8",
+                                                        "sheet_sha256":  "6ecf73ef3d3efb964e0208258aa5df87115b70e582a09841f52e321fee459bf5"
+                                                    },
+                                                    {
+                                                        "camera":  "sbs-g3-a-303305168125936",
+                                                        "comparison_sha256":  "a8bb7d37739164759a15b2193b811d50c4aa7890a528195f0dec9c2bfb1a7efc",
+                                                        "render_sha256":  "d1ac858a5c765497c5b27175e47ba173a40bad723cef6851f2745c9b4e0bb1e9",
+                                                        "sheet_sha256":  "4783305ffddee624c2e6b78fd3cf5126cd4537a44288370b8d64a7ff24721158"
+                                                    },
+                                                    {
+                                                        "camera":  "sbs-g3-a-320215796381417",
+                                                        "comparison_sha256":  "4cdbe7483c84e7e96f4b9c6f294753e510c49dd5433337d0ccf64c50ab1a8586",
+                                                        "render_sha256":  "bbfa7f6f22f85fad809d7d471cb5f56dc55eea4713c9734922bf5e7c31d514c9",
+                                                        "sheet_sha256":  "b87572e1af7e3327d5eea91b173ba93b997fb3709a0f4c487d1528f9c068e07a"
+                                                    },
+                                                    {
+                                                        "camera":  "sbs-g3-b-381800493259507",
+                                                        "comparison_sha256":  "bb8686f2fe7465ba42ea971dda6547a304768aeaacf82ae9a24b949dcfcd77d3",
+                                                        "render_sha256":  "5bcccf023100e86d3bfdaee10ae7d1f13fbe8f646081084a1424475a68a9f825",
+                                                        "sheet_sha256":  "60d0785b95906f99a79cf291ad74f7d382b87b1ed908b9c82afcd0435ffee100"
+                                                    },
+                                                    {
+                                                        "camera":  "sbs-g3-b-2279538078845158",
+                                                        "comparison_sha256":  "d7a0c29ce47125e3f1bcc19370906ce2ed7e433302e45887f9568e23aaefb2bf",
+                                                        "render_sha256":  "aa02cd8e8f74c334ad92f499e582333bcc7f9accc255b7608175eb640bf1a58f",
+                                                        "sheet_sha256":  "648a64e4e8ae3b7159909ba324119dfd7c47dc57630da3bd7144891b09e02664"
+                                                    },
+                                                    {
+                                                        "camera":  "sbs-g3-b-837235577143499",
+                                                        "comparison_sha256":  "8676ada6ab9b0582d015f708cdc62ee28cb31dfe02dc0db2993d5bd2f093bb3d",
+                                                        "render_sha256":  "e3d061b04ca950cafa5abeae91b639bdf923f3286839d2dd2d689cbc5143c2ef",
+                                                        "sheet_sha256":  "49ff5571ac73710566e65348e48e0b516d1e86d971ed5f9f99ab35de0b369a82"
+                                                    },
+                                                    {
+                                                        "camera":  "sbs-g3-b-3281350541967811",
+                                                        "comparison_sha256":  "6cf1e2a6f02736e4d48f9d75809ab4242cccdb7ad017258068eed9ecba078912",
+                                                        "render_sha256":  "bd547a243f27664420fb3b0141dee3d97207f41a901878bc9e6bd2e96e88fa42",
+                                                        "sheet_sha256":  "fd456b2f1a4b72533ae1062147f8fdb8d2218c2c87a0787aaa04d0d18e227807"
+                                                    },
+                                                    {
+                                                        "camera":  "sbs-g3-b-275528677534382",
+                                                        "comparison_sha256":  "07f8aceba89a22f0d8ef678b4962d89d6b39715000eb3bf0dd00057ce3159007",
+                                                        "render_sha256":  "35820025591a6a0aa4e5e59e336b1a06d4f72ff03ae29ca2ab6d7484eece6926",
+                                                        "sheet_sha256":  "9645d516fee0e04a0db26d7ee945e523b68ea126269d819b9ff29a1230b6dc89"
+                                                    },
+                                                    {
+                                                        "camera":  "sbs-g3-b-150280503737744",
+                                                        "comparison_sha256":  "087e595a45f7654b6b01c9f95790edfcd04512ce8b18fb382bb71b2e3c3ab668",
+                                                        "render_sha256":  "e87cd0624118cce6274f9e0c6c3e56850e31e62dd1b08f7170709703ded804bf",
+                                                        "sheet_sha256":  "c2256678bf31b289aa44cd1dbcfd8fab9a39d957e45ca5ae9f8013c68709e811"
+                                                    },
+                                                    {
+                                                        "camera":  "sbs-g3-b-297817221966185",
+                                                        "comparison_sha256":  "0db1fb1dc739f82198c4f6f488b74725fd9793bbc4c77fd80191d5a3052464cd",
+                                                        "render_sha256":  "1450049a414397b9ec5a5664faa158fbff7189a91bfd329e845f8c92cb902057",
+                                                        "sheet_sha256":  "214c046242586cfaf689fac0cdc84f2ffec8762e0e16bcaf1d36277497262156"
+                                                    },
+                                                    {
+                                                        "camera":  "sbs-g3-b-3678296072299092",
+                                                        "comparison_sha256":  "d543e0ab31a4482c075c44b8bd6382a9c9cd7802c16fd892a820ae47a03f8afa",
+                                                        "render_sha256":  "f494f60fc0cd22eeb99ab2f361eca69e89e5b1871dedb639510700cfbab31a72",
+                                                        "sheet_sha256":  "b2379f564d553b4d18e5dc86a73a69d551449be254e8672d124648565770a91b"
+                                                    },
+                                                    {
+                                                        "camera":  "sbs-g3-b-494288258686575",
+                                                        "comparison_sha256":  "4943df7b00e9a99e18e3487548285155f50e2e1dc6daa19391e24e05cf4e2ced",
+                                                        "render_sha256":  "76eb2e31021d85fa511031c36f96fd5dc27e8f7b1afa0ffc0bb22b4acc24d927",
+                                                        "sheet_sha256":  "f156a8feaced6cd6d1c8d1feae5cd4a9101fe5b5513c4413e4d871710f8eb1fd"
+                                                    },
+                                                    {
+                                                        "camera":  "sbs-g3-b-1801374876712141",
+                                                        "comparison_sha256":  "ce07076f1c2f18dc6b8ebcc94b17b79e6be18aa28c9345ae29f5e7a5b6f903e7",
+                                                        "render_sha256":  "64cee325de030206ec768fafbf44215c194b01c6b4bca4d353327a8c3f0f4689",
+                                                        "sheet_sha256":  "5f065a6bf8a3cd9d21691c4981ac1b9d0d5b23edbaeaef54719b1a8174d95e4b"
+                                                    }
+                                                ],
+                                      "pages":  [
+                                                    {
+                                                        "file":  "page-01.png",
+                                                        "sha256":  "7db741038ac897a97843bd5c97ad3b2675d70ec67bcd16cce098e95c6b2cc4e5"
+                                                    },
+                                                    {
+                                                        "file":  "page-02.png",
+                                                        "sha256":  "9c400b377464b91a5743ab2663a338f7eda253f972d179cc5bba7d274d5723da"
+                                                    },
+                                                    {
+                                                        "file":  "page-03.png",
+                                                        "sha256":  "037fad2de714851616adcbfb724ce32d1ed6876889efea19a8c67d4f494cd6df"
+                                                    },
+                                                    {
+                                                        "file":  "page-04.png",
+                                                        "sha256":  "2b45c7c53257325b9ddc9073288ef2813fb8e4bedac1938c478001c768e58665"
+                                                    },
+                                                    {
+                                                        "file":  "page-05.png",
+                                                        "sha256":  "b3cd2429d66e26765caa706d2a184286facadf1653df0806480cbcdb72d017f8"
+                                                    },
+                                                    {
+                                                        "file":  "page-06.png",
+                                                        "sha256":  "30287a1dabafec82d335110d036788c363ad36c1829290435b1ed268197df64d"
+                                                    },
+                                                    {
+                                                        "file":  "page-07.png",
+                                                        "sha256":  "f54e795f9cfd2201773f4e2fb8cbbdcd4cf0072f85f9a5e6a92ab62dd00cd42f"
+                                                    }
+                                                ]
+                                  }
+               }
+}

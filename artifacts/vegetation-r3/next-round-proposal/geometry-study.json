@@ -1,0 +1,107 @@
+{
+  "status": "PROPOSAL ONLY, NOT APPLIED OR RENDERED",
+  "baseline_source_sha256": "9a07be754a0e15bea87f3de3a1d0b3152838825385db0fd01413f0fa8c4019c1",
+  "cases": {
+    "berberis_red": {
+      "triangles_before": 1362,
+      "triangles_proposal": 1362,
+      "exact_vertices_indices_and_layers": true,
+      "all_fields_unchanged": false,
+      "materials_before": [
+        "hedge_berberis",
+        "hedge_shell_berberis",
+        "hedge_sprig_berberis"
+      ],
+      "materials_proposal": [
+        "hedge_shell_berberis",
+        "hedge_sprig_berberis"
+      ]
+    },
+    "privet": {
+      "triangles_before": 1014,
+      "triangles_proposal": 1014,
+      "exact_vertices_indices_and_layers": true,
+      "all_fields_unchanged": true,
+      "materials_before": [
+        "hedge_privet",
+        "hedge_shell_privet",
+        "hedge_sprig_privet"
+      ],
+      "materials_proposal": [
+        "hedge_privet",
+        "hedge_shell_privet",
+        "hedge_sprig_privet"
+      ]
+    },
+    "hornbeam": {
+      "triangles_before": 996,
+      "triangles_proposal": 996,
+      "exact_vertices_indices_and_layers": true,
+      "all_fields_unchanged": true,
+      "materials_before": [
+        "hedge_hornbeam",
+        "hedge_shell_hornbeam",
+        "hedge_sprig_hornbeam"
+      ],
+      "materials_proposal": [
+        "hedge_hornbeam",
+        "hedge_shell_hornbeam",
+        "hedge_sprig_hornbeam"
+      ]
+    },
+    "thuja": {
+      "triangles_before": 980,
+      "triangles_proposal": 980,
+      "exact_vertices_indices_and_layers": true,
+      "all_fields_unchanged": true,
+      "materials_before": [
+        "hedge_shell_thuja",
+        "hedge_sprig_thuja",
+        "hedge_thuja"
+      ],
+      "materials_proposal": [
+        "hedge_shell_thuja",
+        "hedge_sprig_thuja",
+        "hedge_thuja"
+      ]
+    }
+  },
+  "authored_beds_flat_ground": [
+    {
+      "id": "biezenstwa-plantings",
+      "bed": "E1",
+      "plant": "berberis_red",
+      "triangles_before": 4324,
+      "triangles_proposal": 4324,
+      "exact_vertices_indices_and_layers": true
+    },
+    {
+      "id": "biezenstwa-plantings",
+      "bed": "E2",
+      "plant": "berberis_red",
+      "triangles_before": 4877,
+      "triangles_proposal": 4877,
+      "exact_vertices_indices_and_layers": true
+    },
+    {
+      "id": "biezenstwa-plantings",
+      "bed": "A",
+      "plant": "berberis_red",
+      "triangles_before": 5126,
+      "triangles_proposal": 5126,
+      "exact_vertices_indices_and_layers": true
+    },
+    {
+      "id": "biezenstwa-plantings",
+      "bed": "C",
+      "plant": "berberis_red",
+      "triangles_before": 4075,
+      "triangles_proposal": 4075,
+      "exact_vertices_indices_and_layers": true
+    }
+  ],
+  "authored_total_triangles_before": 18402,
+  "authored_total_triangles_proposal": 18402,
+  "overrides_sha256": "bab8ec77f157bb8f478a5faa16ead67e02ab15578d36ed41b81f22a2979831f7",
+  "note": "One 8x1.3m synthetic bed per species, plus authored bed footprints with FLAT z=0, not imported terrain. No GIS pytest, world build, Unity launch or production writes. This is small geometry analysis, not visual or GPU acceptance."
+}

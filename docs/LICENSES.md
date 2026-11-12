@@ -1,4 +1,4 @@
-﻿# LICENSES — rejestr źródeł i zasobów
+# LICENSES — rejestr źródeł i zasobów
 
 Każde pobrane źródło danych, zasób graficzny, dźwięk, czcionka i narzędzie, którego wynik trafia do repo lub buildu, ma tu wpis. Manifesty maszynowe (URL, data, SHA256, CRS) leżą w `Data/SourceManifests/*.json`; surowe pliki w `Data/raw/` (poza gitem). Zakaz źródeł Google: ADR 0002.
 
@@ -294,3 +294,7 @@ Własny dodatek to analityczny odblask i czytnik stanu istniejących reflektoró
 Wersja źródeł, hashe i skrypt odtworzenia są w
 `artifacts/furniture-r2/24h/candidate-src/provenance.json` oraz
 `artifacts/furniture-r2/24h/prepare-sign-prototype.ps1`. Nie użyto grafiki producentów folii.
+## Kabina — skan skóry CC0 (Poly Haven), GPT cab r2 (s12)
+| ID | Zasób (rozmiar fizyczny) | URL | Autor | Licencja | Mapy (MD5 w `art-source/truck/interior/cab_material_scans.json`) | Użycie w grze |
+|---|---|---|---|---|---|---|
+| `brown_leather` | Brown Leather (0,40 × 0,40 m; kafel 0,12 m, wieniec kierownicy 0,05 m) | https://polyhaven.com/a/brown_leather | Rob Tuytel | CC0 1.0 (https://polyhaven.com/license) | diffuse/normal GL/roughness/AO 2k | faktura skóry i tłoczenia tworzyw kabiny (ADR cab r2) |

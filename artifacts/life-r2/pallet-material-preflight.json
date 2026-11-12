@@ -1,0 +1,13 @@
+{
+    "appearance":  "UNVERIFIED: inspect actual pallet cameras in r3",
+    "set_present":  false,
+    "native_shader_guid":  "3bdc254b264039f44854f125dcb313b3",
+    "native_material_sha":  "88A18C6FB1B91BD2D2CE28021B9502BC52245CA42507A79D32FADFF54720DA69",
+    "material":  "pallet_wood",
+    "declared_set":  "euro_pallet_side",
+    "spec_sha":  "8AB1E1763D79EBA84914D9182F2C81D2B98B8AFCE7AF5500CD28FBD0AE5C22AF",
+    "native_library":  "baseline from before-exact; B import pending",
+    "native_shader_source":  "game/Assets/_Project/Rendering/Shaders/WorldSurface.shader",
+    "native_base_map_guid":  "e89c272fd8769524ba7dcd43e0a57935",
+    "caution":  "Native WorldSurface has a BaseMap assigned; missing PBR set alone does not prove untextured appearance. Inspect actual pallet baseline."
+}

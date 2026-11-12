@@ -1,0 +1,287 @@
+{
+  "schema": "kamion/sbs-photometry/1",
+  "annotations": [
+    {
+      "camera": "sbs-g3-a-2818555625124739",
+      "comparison_sha256": "a749eb65cd4a38889d419d4f137ef162b12f781302597b536726a0d2ae611256",
+      "render_sha256": "148d967b8587dfaeb46a84cdc1f4f1c493dc6c87efb70663c5d606c6e2e0dd44",
+      "reference_lighting": "clear",
+      "reviewed": true,
+      "review_note": "Manually viewed r1 Low-clear pair: small unobstructed sky and road samples. Sun direction, shadows and approximate pose differ; diagnostic image comparison only, not material albedo or D51.",
+      "masks": {
+        "photo": {
+          "sky": [
+            [
+              [
+                0.64,
+                0.12
+              ],
+              [
+                0.8,
+                0.12
+              ],
+              [
+                0.8,
+                0.35
+              ],
+              [
+                0.64,
+                0.35
+              ]
+            ]
+          ],
+          "asphalt": [
+            [
+              [
+                0.86,
+                0.88
+              ],
+              [
+                0.94,
+                0.88
+              ],
+              [
+                0.94,
+                0.95
+              ],
+              [
+                0.86,
+                0.95
+              ]
+            ]
+          ]
+        },
+        "render": {
+          "sky": [
+            [
+              [
+                0.64,
+                0.12
+              ],
+              [
+                0.8,
+                0.12
+              ],
+              [
+                0.8,
+                0.35
+              ],
+              [
+                0.64,
+                0.35
+              ]
+            ]
+          ],
+          "asphalt": [
+            [
+              [
+                0.86,
+                0.88
+              ],
+              [
+                0.94,
+                0.88
+              ],
+              [
+                0.94,
+                0.95
+              ],
+              [
+                0.86,
+                0.95
+              ]
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "camera": "sbs-g3-a-3970163613102941",
+      "comparison_sha256": "2655985ab39cd8e6b74d893fbfd74b0a0a548e56d8fbe62acec2e295ff88a70d",
+      "render_sha256": "c28905e62c21086d42601caae93c2b4b2e98a76e2c7e754dd0de7e81263b4b3d",
+      "reference_lighting": "clear",
+      "reviewed": true,
+      "review_note": "Manually viewed r1 Low-clear pair: small unobstructed sky and road samples. Sun direction, shadows and approximate pose differ; diagnostic image comparison only, not material albedo or D51.",
+      "masks": {
+        "photo": {
+          "sky": [
+            [
+              [
+                0.64,
+                0.12
+              ],
+              [
+                0.8,
+                0.12
+              ],
+              [
+                0.8,
+                0.35
+              ],
+              [
+                0.64,
+                0.35
+              ]
+            ]
+          ],
+          "asphalt": [
+            [
+              [
+                0.86,
+                0.88
+              ],
+              [
+                0.94,
+                0.88
+              ],
+              [
+                0.94,
+                0.95
+              ],
+              [
+                0.86,
+                0.95
+              ]
+            ]
+          ]
+        },
+        "render": {
+          "sky": [
+            [
+              [
+                0.64,
+                0.12
+              ],
+              [
+                0.8,
+                0.12
+              ],
+              [
+                0.8,
+                0.35
+              ],
+              [
+                0.64,
+                0.35
+              ]
+            ]
+          ],
+          "asphalt": [
+            [
+              [
+                0.86,
+                0.88
+              ],
+              [
+                0.94,
+                0.88
+              ],
+              [
+                0.94,
+                0.95
+              ],
+              [
+                0.86,
+                0.95
+              ]
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "camera": "sbs-g3-a-149248627179406",
+      "comparison_sha256": "6f92ec21d233062320d4819caffb33d14416f5a8e526057b017f8a26eb4dfb8d",
+      "render_sha256": "24a0b32b28abb3b45242e3d41fdefbab7d5f2b571331173d3eaa003209c44932",
+      "reference_lighting": "clear",
+      "reviewed": true,
+      "review_note": "Manually viewed r1 Low-clear pair: small unobstructed sky and road samples. Sun direction, shadows and approximate pose differ; diagnostic image comparison only, not material albedo or D51.",
+      "masks": {
+        "photo": {
+          "sky": [
+            [
+              [
+                0.64,
+                0.12
+              ],
+              [
+                0.8,
+                0.12
+              ],
+              [
+                0.8,
+                0.35
+              ],
+              [
+                0.64,
+                0.35
+              ]
+            ]
+          ],
+          "asphalt": [
+            [
+              [
+                0.86,
+                0.88
+              ],
+              [
+                0.94,
+                0.88
+              ],
+              [
+                0.94,
+                0.95
+              ],
+              [
+                0.86,
+                0.95
+              ]
+            ]
+          ]
+        },
+        "render": {
+          "sky": [
+            [
+              [
+                0.64,
+                0.12
+              ],
+              [
+                0.8,
+                0.12
+              ],
+              [
+                0.8,
+                0.35
+              ],
+              [
+                0.64,
+                0.35
+              ]
+            ]
+          ],
+          "asphalt": [
+            [
+              [
+                0.86,
+                0.88
+              ],
+              [
+                0.94,
+                0.88
+              ],
+              [
+                0.94,
+                0.95
+              ],
+              [
+                0.86,
+                0.95
+              ]
+            ]
+          ]
+        }
+      }
+    }
+  ]
+}

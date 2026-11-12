@@ -1,0 +1,85 @@
+﻿{
+    "delivered_at":  "2026-11-12T02:41:10.5689588+01:00",
+    "source_snapshot_git":  "767405c4",
+    "branch":  "gpt-sbs-r2",
+    "destination":  "C:\\Users\\matma\\Documents\\Claude\\kamion",
+    "robocopy_exit_codes":  {
+                                "round":  1,
+                                "latest":  1
+                            },
+    "coverage":  [
+                     {
+                         "root":  "artifacts/sbs-r2",
+                         "source_file_count":  1047,
+                         "missing_targets":  0,
+                         "length_mismatches":  0
+                     },
+                     {
+                         "root":  "artifacts/sbs-gate3/latest",
+                         "source_file_count":  338,
+                         "missing_targets":  0,
+                         "length_mismatches":  0
+                     }
+                 ],
+    "critical_sha256":  [
+                            {
+                                "path":  "artifacts/sbs-r2/REPORT.md",
+                                "sha256":  "af8b654c6a8baad968467831a6c2f5d042bad9bf73443ea6d4611a88e4ab2618",
+                                "match":  true
+                            },
+                            {
+                                "path":  "artifacts/sbs-r2/AUDIT.json",
+                                "sha256":  "24b5791e825ea153be70283057878dfa890fab64cc15403b3b378f55d92fa093",
+                                "match":  true
+                            },
+                            {
+                                "path":  "artifacts/sbs-r2/gis-completed.json",
+                                "sha256":  "6b795ebd8f35ddbdd0e2f4e73ca6e91881b70f1b9db3c2259e681225f058969b",
+                                "match":  true
+                            },
+                            {
+                                "path":  "artifacts/sbs-r2/evidence/inputs.zip",
+                                "sha256":  "1b68a2d644c67b38c7f15b69eab9a6b89533d4d739c2f0fdc1a6fdd1f19e34ed",
+                                "match":  true
+                            },
+                            {
+                                "path":  "artifacts/sbs-r2/counters/camera-counters.csv",
+                                "sha256":  "f662e1815155d58e8a22cc001acd9d34889b35fc7fe3e774b1c29f1387cfd661",
+                                "match":  true
+                            },
+                            {
+                                "path":  "artifacts/sbs-gate3/latest/index.html",
+                                "sha256":  "1e715088d72b0d9a524e46bec4d78544541c9f398b539c412e0f7b9e9a01cbea",
+                                "match":  true
+                            },
+                            {
+                                "path":  "artifacts/sbs-gate3/latest/data.json",
+                                "sha256":  "d0a1cf8ab1aeeb136fce8105ed0508bb87bd32f81ab8b7f75faf078339f8c9cc",
+                                "match":  true
+                            },
+                            {
+                                "path":  "artifacts/sbs-r2/evidence/sheets/Low-overcast/metrics.json",
+                                "sha256":  "03cb1e76d86a672d24492b591e7d272434b6a927943b56f74505b79d40121e60",
+                                "match":  true
+                            },
+                            {
+                                "path":  "artifacts/sbs-r2/evidence/sheets/Low-clear/metrics.json",
+                                "sha256":  "b0714cf9352c7839d3602b2c3f98961f9c0681df49482766904250885877ff15",
+                                "match":  true
+                            },
+                            {
+                                "path":  "artifacts/sbs-r2/evidence/sheets/High-overcast/metrics.json",
+                                "sha256":  "45c0293e4f4edd4675ebe4b2b88ecfae62b617fdfc43993a627dfbed70cff3b0",
+                                "match":  true
+                            },
+                            {
+                                "path":  "artifacts/sbs-r2/evidence/sheets/High-clear/metrics.json",
+                                "sha256":  "8626b37c7bac171b44e3f019b3035412237539e7a42f45bf4b1c86e37de0e99d",
+                                "match":  true
+                            }
+                        ],
+    "verification_scope":  "Every copied source file exists with equal length; SHA verified for the listed critical files, not every payload. Receipt itself added afterwards.",
+    "main_commit_performed":  false,
+    "merge_into_main_performed":  false,
+    "push_performed":  false
+}

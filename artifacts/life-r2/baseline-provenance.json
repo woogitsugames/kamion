@@ -1,0 +1,46 @@
+{
+    "time":  "2026-11-11T23:58:22.5296165+01:00",
+    "branch":  "gpt-life-r2",
+    "main_merged":  "765145c5",
+    "world_manifest_expected":  "849a6f88c7249f54dccab5e697a60729d3314bea1d73286f796a7ff7b324ca1c",
+    "world_manifest_actual":  "849a6f88c7249f54dccab5e697a60729d3314bea1d73286f796a7ff7b324ca1c",
+    "source_checks":  [
+                          {
+                              "path":  "art-source/world/materials/_src/sets_facade.py",
+                              "expected":  "23e2e21ef091fe60e93fdc7ca460c9543d7514a133f78452e36b3afb2faee362",
+                              "actual":  "23e2e21ef091fe60e93fdc7ca460c9543d7514a133f78452e36b3afb2faee362"
+                          },
+                          {
+                              "path":  "art-source/world/materials/materials_spec.json",
+                              "expected":  "8ab1e1763d79eba84914d9182f2c81d2b98b8afce7af5500cd28fbd0ae5c22af",
+                              "actual":  "8ab1e1763d79eba84914d9182f2c81d2b98b8afce7af5500cd28fbd0ae5c22af"
+                          },
+                          {
+                              "path":  "art-source/world/props/street_props.glb",
+                              "expected":  "c56cbe59b99b61d8cf15c605c6b0b78697c45e76af8bdaea404de7f5602d3cfd",
+                              "actual":  "c56cbe59b99b61d8cf15c605c6b0b78697c45e76af8bdaea404de7f5602d3cfd"
+                          },
+                          {
+                              "path":  "art-source/world/props/props_meta.json",
+                              "expected":  "c4e28f96d2ec46a754856cc30511b8ef69936266579ffa1d1aa50e86158ad2f8",
+                              "actual":  "c4e28f96d2ec46a754856cc30511b8ef69936266579ffa1d1aa50e86158ad2f8"
+                          },
+                          {
+                              "path":  "tools/worldgen/streetscape/life_cars.py",
+                              "expected":  "50e38b0f77c6b113a00f76d271ed5554a1a92c7c1a9011fb4c2e941b21dc73ed",
+                              "actual":  "50e38b0f77c6b113a00f76d271ed5554a1a92c7c1a9011fb4c2e941b21dc73ed"
+                          },
+                          {
+                              "path":  "tools/worldgen/streetscape/materials.py",
+                              "expected":  "52a49d5d1af26e7cce0a5f910edca236a2f41a9f0b10ad1236f5031567d9d409",
+                              "actual":  "52a49d5d1af26e7cce0a5f910edca236a2f41a9f0b10ad1236f5031567d9d409"
+                          },
+                          {
+                              "path":  "game/Assets/_Project/Environment/Shaders/WorldPBR.shader",
+                              "expected":  "25ac1072f80989797b8f099a3a205fd88e445b548cf329b2557530f6442c2b04",
+                              "actual":  "25ac1072f80989797b8f099a3a205fd88e445b548cf329b2557530f6442c2b04"
+                          }
+                      ],
+    "mismatches":  0,
+    "baseline_origin":  "Native candidate imported in life r1; merged main only changes SBS/docs/watchdog, no world or vehicle source changes"
+}

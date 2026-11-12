@@ -1,0 +1,15 @@
+{
+  "changed_outputs_after_final_gis_and_unity": [],
+  "source_drift_since_baseline": [],
+  "source_count": 7,
+  "backed_up_generator_side_effects": {
+    "Data/Regions/bialystok-industrial-c/generated/far_field_qa.json": "e9b94f22b937a3b92d6584017e6d0360789437e56427fc84e8992f748dc4716b",
+    "Data/Regions/bialystok-industrial-c/generated/landmarks/viaduct_putry_underdeck.spec.json": "1378f15fb4ec815d74d035c6363e7cac904329f97ad327653c3494bcb4044fa6",
+    "Data/Regions/bialystok-industrial-c/generated/roads_qa.json": "4f66f53c5f9cecfcdf658283525dd422f2b17d894725dc1c7f85d638db174af7",
+    "Data/Regions/bialystok-industrial-c/generated/streetscape_qa.json": "c778b2b94519287a527057bdbf8e9dc0dc510b9337ad67316f9d2e973c6d7f99",
+    "Data/Regions/bialystok-industrial-c/generated/world_manifest.json": "d6b69693af7b7953546c6788b087628b38c5fa3b0ef7432891a74f6b32302b6b",
+    "Data/SourceManifests/bialystok-industrial-c-far-field.manifest.json": "7171d1c26d0a8e0c03ac520fe994c31a5f477d2b906b0b025016bfda3300e036",
+    "art-source/world/props/props_meta.json": "17f8b282a8ad6fe41f3b5d1b93eeaf44e0d419dce1894412dfd33eefd4ca9327"
+  },
+  "note": "Recorded before restoring tracked generator side effects to HEAD. Snapshot-restored describes the generated/imported world; canonical tracked metadata will then return to the pre-round state."
+}

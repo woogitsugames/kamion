@@ -1,0 +1,150 @@
+diff --git a/tests/gis/test_vegetation_0109_mapped.py b/tests/gis/test_vegetation_0109_mapped.py
+new file mode 100644
+index 00000000..c3252641
+--- /dev/null
++++ b/tests/gis/test_vegetation_0109_mapped.py
+@@ -0,0 +1,65 @@
++"""D51: orthophoto-confirmed broadleaf points must respect world placement guards."""
++from types import SimpleNamespace
++
++import numpy as np
++
++from streetscape.vegetation import place
++
++
++ORIGIN = np.array([777995., 596223.])
++PREFIX = "ortho:gugik-2024:g3-b-120:"
++
++
++def context(block_first=False, osm_duplicate=False):
++    hf = SimpleNamespace(x0=-350., y1=-150., z=np.zeros((129, 129)))
++    height = np.full(hf.z.shape, 130.)
++    blocked = np.zeros(hf.z.shape, bool)
++    if block_first:
++        blocked[28, 73] = True  # first measured crown centre, local (-277, -178)
++    src = {"bdot10k": {k: [] for k in (
++        "OT_PTLZ_A", "OT_PTRK_A", "OT_OIPR_P", "OT_OIPR_L", "OT_PTNZ_A", "OT_PTTR_A")},
++        "osm": {"nodes": [], "ways": [], "areas": []}}
++    if osm_duplicate:
++        src["osm"]["nodes"].append(dict(osm_node=1, tags={"natural": "tree", "genus": "Tilia"},
++            geometry={"type": "Point", "coordinates": [777718., 596045.]}))
++    return src, hf, height, blocked
++
++
++def run(**kwargs):
++    src, hf, height, blocked = context(**kwargs)
++    report = {}
++    trees, _ = place(src, ORIGIN, hf, height, blocked, report)
++    return trees, report
++
++
++def test_confirmed_roadside_crowns_are_present_stable_and_grounded():
++    trees, report = run()
++    again, _ = run()
++    assert trees == again
++    assert len(trees) == 4
++    assert all(t["src"].startswith(PREFIX) for t in trees)
++    assert {(t["e"], t["n"]) for t in trees} == {
++        (-277., -178.), (-263., -185.), (-251., -193.), (-233., -202.)}
++    assert all(t["z"] == 130. and 12.5 <= t["h"] <= 15. for t in trees)
++    assert report["orthophoto_trees"]["placed"] == 4
++
++
++def test_mapped_point_cannot_override_a_blocked_surface():
++    trees, report = run(block_first=True)
++    assert len(trees) == 3
++    assert not any((t["e"], t["n"]) == (-277., -178.) for t in trees)
++    assert report["orthophoto_trees"]["blocked"] == 1
++
++
++def test_existing_osm_tree_wins_over_an_orthophoto_duplicate():
++    trees, report = run(osm_duplicate=True)
++    assert len(trees) == 4
++    assert any(t["src"] == "osm:node/1" for t in trees)
++    assert report["orthophoto_trees"]["placed"] == 3
++    assert report["orthophoto_trees"]["deduplicated"] == 1
++
++
++def test_source_points_cannot_leak_into_an_unrelated_region():
++    src, hf, height, blocked = context()
++    trees, _ = place(src, np.zeros(2), hf, height, blocked, {})
++    assert trees == []
+diff --git a/tools/worldgen/streetscape/vegetation.py b/tools/worldgen/streetscape/vegetation.py
+index 611f0966..8e53a55f 100644
+--- a/tools/worldgen/streetscape/vegetation.py
++++ b/tools/worldgen/streetscape/vegetation.py
+@@ -63,6 +63,22 @@ def _scatter(poly, spacing, rng):
+ TREE_GROUP_DEFAULTS = {"group_size": [3, 7], "in_group_m": [3.0, 5.5], "gap_m": [15.0, 40.0], "depth_m": 3.0,
+                        "rows_replace_m": 12.0, "species": {"linden": 0.5, "pine": 0.2, "birch": 0.2, "maple": 0.1}}
+ 
++# ADR0109 r3 / D51 B8. Four missing roadside broadleaf crowns, hand-read from
++# the local GUGiK 2024 orthophoto (not a game texture). Source: region ortho.json,
++# gugik-orto-2024-rgb-0p25-bialystok-industrial-c; SHA256 below. Mapillary
++# 297817221966185 (zsolt, 2017-07-29, CC BY-SA 4.0) confirms the roadside habit.
++# EPSG:2180 crown centres, NOT surveyed trunks: +/-3m WORKING_VALUE. Heights
++# and linden as a broadleaf proxy are WORKING_VALUE, botanical species unverified.
++# Keep these source corrections here, in the vegetation-owned data, rather than
++# altering the shared road/landmark overrides. Other regions clip them out.
++ORTHO_TREE_CORRECTIONS = ({
++    "id": "g3-b-120",
++    "ortho_sha256": "19d7c3ca5d2192b1d0367c8d039e41aa60221927755b45c6a6763e933d96258b",
++    "points_epsg2180": ((777718., 596045.), (777732., 596038.),
++                        (777744., 596030.), (777762., 596021.)),
++    "species": "linden", "height_range_m_WORKING_VALUE": (12.5, 15.0),
++},)
++
+ 
+ def group_positions(line, rng, prm):
+     """Clumps along `line` (shapely LineString): n trees (group_size) spaced in_group_m along the line with lateral
+@@ -108,14 +124,14 @@ def place(src, origin, hf, zc, blocked, report, overrides=None):
+         j = np.clip(np.rint(hf.y1 - P[:, 1]).astype(int), 0, H - 1)
+         return ~blocked[j, i], zc[j, i]
+ 
+-    def emit(P, species, rng, src_id, hscale=1.0, fk=None):
++    def emit(P, species, rng, src_id, hscale=1.0, fk=None, height_range=None):
+         if not len(P):
+             return
+         good, z = ok(P)
+         for (x, y), zz, sp, g in zip(P, z, species, good):
+             if not g:
+                 continue
+-            lo, hi = HEIGHT[sp]
++            lo, hi = HEIGHT[sp] if height_range is None else height_range
+             h = rng.uniform(lo, hi) * hscale
+             out.append({"p": f"tree_{sp}", "v": int(rng.integers(0, 3)), "e": round(float(x), 2), "n": round(float(y), 2),
+                         "z": round(float(zz), 2), "h": round(float(h), 1), "yaw": round(float(rng.uniform(0, 6.2832)), 3),
+@@ -210,6 +226,21 @@ def place(src, origin, hf, zc, blocked, report, overrides=None):
+             q = np.asarray(nd["geometry"]["coordinates"], float)[None] - origin
+             rng = np.random.default_rng(nd["osm_node"])
+             emit(q, [osm_tree_species(nd["tags"])], rng, f"osm:node/{nd['osm_node']}")
++    # Confirmed source points still go through the same blocked/ground guard.
++    # Insert after mapped trees, before speculative self-seeded vegetation: the
++    # existing mapped tree wins the 1.8m dedup; a random sapling cannot replace it.
++    ortho_candidates, ortho_emitted = 0, 0
++    for correction in ORTHO_TREE_CORRECTIONS:
++        for j, point in enumerate(correction["points_epsg2180"]):
++            q = np.asarray(point, float) - np.asarray(origin, float)
++            if not (hf.x0 <= q[0] <= hf.x0+W-1 and hf.y1-H+1 <= q[1] <= hf.y1):
++                continue  # never clamp a different region's point onto a tile edge
++            ortho_candidates += 1
++            key = f"ortho:gugik-2024:{correction['id']}:{j}"
++            n0 = len(out)
++            emit(q[None], [correction["species"]], np.random.default_rng(_seed(key)), key,
++                 height_range=correction["height_range_m_WORKING_VALUE"])
++            ortho_emitted += len(out)-n0
+     # self-seeded vegetation on unmown land
+     for layer in ("OT_PTNZ_A", "OT_PTTR_A"):
+         for f in src["bdot10k"][layer]:
+@@ -234,6 +265,12 @@ def place(src, origin, hf, zc, blocked, report, overrides=None):
+         cnt[t["p"]] = cnt.get(t["p"], 0) + 1
+     report["trees"] = cnt
+     report["understorey"] = sum(1 for t in out if t["src"].endswith(":under"))
++    if ortho_candidates:
++        placed = sum(t["src"].startswith("ortho:gugik-2024:") for t in out)
++        report["orthophoto_trees"] = dict(candidates=ortho_candidates, placed=placed,
++            blocked=ortho_candidates-ortho_emitted, deduplicated=ortho_emitted-placed,
++            position_status="WORKING_VALUE: crown centres +/-3m, not surveyed trunks",
++            height_species_status="WORKING_VALUE: 12.5-15m, linden proxy for broadleaf")
+     report["_forest_mix"] = forest_mix
+     return out, forests
+ 
