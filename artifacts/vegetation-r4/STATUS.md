@@ -100,3 +100,4 @@ Piny B przeszły: poza jawną zmianą tris nasadzeń reszta kontraktów danych z
 87809 terminalne0: WorldB2 534,6s oraz dekodowana kolizja64chunków. Piny B2 przeszły0: jedyna zmianaźródłowa plantings.py, wszystkie64instancje/kolizje i far_field identyczne,15Megascans bezfallback. Zmienione tylkochunk6_6 Low/High i metadata. Nasadzenia+1945tris do20347, bez zmiany4obrysów/94,3m². Nowyjob9518 importuje od12:48:05 przezUnityslot, potem16próbB. To jeszcze nie pomiar kamer/GPU ani akceptacja.
 Import B kod0. Dalej16prób w tych samych kamerach i warunkach.
 Probe probe-b: Low overcast zapisany. Obejrzeć arkusze i koszt przed dalszą decyzją; to nie pełna macierz.
+Probe probe-b: Low clear zapisany. Obejrzeć arkusze i koszt przed dalszą decyzją; to nie pełna macierz.
