@@ -138,3 +138,5 @@ Po budowie B (2026-11-12T10:42:29.8958663+01:00): potwierdź natywną zmianę ty
 Po budowie B (2026-11-12T10:45:17.9668810+01:00): zapisz 492 kadry i budżet czerni B. Następny etap w post-b.ps1; po kompletach oględziny i decyzja.
 
 Po budowie B (2026-11-12T10:45:26.2889658+01:00): zmierz barwę i kontrast czerni B. Następny etap w post-b.ps1; po kompletach oględziny i decyzja.
+
+Krok 37: B kompletny, post-b 42312 zakończony 0; obejrzano trzy siatki oraz Low-clear bok/tył czerni. Natywne 28 materiałów: tylko _CarFlake.z czerni 0,08→0,025, reszta dokładnie zgodna. Clear ROI drzwi/asfalt Low 0,92361, High 0,93082 (A 0,98890/0,99535); overcast 0,67064/0,69015. Neutralna barwa zachowana, cel clear nadal PARTIAL. Zachowano B jako bazę C. Następny krok: shader-only C zwiększy tylko rearFace zasięg/ilość monotonicznego nalotu (saturate amount, opacity≤0,5), bez nowej mapy/przebiegu; native B pozostaje aktualny.
