@@ -172,4 +172,4 @@ def test_plots_report_of_the_built_region():
     assert qa["inst_trees_kept"] >= 0.3 * qa["plots"]          # review P1-a: grown trees, >= 0.3 per plot on average
     assert qa["overgrowth"] >= 0.5 * qa["plots"] and qa["bushes"] + qa["shrubs"] >= 2 * qa["plots"]
     assert qa["fence_step_zone_hits"] == 0
-    assert qa["tris"] <= 120_000                               # kit triangles of the whole region (ADR 0124: 52 k)
+    assert qa["tris"] <= 120_000 and qa["inst_trees_kept"] <= 3 * qa["plots"]                               # kit triangles of the whole region (ADR 0124: 52 k)

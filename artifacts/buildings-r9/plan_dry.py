@@ -43,6 +43,14 @@ b = Buf()
 surf = FU.SurfaceTop([p_ for p_ in w.buf.parts if p_.layer == "road"])
 out = PLT.build(b, rp, lambda q: 0.0, surf, rep, items=[])
 TREES = out["trees"]
+for p_ in P:                       # ends of the fence runs that join nothing (diagnosis of free-standing panels)
+    g_ = p_["lay"]["gate"]
+    if g_ is None:
+        continue
+    ends = [(r_["a"], r_) for r_ in p_["lay"]["runs"]] + [(r_["b"], r_) for r_ in p_["lay"]["runs"]]
+    gaps = [round(min(float(np.hypot(*(e_ - (g_["m"] + g_["t"] * sx * (g_["w"] / 2 + 2 * g_["ph"]))))) for e_, r_ in ends), 2) for sx in (-1, 1)]
+    if max(gaps) > 0.25:
+        print("gate post gap", p_["id"][-12:], p_["front_style"], gaps)
 print("inst trees", len(TREES), collections.Counter(t["p"] for t in TREES), "h", sorted(t["h"] for t in TREES)[::max(1, len(TREES) // 12)])
 print("plots with >= 1 inst tree", len({t["src"] for t in TREES}), "of", len(P), "| stubs dropped", rep["plots"].get("fence_stubs_dropped"),
       "| tracks", rep["plots"].get("track_drives"))

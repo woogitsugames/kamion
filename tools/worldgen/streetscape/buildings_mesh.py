@@ -250,7 +250,7 @@ def runoff_uv1(runoff, ua, ub, za, zb):
 
 
 LOD1_HOUSE_OPENINGS = True     # ADR 0124 r2: windows / door of houses on the LOD1 prism (dark quads, no new material)
-LOD1_HOUSE_FRAME_M = 0.07                      # ADR 0132: frame round a LOD1 opening of a house, m
+LOD1_HOUSE_FRAME_M = 0.12                      # ADR 0132: frame round a LOD1 opening of a house, m
 LOD1_HOUSE_FRAME_MATS = ("plaster_white", "plaster_light", "downpipe")      # first one the chunk's LOD1 has and the wall is not
 LOD1_HOUSE_OPENING_FALLBACK = "downpipe"       # 0.30 grey: gutters of every pitched house on LOD1
 _CHUNK_M = 256.0                               # terrain_mesh.chunks.CHUNK_M (chunk bounds are multiples of it)

@@ -365,6 +365,20 @@ def _post_half(style):
     return 0.19 if STYLES[style][4] else 0.05
 
 
+CORNER_SNAP_M = 0.9           # a gate group closer than this to the end of the front edge moves onto the corner
+
+
+def _snap_corner(g0, w, L):
+    """ADR 0132 (review 0124 P1-d, r16_drive_3): a gate 0.3 m short of the plot corner left a gap no fence panel fits
+    (stretches under 0.6 m are not built) - the side fence then started in the air beside the gate post. The outer
+    gate post IS the corner post now."""
+    if g0 < CORNER_SNAP_M:
+        return 0.0
+    if L - (g0 + w) < CORNER_SNAP_M:
+        return L - w
+    return g0
+
+
 def layout(plot, cut=None, near=None, garages=(), gate_s=None, no_gate=False, garage_doors=()):
     """Fence runs, gate and wicket(s) of one plot.
     cut: polygon the fence does not cross (roads, buildings, door steps, garage doors); near: _Near of existing fences
@@ -442,13 +456,13 @@ def layout(plot, cut=None, near=None, garages=(), gate_s=None, no_gate=False, ga
         elif L >= gslot + wslot + 0.6:
             grp = gslot + wslot - 2 * ph                     # gate + wicket share the post between them
             g0 = sg - (gslot / 2 if w_side > 0 else gslot / 2 + wslot - 2 * ph)
-            g0 = min(max(g0, 0.3), L - grp - 0.3)
+            g0 = _snap_corner(min(max(g0, 0.3), L - grp - 0.3), grp, L)
             if w_side > 0:
                 gate_iv["gate"], gate_iv["wicket"] = (g0, g0 + gslot), (g0 + gslot - 2 * ph, g0 + grp)
             else:
                 gate_iv["wicket"], gate_iv["gate"] = (g0, g0 + wslot), (g0 + wslot - 2 * ph, g0 + grp)
         elif L >= gslot + 0.6:
-            g0 = min(max(sg - gslot / 2, 0.3), L - gslot - 0.3)
+            g0 = _snap_corner(min(max(sg - gslot / 2, 0.3), L - gslot - 0.3), gslot, L)
             gate_iv["gate"] = (g0, g0 + gslot)
         elif L >= wslot + 0.6:
             w0 = min(max(sg - wslot / 2, 0.3), L - wslot - 0.3)
@@ -1556,8 +1570,11 @@ STREET_STRIP_M = 6.0          # crowns up to this far in front of the fence belo
 STREET_TREE_CW_M = 3.0        # ... and a trunk there keeps this clear of the carriageway (a 2.55 m wide truck passes)
 PC_R_TREE = 1.25              # crown radius from which a crown is a tree (plot_canopy.R_TREE_M)
 INST_R_M = 2.3                # crown radius from which the tree is an instance of the region's tree library
-INST_SPECIES = [("birch", 0.32), ("linden", 0.22), ("maple", 0.22), ("pine", 0.14), ("alder", 0.10)]   # WORKING_VALUE mix
-INST_H_M = {"birch": (8.0, 19.0), "linden": (8.0, 18.0), "maple": (7.5, 16.0), "pine": (11.0, 22.0), "alder": (8.0, 17.0)}
+INST_SPECIES = [("birch", 0.34), ("linden", 0.26), ("maple", 0.26), ("pine", 0.14)]   # WORKING_VALUE mix
+# one model variant per species (r1 used all 3 x 5 species: every prototype x LOD in view is 1-3 instanced draws, the
+# worst house-street camera on Low gained +17); yaw, height and lean still differ from tree to tree
+INST_VARIANT = {"birch": 1, "linden": 0, "maple": 2, "pine": 1}
+INST_H_M = {"birch": (8.0, 19.0), "linden": (8.0, 18.0), "maple": (7.5, 16.0), "pine": (11.0, 22.0)}
 OVERGROWTH = {"old": (2, 4), "prl": (1, 3), "new": (0, 1)}      # shrubs through / over the fence per plot (min, max)
 
 
@@ -1766,7 +1783,7 @@ def build(buf, rp, zf, surf_top, report, items=None):
                             continue
                         sp = _pick_w(INST_SPECIES, kk, "sp")
                         lo_, hi_ = INST_H_M[sp]
-                        trees.append({"p": f"tree_{sp}", "v": int(hfloat(kk, "v") * 3) % 3, "e": round(float(p[0]), 2),
+                        trees.append({"p": f"tree_{sp}", "v": INST_VARIANT[sp], "e": round(float(p[0]), 2),
                                       "n": round(float(p[1]), 2), "z": round(float(zf(p)), 2),
                                       "h": round(float(min(max(3.6 * cr_ + 3.0, lo_), hi_)), 1),
                                       "yaw": round(hfloat(kk, "yaw") * 6.2832, 3), "lean": round(hfloat(kk, "lean") * 0.05, 3),
@@ -1799,7 +1816,7 @@ def build(buf, rp, zf, surf_top, report, items=None):
                         p = spot("big", k, reg, 6.0)
                         if p is not None:
                             sp = _pick_w(INST_SPECIES, key, "bsp", k)
-                            trees.append({"p": f"tree_{sp}", "v": int(hfloat(key, "bv", k) * 3) % 3, "e": round(float(p[0]), 2),
+                            trees.append({"p": f"tree_{sp}", "v": INST_VARIANT[sp], "e": round(float(p[0]), 2),
                                           "n": round(float(p[1]), 2), "z": round(float(zf(p)), 2),
                                           "h": round(9.0 + 7.0 * hfloat(key, "big_h", k), 1),
                                           "yaw": round(hfloat(key, "byaw", k) * 6.2832, 3), "lean": 0.02, "src": f"{src_id}:rule"})
