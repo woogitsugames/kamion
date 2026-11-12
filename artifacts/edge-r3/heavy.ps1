@@ -1,6 +1,6 @@
 param(
     [Parameter(Mandatory)]
-    [ValidateSet('BuildWorld','BuildMaterials','FarField','GisFile','GisFinal','PhysicsFile','Gate3File','AuditMesh','AuditHeights','ScopeGenerated','Compare')]
+    [ValidateSet('BuildWorld','BuildMaterials','FarField','GisFile','GisFinal','PhysicsFile','Gate3File','AuditMesh','AuditGround','ScopeGenerated','Compare')]
     [string]$Task,
     [string]$TestFile,
     [switch]$AtRoundEnd,
@@ -31,7 +31,7 @@ try {
         'BuildMaterials' { & uv run --project tools/worldgen python art-source/world/materials/_src/build_all.py }
         'FarField' { & uv run --project tools/worldgen tools/worldgen/streetscape/far_field.py --region bialystok-industrial-c }
         'AuditMesh' { & uv run --project tools/worldgen python "$PSScriptRoot/audit_mesh.py" $Phase }
-        'AuditHeights' { & uv run --project tools/worldgen python "$PSScriptRoot/audit_heights.py" }
+        'AuditGround' { & uv run --project tools/worldgen python "$PSScriptRoot/audit_ground_alignment.py" $Phase }
         'ScopeGenerated' { & uv run --project tools/worldgen python "$PSScriptRoot/scope_generated.py" }
         'Compare' { & uv run --project tools/worldgen python "$PSScriptRoot/compare.py" }
         'GisFinal' { & uv run --project tools/worldgen python -m pytest tests/gis -q }

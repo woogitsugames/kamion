@@ -15,3 +15,5 @@ Krok 4: zapisano PLAN z hipotezą 528 vs 512 próbek oraz niezależnym wzorcem a
 Następny krok: koniec przygotowania źródeł, import-baseline.ps1 i kontrola nowej siatki przed poprawką.
 Krok 5: przygotowano test-corner.ps1 z obowiązkowym Before.complete i filtrem tylko dwóch nowych przypadków. Red wymaga dokładnie 2 porażek z komunikatem docelowej asercji, Green dokładnie 2 zaliczonych; brak XML, błąd kompilacji lub inna przyczyna nie będą uznane za dowód. Każde uruchomienie ma własny Unity slot, XML, SHA źródeł i WIP.
 Następny krok nadal: koniec materiałów/świata bazowego → import → Before, dopiero potem dodanie testu i Red.
+Krok 6: diagnostyka podłoża w r3 zapisze osobne ground-alignment-before/after.json, bez nadpisywania dowodu bazy; dostępna jako heavy.ps1 -Task AuditGround -Phase before|after. Czytanie przyczyny porażki XML w Red oparto na XPath, aby nie pomylić asercji z błędem uruchomienia.
+Następny krok: nadal przygotowanie materiałów pod heavy; po pełnym źródle i imporcie pomiar Before oraz test regresji.

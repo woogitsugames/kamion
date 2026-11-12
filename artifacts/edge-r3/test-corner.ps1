@@ -19,7 +19,8 @@ try {
     if ($Phase -eq 'Red') {
         if ($code -eq 0 -or [int]$run.failed -ne 2) { throw 'Old production code must fail both corner regressions' }
         foreach ($test in $doc.SelectNodes('//test-case')) {
-            if ($test.failure.message.InnerText -notmatch 'uniform perimeter') { throw 'Unexpected failure cause; do not classify as the intended red regression' }
+            $message = $test.SelectSingleNode('failure/message')
+            if (-not $message -or $message.InnerText -notmatch 'uniform perimeter') { throw 'Unexpected failure cause; do not classify as the intended red regression' }
         }
     } elseif ($code -ne 0 -or [int]$run.failed -ne 0 -or [int]$run.passed -ne 2) {
         throw 'Both corner regressions must pass after the fix'

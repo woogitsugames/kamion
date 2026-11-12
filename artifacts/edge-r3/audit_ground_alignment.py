@@ -15,6 +15,9 @@ sys.path.insert(0, str(ROOT / 'tools/worldgen'))
 from streetscape import far_field as FF
 
 REGION = 'bialystok-industrial-c'
+phase = sys.argv[1] if len(sys.argv) > 1 else 'after'
+if phase not in ('before', 'after', 'prototype'):
+    raise ValueError('Expected before, after or prototype')
 mesh_path = ROOT / f'game/Assets/_Generated/World/{REGION}/Meshes/world_edge.asset'
 source = mesh_path.read_text()
 vertex_count = int(re.search(r'm_VertexCount: (\d+)', source)[1])
@@ -78,12 +81,12 @@ for along in np.linspace(-1024, 1024, 129):
                                  delta_m=predicted-actual))
 delta = np.array([r['delta_m'] for r in rows])
 worst = sorted(rows, key=lambda r: abs(r['delta_m']), reverse=True)[:20]
-result = dict(samples=len(rows), min_delta_m=float(delta.min()), max_delta_m=float(delta.max()),
+result = dict(phase=phase, samples=len(rows), min_delta_m=float(delta.min()), max_delta_m=float(delta.max()),
               p95_absolute_delta_m=float(np.percentile(np.abs(delta),95)),
               above_building_skirt_0_8m=int((delta > 0.8).sum()), worst_samples=worst,
               source_sha256={str(path.relative_to(ROOT)):hashlib.sha256(path.read_bytes()).hexdigest()
                              for path in (mesh_path, apron_path)},
               note='Diagnostic only. Python ground minus actual original apron triangles; '
                    'does not prove a visible seam or alter production geometry/fog.')
-(HERE/'ground-alignment-audit.json').write_text(json.dumps(result,indent=2), encoding='utf-8')
+(HERE/f'ground-alignment-{phase}.json').write_text(json.dumps(result,indent=2), encoding='utf-8')
 print(json.dumps({k:v for k,v in result.items() if k != 'worst_samples'}))
