@@ -15,3 +15,10 @@
 - Wpięte: VehicleAudioLibrary (pola el*), importer, TruckAudioController (ApplySoundSet, PlaySet, UpdateCues: sprzęg, wyboje, przełączniki, cofanie, klakson, drzwi, wycie skrzyni), EngineAudio (turbo v2, CabEngineScale), PerspectiveLoop.SetClips/SetMix, AmbientAudio.SetBed, Core/AudioCues, ustawienia (Zestaw dźwięków + odsłuch klakson/drzwi), klawisz K = klakson.
 - SYRENA: film właściciela -> łuki 380→900→380 Hz z harmonicznymi, okres 4,0 s + piski 1 kHz = proceduralny wózek widłowy (sfx_layers.forklift_loop: sinus silnika 380+520·speed, 2 manewry/8 s, beeper 1,25 Hz). Obecny w obu zestawach. Naprawa: AmbientAudio.forkliftVolume = 0. Dowód: verify/owner_siren_before.png, verify/siren_before_after.png, siren_scan.txt.
 - NASTĘPNY KROK: `pwsh scripts/unity-slot.ps1 -Acquire -Owner claude-audio-fx` (czeka na PHONE_RUN) -> import audio + testy PlayMode/EditMode.
+
+## krok 4: REGEN-02, testy, ADR, merge
+- REGEN-02: turbo (6) PASS -> gwizd v2; stop kabina (7) PASS -> el_engine_stop_cab_r02; wycieraczki FAIL; przejazdy pominięte (siatka bez zmian).
+- Unity: import OK, PlayMode audio 23/23, EditMode audio 20/20 (AudioCuesTests dopisany, nieuruchomiony). A/B: ab/*.ogg (4 × ≤ 30 s).
+- ADR 0142, LICENSES (3 wiersze), docs/08. Merge main 7068123a bez konfliktów (main nie dotykał audio).
+- Film właściciela i montaże robocze wyjęte z gita (tylko lokalnie + kopia w main/artifacts/audio-fx).
+- NASTĘPNY KROK (lider): `git merge audio-fx` w main; APK; odsłuch właściciela (Ustawienia → DŹWIĘK → Zestaw dźwięków; Klakson/Drzwi; klawisz K); opcjonalnie `pwsh scripts/test.ps1 -Platform EditMode -Filter AudioCues`.
