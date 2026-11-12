@@ -153,8 +153,11 @@ def test_generated_world_has_exactly_one_authored_instance_per_chimney():
     for o in overrides():
         assert o['id'] in applied
         assert applied[o['id']]['asset']==EC.entry(o,EC.config())['asset']
+    world=REPO/'Data/raw/derived'/REGION_ID/'world'
+    if not world.exists():
+        pytest.skip("world chunks not generated here (Data/raw is gitignored)")
     instances=[]
-    for p in (REPO/'Data/raw/derived'/REGION_ID/'world').glob('instances_*.json'):
+    for p in world.glob('instances_*.json'):
         value=json.loads(p.read_text())
         instances.extend(value['instances'] if isinstance(value,dict) else value)
     for o in overrides():
