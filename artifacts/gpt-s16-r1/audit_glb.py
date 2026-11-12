@@ -87,8 +87,15 @@ def main():
             return sorted(tuple(t) for t in values)
         if triangle_positions(prims) != triangle_positions(target):
             failures.append(f'geometry changed: {name}')
+    added = sorted(after.keys()-before.keys())
+    for name in added:
+        previous = name.removesuffix('.lod2') + '.lod1'
+        if not name.startswith(('tractor_', 'trailer_')) or not name.endswith('.lod2') or previous not in after:
+            failures.append(f'unexpected added node: {name}')
+        elif digest(after[name]) != digest(after[previous]) or len(after[name]) > 2:
+            failures.append(f'yard alias differs: {name}')
     result = dict(protected_nodes=len(unchanged), lods=changed,
-                  added_nodes=sorted(after.keys()-before.keys()), failures=failures)
+                  added_nodes=added, failures=failures)
     args.output.write_text(json.dumps(result, indent=2)+'\n', encoding='utf-8')
     print(json.dumps(dict(protected_nodes=len(unchanged), lods=len(changed), failures=failures)))
     if failures:

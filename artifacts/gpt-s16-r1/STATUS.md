@@ -14,3 +14,5 @@ W tle: candidate-world.ps1 (sesja 32203, pool heavy); rozszerzone before (9884) 
 Dodano EditMode: walidacja pasm i stałego cull, kontrakt UV atlasu oraz kontrola rzeczywistego importu (3 LOD, max 2 podsiatki daleko, ten sam natywny mesh/material aliasu placowych). Testy Unity jeszcze niewykonane — pełny EditMode po imporcie after.
 
 Eksport atlasu respektuje out_dir: testowe biblioteki zapisują mapy w swoim textures, bez efektów ubocznych w globalnym art-source. W tle tylko generacja kandydata oraz kolejka before; brak importu after.
+
+Audyt po eksporcie sprawdzi również każdy nowy .lod2 placowych: musi być identyczny z .lod1 i mieć max 2 podsiatki. Żadne inne nowe węzły nie są dozwolone.
