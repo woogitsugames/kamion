@@ -84,3 +84,5 @@ potem poprawić największe udokumentowane odstępstwo wiaty. WIP po każdym kro
 2026-11-12T11:59:34.9064290+01:00: Unity side-render before-side High clear; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
 
 2026-11-12T11:59:56.5097836+01:00: Unity side-render before-side High overcast; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
+
+2026-11-12T12:00:34.0683532+01:00: osobna próba before-side kompletna: 8 PNG, po 2 dla Low/High i clear/overcast. Root obejrzał dwa podglądy przeciwnego narożnika (Low-clear Anders i High-overcast Factory), potwierdzając skrzyniowy odczyt starego modelu. Pozostałe 6 plików zapisane, bez deklaracji ich oględzin. Nie zmienia to 236 kadrów budżetowych. Własny marker usunięty, slot Unity zwolniony; generator nadal w kolejce heavy. Po imporcie kandydata odtworzyć side-captures.ps1 -Phase after-side.
