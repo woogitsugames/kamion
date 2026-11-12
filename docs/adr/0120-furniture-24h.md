@@ -313,3 +313,25 @@ Pozostawiono go bez zmian; luka wymaga jawnego zgłoszenia integratorowi.
 Rzeczywiste 236 kadrów, dokładne Low i drugi narożnik są powtarzane
 w oddzielnych katalogach after2/exact-after2/after2-side, z metrykami
 iteration2. Wyniki krótszego zasięgu zachowano jako historyczną iterację.
+
+### r3, neutralne kosztowo grupowanie materiałów — kandydat 3
+
+Iteracja 2 z prawidłowym zasięgiem ujawniła +3 draws Low na g3b-eye-s1482
+w obu oświetleniach. Budżet nie jest spełniony. Nie skraca się cullingu,
+aby ukryć ten koszt. Nieprzezroczyste części generic i czerwonej rodziny
+są scalane do jednego slotu shelter_opaque_0120; ich szkło pozostaje osobno.
+Docelowo każda rodzina ma dwa sloty zamiast czterech/trzech.
+
+Addytywna flaga danych w materials.py i lokalny keyword World Surface
+wybierają istniejące receptury przez stały UV0.x. Oryginalne RGB i smoothness
+są przekazywane w istniejącym interpolatorze, a per-source sky_occ.x w wolnym
+W normalnych; sky_occ.y źródeł musi pozostać wspólnym zerem. Bez dodatkowej
+tekstury, samplera, przebiegu ani redukcji geometrii/zasięgu. Fabryka odrzuca
+receptury z odmienną ścieżką tekstur, emisji, przezroczystości lub metalu.
+
+Focused FurnitureShelterMaterialTests: 18/18, bez pominięć, obejmuje rzeczywisty
+GPU RGB/smoothness Low/High i wszystkie cztery wartości sky_occ. Testy nie są
+pomiarem końcowego oświetlonego obrazu ani GPU urządzenia. Własne testy geometrii
+i normalnych oraz pełne after3 są oczekujące. Źródła zamrożono hashami, a jeden
+slot heavy obejmie sekwencyjnie focused pytest, generator i skan; jest zwalniany
+przed Unity. Osobne katalogi iteration3 zachowują historyczne serie bez nadpisania.

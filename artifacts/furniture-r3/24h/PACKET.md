@@ -6,6 +6,8 @@ Kandydat 2 dodaje własny `Editor/Furniture/FurnitureShelterPolicySave.cs`. Norm
 
 Poprawiona seria trafia do `after2`, `exact-after2`, `after2-side`, z metrykami w `iteration2`. Dotychczasowe ścieżki `after`, `exact-after`, `after-side` oraz główne pliki frame-budget opisują historyczną iterację 1 i nie zostają nadpisane.
 
+**Iteracja 2 nie spełnia budżetu Low:** przy poprawnym zasięgu kamera `g3b-eye-s1482` ma +3 draws instancji w clear i overcast. Nie zamykać rundy na jej wynikach. Kandydat 3 scala nieprzezroczyste części obu rodzin do jednego slotu, pozostawiając szkło osobno. UV0.x wskazuje dotychczasową recepturę, a lokalny wariant World Surface zachowuje RGB, smoothness i sky_occ. Kolizje i zasięg nie są skracane. 18 focused testów materiału/GPU przeszło bez pominięć; pełne testy geometrii, generator oraz pomiary `after3` / `iteration3` nadal oczekują. Stary batch arkuszy nie wystartował z powodu terminalnego błędu współdzielenia pliku kolejki Acquire — nie uznaje się go za przegląd 236 par.
+
 Gałąź `gpt-furniture-r3`, jeden worktree sesji. Merge main: `889201d5`, baseline po merge: `162214c3`. Kod kandydata po poprawce dachu: `973a50be6bb0965f397bb21d9d75fcd8ae8ca56c`. Późniejsze commity zapisują diagnostykę i dowody. Nie scalano do main ani nie pushowano.
 
 ## Zakres i pochodzenie
