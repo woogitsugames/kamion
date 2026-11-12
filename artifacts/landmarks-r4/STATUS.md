@@ -60,3 +60,5 @@ Krok 9d: zapisana hipoteza ewentualnego C wyłącznie w notatce, bez zmiany mode
 Krok 9e: B zachowuje osiem pierścieni i pierwotną liczbę narożników, więc przywrócono także oryginalny próg216 normalnych w teście r7. Nowe kontrole rdzenia każdego drzewa, skończoności i ciągłości normalnych pozostają. Wariant B nie wymaga osłabienia żadnego dotychczasowego progu. Testy po aktualizacji spec/GLB przez World B, nie na pozostawionych wyjściach A.
 
 Krok 9f: 14:20CET pojawił się PHONE_RUN; waiter B nadal żywy (terminal13840), nic nie uruchamia przed zwolnieniem blokady. Brak własnego lease heavy i nowych logów World B. Kolejka z9 przesunęła się do1 właściciela przede mną. Model B pozostaje zapisany, bez dalszych zmian.
+
+Krok 9g: podczas PHONE_RUN przeanalizowano wyłącznie mały model propozycji C (0,4s, bez eksportu/world/pytest i bez modyfikacji B). Pięć pierścieni+27/78 pionowych sprayów zachowuje98/224 tris i oryginalny próg216 normalnych (240 narożników Low); wszystkie6 pól alfa mniejsze niż baseline. Hipoteza nie ma obrazu i nie jest przyjęta; B nadal czeka na telefon/slot.
