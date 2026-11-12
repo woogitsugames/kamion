@@ -19,18 +19,19 @@ namespace Game.Rendering.Editor
             public string camera,targetFormat,descriptorFormat,colorBeforePostFormat;
             public bool hdrEnabled,postEnabled;
         }
-        [Serializable] sealed class Proof {public string scope="Editor High HDR intermediate reference, existing final ARGB32 QA target. No Low/player pass.";public Frame[] frames;}
+        [Serializable] sealed class Proof {public string scope="Editor High pre-post format diagnostic. No Low/player pass.";public bool forceHdr;public Frame[] frames;}
         static readonly PropertyInfo s_Features=typeof(ScriptableRenderer).GetProperty("rendererFeatures",BindingFlags.Instance|BindingFlags.NonPublic);
         readonly Camera m_Target;
+        readonly bool m_ForceHdr;
         readonly Feature m_Feature;
         readonly HashSet<ScriptableRenderer> m_Renderers=new HashSet<ScriptableRenderer>();
         readonly Dictionary<int,Frame> m_Frames=new Dictionary<int,Frame>();
         string m_Error;
         bool Matches(Camera camera)=>camera!=null && (m_Target!=null?camera==m_Target:camera.GetComponent<ControlCamera>()!=null);
-        public LightHdrQaReference(Camera target=null)
+        public LightHdrQaReference(Camera target=null,bool forceHdr=true)
         {
             if(s_Features==null)throw new MissingMemberException("Actual renderer feature list");
-            m_Target=target;m_Feature=ScriptableObject.CreateInstance<Feature>();m_Feature.hideFlags=HideFlags.HideAndDontSave;
+            m_Target=target;m_ForceHdr=forceHdr;m_Feature=ScriptableObject.CreateInstance<Feature>();m_Feature.hideFlags=HideFlags.HideAndDontSave;
             m_Feature.owner=this;m_Feature.Create();RenderPipelineManager.beginCameraRendering+=OnBegin;
         }
         void OnBegin(ScriptableRenderContext context,Camera camera)
@@ -48,9 +49,9 @@ namespace Game.Rendering.Editor
         {
             if(m_Error!=null)throw new InvalidOperationException(m_Error);
             if(m_Frames.Count!=expected)throw new InvalidOperationException($"HDR camera proof incomplete {m_Frames.Count}/{expected}");
-            foreach(var f in m_Frames.Values)if(!f.hdrEnabled || !f.postEnabled || f.descriptorFormat!="R16G16B16A16_SFloat" || f.colorBeforePostFormat!="R16G16B16A16_SFloat")
+            foreach(var f in m_Frames.Values)if(!f.hdrEnabled || !f.postEnabled || (m_ForceHdr && (f.descriptorFormat!="R16G16B16A16_SFloat" || f.colorBeforePostFormat!="R16G16B16A16_SFloat")))
                 throw new InvalidOperationException("HDR reference did not retain actual half-float color before post");
-            var frames=new Frame[m_Frames.Count];m_Frames.Values.CopyTo(frames,0);return JsonUtility.ToJson(new Proof{frames=frames},true);
+            var frames=new Frame[m_Frames.Count];m_Frames.Values.CopyTo(frames,0);return JsonUtility.ToJson(new Proof{forceHdr=m_ForceHdr,frames=frames},true);
         }
         public void Write(string folder,int expected)=>File.WriteAllText(Path.Combine(folder,"hdr-reference-proof.json"),GetProof(expected));
         public void Dispose()
@@ -68,7 +69,7 @@ namespace Game.Rendering.Editor
             {
                 if(owner==null || !owner.Matches(cameraData.camera))return;
                 // This is a ref-return property backed by UniversalCameraData in this URP version.
-                cameraData.cameraTargetDescriptor.graphicsFormat=GraphicsFormat.R16G16B16A16_SFloat;
+                if(owner.m_ForceHdr)cameraData.cameraTargetDescriptor.graphicsFormat=GraphicsFormat.R16G16B16A16_SFloat;
             }
             public override void AddRenderPasses(ScriptableRenderer renderer,ref RenderingData renderingData)
             {
@@ -78,7 +79,7 @@ namespace Game.Rendering.Editor
         sealed class ReferencePass : ScriptableRenderPass
         {
             readonly LightHdrQaReference m_Owner;
-            public ReferencePass(LightHdrQaReference owner){m_Owner=owner;renderPassEvent=RenderPassEvent.BeforeRenderingPostProcessing;requiresIntermediateTexture=true;}
+            public ReferencePass(LightHdrQaReference owner){m_Owner=owner;renderPassEvent=RenderPassEvent.BeforeRenderingPostProcessing;requiresIntermediateTexture=owner.m_ForceHdr;}
             public override void RecordRenderGraph(RenderGraph graph,ContextContainer frameData)
             {
                 var camera=frameData.Get<UniversalCameraData>();if(m_Owner==null || !m_Owner.Matches(camera.camera))return;

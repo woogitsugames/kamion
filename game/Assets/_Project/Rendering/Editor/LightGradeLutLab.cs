@@ -165,8 +165,11 @@ namespace Game.Rendering.Editor
                     try{
                         Color32[] highPixels,highGradient,legacyPixels,legacyGradient,intermediatePixels,intermediateGradient;
                         using(var copy=new LightNativeGradeLutCapture(s_Camera,32)){
-                            legacyPixels=Render(inputs,16,12,32,false);
-                            legacyGradient=Render(gradients,1024,12,1,false,null,32);
+                            using(var observer=new LightHdrQaReference(s_Camera,false)){
+                                legacyPixels=Render(inputs,16,12,32,false);
+                                legacyGradient=Render(gradients,1024,12,1,false,null,32);
+                                File.WriteAllText(Path.Combine(folder,name+"-legacy-prepost-proof.json"),observer.GetProof(1));
+                            }
                             using(var hdr=new LightHdrQaReference(s_Camera)){
                                 intermediatePixels=Render(inputs,16,12,32,false);
                                 intermediateGradient=Render(gradients,1024,12,1,false,null,32);
