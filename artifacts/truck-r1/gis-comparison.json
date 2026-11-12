@@ -1,0 +1,29 @@
+﻿{
+    "baseline_failed":  [
+                            "FAILED tests/gis/test_far_field.py::test_generated_far_field_qa_and_manifests",
+                            "FAILED tests/gis/test_hero_bridge.py::test_instances_emitted",
+                            "FAILED tests/gis/test_road_fidelity.py::test_report_not_stale",
+                            "FAILED tests/gis/test_streetscape.py::test_instances_reference_existing_prototypes",
+                            "FAILED tests/gis/test_world_roads.py::test_export_is_deterministic"
+                        ],
+    "final_failed":  [
+                         "FAILED tests/gis/test_far_field.py::test_generated_far_field_qa_and_manifests",
+                         "FAILED tests/gis/test_hero_bridge.py::test_instances_emitted",
+                         "FAILED tests/gis/test_road_fidelity.py::test_report_not_stale",
+                         "FAILED tests/gis/test_streetscape.py::test_instances_reference_existing_prototypes",
+                         "FAILED tests/gis/test_world_roads.py::test_export_is_deterministic"
+                     ],
+    "new_or_missing_failures":  [
+
+                                ],
+    "baseline_summary":  "5 failed, 488 passed, 1 xfailed in 1297.55s (0:21:37)",
+    "final_summary":  "5 failed, 488 passed, 1 xfailed in 688.34s (0:11:28)",
+    "side_effect_files":  [
+                              "Data/Regions/bialystok-industrial-c/generated/far_field_qa.json",
+                              "Data/Regions/bialystok-industrial-c/generated/landmarks/viaduct_putry_underdeck.spec.json",
+                              "Data/Regions/bialystok-industrial-c/generated/roads_qa.json",
+                              "Data/Regions/bialystok-industrial-c/generated/streetscape_qa.json",
+                              "Data/Regions/bialystok-industrial-c/generated/world_manifest.json",
+                              "Data/SourceManifests/bialystok-industrial-c-far-field.manifest.json"
+                          ]
+}
