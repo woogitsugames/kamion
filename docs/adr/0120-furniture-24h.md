@@ -288,3 +288,7 @@ autorstwo, CC BY-SA 4.0, adresy źródeł i osobny hash wycinka zapisano
 w `artifacts/furniture-r3/24h/reference/provenance.json`. Bieżący pakiet
 zachowuje pozycje OCZEKUJĄCE dla pełnych renderów, geometrii i końcowych
 testów; wyników r2 nie przedstawiono jako wyników r3.
+
+Kontrola geometrii po generatorze zakończyła się zgodnością 6833/6833
+chronionych payloadów, bez różnic. Skan pracował w slocie heavy, zwolnionym
+po zakończeniu. Pozostałe bramki pełnego renderu i testów nadal są otwarte.

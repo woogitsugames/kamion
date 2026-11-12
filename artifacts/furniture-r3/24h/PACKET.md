@@ -20,7 +20,7 @@ Po bazie generator `after1` trwał 546,9 s, wyeksportował 64 GLB, 479 MiB High 
 
 Audyt [instances-after.json](instances-after.json): 64 niezmienione znormalizowane multizbiory instancji, 23 wiaty, dokładnie dwa wybrane czerwone warianty. Wszystkie pola instancji poza tymi dwiema nazwami prototypu identyczne z bazą. Porównanie zachowuje duplikaty, lecz nie wymaga kolejności wierszy, którą eksporter sortuje według prototypu. To dowód metadanych, nie geometrii ani liczby widocznych instancji w kamerze.
 
-Kontrola chronionej geometrii ma bazowe 6833 payloady; wynik po zmianie jest OCZEKUJĄCY. Nie przypisano wyniku zero różnic na podstawie samego audytu JSON.
+Kontrola chronionej geometrii zakończona: 6833 payloady przed i 6833 po, zero różnic w `protected-geometry-comparison.json`. Skan GLB działał w slocie heavy. To osobny dowód eksportowanej geometrii, niezależny od audytu JSON; zakres wykluczeń mebli jest jawny w `snapshot_geometry.py`.
 
 ## Wczesna kontrola wizualna — zakres ograniczony
 
