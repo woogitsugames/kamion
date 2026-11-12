@@ -28,3 +28,5 @@ EditMode zakończony: exit 0; szczegóły EDITMODE-STATUS.md i final-editmode.xm
 Końcowy EditMode: 452 passed,0failed,0skipped. Audyt GLB B ponowiony:420chronionych,68dalekich,14aliasów,0błędów. Przywrócono7ubocznych zapisów materiałów Unity; finalguard:456oryginalnych identycznych SHA256+dodany1atlas. Autor obejrzał160dodatkowych par we wszystkich warunkach. Niezależny visual-critic: PASS statycznego edytora; ruch,ASTC iGPUtelefon pozostają UNVERIFIED. Pełny GIS w tle.
 
 Dopisano końcowy zakres raportu i ADR; jedyny oczekiwany wynik to końcowy pełny GIS. NASTĘPNY KROK: Get-Content artifacts/gpt-s16-r1/final-gis.log -Tail 20
+
+Audyt zakresu:1051zmienionych plików (w tym dowody),0edycji zakazanych źródeł;960obrazów recenzji ma max960px. Kopia do main/artifacts/gpt-s16-r1:1027plików,52.1MB,bez pełnychPNG ani prywatnych surowców. GIS nadal działa, pozostałe kroki r1 gotowe.
