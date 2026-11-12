@@ -66,3 +66,4 @@ Krok 27: obejrzano pierwsze rzeczywiste After Low-clear i High-clear w tym samym
 2026-11-12T12:56:34.2459790+01:00 Native after High-overcast 1280x960: 15 kamer, każdy PNG ma proporcje źródłowej fotografii; diagnostyczna 2948 pozostaje C.
 2026-11-12T12:56:34.7451751+01:00 After ukończone: obrazy telefonu i native oraz rzeczywiste siatki Unity zamrożone z SHA. Wynik wizualny i wszystkie budżety wymagają oceny; nie ogłaszamy jeszcze PASS.
 2026-11-12T12:58:22.1674503+01:00 Zakończono testy EditMode; szczegółowy wynik w artifacts/tests.
+Krok 28: obejrzano4identyczne parywycinków hali oraz pełne High-clear/Low-overcast. OcenaPARTIAL: zniknął jaskrawy pas, Highma czytelne podziały i pasmo szkła, Lowgłównie zmianę koloru; bez twierdzenia o identyfikacji elewacji. EditMode340/340,0failed/skip; XMLskopiowano zSHA. Audytybuforów i budżetów czekająheavy, nativefoto i końcowyGIS niezaliczone.

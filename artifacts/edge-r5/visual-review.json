@@ -1,0 +1,27 @@
+{
+  "status": "PARTIAL",
+  "candidate_geometry_identity_confirmed": true,
+  "photographic_identity_confirmed": false,
+  "photometry": "UNVERIFIED",
+  "device_gpu": "UNVERIFIED",
+  "observed_hall_pairs": [
+    "hall-review/High-clear-pair.jpg",
+    "hall-review/Low-clear-pair.jpg",
+    "hall-review/High-overcast-pair.jpg",
+    "hall-review/Low-overcast-pair.jpg"
+  ],
+  "observed_full_frames": [
+    "hall-review/full-High-clear.jpg",
+    "hall-review/full-Low-overcast.jpg"
+  ],
+  "observations": [
+    "Szeroki pomarańczowy pas zniknął w czterech konfiguracjach; wysokość i obrys wizualnie pozostają zgodne z bazą.",
+    "High pokazuje stonowaną okładzinę z podziałami i górne pasmo szkła na długiej ścianie. Krótka ściana pozostaje bez szkła.",
+    "W Low podziały paneli są słabo widoczne. Korzyść to głównie usunięcie arbitralnego brązu i jaskrawej obróbki oraz subtelne pasmo szkła.",
+    "W obejrzanych pełnych kadrach nie stwierdzono nowej wyraźnej anomalii kolorystycznej lub sylwetki. Nie jest to przegląd każdego piksela całej trasy."
+  ],
+  "estimated_features": ["wall_colour", "cladding_modules", "glazing_band", "roof_fascia"],
+  "budget_and_buffer_audits": "PENDING",
+  "native_photo_review": "PENDING",
+  "acceptance": "PENDING measured budgets, independent buffers, native comparisons and final GIS"
+}
