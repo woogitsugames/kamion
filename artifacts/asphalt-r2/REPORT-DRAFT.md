@@ -1,6 +1,6 @@
 # Runda 2 — krawężniki i kostka jako materiał
 
-To jest wersja robocza raportu. Końcowe testy physics/gate3, fidelity i EditMode wymagają jeszcze zakończenia i odczytania; GIS jest już zakończony poprawnie. Nie jest to przekaz gotowej rundy.
+To jest wersja robocza raportu. Końcowe fidelity i EditMode wymagają jeszcze zakończenia i odczytania; GIS jest zakończony poprawnie, a physics/gate3 ma jedną znaną porażkę opisaną poniżej. Nie jest to przekaz gotowej rundy.
 
 Praca odbywa się na gpt-asphalt-r2 w stałym worktree gpt-asphalt. Bazą jest merge main 4992c434c65bd87648e0b528e4b331fa13d8ca84. Wybrany wariant to candidate2; ostatni commit obejmujący kod produktu i jego sondy QA to 6832f50b. Późniejsze checkpointy zawierają audyty, raporty i wyniki. Nie scalano do main ani nie pushowano gałęzi.
 
@@ -34,9 +34,10 @@ Materiał publicznego chodnika przed zmianą jest u góry, candidate2 u dołu. P
 
 ![Obrzeże High overcast: natywny wycinek PNG przed i po](material-review-candidate2-960/High-overcast-asphalt_kerb_andersa_close-crop-pair.jpg)
 
-Testy GPU zakresu i ówczesny pełny EditMode: 312/312 passed, zero failed i skipped (candidate2-editmode.xml). World candidate2 zakończył się poprawnie w 442,3 s, bez fallback=True, import i cztery serie capture exit 0, audyt odwołań przed importem exit 0. Końcowy GIS zakończył się exit 0: 604 passed, 1 oczekiwany xfailed, zero failures/errors, 1224,78 s według podsumowania pytest. Przywrócono metadane producenta, a audyt 196 odwołań i SHA nie wykazał rozbieżności. Physics/gate3, fidelity i końcowy EditMode nadal wymagają zakończenia i odczytania.
+Testy GPU zakresu i ówczesny pełny EditMode: 312/312 passed, zero failed i skipped (candidate2-editmode.xml). World candidate2 zakończył się poprawnie w 442,3 s, bez fallback=True, import i cztery serie capture exit 0, audyt odwołań przed importem exit 0. Końcowy GIS zakończył się exit 0: 604 passed, 1 oczekiwany xfailed, zero failures/errors, 1224,78 s według podsumowania pytest. Przywrócono metadane producenta, a audyt 196 odwołań i SHA nie wykazał rozbieżności. Physics/gate3: 47 passed, 1 failed, exit 1, 297,11 s. Jedyna porażka test_generator_reproduces_committed_scenarios dotyczy top_speed_flat_comb.json i jest wymieniona jako znana w protokole. Testy physics/gate3 oraz dims.json nie zmieniły się względem bazy4992c434; szczegóły w physics-result.json i pełnym logu. Nie raportujemy całej sekwencji jako zielonej. Fidelity i końcowy EditMode nadal wymagają zakończenia i odczytania.
 
 Nie naprawiano geometrii krawężników, oznakowania, dróg, budynków, trawy, świateł ani materiałów hali/placu/bramy Kwadrat. Na kostce nie udawano brudu przy brzegu na podstawie UV1 (0,50), które w wybranej próbce nie daje użytecznej informacji o brzegu. Pozostają stare ograniczenia r1: regularne prostokątne naprawy i problemy przetarcia części świeżej farby. Historyczne proporcje kontrastu renderu r1 zostały wycofane po błędzie odtwarzania anchor z reseatowanej kamery; korekta została przekazana i zweryfikowana SHA w main/artifacts/asphalt-r1. Nie odtwarzano tych pomiarów z obecnych GLB.
 
 Przewidywane konflikty: addytywne pola i bloki WorldPBR, WorldPbrMaterials oraz dopisane definicje materiałów w streetscape/materials.py. Przy integracji trzeba zachować nowsze bazowe wartości tych wspólnych materiałów i flagi innych sesji. Dane generated/world_manifest wymagają regeneracji według protokołu. Nie scalano kodu do main. Kolejna runda: gałąź gpt-asphalt-r3, merge aktualnego main, place przemysłowe poza Kwadratem.
+
 

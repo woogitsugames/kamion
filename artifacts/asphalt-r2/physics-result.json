@@ -1,0 +1,17 @@
+{
+  "checked_at": "2026-11-12T10:36:04.7728624+01:00",
+  "base": "4992c434c65bd87648e0b528e4b331fa13d8ca84",
+  "paths": [
+    "tests/physics",
+    "tests/gate3",
+    "art-source/truck/dims.json"
+  ],
+  "changed": [],
+  "physics_exit": 1,
+  "passed": 47,
+  "failed": 1,
+  "seconds": 297.11,
+  "failure": "tests/physics/test_scenario_strictness.py::test_generator_reproduces_committed_scenarios",
+  "different_scenario": "top_speed_flat_comb.json",
+  "classification": "Known failure named by round protocol; failure is disclosed, not counted as green."
+}
