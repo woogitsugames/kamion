@@ -84,6 +84,9 @@ namespace Game.Rendering
         /// non-tree prototype); AbVehicleCullM &gt; 0 replaces the fixed vehicle cull distance. null / 0 = shipping state.</summary>
         public static string[] AbPropsPrefix, AbPropShadowPrefix;
         public static float AbVehicleCullM;
+        /// <summary>ADR 0136 r2 A/B: vehicle LOD switch distance multiplier (vl:, 1 = shipping) and vehicles skipped in extra views (vm).</summary>
+        public static float AbVehicleLodScale = 1f;
+        public static bool AbVehicleNoExtraView;
 
         public static bool Any => Msaa.HasValue || RenderScale.HasValue || ShadowDistance.HasValue || Post.HasValue || Dither.HasValue || SkyDither.HasValue || GlassShadowBias.HasValue || Hdr.HasValue ||
                                   LeafA2C.HasValue || Trees.HasValue || TreeShadowMask.HasValue || TreeCardScale.HasValue ||

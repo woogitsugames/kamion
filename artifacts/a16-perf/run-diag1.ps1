@@ -36,6 +36,10 @@ $runs = [ordered]@{
   ab_vshadow = 'ps:car_/van_/tractor_/trailer_/bus_'
   ab_vc150  = 'vc:150'
   ab_vc100  = 'vc:100'
+  ab_contact = 'pp:contact_'
+  ab_vl05   = 'vl:0.5'
+  ab_vm     = 'vm'
+  ab_mirrorlow = 'mirrorlow'
 }
 $sel = if ($Only) { $Only -split ',' } else { $runs.Keys }
 $spec = ($sel | ForEach-Object { "$_=rq_ab=$($runs[$_]) $fix" }) -join ';'

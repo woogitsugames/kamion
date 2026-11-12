@@ -518,6 +518,8 @@ namespace Game.Rendering
                     // ADR 0136 r2: per-prefix props A/B (pp:car/van = not drawn, ps:all|<prefixes> = no shadow, vc:<m> vehicle cull)
                     if (m_AbKey.StartsWith("pp:")) { RenderOverrides.AbPropsPrefix = b ? m_AbKey.Substring(3).Split('/') : null; break; }
                     if (m_AbKey.StartsWith("ps:")) { RenderOverrides.AbPropShadowPrefix = b ? m_AbKey.Substring(3).Split('/') : null; break; }
+                    if (m_AbKey.StartsWith("vl:")) { RenderOverrides.AbVehicleLodScale = b ? float.Parse(m_AbKey.Substring(3), System.Globalization.CultureInfo.InvariantCulture) : 1f; break; }
+                    if (m_AbKey == "vm") { RenderOverrides.AbVehicleNoExtraView = b; break; }
                     if (m_AbKey.StartsWith("vc:")) { RenderOverrides.AbVehicleCullM = b ? float.Parse(m_AbKey.Substring(3), System.Globalization.CultureInfo.InvariantCulture) : 0f; break; }
                     if (m_AbKey.IndexOf(':') > 0) SetGeneric(b);   // ADR 0136
                     break;

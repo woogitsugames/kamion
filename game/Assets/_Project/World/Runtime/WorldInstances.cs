@@ -306,6 +306,7 @@ namespace Game.World
             bool trees = m_Trees && !RenderOverrides.AbTreesOff;
             bool props = RenderOverrides.Props != false && !RenderOverrides.AbPropsOff;
             SyncAbMasks();
+            bool skipVehicles = RenderOverrides.AbVehicleNoExtraView && cam.TryGetComponent(out IExtraViewCamera _);   // ADR 0136 r2 A/B (diagnostics)
             GeometryUtility.CalculateFrustumPlanes(cam, m_Planes);
             Vector3 cp = cam.transform.position;
             // ADR 0068: extra views (mirrors) use their own LOD scale on the tier bias (Game.Core.ExtraViewLod), whatever
@@ -374,9 +375,11 @@ namespace Game.World
                     if (!trees && m_Thin[run.prototype]) continue;
                     if (!props && !m_Thin[run.prototype]) continue;
                     if (m_AbHide != null && m_AbHide[run.prototype]) continue;   // ADR 0136 r2 A/B (diagnostics)
+                    if (skipVehicles && m_FixedCull[run.prototype]) continue;
                     float ls = thinnableProto(run.prototype) ? Mathf.Min(scale, m_TreeCard) * RenderOverrides.AbTreeCardScale : scale;
                     float cs = m_FixedCull[run.prototype] ? distanceScale * VehicleCullFactor : scale;   // vehicles: same cull on every tier
                     float l0 = m_Lod0Min[run.prototype] * distanceScale;   // vehicles: LOD0 floor on every tier
+                    if (m_FixedCull[run.prototype] && RenderOverrides.AbVehicleLodScale != 1f) { ls *= RenderOverrides.AbVehicleLodScale; l0 *= RenderOverrides.AbVehicleLodScale; }
                     int ln = LodAt(ends, dNear, ls, cs, l0), lf = LodAt(ends, dFar, ls, cs, l0);
                     bool thinnable = m_Thin[run.prototype];
                     int stride = thinnable ? ThinStride(dNear, scale) : 1;
