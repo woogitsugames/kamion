@@ -1,0 +1,65 @@
+{
+  "scope": "GLB JSON headers only plus file hash; no binary geometry decode or rays",
+  "checked_at": "2026-11-12T13:46:57.3947637+01:00",
+  "world_manifest_sha256": "5f90bdb17c5e545070b086bedd419def6ee2288efef3feb68a4c3bf54e698b00",
+  "chunks": [
+    {
+      "json_header_bytes": 81848,
+      "nodes": [
+        {
+          "materials": [
+            "apron_sett",
+            "bridge_concrete",
+            "curb_concrete",
+            "road_asphalt",
+            "road_gravel",
+            "road_paving",
+            "shoulder_gravel",
+            "sidewalk_paving",
+            "verge_grass"
+          ],
+          "transforms": {},
+          "name": "road"
+        },
+        {
+          "materials": [
+            "barrier_steel",
+            "bridge_concrete",
+            "bridge_fascia_green",
+            "bridge_soffit",
+            "curb_concrete",
+            "noise_glass",
+            "pier_yellow",
+            "ramp_wall_blocks",
+            "road_asphalt",
+            "shoulder_gravel",
+            "sidewalk_paving",
+            "verge_grass"
+          ],
+          "transforms": {},
+          "name": "bridge"
+        },
+        {
+          "materials": [
+            "collision_asphalt",
+            "collision_building",
+            "collision_curb",
+            "collision_fence",
+            "collision_grass",
+            "collision_paving",
+            "collision_steel"
+          ],
+          "transforms": {},
+          "name": "road_collision"
+        }
+      ],
+      "sha256": "ad9d50df0901f3f1c240edeb2c6a84d4a67ef536f68f437ff59b26b36146810f",
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_1_3.low.glb"
+    }
+  ],
+  "point_en": [
+    -528.1266,
+    2.4881
+  ],
+  "camera": "sbs-g3-b-494288258686575"
+}
