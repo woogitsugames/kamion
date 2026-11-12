@@ -6,6 +6,7 @@ from pathlib import Path
 here = Path(__file__).resolve().parent
 parser = argparse.ArgumentParser()
 parser.add_argument('label')
+parser.add_argument('--allow-plantings-triangle-change',action='store_true')
 args = parser.parse_args()
 before = here/'snapshot-baseline'
 after = here/('snapshot-'+args.label)
@@ -27,9 +28,17 @@ result = dict(label=args.label, source_changes=source_changes, instance_changes=
     plantings_before=plantings(bq), plantings_after=plantings(aq),
     megascans_available=len(mega.get('available', [])), megascans_fallback=mega.get('fallback', False),
     collision_note='Exact decoded geometry/transform/material digests; not a PhysX runtime measurement.')
+old_plantings,new_plantings=plantings(bq),plantings(aq)
+unchanged_planting_fields=lambda value:{k:v for k,v in value.items() if k!='tris'}
+plantings_match=(old_plantings==new_plantings or
+    (args.allow_plantings_triangle_change and
+     unchanged_planting_fields(old_plantings)==unchanged_planting_fields(new_plantings)))
+result['plantings_triangle_delta']=new_plantings['tris']-old_plantings['tris']
+result['plantings_triangle_change_explicitly_allowed']=args.allow_plantings_triangle_change
+result['budget_note']='Provenance only. Per-camera Low draw/triangle budgets require new render measurements.'
 result['pass'] = (source_changes == ['tools/worldgen/streetscape/plantings.py']
     and not instance_changes and not collision_changes and ac['chunk_count'] == 64
-    and not far_field_changes and plantings(bq) == plantings(aq)
+    and not far_field_changes and plantings_match
     and result['megascans_available'] >= 15 and not result['megascans_fallback'])
 (here/(args.label+'-input-proof.json')).write_text(json.dumps(result, indent=2)+'\n', encoding='utf-8')
 print(json.dumps(result, indent=2))
