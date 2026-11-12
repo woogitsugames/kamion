@@ -30,3 +30,5 @@ Fidelity po odświeżeniu:9passed,1xfailed; poprzedni FAILstale rozwiązany. Pr�
 Dodatkowe kamery: after/Low-clear zapisane.
 
 Dodatkowe kamery: after/Low-overcast zapisane.
+
+Dodatkowe kamery: after/High-clear zapisane.
