@@ -122,3 +122,23 @@ Wynik CSV (Lock 800°): zasięg jednym gestem przy 5–20 km/h **0,44 → 1,00**
 - Przy target SDK 37 (przyszłość) wyjątek dla gier pozostaje deklarowany przez `appCategory`; opt-out
   `PROPERTY_COMPAT_ALLOW_RESTRICTED_RESIZABILITY` nie jest potrzebny i nie został dodany.
 - Pełny HUD pod Folda (mniejsze koło/pedały, większe lusterka, zwinięty panel) — osobne zadanie po bramce 3.
+
+## Rewizja r3 (2026-11-12, test właściciela na APK `39068ac2c0`)
+Zgłoszenia: (1) „nie za każdym razem trafiam w kierownicę i zamiast skręcać obraca mi widokiem po kabinie”;
+(2) „zamiast pokazywać na foldzie obraz tak jak trzymam telefon, to go obraca (…) i wymusza mi widok poziomy”.
+- **Przyczyna (2):** manifest `userLandscape` (Player Settings: portret wyłączony) — aktywność startuje już obrócona do
+  poziomu, zanim zadziała skrypt; r2 „ustal, potem zablokuj” blokował więc poziom albo obracał obraz drugi raz.
+- **Decyzja (2), ProjectSettings przez `ProjectSetup` (lider uruchamia `setup-project.ps1`):**
+  `allowedAutorotateToPortrait: 0 → 1`, `allowedAutorotateToPortraitUpsideDown: 0 → 1` (L/R bez zmian,
+  `defaultScreenOrientation: 4` AutoRotation bez zmian) → manifest `fullUser`: aktywność startuje w orientacji, w jakiej
+  ekran już jest. Skrypt (`ScreenOrientationLock`): okno ~1:1 (≤ 1,25) → w pierwszej klatce blokada BIEŻĄCEJ orientacji,
+  gra nigdy nie prosi o obrót (także po złożeniu/rozłożeniu); okno wydłużone → od razu tylko poziom L/R (telefon trzymany
+  pionowo obróci się raz, jak w każdej grze poziomej), przy gyro po 1,2 s blokada bieżącego poziomu.
+  Portret ~1:1: HUD (`HudLayoutTests` fold-inner-rotated) i FOV kabiny (`CabVerticalFov`) już obsłużone.
+- **Decyzja (1):** obszar chwytu kierownicy = kwadrat rysunku + margines max(30 % promienia = 60 j., 8 mm przez
+  `DeviceDisplay.Dpi`) z każdej strony, przycięty do safe area i do sąsiednich stref (kierunkowskazy nad, dźwignia
+  obok) — `HudLayout.WheelGrabRect`. Kamera = tylko dotyk poza wszystkimi strefami HUD i poza obszarem chwytu.
+- **Diagnostyka:** `[CONTROLS] touch-zones` (ekran, safe area, px/j., dpi, prostokąty kierownicy/chwytu/kierunkowskazów/
+  dźwigni w px) przy każdym układzie HUD; `[SCREEN] orientation changed a -> b` (kto obrócił: system), `[SCREEN] camera
+  roll` > 10° (przechył kabiny/głowy), `[SCREEN] Lock|AllowAuto` z rotacją Display i naturalną orientacją panelu.
+  Gyro steering domyślnie wyłączone (`gyroEnabled=false`), kamera nie czyta żyroskopu — hipoteza (a) odpada.
