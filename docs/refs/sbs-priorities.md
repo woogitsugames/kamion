@@ -1,8 +1,25 @@
-# SBS — kontrola punktowa r4 i historyczny ranking r3
+# SBS — priorytety r4 i historia r3
 
-Stan r4, 12.11 około 13:17: bazą nowej generacji jest main 0023f39d po pakietach A+B+C. Materiały i świat zakończone bez fallbacków, import oraz pełne 168 raw gotowe na HEAD 80159a70. [Własny punktowy przegląd](../../artifacts/sbs-r4/FRESH-SPOT-REVIEW.md) A294859/A303305 Low-clear i High-clear potwierdza brak ostrego ukośnego klina nad prawym horyzontem w nowej wspólnej bazie. Pozostaje miękki szary pas dolnego nieba; nie utożsamiać go z dawnym twardym klinem ani blokerem D51. W 303305 nadal nie zgadza się sylwetka bloków po lewej. To tylko 4 klatki: 294859 jest C, 303305 jest B; nowa pełna ocena D51 i ranking r4 jeszcze nie powstały. Wszystkie wyniki i ranking r3 poniżej pozostają historyczne.
+Stan r4, 12.11 około 13:30: bazą nowej generacji jest main 0023f39d po pakietach A+B+C. Materiały i świat zakończone bez fallbacków, import oraz pełne 168 raw gotowe na HEAD 80159a70. [Niezależny świeży przegląd](../../artifacts/sbs-r4/REVIEW-D51-BASELINE.md) wszystkich 25 par B Low-overcast daje D51 FAIL: 13 rozpoznawalnych, 11 częściowych i 1 nierozpoznawalna. Obejrzano 50 natywnych obrazów; przyszłych arkuszy 960 px jeszcze nie oceniano. Sumy są takie jak w r3, ale oceny dotyczą nowych SHA, a historia r3 i r1 pozostaje w rejestrze. Żadnej pozy C nie awansowano.
+
+[Własny punktowy przegląd](../../artifacts/sbs-r4/FRESH-SPOT-REVIEW.md) A294859/A303305 Low-clear i High-clear potwierdza brak ostrego ukośnego klina nad prawym horyzontem w nowej wspólnej bazie. Pozostaje miękki szary pas dolnego nieba; nie utożsamiać go z dawnym twardym klinem ani blokerem D51. W 303305 nadal nie zgadza się sylwetka bloków po lewej. Ta kontrola obejmuje tylko 4 klatki: 294859 jest C, 303305 jest B.
+
+## Aktualne największe odstępstwa z natywnych par r4
+
+| Kolejność | Problem | Dowód i następny krok | Właściciel |
+|---|---|---|---|
+| 1 | Stacje i projekcja portali: B328135, B275528, B297817; dalej B837235, B494288, B180137 | B328135 nadal nierozpoznawalny. Portal istnieje; brak zgodnej projekcji nie dowodzi braku obiektu. Wykonać przygotowane kontrole C i porównać dwie trwałe kotwice, rozdzielając pozę od świata. | sbs; geometria portalu i ekranu pozostaje u właściciela świata |
+| 2 | Wyspa, chodnik i przejście A320326; U-3 przy B837235 | Świeża para pokazuje trawiastą wyspę zamiast zgodnej relacji chodnika, przejścia i znaków. Nie zamykać problemu samym przesunięciem tarczy. | Claude — geometria węzłów; furniture — lica i słupki; sbs — poza |
+| 3 | Pierzeja B150280/B297817, częściowo B328135 | Hale i blok są obecne, lecz nie zastępują charakterystycznej zabudowy usługowej i dominant. Sprawdzić po kalibracji pozy oraz na kolejnej scalonej bazie 0126. | Claude — zabudowa |
+| 4 | Najbliższe podpory i łuk A201270/A139889; duży C-9 A177786 | Dalsze filary istnieją. Niezgodna jest relacja najbliższego filara do kamery, łuku i nasypu; rozdzielić stację od geometrii. | Claude — wiadukty i węzły; sbs — poza |
+| 5 | Prawy ekran i WN B367829/B494288/B180137 | Ekrany i słup są obecne. Pozostają proporcje, ciągłość i relacja do włączenia. B494288 w obu obrazach skręca w lewo; brak podstaw do dużego yaw. | furniture / Claude; sbs — poza |
+| 6 | Panorama bloków A454716/A303305/A320215 i dolne niebo | Panorama nadal niezgodna, ale pomost pozostaje rozpoznawalny. Ostry klin naprawiony w dwóch kontrolowanych kadrach; miękki szary pas to dalsza jakość obrazu, nie samodzielny bloker D51. | edge / vegetation / light |
+
+Koszt skumulowany nie jest zamknięty: [wszystkie liczniki r4](../../artifacts/sbs-r4/BUDGET-LIMITATIONS.md) pokazują względem r3 draws +0 i tris ≤+2%, lecz względem r2 Low nadal ma 38/84 wzrostów draws i już 34/84 przekroczeń +2% tris (r3: 22/84). To estymaty edytora, bez pomiaru GPU A16. Nie resetować oceny budżetu co rundę.
 
 Kolejne cele z [recenzji pakietu C](../reports/visual/REVIEW-2026-11-12-s12-gpt-batch-c.md): edge — kolor i podział hal południowej panoramy; furniture — profil tyłu tarczy i kontrast obejm; life — odbicie otoczenia na czerni, szum płatków i prostokątny cień pod autem. Szczegółów kabiny i naczep nie oceniać z samych kadrów trasy. SBS nadal zaczyna od sześciu niepewnych pozy; przygotowano 15 kontrolowanych hipotez C z osobnym rozpoznaniem widocznej jezdni w węźle bridge, bez awansu produkcyjnych kamer.
+
+## Historia r3
 
 Aktualizacja: 12.11.2026 około 11:31, gałąź gpt-sbs-r3. Źródła świata renderów z main 9874d98c; baza capture 14ccbaf1 dodaje tylko obsługę slotów i integracji. Main ma już 49a9d332 po pakietach A+B; obrazy r3 nie przedstawiają tej późniejszej bazy. Pełny render 168 raw z HEAD 62d45b92 jest gotowy. Ranking uwzględnia niezależny przegląd wszystkich 25 B Low-overcast (FAIL: 13 rozpoznawalnych, 11 częściowych, 1 nierozpoznawalny) oraz własny przegląd wszystkich 25 B Low-clear. Próby diagnostyczne nadal są C i nie poprawiają formalnego wyniku.
 
@@ -71,4 +88,5 @@ Odczytano z main 49a9d332 około 11:31. [Migawka recenzji pakietu A](../../artif
 | asphalt | Prostokątne łaty i przetarcia oznakowania jako materiał, po rozwiązaniu blokerów orientacyjnych. | Pakiety A+B nie dają nowej recenzji asfaltu; wcześniejsza ocena pozostaje historyczna. Nie używać niekwalifikowanego histogramu r3 jako albedo. |
 
 Kolejność nadal wynika z rozpoznawalności układu, a dopiero później z materiałów i zużycia. Nowy main trzeba odświeżyć w następnej rundzie SBS. Wspólny wzrost kosztu z bazy r2 do r3 (38/84 Low draws i 22/84 tris ponad 2%) jest jawny w [ograniczeniach budżetu](../../artifacts/sbs-r3/BUDGET-LIMITATIONS.md); nie rozdzielamy go bez pomiaru na poszczególne domeny.
+
 

@@ -1,0 +1,40 @@
+# Niezależny przegląd D51 — natywny baseline SBS r4
+
+Obejrzano wszystkie **25 par B: 25 zdjęć źródłowych i 25 natywnych renderów Low-overcast**, osobno przez view_image, zgodnie z recognition-native-request.json. Renderowany HEAD: `80159a70e7cea39146a465208da5471cb9beb915`. Powiązania z obrazami zapisano w independent-native-review.json. Nie oglądano arkuszy 960 px, które powstaną później.
+
+Kryterium: rozpoznanie układu trasy i trwałych punktów orientacyjnych przez kierowcę znającego miejsce. Niebo, ekspozycja, ton trawy i kosmetyka materiałów same nie blokują D51. Zachowano całą kohortę 25 B; 17 C wyłączono bez promocji. Ocen nie przenoszono z poprzedniej rundy.
+
+| Kamera | Ocena | Uzasadnienie | Zastrzeżenie pozy |
+|---|---|---|---|
+| sbs-g3-a-2818555625124739 | RECOGNISABLE | Pomost z czerwonym pasem, rytm podpór i łuk łącznicy identyfikują miejsce. Świat: zamiast nasypu z kruszywa i szyny przy łuku jest rozległa płaska powierzchnia; tablica jest obecna. | — |
+| sbs-g3-a-3970163613102941 | RECOGNISABLE | Zgodna dominanta wiaduktu i kierunek łuku. Świat: bariera i nasyp nie odpowiadają zdjęciu; położenie tablicy różni się. | — |
+| sbs-g3-a-149248627179406 | RECOGNISABLE | Rozpoznawalna relacja pomostu, podpór i zakrętu. Tablica w renderze jest znacznie bliższa i większa; nie przesądza to o przyczynie. | Odległość do tablicy wymaga rozdzielenia błędu pozy i ustawienia obiektu. |
+| sbs-g3-a-177786140912399 | PARTIAL | Wieżowiec i wiadukt identyfikują okolicę, ale wielki C-9 zasłania pierwszy plan, a najbliższy filar ze zdjęcia nie ma zgodnej projekcji. Świat: brak odpowiadającej bariery nasypu. | Stacja wzdłuż drogi i położenie C-9 wymagają niezależnych kotwic. |
+| sbs-g3-a-178689077481862 | RECOGNISABLE | Wieżowiec, przejazd pod czerwonym wiaduktem i wysepka tworzą rozpoznawalny układ. Świat: bariera nasypu i relacje podpór pozostają odmienne. | Nie utożsamiać rozpoznania miejsca z dokładnym dopasowaniem najbliższych podpór i C-9. |
+| sbs-g3-a-223210302566110 | RECOGNISABLE | Pomost z dwoma pasami, barierami i dalszym zjazdem jest rozpoznawalny. Świat: rodzina latarni i otoczenie panoramy są inne. Zdjęcie pod słońce ogranicza szczegóły. | — |
+| sbs-g3-a-309664504075286 | RECOGNISABLE | Zachowany rozpoznawalny przekrój pomostu i zjazdu. Świat: bardzo bliska jednoramienna latarnia po prawej nie odpowiada dominantom zdjęcia; ekspozycja nie wpływa na werdykt. | — |
+| sbs-g3-a-504348097385466 | RECOGNISABLE | Profil wiaduktu i łuk łącznicy są charakterystyczne. Tablica istnieje, lecz jej położenie w kadrze i skala są inne; nasyp i zabezpieczenie nadal niezgodne. | Tablica nie jest jeszcze potwierdzoną kotwicą pozy. |
+| sbs-g3-a-201270605169291 | PARTIAL | Wiadukt i zakręt rozpoznawalne ogólnie, ale zdjęcie pokazuje bliską grupę podpór w miejscu szerokiego prześwitu renderu. Świat: relacja podpór do nasypu i bariery pozostaje niezgodna. | Część rozbieżności może pochodzić ze stacji kamery; ta para nie rozstrzyga proporcji przyczyn. |
+| sbs-g3-a-1398898753813071 | PARTIAL | Duży najbliższy filar, bariera i zakręt ze zdjęcia nie tworzą zgodnej relacji w renderze. Dalsze filary istnieją; nie jest to brak wszystkich podpór. | Do rozdzielenia pozycja kamery i geometria najbliższej podpory. |
+| sbs-g3-a-320326319617139 | PARTIAL | Wiadukt pozwala skojarzyć okolicę, ale chodnik, przejście i bliskie D-3/D-6 ze zdjęcia zastępuje w renderze trawiasta wyspa. Świat: obrys nosa i wyposażenie niezgodne. | Możliwe dodatkowe przesunięcie boczne; nie naprawiać całej różnicy przesuwaniem znaków. |
+| sbs-g3-a-482392746429891 | RECOGNISABLE | Bariera w pierwszym planie i czerwony wiadukt identyfikują miejsce. Świat: rozstaw i kształt bliskich podpór oraz brak odpowiadającego niebieskiego znaku. | — |
+| sbs-g3-a-454716650857984 | RECOGNISABLE | Zgodny charakter zjazdu z pomostu, pasów i barier. Świat: brak zgodnej panoramy bloków oraz dwuramiennych latarni; nie przekreśla to identyfikacji pomostu. | — |
+| sbs-g3-a-303305168125936 | RECOGNISABLE | Dwa pasy, bariery i daleki przebieg zjazdu pozostają rozpoznawalne. Świat: miejska panorama i rodziny latarni nie odpowiadają zdjęciu. | — |
+| sbs-g3-a-320215796381417 | RECOGNISABLE | Rozpoznawalny układ pomostu i zjazdu. Świat: inna panorama po lewej, inne latarnie i zagospodarowanie po prawej. | — |
+| sbs-g3-b-381800493259507 | RECOGNISABLE | Portal w tle, pas dzielący i prawy nos z U-3 tworzą charakterystyczny układ. Szewron jest jednak mniejszy i dalej niż na zdjęciu. | Stacja dashcam oraz osadzenie U-3 nadal niepotwierdzone. |
+| sbs-g3-b-2279538078845158 | RECOGNISABLE | Biały blok po lewej, prawy budynek o zaokrąglonej fasadzie, odgałęzienie i portal w tle pozwalają rozpoznać miejsce. Nos oraz oznakowanie wymagają dokładniejszego dopasowania. | — |
+| sbs-g3-b-837235577143499 | PARTIAL | Portal i prawa zabudowa są obecne, lecz duży bliski U-3 ze zdjęcia nie trafia w odpowiadającą część kadru. Świat i poza nie są jeszcze rozdzielone. | Niepewna stacja; sprawdzić osobno geometrię nosa i ustawienie szewronu. |
+| sbs-g3-b-3281350541967811 | NOT_RECOGNISABLE | Nie ma odpowiadającego zdjęciu bliskiego tyłu portalu po lewej; render przedstawia ogólną prostą z halami. Brak wystarczającego zestawu dominant do identyfikacji tej pary. | Główna niewiadoma to stacja i położenie kamery względem istniejącego portalu; nie dowodzi to braku portalu w świecie. |
+| sbs-g3-b-275528677534382 | PARTIAL | Portal i układ szerokiej jezdni pozwalają skojarzyć miejsce, lecz portal jest ogromny i ucięty zamiast mieścić się dalej przed kamerą. Boczne znaki nie tworzą zgodnej drugiej kotwicy. | Stacja dashcam, pitch i robocze wymiary portalu wymagają rozdzielenia. |
+| sbs-g3-b-150280503737744 | PARTIAL | Ogólny układ pasów i pasa dzielącego jest podobny. Świat: jasne hale i blok nie zastępują charakterystycznej pierzei usługowej, pylonów oraz dominant w tle zdjęcia. | — |
+| sbs-g3-b-297817221966185 | PARTIAL | Ogólna droga jest podobna, lecz portal po lewej jest znacznie bliższy i większy niż na zdjęciu. Świat: brak zgodnego rytmu dużych drzew i charakterystycznej prawej pierzei. | Do kalibracji stacja i boczne położenie; brak podstaw do zamiany ID lub odwracania kierunku o 180 stopni. |
+| sbs-g3-b-3678296072299092 | PARTIAL | Prawy ekran i słup linii WN są obecne. Ich sylwetka, ciągłość ekranu i relacja do prawego odgałęzienia nie tworzą jeszcze równie charakterystycznego układu jak na zdjęciu. Nie zgłaszam całkowitego braku tych obiektów. | Stacja i relacja kamery do włączenia mogą zwiększać różnicę; nie rozstrzygnięto kotwicami. |
+| sbs-g3-b-494288258686575 | PARTIAL | Dwa pasy, łuk w lewo i prawy ekran identyfikują typ miejsca, lecz pionowa projekcja drogi i wysokość ekranu są istotnie odmienne. Świat: proporcje ekranu i infrastruktury. | Oba obrazy skręcają w lewo; duża korekta yaw nie jest uzasadniona. Sprawdzić pitch, poziom i odległość boczną. |
+| sbs-g3-b-1801374876712141 | PARTIAL | Prawy ekran istnieje, ale jego początek i relacja do włączenia nie odpowiadają zdjęciu. Świat: domowa zabudowa za ekranem i brak zgodnego billboardu po lewej. | Pitch i stacja wymagają kontroli na niezależnych kotwicach; ekran sam nie wystarcza. |
+
+**Wynik: FAIL — 13 RECOGNISABLE, 11 PARTIAL, 1 NOT_RECOGNISABLE.**
+
+Największe blokery: niepotwierdzone stacje i projekcje portali na G3-B (328135, 275528, 297817), relacja U-3 do nosa przy 837235, brak zgodnej pierzei handlowej, niezgodna relacja najbliższych podpór do łuku przy A201270/A139889 oraz układ chodnika i przejścia A320326. Ekrany, portale, słup WN i tablice są obecne w świecie; ich obecność nie zamyka problemu osadzenia, proporcji lub czytelności.
+
+Ograniczenia: kamery nadal WORKING_VALUE, brak zmierzonych kotwic dla spornych pozy, historyczne zdjęcia mogą pokazywać inną epokę. Rozpoznanie miejsca nie zatwierdza dokładności pozy ani wszystkich elementów świata. Ruch uliczny i wygląd materiałów nie były warunkiem wyniku. To niezależna ocena natywnych par bieżącej serii, bez pomiaru telefonu, akceptacji właściciela, testów wydajności i zmian produkcyjnych kamer/świata. Zbieżność sum z wcześniejszą rundą nie oznacza dziedziczenia ocen.
+
