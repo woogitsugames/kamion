@@ -40,3 +40,5 @@ za małe do potwierdzenia wierności konstrukcyjnej. Rootłącznie165/330:całyL
 Low-clear przekazano niezależnemu reviewerowi. Trzy wariantyHigh jeszcze nieocenione.
 
 Niezależny reviewer zakończył Low-clear55/55. Łącznie165/330 (wszystkieLow) bez nowego widocznego blokera, bez halo/przypadkowej emisji i znikających mebli. Drobne zużycie nie potwierdza poprawy czytelności legendy. WszystkieHigh nadal otwarte, podobnie szczegóły mocowań, zdjęciowa zgodność konstrukcyjna, fotometria, okluzja, ruch/urządzenie/GPU.
+
+Root obejrzał High-overcast01–10,55/55 kamer, pojedyncze arkusze≤960px. Brak nowej oczywistej regresji mebli, utraty obiektów czy halo. Białe drobiny na gruncie występują także w baseline; bez przypisania ich zmianie znaków. Rootłącznie220/330, Highclear/dusk110 otwarte. Przekazano High-overcast do niezależnej oceny.
