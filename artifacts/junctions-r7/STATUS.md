@@ -13,3 +13,6 @@
 - NASTĘPNY KROK po chain: obejrzeć pairs_r7c, `bash artifacts/junctions-r7/scripts/post.sh r7c full`, EditMode (scripts/test.ps1 -Platform EditMode w slocie unity).
 - 20:05 live nadpisany (artifacts/live/junctions-r7.md); build r7c rc 0, chain w toku (import/rendery).
 - 20:13 r7c: test_guardrail_overlap 8/8, cols_check 0/32 kolumn przy jezdni, rail_far 0 biegów > 3 m. W TLE: chain.sh r7c (import/rendery, logs/r7c_imp.out) + post.sh r7c full (logs/r7c_post.out).
+- 21:15 r7d: chain done (build/import/rendery rc 0). Zgłoszenie właściciela „pas zjazdu idzie zygzakiem” = łącznica Putry za rozwidleniem (override putry-link-fork-placement, węzły t 0,154-0,704 dopasowane do ortofoto: scripts/zz_ortho_edge.py, zz_fit.py, zz_net.py, zz_edges.py); kamera r7_exit_zigzag_eye; tablica F-10 (gate3_sign biezenstwa-f10-north, E 515,8 N -680,3); księgowanie poręczy hero. pytest r7d 885 passed / 1 xfailed; EditMode 408/408.
+- 21:27 origin/main scalony (generated -> ours), 21:37 r7e = regeneracja na scalonym kodzie (build rc 0), EditMode 438/438, swept: G3-B tyre min -0,14 -> +0,10 m. W TLE: pytest full (logs/r7e_pytest.log, koniec „final done” w logs/r7e_post.out).
+- NASTĘPNY KROK: po „final done” wpisać wynik pytest r7e do ADR 0144 (sekcja Testy), commit, kopia dowodów do main artifacts/junctions-r7/.
