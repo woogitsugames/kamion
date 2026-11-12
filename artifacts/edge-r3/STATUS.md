@@ -63,3 +63,5 @@ Krok 18: build_world po poprawce zakończony kodem 0 bez fallback=True; wynik w 
 2026-11-12T02:19:56.4806783+01:00 Zakończono testy EditMode; szczegółowy wynik w artifacts/tests.
 Krok 21: pełne EditMode po poprawce: 297/297, 0 failed, 0 skipped, 12,8626 s; kopię XML zachowano w tests/full-editmode.xml. Cała macierz After 368 PNG ukończona. Pomiary geometrii/kurtyn, prześwitu i Compare oczekują pod heavy; nie uruchamiamy innego Pythona tej sesji.
 Następny krok: ocena par zwykłych kamer i wyników pomiarów, potem pełny GIS tylko na zakończenie rundy.
+Krok 22: ADR 0121 r3 opisuje przyczynę, niezależny Red/Green, bazę 368+368 PNG i EditMode 297/297. Obejrzano zwykłe north Low-overcast oraz east High-clear: efekt wizualny bliski neutralnemu, bez ogłaszania zamknięcia fotograficznej jakości. Pomiary After i końcowy GIS nadal otwarte.
+Następny krok: wyniki geometry-comparison-receipt.json i wszystkich kamer, potem końcowy GIS pod heavy.
