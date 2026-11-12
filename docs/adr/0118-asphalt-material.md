@@ -1,4 +1,4 @@
-﻿# ADR 0118 — Materiał nawierzchni
+# ADR 0118 — Materiał nawierzchni
 
 ## r1 — Low, ślady kół i widoczność istniejących napraw
 
@@ -22,6 +22,35 @@ Kontrola r1a wykazała za mocne przetarcie na nowej nawierzchni. Materiał jezdn
 
 
 ### Wynik końcowy r1 / candidate2
-Kod produktu: 53e403c964cbb62e028c27eabd6d78ec1c27e3f5. Porównano 312 par z 78 kamer w Low/High clear/overcast, osobno mesh i instancje: wszystkie liczniki delta 0. Obejrzano 28 contact sheets i 14 większych arkuszy. Importer: geometria bez wzrostu bajtów, tekstury ASTC 40 667 737 bajtów bez wzrostu. Są to estymacje widoczności i alokacji, nie czas GPU. Low overcast ślad/środek: baseline 1,045/1,033, candidate2 0,970/0,972. Referencja jednego zdjęcia około 0,67, więc docelowego kontrastu nie potwierdzono. Niezależny krytyk: warunkowe, bez pełnego wizualnego PASS; stara łata zbyt regularna i płaska, część nowej farby nadal zużyta. EditMode 275/275 passed. Końcowy GIS 521 passed, 1 xfailed; odtworzono metadane producenta, audyt 196 plik/SHA bez rozbieżności. Fidelity exit 0. Physics/gate3 47 passed, 1 znana porażka odtwarzalności top_speed_flat_comb.json; źródeł fizyki nie zmieniano. A16 UNVERIFIED.
+Kod produktu: 53e403c964cbb62e028c27eabd6d78ec1c27e3f5. Porównano 312 par z 78 kamer w Low/High clear/overcast, osobno mesh i instancje: wszystkie liczniki delta 0. Obejrzano 28 contact sheets i 14 większych arkuszy. Importer: geometria bez wzrostu bajtów, tekstury ASTC 40 667 737 bajtów bez wzrostu. Są to estymacje widoczności i alokacji, nie czas GPU. Pomiar kontrastu renderu z r1 został wycofany: narzędzie błędnie odtwarzało anchor z wysokości kamery zmienianej przez seat=road. Wymagana jest rzeczywista rootToWorld; brak jej w starych zapisach oznacza UNVERIFIED. Patrz artifacts/asphalt-r1/CORRECTION-2026-11-12.md. Pomiary samej fotografii około 0,67 pozostają oddzielnym pomiarem obrazu. Niezależny krytyk: warunkowe, bez pełnego wizualnego PASS; stara łata zbyt regularna i płaska, część nowej farby nadal zużyta. EditMode 275/275 passed. Końcowy GIS 521 passed, 1 xfailed; odtworzono metadane producenta, audyt 196 plik/SHA bez rozbieżności. Fidelity exit 0. Physics/gate3 47 passed, 1 znana porażka odtwarzalności top_speed_flat_comb.json; źródeł fizyki nie zmieniano. A16 UNVERIFIED.
 
 
+
+## r2 — krawężniki i kostka jako materiał
+
+Stan końcowy: runda zakończona, candidate2 ma PASS ograniczonej poprawy materiałowej; jedna znana porażka physics/gate3 jest ujawniona, GPU A16 UNVERIFIED. Bazą jest merge main 4992c434. D51 określa rozpoznawalność trasy jako priorytet bramki 3; ocena drobnych materiałów w tej rundzie nie jest blokadą tej bramki.
+
+Zakres pozostaje materiałowy. Istniejący generator zapisuje UV1 długości i odległości od rynsztoka dla profili krawężników/chodników, a zestawy mają maskę fug Var.B. Zbadamy wykorzystanie tych danych do brudu przy krawędzi i czytelniejszych fug. Źródła roads, geometria i ustawienia jakości pozostają poza zmianą. Materiały bez nowych flag muszą zachować dotychczasowe działanie; brak UV1 nie może być interpretowany jako poprawne dane brzegu.
+
+Przed wyborem parametrów potrzebne są cztery serie baseline, oględziny roboczych zbliżeń poza Kwadratem i referencje w aktualnych pozach SBS z main. Mierzymy zmiany w tych samych polach obrazu Low/High clear/overcast oraz wszystkie liczniki kamer i instancji. Wartości wizualne będą WORKING_VALUE, koszt A16 bez telefonu pozostaje UNVERIFIED. Kontrakty _Tile, liniowego _Tint i weather/runoff zostają zachowane.
+
+
+
+### r2a — kandydat materiałowy
+Oględziny poprawionego zbliżenia wykazały już czytelne fugi kostki i duże mokro wyglądające plamy. Parametry ground_grime dotyczą tylko sidewalk_paving: damp_darkening 0,42 → 0,18, threshold 0,62 → 0,65, joint_dirt bez zmian 0,45, gloss 0,5 → 0,15. Krawężnik opt-in kerb_wear: joint_dirt 0,35, mineral_film 0,16, threshold 0,55. Wartości WORKING_VALUE. Oba efekty używają już próbkowanych tekstur: brak nowych odczytów, wariantów słów kluczowych, przebiegów lub kanałów UV. Nie wykorzystujemy niepełnego UV1 (0,50) do udawania brudu przy brzegu. Profile, pozycje, indeksy i dane geometrii bez zmian; wymagany audyt wszystkich GLB oraz liczników kamer. Zdjęcia SBS mają niedopasowaną pozę i służą tu wyłącznie za przykład materiału, bez kalibracji fotometrycznej.
+
+
+### r2b — zachowanie obszaru Kwadrat
+Read-only kontrola overrides ujawniła, że top wysepki bramy używa sidewalk_paving. Wariant candidate1 nie jest końcowym wynikiem: nowy materiał musi wyłączyć także współdzielone ID na chronionym obszarze. Flaga ground_wear_exclude_local_en=[400,-700,850,-250] obejmuje punkty Kwadrat i bramę z buforem; wewnątrz kerb_wear ma wagę zero, a ground_grime używa oryginalnych współczynników. Osiem metrów przejścia jest wyłącznie na zewnątrz. Fragment używa TransformWorldToObject, aby wykluczenie zachować po floating origin. Nowe odczyty tekstur/przebiegi/UV: zero; całe r2 deklaruje teraz trzy dodatkowe float4 (48 bajtów stałych przed wyrównaniem), sprawdzanie zakresu i ALU dla aktywnych flag. GPU A16 UNVERIFIED. Nie zmieniono overrides, dróg, geometrii ani assetów Kwadrat. GPU readback rzeczywistego bloku HLSL testuje punkt Kwadrat, publiczny probe i brak scope z przesunięciem obiektu: EditMode 312/312 passed, zero skipped. Finalne kamery Kwadrat muszą zostać porównane z baseline przed publikacją.
+
+
+### r2c — zakończona kontrola materiału, oczekiwanie na końcowe testy
+Wybrano candidate2. Baseline i kandydat mają 82 kamery × cztery warunki, 328 zgodnych par oraz identyczne rzeczywiste macierze i rozmiary RT. Wszystkie 2952 liczniki, w tym osobne liczniki instancji, mają deltę zero. Audyt 128 GLB i 7315 prymitywów: identyczne atrybuty, indeksy i hierarchie; 22 kategorie bajtów importu bez wzrostu, ASTC 40 910 657 B bez zmiany. Są to dowody geometrii i estymacji widoczności, nie czasu GPU.
+
+Samodzielnie obejrzano 60 arkuszy obejmujących wszystkie pary. Niezależny visual-critic: PASS ograniczonej poprawy materiału candidate2; brak zatwierdzenia pełnego realizmu, stabilności w ruchu i Gate3. Publiczna kostka ma słabsze duże plamy, obrzeże czytelniejsze spoiny. Jasne punkty High i regularność kostek pozostają ograniczeniami. Chroniona brama: candidate2 zmienia o ponad 2 poziomy RGB 0/7/4/6 pikseli całych czterech obrazów wobec 9996/9240/8820/8828 w odrzuconym candidate1. Nie jest to deklaracja identyczności całych obrazów ani dowód całego obwodu wyłączenia.
+
+Końcowy GIS: 604 passed, 1 oczekiwany xfailed, exit 0, 1224,78 s; po odtworzeniu metadanych producenta audyt 196 odwołań/SHA bez rozbieżności. Physics/gate3, fidelity i końcowy EditMode pozostają w sekwencji walidacji; raport końcowy i przekazanie rundy nastąpią po odczytaniu ich wyników. Narzędzia hosta były niedostępne od około 03:44 do 09:04; nie zaliczamy tego jako ciągłej pracy. Wznowiono tylko brakującą walidację, zachowując ukończone rendery i audyty.
+
+### Wynik końcowy r2 / candidate2
+
+Końcowy EditMode312/312 passed, bez pominięć i porażek. GIS604 passed,1 oczekiwany xfailed,exit0. Physics/gate3:47 passed,1 znana porażka odtwarzalności top_speed_flat_comb.json,exit1; wejścia tego testu i dims.json bez zmian względem bazy. Fidelityexit0 po229,3s; wygenerowane zmiany obejmują tylko17 ścieżek nakładek, bez zmian metryk. Wskaźniki narzędzia nadal wykazują niezweryfikowane pasy i brakujące wyspy/drogi, więc exit0 nie jest zatwierdzeniem Gate3. Końcowy audyt196 odwołań/SHA bez rozbieżności. Wszystkie60 obejrzanych arkuszy ponownie zgodne SHA. Ustawienia Unity przywrócone, własne sloty zwolnione. Pełny raport i wszystkie328 par/2952 liczniki w artifacts/asphalt-r2/REPORT.md; przekazanie wyłącznie przez robocopy artifacts, bez merge do main i bez push. Następna runda obejmuje materiały placów przemysłowych poza Kwadratem po świeżym merge main i nowym baseline.

@@ -193,6 +193,10 @@ def plan(region_id, overrides, fc, origin, zground, report, log=lambda *a: None)
             log("hero building", o["id"], "STALE:", why, "- generic geometry kept")
             continue
         out.append({"override": o, "spec": spec, "meta": meta, "sha": sha})
+    # ADR 0116 r3: own EC landmark assets reuse the hero apply/triangle path.
+    # They replace no BDOT building and retain the generic chimney if unverified.
+    from . import ec_chimneys
+    out.extend(ec_chimneys.plan(region_id, overrides, origin, zground, report, log))
     return out
 
 

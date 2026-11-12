@@ -1,0 +1,111 @@
+{
+  "file": "Data\\raw\\derived\\bialystok-industrial-c\\world\\chunk_3_4.low.glb",
+  "paving_hits": [
+    {
+      "query": "paving_look_at",
+      "node": "paved",
+      "material": "sidewalk_paving",
+      "triangle": 24,
+      "en": [
+        -200.6,
+        -241.9
+      ],
+      "elevation_u": 130.8006431180718,
+      "uv1": [
+        0.0,
+        50.0
+      ]
+    },
+    {
+      "query": "paving_near_middle",
+      "node": "paved",
+      "material": "sidewalk_paving",
+      "triangle": 27,
+      "en": [
+        -199.553,
+        -242.667
+      ],
+      "elevation_u": 130.86825395772905,
+      "uv1": [
+        0.0,
+        50.00000000000001
+      ]
+    }
+  ],
+  "nearest_right_kerb_tops": [
+    {
+      "node": "paved",
+      "material": "curb_concrete",
+      "triangle": 1949,
+      "en": [
+        -198.87076967710564,
+        -244.14970245821394
+      ],
+      "elevation_u": 130.91514245737196,
+      "distance_m": 7.895205245173456
+    },
+    {
+      "node": "paved",
+      "material": "curb_concrete",
+      "triangle": 1951,
+      "en": [
+        -200.17100524902344,
+        -243.16900634765625
+      ],
+      "elevation_u": 130.875,
+      "distance_m": 8.061429356333635
+    },
+    {
+      "node": "paved",
+      "material": "curb_concrete",
+      "triangle": 1945,
+      "en": [
+        -196.9969940185547,
+        -245.56199645996094
+      ],
+      "elevation_u": 130.83399963378906,
+      "distance_m": 8.237255545310557
+    },
+    {
+      "node": "paved",
+      "material": "curb_concrete",
+      "triangle": 1953,
+      "en": [
+        -201.75900268554688,
+        -241.9720001220703
+      ],
+      "elevation_u": 130.7310028076172,
+      "distance_m": 8.683853114084192
+    },
+    {
+      "node": "paved",
+      "material": "curb_concrete",
+      "triangle": 1943,
+      "en": [
+        -195.40899658203125,
+        -246.75900268554688
+      ],
+      "elevation_u": 131.0030059814453,
+      "distance_m": 9.008236693341328
+    }
+  ],
+  "proposed_kerb_camera": {
+    "id": "asphalt_kerb_andersa_close",
+    "type": "persp",
+    "kind": "material_probe",
+    "seat": "road",
+    "pos": [
+      -203.625,
+      -250.453,
+      131.66514245737196
+    ],
+    "look_at": [
+      -198.87076967710564,
+      -244.14970245821394,
+      130.93514245737197
+    ],
+    "fov_deg": 42,
+    "note": "WORKING_VALUE pose aimed at a measured nearest right-hand kerb top; inspect render. Not a photo pose."
+  },
+  "note": "Local source GLB geometry only; no general occlusion proof or changes to mesh. Camera still requires visual verification."
+}

@@ -1,0 +1,40 @@
+{
+  "git_sha": "01b4d2158b365cc292ee25c11c59792431642637",
+  "captured_at_utc": "2026-11-12T02:24:27.7700504Z",
+  "tier": "Low",
+  "lighting": "overcast",
+  "width": 1280,
+  "height": 960,
+  "diagnostic_only": true,
+  "pose_confidence": "C",
+  "cameras": [
+    "sbs-probe-gantry-3281350541967811-b000",
+    "sbs-probe-gantry-3281350541967811-b030",
+    "sbs-probe-gantry-3281350541967811-b045",
+    "sbs-probe-gantry-3281350541967811-b060",
+    "sbs-probe-gantry-297817221966185-b000",
+    "sbs-probe-gantry-297817221966185-b030",
+    "sbs-probe-gantry-297817221966185-b045",
+    "sbs-probe-gantry-297817221966185-b060"
+  ],
+  "status": "OK",
+  "input_sha256": {
+    "probe_cameras": "b7ac612af98a1343f9c51285bcbd4aaedadb93433972ba7c3f97dfdd7a8e6e80",
+    "probe_plan": "11825fef11866fb424cab0ee69357e0da076e058448f107d910db6f30dd74db9",
+    "import_receipt": "07e0a2d65b296f061e649a8545bc82aa2bfd72381004c120af7fac61c71b4814",
+    "production_cameras": "41686dd5d9a9ef0969ab9d7772e359b150a6f1783b67538d9d8f875880f1ae2e",
+    "references": "f7991691c5868e67658ff9879c6b736c372b4ac02f1be9b84cebca4cd51b40af",
+    "world_manifest": "2d486ac202829ca711b2d72fabc2299b6c637f1059f7adc9c42e1ad6b8aba489",
+    "materials_spec": "c552a473f4e2849cd6aedcd839210f39416292ca16c422aecc46517e23d60afb"
+  },
+  "render_sha256": {
+    "sbs-probe-gantry-3281350541967811-b000": "1b44c413ba98c87ba8bc6bde54fd7b97ce195accda93fea6cfbae3a2f2c5122e",
+    "sbs-probe-gantry-3281350541967811-b030": "52d892e5d974aea9b511efd3c6b3b51a94eca06beb5294521a8571746f2b9e7e",
+    "sbs-probe-gantry-3281350541967811-b045": "529821cfac0e33203c68408a599af0abff95fbcee0550097eeefe851dc038b93",
+    "sbs-probe-gantry-3281350541967811-b060": "2842c04365f6eeb92f15fa943bc0f21dba7fc27f899e3e8e8005cb4522500577",
+    "sbs-probe-gantry-297817221966185-b000": "b11cf58fdb1e377d1d2717557976c10e8c9c2d35eb54c603bda201f71636fd78",
+    "sbs-probe-gantry-297817221966185-b030": "6b753e8cd85623371caa5198713e0c884e8fa8e4a4431f3d11f0311f089b2a09",
+    "sbs-probe-gantry-297817221966185-b045": "95b1ca651dc80ce3aae45896a2465e9085e551b453f7471d11f6bb3f3e517cec",
+    "sbs-probe-gantry-297817221966185-b060": "524db327f543e1885cb09805213576548f01907b75fe6ec7c32a96cf1e009b26"
+  }
+}

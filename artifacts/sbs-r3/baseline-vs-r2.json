@@ -1,0 +1,21 @@
+﻿{
+    "checked_at":  "2026-11-12T03:15:43.3656470+01:00",
+    "new_chunks":  64,
+    "changed_high_manifest_sha":  64,
+    "changed_low_manifest_sha":  64,
+    "scope":  "Manifest-to-manifest metadata comparison; this does not independently hash all128 actual GLB files. No image improvement or budget attribution to SBS.",
+    "r2_world_manifest_sha256":  "ed7c6156503289156d910b76fd4252cd0c6027107c5f0ea9ed7969d851cafa4b",
+    "r3_world_manifest_sha256":  "2d486ac202829ca711b2d72fabc2299b6c637f1059f7adc9c42e1ad6b8aba489",
+    "production_inputs":  [
+                              {
+                                  "name":  "sbs_cameras.json",
+                                  "unchanged_since_r2":  true,
+                                  "current_sha256":  "41686dd5d9a9ef0969ab9d7772e359b150a6f1783b67538d9d8f875880f1ae2e"
+                              },
+                              {
+                                  "name":  "sbs_references.json",
+                                  "unchanged_since_r2":  true,
+                                  "current_sha256":  "f7991691c5868e67658ff9879c6b736c372b4ac02f1be9b84cebca4cd51b40af"
+                              }
+                          ]
+}

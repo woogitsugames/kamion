@@ -1,0 +1,94 @@
+﻿{
+    "scope":  "CPU-estymacja SceneStats/WorldInstances; brak pomiaru GPU",
+    "coarse_frames":  220,
+    "unrounded_low_frames":  110,
+    "mesh_draw_delta_min":  0,
+    "mesh_draw_delta_max":  0,
+    "instance_draw_delta_min":  0,
+    "instance_draw_delta_max":  0,
+    "low_upper_bound_at_most_2_percent":  102,
+    "low_unproven":  8,
+    "unproven_records":  [
+                             {
+                                 "camera":  "edge-east",
+                                 "tier":  "Low",
+                                 "lighting":  "clear",
+                                 "after_exact_triangles":  85219,
+                                 "before_floor_triangles":  83000,
+                                 "tris_delta_upper_percent":  2.673493975903618,
+                                 "mesh_draw_delta":  0,
+                                 "instance_draw_delta":  0
+                             },
+                             {
+                                 "camera":  "edge-north",
+                                 "tier":  "Low",
+                                 "lighting":  "clear",
+                                 "after_exact_triangles":  95890,
+                                 "before_floor_triangles":  93000,
+                                 "tris_delta_upper_percent":  3.107526881720424,
+                                 "mesh_draw_delta":  0,
+                                 "instance_draw_delta":  0
+                             },
+                             {
+                                 "camera":  "edge-west",
+                                 "tier":  "Low",
+                                 "lighting":  "clear",
+                                 "after_exact_triangles":  88592,
+                                 "before_floor_triangles":  86000,
+                                 "tris_delta_upper_percent":  3.013953488372101,
+                                 "mesh_draw_delta":  0,
+                                 "instance_draw_delta":  0
+                             },
+                             {
+                                 "camera":  "fire-station-above",
+                                 "tier":  "Low",
+                                 "lighting":  "clear",
+                                 "after_exact_triangles":  312428,
+                                 "before_floor_triangles":  306000,
+                                 "tris_delta_upper_percent":  2.1006535947712512,
+                                 "mesh_draw_delta":  0,
+                                 "instance_draw_delta":  0
+                             },
+                             {
+                                 "camera":  "edge-east",
+                                 "tier":  "Low",
+                                 "lighting":  "overcast",
+                                 "after_exact_triangles":  85219,
+                                 "before_floor_triangles":  83000,
+                                 "tris_delta_upper_percent":  2.673493975903618,
+                                 "mesh_draw_delta":  0,
+                                 "instance_draw_delta":  0
+                             },
+                             {
+                                 "camera":  "edge-north",
+                                 "tier":  "Low",
+                                 "lighting":  "overcast",
+                                 "after_exact_triangles":  95890,
+                                 "before_floor_triangles":  93000,
+                                 "tris_delta_upper_percent":  3.107526881720424,
+                                 "mesh_draw_delta":  0,
+                                 "instance_draw_delta":  0
+                             },
+                             {
+                                 "camera":  "edge-west",
+                                 "tier":  "Low",
+                                 "lighting":  "overcast",
+                                 "after_exact_triangles":  88592,
+                                 "before_floor_triangles":  86000,
+                                 "tris_delta_upper_percent":  3.013953488372101,
+                                 "mesh_draw_delta":  0,
+                                 "instance_draw_delta":  0
+                             },
+                             {
+                                 "camera":  "fire-station-above",
+                                 "tier":  "Low",
+                                 "lighting":  "overcast",
+                                 "after_exact_triangles":  312428,
+                                 "before_floor_triangles":  306000,
+                                 "tris_delta_upper_percent":  2.1006535947712512,
+                                 "mesh_draw_delta":  0,
+                                 "instance_draw_delta":  0
+                             }
+                         ],
+    "method":  "Dokładny licznik po zmianie dzielony przez dolną granicę baseline z zapisu w tysiącach; podane delty są górnymi granicami, nie dokładnym przyrostem."
+}

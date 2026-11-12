@@ -1,0 +1,13 @@
+pass1 76 s
+plots 99 drops 43 access {'moved': 11, 'removed': 5, 'removed_no_carriageway': 3, 'removed_junction': 2}
+age Counter({'prl': 51, 'new': 27, 'old': 21})
+front Counter({'concrete': 15, 'brick_picket': 14, 'chainlink': 14, 'picket': 13, 'bars': 13, 'boards_brown': 7, 'brick_boards': 6, 'lamella': 5, 'brick_bars': 5, 'wall': 3, 'boards_rust': 2, 'boards_grey': 2})
+gates 43 wickets 54 access 43 garage-aligned 2 steps 210 garage doors 5
+d_cw [1.6, 1.8, 1.9, 1.9, 1.9, 2.0, 2.2, 2.3, 2.4, 2.4, 2.5, 2.5, 2.6, 2.6, 2.6, 2.7, 2.7, 2.8, 2.8, 2.8, 2.9, 3.0, 3.2, 3.3, 3.5, 3.6, 4.5, 4.9, 4.9, 6.0, 6.1, 6.5, 8.0, 8.1, 8.5, 8.6, 8.9, 10.4, 11.0, 11.2, 11.5, 13.7, 14.0]
+area median 591 sum 74242
+house kerbs 5 1573 m
+applied drops 43
+fence runs crossing a door zone: 0
+paved items Counter({'yard_paving': 130, 'plot_lawn': 113}) {'plot_lawn': 45345, 'yard_paving': 3702}
+{"plots": 99, "fence_m": {"bars": 234, "boards_brown": 336, "boards_grey": 292, "boards_rust": 128, "brick_bars": 144, "brick_boards": 138, "brick_picket": 326, "chainlink": 3717, "concrete": 2053, "lamella": 819, "picket": 760, "wall": 762}, "gates": 43, "sliding_gates": 10, "wickets": 131, "drives": 43, "kerb_drops": 43, "verge_overlays": 43, "thujas": 434, "spruces": 19, "fruit_trees": 64, "big_trees": 15, "shrubs": 462, "hedge_m": 477, "flower_cards": 530, "bins": 25, "tris": 52022, "instances": 0, "plot_m2_median": 591.2, "age": {"new": 27, "prl": 51, "old": 21}, "styles_front": {"lamella": 5, "brick_picket": 14, "picket": 13, "brick_boards": 6, "boards_brown": 7, "wall": 3, "chainlink": 14, "boards_rust": 2, "concrete": 15, "bars": 13, "brick_bars": 5, "boards_grey": 2}, "styles_side": {"wall": 8, "concrete": 24, "chainlink": 44, "boards_brown": 3, "lamella": 8, "boards_grey": 5, "picket": 6, "boards_rust": 1}, "access": {"moved": 11, "removed": 5, "removed_no_carriageway": 3, "removed_junction": 2}, "fence_step_zone_hits": 0, "street_wires": {"chains": 0, "spans": 0, "span_m": 0, "drops": 0, "tris": 0, "chains_without_lamps": 7}}
+tris {('collision', 'collision_fence'): 3188, ('furniture', 'plot_kit'): 52022, ('plot_ground', 'yard_paving'): 1747}

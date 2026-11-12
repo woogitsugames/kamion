@@ -1561,3 +1561,81 @@ overrides:
     reason: Second P-9 guidance arrow 15.8 m further (artifacts/junctions-r4/trace/n100_arrow2.jpg), before the kerb jog E -247 N -253.
     confidence: high
     verify: owner drive
+  # ---------------------------------------------------------------- ADR 0126: G3-B trade frontage (streetscape.frontage)
+  # State of 2024 (Mapillary strudel 2024-08-15, kino 2024-07-26; GUGiK orthophoto 2024-05-27; LoD1 2024 heights), the
+  # same year as every footprint and height of the region. The gate photos of 2017-2020 (zsolt 297817221966185 /
+  # 3281350541967811, picturehoover 150280503737744) show the car showroom white with a red entrance block and red
+  # flags; it was re-clad dark before 2024. Colours = nearest existing material (WORKING_VALUE), no brand lettering.
+  - id: g3b-frontage-furniture-showroom
+    target: {building: "bdot:2BE4B431-C34A-1BF0-E053-CC2BA8C0D140"}
+    reason: >-
+      BDOT10k FUNKCJA "magazyn" made it a sheet-clad hall with docks. Photos (picturehoover 150280503737744 2020-06-27,
+      strudel 490210580292738 2024-08-15, kino 806036451686717 2024-07-26): a furniture showroom, red-brown walls,
+      a dark band of glazing under an overhanging dark roof edge on the road (NE) and NW sides, no ramps. Height LoD1
+      2024 6.55 m (band and roof-edge heights read off the photo proportions: WORKING_VALUE).
+    confidence: medium
+    verify: owner photo session (frontage of the G3-B stretch)
+    set:
+      typology: office
+      frontage:
+        wall: brick_red
+        fascia: {material: hall_flashing, height_m: 0.45, overhang_m: 0.6}
+        glazing:
+          - {facing: [NE, NW], span: [0.0, 1.0], z: [3.5, 5.5], pitch_m: 1.6, min_len_m: 7.0, margin_m: 0.8}
+  - id: g3b-frontage-car-showroom
+    target: {building: "bdot:2BE4B431-C785-1BF0-E053-CC2BA8C0D140"}
+    reason: >-
+      Car showroom. Photos strudel 469512365899192 / 490210580292738 (2024-08-15): black fascia over a fully glazed
+      front on the road (NE) end and on the first part of the NW side, three yellow flag masts and a dark totem by
+      the entrance drive, a lattice mast with a dark blue oval board at the north corner (the oval is on every photo
+      since 2017). Mast and totem = the feet of their shadows on the orthophoto 2024-05-27 (+-1.5 m): mast E -204.5
+      N -300, totem E -162 N -339. Flags: the three banner shadows start at E -163.8...-160.6 N -329.4...-333.8;
+      the masts stand ~5.8 m back along the shadow (bearing 258 deg) if the banner is the top 4 m of an 8.5 m mast
+      (photo: banner about 1 : 3...4): row centre E -168.2 N -332.8 (+-6 m, low confidence). Row bearing: the shadow ends give ~142 deg
+      (+-20 deg: +-1.5 m over a 5.4 m base), which is end-on from the road, yet both 2024 photos show three
+      separate banners from the carriageway (pitch ~0.8 deg at ~80 m = ~1.1 m across the line of sight, banner
+      ~0.45 of the pitch); the row is therefore turned to ~167 deg (rotate_deg 35) and the banner is 0.8 m wide.
+      Heights from photo proportions and shadow lengths (WORKING_VALUE). Rear walls not visible in any open photo
+      (dark grey assumed).
+      Functional sign SERWIS instead of the brand lettering on the fascia.
+    confidence: medium
+    verify: owner photo session (frontage of the G3-B stretch)
+    set:
+      frontage:
+        wall: plaster_accent_grey
+        fascia: {material: hall_flashing, height_m: 2.3, facings: [NE, NW]}
+        glazing:
+          - {facing: NE, span: [0.0, 1.0], z: [0.25, 3.7], pitch_m: 2.4, transom_m: 2.5}
+          - {facing: NW, span: [0.0, 0.4], z: [0.25, 3.7], pitch_m: 2.4, transom_m: 2.5, min_len_m: 20.0}
+        sign: {code: serwis, facing: NE, u: 0.5, z_m: 4.9}
+        props:
+          - {kind: sign_mast, facing: NE, u: 1.05, out_m: 7.7, height_m: 10.0, board_w_m: 4.6, board_h_m: 1.3,
+             board_dir: out, material: bin_plastic_blue}
+          - {kind: flag_row, facing: NE, u: -0.638, out_m: 7.5, rotate_deg: 35, count: 3, spacing_m: 2.7, height_m: 8.5,
+             banner_w_m: 0.8, banner_h_m: 4.0, banner_dir: out, material: paint_yellow}
+          - {kind: totem, facing: NE, u: -0.93, out_m: 7.3, height_m: 6.0, width_m: 1.6, depth_m: 0.4,
+             material: plaster_accent_grey}
+  - id: g3b-frontage-glazed-showroom
+    target: {building: "bdot:3c5cd1c0-9ee5-4321-916e-ba061fd4d013"}
+    reason: >-
+      Second showroom of the row. Photo strudel 1395903477772426 (2024-08-15): dark grey fascia over full-height
+      glazing with narrow vertical profiles; the orthophoto 2024-05-27 shows a glazed roof over its NE half. Height
+      LoD1 2024 7.02 m; glazing 0.3-4.2 m read off the photo (WORKING_VALUE).
+    confidence: low
+    verify: owner photo session (frontage of the G3-B stretch)
+    set:
+      frontage:
+        wall: plaster_accent_grey
+        fascia: {material: hall_flashing, height_m: 0.5}
+        glazing:
+          - {facing: [NE, NW], span: [0.0, 1.0], z: [0.3, 4.2], pitch_m: 1.5, min_len_m: 8.0}
+  - id: g3b-frontage-block-by-the-road
+    target: {building: "bdot:d0f4dd2c-c040-439e-aece-8fe13f9d3046"}
+    reason: >-
+      Four-storey block next to the showrooms (built after 2020: a crane on picturehoover 150280503737744). Photos kino
+      806036451686717 (2024-07-26) and strudel 1447066149328933 (2024-08-15): white / light render, punched windows on
+      the long sides, loggias only at the gable end, no colour bands. The hashed pick gave balcony galleries along both
+      long sides.
+    confidence: medium
+    verify: owner photo session (frontage of the G3-B stretch)
+    set: {wall_material: plaster_light, balconies: false, bands: false}

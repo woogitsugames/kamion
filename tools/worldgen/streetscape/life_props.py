@@ -382,7 +382,7 @@ def tractor(colour):
     """Generic 4x2 cab-over tractor (v3.1 silhouette), origin under the fifth wheel, +y forward. Dimensions typical
     for the class (WORKING_VALUE); deliberately brand-less: raked windscreen, rounded cab corners, medium roof with a
     roof deflector (owiewka dachowa) and cab side extenders, black grille panel without any badge, fuel tank and
-    battery box between the axles, steps behind the front wheel, rear mudguards, mirrors. LOD0 <= 1.5 k triangles,
+    battery box between the axles, steps behind the front wheel, rear mudguards, mirrors. LOD0 <= 1.7 k triangles,
     LOD1 ~ 300 (props_meta.json)."""
     t = TRACTOR
     paint = f"tractor_paint_{colour}"

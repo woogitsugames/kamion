@@ -69,6 +69,7 @@ namespace Game.Rendering
         void OnDisable()
         {
             KamionHeadlamps.Reset();
+            Shader.SetGlobalFloat("_KamionDimColourDesaturation",0f);
             QualityProfileApplier.Applied -= OnTierApplied;
             RenderPipelineManager.beginContextRendering -= OnBeginRendering;
             if (Instance == this) Instance = null;
