@@ -45,7 +45,12 @@ def _objects(w: World) -> list[dict]:
         out.append({"id": p["id"], "kind": kind, "e": p["e"], "n": p["n"], "r": r})
     for t in w.trees:
         out.append({"id": t["id"], "kind": "tree", "e": t["e"], "n": t["n"], "r": TRUNK_R_M})
+    # Integration r6: boards on sign gantries / portals / cantilevers (overrides kind sign_gantry) hang OVER the
+    # carriageway by design (clearance >= 5.0 m) - M37 reported them as the top on-route errors (false positives).
+    overhead = {"override:" + o.get("id", "") for o in (w.overrides or []) if o.get("kind") == "sign_gantry"}
     for s in w.signs:
+        if s.get("src") in overhead:
+            continue
         out.append({"id": f"sign:{s['id']}", "kind": "sign", "e": s["e"], "n": s["n"], "r": OBJ_FOOTPRINT_M["sign"]})
     for l in w.lamps:
         out.append({"id": f"lamp:{l['id']}", "e": l["e"], "n": l["n"], "kind": "lamp", "r": OBJ_FOOTPRINT_M["lamp"]})

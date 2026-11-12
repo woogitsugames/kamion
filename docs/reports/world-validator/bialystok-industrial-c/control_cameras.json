@@ -5,83 +5,7 @@
  "frame": "local E/N metres; z = region origin z + eye height (heightmap not in git, WORKING_VALUE)",
  "cameras": [
   {
-   "id": "wv-000-object_in_carriageway",
-   "type": "persp",
-   "fov_deg": 55.0,
-   "pos": [
-    -511.02,
-    13.54,
-    133.64
-   ],
-   "look_at": [
-    -496.02,
-    13.15,
-    132.14
-   ],
-   "note": "object_in_carriageway | sign:override:andersa-putry-portal-p40 | sign centre 1.38 m inside the carriageway edge | E -496.0 N 13.1 | 53.158927, 23.152487",
-   "category": "object_in_carriageway",
-   "severity": "error",
-   "finding": "sign:override:andersa-putry-portal-p40"
-  },
-  {
-   "id": "wv-001-object_in_carriageway",
-   "type": "persp",
-   "fov_deg": 55.0,
-   "pos": [
-    -410.11,
-    -88.07,
-    133.64
-   ],
-   "look_at": [
-    -395.44,
-    -84.92,
-    132.14
-   ],
-   "note": "object_in_carriageway | sign:override:andersa-putry-cantilever-p37 | sign centre 3.00 m inside the carriageway edge | E -395.4 N -84.9 | 53.157995, 23.153903",
-   "category": "object_in_carriageway",
-   "severity": "error",
-   "finding": "sign:override:andersa-putry-cantilever-p37"
-  },
-  {
-   "id": "wv-002-object_in_carriageway",
-   "type": "persp",
-   "fov_deg": 55.0,
-   "pos": [
-    -513.23,
-    11.09,
-    133.64
-   ],
-   "look_at": [
-    -498.24,
-    10.76,
-    132.14
-   ],
-   "note": "object_in_carriageway | sign:override:andersa-putry-portal-p40 | sign centre 1.37 m inside the carriageway edge | E -498.2 N 10.8 | 53.158907, 23.152452",
-   "category": "object_in_carriageway",
-   "severity": "error",
-   "finding": "sign:override:andersa-putry-portal-p40"
-  },
-  {
-   "id": "wv-003-object_in_carriageway",
-   "type": "persp",
-   "fov_deg": 55.0,
-   "pos": [
-    -275.48,
-    -218.69,
-    133.64
-   ],
-   "look_at": [
-    -263.73,
-    -209.36,
-    132.14
-   ],
-   "note": "object_in_carriageway | sign:override:andersa-putry-approach-gantry | sign centre 3.35 m inside the carriageway edge | E -263.7 N -209.4 | 53.156810, 23.155760",
-   "category": "object_in_carriageway",
-   "severity": "error",
-   "finding": "sign:override:andersa-putry-approach-gantry"
-  },
-  {
-   "id": "wv-004-sign_facing_away",
+   "id": "wv-000-sign_facing_away",
    "type": "persp",
    "fov_deg": 55.0,
    "pos": [
@@ -100,7 +24,7 @@
    "finding": "rule:maxspeed:c:w1090234575:8722811971-9986085571"
   },
   {
-   "id": "wv-005-sign_facing_away",
+   "id": "wv-001-sign_facing_away",
    "type": "persp",
    "fov_deg": 55.0,
    "pos": [
@@ -119,7 +43,7 @@
    "finding": "osm:node/3097201643"
   },
   {
-   "id": "wv-006-sign_facing_away",
+   "id": "wv-002-sign_facing_away",
    "type": "persp",
    "fov_deg": 55.0,
    "pos": [
@@ -138,26 +62,7 @@
    "finding": "rule:maxspeed:c:w174538883:1852129070-1852128980"
   },
   {
-   "id": "wv-007-object_in_carriageway",
-   "type": "persp",
-   "fov_deg": 55.0,
-   "pos": [
-    -322.3,
-    -185.48,
-    133.64
-   ],
-   "look_at": [
-    -309.3,
-    -178.0,
-    132.14
-   ],
-   "note": "object_in_carriageway | lamp:dk8-putry-median-double-lamps:16 | lamp centre 0.76 m inside the carriageway edge | E -309.3 N -178.0 | 53.157115, 23.155107",
-   "category": "object_in_carriageway",
-   "severity": "error",
-   "finding": "lamp:dk8-putry-median-double-lamps:16"
-  },
-  {
-   "id": "wv-008-building_in_carriageway",
+   "id": "wv-003-building_in_carriageway",
    "type": "persp",
    "fov_deg": 55.0,
    "pos": [
@@ -176,7 +81,7 @@
    "finding": "osm:way/279896718"
   },
   {
-   "id": "wv-009-building_in_carriageway",
+   "id": "wv-004-building_in_carriageway",
    "type": "persp",
    "fov_deg": 55.0,
    "pos": [
@@ -195,7 +100,7 @@
    "finding": "bdot:2BE4B431-C7B4-1BF0-E053-CC2BA8C0D140"
   },
   {
-   "id": "wv-010-building_in_carriageway",
+   "id": "wv-005-building_in_carriageway",
    "type": "persp",
    "fov_deg": 55.0,
    "pos": [
@@ -214,7 +119,7 @@
    "finding": "osm:way/236606117"
   },
   {
-   "id": "wv-011-building_in_carriageway",
+   "id": "wv-006-building_in_carriageway",
    "type": "persp",
    "fov_deg": 55.0,
    "pos": [
@@ -233,7 +138,7 @@
    "finding": "bdot:2BE4B431-B151-1BF0-E053-CC2BA8C0D140"
   },
   {
-   "id": "wv-012-building_in_carriageway",
+   "id": "wv-007-building_in_carriageway",
    "type": "persp",
    "fov_deg": 55.0,
    "pos": [
@@ -252,7 +157,7 @@
    "finding": "bdot:2BE4B431-C728-1BF0-E053-CC2BA8C0D140"
   },
   {
-   "id": "wv-013-building_in_carriageway",
+   "id": "wv-008-building_in_carriageway",
    "type": "persp",
    "fov_deg": 55.0,
    "pos": [
@@ -271,7 +176,7 @@
    "finding": "bdot:2BE4B431-CA03-1BF0-E053-CC2BA8C0D140"
   },
   {
-   "id": "wv-014-object_in_carriageway",
+   "id": "wv-009-object_in_carriageway",
    "type": "persp",
    "fov_deg": 55.0,
    "pos": [
@@ -290,7 +195,7 @@
    "finding": "canopy:1958"
   },
   {
-   "id": "wv-015-object_in_carriageway",
+   "id": "wv-010-object_in_carriageway",
    "type": "persp",
    "fov_deg": 55.0,
    "pos": [
@@ -309,7 +214,7 @@
    "finding": "canopy:1979"
   },
   {
-   "id": "wv-016-object_in_carriageway",
+   "id": "wv-011-object_in_carriageway",
    "type": "persp",
    "fov_deg": 55.0,
    "pos": [
@@ -328,7 +233,7 @@
    "finding": "canopy:1912"
   },
   {
-   "id": "wv-017-building_in_carriageway",
+   "id": "wv-012-building_in_carriageway",
    "type": "persp",
    "fov_deg": 55.0,
    "pos": [
@@ -347,7 +252,7 @@
    "finding": "bdot:2BE4B431-C727-1BF0-E053-CC2BA8C0D140"
   },
   {
-   "id": "wv-018-building_in_carriageway",
+   "id": "wv-013-building_in_carriageway",
    "type": "persp",
    "fov_deg": 55.0,
    "pos": [
@@ -366,7 +271,7 @@
    "finding": "bdot:2BE4B431-C9E1-1BF0-E053-CC2BA8C0D140"
   },
   {
-   "id": "wv-019-building_in_carriageway",
+   "id": "wv-014-building_in_carriageway",
    "type": "persp",
    "fov_deg": 55.0,
    "pos": [
@@ -385,7 +290,7 @@
    "finding": "bdot:2BE4B431-C9E2-1BF0-E053-CC2BA8C0D140"
   },
   {
-   "id": "wv-020-object_in_carriageway",
+   "id": "wv-015-object_in_carriageway",
    "type": "persp",
    "fov_deg": 55.0,
    "pos": [
@@ -404,7 +309,7 @@
    "finding": "canopy:739"
   },
   {
-   "id": "wv-021-object_in_carriageway",
+   "id": "wv-016-object_in_carriageway",
    "type": "persp",
    "fov_deg": 55.0,
    "pos": [
@@ -423,7 +328,7 @@
    "finding": "canopy:749"
   },
   {
-   "id": "wv-022-object_in_carriageway",
+   "id": "wv-017-object_in_carriageway",
    "type": "persp",
    "fov_deg": 55.0,
    "pos": [
@@ -442,7 +347,7 @@
    "finding": "canopy:729"
   },
   {
-   "id": "wv-023-object_in_carriageway",
+   "id": "wv-018-object_in_carriageway",
    "type": "persp",
    "fov_deg": 55.0,
    "pos": [
@@ -461,7 +366,7 @@
    "finding": "canopy:2065"
   },
   {
-   "id": "wv-024-building_in_carriageway",
+   "id": "wv-019-building_in_carriageway",
    "type": "persp",
    "fov_deg": 55.0,
    "pos": [
@@ -480,7 +385,7 @@
    "finding": "bdot:2BE4B431-C729-1BF0-E053-CC2BA8C0D140"
   },
   {
-   "id": "wv-025-object_in_carriageway",
+   "id": "wv-020-object_in_carriageway",
    "type": "persp",
    "fov_deg": 55.0,
    "pos": [
@@ -499,7 +404,7 @@
    "finding": "canopy:2537"
   },
   {
-   "id": "wv-026-object_in_carriageway",
+   "id": "wv-021-object_in_carriageway",
    "type": "persp",
    "fov_deg": 55.0,
    "pos": [
@@ -518,7 +423,7 @@
    "finding": "canopy:2571"
   },
   {
-   "id": "wv-027-building_in_carriageway",
+   "id": "wv-022-building_in_carriageway",
    "type": "persp",
    "fov_deg": 55.0,
    "pos": [
@@ -537,7 +442,7 @@
    "finding": "bdot:2BE4B431-C726-1BF0-E053-CC2BA8C0D140"
   },
   {
-   "id": "wv-028-building_in_carriageway",
+   "id": "wv-023-building_in_carriageway",
    "type": "persp",
    "fov_deg": 55.0,
    "pos": [
@@ -556,7 +461,7 @@
    "finding": "osm:way/385737652"
   },
   {
-   "id": "wv-029-building_in_carriageway",
+   "id": "wv-024-building_in_carriageway",
    "type": "persp",
    "fov_deg": 55.0,
    "pos": [
@@ -575,7 +480,7 @@
    "finding": "bdot:da252fd0-1894-11ed-9283-b8ca3aa2e5c2"
   },
   {
-   "id": "wv-030-building_in_carriageway",
+   "id": "wv-025-building_in_carriageway",
    "type": "persp",
    "fov_deg": 55.0,
    "pos": [
@@ -594,7 +499,7 @@
    "finding": "bdot:da81a7b1-1894-11ed-a3df-b8ca3aa2e5c2"
   },
   {
-   "id": "wv-031-building_in_carriageway",
+   "id": "wv-026-building_in_carriageway",
    "type": "persp",
    "fov_deg": 55.0,
    "pos": [
@@ -613,7 +518,7 @@
    "finding": "bdot:ece86670-a823-11ef-892b-1866da21c735"
   },
   {
-   "id": "wv-032-object_in_carriageway",
+   "id": "wv-027-object_in_carriageway",
    "type": "persp",
    "fov_deg": 55.0,
    "pos": [
@@ -632,7 +537,7 @@
    "finding": "canopy:2107"
   },
   {
-   "id": "wv-033-object_in_carriageway",
+   "id": "wv-028-object_in_carriageway",
    "type": "persp",
    "fov_deg": 55.0,
    "pos": [
@@ -651,7 +556,7 @@
    "finding": "canopy:2820"
   },
   {
-   "id": "wv-034-object_in_carriageway",
+   "id": "wv-029-object_in_carriageway",
    "type": "persp",
    "fov_deg": 55.0,
    "pos": [
@@ -670,7 +575,7 @@
    "finding": "canopy:1887"
   },
   {
-   "id": "wv-035-object_in_carriageway",
+   "id": "wv-030-object_in_carriageway",
    "type": "persp",
    "fov_deg": 55.0,
    "pos": [
@@ -689,7 +594,7 @@
    "finding": "canopy:1567"
   },
   {
-   "id": "wv-036-building_in_carriageway",
+   "id": "wv-031-building_in_carriageway",
    "type": "persp",
    "fov_deg": 55.0,
    "pos": [
@@ -708,7 +613,7 @@
    "finding": "osm:way/305072027"
   },
   {
-   "id": "wv-037-object_in_carriageway",
+   "id": "wv-032-object_in_carriageway",
    "type": "persp",
    "fov_deg": 55.0,
    "pos": [
@@ -727,7 +632,7 @@
    "finding": "canopy:3256"
   },
   {
-   "id": "wv-038-building_in_carriageway",
+   "id": "wv-033-building_in_carriageway",
    "type": "persp",
    "fov_deg": 55.0,
    "pos": [
@@ -746,7 +651,7 @@
    "finding": "bdot:2BE4B431-C7C0-1BF0-E053-CC2BA8C0D140"
   },
   {
-   "id": "wv-039-object_in_carriageway",
+   "id": "wv-034-object_in_carriageway",
    "type": "persp",
    "fov_deg": 55.0,
    "pos": [
@@ -765,7 +670,7 @@
    "finding": "canopy:2244"
   },
   {
-   "id": "wv-040-object_in_carriageway",
+   "id": "wv-035-object_in_carriageway",
    "type": "persp",
    "fov_deg": 55.0,
    "pos": [
@@ -784,7 +689,7 @@
    "finding": "canopy:3202"
   },
   {
-   "id": "wv-041-object_in_carriageway",
+   "id": "wv-036-object_in_carriageway",
    "type": "persp",
    "fov_deg": 55.0,
    "pos": [
@@ -803,7 +708,7 @@
    "finding": "canopy:3365"
   },
   {
-   "id": "wv-042-object_in_carriageway",
+   "id": "wv-037-object_in_carriageway",
    "type": "persp",
    "fov_deg": 55.0,
    "pos": [
@@ -822,7 +727,7 @@
    "finding": "canopy:3383"
   },
   {
-   "id": "wv-043-object_in_carriageway",
+   "id": "wv-038-object_in_carriageway",
    "type": "persp",
    "fov_deg": 55.0,
    "pos": [
@@ -841,7 +746,7 @@
    "finding": "canopy:3391"
   },
   {
-   "id": "wv-044-object_in_carriageway",
+   "id": "wv-039-object_in_carriageway",
    "type": "persp",
    "fov_deg": 55.0,
    "pos": [
@@ -860,7 +765,7 @@
    "finding": "canopy:3398"
   },
   {
-   "id": "wv-045-object_in_carriageway",
+   "id": "wv-040-object_in_carriageway",
    "type": "persp",
    "fov_deg": 55.0,
    "pos": [
@@ -879,7 +784,7 @@
    "finding": "canopy:3425"
   },
   {
-   "id": "wv-046-object_in_carriageway",
+   "id": "wv-041-object_in_carriageway",
    "type": "persp",
    "fov_deg": 55.0,
    "pos": [
@@ -898,7 +803,7 @@
    "finding": "canopy:3431"
   },
   {
-   "id": "wv-047-building_in_carriageway",
+   "id": "wv-042-building_in_carriageway",
    "type": "persp",
    "fov_deg": 55.0,
    "pos": [
@@ -917,7 +822,7 @@
    "finding": "bdot:2BE4B431-C290-1BF0-E053-CC2BA8C0D140"
   },
   {
-   "id": "wv-048-building_in_carriageway",
+   "id": "wv-043-building_in_carriageway",
    "type": "persp",
    "fov_deg": 55.0,
    "pos": [
@@ -936,7 +841,7 @@
    "finding": "osm:way/236109633"
   },
   {
-   "id": "wv-049-object_in_carriageway",
+   "id": "wv-044-object_in_carriageway",
    "type": "persp",
    "fov_deg": 55.0,
    "pos": [
@@ -955,7 +860,7 @@
    "finding": "canopy:2043"
   },
   {
-   "id": "wv-050-object_in_carriageway",
+   "id": "wv-045-object_in_carriageway",
    "type": "persp",
    "fov_deg": 55.0,
    "pos": [
@@ -974,7 +879,7 @@
    "finding": "canopy:2033"
   },
   {
-   "id": "wv-051-object_in_carriageway",
+   "id": "wv-046-object_in_carriageway",
    "type": "persp",
    "fov_deg": 55.0,
    "pos": [
@@ -993,7 +898,7 @@
    "finding": "canopy:1988"
   },
   {
-   "id": "wv-052-object_in_carriageway",
+   "id": "wv-047-object_in_carriageway",
    "type": "persp",
    "fov_deg": 55.0,
    "pos": [
@@ -1012,7 +917,7 @@
    "finding": "canopy:1078"
   },
   {
-   "id": "wv-053-object_in_carriageway",
+   "id": "wv-048-object_in_carriageway",
    "type": "persp",
    "fov_deg": 55.0,
    "pos": [
@@ -1031,7 +936,7 @@
    "finding": "canopy:1061"
   },
   {
-   "id": "wv-054-object_in_carriageway",
+   "id": "wv-049-object_in_carriageway",
    "type": "persp",
    "fov_deg": 55.0,
    "pos": [
@@ -1050,7 +955,7 @@
    "finding": "canopy:1046"
   },
   {
-   "id": "wv-055-object_in_carriageway",
+   "id": "wv-050-object_in_carriageway",
    "type": "persp",
    "fov_deg": 55.0,
    "pos": [
@@ -1069,7 +974,7 @@
    "finding": "canopy:1777"
   },
   {
-   "id": "wv-056-object_in_carriageway",
+   "id": "wv-051-object_in_carriageway",
    "type": "persp",
    "fov_deg": 55.0,
    "pos": [
@@ -1088,7 +993,7 @@
    "finding": "canopy:614"
   },
   {
-   "id": "wv-057-object_in_carriageway",
+   "id": "wv-052-object_in_carriageway",
    "type": "persp",
    "fov_deg": 55.0,
    "pos": [
@@ -1107,7 +1012,7 @@
    "finding": "canopy:581"
   },
   {
-   "id": "wv-058-object_in_carriageway",
+   "id": "wv-053-object_in_carriageway",
    "type": "persp",
    "fov_deg": 55.0,
    "pos": [
@@ -1126,7 +1031,7 @@
    "finding": "canopy:651"
   },
   {
-   "id": "wv-059-object_in_carriageway",
+   "id": "wv-054-object_in_carriageway",
    "type": "persp",
    "fov_deg": 55.0,
    "pos": [
@@ -1143,6 +1048,101 @@
    "category": "object_in_carriageway",
    "severity": "error",
    "finding": "canopy:970"
+  },
+  {
+   "id": "wv-055-object_in_carriageway",
+   "type": "persp",
+   "fov_deg": 55.0,
+   "pos": [
+    -700.81,
+    -1031.29,
+    133.64
+   ],
+   "look_at": [
+    -692.38,
+    -1018.88,
+    132.14
+   ],
+   "note": "object_in_carriageway | canopy:963 | tree centre 1.31 m inside the carriageway edge | E -692.4 N -1018.9 | 53.149774, 23.148663",
+   "category": "object_in_carriageway",
+   "severity": "error",
+   "finding": "canopy:963"
+  },
+  {
+   "id": "wv-056-object_in_carriageway",
+   "type": "persp",
+   "fov_deg": 55.0,
+   "pos": [
+    572.14,
+    -696.46,
+    133.64
+   ],
+   "look_at": [
+    562.62,
+    -684.87,
+    132.14
+   ],
+   "note": "object_in_carriageway | sign:rule:roundabout:j:n1882953898 | sign centre 0.60 m inside the carriageway edge | E 562.6 N -684.9 | 53.152114, 23.167675",
+   "category": "object_in_carriageway",
+   "severity": "warn",
+   "finding": "sign:rule:roundabout:j:n1882953898"
+  },
+  {
+   "id": "wv-057-object_in_carriageway",
+   "type": "persp",
+   "fov_deg": 55.0,
+   "pos": [
+    572.14,
+    -696.46,
+    133.64
+   ],
+   "look_at": [
+    562.62,
+    -684.87,
+    132.14
+   ],
+   "note": "object_in_carriageway | sign:rule:roundabout:j:n1882953898 | sign centre 0.60 m inside the carriageway edge | E 562.6 N -684.9 | 53.152114, 23.167675",
+   "category": "object_in_carriageway",
+   "severity": "warn",
+   "finding": "sign:rule:roundabout:j:n1882953898"
+  },
+  {
+   "id": "wv-058-object_in_carriageway",
+   "type": "persp",
+   "fov_deg": 55.0,
+   "pos": [
+    574.91,
+    -691.42,
+    133.64
+   ],
+   "look_at": [
+    565.32,
+    -679.89,
+    132.14
+   ],
+   "note": "object_in_carriageway | sign:osm:node/1882953930 | sign centre 0.60 m inside the carriageway edge | E 565.3 N -679.9 | 53.152158, 23.167720",
+   "category": "object_in_carriageway",
+   "severity": "warn",
+   "finding": "sign:osm:node/1882953930"
+  },
+  {
+   "id": "wv-059-object_on_kerb",
+   "type": "persp",
+   "fov_deg": 55.0,
+   "pos": [
+    556.97,
+    -698.03,
+    133.64
+   ],
+   "look_at": [
+    547.61,
+    -686.31,
+    132.14
+   ],
+   "note": "object_on_kerb | sign:rule:roundabout_exit:j:n1882953899 | sign only 0.49 m outside the carriageway edge (< skrajnia 0.50 m) - stands on the kerb | E 547.6 N -686.3 | 53.152109, 23.167450",
+   "category": "object_on_kerb",
+   "severity": "warn",
+   "finding": "sign:rule:roundabout_exit:j:n1882953899"
   }
  ]
 }

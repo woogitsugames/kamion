@@ -54,6 +54,20 @@ def test_mutation_pole_in_carriageway_detected():
     assert hit and hit[0].severity == "error" and hit[0].extra["depth_m"] > 2.0
 
 
+def test_overhead_gantry_board_is_not_in_carriageway():
+    """Integration r6: a board on a sign_gantry override hangs over the road (M37 flagged 4 such boards on the
+    G3 route as errors); the same sign as a post-mounted sign is still an error."""
+    w = synth_world()
+    w.overrides = [{"id": "portal-x", "kind": "sign_gantry"}]
+    w.signs.append({"id": "override:portal-x", "code": "OB_1", "e": 0.0, "n": 1.0, "faces_route_driver": True,
+                    "offset_m": 1.6, "src": "override:portal-x"})
+    w.signs.append({"id": "osm:node/7", "code": "B-33_50", "e": 5.0, "n": 1.0, "faces_route_driver": True,
+                    "offset_m": 0.0, "src": "osm:node/7"})
+    ids = {f.id for f in overlaps.check(w) if f.category == "object_in_carriageway"}
+    assert "sign:osm:node/7" in ids
+    assert "sign:override:portal-x" not in ids
+
+
 def test_mutation_object_on_kerb_detected():
     w = synth_world()
     w.points.append({"id": "osm:node/2", "kind": "sign", "e": 0.0, "n": -3.7, "tags": {}})  # 0.2 m outside edge
@@ -144,6 +158,17 @@ def test_mutation_terrain_wall_detected():
                        "verge_strips": {}}
     fs = terrain.check(w)
     assert any(f.category == "terrain_wall" and f.e == 5.0 for f in fs)
+
+
+def test_terrain_wall_uses_generator_threshold_and_verge_format():
+    """Integration r6: ADR 0146 Open lists 4 walls 0.317-0.345 m found by the generator (thresh_m 0.15); the
+    verge-strip 'worst' entry is [kind, id, e, n] (4 items) as in terrain_walls_qa.json."""
+    w = synth_world()
+    w.terrain_walls = {"thresh_m": 0.15,
+                       "worst": [{"e": 486.1, "n": -1024.0, "h": 0.317, "kind": "skirt", "mat": "yard_concrete", "src": "a"}],
+                       "verge_strips": {"max_m": 0.627, "worst": ["steep_grass", "j:x:vg", -482.0, -461.3]}}
+    fs = [f for f in terrain.check(w) if f.category == "terrain_wall"]
+    assert {f.e for f in fs} == {486.1, -482.0}
 
 
 # ---------------------------------------------------------------- check 4: signs (mutation tests)

@@ -5,6 +5,25 @@ odczytu). Znajduje błędy widoczne dla kierowcy z pozycją (lokalne E/N w metra
 lider mógł z nich zrobić kamery kontrolne. **Nie rusza generatorów ani `Data/**`** — nowy moduł
 `tools/worldgen/validate/` + testy.
 
+> **Korekty integracji r6 (2026-11-13)** — liczby niżej są z PR (przed korektą); po korekcie region daje
+> **558 znalezisk: error 56, warn 88, info 414, na trasie G3 56** (wyjście w `docs/reports/world-validator/` odświeżone):
+> 1. **Fałszywe alarmy na szczycie listy:** 4 tablice na bramownicach/portalach/wysięgniku Andersa–Putry
+>    (`override:andersa-putry-approach-gantry` ×2, `…-cantilever-p37`, `…-portal-p40` ×2 — w `overrides.yaml`
+>    `kind: sign_gantry`, kod `OB_*`) wiszą **nad** jezdnią z założenia; walidator zgłaszał je jako „znak w jezdni”
+>    (error, na trasie). Teraz pomijane (test `test_overhead_gantry_board_is_not_in_carriageway`).
+> 2. **Latarnia `dk8-putry-median-double-lamps:16`** ma w `streetscape_qa.json` `skipped: carriageway` — nie jest
+>    zbudowana (ADR 0146 Open: „Lamp column 16 of the row is skipped”). Loader pomija teraz pozycje `skipped`.
+> 3. **ADR 0146 istnieje** (`docs/adr/0146-putry-andersa-world.md`) — twierdzenie z PR „nie istnieje” jest
+>    nieprawdziwe; czułość na jego sekcję Open nie była sprawdzona. Z Open: 4 ściany terenu 0,317–0,345 m
+>    (generator: `thresh_m` 0,15) — walidator ich **nie łapał** (próg 0,50 m), a format `verge_strips.worst`
+>    ([kind, id, e, n], 4 pola) odrzucał warunkiem `len >= 5`. Teraz próg = `thresh_m` generatora i 4 pola →
+>    5 znalezisk `terrain_wall` (test `test_terrain_wall_uses_generator_threshold_and_verge_format`).
+> 4. Precyzja „40/40, 0 FP” z sekcji A **nie potwierdza się**: wśród 61 błędów na trasie było ≥ 5 fałszywych (pkt 1–2).
+>    Pozostałe niezweryfikowane ryzyka: jezdnia = pas wokół osi grafu ± szerokość/2 (nie siatka generatora), drzewa
+>    = korony z `plot_canopy.json` (nie postawione instancje) — 53 „drzewa w jezdni” wymagają sprawdzenia na
+>    kamerach; `duplicate_parallel` (342) porównuje linie wejściowe OSM/BDOT, nie wygenerowane chodniki.
+> 5. `SKRAJNIA_M` 0,50 m — źródło: PTB2022 **§ 79 ust. 1** (pasy bezpieczeństwa skrajni jezdni 0,50 m).
+
 Uruchomienie:
 
 ```

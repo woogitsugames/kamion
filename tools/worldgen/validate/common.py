@@ -220,6 +220,8 @@ def load_world(region_id: str) -> World:
                         "src": s.get("src")})
     for row_id, row in (fum.get("lamp_rows") or {}).items():
         for it in row.get("items", []):
+            if it.get("skipped"):   # integration r6: not built (e.g. 'carriageway', ADR 0146 column 16) - was a false positive
+                continue
             at = it["at"]
             w.lamps.append({"id": f"{row_id}:{it.get('k', len(w.lamps))}", "e": float(at[0]), "n": float(at[1]),
                             "z": it.get("z"), "p": it.get("p"), "row": row_id})

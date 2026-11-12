@@ -44,17 +44,20 @@ def check(w: World) -> list[Finding]:
                                     severity="error", extra={"max_grade": float(g), "grade_limit": float(lim)}))
 
     tw = w.terrain_walls or {}
+    # Integration r6: the generator's own wall threshold (terrain_walls_qa.json thresh_m = 0.15 m) - with the
+    # 0.50 m WORKING_VALUE the 4 known walls of ADR 0146 Open (0.317-0.345 m) were never reported.
+    wall_max = float(tw.get("thresh_m", TERRAIN_WALL_MAX_M))
     for item in tw.get("worst", []):
         h = float(item.get("h", 0.0))
-        if h > TERRAIN_WALL_MAX_M:
+        if h > wall_max:
             findings.append(Finding("terrain_wall", float(item["e"]), float(item["n"]), str(item.get("src", "")),
                                     f"terrain wall {h:.2f} m high (kind={item.get('kind')}, mat={item.get('mat')}) "
-                                    f"> {TERRAIN_WALL_MAX_M:.2f} m", severity="warn",
+                                    f"> {wall_max:.2f} m", severity="warn",
                                     extra={"h_m": h, "kind": item.get("kind"), "mat": item.get("mat")}))
     vs = tw.get("verge_strips") or {}
     if isinstance(vs.get("max_m"), (int, float)) and float(vs["max_m"]) > TERRAIN_WALL_MAX_M and vs.get("worst"):
         wv = vs["worst"]
-        if isinstance(wv, list) and len(wv) >= 5:
+        if isinstance(wv, list) and len(wv) >= 4:   # [kind, id, e, n] (r6: was >= 5, so never reported)
             findings.append(Finding("terrain_wall", float(wv[2]), float(wv[3]), str(wv[1]),
                                     f"verge strip {wv[0]} max {float(vs['max_m']):.2f} m > {TERRAIN_WALL_MAX_M:.2f} m",
                                     severity="info", extra={"h_m": float(vs["max_m"]), "kind": str(wv[0])}))
