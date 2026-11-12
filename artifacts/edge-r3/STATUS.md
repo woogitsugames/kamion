@@ -13,3 +13,5 @@ Krok 3: przygotowano import-baseline.ps1. Przed Unity wymaga kodów 0 build_all/
 Następny krok po prepare-baseline: pwsh artifacts/edge-r3/import-baseline.ps1.
 Krok 4: zapisano PLAN z hipotezą 528 vs 512 próbek oraz niezależnym wzorcem analitycznym testu stoku N (nie E). Plan przewiduje test red/green przez rzeczywisty BuildApron dopiero po Before. Nie zmieniono produkcyjnego C# ani kodu mgły; nadal przygotowujemy bazę po nowym main.
 Następny krok: koniec przygotowania źródeł, import-baseline.ps1 i kontrola nowej siatki przed poprawką.
+Krok 5: przygotowano test-corner.ps1 z obowiązkowym Before.complete i filtrem tylko dwóch nowych przypadków. Red wymaga dokładnie 2 porażek z komunikatem docelowej asercji, Green dokładnie 2 zaliczonych; brak XML, błąd kompilacji lub inna przyczyna nie będą uznane za dowód. Każde uruchomienie ma własny Unity slot, XML, SHA źródeł i WIP.
+Następny krok nadal: koniec materiałów/świata bazowego → import → Before, dopiero potem dodanie testu i Red.
