@@ -11,3 +11,9 @@ Diagnostyka klonu zmienia wyłącznie h z 8 do 13,8 m w wejściu renderera. Nie 
 Obie próby w tej jednej kamerze Low mają 665 wywołań, czyli 460 statycznych i 205 instancji, oraz raportowane 575 tys. trójkątów, czyli 547 i 28 tys. Precyzja trisK nie wyklucza mniejszych różnic geometrii. A wcześniej dodało cztery wywołania. Brak wzrostu kosztu nie akceptuje wyglądu ani całej macierzy kamer.
 
 Krytyk wskazał niejednoznaczne globalne producer_generated:false. Poprawiono je na osobne pola każdego wariantu; false dotyczy tylko diagnostyki klonu. Nie oceniono jeszcze przywróconego świata po końcowej regeneracji i imporcie. Oczekujące testy nie potwierdzają przywrócenia.
+
+## Końcowa niezależna kontrola przywrócenia
+
+Powyższe ostatnie zastrzeżenie opisuje stan sprzed kontroli. Krytyk następnie obejrzał before i restored-probe dla sbs-g3-b-297817221966185 Low-overcast i sam obliczył ich SHA-256. Potwierdził identyczność bajtową oraz brak różnicy wizualnej, zgodnie z restored-probe-proof.json. Werdykt: PASS wyłącznie dla przywrócenia tego obrazu do baseline. B8 nadal FAIL i otwarte; brak pełnej macierzy after.
+
+Krytyk odczytał też restored-world-proof.json: 130 GLB, 64 pliki instancji i siedem źródeł zgodne z baseline, 15 Megascans, fallback false, eksperymentalne QA ortofoto nieobecne. GIS 525 passed, 1 xfailed, 1 failed nie jest zielony. W momencie tej oceny EditMode jeszcze trwał, więc krytyk nie przyznał mu oceny. Późniejszy rzeczywisty XML dokumentuje 261/261; to wynik testów, nie niezależna ocena wizualna.

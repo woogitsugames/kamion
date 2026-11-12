@@ -1,0 +1,464 @@
+VBCSCompilerServerWatchdog: watching VBCSCompiler (PID 46164)
+[Licensing::Module] Trying to connect to existing licensing client channel...
+Built from '6000.3/respin/6000.3.28f1-21f78c3e21d1' branch; Version is '6000.3.28f1 (8f082d2fe476) revision 9373741'; Using compiler version '194234433'; Build Type 'Release'
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-matma" at "2026-11-12T01:54:07.0656048Z"
+OS: 'Windows 11  (10.0.26300) Core' Language: 'pl' Physical Memory: 65257 MB
+BatchMode: 1, IsHumanControllingUs: 0, StartBugReporterOnCrash: 0, Is64bit: 1
+System  architecture: x64
+Process architecture: x64
+Date: 2026-11-12T01:54:07Z
+[Licensing::Client] Code 10 while verifying Licensing Client signature (process Id: 81312, path: "C:/Program Files/WindowsApps/UnityTechnologies.UnityHub_3.22.6.65535_x64__2vrhnee42bhxm/app/UnityLicensingClient_V1/Unity.Licensing.Client.exe")
+[Licensing::Module] LicensingClient has failed validation; ignoring
+[Licensing::Client] Error: HandshakeResponse reported an error:
+	ResponseCode: 505
+	ResponseStatus: Unsupported protocol version '1.19.0'.
+[Licensing::Module] Error: Failed to handshake to channel: "LicenseClient-matma"
+[Licensing::IpcConnector] LicenseClient-matma channel disconnected successfully.
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-matma-1.19.0" at "2026-11-12T01:54:07.103609Z"
+[Licensing::Client] Code 10 while verifying Licensing Client signature (process Id: 93952, path: "C:/Program Files/Unity/Hub/Editor/6000.3.28f1/Editor/Data/Resources/Licensing/Client/Unity.Licensing.Client.exe")
+[Licensing::Module] LicensingClient has failed validation; ignoring
+[Licensing::Client] Handshaking with LicensingClient:
+  Version:                 1.19.0+4cc3dda
+  Session Id:              2ba2f97dbad0411aac6f48038df9b20a
+  Correlation Id:          b0102a772812f553d3083e5a7793f40a
+  External correlation Id: 2740974397655581376
+  Machine Id:              TpSWSq02QnVDgSrjPNrJ8jdase4=
+[Licensing::Module] Successfully connected to LicensingClient on channel: "LicenseClient-matma-1.19.0" (connect: 0.00s, validation: 0.00s, handshake: 0.05s)
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-matma-1.19.0-notifications" at "2026-11-12T01:54:07.1521102Z"
+[Licensing::Module] Error: Access token is unavailable; failed to update
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Module] License group:
+  Id: 9072484440658-UnityPersXXXX
+  Product: Unity Personal
+  Type: Assigned
+  Expiration: Unlimited
+[Licensing::Client] Successfully updated license, isAsync: True, time: 0.00
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Module] Licensing Background thread has ended after 0.09s
+
+COMMAND LINE ARGUMENTS:
+C:\Program Files\Unity\Hub\Editor\6000.3.28f1\Editor\Unity.exe
+-batchmode
+-projectPath
+C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-vegetation\game
+-logFile
+C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-vegetation\artifacts\logs\visual-qa-WorldC-20261112-025406.log
+-buildTarget
+Android
+-quit
+-executeMethod
+Game.Editor.VisualQA.VisualQaRunner.RenderControlCameras
+-qaScene
+WorldC
+-qaWidth
+1024
+-qaHeight
+768
+-qaTier
+Low
+-qaOutput
+C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-vegetation\artifacts\vegetation-r3\restored-probe\Low-overcast-photo-2048x1536
+-qaLighting
+overcast
+-qaCameras
+sbs-g3-b-297817221966185
+-qaGate3
+C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-vegetation\artifacts\vegetation-r3\photo-cameras-2048x1536.json
+Successfully changed project path to: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-vegetation\game
+C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-vegetation/game
+[UnityMemory] Configuration Parameters - Can be set up in boot.config
+    "memorysetup-temp-allocator-size-nav-mesh-worker=65536"
+    "memorysetup-temp-allocator-size-audio-worker=65536"
+    "memorysetup-temp-allocator-size-gfx=262144"
+    "memorysetup-allocator-temp-initial-block-size-main=262144"
+    "memorysetup-allocator-temp-initial-block-size-worker=262144"
+    "memorysetup-temp-allocator-size-background-worker=32768"
+    "memorysetup-temp-allocator-size-job-worker=262144"
+    "memorysetup-temp-allocator-size-preload-manager=33554432"
+    "memorysetup-remapper-allocator-initial-capacity=32768"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-bucket-allocator-granularity=16"
+    "memorysetup-bucket-allocator-bucket-count=8"
+    "memorysetup-bucket-allocator-block-size=33554432"
+    "memorysetup-bucket-allocator-block-count=8"
+    "memorysetup-main-allocator-block-size=16777216"
+    "memorysetup-thread-allocator-block-size=16777216"
+    "memorysetup-gfx-main-allocator-block-size=16777216"
+    "memorysetup-gfx-thread-allocator-block-size=16777216"
+    "memorysetup-cache-allocator-block-size=4194304"
+    "memorysetup-typetree-allocator-block-size=2097152"
+    "memorysetup-profiler-bucket-allocator-granularity=16"
+    "memorysetup-profiler-bucket-allocator-bucket-count=8"
+    "memorysetup-profiler-bucket-allocator-block-size=33554432"
+    "memorysetup-profiler-bucket-allocator-block-count=8"
+    "memorysetup-profiler-allocator-block-size=16777216"
+    "memorysetup-profiler-editor-allocator-block-size=1048576"
+    "memorysetup-temp-allocator-size-main=16777216"
+    "memorysetup-job-temp-allocator-block-size=2097152"
+    "memorysetup-job-temp-allocator-block-size-background=1048576"
+    "memorysetup-job-temp-allocator-reduction-small-platforms=262144"
+    "memorysetup-temp-allocator-size-cloud-worker=32768"
+Player connection [79312]  Target information:
+
+Player connection [79312]  * "[IP] 192.168.0.241 [Port] 55505 [Flags] 2 [Guid] 1418052266 [EditorId] 1418052266 [Version] 1048832 [Id] WindowsEditor(7,DOM-NEW) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
+
+Player connection [79312] Host joined multi-casting on [225.0.0.222:54997]...
+Player connection [79312] Host joined alternative multi-casting on [225.0.0.222:34997]...
+Input System module state changed to: Initialized.
+[Physics::Module] Initialized fallback backend.
+[Physics::Module] Id: 0xdecafbad
+[Package Manager] Connected to IPC stream "Upm-38800" after 0.2 seconds.
+[Licensing::Client] Successfully resolved entitlement details
+Library Redirect Path: Library/
+[Physics::Module] Selected backend.
+[Physics::Module] Name: PhysX
+[Physics::Module] Id: 0xf2b8ea05
+[Physics::Module] SDK Version: 4.1.2
+[Physics::Module] Integration Version: 1.0.0
+[Physics::Module] Threading Mode: Multi-Threaded
+[Licensing::Client] Successfully resolved entitlement details
+Targeting platform: Android
+Refreshing native plugins compatible for Editor in 0.43 ms, found 0 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Initialize engine version: 6000.3.28f1 (8f082d2fe476)
+[Subsystems] Discovering subsystems at path C:/Program Files/Unity/Hub/Editor/6000.3.28f1/Editor/Data/Resources/UnitySubsystems
+[Subsystems] Discovering subsystems at path C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-vegetation/game/Assets
+GfxDevice: creating device client; kGfxThreadingModeNonThreaded
+d3d12: failed to query info queue interface (0x80004002).
+Direct3D:
+    Version:         Direct3D 12 [level 12.2]
+    Renderer:        NVIDIA GeForce RTX 5070 (ID=0x2f04)
+    Vendor:          NVIDIA
+    VRAM:            11943 MB
+    App VRAM Budget: 11175 MB
+    Driver:          32.0.16.1088
+Initialize mono
+Mono path[0] = 'C:/Program Files/Unity/Hub/Editor/6000.3.28f1/Editor/Data/Managed'
+Mono path[1] = 'C:/Program Files/Unity/Hub/Editor/6000.3.28f1/Editor/Data/MonoBleedingEdge/lib/mono/unityjit-win32'
+Mono config path = 'C:/Program Files/Unity/Hub/Editor/6000.3.28f1/Editor/Data/MonoBleedingEdge/etc'
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56800
+Using cacheserver namespaces - metadata:defaultmetadata, artifacts:defaultartifacts
+Using cacheserver namespaces - metadata:defaultmetadata, artifacts:defaultartifacts
+ImportWorker Server TCP listen port: 0
+AcceleratorClientConnectionCallback - disconnected - :0
+Begin MonoManager ReloadAssembly
+Registering precompiled unity dll's ...
+Register platform support module: C:/Program Files/Unity/Hub/Editor/6000.3.28f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll
+Register platform support module: C:/Program Files/Unity/Hub/Editor/6000.3.28f1/Editor/Data/PlaybackEngines/AndroidPlayer/UnityEditor.Android.Extensions.dll
+Registered in 0.001818 seconds.
+- Loaded All Assemblies, in  0.263 seconds
+Native extension for Android target not found
+Native extension for WindowsStandalone target not found
+Package Manager log level set to [2]
+ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:False
+Mono: successfully reloaded assembly
+- Finished resetting the current domain, in  0.269 seconds
+Domain Reload Profiling: 530ms
+	BeginReloadAssembly (80ms)
+		ExecutionOrderSort (0ms)
+		DisableScriptedObjects (0ms)
+		BackupInstance (0ms)
+		ReleaseScriptingObjects (0ms)
+		CreateAndSetChildDomain (12ms)
+	RebuildCommonClasses (24ms)
+	RebuildNativeTypeToScriptingClass (8ms)
+	initialDomainReloadingComplete (32ms)
+	LoadAllAssembliesAndSetupDomain (117ms)
+		LoadAssemblies (66ms)
+		RebuildTransferFunctionScriptingTraits (0ms)
+		AnalyzeDomain (114ms)
+			TypeCache.Refresh (112ms)
+				TypeCache.ScanAssembly (102ms)
+			BuildScriptInfoCaches (0ms)
+			ResolveRequiredComponents (0ms)
+	FinalizeReload (269ms)
+		ReleaseScriptCaches (0ms)
+		RebuildScriptCaches (0ms)
+		SetupLoadedEditorAssemblies (244ms)
+			LogAssemblyErrors (0ms)
+			InitializePlatformSupportModulesInManaged (39ms)
+			SetLoadedEditorAssemblies (3ms)
+			BeforeProcessingInitializeOnLoad (52ms)
+			ProcessInitializeOnLoadAttributes (87ms)
+			ProcessInitializeOnLoadMethodAttributes (64ms)
+			AfterProcessingInitializeOnLoad (0ms)
+			EditorAssembliesLoaded (0ms)
+		ExecutionOrderSort2 (0ms)
+		AwakeInstancesAfterBackupRestoration (0ms)
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Client] Successfully resolved entitlement details
+Application.AssetDatabase Initial Refresh Start
+[Package Manager] Restoring resolved packages state from cache
+[Licensing::Client] Successfully resolved entitlement details
+[Package Manager] Registered 58 packages:
+  Packages from [https://packages.unity.com]:
+    com.unity.ai.navigation@2.0.16 (location: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-vegetation\game\Library\PackageCache\com.unity.ai.navigation@d0cf77b009bb)
+    com.unity.cloud.gltfast@6.20.0 (location: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-vegetation\game\Library\PackageCache\com.unity.cloud.gltfast@11ddc2436f97)
+    com.unity.collab-proxy@2.14.0 (location: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-vegetation\game\Library\PackageCache\com.unity.collab-proxy@ac5a9def1e96)
+    com.unity.ide.rider@3.1.0 (location: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-vegetation\game\Library\PackageCache\com.unity.ide.rider@570989d4a882)
+    com.unity.ide.visualstudio@2.0.26 (location: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-vegetation\game\Library\PackageCache\com.unity.ide.visualstudio@a99d56dec63f)
+    com.unity.inputsystem@1.20.1 (location: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-vegetation\game\Library\PackageCache\com.unity.inputsystem@2436e68c60c4)
+    com.unity.timeline@1.8.13 (location: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-vegetation\game\Library\PackageCache\com.unity.timeline@3a22918286f5)
+    com.unity.visualscripting@1.9.12 (location: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-vegetation\game\Library\PackageCache\com.unity.visualscripting@4edfcc09512f)
+    com.unity.burst@1.8.31 (location: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-vegetation\game\Library\PackageCache\com.unity.burst@bfa84123c21a)
+    com.unity.collections@2.7.1 (location: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-vegetation\game\Library\PackageCache\com.unity.collections@88d5bf65ce66)
+    com.unity.mathematics@1.3.3 (location: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-vegetation\game\Library\PackageCache\com.unity.mathematics@19a9377c4ffa)
+    com.unity.searcher@4.9.5 (location: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-vegetation\game\Library\PackageCache\com.unity.searcher@a463122f2c00)
+    com.unity.nuget.mono-cecil@1.11.6 (location: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-vegetation\game\Library\PackageCache\com.unity.nuget.mono-cecil@ecb9724e46ff)
+    com.unity.test-framework.performance@3.5.0 (location: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-vegetation\game\Library\PackageCache\com.unity.test-framework.performance@8b56083ec0f0)
+  Built-in packages:
+    com.unity.modules.accessibility@1.0.0 (location: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-vegetation\game\Library\PackageCache\com.unity.modules.accessibility)
+    com.unity.modules.adaptiveperformance@1.0.0 (location: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-vegetation\game\Library\PackageCache\com.unity.modules.adaptiveperformance)
+    com.unity.modules.ai@1.0.0 (location: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-vegetation\game\Library\PackageCache\com.unity.modules.ai)
+    com.unity.modules.androidjni@1.0.0 (location: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-vegetation\game\Library\PackageCache\com.unity.modules.androidjni)
+    com.unity.modules.animation@1.0.0 (location: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-vegetation\game\Library\PackageCache\com.unity.modules.animation)
+    com.unity.modules.assetbundle@1.0.0 (location: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-vegetation\game\Library\PackageCache\com.unity.modules.assetbundle)
+    com.unity.modules.audio@1.0.0 (location: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-vegetation\game\Library\PackageCache\com.unity.modules.audio)
+    com.unity.modules.cloth@1.0.0 (location: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-vegetation\game\Library\PackageCache\com.unity.modules.cloth)
+    com.unity.modules.director@1.0.0 (location: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-vegetation\game\Library\PackageCache\com.unity.modules.director)
+    com.unity.modules.imageconversion@1.0.0 (location: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-vegetation\game\Library\PackageCache\com.unity.modules.imageconversion)
+    com.unity.modules.imgui@1.0.0 (location: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-vegetation\game\Library\PackageCache\com.unity.modules.imgui)
+    com.unity.modules.jsonserialize@1.0.0 (location: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-vegetation\game\Library\PackageCache\com.unity.modules.jsonserialize)
+    com.unity.modules.particlesystem@1.0.0 (location: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-vegetation\game\Library\PackageCache\com.unity.modules.particlesystem)
+    com.unity.modules.physics@1.0.0 (location: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-vegetation\game\Library\PackageCache\com.unity.modules.physics)
+    com.unity.modules.physics2d@1.0.0 (location: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-vegetation\game\Library\PackageCache\com.unity.modules.physics2d)
+    com.unity.modules.screencapture@1.0.0 (location: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-vegetation\game\Library\PackageCache\com.unity.modules.screencapture)
+    com.unity.modules.terrain@1.0.0 (location: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-vegetation\game\Library\PackageCache\com.unity.modules.terrain)
+    com.unity.modules.terrainphysics@1.0.0 (location: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-vegetation\game\Library\PackageCache\com.unity.modules.terrainphysics)
+    com.unity.modules.tilemap@1.0.0 (location: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-vegetation\game\Library\PackageCache\com.unity.modules.tilemap)
+    com.unity.modules.ui@1.0.0 (location: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-vegetation\game\Library\PackageCache\com.unity.modules.ui)
+    com.unity.modules.uielements@1.0.0 (location: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-vegetation\game\Library\PackageCache\com.unity.modules.uielements)
+    com.unity.modules.umbra@1.0.0 (location: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-vegetation\game\Library\PackageCache\com.unity.modules.umbra)
+    com.unity.modules.unityanalytics@1.0.0 (location: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-vegetation\game\Library\PackageCache\com.unity.modules.unityanalytics)
+    com.unity.modules.unitywebrequest@1.0.0 (location: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-vegetation\game\Library\PackageCache\com.unity.modules.unitywebrequest)
+    com.unity.modules.unitywebrequestassetbundle@1.0.0 (location: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-vegetation\game\Library\PackageCache\com.unity.modules.unitywebrequestassetbundle)
+    com.unity.modules.unitywebrequestaudio@1.0.0 (location: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-vegetation\game\Library\PackageCache\com.unity.modules.unitywebrequestaudio)
+    com.unity.modules.unitywebrequesttexture@1.0.0 (location: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-vegetation\game\Library\PackageCache\com.unity.modules.unitywebrequesttexture)
+    com.unity.modules.unitywebrequestwww@1.0.0 (location: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-vegetation\game\Library\PackageCache\com.unity.modules.unitywebrequestwww)
+    com.unity.modules.vectorgraphics@1.0.0 (location: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-vegetation\game\Library\PackageCache\com.unity.modules.vectorgraphics)
+    com.unity.modules.vehicles@1.0.0 (location: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-vegetation\game\Library\PackageCache\com.unity.modules.vehicles)
+    com.unity.modules.video@1.0.0 (location: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-vegetation\game\Library\PackageCache\com.unity.modules.video)
+    com.unity.modules.vr@1.0.0 (location: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-vegetation\game\Library\PackageCache\com.unity.modules.vr)
+    com.unity.modules.wind@1.0.0 (location: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-vegetation\game\Library\PackageCache\com.unity.modules.wind)
+    com.unity.modules.xr@1.0.0 (location: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-vegetation\game\Library\PackageCache\com.unity.modules.xr)
+    com.unity.multiplayer.center@1.0.1 (location: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-vegetation\game\Library\PackageCache\com.unity.multiplayer.center@f01f4ba8d00a)
+    com.unity.render-pipelines.universal@17.3.0 (location: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-vegetation\game\Library\PackageCache\com.unity.render-pipelines.universal@029be7ffa662)
+    com.unity.test-framework@1.6.0 (location: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-vegetation\game\Library\PackageCache\com.unity.test-framework@bd7f943e9647)
+    com.unity.ugui@2.0.0 (location: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-vegetation\game\Library\PackageCache\com.unity.ugui@44a561608371)
+    com.unity.ext.nunit@2.0.5 (location: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-vegetation\game\Library\PackageCache\com.unity.ext.nunit@d8c07649098d)
+    com.unity.render-pipelines.core@17.3.0 (location: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-vegetation\game\Library\PackageCache\com.unity.render-pipelines.core@3424017a4ec3)
+    com.unity.shadergraph@17.3.0 (location: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-vegetation\game\Library\PackageCache\com.unity.shadergraph@d526115bb944)
+    com.unity.render-pipelines.universal-config@17.0.3 (location: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-vegetation\game\Library\PackageCache\com.unity.render-pipelines.universal-config@8dc1aab4af1d)
+    com.unity.modules.subsystems@1.0.0 (location: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-vegetation\game\Library\PackageCache\com.unity.modules.subsystems)
+    com.unity.modules.hierarchycore@1.0.0 (location: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-vegetation\game\Library\PackageCache\com.unity.modules.hierarchycore)
+[Subsystems] No new subsystems found in resolved package list.
+[Package Manager] Done registering packages in 0.01 seconds
+info: Microsoft.Hosting.Lifetime[14]
+      Now listening on: http://localhost:80
+info: Microsoft.Hosting.Lifetime[0]
+      Application started. Press Ctrl+C to shut down.
+info: Microsoft.Hosting.Lifetime[0]
+      Hosting environment: Production
+info: Microsoft.Hosting.Lifetime[0]
+      Content root path: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-vegetation\game\
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/2 POST http://ilpp/UnityILPP.PostProcessing/Ping application/grpc -
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'gRPC - /UnityILPP.PostProcessing/Ping'
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'gRPC - /UnityILPP.PostProcessing/Ping'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/2 POST http://ilpp/UnityILPP.PostProcessing/Ping application/grpc - - 200 - application/grpc 24.0264ms
+Starting: C:\Program Files\Unity\Hub\Editor\6000.3.28f1\Editor\Data\Tools\BuildPipeline\bee_backend.exe --ipc --defer-dag-verification --dagfile="Library/Bee/1300b0aE.dag" --continue-on-failure --profile="Library/Bee/backend1.traceevents" ScriptAssemblies
+WorkingDir: C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-vegetation/game
+DisplayProgressbar: Compiling Scripts
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/2 POST http://ilpp/UnityILPP.PostProcessing/ConfigurePostProcessors application/grpc -
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'gRPC - /UnityILPP.PostProcessing/ConfigurePostProcessors'
+warn: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Assembly system.runtime.interopservices.windowsruntime has duplicate hint path. Ignoring "C:\Program Files\Unity\Hub\Editor\6000.3.28f1\Editor\Data\UnityReferenceAssemblies\unity-4.8-api\Facades\System.Runtime.InteropServices.WindowsRuntime.dll" in favor of "C:\Program Files\Unity\Hub\Editor\6000.3.28f1\Editor\Data\NetStandard\Extensions\2.0.0\System.Runtime.InteropServices.WindowsRuntime.dll"
+warn: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Assembly system.componentmodel.composition has duplicate hint path. Ignoring "C:\Program Files\Unity\Hub\Editor\6000.3.28f1\Editor\Data\UnityReferenceAssemblies\unity-4.8-api\System.ComponentModel.Composition.dll" in favor of "C:\Program Files\Unity\Hub\Editor\6000.3.28f1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\System.ComponentModel.Composition.dll"
+info: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Resolved Unity.Burst.Cecil, Version=0.11.6.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e with Library\PackageCache\com.unity.burst@bfa84123c21a\Unity.Burst.CodeGen\Unity.Burst.Cecil.dll
+info: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Resolved Mono.Cecil, Version=0.11.5.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e with Library\PackageCache\com.unity.nuget.mono-cecil@ecb9724e46ff\Mono.Cecil.dll
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'gRPC - /UnityILPP.PostProcessing/ConfigurePostProcessors'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/2 POST http://ilpp/UnityILPP.PostProcessing/ConfigurePostProcessors application/grpc - - 200 - application/grpc 35.7176ms
+ExitCode: 0 Duration: 0s266ms
+[ 832/1085  0s] ILPP-Configuration Library/ilpp-configuration.nevergeneratedoutput
+*** Tundra build success (0.24 seconds), 1 items updated, 1085 evaluated
+AssetDatabase: script compilation time: 0.561918s
+Begin MonoManager ReloadAssembly
+Total cache size 115752970
+Total cache size after purge 115752970, took 00:00:00.0549985
+- Loaded All Assemblies, in  0.600 seconds
+Refreshing native plugins compatible for Editor in 1.60 ms, found 4 plugins.
+Native extension for Android target not found
+Native extension for WindowsStandalone target not found
+Refreshing native plugins compatible for Editor in 1.50 ms, found 4 plugins.
+ScheduleIndexationOnStartup MainProcess:True IndexOnStartup:True
+Mono: successfully reloaded assembly
+- Finished resetting the current domain, in  2.543 seconds
+Domain Reload Profiling: 3139ms
+	BeginReloadAssembly (128ms)
+		ExecutionOrderSort (0ms)
+		DisableScriptedObjects (17ms)
+		BackupInstance (0ms)
+		ReleaseScriptingObjects (0ms)
+		CreateAndSetChildDomain (36ms)
+	RebuildCommonClasses (23ms)
+	RebuildNativeTypeToScriptingClass (7ms)
+	initialDomainReloadingComplete (20ms)
+	LoadAllAssembliesAndSetupDomain (418ms)
+		LoadAssemblies (278ms)
+		RebuildTransferFunctionScriptingTraits (0ms)
+		AnalyzeDomain (189ms)
+			TypeCache.Refresh (131ms)
+				TypeCache.ScanAssembly (117ms)
+			BuildScriptInfoCaches (46ms)
+			ResolveRequiredComponents (8ms)
+	FinalizeReload (2544ms)
+		ReleaseScriptCaches (0ms)
+		RebuildScriptCaches (0ms)
+		SetupLoadedEditorAssemblies (2330ms)
+			LogAssemblyErrors (0ms)
+			InitializePlatformSupportModulesInManaged (20ms)
+			SetLoadedEditorAssemblies (3ms)
+			BeforeProcessingInitializeOnLoad (112ms)
+			ProcessInitializeOnLoadAttributes (2131ms)
+			ProcessInitializeOnLoadMethodAttributes (59ms)
+			AfterProcessingInitializeOnLoad (5ms)
+			EditorAssembliesLoaded (0ms)
+		ExecutionOrderSort2 (0ms)
+		AwakeInstancesAfterBackupRestoration (16ms)
+Start importing Assets/_Project/Rendering/Settings/Lighting/M_Sky.mat using Guid(701bd35617fcb14459ea9dd3ad65d337) (NativeFormatImporter) -> (artifact id: '55b60b55e63073a70fd58e4949344e53') in 0.009343 seconds
+Refreshing native plugins compatible for Editor in 1.48 ms, found 4 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Asset Pipeline Refresh (id=4db0e7d5f980c1e40bc699e9a5036652): Total: 4.743 seconds - Initiated by InitialRefreshV2(ForceSynchronousImport)
+	Summary:
+		Imports: total=1 (actual=1, local cache=0, cache server=0)
+		Asset DB Process Time: managed=1 ms, native=3324 ms
+		Asset DB Callback time: managed=195 ms, native=18 ms
+		Scripting: domain reloads=1, domain reload time=601 ms, compile time=564 ms, other=37 ms
+		Project Asset Count: scripts=1578, non-scripts=3925
+		Asset File Changes: new=0, changed=1, moved=0, deleted=0
+		Scan Filter Count: 0
+	InvokeCustomDependenciesCallbacks: 0.002ms
+	InvokePackagesCallback: 16.244ms
+	ApplyChangesToAssetFolders: 0.669ms
+	Scan: 493.713ms
+	OnSourceAssetsModified: 0.664ms
+	CategorizeAssetsWithTransientArtifact: 34.515ms
+	ProcessAssetsWithTransientArtifactChanges: 58.502ms
+	CategorizeAssets: 53.733ms
+	ImportOutOfDateAssets: 2564.126ms (1987.094ms without children)
+		ImportManagerImport: 10.611ms (0.949ms without children)
+			ImportInProcess: 9.639ms
+			UpdateCategorizedAssets: 0.023ms
+		CompileScripts: 564.101ms
+		ReloadNativeAssets: 0.028ms
+		UnloadImportedAssets: 1.257ms
+		ReloadImportedAssets: 0.000ms
+		EnsureUptoDateAssetsAreRegisteredWithGuidPM: 0.610ms
+		InitializingProgressBar: 0.006ms
+		PostProcessAllAssetNotificationsAddChangedAssets: 0.000ms
+		OnDemandSchedulerStart: 0.418ms
+	PostProcessAllAssets: 196.368ms
+	Hotreload: 2.874ms
+	GatherAllCurrentPrimaryArtifactRevisions: 0.001ms
+	UnloadStreamsBegin: 1.879ms
+	PersistCurrentRevisions: 0.237ms
+	UnloadStreamsEnd: 0.001ms
+	GenerateScriptTypeHashes: 5.165ms
+	Untracked: 1319.104ms
+
+Application.AssetDatabase Initial Refresh End
+Launched and connected shader compiler UnityShaderCompiler.exe after 0.01 seconds
+Scanning for USB devices : 7.366ms
+Initializing Unity extensions:
+[MODES] ModeService[none].Initialize
+[MODES] ModeService[none].LoadModes
+[MODES] Loading mode Default (0) for mode-current-id-Kamion
+Unloading 35 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 7264 unused Assets / (6.7 MB). Loaded Objects now: 8102.
+Memory consumption went from 313.0 MB to 306.3 MB.
+Total: 8.244500 ms (FindLiveObjects: 0.584000 ms CreateObjectMapping: 0.539900 ms MarkObjects: 4.050500 ms  DeleteObjects: 3.069200 ms)
+
+Opening scene 'Assets/_Generated/World/bialystok-industrial-c/WorldC.unity'
+Unloading 365 Unused Serialized files (Serialized files now loaded: 0)
+Loaded scene 'Assets/_Generated/World/bialystok-industrial-c/WorldC.unity'
+	Deserialize:            275.327 ms
+	Integration:            881.790 ms
+	Integration of assets:  300.919 ms
+	Thread Wait Time:       4.644 ms
+	Total Operation Time:   1462.680 ms
+Unloading 3 unused Assets / (1.8 KB). Loaded Objects now: 22031.
+Memory consumption went from 486.9 MB to 486.9 MB.
+Total: 6.107200 ms (FindLiveObjects: 1.216800 ms CreateObjectMapping: 0.391000 ms MarkObjects: 4.452300 ms  DeleteObjects: 0.046500 ms)
+
+[WORLD] collision cooked at load: 287 meshes, bake 85 ms (parallel), enable 1 ms, total 86 ms
+[GATE3] 15 cameras created, 0 re-seated on the road collision
+[RQ_PIPELINE] scale=0,75 fsrSharpness=0,92 fsrOverride=False cascades=1 shadowResolution=1024 shadowDistance=35 bias=1/1 splits=(0.07, 0.20)
+[QUALITY_STATE] tier=Low cameraDither=False skyDitherOff=0 glassShadowBias=0
+[ENVCAP] size=64 interval=10 far=150 minMove=2,0 faces: [0] 174 draws 168k tris [1] 200 draws 253k tris [2] 46 draws 60k tris [3] 61 draws 71k tris [4] 151 draws 223k tris [5] 239 draws 321k tris; mean/face 145 draws 183k tris
+[VISUALQA] cab screens Tractor4x2_TRAKT: refresh 25,395 ms CPU, cluster 916 verts, nav 1516 verts, night=False, clock=13:27
+[QA] contact shadow Tractor4x2_TRAKT: 37 vertices, 25 ground hits; plane 10,322 slab z 4,2 ±1,2 h 0,21..0,27 groundWorldY 10,255 layer 8 r True; plane 10,322 slab z 1,1 ±1,9 h 0,26..0,34 groundWorldY 10,301 layer 8 r True; 
+[ENVCAP] size=64 interval=10 far=150 minMove=2,0 faces: [0] 174 draws 168k tris [1] 200 draws 253k tris [2] 46 draws 60k tris [3] 61 draws 71k tris [4] 151 draws 223k tris [5] 239 draws 321k tris; mean/face 145 draws 183k tris
+[QA] street lamps: lamps on 0,00, glass materials 2, heads 702, pools 0
+[QA] cab light sbs-g3-b-297817221966185: fill (0.0189, 0.0181, 0.0167) gain 1,00 (meter 0,00 EV)
+Releasing render texture that is set to be RenderTexture.active!
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.RenderTexture:Release ()
+Game.Editor.VisualQA.VisualQaRunner:RenderToPixels (UnityEngine.Camera,int,int,int&,System.Action,int,single) (at Assets/_Project/Editor/VisualQA/VisualQaRunner.cs:491)
+Game.Editor.VisualQA.VisualQaRunner:Render (string,int,int,string,string,string,string) (at Assets/_Project/Editor/VisualQA/VisualQaRunner.cs:336)
+Game.Editor.VisualQA.VisualQaRunner:RenderControlCameras () (at Assets/_Project/Editor/VisualQA/VisualQaRunner.cs:42)
+
+[Assets/_Project/Editor/VisualQA/VisualQaRunner.cs line 336]
+
+[VISUALQA] sbs-g3-b-297817221966185 → C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-vegetation\artifacts\vegetation-r3\restored-probe\Low-overcast-photo-2048x1536\sbs-g3-b-297817221966185.png
+VISUALQA_RESULT: OK rendered=1 dir=C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-vegetation\artifacts\vegetation-r3\restored-probe\Low-overcast-photo-2048x1536
+Killing ADB server in 2,0333917 seconds.
+Start importing ProjectSettings/QualitySettings.asset using Guid(00000000000000009000000000000000) (LibraryAssetImporter) -> (artifact id: 'd20994d34735f9a26f13281da51351fe') in 0.0053979 seconds
+Start importing Assets/_Project/Rendering/Settings/Lighting/M_Sky.mat using Guid(701bd35617fcb14459ea9dd3ad65d337) (NativeFormatImporter) -> (artifact id: '2817ac308e6d8008989a679f0addccf4') in 0.0017563 seconds
+Start importing Assets/_Generated/World/bialystok-industrial-c/Materials/M_car_dirt_2.mat using Guid(4979158108490884c94392c9f19a1aac) (NativeFormatImporter) -> (artifact id: '5bed6ee96d17dbc5182e9f1ad1487ea6') in 0.0017349 seconds
+Start importing Assets/_Generated/World/bialystok-industrial-c/Materials/M_car_dirt_1.mat using Guid(9e9a8dcb8097ddb418e98647ca634c55) (NativeFormatImporter) -> (artifact id: '4461b78179e519b31f6aae1308ac096f') in 0.001322 seconds
+Refreshing native plugins compatible for Editor in 1.29 ms, found 4 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Asset Pipeline Refresh (id=ce82773ad4a0a524f9d2a96af62af75a): Total: 0.067 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+[Physics::Module] Cleanup current backend.
+[Physics::Module] Id: 0xf2b8ea05
+Input System module state changed to: ShutdownInProgress.
+Input System polling thread exited.
+Input System module state changed to: Shutdown.
+[Licensing::IpcConnector] LicenseClient-matma-1.19.0-notifications channel disconnected successfully.
+[Licensing::IpcConnector] LicenseClient-matma-1.19.0 channel disconnected successfully.
+AcceleratorClientConnectionCallback - disconnected - :0
+Cleanup mono
+Leak Detected : Persistent allocates 6 individual allocations. To find out more please enable 'Preferences > Jobs > Leak Detection Level > Enabled With Stack Trace' and reproduce the leak again.
+abort_threads: Failed aborting id: 000000000001996C, mono_thread_manage will ignore it
+
+abort_threads: Failed aborting id: 00000000000197A4, mono_thread_manage will ignore it
+
+abort_threads: Failed aborting id: 000000000001A018, mono_thread_manage will ignore it
+
+abort_threads: Failed aborting id: 000000000001996C, mono_thread_manage will ignore it
+
+abort_threads: Failed aborting id: 00000000000197A4, mono_thread_manage will ignore it
+
+abort_threads: Failed aborting id: 000000000001A018, mono_thread_manage will ignore it
+
+debugger-agent: Unable to listen on 5128
+Checking for leaked weakptr:
+  Found no leaked weakptrs.
+[Package Manager] Server process was shutdown
+##utp:{"type":"MemoryLeaks","version":2,"phase":"Immediate","time":1794448460640,"processId":38800,"allocatedMemory":21241385,"memoryLabels":[{"Default":29313},{"Permanent":15236},{"NewDelete":68635},{"Thread":4237960},{"Manager":825053},{"VertexData":8},{"Geometry":816},{"Texture":160},{"Shader":79957},{"Material":24},{"GfxDevice":60696},{"Animation":392},{"Audio":3040},{"FreeType":8},{"FontEngine":736},{"Physics":1970},{"Physics2D":16},{"Serialization":488},{"Input":14984},{"JobScheduler":33024},{"TextLib":280},{"Mono":32},{"MonoCode":64},{"ScriptingNativeRuntime":155060},{"BaseObject":1620272},{"Resource":1336},{"Renderer":3000},{"Transform":4685},{"File":3937},{"WebCam":616},{"Culling":32},{"Terrain":11394},{"Wind":24},{"STL":40},{"String":16525},{"DynamicArray":125581},{"HashMap":279371},{"Utility":2661910},{"Curl":2559},{"PoolAlloc":2392},{"AI":80},{"TypeTree":5341},{"ScriptManager":512},{"RuntimeInitializeOnLoadManager":64},{"SpriteAtlas":112},{"GI":7792},{"Director":8240},{"CloudService":7912},{"WebRequest":552},{"VR":48034},{"SceneManager":504},{"Video":64},{"LazyScriptCache":32},{"NativeArray":1428800},{"Camera":17},{"Secure":2377},{"SerializationCache":1576},{"APIUpdating":10320},{"Subsystems":336},{"VirtualTexturing":57888},{"StaticSafetyDebugInfo":278528},{"Analytics":992},{"Hierarchy":608},{"CoreStats":13112},{"Identifiers":6480},{"Gui":96},{"EditorUtility":116394},{"VersionControl":4},{"Undo":947},{"AssetDatabase":8923907},{"EditorGi":328},{"UnityConnect":29208},{"Upm":1896},{"AssetCompliance":64},{"DrivenProperties":72},{"LocalIPC":274},{"ProfilerEditor":9746},{"CoreBusinessMetrics":3498},{"Licensing":12988},{"AssetReference":32},{"IPCStream":32}]}
+~StackAllocator(ALLOC_TEMP_MAIN) m_LastAlloc not NULL. Did you forget to call FreeAllStackAllocations()? To get more information, run app with -diag-temp-memory-leak-validation cmd line argument

@@ -96,3 +96,4 @@ Pierwszy restored-probe zatrzymał się przed uruchomieniem Unity: brak katalogu
 Dokończenie r3: ponowiony probe przywróconego świata kod 0. Produkcja przywrócona do r1, brak zaakceptowanej korekty B8.
 Dokończenie r3: zgodność obrazu z baseline kod 0. Produkcja przywrócona do r1, brak zaakceptowanej korekty B8.
 Dokończenie r3: EditMode kod 0. Produkcja przywrócona do r1, brak zaakceptowanej korekty B8.
+Zakończono walidację: EditMode261/261, restored-probe byte-identical i PASS krytyka tylko przywrócenia, GIS525/1xfail/1fail starego fidelity. Audyt po GIS i Unity bez driftu. Siedem metadanych generatora zbackupowano i przywrócono z HEAD. REPORT.md i raport wizualny są końcowe; nie przyjęto produkcyjnej zmiany r3. Następny krok: pełny checkpoint artefaktów, robocopy do main, od razu kolejna wolna gałąź i merge main.

@@ -65,3 +65,11 @@ Produkcję vegetation.py i testy przywrócono do r1 w f5f60b64. Generator przywr
 Dodatkowe ograniczenie: cztery odczytane korony leżą przed JRG2; nie dowiedziono, że są tymi samymi drzewami pasa dzielącego, których dotyczy B8. Nowy feedback lidera wskazuje korekty pozy G3-B jako główny bloker. Przed następnym przypisaniem nasadzeń potrzebna jest poprawiona poza SBS. B8 pozostaje otwarte, a odrzuconych punktów nie należy integrować jako jego naprawy.
 
 Następna próba po zakończeniu walidacji i merge main będzie dotyczyć berberysu wyglądającego jak bordowe bale, zgodnie z feedbackiem s11 i recenzją zbiorczą r1. Hipoteza rdzenia i kontrakt materiałów są zapisane w CLOSING-NOTES.md; nie zmieniono ich podczas bieżącej walidacji. Nie edytowano dróg, landmarków ani overrides.yaml.
+
+### R3 — końcowe dowody i zamknięcie
+
+Pełny GIS: 525 passed, 1 xfailed, 1 failed w 1390,34 s (wliczone wstrzymanie watchdog). Jedyna porażka to test_road_fidelity::test_report_not_stale: raport i siedem jego źródeł są niezmienione względem bazy, raport był nieaktualny już tam. Nie traktujemy tego jako zielonego GIS i nie regenerujemy cudzej dziedziny.
+
+Import przywróconego świata przeszedł. Probe B/120 Low-overcast ma SHA identyczny z baseline, co potwierdził niezależny krytyk po obejrzeniu obu PNG. EditMode 261/261. Po GIS i Unity nadal zgodne 130 GLB, 64 pliki instancji i siedem pinów źródeł; posttests-audit nie wykazał driftu. Krytyk akceptuje tylko przywrócenie obrazu. B8 pozostaje otwarte, bez pełnej macierzy after i bez akceptowanej zmiany produkcyjnej r3.
+
+Siedem wspólnych skutków ubocznych generatora zachowano w artefaktach, po czym przywrócono z HEAD. Snapshot-restored oraz generator-side-effects opisują wynik użyty do importu; kanoniczne metadane wróciły do stanu sprzed rundy. Lider musi regenerować po integracji. REPORT oraz docs/reports/visual/2026-11-12-vegetation-0109-r3.md podają pełny zakres dowodów. Następna runda: berberys, z odizolowaną propozycją, która nie została jeszcze wdrożona ani wyrenderowana.
