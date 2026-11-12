@@ -72,3 +72,5 @@ potem poprawić największe udokumentowane odstępstwo wiaty. WIP po każdym kro
 2026-11-12T11:56:18.0780855+01:00: szybka kontrola diff --check względem baseline 162214c3 zakończyła się kodem 0. Zmienione źródła produktu ograniczają się do props.py, furniture.py, fab_details.py, addytywnego materials.py oraz własnego pliku testów. Nie zmieniono roads, overrides, barier ani plików Claude. Nie zastępuje to oczekujących testów i pomiarów renderu.
 
 2026-11-12T11:56:36.7394836+01:00: heavy focused candidate1; sukces=True; slot gpt-furniture-r3 zwolniony. NASTĘPNY KROK: sprawdzić log i kontynuować walidację rundy.
+
+2026-11-12T11:56:58.8857809+01:00: pojedynczy plik test_furniture_shelters_0120.py: 10 passed w 0,27 s. Weryfikuje zakres wyboru źródeł, niezmienną kolizję, przejście, połączenie słupków z dachem oraz sloty prototypu. Nie dowodzi budżetu sceny. Slot testów zwolniony; generator after1 czeka w aktualnej kolejce heavy (queue ahead=7), bez omijania kolejności. NASTĘPNY KROK: generator, geometry, import i 236 renderów; kod kandydata zamrożony.
