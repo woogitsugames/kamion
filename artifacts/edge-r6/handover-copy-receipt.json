@@ -1,0 +1,44 @@
+{
+  "state": "owner-requested early handover, not completed round",
+  "observed": "2026-11-12T16:26:06.8501941+01:00",
+  "robocopy_exit_code": 1,
+  "branch": "gpt-edge-r6",
+  "source": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-edge\\artifacts\\edge-r6",
+  "critical_files": [
+    {
+      "file": "PRZEKAZANIE.md",
+      "sha256": "6F2A5A29410705335C42533CD96E54B133164F850A54204F3E61CA387013730A"
+    },
+    {
+      "file": "REPORT.md",
+      "sha256": "B0B234BDA2C054EE2C186F28CB21B02C11DF2A32FD324312916715F91E29C5E9"
+    },
+    {
+      "file": "STOP.requested",
+      "sha256": "B10720905C656E2AFEFE2678D1ABE2D4E02D94A765E7D01D6D953C6834B0F270"
+    },
+    {
+      "file": "STATUS.md",
+      "sha256": "A34E14E8547321FC23DBE6307F58F473BBA62FCFCEF2A1593F610C9AEC74A4F5"
+    },
+    {
+      "file": "handover-live-state.json",
+      "sha256": "CDA2ED0AB8D3DE1EB2120387138F4B473ECF24F911C9018C5A5D1236053A0265"
+    },
+    {
+      "file": "ADR0121-snapshot.md",
+      "sha256": "8B683E166869F2FC9318C9EE35243806A8533934AA0777AFDA2620CD80FA966C"
+    },
+    {
+      "file": "acquire-slot.ps1",
+      "sha256": "94E86D4CD4F52899C364B733F97A497F9A1E5D78D2356B3D6D645B2E4BBB4AF0"
+    },
+    {
+      "file": "import-baseline.ps1",
+      "sha256": "14AAD6358469C22DF9C83A9EE8315661ECAD11A062FB63CE5BB9DDABECAB33A2"
+    }
+  ],
+  "note": "Live preparation log/STATUS may advance later in worktree during cooperative drain. Snapshot is not proof of job completion.",
+  "checkpoint": "e543c200e713ccf0e484527ffb53dea9fd8a888f",
+  "destination": "C:/Users/matma/Documents/Claude/kamion/artifacts/edge-r6"
+}
