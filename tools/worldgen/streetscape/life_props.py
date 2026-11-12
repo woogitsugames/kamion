@@ -81,8 +81,11 @@ def rounded_rect(hw, zb, zt, r=0.08, rb=0.05):
 
 
 def wheel(m, c, r, w, seg, axis=(1, 0, 0), tyre="tyre", rim="rim", rim_r=0.62, out_sign=1, simple=False):
-    """Tyre (tread tube + outer sidewall ring) and a flat rim disc on the outer side (out_sign = side of the
-    vehicle the wheel is on; the inner side is never visible). simple=True: six-sided tread and outer discs."""
+    """Tyre and recessed, vented outer rim (out_sign = vehicle side).
+
+    The inner side is never visible. simple=True keeps the distant six-sided
+    tread and discs. ADR 0122 life r4: near rims reuse existing rim/tyre groups.
+    """
     c = np.asarray(c, float)
     ax = np.asarray(axis, float)
     if simple:
@@ -123,9 +126,54 @@ def wheel(m, c, r, w, seg, axis=(1, 0, 0), tyre="tyre", rim="rim", rim_r=0.62, o
         a0, a1, b0, b1 = i, (i + 1) % seg, seg + i, seg + (i + 1) % seg
         T += [(a0, a1, b1), (a0, b1, b0)] if sgn > 0 else [(a0, b1, a1), (a0, b0, b1)]
     m.add(tyre, ring + inner, T)
-    Vr = [cc + ax * sgn * 0.02] + inner
-    Tr = [(0, 1 + i, 1 + (i + 1) % seg) if sgn > 0 else (0, 1 + (i + 1) % seg, 1 + i) for i in range(seg)]
-    m.add(rim, Vr, Tr)
+    # Keep the tread, nominal envelope, sidewall and outer bead exactly where
+    # they were. The dish/vents replace the old almost-flat full grey fan.
+    # Dimensions below are WORKING_VALUE for a generic unbranded steel rim.
+    directions = np.asarray([math.cos(t) * u + math.sin(t) * v for t in a])
+    rr = r * rim_r
+
+    def rim_ring(radius, depth):
+        return cc + ax * sgn * depth + directions * radius
+
+    def face(material, points):
+        # Reverse winding, not vertex order: reversing the whole quad changes
+        # its diagonal and hence area-weighted crease normals on the other side.
+        triangles = [(0, 1, 2), (0, 2, 3)]
+        if sgn < 0:
+            triangles = [(a, c, b) for a, b, c in triangles]
+        m.add(material, points, triangles, [[0, 0], [1, 0], [1, 1], [0, 1]])
+
+    def annulus(outer, inside):
+        for i in range(seg):
+            j = (i + 1) % seg
+            face(rim, [outer[i], outer[j], inside[j], inside[i]])
+
+    bead = np.asarray(inner)                    # existing tyre/rim seam
+    dish_outer = rim_ring(rr * 0.88, -0.035)
+    dish_inner = rim_ring(rr * 0.42, -0.055)
+    hub = rim_ring(rr * 0.28, 0.018)            # within the old +0.020 m cap
+    annulus(bead, dish_outer)
+    for i in range(seg):
+        j = (i + 1) % seg
+        q = np.asarray([dish_outer[i], dish_outer[j], dish_inner[j], dish_inner[i]])
+        if i % 2:
+            face(rim, q)
+            continue
+        # An actual inset opening with four metal walls and a dark backing.
+        # Its occluded interior reuses tyre; no decal or new draw/material.
+        centre = q.mean(axis=0)
+        opening = centre + (q - centre) * 0.56
+        back = opening - ax * sgn * 0.035
+        for k in range(4):
+            nk = (k + 1) % 4
+            face(rim, [q[k], q[nk], opening[nk], opening[k]])
+            face(rim, [opening[k], opening[nk], back[nk], back[k]])
+        face(tyre, back)
+    annulus(dish_inner, hub)
+    centre = cc + ax * sgn * 0.018
+    fan = [(0, 1 + i, 1 + (i + 1) % seg) if sgn > 0
+           else (0, 1 + (i + 1) % seg, 1 + i) for i in range(seg)]
+    m.add(rim, [centre] + list(hub), fan)
 
 
 def bx(m, mat, x0, x1, y0, y1, z0, z1):
@@ -836,30 +884,42 @@ GANTRIES = set()        # (span_m, height_dm) registered by streetscape.landmark
 LANDMARKS = {}          # name -> (height, base_d, top_d) registered by streetscape.landmarks
 
 
+# Lattice member radii (m). LOD1 keeps the lattice (ADR 0127): the old LOD1 was two solid boxes, so from 25 m on Low
+# (lodBias 0.5) the portal read as a closed grey frame. Members a little thicker than LOD0 so a chord still covers
+# >= 1 px at ~120 m (1280 px frame), 3-sided tubes, column lacing only on the two faces across the road.
+# WORKING_VALUE (read off Mapillary 275528677534382 / 3281350541967811 against the 3.5 m lanes).
+GANTRY_CHORD_R = (0.06, 0.08)       # LOD0, LOD1
+GANTRY_LACE_R = (0.03, 0.045)
+
+
 def sign_gantry(span, H):
     """Steel lattice sign gantry: two 0.6 x 0.6 m lattice columns at x = +-span/2 on concrete footings and a
-    0.8 m deep lattice beam whose top is at H; +y = front (boards hang there). Typical Polish overhead-sign
-    structure (CC0 photo, docs/REFERENCES.md); member sizes WORKING_VALUE."""
+    0.8 m deep lattice beam whose top is at H; +y = front (boards stand there). Typical Polish overhead-sign
+    structure (CC0 photo, docs/REFERENCES.md); member sizes WORKING_VALUE. LOD1 = the same lattice, fewer sides."""
     m, l1 = Mesh(), Mesh()
     zb0, zb1 = H - 1.0, H
-    for sx in (-1, 1):
-        x = sx * span / 2
-        for cx in (-0.3, 0.3):
-            for cy in (-0.3, 0.3):
-                m.tube("gantry_steel", [x + cx, cy, 0.25], [x + cx, cy, H], 0.05, None, 6, cap=False)
-        for z in np.arange(0.6, H - 0.3, 1.2):                 # zig-zag lacing on the four faces
-            for (a, b) in (((-0.3, -0.3), (0.3, -0.3)), ((0.3, -0.3), (0.3, 0.3)), ((0.3, 0.3), (-0.3, 0.3)),
-                           ((-0.3, 0.3), (-0.3, -0.3))):
-                m.tube("gantry_steel", [x + a[0], a[1], z], [x + b[0], b[1], z + 0.6], 0.025, None, 4, cap=False)
-        bx(l1, "gantry_steel", x - 0.3, x + 0.3, -0.3, 0.3, 0.25, H)
-    for cy in (-0.4, 0.4):
-        for z in (zb0, zb1):
-            m.tube("gantry_steel", [-span / 2, cy, z], [span / 2, cy, z], 0.06, None, 6, cap=False)
-        xs = np.arange(-span / 2, span / 2 - 0.5, 1.0)
-        for i, x in enumerate(xs):
-            za, zb = (zb0, zb1) if i % 2 == 0 else (zb1, zb0)
-            m.tube("gantry_steel", [x, cy, za], [x + 1.0, cy, zb], 0.025, None, 4, cap=False)
-    bx(l1, "gantry_steel", -span / 2, span / 2, -0.4, 0.4, zb0, zb1)
+    faces = (((-0.3, -0.3), (0.3, -0.3)), ((0.3, -0.3), (0.3, 0.3)), ((0.3, 0.3), (-0.3, 0.3)),
+             ((-0.3, 0.3), (-0.3, -0.3)))
+    for lod, mm in enumerate((m, l1)):
+        rc, rl = GANTRY_CHORD_R[lod], GANTRY_LACE_R[lod]
+        sc, sl = ((6, 4), (3, 3))[lod]
+        for sx in (-1, 1):
+            x = sx * span / 2
+            for cx in (-0.3, 0.3):
+                for cy in (-0.3, 0.3):
+                    mm.tube("gantry_steel", [x + cx, cy, 0.25], [x + cx, cy, H], rc, None, sc, cap=False)
+            for z in np.arange(0.6, H - 0.3, 1.2):                 # zig-zag lacing on the four faces
+                for (a, b) in (faces if lod == 0 else (faces[0], faces[2])):
+                    mm.tube("gantry_steel", [x + a[0], a[1], z], [x + b[0], b[1], z + 0.6], rl, None, sl, cap=False)
+                    mm.tube("gantry_steel", [x + b[0], b[1], z + 0.6], [x + a[0], a[1], min(z + 1.2, H)], rl, None, sl,
+                            cap=False)
+        for cy in (-0.4, 0.4):
+            for z in (zb0, zb1):
+                mm.tube("gantry_steel", [-span / 2, cy, z], [span / 2, cy, z], rc, None, sc, cap=False)
+            xs = np.arange(-span / 2, span / 2 - 0.5, 1.0)
+            for i, x in enumerate(xs):
+                za, zb = (zb0, zb1) if i % 2 == 0 else (zb1, zb0)
+                mm.tube("gantry_steel", [x, cy, za], [x + 1.0, cy, zb], rl, None, sl, cap=False)
     # no collider on the gantry itself: the Unity importer makes one box per prototype from its .col below 2.6 m,
     # which for two columns 16 m apart was a wall across the carriageway (route_start s = 1375 m). The columns'
     # colliders come with the separate `gantry_footing` instances (one per column, streetscape.landmarks).
@@ -873,29 +933,32 @@ def sign_cantilever(reach, H, mirror=False):
     """Single-column lattice sign cantilever (ADR 0069, Mapillary p37 2020: one 0.6 x 0.6 m lattice column in the
     gore / at the shoulder, a 0.8 m deep lattice arm over the lanes). Column at the origin, arm along local +x (-x when
     `mirror`, column left of travel) to `reach`, top of the arm at H; +y = front (boards hang there). Member sizes
-    WORKING_VALUE (read off the photo against the 3.5 m lanes). LOD0: 4 chords + zig-zag lacing; LOD1: two boxes."""
+    WORKING_VALUE (read off the photo against the 3.5 m lanes). LOD0: 4 chords + zig-zag lacing; LOD1: 3-sided lattice."""
     m, l1 = Mesh(), Mesh()
     d = -1.0 if mirror else 1.0
     zb0, zb1 = H - 0.8, H
-    for cx in (-0.3, 0.3):
-        for cy in (-0.3, 0.3):
-            m.tube("gantry_steel", [cx, cy, 0.25], [cx, cy, H + 0.3], 0.05, None, 6, cap=False)
-    for z in np.arange(0.6, H - 0.3, 1.2):
-        for (a, b) in (((-0.3, -0.3), (0.3, -0.3)), ((0.3, -0.3), (0.3, 0.3)), ((0.3, 0.3), (-0.3, 0.3)),
-                       ((-0.3, 0.3), (-0.3, -0.3))):
-            m.tube("gantry_steel", [a[0], a[1], z], [b[0], b[1], z + 0.6], 0.025, None, 4, cap=False)
-    bx(l1, "gantry_steel", -0.3, 0.3, -0.3, 0.3, 0.25, H + 0.3)
+    faces = (((-0.3, -0.3), (0.3, -0.3)), ((0.3, -0.3), (0.3, 0.3)), ((0.3, 0.3), (-0.3, 0.3)),
+             ((-0.3, 0.3), (-0.3, -0.3)))
     x0 = 0.3
-    for cy in (-0.35, 0.35):
-        for z in (zb0, zb1):
-            m.tube("gantry_steel", [d * x0, cy, z], [d * reach, cy, z], 0.055, None, 6, cap=True)
-        xs = np.arange(x0, reach - 0.4, 0.9)
-        for i, x in enumerate(xs):
-            za, zb = (zb0, zb1) if i % 2 == 0 else (zb1, zb0)
-            m.tube("gantry_steel", [d * x, cy, za], [d * min(x + 0.9, reach), cy, zb], 0.022, None, 4, cap=False)
-    for x in np.arange(x0, reach, 1.8):                       # cross ties between the two arm planes
-        m.tube("gantry_steel", [d * x, -0.35, zb1], [d * x, 0.35, zb1], 0.02, None, 4, cap=False)
-    bx(l1, "gantry_steel", d * x0, d * reach, -0.35, 0.35, zb0, zb1)
+    for lod, mm in enumerate((m, l1)):                         # LOD1 = thicker 3-sided lattice (ADR 0127), not boxes
+        rc, rl = GANTRY_CHORD_R[lod], GANTRY_LACE_R[lod]
+        sc, sl = ((6, 4), (3, 3))[lod]
+        for cx in (-0.3, 0.3):
+            for cy in (-0.3, 0.3):
+                mm.tube("gantry_steel", [cx, cy, 0.25], [cx, cy, H + 0.3], rc, None, sc, cap=False)
+        for z in np.arange(0.6, H - 0.3, 1.2):
+            for (a, b) in (faces if lod == 0 else (faces[0], faces[2])):
+                mm.tube("gantry_steel", [a[0], a[1], z], [b[0], b[1], z + 0.6], rl, None, sl, cap=False)
+        for cy in (-0.35, 0.35):
+            for z in (zb0, zb1):
+                mm.tube("gantry_steel", [d * x0, cy, z], [d * reach, cy, z], rc, None, sc, cap=lod == 0)
+            xs = np.arange(x0, reach - 0.4, 0.9)
+            for i, x in enumerate(xs):
+                za, zb = (zb0, zb1) if i % 2 == 0 else (zb1, zb0)
+                mm.tube("gantry_steel", [d * x, cy, za], [d * min(x + 0.9, reach), cy, zb], rl, None, sl, cap=False)
+        if lod == 0:
+            for x in np.arange(x0, reach, 1.8):                   # cross ties between the two arm planes
+                mm.tube("gantry_steel", [d * x, -0.35, zb1], [d * x, 0.35, zb1], 0.02, None, 4, cap=False)
     return m, l1, None
 
 

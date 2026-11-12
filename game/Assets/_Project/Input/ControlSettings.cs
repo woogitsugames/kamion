@@ -16,7 +16,7 @@ namespace Game.Controls
         public const string PrefKey = "controls.settings";
         /// <summary>Pre-settings-menu key: 0 = wheel 270, 1 = wheel 900, 2 = gyro (Stage 1/2 builds).</summary>
         public const string LegacySteerModeKey = "controls.steerMode";
-        public const int CurrentSchema = 3;
+        public const int CurrentSchema = 4;
 
         public const float RangeMin = 180f, RangeMax = 900f;
         public const float GainMin = 0.5f, GainMax = 2f;
@@ -56,6 +56,12 @@ namespace Game.Controls
         /// speed one on-screen degree is one cab-wheel degree (gyro: less lock at full tilt); off = the old fixed mapping.
         /// </summary>
         public bool speedSensitiveSteering = true;
+        /// <summary>
+        /// Schema 4 (ADR 0135): touch-wheel gesture. true = sideways thumb slide (relative, mm of travel, anywhere on the
+        /// wheel); false = finger angle around the centre (ADR 0058). The rotate gesture could not reach full lock with a
+        /// thumb in the screen corner (owner, Fold, 2026-11-12: "ciężko, nieprzyjemnie się kieruje").
+        /// </summary>
+        public bool wheelDragGrab = true;
 
         public const float ProgressiveThrottleExponent = 1.6f, ProgressiveBrakeExponent = 1.4f;
         public const float BaseGyroMaxTiltDeg = 35f;
@@ -76,6 +82,7 @@ namespace Game.Controls
             gyroSensitivity = d.gyroSensitivity; throttleProgressive = d.throttleProgressive; brakeProgressive = d.brakeProgressive;
             lookSensitivity = d.lookSensitivity; cabFov = d.cabFov; headMotion = d.headMotion;
             speedSensitiveSteering = d.speedSensitiveSteering;
+            wheelDragGrab = d.wheelDragGrab;
             schema = CurrentSchema;
         }
 
@@ -113,7 +120,8 @@ namespace Game.Controls
         /// <summary>
         /// Schema migrations. v0 (no "schema" field), v1 (no camera fields) and v2 (no speed-sensitive steering) need no
         /// value conversion: JsonUtility leaves the missing fields at their defaults, so only the version is raised and
-        /// the owner's other choices are kept. v2 to v3 explicitly switches speed-sensitive steering on: the v2 mapping
+        /// the owner's other choices are kept. v3 to v4 switches the touch wheel to the drag gesture (ADR 0135, same reasoning:
+        /// the old gesture was the cause of the report). v2 to v3 explicitly switches speed-sensitive steering on: the v2 mapping
         /// was the cause of the "wheel turns far too fast" feel report (ADR 0058), so an old save gets the new feel.
         /// </summary>
         static void Migrate(ControlSettings s)
@@ -121,6 +129,7 @@ namespace Game.Controls
             if (s.schema < 1) s.schema = 1;
             if (s.schema < 2) s.schema = 2;   // v2: lookSensitivity, cabFov, headMotion
             if (s.schema < 3) { s.speedSensitiveSteering = true; s.schema = 3; }   // v3: ADR 0058 steering column
+            if (s.schema < 4) { s.wheelDragGrab = true; s.schema = 4; }            // v4: ADR 0135 drag gesture (owner report)
             if (s.schema > CurrentSchema) s.schema = CurrentSchema;   // saved by a newer build: keep known fields
         }
 
@@ -160,6 +169,7 @@ namespace Game.Controls
                 wheel.Sensitivity = wheelSensitivity;
                 wheel.SpeedSensitive = speedSensitiveSteering;
                 wheel.DeadZone = wheelDeadZone;
+                wheel.Grab = wheelDragGrab ? WheelGrab.Drag : WheelGrab.Rotate;
                 wheel.Enabled = !gyroEnabled;
                 wheel.SetWheelDeg(wheel.WheelDeg);   // re-clamp to a shorter range
             }
@@ -195,7 +205,8 @@ namespace Game.Controls
                 + " lookSens=" + lookSensitivity.ToString("F2", ci)
                 + " cabFov=" + cabFov.ToString("F0", ci)
                 + " headMotion=" + (headMotion ? "on" : "off")
-                + " speedSteer=" + (speedSensitiveSteering ? "on" : "off");
+                + " speedSteer=" + (speedSensitiveSteering ? "on" : "off")
+                + " grab=" + (wheelDragGrab ? "drag" : "rotate");
         }
 
         /// <summary>Writes <see cref="LogLine"/> without a stack trace (one logcat line per entry).</summary>

@@ -94,7 +94,46 @@ namespace Game.UI.Driving
         public static readonly Vector2 ThrottleSize = new Vector2(170f, 360f);
         public static readonly Vector2 GearsSize = new Vector2(208f, 328f);
         public const float DevTextHeight = 112f;
-        const float ControlsBottom = Margin + 8f, WheelLeft = Margin + 16f;
+        /// <summary>Gap between the safe-area edge and the wheel (left) / the bottom controls; the wheel's invisible grab
+        /// area extends over it (ADR 0135).</summary>
+        public const float ControlsBottom = Margin + 8f, WheelLeft = Margin + 16f;
+
+        /// <summary>Grab margin around the wheel drawing as a fraction of its radius (ADR 0135 r2). WORKING_VALUE.</summary>
+        public const float GrabMarginRadiusFraction = 0.3f;
+        /// <summary>Grab margin around the wheel drawing in millimetres (thumb contact ~8-10 mm). WORKING_VALUE.</summary>
+        public const float GrabMarginMm = 8f;
+
+        /// <summary>Grab margin [canvas units]: the larger of 30 % of the wheel radius and 8 mm on the panel.</summary>
+        public static float GrabMarginUnits(float pixelsPerUnit, float dpi)
+        {
+            float unitsPerMm = dpi > 1f && pixelsPerUnit > 1e-4f ? dpi / 25.4f / pixelsPerUnit : 0f;
+            return Mathf.Max(GrabMarginRadiusFraction * WheelSize * 0.5f, GrabMarginMm * unitsPerMm);
+        }
+
+        /// <summary>
+        /// Touch target of the steering wheel (ADR 0135 r2, owner Fold test: "nie za każdym razem trafiam w kierownicę i
+        /// zamiast skręcać obraca mi widokiem"): the wheel square grown by <paramref name="margin"/> on every side,
+        /// clamped to the safe area, and cut back on any side where another active zone lies (turn signals above, stalk
+        /// right, ...), so it never takes a touch meant for a button or pedal. Always contains the whole drawing.
+        /// Everything outside it and outside the other zones is the camera look pad. Pure, unit-tested.
+        /// </summary>
+        public static Rect WheelGrabRect(in HudLayoutResult r, float width, float height, float margin)
+        {
+            Rect wheel = new Rect(r.Steering.x, r.Steering.y, WheelSize, WheelSize);
+            float x0 = Mathf.Max(0f, wheel.xMin - margin), y0 = Mathf.Max(0f, wheel.yMin - margin);
+            float x1 = Mathf.Min(width, wheel.xMax + margin), y1 = Mathf.Min(height, wheel.yMax + margin);
+            for (int i = 0; i < HudLayoutResult.ZoneCount; i++)
+            {
+                if (i == 8 || !r.Zone(i, out Rect z)) continue;
+                if (z.xMax <= x0 || z.xMin >= x1 || z.yMax <= y0 || z.yMin >= y1) continue;   // no overlap
+                // Cut the side facing the zone (the zone never overlaps the wheel itself: solver invariant).
+                if (z.yMin >= wheel.yMax) y1 = Mathf.Min(y1, z.yMin);
+                else if (z.yMax <= wheel.yMin) y0 = Mathf.Max(y0, z.yMax);
+                else if (z.xMin >= wheel.xMax) x1 = Mathf.Min(x1, z.xMin);
+                else if (z.xMax <= wheel.xMin) x0 = Mathf.Max(x0, z.xMax);
+            }
+            return Rect.MinMaxRect(Mathf.Min(x0, wheel.xMin), Mathf.Min(y0, wheel.yMin), Mathf.Max(x1, wheel.xMax), Mathf.Max(y1, wheel.yMax));
+        }
 
         public static void Solve(in HudLayoutInput s, out HudLayoutResult r)
         {

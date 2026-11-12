@@ -16,6 +16,7 @@ from terrain_mesh import conform as CF
 
 from . import buildings_mesh as BM
 from . import forest_hlod as FH
+from . import frontage as FR
 from . import furniture as FU
 from . import fab_details as FD
 from . import signs_route as SR
@@ -198,7 +199,8 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     FU.lamps(pl, w.net, src["osm"]["nodes"], origin, frep)
     lin = FU.Lin(w.buf, zsurf)
     # authored fences of hero buildings replace the generic panel fence of the same OSM way (ADR 0070 r3)
-    FU.fences(lin, src, origin, shapely.union_all([roads_poly] + HBD.fence_cut(heroes)), frep)
+    FU.fences(lin, src, origin, shapely.union_all([roads_poly] + HBD.fence_cut(heroes)), frep,
+              styles=FU.fence_styles(overrides))
     def znat(e, n):                              # natural ground (NMT, decks removed): embankment height
         return PV.bilinear(hf.z, hf, np.asarray(e, float), np.asarray(n, float))
     FU.guardrails(lin, w.net, znat, frep)
@@ -221,6 +223,7 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
                    if f["props"].get("rodzaj") == "parking" and f["geometry"]["type"] == "Polygon"]
     LF.place(pl, docks, paved, blds, roads_poly, bpoly, route_P, frep, buf=w.buf, zsurf=zsurf, park_polys=park_polys,
              no_parking=DY.no_parking(overrides, origin) + GT.no_parking(frep), authored_trailers=DY.dock_trailers(overrides))
+    FR.place_cars(pl, brep.get("frontage_props"), frep)         # display vehicles of authored frontages (ADR 0129)
     YW.apply(w.buf, overrides, origin, docks, paved, roads_poly, zsurf, frep)     # authored yard wear (ADR 0071 r11)
     FD.apply(w, pl, roads_poly, bpoly, paved, park_polys, route_P, frep, log, overrides=overrides, deck_at=deck_at)   # Fab Megascans (ADR 0084)
     carriage = PV.road_footprint_polygon([p for p in road_parts if p.mat.startswith("road_")])

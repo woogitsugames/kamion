@@ -1136,6 +1136,8 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
                 if sg and not signed and L >= 8 and FR.faces(nout, sg["facing"]):
                     signs.append(FK.sign_instance(sg["code"], a, d, nout, L * float(sg.get("u", 0.5)),
                                                   zref + float(sg["z_m"]), f"{key}:{ei}"))
+                    if float(sg.get("scale", 1.0)) != 1.0:      # ADR 0129: a fascia board legible from the road
+                        signs[-1]["sz"] = round(float(sg["scale"]), 3)
                     signed = True
             elif typ == "hall":
                 # plinth (concrete, up to dock floor) + cladding scheme + coping on top

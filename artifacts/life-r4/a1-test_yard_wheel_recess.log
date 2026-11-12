@@ -1,0 +1,112 @@
+FFF......                                                                [100%]
+================================== FAILURES ===================================
+_ test_near_rim_has_depth_without_expanding_tyre_and_is_mirrored[0.535-0.385-10] _
+
+radius = 0.535, width = 0.385, segments = 10
+
+    @pytest.mark.parametrize('radius,width,segments', CASES)
+    def test_near_rim_has_depth_without_expanding_tyre_and_is_mirrored(radius, width, segments):
+        positive = exported(radius, width, segments, 1)
+        negative = exported(radius, width, segments, -1)
+        assert positive.keys() == negative.keys() == {'rim', 'tyre'}
+        for side, parts in ((1, positive), (-1, negative)):
+            vertices = np.concatenate([p['V'] for p in parts.values()])
+            assert vertices[:, 2].min() >= -1e-6
+            assert vertices[:, 2].max() <= 2 * radius + 1e-6
+            assert np.max(np.abs(vertices[:, 0])) <= width / 2 + 0.020001
+            depth = side * parts['rim']['V'][:, 0] - width / 2
+            assert depth.max() - depth.min() > 0.07, 'A flat fan is not a recessed rim'
+        for material, pos in positive.items():
+            neg = negative[material]
+            expected = np.concatenate([pos['V'] * [-1, 1, 1], pos['N'] * [-1, 1, 1]], axis=1)
+            actual = np.concatenate([neg['V'], neg['N']], axis=1)
+            # Post-crease corner positions/normals, independent of vertex numbering.
+>           assert Counter(map(tuple, np.round(expected, 5))) == Counter(map(tuple, np.round(actual, 5))), material
+E           AssertionError: tyre
+E           assert Counter({(np....(-0.007)): 1}) == Counter({(np....(-0.108)): 1})
+E             
+E             Omitting 40 identical items, use -vv to show
+E             Left contains 20 more items:
+E             {(np.float64(-0.1925), np.float64(-0.535), np.float64(0.535), np.float64(-0.0), np.float64(-0.994), np.float64(0.108)): 2}
+E             {(np.float64(-0.1925), np.float64(-0.43282), np.float64(0.22053), np.float64(-0.0), np.float64(-0.868), np.float64(-0.497)): 1}
+E             {(np.float64(-0.1925), np.float64(-0.43282), np.float64(0.84947), np.float64(-0.0), np.float64(-0.741), np.float64(0.671)): 1}
+E             {(np.float64(-0.1925), np.float64(-0.16532), np.float64(0.02618), np.float64(-0.0), np.float64(-0.41), np.float64(-0.912)): 1}...
+E             
+E             ...Full output truncated, use '-vv' to show
+
+tests\gis\test_yard_wheel_recess.py:37: AssertionError
+_ test_near_rim_has_depth_without_expanding_tyre_and_is_mirrored[0.51-0.32-14] _
+
+radius = 0.51, width = 0.32, segments = 14
+
+    @pytest.mark.parametrize('radius,width,segments', CASES)
+    def test_near_rim_has_depth_without_expanding_tyre_and_is_mirrored(radius, width, segments):
+        positive = exported(radius, width, segments, 1)
+        negative = exported(radius, width, segments, -1)
+        assert positive.keys() == negative.keys() == {'rim', 'tyre'}
+        for side, parts in ((1, positive), (-1, negative)):
+            vertices = np.concatenate([p['V'] for p in parts.values()])
+            assert vertices[:, 2].min() >= -1e-6
+            assert vertices[:, 2].max() <= 2 * radius + 1e-6
+            assert np.max(np.abs(vertices[:, 0])) <= width / 2 + 0.020001
+            depth = side * parts['rim']['V'][:, 0] - width / 2
+            assert depth.max() - depth.min() > 0.07, 'A flat fan is not a recessed rim'
+        for material, pos in positive.items():
+            neg = negative[material]
+            expected = np.concatenate([pos['V'] * [-1, 1, 1], pos['N'] * [-1, 1, 1]], axis=1)
+            actual = np.concatenate([neg['V'], neg['N']], axis=1)
+            # Post-crease corner positions/normals, independent of vertex numbering.
+>           assert Counter(map(tuple, np.round(expected, 5))) == Counter(map(tuple, np.round(actual, 5))), material
+E           AssertionError: tyre
+E           assert Counter({(np....(-0.005)): 1}) == Counter({(np....(-0.076)): 1})
+E             
+E             Omitting 56 identical items, use -vv to show
+E             Left contains 28 more items:
+E             {(np.float64(-0.16), np.float64(-0.51), np.float64(0.51), np.float64(-0.0), np.float64(-0.997), np.float64(0.076)): 2}
+E             {(np.float64(-0.16), np.float64(-0.45949), np.float64(0.28872), np.float64(-0.0), np.float64(-0.931), np.float64(-0.364)): 1}
+E             {(np.float64(-0.16), np.float64(-0.45949), np.float64(0.73128), np.float64(-0.0), np.float64(-0.865), np.float64(0.501)): 1}
+E             {(np.float64(-0.16), np.float64(-0.31798), np.float64(0.11127), np.float64(-0.0), np.float64(-0.681), np.float64(-0.732)): 1}...
+E             
+E             ...Full output truncated, use '-vv' to show
+
+tests\gis\test_yard_wheel_recess.py:37: AssertionError
+_ test_near_rim_has_depth_without_expanding_tyre_and_is_mirrored[0.51-0.62-14] _
+
+radius = 0.51, width = 0.62, segments = 14
+
+    @pytest.mark.parametrize('radius,width,segments', CASES)
+    def test_near_rim_has_depth_without_expanding_tyre_and_is_mirrored(radius, width, segments):
+        positive = exported(radius, width, segments, 1)
+        negative = exported(radius, width, segments, -1)
+        assert positive.keys() == negative.keys() == {'rim', 'tyre'}
+        for side, parts in ((1, positive), (-1, negative)):
+            vertices = np.concatenate([p['V'] for p in parts.values()])
+            assert vertices[:, 2].min() >= -1e-6
+            assert vertices[:, 2].max() <= 2 * radius + 1e-6
+            assert np.max(np.abs(vertices[:, 0])) <= width / 2 + 0.020001
+            depth = side * parts['rim']['V'][:, 0] - width / 2
+            assert depth.max() - depth.min() > 0.07, 'A flat fan is not a recessed rim'
+        for material, pos in positive.items():
+            neg = negative[material]
+            expected = np.concatenate([pos['V'] * [-1, 1, 1], pos['N'] * [-1, 1, 1]], axis=1)
+            actual = np.concatenate([neg['V'], neg['N']], axis=1)
+            # Post-crease corner positions/normals, independent of vertex numbering.
+>           assert Counter(map(tuple, np.round(expected, 5))) == Counter(map(tuple, np.round(actual, 5))), material
+E           AssertionError: tyre
+E           assert Counter({(np....(-0.005)): 1}) == Counter({(np....(-0.076)): 1})
+E             
+E             Omitting 56 identical items, use -vv to show
+E             Left contains 28 more items:
+E             {(np.float64(-0.31), np.float64(-0.51), np.float64(0.51), np.float64(-0.0), np.float64(-0.997), np.float64(0.076)): 2}
+E             {(np.float64(-0.31), np.float64(-0.45949), np.float64(0.28872), np.float64(-0.0), np.float64(-0.931), np.float64(-0.364)): 1}
+E             {(np.float64(-0.31), np.float64(-0.45949), np.float64(0.73128), np.float64(-0.0), np.float64(-0.865), np.float64(0.501)): 1}
+E             {(np.float64(-0.31), np.float64(-0.31798), np.float64(0.11127), np.float64(-0.0), np.float64(-0.681), np.float64(-0.732)): 1}...
+E             
+E             ...Full output truncated, use '-vv' to show
+
+tests\gis\test_yard_wheel_recess.py:37: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/gis/test_yard_wheel_recess.py::test_near_rim_has_depth_without_expanding_tyre_and_is_mirrored[0.535-0.385-10]
+FAILED tests/gis/test_yard_wheel_recess.py::test_near_rim_has_depth_without_expanding_tyre_and_is_mirrored[0.51-0.32-14]
+FAILED tests/gis/test_yard_wheel_recess.py::test_near_rim_has_depth_without_expanding_tyre_and_is_mirrored[0.51-0.62-14]
+3 failed, 6 passed in 0.50s

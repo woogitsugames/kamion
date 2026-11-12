@@ -222,7 +222,9 @@ namespace Game.Vehicle.Physics
             ParkingBrakeWarning = warn;
             double demand = pedal * Amt.TorqueScale;
             ThrottleDemand = demand;
-            Engine.UpdateEngineBrake(demand < 0.02 && Amt.Gear != 0 && Amt.State == AmtState.Drive ? EngineBrakeCommand : 0, dt);
+            if (Amt.SyncBrakeCut) Engine.CutEngineBrake();
+            Engine.SyncBrakeActive = Amt.SyncBrakeRequest;
+            Engine.UpdateEngineBrake(Amt.SyncBrakeRequest ? 1.0 : demand < 0.02 && Amt.Gear != 0 && Amt.State == AmtState.Drive ? EngineBrakeCommand : 0, dt);
 
             // Retarder on the gearbox output (works in any gear, also during shifts).
             double fd = Def.driveline.finalDriveRatio;

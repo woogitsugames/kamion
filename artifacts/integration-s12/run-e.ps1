@@ -7,7 +7,7 @@ $L = 'artifacts/integration-s12/logs-e'; New-Item -ItemType Directory -Force $L 
 "START $(Get-Date -Format o) $(git rev-parse --short HEAD)"
 bash artifacts/integration-s12/regen.sh e *> artifacts/logs/s12-regen-e.log
 "REGEN DONE $(Get-Date -Format o)"; Select-String -Path artifacts/logs/s12-regen-e.log -Pattern 'rc=|passed|failed' | Select-Object -Last 8 | ForEach-Object { $_.Line }
-git add Data/Regions/bialystok-industrial-c/generated Data/SourceManifests art-source/world/props art-source/world/materials 2>$null
+git add Data/Regions/bialystok-industrial-c/generated Data/SourceManifests art-source/world/props art-source/world/materials art-source/world/landmarks 2>$null
 git commit -qm "chore(world): regenerate after batch D + 0126 + 0124 + SBS poses (s12 regen e)`n`nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"; "GENCOMMIT $(git rev-parse --short HEAD)"
 pwsh -NoProfile -File scripts/unity-slot.ps1 -Acquire -Priority -PollSeconds 5 -Owner lead-s12-integration-e
 pwsh scripts/import-region.ps1 -Region bialystok-industrial-c; "IMPORT EXIT $LASTEXITCODE"

@@ -16,8 +16,8 @@ namespace Game.Controls
         /// <summary>Speed breakpoints [km/h] of <see cref="handRateDegS"/> (piecewise linear, flat outside).</summary>
         public float[] handRateSpeedsKmh = { 0f, 10f, 30f, 50f, 80f, 100f };
         /// <summary>Highest steering-wheel rate the driver's hands produce [deg/s] at those speeds: quick hand-over-hand
-        /// when manoeuvring, calm corrections at motorway speed (a real driver at 80 km/h rarely exceeds ~100-150 deg/s).</summary>
-        public float[] handRateDegS = { 540f, 480f, 300f, 200f, 130f, 110f };
+        /// when manoeuvring (ADR 0135: 720/600 at 0/10 km/h, was 540/480), calm corrections at motorway speed (a real driver at 80 km/h rarely exceeds ~100-150 deg/s).</summary>
+        public float[] handRateDegS = { 720f, 600f, 300f, 200f, 130f, 110f };
         /// <summary>Time to reach the rate limit from rest [s] (acceleration limit = rate / rise): wheel + arm inertia, no snaps.</summary>
         public float rateRiseTimeS = 0.1f;
         /// <summary>Time constant of following a small finger motion [s] (perceived lag; kept below ~80 ms).</summary>
@@ -40,6 +40,13 @@ namespace Game.Controls
         public float speedGainEndKmh = 60f;
         /// <summary>Cab-wheel degrees per on-screen-wheel degree at speed (1 = the touch wheel is the real wheel).</summary>
         public float highSpeedScreenToHandwheel = 1f;
+        /// <summary>Drag gesture (ADR 0135): on-screen wheel degrees per millimetre of sideways finger travel. 10.8 = the
+        /// comfort range (270 deg) in 25 mm, i.e. full lock within a thumb sweep at manoeuvring speed. WORKING_VALUE.</summary>
+        public float dragScreenDegPerMm = 10.8f;
+        /// <summary>Drag gesture at speed (from <see cref="speedGainEndKmh"/>): cab-wheel degrees per millimetre (5 = a
+        /// 20-30 deg lane-change correction is a 4-6 mm thumb slide; the rotate gesture on the reference phone gave ~3-6
+        /// deg/mm at the rim). WORKING_VALUE.</summary>
+        public float dragHighSpeedHandwheelDegPerMm = 5f;
         /// <summary>Gyro: fraction of full lock reachable at full tilt at speed (1 at low speed).</summary>
         public float gyroHighSpeedGain = 0.3f;
 
@@ -92,8 +99,12 @@ namespace Game.Controls
         /// A range that already maps ~1:1 (simulator 900) stays at 1.
         /// </summary>
         public float WheelGain(float speedKmh, float screenRangeDeg, float lockDeg)
+            => WheelGain(speedKmh, screenRangeDeg, lockDeg, highSpeedScreenToHandwheel);
+
+        /// <summary>As above with an explicit cab-wheel-per-on-screen-degree ratio at speed (drag gesture, ADR 0135).</summary>
+        public float WheelGain(float speedKmh, float screenRangeDeg, float lockDeg, float highScreenToHandwheel)
         {
-            float high = Mathf.Min(1f, highSpeedScreenToHandwheel * Mathf.Max(1f, screenRangeDeg) / Mathf.Max(1f, lockDeg));
+            float high = Mathf.Min(1f, highScreenToHandwheel * Mathf.Max(1f, screenRangeDeg) / Mathf.Max(1f, lockDeg));
             return Mathf.Lerp(1f, high, SpeedBlend(speedKmh));
         }
 

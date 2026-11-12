@@ -1,0 +1,148 @@
+--- a/tools/worldgen/streetscape/far_field.py
++++ b/tools/worldgen/streetscape/far_field.py
+@@ -12,6 +12,8 @@
+     albedo, COLOR_0.a = window mode: 1.0 block/office grid, 0.75 ribbon glazing, 0.0 windowless) and UV1 window
+     bays/storeys for residential blocks, offices, industrial halls, pitched-roof houses, tapered red/white-banded
+     chimneys, HV lattice pylons, and dark under-canopy forest mounds.
++    Industrial cladding (ADR 0121 r5) reserves alpha 0.25 for opaque panels and 0.65 for panels with an upper ribbon;
++    these WORKING_VALUE appearance markers use the existing UV1 and do not change measured height or footprint.
+   - Submesh 1 (`forest_edge_mixed`, Kamion/Vegetation _HLOD_EDGE): alpha-tested tree-crown silhouette curtains along
+     stand edges and stepped interior forest ridges.
+ 
+@@ -1128,6 +1130,22 @@
+     return False
+ 
+ 
++def _hall_appearance_class(b: dict) -> str:
++    """WORKING_VALUE surface typology from declared use, never measured height.
++
++    Function is GIS data; cladding, colours and glazing below are estimates.
++    A large hall-shaped footprint alone does not establish an industrial use.
++    """
++    function = str(b.get("func") or "").casefold()
++    if any(word in function for word in ("elektrociepł", "elektrown", "ciepłown", "kotłown")):
++        return "energy"
++    if any(word in function for word in (
++            "przemysł", "produkc", "magazyn", "składow", "warsztat", "fabryk", "spalarn",
++            "industrial", "warehouse", "manufactur", "factory", "storage", "workshop")):
++        return "industrial"
++    return "other"
++
++
+ def _add_building(sectors: dict[str, SectorBuilder], b: dict, elev: BorderElevation, half: float, tier: str, exclusion=None):
+     rc = np.asarray(b["rect"], dtype=np.float64)
+     if len(rc) < 4 or not building_outside_region(Polygon(rc), half, exclusion):
+@@ -1234,12 +1252,16 @@
+         return
+ 
+     if typ == "hall":
+-        is_power_plant = "elektrociepł" in b.get("func", "").lower() or h_raw >= 22.0
+-        wall_rgb = (0.24, 0.10, 0.07) if is_power_plant else _hpick(bid, PALETTE_HALL, "wall")
+-        acc_rgb = _hpick(bid, PALETTE_HALL_ACCENT, "acc")
++        appearance = _hall_appearance_class(b)
++        industrial = appearance == "industrial"
++        panel_hall = industrial and h_raw >= 12.0  # WORKING_VALUE appearance, not a measured facade
++        wall_rgb = (0.24, 0.10, 0.07) if appearance == "energy" else _hpick(bid, PALETTE_HALL, "wall")
++        # Unknown branding is not a reason for a bright 16%-height coloured stripe.
++        acc_rgb = tuple(c * 0.72 for c in wall_rgb) if industrial else _hpick(bid, PALETTE_HALL_ACCENT, "acc")
+         use_fascia = tier == "High" or d_raw < 700.0
+-        z_fascia = (z_top - max(1.1 * s_h, h_eff * 0.16)) if use_fascia else z_top
+-        has_clerestory = _hfloat(bid, "clere") < 0.55
++        fascia_h = min(max(0.35 * s_h, 0.10), h_eff * 0.04) if industrial else max(1.1 * s_h, h_eff * 0.16)
++        z_fascia = z_top - fascia_h if use_fascia else z_top
++        has_clerestory = panel_hall or _hfloat(bid, "clere") < 0.55
+ 
+         for i in range(4):
+             a, c = pts[i], pts[(i + 1) % 4]
+@@ -1249,12 +1271,23 @@
+             is_long = (i % 2) == (long_idx % 2)
+             if is_long and has_clerestory and L_raw >= 16.0:
+                 bays = max(3, int(round(L_raw / 4.0)))
+-                uv1 = [[0.0, -1.2], [float(bays), -1.2], [float(bays), 1.0], [0.0, 1.0]]
++                # Only the top row is positive: do not invent a storey count.
++                # The 4 m source-height module gives an estimated ~1.8 m upper
++                # glazing band. Preserve the legacy contract for other halls.
++                bottom_v = 1.0 - (z_fascia - z_bot) / max(4.0 * s_h, 0.1) if panel_hall else -1.2
++                uv1 = [[0.0, bottom_v], [float(bays), bottom_v], [float(bays), 1.0], [0.0, 1.0]]
+                 sec.add_quad0([a[0], a[1], z_bot], [c[0], c[1], z_bot], [c[0], c[1], z_fascia], [a[0], a[1], z_fascia],
+-                              (*wall_rgb, 0.75), uv1=uv1)
++                              (*wall_rgb, 0.65 if panel_hall else 0.75), uv1=uv1)
+             else:
++                panel_uv = None
++                if panel_hall:
++                    # Explicit opaque-cladding payload: 1.2 m wide / 3 m high
++                    # source modules, carried in the already-existing UV1.
++                    columns = L_raw / 1.2
++                    rows = (z_fascia - z_bot) / max(3.0 * s_h, 0.1)
++                    panel_uv = [[0.0, 0.0], [columns, 0.0], [columns, rows], [0.0, rows]]
+                 sec.add_quad0([a[0], a[1], z_bot], [c[0], c[1], z_bot], [c[0], c[1], z_fascia], [a[0], a[1], z_fascia],
+-                              (*wall_rgb, 0.0))
++                              (*wall_rgb, 0.25 if panel_hall else 0.0), uv1=panel_uv)
+             if use_fascia:
+                 sec.add_quad0([a[0], a[1], z_fascia], [c[0], c[1], z_fascia], [c[0], c[1], z_top], [a[0], a[1], z_top],
+                               (*acc_rgb, 0.0))
+@@ -1554,11 +1587,27 @@
+     # Write SourceManifest in Data/SourceManifests/
+     manifest_dir = REPO / "Data" / "SourceManifests"
+     manifest_dir.mkdir(parents=True, exist_ok=True)
++    appearance_policy = {
++        "schema": "far-field-appearance/1",
++        "status": "WORKING_VALUE",
++        "not_measured": ["wall_colour", "cladding_modules", "glazing_band", "roof_fascia"],
++        "classification": "declared function; height alone does not imply an energy plant",
++        "industrial_panel_min_height_m": 12.0,
++        "panel_alpha": 0.25,
++        "panel_ribbon_alpha": 0.65,
++        "source_hall_counts": {
++            kind: sum(1 for b in gis["buildings"] if b["typ"] == "hall" and _hall_appearance_class(b) == kind)
++            for kind in ("industrial", "energy", "other")
++        },
++        "source_panel_hall_count": sum(1 for b in gis["buildings"] if b["typ"] == "hall"
++                                       and b["h"] >= 12.0 and _hall_appearance_class(b) == "industrial"),
++    }
+     src_manifest = {
+         "schema": "truck-sim-pl/source-manifest/1",
+         "id": f"{region_id}-far-field",
+         "region": region_id,
+         "adr": "0085-far-field-backdrop",
++        "appearance_policy": appearance_policy,
+         "ring_bounds_local_m": {"inner_half_m": half, "outer_half_m": RING_MAX_M},
+         "region_inputs_sha256": {k: v for k, v in gis["sources_sha256"].items() if k.startswith("region/")},
+         "lod1_height_audit": gis["lod1_height_audit"],
+@@ -1609,6 +1658,7 @@
+         "schema": "truck-sim-pl/far-field-qa/1",
+         "region": region_id,
+         "feature_counts": src_manifest["feature_counts"],
++        "appearance_policy": appearance_policy,
+         "boundary_exclusions": gis["boundary_exclusions"],
+         "lod1_height_audit": gis["lod1_height_audit"],
+         "building_height_sources": gis["building_height_sources"],
+--- a/game/Assets/_Project/Rendering/Shaders/WorldSurface.shader
++++ b/game/Assets/_Project/Rendering/Shaders/WorldSurface.shader
+@@ -201,6 +201,26 @@
+                 {
+                     albedo *= i.masks.rgb;
+                     float2 g = i.uv1;
++                    // ADR 0121 r5: explicit far-field industrial payload only.
++                    // Legacy alpha 0 / 0.75 / 1 never enters this branch. No
++                    // added channel, varying, texture, keyword or render pass.
++                    half panelPlain = step(0.20h, i.masks.a) * step(i.masks.a, 0.30h);
++                    half panelRibbon = step(0.60h, i.masks.a) * step(i.masks.a, 0.70h);
++                    if (panelPlain + panelRibbon > 0.5h)
++                    {
++                        float2 panelUV = lerp(g, g * float2(10.0 / 3.0, 4.0 / 3.0), panelRibbon);
++                        float2 panelFW = max(fwidth(panelUV), 1e-4);
++                        float2 panelF = frac(panelUV);
++                        float2 distanceToJoint = min(panelF, 1.0 - panelF);
++                        float2 joint = saturate((0.012 - distanceToJoint) / panelFW + 0.5);
++                        // At subpixel pitch use mean joint coverage, not a
++                        // moire grid or a progressively darker whole facade.
++                        joint = lerp(joint, float2(0.024, 0.024), saturate((panelFW - 0.5) * 2.0));
++                        half jointCoverage = joint.x + joint.y - joint.x * joint.y;
++                        float panelHash = frac(sin(dot(floor(panelUV), float2(12.9898, 78.233))) * 43758.5453);
++                        half panelVariation = (panelHash - 0.5) * 0.045 * saturate(1.0 - max(panelFW.x, panelFW.y));
++                        albedo *= 1.0h - 0.10h * jointCoverage + panelVariation;
++                    }
+                     float2 bay = floor(g);
+                     float2 f = g - bay;
+                     float2 fw = max(fwidth(g), 1e-4);

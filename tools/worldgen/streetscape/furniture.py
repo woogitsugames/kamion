@@ -1080,8 +1080,30 @@ def panel_fence(lin, line, col, key, flexible=False):
     lin.posts(col,P,None,.06,.04,S.FENCE_H+.05,zb=Z,src=key,ground_feet=True)
 
 
-def fences(lin, src, origin, roads_poly, report):
+FENCE_COLOURS = ("fence_green", "fence_anthracite", "fence_galv")
+
+
+def fence_styles(overrides):
+    """kind: fence_style -> {osm way id: panel fence colour} (authored: the colour of an OSM fence is not in the data,
+    the rule hashes it; ADR 0129)."""
+    out = {}
+    for o in overrides or []:
+        if o.get("kind") != "fence_style":
+            continue
+        col = f"fence_{o['colour']}"
+        if col not in FENCE_COLOURS:
+            raise ValueError(f"override {o.get('id')}: fence colour {o['colour']!r}, expected one of "
+                             f"{[c[6:] for c in FENCE_COLOURS]}")
+        for w in o["osm_way"]:
+            out[int(w)] = col
+    return out
+
+
+def fences(lin, src, origin, roads_poly, report, styles=None):
+    """styles: {osm way id: colour material} of the authored fence_style overrides (fence_styles)."""
     n = {"panel_m": 0.0, "concrete_m": 0.0, "retaining_m": 0.0}
+    styles = styles or {}
+    seen = set()
     cutter = roads_poly.buffer(0.3) if roads_poly is not None else None
     for f in src["osm"]["ways"]:
         b = f["tags"].get("barrier")
@@ -1093,7 +1115,10 @@ def fences(lin, src, origin, roads_poly, report):
             P = lin.dens(part, 2.0)              # 2 m: the Low terrain band is 2 m, posts sample the ground themselves
             Z = lin.z(P)
             if b in ("fence", "yes"):
-                col = ["fence_green", "fence_anthracite", "fence_galv"][_h(key) % 3]
+                col = FENCE_COLOURS[_h(key) % 3]
+                if int(f["osm_way"]) in styles:
+                    col = styles[int(f["osm_way"])]
+                    seen.add(int(f["osm_way"]))
                 panel_fence(lin, part, col, key, flexible=f["tags"].get("fence_type") in ("chain_link", "wire"))
                 n["panel_m"] += part.length
             elif b == "wall":
@@ -1112,6 +1137,9 @@ def fences(lin, src, origin, roads_poly, report):
             retaining(lin, lin.dens(part, 1.0), f"bdot:{f['id']}")
             n["retaining_m"] += part.length
     report["fences"] = {k: round(v) for k, v in n.items()}
+    if styles:      # a styled way that is no longer in the data is reported, never silently dropped
+        report["fences"]["styled_ways"] = sorted(seen)
+        report["fences"]["style_stale"] = sorted(set(styles) - seen)
 
 
 def retaining(lin, P, key):
@@ -1769,6 +1797,7 @@ NOISE_STYLES = {
     "glazed": {"plinth_m": 0.6, "band_m": 1.0, "post_mat": "noise_post", "panel": "noise_panel_dark"},
 }
 NOISE_DEFAULT_STYLE = "solid"
+NOISE_POST_W = 0.22
 NOISE_DEDUP_M = 4.0          # an OSM way within this of a BDOT10k barrier is the same object (BDOT geometry kept)
 
 
@@ -1782,6 +1811,8 @@ def _noise_style_overrides(overrides, origin):
                 st = dict(NOISE_STYLES[z.get("style", NOISE_DEFAULT_STYLE)])
                 if "band_m" in z:
                     st["band_m"] = float(z["band_m"])
+                if "height_m" in z:                        # ADR 0127: authored barrier height inside the zone
+                    st["height_m"] = float(z["height_m"])
                 st["name"] = z.get("style", NOISE_DEFAULT_STYLE)
                 zones.append((c, float(z.get("radius_m", 30.0)), st, o["id"]))
         elif o.get("kind") == "noise_barrier":
@@ -1831,7 +1862,8 @@ def noise_wall(lin, P, Z, st, H, key):
             lin.slab(st["post_mat"], P, zm - 0.04, zm + 0.04, 0.08, key + ":rail")
     lin.ribbon("collision_fence", P, Z - 0.2, Z + H, 0.0, key, both=False)
     lin.buf.parts[-1].layer = "collision"
-    lin.posts(st["post_mat"], P, S.NOISE_BARRIER_POST, 0.16, 0.16, H + 0.1, src=key)
+    # ADR 0127: posts NOISE_POST_W wide (HEB 200 class; 0.16 m read as fence wire at 80 m on Low), WORKING_VALUE
+    lin.posts(st["post_mat"], P, S.NOISE_BARRIER_POST, NOISE_POST_W, NOISE_POST_W, H + 0.1, src=key)
 
 
 def noise_barriers(lin, src, origin, roads_poly, report, overrides=None, pl=None):
@@ -1862,7 +1894,7 @@ def noise_barriers(lin, src, origin, roads_poly, report, overrides=None, pl=None
             P = lin.dens(part, 2.0)
             Z = lin.z(P)
             for sl, st in _noise_runs(P, zones, default):
-                noise_wall(lin, P[sl], Z[sl], st, H, key)
+                noise_wall(lin, P[sl], Z[sl], st, st.get("height_m", H), key)
                 seg = float(np.sum(np.hypot(*np.diff(P[sl], axis=0).T)))
                 by_style[st["name"]] = by_style.get(st["name"], 0.0) + seg
             for c, r, s, oid in zones:
@@ -2014,7 +2046,16 @@ def power_lines(lin, src, origin, report, pl=None, roads_poly=None):
             P = power_supports(pl, P, hv, f["id"], roads_poly, sup_rep)
             if len(P) < 2:
                 continue
-        h, sep = (23.0, 5.0) if hv else (11.7, 0.8)
+        # attachment points (lateral offset, height above ground). HV (ADR 0127): the six phase conductors hang
+        # under the arm tips of streetscape.props.pylon (three levels, both sides) + the earth wire on the peak;
+        # the old three wires at 23 m, +-5 m met no arm of the tower. MV: three conductors on the pole cross-arm.
+        if hv:
+            from . import props as PR
+            hang = [(sx * PR.PYLON_ARM_L, za - PR.PYLON_INSULATOR_M) for za in PR.PYLON_ARM_Z for sx in (-1.0, 1.0)]
+            hang.append((0.0, 32.0))
+        else:
+            hang = [(o, 11.7) for o in (-0.8, 0.0, 0.8)]
+        h = max(z for _, z in hang)
         for a, b in zip(P, P[1:]):
             L = float(np.hypot(*(b - a)))
             if L < 5:
@@ -2031,9 +2072,10 @@ def power_lines(lin, src, origin, report, pl=None, roads_poly=None):
             report["wire_max_turn_deg"] = round(max(report.get("wire_max_turn_deg", 0.0), turn), 3)
             report["wire_max_seg_m"] = round(max(report.get("wire_max_seg_m", 0.0),
                                                  float(np.max(np.hypot(np.diff(t * L), np.diff(Z))))), 3)
-            for o in (-sep, 0.0, sep):
+            for o, zh in hang:
                 QQ = Q + nn * o
-                V = np.concatenate([np.column_stack([QQ, Z - WIRE_HALF_W]), np.column_stack([QQ, Z + WIRE_HALF_W])])
+                Zw = Z - (h - zh)
+                V = np.concatenate([np.column_stack([QQ, Zw - WIRE_HALF_W]), np.column_stack([QQ, Zw + WIRE_HALF_W])])
                 m = len(QQ)
                 T = np.array([(i, i + 1, m + i + 1) for i in range(m - 1)] + [(i, m + i + 1, m + i) for i in range(m - 1)])
                 # layer "wires": the engine re-expands each ribbon towards the camera to >= 1 px with coverage alpha

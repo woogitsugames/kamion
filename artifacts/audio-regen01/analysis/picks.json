@@ -1,0 +1,450 @@
+{
+ "ENG_EXT_ON_HIGH": {
+  "pick": "ENG_EXT_ON_HIGH (2).wav",
+  "score": -25.36,
+  "meets_prompt": false,
+  "why": "measured 912 rpm (dominant line; ladder spacing 912; asked high, >= 1500), span 14.2 %, level range 4.8 dB",
+  "ranking": [
+   [
+    "ENG_EXT_ON_HIGH (2).wav",
+    -25.36
+   ],
+   [
+    "ENG_EXT_ON_HIGH (1).wav",
+    -40.05
+   ],
+   [
+    "ENG_EXT_ON_HIGH (4).wav",
+    -51.81
+   ],
+   [
+    "ENG_EXT_ON_HIGH (3).wav",
+    -486.78
+   ]
+  ],
+  "prompt": {
+   "id": "ENG_EXT_ON_HIGH",
+   "prompt": "Heavy truck inline-six turbo diesel at high revs near its governed maximum, recorded outside by the exhaust stack, pulling hard uphill in a low gear, fast busy firing rhythm blending into a gritty high drone, loud turbo whistle, held perfectly steady, no gear change, no pitch change, seamless loop, no music, no voices",
+   "duration": 6,
+   "influence": 80,
+   "loop": true,
+   "batch": "REGEN-01"
+  }
+ },
+ "ENG_EXT_OFF_HIGH": {
+  "pick": "ENG_EXT_OFF_HIGH (1).wav",
+  "score": 0.41,
+  "meets_prompt": false,
+  "why": "measured 1859 rpm (dominant line; ladder spacing 930; asked high, >= 1500), span 4.8 %, level range 1.1 dB",
+  "ranking": [
+   [
+    "ENG_EXT_OFF_HIGH (1).wav",
+    0.41
+   ],
+   [
+    "ENG_EXT_OFF_HIGH (2).wav",
+    -2.32
+   ],
+   [
+    "ENG_EXT_OFF_HIGH (3).wav",
+    -10.01
+   ],
+   [
+    "ENG_EXT_OFF_HIGH (4).wav",
+    -20.39
+   ]
+  ],
+  "prompt": {
+   "id": "ENG_EXT_OFF_HIGH",
+   "prompt": "Heavy truck inline-six diesel spinning at high revs with the throttle closed, recorded outside, fast light firing rhythm, hollow high-pitched drone, no turbo whistle, held perfectly steady, no pitch change, seamless loop, no music, no voices",
+   "duration": 6,
+   "influence": 80,
+   "loop": true,
+   "batch": "REGEN-01"
+  }
+ },
+ "ENG_CAB_ON_HIGH": {
+  "pick": "ENG_CAB_ON_HIGH (3).wav",
+  "score": -8.7,
+  "meets_prompt": true,
+  "why": "measured 1541 rpm (dominant line; ladder spacing 1541; asked high, >= 1500), span 10.8 %, level range 2.5 dB",
+  "ranking": [
+   [
+    "ENG_CAB_ON_HIGH (3).wav",
+    -8.7
+   ],
+   [
+    "ENG_CAB_ON_HIGH (1).wav",
+    -10.38
+   ],
+   [
+    "ENG_CAB_ON_HIGH (2).wav",
+    -13.3
+   ],
+   [
+    "ENG_CAB_ON_HIGH (4).wav",
+    -17.58
+   ]
+  ],
+  "prompt": {
+   "id": "ENG_CAB_ON_HIGH",
+   "prompt": "Inside a heavy truck cab while the inline-six diesel works hard at high revs in a low gear, fast busy engine drone through the floor and firewall, buzzing cab panels, turbo whine, held perfectly steady, no road noise, no pitch change, seamless loop, no music, no voices",
+   "duration": 6,
+   "influence": 80,
+   "loop": true,
+   "batch": "REGEN-01"
+  }
+ },
+ "ENG_CAB_OFF_HIGH": {
+  "pick": "ENG_CAB_OFF_HIGH (1).wav",
+  "score": -16.76,
+  "meets_prompt": false,
+  "why": "measured 1472 rpm (dominant line; ladder spacing 1472; asked high, >= 1500), span 15.2 %, level range 6.3 dB",
+  "ranking": [
+   [
+    "ENG_CAB_OFF_HIGH (1).wav",
+    -16.76
+   ],
+   [
+    "ENG_CAB_OFF_HIGH (2).wav",
+    -17.57
+   ],
+   [
+    "ENG_CAB_OFF_HIGH (4).wav",
+    -21.44
+   ],
+   [
+    "ENG_CAB_OFF_HIGH (3).wav",
+    -24.26
+   ]
+  ],
+  "prompt": {
+   "id": "ENG_CAB_OFF_HIGH",
+   "prompt": "Inside a heavy truck cab, diesel engine spinning fast with the throttle closed, light high-pitched drone through the floor, faint mechanical whir, held perfectly steady, no road noise, no pitch change, seamless loop, no music, no voices",
+   "duration": 6,
+   "influence": 80,
+   "loop": true,
+   "batch": "REGEN-01"
+  }
+ },
+ "ENG_EXT_IDLE_SLOW": {
+  "pick": "ENG_EXT_IDLE_SLOW (4).wav",
+  "score": -6.99,
+  "meets_prompt": true,
+  "why": "measured 737 rpm (asked slow idle, <= 750), span 12.4 %",
+  "ranking": [
+   [
+    "ENG_EXT_IDLE_SLOW (4).wav",
+    -6.99
+   ],
+   [
+    "ENG_EXT_IDLE_SLOW (2).wav",
+    -10.29
+   ],
+   [
+    "ENG_EXT_IDLE_SLOW (1).wav",
+    -16.09
+   ],
+   [
+    "ENG_EXT_IDLE_SLOW (3).wav",
+    -36.15
+   ]
+  ],
+  "prompt": {
+   "id": "ENG_EXT_IDLE_SLOW",
+   "prompt": "Big heavy truck diesel engine at a very slow low idle, recorded outside, deep lazy lumpy rhythm with each combustion thump clearly separate, soft exhaust puffs, faint injector tick, steady, no revving, no pitch change, seamless loop, no music, no voices",
+   "duration": 8,
+   "influence": 80,
+   "loop": true,
+   "batch": "REGEN-01"
+  }
+ },
+ "ENG_CAB_IDLE_SLOW": {
+  "pick": "ENG_CAB_IDLE_SLOW (4).wav",
+  "score": -2.33,
+  "meets_prompt": true,
+  "why": "measured 723 rpm (asked slow idle, <= 750), span 9.2 %",
+  "ranking": [
+   [
+    "ENG_CAB_IDLE_SLOW (4).wav",
+    -2.33
+   ],
+   [
+    "ENG_CAB_IDLE_SLOW (3).wav",
+    -10.44
+   ],
+   [
+    "ENG_CAB_IDLE_SLOW (2).wav",
+    -10.99
+   ],
+   [
+    "ENG_CAB_IDLE_SLOW (1).wav",
+    -14.77
+   ]
+  ],
+  "prompt": {
+   "id": "ENG_CAB_IDLE_SLOW",
+   "prompt": "Inside a parked heavy truck cab with the diesel engine at a very slow low idle, deep slow throb felt through the seat, each combustion thump separate and muffled, very faint ticking, steady, no road noise, no revving, no pitch change, seamless loop, no music, no voices",
+   "duration": 8,
+   "influence": 80,
+   "loop": true,
+   "batch": "REGEN-01"
+  }
+ },
+ "TURBO_WHISTLE_LOOP": {
+  "pick": "TURBO_WHISTLE_LOOP (3).wav",
+  "score": -19.4,
+  "meets_prompt": false,
+  "why": "line 6009 Hz at 4.5 dB over floor (>= 12), span 9.7 %",
+  "ranking": [
+   [
+    "TURBO_WHISTLE_LOOP (3).wav",
+    -19.4
+   ],
+   [
+    "TURBO_WHISTLE_LOOP (4).wav",
+    -21.87
+   ],
+   [
+    "TURBO_WHISTLE_LOOP (1).wav",
+    -25.88
+   ],
+   [
+    "TURBO_WHISTLE_LOOP (2).wav",
+    -26.21
+   ]
+  ],
+  "prompt": {
+   "id": "TURBO_WHISTLE_LOOP",
+   "prompt": "Steady high-pitched whistle of a heavy truck turbocharger at constant boost, close to the engine, clean continuous tone with soft air rush, no engine rumble, no pitch change, seamless loop, no music, no voices",
+   "duration": 5,
+   "influence": 80,
+   "loop": true,
+   "batch": "REGEN-01"
+  }
+ },
+ "ENG_EXT_ON_SWEEP": {
+  "pick": "ENG_EXT_ON_SWEEP (4).wav",
+  "score": 42.54,
+  "meets_prompt": true,
+  "why": "line 904->1772 rpm over 6.4 s, resid 0.8 %, monotonic 91 %, line 22.7 dB, octave-consistent 100 %, grid [900, 1200, 1500, 1800]",
+  "ranking": [
+   [
+    "ENG_EXT_ON_SWEEP (4).wav",
+    42.54
+   ],
+   [
+    "ENG_EXT_ON_SWEEP (2).wav",
+    36.65
+   ],
+   [
+    "ENG_EXT_ON_SWEEP (3).wav",
+    31.43
+   ],
+   [
+    "ENG_EXT_ON_SWEEP (1).wav",
+    19.02
+   ]
+  ],
+  "prompt": {
+   "id": "ENG_EXT_ON_SWEEP",
+   "prompt": "Heavy truck inline-six turbo diesel recorded outside by the exhaust stack, accelerating slowly and continuously from low idle all the way to maximum revs in one gear under heavy load, smooth steady rise in engine speed with no gear change, no pauses, no music, no voices",
+   "duration": 30,
+   "influence": 80,
+   "loop": false,
+   "batch": "REGEN-01"
+  }
+ },
+ "ENG_CAB_ON_SWEEP": {
+  "pick": "ENG_CAB_ON_SWEEP (3).wav",
+  "score": 32.47,
+  "meets_prompt": false,
+  "why": "line 1382->2424 rpm over 9.5 s, resid 1.0 %, monotonic 66 %, line 22.5 dB, octave-consistent 67 %, grid [1500, 1800, 2100]",
+  "ranking": [
+   [
+    "ENG_CAB_ON_SWEEP (3).wav",
+    32.47
+   ],
+   [
+    "ENG_CAB_ON_SWEEP (2).wav",
+    31.2
+   ],
+   [
+    "ENG_CAB_ON_SWEEP (4).wav",
+    24.65
+   ],
+   [
+    "ENG_CAB_ON_SWEEP (1).wav",
+    16.19
+   ]
+  ],
+  "prompt": {
+   "id": "ENG_CAB_ON_SWEEP",
+   "prompt": "Inside a heavy truck cab, the inline-six diesel accelerates slowly and continuously from low idle to maximum revs in one gear under heavy load, smooth steady rise of the engine drone through the floor, no gear change, no pauses, no road noise, no music, no voices",
+   "duration": 30,
+   "influence": 80,
+   "loop": false,
+   "batch": "REGEN-01"
+  }
+ },
+ "ENG_STOP_CAB": {
+  "pick": "ENG_STOP_CAB (4).wav",
+  "score": 12.61,
+  "meets_prompt": false,
+  "why": "tail vs head -9.7 dB (<= -15 for a run-down), line -5.8 %",
+  "ranking": [
+   [
+    "ENG_STOP_CAB (4).wav",
+    12.61
+   ],
+   [
+    "ENG_STOP_CAB (2).wav",
+    9.93
+   ],
+   [
+    "ENG_STOP_CAB (3).wav",
+    6.98
+   ],
+   [
+    "ENG_STOP_CAB (1).wav",
+    4.71
+   ]
+  ],
+  "prompt": {
+   "id": "ENG_STOP_CAB",
+   "prompt": "Inside a heavy truck cab, the idling diesel engine is switched off, the cab shudders once and the engine runs down to silence, a soft dashboard click at the end, no music, no voices",
+   "duration": 3,
+   "influence": 60,
+   "loop": false,
+   "batch": "REGEN-01"
+  }
+ },
+ "GEAR_UPSHIFT_CAB": {
+  "pick": "GEAR_UPSHIFT_CAB (6).wav",
+  "score": 24.37,
+  "meets_prompt": true,
+  "why": "pitch drop 14.2 % (>= 6) at 0.25 s, level after +2.0 dB (> -6), shift click 20.3 dB (>= 10)",
+  "ranking": [
+   [
+    "GEAR_UPSHIFT_CAB (6).wav",
+    24.37
+   ],
+   [
+    "GEAR_UPSHIFT_CAB (7).wav",
+    5.36
+   ],
+   [
+    "GEAR_UPSHIFT_CAB (5).wav",
+    3.97
+   ],
+   [
+    "GEAR_UPSHIFT_CAB (8).wav",
+    2.25
+   ]
+  ],
+  "prompt": {
+   "id": "GEAR_UPSHIFT_CAB",
+   "prompt": "Inside a heavy truck cab while accelerating: the diesel engine drones steadily, then drops in pitch as the automated gearbox shifts up with a short pneumatic click and a soft clunk, and immediately keeps pulling at a lower engine speed until the end, engine audible the whole time, no music, no voices",
+   "duration": 2.5,
+   "influence": 70,
+   "loop": false,
+   "batch": "REGEN-01"
+  }
+ },
+ "BRAKE_SERVICE_HISS": {
+  "pick": "BRAKE_SERVICE_HISS (7).wav",
+  "score": 12.63,
+  "meets_prompt": true,
+  "why": "onset 0 ms, >2 kHz 94 %, -20 dB after 0.18 s, bursts 0",
+  "ranking": [
+   [
+    "BRAKE_SERVICE_HISS (7).wav",
+    12.63
+   ],
+   [
+    "BRAKE_SERVICE_HISS (6).wav",
+    12.06
+   ],
+   [
+    "BRAKE_SERVICE_HISS (5).wav",
+    9.47
+   ],
+   [
+    "BRAKE_SERVICE_HISS (8).wav",
+    8.34
+   ]
+  ],
+  "prompt": {
+   "id": "BRAKE_SERVICE_HISS",
+   "prompt": "Single short sharp hiss of compressed air released from a heavy truck brake valve right after the brake pedal is let go, starts immediately, clean, nothing else, no music, no voices",
+   "duration": 1,
+   "influence": 70,
+   "loop": false,
+   "batch": "REGEN-01"
+  }
+ },
+ "CAB_WIPERS_LOOP": {
+  "pick": "CAB_WIPERS_LOOP (6).wav",
+  "score": -16.91,
+  "meets_prompt": false,
+  "why": "period 0.37 s (asked 1.0), CV 9.4 %, wrap 0.36 s (-2 %)",
+  "ranking": [
+   [
+    "CAB_WIPERS_LOOP (6).wav",
+    -16.91
+   ],
+   [
+    "CAB_WIPERS_LOOP (5).wav",
+    -24.29
+   ],
+   [
+    "CAB_WIPERS_LOOP (7).wav",
+    -52.35
+   ],
+   [
+    "CAB_WIPERS_LOOP (8).wav",
+    -63.73
+   ]
+  ],
+  "prompt": {
+   "id": "CAB_WIPERS_LOOP",
+   "prompt": "Truck windscreen wipers sweeping at a perfectly even slow rhythm, exactly one sweep every second, rubber squeak on wet glass and soft motor hum, steady, seamless loop, no music, no voices",
+   "duration": 6,
+   "influence": 70,
+   "loop": true,
+   "batch": "REGEN-01"
+  }
+ },
+ "CAB_DOOR_OPEN": {
+  "pick": "CAB_DOOR_OPEN (7).wav",
+  "score": 7.08,
+  "meets_prompt": true,
+  "why": "latch at 0.00 s (<= 0.1), air layer +14.2 dB over pre-latch floor",
+  "ranking": [
+   [
+    "CAB_DOOR_OPEN (7).wav",
+    7.08
+   ],
+   [
+    "CAB_DOOR_OPEN (8).wav",
+    5.06
+   ],
+   [
+    "CAB_DOOR_OPEN (5).wav",
+    -3.25
+   ],
+   [
+    "CAB_DOOR_OPEN (6).wav",
+    -4.45
+   ]
+  ],
+  "prompt": {
+   "id": "CAB_DOOR_OPEN",
+   "prompt": "Heavy truck cab door opened from inside: the metal latch clunks immediately at the start, the door swings open and outside air and distant traffic become audible, no music, no voices",
+   "duration": 2,
+   "influence": 70,
+   "loop": false,
+   "batch": "REGEN-01"
+  }
+ }
+}
