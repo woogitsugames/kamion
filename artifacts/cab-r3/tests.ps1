@@ -1,4 +1,4 @@
-param([string]$Filter='Game.Tests.EditMode.CabLeatherMappingTests',[switch]$Full)
+﻿param([string]$Filter='Game.Tests.EditMode.CabBacklightTests',[switch]$Full)
 $ErrorActionPreference='Stop'
 Set-Location (Resolve-Path "$PSScriptRoot/../..")
 $slot='C:/Users/matma/Documents/Claude/kamion/scripts/unity-slot.ps1'
@@ -12,3 +12,4 @@ try {
 }
 finally { pwsh $slot -Release -Owner gpt-cab; git restore -- game/Assets/_Project/Rendering/Settings game/ProjectSettings }
 exit $code
+

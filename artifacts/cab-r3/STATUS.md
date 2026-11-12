@@ -28,3 +28,4 @@ Zakończono Game.Editor.Setup.TruckAssetBuilder.BuildBatch, exit 0. Następny kr
 Zakończono Game.World.Import.WorldTruckInstaller.InstallBatch, exit 0. Następny krok: kolejny etap prefab/sceny lub capture-0112 -Stage result-0112.
 BuildBatch/InstallBatch night1 exit 0, oba sloty Unity zwolnione. Baseline-evidence.json potwierdza sześć stanów po siedem kadrów i sześć luster, wszędzie zero pikseli wnętrza. Następny krok pełna macierz night1 i obejrzenie A/B. World r3 czeka na heavy, uchwyt 26738.
 Zapisano result-0112-night1 Low clear, siedem kamer i sześć natywnych RT z identyfikatorem wnętrza. Następny krok: kontynuować macierz lub porównać PNG.
+Dokumentacja BACKLIGHT.md opisuje flagę wypieku, istniejące pasma atlasu, ekspozycję, ograniczenia i poprawny stan fixture. Wrapper testów domyślnie wskazuje CabBacklightTests. Builder loguje włączenie profilu i zachowuje liczby/UV z r2. Ocena pełnych kadrów night1 nadal trwa.
