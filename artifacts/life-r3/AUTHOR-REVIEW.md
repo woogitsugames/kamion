@@ -16,7 +16,7 @@ sheet_far pokazuje rzeczywisty rząd 22 aut z 20/35/45 m; far45 częściowo zas�
 
 Budżet C: wszystkie 492 rekordy, trasa Low max +0,067613%, High +0,155216%; wszystkie kamery Low +0,323992%, High +0,164056%. Draws świata i instancji osobno +0, brak brakujących kamer, identyczne pozycje/rotacje/projekcja. To CPU-estymaty przed SRP batching, bez pomiaru GPU/A16. Geometrycznie poza autami i w 192 raw brak zmian. Dodatkowy interpolant pochodzi z r1; r3 dodaje dane/ALU, nie nowy przebieg lub próbkę tekstury.
 
-Końcowy EditMode 323/323 passed, pojedyncze testy osobówek zielone. Pierwszy pełny GIS zakończony: 639 passed, 1 xfailed, 1 failed w 709,86 s. Jedyna porażka to potwierdzone stare SHA overrides/meshing w fidelity_qa po dołączeniu main. Raport zostanie odświeżony kanonicznie pod heavy, potem pojedynczy test fidelity i ponowny pełny GIS. Wynik powtórny wymaga odbioru. Dopóki tego nie zakończono, runda nie jest gotowa do przekazania.
+Końcowy EditMode 323/323 passed, pojedyncze testy osobówek zielone. Pierwszy pełny GIS zakończony: 639 passed, 1 xfailed, 1 failed w 709,86 s. Jedyna porażka to potwierdzone stare SHA overrides/meshing w fidelity_qa po dołączeniu main. Raport odświeżono kanonicznie pod heavy; osobny test fidelity 9 passed i 1 xfailed, ponowny pełny GIS 640 passed i 1 xfailed w 774,96 s (exit 0). Końcowy proof źródeł/GLB/raw i 28 natywnych materiałów przeszedł, heavy zwolniony. Runda gotowa do niezależnej recenzji lidera.
 
 Ocena końcowa wyglądu: PARTIAL. Najbardziej przekonująca poprawa to geometria ramion, mniejsza — czerń. Pozostają brud tyłu, ogólny model/materiały i powtarzalność floty. Bez deklaracji fotorealizmu, nowego odbioru krytyka lub testu telefonu.
 
