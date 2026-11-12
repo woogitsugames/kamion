@@ -30,3 +30,8 @@
 - 18:29 (s14) r2 start: merge main (FF 9a1961db0). Klucze A/B per prefiks: rq_ab pp:/ps:/vc: (WorldInstances.SyncAbMasks). G3-A ≤300 m: ~600 pojazdów
   (stały cull 300 m na wszystkich tierach) vs G3-B ~50. Build APK diagA2 w tle.
   NASTĘPNY KROK: `pwsh artifacts/a16-perf/run-diag1.ps1 -Segment A -OutTag diagA2 -Apk <apk> -Only ab_veh,ab_vcar,ab_vtruck,ab_lamp,ab_signs,ab_fabp,ab_lmk,ab_misc,ab_pshadow,ab_vshadow,ab_vc150`
+- 18:51 diagA2 (G3-A uncapped scale 0.75, APK 7ebb0151d1, Δ A-B p50 GPU/CPU ms): veh +1.94/+5.24, car+van+contact +1.29/+4.44,
+  tractor/trailer/bus +0.10/+1.13, lamp -0.15/+0.65, signs -0.13/+0.30, fab -0.04/+0.13, landmark/facade +0.21/+0.93, misc -0.66/-0.72,
+  prop shadows (ps:all) 0.00/+0.04, vehicle shadows -0.46/-0.11, vehicle cull 300->150 m +0.35/+2.41. => koszt = auta osobowe <150 m
+  (LOD0 12 / LOD1 11 / LOD2 7 submeshy na prototyp, 24 prototypy). Cienie propsów nic nie kosztują.
+  NASTĘPNY KROK: diagA3: contact patch / LOD aut / mirrorlow (klucze w run-diag1.ps1).
