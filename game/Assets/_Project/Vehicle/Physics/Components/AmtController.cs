@@ -361,8 +361,10 @@ namespace Game.Vehicle.Physics
                     double after = rpm * GearRatio(Gear + k) / GearRatio(Gear) * (ebMode ? 1 : speedFactor);
                     // Light-load skip shift (ADR 0134): a light combination with a firm pedal skips a gear when the engine
                     // still lands in the full-torque plateau and the truck keeps accelerating strongly in the target gear.
+                    // It must also land at or above the lugging guard (down-shift line - 150, incl. the grade bonus), or it hunts (6 % climb).
                     bool lightSkip = false;
-                    if (k == 2 && !ebMode && throttle > 0.5 && Def.skipShiftMinRpmAfter > 0 && after < minAfter && after >= Def.skipShiftMinRpmAfter)
+                    if (k == 2 && !ebMode && throttle > 0.5 && Def.skipShiftMinRpmAfter > 0 && after < minAfter
+                        && after >= Math.Max(Def.skipShiftMinRpmAfter, downLine - 150))
                     {
                         double fSkip = Tractive(engine, Gear + k, after * MathUtil.RpmToRadS, throttle, wheelRadius, fdEff);
                         lightSkip = (fSkip - resistance) / Math.Max(massKg, 1) >= Def.skipShiftMinAccel * throttle;
