@@ -116,10 +116,10 @@ namespace PhysicsRunner.Sim
         }
 
         /// <summary>Cargo for a configuration preset (laden40 = 40.0 t gross combination mass).</summary>
-        public static CargoDefinition CargoFor(Scenario sc, VehicleModel tractor)
+        public static CargoDefinition CargoFor(Scenario sc, VehicleModel tractor, DefinitionSet defs = null)
         {
             var c = new CargoDefinition();
-            var tdef = Defs.Trailers[sc.trailer];
+            var tdef = (defs ?? Defs).Trailers[sc.trailer];
             double empty = MassProperties.Compute(tdef.massElements).Mass;
             switch (sc.combination)
             {
@@ -135,13 +135,14 @@ namespace PhysicsRunner.Sim
             return c;
         }
 
-        /// <summary>Creates the models and bodies placed at static equilibrium on the ground.</summary>
-        public static SimContext Setup(Scenario sc, RunOptions opt)
+        /// <summary>Creates the models and bodies placed at static equilibrium on the ground. defs = test-provided definition set (comparison tests); null = the production JSONs.</summary>
+        public static SimContext Setup(Scenario sc, RunOptions opt, DefinitionSet defs = null)
         {
+            defs ??= Defs;
             var settings = new SolverSettings { substeps = opt.Substeps ?? sc.substeps };
-            var tractor = Defs.CreateModel(sc.vehicle, settings);
+            var tractor = defs.CreateModel(sc.vehicle, settings);
             TrailerModel trailer = null;
-            if (sc.HasTrailer) trailer = Defs.CreateTrailer(sc.trailer, CargoFor(sc, tractor), settings);
+            if (sc.HasTrailer) trailer = defs.CreateTrailer(sc.trailer, CargoFor(sc, tractor, defs), settings);
             bool coupled = sc.overrides.coupled;
             var combo = new CombinationModel(tractor, trailer, trailer != null && coupled);
             tractor.EnduranceBrakesEnabled = sc.overrides.enduranceBrakes;
@@ -293,10 +294,10 @@ namespace PhysicsRunner.Sim
             }
         }
 
-        public static RunResult Run(Scenario sc, RunOptions opt = null)
+        public static RunResult Run(Scenario sc, RunOptions opt = null, DefinitionSet defs = null)
         {
             opt ??= new RunOptions();
-            var s = Setup(sc, opt);
+            var s = Setup(sc, opt, defs);
             var driver = CreateDriver(sc, s, out Vec3 center);
             double dt = opt.Dt ?? sc.dt;
             double duration = opt.Duration ?? sc.duration;
