@@ -19,3 +19,4 @@ Krok 12: przed pierwszym Red doprecyzowano ten sam test hali: wymaga jawnego zna
 2026-11-12T11:27:45.5999335+01:00 Zakończono bazowy World pod osobnym slotem heavy; źródła innych dziedzin bez edycji.
 2026-11-12T11:27:46.0016487+01:00 Świat bazowy r5 gotowy bez fallback=True; następnie import Low/High i pełne Before, bez nowej zmiany produkcyjnej.
 2026-11-12T11:29:46.1786650+01:00 Pełny import bazowy Low/High i odtworzenie generowanych prefabów pojazdów nowego main potwierdzone IMPORT_RESULT/TRUCK_RESULT: OK; sprawdzono 151 gotowych map Medium bez niejawnego build_all. Źródła cab/truck bez edycji. Następnie validate.ps1 -Phase Before.
+2026-11-12T11:30:47.7751446+01:00 Zapisano rendery before/Low-clear wszystkich kamer; ocena PNG i budżetu nadal w toku.
