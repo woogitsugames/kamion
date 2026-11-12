@@ -56,6 +56,11 @@ foreach ($tier in @('Low','High')) {
             $captureInputs = @('Data/Regions/bialystok-industrial-c/sbs_references.json',
                 'Data/Regions/bialystok-industrial-c/generated/world_manifest.json',
                 'art-source/world/materials/materials_spec.json',
+                'game/Assets/_Project/Rendering/Shaders/Sky.shader',
+                'game/Assets/_Project/Environment/Shaders/WorldPBR.shader',
+                'game/Assets/_Project/Rendering/Resources/Sky/T_ClearClouds.png',
+                'game/Assets/_Project/Rendering/Resources/Sky/ClearCloudsSource.json',
+                'game/Assets/_Project/Rendering/Resources/QualityProfile.asset',
                 "game/Assets/_Generated/World/bialystok-industrial-c/$scene.unity",
                 'game/Assets/_Generated/World/bialystok-industrial-c/Meshes/world_edge.asset',
                 "game/Assets/_Generated/World/bialystok-industrial-c/Meshes/$tier/world_edge_far.asset")
@@ -63,7 +68,7 @@ foreach ($tier in @('Low','High')) {
             foreach ($inputFile in $captureInputs) { $hashes[$inputFile] = (Get-FileHash -LiteralPath $inputFile -Algorithm SHA256).Hash }
             $hashes['proof-cameras.json'] = (Get-FileHash -LiteralPath "$out/proof-cameras.json" -Algorithm SHA256).Hash
             $capture = @{branch=(git branch --show-current);commit=(git rev-parse HEAD);phase=$label;tier=$tier;lighting=$lighting;inputs_sha256=$hashes;started=(Get-Date -Format o)}
-            & pwsh scripts/visual-qa.ps1 -Scene $scene -Tier $tier -Lighting $lighting `
+            & pwsh scripts/visual-qa.ps1 -Scene $scene -Tier $tier -Lighting $lighting -Width 2340 -Height 1080 `
                 -Gate3 "$out/proof-cameras.json" -OutputDir "$out/$label/$tier-$lighting"
             if ($LASTEXITCODE -ne 0) { throw "Render failed: $label/$tier-$lighting" }
             $proofIds = @((Get-Content "$out/proof-cameras.json" -Raw | ConvertFrom-Json).cameras | ForEach-Object id)
@@ -87,4 +92,6 @@ foreach ($tier in @('Low','High')) {
         Save-Step "Zapisano rendery $label/$tier-$lighting wszystkich kamer; ocena PNG i budżetu nadal w toku."
     }
 }
+& pwsh -File "$out/validate-native.ps1" -Phase $label
+if($LASTEXITCODE -ne 0){throw 'Native photograph-aspect capture failed'}
 "$(Get-Date -Format o)" | Set-Content "$out/$Phase.complete"

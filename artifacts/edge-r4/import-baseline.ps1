@@ -3,6 +3,9 @@ $ErrorActionPreference = 'Stop'
 $root = (Resolve-Path "$PSScriptRoot/../..").Path
 Set-Location $root
 . scripts/env.ps1
+$cloudPath=Join-Path $root 'game/Assets/_Project/Rendering/Resources/Sky/T_ClearClouds.png'
+$cloudBytes=[IO.File]::ReadAllBytes($cloudPath)
+if(($cloudBytes[0..7] -join ',') -ne '137,80,78,71,13,10,26,10'){throw 'Cloud PNG missing or still an LFS pointer'}
 if ((git branch --show-current).Trim() -ne 'gpt-edge-r4') { throw 'Wrong branch' }
 $receipt = Get-Content "$PSScriptRoot/baseline-preparation-receipt.json" -Raw | ConvertFrom-Json
 if ($receipt.materials_exit_code -ne 0 -or $receipt.world_exit_code -ne 0) { throw 'Baseline preparation failed' }

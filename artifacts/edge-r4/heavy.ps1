@@ -7,6 +7,10 @@ param(
     [ValidateSet('before','after','prototype')] [string]$Phase = 'after'
 )
 $ErrorActionPreference = 'Stop'
+$env:OMP_NUM_THREADS='1'
+$env:OPENBLAS_NUM_THREADS='1'
+$env:MKL_NUM_THREADS='1'
+$env:NUMEXPR_NUM_THREADS='1'
 $edgeRoot = (Resolve-Path "$PSScriptRoot/../..").Path
 Set-Location $edgeRoot
 $owner = (git branch --show-current).Trim()
