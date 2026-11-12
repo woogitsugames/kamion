@@ -67,4 +67,10 @@ foreach($file in Get-ChildItem -LiteralPath $PSScriptRoot -Recurse -File){
     if(-not(Test-Path -LiteralPath $target) -or (Get-Item -LiteralPath $target).Length -ne $file.Length){throw "Delivery missing/different size: $relative"}
 }
 if((Get-FileHash "$PSScriptRoot/REPORT.md").Hash -ne (Get-FileHash "$destination/REPORT.md").Hash){throw 'Delivered REPORT differs'}
+Add-Content "$PSScriptRoot/STATUS.md" 'Dostawa rundy5 do main przez robocopy zakończona; wszystkie rozmiary plików i SHA256 REPORT zweryfikowane. Bez merge/push. Następny krok: r6 i merge aktualnego main.'
+git add -f artifacts/light-r5/STATUS.md
+git commit -m 'wip(light): record verified round5 artifact delivery'
+& robocopy $PSScriptRoot $destination /E /R:1 /W:1 /NFL /NDL /NP /NJH /NJS
+if($LASTEXITCODE -ge 8){throw 'Final metadata delivery failed'}
+if((Get-FileHash "$PSScriptRoot/STATUS.md").Hash -ne (Get-FileHash "$destination/STATUS.md").Hash){throw 'Delivered STATUS differs'}
 Write-Output "ROUND5_DELIVERY: verified all file sizes and REPORT SHA256; no merge/push. Next: branch gpt-light-r6 from current round, merge latest main."
