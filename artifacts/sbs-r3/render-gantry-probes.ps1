@@ -9,6 +9,7 @@ try {
     $import=Get-Content artifacts/sbs-r3/import-completed.json -Raw | ConvertFrom-Json
     $world='Data/Regions/bialystok-industrial-c/generated/world_manifest.json'
     if($import.exit_code -ne 0 -or $import.world_manifest_sha256 -ne (Get-FileHash $world).Hash.ToLowerInvariant()){throw 'Need completed matching import'}
+    if($import.materials_spec_sha256 -ne (Get-FileHash art-source/world/materials/materials_spec.json).Hash.ToLowerInvariant()){throw 'Imported material snapshot changed'}
     $paths=[ordered]@{probe_cameras=$cameraFile;production_cameras='Data/Regions/bialystok-industrial-c/sbs_cameras.json';references='Data/Regions/bialystok-industrial-c/sbs_references.json';world_manifest=$world;materials_spec='art-source/world/materials/materials_spec.json'}
     $inputDir=Join-Path $root 'inputs';New-Item -ItemType Directory -Force $inputDir | Out-Null
     foreach($entry in $paths.GetEnumerator()){Copy-Item -LiteralPath $entry.Value -Destination (Join-Path $inputDir ($entry.Key+'.json')) -Force}
@@ -36,3 +37,4 @@ try {
         }
     }
 } finally {Pop-Location}
+
