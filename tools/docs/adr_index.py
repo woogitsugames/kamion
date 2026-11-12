@@ -78,9 +78,9 @@ def audit(adrs):
     no_status = [a for a in adrs if a["status"] is None]
 
     dangling = defaultdict(set)
-    for dirpath, _dirnames, filenames in os.walk(REPO_ROOT):
-        if ".git" in dirpath.split(os.sep):
-            continue
+    skip = {".git", ".claude", "Library", "Data", "_Generated", ".venv", "node_modules", "artifacts", "Temp", "obj", "bin"}
+    for dirpath, dirnames, filenames in os.walk(REPO_ROOT):
+        dirnames[:] = [d for d in dirnames if d not in skip]
         for fn in filenames:
             if not fn.lower().endswith(REF_EXTENSIONS):
                 continue

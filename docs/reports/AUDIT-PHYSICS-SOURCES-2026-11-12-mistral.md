@@ -155,3 +155,10 @@ Skala pomocnicza: wartości klasowe (class reference) oznaczają „zgodne z kla
 - Dane silnika i skrzyni (Volvo D13K500 klasa, ZF TraXon) oraz retarder 4000 Nm/600 kW są **POTWIERDZONE** w kartach producentów.
 - Największa grupa ryzyka to parametry „czujące się” w kabinie: zawieszenie kabiny, sztywności przechyłu, tarcie opon, strategia AMT — wszystkie BRAK ŹRÓDŁA / UNVERIFIED.
 - Żadna zmiana kodu ani danych nie została wykonana; raport jest jedynym plikiem tego PR.
+
+---
+## Uwagi lidera po recenzji (s13, 2026-11-12)
+- „Typowo 1,24” dla wzmocnienia ruchu naczepy (rearward amplification) — **brak źródła**: strona FHWA podaje tylko „approximately 1.0”, więc obecny wynik modelu jest zgodny. Pozycja UNVERIFIED.
+- Przyczyna z punktu #1 (skok naczepy) przeczy `docs/PHYSICS_VALIDATION.md:147` (tam: brak skręcania ramy) — do weryfikacji, nie do wdrożenia.
+- Punkty #3, #5, #10: bez cytatu albo fizycznie błędne — nie wdrażać bez źródła.
+- Ostrzeżenie niskiego ciśnienia „R13: 6,5 bar” — bez cytatu; repo ma 5,5 bar. Sprawdzić w tekście regulaminu EKG ONZ R13 przed zmianą.

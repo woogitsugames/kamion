@@ -65,3 +65,8 @@ Rdzeń pętli jazdy — fizyka w `FixedUpdate`, wizualy z interpolacją, input, 
 2. `BuildTelemetry()` (5 Hz) i overlay diagnostyczny (2 Hz) alokują ~1–2 KB stringów na odświeżenie — akceptowalne, ale tanio można dodać cache ostatniej wartości; dodatkowo boxing enuma `AmtState` w `StringBuilder.Append`.
 3. `CabScreens.Sample` alokuje `DriverInput` tylko gdy ekrany nie mają podpiętego pojazdu; `NavLayout.Abbreviate` alokuje tylko przy pierwszej wystąpieniu nazwy ulicy (cache działa).
 Nie znaleziono: LINQ, `ToArray/ToList`, `Physics.*All` bez NonAlloc, `StartCoroutine` w pętli, boxingu enumów w słownikach ani string-kluczy shaderowych w pętli jazdy.
+
+---
+## Uwagi lidera po recenzji (s13, 2026-11-12)
+- Najważniejsze: etykieta gyro `DrivingHud.cs:751-752` tworzy stringi co klatkę (opóźnienie odświeżania przesuwane dopiero w `:755`); `DiagnosticsOverlay.cs:193-195` alokuje także przy ukrytym panelu.
+- Raport na starszej bazie — pomija ok. 24 pliki zmienione później (steer-fold, audio, truck-feel). Wielkości alokacji to szacunki → UNVERIFIED.

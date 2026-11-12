@@ -3,7 +3,7 @@
 Automatycznie generowany przez `tools/docs/adr_index.py` — nie edytuj ręcznie.
 Ponowne wygenerowanie: `python3 tools/docs/adr_index.py` (z katalogu głównego repo).
 
-Liczba ADR: **111** (numery 0001–0131, z lukami — patrz raport audytu).
+Liczba ADR: **116** (numery 0001–0138, z lukami — patrz raport audytu).
 
 | Numer | Tytuł | Status | Data | Link |
 |---|---|---|---|---|
@@ -116,5 +116,10 @@ Liczba ADR: **111** (numery 0001–0131, z lukami — patrz raport audytu).
 | 0124 | Zabudowa r8 — działki z bliska i ulica mieszkaniowa (brama tylko z dojazdem, pas zjazdu jako wielokąt, strefy… | propozycja, **runda r1 — jedna iteracja wizualna, przerwana limitem sesji** (world-builder, gałąź `buildings-… | 2026-11-11 | [0124-buildings-r8.md](0124-buildings-r8.md) |
 | 0125 | gate 3 recognisability (G3-B): portal, signs, noise screens, HV line | implemented on branch `gate3-signs` (base main `ce3f1a77`, 2026-11-11); not merged. Gate 3 itself is NOT | 2026-11-11 | [0125-gate3-signs-gantries.md](0125-gate3-signs-gantries.md) |
 | 0126 | G3-B trade frontage (recognisability): authored facades of the showroom row | implemented on branch `g3b-frontage` (base main `1d4674ab`, main `76b3fb76` merged in, 2026-11-12); not merge… | 2026-11-12 | [0126-g3b-frontage.md](0126-g3b-frontage.md) |
+| 0127 | G3-B legibility on Low: lattice portal at distance, HV tower, noise screens | implemented on branch `g3b-lowread` (base main `31e54e00`, 2026-11-12); not merged. Gate 3 is NOT re-judged | 2026-11-12 | [0127-g3b-low-readability.md](0127-g3b-low-readability.md) |
 | 0130 | SBS G3-B pose calibration: 3281350, 297817, 1801374, 494288 | implemented on branch `sbs-poses` (base main `587adc32`, 2026-11-12, s12); not merged. Data only: no world, | 2026-11-12 | [0130-sbs-poses-g3b.md](0130-sbs-poses-g3b.md) |
 | 0131 | Render P1 fixes on main (s12): crack sealant, road covers at night, FurnitureSign variants, retro bridge GC | implemented on branch `render-p1` (base main `587adc32`, 2026-11-12); not merged. | 2026-11-12 | [0131-render-p1.md](0131-render-p1.md) |
+| 0134 | Truck feel after the Fold test: gear-change nod, light-load skip shifts, smooth AMT torque, cab damping | proposed (2026-11-12, agent truck-feel, session 12). Touches `AmtController`, `Engine` (engine brake during | 2026-11-12 | [0134-truck-feel.md](0134-truck-feel.md) |
+| 0135 | kierownica dotykowa „przesuw kciukiem” i orientacja ekranu na składanym telefonie | proponowany (2026-11-12, gałąź `steer-fold`). Źródło: test właściciela na Samsungu Galaxy Fold (APK `11db0552… | 2026-11-12 | [0135-steer-fold.md](0135-steer-fold.md) |
+| 0137 | Silnik z nagrań ElevenLabs obok syntezy (przełącznik w ustawieniach) | Proposed (agent audio, s12), 2026-11-12. Ocena brzmienia: właściciel (telefon, głośnik i słuchawki). | 2026-11-12 | [0137-elevenlabs-engine-audio.md](0137-elevenlabs-engine-audio.md) |
+| 0138 | Partia ElevenLabs REGEN-01: wybór wariantów i wiersz silnika z jednego przejazdu przez obroty | Proposed (agent audio, s13), 2026-11-12. Ocena brzmienia: właściciel (telefon, głośnik i słuchawki). | 2026-11-12 | [0138-audio-regen01.md](0138-audio-regen01.md) |
