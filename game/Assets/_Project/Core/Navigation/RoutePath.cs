@@ -31,6 +31,13 @@ namespace Game.Core.Navigation
         public readonly float[] ManTurn;
         public readonly byte[] ManExit;
         public readonly ushort[] ManName;
+        /// <summary>Directed edge the truck arrives on for this manoeuvre (-1: none, e.g. Arrive).</summary>
+        public readonly int[] ManIn;
+        /// <summary>Lane guidance for the manoeuvre: lane count of the incoming edge, direction class and the
+        /// bitmasks of allowed / recommended lanes (bit i = lane i, OSM order, leftmost = bit 0).</summary>
+        public readonly byte[] ManLaneCount;
+        public readonly byte[] ManLaneCls;
+        public readonly uint[] ManLanesAllowed, ManLanesRec;
         public int ManCount;
 
         public Vector2 Destination;
@@ -49,6 +56,8 @@ namespace Game.Core.Navigation
             Directed = new int[edgeCapacity];
             int m = edgeCapacity + 4;
             ManPoint = new int[m]; ManType = new Maneuver[m]; ManTurn = new float[m]; ManExit = new byte[m]; ManName = new ushort[m];
+            ManIn = new int[m]; ManLaneCount = new byte[m]; ManLaneCls = new byte[m];
+            ManLanesAllowed = new uint[m]; ManLanesRec = new uint[m];
         }
 
         /// <summary>Capacity that fits any simple route of <paramref name="g"/> (every point of every edge in both directions).</summary>
@@ -72,12 +81,33 @@ namespace Game.Core.Navigation
             return true;
         }
 
-        public void AddManeuver(int point, Maneuver type, float turnDeg, int exit, ushort name)
+        public void AddManeuver(int point, Maneuver type, float turnDeg, int exit, ushort name, int inDirected = -1)
         {
             if (ManCount >= ManPoint.Length) return;
             ManPoint[ManCount] = point; ManType[ManCount] = type; ManTurn[ManCount] = turnDeg; ManExit[ManCount] = (byte)Mathf.Clamp(exit, 0, 255);
-            ManName[ManCount] = name;
+            ManName[ManCount] = name; ManIn[ManCount] = inDirected;
+            ManLaneCount[ManCount] = 0; ManLaneCls[ManCount] = 0; ManLanesAllowed[ManCount] = 0; ManLanesRec[ManCount] = 0;
             ManCount++;
+        }
+
+        /// <summary>Lane guidance of manoeuvre <paramref name="k"/>: which lanes of the incoming edge lead in the turn direction.</summary>
+        public void SetLaneGuidance(RouteGraph g, int k, int inDirected, float turnDeg)
+        {
+            ManIn[k] = inDirected;
+            if (inDirected < 0) { ManLaneCount[k] = 0; ManLaneCls[k] = 0; ManLanesAllowed[k] = 0; ManLanesRec[k] = 0; return; }
+            int e = inDirected >> 1;
+            bool rev = RouteGraph.Reversed(inDirected);
+            int n = Mathf.Min(g.LaneCount(e, rev), 32);
+            byte cls = LaneGuidance.ClassBit(turnDeg);
+            uint allowed = 0u, rec = 0u;
+            for (int i = 0; i < n; i++)
+            {
+                byte m = g.LaneMask(e, rev, i);
+                if ((m & cls) == 0) continue;
+                allowed |= 1u << i;
+                if ((m & ~(byte)cls & ~RouteGraph.LaneThrough) == 0) rec |= 1u << i;   // only the turn direction (and through) marked
+            }
+            ManLaneCount[k] = (byte)n; ManLaneCls[k] = cls; ManLanesAllowed[k] = allowed; ManLanesRec[k] = rec;
         }
 
         /// <summary>Copies another path (same capacities) - e.g. the start route kept while a new one is planned.</summary>
@@ -88,7 +118,10 @@ namespace Game.Core.Navigation
             System.Array.Copy(o.Directed, Directed, o.DirectedCount); DirectedCount = o.DirectedCount;
             System.Array.Copy(o.ManPoint, ManPoint, o.ManCount); System.Array.Copy(o.ManType, ManType, o.ManCount);
             System.Array.Copy(o.ManTurn, ManTurn, o.ManCount); System.Array.Copy(o.ManExit, ManExit, o.ManCount);
-            System.Array.Copy(o.ManName, ManName, o.ManCount); ManCount = o.ManCount;
+            System.Array.Copy(o.ManName, ManName, o.ManCount); System.Array.Copy(o.ManIn, ManIn, o.ManCount);
+            System.Array.Copy(o.ManLaneCount, ManLaneCount, o.ManCount); System.Array.Copy(o.ManLaneCls, ManLaneCls, o.ManCount);
+            System.Array.Copy(o.ManLanesAllowed, ManLanesAllowed, o.ManCount); System.Array.Copy(o.ManLanesRec, ManLanesRec, o.ManCount);
+            ManCount = o.ManCount;
             Destination = o.Destination; DestinationName = o.DestinationName; CostSeconds = o.CostSeconds;
             Version = System.Math.Max(Version, o.Version) + 1;
         }
@@ -101,6 +134,25 @@ namespace Game.Core.Navigation
             if (a < 45f) return right ? Maneuver.SlightRight : Maneuver.SlightLeft;
             if (a < 135f) return right ? Maneuver.Right : Maneuver.Left;
             return right ? Maneuver.SharpRight : Maneuver.SharpLeft;
+        }
+    }
+
+    /// <summary>
+    /// Matches a manoeuvre's turn angle to the OSM turn:lanes direction classes (wiki Key:turn) and to the lane
+    /// masks of the incoming edge: which lanes lead in the chosen direction (allowed) and which are dedicated to
+    /// it (recommended). OSM has no "sharp" / merge classes: sharp turns map to left / right, merges are not
+    /// matched. Pure static, no allocation.
+    /// </summary>
+    public static class LaneGuidance
+    {
+        /// <summary>Lane direction bit (RouteGraph.Lane*) matching the signed turn angle (+ = right).</summary>
+        public static byte ClassBit(float turnDeg)
+        {
+            float a = Mathf.Abs(turnDeg);
+            if (a >= 150f) return RouteGraph.LaneReverse;
+            if (a >= 60f) return turnDeg > 0f ? RouteGraph.LaneRight : RouteGraph.LaneLeft;
+            if (a >= 25f) return turnDeg > 0f ? RouteGraph.LaneSlightRight : RouteGraph.LaneSlightLeft;
+            return RouteGraph.LaneThrough;
         }
     }
 }

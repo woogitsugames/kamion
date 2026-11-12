@@ -19,6 +19,8 @@ Sources (texts read 2026-11-09):
 
 from __future__ import annotations
 
+import math
+
 # --------------------------------------------------------------------------------------------
 # Road class mapping. OSM `highway` -> Polish technical class (PTB2022 § 11). WORKING_VALUE:
 # the mapping is ours (OSM classes are functional, not technical). Urban Białystok assumed.
@@ -174,9 +176,10 @@ P10_GAP = 0.50
 P10_EDGE_MAX = 0.50
 P10_WIDTH = 4.0                     # pkt 4.2.1: crossing width s = 4.0 m (>= 2.5 m in built-up areas)
 P12_W = 0.50                        # rys. 4.2.3.1: STOP line 0.5 m
-# P-11 cycle crossing: two rows of squares. UNVERIFIED against [ZNAKI-Z2] pkt 4.2.2 (not at hand): 0.4 m squares,
-# 0.4 m gaps, rows 2.0 m apart (inner edges) read off the GUGiK 0.08 m orthophoto at Rondo Putry (ADR 0093).
-P11_SQUARE, P11_GAP, P11_CLEAR = 0.40, 0.40, 2.0
+# P-11 cycle crossing: two rows of squares. [ZNAKI-Z2] rys. 4.2.2.1 (Dz.U. 2019 poz. 2311, str. 569, PDF
+# D2019000231102.pdf on isap.sejm.gov.pl): 0.5 m squares with 0.5 m gaps; pkt 4.2.2 (str. 569): crossing
+# width >= 1.8 m (one-way) / 3.0 m (two-way). Rows 2.0 m apart (inner edges) per ADR 0093.
+P11_SQUARE, P11_GAP, P11_CLEAR = 0.50, 0.50, 2.0
 P8_MIN_LANE_W = 2.5                 # ADR 0093: no arrow in a lane narrower than this (taper of a slip lane)
 P13_BASE, P13_GAP, P13_H = 0.50, 0.25, 0.70   # rys. 4.2.4.1: triangles
 P14_LEN, P14_GAP, P14_DEPTH = 0.75, 0.25, 0.50  # rys. 4.2.5.1: rectangles 0.5 deep (0.375 m2/mb)
@@ -212,10 +215,19 @@ SURFACE_OF = {"yard_paving": "paving", "yard_behaton": "paving", "sidewalk_pavin
 SIGN_H_MIN = 2.00
 SIGN_H_SIDEWALK = 2.20
 SIGN_H_OVERHEAD = 5.00
-# Sizes ("średnie" group, used on Z/G/GP streets) – WORKING_VALUE: Table 1.1 of [ZNAKI-Z1] not yet read;
-# values are common catalogue plate sizes (triangle side 900, disc 800, square 800, octagon 800 mm).
-# To be verified against Tabl. 1.1 before release.
-SIGN_SIZE = {"triangle": 0.90, "disc": 0.80, "square": 0.80, "octagon": 0.80, "diamond": 0.80}
+# Sizes, grupa wielkości "średnie" (S) of [ZNAKI-Z1] pkt 1.2.1 (Dz.U. 2019 poz. 2311, printed pp. 2-3 /
+# PDF pp. 7-8): medium on single-carriageway national and voivodeship roads — our region's DK8/DK19/DK65
+# (OSM trunk -> class GP) and DW675 are modelled single-carriageway, city streets are lower classes;
+# A-7/B-20 never smaller than medium (pkt 1.2.1). Dimensions: Tabela 1.1 (printed p. 4 / PDF p. 9) —
+# A side 900 mm, B diameter 800 mm, D base 600+150n mm (n = 0 here); Tabela 5.1 (printed p. 173 / PDF p. 178)
+# + pkt 5.2.1.1 (printed p. 180 / PDF p. 185) — D-1 side 600 mm (repeats 400 mm). B-20 octagon:
+# pkt 3.1.1 (printed p. 91 / PDF p. 96) + Tabela 3.1 (printed p. 92 / PDF p. 97) — the 800 mm is the
+# diameter of the circle INSCRIBED in the octagon, so the plate corner-to-corner = 800/cos(pi/8) mm.
+# Mesh convention (props.plate, gate3_landmarks._outline, furniture stacking): the value is the plate's bounding size -
+# disc diameter, square side, octagon corner-to-corner and DIAMOND DIAGONAL (vertices on the axes). D-1 side 600 mm
+# -> diagonal 0.60*sqrt(2) = 0.849 m (integration r4: 0.60 here would make the D-1 side 0.42 m).
+SIGN_SIZE = {"triangle": 0.90, "disc": 0.80, "square": 0.60,
+             "octagon": 0.80 / math.cos(math.pi / 8), "diamond": 0.60 * math.sqrt(2)}
 SIGN_LATERAL = 0.75         # WORKING_VALUE: plate edge 0.5-1.0 m behind the kerb face (never over the kerb)
 SIGN_POST_D = 0.0603        # Ø60.3 mm galvanised tube, standard Polish sign post (catalogue) WORKING_VALUE
 SPEED_SIGN_AFTER_JUNCTION = 30.0  # WORKING_VALUE distance; rule: a B-33 limit ends at the next junction

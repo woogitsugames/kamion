@@ -38,6 +38,10 @@ namespace Game.UI
         float m_NextRefresh;
         string m_Header;
         readonly StringBuilder m_Sb = new StringBuilder(1024);
+        int m_LastFpsTarget = int.MinValue;
+        int m_LastTierLevel = int.MinValue;
+        string m_LastBody;
+        bool? m_LastHideLabel;
 
         public static DiagnosticsOverlay Create(Camera camera, IPlatformServices platform, DiagnosticsSampler sampler)
         {
@@ -190,9 +194,25 @@ namespace Game.UI
             m_View.Refresh();
             var ci = CultureInfo.InvariantCulture;
             int targetFps = Application.targetFrameRate;
-            m_FpsButtonLabel.text = targetFps > 0 ? $"Cel: {targetFps} FPS" : "Cel: auto";
-            m_TierButtonLabel.text = "Jakość: " + QualityTiers.Current;
-            m_HideButtonLabel.text = m_Panel.activeSelf ? "Ukryj" : "Diagnostyka";
+            // Button labels update only when the displayed value changes (they allocated a formatted string every 0.5 s before, even with the panel hidden).
+            if (targetFps != m_LastFpsTarget)
+            {
+                m_LastFpsTarget = targetFps;
+                m_FpsButtonLabel.text = targetFps > 0 ? "Cel: " + targetFps + " FPS" : "Cel: auto";
+            }
+            // QualityTiers.Current reads QualitySettings.names (a new array each call): gate on the level index instead.
+            int tierLevel = QualitySettings.GetQualityLevel();
+            if (m_LastTierLevel != tierLevel)
+            {
+                m_LastTierLevel = tierLevel;
+                m_TierButtonLabel.text = "Jakość: " + QualityTiers.Current;
+            }
+            bool hidden = !m_Panel.activeSelf;
+            if (m_LastHideLabel != hidden)
+            {
+                m_LastHideLabel = hidden;
+                m_HideButtonLabel.text = hidden ? "Diagnostyka" : "Ukryj";
+            }
             if (!m_Panel.activeSelf) return;
 
             var snap = m_Sampler != null ? m_Sampler.Snapshot : default;
@@ -224,7 +244,15 @@ namespace Game.UI
               .Append("  ·  Unity alloc ").Append((snap.UnityAllocatedBytes >> 20).ToString(ci))
               .Append(" / reserved ").Append((snap.UnityReservedBytes >> 20).ToString(ci)).Append(" MB")
               .Append("  ·  session ").Append(snap.SessionSeconds.ToString("F0", ci)).Append(" s");
-            m_Body.text = sb.ToString();
+            if (!SbEquals(sb, m_LastBody)) { m_LastBody = sb.ToString(); m_Body.text = m_LastBody; }
+        }
+
+        /// <summary>Char-by-char comparison of a StringBuilder with a string — no allocation; Text.text is set only when the displayed content changed.</summary>
+        static bool SbEquals(StringBuilder sb, string s)
+        {
+            if (s == null || sb.Length != s.Length) return false;
+            for (int i = 0; i < sb.Length; i++) if (sb[i] != s[i]) return false;
+            return true;
         }
     }
 }

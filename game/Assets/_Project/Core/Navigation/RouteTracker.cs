@@ -17,6 +17,13 @@ namespace Game.Core.Navigation
         public int Then;
         public ushort CurrentName;
         public byte CurrentLimit;
+        /// <summary>Lane guidance for the next manoeuvre: lane count of the incoming edge, direction class and
+        /// bitmasks of allowed / recommended lanes (bit i = lane i, OSM order, leftmost = bit 0); 0 / -1 = none.
+        /// Precomputed by the planner, copied here - no allocation in the driving loop.</summary>
+        public byte NextLaneCount;
+        public byte NextLaneCls;
+        public uint NextLanesAllowed, NextLanesRec;
+        public int NextLaneSrc;
     }
 
     /// <summary>
@@ -45,6 +52,7 @@ namespace Game.Core.Navigation
         public void Update(RoutePath p, Vector2 pos, float headingDeg, float speedMs, float dt, ref NavGuidance g)
         {
             g.Next = -1; g.Then = -1; g.NeedsReroute = false;
+            g.NextLaneCount = 0; g.NextLaneCls = 0; g.NextLanesAllowed = 0; g.NextLanesRec = 0; g.NextLaneSrc = -1;
             g.HasRoute = p != null && p.HasRoute;
             if (!g.HasRoute) { g.OnRoute = false; g.Arrived = false; g.RemainingM = 0f; g.NextM = float.NaN; m_Seg = -1; return; }
             if (p.Version != m_Version) { m_Version = p.Version; m_Seg = -1; m_OffT = 0f; }
@@ -75,6 +83,9 @@ namespace Game.Core.Navigation
                 if (ms > s + 1f || p.ManType[k] == Maneuver.Arrive)
                 {
                     g.Next = k; g.NextM = Mathf.Max(0f, ms - s);
+                    g.NextLaneCount = p.ManLaneCount[k]; g.NextLaneCls = p.ManLaneCls[k];
+                    g.NextLanesAllowed = p.ManLanesAllowed[k]; g.NextLanesRec = p.ManLanesRec[k];
+                    g.NextLaneSrc = p.ManIn[k];
                     if (k + 1 < p.ManCount && p.S[p.ManPoint[k + 1]] - ms <= ThenWithinM) g.Then = k + 1;
                     break;
                 }
