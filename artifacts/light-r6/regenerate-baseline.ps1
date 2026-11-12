@@ -42,12 +42,13 @@ if($fidelity.worldLogSha -ne $world.logSha -or $fidelity.logSha -ne (Get-FileHas
 if($phase -le 3){
     if(-not(Test-Path Data/raw/derived/bialystok-industrial-c/world/chunk_0_0.glb) -or -not(Test-Path Data/Regions/bialystok-industrial-c/route_start.json)){throw 'Missing import inputs; do not invoke un-slotted nested generation'}
     CheckMaterials
+    # Refuse before entering the restore scope: pre-existing settings edits must survive a failed import precondition.
+    git diff --quiet HEAD -- game/Assets/_Project/Rendering/Settings game/ProjectSettings
+    if($LASTEXITCODE){throw 'Settings dirty before import; preserve them and commit explicitly'}
     $log="$PSScriptRoot/import.$(Get-Timestamp).log"
     & pwsh $slot -Acquire -Owner gpt-light -PollSeconds 5 -StaleHours 87600
     if($LASTEXITCODE){throw 'No Unity slot; resume at Import after exact terminal failure'}
     try{
-        git diff --quiet HEAD -- game/Assets/_Project/Rendering/Settings game/ProjectSettings
-        if($LASTEXITCODE){throw 'Settings dirty before import; commit explicitly'}
         # Same Unity entry point/arguments as import-region.ps1, after its Python preflight was completed above under heavy.
         $code=Invoke-UnityBatch -LogFile $log -Arguments @('-executeMethod','Game.World.Import.RegionImporter.ImportBatch','-region','bialystok-industrial-c','-tiers','Low,High','-materialTier','Medium')
         if($code -ne 0 -or (Select-String -LiteralPath $log -Pattern 'Shader error|error CS\d+|\w+Exception:' -Quiet)){throw "Import failed: $code $log"}
