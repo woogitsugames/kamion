@@ -121,11 +121,14 @@ namespace Game.UI.Driving
         Text m_Speed, m_Gear, m_Rpm, m_Park, m_Status, m_Telemetry, m_GyroLabel;
         Text m_CamLabel, m_SteerLabel, m_TelLabel, m_RecLabel;
         Image m_RpmBar, m_RecImage, m_DriveBtn, m_NeutralBtn, m_ReverseBtn, m_ParkBtn, m_ManualBtn;
-        int m_LastSpeed = int.MinValue, m_LastRpmBucket = int.MinValue;
-        string m_LastGear;
+        int m_LastSpeed = int.MinValue, m_LastRpmBucket = int.MinValue, m_LastGyroKey = int.MinValue;
+        string m_LastGear, m_LastTelemetry;
         float m_NextTelemetry;
         readonly StringBuilder m_Sb = new StringBuilder(2048);
         static readonly string[] k_SpeedStrings = BuildNumbers(200);
+        static readonly string[] k_RpmStrings = BuildRpmStrings();
+        // Gyro label: prebuilt strings for the rounded display value (±90.0° in 0.1 steps) x sensor suffix.
+        static readonly string[] k_GyroStrings = BuildGyroStrings();
 
         /// <summary>Developer diagnostic text (status line, coupling line). Off by default in every build; toggled by launch argument
         /// devhud=1 (context) or by holding four fingers on the screen for 0.8 s.</summary>
@@ -730,11 +733,11 @@ namespace Game.UI.Driving
             }
             if (speed != m_LastSpeed) { m_LastSpeed = speed; m_Speed.text = k_SpeedStrings[speed]; }
             if (!ReferenceEquals(gear, m_LastGear)) { m_LastGear = gear; m_Gear.text = gear; }
-            int bucket = Mathf.RoundToInt(rpm / 50f);
+            int bucket = Mathf.Clamp(Mathf.RoundToInt(rpm / 50f), 0, k_RpmStrings.Length - 1);
             if (bucket != m_LastRpmBucket)
             {
                 m_LastRpmBucket = bucket;
-                m_Rpm.text = (bucket * 50).ToString(CultureInfo.InvariantCulture) + " obr/min";
+                m_Rpm.text = k_RpmStrings[bucket];   // prebuilt string, no per-frame allocation
                 m_RpmBar.rectTransform.anchorMax = new Vector2(Mathf.Clamp01(rpm / rpmMax), 1f);
                 m_RpmBar.color = rpm > 1900f ? k_Amber : k_Muted;
             }
@@ -755,9 +758,17 @@ namespace Game.UI.Driving
             {
                 m_NextTelemetry = Time.unscaledTime + 0.2f;
                 if (gyroTelemetry)
-                    m_GyroLabel.text = "Gyro: " + m_Ctx.Gyro.RelativeTiltDeg.ToString("F1", CultureInfo.InvariantCulture) + "°" + (m_Ctx.Gyro.HasSensor ? "" : "  (brak czujnika)");
+                {
+                    // Displayed value is rounded to 0.1°: look up the prebuilt string, update only on change.
+                    var g = m_Ctx.Gyro;
+                    int key = (Mathf.Clamp(Mathf.RoundToInt(g.RelativeTiltDeg * 10f), -900, 900) + 900) * 2 + (g.HasSensor ? 1 : 0);
+                    if (key != m_LastGyroKey) { m_LastGyroKey = key; m_GyroLabel.text = k_GyroStrings[key]; }
+                }
                 if (TelemetryVisible)
-                    m_Telemetry.text = BuildTelemetry();
+                {
+                    BuildTelemetry(m_Sb);
+                    if (!SbEquals(m_Sb, m_LastTelemetry)) { m_LastTelemetry = m_Sb.ToString(); m_Telemetry.text = m_LastTelemetry; }
+                }
             }
             if (m_RecImage != null) m_RecImage.color = m_Ctx.Recorder != null && m_Ctx.Recorder.IsRecording ? new Color(0.55f, 0.16f, 0.14f, 0.95f) : k_Button;
             RefreshStage2(v);
@@ -804,7 +815,8 @@ namespace Game.UI.Driving
             if (DevDiagnostics && TelemetryVisible && m_Ctx.CouplingStatus != null && Time.unscaledTime >= m_NextCoupling)
             {
                 m_NextCoupling = Time.unscaledTime + 0.1f;
-                m_Coupling.text = m_Ctx.CouplingStatus() ?? "";
+                var c = m_Ctx.CouplingStatus();
+                if (!ReferenceEquals(c, m_Coupling.text)) m_Coupling.text = c ?? "";
             }
             SetInset(m_MirrorLGo, m_MirrorL, m_Ctx.LeftMirrorTexture, m_L.ShowMirrorLeft);
             SetInset(m_MirrorRGo, m_MirrorR, m_Ctx.RightMirrorTexture, m_L.ShowMirrorRight);
@@ -843,15 +855,15 @@ namespace Game.UI.Driving
             return arr[Mathf.Clamp(gear, 0, arr.Length - 1)];
         }
 
-        string BuildTelemetry()
+        void BuildTelemetry(StringBuilder sb)
         {
             var ci = CultureInfo.InvariantCulture;
-            var sb = m_Sb; sb.Clear();
+            sb.Clear();
             var v = m_Ctx.Vehicle;
             if (v == null || !v.Initialized)
             {
                 sb.Append("TELEMETRIA (podgląd)\nprędkość —  obroty —  bieg —\nkoła: Fz [kN] · poślizg · kąt znosu · nawierzchnia\nkrok fizyki — µs");
-                return sb.ToString();
+                return;
             }
             var m = v.Model;
             var inp = v.Input;
@@ -902,7 +914,15 @@ namespace Game.UI.Driving
             sb.Append('\n');
             if (m_Ctx.Mixer != null) sb.Append("sterowanie: ").Append(m_Ctx.Mixer.SteeringSource);
             if (m_Ctx.Recorder != null && m_Ctx.Recorder.IsRecording) sb.Append("   REC ").Append(System.IO.Path.GetFileName(m_Ctx.Recorder.CurrentFile));
-            return sb.ToString();
+        }
+
+        /// <summary>Char-by-char comparison of a StringBuilder with a string — no allocation (Text has no char[] API, so the
+        /// new string is built only when the displayed content actually changed).</summary>
+        static bool SbEquals(StringBuilder sb, string s)
+        {
+            if (s == null || sb.Length != s.Length) return false;
+            for (int i = 0; i < sb.Length; i++) if (sb[i] != s[i]) return false;
+            return true;
         }
 
         void RefreshLabels()
@@ -930,6 +950,28 @@ namespace Game.UI.Driving
             var a = new string[17];
             a[0] = prefix;
             for (int i = 1; i < a.Length; i++) a[i] = prefix + i.ToString(CultureInfo.InvariantCulture);
+            return a;
+        }
+
+        static string[] BuildRpmStrings()
+        {
+            // Displayed rpm is quantized to 50 rpm buckets (unchanged): 0 .. 20000 obr/min.
+            var a = new string[401];
+            for (int i = 0; i < a.Length; i++) a[i] = (i * 50).ToString(CultureInfo.InvariantCulture) + " obr/min";
+            return a;
+        }
+
+        static string[] BuildGyroStrings()
+        {
+            // Same text as "Gyro: " + tilt.ToString("F1", InvariantCulture) + "°" + suffix, prebuilt once:
+            // tenth-degrees -900..900 (±90.0° in 0.1 steps) x sensor suffix present/absent.
+            var a = new string[1801 * 2];
+            for (int t = -900; t <= 900; t++)
+            {
+                string num = (t / 10f).ToString("F1", CultureInfo.InvariantCulture);
+                a[(t + 900) * 2] = "Gyro: " + num + "°" + "  (brak czujnika)";
+                a[(t + 900) * 2 + 1] = "Gyro: " + num + "°";
+            }
             return a;
         }
 
