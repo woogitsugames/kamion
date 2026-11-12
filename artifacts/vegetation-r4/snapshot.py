@@ -34,7 +34,10 @@ tracked = subprocess.check_output(['git','ls-files','-z','--','tools/worldgen','
     'Data/Regions/bialystok-industrial-c'],cwd=ROOT).decode('utf-8').split('\0')
 extensions = {'.py','.cs','.shader','.hlsl','.asset','.mat','.json','.yaml','.yml','.unity','.glb','.png'}
 report['source_files'] = {name: hashlib.sha256((ROOT/name).read_bytes()).hexdigest()
-    for name in tracked if name and (ROOT/name).is_file() and Path(name).suffix in extensions}
+    for name in tracked if name and (ROOT/name).is_file() and Path(name).suffix in extensions
+    and not name.startswith('Data/Regions/bialystok-industrial-c/generated/')
+    and name != 'art-source/world/props/props_meta.json'}
+report['source_scope_note'] = 'Tracked production inputs; generated region metadata and props_meta are recorded separately under files, not classified as unchanged source code.'
 instance_dest = dest/'instances'
 instance_dest.mkdir(exist_ok=True)
 report['instance_files'] = {}
