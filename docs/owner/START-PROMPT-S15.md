@@ -30,7 +30,6 @@ Pamięć projektu: `C:\Users\matma\.claude\projects\C--Users-matma-Documents-Cla
 | 0141 | krawędź mapy i tło (far_skyline; kominy EC w SBS 297817/150280) | Fable | `edge-r6c` |
 | 0144 | węzły r7: W-beam przez poręcz, filary z danych, żwir, spód pomostu, tablica F-10 w 482392 | Fable | `junctions-r7` |
 | 0146 | Putry/Andersa: wysokość latarni Y, pobocze 494288, mur 810896, tablice portalu Andersa (~0,6 m za wysoko), gzyms, dwuteowniki | Fable | `putry-andersa` |
-| — | integracja Mistrala r2 (#6–#14) na gałęzi `mistral-r2-int` | Opus | `mistral-r2-int` |
 
 **Fable tygodniowo ~90 % (reset 15.11 11:59).** Nowe zadania świata dawaj na Opus. Agentów Fable dokończ na Fable tylko wtedy, gdy limit na to pozwala.
 
@@ -56,7 +55,7 @@ Pamięć projektu: `C:\Users\matma\.claude\projects\C--Users-matma-Documents-Cla
   - Po integracji przeoceń 494288, 482392 i 320326 w `sbs_recognition.json`.
   - A16 Low: G3-B GPU p95 33,9; G3-A 34,5 po vehicleCullM 150. Budżet 33,3.
 - **Mistral:**
-  - Runda 2 (#6–#14): zrecenzowana (3 SCAL, 6 SCAL po drobnych poprawkach). Wszystkie scalone z poprawkami na gałęzi `mistral-r2-int`; ostatnio sprawdzane, które porażki `tests/gis` występują też na main. **Scal `mistral-r2-int` do main**, gdy jej live mówi gotowe. GitHub sam oznaczy PR-y jako scalone.
+  - Runda 2 (#6–#14): **scalona w s14** (`fc500083`, gałąź `mistral-r2-int` z poprawkami lidera; PR-y zamknięte). Worktree `mistral-r2-int` usuń przez `scripts/cleanup-disk.ps1`.
   - **Runda 3 + M9: PR-y #15–#20, gotowe, niezrecenzowane** (M9 znaki pionowe, M16 oktawa audio, M17 źródła fizyki, M18 oznakowanie z ISAP, M19 expectedFailMetrics, M20 HUD zero-alloc). Zrecenzuj je (komentarz po polsku) i scal. M20 zmienia C#, więc najpierw kompilacja Unity i pomiar GC. Właściciel mówi, że Mistral skończył.
   - Osobne zadania z recenzji Mistrala: duplikat `concrete_pole` w `materials.py` (świat, regeneracja); po #14 przebieg fidelity.
 
