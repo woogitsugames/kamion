@@ -457,6 +457,11 @@ def build(buf, net, gp: GorePlan):
         _build_island(buf, isl, ms, cs)
 
 
+GRAVEL_NOSE_GRIME = 1.0             # ADR 0144: COLOR_0.r of the gravel top of an authored traffic island
+GRAVEL_WEED_REACH_M = 0.9           # weeds reach this far in from the edge of the gravel (WORKING_VALUE, photo 320326319617139)
+GRAVEL_WEED_BANDS_M = (0.3, 0.9)    # inset rings of the visual mesh (vertices for the weed weight)
+
+
 def _build_island(buf, isl: Island, ms, cs):
     pg = shapely.segmentize(isl.poly.buffer(0), 1.0)
     ring = np.asarray(pg.exterior.coords)[:-1]
@@ -494,8 +499,33 @@ def _build_island(buf, isl: Island, ms, cs):
         # height: nearest ring vertex (kerb line follows the carriageway)
         d = np.hypot(V[:, None, 0] - ring[None, :, 0], V[:, None, 1] - ring[None, :, 1])
         z = zr[np.argmin(d, axis=1)] + h + lift
-        buf.add("road", mat, np.column_stack([V, z]), V.copy(), Tt, src="island:" + isl.id)
         buf.add("collision", cmat, np.column_stack([V, z]), V.copy(), Tt, src="island:" + isl.id)
+        if mat == "island_gravel":
+            # ADR 0144 (REVIEW s14-0128 P1-2): the gravel of an island nose is old, dirty crushed stone with weeds
+            # along its kerbs (Mapillary 320326319617139), not the clean bed of the centre island: COLOR_0.r = grime
+            # (Kamion/World PBR _VERTEX_GRIME, manifest vertex_grime), COLOR_0.g = weed weight, 1 at the edge of the
+            # gravel -> 0 at GRAVEL_WEED_REACH_M inside. Visual mesh in bands so the weights have vertices to live on.
+            rings = [poly]
+            for off_ in GRAVEL_WEED_BANDS_M:
+                inner = poly.buffer(-off_)
+                if inner.is_empty or inner.area < 0.2:
+                    break
+                rings.append(inner)
+            for k_, outer_ in enumerate(rings):
+                band = outer_ if k_ + 1 == len(rings) else outer_.difference(rings[k_ + 1])
+                for part in _parts(band):
+                    Vb, Tb = _triangulate(part, 0.7)
+                    if Vb is None:
+                        continue
+                    db = np.hypot(Vb[:, None, 0] - ring[None, :, 0], Vb[:, None, 1] - ring[None, :, 1])
+                    zb = zr[np.argmin(db, axis=1)] + h + lift
+                    dedge = shapely.distance(poly.exterior, shapely.points(Vb))
+                    COL = np.zeros((len(Vb), 4))
+                    COL[:, 0] = GRAVEL_NOSE_GRIME
+                    COL[:, 1] = np.clip(1.0 - dedge / GRAVEL_WEED_REACH_M, 0.0, 1.0)
+                    buf.add("road", mat, np.column_stack([Vb, zb]), Vb.copy(), Tb, src="island:" + isl.id, COL=COL)
+            return
+        buf.add("road", mat, np.column_stack([V, z]), V.copy(), Tt, src="island:" + isl.id)
 
     if inner_pg.is_empty or inner_pg.area < 0.5:
         top(Polygon(ring), "curb_concrete", "collision_curb", 0.0)

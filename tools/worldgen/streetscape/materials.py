@@ -332,14 +332,29 @@ M = {
     "kp_roof_white": {"color": [0.52, 0.52, 0.50], "rough": 0.8},
     # hero viaduct asset (ADR 0067, streetscape.hero_bridge): strip atlas on a CC0 scan (colour = atlas mean, so the
     # calibrated-set tint is 1), railing infill + galvanised steel, light crushed stone of the centre island
+    # ADR 0144 (REVIEW s14-0123 P2-5): ground_bounce = ground albedo x form factor for down-facing normals - the
+    # soffit is lit by the light the carriageway and the crushed stone throw back (photos: light grey concrete), not
+    # by the lower hemisphere of the sky probe (render: black-green). WORKING_VALUE, tuned on the soffit / asphalt
+    # ratio of the photo pairs (ADR 0144 table).
     "viaduct_concrete": {"color": _set_mean("viaduct_concrete", [0.369, 0.324, 0.276]), "rough": 0.85,
-                         "surface": "concrete", "texture_set": "viaduct_concrete", "set_tile": True},
+                         "surface": "concrete", "texture_set": "viaduct_concrete", "set_tile": True,
+                         "ground_bounce": [0.42, 0.41, 0.39], "sky_occ": [0.0, 0.0]},
     # ADR 0123: cast_shadows false - the six alpha-tested bars of the deck railing drew a checkerboard on the cap at the
     # Low shadow resolution (REVIEW s10-0117 P1-1); real 12 mm bars throw hairline shadows the road barrier covers
     "viaduct_steel": {"color": [1.0, 1.0, 1.0], "rough": 0.9, "metal": 0.0, "texture": "viaduct_steel",
                       "alpha_cutoff": 0.5, "cast_shadows": False},
-    "island_gravel": {"color": [0.30, 0.285, 0.26], "rough": 0.95, "surface": "gravel",
-                      "texture_set": "gravel_compacted"},
+    # ADR 0144 (REVIEW s14-0123 P2-3 / s14-0128 P1-2), all WORKING_VALUE (photos are not reflectance measurements):
+    #  - the bed of the centre island reads as light warm crushed stone on Mapillary 2818555625124739 /
+    #    1398898753813071, the render as grey-brown compacted ground: linear albedo x 1.30 and warmer
+    #    (was [0.30, 0.285, 0.26], mean 0.282 -> mean 0.366), grain x 1.75 (set_tile_m 7 m for the 4 m scan tile:
+    #    0-31.5 mm stones read as 0-55 mm crushed stone);
+    #  - the gravel of an authored island nose (roads.gores, COLOR_0.r) is old dirty gravel, darker and browner than
+    #    the paving beside it (Mapillary 320326319617139): vertex_grime -> albedo about 0.72 x the old one
+    #    (grime x tone, tone = 0.6 + 0.8 x set mean 0.2 = 0.76 -> [0.235, 0.20, 0.165]);
+    #  - vertex_weed: dry weed green between the stones along the kerbs (COLOR_0.g).
+    "island_gravel": {"color": [0.41, 0.37, 0.318], "rough": 0.95, "surface": "gravel",
+                      "texture_set": "gravel_compacted", "set_tile_m": [7.0, 7.0],
+                      "vertex_grime": [0.31, 0.265, 0.218, 0.0], "vertex_weed": [0.075, 0.095, 0.035]},
     "bridge_fascia_red": {"color": [0.30, 0.05, 0.04], "rough": 0.7},
     "bridge_fascia_green": {"color": [0.07, 0.17, 0.10], "rough": 0.7},
     "pier_yellow": {"color": [0.46, 0.40, 0.17], "rough": 0.85},

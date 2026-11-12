@@ -237,7 +237,7 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
                                   "worst": sorted(pl.seat_log, key=lambda r: -r["step_m"])[:20]}
     SR.route_audit(pl.items, route_P, w.net, w.junctions, frep)
     rep["furniture"] = frep
-    log("furniture", {k: v for k, v in frep.items() if k != "junction_signs"})
+    log("furniture", {k: v for k, v in frep.items() if k not in ("junction_signs", "guardrail_runs")})
 
     # house plots (ADR 0107 / 0114): fences, gates and garden as chunk geometry in one material (`plot_kit`)
     def zplot(q):

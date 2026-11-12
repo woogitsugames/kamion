@@ -487,7 +487,10 @@ def build(buf, overrides, origin, roads_poly, road_parts, zground, deck_mask_at,
             # stones (ADR 0060) / gravel: light crushed-stone bed under the viaduct (ADR 0067)
             mat = {"paving": "sidewalk_paving", "stones": "bed_stones", "gravel": "island_gravel"}.get(fill, "bed_soil")
             V = np.column_stack([P2, z])
-            buf.add("paved", mat, V, P2.copy(), T, src=f"override:{o['id']}:island{ii}")
+            # ADR 0144: island_gravel carries vertex grime / weeds in COLOR_0 (authored island noses, roads.gores);
+            # a bed writes zeros so a chunk with only this bed still exports the attribute (no attribute = white)
+            buf.add("paved", mat, V, P2.copy(), T, src=f"override:{o['id']}:island{ii}",
+                    COL=np.zeros((len(V), 4)) if mat == "island_gravel" else None)
             # Loose beds (soil, river stones, crushed stone) are soft ground for a wheel: collision_grass (low grip, high
             # rolling resistance - same class as yard_gravel in standards.SURFACE_OF); only paved islands are hard.
             # ADR 0082: the owner drove a 40 t combination across the gravel island of Rondo Bieżeństwa with the

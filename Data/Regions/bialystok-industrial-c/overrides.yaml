@@ -282,8 +282,29 @@ overrides:
       # the centre and rows 31-33 m out, on the far side of the ring carriageway). Rows 2 and 5 below are those two
       # (14 m either side of the ring centre along the viaduct: columns 2 m inside the island kerb, WORKING_VALUE
       # +-2 m); rows 1, 2 from each end keep the stations the rule gave (not measured: no photo shows them usably).
-      pier_lines_en: [[487.5, -688.05], [509.0, -699.85], [540.3, -716.9], [564.8, -730.3], [595.15, -746.85],
-                      [616.65, -758.65]]
+      # ADR 0144 (REVIEW s14-0123 P1-2, "luka w rzedzie filarow"). Sources checked: OSM (podlaskie-261108.osm.pbf)
+      # has no bridge:support near the object, BDOT10k 2061 has no pier geometry, and on the 0.08 m GUGiK orthophoto
+      # the decks hide the supports - the only open evidence is the Mapillary frames (richlv, CC BY-SA 4.0,
+      # reference only). 2818555625124739 and 3970163613102941 (camera on the ring, looking along the north-west half):
+      # FOUR pier rows between the island and the abutment wall - the row on the island and three more at an even
+      # rhythm - where the model had three (spans 35.6 / 24.5 / 24.5 m: the 35.6 m span was the gap). Island row ->
+      # abutment = 84.7 m on the lead deck (generated open range), so 4 equal spans of 21.2 m; the first span read
+      # off 2818555625124739 with the camera pose of sbs_cameras.json is 19.8 m +- 2 m (bearings of the two columns
+      # of the near deck in rows 1 and 2), consistent. South-east half: 83.6 m -> 4 x 20.9 m by symmetry of the
+      # structure (WORKING_VALUE: no open frame looks along that half). The two island rows are unchanged (ADR 0123).
+      pier_lines_en: [[484.54, -686.47], [503.12, -696.62], [521.70, -706.77], [540.3, -716.9], [564.8, -730.3],
+                      [583.14, -740.33], [601.49, -750.35], [619.84, -760.38]]
+      # ADR 0144 (P2-4): oval piers with the red band on their noses instead of chamfered 0.8 x 1.0 m boxes.
+      # 3970163613102941 / 2818555625124739: nose face : side face = 1 : 2.0-2.4 after removing the view angle, i.e.
+      # the long axis lies ALONG the bridge; against the pier height of the model (4.3 m) the nearest pier measures
+      # about 0.5-0.75 m across and 1.1-1.6 m along -> 0.70 x 1.40 m (WORKING_VALUE +-0.2 m). Columns of one deck
+      # stand 3.8 m apart on 178689077481862 (two rays to their feet), 3.6-5.4 m on 2818555625124739 -> 1.75 m either
+      # side of the deck axis (was 1.30 m; WORKING_VALUE +-0.4 m), which keeps them under the box girder (bottom
+      # flange half width 2.0 m).
+      col_shape: stadium
+      col_len_m: 1.40
+      col_wid_m: 0.70
+      col_offset_m: 1.75
     reason: >-
       Landmark object of route G3-A (ADR 0067): the Andersa viaduct over Rondo Pamięci Bieżeństwa 1915 r. gets an
       authored Blender asset (art-source/world/landmarks/viaduct_biezenstwa, tools/blender/world/landmarks/
@@ -1112,7 +1133,11 @@ overrides:
   - id: dk8-ramp-split-island
     kind: traffic_island
     surface: sidewalk_paving
-    polygon_en: [[-781.9, 76.5], [-781.2, 77.1], [-768.1, 77.3], [-753.0, 76.9], [-753.3, 73.5], [-781.3, 75.6]]
+    # ADR 0144: tongue between the two deck starts (E -753...-751.3, N 75.45...77.15) - the island used to stop 3 m
+    # short of the decks, leaving a strip of grass lower than both (the rails dived into it; orthophoto
+    # artifacts/junctions-r6/ortho/kerb_merge_e.jpg: paved separator up to the expansion joints at E -752)
+    polygon_en: [[-781.9, 76.5], [-781.2, 77.1], [-768.1, 77.3], [-753.0, 76.9], [-751.3, 77.15], [-751.3, 75.45],
+                 [-753.15, 75.3], [-753.3, 73.5], [-781.3, 75.6]]
     reason: >-
       Kerbed concrete separator with barriers between the main carriageway and the ramp from Rondo Putry, rounded nose
       at E -781.9 N 76.5 (the kerb of the owner's video), running east onto the viaduct (xsec/km_trunk.png stations
@@ -1595,7 +1620,9 @@ overrides:
     # b4: carried on to the ramp deck along N 76.65 (orthophoto: rail at N 76.6-76.9). The generated island narrows to
     # N 76.8 at E -755...-753 (xsec_glb.py, build b3), so the b2 line at N 77.05 left it at E -756 and dived; at N 76.65
     # it stays on the paving up to E -753 and the free end swings onto the start of the deck barrier (_join_free_ends).
-    polyline_en: [[-752.3, 76.75], [-753.5, 76.64], [-757.0, 76.68], [-765.0, 76.8], [-775.0, 76.7], [-778.5, 76.7]]
+    # ADR 0144: carried on to the first post of the barrier of the ramp deck (generated at E -750.0 N 77.4, build r7a;
+    # re-trace if the generator moves it) - the deck barrier used to start in the air 2.4 m from the end of this rail
+    polyline_en: [[-750.1, 77.35], [-751.3, 77.0], [-753.5, 76.72], [-757.0, 76.68], [-765.0, 76.8], [-775.0, 76.7], [-778.5, 76.7]]
     free_ends: [false, true]      # east end: stays at the deck joint (no swing onto the south rail, no terminal)
     reason: >-
       ADR 0123 (REVIEW s10-0117 P1-4, p0_kerb_merge_eye): second rail of the separator dk8-ramp-split-island, on its

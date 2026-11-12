@@ -334,9 +334,49 @@ def build_pier(mb, st, pr, lod, low_sgn, colmb):
     hl, hw, chm = PRM["col_len_m"] / 2, PRM["col_wid_m"] / 2, PRM["col_chamfer_m"]
     gap = PRM["bearing_gap_m"] if lod < 2 else 0.0
     ztop = pr["top"] - gap
+    stadium = PRM.get("col_shape") == "stadium"
     for q in pr["cols"]:
         c = np.array(q[:2])
         z0 = q[2] - 0.5
+        if stadium:
+            # ADR 0144 (REVIEW s14-0123 P1-2 / P2-4): oval pier - two straight sides along the bridge and a round nose
+            # at each end, the red band on the noses (Mapillary 178689077481862, 177786140912399, 3970163613102941:
+            # rounded concrete either side of a red band that takes about half of the visible width). The atlas band
+            # (stripe centres front_c / back_c, stripe_w) is kept: arc length runs 1:1 for NOSE_FLAT m either side of
+            # a nose centre (the stripe), the rest of the nose and the sides are squeezed / stretched plain concrete.
+            r = hw
+            K = (6, 4, 2)[lod]
+            NOSE_FLAT = 0.30
+
+            def vnose(d):
+                return math.copysign(min(abs(d), NOSE_FLAT) + max(abs(d) - NOSE_FLAT, 0.0) * 0.28, d)
+
+            loc, vv = [], []
+            for sg, vc in ((1.0, P["front_c"]), (-1.0, P["back_c"])):
+                for k in range(K + 1):
+                    th = -math.pi / 2 + math.pi * k / K
+                    loc.append((sg * (hl - r + r * math.cos(th)), sg * r * math.sin(th)))
+                    vv.append(P["v0"] + vc + vnose(r * th))
+            n_ = len(loc)
+            vv.append(P["v0"] + P["perimeter"] - 0.01)          # closing side ends at the far edge of the band
+            ring = [c + t2 * a + n2 * b for a, b in loc]
+            for i in range(n_):
+                p, r_ = ring[i], ring[(i + 1) % n_]
+                out = np.append((p + r_) / 2 - c, 0.0)
+                v0, v1 = vv[i], (vv[i + 1] if i + 1 < n_ else vv[n_])
+                if i + 1 == n_:
+                    v0 = vv[i]
+                mb.quad([(*p, z0), (*r_, z0), (*r_, ztop), (*p, ztop)],
+                        [(ztop - z0, v0), (ztop - z0, v1), (0.0, v1), (0.0, v0)], CONC, out)
+            colmb.box(c, t2, n2, hl, hw, z0, pr["top"], CONC, ((0, 0), (1, 1)), top=True, bottom=True)
+            sp, sd = LAY["swatch_plain"], LAY["swatch_dark"]
+            pa, pb = min(0.45, hl - 0.15), hw - 0.05
+            if lod == 0:
+                mb.box(c, t2, n2, pa, pb, ztop, ztop + gap * 0.45, CONC, ((sp["u"][0], sp["v"][0]), (sp["u"][0] + 0.6, sp["v"][0] + gap * 0.45)), top=True)
+                mb.box(c, t2, n2, pa - 0.08, pb - 0.08, ztop + gap * 0.45, pr["top"], CONC, ((sd["u"][0], sd["v"][0]), (sd["u"][1], sd["v"][1])), top=False)
+            elif lod == 1:
+                mb.box(c, t2, n2, pa - 0.04, pb - 0.04, ztop, pr["top"], CONC, ((sd["u"][0], sd["v"][0]), (sd["u"][1], sd["v"][1])), top=False)
+            continue
         # outline, starting at the front face (normal +t), counter-clockwise seen from above
         if lod < 2:
             loc = [(hl, -hw + chm), (hl, hw - chm), (hl - chm, hw), (-hl + chm, hw), (-hl, hw - chm), (-hl, -hw + chm),

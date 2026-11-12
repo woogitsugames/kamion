@@ -317,6 +317,29 @@ namespace Game.World.Import
                 else mat.DisableKeyword("_VERTEX_GRIME");
                 EditorUtility.SetDirty(mat);
             }
+            // ADR 0144: manifest "vertex_weed": [r, g, b] = weed albedo where the mesh carries COLOR_0.g (needs vertex_grime:
+            // same keyword); "ground_bounce": [r, g, b] = ground albedo x form factor for down-facing normals (soffits);
+            // "set_tile_m": [x, y] = sampling size of the texture set for this material (larger = coarser grain).
+            if (mat != null && mat.HasProperty("_VertexWeed"))
+            {
+                var vw = m.Get("vertex_weed") as List<object>;
+                mat.SetVector("_VertexWeed", vw != null && vw.Count >= 3
+                    ? new Vector4((float)Num(vw[0]), (float)Num(vw[1]), (float)Num(vw[2]), 1f) : Vector4.zero);
+                EditorUtility.SetDirty(mat);
+            }
+            if (mat != null && mat.HasProperty("_GroundBounce"))
+            {
+                var gb = m.Get("ground_bounce") as List<object>;
+                mat.SetVector("_GroundBounce", gb != null && gb.Count >= 3
+                    ? new Vector4((float)Num(gb[0]), (float)Num(gb[1]), (float)Num(gb[2]), 1f) : Vector4.zero);
+                EditorUtility.SetDirty(mat);
+            }
+            if (mat != null && mat.HasProperty("_Tile") && m.Get("set_tile_m") is List<object> tlm && tlm.Count >= 2)
+            {
+                var t0 = mat.GetVector("_Tile");
+                mat.SetVector("_Tile", new Vector4((float)Num(tlm[0]), (float)Num(tlm[1]), t0.z, t0.w));
+                EditorUtility.SetDirty(mat);
+            }
             // ADR 0123: manifest "set_metal" (0..1) = metallic scale of a generated PBR set whose MaskMap.r carries a
             // metal mask (galvanised barrier: bare zinc 1, dirt / rust 0). Sets without the key keep metallic 0.
             if (mat != null && mat.HasProperty("_MetallicScale") && m.Get("set_metal") != null)
