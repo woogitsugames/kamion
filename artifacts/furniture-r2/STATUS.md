@@ -107,3 +107,5 @@ NASTĘPNY KROK: przygotować własne skrypty r2 z ownerem heavy gpt-furniture-r2
 2026-11-12T09:07:35.1182723+01:00: Unity import after1 Low overcast; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
 
 2026-11-12T09:08:20.0061936+01:00: import kandydata exit0, 64 chunki Low/High. Dane render/instancje/kolizje: Low120,7→120,8 MB, High262,8→262,9 MB (nie PSS). Przywrócono efekty uboczne ustawień przez wrapper. Rozpoczyna się sekwencyjny komplet330 obrazów,165 dokładnych liczników Low i kontrolowany night-rig obu poziomów. Hashe geometrii osobno nadal oczekują na heavy; nie traktujemy ich jako PASS. NASTĘPNY KROK: pwsh artifacts/furniture-r2/24h/after-evidence.ps1.
+
+2026-11-12T09:08:50.3132895+01:00: Unity render after Low clear; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
