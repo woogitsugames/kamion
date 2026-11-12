@@ -27,7 +27,7 @@ try {
     if($acquireCode -eq 0){break}
     $details=Get-Content -LiteralPath $attemptLog -Raw
     $ownSlot="C:/Users/matma/Documents/Claude/kamion/artifacts/locks/heavy-slots/$owner.slot"
-    $sharingRace=$details.Contains("\queue\$owner.wait") -and $details -match 'because it is being\s+used by another process'
+    $sharingRace=$details.Contains("\queue\$owner.wait") -and $details -match 'because it is being[\s|]+used by another process'
     if($attempt -eq 3 -or -not $sharingRace -or (Test-Path $ownSlot)) {
       throw "Nie uzyskano slotu heavy; pełny log: $attemptLog"
     }
@@ -62,6 +62,7 @@ catch {
 }
 finally { $guard.ReleaseMutex(); $guard.Dispose() }
 exit $code
+
 
 
 

@@ -1,0 +1,36 @@
+{
+  "scope": "Lightweight classification preflight against actual saved acquisition error; no slot acquisition or worker",
+  "checked_at": "2026-11-12T14:39:03.3019538+01:00",
+  "cases": [
+    {
+      "case": "actual rendered Windows error",
+      "expected": true,
+      "actual": true,
+      "pass": true
+    },
+    {
+      "case": "plain Windows error",
+      "expected": true,
+      "actual": true,
+      "pass": true
+    },
+    {
+      "case": "different owner",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "case": "slot creation error",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "case": "generic failure",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    }
+  ]
+}
