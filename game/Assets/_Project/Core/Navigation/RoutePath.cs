@@ -21,6 +21,8 @@ namespace Game.Core.Navigation
         public readonly ushort[] Name;
         /// <summary>Speed limit of the segment starting at the point [km/h]; 0 = not tagged in OSM (not shown).</summary>
         public readonly byte[] Limit;
+        /// <summary>Road class of the segment starting at the point (0 service .. 3 trunk/primary; ETA profile, NavEta).</summary>
+        public readonly byte[] Class;
         public int Count;
 
         public readonly int[] Directed;
@@ -53,6 +55,7 @@ namespace Game.Core.Navigation
         public RoutePath(int pointCapacity, int edgeCapacity)
         {
             Points = new Vector2[pointCapacity]; S = new float[pointCapacity]; Name = new ushort[pointCapacity]; Limit = new byte[pointCapacity];
+            Class = new byte[pointCapacity];
             Directed = new int[edgeCapacity];
             int m = edgeCapacity + 4;
             ManPoint = new int[m]; ManType = new Maneuver[m]; ManTurn = new float[m]; ManExit = new byte[m]; ManName = new ushort[m];
@@ -70,13 +73,13 @@ namespace Game.Core.Navigation
         }
 
         /// <summary>Appends a point (skips duplicates closer than 1 cm); false when full.</summary>
-        public bool Add(Vector2 p, ushort name, byte limit)
+        public bool Add(Vector2 p, ushort name, byte limit, byte cls = 0)
         {
-            if (Count > 0 && (p - Points[Count - 1]).sqrMagnitude < 1e-4f) { Name[Count - 1] = name; Limit[Count - 1] = limit; return true; }
+            if (Count > 0 && (p - Points[Count - 1]).sqrMagnitude < 1e-4f) { Name[Count - 1] = name; Limit[Count - 1] = limit; Class[Count - 1] = cls; return true; }
             if (Count >= Points.Length) return false;
             Points[Count] = p;
             S[Count] = Count == 0 ? 0f : S[Count - 1] + Vector2.Distance(Points[Count - 1], p);
-            Name[Count] = name; Limit[Count] = limit;
+            Name[Count] = name; Limit[Count] = limit; Class[Count] = cls;
             Count++;
             return true;
         }
@@ -114,7 +117,8 @@ namespace Game.Core.Navigation
         public void CopyFrom(RoutePath o)
         {
             System.Array.Copy(o.Points, Points, o.Count); System.Array.Copy(o.S, S, o.Count);
-            System.Array.Copy(o.Name, Name, o.Count); System.Array.Copy(o.Limit, Limit, o.Count); Count = o.Count;
+            System.Array.Copy(o.Name, Name, o.Count); System.Array.Copy(o.Limit, Limit, o.Count);
+            System.Array.Copy(o.Class, Class, o.Count); Count = o.Count;
             System.Array.Copy(o.Directed, Directed, o.DirectedCount); DirectedCount = o.DirectedCount;
             System.Array.Copy(o.ManPoint, ManPoint, o.ManCount); System.Array.Copy(o.ManType, ManType, o.ManCount);
             System.Array.Copy(o.ManTurn, ManTurn, o.ManCount); System.Array.Copy(o.ManExit, ManExit, o.ManCount);

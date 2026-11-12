@@ -1,0 +1,1148 @@
+{
+ "schema": "truck-sim-pl/world-validator-cameras/1",
+ "region": "bialystok-industrial-c",
+ "source": "tools/worldgen/validate/run.py",
+ "frame": "local E/N metres; z = region origin z + eye height (heightmap not in git, WORKING_VALUE)",
+ "cameras": [
+  {
+   "id": "wv-000-sign_facing_away",
+   "type": "persp",
+   "fov_deg": 55.0,
+   "pos": [
+    658.57,
+    -569.63,
+    133.64
+   ],
+   "look_at": [
+    647.22,
+    -559.82,
+    132.14
+   ],
+   "note": "sign_facing_away | rule:maxspeed:c:w1090234575:8722811971-9986085571 | sign B-33_30 faces away from the route driver (offset 4.4 m) | E 647.2 N -559.8 | 53.153192, 23.169046",
+   "category": "sign_facing_away",
+   "severity": "error",
+   "finding": "rule:maxspeed:c:w1090234575:8722811971-9986085571"
+  },
+  {
+   "id": "wv-001-sign_facing_away",
+   "type": "persp",
+   "fov_deg": 55.0,
+   "pos": [
+    -295.7,
+    -187.4,
+    133.64
+   ],
+   "look_at": [
+    -283.03,
+    -179.37,
+    132.14
+   ],
+   "note": "sign_facing_away | osm:node/3097201643 | sign D-6 faces away from the route driver (offset 10.8 m) | E -283.0 N -179.4 | 53.157089, 23.155498",
+   "category": "sign_facing_away",
+   "severity": "error",
+   "finding": "osm:node/3097201643"
+  },
+  {
+   "id": "wv-002-sign_facing_away",
+   "type": "persp",
+   "fov_deg": 55.0,
+   "pos": [
+    -450.31,
+    -34.71,
+    133.64
+   ],
+   "look_at": [
+    -435.35,
+    -33.56,
+    132.14
+   ],
+   "note": "sign_facing_away | rule:maxspeed:c:w174538883:1852129070-1852128980 | sign B-33_20 faces away from the route driver (offset 9.6 m) | E -435.4 N -33.6 | 53.158476, 23.153352",
+   "category": "sign_facing_away",
+   "severity": "error",
+   "finding": "rule:maxspeed:c:w174538883:1852129070-1852128980"
+  },
+  {
+   "id": "wv-003-building_in_carriageway",
+   "type": "persp",
+   "fov_deg": 55.0,
+   "pos": [
+    63.96,
+    -407.78,
+    133.64
+   ],
+   "look_at": [
+    61.63,
+    -392.97,
+    132.14
+   ],
+   "note": "building_in_carriageway | osm:way/279896718 | building footprint intersects the carriageway by 127.4 m2 | E 61.6 N -393.0 | 53.154994, 23.160455",
+   "category": "building_in_carriageway",
+   "severity": "error",
+   "finding": "osm:way/279896718"
+  },
+  {
+   "id": "wv-004-building_in_carriageway",
+   "type": "persp",
+   "fov_deg": 55.0,
+   "pos": [
+    -199.54,
+    -167.92,
+    133.64
+   ],
+   "look_at": [
+    -188.06,
+    -158.26,
+    132.14
+   ],
+   "note": "building_in_carriageway | bdot:2BE4B431-C7B4-1BF0-E053-CC2BA8C0D140 | building footprint intersects the carriageway by 5.5 m2 | E -188.1 N -158.3 | 53.157229, 23.156933",
+   "category": "building_in_carriageway",
+   "severity": "error",
+   "finding": "bdot:2BE4B431-C7B4-1BF0-E053-CC2BA8C0D140"
+  },
+  {
+   "id": "wv-005-building_in_carriageway",
+   "type": "persp",
+   "fov_deg": 55.0,
+   "pos": [
+    500.79,
+    -781.42,
+    133.64
+   ],
+   "look_at": [
+    492.7,
+    -768.79,
+    132.14
+   ],
+   "note": "building_in_carriageway | osm:way/236606117 | building footprint intersects the carriageway by 58.8 m2 | E 492.7 N -768.8 | 53.151398, 23.166559",
+   "category": "building_in_carriageway",
+   "severity": "error",
+   "finding": "osm:way/236606117"
+  },
+  {
+   "id": "wv-006-building_in_carriageway",
+   "type": "persp",
+   "fov_deg": 55.0,
+   "pos": [
+    -669.63,
+    -24.43,
+    133.64
+   ],
+   "look_at": [
+    -654.64,
+    -23.88,
+    132.14
+   ],
+   "note": "building_in_carriageway | bdot:2BE4B431-B151-1BF0-E053-CC2BA8C0D140 | building footprint intersects the carriageway by 11.9 m2 | E -654.6 N -23.9 | 53.158677, 23.150088",
+   "category": "building_in_carriageway",
+   "severity": "error",
+   "finding": "bdot:2BE4B431-B151-1BF0-E053-CC2BA8C0D140"
+  },
+  {
+   "id": "wv-007-building_in_carriageway",
+   "type": "persp",
+   "fov_deg": 55.0,
+   "pos": [
+    -297.43,
+    -400.63,
+    133.64
+   ],
+   "look_at": [
+    -288.49,
+    -388.58,
+    132.14
+   ],
+   "note": "building_in_carriageway | bdot:2BE4B431-C728-1BF0-E053-CC2BA8C0D140 | building footprint intersects the carriageway by 7.1 m2 | E -288.5 N -388.6 | 53.155216, 23.155235",
+   "category": "building_in_carriageway",
+   "severity": "error",
+   "finding": "bdot:2BE4B431-C728-1BF0-E053-CC2BA8C0D140"
+  },
+  {
+   "id": "wv-008-building_in_carriageway",
+   "type": "persp",
+   "fov_deg": 55.0,
+   "pos": [
+    -352.38,
+    -373.08,
+    133.64
+   ],
+   "look_at": [
+    -342.08,
+    -362.17,
+    132.14
+   ],
+   "note": "building_in_carriageway | bdot:2BE4B431-CA03-1BF0-E053-CC2BA8C0D140 | building footprint intersects the carriageway by 1.6 m2 | E -342.1 N -362.2 | 53.155481, 23.154458",
+   "category": "building_in_carriageway",
+   "severity": "error",
+   "finding": "bdot:2BE4B431-CA03-1BF0-E053-CC2BA8C0D140"
+  },
+  {
+   "id": "wv-009-object_in_carriageway",
+   "type": "persp",
+   "fov_deg": 55.0,
+   "pos": [
+    -595.41,
+    -151.83,
+    133.64
+   ],
+   "look_at": [
+    -580.88,
+    -148.12,
+    132.14
+   ],
+   "note": "object_in_carriageway | canopy:1958 | tree centre 1.38 m inside the carriageway edge | E -580.9 N -148.1 | 53.157525, 23.151081",
+   "category": "object_in_carriageway",
+   "severity": "error",
+   "finding": "canopy:1958"
+  },
+  {
+   "id": "wv-010-object_in_carriageway",
+   "type": "persp",
+   "fov_deg": 55.0,
+   "pos": [
+    -593.4,
+    -153.89,
+    133.64
+   ],
+   "look_at": [
+    -578.88,
+    -150.12,
+    132.14
+   ],
+   "note": "object_in_carriageway | canopy:1979 | tree centre 1.04 m inside the carriageway edge | E -578.9 N -150.1 | 53.157506, 23.151109",
+   "category": "object_in_carriageway",
+   "severity": "error",
+   "finding": "canopy:1979"
+  },
+  {
+   "id": "wv-011-object_in_carriageway",
+   "type": "persp",
+   "fov_deg": 55.0,
+   "pos": [
+    -599.68,
+    -149.24,
+    133.64
+   ],
+   "look_at": [
+    -585.12,
+    -145.62,
+    132.14
+   ],
+   "note": "object_in_carriageway | canopy:1912 | tree centre 0.72 m inside the carriageway edge | E -585.1 N -145.6 | 53.157549, 23.151020",
+   "category": "object_in_carriageway",
+   "severity": "error",
+   "finding": "canopy:1912"
+  },
+  {
+   "id": "wv-012-building_in_carriageway",
+   "type": "persp",
+   "fov_deg": 55.0,
+   "pos": [
+    -321.31,
+    -432.66,
+    133.64
+   ],
+   "look_at": [
+    -312.37,
+    -420.62,
+    132.14
+   ],
+   "note": "building_in_carriageway | bdot:2BE4B431-C727-1BF0-E053-CC2BA8C0D140 | building footprint intersects the carriageway by 58.4 m2 | E -312.4 N -420.6 | 53.154941, 23.154851",
+   "category": "building_in_carriageway",
+   "severity": "error",
+   "finding": "bdot:2BE4B431-C727-1BF0-E053-CC2BA8C0D140"
+  },
+  {
+   "id": "wv-013-building_in_carriageway",
+   "type": "persp",
+   "fov_deg": 55.0,
+   "pos": [
+    -406.77,
+    -368.93,
+    133.64
+   ],
+   "look_at": [
+    -395.66,
+    -358.85,
+    132.14
+   ],
+   "note": "building_in_carriageway | bdot:2BE4B431-C9E1-1BF0-E053-CC2BA8C0D140 | building footprint intersects the carriageway by 7.7 m2 | E -395.7 N -358.8 | 53.155538, 23.153662",
+   "category": "building_in_carriageway",
+   "severity": "error",
+   "finding": "bdot:2BE4B431-C9E1-1BF0-E053-CC2BA8C0D140"
+  },
+  {
+   "id": "wv-014-building_in_carriageway",
+   "type": "persp",
+   "fov_deg": 55.0,
+   "pos": [
+    -466.6,
+    -337.7,
+    133.64
+   ],
+   "look_at": [
+    -454.45,
+    -328.91,
+    132.14
+   ],
+   "note": "building_in_carriageway | bdot:2BE4B431-C9E2-1BF0-E053-CC2BA8C0D140 | building footprint intersects the carriageway by 23.6 m2 | E -454.4 N -328.9 | 53.155838, 23.152811",
+   "category": "building_in_carriageway",
+   "severity": "error",
+   "finding": "bdot:2BE4B431-C9E2-1BF0-E053-CC2BA8C0D140"
+  },
+  {
+   "id": "wv-015-object_in_carriageway",
+   "type": "persp",
+   "fov_deg": 55.0,
+   "pos": [
+    -742.22,
+    932.86,
+    133.64
+   ],
+   "look_at": [
+    -732.88,
+    921.12,
+    132.14
+   ],
+   "note": "object_in_carriageway | canopy:739 | tree centre 0.84 m inside the carriageway edge | E -732.9 N 921.1 | 53.167193, 23.149739",
+   "category": "object_in_carriageway",
+   "severity": "error",
+   "finding": "canopy:739"
+  },
+  {
+   "id": "wv-016-object_in_carriageway",
+   "type": "persp",
+   "fov_deg": 55.0,
+   "pos": [
+    -739.93,
+    935.38,
+    133.64
+   ],
+   "look_at": [
+    -730.62,
+    923.62,
+    132.14
+   ],
+   "note": "object_in_carriageway | canopy:749 | tree centre 1.07 m inside the carriageway edge | E -730.6 N 923.6 | 53.167215, 23.149775",
+   "category": "object_in_carriageway",
+   "severity": "error",
+   "finding": "canopy:749"
+  },
+  {
+   "id": "wv-017-object_in_carriageway",
+   "type": "persp",
+   "fov_deg": 55.0,
+   "pos": [
+    -744.96,
+    936.36,
+    133.64
+   ],
+   "look_at": [
+    -735.62,
+    924.62,
+    132.14
+   ],
+   "note": "object_in_carriageway | canopy:729 | tree centre 1.50 m inside the carriageway edge | E -735.6 N 924.6 | 53.167226, 23.149702",
+   "category": "object_in_carriageway",
+   "severity": "error",
+   "finding": "canopy:729"
+  },
+  {
+   "id": "wv-018-object_in_carriageway",
+   "type": "persp",
+   "fov_deg": 55.0,
+   "pos": [
+    -584.49,
+    -240.59,
+    133.64
+   ],
+   "look_at": [
+    -570.62,
+    -234.88,
+    132.14
+   ],
+   "note": "object_in_carriageway | canopy:2065 | tree centre 0.69 m inside the carriageway edge | E -570.6 N -234.9 | 53.156741, 23.151159",
+   "category": "object_in_carriageway",
+   "severity": "error",
+   "finding": "canopy:2065"
+  },
+  {
+   "id": "wv-019-building_in_carriageway",
+   "type": "persp",
+   "fov_deg": 55.0,
+   "pos": [
+    -350.36,
+    -465.41,
+    133.64
+   ],
+   "look_at": [
+    -341.34,
+    -453.42,
+    132.14
+   ],
+   "note": "building_in_carriageway | bdot:2BE4B431-C729-1BF0-E053-CC2BA8C0D140 | building footprint intersects the carriageway by 76.4 m2 | E -341.3 N -453.4 | 53.154662, 23.154390",
+   "category": "building_in_carriageway",
+   "severity": "error",
+   "finding": "bdot:2BE4B431-C729-1BF0-E053-CC2BA8C0D140"
+  },
+  {
+   "id": "wv-020-object_in_carriageway",
+   "type": "persp",
+   "fov_deg": 55.0,
+   "pos": [
+    -520.88,
+    -322.01,
+    133.64
+   ],
+   "look_at": [
+    -508.12,
+    -314.12,
+    132.14
+   ],
+   "note": "object_in_carriageway | canopy:2537 | tree centre 0.75 m inside the carriageway edge | E -508.1 N -314.1 | 53.155998, 23.152023",
+   "category": "object_in_carriageway",
+   "severity": "error",
+   "finding": "canopy:2537"
+  },
+  {
+   "id": "wv-021-object_in_carriageway",
+   "type": "persp",
+   "fov_deg": 55.0,
+   "pos": [
+    -518.06,
+    -327.13,
+    133.64
+   ],
+   "look_at": [
+    -505.38,
+    -319.12,
+    132.14
+   ],
+   "note": "object_in_carriageway | canopy:2571 | tree centre 0.68 m inside the carriageway edge | E -505.4 N -319.1 | 53.155952, 23.152059",
+   "category": "object_in_carriageway",
+   "severity": "error",
+   "finding": "canopy:2571"
+  },
+  {
+   "id": "wv-022-building_in_carriageway",
+   "type": "persp",
+   "fov_deg": 55.0,
+   "pos": [
+    -379.03,
+    -498.27,
+    133.64
+   ],
+   "look_at": [
+    -369.95,
+    -486.33,
+    132.14
+   ],
+   "note": "building_in_carriageway | bdot:2BE4B431-C726-1BF0-E053-CC2BA8C0D140 | building footprint intersects the carriageway by 37.3 m2 | E -369.9 N -486.3 | 53.154382, 23.153935",
+   "category": "building_in_carriageway",
+   "severity": "error",
+   "finding": "bdot:2BE4B431-C726-1BF0-E053-CC2BA8C0D140"
+  },
+  {
+   "id": "wv-023-building_in_carriageway",
+   "type": "persp",
+   "fov_deg": 55.0,
+   "pos": [
+    177.0,
+    -863.53,
+    133.64
+   ],
+   "look_at": [
+    173.98,
+    -848.84,
+    132.14
+   ],
+   "note": "building_in_carriageway | osm:way/385737652 | building footprint intersects the carriageway by 52.5 m2 | E 174.0 N -848.8 | 53.150847, 23.161735",
+   "category": "building_in_carriageway",
+   "severity": "error",
+   "finding": "osm:way/385737652"
+  },
+  {
+   "id": "wv-024-building_in_carriageway",
+   "type": "persp",
+   "fov_deg": 55.0,
+   "pos": [
+    -663.46,
+    -345.71,
+    133.64
+   ],
+   "look_at": [
+    -650.15,
+    -338.77,
+    132.14
+   ],
+   "note": "building_in_carriageway | bdot:da252fd0-1894-11ed-9283-b8ca3aa2e5c2 | building footprint intersects the carriageway by 16.4 m2 | E -650.2 N -338.8 | 53.155851, 23.149882",
+   "category": "building_in_carriageway",
+   "severity": "error",
+   "finding": "bdot:da252fd0-1894-11ed-9283-b8ca3aa2e5c2"
+  },
+  {
+   "id": "wv-025-building_in_carriageway",
+   "type": "persp",
+   "fov_deg": 55.0,
+   "pos": [
+    251.24,
+    -969.91,
+    133.64
+   ],
+   "look_at": [
+    247.48,
+    -955.39,
+    132.14
+   ],
+   "note": "building_in_carriageway | bdot:da81a7b1-1894-11ed-a3df-b8ca3aa2e5c2 | building footprint intersects the carriageway by 341.7 m2 | E 247.5 N -955.4 | 53.149853, 23.162739",
+   "category": "building_in_carriageway",
+   "severity": "error",
+   "finding": "bdot:da81a7b1-1894-11ed-a3df-b8ca3aa2e5c2"
+  },
+  {
+   "id": "wv-026-building_in_carriageway",
+   "type": "persp",
+   "fov_deg": 55.0,
+   "pos": [
+    538.79,
+    -71.37,
+    133.64
+   ],
+   "look_at": [
+    523.92,
+    -69.4,
+    132.14
+   ],
+   "note": "building_in_carriageway | bdot:ece86670-a823-11ef-892b-1866da21c735 | building footprint intersects the carriageway by 4.3 m2 | E 523.9 N -69.4 | 53.157654, 23.167633",
+   "category": "building_in_carriageway",
+   "severity": "error",
+   "finding": "bdot:ece86670-a823-11ef-892b-1866da21c735"
+  },
+  {
+   "id": "wv-027-object_in_carriageway",
+   "type": "persp",
+   "fov_deg": 55.0,
+   "pos": [
+    -576.96,
+    -474.91,
+    133.64
+   ],
+   "look_at": [
+    -565.38,
+    -465.38,
+    132.14
+   ],
+   "note": "object_in_carriageway | canopy:2107 | tree centre 0.84 m inside the carriageway edge | E -565.4 N -465.4 | 53.154672, 23.151037",
+   "category": "object_in_carriageway",
+   "severity": "error",
+   "finding": "canopy:2107"
+  },
+  {
+   "id": "wv-028-object_in_carriageway",
+   "type": "persp",
+   "fov_deg": 55.0,
+   "pos": [
+    -485.1,
+    -570.31,
+    133.64
+   ],
+   "look_at": [
+    -475.38,
+    -558.88,
+    132.14
+   ],
+   "note": "object_in_carriageway | canopy:2820 | tree centre 1.65 m inside the carriageway edge | E -475.4 N -558.9 | 53.153786, 23.152299",
+   "category": "object_in_carriageway",
+   "severity": "error",
+   "finding": "canopy:2820"
+  },
+  {
+   "id": "wv-029-object_in_carriageway",
+   "type": "persp",
+   "fov_deg": 55.0,
+   "pos": [
+    -599.16,
+    -497.7,
+    133.64
+   ],
+   "look_at": [
+    -587.62,
+    -488.12,
+    132.14
+   ],
+   "note": "object_in_carriageway | canopy:1887 | tree centre 0.65 m inside the carriageway edge | E -587.6 N -488.1 | 53.154479, 23.150686",
+   "category": "object_in_carriageway",
+   "severity": "error",
+   "finding": "canopy:1887"
+  },
+  {
+   "id": "wv-030-object_in_carriageway",
+   "type": "persp",
+   "fov_deg": 55.0,
+   "pos": [
+    -637.32,
+    -484.96,
+    133.64
+   ],
+   "look_at": [
+    -625.38,
+    -475.88,
+    132.14
+   ],
+   "note": "object_in_carriageway | canopy:1567 | tree centre 1.27 m inside the carriageway edge | E -625.4 N -475.9 | 53.154609, 23.150133",
+   "category": "object_in_carriageway",
+   "severity": "error",
+   "finding": "canopy:1567"
+  },
+  {
+   "id": "wv-031-building_in_carriageway",
+   "type": "persp",
+   "fov_deg": 55.0,
+   "pos": [
+    -237.93,
+    -804.59,
+    133.64
+   ],
+   "look_at": [
+    -233.68,
+    -790.2,
+    132.14
+   ],
+   "note": "building_in_carriageway | osm:way/305072027 | building footprint intersects the carriageway by 533.8 m2 | E -233.7 N -790.2 | 53.151586, 23.155704",
+   "category": "building_in_carriageway",
+   "severity": "error",
+   "finding": "osm:way/305072027"
+  },
+  {
+   "id": "wv-032-object_in_carriageway",
+   "type": "persp",
+   "fov_deg": 55.0,
+   "pos": [
+    -406.37,
+    -705.62,
+    133.64
+   ],
+   "look_at": [
+    -398.88,
+    -692.62,
+    132.14
+   ],
+   "note": "object_in_carriageway | canopy:3256 | tree centre 1.70 m inside the carriageway edge | E -398.9 N -692.6 | 53.152547, 23.153324",
+   "category": "object_in_carriageway",
+   "severity": "error",
+   "finding": "canopy:3256"
+  },
+  {
+   "id": "wv-033-building_in_carriageway",
+   "type": "persp",
+   "fov_deg": 55.0,
+   "pos": [
+    -72.93,
+    -924.32,
+    133.64
+   ],
+   "look_at": [
+    -71.75,
+    -909.36,
+    132.14
+   ],
+   "note": "building_in_carriageway | bdot:2BE4B431-C7C0-1BF0-E053-CC2BA8C0D140 | building footprint intersects the carriageway by 2.8 m2 | E -71.8 N -909.4 | 53.150432, 23.158017",
+   "category": "building_in_carriageway",
+   "severity": "error",
+   "finding": "bdot:2BE4B431-C7C0-1BF0-E053-CC2BA8C0D140"
+  },
+  {
+   "id": "wv-034-object_in_carriageway",
+   "type": "persp",
+   "fov_deg": 55.0,
+   "pos": [
+    -553.54,
+    -601.15,
+    133.64
+   ],
+   "look_at": [
+    -543.38,
+    -590.12,
+    132.14
+   ],
+   "note": "object_in_carriageway | canopy:2244 | tree centre 1.20 m inside the carriageway edge | E -543.4 N -590.1 | 53.153541, 23.151257",
+   "category": "object_in_carriageway",
+   "severity": "error",
+   "finding": "canopy:2244"
+  },
+  {
+   "id": "wv-035-object_in_carriageway",
+   "type": "persp",
+   "fov_deg": 55.0,
+   "pos": [
+    -420.22,
+    -715.31,
+    133.64
+   ],
+   "look_at": [
+    -412.62,
+    -702.38,
+    132.14
+   ],
+   "note": "object_in_carriageway | canopy:3202 | tree centre 0.76 m inside the carriageway edge | E -412.6 N -702.4 | 53.152466, 23.153111",
+   "category": "object_in_carriageway",
+   "severity": "error",
+   "finding": "canopy:3202"
+  },
+  {
+   "id": "wv-036-object_in_carriageway",
+   "type": "persp",
+   "fov_deg": 55.0,
+   "pos": [
+    -380.66,
+    -751.76,
+    133.64
+   ],
+   "look_at": [
+    -373.88,
+    -738.38,
+    132.14
+   ],
+   "note": "object_in_carriageway | canopy:3365 | tree centre 1.34 m inside the carriageway edge | E -373.9 N -738.4 | 53.152123, 23.153658",
+   "category": "object_in_carriageway",
+   "severity": "error",
+   "finding": "canopy:3365"
+  },
+  {
+   "id": "wv-037-object_in_carriageway",
+   "type": "persp",
+   "fov_deg": 55.0,
+   "pos": [
+    -378.04,
+    -762.56,
+    133.64
+   ],
+   "look_at": [
+    -371.38,
+    -749.12,
+    132.14
+   ],
+   "note": "object_in_carriageway | canopy:3383 | tree centre 1.86 m inside the carriageway edge | E -371.4 N -749.1 | 53.152026, 23.153686",
+   "category": "object_in_carriageway",
+   "severity": "error",
+   "finding": "canopy:3383"
+  },
+  {
+   "id": "wv-038-object_in_carriageway",
+   "type": "persp",
+   "fov_deg": 55.0,
+   "pos": [
+    -377.01,
+    -764.57,
+    133.64
+   ],
+   "look_at": [
+    -370.38,
+    -751.12,
+    132.14
+   ],
+   "note": "object_in_carriageway | canopy:3391 | tree centre 1.78 m inside the carriageway edge | E -370.4 N -751.1 | 53.152007, 23.153699",
+   "category": "object_in_carriageway",
+   "severity": "error",
+   "finding": "canopy:3391"
+  },
+  {
+   "id": "wv-039-object_in_carriageway",
+   "type": "persp",
+   "fov_deg": 55.0,
+   "pos": [
+    -375.48,
+    -766.35,
+    133.64
+   ],
+   "look_at": [
+    -368.88,
+    -752.88,
+    132.14
+   ],
+   "note": "object_in_carriageway | canopy:3398 | tree centre 0.87 m inside the carriageway edge | E -368.9 N -752.9 | 53.151991, 23.153720",
+   "category": "object_in_carriageway",
+   "severity": "error",
+   "finding": "canopy:3398"
+  },
+  {
+   "id": "wv-040-object_in_carriageway",
+   "type": "persp",
+   "fov_deg": 55.0,
+   "pos": [
+    -367.95,
+    -791.22,
+    133.64
+   ],
+   "look_at": [
+    -361.62,
+    -777.62,
+    132.14
+   ],
+   "note": "object_in_carriageway | canopy:3425 | tree centre 1.10 m inside the carriageway edge | E -361.6 N -777.6 | 53.151765, 23.153807",
+   "category": "object_in_carriageway",
+   "severity": "error",
+   "finding": "canopy:3425"
+  },
+  {
+   "id": "wv-041-object_in_carriageway",
+   "type": "persp",
+   "fov_deg": 55.0,
+   "pos": [
+    -366.92,
+    -792.99,
+    133.64
+   ],
+   "look_at": [
+    -360.62,
+    -779.38,
+    132.14
+   ],
+   "note": "object_in_carriageway | canopy:3431 | tree centre 0.65 m inside the carriageway edge | E -360.6 N -779.4 | 53.151749, 23.153820",
+   "category": "object_in_carriageway",
+   "severity": "error",
+   "finding": "canopy:3431"
+  },
+  {
+   "id": "wv-042-building_in_carriageway",
+   "type": "persp",
+   "fov_deg": 55.0,
+   "pos": [
+    -205.37,
+    -960.39,
+    133.64
+   ],
+   "look_at": [
+    -202.23,
+    -945.72,
+    132.14
+   ],
+   "note": "building_in_carriageway | bdot:2BE4B431-C290-1BF0-E053-CC2BA8C0D140 | building footprint intersects the carriageway by 49.2 m2 | E -202.2 N -945.7 | 53.150174, 23.156039",
+   "category": "building_in_carriageway",
+   "severity": "error",
+   "finding": "bdot:2BE4B431-C290-1BF0-E053-CC2BA8C0D140"
+  },
+  {
+   "id": "wv-043-building_in_carriageway",
+   "type": "persp",
+   "fov_deg": 55.0,
+   "pos": [
+    -231.91,
+    -956.48,
+    133.64
+   ],
+   "look_at": [
+    -228.38,
+    -941.9,
+    132.14
+   ],
+   "note": "building_in_carriageway | osm:way/236109633 | building footprint intersects the carriageway by 94.1 m2 | E -228.4 N -941.9 | 53.150222, 23.155652",
+   "category": "building_in_carriageway",
+   "severity": "error",
+   "finding": "osm:way/236109633"
+  },
+  {
+   "id": "wv-044-object_in_carriageway",
+   "type": "persp",
+   "fov_deg": 55.0,
+   "pos": [
+    -581.62,
+    -811.81,
+    133.64
+   ],
+   "look_at": [
+    -572.88,
+    -799.62,
+    132.14
+   ],
+   "note": "object_in_carriageway | canopy:2043 | tree centre 0.80 m inside the carriageway edge | E -572.9 N -799.6 | 53.151678, 23.150636",
+   "category": "object_in_carriageway",
+   "severity": "error",
+   "finding": "canopy:2043"
+  },
+  {
+   "id": "wv-045-object_in_carriageway",
+   "type": "persp",
+   "fov_deg": 55.0,
+   "pos": [
+    -583.37,
+    -812.3,
+    133.64
+   ],
+   "look_at": [
+    -574.62,
+    -800.12,
+    132.14
+   ],
+   "note": "object_in_carriageway | canopy:2033 | tree centre 1.69 m inside the carriageway edge | E -574.6 N -800.1 | 53.151674, 23.150609",
+   "category": "object_in_carriageway",
+   "severity": "error",
+   "finding": "canopy:2033"
+  },
+  {
+   "id": "wv-046-object_in_carriageway",
+   "type": "persp",
+   "fov_deg": 55.0,
+   "pos": [
+    -586.92,
+    -810.53,
+    133.64
+   ],
+   "look_at": [
+    -578.12,
+    -798.38,
+    132.14
+   ],
+   "note": "object_in_carriageway | canopy:1988 | tree centre 0.78 m inside the carriageway edge | E -578.1 N -798.4 | 53.151692, 23.150559",
+   "category": "object_in_carriageway",
+   "severity": "error",
+   "finding": "canopy:1988"
+  },
+  {
+   "id": "wv-047-object_in_carriageway",
+   "type": "persp",
+   "fov_deg": 55.0,
+   "pos": [
+    -688.55,
+    -779.62,
+    133.64
+   ],
+   "look_at": [
+    -678.62,
+    -768.38,
+    132.14
+   ],
+   "note": "object_in_carriageway | canopy:1078 | tree centre 0.75 m inside the carriageway edge | E -678.6 N -768.4 | 53.152013, 23.149085",
+   "category": "object_in_carriageway",
+   "severity": "error",
+   "finding": "canopy:1078"
+  },
+  {
+   "id": "wv-048-object_in_carriageway",
+   "type": "persp",
+   "fov_deg": 55.0,
+   "pos": [
+    -689.82,
+    -779.61,
+    133.64
+   ],
+   "look_at": [
+    -679.88,
+    -768.38,
+    132.14
+   ],
+   "note": "object_in_carriageway | canopy:1061 | tree centre 0.84 m inside the carriageway edge | E -679.9 N -768.4 | 53.152014, 23.149067",
+   "category": "object_in_carriageway",
+   "severity": "error",
+   "finding": "canopy:1061"
+  },
+  {
+   "id": "wv-049-object_in_carriageway",
+   "type": "persp",
+   "fov_deg": 55.0,
+   "pos": [
+    -691.07,
+    -779.34,
+    133.64
+   ],
+   "look_at": [
+    -681.12,
+    -768.12,
+    132.14
+   ],
+   "note": "object_in_carriageway | canopy:1046 | tree centre 0.68 m inside the carriageway edge | E -681.1 N -768.1 | 53.152017, 23.149048",
+   "category": "object_in_carriageway",
+   "severity": "error",
+   "finding": "canopy:1046"
+  },
+  {
+   "id": "wv-050-object_in_carriageway",
+   "type": "persp",
+   "fov_deg": 55.0,
+   "pos": [
+    -607.66,
+    -917.89,
+    133.64
+   ],
+   "look_at": [
+    -599.38,
+    -905.38,
+    132.14
+   ],
+   "note": "object_in_carriageway | canopy:1777 | tree centre 1.11 m inside the carriageway edge | E -599.4 N -905.4 | 53.150743, 23.150149",
+   "category": "object_in_carriageway",
+   "severity": "error",
+   "finding": "canopy:1777"
+  },
+  {
+   "id": "wv-051-object_in_carriageway",
+   "type": "persp",
+   "fov_deg": 55.0,
+   "pos": [
+    -760.46,
+    -955.86,
+    133.64
+   ],
+   "look_at": [
+    -751.12,
+    -944.12,
+    132.14
+   ],
+   "note": "object_in_carriageway | canopy:614 | tree centre 1.09 m inside the carriageway edge | E -751.1 N -944.1 | 53.150475, 23.147852",
+   "category": "object_in_carriageway",
+   "severity": "error",
+   "finding": "canopy:614"
+  },
+  {
+   "id": "wv-052-object_in_carriageway",
+   "type": "persp",
+   "fov_deg": 55.0,
+   "pos": [
+    -765.97,
+    -961.61,
+    133.64
+   ],
+   "look_at": [
+    -756.62,
+    -949.88,
+    132.14
+   ],
+   "note": "object_in_carriageway | canopy:581 | tree centre 0.96 m inside the carriageway edge | E -756.6 N -949.9 | 53.150426, 23.147765",
+   "category": "object_in_carriageway",
+   "severity": "error",
+   "finding": "canopy:581"
+  },
+  {
+   "id": "wv-053-object_in_carriageway",
+   "type": "persp",
+   "fov_deg": 55.0,
+   "pos": [
+    -755.02,
+    -983.28,
+    133.64
+   ],
+   "look_at": [
+    -745.88,
+    -971.38,
+    132.14
+   ],
+   "note": "object_in_carriageway | canopy:651 | tree centre 1.61 m inside the carriageway edge | E -745.9 N -971.4 | 53.150228, 23.147906",
+   "category": "object_in_carriageway",
+   "severity": "error",
+   "finding": "canopy:651"
+  },
+  {
+   "id": "wv-054-object_in_carriageway",
+   "type": "persp",
+   "fov_deg": 55.0,
+   "pos": [
+    -699.3,
+    -1030.53,
+    133.64
+   ],
+   "look_at": [
+    -690.88,
+    -1018.12,
+    132.14
+   ],
+   "note": "object_in_carriageway | canopy:970 | tree centre 2.99 m inside the carriageway edge | E -690.9 N -1018.1 | 53.149780, 23.148686",
+   "category": "object_in_carriageway",
+   "severity": "error",
+   "finding": "canopy:970"
+  },
+  {
+   "id": "wv-055-object_in_carriageway",
+   "type": "persp",
+   "fov_deg": 55.0,
+   "pos": [
+    -700.81,
+    -1031.29,
+    133.64
+   ],
+   "look_at": [
+    -692.38,
+    -1018.88,
+    132.14
+   ],
+   "note": "object_in_carriageway | canopy:963 | tree centre 1.31 m inside the carriageway edge | E -692.4 N -1018.9 | 53.149774, 23.148663",
+   "category": "object_in_carriageway",
+   "severity": "error",
+   "finding": "canopy:963"
+  },
+  {
+   "id": "wv-056-object_in_carriageway",
+   "type": "persp",
+   "fov_deg": 55.0,
+   "pos": [
+    572.14,
+    -696.46,
+    133.64
+   ],
+   "look_at": [
+    562.62,
+    -684.87,
+    132.14
+   ],
+   "note": "object_in_carriageway | sign:rule:roundabout:j:n1882953898 | sign centre 0.60 m inside the carriageway edge | E 562.6 N -684.9 | 53.152114, 23.167675",
+   "category": "object_in_carriageway",
+   "severity": "warn",
+   "finding": "sign:rule:roundabout:j:n1882953898"
+  },
+  {
+   "id": "wv-057-object_in_carriageway",
+   "type": "persp",
+   "fov_deg": 55.0,
+   "pos": [
+    572.14,
+    -696.46,
+    133.64
+   ],
+   "look_at": [
+    562.62,
+    -684.87,
+    132.14
+   ],
+   "note": "object_in_carriageway | sign:rule:roundabout:j:n1882953898 | sign centre 0.60 m inside the carriageway edge | E 562.6 N -684.9 | 53.152114, 23.167675",
+   "category": "object_in_carriageway",
+   "severity": "warn",
+   "finding": "sign:rule:roundabout:j:n1882953898"
+  },
+  {
+   "id": "wv-058-object_in_carriageway",
+   "type": "persp",
+   "fov_deg": 55.0,
+   "pos": [
+    574.91,
+    -691.42,
+    133.64
+   ],
+   "look_at": [
+    565.32,
+    -679.89,
+    132.14
+   ],
+   "note": "object_in_carriageway | sign:osm:node/1882953930 | sign centre 0.60 m inside the carriageway edge | E 565.3 N -679.9 | 53.152158, 23.167720",
+   "category": "object_in_carriageway",
+   "severity": "warn",
+   "finding": "sign:osm:node/1882953930"
+  },
+  {
+   "id": "wv-059-object_on_kerb",
+   "type": "persp",
+   "fov_deg": 55.0,
+   "pos": [
+    556.97,
+    -698.03,
+    133.64
+   ],
+   "look_at": [
+    547.61,
+    -686.31,
+    132.14
+   ],
+   "note": "object_on_kerb | sign:rule:roundabout_exit:j:n1882953899 | sign only 0.49 m outside the carriageway edge (< skrajnia 0.50 m) - stands on the kerb | E 547.6 N -686.3 | 53.152109, 23.167450",
+   "category": "object_on_kerb",
+   "severity": "warn",
+   "finding": "sign:rule:roundabout_exit:j:n1882953899"
+  }
+ ]
+}

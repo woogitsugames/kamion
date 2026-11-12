@@ -1,0 +1,1616 @@
+{
+ "region": "bialystok-industrial-c",
+ "lengthTolM": 2.0,
+ "turnTolDeg": 2.5,
+ "note": "Golden routes for tools/nav-runner (M35). Source of truth: the region KRTG graph (OSM ODbL), NOT Google. Recorded from the C# RoutePlanner by `dotnet run -c Release --project tools/nav-runner/Runner -- --write-golden` (integration r6); re-record after every graph regeneration and review the diff.",
+ "routes": [
+  {
+   "id": "G01",
+   "label": "Kombatantow->AndersaSE",
+   "from": [
+    -1.7,
+    -897.8
+   ],
+   "to": [
+    -172.0,
+    -298.0
+   ],
+   "because": "Kombatantow -> Andersa, jezdnia SE: prosto al. Tysiaclecia, bez zawracania",
+   "lengthM": 1641.9,
+   "costS": 156.6,
+   "maneuvers": [
+    {
+     "type": "SlightLeft",
+     "turnDeg": -28.6,
+     "exit": 0,
+     "street": "Kombatantów"
+    },
+    {
+     "type": "Right",
+     "turnDeg": 89.3,
+     "exit": 0,
+     "street": "Aleja Tysiąclecia Państwa Polskiego"
+    },
+    {
+     "type": "SlightRight",
+     "turnDeg": 25.5,
+     "exit": 0,
+     "street": ""
+    },
+    {
+     "type": "Arrive",
+     "turnDeg": 0,
+     "exit": 0,
+     "street": "Generała Władysława Andersa"
+    }
+   ]
+  },
+  {
+   "id": "G02",
+   "label": "Kombatantow->AndersaNW",
+   "from": [
+    -1.7,
+    -897.8
+   ],
+   "to": [
+    -457.95,
+    -55.97
+   ],
+   "because": "Kombatantow -> Andersa, jezdnia NW: przejazd przez pas dzielacy Andersa (krawedz 97) ma flage no-truck, wiec trasa zawraca na Rondzie Pamieci Biezenstwa (zjazd 4.); bez flagi no-truck 1706 m zamiast 3785 m (sprawdzone r6, test NoTruckMedian_ForcesRoundaboutDetour)",
+   "lengthM": 3785.1,
+   "costS": 320.2,
+   "maneuvers": [
+    {
+     "type": "SlightLeft",
+     "turnDeg": -28.6,
+     "exit": 0,
+     "street": "Kombatantów"
+    },
+    {
+     "type": "Right",
+     "turnDeg": 89.3,
+     "exit": 0,
+     "street": "Aleja Tysiąclecia Państwa Polskiego"
+    },
+    {
+     "type": "SlightRight",
+     "turnDeg": 25.5,
+     "exit": 0,
+     "street": ""
+    },
+    {
+     "type": "SlightRight",
+     "turnDeg": 14.9,
+     "exit": 0,
+     "street": "Rondo Pamięci Bieżeństwa 1915 roku"
+    },
+    {
+     "type": "Roundabout",
+     "turnDeg": -178.5,
+     "exit": 4,
+     "street": "Generała Władysława Andersa"
+    },
+    {
+     "type": "SlightLeft",
+     "turnDeg": -1.2,
+     "exit": 0,
+     "street": "Generała Władysława Andersa"
+    },
+    {
+     "type": "Arrive",
+     "turnDeg": 0,
+     "exit": 0,
+     "street": "Generała Władysława Andersa"
+    }
+   ]
+  },
+  {
+   "id": "G03",
+   "label": "Andersa->Kombatantow",
+   "from": [
+    -225.64,
+    -239.35
+   ],
+   "to": [
+    -205.02,
+    -854.88
+   ],
+   "because": "Andersa -> Kombatantow: przez Rondo Putry (zjazd 2.) i al. Tysiaclecia",
+   "lengthM": 1587.6,
+   "costS": 158.2,
+   "maneuvers": [
+    {
+     "type": "SlightRight",
+     "turnDeg": 8.5,
+     "exit": 0,
+     "street": "Rondo Krzysztofa Jakuba Putry Wicemarszałka Sejmu RP"
+    },
+    {
+     "type": "Roundabout",
+     "turnDeg": -137.7,
+     "exit": 2,
+     "street": "Aleja Tysiąclecia Państwa Polskiego"
+    },
+    {
+     "type": "Left",
+     "turnDeg": -93.1,
+     "exit": 0,
+     "street": "Kombatantów"
+    },
+    {
+     "type": "Arrive",
+     "turnDeg": 0,
+     "exit": 0,
+     "street": "Kombatantów"
+    }
+   ]
+  },
+  {
+   "id": "G04",
+   "label": "Andersa->Putry",
+   "from": [
+    -225.64,
+    -239.35
+   ],
+   "to": [
+    -555.6,
+    -10.18
+   ],
+   "because": "Andersa -> Rondo Putry: wjazd na rondo, zjazd 3.",
+   "lengthM": 564.6,
+   "costS": 65.5,
+   "maneuvers": [
+    {
+     "type": "SlightRight",
+     "turnDeg": 8.5,
+     "exit": 0,
+     "street": "Rondo Krzysztofa Jakuba Putry Wicemarszałka Sejmu RP"
+    },
+    {
+     "type": "Roundabout",
+     "turnDeg": 0,
+     "exit": 2,
+     "street": "Rondo Krzysztofa Jakuba Putry Wicemarszałka Sejmu RP"
+    },
+    {
+     "type": "Arrive",
+     "turnDeg": 0,
+     "exit": 0,
+     "street": "Rondo Krzysztofa Jakuba Putry Wicemarszałka Sejmu RP"
+    }
+   ]
+  },
+  {
+   "id": "G05",
+   "label": "Tysiaclecia->Putry",
+   "from": [
+    -289.19,
+    -883.86
+   ],
+   "to": [
+    -555.6,
+    -10.18
+   ],
+   "because": "Al. Tysiaclecia -> Rondo Putry: wjazd na rondo z al. Tysiaclecia (krawedz 33 -> 279). Uwaga r6: relacja only_* 274->279 tej trasy nie dotyczy (trasa nie jedzie krawedzia 274; bez zakazow skretu trasa identyczna)",
+   "lengthM": 1107.5,
+   "costS": 128.7,
+   "maneuvers": [
+    {
+     "type": "SlightRight",
+     "turnDeg": 6.3,
+     "exit": 0,
+     "street": "Aleja Tysiąclecia Państwa Polskiego"
+    },
+    {
+     "type": "Roundabout",
+     "turnDeg": 0,
+     "exit": 3,
+     "street": "Rondo Krzysztofa Jakuba Putry Wicemarszałka Sejmu RP"
+    },
+    {
+     "type": "Arrive",
+     "turnDeg": 0,
+     "exit": 0,
+     "street": "Rondo Krzysztofa Jakuba Putry Wicemarszałka Sejmu RP"
+    }
+   ]
+  },
+  {
+   "id": "G06",
+   "label": "Andersa->Grodzieńska",
+   "from": [
+    -225.64,
+    -239.35
+   ],
+   "to": [
+    -538.37,
+    -551.22
+   ],
+   "because": "Andersa -> Grodzieńska: Rondo Putry zjazd 2., potem w prawo",
+   "lengthM": 1153.2,
+   "costS": 145.6,
+   "maneuvers": [
+    {
+     "type": "SlightRight",
+     "turnDeg": 8.5,
+     "exit": 0,
+     "street": "Rondo Krzysztofa Jakuba Putry Wicemarszałka Sejmu RP"
+    },
+    {
+     "type": "Roundabout",
+     "turnDeg": -137.7,
+     "exit": 2,
+     "street": "Aleja Tysiąclecia Państwa Polskiego"
+    },
+    {
+     "type": "Right",
+     "turnDeg": 59.6,
+     "exit": 0,
+     "street": "Wileńska"
+    },
+    {
+     "type": "Left",
+     "turnDeg": -88.4,
+     "exit": 0,
+     "street": "Grodzieńska"
+    },
+    {
+     "type": "Arrive",
+     "turnDeg": 0,
+     "exit": 0,
+     "street": "Grodzieńska"
+    }
+   ]
+  },
+  {
+   "id": "G07",
+   "label": "Andersa->Wileńska",
+   "from": [
+    -225.64,
+    -239.35
+   ],
+   "to": [
+    -513.81,
+    -500.29
+   ],
+   "because": "Andersa -> Wileńska: przez Putry, skret w prawo w Wileńska (GPS_B12 #10)",
+   "lengthM": 1084,
+   "costS": 120,
+   "maneuvers": [
+    {
+     "type": "SlightRight",
+     "turnDeg": 8.5,
+     "exit": 0,
+     "street": "Rondo Krzysztofa Jakuba Putry Wicemarszałka Sejmu RP"
+    },
+    {
+     "type": "Roundabout",
+     "turnDeg": -137.7,
+     "exit": 2,
+     "street": "Aleja Tysiąclecia Państwa Polskiego"
+    },
+    {
+     "type": "Right",
+     "turnDeg": 59.6,
+     "exit": 0,
+     "street": "Wileńska"
+    },
+    {
+     "type": "Arrive",
+     "turnDeg": 0,
+     "exit": 0,
+     "street": "Wileńska"
+    }
+   ]
+  },
+  {
+   "id": "G08",
+   "label": "Andersa->Kowieńska",
+   "from": [
+    -225.64,
+    -239.35
+   ],
+   "to": [
+    -534.52,
+    -569.62
+   ],
+   "because": "Andersa -> Kowieńska: Rondo Putry zjazd 2., w prawo w Wileńska, w lewo w Grodzieńska, w prawo w Kowieńska (r6: w PR bylo 'ostry w lewo' - nieprawda)",
+   "lengthM": 1179.3,
+   "costS": 157.5,
+   "maneuvers": [
+    {
+     "type": "SlightRight",
+     "turnDeg": 8.5,
+     "exit": 0,
+     "street": "Rondo Krzysztofa Jakuba Putry Wicemarszałka Sejmu RP"
+    },
+    {
+     "type": "Roundabout",
+     "turnDeg": -137.7,
+     "exit": 2,
+     "street": "Aleja Tysiąclecia Państwa Polskiego"
+    },
+    {
+     "type": "Right",
+     "turnDeg": 59.6,
+     "exit": 0,
+     "street": "Wileńska"
+    },
+    {
+     "type": "Left",
+     "turnDeg": -88.4,
+     "exit": 0,
+     "street": "Grodzieńska"
+    },
+    {
+     "type": "Right",
+     "turnDeg": 88.6,
+     "exit": 0,
+     "street": "Kowieńska"
+    },
+    {
+     "type": "Arrive",
+     "turnDeg": 0,
+     "exit": 0,
+     "street": "Kowieńska"
+    }
+   ]
+  },
+  {
+   "id": "G09",
+   "label": "Andersa->Lidzka",
+   "from": [
+    -225.64,
+    -239.35
+   ],
+   "to": [
+    -559.93,
+    -477.71
+   ],
+   "because": "Andersa -> Lidzka: Wileńska + dwa skrety w prawo",
+   "lengthM": 1150.3,
+   "costS": 140.9,
+   "maneuvers": [
+    {
+     "type": "SlightRight",
+     "turnDeg": 8.5,
+     "exit": 0,
+     "street": "Rondo Krzysztofa Jakuba Putry Wicemarszałka Sejmu RP"
+    },
+    {
+     "type": "Roundabout",
+     "turnDeg": -137.7,
+     "exit": 2,
+     "street": "Aleja Tysiąclecia Państwa Polskiego"
+    },
+    {
+     "type": "Right",
+     "turnDeg": 59.6,
+     "exit": 0,
+     "street": "Wileńska"
+    },
+    {
+     "type": "Right",
+     "turnDeg": 89.1,
+     "exit": 0,
+     "street": "Lidzka"
+    },
+    {
+     "type": "Arrive",
+     "turnDeg": 0,
+     "exit": 0,
+     "street": "Lidzka"
+    }
+   ]
+  },
+  {
+   "id": "G10",
+   "label": "Andersa->Motoszko",
+   "from": [
+    -225.64,
+    -239.35
+   ],
+   "to": [
+    -552.62,
+    -256.37
+   ],
+   "because": "Andersa -> Motoszko: prosta trasa przez rondo",
+   "lengthM": 803.6,
+   "costS": 84,
+   "maneuvers": [
+    {
+     "type": "SlightRight",
+     "turnDeg": 8.5,
+     "exit": 0,
+     "street": "Rondo Krzysztofa Jakuba Putry Wicemarszałka Sejmu RP"
+    },
+    {
+     "type": "Roundabout",
+     "turnDeg": -137.7,
+     "exit": 2,
+     "street": "Aleja Tysiąclecia Państwa Polskiego"
+    },
+    {
+     "type": "Right",
+     "turnDeg": 90.5,
+     "exit": 0,
+     "street": "Michała Motoszko"
+    },
+    {
+     "type": "Arrive",
+     "turnDeg": 0,
+     "exit": 0,
+     "street": "Michała Motoszko"
+    }
+   ]
+  },
+  {
+   "id": "G11",
+   "label": "Andersa->Racławicka",
+   "from": [
+    -225.64,
+    -239.35
+   ],
+   "to": [
+    -385.18,
+    -706.19
+   ],
+   "because": "Andersa -> Racławicka",
+   "lengthM": 1301.4,
+   "costS": 141.5,
+   "maneuvers": [
+    {
+     "type": "SlightRight",
+     "turnDeg": 8.5,
+     "exit": 0,
+     "street": "Rondo Krzysztofa Jakuba Putry Wicemarszałka Sejmu RP"
+    },
+    {
+     "type": "Roundabout",
+     "turnDeg": -137.7,
+     "exit": 2,
+     "street": "Aleja Tysiąclecia Państwa Polskiego"
+    },
+    {
+     "type": "Right",
+     "turnDeg": 85.9,
+     "exit": 0,
+     "street": "Racławicka"
+    },
+    {
+     "type": "Left",
+     "turnDeg": -89.8,
+     "exit": 0,
+     "street": "Racławicka"
+    },
+    {
+     "type": "Arrive",
+     "turnDeg": 0,
+     "exit": 0,
+     "street": "Racławicka"
+    }
+   ]
+  },
+  {
+   "id": "G12",
+   "label": "Andersa->Skidelska",
+   "from": [
+    -225.64,
+    -239.35
+   ],
+   "to": [
+    -604.61,
+    -525.9
+   ],
+   "because": "Andersa -> Skidelska",
+   "lengthM": 1147.2,
+   "costS": 152.3,
+   "maneuvers": [
+    {
+     "type": "SlightRight",
+     "turnDeg": 8.5,
+     "exit": 0,
+     "street": "Rondo Krzysztofa Jakuba Putry Wicemarszałka Sejmu RP"
+    },
+    {
+     "type": "Roundabout",
+     "turnDeg": -137.7,
+     "exit": 2,
+     "street": "Aleja Tysiąclecia Państwa Polskiego"
+    },
+    {
+     "type": "Right",
+     "turnDeg": 82.3,
+     "exit": 0,
+     "street": "Skidelska"
+    },
+    {
+     "type": "Arrive",
+     "turnDeg": 0,
+     "exit": 0,
+     "street": "Skidelska"
+    }
+   ]
+  },
+  {
+   "id": "G13",
+   "label": "Andersa->Wołkowyska",
+   "from": [
+    -225.64,
+    -239.35
+   ],
+   "to": [
+    -504.13,
+    -634.48
+   ],
+   "because": "Andersa -> Wołkowyska: dluzsza trasa przez centrum",
+   "lengthM": 1260.7,
+   "costS": 185.7,
+   "maneuvers": [
+    {
+     "type": "SlightRight",
+     "turnDeg": 8.5,
+     "exit": 0,
+     "street": "Rondo Krzysztofa Jakuba Putry Wicemarszałka Sejmu RP"
+    },
+    {
+     "type": "Roundabout",
+     "turnDeg": -137.7,
+     "exit": 2,
+     "street": "Aleja Tysiąclecia Państwa Polskiego"
+    },
+    {
+     "type": "Right",
+     "turnDeg": 59.6,
+     "exit": 0,
+     "street": "Wileńska"
+    },
+    {
+     "type": "Left",
+     "turnDeg": -88.4,
+     "exit": 0,
+     "street": "Grodzieńska"
+    },
+    {
+     "type": "Right",
+     "turnDeg": 88.6,
+     "exit": 0,
+     "street": "Kowieńska"
+    },
+    {
+     "type": "Arrive",
+     "turnDeg": 0,
+     "exit": 0,
+     "street": "Wołkowyska"
+    }
+   ]
+  },
+  {
+   "id": "G14",
+   "label": "Andersa->Bełzy",
+   "from": [
+    -225.64,
+    -239.35
+   ],
+   "to": [
+    -92.72,
+    -763.15
+   ],
+   "because": "Andersa -> Bełzy",
+   "lengthM": 1745,
+   "costS": 184.8,
+   "maneuvers": [
+    {
+     "type": "SlightRight",
+     "turnDeg": 8.5,
+     "exit": 0,
+     "street": "Rondo Krzysztofa Jakuba Putry Wicemarszałka Sejmu RP"
+    },
+    {
+     "type": "Roundabout",
+     "turnDeg": -137.7,
+     "exit": 2,
+     "street": "Aleja Tysiąclecia Państwa Polskiego"
+    },
+    {
+     "type": "Left",
+     "turnDeg": -93.1,
+     "exit": 0,
+     "street": "Kombatantów"
+    },
+    {
+     "type": "Left",
+     "turnDeg": -53,
+     "exit": 0,
+     "street": "Władysława Bełzy"
+    },
+    {
+     "type": "Arrive",
+     "turnDeg": 0,
+     "exit": 0,
+     "street": "Władysława Bełzy"
+    }
+   ]
+  },
+  {
+   "id": "G15",
+   "label": "Tysiaclecia->Andersa",
+   "from": [
+    -289.19,
+    -883.86
+   ],
+   "to": [
+    -225.64,
+    -239.35
+   ],
+   "because": "Al. Tysiaclecia -> Andersa: obrot na Rondzie Biezenstwa",
+   "lengthM": 3179.5,
+   "costS": 264.3,
+   "maneuvers": [
+    {
+     "type": "SlightRight",
+     "turnDeg": 25.5,
+     "exit": 0,
+     "street": ""
+    },
+    {
+     "type": "SlightRight",
+     "turnDeg": 14.9,
+     "exit": 0,
+     "street": "Rondo Pamięci Bieżeństwa 1915 roku"
+    },
+    {
+     "type": "Roundabout",
+     "turnDeg": -178.5,
+     "exit": 4,
+     "street": "Generała Władysława Andersa"
+    },
+    {
+     "type": "Arrive",
+     "turnDeg": 0,
+     "exit": 0,
+     "street": "Generała Władysława Andersa"
+    }
+   ]
+  },
+  {
+   "id": "G16",
+   "label": "Kombatantow->Tysiaclecia",
+   "from": [
+    -205.02,
+    -854.88
+   ],
+   "to": [
+    -289.19,
+    -883.86
+   ],
+   "because": "Kombatantow -> al. Tysiaclecia",
+   "lengthM": 126.1,
+   "costS": 42.1,
+   "maneuvers": [
+    {
+     "type": "UTurn",
+     "turnDeg": -264.8,
+     "exit": 0,
+     "street": "Aleja Tysiąclecia Państwa Polskiego"
+    },
+    {
+     "type": "Arrive",
+     "turnDeg": 0,
+     "exit": 0,
+     "street": "Aleja Tysiąclecia Państwa Polskiego"
+    }
+   ]
+  },
+  {
+   "id": "G17",
+   "label": "Sokolska->Andersa",
+   "from": [
+    -352.17,
+    -926.8
+   ],
+   "to": [
+    -225.64,
+    -239.35
+   ],
+   "because": "Sokolska -> Andersa: Kombatantow, al. Tysiaclecia, zawrocenie na Rondzie Pamieci Biezenstwa (r6: w PR 'trasa omija zakaz no-truck' - bez flag no-truck trasa identyczna, wiec para tego nie sprawdza)",
+   "lengthM": 3259.7,
+   "costS": 283.8,
+   "maneuvers": [
+    {
+     "type": "Left",
+     "turnDeg": -88.1,
+     "exit": 0,
+     "street": "Aleja Tysiąclecia Państwa Polskiego"
+    },
+    {
+     "type": "SlightRight",
+     "turnDeg": 25.5,
+     "exit": 0,
+     "street": ""
+    },
+    {
+     "type": "SlightRight",
+     "turnDeg": 14.9,
+     "exit": 0,
+     "street": "Rondo Pamięci Bieżeństwa 1915 roku"
+    },
+    {
+     "type": "Roundabout",
+     "turnDeg": -178.5,
+     "exit": 4,
+     "street": "Generała Władysława Andersa"
+    },
+    {
+     "type": "Arrive",
+     "turnDeg": 0,
+     "exit": 0,
+     "street": "Generała Władysława Andersa"
+    }
+   ]
+  },
+  {
+   "id": "G18",
+   "label": "BitwyBialostockiej->Andersa",
+   "from": [
+    507.36,
+    -810.43
+   ],
+   "to": [
+    -225.64,
+    -239.35
+   ],
+   "because": "Bitwy Bialostockiej -> Andersa: start na krawedzi 141, Rondo Pamieci Biezenstwa zjazd 3. (r6: w PR 'hgv=no omijany, zakaz 135->141 respektowany' - bez zakazow i bez flag no-truck trasa identyczna, wiec para tego nie sprawdza)",
+   "lengthM": 1072.9,
+   "costS": 95.3,
+   "maneuvers": [
+    {
+     "type": "Roundabout",
+     "turnDeg": -90,
+     "exit": 3,
+     "street": "Generała Władysława Andersa"
+    },
+    {
+     "type": "Arrive",
+     "turnDeg": 0,
+     "exit": 0,
+     "street": "Generała Władysława Andersa"
+    }
+   ]
+  },
+  {
+   "id": "G19",
+   "label": "Wileńska->Kombatantow",
+   "from": [
+    -513.81,
+    -500.29
+   ],
+   "to": [
+    -205.02,
+    -854.88
+   ],
+   "because": "Wileńska -> Kombatantow: przez centrum, rondo Putry",
+   "lengthM": 654.3,
+   "costS": 85.3,
+   "maneuvers": [
+    {
+     "type": "Right",
+     "turnDeg": 112.6,
+     "exit": 0,
+     "street": "Aleja Tysiąclecia Państwa Polskiego"
+    },
+    {
+     "type": "Left",
+     "turnDeg": -93.1,
+     "exit": 0,
+     "street": "Kombatantów"
+    },
+    {
+     "type": "Arrive",
+     "turnDeg": 0,
+     "exit": 0,
+     "street": "Kombatantów"
+    }
+   ]
+  },
+  {
+   "id": "G20",
+   "label": "Grodzieńska->Kombatantow",
+   "from": [
+    -538.37,
+    -551.22
+   ],
+   "to": [
+    -205.02,
+    -854.88
+   ],
+   "because": "Grodzieńska -> Kombatantow",
+   "lengthM": 586,
+   "costS": 94.9,
+   "maneuvers": [
+    {
+     "type": "Left",
+     "turnDeg": -93.1,
+     "exit": 0,
+     "street": "Kombatantów"
+    },
+    {
+     "type": "Arrive",
+     "turnDeg": 0,
+     "exit": 0,
+     "street": "Kombatantów"
+    }
+   ]
+  },
+  {
+   "id": "G21",
+   "label": "Skidelska->Maczka",
+   "from": [
+    -604.61,
+    -525.9
+   ],
+   "to": [
+    -691.45,
+    64.19
+   ],
+   "because": "Skidelska -> Maczka",
+   "lengthM": 3496.7,
+   "costS": 326.6,
+   "maneuvers": [
+    {
+     "type": "Left",
+     "turnDeg": -85.3,
+     "exit": 0,
+     "street": "Wileńska"
+    },
+    {
+     "type": "Left",
+     "turnDeg": -62.8,
+     "exit": 0,
+     "street": "Aleja Tysiąclecia Państwa Polskiego"
+    },
+    {
+     "type": "SlightRight",
+     "turnDeg": 25.5,
+     "exit": 0,
+     "street": ""
+    },
+    {
+     "type": "SlightRight",
+     "turnDeg": 14.9,
+     "exit": 0,
+     "street": "Rondo Pamięci Bieżeństwa 1915 roku"
+    },
+    {
+     "type": "Roundabout",
+     "turnDeg": -178.5,
+     "exit": 4,
+     "street": "Generała Władysława Andersa"
+    },
+    {
+     "type": "SlightLeft",
+     "turnDeg": -1.2,
+     "exit": 0,
+     "street": "Generała Władysława Andersa"
+    },
+    {
+     "type": "Arrive",
+     "turnDeg": 0,
+     "exit": 0,
+     "street": "Generała Stanisława Maczka"
+    }
+   ]
+  },
+  {
+   "id": "G22",
+   "label": "Wołkowyska->Andersa",
+   "from": [
+    -504.13,
+    -634.48
+   ],
+   "to": [
+    -225.64,
+    -239.35
+   ],
+   "because": "Wołkowyska -> Andersa",
+   "lengthM": 3391.5,
+   "costS": 318.4,
+   "maneuvers": [
+    {
+     "type": "Left",
+     "turnDeg": -66.1,
+     "exit": 0,
+     "street": "Aleja Tysiąclecia Państwa Polskiego"
+    },
+    {
+     "type": "SlightRight",
+     "turnDeg": 25.5,
+     "exit": 0,
+     "street": ""
+    },
+    {
+     "type": "SlightRight",
+     "turnDeg": 14.9,
+     "exit": 0,
+     "street": "Rondo Pamięci Bieżeństwa 1915 roku"
+    },
+    {
+     "type": "Roundabout",
+     "turnDeg": -178.5,
+     "exit": 4,
+     "street": "Generała Władysława Andersa"
+    },
+    {
+     "type": "Arrive",
+     "turnDeg": 0,
+     "exit": 0,
+     "street": "Generała Władysława Andersa"
+    }
+   ]
+  },
+  {
+   "id": "G23",
+   "label": "Bełzy->Tysiaclecia",
+   "from": [
+    -92.72,
+    -763.15
+   ],
+   "to": [
+    -289.19,
+    -883.86
+   ],
+   "because": "Bełzy -> al. Tysiaclecia",
+   "lengthM": 283.6,
+   "costS": 64.6,
+   "maneuvers": [
+    {
+     "type": "Right",
+     "turnDeg": 53,
+     "exit": 0,
+     "street": "Kombatantów"
+    },
+    {
+     "type": "UTurn",
+     "turnDeg": -264.8,
+     "exit": 0,
+     "street": "Aleja Tysiąclecia Państwa Polskiego"
+    },
+    {
+     "type": "Arrive",
+     "turnDeg": 0,
+     "exit": 0,
+     "street": "Aleja Tysiąclecia Państwa Polskiego"
+    }
+   ]
+  },
+  {
+   "id": "G24",
+   "label": "Lidzka->Putry",
+   "from": [
+    -559.93,
+    -477.71
+   ],
+   "to": [
+    -555.6,
+    -10.18
+   ],
+   "because": "Lidzka -> Rondo Putry",
+   "lengthM": 791.1,
+   "costS": 140.1,
+   "maneuvers": [
+    {
+     "type": "Left",
+     "turnDeg": -89.1,
+     "exit": 0,
+     "street": "Wileńska"
+    },
+    {
+     "type": "Left",
+     "turnDeg": -62.8,
+     "exit": 0,
+     "street": "Aleja Tysiąclecia Państwa Polskiego"
+    },
+    {
+     "type": "SlightRight",
+     "turnDeg": 6.3,
+     "exit": 0,
+     "street": "Aleja Tysiąclecia Państwa Polskiego"
+    },
+    {
+     "type": "Roundabout",
+     "turnDeg": 0,
+     "exit": 3,
+     "street": "Rondo Krzysztofa Jakuba Putry Wicemarszałka Sejmu RP"
+    },
+    {
+     "type": "Arrive",
+     "turnDeg": 0,
+     "exit": 0,
+     "street": "Rondo Krzysztofa Jakuba Putry Wicemarszałka Sejmu RP"
+    }
+   ]
+  },
+  {
+   "id": "G25",
+   "label": "Kowieńska->Bieżeństwo",
+   "from": [
+    -534.52,
+    -569.62
+   ],
+   "to": [
+    555.0,
+    -717.0
+   ],
+   "because": "Kowieńska -> Rondo Pamieci Biezenstwa (cel na rondzie)",
+   "lengthM": 2994.9,
+   "costS": 338.1,
+   "maneuvers": [
+    {
+     "type": "Left",
+     "turnDeg": -88.6,
+     "exit": 0,
+     "street": "Grodzieńska"
+    },
+    {
+     "type": "Right",
+     "turnDeg": 88.4,
+     "exit": 0,
+     "street": "Wileńska"
+    },
+    {
+     "type": "Left",
+     "turnDeg": -62.8,
+     "exit": 0,
+     "street": "Aleja Tysiąclecia Państwa Polskiego"
+    },
+    {
+     "type": "SlightRight",
+     "turnDeg": 25.5,
+     "exit": 0,
+     "street": ""
+    },
+    {
+     "type": "SlightRight",
+     "turnDeg": 14.9,
+     "exit": 0,
+     "street": "Rondo Pamięci Bieżeństwa 1915 roku"
+    },
+    {
+     "type": "Roundabout",
+     "turnDeg": -92.8,
+     "exit": 3,
+     "street": ""
+    },
+    {
+     "type": "Right",
+     "turnDeg": 92.3,
+     "exit": 0,
+     "street": ""
+    },
+    {
+     "type": "Right",
+     "turnDeg": 96.2,
+     "exit": 0,
+     "street": "Stefana Batorego"
+    },
+    {
+     "type": "SlightRight",
+     "turnDeg": 0.4,
+     "exit": 0,
+     "street": "Generała Władysława Andersa"
+    },
+    {
+     "type": "Arrive",
+     "turnDeg": 0,
+     "exit": 0,
+     "street": "Generała Władysława Andersa"
+    }
+   ]
+  },
+  {
+   "id": "G26",
+   "label": "Andersa->Bieżeństwo",
+   "from": [
+    -225.64,
+    -239.35
+   ],
+   "to": [
+    555.0,
+    -717.0
+   ],
+   "because": "Andersa -> Rondo Pamieci Biezenstwa: zjazd z ronda",
+   "lengthM": 3001.3,
+   "costS": 303.1,
+   "maneuvers": [
+    {
+     "type": "SlightRight",
+     "turnDeg": 8.5,
+     "exit": 0,
+     "street": "Rondo Krzysztofa Jakuba Putry Wicemarszałka Sejmu RP"
+    },
+    {
+     "type": "Roundabout",
+     "turnDeg": -178.1,
+     "exit": 3,
+     "street": ""
+    },
+    {
+     "type": "SlightRight",
+     "turnDeg": 14.9,
+     "exit": 0,
+     "street": "Rondo Pamięci Bieżeństwa 1915 roku"
+    },
+    {
+     "type": "Roundabout",
+     "turnDeg": -92.8,
+     "exit": 3,
+     "street": ""
+    },
+    {
+     "type": "Right",
+     "turnDeg": 92.3,
+     "exit": 0,
+     "street": ""
+    },
+    {
+     "type": "Right",
+     "turnDeg": 96.2,
+     "exit": 0,
+     "street": "Stefana Batorego"
+    },
+    {
+     "type": "SlightRight",
+     "turnDeg": 0.4,
+     "exit": 0,
+     "street": "Generała Władysława Andersa"
+    },
+    {
+     "type": "Arrive",
+     "turnDeg": 0,
+     "exit": 0,
+     "street": "Generała Władysława Andersa"
+    }
+   ]
+  },
+  {
+   "id": "G27",
+   "label": "Kombatantow->Bieżeństwo",
+   "from": [
+    -205.02,
+    -854.88
+   ],
+   "to": [
+    555.0,
+    -717.0
+   ],
+   "because": "Kombatantow -> Rondo Pamieci Biezenstwa",
+   "lengthM": 3367,
+   "costS": 327.8,
+   "maneuvers": [
+    {
+     "type": "Right",
+     "turnDeg": 89.3,
+     "exit": 0,
+     "street": "Aleja Tysiąclecia Państwa Polskiego"
+    },
+    {
+     "type": "SlightRight",
+     "turnDeg": 25.5,
+     "exit": 0,
+     "street": ""
+    },
+    {
+     "type": "SlightRight",
+     "turnDeg": 14.9,
+     "exit": 0,
+     "street": "Rondo Pamięci Bieżeństwa 1915 roku"
+    },
+    {
+     "type": "Roundabout",
+     "turnDeg": -92.8,
+     "exit": 3,
+     "street": ""
+    },
+    {
+     "type": "Right",
+     "turnDeg": 92.3,
+     "exit": 0,
+     "street": ""
+    },
+    {
+     "type": "Right",
+     "turnDeg": 96.2,
+     "exit": 0,
+     "street": "Stefana Batorego"
+    },
+    {
+     "type": "SlightRight",
+     "turnDeg": 0.4,
+     "exit": 0,
+     "street": "Generała Władysława Andersa"
+    },
+    {
+     "type": "Arrive",
+     "turnDeg": 0,
+     "exit": 0,
+     "street": "Generała Władysława Andersa"
+    }
+   ]
+  },
+  {
+   "id": "G28",
+   "label": "Świsłocka->Kombatantow",
+   "from": [
+    -581.48,
+    -502.18
+   ],
+   "to": [
+    -205.02,
+    -854.88
+   ],
+   "because": "Świsłocka -> Kombatantow",
+   "lengthM": 754.8,
+   "costS": 117.9,
+   "maneuvers": [
+    {
+     "type": "Left",
+     "turnDeg": -89,
+     "exit": 0,
+     "street": "Wileńska"
+    },
+    {
+     "type": "Right",
+     "turnDeg": 112.6,
+     "exit": 0,
+     "street": "Aleja Tysiąclecia Państwa Polskiego"
+    },
+    {
+     "type": "Left",
+     "turnDeg": -93.1,
+     "exit": 0,
+     "street": "Kombatantów"
+    },
+    {
+     "type": "Arrive",
+     "turnDeg": 0,
+     "exit": 0,
+     "street": "Kombatantów"
+    }
+   ]
+  },
+  {
+   "id": "G29",
+   "label": "Łańcucka->Putry",
+   "from": [
+    -364.0,
+    -772.82
+   ],
+   "to": [
+    -555.6,
+    -10.18
+   ],
+   "because": "Łańcucka -> Rondo Putry",
+   "lengthM": 1221.9,
+   "costS": 183.3,
+   "maneuvers": [
+    {
+     "type": "Right",
+     "turnDeg": 89.8,
+     "exit": 0,
+     "street": "Aleja Tysiąclecia Państwa Polskiego"
+    },
+    {
+     "type": "Left",
+     "turnDeg": -66.1,
+     "exit": 0,
+     "street": "Aleja Tysiąclecia Państwa Polskiego"
+    },
+    {
+     "type": "SlightRight",
+     "turnDeg": 6.3,
+     "exit": 0,
+     "street": "Aleja Tysiąclecia Państwa Polskiego"
+    },
+    {
+     "type": "Roundabout",
+     "turnDeg": 0,
+     "exit": 3,
+     "street": "Rondo Krzysztofa Jakuba Putry Wicemarszałka Sejmu RP"
+    },
+    {
+     "type": "Arrive",
+     "turnDeg": 0,
+     "exit": 0,
+     "street": "Rondo Krzysztofa Jakuba Putry Wicemarszałka Sejmu RP"
+    }
+   ]
+  },
+  {
+   "id": "G30",
+   "label": "Andersa3->Motoszko",
+   "from": [
+    320.34,
+    -581.67
+   ],
+   "to": [
+    -552.62,
+    -256.37
+   ],
+   "because": "Andersa (inny punkt) -> Motoszko",
+   "lengthM": 1452.9,
+   "costS": 125.5,
+   "maneuvers": [
+    {
+     "type": "SlightRight",
+     "turnDeg": 8.5,
+     "exit": 0,
+     "street": "Rondo Krzysztofa Jakuba Putry Wicemarszałka Sejmu RP"
+    },
+    {
+     "type": "Roundabout",
+     "turnDeg": -137.7,
+     "exit": 2,
+     "street": "Aleja Tysiąclecia Państwa Polskiego"
+    },
+    {
+     "type": "Right",
+     "turnDeg": 90.5,
+     "exit": 0,
+     "street": "Michała Motoszko"
+    },
+    {
+     "type": "Arrive",
+     "turnDeg": 0,
+     "exit": 0,
+     "street": "Michała Motoszko"
+    }
+   ]
+  },
+  {
+   "id": "G31",
+   "label": "Tysiaclecia2->Kombatantow",
+   "from": [
+    -543.54,
+    67.73
+   ],
+   "to": [
+    -205.02,
+    -854.88
+   ],
+   "because": "Al. Tysiaclecia (inny punkt) -> Kombatantow",
+   "lengthM": 1253.8,
+   "costS": 141.5,
+   "maneuvers": [
+    {
+     "type": "UTurn",
+     "turnDeg": -172.6,
+     "exit": 0,
+     "street": "Aleja Tysiąclecia Państwa Polskiego"
+    },
+    {
+     "type": "Roundabout",
+     "turnDeg": -28.3,
+     "exit": 1,
+     "street": "Aleja Tysiąclecia Państwa Polskiego"
+    },
+    {
+     "type": "Left",
+     "turnDeg": -93.1,
+     "exit": 0,
+     "street": "Kombatantów"
+    },
+    {
+     "type": "Arrive",
+     "turnDeg": 0,
+     "exit": 0,
+     "street": "Kombatantów"
+    }
+   ]
+  },
+  {
+   "id": "G32",
+   "label": "Kombatantow2->Wileńska",
+   "from": [
+    -158.31,
+    -840.05
+   ],
+   "to": [
+    -513.81,
+    -500.29
+   ],
+   "because": "Kombatantow (drugi punkt) -> Wileńska",
+   "lengthM": 713.9,
+   "costS": 91.7,
+   "maneuvers": [
+    {
+     "type": "Right",
+     "turnDeg": 89.3,
+     "exit": 0,
+     "street": "Aleja Tysiąclecia Państwa Polskiego"
+    },
+    {
+     "type": "Left",
+     "turnDeg": -117.3,
+     "exit": 0,
+     "street": "Wileńska"
+    },
+    {
+     "type": "Arrive",
+     "turnDeg": 0,
+     "exit": 0,
+     "street": "Wileńska"
+    }
+   ]
+  },
+  {
+   "id": "G33",
+   "label": "Andersa->Racławicka2",
+   "from": [
+    -508.79,
+    -32.5
+   ],
+   "to": [
+    -385.18,
+    -706.19
+   ],
+   "because": "Andersa (polnocny punkt) -> Racławicka",
+   "lengthM": 3575,
+   "costS": 313.6,
+   "maneuvers": [
+    {
+     "type": "SlightRight",
+     "turnDeg": 14.9,
+     "exit": 0,
+     "street": "Rondo Pamięci Bieżeństwa 1915 roku"
+    },
+    {
+     "type": "Roundabout",
+     "turnDeg": -178.5,
+     "exit": 4,
+     "street": "Generała Władysława Andersa"
+    },
+    {
+     "type": "SlightRight",
+     "turnDeg": 8.5,
+     "exit": 0,
+     "street": "Rondo Krzysztofa Jakuba Putry Wicemarszałka Sejmu RP"
+    },
+    {
+     "type": "Roundabout",
+     "turnDeg": -137.7,
+     "exit": 2,
+     "street": "Aleja Tysiąclecia Państwa Polskiego"
+    },
+    {
+     "type": "Right",
+     "turnDeg": 85.9,
+     "exit": 0,
+     "street": "Racławicka"
+    },
+    {
+     "type": "Left",
+     "turnDeg": -89.8,
+     "exit": 0,
+     "street": "Racławicka"
+    },
+    {
+     "type": "Arrive",
+     "turnDeg": 0,
+     "exit": 0,
+     "street": "Racławicka"
+    }
+   ]
+  },
+  {
+   "id": "G34",
+   "label": "Grodzieńska->Wileńska",
+   "from": [
+    -538.37,
+    -551.22
+   ],
+   "to": [
+    -513.81,
+    -500.29
+   ],
+   "because": "Grodzieńska -> Wileńska",
+   "lengthM": 69.2,
+   "costS": 21.6,
+   "maneuvers": [
+    {
+     "type": "Right",
+     "turnDeg": 88.4,
+     "exit": 0,
+     "street": "Wileńska"
+    },
+    {
+     "type": "Arrive",
+     "turnDeg": 0,
+     "exit": 0,
+     "street": "Wileńska"
+    }
+   ]
+  },
+  {
+   "id": "G35",
+   "label": "Wileńska->Skidelska",
+   "from": [
+    -513.81,
+    -500.29
+   ],
+   "to": [
+    -604.61,
+    -525.9
+   ],
+   "because": "Wileńska -> Skidelska",
+   "lengthM": 132.3,
+   "costS": 35.6,
+   "maneuvers": [
+    {
+     "type": "Right",
+     "turnDeg": 85.3,
+     "exit": 0,
+     "street": "Skidelska"
+    },
+    {
+     "type": "Arrive",
+     "turnDeg": 0,
+     "exit": 0,
+     "street": "Skidelska"
+    }
+   ]
+  },
+  {
+   "id": "G36",
+   "label": "Putry->Bieżeństwo",
+   "from": [
+    -555.6,
+    -10.18
+   ],
+   "to": [
+    555.0,
+    -717.0
+   ],
+   "because": "Rondo Putry -> Rondo Pamieci Biezenstwa: trasa miedzy rondami przez al. Tysiaclecia",
+   "lengthM": 2436.8,
+   "costS": 237.5,
+   "maneuvers": [
+    {
+     "type": "SlightRight",
+     "turnDeg": 14.9,
+     "exit": 0,
+     "street": "Rondo Pamięci Bieżeństwa 1915 roku"
+    },
+    {
+     "type": "Roundabout",
+     "turnDeg": -92.8,
+     "exit": 3,
+     "street": ""
+    },
+    {
+     "type": "Right",
+     "turnDeg": 92.3,
+     "exit": 0,
+     "street": ""
+    },
+    {
+     "type": "Right",
+     "turnDeg": 96.2,
+     "exit": 0,
+     "street": "Stefana Batorego"
+    },
+    {
+     "type": "SlightRight",
+     "turnDeg": 0.4,
+     "exit": 0,
+     "street": "Generała Władysława Andersa"
+    },
+    {
+     "type": "Arrive",
+     "turnDeg": 0,
+     "exit": 0,
+     "street": "Generała Władysława Andersa"
+    }
+   ]
+  }
+ ]
+}
