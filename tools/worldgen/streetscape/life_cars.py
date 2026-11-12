@@ -958,12 +958,16 @@ def _wheel2(m, x_out, yc, r, sx, seg, steel, lod, wst=0, rimm="rim", tyre="tyre"
                     r1 = rr - 0.004
                     ia, ib_ = c0 + u * 0.05 - v * wi, c0 + u * 0.05 + v * wi
                     oa, ob = c0 + u1 * r1 - v1 * wo + X * 0.012, c0 + u1 * r1 + v1 * wo + X * 0.012
-                    if ns * (2 if twin else 1) > 7:               # thin spokes: one face
-                        _quad(m, face, ia, oa, ob, ib_, X)
-                    else:
-                        im, om = c0 + u * 0.05 + X * 0.012, c0 + u1 * r1 + X * 0.022
-                        _quad(m, face, ia, oa, om, im, X - v * 0.6)
-                        _quad(m, face, im, om, ob, ib_, X + v * 0.6)
+                    # ADR0089 life r3, WORKING_VALUE: two faces also on thin
+                    # spokes. The wide section survives the existing 38-degree
+                    # exporter crease; no global normal-policy change.
+                    thin = ns * (2 if twin else 1) > 7
+                    rise_inner, rise_outer = ((0.010, 0.020) if thin else
+                        (max(0.020, min(0.026, wi * 0.40)), 0.012 + max(0.014, min(0.018, wo * 0.40))))
+                    im = c0 + u * 0.05 + X * rise_inner
+                    om = c0 + u1 * r1 + X * rise_outer
+                    _quad(m, face, ia, oa, om, im, X - v * 0.6)
+                    _quad(m, face, im, om, ob, ib_, X + v * 0.6)
             fan(face, ring(0.22 * r, 0.026 - 0.010, 8), X)
             fan("rim_dark", ring(0.085 * r, 0.012, 6), X)
     else:
