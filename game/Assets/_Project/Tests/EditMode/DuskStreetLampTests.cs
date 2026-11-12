@@ -12,6 +12,32 @@ namespace Game.Tests
     public class DuskStreetLampTests
     {
         [Test]
+        public void NightReflectionUsesMappedSkyButPreservesGroundRadiance()
+        {
+            var night = LightingPreset.CreateNight();
+            Cubemap raw = null, mapped = null;
+            try
+            {
+                var model = night.CreateModel();
+                raw = model.ReflectionCubemap(night.groundAlbedo, 8);
+                mapped = model.ReflectionCubemap(night.groundAlbedo, 8, c => WorldAtmosphere.DisplaySkyFog(night, c));
+                var beforeSky = raw.GetPixel(CubemapFace.PositiveY, 4, 4);
+                var afterSky = mapped.GetPixel(CubemapFace.PositiveY, 4, 4);
+                Assert.Less(afterSky.maxColorComponent, beforeSky.maxColorComponent*0.3f,
+                    "Night reflection must not retain the bright twilight sky");
+                var beforeGround = raw.GetPixel(CubemapFace.NegativeY, 4, 4);
+                var afterGround = mapped.GetPixel(CubemapFace.NegativeY, 4, 4);
+                Assert.AreEqual(beforeGround, afterGround, "sky appearance must not dim reflected diffuse ground");
+            }
+            finally
+            {
+                if (raw != null) Object.DestroyImmediate(raw);
+                if (mapped != null) Object.DestroyImmediate(mapped);
+                Object.DestroyImmediate(night);
+            }
+        }
+
+        [Test]
         public void NightSkyPresentationChangesFogColourWithoutChangingScenePhotometry()
         {
             var night = LightingPreset.CreateNight();
