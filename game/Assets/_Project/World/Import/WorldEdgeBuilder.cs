@@ -129,7 +129,7 @@ namespace Game.World.Import
             amr.reflectionProbeUsage = ReflectionProbeUsage.Off;
 
             // ---- far-field backdrop sectors (ADR 0085) ----
-            int farTris = BuildFarField(r, edge, tier);
+            int farTris = BuildFarField(r, edge, tier, min, max);
 
             // ---- closures ----
             string closurePath = $"{r.Dir}/Meshes/world_edge_closures.asset";
@@ -174,7 +174,10 @@ namespace Game.World.Import
                       $"{closures.Count} closures {ClosureSetbackM:F0} m inside, {stubs.Count} road stubs, apron {mesh.vertexCount} verts to {ApronReachM:F0} m, far-field {farTris} tris");
         }
 
-        static int BuildFarField(RegionImporter.Result r, Transform edge, string tier)
+        /// <summary>Node of the far-field GLB with the tall ring objects kept visible beyond the far plane (ADR 0141).</summary>
+        public const string FarSkylineNode = "far_skyline";
+
+        static int BuildFarField(RegionImporter.Result r, Transform edge, string tier, Vector2 min, Vector2 max)
         {
             string glbName = tier == "High" ? "far_field.glb" : "far_field.low.glb";
             string glbPath = Path.Combine(EditorTools.RepoRoot, "Data", "raw", "derived", r.Region, "world", glbName);
@@ -221,9 +224,44 @@ namespace Game.World.Import
                 smr.lightProbeUsage = LightProbeUsage.Off;
                 smr.reflectionProbeUsage = ReflectionProbeUsage.Off;
             }
+            // ADR 0141: skyline (tall ring objects + far stand-ins of the region's landmark stacks). One renderer, the
+            // sectors' material. Kamion/World Surface holds its flagged vertices in front of the far plane, so the
+            // renderer must never be frustum-culled by distance: its bounds are grown over the whole tile (the camera
+            // is always inside them). Sibling of WorldFarField, whose 4-sector contract (ADR 0085) stays as it is.
+            var sky = g.Find(FarSkylineNode);
+            if (sky != null && sky.Primitives.Count > 0)
+            {
+                var skyMats = new Material[sky.Primitives.Count];
+                for (int i = 0; i < skyMats.Length; i++)
+                    skyMats[i] = Mat(r, sky.Primitives[i].Material, "far_field_buildings", "plaster_light");
+                var sm = WorldMeshBake.Compact($"{FarSkylineNode}_{tier}", sky.Primitives,
+                    new WorldMeshBake.Options { Uv0 = true, Uv1 = true, Colors = true });
+                sm.bounds = SkylineBounds(sm.bounds, min, max);
+                AssetDatabase.AddObjectToAsset(sm, farHost);
+                for (int i = 0; i < sm.subMeshCount; i++) totalTris += (int)(sm.GetIndexCount(i) / 3);
+                totalBytes += WorldMeshBake.GpuBytes(sm);
+
+                var sgo = new GameObject("FarSkyline");
+                sgo.transform.SetParent(edge, false);
+                sgo.AddComponent<MeshFilter>().sharedMesh = sm;
+                var smr = sgo.AddComponent<MeshRenderer>();
+                smr.sharedMaterials = skyMats;
+                smr.shadowCastingMode = ShadowCastingMode.Off;
+                smr.receiveShadows = false;
+                smr.lightProbeUsage = LightProbeUsage.Off;
+                smr.reflectionProbeUsage = ReflectionProbeUsage.Off;
+            }
             r.MemoryBytes[$"{tier}/far_field"] = totalBytes;
             EditorUtility.SetDirty(farHost);
             return totalTris;
+        }
+
+        /// <summary>Skyline mesh bounds grown to contain the whole region tile (public for the EditMode test).</summary>
+        public static Bounds SkylineBounds(Bounds mesh, Vector2 min, Vector2 max)
+        {
+            mesh.Encapsulate(new Vector3(min.x, mesh.min.y, min.y));
+            mesh.Encapsulate(new Vector3(max.x, mesh.max.y, max.y));
+            return mesh;
         }
 
         // ADR 0121: the old 30 m radius erased one carriageway at the Andersa and Tysiąclecia exits

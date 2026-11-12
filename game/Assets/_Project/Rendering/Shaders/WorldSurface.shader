@@ -79,6 +79,51 @@ Shader "Kamion/World Surface"
         float _KamionGlassShadowBias;
         #include "KamionLampPools.hlsl"
         #include "VegetationGround.hlsl"
+
+        // ADR 0141 far skyline (_FAR_FACADE = far-field meshes only; their ordinary TEXCOORD_1.x is >= 0). The far-field
+        // generator stores -(x + 16) on the tall ring objects ("clamp") and -(x + 4096) on its stand-ins for landmark
+        // stacks drawn by the region ("beyond"). Only clip-space z changes, so screen position, perspective and the
+        // fog distance stay true:
+        // - clamp: a vertex behind the plane 6 m in front of the far plane is held just in front of the far plane
+        //   (6 m .. 1.5 m, farther objects closer to it, so the depth order survives where the buffer resolves it;
+        //   otherwise the generator's far-to-near index order decides). The Low tier (far clip 900 m) keeps the city
+        //   skyline without a longer far plane.
+        // - beyond: the exact complement of the far-plane clip (z crosses the far plane where w = far), so the
+        //   stand-in appears precisely where the region's own mesh is cut off and never overlaps it.
+        // Orthographic cameras are left alone (clamp) or see no stand-in (beyond).
+        float KamionNdcAtViewDepth(float d)
+        {
+            return (UNITY_MATRIX_P._m22 * (-d) + UNITY_MATRIX_P._m23) / d;
+        }
+        float4 KamionFarSkyline(float4 cs, float flagU)
+        {
+            if (flagU > -15.5) return cs;
+            bool beyond = flagU <= -4000.0;
+            float farPlane = _ProjectionParams.z;
+            if (unity_OrthoParams.w > 0.5)
+            {
+            #if UNITY_REVERSED_Z
+                if (beyond) cs.z = -cs.w;        // behind the far plane (reversed z: far = 0)
+            #else
+                if (beyond) cs.z = cs.w * 2.0;   // behind the far plane (far = w)
+            #endif
+                return cs;
+            }
+            float w = cs.w;
+            float nFar = KamionNdcAtViewDepth(farPlane);
+            if (beyond)
+            {
+                float nIn = KamionNdcAtViewDepth(farPlane - 3.0);
+                float t = clamp((w - farPlane) / 96.0, -1.0, 1.0);
+                cs.z = (nFar + (nIn - nFar) * t) * w;
+            }
+            else if (w > farPlane - 6.0)
+            {
+                float inFront = lerp(6.0, 1.5, saturate((w - farPlane) / 4000.0));
+                cs.z = KamionNdcAtViewDepth(farPlane - inFront) * w;
+            }
+            return cs;
+        }
         ENDHLSL
 
         Pass
@@ -147,6 +192,11 @@ Shader "Kamion/World Surface"
                 o.masks = v.color;
             #if defined(_FAR_FACADE)
                 o.uv1 = v.uv1;
+                if (v.uv1.x <= -15.5)   // ADR 0141 skyline flag: restore the window-grid coordinate, keep it in view
+                {
+                    o.uv1.x = -v.uv1.x - (v.uv1.x <= -4000.0 ? 4096.0 : 16.0);
+                    o.positionCS = KamionFarSkyline(o.positionCS, v.uv1.x);
+                }
             #endif
                 return o;
             }
@@ -366,9 +416,24 @@ Shader "Kamion/World Surface"
             #pragma vertex DepthVert
             #pragma fragment DepthFrag
             #pragma multi_compile_instancing
-            struct A { float4 positionOS : POSITION; UNITY_VERTEX_INPUT_INSTANCE_ID };
+            #pragma shader_feature_local _FAR_FACADE
+            struct A
+            {
+                float4 positionOS : POSITION;
+            #if defined(_FAR_FACADE)
+                float2 uv1 : TEXCOORD1;
+            #endif
+                UNITY_VERTEX_INPUT_INSTANCE_ID
+            };
             struct V { float4 positionCS : SV_POSITION; };
-            V DepthVert(A v) { UNITY_SETUP_INSTANCE_ID(v); V o; o.positionCS = TransformObjectToHClip(v.positionOS.xyz); return o; }
+            V DepthVert(A v)
+            {
+                UNITY_SETUP_INSTANCE_ID(v); V o; o.positionCS = TransformObjectToHClip(v.positionOS.xyz);
+            #if defined(_FAR_FACADE)
+                o.positionCS = KamionFarSkyline(o.positionCS, v.uv1.x);   // ADR 0141: same depth as ForwardLit
+            #endif
+                return o;
+            }
             half4 DepthFrag(V i) : SV_Target { return 0; }
             ENDHLSL
         }
