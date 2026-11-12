@@ -1,6 +1,10 @@
 param([ValidateSet('Low','High')][string[]]$Tiers=@('Low','High'),[ValidatePattern('^[a-z0-9-]*$')][string]$Suffix='', [ValidatePattern('^[a-z0-9-]+$')][string]$Stage='before')
 $ErrorActionPreference='Stop'
 Set-Location ([IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..')))
+if(Test-Path artifacts/life-r5/STOP-REQUESTED.json){
+ @{time=(Get-Date -Format o);reason='User requested stop and handoff; existing capture batch drained naturally';unity_started=$false;stage=$Stage}|ConvertTo-Json|Set-Content artifacts/life-r5/STOP-DRAINED.json
+ throw 'STOP_REQUESTED: no new native LOD job; handoff requested by user'
+}
 if((git branch --show-current).Trim() -ne 'gpt-life-r5'){throw 'Wrong branch'}
 . scripts/env.ps1
 $proof=Get-Content "artifacts/life-r5/$Stage-inputs.json" -Raw|ConvertFrom-Json
