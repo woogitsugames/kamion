@@ -21,3 +21,10 @@ after1 (build 2) obejrzane: portal w 275528/837235/2279/381800 na miejscu, wiadu
 Build 3 OK (522 s): U-4a postawione po przyciągnięciu 5.4 m na nos wyspy; D-3/D-6 przy rondzie Bieżeństwa nadal stale (jezdnia generowana > 8 m) - OTWARTE, udokumentowane w teście i ADR.
 W toku: import-2 + render `after` (Low overcast+clear) oraz pełne `pytest tests/gis` (heavy).
 NASTĘPNY KROK: `bash artifacts/gate3-signs/make-pairs.sh after; python artifacts/gate3-signs/stats-diff.py after`
+
+## 5. Finał (build 3 zaimportowany)
+Rendery `after/` (Low-overcast) i `after-clear/` (Low-clear), pary przed/po `pairs-after/*.jpg` (40), wycinki `crop-837235-portal.jpg`, `crop-381800-u4a.jpg`. Obejrzane: portal + 2 tablice + 2x A-30 z tabliczką (275528/837235/2279/381800), U-4a na nosie wyspy (381800, 2279), ekran tylko po prawej na wiadukcie (494288), tabliczki nazwy ronda (2818, 5043).
+Draws Low-overcast G3-B (20 kamer, szacunek edytora przed batchingiem, `stats-diff-after.txt`): delta razem -10..+15, mediana 0; tris statyczne -3..-23k (dryf baseline), instancje +0..+2k.
+EditMode 261/261. tests/gis/test_gate3_landmarks.py 12 passed. Pełne `pytest tests/gis` - czeka na slot heavy (log `pytest-gis.log`).
+OTWARTE: D-3/D-6 przy rondzie Bieżeństwa (stale: jezdnia generowana), pozy kamer SBS (3281350 ~45 m, grobin ~12 m), czytelność szkła ekranów na Low-overcast.
+NASTĘPNY KROK: `Get-Content artifacts/gate3-signs/pytest-gis.log -Tail 15` ; scalenie: `git merge gate3-signs` + `uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c` + import

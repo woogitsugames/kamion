@@ -19,7 +19,9 @@ D51 (recognisability of the route before material polish).
 
 ## Decision
 
-1. **Portal**: `andersa-putry-approach-gantry` `distance_m` 40 -> 99 (same way / node), board rows after the 2020 frame.
+1. **Portal**: `andersa-putry-approach-gantry` re-anchored: 39 m before OSM node 12620261934 on way 266084693 (was 40 m
+   before node 2840742308); generated centre (-260.8, -208.3), 0.4 m from the orthophoto reading. Board rows after the
+   2020 frame.
 2. **New module `tools/worldgen/streetscape/gate3_landmarks.py`**, override `kind: gate3_sign`: a sign assembly placed
    by `at_en` (orthophoto) or `along` (way / node / distance / side of travel). One assembly = one prototype
    `sign_g3_<key>` with ONE material `sign_<key>` (post, faces and backs share a <= 512 px texture written through the
@@ -27,6 +29,9 @@ D51 (recognisability of the route before material polish).
    plate, U-4a, D-1, D-3, D-6, street-name plate (teal plate and post as in Białystok).
    Entries: two warning signs before the portal, U-4a on the island nose, two name plates and D-3 / D-6 at Rondo
    Bieżeństwa (the last four +- 3-5 m, low confidence: the island is under the deck on the orthophoto).
+   An authored point that falls on the generated carriageway is moved 0.6 m behind the nearest carriageway edge when
+   that edge is within 8 m (`snapped_m` in QA; the U-4a moved 5.4 m onto the generated island nose), otherwise the
+   entry is reported stale. A point under a viaduct deck takes the terrain height, not the deck.
 3. **Viaduct screens**: `bridge_style.set.screen_side: travel_right` (`roads.meshing.screen_sides`); the edge without
    a screen keeps its railing. Applied to the Putry viaduct; the southbound deck is assumed symmetric (UNVERIFIED).
 4. **Ground noise barriers**: glazed style gets a joint rail at mid height of the glazing; zones 4-6 (al. Tysiąclecia)
@@ -42,6 +47,11 @@ No change in `signs.py`, `signs_route.py`, `fab_details.py`; `signs.square / d1 
 
 ## Not done / open
 
+- **D-3 / D-6 at the northern slip of Rondo Bieżeństwa (#11) are NOT placed**: the generated junction has carriageway
+  where the orthophoto has the small island (more than 8 m from any edge). Both entries stay in `overrides.yaml` and
+  are listed under `gate3_landmarks.stale` until the junction stream builds that island and crossing.
+- Draw estimate (editor, Low overcast, before batching) on the G3-B cameras: see `artifacts/gate3-signs/` stats; the
+  baseline is main's imported world, which already differed from main's code, so the delta is not fully isolated.
 - Pose errors confirmed, not fixed here (camera files belong to the SBS stream): 3281350 (~45 m along the road),
   275528 (~12 m), 1801374 (~15-20 m), 494288 (heading).
 - Crossing with paved island at Rondo Bieżeństwa (#11), retail frontage (#21/#22), missing pier (#9/#10), gravel
