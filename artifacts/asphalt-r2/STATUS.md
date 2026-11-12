@@ -38,3 +38,4 @@
 2026-11-12T02:16:20.0777601+01:00: EditMode 309/309 passed, 0 failed, 0 skipped, exit 0. XML zachowany w artifacts/asphalt-r2/candidate-editmode.xml. To kontrola kompilacji/regresji edytora, nie ocena wyglądu. World nadal działa w heavy (2020), przed importem wymagany jego terminalny wynik.
 2026-11-12T02:18:35.8529828+01:00: Zapisano robocze fakty do raportu końcowego (REPORT-DRAFT, nie finalny REPORT). Generator działa: pass 1 / planowanie działek, bez uruchamiania kolejnego heavy. EditMode ukończony.
 2026-11-12T02:22:01.7626284+01:00: heavy World owner=gpt-asphalt-r2 exit=0; log artifacts/asphalt-r2/candidate-World.log. Slot zwolniony po zakończeniu procesu.
+2026-11-12T02:22:15.8222997+01:00: Producent świata kandydata exit 0, 424,1 s, brak fallback=True. Audyt odwołań przed importem exit 0. Następny krok: import i 4 serie obrazów kandydata.
