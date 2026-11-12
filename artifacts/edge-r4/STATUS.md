@@ -28,3 +28,4 @@ Krok 9: źródła Sky opisują opacity=0 w dolnej półsferze fotografii oraz ob
 2026-11-12T10:30:00.4908813+01:00 Native before High-overcast 1280x720: 11 kamer, każdy PNG ma proporcje źródłowej fotografii; diagnostyczna 2948 pozostaje C.
 2026-11-12T10:30:20.0052649+01:00 Native before High-overcast 1280x960: 15 kamer, każdy PNG ma proporcje źródłowej fotografii; diagnostyczna 2948 pozostaje C.
 2026-11-12T10:30:20.6436114+01:00 Pełne Before i native ukończone; siatki apron/far, źródłowe GLB i profil zamrożone z SHA. Następnie maski klina; kod produkcyjny r4 jeszcze bez zmiany.
+2026-11-12T10:30:39.4941796+01:00 Maska own-opaque Low-clear gotowa dla 2948/303305 w1280×720; materiały rzeczywiście wybrane, analiza obrazu nadal otwarta.
