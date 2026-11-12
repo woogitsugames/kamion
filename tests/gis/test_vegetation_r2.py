@@ -3,6 +3,7 @@ import math
 from pathlib import Path
 import numpy as np
 
+from conftest import require_lfs
 from streetscape.foliage_policy import crown_opening, leaf_lod_indices, metric_patch_field, osm_tree_species
 from streetscape.leaf_textures import pine_scan
 from streetscape.vegetation_metrics import foliage_mask
@@ -74,6 +75,7 @@ def test_shipping_pine_impostors_retain_branch_connections():
     # disconnected186 crown components over these atlases; connected CC049.
     # Includes all six views of all three variants; independent of optional raw.
     root = Path(__file__).resolve().parents[2]
+    require_lfs(*(root / f'art-source/world/vegetation/impostor_tree_pine_{v}.png' for v in range(3)))
     components = 0
     for variant in range(3):
         path=root/f'art-source/world/vegetation/impostor_tree_pine_{variant}.png'
