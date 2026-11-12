@@ -180,3 +180,17 @@ Model produkcyjny nie został jeszcze zmieniony, baseline czeka w kolejce FIFO.
 Próba wymaga renderu i porównania z fotografią; w razie regresji zostanie odrzucona.
 Przygotowany audyt GLB ma ochronić wszystkie trójkąty poza trzema koronami,
 progi i liczbę LOD oraz sylwetkę LOD2. Pigment tynku D48 i atlasy bez zmiany.
+
+Wariant A odrzucono po podglądzie wszystkich ośmiu PNG (Low/High overcast,
+cztery kamery). Cztery wąskie pierścienie i boczne karty dały cienki stożek
+z płaskimi klinami i trójkątnymi otworami. Zachowane archiwum variants/a,
+REJECTED-A.md i pary fotograficzne; techniczny audyt nie był akceptacją obrazu.
+Waiter pojedynczego pliku GIS anulowany przed uzyskaniem heavy, bez uruchomienia
+pytest; nie zatrzymano żadnego generatora ani cudzego procesu.
+
+Próba B zachowuje pierwotne 12/54 karty, ich położenia, orientacje i UV, więc
+nie zwiększa powierzchni alfa. Rdzeń ma osiem pierścieni, ale ich promienie
+zależą od azymutu, a wysokości narożników są przesunięte wewnątrz bezpiecznej
+części odstępu poziomów. Normalne wynikają z rzeczywistej powierzchni.
+Konfiguracja jest WORKING_VALUE; trójkąty planowane jak w baseline, wynik obrazu
+jeszcze nieznany. Atlas, tynk i rozmieszczenie zieleni pozostają bez zmian.
