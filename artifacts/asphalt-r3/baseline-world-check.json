@@ -1,0 +1,20 @@
+{
+  "checked_at": "2026-11-12T16:00:22.5626038+01:00",
+  "world_exit": 0,
+  "world_elapsed_s": 624.7,
+  "manifest_sha256": "BF4A2C8F5DD033E22868E642BAFF744EACF5DDF5AD0A25236786B71DAD777B1B",
+  "world_log_sha256": "542594D08DC45DBEFF925BA5ABA8ADFE721669BE85DB69601885922486AFE8C4",
+  "reference_audit": {
+    "file_sha256": "7185B40A850249713ECB018F6E128D34D3C3BB672FD0BCC95A21203122CD6A7C",
+    "mismatches": [],
+    "checked": 196
+  },
+  "megascans": {
+    "fallback_field_present": false,
+    "available": 15,
+    "literal_fallback_true_in_log": false,
+    "added_props": 320,
+    "fallback": null
+  },
+  "note": "Fresh canonical world only. Unity import and GLB surface/geometry audit are still queued. Missing fallback field is not asserted to be an explicit false value. No product candidate or full baseline accepted."
+}
