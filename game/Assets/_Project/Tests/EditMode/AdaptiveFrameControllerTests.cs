@@ -107,6 +107,16 @@ namespace Game.Tests.EditMode
         }
 
         [Test]
+        public void StepsDownAtTenFps()
+        {
+            // ADR 0152: A16 High / Fold Ultra at ~10 FPS (GPU ~90-150 ms) - a 2 s window held ~20 samples < 30 and the
+            // scale stayed at 1.00 forever. Now the window grows to MinSamples and the scale reaches the floor.
+            var c = NewScale(); float t = 0f;
+            for (int i = 0; i < 200; i++) { t += 0.1f; c.AddFrame(t, 95f * c.Scale * c.Scale, 30); }
+            Assert.AreEqual(0.80f, c.Scale, 1e-4f);
+        }
+
+        [Test]
         public void NoGpuTimingsKeepTheTierScale()
         {
             var c = NewScale(); float t = 0f;

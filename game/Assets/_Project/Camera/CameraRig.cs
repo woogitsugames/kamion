@@ -125,6 +125,7 @@ namespace Game.Cameras
 
         void FixedUpdate()
         {
+            m_FixedSteps++;
             if (targetBody == null) return;
             Vector3 v = targetBody.linearVelocity;
             speedKmh = Vector3.Dot(v, targetBody.transform.forward) * 3.6f;
@@ -149,7 +150,52 @@ namespace Game.Cameras
                 case CameraMode.Chase: UpdateChase(dt); break;
                 default: UpdateOrbit(); break;
             }
+            if (PoseLogPath != null) LogPose();
+            m_FixedSteps = 0;
         }
+
+        // ---- ADR 0152 diagnostics: per-frame camera pose (launch argument camlog=1), off by default --------------------
+        /// <summary>CSV path of the per-frame pose log; null = off. Set by the bootstrap from the launch argument camlog=1.</summary>
+        public static string PoseLogPath;
+        int m_FixedSteps;
+        float[] m_Log;
+        int m_LogN;
+        Vector3 m_LastTargetPos;
+        const int LogCols = 12, LogRows = 200;
+
+        void LogPose()
+        {
+            if (m_Log == null) { m_Log = new float[LogCols * LogRows]; try { System.IO.File.WriteAllText(PoseLogPath, "t_s,dt_ms,fixed_steps,head_x_mm,head_z_mm,eye_x_mm,eye_y_mm,eye_z_mm,pitch_deg,yaw_deg,roll_deg,target_move_mm
+"); } catch { PoseLogPath = null; return; } m_LastTargetPos = target.position; }
+            Vector3 eye = target.InverseTransformPoint(cam.transform.position);
+            Vector3 e = (Quaternion.Inverse(target.rotation) * cam.transform.rotation).eulerAngles;
+            int o = m_LogN * LogCols;
+            m_Log[o] = Time.realtimeSinceStartup; m_Log[o + 1] = Time.deltaTime * 1000f; m_Log[o + 2] = m_FixedSteps;
+            m_Log[o + 3] = m_HeadPos.x * 1000f; m_Log[o + 4] = m_HeadPos.z * 1000f;
+            m_Log[o + 5] = eye.x * 1000f; m_Log[o + 6] = eye.y * 1000f; m_Log[o + 7] = eye.z * 1000f;
+            m_Log[o + 8] = Mathf.DeltaAngle(0f, e.x); m_Log[o + 9] = Mathf.DeltaAngle(0f, e.y); m_Log[o + 10] = Mathf.DeltaAngle(0f, e.z);
+            m_Log[o + 11] = (target.position - m_LastTargetPos).magnitude * 1000f;
+            m_LastTargetPos = target.position;
+            if (++m_LogN == LogRows) FlushPoseLog();
+        }
+
+        void FlushPoseLog()
+        {
+            if (m_Log == null || m_LogN == 0 || PoseLogPath == null) return;
+            var sb = new System.Text.StringBuilder(m_LogN * 96);
+            var ci = System.Globalization.CultureInfo.InvariantCulture;
+            for (int r = 0; r < m_LogN; r++)
+            {
+                for (int c = 0; c < LogCols; c++) { if (c > 0) sb.Append(','); sb.Append(m_Log[r * LogCols + c].ToString(c == 0 ? "F3" : "F2", ci)); }
+                sb.Append('
+');
+            }
+            try { System.IO.File.AppendAllText(PoseLogPath, sb.ToString()); } catch { }
+            m_LogN = 0;
+        }
+
+        void OnDisable() => FlushPoseLog();
+        void OnApplicationPause(bool paused) { if (paused) FlushPoseLog(); }
 
         /// <summary>Public for tests; called from LateUpdate in Cab mode.</summary>
         public void UpdateCab(float dt)
@@ -157,10 +203,7 @@ namespace Game.Cameras
             var anchor = eyeAnchor != null ? eyeAnchor : target;
             // Head lags behind the cab: braking (a_z < 0) moves the head forward, cornering moves it outward.
             Vector3 desired = Vector3.ClampMagnitude(new Vector3(-m_AccFiltered.x, 0f, -m_AccFiltered.z) * headGain, headMaxOffset);
-            float w = 2f * Mathf.PI * headFrequency;
-            Vector3 acc = w * w * (desired - m_HeadPos) - 2f * headDamping * w * m_HeadVel;
-            m_HeadVel += acc * dt;
-            m_HeadPos += m_HeadVel * dt;
+            StepHeadSpring(desired, dt, headFrequency, headDamping, ref m_HeadPos, ref m_HeadVel, LegacyHeadIntegration);
             m_HeadPos = Vector3.ClampMagnitude(m_HeadPos, headMaxOffset * 1.5f);
             if (!IsFinite(m_HeadPos) || !IsFinite(m_HeadVel)) { m_HeadPos = Vector3.zero; m_HeadVel = Vector3.zero; }
 
@@ -202,6 +245,28 @@ namespace Game.Cameras
             if (!(aspect > 0f) || aspect >= 1f) return settingDeg;
             float v = 2f * Mathf.Atan(Mathf.Tan(settingDeg * 0.5f * Mathf.Deg2Rad) / aspect) * Mathf.Rad2Deg;
             return Mathf.Min(v, 90f);
+        }
+
+        /// <summary>ADR 0152 A/B only (launch argument cam_legacy=1): the pre-0152 single explicit step per rendered frame.</summary>
+        public static bool LegacyHeadIntegration;
+        /// <summary>Largest integration step of the head spring (s). ADR 0152: one semi-implicit Euler step per frame is
+        /// unstable for w*dt above ~1.1 (1.8 Hz, zeta 0.7: dt &gt; ~0.09 s, i.e. below ~11 FPS) - the eigenvalue goes below -1
+        /// and the head offset flips sign every frame up to the clamp (Fold Ultra and A16 High at 8-10 FPS).</summary>
+        public const float HeadMaxStepS = 1f / 60f;
+
+        /// <summary>Damped head spring towards <paramref name="desired"/> over <paramref name="dt"/>; sub-stepped so it is
+        /// stable at any frame time (allocation-free, at most 12 sub-steps: dt is capped by Time.maximumDeltaTime 0.1 s).</summary>
+        public static void StepHeadSpring(Vector3 desired, float dt, float frequencyHz, float damping, ref Vector3 pos, ref Vector3 vel, bool legacy = false)
+        {
+            float w = 2f * Mathf.PI * frequencyHz;
+            int n = legacy ? 1 : Mathf.Clamp(Mathf.CeilToInt(dt / HeadMaxStepS), 1, 12);
+            float h = dt / n;
+            for (int i = 0; i < n; i++)
+            {
+                Vector3 acc = w * w * (desired - pos) - 2f * damping * w * vel;
+                vel += acc * h;
+                pos += vel * h;
+            }
         }
 
         static bool IsFinite(Vector3 v) => !(float.IsNaN(v.x) || float.IsNaN(v.y) || float.IsNaN(v.z) || float.IsInfinity(v.x) || float.IsInfinity(v.y) || float.IsInfinity(v.z));
