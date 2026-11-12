@@ -29,12 +29,14 @@ $all = foreach ($camera in $cameraFile.cameras | Where-Object id -in $ids) {
         @{id=$building.id;source=$building.height_source;height_m=$building.h;
           raw_e=$e;raw_n=$n;effective_e=$ee;effective_n=$en;
           horizontal_angle_deg=$angle;forward_distance_m=$forward;
-          low_far_900m_excludes_centroid=($forward -gt 900)}
+          low_far_900m_excludes_centroid=($forward -gt 900);
+          gate3_high_far_1400m_excludes_centroid=($forward -gt 1400)}
     }
     @{camera=$camera.id;camera_e=$ce;camera_n=$cn;candidate_blocks=@($objects|Sort-Object horizontal_angle_deg);
-      in_horizontal_fov=@($objects).Count;beyond_low_far_centroids=@($objects|Where-Object low_far_900m_excludes_centroid).Count}
+      in_horizontal_fov=@($objects).Count;beyond_low_far_centroids=@($objects|Where-Object low_far_900m_excludes_centroid).Count;
+      beyond_gate3_high_far_centroids=@($objects|Where-Object gate3_high_far_1400m_excludes_centroid).Count}
 }
 @{schema='edge-planar-visibility-diagnostic/1';source_sha256=(Get-FileHash $cachePath -Algorithm SHA256).Hash;
-  note='Planar centroids only; no occlusion, vertical frustum, roof, fog, camera-pose verification or photographic identity claim. Current source foreshortening reproduced analytically. 900 m is the current Low far clip.';
+  note='Planar centroids only; no occlusion, vertical frustum, roof, fog, camera-pose verification or photographic identity claim. Current source foreshortening reproduced analytically. Low far clip=900. High profile=2500, but Gate3Cameras authors 1400 and VisualQaRunner takes min(authored,tier), so these High photo captures are limited to 1400 by the source rule, unlike the regular High driver camera.';
   cameras=@($all)} | ConvertTo-Json -Depth 8 | Set-Content "$PSScriptRoot/skyline-visibility.json"
 $all | Select-Object camera,in_horizontal_fov,beyond_low_far_centroids | Format-Table -AutoSize
