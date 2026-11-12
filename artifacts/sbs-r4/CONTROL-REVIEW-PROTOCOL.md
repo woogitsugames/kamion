@@ -2,7 +2,18 @@
 
 Plan obejmuje 15 prób, ale liczba renderów zależy od znalezienia jednoznacznej widocznej jezdni. Odrzucenia pozostają w planie. Każda kamera jest C. Kontrole przenoszą wcześniejszy przepis XY, yaw i FOV na świeży świat, z ponownym osadzeniem nominalnego oka na widocznej powierzchni. Nie są dokładnym odtworzeniem pikseli r3. Delta przesunięcia w nagłówku jest liczona od tej kontroli, nie od produkcyjnej kamery.
 
-Ocenę zaczynamy od pełnego natywnego zdjęcia i renderu. Arkusz 960 px służy orientacji. Przybliżone regiony zapisane poniżej pochodzą z ręcznego przeglądu r3, są WORKING_VALUE i nie stanowią punktów kalibracyjnych ani automatycznego testu. Trzeba porównać stałe elementy świata; ruchome samochody i sam histogram nie kwalifikują pozy.
+Ocenę zaczynamy od pełnego natywnego zdjęcia porównawczego i renderu. „Natywne” oznacza tu plik porównawczy w jego własnej rozdzielczości, także po wcześniej zapisanej rektyfikacji SfM; nie oznacza nieprzekształconego oryginału aparatu. Oryginał i zdjęcie porównawcze mają odrębne SHA w referencjach. Arkusz 960 px służy orientacji. Przybliżone regiony zapisane poniżej pochodzą z ręcznego przeglądu r3, są WORKING_VALUE i nie stanowią punktów kalibracyjnych ani automatycznego testu. Trzeba porównać stałe elementy świata; ruchome samochody i sam histogram nie kwalifikują pozy.
+
+Sprawdzono optykę zapisaną w migawce r4. Wszystkie sześć źródeł ma intrinsics SfM i rektyfikację; FOV nie jest wspólną dowolną wartością 70°. Poniższe wartości są odczytem istniejących danych, nie nowym pomiarem lub zatwierdzeniem SfM. Roll, GPS i dokładność estymacji nadal pozostają niezweryfikowane. Próby zachowują FOV zgodny z zapisanym obrazem porównawczym.
+
+| Źródła | Model źródła | Focal obrazu po rektyfikacji | Pionowy FOV renderu |
+|---|---|---:|---:|
+| 275528, 837235 | fisheye | 0,5 | 58,71551° |
+| 328135, 297817 | perspective | 0,9388413792 | 43,54635° |
+| 180137 | perspective | 0,5 | 58,71551° |
+| 494288 | perspective | 1,3087019493 | 31,97862° |
+
+Pełne ID, parametry i SHA źródeł zachowuje six-pose-optics-preflight.json. Zmiana samego renderowego FOV bez zgodnej zmiany rektyfikacji zdjęcia nie jest poprawną kalibracją.
 
 | Zdjęcie | Kontrola i zmienna | Dwie niezależne obserwacje wymagane przed zmianą produkcyjnej pozy |
 |---|---|---|

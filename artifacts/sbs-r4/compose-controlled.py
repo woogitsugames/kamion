@@ -53,7 +53,7 @@ for p in plan['probes']:
     kind='KONTROLA' if p['control'] else 'PRÓBA'
     label=f'{camera} | {kind} | C — diagnostyka, nie ocena D51'
     draw.text((8,5),label,font=font,fill='white')
-    draw.text((8,25),'Zdjęcie — bez zmiany kadru',font=small,fill='#ddd')
+    draw.text((8,25),'Zdjęcie porównawcze — rektyfikacja SfM',font=small,fill='#ddd')
     draw.text((498,25),'Render Low-overcast — ten sam FOV i proporcje',font=small,fill='#ddd')
     canvas.paste(ImageOps.contain(photo_image,(470,pane_height)),(0,44))
     canvas.paste(ImageOps.contain(render,(470,pane_height)),(490,44))

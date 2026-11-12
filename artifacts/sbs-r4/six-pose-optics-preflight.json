@@ -1,0 +1,99 @@
+{
+  "cameras_sha256": "41686dd5d9a9ef0969ab9d7772e359b150a6f1783b67538d9d8f875880f1ae2e",
+  "intrinsics_sha256": "3becbc9e737e3ac0ead357ac831ad5b6cdfa4ae02bdaaf8914292ab165dd551b",
+  "rows": [
+    {
+      "pose_confidence": "B",
+      "camera": "sbs-g3-b-275528677534382",
+      "id": "275528677534382",
+      "exif_orientation": 1,
+      "render_vertical_fov_deg": 58.71551,
+      "camera_parameters": [
+        0.47094983535563,
+        -0.055631972088947,
+        0.00056561603747365
+      ],
+      "camera_type": "fisheye",
+      "rectified_focal": 0.5,
+      "assumptions": "NMT/eye/manual horizon WORKING_VALUE; FOV and radial rectification from Mapillary SfM intrinsics. Roll/GPS/SfM accuracy unverified."
+    },
+    {
+      "pose_confidence": "B",
+      "camera": "sbs-g3-b-837235577143499",
+      "id": "837235577143499",
+      "exif_orientation": 1,
+      "render_vertical_fov_deg": 58.71551,
+      "camera_parameters": [
+        0.47094983535563,
+        -0.055631972088947,
+        0.00056561603747365
+      ],
+      "camera_type": "fisheye",
+      "rectified_focal": 0.5,
+      "assumptions": "NMT/eye/manual horizon WORKING_VALUE; FOV and radial rectification from Mapillary SfM intrinsics. Roll/GPS/SfM accuracy unverified."
+    },
+    {
+      "pose_confidence": "B",
+      "camera": "sbs-g3-b-3281350541967811",
+      "id": "3281350541967811",
+      "exif_orientation": 1,
+      "render_vertical_fov_deg": 43.54635,
+      "camera_parameters": [
+        0.91149648466251,
+        0.07459395955721,
+        -0.094079008330183
+      ],
+      "camera_type": "perspective",
+      "rectified_focal": 0.9388413792023853,
+      "assumptions": "NMT/eye/manual horizon WORKING_VALUE; FOV and radial rectification from Mapillary SfM intrinsics. Roll/GPS/SfM accuracy unverified."
+    },
+    {
+      "pose_confidence": "B",
+      "camera": "sbs-g3-b-297817221966185",
+      "id": "297817221966185",
+      "exif_orientation": 1,
+      "render_vertical_fov_deg": 43.54635,
+      "camera_parameters": [
+        0.91149648466251,
+        0.07459395955721,
+        -0.094079008330183
+      ],
+      "camera_type": "perspective",
+      "rectified_focal": 0.9388413792023853,
+      "assumptions": "NMT/eye/manual horizon WORKING_VALUE; FOV and radial rectification from Mapillary SfM intrinsics. Roll/GPS/SfM accuracy unverified."
+    },
+    {
+      "pose_confidence": "B",
+      "camera": "sbs-g3-b-1801374876712141",
+      "id": "1801374876712141",
+      "exif_orientation": 1,
+      "render_vertical_fov_deg": 58.71551,
+      "camera_parameters": [
+        0.48184612819983,
+        0.025693975560915,
+        -0.0076224985225763
+      ],
+      "camera_type": "perspective",
+      "rectified_focal": 0.5,
+      "assumptions": "NMT/eye/manual horizon WORKING_VALUE; FOV and radial rectification from Mapillary SfM intrinsics. Roll/GPS/SfM accuracy unverified."
+    },
+    {
+      "pose_confidence": "B",
+      "camera": "sbs-g3-b-494288258686575",
+      "id": "494288258686575",
+      "exif_orientation": 1,
+      "render_vertical_fov_deg": 31.97862,
+      "camera_parameters": [
+        1.2705844168153,
+        0.071836924351113,
+        -0.094628538793758
+      ],
+      "camera_type": "perspective",
+      "rectified_focal": 1.308701949319759,
+      "assumptions": "NMT/eye/manual horizon WORKING_VALUE; FOV and radial rectification from Mapillary SfM intrinsics. Roll/GPS/SfM accuracy unverified."
+    }
+  ],
+  "checked_at": "2026-11-12T14:38:55.5332474+01:00",
+  "scope": "Existing captured intrinsics only; no new calibration, rectification or pose change",
+  "references_sha256": "f7991691c5868e67658ff9879c6b736c372b4ac02f1be9b84cebca4cd51b40af"
+}
