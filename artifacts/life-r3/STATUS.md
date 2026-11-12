@@ -42,3 +42,5 @@ Krok 15: składnia przygotowanych helperów poprawna. Guard kandydata sprawdza b
 Przed zmianą (2026-11-12T09:31:06.3055307+01:00): wybierz rzeczywiste kadry tyłu i floty r3. Następny krok według post-baseline.ps1; po capture obejrzeć kadry i dopiero zmienić produkcję.
 
 Krok 16: przygotowano review-focus.py do jawnie opisanych miniatur ≤960 px i siatek dziewięciu nowych kamer (oryginały PNG nietknięte). Odczytano aktualny HANDOVER main c89b3e7d: lider Claude kontynuuje jako S12 po restarcie; brak nowych uwag life i brak zmiany roli integratora. Baseline r3 nadal z kodu 14ccbaf1, nowych dokumentów nie domergowano w środku pomiaru. Następny krok: istniejący 46468, capture, heavy review-focus.py before, oględziny.
+
+Krok 17: przyszłe importy mogą użyć PreparedVerified z proof utworzonym w tym samym heavy co World/testy. Tryb ponownie sprawdza wszystkie SHA źródeł, map, raw, fixtures i manifestu strumieniowo w PowerShell, po czym nadal nabywa slot Unity. Ogranicza dodatkowe kolejki krótkiego Pythona; bieżący proces 46468 nadal wykonuje dotychczasowy PreparedImport bez restartu. Następny krok: istniejący import/capture baseline; potem oględziny.
