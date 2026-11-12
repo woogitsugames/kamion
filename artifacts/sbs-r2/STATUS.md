@@ -130,3 +130,6 @@ ComposeOnly obejmuje teraz cztery sekwencyjne stany jedną dzierżawą heavy. Ka
 
 ## Przygotowanie celowanej diagnostyki 182
 Źródłowa najbliższa oś drogi naziemnej znajduje się około 5,72 m na wschód od zapisanej pozy, kurs osi około 352,83 stopnia siatki. To dane grafu, nie dowód faktycznego pasa w GLB. Przygotowano 16 hipotez wyłącznie w artefaktach: przesunięcia E, kurs, dwa warianty horyzontu oraz kontrolne przesunięcia N. Każda ma C i diagnostic_only; nie zmieniono produkcyjnych kamer ani referencji. Render będzie osobny, Low-overcast, przez Unity gpt-sbs, bez kompozycji Pythona i bez wpływu na roster 168 głównych klatek r2. Probe 00 zachowuje bazową geometrię kamery.
+
+## Celowana diagnostyka 182 — wynik
+Render 16 hipotez zakończony kodem 0, slot Unity zwolniony. Sprawdzono wszystkie 16 SHA PNG, SHA pliku prób i niezmienność produkcyjnego pliku kamer. Obejrzano wszystkie 16 wariantów i natywne zdjęcie. Niezależny krytyk potwierdził: 12 najlepszy do dalszej pracy, ale C pozostaje z powodu niezgodności dwóch bliższych narożników z dalszą jezdnią, nie z powodu braku sygnalizatorów. Wariant 14 pokazuje niezgodny widok pod pomostem. Zapisano REVIEW-INDEPENDENT-182.md. Nie zmieniono źródeł produkcyjnych, rostra 168 klatek, klasy ani D51. Dalsza kalibracja wymaga pewniejszych kotwic; nie zastępuje zamknięcia pakietu metryk r2.
