@@ -7,6 +7,7 @@ parser.add_argument('--before', default='before')
 parser.add_argument('--after', default='after')
 parser.add_argument('--tag', default='')
 parser.add_argument('--exact', action='store_true')
+parser.add_argument('--all-cameras', action='store_true')
 args = parser.parse_args()
 prefix = args.tag + '-' if args.tag else ''
 route_path=ROOT/'route-camera-ids.json'
@@ -53,7 +54,7 @@ for condition in ('Low-clear','Low-overcast','High-clear','High-overcast'):
     out.mkdir(parents=True,exist_ok=True)
     for row in rows:
         camera=row['camera']
-        if not camera.startswith(('yard_','r10b_','g_dirt_','g_current_','g_r4_','life3_','sheet_far_','r10_wheel','r10_front','r10_rear')):
+        if not args.all_cameras and not camera.startswith(('yard_','r10b_','g_dirt_','g_current_','g_r4_','life3_','sheet_far_','r10_wheel','r10_front','r10_rear')):
             continue
         canvas=Image.new('RGB',(960,250),'#252525')
         draw=ImageDraw.Draw(canvas)

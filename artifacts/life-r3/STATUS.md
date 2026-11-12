@@ -146,3 +146,5 @@ Krok 38: C zastosowany tylko wewnątrz passenger w<1,5 CARPAINT: amount=saturate
 Krok 39: capture C uruchomiony raz, produkcja zamrożona. Przygotowano osobne Life3C GPU probe, kopię rzeczywistego shadera i niezależne wyniki gpu-c; oczekiwany wzór obejmuje C amount/falloff. Wrapper wymaga SHA after-c-inputs. Następny krok: odebrać istniejący capture, walidacja/porównanie before→C, preview/ROI, gpu-proof-c.ps1 przez Unity slot, oględziny C.
 
 Krok 40: post-c.ps1 zapisany; poczeka na istniejący capture C, porówna wszystkie kamery/liczniki/pozy i kontrakt 28 materiałów B, przygotuje podglądy/ROI oraz świeży GPU proof C. Pełny GIS pozostaje dopiero po wyborze końcowego wariantu. Następny krok: uruchomić raz post-c.ps1 (capture 7159), potem oględziny i decyzja.
+
+Krok 41: przygotowano NIEURUCHOMIONY final-heavy.ps1; wymaga C-SELECTED po oględzinach. Jeden heavy tworzy pary wszystkich kamer (nowa opcja --all-cameras), uruchamia pełny GIS tylko na końcu i ponownie sprawdza źródła/GLB/raw/materialy. Nie miesza liczników kanonicznego c-budget z metrykami arkuszy. Następny krok: istniejący capture 7159/post-c 84367, oględziny C, dopiero wybrany wariant i testy końcowe.
