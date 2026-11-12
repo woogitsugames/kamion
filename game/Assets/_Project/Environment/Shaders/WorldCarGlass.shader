@@ -21,6 +21,10 @@
 // sheet R = F (1 + T^2) instead of the free x 1.3; _Horizon is only the fallback when the ground globals are unset.
 // r10 (ADR 0078): clear lamp covers. Panes whose UV0 u is offset by 8 (life_cars.LENS_U: the covers over the modelled
 // headlamp and tail-lamp buckets) use _LensOpacity (clear polycarbonate) when it is >= 0; same material, same draw.
+// ADR 0127: transparent noise screens (keyword _SCREEN_SHEET, materials noise_glass*). A 3-4 m sheet beside an open
+// road mirrors the horizon sky at grazing angles, not parked-car clutter (_HorizonSky); aged PMMA carries a uniform
+// matt film (_Haze) and, on the viaduct screens, horizontal bird-protection lines every ~0.1 m (_Stripe along UV0 v,
+// faded to their mean coverage when sub-pixel). Without the keyword the car panes compile exactly as before.
 // Neither casts nor receives shadows. GPU instancing (prop instances).
 Shader "Kamion/World Car Glass"
 {
@@ -36,6 +40,11 @@ Shader "Kamion/World Car Glass"
         _Horizon ("Reflection of rays below the horizon", Range(0, 1)) = 0.30
         _DustColor ("Dust film colour", Color) = (0.36, 0.34, 0.30, 1)
         _Dust ("Dust film amount", Range(0, 1)) = 0.6
+        [Toggle(_SCREEN_SHEET)] _ScreenSheet ("Noise-screen sheet (ADR 0127)", Float) = 0
+        _HorizonSky ("Screen: sky share of reflections near the horizon", Range(0, 1)) = 0
+        _Haze ("Screen: uniform matt film", Range(0, 1)) = 0
+        _HazeColor ("Screen: film colour", Color) = (0.50, 0.52, 0.52, 1)
+        _Stripe ("Screen: lines per UV0 v unit (x), strength (y), duty (z)", Vector) = (0, 0, 0.25, 0)
     }
     SubShader
     {
@@ -54,6 +63,7 @@ Shader "Kamion/World Car Glass"
             #pragma fragment frag
             #pragma multi_compile_fog
             #pragma multi_compile_instancing
+            #pragma shader_feature_local_fragment _SCREEN_SHEET
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
             #include "Assets/_Project/Rendering/Shaders/KamionAtmosphere.hlsl"   // ADR 0080 r11: same haze and Low tone toe as the car body
             float4 _KamionGroundEnv;    // rgb: diffuse ground radiance (exposed), EnvironmentLighting
@@ -62,6 +72,8 @@ Shader "Kamion/World Car Glass"
             CBUFFER_START(UnityPerMaterial)
                 half4 _Tint, _DustColor;
                 half _Opacity, _PrivacyOpacity, _Smoothness, _Reflect, _ReflectMax, _Dust, _Horizon, _LensOpacity;
+                half4 _HazeColor, _Stripe;
+                half _HorizonSky, _Haze, _ScreenSheet;
             CBUFFER_END
 
             struct Attributes
@@ -112,7 +124,12 @@ Shader "Kamion/World Car Glass"
                 half3 envSky = GlossyEnvironmentReflection(r, 1.0h - _Smoothness, 1.0h);
                 half open = smoothstep(0.0h, 0.26h, r.y);    // WORKING_VALUE: open sky from ~15 deg up
                 half3 clutter = _KamionHorizonEnv.a > 0.5 ? (half3)_KamionGroundEnv.rgb : envSky * _Horizon;
+            #if defined(_SCREEN_SHEET)
+                // free-standing screen: both faces are outdoors and near-horizontal rays reach the horizon sky
+                half3 env = lerp(lerp(clutter, envSky, _HorizonSky), envSky, open);
+            #else
                 half3 env = lerp(clutter, envSky, open) * lerp(0.15h, 1.0h, front);   // inner face: the dark cabin
+            #endif
 
                 float2 muv = i.uv;
                 half lens = step(6.0, abs(muv.x)) * step(0.0h, _LensOpacity);
@@ -146,6 +163,19 @@ Shader "Kamion/World Car Glass"
                 half d = smoothstep(0.75h, 1.0h, e) * _Dust;
                 col = col * (1.0h - 0.6h * d) + _DustColor.rgb * diffuse * (0.5h * d);
                 alpha = alpha + (1.0h - alpha) * d;
+            #if defined(_SCREEN_SHEET)
+                // matt film of the aged sheet + printed lines (triangle wave along v; when a line period is under
+                // ~2 px the lines are replaced by their mean coverage, so the far end of a screen does not shimmer)
+                float sv = i.uv.y * _Stripe.x;
+                float fw = fwidth(sv);
+                half tri = (half)abs(frac(sv) - 0.5) * 2.0h;
+                half ln = 1.0h - smoothstep(_Stripe.z - (half)fw * 2.0h, _Stripe.z + (half)fw * 2.0h, tri);
+                ln = lerp(ln, _Stripe.z, (half)saturate(fw * 2.0 - 0.5));
+                half film = saturate(_Haze + ln * _Stripe.y);
+                half3 filmLit = _HazeColor.rgb * (sky + sun.color * saturate(dot(n, sun.direction)));
+                col = col * (1.0h - 0.6h * film) + filmLit * (0.5h * film);
+                alpha = alpha + (1.0h - alpha) * film;
+            #endif
                 // premultiplied: the haze in front of the pane is weighted by its coverage; then the Low tone toe
                 half fog = exp(-i.fogFactor);
                 col = KamionTone(lerp((half3)_KamionHazeColor.rgb * alpha, col, fog));

@@ -87,6 +87,10 @@ namespace Game.World.Import
             else if (proto.StartsWith("fab_")) e = new[] { 12f, 30f, 65f };
             else if (proto.StartsWith("lamp_")) e = new[] { 60f, 400f };
             else if (proto == "pylon" || proto == "power_pole") e = new[] { 80f, 1500f };
+            // ADR 0127: lattice sign portals / cantilevers and their overhead boards are road landmarks 16-20 m wide:
+            // with the generic sign policy they dropped to LOD1 at 25 m and were culled at 125 m on Low (lodBias 0.5).
+            else if (proto.StartsWith("sign_gantry_") || proto.StartsWith("sign_cantilever_")) e = new[] { 100f, 800f };
+            else if (proto.StartsWith("board_OB_")) e = new[] { 50f, 800f };
             else if (proto.StartsWith("plate_") || proto.StartsWith("board_") || proto.StartsWith("sign_") || proto.StartsWith("signal_")) e = new[] { 50f, 250f };
             else if (proto == "bus_shelter" || proto.EndsWith("_gate")) e = new[] { 60f, 300f };
             // Hero landmark assets (ADR 0067 viaduct, ADR 0070 fire station, ADR 0071 depot; art-source/world/landmarks):
