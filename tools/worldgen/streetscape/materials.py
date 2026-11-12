@@ -99,6 +99,11 @@ M = {
     "concrete_base": {"color": [0.30, 0.30, 0.28], "rough": 0.9},
     "steel_galv": {"color": [0.42, 0.43, 0.43], "rough": 0.55, "metal": 0.9},
     "steel_galv_dark": {"color": [0.30, 0.31, 0.31], "rough": 0.6, "metal": 0.9},
+    # HV lattice tower (ADR 0127): weathered hot-dip zinc is dull and reads dark against any sky (Mapillary
+    # 3678296072299092); metal 0.9 mirrored the overcast dome, so the tower was as bright as the sky behind it.
+    "pylon_steel": {"color": [0.115, 0.12, 0.12], "rough": 0.8, "metal": 0.2},
+    # back of an overhead direction board: plain grey sheet, no rivet dots at 2-8 m width (review s11-0125 P1)
+    "board_back": {"color": [0.21, 0.22, 0.22], "rough": 0.6, "metal": 0.3},
     "luminaire_housing": {"color": [0.12, 0.12, 0.13], "rough": 0.5, "metal": 0.5},
     "concrete_pole": {"color": [0.36, 0.36, 0.34], "rough": 0.9},
     "steel_painted_grey": {"color": [0.22, 0.23, 0.23], "rough": 0.6, "metal": 0.3},
@@ -341,8 +346,15 @@ M = {
     # transparent noise screens (PMMA / laminated glass, viaduct decks): clear sheet with a faint green edge tint, sky
     # reflection, road-spray film on the lowest ~0.9 m (Kamion/World Car Glass; UV0 v = 1 at the foot -> -0.25 at the
     # top, roads.meshing). Review r6 W-N2: the flat 0.55/0.60/0.60 alpha 0.22 sheet read as solid mint. WORKING_VALUE
+    # ADR 0127 (review s11-0125 P1: at alpha 0.10 the sheet made no plane): alpha stays; "screen" switches the shader
+    # to the free-standing sheet model - horizon sky in grazing reflections, a uniform matt film of aged PMMA (haze)
+    # and, on the viaduct screens (noise_glass_lined, Mapillary 494288258686575), printed horizontal lines every
+    # ~0.1 m: stripe = [lines per UV0 v unit (v spans 1.25 over the 2.75 m sheet -> 22), strength, duty]. WORKING_VALUE
     "noise_glass": {"color": [0.030, 0.042, 0.040], "rough": 0.04, "alpha": 0.10, "blend": True, "shader": "car_glass",
-                    "dust": 0.75},
+                    "dust": 0.75, "screen": {"horizon_sky": 0.85, "haze": 0.10}},
+    "noise_glass_lined": {"color": [0.030, 0.042, 0.040], "rough": 0.04, "alpha": 0.10, "blend": True,
+                          "shader": "car_glass", "dust": 0.75,
+                          "screen": {"horizon_sky": 0.85, "haze": 0.06, "stripe": [22.0, 0.45, 0.25]}},
     # authored plantings (streetscape.plantings, review r6 W-N12): red berberis hedge, island bed soil / bark mulch.
     # Linear albedo WORKING_VALUE from the CC0 Bieżeństwa photo (hedge vs asphalt luminance ratio, overcast).
     # Clipped hedges = opaque dark core (interior shade + stems, hedge_foliage set) + alpha leaf shell + loose shoot
@@ -360,7 +372,9 @@ M = {
     # yet), lighter than a road shoulder. WORKING_VALUE.
     "bed_stones": {"color": [0.22, 0.21, 0.195], "rough": 0.95, "surface": "gravel", "texture_set": "gravel_compacted"},
     # sign gantry (streetscape.life_props.sign_gantry)
-    "gantry_steel": {"color": [0.42, 0.43, 0.43], "rough": 0.55, "metal": 0.9},
+    # ADR 0127: weathered zinc, mostly dielectric look - with metal 0.9 the lattice mirrored the overcast sky and had no
+    # contrast against it (review s11-0125 P1). WORKING_VALUE against Mapillary 3281350541967811 (sun) / 275528677534382.
+    "gantry_steel": {"color": [0.25, 0.26, 0.26], "rough": 0.7, "metal": 0.3},
     # hero fire station asset (ADR 0070, streetscape.hero_building): atlas on CC0 scans (colour = atlas mean, so the
     # calibrated-set tint is 1), alpha-tested fence / gate / lettering
     "fire_station": {"color": _set_mean("fire_station", [0.30, 0.33, 0.39]), "rough": 0.8,

@@ -388,6 +388,10 @@ DEFAULT_BRIDGE_STYLE = {"fascia": None, "pier_mat": "bridge_concrete", "noise_sc
                         "pier_r": 0.6, "screen_side": "both"}
 
 
+SCREEN_POST_M = 2.0       # post spacing of deck noise screens (m), WORKING_VALUE read off Mapillary 494288258686575
+SCREEN_POST_W = 0.22      # post width along the road (m), WORKING_VALUE (HEB 200-220 class)
+
+
 def screen_sides(c, style):
     """Deck edges ("L" / "R" of the chain direction) that carry the noise screen (ADR 0125)."""
     if not style.get("noise_screen"):
@@ -485,19 +489,22 @@ def build_bridge_extras(buf, c, st, P, N, hw, br):
                     buf.parts[-1].T = buf.parts[-1].T[:, [0, 2, 1]]
             if side in screen_sides(c, style) and not hero:    # transparent noise screen on posts at the deck edge
                 e = top - np.column_stack([nn0 * sgn * 0.05, np.zeros(len(ss))])
-                _strip(buf, "bridge", "noise_glass", e + [0, 0, 0.25], e + [0, 0, style["screen_h"]], c.id + ":screen")
+                _strip(buf, "bridge", "noise_glass_lined", e + [0, 0, 0.25], e + [0, 0, style["screen_h"]],
+                       c.id + ":screen")
                 # glass dust mask (Kamion/World Car Glass: film where max(|u|, |v|) > 0.58): v = 1 at the foot of the
                 # sheet -> -0.25 at the top, so road spray covers the lowest ~0.9 m; u = 0 (posts hide the panel ends)
                 for prt in buf.parts[-2:]:
                     k = len(prt.V) // 2
                     prt.UV = np.column_stack([np.zeros(2 * k), np.concatenate([np.ones(k), np.full(k, -0.25)])])
                 run_len = float(ss[-1] - ss[0])
-                for k in range(int(run_len // 3.0) + 1):
-                    s_p = float(ss[0]) + 3.0 * k
+                # ADR 0127: H-section posts every SCREEN_POST_M, SCREEN_POST_W wide along the road (Mapillary
+                # 494288258686575: ~12 posts per 25 m, flange about a quarter of the bay). Were 0.14 m every 3 m.
+                for k in range(int(run_len // SCREEN_POST_M) + 1):
+                    s_p = float(ss[0]) + SCREEN_POST_M * k
                     pi = np.interp(s_p, ss, np.arange(len(ss)))
                     p3 = np.array([np.interp(pi, np.arange(len(ss)), e[:, d]) for d in range(3)])
                     box(buf, "bridge", "barrier_steel", p3[:2] + c.line.frame(s_p)[1] * sgn * 0.06,
-                        c.line.frame(s_p)[0], 0.07, 0.07, p3[2] - 0.05, p3[2] + style["screen_h"] + 0.1,
+                        c.line.frame(s_p)[0], SCREEN_POST_W / 2, 0.09, p3[2] - 0.05, p3[2] + style["screen_h"] + 0.1,
                         c.id + ":screen")
         # retaining walls of a walled ramp (profile.mark_walled_ramps): block-faced wall from the deck edge down to
         # 0.5 m below the NMT beside it, facing outward; also a collision wall

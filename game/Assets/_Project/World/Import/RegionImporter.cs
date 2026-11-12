@@ -374,7 +374,8 @@ namespace Game.World.Import
                     return CarGlassMaterial(path, albedo, rough, (float)Num(m.Get("alpha")), m.Get("dust") != null ? (float)Num(m.Get("dust")) : 0f,
                         m.Get("privacy_alpha") != null ? (float)Num(m.Get("privacy_alpha")) : 0.80f,
                         m.Get("reflect") != null ? (float)Num(m.Get("reflect")) : 1f,
-                        m.Get("lens_alpha") != null ? (float)Num(m.Get("lens_alpha")) : -1f);
+                        m.Get("lens_alpha") != null ? (float)Num(m.Get("lens_alpha")) : -1f,
+                        m.Get("screen") as Dictionary<string, object>);
                 // Optional alpha texture (road film overlays of parked cars): matt, no sky mirror.
                 Texture2D bt = null;
                 if (m.Get("texture") is string btex)
@@ -513,7 +514,8 @@ namespace Game.World.Import
         }
 
         /// <summary>Parked-car glass (Kamion/World Car Glass): premultiplied tint + capped Fresnel reflection + UV0 dust.</summary>
-        static Material CarGlassMaterial(string path, Color tintLinear, float rough, float opacity, float dust, float privacy, float reflect, float lens = -1f)
+        static Material CarGlassMaterial(string path, Color tintLinear, float rough, float opacity, float dust, float privacy, float reflect, float lens = -1f,
+            Dictionary<string, object> screen = null)
         {
             var shader = Shader.Find("Kamion/World Car Glass") ?? throw new InvalidOperationException("Kamion/World Car Glass not found (compile error?)");
             var mat = AssetDatabase.LoadAssetAtPath<Material>(path);
@@ -533,6 +535,16 @@ namespace Game.World.Import
             mat.SetFloat("_ReflectMax", 0.55f);
             mat.SetFloat("_Horizon", 0.30f);
             mat.SetColor("_DustColor", new Color(0.36f, 0.34f, 0.30f, 1f));
+            // ADR 0127: noise-screen sheets ("screen": {horizon_sky, haze, stripe: [lines per v unit, strength, duty]})
+            float Scr(string k, float d) => screen != null && screen.Get(k) != null ? (float)Num(screen.Get(k)) : d;
+            var stripe = screen != null ? screen.Get("stripe") as List<object> : null;
+            mat.SetFloat("_ScreenSheet", screen != null ? 1f : 0f);
+            mat.SetFloat("_HorizonSky", Scr("horizon_sky", 0f));
+            mat.SetFloat("_Haze", Scr("haze", 0f));
+            mat.SetColor("_HazeColor", new Color(0.50f, 0.52f, 0.52f, 1f));
+            mat.SetVector("_Stripe", stripe != null && stripe.Count >= 3
+                ? new Vector4((float)Num(stripe[0]), (float)Num(stripe[1]), (float)Num(stripe[2]), 0f) : new Vector4(0f, 0f, 0.25f, 0f));
+            if (screen != null) mat.EnableKeyword("_SCREEN_SHEET");
             mat.SetOverrideTag("RenderType", "Transparent");
             mat.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
             EditorUtility.SetDirty(mat);

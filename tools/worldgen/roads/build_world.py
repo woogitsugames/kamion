@@ -870,6 +870,10 @@ def instance_ends(proto, nlods):
         e = [60.0, 400.0]
     elif proto in ("pylon", "power_pole"):
         e = [80.0, 1500.0]
+    elif proto.startswith(("sign_gantry_", "sign_cantilever_")):      # ADR 0127
+        e = [100.0, 800.0]
+    elif proto.startswith("board_OB_"):
+        e = [50.0, 800.0]
     elif proto.startswith(("plate_", "board_", "sign_", "signal_")):
         e = [50.0, 250.0]
     elif proto == "bus_shelter" or proto.endswith("_gate"):

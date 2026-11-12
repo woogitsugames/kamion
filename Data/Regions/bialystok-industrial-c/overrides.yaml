@@ -315,6 +315,10 @@ overrides:
     osm_way: 266084693
     before_node: n12620261934
     distance_m: 39.0
+    # ADR 0127: column feet from the GUGiK hi-res orthophoto (WMS ORTO HighResolution, crop
+    # artifacts/g3b-lowread/crops/ortho-gantry-hr.jpg): the beam is 14.0 m long, the feet stand ~0.5 m behind the
+    # kerbs. The rule (carriageway + side strips + 1 m) gave a 16 m span.
+    columns_en: [[-267.0, -212.8], [-258.6, -202.2]]
     boards:
       - lanes: [0, 1]
         rows: [[["8", E67], Warszawa], [["65"], Ełk]]
@@ -596,11 +600,17 @@ overrides:
       - {center_epsg2180: [777582.0, 596169.0], radius_m: 25.0, style: glazed, band_m: 1.0}
       - {center_epsg2180: [777535.0, 596208.0], radius_m: 45.0, style: glazed, band_m: 1.6}
       - {center_epsg2180: [777625.0, 596121.0], radius_m: 75.0, style: glazed, band_m: 1.0}   # MA-008 link
-      - {center_epsg2180: [777445.0, 596353.0], radius_m: 45.0, style: glazed, band_m: 1.8}   # MA-008/021 Tysiaclecia
+      - {center_epsg2180: [777445.0, 596353.0], radius_m: 45.0, style: glazed, band_m: 2.2, height_m: 5.2}   # MA-008/021 Tysiaclecia; ADR 0127 height
       - {center_epsg2180: [777445.0, 596438.0], radius_m: 45.0, style: glazed, band_m: 1.8}
       - {center_epsg2180: [777445.0, 596523.0], radius_m: 60.0, style: glazed, band_m: 1.8}
+      # ADR 0127: the set-back barrier along the house plots east of al. Tysiaclecia (BDOT10k OT_OIKM_L ...C0D140 /
+      # OSM 319142226, N = 60..111 local) is glazed above a dark band from its south corner on Mapillary
+      # 1801374876712141 (gpsmapper 2019); it was "solid" south of N ~ 90 (outside the zones above).
+      # Height (review s12-0130: "ekran-plot nizszy"): read off the same frame against the 0.6 m plinth - dark band
+      # ~1.6 m, glazing ~3.1 m -> 5.2 m to the top, band top 2.2 m (WORKING_VALUE; was the generic 4.0 m / 1.8 m).
+      - {center_epsg2180: [777466.0, 596303.0], radius_m: 30.0, style: glazed, band_m: 2.2, height_m: 5.2}
     mapillary: ["1911352299378570", "1783751488818497", "1240467703063612", "1424981177846267", "995780104564541",
-                "312705613662497", "1340597302993462"]
+                "312705613662497", "1340597302993462", "1801374876712141"]
     reason: >-
       The NE barrier of the Andersa link to Rondo Putry (OSM 319142221-319142224 wall=noise_barrier / BDOT10k
       OT_OIKM_L) is glazed from the bus stop to the ring on the 2024 photos (kino, p38: light plinth ~0.6 m, dark band
