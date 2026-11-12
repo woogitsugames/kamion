@@ -33,6 +33,13 @@ Nie spadło do 0, więc xfail zostaje; zaktualizowałem tylko opis (liczby zmier
 `c:w177895177 L bridge` (E 669,4 N −781,9, wiadukt Bieżeństwa) i `c:w240542867 R approach` (E −739,6 N 74,1, łącznica DK8).
 Para zapór edge-west (Maczka × trunk_link, 0,20 m) — zgodnie z opisem, osobne zadanie w C# `WorldEdgeBuilder`.
 
+### Po scaleniu origin/main (Mistral r6, 68e5fc39f) w trakcie integracji
+r6 zmienia `roads/standards.py` (`SHOULDER_W["GP"]` 1,25 → 0,75) i `roads/network.py` (stała 0,75 → `SHOULDER_W["GP"]`) —
+wartość w profilu bez zmian, ale oba pliki są wejściami `fidelity_qa`. Merge bez konfliktów, ponownie `build_world` →
+`export-route` → `fidelity`: **GLB, manifest, QA, graf tras identyczne bajtowo z pierwszym przebiegiem** (te same liczby: 65 / 4 /
+far_field 118 588 / 24 548 / 498+169 MiB); zmieniły się tylko skróty wejść w `fidelity_qa.json`. Import Unity nie wymagał powtórki.
+EditMode na scalonym drzewie: **467/467**. pytest gis na scalonym drzewie: **971 passed, 4 xfailed, 0 failed** (14:46; xfail: 2× M29, `p21_hatch` czeka na właściciela, `test_target_edge_p95` cel ADR 0075). Walidator świata M37 (`validate/run.py`, `--prev` = raport w repo): 558 znalezisk, 56 error — identycznie jak raport w repo (`artifacts/world-int-s16/validator/`).
+
 ## Uwaga dla lidera: import w main był stary
 `game/Assets/_Generated/World/bialystok-industrial-c` w main jest z **2026-11-12 14:03** (log `import-region-…-173604` w
 main ma 17:36). APK `kamion-0.1.0-fbb610dd30.apk` i wcześniejsze z main zawierały świat sprzed 0141 r6d/0144/0132/0146/M24.

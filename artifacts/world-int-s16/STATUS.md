@@ -8,3 +8,5 @@
 - NASTĘPNY KROK: ocena par 494288/482392/320326/297817/275528, wpis do sbs_recognition.json, raport docs/reports/WORLD-INTEGRATION-2026-11-13-s16.md
 - 00:4x sbs_recognition.json: nowa wersja world-int-s16 (5 kadrów RECOGNISABLE, 320326 awans z PARTIAL), r3 w history. Raport docs/reports/WORLD-INTEGRATION-2026-11-13-s16.md. xfail M29 zostaje (32 -> 2), opis zaktualizowany.
 - NASTĘPNY KROK (lider): `git merge world-int-s16` → w main `pwsh scripts/import-region.ps1 -Region bialystok-industrial-c` (import main z 12.11 14:03!) → visual-critic na artifacts/world-int-s16/pairs → APK Low A16.
+- 00:5x merge origin/main (Mistral r6) → regeneracja: GLB identyczne, fidelity_qa skróty wejść; EditMode 467/467; pytest gis 971 passed 4 xfailed 0 failed; walidator M37 558/56 bez zmian.
+- NASTĘPNY KROK (lider): `git merge world-int-s16` → `pwsh scripts/import-region.ps1 -Region bialystok-industrial-c` w main → visual-critic na artifacts/world-int-s16/pairs → APK Low A16.
