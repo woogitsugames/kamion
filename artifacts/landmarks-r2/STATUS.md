@@ -20,3 +20,5 @@ Krok 2e: preflight kolejnej rundy wykrył błędny opis referencji kominów w NE
 Krok 2f: lekki odczyt GPS zdjęcia i istniejących pozycji kominów przewiduje kolejność lewo-prawo: w628899554, w628899553, separacja kątowa 9,817 stopnia. Wynik jest wstępnym przypisaniem przestrzennym, bez potwierdzenia pozy i proporcji malowania. Generator baseline r2 właśnie uzyskał heavy, więc do jego ukończenia nie zmieniam źródeł.
 
 Krok 2g: kontrola separacji kominów porównuje model otworkowy ogniskowej 27 mm z centrami lokalnych kadrów. Pozostaje rozbieżność kierunku między dwoma przypisaniami; json jawnie oznacza pozę UNVERIFIED. Nie dopasowano ani nie przesunięto modeli do zdjęcia.
+
+Krok 3: świeży baseline świata po merge main wygenerowany pod heavy, bez fallback=True. Agregaty i spec podmostowy zachowane. NASTĘPNY KROK: import i wszystkie kamery trasy wraz z dziewięcioma własnymi kadrami detalu pod slotem Unity.
