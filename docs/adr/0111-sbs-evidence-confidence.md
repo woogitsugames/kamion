@@ -56,3 +56,21 @@ Walidacja r3 zakończona. Pojedynczy pytest raportu: 34/34 PASS. Audyt główny 
 
 
 
+
+## r4 — ścisłe migawki i dzierżawy zasobów (runda w toku)
+
+Baza nowej generacji to main 0023f39d po pakietach A+B+C. PBR i świat mają osobne dzierżawy FIFO, bez Priority. Pełne 168 raw po imporcie pochodzi z HEAD 80159a70, manifestu świata 5f90bdb1 i materiałów c552a473. Każdy etap Unity korzysta z właściciela gpt-sbs, ciężki Python z gpt-sbs-r4. Nie uruchamiamy dwóch ciężkich zadań z tym samym właścicielem.
+
+ComposeOnly domyślnie czyta OutputRoot/inputs; parametr Inputs może wskazać inną zapisaną migawkę. Obowiązkowe są sbs_cameras.json, sbs_references.json, world_manifest.json i materials_spec.json. Brak katalogu lub pliku jest błędem, bez zastępowania go aktualnym stanem repo. Adnotacje także pochodzą z wybranej migawki, chyba że jawnie wskazano Photometry. Ścisła kompozycja z poprawnej migawki nie wymaga --historical: zachowuje walidację capture, epoki, SHA, rosteru i wymiarów. --historical pozostaje osobną zgodą na dawny tryb danych.
+
+RenderOnly zapisuje wejścia bez wymagania wcześniejszych metryk kompozycji. Przed publikacją migawki sprawdza wszystkie grupy proporcji, unikalne kamery i hashe, poprawny stan oraz jedną epokę kodu i bazy main. Sprawdza rzeczywiste SHA raw, nagłówek PNG i wymiary 1280 px zgodne z proporcjami zdjęcia, a także brak dodatkowych PNG. Cztery skopiowane pliki źródłowe muszą odpowiadać wszystkim capture. Wcześniejsze wejścia zachowuje w inputs-history, a ZIP utrwala dokładne bajty. Nagłówek PNG nie zastępuje pełnego dekodowania podczas późniejszej kompozycji i audytu.
+
+Heavy jest zwalniany po każdym stanie, obejmującym arkusze B i diagnostykę tego samego stanu. Domyślna kompozycja odmawia, jeśli własny slot lub bilet FIFO już istnieje; sprawdza to przy starcie i bezpośrednio przed każdym nowym Acquire. RenderOnly może pracować obok oczekującego testu heavy. HeavyLeaseOwner jest jawnym wyjątkiem wyłącznie dla jednego stanu ComposeOnly i bieżącej gałęzi: wymaga istniejącej dzierżawy, zachowuje niezmienny rekord właściciela i czasu, sprawdza go przed i po oraz nigdy go nie zwalnia. Nie deklarujemy atomowej ochrony przed jednoczesnymi startami klientów, które nie współpracują z tym wrapperem; wspólnego skryptu slotów nie zmieniano.
+
+Niezależny przegląd kodu i izolowanych fixture zakończył się PASS w swoim zakresie. Przygotowano 11 dodatkowych przypadków ścisłej migawki oraz 20 przypadków PowerShell obejmujących dzierżawy, kolejkę, RenderOnly, brak wejść, mieszane epoki i podmienione raw. Testy wykonawcze nadal oczekują na heavy; walidacja końcowa rundy i końcowy GIS nie zostały jeszcze zakończone. Aktualny stan zapisuje artifacts/sbs-r4/STATUS.md.
+
+Niezależny przegląd wszystkich 25 natywnych par B Low-overcast, czyli 50 obrazów, daje świeży FAIL 13/11/1. Rejestr wiąże oceny z aktualnymi SHA i zachowuje historię r3 i r1. Recenzent nie oglądał przyszłych arkuszy 960 px; metoda natywna jest jawna w danych. Wszystkie C pozostają wykluczone. Punktowa kontrola 294859 i 303305 na Low/High-clear potwierdza usunięcie ostrego klina, przy pozostałym miękkim szarym pasie i niezgodnej panoramie. Dokładne bajty ocen i metadanych źródłowych zabezpieczono w zweryfikowanych ZIP-ach.
+
+Wszystkie 168 liczników zachowuje osobno statykę i instancje. Względem r3 draws pozostają bez zmian, a przyrost tris mieści się w 2%. Stała baza r2 pokazuje jednak Low: 38/84 wzrostów draws i 34/84 przekroczeń 2% tris, wobec 22/84 w r3. Nie daje to PASS budżetu świata; GPU i telefon nadal niezmierzone.
+
+Przygotowano przepis 15 kontrolowanych prób C, jeszcze bez wykonania raycastów i nowych renderów diagnostycznych. Sampler obejmuje widoczne road i bridge, oddzielając road_collision; faktyczny nagłówek nowego GLB potwierdza road_asphalt także w bridge, bez transformacji węzła. Nie dowodzi to jeszcze powierzchni pod kamerą. Dwa znane źródła Commons początku trasy mają teraz EXIF oryginału związany z identycznymi lokalnymi miniaturami; ogniskowa 27 mm eq nie rozstrzyga crop, kierunku ani poprawności GPS. Pierwsze 300 m nadal bez zatwierdzonej pary. Nie zmieniano produkcyjnych kamer ani źródeł innych dziedzin.
