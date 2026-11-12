@@ -84,16 +84,27 @@ Shader "Kamion/World Surface"
         // generator stores -(x + 16) on the tall ring objects ("clamp") and -(x + 4096) on its stand-ins for landmark
         // stacks drawn by the region ("beyond"). Only clip-space z changes, so screen position, perspective and the
         // fog distance stay true:
-        // - clamp: a vertex behind the plane 6 m in front of the far plane is held just in front of the far plane
-        //   (6 m .. 1.5 m, farther objects closer to it, so the depth order survives where the buffer resolves it;
+        // - clamp: a vertex behind the plane 40 m in front of the far plane is held in front of the far plane
+        //   (40 m .. 30 m, farther objects closer to it, so the depth order survives where the buffer resolves it;
         //   otherwise the generator's far-to-near index order decides). The Low tier (far clip 900 m) keeps the city
-        //   skyline without a longer far plane.
+        //   skyline without a longer far plane. The depth also stays a few 1e-6 NDC in front of the far plane, where
+        //   Unity draws the skybox (measured in the editor: at 3-6 m, 3.7e-7 NDC with a 0.1 m near plane, the sky
+        //   overwrote the skyline).
         // - beyond: the exact complement of the far-plane clip (z crosses the far plane where w = far), so the
         //   stand-in appears precisely where the region's own mesh is cut off and never overlaps it.
         // Orthographic cameras are left alone (clamp) or see no stand-in (beyond).
         float KamionNdcAtViewDepth(float d)
         {
             return (UNITY_MATRIX_P._m22 * (-d) + UNITY_MATRIX_P._m23) / d;
+        }
+        float KamionNdcInFrontOfFar(float d)
+        {
+            float n = KamionNdcAtViewDepth(d);
+        #if UNITY_REVERSED_Z
+            return max(n, 4.0e-6);
+        #else
+            return min(n, 1.0 - 8.0e-6);
+        #endif
         }
         float4 KamionFarSkyline(float4 cs, float flagU)
         {
@@ -113,14 +124,14 @@ Shader "Kamion/World Surface"
             float nFar = KamionNdcAtViewDepth(farPlane);
             if (beyond)
             {
-                float nIn = KamionNdcAtViewDepth(farPlane - 3.0);
-                float t = clamp((w - farPlane) / 96.0, -1.0, 1.0);
+                float nIn = KamionNdcInFrontOfFar(farPlane - 35.0);
+                float t = clamp((w - farPlane) / 16.0, -1.0, 1.0);
                 cs.z = (nFar + (nIn - nFar) * t) * w;
             }
-            else if (w > farPlane - 6.0)
+            else if (w > farPlane - 40.0)
             {
-                float inFront = lerp(6.0, 1.5, saturate((w - farPlane) / 4000.0));
-                cs.z = KamionNdcAtViewDepth(farPlane - inFront) * w;
+                float inFront = lerp(40.0, 30.0, saturate((w - farPlane) / 4000.0));
+                cs.z = KamionNdcInFrontOfFar(farPlane - inFront) * w;
             }
             return cs;
         }
