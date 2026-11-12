@@ -22,6 +22,7 @@ namespace Game.Rendering.Editor
         {
             public string camera,preset,key;
             public float physicalCaptureBypass,enabled;
+            public Vector4 cabToeParity;
         }
         [Serializable] sealed class Proof
         {
@@ -38,7 +39,7 @@ namespace Game.Rendering.Editor
             var pipeline=AssetDatabase.LoadAssetAtPath<UniversalRenderPipelineAsset>("Assets/_Project/Rendering/Settings/URP_High.asset");
             if(preset==null || pipeline==null)throw new InvalidOperationException("Missing look key inputs");
             WorldAtmosphere.ResolveLook(preset,out float toe,out float toeP,out float pivot);
-            return new Key{unity=Application.unityVersion,urp=typeof(UniversalRenderPipelineAsset).Assembly.GetName().Version.ToString(),
+            return new Key{unity=Application.unityVersion,urp=UnityEditor.PackageManager.PackageInfo.FindForAssembly(typeof(UniversalRenderPipelineAsset).Assembly)?.version??"unknown",
                 lutSize=pipeline.colorGradingLutSize,gradingMode=(int)pipeline.colorGradingMode,hdr=pipeline.supportsHDR,
                 black=preset.lookBlackLevel,white=preset.lookWhiteClip,toe=toe,toeP=toeP,pivot=pivot,saturation=preset.lookSaturation,
                 highlightDesaturation=preset.lookHighlightDesaturation,dimColour=preset.dimColourDesaturation};
@@ -74,17 +75,27 @@ namespace Game.Rendering.Editor
             Shader.SetGlobalTexture("_KamionOpaqueGradeLut",m_Lut);
             Shader.SetGlobalFloat("_KamionOpaqueGradeSize",m_Lut.width);
             Shader.SetGlobalFloat("_KamionOpaqueGradeEnabled",1);
+            // Cab/exterior already have a Low-only approximate D23 curve before KamionMixFog.
+            // Disable that approximation only for this diagnostic display camera, otherwise the full bake applies twice.
+            // Physical captures retain the original globals and bypass the entire opaque LUT.
+            if(Shader.GetGlobalFloat("_KamionSkyCapOff")<.5f)
+                Shader.SetGlobalVector("_KamionToeParity",Vector4.zero);
             // Sky's compression must target the baked response instead of the legacy Low toe.
             Shader.SetGlobalVector("_KamionSkyCap",new Vector4(InverseGrey(EnvironmentLighting.SkyCapHorizonDisplay),InverseGrey(EnvironmentLighting.SkyCapZenithDisplay),1,0));
-            if(camera.GetComponent<ControlCamera>()!=null)
-                m_Frames[camera.GetInstanceID()]=new Frame{camera=camera.name,preset=env.Active.name,key=key,
-                    physicalCaptureBypass=Shader.GetGlobalFloat("_KamionSkyCapOff"),enabled=Shader.GetGlobalFloat("_KamionOpaqueGradeEnabled")};
+        }
+        public void Observe(Camera camera)
+        {
+            var env=EnvironmentLighting.Instance;
+            if(env!=null && env.Active!=null && camera.GetComponent<ControlCamera>()!=null)
+                m_Frames[camera.GetInstanceID()]=new Frame{camera=camera.name,preset=env.Active.name,key=JsonUtility.ToJson(CaptureKey(env.Active)),
+                    physicalCaptureBypass=Shader.GetGlobalFloat("_KamionSkyCapOff"),enabled=Shader.GetGlobalFloat("_KamionOpaqueGradeEnabled"),
+                    cabToeParity=Shader.GetGlobalVector("_KamionToeParity")};
         }
         public void Write(string folder,int expected)
         {
             if(m_Error!=null)throw new InvalidOperationException(m_Error);
             if(m_Frames.Count!=expected)throw new InvalidOperationException($"Missing grade proof cameras {m_Frames.Count}/{expected}");
-            foreach(var frame in m_Frames.Values)if(frame.enabled!=1 || frame.physicalCaptureBypass!=0)throw new InvalidOperationException("Grade absent or physical capture bypass active in main camera");
+            foreach(var frame in m_Frames.Values)if(frame.enabled!=1 || frame.physicalCaptureBypass!=0 || frame.cabToeParity!=Vector4.zero)throw new InvalidOperationException("Grade absent, double cab curve or physical capture bypass active in main camera");
             var frames=new Frame[m_Frames.Count];m_Frames.Values.CopyTo(frames,0);
             File.WriteAllText(Path.Combine(folder,"opaque-grade-proof.json"),JsonUtility.ToJson(new Proof{size=m_Lut.width,frames=frames},true));
         }

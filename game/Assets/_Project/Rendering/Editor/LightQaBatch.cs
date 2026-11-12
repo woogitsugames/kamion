@@ -165,6 +165,14 @@ namespace Game.Rendering.Editor
                             throw new InvalidOperationException($"Actual per-camera dim colour mismatch: requested{job.expectedDimColour}, global{Shader.GetGlobalFloat("_KamionDimColourDesaturation")}, preset{EnvironmentLighting.Instance?.Active?.dimColourDesaturation}, path{AssetDatabase.GetAssetPath(EnvironmentLighting.Instance?.Active)}");
                     };
                     int count;
+                    // Scene components subscribe while the runner opens the scene. Reorder this experimental
+                    // callback after CabInteriorLighting so the Low-only approximate curve cannot overwrite it.
+                    void OrderGradeProbe(Scene scene,OpenSceneMode mode)
+                    {
+                        RenderPipelineManager.beginCameraRendering-=filter;
+                        RenderPipelineManager.beginCameraRendering+=filter;
+                    }
+                    void ObserveGrade(ScriptableRenderContext context,Camera camera){gradeProbe?.Observe(camera);}
                     SkyOnlyProof skyProof = null;
                     void PrepareSkyOnly(Scene scene, OpenSceneMode mode) { skyProof = HideWorldForSkyQa(); }
                     void AddDriverEye(Scene scene, OpenSceneMode mode)
@@ -216,6 +224,7 @@ namespace Game.Rendering.Editor
                     }
                     if (job.actualDriverEye) EditorSceneManager.sceneOpened += AddDriverEye;
                     if (job.skyOnly) EditorSceneManager.sceneOpened += PrepareSkyOnly;
+                    if(gradeProbe!=null){EditorSceneManager.sceneOpened+=OrderGradeProbe;RenderPipelineManager.endCameraRendering+=ObserveGrade;}
                     RenderPipelineManager.beginCameraRendering += filter;
                     try
                     {
@@ -226,6 +235,7 @@ namespace Game.Rendering.Editor
                         RenderPipelineManager.beginCameraRendering -= filter;
                         if (job.actualDriverEye) EditorSceneManager.sceneOpened -= AddDriverEye;
                         if (job.skyOnly) EditorSceneManager.sceneOpened -= PrepareSkyOnly;
+                        if(gradeProbe!=null){EditorSceneManager.sceneOpened-=OrderGradeProbe;RenderPipelineManager.endCameraRendering-=ObserveGrade;}
                     }
                     if (count <= 0) throw new InvalidOperationException("Job rendered no cameras: " + job.output);
                     int expected = string.IsNullOrEmpty(job.cameras) ? count : job.cameras.Split(',')
