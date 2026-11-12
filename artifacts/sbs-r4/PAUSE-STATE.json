@@ -1,0 +1,73 @@
+{
+  "paused_at": "2026-11-12T16:23:35.3789885+01:00",
+  "reason": "Explicit owner stop due to approaching weekly usage limit; no processes killed",
+  "branch": "gpt-sbs-r4",
+  "checkpoint_head": "61597d100cfda71659c9a449ab31a382c3c0d7e7",
+  "live_session": 31378,
+  "live_processes": [
+    {
+      "ProcessId": 68916,
+      "ParentProcessId": 25184,
+      "CreationDate": "2026-11-12T15:02:07.003809+01:00",
+      "CommandLine": "\"C:\\Program Files\\WindowsApps\\OpenAI.CodexPrimaryRuntime.v26-1104-2876-0_26.1104.2876.0_x64__3k8sg7r9htsxt\\dependencies\\native\\powershell\\pwsh.exe\" -Command \"try { [Console]::OutputEncoding=[System.Text.Encoding]::UTF8 } catch {}\npwsh -NoProfile -File artifacts/sbs-r4/compose-all.ps1 *> artifacts/sbs-r4/compose-all.log\""
+    },
+    {
+      "ProcessId": 70780,
+      "ParentProcessId": 68916,
+      "CreationDate": "2026-11-12T15:02:07.233782+01:00",
+      "CommandLine": "\"C:\\Program Files\\WindowsApps\\OpenAI.CodexPrimaryRuntime.v26-1104-2876-0_26.1104.2876.0_x64__3k8sg7r9htsxt\\dependencies\\native\\powershell\\pwsh.exe\" -NoProfile -File artifacts/sbs-r4/compose-all.ps1"
+    },
+    {
+      "ProcessId": 59180,
+      "ParentProcessId": 70780,
+      "CreationDate": "2026-11-12T15:02:07.599416+01:00",
+      "CommandLine": "\"C:\\Program Files\\WindowsApps\\OpenAI.CodexPrimaryRuntime.v26-1104-2876-0_26.1104.2876.0_x64__3k8sg7r9htsxt\\dependencies\\native\\powershell\\pwsh.exe\" -NoProfile -File C:\\Users\\matma\\Documents\\Claude\\kamion\\scripts\\unity-slot.ps1 -Acquire -Pool heavy -Owner gpt-sbs-r4 -PollSeconds 7 -StaleHours 87600"
+    }
+  ],
+  "last_log": "waiting for a heavy slot (3/3 busy, phone=False, reserved=, queue ahead=3) ...",
+  "generated_backup": [
+    {
+      "source": "Data/Regions/bialystok-industrial-c/generated/far_field_qa.json",
+      "backup": "artifacts\\sbs-r4\\pause-generated\\Data\\Regions\\bialystok-industrial-c\\generated\\far_field_qa.json",
+      "bytes": 3358,
+      "sha256": "84aaadaeaea21bbfc733d234998cb84a06056f3f2fbb811427be6db17a44c61a"
+    },
+    {
+      "source": "Data/Regions/bialystok-industrial-c/generated/landmarks/viaduct_putry_underdeck.spec.json",
+      "backup": "artifacts\\sbs-r4\\pause-generated\\Data\\Regions\\bialystok-industrial-c\\generated\\landmarks\\viaduct_putry_underdeck.spec.json",
+      "bytes": 63876,
+      "sha256": "8f918e2dc245f32e4db3d4521cb04fe4b82233977f73abc3b9d5687c912c4e49"
+    },
+    {
+      "source": "Data/Regions/bialystok-industrial-c/generated/streetscape_qa.json",
+      "backup": "artifacts\\sbs-r4\\pause-generated\\Data\\Regions\\bialystok-industrial-c\\generated\\streetscape_qa.json",
+      "bytes": 103823,
+      "sha256": "e029a49811e71fcd6a3cc522f8601327331587969d66cbaee24c7a5ec01985bf"
+    },
+    {
+      "source": "Data/Regions/bialystok-industrial-c/generated/world_manifest.json",
+      "backup": "artifacts\\sbs-r4\\pause-generated\\Data\\Regions\\bialystok-industrial-c\\generated\\world_manifest.json",
+      "bytes": 278072,
+      "sha256": "5f90bdb17c5e545070b086bedd419def6ee2288efef3feb68a4c3bf54e698b00"
+    },
+    {
+      "source": "Data/SourceManifests/bialystok-industrial-c-far-field.manifest.json",
+      "backup": "artifacts\\sbs-r4\\pause-generated\\Data\\SourceManifests\\bialystok-industrial-c-far-field.manifest.json",
+      "bytes": 2768,
+      "sha256": "c6e4126d70daf723858ef7b721e75e667be1e18a050a8ecdc4f1eea12dde653d"
+    },
+    {
+      "source": "art-source/world/props/props_meta.json",
+      "backup": "artifacts\\sbs-r4\\pause-generated\\art-source\\world\\props\\props_meta.json",
+      "bytes": 31651,
+      "sha256": "b8ef6db94d9018ab32570073f73f6fb6215c3f6f85144018d2d167fb09cf220f"
+    },
+    {
+      "source": "art-source/world/props/street_props.glb",
+      "backup": "artifacts\\sbs-r4\\pause-generated\\art-source\\world\\props\\street_props.glb",
+      "bytes": 12158364,
+      "sha256": "896ad1fd0a863a6c9e4c73c0f789d9ae25956ebf3140265204e970f43748472d"
+    }
+  ],
+  "note": "Keep worktree and generated GLBs intact until baseline audit. Backup is physical/ignored, hashes are committed. Composition may continue after handoff."
+}
