@@ -28,3 +28,6 @@ Krok 9: źródła bazowe gotowe: build_all kod 0 (644 s), build_world kod 0 (415
 Następny krok: import-baseline.ps1, pełny import + generowane pojazdy + Before; każda sesja Unity we własnym slocie.
 Krok 10: pełny import świata zakończony IMPORT_RESULT: OK. Instalator pojazdu zwrócił 1 przez brak wygenerowanego poza gitem SM_CabInterior_LOD0.fbx; slot zwolniono. Plik skopiowano z istniejącego cache main i potwierdzono SHA, bez Blendera i bez edycji źródeł kabiny. Pierwszy log błędu zachowano.
 Dodano ResumeVehicle, wymagający udanego wcześniejszego importu świata. Następna komenda: pwsh artifacts/edge-r3/import-baseline.ps1 -ResumeVehicle; potem Before.
+2026-11-12T01:30:55.0519374+01:00 Pełny import bazowy Low/High i odtworzenie generowanych prefabów pojazdów nowego main potwierdzone IMPORT_RESULT/TRUCK_RESULT: OK; sprawdzono 151 gotowych map Medium bez niejawnego build_all. Źródła cab/truck bez edycji. Następnie validate.ps1 -Phase Before.
+Krok 11: walidacja zrzutów r3 wymaga teraz PNG oraz statystyk dla każdego zadeklarowanego ID kamery i każdego wpisu stats; brak diagnostycznej kamery nie przejdzie jako ukończona baza. Metadane zapiszą liczbę kamer dowodowych i wszystkich statystyk. Zmiana dotyczy wyłącznie skryptu artefaktów.
+Następny krok: wynik wznowionego przygotowania pojazdu i Before, następnie pomiar starego podłoża i dwa testy Red.

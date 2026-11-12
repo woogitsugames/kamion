@@ -66,11 +66,22 @@ foreach ($tier in @('Low','High')) {
             & pwsh scripts/visual-qa.ps1 -Scene $scene -Tier $tier -Lighting $lighting `
                 -Gate3 "$out/proof-cameras.json" -OutputDir "$out/$label/$tier-$lighting"
             if ($LASTEXITCODE -ne 0) { throw "Render failed: $label/$tier-$lighting" }
+            $proofIds = @((Get-Content "$out/proof-cameras.json" -Raw | ConvertFrom-Json).cameras | ForEach-Object id)
+            $statIds = @(Select-String -LiteralPath "$out/$label/$tier-$lighting/stats.txt" -Pattern '^(.+): objects=' | ForEach-Object { $_.Matches[0].Groups[1].Value })
+            foreach ($cameraId in $proofIds + $statIds | Sort-Object -Unique) {
+                $frame = "$out/$label/$tier-$lighting/$cameraId.png"
+                if (-not (Test-Path -LiteralPath $frame) -or (Get-Item -LiteralPath $frame).Length -eq 0) {
+                    throw "Missing camera frame: $cameraId"
+                }
+                if ($cameraId -notin $statIds) { throw "Missing camera statistics: $cameraId" }
+            }
             foreach ($inputFile in $captureInputs) {
                 if ((Get-FileHash -LiteralPath $inputFile -Algorithm SHA256).Hash -ne $hashes[$inputFile]) { throw "Input changed during capture: $inputFile" }
             }
             if ((Get-FileHash -LiteralPath "$out/proof-cameras.json" -Algorithm SHA256).Hash -ne $hashes['proof-cameras.json']) { throw 'Camera file changed during capture' }
             $capture['finished'] = Get-Date -Format o
+            $capture['expected_proof_cameras'] = $proofIds.Count
+            $capture['captured_camera_statistics'] = $statIds.Count
             $capture | ConvertTo-Json -Depth 6 | Set-Content "$out/$label/$tier-$lighting/capture-inputs.json"
         }
         Save-Step "Zapisano rendery $label/$tier-$lighting wszystkich kamer; ocena PNG i budżetu nadal w toku."
