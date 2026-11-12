@@ -12,6 +12,11 @@ namespace Game.Editor.VisualQA
     public static class AsphaltQaStateProbe
     {
         static readonly HashSet<string> seen = new HashSet<string>();
+        [Serializable] sealed class CameraInventory
+        {
+            public string[] ids, duplicateIds;
+            public string note = "All scene ControlCamera IDs after the supplied gate camera fixture was loaded; independent of the selected render filter.";
+        }
         [Serializable] sealed class GroundSnapshot
         {
             public string id, shader, baseMap, maskMap;
@@ -59,6 +64,21 @@ namespace Game.Editor.VisualQA
                     $"keywords={string.Join(",", material.shaderKeywords)}");
             string directory = Environment.GetEnvironmentVariable("KAMION_ASPHALT_QA_DIRECTORY");
             if (material == null || string.IsNullOrEmpty(directory)) return;
+            string inventoryPath = Path.Combine(directory, "camera-inventory.json");
+            if (!File.Exists(inventoryPath))
+            {
+                var ids = new List<string>(); var duplicates = new HashSet<string>(); var unique = new HashSet<string>();
+                foreach (var control in UnityEngine.Object.FindObjectsByType<Game.Rendering.ControlCamera>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+                {
+                    ids.Add(control.id);
+                    if (!unique.Add(control.id)) duplicates.Add(control.id);
+                }
+                ids.Sort(StringComparer.Ordinal);
+                Directory.CreateDirectory(directory);
+                File.WriteAllText(inventoryPath, JsonUtility.ToJson(new CameraInventory {
+                    ids = ids.ToArray(), duplicateIds = new List<string>(duplicates).ToArray()
+                }, true));
+            }
             var paint = AssetDatabase.LoadAssetAtPath<Material>(
                 "Assets/_Generated/World/bialystok-industrial-c/Materials/M_marking_white.mat");
             var mask = material.GetTexture("_MaskMap") as Texture2D;
