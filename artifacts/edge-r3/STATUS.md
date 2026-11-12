@@ -47,3 +47,4 @@ Po ukończonej bazie dodano wyłącznie dwa testy rzeczywistego BuildApron na st
 Krok 16: Red potwierdzony: 2/2 oczekiwanych porażek właściwej asercji, bez pominięć; XML i SHA w corner-red-result.json. Audyt nowej bazy: 5676 punktów, max +1,4267 m, 40 >0,8 m, p95 abs 0,1733 m.
 Poprawiono wyłącznie WorldEdgeBuilder: średnia i okno wygładzania są liczone po 512 unikalnych punktach, wynik przypisany także 16 dodatkowym kopiom narożników. Pozostają te same wierzchołki/topologia/UV/kolory i podział submesh; surowe próbki terenu przy brzegu bez zmian. Obliczenia tylko przy imporcie.
 Następna komenda: test-corner.ps1 -Phase Green, następnie wymagany build_world pod heavy, przebudowa edge i macierz After.
+2026-11-12T01:51:30.6730666+01:00 Test narożnika Green potwierdzony: total 2, passed 2, failed 0; XML i SHA w corner-green-result.json.
