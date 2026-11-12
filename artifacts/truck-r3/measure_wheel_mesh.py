@@ -28,6 +28,7 @@ for mesh in data['rows']:
     uv = vectors(mesh['uv'], 'xy')
     row = {'asset':mesh['asset'],'node':mesh['node'],'runtime_readable':mesh['runtimeReadable'],
            'vertices':len(points),'normals':len(normals),'uv_vertices':len(uv),'submeshes':[]}
+    semantic = hashlib.sha256()
     for i, group in enumerate(mesh['submeshes']):
         if group['topology'] != 'Triangles':
             raise ValueError(f'Unexpected topology {mesh["node"]}: {group["topology"]}')
@@ -42,8 +43,17 @@ for mesh in data['rows']:
         twice_area = np.linalg.norm(cross,axis=1)
         longest = np.maximum.reduce([np.linalg.norm(a-b,axis=1),np.linalg.norm(b-c,axis=1),np.linalg.norm(c-a,axis=1)])
         slenderness = longest**2/np.maximum(twice_area,1e-30)
-        result = {'index':i,'triangles':len(indices),'area_below_1e12':int((twice_area<2e-12).sum()),
+        result = {'index':i,'triangles':len(indices),'area_below_1e_minus12':int((twice_area<2e-12).sum()),
                   'area_m2_sum':float(twice_area.sum()/2),'slenderness_over_100':int((slenderness>100).sum())}
+        # Stable triangle content hash, independent of imported vertex/triangle ordering.
+        # Normals + UV preserve the shading contract; winding is checked separately above.
+        corner = np.concatenate([points, normals, uv],axis=1) if len(normals)==len(points) and len(uv)==len(points) else points
+        records=[]
+        for tri in indices:
+            corners = sorted(tuple(np.round(corner[j],6)) for j in tri)
+            records.append(tuple(value for entry in corners for value in entry))
+        semantic.update(np.asarray(sorted(records),dtype='<f8').tobytes())
+        semantic.update(str(i).encode('ascii'))
         if len(normals)==len(points):
             avg = normals[indices].mean(axis=1)
             length = np.linalg.norm(avg,axis=1)
@@ -55,6 +65,7 @@ for mesh in data['rows']:
             span = u.max(axis=1)-u.min(axis=1)
             result.update(uv_span_above_025=int((span.max(axis=1)>.25).sum()),uv_span_max=float(span.max()))
         row['submeshes'].append(result)
+    row['semantic_triangle_sha256_1e6'] = semantic.hexdigest()
     rows.append(row)
 summary = {'input':str(path),'sha256':hashlib.sha256(path.read_bytes()).hexdigest(),
            'note':'Imported local geometry before shader flattening. Measurements alone do not distinguish intended holes, collapsed geometry, UV artifacts or shading defects; compare actual probes. No automatic PASS.',
