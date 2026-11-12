@@ -228,3 +228,5 @@ potem poprawić największe udokumentowane odstępstwo wiaty. WIP po każdym kro
 2026-11-12T16:15:54.2170209+01:00: Focused test geometrii/palety przeszedł w heavy. Następny etap to generator w tym samym slocie, bez równoległego Pythona.
 
 2026-11-12T16:22:18.4352464+01:00: WŁAŚCICIEL POLECIŁ BEZPIECZNIE ZAKOŃCZYĆ (limit tygodniowy). Własny STOP_REQUESTED blokuje nowe Unity/heavy przed Acquire. Bieżący generator PID 80828 oraz rodzic 68124 nie są ubijane: dokończą generator i sekwencyjne audyty, a finally zwolni heavy. Nie będzie następnej rundy. R3 pozostaje NIEGOTOWA DO INTEGRACJI, bez końcowego REPORT; powstaje PRZEKAZANIE.md.
+
+2026-11-12T16:26:40.9634835+01:00: Generator after3 zakończony. Slot nadal obejmuje wyłącznie sekwencyjny skan chronionej geometrii, nie Unity.
