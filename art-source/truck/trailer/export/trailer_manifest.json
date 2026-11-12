@@ -705,8 +705,8 @@
    "tris_total": 89000,
    "tris_before_decimation": 107506,
    "decimate_area_budget_k": 430.17,
-   "file_bytes": 7395100,
-   "build_s": 11.8
+   "file_bytes": 7282444,
+   "build_s": 8.3
   },
   "LOD1": {
    "file": "art-source/truck/trailer/export/SM_Trailer_LOD1.fbx",
@@ -1388,8 +1388,8 @@
    "tris_total": 24500,
    "tris_before_decimation": 92982,
    "decimate_area_budget_k": 69.19,
-   "file_bytes": 2167996,
-   "build_s": 8.0
+   "file_bytes": 2143132,
+   "build_s": 6.0
   },
   "LOD2": {
    "file": "art-source/truck/trailer/export/SM_Trailer_LOD2.fbx",
@@ -1399,7 +1399,7 @@
      "role": "CHASSIS",
      "rig_parent": "Trailer_LOD2",
      "fbx_parent": "Trailer_LOD2",
-     "tris": 3752,
+     "tris": 3571,
      "materials": [
       "MI_Trl_Trim",
       "MI_Trl_Paint",
@@ -1453,7 +1453,7 @@
      "role": "CURTAIN_L",
      "rig_parent": "Trailer_LOD2",
      "fbx_parent": "Trailer_LOD2",
-     "tris": 464,
+     "tris": 426,
      "materials": [
       "MI_Trl_Curtain"
      ],
@@ -1472,7 +1472,7 @@
      "role": "CURTAIN_R",
      "rig_parent": "Trailer_LOD2",
      "fbx_parent": "Trailer_LOD2",
-     "tris": 464,
+     "tris": 427,
      "materials": [
       "MI_Trl_Curtain"
      ],
@@ -1677,7 +1677,7 @@
      "role": "WHEEL_1L",
      "rig_parent": "Trailer_LOD2",
      "fbx_parent": "Trailer_LOD2",
-     "tris": 511,
+     "tris": 554,
      "materials": [
       "MI_Trl_Metal",
       "MI_Trl_Trim"
@@ -1705,13 +1705,13 @@
       }
      },
      "tyre_outer_radius_m": 0.5494,
-     "width_m": 0.3961
+     "width_m": 0.3963
     },
     "WHEEL_1R_LOD2": {
      "role": "WHEEL_1R",
      "rig_parent": "Trailer_LOD2",
      "fbx_parent": "Trailer_LOD2",
-     "tris": 515,
+     "tris": 557,
      "materials": [
       "MI_Trl_Metal",
       "MI_Trl_Trim"
@@ -1745,7 +1745,7 @@
      "role": "WHEEL_2L",
      "rig_parent": "Trailer_LOD2",
      "fbx_parent": "Trailer_LOD2",
-     "tris": 514,
+     "tris": 556,
      "materials": [
       "MI_Trl_Metal",
       "MI_Trl_Trim"
@@ -1779,7 +1779,7 @@
      "role": "WHEEL_2R",
      "rig_parent": "Trailer_LOD2",
      "fbx_parent": "Trailer_LOD2",
-     "tris": 510,
+     "tris": 550,
      "materials": [
       "MI_Trl_Metal",
       "MI_Trl_Trim"
@@ -1806,14 +1806,14 @@
        "convention": "forward roll = positive angle about local +X"
       }
      },
-     "tyre_outer_radius_m": 0.5505,
+     "tyre_outer_radius_m": 0.5517,
      "width_m": 0.3916
     },
     "WHEEL_3L_LOD2": {
      "role": "WHEEL_3L",
      "rig_parent": "Trailer_LOD2",
      "fbx_parent": "Trailer_LOD2",
-     "tris": 510,
+     "tris": 552,
      "materials": [
       "MI_Trl_Metal",
       "MI_Trl_Trim"
@@ -1840,14 +1840,14 @@
        "convention": "forward roll = positive angle about local +X"
       }
      },
-     "tyre_outer_radius_m": 0.547,
+     "tyre_outer_radius_m": 0.5443,
      "width_m": 0.3899
     },
     "WHEEL_3R_LOD2": {
      "role": "WHEEL_3R",
      "rig_parent": "Trailer_LOD2",
      "fbx_parent": "Trailer_LOD2",
-     "tris": 510,
+     "tris": 551,
      "materials": [
       "MI_Trl_Metal",
       "MI_Trl_Trim"
@@ -1874,7 +1874,7 @@
        "convention": "forward roll = positive angle about local +X"
       }
      },
-     "tyre_outer_radius_m": 0.5463,
+     "tyre_outer_radius_m": 0.5457,
      "width_m": 0.3937
     }
    },
@@ -2063,11 +2063,11 @@
     }
    },
    "collision": {},
-   "tris_total": 7850,
-   "tris_before_decimation": 72418,
-   "decimate_area_budget_k": 31.32,
-   "file_bytes": 848476,
-   "build_s": 3.5
+   "tris_total": 7844,
+   "tris_before_decimation": 73834,
+   "decimate_area_budget_k": 28.83,
+   "file_bytes": 843468,
+   "build_s": 4.9
   }
  },
  "units": "metres",
@@ -2679,20 +2679,20 @@
    },
    "Trim": {
     "area_m2": 268.24,
-    "uv_coverage": 0.268,
+    "uv_coverage": 0.279,
     "px_per_m": {
-     "High": 130,
-     "Medium": 65,
-     "Low": 32
+     "High": 132,
+     "Medium": 66,
+     "Low": 33
     }
    },
    "Metal": {
     "area_m2": 38.8,
-    "uv_coverage": 0.831,
+    "uv_coverage": 0.882,
     "px_per_m": {
-     "High": 300,
-     "Medium": 150,
-     "Low": 75
+     "High": 309,
+     "Medium": 154,
+     "Low": 77
     }
    },
    "Lights": {
