@@ -86,22 +86,26 @@ namespace Game.Tests
         [Test]
         public void Recording_AllocatesNoManagedMemory_InSteadyDrivingWithInputChanges()
         {
-            var log = new ControlInputLogger(_ => { });
             var cmd = new DriverIntent { ShiftDelta = 1, ToggleParkingBrake = true };
-            // Warm up (JIT, ring touch, all branches), then measure the frames of a drive with constantly changing input.
             const int frames = 1500;
-            Action run = () =>
+            static void RunDrive(ControlInputLogger target, in DriverIntent command)
             {
                 for (int i = 0; i < frames; i++)
                 {
                     float t = 10f + i * 0.016f;
-                    log.Observe(t, Axes((float)Math.Sin(i * 0.05), 0.5f + 0.5f * (float)Math.Sin(i * 0.02), i % 300 < 20 ? 0.8f : 0f), 40f + i * 0.01f);
-                    if (i % 200 == 0) log.Observe(t, cmd, 40f);
-                    if (i % 250 == 0) log.Event(t, "camera mode=Chase");
-                    log.TryFlush(t, false);   // never flushes while input is active and the ring has room
+                    target.Observe(t, Axes((float)Math.Sin(i * 0.05), 0.5f + 0.5f * (float)Math.Sin(i * 0.02), i % 300 < 20 ? 0.8f : 0f), 40f + i * 0.01f);
+                    if (i % 200 == 0) target.Observe(t, command, 40f);
+                    if (i % 250 == 0) target.Event(t, "camera mode=Chase");
+                    target.TryFlush(t, false);   // never flushes while input is active and the ring has room
                 }
-            };
-            GcAllocCounter.AssertZero(run, warmup: () => { run(); log.Flush(); }, message: "recording must not allocate");
+            }
+            // Warm up (JIT, ring touch, all branches) on a separate instance so m_LastAxisT on `log` stays -Infinity.
+            var warm = new ControlInputLogger(_ => { });
+            var log = new ControlInputLogger(_ => { });
+            GcAllocCounter.AssertZero(
+                () => RunDrive(log, cmd),
+                warmup: () => { RunDrive(warm, cmd); warm.Flush(); },
+                message: "recording must not allocate");
             Assert.Greater(log.Pending, 20, "the drive really recorded entries");
         }
     }
