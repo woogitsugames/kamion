@@ -58,3 +58,8 @@ Ciężkich testów (pełne `tests/gis`, Unity, telefon) nie uruchamiałem. Czerw
 - World/docs: zweryfikować wymiary P-10/P-13/P-1/P-8 i numery paragrafów PTB2022 z PDF ISAP (zał. nr 2 do Dz.U. 2019 poz. 2311; Dz.U. 2022 poz. 1518).
 - M9 (znaki pionowe vs rozporządzenie) nie zostało dostarczone, więc zadanie zostaje otwarte.
 - GC HUD: pozycja 2 audytu (`BuildTelemetry`) i cache etykiety gyro, jeśli profil na telefonie pokaże GC.
+
+## Integracja `mistral-r2-int` (notatki lidera)
+
+- #14: duplikat klucza `concrete_pole` w `tools/worldgen/streetscape/materials.py:108` (`[0.36, 0.36, 0.34]`) i `:163` (`[0.33, 0.33, 0.31]`) — **celowo NIE zmieniony** przy scaleniu. Obecnie działa wartość z l. 163 (późniejszy klucz w literale dict wygrywa). Zmiana wymaga decyzji o kolorze i regeneracji świata (osobne zadanie World). Ruff F601 będzie go zgłaszał do tego czasu.
+- #14: `ci.yml` job `lint` — `uvx ruff@0.17.5 check tools tests --exit-zero`, `PSScriptAnalyzer -RequiredVersion 1.25.0`, bez `exit 1`. Wersje: ruff 0.17.5 = lokalny `uvx ruff --version` (ruff nie występuje w `uv.lock`), PSScriptAnalyzer 1.25.0 = bieżąca wersja w PSGallery (`Find-Module`, 2026-11-12; lokalnie moduł niezainstalowany).

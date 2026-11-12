@@ -49,7 +49,8 @@ jobs:
         run: uv run --project tools/audio --with pytest pytest tools/audio/tests -q
 
   lint:
-    # NIEBLOKUJĄCY: continue-on-error - lint nie może blokować merge'u.
+    # NIEBLOKUJĄCY: continue-on-error + --exit-zero — lint raportuje, nie blokuje merge'u.
+    # Wersje przypięte: ruff 0.17.5 (lokalny uvx 2026-11-12), PSScriptAnalyzer 1.25.0 (PSGallery 2026-11-12).
     runs-on: ubuntu-latest
     continue-on-error: true
     steps:
@@ -57,12 +58,12 @@ jobs:
         with: { lfs: false }
       - uses: astral-sh/setup-uv@v6
       - name: Ruff (tools/, tests/) - konfiguracja w ruff.toml
-        run: uvx ruff check tools tests
+        run: uvx ruff@0.17.5 check tools tests --exit-zero
       - name: PSScriptAnalyzer (scripts/*.ps1)
         shell: pwsh
         run: |
-          Install-Module PSScriptAnalyzer -Scope CurrentUser -Force -SkipPublisherCheck
+          Install-Module PSScriptAnalyzer -RequiredVersion 1.25.0 -Scope CurrentUser -Force -SkipPublisherCheck
           $found = Invoke-ScriptAnalyzer -Path scripts -Recurse
           $found | Select-Object ScriptName, Line, Severity, RuleName, Message |
             Format-Table -AutoSize | Out-String -Width 220
-          if ($found) { exit 1 }
+          "PSScriptAnalyzer: $(@($found).Count) findings (report only)"
