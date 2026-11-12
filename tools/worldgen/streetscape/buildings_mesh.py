@@ -1449,8 +1449,12 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
         # ADR 0132 (review 0124 P2-d: black rectangles without frames read as a burnt-out house from close by): a
         # frame of LOD1_HOUSE_FRAME_M round the dark pane, in the same plane (4 quads, no overlap -> no z-fight), in
         # a light material the LOD1 of that chunk already draws and that is not the wall of this house
-        fm = next((m_ for m_ in LOD1_HOUSE_FRAME_MATS if m_ != wall_ and m_ != mat and m_ in l1_frame_cells.get(cell, ())), None)
         q = np.asarray(quad, float)
+        # every chunk cell the opening touches must already draw the frame material (chunks cut per triangle centroid:
+        # r1 put one frame triangle of an opening on a chunk border into a chunk without it, +1 submesh)
+        qcells = {tuple(np.floor(c_[:2] / _CHUNK_M).astype(int).tolist()) for c_ in q}
+        fm = next((m_ for m_ in LOD1_HOUSE_FRAME_MATS if m_ != wall_ and m_ != mat
+                   and all(m_ in l1_frame_cells.get(c_, ()) for c_ in qcells)), None)
         wq, hq = float(np.linalg.norm(q[1] - q[0])), float(q[3][2] - q[0][2])
         f_ = min(LOD1_HOUSE_FRAME_M, 0.2 * wq, 0.2 * hq)
         acc_ = by_key.setdefault(k_, Acc())
