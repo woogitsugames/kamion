@@ -30,3 +30,5 @@ potem poprawić największe udokumentowane odstępstwo wiaty. WIP po każdym kro
 2026-11-12T11:09:20.2467484+01:00: dodatkowa referencjaWodociągi983799980108126 obejrzana≤960, odrzucona jako dowód rodziny wiaty z powodu niewystarczającej widoczności. Bez rozszerzania zmian na wszystkie przystanki. Baselineworld nadal oczekuje w heavy; proces65664 potwierdzony.
 
 2026-11-12T11:19:06.9450335+01:00: heavy world before; sukces=True; slot gpt-furniture-r3 zwolniony. NASTĘPNY KROK: sprawdzić log i kontynuować walidację rundy.
+
+2026-11-12T11:20:39.6922644+01:00: world baseline zakończony510,1s,64GLB,479MiBHigh/150MiBLow, brakfallback=True. Geometrysnapshot czeka naheavy. Mały helperJSON przygotował59 kamer, w tym4zbliżenia wiat; pochodzenie/hash instancji zapisano. Pozycje i powiązanie najbliższego źródła nadalWORKING_VALUE do obejrzenia renderów.
