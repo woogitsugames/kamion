@@ -86,9 +86,37 @@ Run on the branch after `git merge main` (`611f116c9`, no conflicts) and a full 
 - 150280 (pre-0143 pose): the stacks in the render are visibly smaller and further left than on the photo (crop
   `crops/z150280.jpg`). Position and height come from source data, so this is the SBS pose / FOV of that frame, not
   the skyline; not corrected here.
-- `edge-*`, `dk8-dk19-exit`: closures read as a closed road (double board + B-1) instead of a bare striped plank.
+- `edge-*`: closures read as a closed road (double board + B-1) instead of a bare striped plank.
+  Correction (r6d): the first version of this note also named `dk8-dk19-exit`. That camera has no closure in
+  frame (before and after are the same picture apart from the changes of main); the claim was wrong and is withdrawn.
 - Not done: haze on the stacks is the ordinary distance fog of the tier; at 1.3–1.5 km on Low-clear they are a
   little crisper than on the photos (owner / critic call).
+
+## Revision r6d (review `REVIEW-2026-11-12-s15-0141`, branch `edge-r6d`)
+
+1. **Doubled B-1 discs on `edge-west` (P1).** Cause: at the west edge each carriageway of Maczka (10 m) and its
+   `trunk_link` (7 m / 6.5 m) are separate graph edges cut by the region edge; their closures stood 0.5 m and 0.9 m
+   apart (WorldC scene), each with its own barrier row, boards and B-1. Fix in the importer
+   (`WorldEdgeBuilder.MergeOverlappingClosures`): parallel closures (heading within 25 deg, at most 8 m apart along
+   the road: WORKING_VALUE) whose barrier spans overlap become one visible closure over the union of both spans, in
+   the frame of the wider road - one barrier row, one pair of boards, one B-1 per carriageway. Carriageways with a
+   median between them and crossing roads stay separate. Colliders and `WorldBoundary.closures` are unchanged (one per
+   road, `WorldEdgeRecoveryTests` contract). The closures are built in the Unity importer, not in the Python
+   generator, so the regression test is EditMode (`WorldEdgeClosureSkylineTests`, 3 new cases with the scene
+   coordinates of the four Maczka closures), not pytest.
+2. **Grey "white" on U-20 / B-1 (P1).** The albedo was already linear 0.62 = sRGB 0.81 (the far-field chimney white),
+   the material has no extra fog or AO: `far_field_buildings` is plain `Kamion/World Surface` with ordinary tier fog,
+   SH ambient and baked sky visibility. In `edge-west` the boards face east and are in their own shade (ambient
+   only), so the white dropped to the tone of the sunlit concrete behind; in `edge-north` (sunlit boards) the same
+   paint rendered white. Sign sheeting is brighter than weathered chimney paint: white 0.62 -> 0.80 linear
+   (sRGB 0.91), red 0.38 -> 0.52 linear (sRGB 0.75), both WORKING_VALUE. Chimney colours unchanged.
+3. **Pine belt hides ~45 % of the stacks (P2): not changed.** The belt is BDOT forest `2BE4B432-6BC0`; its trees
+   (pine 20.7 - 23.7 m, 400 - 470 m from the 297817 camera, elevation +3.3 .. +4.1 deg against about +5.4 deg for
+   the top of a 120 m stack at 1.3 km) get their height from the species range of `vegetation.py`, not from a
+   measurement. There is no canopy height source in the pipeline (no NMPT / lidar DSM in `Data/raw/gugik`), so the
+   data cannot be called wrong or right here; lowering the trees to fit one photo would be a guess. Open: ingest
+   GUGiK NMPT and derive forest heights from NMPT - NMT (separate task).
+@@R6D@@
 
 ## Risks / open
 
