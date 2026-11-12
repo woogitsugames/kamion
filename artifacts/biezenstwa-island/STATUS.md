@@ -48,3 +48,12 @@
   obejrzeć `pairs_i2/`, uzupełnić „Result” w `docs/adr/0128-biezenstwa-island.md`, `robocopy artifacts\biezenstwa-island C:\Users\matma\Documents\Claude\kamion\artifacts\biezenstwa-island /E /XF *.pkl`;
   gdy brak „all done” i brak procesu: `bash artifacts/biezenstwa-island/scripts/all.sh i2 > artifacts/biezenstwa-island/logs/i2_all.out 2>&1`.
   Do decyzji lidera: U-4a przy Andersa — świat 2024 (ortofoto, krótsza wyspa) czy stan ze zdjęć 2017–2019.
+
+## Sesja 13
+- krok 9 (16:45): wznowienie. `all.sh i2` z s12 nadal żyje (PID 44241) i czeka w kolejce heavy (build NIE wystartował, `i2_all.out` pusty).
+  Zanim dostał slot: `git merge junctions-r6` (61f8eda5, konflikt world_manifest → ours) i `git merge main` (bedc52d1; konflikty generated/*.json,
+  street_props.glb → ours; WorldPBR.shader CBUFFER → obie strony: _VertexGrime/_LowNoShadow + _KerbWear/_GroundWearExclude/_GroundGrimeBase).
+  Build i2 pójdzie więc już na drzewie scalonym z main (0d412990).
+  NASTĘPNY KROK: `tail -20 artifacts/biezenstwa-island/logs/i2_all.out` — gdy „all done”: obejrzeć `pairs_i2/`, `logs/i2_pytest.log`, `logs/i2_editmode.log`,
+  uzupełnić „Result” w `docs/adr/0128-biezenstwa-island.md`, commit, robocopy do main. Brak procesu i brak „all done”:
+  `bash artifacts/biezenstwa-island/scripts/all.sh i2 > artifacts/biezenstwa-island/logs/i2_all.out 2>&1`
