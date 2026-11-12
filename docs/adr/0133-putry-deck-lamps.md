@@ -1,6 +1,6 @@
 # ADR 0133 — DK8 over Rondo Putry: median double-arm lamp row (authored), deck geometry unchanged
 
-Status: implemented on branch `putry-deck` (base main `29f5cf85`, 2026-11-12, s12); not merged. A visual-critic
+Status: implemented on branch `putry-deck` (base main `29f5cf85`, 2026-11-12, s12; main merged s13 `3feda88c8`); not merged. A visual-critic
 review is still required; the D51 grades below are the author's.
 Source: ADR 0130 (494288 "lamps: world, not pose"), `docs/reports/visual/REVIEW-2026-11-12-s12-0130-truck-r3.md`
 (world follow-up "łuk i latarnie pomostu Putry"), ADR 0125 (screen on the outer edge), ADR 0105/0119 (underdeck).
@@ -45,4 +45,28 @@ The reviewer also reported the deck "in a clear left curve" while the photo look
 
 ## Validation
 
-See the table and numbers below (filled after the render loop).
+Run on the branch after `git merge main` (3feda88c8) and a full regeneration (build_world 582 s, import-region OK,
+Low 121.0 MB / High 263.1 MB world memory).
+
+- `streetscape_qa.json` `furniture.lamp_rows.dk8-putry-median-double-lamps`: placed 14 / 14, on deck consoles 11,
+  ground columns 3, skipped on carriageway 0, rule lamps removed 23.
+- `tests/gis/test_lamp_rows.py` 4/4; `pytest tests/gis tests/gate3`: 825 passed, 1 xfailed (heavy slot, 17 min).
+- SBS G3-B, Low, overcast + clear, 10 frames each (`artifacts/putry-deck/{before,after}/Low-*`, sheets
+  `artifacts/putry-deck/pairs/*.jpg`; "before" = base main 29f5cf85, so deltas also contain unrelated main changes):
+  instanced props draws per frame -7 .. +6 (494288: 88 -> 81; 209622 / 810525 / 810896: +6), instances -14 .. +1,
+  drawsEst / trisK of the static meshes unchanged in every frame. Budget not worsened.
+
+| Frame | Before | After |
+|---|---|---|
+| 494288 (on the NW deck) | single-arm lamps on the right, next to the screen; none on the left | Y columns behind the left median barrier, screen side clear - as on the photo |
+| 4312632 / 468026 (from below, S) | single-arm heads above the deck parapet | double heads above the deck, rhythm ~35 m - as on the photo |
+
+### D51 (author's grade; visual-critic pending)
+
+"Would a driver recognise the Putry deck?" - on 494288: yes for the furniture (screen right, Y lamp row left,
+barrier, two lanes), which was the blocker named in the 0130 review. Still different from the photo and NOT fixed
+here: (1) the render bends right much more than the photo; plan geometry matches the 0.08 m ortho, so this is the
+SBS camera pose (position along the curve / yaw) - next step is a pose re-solve of 494288 on the deck, not a deck
+change; (2) the wide light-grey strip right of the edge line (photo: a narrower reddish-brown strip before the barrier);
+(3) under-deck dark panels in 4312632 / 468026 (ADR 0105/0119 scope). Grade: G3-B furniture PASS (author),
+deck curve/pose OPEN.

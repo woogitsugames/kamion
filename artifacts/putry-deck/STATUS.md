@@ -14,3 +14,4 @@
 - step 7: regen on merged main OK (582 s); lamp_rows placed 14, console 11, rule lamps removed 23. NEXT: import-region (slot) -> render_putry.ps1 -OutDir artifacts/putry-deck/after
 - step 8: pytest gis+gate3 825 passed 1 xfailed (17 min, heavy). import2 OK. Render after in progress.
 - step 9: after renders 20 frames + pairs/*.jpg; instanced draws delta -1..+6 per frame, instances -7..+1. NEXT: EditMode (unity slot), ADR Validation, visual-critic
+- step 10: ADR 0133 Validation + D51 filled. EditMode running (log artifacts/putry-deck/logs/editmode.log).
