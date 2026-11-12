@@ -1,34 +1,102 @@
 {
   "schema": "truck-sim-pl/lamp-rows/1",
-  "adr": "docs/adr/0133-putry-deck-lamps.md",
+  "adr": "docs/adr/0133-putry-deck-lamps.md, docs/adr/0146-putry-andersa-world.md",
   "frame": "local E,N (m) of region.yaml origin (EPSG:2180 777995, 596223)",
   "rows": [
     {
       "id": "dk8-putry-median-double-lamps",
-      "reason": "DK8 / Andersa dual carriageway over Rondo Putry: one row of double-arm (Y) columns in the median, arms across both carriageways; no lamps on the outer edges. Photo Mapillary 494288258686575 (szurek 2017, CC BY-SA 4.0, reference only): Y-columns behind the left (median) barrier of the NW-bound deck, screen on the right. GUGiK WMS HighResolution 0.08 m (cells c_02..c_04 x c_07..c_08): 14 double-arm heads in the grass median and in the 4.2 m gap between the two decks, spacing 32-37 m.",
+      "reason": "DK8 / Andersa dual carriageway over Rondo Putry: one row of double-arm (Y) columns in the median, arms across both carriageways; no lamps on the outer edges. Photo Mapillary 494288258686575 (szurek 2017, CC BY-SA 4.0, reference only): Y-columns behind the left (median) barrier of the NW-bound deck, screen on the right. GUGiK WMS HighResolution 0.08 m (cells c_02..c_04 x c_07..c_08): 14 double-arm heads in the grass median and in the 4.2 m gap between the two decks, spacing 32-37 m. ADR 0146: the columns in the gap between the decks stand on the ground under the viaduct (0.08 m orthophoto: the pole shadow starts at the base on the gravel of the gap floor and runs 7.7 m on it to the NE deck, e.g. column 9 at E -502.2 N -27.3), so they are masts of deck height + ~11 m; luminaires ~11 m above the road (luminaire shadow on the NE deck 11.3 m from its image with a sun of ~1.05 m shadow per m, calibrated on a car; ground column 1: fork shadow 10.8 m; photo 494288 with the phone's native focal length: head 10.3 m above the eye). Row continued south-east on the grass median to the median opening at the fire station (4 columns, same orthophoto, cells c_04_07..c_05_06).",
       "source": "GUGiK ortho 0.08 m, base = start of the pole shadow (top leans away from the nadir); read on 2x crops, artifacts/putry-deck/data/sheet1.jpg, sheet2.jpg. Lateral accuracy ~1 m (WORKING_VALUE)",
       "confidence": "medium",
-      "verify": "column type / height / arm reach (photo-scaled WORKING_VALUE), console vs. a column on the cap, lamps east of E -396 (outside the fetched ortho cells)",
-      "proto": "lamp_double_12m",
-      "proto_console": "lamp_double_console_12m",
-      "suppress_rule_lamps": {"osm_way": [1101181473, 173956078], "within_m": 18.0},
+      "verify": "mast footing and exact height (no drawings), column type south-east of E -282 (rule lamps there)",
+      "proto": "lamp_double_11m",
+      "suppress_rule_lamps": {
+        "osm_way": [
+          1101181473,
+          173956078,
+          284022563,
+          606396460,
+          560802655,
+          266084693
+        ],
+        "within_m": 18.0
+      },
       "deck_snap_m": 2.6,
       "points_en": [
-        [-792.0, 66.0],
-        [-759.9, 63.5],
-        [-723.3, 60.3],
-        [-686.7, 57.0],
-        [-651.4, 51.7],
-        [-619.3, 43.0],
-        [-585.8, 29.5],
-        [-556.0, 13.4],
-        [-527.2, -6.8],
-        [-502.3, -27.4],
-        [-475.6, -49.2],
-        [-449.6, -70.7],
-        [-422.7, -92.4],
-        [-396.4, -113.4]
-      ]
+        [
+          -792.0,
+          66.0
+        ],
+        [
+          -759.9,
+          63.5
+        ],
+        [
+          -723.3,
+          60.3
+        ],
+        [
+          -686.7,
+          57.0
+        ],
+        [
+          -651.4,
+          51.7
+        ],
+        [
+          -619.3,
+          43.0
+        ],
+        [
+          -585.8,
+          29.5
+        ],
+        [
+          -556.0,
+          13.4
+        ],
+        [
+          -527.2,
+          -6.8
+        ],
+        [
+          -502.3,
+          -27.4
+        ],
+        [
+          -475.6,
+          -49.2
+        ],
+        [
+          -449.6,
+          -70.7
+        ],
+        [
+          -422.7,
+          -92.4
+        ],
+        [
+          -396.4,
+          -113.4
+        ],
+        [
+          -368.3,
+          -136.1
+        ],
+        [
+          -338.7,
+          -157.5
+        ],
+        [
+          -309.3,
+          -178.0
+        ],
+        [
+          -282.0,
+          -201.7
+        ]
+      ],
+      "proto_mast": "lamp_double_mast_11m"
     }
   ]
 }

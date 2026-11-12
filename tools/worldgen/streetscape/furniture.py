@@ -349,12 +349,17 @@ CAP_IN_M = 0.35            # deck-top sample this far inside the fascia edge (ca
 
 
 def lamp_rows(pl, parts, path, report):
-    """Authored lamp rows (ADR 0133, `<region>/lamp_rows.json`, survives every regeneration): positions measured
-    on the GUGiK 0.08 m orthophoto replace the rule lamps of the named chains within `within_m` of the row.
-    Runs after the carriageway / island / deck clearing passes: the row is authored, and a column on a console in
-    the gap between two decks stands above the ground roads under it (clear_carriageway would push it away).
-    A point within `deck_snap_m` of a bridge deck goes on a console at the nearest deck edge (fascia), on the
-    cap-top height, arms across the road (+y toward the deck); otherwise it is a ground column on the terrain."""
+    """Authored lamp rows (ADR 0133 / 0146, `<region>/lamp_rows.json`, survives every regeneration): positions
+    measured on the GUGiK 0.08 m orthophoto replace the rule lamps of the named chains within `within_m` of the row.
+    Runs after the carriageway / island / deck clearing passes: the row is authored, and a mast in the gap between
+    two decks stands above the ground roads under it (clear_carriageway would push it away).
+    A point within `deck_snap_m` of a bridge deck, outside it:
+      - `proto_mast` (ADR 0146): the mast stays at the measured point (its base is on the ground under the viaduct,
+        orthophoto: the pole shadow starts on the gravel in the gap) and its origin is the cap-top height of the
+        nearest deck edge, so the luminaires keep their height above the road;
+      - else `proto_console` (ADR 0133): on a console at the nearest deck edge (fascia), arms across the road.
+    A point on a deck-level surface (median fill between two walled ramps) is a ground column on that surface;
+    otherwise a ground column on the terrain."""
     import json
     from pathlib import Path
     from shapely.ops import nearest_points
@@ -412,7 +417,9 @@ def lamp_rows(pl, parts, path, report):
                     u = (edge - p) / max(d, 1e-9)                 # toward the deck, across the road
                     u = u if abs(float(u @ nrm)) > 0.7 else nrm * np.sign(float((edge - p) @ nrm) or 1.0)
                     zc = deck.top(*(edge + u * CAP_IN_M))
-                    if math.isfinite(zc):
+                    if math.isfinite(zc) and row.get("proto_mast"):
+                        z, proto = float(zc), row["proto_mast"]
+                    elif math.isfinite(zc):
                         q, z, proto = edge - u * CONSOLE_OUT_M, float(zc), row["proto_console"]
                 elif inside:
                     zc = deck.top(*p)
@@ -425,7 +432,8 @@ def lamp_rows(pl, parts, path, report):
             placed.append({"k": k, "p": proto, "at": [round(float(q[0]), 2), round(float(q[1]), 2)], "z": round(zb, 2),
                            "shift_m": round(float(np.hypot(*(np.asarray(q) - p))), 2)})
         out[row["id"]] = {"rule_lamps_removed": removed, "placed": sum(1 for x in placed if "p" in x),
-                          "console": sum(1 for x in placed if x.get("p") == row["proto_console"]), "items": placed}
+                          "console": sum(1 for x in placed if x.get("p") == row.get("proto_console")),
+                          "mast": sum(1 for x in placed if x.get("p") == row.get("proto_mast")), "items": placed}
     report["lamp_rows"] = out
 
 
@@ -1794,7 +1802,9 @@ def guardrails(lin, net, zground, report):
             # BRIDGE_BARRIER_EDGE_MIN_M to the cap edge
             # ADR 0123: on a narrow cap the face distance rules (0.42 m: the post line may stand further than
             # BRIDGE_BARRIER_EDGE_M from the cap edge); the 1.5 m caps keep BRIDGE_BARRIER_EDGE_M as before
-            edge = kw[br] + S.KERB_TOP_W - (S.BRIDGE_BARRIER_FACE_M + W_BACK + 0.083)
+            # ADR 0146: bridge_style `barrier_face_m` (Putry decks: posts ~0.7 m behind the kerb face on 494288)
+            face_m = float(bridge_style(c).get("barrier_face_m") or S.BRIDGE_BARRIER_FACE_M)
+            edge = kw[br] + S.KERB_TOP_W - (face_m + W_BACK + 0.083)
             edge = np.where(kw[br] < 1.3, np.maximum(edge, S.BRIDGE_BARRIER_EDGE_MIN_M),
                             np.clip(edge, S.BRIDGE_BARRIER_EDGE_MIN_M, S.BRIDGE_BARRIER_EDGE_M))
             off[br] = hw[br] + S.KERB_TOP_W + kw[br] - edge
