@@ -16,7 +16,7 @@ namespace Game.Vehicle.Runtime
         /// <summary>ADR 0068: the complete pre-0068 configuration (launch argument rq_mirror_legacy / pass A/B toggler).</summary>
         static bool Legacy => MirrorOverrides.Legacy;
         /// <summary>Main-mirror render-texture height in pixels (width follows the glass aspect; convex mirrors scale it).</summary>
-        public static int MirrorHeight => Mathf.RoundToInt(MirrorHeightFor(Level) * (Legacy ? 1f : MirrorOverrides.Resolution ?? 1f));
+        public static int MirrorHeight => Mathf.RoundToInt(MirrorHeightFor(Level) * (Legacy ? 1f : MirrorOverrides.Resolution ?? MirrorOverrides.TierResolution));
         public static int MirrorHeightFor(int level) => level switch { 0 => 224, 1 => 288, 2 => 384, _ => 512 };
         /// <summary>
         /// Hard cap of mirror camera renders per frame (ADR 0042). All mirrors share it through a weighted round-robin:

@@ -99,6 +99,9 @@ namespace Game.Rendering
                      "WorldInstances.VehicleCullM (300 m). A16 Low G3-A: ~370 parked cars within 300 m, 7-12 submeshes each - the " +
                      "instanced submission cost (CPU +2.4 ms, GPU +0.35 ms beyond 150 m) is not worth ~20 px cars")]
             public float vehicleCullM;
+            [Tooltip("ADR 0136 r2: mirror render-texture height multiplier on this tier (0 = 1). Low 0.75 follows the Low main-view " +
+                     "render scale (224 -> 168 px class II); A16 G3-A A/B: mirrors 1.46 ms GPU, x0.75 saves 0.47 ms")]
+            public float mirrorResolutionScale;
             [Header("Budget assumptions (UNMEASURED until the phone is measured)")]
             public int budgetDrawCalls;
             public int budgetTrianglesK;
@@ -215,7 +218,7 @@ namespace Game.Rendering
                 treeCardLodScale = 0.5f, treeThinStartM = 90f, treeCullM = 600f, treeShadowLodMask = 1, leafAlphaToCoverage = true, simpleFoliage = true,
                 forestHlodM = 70f, forestHlodCullM = 1000f,
                 clearCoat = true, vehicleGrimeDetail = true, envCaptureSize = 64, envCaptureInterval = 10, envCaptureFarClip = 150f, envCaptureMinMove = 2f, envCaptureMaxAge = 20f, contactShadows = true, cabShadowLift = 8f, streetLights = 0, lampPools = 4,
-                glassFast = true, forestFast = true, vehicleCullM = 150f,
+                glassFast = true, forestFast = true, vehicleCullM = 150f, mirrorResolutionScale = 0.75f,
                 budgetDrawCalls = 250, budgetTrianglesK = 350, budgetTextureMB = 64, budgetShadowMs = 1.0f, budgetStatus = "UNMEASURED",
             },
             new Tier
