@@ -67,9 +67,12 @@ A/B bez limitu na G3-B (ten sam APK): impostory **1,37 → 0,51 ms** średnio, w
 Ocena: **G3-B — p99 50 → 33,7 ms (jak s10), klatki > 40 ms 41 → 16, GPU p95 35,2 → 33,9 ms (cel 33,3: brakuje 0,6 ms).**
 **G3-A — bez zmiany GPU** (brak lasu: drzewa/impostory/HLOD na G3-A ≈ 0, `artifacts/a16-perf/diagA`); regresja G3-A
 (GPU p50 +2,5 ms przy limicie) nie jest w lesie: A/B G3-A bez limitu — asfalt Low (pęknięcia + detal, 0118) +0,96 ms (szum okien ±3 ms,
-w G3-B +0,27), far field +0,36, płoty −0,44 (szum), ciężarówka +4,14 (bez zmian). Do dalszej rundy.
+w G3-B +0,27), far field +0,36, płoty −0,44 (szum), ciężarówka +4,14 (bez zmian), **propsy (instancje: auta/przyczepy/meble/znaki) +2,48 ms GPU i +7,0 ms CPU**
+(na G3-B tylko +0,16), cienie +1,44, lusterka +1,32 (propsy także w lusterkach i cieniach). Główny kandydat regresji G3-A = instancjonowane
+propsy na placach/podwórzach (s11–s12: gpt-life r1–r3, furniture r2, static yard vehicles 0122). Do dalszej rundy: rozbicie `rq_ab off:m.<prefiks>` per prototyp na G3-A.
 
 ## Otwarte
+- **G3-A: propsy +2,48 ms GPU / +7 ms CPU** — rozbić per prototyp (auta `car_`/`van_`/`trailer_`/`contact_`, meble), potem LOD/cull/cienie propsów na Low.
 - Karty liści LOD0/LOD1 (`leaves_*.png` pokrycie 23–48 %) — ta sama technika na kartach w `trees.glb` (osobna siatka per karta).
 - Ściany HLOD: górne ~12 % atlasu puste — przycięcie w `forest_hlod.py` (mały zysk).
 - Treść s11–s12 (+1,5–2 ms rozproszone): budżet per runda dla agentów treści (pomiar `rq_ab off:m.<prefix>` na A16 przed scaleniem).

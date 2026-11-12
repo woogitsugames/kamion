@@ -23,3 +23,7 @@
   G3-A 32.44/35.53, p99 49.95, >40 26 (s12 32.32/35.54, 42) — G3-A bez zmiany GPU. Impostor A/B uncapped 1.37 -> 0.51 ms (okna lasu 6.6/4.8 -> 1.9/2.3).
   „before” na tym samym dniu niemożliwy: INSTALL_FAILED_VERSION_DOWNGRADE (4097 < 4105, -d nie działa na release) — baza = gate3 s12.
   Merge main 4c25ff20 (czysty). NASTĘPNY KROK: (w toku) ablacje G3-A `pwsh artifacts/a16-perf/run-diag1.ps1 -Segment A -OutTag diagA -Only ...`
+- 17:56 diagA (G3-A uncapped, APK trim): props +2.48 GPU/+7.0 CPU (G3-B +0.16!), shadows +1.44, mirrors +1.32, asph +0.96 (szum), far +0.36,
+  truck +4.14, trees/impostor/hlod ≈ 0, fsign −0.03, plot −0.44. G3-A regresja = instancjonowane propsy (auta/meble z s11–s12).
+  NASTĘPNY KROK: dodać rozbicie propsów per prefiks (RenderOverrides.AbPropsOff -> filtr prefiksu) i zmierzyć na G3-A:
+  `pwsh artifacts/a16-perf/run-diag1.ps1 -Segment A -OutTag diagA2 -Only <nowe klucze>`. Gałąź gotowa do scalenia warunkowo (G3-B).
