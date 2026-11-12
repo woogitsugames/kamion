@@ -8,6 +8,7 @@ read=lambda p:json.loads(Path(p).read_text(encoding='utf-8-sig'))
 sha=lambda p:hashlib.sha256(Path(p).read_bytes()).hexdigest()
 plan=read(INPUT/'probe_plan.json');cameras=read(INPUT/'probe_cameras.json')['cameras']
 assert 1<=len(plan['probes'])<=30 and len({p['probe'] for p in plan['probes']})==len(plan['probes'])
+assert len(plan['probes'])+len(plan['rejected'])==plan['attempted_count']==30
 assert {c['id'] for c in cameras}=={p['probe'] for p in plan['probes']}
 assert all(c['pose_confidence']=='C' for c in cameras)
 assert plan['probe_cameras_sha256']==sha(INPUT/'probe_cameras.json')
@@ -67,8 +68,10 @@ for p in plan['probes']:
                  f'<a href="../renders/1280x{p["height"]}/{html.escape(camera)}.png">Natywny render</a> · '
                  f'<a href="{html.escape(p["page_url"],quote=True)}">Źródło: {html.escape(p["author"])}</a></p></article>')
 body='<!doctype html><html lang="pl"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>SBS r3 — hipotezy przy bramownicy</title><style>body{background:#181c20;color:#eee;font:16px Arial;max-width:960px;margin:auto;padding:12px}img{max-width:100%;height:auto}a{color:#9df}h2{font-size:18px;overflow-wrap:anywhere}article{margin:24px 0}</style><h1>Hipotezy C — druga partia — zdjęcie i render</h1><p>Diagnostyka Low-overcast. FOV pozostaje stały; warianty pozycji, pitch i nominalnego oka opisano w planie i nagłówkach. To nie ocena D51 ani awans produkcyjnej pozy. Ujemne przesunięcie oznacza cofnięcie po wskazanej osi jezdni lub spojrzenia.</p>'+''.join(cards)+'</html>'
+notice=f'<p>Zaplanowano {plan["attempted_count"]} prób; wyrenderowano {len(rows)}. Przed renderem odrzucono {len(plan["rejected"])} przypadki bez bezpiecznie ustalonej powierzchni. <a href="../inputs/probe_plan.json">Pełny plan i powody odrzuceń</a>.</p>'
+body=body.replace('</h1>','</h1>'+notice,1)
 (OUT/'index.html').write_text(body,encoding='utf-8')
-(OUT/'audit.json').write_text(json.dumps({'diagnostic_only':True,'gate_status':'UNVERIFIED','pose_confidence':'C','count':len(rows),'capture_git_sha':next(iter(captures.values()))['git_sha'],'input_sha256':{key:sha(INPUT/name) for key,name in input_files.items()},'pairs':rows},indent=2)+'\n',encoding='utf-8')
+(OUT/'audit.json').write_text(json.dumps({'diagnostic_only':True,'gate_status':'UNVERIFIED','pose_confidence':'C','count':len(rows),'attempted_count':plan['attempted_count'],'rejected_before_render':plan['rejected'],'capture_git_sha':next(iter(captures.values()))['git_sha'],'input_sha256':{key:sha(INPUT/name) for key,name in input_files.items()},'pairs':rows},indent=2)+'\n',encoding='utf-8')
 print(f'Composed and SHA-verified {len(rows)} diagnostic refinement pairs at width960; no production source writes')
 
 
