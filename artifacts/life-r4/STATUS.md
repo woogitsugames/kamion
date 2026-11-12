@@ -55,3 +55,5 @@ Krok 15: candidate-gen.ps1 przygotowany do pojedynczej puli heavy: audyt zapisan
 Kandydat a (2026-11-12T12:37:36.4987862+01:00): zapisz przerwany kandydat a na etapie focused-tests. Następny etap w candidate-gen.ps1; potem import/capture i oględziny. Limity klatki bez zmiany.
 
 Krok 16: kandydat a terminalny exit 1 na testach, przed World; prebuild audyt GLB baseline 471 węzłów/0 zmian/raw 0. Nowy test: 3 failed i 6 passed (0,62 s), różnice normalnych przy odbiciu. W face() zastąpiono odwracanie listy punktów odwróceniem winding indeksów przy tej samej przekątnej — zachowuje triangulację i wagi crease po obu stronach. Nie usunięto ani nie osłabiono testu, dodano nazwę materiału do błędu. Heavy zwolniony, 44667 zakończony; brak własnego Unity. Następny krok: kandydat a1 (nowe ścieżki, zachowane logi a), od testów i audytu do World; bez pełnego GIS w trakcie.
+
+Kandydat a1 (2026-11-12T12:42:07.1280702+01:00): zapisz przerwany kandydat a1 na etapie focused-tests. Następny etap w candidate-gen.ps1; potem import/capture i oględziny. Limity klatki bez zmiany.
