@@ -21,8 +21,12 @@
    "segment": "G3-B",
    "pose_confidence": "C",
    "pose_reason": "ADR 0126 control view, pose estimated by hand (WORKING_VALUE)",
-   "note": "strudel 2024-08-15 (CC BY-SA 4.0). GPS -247,-238 lags: banner ~1 m wide subtends 0.85 deg -> camera ~67 m from the flag row; pose = that point on the right lane (WORKING_VALUE).",
-   "photo": "Data/raw/mapillary/bialystok-industrial-c/469512365899192.jpg"
+   "note": "strudel 2024-08-15 (CC BY-SA 4.0). GPS -247,-238 lags: banner ~1 m wide subtends 0.85 deg -> camera ~67 m from the flag row; pose = that point on the right lane (WORKING_VALUE). ADR 0129: the 2024 reference of gate frames #22 / #19 (zsolt 2017 frames of the same approach; their true camera is ~45 m further than the GPS, i.e. about here).",
+   "photo": "Data/raw/mapillary/bialystok-industrial-c/469512365899192.jpg",
+   "reference_for": [
+    "sbs-g3-b-297817221966185",
+    "sbs-g3-b-3281350541967811"
+   ]
   },
   {
    "id": "g3b-frontage-2024-490210580292738",
@@ -43,8 +47,11 @@
    "segment": "G3-B",
    "pose_confidence": "C",
    "pose_reason": "ADR 0126 control view, pose estimated by hand (WORKING_VALUE)",
-   "note": "strudel 2024-08-15 (CC BY-SA 4.0), previous frame of the same sequence; GPS -290,-207 moved 25 m along the road (WORKING_VALUE).",
-   "photo": "Data/raw/mapillary/fire-station/490210580292738.jpg"
+   "note": "strudel 2024-08-15 (CC BY-SA 4.0), previous frame of the same sequence; GPS -290,-207 moved 25 m along the road (WORKING_VALUE). ADR 0129: the 2024 reference of gate frame #21 (same station: the 2020 gate photo shows the showroom white and red, the model is the 2024 state).",
+   "photo": "Data/raw/mapillary/fire-station/490210580292738.jpg",
+   "reference_for": [
+    "sbs-g3-b-150280503737744"
+   ]
   },
   {
    "id": "g3b-frontage-block-from-se",
@@ -88,6 +95,49 @@
    "pose_confidence": "C",
    "pose_reason": "ADR 0126 control view, pose estimated by hand (WORKING_VALUE)",
    "note": "No photo: close control view of the car showroom front (glazing, fascia, flags, totem, mast) for LOD / z-fighting checks."
+  },
+  {
+   "id": "g3b-frontage-2024-1020363345994649",
+   "kind": "photo_match",
+   "seat": "file",
+   "type": "persp",
+   "pos": [
+    -201.0,
+    -275.4,
+    133.4
+   ],
+   "look_at": [
+    -170.8,
+    -301.6,
+    141.4
+   ],
+   "fov_deg": 43.5,
+   "segment": "G3-B",
+   "pose_confidence": "C",
+   "pose_reason": "ADR 0129 control view, pose estimated by hand (WORKING_VALUE)",
+   "note": "strudel 2024-08-15 (CC BY-SA 4.0), next frame of the same sequence: second showroom with sky-mirroring glazing, vans on the lot. GPS -220,-259 moved 25 m along the road as its sibling frames (WORKING_VALUE).",
+   "photo": "Data/raw/mapillary/fire-station/1020363345994649.jpg"
+  },
+  {
+   "id": "g3b-frontage-near-lot",
+   "kind": "photo_match",
+   "seat": "file",
+   "type": "persp",
+   "pos": [
+    -157.0,
+    -316.0,
+    133.6
+   ],
+   "look_at": [
+    -170.0,
+    -336.0,
+    135.6
+   ],
+   "fov_deg": 50.0,
+   "segment": "G3-B",
+   "pose_confidence": "C",
+   "pose_reason": "ADR 0129 control view; not a photo pose",
+   "note": "No photo: close control view of the display vehicles, the flag row and the totem from the kerb (banner bow, mast material, vehicle seating)."
   }
  ]
 }
