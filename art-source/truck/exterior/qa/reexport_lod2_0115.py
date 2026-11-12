@@ -4,7 +4,9 @@ Uses the production export_lod and native FBX validator. Preserves every texture
 LOD0/1 byte. The master pieces in the cache retain the original baked Atlas contract.
 """
 import argparse
+import ast
 import hashlib
+import inspect
 import json
 from pathlib import Path
 import runpy
@@ -40,6 +42,33 @@ else:
 preserved={str(path.relative_to(out)):digest(path) for path in out.rglob('*') if path.is_file()
            and (path.suffix=='.png' or path.name.endswith(('LOD0.fbx','LOD1.fbx')))}
 bpy.ops.wm.open_mainfile(filepath=str(cache))
+if domain=='exterior':
+    def restore_parametric_loft(factory, name):
+        # These Python-only descriptors are not serialized in .blend. Evaluate the
+        # canonical factory's pure setup statements, stopping before the first mesh build.
+        # Do not duplicate dimensions or create replacement body meshes in the cache.
+        function=ast.parse(inspect.getsource(factory)).body[0]
+        namespace=vars(A.B).copy()
+        statements=[]
+        for statement in function.body:
+            if isinstance(statement,ast.Assign) and any(
+                isinstance(node,ast.Call) and isinstance(node.func,ast.Attribute) and node.func.attr=='build'
+                for node in ast.walk(statement)):
+                break
+            if not isinstance(statement,(ast.Assign,ast.If)):
+                continue  # docstring, global declaration, set_group: no descriptor state
+            calls=[node for node in ast.walk(statement) if isinstance(node,ast.Call)]
+            if any(not isinstance(call.func,ast.Name) or call.func.id not in {'Loft','face_y','modern','rounded'}
+                   for call in calls):
+                raise RuntimeError('Parametric factory setup changed: '+factory.__name__)
+            statements.append(statement)
+        exec(compile(ast.Module(body=statements,type_ignores=[]),'<canonical-loft-descriptor>','exec'),namespace)
+        loft=namespace.get(name)
+        if loft is None or not hasattr(loft,'front_param'):
+            raise RuntimeError('Could not restore canonical '+name)
+        return loft
+    A.B.CAB=restore_parametric_loft(A.B.cab_shell,'CAB')
+    A.B.LOW=restore_parametric_loft(A.B.lower_fairing,'LOW')
 game=bpy.data.collections.get('GAME')
 if game is None:
     raise RuntimeError('Canonical cache lacks the master GAME collection')
