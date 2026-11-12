@@ -1,0 +1,275 @@
+{
+  "method": "Native RGB PNG, exact absolute channel difference in manually fixed foreground ROI. Sky ROI only block3; no physical photometry.",
+  "results": [
+    {
+      "tier": "Low",
+      "camera": "driver-andersa-to-putry",
+      "variant": "dim-warm",
+      "roi": [
+        1053,
+        670,
+        1521,
+        1004
+      ],
+      "mean_abs_rgb": 0.07286282136581537,
+      "max_abs_rgb": 2,
+      "fraction_pixels_changed": 0.19834689595168636,
+      "sky_roi_luma_mean": null
+    },
+    {
+      "tier": "Low",
+      "camera": "driver-andersa-to-putry",
+      "variant": "dim-neutral",
+      "roi": [
+        1053,
+        670,
+        1521,
+        1004
+      ],
+      "mean_abs_rgb": 0.0731144548509818,
+      "max_abs_rgb": 2,
+      "fraction_pixels_changed": 0.19961999078765547,
+      "sky_roi_luma_mean": null
+    },
+    {
+      "tier": "Low",
+      "camera": "driver-andersa-to-putry",
+      "variant": "dark-neutral",
+      "roi": [
+        1053,
+        670,
+        1521,
+        1004
+      ],
+      "mean_abs_rgb": 0.07864612655031816,
+      "max_abs_rgb": 2,
+      "fraction_pixels_changed": 0.21259404268386303,
+      "sky_roi_luma_mean": null
+    },
+    {
+      "tier": "Low",
+      "camera": "cab-dash",
+      "variant": "dim-warm",
+      "roi": [
+        1123,
+        518,
+        1451,
+        691
+      ],
+      "mean_abs_rgb": 0.03404765261525448,
+      "max_abs_rgb": 2,
+      "fraction_pixels_changed": 0.09336669956294939,
+      "sky_roi_luma_mean": null
+    },
+    {
+      "tier": "Low",
+      "camera": "cab-dash",
+      "variant": "dim-neutral",
+      "roi": [
+        1123,
+        518,
+        1451,
+        691
+      ],
+      "mean_abs_rgb": 0.03415339066685465,
+      "max_abs_rgb": 2,
+      "fraction_pixels_changed": 0.09364866770054983,
+      "sky_roi_luma_mean": null
+    },
+    {
+      "tier": "Low",
+      "camera": "cab-dash",
+      "variant": "dark-neutral",
+      "roi": [
+        1123,
+        518,
+        1451,
+        691
+      ],
+      "mean_abs_rgb": 0.036738098594858784,
+      "max_abs_rgb": 2,
+      "fraction_pixels_changed": 0.1006802481319611,
+      "sky_roi_luma_mean": null
+    },
+    {
+      "tier": "Low",
+      "camera": "r10_block_3",
+      "variant": "dim-warm",
+      "roi": [
+        468,
+        821,
+        1521,
+        1004
+      ],
+      "mean_abs_rgb": 0.02539366230926644,
+      "max_abs_rgb": 2,
+      "fraction_pixels_changed": 0.07376789708301548,
+      "sky_roi_luma_mean": 7.883834753086419
+    },
+    {
+      "tier": "Low",
+      "camera": "r10_block_3",
+      "variant": "dim-neutral",
+      "roi": [
+        468,
+        821,
+        1521,
+        1004
+      ],
+      "mean_abs_rgb": 0.026054451069630183,
+      "max_abs_rgb": 2,
+      "fraction_pixels_changed": 0.07565685343463122,
+      "sky_roi_luma_mean": 7.9438409012345685
+    },
+    {
+      "tier": "Low",
+      "camera": "r10_block_3",
+      "variant": "dark-neutral",
+      "roi": [
+        468,
+        821,
+        1521,
+        1004
+      ],
+      "mean_abs_rgb": 0.028202879447566758,
+      "max_abs_rgb": 2,
+      "fraction_pixels_changed": 0.08182190878001443,
+      "sky_roi_luma_mean": 3.990737802469136
+    },
+    {
+      "tier": "High",
+      "camera": "driver-andersa-to-putry",
+      "variant": "dim-warm",
+      "roi": [
+        1053,
+        670,
+        1521,
+        1004
+      ],
+      "mean_abs_rgb": 0.26106974086016005,
+      "max_abs_rgb": 11,
+      "fraction_pixels_changed": 0.3963227391371104,
+      "sky_roi_luma_mean": null
+    },
+    {
+      "tier": "High",
+      "camera": "driver-andersa-to-putry",
+      "variant": "dim-neutral",
+      "roi": [
+        1053,
+        670,
+        1521,
+        1004
+      ],
+      "mean_abs_rgb": 0.2602380708668134,
+      "max_abs_rgb": 11,
+      "fraction_pixels_changed": 0.39584292952556427,
+      "sky_roi_luma_mean": null
+    },
+    {
+      "tier": "High",
+      "camera": "driver-andersa-to-putry",
+      "variant": "dark-neutral",
+      "roi": [
+        1053,
+        670,
+        1521,
+        1004
+      ],
+      "mean_abs_rgb": 0.27775858539331594,
+      "max_abs_rgb": 11,
+      "fraction_pixels_changed": 0.41801653104048314,
+      "sky_roi_luma_mean": null
+    },
+    {
+      "tier": "High",
+      "camera": "cab-dash",
+      "variant": "dim-warm",
+      "roi": [
+        1123,
+        518,
+        1451,
+        691
+      ],
+      "mean_abs_rgb": 0.08955425536914328,
+      "max_abs_rgb": 7,
+      "fraction_pixels_changed": 0.14702876075003524,
+      "sky_roi_luma_mean": null
+    },
+    {
+      "tier": "High",
+      "camera": "cab-dash",
+      "variant": "dim-neutral",
+      "roi": [
+        1123,
+        518,
+        1451,
+        691
+      ],
+      "mean_abs_rgb": 0.08968936510174351,
+      "max_abs_rgb": 7,
+      "fraction_pixels_changed": 0.14713449880163543,
+      "sky_roi_luma_mean": null
+    },
+    {
+      "tier": "High",
+      "camera": "cab-dash",
+      "variant": "dark-neutral",
+      "roi": [
+        1123,
+        518,
+        1451,
+        691
+      ],
+      "mean_abs_rgb": 0.0949351473283519,
+      "max_abs_rgb": 7,
+      "fraction_pixels_changed": 0.1548181305512477,
+      "sky_roi_luma_mean": null
+    },
+    {
+      "tier": "High",
+      "camera": "r10_block_3",
+      "variant": "dim-warm",
+      "roi": [
+        468,
+        821,
+        1521,
+        1004
+      ],
+      "mean_abs_rgb": 0.11734535899684655,
+      "max_abs_rgb": 11,
+      "fraction_pixels_changed": 0.19177577465373458,
+      "sky_roi_luma_mean": 12.817111506172836
+    },
+    {
+      "tier": "High",
+      "camera": "r10_block_3",
+      "variant": "dim-neutral",
+      "roi": [
+        468,
+        821,
+        1521,
+        1004
+      ],
+      "mean_abs_rgb": 0.11940729669934284,
+      "max_abs_rgb": 11,
+      "fraction_pixels_changed": 0.19514891099590553,
+      "sky_roi_luma_mean": 12.993831975308641
+    },
+    {
+      "tier": "High",
+      "camera": "r10_block_3",
+      "variant": "dark-neutral",
+      "roi": [
+        468,
+        821,
+        1521,
+        1004
+      ],
+      "mean_abs_rgb": 0.12931047903725498,
+      "max_abs_rgb": 11,
+      "fraction_pixels_changed": 0.21060306488357491,
+      "sky_roi_luma_mean": 9.0
+    }
+  ]
+}
