@@ -1,6 +1,6 @@
 # SBS — priorytety odstępstw od zdjęć, r3
 
-Aktualizacja: 12.11.2026 około 10:15, gałąź gpt-sbs-r3. Źródła świata z main 9874d98c; aktualny main 14ccbaf1 dodaje tylko obsługę slotów i integracji. Pełny render 168 raw z HEAD 62d45b92 jest gotowy. Ranking uwzględnia niezależny przegląd wszystkich 25 B Low-overcast (FAIL: 13 rozpoznawalnych, 11 częściowych, 1 nierozpoznawalny) oraz własny przegląd wszystkich 25 B Low-clear. Próby diagnostyczne nadal są C i nie poprawiają formalnego wyniku.
+Aktualizacja: 12.11.2026 około 11:31, gałąź gpt-sbs-r3. Źródła świata renderów z main 9874d98c; baza capture 14ccbaf1 dodaje tylko obsługę slotów i integracji. Main ma już 49a9d332 po pakietach A+B; obrazy r3 nie przedstawiają tej późniejszej bazy. Pełny render 168 raw z HEAD 62d45b92 jest gotowy. Ranking uwzględnia niezależny przegląd wszystkich 25 B Low-overcast (FAIL: 13 rozpoznawalnych, 11 częściowych, 1 nierozpoznawalny) oraz własny przegląd wszystkich 25 B Low-clear. Próby diagnostyczne nadal są C i nie poprawiają formalnego wyniku.
 
 Kryterium D51: rozpoznanie miejsca przez kierowcę znającego trasę. Niebo, ekspozycja, odcień trawy i kosmetyka materiałów nie blokują same w sobie. Nie szeregujemy świata według błędu histogramu. Metryki r2 są porównywalne tylko dla trzech Low-clear i nie zastępują oceny układu.
 
@@ -41,10 +41,29 @@ Kryterium D51: rozpoznanie miejsca przez kierowcę znającego trasę. Niebo, eks
 - [Recenzja life/vegetation/cab/edge](../reports/visual/REVIEW-2026-11-12-s11-gpt-r1-batch.md) oraz [asphalt/landmarks/light/truck](../reports/visual/REVIEW-2026-11-12-s11-gpt-r1-batch2.md): tematy dla dziedzin, brak pomiaru wspólnego A16.
 - [Zamknięty raport SBS r2](../../artifacts/sbs-r2/REPORT.md), [audyt](../../artifacts/sbs-r2/AUDIT.json), [przegląd sześciu par 0125](../../artifacts/sbs-r2/PRE-R3-VISUAL.md), [HTML](../../artifacts/sbs-gate3/latest/index.html).
 
-Pełna seria r3 powstała około 09:06–09:09 na źródłach aktualnego main 14ccbaf1. Niezależny recenzent obejrzał wszystkie 25 B Low-overcast, a własny przegląd obejmuje już wszystkie 25 B Low-clear oraz wcześniejsze cztery natywne raw. Wynik formalny nowej bazy: FAIL 13/11/1; nie obejmuje akceptacji nowych prób C. Nowa poza unieważnia porównywalność trendu; każda nowa ocena D51 wymaga związania z SHA zdjęcia i renderu. C nie są usuwane z historii, ale nie liczą się jako zaliczone pary.
+Pełna seria r3 powstała około 09:06–09:09 na źródłach ówczesnego main 14ccbaf1. Niezależny recenzent obejrzał wszystkie 25 B Low-overcast, a własny przegląd obejmuje już wszystkie 25 B Low-clear oraz wcześniejsze cztery natywne raw. Wynik formalny nowej bazy: FAIL 13/11/1; nie obejmuje akceptacji nowych prób C. Nowa poza unieważnia porównywalność trendu; każda nowa ocena D51 wymaga związania z SHA zdjęcia i renderu. C nie są usuwane z historii, ale nie liczą się jako zaliczone pary.
 
 [Dokładny zakres świeżego przeglądu czterech klatek](../../artifacts/sbs-r3/FRESH-SPOT-REVIEW.md) i [SHA](../../artifacts/sbs-r3/fresh-spot-inspection.json). Nie jest to nowy pełny werdykt D51.
 
 
 
 [Pełny niezależny przegląd bazy r3](../../artifacts/sbs-r3/REVIEW-D51-BASELINE.md) i [własny przegląd 25 Low-clear](../../artifacts/sbs-r3/REVIEW-LOW-CLEAR.md) zastępują częściowy zakres opisany wyżej w historycznym przeglądzie czterech klatek. Ocenę r3 trzeba odczytywać wraz z SHA w rejestrze, nie przenosić jej na inne stany światła.
+
+## Nowsze recenzje s12 — zakres do następnych rund
+
+Odczytano z main 49a9d332 około 11:31. [Migawka recenzji pakietu A](../../artifacts/sbs-r3/review-snapshots/REVIEW-2026-11-12-s12-gpt-batch-a.md), [pakietu B](../../artifacts/sbs-r3/review-snapshots/REVIEW-2026-11-12-s12-gpt-batch-b.md) i [SHA źródeł](../../artifacts/sbs-r3/review-source-index.json). To uwagi niezależnych recenzji innych rund, nie własny przegląd renderów nowego main. Nie zastępują powyższego wyniku D51 bazy r3.
+
+| Dziedzina | Największy kolejny problem według najnowszego dostępnego dowodu | Granica dowodu |
+|---|---|---|
+| sbs | Priorytet 297817/328135, potem 275528/837235, 180137 i 494288. Dwie niezależne kotwice, bez strojenia kamery do błędu portalu lub wyspy. | Przeglądy r3 nadal nie akceptują żadnej próby C. Nowe małe próby pitch i B275528 opisane w artefaktach, po odświeżeniu main w r4. |
+| vegetation | B8 czeka na pozę SBS; niezależnie można poprawiać berberys przypominający bordowe bale i mierzyć koszt. | R3 vegetation jest produkcyjnym NO-OP; odrzuconych koron nie traktować jako wdrożonej poprawy. Nie oceniać brakujących koron B297817 bez zgodnego kadru. |
+| edge | Klin clear i B9 przed dalszym dopracowaniem panoramy; jaskrawe, płaskie pudła LoD1 wymagają okien, kondygnacji i materiału. | Podejrzane bloki B9 leżą wewnątrz regionu: nie dublować ich automatycznie far-fieldem. Aktualna okluzja wymaga nowego wspólnego renderu. |
+| landmarks | Fazy filarów w tej samej musztardowej farbie, bez szarego pasa; sprawdzić ciemny równoległobok i odwodnienie. | Usunięcie zmyślonych schodów jest poprawą, nie zamknięciem D51. Brak najbliższej podpory przy rondzie nadal należy do geometrii Claude. |
+| light | Po wspólnej kontroli klina: nocne plamy światła na jezdni, emisja głowic, halo i łuna miasta; teren mniej nasycony nocą. | Night r2 wygląda jak przyciemniony dzień. Usunięto niespójne odbicie zachodu, ale nie dowiedziono naprawy dziennego klina. GPU A16 niezmierzone. |
+| truck | Lakier z odbiciem nieba i szyba bez mlecznego wyglądu; zużycie progów/błotników i krawędzi stopnia, dalej opony/felgi. | R2 poprawia czytelność kratki stopnia w makro; cały kadr z trasą pozostaje prawie bez zmiany. Nie przypisywać poprawie stopnia zaliczenia lakieru. |
+| cab | Osobny skan tworzywa lub usunięcie szerokich fal tłoczenia; wytarcie kontaktowe i pasmo AO. | Ziarno r2 czyta się jak skaj, poprawa poza makro mała. Kwestie licencji i deterministyczności muszą być rozstrzygnięte przez właściciela/lidera, bez edycji tych plików przez SBS. |
+| life | Felgi i ciemny bok opony LOD0, osprzęt podwozia naczepy, plandeka z lokalnymi fałdami i pasami. | R2 oddziela trzy koła w LOD1, lecz nadal ma płaskie dyski i gołą ramę. Budżetu trasy nie zastępować wynikiem makro. |
+| furniture | Sylwetka słupa WN i ekranów, osadzenie U-3 oraz znaki wobec rzeczywistego nosa wyspy. | Pakiety A+B nie dają nowej recenzji tej dziedziny; podstawą pozostaje wcześniejszy dowód i świeże kadry r3. Geometrii nosa nie naprawiać samym przesunięciem znaku. |
+| asphalt | Prostokątne łaty i przetarcia oznakowania jako materiał, po rozwiązaniu blokerów orientacyjnych. | Pakiety A+B nie dają nowej recenzji asfaltu; wcześniejsza ocena pozostaje historyczna. Nie używać niekwalifikowanego histogramu r3 jako albedo. |
+
+Kolejność nadal wynika z rozpoznawalności układu, a dopiero później z materiałów i zużycia. Nowy main trzeba odświeżyć w następnej rundzie SBS. Wspólny wzrost kosztu z bazy r2 do r3 (38/84 Low draws i 22/84 tris ponad 2%) jest jawny w [ograniczeniach budżetu](../../artifacts/sbs-r3/BUDGET-LIMITATIONS.md); nie rozdzielamy go bez pomiaru na poszczególne domeny.
