@@ -58,3 +58,5 @@ Krok 9c: lekka analiza6 izolowanych koron B (bez Blender/world/pytest) potwierdz
 Krok 9d: zapisana hipoteza ewentualnego C wyłącznie w notatce, bez zmiany modelu B: mniejsze/liczniejsze spraye z pierwotną orientacją, jeżeli B nadal będzie bryłą. Decyzja dopiero po renderze B; brak poprawy oznacza odrzucenie, także NO-OP zamiast pozornego PASS.
 
 Krok 9e: B zachowuje osiem pierścieni i pierwotną liczbę narożników, więc przywrócono także oryginalny próg216 normalnych w teście r7. Nowe kontrole rdzenia każdego drzewa, skończoności i ciągłości normalnych pozostają. Wariant B nie wymaga osłabienia żadnego dotychczasowego progu. Testy po aktualizacji spec/GLB przez World B, nie na pozostawionych wyjściach A.
+
+Krok 9f: 14:20CET pojawił się PHONE_RUN; waiter B nadal żywy (terminal13840), nic nie uruchamia przed zwolnieniem blokady. Brak własnego lease heavy i nowych logów World B. Kolejka z9 przesunęła się do1 właściciela przede mną. Model B pozostaje zapisany, bez dalszych zmian.
