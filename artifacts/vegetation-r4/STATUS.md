@@ -101,3 +101,4 @@ Piny B przeszły: poza jawną zmianą tris nasadzeń reszta kontraktów danych z
 Import B kod0. Dalej16prób w tych samych kamerach i warunkach.
 Probe probe-b: Low overcast zapisany. Obejrzeć arkusze i koszt przed dalszą decyzją; to nie pełna macierz.
 Probe probe-b: Low clear zapisany. Obejrzeć arkusze i koszt przed dalszą decyzją; to nie pełna macierz.
+Probe probe-b: High overcast zapisany. Obejrzeć arkusze i koszt przed dalszą decyzją; to nie pełna macierz.
