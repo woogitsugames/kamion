@@ -91,3 +91,4 @@ Wznowiony stan GIS przekopiowano także do własnego katalogu artefaktów na mai
 Pełny końcowy GIS kod 1; szczegóły pytest-final.log. Znana porażka starego fidelity wymaga osobnej weryfikacji, nie naprawiania cudzej dziedziny.
 Zamknięcie odrzuconej r3: import przywróconego świata kod 0. Kod produkcyjny przywrócony do r1; brak akceptowanej korekty B8.
 Zamknięcie odrzuconej r3: probe przywróconego świata kod 1. Kod produkcyjny przywrócony do r1; brak akceptowanej korekty B8.
+Końcowy GIS: 525 passed, 1 xfailed, 1 failed w 1390,34 s (czas zawiera pauzę watchdog). Jedyny błąd test_road_fidelity::test_report_not_stale; ponowny dowód potwierdził siedem niezmienionych źródeł i nieaktualność raportu już w bazie 49de5a4e. Ponowna kontrola po testach: 130 GLB, 64 instancje JSON, 7 pinów źródeł zgodne; Megascans 15, fallback false. Import restored runner kod 0, slot zwolniony. Dalej probe i EditMode.

@@ -16,7 +16,9 @@ Niezależny krytyk potwierdził odrzucenie wszystkich prób oraz otwarty stan B8
 
 Baseline obejmuje 368 obrazów: 268 kamer kontrolnych z r1 B, ponownie użytych po zgodności pinów źródeł i 130 GLB, oraz 100 świeżych obrazów 25 póz B w Low/High clear/overcast. Obejrzano wszystkie 16 świeżych arkuszy. Nie wykonano pełnej macierzy after dla odrzuconych kandydatów i nie ogłasza się ich zgodności budżetowej na wszystkich kamerach. all-camera-costs.csv raportuje wszystkie kamery baseline i jawnie oznaczone próby, z osobnymi wywołaniami statycznymi i instancji. trisK ma całkowitą precyzję, nie jest pomiarem GPU.
 
-Testy celowane eksperymentów: A 16/16, B 22/22. Końcowy pełny GIS, EditMode i dowód przywrócenia wymagają uzupełnienia po zakończeniu finish-rejected.ps1. Megascans w obu producentach: 15 dostępnych zasobów, fallback false.
+Testy celowane eksperymentów: A 16/16, B 22/22. Końcowy pełny GIS: 525 passed, 1 xfailed, 1 failed w 1390,34 s, z wstrzymaniem przez watchdog w tym czasie. Jedyną porażką jest test_road_fidelity.py::test_report_not_stale. Dowód względem bazy 49de5a4e potwierdza nieaktualność raportu dla siedmiu źródeł już w bazie i ich brak zmian po normalizacji końców linii. Raport drogowy pozostaje niezmieniony; nie regenerowano cudzej dziedziny. To jawna porażka testu, nie zielony GIS.
+
+Po testach ponownie potwierdzono zgodność 130 GLB, 64 plików instancji i siedmiu pinów źródeł z baseline. Megascans: 15 dostępnych zasobów, fallback false; eksperymentalne QA ortofoto nieobecne. Import przywróconego świata zakończył się kodem 0. EditMode i kontrola probe wymagają jeszcze uzupełnienia.
 
 Nie zmieniano dróg, landmarków, overrides.yaml ani runtime importera. Nie używano telefonów, nie scalano do main i nie pushowano. Każdy ciężki generator i GIS przechodzi przez heavy, Unity przez osobny slot. Po zamknięciu wspólne skutki uboczne generatora trzeba przywrócić z HEAD; migawki pozostają w artefaktach.
 
