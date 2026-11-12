@@ -54,7 +54,7 @@ foreach($tier in $Tiers) {
   $code=Invoke-UnityBatch -LogFile "$dir/unity.log" -Arguments @('-executeMethod','Game.Editor.VisualQA.VisualQaRunner.RenderControlCameras',
    '-qaScene',$scene,'-qaWidth','2340','-qaHeight','1080','-qaTier',$tier,'-qaOutput',$dir,'-qaLighting','overcast',
    '-qaGate3',[IO.Path]::GetFullPath('artifacts/life-r5/cameras.json'),'-qaCameras',$selected,
-   '-qaLifeExact',"$dir/exact-stats.json",'-qaLifeYardLod',"$dir/native-lod.json",'-qaLifeYardTargets',[IO.Path]::GetFullPath('artifacts/life-r5/yard-native-targets.json'))
+   '-qaLifeExact',"$dir/exact-stats.json",'-qaLifePropLod',"$dir/native-lod.json",'-qaLifePropTargets',[IO.Path]::GetFullPath('artifacts/life-r5/yard-native-targets.json'))
   @{tier=$tier;exit_code=$code;finished=(Get-Date -Format o);probe_sha=$probeHash}|ConvertTo-Json|Set-Content "$dir/unity-result.json"
   if($code){throw "Diagnostic Unity failed: $tier ($code)"}
  } finally {

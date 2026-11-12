@@ -52,8 +52,8 @@ namespace Game.Editor.VisualQA
             string targets = null;
             for (int i = 0; i + 1 < args.Length; i++)
             {
-                if (args[i] == "-qaLifeYardLod") Output = args[i + 1];
-                if (args[i] == "-qaLifeYardTargets") targets = args[i + 1];
+                if (args[i] == "-qaLifePropLod") Output = args[i + 1];
+                if (args[i] == "-qaLifePropTargets") targets = args[i + 1];
             }
             if (string.IsNullOrEmpty(Output)) return;
             if (string.IsNullOrEmpty(targets)) throw new ArgumentException("Missing yard targets");
