@@ -29,3 +29,4 @@
 2026-11-12T02:00:33.1632889+01:00: zapisano artifacts/asphalt-r2/baseline/High-overcast. Następny krok: pozostałe serie lub porównanie wariantu.
 2026-11-12T02:01:06.8075474+01:00: zapisano artifacts/asphalt-r2/baseline/High-clear. Następny krok: pozostałe serie lub porównanie wariantu.
 2026-11-12T02:01:07.2648644+01:00: Baseline odświeżony po korekcie kadru i rzeczywistej macierzy regionu. Obrazy/metryki sprzed korekty nie służą do porównania nowego kandydata.
+2026-11-12T02:09:18.9398543+01:00: Kandydat r2: addytywne kerb_wear i ground_grime. Krawężnik używa istniejących Mask.B/macro; chodnik zachowuje siłę fug 0,45, osłabia ciemne mokre plamy i ich połysk. Brak nowych UV/tekstur/przebiegów, geometria bez zmian. Wartości WORKING_VALUE, wymagają renderu i budżetu.

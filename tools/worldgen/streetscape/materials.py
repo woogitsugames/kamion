@@ -542,3 +542,15 @@ M["marking_white"] = {"color": [0.55, 0.55, 0.54], "rough": 0.65, "surface": "pa
 # WORKING_VALUE: 0.85 legacy opacity × 1.15 = 0.9775, only for roads.decals traffic-stop stains.
 # Private-yard/gate/bus oil retains UV1.x=0 and the previous material response.
 M["decal_oil"]["traffic_opacity_scale"] = 1.15
+
+# ADR0118 r2: material-only road aliases; geometry belongs to roads/ (Claude).
+# WORKING_VALUE: mineral film on kerbs, dry footway joints without oily-looking pools.
+# Reuse existing Mask.B and macro on kerbs, existing _GRIME fetch on the footway.
+# Yard paving / behaton and Kwadrat materials retain their original defaults.
+M["curb_concrete"] = {"color": [0.28, 0.278, 0.27], "rough": 0.85, "surface": "concrete_kerb",
+                      "texture_set": "kerb_concrete_1m",
+                      "kerb_wear": {"joint_dirt": 0.35, "mineral_film": 0.16, "film_threshold": 0.55}}
+M["sidewalk_paving"] = {"color": [0.26, 0.255, 0.245], "rough": 0.85, "surface": "paving_stones",
+                        "texture_set": "paving_20x10_grey",
+                        "ground_grime": {"damp_darkening": 0.18, "damp_threshold": 0.65,
+                                         "joint_dirt": 0.45, "damp_gloss": 0.15}}
