@@ -46,3 +46,4 @@ Zapisano baseline Low overcast, siedem kamer i sześć natywnych RT z identyfika
 Zapisano baseline Low dusk, siedem kamer i sześć natywnych RT z identyfikatorem wnętrza. Następny krok: kontynuować macierz lub porównać PNG.
 Obejrzano poprawione baseline Low overcast cab-grain i cab-dash, dwa natywne PNG. BASELINE-REVIEW.md opisuje nadal widoczne pasmo deski, ziarno i miękkie drobne napisy Low; hashe w reviewed-baseline-early.json. Bez przypisywania poprawy nieuruchomionemu kandydatowi. Pełna macierz nadal trwa.
 Zapisano baseline High clear, siedem kamer i sześć natywnych RT z identyfikatorem wnętrza. Następny krok: kontynuować macierz lub porównać PNG.
+Zapisano baseline High overcast, siedem kamer i sześć natywnych RT z identyfikatorem wnętrza. Następny krok: kontynuować macierz lub porównać PNG.
