@@ -67,6 +67,8 @@ Shader "Kamion/World PBR"
         _SkyOcc ("Sky occlusion: x down-facing ambient, y horizon reflection (0 = off; ADR 0060)", Vector) = (0, 0, 0, 0)
         _LowNoShadow ("No shadow casting below the world-detail tier (Low; ADR 0123)", Float) = 0
         _VertexGrime ("Vertex grime (_VERTEX_GRIME, COLOR_0.r): rgb grime albedo (linear), w roughness gain (ADR 0123)", Vector) = (0.1, 0.1, 0.09, 0.3)
+        _VertexWeed ("Vertex weeds (_VERTEX_GRIME, COLOR_0.g): rgb weed albedo (linear), w = 1 on (ADR 0144)", Vector) = (0.07, 0.09, 0.035, 0)
+        _GroundBounce ("Ground bounce on down-facing normals: rgb = ground albedo x form factor (linear), w = 1 on (ADR 0144)", Vector) = (0, 0, 0, 0)
         _AgeTint ("Patch age target / base albedo ratio", Float) = 2.0
         _PatchSeam ("Repair: seam width m, darkening, fresh tone, aged tone (ADR0118)", Vector) = (0, 0, 1, 1)
         _DecalAlpha ("Decal opacity", Range(0, 1)) = 1
@@ -116,7 +118,7 @@ Shader "Kamion/World PBR"
             float4 _PaintFreshWear;
             float4 _AsphaltWear;
             float4 _PatchSeam;
-            float4 _Grime, _SkyOcc;
+            float4 _Grime, _SkyOcc, _VertexWeed, _GroundBounce;
             float4 _VertexGrime;
             float _LowNoShadow;
             float4 _KerbWear;
@@ -851,6 +853,26 @@ Shader "Kamion/World PBR"
                     half tone = 0.6 + 0.8 * dot(base.rgb, half3(0.3333, 0.3333, 0.3333));
                     albedo = lerp(albedo, _VertexGrime.rgb * tone, vg);
                     smooth *= 1.0 - _VertexGrime.w * vg;
+                    // ADR 0144 (REVIEW s14-0128 P1-2): weeds between the stones where the mesh carries COLOR_0.g (kerb-side
+                    // growth on a gravel island nose), broken up by two octaves of value noise (0.35 m / 0.12 m cells) so
+                    // the per-vertex weight reads as tufts, not as a soft stain. Off unless the manifest sets vertex_weed.
+                    half wg = i.masks.g * _VertexWeed.w;
+                    if (wg > 0.01)
+                    {
+                        float2 q = pw.xz * 2.9;
+                        float2 f0 = floor(q), fr = frac(q);
+                        fr = fr * fr * (3.0 - 2.0 * fr);
+                        #define KH(p) frac(sin(dot(p, float2(12.9898, 78.233))) * 43758.5453)
+                        half n1 = lerp(lerp(KH(f0), KH(f0 + float2(1, 0)), fr.x), lerp(KH(f0 + float2(0, 1)), KH(f0 + float2(1, 1)), fr.x), fr.y);
+                        q = pw.xz * 8.3 + 17.0; f0 = floor(q); fr = frac(q);
+                        half n2 = lerp(lerp(KH(f0), KH(f0 + float2(1, 0)), fr.x), lerp(KH(f0 + float2(0, 1)), KH(f0 + float2(1, 1)), fr.x), fr.y);
+                        #undef KH
+                        half nz = n1 * 0.65 + n2 * 0.35;
+                        half th = 1.05 - 0.85 * wg;
+                        half wd = smoothstep(th, th + 0.10, nz);
+                        albedo = lerp(albedo, _VertexWeed.rgb * (0.7 + 0.6 * n2), wd);
+                        smooth *= 1.0 - 0.5 * wd;
+                    }
                 }
             #endif
                 albedo = saturate(albedo);
@@ -931,7 +953,14 @@ Shader "Kamion/World PBR"
             #endif
 
                 // sky occlusion (ADR 0060) on top of baked sky visibility giK (ADR 0064)
-                half3 ambient = SampleSH(nw) * diffColor * (ao * giK) * (1.0 - _SkyOcc.x * saturate(-nw.y));
+                // ADR 0144 (REVIEW s14-0123 P2-5): a soffit is lit by light thrown back from the ground, not by the lower
+                // hemisphere of the sky probe (dark green here: the soffit came out near black-green where the photos have
+                // light grey concrete). _GroundBounce.rgb = ground albedo x form factor; the light that reaches the ground
+                // is taken as the sky irradiance on an up-facing plane (the sun term is left out: WORKING model).
+                half dn = saturate(-nw.y) * _GroundBounce.w;
+                half3 shAmb = SampleSH(nw);
+                if (dn > 0.001) shAmb = lerp(shAmb, SampleSH(half3(0, 1, 0)) * _GroundBounce.rgb, dn);
+                half3 ambient = shAmb * diffColor * (ao * giK) * (1.0 - _SkyOcc.x * saturate(-nw.y));
                 half3 R = reflect(-V, nw);
                 half fresnel = Pow4(1.0 - NoV);
                 half grazing = saturate(smooth + max(metal, 0.04));

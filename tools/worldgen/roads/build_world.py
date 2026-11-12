@@ -671,7 +671,7 @@ def build(region_id: str, out_root: Path | None = None, verbose=True):
         w.stats["kerb_tris_dropped_in_fills_hero"] = GO.drop_kerbs_in_fills(w.buf, w.gore_plan)
     w.stats["gores"]["kerb_tris_in_fill"] = GO.kerbs_in_fills(w.buf, w.gore_plan)
     log("kerb triangles inside paved gore fills:", w.stats["gores"]["kerb_tris_in_fill"])
-    log("hero bridges", {k: [x["id"] for x in v] for k, v in w.stats["hero_bridges"].items()})
+    log("hero bridges", {k: [x["id"] if isinstance(x, dict) else x for x in v] for k, v in w.stats["hero_bridges"].items()})
 
     half = w.region["bbox"]["width_m"] / 2
     e0 = w.region["bbox"]["xmin"] - w.origin[0]

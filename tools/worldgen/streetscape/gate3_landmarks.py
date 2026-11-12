@@ -6,6 +6,7 @@ must recognise the route). Everything is data in Data/Regions/<id>/overrides.yam
                         {face: A-30, plate: "text"}       warning triangle (upright) + yellow plate with a short text
                         {face: U-4a}                      red / white chevron board on a traffic-island nose
                         {face: D-3} / {face: D-6} / {face: D-1}
+                        {face: F-10}                      lane directions before a junction (straight | right), two posts
                         {face: street_name, text: "..."}  city street-name plate (teal plate, teal post)
                       Position, one of:
                         at_en: [E, N]                     region-local metres (measured on the GUGiK orthophoto)
@@ -51,9 +52,13 @@ FACE_DIM = {
     "D-3": ("rect", 0.60, 0.60),
     "D-6": ("rect", 0.60, 0.60),
     "U-4a": ("rect", 0.75, 1.35),
+    # ADR 0144: 2-lane F-10 read off Mapillary 482392746429891 (plate 140 x 85 px beside its own posts 12 px wide; with
+    # the 60 mm post that is ~0.7 m, a real post of this board is thicker): 0.90 x 0.55 m WORKING_VALUE
+    "F-10": ("rect", 0.90, 0.55),
     "plate": ("rect", 0.60, 0.45),
     "street_name": ("rect", 1.00, 0.25),
 }
+TWO_POSTS = {"F-10"}          # faces carried by two posts (0.3 x plate width either side of the middle)
 PROTOS = {}                   # prototype name -> (lod0, lod1, collision), registered by build(), read by props.build_all
 
 
@@ -117,6 +122,25 @@ def draw_face(code, w_px, h_px, text=None):
         cx = w_px / 2
         d.rectangle([cx - 0.07 * w_px, 0.42 * h_px, cx + 0.07 * w_px, 0.86 * h_px], fill=SG.WHITE)
         d.polygon([(cx, 0.12 * h_px), (cx + 0.24 * w_px, 0.46 * h_px), (cx - 0.24 * w_px, 0.46 * h_px)], fill=SG.WHITE)
+        return im
+    if code == "F-10":                                   # lane directions: straight | right turn, dashed lane line between
+        im = Image.new("RGB", (w_px, h_px), SG.WHITE)
+        d = ImageDraw.Draw(im)
+        m = max(2, int(0.02 * w_px))
+        d.rectangle([m, m, w_px - m - 1, h_px - m - 1], fill=SG.BLUE)
+        st = 0.075 * w_px                                # arrow stroke
+        cx = 0.25 * w_px                                 # left lane: straight on
+        d.rectangle([cx - st / 2, 0.40 * h_px, cx + st / 2, 0.84 * h_px], fill=SG.WHITE)
+        d.polygon([(cx, 0.14 * h_px), (cx + 0.12 * w_px, 0.44 * h_px), (cx - 0.12 * w_px, 0.44 * h_px)], fill=SG.WHITE)
+        for k in range(3):                               # lane line: three dashes
+            y0 = (0.16 + 0.26 * k) * h_px
+            d.rectangle([0.5 * w_px - st / 5, y0, 0.5 * w_px + st / 5, y0 + 0.15 * h_px], fill=SG.WHITE)
+        x0 = 0.64 * w_px                                 # right lane: stem up, then bent to the right
+        d.rectangle([x0 - st / 2, 0.42 * h_px, x0 + st / 2, 0.84 * h_px], fill=SG.WHITE)
+        d.pieslice([x0 - st / 2, 0.42 * h_px - st, x0 + 1.5 * st, 0.42 * h_px + st], 180, 270, fill=SG.WHITE)
+        d.rectangle([x0 + st / 2, 0.42 * h_px - st, 0.74 * w_px, 0.42 * h_px], fill=SG.WHITE)
+        ya = 0.42 * h_px - st / 2
+        d.polygon([(0.90 * w_px, ya), (0.73 * w_px, ya - 0.17 * h_px), (0.73 * w_px, ya + 0.17 * h_px)], fill=SG.WHITE)
         return im
     if code in ("D-6", "D-1"):                           # reuse the project's own drawings (streetscape.signs)
         src = SG.square("D-6") if code == "D-6" else SG.d1()
@@ -198,7 +222,9 @@ def assembly_mesh(parts, post="galv", lower=2.0):
     for seg, backs in ((8, True), (4, True)):
         m = PP.Mesh()
         pm = PP.Mesh()
-        pm.tube("p", [0, 0, -0.03], [0, 0, top], r, None, seg)
+        wide = max((c[1] for c in cells if c[0] in TWO_POSTS), default=0.0)
+        for xp in ((-0.3 * wide, 0.3 * wide) if wide else (0.0,)):
+            pm.tube("p", [xp, 0, -0.03], [xp, 0, top], r, None, seg)
         Vs, Ts, UVs = pm.prims["p"]
         off = 0
         for V, T in zip(Vs, Ts):                         # Mesh.add offsets T by the vertices added before

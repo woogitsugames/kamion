@@ -1391,11 +1391,8 @@ def _rail_posts(lin, Q, Zq, Tq, top, deck, key):
             pts = [P3(POST_FRONT, sg * a_, zs0), P3(W_BACK, sg * a_, zs0), P3(W_BACK, sg * a_, zs1),
                    P3(POST_FRONT, sg * a_, zs1)]
             solid.append((pts if sg > 0 else pts[::-1], ((u, 0.20), (u + 0.1, 0.20), (u + 0.1, 0.36), (u, 0.36))))
-        if deck:
-            # foot plate bolted to the cap: top and the road-side edge
-            f0, f1, a_, th = POST_FRONT + 0.05, POST_FRONT - dep - 0.05, 0.11, 0.02
-            solid.append(([P3(f1, a_, z + th), P3(f0, a_, z + th), P3(f0, -a_, z + th), P3(f1, -a_, z + th)],
-                          ((u + 0.2, 0.05), (u + 0.42, 0.05), (u + 0.42, 0.27), (u + 0.2, 0.27))))
+        # ADR 0144 (REVIEW s14-0123 P1-1): no foot plate under a deck post - the up-facing galvanised quad mirrored
+        # the sky and read as a white square on the cap / paving (p0_kerb_merge_eye); 2 triangles per post saved
     _quads(lin, "furniture", POST_MAT, solid, key, both=False)
 
 
@@ -1414,7 +1411,7 @@ def _stations(P, Z, top, spacing, lo, hi):
     return Q, np.interp(u, s, Z[lo:hi + 1]), Tq, np.interp(u, s, top[lo:hi + 1])
 
 
-def guardrail(lin, P, Z, key, tall=None, term=(False, False)):
+def guardrail(lin, P, Z, key, tall=None, term=(False, False), term_tall=(False, False)):
     """Steel W-beam on posts (top GUARDRAIL_H), Z = ground/surface height along P (points ~1 m apart). P is the post
     line; the road is on its LEFT normal side (beam face W_BACK + 0.083 in front of it).
 
@@ -1424,7 +1421,9 @@ def guardrail(lin, P, Z, key, tall=None, term=(False, False)):
     the face of the post, not on its top), ground posts every GUARDRAIL_POST_SPACING_GROUND; deck runs: heavier posts
     on foot plates every GUARDRAIL_POST_SPACING with a box beam above the W-beam (Mapillary 454716650857984: low
     W-beam + upper beam on short posts; the handrail with horizontal bars at the deck edge is a separate railing -
-    hero asset / roads.meshing.build_bridge_extras)."""
+    hero asset / roads.meshing.build_bridge_extras).
+    ADR 0144: `term_tall` = (start, end): that end of a DECK run is free (no other rail carries on from it,
+    _mark_free_deck_ends) - it is turned down like a ground end instead of stopping in the air."""
     n = len(P)
     tall = np.zeros(n, bool) if tall is None else np.asarray(tall, bool)
     first = len(lin.buf.parts)
@@ -1432,10 +1431,10 @@ def guardrail(lin, P, Z, key, tall=None, term=(False, False)):
     tl = int(S.GUARDRAIL_TERMINAL_M)
     lo, hi = 0, n
     if n > 2 * tl + 4:
-        if term[0] and not tall[:tl + 1].any():
+        if term[0] and (term_tall[0] or not tall[:tl + 1].any()):
             top[:tl + 1] = np.linspace(0.33, S.GUARDRAIL_H, tl + 1)
             lo = tl
-        if term[1] and not tall[-tl - 1:].any():
+        if term[1] and (term_tall[1] or not tall[-tl - 1:].any()):
             top[-tl - 1:] = np.linspace(S.GUARDRAIL_H, 0.33, tl + 1)
             hi = n - tl
     d = np.gradient(P, axis=0)
@@ -1529,6 +1528,37 @@ GUARDRAIL_DEDUP_M = 1.0     # ADR 0100 (REVIEW s10-0095 P1-10): a run within thi
 GUARDRAIL_DEDUP_GROUND_M = 2.5   # ADR 0110 (REVIEW s10-0100 P1-6): ground runs - one rail per separator also when the
 #                                  two edges that want it are 1-2.5 m apart (decks keep 1 m: two decks, two rails)
 GUARDRAIL_MIN_RUN = 8       # points (1 m apart) of a run left after the dedup; shorter leftovers are dropped
+
+
+RAIL_DIP_M = 8             # ADR 0144: points (1 m) - a dip of an authored rail shorter than this is bridged
+RAIL_DIP_MIN = 0.25         # ... when it is deeper than this below the line between its shoulders
+
+
+def _bridge_dips(Z):
+    """Foot heights with short dips (< RAIL_DIP_M points, > RAIL_DIP_MIN deep) replaced by the straight line between
+    their shoulders; a dip at an end of the run is levelled to its one shoulder."""
+    Z = np.asarray(Z, float).copy()
+    n = len(Z)
+    i = 0
+    while i < n:
+        best = None
+        for j in range(min(n - 1, i + RAIL_DIP_M), i + 1, -1):
+            line = np.linspace(Z[i], Z[j], j - i + 1)
+            if (line[1:-1] - Z[i + 1:j] > RAIL_DIP_MIN).any() and (Z[i + 1:j] <= line[1:-1] + 1e-9).all():
+                best = (j, line)
+                break
+        if best:
+            Z[i:best[0] + 1] = best[1]
+            i = best[0]
+        else:
+            i += 1
+    h = RAIL_DIP_M
+    if n > 2 * h + 1:               # ends: a drop over the last / first h points of a run that was level before them
+        if (Z[n - h - 1] - Z[n - h:] > RAIL_DIP_MIN).any() and abs(Z[n - h - 1] - Z[n - 2 * h - 1]) < 0.15:
+            Z[n - h:] = np.maximum(Z[n - h:], Z[n - h - 1])
+        if (Z[h] - Z[:h] > RAIL_DIP_MIN).any() and abs(Z[h] - Z[2 * h]) < 0.15:
+            Z[:h] = np.maximum(Z[:h], Z[h])
+    return Z
 
 
 GUARDRAIL_JOIN_M = 4.0      # ADR 0117: a run cut by the dedup is led onto the rail that cut it when that is this close
@@ -1656,14 +1686,90 @@ def _join_free_ends(queue, m):
         lines[i] = LineString(Ps)
 
 
+RAIL_CONTINUE_M = 2.5       # ADR 0144: a deck run end with another rail end this close (and within RAIL_CONTINUE_DZ) carries on
+RAIL_CONTINUE_DZ = 0.8
+
+
+def _mark_free_deck_ends(queue, m=None):
+    """ADR 0144 (REVIEW s14-0123 P1-1, "koniec tasmy wisi bez zakonczenia"): it["term_tall"] = (start, end), True where
+    a DECK end of a run has no other rail end within RAIL_CONTINUE_M at its level - that end gets a turned-down
+    terminal. Ends that another run continues (next chain of the same deck, a ground rail led onto it) stay as they
+    are, as do ends whose terminal was cancelled (authored `free_ends`, joins)."""
+    ends = []
+    for i, it in enumerate(queue):
+        for e_ in (0, -1):
+            ends.append((i, np.asarray(it["P"][e_], float), float(it["Z"][e_])))
+    for i, it in enumerate(queue):
+        tl = it.get("tall")
+        flags = []
+        for e_ in (0, -1):
+            free = False
+            if tl is not None and len(tl) and bool(np.asarray(tl)[e_]) and it["term"][0 if e_ == 0 else 1]:
+                p, z = np.asarray(it["P"][e_], float), float(it["Z"][e_])
+                free = not any(j != i and float(np.hypot(*(q - p))) <= RAIL_CONTINUE_M and abs(zq - z) <= RAIL_CONTINUE_DZ
+                               for j, q, zq in ends)
+            flags.append(free)
+        it["term_tall"] = tuple(flags)
+        if m is not None:
+            m["deck_free_ends"] = m.get("deck_free_ends", 0) + int(sum(flags))
+
+
 def _flush_rails(lin, m=None):
     queue = getattr(lin, "rail_queue", None) or []
     if queue and m is not None:
         _join_free_ends(queue, m)
+    _mark_free_deck_ends(queue, m)
     for it in queue:
-        guardrail(lin, it["P"], it["Z"], it["key"], it["tall"], it["term"])
+        guardrail(lin, it["P"], it["Z"], it["key"], it["tall"], it["term"], it.get("term_tall", (False, False)))
     lin.rail_queue = None
+    lin.rail_runs = [{"key": it["key"], "P": np.asarray(it["P"], float), "Z": np.asarray(it["Z"], float),
+                      "tall": np.zeros(len(it["P"]), bool) if it["tall"] is None else np.asarray(it["tall"], bool),
+                      "term": tuple(it["term"]), "term_tall": tuple(it.get("term_tall", (False, False)))} for it in queue]
     return [bool(np.all(it["tall"])) for it in queue]
+
+
+PARAPET_BARRIER_MIN_M = 1.0   # ADR 0144: no generic deck balustrade within this of a road barrier (W-beam + upper beam)
+
+
+def drop_parapets_at_barriers(buf, runs, m=None):
+    """ADR 0144 (REVIEW s14-0123 P1-1): the generic balustrade of a deck edge (roads.meshing.build_bridge_extras, src
+    "<chain>:parapet", 0.15 m in from the cap edge) and the road barrier of the same cap (posts 0.2-0.4 m in from that
+    edge) are two rail systems 0.1-0.3 m apart: on p0_kerb_merge_eye the W-beam ran through the balustrade posts for
+    ~10 m. One system per edge: where a deck barrier (W-beam + upper box beam at BRIDGE_BARRIER_H - a barrier-railing)
+    runs within PARAPET_BARRIER_MIN_M, the balustrade triangles are dropped. Hero viaducts carry their authored
+    railing in the asset (measured off photos, e.g. Mapillary 454716650857984); their generic balustrade goes either way (here or in
+    hero_bridge.apply, which counts both). Returns the
+    number of triangles removed."""
+    from scipy.spatial import cKDTree
+    pts = []
+    for r in runs:
+        tl = np.asarray(r["tall"], bool)
+        if tl.sum() < 2:
+            continue
+        P3 = np.column_stack([r["P"], r["Z"]])[tl]
+        # runs are sampled every ~1 m: densify to 0.25 m so the distance to the polyline is right to a few cm
+        u = np.linspace(0.0, len(P3) - 1.0, 4 * (len(P3) - 1) + 1)
+        pts.append(np.column_stack([np.interp(u, np.arange(len(P3)), P3[:, d]) for d in range(3)]))
+    if not pts:
+        return 0
+    A = np.concatenate(pts)
+    tree = cKDTree(A[:, :2])
+    removed = 0
+    for p in buf.parts:
+        if p.layer != "bridge" or not p.src.endswith(":parapet") or not len(p.T):
+            continue
+        cen = p.V[p.T].mean(1)
+        d, k = tree.query(cen[:, :2])
+        near = (d < PARAPET_BARRIER_MIN_M) & (np.abs(cen[:, 2] - A[k, 2]) < 2.5)
+        if near.any():
+            removed += int(near.sum())
+            p.T = p.T[~near]
+            # per part, for the accounting of hero viaducts (hero_bridge.apply: "generic dressing the asset replaces")
+            by_src = buf.__dict__.setdefault("parapet_dropped", {})
+            by_src[p.src] = by_src.get(p.src, 0) + int(near.sum())
+    if m is not None:
+        m["parapet_tris_dropped"] = removed
+    return removed
 
 
 STRUCT_GUARD_GAP_M = 8.0     # WORKING_VALUE (ADR 0110): a ground carriageway edge this close to a viaduct / walled ramp
@@ -1731,6 +1837,7 @@ def guardrails(lin, net, zground, report):
     # ADR 0100: authored guardrails on kerbed separators traced on the orthophoto (`kind: guardrail`, polyline_en in
     # region-local E/N, drawn with the road on the RIGHT of the drawing direction = the face of the W-beam)
     m["authored"] = 0.0
+    surf_top = None
     for o in getattr(net, "authored", None) or []:
         if o.get("kind") != "guardrail":
             continue
@@ -1745,6 +1852,16 @@ def guardrails(lin, net, zground, report):
         if not np.isfinite(Z).all():
             net.overrides_stale.append(o["id"])
             continue
+        # ADR 0144: an authored rail stands on the exact top of the surface under it (island paving, kerb top), not on
+        # the 1 m raster that blends an island top with the carriageway beside it (the rails of dk8-ramp-split-island
+        # stood 0.65 m into the paving: beam top 0.10 m above it), and it does not dive into a short dip of the ground
+        # (the 3 m of grass between the island end and the deck joint: the beam end hung 0.75 m low beside the deck
+        # barrier it leads to) - dips shorter than RAIL_DIP_M are bridged at the height of their shoulders.
+        if surf_top is None:
+            surf_top = SurfaceTop(lin.buf.parts)
+        zt = np.array([surf_top.top(float(e_), float(n_)) for e_, n_ in P])
+        Z = np.where(np.isfinite(zt), np.maximum(Z, zt), Z)
+        Z = _bridge_dips(Z)
         # ADR 0123: authored rails are not deduplicated against each other (two traced rails of one separator, 1.5 m
         # apart: the second was cut away by the 2.5 m ground rule) - only the rule runs give way to them
         own = []
@@ -1847,6 +1964,10 @@ def guardrails(lin, net, zground, report):
                     if len(set(want[sl].tolist())) > 1:
                         o_ = ndimage.uniform_filter1d(o_, 9, mode="nearest")
                         z_ = ndimage.uniform_filter1d(z_, 9, mode="nearest")
+                    elif len(o_) > 5 and float(np.abs(np.diff(o_)).max()) > 0.2:
+                        # ADR 0144 (p0_kerb_merge_eye): one rule, but the cap width steps between two stations (deck stub
+                        # at a junction mouth) - the post line jumped 0.5 m sideways within 1 m (zigzag); eased over 5 m
+                        o_ = ndimage.uniform_filter1d(o_, 5, mode="nearest")
                     P = c.line.offset_point(ss[sl], sgn * o_)
                     tall = want[sl] == 1
                     if sgn > 0:                          # beam faces the road: road is on the right of travel
@@ -1862,7 +1983,13 @@ def guardrails(lin, net, zground, report):
                         m[names[q]] += float((want[sl] == q).sum())
                 k = kk + 1
     deck_flags = _flush_rails(lin, m)
+    drop_parapets_at_barriers(lin.buf, lin.rail_runs, m)
     report["guardrails_m"] = {k: round(v) for k, v in m.items()}
+    # ADR 0144: every built run (1 m points: E, N, foot z, deck flag) for tests/gis/test_guardrail_overlap.py
+    report["guardrail_runs"] = [{"key": r["key"], "term": [bool(x) for x in r["term"]],
+                                 "term_tall": [bool(x) for x in r["term_tall"]],
+                                 "pts": [[round(float(a), 2), round(float(b), 2), round(float(z_), 2), int(t_)]
+                                         for (a, b), z_, t_ in zip(r["P"], r["Z"], r["tall"])]} for r in lin.rail_runs]
     # pier_guardrails (after the bridge supports exist) dedups against the GROUND rails (deck rails pass overhead)
     net.guardrail_built = [b for b, dk in zip(built, deck_flags) if not dk] if len(deck_flags) == len(built) else built
     d = np.array(drops) if drops else np.zeros(1)
@@ -1956,6 +2083,12 @@ def pier_guardrails(lin, net, piers, parts, report):
             _dedup_guardrail(lin, E, z, f"pier{i}:structure", built, m)
             got = sum(b_.length for b_ in built[n0:])
             total += got
+            for b_ in built[n0:]:              # ADR 0144: QA list of every built run (tests/gis/test_guardrail_overlap.py)
+                C_ = np.asarray(b_.coords)
+                kz = np.argmin(np.hypot(E[None, :, 0] - C_[:, None, 0], E[None, :, 1] - C_[:, None, 1]), axis=1)
+                report.setdefault("guardrail_runs", []).append({
+                    "key": f"pier{i}:structure", "term": [True, True], "term_tall": [False, False],
+                    "pts": [[round(float(a), 2), round(float(b), 2), round(float(z[k_]), 2), 0] for (a, b), k_ in zip(C_, kz)]})
             if got > 0:
                 hits.append({"pier": [round(float(q[0]), 1), round(float(q[1]), 1)], "edge_m": round(dq, 2),
                              "offset_m": round(off, 2), "built_m": round(got, 1)})
