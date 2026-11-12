@@ -7,7 +7,8 @@
     "multi_diameters": "8.27m base from OSM outline area, interpretation uncertain; 8.27m top is WORKING_VALUE near photographic resection, not a survey",
     "bands": "WORKING_VALUE 12m spacing, different lower limits 36m/60m; photographic resection with known 120m and technical single-flue diameter, pose/intrinsics and outlet-height ambiguity remain",
     "heads": "One outlet versus three outlets and distinct gallery patterns visible on Rakoon 2020 photo; detailed head dimensions/azimuth WORKING_VALUE",
-    "materials": "Existing shared chimney materials, no measured reflectance or new shader path"
+    "materials": "Existing shared chimney materials, three on both LODs; pale galleries reuse chimney_white. No measured reflectance or new shader path",
+    "lower_body": "Long white lower body supported by open Hiuppo 2007 photo; its old checkerboard marking is not applied to the 2020 reference epoch"
   },
   "sources": [
     {
@@ -26,7 +27,15 @@
     {
       "title": "EMKA multi-flue chimney H120m",
       "url": "https://www.emka.krakow.pl/realizacje/enea-wytwarzanie-elektrocieplownia-bialystok-komin-wieloprzewodowy-h120m/",
-      "use": "Height and long white lower shaft checked; photograph viewed only in temporary cache, not reproduced"
+      "use": "Textual project-record height only. Contractor photograph is not an open D43 asset reference and is not distributed; model parameters use the open Commons photographs and OSM"
+    },
+    {
+      "title": "EC Białystok (2007)",
+      "author": "Hiuppo",
+      "url": "https://commons.wikimedia.org/wiki/File:EC_Bia%C5%82ystok.jpg",
+      "license": "CC BY-SA 2.5",
+      "license_url": "https://creativecommons.org/licenses/by-sa/2.5/",
+      "use": "Long pale lower shafts only; historical checkerboard head, logos and image pixels are not copied into the model"
     },
     {
       "title": "OpenStreetMap ways 628899553 / 628899554",

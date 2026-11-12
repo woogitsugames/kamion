@@ -33,7 +33,7 @@ def test_lods_use_existing_material_budgets_and_have_vertical_axes(index):
     cfg=EC.config(); d=EC.entry(overrides()[index],cfg)
     lods=EC.meshes(d)
     assert len(lods)==2
-    assert {p['mat'] for p in lods[0]}=={'chimney_white','chimney_red','chimney_concrete','gantry_steel'}
+    assert {p['mat'] for p in lods[0]}=={'chimney_white','chimney_red','chimney_concrete'}
     assert {p['mat'] for p in lods[1]}=={'chimney_white','chimney_red','chimney_concrete'}
     for lod in lods:
         V=np.concatenate([p['V'] for p in lod])
@@ -47,6 +47,24 @@ def test_lods_use_existing_material_budgets_and_have_vertical_axes(index):
             shell=V[np.isclose(V[:,2],z)]
             assert np.max(np.abs((shell[:,:2].min(0)+shell[:,:2].max(0))/2))<1e-8
     assert sum(len(p['T']) for p in lods[1])<sum(len(p['T']) for p in lods[0])
+
+
+@pytest.mark.parametrize('index',[0,1])
+def test_gallery_fascia_survives_a_view_from_below_without_extra_material(index):
+    d=EC.entry(overrides()[index],EC.config())
+    for lod in EC.meshes(d):
+        p=next(p for p in lod if p['mat']=='chimney_white')
+        V,T=p['V'],p['T']
+        for z in d['galleries_m']:
+            outer=(d['base_d_m']+(d['top_d_m']-d['base_d_m'])*z/120)/2+.75
+            triangles=V[T]
+            near=np.all((triangles[:,:,2]>=z-.251)&(triangles[:,:,2]<=z+.001),axis=1)
+            radial=np.all(np.linalg.norm(triangles[:,:,:2],axis=2)>outer-.01,axis=1)
+            fascia=triangles[near&radial]
+            assert len(fascia)>=24
+            normal=np.cross(fascia[:,1]-fascia[:,0],fascia[:,2]-fascia[:,0])
+            assert np.all(np.abs(normal[:,2])<1e-8)
+            assert np.all(np.sum(normal[:,:2]*fascia.mean(1)[:,:2],axis=1)>0)
 
 
 @pytest.mark.parametrize('change',[

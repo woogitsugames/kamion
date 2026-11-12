@@ -98,12 +98,19 @@ def annulus(mesh,mat,z,inner,outer,seg):
     mesh.add(mat,V,T,np.zeros((len(V),2)))
 
 
+def disk(mesh,mat,z,radius,seg,centre=(0.,0.)):
+    a=np.arange(seg+1)*2*math.pi/seg
+    ring=np.column_stack([np.cos(a)*radius+centre[0],np.sin(a)*radius+centre[1],np.full(seg+1,z)])
+    V=np.vstack([[centre[0],centre[1],z],ring])
+    mesh.add(mat,V,[(0,k+1,k+2) for k in range(seg)])
+
+
 def meshes(d):
     from .props import Mesh
     out=[]
     H=d['height_m']
     radius=lambda z:(d['base_d_m']+(d['top_d_m']-d['base_d_m'])*max(0,z)/H)/2
-    for lod,seg in enumerate((28,12)):
+    for lod,seg in enumerate((24,12)):
         m=Mesh()
         bounds=[-1.,*d['band_boundaries_m']]
         shaft_top=116.8 if d['outlets']==3 else H
@@ -118,30 +125,36 @@ def meshes(d):
         if d['outlets']==3:
             # Three separate flues, not a single tapered capped cone. Dimensions
             # of the head remain WORKING_VALUE; total height remains exactly120m.
-            annulus(m,'chimney_red',shaft_top,0.15,radius(shaft_top),seg)
+            disk(m,'chimney_red',shaft_top,radius(shaft_top),seg)
             for k in range(3):
                 a=math.radians(30+120*k)
                 x,y=1.8*math.cos(a),1.8*math.sin(a)
                 m.tube('chimney_red',[x,y,shaft_top],[x,y,H],.78,.78,8 if lod==0 else 6,cap=False)
-                m.tube(dark,[x,y,H-.45],[x,y,H-.4],.64,.64,8 if lod==0 else 6,cap=True)
+                disk(m,dark,H-.4,.64,8 if lod==0 else 6,(x,y))
         else:
             annulus(m,'chimney_red',H,radius(H)-.22,radius(H)+.10,seg)
-            m.tube(dark,[0,0,H-.8],[0,0,H-.7],radius(H)-.22,None,seg,cap=True)
-        gallery_mat='gantry_steel' if lod==0 else dark
+            disk(m,dark,H-.7,radius(H)-.22,12)
+        # The photograph's galleries are pale painted structures. Reuse this
+        # existing material on both LODs; no fourth material or new shader path.
+        gallery_mat='chimney_white'
+        gallery_seg=12
         for z in d['galleries_m']:
             outer=radius(z)+.75
-            annulus(m,gallery_mat,z,radius(z),outer,seg)
+            annulus(m,gallery_mat,z,radius(z),outer,gallery_seg)
+            # A horizontal one-sided annulus vanished from below on LOD1.
+            # The 0.25m outer fascia is a WORKING_VALUE, visible on both LODs.
+            m.tube(gallery_mat,[0,0,z-.25],[0,0,z],outer,outer,gallery_seg,cap=False)
             if lod==0:
                 # Thin rails, open centre. Low keeps the silhouette with one annulus.
                 for zz in (z+.5,z+1.):
-                    for k in range(seg):
-                        a,b=2*math.pi*k/seg,2*math.pi*(k+1)/seg
+                    for k in range(gallery_seg):
+                        a,b=2*math.pi*k/gallery_seg,2*math.pi*(k+1)/gallery_seg
                         m.tube(gallery_mat,[outer*math.cos(a),outer*math.sin(a),zz],
-                               [outer*math.cos(b),outer*math.sin(b),zz],.028,None,4,cap=False)
-                for k in range(0,seg,2):
-                    a=2*math.pi*k/seg
+                               [outer*math.cos(b),outer*math.sin(b),zz],.028,None,3,cap=False)
+                for k in range(gallery_seg):
+                    a=2*math.pi*k/gallery_seg
                     m.tube(gallery_mat,[outer*math.cos(a),outer*math.sin(a),z],
-                           [outer*math.cos(a),outer*math.sin(a),z+1.],.028,None,4,cap=False)
+                           [outer*math.cos(a),outer*math.sin(a),z+1.],.028,None,3,cap=False)
         out.append(m.out())
     return out
 
