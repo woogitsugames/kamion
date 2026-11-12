@@ -3,7 +3,9 @@ $ErrorActionPreference='Stop'
 Set-Location ([IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..')))
 . scripts/env.ps1
 $library='art-source/world/props/street_props.glb'
-@{stage=$Stage;time=(Get-Date).ToString('o');library_sha=(Get-FileHash $library).Hash;meta_sha=(Get-FileHash art-source/world/props/props_meta.json).Hash;cameras_sha=(Get-FileHash artifacts/life-r2/cameras.json).Hash;probe_sha=(Get-FileHash game/Assets/_Project/Editor/VisualQA/LifeExactStats.cs).Hash} | ConvertTo-Json | Set-Content "artifacts/life-r2/$Stage-inputs.json"
+$sourceHashes=[ordered]@{}
+foreach($source in @('tools/worldgen/streetscape/life.py','tools/worldgen/streetscape/life_props.py','tools/worldgen/streetscape/life_cars.py','tools/worldgen/streetscape/depot_yard.py','tools/worldgen/streetscape/materials.py','game/Assets/_Project/Environment/Shaders/WorldPBR.shader','game/Assets/_Project/World/Import/WorldPbrMaterials.cs')){$sourceHashes[$source]=(Get-FileHash -LiteralPath $source).Hash}
+@{stage=$Stage;time=(Get-Date).ToString('o');source_commit=(git rev-parse HEAD);source_sha=$sourceHashes;library_sha=(Get-FileHash $library).Hash;meta_sha=(Get-FileHash art-source/world/props/props_meta.json).Hash;cameras_sha=(Get-FileHash artifacts/life-r2/cameras.json).Hash;probe_sha=(Get-FileHash game/Assets/_Project/Editor/VisualQA/LifeExactStats.cs).Hash} | ConvertTo-Json -Depth 4 | Set-Content "artifacts/life-r2/$Stage-inputs.json"
 foreach($tier in @('Low','High')) { foreach($light in @('clear','overcast')) {
  $scene=if($tier -eq 'High'){'WorldC_High'}else{'WorldC'}
  $dir=[IO.Path]::GetFullPath("artifacts/life-r2/$Stage/$tier-$light")

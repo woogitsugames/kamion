@@ -281,12 +281,12 @@ Shader "Kamion/World PBR"
                 {
                     // WORKING_VALUE: source UV1 is height above the actual class sill
                     // and an affine rear=0/front=1 axle coordinate. No film inversion.
-                    half amount = 0.08h + 0.92h * i.carFilm.x;
-                    half falloff = 0.16h + 0.06h * i.carFilm.x;
-                    half vertical = exp2(-max(i.uv.z, 0.0) / falloff * 1.442695h);
+                    half amount, falloff;
                     half keepUpper = 0.0h;
                     if (_CarFlake.w < 1.5)
                     {
+                        amount = 0.08h + 0.92h * i.carFilm.x;
+                        falloff = 0.16h + 0.06h * i.carFilm.x;
                         // Preserve the existing passenger-car bonnet/roof response.
                         // Static cabs opt out: their previous plain paint had no such layer.
                         keepUpper = smoothstep(0.45h, 0.85h, abs(n.y)) * smoothstep(0.6, 0.8, um.y);
@@ -295,6 +295,15 @@ Shader "Kamion/World PBR"
                         base.rgb *= lerp(half3(1, 1, 1), legacyMultiplier, keepUpper);
                         mask.a = saturate(mask.a - 0.35h * upperFilm * keepUpper);
                     }
+                    else
+                    {
+                        // ADR 0122 C, WORKING_VALUE: yard-cab film was almost
+                        // invisible with the passenger-car sill envelope.
+                        // Keep the four instance levels, broaden only static cabs.
+                        amount = 0.25h + 0.75h * i.carFilm.x;
+                        falloff = 0.32h + 0.16h * i.carFilm.x;
+                    }
+                    half vertical = exp2(-max(i.uv.z, 0.0) / falloff * 1.442695h);
                     half frontTrail = saturate(1.0h - abs(i.uv.w - 0.87h) / 0.28h);
                     half rearTrail = saturate(1.0h - abs(i.uv.w + 0.13h) / 0.28h);
                     half rearFace = saturate((-i.uv.w - 0.20h) * 8.0h);
