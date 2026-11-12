@@ -59,6 +59,19 @@ namespace PhysicsRunner.Tests
             Assert.Equal(0, a.WheelLift);
         }
 
+        /// <summary>Diagnostic (prints only): yaw rate and articulation left after the released flick, per combination.</summary>
+        [Fact]
+        public void Replay35_ResidualYawAfterRelease_Diagnostic()
+        {
+            foreach (var combo in new[] { "solo", "empty", "laden40" })
+            {
+                var sc = TouchEvidence.Replay(35, -1, combo); sc.duration = 20;
+                var tr = TouchEvidence.Run(sc);
+                int n = tr.T.Count;
+                _out.WriteLine($"{combo}: t=8 s yaw {tr.YawRateDps[n * 8 / 20]:F3} deg/s artic {tr.Artic[n * 8 / 20]:F3}; t=20 s yaw {tr.YawRateDps[n - 1]:F3} deg/s artic {tr.Artic[n - 1]:F3} road wheel {tr.RoadWheelDeg[n - 1]:F4}");
+            }
+        }
+
         [Fact]
         public void LaneChange35_ThumbGain4_WeavedBefore_SettlesAfter()
         {
