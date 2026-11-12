@@ -32,7 +32,7 @@ switch ($Task) {
     'Analyze' { $uvArguments += @('python',$Script); $uvArguments += $ScriptArguments }
 }
 $log = Join-Path $PSScriptRoot ("heavy-{0}-{1}.log" -f $Task,(Get-Date -Format 'yyyyMMdd-HHmmss'))
-& pwsh $slot -Acquire -Pool heavy -Owner $owner -PollSeconds 5
+& pwsh $slot -Acquire -Pool heavy -Owner $owner -PollSeconds 1 -StaleHours 87600
 if ($LASTEXITCODE -ne 0) { throw 'Nie uzyskano slotu heavy' }
 $code = 1
 try {
@@ -51,5 +51,6 @@ Add-Content (Join-Path $PSScriptRoot 'STATUS.md') "Zadanie heavy $Task zakończo
 git add -f (Join-Path $PSScriptRoot 'STATUS.md')
 git commit -m "wip(light): zapisz wynik heavy $Task"
 exit $code
+
 
 

@@ -1,4 +1,4 @@
-param([switch]$ResumeAfterWorld)
+﻿param([switch]$ResumeAfterWorld)
 $ErrorActionPreference = 'Stop'
 $repo = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..'))
 Set-Location $repo
@@ -7,7 +7,7 @@ if ($owner -ne 'gpt-light-r3') { throw 'Expected round3 branch' }
 $slot = 'C:/Users/matma/Documents/Claude/kamion/scripts/unity-slot.ps1'
 $env:PYTHONUNBUFFERED='1'
 $env:OMP_NUM_THREADS='1'; $env:OPENBLAS_NUM_THREADS='1'; $env:MKL_NUM_THREADS='1'; $env:NUMEXPR_NUM_THREADS='1'
-& pwsh $slot -Acquire -Pool heavy -Owner $owner -PollSeconds 5
+& pwsh $slot -Acquire -Pool heavy -Owner $owner -PollSeconds 1 -StaleHours 87600
 if ($LASTEXITCODE) { throw 'No heavy slot' }
 $code=1
 try {
@@ -58,3 +58,4 @@ git commit -m 'WIP light r3: record regenerated baseline import result'
 if ($code) { exit $code }
 & pwsh "$PSScriptRoot/run-light-batch.ps1" -Jobs artifacts/light-r3/baseline.json -Gate3 artifacts/light-r3/qa-cameras.json
 exit $LASTEXITCODE
+
