@@ -16,3 +16,8 @@ Build 1 OK (506 s): frontages 3, propsy 3/3 postawione, balkony 3413 -> 3357, wi
 Obejrzane pary after1: 150280 - brązowy salon z ciemnym pasem i okapem, ciemny salon, owal na maszcie, flaga; blok jasny bez galerii. Poprawki do builda 2: rząd flag (3 maszty zlewały się w jeden - obrót rzędu, baner 1x4 m, maszt 8.5 m), grubsze nogi masztu kratowego.
 Kamery kontrolne `Data/Regions/bialystok-industrial-c/g3b_frontage_cameras.json` (2 pozy pod zdjęcia strudel 2024, 2 widoki kontrolne) + `run-control.ps1`.
 NASTĘPNY KROK: `pwsh artifacts/g3b-frontage/run-cycle.ps1 -Name after -Tag 2` potem `bash artifacts/g3b-frontage/make-pairs.sh after; python artifacts/g3b-frontage/stats-diff.py after`
+
+## 4. Sesja 12: wznowienie po restarcie 03:44
+Scalono main (76b3fb76) -> 5a4f0dd7; konflikt tylko `generated/world_manifest.json` (ours, regeneracja w buildzie 2). Build 2 sprzed restartu: build_world OK, import zabity restartem (exit 1073807364) - cały cykl od nowa na kodzie po scaleniu.
+Poprawki builda 2 w kodzie: rząd flag (rotate 10 deg, baner 1x4 m, maszt 8,5 m - już w b89e4ced), maszt kratowy: nogi 0,16 m (było 0,10), rygle 0,10, skratowania 0,11.
+NASTĘPNY KROK: `pwsh artifacts/g3b-frontage/run-cycle.ps1 -Name after -Tag 2; bash artifacts/g3b-frontage/make-pairs.sh after; python artifacts/g3b-frontage/stats-diff.py after`

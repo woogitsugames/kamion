@@ -234,19 +234,20 @@ def sign_mast(acc, p, q, d, nout, zg):
     bn = np.array([bd[1], -bd[0]])
     d3, n3 = np.append(d, 0.0), np.append(nout, 0.0)
     zb = zg + h - bh
+    leg = float(p.get("leg_m", 0.16)) / 2      # 0.10 m legs vanished at 80 m on Low (build 1 review)
     for layer in (FK.L0, FK.L1):
         low = layer == FK.L1
         for sx in (-1, 1):
             for sy in (-1, 1):
                 c = np.array([*(q + d * (sx * s) + nout * (sy * s)), zg + (h - bh) / 2])
-                acc.box(layer, MAST, c, d3 * 0.05, n3 * 0.05, [0, 0, (h - bh) / 2], skip=(0, 1))
+                acc.box(layer, MAST, c, d3 * leg, n3 * leg, [0, 0, (h - bh) / 2], skip=(0, 1))
         rings = max(2, int((h - bh) // 1.5))
         for k in range(1, rings + 1):
             z = zg + (h - bh) * k / rings
             for ax_, ay_ in ((d, nout), (nout, d)):
                 for sy in (-1, 1):
                     c = np.array([*(q + ay_ * (sy * s)), z])
-                    acc.box(layer, MAST, c, np.append(ax_ * s, 0), np.append(ay_ * 0.03, 0), [0, 0, 0.035],
+                    acc.box(layer, MAST, c, np.append(ax_ * s, 0), np.append(ay_ * 0.04, 0), [0, 0, 0.05],
                             skip=(0, 1, 4, 5) if low else (4, 5))
             if low:
                 continue
@@ -256,7 +257,7 @@ def sign_mast(acc, p, q, d, nout, zg):
                     sg = 1 if (k + (sy > 0)) % 2 else -1
                     p0 = np.array([*(q + ay_ * (sy * s) - ax_ * (sg * s)), z0])
                     p1 = np.array([*(q + ay_ * (sy * s) + ax_ * (sg * s)), z])
-                    w3 = np.array([0.0, 0.0, 0.04])
+                    w3 = np.array([0.0, 0.0, 0.055])
                     acc.quad(layer, MAST, p0 - w3, p1 - w3, p1 + w3, p0 + w3)
                     acc.quad(layer, MAST, p1 - w3, p0 - w3, p0 + w3, p1 + w3)
         seg = 12 if low else 20                      # oval board, both sides
