@@ -22,3 +22,5 @@ Dodatkowe kamery: before/High-clear zapisane.
 Dodatkowe kamery: before/High-overcast zapisane.
 
 Przywrócono bibliotekę i import kandydata B po dodatkowym baseline.
+
+EditMode zakończony: exit 0; szczegóły EDITMODE-STATUS.md i final-editmode.xml.
