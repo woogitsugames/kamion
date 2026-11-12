@@ -73,10 +73,10 @@ for p in P:                                       # wicket -> door steps (fence 
     wm = np.array(p["wicket"]["m"])                # r2: stand INSIDE the wicket (r1 stood behind the fence / in a wall)
     v = wm - dp
     dist = float(np.linalg.norm(v))
-    if dist < 3.0:
+    if dist < 4.5:
         continue
-    add(f"r16_door_{k}", dp + v / dist * min(dist - 0.8, 7.0), dp, 1.6, 1.1, 55.0,
-        f"ADR 0124: house door / steps of plot {p['id']} ({p['front']}) from inside the wicket, {min(dist - 0.8, 7.0):.1f} m")
+    add(f"r16_door_{k}", dp + v / dist * min(dist - 2.0, 6.0), dp, 1.6, 1.1, 55.0   # s12: 2 m inside the wicket (0.8 m stood in the hedge),
+        f"ADR 0124: house door / steps of plot {p['id']} ({p['front']}) from inside the wicket, {min(dist - 2.0, 6.0):.1f} m")
     k += 1
 k = 0
 for p in P:                                       # garden close-ups (plants from 6-8 m, eye level)

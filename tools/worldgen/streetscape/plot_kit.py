@@ -722,8 +722,11 @@ def _hedge(rng, h, w):
     c[np.broadcast_to(body, (h, w)), :3] = (26, 40, 24)
     c[np.broadcast_to(body, (h, w)), 3] = 1.0
     S = _Stamper(c, stamps, wrap=True)
-    n = 9000
-    lp = 0.075 * w / KIT_M
+    # s12 (ADR 0124 r2): the row is 1.5 m of hedge in 170 px but a hedge quad stands up to ~2.1 m, so a 7.5 cm stamp
+    # read as a ~18 cm leaf from 5 m (r1 / r2b `r15_front_brick_bars`). 3.6 cm in the atlas = 5-8 cm on the hedge
+    # (privet / hornbeam blade, WORKING_VALUE); count scaled with the area so the cover stays the same.
+    n = 36000
+    lp = 0.036 * w / KIT_M
     for i in range(n):
         x = rng.uniform(0, w)
         t0 = float(top[0, int(x) % w])
