@@ -24,7 +24,8 @@ $output = [IO.Path]::GetFullPath($OutputRoot, $taskRoot)
 $region = Join-Path $taskRoot 'Data/Regions/bialystok-industrial-c'
 $inputSnapshot = $null
 if($Inputs){$inputSnapshot=[IO.Path]::GetFullPath($Inputs,$taskRoot)}
-elseif($ComposeOnly -and (Test-Path -LiteralPath (Join-Path $output 'inputs') -PathType Container)){$inputSnapshot=Join-Path $output 'inputs'}
+elseif($ComposeOnly){$inputSnapshot=Join-Path $output 'inputs'}
+if($ComposeOnly -and !(Test-Path -LiteralPath $inputSnapshot -PathType Container)){throw 'Captured input directory required for ComposeOnly; render or provide Inputs first'}
 $sourceInputRoot=if($inputSnapshot){$inputSnapshot}else{$region}
 if($inputSnapshot){
     foreach($name in @('sbs_cameras.json','sbs_references.json','world_manifest.json','materials_spec.json')){
@@ -49,6 +50,48 @@ function Get-AspectKey($width, $height) {
 function Restore-UnitySideEffects {
     & git -C $taskRoot restore -- game/Assets/_Project/Rendering/Settings game/ProjectSettings
 }
+function Assert-RenderState($captures,$tier,$light,$renderDir) {
+    $ids=@($references.camera)
+    if(!$ids.Count -or @($ids | Select-Object -Unique).Count -ne $ids.Count){throw 'Reference roster must be nonempty and unique'}
+    if(@($ids | Where-Object {$_ -notmatch '^sbs-[A-Za-z0-9_-]+$'}).Count){throw 'Invalid reference camera ID'}
+    $groups=@($references | Group-Object {Get-AspectKey $_.width $_.height})
+    if($captures.Count -ne $groups.Count){throw 'Incomplete aspect capture roster'}
+    $seen=@();$aspectKeys=@()
+    foreach($capture in $captures){
+        if($capture.status -ne 'OK' -or $capture.tier -ne $tier -or $capture.lighting -ne $light){throw 'Capture status or render state differs'}
+        if($capture.git_sha -notmatch '^[a-fA-F0-9]{40}$' -or $capture.main_sha -notmatch '^[a-fA-F0-9]{40}$'){throw 'Incomplete capture code provenance'}
+        if($capture.width -le 0 -or $capture.height -le 0){throw 'Invalid capture dimensions'}
+        $key=Get-AspectKey $capture.width $capture.height
+        $group=@($groups | Where-Object Name -eq $key)
+        if($group.Count -ne 1 -or $key -in $aspectKeys){throw 'Unexpected or duplicate capture aspect'}
+        $aspectKeys+=$key
+        $first=$group[0].Group[0]
+        if($capture.width -ne 1280 -or $capture.height -ne [int](1280*$first.height/$first.width)){throw 'Capture dimensions differ from reference aspect'}
+        $expected=@($group[0].Group.camera);$actual=@($capture.cameras)
+        if($actual.Count -ne $expected.Count -or @($actual | Select-Object -Unique).Count -ne $actual.Count){throw 'Incomplete or duplicate capture cameras'}
+        if(@(Compare-Object $expected $actual).Count){throw 'Capture cameras differ from reference aspect roster'}
+        $hashed=@($capture.render_sha256.PSObject.Properties.Name)
+        if($hashed.Count -ne $actual.Count -or @(Compare-Object $actual $hashed).Count){throw 'Capture hash roster differs from cameras'}
+        $seen+=$actual
+        foreach($camera in $actual){
+            $path=Join-Path $renderDir ($camera+'.png')
+            if(!(Test-Path -LiteralPath $path -PathType Leaf)){throw "Missing captured raw: $camera"}
+            $digest=(Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash.ToLowerInvariant()
+            if($capture.render_sha256.$camera -ne $digest){throw "Captured raw hash differs: $camera"}
+            $stream=[IO.File]::OpenRead($path)
+            try {
+                $header=[byte[]]::new(24)
+                if($stream.Read($header,0,24) -ne 24 -or [BitConverter]::ToString($header,0,8) -ne '89-50-4E-47-0D-0A-1A-0A' -or [Text.Encoding]::ASCII.GetString($header,12,4) -ne 'IHDR'){throw "Invalid PNG header: $camera"}
+                $width=[Net.IPAddress]::NetworkToHostOrder([BitConverter]::ToInt32($header,16))
+                $height=[Net.IPAddress]::NetworkToHostOrder([BitConverter]::ToInt32($header,20))
+                if($width -ne $capture.width -or $height -ne $capture.height){throw "Raw dimensions differ from capture: $camera"}
+            } finally {$stream.Dispose()}
+        }
+    }
+    if($seen.Count -ne $ids.Count -or @($seen | Select-Object -Unique).Count -ne $ids.Count){throw 'Incomplete or duplicate state camera roster'}
+    $rawIds=@(Get-ChildItem -LiteralPath $renderDir -Filter '*.png' -File | ForEach-Object BaseName)
+    if($rawIds.Count -ne $ids.Count -or @(Compare-Object $ids $rawIds).Count){throw 'Raw PNG roster differs from references'}
+}
 function Save-EvidenceInputs([switch]$CaptureOnly) {
     $sourceMap=[ordered]@{
         'sbs_cameras.json'=$cameraFile
@@ -59,9 +102,12 @@ function Save-EvidenceInputs([switch]$CaptureOnly) {
     $expected=@{'sbs_cameras.json'='cameras_sha256';'sbs_references.json'='references_sha256';'world_manifest.json'='world_manifest_sha256';'materials_spec.json'='materials_spec_sha256'}
     $captureRows=@();$metricRows=@()
     foreach($tier in $Tiers){foreach($light in $Lighting){
-        $files=@(Get-ChildItem -LiteralPath (Join-Path $output "renders/$tier-$light") -Filter 'capture-*.json')
+        $stateDir=Join-Path $output "renders/$tier-$light"
+        $files=@(Get-ChildItem -LiteralPath $stateDir -Filter 'capture-*.json')
         if(!$files.Count){throw 'Cannot snapshot evidence without render captures'}
-        foreach($file in $files){$captureRows+=Get-Content -LiteralPath $file.FullName -Raw | ConvertFrom-Json}
+        $stateCaptures=@(foreach($file in $files){Get-Content -LiteralPath $file.FullName -Raw | ConvertFrom-Json})
+        Assert-RenderState $stateCaptures $tier $light $stateDir
+        $captureRows+=$stateCaptures
         if(!$CaptureOnly){
             $metricRows+=Get-Content -LiteralPath (Join-Path $output "sheets/$tier-$light/metrics.json") -Raw | ConvertFrom-Json
             if($IncludeDiagnostics){$metricRows+=Get-Content -LiteralPath (Join-Path $output "diagnostics/$tier-$light/metrics.json") -Raw | ConvertFrom-Json}
