@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "id": "slalom_70_comb",
+  "description": "Slalom-like double lane change 3.5 m over 50 m with a short 15 m hold at 70 km/h (path peak a_y ~0.27 g)",
+  "spec": "docs/04 s6.8",
+  "variants": [
+    "empty",
+    "laden40"
+  ],
+  "ground": {
+    "gradePercent": 0,
+    "surface": "dry_asphalt"
+  },
+  "initial": {
+    "speedKmh": 70
+  },
+  "duration": 30,
+  "driver": {
+    "type": "lanechange",
+    "targetKmh": 70,
+    "startDistance": 40,
+    "length": 50,
+    "offset": 3.5,
+    "doubleChange": true,
+    "holdLength": 15
+  },
+  "checks": [
+    {
+      "metric": "max_articulation_deg",
+      "status": "WORKING_VALUE",
+      "source": "trailer follows the slalom without large swing; limit jak w lane_change_80 (6 deg). UNVERIFIED dla tej geometrii",
+      "max": 6
+    },
+    {
+      "metric": "rearward_amplification",
+      "status": "WORKING_VALUE",
+      "source": "rearward amplification of tractor-semitrailers is about 1.0-1.3 in the literature (UNVERIFIED); WORKING band 0.8-1.6 (jak lane_change_80)",
+      "min": 0.8,
+      "max": 1.6,
+      "variant": "laden40"
+    },
+    {
+      "metric": "rearward_amplification",
+      "status": "WORKING_VALUE",
+      "source": "as above",
+      "min": 0.8,
+      "max": 1.6,
+      "variant": "empty"
+    },
+    {
+      "metric": "articulation_settle_deg",
+      "status": "WORKING_VALUE",
+      "source": "trailer swing damped after the manoeuvre (jak lane_change_80)",
+      "max": 0.5,
+      "from": 26
+    },
+    {
+      "metric": "wheel_lift",
+      "status": "WORKING_VALUE",
+      "source": "no wheel lift in a slalom at 70 km/h",
+      "max": 0
+    },
+    {
+      "metric": "max_lat_accel_ms2",
+      "status": "WORKING_VALUE",
+      "source": "manoeuvre stays at the intended moderate level; a_y peak ~ A pi^2 v^2 / (2 L^2) = 3.5*pi^2*(70/3.6)^2/(2*50^2) ~ 2.6 m/s^2, limit UNVERIFIED 3.5",
+      "max": 3.5
+    },
+    {
+      "metric": "max_yaw_rate_dps",
+      "status": "WORKING_VALUE",
+      "source": "no spin",
+      "max": 10
+    },
+    {
+      "metric": "max_dv_step_ms",
+      "status": "WORKING_VALUE",
+      "source": "no solver explosion / impulse spikes (per-step velocity change of either body)",
+      "max": 0.35
+    },
+    {
+      "metric": "max_fifth_wheel_error_mm",
+      "status": "WORKING_VALUE",
+      "source": "kingpin constraint drift (custom fifth-wheel constraint)",
+      "max": 5
+    }
+  ]
+}

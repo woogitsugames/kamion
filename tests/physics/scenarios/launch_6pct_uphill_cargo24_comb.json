@@ -1,0 +1,104 @@
+{
+  "schemaVersion": 1,
+  "id": "launch_6pct_uphill_cargo24_comb",
+  "description": "Hill start on 6% with 24 t of cargo (GCW ~38 t), service brake held, release, full throttle (hill start aid)",
+  "spec": "docs/04 s6.2",
+  "variants": [
+    "cargo24"
+  ],
+  "ground": {
+    "gradePercent": 6,
+    "surface": "dry_asphalt"
+  },
+  "initial": {},
+  "duration": 60,
+  "driver": {
+    "type": "timeline",
+    "keys": [
+      {
+        "t": 0,
+        "throttle": 0,
+        "brake": 1,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D"
+      },
+      {
+        "t": 2.0,
+        "throttle": 1,
+        "brake": 0,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "D"
+      }
+    ]
+  },
+  "checks": [
+    {
+      "metric": "rollback_m",
+      "status": "WORKING_VALUE",
+      "source": "docs/04 s6.2 'bez cofania sie'; 5 cm for tire/suspension/kingpin compliance (jak launch_6pct_uphill_comb)",
+      "max": 0.05
+    },
+    {
+      "metric": "stalled",
+      "status": "WORKING_VALUE",
+      "source": "engine must not stall",
+      "max": 0
+    },
+    {
+      "metric": "min_rpm",
+      "status": "WORKING_VALUE",
+      "source": "engine stays near idle or above",
+      "min": 550,
+      "from": 2
+    },
+    {
+      "metric": "time_to_kmh",
+      "status": "WORKING_VALUE",
+      "source": "plausibility band of launch_6pct_uphill_comb@laden40 (3-35 s); 24 t cargo ~ 38 t GCW, close to 40 t. UNVERIFIED (docs nie podaja liczby dla 24 t)",
+      "min": 3,
+      "max": 35,
+      "arg": 15
+    },
+    {
+      "metric": "max_clutch_temp_c",
+      "status": "WORKING_VALUE",
+      "source": "hill start must not overheat the clutch (thermal model WORKING_VALUE)",
+      "max": 250
+    },
+    {
+      "metric": "shift_count",
+      "status": "WORKING_VALUE",
+      "source": "no gear hunting on the climb (limit jak w launch_6pct_uphill_comb)",
+      "max": 14
+    },
+    {
+      "metric": "downshift_count",
+      "status": "WORKING_VALUE",
+      "source": "full throttle and still accelerating: no down-shift (jak launch_6pct_uphill_comb, ADR 0024)",
+      "max": 0,
+      "from": 2,
+      "to": 25
+    },
+    {
+      "metric": "min_speed_kmh",
+      "status": "WORKING_VALUE",
+      "source": "keeps climbing after the start (no stall-out from hunting)",
+      "min": 10,
+      "from": 20
+    },
+    {
+      "metric": "max_dv_step_ms",
+      "status": "WORKING_VALUE",
+      "source": "no solver explosion / impulse spikes (per-step velocity change of either body)",
+      "max": 0.35
+    },
+    {
+      "metric": "max_fifth_wheel_error_mm",
+      "status": "WORKING_VALUE",
+      "source": "kingpin constraint drift (custom fifth-wheel constraint)",
+      "max": 5
+    }
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "id": "downhill_8pct_retarder_comb",
+  "description": "40 t on an 8% descent, 40 km/h held with endurance brakes only (brake cruise + retarder), no service brake over ~3 km",
+  "spec": "docs/04 s6.6",
+  "variants": [
+    "laden40"
+  ],
+  "ground": {
+    "gradePercent": -8,
+    "surface": "dry_asphalt"
+  },
+  "initial": {
+    "speedKmh": 40
+  },
+  "sampleEvery": 5,
+  "duration": 300,
+  "driver": {
+    "type": "speedhold",
+    "targetKmh": 40,
+    "enduranceOnly": true
+  },
+  "checks": [
+    {
+      "metric": "mean_speed_kmh",
+      "status": "WORKING_VALUE",
+      "source": "docs/04 s6.6 (zjazd 6-8% ze stabilizacja predkosci); docs nie podaja liczby dla 40 km/h na 8% (UNVERIFIED): target +/-5 km/h",
+      "min": 35,
+      "max": 45,
+      "from": 60
+    },
+    {
+      "metric": "speed_range_kmh",
+      "status": "WORKING_VALUE",
+      "source": "stable descent (jak downhill_7pct_brake_cruise_60: <= 2 km/h)",
+      "max": 2,
+      "from": 60
+    },
+    {
+      "metric": "max_service_demand",
+      "status": "WORKING_VALUE",
+      "source": "bez przegrzania hamulcow: hamulec roboczy nieuzywany na zjezdzie. Model termiczny hamulcow NIE istnieje (docs/PHYSICS_VALIDATION.md §7), wiec to proxy; analog R13 1.8.2 (SOURCED) dla 7%/30 km/h w downhill_7pct_typeIIA",
+      "max": 0
+    },
+    {
+      "metric": "max_retarder_torque_nm",
+      "status": "SOURCED",
+      "source": "S2 Intarder limit 4000 Nm (jak downhill_7pct_brake_cruise_60)",
+      "max": 4000
+    },
+    {
+      "metric": "max_rpm",
+      "status": "WORKING_VALUE",
+      "source": "engine overrun limit while engine braking (WORKING_VALUE 2400 rpm)",
+      "max": 2400
+    },
+    {
+      "metric": "max_dv_step_ms",
+      "status": "WORKING_VALUE",
+      "source": "no solver explosion / impulse spikes (per-step velocity change of either body)",
+      "max": 0.35
+    },
+    {
+      "metric": "max_fifth_wheel_error_mm",
+      "status": "WORKING_VALUE",
+      "source": "kingpin constraint drift (custom fifth-wheel constraint)",
+      "max": 5
+    }
+  ]
+}
