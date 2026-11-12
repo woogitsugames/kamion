@@ -43,12 +43,13 @@ Native sprawdza sześć materiałów kabin, siedem lakierów aut, sześć plande
 
 Kontrola ramek osobówek A/C: 59/76 PNG identycznych bajtowo. Obejrzano wszystkie 17 różnych na pięciu arkuszach z maskami; duże obszary zmian są w tle pojazdów placowych, występują też drobne punkty przy krawędziach/połyskach. Nie stwierdzono widocznej na arkuszach regresji sylwetki/lakieru, ale nie deklarujemy identyczności każdego piksela osobówek. Źródłowe węzły GLB aut są identyczne. Metryki i lokalizacje: protected-c-pixel-audit.json.
 
-Testy: pojedynczy test_yard_vehicle_lod 12 passed, test_streetscape 59 passed; EditMode 280/280. Pierwszy końcowy GIS: 584 passed, 1 xfailed, 1 failed w 619,59 s — drugi historyczny limit 260 w test_yard_wear nie był zsynchronizowany z opisanym limitem 320. Produkcja C pozostała bez zmian; po ujednoliceniu oczekiwania następuje test jednego pliku i pełny GIS z nowym tagiem. Wynik będzie dopisany przed REPORT.
+Testy: pojedynczy test_yard_vehicle_lod 12 passed, test_streetscape 59 passed; EditMode 280/280. Pierwszy końcowy GIS: 584 passed, 1 xfailed, 1 failed w 619,59 s — drugi historyczny limit 260 w test_yard_wear nie był zsynchronizowany z opisanym limitem 320. Produkcja C pozostała bez zmian; po ujednoliceniu oczekiwania pojedynczy test_yard_wear zaliczył 8/8, a powtórny pełny GIS: 585 passed, 1 xfailed w 612,19 s. Końcowa walidacja natywna C również przeszła; SHA produkcji i biblioteki zgodne z capture.
 
 ## Ocena i przekazanie
 
 Obejrzano komplet 56 arkuszy C (część w przeglądach ≤960 px), zbliżenia B/C i dwie pary zdjęcie/render. Największa poprawa to czytelne oddzielne koła dalszego LOD Low. Brud jest nadal delikatny; felgi pozostają płaskie, bryły i szkło kabin uproszczone, ciemne plandeki tracą detal. Ocena autora: geometria poprawiona, brud/realizm PARTIAL. Niezależną recenzję i pomiar urządzenia zleca lider Claude S11; autor nie scala do main, nie pushuje i nie używa telefonu.
 
 Przewidywane konflikty: definicje wskazanych materiałów, CARPAINT, fabryka materiałów, biblioteka props i manifest. Zachować inne domeny; generaty przy integracji main wybrać z main i odtworzyć ze złączonych źródeł zgodnie z protokołem. Aktualne uwagi lidera s11 w GPT-FEEDBACK-S10 (~01:50) po scaleniu life r1 0978792e dopisują brud tyłu osobówek, felgi, czerń w słońcu i sheet_far. Zostaną uwzględnione w następnej r3 po dołączeniu aktualnego main do własnej gałęzi. Preflight palet i brak deklarowanego zestawu euro_pallet_side zachowano do dalszego backlogu; palet w r2 nie zmieniano, a brak zestawu PBR sam nie dowodzi braku BaseMap lub wyglądu na renderze.
+
 
 
