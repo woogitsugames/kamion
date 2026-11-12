@@ -17,7 +17,9 @@ def tile(im, label, w=480):
 def sheet(base_key, items, out):
     """items: list of (label, image path)."""
     R = P.refs(); ref = next(v for k, v in R.items() if k.endswith(base_key))
-    photo = Image.open(P.ROOT / ref['comparison_photo'])
+    pp = P.ROOT / ref['comparison_photo']
+    if not pp.exists(): pp = Path('C:/Users/matma/Documents/Claude/kamion') / ref['comparison_photo']
+    photo = Image.open(pp)
     tiles = [tile(photo, f"PHOTO {ref['source_id']} {ref['author']} {ref['captured_at']} {ref['license']}")]
     tiles += [tile(Image.open(p), l) for l, p in items if Path(p).exists()]
     th = tiles[0].height

@@ -83,6 +83,22 @@ if RND == 'r1':
                                    ('sc', 528.2, -682.4, 0.9, 246.09, 0.75), ('sd', 531.5, -685.0, 1.5, 246.09, 0.75)):
         probe(K, tag, e, n, eye, hd, hz, f'E {e} N {n} eye {eye} heading {hd} horizon {hz} (0128 shift of the same sequence = +3.3/-2.6 m, +3.4 deg)', base_prefix='sbs-g3-a-')
 
+if RND == 'r2':
+    K = '494288258686575'
+    for tag, s_, lat, eye in (('g0', -32.0, 1.7, 1.15), ('g1', -32.0, 2.1, 1.15), ('g2', -26.0, 1.7, 1.15), ('g3', -38.0, 1.7, 1.15)):
+        e, n, t = deck_pt(s_, lat)
+        probe(K, tag, e, n, eye, t + 7.5, 0.725, f's {s_} m, {lat} m right of the graph centreline (generated dash ~0.85 m right of it), eye {eye}, heading tangent+7.5')
+    K = '810896133189484'
+    cid = 'sbs-g3-b-' + K
+    c0 = next(c for c in P.S.read(P.REGION / 'sbs_cameras.json')['cameras'] if c['id'] == cid)
+    e0, n0 = c0['pos'][:2]
+    hd = math.radians(128.1); ux, uy = math.sin(hd), math.cos(hd); rx, ry = uy, -ux
+    for tag, right, eye in (('m0', 3.5, 1.0), ('m1', 5.0, 1.0), ('m2', 3.5, 1.6)):
+        probe(K, tag, e0 + right * rx, n0 + right * ry, eye, 78.674, None, f'{right} m SW of production (SE-bound Andersa, kerb 2.5H left from the photo), eye {eye}')
+    K = '482392746429891'
+    for tag, e, n, hd_ in (('sa', 531.5, -685.0, 246.09), ('pf', 537.383, -690.585, 252.472), ('pm', 534.4, -687.8, 249.3)):
+        probe(K, tag, e, n, 0.9, hd_, 0.75, f'E {e} N {n} heading {hd_} eye 0.9 (pf = pier-column resection, piers low confidence)', base_prefix='sbs-g3-a-')
+
 prod = {c['id']: c for c in P.S.read(P.REGION / 'sbs_cameras.json')['cameras']}
 EXTRA = ['sbs-g3-b-837235577143499'] if RND == 'r1' else []
 probes += [prod[b] for b in sorted({p['base'] for p in plan} | set(EXTRA))]
