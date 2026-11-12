@@ -247,3 +247,5 @@ NASTĘPNY KROK: przygotować własne skrypty r2 z ownerem heavy gpt-furniture-r2
 2026-11-12T10:46:55.1656976+01:00: GIS zakończony:644passed,1xfailed,1failed827,24s. Jedyna porażka zastany stale-report dlaoverrides.yaml/roads/meshing.py, audyt potwierdza niezmienność wejść. Cofnięto efekt uboczny specyfikacji wiaduktu. Slot zwolniony. Physics/gate3 oczekuje naheavy/rezerwację lidera, bez omijania.
 
 2026-11-12T10:58:39.3077237+01:00: heavy physics final3; sukces=True; slot gpt-furniture-r2 zwolniony. NASTĘPNY KROK: sprawdzić log i kontynuować walidację rundy.
+
+2026-11-12T10:58:39.7263818+01:00: końcowe Python zakończone:GIS=1,physics/gate3=0. Wcześniejsze EditMode340/340 pozostaje ważne, kod zamrożony. Odczytać pełne logi i porażki przed REPORT; nie utożsamiać wykonania z PASS.
