@@ -19,7 +19,7 @@ const sampleLabels={REVIEWED_SAMPLES:'Próbki sprawdzone',STALE:'Próbki dla inn
 function photometryLabel(status){return sampleLabels[status]||('Próbki: '+(status||'brak kwalifikacji'))}
 
 const review=data.recognition,counts=review.counts||{};
-$('gate').append(el('strong','Ostatnia recenzja D51: '+review.gate_result),el('p',`${counts.RECOGNISABLE??0} rozpoznawalnych · ${counts.PARTIAL??0} częściowych · ${counts.NOT_RECOGNISABLE??0} nierozpoznawalnych`),el('small','Materiał recenzji: '+(review.reviewed_run||'nieustalony')+' / '+(review.reviewed_state||'nieustalony')+'. Nowe obrazy wymagają nowej oceny.'));
+$('gate').append(el('strong','Ostatnia recenzja D51: '+review.gate_result),el('p',`Rozpoznawalne: ${counts.RECOGNISABLE??0} · częściowe: ${counts.PARTIAL??0} · nierozpoznawalne: ${counts.NOT_RECOGNISABLE??0}`),el('small','Materiał recenzji: '+(review.reviewed_run||'nieustalony')+' / '+(review.reviewed_state||'nieustalony')+'. Nowe obrazy wymagają nowej oceny.'));
 for(const r of review.assessments||[]){const row=el('tr');row.append(el('td',r.camera),el('td',r.result),el('td',r.reason+(r.pose_warning?' Zastrzeżenie pozy: '+r.pose_warning:'')));$('recognition').append(row)}
 for(const r of data.runs){const o=el('option',r.id);o.value=r.id;$('run').append(o)}$('run').value=data.runs.at(-1).id;
 function chooseState(){const old=$('state').value;$('state').replaceChildren();const r=data.runs.find(x=>x.id===$('run').value);for(const s of Object.keys(r.states)){const o=el('option',s);o.value=s;$('state').append(o)}if(r.states[old])$('state').value=old;draw()}
@@ -33,3 +33,4 @@ const link=sourceLink(p.source_url);if(link)card.append(link);card.append(el('sm
 for(const t of data.trends){const box=el('article');box.append(el('h3',`${t.from} → ${t.to} / ${t.state}`));if(!t.pairs)box.append(el('p','Brak porównywalnych, sprawdzonych próbek.','empty'));else box.append(el('p',`${t.pairs} zgodnych par. Mediana zmiany błędu: histogram ${fmt(t.median_changes.histogram_l1_change)}, asfalt ${fmt(t.median_changes.asphalt_luma_error_change)}, kontrast ${fmt(t.median_changes.contrast_error_change)}.`));box.append(el('p','Pominięcia: '+JSON.stringify(t.skipped),'muted'));$('trends').append(box)}if(!data.trends.length)$('trends').append(el('p','Trend wymaga co najmniej dwóch rund ze zgodnymi próbkami.','empty'));
 $('generated').textContent='Raport lokalny, bez zasobów sieciowych. Wygenerowano '+date(data.generated_at_utc);$('run').onchange=chooseState;$('state').onchange=draw;$('rejected').onchange=draw;chooseState();
 </script></html>
+

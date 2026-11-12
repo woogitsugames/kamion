@@ -1,0 +1,150 @@
+{
+  "schema": "kamion/sbs-ui-review/1",
+  "reviewed_at": "2026-11-12T10:20:53.9861017+01:00",
+  "target": "report-history-preview, candidate registry; latest/Data unchanged",
+  "desktop": {
+    "viewport_height": 960,
+    "viewport_width": 1280,
+    "scroll_width": 1280
+  },
+  "narrow": {
+    "viewport_height": 844,
+    "viewport_width": 390,
+    "scroll_width": 390
+  },
+  "browser_checks": [
+    {
+      "run": "sbs-r1",
+      "state": "Low-overcast",
+      "cards": 25,
+      "exact": 25,
+      "stale": 0,
+      "missing": 0
+    },
+    {
+      "run": "sbs-r1",
+      "state": "Low-clear",
+      "cards": 25,
+      "exact": 0,
+      "stale": 0,
+      "missing": 25
+    },
+    {
+      "run": "sbs-r1",
+      "state": "High-overcast",
+      "cards": 25,
+      "exact": 0,
+      "stale": 0,
+      "missing": 25
+    },
+    {
+      "run": "sbs-r1",
+      "state": "High-clear",
+      "cards": 25,
+      "exact": 0,
+      "stale": 0,
+      "missing": 25
+    },
+    {
+      "run": "sbs-r2",
+      "state": "Low-overcast",
+      "cards": 25,
+      "exact": 19,
+      "stale": 6,
+      "missing": 0
+    },
+    {
+      "run": "sbs-r2",
+      "state": "Low-clear",
+      "cards": 25,
+      "exact": 0,
+      "stale": 25,
+      "missing": 0
+    },
+    {
+      "run": "sbs-r2",
+      "state": "High-overcast",
+      "cards": 25,
+      "exact": 0,
+      "stale": 25,
+      "missing": 0
+    },
+    {
+      "run": "sbs-r2",
+      "state": "High-clear",
+      "cards": 25,
+      "exact": 0,
+      "stale": 25,
+      "missing": 0
+    },
+    {
+      "run": "sbs-r3",
+      "state": "Low-overcast",
+      "cards": 25,
+      "exact": 25,
+      "stale": 0,
+      "missing": 0
+    },
+    {
+      "run": "sbs-r3",
+      "state": "Low-clear",
+      "cards": 25,
+      "exact": 0,
+      "stale": 25,
+      "missing": 0
+    },
+    {
+      "run": "sbs-r3",
+      "state": "High-overcast",
+      "cards": 25,
+      "exact": 0,
+      "stale": 25,
+      "missing": 0
+    },
+    {
+      "run": "sbs-r3",
+      "state": "High-clear",
+      "cards": 25,
+      "exact": 0,
+      "stale": 25,
+      "missing": 0
+    }
+  ],
+  "diagnostic_cards": 42,
+  "console_errors": 0,
+  "console_warnings": 0,
+  "loaded_broken_images": 0,
+  "screenshots_visually_viewed": true,
+  "code_review": "independent PASS bafa7544; tests pending",
+  "limitation": "First exact getByLabel selector timed out; reran controls through observed #run/#state. QA does not replace pytest. Both browser and local server closed.",
+  "files": [
+    {
+      "path": "artifacts/sbs-r3/report-history-preview/index.html",
+      "sha256": "f1b6cf223f6e1913edcd99dce74b8c1c4d02b39e2aa3a9fc9656d5f9865eb020"
+    },
+    {
+      "path": "artifacts/sbs-r3/report-history-preview/data.json",
+      "sha256": "9eaca3ae7558db2bbac874323c92f21904a0112baf4c619c62a6188276e5bb0e"
+    },
+    {
+      "path": "artifacts/sbs-r3/recognition-r3-baseline.json",
+      "sha256": "48c04adaf30092a409edbf165e62ae8f79be84835adebc9ffaf14227d5542628"
+    },
+    {
+      "path": "tools/refs/sbs_report.py",
+      "sha256": "a9ae90ad41154a552973132d2d08d22a4cc94299e3a52fa847615013bb5d1934"
+    },
+    {
+      "path": "tools/refs/sbs_report_template.html",
+      "sha256": "0dc0f4d1812b39bb0b849e3539fb152a968f06f263dbd6a3fb49640cf9f4aca0"
+    },
+    {
+      "path": "artifacts/sbs-r3/ui-history-review/sbs-r3-history-desktop.png",
+      "sha256": "52bf6a2f73934dd6ff1f0bcc7a26e963cde34d1e692506f2ace9811527a8152f"
+    },
+    {
+      "path": "artifacts/sbs-r3/ui-history-review/sbs-r3-history-narrow.png",
+      "sha256": "a114bcb648cfcb4147183bf9eac40ecd390e0358328e2b820d4cef9cadac7707"
+    }
+  ]
+}
