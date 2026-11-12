@@ -347,7 +347,8 @@ namespace Game.Core.Navigation
                         turn = SignedTurn(inDir, outDir);
                         nm = NameFrom(g, p, j);
                     }
-                    p.AddManeuver(m_EdgeFirstPoint[i], Maneuver.Roundabout, turn, exits, nm);
+                    p.AddManeuver(m_EdgeFirstPoint[i], Maneuver.Roundabout, turn, exits, nm, prev);
+                    p.SetLaneGuidance(g, p.ManCount - 1, prev, turn);
                     i = j;   // the exit transition belongs to this manoeuvre
                     continue;
                 }
@@ -378,9 +379,11 @@ namespace Game.Core.Navigation
                 {
                     float sum = p.ManTurn[last] + t;
                     p.ManTurn[last] = sum; p.ManType[last] = RoutePath.Classify(sum); p.ManName[last] = name;
+                    p.SetLaneGuidance(g, last, p.ManIn[last], sum);
                     continue;
                 }
-                p.AddManeuver(pt, type, t, 0, name);
+                p.AddManeuver(pt, type, t, 0, name, prev);
+                p.SetLaneGuidance(g, p.ManCount - 1, prev, t);
             }
             p.AddManeuver(p.Count - 1, Maneuver.Arrive, 0f, 0, p.DestinationName);
         }

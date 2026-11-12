@@ -20,7 +20,7 @@ namespace Game.UI.Navigation
     [DefaultExecutionOrder(110)]
     public sealed class MiniMapView : MonoBehaviour, IPointerClickHandler
     {
-        public const float BannerH = 108f, StreetH = 36f;
+        public const float BannerH = 108f, StreetH = 36f, LaneBarH = 30f;
         static readonly Color k_Frame = new Color(0.06f, 0.065f, 0.07f, 0.95f);
 
         NavigationService m_Nav;
@@ -148,7 +148,9 @@ namespace Game.UI.Navigation
             var g = m_Nav.Guidance;
             var path = m_Nav.Path;
             bool route = g.HasRoute;
-            float top = route ? BannerH : 0f;
+            // Lane bar under the banner when the next manoeuvre has lane data with turn directions.
+            float laneBar = route && g.OnRoute && !g.Arrived && g.Next >= 0 && g.NextLaneCount > 0 && g.NextLanesAllowed != 0 ? LaneBarH : 0f;
+            float top = route ? BannerH + laneBar : 0f;
             float mapH = H - top - StreetH;
 
             float kmh = Mathf.Abs(m_Nav.SpeedMs) * 3.6f;
@@ -184,7 +186,7 @@ namespace Game.UI.Navigation
             string street = m_Nav.NameOf(m_Nav.CurrentStreet);
             if (street.Length > 0) NavDraw.FitText(d, m_Fit, NavLayout.Abbreviate(street), W * 0.5f, H - 11f, 19f, W - 16f, pal.BarText, DisplayCanvas.Align.Center);
 
-            if (route) Banner(d, g, path, W, pal);
+            if (route) Banner(d, g, path, W, laneBar, pal);
             d.End(pal.Bg);
 
             LastCpuMs = (Stopwatch.GetTimestamp() - t0) * 1000.0 / Stopwatch.Frequency;
@@ -197,7 +199,7 @@ namespace Game.UI.Navigation
             return b - a > 1e-4f ? Mathf.Clamp01((s - a) / (b - a)) : 0f;
         }
 
-        void Banner(DisplayCanvas d, in NavGuidance g, RoutePath p, float W, in P.Nav pal)
+        void Banner(DisplayCanvas d, in NavGuidance g, RoutePath p, float W, float laneBar, in P.Nav pal)
         {
             d.Rect(0f, 0f, W, BannerH, pal.Box);
             if (g.Arrived)
@@ -233,6 +235,9 @@ namespace Game.UI.Navigation
                 d.Rect(cx - 28f, 8f, 56f, 56f, pal.RouteCasing);
                 NavDraw.ManeuverIcon(d, cx, 36f, 40f, p.ManType[g.Then], p.ManTurn[g.Then], pal.BoxText, pal.RouteCasing);
             }
+            if (laneBar > 0f)
+                NavDraw.LaneBar(d, m_Nav.Graph, g.NextLaneSrc, g.NextLaneCount, g.NextLaneCls, g.NextLanesAllowed, g.NextLanesRec,
+                    0f, BannerH, W, laneBar, pal);
         }
     }
 }

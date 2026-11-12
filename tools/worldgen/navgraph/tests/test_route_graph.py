@@ -74,12 +74,12 @@ def _region():
 def test_region_file_is_reproducible():
     """The committed game file equals a fresh build at the file's own format version (no hand edits).
 
-    The committed file is still KRTG v1; the generator now writes v2 (truck limits), so the leader regenerates
-    the .bytes in integration and this test then compares the v2 build."""
+    KRTG v2 = truck limits (M21) + lanes (M22); a committed v1 file is compared with a v1 serialization of the fresh
+    build until the .bytes is regenerated."""
     _, t = _region()
     committed = open(os.path.join(brg.OUT_DIR, REGION + "_route.bytes"), "rb").read()
     (ver,) = struct.unpack_from("<H", committed, 4)
-    assert ver in (brg.VERSION_V1, brg.VERSION)
+    assert ver in brg.SUPPORTED_VERSIONS
     assert brg.serialize(t, version=ver) == committed
 
 
@@ -149,6 +149,117 @@ def test_region_limit_tag_counts():
     assert sum(1 for e in t["edges"] if e["flags"] & brg.F_HGV_DESTINATION) == 0
     assert all(e["maxweight_c"] == 0 and e["maxaxleload_c"] == 0 and e["maxheight_cm"] == 0 and e["maxlength_cm"] == 0
                for e in t["edges"])
+
+
+# ------------------------------------------------------------------ lanes (OSM Key:turn:lanes)
+
+def test_parse_turn_lanes_values():
+    L, SL, T, SR, R = 1, 2, 4, 8, 16
+    ML, MR, REV = 32, 64, 128
+    assert brg.parse_turn_lanes(None) is None
+    assert brg.parse_turn_lanes("left|through|right") == [L, T, R]
+    assert brg.parse_turn_lanes("left;through|through|right") == [L | T, T, R]
+    assert brg.parse_turn_lanes("slight_left|slight_right") == [SL, SR]
+    assert brg.parse_turn_lanes("merge_to_left|merge_to_right") == [ML, MR]
+    assert brg.parse_turn_lanes("reverse") == [REV]
+    assert brg.parse_turn_lanes("none") == [0]
+    assert brg.parse_turn_lanes("") == [0]
+    assert brg.parse_turn_lanes("left||right") == [L, 0, R]          # empty slot = no data
+    assert brg.parse_turn_lanes("left;none|through") == [L, T]
+    assert brg.parse_turn_lanes("left;bogus_token|right") == [L, R]  # unknown tokens ignored
+    assert brg.parse_turn_lanes("left; through |right") == [L | T, R]  # whitespace tolerated
+
+
+def lanes_graph():
+    nodes = [{"id": "nA", "x": 0.0, "y": 0.0, "osm_node": 1}, {"id": "nB", "x": 100.0, "y": 0.0, "osm_node": 2}]
+    edges = [
+        edge("w1", "nA", "nB", [[0, 0], [100, 0]], 1, highway="secondary", oneway="no",
+             **{"turn:lanes": "left|through|right"}),
+        edge("w2", "nA", "nB", [[0, 0], [100, 0]], 2, highway="secondary", oneway="-1",
+             **{"turn:lanes:forward": "through|right", "turn:lanes:backward": "left;through"}),
+        edge("w3", "nA", "nB", [[0, 0], [100, 0]], 3, highway="secondary", oneway="yes",
+             **{"turn:lanes": "through"}),
+        edge("w4", "nA", "nB", [[0, 0], [100, 0]], 4, highway="secondary", oneway="no", lanes="3"),
+    ]
+    return {"nodes": nodes, "edges": edges}
+
+
+def test_lanes_directions_and_oneway_reverse():
+    t = brg.build(lanes_graph(), (0.0, 0.0), [])
+    by_way = {e["osm_way"]: e["lanes"] for e in t["edges"]}
+    # Two-way way with a plain turn:lanes: ambiguous (wiki Key:turn wants :forward / :backward there) - not split.
+    assert by_way[1] == ([], [])
+    # oneway=-1 reverses the geometry: the travel direction is the way's backward one (turn:lanes:backward);
+    # the backward direction of a one-way edge is never driven.
+    assert by_way[2] == ([1 | 4], [])
+    assert by_way[2][0] == [brg.LANE_BITS["left"] | brg.LANE_BITS["through"]]
+    # oneway=yes: forward only.
+    assert by_way[3] == ([4], [])
+    # Two-way plain lanes=3 is the TOTAL of both directions (wiki Key:lanes) - not split.
+    assert by_way[4] == ([], [])
+
+
+def test_lanes_only_from_osm_and_roundabout_one_way():
+    nodes = [{"id": "nA", "x": 0.0, "y": 0.0, "osm_node": 1}, {"id": "nB", "x": 100.0, "y": 0.0, "osm_node": 2}]
+    dflt = edge("w5", "nA", "nB", [[0, 0], [100, 0]], 5, highway="secondary", oneway="yes", lanes=2)
+    dflt["attrs"]["lanes"]["src"] = "default"            # pipeline default, not OSM data
+    edges = [
+        dflt,
+        edge("w6", "nA", "nB", [[0, 0], [100, 0]], 6, highway="secondary", junction="roundabout", lanes="2",
+             **{"turn:lanes": "left;through|right"}),
+        edge("w7", "nA", "nB", [[0, 0], [100, 0]], 7, highway="secondary", oneway="no",
+             **{"lanes:forward": "2", "lanes:backward": "1"}),
+    ]
+    t = brg.build({"nodes": nodes, "edges": edges}, (0.0, 0.0), [])
+    by_way = {e["osm_way"]: e["lanes"] for e in t["edges"]}
+    assert by_way[5] == ([], []), "src=default lane count is ignored"
+    assert by_way[6] == ([1 | 4, 16], []), "roundabout = one-way: no backward lanes"
+    assert by_way[7] == ([0, 0], [0]), "lanes:forward / :backward give per-direction counts"
+
+
+def test_lanes_forward_backward_without_reverse():
+    nodes = [{"id": "nA", "x": 0.0, "y": 0.0, "osm_node": 1}, {"id": "nB", "x": 100.0, "y": 0.0, "osm_node": 2}]
+    edges = [edge("w9", "nA", "nB", [[0, 0], [100, 0]], 9, highway="secondary", oneway="no",
+                  **{"turn:lanes:forward": "through", "turn:lanes:backward": "left|right",
+                     "lanes:forward": "1", "lanes:backward": "2"})]
+    t = brg.build({"nodes": nodes, "edges": edges}, (0.0, 0.0), [])
+    assert t["edges"][0]["lanes"] == ([4], [1, 16])
+
+
+def test_serialize_v2_lanes_roundtrip_and_v1_compat():
+    t = brg.build(lanes_graph(), (0.0, 0.0), [])
+    v2 = brg.serialize(t)                      # default = VERSION 2
+    assert struct.unpack_from("<H", v2, 4)[0] == 2
+    p = brg.parse(v2)
+    assert p["version"] == 2 and len(p["lanes"]) == 2      # w2, w3 (w1 / w4 two-way plain tags: not split)
+    assert p["lanes"][1] == ([1 | 4], [])
+    assert p["lanes"][2] == ([4], [])
+    assert brg.serialize(brg.parse(v2)) == v2  # deterministic
+    v1 = brg.serialize(t, version=1)
+    assert struct.unpack_from("<H", v1, 4)[0] == 1
+    p1 = brg.parse(v1)
+    assert p1["version"] == 1 and p1["lanes"] == {}
+    try:
+        bad = bytearray(v2)
+        struct.pack_into("<H", bad, 4, 3)
+        brg.parse(bytes(bad))
+        assert False, "version 3 must be rejected"
+    except ValueError:
+        pass
+
+
+def test_region_lanes():
+    graph, t = _region()
+    blocks = {i for i, e in enumerate(t["edges"]) if e["lanes"][0] or e["lanes"][1]}
+    with_dir = {i for i, e in enumerate(t["edges"]) if any(e["lanes"][0]) or any(e["lanes"][1])}
+    # 174 edges carry the turn:lanes key (ADR 0150): 77 from OSM with values, 97 pipeline defaults (src=default,
+    # value None); + 1 turn:lanes:forward -> 78 edges with directions. Lane counts only from OSM (192 lanes / 1
+    # lanes:forward / 1 lanes:backward; 454 src=default ignored; plain lanes on two-way ways not split) -> 182 blocks.
+    assert len(with_dir) == 78
+    assert len(blocks) == 182
+    # A known value survives into the v2 build: al. Tysiaclecia way 236107504 has left|through|right.
+    i = next(i for i, e in enumerate(t["edges"]) if e["osm_way"] == 236107504)
+    assert t["edges"][i]["lanes"][0] == [1, 4, 16]
 
 
 def test_region_graph_sane():
