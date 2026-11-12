@@ -388,6 +388,7 @@ namespace Game.Tests
                 w.Write((uint)g.EdgeFrom[e]); w.Write((uint)g.EdgeTo[e]); w.Write(g.EdgeLength[e]); w.Write(g.EdgeClass[e]);
                 w.Write(g.EdgeFlags[e]); w.Write(g.EdgeName[e]); w.Write(g.EdgeMaxSpeed[e]); w.Write((byte)(g.EdgeMaxSpeedOsm[e] ? 1 : 0));
                 w.Write((ushort)(g.EdgeStart[e + 1] - g.EdgeStart[e]));
+                if (version >= 2) { w.Write((ushort)0); w.Write((ushort)0); w.Write((ushort)0); w.Write((ushort)0); }   // truck limits (M21): none
                 for (int k = g.EdgeStart[e]; k < g.EdgeStart[e + 1]; k++) { w.Write(g.Points[k].x); w.Write(g.Points[k].y); }
             }
             w.Write((ushort)g.RestrFrom.Length);

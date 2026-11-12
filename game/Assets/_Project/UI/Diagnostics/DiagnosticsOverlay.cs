@@ -39,7 +39,8 @@ namespace Game.UI
         string m_Header;
         readonly StringBuilder m_Sb = new StringBuilder(1024);
         int m_LastFpsTarget = int.MinValue;
-        string m_LastTier, m_LastBody;
+        int m_LastTierLevel = int.MinValue;
+        string m_LastBody;
         bool? m_LastHideLabel;
 
         public static DiagnosticsOverlay Create(Camera camera, IPlatformServices platform, DiagnosticsSampler sampler)
@@ -199,11 +200,12 @@ namespace Game.UI
                 m_LastFpsTarget = targetFps;
                 m_FpsButtonLabel.text = targetFps > 0 ? "Cel: " + targetFps + " FPS" : "Cel: auto";
             }
-            string tier = QualityTiers.Current;
-            if (m_LastTier != tier)
+            // QualityTiers.Current reads QualitySettings.names (a new array each call): gate on the level index instead.
+            int tierLevel = QualitySettings.GetQualityLevel();
+            if (m_LastTierLevel != tierLevel)
             {
-                m_LastTier = tier;
-                m_TierButtonLabel.text = "Jakość: " + tier;
+                m_LastTierLevel = tierLevel;
+                m_TierButtonLabel.text = "Jakość: " + QualityTiers.Current;
             }
             bool hidden = !m_Panel.activeSelf;
             if (m_LastHideLabel != hidden)

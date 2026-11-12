@@ -154,6 +154,7 @@ namespace Game.Tests
             if (version >= 2) { w.Write(mw); w.Write(mal); w.Write(mh); w.Write(ml); }
             w.Write(0f); w.Write(0f); w.Write(100f); w.Write(0f);
             w.Write((ushort)0);                                           // no restrictions
+            if (version >= 2) w.Write((uint)0);                           // lane section (M22): no lane blocks
             return ms.ToArray();
         }
 
