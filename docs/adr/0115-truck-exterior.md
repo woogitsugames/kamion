@@ -51,3 +51,11 @@ Kompilacja Android z zawartością Low i High zakończyła się powodzeniem: 0 b
 ## Runda 2 — zabrudzenia i zużycie
 
 Start po dostarczeniu r1. Gałąź gpt-truck-r2, merge main 2c3939b2 do własnej gałęzi bez konfliktów. Najpierw świeże wejścia i import po zmianach innych sesji, następnie kontrola ilości brudu i baseline Low/High w obu pogodach. Pełny GIS wyłącznie na końcu rundy. Źródła innych dziedzin pozostają bez zmian.
+
+### Decyzja materiałowa r2
+
+Pozostaje wyłącznie mniejsza proceduralna retencja na górnych, niepolakierowanych metalowych powierzchniach. Maska z atlasu nadal ma pierwszeństwo przez max, a AO nadal cieniuje wnękę. Wypukłe kratki stopnia miały niskie AO razem z całą wnęką: uzależnienie czyszczenia od wysokiego AO nie dawało widocznej poprawy. Diagnostyka rzeczywistych materiałów pokazała dominację brudu proceduralnego, dlatego niezależne osłabienie jego retencji do 0,25 na metalowych powierzchniach skierowanych w górę przywraca kratkę. Wartość 0,25 i progi normalnej są WORKING_VALUE, bez deklaracji fizycznego modelu śladów butów. Lakier i koła są wykluczone. Nie dodano tekstur, przebiegów, słów kluczowych ani geometrii; koszt dodatkowej arytmetyki na telefonie pozostaje UNVERIFIED.
+
+Niezależna kontrola czterech zbliżeń Low/High, clear/overcast zaakceptowała czytelniejszy ciemnoszary stopień przy zachowanym cieniu wnęki i bez jasnego halo. Testowane zacieki plandeki i jaśniejszy suchy plastik odrzucono jako niewidoczną korzyść przy dodatkowej arytmetyce. Krótsze plamy rozbryzgu poprawiały charakter brudu, lecz pogarszały czytelność dolnego pomarańczowego elementu, więc także zostały wycofane. Wszystkie odrzucone próby mają osobne obrazy i oceny w artifacts/truck-r2.
+
+Korekta założenia o profilach: aktualny main ma vehicleGrimeDetail=true również na Low. Stąd wcześniejsze wpisy robocze o niezmienionym Low height-only były błędne; wykryto to przy kontroli krótszego rozbryzgu i zapisano korektę w STATUS oraz REVIEW-SPLASH-017.md. Nie zmieniano profili jakości. Błotniki i plandeka nie są zgłaszane jako rozwiązane. Walidacja końcowa w toku.

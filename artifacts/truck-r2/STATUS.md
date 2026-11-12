@@ -74,3 +74,4 @@ Krok 29: przygotowano sekwencyjne arkusze końcowe i stałe ROI kratki (piksele 
 Zapisano final High overcast, kod wejściowy zgodny z fingerprintem. Następny krok: pomiary i oględziny par przed/po.
 Zapisano final High clear, kod wejściowy zgodny z fingerprintem. Następny krok: pomiary i oględziny par przed/po.
 Zapisano detail-final-fleet, ilość brudu 0.5, 12 świeżych kadrów. Materiały przywrócone. Następny krok: porównać pas zabrudzenia, błotniki i plandekę ze zdjęciami.
+Krok 30: ADR 0115 uzupełniony o decyzję r2, dowód diagnostyczny, odrzucone próby i korektę założenia o Low. Bez deklaracji rozwiązania błotników/plandeki i bez niezmierzonego PASS telefonu. Końcowe kontrole trwają.
