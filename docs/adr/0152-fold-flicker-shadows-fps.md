@@ -89,6 +89,18 @@ Brak regresji (różnice w szumie). Logcat bez błędów gry (65 dopasowań = sz
 
 Ciemne klatki: 1 vs 0 zdarzeń — zgodne z hipotezą, za mało zdarzeń na dowód (UNVERIFIED).
 
+## Tier domyślny Folda (z liczb powyżej)
+- Ekran wewnętrzny 2256×2504 = 5,65 Mpx (S24+ 1080×2340 = 2,53 Mpx, ×2,2). Przy renderScale 1,0 Ultra (MSAA 4×, SSAO, cienie
+  4096/4 kaskady) to GPU p50/p95 29,8/41,9 ms → **60 FPS nieosiągalne** (budżet 16,7 ms; nawet p50 ×1,8 ponad), 30 FPS też nie
+  (p95 > 33,3 ms) bez adaptacji skali. High/30: GPU p50/p95 24,7/28,8 ms, 5 min bez spadków, thermal 0 → **zapas ~13 % do 33,3 ms**.
+- Decyzja: **domyślnie High/30 bez zmian** (reguła `Adreno (TM) 8` → High, już była; notatka reguły zamiast `UNMEASURED` podaje
+  pomiar Folda). Nie dodajemy reguły po rozdzielczości: jedyny pomiar to ten Fold, a High/30 trzyma 30 FPS przy skali 1,0.
+- Ultra zostaje do wyboru, ale z siatką bezpieczeństwa (adaptacja 0,70, fallback 30). High/60 na Foldzie niezmierzone; GPU p50
+  24,7 ms wskazuje, że 60 FPS wymagałoby skali ~0,7 (szacunek z liniowej proporcji pikseli — `UNVERIFIED`).
+
 ## Otwarte
-- Tier Folda (Ultra/60 zapisany przez gracza) — patrz Wyniki/Fold.
+- **Fold Ultra/60 300 s z nową siatką bezpieczeństwa — NIE zmierzone** (Fold odłączony przez właściciela 22:30). Komenda:
+  `pwsh artifacts/fold-flicker/fold-run.ps1 -Serial RFGL80RXBPZ -MinBattery 40 -CoolBelowC 36 -Duration 300 -Apk <apk> -OutTag foldultra -Runs "ultra60=Ultra;fps60;camlog=1"`.
+- Fold High/30 30 min (termika długoterminowa) — niezmierzone.
+- Menu: czy oferować 60 FPS z Ultra na ekranach > 4 Mpx — do decyzji (gameplay-ui), dane wyżej.
 - Czarne mignięcia przy prezentacji — UNVERIFIED do przebiegu na Foldzie z logcat na żywo.
