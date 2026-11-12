@@ -1,0 +1,6 @@
+unity: C:\Program Files\Unity\Hub\Editor\6000.3.28f1\Editor\Unity.exe -batchmode -projectPath C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-furniture\game -logFile C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-furniture\artifacts\logs\test-editmode-20261112-024241.log -buildTarget Android -runTests -testPlatform EditMode -testResults C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-furniture\artifacts\tests\editmode-20261112-024241.xml -testFilter Game.Tests.FurnitureSignTests
+VBCSCompilerServerWatchdog: watching VBCSCompiler (PID 67888)
+EditMode: 12 total, 11 passed, 1 failed, 0 skipped (Failed(Child)) -> C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-furniture\artifacts\tests\editmode-20261112-024241.xml
+  FAILED Game.Tests.FurnitureSignTests.FactoryKeepsFaceUvAndRestoresOrdinaryLitWhenRetroIsRemoved:   Expected: same as <M_sign (UnityEngine.Material)>
+  But was:  <M_sign (UnityEngine.Material)>
+

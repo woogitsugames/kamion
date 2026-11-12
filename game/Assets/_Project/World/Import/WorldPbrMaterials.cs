@@ -136,6 +136,8 @@ namespace Game.World.Import
         /// <summary>PBR material for a manifest material, or null when its set is missing (caller falls back).</summary>
         public static Material Create(RegionImporter.Result r, string id, Dictionary<string, object> def, string path)
         {
+            if (id == "plate_back" && def.Get("furniture_sign_fronts") is Dictionary<string, object> fronts)
+                FurnitureSignFronts(r, fronts);
             if (def.Get("furniture_sign_face") is string face) return FurnitureSign(r, id, def, face, path);
             // ADR0120 additive, data-gated route: retain the original World Surface factory and material identity.
             if (id == "concrete_plinth")
@@ -559,12 +561,38 @@ namespace Game.World.Import
                 .Where(p => !p.EndsWith("_Var.png")).Select(AssetDatabase.LoadAssetAtPath<Texture>).Where(t => t != null).ToArray();
         }
 
+        // A plate assembly's explicit data flag registers only its actual front IDs. RegionImporter
+        // iterates a ToList snapshot of MaterialDefs before importing prototypes, so these additions
+        // safely provide their existing texture/UV path without editing the generic prototype importer.
+        static void FurnitureSignFronts(RegionImporter.Result r, Dictionary<string, object> settings)
+        {
+            string meta = Path.Combine(EditorTools.RepoRoot, "art-source", "world", "props", "props_meta.json");
+            var prototypes = Obj(Obj(Parse(File.ReadAllText(meta))).Get("prototypes"));
+            var faces = new HashSet<string>(StringComparer.Ordinal);
+            foreach (var proto in prototypes.Values)
+                foreach (var material in Arr(Obj(proto).Get("materials")))
+                    if (material is string name && name.StartsWith("sign_", StringComparison.Ordinal)
+                        && !name.StartsWith("sign_facade_", StringComparison.Ordinal)) faces.Add(name);
+            foreach (string name in faces.OrderBy(x => x, StringComparer.Ordinal))
+            {
+                // An explicitly authored material definition from another domain retains ownership.
+                if (r.MaterialDefs.ContainsKey(name)) continue;
+                var face = new Dictionary<string, object> {
+                    { "color", new List<object> { 1.0, 1.0, 1.0 } }, { "rough", 0.45 },
+                    { "furniture_sign_face", name.Substring(5) },
+                    { "furniture_sign_retro", new Dictionary<string, object> { { "gain", Num(settings.Get("gain")) } } }
+                };
+                r.MaterialDefs[name] = face;
+                r.Materials[name] = FurnitureSign(r, name, face, name.Substring(5), $"{r.Dir}/Materials/M_{name}.mat");
+            }
+        }
+
         // ADR0120 r2: explicit face data preserves the original Lit texture/UV path. The optional
         // retro block selects the additive forward shader; removing it restores ordinary URP Lit.
         static Material FurnitureSign(RegionImporter.Result r, string id, Dictionary<string, object> def,
             string face, string path)
         {
-            if (id != "sign_" + face || !System.Text.RegularExpressions.Regex.IsMatch(face, @"^[A-Z]-[0-9]+(?:_[0-9]+)?$"))
+            if (id != "sign_" + face || !System.Text.RegularExpressions.Regex.IsMatch(face, @"^[A-Z][A-Za-z0-9_-]*$"))
                 throw new InvalidOperationException("Invalid explicitly flagged furniture sign face");
             string png = Path.Combine(EditorTools.RepoRoot, "art-source", "world", "signs", face + ".png");
             if (!File.Exists(png)) throw new FileNotFoundException("Flagged furniture sign texture missing", png);

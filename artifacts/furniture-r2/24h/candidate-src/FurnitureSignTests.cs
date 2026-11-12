@@ -222,13 +222,16 @@ namespace Game.Tests
             Assert.IsTrue(mat.IsKeywordEnabled(Keyword)); Assert.IsFalse(mat.IsKeywordEnabled("_EMISSION"));
             Assert.That(mat.GetColor("_EmissionColor").r, Is.EqualTo(800).Within(.001f));
             var texture = mat.GetTexture("_BaseMap"); Assert.NotNull(texture);
+            string materialGuid = AssetDatabase.AssetPathToGUID(dir+"/M_sign.mat");
+            string textureGuid = AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(texture));
             AssetDatabase.SaveAssets();
             Assert.IsTrue(AssetDatabase.LoadAssetAtPath<Material>(dir+"/M_sign.mat").IsKeywordEnabled(Keyword));
             def.Remove("furniture_sign_retro");
             var restored = (Material)create.Invoke(null, new[] {result,(object)"sign_B-33_70",def,dir+"/M_sign.mat"});
-            Assert.AreSame(mat,restored); Assert.AreEqual("Universal Render Pipeline/Lit",restored.shader.name);
+            Assert.AreEqual(materialGuid,AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(restored)));
+            Assert.AreEqual("Universal Render Pipeline/Lit",restored.shader.name);
             Assert.IsFalse(restored.IsKeywordEnabled(Keyword)); Assert.IsFalse(restored.IsKeywordEnabled("_EMISSION"));
-            Assert.AreSame(texture,restored.GetTexture("_BaseMap"));
+            Assert.AreEqual(textureGuid,AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(restored.GetTexture("_BaseMap"))));
             Assert.AreEqual(Color.black,restored.GetColor("_EmissionColor"));
             var args = new object[] {def,"sign_B-33_70",false,false,false};
             channels.Invoke(null,args);

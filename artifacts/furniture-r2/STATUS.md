@@ -31,3 +31,7 @@ NASTĘPNY KROK: przygotować własne skrypty r2 z ownerem heavy gpt-furniture-r2
 2026-11-12T02:42:39.6920904+01:00: trzecia próba GPU 10/10 passed, bez pominięć. Potwierdzono liniowy HDR współczynnika 1 i 800, zgodność off/no-source z URP Lit, alpha, przód/tył, kąt, dystans i 9→9 przebiegów. Generator bazowy zdobył slot heavy i działa. Dodano nieaktywną bez flagi fabrykę znaków do wspólnego C# oraz test jej trwałości i wycofania do Lit; manifest świata nadal bez flag znaku. NASTĘPNY KROK: izolowana próba fabryki i socketów high-only; własny import/render czeka na markerze.
 
 2026-11-12T02:43:01.4134427+01:00: Unity sign-probe factory Low overcast; sukces=False. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
+
+2026-11-12T02:43:01.9909113+01:00: próba znaków nie przeszła (exit=1). Własny import/render pozostaje wstrzymany przez PAUSE_UNITY do odczytu logu i naprawy. NASTĘPNY KROK: odczytać sign-probe-first.log oraz XML, usunąć marker dopiero po usunięciu błędu kompilacji.
+
+2026-11-12T02:46:40.3169847+01:00: próba fabryki: 11 passed, 1 failed na zbyt silnej tożsamości managed wrappera po AssetDatabase reimport. Test teraz kontroluje trwały GUID materiału i tekstury, shader oraz flagi. Przygotowano obsługę całej rodziny znaków przez jawną flagę plate_back: tylko aktualne identyfikatory z props_meta, bez etykiet fasad i bez nadpisywania cudzych jawnych definicji. Pozwala objąć tablice kierunkowe bez listy hashy; flaga nadal nieaktywna w bazowym świecie. NASTĘPNY KROK: dokończyć testy fabryki/rodziny w slocie Unity, sprawdzić bazowy generator.
