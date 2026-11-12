@@ -52,7 +52,7 @@ foreach($preset in 'clear','overcast','night'){
         if($LASTEXITCODE){throw 'Montage failed'}
         $sheets+=@{preset=$preset;sheet=$sheet;cameras=$ids[($i*3)..($i*3+2)]}
     }
-    Write-Output "Compared $preset:12 camera triples and12 cube pairs"
+    Write-Output "Compared ${preset}:12 camera triples and12 cube pairs"
 }
 @{scope='Low baseline versus LowLUT32, rounded CPU estimates before SRP, instances separately; no GPU claim';entries=$budget}|ConvertTo-Json -Depth 8|Set-Content "$root/budget-comparison.json" -Encoding utf8
 @{scope='Whole-frame RGB code differences to High, affected by different tier geometry, shadows, render scale and alpha; not a photometric fit or acceptance gate';entries=$pixels}|ConvertTo-Json -Depth 8|Set-Content "$root/high-comparison.json" -Encoding utf8
@@ -61,3 +61,4 @@ $sheets|ConvertTo-Json -Depth 5|Set-Content "$out/index.json" -Encoding utf8
 if(@($budget|Where-Object {$_.totalDrawDelta -gt 0 -or $_.totalTriangleDeltaPercent -gt 2}).Count){throw 'Budget regression'}
 $budget|Group-Object totalDrawDelta,totalTriangleDeltaPercent|Select-Object Count,Name
 $cube|ForEach-Object {$_.difference}|Measure-Object mean,max -Maximum
+

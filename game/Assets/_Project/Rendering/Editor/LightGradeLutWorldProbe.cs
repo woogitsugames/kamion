@@ -23,6 +23,7 @@ namespace Game.Rendering.Editor
             public string camera,preset,key;
             public float physicalCaptureBypass,enabled;
             public Vector4 cabToeParity;
+            public Vector4 actualSkyCap;
         }
         [Serializable] sealed class Proof
         {
@@ -58,17 +59,6 @@ namespace Game.Rendering.Editor
                 hideFlags=HideFlags.HideAndDontSave,name="Editor-only opaque look experiment"};
             m_Lut.SetPixelData(bytes,0);m_Lut.Apply(false,false);
         }
-        float InverseGrey(float display)
-        {
-            float target=LookGrading.SrgbToLinear(display),lo=0,hi=4;
-            for(int i=0;i<32;i++){
-                float mid=(lo+hi)*.5f,q=Mathf.Sqrt(mid/(1+mid));
-                q=(q*(m_Lut.width-1)+.5f)/m_Lut.width;
-                var c=m_Lut.GetPixelBilinear(q,q,q);
-                if(c.r*.2126f+c.g*.7152f+c.b*.0722f<target)lo=mid;else hi=mid;
-            }
-            return (lo+hi)*.5f;
-        }
         public void Apply(Camera camera)
         {
             Shader.SetGlobalFloat("_KamionOpaqueGradeEnabled",0);
@@ -90,8 +80,10 @@ namespace Game.Rendering.Editor
                 m_HasSavedParity=true;
                 Shader.SetGlobalVector("_KamionToeParity",Vector4.zero);
             }
-            // Sky's compression must target the baked response instead of the legacy Low toe.
-            Shader.SetGlobalVector("_KamionSkyCap",new Vector4(InverseGrey(EnvironmentLighting.SkyCapHorizonDisplay),InverseGrey(EnvironmentLighting.SkyCapZenithDisplay),1,0));
+            // Use the SAME input compression as actual High, whose response this LUT approximates.
+            // Chasing .98 independently can exceed the sampled response and flatten photographic clouds.
+            var caps=EnvironmentLighting.GradedSkyCaps(env.Active);
+            Shader.SetGlobalVector("_KamionSkyCap",new Vector4(caps.x,caps.y,1,0));
         }
         public void Observe(Camera camera)
         {
@@ -99,7 +91,7 @@ namespace Game.Rendering.Editor
             if(env!=null && env.Active!=null && camera.GetComponent<ControlCamera>()!=null)
                 m_Frames[camera.GetInstanceID()]=new Frame{camera=camera.name,preset=env.Active.name,key=JsonUtility.ToJson(CaptureKey(env.Active)),
                     physicalCaptureBypass=Shader.GetGlobalFloat("_KamionSkyCapOff"),enabled=Shader.GetGlobalFloat("_KamionOpaqueGradeEnabled"),
-                    cabToeParity=Shader.GetGlobalVector("_KamionToeParity")};
+                    cabToeParity=Shader.GetGlobalVector("_KamionToeParity"),actualSkyCap=Shader.GetGlobalVector("_KamionSkyCap")};
         }
         public void Write(string folder,int expected)
         {

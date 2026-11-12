@@ -226,9 +226,8 @@ namespace Game.Rendering
             float h, z;
             if (post)
             {
-                var curve = new AnimationCurve(LookGrading.MasterCurveKeys(p.lookBlackLevel, p.lookWhiteClip, toe, toeP, pivot));
-                h = InverseDisplay(curve, SkyCapHorizonDisplay, p.lookWhiteClip);
-                z = InverseDisplay(curve, SkyCapZenithDisplay, p.lookWhiteClip);
+                var caps = GradedSkyCaps(p);
+                h = caps.x; z = caps.y;
             }
             else
             {
@@ -237,6 +236,16 @@ namespace Game.Rendering
                 z = LookGrading.InverseToe(LookGrading.SrgbToLinear(SkyCapZenithDisplay), toe, toeP, pivot);
             }
             Shader.SetGlobalVector(k_SkyCap, new Vector4(h, z, 1f, 0f));
+        }
+
+        /// <summary>The actual pre-grading sky inputs of the post-processing tiers. A Low grade comparison must use
+        /// these same inputs, rather than independently chasing a display target the sampled LUT may not reach.</summary>
+        public static Vector2 GradedSkyCaps(LightingPreset preset)
+        {
+            WorldAtmosphere.ResolveLook(preset, out float toe, out float toeP, out float pivot);
+            var curve = new AnimationCurve(LookGrading.MasterCurveKeys(preset.lookBlackLevel, preset.lookWhiteClip, toe, toeP, pivot));
+            return new Vector2(InverseDisplay(curve, SkyCapHorizonDisplay, preset.lookWhiteClip),
+                InverseDisplay(curve, SkyCapZenithDisplay, preset.lookWhiteClip));
         }
 
         /// <summary>Exposed scene value that the D23 master curve maps to <paramref name="display"/> (sRGB), by bisection.</summary>
