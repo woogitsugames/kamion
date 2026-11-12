@@ -48,3 +48,5 @@ GPUseach zakończony:40pozycji, próg>=0.97względem samotnej maski; kratka chł
 Dodatkowe kamery: after/Low-clear zapisane.
 
 Dodatkowe kamery: after/Low-overcast zapisane.
+
+Dodatkowe kamery: after/High-clear zapisane.
