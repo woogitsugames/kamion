@@ -74,3 +74,4 @@ Probe probe-a: Low overcast zapisany. Obejrzeć arkusze i koszt przed dalszą de
 Probe probe-a: Low clear zapisany. Obejrzeć arkusze i koszt przed dalszą decyzją; to nie pełna macierz.
 Probe probe-a: High overcast zapisany. Obejrzeć arkusze i koszt przed dalszą decyzją; to nie pełna macierz.
 Probe probe-a: High clear zapisany. Obejrzeć arkusze i koszt przed dalszą decyzją; to nie pełna macierz.
+12586 terminalne 0: import i16prób gotowe. Lekki skład ośmiu arkuszy 1,33 s; autor obejrzał wszystkie. Low max delta draws0/tris0; osiem kontroli fence2/remiza ma PNG identyczne bajtowo z baseline. SELF-REVIEW-probe-a: boki drobniejsze, lecz duży płaski wierzch pozostał, A nie ma akceptacji realizmu. Niezależny krytyk ocenia8arkuszy. Bez pełnego GIS na tym etapie.
