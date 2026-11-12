@@ -18,7 +18,7 @@ replace_once('public static class TruckDetail0115', 'public static class TruckRe
 replace_once('string source=File.ReadAllText(original);', '''string source=File.ReadAllText(original);
             source=source.Replace("half grime = m.g;", "half debugProc = 0; half grime = m.g;")
                 .Replace("grime = max(grime * 0.8, proc);", "debugProc = proc; grime = max(grime * 0.8, proc);");''')
-replace_once('string fields=mode=="mask"?', 'string fields=mode=="retention"?"float3(saturate(m.g*0.8),saturate(debugProc),saturate(grime))":mode=="surface"?"float3(m.b,m.r,saturate(normalize(i.normalWS).y))":mode=="mask"?')
+replace_once('string fields=mode=="mask"?"float3(coat,dirt,m.r)":', 'string fields=mode=="retention"?"float3(saturate(m.g*0.8),saturate(debugProc),saturate(grime))":mode=="surface"?"float3(m.b,m.r,saturate(normalize(i.normalWS).y))":mode=="mask"?"float3(coat,dirt,m.r)":')
 replace_once('if(mode=="crown")source=source.Replace', 'if(mode=="crown"||mode=="surface")source=source.Replace')
 replace_once('AssetDatabase.FindAssets("MI_Ext_Paint t:Material",new[]{"Assets/_Generated/Truck"})', 'AssetDatabase.FindAssets("t:Material",new[]{"Assets/_Generated/Truck","Assets/_Generated/Trailer"})')
 replace_once('if(material==null||!material.HasProperty("_IsPaint")||material.GetFloat("_IsPaint")<0.5f) continue;', 'if(material==null||material.shader==null||material.shader.name!="Kamion/Truck Exterior") continue;')
