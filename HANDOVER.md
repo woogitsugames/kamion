@@ -17,7 +17,10 @@
 | 0148 | **dźwięk jałowy / niskie obroty** (film właściciela z Folda 20:03) | Opus | `audio-idle` | `artifacts/live/audio-idle.md` | start 20:40 |
 | 0149 | **kierowanie r2: „ciężko, szybko traci się kontrolę”** (ten sam film) | Opus | `steer-r2` | `artifacts/live/steer-r2.md` | start 20:40 |
 - Film właściciela: `artifacts/owner-feedback/2026-11-12-fold-video/` (mp4, audio.wav, spec.png, contact.jpg). Obserwacje lidera: od 15 s (gaz puszczony, D9, ~900–1000 obr/min) widmo szumowe z trzepotaniem; stałe wycięcie ~110 Hz (podejrzenie filtra grzebieniowego); przy 34–38 km/h zjazd na wyspę z kreskowaniem.
-- **Ostatni przydzielony ADR: 0149.**
+| 0150 | **mapa + minimapa + GPS** (polecenie właściciela 20:5x; zakres etapu 5 przyspieszony decyzją właściciela) | Opus | `gps-map` | `artifacts/live/gps-map.md` | start 20:55 |
+- 0141 edge-r6c: GOTOWE (sha 181b508ed, pytest 853 ok, EditMode 412/412) → visual-critic D51 w toku → scalenie. Otwarte: głębia skyline `_FAR_FACADE` na A16 UNVERIFIED.
+- Zygzak krawędzi zjazdu (film t≈17–19 s, przed bramownicą Warszawa/Ełk/Augustów) → dopisany do 0144 junctions-r7 (r7c albo r7d).
+- **Ostatni przydzielony ADR: 0150.**
 - Ścieżka bramki 3 bez zmian (patrz KONIEC S14 niżej).
 
 # HANDOVER — kamion, SESJA 14 (start 2026-11-12 18:22, nowe konto)
