@@ -1,4 +1,5 @@
 $ErrorActionPreference = 'Stop'
+[System.Diagnostics.Process]::GetCurrentProcess().PriorityClass = 'BelowNormal'
 Set-Location (Resolve-Path "$PSScriptRoot/../..")
 $slotScript = 'C:/Users/matma/Documents/Claude/kamion/scripts/unity-slot.ps1'
 # Existing ignored build inputs only; no audio generator and no changes to audio source code.

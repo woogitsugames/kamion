@@ -1,5 +1,6 @@
 # Uruchamiać wyłącznie na końcu rundy, zgodnie z aktualizacją właściciela z 11.11.
 $ErrorActionPreference = 'Stop'
+[System.Diagnostics.Process]::GetCurrentProcess().PriorityClass = 'BelowNormal'
 Set-Location (Resolve-Path "$PSScriptRoot/../..")
 # W main znajduje się aktualna wersja infrastruktury z pulą heavy. Nie zmieniamy cudzych plików w worktree.
 $slotScript = 'C:/Users/matma/Documents/Claude/kamion/scripts/unity-slot.ps1'
