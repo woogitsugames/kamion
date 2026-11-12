@@ -34,3 +34,5 @@ potem poprawić największe udokumentowane odstępstwo wiaty. WIP po każdym kro
 2026-11-12T11:20:39.6922644+01:00: world baseline zakończony510,1s,64GLB,479MiBHigh/150MiBLow, brakfallback=True. Geometrysnapshot czeka naheavy. Mały helperJSON przygotował59 kamer, w tym4zbliżenia wiat; pochodzenie/hash instancji zapisano. Pozycje i powiązanie najbliższego źródła nadalWORKING_VALUE do obejrzenia renderów.
 
 2026-11-12T11:20:55.9543893+01:00: doprecyzowanie liczbykamer:plik zawiera11 własnych wpisów(7z r2+4wiaty); oczekiwane59 obejmuje również kamery sceny, musi zostać potwierdzone logiem renderera. Źródła przystanków mają odległość1,06m i1,59m od wybranych instancji. Nie traktować11 wpisów jako pełnej liczby kadrów ani59 jako już wyrenderowanych.
+
+2026-11-12T11:22:46.0832558+01:00: heavy geometry before; sukces=True; slot gpt-furniture-r3 zwolniony. NASTĘPNY KROK: sprawdzić log i kontynuować walidację rundy.
