@@ -35,7 +35,7 @@ namespace Game.Editor.VisualQA
         [Serializable] public class Dump
         {
             public string schema = "kamion/life4-native-lod-buffer/1";
-            public string note = "Actual compiled WorldInstances.OnBeginCamera dispatch, retained batches cleared before each diagnostic camera. CPU submission evidence, not GPU/A16 timing. Compare diagnostic legacy counts and pose with canonical capture.";
+            public string note = "Actual compiled WorldInstances.OnBeginCamera dispatch, selected-prototype retained batches cleared before each diagnostic camera. CPU submission evidence, not GPU/A16 timing. Compare diagnostic legacy counts and pose with canonical capture.";
             public Row[] rows;
             public string[] errors;
         }
@@ -80,7 +80,20 @@ namespace Game.Editor.VisualQA
                 if (all.Length != 1 || all[0].enabled) throw new InvalidOperationException("Expected one unsubscribed WorldInstances");
                 Current = all[0];
                 var buffers = Field<Matrix4x4[][]>(Current, "m_Batch");
-                if (buffers != null) foreach (var buffer in buffers) Array.Clear(buffer, 0, buffer.Length);
+                if (buffers != null)
+                {
+                    var offsets = Field<int[]>(Current, "m_BatchOffset");
+                    foreach (var target in Selected)
+                    {
+                        int pi = Array.FindIndex(Current.set.prototypes, p => p.name == target.prototype);
+                        if (pi < 0) throw new InvalidOperationException("Missing selected prototype " + target.prototype);
+                        for (int l = 0; l < Current.set.prototypes[pi].lods.Length; l++)
+                        {
+                            var buffer = buffers[offsets[pi] + l];
+                            Array.Clear(buffer, 0, buffer.Length);
+                        }
+                    }
+                }
                 typeof(WorldInstances).GetMethod("OnBeginCamera", Private).Invoke(Current, new object[] { context, camera });
                 if (Field<Camera>(Current, "m_Camera") != camera) throw new InvalidOperationException("Native renderer did not process diagnostic camera");
             }
