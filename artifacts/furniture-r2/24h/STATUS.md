@@ -85,3 +85,5 @@ NASTĘPNY KROK: przygotować własne skrypty r2 z ownerem heavy gpt-furniture-r2
 2026-11-12T03:19:32.6416962+01:00: poprawiono skalowanie zwrotu względem _KamionExposure; gain800 jest współczynnikiem wyświetlania przy roboczej ekspozycji1/512, nie zmierzoną tabeląRA. Dodano test GPU proporcjonalnego zaniku przy połowie i zerowej ekspozycji. Nie zmieniono geometrii ani danych czytanych przez bieżącą sekwencję Python. NASTĘPNY KROK: próba FurnitureSignTests -Phase exposure, osobny slot Unity; sekwencja58010 kończy się przed importem, więc nie uruchomi własnego Unity równolegle.
 
 2026-11-12T03:19:56.9569012+01:00: Unity sign-probe exposure Low overcast; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
+
+2026-11-12T03:20:59.3065540+01:00: heavy focused candidate1; sukces=True; slot gpt-furniture-r2 zwolniony. NASTĘPNY KROK: sprawdzić log i kontynuować walidację rundy.
