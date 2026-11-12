@@ -122,6 +122,8 @@ namespace Game.World
             m_HlodSwitch = ok && t.forestHlodM != 0f ? Mathf.Max(t.forestHlodM, 0f) : forestHlodM;
             m_HlodCull = ok && t.forestHlodM != 0f ? t.forestHlodCullM : forestHlodCullM;
             m_Trees = !RenderOverrides.Trees.HasValue || RenderOverrides.Trees.Value;
+            // ADR 0136 r2: per-tier vehicle cull (Low 150 m); 0 / no tier = the common VehicleCullM.
+            m_TierVehicleCullM = QualityProfileApplier.HasCurrent && t.vehicleCullM > 0f ? t.vehicleCullM : VehicleCullM;
             // Impostor view cross-fade (Kamion/Vegetation _IMPOSTOR): 2 views on Medium and up, the nearest view on Low
             // (half the texture fetches; ADR 0023 cost table). Tier = LOD bias (Low 0.5).
             Shader.SetGlobalFloat(k_ImpostorBlend, TierLodBias >= 0.75f ? 1f : 0f);
@@ -437,6 +439,7 @@ namespace Game.World
         bool[] m_AbHide, m_AbNoShadow;
         string[] m_AbHideSrc, m_AbShadowSrc;
         float m_VehicleCullFactor = 1f;
+        float m_TierVehicleCullM = VehicleCullM;
         float VehicleCullFactor => m_VehicleCullFactor;
 
         void SyncAbMasks()
@@ -451,7 +454,7 @@ namespace Game.World
                 m_AbShadowSrc = RenderOverrides.AbPropShadowPrefix;
                 m_AbNoShadow = PrefixMask(m_AbShadowSrc);
             }
-            m_VehicleCullFactor = RenderOverrides.AbVehicleCullM > 0f ? RenderOverrides.AbVehicleCullM / VehicleCullM : 1f;
+            m_VehicleCullFactor = (RenderOverrides.AbVehicleCullM > 0f ? RenderOverrides.AbVehicleCullM : m_TierVehicleCullM) / VehicleCullM;
         }
 
         bool[] PrefixMask(string[] prefixes)

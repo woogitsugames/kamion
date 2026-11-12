@@ -74,6 +74,7 @@ namespace Game.Rendering
         public static bool? Hud;         // rq_hud
         public static bool? GlassFast;   // rq_glassfast (tier override, ADR 0106)
         public static bool? ForestFast;  // rq_forestfast (tier override, ADR 0113)
+        public static float? VehicleCull; // rq_vehcull (m, tier override; 0 = common 300 m; ADR 0136 r2)
         public static int? GlassDebug;   // rq_glassdbg (with rq_ab glassdbg: the B level of _KamionGlassDebug)
         /// <summary>ADR 0106 A/B state (ExtraViewCostMonitor): instanced trees / props suspended in the B windows.</summary>
         public static bool AbTreesOff, AbPropsOff, AbTreeShadowOff, AbHlodOff, AbImpostorOff;
@@ -87,6 +88,8 @@ namespace Game.Rendering
         /// <summary>ADR 0136 r2 A/B: vehicle LOD switch distance multiplier (vl:, 1 = shipping) and vehicles skipped in extra views (vm).</summary>
         public static float AbVehicleLodScale = 1f;
         public static bool AbVehicleNoExtraView;
+        /// <summary>ADR 0136 r2 A/B: truck clear coat (cc) / grime detail (grime) off in B.</summary>
+        public static bool AbClearCoatOff, AbGrimeOff;
 
         public static bool Any => Msaa.HasValue || RenderScale.HasValue || ShadowDistance.HasValue || Post.HasValue || Dither.HasValue || SkyDither.HasValue || GlassShadowBias.HasValue || Hdr.HasValue ||
                                   LeafA2C.HasValue || Trees.HasValue || TreeShadowMask.HasValue || TreeCardScale.HasValue ||
@@ -97,7 +100,7 @@ namespace Game.Rendering
                                   Game.Core.MirrorOverrides.Any ||
                                   WorldGi.HasValue || WorldSun.HasValue ||
                                   Clouds.HasValue || GroundHaze.HasValue || Ssao.HasValue || Look || CabToe.HasValue ||
-                                  LodBias.HasValue || FarClip.HasValue || CullMask.HasValue || Props.HasValue || Hud.HasValue || GlassFast.HasValue || ForestFast.HasValue;
+                                  LodBias.HasValue || FarClip.HasValue || VehicleCull.HasValue || CullMask.HasValue || Props.HasValue || Hud.HasValue || GlassFast.HasValue || ForestFast.HasValue;
 
         /// <summary>Reads the overrides through a launch-argument getter (platform services). Returns a log line.</summary>
         public static string Parse(Func<string, string> arg)
@@ -137,6 +140,7 @@ namespace Game.Rendering
             WorldAtmosphere.GrassOverride = gvar;
             LodBias = F(arg("rq_lod")); FarClip = F(arg("rq_far")); CullMask = I(arg("rq_mask")); Props = B(arg("rq_props")); Hud = B(arg("rq_hud")); GlassDebug = I(arg("rq_glassdbg")); GlassFast = B(arg("rq_glassfast"));   // ADR 0106
             ForestFast = B(arg("rq_forestfast"));   // ADR 0113
+            VehicleCull = F(arg("rq_vehcull"));      // ADR 0136 r2
             PsoWarmup.Init(arg);   // ADR 0113: PSO warm-up / trace, spike probe (player only)
             string ab = arg("rq_ab");
             Ab = string.IsNullOrEmpty(ab) ? null : ab.ToLowerInvariant();
@@ -158,7 +162,7 @@ namespace Game.Rendering
                          $"mirror_res={Game.Core.MirrorOverrides.Resolution} mirror_rate={Game.Core.MirrorOverrides.DueSchedule} mirror_legacy={Game.Core.MirrorOverrides.Legacy} " +
                          $"mirror_off={Game.Core.MirrorOverrides.Suspended} worldgi={WorldGi} worldsun={WorldSun} " +
                          $"clouds={Clouds} haze={GroundHaze} ssao={Ssao} look={WorldAtmosphere.LookVariant} ev={LightingPreset.ExposureBiasOverride} wet={WorldAtmosphere.WetOverride} " +
-                         $"lod={LodBias} far={FarClip} mask={CullMask} props={Props} hud={Hud} glassfast={GlassFast} forestfast={ForestFast}" : null;
+                         $"lod={LodBias} far={FarClip} mask={CullMask} props={Props} hud={Hud} glassfast={GlassFast} forestfast={ForestFast} vehcull={VehicleCull}" : null;
         }
 
         /// <summary>The tier with the overrides applied (vegetation + camera fields; URP asset fields by the applier).</summary>
@@ -173,6 +177,7 @@ namespace Game.Rendering
             if (TreeShadowMask.HasValue) t.treeShadowLodMask = TreeShadowMask.Value;
             if (TreeCardScale.HasValue) t.treeCardLodScale = TreeCardScale.Value;
             if (TreeCull.HasValue) t.treeCullM = TreeCull.Value;
+            if (VehicleCull.HasValue) t.vehicleCullM = VehicleCull.Value;
             if (TreeThin.HasValue) t.treeThinStartM = TreeThin.Value;
             if (SimpleFoliage.HasValue) t.simpleFoliage = SimpleFoliage.Value;
             if (ForestHlod.HasValue) t.forestHlodM = ForestHlod.Value > 0f ? ForestHlod.Value : -1f;   // -1 = off

@@ -95,6 +95,10 @@ namespace Game.Rendering
                      "walls in one pass (ZWrite + alpha-to-coverage, no depth pre-pass), L2 SH per vertex on the walls and no shadow-map " +
                      "fetch past the shadow fade on every vegetation pixel (_KAMION_VEG_FAST). A16 Low: forest HLOD + impostors 4.3 ms")]
             public bool forestFast;
+            [Tooltip("ADR 0136 r2: cull distance (m) of parked vehicles and their contact patches on this tier; 0 = the common " +
+                     "WorldInstances.VehicleCullM (300 m). A16 Low G3-A: ~370 parked cars within 300 m, 7-12 submeshes each - the " +
+                     "instanced submission cost (CPU +2.4 ms, GPU +0.35 ms beyond 150 m) is not worth ~20 px cars")]
+            public float vehicleCullM;
             [Header("Budget assumptions (UNMEASURED until the phone is measured)")]
             public int budgetDrawCalls;
             public int budgetTrianglesK;
@@ -211,7 +215,7 @@ namespace Game.Rendering
                 treeCardLodScale = 0.5f, treeThinStartM = 90f, treeCullM = 600f, treeShadowLodMask = 1, leafAlphaToCoverage = true, simpleFoliage = true,
                 forestHlodM = 70f, forestHlodCullM = 1000f,
                 clearCoat = true, vehicleGrimeDetail = true, envCaptureSize = 64, envCaptureInterval = 10, envCaptureFarClip = 150f, envCaptureMinMove = 2f, envCaptureMaxAge = 20f, contactShadows = true, cabShadowLift = 8f, streetLights = 0, lampPools = 4,
-                glassFast = true, forestFast = true,
+                glassFast = true, forestFast = true, vehicleCullM = 150f,
                 budgetDrawCalls = 250, budgetTrianglesK = 350, budgetTextureMB = 64, budgetShadowMs = 1.0f, budgetStatus = "UNMEASURED",
             },
             new Tier

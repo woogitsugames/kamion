@@ -520,6 +520,8 @@ namespace Game.Rendering
                     if (m_AbKey.StartsWith("ps:")) { RenderOverrides.AbPropShadowPrefix = b ? m_AbKey.Substring(3).Split('/') : null; break; }
                     if (m_AbKey.StartsWith("vl:")) { RenderOverrides.AbVehicleLodScale = b ? float.Parse(m_AbKey.Substring(3), System.Globalization.CultureInfo.InvariantCulture) : 1f; break; }
                     if (m_AbKey == "vm") { RenderOverrides.AbVehicleNoExtraView = b; break; }
+                    if (m_AbKey == "cc") { Shader.SetGlobalFloat("_KamionClearCoatOff", b ? 1f : (QualityProfileApplier.Current.clearCoat ? 0f : 1f)); break; }
+                    if (m_AbKey == "grime") { Shader.SetGlobalFloat("_KamionGrimeDetailOff", b ? 1f : (QualityProfileApplier.Current.vehicleGrimeDetail ? 0f : 1f)); break; }
                     if (m_AbKey.StartsWith("vc:")) { RenderOverrides.AbVehicleCullM = b ? float.Parse(m_AbKey.Substring(3), System.Globalization.CultureInfo.InvariantCulture) : 0f; break; }
                     if (m_AbKey.IndexOf(':') > 0) SetGeneric(b);   // ADR 0136
                     break;
