@@ -172,7 +172,9 @@ def test_life_prototypes_budget_and_lods():
     # of test_frame_budget_with_forest_hlod are unchanged) <= 900 (was 650); LOD2 (42.5 / 127.5 - 300 m) <= 60 triangles
     assert max(t0 for k, (t0, _) in tris.items() if k.startswith(("car_", "van_"))) <= 4200
     assert max(t1 for k, (_, t1) in tris.items() if k.startswith(("car_", "van_"))) <= 900
-    assert max(t0 for k, (t0, _) in tris.items() if k.startswith("trailer_")) <= 1200
+    # ADR 0122 life r4: recessed near rims, actual library max 2032.
+    # Prototype ceiling only; route +2% and both draw budgets remain unchanged.
+    assert max(t0 for k, (t0, _) in tris.items() if k.startswith("trailer_")) <= 2200
     # ADR 0122: six separate capped distant wheels (measured maximum 316).
     # The route guard still requires draws +0 and total triangles <= +2%.
     assert max(t1 for k, (_, t1) in tris.items() if k.startswith("trailer_")) <= 320
@@ -320,10 +322,12 @@ def test_second_lamp_family_on_side_streets(qa):
 def test_vehicle_prototypes_are_plain():
     """Tractor and container prototypes: two LODs, LOD1 much lighter, no texture beyond plate/corrugation."""
     from streetscape import life_props as LP
-    for m0, m1, col in (LP.tractor("white"), LP.container(40, "rust"), LP.container(20, "blue")):
+    # The near tractor rim budget changes; container budgets stay at 1500.
+    for (m0, m1, col), limit in ((LP.tractor("white"), 1700), (LP.container(40, "rust"), 1500),
+                                (LP.container(20, "blue"), 1500)):
         t0 = sum(len(p["T"]) for p in m0.out())
         t1 = sum(len(p["T"]) for p in m1.out())
-        assert 0 < t1 < t0 <= 1500 and col is not None
+        assert 0 < t1 < t0 <= limit and col is not None
     a, b = LP.tractor_extent()
     assert -2.0 < a < -1.0 and 4.0 < b < 5.5                      # 4x2 tractor ~6.2 m long
 

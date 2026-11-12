@@ -1,6 +1,8 @@
 # ADR 0122 — statyczne pojazdy placowe
 
-Status: life r2, wybrany C; końcowy GIS 585 passed, 1 xfailed, EditMode 280/280. Przekazane liderowi, niezależna recenzja S12 SCAL/PARTIAL; lider scalił r2 do main w partii B. Autor nie scalał do main i nie pushował.
+Status bieżący: life r4 A2 wybrany, PARTIAL; GIS 709 passed, 1 xfailed (953,02 s), EditMode 340/340 passed, 0 skipped, native przywrócone i sprawdzone. Niezależny odbiór należy do lidera.
+
+Status historyczny life r2, wybrany C; końcowy GIS 585 passed, 1 xfailed, EditMode 280/280. Przekazane liderowi, niezależna recenzja S12 SCAL/PARTIAL; lider scalił r2 do main w partii B. Autor nie scalał do main i nie pushował.
 
 ## Runda life r2 — problem i zakres
 
@@ -55,4 +57,24 @@ Przewidywane konflikty: definicje wskazanych materiałów, CARPAINT, fabryka mat
 
 
 Uwagi niezależnej recenzji S12 (REVIEW-2026-11-12-s12-gpt-batch-b.md): LOD1 osi poprawiony, lecz LOD0 felg płaski; brak czytelnego osprzętu podwozia, plandeka zbyt regularna, kabiny uproszczone. To otwarty backlog następnych rund life. Lokalny limit LOD1 320 jest strażnikiem regresji złożoności prototypu, nie samodzielnym dowodem wydajności; dopuszczenie wzrostu wymagało pomiaru całej trasy ≤2% i osobno +0 draws świata/instancji. Nie wyprowadza się budżetu telefonu z maksimum prototypu 316.
+
+## Runda life r4 — przestrzenne felgi placowe, wybrane A2
+
+Gałąź gpt-life-r4 dołączyła main 8b74c2c5 tylko do własnej gałęzi (71477fbd), zachowując zmiany life r3. Konfliktowe generaty i GLB przyjęto z main i odtworzono kanonicznie; LICENSES zachowuje wpisy obu stron. Lider Claude jest jedynym integratorem, autor nie scala do main i nie pushuje.
+
+Baseline: materiały 909 s, World 489,9 s bez fallback=True, fidelity i osobny test 9 passed/1 xfailed. Source-proof potwierdza 192 raw bez mismatch, 15 gotowych Fab/Megascans i 151 map Medium. Import Low/High oraz 131 kamer w czterech warunkach dały 524 PNG. Dodano osiem kadrów: pięć zbliżeń felg i trzy istniejących podpór. Obejrzano te detale oraz dwie referencje konstrukcji. Kadr supports5 chłodni przecina krawędź terenu i nie służy do dowodzenia detalu podpór; pozostaje w licznikach. Górny fragment opony nie zawsze mieści się w zbliżeniu, ale czoło felgi jest widoczne. Nie wyprowadza się z tych kadrów pomiaru kontaktu każdej instancji z terenem.
+
+Opt-in, artefaktowy Life4YardLodProbe uruchamia rzeczywistą skompilowaną metodę WorldInstances.OnBeginCamera w osobnej scenie diagnostycznej. Automatyczna subskrypcja komponentu jest tymczasowo wyłączona, badane bufory wyzerowane, a po QA przywracany zwykły cykl życia. Nie przepisuje się algorytmu LOD ani nie zmienia player path lub wspólnego progu. Wymagana jest identyczność wszystkich liczników i pozy/projekcji względem kanonicznego capture. Low i High potwierdziły po 13 celów z faktycznym LOD0. Kamera side8 ma około 9,23 m od origin naczepy, a supports5 około 11,85 m; nazwa kamery nie jest pomiarem do origin. Dwa wcześniejsze procesy High zwróciły błąd przy zamykaniu po zapisaniu 13 renderów. Logi zachowano. Po poprawieniu cyklu życia narzędzia osobny High zakończył się 0 i przeszedł pełną zgodność danych; nie dowodzi to samo w sobie przyczyny wcześniejszych błędów.
+
+Źródło już zawiera podpory, korbę, belki, skrzynkę i zapasowe koło. Nie dodaje się ich ponownie ani nie zmienia progu LOD, żeby zastąpić diagnozę. Potwierdzony główny problem bliskiego koła to niemal płaski, pełny fan felgi. Kandydat A2 zastępuje go miską z kołnierzem, wystającą piastą i zagłębionymi otworami o metalowych ściankach oraz ciemnym dnie. Rozmiary są WORKING_VALUE dla generycznej obręczy bez marki. Wykorzystuje istniejące grupy rim/tyre, bez nowych materiałów, tekstur, shaderów lub przebiegów. Bieżnik, nominalny obrys, rozmieszczenie, kolizja, contact i LOD1 pozostają chronione; to wymaga także audytu rzeczywistego GLB po generacji.
+
+Pierwszy test ujawnił zmianę przekątnej po odwróceniu listy wierzchołków quada. Poprawka odwraca winding trójkątów przy tej samej przekątnej. Pozostały bias opony zweryfikowano na zamrożonym źródle baseline: stare i nowe koło mają identycznie 44/60/60 rozbieżności mirror po crease, nowa felga i dna po 0. Test nowych powierzchni nie wymaga naprawy starego, niezmienionego bieżnika; niezależny audyt GLB chroni wszystkie jego atrybuty przed zmianą. Nowy plik testów: 9 passed, kontrakt pojazdów placowych: 12 passed. Nie jest to pełny GIS ani końcowy EditMode tej rundy.
+
+World A2 zakończony po 528,5 s bez fallback. Audyt 471 węzłów: zmieniono 28 podsiatek wyłącznie tyre/rim LOD0 czternastu prototypów; wszystkie atrybuty bieżnika, kolizje/contact, LOD1, pozostałe węzły i 192 raw bez zmian. Biblioteka łącznie +11424 tris (nie koszt klatki). Plandeka LOD0 1102→1942, chłodnia 1192→2032, ciągnik 766→1550; LOD1 odpowiednio 316/290/286 bez zmiany. Wszystkie 408 natywnych materiałów po imporcie identyczne z baseline.
+
+Pełne before/after-a2: 524 pary PNG i rekordów, identyczne pozycje, rotacje i projekcja. Trasa 59 kamer/warunek: Low max +0,365808608% (r10_block_5), High +0,585729008% (g3a-rondo-bie-approach). Wszystkie 131 kamer: Low +3,496473727% (yard_tractor_white_side8), High +2,639701583% (yard_tractor_blue_rear34). Draws świata i instancji osobno +0 wszędzie, brak pominiętych kamer i przekroczeń trasy. Liczniki CPU przed SRP batching, nie czas GPU/A16. PS metadata-budget i pełne porównanie Python zgodne.
+
+Po pomiarach i oględzinach wybrano A2 (PARTIAL). Dopiero wtedy zaktualizowano lokalny sufit naczep 1200→2200 i ciągników 1500→1700, przy rzeczywistych maksimach 2032/1550. Zapas około 150 tris; kontenery nadal 1500, odległy LOD i limity ramki/trasy bez zmiany. Zsynchronizowano obie kopie oczekiwania ciągnika. Zmienione pliki testów: 59/59 streetscape i 20/20 world_v31.
+
+EditMode 340/340 passed, 0 skipped. Guard po teście wykrył _SrcBlend 5→1 w dwóch nieużywanych cache car_dirt_1/2. Przywrócono wyłącznie ich dokładne bajty baseline, zweryfikowane SHA; wszystkie 408 materiałów i siedem źródeł/GLB/meta/kamery znów zgodne. Oryginalny wrapper exit 1 zachowany wraz z before/after; final-editmode-restored.json dokumentuje przyjęcie poprawnego NUnit po cleanup, nie pomija nieudanego testu. Końcowy GIS zakończony: 709 passed, 1 xfailed w 953,02 s, exit 0. Końcowy source-proof, ścisły audyt kół/bieżnika/raw i wszystkie 408 materiałów ponownie poprawne; heavy zwolniony. Koszt GPU/A16 pozostaje UNVERIFIED. Następna r5: zaległe palety.
 

@@ -1,0 +1,979 @@
+{
+    "schema": "kamion/life-exact-cpu/1",
+    "note": "CPU estimates before SRP batching; not GPU counters. Validate against legacy stats.",
+    "rows": [
+        {
+            "id": "yard_tractor_blue_side8",
+            "worldTriangles": 339919,
+            "instanceTriangles": 13770,
+            "worldDraws": 139,
+            "objects": 20,
+            "instanceDraws": 140,
+            "instances": 642,
+            "cells": 36,
+            "hlodCells": 7,
+            "aspect": 1.3333333730697632,
+            "fov": 60.0,
+            "position": {
+                "x": 800.3297119140625,
+                "y": 14.731993675231934,
+                "z": -599.0927124023438
+            },
+            "rotation": {
+                "x": 0.014676166698336602,
+                "y": 0.9033870100975037,
+                "z": -0.031017009168863298,
+                "w": 0.42745116353034975
+            },
+            "orthographic": false,
+            "orthographicSize": 5.0
+        },
+        {
+            "id": "yard_tractor_blue_wheel2",
+            "worldTriangles": 434269,
+            "instanceTriangles": 11670,
+            "worldDraws": 139,
+            "objects": 17,
+            "instanceDraws": 105,
+            "instances": 602,
+            "cells": 21,
+            "hlodCells": 7,
+            "aspect": 1.3333333730697632,
+            "fov": 40.0,
+            "position": {
+                "x": 804.6281127929688,
+                "y": 13.231993675231934,
+                "z": -601.0660400390625
+            },
+            "rotation": {
+                "x": 0.0,
+                "y": 0.833388090133667,
+                "z": 0.0,
+                "w": 0.5526883006095886
+            },
+            "orthographic": false,
+            "orthographicSize": 5.0
+        },
+        {
+            "id": "yard_tractor_white_side8",
+            "worldTriangles": 1129595,
+            "instanceTriangles": 91837,
+            "worldDraws": 628,
+            "objects": 106,
+            "instanceDraws": 480,
+            "instances": 782,
+            "cells": 535,
+            "hlodCells": 259,
+            "aspect": 1.3333333730697632,
+            "fov": 60.0,
+            "position": {
+                "x": 588.4946899414063,
+                "y": 8.971999168395996,
+                "z": -241.1381072998047
+            },
+            "rotation": {
+                "x": 0.02941242977976799,
+                "y": -0.5147697329521179,
+                "z": 0.017674406990408899,
+                "w": 0.8566414713859558
+            },
+            "orthographic": false,
+            "orthographicSize": 5.0
+        },
+        {
+            "id": "yard_tractor_white_wheel2",
+            "worldTriangles": 1736571,
+            "instanceTriangles": 70204,
+            "worldDraws": 822,
+            "objects": 125,
+            "instanceDraws": 445,
+            "instances": 540,
+            "cells": 433,
+            "hlodCells": 158,
+            "aspect": 1.3333333730697632,
+            "fov": 40.0,
+            "position": {
+                "x": 583.8917236328125,
+                "y": 7.471999645233154,
+                "z": -240.05015563964845
+            },
+            "rotation": {
+                "x": 0.0,
+                "y": -0.6324663758277893,
+                "z": 0.0,
+                "w": 0.7745878100395203
+            },
+            "orthographic": false,
+            "orthographicSize": 5.0
+        },
+        {
+            "id": "yard_trailer_curtain_0_side8",
+            "worldTriangles": 1385773,
+            "instanceTriangles": 91447,
+            "worldDraws": 647,
+            "objects": 112,
+            "instanceDraws": 498,
+            "instances": 498,
+            "cells": 463,
+            "hlodCells": 239,
+            "aspect": 1.3333333730697632,
+            "fov": 60.0,
+            "position": {
+                "x": 246.94110107421876,
+                "y": 10.746001243591309,
+                "z": -293.2178039550781
+            },
+            "rotation": {
+                "x": 0.029686391353607179,
+                "y": -0.5012581944465637,
+                "z": 0.01721056178212166,
+                "w": 0.8646171689033508
+            },
+            "orthographic": false,
+            "orthographicSize": 5.0
+        },
+        {
+            "id": "yard_trailer_curtain_0_supports5",
+            "worldTriangles": 1500966,
+            "instanceTriangles": 83940,
+            "worldDraws": 688,
+            "objects": 118,
+            "instanceDraws": 478,
+            "instances": 489,
+            "cells": 419,
+            "hlodCells": 184,
+            "aspect": 1.3333333730697632,
+            "fov": 50.0,
+            "position": {
+                "x": 241.72067260742188,
+                "y": 9.246001243591309,
+                "z": -297.3039245605469
+            },
+            "rotation": {
+                "x": 0.0,
+                "y": -0.5790151357650757,
+                "z": 0.0,
+                "w": 0.8153167963027954
+            },
+            "orthographic": false,
+            "orthographicSize": 5.0
+        },
+        {
+            "id": "yard_trailer_curtain_0_wheel2",
+            "worldTriangles": 1766046,
+            "instanceTriangles": 66282,
+            "worldDraws": 729,
+            "objects": 122,
+            "instanceDraws": 438,
+            "instances": 388,
+            "cells": 354,
+            "hlodCells": 134,
+            "aspect": 1.3333333730697632,
+            "fov": 40.0,
+            "position": {
+                "x": 243.92088317871095,
+                "y": 9.246001243591309,
+                "z": -289.22991943359377
+            },
+            "rotation": {
+                "x": 0.0,
+                "y": -0.6202326416969299,
+                "z": 0.0,
+                "w": 0.7844179272651672
+            },
+            "orthographic": false,
+            "orthographicSize": 5.0
+        },
+        {
+            "id": "yard_trailer_curtain_3_side8",
+            "worldTriangles": 1374026,
+            "instanceTriangles": 75212,
+            "worldDraws": 890,
+            "objects": 124,
+            "instanceDraws": 569,
+            "instances": 602,
+            "cells": 426,
+            "hlodCells": 30,
+            "aspect": 1.3333333730697632,
+            "fov": 60.0,
+            "position": {
+                "x": 341.2304992675781,
+                "y": 5.315001964569092,
+                "z": -43.1952018737793
+            },
+            "rotation": {
+                "x": -0.008557870984077454,
+                "y": 0.9678317904472351,
+                "z": -0.03323037922382355,
+                "w": -0.249247208237648
+            },
+            "orthographic": false,
+            "orthographicSize": 5.0
+        },
+        {
+            "id": "yard_trailer_curtain_3_supports5",
+            "worldTriangles": 1618124,
+            "instanceTriangles": 69938,
+            "worldDraws": 924,
+            "objects": 131,
+            "instanceDraws": 473,
+            "instances": 535,
+            "cells": 383,
+            "hlodCells": 32,
+            "aspect": 1.3333333730697632,
+            "fov": 50.0,
+            "position": {
+                "x": 334.64666748046877,
+                "y": 3.8150017261505129,
+                "z": -42.41846466064453
+            },
+            "rotation": {
+                "x": 0.0,
+                "y": 0.9413551092147827,
+                "z": 0.0,
+                "w": -0.33741751313209536
+            },
+            "orthographic": false,
+            "orthographicSize": 5.0
+        },
+        {
+            "id": "yard_trailer_curtain_3_wheel2",
+            "worldTriangles": 1852939,
+            "instanceTriangles": 66609,
+            "worldDraws": 872,
+            "objects": 127,
+            "instanceDraws": 466,
+            "instances": 489,
+            "cells": 345,
+            "hlodCells": 32,
+            "aspect": 1.3333333730697632,
+            "fov": 40.0,
+            "position": {
+                "x": 340.72357177734377,
+                "y": 3.8150017261505129,
+                "z": -48.171871185302737
+            },
+            "rotation": {
+                "x": 0.0,
+                "y": 0.9227318167686462,
+                "z": 0.0,
+                "w": -0.3854426443576813
+            },
+            "orthographic": false,
+            "orthographicSize": 5.0
+        },
+        {
+            "id": "yard_trailer_reefer_0_side8",
+            "worldTriangles": 1544608,
+            "instanceTriangles": 102756,
+            "worldDraws": 806,
+            "objects": 117,
+            "instanceDraws": 527,
+            "instances": 1526,
+            "cells": 300,
+            "hlodCells": 22,
+            "aspect": 1.3333333730697632,
+            "fov": 60.0,
+            "position": {
+                "x": 213.17640686035157,
+                "y": 10.124999046325684,
+                "z": -263.7327880859375
+            },
+            "rotation": {
+                "x": -0.008133132010698319,
+                "y": 0.9709325432777405,
+                "z": -0.03333624452352524,
+                "w": -0.2368810474872589
+            },
+            "orthographic": false,
+            "orthographicSize": 5.0
+        },
+        {
+            "id": "yard_trailer_reefer_0_supports5",
+            "worldTriangles": 1613771,
+            "instanceTriangles": 98385,
+            "worldDraws": 699,
+            "objects": 97,
+            "instanceDraws": 579,
+            "instances": 1435,
+            "cells": 240,
+            "hlodCells": 13,
+            "aspect": 1.3333333730697632,
+            "fov": 50.0,
+            "position": {
+                "x": 217.4751739501953,
+                "y": 8.624999046325684,
+                "z": -268.7796630859375
+            },
+            "rotation": {
+                "x": 0.0,
+                "y": 0.989189088344574,
+                "z": 0.0,
+                "w": -0.1466459333896637
+            },
+            "orthographic": false,
+            "orthographicSize": 5.0
+        },
+        {
+            "id": "yard_trailer_reefer_0_wheel2",
+            "worldTriangles": 1582416,
+            "instanceTriangles": 95682,
+            "worldDraws": 576,
+            "objects": 74,
+            "instanceDraws": 579,
+            "instances": 1380,
+            "cells": 173,
+            "hlodCells": 13,
+            "aspect": 1.3333333730697632,
+            "fov": 40.0,
+            "position": {
+                "x": 209.3170166015625,
+                "y": 8.624999046325684,
+                "z": -266.9155578613281
+            },
+            "rotation": {
+                "x": 0.0,
+                "y": 0.9954280257225037,
+                "z": 0.0,
+                "w": -0.09551507234573364
+            },
+            "orthographic": false,
+            "orthographicSize": 5.0
+        }
+    ],
+    "models": [
+        {
+            "name": "tractor_blue",
+            "triangles": [
+                766,
+                286
+            ],
+            "payloads": [
+                {
+                    "present": true,
+                    "vertices": 217,
+                    "heightError": 0.0007812976837158203,
+                    "axleError": 0.0004698122793342918
+                },
+                {
+                    "present": true,
+                    "vertices": 161,
+                    "heightError": 0.0007812976837158203,
+                    "axleError": 0.0004698122793342918
+                }
+            ]
+        },
+        {
+            "name": "trailer_curtain_1",
+            "triangles": [
+                1102,
+                316
+            ],
+            "payloads": []
+        },
+        {
+            "name": "trailer_curtain_2",
+            "triangles": [
+                1102,
+                316
+            ],
+            "payloads": []
+        },
+        {
+            "name": "trailer_reefer_0",
+            "triangles": [
+                1192,
+                290
+            ],
+            "payloads": []
+        },
+        {
+            "name": "tractor_black",
+            "triangles": [
+                766,
+                286
+            ],
+            "payloads": [
+                {
+                    "present": true,
+                    "vertices": 217,
+                    "heightError": 0.0007812976837158203,
+                    "axleError": 0.0004698122793342918
+                },
+                {
+                    "present": true,
+                    "vertices": 161,
+                    "heightError": 0.0007812976837158203,
+                    "axleError": 0.0004698122793342918
+                }
+            ]
+        },
+        {
+            "name": "tractor_red",
+            "triangles": [
+                766,
+                286
+            ],
+            "payloads": [
+                {
+                    "present": true,
+                    "vertices": 217,
+                    "heightError": 0.0007812976837158203,
+                    "axleError": 0.0004698122793342918
+                },
+                {
+                    "present": true,
+                    "vertices": 161,
+                    "heightError": 0.0007812976837158203,
+                    "axleError": 0.0004698122793342918
+                }
+            ]
+        },
+        {
+            "name": "trailer_curtain_0",
+            "triangles": [
+                1102,
+                316
+            ],
+            "payloads": []
+        },
+        {
+            "name": "tractor_silver",
+            "triangles": [
+                766,
+                286
+            ],
+            "payloads": [
+                {
+                    "present": true,
+                    "vertices": 217,
+                    "heightError": 0.0007812976837158203,
+                    "axleError": 0.0004698122793342918
+                },
+                {
+                    "present": true,
+                    "vertices": 161,
+                    "heightError": 0.0007812976837158203,
+                    "axleError": 0.0004698122793342918
+                }
+            ]
+        },
+        {
+            "name": "tractor_white",
+            "triangles": [
+                766,
+                286
+            ],
+            "payloads": [
+                {
+                    "present": true,
+                    "vertices": 217,
+                    "heightError": 0.0007812976837158203,
+                    "axleError": 0.0004698122793342918
+                },
+                {
+                    "present": true,
+                    "vertices": 161,
+                    "heightError": 0.0007812976837158203,
+                    "axleError": 0.0004698122793342918
+                }
+            ]
+        },
+        {
+            "name": "trailer_box_0",
+            "triangles": [
+                1174,
+                276
+            ],
+            "payloads": []
+        },
+        {
+            "name": "trailer_curtain_3",
+            "triangles": [
+                1102,
+                316
+            ],
+            "payloads": []
+        },
+        {
+            "name": "trailer_curtain_4",
+            "triangles": [
+                1102,
+                316
+            ],
+            "payloads": []
+        },
+        {
+            "name": "trailer_curtain_5",
+            "triangles": [
+                1102,
+                316
+            ],
+            "payloads": []
+        },
+        {
+            "name": "tractor_green",
+            "triangles": [
+                766,
+                286
+            ],
+            "payloads": [
+                {
+                    "present": true,
+                    "vertices": 217,
+                    "heightError": 0.0007812976837158203,
+                    "axleError": 0.0004698122793342918
+                },
+                {
+                    "present": true,
+                    "vertices": 161,
+                    "heightError": 0.0007812976837158203,
+                    "axleError": 0.0004698122793342918
+                }
+            ]
+        }
+    ],
+    "materials": [
+        {
+            "name": "M_car_paint_black",
+            "shader": "Kamion/World PBR",
+            "baseMap": "T_car_grime_clean_BaseColor",
+            "carPaint": true,
+            "carPlate": false,
+            "motionVectors": true,
+            "xrMotionVectors": true,
+            "passes": 3,
+            "flake": {
+                "x": 400.0,
+                "y": 1.0,
+                "z": 0.02500000037252903,
+                "w": 1.0
+            },
+            "tile": {
+                "x": 4.0,
+                "y": 4.0,
+                "z": 16.0,
+                "w": 1.0
+            }
+        },
+        {
+            "name": "M_car_paint_blue",
+            "shader": "Kamion/World PBR",
+            "baseMap": "T_car_grime_clean_BaseColor",
+            "carPaint": true,
+            "carPlate": false,
+            "motionVectors": true,
+            "xrMotionVectors": true,
+            "passes": 3,
+            "flake": {
+                "x": 400.0,
+                "y": 1.0,
+                "z": 0.07999999821186066,
+                "w": 1.0
+            },
+            "tile": {
+                "x": 4.0,
+                "y": 4.0,
+                "z": 16.0,
+                "w": 1.0
+            }
+        },
+        {
+            "name": "M_car_paint_grey",
+            "shader": "Kamion/World PBR",
+            "baseMap": "T_car_grime_clean_BaseColor",
+            "carPaint": true,
+            "carPlate": false,
+            "motionVectors": true,
+            "xrMotionVectors": true,
+            "passes": 3,
+            "flake": {
+                "x": 400.0,
+                "y": 1.0,
+                "z": 0.07999999821186066,
+                "w": 1.0
+            },
+            "tile": {
+                "x": 4.0,
+                "y": 4.0,
+                "z": 16.0,
+                "w": 1.0
+            }
+        },
+        {
+            "name": "M_car_paint_red",
+            "shader": "Kamion/World PBR",
+            "baseMap": "T_car_grime_clean_BaseColor",
+            "carPaint": true,
+            "carPlate": false,
+            "motionVectors": true,
+            "xrMotionVectors": true,
+            "passes": 3,
+            "flake": {
+                "x": 400.0,
+                "y": 1.0,
+                "z": 0.07999999821186066,
+                "w": 1.0
+            },
+            "tile": {
+                "x": 4.0,
+                "y": 4.0,
+                "z": 16.0,
+                "w": 1.0
+            }
+        },
+        {
+            "name": "M_car_paint_silver",
+            "shader": "Kamion/World PBR",
+            "baseMap": "T_car_grime_clean_BaseColor",
+            "carPaint": true,
+            "carPlate": false,
+            "motionVectors": false,
+            "xrMotionVectors": true,
+            "passes": 3,
+            "flake": {
+                "x": 400.0,
+                "y": 1.0,
+                "z": 0.07999999821186066,
+                "w": 1.0
+            },
+            "tile": {
+                "x": 4.0,
+                "y": 4.0,
+                "z": 16.0,
+                "w": 1.0
+            }
+        },
+        {
+            "name": "M_car_paint_white",
+            "shader": "Kamion/World PBR",
+            "baseMap": "T_car_grime_clean_BaseColor",
+            "carPaint": true,
+            "carPlate": false,
+            "motionVectors": true,
+            "xrMotionVectors": true,
+            "passes": 3,
+            "flake": {
+                "x": 400.0,
+                "y": 1.0,
+                "z": 0.07999999821186066,
+                "w": 1.0
+            },
+            "tile": {
+                "x": 4.0,
+                "y": 4.0,
+                "z": 16.0,
+                "w": 1.0
+            }
+        },
+        {
+            "name": "M_car_paint_white2",
+            "shader": "Kamion/World PBR",
+            "baseMap": "T_car_grime_clean_BaseColor",
+            "carPaint": true,
+            "carPlate": false,
+            "motionVectors": true,
+            "xrMotionVectors": true,
+            "passes": 3,
+            "flake": {
+                "x": 400.0,
+                "y": 1.0,
+                "z": 0.07999999821186066,
+                "w": 1.0
+            },
+            "tile": {
+                "x": 4.0,
+                "y": 4.0,
+                "z": 16.0,
+                "w": 1.0
+            }
+        },
+        {
+            "name": "M_car_plate",
+            "shader": "Kamion/World Car Plate",
+            "baseMap": "car_plates",
+            "carPaint": false,
+            "carPlate": true,
+            "motionVectors": false,
+            "xrMotionVectors": true,
+            "passes": 9,
+            "flake": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0,
+                "w": 0.0
+            },
+            "tile": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0,
+                "w": 0.0
+            }
+        },
+        {
+            "name": "M_tractor_paint_black",
+            "shader": "Kamion/World PBR",
+            "baseMap": "T_car_grime_clean_BaseColor",
+            "carPaint": true,
+            "carPlate": false,
+            "motionVectors": true,
+            "xrMotionVectors": true,
+            "passes": 3,
+            "flake": {
+                "x": 400.0,
+                "y": 1.0,
+                "z": 0.07999999821186066,
+                "w": 2.0
+            },
+            "tile": {
+                "x": 4.0,
+                "y": 4.0,
+                "z": 16.0,
+                "w": 1.0
+            }
+        },
+        {
+            "name": "M_tractor_paint_blue",
+            "shader": "Kamion/World PBR",
+            "baseMap": "T_car_grime_clean_BaseColor",
+            "carPaint": true,
+            "carPlate": false,
+            "motionVectors": true,
+            "xrMotionVectors": true,
+            "passes": 3,
+            "flake": {
+                "x": 400.0,
+                "y": 1.0,
+                "z": 0.07999999821186066,
+                "w": 2.0
+            },
+            "tile": {
+                "x": 4.0,
+                "y": 4.0,
+                "z": 16.0,
+                "w": 1.0
+            }
+        },
+        {
+            "name": "M_tractor_paint_green",
+            "shader": "Kamion/World PBR",
+            "baseMap": "T_car_grime_clean_BaseColor",
+            "carPaint": true,
+            "carPlate": false,
+            "motionVectors": true,
+            "xrMotionVectors": true,
+            "passes": 3,
+            "flake": {
+                "x": 400.0,
+                "y": 1.0,
+                "z": 0.07999999821186066,
+                "w": 2.0
+            },
+            "tile": {
+                "x": 4.0,
+                "y": 4.0,
+                "z": 16.0,
+                "w": 1.0
+            }
+        },
+        {
+            "name": "M_tractor_paint_red",
+            "shader": "Kamion/World PBR",
+            "baseMap": "T_car_grime_clean_BaseColor",
+            "carPaint": true,
+            "carPlate": false,
+            "motionVectors": true,
+            "xrMotionVectors": true,
+            "passes": 3,
+            "flake": {
+                "x": 400.0,
+                "y": 1.0,
+                "z": 0.07999999821186066,
+                "w": 2.0
+            },
+            "tile": {
+                "x": 4.0,
+                "y": 4.0,
+                "z": 16.0,
+                "w": 1.0
+            }
+        },
+        {
+            "name": "M_tractor_paint_silver",
+            "shader": "Kamion/World PBR",
+            "baseMap": "T_car_grime_clean_BaseColor",
+            "carPaint": true,
+            "carPlate": false,
+            "motionVectors": false,
+            "xrMotionVectors": true,
+            "passes": 3,
+            "flake": {
+                "x": 400.0,
+                "y": 1.0,
+                "z": 0.07999999821186066,
+                "w": 2.0
+            },
+            "tile": {
+                "x": 4.0,
+                "y": 4.0,
+                "z": 16.0,
+                "w": 1.0
+            }
+        },
+        {
+            "name": "M_tractor_paint_white",
+            "shader": "Kamion/World PBR",
+            "baseMap": "T_car_grime_clean_BaseColor",
+            "carPaint": true,
+            "carPlate": false,
+            "motionVectors": true,
+            "xrMotionVectors": true,
+            "passes": 3,
+            "flake": {
+                "x": 400.0,
+                "y": 1.0,
+                "z": 0.07999999821186066,
+                "w": 2.0
+            },
+            "tile": {
+                "x": 4.0,
+                "y": 4.0,
+                "z": 16.0,
+                "w": 1.0
+            }
+        },
+        {
+            "name": "M_trailer_curtain_blue",
+            "shader": "Kamion/World PBR",
+            "baseMap": "T_curtain_folds_BaseColor",
+            "carPaint": false,
+            "carPlate": false,
+            "motionVectors": true,
+            "xrMotionVectors": true,
+            "passes": 3,
+            "flake": {
+                "x": 400.0,
+                "y": 1.0,
+                "z": 0.0,
+                "w": 0.0
+            },
+            "tile": {
+                "x": 4.800000190734863,
+                "y": 2.700000047683716,
+                "z": 16.0,
+                "w": 1.0
+            }
+        },
+        {
+            "name": "M_trailer_curtain_green",
+            "shader": "Kamion/World PBR",
+            "baseMap": "T_curtain_folds_BaseColor",
+            "carPaint": false,
+            "carPlate": false,
+            "motionVectors": true,
+            "xrMotionVectors": true,
+            "passes": 3,
+            "flake": {
+                "x": 400.0,
+                "y": 1.0,
+                "z": 0.0,
+                "w": 0.0
+            },
+            "tile": {
+                "x": 4.800000190734863,
+                "y": 2.700000047683716,
+                "z": 16.0,
+                "w": 1.0
+            }
+        },
+        {
+            "name": "M_trailer_curtain_grey",
+            "shader": "Kamion/World PBR",
+            "baseMap": "T_curtain_folds_BaseColor",
+            "carPaint": false,
+            "carPlate": false,
+            "motionVectors": true,
+            "xrMotionVectors": true,
+            "passes": 3,
+            "flake": {
+                "x": 400.0,
+                "y": 1.0,
+                "z": 0.0,
+                "w": 0.0
+            },
+            "tile": {
+                "x": 4.800000190734863,
+                "y": 2.700000047683716,
+                "z": 16.0,
+                "w": 1.0
+            }
+        },
+        {
+            "name": "M_trailer_curtain_red",
+            "shader": "Kamion/World PBR",
+            "baseMap": "T_curtain_folds_BaseColor",
+            "carPaint": false,
+            "carPlate": false,
+            "motionVectors": true,
+            "xrMotionVectors": true,
+            "passes": 3,
+            "flake": {
+                "x": 400.0,
+                "y": 1.0,
+                "z": 0.0,
+                "w": 0.0
+            },
+            "tile": {
+                "x": 4.800000190734863,
+                "y": 2.700000047683716,
+                "z": 16.0,
+                "w": 1.0
+            }
+        },
+        {
+            "name": "M_trailer_curtain_silver",
+            "shader": "Kamion/World PBR",
+            "baseMap": "T_curtain_folds_BaseColor",
+            "carPaint": false,
+            "carPlate": false,
+            "motionVectors": true,
+            "xrMotionVectors": true,
+            "passes": 3,
+            "flake": {
+                "x": 400.0,
+                "y": 1.0,
+                "z": 0.0,
+                "w": 0.0
+            },
+            "tile": {
+                "x": 4.800000190734863,
+                "y": 2.700000047683716,
+                "z": 16.0,
+                "w": 1.0
+            }
+        },
+        {
+            "name": "M_trailer_curtain_white",
+            "shader": "Kamion/World PBR",
+            "baseMap": "T_curtain_folds_BaseColor",
+            "carPaint": false,
+            "carPlate": false,
+            "motionVectors": true,
+            "xrMotionVectors": true,
+            "passes": 3,
+            "flake": {
+                "x": 400.0,
+                "y": 1.0,
+                "z": 0.0,
+                "w": 0.0
+            },
+            "tile": {
+                "x": 4.800000190734863,
+                "y": 2.700000047683716,
+                "z": 16.0,
+                "w": 1.0
+            }
+        }
+    ],
+    "errors": []
+}
