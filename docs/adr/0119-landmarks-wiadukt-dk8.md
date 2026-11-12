@@ -45,5 +45,22 @@ Addytywny blok materials.py jest sterowany pier_paint.enabled; liniowy pigment
 
 Test ochrony pomostu rozszerzono o UV1 i COL oraz sprzeczne flagi starego spec;
 osobny test porównuje komplet kolizji i podział istniejących trójkątów.
-Stan: generator kandydata uruchomiony. Wyniki testów, wyglądu i budżetu po zmianie
-pozostają UNVERIFIED do zakończenia walidacji i obejrzenia wszystkich porównań.
+Pierwszy podgląd: 20 par detalu, Low mesh/instance draws +0. Usunięto 69 stopni
+w czterech biegach, -690 tris; pełne spec.decks obu łańcuchów, deck SHA oraz
+roads_qa zachowały treść baseline. Ochra w rozdzielonym ROI Low-overcast ma
+85/72/42 sRGB (R/G 1,181). To podzbiór kamer, nie pełne potwierdzenie budżetu.
+
+Po podglądzie dół pozostał zbyt czysty. Druga iteracja dodaje paint_weathering:
+istniejącą modulację concrete_precast, splash_h=0,8 m i runoff o skali 0,35
+(mapa do 4 m daje około 1,4 m na kolumnie). Własne pomalowane płaszczyzny mają
+UV0.y od gruntu i UV1 od głowicy; fazy i kolizja zachowują stare UV. Krótkie
+geometryczne zacieki kolumn są zastępowane teksturowymi, nie dublowane. Wspólny
+materials.py ma tylko addytywny blok za flagą danych; shaderów nie zmieniono.
+Liczba przebiegów pozostaje ta sama, koszt dodatkowych próbek PBR na A16 jest
+UNVERIFIED bez telefonu. Wariant wymaga pełnego pomiaru kamer Low i High.
+
+Test pierwszego wariantu nigdy nie uzyskał slotu i został celowo anulowany jako
+nieaktualny. Druga iteracja wykona pojedynczy plik i generator kolejno pod jednym
+slotem heavy; pełny GIS dopiero po akceptacji renderów na końcu rundy.
+Stan: druga iteracja oczekuje heavy. Testy, wygląd weather oraz pełny budżet
+pozostają UNVERIFIED do zakończenia walidacji i obejrzenia porównań.
