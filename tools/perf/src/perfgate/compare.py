@@ -80,7 +80,7 @@ def compare_runs(
     rng = np.random.default_rng(seed)
     ft_a = np.asarray(ft_a, dtype=float)
     ft_b = np.asarray(ft_b, dtype=float)
-    names = metrics or (FPS_METRICS + TIME_METRICS + PCT_METRICS + ("gpu_p95_ms",))
+    names = metrics or tuple(dict.fromkeys(FPS_METRICS + TIME_METRICS + PCT_METRICS))
     results: list[MetricComparison] = []
     for name in names:
         if name == "gpu_p95_ms":

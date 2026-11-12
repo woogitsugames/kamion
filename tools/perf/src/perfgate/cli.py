@@ -79,8 +79,7 @@ def cmd_compare(args) -> int:
 
 
 def cmd_history(args) -> int:
-    root = Path(args.root)
-    run_dirs = sorted(p.parent for p in root.rglob("frametimes.csv"))
+    run_dirs = sorted({p.parent for root in args.root for p in Path(root).rglob("frametimes.csv")})
     if args.limit:
         run_dirs = run_dirs[: args.limit]
     rows = []
@@ -96,7 +95,7 @@ def cmd_history(args) -> int:
         except ParseError as e:
             print(f"UWAGA: pominięto {d}: {e}", file=sys.stderr)
     lines = [
-        f"# Historia bramek — {len(rows)} pomiarów pod {root}",
+        f"# Historia bramek — {len(rows)} pomiarów pod {', '.join(args.root)}",
         "",
         "| pomiar | telefon | cel FPS | n | FPS śr. | p50 | p95 | p99 | max | GPU p95 | >1.5x % | naprz. % | T start | T trend °C/min | throttling | PSS max MB | PSS trend MB/min | jakość |",
         "|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|",
@@ -163,8 +162,8 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--out", default=None)
     p.set_defaults(fn=cmd_compare)
 
-    p = sub.add_parser("history", help="zbiorcza tabela wszystkich pomiarów pod root")
-    p.add_argument("root")
+    p = sub.add_parser("history", help="zbiorcza tabela wszystkich pomiarów pod root (można podać kilka)")
+    p.add_argument("root", nargs="+")
     p.add_argument("--out", default=None)
     p.add_argument("--warmup-s", type=float, default=5.0)
     p.add_argument("--target-fps", type=int, default=None, choices=[30, 60])

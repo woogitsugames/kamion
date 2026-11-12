@@ -123,7 +123,10 @@ def parse_frametimes_csv(path: Path) -> list[FrameRow]:
         for lineno, rec in enumerate(reader, start=2):
             if not rec or all(not c.strip() for c in rec):
                 continue
+            if len(rec) < len(header):
+                rec = rec + [""] * (len(header) - len(rec))  # puste końcowe kolumny (np. ab)
             try:
+                mirror_raw = rec[idx["mirror_n"]]
                 rows.append(
                     FrameRow(
                         frame=int(rec[idx["frame"]]),
@@ -132,8 +135,8 @@ def parse_frametimes_csv(path: Path) -> list[FrameRow]:
                         cpu_main_ms=float(rec[idx["cpu_main_ms"]]),
                         gpu_ms=float(rec[idx["gpu_ms"]]),
                         render_scale=float(rec[idx["render_scale"]]),
-                        mirror_n=float(rec[idx["mirror_n"]]),
-                        ab=rec[idx["ab"]].strip() if idx["ab"] < len(rec) else "",
+                        mirror_n=float(mirror_raw) if mirror_raw.strip() else 0.0,
+                        ab=rec[idx["ab"]].strip(),
                     )
                 )
             except (ValueError, IndexError) as e:
