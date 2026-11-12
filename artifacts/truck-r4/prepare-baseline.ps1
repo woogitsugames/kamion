@@ -28,7 +28,7 @@ foreach ($job in @(
 )) {
     if ($SkipGenerators) { continue }
     if ($SkipMaterials -and $job.id -eq 'materials') { continue }
-    pwsh $slotScript -Acquire -Pool heavy -Owner gpt-truck-r4 -StaleHours 100000 -PollSeconds 1
+    pwsh $slotScript -Acquire -Pool heavy -Owner gpt-truck-r4 -StaleHours 100000 -PollSeconds 5
     if ($LASTEXITCODE -ne 0) { throw 'Nie uzyskano slotu heavy.' }
     try {
         $arguments = $job.args
@@ -53,7 +53,7 @@ foreach ($tier in $spec.sets.asphalt_detail_photo.files.PSObject.Properties) {
 }
 if ($photoNeedsBuild) {
     if (!(Test-Path Data/photos/nowe/Worn_cracked_asphalt_pavement.jpg)) { throw 'Brak lokalnej kopii dostarczonego zdjęcia detalu asfaltu.' }
-    pwsh $slotScript -Acquire -Pool heavy -Owner gpt-truck-r4 -StaleHours 100000 -PollSeconds 1
+    pwsh $slotScript -Acquire -Pool heavy -Owner gpt-truck-r4 -StaleHours 100000 -PollSeconds 5
     if ($LASTEXITCODE -ne 0) { throw 'Nie uzyskano slotu heavy dla brakującej warstwy.' }
     try {
         uv run --project tools/worldgen python art-source/world/materials/_src/build_all.py --only asphalt_detail_photo *> artifacts/truck-r4/baseline-photo-layer.log
@@ -73,7 +73,7 @@ foreach ($set in $spec.sets.PSObject.Properties) {
     }
 }
 if (!(Test-Path Data/raw/derived/bialystok-industrial-c/world/chunk_0_0.glb) -or !(Test-Path Data/Regions/bialystok-industrial-c/route_start.json)) { throw 'Brak wejść; import uruchomiłby dodatkowego Pythona.' }
-pwsh $slotScript -Acquire -Owner gpt-truck -StaleHours 100000 -PollSeconds 1
+pwsh $slotScript -Acquire -Owner gpt-truck -StaleHours 100000 -PollSeconds 5
 if ($LASTEXITCODE -ne 0) { throw 'Nie uzyskano slotu Unity.' }
 try {
     pwsh scripts/import-region.ps1 -Region bialystok-industrial-c
@@ -86,4 +86,5 @@ finally {
 Add-Content -Encoding utf8 artifacts/truck-r4/STATUS.md 'Import bieżącej bazy zakończony. Zachować patch wygenerowanych danych, lecz nie przywracać starego world_manifest przed końcowym GIS: test deterministyczności musi porównać świeżą regenerację z tą samą wersją źródeł. Plików innych dziedzin nie commitować; przywrócić je dopiero po konsumentach i testach. Następny krok: baseline-captures.ps1.'
 git add -f artifacts/truck-r4/STATUS.md
 git commit --only artifacts/truck-r4/STATUS.md -m 'wip(truck): import aktualnej bazy r4'
+
 
