@@ -17,3 +17,5 @@ Krok 6: w artifacts zapisano szkic pojedynczego pliku testów: wymiary i osie, m
 Krok 6a: skrypt kontynuacji baseline oczekuje wyłącznie na potwierdzony proces 49724, nie uruchamia ponownego generatora. QA zachowa wszystkie znane kadry r2 i trzy nowe EC; pełny faktyczny spis czterech warunków będzie zapisany i porównany, bez założenia liczby 48. Narzędzia budżetu i arkuszy przygotowane do tego spisu.
 
 Krok 6b: przygotowano pary EC 960 px z pełną wysokością zdjęcia CC BY 3.0; tylko centralne przycięcie renderu 2340→1920 i jawne powiększenie detali 2x. Bez osobnego skalowania kominów, przekształcania pozy i korekty barwy. Ograniczenia źródła i atrybucja zapiszą się przy każdej parze. NASTĘPNY KROK po baseline: uv run --project tools/worldgen python artifacts/landmarks-r3/photo_pair.py before.
+
+Krok 6c: przygotowano odczyt rzeczywistych macierzy WorldInstances.SyncOrigin w Unity, do uruchomienia po baseline. Ma odróżnić pochylenie modelu od perspektywy. Tymczasowy skrypt Editor nie zapisuje scen i jest usuwany po uruchomieniu pod slotem. Jeszcze nie wykonany.
