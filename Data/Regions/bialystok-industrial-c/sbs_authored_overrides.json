@@ -176,26 +176,32 @@
     "sbs-g3-a-320326319617139": {
       "horizon_y_fraction": 0.7,
       "pose_status": "WORKING_VALUE",
-      "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE.",
-      "east_delta_m": 9.559,
-      "north_delta_m": -5.7517,
-      "eye_height_m": 1.7,
+      "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE. ADR 0143: promoted the ADR 0128 probe pose E 541.5 N -690.4 U 140.52, heading 244.0, rectified horizon 0.7205 (pitch 18.3). The D-3 / D-6 island is on branch biezenstwa-island; on main the frame shows the nose position without the signs until that merge. WORKING_VALUE, not surveyed.",
+      "east_delta_m": 12.8464,
+      "north_delta_m": -8.3127,
+      "eye_height_m": 0.9,
       "pose_confidence": "B",
-      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "pose_reason": "ADR 0143 (s14): probe sbs-p143-320326-p128; anchors: ADR 0128 probe (zenith VP pitch 18.3 deg, zebra corner anchor, eye 0.9 m), accepted by REVIEW s14-0128 (D-3 left, D-6 right on the kerbed nose); re-rendered here on the regenerated main world: viaduct fascia line and roundabout kerb as on the photo",
       "photometric_use": false,
-      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict",
+      "absolute_u_m": 140.52,
+      "heading_delta_deg": 3.401,
+      "rectified_horizon_y_fraction": 0.7204818
     },
     "sbs-g3-a-482392746429891": {
       "horizon_y_fraction": 0.7,
       "pose_status": "WORKING_VALUE",
-      "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE.",
-      "east_delta_m": 13.6031,
-      "north_delta_m": -5.4959,
-      "eye_height_m": 1.7,
+      "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE. ADR 0143: camera moved +3.3 m E / -2.6 m N (as the ADR 0128 pose of the same sequence), eye 0.9 m, heading 246.1, rectified horizon 0.75. Near pier pairs still ~100 px left of the photo (pier positions are a low-confidence by-eye spec); the blue lane-direction board is absent from the world (not a pose issue). WORKING_VALUE, not surveyed.",
+      "east_delta_m": 16.9058,
+      "north_delta_m": -8.0719,
+      "eye_height_m": 0.9,
       "pose_confidence": "B",
-      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "pose_reason": "ADR 0143 (s14): probe sbs-p143-482392-sa; anchors: near kerb line from the bottom (x 0.62) to the right edge (y 0.83) as on the photo; far pier pair and abutment within ~30 px; same richlv 2020-08-15 sequence as 320326 (ADR 0128 shift +3.3/-2.6 m, +3.4 deg, eye 0.9)",
       "photometric_use": false,
-      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict",
+      "absolute_u_m": 140.5406,
+      "heading_delta_deg": 3.405,
+      "rectified_horizon_y_fraction": 0.75
     },
     "sbs-g3-a-454716650857984": {
       "horizon_y_fraction": 0.63,
@@ -399,14 +405,16 @@
     "sbs-g3-b-810896133189484": {
       "horizon_y_fraction": 0.7,
       "pose_status": "WORKING_VALUE",
-      "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE.",
-      "east_delta_m": 0.2351,
-      "north_delta_m": 0.4265,
-      "eye_height_m": 1.7,
+      "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE. ADR 0143: camera moved 3.5 m SW from the median (it stood 5.0 m left of the SE-bound centreline, beside the generated retaining wall) onto the left lane of SE-bound Andersa, eye 1.0 m on the generated asphalt, heading kept (SfM 78.7). The frame stays unusable until the world fixes the NW-bound carriageway here (generated on a ~3-4 m retaining wall; photo: at grade, grass median, guardrail). WORKING_VALUE, not surveyed.",
+      "east_delta_m": -1.9246,
+      "north_delta_m": -2.3277,
+      "eye_height_m": 1.0,
       "pose_confidence": "C",
-      "pose_reason": "J1: camera intersects acoustic screen",
+      "pose_reason": "ADR 0143 (s14): probe sbs-p143-810896-m0; anchors: photo = car on SE-bound Andersa looking ~51 deg left of the road (kerb vanishing point x ~1440 px), kerb 2.5 x eye height left of the camera, guardrail top below the horizon (eye ~1.0 m)",
       "photometric_use": false,
-      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict",
+      "absolute_u_m": 133.657,
+      "heading_delta_deg": 0.001
     },
     "sbs-g3-b-810525063224609": {
       "horizon_y_fraction": 0.7,
@@ -477,16 +485,17 @@
     "sbs-g3-b-494288258686575": {
       "horizon_y_fraction": 0.66,
       "pose_status": "WORKING_VALUE",
-      "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R2: photo visibly on Putry deck. Existing generated bridge road asphalt vertical ray at stored EN hits absolute U 140.188m (artifacts/sbs-gate3/deck-ray-heights.json), add nominal eye 1.7m; keep computed GPS because original GPS is outside deck asphalt. Camera only; WORKING_VALUE eye, no world modification. ADR 0130: 3 m right on the Putry deck (right lane, still road_asphalt in the generated deck); deck height from generated chunk GLB ray + 1.7 m. Generated road asphalt U 140.1491 m (chunk GLB ray) + eye 1.7 m; rectified horizon 0.72 measured on the rectified photo (supersedes horizon_y_fraction). WORKING_VALUE, not surveyed.",
-      "absolute_u_m": 141.8491,
-      "eye_height_m": 1.7,
+      "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R2: photo visibly on Putry deck. Existing generated bridge road asphalt vertical ray at stored EN hits absolute U 140.188m (artifacts/sbs-gate3/deck-ray-heights.json), add nominal eye 1.7m; keep computed GPS because original GPS is outside deck asphalt. Camera only; WORKING_VALUE eye, no world modification. ADR 0130: 3 m right on the Putry deck (right lane, still road_asphalt in the generated deck); deck height from generated chunk GLB ray + 1.7 m. Generated road asphalt U 140.1491 m (chunk GLB ray) + eye 1.7 m; rectified horizon 0.72 measured on the rectified photo (supersedes horizon_y_fraction). WORKING_VALUE, not surveyed. ADR 0143: camera moved 41 m back (SE) along the NW-bound Putry deck to E -486.3 N -30.7 and 1.7 m right of the graph centreline (~0.85 m right of the generated lane dash; ADR 0130 had it 4.7 m right = on the edge line, which made the road read as a right bend), eye 1.15 m on the generated deck asphalt, heading 316.8 (tangent + 7.5), rectified horizon 0.725; photo roll ~-3.7 deg is not renderable (fit494b.py rms 13.8 px). WORKING_VALUE, not surveyed.",
+      "absolute_u_m": 140.1677,
+      "eye_height_m": 1.15,
       "pose_confidence": "B",
-      "pose_reason": "ADR 0130 (s12): calibrated from diagnostic probe r2 c1/c2 (between); anchors: dark screen posts close at the right receding to x ~0.2 at the horizon; median barrier and second deck at the left edge; horizon 0.72",
+      "pose_reason": "ADR 0143 (s14): probe sbs-p143-494288-g0; anchors: median lamp ladder x + 1/d spacing (nearest lamp ~35-40 m ahead, ~33 m pitch), lane dash line, near road vanishing point x 441 / y 687 of 1280x960 (heading = road tangent + 7.5 deg); rendered: dash slanting from the lower left, right edge line, screen receding to x ~0.2 at the far left bend as on the photo",
       "photometric_use": false,
       "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict",
-      "east_delta_m": 1.8054,
-      "north_delta_m": 2.3959,
-      "rectified_horizon_y_fraction": 0.72
+      "east_delta_m": 41.8621,
+      "north_delta_m": -33.1464,
+      "rectified_horizon_y_fraction": 0.725,
+      "heading_delta_deg": 7.442
     },
     "sbs-g3-b-182011943700132": {
       "horizon_y_fraction": 0.62,

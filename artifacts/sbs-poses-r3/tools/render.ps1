@@ -11,7 +11,7 @@ if($LASTEXITCODE -ne 0){throw 'slot'}
 try{
   foreach($g in @(@{f='ids-4x3.txt';w=1280;h=960},@{f='ids-16x9.txt';w=1280;h=720})){
     $idf="artifacts/sbs-poses-r3/$Round/$($g.f)"; if(!(Test-Path $idf)){continue}
-    $ids=(Get-Content $idf -Raw).Trim(); if(!$ids){continue}
+    $ids="$(Get-Content $idf -Raw)".Trim(); if(!$ids){continue}
     $out="artifacts/sbs-poses-r3/$Round/renders/$OutName"
     & pwsh -NoProfile -File scripts/visual-qa.ps1 -Scene WorldC -Tier $Tier -Lighting $Lighting -Width $g.w -Height $g.h -Gate3 $camFile -Cameras $ids -OutputDir $out
     if($LASTEXITCODE -ne 0){throw "render failed $($g.f)"}
