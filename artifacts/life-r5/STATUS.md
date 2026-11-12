@@ -59,3 +59,5 @@ ZATRZYMANIE na prośbę właściciela (12.11 około 16:22): kończy się limit t
 PRZEKAZANIE na prośbę właściciela: zapisano PRZEKAZANIE-LIFE-2026-11-12.md i REPORT oznaczony wstrzymaniem, bez deklaracji gotowej poprawy palet. Potwierdzono r4 jako przodka main 165c419c. Aktualny batch 72932 zostanie dokończony normalnie w tle; finish-stop-handoff.ps1 jedynie czeka, zapisuje stan, commit i kopię artefaktów, bez nowych ciężkich zadań. Nie wznawiać pętli 24 h automatycznie.
 
 Uruchomiono wyłącznie lekki skrypt kończący PID 54980, czeka na już istniejący batch 72932. Bez nowych Unity/Python. Przekazanie i REPORT będą dostępne od razu w main; po wyjściu batcha skrypt uzupełni kopię, STATUS i wynik. Praca autora zakończona na polecenie właściciela.
+
+Wznowienie baseline (2026-11-12T16:27:44.9772023+01:00): potwierdź pełny baseline palet po poprawce snapshotu. Następny krok capture/LOD/oględziny; oryginalny błąd snapshotu zachowany.
