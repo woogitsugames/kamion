@@ -1,0 +1,30 @@
+{
+  "observed_at": "2026-11-12T15:53:56.6642457+01:00",
+  "session_id": 31378,
+  "session_live_poll_completed": true,
+  "last_log": "waiting for a heavy slot (0/3 busy, phone=True, reserved=, queue ahead=6) ...",
+  "own_processes": [
+    {
+      "ProcessId": 68916,
+      "ParentProcessId": 25184,
+      "CreationDate": "2026-11-12T15:02:07.003809+01:00",
+      "CommandLine": "\"C:\\Program Files\\WindowsApps\\OpenAI.CodexPrimaryRuntime.v26-1104-2876-0_26.1104.2876.0_x64__3k8sg7r9htsxt\\dependencies\\native\\powershell\\pwsh.exe\" -Command \"try { [Console]::OutputEncoding=[System.Text.Encoding]::UTF8 } catch {}\npwsh -NoProfile -File artifacts/sbs-r4/compose-all.ps1 *> artifacts/sbs-r4/compose-all.log\""
+    },
+    {
+      "ProcessId": 70780,
+      "ParentProcessId": 68916,
+      "CreationDate": "2026-11-12T15:02:07.233782+01:00",
+      "CommandLine": "\"C:\\Program Files\\WindowsApps\\OpenAI.CodexPrimaryRuntime.v26-1104-2876-0_26.1104.2876.0_x64__3k8sg7r9htsxt\\dependencies\\native\\powershell\\pwsh.exe\" -NoProfile -File artifacts/sbs-r4/compose-all.ps1"
+    },
+    {
+      "ProcessId": 59180,
+      "ParentProcessId": 70780,
+      "CreationDate": "2026-11-12T15:02:07.599416+01:00",
+      "CommandLine": "\"C:\\Program Files\\WindowsApps\\OpenAI.CodexPrimaryRuntime.v26-1104-2876-0_26.1104.2876.0_x64__3k8sg7r9htsxt\\dependencies\\native\\powershell\\pwsh.exe\" -NoProfile -File C:\\Users\\matma\\Documents\\Claude\\kamion\\scripts\\unity-slot.ps1 -Acquire -Pool heavy -Owner gpt-sbs-r4 -PollSeconds 7 -StaleHours 87600"
+    }
+  ],
+  "own_slot_present": false,
+  "own_ticket_present": true,
+  "note": "Twelve authoritative live session polls over nine minutes. Same process; no restart, queue modification or foreign lease removal.",
+  "excluded_observer_pid": 21968
+}
