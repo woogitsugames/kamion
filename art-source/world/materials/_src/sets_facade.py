@@ -392,7 +392,7 @@ def noise_cassette(n=1024):
     return st
 
 
-def car_grime(n=1024):
+def car_grime(n=1024, lower_film=True):
     """Parked-car paint film: road spray on the sills and bumpers (v < 0.55 m, warm grey-brown, strongest at the
     bottom edge), dust film and pollen on horizontal-ish upper surfaces, rain runs below the belt line and the roof
     edge, faint orange peel. u = metres along the body, v = metres above the ground (life_props car/van UV).
@@ -418,7 +418,28 @@ def car_grime(n=1024):
         kd = np.clip(dust, 0, 1)[..., None] * 0.5
         a = a * (1 - k) + a * np.array([1.0, 0.92, 0.78], np.float32) * k
         return a * (1 - kd) + a * np.array([1.0, 0.97, 0.90], np.float32) * kd
-    return _finish("car_grime", c, lum, h, rough, np.zeros_like(X), np.zeros_like(X), extra=tint, ao_k=0.2)
+    result = _finish("car_grime", c, lum, h, rough, np.zeros_like(X), np.zeros_like(X), extra=tint, ao_k=0.2)
+    if not lower_film:
+        # Preserve the LEGACY calibration gain. Recalibrating the clean map would
+        # alter upper dust/peel pixels unrelated to the removed lower film.
+        legacy_raw = tint(lum[..., None] * np.ones(3, np.float32)).astype(np.float32)
+        gain = MOD_MEAN / float((legacy_raw @ LUM).mean())
+        clean_lum = (1 + 0.01 * peel) * (1 - 0.07 * runs * belt) * (1 + 0.05 * dust)
+        clean_raw = clean_lum[..., None] * np.ones(3, np.float32)
+        kd = dust[..., None] * 0.5
+        clean_raw = clean_raw * (1 - kd) + clean_raw * np.array([1.0, 0.97, 0.90], np.float32) * kd
+        # Keep the legacy repeat-boundary padding: the writer's periodic Gaussian
+        # otherwise carries the changed bottom film into the unchanged top rows.
+        # Native paint UV/Tile ranges are audited separately; mip filtering is not
+        # claimed identical merely because point coordinates miss this gutter.
+        clean_region = v >= 0.05
+        result.albedo = np.where(((film > 0) & clean_region)[..., None],
+                                 np.clip(clean_raw.astype(np.float32) * gain, 0, 1), result.albedo)
+        result.rough = np.where(clean_region, np.clip(0.32 + 0.15 * dust, 0.05, 1).astype(np.float32), result.rough)
+        # Clean-only Mask.R payload: exactly the film removed here. Seven car
+        # paint materials have MetallicScale0 and a separate CarPaint metal model.
+        result.metal = np.where(clean_region, film, 0).astype(np.float32)
+    return result
 
 
 def parapet_runoff(nx=1024, ny=160, seed=521):
@@ -614,6 +635,9 @@ FACADE_SETS = {
         note="Clipped red berberis hedge face: leaf clusters, dark voids, thin holes (u along, v over the section)."),
     "soil_bed": dict(fn=soil_bed, tile_m=[2.0, 2.0], slots=["bed_soil"],
         note="Island planting bed: loam with bark mulch chips, a few stones, leaf litter (u, v plan metres)."),
+    "car_grime_clean": dict(fn=lambda: car_grime(lower_film=False), tile_m=[5.0, 2.5],
+        slots=["car_paint_silver", "car_paint_grey", "car_paint_black", "car_paint_white", "car_paint_white2", "car_paint_blue", "car_paint_red"],
+        note="R4 clean lower shell; original upper dust/runs/peel and calibration retained. Road deposition is instance-driven."),
     "car_grime": dict(fn=car_grime, tile_m=[5.0, 2.5], slots=["car_paint_*"],
         note="Parked-car paint film: road spray on sills, dust on top, rain runs (u along body, v = height)."),
     "box_panel": dict(fn=box_panel, tile_m=[4.8, 2.7], slots=["trailer_box_white"],

@@ -167,19 +167,19 @@ M = {
     # r10b: dark paints lifted (black 0.018 -> 0.035, blue 0.03 / 0.05 / 0.12 -> 0.045 / 0.085 / 0.21, grey 0.13 -> 0.16):
     # under the ADR 0080 overcast the old values rendered as black silhouettes (review 0080 P1 #2); the Mapillary
     # crops in artifacts/cars-r9/refs show black / dark grey bodies clearly above the tyres. WORKING_VALUE.
-    "car_paint_silver": {"color": [0.42, 0.43, 0.44], "rough": 0.28, "metal": 0.6, "texture_set": "car_grime",
+    "car_paint_silver": {"color": [0.42, 0.43, 0.44], "rough": 0.28, "metal": 0.6, "texture_set": "car_grime_clean",
                          "paint": [0.85, 0.30, 0.0, 0.50]},
-    "car_paint_grey": {"color": [0.16, 0.165, 0.17], "rough": 0.26, "metal": 0.5, "texture_set": "car_grime",
+    "car_paint_grey": {"color": [0.16, 0.165, 0.17], "rough": 0.26, "metal": 0.5, "texture_set": "car_grime_clean",
                        "paint": [0.75, 0.28, 0.0, 0.50]},
-    "car_paint_black": {"color": [0.035, 0.035, 0.038], "rough": 0.2, "metal": 0.3, "texture_set": "car_grime",
+    "car_paint_black": {"color": [0.035, 0.035, 0.038], "rough": 0.2, "metal": 0.3, "texture_set": "car_grime_clean",
                         "paint": [0.55, 0.22, 0.8, 0.45], "pearl_tint": [1.6, 1.9, 3.2]},
-    "car_paint_white": {"color": [0.68, 0.68, 0.66], "rough": 0.3, "texture_set": "car_grime",
+    "car_paint_white": {"color": [0.68, 0.68, 0.66], "rough": 0.3, "texture_set": "car_grime_clean",
                         "paint": [0.0, 0.0, 0.0, 0.5]},
-    "car_paint_white2": {"color": [0.62, 0.63, 0.62], "rough": 0.36, "texture_set": "car_grime",
+    "car_paint_white2": {"color": [0.62, 0.63, 0.62], "rough": 0.36, "texture_set": "car_grime_clean",
                          "paint": [0.0, 0.0, 0.0, 0.5]},
-    "car_paint_blue": {"color": [0.045, 0.085, 0.21], "rough": 0.24, "metal": 0.4, "texture_set": "car_grime",
+    "car_paint_blue": {"color": [0.045, 0.085, 0.21], "rough": 0.24, "metal": 0.4, "texture_set": "car_grime_clean",
                        "paint": [0.70, 0.30, 0.0, 0.48]},
-    "car_paint_red": {"color": [0.32, 0.03, 0.025], "rough": 0.28, "metal": 0.2, "texture_set": "car_grime",
+    "car_paint_red": {"color": [0.32, 0.03, 0.025], "rough": 0.28, "metal": 0.2, "texture_set": "car_grime_clean",
                       "paint": [0.0, 0.0, 0.0, 0.5]},
     "car_paint_green": {"color": [0.035, 0.07, 0.045], "rough": 0.35, "metal": 0.4, "texture_set": "car_grime"},
     "car_paint_beige": {"color": [0.36, 0.32, 0.24], "rough": 0.4, "metal": 0.3, "texture_set": "car_grime"},
@@ -195,11 +195,12 @@ M = {
     "car_dirt_3": {"color": [0.18, 0.165, 0.135], "rough": 1.0, "alpha": 0.78, "blend": True, "texture": "car_dirt"},
     "car_lamp": {"color": [0.045, 0.047, 0.05], "rough": 0.12, "metal": 0.5},     # smoked lamp housing behind the lens
     # alloy under brake dust (v4: 0.115 rendered as a black disc on LOD1 at 12-45 m on Low, read as "no rim")
-    "rim_dusty": {"color": [0.27, 0.25, 0.22], "rough": 0.58, "metal": 0.45},
-    "tyre_dusty": {"color": [0.05, 0.045, 0.038], "rough": 0.95},
+    # ADR0089 WORKING_VALUE: neutral brake dust/rubber, old luminance retained; dark dish stays rim_dark/car_trim.
+    "rim_dusty": {"color": [0.25, 0.25, 0.25], "rough": 0.58, "metal": 0.45},
+    "tyre_dusty": {"color": [0.046, 0.046, 0.046], "rough": 0.95},
     # r10 (ADR 0078): LOD0 car tyres with the tread / sidewall texture (modulation, mean ~0.78; colour raised to match)
     "car_tyre": {"color": [0.033, 0.033, 0.033], "rough": 0.85, "texture": "car_tyre"},
-    "car_tyre_dusty": {"color": [0.066, 0.059, 0.050], "rough": 0.95, "texture": "car_tyre"},
+    "car_tyre_dusty": {"color": [0.060, 0.060, 0.060], "rough": 0.95, "texture": "car_tyre"},
     "car_interior": {"color": [0.022, 0.022, 0.024], "rough": 0.9},
     "rim_dark": {"color": [0.05, 0.05, 0.052], "rough": 0.6, "metal": 0.5},
     "rim_steel": {"color": [0.07, 0.07, 0.072], "rough": 0.55, "metal": 0.6},
@@ -515,3 +516,31 @@ for _k in ("roof_tiles_red", "roof_tiles_brown"):
 #   unmown verge next to it).
 M["plot_kit"] = {"color": [1.0, 1.0, 1.0], "rough": 0.85, "texture": "plot_kit", "alpha_cutoff": 0.5}
 M["plot_lawn"] = {"color": [0.150, 0.200, 0.060], "rough": 0.95, "surface": "grass", "texture_set": "grass_verge"}
+
+
+# ADR0118 r1: asphalt-only overrides of the road material table (MATERIALS.update(M)).
+# WORKING_VALUE: judged against local photo wheel/centre ratio 0.67, not measured physical albedo.
+# No road generator/geometry change; fresh SMA deliberately has no old-road damage opt-in.
+M["road_asphalt"] = {"color": [0.081, 0.08, 0.079], "rough": 0.9, "surface": "asphalt",
+                     "texture_set": "asphalt_worn",
+                     "asphalt_wear": {"tone": 0.90, "wheel_darkening": 0.45, "low_cracks": 1.0,
+                                      "low_photo_detail": 0.75}}
+# WORKING_VALUE: a 25 mm bituminous saw-cut seal, fresh darker fill and aged lighter aggregate.
+# UV0 is normalised by yard_wear before chunking; base/normal textures still use world metres.
+M["decal_patch"]["asphalt_patch_seam"] = {"width_m": 0.025, "darkening": 0.65,
+                                         "fresh_tone": 0.88, "aged_tone": 1.08}
+M["decal_patch"]["asphalt_wear"] = {"low_photo_detail": 0.75}
+# Restore authored wheel wear (0099 halved it in C#). Keep all coefficients visible here.
+# Glyphs share the transverse encoding: their readability is an explicit visual control, not a claimed fix.
+from roads.standards import MARKING_LIFT as _ASPHALT_PAINT_LIFT
+M["marking_white"] = {"color": [0.55, 0.55, 0.54], "rough": 0.65, "surface": "paint",
+                      "texture_set": "asphalt_worn", "decal": True, "depth_offset_m": _ASPHALT_PAINT_LIFT,
+                      "paint": {"wheel_wear": 0.85, "age_wear": 0.25, "dirt": 0.38, "line_w_m": 0.12,
+                                "fresh_surface_from_road": True, "asphalt_underlay": True,
+                                "fresh_wheel_scale": 0.0, "fresh_age_scale": 0.0,
+                                "fresh_dirt_scale": 1.0, "fresh_underlay_scale": 0.9375},
+                      "asphalt_wear": {"tone": 0.90, "wheel_darkening": 0.45, "low_cracks": 1.0,
+                                       "low_photo_detail": 0.75, "wheel_polish": 0.6, "drip_band": 0.22}}
+# WORKING_VALUE: 0.85 legacy opacity × 1.15 = 0.9775, only for roads.decals traffic-stop stains.
+# Private-yard/gate/bus oil retains UV1.x=0 and the previous material response.
+M["decal_oil"]["traffic_opacity_scale"] = 1.15

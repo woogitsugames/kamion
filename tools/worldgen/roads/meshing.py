@@ -382,8 +382,21 @@ def _emit_strip(buf, G, OUT, zg, params, kap_toward, hw, flip, br, coarse, src, 
 # Default: bare concrete, round grey piers, no screen. Ground truth: CC0 photos in docs/REFERENCES.md.
 BRIDGE_STYLES = {}
 FASCIA_BAND_H = 0.55        # WORKING_VALUE: painted band height read off the CC0 photos (vs ~1.1 m railing)
+#   screen_side   "both" (default) or "travel_right": the screen stands only on the right-hand edge in the direction
+#                 of travel (the outer edge of a one-way carriageway of a dual road); the other edge keeps the railing
 DEFAULT_BRIDGE_STYLE = {"fascia": None, "pier_mat": "bridge_concrete", "noise_screen": None, "screen_h": 3.0,
-                        "pier_r": 0.6}
+                        "pier_r": 0.6, "screen_side": "both"}
+
+
+def screen_sides(c, style):
+    """Deck edges ("L" / "R" of the chain direction) that carry the noise screen (ADR 0125)."""
+    if not style.get("noise_screen"):
+        return ()
+    if style.get("screen_side", "both") != "travel_right":
+        return ("L", "R")
+    d = np.asarray(c.dirn)
+    fwd = int(np.sum(d > 0)) >= int(np.sum(d < 0))        # travel runs with the chain direction
+    return ("R",) if fwd else ("L",)
 
 
 def bridge_style(c):
@@ -470,7 +483,7 @@ def build_bridge_extras(buf, c, st, P, N, hw, br):
                 # winding: the strip faces outward (left side reversed)
                 if sgn > 0:
                     buf.parts[-1].T = buf.parts[-1].T[:, [0, 2, 1]]
-            if style["noise_screen"] and not hero:    # transparent noise screen on posts at the deck edge (both sides)
+            if side in screen_sides(c, style) and not hero:    # transparent noise screen on posts at the deck edge
                 e = top - np.column_stack([nn0 * sgn * 0.05, np.zeros(len(ss))])
                 _strip(buf, "bridge", "noise_glass", e + [0, 0, 0.25], e + [0, 0, style["screen_h"]], c.id + ":screen")
                 # glass dust mask (Kamion/World Car Glass: film where max(|u|, |v|) > 0.58): v = 1 at the foot of the
@@ -511,7 +524,8 @@ def build_bridge_extras(buf, c, st, P, N, hw, br):
         tt, nn = c.line.frame(ss)
         # ADR 0110: no balustrade where a noise screen stands on the same edge (the screen is the edge protection; with
         # the barrier-railing that made three rail systems side by side, REVIEW s10-0100 P1-6 p0_lamp_w1101181473_eye)
-        for side, sgn in (() if (hero or style["noise_screen"]) else (("L", 1.0), ("R", -1.0))):
+        scr = screen_sides(c, style)                 # ADR 0125: an edge without a screen keeps its railing
+        for side, sgn in (() if hero else tuple(x for x in (("L", 1.0), ("R", -1.0)) if x[0] not in scr)):
             top = outer[side][1].copy()
             top[:, :2] -= nn * sgn * 0.15
             for z0, z1, th in ((S.BRIDGE_PARAPET_H - 0.10, S.BRIDGE_PARAPET_H, 0.06), (0.45, 0.60, 0.04)):

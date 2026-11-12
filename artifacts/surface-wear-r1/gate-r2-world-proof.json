@@ -1,0 +1,21 @@
+{
+  "changed": [
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_6_6.glb",
+      "ordered_primitives": 110,
+      "changed_scalar_values": 72,
+      "geometry_uv0_strength_legacy_uv1_exact": true
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_6_6.low.glb",
+      "ordered_primitives": 69,
+      "changed_scalar_values": 72,
+      "geometry_uv0_strength_legacy_uv1_exact": true
+    }
+  ],
+  "unchanged_raw_files": 190,
+  "cached_Unity_unchanged": 2441,
+  "added_triangles": 0,
+  "added_vertices": 0,
+  "note": "Gate-r1 to r2 changes ONLY72 UV1.x signs per tier; legacy tyre data literal exact. Shader adds signed mode .65/.90m fades, strength.9 and macro unchanged. GPU/visibility unverified; Unity remains held."
+}

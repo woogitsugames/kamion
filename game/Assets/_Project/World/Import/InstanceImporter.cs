@@ -179,6 +179,7 @@ namespace Game.World.Import
                             noShadow.Add(materials.Count);
                         materials.Add(mat);
                         uv |= textured;
+                        if (prim.Material == "car_plate" && prim.Uv1 != null) uv1 = true;
                         // ADR 0071 r11: wall-top / sill run-off space of the hero hall (TEXCOORD_1, only where the
                         // material reads it and the primitive carries it)
                         if (prim.Uv1 != null && prim.Material != null && r.MaterialDefs.TryGetValue(prim.Material, out var pd))

@@ -44,6 +44,12 @@ namespace Game.Rendering
         [Range(0f, 12000f)] public float overcastCctK;
         [Tooltip("Cloud deck contrast of the overcast dome (0 = flat dome): thick parts darker, thin parts lighter, mean 1")]
         [Range(0f, 0.6f)] public float cloudContrast;
+        [Tooltip("ADR 0108: opacity of the photographic clear-cloud mask (0 = analytic blue sky). Sun/ambient metering stay unchanged.")]
+        [Range(0f, 1f)] public float clearCloudCover;
+        [Tooltip("ADR 0108: opt-in smoother sun-shadow filter on High only; 0 inherits the tier. Low unchanged.")]
+        [Range(0, 3)] public int highSunShadowFilter;
+        [Tooltip("ADR 0108: display-only blue-sky chroma multiplier above the haze horizon; 0/1 keep the analytic colour.")]
+        [Range(1f, 4f)] public float clearSkySaturation = 1f;
         [Tooltip("Cloud texture tiles per unit of the cloud plane (plane at height 1; smaller = larger cloud masses)")]
         public float cloudScale = 0.16f;
         [Tooltip("Cloud drift (plane units per second; ~0.004 = 20 km/h at 1500 m)")]
@@ -111,8 +117,12 @@ namespace Game.Rendering
             var p = CreateInstance<LightingPreset>();
             p.name = "LP_Clear";
             p.sunElevationDeg = 42f; p.sunAzimuthDeg = 200f; p.turbidity = 2.5f; p.overcast = 0f; p.visibilityKm = 20f;
-            // ADR0098 WORKING_VALUE: highlight shoulder above the fixed asphalt/mid-grey anchors, no EV change.
-            p.lookWhiteClip = 1.2f;
+            // ADR 0108 r1 WORKING_VALUE: measured 1.2/1.8 ablation removes the white-van plateau
+            // above the fixed asphalt/mid-grey anchors, without changing exposure.
+            p.lookWhiteClip = 1.8f;
+            // ADR 0108 r1 WORKING_VALUE: the route reference photos show scattered cumulus in blue sky.
+            p.clearCloudCover = 1f;
+            p.clearSkySaturation = 2f; // ADR 0108: 1/2/3/4 ablation against the daytime reference skies.
             return p;
         }
 
@@ -147,6 +157,7 @@ namespace Game.Rendering
             var p = CreateInstance<LightingPreset>();
             p.name = "LP_LowSun";
             p.sunElevationDeg = 9f; p.sunAzimuthDeg = 60f; p.turbidity = 3f; p.overcast = 0f; p.visibilityKm = 15f;
+            p.highSunShadowFilter = 3;
             p.lookSaturation = -3f;
             p.whiteBalanceAdaptation = 0.5f; // owner decision D27 (2026-11-10): phone-style WB at low sun, ADR 0043
             return p;

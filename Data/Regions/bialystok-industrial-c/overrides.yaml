@@ -300,30 +300,128 @@ overrides:
   - id: andersa-viaduct-putry-style
     kind: bridge_style
     target: {osm_way: [1101181473, 173956078, 284022563, 606396460]}
-    set: {fascia: green, pier_mat: pier_yellow, noise_screen: transparent, screen_h: 3.0}
+    set: {fascia: green, pier_mat: pier_yellow, noise_screen: transparent, screen_h: 3.0, screen_side: travel_right}
     reason: >-
       Andersa viaduct at Rondo Putry (DK8/DK19/DK65): green deck edge, yellow-painted round piers in pairs,
       transparent noise screens on posts along the deck (CC0 photo 7204_May_2021, Rakoon; consistent with the
       CC BY-SA photos of Rondo Putry and Andersa/Maczka used as reference only). Screen height WORKING_VALUE.
+      ADR 0125: the screen stands on the outer (right-hand) edge only - Mapillary 494288258686575 (szurek 2017,
+      northbound deck) has the screen on the right and a guard rail with an open view of the other carriageway
+      on the left. The southbound deck is assumed symmetric (UNVERIFIED).
     confidence: medium
     verify: screen height and post spacing, which deck sides carry screens
   - id: andersa-putry-approach-gantry
     kind: sign_gantry
     osm_way: 266084693
-    before_node: n2840742308
-    distance_m: 40.0
+    before_node: n12620261934
+    distance_m: 39.0
     boards:
       - lanes: [0, 1]
-        rows: [[[E67], Warszawa], [["65"], Ełk]]
+        rows: [[["8", E67], Warszawa], [["65"], Ełk]]
       - lanes: [2]
-        rows: [[["8", E67], Augustów], [["19"], Kuźnica]]
+        rows: [[["8", E67], Augustów], [["19"], Kuźnica], [["675"], Centrum]]
+    mapillary: ["468708117568850", "143559297695026", "275528677534382", "1056932506043672", "3281350541967811"]
     reason: >-
       Overhead boards before the split of Andersa (northbound) into the viaduct (Warszawa / Ełk, OSM destination
-      on way 1101181473) and the link to Rondo Putry (Augustów / Kuźnica PL/BY, way 606396463). Board texts follow
-      the CC0 photo 7204_May_2021 (Rakoon); the exact gantry position is not measured (40 m before the split,
-      WORKING_VALUE). Faces are our own schematic drawings, not copies of the real boards.
+      on way 1101181473) and the link to Rondo Putry (Augustów / Kuźnica PL/BY, way 606396463).
+      ADR 0125 (gate 3, D51): station re-measured. The lattice portal is visible on the GUGiK orthophoto 2024
+      (0.25 m) across the northbound carriageway at E,N = (-261, -208) +- 3 m (region-local); Mapillary richlv
+      2020-08-15 brackets it between 468708117568850 (GPS -252.7,-214.8: column ~15 m ahead) and 143559297695026
+      (GPS -269.3,-200.4: its shadow at the camera); grobin 275528677534382 (2019) and kino 1056932506043672 (2024)
+      agree (39 m before OSM node 12620261934). The old WORKING_VALUE (40 m before the split node 2840742308) stood
+      59 m too far north-west. zsolt
+      3281350541967811 (2017) shows the same portal from behind; its GPS is ~45 m off (pose error, not a second
+      portal). Board texts after the 2020 frame; faces are our own schematic drawings, not copies of the real boards.
+    confidence: medium
+    verify: board layout and portal height on site
+  - id: andersa-gantry-warning-right
+    kind: gate3_sign
+    along: {osm_way: 266084693, before_node: n12620261934, distance_m: 46.0, side: R}
+    parts: [{face: A-30, plate: "wyjazd\nstraży"}]
+    mapillary: ["468708117568850", "275528677534382"]
+    reason: >-
+      ADR 0125: warning triangle with a yellow plate on both sides of the carriageway a few metres before the portal
+      (richlv 468708117568850, 2020; grobin 275528677534382, 2019 - the D51 review read the silhouettes as D-1).
+      OSM has emergency traffic signals of the fire station exit 20 m further (node at -278,-197), so the plate
+      text is the generic "wyjazd straży"; the real plate carries a pictogram that cannot be read. 7 m before the
+      portal: WORKING_VALUE read off the 2020 frame.
     confidence: low
-    verify: gantry station, lane assignment and board layout from a site photo
+    verify: sign code and plate on site
+  - id: andersa-gantry-warning-left
+    kind: gate3_sign
+    along: {osm_way: 266084693, before_node: n12620261934, distance_m: 46.0, side: L}
+    parts: [{face: A-30, plate: "wyjazd\nstraży"}]
+    mapillary: ["468708117568850", "275528677534382"]
+    reason: Same sign repeated on the median side (both photos). ADR 0125.
+    confidence: low
+    verify: sign code and plate on site
+  - id: andersa-elewatorska-island-u4a
+    kind: gate3_sign
+    at_en: [-217.3, -240.3]
+    travel_bearing_deg: 312
+    lower_edge_m: 0.9
+    parts: [{face: U-4a}]
+    mapillary: ["381800493259507", "837235577143499"]
+    reason: >-
+      ADR 0125: red / white chevron board on the nose of the island between Andersa (northbound) and the right-turn
+      slip into the side road, the main orientation mark of frames 381800493259507 (szurek 2017) and
+      837235577143499 (grobin 2019). Position = island nose on the GUGiK orthophoto 2024 (+- 1.5 m); the 2024 frame
+      (kino 1056932506043672) shows U-21 posts there instead, so the board is the 2017-2019 state. Board size
+      0.75 x 1.35 m and its designation (U-4a; the review calls it U-3) are WORKING_VALUE / UNVERIFIED.
+    confidence: low
+    verify: present state of the island nose on site
+  - id: biezenstwa-street-name-east
+    kind: gate3_sign
+    at_en: [567.1, -704.2]
+    travel_bearing_deg: 288
+    lower_edge_m: 2.6
+    post: teal
+    parts: [{face: street_name, text: "Rondo Pamięci\nBieżeństwa 1915 roku"}]
+    mapillary: ["504348097385466"]
+    reason: >-
+      ADR 0125: teal street-name plate on a teal post at the edge of the gravel island under the viaduct (richlv
+      504348097385466, 2020: ~4 m ahead-left of the camera on the ring). The island is hidden under the deck on the
+      orthophoto, so the position is the ring geometry (centre 554.7,-716.6; island edge ~17.5 m) at the bearing
+      read off the frame: +- 5 m, WORKING_VALUE. The name is the official name of the roundabout (OSM).
+    confidence: low
+    verify: plate position and text layout on site
+  - id: biezenstwa-street-name-north
+    kind: gate3_sign
+    at_en: [550.2, -699.7]
+    travel_bearing_deg: 262
+    lower_edge_m: 2.6
+    post: teal
+    parts: [{face: street_name, text: "Rondo Pamięci\nBieżeństwa 1915 roku"}]
+    mapillary: ["2818555625124739", "3970163613102941", "201270605169291"]
+    reason: >-
+      ADR 0125: second teal name plate at the island edge, ~12 m ahead of richlv 2818555625124739 / 3970163613102941
+      (2020). Same method and accuracy as biezenstwa-street-name-east (+- 5 m, WORKING_VALUE).
+    confidence: low
+    verify: plate position on site
+  - id: biezenstwa-n-slip-d6
+    kind: gate3_sign
+    at_en: [540.0, -690.6]
+    travel_bearing_deg: 300
+    lower_edge_m: 2.2
+    parts: [{face: D-6}]
+    mapillary: ["320326319617139"]
+    reason: >-
+      ADR 0125: D-6 on its own post at the left end of the pedestrian crossing of the northern slip road, on the
+      small island beside the viaduct (richlv 320326319617139, 2020). Crossing read on the GUGiK orthophoto 2024 at
+      E 533-539, N -681..-689; the post +- 3 m, WORKING_VALUE (the frame's own pose is WORKING_VALUE).
+    confidence: low
+    verify: post positions on site
+  - id: biezenstwa-n-slip-d3
+    kind: gate3_sign
+    at_en: [543.6, -691.8]
+    travel_bearing_deg: 300
+    lower_edge_m: 2.4
+    parts: [{face: D-3}]
+    mapillary: ["320326319617139"]
+    reason: >-
+      ADR 0125: D-3 (one-way road) on a taller post ~3.5 m before the D-6 on the same island (same frame). +- 3 m.
+    confidence: low
+    verify: post positions on site
   - id: ec-bialystok-chimney-1
     kind: landmark
     osm_way: 628899553
@@ -457,9 +555,9 @@ overrides:
       - {center_epsg2180: [777582.0, 596169.0], radius_m: 25.0, style: glazed, band_m: 1.0}
       - {center_epsg2180: [777535.0, 596208.0], radius_m: 45.0, style: glazed, band_m: 1.6}
       - {center_epsg2180: [777625.0, 596121.0], radius_m: 75.0, style: glazed, band_m: 1.0}   # MA-008 link
-      - {center_epsg2180: [777445.0, 596353.0], radius_m: 45.0, style: glazed, band_m: 1.0}   # MA-008/021 Tysiaclecia
-      - {center_epsg2180: [777445.0, 596438.0], radius_m: 45.0, style: glazed, band_m: 1.0}
-      - {center_epsg2180: [777445.0, 596523.0], radius_m: 60.0, style: glazed, band_m: 1.0}
+      - {center_epsg2180: [777445.0, 596353.0], radius_m: 45.0, style: glazed, band_m: 1.8}   # MA-008/021 Tysiaclecia
+      - {center_epsg2180: [777445.0, 596438.0], radius_m: 45.0, style: glazed, band_m: 1.8}
+      - {center_epsg2180: [777445.0, 596523.0], radius_m: 60.0, style: glazed, band_m: 1.8}
     mapillary: ["1911352299378570", "1783751488818497", "1240467703063612", "1424981177846267", "995780104564541",
                 "312705613662497", "1340597302993462"]
     reason: >-
@@ -471,6 +569,8 @@ overrides:
       Map audit r9 (MA-008 / MA-021): Mapillary 1424981177846267, 995780104564541 (link to Putry) and 312705613662497,
       1340597302993462 (al. Tysiaclecia) show clear panels on green posts with a low solid plinth along these runs
       too; zones 3-6 added (band 1.0 m WORKING_VALUE).
+      ADR 0125: Mapillary 1801374876712141 (gpsmapper 2019, al. Tysiaclecia northbound) shows the dark solid band
+      of zones 4-6 reaching ~40 % of the 4 m wall; band 1.0 -> 1.8 m (WORKING_VALUE, read against the posts).
     confidence: medium
     verify: style change station and band heights on site
   - id: andersa-p26-tree-groups

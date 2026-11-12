@@ -1,0 +1,42 @@
+{
+  "schema": "truck-sim-pl/gate3-cameras/1",
+  "region": "bialystok-industrial-c",
+  "cameras": [
+    {
+      "id": "d_gate_kerb_outer",
+      "type": "persp",
+      "kind": "photo_match",
+      "seat": "file",
+      "pos": [
+        621,
+        -604,
+        142.3225
+      ],
+      "look_at": [
+        623.707,
+        -604.716,
+        140.9073
+      ],
+      "fov_deg": 48,
+      "note": "ReadonlyGsourceverifiedactualentrykerb scuffs byrealbooms, notgatehouseproxy. Actualvisibilitypending."
+    },
+    {
+      "id": "d_gate_kerb_nose",
+      "type": "persp",
+      "kind": "photo_match",
+      "seat": "file",
+      "pos": [
+        621.5,
+        -605.5,
+        142.3036
+      ],
+      "look_at": [
+        617.739,
+        -603.411,
+        140.9
+      ],
+      "fov_deg": 48,
+      "note": "ReadonlyGsourceverifiedrealislandnose/boomzone, no pairedpavementtreadclaim."
+    }
+  ]
+}

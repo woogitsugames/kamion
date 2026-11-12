@@ -1,0 +1,185 @@
+tier=High lighting=overcast msaa=2 renderScale=1
+biezenstwa-above: objects=96 drawsEst=450 shadowDrawsEst=477 trisK=1100 (estimate, before SRP batching)
+  biezenstwa-above instanced (props+trees): draws 572, instances 703, triangles 70k, cells 191, forest HLOD cells 124
+cab-dash: objects=118 drawsEst=786 shadowDrawsEst=480 trisK=1386 (estimate, before SRP batching)
+  cab-dash instanced (props+trees): draws 693, instances 703, triangles 76k, cells 331, forest HLOD cells 20
+cab-driver: objects=114 drawsEst=746 shadowDrawsEst=480 trisK=1370 (estimate, before SRP batching)
+  cab-driver instanced (props+trees): draws 696, instances 840, triangles 77k, cells 289, forest HLOD cells 16
+cab-gate: objects=109 drawsEst=704 shadowDrawsEst=480 trisK=1356 (estimate, before SRP batching)
+  cab-gate instanced (props+trees): draws 673, instances 807, triangles 74k, cells 285, forest HLOD cells 9
+cab-grain: objects=18 drawsEst=112 shadowDrawsEst=480 trisK=421 (estimate, before SRP batching)
+  cab-grain instanced (props+trees): draws 120, instances 28, triangles 16k, cells 4, forest HLOD cells 0
+cab-left: objects=51 drawsEst=288 shadowDrawsEst=480 trisK=825 (estimate, before SRP batching)
+  cab-left instanced (props+trees): draws 522, instances 834, triangles 51k, cells 86, forest HLOD cells 15
+cab-materials: objects=30 drawsEst=148 shadowDrawsEst=480 trisK=645 (estimate, before SRP batching)
+  cab-materials instanced (props+trees): draws 265, instances 62, triangles 29k, cells 6, forest HLOD cells 0
+cab-mirror-front: objects=138 drawsEst=993 shadowDrawsEst=480 trisK=2558 (estimate, before SRP batching)
+  cab-mirror-front instanced (props+trees): draws 502, instances 342, triangles 53k, cells 352, forest HLOD cells 38
+cab-mirrors-left: objects=41 drawsEst=240 shadowDrawsEst=480 trisK=827 (estimate, before SRP batching)
+  cab-mirrors-left instanced (props+trees): draws 337, instances 532, triangles 31k, cells 60, forest HLOD cells 12
+cab-mirrors-right: objects=134 drawsEst=867 shadowDrawsEst=480 trisK=2340 (estimate, before SRP batching)
+  cab-mirrors-right instanced (props+trees): draws 394, instances 371, triangles 56k, cells 362, forest HLOD cells 84
+cab-right: objects=152 drawsEst=1053 shadowDrawsEst=480 trisK=1755 (estimate, before SRP batching)
+  cab-right instanced (props+trees): draws 733, instances 749, triangles 98k, cells 522, forest HLOD cells 116
+cab-seat: objects=37 drawsEst=197 shadowDrawsEst=480 trisK=549 (estimate, before SRP batching)
+  cab-seat instanced (props+trees): draws 216, instances 753, triangles 32k, cells 38, forest HLOD cells 22
+cab-seat-entry: objects=29 drawsEst=98 shadowDrawsEst=480 trisK=451 (estimate, before SRP batching)
+  cab-seat-entry instanced (props+trees): draws 84, instances 18, triangles 14k, cells 2, forest HLOD cells 0
+car_lod_08: objects=61 drawsEst=306 shadowDrawsEst=480 trisK=1031 (estimate, before SRP batching)
+  car_lod_08 instanced (props+trees): draws 340, instances 662, triangles 88k, cells 342, forest HLOD cells 282
+car_lod_12: objects=70 drawsEst=325 shadowDrawsEst=480 trisK=1082 (estimate, before SRP batching)
+  car_lod_12 instanced (props+trees): draws 342, instances 649, triangles 91k, cells 343, forest HLOD cells 282
+car_lod_15: objects=77 drawsEst=342 shadowDrawsEst=480 trisK=1149 (estimate, before SRP batching)
+  car_lod_15 instanced (props+trees): draws 326, instances 637, triangles 94k, cells 344, forest HLOD cells 282
+car_lod_25: objects=109 drawsEst=393 shadowDrawsEst=480 trisK=1268 (estimate, before SRP batching)
+  car_lod_25 instanced (props+trees): draws 360, instances 613, triangles 92k, cells 345, forest HLOD cells 279
+chase: objects=139 drawsEst=709 shadowDrawsEst=474 trisK=1421 (estimate, before SRP batching)
+  chase instanced (props+trees): draws 593, instances 686, triangles 58k, cells 243, forest HLOD cells 8
+dk8-dk19-exit: objects=33 drawsEst=113 shadowDrawsEst=51 trisK=408 (estimate, before SRP batching)
+  dk8-dk19-exit instanced (props+trees): draws 88, instances 2218, triangles 61k, cells 73, forest HLOD cells 46
+driver-andersa-to-putry: objects=104 drawsEst=545 shadowDrawsEst=342 trisK=1265 (estimate, before SRP batching)
+  driver-andersa-to-putry instanced (props+trees): draws 276, instances 889, triangles 79k, cells 311, forest HLOD cells 187
+edge-east: objects=11 drawsEst=54 shadowDrawsEst=120 trisK=243 (estimate, before SRP batching)
+  edge-east instanced (props+trees): draws 45, instances 244, triangles 1k, cells 6, forest HLOD cells 0
+edge-north: objects=12 drawsEst=51 shadowDrawsEst=129 trisK=185 (estimate, before SRP batching)
+  edge-north instanced (props+trees): draws 96, instances 1166, triangles 30k, cells 10, forest HLOD cells 1
+edge-south: objects=16 drawsEst=124 shadowDrawsEst=294 trisK=525 (estimate, before SRP batching)
+  edge-south instanced (props+trees): draws 81, instances 48, triangles 4k, cells 3, forest HLOD cells 0
+edge-west: objects=14 drawsEst=47 shadowDrawsEst=102 trisK=178 (estimate, before SRP batching)
+  edge-west instanced (props+trees): draws 68, instances 951, triangles 15k, cells 9, forest HLOD cells 0
+fire-station-abeam: objects=75 drawsEst=312 shadowDrawsEst=342 trisK=897 (estimate, before SRP batching)
+  fire-station-abeam instanced (props+trees): draws 333, instances 911, triangles 88k, cells 476, forest HLOD cells 336
+fire-station-above: objects=131 drawsEst=569 shadowDrawsEst=261 trisK=1322 (estimate, before SRP batching)
+  fire-station-above instanced (props+trees): draws 342, instances 1089, triangles 88k, cells 501, forest HLOD cells 261
+fire-station-ref7197: objects=36 drawsEst=150 shadowDrawsEst=342 trisK=1000 (estimate, before SRP batching)
+  fire-station-ref7197 instanced (props+trees): draws 237, instances 520, triangles 67k, cells 276, forest HLOD cells 239
+fire-station-route: objects=83 drawsEst=372 shadowDrawsEst=342 trisK=934 (estimate, before SRP batching)
+  fire-station-route instanced (props+trees): draws 301, instances 801, triangles 90k, cells 470, forest HLOD cells 377
+g3a-eye-s0262: objects=65 drawsEst=448 shadowDrawsEst=291 trisK=1013 (estimate, before SRP batching)
+  g3a-eye-s0262 instanced (props+trees): draws 614, instances 461, triangles 102k, cells 177, forest HLOD cells 3
+g3a-rondo-bie-approach: objects=54 drawsEst=396 shadowDrawsEst=336 trisK=940 (estimate, before SRP batching)
+  g3a-rondo-bie-approach instanced (props+trees): draws 249, instances 332, triangles 33k, cells 133, forest HLOD cells 0
+g3b-eye-s1482: objects=89 drawsEst=447 shadowDrawsEst=219 trisK=1010 (estimate, before SRP batching)
+  g3b-eye-s1482 instanced (props+trees): draws 282, instances 921, triangles 50k, cells 234, forest HLOD cells 148
+g3b-rondo-putry-approach: objects=87 drawsEst=443 shadowDrawsEst=426 trisK=991 (estimate, before SRP batching)
+  g3b-rondo-putry-approach instanced (props+trees): draws 162, instances 701, triangles 34k, cells 195, forest HLOD cells 122
+g_current_black_lod_05: objects=53 drawsEst=170 shadowDrawsEst=504 trisK=616 (estimate, before SRP batching)
+  g_current_black_lod_05 instanced (props+trees): draws 221, instances 365, triangles 56k, cells 108, forest HLOD cells 99
+g_current_black_lod_20: objects=64 drawsEst=198 shadowDrawsEst=492 trisK=680 (estimate, before SRP batching)
+  g_current_black_lod_20 instanced (props+trees): draws 368, instances 378, triangles 85k, cells 116, forest HLOD cells 105
+g_current_black_lod_45: objects=64 drawsEst=202 shadowDrawsEst=426 trisK=655 (estimate, before SRP batching)
+  g_current_black_lod_45 instanced (props+trees): draws 413, instances 398, triangles 92k, cells 123, forest HLOD cells 111
+g_current_black_wheel_02: objects=72 drawsEst=229 shadowDrawsEst=492 trisK=641 (estimate, before SRP batching)
+  g_current_black_wheel_02 instanced (props+trees): draws 381, instances 559, triangles 82k, cells 206, forest HLOD cells 187
+g_dirt_level_0: objects=123 drawsEst=584 shadowDrawsEst=336 trisK=1390 (estimate, before SRP batching)
+  g_dirt_level_0 instanced (props+trees): draws 493, instances 407, triangles 135k, cells 270, forest HLOD cells 90
+g_dirt_level_1: objects=36 drawsEst=229 shadowDrawsEst=459 trisK=831 (estimate, before SRP batching)
+  g_dirt_level_1 instanced (props+trees): draws 555, instances 359, triangles 114k, cells 55, forest HLOD cells 0
+g_dirt_level_2: objects=16 drawsEst=150 shadowDrawsEst=384 trisK=465 (estimate, before SRP batching)
+  g_dirt_level_2 instanced (props+trees): draws 463, instances 194, triangles 119k, cells 52, forest HLOD cells 41
+g_dirt_level_3: objects=167 drawsEst=896 shadowDrawsEst=219 trisK=1952 (estimate, before SRP batching)
+  g_dirt_level_3 instanced (props+trees): draws 293, instances 430, triangles 68k, cells 478, forest HLOD cells 89
+glass_front: objects=114 drawsEst=678 shadowDrawsEst=480 trisK=1426 (estimate, before SRP batching)
+  glass_front instanced (props+trees): draws 453, instances 663, triangles 86k, cells 495, forest HLOD cells 209
+kwadrat-park-gate: objects=83 drawsEst=298 shadowDrawsEst=291 trisK=672 (estimate, before SRP batching)
+  kwadrat-park-gate instanced (props+trees): draws 820, instances 483, triangles 156k, cells 287, forest HLOD cells 236
+photo-biezenstwa-ground: objects=58 drawsEst=419 shadowDrawsEst=480 trisK=963 (estimate, before SRP batching)
+  photo-biezenstwa-ground instanced (props+trees): draws 241, instances 323, triangles 31k, cells 138, forest HLOD cells 0
+putry-above: objects=78 drawsEst=428 shadowDrawsEst=276 trisK=1118 (estimate, before SRP batching)
+  putry-above instanced (props+trees): draws 237, instances 528, triangles 24k, cells 196, forest HLOD cells 23
+r10_block_1: objects=93 drawsEst=605 shadowDrawsEst=342 trisK=1742 (estimate, before SRP batching)
+  r10_block_1 instanced (props+trees): draws 359, instances 611, triangles 36k, cells 224, forest HLOD cells 14
+r10_block_2: objects=86 drawsEst=523 shadowDrawsEst=300 trisK=1721 (estimate, before SRP batching)
+  r10_block_2 instanced (props+trees): draws 439, instances 631, triangles 42k, cells 181, forest HLOD cells 7
+r10_block_3: objects=85 drawsEst=528 shadowDrawsEst=300 trisK=1485 (estimate, before SRP batching)
+  r10_block_3 instanced (props+trees): draws 457, instances 662, triangles 48k, cells 176, forest HLOD cells 5
+r10_block_4: objects=80 drawsEst=486 shadowDrawsEst=213 trisK=1584 (estimate, before SRP batching)
+  r10_block_4 instanced (props+trees): draws 396, instances 576, triangles 35k, cells 184, forest HLOD cells 9
+r10_block_5: objects=85 drawsEst=522 shadowDrawsEst=213 trisK=1517 (estimate, before SRP batching)
+  r10_block_5 instanced (props+trees): draws 364, instances 845, triangles 36k, cells 193, forest HLOD cells 9
+r10_fence_1: objects=78 drawsEst=416 shadowDrawsEst=342 trisK=1458 (estimate, before SRP batching)
+  r10_fence_1 instanced (props+trees): draws 420, instances 874, triangles 48k, cells 161, forest HLOD cells 18
+r10_fence_2: objects=177 drawsEst=884 shadowDrawsEst=342 trisK=1683 (estimate, before SRP batching)
+  r10_fence_2 instanced (props+trees): draws 497, instances 696, triangles 78k, cells 513, forest HLOD cells 171
+r10_fence_3: objects=130 drawsEst=517 shadowDrawsEst=204 trisK=1304 (estimate, before SRP batching)
+  r10_fence_3 instanced (props+trees): draws 415, instances 833, triangles 89k, cells 507, forest HLOD cells 270
+r10_front_04: objects=60 drawsEst=304 shadowDrawsEst=480 trisK=1024 (estimate, before SRP batching)
+  r10_front_04 instanced (props+trees): draws 340, instances 672, triangles 88k, cells 343, forest HLOD cells 283
+r10_hall_1: objects=31 drawsEst=205 shadowDrawsEst=297 trisK=593 (estimate, before SRP batching)
+  r10_hall_1 instanced (props+trees): draws 652, instances 465, triangles 96k, cells 61, forest HLOD cells 23
+r10_hall_2: objects=28 drawsEst=201 shadowDrawsEst=249 trisK=630 (estimate, before SRP batching)
+  r10_hall_2 instanced (props+trees): draws 712, instances 481, triangles 92k, cells 68, forest HLOD cells 29
+r10_hall_3: objects=131 drawsEst=949 shadowDrawsEst=417 trisK=1463 (estimate, before SRP batching)
+  r10_hall_3 instanced (props+trees): draws 571, instances 761, triangles 77k, cells 541, forest HLOD cells 149
+r10_hall_4: objects=113 drawsEst=365 shadowDrawsEst=486 trisK=914 (estimate, before SRP batching)
+  r10_hall_4 instanced (props+trees): draws 597, instances 521, triangles 129k, cells 411, forest HLOD cells 305
+r10_house_1: objects=70 drawsEst=253 shadowDrawsEst=489 trisK=767 (estimate, before SRP batching)
+  r10_house_1 instanced (props+trees): draws 270, instances 583, triangles 67k, cells 422, forest HLOD cells 308
+r10_house_2: objects=71 drawsEst=254 shadowDrawsEst=213 trisK=795 (estimate, before SRP batching)
+  r10_house_2 instanced (props+trees): draws 248, instances 723, triangles 65k, cells 422, forest HLOD cells 305
+r10_office_1: objects=21 drawsEst=152 shadowDrawsEst=504 trisK=355 (estimate, before SRP batching)
+  r10_office_1 instanced (props+trees): draws 220, instances 692, triangles 39k, cells 43, forest HLOD cells 27
+r10_office_2: objects=28 drawsEst=201 shadowDrawsEst=321 trisK=630 (estimate, before SRP batching)
+  r10_office_2 instanced (props+trees): draws 886, instances 470, triangles 193k, cells 67, forest HLOD cells 30
+r10_rear_04: objects=93 drawsEst=373 shadowDrawsEst=480 trisK=1165 (estimate, before SRP batching)
+  r10_rear_04 instanced (props+trees): draws 520, instances 845, triangles 53k, cells 97, forest HLOD cells 12
+r10_shed_1: objects=19 drawsEst=144 shadowDrawsEst=480 trisK=351 (estimate, before SRP batching)
+  r10_shed_1 instanced (props+trees): draws 215, instances 913, triangles 36k, cells 41, forest HLOD cells 25
+r10_shed_2: objects=178 drawsEst=1070 shadowDrawsEst=213 trisK=1585 (estimate, before SRP batching)
+  r10_shed_2 instanced (props+trees): draws 363, instances 922, triangles 49k, cells 520, forest HLOD cells 79
+r10_shed_3: objects=86 drawsEst=578 shadowDrawsEst=321 trisK=1180 (estimate, before SRP batching)
+  r10_shed_3 instanced (props+trees): draws 679, instances 1454, triangles 86k, cells 215, forest HLOD cells 27
+r10_wheel_02: objects=55 drawsEst=291 shadowDrawsEst=480 trisK=1090 (estimate, before SRP batching)
+  r10_wheel_02 instanced (props+trees): draws 340, instances 677, triangles 88k, cells 322, forest HLOD cells 267
+r10b_black_05: objects=58 drawsEst=318 shadowDrawsEst=504 trisK=954 (estimate, before SRP batching)
+  r10b_black_05 instanced (props+trees): draws 568, instances 478, triangles 125k, cells 358, forest HLOD cells 276
+r10b_black_20: objects=94 drawsEst=397 shadowDrawsEst=492 trisK=1144 (estimate, before SRP batching)
+  r10b_black_20 instanced (props+trees): draws 554, instances 473, triangles 127k, cells 361, forest HLOD cells 276
+r10b_black_45: objects=101 drawsEst=412 shadowDrawsEst=462 trisK=1298 (estimate, before SRP batching)
+  r10b_black_45 instanced (props+trees): draws 525, instances 455, triangles 109k, cells 360, forest HLOD cells 273
+r10b_blue_05: objects=63 drawsEst=354 shadowDrawsEst=363 trisK=1199 (estimate, before SRP batching)
+  r10b_blue_05 instanced (props+trees): draws 572, instances 476, triangles 133k, cells 352, forest HLOD cells 267
+r10b_blue_20: objects=64 drawsEst=356 shadowDrawsEst=303 trisK=1209 (estimate, before SRP batching)
+  r10b_blue_20 instanced (props+trees): draws 561, instances 459, triangles 123k, cells 350, forest HLOD cells 264
+r10b_grey_05: objects=67 drawsEst=367 shadowDrawsEst=408 trisK=1261 (estimate, before SRP batching)
+  r10b_grey_05 instanced (props+trees): draws 574, instances 479, triangles 137k, cells 361, forest HLOD cells 274
+r10b_grey_20: objects=71 drawsEst=379 shadowDrawsEst=285 trisK=1317 (estimate, before SRP batching)
+  r10b_grey_20 instanced (props+trees): draws 544, instances 467, triangles 135k, cells 360, forest HLOD cells 271
+r10b_silver_05: objects=60 drawsEst=304 shadowDrawsEst=480 trisK=1024 (estimate, before SRP batching)
+  r10b_silver_05 instanced (props+trees): draws 340, instances 692, triangles 88k, cells 351, forest HLOD cells 286
+r4_dirt_candidate_3: objects=77 drawsEst=273 shadowDrawsEst=321 trisK=767 (estimate, before SRP batching)
+  r4_dirt_candidate_3 instanced (props+trees): draws 625, instances 468, triangles 127k, cells 202, forest HLOD cells 179
+route-onramp-andersa: objects=155 drawsEst=1000 shadowDrawsEst=234 trisK=1580 (estimate, before SRP batching)
+  route-onramp-andersa instanced (props+trees): draws 751, instances 1441, triangles 155k, cells 672, forest HLOD cells 268
+route-onramp-andersa-above: objects=141 drawsEst=747 shadowDrawsEst=96 trisK=1344 (estimate, before SRP batching)
+  route-onramp-andersa-above instanced (props+trees): draws 721, instances 1528, triangles 168k, cells 686, forest HLOD cells 384
+route-putry-approach: objects=88 drawsEst=446 shadowDrawsEst=360 trisK=1002 (estimate, before SRP batching)
+  route-putry-approach instanced (props+trees): draws 248, instances 659, triangles 44k, cells 212, forest HLOD cells 135
+route-putry-entry-signs: objects=69 drawsEst=320 shadowDrawsEst=489 trisK=674 (estimate, before SRP batching)
+  route-putry-entry-signs instanced (props+trees): draws 190, instances 630, triangles 26k, cells 166, forest HLOD cells 104
+stretch-01: objects=100 drawsEst=667 shadowDrawsEst=480 trisK=1181 (estimate, before SRP batching)
+  stretch-01 instanced (props+trees): draws 732, instances 876, triangles 89k, cells 293, forest HLOD cells 10
+stretch-02: objects=77 drawsEst=528 shadowDrawsEst=321 trisK=1029 (estimate, before SRP batching)
+  stretch-02 instanced (props+trees): draws 1042, instances 788, triangles 175k, cells 229, forest HLOD cells 6
+stretch-03: objects=66 drawsEst=452 shadowDrawsEst=291 trisK=1014 (estimate, before SRP batching)
+  stretch-03 instanced (props+trees): draws 575, instances 473, triangles 99k, cells 185, forest HLOD cells 3
+stretch-04: objects=171 drawsEst=1114 shadowDrawsEst=498 trisK=1698 (estimate, before SRP batching)
+  stretch-04 instanced (props+trees): draws 575, instances 754, triangles 100k, cells 788, forest HLOD cells 310
+stretch-05-docks: objects=111 drawsEst=561 shadowDrawsEst=321 trisK=1171 (estimate, before SRP batching)
+  stretch-05-docks instanced (props+trees): draws 1234, instances 875, triangles 296k, cells 691, forest HLOD cells 473
+trailer-34: objects=178 drawsEst=1013 shadowDrawsEst=480 trisK=2195 (estimate, before SRP batching)
+  trailer-34 instanced (props+trees): draws 637, instances 567, triangles 61k, cells 352, forest HLOD cells 26
+trailer-side: objects=133 drawsEst=735 shadowDrawsEst=480 trisK=1442 (estimate, before SRP batching)
+  trailer-side instanced (props+trees): draws 448, instances 659, triangles 89k, cells 528, forest HLOD cells 225
+truck-34: objects=109 drawsEst=335 shadowDrawsEst=480 trisK=1220 (estimate, before SRP batching)
+  truck-34 instanced (props+trees): draws 361, instances 603, triangles 96k, cells 335, forest HLOD cells 277
+truck-34r: objects=67 drawsEst=161 shadowDrawsEst=480 trisK=551 (estimate, before SRP batching)
+  truck-34r instanced (props+trees): draws 145, instances 907, triangles 30k, cells 44, forest HLOD cells 31
+truck-at-gate: objects=71 drawsEst=166 shadowDrawsEst=480 trisK=637 (estimate, before SRP batching)
+  truck-at-gate instanced (props+trees): draws 157, instances 680, triangles 36k, cells 82, forest HLOD cells 71
+truck-front: objects=72 drawsEst=203 shadowDrawsEst=480 trisK=661 (estimate, before SRP batching)
+  truck-front instanced (props+trees): draws 147, instances 517, triangles 38k, cells 86, forest HLOD cells 76
+truck-rear34: objects=168 drawsEst=1016 shadowDrawsEst=480 trisK=2101 (estimate, before SRP batching)
+  truck-rear34 instanced (props+trees): draws 657, instances 546, triangles 64k, cells 393, forest HLOD cells 35
+truck-side: objects=151 drawsEst=772 shadowDrawsEst=480 trisK=1808 (estimate, before SRP batching)
+  truck-side instanced (props+trees): draws 425, instances 498, triangles 88k, cells 439, forest HLOD cells 185
