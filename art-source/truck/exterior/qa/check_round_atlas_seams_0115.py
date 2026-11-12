@@ -8,6 +8,7 @@ import ast
 import hashlib
 import json
 import math
+import os
 from pathlib import Path
 import subprocess
 import sys
@@ -140,7 +141,7 @@ authoring = {'parametric_uv_preserved':True,'packed_charts':before_islands,
 print('ATLAS_AUTHORING:',json.dumps(authoring))
 
 source = ROOT/'tools/blender/truck/exterior/a6_export.py'
-output = ROOT/'artifacts/truck-r3/atlas-seam-regression.json'
+output = ROOT/os.environ.get('TRUCK_0115_ARTIFACT_ROOT','artifacts/truck-r3')/'atlas-seam-regression.json'
 output.parent.mkdir(parents=True,exist_ok=True)
 output.write_text(json.dumps({'result':'Passed','baseline_commit':'e35eb7e5',
     'candidate_source_sha256':hashlib.sha256(source.read_bytes()).hexdigest(),

@@ -63,6 +63,9 @@ for ob in objects:
         if area <= 1e-14 or any(v < -1e-6 or v > 1+1e-6 for p in points for v in p):
             raise AssertionError('Degenerate or out-of-atlas Low triangle')
     A.finalize_mesh(low)
+    mesh.calc_loop_triangles()
+    if len(mesh.loop_triangles) != 680:
+        raise AssertionError('Finalize changed regular Low topology')
     if any(n in mesh.attributes for n in ('disc_chart', 'disc_parameter', 'prio')):
         raise AssertionError('Auxiliary authoring data would escape to FBX')
     if [layer.name for layer in mesh.uv_layers] != ['Atlas', 'Decal', 'Data']:
