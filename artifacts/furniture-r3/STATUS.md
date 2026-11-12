@@ -64,3 +64,5 @@ potem poprawić największe udokumentowane odstępstwo wiaty. WIP po każdym kro
 2026-11-12T11:38:08.3595509+01:00: preflight licznika zatrzymał próbę przed Unity:tekstowe kopiowanie dodało końcowy newline doC#, więc hash różnił się od własnego istniejącego diagnostyka r2. Skopiowano źródło bajtowo i potwierdzono zgodnośćSHA256 z celem; kod bez zmian. Zachowano log nieudanej kontroli. Ponowne uruchomienie tej samej próby jest teraz bezpieczne; marker własny odtworzony.
 
 2026-11-12T11:38:35.8684391+01:00: dokładny licznik CPU before Low clear; sukces=True, slot Unity zwolniony. NASTĘPNY KROK: pozostałe warianty i porównanie przed/po, bez deklaracji czasu GPU.
+
+2026-11-12T11:39:00.7749909+01:00: dokładny licznik CPU before Low overcast; sukces=True, slot Unity zwolniony. NASTĘPNY KROK: pozostałe warianty i porównanie przed/po, bez deklaracji czasu GPU.
