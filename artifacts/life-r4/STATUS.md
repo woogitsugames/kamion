@@ -7,3 +7,5 @@ Cel: na aktualnym main potwierdzić faktyczny runtime LOD i widoczność istniej
 Oryginalna doba kończy się około 12.11.2026 21:31 Warszawa. Jedyny integrator main: lider Claude (kontynuacja S12). Bez scalania do main, pushowania i telefonów. Każde Unity: slot gpt-life; ciężki Python: heavy gpt-life-r4, bez usuwania cudzych slotów/rezerwacji. StaleHours 1000000.
 
 Następny krok: zakończyć merge i sprawdzić wspólną flagę flake_lift; odświeżyć dozwolone źródła raw/CC0/Megascans, kanoniczne materiały → World → fidelity w jednym heavy, nowy import/baseline w czterech warunkach. Dopiero po oględzinach zmiana produkcyjna. Nie używać starego main z r3 jako baseline.
+
+Krok 2: odświeżono raw CC0, źródła CC0/Megascans i natywne Truck/Trailer z main; źródła fixture przed/po kopiowaniu oraz wszystkie kopie zgodne SHA. Nie kopiowano świata z aktywnego main. Następny krok: baseline-gen.ps1 pod jednym heavy.
