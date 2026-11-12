@@ -32,6 +32,7 @@ namespace Game.Rendering.Editor
             public bool actualDriverEye; // QA only: cab-dash eye, horizontal actual cab forward. Never a light source.
             public bool verifyWetness;
             public float expectedWetness;
+            public bool skyOnly; // Diagnostic only: disable scene renderers and the custom world instancer, retain lighting.
             public int expectedHeadlamps; // 0 unchecked, 1 off, 2 on. Requires per-camera probes.
             public bool overrideSkyDisplay;
             public float skyDisplayGain = 1f, skyDisplayDesaturation;
@@ -116,6 +117,7 @@ namespace Game.Rendering.Editor
                     if (job.expectedHeadlamps < 0 || job.expectedHeadlamps > 2 || (job.expectedHeadlamps > 0 && lampProbe == null))
                         throw new ArgumentException("expectedHeadlamps requires lampProbe and a value0..2");
                     Action<ScriptableRenderContext, Camera> filter = (_, camera) => {
+                        if (job.skyOnly) HideWorldForSkyQa();
                         if (job.shadowFilter > 0)
                             foreach (var light in UnityEngine.Object.FindObjectsByType<Light>(FindObjectsSortMode.None))
                                 if (light.type == LightType.Directional)
@@ -123,6 +125,8 @@ namespace Game.Rendering.Editor
                         lampProbe?.Capture(camera);
                     };
                     int count;
+                    SkyOnlyProof skyProof = null;
+                    void PrepareSkyOnly(Scene scene, OpenSceneMode mode) { skyProof = HideWorldForSkyQa(); }
                     void AddDriverEye(Scene scene, OpenSceneMode mode)
                     {
                         var eye = UnityEngine.Object.FindObjectsByType<ControlCamera>(FindObjectsInactive.Include, FindObjectsSortMode.None)
@@ -150,6 +154,7 @@ namespace Game.Rendering.Editor
                         }, true));
                     }
                     if (job.actualDriverEye) EditorSceneManager.sceneOpened += AddDriverEye;
+                    if (job.skyOnly) EditorSceneManager.sceneOpened += PrepareSkyOnly;
                     RenderPipelineManager.beginCameraRendering += filter;
                     try
                     {
@@ -159,11 +164,20 @@ namespace Game.Rendering.Editor
                     finally {
                         RenderPipelineManager.beginCameraRendering -= filter;
                         if (job.actualDriverEye) EditorSceneManager.sceneOpened -= AddDriverEye;
+                        if (job.skyOnly) EditorSceneManager.sceneOpened -= PrepareSkyOnly;
                     }
                     if (count <= 0) throw new InvalidOperationException("Job rendered no cameras: " + job.output);
                     int expected = string.IsNullOrEmpty(job.cameras) ? count : job.cameras.Split(',')
                         .Select(id => id.Trim()).Where(id => id.Length > 0).Distinct(StringComparer.OrdinalIgnoreCase).Count();
                     if (count != expected) throw new InvalidOperationException($"Incomplete lighting QA: expected={expected}, rendered={count}");
+                    if (job.skyOnly)
+                    {
+                        var final = HideWorldForSkyQa();
+                        if (skyProof == null || skyProof.sceneRenderers == 0 || skyProof.worldInstancers == 0 ||
+                            final.remainingEnabledRenderers != 0 || final.remainingEnabledInstancers != 0)
+                            throw new InvalidOperationException("Sky-only QA did not disable the expected world drawing paths");
+                        File.WriteAllText(Path.Combine(job.output, "sky-only-proof.json"), JsonUtility.ToJson(final, true));
+                    }
                     lampProbe?.Write(job.output, expected, job.expectedHeadlamps,
                         job.verifyWetness ? job.expectedWetness : (float?)null);
                     var environment = UnityEngine.Object.FindAnyObjectByType<EnvironmentLighting>();
@@ -202,6 +216,28 @@ namespace Game.Rendering.Editor
                 RenderOverrides.Parse(_ => null);
             }
             if (Application.isBatchMode) EditorApplication.Exit(exit);
+        }
+
+        [Serializable] sealed class SkyOnlyProof
+        {
+            public string scope = "QA only: scene Renderer.enabled=false and Game.World.WorldInstances.enabled=false; lighting and preset retained; no scene saved";
+            public int sceneRenderers, worldInstancers, remainingEnabledRenderers, remainingEnabledInstancers;
+        }
+
+        static SkyOnlyProof HideWorldForSkyQa()
+        {
+            var scene = SceneManager.GetActiveScene();
+            var renderers = UnityEngine.Object.FindObjectsByType<Renderer>(FindObjectsInactive.Include, FindObjectsSortMode.None)
+                .Where(r => r.gameObject.scene == scene).ToArray();
+            var instancers = UnityEngine.Object.FindObjectsByType<MonoBehaviour>(FindObjectsInactive.Include, FindObjectsSortMode.None)
+                .Where(b => b.gameObject.scene == scene && b.GetType().FullName == "Game.World.WorldInstances").ToArray();
+            foreach (var renderer in renderers) renderer.enabled = false;
+            foreach (var instancer in instancers) instancer.enabled = false;
+            return new SkyOnlyProof {
+                sceneRenderers = renderers.Length, worldInstancers = instancers.Length,
+                remainingEnabledRenderers = renderers.Count(r => r.enabled),
+                remainingEnabledInstancers = instancers.Count(b => b.enabled)
+            };
         }
 
         [Serializable] sealed class EyeProof
