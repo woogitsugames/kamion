@@ -52,3 +52,4 @@ Zapisano pary foto before High-overcast-photo-2048x1536. Następny krok: porówn
 Złożono arkusze świeżego baseline i statystyki kamer w heavy, z ograniczeniem BLAS do jednego wątku. Autor musi obejrzeć arkusze przed zmianą produkcji.
 Celowany RED nowego kontraktu: kod 1, oczekiwany RED=True. Produkcja nadal bez zmian; to nie zielony test ani akceptacja wyglądu.
 Autor obejrzał wszystkie 40 arkuszy before (368 ujęć). SELF-REVIEW-before opisuje bryłowy berberys, otwarte drzewa B8 i zakres próby. RED: 1 failed, 4 passed, 0,66 s. Następny krok: materiał liści istniejącej warstwy wewnętrznej, bez nowych trójkątów.
+Kandydat A zmienia wyłącznie berberis_red: istniejąca geometria rdzenia używa istniejącego materiału alpha liści i UV w skali liścia. Test wysokości zachowano przez etykietowany wariant referencyjny; osobny test sprawdza identyczność geometrii. Kandydat nie jest zaakceptowany wizualnie.

@@ -5,7 +5,7 @@ import numpy as np
 from shapely.geometry import box, mapping
 
 from streetscape.vegetation import ground_masks
-from streetscape.plantings import hedge_mass, hedge_mats
+from streetscape.plantings import SPECIES, hedge_mass, hedge_mats
 
 
 def test_verge_keeps_patch_variation_beside_a_mapped_lawn_without_invented_bare_soil():
@@ -35,10 +35,13 @@ def test_mapped_forest_and_exposed_soil_survive_ground_variation():
     assert (masks[:, 64, 0] == 0).all()  # road channel remains exactly zero on road
 
 
-def test_roundabout_berberis_core_stays_below_the_actual_triangulated_leaf_shell():
+def test_roundabout_berberis_core_stays_below_the_actual_triangulated_leaf_shell(monkeypatch):
     # This round changes the photographed berberis beds. Other prototype
     # families keep their existing geometry; their corner defects remain open.
     plant = "berberis_red"
+    # Label the inner geometry with its opaque reference material for selection.
+    # The leaf-core regression separately proves exact vertex/index equality.
+    monkeypatch.setitem(SPECIES[plant], "leaf_core", False)
     class Capture:
         def __init__(self):
             self.parts = []
