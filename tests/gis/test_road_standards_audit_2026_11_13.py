@@ -94,7 +94,11 @@ def test_sidewalk_crossfall_vs_33():
 def test_kerb_height_vs_89():
     """PTB2022 § 89 ust. 2 pkt 1: dopuszcza się zmniejszenie odległości bariery do 0,50 m
     od krawędzi pasa ruchu, "jeżeli na krawędzi pasa ruchu znajduje się krawężnik o wysokości
-    wynoszącej co najmniej 0,12 m"."""
+    wynoszącej co najmniej 0,12 m".
+
+    Integracja r6: to NIE jest wymóg wysokości krawężnika (przepis jej nie ustala; KERB_HEIGHT
+    = WORKING_VALUE), tylko warunek skróconej odległości bariery - test pilnuje, żeby
+    GUARDRAIL_OFFSET 0,60 m (< 1,0 m) przy krawężniku pozostał dopuszczalny."""
     assert S.KERB_HEIGHT >= 0.12
 
 
