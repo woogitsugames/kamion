@@ -1,12 +1,12 @@
-﻿# Aktualny stan R2 — 12.11.2026, 00:55 Europe/Warsaw
+﻿# Aktualny stan R2 — 12.11.2026, 01:33 Europe/Warsaw
 
 Gałąź gpt-sbs-r2, wyłącznie domena SBS. Runda jeszcze niezakończona.
 
 Gotowe: świat kod 0 (457 s, bez fallback=True), 64 GLB o SHA identycznych z r1; import Low+High; EditMode 261/261; 168 nowych renderów z jednego HEAD b9b5574e; 168 wierszy liczników, wszystkie delty Low geometrii/instancji/tris = 0. SHA 143/168 PNG identyczne z r1. Test raportu po rzeczywistej poprawce HTML: 25/25; test zgodności SBS: 40/40, fotometria: 13/13, fidelity: kod 0. Własny i niezależny przegląd sześciu zmienionych B zapisany. Formalna recenzja D51 pozostaje r1 FAIL 12/11/2, klasy 25 B / 17 C / brak A bez zmian.
 
-W toku: żywy post-world (sesja 79348, PID 84752) czeka na heavy dla historycznych kompozycji r1. Testy raportu, zgodności i fotometrii oraz fidelity zakończone poprawnie. Sesja 44605 czeka na sukces PID 84752, następnie wykona ComposeOnly r2, audyt przez heavy i raport artifacts/sbs-gate3/latest. Nie uruchamiać drugiego ciężkiego zadania z tym samym właścicielem ani nie powtarzać generatora i renderów.
+W toku: post-world (sesja 79348) zakończony kodem 0: 78 testów, fidelity i historyczne kompozycje. Kompozycje r2 oraz zweryfikowana migawka wejść także gotowe. Żywa sesja 44605 czeka na heavy dla audytu 168 renderów i 128 GLB; po sukcesie wygeneruje raport latest. Low-clear obejrzano w całości: 25 natywnych arkuszy. Nie powtarzać generatora ani renderów i nie uruchamiać równoległego heavy naszej gałęzi.
 
-Do zakończenia: historyczne i aktualne kompozycje, audyt oraz przegląd 28 stron A/B i raportu HTML; niezależny przegląd narzędzia/pakietu; pełny GIS dopiero na końcu; finalny ADR/REPORT; robocopy r2 i latest do main bez commitowania na main; zaraz potem nowa gałąź rundy i merge main. Produkty generatorów spoza SBS nie będą commitowane i zostaną przywrócone po zachowaniu dowodów. Nowe pełne capture wykonano około 00:20; następny odczyt aktualnego main najpóźniej około 06:20.
+Do zakończenia: audyt oraz przegląd pozostałych 75 A/B i raportu HTML; niezależny przegląd narzędzia/pakietu; pełny GIS dopiero na końcu; finalny ADR/REPORT; robocopy r2 i latest do main bez commitowania na main; zaraz potem nowa gałąź rundy i merge main. Produkty generatorów spoza SBS nie będą commitowane i zostaną przywrócone po zachowaniu dowodów. Nowe pełne capture wykonano około 00:20; następny odczyt aktualnego main najpóźniej około 06:20.
 
 Cały cel trwa do około 12.11.2026, 21:31 Europe/Warsaw. Nie pushować, nie scalać do main, nie używać telefonów. Unity: owner gpt-sbs. Heavy: owner bieżącej gałęzi. Cudzych slotów i PHONE_RUN nie zmieniać.
 
@@ -136,3 +136,11 @@ Render 16 hipotez zakończony kodem 0, slot Unity zwolniony. Sprawdzono wszystki
 
 ## Analiza kolejnej nierozwiązanej pozy
 Odczytano i obejrzano źródło 326 oraz istniejący loader kamer. Zapisano w CALIBRATION-NOTES.md potrzebę rozdzielenia roll, pitch i zniekształcenia obiektywu; loader nie ma pola roll. Nie wdrożono nowej rektyfikacji ani nie zmieniono C#, kamer, FOV lub referencji. Nie należy uznawać samego nachylenia słupów za zmierzoną wartość roll.
+
+
+## Kompozycje i przegląd Low-clear
+Post-world zakończony kodem 0. Historyczne r1 i aktualne r2: każde ma 100 A/B oraz 168 diagnostycznych arkuszy, bez brakujących renderów. Aktualny ComposeOnly wykonał 8 kompozycji w jednej dzierżawie heavy i zwolnił ją; migawka inputs/inputs.zip przeszła rzeczywiste kontrole SHA, także adnotacji. Audyt oczekuje na osobny heavy.
+Obejrzano wszystkie 25 natywnych Low-clear; zapisano ledger z SHA zdjęcia, raw i arkusza. Trzy sprawdzone próbki mają True/REVIEWED_SAMPLES; pozostałe False. Nadal braki podpór, bramownic i oznakowania. Zakres przeglądu końcowego: pozostałe 75 A/B oraz HTML; nie trzeba ponownie oglądać 7 stron Low-clear, skoro komplet obejrzano natywnie.
+
+## Ponowna próba źródeł początku trasy
+Mapillary API znów dostępne. Oryginalny mały bbox początku: 0 rekordów. Jedno zapytanie obejmujące pierwsze 300 m z buforem 35 m: 20 rekordów, brak dalszej strony. Wszystkie mają rzutowane stacje 317,017–365,438 m, żadnej do 300 m, także bez odrzucania panoram (rekordów panoramicznych 0). Nie pobrano nowych zdjęć i nie zapisano nic do współdzielonego raw. Wynik nie dowodzi braku wszelkich możliwych źródeł, ale nie dostarczył nowego kandydata na ten odcinek. Metadata są oczyszczone z podpisanych URL i danych autoryzacyjnych.
