@@ -15,13 +15,14 @@ ten dokumentuje rozbieżność zamiast jej ukrywać. Wątpliwe pozycje są oznac
 from __future__ import annotations
 
 import math
-from pathlib import Path
 
 import pytest
 
 from roads import standards as S
 from streetscape import gate3_landmarks as G3
 from streetscape import signs as SG
+
+pytestmark = pytest.mark.unit
 
 # --- Tabela wymagań [ZNAKI-Z1], grupa wielkości "średnie" (S) ---------------------------
 # pkt 1.2.1 (str. 2-3): średnie m.in. na jednojezdniowych drogach krajowych/wojewódzkich i drogach
@@ -169,14 +170,3 @@ def test_direction_boards_return_physical_size():
     im, w_m, h_m = SG.overhead_board([(["E67"], "Białystok"), (["19"], "Wasilków")])
     assert w_m > 1.0 and h_m > 0.5
 
-
-def test_generated_sign_assets_not_lfs_pointers():
-    """Assety generated są obiektami LFS; przy samych wskaźnikach test się pomija."""
-    repo = Path(__file__).resolve().parents[2]
-    gen = repo / "Data" / "Regions" / "bialystok-industrial-c" / "generated"
-    if not gen.exists():
-        pytest.skip("generated region data not built")
-    pointers = [p for p in gen.rglob("*")
-                if p.is_file() and p.read_bytes()[:37] == b"version https://git-lfs.github.com/spec/"]
-    if pointers:
-        pytest.skip(f"{len(pointers)} plików generated to wskaźniki git-LFS (np. {pointers[0].name})")

@@ -22,12 +22,12 @@ i test `tests/gis/test_signs_pl_audit.py`; rozbieżności są w raporcie i w `KN
 |---|---|---|---|
 | Grupa wielkości dla miejskich Z/G/L | grupa „średnie” (S) — `tools/worldgen/roads/standards.py:215-218` | [ZNAKI-Z1] pkt 1.2.1 (str. 2-3): średnie m.in. na jednojezdniowych drogach krajowych/wojewódzkich i dwujezdniowych w zabudowanym z V ≤ 60 km/h | OK |
 | A-7 / A-30 wymiar | bok trójkąta 0,90 m — `standards.py:218` (`triangle`), `streetscape/signs.py:308`, `streetscape/gate3_landmarks.py:49` | Tabela 1.1 (str. 4): A średnie = bok 900 mm; pkt 1.2.1 (str. 3): A-7/B-20 nie mniejsze niż średnie | OK |
-| B-20 (STOP) wymiar | 0,80 m między narożnikami ośmiokąta → koło wpisane 0,739 m — `standards.py:218` (`octagon`), `signs.py:308` | pkt 3.1.1 (str. 91) + Tabela 3.1 (str. 92): wymiar B-20 = średnica **koła wpisanego** w ośmiokąt, średnie 800 mm (płyta 800/cos(π/8) ≈ 866 mm między narożnikami); B-20 nie w grupie wielkiej, na drogach małych = średni | **ROZBIERZNOŚĆ — do poprawy** (0,739 vs 0,800 m) |
+| B-20 (STOP) wymiar | 0,80 m między narożnikami ośmiokąta → koło wpisane 0,739 m — `standards.py:218` (`octagon`), `signs.py:308` | pkt 3.1.1 (str. 91) + Tabela 3.1 (str. 92): wymiar B-20 = średnica **koła wpisanego** w ośmiokąt, średnie 800 mm (płyta 800/cos(π/8) ≈ 866 mm między narożnikami); B-20 nie w grupie wielkiej, na drogach małych = średni | **ROZBIEŻNOŚĆ — do poprawy** (0,739 vs 0,800 m) |
 | B-33 / B-1 / B-2 / B-36 wymiar | średnica tarczy 0,80 m — `standards.py:218` (`disc`), `signs.py:308-310` | Tabela 3.1 (str. 92): B średnie = średnica 800 mm, obrzeże s = 0,1·d | OK |
 | C-12 / C-9 wymiar | średnica 0,80 m — `standards.py:218`, `signs.py:308` | Tabela 4.1 (str. 152): C średnie = średnica 800 mm (kolumna C Tabeli 1.1 = 600 mm nadpisana opisem szczegółowym pkt 4.1.1) | OK |
-| D-1 wymiar | 0,80 m boku rombu — `standards.py:218` (`diamond`), `gate3_landmarks.py:50` | Tabela 5.1 (str. 173): D średnie = długość podstawy 600 mm; pkt 5.2.1.1 (str. 180): D-1 bok 600 mm, powtórzenia 400 mm | **ROZBIERZNOŚĆ — do poprawy** (0,80 vs 0,60 m) |
+| D-1 wymiar | 0,80 m boku rombu — `standards.py:218` (`diamond`), `gate3_landmarks.py:50` | Tabela 5.1 (str. 173): D średnie = długość podstawy 600 mm; pkt 5.2.1.1 (str. 180): D-1 bok 600 mm, powtórzenia 400 mm | **ROZBIEŻNOŚĆ — do poprawy** (0,80 vs 0,60 m) |
 | D-3 / D-6 (gate3) wymiar | 0,60 × 0,60 m — `gate3_landmarks.py:51-52` | Tabela 5.1 (str. 173): D średnie 600 mm | OK |
-| D-6 / D-15 (rule-based) wymiar | 0,80 m — `standards.py:218` (`square`), użyte w `streetscape/furniture.py:494` | Tabela 5.1 (str. 173): 600 mm; pkt 5.2.15 (str. 216): D-15 „takie jak średnie” (poza krajowymi dopuszczalne mini 400 mm) | **ROZBIERZNOŚĆ — do poprawy** (0,80 vs 0,60 m; niespójne wewnętrznie z gate3 0,60 m) |
+| D-6 / D-15 (rule-based) wymiar | 0,80 m — `standards.py:218` (`square`), użyte w `streetscape/furniture.py:494` | Tabela 5.1 (str. 173): 600 mm; pkt 5.2.15 (str. 216): D-15 „takie jak średnie” (poza krajowymi dopuszczalne mini 400 mm) | **ROZBIEŻNOŚĆ — do poprawy** (0,80 vs 0,60 m; niespójne wewnętrznie z gate3 0,60 m) |
 | U-4a wymiar | 0,75 × 1,35 m — `gate3_landmarks.py:53` | załącznik nr 4 (poza zał. 1) — nieprzeczytany w całości | **UNVERIFIED** |
 | U-4a wysokość | `lower_edge_m: 0.9` — `Data/Regions/bialystok-industrial-c/overrides.yaml:347` | Tabela 1.11 (str. 32): znaki na urządzeniach BRD 0,90-1,20 m | OK |
 | Wysokość dolnej krawędzi A-D (zabudowany) | 2,00 m / 2,20 m na chodniku — `standards.py:212-213`, użyte w `furniture.py:490` | Tabela 1.11 (str. 32, brzmienie po Dz.U. 2021 poz. 2066): min 2,00 m; na chodniku 2,20 m | OK |
@@ -46,12 +46,12 @@ i test `tests/gis/test_signs_pl_audit.py`; rozbieżności są w raporcie i w `KN
 
 `tests/gis/test_signs_pl_audit.py` — dane znaków wobec tabeli wymagań: każda pozycja albo zgadza się
 z przepisem, albo jest jawnie w `KNOWN_DEVIATIONS` z cytatem (wtedy test dokumentuje rozbieżność).
-Test assetów `Data/**/generated` pomija się przez `pytest.skip`, gdy pliki są wskaźnikami LFS.
+Test ma marker `unit` (job CI `-m unit`). [Poprawka lidera s15: usunięto test assetów `Data/**/generated`, który niczego nie sprawdzał (tylko `skip`) i czytał w całości każdy plik `generated` (`read_bytes()`, GB danych).]
 
 ## Weryfikacja
 
 `uv run --project tools/worldgen pytest tests/gis/test_signs_pl_audit.py tests/gis/test_furniture_signs_0120.py tests/gis/test_gate3_landmarks.py tests/gis/test_streetscape.py -q`
-→ wszystkie testy przechodzą (z wyjątkiem pomijanego testu LFS).
+→ wszystkie testy przechodzą.
 
 ## Do zrobienia osobno (poza tym PR)
 
