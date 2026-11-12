@@ -149,12 +149,19 @@ namespace Game.World.Import
             var shader = Shader.Find("Kamion/World PBR") ?? throw new InvalidOperationException("Kamion/World PBR missing");
             var mat = AssetDatabase.LoadAssetAtPath<Material>(path);
             if (mat == null) { mat = new Material(shader); AssetDatabase.CreateAsset(mat, path); }
-            mat.shader = shader;
-            mat.shaderKeywords = new[] { "_DECAL_ALPHA" };
-            mat.enableInstancing = true;
-            mat.SetTexture("_BaseMap", tex);
             // metallic_gloss: R metallic (0 on these scans), A smoothness - the World PBR _MaskMap A contract.
             var mask = Texture(r, id, "metallic_gloss", Resolve(maps.Get("metallic_gloss")), true, false, false, true);
+            ApplyDecal(mat, tex, mask);
+            return mat;
+        }
+
+        /// <summary>The World PBR road-decal state of a Fab cover; also used to convert already imported materials.</summary>
+        public static void ApplyDecal(Material mat, Texture2D baseMap, Texture2D mask)
+        {
+            mat.shader = Shader.Find("Kamion/World PBR") ?? throw new InvalidOperationException("Kamion/World PBR missing");
+            mat.shaderKeywords = new[] { "_DECAL_ALPHA" };
+            mat.enableInstancing = true;
+            mat.SetTexture("_BaseMap", baseMap);
             mat.SetTexture("_MaskMap", mask);
             mat.SetTexture("_NormalMap", null);
             mat.SetColor("_Tint", Color.white);
@@ -173,7 +180,6 @@ namespace Game.World.Import
             mat.SetOverrideTag("RenderType", "Transparent");
             mat.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Geometry + 20;
             EditorUtility.SetDirty(mat);
-            return mat;
         }
         static Texture2D Texture(RegionImporter.Result r, string id, string channel, string source, bool linear, bool normal, bool alpha, bool clamp)
         {
