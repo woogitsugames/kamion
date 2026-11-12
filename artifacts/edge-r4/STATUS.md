@@ -13,3 +13,4 @@ Krok 7: lekka kontrola parserem AST potwierdziła składnię Compare (bez import
 Krok 8: porównano wszystkie kamery sbs z proof z aktualnym kanonicznym sbs_cameras.json: pozycje, look_at, FOV i seat zgodne (wynik z liczbą w canonical-camera-check.json). Kanoniczny plik dodano do niezmiennych wejść; nie zmieniono żadnej pozy. World bazowy aktywny pod heavy, Before jeszcze nie rozpoczęte.
 2026-11-12T10:23:29.5921151+01:00 Zakończono bazowy World pod osobnym slotem heavy; źródła innych dziedzin bez edycji.
 2026-11-12T10:23:29.9838614+01:00 Świat bazowy r4 gotowy bez fallback=True; następnie import Low/High i pełne Before, bez nowej zmiany produkcyjnej.
+2026-11-12T10:25:15.2125452+01:00 Pełny import bazowy Low/High i odtworzenie generowanych prefabów pojazdów nowego main potwierdzone IMPORT_RESULT/TRUCK_RESULT: OK; sprawdzono 151 gotowych map Medium bez niejawnego build_all. Źródła cab/truck bez edycji. Następnie validate.ps1 -Phase Before.
