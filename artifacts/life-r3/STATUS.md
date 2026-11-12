@@ -50,3 +50,5 @@ Krok 18: candidate-build.ps1 zapisany, NIE uruchomiony. World → audyt GLB/192 
 Przed zmianą (2026-11-12T09:38:56.1022191+01:00): zapisz przerwany baseline przed zmianą r3 na etapie import. Następny krok według post-baseline.ps1; po capture obejrzeć kadry i dopiero zmienić produkcję.
 
 Krok 19: po identyfikacji łańcucha własnych PID 65020→67604→21548→53280, przy braku własnego heavy, zatrzymano WYŁĄCZNIE oczekiwanie 53280 na powtórny proof. Post-baseline zakończył się kontrolowanym błędem import (Unity nie ruszyło), dowód wyniku zachowany. Wznowienie użyje istniejącego baseline-generated-source-proof i niezależnie ponownie zahaszuje każdy plik w PowerShell. Cudze sloty/procesy nietknięte. Następny krok: pwsh -NoProfile -File artifacts/life-r3/resume-baseline.ps1.
+
+Wznowienie baseline (2026-11-12T09:40:59.0014536+01:00): zaimportuj baseline r3 po ponownej kontroli SHA. Następny krok: capture i oględziny; produkcja bez zmian.
