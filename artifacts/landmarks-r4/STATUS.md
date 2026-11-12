@@ -20,3 +20,5 @@ Krok 2c: przygotowano (jeszcze niewykonany) crown_asset_audit.py: porównanie ba
 Krok 2d: ADR0116 ma sekcję r4 z hipotezą, policzonym polem kart i jawnym brakiem renderu; poprawiono nieaktualną wzmiankę o oczekujących testach r3. Bez zmiany źródeł modelu. Kolejka FIFO przesunęła się z5 do4 właścicieli przede mną.
 
 Krok 2e: przygotowano baseline_snapshot.py do uruchomienia dopiero po zakończeniu capture. Uzupełni rzeczywisty inwentarz czterech warunków, sprawdzi192 hashe runtime i zachowa GLB/spec/meta/dims/builder sprzed zmiany. Narzędzia porównań przeniesione z r3, bez stałej liczby kamer. Snapshot jeszcze niewykonany; baseline wciąż kolejkuje.
+
+Krok 3: świeży baseline świata po merge main wygenerowany pod heavy, bez fallback=True. Agregaty i spec podmostowy zachowane. NASTĘPNY KROK: import i wszystkie kamery trasy wraz z odziedziczonymi kadrami landmarks pod slotem Unity.
