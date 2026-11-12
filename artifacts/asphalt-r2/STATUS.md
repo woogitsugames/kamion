@@ -65,3 +65,4 @@
 2026-11-12T03:00:14.3371088+01:00: Import scoped candidate2 exit 0, raport pamięci zachowany. Następny krok: cztery serie capture.
 2026-11-12T03:00:49.2377506+01:00: zapisano artifacts/asphalt-r2/candidate2/Low-overcast. Następny krok: pozostałe serie lub porównanie wariantu.
 2026-11-12T03:01:19.7841668+01:00: zapisano artifacts/asphalt-r2/candidate2/Low-clear. Następny krok: pozostałe serie lub porównanie wariantu.
+2026-11-12T03:02:02.9808632+01:00: zapisano artifacts/asphalt-r2/candidate2/High-overcast. Następny krok: pozostałe serie lub porównanie wariantu.
