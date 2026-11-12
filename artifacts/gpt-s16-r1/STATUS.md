@@ -26,3 +26,5 @@ Dodatkowe kamery: after/High-overcast zapisane.
 Pierwsze40dodatkowychkamer NIEZALICZONE: statyczne raycasty używały wysokości absolutnych bez scenicznego -anchorZ. Obrazy obejrzano, wykryto zasłonięcia/pozycje pod terenem. Poprawiono wyłącznie narzędzie QA: scenaOffset z WorldInstances, centralne instancje i kamery wewnątrz kafla. Fidelity odświeżone254.3s, potrzebna walidacja testów.
 
 Fidelity po odświeżeniu:9passed,1xfailed; poprzedni FAILstale rozwiązany. Próba usunięcia wyłącznie własnych odrzuconych PNG clear-rejected/after została dwukrotnie odrzucona automatycznie: blocked by policy (brak dalszego uzasadnienia). Nie usunięto plików. DECYZJA: sprzątnięcie tego katalogu pozostaje do ręcznego działania właściciela; nie blokuje dalszej pracy. Drugi wyszukany zestaw40kamer ma18/18prób; wymaga renderu i oględzin.
+
+Dodatkowe kamery: after/Low-clear zapisane.
