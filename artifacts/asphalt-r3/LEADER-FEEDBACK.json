@@ -11,11 +11,21 @@
   "post_0131": {
     "status": "Merged leader fix smooth+0.06. Earlier chalk diagnostics describe pre0131 state. Loop/dot mask and driver-eye visibility remain P2, not claimed fixed. Industrial yard scope remains primary r3.",
     "review_sha256": "5C0438464306278C96CECD61251D1A2CCCB5935BA5A998E4D7E389EC30AEF0AD",
-    "read_at": "2026-11-12T14:17:51.5875890+01:00",
+    "read_at": "2026-11-12T14:17:51.587589+01:00",
     "review": "C:/Users/matma/Documents/Claude/kamion/docs/reports/visual/REVIEW-2026-11-12-s12-0131.md",
     "merge": "e5eb5902",
     "feedback_sha256": "7B308A1C0728500C2198A1E3B342C6F9B2F2A6C7D9D6659BD89D96003880CAF8",
     "main": "11db0552",
     "feedback_source": "C:/Users/matma/Documents/Claude/kamion/docs/owner/GPT-FEEDBACK-S10.md"
+  },
+  "handover_1523": {
+    "scope_exclusions": "Sterile starting yard is protected Kwadrat; trailer/HUD feedback belongs to other streams. Current industrial-yard r3 remains primary.",
+    "phone_status": "Handover14:41 confirms A16 Low A+B measurement under PHONE_RUN; host metrics PID76372 parent75388 observed live at15:23. Earlier PID18080 ended/replaced; not evidence the measurement is complete.",
+    "owner_reported_asphalt_issue": "Grey rectangular patch on a road curve reads like a cover in the owner Fold recording. Reported in handover; recording/object/material not inspected here.",
+    "sha256": "CEEE103BDA70EC9A7E5B574B7AC8410D718F94363838B5CE3BB19CCC0062E452",
+    "source": "C:/Users/matma/Documents/Claude/kamion/HANDOVER.md",
+    "read_at": "2026-11-12T15:23:25+01:00",
+    "after_current_round": "Inspect actual object identity and source-supported repair appearance; material-only scope, road geometry remains Claude. Do not assume the object is decal_patch.",
+    "round_base": "R3 remains on mergee5eb5902 (main11db0552 plus own QA). Do not repeatedly resync unrelated subsequent integrations mid-round; merge main again at next round."
   }
 }
