@@ -1,0 +1,40 @@
+{
+  "after": "candidate2",
+  "rows": [
+    {
+      "series": "Low-overcast",
+      "png": 82,
+      "snapshots": 82,
+      "render_targets": [
+        "1755x810"
+      ]
+    },
+    {
+      "series": "Low-clear",
+      "png": 82,
+      "snapshots": 82,
+      "render_targets": [
+        "1755x810"
+      ]
+    },
+    {
+      "series": "High-overcast",
+      "png": 82,
+      "snapshots": 82,
+      "render_targets": [
+        "2340x1080"
+      ]
+    },
+    {
+      "series": "High-clear",
+      "png": 82,
+      "snapshots": 82,
+      "render_targets": [
+        "2340x1080"
+      ]
+    }
+  ],
+  "pose_matrix_differences": [],
+  "scope_errors": [],
+  "note": "Actual material uniforms and camera matrices, not proof of per-pixel scope or GPU performance."
+}

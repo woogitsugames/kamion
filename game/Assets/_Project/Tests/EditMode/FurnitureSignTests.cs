@@ -74,6 +74,16 @@ namespace Game.Tests
             var globals = new[] { "_WorldSpaceCameraPos", "_MainLightPosition", "_MainLightColor", "_FurnitureRetroHead0",
                 "_FurnitureRetroHead1", "_FurnitureRetroHead2", "_FurnitureRetroHead3", "_FurnitureRetroForward", "_FurnitureRetroUp", "_FurnitureRetroState" };
             var savedGlobals = new Vector4[globals.Length];
+            // ADR 0131: Kamion/Furniture Sign compiles a project subset of the Lit pipeline keywords. Parity with Lit is
+            // asserted for that subset: the dropped global keywords are off for both draws (restored afterwards).
+            var dropped = new[] { "_REFLECTION_PROBE_BLENDING", "_REFLECTION_PROBE_BOX_PROJECTION", "_REFLECTION_PROBE_ATLAS",
+                "_SCREEN_SPACE_OCCLUSION", "_SCREEN_SPACE_IRRADIANCE", "_LIGHT_COOKIES", "_LIGHT_LAYERS", "_CLUSTER_LIGHT_LOOP",
+                "_ADDITIONAL_LIGHTS_VERTEX", "_MAIN_LIGHT_SHADOWS_SCREEN", "_ADDITIONAL_LIGHT_SHADOWS", "_DBUFFER_MRT1",
+                "_DBUFFER_MRT2", "_DBUFFER_MRT3", "LIGHTMAP_BICUBIC_SAMPLING", "REFLECTION_PROBE_ROTATION", "PROBE_VOLUMES_L1",
+                "PROBE_VOLUMES_L2", "LOD_FADE_CROSSFADE", "DEBUG_DISPLAY", "USE_LEGACY_LIGHTMAPS" };
+            var droppedOn = new List<string>();
+            foreach (var k in dropped) if (Shader.IsKeywordEnabled(k)) { droppedOn.Add(k); Shader.DisableKeyword(k); }
+            if (droppedOn.Count > 0) Debug.Log("[FurnitureSignProbe] global keywords off for parity: " + string.Join(",", droppedOn));
             for (int k = 0; k < globals.Length; k++) savedGlobals[k] = Shader.GetGlobalVector(globals[k]);
             try
             {
@@ -118,6 +128,7 @@ namespace Game.Tests
             finally
             {
                 for (int k = 0; k < globals.Length; k++) Shader.SetGlobalVector(globals[k], savedGlobals[k]);
+                foreach (var k in droppedOn) Shader.EnableKeyword(k);
                 Shader.SetGlobalFloat("_KamionExposure",savedExposure);
                 RenderTexture.active = previous; cb.Release(); RenderTexture.ReleaseTemporary(rt);
                 UnityEngine.Object.DestroyImmediate(pixel); UnityEngine.Object.DestroyImmediate(mesh);
@@ -151,7 +162,10 @@ namespace Game.Tests
                 Assert.GreaterOrEqual(a.FindPass("ForwardLit"), 0);
                 Assert.GreaterOrEqual(b.FindPass("ForwardLit"), 0);
                 Debug.Log($"[FurnitureSignProbe] actual passes URP={a.passCount}, furniture={b.passCount}");
-                Assert.AreEqual(a.passCount, b.passCount);
+                // ADR 0131: Forward-only subset of the Lit passes (no GBuffer/Meta/2D/motion vectors) - never more.
+                Assert.LessOrEqual(b.passCount, a.passCount);
+                foreach (var p in new[] { "ShadowCaster", "DepthOnly", "DepthNormals" })
+                    Assert.GreaterOrEqual(b.FindPass(p), 0, p);
             }
             finally { UnityEngine.Object.DestroyImmediate(a); UnityEngine.Object.DestroyImmediate(b); }
         }

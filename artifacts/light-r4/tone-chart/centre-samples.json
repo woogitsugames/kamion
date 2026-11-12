@@ -1,0 +1,1829 @@
+{
+  "scope": "One centre pixel per flat chart patch; code values0..255; exposed-linear input, not physical photometry or a source-photo comparison",
+  "samples": [
+    {
+      "high_rgb": [
+        189.0,
+        0.0,
+        3.0
+      ],
+      "patch": "colour-0",
+      "preset": "Clear",
+      "low_rgb": [
+        188.0,
+        0.0,
+        0.0
+      ],
+      "high_minus_low": [
+        1.0,
+        0.0,
+        3.0
+      ]
+    },
+    {
+      "high_rgb": [
+        0.0,
+        189.0,
+        3.0
+      ],
+      "patch": "colour-1",
+      "preset": "Clear",
+      "low_rgb": [
+        0.0,
+        188.0,
+        0.0
+      ],
+      "high_minus_low": [
+        0.0,
+        1.0,
+        3.0
+      ]
+    },
+    {
+      "high_rgb": [
+        81.0,
+        138.0,
+        189.0
+      ],
+      "patch": "colour-10",
+      "preset": "Clear",
+      "low_rgb": [
+        80.0,
+        137.0,
+        188.0
+      ],
+      "high_minus_low": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "high_rgb": [
+        119.0,
+        97.0,
+        75.0
+      ],
+      "patch": "colour-11",
+      "preset": "Clear",
+      "low_rgb": [
+        118.0,
+        97.0,
+        75.0
+      ],
+      "high_minus_low": [
+        1.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "high_rgb": [
+        0.0,
+        3.0,
+        189.0
+      ],
+      "patch": "colour-2",
+      "preset": "Clear",
+      "low_rgb": [
+        0.0,
+        0.0,
+        188.0
+      ],
+      "high_minus_low": [
+        0.0,
+        3.0,
+        1.0
+      ]
+    },
+    {
+      "high_rgb": [
+        189.0,
+        189.0,
+        0.0
+      ],
+      "patch": "colour-3",
+      "preset": "Clear",
+      "low_rgb": [
+        188.0,
+        188.0,
+        0.0
+      ],
+      "high_minus_low": [
+        1.0,
+        1.0,
+        0.0
+      ]
+    },
+    {
+      "high_rgb": [
+        0.0,
+        189.0,
+        189.0
+      ],
+      "patch": "colour-4",
+      "preset": "Clear",
+      "low_rgb": [
+        0.0,
+        188.0,
+        188.0
+      ],
+      "high_minus_low": [
+        0.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "high_rgb": [
+        189.0,
+        0.0,
+        189.0
+      ],
+      "patch": "colour-5",
+      "preset": "Clear",
+      "low_rgb": [
+        188.0,
+        0.0,
+        188.0
+      ],
+      "high_minus_low": [
+        1.0,
+        0.0,
+        1.0
+      ]
+    },
+    {
+      "high_rgb": [
+        63.0,
+        119.0,
+        48.0
+      ],
+      "patch": "colour-6",
+      "preset": "Clear",
+      "low_rgb": [
+        63.0,
+        118.0,
+        48.0
+      ],
+      "high_minus_low": [
+        0.0,
+        1.0,
+        0.0
+      ]
+    },
+    {
+      "high_rgb": [
+        81.0,
+        81.0,
+        81.0
+      ],
+      "patch": "colour-7",
+      "preset": "Clear",
+      "low_rgb": [
+        80.0,
+        80.0,
+        80.0
+      ],
+      "high_minus_low": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "high_rgb": [
+        255.0,
+        255.0,
+        255.0
+      ],
+      "patch": "colour-8",
+      "preset": "Clear",
+      "low_rgb": [
+        255.0,
+        255.0,
+        255.0
+      ],
+      "high_minus_low": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "high_rgb": [
+        232.0,
+        149.0,
+        80.0
+      ],
+      "patch": "colour-9",
+      "preset": "Clear",
+      "low_rgb": [
+        231.0,
+        149.0,
+        80.0
+      ],
+      "high_minus_low": [
+        1.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "high_rgb": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "patch": "grey-0",
+      "preset": "Clear",
+      "low_rgb": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "high_minus_low": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "high_rgb": [
+        8.0,
+        8.0,
+        8.0
+      ],
+      "patch": "grey-1",
+      "preset": "Clear",
+      "low_rgb": [
+        8.0,
+        8.0,
+        8.0
+      ],
+      "high_minus_low": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "high_rgb": [
+        255.0,
+        255.0,
+        255.0
+      ],
+      "patch": "grey-10",
+      "preset": "Clear",
+      "low_rgb": [
+        255.0,
+        255.0,
+        255.0
+      ],
+      "high_minus_low": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "high_rgb": [
+        255.0,
+        255.0,
+        255.0
+      ],
+      "patch": "grey-11",
+      "preset": "Clear",
+      "low_rgb": [
+        255.0,
+        255.0,
+        255.0
+      ],
+      "high_minus_low": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "high_rgb": [
+        25.0,
+        25.0,
+        25.0
+      ],
+      "patch": "grey-2",
+      "preset": "Clear",
+      "low_rgb": [
+        25.0,
+        25.0,
+        25.0
+      ],
+      "high_minus_low": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "high_rgb": [
+        48.0,
+        48.0,
+        48.0
+      ],
+      "patch": "grey-3",
+      "preset": "Clear",
+      "low_rgb": [
+        48.0,
+        48.0,
+        48.0
+      ],
+      "high_minus_low": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "high_rgb": [
+        85.0,
+        85.0,
+        85.0
+      ],
+      "patch": "grey-4",
+      "preset": "Clear",
+      "low_rgb": [
+        85.0,
+        85.0,
+        85.0
+      ],
+      "high_minus_low": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "high_rgb": [
+        119.0,
+        119.0,
+        119.0
+      ],
+      "patch": "grey-5",
+      "preset": "Clear",
+      "low_rgb": [
+        118.0,
+        118.0,
+        118.0
+      ],
+      "high_minus_low": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "high_rgb": [
+        156.0,
+        156.0,
+        156.0
+      ],
+      "patch": "grey-6",
+      "preset": "Clear",
+      "low_rgb": [
+        156.0,
+        156.0,
+        156.0
+      ],
+      "high_minus_low": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "high_rgb": [
+        189.0,
+        189.0,
+        189.0
+      ],
+      "patch": "grey-7",
+      "preset": "Clear",
+      "low_rgb": [
+        188.0,
+        188.0,
+        188.0
+      ],
+      "high_minus_low": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "high_rgb": [
+        219.0,
+        219.0,
+        219.0
+      ],
+      "patch": "grey-8",
+      "preset": "Clear",
+      "low_rgb": [
+        218.0,
+        218.0,
+        218.0
+      ],
+      "high_minus_low": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "high_rgb": [
+        255.0,
+        255.0,
+        255.0
+      ],
+      "patch": "grey-9",
+      "preset": "Clear",
+      "low_rgb": [
+        255.0,
+        255.0,
+        255.0
+      ],
+      "high_minus_low": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "high_rgb": [
+        189.0,
+        0.0,
+        3.0
+      ],
+      "patch": "colour-0",
+      "preset": "Overcast",
+      "low_rgb": [
+        182.0,
+        0.0,
+        0.0
+      ],
+      "high_minus_low": [
+        7.0,
+        0.0,
+        3.0
+      ]
+    },
+    {
+      "high_rgb": [
+        0.0,
+        189.0,
+        3.0
+      ],
+      "patch": "colour-1",
+      "preset": "Overcast",
+      "low_rgb": [
+        0.0,
+        182.0,
+        0.0
+      ],
+      "high_minus_low": [
+        0.0,
+        7.0,
+        3.0
+      ]
+    },
+    {
+      "high_rgb": [
+        81.0,
+        138.0,
+        189.0
+      ],
+      "patch": "colour-10",
+      "preset": "Overcast",
+      "low_rgb": [
+        50.0,
+        116.0,
+        182.0
+      ],
+      "high_minus_low": [
+        31.0,
+        22.0,
+        7.0
+      ]
+    },
+    {
+      "high_rgb": [
+        119.0,
+        97.0,
+        75.0
+      ],
+      "patch": "colour-11",
+      "preset": "Overcast",
+      "low_rgb": [
+        92.0,
+        68.0,
+        45.0
+      ],
+      "high_minus_low": [
+        27.0,
+        29.0,
+        30.0
+      ]
+    },
+    {
+      "high_rgb": [
+        0.0,
+        3.0,
+        189.0
+      ],
+      "patch": "colour-2",
+      "preset": "Overcast",
+      "low_rgb": [
+        0.0,
+        0.0,
+        182.0
+      ],
+      "high_minus_low": [
+        0.0,
+        3.0,
+        7.0
+      ]
+    },
+    {
+      "high_rgb": [
+        189.0,
+        189.0,
+        0.0
+      ],
+      "patch": "colour-3",
+      "preset": "Overcast",
+      "low_rgb": [
+        182.0,
+        182.0,
+        0.0
+      ],
+      "high_minus_low": [
+        7.0,
+        7.0,
+        0.0
+      ]
+    },
+    {
+      "high_rgb": [
+        0.0,
+        189.0,
+        189.0
+      ],
+      "patch": "colour-4",
+      "preset": "Overcast",
+      "low_rgb": [
+        0.0,
+        182.0,
+        182.0
+      ],
+      "high_minus_low": [
+        0.0,
+        7.0,
+        7.0
+      ]
+    },
+    {
+      "high_rgb": [
+        189.0,
+        0.0,
+        189.0
+      ],
+      "patch": "colour-5",
+      "preset": "Overcast",
+      "low_rgb": [
+        182.0,
+        0.0,
+        182.0
+      ],
+      "high_minus_low": [
+        7.0,
+        0.0,
+        7.0
+      ]
+    },
+    {
+      "high_rgb": [
+        63.0,
+        119.0,
+        48.0
+      ],
+      "patch": "colour-6",
+      "preset": "Overcast",
+      "low_rgb": [
+        34.0,
+        92.0,
+        21.0
+      ],
+      "high_minus_low": [
+        29.0,
+        27.0,
+        27.0
+      ]
+    },
+    {
+      "high_rgb": [
+        81.0,
+        81.0,
+        81.0
+      ],
+      "patch": "colour-7",
+      "preset": "Overcast",
+      "low_rgb": [
+        50.0,
+        50.0,
+        50.0
+      ],
+      "high_minus_low": [
+        31.0,
+        31.0,
+        31.0
+      ]
+    },
+    {
+      "high_rgb": [
+        255.0,
+        255.0,
+        255.0
+      ],
+      "patch": "colour-8",
+      "preset": "Overcast",
+      "low_rgb": [
+        255.0,
+        255.0,
+        255.0
+      ],
+      "high_minus_low": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "high_rgb": [
+        232.0,
+        149.0,
+        80.0
+      ],
+      "patch": "colour-9",
+      "preset": "Overcast",
+      "low_rgb": [
+        240.0,
+        131.0,
+        50.0
+      ],
+      "high_minus_low": [
+        -8.0,
+        18.0,
+        30.0
+      ]
+    },
+    {
+      "high_rgb": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "patch": "grey-0",
+      "preset": "Overcast",
+      "low_rgb": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "high_minus_low": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "high_rgb": [
+        8.0,
+        8.0,
+        8.0
+      ],
+      "patch": "grey-1",
+      "preset": "Overcast",
+      "low_rgb": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "high_minus_low": [
+        7.0,
+        7.0,
+        7.0
+      ]
+    },
+    {
+      "high_rgb": [
+        255.0,
+        255.0,
+        255.0
+      ],
+      "patch": "grey-10",
+      "preset": "Overcast",
+      "low_rgb": [
+        255.0,
+        255.0,
+        255.0
+      ],
+      "high_minus_low": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "high_rgb": [
+        255.0,
+        255.0,
+        255.0
+      ],
+      "patch": "grey-11",
+      "preset": "Overcast",
+      "low_rgb": [
+        255.0,
+        255.0,
+        255.0
+      ],
+      "high_minus_low": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "high_rgb": [
+        25.0,
+        25.0,
+        25.0
+      ],
+      "patch": "grey-2",
+      "preset": "Overcast",
+      "low_rgb": [
+        6.0,
+        6.0,
+        6.0
+      ],
+      "high_minus_low": [
+        19.0,
+        19.0,
+        19.0
+      ]
+    },
+    {
+      "high_rgb": [
+        48.0,
+        48.0,
+        48.0
+      ],
+      "patch": "grey-3",
+      "preset": "Overcast",
+      "low_rgb": [
+        21.0,
+        21.0,
+        21.0
+      ],
+      "high_minus_low": [
+        27.0,
+        27.0,
+        27.0
+      ]
+    },
+    {
+      "high_rgb": [
+        85.0,
+        85.0,
+        85.0
+      ],
+      "patch": "grey-4",
+      "preset": "Overcast",
+      "low_rgb": [
+        54.0,
+        54.0,
+        54.0
+      ],
+      "high_minus_low": [
+        31.0,
+        31.0,
+        31.0
+      ]
+    },
+    {
+      "high_rgb": [
+        119.0,
+        119.0,
+        119.0
+      ],
+      "patch": "grey-5",
+      "preset": "Overcast",
+      "low_rgb": [
+        92.0,
+        92.0,
+        92.0
+      ],
+      "high_minus_low": [
+        27.0,
+        27.0,
+        27.0
+      ]
+    },
+    {
+      "high_rgb": [
+        156.0,
+        156.0,
+        156.0
+      ],
+      "patch": "grey-6",
+      "preset": "Overcast",
+      "low_rgb": [
+        140.0,
+        140.0,
+        140.0
+      ],
+      "high_minus_low": [
+        16.0,
+        16.0,
+        16.0
+      ]
+    },
+    {
+      "high_rgb": [
+        189.0,
+        189.0,
+        189.0
+      ],
+      "patch": "grey-7",
+      "preset": "Overcast",
+      "low_rgb": [
+        182.0,
+        182.0,
+        182.0
+      ],
+      "high_minus_low": [
+        7.0,
+        7.0,
+        7.0
+      ]
+    },
+    {
+      "high_rgb": [
+        219.0,
+        219.0,
+        219.0
+      ],
+      "patch": "grey-8",
+      "preset": "Overcast",
+      "low_rgb": [
+        223.0,
+        223.0,
+        223.0
+      ],
+      "high_minus_low": [
+        -4.0,
+        -4.0,
+        -4.0
+      ]
+    },
+    {
+      "high_rgb": [
+        255.0,
+        255.0,
+        255.0
+      ],
+      "patch": "grey-9",
+      "preset": "Overcast",
+      "low_rgb": [
+        255.0,
+        255.0,
+        255.0
+      ],
+      "high_minus_low": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "high_rgb": [
+        189.0,
+        0.0,
+        3.0
+      ],
+      "patch": "colour-0",
+      "preset": "Dusk",
+      "low_rgb": [
+        188.0,
+        0.0,
+        0.0
+      ],
+      "high_minus_low": [
+        1.0,
+        0.0,
+        3.0
+      ]
+    },
+    {
+      "high_rgb": [
+        0.0,
+        189.0,
+        3.0
+      ],
+      "patch": "colour-1",
+      "preset": "Dusk",
+      "low_rgb": [
+        0.0,
+        188.0,
+        0.0
+      ],
+      "high_minus_low": [
+        0.0,
+        1.0,
+        3.0
+      ]
+    },
+    {
+      "high_rgb": [
+        81.0,
+        138.0,
+        189.0
+      ],
+      "patch": "colour-10",
+      "preset": "Dusk",
+      "low_rgb": [
+        80.0,
+        137.0,
+        188.0
+      ],
+      "high_minus_low": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "high_rgb": [
+        119.0,
+        97.0,
+        75.0
+      ],
+      "patch": "colour-11",
+      "preset": "Dusk",
+      "low_rgb": [
+        118.0,
+        97.0,
+        75.0
+      ],
+      "high_minus_low": [
+        1.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "high_rgb": [
+        0.0,
+        3.0,
+        189.0
+      ],
+      "patch": "colour-2",
+      "preset": "Dusk",
+      "low_rgb": [
+        0.0,
+        0.0,
+        188.0
+      ],
+      "high_minus_low": [
+        0.0,
+        3.0,
+        1.0
+      ]
+    },
+    {
+      "high_rgb": [
+        189.0,
+        189.0,
+        0.0
+      ],
+      "patch": "colour-3",
+      "preset": "Dusk",
+      "low_rgb": [
+        188.0,
+        188.0,
+        0.0
+      ],
+      "high_minus_low": [
+        1.0,
+        1.0,
+        0.0
+      ]
+    },
+    {
+      "high_rgb": [
+        0.0,
+        189.0,
+        189.0
+      ],
+      "patch": "colour-4",
+      "preset": "Dusk",
+      "low_rgb": [
+        0.0,
+        188.0,
+        188.0
+      ],
+      "high_minus_low": [
+        0.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "high_rgb": [
+        189.0,
+        0.0,
+        189.0
+      ],
+      "patch": "colour-5",
+      "preset": "Dusk",
+      "low_rgb": [
+        188.0,
+        0.0,
+        188.0
+      ],
+      "high_minus_low": [
+        1.0,
+        0.0,
+        1.0
+      ]
+    },
+    {
+      "high_rgb": [
+        63.0,
+        119.0,
+        48.0
+      ],
+      "patch": "colour-6",
+      "preset": "Dusk",
+      "low_rgb": [
+        63.0,
+        118.0,
+        48.0
+      ],
+      "high_minus_low": [
+        0.0,
+        1.0,
+        0.0
+      ]
+    },
+    {
+      "high_rgb": [
+        81.0,
+        81.0,
+        81.0
+      ],
+      "patch": "colour-7",
+      "preset": "Dusk",
+      "low_rgb": [
+        80.0,
+        80.0,
+        80.0
+      ],
+      "high_minus_low": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "high_rgb": [
+        255.0,
+        255.0,
+        255.0
+      ],
+      "patch": "colour-8",
+      "preset": "Dusk",
+      "low_rgb": [
+        255.0,
+        255.0,
+        255.0
+      ],
+      "high_minus_low": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "high_rgb": [
+        232.0,
+        149.0,
+        80.0
+      ],
+      "patch": "colour-9",
+      "preset": "Dusk",
+      "low_rgb": [
+        231.0,
+        149.0,
+        80.0
+      ],
+      "high_minus_low": [
+        1.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "high_rgb": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "patch": "grey-0",
+      "preset": "Dusk",
+      "low_rgb": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "high_minus_low": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "high_rgb": [
+        8.0,
+        8.0,
+        8.0
+      ],
+      "patch": "grey-1",
+      "preset": "Dusk",
+      "low_rgb": [
+        8.0,
+        8.0,
+        8.0
+      ],
+      "high_minus_low": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "high_rgb": [
+        255.0,
+        255.0,
+        255.0
+      ],
+      "patch": "grey-10",
+      "preset": "Dusk",
+      "low_rgb": [
+        255.0,
+        255.0,
+        255.0
+      ],
+      "high_minus_low": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "high_rgb": [
+        255.0,
+        255.0,
+        255.0
+      ],
+      "patch": "grey-11",
+      "preset": "Dusk",
+      "low_rgb": [
+        255.0,
+        255.0,
+        255.0
+      ],
+      "high_minus_low": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "high_rgb": [
+        25.0,
+        25.0,
+        25.0
+      ],
+      "patch": "grey-2",
+      "preset": "Dusk",
+      "low_rgb": [
+        25.0,
+        25.0,
+        25.0
+      ],
+      "high_minus_low": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "high_rgb": [
+        48.0,
+        48.0,
+        48.0
+      ],
+      "patch": "grey-3",
+      "preset": "Dusk",
+      "low_rgb": [
+        48.0,
+        48.0,
+        48.0
+      ],
+      "high_minus_low": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "high_rgb": [
+        85.0,
+        85.0,
+        85.0
+      ],
+      "patch": "grey-4",
+      "preset": "Dusk",
+      "low_rgb": [
+        85.0,
+        85.0,
+        85.0
+      ],
+      "high_minus_low": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "high_rgb": [
+        119.0,
+        119.0,
+        119.0
+      ],
+      "patch": "grey-5",
+      "preset": "Dusk",
+      "low_rgb": [
+        118.0,
+        118.0,
+        118.0
+      ],
+      "high_minus_low": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "high_rgb": [
+        156.0,
+        156.0,
+        156.0
+      ],
+      "patch": "grey-6",
+      "preset": "Dusk",
+      "low_rgb": [
+        156.0,
+        156.0,
+        156.0
+      ],
+      "high_minus_low": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "high_rgb": [
+        189.0,
+        189.0,
+        189.0
+      ],
+      "patch": "grey-7",
+      "preset": "Dusk",
+      "low_rgb": [
+        188.0,
+        188.0,
+        188.0
+      ],
+      "high_minus_low": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "high_rgb": [
+        219.0,
+        219.0,
+        219.0
+      ],
+      "patch": "grey-8",
+      "preset": "Dusk",
+      "low_rgb": [
+        218.0,
+        218.0,
+        218.0
+      ],
+      "high_minus_low": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "high_rgb": [
+        255.0,
+        255.0,
+        255.0
+      ],
+      "patch": "grey-9",
+      "preset": "Dusk",
+      "low_rgb": [
+        255.0,
+        255.0,
+        255.0
+      ],
+      "high_minus_low": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "high_rgb": [
+        189.0,
+        0.0,
+        3.0
+      ],
+      "patch": "colour-0",
+      "preset": "Night",
+      "low_rgb": [
+        188.0,
+        0.0,
+        0.0
+      ],
+      "high_minus_low": [
+        1.0,
+        0.0,
+        3.0
+      ]
+    },
+    {
+      "high_rgb": [
+        0.0,
+        189.0,
+        3.0
+      ],
+      "patch": "colour-1",
+      "preset": "Night",
+      "low_rgb": [
+        0.0,
+        188.0,
+        0.0
+      ],
+      "high_minus_low": [
+        0.0,
+        1.0,
+        3.0
+      ]
+    },
+    {
+      "high_rgb": [
+        81.0,
+        138.0,
+        189.0
+      ],
+      "patch": "colour-10",
+      "preset": "Night",
+      "low_rgb": [
+        80.0,
+        137.0,
+        188.0
+      ],
+      "high_minus_low": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "high_rgb": [
+        119.0,
+        97.0,
+        75.0
+      ],
+      "patch": "colour-11",
+      "preset": "Night",
+      "low_rgb": [
+        118.0,
+        97.0,
+        75.0
+      ],
+      "high_minus_low": [
+        1.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "high_rgb": [
+        0.0,
+        3.0,
+        189.0
+      ],
+      "patch": "colour-2",
+      "preset": "Night",
+      "low_rgb": [
+        0.0,
+        0.0,
+        188.0
+      ],
+      "high_minus_low": [
+        0.0,
+        3.0,
+        1.0
+      ]
+    },
+    {
+      "high_rgb": [
+        189.0,
+        189.0,
+        0.0
+      ],
+      "patch": "colour-3",
+      "preset": "Night",
+      "low_rgb": [
+        188.0,
+        188.0,
+        0.0
+      ],
+      "high_minus_low": [
+        1.0,
+        1.0,
+        0.0
+      ]
+    },
+    {
+      "high_rgb": [
+        0.0,
+        189.0,
+        189.0
+      ],
+      "patch": "colour-4",
+      "preset": "Night",
+      "low_rgb": [
+        0.0,
+        188.0,
+        188.0
+      ],
+      "high_minus_low": [
+        0.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "high_rgb": [
+        189.0,
+        0.0,
+        189.0
+      ],
+      "patch": "colour-5",
+      "preset": "Night",
+      "low_rgb": [
+        188.0,
+        0.0,
+        188.0
+      ],
+      "high_minus_low": [
+        1.0,
+        0.0,
+        1.0
+      ]
+    },
+    {
+      "high_rgb": [
+        63.0,
+        119.0,
+        48.0
+      ],
+      "patch": "colour-6",
+      "preset": "Night",
+      "low_rgb": [
+        63.0,
+        118.0,
+        48.0
+      ],
+      "high_minus_low": [
+        0.0,
+        1.0,
+        0.0
+      ]
+    },
+    {
+      "high_rgb": [
+        81.0,
+        81.0,
+        81.0
+      ],
+      "patch": "colour-7",
+      "preset": "Night",
+      "low_rgb": [
+        80.0,
+        80.0,
+        80.0
+      ],
+      "high_minus_low": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "high_rgb": [
+        255.0,
+        255.0,
+        255.0
+      ],
+      "patch": "colour-8",
+      "preset": "Night",
+      "low_rgb": [
+        255.0,
+        255.0,
+        255.0
+      ],
+      "high_minus_low": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "high_rgb": [
+        232.0,
+        149.0,
+        80.0
+      ],
+      "patch": "colour-9",
+      "preset": "Night",
+      "low_rgb": [
+        231.0,
+        149.0,
+        80.0
+      ],
+      "high_minus_low": [
+        1.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "high_rgb": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "patch": "grey-0",
+      "preset": "Night",
+      "low_rgb": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "high_minus_low": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "high_rgb": [
+        8.0,
+        8.0,
+        8.0
+      ],
+      "patch": "grey-1",
+      "preset": "Night",
+      "low_rgb": [
+        8.0,
+        8.0,
+        8.0
+      ],
+      "high_minus_low": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "high_rgb": [
+        255.0,
+        255.0,
+        255.0
+      ],
+      "patch": "grey-10",
+      "preset": "Night",
+      "low_rgb": [
+        255.0,
+        255.0,
+        255.0
+      ],
+      "high_minus_low": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "high_rgb": [
+        255.0,
+        255.0,
+        255.0
+      ],
+      "patch": "grey-11",
+      "preset": "Night",
+      "low_rgb": [
+        255.0,
+        255.0,
+        255.0
+      ],
+      "high_minus_low": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "high_rgb": [
+        25.0,
+        25.0,
+        25.0
+      ],
+      "patch": "grey-2",
+      "preset": "Night",
+      "low_rgb": [
+        25.0,
+        25.0,
+        25.0
+      ],
+      "high_minus_low": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "high_rgb": [
+        48.0,
+        48.0,
+        48.0
+      ],
+      "patch": "grey-3",
+      "preset": "Night",
+      "low_rgb": [
+        48.0,
+        48.0,
+        48.0
+      ],
+      "high_minus_low": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "high_rgb": [
+        85.0,
+        85.0,
+        85.0
+      ],
+      "patch": "grey-4",
+      "preset": "Night",
+      "low_rgb": [
+        85.0,
+        85.0,
+        85.0
+      ],
+      "high_minus_low": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "high_rgb": [
+        119.0,
+        119.0,
+        119.0
+      ],
+      "patch": "grey-5",
+      "preset": "Night",
+      "low_rgb": [
+        118.0,
+        118.0,
+        118.0
+      ],
+      "high_minus_low": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "high_rgb": [
+        156.0,
+        156.0,
+        156.0
+      ],
+      "patch": "grey-6",
+      "preset": "Night",
+      "low_rgb": [
+        156.0,
+        156.0,
+        156.0
+      ],
+      "high_minus_low": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "high_rgb": [
+        189.0,
+        189.0,
+        189.0
+      ],
+      "patch": "grey-7",
+      "preset": "Night",
+      "low_rgb": [
+        188.0,
+        188.0,
+        188.0
+      ],
+      "high_minus_low": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "high_rgb": [
+        219.0,
+        219.0,
+        219.0
+      ],
+      "patch": "grey-8",
+      "preset": "Night",
+      "low_rgb": [
+        218.0,
+        218.0,
+        218.0
+      ],
+      "high_minus_low": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "high_rgb": [
+        255.0,
+        255.0,
+        255.0
+      ],
+      "patch": "grey-9",
+      "preset": "Night",
+      "low_rgb": [
+        255.0,
+        255.0,
+        255.0
+      ],
+      "high_minus_low": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    }
+  ]
+}

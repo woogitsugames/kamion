@@ -28,6 +28,10 @@ namespace Game.Rendering.Editor
             public int shadowFilter; // 0 keeps the light's state; 1/2/3 = URP Low/Medium/High.
             public bool shadowWallProbe; // hall3: establish a physical 10 m span for the PNG edge measurement.
             public float clearSkySaturation; // 0 leaves preset unchanged; diagnostic display-only chroma.
+            public bool overrideDimColour;
+            public float dimColourDesaturation;
+            public bool verifyDimColour;
+            public float expectedDimColour;
             public bool lampProbe;
             public bool actualDriverEye; // QA only: cab-dash eye, horizontal actual cab forward. Never a light source.
             public bool wetRoadViews; // QA only: two external near-road views anchored to the real truck.
@@ -67,7 +71,10 @@ namespace Game.Rendering.Editor
                 if (profile == null) throw new InvalidOperationException("Missing QualityProfile");
                 originalTiers = (QualityProfile.Tier[])profile.tiers.Clone();
                 foreach (var preset in LookDevAssets.Presets())
-                    if (preset != null) presetSnapshots[preset] = EditorJsonUtility.ToJson(preset);
+                    if (preset != null) {
+                        presetSnapshots[preset] = EditorJsonUtility.ToJson(preset);
+                        Debug.Log($"LIGHT_QA_PRESET: {preset.name} path={AssetDatabase.GetAssetPath(preset)} dim={preset.dimColourDesaturation}");
+                    }
                 foreach (var t in originalTiers)
                 {
                     var pipeline = AssetDatabase.LoadAssetAtPath<UniversalRenderPipelineAsset>(
@@ -102,6 +109,11 @@ namespace Game.Rendering.Editor
                         var preset = presetSnapshots.Keys.Single(p => string.Equals(p.name, "LP_" + job.lighting, StringComparison.OrdinalIgnoreCase));
                         preset.clearSkySaturation = job.clearSkySaturation;
                     }
+                    if(job.overrideDimColour)
+                    {
+                        if(job.dimColourDesaturation<0f || job.dimColourDesaturation>1f)throw new ArgumentException("Dim colour outside0..1");
+                        presetSnapshots.Keys.Single(p=>string.Equals(p.name,"LP_"+job.lighting,StringComparison.OrdinalIgnoreCase)).dimColourDesaturation=job.dimColourDesaturation;
+                    }
                     if (job.overrideSkyDisplay)
                     {
                         if (job.skyDisplayGain < 0.001f || job.skyDisplayGain > 1f || job.skyDisplayDesaturation < 0f || job.skyDisplayDesaturation > 1f)
@@ -131,6 +143,8 @@ namespace Game.Rendering.Editor
                     var lampProbe = job.lampProbe ? new LightQaLampProbe() : null;
                     if (job.verifyWetness && (lampProbe == null || job.expectedWetness < 0f || job.expectedWetness > 1f))
                         throw new ArgumentException("Wetness proof requires lampProbe and expectedWetness0..1");
+                    if(job.verifyDimColour && (lampProbe==null || job.expectedDimColour<0f || job.expectedDimColour>1f))
+                        throw new ArgumentException("Dim-colour proof requires lampProbe and expectedDimColour0..1");
                     if (job.expectedHeadlamps < 0 || job.expectedHeadlamps > 2 || (job.expectedHeadlamps > 0 && lampProbe == null))
                         throw new ArgumentException("expectedHeadlamps requires lampProbe and a value0..2");
                     Action<ScriptableRenderContext, Camera> filter = (_, camera) => {
@@ -140,6 +154,9 @@ namespace Game.Rendering.Editor
                                 if (light.type == LightType.Directional)
                                     light.GetUniversalAdditionalLightData().softShadowQuality = (SoftShadowQuality)job.shadowFilter;
                         lampProbe?.Capture(camera);
+                        if(job.verifyDimColour && camera.GetComponent<ControlCamera>()!=null &&
+                            Mathf.Abs(Shader.GetGlobalFloat("_KamionDimColourDesaturation")-job.expectedDimColour)>.0001f)
+                            throw new InvalidOperationException($"Actual per-camera dim colour mismatch: requested{job.expectedDimColour}, global{Shader.GetGlobalFloat("_KamionDimColourDesaturation")}, preset{EnvironmentLighting.Instance?.Active?.dimColourDesaturation}, path{AssetDatabase.GetAssetPath(EnvironmentLighting.Instance?.Active)}");
                     };
                     int count;
                     SkyOnlyProof skyProof = null;
@@ -217,7 +234,8 @@ namespace Game.Rendering.Editor
                         File.WriteAllText(Path.Combine(job.output, "sky-only-proof.json"), JsonUtility.ToJson(final, true));
                     }
                     lampProbe?.Write(job.output, expected, job.expectedHeadlamps,
-                        job.verifyWetness ? job.expectedWetness : (float?)null);
+                        job.verifyWetness ? job.expectedWetness : (float?)null,
+                        job.verifyDimColour ? job.expectedDimColour : (float?)null);
                     var environment = UnityEngine.Object.FindAnyObjectByType<EnvironmentLighting>();
                     if (environment == null || environment.Active == null || environment.Model == null)
                         throw new InvalidOperationException("Lighting QA requires a configured EnvironmentLighting");

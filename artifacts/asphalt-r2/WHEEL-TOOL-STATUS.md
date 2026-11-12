@@ -1,0 +1,5 @@
+# Status narzędzia wheel_contrast po kontroli źródła
+
+Dodano odmowę pomiaru, gdy baseline i kandydat mają różne lub brakujące view/projection/rootToWorld, różne rozmiary PNG albo gdy obecny GLB nie odpowiada zapisanym atrybutom/indeksom i grafowi baseline. Wymagany jest także zgodny ledger geometry wybranego kandydata. Projektor odmawia obsługi nieidentity transformacji węzłów GLB, bo ich nie implementuje. Macierze sondy C# są jawnie row-major; importer odwraca X i V przed pakowaniem Half UV1, co narzędzie uwzględnia.
+
+Wykonano tylko lekką kontrolę składni źródła (bez importu NumPy, odczytu GLB lub pomiaru obrazu). Pierwsza komenda compile na tekście UTF-8 nie usunęła istniejącego BOM; powtórzenie z utf-8-sig przeszło. To nie jest błąd wykonania pomiaru — pomiar nie został uruchomiony. Nowe guardy wymagają sprawdzenia przy rzeczywistym użyciu pod heavy i oględzin kolorowych masek, w tym przesłaniania przez obiekty inne niż droga. Nie ma nowego wyniku liczbowego ani przywrócenia wycofanych metryk r1. Zapisane wyniki rundy2 nie zależą od tego niewykonanego narzędzia.

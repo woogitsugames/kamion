@@ -1,0 +1,26 @@
+{
+  "checked_at": "2026-11-12T12:22:34.0272627+01:00",
+  "visual_review_hashes_verified": 60,
+  "camera_conditions": 328,
+  "counter_rows": 2952,
+  "geometry_equal": true,
+  "validation_pending": [],
+  "raw_validation": {
+    "branch": "gpt-asphalt-r2",
+    "label": "candidate2",
+    "started": "2026-11-12T09:06:27.2893061+01:00",
+    "compare": 0,
+    "gis_exit": 0,
+    "physics_gate3_exit": 1,
+    "resumed_at": "2026-11-12T11:44:42.9853959+01:00",
+    "resumed_reason": "Switched own waiting wrapper to the current main FIFO slot implementation; no running Python task interrupted.",
+    "resume_history": {
+      "at": "2026-11-12T11:38:29.9623509+01:00",
+      "reason": "Own waiting wrapper rescheduled after more than one hour without a heavy slot; no running Python task interrupted."
+    },
+    "fidelity_exit": 0,
+    "editmode_exit": 0,
+    "finished": "2026-11-12T12:22:13.9818814+01:00"
+  },
+  "note": "Read-only integrity check, not final acceptance. Read test logs, final XML and fidelity findings before REPORT and end-round-checks.json."
+}

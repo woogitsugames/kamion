@@ -527,7 +527,10 @@ for _k in ("roof_tiles_red", "roof_tiles_brown"):
 # - `plot_lawn`: the mown lawn inside a plot, a draped surface of the grass_verge set. Lighter and yellower than the
 #   rough grass outside the fence (WORKING_VALUE, refs P13 / P19 / C04: a lawn reads ~1.3x the luminance of the
 #   unmown verge next to it).
-M["plot_kit"] = {"color": [1.0, 1.0, 1.0], "rough": 0.85, "texture": "plot_kit", "alpha_cutoff": 0.5}
+# ADR 0124: `vertex_color` - COLOR_0 selects hard surface (a = 0, rgb * 2 = ageing tint) / foliage (a = 1, rgb = normal);
+# `shader` - the importer swaps URP Lit for Kamion/World PlotKit (two-sided panels lit correctly, plants as volumes).
+M["plot_kit"] = {"color": [1.0, 1.0, 1.0], "rough": 0.85, "texture": "plot_kit", "alpha_cutoff": 0.5, "vertex_color": True,
+                 "shader": "Kamion/World PlotKit"}
 M["plot_lawn"] = {"color": [0.150, 0.200, 0.060], "rough": 0.95, "surface": "grass", "texture_set": "grass_verge"}
 
 # ADR 0120, furniture-only alias: the shallow lamp footing keeps the concrete-base pigment,
@@ -612,3 +615,23 @@ M["pier_yellow"].update(_underdeck_pier_weather())
 M["plate_back"] = {**M["plate_back"], "furniture_sign_fronts": {
     "gain": 800.0,  # uncalibrated display coefficient, WORKING_VALUE
 }}
+
+# ADR0118 r2: material-only road aliases; geometry belongs to roads/ (Claude).
+# WORKING_VALUE: mineral film on kerbs, dry footway joints without oily-looking pools.
+# Reuse existing Mask.B and macro on kerbs, existing _GRIME fetch on the footway.
+# Yard paving / behaton and Kwadrat materials retain their original defaults.
+M["curb_concrete"] = {"color": [0.28, 0.278, 0.27], "rough": 0.85, "surface": "concrete_kerb",
+                      "texture_set": "kerb_concrete_1m",
+                      "kerb_wear": {"joint_dirt": 0.35, "mineral_film": 0.16, "film_threshold": 0.55}}
+M["sidewalk_paving"] = {"color": [0.26, 0.255, 0.245], "rough": 0.85, "surface": "paving_stones",
+                        "texture_set": "paving_20x10_grey",
+                        "ground_grime": {"damp_darkening": 0.18, "damp_threshold": 0.65,
+                                         "joint_dirt": 0.45, "damp_gloss": 0.15}}
+
+# The gate's entry island also uses sidewalk_paving. Exclude the whole separately owned
+# Kwadrat site, not merely its yard material IDs. Conservative local-E/N envelope:
+# authored points E=493.4..765, N=-551..-343 plus entry node (627.592,-585.783),
+# with a buffer for the gate / kerb returns. Read-only source: regional overrides / graph.
+# These are scope bounds, not a survey of the site. No override/mesh/hero asset is edited.
+for _asphalt_ground_id in ("curb_concrete", "sidewalk_paving"):
+    M[_asphalt_ground_id]["ground_wear_exclude_local_en"] = [400.0, -700.0, 850.0, -250.0]

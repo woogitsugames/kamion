@@ -1,0 +1,16 @@
+{
+  "completed_at": "2026-11-12T11:52:41.8210992+01:00",
+  "session_id": 80208,
+  "exit_code": 0,
+  "passed": 665,
+  "failed": 0,
+  "xfailed": 1,
+  "duration_seconds": 726.22,
+  "source_head": "bcc65bbb3cea94a5355036ac293d1b9209a892d0",
+  "observed_head_after_acquire": "101ce58f19ef1a575c12e6f9858de4701a86bdc5",
+  "head_at_completion": "105c641d8a450bfc7946e196c3b0cf9d3b7f2a59",
+  "heavy_released": true,
+  "summary": "665 passed, 1 xfailed in 726.22s (0:12:06)",
+  "log_sha256": "4023d736f531b91a746db37ba75312b3cb209d78a697afacb754bfbae51c985b",
+  "queue_adjustment": "gis-queue-adjustment.json; original waiting-only session11437 ended before pytest; exactly one actual full run"
+}

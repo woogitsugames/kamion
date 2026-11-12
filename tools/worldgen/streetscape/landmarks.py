@@ -26,6 +26,7 @@ from roads.network import side_extent, side_params
 
 from . import life_props as LP
 from . import signs as SG
+from . import ec_chimneys as EC
 
 
 def _yaw(f):
@@ -158,6 +159,13 @@ def build(pl, net, graph, overrides, origin, boards, report):
         elif o.get("kind") == "landmark":
             x, y = o["epsg2180"]
             p = np.array([x - ox, y - oy])
+            authored = EC.active(o, origin)
+            if authored is not None:
+                # The matching hero plan adds this instance and its measured
+                # triangle counts later; do not also register a generic cone.
+                rep["landmarks"].append({"id": o["id"], "proto": authored["prototype"],
+                                         "at": [round(float(v), 1) for v in p], "authored": True})
+                continue
             name = f"landmark_chimney_{int(o['height_m'])}_{int(round(o['base_d_m'] * 10))}"
             LP.LANDMARKS[name] = (float(o["height_m"]), float(o["base_d_m"]), float(o["top_d_m"]))
             pl.add(name, p, 0.0, src=f"override:{o['id']}")

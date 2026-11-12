@@ -1,0 +1,27 @@
+{
+  "verified_at": "2026-11-12T10:33:55.7039093+01:00",
+  "status": "LATEST_EQUIVALENT_TO_BROWSER_REVIEWED_PREVIEW",
+  "excluded_fields": [
+    "generated_at_utc",
+    "recognition.note"
+  ],
+  "note": "Only build time and non-rendered registry note differ. All runs, pair reviews, trends, verdict and UI template are identical. See ui-history-review/RESULT.json for browser QA.",
+  "files": [
+    {
+      "path": "artifacts/sbs-gate3/latest/index.html",
+      "sha256": "79793ef8d51b939661537e013567eedb8339cd5b09b5fb15b4e15b8ef7292290"
+    },
+    {
+      "path": "artifacts/sbs-gate3/latest/data.json",
+      "sha256": "fd83126c45b4cf409087fde07ad9039a271252437dd43f686395704576fcec56"
+    },
+    {
+      "path": "Data/Regions/bialystok-industrial-c/sbs_recognition.json",
+      "sha256": "a60360946b4bdb5de6924a466586c4efa2ea09ba974e72055358e01949bc4e48"
+    },
+    {
+      "path": "tools/refs/sbs_report_template.html",
+      "sha256": "0dc0f4d1812b39bb0b849e3539fb152a968f06f263dbd6a3fb49640cf9f4aca0"
+    }
+  ]
+}

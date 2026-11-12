@@ -1,0 +1,4241 @@
+{
+  "schema": "kamion.world.materials/1",
+  "generator": "art-source/world/materials/_src/build_all.py (pbrkit.py, sets_asphalt.py, sets_other.py, sets_facade.py)",
+  "conventions": {
+    "units": "metres; tile_m = world size of one texture repeat",
+    "BaseColor": "sRGB, linear albedo calibrated (Rec.709 luminance mean = albedo_target_mean_lum_linear); kind modulation_set: neutral map with mean 0.5, engine albedo = 2 x manifest colour x map",
+    "Normal": "tangent space, OpenGL (+Y = +v), Unity/glTF convention; import as Normal map",
+    "MaskMap": "URP Lit: R metallic, G occlusion, B detail mask, A smoothness; import sRGB off",
+    "Var": "R height normalised over height_range_m, G per-element random id (block/slab/chip; point sampled, never averaged), B joint/crack/bare mask (water, dirt, weeds), A convexity/edge wear; import sRGB off, mip filter box",
+    "tiers": "High = generated resolution (2048 for square sets), Medium = /2, Low = /4, box-filtered from High in linear space; smoothness per tier gets the normal variance lost by the downsample (Toksvig-style) so distant surfaces do not sparkle",
+    "mipmaps": "Unity-generated, Kaiser filter for BaseColor; aniso 4 (Medium) / 8 (High); hf_ratio_albedo = share of albedo variance above half Nyquist (shimmer risk; values in each set entry)",
+    "anti_tiling": "(1) macro_variation at 64 m and 264 m rotated (existing shader path); (2) Var.G element id + world tile index hash -> per-element tone jitter (paving, slabs); (3) distinct features (cracks, sealant) only in the 16 m crack layer, faded by macro B; (4) optional second base sample at x2.71 scale on High",
+    "albedo_source": "'Cool Pavements' review, arXiv:2409.12242 (https://arxiv.org/abs/2409.12242), p. 7: new asphalt concrete ~0.05, rising with ageing and soiling to ~0.15; Portland cement concrete up to 0.35, soiled ~0.2 within weeks/months. Broadband solar albedo, not visible-band: the texture means are WORKING_VALUE placed inside those ranges",
+    "grass_albedo_source": "WORKING_VALUE (visible-band albedo of mown grass; no measured source in repo)",
+    "cc0_scans": "ADR 0063: sets with a `source` entry are built from CC0 scans (Poly Haven, manifest art-source/world/cc0/cc0_manifest.json, processing _src/sets_scan.py): de-lit, flattened above ~1 m, white-balanced to the previous set mean and calibrated to the same target; height integrated from the scan normals; isotropic scans re-assembled (texture bombing) into 4 m tiles; hybrids keep the procedural layout and take the scan micro-detail"
+  },
+  "sets": {
+    "asphalt_cracks_layer": {
+      "tile_m": [
+        16.0,
+        16.0
+      ],
+      "uv": "world_xy_planar",
+      "slots": [
+        "overlay on road_asphalt / yard_asphalt / path_asphalt (not on asphalt_sma_fresh)"
+      ],
+      "note": "Mask: R open crack coverage (crack 1-5 mm, meandering, branched, broken into 2-12 m runs), G sealant band 25-40 mm (glossy bitumen, smoothness ~0.55, albedo ~0.03), B alligator zone, A ravelled halo. Normal: crack/sealant relief, blend with RNM/whiteout. Suggested: albedo *= lerp(1, 0.35, R) then lerp to 0.03 by G; smoothness lerp to 0.55 by G; scale R by a per-road age factor and by macro B so whole stretches can be crack-free (REVIEW r2 #5, r3 W8).",
+      "kind": "layer",
+      "files": {
+        "High": {
+          "res": [
+            2048,
+            2048
+          ],
+          "texel_mm": 7.81,
+          "dir": "asphalt_cracks_layer/High",
+          "files": [
+            "T_asphalt_cracks_layer_Mask.png",
+            "T_asphalt_cracks_layer_Normal.png"
+          ],
+          "png_bytes": 1336187,
+          "astc": {
+            "Mask": "6x6",
+            "Normal": "5x5"
+          },
+          "gpu_bytes_astc_mips": 6067759
+        },
+        "Medium": {
+          "res": [
+            1024,
+            1024
+          ],
+          "texel_mm": 15.62,
+          "dir": "asphalt_cracks_layer/Medium",
+          "files": [
+            "T_asphalt_cracks_layer_Mask.png",
+            "T_asphalt_cracks_layer_Normal.png"
+          ],
+          "png_bytes": 447107,
+          "astc": {
+            "Mask": "8x8",
+            "Normal": "6x6"
+          },
+          "gpu_bytes_astc_mips": 971680
+        },
+        "Low": {
+          "res": [
+            512,
+            512
+          ],
+          "texel_mm": 31.25,
+          "dir": "asphalt_cracks_layer/Low",
+          "files": [
+            "T_asphalt_cracks_layer_Mask.png",
+            "T_asphalt_cracks_layer_Normal.png"
+          ],
+          "png_bytes": 142375,
+          "astc": {
+            "Mask": "8x8",
+            "Normal": "8x8"
+          },
+          "gpu_bytes_astc_mips": 174762
+        }
+      },
+      "coverage": {
+        "open_crack": 0.00366,
+        "sealant": 0.00764,
+        "alligator_zone": 0.0541
+      }
+    },
+    "asphalt_detail_photo": {
+      "tile_m": [
+        1.0,
+        1.0
+      ],
+      "uv": "world_xy_planar x1 (close-range detail, fade out beyond ~25 m)",
+      "slots": [
+        "URP-style detail albedo + detail normal on asphalt_worn, asphalt_patch, asphalt_sma_fresh"
+      ],
+      "note": "From the public-domain photo Worn_cracked_asphalt_pavement.jpg (John Harvey, Wikimedia Commons): crack-free crop, luminance high-pass, contrast-normalised, made tileable (variance-preserving offset blend). DetailAlbedo follows URP: albedo *= tex * unity_ColorSpaceDouble, so sRGB 128 = neutral (x1.0), range ~x0.75..x1.3. Scale ~0.9 mm/px estimated from the aggregate size: WORKING_VALUE.",
+      "kind": "layer",
+      "files": {
+        "High": {
+          "res": [
+            1024,
+            1024
+          ],
+          "texel_mm": 0.98,
+          "dir": "asphalt_detail_photo/High",
+          "files": [
+            "T_asphalt_detail_photo_DetailAlbedo.png",
+            "T_asphalt_detail_photo_DetailNormal.png"
+          ],
+          "png_bytes": 2617145,
+          "gpu_bytes_astc_mips": 1244310,
+          "astc": {
+            "DetailAlbedo": "6x6",
+            "DetailNormal": "6x6"
+          }
+        },
+        "Medium": {
+          "res": [
+            512,
+            512
+          ],
+          "texel_mm": 1.95,
+          "dir": "asphalt_detail_photo/Medium",
+          "files": [
+            "T_asphalt_detail_photo_DetailAlbedo.png",
+            "T_asphalt_detail_photo_DetailNormal.png"
+          ],
+          "png_bytes": 670655,
+          "gpu_bytes_astc_mips": 311077,
+          "astc": {
+            "DetailAlbedo": "6x6",
+            "DetailNormal": "6x6"
+          }
+        }
+      },
+      "source_photo": "Data/photos/nowe/Worn_cracked_asphalt_pavement.jpg (public domain)",
+      "note_low": "Low tier: no detail layer (bandwidth); the base sets alone."
+    },
+    "asphalt_patch": {
+      "tile_m": [
+        4.0,
+        4.0
+      ],
+      "target": 0.062,
+      "uv": "world_xy_planar",
+      "slots": [
+        "decal_patch"
+      ],
+      "note": "Newer AC 8 patch fill, darker than the road around it (fresh binder, 0.05 class). The decal's TEXCOORD_1.x (age 0..1) should lerp albedo toward asphalt_worn and smoothness down.",
+      "kind": "tiling_set",
+      "albedo_target_mean_lum_linear": 0.062,
+      "source": {
+        "source": "clean_asphalt",
+        "source_dimensions_m": [
+          2.1,
+          2.1
+        ],
+        "bombing": {
+          "cells": 4,
+          "patch_m": 2.1,
+          "tile_m": 4.0
+        },
+        "assets": [
+          {
+            "id": "clean_asphalt",
+            "page": "https://polyhaven.com/a/clean_asphalt",
+            "authors": {
+              "Dimitrios Savva": "All"
+            },
+            "license": "CC0 1.0"
+          }
+        ]
+      },
+      "files": {
+        "High": {
+          "res": [
+            2048,
+            2048
+          ],
+          "texel_mm": 1.95,
+          "dir": "asphalt_patch/High",
+          "png_bytes": 25802016,
+          "files": [
+            "T_asphalt_patch_BaseColor.png",
+            "T_asphalt_patch_MaskMap.png",
+            "T_asphalt_patch_Normal.png",
+            "T_asphalt_patch_Var.png"
+          ],
+          "smoothness_mean": 0.34,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 9954481
+        },
+        "Medium": {
+          "res": [
+            1024,
+            1024
+          ],
+          "texel_mm": 3.91,
+          "dir": "asphalt_patch/Medium",
+          "png_bytes": 6078248,
+          "files": [
+            "T_asphalt_patch_BaseColor.png",
+            "T_asphalt_patch_MaskMap.png",
+            "T_asphalt_patch_Normal.png",
+            "T_asphalt_patch_Var.png"
+          ],
+          "smoothness_mean": 0.339,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 1943360
+        },
+        "Low": {
+          "res": [
+            512,
+            512
+          ],
+          "texel_mm": 7.81,
+          "dir": "asphalt_patch/Low",
+          "png_bytes": 1330003,
+          "files": [
+            "T_asphalt_patch_BaseColor.png",
+            "T_asphalt_patch_MaskMap.png",
+            "T_asphalt_patch_Normal.png",
+            "T_asphalt_patch_Var.png"
+          ],
+          "smoothness_mean": 0.339,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 349525
+        }
+      },
+      "height_range_m": [
+        -0.00333,
+        0.00462
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.062,
+        "p05": 0.0488,
+        "p95": 0.0776,
+        "mean_rgb_linear": [
+          0.0619,
+          0.0621,
+          0.0616
+        ]
+      },
+      "hf_ratio_albedo": 0.4534,
+      "ao_mean": 0.976
+    },
+    "asphalt_sma_fresh": {
+      "tile_m": [
+        4.0,
+        4.0
+      ],
+      "target": 0.075,
+      "uv": "world_xy_planar",
+      "slots": [
+        "road_asphalt (sections resurfaced recently: proposed material road_asphalt_new)"
+      ],
+      "note": "SMA 11 wearing course a few months in service: binder film still on the chips, slight sheen.",
+      "kind": "tiling_set",
+      "albedo_target_mean_lum_linear": 0.075,
+      "source": {
+        "source": "asphalt_pit_lane",
+        "source_dimensions_m": [
+          2.0,
+          2.0
+        ],
+        "bombing": {
+          "cells": 4,
+          "patch_m": 2.0,
+          "tile_m": 4.0
+        },
+        "assets": [
+          {
+            "id": "asphalt_pit_lane",
+            "page": "https://polyhaven.com/a/asphalt_pit_lane",
+            "authors": {
+              "Dimitrios Savva": "All"
+            },
+            "license": "CC0 1.0"
+          }
+        ]
+      },
+      "files": {
+        "High": {
+          "res": [
+            2048,
+            2048
+          ],
+          "texel_mm": 1.95,
+          "dir": "asphalt_sma_fresh/High",
+          "png_bytes": 27304334,
+          "files": [
+            "T_asphalt_sma_fresh_BaseColor.png",
+            "T_asphalt_sma_fresh_MaskMap.png",
+            "T_asphalt_sma_fresh_Normal.png",
+            "T_asphalt_sma_fresh_Var.png"
+          ],
+          "smoothness_mean": 0.318,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 9954481
+        },
+        "Medium": {
+          "res": [
+            1024,
+            1024
+          ],
+          "texel_mm": 3.91,
+          "dir": "asphalt_sma_fresh/Medium",
+          "png_bytes": 7514030,
+          "files": [
+            "T_asphalt_sma_fresh_BaseColor.png",
+            "T_asphalt_sma_fresh_MaskMap.png",
+            "T_asphalt_sma_fresh_Normal.png",
+            "T_asphalt_sma_fresh_Var.png"
+          ],
+          "smoothness_mean": 0.315,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 1943360
+        },
+        "Low": {
+          "res": [
+            512,
+            512
+          ],
+          "texel_mm": 7.81,
+          "dir": "asphalt_sma_fresh/Low",
+          "png_bytes": 1798592,
+          "files": [
+            "T_asphalt_sma_fresh_BaseColor.png",
+            "T_asphalt_sma_fresh_MaskMap.png",
+            "T_asphalt_sma_fresh_Normal.png",
+            "T_asphalt_sma_fresh_Var.png"
+          ],
+          "smoothness_mean": 0.309,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 349525
+        }
+      },
+      "height_range_m": [
+        -0.0082,
+        0.01106
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.075,
+        "p05": 0.0434,
+        "p95": 0.1203,
+        "mean_rgb_linear": [
+          0.0767,
+          0.0746,
+          0.0742
+        ]
+      },
+      "hf_ratio_albedo": 0.1775,
+      "ao_mean": 0.963
+    },
+    "asphalt_worn": {
+      "tile_m": [
+        4.04,
+        4.04
+      ],
+      "target": 0.08,
+      "uv": "world_xy_planar",
+      "slots": [
+        "road_asphalt",
+        "yard_asphalt",
+        "path_asphalt"
+      ],
+      "note": "Aged AC 11 (albedo 0.08, was 0.13; paint/asphalt contrast, ADR 0049 addendum r7): exposed light aggregate, ravelling sockets, dust in voids, low-contrast hairline micro-cracking only. Distinct cracks come from asphalt_cracks_layer (16 m) so this 4 m base has no recognisable features.",
+      "kind": "tiling_set",
+      "albedo_target_mean_lum_linear": 0.08,
+      "source": {
+        "source": "asphalt_04",
+        "source_dimensions_m": [
+          4.04,
+          4.04
+        ],
+        "assets": [
+          {
+            "id": "asphalt_04",
+            "page": "https://polyhaven.com/a/asphalt_04",
+            "authors": {
+              "Jenelle van Heerden": "Processing",
+              "Sergej Majboroda": "Photography"
+            },
+            "license": "CC0 1.0"
+          }
+        ]
+      },
+      "files": {
+        "High": {
+          "res": [
+            2048,
+            2048
+          ],
+          "texel_mm": 1.97,
+          "dir": "asphalt_worn/High",
+          "png_bytes": 26625509,
+          "files": [
+            "T_asphalt_worn_BaseColor.png",
+            "T_asphalt_worn_MaskMap.png",
+            "T_asphalt_worn_Normal.png",
+            "T_asphalt_worn_Var.png"
+          ],
+          "smoothness_mean": 0.099,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 9954481
+        },
+        "Medium": {
+          "res": [
+            1024,
+            1024
+          ],
+          "texel_mm": 3.95,
+          "dir": "asphalt_worn/Medium",
+          "png_bytes": 7197398,
+          "files": [
+            "T_asphalt_worn_BaseColor.png",
+            "T_asphalt_worn_MaskMap.png",
+            "T_asphalt_worn_Normal.png",
+            "T_asphalt_worn_Var.png"
+          ],
+          "smoothness_mean": 0.097,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 1943360
+        },
+        "Low": {
+          "res": [
+            512,
+            512
+          ],
+          "texel_mm": 7.89,
+          "dir": "asphalt_worn/Low",
+          "png_bytes": 1765424,
+          "files": [
+            "T_asphalt_worn_BaseColor.png",
+            "T_asphalt_worn_MaskMap.png",
+            "T_asphalt_worn_Normal.png",
+            "T_asphalt_worn_Var.png"
+          ],
+          "smoothness_mean": 0.094,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 349525
+        }
+      },
+      "height_range_m": [
+        -0.00838,
+        0.0053
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.08,
+        "p05": 0.0565,
+        "p95": 0.1143,
+        "mean_rgb_linear": [
+          0.0819,
+          0.0795,
+          0.078
+        ]
+      },
+      "hf_ratio_albedo": 0.1884,
+      "ao_mean": 0.972
+    },
+    "bark_pine": {
+      "tile_m": [
+        2.0,
+        2.0
+      ],
+      "slots": [
+        "(not assigned) tree trunks - vegetation is the world-builder's scope (ADR 0060)"
+      ],
+      "note": "Plated pine bark, neutral modulation map (mean 0.5 per channel); colour from the manifest.",
+      "uv": "mesh_uv0_metres (u around, v up)",
+      "kind": "modulation_set",
+      "albedo_target_mean_lum_linear": 0.5,
+      "source": {
+        "source": "pine_bark",
+        "source_dimensions_m": [
+          2.0,
+          2.0
+        ],
+        "assets": [
+          {
+            "id": "pine_bark",
+            "page": "https://polyhaven.com/a/pine_bark",
+            "authors": {
+              "Dimitrios Savva": "All"
+            },
+            "license": "CC0 1.0"
+          }
+        ]
+      },
+      "files": {
+        "High": {
+          "res": [
+            1024,
+            1024
+          ],
+          "texel_mm": 1.95,
+          "dir": "bark_pine/High",
+          "png_bytes": 6850536,
+          "files": [
+            "T_bark_pine_BaseColor.png",
+            "T_bark_pine_MaskMap.png",
+            "T_bark_pine_Normal.png",
+            "T_bark_pine_Var.png"
+          ],
+          "smoothness_mean": 0.293,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 2488620
+        },
+        "Medium": {
+          "res": [
+            512,
+            512
+          ],
+          "texel_mm": 3.91,
+          "dir": "bark_pine/Medium",
+          "png_bytes": 1974335,
+          "files": [
+            "T_bark_pine_BaseColor.png",
+            "T_bark_pine_MaskMap.png",
+            "T_bark_pine_Normal.png",
+            "T_bark_pine_Var.png"
+          ],
+          "smoothness_mean": 0.284,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 485840
+        },
+        "Low": {
+          "res": [
+            256,
+            256
+          ],
+          "texel_mm": 7.81,
+          "dir": "bark_pine/Low",
+          "png_bytes": 530737,
+          "files": [
+            "T_bark_pine_BaseColor.png",
+            "T_bark_pine_MaskMap.png",
+            "T_bark_pine_Normal.png",
+            "T_bark_pine_Var.png"
+          ],
+          "smoothness_mean": 0.266,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 87381
+        }
+      },
+      "height_range_m": [
+        -0.0381,
+        0.03528
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.4954,
+        "p05": 0.3108,
+        "p95": 0.7146,
+        "mean_rgb_linear": [
+          0.498,
+          0.4948,
+          0.4934
+        ]
+      },
+      "hf_ratio_albedo": 0.0393,
+      "ao_mean": 0.877
+    },
+    "barrier_galv": {
+      "tile_m": [
+        4.0,
+        0.5
+      ],
+      "slots": [
+        "barrier_steel"
+      ],
+      "note": "Weathered galvanised W-beam element 4.0 m (ADR 0117): u along, v unrolled across the folded profile (0.472 m); splice bolts, lap edge, road dust on up-facing flanks, bottom-edge spray, sparse rust.",
+      "uv": "mesh_uv0_metres (u along, v up)",
+      "kind": "modulation_set",
+      "albedo_target_mean_lum_linear": 0.5,
+      "files": {
+        "High": {
+          "res": [
+            1024,
+            128
+          ],
+          "texel_mm": 3.91,
+          "dir": "barrier_galv/High",
+          "png_bytes": 526422,
+          "files": [
+            "T_barrier_galv_BaseColor.png",
+            "T_barrier_galv_MaskMap.png",
+            "T_barrier_galv_Normal.png",
+            "T_barrier_galv_Var.png"
+          ],
+          "smoothness_mean": 0.363,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 311077
+        },
+        "Medium": {
+          "res": [
+            512,
+            64
+          ],
+          "texel_mm": 7.81,
+          "dir": "barrier_galv/Medium",
+          "png_bytes": 136478,
+          "files": [
+            "T_barrier_galv_BaseColor.png",
+            "T_barrier_galv_MaskMap.png",
+            "T_barrier_galv_Normal.png",
+            "T_barrier_galv_Var.png"
+          ],
+          "smoothness_mean": 0.362,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 60730
+        }
+      },
+      "height_range_m": [
+        -0.0024,
+        0.00273
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.5,
+        "p05": 0.4099,
+        "p95": 0.5916,
+        "mean_rgb_linear": [
+          0.5038,
+          0.4996,
+          0.4927
+        ]
+      },
+      "hf_ratio_albedo": 0.0116,
+      "ao_mean": 0.995
+    },
+    "behaton_i_grey": {
+      "tile_m": [
+        1.92,
+        1.92
+      ],
+      "target": 0.23,
+      "uv": "world_xy_planar",
+      "slots": [
+        "yard_behaton"
+      ],
+      "note": "I-shaped (double-T) interlocking 8 cm blocks 200 x 166 mm, waist 120 mm (WORKING_VALUE), rows offset half a block, 3-4 mm sand joints with moss away from traffic. Var.G = block id: the shader should add hash(block id + world tile index) tone jitter so the 4 m tile never repeats.",
+      "kind": "tiling_set",
+      "albedo_target_mean_lum_linear": 0.23,
+      "source": {
+        "source": "concrete_pavers",
+        "source_dimensions_m": [
+          1.92,
+          1.92
+        ],
+        "elements_per_tile": 106,
+        "assets": [
+          {
+            "id": "concrete_pavers",
+            "page": "https://polyhaven.com/a/concrete_pavers",
+            "authors": {
+              "Amal Kumar": "All"
+            },
+            "license": "CC0 1.0"
+          }
+        ]
+      },
+      "files": {
+        "High": {
+          "res": [
+            1024,
+            1024
+          ],
+          "texel_mm": 1.88,
+          "dir": "behaton_i_grey/High",
+          "png_bytes": 5398654,
+          "files": [
+            "T_behaton_i_grey_BaseColor.png",
+            "T_behaton_i_grey_MaskMap.png",
+            "T_behaton_i_grey_Normal.png",
+            "T_behaton_i_grey_Var.png"
+          ],
+          "smoothness_mean": 0.11,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 2488620
+        },
+        "Medium": {
+          "res": [
+            512,
+            512
+          ],
+          "texel_mm": 3.75,
+          "dir": "behaton_i_grey/Medium",
+          "png_bytes": 1500570,
+          "files": [
+            "T_behaton_i_grey_BaseColor.png",
+            "T_behaton_i_grey_MaskMap.png",
+            "T_behaton_i_grey_Normal.png",
+            "T_behaton_i_grey_Var.png"
+          ],
+          "smoothness_mean": 0.107,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 485840
+        },
+        "Low": {
+          "res": [
+            256,
+            256
+          ],
+          "texel_mm": 7.5,
+          "dir": "behaton_i_grey/Low",
+          "png_bytes": 373072,
+          "files": [
+            "T_behaton_i_grey_BaseColor.png",
+            "T_behaton_i_grey_MaskMap.png",
+            "T_behaton_i_grey_Normal.png",
+            "T_behaton_i_grey_Var.png"
+          ],
+          "smoothness_mean": 0.101,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 87381
+        }
+      },
+      "height_range_m": [
+        -0.00659,
+        0.00362
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.23,
+        "p05": 0.1143,
+        "p95": 0.3096,
+        "mean_rgb_linear": [
+          0.2316,
+          0.2303,
+          0.2226
+        ]
+      },
+      "hf_ratio_albedo": 0.0514,
+      "ao_mean": 0.934
+    },
+    "box_panel": {
+      "tile_m": [
+        4.8,
+        2.7
+      ],
+      "slots": [
+        "trailer_box_white"
+      ],
+      "note": "Box body panels with seam profiles every 1.2 m, road film low down.",
+      "uv": "mesh_uv0_metres (u along, v up)",
+      "kind": "modulation_set",
+      "albedo_target_mean_lum_linear": 0.5,
+      "files": {
+        "High": {
+          "res": [
+            1024,
+            576
+          ],
+          "texel_mm": 4.69,
+          "dir": "box_panel/High",
+          "png_bytes": 1589691,
+          "files": [
+            "T_box_panel_BaseColor.png",
+            "T_box_panel_MaskMap.png",
+            "T_box_panel_Normal.png",
+            "T_box_panel_Var.png"
+          ],
+          "smoothness_mean": 0.583,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 1399848
+        },
+        "Medium": {
+          "res": [
+            512,
+            288
+          ],
+          "texel_mm": 9.38,
+          "dir": "box_panel/Medium",
+          "png_bytes": 459610,
+          "files": [
+            "T_box_panel_BaseColor.png",
+            "T_box_panel_MaskMap.png",
+            "T_box_panel_Normal.png",
+            "T_box_panel_Var.png"
+          ],
+          "smoothness_mean": 0.583,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 273285
+        },
+        "Low": {
+          "res": [
+            256,
+            144
+          ],
+          "texel_mm": 18.75,
+          "dir": "box_panel/Low",
+          "png_bytes": 117169,
+          "files": [
+            "T_box_panel_BaseColor.png",
+            "T_box_panel_MaskMap.png",
+            "T_box_panel_Normal.png",
+            "T_box_panel_Var.png"
+          ],
+          "smoothness_mean": 0.582,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 49152
+        }
+      },
+      "height_range_m": [
+        -0.00039,
+        0.0017
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.5,
+        "p05": 0.4292,
+        "p95": 0.5349,
+        "mean_rgb_linear": [
+          0.5,
+          0.5,
+          0.5
+        ]
+      },
+      "hf_ratio_albedo": 0.0105,
+      "ao_mean": 0.998
+    },
+    "brick": {
+      "tile_m": [
+        1.5059,
+        1.5059
+      ],
+      "slots": [
+        "brick_red",
+        "chimney_brick"
+      ],
+      "note": "Brick NF 250 x 65 mm, 10 mm mortar, stretcher bond, per-brick tone.",
+      "uv": "mesh_uv0_metres (u along, v up)",
+      "kind": "modulation_set",
+      "albedo_target_mean_lum_linear": 0.5,
+      "source": {
+        "source": "red_brick",
+        "source_dimensions_m": [
+          1.4,
+          1.4
+        ],
+        "measured_period_m": [
+          0.0697
+        ],
+        "scale_to_standard_xy": [
+          1.0756,
+          1.0756
+        ],
+        "assets": [
+          {
+            "id": "red_brick",
+            "page": "https://polyhaven.com/a/red_brick",
+            "authors": {
+              "Rob Tuytel": "All"
+            },
+            "license": "CC0 1.0"
+          }
+        ]
+      },
+      "files": {
+        "High": {
+          "res": [
+            1024,
+            1024
+          ],
+          "texel_mm": 1.47,
+          "dir": "brick/High",
+          "png_bytes": 5803235,
+          "files": [
+            "T_brick_BaseColor.png",
+            "T_brick_MaskMap.png",
+            "T_brick_Normal.png",
+            "T_brick_Var.png"
+          ],
+          "smoothness_mean": 0.077,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 2488620
+        },
+        "Medium": {
+          "res": [
+            512,
+            512
+          ],
+          "texel_mm": 2.94,
+          "dir": "brick/Medium",
+          "png_bytes": 1652866,
+          "files": [
+            "T_brick_BaseColor.png",
+            "T_brick_MaskMap.png",
+            "T_brick_Normal.png",
+            "T_brick_Var.png"
+          ],
+          "smoothness_mean": 0.075,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 485840
+        },
+        "Low": {
+          "res": [
+            256,
+            256
+          ],
+          "texel_mm": 5.88,
+          "dir": "brick/Low",
+          "png_bytes": 445791,
+          "files": [
+            "T_brick_BaseColor.png",
+            "T_brick_MaskMap.png",
+            "T_brick_Normal.png",
+            "T_brick_Var.png"
+          ],
+          "smoothness_mean": 0.071,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 87381
+        }
+      },
+      "height_range_m": [
+        -0.00682,
+        0.00406
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.4999,
+        "p05": 0.3062,
+        "p95": 0.6534,
+        "mean_rgb_linear": [
+          0.4998,
+          0.4999,
+          0.4998
+        ]
+      },
+      "hf_ratio_albedo": 0.0215,
+      "ao_mean": 0.916
+    },
+    "car_grime": {
+      "tile_m": [
+        5.0,
+        2.5
+      ],
+      "slots": [
+        "car_paint_*"
+      ],
+      "note": "Parked-car paint film: road spray on sills, dust on top, rain runs (u along body, v = height).",
+      "uv": "mesh_uv0_metres (u along, v up)",
+      "kind": "modulation_set",
+      "albedo_target_mean_lum_linear": 0.5,
+      "files": {
+        "High": {
+          "res": [
+            1024,
+            512
+          ],
+          "texel_mm": 4.88,
+          "dir": "car_grime/High",
+          "png_bytes": 2059975,
+          "files": [
+            "T_car_grime_BaseColor.png",
+            "T_car_grime_MaskMap.png",
+            "T_car_grime_Normal.png",
+            "T_car_grime_Var.png"
+          ],
+          "smoothness_mean": 0.586,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 1244310
+        },
+        "Medium": {
+          "res": [
+            512,
+            256
+          ],
+          "texel_mm": 9.77,
+          "dir": "car_grime/Medium",
+          "png_bytes": 482140,
+          "files": [
+            "T_car_grime_BaseColor.png",
+            "T_car_grime_MaskMap.png",
+            "T_car_grime_Normal.png",
+            "T_car_grime_Var.png"
+          ],
+          "smoothness_mean": 0.586,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 242920
+        },
+        "Low": {
+          "res": [
+            256,
+            128
+          ],
+          "texel_mm": 19.53,
+          "dir": "car_grime/Low",
+          "png_bytes": 105996,
+          "files": [
+            "T_car_grime_BaseColor.png",
+            "T_car_grime_MaskMap.png",
+            "T_car_grime_Normal.png",
+            "T_car_grime_Var.png"
+          ],
+          "smoothness_mean": 0.586,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 43690
+        }
+      },
+      "height_range_m": [
+        -6e-05,
+        7e-05
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.5,
+        "p05": 0.3744,
+        "p95": 0.5342,
+        "mean_rgb_linear": [
+          0.5063,
+          0.4995,
+          0.4864
+        ]
+      },
+      "hf_ratio_albedo": 0.0069,
+      "ao_mean": 1.0
+    },
+    "car_grime_clean": {
+      "tile_m": [
+        5.0,
+        2.5
+      ],
+      "slots": [
+        "car_paint_silver",
+        "car_paint_grey",
+        "car_paint_black",
+        "car_paint_white",
+        "car_paint_white2",
+        "car_paint_blue",
+        "car_paint_red"
+      ],
+      "note": "R4 clean lower shell; original upper dust/runs/peel and calibration retained. Road deposition is instance-driven.",
+      "uv": "mesh_uv0_metres (u along, v up)",
+      "kind": "modulation_set",
+      "albedo_target_mean_lum_linear": 0.5,
+      "files": {
+        "High": {
+          "res": [
+            1024,
+            512
+          ],
+          "texel_mm": 4.88,
+          "dir": "car_grime_clean/High",
+          "png_bytes": 2017205,
+          "files": [
+            "T_car_grime_clean_BaseColor.png",
+            "T_car_grime_clean_MaskMap.png",
+            "T_car_grime_clean_Normal.png",
+            "T_car_grime_clean_Var.png"
+          ],
+          "smoothness_mean": 0.621,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 1244310
+        },
+        "Medium": {
+          "res": [
+            512,
+            256
+          ],
+          "texel_mm": 9.77,
+          "dir": "car_grime_clean/Medium",
+          "png_bytes": 467164,
+          "files": [
+            "T_car_grime_clean_BaseColor.png",
+            "T_car_grime_clean_MaskMap.png",
+            "T_car_grime_clean_Normal.png",
+            "T_car_grime_clean_Var.png"
+          ],
+          "smoothness_mean": 0.621,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 242920
+        },
+        "Low": {
+          "res": [
+            256,
+            128
+          ],
+          "texel_mm": 19.53,
+          "dir": "car_grime_clean/Low",
+          "png_bytes": 103603,
+          "files": [
+            "T_car_grime_clean_BaseColor.png",
+            "T_car_grime_clean_MaskMap.png",
+            "T_car_grime_clean_Normal.png",
+            "T_car_grime_clean_Var.png"
+          ],
+          "smoothness_mean": 0.621,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 43690
+        }
+      },
+      "height_range_m": [
+        -6e-05,
+        7e-05
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.5184,
+        "p05": 0.5069,
+        "p95": 0.5342,
+        "mean_rgb_linear": [
+          0.5217,
+          0.5183,
+          0.511
+        ]
+      },
+      "hf_ratio_albedo": 0.0255,
+      "ao_mean": 1.0
+    },
+    "concrete_cast_5m_joints": {
+      "tile_m": [
+        10.0,
+        10.0
+      ],
+      "target": 0.3,
+      "uv": "world_xy_planar",
+      "slots": [
+        "yard_concrete",
+        "road_concrete",
+        "bridge_concrete"
+      ],
+      "note": "5 x 5 m cast slabs, 8 mm sawn joints with bitumen sealant (open stretches with dirt), broom finish, worn exposed sand, one corner break and one transverse crack per 10 m tile. Var.G = slab id. Joint lines are world-aligned: for road_concrete they need along-road UV (UV1).",
+      "kind": "tiling_set",
+      "albedo_target_mean_lum_linear": 0.3,
+      "source": {
+        "source": "brushed_concrete",
+        "mode": "hybrid (procedural layout + scan micro-detail)",
+        "assets": [
+          {
+            "id": "brushed_concrete",
+            "page": "https://polyhaven.com/a/brushed_concrete",
+            "authors": {
+              "Dario Barresi": "Processing",
+              "Dimitrios Savva": "Photography"
+            },
+            "license": "CC0 1.0"
+          }
+        ]
+      },
+      "files": {
+        "High": {
+          "res": [
+            2048,
+            2048
+          ],
+          "texel_mm": 4.88,
+          "dir": "concrete_cast_5m_joints/High",
+          "png_bytes": 22700891,
+          "files": [
+            "T_concrete_cast_5m_joints_BaseColor.png",
+            "T_concrete_cast_5m_joints_MaskMap.png",
+            "T_concrete_cast_5m_joints_Normal.png",
+            "T_concrete_cast_5m_joints_Var.png"
+          ],
+          "smoothness_mean": 0.142,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 9954481
+        },
+        "Medium": {
+          "res": [
+            1024,
+            1024
+          ],
+          "texel_mm": 9.77,
+          "dir": "concrete_cast_5m_joints/Medium",
+          "png_bytes": 5555196,
+          "files": [
+            "T_concrete_cast_5m_joints_BaseColor.png",
+            "T_concrete_cast_5m_joints_MaskMap.png",
+            "T_concrete_cast_5m_joints_Normal.png",
+            "T_concrete_cast_5m_joints_Var.png"
+          ],
+          "smoothness_mean": 0.141,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 1943360
+        },
+        "Low": {
+          "res": [
+            512,
+            512
+          ],
+          "texel_mm": 19.53,
+          "dir": "concrete_cast_5m_joints/Low",
+          "png_bytes": 1341795,
+          "files": [
+            "T_concrete_cast_5m_joints_BaseColor.png",
+            "T_concrete_cast_5m_joints_MaskMap.png",
+            "T_concrete_cast_5m_joints_Normal.png",
+            "T_concrete_cast_5m_joints_Var.png"
+          ],
+          "smoothness_mean": 0.14,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 349525
+        }
+      },
+      "height_range_m": [
+        -0.00718,
+        0.00495
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.3,
+        "p05": 0.2446,
+        "p95": 0.3591,
+        "mean_rgb_linear": [
+          0.3031,
+          0.2986,
+          0.2896
+        ]
+      },
+      "hf_ratio_albedo": 0.0977,
+      "ao_mean": 0.983
+    },
+    "concrete_fence_panel": {
+      "tile_m": [
+        4.0,
+        2.0
+      ],
+      "slots": [
+        "concrete_fence"
+      ],
+      "note": "Prefab concrete panel fence: 2 m bays, 0.5 m panels, pores, joints, splash grime, run-off.",
+      "uv": "mesh_uv0_metres (u along, v up)",
+      "kind": "modulation_set",
+      "albedo_target_mean_lum_linear": 0.5,
+      "files": {
+        "High": {
+          "res": [
+            1024,
+            512
+          ],
+          "texel_mm": 3.91,
+          "dir": "concrete_fence_panel/High",
+          "png_bytes": 1863634,
+          "files": [
+            "T_concrete_fence_panel_BaseColor.png",
+            "T_concrete_fence_panel_MaskMap.png",
+            "T_concrete_fence_panel_Normal.png",
+            "T_concrete_fence_panel_Var.png"
+          ],
+          "smoothness_mean": 0.132,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 1244310
+        },
+        "Medium": {
+          "res": [
+            512,
+            256
+          ],
+          "texel_mm": 7.81,
+          "dir": "concrete_fence_panel/Medium",
+          "png_bytes": 346282,
+          "files": [
+            "T_concrete_fence_panel_BaseColor.png",
+            "T_concrete_fence_panel_MaskMap.png",
+            "T_concrete_fence_panel_Normal.png",
+            "T_concrete_fence_panel_Var.png"
+          ],
+          "smoothness_mean": 0.131,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 242920
+        },
+        "Low": {
+          "res": [
+            256,
+            128
+          ],
+          "texel_mm": 15.62,
+          "dir": "concrete_fence_panel/Low",
+          "png_bytes": 75458,
+          "files": [
+            "T_concrete_fence_panel_BaseColor.png",
+            "T_concrete_fence_panel_MaskMap.png",
+            "T_concrete_fence_panel_Normal.png",
+            "T_concrete_fence_panel_Var.png"
+          ],
+          "smoothness_mean": 0.131,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 43690
+        }
+      },
+      "height_range_m": [
+        -0.01026,
+        0.00044
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.5,
+        "p05": 0.3612,
+        "p95": 0.5727,
+        "mean_rgb_linear": [
+          0.5051,
+          0.4996,
+          0.4885
+        ]
+      },
+      "hf_ratio_albedo": 0.0061,
+      "ao_mean": 0.989
+    },
+    "concrete_precast": {
+      "tile_m": [
+        6.0,
+        3.0
+      ],
+      "slots": [
+        "hall_plinth"
+      ],
+      "note": "Precast plinth panels, 6 m bays, formwork ties, pores, run-off.",
+      "uv": "mesh_uv0_metres (u along, v up)",
+      "kind": "modulation_set",
+      "albedo_target_mean_lum_linear": 0.5,
+      "source": {
+        "source": "concrete_floor_worn_001",
+        "mode": "hybrid (procedural layout + scan micro-detail)",
+        "assets": [
+          {
+            "id": "concrete_floor_worn_001",
+            "page": "https://polyhaven.com/a/concrete_floor_worn_001",
+            "authors": {
+              "Dimitrios Savva": "Photography",
+              "Rico Cilliers": "Processing"
+            },
+            "license": "CC0 1.0"
+          }
+        ]
+      },
+      "files": {
+        "High": {
+          "res": [
+            2048,
+            1024
+          ],
+          "texel_mm": 2.93,
+          "dir": "concrete_precast/High",
+          "png_bytes": 9978476,
+          "files": [
+            "T_concrete_precast_BaseColor.png",
+            "T_concrete_precast_MaskMap.png",
+            "T_concrete_precast_Normal.png",
+            "T_concrete_precast_Var.png"
+          ],
+          "smoothness_mean": 0.15,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 4977240
+        },
+        "Medium": {
+          "res": [
+            1024,
+            512
+          ],
+          "texel_mm": 5.86,
+          "dir": "concrete_precast/Medium",
+          "png_bytes": 2342827,
+          "files": [
+            "T_concrete_precast_BaseColor.png",
+            "T_concrete_precast_MaskMap.png",
+            "T_concrete_precast_Normal.png",
+            "T_concrete_precast_Var.png"
+          ],
+          "smoothness_mean": 0.15,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 971680
+        },
+        "Low": {
+          "res": [
+            512,
+            256
+          ],
+          "texel_mm": 11.72,
+          "dir": "concrete_precast/Low",
+          "png_bytes": 604778,
+          "files": [
+            "T_concrete_precast_BaseColor.png",
+            "T_concrete_precast_MaskMap.png",
+            "T_concrete_precast_Normal.png",
+            "T_concrete_precast_Var.png"
+          ],
+          "smoothness_mean": 0.149,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 174762
+        }
+      },
+      "height_range_m": [
+        -0.00958,
+        0.00259
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.4998,
+        "p05": 0.3898,
+        "p95": 0.6083,
+        "mean_rgb_linear": [
+          0.5046,
+          0.4996,
+          0.487
+        ]
+      },
+      "hf_ratio_albedo": 0.0702,
+      "ao_mean": 0.989
+    },
+    "concrete_slab_3x1.5": {
+      "tile_m": [
+        6.0,
+        6.0
+      ],
+      "target": 0.27,
+      "uv": "world_xy_planar",
+      "slots": [
+        "yard_slabs"
+      ],
+      "note": "Precast road plates 3.0 x 1.5 m ('JOMB' type), rows with irregular offsets, 12-32 mm soil joints (some with grass), worn arrises, settlement steps up to +-6 mm, lifting-socket notches. Albedo mean measured on plates only (joints excluded).",
+      "kind": "tiling_set",
+      "albedo_target_mean_lum_linear": 0.27,
+      "source": {
+        "source": "concrete_floor_worn_001",
+        "mode": "hybrid (procedural layout + scan micro-detail)",
+        "assets": [
+          {
+            "id": "concrete_floor_worn_001",
+            "page": "https://polyhaven.com/a/concrete_floor_worn_001",
+            "authors": {
+              "Dimitrios Savva": "Photography",
+              "Rico Cilliers": "Processing"
+            },
+            "license": "CC0 1.0"
+          }
+        ]
+      },
+      "files": {
+        "High": {
+          "res": [
+            2048,
+            2048
+          ],
+          "texel_mm": 2.93,
+          "dir": "concrete_slab_3x1.5/High",
+          "png_bytes": 18340468,
+          "files": [
+            "T_concrete_slab_3x1.5_BaseColor.png",
+            "T_concrete_slab_3x1.5_MaskMap.png",
+            "T_concrete_slab_3x1.5_Normal.png",
+            "T_concrete_slab_3x1.5_Var.png"
+          ],
+          "smoothness_mean": 0.101,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 9954481
+        },
+        "Medium": {
+          "res": [
+            1024,
+            1024
+          ],
+          "texel_mm": 5.86,
+          "dir": "concrete_slab_3x1.5/Medium",
+          "png_bytes": 4507998,
+          "files": [
+            "T_concrete_slab_3x1.5_BaseColor.png",
+            "T_concrete_slab_3x1.5_MaskMap.png",
+            "T_concrete_slab_3x1.5_Normal.png",
+            "T_concrete_slab_3x1.5_Var.png"
+          ],
+          "smoothness_mean": 0.097,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 1943360
+        },
+        "Low": {
+          "res": [
+            512,
+            512
+          ],
+          "texel_mm": 11.72,
+          "dir": "concrete_slab_3x1.5/Low",
+          "png_bytes": 1165932,
+          "files": [
+            "T_concrete_slab_3x1.5_BaseColor.png",
+            "T_concrete_slab_3x1.5_MaskMap.png",
+            "T_concrete_slab_3x1.5_Normal.png",
+            "T_concrete_slab_3x1.5_Var.png"
+          ],
+          "smoothness_mean": 0.095,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 349525
+        }
+      },
+      "height_range_m": [
+        -0.04471,
+        0.00956
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.2658,
+        "p05": 0.1877,
+        "p95": 0.3345,
+        "mean_rgb_linear": [
+          0.2692,
+          0.2653,
+          0.2552
+        ]
+      },
+      "hf_ratio_albedo": 0.042,
+      "ao_mean": 0.981
+    },
+    "container_corrugation": {
+      "tile_m": [
+        2.78,
+        2.6
+      ],
+      "slots": [
+        "container_*"
+      ],
+      "note": "Container side corrugation 0.278 m pitch, dents, rust spots.",
+      "uv": "mesh_uv0_metres (u along, v up)",
+      "kind": "modulation_set",
+      "albedo_target_mean_lum_linear": 0.5,
+      "files": {
+        "High": {
+          "res": [
+            1024,
+            956
+          ],
+          "texel_mm": 2.71,
+          "dir": "container_corrugation/High",
+          "png_bytes": 766612,
+          "files": [
+            "T_container_corrugation_BaseColor.png",
+            "T_container_corrugation_MaskMap.png",
+            "T_container_corrugation_Normal.png",
+            "T_container_corrugation_Var.png"
+          ],
+          "smoothness_mean": 0.396,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 2323360
+        },
+        "Medium": {
+          "res": [
+            512,
+            478
+          ],
+          "texel_mm": 5.43,
+          "dir": "container_corrugation/Medium",
+          "png_bytes": 303091,
+          "files": [
+            "T_container_corrugation_BaseColor.png",
+            "T_container_corrugation_MaskMap.png",
+            "T_container_corrugation_Normal.png",
+            "T_container_corrugation_Var.png"
+          ],
+          "smoothness_mean": 0.395,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 453577
+        },
+        "Low": {
+          "res": [
+            256,
+            239
+          ],
+          "texel_mm": 10.86,
+          "dir": "container_corrugation/Low",
+          "png_bytes": 114977,
+          "files": [
+            "T_container_corrugation_BaseColor.png",
+            "T_container_corrugation_MaskMap.png",
+            "T_container_corrugation_Normal.png",
+            "T_container_corrugation_Var.png"
+          ],
+          "smoothness_mean": 0.391,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 81578
+        }
+      },
+      "height_range_m": [
+        -0.006,
+        0.036
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.5,
+        "p05": 0.4515,
+        "p95": 0.5361,
+        "mean_rgb_linear": [
+          0.502,
+          0.4996,
+          0.4984
+        ]
+      },
+      "hf_ratio_albedo": 0.0096,
+      "ao_mean": 0.983
+    },
+    "curtain_folds": {
+      "tile_m": [
+        4.8,
+        2.7
+      ],
+      "slots": [
+        "trailer_curtain_*"
+      ],
+      "note": "Curtainsider tarpaulin folds, sag between straps, grime on the lower third.",
+      "uv": "mesh_uv0_metres (u along, v up)",
+      "kind": "modulation_set",
+      "albedo_target_mean_lum_linear": 0.5,
+      "files": {
+        "High": {
+          "res": [
+            2048,
+            1152
+          ],
+          "texel_mm": 2.34,
+          "dir": "curtain_folds/High",
+          "png_bytes": 2893125,
+          "files": [
+            "T_curtain_folds_BaseColor.png",
+            "T_curtain_folds_MaskMap.png",
+            "T_curtain_folds_Normal.png",
+            "T_curtain_folds_Var.png"
+          ],
+          "smoothness_mean": 0.364,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 5599395
+        },
+        "Medium": {
+          "res": [
+            1024,
+            576
+          ],
+          "texel_mm": 4.69,
+          "dir": "curtain_folds/Medium",
+          "png_bytes": 1003302,
+          "files": [
+            "T_curtain_folds_BaseColor.png",
+            "T_curtain_folds_MaskMap.png",
+            "T_curtain_folds_Normal.png",
+            "T_curtain_folds_Var.png"
+          ],
+          "smoothness_mean": 0.364,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 1093140
+        },
+        "Low": {
+          "res": [
+            512,
+            288
+          ],
+          "texel_mm": 9.38,
+          "dir": "curtain_folds/Low",
+          "png_bytes": 357492,
+          "files": [
+            "T_curtain_folds_BaseColor.png",
+            "T_curtain_folds_MaskMap.png",
+            "T_curtain_folds_Normal.png",
+            "T_curtain_folds_Var.png"
+          ],
+          "smoothness_mean": 0.363,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 196608
+        }
+      },
+      "height_range_m": [
+        -0.01196,
+        0.01202
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.5,
+        "p05": 0.4229,
+        "p95": 0.5553,
+        "mean_rgb_linear": [
+          0.499,
+          0.499,
+          0.499
+        ]
+      },
+      "hf_ratio_albedo": 0.0009,
+      "ao_mean": 0.993
+    },
+    "facade_atlas": {
+      "tile_m": [
+        16.0,
+        16.0
+      ],
+      "target": null,
+      "kind": "tiling_set",
+      "uv": "mesh_uv0_metres (atlas cells, layout tools/worldgen/streetscape/facade_atlas.py)",
+      "slots": [
+        "facade_atlas (windows, doors, garage doors, balustrades, facade equipment; ADR 0081)"
+      ],
+      "note": "Cell atlas 16 x 16 m. Calibrated: every cell carries its real albedo (tint 1).",
+      "albedo_target_mean_lum_linear": null,
+      "files": {
+        "High": {
+          "res": [
+            4096,
+            4096
+          ],
+          "texel_mm": 3.91,
+          "dir": "facade_atlas/High",
+          "png_bytes": 4400133,
+          "files": [
+            "T_facade_atlas_BaseColor.png",
+            "T_facade_atlas_MaskMap.png",
+            "T_facade_atlas_Normal.png",
+            "T_facade_atlas_Var.png"
+          ],
+          "smoothness_mean": 0.57,
+          "aux_res": [
+            2048,
+            2048
+          ],
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 17420342
+        },
+        "Medium": {
+          "res": [
+            2048,
+            2048
+          ],
+          "texel_mm": 7.81,
+          "dir": "facade_atlas/Medium",
+          "png_bytes": 1720369,
+          "files": [
+            "T_facade_atlas_BaseColor.png",
+            "T_facade_atlas_MaskMap.png",
+            "T_facade_atlas_Normal.png",
+            "T_facade_atlas_Var.png"
+          ],
+          "smoothness_mean": 0.536,
+          "aux_res": [
+            1024,
+            1024
+          ],
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 3809826
+        },
+        "Low": {
+          "res": [
+            1024,
+            1024
+          ],
+          "texel_mm": 15.62,
+          "dir": "facade_atlas/Low",
+          "png_bytes": 655652,
+          "files": [
+            "T_facade_atlas_BaseColor.png",
+            "T_facade_atlas_MaskMap.png",
+            "T_facade_atlas_Normal.png",
+            "T_facade_atlas_Var.png"
+          ],
+          "smoothness_mean": 0.509,
+          "aux_res": [
+            512,
+            512
+          ],
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 611669
+        }
+      },
+      "height_range_m": [
+        -0.04,
+        0.03
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.2504,
+        "p05": 0.0241,
+        "p95": 0.6556,
+        "mean_rgb_linear": [
+          0.2432,
+          0.237,
+          0.2286
+        ]
+      },
+      "hf_ratio_albedo": 0.0028,
+      "ao_mean": 0.977
+    },
+    "facade_far": {
+      "tile_m": [
+        24.0,
+        45.8
+      ],
+      "target": 0.5,
+      "kind": "modulation_set",
+      "uv": "mesh_uv0_metres (u = bay x 3 m, v = row; layout facade_atlas.FAR_*)",
+      "slots": [
+        "<wall>__far_block / __far_office / __far_ribbon (LOD1 window zone; ADR 0081)"
+      ],
+      "note": "Storey rows of 8 bays composed from the facade_atlas cells; wall = neutral 0.5 tinted by the wall colour.",
+      "albedo_target_mean_lum_linear": 0.5,
+      "files": {
+        "High": {
+          "res": [
+            2048,
+            3908
+          ],
+          "texel_mm": 11.72,
+          "dir": "facade_far/High",
+          "png_bytes": 1532540,
+          "files": [
+            "T_facade_far_BaseColor.png",
+            "T_facade_far_MaskMap.png",
+            "T_facade_far_Normal.png",
+            "T_facade_far_Var.png"
+          ],
+          "smoothness_mean": 0.324,
+          "aux_res": [
+            512,
+            977
+          ],
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 5639191
+        },
+        "Medium": {
+          "res": [
+            1024,
+            1954
+          ],
+          "texel_mm": 23.44,
+          "dir": "facade_far/Medium",
+          "png_bytes": 606539,
+          "files": [
+            "T_facade_far_BaseColor.png",
+            "T_facade_far_MaskMap.png",
+            "T_facade_far_Normal.png",
+            "T_facade_far_Var.png"
+          ],
+          "smoothness_mean": 0.324,
+          "aux_res": [
+            512,
+            977
+          ],
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 1817480
+        },
+        "Low": {
+          "res": [
+            512,
+            977
+          ],
+          "texel_mm": 46.88,
+          "dir": "facade_far/Low",
+          "png_bytes": 249305,
+          "files": [
+            "T_facade_far_BaseColor.png",
+            "T_facade_far_MaskMap.png",
+            "T_facade_far_Normal.png",
+            "T_facade_far_Var.png"
+          ],
+          "smoothness_mean": 0.324,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 666965
+        }
+      },
+      "height_range_m": [
+        0.0,
+        0.0
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.4206,
+        "p05": 0.0269,
+        "p95": 0.626,
+        "mean_rgb_linear": [
+          0.4213,
+          0.4217,
+          0.4151
+        ]
+      },
+      "hf_ratio_albedo": 0.0043,
+      "ao_mean": 1.0
+    },
+    "fence_concrete": {
+      "tile_m": [
+        16.0,
+        4.5
+      ],
+      "target": 0.3,
+      "kind": "tiling_set",
+      "uv": "mesh_uv0_metres (bay cells, layout facade_atlas.fence_uv)",
+      "slots": [
+        "concrete_fence, concrete_fence_post (prefabricated fence; ADR 0081)"
+      ],
+      "note": "Strip atlas 16 x 4.5 m: 8 bays of stacked 0.5 m plates, 5 framed panels, post strip. Micro detail from the CC0 scan concrete_floor_worn_001 (Poly Haven) when fetched.",
+      "albedo_target_mean_lum_linear": 0.3,
+      "source": {
+        "source": "concrete_floor_worn_001",
+        "mode": "hybrid (procedural layout + scan micro-detail)",
+        "assets": [
+          {
+            "id": "concrete_floor_worn_001",
+            "page": "https://polyhaven.com/a/concrete_floor_worn_001",
+            "authors": {
+              "Dimitrios Savva": "Photography",
+              "Rico Cilliers": "Processing"
+            },
+            "license": "CC0 1.0"
+          }
+        ]
+      },
+      "files": {
+        "High": {
+          "res": [
+            2048,
+            576
+          ],
+          "texel_mm": 7.81,
+          "dir": "fence_concrete/High",
+          "png_bytes": 6235915,
+          "files": [
+            "T_fence_concrete_BaseColor.png",
+            "T_fence_concrete_MaskMap.png",
+            "T_fence_concrete_Normal.png",
+            "T_fence_concrete_Var.png"
+          ],
+          "smoothness_mean": 0.118,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 2799697
+        },
+        "Medium": {
+          "res": [
+            1024,
+            288
+          ],
+          "texel_mm": 15.62,
+          "dir": "fence_concrete/Medium",
+          "png_bytes": 1380545,
+          "files": [
+            "T_fence_concrete_BaseColor.png",
+            "T_fence_concrete_MaskMap.png",
+            "T_fence_concrete_Normal.png",
+            "T_fence_concrete_Var.png"
+          ],
+          "smoothness_mean": 0.117,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 546570
+        },
+        "Low": {
+          "res": [
+            512,
+            144
+          ],
+          "texel_mm": 31.25,
+          "dir": "fence_concrete/Low",
+          "png_bytes": 297596,
+          "files": [
+            "T_fence_concrete_BaseColor.png",
+            "T_fence_concrete_MaskMap.png",
+            "T_fence_concrete_Normal.png",
+            "T_fence_concrete_Var.png"
+          ],
+          "smoothness_mean": 0.115,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 98304
+        }
+      },
+      "height_range_m": [
+        -0.013,
+        0.00789
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.2993,
+        "p05": 0.196,
+        "p95": 0.3854,
+        "mean_rgb_linear": [
+          0.3075,
+          0.2991,
+          0.2778
+        ]
+      },
+      "hf_ratio_albedo": 0.0251,
+      "ao_mean": 0.978
+    },
+    "fire_station": {
+      "tile_m": [
+        14.0,
+        14.0
+      ],
+      "target": 0.57,
+      "atlas": true,
+      "uv": "mesh_uv0_metres (atlas position in metres; layout in art-source/world/landmarks/fire_station_jrg2/atlas_layout.json)",
+      "slots": [
+        "fire_station (hero fire station asset, ADR 0070)"
+      ],
+      "note": "Atlas 14 x 14 m (2048 x 2048 High, 6.8 mm/texel): pale blue render band with splash zone and run-off, blue trapezoidal roof sheet, flashing, plinth, sectional door, clinker pier, windows, swatches. Detail / relief / roughness from CC0 scans (Poly Haven: Painted Plaster Wall, Brick Wall 006, Concrete Wall 008); colours WORKING_VALUE by eye from CC0 photos. albedo_target_mean_lum_linear applies to the clean render, not the atlas mean.",
+      "kind": "tiling_set",
+      "albedo_target_mean_lum_linear": 0.57,
+      "files": {
+        "High": {
+          "res": [
+            2048,
+            2048
+          ],
+          "texel_mm": 6.84,
+          "dir": "fire_station/High",
+          "png_bytes": 10052548,
+          "files": [
+            "T_fire_station_BaseColor.png",
+            "T_fire_station_MaskMap.png",
+            "T_fire_station_Normal.png",
+            "T_fire_station_Var.png"
+          ],
+          "smoothness_mean": 0.328,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 9954481
+        },
+        "Medium": {
+          "res": [
+            1024,
+            1024
+          ],
+          "texel_mm": 13.67,
+          "dir": "fire_station/Medium",
+          "png_bytes": 2725830,
+          "files": [
+            "T_fire_station_BaseColor.png",
+            "T_fire_station_MaskMap.png",
+            "T_fire_station_Normal.png",
+            "T_fire_station_Var.png"
+          ],
+          "smoothness_mean": 0.307,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 1943360
+        },
+        "Low": {
+          "res": [
+            512,
+            512
+          ],
+          "texel_mm": 27.34,
+          "dir": "fire_station/Low",
+          "png_bytes": 674776,
+          "files": [
+            "T_fire_station_BaseColor.png",
+            "T_fire_station_MaskMap.png",
+            "T_fire_station_Normal.png",
+            "T_fire_station_Var.png"
+          ],
+          "smoothness_mean": 0.282,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 349525
+        }
+      },
+      "height_range_m": [
+        -0.02956,
+        0.03727
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.2166,
+        "p05": 0.0329,
+        "p95": 0.6162,
+        "mean_rgb_linear": [
+          0.1807,
+          0.2209,
+          0.2877
+        ]
+      },
+      "hf_ratio_albedo": 0.0029,
+      "ao_mean": 0.941,
+      "source": "polyhaven:painted_plaster_wall (CC0); polyhaven:concrete_wall_008 (CC0); polyhaven:brick_wall_006 (CC0); polyhaven:fir_tree_01 needle RGB (CC0; authored opaque canopy derivative)",
+      "render_mean_rgb_linear": [
+        0.212,
+        0.2973,
+        0.4167
+      ]
+    },
+    "grass_verge": {
+      "tile_m": [
+        3.0,
+        3.0
+      ],
+      "target": 0.095,
+      "uv": "world_xy_planar",
+      "slots": [
+        "verge_grass",
+        "terrain_grass"
+      ],
+      "note": "Mown verge from above (z-buffered blades, 2x supersampled): tufts, thatch, bare soil, plantain/dandelion rosettes, clover. Extra albedo BaseColor_late_autumn (olive-brown; REVIEW r3 W10). Var.B = bare soil (more mud near kerbs via COLOR_0 masks).",
+      "kind": "tiling_set",
+      "albedo_target_mean_lum_linear": 0.095,
+      "files": {
+        "High": {
+          "res": [
+            2048,
+            2048
+          ],
+          "texel_mm": 1.46,
+          "dir": "grass_verge/High",
+          "png_bytes": 42691339,
+          "files": [
+            "T_grass_verge_BaseColor.png",
+            "T_grass_verge_BaseColor_late_autumn.png",
+            "T_grass_verge_MaskMap.png",
+            "T_grass_verge_Normal.png",
+            "T_grass_verge_Var.png"
+          ],
+          "smoothness_mean": 0.185,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 12443101
+        },
+        "Medium": {
+          "res": [
+            1024,
+            1024
+          ],
+          "texel_mm": 2.93,
+          "dir": "grass_verge/Medium",
+          "png_bytes": 12349309,
+          "files": [
+            "T_grass_verge_BaseColor.png",
+            "T_grass_verge_BaseColor_late_autumn.png",
+            "T_grass_verge_MaskMap.png",
+            "T_grass_verge_Normal.png",
+            "T_grass_verge_Var.png"
+          ],
+          "smoothness_mean": 0.131,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 2565515
+        },
+        "Low": {
+          "res": [
+            512,
+            512
+          ],
+          "texel_mm": 5.86,
+          "dir": "grass_verge/Low",
+          "png_bytes": 3057451,
+          "files": [
+            "T_grass_verge_BaseColor.png",
+            "T_grass_verge_BaseColor_late_autumn.png",
+            "T_grass_verge_MaskMap.png",
+            "T_grass_verge_Normal.png",
+            "T_grass_verge_Var.png"
+          ],
+          "smoothness_mean": 0.076,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 436906
+        }
+      },
+      "height_range_m": [
+        -0.00089,
+        0.00998
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.095,
+        "p05": 0.0707,
+        "p95": 0.1203,
+        "mean_rgb_linear": [
+          0.074,
+          0.1094,
+          0.0158
+        ]
+      },
+      "hf_ratio_albedo": 0.1263,
+      "ao_mean": 0.938
+    },
+    "gravel_compacted": {
+      "tile_m": [
+        4.0,
+        4.0
+      ],
+      "target": 0.2,
+      "uv": "world_xy_planar",
+      "slots": [
+        "shoulder_gravel",
+        "road_gravel",
+        "yard_gravel"
+      ],
+      "note": "Compacted crushed stone 0-31.5 mm: two stone sizes half-buried in fines and dust.",
+      "kind": "tiling_set",
+      "albedo_target_mean_lum_linear": 0.2,
+      "source": {
+        "source": "gravel_floor_02",
+        "source_dimensions_m": [
+          2.0,
+          2.0
+        ],
+        "bombing": {
+          "cells": 4,
+          "patch_m": 2.0,
+          "tile_m": 4.0
+        },
+        "assets": [
+          {
+            "id": "gravel_floor_02",
+            "page": "https://polyhaven.com/a/gravel_floor_02",
+            "authors": {
+              "Jenelle van Heerden": "Processing",
+              "Dimitrios Savva": "Photography"
+            },
+            "license": "CC0 1.0"
+          }
+        ]
+      },
+      "files": {
+        "High": {
+          "res": [
+            2048,
+            2048
+          ],
+          "texel_mm": 1.95,
+          "dir": "gravel_compacted/High",
+          "png_bytes": 35076101,
+          "files": [
+            "T_gravel_compacted_BaseColor.png",
+            "T_gravel_compacted_MaskMap.png",
+            "T_gravel_compacted_Normal.png",
+            "T_gravel_compacted_Var.png"
+          ],
+          "smoothness_mean": 0.177,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 9954481
+        },
+        "Medium": {
+          "res": [
+            1024,
+            1024
+          ],
+          "texel_mm": 3.91,
+          "dir": "gravel_compacted/Medium",
+          "png_bytes": 9907534,
+          "files": [
+            "T_gravel_compacted_BaseColor.png",
+            "T_gravel_compacted_MaskMap.png",
+            "T_gravel_compacted_Normal.png",
+            "T_gravel_compacted_Var.png"
+          ],
+          "smoothness_mean": 0.138,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 1943360
+        },
+        "Low": {
+          "res": [
+            512,
+            512
+          ],
+          "texel_mm": 7.81,
+          "dir": "gravel_compacted/Low",
+          "png_bytes": 2455243,
+          "files": [
+            "T_gravel_compacted_BaseColor.png",
+            "T_gravel_compacted_MaskMap.png",
+            "T_gravel_compacted_Normal.png",
+            "T_gravel_compacted_Var.png"
+          ],
+          "smoothness_mean": 0.08,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 349525
+        }
+      },
+      "height_range_m": [
+        -0.01585,
+        0.01593
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.2,
+        "p05": 0.1123,
+        "p95": 0.3042,
+        "mean_rgb_linear": [
+          0.2138,
+          0.1988,
+          0.1711
+        ]
+      },
+      "hf_ratio_albedo": 0.0917,
+      "ao_mean": 0.801
+    },
+    "hedge_foliage": {
+      "tile_m": [
+        1.5,
+        1.5
+      ],
+      "slots": [
+        "hedge_berberis"
+      ],
+      "note": "Clipped red berberis hedge face: leaf clusters, dark voids, thin holes (u along, v over the section).",
+      "uv": "mesh_uv0_metres (u along, v up)",
+      "kind": "modulation_set",
+      "albedo_target_mean_lum_linear": 0.5,
+      "files": {
+        "High": {
+          "res": [
+            512,
+            512
+          ],
+          "texel_mm": 2.93,
+          "dir": "hedge_foliage/High",
+          "png_bytes": 1994694,
+          "files": [
+            "T_hedge_foliage_BaseColor.png",
+            "T_hedge_foliage_MaskMap.png",
+            "T_hedge_foliage_Normal.png",
+            "T_hedge_foliage_Var.png"
+          ],
+          "smoothness_mean": 0.192,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 622155
+        },
+        "Medium": {
+          "res": [
+            256,
+            256
+          ],
+          "texel_mm": 5.86,
+          "dir": "hedge_foliage/Medium",
+          "png_bytes": 575556,
+          "files": [
+            "T_hedge_foliage_BaseColor.png",
+            "T_hedge_foliage_MaskMap.png",
+            "T_hedge_foliage_Normal.png",
+            "T_hedge_foliage_Var.png"
+          ],
+          "smoothness_mean": 0.01,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 121460
+        },
+        "Low": {
+          "res": [
+            128,
+            128
+          ],
+          "texel_mm": 11.72,
+          "dir": "hedge_foliage/Low",
+          "png_bytes": 151460,
+          "files": [
+            "T_hedge_foliage_BaseColor.png",
+            "T_hedge_foliage_MaskMap.png",
+            "T_hedge_foliage_Normal.png",
+            "T_hedge_foliage_Var.png"
+          ],
+          "smoothness_mean": 0.0,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 21845
+        }
+      },
+      "height_range_m": [
+        -0.09821,
+        0.08426
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.5,
+        "p05": 0.2447,
+        "p95": 0.7416,
+        "mean_rgb_linear": [
+          0.4983,
+          0.5007,
+          0.4986
+        ]
+      },
+      "hf_ratio_albedo": 0.0175,
+      "ao_mean": 0.542
+    },
+    "kerb_concrete_1m": {
+      "tile_m": [
+        2.0,
+        0.5
+      ],
+      "target": 0.28,
+      "uv": "mesh_uv0_metres (u along, v across)",
+      "slots": [
+        "curb_concrete"
+      ],
+      "note": "Precast kerb units 1.0 m (PN-EN 1340 kerb 15x30), mortar joints, chipped arrises. Tile 2 m x 0.5 m, non-square texture (2048x512 High). Aged, grime-darkened kerb (0.28 after photo comparison with Rondo Bieżeństwa; 0.33 read as white lines).",
+      "kind": "tiling_set",
+      "albedo_target_mean_lum_linear": 0.28,
+      "source": {
+        "source": "concrete_floor_worn_001",
+        "mode": "hybrid (procedural layout + scan micro-detail)",
+        "assets": [
+          {
+            "id": "concrete_floor_worn_001",
+            "page": "https://polyhaven.com/a/concrete_floor_worn_001",
+            "authors": {
+              "Dimitrios Savva": "Photography",
+              "Rico Cilliers": "Processing"
+            },
+            "license": "CC0 1.0"
+          }
+        ]
+      },
+      "files": {
+        "High": {
+          "res": [
+            2048,
+            512
+          ],
+          "texel_mm": 0.98,
+          "dir": "kerb_concrete_1m/High",
+          "png_bytes": 5278135,
+          "files": [
+            "T_kerb_concrete_1m_BaseColor.png",
+            "T_kerb_concrete_1m_MaskMap.png",
+            "T_kerb_concrete_1m_Normal.png",
+            "T_kerb_concrete_1m_Var.png"
+          ],
+          "smoothness_mean": 0.139,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 2488620
+        },
+        "Medium": {
+          "res": [
+            1024,
+            256
+          ],
+          "texel_mm": 1.95,
+          "dir": "kerb_concrete_1m/Medium",
+          "png_bytes": 1387160,
+          "files": [
+            "T_kerb_concrete_1m_BaseColor.png",
+            "T_kerb_concrete_1m_MaskMap.png",
+            "T_kerb_concrete_1m_Normal.png",
+            "T_kerb_concrete_1m_Var.png"
+          ],
+          "smoothness_mean": 0.135,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 485840
+        },
+        "Low": {
+          "res": [
+            512,
+            128
+          ],
+          "texel_mm": 3.91,
+          "dir": "kerb_concrete_1m/Low",
+          "png_bytes": 329661,
+          "files": [
+            "T_kerb_concrete_1m_BaseColor.png",
+            "T_kerb_concrete_1m_MaskMap.png",
+            "T_kerb_concrete_1m_Normal.png",
+            "T_kerb_concrete_1m_Var.png"
+          ],
+          "smoothness_mean": 0.132,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 87381
+        }
+      },
+      "height_range_m": [
+        -0.00586,
+        0.00193
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.28,
+        "p05": 0.1996,
+        "p95": 0.3559,
+        "mean_rgb_linear": [
+          0.2827,
+          0.2799,
+          0.2728
+        ]
+      },
+      "hf_ratio_albedo": 0.008,
+      "ao_mean": 0.986
+    },
+    "large_panel_joints": {
+      "tile_m": [
+        6.0,
+        5.6
+      ],
+      "slots": [
+        "panel_concrete"
+      ],
+      "note": "Large-panel block: 3.0 x 2.8 m panels, sealed joints, per-panel tone.",
+      "uv": "mesh_uv0_metres (u along, v up)",
+      "kind": "modulation_set",
+      "albedo_target_mean_lum_linear": 0.5,
+      "source": {
+        "source": "concrete_floor_worn_001",
+        "mode": "hybrid (procedural layout + scan micro-detail)",
+        "assets": [
+          {
+            "id": "concrete_floor_worn_001",
+            "page": "https://polyhaven.com/a/concrete_floor_worn_001",
+            "authors": {
+              "Dimitrios Savva": "Photography",
+              "Rico Cilliers": "Processing"
+            },
+            "license": "CC0 1.0"
+          }
+        ]
+      },
+      "files": {
+        "High": {
+          "res": [
+            2048,
+            1908
+          ],
+          "texel_mm": 2.93,
+          "dir": "large_panel_joints/High",
+          "png_bytes": 21810653,
+          "files": [
+            "T_large_panel_joints_BaseColor.png",
+            "T_large_panel_joints_MaskMap.png",
+            "T_large_panel_joints_Normal.png",
+            "T_large_panel_joints_Var.png"
+          ],
+          "smoothness_mean": 0.121,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 9273999
+        },
+        "Medium": {
+          "res": [
+            1024,
+            954
+          ],
+          "texel_mm": 5.86,
+          "dir": "large_panel_joints/Medium",
+          "png_bytes": 4505636,
+          "files": [
+            "T_large_panel_joints_BaseColor.png",
+            "T_large_panel_joints_MaskMap.png",
+            "T_large_panel_joints_Normal.png",
+            "T_large_panel_joints_Var.png"
+          ],
+          "smoothness_mean": 0.119,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 1810513
+        },
+        "Low": {
+          "res": [
+            512,
+            477
+          ],
+          "texel_mm": 11.72,
+          "dir": "large_panel_joints/Low",
+          "png_bytes": 917965,
+          "files": [
+            "T_large_panel_joints_BaseColor.png",
+            "T_large_panel_joints_MaskMap.png",
+            "T_large_panel_joints_Normal.png",
+            "T_large_panel_joints_Var.png"
+          ],
+          "smoothness_mean": 0.117,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 325632
+        }
+      },
+      "height_range_m": [
+        -0.00738,
+        0.00188
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.4985,
+        "p05": 0.3869,
+        "p95": 0.602,
+        "mean_rgb_linear": [
+          0.4985,
+          0.4985,
+          0.4985
+        ]
+      },
+      "hf_ratio_albedo": 0.0676,
+      "ao_mean": 0.981
+    },
+    "macro_variation": {
+      "tile_m": [
+        64.0,
+        64.0
+      ],
+      "uv": "world_xy_planar (sample twice: 64 m and 64 m x 4.13 rotated, as Kamion/World Surface does)",
+      "slots": [
+        "_MacroMap of every ground material"
+      ],
+      "note": "R 8-64 m tone, G 2-16 m tone (both drop-in for the current _MacroMap R/G), B wear/dirt patches 1.5-24 m, A 0.5-4 m mottling. All centred on 0.5, linear (import sRGB off).",
+      "kind": "layer",
+      "files": {
+        "High": {
+          "res": [
+            1024,
+            1024
+          ],
+          "texel_mm": 62.5,
+          "dir": "macro_variation/High",
+          "files": [
+            "T_macro_variation.png"
+          ],
+          "png_bytes": 1616223,
+          "gpu_bytes_astc_mips": 349525,
+          "astc": {
+            "Macro": "8x8"
+          }
+        },
+        "Medium": {
+          "res": [
+            512,
+            512
+          ],
+          "texel_mm": 125.0,
+          "dir": "macro_variation/Medium",
+          "files": [
+            "T_macro_variation.png"
+          ],
+          "png_bytes": 525610,
+          "gpu_bytes_astc_mips": 87381,
+          "astc": {
+            "Macro": "8x8"
+          }
+        },
+        "Low": {
+          "res": [
+            256,
+            256
+          ],
+          "texel_mm": 250.0,
+          "dir": "macro_variation/Low",
+          "files": [
+            "T_macro_variation.png"
+          ],
+          "png_bytes": 163480,
+          "gpu_bytes_astc_mips": 21845,
+          "astc": {
+            "Macro": "8x8"
+          }
+        }
+      }
+    },
+    "noise_cassette": {
+      "tile_m": [
+        4.0,
+        4.0
+      ],
+      "slots": [
+        "noise_panel"
+      ],
+      "note": "Absorbing noise-barrier cassettes 4.0 x 0.5 m, perforated face, joint lips, splash grime, run-off.",
+      "uv": "mesh_uv0_metres (u along, v up)",
+      "kind": "modulation_set",
+      "albedo_target_mean_lum_linear": 0.5,
+      "files": {
+        "High": {
+          "res": [
+            1024,
+            1024
+          ],
+          "texel_mm": 3.91,
+          "dir": "noise_cassette/High",
+          "png_bytes": 1040521,
+          "files": [
+            "T_noise_cassette_BaseColor.png",
+            "T_noise_cassette_MaskMap.png",
+            "T_noise_cassette_Normal.png",
+            "T_noise_cassette_Var.png"
+          ],
+          "smoothness_mean": 0.439,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 2488620
+        },
+        "Medium": {
+          "res": [
+            512,
+            512
+          ],
+          "texel_mm": 7.81,
+          "dir": "noise_cassette/Medium",
+          "png_bytes": 353258,
+          "files": [
+            "T_noise_cassette_BaseColor.png",
+            "T_noise_cassette_MaskMap.png",
+            "T_noise_cassette_Normal.png",
+            "T_noise_cassette_Var.png"
+          ],
+          "smoothness_mean": 0.432,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 485840
+        },
+        "Low": {
+          "res": [
+            256,
+            256
+          ],
+          "texel_mm": 15.62,
+          "dir": "noise_cassette/Low",
+          "png_bytes": 94826,
+          "files": [
+            "T_noise_cassette_BaseColor.png",
+            "T_noise_cassette_MaskMap.png",
+            "T_noise_cassette_Normal.png",
+            "T_noise_cassette_Var.png"
+          ],
+          "smoothness_mean": 0.428,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 87381
+        }
+      },
+      "height_range_m": [
+        -0.0138,
+        0.0012
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.5,
+        "p05": 0.4067,
+        "p95": 0.5536,
+        "mean_rgb_linear": [
+          0.502,
+          0.4998,
+          0.4957
+        ]
+      },
+      "hf_ratio_albedo": 0.012,
+      "ao_mean": 0.986
+    },
+    "oil_stain_alpha": {
+      "tile_m": [
+        2.0,
+        2.0
+      ],
+      "target": null,
+      "uv": "decal_radial_uv0_atlas_2x2",
+      "slots": [
+        "decal_oil"
+      ],
+      "note": "2x2 atlas, one stain per cell in the decal's radial UV (centre 0.5/0.5): 0 drip pool, 1 tyre smear (elongated, for yards), 2 old faded ring, 3 drip cluster. Cell = floor(seed*4) from TEXCOORD_1.y; BaseColor.a = opacity; cell borders fade to 0 so mips do not bleed.",
+      "kind": "decal_atlas",
+      "albedo_target_mean_lum_linear": null,
+      "files": {
+        "High": {
+          "res": [
+            2048,
+            2048
+          ],
+          "texel_mm": 0.98,
+          "dir": "oil_stain_alpha/High",
+          "png_bytes": 5564607,
+          "files": [
+            "T_oil_stain_alpha_BaseColor.png",
+            "T_oil_stain_alpha_MaskMap.png",
+            "T_oil_stain_alpha_Normal.png",
+            "T_oil_stain_alpha_Var.png"
+          ],
+          "smoothness_mean": 0.223,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 9954481
+        },
+        "Medium": {
+          "res": [
+            1024,
+            1024
+          ],
+          "texel_mm": 1.95,
+          "dir": "oil_stain_alpha/Medium",
+          "png_bytes": 1936352,
+          "files": [
+            "T_oil_stain_alpha_BaseColor.png",
+            "T_oil_stain_alpha_MaskMap.png",
+            "T_oil_stain_alpha_Normal.png",
+            "T_oil_stain_alpha_Var.png"
+          ],
+          "smoothness_mean": 0.223,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 1943360
+        },
+        "Low": {
+          "res": [
+            512,
+            512
+          ],
+          "texel_mm": 3.91,
+          "dir": "oil_stain_alpha/Low",
+          "png_bytes": 645375,
+          "files": [
+            "T_oil_stain_alpha_BaseColor.png",
+            "T_oil_stain_alpha_MaskMap.png",
+            "T_oil_stain_alpha_Normal.png",
+            "T_oil_stain_alpha_Var.png"
+          ],
+          "smoothness_mean": 0.223,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 349525
+        }
+      },
+      "height_range_m": [
+        0.0,
+        0.00013
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.0179,
+        "p05": 0.0135,
+        "p95": 0.0246,
+        "mean_rgb_linear": [
+          0.0202,
+          0.0175,
+          0.0146
+        ]
+      },
+      "hf_ratio_albedo": 0.0002,
+      "ao_mean": 1.0
+    },
+    "parapet_runoff": {
+      "tile_m": [
+        24.0,
+        4.0
+      ],
+      "uv": "mesh_uv1 (u metres along the wall, v = 1 + metres below the attic fascia / length scale; v < 0.5 = no wall-top data)",
+      "slots": [
+        "_RunoffMap of hall_wall_* (keyword _RUNOFF, buildings_mesh.py hall walls)"
+      ],
+      "note": "Run-off streaks under the parapet coping of halls (zacieki pod attyka): R soot/dirt, G rust, linear. Long streaks below coping-sheet joints every 2-3 m, fine drip lines, broad smudges, uneven dirty band under the drip edge; fades to 0 at 4 m. One RGB sample on wall pixels, all tiers (Low 256x40). Look WORKING_VALUE (photo-judged, no measurements).",
+      "kind": "layer",
+      "files": {
+        "High": {
+          "res": [
+            1024,
+            160
+          ],
+          "texel_mm": 23.4,
+          "dir": "parapet_runoff/High",
+          "files": [
+            "T_parapet_runoff.png"
+          ],
+          "png_bytes": 32213,
+          "gpu_bytes_astc_mips": 97211,
+          "astc": {
+            "Macro": "6x6"
+          }
+        },
+        "Medium": {
+          "res": [
+            512,
+            80
+          ],
+          "texel_mm": 46.9,
+          "dir": "parapet_runoff/Medium",
+          "files": [
+            "T_parapet_runoff.png"
+          ],
+          "png_bytes": 9975,
+          "gpu_bytes_astc_mips": 24302,
+          "astc": {
+            "Macro": "6x6"
+          }
+        },
+        "Low": {
+          "res": [
+            256,
+            40
+          ],
+          "texel_mm": 93.8,
+          "dir": "parapet_runoff/Low",
+          "files": [
+            "T_parapet_runoff.png"
+          ],
+          "png_bytes": 3137,
+          "gpu_bytes_astc_mips": 6075,
+          "astc": {
+            "Macro": "6x6"
+          }
+        }
+      },
+      "coverage": {
+        "soot_mean": 0.0339,
+        "rust_mean": 0.0004
+      }
+    },
+    "paving_20x10_grey": {
+      "tile_m": [
+        2.2792,
+        2.2792
+      ],
+      "target": 0.26,
+      "uv": "world_xy_planar",
+      "slots": [
+        "sidewalk_paving",
+        "yard_paving",
+        "road_paving"
+      ],
+      "note": "Rectangular 200 x 100 mm 'holland' blocks, running bond, 4-shade grey melange. Var.G = block id (same anti-repeat trick as behaton).",
+      "kind": "tiling_set",
+      "albedo_target_mean_lum_linear": 0.26,
+      "source": {
+        "source": "pavement_04",
+        "source_dimensions_m": [
+          3.1,
+          3.1
+        ],
+        "measured_period_m": [
+          0.1408
+        ],
+        "scale_to_standard_xy": [
+          0.7352,
+          0.7352
+        ],
+        "elements_per_tile": 239,
+        "assets": [
+          {
+            "id": "pavement_04",
+            "page": "https://polyhaven.com/a/pavement_04",
+            "authors": {
+              "Jan Burghardt": "All"
+            },
+            "license": "CC0 1.0"
+          }
+        ]
+      },
+      "files": {
+        "High": {
+          "res": [
+            1024,
+            1024
+          ],
+          "texel_mm": 2.23,
+          "dir": "paving_20x10_grey/High",
+          "png_bytes": 5100142,
+          "files": [
+            "T_paving_20x10_grey_BaseColor.png",
+            "T_paving_20x10_grey_MaskMap.png",
+            "T_paving_20x10_grey_Normal.png",
+            "T_paving_20x10_grey_Var.png"
+          ],
+          "smoothness_mean": 0.166,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 2488620
+        },
+        "Medium": {
+          "res": [
+            512,
+            512
+          ],
+          "texel_mm": 4.45,
+          "dir": "paving_20x10_grey/Medium",
+          "png_bytes": 1301961,
+          "files": [
+            "T_paving_20x10_grey_BaseColor.png",
+            "T_paving_20x10_grey_MaskMap.png",
+            "T_paving_20x10_grey_Normal.png",
+            "T_paving_20x10_grey_Var.png"
+          ],
+          "smoothness_mean": 0.166,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 485840
+        },
+        "Low": {
+          "res": [
+            256,
+            256
+          ],
+          "texel_mm": 8.9,
+          "dir": "paving_20x10_grey/Low",
+          "png_bytes": 323423,
+          "files": [
+            "T_paving_20x10_grey_BaseColor.png",
+            "T_paving_20x10_grey_MaskMap.png",
+            "T_paving_20x10_grey_Normal.png",
+            "T_paving_20x10_grey_Var.png"
+          ],
+          "smoothness_mean": 0.166,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 87381
+        }
+      },
+      "height_range_m": [
+        -0.00126,
+        0.00178
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.2591,
+        "p05": 0.0673,
+        "p95": 0.3889,
+        "mean_rgb_linear": [
+          0.2613,
+          0.259,
+          0.253
+        ]
+      },
+      "hf_ratio_albedo": 0.1538,
+      "ao_mean": 0.925
+    },
+    "plaster": {
+      "tile_m": [
+        2.0,
+        2.0
+      ],
+      "slots": [
+        "plaster_*"
+      ],
+      "note": "Thin-coat plaster grain with trowel clouds and streaks.",
+      "uv": "mesh_uv0_metres (u along, v up)",
+      "kind": "modulation_set",
+      "albedo_target_mean_lum_linear": 0.5,
+      "source": {
+        "source": "painted_plaster_wall",
+        "source_dimensions_m": [
+          2.0,
+          2.0
+        ],
+        "assets": [
+          {
+            "id": "painted_plaster_wall",
+            "page": "https://polyhaven.com/a/painted_plaster_wall",
+            "authors": {
+              "Amal Kumar": "All"
+            },
+            "license": "CC0 1.0"
+          }
+        ]
+      },
+      "files": {
+        "High": {
+          "res": [
+            1024,
+            1024
+          ],
+          "texel_mm": 1.95,
+          "dir": "plaster/High",
+          "png_bytes": 4068047,
+          "files": [
+            "T_plaster_BaseColor.png",
+            "T_plaster_MaskMap.png",
+            "T_plaster_Normal.png",
+            "T_plaster_Var.png"
+          ],
+          "smoothness_mean": 0.081,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 2488620
+        },
+        "Medium": {
+          "res": [
+            512,
+            512
+          ],
+          "texel_mm": 3.91,
+          "dir": "plaster/Medium",
+          "png_bytes": 1096799,
+          "files": [
+            "T_plaster_BaseColor.png",
+            "T_plaster_MaskMap.png",
+            "T_plaster_Normal.png",
+            "T_plaster_Var.png"
+          ],
+          "smoothness_mean": 0.081,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 485840
+        },
+        "Low": {
+          "res": [
+            256,
+            256
+          ],
+          "texel_mm": 7.81,
+          "dir": "plaster/Low",
+          "png_bytes": 267511,
+          "files": [
+            "T_plaster_BaseColor.png",
+            "T_plaster_MaskMap.png",
+            "T_plaster_Normal.png",
+            "T_plaster_Var.png"
+          ],
+          "smoothness_mean": 0.081,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 87381
+        }
+      },
+      "height_range_m": [
+        -0.00021,
+        0.00016
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.5021,
+        "p05": 0.4922,
+        "p95": 0.5119,
+        "mean_rgb_linear": [
+          0.5014,
+          0.5014,
+          0.5014
+        ]
+      },
+      "hf_ratio_albedo": 0.3063,
+      "ao_mean": 0.995
+    },
+    "roof_tiles": {
+      "tile_m": [
+        1.4,
+        1.4
+      ],
+      "slots": [
+        "roof_tiles_*",
+        "roof_metal_*"
+      ],
+      "note": "S-profile roof tile courses, roll pitch 0.20 m, gauge 0.35 m (u along the eave, v up the slope).",
+      "uv": "mesh_uv0_metres (u along, v up)",
+      "kind": "modulation_set",
+      "albedo_target_mean_lum_linear": 0.5,
+      "files": {
+        "High": {
+          "res": [
+            512,
+            512
+          ],
+          "texel_mm": 2.73,
+          "dir": "roof_tiles/High",
+          "png_bytes": 1201730,
+          "files": [
+            "T_roof_tiles_BaseColor.png",
+            "T_roof_tiles_MaskMap.png",
+            "T_roof_tiles_Normal.png",
+            "T_roof_tiles_Var.png"
+          ],
+          "smoothness_mean": 0.199,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 622155
+        },
+        "Medium": {
+          "res": [
+            256,
+            256
+          ],
+          "texel_mm": 5.47,
+          "dir": "roof_tiles/Medium",
+          "png_bytes": 268711,
+          "files": [
+            "T_roof_tiles_BaseColor.png",
+            "T_roof_tiles_MaskMap.png",
+            "T_roof_tiles_Normal.png",
+            "T_roof_tiles_Var.png"
+          ],
+          "smoothness_mean": 0.189,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 121460
+        },
+        "Low": {
+          "res": [
+            128,
+            128
+          ],
+          "texel_mm": 10.94,
+          "dir": "roof_tiles/Low",
+          "png_bytes": 52136,
+          "files": [
+            "T_roof_tiles_BaseColor.png",
+            "T_roof_tiles_MaskMap.png",
+            "T_roof_tiles_Normal.png",
+            "T_roof_tiles_Var.png"
+          ],
+          "smoothness_mean": 0.182,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 21845
+        }
+      },
+      "height_range_m": [
+        -0.00022,
+        0.03021
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.5,
+        "p05": 0.3583,
+        "p95": 0.5854,
+        "mean_rgb_linear": [
+          0.5,
+          0.5,
+          0.5
+        ]
+      },
+      "hf_ratio_albedo": 0.0368,
+      "ao_mean": 0.939
+    },
+    "sandwich_ribbed": {
+      "tile_m": [
+        6.0,
+        6.0
+      ],
+      "slots": [
+        "hall_wall_grey",
+        "hall_wall_silver",
+        "hall_wall_white",
+        "hall_wall_ivory",
+        "booth_panel"
+      ],
+      "note": "Horizontal sandwich panels 1.0 m, micro-lined face, shadow-gap joints, run-off streaks.",
+      "uv": "mesh_uv0_metres (u along, v up)",
+      "kind": "modulation_set",
+      "albedo_target_mean_lum_linear": 0.5,
+      "files": {
+        "High": {
+          "res": [
+            2048,
+            2048
+          ],
+          "texel_mm": 2.93,
+          "dir": "sandwich_ribbed/High",
+          "png_bytes": 1257623,
+          "files": [
+            "T_sandwich_ribbed_BaseColor.png",
+            "T_sandwich_ribbed_MaskMap.png",
+            "T_sandwich_ribbed_Normal.png",
+            "T_sandwich_ribbed_Var.png"
+          ],
+          "smoothness_mean": 0.506,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 9954481
+        },
+        "Medium": {
+          "res": [
+            1024,
+            1024
+          ],
+          "texel_mm": 5.86,
+          "dir": "sandwich_ribbed/Medium",
+          "png_bytes": 462203,
+          "files": [
+            "T_sandwich_ribbed_BaseColor.png",
+            "T_sandwich_ribbed_MaskMap.png",
+            "T_sandwich_ribbed_Normal.png",
+            "T_sandwich_ribbed_Var.png"
+          ],
+          "smoothness_mean": 0.504,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 1943360
+        },
+        "Low": {
+          "res": [
+            512,
+            512
+          ],
+          "texel_mm": 11.72,
+          "dir": "sandwich_ribbed/Low",
+          "png_bytes": 163027,
+          "files": [
+            "T_sandwich_ribbed_BaseColor.png",
+            "T_sandwich_ribbed_MaskMap.png",
+            "T_sandwich_ribbed_Normal.png",
+            "T_sandwich_ribbed_Var.png"
+          ],
+          "smoothness_mean": 0.5,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 349525
+        }
+      },
+      "height_range_m": [
+        -0.00659,
+        -0.0
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.5,
+        "p05": 0.457,
+        "p95": 0.5367,
+        "mean_rgb_linear": [
+          0.4969,
+          0.4969,
+          0.4969
+        ]
+      },
+      "hf_ratio_albedo": 0.0102,
+      "ao_mean": 0.993
+    },
+    "sectional_door": {
+      "tile_m": [
+        3.0,
+        3.0
+      ],
+      "slots": [
+        "dock_door",
+        "garage_door"
+      ],
+      "note": "Sectional door leaves 0.5 m with a mid-panel rib, stucco grain, scuffed bottom.",
+      "uv": "mesh_uv0_metres (u along, v up)",
+      "kind": "modulation_set",
+      "albedo_target_mean_lum_linear": 0.5,
+      "files": {
+        "High": {
+          "res": [
+            1024,
+            1024
+          ],
+          "texel_mm": 2.93,
+          "dir": "sectional_door/High",
+          "png_bytes": 3887887,
+          "files": [
+            "T_sectional_door_BaseColor.png",
+            "T_sectional_door_MaskMap.png",
+            "T_sectional_door_Normal.png",
+            "T_sectional_door_Var.png"
+          ],
+          "smoothness_mean": 0.578,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 2488620
+        },
+        "Medium": {
+          "res": [
+            512,
+            512
+          ],
+          "texel_mm": 5.86,
+          "dir": "sectional_door/Medium",
+          "png_bytes": 854397,
+          "files": [
+            "T_sectional_door_BaseColor.png",
+            "T_sectional_door_MaskMap.png",
+            "T_sectional_door_Normal.png",
+            "T_sectional_door_Var.png"
+          ],
+          "smoothness_mean": 0.568,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 485840
+        },
+        "Low": {
+          "res": [
+            256,
+            256
+          ],
+          "texel_mm": 11.72,
+          "dir": "sectional_door/Low",
+          "png_bytes": 157490,
+          "files": [
+            "T_sectional_door_BaseColor.png",
+            "T_sectional_door_MaskMap.png",
+            "T_sectional_door_Normal.png",
+            "T_sectional_door_Var.png"
+          ],
+          "smoothness_mean": 0.558,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 87381
+        }
+      },
+      "height_range_m": [
+        -0.00529,
+        0.0004
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.5,
+        "p05": 0.4384,
+        "p95": 0.5368,
+        "mean_rgb_linear": [
+          0.5,
+          0.5,
+          0.5
+        ]
+      },
+      "hf_ratio_albedo": 0.0353,
+      "ao_mean": 0.991
+    },
+    "sidewalk_slab_35": {
+      "tile_m": [
+        2.158,
+        2.158
+      ],
+      "slots": [
+        "(not assigned yet) sidewalk slabs 35x35 cm, older footways"
+      ],
+      "note": "Square concrete sidewalk slabs (plyty chodnikowe 35x35x5), scan scaled from ~0.30 m to 0.35 m slabs (WORKING_VALUE). Var.G = slab id from the scan's displacement.",
+      "uv": "world_xy_planar",
+      "kind": "tiling_set",
+      "albedo_target_mean_lum_linear": 0.27,
+      "source": {
+        "source": "concrete_pavement_02",
+        "source_dimensions_m": [
+          1.8,
+          1.8
+        ],
+        "measured_period_m": [
+          0.2944
+        ],
+        "scale_to_standard_xy": [
+          1.1989,
+          1.1989
+        ],
+        "elements_per_tile": 133,
+        "assets": [
+          {
+            "id": "concrete_pavement_02",
+            "page": "https://polyhaven.com/a/concrete_pavement_02",
+            "authors": {
+              "Charlotte Baglioni": "All"
+            },
+            "license": "CC0 1.0"
+          }
+        ]
+      },
+      "files": {
+        "High": {
+          "res": [
+            1024,
+            1024
+          ],
+          "texel_mm": 2.11,
+          "dir": "sidewalk_slab_35/High",
+          "png_bytes": 6545019,
+          "files": [
+            "T_sidewalk_slab_35_BaseColor.png",
+            "T_sidewalk_slab_35_MaskMap.png",
+            "T_sidewalk_slab_35_Normal.png",
+            "T_sidewalk_slab_35_Var.png"
+          ],
+          "smoothness_mean": 0.216,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 2488620
+        },
+        "Medium": {
+          "res": [
+            512,
+            512
+          ],
+          "texel_mm": 4.21,
+          "dir": "sidewalk_slab_35/Medium",
+          "png_bytes": 1694811,
+          "files": [
+            "T_sidewalk_slab_35_BaseColor.png",
+            "T_sidewalk_slab_35_MaskMap.png",
+            "T_sidewalk_slab_35_Normal.png",
+            "T_sidewalk_slab_35_Var.png"
+          ],
+          "smoothness_mean": 0.213,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 485840
+        },
+        "Low": {
+          "res": [
+            256,
+            256
+          ],
+          "texel_mm": 8.43,
+          "dir": "sidewalk_slab_35/Low",
+          "png_bytes": 396075,
+          "files": [
+            "T_sidewalk_slab_35_BaseColor.png",
+            "T_sidewalk_slab_35_MaskMap.png",
+            "T_sidewalk_slab_35_Normal.png",
+            "T_sidewalk_slab_35_Var.png"
+          ],
+          "smoothness_mean": 0.209,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 87381
+        }
+      },
+      "height_range_m": [
+        -0.01033,
+        0.0074
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.27,
+        "p05": 0.1887,
+        "p95": 0.3669,
+        "mean_rgb_linear": [
+          0.2718,
+          0.2703,
+          0.2621
+        ]
+      },
+      "hf_ratio_albedo": 0.1269,
+      "ao_mean": 0.958
+    },
+    "soil_bed": {
+      "tile_m": [
+        2.0,
+        2.0
+      ],
+      "slots": [
+        "bed_soil"
+      ],
+      "note": "Island planting bed: loam with bark mulch chips, a few stones, leaf litter (u, v plan metres).",
+      "uv": "mesh_uv0_metres (u along, v up)",
+      "kind": "modulation_set",
+      "albedo_target_mean_lum_linear": 0.5,
+      "files": {
+        "High": {
+          "res": [
+            512,
+            512
+          ],
+          "texel_mm": 3.91,
+          "dir": "soil_bed/High",
+          "png_bytes": 1828355,
+          "files": [
+            "T_soil_bed_BaseColor.png",
+            "T_soil_bed_MaskMap.png",
+            "T_soil_bed_Normal.png",
+            "T_soil_bed_Var.png"
+          ],
+          "smoothness_mean": 0.124,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 622155
+        },
+        "Medium": {
+          "res": [
+            256,
+            256
+          ],
+          "texel_mm": 7.81,
+          "dir": "soil_bed/Medium",
+          "png_bytes": 554204,
+          "files": [
+            "T_soil_bed_BaseColor.png",
+            "T_soil_bed_MaskMap.png",
+            "T_soil_bed_Normal.png",
+            "T_soil_bed_Var.png"
+          ],
+          "smoothness_mean": 0.083,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 121460
+        },
+        "Low": {
+          "res": [
+            128,
+            128
+          ],
+          "texel_mm": 15.62,
+          "dir": "soil_bed/Low",
+          "png_bytes": 151416,
+          "files": [
+            "T_soil_bed_BaseColor.png",
+            "T_soil_bed_MaskMap.png",
+            "T_soil_bed_Normal.png",
+            "T_soil_bed_Var.png"
+          ],
+          "smoothness_mean": 0.04,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 21845
+        }
+      },
+      "height_range_m": [
+        -0.04084,
+        0.04312
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.5,
+        "p05": 0.3404,
+        "p95": 0.6782,
+        "mean_rgb_linear": [
+          0.5053,
+          0.4995,
+          0.4895
+        ]
+      },
+      "hf_ratio_albedo": 0.0122,
+      "ao_mean": 0.796
+    },
+    "trapezoid_sheet": {
+      "tile_m": [
+        2.0,
+        2.0
+      ],
+      "slots": [
+        "hall_wall_graphite",
+        "hall_wall_accent_*",
+        "balcony_panel"
+      ],
+      "note": "Trapezoidal sheet, vertical ribs 0.25 m pitch, 35 mm deep (T35-like, WORKING_VALUE).",
+      "uv": "mesh_uv0_metres (u along, v up)",
+      "kind": "modulation_set",
+      "albedo_target_mean_lum_linear": 0.5,
+      "source": {
+        "source": "corrugated_iron_03",
+        "mode": "hybrid (procedural layout + scan micro-detail)",
+        "assets": [
+          {
+            "id": "corrugated_iron_03",
+            "page": "https://polyhaven.com/a/corrugated_iron_03",
+            "authors": {
+              "Charlotte Baglioni": "All"
+            },
+            "license": "CC0 1.0"
+          }
+        ]
+      },
+      "files": {
+        "High": {
+          "res": [
+            1024,
+            1024
+          ],
+          "texel_mm": 1.95,
+          "dir": "trapezoid_sheet/High",
+          "png_bytes": 1569465,
+          "files": [
+            "T_trapezoid_sheet_BaseColor.png",
+            "T_trapezoid_sheet_MaskMap.png",
+            "T_trapezoid_sheet_Normal.png",
+            "T_trapezoid_sheet_Var.png"
+          ],
+          "smoothness_mean": 0.511,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 2488620
+        },
+        "Medium": {
+          "res": [
+            512,
+            512
+          ],
+          "texel_mm": 3.91,
+          "dir": "trapezoid_sheet/Medium",
+          "png_bytes": 473147,
+          "files": [
+            "T_trapezoid_sheet_BaseColor.png",
+            "T_trapezoid_sheet_MaskMap.png",
+            "T_trapezoid_sheet_Normal.png",
+            "T_trapezoid_sheet_Var.png"
+          ],
+          "smoothness_mean": 0.502,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 485840
+        },
+        "Low": {
+          "res": [
+            256,
+            256
+          ],
+          "texel_mm": 7.81,
+          "dir": "trapezoid_sheet/Low",
+          "png_bytes": 140663,
+          "files": [
+            "T_trapezoid_sheet_BaseColor.png",
+            "T_trapezoid_sheet_MaskMap.png",
+            "T_trapezoid_sheet_Normal.png",
+            "T_trapezoid_sheet_Var.png"
+          ],
+          "smoothness_mean": 0.484,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 87381
+        }
+      },
+      "height_range_m": [
+        -0.00061,
+        0.03549
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.4997,
+        "p05": 0.4529,
+        "p95": 0.5424,
+        "mean_rgb_linear": [
+          0.4997,
+          0.4997,
+          0.4997
+        ]
+      },
+      "hf_ratio_albedo": 0.0249,
+      "ao_mean": 0.958
+    },
+    "viaduct_concrete": {
+      "tile_m": [
+        24.0,
+        12.0
+      ],
+      "target": 0.36,
+      "atlas": true,
+      "uv": "mesh_uv0_metres (u along the bridge, v = band position; layout in art-source/world/landmarks/viaduct_biezenstwa/atlas_layout.json)",
+      "slots": [
+        "viaduct_concrete (hero viaduct asset, ADR 0067)"
+      ],
+      "note": "Strip atlas 24 x 12 m (4096 x 2048 High): red cornice band, unrolled box-girder half section, unrolled column, abutment wall, swatches. Base detail / relief / roughness from the CC0 scan 'Concrete Wall 008' (Poly Haven); pours, formwork, drains, drips, soot, leak streaks generated. albedo_target_mean_lum_linear applies to the clean concrete of the girder band, not the atlas mean.",
+      "kind": "tiling_set",
+      "albedo_target_mean_lum_linear": 0.36,
+      "files": {
+        "High": {
+          "res": [
+            4096,
+            2048
+          ],
+          "texel_mm": 5.86,
+          "dir": "viaduct_concrete/High",
+          "png_bytes": 16833194,
+          "files": [
+            "T_viaduct_concrete_BaseColor.png",
+            "T_viaduct_concrete_MaskMap.png",
+            "T_viaduct_concrete_Normal.png",
+            "T_viaduct_concrete_Var.png"
+          ],
+          "smoothness_mean": 0.132,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 19908962
+        },
+        "Medium": {
+          "res": [
+            2048,
+            1024
+          ],
+          "texel_mm": 11.72,
+          "dir": "viaduct_concrete/Medium",
+          "png_bytes": 4586919,
+          "files": [
+            "T_viaduct_concrete_BaseColor.png",
+            "T_viaduct_concrete_MaskMap.png",
+            "T_viaduct_concrete_Normal.png",
+            "T_viaduct_concrete_Var.png"
+          ],
+          "smoothness_mean": 0.131,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 3886721
+        },
+        "Low": {
+          "res": [
+            1024,
+            512
+          ],
+          "texel_mm": 23.44,
+          "dir": "viaduct_concrete/Low",
+          "png_bytes": 1106100,
+          "files": [
+            "T_viaduct_concrete_BaseColor.png",
+            "T_viaduct_concrete_MaskMap.png",
+            "T_viaduct_concrete_Normal.png",
+            "T_viaduct_concrete_Var.png"
+          ],
+          "smoothness_mean": 0.131,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 699050
+        }
+      },
+      "height_range_m": [
+        -0.01406,
+        0.00062
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.3329,
+        "p05": 0.1409,
+        "p95": 0.4081,
+        "mean_rgb_linear": [
+          0.3741,
+          0.3209,
+          0.271
+        ]
+      },
+      "hf_ratio_albedo": 0.0102,
+      "ao_mean": 0.998,
+      "source": "polyhaven:concrete_wall_008 (CC0)",
+      "concrete_mean_rgb_linear": [
+        0.3726,
+        0.3586,
+        0.3062
+      ]
+    }
+  }
+}

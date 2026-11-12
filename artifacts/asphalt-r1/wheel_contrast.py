@@ -1,4 +1,4 @@
-"""Measure display luma in projected road wheel/centre fields, with inspectable masks."""
+﻿"""Measure display luma in projected road wheel/centre fields, with inspectable masks."""
 import argparse
 import json
 import sys
@@ -18,27 +18,26 @@ def main():
     parser.add_argument('--condition', action='append')
     args = parser.parse_args()
     camera = 'd_wear_lane_old'
-    spec = next(c for c in json.loads((OUT / 'cameras.json').read_text(encoding='utf-8-sig'))['cameras'] if c['id'] == camera)
     rows = []
     for condition in args.condition or ('Low-overcast', 'Low-clear', 'High-overcast', 'High-clear'):
         directory = OUT / args.after / condition
         state = json.loads((directory / 'runtime-cameras' / ('QA_' + camera + '.json')).read_text())
-        matrix = np.array(state['projection']).reshape(4, 4) @ np.array(state['view']).reshape(4, 4)
+        if len(state.get('rootToWorld', [])) != 16:
+            raise RuntimeError('Runtime rootToWorld is required. Never infer the world anchor from an input camera: seat=road may reseat it.')
+        matrix = (np.array(state['projection']).reshape(4, 4) @ np.array(state['view']).reshape(4, 4)
+                  @ np.array(state['rootToWorld']).reshape(4, 4))
         im = Image.open(directory / (camera + '.png')).convert('RGB')
         width, height = im.size
         # Clear near asphalt, away from the crossing, kerb and white boundary line.
         x0, y0, x1, y1 = [round(v * width / 960) for v in (380, 280, 630, 400)]
         depth = np.full((y1-y0, x1-x0), np.inf)
         uv = np.full((*depth.shape, 2), np.nan)
-        runtime_pos = state['position']
-        offset = np.array(spec['pos'])[[0, 2, 1]] - [runtime_pos['x'], runtime_pos['y'], runtime_pos['z']]
         _, nodes = read(ROOT / 'Data/raw/derived/bialystok-industrial-c/world/chunk_3_4.low.glb')
         for material, attrs in nodes['road']:
             if material != 'road_asphalt' or 'TEXCOORD_1' not in attrs:
                 continue
             xyz = attrs['POSITION'].astype(float)
             xyz[:, 0] *= -1
-            xyz -= offset
             clip = matrix @ np.column_stack((xyz, np.ones(len(xyz)))).T
             ndc = (clip[:3] / clip[3]).T
             points = np.column_stack(((ndc[:, 0]+1)*width/2, (1-ndc[:, 1])*height/2))
@@ -94,7 +93,7 @@ def main():
                 ratios[side] = dict(rows=len(pairs), median_ratio=float(np.median([a/b for a, b in pairs if b > 0])) if pairs else None)
             measurements.append(dict(label=label, fields=values, row_matched=ratios))
         rows.append(dict(condition=condition, camera=camera, roi960=[380, 280, 630, 400], runtime=state, measurements=measurements))
-    result = dict(note='Display luma, not physical albedo. Actual runtime matrices, perspective-correct Half UV1. Road-only projection does not resolve non-road occluders; inspect coloured masks before accepting. Baseline reuses identical camera pose and unchanged road geometry.', rows=rows)
+    result = dict(note='Display luma, not physical albedo. Actual runtime root-to-world, view and projection matrices, perspective-correct Half UV1. Road-only projection does not resolve non-road occluders; inspect coloured masks before accepting. Baseline reuses identical camera pose and unchanged road geometry.', rows=rows)
     (OUT / f'wheel-contrast-{args.after}.json').write_text(json.dumps(result, indent=2)+'\n')
     for row in rows:
         print(row['condition'], [(m['label'], m['fields'], m['row_matched']) for m in row['measurements']])
@@ -102,5 +101,7 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
 
 
