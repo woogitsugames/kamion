@@ -155,6 +155,7 @@ namespace Game.UI
             // Left column: wheel + pedals
             float y = 0f;
             Header(content, "KIEROWNICA DOTYKOWA", left, ref y);
+            Segment(content, left, ref y, "Chwyt", "obrót", "przesuw", () => Settings.wheelDragGrab, v => Settings.wheelDragGrab = v);
             Stepper(content, left, ref y, "Zakres kierownicy", () => F0(Settings.wheelRangeDeg) + "°", d => Settings.wheelRangeDeg = Step(Settings.wheelRangeDeg, d, 90f, ControlSettings.RangeMin, ControlSettings.RangeMax));
             Stepper(content, left, ref y, "Czułość", () => Pct(Settings.wheelSensitivity), d => Settings.wheelSensitivity = Step(Settings.wheelSensitivity, d, 0.1f, ControlSettings.GainMin, ControlSettings.GainMax));
             Stepper(content, left, ref y, "Samocentrowanie", () => Settings.centreStrength <= 0.001f ? "wyłączone" : Pct(Settings.centreStrength), d => Settings.centreStrength = Step(Settings.centreStrength, d, 0.1f, ControlSettings.CentreMin, ControlSettings.CentreMax));

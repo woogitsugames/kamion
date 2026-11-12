@@ -32,6 +32,9 @@ namespace Game.Controls
         /// </summary>
         public static float ClockwiseAngleFromUp(Vector2 fromCentre) => Mathf.Atan2(fromCentre.x, fromCentre.y) * Mathf.Rad2Deg;
 
+        /// <summary>On-screen wheel degrees for a horizontal finger travel [mm] (drag gesture, ADR 0135): right = clockwise.</summary>
+        public static float DragDeg(float dxMm, float degPerMm) => dxMm * degPerMm;
+
         /// <summary>Exponential smoothing factor for a first-order filter with time constant tau.</summary>
         public static float SmoothingAlpha(float dt, float tau) => tau <= 1e-5f ? 1f : 1f - Mathf.Exp(-dt / tau);
     }

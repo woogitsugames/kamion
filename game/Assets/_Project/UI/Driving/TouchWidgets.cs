@@ -5,12 +5,27 @@ using UnityEngine.EventSystems;
 
 namespace Game.UI.Driving
 {
-    /// <summary>On-screen steering wheel: forwards pointer positions (relative to its centre) to <see cref="TouchSteeringWheel"/>.</summary>
+    /// <summary>
+    /// On-screen steering wheel: forwards pointer positions (relative to its centre, and in millimetres on the screen for
+    /// the drag gesture) to <see cref="TouchSteeringWheel"/>. Touches anywhere on this object or its children (the
+    /// invisible grab area that extends the drawing to the safe-area edges, ADR 0135) grab the wheel. Draws the command
+    /// (<see cref="rotating"/>) and where the cab wheel actually is (<see cref="columnMark"/>).
+    /// </summary>
     public sealed class SteeringWheelWidget : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler
     {
+        /// <summary>DPI used when the platform reports none (Screen.dpi = 0). WORKING_VALUE (typical phone 400-500).</summary>
+        public const float FallbackDpi = 420f;
+
         public TouchSteeringWheel wheel;
         public RectTransform rotating;
+        /// <summary>Optional: marker rotated to the cab-wheel angle in on-screen degrees (lags the finger like the heavy wheel).</summary>
+        public RectTransform columnMark;
         int m_Pointer = int.MinValue;
+
+        /// <summary>Screen pixels to millimetres (physical finger travel; the gesture does not depend on the canvas scale).</summary>
+        public static Vector2 PixelsToMm(Vector2 px, float dpi) => px * (25.4f / (dpi > 1f ? dpi : FallbackDpi));
+
+        static Vector2 Mm(PointerEventData e) => PixelsToMm(e.position, Screen.dpi);
 
         Vector2 FromCentre(PointerEventData e)
         {
@@ -24,13 +39,13 @@ namespace Game.UI.Driving
         {
             if (wheel == null || m_Pointer != int.MinValue) return;
             m_Pointer = e.pointerId;
-            wheel.PointerDown(FromCentre(e));
+            wheel.PointerDown(FromCentre(e), Mm(e));
         }
 
         public void OnDrag(PointerEventData e)
         {
             if (wheel == null || e.pointerId != m_Pointer) return;
-            wheel.PointerDrag(FromCentre(e));
+            wheel.PointerDrag(FromCentre(e), Mm(e));
         }
 
         public void OnPointerUp(PointerEventData e)
@@ -47,8 +62,9 @@ namespace Game.UI.Driving
 
         void LateUpdate()
         {
-            if (wheel != null && rotating != null)
-                rotating.localRotation = Quaternion.Euler(0f, 0f, -wheel.WheelDeg); // UI z+ is counter-clockwise
+            if (wheel == null) return;
+            if (rotating != null) rotating.localRotation = Quaternion.Euler(0f, 0f, -wheel.WheelDeg); // UI z+ is counter-clockwise
+            if (columnMark != null) columnMark.localRotation = Quaternion.Euler(0f, 0f, -wheel.ColumnScreenDeg);
         }
     }
 
