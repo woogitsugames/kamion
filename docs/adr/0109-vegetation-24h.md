@@ -53,3 +53,15 @@ B jest próbą zastąpienia pobliskiego, losowego samosiewu dojrzałym drzewem w
 Baseline: 268 kontrolnych obrazów z r1 B ponownie wykorzystanych po zgodności siedmiu hashy źródeł/kamer i 130 GLB; nie opisujemy ich jako świeże. Dodatkowo wyrenderowano 100 nowych obrazów dla 25 póz B w Low/High clear/overcast. Klasy C są pominięte. Metadane kanoniczne przed rundą oraz metadane wcześniejszego importu B są zapisane osobno: snapshot-baseline i snapshot-baseline/imported-world. Korektę błędu separatorów Windows w pierwszym helperze ujawnia STATUS i baseline-provenance.json; nie dotyczy zgodności kodu, GLB ani PNG.
 
 Test przed funkcją A: 3 failed i 1 passed; po A: 16/16 testów celowanych. Przejście testów nie uchroniło A przed odrzuceniem wizualnym/budżetowym. Testy zmienionej polityki B czekają na heavy; wynik jest w STATUS. Pełny GIS i EditMode będą dopiero na końcu rundy. Stan wizualny B, budżet i D51 pozostają niepotwierdzone do aktualnych renderów i niezależnego krytyka. Telefony są poza zakresem tej sesji.
+
+### R3 — decyzja o odrzuceniu prób, walidacja przywrócenia w toku
+
+Wcześniejszy opis A i B jest dziennikiem eksperymentów, nie przyjętą decyzją produkcyjną. A odrzucono po wzroście łącznych wywołań Low 665 do 669. B1 przeszedł pełny generator i 22 testy celowane, zastąpił jeden samosiew, odłożył trzy punkty i nie dodał rekordów. Próba Low zachowała 460 wywołań statycznych i 205 instancji, ale nie zmieniła żadnego piksela w stałym obszarze koron. Różnice 5307 pikseli leżą w niższym pasie obrazu. Nie certyfikowano B1 na pełnej macierzy kamer.
+
+Diagnostyka wysokości istniejącego klonu 8 do 13,8 m była tylko zmianą wejścia renderera. Nie nazywamy jej wyprodukowanym B2. Powiększyła rzadką sylwetkę, bez odtworzenia zespołu gęstych koron. Odrzucono ją wraz z B1; niezależny krytyk potwierdził oba werdykty. Dowody są w rejected-comparison.jpg oraz VISUAL-CRITIC-B.md.
+
+Produkcję vegetation.py i testy przywrócono do r1 w f5f60b64. Generator przywróconego kodu zakończył się w 455,7 s. Kontrola restored-world-proof.json potwierdziła 130 zgodnych GLB, 64 pliki instancji i siedem pinów źródeł względem baseline; 15 Megascans, fallback false. Końcowy GIS, import, probe i EditMode są nadal w sekwencji walidacji. Nie jest to jeszcze zamknięta runda.
+
+Dodatkowe ograniczenie: cztery odczytane korony leżą przed JRG2; nie dowiedziono, że są tymi samymi drzewami pasa dzielącego, których dotyczy B8. Nowy feedback lidera wskazuje korekty pozy G3-B jako główny bloker. Przed następnym przypisaniem nasadzeń potrzebna jest poprawiona poza SBS. B8 pozostaje otwarte, a odrzuconych punktów nie należy integrować jako jego naprawy.
+
+Następna próba po zakończeniu walidacji i merge main będzie dotyczyć berberysu wyglądającego jak bordowe bale, zgodnie z feedbackiem s11 i recenzją zbiorczą r1. Hipoteza rdzenia i kontrakt materiałów są zapisane w CLOSING-NOTES.md; nie zmieniono ich podczas bieżącej walidacji. Nie edytowano dróg, landmarków ani overrides.yaml.
