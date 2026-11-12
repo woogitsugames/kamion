@@ -1,3 +1,4 @@
+param([switch]$ResumeAfterMaterials)
 $ErrorActionPreference = 'Stop'
 Set-Location 'C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-vegetation'
 . artifacts/vegetation-r4/checkpoint.ps1
@@ -6,10 +7,16 @@ function Check-Step([string]$Step,[int]$Code) {
     Save-VegetationCheckpoint -Message "wip(vegetation): r4 baseline $Step kod $Code"
     if ($Code -ne 0) { throw "R4 baseline $Step failed: $Code" }
 }
-uv run --project tools/worldgen python artifacts/vegetation-r4/prepare_photo_cameras.py *> artifacts/vegetation-r4/prepare-photos.log
-Check-Step 'przygotowanie fotografii i kamer' $LASTEXITCODE
-pwsh artifacts/vegetation-r4/heavy-task.ps1 -Task Materials *> artifacts/vegetation-r4/before-materials.log
-Check-Step 'materiały przez heavy' $LASTEXITCODE
+if (-not $ResumeAfterMaterials) {
+    uv run --project tools/worldgen python artifacts/vegetation-r4/prepare_photo_cameras.py *> artifacts/vegetation-r4/prepare-photos.log
+    Check-Step 'przygotowanie fotografii i kamer' $LASTEXITCODE
+    pwsh artifacts/vegetation-r4/heavy-task.ps1 -Task Materials *> artifacts/vegetation-r4/before-materials.log
+    Check-Step 'materiały przez heavy' $LASTEXITCODE
+} else {
+    if (-not (Test-Path artifacts/vegetation-r4/photo-references.json)) { throw 'Missing prepared references' }
+    pwsh artifacts/vegetation-r4/import-safe.ps1 -CheckOnly *> artifacts/vegetation-r4/resume-materials-preflight.log
+    Check-Step 'kontrola wcześniej ukończonych materiałów, bez Unity' $LASTEXITCODE
+}
 pwsh artifacts/vegetation-r4/heavy-task.ps1 -Task World *> artifacts/vegetation-r4/before-world.log
 Check-Step 'świat przez heavy' $LASTEXITCODE
 uv run --project tools/worldgen python artifacts/vegetation-r4/snapshot.py baseline
