@@ -20,3 +20,5 @@ Krok 6: zapisano projekt r3 bez zmiany produkcji. Audyt GLB będzie chronił wsz
 Krok 7: pomocniki PS/Python parsują się poprawnie; inwentarz aktualnej sceny odnajduje 48 kamer bazowych. Zapisano post-baseline.ps1: czeka na JEDEN istniejący generator, potem heavy-kamery, guarded import i cztery capture. Brak automatycznej zmiany produkcji bez oględzin. Następny krok: uruchomić raz pwsh -NoProfile -File artifacts/life-r3/post-baseline.ps1 (2467 pozostaje generatorem).
 
 Baseline (2026-11-12T09:13:02.3950166+01:00): odtwórz materiały świeżego baseline r3. Następny etap w baseline-gen.ps1; po generacji nowe kamery i PreparedImport.
+
+Krok 8: materiały ukończone w 519 s, checkpoint cdc1e6b5; generator World nadal w tym samym heavy 2467. Audyt przyszłego kandydata sprawdzi też .col/.contact i każdą podsiatkę osobówki; pozwala jedynie rim/rim_dark/rim_dusty przy zachowanym układzie grup. Następny krok: ukończenie World → post-baseline 46468 automatycznie przygotuje kamery i capture.
