@@ -25,3 +25,5 @@ Krok 7: świeży baseline świata po merge main ukończony bez fallback=True. Za
 Krok 6d: dopisano test integracji rejestracji landmarków z hero apply: dla zweryfikowanego assetu i dla fallbacku musi pozostać dokładnie jedna instancja danego źródła. Testy nadal są szkicem, nie raportuję ich jako PASS. Poprawiono też zwalnianie slotu sondy: kontrola istniejącego pliku następuje przed acquire.
 
 Krok 6e: ADR 0116 rozszerzony o r3 z pełnymi ograniczeniami źródeł, pozy i roboczych wymiarów; bez deklaracji wyniku nieuruchomionego wariantu. Przygotowano baseline_sheets.py do przeglądu całego faktycznego spisu kamer.
+
+Krok 8: import i baseline QA zakończone; faktyczny spis kamer w baseline-result.json. Następnie obejrzenie pełnych zestawów i pary zdjęcia EC przed wdrożeniem.
