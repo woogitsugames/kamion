@@ -1,0 +1,21 @@
+sweep 2
+  600 steady  4.40- 8.40 meas   815 warp 0.74-0.74 dom_err  +0.1% yin 1.03 ap 0.39 len 5.39s
+  900 steady  4.40- 8.40 meas   815 warp 1.10-1.10 dom_err  +0.9% yin 1.03 ap 0.26 len 3.58s
+  1200 rise   10.65-11.90 meas  1229 warp 0.91-1.10 dom_err  +0.1% yin 1.00 ap 0.04 len 1.24s
+  1500 rise   12.40-13.85 meas  1494 warp 0.91-1.11 dom_err  +0.6% yin 0.49 ap 0.39 len 1.40s
+  1800 rise   14.00-17.95 meas  1856 warp 0.93-1.07 dom_err  +0.1% yin 0.51 ap 0.16 len 4.03s
+  2100 rise   17.10-20.20 meas  2044 warp 0.97-1.11 dom_err  -0.3% yin 1.00 ap 0.25 len 2.98s
+sweep 3
+  600 steady  3.15- 7.15 meas   595 warp 1.01-1.01 dom_err  +5.0% yin 1.25 ap 0.72 len 3.93s
+  900 steady  3.15- 7.15 meas   595 warp 1.51-1.51 dom_err  +5.8% yin 1.05 ap 0.67 len 2.61s
+  1200 rise   10.45-11.80 meas  1260 warp 0.91-1.09 dom_err  +0.1% yin 0.99 ap 0.29 len 1.38s
+  1500 rise   12.30-14.35 meas  1524 warp 0.91-1.11 dom_err  -0.4% yin 0.50 ap 0.35 len 2.04s
+  1800 rise   15.00-18.95 meas  1771 warp 1.00-1.03 dom_err  +0.1% yin 0.51 ap 0.26 len 3.85s
+  2100 top    17.05-21.00 meas  1798 warp 1.12-1.20 dom_err  -0.3% yin 0.51 ap 0.29 len 3.34s
+sweep 4
+  600 steady  6.00- 8.80 meas   763 warp 0.79-0.79 dom_err  +2.5% yin 1.02 ap 0.37 len 3.52s
+  900 steady  6.00- 8.80 meas   763 warp 1.18-1.18 dom_err  +2.5% yin 1.00 ap 0.29 len 2.33s
+  1200 rise    9.85-11.35 meas  1207 warp 0.91-1.10 dom_err  +0.1% yin 1.00 ap 0.16 len 1.47s
+  1500 rise   11.90-13.90 meas  1471 warp 0.91-1.11 dom_err  -0.4% yin 1.01 ap 0.21 len 1.92s
+  1800 rise   13.85-15.40 meas  1716 warp 1.02-1.11 dom_err  +0.9% yin 1.00 ap 0.21 len 1.44s
+  2100 top    13.75-15.40 meas  1710 warp 1.18-1.31 dom_err  +1.1% yin 1.00 ap 0.18 len 1.30s

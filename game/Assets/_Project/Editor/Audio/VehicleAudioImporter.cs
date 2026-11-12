@@ -24,6 +24,9 @@ namespace Game.Editor.Audio
         public const string ClipsDir = GeneratedDir + "/Clips";
         public const string ResourcesDir = GeneratedDir + "/Resources/VehicleAudio";
         public static string ManifestPath => Path.Combine(EditorTools.RepoRoot, "art-source", "audio", "generated", "manifest.json");
+        /// <summary>ElevenLabs layers (ADR 0137): WAVs tracked in git under this folder, manifest from tools/audio/el_prepare.py.</summary>
+        public const string ElevenLabsDir = "Assets/_Project/Audio/ElevenLabs";
+        public static string ElevenLabsManifestPath => Path.Combine(EditorTools.ProjectRoot, ElevenLabsDir, "el_manifest.json");
 
         [Serializable] class Manifest
         {
@@ -49,7 +52,8 @@ namespace Game.Editor.Audio
         {
             string lib = Path.Combine(EditorTools.ProjectRoot, ResourcesDir, "VehicleAudioLibrary.asset");
             if (!File.Exists(ManifestPath)) return File.Exists(lib);
-            if (File.Exists(lib) && File.GetLastWriteTimeUtc(lib) >= File.GetLastWriteTimeUtc(ManifestPath)) return true;
+            if (File.Exists(lib) && File.GetLastWriteTimeUtc(lib) >= File.GetLastWriteTimeUtc(ManifestPath)
+                && (!File.Exists(ElevenLabsManifestPath) || File.GetLastWriteTimeUtc(lib) >= File.GetLastWriteTimeUtc(ElevenLabsManifestPath))) return true;
             return Import();
         }
 
@@ -161,11 +165,75 @@ namespace Game.Editor.Audio
             lib.indicatorTock = Pair("indicator_tock", "indicator_tock_cab");
             lib.birdSparrow = Sfx("bird_sparrow");
             lib.birdTit = Sfx("bird_tit");
-            lib.sourceInfo = $"{man.clips.Length} engine loops + {man.sfx.Length} sfx, {man.generator}";
+            int el = ImportElevenLabs(lib);
+            lib.sourceInfo = $"{man.clips.Length} engine loops + {man.sfx.Length} sfx, {man.generator}; ElevenLabs {el} clips";
             EditorUtility.SetDirty(lib);
             AssetDatabase.SaveAssets();
             Debug.Log($"[AUDIO] vehicle audio imported: {man.clips.Length} loops, {man.sfx.Length} sfx, {copied} WAVs copied → {ResourcesDir}");
             return true;
+        }
+
+        /// <summary>
+        /// Adds the ElevenLabs set (ADR 0137) to the library: engine and exhaust-brake banks (incoherent crossfade) and
+        /// the event clips. Returns the number of clips, 0 when el_manifest.json is absent (fields stay null, the game
+        /// falls back to the procedural engine).
+        /// </summary>
+        static int ImportElevenLabs(VehicleAudioLibrary lib)
+        {
+            lib.elExteriorEngine = lib.elCabEngine = lib.elExteriorEngineBrake = lib.elCabEngineBrake = null;
+            lib.elEngineStart = lib.elEngineStop = lib.elIdleClatter = lib.elRetarder = lib.elTurboWastegate = default;
+            if (!File.Exists(ElevenLabsManifestPath)) return 0;
+            var man = JsonUtility.FromJson<Manifest>(File.ReadAllText(ElevenLabsManifestPath));
+            string AssetPath(string repoRelative) => repoRelative.StartsWith("game/", StringComparison.Ordinal) ? repoRelative.Substring(5) : repoRelative;
+            AudioClip Load(string repoRelative)
+            {
+                var clip = AssetDatabase.LoadAssetAtPath<AudioClip>(AssetPath(repoRelative));
+                if (clip == null) throw new InvalidDataException("ElevenLabs clip not imported: " + repoRelative);
+                return clip;
+            }
+            EngineSoundBank Bank(string file, string kind, string persp, float spatial)
+            {
+                var sel = new List<Clip>();
+                foreach (var c in man.clips) if (c.kind == kind && c.perspective == persp) sel.Add(c);
+                var rpms = new SortedSet<int>(); var loads = new SortedSet<float>();
+                foreach (var c in sel) { rpms.Add(c.rpm); loads.Add(kind == "ebrake" ? 0f : c.load); }
+                var rp = new List<int>(rpms); var lp = new List<float>(loads);
+                int n = rp.Count * lp.Count;
+                var bank = LoadOrCreate<EngineSoundBank>($"{ResourcesDir}/{file}.asset");
+                bank.rpmPoints = rp.ConvertAll(r => (float)r).ToArray();
+                bank.loadPoints = lp.ToArray();
+                bank.clips = new AudioClip[n];
+                bank.clipRpmExact = new float[n];
+                bank.clipCycles = new int[n];
+                bank.spatialBlend = spatial;
+                bank.incoherent = true;
+                foreach (var c in sel)
+                {
+                    int i = lp.IndexOf(kind == "ebrake" ? 0f : c.load) * rp.Count + rp.IndexOf(c.rpm);
+                    bank.clips[i] = Load(c.file);
+                    bank.clipRpmExact[i] = c.rpm_exact;
+                    bank.clipCycles[i] = c.cycles;
+                }
+                if (!bank.Validate(out string err)) throw new InvalidDataException(err);
+                EditorUtility.SetDirty(bank);
+                return bank;
+            }
+            lib.elExteriorEngine = Bank("EngineBank_el_ext", "engine", "ext", 1f);
+            lib.elCabEngine = Bank("EngineBank_el_cab", "engine", "cab", 0f);
+            lib.elExteriorEngineBrake = Bank("EngineBrakeBank_el_ext", "ebrake", "ext", 1f);
+            lib.elCabEngineBrake = Bank("EngineBrakeBank_el_cab", "ebrake", "cab", 0f);
+            var sfx = new Dictionary<string, string>();
+            foreach (var s in man.sfx) sfx[s.name] = s.file;
+            AudioClip Sfx(string name) => sfx.TryGetValue(name, out var f) ? Load(f) : null;
+            VehicleAudioLibrary.PerspectivePair Pair(string ext, string cab) =>
+                new VehicleAudioLibrary.PerspectivePair { ext = Sfx(ext), cab = Sfx(cab) };
+            lib.elEngineStart = Pair("el_engine_start_ext", "el_engine_start_cab");
+            lib.elEngineStop = Pair("el_engine_stop_ext", "el_engine_stop_cab");
+            lib.elIdleClatter = Pair("el_idle_clatter_loop", "el_idle_clatter_cab_loop");
+            lib.elRetarder = Pair("el_retarder_loop", "el_retarder_cab_loop");
+            lib.elTurboWastegate = Pair("el_turbo_wastegate", "el_turbo_wastegate_cab");
+            Debug.Log($"[AUDIO] ElevenLabs set imported: {man.clips.Length} loops, {man.sfx.Length} sfx ({man.generator})");
+            return man.clips.Length + man.sfx.Length;
         }
 
         static T LoadOrCreate<T>(string path) where T : ScriptableObject
@@ -178,19 +246,26 @@ namespace Game.Editor.Audio
         }
     }
 
-    /// <summary>Import settings for the generated vehicle audio (applies only under Audio/Generated/Clips).</summary>
+    /// <summary>
+    /// Import settings for the vehicle audio (applies only under Audio/Generated/Clips and Audio/ElevenLabs/Clips).
+    /// Loops: ADPCM, Compressed In Memory (cheap decode for ~12 engine voices on the Helio G99, ADR 0007).
+    /// One-shots: ADPCM Decompress On Load (procedural), Vorbis q 0.7 Decompress On Load (ElevenLabs events: longer,
+    /// broadband, decoded once at load so no runtime Vorbis cost; ADR 0137).
+    /// </summary>
     public sealed class VehicleAudioPostprocessor : AssetPostprocessor
     {
         void OnPreprocessAudio()
         {
-            if (!assetPath.StartsWith(VehicleAudioImporter.ClipsDir + "/", StringComparison.Ordinal)) return;
+            bool el = assetPath.StartsWith(VehicleAudioImporter.ElevenLabsDir + "/Clips/", StringComparison.Ordinal);
+            if (!el && !assetPath.StartsWith(VehicleAudioImporter.ClipsDir + "/", StringComparison.Ordinal)) return;
             var imp = (AudioImporter)assetImporter;
             bool oneShot = assetPath.Contains("/sfx/") && !assetPath.EndsWith("_loop.wav", StringComparison.Ordinal);
             imp.forceToMono = true;
             imp.loadInBackground = false;
             var s = imp.defaultSampleSettings;
             s.loadType = oneShot ? AudioClipLoadType.DecompressOnLoad : AudioClipLoadType.CompressedInMemory;
-            s.compressionFormat = AudioCompressionFormat.ADPCM;
+            s.compressionFormat = el && oneShot ? AudioCompressionFormat.Vorbis : AudioCompressionFormat.ADPCM;
+            if (el && oneShot) s.quality = 0.7f;
             s.sampleRateSetting = AudioSampleRateSetting.PreserveSampleRate;
             s.preloadAudioData = true;
             imp.defaultSampleSettings = s;

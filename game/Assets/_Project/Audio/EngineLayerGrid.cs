@@ -45,6 +45,9 @@ namespace TruckSim.Audio
 
         public int ActiveVoices { get; private set; }
 
+        /// <summary>Bank of unrelated recordings: the caller uses an equal-power crossfade (Coherence 0).</summary>
+        public bool Incoherent => _bank.incoherent;
+
         public EngineLayerGrid(EngineSoundBank bank, Transform parent, int poolSize, AudioMixerGroup output,
                                uint seed, string label)
         {

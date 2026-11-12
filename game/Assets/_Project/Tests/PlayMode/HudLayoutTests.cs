@@ -282,11 +282,55 @@ namespace Game.Tests
                         if (g.transform.parent != null && g.transform.parent.name == "Rotating") continue;
                         if (g.name == "Rotating") continue;   // the wheel sprite turns inside its square
                         Rect gr = RectIn(g.rectTransform, safe);
+                        if (g.name == "GrabArea")
+                        {
+                            // ADR 0135: invisible touch target of the wheel, extended over the empty margin to the
+                            // safe-area edges left of and below the wheel; it must stay inside the safe area and must not
+                            // reach any other zone (checked against every zone below).
+                            Assert.AreEqual(0f, g.color.a, 1e-6f, $"{what}: GrabArea is invisible");
+                            Assert.IsTrue(Contains(bounds, gr, 0.6f), $"{what}: GrabArea {gr} outside the safe area");
+                            Assert.IsTrue(Contains(gr, real, 0.6f), $"{what}: GrabArea {gr} does not cover the whole wheel {real}");
+                            Assert.IsTrue(gr.xMin <= Mathf.Max(0f, real.xMin - 59f) + 0.6f && gr.yMin <= Mathf.Max(0f, real.yMin - 59f) + 0.6f, $"{what}: GrabArea {gr} margin left/below the wheel {real}");
+                            for (int j = 0; j < HudLayoutResult.ZoneCount; j++)
+                                if (j != i && layout.Zone(j, out Rect other) && other.Overlaps(gr) && Rect.MinMaxRect(Mathf.Max(other.xMin, gr.xMin), Mathf.Max(other.yMin, gr.yMin), Mathf.Min(other.xMax, gr.xMax), Mathf.Min(other.yMax, gr.yMax)).width > 0.6f
+                                    && Rect.MinMaxRect(Mathf.Max(other.xMin, gr.xMin), Mathf.Max(other.yMin, gr.yMin), Mathf.Min(other.xMax, gr.xMax), Mathf.Min(other.yMax, gr.yMax)).height > 0.6f)
+                                    Assert.Fail($"{what}: GrabArea {gr} overlaps {HudLayoutResult.ZoneName(j)} {other}");
+                            continue;
+                        }
                         Assert.IsTrue(Contains(real, gr, 2.5f), $"{what}: {zn}/{g.name} {gr} sticks out of its zone {real}");
                     }
                 }
             }
             UnityEngine.Object.Destroy(hud.gameObject);
+        }
+
+        /// <summary>ADR 0135 r2: the wheel touch target covers the drawing + margin (30 % radius or 8 mm), reaches the
+        /// safe-area edges left/below, and never covers another zone (buttons, pedals).</summary>
+        [Test]
+        public void WheelGrabRect_CoversDrawingPlusMargin_NeverOverButtons()
+        {
+            foreach (var (name, w, h, ppu, dpi) in new (string, float, float, float, float)[]
+                     { ("fold inner 2184x1968", 2184f, 1968f, 2184f / 1680f, 374f), ("fold inner 1200x1080", 1200f, 1080f, 1200f / 1680f, 374f),
+                       ("cover 2340x1080", 2340f, 1080f, 1f, 420f), ("S24+ 2340x1080", 2340f, 1080f, 1f, 516f) })
+            {
+                var size = Game.UI.Layout.UiScale.SizeUnits(w, h, dpi);
+                var input = new Game.UI.Driving.HudLayoutInput { Width = size.x, Height = size.y };
+                Game.UI.Driving.HudLayout.Solve(input, out var r);
+                float m = Game.UI.Driving.HudLayout.GrabMarginUnits(Game.UI.Layout.UiScale.PixelsPerUnit(w, h, dpi), dpi);
+                Rect g = Game.UI.Driving.HudLayout.WheelGrabRect(r, size.x, size.y, m);
+                Rect wheel = new Rect(r.Steering.x, r.Steering.y, Game.UI.Driving.HudLayout.WheelSize, Game.UI.Driving.HudLayout.WheelSize);
+                Assert.IsTrue(g.xMin <= wheel.xMin && g.yMin <= wheel.yMin && g.xMax >= wheel.xMax && g.yMax >= wheel.yMax, name + ": covers the drawing");
+                Assert.AreEqual(Mathf.Max(0f, wheel.xMin - m), g.xMin, 0.01f, name + ": left margin / safe edge");
+                Assert.AreEqual(Mathf.Max(0f, wheel.yMin - m), g.yMin, 0.01f, name + ": bottom margin / safe edge");
+                Assert.GreaterOrEqual(m, 60f - 1e-3f, name + ": >= 30 % of the radius");
+                for (int i = 0; i < Game.UI.Driving.HudLayoutResult.ZoneCount; i++)
+                {
+                    if (i == 8 || !r.Zone(i, out Rect z)) continue;
+                    bool overlap = z.xMin < g.xMax - 0.01f && z.xMax > g.xMin + 0.01f && z.yMin < g.yMax - 0.01f && z.yMax > g.yMin + 0.01f;
+                    Assert.IsFalse(overlap, name + ": grab area over " + Game.UI.Driving.HudLayoutResult.ZoneName(i));
+                }
+                Debug.Log("[TEST] " + name + ": wheel " + wheel + " grab " + g + " margin " + m.ToString("F0") + " units");
+            }
         }
 
         /// <summary>Folding / unfolding while driving: the same HUD object lays out again for the new screen.</summary>
