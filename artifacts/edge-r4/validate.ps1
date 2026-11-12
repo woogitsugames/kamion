@@ -22,10 +22,12 @@ function With-UnitySlot([scriptblock]$action) {
     }
 }
 if ($Phase -eq 'Before') {
+    if(Test-Path -LiteralPath "$out/Before.complete"){Remove-Item -LiteralPath "$out/Before.complete"}
     # The imported main scene is the baseline; only the edge is rebuilt after this phase.
     # It is deliberately not reimported with the edited WorldEdgeBuilder before baseline capture.
     $label = 'before'
 } elseif ($Phase -eq 'After') {
+    if(-not(Test-Path -LiteralPath "$out/Before.complete")){throw 'Complete baseline required before After'}
     if (Test-Path -LiteralPath "$out/After.complete") { Remove-Item -LiteralPath "$out/After.complete" }
     if (-not $SkipRebuild) { With-UnitySlot {
         $code = Invoke-UnityBatch -LogFile "$out/rebuild-after.log" -Arguments @(
