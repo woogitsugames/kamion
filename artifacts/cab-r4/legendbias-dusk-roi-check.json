@@ -1,0 +1,24 @@
+{
+  "scope": "Only one 240x200 native ROI from two Low captures; not full-frame photometry",
+  "light": "dusk",
+  "candidate_stage": "result-0112-legendbias",
+  "roi": [
+    440,
+    840,
+    680,
+    1040
+  ],
+  "changed_pixels": 329,
+  "pixels": 48000,
+  "max_channel_delta": 103,
+  "mean_channel_delta": [
+    0.16833333333333333,
+    0.16839583333333333,
+    0.17325
+  ],
+  "crop_sha256": [
+    "5a4f8a1b8fa390ec8e91e72815c457a89edd96bd7eb49e8218565f3b61aa2529",
+    "b7a3d8a0df99af8c99e6f8b28b2ad0540dfa630c52700dc76284ffab49a2e969"
+  ],
+  "elapsed_seconds": 0.14482649999990826
+}
