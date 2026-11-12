@@ -6,7 +6,7 @@ Set-Location $repo
 $slot='C:/Users/matma/Documents/Claude/kamion/scripts/unity-slot.ps1'
 $folder="$PSScriptRoot/$OutputName";$log="$PSScriptRoot/$OutputName.$(Get-Timestamp).log"
 $source=(git rev-parse HEAD).Trim()
-$sourcePaths=@('game/Assets/_Project/Rendering/Editor/LightGradeLutLab.cs','game/Assets/_Project/Rendering/Editor/LightGradeLutLab.shader','game/Assets/_Project/Rendering/Editor/LightGradeLutWorldProbe.cs','game/Assets/_Project/Rendering/Shaders/KamionAtmosphere.hlsl')
+$sourcePaths=@('game/Assets/_Project/Rendering/Editor/LightGradeLutLab.cs','game/Assets/_Project/Rendering/Editor/LightGradeLutLab.shader','game/Assets/_Project/Rendering/Editor/LightGradeLutWorldProbe.cs','game/Assets/_Project/Rendering/Shaders/KamionAtmosphere.hlsl','game/Assets/_Project/Rendering/Shaders/KamionOpaqueGradeLabVariants.hlsl')
 $sourceHashes=@($sourcePaths|ForEach-Object {@{path=$_;sha256=(Get-FileHash -LiteralPath $_).Hash}})
 & pwsh $slot -Acquire -Owner gpt-light -PollSeconds 1 -StaleHours 87600
 if($LASTEXITCODE){throw 'No Unity slot'}
@@ -47,5 +47,6 @@ finally{git restore -- game/Assets/_Project/Rendering/Settings game/ProjectSetti
 Add-Content "$PSScriptRoot/STATUS.md" "Lab gradingu33PNG+6kostek,192holdout+12288gradientnaPreset zakończony; log=$log. To diagnostyka, bez wdrożenia lub GPU PASS."
 git add -f artifacts/light-r5/STATUS.md
 git commit -m 'WIP light r5: record actual High-baked LUT laboratory evidence'
+
 
 

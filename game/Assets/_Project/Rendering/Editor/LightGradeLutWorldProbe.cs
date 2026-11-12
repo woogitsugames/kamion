@@ -103,7 +103,7 @@ namespace Game.Rendering.Editor
         {
             if(m_Error!=null)throw new InvalidOperationException(m_Error);
             if(m_Frames.Count!=expected)throw new InvalidOperationException($"Missing grade proof cameras {m_Frames.Count}/{expected}");
-            foreach(var frame in m_Frames.Values)if(frame.enabled!=1 || frame.physicalCaptureBypass!=0 || frame.cabToeParity!=Vector4.zero)throw new InvalidOperationException("Grade absent, double cab curve or physical capture bypass active in main camera");
+            foreach(var frame in m_Frames.Values)if(frame.enabled!=1 || frame.physicalCaptureBypass!=0 || frame.cabToeParity!=Vector4.zero || frame.key!=m_Key)throw new InvalidOperationException("Grade absent, stale final key, double cab curve or physical capture bypass active in main camera");
             var frames=new Frame[m_Frames.Count];m_Frames.Values.CopyTo(frames,0);
             File.WriteAllText(Path.Combine(folder,"opaque-grade-proof.json"),JsonUtility.ToJson(new Proof{size=m_Lut.width,frames=frames},true));
         }
