@@ -61,3 +61,5 @@ Krok 7: pojedynczy plik test_viaduct_underdeck.py dla wariantu weather zakończy
 Krok 7e: pojedynczy plik 14/14 PASS w 0.29 s, po czym generator wystartował jako PID 41640. Globalny watchdog zawiesił go o 02:23:00; nie wznowiono ręcznie. Zapisano czas utworzenia procesu i obserwowaną pauzę, wynik nie będzie benchmarkiem CPU. Lekka kontrola kominów (cztery próbki NMT i dwa punkty) daje rozbieżność pitch 2.619 stopnia dla znanych wysokości; potwierdza konieczność rozwiązania pozy, bez zmian geometrii.
 
 Krok 7f: obejrzano wszystkie cztery arkusze after-preview-from-before (20 par). We wszystkich schody znikają; rozdział faz i ochra są czytelne, a gładki dół uzasadnia weather. review_all.py ma osobny --focus z etykietą diagnostic subset only; domyślnie nadal wymaga pełnych 58 kamer. To nie zastępuje pełnego pomiaru końcowego. Generator weather pozostaje pod nadzorcą zasobów.
+
+Krok 7g: watchdog wznowił PID 41640 o 02:35:49 po obserwowanej pauzie 769 s (02:23:00–02:35:49). Zdarzenia zapisano w weather-watchdog-events.log; nie wykonywano ręcznego resume ani ponownego testu. Trwa ten sam generator pod własnym heavy.
