@@ -12,6 +12,21 @@ Jesteś administratorem dysku na komputerze właściciela (Windows 11, `C:` ma 1
 - Pomiar sprzed sprzątania: worktree zajmowały razem ok. 520 GB. Najwięcej kopie GPT: `gpt-life` 35 GB, `gpt-light`, `gpt-truck`, `gpt-landmarks` i `gpt-car-paint` po ok. 20 GB.
 - Dysk `G:` to Google Drive for Desktop. Pokazuje tyle samo wolnego miejsca co `C:`, bo jego cache leży na C:. Nie jest osobnym problemem.
 
+## Pomiar lidera Claude (12.11, ok. 20:10, po sprzątaniu; punkt startowy)
+| GB | ścieżka |
+|---|---|
+| 553 | `C:\Users\matma\Documents\Claude` (w tym kamion `.claude\worktrees` **293**, kamion `artifacts` **226**, `game` 10, `.git` 8, `Data` 4) |
+| 84 | `C:\Users\matma\AppData\Local\Temp` |
+| 45 | `C:\Users\matma\AppData\Local\uv` (cache uv) |
+| 33 | `C:\Program Files\Unity` |
+| 25 | `C:\hiberfil.sys` |
+| 25 | `C:\pagefile.sys` |
+| ~10 | ProgramData, Roaming, Packages, LocalLow, Downloads (razem) |
+
+Razem to ok. 780 GB. Zajęte jest ok. 1,36 TB, więc **ok. 600 GB jest nierozpoznane**. Najpierw szukaj tam: inne katalogi w `C:\Users\matma` (OneDrive, `.cache`, `.nuget`, `.gradle`, `.android`, `AppData\Local` poza zmierzonymi), inni użytkownicy, `C:\Windows` (WinSxS), kopie cieni i punkty przywracania, `C:\$Recycle.Bin`. Pozostałe katalogi w `Documents\Claude` (553 GB) poza kamion też mierz osobno.
+
+W `kamion\artifacts` (226 GB) są rendery, logi i stare APK z wielu sesji. Pokaż podkatalogi > 2 GB. Kandydaci do usunięcia za zgodą właściciela: stare rendery (`renders*`, `vqa*`, `sbs*`) z zakończonych zadań. Zostaw `artifacts\live`, `artifacts\locks`, `artifacts\apk` (skrypt sam przycina APK) i katalogi aktywnych agentów.
+
 ## Krok 1: tylko pomiar, niczego nie usuwaj
 1. Wolne miejsce: `(Get-PSDrive C).Free/1GB`.
 2. Największe katalogi: najlepiej WizTree albo `du64` (Sysinternals), jeśli są zainstalowane. W przeciwnym razie PowerShell, rekurencyjnie od `C:\`, dwa poziomy w głąb, z `-Force -ErrorAction SilentlyContinue`. Policz koniecznie:
