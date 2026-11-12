@@ -151,7 +151,10 @@ namespace Game.Tests
                 Assert.GreaterOrEqual(a.FindPass("ForwardLit"), 0);
                 Assert.GreaterOrEqual(b.FindPass("ForwardLit"), 0);
                 Debug.Log($"[FurnitureSignProbe] actual passes URP={a.passCount}, furniture={b.passCount}");
-                Assert.AreEqual(a.passCount, b.passCount);
+                // ADR 0131: Forward-only subset of the Lit passes (no GBuffer/Meta/2D/motion vectors) - never more.
+                Assert.LessOrEqual(b.passCount, a.passCount);
+                foreach (var p in new[] { "ShadowCaster", "DepthOnly", "DepthNormals" })
+                    Assert.GreaterOrEqual(b.FindPass(p), 0, p);
             }
             finally { UnityEngine.Object.DestroyImmediate(a); UnityEngine.Object.DestroyImmediate(b); }
         }

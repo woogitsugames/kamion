@@ -132,6 +132,8 @@ Shader "Kamion/Furniture Sign"
 
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE
             #pragma multi_compile _ _ADDITIONAL_LIGHTS
+            // SH evaluation mode as URP Lit (Auto on Android = per-vertex/mixed; URP strips the unused ones).
+            #pragma multi_compile _ EVALUATE_SH_MIXED EVALUATE_SH_VERTEX
             #pragma multi_compile_fragment _ _SHADOWS_SOFT _SHADOWS_SOFT_LOW _SHADOWS_SOFT_MEDIUM _SHADOWS_SOFT_HIGH
             #pragma multi_compile_fog
             #pragma multi_compile_instancing

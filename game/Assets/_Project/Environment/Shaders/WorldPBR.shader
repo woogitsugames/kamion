@@ -478,10 +478,11 @@ Shader "Kamion/World PBR"
                     albedo *= lerp(1.0, 0.35, cm.r * amount);
                     albedo = lerp(albedo, half3(0.03, 0.03, 0.03), cm.g * amount);
                     albedo *= 1.0 - cm.a * amount * 0.12;
-                    // ADR 0131: aged, dust-filmed bitumen sealant - only a little smoother than the asphalt
-                    // (WORKING_VALUE 0.24). At 0.55 the env term at grazing NoV (grazing = smooth) out-reflected
-                    // the 0.03 albedo and the sealant read as white chalk, also under an overcast sky.
-                    smooth = lerp(smooth, max(smooth, 0.24), cm.g * amount);
+                    // ADR 0131: aged, dust-filmed bitumen sealant - a dark band only slightly smoother than the asphalt
+                    // around it (+0.06, WORKING_VALUE). At 0.55 the env term at grazing NoV (grazing = smooth)
+                    // out-reflected the 0.03 albedo and the sealant read as white chalk, also under an overcast sky;
+                    // at 0.24 it cancelled the dark albedo exactly (invisible from the driver's eye height).
+                    smooth = lerp(smooth, smooth + 0.06, cm.g * amount);
                 #if defined(_KAMION_WORLD_DETAIL)
                     half3 cn = UnpackNormalScale(SAMPLE_TEXTURE2D(_CrackNormal, sampler_CrackMap, uc), amount);
                     tn = normalize(half3(tn.xy + cn.xy, tn.z * cn.z));
