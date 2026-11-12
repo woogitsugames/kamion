@@ -148,3 +148,5 @@ Krok 39: capture C uruchomiony raz, produkcja zamrożona. Przygotowano osobne Li
 Krok 40: post-c.ps1 zapisany; poczeka na istniejący capture C, porówna wszystkie kamery/liczniki/pozy i kontrakt 28 materiałów B, przygotuje podglądy/ROI oraz świeży GPU proof C. Pełny GIS pozostaje dopiero po wyborze końcowego wariantu. Następny krok: uruchomić raz post-c.ps1 (capture 7159), potem oględziny i decyzja.
 
 Krok 41: przygotowano NIEURUCHOMIONY final-heavy.ps1; wymaga C-SELECTED po oględzinach. Jeden heavy tworzy pary wszystkich kamer (nowa opcja --all-cameras), uruchamia pełny GIS tylko na końcu i ponownie sprawdza źródła/GLB/raw/materialy. Nie miesza liczników kanonicznego c-budget z metrykami arkuszy. Następny krok: istniejący capture 7159/post-c 84367, oględziny C, dopiero wybrany wariant i testy końcowe.
+
+Po capture C (2026-11-12T10:49:28.0727242+01:00): potwierdź pełne kadry i budżet C. Następny krok według post-c.ps1, potem oględziny i wybór autora.
