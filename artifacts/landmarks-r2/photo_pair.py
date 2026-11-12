@@ -41,5 +41,5 @@ result = dict(source=str(source.relative_to(root)), source_crop_box=box,
               source_page="https://commons.wikimedia.org/wiki/File:7204_May_2021_in_Bia%C5%82ystok.jpg",
               author="Rakoon", license="CC0", modifications="Central vertical crop and resizing for comparison",
               camera=camera, phase=phase, pose_confidence="UNVERIFIED", pairs=records)
-(out / "source.json").write_text(json.dumps(result, indent=2), encoding="utf-8")
+(out / f"source-{camera}.json").write_text(json.dumps(result, indent=2), encoding="utf-8")
 print(f"Saved {len(records)} reference pairs to {out}")
