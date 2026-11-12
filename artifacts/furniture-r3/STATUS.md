@@ -94,3 +94,5 @@ potem poprawić największe udokumentowane odstępstwo wiaty. WIP po każdym kro
 2026-11-12T12:25:55.6356900+01:00: doprecyzowano audyt JSON: eksporter sortuje instancje według prototypu, więc zmiana nazwy legalnie zmienia kolejność wierszy. Porównywane są pełne multizbiory instancji w każdym chunku, z zachowaniem duplikatów i wszystkich pól; nie ignoruje się pozycji ani innych wartości. Bazę przeliczono wyłącznie po tej zmianie metody i ponownie potwierdzono wszystkie źródłowe SHA256. Generator nadal w kolejce; źródła produktu bez zmian.
 
 2026-11-12T12:30:59.4484674+01:00: generator otrzymał heavy i rozpoczął pracę; zapisano pomocnik preview_shelter_frame.py do pojedynczego interaktywnego podglądu PNG, maksymalnie 3 MP wejścia i 960 px wyjścia, priorytet IDLE. Nie uruchamia batchu ani generatora. Umożliwia obejrzenie szkła od razu po pierwszym renderze, zanim zakończy się cała seria. NASTĘPNY KROK: wynik generatora i kontrola kandydata.
+
+2026-11-12T12:37:32.6545950+01:00: heavy world after1; sukces=True; slot gpt-furniture-r3 zwolniony. NASTĘPNY KROK: sprawdzić log i kontynuować walidację rundy.
