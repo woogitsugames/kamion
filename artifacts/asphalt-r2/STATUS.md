@@ -28,3 +28,4 @@
 2026-11-12T01:59:58.5600975+01:00: zapisano artifacts/asphalt-r2/baseline/Low-clear. Następny krok: pozostałe serie lub porównanie wariantu.
 2026-11-12T02:00:33.1632889+01:00: zapisano artifacts/asphalt-r2/baseline/High-overcast. Następny krok: pozostałe serie lub porównanie wariantu.
 2026-11-12T02:01:06.8075474+01:00: zapisano artifacts/asphalt-r2/baseline/High-clear. Następny krok: pozostałe serie lub porównanie wariantu.
+2026-11-12T02:01:07.2648644+01:00: Baseline odświeżony po korekcie kadru i rzeczywistej macierzy regionu. Obrazy/metryki sprzed korekty nie służą do porównania nowego kandydata.
