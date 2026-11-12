@@ -73,3 +73,5 @@ Krok 20: ADR 0122 uzupełniony o R4 w toku: pochodzenie baseline, natywny LOD0 z
 Kandydat a2 (2026-11-12T12:59:48.8368020+01:00): wygeneruj przestrzenne koła placowe a2. Następny etap w candidate-gen.ps1; potem import/capture i oględziny. Limity klatki bez zmiany.
 
 Kandydat a2 (2026-11-12T12:59:52.3674068+01:00): potwierdź zakres GLB, raw i fidelity kół a2. Następny etap w candidate-gen.ps1; potem import/capture i oględziny. Limity klatki bez zmiany.
+
+Po kandydacie a2 (2026-11-12T13:01:15.8550455+01:00): zaimportuj geometrię felgi a2. Następny krok: oględziny przed decyzją, bez deklaracji finalnego PASS.
