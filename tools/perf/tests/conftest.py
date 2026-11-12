@@ -1,11 +1,19 @@
+import os
 import sys
 from pathlib import Path
 
 import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from perfgate.formats import FrameRow  # noqa: E402
+
+_mutation = os.environ.get("PERFGATE_MUTATION")
+if _mutation:
+    import mutations
+
+    mutations.apply(_mutation)
 
 
 def make_rows(ft_ms, start_t=0.0, dt=0.033333):

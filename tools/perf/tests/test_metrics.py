@@ -43,12 +43,13 @@ def test_warmup_excludes_early_frames():
 
 def test_over_1_5x_and_janky():
     # cel 33.333 ms; 1.5x = 50.0 ms; janky > 66.667 ms
-    rows = make_rows([33.333] * 9 + [50.1] + [70.0])
+    # 48.0 ms leży między 1.4x (46.67) a 1.5x (50.0) — odróżnia definicję progu
+    rows = make_rows([33.333] * 9 + [48.0, 50.1] + [70.0])
     fm = compute_frame_metrics(rows, warmup_s=0.0, target_fps=30)
-    assert fm.over_1_5x_count == 2  # 50.1 i 70.0
-    assert fm.over_1_5x_pct == pytest.approx(100 * 2 / 11)
+    assert fm.over_1_5x_count == 2  # 50.1 i 70.0; 48.0 < 50.0 nie liczy się
+    assert fm.over_1_5x_pct == pytest.approx(100 * 2 / 12)
     assert fm.janky_count == 1  # tylko 70.0 > 66.667
-    assert fm.janky_pct == pytest.approx(100 / 11)
+    assert fm.janky_pct == pytest.approx(100 / 12)
 
 
 def test_alternation_exactly_15_6_pct():
