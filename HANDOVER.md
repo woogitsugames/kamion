@@ -33,6 +33,8 @@
 | zabudowa r9 (wysoka zieleń, żywopłot, wiata, jabłonie) | 0132 | Fable | `buildings-r9` | `artifacts/buildings-r9/STATUS.md` |
 | pomiar gate3 A16 Low A+B po czystym APK z run-e (jedyny agent telefonowy) | — | Opus build-qa | main (tylko odczyt) | `artifacts/gate3-a16-s12/REPORT-DATA.md` |
 - Kolejność scalania: 0123 → 0128 (bazuje na junctions-r6) ; reszta niezależnie. Ostatni przydzielony ADR: 0132.
+- **13:41 trigger:** 5 h **89 %** (reset 14:10), tydzień 32 %, Fable 48 %. ≥85 % → bez nowych agentów. Integracja e: regen e w toku (fidelity), potem import/testy/vqa-e/SBS render-only/czysty APK (agent build-qa czeka na APK). **Slot heavy = wąskie gardło**: 11 w kolejce FIFO (5 Claude, 6 GPT). Ostatnie WIP agentów: 0123 `82907ea6` (b6: nasyp żwirowy na wyspie centralnej ronda Bieżeństwa), 0127 `680b4c95` (szkło ekranu 1801374), 0128 `c0ef43a3` (baseline b5 SBS), 0129 `100ab9e5`, 0130 `a300b826` (pary 4 stanów), 0131 `199b8e8c`, 0132 `0d91a834` (kanopa z ortofoto, żywopłot v2). GPT gotowe: **truck r3** (REPORT) → krytyk po resecie limitu.
+- **Jeśli sesja padnie (limit/inne konto):** nowy lider: (1) `artifacts/integration-s12/run-e.log` — jeśli brak `END`, uruchom `pwsh -NoProfile -File artifacts/integration-s12/run-e.ps1 > artifacts/integration-s12/run-e.log 2>&1` (w tle; regeneracja idempotentna); (2) wznów agentów z tabeli z ich STATUS.md (każdy ma NASTĘPNY KROK); (3) krytyk dla gotowych → scal → regen → APK → gate3 A16 (`artifacts/gate3-a16-s12/`).
 
 ---
 # HANDOVER — kamion, ZAMKNIĘCIE sesji 11 (2026-11-12 09:10) → start s12 na koncie z czystym limitem
