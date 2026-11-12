@@ -20,5 +20,19 @@ namespace Game.UI
                 return s_Default;
             }
         }
+
+        static TMPro.TMP_FontAsset s_DefaultTmp;
+
+        /// <summary>The same typeface as <see cref="Default"/> as a TMP font asset (TMP ships inside com.unity.ugui 2.0.0
+        /// in Unity 6), for labels that write with SetCharArray / numeric SetText — zero GC in the drive loop.</summary>
+        public static TMPro.TMP_FontAsset DefaultTmp
+        {
+            get
+            {
+                if (s_DefaultTmp != null) return s_DefaultTmp;
+                s_DefaultTmp = TMPro.TMP_FontAsset.CreateFontAsset(Default);
+                return s_DefaultTmp;
+            }
+        }
     }
 }

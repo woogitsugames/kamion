@@ -44,8 +44,9 @@ namespace Game.UI.CabDisplays
             return this;
         }
 
-        /// <summary>Fixed-point number with <paramref name="decimals"/> digits after a decimal comma (rounded half away from zero).</summary>
-        public TextBuffer AppendFixed(double v, int decimals, bool group = false)
+        /// <summary>Fixed-point number with <paramref name="decimals"/> digits after a decimal separator (rounded half away
+        /// from zero). <paramref name="sep"/> ',' = Polish cluster style, '.' = invariant HUD style (float.ToString("F1", InvariantCulture)).</summary>
+        public TextBuffer AppendFixed(double v, int decimals, bool group = false, char sep = ',')
         {
             long scale = 1;
             for (int i = 0; i < decimals; i++) scale *= 10;
@@ -55,10 +56,67 @@ namespace Game.UI.CabDisplays
             Append(n / scale, 1, group);
             if (decimals > 0)
             {
-                Append(',');
+                Append(sep);
                 Append(n % scale, decimals);
             }
             return this;
+        }
+
+        /// <summary>Signed fixed-point, .NET "+0.00;-0.00" style (positive section also for zero and -0.0), with an explicit separator.</summary>
+        public TextBuffer AppendSigned(double v, int decimals, char sep = '.')
+        {
+            Append(v < 0 ? '-' : '+');
+            return AppendFixed(System.Math.Abs(v), decimals, false, sep);
+        }
+
+        /// <summary>Fixed-point right-aligned in <paramref name="width"/> (PadLeft): spaces are inserted in place, no allocation.</summary>
+        public TextBuffer AppendFixedPadded(double v, int decimals, char sep, int width)
+        {
+            int start = Length;
+            AppendFixed(v, decimals, false, sep);
+            PadLeftInPlace(start, width);
+            return this;
+        }
+
+        /// <summary>Signed fixed-point right-aligned in <paramref name="width"/> (PadLeft).</summary>
+        public TextBuffer AppendSignedPadded(double v, int decimals, char sep, int width)
+        {
+            int start = Length;
+            AppendSigned(v, decimals, sep);
+            PadLeftInPlace(start, width);
+            return this;
+        }
+
+        /// <summary>String left-aligned in <paramref name="width"/> (PadRight): trailing spaces appended when shorter.</summary>
+        public TextBuffer AppendRight(string s, int width)
+        {
+            if (s == null) return this;
+            Append(s);
+            for (int i = s.Length; i < width; i++) Append(' ');
+            return this;
+        }
+
+        /// <summary>File name of a path (after the last '/' or '\\') without System.IO.Path.GetFileName allocating a string.</summary>
+        public TextBuffer AppendFileName(string path)
+        {
+            if (path == null) return this;
+            int slash = -1;
+            for (int i = path.Length - 1; i >= 0; i--)
+            {
+                char c = path[i];
+                if (c == '/' || c == '\\') { slash = i; break; }
+            }
+            for (int i = slash + 1; i < path.Length; i++) Append(path[i]);
+            return this;
+        }
+
+        void PadLeftInPlace(int start, int width)
+        {
+            int pad = width - (Length - start);
+            if (pad <= 0 || Length + pad > Chars.Length) return;
+            for (int i = Length - 1; i >= start; i--) Chars[i + pad] = Chars[i];
+            for (int i = 0; i < pad; i++) Chars[start + i] = ' ';
+            Length += pad;
         }
 
         /// <summary>Clock "hh:mm" from minutes of the day.</summary>
