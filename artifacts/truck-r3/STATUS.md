@@ -98,3 +98,4 @@ EditMode detail-wheels-v3: 12/12, failed 0, skipped 0, exit 0. XML i JSON w paki
 Zapisano detail-wheels-v3-fleet, ilość brudu 0.5, 12 świeżych kadrów. Materiały przywrócone. Następny krok: porównać pas zabrudzenia, błotniki i plandekę ze zdjęciami.
 Krok 63: capture v3 exit0, testy geometrii12/12, 12 świeżych kadrów. Oględziny Low overcast/clear potwierdzają wyraźnie pełniejszą tarczę niż v2; gwiaździste trójkąty zniknęły, otwory/obrys nadal kanciaste. High bez widocznej nowej zmiany, naczepa ma zamkniętą piastę, jej obrys wciąż wielokątny. Dwie pary zdjęcie|render960 wygenerowano. Niezależny krytyk ocenia lokalne regresje. Następny krok: pełne siedem kamer Low w dwóch pogodach oraz audyt siatek v3.
 Zapisano whole-low-v3 Low overcast, kod wejściowy zgodny z fingerprintem. Następny krok: pomiary i oględziny par przed/po.
+Zapisano whole-low-v3 Low clear, kod wejściowy zgodny z fingerprintem. Następny krok: pomiary i oględziny par przed/po.
