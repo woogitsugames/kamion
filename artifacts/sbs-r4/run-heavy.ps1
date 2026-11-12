@@ -11,6 +11,10 @@ try {
     $owner=(& git branch --show-current).Trim()
     if($owner -ne 'gpt-sbs-r4'){throw 'Expected r4 branch'}
     if($Task -eq 'FinalGis' -and !$EndOfRound){throw 'Full GIS only at end of round'}
+    $disposition=Join-Path $PSScriptRoot 'controlled-trials-disposition.json'
+    if($Task -in @('PrepareControls','ComposeControls') -and (Test-Path -LiteralPath $disposition)){
+        if((Get-Content -LiteralPath $disposition -Raw | ConvertFrom-Json).status -eq 'SUPERSEDED_BEFORE_EXECUTION'){throw 'Historical pose recipe superseded by merged ADR 0130; verify current main in next round'}
+    }
     if($Task -eq 'TestFile' -and (!$TestFile -or !(Test-Path -LiteralPath $TestFile -PathType Leaf) -or $TestFile -notmatch '^tests/gis/test_[^/\\]+\.py$')){throw 'Single GIS test file required'}
     $slot='C:/Users/matma/Documents/Claude/kamion/scripts/unity-slot.ps1'
     # Do not borrow or silently reuse another job with this owner.
@@ -37,6 +41,12 @@ try {
     pwsh -NoProfile -File $slot -Acquire -Pool heavy -Owner $owner -PollSeconds 5 -StaleHours 87600
     if($LASTEXITCODE -ne 0){throw 'Heavy lease failed'}
     try {
+        if($ResumeOwnWaitFrom){
+            $resume.status='RESUMED_SLOT_ACQUIRED'
+            $resume | Add-Member resumed_acquired_at (Get-Date -Format o) -Force
+            $resume | Add-Member resumed_runheavy_pid $PID -Force
+            $resume | ConvertTo-Json | Set-Content -LiteralPath $ResumeOwnWaitFrom -Encoding utf8
+        }
         $started=[DateTime]::UtcNow
         $sourceHead=(& git rev-parse HEAD).Trim()
         $env:PYTHONUNBUFFERED='1'

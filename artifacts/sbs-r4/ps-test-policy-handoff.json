@@ -4,7 +4,7 @@
   "old_runheavy_pid": 9972,
   "old_acquire_created": "2026-11-12T13:54:38.818066+01:00",
   "reason": "Canonical policy now permits heavy during PHONE_RUN; prior process loaded old policy. No pytest or uv child, no own slot.",
-  "status": "OWN_WAIT_STOPPED_BEFORE_WORK",
+  "status": "RESUMED_TEST_COMPLETED",
   "test_file": "tests/gis/test_sbs_evidence_script.py",
   "task": "TestFile",
   "old_runheavy_created": "2026-11-12T13:54:38.544403+01:00",
@@ -13,5 +13,7 @@
   "worktree": "C:\\Users\\matma\\Documents\\Claude\\kamion\\.claude\\worktrees\\gpt-sbs",
   "new_policy_commit": "f7d0e5a0",
   "new_canonical_sha256": "68ceff83d4d427f975bd13b7d98d97c9ed440b927fb76871fef658f0dbb27cc7",
-  "stopped_verified_at": "2026-11-12T14:55:47.2660128+01:00"
+  "stopped_verified_at": "2026-11-12T14:55:47.2660128+01:00",
+  "completed_exec_session": 67981,
+  "test_receipt_sha256": "645443fd4c4bc207a107d3dd4beb789b90907ea7416eda02c159104d992fe6bd"
 }

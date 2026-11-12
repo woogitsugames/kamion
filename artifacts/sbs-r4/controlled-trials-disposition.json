@@ -1,0 +1,14 @@
+{
+  "prepared_attempts": 0,
+  "source_review_sha256": "1096d4d019b506142decf2a15d30e31ac29112c21fdab1e60949425b918bd967",
+  "recorded_at": "2026-11-12T15:02:06.5254564+01:00",
+  "source_review": "C:/Users/matma/Documents/Claude/kamion/docs/reports/visual/REVIEW-2026-11-12-s12-0130-truck-r3.md",
+  "accepted_production_poses": 0,
+  "status": "SUPERSEDED_BEFORE_EXECUTION",
+  "upstream_pose_merge": "abf15f9e",
+  "rendered_attempts": 0,
+  "next": "Finish strict baseline evidence and final checks in r4, then gpt-sbs-r5 merge main and fresh full matrix. Do not copy subset G3-B ratings into current baseline.",
+  "observed_main": "19aa4c58",
+  "planned_attempts": 15,
+  "reason": "Merged ADR 0130 changed all six relevant pose recipes and identified remaining world discrepancies. Old-world pitch recipe would duplicate accepted upstream work. Preserve recipe as history, rerender current main in next round before recognition updates."
+}
