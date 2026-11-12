@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-12T16:02:41.4938801+01:00",
+  "updated_at": "2026-11-12T16:30:01.2063496+01:00",
   "branch": "gpt-asphalt-r3",
   "deadline": "2026-11-12T21:31:53+01:00",
   "source_merge": "e5eb5902",
@@ -18,24 +18,24 @@
   "live_jobs": [
     {
       "name": "surface_audit",
+      "tool_session": 15215,
+      "status": "Existing job left untouched; revalidate before action",
       "process_ids": [
         13412
-      ],
-      "tool_session": 15215
+      ]
     },
     {
+      "terminal_exit": 0,
       "name": "import",
-      "process_ids": [
-        43640
-      ],
-      "tool_session": 13823
+      "tool_session": 13823,
+      "process_ids": []
     },
     {
+      "terminal_exit": 1,
+      "reason": "Parser error before Unity; fixed eb9c5fc4; no retry",
       "name": "pose_trial",
-      "process_ids": [
-        17940
-      ],
-      "tool_session": 82908
+      "tool_session": 82908,
+      "process_ids": []
     }
   ],
   "fixture": {
@@ -50,13 +50,11 @@
     "eye_height_contract": "material_inspection + seat=road => collision+2.5m; fileU150 is nominal only"
   },
   "next_actions": [
-    "Revalidate live handles/PIDs; do not restart on timeout. World87456 is terminal.",
-    "Import13823 and SurfaceAudit15215 wait in separate global pools; pose82908 automatically waits for import43640.",
-    "Inspect four post0131 pose PNGs, compilation/import receipt and schema3 snapshots; request existing read-only critic.",
-    "Read yard-probe-baseline and geometry-summary-baseline; inspect optional ortho-context status separately.",
-    "Run audit-yard-poses.ps1 after matching pose/source files exist; fix rejected poses before accepting full baseline.",
-    "Derive capture-plan expected_ids from fresh actual camera-inventory, not a guessed camera count.",
-    "Capture full baseline Low/High clear/overcast, inspect it, then choose actual industrial material change."
+    "Resume only on a new owner instruction.",
+    "Inspect existing SurfaceAudit process/results; do not duplicate it.",
+    "Do not rerun successful World or import.",
+    "Retry only camera pose trial after resumption, then inspect/audit poses before full baseline.",
+    "See PRZEKAZANIE-2026-11-12.md; R3 remains WIP with no product candidate."
   ],
   "constraints": [
     "No merge to main, push, phones/adb or foreign source edits.",
@@ -74,5 +72,7 @@
     "capture_context_bound_to_import": true,
     "ortho": "Optional bounded window inside GeometryAudit baseline heavy, status available/unavailable; no image implied by geomaudit exit0."
   },
-  "note": "Operational snapshot only. Revalidate filesystem/tool/process state before action; this is not REPORT, end-checks or a product PASS."
+  "note": "Operational snapshot only. Revalidate filesystem/tool/process state before action; this is not REPORT, end-checks or a product PASS.",
+  "agent_work": "Stopped on owner request; pause requested. No automatic model continuation.",
+  "handover": "artifacts/asphalt-r3/PRZEKAZANIE-2026-11-12.md"
 }
