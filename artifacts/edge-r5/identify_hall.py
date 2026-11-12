@@ -26,7 +26,8 @@ generator_path = 'tools/worldgen/streetscape/far_field.py'
 if hashlib.sha256((ROOT/generator_path).read_bytes()).hexdigest().lower() != capture['inputs_sha256'][generator_path].lower():
     raise RuntimeError('Generator changed since the baseline; do not identify from modified code')
 building_id = '2BE4B431-C061-1BF0-E053-CC2BA8C0D140'
-cache = json.loads((ROOT/'Data/raw/derived/bialystok-industrial-c/world/far_field_gis_cache.json').read_text())
+cache_path = HERE/'before-source/far_field_gis_cache.json'
+cache = json.loads(cache_path.read_text())
 matches = [b for b in cache['buildings'] if b['id'] == building_id]
 if len(matches) != 1:
     raise RuntimeError('Source candidate missing or ambiguous')
@@ -67,7 +68,8 @@ def triangle_key(triangle):
     return tuple(sorted(tuple(p) for p in np.rint(triangle*1000).astype(np.int64)))
 
 
-result = dict(building=building, generator_sha256=capture['inputs_sha256'][generator_path],
+result = dict(building=building, cache_sha256=hashlib.sha256(cache_path.read_bytes()).hexdigest(),
+              generator_sha256=capture['inputs_sha256'][generator_path],
               note='Exact source-to-production triangle match; no photographic identity claim.',tiers={})
 high_triangles = None
 for tier, filename in (('High','far_field.glb'),('Low','far_field.low.glb')):

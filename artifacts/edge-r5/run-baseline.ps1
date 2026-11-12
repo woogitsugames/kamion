@@ -15,7 +15,7 @@ New-Item -ItemType Directory -Force $out|Out-Null
 Copy-Item game/Assets/_Generated/World/bialystok-industrial-c/Meshes/world_edge.asset "$out/world_edge.asset"
 Copy-Item game/Assets/_Generated/World/bialystok-industrial-c/Meshes/Low/world_edge_far.asset "$out/world_edge_far-Low.asset"
 Copy-Item game/Assets/_Generated/World/bialystok-industrial-c/Meshes/High/world_edge_far.asset "$out/world_edge_far-High.asset"
-foreach($name in @('far_field.glb','far_field.low.glb','far_field_apron.json')){
+foreach($name in @('far_field.glb','far_field.low.glb','far_field_apron.json','far_field_gis_cache.json')){
     Copy-Item "Data/raw/derived/bialystok-industrial-c/world/$name" (Join-Path $out $name)
 }
 Copy-Item Data/Regions/bialystok-industrial-c/generated/far_field_qa.json "$PSScriptRoot/before-far-field-qa.json"
