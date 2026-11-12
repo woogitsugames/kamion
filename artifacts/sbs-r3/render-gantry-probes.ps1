@@ -20,11 +20,15 @@ try {
         $materialHash=(Get-FileHash art-source/world/materials/materials_spec.json).Hash.ToLowerInvariant()
         if($worldHash -ne $import.world_manifest_sha256 -or $materialHash -ne $import.materials_spec_sha256){throw 'Current inputs differ from imported scene'}
         if($plan.world_manifest_sha256 -ne $worldHash -or $plan.probe_cameras_sha256 -ne (Get-FileHash $cameraFile).Hash.ToLowerInvariant()){throw 'Probe plan does not match world/cameras'}
+        $checkedSources=@()
         foreach($entry in $plan.production_source_sha256.PSObject.Properties){
-            if($entry.Name -notin @('Data/Regions/bialystok-industrial-c/sbs_cameras.json','Data/Regions/bialystok-industrial-c/sbs_references.json')){throw 'Unexpected production source in probe plan'}
+            $normalizedName=$entry.Name.Replace('\','/')
+            if($normalizedName -notin @('Data/Regions/bialystok-industrial-c/sbs_cameras.json','Data/Regions/bialystok-industrial-c/sbs_references.json')){throw 'Unexpected production source in probe plan'}
+            if($normalizedName -in $checkedSources){throw 'Duplicate production source binding'}
+            $checkedSources+=$normalizedName
             if((Get-FileHash $entry.Name).Hash.ToLowerInvariant() -ne $entry.Value){throw 'Production source changed since probe preparation'}
         }
-        if(@($plan.production_source_sha256.PSObject.Properties).Count -ne 2){throw 'Incomplete production source binding'}
+        if($checkedSources.Count -ne 2){throw 'Incomplete production source binding'}
         foreach($photo in ($plan.probes | Select-Object photo,photo_sha256 -Unique)){
             $photoPath=[IO.Path]::GetFullPath($photo.photo,$taskRoot)
             if(!$photoPath.StartsWith($taskRoot+[IO.Path]::DirectorySeparatorChar,[StringComparison]::OrdinalIgnoreCase)){throw 'Photo outside task root'}

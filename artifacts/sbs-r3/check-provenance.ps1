@@ -49,6 +49,11 @@ try {
         } finally {[IO.File]::WriteAllBytes($full,$original)}
         Assert-ProbeInputs
     }
+    $plan.production_source_sha256=[pscustomobject]@{($prodCamera.Replace('/','\'))=(Hash $prodCamera);($prodRefs.Replace('/','\'))=(Hash $prodRefs)}
+    $plan | ConvertTo-Json -Depth 5 | Set-Content $planFile -Encoding utf8
+    $loadedPlanHash=Hash $planFile
+    Assert-ProbeInputs
+    $results += [ordered]@{case='matching Windows separator bindings';accepted=$true}
     [ordered]@{checked_at_utc=[DateTime]::UtcNow.ToString('o');wrapper_sha256=(Hash $wrapper);source_function='Assert-ProbeInputs extracted by PowerShell AST';scope='Tiny synthetic files only; does not launch Unity, Python, acquire slots or claim runtime world validation';results=$results} | ConvertTo-Json -Depth 6 | Set-Content (Join-Path $PSScriptRoot 'provenance-contract-results.json') -Encoding utf8
-    Write-Output 'PASS matching inputs and eight stale-input rejection cases; restored valid fixture after each mutation'
+    Write-Output 'PASS matching inputs with slash/backslash bindings and eight stale-input rejection cases'
 } finally {Pop-Location}
