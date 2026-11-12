@@ -10,3 +10,5 @@ Pliki służą analizie powierzchni, nie teksturom gry. Nie przenosi się marek,
 Metadane API i licencje dwóch CC BY zapisano w *-source.json. Zmiany plików: serwerowe miniatury, bez retuszu. Brak nowego otwartego zdjęcia z dopasowanym listopadowym overcast; dopóki nie ma takiej pary, dopasowanie sezonowej fotometrii pozostaje UNVERIFIED.
 
 Obejrzano także miniaturę zimową 250×187: na czarnym aucie osad jest jaśniejszy od lakieru i obejmuje dolną klapę/zderzak. Mała rozdzielczość i błysk wykluczają ilościowy pomiar koloru; nie jest wzorem drobnych smug.
+
+Finalne pary r3: sbs-black-c.jpg (istniejące zdjęcie Mapillary 513486983365569, SHA z provenance r1; inny model, miejsce, obiektyw i pogoda, tylko ogólna czytelność czerni; crop renderu 1650×900+(450,180)); sbs-tail-c.jpg (Greg Schechter, CC BY 2.0 powyżej, miniatura i crop renderu 1150×700+(650,300), inna pogoda/kraj/model i znacznie silniejszy brud po podróży). Pary ≤960 px, oznaczone; NIE służą kalibracji sezonowej lub albedo. Referencja pyłu tylnej szyby nie przeniesiona do lakieru. Miniaturę PD 250 px zostawiono jako osobny plik bez powiększania i bez włączania do większej planszy.
