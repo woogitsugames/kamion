@@ -493,11 +493,11 @@ namespace Game.Tests
             var gd = new NavGuidance();
             tr.Update(p, new Vector2(50, 0), 90f, 5f, 0.02f, ref gd);   // warm-up (JIT)
             Assert.AreEqual(0b001u, gd.NextLanesAllowed);
-            long before = System.GC.GetAllocatedBytesForCurrentThread();
-            for (int i = 0; i < 10; i++) planner.Plan(new Vector2(50, 0), 90f, new Vector2(200, 150), p);
-            for (int i = 0; i < 2000; i++) tr.Update(p, p.Points[i % p.Count], 90f, 10f, 0.02f, ref gd);
-            long bytes = System.GC.GetAllocatedBytesForCurrentThread() - before;
-            Assert.AreEqual(0, bytes, "planning with lane guidance + tracking allocate nothing");
+            GcAllocCounter.AssertZero(() =>
+            {
+                for (int i = 0; i < 10; i++) planner.Plan(new Vector2(50, 0), 90f, new Vector2(200, 150), p);
+                for (int i = 0; i < 2000; i++) tr.Update(p, p.Points[i % p.Count], 90f, 10f, 0.02f, ref gd);
+            }, message: "planning with lane guidance + tracking allocate nothing");
         }
 
         [Test]
@@ -510,12 +510,13 @@ namespace Game.Tests
             var gd = new NavGuidance();
             Vector2 a = k_Kombatantow, b = k_AndersaSE;
             Assert.AreEqual(PlanStatus.Ok, planner.Plan(a, 0f, b, p), "heading north");   // warm-up (JIT)
+            planner.Plan(b, float.NaN, a, p);
             for (int i = 0; i < 50; i++) tr.Update(p, p.Points[i % p.Count], 0f, 10f, 0.02f, ref gd);
-            long before = System.GC.GetAllocatedBytesForCurrentThread();
-            for (int i = 0; i < 10; i++) planner.Plan(i % 2 == 0 ? a : b, float.NaN, i % 2 == 0 ? b : a, p);
-            for (int i = 0; i < 2000; i++) tr.Update(p, p.Points[(i / 3) % p.Count] + new Vector2(1f, 0f), i * 0.5f, 10f, 0.02f, ref gd);
-            long bytes = System.GC.GetAllocatedBytesForCurrentThread() - before;
-            Assert.AreEqual(0, bytes, "routing / re-planning and guidance allocate nothing");
+            GcAllocCounter.AssertZero(() =>
+            {
+                for (int i = 0; i < 10; i++) planner.Plan(i % 2 == 0 ? a : b, float.NaN, i % 2 == 0 ? b : a, p);
+                for (int i = 0; i < 2000; i++) tr.Update(p, p.Points[(i / 3) % p.Count] + new Vector2(1f, 0f), i * 0.5f, 10f, 0.02f, ref gd);
+            }, message: "routing / re-planning and guidance allocate nothing");
 
             var sw = System.Diagnostics.Stopwatch.StartNew();
             for (int i = 0; i < 20; i++) planner.Plan(i % 2 == 0 ? a : b, float.NaN, i % 2 == 0 ? b : a, p);

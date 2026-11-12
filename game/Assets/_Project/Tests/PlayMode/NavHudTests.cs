@@ -111,18 +111,18 @@ namespace Game.Tests
             var path = nav.Path;
             for (int i = 0; i < 30; i++) { nav.StepForTest(path.Points[i % path.Count], 270f, 8f, 0.033f); mini.Draw(0.033f); }
             mini.ResetStats();
-            long before = System.GC.GetAllocatedBytesForCurrentThread();
-            for (int i = 0; i < 300; i++)
+            GcAllocCounter.AssertZero(() =>
             {
-                int k = (i / 4) % (path.Count - 1);
-                Vector2 dir = path.Points[k + 1] - path.Points[k];
-                nav.StepForTest(path.Points[k], Mathf.Atan2(dir.x, dir.y) * Mathf.Rad2Deg, 10f, 0.033f);
-                mini.Draw(0.033f);
-            }
-            long bytes = System.GC.GetAllocatedBytesForCurrentThread() - before;
+                for (int i = 0; i < 300; i++)
+                {
+                    int k = (i / 4) % (path.Count - 1);
+                    Vector2 dir = path.Points[k + 1] - path.Points[k];
+                    nav.StepForTest(path.Points[k], Mathf.Atan2(dir.x, dir.y) * Mathf.Rad2Deg, 10f, 0.033f);
+                    mini.Draw(0.033f);
+                }
+            }, message: "minimap refresh + guidance allocate nothing");
             Debug.Log($"[NAV] minimap refresh: avg {mini.AverageCpuMs:F3} ms CPU over {mini.RefreshCount} refreshes, last {mini.LastCpuMs:F3} ms; " +
                       $"canvas {mini.Canvas.DesignWidth}x{mini.Canvas.DesignHeight} design px, {mini.Canvas.VertexCount} verts, overflow {mini.Canvas.Overflow}");
-            Assert.AreEqual(0, bytes, "minimap refresh + guidance allocate nothing");
             Assert.AreEqual(0, mini.Canvas.Overflow);
             Object.Destroy(mini.gameObject); Object.Destroy(hud.gameObject); Object.Destroy(navGo); Object.Destroy(camGo);
             yield return null;
@@ -151,16 +151,16 @@ namespace Game.Tests
             Game.UI.Navigation.NavDraw.LaneBar(dc, g, 0, 4, RouteGraph.LaneLeft, 0b0001u, 0b0001u, 0f, 0f, 340f, 30f, pal);
             dc.End(pal.Bg);
             Assert.AreEqual(0, dc.Overflow);
-            long before = System.GC.GetAllocatedBytesForCurrentThread();
-            for (int i = 0; i < 300; i++)
+            GcAllocCounter.AssertZero(() =>
             {
-                uint allowed = (uint)(1 << (i % 4));
-                dc.Begin();
-                Game.UI.Navigation.NavDraw.LaneBar(dc, g, 0, 4, RouteGraph.LaneLeft, allowed, allowed, 0f, 0f, 340f, 30f, pal);
-                dc.End(pal.Bg);
-            }
-            long bytes = System.GC.GetAllocatedBytesForCurrentThread() - before;
-            Assert.AreEqual(0, bytes, "lane bar redraw allocates nothing");
+                for (int i = 0; i < 300; i++)
+                {
+                    uint allowed = (uint)(1 << (i % 4));
+                    dc.Begin();
+                    Game.UI.Navigation.NavDraw.LaneBar(dc, g, 0, 4, RouteGraph.LaneLeft, allowed, allowed, 0f, 0f, 340f, 30f, pal);
+                    dc.End(pal.Bg);
+                }
+            }, message: "lane bar redraw allocates nothing");
             Assert.AreEqual(0, dc.Overflow);
             dc.Dispose();
             yield return null;
