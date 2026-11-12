@@ -48,3 +48,5 @@ Krok 16: Red potwierdzony: 2/2 oczekiwanych porażek właściwej asercji, bez po
 Poprawiono wyłącznie WorldEdgeBuilder: średnia i okno wygładzania są liczone po 512 unikalnych punktach, wynik przypisany także 16 dodatkowym kopiom narożników. Pozostają te same wierzchołki/topologia/UV/kolory i podział submesh; surowe próbki terenu przy brzegu bez zmian. Obliczenia tylko przy imporcie.
 Następna komenda: test-corner.ps1 -Phase Green, następnie wymagany build_world pod heavy, przebudowa edge i macierz After.
 2026-11-12T01:51:30.6730666+01:00 Test narożnika Green potwierdzony: total 2, passed 2, failed 0; XML i SHA w corner-green-result.json.
+Krok 17: Green potwierdzony: 2/2 zaliczone, 0 pominięć, te same SHA testu co Red, inny SHA kodu produkcyjnego. Stary kod miał błąd około ±0,425 m na analitycznych stokach; poprawka spełnia tolerancję 0,01 m przez rzeczywisty generator siatki.
+Następny krok: pełny build_world po zmianie pod heavy, potem validate.ps1 -Phase After (wyłącznie przebudowa edge w istniejącej bazie). Pozostałe generatory/źródła bez edycji.
