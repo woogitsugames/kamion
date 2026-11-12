@@ -50,7 +50,8 @@ for p in plan['probes']:
     assert render.size==(p['width'],p['height']) and photo_image.size==render.size
     pane_height=round(470*p['height']/p['width'])
     canvas=Image.new('RGB',(960,pane_height+140),(24,28,32));draw=ImageDraw.Draw(canvas)
-    label=f'{camera} | C — diagnostyka, nie ocena D51'
+    kind='KONTROLA' if p['control'] else 'PRÓBA'
+    label=f'{camera} | {kind} | C — diagnostyka, nie ocena D51'
     draw.text((8,5),label,font=font,fill='white')
     draw.text((8,25),'Zdjęcie — bez zmiany kadru',font=small,fill='#ddd')
     draw.text((498,25),'Render Low-overcast — ten sam FOV i proporcje',font=small,fill='#ddd')
@@ -58,7 +59,9 @@ for p in plan['probes']:
     canvas.paste(ImageOps.contain(render,(470,pane_height)),(490,44))
     axis_label={'road':'oś jezdni','view':'kierunek spojrzenia'}[p['translation_axis']]
     parameters=f'Oś: {axis_label}; delta od kontroli {p["offset_m"]:+g} m; w lewo {p["left_delta_m"]:+g} m; h {p["horizon_y_fraction"]:.3f}; oko {p["nominal_eye_m"]:g} m'
-    footer=[parameters,f'{p["author"]} | {p["license"]} | {p["page_url"]}',
+    surface=p['selected_surface']
+    footer=[parameters,f'Osadzenie na {surface["node"]}/{surface["material"]}; zmiana U względem źródła {p["u_delta_from_source_m"]:+.3f} m',
+            f'{p["author"]} | {p["license"]} | {p["page_url"]}',
             f'Photo SHA {p["photo_sha256"][:16]}… | Render SHA {capture["render_sha256"][camera][:16]}… | kod {capture["git_sha"][:8]}',
             'Poza i nominalne oko WORKING_VALUE. Portal + niezależna trwała kotwica; brak automatycznej promocji.']
     draw.multiline_text((8,pane_height+51),'\n'.join(footer),font=small,fill='#ddd',spacing=3)
