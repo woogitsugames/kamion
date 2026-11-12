@@ -12,7 +12,7 @@ $cmds = [ordered]@{
 }
 pwsh -NoProfile -File scripts/unity-slot.ps1 -Acquire -Pool heavy -Owner world-int-s16
 try {
-  foreach ($s in $Steps) {
+  foreach ($s in ($Steps -split ",")) {
     $log = Join-Path $logs "$s.log"
     $t0 = Get-Date
     "=== $s start $(Get-Date -Format s)" | Out-File $log -Encoding utf8
