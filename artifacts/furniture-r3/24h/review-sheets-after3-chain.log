@@ -1,0 +1,11 @@
+Get-Content: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-furniture\artifacts\furniture-r3\24h\review-sheets.ps1:14
+Line |
+  14 |  $coverage=@(Get-Content "$metrics/frame-coverage.json" -Raw | Convert …
+     |              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | Cannot find path
+     | 'C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-furniture\artifacts\furniture-r3\24h\iteration3\frame-coverage.json' because it does not exist.
+Exception: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-furniture\artifacts\furniture-r3\24h\review-sheets.ps1:15
+Line |
+  15 |  … Object cameras -Sum).Sum -ne 236){throw 'Incomplete camera coverage'}
+     |                                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | Incomplete camera coverage

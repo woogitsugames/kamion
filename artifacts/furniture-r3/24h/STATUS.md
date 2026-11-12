@@ -232,3 +232,5 @@ potem poprawić największe udokumentowane odstępstwo wiaty. WIP po każdym kro
 2026-11-12T16:26:40.9634835+01:00: Generator after3 zakończony. Slot nadal obejmuje wyłącznie sekwencyjny skan chronionej geometrii, nie Unity.
 
 2026-11-12T16:26:44.0261666+01:00: Pakiet heavy candidate3 zakończony; etap=protected geometry after3, sukces=True, slot zwolniony. Następny krok: normalny import i faktyczne pomiary, bez deklaracji budżetu z liczby slotów.
+
+2026-11-12T16:27:52.7263254+01:00: ZATRZYMANO BEZPIECZNIE na polecenie właściciela. Generator after3 zakończony 644,4 s, 64 GLB, brak fallback=True; audyt 6833/6833, zero zmian; 64 JSON, 23 wiaty, dokładnie 2 warianty, zero zmian znormalizowanych instancji. Heavy zwolniony, brak własnych slotów i procesów candidate/consumers. STOP zatrzymał import PRZED Unity (parent exit1 opisuje oczekiwane zatrzymanie, nie niepowodzenie generatora); dependent consumers zakończyły się po stwierdzeniu brakujących renderów bez nowego zadania. Końcowe testy i budżet r3 niewykonane. Bez REPORT, push, merge do main i następnej rundy. PRZEKAZANIE.md zawiera dalsze kroki; wznowienie tylko na nowe polecenie.

@@ -1,0 +1,11 @@
+Get-Content: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-furniture\artifacts\furniture-r3\24h\photo-shelter-captures.ps1:11
+Line |
+  11 |  $coverage=@(Get-Content "$ev/iteration3/frame-coverage.json" -Raw|Con …
+     |              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | Cannot find path
+     | 'C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-furniture\artifacts\furniture-r3\24h\iteration3\frame-coverage.json' because it does not exist.
+Exception: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-furniture\artifacts\furniture-r3\24h\photo-shelter-captures.ps1:12
+Line |
+  12 |  … Object cameras -Sum).Sum -ne 236){throw 'Candidate3 is not complete'}
+     |                                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | Candidate3 is not complete

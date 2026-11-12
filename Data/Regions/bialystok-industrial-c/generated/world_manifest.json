@@ -3664,7 +3664,7 @@
    "instances": {
     "count": 1477,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_2_4.json",
-    "sha256": "c89fcf7a0d8f134be307983a031d5079e124671802b83fb0f15f38e3f347e94f"
+    "sha256": "ac141a5b8f194faf365c491b47a49210ade6229375861d743c19e0b8256ae50a"
    },
    "low": {
     "bytes": 6970632,
@@ -6368,7 +6368,7 @@
    "instances": {
     "count": 455,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_4_5.json",
-    "sha256": "8fe28576a6bdb5323563e8c71f42041916444797ec7d2b445a39103d48051d03"
+    "sha256": "de2bb6129ed6e450d436d41b0e0053cc94c3c3c4d5751b94a7d3ba77736bedc2"
    },
    "low": {
     "bytes": 2525060,
@@ -14494,6 +14494,16 @@
     0.0
    ]
   },
+  "shelter_clear_glass_0120": {
+   "alpha": 0.14,
+   "blend": true,
+   "color": [
+    0.12,
+    0.15,
+    0.15
+   ],
+   "rough": 0.4
+  },
   "shelter_glass": {
    "color": [
     0.05,
@@ -14505,6 +14515,33 @@
     0.0,
     0.9
    ]
+  },
+  "shelter_opaque_0120": {
+   "color": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "furniture_shelter_palette": [
+    "steel_painted",
+    "shelter_roof",
+    "bench_wood",
+    "shelter_red_frame_0120"
+   ],
+   "rough": 0.5,
+   "sky_occ": [
+    0.0,
+    0.0
+   ]
+  },
+  "shelter_red_frame_0120": {
+   "color": [
+    0.22,
+    0.022,
+    0.016
+   ],
+   "metal": 0.25,
+   "rough": 0.5
   },
   "shelter_roof": {
    "color": [

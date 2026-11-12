@@ -446,13 +446,19 @@
   },
   "bus_shelter": {
    "materials": [
-    "bench_wood",
     "shelter_glass",
-    "shelter_roof",
-    "steel_painted"
+    "shelter_opaque_0120"
    ],
    "tris_lod0": 120,
    "tris_lod1": 120
+  },
+  "bus_shelter_red_0120": {
+   "materials": [
+    "shelter_clear_glass_0120",
+    "shelter_opaque_0120"
+   ],
+   "tris_lod0": 196,
+   "tris_lod1": 180
   },
   "cantilever_gate": {
    "materials": [
