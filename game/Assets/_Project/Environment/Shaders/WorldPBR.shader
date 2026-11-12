@@ -308,6 +308,11 @@ Shader "Kamion/World PBR"
                         // bounded by the existing 0.5 opacity, no new sampling.
                         falloff += deposition * (0.12h + 0.12h * i.carFilm.x)
                                  + rearFace * 0.10h * (0.25h + 0.75h * i.carFilm.x);
+                        // ADR0089 life r3 C, WORKING_VALUE: the level-2 rear
+                        // still looked freshly washed from 5.7 m. Broaden the
+                        // rear-quarter/tail only, never detach film from the sill.
+                        amount = saturate(amount + rearFace * 0.16h * (0.25h + 0.75h * i.carFilm.x));
+                        falloff += rearFace * (0.18h + 0.18h * i.carFilm.x);
                         // Preserve the existing passenger-car bonnet/roof response.
                         // Static cabs opt out: their previous plain paint had no such layer.
                         keepUpper = smoothstep(0.45h, 0.85h, abs(n.y)) * smoothstep(0.6, 0.8, um.y);

@@ -1,6 +1,8 @@
 {
-  "mode": "candidate-b-native-imported",
-  "imported": "2026-11-12T10:42:29.8835788+01:00",
+  "mode": "candidate-c-shader-applied",
+  "note": "Geometry, all native materials and UV1 unchanged from B; C tail-film shader only",
+  "requires_generation": false,
   "requires_reimport": false,
-  "requires_generation": false
+  "native_library": "candidate-b",
+  "requires_shader_compile": true
 }
