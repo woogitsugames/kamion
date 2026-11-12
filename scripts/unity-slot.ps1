@@ -22,7 +22,7 @@ param(
     [switch]$Status,
     [string]$Owner = $env:USERNAME,
     # Pool: 'unity' (Unity batch: import, tests, renders, builds; max 4) or 'heavy' (Python world jobs:
-    # build_world.py, build_all.py, pytest tests/gis|physics|gate3, fidelity/run.py; max 3 - each takes 1-8 GB and all cores).
+    # build_world.py, build_all.py, pytest tests/gis|physics|gate3, fidelity/run.py; max 4 (s13) - each takes 1-8 GB and all cores).
     # 2026-11-11: ~13 parallel pytest/build_world runs froze the PC at 100 % CPU / RAM.
     [ValidateSet('unity', 'heavy')] [string]$Pool = 'unity',
     [int]$MaxSlots = 0,
@@ -33,7 +33,7 @@ param(
 )
 $ErrorActionPreference = 'Stop'
 $main = 'C:\Users\matma\Documents\Claude\kamion'
-if ($MaxSlots -le 0) { $MaxSlots = if ($Pool -eq 'heavy') { 3 } else { 4 } }
+if ($MaxSlots -le 0) { $MaxSlots = if ($Pool -eq 'heavy') { 4 } else { 4 } }
 $dir = Join-Path $main ("artifacts\locks\{0}-slots" -f $Pool)
 $phone = Join-Path $main 'artifacts\locks\PHONE_RUN'
 New-Item -ItemType Directory -Force $dir | Out-Null

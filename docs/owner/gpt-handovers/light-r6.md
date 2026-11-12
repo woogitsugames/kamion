@@ -65,3 +65,7 @@ Kopia dla właściciela: `C:\Users\matma\Documents\Claude\kamion\artifacts\light
 Własny bieżący STATUS, szczegóły wznowienia CONTINUE i ADR `docs/adr/0108-light-sky-exposure-post.md` są zapisane. Ta kopia jest przekazaniem przerwanej rundy, nie REPORT końcowym ani zgodą na integrację.
 
 Skrypt zapisu końcowego uruchomiono jako PID 76116. Stan w chwili utworzenia przekazania: 2026-11-12 16:29:02.
+
+## Aktualizacja po zakończeniu procesu (2026-11-12 16:34:03)
+
+Proces 73184 zakończył się sam. Slot heavy własnej rundy jest nieobecny. World checkpoint: False. Potwierdzone zatrzymanie przed Fidelity: False. Zarchiwizowano 0 zmienionych plików śledzonych i patch w stop-generated-snapshot. Zmiany generatora pozostawiono także w worktree; nie cofano ich i nie scalano do main. Raw derived pozostaje w tym worktree. Sprawdź STOP-COMPLETED.json i log World przed wznowieniem.

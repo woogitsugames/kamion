@@ -223,30 +223,38 @@ namespace Game.Tests
         }
 
         [Test]
-        public void OrientationLock_NearSquare_SettlesThenLocks_NoRotationWhileDriving()
+        public void OrientationLock_NearSquare_KeepsLaunchOrientation_NeverRotates()
+        {
+            foreach (var start in new[] { ScreenOrientation.Portrait, ScreenOrientation.LandscapeLeft })
+            {
+                var l = new ScreenOrientationLock();
+                int w = start == ScreenOrientation.Portrait ? 1968 : 2184, h = start == ScreenOrientation.Portrait ? 2184 : 1968;
+                Assert.AreEqual(OrientationCommand.Lock, l.Step(0f, w, h, start, false), "first frame: lock, no AllowAuto");
+                Assert.AreEqual(start, l.LockTo, "keeps the orientation the display already has");
+                for (float t = 0.1f; t < 30f; t += 0.5f) Assert.AreEqual(OrientationCommand.None, l.Step(t, w, h, start, true), "never asks for a rotation");
+            }
+            var u = new ScreenOrientationLock();
+            Assert.AreEqual(OrientationCommand.None, u.Step(0f, 1968, 2184, ScreenOrientation.AutoRotation, false), "not concrete yet: wait");
+            Assert.AreEqual(OrientationCommand.Lock, u.Step(0.1f, 1968, 2184, ScreenOrientation.Portrait, false));
+        }
+
+        [Test]
+        public void OrientationLock_FoldUnfold_PhoneLandscape_GyroLock()
         {
             var l = new ScreenOrientationLock();
-            Assert.AreEqual(OrientationCommand.AllowAuto, l.Step(0f, 2184, 1968, ScreenOrientation.LandscapeLeft, false), "start: settle");
-            Assert.IsTrue(l.Allowed.Portrait);
-            // The OS turns the picture to the held (portrait) orientation during the settle: the settle restarts.
-            Assert.AreEqual(OrientationCommand.None, l.Step(0.5f, 1968, 2184, ScreenOrientation.Portrait, false));
-            Assert.AreEqual(OrientationCommand.None, l.Step(1.5f, 1968, 2184, ScreenOrientation.Portrait, false), "still settling after the rotation");
-            Assert.AreEqual(OrientationCommand.Lock, l.Step(1.8f, 1968, 2184, ScreenOrientation.Portrait, false));
-            Assert.AreEqual(ScreenOrientation.Portrait, l.LockTo, "locks the held orientation");
-            for (float t = 2f; t < 60f; t += 0.5f) Assert.AreEqual(OrientationCommand.None, l.Step(t, 1968, 2184, ScreenOrientation.Portrait, true), "locked while driving");
-            // Fold -> cover screen (elongated): settle again with landscape only, then free L/R without gyro.
-            Assert.AreEqual(OrientationCommand.AllowAuto, l.Step(61f, 2520, 1080, ScreenOrientation.LandscapeLeft, false));
+            Assert.AreEqual(OrientationCommand.Lock, l.Step(0f, 1968, 2184, ScreenOrientation.Portrait, false));
+            // Fold -> cover screen (elongated): landscape only.
+            Assert.AreEqual(OrientationCommand.AllowAuto, l.Step(10f, 1080, 2520, ScreenOrientation.Portrait, false));
             Assert.IsFalse(l.Allowed.Portrait);
-            Assert.AreEqual(OrientationCommand.None, l.Step(63f, 2520, 1080, ScreenOrientation.LandscapeLeft, false));
+            Assert.AreEqual(OrientationCommand.None, l.Step(10.5f, 2520, 1080, ScreenOrientation.LandscapeLeft, false));
+            Assert.AreEqual(OrientationCommand.None, l.Step(13f, 2520, 1080, ScreenOrientation.LandscapeLeft, false));
             Assert.IsFalse(l.Locked, "phone without gyro: landscape L/R rotate as before");
-            // Gyro switched on: lock; off: unlock.
-            Assert.AreEqual(OrientationCommand.Lock, l.Step(64f, 2520, 1080, ScreenOrientation.LandscapeRight, true));
+            Assert.AreEqual(OrientationCommand.Lock, l.Step(14f, 2520, 1080, ScreenOrientation.LandscapeRight, true), "gyro on: lock");
             Assert.AreEqual(ScreenOrientation.LandscapeRight, l.LockTo);
-            Assert.AreEqual(OrientationCommand.None, l.Step(70f, 2520, 1080, ScreenOrientation.LandscapeRight, true));
-            Assert.AreEqual(OrientationCommand.AllowAuto, l.Step(71f, 2520, 1080, ScreenOrientation.LandscapeRight, false));
-            // Unfold again: settle, lock.
-            Assert.AreEqual(OrientationCommand.AllowAuto, l.Step(80f, 2184, 1968, ScreenOrientation.LandscapeRight, true));
-            Assert.AreEqual(OrientationCommand.Lock, l.Step(81.3f, 2184, 1968, ScreenOrientation.LandscapeRight, true));
+            Assert.AreEqual(OrientationCommand.AllowAuto, l.Step(15f, 2520, 1080, ScreenOrientation.LandscapeRight, false), "gyro off: unlock");
+            // Unfold: keep whatever the inner screen shows.
+            Assert.AreEqual(OrientationCommand.Lock, l.Step(20f, 2184, 1968, ScreenOrientation.LandscapeRight, true));
+            Assert.AreEqual(ScreenOrientation.LandscapeRight, l.LockTo);
         }
 
         [Test]
@@ -256,7 +264,7 @@ namespace Game.Tests
             Assert.AreEqual(OrientationCommand.AllowAuto, l.Step(0f, 2340, 1080, ScreenOrientation.LandscapeLeft, true));
             Assert.AreEqual(OrientationCommand.None, l.Step(1f, 2340, 1080, ScreenOrientation.LandscapeLeft, true));
             Assert.AreEqual(OrientationCommand.Lock, l.Step(1.3f, 2340, 1080, ScreenOrientation.LandscapeLeft, true));
-            Assert.AreEqual(OrientationCommand.None, l.Step(1.4f, 2340, 1080, ScreenOrientation.AutoRotation, true), "no repeat");
+            Assert.AreEqual(OrientationCommand.None, l.Step(1.4f, 2340, 1080, ScreenOrientation.LandscapeLeft, true), "no repeat");
         }
 
         // ---------------------------------------------------------------- evidence
