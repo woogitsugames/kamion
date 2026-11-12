@@ -33,7 +33,7 @@ try {
     & uv run --project tools/worldgen tools/worldgen/fidelity/run.py --region bialystok-industrial-c --art "$PSScriptRoot/fidelity" *> "$PSScriptRoot/fidelity-preimport.log"
     if ($LASTEXITCODE) { throw 'fidelity failed' }
     # Import may build missing material sets first: retain heavy for that nested sequential Python work.
-    & pwsh $slot -Acquire -Owner gpt-light
+    & pwsh $slot -Acquire -Owner gpt-light -PollSeconds 1 -StaleHours 87600
     if ($LASTEXITCODE) { throw 'No Unity slot' }
     git diff --quiet HEAD -- game/Assets/_Project/Rendering/Settings game/ProjectSettings
     if ($LASTEXITCODE) {
@@ -58,4 +58,5 @@ git commit -m 'WIP light r3: record regenerated baseline import result'
 if ($code) { exit $code }
 & pwsh "$PSScriptRoot/run-light-batch.ps1" -Jobs artifacts/light-r3/baseline.json -Gate3 artifacts/light-r3/qa-cameras.json
 exit $LASTEXITCODE
+
 
