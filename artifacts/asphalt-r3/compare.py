@@ -1,6 +1,7 @@
 """Compare every captured camera; preserve instance counters separately from mesh counters."""
 import argparse
 import csv
+import hashlib
 import json
 import re
 from pathlib import Path
@@ -57,7 +58,9 @@ def main():
                 assert ba.shape == ca.shape
                 delta = ca-ba
                 row = dict(condition=condition,camera=camera,rmse_rgb=float(np.sqrt((delta*delta).mean())),
-                           changed_pixels_gt_2=float((np.max(abs(delta),axis=2)>2).mean()))
+                           changed_pixels_gt_2=float((np.max(abs(delta),axis=2)>2).mean()),
+                           before_image_sha256=hashlib.sha256((bdir/name).read_bytes()).hexdigest(),
+                           after_image_sha256=hashlib.sha256((adir/name).read_bytes()).hexdigest())
                 for key, value in bc[camera].items():
                     row[f'before_{key}'] = value
                     row[f'after_{key}'] = ac[camera][key]
