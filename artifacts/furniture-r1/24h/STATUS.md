@@ -209,3 +209,5 @@ NASTĘPNY KROK: uv run --project tools/worldgen tools/worldgen/roads/build_world
 2026-11-12T01:29:09.3153738+01:00: dokładniejszy licznik CPU Low overcast; sukces=True. Slot Unity zwolniony. NASTĘPNY KROK: odczytać zweryfikowane granice budżetu; to nie pomiar GPU.
 
 2026-11-12T01:29:34.7448044+01:00: dokładniejszy licznik CPU Low clear; sukces=True. Slot Unity zwolniony. NASTĘPNY KROK: odczytać zweryfikowane granice budżetu; to nie pomiar GPU.
+
+2026-11-12T01:36:52.5667917+01:00: końcowe liczniki Low: driver upper1,68194%, route1,70853%, abeam1,60041% (baseline pozostaje dolną granicą z zaokrągleń). Above upper2,10065%, edge-east2,67349%, north3,10753%, west3,01395% pozostają niepotwierdzone; wszystkie kamery raportowane. Tymczasowy skrypt C# usunięto z _Generated po pomiarach. Cofnięto uboczną regenerację czterech plików innych dziedzin; zachowano własny manifest i QA. NASTĘPNY KROK: pełny GIS na końcu rundy, physics/gate3, EditMode i przegląd wyników.
