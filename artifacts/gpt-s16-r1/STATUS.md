@@ -44,3 +44,5 @@ Dalsze kadry z obrysów nadal miejscami zasłonięte przez złożone obiekty sce
 GPUdobór ujawnił błąd samej maski: referencjaLODO porównywana z innym rzeczywistymLOD świata dawała samo-zasłanianie. Poprawiono wyłącznie diagnostykę: maska używa faktycznie wybranegoLOD dla profiluHigh, mierzy minimalnie poza granicą zaokrągleń. Zwykłe rendery i kod produktu bez zmian.
 
 GPUseach zakończony:40pozycji, próg>=0.97względem samotnej maski; kratka chłodni1.00. Maska sprawdza faktycznie renderowanyLOD, działała w scenieHigh. Zwykłe obrazy bezmaski wymagają oględzin przed powtórnym baseline; po nim restore-candidate + pełne testy.
+
+Dodatkowe kamery: after/Low-clear zapisane.
