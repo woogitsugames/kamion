@@ -89,6 +89,18 @@ Brak regresji (różnice w szumie). Logcat bez błędów gry (65 dopasowań = sz
 
 Ciemne klatki: 1 vs 0 zdarzeń — zgodne z hipotezą, za mało zdarzeń na dowód (UNVERIFIED).
 
+**Galaxy S24+ SM-S926B (Xclipse 940), ekran ustawiony na 3120×1440 = 4,49 Mpx, APK `550a353f48`, trasa jak wyżej, 300 s,
+start < 35,5 °C, bateria 91→86 % (`s24/`, `ft.py`, `campose.py`; zamiast Folda — odłączony 22:30)**:
+
+| przebieg | FPS | klatka p50/p95/p99 | GPU p50/p95 | skala | PSS | błędy capture | naprzemienne klatki kamery | koniec |
+|---|---|---|---|---|---|---|---|---|
+| Ultra/60 | 28,11 | 33,4 / 66,7 / 66,8 | 29,2 / 34,2 | 0,85→0,70 | 1250–1434 MB | **0** | 0,0 % (dt p50 33,4 ms) | 37,4 °C, thermal 2, `fallback=thermal` |
+| High/30 | 29,95 | 33,4 / 33,6 / 34,1 | 23,7 / 28,7 | 0,85–1,00 | 1216–1281 MB | 0 | 0,0 % | 36,0 °C, thermal 1, bez fallbacku |
+
+Ultra/60: siatka bezpieczeństwa działa — `fallback=pacing` (cel 60→30) po ~14 s, adaptacja skali do podłogi 0,70 od ~180 s,
+potem `fallback=thermal`; ostatnie 2 min 29,7–31,3 FPS, p95 33,5 ms. Wcześniej (30–120 s) okresy 24,6–25,1 FPS przy skali
+0,75–0,85 (klatka p95 66,7 ms) — Ultra na 4,5 Mpx nie mieści się stabilnie w 33,3 ms nawet przy 30 FPS. Brak hitchy > 100 ms.
+
 **Testy EditMode (po merge `origin/main` 7100140dc)**: 451/453; 2 błędy = znane `CarPaintMaterialTests.DepositionChannel_*` z main
 (`artifacts/tests/editmode-20261112-223107.xml`).
 
