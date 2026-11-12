@@ -1,4 +1,4 @@
-# ADR 0119 — DK8 przy Putry, powierzchnie i geometria pod pomostem
+﻿# ADR 0119 — DK8 przy Putry, powierzchnie i geometria pod pomostem
 
 ## Runda r2 — 12 listopada 2026, w toku
 
@@ -20,7 +20,7 @@ mają Y sd około 6,6–10,0, a dużą różnicę jasności daje światło pod p
 Odtworzenie powierzchni ścięć i ocieplenie stosunku R/G należy ocenić na świeżych
 renderach, zamiast podnosić szum całej farby. Parametry bez pomiaru pozostają WORKING_VALUE.
 
-Kamery: wszystkie dotychczasowe kontrolne oraz dziewięć własnych kadrów detalu,
+Kamery: wszystkie dotychczasowe kontrolne oraz dziesięć własnych kadrów detalu,
 skopiowanych i połączonych z wcześniejszych dowodów viaduct-r10, bez zmian kamer
 sesji sbs. Low/High, overcast/clear, stała kolejność i rozdzielczość przed/po.
 Budżet: draws Low +0, instancje osobno, suma trójkątów najwyżej +2% w każdej kamerze.
