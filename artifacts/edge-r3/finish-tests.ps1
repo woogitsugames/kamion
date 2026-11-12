@@ -1,4 +1,8 @@
 $ErrorActionPreference = 'Stop'
+$env:OMP_NUM_THREADS = '1'
+$env:OPENBLAS_NUM_THREADS = '1'
+$env:MKL_NUM_THREADS = '1'
+$env:NUMEXPR_NUM_THREADS = '1'
 Set-Location (Resolve-Path "$PSScriptRoot/../..")
 $slot = 'C:/Users/matma/Documents/Claude/kamion/scripts/unity-slot.ps1'
 $owner = (git branch --show-current).Trim()
