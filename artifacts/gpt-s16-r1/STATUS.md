@@ -14,3 +14,5 @@ Pełny GIS zakończony: exit 1; szczegóły GIS-STATUS.md oraz final-gis.log.
 GIS:926passed,3xfailed,1FAIL(test_report_not_stale) — odświeżenie fidelity w slocie heavy27250, bez zmian roads/*. Recenzja wizualnaPARTIAL: brak nowej regresji w widocznych celach, ale część przejść zasłonięta. Wyszukiwarka dodatkowych kamer sprawdzi statyczne linie widzenia do rzeczywistych instancji, także agregatu chłodni; wynik wymaga oględzin.
 
 Wyszukano40uzupełniającychkamer; każda para progowa18/18niezasłoniętych prób statycznych. Nie oznacza to akceptacji wizualnej. Obejrzano wszystkie456par w20arkuszach author-overviews i lokalny real-cars-contact.jpg; brak nowej zmiany makro, luki widoczności potwierdzone. Start renderów dodatkowych after przed ponownym bazowym importem.
+
+Dodatkowe kamery: after/Low-clear zapisane.
