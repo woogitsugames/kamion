@@ -24,6 +24,13 @@ namespace Game.Gameplay
     /// rebuilds the engine voice pool once).
     /// Engine source (ADR 0137): <see cref="AudioPreferences.EngineSource"/> picks the ElevenLabs layers (default when
     /// imported) or the procedural synthesis; the retarder loop follows the same choice.
+    /// Sound set (ADR 0142): with the ElevenLabs choice the effects follow too (pneumatics, AMT up/down shift, relay,
+    /// compressor, tyres wet/concrete/gravel + dry and wind in the cab, ambience bed, turbo v2) and the set adds event
+    /// sounds the synthesis never had: fifth-wheel coupling, suspension bumps (wheel compression rate), cab switches
+    /// (selector/mode/stalk changes), reversing beeper (selector R), gear whine; plus a cabin mix where the engine sits
+    /// ~3 dB lower and tyres/wind are audible at cruise. The procedural choice keeps the pre-0142 behaviour unchanged.
+    /// Horn (<see cref="AudioCues.HornHeld"/>, <see cref="HornTap"/>) and cab doors (<see cref="OnDoor"/>) use the
+    /// recordings in both sets (no procedural version exists).
     /// </summary>
     [DefaultExecutionOrder(250)]
     public sealed class TruckAudioController : MonoBehaviour, IEngineAudioState
@@ -37,6 +44,13 @@ namespace Game.Gameplay
         [Range(0f, 1f)] public float cabRoadFactor = 0.55f, cabWindFactor = 0.35f, cabPneumaticsFactor = 0.6f;
         [Range(0f, 1f)] public float squealVolume = 0.55f, retarderVolume = 0.50f, compressorVolume = 0.35f, relayVolume = 0.55f;
         [Range(0f, 1f)] public float cabSquealFactor = 1.0f, cabRetarderFactor = 0.85f, cabCompressorFactor = 0.75f, extRelayFactor = 0.25f;
+        [Header("ElevenLabs set (ADR 0142). Cabin balance: ADR 0142 table (levels at idle / 50 / 80 km/h)")]
+        [Range(0f, 2f)] public float elCabRoadFactor = 1.35f, elCabWindFactor = 1.45f, elCabBedFactor = 0.35f;
+        [Range(0f, 1f)] public float elCabEngineScale = 0.7f;
+        [Range(0f, 1f)] public float hornVolume = 0.9f, doorVolume = 0.8f, switchVolume = 0.45f, coupleVolume = 0.9f;
+        [Range(0f, 1f)] public float bumpVolume = 0.8f, beeperVolume = 0.45f, gearWhineVolume = 0.10f, cabHornFactor = 0.7f;
+        [Tooltip("Suspension compression rate [m/s] above which a bump thump plays (WORKING_VALUE, 0.3 s cooldown).")]
+        public float bumpRateThreshold = 0.45f;
         [Tooltip("Industrial yard ambience level (0 = off). A future zone system sets AmbientAudio.zone / zoneLevel instead.")]
         [Range(0f, 1f)] public float ambientZoneLevel = 1f;
 
@@ -56,6 +70,13 @@ namespace Game.Gameplay
         float m_BrakePeak, m_BrakeHeld;
         bool m_PrevPark, m_PrevCompressor, m_HasPrev;
         AmtState m_PrevAmt;
+        // ADR 0142
+        bool m_El;
+        PerspectiveLoop m_Horn, m_Beeper, m_GearWhine;
+        float m_HornGain, m_HornTap, m_BumpCooldown, m_SynthCabBed = 0.5f;
+        int m_PrevCouple = -1, m_PrevLever;
+        bool m_PrevManual, m_PrevCruise;
+        GearSelector m_PrevSelector;
 
         public bool HasAudio => m_Engine != null;
         public float InteriorBlend => m_Interior;
@@ -66,6 +87,21 @@ namespace Game.Gameplay
         public float SurfaceWeight(int surface) => m_SurfaceWeight[surface];
         public float SquealLevel => m_SquealGain;
         public bool AmbientReady => m_Ambient != null && m_Ambient.Ready;
+        /// <summary>The ElevenLabs effect set is active (ADR 0142).</summary>
+        public bool ElevenLabsFx => m_El;
+        /// <summary>Event counters and the last one-shot clip (tests, diagnostics; no allocation).</summary>
+        public int ShiftUpEvents { get; private set; }
+        public int ShiftDownEvents { get; private set; }
+        public int SwitchEvents { get; private set; }
+        public int BumpEvents { get; private set; }
+        public int CoupleEvents { get; private set; }
+        public AudioClip LastOneShot { get; private set; }
+        public float HornLevel => m_HornGain;
+        public PerspectiveLoop TyreLoop(int surface) => m_Tyre[surface];
+        public PerspectiveLoop WindLoop => m_Wind;
+        public PerspectiveLoop CompressorLoop => m_Compressor;
+        public PerspectiveLoop BeeperLoop => m_Beeper;
+        public AmbientAudio Ambient => m_Ambient;
 
         // ---- IEngineAudioState ----
         public float Rpm => vehicle != null && vehicle.Initialized ? (float)vehicle.Model.Engine.Rpm : 0f;
@@ -124,7 +160,6 @@ namespace Game.Gameplay
             m_RetarderEl = m_Lib.elRetarder.IsValid
                 ? new PerspectiveLoop(t, "RetarderEL", m_Lib.elRetarder.ext, m_Lib.elRetarder.cab, new Vector3(0f, 0.7f, wb * 0.6f), 70, 1f)
                 : null;
-            SelectRetarder();
             m_Compressor = new PerspectiveLoop(t, "Compressor", m_Lib.compressor.ext, m_Lib.compressor.cab, new Vector3(0.5f, 0.8f, wb + 0.5f), 80, 1f);
             if (m_Lib.ambientBed.IsValid)
             {
@@ -133,8 +168,15 @@ namespace Game.Gameplay
                 m_Ambient = ag.AddComponent<AmbientAudio>();
                 m_Ambient.zoneLevel = ambientZoneLevel;
                 m_Ambient.Configure(m_Lib);
+                m_SynthCabBed = m_Ambient.cabBedFactor;
             }
-            Debug.Log($"[AUDIO] vehicle audio ready ({m_Lib.sourceInfo}) engine={m_Engine.Source} elevenlabs={(m_Lib.HasElevenLabs ? "imported" : "missing")}");
+            if (m_Lib.elHorn.IsValid) m_Horn = new PerspectiveLoop(t, "Horn", m_Lib.elHorn.ext, m_Lib.elHorn.cab, new Vector3(0f, 3.6f, wb + 0.8f), 50, 1f);
+            if (m_Lib.elReverseBeeper.IsValid)
+                m_Beeper = new PerspectiveLoop(t, "ReverseBeeper", m_Lib.elReverseBeeper.ext, m_Lib.elReverseBeeper.cab, new Vector3(0f, 0.8f, -1.0f), 90, 1f);
+            if (m_Lib.elGearWhineCab != null)
+                m_GearWhine = new PerspectiveLoop(t, "GearWhine", m_Lib.elGearWhineCab, m_Lib.elGearWhineCab, new Vector3(0f, 1.0f, wb + 0.4f), 120, 1f);
+            SelectRetarder();
+            Debug.Log($"[AUDIO] vehicle audio ready ({m_Lib.sourceInfo}) engine={m_Engine.Source} elevenlabs={(m_Lib.HasElevenLabs ? "imported" : "missing")} fx={(m_Lib.HasElevenLabsFx ? "imported" : "missing")}");
         }
 
         EngineSoundSource WantedSource() =>
@@ -145,6 +187,40 @@ namespace Game.Gameplay
             var want = m_Engine.Source == EngineSoundSource.ElevenLabs && m_RetarderEl != null ? m_RetarderEl : m_RetarderSynth;
             if (m_Retarder != null && m_Retarder != want) m_Retarder.Set(0f, 1f, m_Interior);
             m_Retarder = want;
+            ApplySoundSet();
+        }
+
+        /// <summary>
+        /// Effect clips of the active set (ADR 0142). Called at start and on a settings change only: swaps clips on the
+        /// existing sources (PerspectiveLoop.SetClips), no new objects.
+        /// </summary>
+        void ApplySoundSet()
+        {
+            m_El = m_Engine.Source == EngineSoundSource.ElevenLabs && m_Lib.HasElevenLabsFx;
+            for (int i = 0; i < LayerMath.SurfaceCount; i++)
+            {
+                var syn = m_Lib.tyreSurface != null && i < m_Lib.tyreSurface.Length && m_Lib.tyreSurface[i].IsValid
+                    ? m_Lib.tyreSurface[i]
+                    : new VehicleAudioLibrary.PerspectivePair { ext = m_Lib.roadRollLoop, cab = m_Lib.roadRollLoopCab };
+                var el = m_El && m_Lib.elTyreSurface != null && i < m_Lib.elTyreSurface.Length ? m_Lib.elTyreSurface[i] : default;
+                if (el.IsValid) m_Tyre[i].SetClips(el.ext, el.cab, 1f);
+                else if (m_El && i == 0 && m_Lib.elTyreDryCab != null) m_Tyre[i].SetClips(syn.ext, m_Lib.elTyreDryCab, 1f);
+                else m_Tyre[i].SetClips(syn.ext, syn.cab, 1f);
+            }
+            m_Wind.SetClips(m_Lib.windLoop, m_El && m_Lib.elWindCab != null ? m_Lib.elWindCab : m_Lib.windLoopCab, 1f);
+            if (m_El && m_Lib.elCompressor.IsValid) m_Compressor.SetClips(m_Lib.elCompressor.ext, m_Lib.elCompressor.cab, 1f);
+            else m_Compressor.SetClips(m_Lib.compressor.ext, m_Lib.compressor.cab, 1f);
+            if (m_Ambient != null)
+            {
+                m_Ambient.SetBed(m_El && m_Lib.elAmbientBed.IsValid ? m_Lib.elAmbientBed : m_Lib.ambientBed);
+                m_Ambient.cabBedFactor = m_El ? elCabBedFactor : m_SynthCabBed;
+            }
+            m_Engine.CabEngineScale = m_El ? elCabEngineScale : 1f;
+            if (!m_El)
+            {
+                m_Beeper?.Set(0f, 1f, m_Interior);
+                m_GearWhine?.Set(0f, 1f, m_Interior);
+            }
         }
 
         /// <summary>Applies a changed <see cref="AudioPreferences.EngineSource"/> (settings panel) once.</summary>
@@ -192,8 +268,9 @@ namespace Game.Gameplay
             float v = Mathf.Abs((float)m.SpeedForward);
             float vn = Mathf.Clamp01(v / 25f);
             UpdateTyres(m, v, dt);
-            if (m_Wind.Valid) m_Wind.Set(windVolume * Mathf.Lerp(1f, cabWindFactor, m_Interior) * Mathf.Pow(vn, 2.2f), 1f, m_Interior);
+            if (m_Wind.Valid) m_Wind.Set(windVolume * Mathf.Lerp(1f, m_El ? elCabWindFactor : cabWindFactor, m_Interior) * Mathf.Pow(vn, 2.2f), 1f, m_Interior);
             UpdateMechanical(m, v, dt);
+            UpdateCues(m, v, dt);
             if (m_Ambient != null)
             {
                 m_Ambient.Interior = m_Interior;
@@ -210,7 +287,7 @@ namespace Game.Gameplay
             else if (m_BrakePeak > 0f)
             {
                 // Release after a held application: exhaust from the relay valves, louder after harder braking.
-                if (m_BrakeHeld > 0.25f) Play(m_Lib.airBrakeRelease, m_Lib.airBrakeReleaseCab, cabView, pv * Mathf.Lerp(0.35f, 1f, m_BrakePeak));
+                if (m_BrakeHeld > 0.25f) PlaySet(m_Lib.elAirBrakeRelease, m_Lib.airBrakeRelease, m_Lib.airBrakeReleaseCab, cabView, pv * Mathf.Lerp(0.35f, 1f, m_BrakePeak));
                 m_BrakePeak = 0f; m_BrakeHeld = 0f;
             }
             bool park = vehicle.Input.ParkingBrake;
@@ -218,22 +295,29 @@ namespace Game.Gameplay
             var amt = m.Amt.State;
             if (m_HasPrev)
             {
-                if (park && !m_PrevPark) Play(m_Lib.parkingBrakeSet, m_Lib.parkingBrakeSetCab, cabView, pv);
+                if (park && !m_PrevPark) PlaySet(m_Lib.elParkingBrakeSet, m_Lib.parkingBrakeSet, m_Lib.parkingBrakeSetCab, cabView, pv);
                 if (!park && m_PrevPark)
                 {
-                    if (m_Lib.parkingBrakeRelease != null) Play(m_Lib.parkingBrakeRelease, m_Lib.parkingBrakeReleaseCab, cabView, pv * 0.8f);
+                    if (m_El && m_Lib.elParkingBrakeRelease.IsValid) Play(m_Lib.elParkingBrakeRelease.ext, m_Lib.elParkingBrakeRelease.cab, cabView, pv * 0.8f);
+                    else if (m_Lib.parkingBrakeRelease != null) Play(m_Lib.parkingBrakeRelease, m_Lib.parkingBrakeReleaseCab, cabView, pv * 0.8f);
                     else Play(m_Lib.airBrakeRelease, m_Lib.airBrakeReleaseCab, cabView, pv * 0.5f);
                 }
                 if (m_PrevCompressor && !comp)
                 {
                     // governor cut-out: alternate the loud purge and the softer 'psst' so it never repeats identically
                     m_PurgeAlt = !m_PurgeAlt;
-                    if (m_PurgeAlt && m_Lib.airDryerPurgeB != null) Play(m_Lib.airDryerPurgeB, m_Lib.airDryerPurgeBCab, cabView, pv * 0.9f);
-                    else Play(m_Lib.airDryerPurge, m_Lib.airDryerPurgeCab, cabView, pv * 0.8f);
+                    if (m_PurgeAlt && m_Lib.airDryerPurgeB != null) PlaySet(m_Lib.elAirDryerPurgeB, m_Lib.airDryerPurgeB, m_Lib.airDryerPurgeBCab, cabView, pv * 0.9f);
+                    else PlaySet(m_Lib.elAirDryerPurge, m_Lib.airDryerPurge, m_Lib.airDryerPurgeCab, cabView, pv * 0.8f);
                 }
                 bool shiftStart = (amt == AmtState.ShiftTorqueRamp || amt == AmtState.ShiftNeutral) &&
                                   m_PrevAmt != AmtState.ShiftTorqueRamp && m_PrevAmt != AmtState.ShiftNeutral;
-                if (shiftStart) Play(m_Lib.gearshiftAir, m_Lib.gearshiftAirCab, cabView, pv * 0.6f);
+                if (shiftStart)
+                {
+                    // AMT shift cylinder; the ElevenLabs set distinguishes up (click + clunk) and down (clunk + longer exhaust)
+                    bool up = m.Amt.TargetGear > m.Amt.Gear;
+                    if (up) ShiftUpEvents++; else ShiftDownEvents++;
+                    PlaySet(up ? m_Lib.elGearshiftUp : m_Lib.elGearshiftDown, m_Lib.gearshiftAir, m_Lib.gearshiftAirCab, cabView, pv * 0.6f);
+                }
             }
             m_PrevPark = park; m_PrevCompressor = comp; m_PrevAmt = amt; m_HasPrev = true;
 
@@ -243,7 +327,8 @@ namespace Game.Gameplay
             if (ev != 0)
             {
                 var pair = ev > 0 ? m_Lib.indicatorTick : m_Lib.indicatorTock;
-                Play(pair.ext, pair.cab, cabView, relayVolume * (cabView ? 1f : extRelayFactor));
+                var elp = ev > 0 ? m_Lib.elIndicatorTick : m_Lib.elIndicatorTock;
+                PlaySet(elp, pair.ext, pair.cab, cabView, relayVolume * (cabView ? 1f : extRelayFactor));
             }
         }
 
@@ -254,7 +339,95 @@ namespace Game.Gameplay
         void Play(AudioClip ext, AudioClip cab, bool cabView, float volume)
         {
             var clip = cabView && cab != null ? cab : ext;
-            if (clip != null) m_OneShot.PlayOneShot(clip, volume);
+            if (clip == null) return;
+            m_OneShot.PlayOneShot(clip, volume);
+            LastOneShot = clip;
+        }
+
+        /// <summary>ElevenLabs clip of the event when that set is active, else the procedural pair (ADR 0142).</summary>
+        void PlaySet(in VehicleAudioLibrary.PerspectivePair el, AudioClip ext, AudioClip cab, bool cabView, float volume)
+        {
+            if (m_El && el.IsValid) Play(el.ext, el.cab, cabView, volume);
+            else Play(ext, cab, cabView, volume);
+        }
+
+        /// <summary>Short horn blast (UI button / settings preview): seconds of hold.</summary>
+        public void HornTap(float seconds = 0.6f) => m_HornTap = Mathf.Max(m_HornTap, seconds);
+
+        /// <summary>Cab door opened / closed (future cab interaction; settings preview). Recordings in both sets.</summary>
+        public void OnDoor(bool open)
+        {
+            if (m_Lib == null) return;
+            var p = open ? m_Lib.elDoorOpen : m_Lib.elDoorClose;
+            if (p.IsValid) Play(p.ext, p.cab, m_Interior > 0.5f, doorVolume);
+        }
+
+        /// <summary>
+        /// ADR 0142 cues: horn (hold flag / tap / settings preview), door preview, and in the ElevenLabs set: fifth-wheel
+        /// coupling (FifthWheel.CouplingEvents), suspension bumps (max wheel compression rate), cab switch clicks (changes
+        /// of selector, A/M mode, endurance-brake stalk, brake cruise), reversing beeper (selector R, engine running),
+        /// gear whine.
+        /// </summary>
+        void UpdateCues(VehicleModel m, float v, float dt)
+        {
+            bool cabView = m_Interior > 0.5f;
+            if (AudioCues.TryTake(out var cue))
+            {
+                if (cue == AudioCue.HornTap) HornTap();
+                else if (cue == AudioCue.DoorOpen) OnDoor(true);
+                else if (cue == AudioCue.DoorClose) OnDoor(false);
+            }
+            m_HornTap = Mathf.Max(0f, m_HornTap - dt);
+            float hornTarget = AudioCues.HornHeld || m_HornTap > 0f ? hornVolume : 0f;
+            m_HornGain = LayerMath.ExponentialStep(m_HornGain, hornTarget, dt, 0.012f, 0.06f);
+            m_Horn?.Set(m_HornGain * Mathf.Lerp(1f, cabHornFactor, m_Interior), 1f, m_Interior);
+
+            var input = vehicle.Input;
+            int couple = vehicle.Combination != null ? vehicle.Combination.FifthWheel.CouplingEvents : 0;
+            bool cruise = input.BrakeCruiseKmh > 0f;
+            if (m_El && m_PrevCouple >= 0)
+            {
+                if (couple > m_PrevCouple && m_Lib.elTrailerCouple.IsValid)
+                {
+                    Play(m_Lib.elTrailerCouple.ext, m_Lib.elTrailerCouple.cab, cabView, coupleVolume);
+                    CoupleEvents++;
+                }
+                if (m_Lib.elCabSwitch.IsValid && (input.Selector != m_PrevSelector || input.ManualMode != m_PrevManual ||
+                                                  input.RetarderLever != m_PrevLever || cruise != m_PrevCruise))
+                {
+                    Play(m_Lib.elCabSwitch.ext, m_Lib.elCabSwitch.cab, cabView, switchVolume * (cabView ? 1f : 0.2f));
+                    SwitchEvents++;
+                }
+            }
+            m_PrevCouple = couple; m_PrevSelector = input.Selector; m_PrevManual = input.ManualMode;
+            m_PrevLever = input.RetarderLever; m_PrevCruise = cruise;
+
+            // suspension bump: fastest compression among the tractor wheels in contact
+            m_BumpCooldown = Mathf.Max(0f, m_BumpCooldown - dt);
+            if (m_El && m_BumpCooldown <= 0f && m_Lib.elSuspBump.IsValid)
+            {
+                float rate = 0f;
+                var w = m.Wheels;
+                for (int i = 0; i < w.Length; i++)
+                    if (w[i].Contact && (float)w[i].CompressionRate > rate) rate = (float)w[i].CompressionRate;
+                if (rate > bumpRateThreshold)
+                {
+                    float g = Mathf.Clamp01((rate - bumpRateThreshold) / bumpRateThreshold);
+                    Play(m_Lib.elSuspBump.ext, m_Lib.elSuspBump.cab, cabView, bumpVolume * (0.35f + 0.65f * g));
+                    m_BumpCooldown = 0.3f;
+                    BumpEvents++;
+                }
+            }
+
+            bool running = !m.Engine.Stalled && m.Engine.Rpm > 300.0;
+            if (m_Beeper != null)
+                m_Beeper.Set(m_El && running && input.Selector == GearSelector.Reverse ? beeperVolume : 0f, 1f, m_Interior);
+            if (m_GearWhine != null)
+            {
+                // meshing gears under load at speed, heard in the cab; pitch with the input shaft (engine rpm)
+                float gw = m_El ? gearWhineVolume * Mathf.Clamp01(v / 20f) * (0.3f + 0.7f * Load) * m_Interior : 0f;
+                m_GearWhine.Set(gw, Mathf.Clamp((float)m.Engine.Rpm / 1300f, 0.5f, 1.8f), 1f);
+            }
         }
 
         void UpdateTyres(VehicleModel m, float v, float dt)
@@ -273,7 +446,7 @@ namespace Game.Gameplay
                 m_SurfaceWeight[i] = m_SurfaceInit ? m_SurfaceWeight[i] + (target - m_SurfaceWeight[i]) * k : target; // first frame snaps (no fade-in from silence)
                 squealable += m_SurfaceWeight[i] * LayerMath.SurfaceSquealable[i];
                 if (m_Tyre[i].Valid)
-                    m_Tyre[i].Set(LayerMath.TyreGain(v, i, roadVolume) * m_SurfaceWeight[i] * Mathf.Lerp(1f, cabRoadFactor, m_Interior), pitch, m_Interior);
+                    m_Tyre[i].Set(LayerMath.TyreGain(v, i, roadVolume) * m_SurfaceWeight[i] * Mathf.Lerp(1f, m_El ? elCabRoadFactor : cabRoadFactor, m_Interior), pitch, m_Interior);
             }
             m_SurfaceInit = true;
             float sg = LayerMath.SquealGain(slip, v) * squealable;
@@ -311,6 +484,6 @@ namespace Game.Gameplay
         }
 
         /// <summary>Called after a respawn: avoids one-shots for the state jump.</summary>
-        public void ResetEvents() { m_HasPrev = false; m_BrakePeak = 0f; m_BrakeHeld = 0f; }
+        public void ResetEvents() { m_HasPrev = false; m_BrakePeak = 0f; m_BrakeHeld = 0f; m_PrevCouple = -1; m_BumpCooldown = 0.5f; }
     }
 }

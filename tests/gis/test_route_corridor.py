@@ -13,7 +13,7 @@ from __future__ import annotations
 import pytest
 
 import route_corridor as RC
-from conftest import REGION_DIR, REGION_ID, REPO
+from conftest import REGION_DIR, REGION_ID, REPO, require_lfs
 
 WORLD = REPO / "Data" / "raw" / "derived" / REGION_ID / "world"
 PROPS = REPO / "art-source" / "world" / "props" / "street_props.glb"
@@ -24,6 +24,7 @@ ROUTE = REGION_DIR / "route_start.json"
 def corridor():
     if not (WORLD / "chunk_0_0.low.glb").exists():
         pytest.skip("world not built (run tools/worldgen/roads/build_world.py)")
+    require_lfs(PROPS)
     return RC.check(WORLD, PROPS, ROUTE)
 
 

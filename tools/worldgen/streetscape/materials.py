@@ -645,3 +645,22 @@ M["sidewalk_paving"] = {"color": [0.26, 0.255, 0.245], "rough": 0.85, "surface":
 # These are scope bounds, not a survey of the site. No override/mesh/hero asset is edited.
 for _asphalt_ground_id in ("curb_concrete", "sidewalk_paving"):
     M[_asphalt_ground_id]["ground_wear_exclude_local_en"] = [400.0, -700.0, 850.0, -250.0]
+
+
+# ADR 0129 (G3-B frontage round 2, review 0126 P2; additive block, parameters of the existing Kamion/World PBR
+# material - no shader change, no new pass):
+# - `showroom_glass`: the full-height panes of a showroom. The shared `glass` (windows) cuts 90 % of the horizon
+#   reflection (SKY_OCC_GLASS: a window sees the street) - right for a punched window, a black box for a 29 x 3.5 m
+#   shopfront (review: "czarne pudło z czarną kratą"). Here the horizon cut is 70 %: the existing fresnel term mirrors
+#   the sky as a gradient (brighter towards the head of the pane, where the reflected ray climbs), the base is a
+#   touch lighter and bluer (a lit interior behind the glass). WORKING_VALUE, judged against strudel 2024
+#   (469512365899192, 1020363345994649): glazing clearly lighter than the black fascia over it.
+# - `frontage_galv`: hot-dip galvanised lattice / flag masts, matt: `downpipe` (metal 0.7) and `steel_galv`
+#   (metal 0.9) mirror the overcast sky to white (review: "nogi jasnobiałe", same finding as ADR 0114 plot_kit).
+# s13 (first render of round 2): at 0.045 albedo the pane still read black on Low-overcast - seen square-on the
+# reflected ray is horizontal (R.y ~ 0, fresnel ~ 0), so the environment term adds nothing whatever the horizon cut.
+# The sky mirrored in the pane is therefore carried by the diffuse term: a light blue-grey base that follows the
+# ambient probe (grey under overcast, blue under a clear sky). Photo strudel 1020363345994649 (2024): glazing
+# about as light as the low sky, far lighter than the fascia (0.05) and the grey walls (0.20). WORKING_VALUE.
+M["showroom_glass"] = {"color": [0.26, 0.31, 0.37], "rough": 0.05, "sky_occ": [0.0, 0.70]}
+M["frontage_galv"] = {"color": [0.27, 0.28, 0.285], "rough": 0.7, "sky_occ": [0.0, 0.0]}
