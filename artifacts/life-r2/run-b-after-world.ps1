@@ -53,7 +53,7 @@ try {
  & uv run --project tools/worldgen python artifacts/life-r2/compare-exact.py before-exact after-b-exact exact-b
  if($LASTEXITCODE -ne 0){throw 'Exact comparison B failed'}
  Heavy 'Script' 'compare-b' 'artifacts/life-r2/render-compare-b.py'
- Save-Step 'zapisz dokładny budżet i plansze B' 'Porównanie wszystkich 114 kamer × 4 gotowe. Następne: oględziny autora i decyzja o poprawkach, potem pełny GIS i EditMode.' @('artifacts/life-r2/exact-b-all-camera-budget.json','artifacts/life-r2/exact-b-budget-summary.json','artifacts/life-r2/b-all-camera-budget.json','artifacts/life-r2/b-budget-summary.json')
+ Save-Step 'zapisz dokładny budżet i plansze B' 'Porównanie wszystkich 114 kamer × 4 gotowe. Następne: oględziny autora i decyzja o poprawkach, potem pełny GIS i EditMode.' @('artifacts/life-r2/exact-b-all-camera-budget.json','artifacts/life-r2/exact-b-budget-summary.json','artifacts/life-r2/b-all-camera-budget.json','artifacts/life-r2/b-budget-summary.json','artifacts/life-r2/passenger-car-frame-check-b.json')
  $phase='await-author-review';$code=0
 } catch {
  Add-Content artifacts/life-r2/STATUS.md ("`nB przerwane na etapie {0}: {1}. Sprawdzić istniejący log; nie restartować całego ciągu." -f $phase,$_.Exception.Message)
