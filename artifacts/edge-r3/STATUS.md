@@ -55,3 +55,4 @@ Następny krok po pełnym After: uruchomić audyt kurtyn pod heavy razem z pozos
 Krok 20: zamrożono 25 zaakceptowanych fotografii B w reference-photos, każdą po kontroli przypiętego SHA; atrybucja i źródło w reference-photos.json. Compare r3 użyje tych niezmiennych plików zamiast podatnego na aktualizacje katalogu sbs main. Bez zmiany obrazu, klasy pozy i kalibracji.
 Następny krok: koniec build_world po poprawce → After; potem odczyty geometrii i porównania pod heavy, EditMode oraz końcowy GIS.
 Krok 18: build_world po poprawce zakończony kodem 0 bez fallback=True; wynik w build-world-after.log. Następna komenda: validate.ps1 -Phase After pod Unity.
+2026-11-12T02:15:17.6743141+01:00 Przebudowano wyłącznie WorldEdge w scenach Low i High; wynik wizualny do sprawdzenia.
