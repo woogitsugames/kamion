@@ -1702,7 +1702,7 @@ def decimate_pieces(pieces, target, floor_tris=40, lights_min=0.5, round_seg=0, 
                 columns, tolerance = 16, .012
             elif '_rim' in o.name:
                 columns = 40 if o.name.startswith('wheel_F') else round_seg
-                tolerance = .030 if inner else .020   # WIP budget redistribution, native validation required
+                tolerance = .020 if o.name.startswith('wheel_F') else .030  # WIP: spend visible detail on front
         before, after = reduce_round(o, columns, profile_tol=tolerance)
         print(f"  round {o.name}: {before} -> {after} segments, {tris_of(o)} tris")
     grids = [o for o in pieces if grid_lod and grid_spec(o) and grid_spec(o)[grid_lod] is not None]
@@ -1713,7 +1713,8 @@ def decimate_pieces(pieces, target, floor_tris=40, lights_min=0.5, round_seg=0, 
         before, after = reduce_grid(o, spec[0], spec[grid_lod], open_top=ot)
         print(f"  grid {o.name}: {before} -> {after} columns, {t_before} -> {tris_of(o)} tris")
     dec = [o for o in pieces if tris_of(o) > floor_tris and not o.name.startswith(("decal_", "MIRROR_") + NO_DECIMATE + tuple(keep))
-           and o not in rounds and o not in grids and not o.get('regular_disc_lod', False)]
+           and o not in rounds and o not in grids and not o.get('regular_disc_lod', False)
+           and not (C.REGULAR_FRONT_WHEELS and grid_lod == 2 and o.name.startswith('wheel_F') and '_nut' in o.name)]
     fixed = sum(tris_of(o) for o in pieces if o not in dec)
     base = {o.name: tris_of(o) for o in dec}
     area = {o.name: max(1e-6, sum(p.area for p in o.data.polygons)) for o in dec}
@@ -1883,7 +1884,7 @@ def lod_pieces(master, lod, coll):
     else:
         drop = LOD2_DROP if lod == 2 else LOD1_DROP
         keep = [o for o in master if not any(k in o.name for k in drop
-                    if not (C.REGULAR_FRONT_WHEELS and lod == 2 and k == '_dish' and o.name.startswith('wheel_F')))
+                    if not (C.REGULAR_FRONT_WHEELS and lod == 2 and k in ('_dish', '_nut') and o.name.startswith('wheel_F')))
                 and not (lod == 2 and o.name.startswith("MIRROR_"))]
     out = []
     for o in keep:
