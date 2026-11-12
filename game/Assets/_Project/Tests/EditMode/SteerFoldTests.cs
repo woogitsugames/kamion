@@ -213,7 +213,7 @@ namespace Game.Tests
             var before = SteeringFeel.Defaults();
             before.handRateDegS = new[] { 540f, 480f, 300f, 200f, 130f, 110f };
             const float rotateReachDeg = 120f, dragReachMm = 25f;
-            var sb = new StringBuilder("kmh,before_reach_lock_frac,after_reach_lock_frac,before_t90_s,after_t90_s,before_cab_deg_per_mm_at_rim_s24,after_cab_deg_per_mm\n");
+            var sb = new StringBuilder("kmh,before_reach_lock_frac,after_reach_lock_frac,before_t90_full_lock_s,after_t90_full_lock_s,before_cab_deg_per_mm_at_rim_s24,after_cab_deg_per_mm\n");
             foreach (float kmh in new[] { 5f, 10f, 20f, 40f, 60f, 80f })
             {
                 float gainRot = before.WheelGain(kmh, 270f, Lock, before.highSpeedScreenToHandwheel);
@@ -221,7 +221,7 @@ namespace Game.Tests
                 var dw = new TouchSteeringWheel { Grab = WheelGrab.Drag, DeadZone = 0f, Feel = after };
                 float gainDrag = after.WheelGain(kmh, 270f, Lock, dw.HighSpeedScreenToHandwheel);
                 float reachAfter = Mathf.Min(1f, dragReachMm * after.dragScreenDegPerMm / 270f * gainDrag);
-                float t90b = T90(before, reachBefore * Lock, kmh), t90a = T90(after, reachAfter * Lock, kmh);
+                float t90b = T90(before, Lock, kmh), t90a = T90(after, Lock, kmh);   // same target: hand-rate change only
                 // Rotate gesture at the rim of the 400-unit wheel on the S24+ (1 px/unit, ~516 dpi, r ~ 180 units): mm per on-screen degree.
                 float mmPerDegRim = 180f * Mathf.Deg2Rad * 25.4f / 516f;
                 float cabPerMmBefore = gainRot * Lock / 270f / mmPerDegRim;
@@ -231,6 +231,7 @@ namespace Game.Tests
                   .Append(cabPerMmBefore.ToString("F1", ci)).Append(',').Append(cabPerMmAfter.ToString("F1", ci)).Append('\n');
                 Assert.GreaterOrEqual(reachAfter, reachBefore - 1e-4f, "reach at " + kmh);
                 if (kmh <= 20f) Assert.AreEqual(1f, reachAfter, 1e-4f, "full lock reachable when manoeuvring");
+                Assert.LessOrEqual(t90a, t90b + 1e-4f, "never slower than ADR 0058 at " + kmh);
             }
             Debug.Log("[TEST] ADR 0135 reach/lag\n" + sb);
             string dir = Environment.GetEnvironmentVariable("KAMION_STEER_EVIDENCE_DIR");
