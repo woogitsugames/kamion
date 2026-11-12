@@ -107,3 +107,11 @@ NASTĘPNY KROK (kolejna sesja, slot heavy / unity):
 - Zastane niezapisane: runda `r2b` (świat z kodu c294f85c, build 516 s, import 523 s, rendery Low/High/extra/extra_low/extra_hc gotowe 02:39),
   `generated/{streetscape_qa,world_manifest}.json` z r2b niezacommitowane → commit teraz. r2 vs r1: Low razem +3 (najg. +1), High(-treść Low) +15 (najg. +2).
 - NASTĘPNY KROK: `git merge main` → `pwsh artifacts/buildings-r16/world.ps1 -Round r2c` → `pwsh artifacts/buildings-r16/full_round.ps1 -Round r2c`
+
+## s12 — krok 1: merge main + poprawki przed budową r2c
+- `git merge main` (76b3fb76) → 52bb5bab: generated `--ours` (4 pliki), `RegionImporter.cs` unia (car_plate `PreserveLitPasses` + klucz `shader`).
+- Obejrzane r2b (`r2b/sheets/*.jpg`): klin trawy na zjazdach zniknął (`r16_drive_0..3`, `r16_kerb_0/1`); LOD1 domów na Low ma ciemne otwory;
+  żywopłot nadal z liśćmi ~18 cm → stempel 7,5 → 3,6 cm (`plot_kit._hedge`); kamery `r16_door_*` 2 m za furtką.
+- W toku (tło): `world.ps1 -Round r2c` (czeka na slot heavy 3/3) → `s12_chain.ps1 -Round r2c` (fidelity + pełny pytest w heavy ‖ full_round + EditMode).
+- NASTĘPNY KROK: `Get-Content artifacts/buildings-r16/r2c/round.log` → jeśli brak `CHAIN DONE`: `pwsh artifacts/buildings-r16/s12_chain.ps1 -Round r2c`
+  → `python artifacts/buildings-r16/budget2.py artifacts/buildings-r16/r1/Low-overcast artifacts/buildings-r16/r2c/Low-overcast` (i High-overcast, extra_hc)
