@@ -51,3 +51,5 @@ Nie wykonano merge do main, push, telefonu ani edycji innych dziedzin. Odśwież
 2026-11-12T12:44:49.3771232+01:00: zapisano migawkę recenzji pakietu C i SHA. W sbs-priorities jawnie rozdzielono historyczny ostry klin r3 od poprawki light i pozostałego miękkiego pasa nieba. Nowy wspólny dowód SBS pozostaje pending; bez przenoszenia werdyktu z cudzych kadrów. World nadal kolejkaFIFO.
 
 2026-11-12T12:48:56.8311771+01:00: wszystkie prywatne wrapperyPSr4 bez błędów parsera; oba nowe skrypty kontrolowanych prób bez błędówAST. To wyłącznie lekka kontrola składni, bez wykonania generatora, rayów, pytest ani Unity. World77049 pozostaje aktywny i czeka w FIFO, obecnie2 zgłoszenia przed nim.
+
+2026-11-12T12:51:59.5366756+01:00: świeże pojedyncze zapytanie Commons zwróciło16 rekordów metadanych;7 nie było w lokalnym manifeście. Lekka projekcja współrzędnych na G3-A wykazała, że wszystkie7 leży przy stacjach317–437 m lub dalej od korytarza. W pierwszych300 m i do35 m od osi pozostają wyłącznie dwa znane źródła229,676 i248,704 m. Nie pobrano nowych zdjęć, nie zmieniono produkcyjnych referencji ani oceny pokrycia0–200 m. Zapisano odpowiedźAPI i źródłowe SHA klasyfikacji.
