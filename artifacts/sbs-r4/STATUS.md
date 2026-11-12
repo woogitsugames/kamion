@@ -36,3 +36,5 @@ Nie wykonano merge do main, push, telefonu ani edycji innych dziedzin. Odśwież
 2026-11-12T12:35:49.6345987+01:00: materiały uzyskały heavy FIFO, generator pracuje. Przygotowałem prywatne wrappery importu i kontrolowanych renderów r4; delta przesunięcia jest jawnie względem odziedziczonej kontroli, a poziom oka będzie ponownie osadzony na świeżej widocznej jezdni. Bez uruchomienia drugiego zadania heavy ani Unity.
 
 2026-11-12T12:36:16.6686306+01:00: niezależny przegląd samplera PASS w zakresie kodu, bez uruchomienia. Przygotowane również wrappery pełnej serii i EditMode. ComposeOnly będzie korzystać wyłącznie z zapisanych wejść, bez podmiany adnotacji na pliki live. Nowe helpery dodaję jawnie force, ponieważ artifacts jest ignorowane; poprzedni commit45396e97 zapisał tylko śledzony STATUS.
+
+2026-11-12T12:36:49.5422890+01:00: przygotowany run-heavy.ps1 r4, bez Priority, z ochroną przed już zajętym slotem lub własnym biletem kolejki. Każde wywołanie obejmuje jeden testplik lub jeden etap i zapisuje exitcode przed Release. Nie uruchamiano go równolegle z baseline77049.
