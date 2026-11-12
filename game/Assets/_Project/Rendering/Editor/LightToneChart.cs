@@ -25,6 +25,7 @@ namespace Game.Rendering.Editor
             public bool gradingVerified;
             public float actualSaturation, actualMasterAt01, requestedMasterAt01;
             public Vector4 shaderToe;
+            public Vector4 expectedShaderToe;
             public Patch[] patches;
         }
 
@@ -86,15 +87,20 @@ namespace Game.Rendering.Editor
                     var look=env.GetComponentInChildren<Volume>();
                     if(look==null || !look.sharedProfile.TryGet(out ColorCurves requestedCurves))throw new InvalidOperationException("Missing actual environment look volume");
                     float actualMaster=actualCurves.master.value.Evaluate(.1f), requestedMaster=requestedCurves.master.value.Evaluate(.1f);
-                    bool verified=!profile.postProcessing || (Mathf.Abs(actualMaster-requestedMaster)<.001f && Mathf.Abs(actualAdjustments.saturation.value-preset.lookSaturation)<.01f);
+                    WorldAtmosphere.ResolveLook(preset,out float toe,out float toeP,out float pivot);
+                    Vector4 expectedToe=profile.postProcessing || toe<=0f?Vector4.zero:new Vector4(toe,toeP,LookGrading.ToeGain(toe,toeP,pivot)-1f,0);
+                    Vector4 actualToe=Shader.GetGlobalVector("_KamionTone");
+                    bool actualPost=camera.GetUniversalAdditionalCameraData().renderPostProcessing;
+                    bool verified=actualPost==profile.postProcessing && Vector4.Distance(actualToe,expectedToe)<.0001f &&
+                        (!profile.postProcessing || (Mathf.Abs(actualMaster-requestedMaster)<.001f && Mathf.Abs(actualAdjustments.saturation.value-preset.lookSaturation)<.01f));
                     if(!verified)throw new InvalidOperationException($"Actual High grading not verified: master{actualMaster}/{requestedMaster}, saturation{actualAdjustments.saturation.value}/{preset.lookSaturation}");
                     var png=new Texture2D(1200,400,TextureFormat.RGB24,false);png.SetPixels32(pixels);png.Apply();
                     string stem=Path.Combine(output,tier+"-"+lighting);
                     File.WriteAllBytes(stem+".png",png.EncodeToPNG());
                     File.WriteAllText(stem+".json",JsonUtility.ToJson(new Proof{tier=tier,preset=lighting,
                         modelExposure=env.Model.Exposure,skyHorizontalLux=env.Model.HorizontalIlluminanceLux,renderScale=profile.renderScale,
-                        postProcessing=camera.GetUniversalAdditionalCameraData().renderPostProcessing,whiteClip=preset.lookWhiteClip,
-                        saturation=preset.lookSaturation,shaderToe=Shader.GetGlobalVector("_KamionTone"),gradingVerified=verified,
+                        postProcessing=actualPost,whiteClip=preset.lookWhiteClip,
+                        saturation=preset.lookSaturation,shaderToe=actualToe,expectedShaderToe=expectedToe,gradingVerified=verified,
                         actualSaturation=actualAdjustments.saturation.value,actualMasterAt01=actualMaster,requestedMasterAt01=requestedMaster,patches=patches.ToArray()},true));
                     UnityEngine.Object.DestroyImmediate(png);images++;
                 }
