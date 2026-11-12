@@ -496,7 +496,10 @@ def to_game_piece(o, gm):
     colour 'Col' (glass tint; white elsewhere), face attribute 'prio' (texel priority)."""
     me = o.data
     names = [m.name if m else "" for m in me.materials]
-    keep_uv = [tuple(d.uv) for d in me.uv_layers[0].data] if o.name.startswith("MIRROR_") else None
+    cylindrical = is_round_wheel_piece(o)
+    keep_uv = [tuple(d.uv) for d in me.uv_layers[0].data] if o.name.startswith("MIRROR_") or cylindrical else None
+    if cylindrical:
+        o["cylindrical_atlas"] = True
     for uvl in list(me.uv_layers):
         me.uv_layers.remove(uvl)
     me.uv_layers.new(name="Atlas")
@@ -785,6 +788,53 @@ def widen_thin_islands(objs, mname):
     print(f"  thin islands widened: {n} ({mname})")
 
 
+def normalize_cylindrical_atlas_density(objs, mname):
+    """Keep lathe UV continuous and match the surrounding slot's pre-pack texel density."""
+    def areas(o):
+        me = o.data
+        mi = [m.name for m in me.materials].index(mname)
+        uv = me.uv_layers["Atlas"].data
+        physical, mapped = 0.0, 0.0
+        for face in me.polygons:
+            if face.material_index != mi:
+                continue
+            physical += face.area
+            q = [uv[i].uv for i in face.loop_indices]
+            mapped += abs(sum(a.x*b.y-b.x*a.y for a,b in zip(q,q[1:]+q[:1]))) * 0.5
+        return physical, mapped
+
+    body = [areas(o) for o in objs if not o.get("cylindrical_atlas", False)]
+    physical = sum(a for a,b in body)
+    target = sum(b for a,b in body)/physical if physical > 1e-10 else 1.0
+    for o in objs:
+        if not o.get("cylindrical_atlas", False):
+            continue
+        me = o.data
+        uv = me.uv_layers["Atlas"].data
+        # The original lathe stores angle and normalized profile arc length. Recover their
+        # metric aspect ratio before uniform density matching; no new atlas or resolution.
+        metric_u, metric_v = 0.0, 0.0
+        for face in me.polygons:
+            loops = list(face.loop_indices)
+            for a,b in zip(loops,loops[1:]+loops[:1]):
+                duv = uv[b].uv-uv[a].uv
+                distance = (me.vertices[me.loops[b].vertex_index].co-me.vertices[me.loops[a].vertex_index].co).length
+                if abs(duv.y) < 1e-6 and abs(duv.x) > 1e-8:
+                    metric_u = max(metric_u,distance/abs(duv.x))
+                if abs(duv.x) < 1e-6 and abs(duv.y) > 1e-8:
+                    metric_v = max(metric_v,distance/abs(duv.y))
+        if metric_u <= 0 or metric_v <= 0:
+            raise RuntimeError("Missing parametric lathe UV metric: "+o.name)
+        for loop in uv:
+            loop.uv = (loop.uv.x*metric_u,loop.uv.y*metric_v)
+        real, mapped = areas(o)
+        scale = math.sqrt(target*real/mapped) if mapped > 1e-14 else 0
+        if scale <= 0:
+            raise RuntimeError("Invalid cylindrical atlas area: "+o.name)
+        for loop in uv:
+            loop.uv *= scale
+
+
 def unwrap_atlases(pieces):
     t0 = time.time()
     for slot in BAKED:
@@ -795,16 +845,18 @@ def unwrap_atlases(pieces):
         for o in objs:
             o.data.uv_layers.active = o.data.uv_layers["Atlas"]
         select(objs)
-        bpy.ops.object.mode_set(mode="EDIT")
-        for o in objs:
-            bm = bmesh.from_edit_mesh(o.data)
-            mi = [m.name for m in o.data.materials].index(mname)
-            for f in bm.faces:
-                f.select = f.material_index == mi
-            bmesh.update_edit_mesh(o.data)
-        bpy.ops.uv.smart_project(angle_limit=math.radians(62), island_margin=0.0, area_weight=0.0,
-                                 correct_aspect=True, scale_to_bounds=False)
-        bpy.ops.object.mode_set(mode="OBJECT")
+        if any(not o.get("cylindrical_atlas", False) for o in objs):
+            bpy.ops.object.mode_set(mode="EDIT")
+            for o in objs:
+                bm = bmesh.from_edit_mesh(o.data)
+                mi = [m.name for m in o.data.materials].index(mname)
+                for f in bm.faces:
+                    f.select = f.material_index == mi and not o.get("cylindrical_atlas", False)
+                bmesh.update_edit_mesh(o.data)
+            bpy.ops.uv.smart_project(angle_limit=math.radians(62), island_margin=0.0, area_weight=0.0,
+                                     correct_aspect=True, scale_to_bounds=False)
+            bpy.ops.object.mode_set(mode="OBJECT")
+        normalize_cylindrical_atlas_density(objs,mname)
         # texel priority: scale islands about their centre (interior skin, chassis underside, inner duals smaller)
         for o in objs:
             me = o.data
