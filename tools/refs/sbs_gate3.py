@@ -446,6 +446,9 @@ def compose(render_dir, outdir, strict=True, include_rejected=False, historical=
     # A sealed snapshot changes where bytes are read, not the strength of capture checks.
     # Legacy provenance still requires the separate, explicit historical mode.
     input_dir=Path(inputs) if inputs is not None else REGION
+    if inputs is not None and not historical:
+        for name in ('sbs_cameras.json','sbs_references.json','world_manifest.json','materials_spec.json'):
+            if not (input_dir/name).is_file():raise ValueError(f'incomplete input snapshot: {name}')
     refs=read(input_dir/'sbs_references.json')['references']
     cameras_by_id={c['id']:c for c in read(input_dir/'sbs_cameras.json').get('cameras',[])} if (input_dir/'sbs_cameras.json').exists() else {}
     photometry_path=Path(photometry_file) if photometry_file is not None else input_dir/'sbs_photometry.json'

@@ -277,3 +277,73 @@ def test_missing_or_invalid_photo_hash_never_binds_landmarks(photo_hash):
         {'id':'VP','photo':[0.5,0.5],'render':[0.5,0.5]}]}
     result=sbs.landmark_report([annotation],ref,'b'*64,(100,100))
     assert result['status']=='UNBOUND_IMAGES' and not result['points'] and result['rmse_render_px'] is None
+
+
+def strict_snapshot_fixture(tmp_path,monkeypatch):
+    import hashlib
+    monkeypatch.setattr(sbs,'ROOT',tmp_path);monkeypatch.setattr(sbs,'REGION',tmp_path/'live')
+    snapshot=tmp_path/'snapshot';renders=tmp_path/'renders';renders.mkdir()
+    Image.new('RGB',(40,30),'gray').save(tmp_path/'photo.png')
+    Image.new('RGB',(40,30),'gray').save(renders/'sbs-test.png')
+    sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+    ref={'camera':'sbs-test','pose_confidence':'B','pose_status':'WORKING_VALUE','photo':'photo.png',
+         'sha256':sha(tmp_path/'photo.png'),'comparison_sha256':sha(tmp_path/'photo.png'),
+         'horizon_y_fraction':.5,'width':40,'height':30,'author':'Example','license':'CC0',
+         'captured_at':'2020','page_url':'https://example.com/photo'}
+    sbs.write(snapshot/'sbs_references.json',{'references':[ref]})
+    sbs.write(snapshot/'sbs_cameras.json',{'cameras':[{'id':'sbs-test','pos':[0,0,2],'look_at':[0,40,2],'fov_deg':60}]})
+    sbs.write(snapshot/'world_manifest.json',{'world':'captured'})
+    sbs.write(snapshot/'materials_spec.json',{'materials':'captured'})
+    capture={'status':'OK','cameras':['sbs-test'],'git_sha':'a'*40,'main_sha':'b'*40,
+             'tier':'Low','lighting':'overcast','width':40,'height':30,
+             'render_sha256':{'sbs-test':sha(renders/'sbs-test.png')}}
+    for filename,key in (('sbs_cameras.json','cameras_sha256'),('sbs_references.json','references_sha256'),
+                         ('world_manifest.json','world_manifest_sha256'),('materials_spec.json','materials_spec_sha256')):
+        capture[key]=sha(snapshot/filename)
+    sbs.write(renders/'capture-a.json',capture)
+    # Deliberately unusable live state must never be consulted in snapshot mode.
+    sbs.REGION.mkdir();(sbs.REGION/'sbs_references.json').write_text('not live JSON')
+    (sbs.REGION/'sbs_landmarks.json').write_text('not live JSON')
+    (sbs.REGION/'sbs_photometry.json').write_text('not live JSON')
+    return snapshot,renders,capture
+
+
+def test_strict_snapshot_ignores_dirty_live_inputs_without_legacy_mode(tmp_path,monkeypatch):
+    snapshot,renders,_=strict_snapshot_fixture(tmp_path,monkeypatch)
+    sbs.compose(renders,tmp_path/'out',inputs=snapshot)
+    result=sbs.read(tmp_path/'out/metrics.json')
+    assert result['provenance_status']=='RECORDED' and not result['provenance_warnings']
+    assert len(result['pairs'])==1 and result['gate_status']=='UNVERIFIED'
+
+
+@pytest.mark.parametrize('filename,key',[
+    ('sbs_cameras.json','cameras_sha256'),('sbs_references.json','references_sha256'),
+    ('world_manifest.json','world_manifest_sha256'),('materials_spec.json','materials_spec_sha256')])
+def test_strict_snapshot_rejects_changed_input_bytes(tmp_path,monkeypatch,filename,key):
+    snapshot,renders,_=strict_snapshot_fixture(tmp_path,monkeypatch)
+    with (snapshot/filename).open('a',encoding='utf-8') as stream:stream.write(' ')
+    with pytest.raises(ValueError,match='stale render capture|snapshot mismatch'):
+        sbs.compose(renders,tmp_path/'out',inputs=snapshot)
+
+
+@pytest.mark.parametrize('filename',['sbs_cameras.json','sbs_references.json','world_manifest.json','materials_spec.json'])
+def test_strict_snapshot_requires_all_four_sources(tmp_path,monkeypatch,filename):
+    snapshot,renders,_=strict_snapshot_fixture(tmp_path,monkeypatch)
+    (snapshot/filename).unlink()
+    with pytest.raises(ValueError,match='incomplete input snapshot'):
+        sbs.compose(renders,tmp_path/'out',inputs=snapshot)
+
+
+def test_strict_snapshot_still_requires_captures(tmp_path,monkeypatch):
+    snapshot,renders,_=strict_snapshot_fixture(tmp_path,monkeypatch)
+    (renders/'capture-a.json').unlink()
+    with pytest.raises(ValueError,match='capture metadata required'):
+        sbs.compose(renders,tmp_path/'out',inputs=snapshot)
+
+
+def test_strict_snapshot_does_not_relax_mixed_code_epochs(tmp_path,monkeypatch):
+    snapshot,renders,capture=strict_snapshot_fixture(tmp_path,monkeypatch)
+    capture={**capture,'git_sha':'c'*40,'cameras':[],'render_sha256':{}}
+    sbs.write(renders/'capture-b.json',capture)
+    with pytest.raises(ValueError,match='mixed render captures: git_sha'):
+        sbs.compose(renders,tmp_path/'out',inputs=snapshot)
