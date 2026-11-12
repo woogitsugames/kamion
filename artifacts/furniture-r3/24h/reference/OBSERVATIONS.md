@@ -24,3 +24,5 @@ przed dopasowaniem zdjęcia; nie udawać fotometrycznej ani metrycznej kalibracj
 
 NASTĘPNY KROK:obejrzeć baselinefront/corner obu istniejących instancji,
 potwierdzić ich położenie/orientację i zestaw materiałów. Dopiero wtedy kod r3.
+
+Dodatkowo obejrzano983799980108126 (Wodociągi), podgląd960px:wiata nie jest wystarczająco widoczna, więc to nie jest potwierdzenie jej rodziny/koloru. Nie rozszerzać czerwonego wariantu na wszystkie instancje na podstawie tego ujęcia. Metadane ihash zachowano osobno.
