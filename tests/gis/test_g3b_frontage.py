@@ -129,6 +129,11 @@ def test_props_stand_where_authored():
         assert buf.tris(layer, "paint_yellow") == 12 and y[:, 2].max() < 108.0 and y[:, 2].min() > 103.0   # 3 banners x 2 sides
         o = np.concatenate([p.V for p in buf.parts if p.layer == layer and p.mat == "bin_plastic_blue"])
         assert abs(o[:, 2].max() - 109.0) < 1e-6 and o[:, 0].max() - o[:, 0].min() > 4.5      # oval board on top, 4.6 m wide
+    # rotate_deg turns the row clockwise from the wall direction: 90 deg = masts in a line towards the wall
+    b2, _, _ = _build({"frontage": dict(SPEC, props=[dict(SPEC["props"][0], rotate_deg=90, spacing_m=4.0)])})
+    y = np.concatenate([p.V for p in b2.parts if p.layer == "buildings" and p.mat == "downpipe"])
+    y = y[(np.abs(y[:, 0] - 15.0) < 0.1) & (y[:, 1] < -1.0)]       # masts only (not the downpipes on the walls)
+    assert abs(y[:, 1].min() + 12.04) < 1e-6 and abs(y[:, 1].max() + 3.96) < 1e-6
     spec = dict(SPEC, props=[{"kind": "totem", "facing": "NE"}])
     _, rep, _ = _build({"frontage": spec})
     assert rep["frontage_props"] == [{"kind": "totem", "placed": False, "reason": "no wall faces NE", "building": "t:1"}]
@@ -207,7 +212,7 @@ def test_props_clear_of_buildings_and_at_the_orthophoto_spots(region_blds):
     b = blds[IDS["cars"]]
     spec = FR.plan(b["ovr"]["frontage"], MT.M)
     edges = BM.ring_edges(b["poly"].exterior)
-    want = {"sign_mast": (-204.5, -300.0), "flag_row": (-162.2, -331.6), "totem": (-162.0, -338.8)}
+    want = {"sign_mast": (-204.5, -300.0), "flag_row": (-168.2, -332.8), "totem": (-162.0, -338.8)}
     seen = set()
     for p in spec["props"]:
         q, _, _ = FR._anchor(p, edges)

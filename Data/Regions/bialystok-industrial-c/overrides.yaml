@@ -1488,9 +1488,12 @@ overrides:
       Car showroom. Photos strudel 469512365899192 / 490210580292738 (2024-08-15): black fascia over a fully glazed
       front on the road (NE) end and on the first part of the NW side, three yellow flag masts and a dark totem by
       the entrance drive, a lattice mast with a dark blue oval board at the north corner (the oval is on every photo
-      since 2017). Mast, flag and totem positions = their shadows on the orthophoto 2024-05-27 (+-1.5 m): mast E
-      -204.5 N -300, flags E -163.8...-160.6 N -329.4...-333.8, totem E -162 N -339. Heights from the shadow lengths
-      against a street lamp (WORKING_VALUE). Rear walls not visible in any open photo (dark grey assumed).
+      since 2017). Mast and totem = the feet of their shadows on the orthophoto 2024-05-27 (+-1.5 m): mast E -204.5
+      N -300, totem E -162 N -339. Flags: the three banner shadows start at E -163.8...-160.6 N -329.4...-333.8;
+      the masts stand ~5.8 m back along the shadow (bearing 258 deg) if the banner is the top 4 m of an 8.5 m mast
+      (photo: banner about 1 : 3...4): row centre E -168.2 N -332.8 (+-6 m, low confidence), row bearing ~142 deg.
+      Heights from photo proportions and shadow lengths (WORKING_VALUE). Rear walls not visible in any open photo
+      (dark grey assumed).
       Functional sign SERWIS instead of the brand lettering on the fascia.
     confidence: medium
     verify: owner photo session (frontage of the G3-B stretch)
@@ -1505,8 +1508,8 @@ overrides:
         props:
           - {kind: sign_mast, facing: NE, u: 1.05, out_m: 7.7, height_m: 10.0, board_w_m: 4.6, board_h_m: 1.3,
              board_dir: out, material: bin_plastic_blue}
-          - {kind: flag_row, facing: NE, u: -0.755, out_m: 12.6, count: 3, spacing_m: 2.7, height_m: 9.0,
-             banner_w_m: 1.0, banner_h_m: 5.5, banner_dir: out, material: paint_yellow}
+          - {kind: flag_row, facing: NE, u: -0.638, out_m: 7.5, rotate_deg: 10, count: 3, spacing_m: 2.7, height_m: 8.5,
+             banner_w_m: 1.0, banner_h_m: 4.0, banner_dir: out, material: paint_yellow}
           - {kind: totem, facing: NE, u: -0.93, out_m: 7.3, height_m: 6.0, width_m: 1.6, depth_m: 0.4,
              material: plaster_accent_grey}
   - id: g3b-frontage-glazed-showroom

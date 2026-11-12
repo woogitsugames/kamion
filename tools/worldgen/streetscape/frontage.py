@@ -195,13 +195,16 @@ def _anchor(p, edges):
 
 
 def flag_row(acc, p, q, d, nout, zg):
-    """Row of flag masts along the wall with vertical banners (plain colour, no lettering)."""
+    """Row of flag masts with vertical banners (plain colour, no lettering). The row runs along the wall, turned
+    clockwise by rotate_deg (seen from above); banners hang towards banner_dir (out = away from the wall)."""
     n, sp = int(p.get("count", 3)), float(p.get("spacing_m", 4.0))
+    rot = math.radians(float(p.get("rotate_deg", 0.0)))
+    row = np.array([d[0] * math.cos(rot) + d[1] * math.sin(rot), -d[0] * math.sin(rot) + d[1] * math.cos(rot)])
     h, bw, bh = float(p.get("height_m", 8.0)), float(p.get("banner_w_m", 1.0)), float(p.get("banner_h_m", 3.6))
     bd = nout if p.get("banner_dir", "out") == "out" else d
     d3, n3, b3 = np.append(d, 0.0), np.append(nout, 0.0), np.append(bd, 0.0)
     for i in range(n):
-        m = q + d * ((i - (n - 1) / 2) * sp)
+        m = q + row * ((i - (n - 1) / 2) * sp)
         for layer in (FK.L0, FK.L1):
             acc.box(layer, MAST, [m[0], m[1], zg + h / 2], d3 * 0.04, n3 * 0.04, [0, 0, h / 2], skip=(0,))
             a0 = np.array([m[0], m[1], zg + h - bh - 0.1]) + b3 * 0.06
@@ -236,14 +239,14 @@ def sign_mast(acc, p, q, d, nout, zg):
         for sx in (-1, 1):
             for sy in (-1, 1):
                 c = np.array([*(q + d * (sx * s) + nout * (sy * s)), zg + (h - bh) / 2])
-                acc.box(layer, MAST, c, d3 * 0.035, n3 * 0.035, [0, 0, (h - bh) / 2], skip=(0, 1))
+                acc.box(layer, MAST, c, d3 * 0.05, n3 * 0.05, [0, 0, (h - bh) / 2], skip=(0, 1))
         rings = max(2, int((h - bh) // 1.5))
         for k in range(1, rings + 1):
             z = zg + (h - bh) * k / rings
             for ax_, ay_ in ((d, nout), (nout, d)):
                 for sy in (-1, 1):
                     c = np.array([*(q + ay_ * (sy * s)), z])
-                    acc.box(layer, MAST, c, np.append(ax_ * s, 0), np.append(ay_ * 0.02, 0), [0, 0, 0.025],
+                    acc.box(layer, MAST, c, np.append(ax_ * s, 0), np.append(ay_ * 0.03, 0), [0, 0, 0.035],
                             skip=(0, 1, 4, 5) if low else (4, 5))
             if low:
                 continue
@@ -253,7 +256,7 @@ def sign_mast(acc, p, q, d, nout, zg):
                     sg = 1 if (k + (sy > 0)) % 2 else -1
                     p0 = np.array([*(q + ay_ * (sy * s) - ax_ * (sg * s)), z0])
                     p1 = np.array([*(q + ay_ * (sy * s) + ax_ * (sg * s)), z])
-                    w3 = np.array([0.0, 0.0, 0.03])
+                    w3 = np.array([0.0, 0.0, 0.04])
                     acc.quad(layer, MAST, p0 - w3, p1 - w3, p1 + w3, p0 + w3)
                     acc.quad(layer, MAST, p1 - w3, p0 - w3, p0 + w3, p1 + w3)
         seg = 12 if low else 20                      # oval board, both sides
