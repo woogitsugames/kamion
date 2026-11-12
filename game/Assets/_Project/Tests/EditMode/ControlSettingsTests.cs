@@ -31,6 +31,7 @@ namespace Game.Tests
             Assert.AreEqual(1.6f, d.ThrottleExponent, 1e-6f);
             Assert.AreEqual(1.4f, d.BrakeExponent, 1e-6f);
             Assert.AreEqual(35f, d.GyroMaxTiltDeg, 1e-4f);
+            Assert.IsTrue(d.wheelDragGrab, "ADR 0135: drag gesture by default");
         }
 
         [Test]
@@ -143,7 +144,7 @@ namespace Game.Tests
         {
             string l = Custom().LogLine("saved");
             StringAssert.StartsWith("[CONTROLS] saved v3", l);
-            foreach (string part in new[] { "steer=gyro", "wheelRange=540", "wheelSens=1.40", "centre=0.60", "deadZone=0.040", "gyroInvert=on", "gyroSens=1.50", "throttle=linear", "brake=progressive", "lookSens=1.00", "cabFov=55", "headMotion=on", "speedSteer=on" })
+            foreach (string part in new[] { "steer=gyro", "wheelRange=540", "wheelSens=1.40", "centre=0.60", "deadZone=0.040", "gyroInvert=on", "gyroSens=1.50", "throttle=linear", "brake=progressive", "lookSens=1.00", "cabFov=55", "headMotion=on", "speedSteer=on", "grab=drag" })
                 StringAssert.Contains(part, l);
         }
 
@@ -166,8 +167,11 @@ namespace Game.Tests
         static float WheelRight(ControlSettings s)
         {
             var wheel = new TouchSteeringWheel(); s.ApplyTo(wheel, null, null);
-            wheel.PointerDown(new Vector2(0, 100));
-            for (int i = 1; i <= 6; i++) { float a = i * 10f * Mathf.Deg2Rad; wheel.PointerDrag(new Vector2(Mathf.Sin(a), Mathf.Cos(a)) * 100f); }   // clockwise 60 deg
+            // Both gestures get the same 60 deg (ADR 0135): clockwise around the centre (rotate) and a slide to the right
+            // of 60 / dragScreenDegPerMm millimetres (drag); only the active gesture's coordinates are used.
+            float mmPer10 = 10f / wheel.Feel.dragScreenDegPerMm;
+            wheel.PointerDown(new Vector2(0, 100), new Vector2(20f, 10f));
+            for (int i = 1; i <= 6; i++) { float a = i * 10f * Mathf.Deg2Rad; wheel.PointerDrag(new Vector2(Mathf.Sin(a), Mathf.Cos(a)) * 100f, new Vector2(20f + i * mmPer10, 10f)); }
             var it = new DriverIntent();
             for (int i = 0; i < 20; i++) wheel.Sample(0.02f, new VehicleFeedback(), ref it);
             return it.Steer;
@@ -176,8 +180,9 @@ namespace Game.Tests
         [Test]
         public void Direction_ClockwiseWheel_IsPositive_InWheel270And900()
         {
+            foreach (bool drag in new[] { true, false })
             foreach (float range in new[] { 270f, 900f })
-                Assert.Greater(WheelRight(new ControlSettings { wheelRangeDeg = range, wheelSensitivity = 1.2f }), 0.02f, "range " + range);
+                Assert.Greater(WheelRight(new ControlSettings { wheelRangeDeg = range, wheelSensitivity = 1.2f, wheelDragGrab = drag }), 0.02f, "range " + range + " drag " + drag);
         }
 
         [Test]
