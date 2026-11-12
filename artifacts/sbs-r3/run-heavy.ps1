@@ -27,10 +27,15 @@ try {
             ComposeRefinement {uv run --project tools/refs python artifacts/sbs-r3/compose-refinement1.py}
             TestFile {uv run --project tools/worldgen python -m pytest $TestFile -q}
             Audit {uv run --project tools/refs python artifacts/sbs-r3/audit_final.py}
-            Fidelity {uv run --project tools/worldgen python tools/worldgen/fidelity/run.py --region bialystok-industrial-c --art artifacts/sbs-r3/fidelity}
+            Fidelity {
+                uv run --project tools/refs python artifacts/sbs-r3/audit_sheets.py
+                if($LASTEXITCODE -ne 0){throw 'Sheet audit failed'}
+                uv run --project tools/worldgen python tools/worldgen/fidelity/run.py --region bialystok-industrial-c --art artifacts/sbs-r3/fidelity
+            }
             FinalGis {uv run --project tools/worldgen python -m pytest tests/gis -q}
         }
         if($LASTEXITCODE -ne 0){throw "Task $Task failed with $LASTEXITCODE"}
     } finally {pwsh -NoProfile -File $slot -Release -Pool heavy -Owner $owner}
 } finally {Pop-Location}
+
 
