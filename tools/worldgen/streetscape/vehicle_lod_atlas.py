@@ -1,7 +1,8 @@
 """ADR 0153: two-submesh parked vehicles; geometry and near paint remain unchanged.
 
-The second submesh uses an authored material palette atlas with the original
-linear albedo, metallic and smoothness, including the fictional plate texture.
+The second submesh uses an authored material palette atlas with the baseline
+linear albedo and effective metallic/smoothness, including fictional plates
+and the existing refrigeration-grille stripe pattern.
 No external images, brands or scan assets are introduced.
 """
 from pathlib import Path
