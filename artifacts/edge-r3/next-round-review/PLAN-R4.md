@@ -1,5 +1,9 @@
 Plan roboczy kolejnej rundy, bez zmiany produkcji w r3.
 
+Aktualizacja 09:14 po odczytowym studium: near-city-ownership.json wskazuje po 10 regionalnych bloków ≥25 m w poziomym FOV każdego z trzech kadrów, wewnątrz tile i 900 m. W kadrze 303305 najwyższe źródłowe obiekty mają 37,59–56 m i odległość osiową około 574–680 m. Nie są obiektami far_field. To nadal kandydaci, bez udowodnionej identyfikacji fotograficznej, braków siatki czy błędu wysokości; okluzja niezweryfikowana. Nie wolno ich dublować jako tła ani rysować ponad bliższym lasem. Duży prototyp panoramy opisany niżej nie jest więc automatycznie rozwiązaniem wskazanej recenzji. Najpierw przekazać liderowi ID/pozycje w REPORT i rozdzielić własny problem dalekiego zasięgu od regionalnej zabudowy/roślinności.
+
+skyline-prototype.json/svg/png to wyłącznie studium 64 źródłowych brył wybieranych według znaczenia kątowego w trzech kadrach; nie zawiera zasłaniania, far clip ani mgły i nie jest renderem Unity. 768 trójkątów jest obliczonym kosztem hipotetycznych pudełek, nie zmierzonym budżetem implementacji. Sama najtęższa globalna zabudowa dała początkowo tylko jedną bryłę w schemacie kadru; selekcja powinna mieć uzasadnienie widocznością trasy, nie samą wysokością. Żaden z tych plików nie jest assetem gry.
+
 Problem potwierdzony: panorama bloków z trzech wskazanych zdjęć jest poza Low 900 m. W fotografii High działa dodatkowo authored Gate3 1400 m, mimo profilu 2500 m. Maska własnego far-field nie oznacza ciemnej ściany lasu. Nie usuwać własnych ani cudzych lasów na podstawie samej pary. Nie edytować Gate3Cameras, sbs ani jakości/światła innych sesji.
 
 Po przekazaniu r3: nowa gałąź r4, merge aktualnego main, odtworzenie cache/pochodnych, pełny Before. Ponownie sprawdzić źródła profilu, bo inne sesje mogą je zmienić. Potwierdzić właściciela geometrii i czy problem far clip nadal występuje. Wstępny audyt rozpatruje środki źródłowych bloków, nie faktyczną widoczność całych brył.

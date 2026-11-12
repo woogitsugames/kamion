@@ -1,0 +1,1940 @@
+{
+  "limit": 64,
+  "selection_candidate_count": 67,
+  "selection": "block h>=20m, measuredHeight only, true source centroid within horizontal FOV of the three flagged G3-A views; descending maximum h/forward distance, ID tie-break; cap64",
+  "shipping_asset": false,
+  "prototype_only": true,
+  "count": 64,
+  "profile_sha256": "E6E4C2EC119E2AE656CED5E15C261479D1A5779F2299D1D22A7EEF1A9ED83BDA",
+  "box_triangles": 768,
+  "selection_camera_ids": [
+    "sbs-g3-a-303305168125936",
+    "sbs-g3-a-320215796381417",
+    "sbs-g3-a-454716650857984"
+  ],
+  "source_sha256": "15BD1BFE124ABAE278A810A7E23FD0AEBEE1DB59601673D9F08BC984B9177D24",
+  "box_triangles_status": "analytical count for hypothetical boxes, not a measured Unity mesh",
+  "limit_status": "WORKING_VALUE",
+  "blocks": [
+    {
+      "source_storeys": 8,
+      "rect": [
+        [
+          -1705.6,
+          -1531.1
+        ],
+        [
+          -1793.2,
+          -1494.6
+        ],
+        [
+          -1767.5,
+          -1433.0
+        ],
+        [
+          -1679.9,
+          -1469.5
+        ]
+      ],
+      "ground_m": 132.2841538461538,
+      "height_m": 29.75,
+      "centroid": [
+        -1736.5500000000002,
+        -1482.05
+      ],
+      "id": "2BE4B431-B342-1BF0-E053-CC2BA8C0D140",
+      "height_source": "gugik-lod1-measuredHeight",
+      "ground_source": "WORKING_VALUE extrapolated border profile"
+    },
+    {
+      "source_storeys": 8,
+      "rect": [
+        [
+          -1738.5,
+          -1613.8
+        ],
+        [
+          -1722.0,
+          -1594.0
+        ],
+        [
+          -1711.9,
+          -1602.4
+        ],
+        [
+          -1728.4,
+          -1622.2
+        ]
+      ],
+      "ground_m": 132.2841538461538,
+      "height_m": 29.02,
+      "centroid": [
+        -1725.1999999999998,
+        -1608.1000000000001
+      ],
+      "id": "2BE4B431-B56F-1BF0-E053-CC2BA8C0D140",
+      "height_source": "gugik-lod1-measuredHeight",
+      "ground_source": "WORKING_VALUE extrapolated border profile"
+    },
+    {
+      "source_storeys": 8,
+      "rect": [
+        [
+          -1662.4,
+          -1484.2
+        ],
+        [
+          -1642.3,
+          -1497.7
+        ],
+        [
+          -1652.3,
+          -1512.6
+        ],
+        [
+          -1672.4,
+          -1499.1
+        ]
+      ],
+      "ground_m": 132.2841538461538,
+      "height_m": 27.75,
+      "centroid": [
+        -1657.35,
+        -1498.4
+      ],
+      "id": "2BE4B431-B3BB-1BF0-E053-CC2BA8C0D140",
+      "height_source": "gugik-lod1-measuredHeight",
+      "ground_source": "WORKING_VALUE extrapolated border profile"
+    },
+    {
+      "source_storeys": 8,
+      "rect": [
+        [
+          -1700.4,
+          -1557.9
+        ],
+        [
+          -1662.8,
+          -1501.5
+        ],
+        [
+          -1650.4,
+          -1509.8
+        ],
+        [
+          -1687.9,
+          -1566.2
+        ]
+      ],
+      "ground_m": 132.2841538461538,
+      "height_m": 27.65,
+      "centroid": [
+        -1675.375,
+        -1533.85
+      ],
+      "id": "2BE4B431-B6DB-1BF0-E053-CC2BA8C0D140",
+      "height_source": "gugik-lod1-measuredHeight",
+      "ground_source": "WORKING_VALUE extrapolated border profile"
+    },
+    {
+      "source_storeys": 8,
+      "rect": [
+        [
+          -1737.6,
+          -1643.6
+        ],
+        [
+          -1818.3,
+          -1608.8
+        ],
+        [
+          -1807.6,
+          -1584.0
+        ],
+        [
+          -1726.9,
+          -1618.8
+        ]
+      ],
+      "ground_m": 132.9627696634615,
+      "height_m": 28.55,
+      "centroid": [
+        -1772.6,
+        -1613.8
+      ],
+      "id": "2BE4B431-B623-1BF0-E053-CC2BA8C0D140",
+      "height_source": "gugik-lod1-measuredHeight",
+      "ground_source": "WORKING_VALUE extrapolated border profile"
+    },
+    {
+      "source_storeys": 12,
+      "rect": [
+        [
+          -1890.7,
+          -522.9
+        ],
+        [
+          -2068.1,
+          -549.0
+        ],
+        [
+          -2070.6,
+          -532.4
+        ],
+        [
+          -1893.2,
+          -506.3
+        ]
+      ],
+      "ground_m": 132.9627696634615,
+      "height_m": 34.6,
+      "centroid": [
+        -1980.6499999999999,
+        -527.6500000000001
+      ],
+      "id": "2BE4B431-BC2F-1BF0-E053-CC2BA8C0D140",
+      "height_source": "gugik-lod1-measuredHeight",
+      "ground_source": "WORKING_VALUE extrapolated border profile"
+    },
+    {
+      "source_storeys": 5,
+      "rect": [
+        [
+          -1335.5,
+          -1531.0
+        ],
+        [
+          -1305.1,
+          -1558.1
+        ],
+        [
+          -1319.1,
+          -1573.8
+        ],
+        [
+          -1349.5,
+          -1546.6
+        ]
+      ],
+      "ground_m": 132.2841538461538,
+      "height_m": 21.27,
+      "centroid": [
+        -1327.3,
+        -1552.375
+      ],
+      "id": "e5b63070-34a6-11eb-aa51-5404a6a68038",
+      "height_source": "gugik-lod1-measuredHeight",
+      "ground_source": "WORKING_VALUE extrapolated border profile"
+    },
+    {
+      "source_storeys": 12,
+      "rect": [
+        [
+          -2519.7,
+          -871.6
+        ],
+        [
+          -2445.2,
+          -944.3
+        ],
+        [
+          -2458.3,
+          -957.8
+        ],
+        [
+          -2532.9,
+          -885.1
+        ]
+      ],
+      "ground_m": 132.9627696634615,
+      "height_m": 34.3,
+      "centroid": [
+        -2489.025,
+        -914.6999999999999
+      ],
+      "id": "2BE4B431-B56A-1BF0-E053-CC2BA8C0D140",
+      "height_source": "gugik-lod1-measuredHeight",
+      "ground_source": "WORKING_VALUE extrapolated border profile"
+    },
+    {
+      "source_storeys": 12,
+      "rect": [
+        [
+          -2422.9,
+          -958.6
+        ],
+        [
+          -2468.9,
+          -1012.6
+        ],
+        [
+          -2480.1,
+          -1003.0
+        ],
+        [
+          -2434.2,
+          -949.1
+        ]
+      ],
+      "ground_m": 132.9627696634615,
+      "height_m": 33.37,
+      "centroid": [
+        -2451.5249999999996,
+        -980.8249999999999
+      ],
+      "id": "2BE4B431-AD0A-1BF0-E053-CC2BA8C0D140",
+      "height_source": "gugik-lod1-measuredHeight",
+      "ground_source": "WORKING_VALUE extrapolated border profile"
+    },
+    {
+      "source_storeys": 8,
+      "rect": [
+        [
+          -1806.2,
+          -1528.1
+        ],
+        [
+          -1723.9,
+          -1557.0
+        ],
+        [
+          -1734.2,
+          -1586.3
+        ],
+        [
+          -1816.5,
+          -1557.4
+        ]
+      ],
+      "ground_m": 132.2841538461538,
+      "height_m": 23.98,
+      "centroid": [
+        -1770.2,
+        -1557.1999999999998
+      ],
+      "id": "2BE4B431-B62B-1BF0-E053-CC2BA8C0D140",
+      "height_source": "gugik-lod1-measuredHeight",
+      "ground_source": "WORKING_VALUE extrapolated border profile"
+    },
+    {
+      "source_storeys": 11,
+      "rect": [
+        [
+          -2820.2,
+          -1570.1
+        ],
+        [
+          -2856.8,
+          -1515.5
+        ],
+        [
+          -2843.0,
+          -1506.3
+        ],
+        [
+          -2806.5,
+          -1560.9
+        ]
+      ],
+      "ground_m": 132.9627696634615,
+      "height_m": 32.35,
+      "centroid": [
+        -2831.625,
+        -1538.1999999999998
+      ],
+      "id": "2BE4B431-AC44-1BF0-E053-CC2BA8C0D140",
+      "height_source": "gugik-lod1-measuredHeight",
+      "ground_source": "WORKING_VALUE extrapolated border profile"
+    },
+    {
+      "source_storeys": 11,
+      "rect": [
+        [
+          -2858.1,
+          -1631.4
+        ],
+        [
+          -2886.2,
+          -1648.3
+        ],
+        [
+          -2893.8,
+          -1635.6
+        ],
+        [
+          -2865.7,
+          -1618.7
+        ]
+      ],
+      "ground_m": 132.9627696634615,
+      "height_m": 32.12,
+      "centroid": [
+        -2875.95,
+        -1633.4999999999998
+      ],
+      "id": "2BE4B431-7C7A-1BF0-E053-CC2BA8C0D140",
+      "height_source": "gugik-lod1-measuredHeight",
+      "ground_source": "WORKING_VALUE extrapolated border profile"
+    },
+    {
+      "source_storeys": 11,
+      "rect": [
+        [
+          -2869.0,
+          -1558.7
+        ],
+        [
+          -2852.5,
+          -1586.3
+        ],
+        [
+          -2865.1,
+          -1593.8
+        ],
+        [
+          -2881.6,
+          -1566.1
+        ]
+      ],
+      "ground_m": 132.9627696634615,
+      "height_m": 32.31,
+      "centroid": [
+        -2867.05,
+        -1576.225
+      ],
+      "id": "2BE4B431-A31C-1BF0-E053-CC2BA8C0D140",
+      "height_source": "gugik-lod1-measuredHeight",
+      "ground_source": "WORKING_VALUE extrapolated border profile"
+    },
+    {
+      "source_storeys": 4,
+      "rect": [
+        [
+          -1911.1,
+          -1756.2
+        ],
+        [
+          -1861.4,
+          -1682.3
+        ],
+        [
+          -1795.7,
+          -1726.5
+        ],
+        [
+          -1845.3,
+          -1800.4
+        ]
+      ],
+      "ground_m": 132.9627696634615,
+      "height_m": 23.03,
+      "centroid": [
+        -1853.375,
+        -1741.35
+      ],
+      "id": "d6270b38-226a-4280-98c6-ca1e1a28e661",
+      "height_source": "gugik-lod1-measuredHeight",
+      "ground_source": "WORKING_VALUE extrapolated border profile"
+    },
+    {
+      "source_storeys": 11,
+      "rect": [
+        [
+          -2980.3,
+          -1749.6
+        ],
+        [
+          -2930.9,
+          -1759.8
+        ],
+        [
+          -2933.9,
+          -1774.5
+        ],
+        [
+          -2983.4,
+          -1764.4
+        ]
+      ],
+      "ground_m": 132.9627696634615,
+      "height_m": 33.47,
+      "centroid": [
+        -2957.125,
+        -1762.0749999999998
+      ],
+      "id": "2BE4B431-A26A-1BF0-E053-CC2BA8C0D140",
+      "height_source": "gugik-lod1-measuredHeight",
+      "ground_source": "WORKING_VALUE extrapolated border profile"
+    },
+    {
+      "source_storeys": 12,
+      "rect": [
+        [
+          -2073.9,
+          -559.7
+        ],
+        [
+          -2118.5,
+          -632.2
+        ],
+        [
+          -2130.6,
+          -624.8
+        ],
+        [
+          -2085.9,
+          -552.3
+        ]
+      ],
+      "ground_m": 132.9627696634615,
+      "height_m": 26.77,
+      "centroid": [
+        -2102.225,
+        -592.25
+      ],
+      "id": "2BE4B431-BC31-1BF0-E053-CC2BA8C0D140",
+      "height_source": "gugik-lod1-measuredHeight",
+      "ground_source": "WORKING_VALUE extrapolated border profile"
+    },
+    {
+      "source_storeys": 11,
+      "rect": [
+        [
+          -2276.9,
+          -639.7
+        ],
+        [
+          -2311.3,
+          -546.9
+        ],
+        [
+          -2297.7,
+          -541.9
+        ],
+        [
+          -2263.3,
+          -634.7
+        ]
+      ],
+      "ground_m": 132.9627696634615,
+      "height_m": 27.66,
+      "centroid": [
+        -2287.3,
+        -590.8
+      ],
+      "id": "2BE4B431-B000-1BF0-E053-CC2BA8C0D140",
+      "height_source": "gugik-lod1-measuredHeight",
+      "ground_source": "WORKING_VALUE extrapolated border profile"
+    },
+    {
+      "source_storeys": 11,
+      "rect": [
+        [
+          -3011.8,
+          -1833.8
+        ],
+        [
+          -3027.0,
+          -1805.3
+        ],
+        [
+          -3013.5,
+          -1798.1
+        ],
+        [
+          -2998.3,
+          -1826.5
+        ]
+      ],
+      "ground_m": 132.9627696634615,
+      "height_m": 32.64,
+      "centroid": [
+        -3012.6499999999996,
+        -1815.925
+      ],
+      "id": "2BE4B431-7D35-1BF0-E053-CC2BA8C0D140",
+      "height_source": "gugik-lod1-measuredHeight",
+      "ground_source": "WORKING_VALUE extrapolated border profile"
+    },
+    {
+      "source_storeys": 7,
+      "rect": [
+        [
+          -2092.1,
+          -1070.1
+        ],
+        [
+          -2146.2,
+          -1027.6
+        ],
+        [
+          -2123.4,
+          -998.6
+        ],
+        [
+          -2069.3,
+          -1041.0
+        ]
+      ],
+      "ground_m": 132.9627696634615,
+      "height_m": 23.8,
+      "centroid": [
+        -2107.75,
+        -1034.3249999999998
+      ],
+      "id": "2BE4B431-BCF7-1BF0-E053-CC2BA8C0D140",
+      "height_source": "gugik-lod1-measuredHeight",
+      "ground_source": "WORKING_VALUE extrapolated border profile"
+    },
+    {
+      "source_storeys": 9,
+      "rect": [
+        [
+          -2227.8,
+          -546.9
+        ],
+        [
+          -2218.4,
+          -645.6
+        ],
+        [
+          -2232.9,
+          -647.0
+        ],
+        [
+          -2242.4,
+          -548.3
+        ]
+      ],
+      "ground_m": 132.9627696634615,
+      "height_m": 26.87,
+      "centroid": [
+        -2230.375,
+        -596.95
+      ],
+      "id": "5565d6e6-197c-11ed-860b-b8ca3aa2e5c2",
+      "height_source": "gugik-lod1-measuredHeight",
+      "ground_source": "WORKING_VALUE extrapolated border profile"
+    },
+    {
+      "source_storeys": 5,
+      "rect": [
+        [
+          -2294.0,
+          -761.9
+        ],
+        [
+          -2274.6,
+          -665.5
+        ],
+        [
+          -2261.1,
+          -668.2
+        ],
+        [
+          -2280.6,
+          -764.6
+        ]
+      ],
+      "ground_m": 132.9627696634615,
+      "height_m": 26.78,
+      "centroid": [
+        -2277.5750000000003,
+        -715.0500000000001
+      ],
+      "id": "2BE4B431-BC33-1BF0-E053-CC2BA8C0D140",
+      "height_source": "gugik-lod1-measuredHeight",
+      "ground_source": "WORKING_VALUE extrapolated border profile"
+    },
+    {
+      "source_storeys": 12,
+      "rect": [
+        [
+          -2449.9,
+          -765.5
+        ],
+        [
+          -2362.2,
+          -720.7
+        ],
+        [
+          -2355.8,
+          -733.2
+        ],
+        [
+          -2443.5,
+          -778.0
+        ]
+      ],
+      "ground_m": 132.9627696634615,
+      "height_m": 27.41,
+      "centroid": [
+        -2402.8500000000004,
+        -749.35
+      ],
+      "id": "2BE4B431-B6D2-1BF0-E053-CC2BA8C0D140",
+      "height_source": "gugik-lod1-measuredHeight",
+      "ground_source": "WORKING_VALUE extrapolated border profile"
+    },
+    {
+      "source_storeys": 12,
+      "rect": [
+        [
+          -3003.5,
+          -1007.5
+        ],
+        [
+          -2961.3,
+          -931.5
+        ],
+        [
+          -2948.5,
+          -938.6
+        ],
+        [
+          -2990.7,
+          -1014.6
+        ]
+      ],
+      "ground_m": 132.9627696634615,
+      "height_m": 31.65,
+      "centroid": [
+        -2976.0,
+        -973.05
+      ],
+      "id": "5565d6ea-197c-11ed-ab1d-b8ca3aa2e5c2",
+      "height_source": "gugik-lod1-measuredHeight",
+      "ground_source": "WORKING_VALUE extrapolated border profile"
+    },
+    {
+      "source_storeys": 9,
+      "rect": [
+        [
+          -2330.0,
+          -718.9
+        ],
+        [
+          -2343.3,
+          -620.7
+        ],
+        [
+          -2329.7,
+          -618.9
+        ],
+        [
+          -2316.4,
+          -717.0
+        ]
+      ],
+      "ground_m": 132.9627696634615,
+      "height_m": 26.76,
+      "centroid": [
+        -2329.85,
+        -668.875
+      ],
+      "id": "5565d6e8-197c-11ed-b7ab-b8ca3aa2e5c2",
+      "height_source": "gugik-lod1-measuredHeight",
+      "ground_source": "WORKING_VALUE extrapolated border profile"
+    },
+    {
+      "source_storeys": 11,
+      "rect": [
+        [
+          -3062.4,
+          -1944.1
+        ],
+        [
+          -3089.0,
+          -1832.1
+        ],
+        [
+          -3068.8,
+          -1827.3
+        ],
+        [
+          -3042.3,
+          -1939.3
+        ]
+      ],
+      "ground_m": 132.9627696634615,
+      "height_m": 31.87,
+      "centroid": [
+        -3065.625,
+        -1885.7
+      ],
+      "id": "5565d6d2-197c-11ed-8a46-b8ca3aa2e5c2",
+      "height_source": "gugik-lod1-measuredHeight",
+      "ground_source": "WORKING_VALUE extrapolated border profile"
+    },
+    {
+      "source_storeys": 11,
+      "rect": [
+        [
+          -2968.9,
+          -902.0
+        ],
+        [
+          -3043.0,
+          -965.4
+        ],
+        [
+          -3054.8,
+          -951.7
+        ],
+        [
+          -2980.7,
+          -888.2
+        ]
+      ],
+      "ground_m": 132.9627696634615,
+      "height_m": 31.76,
+      "centroid": [
+        -3011.8500000000004,
+        -926.825
+      ],
+      "id": "2BE4B431-B627-1BF0-E053-CC2BA8C0D140",
+      "height_source": "gugik-lod1-measuredHeight",
+      "ground_source": "WORKING_VALUE extrapolated border profile"
+    },
+    {
+      "source_storeys": 11,
+      "rect": [
+        [
+          -2001.2,
+          -650.2
+        ],
+        [
+          -2075.7,
+          -599.5
+        ],
+        [
+          -2066.4,
+          -585.9
+        ],
+        [
+          -1991.9,
+          -636.5
+        ]
+      ],
+      "ground_m": 132.9627696634615,
+      "height_m": 23.83,
+      "centroid": [
+        -2033.7999999999997,
+        -618.025
+      ],
+      "id": "2BE4B431-B56C-1BF0-E053-CC2BA8C0D140",
+      "height_source": "gugik-lod1-measuredHeight",
+      "ground_source": "WORKING_VALUE extrapolated border profile"
+    },
+    {
+      "source_storeys": 11,
+      "rect": [
+        [
+          -3056.6,
+          -969.8
+        ],
+        [
+          -3091.8,
+          -972.8
+        ],
+        [
+          -3093.1,
+          -958.4
+        ],
+        [
+          -3057.8,
+          -955.3
+        ]
+      ],
+      "ground_m": 132.9627696634615,
+      "height_m": 31.99,
+      "centroid": [
+        -3074.825,
+        -964.075
+      ],
+      "id": "2BE4B431-AF4B-1BF0-E053-CC2BA8C0D140",
+      "height_source": "gugik-lod1-measuredHeight",
+      "ground_source": "WORKING_VALUE extrapolated border profile"
+    },
+    {
+      "source_storeys": 11,
+      "rect": [
+        [
+          -3103.5,
+          -1958.8
+        ],
+        [
+          -3119.7,
+          -1911.6
+        ],
+        [
+          -3103.8,
+          -1906.2
+        ],
+        [
+          -3087.6,
+          -1953.4
+        ]
+      ],
+      "ground_m": 132.9627696634615,
+      "height_m": 29.99,
+      "centroid": [
+        -3103.65,
+        -1932.5
+      ],
+      "id": "2BE4B431-7D38-1BF0-E053-CC2BA8C0D140",
+      "height_source": "gugik-lod1-measuredHeight",
+      "ground_source": "WORKING_VALUE extrapolated border profile"
+    },
+    {
+      "source_storeys": 11,
+      "rect": [
+        [
+          -2644.5,
+          -776.6
+        ],
+        [
+          -2702.3,
+          -712.5
+        ],
+        [
+          -2688.8,
+          -700.3
+        ],
+        [
+          -2630.9,
+          -764.4
+        ]
+      ],
+      "ground_m": 132.9627696634615,
+      "height_m": 27.6,
+      "centroid": [
+        -2666.625,
+        -738.4499999999999
+      ],
+      "id": "2BE4B431-B32B-1BF0-E053-CC2BA8C0D140",
+      "height_source": "gugik-lod1-measuredHeight",
+      "ground_source": "WORKING_VALUE extrapolated border profile"
+    },
+    {
+      "source_storeys": 9,
+      "rect": [
+        [
+          -2868.2,
+          -1792.9
+        ],
+        [
+          -2897.2,
+          -1777.6
+        ],
+        [
+          -2890.2,
+          -1764.4
+        ],
+        [
+          -2861.2,
+          -1779.7
+        ]
+      ],
+      "ground_m": 132.9627696634615,
+      "height_m": 27.68,
+      "centroid": [
+        -2879.2,
+        -1778.6499999999999
+      ],
+      "id": "2BE4B431-761F-1BF0-E053-CC2BA8C0D140",
+      "height_source": "gugik-lod1-measuredHeight",
+      "ground_source": "WORKING_VALUE extrapolated border profile"
+    },
+    {
+      "source_storeys": 9,
+      "rect": [
+        [
+          -2552.5,
+          -601.3
+        ],
+        [
+          -2576.5,
+          -630.3
+        ],
+        [
+          -2586.7,
+          -621.9
+        ],
+        [
+          -2562.6,
+          -592.9
+        ]
+      ],
+      "ground_m": 132.9627696634615,
+      "height_m": 26.6,
+      "centroid": [
+        -2569.575,
+        -611.6
+      ],
+      "id": "2BE4B431-B3D8-1BF0-E053-CC2BA8C0D140",
+      "height_source": "gugik-lod1-measuredHeight",
+      "ground_source": "WORKING_VALUE extrapolated border profile"
+    },
+    {
+      "source_storeys": 10,
+      "rect": [
+        [
+          -3370.8,
+          -1653.8
+        ],
+        [
+          -3357.7,
+          -1617.8
+        ],
+        [
+          -3345.7,
+          -1622.1
+        ],
+        [
+          -3358.8,
+          -1658.1
+        ]
+      ],
+      "ground_m": 132.9627696634615,
+      "height_m": 29.23,
+      "centroid": [
+        -3358.25,
+        -1637.9499999999998
+      ],
+      "id": "2BE4B431-7AFE-1BF0-E053-CC2BA8C0D140",
+      "height_source": "gugik-lod1-measuredHeight",
+      "ground_source": "WORKING_VALUE extrapolated border profile"
+    },
+    {
+      "source_storeys": 9,
+      "rect": [
+        [
+          -2558.8,
+          -548.3
+        ],
+        [
+          -2582.9,
+          -577.7
+        ],
+        [
+          -2592.9,
+          -569.5
+        ],
+        [
+          -2568.8,
+          -540.1
+        ]
+      ],
+      "ground_m": 132.9627696634615,
+      "height_m": 26.49,
+      "centroid": [
+        -2575.8500000000004,
+        -558.9
+      ],
+      "id": "2BE4B431-B3D7-1BF0-E053-CC2BA8C0D140",
+      "height_source": "gugik-lod1-measuredHeight",
+      "ground_source": "WORKING_VALUE extrapolated border profile"
+    },
+    {
+      "source_storeys": 12,
+      "rect": [
+        [
+          -2483.8,
+          -809.4
+        ],
+        [
+          -2528.9,
+          -860.5
+        ],
+        [
+          -2540.0,
+          -850.7
+        ],
+        [
+          -2494.8,
+          -799.6
+        ]
+      ],
+      "ground_m": 132.9627696634615,
+      "height_m": 24.06,
+      "centroid": [
+        -2511.875,
+        -830.0500000000001
+      ],
+      "id": "2BE4B431-B325-1BF0-E053-CC2BA8C0D140",
+      "height_source": "gugik-lod1-measuredHeight",
+      "ground_source": "WORKING_VALUE extrapolated border profile"
+    },
+    {
+      "source_storeys": 9,
+      "rect": [
+        [
+          -3132.9,
+          -1173.8
+        ],
+        [
+          -3120.7,
+          -1158.9
+        ],
+        [
+          -3104.9,
+          -1171.7
+        ],
+        [
+          -3117.1,
+          -1186.7
+        ]
+      ],
+      "ground_m": 132.9627696634615,
+      "height_m": 27.53,
+      "centroid": [
+        -3118.9,
+        -1172.7749999999999
+      ],
+      "id": "2BE4B431-B49C-1BF0-E053-CC2BA8C0D140",
+      "height_source": "gugik-lod1-measuredHeight",
+      "ground_source": "WORKING_VALUE extrapolated border profile"
+    },
+    {
+      "source_storeys": 10,
+      "rect": [
+        [
+          -3709.0,
+          -2310.9
+        ],
+        [
+          -3720.8,
+          -2360.1
+        ],
+        [
+          -3741.5,
+          -2355.1
+        ],
+        [
+          -3729.7,
+          -2305.9
+        ]
+      ],
+      "ground_m": 132.9627696634615,
+      "height_m": 31.37,
+      "centroid": [
+        -3725.25,
+        -2333.0
+      ],
+      "id": "2BE4B431-C013-1BF0-E053-CC2BA8C0D140",
+      "height_source": "gugik-lod1-measuredHeight",
+      "ground_source": "WORKING_VALUE extrapolated border profile"
+    },
+    {
+      "source_storeys": 5,
+      "rect": [
+        [
+          -3207.6,
+          -1969.5
+        ],
+        [
+          -3179.8,
+          -1917.0
+        ],
+        [
+          -3141.5,
+          -1937.2
+        ],
+        [
+          -3169.3,
+          -1989.8
+        ]
+      ],
+      "ground_m": 132.9627696634615,
+      "height_m": 27.58,
+      "centroid": [
+        -3174.55,
+        -1953.375
+      ],
+      "id": "cc3e528d-2d90-4ed7-8c10-3cfaeea5fda4",
+      "height_source": "gugik-lod1-measuredHeight",
+      "ground_source": "WORKING_VALUE extrapolated border profile"
+    },
+    {
+      "source_storeys": 8,
+      "rect": [
+        [
+          -3574.9,
+          -2291.8
+        ],
+        [
+          -3605.1,
+          -2284.8
+        ],
+        [
+          -3601.0,
+          -2267.5
+        ],
+        [
+          -3570.8,
+          -2274.5
+        ]
+      ],
+      "ground_m": 132.9627696634615,
+      "height_m": 30.26,
+      "centroid": [
+        -3587.95,
+        -2279.65
+      ],
+      "id": "2BE4B431-5F69-1BF0-E053-CC2BA8C0D140",
+      "height_source": "gugik-lod1-measuredHeight",
+      "ground_source": "WORKING_VALUE extrapolated border profile"
+    },
+    {
+      "source_storeys": 9,
+      "rect": [
+        [
+          -3210.2,
+          -1128.5
+        ],
+        [
+          -3198.1,
+          -1113.6
+        ],
+        [
+          -3182.5,
+          -1126.4
+        ],
+        [
+          -3194.6,
+          -1141.2
+        ]
+      ],
+      "ground_m": 132.9627696634615,
+      "height_m": 27.56,
+      "centroid": [
+        -3196.35,
+        -1127.425
+      ],
+      "id": "2BE4B431-B793-1BF0-E053-CC2BA8C0D140",
+      "height_source": "gugik-lod1-measuredHeight",
+      "ground_source": "WORKING_VALUE extrapolated border profile"
+    },
+    {
+      "source_storeys": 9,
+      "rect": [
+        [
+          -3279.7,
+          -1213.9
+        ],
+        [
+          -3267.1,
+          -1198.6
+        ],
+        [
+          -3251.3,
+          -1211.7
+        ],
+        [
+          -3263.9,
+          -1227.0
+        ]
+      ],
+      "ground_m": 132.9627696634615,
+      "height_m": 27.77,
+      "centroid": [
+        -3265.4999999999995,
+        -1212.8
+      ],
+      "id": "2BE4B431-B555-1BF0-E053-CC2BA8C0D140",
+      "height_source": "gugik-lod1-measuredHeight",
+      "ground_source": "WORKING_VALUE extrapolated border profile"
+    },
+    {
+      "source_storeys": 9,
+      "rect": [
+        [
+          -3836.2,
+          -2222.3
+        ],
+        [
+          -3715.0,
+          -2251.1
+        ],
+        [
+          -3723.5,
+          -2286.9
+        ],
+        [
+          -3844.7,
+          -2258.2
+        ]
+      ],
+      "ground_m": 132.9627696634615,
+      "height_m": 31.78,
+      "centroid": [
+        -3779.8500000000004,
+        -2254.625
+      ],
+      "id": "2BE4B431-7847-1BF0-E053-CC2BA8C0D140",
+      "height_source": "gugik-lod1-measuredHeight",
+      "ground_source": "WORKING_VALUE extrapolated border profile"
+    },
+    {
+      "source_storeys": 11,
+      "rect": [
+        [
+          -3106.7,
+          -1847.9
+        ],
+        [
+          -3101.0,
+          -1897.1
+        ],
+        [
+          -3121.0,
+          -1899.4
+        ],
+        [
+          -3126.7,
+          -1850.2
+        ]
+      ],
+      "ground_m": 132.9627696634615,
+      "height_m": 27.05,
+      "centroid": [
+        -3113.8500000000004,
+        -1873.6499999999999
+      ],
+      "id": "2BE4B431-7D37-1BF0-E053-CC2BA8C0D140",
+      "height_source": "gugik-lod1-measuredHeight",
+      "ground_source": "WORKING_VALUE extrapolated border profile"
+    },
+    {
+      "source_storeys": 10,
+      "rect": [
+        [
+          -3759.6,
+          -2350.7
+        ],
+        [
+          -3782.1,
+          -2345.3
+        ],
+        [
+          -3770.5,
+          -2296.3
+        ],
+        [
+          -3748.0,
+          -2301.6
+        ]
+      ],
+      "ground_m": 132.9627696634615,
+      "height_m": 31.28,
+      "centroid": [
+        -3765.05,
+        -2323.475
+      ],
+      "id": "2BE4B431-7F5A-1BF0-E053-CC2BA8C0D140",
+      "height_source": "gugik-lod1-measuredHeight",
+      "ground_source": "WORKING_VALUE extrapolated border profile"
+    },
+    {
+      "source_storeys": 11,
+      "rect": [
+        [
+          -2566.2,
+          -721.5
+        ],
+        [
+          -2612.3,
+          -793.8
+        ],
+        [
+          -2628.0,
+          -783.8
+        ],
+        [
+          -2581.9,
+          -711.5
+        ]
+      ],
+      "ground_m": 132.9627696634615,
+      "height_m": 23.99,
+      "centroid": [
+        -2597.1,
+        -752.65
+      ],
+      "id": "2BE4B431-B328-1BF0-E053-CC2BA8C0D140",
+      "height_source": "gugik-lod1-measuredHeight",
+      "ground_source": "WORKING_VALUE extrapolated border profile"
+    },
+    {
+      "source_storeys": 10,
+      "rect": [
+        [
+          -3789.3,
+          -2291.8
+        ],
+        [
+          -3801.2,
+          -2340.8
+        ],
+        [
+          -3823.9,
+          -2335.3
+        ],
+        [
+          -3812.0,
+          -2286.3
+        ]
+      ],
+      "ground_m": 132.9627696634615,
+      "height_m": 31.07,
+      "centroid": [
+        -3806.6,
+        -2313.55
+      ],
+      "id": "2BE4B431-7F59-1BF0-E053-CC2BA8C0D140",
+      "height_source": "gugik-lod1-measuredHeight",
+      "ground_source": "WORKING_VALUE extrapolated border profile"
+    },
+    {
+      "source_storeys": 8,
+      "rect": [
+        [
+          -2794.3,
+          -1822.7
+        ],
+        [
+          -2821.5,
+          -1840.6
+        ],
+        [
+          -2829.5,
+          -1828.4
+        ],
+        [
+          -2802.2,
+          -1810.6
+        ]
+      ],
+      "ground_m": 132.9627696634615,
+      "height_m": 24.0,
+      "centroid": [
+        -2811.875,
+        -1825.5750000000003
+      ],
+      "id": "2BE4B431-761E-1BF0-E053-CC2BA8C0D140",
+      "height_source": "gugik-lod1-measuredHeight",
+      "ground_source": "WORKING_VALUE extrapolated border profile"
+    },
+    {
+      "source_storeys": 10,
+      "rect": [
+        [
+          -3860.8,
+          -2323.9
+        ],
+        [
+          -3849.7,
+          -2276.7
+        ],
+        [
+          -3826.9,
+          -2282.0
+        ],
+        [
+          -3838.0,
+          -2329.2
+        ]
+      ],
+      "ground_m": 132.9627696634615,
+      "height_m": 31.28,
+      "centroid": [
+        -3843.85,
+        -2302.95
+      ],
+      "id": "2BE4B431-7F58-1BF0-E053-CC2BA8C0D140",
+      "height_source": "gugik-lod1-measuredHeight",
+      "ground_source": "WORKING_VALUE extrapolated border profile"
+    },
+    {
+      "source_storeys": 5,
+      "rect": [
+        [
+          -2581.3,
+          -1221.5
+        ],
+        [
+          -2540.8,
+          -1183.1
+        ],
+        [
+          -2527.1,
+          -1197.5
+        ],
+        [
+          -2567.6,
+          -1235.9
+        ]
+      ],
+      "ground_m": 132.9627696634615,
+      "height_m": 21.28,
+      "centroid": [
+        -2554.2000000000003,
+        -1209.5
+      ],
+      "id": "2BE4B431-B858-1BF0-E053-CC2BA8C0D140",
+      "height_source": "gugik-lod1-measuredHeight",
+      "ground_source": "WORKING_VALUE extrapolated border profile"
+    },
+    {
+      "source_storeys": 8,
+      "rect": [
+        [
+          -2836.9,
+          -1804.2
+        ],
+        [
+          -2866.2,
+          -1788.8
+        ],
+        [
+          -2859.3,
+          -1775.8
+        ],
+        [
+          -2830.0,
+          -1791.2
+        ]
+      ],
+      "ground_m": 132.9627696634615,
+      "height_m": 24.04,
+      "centroid": [
+        -2848.1000000000004,
+        -1790.0
+      ],
+      "id": "2BE4B431-7273-1BF0-E053-CC2BA8C0D140",
+      "height_source": "gugik-lod1-measuredHeight",
+      "ground_source": "WORKING_VALUE extrapolated border profile"
+    },
+    {
+      "source_storeys": 1,
+      "rect": [
+        [
+          -2874.7,
+          -545.8
+        ],
+        [
+          -2842.0,
+          -565.2
+        ],
+        [
+          -2855.3,
+          -587.6
+        ],
+        [
+          -2888.0,
+          -568.1
+        ]
+      ],
+      "ground_m": 132.9627696634615,
+      "height_m": 25.69,
+      "centroid": [
+        -2865.0,
+        -566.675
+      ],
+      "id": "e68f4f3c-ae3d-43ef-b135-b322d4d780b1",
+      "height_source": "gugik-lod1-measuredHeight",
+      "ground_source": "WORKING_VALUE extrapolated border profile"
+    },
+    {
+      "source_storeys": 2,
+      "rect": [
+        [
+          -3980.1,
+          -2365.9
+        ],
+        [
+          -3968.8,
+          -2319.5
+        ],
+        [
+          -3947.1,
+          -2324.8
+        ],
+        [
+          -3958.4,
+          -2371.2
+        ]
+      ],
+      "ground_m": 132.9627696634615,
+      "height_m": 31.31,
+      "centroid": [
+        -3963.6,
+        -2345.35
+      ],
+      "id": "da416a64-1894-11ed-a932-b8ca3aa2e5c2",
+      "height_source": "gugik-lod1-measuredHeight",
+      "ground_source": "WORKING_VALUE extrapolated border profile"
+    },
+    {
+      "source_storeys": 10,
+      "rect": [
+        [
+          -3948.9,
+          -2302.4
+        ],
+        [
+          -3938.2,
+          -2257.9
+        ],
+        [
+          -3922.6,
+          -2261.7
+        ],
+        [
+          -3933.4,
+          -2306.1
+        ]
+      ],
+      "ground_m": 132.9627696634615,
+      "height_m": 30.94,
+      "centroid": [
+        -3935.775,
+        -2282.025
+      ],
+      "id": "e5b2d513-34a6-11eb-91d0-5404a6a68038",
+      "height_source": "gugik-lod1-measuredHeight",
+      "ground_source": "WORKING_VALUE extrapolated border profile"
+    },
+    {
+      "source_storeys": 5,
+      "rect": [
+        [
+          -2453.9,
+          -1601.3
+        ],
+        [
+          -2570.1,
+          -1628.1
+        ],
+        [
+          -2585.7,
+          -1560.1
+        ],
+        [
+          -2469.6,
+          -1533.4
+        ]
+      ],
+      "ground_m": 132.9627696634615,
+      "height_m": 21.32,
+      "centroid": [
+        -2519.825,
+        -1580.725
+      ],
+      "id": "2BE4B431-A553-1BF0-E053-CC2BA8C0D140",
+      "height_source": "gugik-lod1-measuredHeight",
+      "ground_source": "WORKING_VALUE extrapolated border profile"
+    },
+    {
+      "source_storeys": 1,
+      "rect": [
+        [
+          -2938.3,
+          -1879.8
+        ],
+        [
+          -2964.1,
+          -1837.3
+        ],
+        [
+          -2951.1,
+          -1829.4
+        ],
+        [
+          -2925.3,
+          -1872.0
+        ]
+      ],
+      "ground_m": 132.9627696634615,
+      "height_m": 23.11,
+      "centroid": [
+        -2944.7,
+        -1854.625
+      ],
+      "id": "f22854b6-0bbb-4000-99ff-b47ffaac3ce3",
+      "height_source": "gugik-lod1-measuredHeight",
+      "ground_source": "WORKING_VALUE extrapolated border profile"
+    },
+    {
+      "source_storeys": 8,
+      "rect": [
+        [
+          -3375.5,
+          -1710.1
+        ],
+        [
+          -3375.7,
+          -1671.8
+        ],
+        [
+          -3363.1,
+          -1671.8
+        ],
+        [
+          -3363.0,
+          -1710.1
+        ]
+      ],
+      "ground_m": 132.9627696634615,
+      "height_m": 23.82,
+      "centroid": [
+        -3369.325,
+        -1690.9499999999998
+      ],
+      "id": "2BE4B431-7AFF-1BF0-E053-CC2BA8C0D140",
+      "height_source": "gugik-lod1-measuredHeight",
+      "ground_source": "WORKING_VALUE extrapolated border profile"
+    },
+    {
+      "source_storeys": 8,
+      "rect": [
+        [
+          -3352.3,
+          -1607.1
+        ],
+        [
+          -3330.3,
+          -1575.8
+        ],
+        [
+          -3320.1,
+          -1583.0
+        ],
+        [
+          -3342.1,
+          -1614.3
+        ]
+      ],
+      "ground_m": 132.9627696634615,
+      "height_m": 23.79,
+      "centroid": [
+        -3336.2000000000003,
+        -1595.05
+      ],
+      "id": "2BE4B431-A25C-1BF0-E053-CC2BA8C0D140",
+      "height_source": "gugik-lod1-measuredHeight",
+      "ground_source": "WORKING_VALUE extrapolated border profile"
+    },
+    {
+      "source_storeys": 5,
+      "rect": [
+        [
+          -3356.9,
+          -1448.1
+        ],
+        [
+          -3336.5,
+          -1423.1
+        ],
+        [
+          -3325.0,
+          -1432.4
+        ],
+        [
+          -3345.4,
+          -1457.4
+        ]
+      ],
+      "ground_m": 132.9627696634615,
+      "height_m": 21.94,
+      "centroid": [
+        -3340.95,
+        -1440.25
+      ],
+      "id": "2BE4B431-AF72-1BF0-E053-CC2BA8C0D140",
+      "height_source": "gugik-lod1-measuredHeight",
+      "ground_source": "WORKING_VALUE extrapolated border profile"
+    },
+    {
+      "source_storeys": 7,
+      "rect": [
+        [
+          -3872.4,
+          -2031.5
+        ],
+        [
+          -3894.7,
+          -2112.2
+        ],
+        [
+          -3916.1,
+          -2106.2
+        ],
+        [
+          -3893.8,
+          -2025.6
+        ]
+      ],
+      "ground_m": 132.9627696634615,
+      "height_m": 26.34,
+      "centroid": [
+        -3894.25,
+        -2068.875
+      ],
+      "id": "2BE4B431-7848-1BF0-E053-CC2BA8C0D140",
+      "height_source": "gugik-lod1-measuredHeight",
+      "ground_source": "WORKING_VALUE extrapolated border profile"
+    },
+    {
+      "source_storeys": 4,
+      "rect": [
+        [
+          -3907.4,
+          -2337.5
+        ],
+        [
+          -3923.2,
+          -2402.5
+        ],
+        [
+          -3943.4,
+          -2397.5
+        ],
+        [
+          -3927.6,
+          -2332.6
+        ]
+      ],
+      "ground_m": 132.9627696634615,
+      "height_m": 25.86,
+      "centroid": [
+        -3925.4,
+        -2367.525
+      ],
+      "id": "da416a62-1894-11ed-9f78-b8ca3aa2e5c2",
+      "height_source": "gugik-lod1-measuredHeight",
+      "ground_source": "WORKING_VALUE extrapolated border profile"
+    },
+    {
+      "source_storeys": 5,
+      "rect": [
+        [
+          -3610.8,
+          -1867.3
+        ],
+        [
+          -3628.7,
+          -1827.2
+        ],
+        [
+          -3604.7,
+          -1816.5
+        ],
+        [
+          -3586.8,
+          -1856.6
+        ]
+      ],
+      "ground_m": 132.9627696634615,
+      "height_m": 21.81,
+      "centroid": [
+        -3607.75,
+        -1841.9
+      ],
+      "id": "2BE4B431-7A42-1BF0-E053-CC2BA8C0D140",
+      "height_source": "gugik-lod1-measuredHeight",
+      "ground_source": "WORKING_VALUE extrapolated border profile"
+    },
+    {
+      "source_storeys": 1,
+      "rect": [
+        [
+          -3625.8,
+          -1943.8
+        ],
+        [
+          -3564.4,
+          -1909.5
+        ],
+        [
+          -3544.9,
+          -1944.5
+        ],
+        [
+          -3606.3,
+          -1978.8
+        ]
+      ],
+      "ground_m": 132.9627696634615,
+      "height_m": 23.82,
+      "centroid": [
+        -3585.3500000000004,
+        -1944.15
+      ],
+      "id": "e9e97ebf-966d-47b5-acde-6df17d678aa8",
+      "height_source": "gugik-lod1-measuredHeight",
+      "ground_source": "WORKING_VALUE extrapolated border profile"
+    },
+    {
+      "source_storeys": 5,
+      "rect": [
+        [
+          -3604.1,
+          -1835.3
+        ],
+        [
+          -3602.6,
+          -1820.0
+        ],
+        [
+          -3573.3,
+          -1822.9
+        ],
+        [
+          -3574.8,
+          -1838.1
+        ]
+      ],
+      "ground_m": 132.9627696634615,
+      "height_m": 21.57,
+      "centroid": [
+        -3588.7,
+        -1829.0750000000003
+      ],
+      "id": "2BE4B431-7A3F-1BF0-E053-CC2BA8C0D140",
+      "height_source": "gugik-lod1-measuredHeight",
+      "ground_source": "WORKING_VALUE extrapolated border profile"
+    },
+    {
+      "source_storeys": 4,
+      "rect": [
+        [
+          -3659.3,
+          -1945.0
+        ],
+        [
+          -3632.5,
+          -1993.7
+        ],
+        [
+          -3646.4,
+          -2001.4
+        ],
+        [
+          -3673.2,
+          -1952.7
+        ]
+      ],
+      "ground_m": 132.9627696634615,
+      "height_m": 23.79,
+      "centroid": [
+        -3652.8500000000004,
+        -1973.2
+      ],
+      "id": "da74fd81-1894-11ed-9dce-b8ca3aa2e5c2",
+      "height_source": "gugik-lod1-measuredHeight",
+      "ground_source": "WORKING_VALUE extrapolated border profile"
+    }
+  ]
+}
