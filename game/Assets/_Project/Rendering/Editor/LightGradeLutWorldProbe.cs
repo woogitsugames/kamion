@@ -34,6 +34,8 @@ namespace Game.Rendering.Editor
         readonly string m_Key;
         readonly Dictionary<int,Frame> m_Frames=new Dictionary<int,Frame>();
         string m_Error;
+        Vector4 m_ParityToRestore;
+        bool m_HasSavedParity;
         public static Key CaptureKey(LightingPreset preset)
         {
             var pipeline=AssetDatabase.LoadAssetAtPath<UniversalRenderPipelineAsset>("Assets/_Project/Rendering/Settings/URP_High.asset");
@@ -79,7 +81,11 @@ namespace Game.Rendering.Editor
             // Disable that approximation only for this diagnostic display camera, otherwise the full bake applies twice.
             // Physical captures retain the original globals and bypass the entire opaque LUT.
             if(Shader.GetGlobalFloat("_KamionSkyCapOff")<.5f)
+            {
+                m_ParityToRestore=Shader.GetGlobalVector("_KamionToeParity");
+                m_HasSavedParity=true;
                 Shader.SetGlobalVector("_KamionToeParity",Vector4.zero);
+            }
             // Sky's compression must target the baked response instead of the legacy Low toe.
             Shader.SetGlobalVector("_KamionSkyCap",new Vector4(InverseGrey(EnvironmentLighting.SkyCapHorizonDisplay),InverseGrey(EnvironmentLighting.SkyCapZenithDisplay),1,0));
         }
@@ -102,9 +108,11 @@ namespace Game.Rendering.Editor
         public void Dispose()
         {
             Shader.SetGlobalFloat("_KamionOpaqueGradeEnabled",0);
+            Shader.SetGlobalFloat("_KamionOpaqueGradeSize",0);
             Shader.SetGlobalTexture("_KamionOpaqueGradeLut",null);
             UnityEngine.Object.DestroyImmediate(m_Lut);
             if(EnvironmentLighting.Instance!=null)EnvironmentLighting.Instance.Apply();
+            if(m_HasSavedParity)Shader.SetGlobalVector("_KamionToeParity",m_ParityToRestore);
         }
     }
 }
