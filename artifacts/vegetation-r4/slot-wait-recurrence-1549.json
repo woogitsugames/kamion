@@ -1,0 +1,158 @@
+{
+  "observed_at": "2026-11-12T15:50:08.0083907+01:00",
+  "main_policy_commit": "f7d0e5a0fb6b7f357144452b03677a4ace9dcbed",
+  "main_policy_committed_at": "2026-11-12T14:49:36+01:00",
+  "heavy_slots": 0,
+  "phone_run": true,
+  "queue": [
+    {
+      "owner": "claude-g3b-lowread",
+      "first_wait": "2026-11-12T14:25:29.8374098",
+      "ticks": 639300903298374098,
+      "heartbeat": "2026-11-12T15:50:06.3507948+01:00"
+    },
+    {
+      "owner": "gpt-furniture-r3",
+      "first_wait": "2026-11-12T14:26:08.3248248",
+      "ticks": 639300903683248248,
+      "heartbeat": "2026-11-12T15:50:06.4518606+01:00"
+    },
+    {
+      "owner": "gpt-truck-r4",
+      "first_wait": "2026-11-12T14:26:15.5432369",
+      "ticks": 639300903755432369,
+      "heartbeat": "2026-11-12T15:49:16.7551905+01:00"
+    },
+    {
+      "owner": "gpt-cab-r4",
+      "first_wait": "2026-11-12T14:30:49.4735997",
+      "ticks": 639300906494735997,
+      "heartbeat": "2026-11-12T15:50:06.3782186+01:00"
+    },
+    {
+      "owner": "claude-putry-deck",
+      "first_wait": "2026-11-12T14:36:35.1157722",
+      "ticks": 639300909951157722,
+      "heartbeat": "2026-11-12T15:49:41.4251589+01:00"
+    },
+    {
+      "owner": "gpt-edge-r6",
+      "first_wait": "2026-11-12T14:55:45.2936728",
+      "ticks": 639300921452936728,
+      "heartbeat": "2026-11-12T15:50:01.7870826+01:00"
+    },
+    {
+      "owner": "gpt-sbs-r4",
+      "first_wait": "2026-11-12T15:02:07.8350142",
+      "ticks": 639300925278350142,
+      "heartbeat": "2026-11-12T15:50:01.7911416+01:00"
+    },
+    {
+      "owner": "gpt-vegetation-r4",
+      "first_wait": "2026-11-12T15:15:17.5670608",
+      "ticks": 639300933175670608,
+      "heartbeat": "2026-11-12T15:50:06.2262479+01:00"
+    },
+    {
+      "owner": "claude-junctions-r6",
+      "first_wait": "2026-11-12T15:30:47.1309093",
+      "ticks": 639300942471309093,
+      "heartbeat": "2026-11-12T15:49:47.5683029+01:00"
+    },
+    {
+      "owner": "gpt-light-r6",
+      "first_wait": "2026-11-12T15:35:49.6152026",
+      "ticks": 639300945496152026,
+      "heartbeat": "2026-11-12T15:50:02.6670230+01:00"
+    },
+    {
+      "owner": "claude-frontage-r2-py",
+      "first_wait": "2026-11-12T15:47:22.0403015",
+      "ticks": 639300952420403015,
+      "heartbeat": "2026-11-12T15:50:02.3026029+01:00"
+    },
+    {
+      "owner": "gpt-asphalt-r3",
+      "first_wait": "2026-11-12T15:47:53.9260662",
+      "ticks": 639300952739260662,
+      "heartbeat": "2026-11-12T15:50:04.2888117+01:00"
+    }
+  ],
+  "heavy_acquirers": [
+    {
+      "pid": 69788,
+      "parent_pid": 47084,
+      "created": "2026-11-12T14:25:29.5368000+01:00",
+      "owner": "claude-g3b-lowread"
+    },
+    {
+      "pid": 73712,
+      "parent_pid": 68124,
+      "created": "2026-11-12T14:26:08.0350430+01:00",
+      "owner": "gpt-furniture-r3"
+    },
+    {
+      "pid": 54632,
+      "parent_pid": 54020,
+      "created": "2026-11-12T14:26:15.1767090+01:00",
+      "owner": "gpt-truck-r4"
+    },
+    {
+      "pid": 28908,
+      "parent_pid": 45068,
+      "created": "2026-11-12T14:30:49.2021130+01:00",
+      "owner": "gpt-cab-r4"
+    },
+    {
+      "pid": 77812,
+      "parent_pid": 57268,
+      "created": "2026-11-12T14:36:34.9048340+01:00",
+      "owner": "claude-putry-deck"
+    },
+    {
+      "pid": 55024,
+      "parent_pid": 71536,
+      "created": "2026-11-12T14:55:45.0573640+01:00",
+      "owner": "gpt-edge-r6"
+    },
+    {
+      "pid": 59180,
+      "parent_pid": 70780,
+      "created": "2026-11-12T15:02:07.5994160+01:00",
+      "owner": "gpt-sbs-r4"
+    },
+    {
+      "pid": 64772,
+      "parent_pid": 57980,
+      "created": "2026-11-12T15:15:17.2965710+01:00",
+      "owner": "gpt-vegetation-r4"
+    },
+    {
+      "pid": 21560,
+      "parent_pid": 51756,
+      "created": "2026-11-12T15:30:46.8969600+01:00",
+      "owner": "claude-junctions-r6"
+    },
+    {
+      "pid": 32636,
+      "parent_pid": 55700,
+      "created": "2026-11-12T15:35:49.3373220+01:00",
+      "owner": "gpt-light-r6"
+    },
+    {
+      "pid": 79652,
+      "parent_pid": 66100,
+      "created": "2026-11-12T15:47:21.7670480+01:00",
+      "owner": "claude-frontage-r2-py"
+    },
+    {
+      "pid": 61736,
+      "parent_pid": 74208,
+      "created": "2026-11-12T15:47:53.6959310+01:00",
+      "owner": "gpt-asphalt-r3"
+    }
+  ],
+  "d_test_log_exists": false,
+  "d_world_log_exists": false,
+  "note": "Read-only host metadata. No foreign process, slot, ticket, PHONE_RUN, shared script or device was changed."
+}

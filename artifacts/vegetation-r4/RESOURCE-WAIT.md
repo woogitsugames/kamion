@@ -1,6 +1,8 @@
 # Diagnostyka oczekiwania — r4 otwarta, nie scalać
 
-**Aktualizacja 15:26:15: zastój zwolniony normalnie.** PHONE_RUN nie istnieje, trzy sloty heavy są zajęte, FIFO ruszyło i D ma dziewięć zgłoszeń przed sobą. Świeże artefakty pomiaru powstawały do 15:25:52. Nie ma potrzeby ingerować w cudze procesy na podstawie poniższego historycznego odczytu. Sekwencja D 68527 nadal czeka; testy i World nie ruszyły, więc runda nie jest gotowa.
+**Nawrót 15:50:08:** wszystkie sloty heavy są wolne, PHONE_RUN znów aktywne, D ma siedem zgłoszeń przed sobą. Nowy odczyt to slot-wait-recurrence-1549.json (rzeczywisty czas wewnątrz: 15:50:08). Czoło FIFO tworzą żywe procesy claude-g3b-lowread, gpt-furniture-r3 i gpt-truck-r4, uruchomione o 14:25–14:26 przed zmianą reguły z 14:49. Ich stare pętle znów blokują także heavy, a nowsi oczekujący nie mogą wyprzedzić ich w FIFO. Vegetation nie zmienia cudzych procesów, biletów ani PHONE_RUN. Własny proces D 68527 nadal żyje i nie uruchomił testów lub World.
+
+**Poprzednie zwolnienie 15:26:15:** PHONE_RUN nie istniał, trzy sloty heavy były zajęte, FIFO ruszyło i D miało dziewięć zgłoszeń przed sobą. Świeże artefakty pomiaru powstawały do 15:25:52. Było to rzeczywiste, czasowe zwolnienie; obecny stan jest opisany wyżej. Runda nadal nie jest gotowa.
 
 To wyłącznie bieżąca diagnostyka zasobów, nie REPORT gotowej rundy. Kod D nie przeszedł jeszcze 41 testów ani generatora i nie ma renderów D. Wygenerowany i zaimportowany świat nadal przedstawia odrzucone C. Nie ma akceptacji do integracji.
 
