@@ -94,3 +94,5 @@ Po budowie A (2026-11-12T10:07:47.1656820+01:00): zaimportuj spójny natywny kan
 Po budowie A (2026-11-12T10:10:37.9511531+01:00): zapisz 492 kontrolowane kadry i budżet A. Następny etap w post-a.ps1; po kompletach obejrzeć obrazy i zdecydować o kolejnej ablacji.
 
 Po budowie A (2026-11-12T10:10:44.9366314+01:00): przygotuj podglądy i pomiar czerni A. Następny etap w post-a.ps1; po kompletach obejrzeć obrazy i zdecydować o kolejnej ablacji.
+
+Po budowie A (2026-11-12T10:11:06.7452241+01:00): potwierdź natywne UV1 i osad A na GPU edytora. Następny etap w post-a.ps1; po kompletach obejrzeć obrazy i zdecydować o kolejnej ablacji.
