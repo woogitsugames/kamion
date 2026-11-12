@@ -47,3 +47,4 @@
   mirres x0.75 +0.47/+0.26, shd25 +0.39, shr512 +0.31, cc +0.15, vc 150->100 +1.29/+1.08, veh (reszta) +0.57/+2.88 (szum okien ±0.7).
   Zmiana Low #2: mirrorResolutionScale 0.75 (lusterko klasy II 224 -> 168 px = skala renderu Low). Build r2c + przeplatane capped x3 w tle.
   NASTĘPNY KROK: `python artifacts/a16-perf/summarize.py 'artifacts/a16-perf/r2c/*'`, potem `pwsh artifacts/a16-perf/vqa-r2.ps1 -Before 'rq_vehcull=300,rq_mirror_res=1'`
+- 19:58 r2c (APK 56b0df6b91, 3x przeplatane capped) w toku; po nim merge main (ADR 0147) + weryfikacja orientacji. NASTĘPNY KROK: `python artifacts/a16-perf/summarize.py 'artifacts/a16-perf/r2c/*'`
