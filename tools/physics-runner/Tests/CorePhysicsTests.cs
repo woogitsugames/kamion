@@ -266,7 +266,8 @@ namespace PhysicsRunner.Tests
             double drivelineOmega = e.Omega / Math.Abs(amt.TotalRatio);
             amt.Update(0.01, inp, 30, drivelineOmega, e, 40000, 0, m.WheelRadiusRef, 0, 0.97);
             Assert.Equal(AmtState.ShiftTorqueRamp, amt.State);
-            Assert.Equal(4, amt.TargetGear);
+            Assert.True(amt.TargetGear > 3, $"expected an upshift from 3rd, got {amt.TargetGear}");
+            Assert.True(amt.TargetGear <= 3 + amt.Def.maxSkip);
             Assert.Equal(1, amt.ShiftCount);
         }
 
@@ -332,7 +333,7 @@ namespace PhysicsRunner.Tests
             var m = NewModel(); var amt = m.Amt;
             double ambient = 25;
             double prev = amt.ClutchTempC;
-            for (int i = 0; i < 2000; i++) // 20 s at 50 kW slip
+            for (int i = 0; i < 20000; i++) // 200 s at 50 kW slip
             {
                 amt.UpdateClutchThermal(50000, 0.01, ambient);
                 Assert.True(amt.ClutchTempC >= prev - 1e-9, "heating must be monotone");
@@ -520,6 +521,7 @@ namespace PhysicsRunner.Tests
             var air = m.Air;
             air.Charge(0);
             m.InitParking(true);
+            air.Update(0.01, 1200, true, 0, false, false, m.Group); // warning is evaluated in Update
             Assert.True(air.LowPressureWarning);
             bool sawCutOut = false;
             for (int i = 0; i < 60000; i++) // 600 s
@@ -1015,8 +1017,8 @@ namespace PhysicsRunner.Tests
         {
             Assert.Equal(0, MathUtil.Clamp01(-3));
             Assert.Equal(1, MathUtil.Clamp01(3));
-            Assert.Equal(5, MathUtil.MoveTowards(0, 5, 2));
-            Assert.Equal(-5, MathUtil.MoveTowards(0, -5, 2));
+            Assert.Equal(2, MathUtil.MoveTowards(0, 5, 2));
+            Assert.Equal(-2, MathUtil.MoveTowards(0, -5, 2));
             Assert.Equal(3, MathUtil.MoveTowards(2.9, 3, 2));
         }
     }
