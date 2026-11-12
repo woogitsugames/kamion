@@ -119,76 +119,33 @@ Shader "Kamion/Furniture Sign"
             #pragma fragment FurnitureSignFragment
 
             // -------------------------------------
-            // Material Keywords
-            #pragma shader_feature_local _NORMALMAP
-            #pragma shader_feature_local _PARALLAXMAP
-            #pragma shader_feature_local _RECEIVE_SHADOWS_OFF
-            #pragma shader_feature_local _ _DETAIL_MULX2 _DETAIL_SCALED
-            #pragma shader_feature_local_fragment _SURFACE_TYPE_TRANSPARENT
+            // ADR 0131: variant set trimmed to what this project can select (was the full URP Lit list, ADR 0120 r2).
+            // Materials: always _ALPHATEST_ON + _FURNITURE_RETRO (WorldPbrMaterials.FurnitureSign); no normal / parallax /
+            // detail / spec-gloss / transparent paths. Pipeline: Forward (no Forward+ cluster loop, no deferred), main-light
+            // shadows (1-4 cascades, soft on High/Ultra), per-pixel point lights of StreetLamps (no additional-light shadows,
+            // no vertex lights), no lightmaps / shadowmask / APV / light cookies / light layers / DBuffer decals /
+            // LOD cross-fade (WorldSceneBuilder: fadeMode None) / debug display / DOTS. Like Kamion/World PBR, the face takes
+            // no SSAO and no reflection-probe blending / box projection (the nearest probe only).
+            // A new pipeline feature the signs must receive has to be added here AND to World PBR.
             #pragma shader_feature_local_fragment _ALPHATEST_ON
-            #pragma shader_feature_local_fragment _ _ALPHAPREMULTIPLY_ON _ALPHAMODULATE_ON
-            #pragma shader_feature_local_fragment _METALLICSPECGLOSSMAP
-            #pragma shader_feature_local_fragment _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
-            #pragma shader_feature_local_fragment _OCCLUSIONMAP
-            #pragma shader_feature_local_fragment _SPECULARHIGHLIGHTS_OFF
-            #pragma shader_feature_local_fragment _ENVIRONMENTREFLECTIONS_OFF
-            #pragma shader_feature_local_fragment _SPECULAR_SETUP
+            #pragma shader_feature_local_fragment _FURNITURE_RETRO
 
-            // -------------------------------------
-            // Universal Pipeline keywords
-            #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _MAIN_LIGHT_SHADOWS_SCREEN
-            #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
-            #pragma multi_compile _ EVALUATE_SH_MIXED EVALUATE_SH_VERTEX
-            #pragma multi_compile_fragment _ _ADDITIONAL_LIGHT_SHADOWS
-            #pragma multi_compile_fragment _ _REFLECTION_PROBE_BLENDING
-            #pragma multi_compile_fragment _ _REFLECTION_PROBE_BOX_PROJECTION
-            #pragma multi_compile_fragment _ _REFLECTION_PROBE_ATLAS
+            #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE
+            #pragma multi_compile _ _ADDITIONAL_LIGHTS
             #pragma multi_compile_fragment _ _SHADOWS_SOFT _SHADOWS_SOFT_LOW _SHADOWS_SOFT_MEDIUM _SHADOWS_SOFT_HIGH
-            #pragma multi_compile_fragment _ _SCREEN_SPACE_OCCLUSION
-            #pragma multi_compile_fragment _ _SCREEN_SPACE_IRRADIANCE
-            #pragma multi_compile_fragment _ _DBUFFER_MRT1 _DBUFFER_MRT2 _DBUFFER_MRT3
-            #pragma multi_compile_fragment _ _LIGHT_COOKIES
-            #pragma multi_compile _ _LIGHT_LAYERS
-            #pragma multi_compile _ _CLUSTER_LIGHT_LOOP
-            #include_with_pragmas "Packages/com.unity.render-pipelines.core/ShaderLibrary/FoveatedRenderingKeywords.hlsl"
-            #include_with_pragmas "Packages/com.unity.render-pipelines.universal/ShaderLibrary/RenderingLayers.hlsl"
-
-
-            // -------------------------------------
-            // Unity defined keywords
-            #pragma multi_compile _ LIGHTMAP_SHADOW_MIXING
-            #pragma multi_compile _ SHADOWS_SHADOWMASK
-            #pragma multi_compile _ DIRLIGHTMAP_COMBINED
-            #pragma multi_compile _ LIGHTMAP_ON
-            #pragma multi_compile_fragment _ LIGHTMAP_BICUBIC_SAMPLING
-            #pragma multi_compile_fragment _ REFLECTION_PROBE_ROTATION
-            #pragma multi_compile _ DYNAMICLIGHTMAP_ON
-            #pragma multi_compile _ USE_LEGACY_LIGHTMAPS
-            #pragma multi_compile _ LOD_FADE_CROSSFADE
-            #pragma multi_compile_fragment _ DEBUG_DISPLAY
-            #include_with_pragmas "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Fog.hlsl"
-            #include_with_pragmas "Packages/com.unity.render-pipelines.universal/ShaderLibrary/ProbeVolumeVariants.hlsl"
-
-            //--------------------------------------
-            // GPU Instancing
+            #pragma multi_compile_fog
             #pragma multi_compile_instancing
-            #pragma instancing_options renderinglayer
-            #include_with_pragmas "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DOTS.hlsl"
 
             #include "Packages/com.unity.render-pipelines.universal/Shaders/LitInput.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/Shaders/LitForwardPass.hlsl"
-            #pragma shader_feature_local_fragment _FURNITURE_RETRO
             #include "FurnitureSignForward.hlsl"
             ENDHLSL
         }
+        // ADR 0131: Forward renderer only - no GBuffer, Meta (lightmapping), 2D or (XR) motion-vector passes (static faces).
+        // DepthNormals stays for the Ultra SSAO prepass, DepthOnly for the depth prepass/texture.
         UsePass "Universal Render Pipeline/Lit/SHADOWCASTER"
-        UsePass "Universal Render Pipeline/Lit/GBUFFER"
         UsePass "Universal Render Pipeline/Lit/DEPTHONLY"
         UsePass "Universal Render Pipeline/Lit/DEPTHNORMALS"
-        UsePass "Universal Render Pipeline/Lit/META"
-        UsePass "Universal Render Pipeline/Lit/UNIVERSAL2D"
-        UsePass "Universal Render Pipeline/Lit/MOTIONVECTORS"
-        UsePass "Universal Render Pipeline/Lit/XRMOTIONVECTORS"
     }
     FallBack "Hidden/Universal Render Pipeline/FallbackError"
 }

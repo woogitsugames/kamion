@@ -126,6 +126,7 @@ namespace Game.World.Import
             bool foliage = id.Contains("grass") || id.Contains("boxwood") || id.Contains("elderberry");
             bool decal = id.Contains("cover") || id.Contains("drain");
             var tex = Texture(r, id, "basecolor", Resolve(maps.Get("basecolor")), false, false, foliage || decal, decal);
+            if (decal) return s_Mats[path] = Decal(r, id, path, maps, tex);
             var mat = RegionImporter.LitMaterial(path, Color.white, 0.85f, decal ? 0.65f : 0f, tex, foliage || decal, 0.5f, foliage, null);
             // Compact world meshes carry no tangent attribute. Never enable URP normal mapping
             // with a missing tangent basis; retain normal products for a later reviewed bake.
@@ -137,6 +138,41 @@ namespace Game.World.Import
             if (mask != null) { mat.SetTexture("_MetallicGlossMap", mask); mat.EnableKeyword("_METALLICSPECGLOSSMAP"); mat.SetFloat("_Smoothness", 1f); }
             EditorUtility.SetDirty(mat);
             s_Mats[path] = mat;
+            return mat;
+        }
+        /// <summary>ADR 0131: road covers / drains are part of the carriageway, so they take the world lighting model
+        /// (Kamion/World PBR: world GI, far shadow, dusk lamp pools, headlamps, Kamion fog). As URP Lit they missed the
+        /// analytic lamp pools and headlamp cone that light the asphalt around them and read as black holes at night.
+        /// Photographed albedo unchanged (tint 1); alpha-blended like the oil decals, whole-UV (_DecalCells 1).</summary>
+        static Material Decal(RegionImporter.Result r, string id, string path, Dictionary<string, object> maps, Texture2D tex)
+        {
+            var shader = Shader.Find("Kamion/World PBR") ?? throw new InvalidOperationException("Kamion/World PBR missing");
+            var mat = AssetDatabase.LoadAssetAtPath<Material>(path);
+            if (mat == null) { mat = new Material(shader); AssetDatabase.CreateAsset(mat, path); }
+            mat.shader = shader;
+            mat.shaderKeywords = new[] { "_DECAL_ALPHA" };
+            mat.enableInstancing = true;
+            mat.SetTexture("_BaseMap", tex);
+            // metallic_gloss: R metallic (0 on these scans), A smoothness - the World PBR _MaskMap A contract.
+            var mask = Texture(r, id, "metallic_gloss", Resolve(maps.Get("metallic_gloss")), true, false, false, true);
+            mat.SetTexture("_MaskMap", mask);
+            mat.SetTexture("_NormalMap", null);
+            mat.SetColor("_Tint", Color.white);
+            mat.SetFloat("_AlbedoScale", 1f);
+            mat.SetFloat("_SmoothnessScale", 1f);
+            mat.SetFloat("_MetallicScale", 0f);
+            mat.SetFloat("_DecalAlpha", 1f);
+            mat.SetFloat("_DecalCells", 1f);
+            mat.SetFloat("_OffsetFactor", -1f);
+            mat.SetFloat("_OffsetUnits", -4f);
+            mat.SetFloat("_ReceiveShadows", 1f);
+            mat.SetFloat("_Cull", 2f);
+            mat.SetFloat("_SrcBlend", (float)UnityEngine.Rendering.BlendMode.SrcAlpha);
+            mat.SetFloat("_DstBlend", (float)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+            mat.SetFloat("_ZWrite", 0f);
+            mat.SetOverrideTag("RenderType", "Transparent");
+            mat.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Geometry + 20;
+            EditorUtility.SetDirty(mat);
             return mat;
         }
         static Texture2D Texture(RegionImporter.Result r, string id, string channel, string source, bool linear, bool normal, bool alpha, bool clamp)
