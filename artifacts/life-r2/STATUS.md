@@ -111,3 +111,5 @@ Krok 41: przygotowano run-c-after-capture.ps1, który czeka na istniejącą sesj
 Iteracja C (2026-11-12T02:57:28.7192836+01:00): Capture C, siedem SHA źródeł, natywny payload/materiały i wszystkie liczniki zweryfikowane. Brak odbioru wizualnego; następna kontrola plansz.
 
 Iteracja C (2026-11-12T02:59:14.9157077+01:00): Compare B zakończony 0 pod heavy; wynik ramek osobówek w passenger-car-frame-check-b.json.
+
+Iteracja C (2026-11-12T02:59:34.2980699+01:00): Compare C zakończony 0 pod heavy. Następne: oględziny autora; jeśli C wybrany, pełny GIS i EditMode na koniec rundy. REPORT jeszcze nie powstał.
