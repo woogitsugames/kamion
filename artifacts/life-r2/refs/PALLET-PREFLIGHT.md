@@ -8,3 +8,5 @@ To preflight life r3, bez zmiany produkcji w r2. Mapillary (lokalne 12 + nowe 16
 Konstrukcja ogólna: [oficjalna strona EPAL](https://www.epal-pallets.org/eu-en/load-carriers/epal-euro-pallet) podaje 800×1200×144 mm, 11 desek i 9 klocków. To źródło wymiarów i budowy, nie zgoda na używanie oznaczeń certyfikacyjnych. Układ własnego modelu pozostanie bez marek i pieczęci. Dane rozmieszczenia istniejących stosów nie wynikają z tych fotografii.
 
 Potwierdzone odstępstwo źródła life_props.pallets_empty: każdy LOD0 jest stosem pełnych prostopadłościanów, a LOD1 jednym pełnym blokiem. Referencje pokazują duże prześwity. Przed zmianą należy znaleźć czytelne kamery rzeczywistych instancji, zmierzyć budżet i wybrać uproszczenie, które zachowa otwory z bliska bez nowych grup materiałowych. Nie wykonano jeszcze takiej zmiany ani renderu palet.
+
+Dodatkowy preflight materiału: M wskazuje euro_pallet_side, którego nie ma w bieżącym materials_spec. Natywny materiał używa WorldSurface i ma przypisaną BaseMap, więc sam brak zestawu PBR NIE dowodzi braku tekstury ani wyglądu bloków. Odpowiedni dowód: ../pallet-material-preflight.json. Odbiór wyglądu wymaga dopiero kamer r3.
