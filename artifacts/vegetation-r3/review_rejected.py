@@ -20,10 +20,22 @@ for label, folder in [('baseline', 'before'), ('B1', 'probe'),
     array = np.array(frame)
     if before is None:
         before = array
+    changed = np.any(array != before, axis=2)
+    ys, xs = np.where(changed)
     result[label] = dict(producer_generated=(label != 'maple_height_only'),
                         stats=stats(directory / 'stats.txt')[camera],
-                        changed_pixels=int(np.any(array != before, axis=2).sum()),
+                        changed_pixels=int(changed.sum()),
+                        changed_bbox=([int(xs.min()), int(ys.min()), int(xs.max()), int(ys.max())]
+                                      if len(xs) else None),
+                        fixed_crown_zone=[0, 269, 461, 507],
+                        changed_pixels_in_fixed_crown_zone=int(changed[269:507,:461].sum()),
                         image_sha256=hashlib.sha256(path.read_bytes()).hexdigest())
+    if label == 'B1':
+        difference = array.copy()
+        difference[changed] = (255, 0, 255)
+        diff_image = Image.fromarray(difference)
+        diff_image.thumbnail((960, 720))
+        diff_image.save(here/'B1-difference.png')
     frames.append((label, frame))
 ref = next(r for r in json.loads((here/'photo-references.json').read_text())['references']
            if r['camera'] == camera)
