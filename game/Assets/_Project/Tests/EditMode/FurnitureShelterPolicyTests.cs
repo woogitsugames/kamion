@@ -1,6 +1,6 @@
 using System;
 using Game.World;
-using Game.World.Import.Furniture;
+using Game.Editor.Furniture;
 using NUnit.Framework;
 using UnityEditor;
 using UnityEngine;

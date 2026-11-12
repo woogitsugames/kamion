@@ -1,9 +1,10 @@
 using System;
 using System.Linq;
+using Game.World;
 using UnityEditor;
 using UnityEngine;
 
-namespace Game.World.Import.Furniture
+namespace Game.Editor.Furniture
 {
     /// <summary>Keep the authored furniture variant on its existing family's visibility policy.
     /// Runs while generated instance assets are saved, with no runtime callback or foreign policy edits.</summary>
