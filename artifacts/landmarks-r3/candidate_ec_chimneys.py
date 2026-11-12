@@ -52,7 +52,7 @@ def valid_dimensions(d, o):
         return (b[0] == d['paint_start_m'] and b[-1] == 120 and
                 all(a < b for a,b in zip(b,b[1:])) and 0 < b[0] < 120 and
                 d['outlets'] in (1,3) and all(0 < g < 119 for g in d['galleries_m']))
-    except (KeyError, TypeError, ValueError):
+    except (KeyError, TypeError, ValueError, IndexError):
         return False
 
 
