@@ -1,0 +1,5 @@
+# Oględziny referencji rundy 3
+
+Obejrzano pełny podgląd fotografii PCRT oraz wcześniej jej oryginał i natywny wycinek. Autor Rakoon, 2020-07-11, CC BY3.0; atrybucja, adres źródła i SHA w reference/SOURCES.json. Natywny wycinek pokazuje zazębiające się kontury kostek, umiarkowanie ciemne spoiny i drobne różnice tonu. Białe oznaczenie zachowuje podziały podłoża. Pełny kadr ma jasne zachmurzone niebo, a część placu jest zasłonięta samochodami. Część drobnego detalu fotografii ogranicza skala i obróbka obrazu.
+
+Dokładna poza tego zdjęcia i zasięg terenu wymagają rozpoznania. Sąsiednie geotagi wskazują okolicę, ale nie ten punkt. Próba dopasowania renderu powinna wykorzystać rzeczywiste punkty/elewację z nowego GLB i widoczne narożniki hali. Ustawienie materiału musi wynikać z baseline; z tej fotografii nie wyznaczono liczbowego albedo, roughness ani normal strength. Licencjonowany oryginał jest dowodem referencyjnym. Raport materiałowy wykorzysta wycinek posadzki z podaną atrybucją; nie powstają tekstury ani marki/logo na assetach gry.
