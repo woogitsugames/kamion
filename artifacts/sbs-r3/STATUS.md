@@ -120,3 +120,5 @@ Zapisano kompletną niezależną ocenę baseline w REVIEW-D51-BASELINE.md: G3-A 
 2026-11-12T10:59:05.7405868+01:00: końcowa dostawa zweryfikuje również168 raw względem zapisanych capture z audytu, zanim zacznie kopiowanie. To wiąże obie grupy obrazów (raw i arkusze) z wynikami walidacji, a nie tylko z identyczną kopią celu.
 
 2026-11-12T10:59:57.3193245+01:00: niezależny przegląd poprawek helpera dostawy PASS: obie zgłoszone luki zamknięte, źródła i istotne artefakty związane z walidacją, staging uwzględniony. To nie potwierdza zakończenia GIS. Sesja11437 nadal żywa i oczekuje na zajęty heavy; nie restartowano i nie uruchomiono duplikatu.
+
+2026-11-12T11:21:56.8660878+01:00: podczas kolejki GIS wykonałem z niezależnym recenzentem odczyt dwóch typów kotwic B275528 na natywnych obrazach. Zapisane szerokie przedziały VP i portalu oraz SHA dają podstawę do jednej próby−9/h.55/oko1.7 w r4, nadal C. Żadnych nowych renderów ani zmian produkcji r3; GIS11437 nadal czeka na heavy.
