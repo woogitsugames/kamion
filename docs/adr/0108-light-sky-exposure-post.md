@@ -52,3 +52,15 @@ Przegląd134 Low przez rodzica i134 High przez krytyka ujawnił niespójność N
 
 
 Zamknięcie r2: końcowy pełny GIS 523 passed / 1 xfailed, 1063.34 s według pytest, kod0. Run wykonał się pod heavy po analizie; oczekiwanie i zawieszenie przez nadzorcę są opisane oddzielnie, nie uznane za awarię testów. Własne efekty regeneracji poza light zachowano w artifacts/light-r2/generated-baseline-rebuild.patch i przywrócono do bazy. Odtwarzanie wymaga generatora/fidelity/importu w slotach. Następna runda r3 dotyczy mokrej nawierzchni; lokalna referencja cm92458760 ma klasęC i nie służy kalibrowanej fotometrii.
+
+## Runda r3 — mokra nawierzchnia i kontrola klina tła, w toku
+
+Gałąź gpt-light-r3 od zakończonego r2, merge main 522361aa bez konfliktów (b36e36b2). Main wnosi m.in. życie, roślinność, kabinę i edge r1; dlatego baseline wymaga świeżego generatora i importu zamiast ponownego użycia sceny z r2. Produkcyjne mokro i presety pozostają na razie bez zmian.
+
+Punktem odniesienia mokrej nawierzchni jest lokalne zdjęcie cm92458760 (Rakoon, 2020-07-11, CC BY 3.0). Plik został obejrzany w oryginale, SHA256 zgodny z manifestem. Widać lokalną warstwę wody i odbicia przy przejściu, zachowaną fakturę poza filmem oraz czytelną kostkę. Poza C / WORKING_VALUE i photometric_use=false pozostają niezmienione: referencja wizualna, bez skalibrowanego pomiaru ROI lub deklaracji poprawnej pozy. Pochodzenie: artifacts/light-r3/reference/wet-source.json.
+
+Starszy ADR 0080 odrzucił mokro przez jasny, plastikowy asfalt i zlewające się oznakowanie. Baseline r3 porównuje rq_wet 0 / 0,5 / 1 na sześciu kamerach i obu tierach, z osobnym kadrem Commons w jego proporcjach. Sonda zapisuje rzeczywiste wetness i puddle share globalnego shadera dla każdej kamery, a nie tylko żądane parametry. Brak poprawnego stanu lub któregokolwiek PNG ma zatrzymać dowód. Dopiero oględziny wyznaczą zmianę odpowiedzi filmu/kałuż w dziedzinie light; nie zmieniamy albedo ani geometrii właściciela asfaltu.
+
+Nowa recenzja main batch2 zgłasza P1: szary klin nad halami w pozycjach SBS 2948595898752384 i 303305168125936, ujawniony na tle chmur. Niezależny preflight potwierdza kontur w czterech starych parach, bez przypisania konkretnego renderera. Hipotezy obejmują sylwetkę geometrii i zbyt krótki dystans mgły po kompresji far-field. Najpierw cztery świeże clear po edge r1; jeśli artefakt zostanie, istniejący VisualQaRunner -qaMask może wskazać WorldFarField lub Apron. Nie ukrywamy problemu globalnym podniesieniem mgły i nie zmieniamy cudzej geometrii.
+
+Pipeline jest szeregowy: generator → fidelity → import (ewentualny build_all w tym samym heavy) → zwolnienie heavy → 40 PNG w Unity. Własny heavy owner gpt-light-r3, Unity owner gpt-light; każdy zwalniany w finally. BLAS/OpenMP/NumExpr ograniczone do jednego wątku. Pełny GIS dopiero na końcu rundy.
