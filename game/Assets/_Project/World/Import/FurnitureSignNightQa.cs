@@ -214,8 +214,6 @@ namespace Game.World.Import
                     draw.set=SaveOwned(set,$"{Dir}/OffSet_{label}.asset");
                 }
             foreach (var c in Object.FindObjectsByType<ControlCamera>(FindObjectsInactive.Include,FindObjectsSortMode.None)) Object.DestroyImmediate(c);
-            var modeController=new GameObject("FurnitureQaLampMode").AddComponent<FurnitureSignQaRigMode>();
-            modeController.mode=mode;modeController.Apply();
             foreach (var pair in new[]{("furniture-night-driver",55f),("furniture-night-detail",15f)})
             {
                 var go=new GameObject(pair.Item1);
@@ -246,6 +244,7 @@ namespace Game.World.Import
                     trueSunElevation=EnvironmentLighting.Instance?.Model?.TrueSunElevationDeg ?? 999});
             }
             RenderPipelineManager.beginCameraRendering+=Observe;
+            FurnitureSignQaRigMode.Bind(mode);
             string folder=Path.Combine(output,mode,distance.ToString("0"));
             try
             {
@@ -263,6 +262,7 @@ namespace Game.World.Import
             finally
             {
                 RenderPipelineManager.beginCameraRendering-=Observe;
+                FurnitureSignQaRigMode.Unbind();
                 Directory.CreateDirectory(folder);
                 File.WriteAllText(Path.Combine(folder,"source-evidence.json"),JsonUtility.ToJson(new Evidence{samples=samples.ToArray()},true));
             }

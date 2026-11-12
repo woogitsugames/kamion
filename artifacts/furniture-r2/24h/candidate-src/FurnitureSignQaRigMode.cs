@@ -5,29 +5,32 @@ using UnityEngine.Rendering;
 
 namespace Game.World.Import
 {
-    /// <summary>Persisted ONLY on owned diagnostic scenes. Binds a desired mode to the real,
-    /// possibly recreated TruckLights component; never publishes a synthetic light source.</summary>
-    [ExecuteAlways]
-    public sealed class FurnitureSignQaRigMode : MonoBehaviour
+    /// <summary>Editor-only scoped fixture. Keeps the desired mode across scene reloads and
+    /// binds it to real TruckLights before camera callbacks, never to a synthetic source.</summary>
+    public static class FurnitureSignQaRigMode
     {
-        public string mode="low";
-        TruckLights m_Lamps;
-        void OnEnable()
+        static string s_Mode;
+        static TruckLights s_Lamps;
+        public static void Bind(string mode)
         {
-            m_Lamps=null;
+            Unbind();s_Mode=mode;
             RenderPipelineManager.beginContextRendering+=Begin;
             Apply();
         }
-        void OnDisable() => RenderPipelineManager.beginContextRendering-=Begin;
-        void Begin(ScriptableRenderContext context,List<Camera> cameras) => Apply();
-        public void Apply()
+        public static void Unbind()
         {
-            if(m_Lamps==null) m_Lamps=Object.FindAnyObjectByType<TruckLights>();
-            if(m_Lamps==null) return;
-            m_Lamps.forceLowBeam=true;
-            m_Lamps.highBeam=mode=="high";
-            m_Lamps.enabled=mode!="source-disabled";
-            if(m_Lamps.enabled) m_Lamps.Refresh();
+            RenderPipelineManager.beginContextRendering-=Begin;
+            s_Lamps=null;
+        }
+        static void Begin(ScriptableRenderContext context,List<Camera> cameras) => Apply();
+        static void Apply()
+        {
+            if(s_Lamps==null) s_Lamps=Object.FindAnyObjectByType<TruckLights>();
+            if(s_Lamps==null) return;
+            s_Lamps.forceLowBeam=true;
+            s_Lamps.highBeam=s_Mode=="high";
+            s_Lamps.enabled=s_Mode!="source-disabled";
+            if(s_Lamps.enabled) s_Lamps.Refresh();
         }
     }
 }
