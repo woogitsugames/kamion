@@ -12,6 +12,7 @@
 | poprawki G3-B z 0127 | 0139 | `g3b-r2` | `artifacts/live/g3b-r2.md` | pary after → merge main → final |
 | krawędź mapy / tło | 0141 | `edge-r6c` | `artifacts/live/edge-r6c.md` | pary after → merge main → testy |
 | **węzły r7: kolizja W-beam/poręcz (P1-1), filary z danych (P1-2), żwir nasypu/nosa, spód pomostu** | 0144 | `junctions-r7` (Fable) | `artifacts/live/junctions-r7.md` | start 18:37 |
+| **dźwięk opon: szuranie w ciasnym skręcie + pisk (właściciel: pisk zły; był syntezą 930 Hz)** | 0145 | `tyre-scrub` (Opus audio) | `artifacts/live/tyre-scrub.md` | start 18:59; nagrania: `docs/owner/ELEVENLABS-REGEN-03.md` (właściciel generuje) |
 | **A16 GPU runda 2: props G3-A wg prefiksu** (jedyny agent telefonowy) | 0136 r2 | `a16-perf` (Opus) | `artifacts/live/a16-perf.md` | start 18:4x |
 | **pozy SBS r3: 494288 (pomost Putry), 810896 (za murem), 837235** | 0143 | `sbs-poses-r3` (Opus) | `artifacts/live/sbs-poses-r3.md` | start 18:4x |
 - Scalone wcześniej (s13): 0129, 0136, 0140, 0142 — patrz niżej. **main wymaga regeneracji** (0129, 0133) + `ImpostorTrimBake.RunBatch` (0136) w jednej integracji.
@@ -20,7 +21,8 @@
 - **Jeśli sesja padnie:** wznów agentów z `artifacts/live/*.md` (NASTĘPNY KROK); nie dubluj procesów w tle (sprawdź `Get-CimInstance Win32_Process` bash/pwsh/Unity).
 - 18:4x: **fix fidelity CRLF** `a4cb9995` (M1) → `fidelity_qa.json` do regeneracji w integracji.
 - **18:37: SCALONE 0123 b7** `bc84fe48` (critic SCAL warunkowo: P1-1 W-beam przez poręcz na p0_kerb_merge_eye, P1-2 luka filarów → 0144) **i 0128 i3** `e79c5cc3` (critic SCAL warunkowo: poza 320326 → 0143). Worktree junctions-r6 i biezenstwa-island do sprzątnięcia (dowody już w main artifacts). **main wymaga regeneracji** (0123, 0128, 0129, 0133, fidelity CRLF).
-- **Ostatni przydzielony ADR: 0144.**
+- 18:59: właściciel pyta o APK z dźwiękami → `kamion-0.1.0-5557fe0165.apk` (aktualne audio). Mistral PR #6–#14: właściciel potwierdził koniec sesji Mistrala → recenzja wszystkich (też drafty) w toku → raport `docs/reports/REVIEW-2026-11-12-s14-mistral-r2.md`, scalanie przez lidera.
+- **Ostatni przydzielony ADR: 0145.**
 
 ---
 # HANDOVER — kamion, SESJA 13 (start 2026-11-12 16:41, nowe konto)
