@@ -1,5 +1,12 @@
 param([switch]$ResumeVehicle)
 $ErrorActionPreference = 'Stop'
+if(Test-Path "$PSScriptRoot/STOP.requested"){
+    @{state='paused-by-owner-before-import';observed=(Get-Date -Format o);
+      note='Queued world preparation may finish; no Unity import/captures started after owner stop.'}|
+        ConvertTo-Json|Set-Content "$PSScriptRoot/PAUSED-BEFORE-IMPORT.json"
+    Write-Host 'Owner requested handover; prepared world retained, baseline import intentionally not started.'
+    exit 75
+}
 $root = (Resolve-Path "$PSScriptRoot/../..").Path
 Set-Location $root
 . scripts/env.ps1

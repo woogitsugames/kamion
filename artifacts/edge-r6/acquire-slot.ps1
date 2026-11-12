@@ -1,5 +1,6 @@
 param([ValidateSet('heavy','unity')][string]$Pool,[Parameter(Mandatory)][string]$Owner)
 $ErrorActionPreference='Stop'
+if(Test-Path "$PSScriptRoot/STOP.requested"){throw 'Owner requested handover; no new acquisition. Read PRZEKAZANIE.md before resuming.'}
 Set-Location (Resolve-Path "$PSScriptRoot/../..")
 if((git branch --show-current).Trim() -ne 'gpt-edge-r6' -or $Owner -notin @('gpt-edge','gpt-edge-r6')){throw 'Wrong owner/round'}
 $central='C:/Users/matma/Documents/Claude/kamion/scripts/unity-slot.ps1'
