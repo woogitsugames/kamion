@@ -52,6 +52,7 @@ for relative,expected in source_hashes.items():
 OUT.mkdir(exist_ok=True)
 sbs.write(OUT/'cameras.json',{'schema':'kamion/sbs-cameras/1','frame':'E,N,absolute U','cameras':result})
 sbs.write(OUT/'plan.json',{'diagnostic_only':True,'all_pose_confidence':'C','baseline':baseline,
+    'probe_cameras_sha256':sha(OUT/'cameras.json'),
     'production_source_sha256':source_hashes,'world_manifest_sha256':sha(world),'probes':plan,
     'acceptance':'Portal plus independent durable road corner; visual and independent review before any production pose. Offsets are hypotheses, no automatic promotion.'})
 print('Prepared 18 C-only probes; production sources unchanged')
