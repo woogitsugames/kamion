@@ -10,3 +10,5 @@
   NASTEPNY KROK: pwsh scripts/unity-slot.ps1 -Acquire -Owner claude-audio-el ; Unity -executeMethod Game.Editor.Audio.VehicleAudioImporter.ImportBatch ; pwsh scripts/test.ps1 -Platform PlayMode -Filter "ElevenLabsEngineAudioTests|AudioLayersTests"
 - krok 6: porownanie z analiza GPT -> artifacts/audio-el/COMPARE-GPT.md (tools/audio/el_rpmtest.py: drabina R6 przy rpm z promptu 2/96). Zmiana zrodel cab_off 1200/1500 -> CAB_OFF_1800 (3). REGEN-01 + R6 (4 pozycje C-F), 56 generacji.
   NASTEPNY KROK: czekam na slot Unity (PHONE_RUN): import + testy PlayMode
+- krok 7: Unity: import OK (ElevenLabs 32 petle + 10 sfx), PlayMode 19/19 (ElevenLabsEngineAudioTests 4/4, AudioLayers, ControlSettingsPanel, DrivingLabScene), EditMode ControlSettingsTests 19/19. Banki EngineBank_el_* + .meta zacommitowane (Generated jest sledzony w repo).
+  NASTEPNY KROK (lider): scalic audio-el; APK -> owner A/B w Ustawieniach DZWIEK/Silnik lub adb -e engine_audio el|synth; po scaleniu truck-feel bramkowac EngineBrake na Amt.SyncBrakeRequest
