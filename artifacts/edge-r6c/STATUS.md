@@ -22,3 +22,9 @@ Gałąź `edge-r6c`, worktree `.claude/worktrees/edge-r6c`, baza main 76c88d4fd.
 - Skyline nie był widoczny za far plane: skybox Unity rysuje ~1e-6 NDC przed far, moje 3–6 m = 3,7e-7. Poprawka: 40..30 m + minimum 4e-6 NDC (dbg1 potwierdził kominy EC w 297817).
 - W tle: `pwsh artifacts/edge-r6c/run-vqa.ps1 -Name after` (log after2.log).
 - NASTĘPNY KROK: `bash artifacts/edge-r6c/make-pairs.sh Low-clear; bash artifacts/edge-r6c/make-pairs.sh Low-overcast; python artifacts/edge-r6c/stats-diff.py baseline after Low-clear`, potem `git merge main` (generated --ours) + build_world (-Pool heavy) + import-region + rendery + pytest gis+gate3 + ADR 0141.
+
+## 2026-11-12 18:55 — pary, merge main, regeneracja
+- Pary Low clear+overcast (101+101, artifacts/edge-r6c/pairs) obejrzane: 2 kominy EC w 297817, 3281350, 150280, 1528935; zapory w edge-*.
+- git merge main 611f116c9 bez konfliktów; build_world 615 s OK (far_field Low 24548 / High 118588). pytest gis+gate3: 845 passed, 1 xfailed, 1 failed (fidelity_qa.json nieaktualny po fixie CRLF a4cb9995 z main) -> fidelity/run.py w toku.
+- W tle: fidelity/run.py (heavy), run-merged.ps1 (import, EditMode, rendery merged).
+- NASTĘPNY KROK: `bash artifacts/edge-r6c/make-pairs.sh Low-clear baseline merged; python artifacts/edge-r6c/stats-diff.py baseline merged Low-clear`, potem docs/adr/0141.
