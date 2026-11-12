@@ -187,6 +187,8 @@ namespace Game.World.Import
                         }
                     }
                     var mesh = WorldMeshBake.Compact(n.Name, n.Primitives, new WorldMeshBake.Options { Uv0 = uv, Uv1 = uv1 });
+                    // ADR 0136: tree impostor quad -> tight band polygon around the views' alpha (~1/3 of the fragments).
+                    if (tree && ReferenceEquals(g, impostors)) ImpostorTrimBake.Apply(mesh, n, materials[starts[starts.Count - 1]]);
                     AssetDatabase.AddObjectToAsset(mesh, set);
                     bytes += WorldMeshBake.GpuBytes(mesh);
                     lods.Add(mesh);

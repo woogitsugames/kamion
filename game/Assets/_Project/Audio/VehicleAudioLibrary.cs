@@ -38,6 +38,20 @@ namespace TruckSim.Audio
         public EngineSoundBank elExteriorEngine, elCabEngine, elExteriorEngineBrake, elCabEngineBrake;
         public PerspectivePair elEngineStart, elEngineStop, elIdleClatter, elRetarder, elTurboWastegate;
 
+        [Header("ElevenLabs effects (ADR 0142; el_manifest.json group \"fx\", tools/audio/el_fx.py)")]
+        [Tooltip("Pneumatics / gearbox one-shots (exterior + prerendered cabin, or one clip for both).")]
+        public PerspectivePair elAirBrakeRelease, elParkingBrakeSet, elParkingBrakeRelease, elAirDryerPurge, elAirDryerPurgeB,
+            elGearshiftUp, elGearshiftDown, elTrailerCouple, elSuspBump, elIndicatorTick, elIndicatorTock, elCabSwitch,
+            elDoorOpen, elDoorClose;
+        [Tooltip("Loops. Cabin-only recordings (dry tyres, wind, gear whine) have ext = null: the exterior keeps the procedural clip.")]
+        public PerspectivePair elCompressor, elHorn, elReverseBeeper, elAmbientBed, elTurboWhine, elTurboRush;
+        public AudioClip elTyreDryCab, elWindCab, elGearWhineCab;
+        [Tooltip("Tyre loops by SurfaceKind; invalid entries keep the procedural loop (cobbles, grass; dry = elTyreDryCab).")]
+        public PerspectivePair[] elTyreSurface = new PerspectivePair[6];
+
+        /// <summary>The ElevenLabs effect set is imported (ADR 0142).</summary>
+        public bool HasElevenLabsFx => elAirBrakeRelease.IsValid;
+
         /// <summary>The ElevenLabs engine set is imported (both perspectives of the rpm x load grid).</summary>
         public bool HasElevenLabs => elExteriorEngine != null && elCabEngine != null;
 

@@ -20,7 +20,10 @@ namespace TruckSim.Audio
 
         [Header("Mix (WORKING_VALUE)")]
         [Range(0f, 1f)] public float bedVolume = 0.30f;
-        [Range(0f, 1f)] public float forkliftVolume = 0.16f;
+        [Tooltip("ADR 0142: 0 = off. The procedural forklift (sfx_layers.forklift_loop) was the owner's 'siren': a pure " +
+                 "380-900 Hz motor sine sweeping up and down every 4.0 s (two manoeuvres per 8 s loop) + 1 kHz beeper, heard in " +
+                 "both sets. Muted until it is redesigned (aperiodic manoeuvres, no bare sine) or replaced by a recording.")]
+        [Range(0f, 1f)] public float forkliftVolume = 0f;
         [Range(0f, 1f)] public float birdVolume = 0.35f;
         [Range(0f, 1f)] public float cabBedFactor = 0.5f, cabForkliftFactor = 0.7f, cabBirdFactor = 0.4f;
         [Tooltip("Birds are heard only below this speed [m/s] (engine and wind mask them).")]
@@ -56,6 +59,15 @@ namespace TruckSim.Audio
             m_NextBird = Time.time + Random.Range(birdInterval.x, birdInterval.y);
             m_PanPhase = Random.value * 6.28f;
         }
+
+        /// <summary>Bed loop of the active sound set (ADR 0142: ElevenLabs AMB_INDUSTRIAL_DAY or the procedural bed).</summary>
+        public void SetBed(VehicleAudioLibrary.PerspectivePair bed)
+        {
+            if (m_Bed != null && bed.IsValid) m_Bed.SetClips(bed.ext, bed.cab);
+        }
+
+        /// <summary>Exterior clip of the bed now playing (tests).</summary>
+        public AudioClip BedClip => m_Bed?.ExtClip;
 
         void Update()
         {

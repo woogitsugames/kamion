@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="20" result="Passed" total="20" passed="20" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-11-12 16:59:35Z" end-time="2026-11-12 16:59:35Z" duration="0,0537271">
+  <test-suite type="TestSuite" id="1000" name="Kamion" fullname="Kamion" runstate="Runnable" testcasecount="403" result="Passed" start-time="2026-11-12 16:59:35Z" end-time="2026-11-12 16:59:35Z" duration="0.053727" total="20" passed="20" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1501" name="Game.Tests.EditMode.dll" fullname="C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/audio-fx/game/Library/ScriptAssemblies/Game.Tests.EditMode.dll" runstate="Runnable" testcasecount="403" result="Passed" start-time="2026-11-12 16:59:35Z" end-time="2026-11-12 16:59:35Z" duration="0.048946" total="20" passed="20" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="43208" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1502" name="Game" fullname="Game" runstate="Runnable" testcasecount="403" result="Passed" start-time="2026-11-12 16:59:35Z" end-time="2026-11-12 16:59:35Z" duration="0.048294" total="20" passed="20" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1503" name="Tests" fullname="Game.Tests" runstate="Runnable" testcasecount="403" result="Passed" start-time="2026-11-12 16:59:35Z" end-time="2026-11-12 16:59:35Z" duration="0.047788" total="20" passed="20" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1054" name="ControlSettingsTests" fullname="Game.Tests.ControlSettingsTests" classname="Game.Tests.ControlSettingsTests" runstate="Runnable" testcasecount="19" result="Passed" start-time="2026-11-12 16:59:35Z" end-time="2026-11-12 16:59:35Z" duration="0.038232" total="19" passed="19" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1067" name="ApplyTo_PushesValuesIntoInputSources" fullname="Game.Tests.ControlSettingsTests.ApplyTo_PushesValuesIntoInputSources" methodname="ApplyTo_PushesValuesIntoInputSources" classname="Game.Tests.ControlSettingsTests" runstate="Runnable" seed="912269051" result="Passed" start-time="2026-11-12 16:59:35Z" end-time="2026-11-12 16:59:35Z" duration="0.012945" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1065" name="CameraSettings_AreClampedAndRoundTrip" fullname="Game.Tests.ControlSettingsTests.CameraSettings_AreClampedAndRoundTrip" methodname="CameraSettings_AreClampedAndRoundTrip" classname="Game.Tests.ControlSettingsTests" runstate="Runnable" seed="1877291263" result="Passed" start-time="2026-11-12 16:59:35Z" end-time="2026-11-12 16:59:35Z" duration="0.000888" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1071" name="CentreStrength_ZeroKeepsWheel_TwoCentresFaster" fullname="Game.Tests.ControlSettingsTests.CentreStrength_ZeroKeepsWheel_TwoCentresFaster" methodname="CentreStrength_ZeroKeepsWheel_TwoCentresFaster" classname="Game.Tests.ControlSettingsTests" runstate="Runnable" seed="1755787795" result="Passed" start-time="2026-11-12 16:59:35Z" end-time="2026-11-12 16:59:35Z" duration="0.002651" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1073" name="DeadZone_SettingSuppressesSmallInput" fullname="Game.Tests.ControlSettingsTests.DeadZone_SettingSuppressesSmallInput" methodname="DeadZone_SettingSuppressesSmallInput" classname="Game.Tests.ControlSettingsTests" runstate="Runnable" seed="615831219" result="Passed" start-time="2026-11-12 16:59:35Z" end-time="2026-11-12 16:59:35Z" duration="0.000594" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1055" name="Defaults_MatchStage2Behaviour" fullname="Game.Tests.ControlSettingsTests.Defaults_MatchStage2Behaviour" methodname="Defaults_MatchStage2Behaviour" classname="Game.Tests.ControlSettingsTests" runstate="Runnable" seed="484586800" result="Passed" start-time="2026-11-12 16:59:35Z" end-time="2026-11-12 16:59:35Z" duration="0.000354" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1068" name="Direction_ClockwiseWheel_IsPositive_InWheel270And900" fullname="Game.Tests.ControlSettingsTests.Direction_ClockwiseWheel_IsPositive_InWheel270And900" methodname="Direction_ClockwiseWheel_IsPositive_InWheel270And900" classname="Game.Tests.ControlSettingsTests" runstate="Runnable" seed="1169805473" result="Passed" start-time="2026-11-12 16:59:35Z" end-time="2026-11-12 16:59:35Z" duration="0.001993" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1070" name="Direction_Gyro_RightTiltIsPositive_InvertFlips" fullname="Game.Tests.ControlSettingsTests.Direction_Gyro_RightTiltIsPositive_InvertFlips" methodname="Direction_Gyro_RightTiltIsPositive_InvertFlips" classname="Game.Tests.ControlSettingsTests" runstate="Runnable" seed="1838199169" result="Passed" start-time="2026-11-12 16:59:35Z" end-time="2026-11-12 16:59:35Z" duration="0.000481" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1069" name="Direction_WheelSensitivityAndRange_ScaleOutput" fullname="Game.Tests.ControlSettingsTests.Direction_WheelSensitivityAndRange_ScaleOutput" methodname="Direction_WheelSensitivityAndRange_ScaleOutput" classname="Game.Tests.ControlSettingsTests" runstate="Runnable" seed="841398499" result="Passed" start-time="2026-11-12 16:59:35Z" end-time="2026-11-12 16:59:35Z" duration="0.000302" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1059" name="Load_ClampsOutOfRangeAndNaN" fullname="Game.Tests.ControlSettingsTests.Load_ClampsOutOfRangeAndNaN" methodname="Load_ClampsOutOfRangeAndNaN" classname="Game.Tests.ControlSettingsTests" runstate="Runnable" seed="106270903" result="Passed" start-time="2026-11-12 16:59:35Z" end-time="2026-11-12 16:59:35Z" duration="0.000235" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1060" name="Load_CorruptJson_GivesDefaults" fullname="Game.Tests.ControlSettingsTests.Load_CorruptJson_GivesDefaults" methodname="Load_CorruptJson_GivesDefaults" classname="Game.Tests.ControlSettingsTests" runstate="Runnable" seed="2099214115" result="Passed" start-time="2026-11-12 16:59:35Z" end-time="2026-11-12 16:59:35Z" duration="0.000938" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1057" name="Load_NothingSaved_GivesDefaults" fullname="Game.Tests.ControlSettingsTests.Load_NothingSaved_GivesDefaults" methodname="Load_NothingSaved_GivesDefaults" classname="Game.Tests.ControlSettingsTests" runstate="Runnable" seed="1380384031" result="Passed" start-time="2026-11-12 16:59:35Z" end-time="2026-11-12 16:59:35Z" duration="0.000212" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1066" name="LogLine_ContainsAllChoices" fullname="Game.Tests.ControlSettingsTests.LogLine_ContainsAllChoices" methodname="LogLine_ContainsAllChoices" classname="Game.Tests.ControlSettingsTests" runstate="Runnable" seed="847470809" result="Passed" start-time="2026-11-12 16:59:35Z" end-time="2026-11-12 16:59:35Z" duration="0.000875" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1061" name="Migration_LegacySteerModeKey_Wheel900AndGyro" fullname="Game.Tests.ControlSettingsTests.Migration_LegacySteerModeKey_Wheel900AndGyro" methodname="Migration_LegacySteerModeKey_Wheel900AndGyro" classname="Game.Tests.ControlSettingsTests" runstate="Runnable" seed="1543926750" result="Passed" start-time="2026-11-12 16:59:35Z" end-time="2026-11-12 16:59:35Z" duration="0.000740" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1062" name="Migration_NewSaveWinsOverLegacyKey" fullname="Game.Tests.ControlSettingsTests.Migration_NewSaveWinsOverLegacyKey" methodname="Migration_NewSaveWinsOverLegacyKey" classname="Game.Tests.ControlSettingsTests" runstate="Runnable" seed="1245102293" result="Passed" start-time="2026-11-12 16:59:35Z" end-time="2026-11-12 16:59:35Z" duration="0.000354" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1063" name="Migration_SchemaLessAndFutureJson_KeepKnownFields" fullname="Game.Tests.ControlSettingsTests.Migration_SchemaLessAndFutureJson_KeepKnownFields" methodname="Migration_SchemaLessAndFutureJson_KeepKnownFields" classname="Game.Tests.ControlSettingsTests" runstate="Runnable" seed="632236768" result="Passed" start-time="2026-11-12 16:59:35Z" end-time="2026-11-12 16:59:35Z" duration="0.000630" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1064" name="Migration_V1Json_GainsCameraDefaultsAndKeepsOwnerChoices" fullname="Game.Tests.ControlSettingsTests.Migration_V1Json_GainsCameraDefaultsAndKeepsOwnerChoices" methodname="Migration_V1Json_GainsCameraDefaultsAndKeepsOwnerChoices" classname="Game.Tests.ControlSettingsTests" runstate="Runnable" seed="900461831" result="Passed" start-time="2026-11-12 16:59:35Z" end-time="2026-11-12 16:59:35Z" duration="0.000289" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1072" name="PedalCurves_LinearVsProgressive" fullname="Game.Tests.ControlSettingsTests.PedalCurves_LinearVsProgressive" methodname="PedalCurves_LinearVsProgressive" classname="Game.Tests.ControlSettingsTests" runstate="Runnable" seed="1418801175" result="Passed" start-time="2026-11-12 16:59:35Z" end-time="2026-11-12 16:59:35Z" duration="0.000722" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1058" name="ResetToDefaults_RestoresEverything" fullname="Game.Tests.ControlSettingsTests.ResetToDefaults_RestoresEverything" methodname="ResetToDefaults_RestoresEverything" classname="Game.Tests.ControlSettingsTests" runstate="Runnable" seed="1643631195" result="Passed" start-time="2026-11-12 16:59:35Z" end-time="2026-11-12 16:59:35Z" duration="0.000352" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1056" name="SaveThenLoad_RoundTripsEveryField" fullname="Game.Tests.ControlSettingsTests.SaveThenLoad_RoundTripsEveryField" methodname="SaveThenLoad_RoundTripsEveryField" classname="Game.Tests.ControlSettingsTests" runstate="Runnable" seed="694894753" result="Passed" start-time="2026-11-12 16:59:35Z" end-time="2026-11-12 16:59:35Z" duration="0.000415" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1303" name="TurnSignalAndInstrumentTests" fullname="Game.Tests.TurnSignalAndInstrumentTests" classname="Game.Tests.TurnSignalAndInstrumentTests" runstate="Runnable" testcasecount="19" result="Passed" start-time="2026-11-12 16:59:35Z" end-time="2026-11-12 16:59:35Z" duration="0.003758" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1319" name="Coolant_EngineOff_CoolsSlowlyTowardsAmbient" fullname="Game.Tests.TurnSignalAndInstrumentTests.Coolant_EngineOff_CoolsSlowlyTowardsAmbient" methodname="Coolant_EngineOff_CoolsSlowlyTowardsAmbient" classname="Game.Tests.TurnSignalAndInstrumentTests" runstate="Runnable" seed="1307518380" result="Passed" start-time="2026-11-12 16:59:35Z" end-time="2026-11-12 16:59:35Z" duration="0.000796" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[Saving results to: C:/Users/matma/AppData/LocalLow/woogitsugames/Kamion\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

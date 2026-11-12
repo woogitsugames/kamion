@@ -361,7 +361,17 @@ def main() -> None:
         "prompts": {k: prompt_of[k] for k in used if k in prompt_of},
     }
     OUT.mkdir(parents=True, exist_ok=True)
-    (OUT / "el_manifest.json").write_text(json.dumps(man, indent=1), encoding="utf-8")
+    mp = OUT / "el_manifest.json"
+    if mp.exists():  # keep the effects written by el_fx.py (ADR 0142)
+        old = json.loads(mp.read_text(encoding="utf-8"))
+        fx = [s for s in old.get("sfx", []) if s.get("group") == "fx"]
+        man["sfx"] += fx
+        for s in fx:
+            if s["source_prompt_id"] in old.get("prompts", {}):
+                man["prompts"][s["source_prompt_id"]] = old["prompts"][s["source_prompt_id"]]
+        if "fx_generator" in old:
+            man["fx_generator"] = old["fx_generator"]
+    mp.write_text(json.dumps(man, indent=1), encoding="utf-8")
     rep = REPORT
     rep.parent.mkdir(parents=True, exist_ok=True)
     rep.write_text("\n".join(report) + "\n", encoding="utf-8")

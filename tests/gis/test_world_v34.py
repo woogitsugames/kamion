@@ -10,7 +10,7 @@ import numpy as np
 import pytest
 from PIL import Image
 
-from conftest import REGION_DIR, REPO
+from conftest import REGION_DIR, REPO, require_lfs
 
 sys.path.insert(0, str(REPO / "tools" / "worldgen"))
 from streetscape import signs as SG            # noqa: E402
@@ -75,6 +75,7 @@ def test_impostors_multi_view_and_lit(meta):
     for name, t in meta["trees"].items():
         n = t["impostor_views"]
         assert n >= 4, name
+        require_lfs(VEG / f"impostor_{name}.png", VEG / f"impostor_{name}_n.png")
         alb = np.asarray(Image.open(VEG / f"impostor_{name}.png").convert("RGBA")).astype(float) / 255
         nrm = np.asarray(Image.open(VEG / f"impostor_{name}_n.png").convert("RGBA")).astype(float) / 255
         assert alb.shape[1] == round(alb.shape[0] * t["impostor_aspect"]) * n, name
@@ -95,6 +96,7 @@ def test_hlod_edge_textures(meta):
     for mix, f in meta["forest_hlod"].items():
         e = f["edge"]
         assert (VEG / e["normal_png"]).exists(), mix
+        require_lfs(VEG / e["png"])
         alb = np.asarray(Image.open(VEG / e["png"]).convert("RGBA")).astype(float) / 255
         cov = alb[..., 3] > 0.5
         # no floating specks above the stand silhouette: the top 12 % of the texture is (nearly) empty except the
