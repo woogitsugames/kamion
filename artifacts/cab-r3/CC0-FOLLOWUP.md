@@ -11,3 +11,9 @@ Na podstawie opisów dostawcy: dwa linolea i gumowe płytki mają charakter pod�
 Nie znaleziono tu gotowego skanu drobnego tłoczonego tworzywa kokpitu. Obecny Plastic z r2 pozostaje jawnie pochodną skóry Brown Leather, a nie skanem tworzywa. Nie zastępować go podłogą lub styropianem wyłącznie dla spełnienia etykiety kategorii. Dalsza wymiana wymaga właściwego typu powierzchni, CC0, udokumentowanego procesu i pola fizycznego, potem porównania Low/High.
 
 Wyszukiwanie Plastic016A i haseł PhotoTexture nie dało przydatnego pierwotnego źródła; pośrednie katalogi nie są dowodem metody przechwycenia. Bez zmiany dotychczasowego statusu UNVERIFIED takich kandydatów.
+
+## Rozpoznanie do r4, 09:42
+
+Odczyt bake_ao w tools/blender/truck/interior/a6_export.py pokazuje bake DIFFUSE DIRECT+INDIRECT pod białym światem i z rzeczywistą barwą wierzchołków. Argument distance nie jest używany w treści tej funkcji. Nie należy więc proponować samego zmniejszenia --ao-distance jako naprawy pasma ani nazywać mapy wyłącznie geometrycznym AO. Dotychczasowy eksperyment odzysku diffuse fill z r2 pozostaje odrzucony.
+
+Dodatkowe pierwotne źródła tworzyw: https://ambientcg.com/view?id=Plastic004 oraz https://ambientcg.com/view?id=Plastic003 podają Technique: Prodedural. Są CC0, ale nie spełniają wymagania skanu; nie pobierano map i nie zmieniano materiałów.
