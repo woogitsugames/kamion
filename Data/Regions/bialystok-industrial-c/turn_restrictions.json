@@ -1,0 +1,72 @@
+{
+ "schema": "truck-sim-pl/turn-restrictions/1",
+ "source": "podlaskie-261108.osm.pbf",
+ "source_sha256": "0ff26cd42f175a5711c69b6d3087a9dcd3bb93367eda16809c75a11ce6c3869d",
+ "license": "ODbL 1.0, © OpenStreetMap contributors",
+ "note": "OSM type=restriction relations touching the region's ways. Turns without a relation are NOT verified (UNVERIFIED): absence in OSM does not mean the turn is legal.",
+ "restrictions": [
+  {
+   "id": 5739648,
+   "restriction": "no_u_turn",
+   "hgv_only": false,
+   "from_way": 177903961,
+   "to_way": 177903962,
+   "via_node": 2388464999,
+   "via_is_way": false
+  },
+  {
+   "id": 8493193,
+   "restriction": "only_straight_on",
+   "hgv_only": false,
+   "from_way": 257367421,
+   "to_way": 257367428,
+   "via_node": 4075461271,
+   "via_is_way": false
+  },
+  {
+   "id": 8519442,
+   "restriction": "no_right_turn",
+   "hgv_only": false,
+   "from_way": 302573219,
+   "to_way": 613026608,
+   "via_node": 3890183128,
+   "via_is_way": false
+  },
+  {
+   "id": 18755465,
+   "restriction": "no_u_turn",
+   "hgv_only": false,
+   "from_way": 1093579592,
+   "to_way": 1093579593,
+   "via_node": 10015785256,
+   "via_is_way": false
+  },
+  {
+   "id": 18755466,
+   "restriction": "no_u_turn",
+   "hgv_only": false,
+   "from_way": 177719992,
+   "to_way": 177719995,
+   "via_node": 1881569076,
+   "via_is_way": false
+  },
+  {
+   "id": 18755467,
+   "restriction": "no_u_turn",
+   "hgv_only": false,
+   "from_way": 367253615,
+   "to_way": 600784975,
+   "via_node": 2840742181,
+   "via_is_way": false
+  },
+  {
+   "id": 18755468,
+   "restriction": "no_u_turn",
+   "hgv_only": false,
+   "from_way": 536419670,
+   "to_way": 282244180,
+   "via_node": 1882887385,
+   "via_is_way": false
+  }
+ ]
+}
