@@ -9,3 +9,4 @@ Recenzja zbiorcza s11 dopisuje okluzję prawego szerokokątnego przez kanał drz
 Instrukcja producenta Scania potwierdza oddzielne tryby jasności dzień/noc/auto, ale nie jest zdjęciem referencyjnym ani celem liczbowym dla fikcyjnej kabiny:
 https://www.scania.com/content/dam/scanianoe/market/master/pdf/SCANIA_AUS4_5inch.pdf
 Zdjęcie nocne ciężarówki wymaga jeszcze znalezienia i obejrzenia. Nie używać obrazów z gier jako rzeczywistej referencji. Nie pobierano ani nie kopiowano grafik z instrukcji.
+Wstępny render Low dusk na końcu r2: night-preflight/Low-dusk, trzy kamery, Unity exit 0 i slot zwolniony. Obejrzano cab-dash: tryb ciemnej mapy działa, brak dominującej białej płyty; główne cyfry czytelne, drobne napisy miękkie przy rozdzielczości Low. Log potwierdza night=True, clock=20:18. Hipoteza znoszenia dimmingu pozostaje niepotwierdzona — nie zmieniać parametrów tylko na podstawie wzoru. Przed zmianą r3 wymagany baseline po merge main, High i porównanie do zdjęcia.
