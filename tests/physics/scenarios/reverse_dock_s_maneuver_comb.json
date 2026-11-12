@@ -89,8 +89,9 @@
     {
       "metric": "min_speed_kmh",
       "status": "WORKING_VALUE",
-      "source": "dock reversing speed bounded: SpeedFwd < 0 in reverse, so |v| <= 15 km/h means min_speed_kmh >= -15",
-      "min": -15
+      "source": "dock reversing speed bounded: SpeedFwd < 0 in reverse, so |v| <= 15 km/h means min_speed_kmh >= -15; <= -2 km/h proves it actually reversed (integration r5: with selector D the S-steer path still ends at z -7.5 m, so final_z alone passed)",
+      "min": -15,
+      "max": -2
     },
     {
       "metric": "final_z_m",

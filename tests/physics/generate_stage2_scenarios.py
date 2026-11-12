@@ -328,7 +328,7 @@ sc("reverse_dock_s_maneuver_comb",
    [chk("max_articulation_deg", mn=20, mx=95, source="S-manoeuvre folds the trailer but the fifth-wheel stop bounds it: +/-90 deg soft deformable stop (3 Hz critically damped), 95 deg = stop + compliance margin; >=20 deg proves the manoeuvre actually articulated"),
     chk("wheel_lift", mx=0, source="all wheels stay loaded while reversing"),
     chk("stalled", mx=0, source="engine must not stall"),
-    chk("min_speed_kmh", mn=-15, source="dock reversing speed bounded: SpeedFwd < 0 in reverse, so |v| <= 15 km/h means min_speed_kmh >= -15"),
+    chk("min_speed_kmh", mn=-15, mx=-2, source="dock reversing speed bounded: SpeedFwd < 0 in reverse, so |v| <= 15 km/h means min_speed_kmh >= -15; <= -2 km/h proves it actually reversed (integration r5: with selector D the S-steer path still ends at z -7.5 m, so final_z alone passed)"),
     chk("final_z_m", mx=-3, source="vehicle actually reversed (heading 0: forward = +z, so z must decrease by >= 3 m in 30 s)")] + stable,
    variants=COMB)
 
