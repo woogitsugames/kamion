@@ -11,7 +11,9 @@ Output:
 
   "KRTG" u16 version (2; 1 = no limit fields, no lane section)
   u16 nNames, nNames x (u16 len, utf8)                     street names (index 0 = "")
-  u32 nNodes, nNodes x (f32 e, f32 n, u8 flags)            flags bit0 boundary (edge leaves the region data)
+  u32 nNodes, nNodes x (f32 e, f32 n, u8 flags)            flags bit0 boundary (edge leaves the region data),
+                                                          bit1 off-reach (node outside the main strongly connected
+                                                          component of the directed graph - M27, ADR 0150)
   u32 nEdges, nEdges x (u32 from, u32 to, f32 length_m, u8 class, u8 flags, u16 name, u8 maxspeed_kmh,
                         u8 maxspeed_src, u16 nPts, nPts x (f32 e, f32 n))
   v2 only, per edge, before nPts: u16 maxweight (0.01 t), u16 maxaxleload (0.01 t), u16 maxheight (cm),
@@ -26,7 +28,10 @@ Output:
 Edge flags: bit0 oneway (travel only from -> to; oneway=-1 is reversed here), bit1 roundabout, bit2 no trucks
 (access=no, hgv=no, service=emergency_access), bit3 restricted access (private / destination / customers / delivery,
 service=driveway: allowed only as first / last edge), bit4 *_link, bit5 (v2) hgv=destination (trucks only as the
-destination edge). hgv:conditional is not encoded (no such tags in the region data; UNVERIFIED).
+destination edge), bit6 (M27) off-reach (an endpoint is outside the main strongly connected component of the directed
+graph - the region clip can cut the only connection, e.g. Olsztyńska/Buska; such edges are not routed to). Both new
+flags are plain bits of the existing flag bytes: no format version change, readers that mask only their own bits
+(v1/v2) are unaffected. hgv:conditional is not encoded (no such tags in the region data; UNVERIFIED).
 Classes: 0 service / living_street / track, 1 residential / unclassified / tertiary, 2 secondary, 3 trunk / primary.
 maxspeed_src: 0 default (pipeline default, UNVERIFIED), 1 OSM.
 The readers (parse here and RouteGraph.Parse in C#) accept version 1 (no limit fields, no lane section) and 2.
@@ -141,6 +146,8 @@ CLASS = {
     "primary": 3, "primary_link": 3, "trunk": 3, "trunk_link": 3, "motorway": 3, "motorway_link": 3,
 }
 F_ONEWAY, F_ROUNDABOUT, F_NO_TRUCK, F_RESTRICTED, F_LINK, F_HGV_DESTINATION = 1, 2, 4, 8, 16, 32
+F_OFF_REACH = 64      # edge flag bit6: an endpoint is outside the main strongly connected component (M27)
+NF_OFF_REACH = 2      # node flag bit1 (bit0 = boundary): node outside the main SCC - "poza zasięgiem"
 NO_TRUCK_ACCESS = {"no"}
 RESTRICTED_ACCESS = {"private", "destination", "customers", "delivery", "permissive"}
 
@@ -318,8 +325,99 @@ def build(graph: dict, origin: tuple[float, float], restrictions: list[dict]) ->
                     continue
                 restr.append((f, via, t, 0 if kind.startswith("no_") else 1))
     restr = sorted(set(restr))
-    return {"names": names, "nodes": nodes, "edges": edges, "restrictions": restr, "unmapped_restrictions": unmapped,
-            "skipped_edges": skipped}
+    t = {"names": names, "nodes": nodes, "edges": edges, "restrictions": restr, "unmapped_restrictions": unmapped,
+         "skipped_edges": skipped}
+    t["reachability"] = mark_reachability(t)
+    return t
+
+
+def strongly_connected_components(n_nodes: int, edges: list) -> tuple[list, list]:
+    """Tarjan SCCs (iterative) of the directed routing graph: from -> to always, to -> from only when not one-way.
+
+    Returns (components, comp) - components sorted by size (desc, ties by smallest node index; deterministic), comp[v]
+    = component index of node v (0 = the main / largest one)."""
+    adj = [[] for _ in range(n_nodes)]
+    for e in edges:
+        adj[e["from"]].append(e["to"])
+        if not (e["flags"] & F_ONEWAY):
+            adj[e["to"]].append(e["from"])
+    index = [-1] * n_nodes
+    low = [0] * n_nodes
+    on_stack = [False] * n_nodes
+    stack = []
+    comp = [-1] * n_nodes
+    comps = []
+    counter = 0
+    for root in range(n_nodes):
+        if index[root] != -1:
+            continue
+        work = [(root, 0)]
+        while work:
+            v, pi = work[-1]
+            if pi == 0:
+                index[v] = low[v] = counter
+                counter += 1
+                stack.append(v)
+                on_stack[v] = True
+            descend = False
+            for i in range(pi, len(adj[v])):
+                w = adj[v][i]
+                if index[w] == -1:
+                    work[-1] = (v, i + 1)
+                    work.append((w, 0))
+                    descend = True
+                    break
+                if on_stack[w] and index[w] < low[v]:
+                    low[v] = index[w]
+            if descend:
+                continue
+            if low[v] == index[v]:
+                c = []
+                while True:
+                    w = stack.pop()
+                    on_stack[w] = False
+                    comp[w] = len(comps)
+                    c.append(w)
+                    if w == v:
+                        break
+                comps.append(c)
+            work.pop()
+            if work:
+                u = work[-1][0]
+                if low[v] < low[u]:
+                    low[u] = low[v]
+    order = sorted(range(len(comps)), key=lambda i: (-len(comps[i]), min(comps[i])))
+    remap = {old: new for new, old in enumerate(order)}
+    comp = [remap[c] for c in comp]
+    comps = [comps[i] for i in order]
+    return comps, comp
+
+
+def mark_reachability(t: dict) -> dict:
+    """SCCs of the directed graph; nodes/edges outside the main (largest) component are marked off-reach
+    (node flag bit1, edge flag bit6 - plain bits of the existing flag bytes, no format version change).
+
+    The 2 km region clip can cut the only connection of a part (ADR 0150: Olsztyńska/Buska) - such parts got
+    "Brak dojazdu"; flagged, the game can snap the destination to the main component instead.
+    Returns the report dict (also stored as t["reachability"])."""
+    comps, comp = strongly_connected_components(len(t["nodes"]), t["edges"])
+    t["nodes"] = [(e, n, f | (NF_OFF_REACH if comp[i] != 0 else 0)) for i, (e, n, f) in enumerate(t["nodes"])]
+    for e in t["edges"]:
+        if comp[e["from"]] != 0 or comp[e["to"]] != 0:
+            e["flags"] |= F_OFF_REACH
+
+    def off(e):
+        return comp[e["from"]] != 0 or comp[e["to"]] != 0
+
+    return {
+        "components": len(comps),
+        "component_sizes": [len(c) for c in comps],
+        "main_nodes": len(comps[0]),
+        "main_edges": sum(1 for e in t["edges"] if comp[e["from"]] == 0 and comp[e["to"]] == 0),
+        "off_nodes": sum(len(c) for c in comps[1:]),
+        "off_edges": sum(1 for e in t["edges"] if off(e)),
+        "off_streets": sorted({t["names"][e["name"]] for e in t["edges"] if off(e) and e["name"]}),
+    }
 
 
 def serialize(t: dict, version: int = VERSION) -> bytes:
@@ -486,6 +584,13 @@ def main(argv=None) -> int:
           f"(oneway {oneway}, skipped {t['skipped_edges']}), names {len(t['names'])}, "
           f"restrictions {len(t['restrictions'])} (OSM relations {len(rows)}, unmapped {len(t['unmapped_restrictions'])}), "
           f"limit-tagged edges {limited}, hgv=destination {hgv_dest}, lane blocks {lane_blocks} (with turn directions {lane_dir})")
+    r = t["reachability"]
+    print(f"reachability: {r['components']} strongly connected components (directed, one-way respected); "
+          f"main component {r['main_nodes']} nodes / {r['main_edges']} edges; "
+          f"off-reach {r['off_nodes']} nodes / {r['off_edges']} edges "
+          f"(sizes: {', '.join(str(s) for s in r['component_sizes'][:8])}{'...' if len(r['component_sizes']) > 8 else ''})")
+    if r["off_streets"]:
+        print("off-reach streets: " + ", ".join(r["off_streets"]))
     return 0
 
 

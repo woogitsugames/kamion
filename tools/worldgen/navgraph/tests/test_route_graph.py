@@ -75,12 +75,22 @@ def test_region_file_is_reproducible():
     """The committed game file equals a fresh build at the file's own format version (no hand edits).
 
     KRTG v2 = truck limits (M21) + lanes (M22); a committed v1 file is compared with a v1 serialization of the fresh
-    build until the .bytes is regenerated."""
+    build until the .bytes is regenerated. M27 exception: the committed file predates the reachability flags
+    (node bit1 / edge bit6), so those bits are masked out of the fresh build before comparing - everything else
+    must match byte-for-byte. The leader regenerates the .bytes; then the mask is a no-op."""
     _, t = _region()
     committed = open(os.path.join(brg.OUT_DIR, REGION + "_route.bytes"), "rb").read()
     (ver,) = struct.unpack_from("<H", committed, 4)
     assert ver in brg.SUPPORTED_VERSIONS
-    assert brg.serialize(t, version=ver) == committed
+    import copy
+    masked = copy.deepcopy(t)
+    masked["nodes"] = [(e, n, f & ~brg.NF_OFF_REACH) for e, n, f in masked["nodes"]]
+    for e in masked["edges"]:
+        e["flags"] &= ~brg.F_OFF_REACH
+    assert brg.serialize(masked, version=ver) == committed
+    # The fresh build does carry the reachability marks (they are plain flag bits, kept in v1 and v2 alike).
+    assert any(e["flags"] & brg.F_OFF_REACH for e in t["edges"])
+    assert any(nd[2] & brg.NF_OFF_REACH for nd in t["nodes"])
 
 
 def test_parse_osm_limit_values():

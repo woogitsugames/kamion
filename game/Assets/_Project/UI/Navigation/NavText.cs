@@ -24,6 +24,7 @@ namespace Game.UI.Navigation
         public const string Minutes = "min";
         public const string OffRoad = "Za daleko od drogi - wybierz miejsce bliżej ulicy";
         public const string NoPath = "Brak dojazdu do tego miejsca";
+        public const string OffReach = "Cel poza zasięgiem mapy - pinezka na najbliższym węźle";
         public const string StartOffRoad = "Pojazd poza siecią dróg mapy";
         public const string AlreadyThere = "Jesteś już w tym miejscu";
         public const string Arrived = "Cel osiągnięty";
