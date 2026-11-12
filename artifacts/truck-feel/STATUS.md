@@ -7,3 +7,5 @@
 - NASTĘPNY KROK: Unity EditMode/PlayMode (czeka na brak PHONE_RUN): `pwsh C:/Users/matma/Documents/Claude/kamion/scripts/unity-slot.ps1 -Acquire -Owner claude-truck-feel; pwsh scripts/test.ps1 -Platform EditMode; pwsh scripts/test.ps1 -Platform PlayMode; pwsh .../unity-slot.ps1 -Release -Owner claude-truck-feel`; potem ADR 0134 + docs.
 - 16:30 ADR 0134 + VEHICLE_REFERENCE_DATA + PHYSICS_VALIDATION 6d napisane (5f5cb948). Unity EditMode + PlayMode (filtr fizyki) w kolejce slotu (czeka na PHONE_RUN).
 - NASTĘPNY KROK: po testach Unity cofnąć efekty uboczne (M_Sky.mat, QualitySettings, ProjectSettings preloadedAssets, game/Assets/Resources) i commit; komenda: `pwsh -File <scratchpad>/unity_tests.ps1`
+- 16:45 Unity: PlayMode (CombinationLab/KerbStrikeParity/TraktTruckRig/DrivingLabScene/TrailerCargoSwap) 27/27 PASS; EditMode 380/382 (2x CarPaintMaterialTests.DepositionChannel — materiały aut świata, niezwiązane z fizyką). Efekty uboczne Unity: brak zmian w git status.
+- NASTĘPNY KROK (lider): review + merge gałęzi truck-feel, APK i jazda na telefonie (pusta i 40 t, widok z kabiny); decyzja właściciela o domyślnym ładunku.
