@@ -75,8 +75,11 @@ namespace Game.Rendering.Editor
             if (urp == null) throw new InvalidOperationException("missing " + UltraAsset);
             var uso = new SerializedObject(urp);
             var list = uso.FindProperty("m_RendererDataList");
-            if (list.arraySize < 1) list.arraySize = 1;
+            if (list.arraySize < 2) list.arraySize = 2;
             list.GetArrayElementAtIndex(0).objectReferenceValue = data;
+            // ADR 0152: index 1 = the plain renderer for the reflection capture (a render request through the SSAO renderer
+            // failed every face on the Fold/Adreno 840: "RenderPass: Fake or uninitialized surface", "EndRenderPass: Not inside a Renderpass").
+            list.GetArrayElementAtIndex(1).objectReferenceValue = AssetDatabase.LoadAssetAtPath<UniversalRendererData>(BaseRenderer);
             uso.ApplyModifiedPropertiesWithoutUndo();
             EditorUtility.SetDirty(urp);
             AssetDatabase.SaveAssets();
