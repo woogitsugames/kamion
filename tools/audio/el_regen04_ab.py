@@ -7,7 +7,7 @@ Engine only (runtime_sim.LayerGrid, ElevenLabs crossfade = equal power, XFADE_CO
 0.7 as in idle_ab.py), cab perspective, load 0 (throttle released), pool 6:
   A) fixed points 600, 750, ..., 1500 rpm, 4 s each (first 0.5 s skipped): line_db = prominence of rpm/20 over the
      +-25 Hz running median (same measure as el_regen04.cell_line_db), RMS dBFS, AM CV of the 60-130 Hz envelope
-  B) coast 1500 -> 900 rpm in 12 s (linear, like toccata on a gear, ADR 0148 owner video: 1500 -> 900 in ~12 s) with
+  B) coast 1500 -> 900 rpm in 12 s (linear, coasting in gear; ADR 0148 owner video: 1500 -> 900 in ~12 s) with
      1 s holds at both ends: 0.5 s windows -> line_db at the momentary rpm/20, RMS; level smoothness = max |step| of the
      100 ms RMS (dB) and of the 0.5 s RMS between neighbours.
 Outputs artifacts/audio-regen04/ab/: coast_1500_900_{before,after}.wav, fixed_<rpm>_{before,after}.wav (one common gain
