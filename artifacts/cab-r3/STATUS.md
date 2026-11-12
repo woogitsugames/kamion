@@ -1,4 +1,4 @@
-﻿# Kabina r3 — nocne podświetlenie
+# Kabina r3 — nocne podświetlenie
 
 Start od zamkniętej r2 d04feba0, następnie merge main bez konfliktów. R2 artifacts skopiowane do main: 565 plików, 582,68 MB, failed 0. Bez merge do main i push.
 
@@ -61,5 +61,6 @@ Aktualny uchwyt Fidelity po potwierdzonym restarcie to 78038, PID wrappera 20552
 Przygotowano GPU preflight bez nowych zmian C#: istniejący CabBezelInspection z DriverEyePoint oraz standardowy -qaMask MIRROR_WideR_LOD0. before/after oznaczają wyłącznie tymczasową ablacją ramki i model bieżący, nie nową poprawkę. Test ma odróżnić zasłonięcie powierzchni od ciemnej zawartości RT; zero maski nie może być uznane za brak okluzji. Fidelity 78038 nadal w kolejce heavy.
 Zapisano odczytowy GPU preflight Low z oka kierowcy. before to tymczasowa ablacja ramki, after to bieżący model; nie jest to zmiana geometrii gry. Maskuje wyłącznie MIRROR_WideR_LOD0; wynik wymaga obejrzenia i kontroli niezerowej maski.
 Obejrzano normalny i maskowany WideR Low after oraz maskę High after. Magenta wypełnia także szeroki ciemny obszar normalnego odbicia: w tej pozycji to zawartość RT, nie szeroka okluzja kanałem drzwi. ROI ma 35727/35949 pikseli magenta Low/High (nie procent okluzji). Low exit 0; High marker OK i 8 świeżych PNG, potem exit -1073741819 przy zamykaniu, bez zgłoszenia czystego sukcesu. Brak nowych zmian geometrii lub FOV. Szczegóły w OCCLUSION-GPU-PREFLIGHT.md.
-09:38: uporządkowano raport po kontroli GPU: usunięto nieaktualne twierdzenie o szerokiej okluzji kanałem. Fidelity PID 20552 nadal żyje i oczekuje na heavy; bez duplikowania kolejki. Rozpoznanie zużycia kontaktowego do r4 prowadzone wyłącznie odczytowo.
+Rano 12 listopada: uporządkowano raport po kontroli GPU: usunięto nieaktualne twierdzenie o szerokiej okluzji kanałem. Fidelity PID 20552 nadal żyje i oczekuje na heavy; bez duplikowania kolejki. Rozpoznanie zużycia kontaktowego do r4 prowadzone wyłącznie odczytowo.
 Rozpoznanie r4: mapa nazwana AO jest wypiekiem DIFFUSE DIRECT+INDIRECT; argument ao-distance nie steruje bake. Źródła ambientCG Plastic003/004 proceduralne, odrzucone jako dowód skanu. Bez zmian shaderów i map. Fidelity nadal pojedynczy proces w kolejce.
+

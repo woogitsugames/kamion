@@ -1,4 +1,4 @@
-﻿# Dalsze źródła CC0 dla tworzywa deski — rozpoznanie
+# Dalsze źródła CC0 dla tworzywa deski — rozpoznanie
 
 Stan 2026-11-12 około 02:49. To rozpoznanie do następnych rund, bez zmian materiałów gry i bez pobierania map.
 
@@ -12,8 +12,9 @@ Nie znaleziono tu gotowego skanu drobnego tłoczonego tworzywa kokpitu. Obecny P
 
 Wyszukiwanie Plastic016A i haseł PhotoTexture nie dało przydatnego pierwotnego źródła; pośrednie katalogi nie są dowodem metody przechwycenia. Bez zmiany dotychczasowego statusu UNVERIFIED takich kandydatów.
 
-## Rozpoznanie do r4, 09:42
+## Rozpoznanie do r4, rano 12 listopada
 
 Odczyt bake_ao w tools/blender/truck/interior/a6_export.py pokazuje bake DIFFUSE DIRECT+INDIRECT pod białym światem i z rzeczywistą barwą wierzchołków. Argument distance nie jest używany w treści tej funkcji. Nie należy więc proponować samego zmniejszenia --ao-distance jako naprawy pasma ani nazywać mapy wyłącznie geometrycznym AO. Dotychczasowy eksperyment odzysku diffuse fill z r2 pozostaje odrzucony.
 
 Dodatkowe pierwotne źródła tworzyw: https://ambientcg.com/view?id=Plastic004 oraz https://ambientcg.com/view?id=Plastic003 podają Technique: Prodedural. Są CC0, ale nie spełniają wymagania skanu; nie pobierano map i nie zmieniano materiałów.
+
