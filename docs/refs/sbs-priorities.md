@@ -1,4 +1,8 @@
-# SBS — priorytety odstępstw od zdjęć, r3
+# SBS — priorytety odstępstw od zdjęć, r3; przygotowanie r4
+
+Stan r4, 12.11 około 12:45: bazą nowej generacji jest main 0023f39d po pakietach A+B+C. Materiały zakończone, świat w kolejce FIFO; świeża seria jeszcze nie powstała. Wszystkie wyniki i ranking r3 poniżej pozostają historyczne. Recenzja pakietu C potwierdza usunięcie ostrego klina na dowodach light r3, ale nie stanowi jeszcze wspólnego dowodu SBS r4. Do kontroli w nowych A294859/A303305 Low-clear i High-clear: brak klina oraz pozostały miękki szaro-beżowy pas dolnego nieba. Nie utożsamiać tego pasa z dawnym twardym klinem ani z blokerem D51.
+
+Kolejne cele z [recenzji pakietu C](../reports/visual/REVIEW-2026-11-12-s12-gpt-batch-c.md): edge — kolor i podział hal południowej panoramy; furniture — profil tyłu tarczy i kontrast obejm; life — odbicie otoczenia na czerni, szum płatków i prostokątny cień pod autem. Szczegółów kabiny i naczep nie oceniać z samych kadrów trasy. SBS nadal zaczyna od sześciu niepewnych pozy; przygotowano 15 kontrolowanych hipotez C z osobnym rozpoznaniem widocznej jezdni w węźle bridge, bez awansu produkcyjnych kamer.
 
 Aktualizacja: 12.11.2026 około 11:31, gałąź gpt-sbs-r3. Źródła świata renderów z main 9874d98c; baza capture 14ccbaf1 dodaje tylko obsługę slotów i integracji. Main ma już 49a9d332 po pakietach A+B; obrazy r3 nie przedstawiają tej późniejszej bazy. Pełny render 168 raw z HEAD 62d45b92 jest gotowy. Ranking uwzględnia niezależny przegląd wszystkich 25 B Low-overcast (FAIL: 13 rozpoznawalnych, 11 częściowych, 1 nierozpoznawalny) oraz własny przegląd wszystkich 25 B Low-clear. Próby diagnostyczne nadal są C i nie poprawiają formalnego wyniku.
 

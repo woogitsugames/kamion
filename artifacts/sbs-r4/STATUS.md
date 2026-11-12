@@ -47,3 +47,5 @@ Nie wykonano merge do main, push, telefonu ani edycji innych dziedzin. Odśwież
 2026-11-12T12:39:50.3809308+01:00: potwierdzono Materials exit0, 505 s w logu, spec SHA c552a473. Source HEAD3a1e398c; późniejsze commity dotyczyły jedynie SBS i helperów, nie źródeł materiałów. Heavy zwolniony12:39:26, World ma nowy bilet FIFO (6 wcześniejszych). Ten sam proces orkiestracji77049, bez nowego heavyjobu.
 
 2026-11-12T12:40:28.0841969+01:00: zapisałem protokół kontroli 15 prób: oddzielna ocena zbiegu jezdni i portalu/ekranu, historyczne regiony tylko WORKING_VALUE. Pitch poprawiający jezdnię kosztem ekranu nie oznacza zaliczenia. Nowe obrazy r4 jeszcze nie powstały; World nadal w FIFO.
+
+2026-11-12T12:44:49.3771232+01:00: zapisano migawkę recenzji pakietu C i SHA. W sbs-priorities jawnie rozdzielono historyczny ostry klin r3 od poprawki light i pozostałego miękkiego pasa nieba. Nowy wspólny dowód SBS pozostaje pending; bez przenoszenia werdyktu z cudzych kadrów. World nadal kolejkaFIFO.
