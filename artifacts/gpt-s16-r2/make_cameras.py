@@ -2,6 +2,7 @@
 import json,sys
 from pathlib import Path
 import numpy as np
+import shapely
 from shapely.geometry import LineString,Point
 ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT/'tools/worldgen'))
@@ -15,11 +16,14 @@ edges=[(LineString(np.asarray(e['geometry'])-o),e) for e in graph['edges']]
 canonical=json.loads((region/'gate3_cameras.json').read_text());cameras=list(canonical['cameras']);selected=[]
 streets=[('Skidelska','P08'),('Racławicka','P10'),('Grodzieńska','P07'),('Wileńska','P12'),('Brzeska','P14'),('Wołkowyska','P17')]
 for index,(name,ref) in enumerate(streets):
+ merged=shapely.line_merge(shapely.union_all([line for line,e in edges if e['attrs'].get('name',{}).get('v')==name]))
+ components=list(getattr(merged,'geoms',[merged]))
  candidates=[]
  for p in qa['plots']['list']:
   if not p['gate']:continue
   gate=np.asarray(p['gate']['m']);line,e=min(edges,key=lambda x:x[0].distance(Point(gate)))
   if e['attrs'].get('name',{}).get('v')==name:
+   line=min(components,key=lambda q:q.distance(Point(gate)))
    # A longer road gives two regular street views, away from end caps.
    station=line.project(Point(gate));margin=min(station,line.length-station)
    candidates.append((margin,p,line,e))

@@ -18,3 +18,5 @@ Zweryfikowano6lokalnych fotografii P07/P08/P10/P12/P14/P17: pełne SHA256 z istn
 Przygotowano niepodłączone szkice algorytmów w artifacts: poszerzenie istniejących koron high bez nowych instancji oraz dodatkowe fronty z twardym limitem geometrii, keepoutami bram i niezmiennymi obwiedniami istniejących rendererów. Baseline ich nie importuje. Kod produktu nadal bez r2; szkice zostaną przeniesione po baseline i usunięte.
 
 Szkice sprawdzone na niezależnej sztucznej posesji: brama otwarta, oba poziomy w tym samym materiale, niezmienione części bazowe, deterministyczne bufory, limit0blokuje dodanie, Low/las bez zmiany. To sprawdzenie algorytmu, nie dowód świata/wyglądu.
+
+Pozy uliczne użyją scalonych po nazwie linii OSM, aby krótkie odcinki grafu między skrzyżowaniami nie ograniczały dwóch ujęć tej samej ulicy. Nadal wyłącznie rzeczywiste osie, bez przesuwania domów lub źródeł.
