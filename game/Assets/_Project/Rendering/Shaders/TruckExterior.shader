@@ -239,7 +239,7 @@ Shader "Kamion/Truck Exterior"
                 half trail = 1.0 - smoothstep(widthMacro * 0.35, widthMacro, abs(frac(flowCell) - centre));
                 half trailDown = 1.0 - smoothstep(0.03, flowLength, roofDistance);
                 half railLip = 1.0 - smoothstep(0.02, 0.12, roofDistance);
-                half railFilm = max(railLip * 0.2, trail * trailDown * lerp(0.6, 1.0, retention)) * (_CurtainPosts.z * 2.0);
+                half railFilm = max(railLip * 0.2, trail * trailDown * lerp(0.6, 1.0, retention) * 2.0) * (_CurtainPosts.z * 2.0);
                 half g = max(max(spray, wake), railFilm); // strength multiplier is a WORKING_VALUE, not a measured deposit
                 if (detail > 0.5)
                 {

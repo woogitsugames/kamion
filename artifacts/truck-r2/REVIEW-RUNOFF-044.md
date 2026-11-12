@@ -7,3 +7,5 @@ Decyzja: zmienić wzorzec przed zwiększaniem siły. W całym boku zmiana jest z
 Nie stwierdzono wyraźnego nawrotu pleśni; pewność średnia ze względu na słabą czytelność. Zwiększanie samej szerokiej maski grozi brudną chmurą. Low i High są kierunkowo spójne, lecz w słońcu nadal dominuje regularny rytm wcześniejszych fałd.
 
 Progi i błotnik: szerokie pionowe smugi na jasnej osłonie i nadkolu są słabo powiązane z rozbryzgiem od kół oraz stawianiem butów, a wnęki stopni pozostają bardzo czarne. Następna poprawka powinna dotyczyć rozmieszczenia i charakteru osadu, nie globalnego przyciemnienia. Koła pozostają osobnym zakresem r3.
+
+Drugi wariant, runoff-trails-044: recenzent nadal nie widzi przekonującej poprawy w całym boku i zaleca jedną próbę większego kontrastu miejscowych śladów, bez wzmacniania całego górnego pasa. Nie stwierdza wyraźnej pleśni ani rozjazdu Low/High. Porównanie stopni washed/fleet potwierdza utratę czytelności kratki pod brudem; selektywne odsłonięcie wystających powierzchni jest zasadne, ale sam AO i normalna nie identyfikują ścierania butami.
