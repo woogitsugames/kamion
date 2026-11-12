@@ -34,3 +34,4 @@ Następny krok: wynik wznowionego przygotowania pojazdu i Before, następnie pom
 Krok 12: świat i pojazdy poprawnie przygotowane (IMPORT_RESULT i TRUCK_RESULT: OK). Wznowiony skrypt przerwała zewnętrzna powłoka PowerShell 5: ErrorAction Stop potraktował przekierowane ostrzeżenie LF/CRLF z git jako błąd i zatrzymał potomny pwsh po zapisie STATUS. Nie jest to błąd importu; oba sloty zwolnione. Wpis importu został zachowany w WIP 6755100f.
 Dla kolejnych wywołań pwsh z przekierowaniem zewnętrzna powłoka używa Continue, a wynik oceniamy przez rzeczywisty kod zakończenia; wewnętrzne skrypty nadal zatrzymują rzeczywiste błędy. Nie powtarzamy importów. Następna komenda: pwsh artifacts/edge-r3/validate.ps1 -Phase Before.
 2026-11-12T01:35:25.0499241+01:00 Zapisano rendery before/Low-clear wszystkich kamer; ocena PNG i budżetu nadal w toku.
+2026-11-12T01:35:58.3200504+01:00 Zapisano rendery before/Low-overcast wszystkich kamer; ocena PNG i budżetu nadal w toku.
