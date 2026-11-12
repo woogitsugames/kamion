@@ -67,3 +67,4 @@
 2026-11-12T03:01:19.7841668+01:00: zapisano artifacts/asphalt-r2/candidate2/Low-clear. Następny krok: pozostałe serie lub porównanie wariantu.
 2026-11-12T03:02:02.9808632+01:00: zapisano artifacts/asphalt-r2/candidate2/High-overcast. Następny krok: pozostałe serie lub porównanie wariantu.
 2026-11-12T03:02:37.8748584+01:00: zapisano artifacts/asphalt-r2/candidate2/High-clear. Następny krok: pozostałe serie lub porównanie wariantu.
+2026-11-12T03:03:24.3607810+01:00: Candidate2 World/import/capture zakończone exit 0; 328 snapshotów sprawdzonych, macierze/pozy bez różnic, scope i bazowy grime prawidłowe. Post-capture zatrzymany przed heavy audytami/testami na błędzie PowerShell: parametr After kolidował z lokalnym after (case-insensitive). Zmieniono lokale na afterCounters/beforeCounters; brak zmian produktu i brak regeneracji. Wznawiamy tę samą analizę na gotowych obrazach, nie producer.

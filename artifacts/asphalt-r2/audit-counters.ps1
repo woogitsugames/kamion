@@ -15,14 +15,14 @@ function Read-Counters([string]$Path) {
 }
 $result=@()
 foreach($condition in 'Low-overcast','Low-clear','High-overcast','High-clear') {
- $before=Read-Counters "artifacts/asphalt-r2/baseline/$condition/stats.txt"
- $after=Read-Counters "artifacts/asphalt-r2/$After/$condition/stats.txt"
- if($before.Count -ne 82 -or $after.Count -ne 82){throw "Camera count mismatch: $condition"}
- foreach($id in $before.Keys | Sort-Object) {
-  if(-not $after.ContainsKey($id)){throw "Missing camera: $id"}
-  foreach($key in $before[$id].Keys) {
-   if(-not $after[$id].Contains($key)){throw "Missing counter: $id/$key"}
-   $b=$before[$id][$key];$a=$after[$id][$key]
+ $beforeCounters=Read-Counters "artifacts/asphalt-r2/baseline/$condition/stats.txt"
+ $afterCounters=Read-Counters "artifacts/asphalt-r2/$After/$condition/stats.txt"
+ if($beforeCounters.Count -ne 82 -or $afterCounters.Count -ne 82){throw "Camera count mismatch: $condition"}
+ foreach($id in $beforeCounters.Keys | Sort-Object) {
+  if(-not $afterCounters.ContainsKey($id)){throw "Missing camera: $id"}
+  foreach($key in $beforeCounters[$id].Keys) {
+   if(-not $afterCounters[$id].Contains($key)){throw "Missing counter: $id/$key"}
+   $b=$beforeCounters[$id][$key];$a=$afterCounters[$id][$key]
    $result += [pscustomobject]@{condition=$condition;camera=$id;counter=$key;before=$b;after=$a;delta=$a-$b}
   }
  }
