@@ -74,3 +74,5 @@ Krok 10: World B i wszystkie3 audyty zaliczone; brak fallback=True. Trwa zapis m
 Krok 10a: B wygenerowany w680,0s bez fallback=True, WIP273682bb. Audyty:336/210 zmienionych tris High/Low wewnątrz3 koron,12020 identycznych trójkątów, cała alfa identyczna bajtowo; manifest/materialy i128+64 pliki miasta bez zmian. Import B zakończony, lease zwolniony. Nowy PHONE_RUN ponownie blokuje start CaptureLow/High; terminal13840 nadal żywy, własny marker DIAGNOSTICS_RUNNING należy do preview-b.ps1. Brak obrazów B, więc brak akceptacji i pełnych testów.
 
 Krok 10b: statycznie sprawdzono składnię wszystkich skryptów PowerShell r4 i15 plików Python (w tym builder/test), błędów0. Mapy Medium użyte przez przyszłą kontrolę cache istnieją. Kontrola trwała0,44s bez uruchamiania testów/generatora/Unity. B nadal czeka na podgląd z powodu PHONE_RUN; nie ma FINAL-CANDIDATE.
+
+Krok 10c: 16:18CET PHONE_RUN zwolniony; podgląd B przesuwa się w kolejce Unity (2 przede mną). Własny terminal13840 nadal aktywny, ciężkie zadania i import zakończone. Nadal brak oceny wizualnej B i brak pełnego GIS.
