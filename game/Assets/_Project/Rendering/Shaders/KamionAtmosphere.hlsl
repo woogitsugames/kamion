@@ -12,6 +12,7 @@
 // 3. Wet surfaces: _KamionWet (x wetness 0..1, y puddle share 0..1) for KamionWetSurface (World PBR / World Surface).
 #ifndef KAMION_ATMOSPHERE_INCLUDED
 #define KAMION_ATMOSPHERE_INCLUDED
+#include_with_pragmas "KamionOpaqueGradeLabVariants.hlsl"
 
 float4 _KamionHaze;        // x beta (1/m), y ground-layer factor a, z 1 / H (1/m), w layer base height y0 (world)
 float4 _KamionHazeColor;   // rgb exposed in-scatter colour (horizon)
@@ -48,10 +49,13 @@ half3 KamionTone(half3 c)
 // ADR 0108 r5: Editor-only opt-in opaque/sky experiment. No runtime binder enables this uniform.
 // The baked response includes dim presentation + toe + High post, so return before all three.
 // Physical reflection captures bypass the entire lookup. Premultiplied glass keeps KamionTone.
+#if defined(_KAMION_OPAQUE_GRADE_LAB)
 TEXTURE3D(_KamionOpaqueGradeLut); SAMPLER(sampler_KamionOpaqueGradeLut);
 float _KamionOpaqueGradeEnabled, _KamionOpaqueGradeSize;
+#endif
 half3 KamionOpaqueTone(half3 c)
 {
+#if defined(_KAMION_OPAQUE_GRADE_LAB)
     if (_KamionOpaqueGradeEnabled > 0.5 && _KamionSkyCapOff < 0.5)
     {
         float3 value=max((float3)c,0.0);
@@ -59,6 +63,7 @@ half3 KamionOpaqueTone(half3 c)
         q=(q*(_KamionOpaqueGradeSize-1.0)+0.5)/_KamionOpaqueGradeSize;
         return SAMPLE_TEXTURE3D_LOD(_KamionOpaqueGradeLut,sampler_KamionOpaqueGradeLut,q,0).rgb;
     }
+#endif
     return KamionTone(c);
 }
 

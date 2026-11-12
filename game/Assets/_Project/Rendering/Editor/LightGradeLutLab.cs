@@ -170,6 +170,7 @@ namespace Game.Rendering.Editor
                         var sharedPixels=Render(inputs,16,12,32,false,null,0,true);
                         SaveImage(Path.Combine(folder,presetName+"-Low-shared32.png"),sharedPixels,512,384);imageCount++;
                         shared=Measure("Actual shared opaque path",32,inputs,reference,Centres(sharedPixels,inputs.Length,16,32));
+                        if(shared.meanAbsoluteRgb>1 || shared.maxRgb>8)throw new InvalidOperationException("Actual shared LUT variant missing or response outside reviewed smoke bounds");
                         Shader.SetGlobalFloat("_KamionSkyCapOff",1);
                         try{
                             var captureReference=Render(inputs,16,12,32,false);

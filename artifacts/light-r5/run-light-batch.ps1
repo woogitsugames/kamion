@@ -6,6 +6,11 @@ Set-Location $repo
 $slot = 'C:/Users/matma/Documents/Claude/kamion/scripts/unity-slot.ps1'
 $jobPath = [IO.Path]::GetFullPath($Jobs, $repo)
 $spec = Get-Content $jobPath -Raw | ConvertFrom-Json
+if($spec.preflightGradeLab){
+    # This runs before acquiring this batch's slot. It is serial with the prior baseline and this render.
+    & pwsh "$PSScriptRoot/run-grade-lab.ps1" -OutputName $spec.preflightGradeLab
+    if($LASTEXITCODE){throw 'Shared grade shader variant preflight failed'}
+}
 foreach ($job in $spec.jobs) { $job.output = [IO.Path]::GetFullPath($job.output, $repo) }
 $resolved = [IO.Path]::ChangeExtension($jobPath, '.resolved.json')
 $spec | ConvertTo-Json -Depth 10 | Set-Content $resolved -Encoding utf8
