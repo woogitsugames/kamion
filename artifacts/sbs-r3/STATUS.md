@@ -142,3 +142,5 @@ Zapisano kompletną niezależną ocenę baseline w REVIEW-D51-BASELINE.md: G3-A 
 2026-11-12T11:44:16.1526907+01:00: zweryfikowałem odczyt pięciu wpisów małego archiwum review-evidence.zip: wszystkieSHA zgodne z receiptem i SHA całegoZIPzgodne. Oryginalne bajty recenzji pozostają odtwarzalne mimo normalizacjiGit. GIS80208 doszedł do86%, nadal bez wyniku końcowego.
 
 2026-11-12T11:52:41.8597261+01:00: końcowy pełny GIS80208 zakończony exit0:665 passed,1 xfailed w726.22s. Heavy zwolniony i własny slot nie istnieje. Receipt wiąże zamrożony kod bcc65bbb, HEAD obserwowany po Acquire i SHA logu. Dokładnie jeden faktyczny pełny przebieg; poprzednia sesja zakończyła samo oczekiwanie przed uruchomieniem pytest.
+
+2026-11-12T11:53:12.9436511+01:00: po zakończeniu GIS przywróciłem dokładnie8 znanych pochodnych generatorów do HEAD, po sprawdzeniu braku innych zmian produkcyjnych i stagingu tych plików. Zapisano SHA przed/po. tools/scripts/Data/game/tests/art-source są czyste względem HEAD; dowody i ZIP wejść pozostają w artefaktach. Nie ruszano main ani cudzych źródeł.
