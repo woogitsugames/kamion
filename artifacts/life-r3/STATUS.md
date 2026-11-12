@@ -76,3 +76,5 @@ Krok 27: post-a.ps1 zapisany: czeka na jeden istniejący build A, następnie Pre
 Krok 28: zapisano plan późniejszej ablacji czerni (bez zastosowania): ewentualne opt-in flake_lift tylko dla car_paint_, istniejący _CarFlake.z i kontrola natywnych wartości/ROI. Pigment/Pearl/światło bez zmiany. R3 A nadal jedyny aktywny kandydat; 86769 ma heavy, test faz 10/10 passed, World w toku. Następny krok: automatyczny post-a 97361 po sukcesie budowy, potem oględziny A.
 
 Kandydat a (2026-11-12T10:05:59.3661640+01:00): wygeneruj osobówki r3 a. Następny etap w candidate-build.ps1; po komplecie PreparedVerified, capture i oględziny.
+
+Kandydat a (2026-11-12T10:06:00.8757604+01:00): sprawdź zakres geometrii r3 a. Następny etap w candidate-build.ps1; po komplecie PreparedVerified, capture i oględziny.
