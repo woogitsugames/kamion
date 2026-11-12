@@ -121,3 +121,4 @@ Import C kod0. Dalej16prób w tych samych kamerach i warunkach.
 Probe probe-c: Low overcast zapisany. Obejrzeć arkusze i koszt przed dalszą decyzją; to nie pełna macierz.
 Probe probe-c: Low clear zapisany. Obejrzeć arkusze i koszt przed dalszą decyzją; to nie pełna macierz.
 Probe probe-c: High overcast zapisany. Obejrzeć arkusze i koszt przed dalszą decyzją; to nie pełna macierz.
+Probe probe-c: High clear zapisany. Obejrzeć arkusze i koszt przed dalszą decyzją; to nie pełna macierz.
