@@ -30,16 +30,17 @@
     "628899553"
   ],
   "angular_separation_deg": 9.817210134095433,
-  "reference_crop_centres_x_WORKING_VALUE": [
-    2962,
-    3662
+  "measured_painted_shaft_centres_x": [
+    2969.75,
+    3630.25
   ],
-  "image_separation_pinhole_deg": 11.277707033652483,
+  "centre_method_file": "chimney-centres.json",
+  "image_separation_pinhole_deg": 10.676777139226903,
   "inferred_heading_from_each_stack_deg": [
-    147.64354518972442,
-    146.18304829016736
+    147.50732802256513,
+    146.64776101743365
   ],
-  "heading_disagreement_deg": 1.4604968995570573,
+  "heading_disagreement_deg": 0.8595670051314812,
   "pose_status": "UNVERIFIED. Rounded GPS, crop centres and equivalent focal length do not establish an exact pose.",
   "conclusion": "Geometric prediction only. Inspect original photo and compare projected separation before assigning head geometry."
 }

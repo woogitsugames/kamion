@@ -19,14 +19,17 @@ for osm, point in points.items():
 # Around a south-facing camera, increasing clockwise bearing appears farther right.
 ordered = sorted(records, key=lambda r: r["bearing_clockwise_from_north_deg"])
 focal_pixels = metadata["focal_35mm_equivalent_mm"] * 3840 / 36
-image_centres = [2962, 3662]  # WORKING_VALUE: centres of existing reference crops, not surveyed axes
+measured = json.loads((out / "chimney-centres.json").read_text(encoding="utf-8"))
+image_centres = [next(row["centre_x_median"] for row in measured["rows"] if row["side"] == side)
+                 for side in ("left", "right")]
 image_angles = [math.degrees(math.atan((x - 1920) / focal_pixels)) for x in image_centres]
 headings = [record["bearing_clockwise_from_north_deg"] - angle for record, angle in zip(ordered, image_angles)]
 result = dict(camera_epsg2180=camera, source_page=metadata["file_page"],
               source_gps_precision_note="Rounded source GPS; not a surveyed camera pose",
               stacks=records, predicted_left_to_right=[r["osm_way"] for r in ordered],
               angular_separation_deg=abs(records[0]["bearing_clockwise_from_north_deg"] - records[1]["bearing_clockwise_from_north_deg"]),
-              reference_crop_centres_x_WORKING_VALUE=image_centres,
+              measured_painted_shaft_centres_x=image_centres,
+              centre_method_file="chimney-centres.json",
               image_separation_pinhole_deg=image_angles[1] - image_angles[0],
               inferred_heading_from_each_stack_deg=headings,
               heading_disagreement_deg=abs(headings[0] - headings[1]),

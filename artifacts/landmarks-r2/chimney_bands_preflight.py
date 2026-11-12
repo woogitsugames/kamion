@@ -14,10 +14,10 @@ stacks = {stack["osm_way"]: stack for stack in identity["stacks"]}
 # Left crop origin y=300; right crop origin y=0. Gallery-obscured boundary
 # on the right around y=367 is deliberately excluded from spacing estimation.
 observations = {
-    "left": dict(osm_way="628899554", source_x_WORKING_VALUE=2962,
+    "left": dict(osm_way="628899554", source_x_measured=identity["measured_painted_shaft_centres_x"][0],
                  boundaries_y_source_WORKING_VALUE=[400, 482, 567, 650, 735],
                  clean_spacings_px=[82, 85, 83, 85], visible_head="three separate outlets, two close head galleries"),
-    "right": dict(osm_way="628899553", source_x_WORKING_VALUE=3662,
+    "right": dict(osm_way="628899553", source_x_measured=identity["measured_painted_shaft_centres_x"][1],
                   boundaries_y_source_WORKING_VALUE=[150, 256, 478, 584, 689],
                   clean_spacings_px=[106, 106, 105], visible_head="one large outlet, head gallery and a lower shaft gallery")
 }
