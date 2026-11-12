@@ -23,21 +23,23 @@ if (-not $adb) { . (Join-Path $wt 'scripts/env.ps1'); $adb = $Adb }
 $log = Join-Path $PSScriptRoot "$OutTag.log"
 function L($m) { $s = "$(Get-Date -Format 'HH:mm:ss') $m"; Write-Host $s; Add-Content $log $s }
 
-# ---- wait for the phone: take PHONE_RUN first (blocks new unity-pool slots), then wait until running Unity exits
+# ---- wait for the phone (lead s12): PHONE_RUN only once no Unity.exe runs; held for the measurement only
+function Run-T([string]$exe, [string[]]$argv, [int]$sec, [string]$out = '') {
+    $pa = @{ FilePath = $exe; ArgumentList = $argv; PassThru = $true; NoNewWindow = $true }
+    if ($out) { $pa.RedirectStandardOutput = $out }
+    $p = Start-Process @pa
+    if (-not $p.WaitForExit($sec * 1000)) { L "timeout ${sec}s: $exe $($argv -join ' ')"; try { $p.Kill($true) } catch { } }
+}
 while ($true) {
-    if (-not (Test-Path $lock)) {
+    $unity = @(Get-Process Unity -ErrorAction SilentlyContinue)
+    if (-not (Test-Path $lock) -and $unity.Count -eq 0) {
         try { New-Item -ItemType File $lock -ErrorAction Stop | Out-Null; Set-Content $lock "a16-perf $(Get-Date -Format s) $OutTag"; break } catch { }
     }
-    L "waiting: lock held by $(Get-Content $lock -ErrorAction SilentlyContinue)"
-    Start-Sleep -Seconds 30
+    L "waiting: lock=$(Test-Path $lock) unity=$($unity.Count)"
+    Start-Sleep -Seconds 20
 }
 L "lock taken"
 try {
-    for ($w = 0; @(Get-Process Unity -ErrorAction SilentlyContinue).Count -gt 0; $w++) {
-        if ($w % 4 -eq 0) { L "waiting for running Unity.exe to exit: $(@(Get-Process Unity).Count)" }
-        Start-Sleep -Seconds 15
-    }
-    if (@(Get-Process Unity -ErrorAction SilentlyContinue).Count -gt 0) { throw 'Unity started right after the lock' }
     & $adb start-server | Out-Null
     $st = (& $adb -s $Serial get-state) 2>&1
     if ("$st" -notmatch 'device') { throw "A16 not online: $st" }
@@ -61,14 +63,12 @@ try {
             '-WarmupSeconds', '25', '-Tier', $Tier, '-Scene', 'WorldC', '-Autopilot', 'route', '-Speed', '30', '-Trailer', '40', '-Extra', ($extra -join ','))
         if ($Uncapped) { $dm += '-Uncapped' } else { $dm += @('-Fps', "$Fps") }
         $before = @(Get-ChildItem (Join-Path $wt "artifacts/device/$Serial") -Directory -ErrorAction SilentlyContinue | ForEach-Object Name)
-        & pwsh @dm | Out-Null
+        Run-T 'pwsh' $dm ($dur + 150) (Join-Path $env:TEMP "a16perf-dm-$name.txt")
         $new = Get-ChildItem (Join-Path $wt "artifacts/device/$Serial") -Directory | Where-Object { $before -notcontains $_.Name } | Sort-Object Name | Select-Object -Last 1
         $dst = Join-Path $PSScriptRoot "$OutTag/$name"
         New-Item -ItemType Directory -Force $dst | Out-Null
         if ($new) { Copy-Item "$($new.FullName)\*" $dst -Recurse -Force -Exclude 'screen.png'; if (Test-Path "$($new.FullName)\screen.png") { Copy-Item "$($new.FullName)\screen.png" "$dst\screen.png" } }
-        & $adb -s $Serial logcat -d -v threadtime -s Unity:V | Set-Content (Join-Path $dst 'logcat.txt') -Encoding utf8
-        $g = @(& $adb -s $Serial shell 'cat /proc/gpufreq/gpufreq_var_dump 2>/dev/null | head -5; cat /sys/kernel/ged/hal/current_freqency 2>/dev/null' 2>&1)
-        $g | Set-Content (Join-Path $dst 'gpufreq.txt')
+        Run-T $adb @('-s', $Serial, 'logcat', '-d', '-v', 'threadtime', '-s', 'Unity:V') 60 (Join-Path $dst 'logcat.txt')
         & $adb -s $Serial shell am force-stop com.woogitsugames.kamion | Out-Null
         L "done $name -> $dst"
     }
