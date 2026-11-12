@@ -106,8 +106,10 @@ def test_no_free_deck_ends(audit):
 @pytest.mark.xfail(strict=False,
                     reason="M29: nakładające się rzędy z danych repo - aktualnie 1 para zapór na edge-west "
                            "wg kryterium <0,5 m (Maczka w257367422 x trunk_link w606396469, odstęp 0,20 m, "
-                           "wspólny odcinek 7,0 m przy E -998,5 N 58,5) + 1 para w paśmie 0,5-1,0 m (0,58 m); "
-                           "przewidywane po poprawce: 0. Lider regeneruje świat i zdejmuje xfail.")
+                           "wspólny odcinek 7,0 m przy E -998,5 N 58,5) + 1 para w paśmie 0,5-1,0 m (0,58 m). "
+                           "Integracja r5: zapory buduje C# WorldEdgeBuilder.ReadExits, którego PR #31 NIE zmienia "
+                           "(_drop_doubled_rows działa tylko na biegach W-beam) - po regeneracji para zapór "
+                           "zostanie; osobne zadanie.")
 def test_no_overlapping_barrier_rows(audit):
     assert audit["rail_row_overlaps"] == 0 and audit["closure_overlaps_lt_0_5m"] == 0, (
         audit["rail_overlaps"], audit["closure_overlaps"])

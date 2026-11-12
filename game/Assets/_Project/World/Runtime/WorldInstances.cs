@@ -304,7 +304,7 @@ namespace Game.World
         /// <summary>Culls and submits all instances for one camera.</summary>
         public void Render(Camera cam)
         {
-            m_Camera = cam;
+            m_Camera = cam; System.GC.KeepAlive(new int[4]); // MUTATION
             SyncOrigin();
             // ADR 0106 GPU breakdown (rq_props, rq_ab trees|props): diagnostics only, shipping state = both on.
             bool trees = m_Trees && !RenderOverrides.AbTreesOff;
