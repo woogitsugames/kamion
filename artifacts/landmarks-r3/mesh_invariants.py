@@ -31,6 +31,7 @@ def read_primitives(path):
         if stride==width:
             digest.update(binary[start:start+a['count']*width])
         else:
+            assert saved['files'][key]['sha256']==orig['sha256'],('Snapshot not from fresh baseline',key)
             for i in range(a['count']): digest.update(binary[start+i*stride:start+i*stride+width])
         return dict(type=a['type'],componentType=a['componentType'],count=a['count'],
                     normalized=a.get('normalized',False),sha256=digest.hexdigest())
@@ -74,6 +75,7 @@ if mode=='capture':
     target=OUT/'baseline-mesh-invariants.json'
 else:
     result=dict(complete=True,all_non_underdeck_primitives_identical=True,files_checked=128,
+                current_manifest_sha256=hashlib.sha256((ROOT/'Data/Regions/bialystok-industrial-c/generated/world_manifest.json').read_bytes()).hexdigest(),
                 exact_primitives_checked=checked,changed_chunk_files=changed,
                 exclusions=[dict(node=n,material=m) for n,m in sorted(ALLOWED)],
                 limitation='Underdeck paint material groups excluded only in bridge node; deck-buffer hashes and collision tests are separate evidence')
