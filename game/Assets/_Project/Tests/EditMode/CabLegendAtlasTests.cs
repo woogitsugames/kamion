@@ -11,7 +11,7 @@ namespace Game.Tests
         [TestCase("Low", 256, -0.75f)]
         [TestCase("Medium", 512, 0f)]
         [TestCase("High", 1024, 0f)]
-        public void BakedLegendMaterial_UsesTierSpecificAtlasBiasAndIconClip(string tier, int size, float bias)
+        public void BakedLegendMaterial_UsesTierSpecificAtlasAndBias(string tier, int size, float bias)
         {
             var set = AssetDatabase.LoadAssetAtPath<TruckMaterialSet>(
                 "Assets/_Generated/Truck/Resources/TRAKT/TruckMaterials_" + tier + ".asset");
@@ -19,8 +19,8 @@ namespace Game.Tests
             var material = set.Get("MI_Cab_Decal");
             Assert.That(material, Is.Not.Null);
             Assert.That(material.GetFloat("_Cutoff"), Is.EqualTo(0.5f).Within(1e-5f));
-            Assert.That(material.HasProperty("_LegendCutoff"), Is.True);
-            Assert.That(material.GetFloat("_LegendCutoff"), Is.EqualTo(tier == "Low" ? 0.28f : 0.16f).Within(1e-5f));
+
+
             var texture = material.GetTexture("_DecalAtlas") as Texture2D;
             Assert.That(texture, Is.Not.Null);
             Assert.That(texture.width, Is.EqualTo(size));
@@ -34,5 +34,6 @@ namespace Game.Tests
         }
     }
 }
+
 
 

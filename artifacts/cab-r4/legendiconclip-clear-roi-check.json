@@ -1,0 +1,25 @@
+{
+  "scope": "Only one 240x200 native ROI from two Low captures; not full-frame photometry",
+  "before_stage": "result-0112-hp15",
+  "light": "clear",
+  "candidate_stage": "result-0112-legendiconclip",
+  "roi": [
+    440,
+    840,
+    680,
+    1040
+  ],
+  "changed_pixels": 199,
+  "pixels": 48000,
+  "max_channel_delta": 130,
+  "mean_channel_delta": [
+    0.13316666666666666,
+    0.136625,
+    0.1410625
+  ],
+  "crop_sha256": [
+    "344cb88bea7913122aaf12bbbf6e489951c4ff3fe5e7ed07fc59f1fe30c11ab8",
+    "abb7c08c79300bdce79c44d5ae56034795179dc38c72ba4d25df7417682d02d9"
+  ],
+  "elapsed_seconds": 0.12617020000107004
+}
