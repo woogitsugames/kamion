@@ -185,6 +185,8 @@ namespace PhysicsRunner.Sim
         public double fingerGainMmPerM = 2.0;
         /// <summary>touch: override of SteeringFeel.dragLatAccelMatchKmh (-1 = shipped steering_feel.json, 0 = ADR 0135 curve).</summary>
         public double touchLatAccelMatchKmh = -1;
+        /// <summary>touch: override of SteeringFeel.dragLatAccelCapAboveMatch (-1 = shipped, 0 = off (ADR 0149 r2), 1 = on).</summary>
+        public int touchCapAbove = -1;
     }
 
     public sealed class KeySpec

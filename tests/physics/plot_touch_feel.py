@@ -19,7 +19,7 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
 
-BEFORE, AFTER = "#9a9a9a", "#1f5fbf"
+BEFORE, R2, AFTER = "#9a9a9a", "#d08a2a", "#1f5fbf"
 
 
 def read(p: Path) -> dict[str, list[float]]:
@@ -35,8 +35,11 @@ def gain_curve(d: Path) -> None:
         ("lat_accel_per_mm_before", "lat_accel_per_mm_after", "kinematic lateral accel per mm [m/s2]"),
         ("pio_onset_gain_before_mm_per_m", "pio_onset_gain_after_mm_per_m", "PIO onset: thumb gain [mm/m] (higher = more margin)"),
     ]):
-        a.plot(g["kmh"], g[kb], "o-", color=BEFORE, label="before (ADR 0135)")
-        a.plot(g["kmh"], g[ka], "o-", color=AFTER, label="after (ADR 0149)")
+        a.plot(g["kmh"], g[kb], "o-", color=BEFORE, label="ADR 0135")
+        kr = kb.replace("before", "r2")
+        if kr in g:
+            a.plot(g["kmh"], g[kr], "o-", color=R2, label="ADR 0149 (r2)")
+        a.plot(g["kmh"], g[ka], "o-", color=AFTER, label="shipped" if kr in g else "after (ADR 0149)")
         a.set_title(title, fontsize=10, loc="left")
         a.grid(alpha=0.3)
     ax[0].legend(fontsize=8)
@@ -55,6 +58,9 @@ def traces(d: Path, name: str, title: str) -> None:
     fig, ax = plt.subplots(len(panels), 1, figsize=(8, 13), sharex=True)
     for x, (k, lab) in zip(ax, panels):
         x.plot(b["t"], b[k], color=BEFORE, label="before")
+        if (d / f"{name}_r2.csv").exists():
+            r2 = read(d / f"{name}_r2.csv")
+            x.plot(r2["t"], r2[k], color=R2, label="r2")
         x.plot(a["t"], a[k], color=AFTER, label="after")
         if k == "lat_m" and any(v != 0 for v in a["target_m"]):
             x.plot(a["t"], a["target_m"], ":", color="black", lw=0.8, label="path")
@@ -69,8 +75,9 @@ def traces(d: Path, name: str, title: str) -> None:
 
 def sweep(d: Path, kmh: int) -> None:
     gains = [1, 2, 3, 4, 5, 6, 8]
-    fig, ax = plt.subplots(1, 2, figsize=(12, 4.5), sharey=True)
-    for x, ph in zip(ax, ["before", "after"]):
+    phs = [p for p in ["before", "r2", "after"] if (d / "sweep" / f"sweep{kmh}_g1.0_{p}.csv").exists()]
+    fig, ax = plt.subplots(1, len(phs), figsize=(6 * len(phs), 4.5), sharey=True)
+    for x, ph in zip(ax, phs):
         for gi, g in enumerate(gains):
             p = d / "sweep" / f"sweep{kmh}_g{g:.1f}_{ph}.csv"
             if not p.exists():
@@ -95,6 +102,10 @@ def main() -> int:
     traces(d, "lc45", "Lane change 3.5 m at 45 km/h, human model (delay 0.25 s, thumb gain 4 mm/m), 40 t")
     sweep(d, 35)
     sweep(d, 45)
+    if (d / "lc80_before.csv").exists():
+        traces(d, "lc80", "Lane change 3.5 m at 80 km/h, human model (delay 0.25 s, thumb gain 4 mm/m), 40 t")
+    if (d / "sweep" / "sweep80_g1.0_before.csv").exists():
+        sweep(d, 80)
     return 0
 
 
