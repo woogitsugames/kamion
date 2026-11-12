@@ -226,6 +226,11 @@ namespace Game.Editor.Setup
                 if (!normal && ti.sRGBTexture != srgb) { ti.sRGBTexture = srgb; dirty = true; }
                 if (!ti.mipmapEnabled) { ti.mipmapEnabled = true; dirty = true; }
                 if (ti.anisoLevel != 2) { ti.anisoLevel = 2; dirty = true; }
+                if (n == "T_Cab_Decal" && tier == "Low")
+                {
+                    float bias = CabLowLegendMipBias();
+                    if (ti.mipMapBias != bias) { ti.mipMapBias = bias; dirty = true; }
+                }
                 if (ti.maxTextureSize != maxSize) { ti.maxTextureSize = maxSize; dirty = true; }
                 if (ti.alphaSource != TextureImporterAlphaSource.FromInput) { ti.alphaSource = TextureImporterAlphaSource.FromInput; dirty = true; }
                 if (ti.alphaIsTransparency) { ti.alphaIsTransparency = false; dirty = true; }
@@ -1023,10 +1028,27 @@ namespace Game.Editor.Setup
             bool enabled = data.TryGetValue("enabled", out var flag) && flag is bool value && value;
             if (!enabled) return tier;
             string source = Json.Str(data["low_atlas_tier"]);
-            if (source != "Medium") throw new InvalidDataException("Cab Low legend atlas override supports Medium only");
+            if (source != "Low" && source != "Medium") throw new InvalidDataException("Cab Low legend atlas supports Low or Medium only");
             return source;
         }
 
+        static float CabLowLegendMipBias()
+        {
+            // The Low source texture is not shared by Medium/High. Never bias their atlas.
+            string path = Path.Combine(EditorTools.RepoRoot, "art-source/truck/interior/cab_legend_atlas.json");
+            if (!File.Exists(path)) return 0f;
+            var data = Json.Obj(Json.Parse(File.ReadAllText(path)));
+            if (Json.Num(data["schema"]) != 1) throw new InvalidDataException("Unknown cab legend atlas schema");
+            bool enabled = data.TryGetValue("enabled", out var flag) && flag is bool value && value;
+            if (!enabled || !data.TryGetValue("low_mip_bias", out var raw)) return 0f;
+            float bias = (float)Json.Num(raw);
+            if (float.IsNaN(bias) || float.IsInfinity(bias) || bias < -1f || bias > 0f)
+                throw new InvalidDataException("Cab Low legend mip bias must be finite in [-1,0]");
+            if (bias != 0f && CabDecalAtlasTier("Low") != "Low")
+                throw new InvalidDataException("Mip bias requires the separate Low atlas");
+            Debug.Log($"CAB_LEGEND_MIP_BIAS: Low only, bias={bias} (WORKING_VALUE)");
+            return bias;
+        }
         static void ConfigureCabBacklight(Material material)
         {
             var data = Json.Obj(Json.Parse(File.ReadAllText(Path.Combine(EditorTools.RepoRoot,
@@ -1377,3 +1399,4 @@ namespace Game.Editor.Setup
         }
     }
 }
+

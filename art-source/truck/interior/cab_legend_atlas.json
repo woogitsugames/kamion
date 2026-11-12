@@ -1,6 +1,7 @@
 {
   "schema": 1,
   "enabled": true,
-  "low_atlas_tier": "Medium",
-  "note": "WORKING_VALUE candidate: existing 512px atlas on Low Decal only; compare with 256px baseline before acceptance. No mip-bias or shader change."
+  "low_atlas_tier": "Low",
+  "low_mip_bias": -0.75,
+  "note": "WORKING_VALUE isolated candidate: original 256px Low atlas, mip bias -0.75. Medium/High stay unchanged; 512px experiment gave negligible ROI difference."
 }
