@@ -30,3 +30,4 @@ Krok 14: korekta wykonania watcherów: działający PowerShell ma już wczytany 
 2026-11-12T11:33:38.2382167+01:00 Native before Low-overcast 1280x720: 11 kamer, każdy PNG ma proporcje źródłowej fotografii; diagnostyczna 2948 pozostaje C.
 2026-11-12T11:33:55.8616929+01:00 Native before Low-overcast 1280x960: 15 kamer, każdy PNG ma proporcje źródłowej fotografii; diagnostyczna 2948 pozostaje C.
 2026-11-12T11:34:14.5973320+01:00 Native before High-clear 1280x720: 11 kamer, każdy PNG ma proporcje źródłowej fotografii; diagnostyczna 2948 pozostaje C.
+2026-11-12T11:34:34.1359223+01:00 Native before High-clear 1280x960: 15 kamer, każdy PNG ma proporcje źródłowej fotografii; diagnostyczna 2948 pozostaje C.
