@@ -221,3 +221,15 @@ Pierwszą serię 330 obrazów i dokładne liczniki Low zachowano w iteration1;
 po korekcie shadera i cache konieczny jest nowy komplet standardowych kadrów.
 Kontrola chronionej geometrii nadal czeka na heavy, więc nie ma jeszcze wyniku.
 
+
+### r2, pełny przegląd i chroniona geometria
+
+Kod i zasoby zamrożone w52668015; późniejsze commity dotyczą dowodów.
+Obejrzano330/330 par na60 arkuszach≤960px, także niezależnie, bez nowego
+widocznego blokera furniture. Nie dowodzi to wierności drobnych mocowań
+ani kalibracji folii. Bezpośrednia para SBS ma istotne rozbieżności pozy/sceny,
+więc zgodność konstrukcyjna ze zdjęciem pozostaje UNVERIFIED.
+DrawEst mesh/instancji/cieni wszędzie+0; dokładne165Low max tris+0,18997983%.
+Chronione payloady geometrii6833→6833,0 różnic. Końcowe EditMode340/340,
+bez pominięć. GIS iphysics/gate3 są osobnymi kontrolami końcowymi w heavy,
+aktualnie oczekującymi; nie przypisano im wyniku na podstawie audytu wejść.

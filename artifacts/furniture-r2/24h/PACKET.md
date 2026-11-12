@@ -36,7 +36,7 @@ po zmianie sceny ma krótkie ponawianie wyszukania brakującego riggu.
 before oraz after: po 55 kamer dla Low/High i clear/overcast/dusk, razem
 330 wariantów każdej strony. Wcześniejsze obrazy po zmianie zachowano
 w iteration1; bieżący after uwzględnia korektę ekspozycji, asymetrii wiązki
-i wyszukiwania socketów. Arkusze compare wymagają jeszcze wykonania w heavy.
+i wyszukiwania socketów. Arkusze compare są kompletne; każdy przygotowano osobno w ograniczonym trybie interaktywnej analizy PNG.
 
 exact-before i exact-after: po 165 kamer Low. Każdy validation.json potwierdza
 zgodność liczb z zaokrąglonym runnerem i zamrożonymi stats.txt; dowody wiążą
@@ -60,7 +60,7 @@ GPUp95, PSS, działania podczas jazdy i na telefonie.
 Niezależny przegląd night-preview/REVIEW-after3.md obejmuje tylko cztery
 podglądy25 m z tieru Low; low/high w nazwach oznaczają tryb reflektorów.
 Potwierdzono miejscową reakcję bez oczywistego halo. Realizm siły i praktyczna
-czytelność pozostały niepotwierdzone. Przegląd wszystkich kamer jeszcze trwa.
+czytelność pozostały niepotwierdzone. Przegląd wszystkich330 kamer jest zakończony, zobacz compare/REVIEW.md.
 
 Bezpośredni kadr zdjęcie/render używa istniejącej kamery
 sbs-g3-b-297817221966185. Referencja: Mapillary, zsolt, 2017-07-29,
@@ -78,7 +78,7 @@ wnioskowania o dokładnej dzisiejszej pozycji i kalibracji fotometrycznej.
 - FurnitureSignTests:16/16, w tym rzeczywiste GPU versus Lit, alfa, HDR1/800,
   strony, kąty, dystans, ekspozycja, asymetria, źródła, GUID i rodzina materiałów.
 - Końcowe EditMode:340/340,0 failed,0 skipped; XML i log w test-results.
-- Chroniona geometria: PENDING, proces czeka na slot heavy. Nie deklarować PASS.
+- Chroniona geometria:6833→6833,0 różnic, pełne payloady poza furniture porównane w heavy.
 - Pełny GIS i physics/gate3: PENDING, wykonywać przy zamknięciu rundy w heavy.
 
 Porażki wcześniejszych fixture zachowano. Pierwszy shader probe nie ustawiał
@@ -92,7 +92,7 @@ unity-step.ps1 zawsze pobiera slot Owner gpt-furniture z main, zwalnia go
 w finally i cofa skutki uboczne ustawień Unity. heavy-step.ps1 pobiera heavy
 pod aktualną gałęzią. Nigdy nie uruchamiać dwóch jego procesów równolegle
 z tym samym właścicielem: ponowne Acquire tylko odświeża istniejący slot.
-compare-after-geometry.ps1 dlatego czeka na terminalny proces geometrii.
+closing-after-geometry.ps1 czekał na terminalny proces geometrii i kolejno uruchamia końcoweGIS/physics. Zbędny waiter pełnej partii arkuszy anulowano po interaktywnym zakończeniu60 stron.
 Żaden helper nie usuwa cudzych slotów ani PHONE_RUN.
 
 Po integracji lider powinien zachować unie flag furniture_plinth_detail i
@@ -113,3 +113,4 @@ raportu ani zamiennikiem testu. Trzy wejścia znanej niezgodności scenariusza
 physics również zachowały bloby bazy r2. Wyniki pełnych testów nadal PENDING.
 
 Aktualizacja końcowych kontroli:root i niezależny reviewer obejrzeli330/330 par na60 arkuszach≤960px, bez nowego widocznego blokera furniture (compare/REVIEW.md). Chroniona geometria6833→6833,0 różnic (protected-geometry-comparison.json). Wszystkie arkusze powstały jako pojedyncze małe interaktywne przeglądy; zbędny pełny batch anulowano, bez powtórnego dekodowania. KońcoweGIS/physics nadal oczekują na heavy. Kod/zasoby52668015 pozostają bez zmian.
+
