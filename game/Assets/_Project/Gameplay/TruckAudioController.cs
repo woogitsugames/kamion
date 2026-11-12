@@ -1,4 +1,5 @@
 using Game.Cameras;
+using Game.Core;
 using Game.Vehicle.Physics;
 using Game.Vehicle.Runtime;
 using TruckSim.Audio;
@@ -19,7 +20,10 @@ namespace Game.Gameplay
     ///   flasher relay tick/tock (<see cref="OnFlasherEdge"/>, driven by the turn-signal stalk's flasher so the click and the lamps share one phase), industrial-yard ambience
     ///   (<see cref="AmbientAudio"/>).
     /// Clips come from <see cref="VehicleAudioLibrary.LoadDefault"/>; without the generated library the truck is silent
-    /// and a single warning is logged. No allocations after Start.
+    /// and a single warning is logged. No allocations after Start (a change of the engine source in the settings
+    /// rebuilds the engine voice pool once).
+    /// Engine source (ADR 0137): <see cref="AudioPreferences.EngineSource"/> picks the ElevenLabs layers (default when
+    /// imported) or the procedural synthesis; the retarder loop follows the same choice.
     /// </summary>
     [DefaultExecutionOrder(250)]
     public sealed class TruckAudioController : MonoBehaviour, IEngineAudioState
@@ -39,7 +43,8 @@ namespace Game.Gameplay
         VehicleAudioLibrary m_Lib;
         EngineAudio m_Engine;
         AudioSource m_OneShot;
-        PerspectiveLoop m_Wind, m_Squeal, m_Retarder, m_Compressor;
+        PerspectiveLoop m_Wind, m_Squeal, m_Retarder, m_Compressor, m_RetarderSynth, m_RetarderEl;
+        int m_PrefVersion = -1;
         readonly PerspectiveLoop[] m_Tyre = new PerspectiveLoop[LayerMath.SurfaceCount];
         readonly float[] m_SurfaceTarget = new float[LayerMath.SurfaceCount];
         readonly float[] m_SurfaceWeight = new float[LayerMath.SurfaceCount];
@@ -55,6 +60,8 @@ namespace Game.Gameplay
         public bool HasAudio => m_Engine != null;
         public float InteriorBlend => m_Interior;
         public EngineAudio Engine => m_Engine;
+        /// <summary>Engine sound set in use (falls back to procedural when the ElevenLabs set is not imported).</summary>
+        public EngineSoundSource EngineSource => m_Engine != null ? m_Engine.Source : EngineSoundSource.Procedural;
         /// <summary>Smoothed share of the tyre contact load on a SurfaceKind (sums to 1); for tests and diagnostics.</summary>
         public float SurfaceWeight(int surface) => m_SurfaceWeight[surface];
         public float SquealLevel => m_SquealGain;
@@ -64,7 +71,21 @@ namespace Game.Gameplay
         public float Rpm => vehicle != null && vehicle.Initialized ? (float)vehicle.Model.Engine.Rpm : 0f;
         public float Load => vehicle != null && vehicle.Initialized ? Mathf.Clamp01((float)vehicle.Model.Engine.LastLoad) : 0f;
         public float Throttle => vehicle != null && vehicle.Initialized ? Mathf.Clamp01((float)vehicle.Model.ThrottleDemand) : 0f;
-        public float EngineBrake => vehicle != null && vehicle.Initialized ? Mathf.Clamp01((float)vehicle.Model.Engine.EngineBrakeState) : 0f;
+        /// <summary>
+        /// Engine-brake activation for the sound. Muted while the AMT is mid-shift: the upshift synchronisation brake
+        /// (ADR 0134) and the decaying actuator state must not play the exhaust-brake roar for a few frames at every
+        /// upshift. TODO(lider, after truck-feel merge): gate on <c>Amt.SyncBrakeRequest</c> instead of the shift states.
+        /// </summary>
+        public float EngineBrake
+        {
+            get
+            {
+                if (vehicle == null || !vehicle.Initialized) return 0f;
+                var st = vehicle.Model.Amt.State;
+                if (st == AmtState.ShiftTorqueRamp || st == AmtState.ShiftNeutral || st == AmtState.ShiftSync || st == AmtState.ShiftEngage) return 0f;
+                return Mathf.Clamp01((float)vehicle.Model.Engine.EngineBrakeState);
+            }
+        }
         public float TurboBoost => vehicle != null && vehicle.Initialized ? Mathf.Clamp01((float)vehicle.Model.Engine.Boost) : 0f;
 
         void Start()
@@ -83,7 +104,8 @@ namespace Game.Gameplay
             go.transform.SetParent(t, false);
             go.transform.localPosition = new Vector3(0f, 1.0f, wb + 0.4f); // engine bay under the cab
             m_Engine = go.AddComponent<EngineAudio>();
-            m_Engine.Configure(m_Lib, this);
+            m_PrefVersion = AudioPreferences.Version;
+            m_Engine.Configure(m_Lib, this, WantedSource());
             go.SetActive(true);
 
             m_OneShot = Source("Pneumatics", null, false, new Vector3(0f, 0.9f, wb * 0.5f), 64);
@@ -98,7 +120,11 @@ namespace Game.Gameplay
             }
             m_Wind = new PerspectiveLoop(t, "Wind", m_Lib.windLoop, m_Lib.windLoopCab, new Vector3(0f, 3.0f, wb + 1.0f), 96, 1f);
             m_Squeal = new PerspectiveLoop(t, "TyreSqueal", m_Lib.tyreSqueal.ext, m_Lib.tyreSqueal.cab, road, 60, 1f);
-            m_Retarder = new PerspectiveLoop(t, "Retarder", m_Lib.retarder.ext, m_Lib.retarder.cab, new Vector3(0f, 0.7f, wb * 0.6f), 70, 1f);
+            m_RetarderSynth = new PerspectiveLoop(t, "Retarder", m_Lib.retarder.ext, m_Lib.retarder.cab, new Vector3(0f, 0.7f, wb * 0.6f), 70, 1f);
+            m_RetarderEl = m_Lib.elRetarder.IsValid
+                ? new PerspectiveLoop(t, "RetarderEL", m_Lib.elRetarder.ext, m_Lib.elRetarder.cab, new Vector3(0f, 0.7f, wb * 0.6f), 70, 1f)
+                : null;
+            SelectRetarder();
             m_Compressor = new PerspectiveLoop(t, "Compressor", m_Lib.compressor.ext, m_Lib.compressor.cab, new Vector3(0.5f, 0.8f, wb + 0.5f), 80, 1f);
             if (m_Lib.ambientBed.IsValid)
             {
@@ -108,7 +134,29 @@ namespace Game.Gameplay
                 m_Ambient.zoneLevel = ambientZoneLevel;
                 m_Ambient.Configure(m_Lib);
             }
-            Debug.Log($"[AUDIO] vehicle audio ready ({m_Lib.sourceInfo})");
+            Debug.Log($"[AUDIO] vehicle audio ready ({m_Lib.sourceInfo}) engine={m_Engine.Source} elevenlabs={(m_Lib.HasElevenLabs ? "imported" : "missing")}");
+        }
+
+        EngineSoundSource WantedSource() =>
+            AudioPreferences.ElevenLabsEngine && m_Lib.HasElevenLabs ? EngineSoundSource.ElevenLabs : EngineSoundSource.Procedural;
+
+        void SelectRetarder()
+        {
+            var want = m_Engine.Source == EngineSoundSource.ElevenLabs && m_RetarderEl != null ? m_RetarderEl : m_RetarderSynth;
+            if (m_Retarder != null && m_Retarder != want) m_Retarder.Set(0f, 1f, m_Interior);
+            m_Retarder = want;
+        }
+
+        /// <summary>Applies a changed <see cref="AudioPreferences.EngineSource"/> (settings panel) once.</summary>
+        void ApplyEngineSourceIfChanged()
+        {
+            if (m_PrefVersion == AudioPreferences.Version) return;
+            m_PrefVersion = AudioPreferences.Version;
+            var want = WantedSource();
+            if (want == m_Engine.Source) return;
+            m_Engine.Configure(m_Lib, this, want);
+            SelectRetarder();
+            Debug.Log($"[AUDIO] engine source switched to {m_Engine.Source}");
         }
 
         AudioSource Source(string name, AudioClip clip, bool loop, Vector3 local, int priority)
@@ -133,6 +181,7 @@ namespace Game.Gameplay
         void Update()
         {
             if (m_Engine == null || vehicle == null || !vehicle.Initialized) return;
+            ApplyEngineSourceIfChanged();
             float dt = Time.deltaTime;
             float target = rig == null || rig.mode == CameraMode.Cab ? 1f : 0f;
             m_Interior = Mathf.MoveTowards(m_Interior, target, dt / 0.15f);

@@ -414,7 +414,7 @@ namespace PhysicsRunner.Sim
                 ChamberFront = m.Wheels[0].ChamberPressure, ChamberRear = m.Wheels[2].ChamberPressure,
                 RearSlip = rearSlip,
                 RetarderTorque = m.Retarder.Torque, EngineBrakeTorque = m.Engine.EngineBrakeTorque, BrakeDemand = m.BrakeDemand,
-                ClutchTemp = m.Amt.ClutchTempC, AmtState = (int)m.Amt.State,
+                ClutchTemp = m.Amt.ClutchTempC, AmtState = (int)m.Amt.State, ClutchCmd = m.Amt.ClutchCommand,
                 CabPitch = m.Cab.Pitch, CabRoll = m.Cab.Roll, CabHeave = m.Cab.Heave,
                 ParkingState = m.ParkingBrakeState,
                 ParkWarning = m.ParkingBrakeWarning,

@@ -1,0 +1,170 @@
+{
+  "report_sha256": "A697BFA50C42899B5BB754C99A471602D56321DA39DA143A4578FBBB3E7A0101",
+  "note": "Read-only hash audit before final GIS; no fidelity regeneration or foreign source changes.",
+  "inputs": [
+    {
+      "path": "Data/Regions/bialystok-industrial-c/overrides.yaml",
+      "recorded_sha256": "08f1397f057e32536ed7df0617f157b03696c8fc467d5c4aef01fde4efe5adf1",
+      "current_sha256": "08f1397f057e32536ed7df0617f157b03696c8fc467d5c4aef01fde4efe5adf1",
+      "stale": false,
+      "unchanged_from_round_merge": true
+    },
+    {
+      "path": "Data/Regions/bialystok-industrial-c/roads.graph.json",
+      "recorded_sha256": "0bd625e041a6a2ca90a74f1652336c731182c234985352de4d377110f1d42cf6",
+      "current_sha256": "0bd625e041a6a2ca90a74f1652336c731182c234985352de4d377110f1d42cf6",
+      "stale": false,
+      "unchanged_from_round_merge": true
+    },
+    {
+      "path": "Data/Regions/bialystok-industrial-c/route_start.json",
+      "recorded_sha256": "c7ddb34ae01729cdf76c05f40edbcffe70f99d68852c32dc4325ca802f5f9d8a",
+      "current_sha256": "c7ddb34ae01729cdf76c05f40edbcffe70f99d68852c32dc4325ca802f5f9d8a",
+      "stale": false,
+      "unchanged_from_round_merge": true
+    },
+    {
+      "path": "tools/worldgen/roads/__init__.py",
+      "recorded_sha256": "328cd6e70845296ce7e67aee4b775c310c3fb318b638111b8ea4d4ad9ca0157b",
+      "current_sha256": "328cd6e70845296ce7e67aee4b775c310c3fb318b638111b8ea4d4ad9ca0157b",
+      "stale": false,
+      "unchanged_from_round_merge": true
+    },
+    {
+      "path": "tools/worldgen/roads/aprons.py",
+      "recorded_sha256": "d25db7889d8805ea77e360148224cc820c9dbc459edc0441d9eef3429e0f320f",
+      "current_sha256": "d25db7889d8805ea77e360148224cc820c9dbc459edc0441d9eef3429e0f320f",
+      "stale": false,
+      "unchanged_from_round_merge": true
+    },
+    {
+      "path": "tools/worldgen/roads/authored_paint.py",
+      "recorded_sha256": "9a4c11f8a7d02bc427e546a4aaa355b5ed9bd394ab801611e89373a0ecc7d3a8",
+      "current_sha256": "9a4c11f8a7d02bc427e546a4aaa355b5ed9bd394ab801611e89373a0ecc7d3a8",
+      "stale": false,
+      "unchanged_from_round_merge": true
+    },
+    {
+      "path": "tools/worldgen/roads/build_world.py",
+      "recorded_sha256": "17610e90c69610e14e8bd34f040e73b65795a241408bc3befcbb824e221e6c0a",
+      "current_sha256": "17610e90c69610e14e8bd34f040e73b65795a241408bc3befcbb824e221e6c0a",
+      "stale": false,
+      "unchanged_from_round_merge": true
+    },
+    {
+      "path": "tools/worldgen/roads/consistency.py",
+      "recorded_sha256": "8acdbef67038fd66c7df6a8374115867f6a86bd580c2729a7af8d43295b4c726",
+      "current_sha256": "8acdbef67038fd66c7df6a8374115867f6a86bd580c2729a7af8d43295b4c726",
+      "stale": false,
+      "unchanged_from_round_merge": true
+    },
+    {
+      "path": "tools/worldgen/roads/context.py",
+      "recorded_sha256": "c89b7fe82daaebd9d0c85bca4049fa33f1c38e250a74e7fcd043765a55d8a78c",
+      "current_sha256": "c89b7fe82daaebd9d0c85bca4049fa33f1c38e250a74e7fcd043765a55d8a78c",
+      "stale": false,
+      "unchanged_from_round_merge": true
+    },
+    {
+      "path": "tools/worldgen/roads/decals.py",
+      "recorded_sha256": "5c63f4a5bf69b6a6e801e18a27f8b1569b6f1a773f4ce54627642c39590b4a6f",
+      "current_sha256": "5c63f4a5bf69b6a6e801e18a27f8b1569b6f1a773f4ce54627642c39590b4a6f",
+      "stale": false,
+      "unchanged_from_round_merge": true
+    },
+    {
+      "path": "tools/worldgen/roads/geom.py",
+      "recorded_sha256": "7e43689419909242550ff62e16c6baffa9343dac5d1a160dc0279a9bd49b8646",
+      "current_sha256": "7e43689419909242550ff62e16c6baffa9343dac5d1a160dc0279a9bd49b8646",
+      "stale": false,
+      "unchanged_from_round_merge": true
+    },
+    {
+      "path": "tools/worldgen/roads/gores.py",
+      "recorded_sha256": "f16d45d1e402e6e93be5fd2c98412e05b264296895b468eebb59af1fe9cbffa3",
+      "current_sha256": "f16d45d1e402e6e93be5fd2c98412e05b264296895b468eebb59af1fe9cbffa3",
+      "stale": false,
+      "unchanged_from_round_merge": true
+    },
+    {
+      "path": "tools/worldgen/roads/junctions.py",
+      "recorded_sha256": "52f9dc56e2531fc2afae061cdd9143111751857d708875764f952a3cd07244d1",
+      "current_sha256": "52f9dc56e2531fc2afae061cdd9143111751857d708875764f952a3cd07244d1",
+      "stale": false,
+      "unchanged_from_round_merge": true
+    },
+    {
+      "path": "tools/worldgen/roads/markings.py",
+      "recorded_sha256": "5c8bd786c58becfe731b17e2f049a90f5eecbd5584bfa8ec55c1757a18b36fab",
+      "current_sha256": "5c8bd786c58becfe731b17e2f049a90f5eecbd5584bfa8ec55c1757a18b36fab",
+      "stale": false,
+      "unchanged_from_round_merge": true
+    },
+    {
+      "path": "tools/worldgen/roads/meshing.py",
+      "recorded_sha256": "6f0dd16de7b92212812ddc347c356c10dc48485a6735b51f3ad0eda49127fd72",
+      "current_sha256": "6f0dd16de7b92212812ddc347c356c10dc48485a6735b51f3ad0eda49127fd72",
+      "stale": false,
+      "unchanged_from_round_merge": true
+    },
+    {
+      "path": "tools/worldgen/roads/network.py",
+      "recorded_sha256": "db415c54ee264d40be493b371b43ec9f386decf31048d3ba5070634d5c4d5f40",
+      "current_sha256": "db415c54ee264d40be493b371b43ec9f386decf31048d3ba5070634d5c4d5f40",
+      "stale": false,
+      "unchanged_from_round_merge": true
+    },
+    {
+      "path": "tools/worldgen/roads/p21_hatch.py",
+      "recorded_sha256": "8f6347af587c2f02d918e2d2ab49e52b7d7ecbf6cdc90e8c90f1c901b15cefa5",
+      "current_sha256": "8f6347af587c2f02d918e2d2ab49e52b7d7ecbf6cdc90e8c90f1c901b15cefa5",
+      "stale": false,
+      "unchanged_from_round_merge": true
+    },
+    {
+      "path": "tools/worldgen/roads/pipeline.py",
+      "recorded_sha256": "6353f7bb5f3551d6675e545334f7e65616c8a24928c2fc8bcf52f4a7453b83e0",
+      "current_sha256": "6353f7bb5f3551d6675e545334f7e65616c8a24928c2fc8bcf52f4a7453b83e0",
+      "stale": false,
+      "unchanged_from_round_merge": true
+    },
+    {
+      "path": "tools/worldgen/roads/profile.py",
+      "recorded_sha256": "ffa9663b56509b1245bd24bd5a9d135c41a598f38a125755616cc6e16b7307fc",
+      "current_sha256": "ffa9663b56509b1245bd24bd5a9d135c41a598f38a125755616cc6e16b7307fc",
+      "stale": false,
+      "unchanged_from_round_merge": true
+    },
+    {
+      "path": "tools/worldgen/roads/qa_ortho.py",
+      "recorded_sha256": "3173a1dcac1107bcb905bc6062460818ab03e8286c9de397aa0c5ed3835a9d8d",
+      "current_sha256": "3173a1dcac1107bcb905bc6062460818ab03e8286c9de397aa0c5ed3835a9d8d",
+      "stale": false,
+      "unchanged_from_round_merge": true
+    },
+    {
+      "path": "tools/worldgen/roads/route.py",
+      "recorded_sha256": "8cbcff1de5bf8e43e1f62cd24f19d82bc212ea07d1c2efc1f1f0ec7c6b195782",
+      "current_sha256": "8cbcff1de5bf8e43e1f62cd24f19d82bc212ea07d1c2efc1f1f0ec7c6b195782",
+      "stale": false,
+      "unchanged_from_round_merge": true
+    },
+    {
+      "path": "tools/worldgen/roads/standards.py",
+      "recorded_sha256": "d26369bfa3ea95e2bb732991b33ff7afb0a185cab32d35fb49e49ab68e561a5e",
+      "current_sha256": "d26369bfa3ea95e2bb732991b33ff7afb0a185cab32d35fb49e49ab68e561a5e",
+      "stale": false,
+      "unchanged_from_round_merge": true
+    },
+    {
+      "path": "tools/worldgen/roads/through_lines.py",
+      "recorded_sha256": "25909812a15b31a63698b6630f4bff1b98caaa534dae8308e016ec0247fbd20a",
+      "current_sha256": "25909812a15b31a63698b6630f4bff1b98caaa534dae8308e016ec0247fbd20a",
+      "stale": false,
+      "unchanged_from_round_merge": true
+    }
+  ],
+  "report_unchanged_from_merge": true,
+  "base_merge": "cc53055a",
+  "stale_inputs": []
+}

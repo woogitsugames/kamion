@@ -220,6 +220,26 @@ Shader "Kamion/World Surface"
                 {
                     albedo *= i.masks.rgb;
                     float2 g = i.uv1;
+                    // ADR 0121 r5: explicit far-field industrial payload only.
+                    // Legacy alpha 0 / 0.75 / 1 never enters this branch. No
+                    // added channel, varying, texture, keyword or render pass.
+                    half panelPlain = step(0.20h, i.masks.a) * step(i.masks.a, 0.30h);
+                    half panelRibbon = step(0.60h, i.masks.a) * step(i.masks.a, 0.70h);
+                    if (panelPlain + panelRibbon > 0.5h)
+                    {
+                        float2 panelUV = lerp(g, g * float2(10.0 / 3.0, 4.0 / 3.0), panelRibbon);
+                        float2 panelFW = max(fwidth(panelUV), 1e-4);
+                        float2 panelF = frac(panelUV);
+                        float2 distanceToJoint = min(panelF, 1.0 - panelF);
+                        float2 joint = saturate((0.012 - distanceToJoint) / panelFW + 0.5);
+                        // At subpixel pitch use mean joint coverage, not a
+                        // moire grid or a progressively darker whole facade.
+                        joint = lerp(joint, float2(0.024, 0.024), saturate((panelFW - 0.5) * 2.0));
+                        half jointCoverage = joint.x + joint.y - joint.x * joint.y;
+                        float panelHash = frac(sin(dot(floor(panelUV), float2(12.9898, 78.233))) * 43758.5453);
+                        half panelVariation = (panelHash - 0.5) * 0.045 * saturate(1.0 - max(panelFW.x, panelFW.y));
+                        albedo *= 1.0h - 0.10h * jointCoverage + panelVariation;
+                    }
                     float2 bay = floor(g);
                     float2 f = g - bay;
                     float2 fw = max(fwidth(g), 1e-4);

@@ -1,0 +1,381 @@
+{
+  "gis_cache_unchanged": true,
+  "gis_cache_sha256": "15bd1bfe124abae278a810a7e23fd0aebee1db59601673d9f08bc984b9177d24",
+  "tiers": {
+    "Low": {
+      "total_triangles": 24500,
+      "raw_primitives": [
+        {
+          "sector": "far_north",
+          "material": "far_field_buildings",
+          "vertices": 2105,
+          "triangles": 847,
+          "topology_unchanged": true,
+          "horizontal_coordinates_unchanged": true,
+          "bounds_unchanged": true,
+          "changed_y_vertices": 0,
+          "before_flags": {
+            "panel": 0,
+            "panel_ribbon": 0
+          },
+          "after_flags": {
+            "panel": 0,
+            "panel_ribbon": 0
+          },
+          "changed_color_vertices": 0
+        },
+        {
+          "sector": "far_north",
+          "material": "forest_edge_mixed",
+          "vertices": 3732,
+          "triangles": 3162,
+          "topology_unchanged": true,
+          "horizontal_coordinates_unchanged": true,
+          "bounds_unchanged": true,
+          "changed_y_vertices": 0,
+          "all_forest_attributes_byte_identical": true
+        },
+        {
+          "sector": "far_east",
+          "material": "far_field_buildings",
+          "vertices": 10038,
+          "triangles": 4840,
+          "topology_unchanged": true,
+          "horizontal_coordinates_unchanged": true,
+          "bounds_unchanged": true,
+          "changed_y_vertices": 88,
+          "before_flags": {
+            "panel": 0,
+            "panel_ribbon": 0
+          },
+          "after_flags": {
+            "panel": 8,
+            "panel_ribbon": 8
+          },
+          "changed_color_vertices": 116
+        },
+        {
+          "sector": "far_east",
+          "material": "forest_edge_mixed",
+          "vertices": 1612,
+          "triangles": 1340,
+          "topology_unchanged": true,
+          "horizontal_coordinates_unchanged": true,
+          "bounds_unchanged": true,
+          "changed_y_vertices": 0,
+          "all_forest_attributes_byte_identical": true
+        },
+        {
+          "sector": "far_south",
+          "material": "far_field_buildings",
+          "vertices": 21203,
+          "triangles": 10569,
+          "topology_unchanged": true,
+          "horizontal_coordinates_unchanged": true,
+          "bounds_unchanged": true,
+          "changed_y_vertices": 476,
+          "before_flags": {
+            "panel": 0,
+            "panel_ribbon": 0
+          },
+          "after_flags": {
+            "panel": 36,
+            "panel_ribbon": 40
+          },
+          "changed_color_vertices": 668
+        },
+        {
+          "sector": "far_south",
+          "material": "forest_edge_mixed",
+          "vertices": 472,
+          "triangles": 386,
+          "topology_unchanged": true,
+          "horizontal_coordinates_unchanged": true,
+          "bounds_unchanged": true,
+          "changed_y_vertices": 0,
+          "all_forest_attributes_byte_identical": true
+        },
+        {
+          "sector": "far_west",
+          "material": "far_field_buildings",
+          "vertices": 4276,
+          "triangles": 1928,
+          "topology_unchanged": true,
+          "horizontal_coordinates_unchanged": true,
+          "bounds_unchanged": true,
+          "changed_y_vertices": 0,
+          "before_flags": {
+            "panel": 0,
+            "panel_ribbon": 0
+          },
+          "after_flags": {
+            "panel": 0,
+            "panel_ribbon": 0
+          },
+          "changed_color_vertices": 0
+        },
+        {
+          "sector": "far_west",
+          "material": "forest_edge_mixed",
+          "vertices": 1706,
+          "triangles": 1428,
+          "topology_unchanged": true,
+          "horizontal_coordinates_unchanged": true,
+          "bounds_unchanged": true,
+          "changed_y_vertices": 0,
+          "all_forest_attributes_byte_identical": true
+        }
+      ],
+      "imported_meshes": [
+        {
+          "mesh": "far_south_Low",
+          "vertices": 21675,
+          "stride": 28,
+          "vertex_index_buffer_bytes": 672630,
+          "buffer_sizes_unchanged": true,
+          "topology_unchanged": true,
+          "after_flags": {
+            "panel": 36,
+            "panel_ribbon": 40
+          }
+        },
+        {
+          "mesh": "far_north_Low",
+          "vertices": 5837,
+          "stride": 28,
+          "vertex_index_buffer_bytes": 187490,
+          "buffer_sizes_unchanged": true,
+          "topology_unchanged": true,
+          "after_flags": {
+            "panel": 0,
+            "panel_ribbon": 0
+          }
+        },
+        {
+          "mesh": "far_east_Low",
+          "vertices": 11650,
+          "stride": 28,
+          "vertex_index_buffer_bytes": 363280,
+          "buffer_sizes_unchanged": true,
+          "topology_unchanged": true,
+          "after_flags": {
+            "panel": 8,
+            "panel_ribbon": 8
+          }
+        },
+        {
+          "mesh": "far_west_Low",
+          "vertices": 5982,
+          "stride": 28,
+          "vertex_index_buffer_bytes": 187632,
+          "buffer_sizes_unchanged": true,
+          "topology_unchanged": true,
+          "after_flags": {
+            "panel": 0,
+            "panel_ribbon": 0
+          }
+        }
+      ],
+      "imported_vertex_index_bytes": 1411032
+    },
+    "High": {
+      "total_triangles": 118524,
+      "raw_primitives": [
+        {
+          "sector": "far_north",
+          "material": "far_field_buildings",
+          "vertices": 7298,
+          "triangles": 3346,
+          "topology_unchanged": true,
+          "horizontal_coordinates_unchanged": true,
+          "bounds_unchanged": true,
+          "changed_y_vertices": 156,
+          "before_flags": {
+            "panel": 0,
+            "panel_ribbon": 0
+          },
+          "after_flags": {
+            "panel": 0,
+            "panel_ribbon": 0
+          },
+          "changed_color_vertices": 156
+        },
+        {
+          "sector": "far_north",
+          "material": "forest_edge_mixed",
+          "vertices": 17120,
+          "triangles": 16004,
+          "topology_unchanged": true,
+          "horizontal_coordinates_unchanged": true,
+          "bounds_unchanged": true,
+          "changed_y_vertices": 0,
+          "all_forest_attributes_byte_identical": true
+        },
+        {
+          "sector": "far_east",
+          "material": "far_field_buildings",
+          "vertices": 58162,
+          "triangles": 28506,
+          "topology_unchanged": true,
+          "horizontal_coordinates_unchanged": true,
+          "bounds_unchanged": true,
+          "changed_y_vertices": 1476,
+          "before_flags": {
+            "panel": 0,
+            "panel_ribbon": 0
+          },
+          "after_flags": {
+            "panel": 32,
+            "panel_ribbon": 28
+          },
+          "changed_color_vertices": 1560
+        },
+        {
+          "sector": "far_east",
+          "material": "forest_edge_mixed",
+          "vertices": 7130,
+          "triangles": 6506,
+          "topology_unchanged": true,
+          "horizontal_coordinates_unchanged": true,
+          "bounds_unchanged": true,
+          "changed_y_vertices": 0,
+          "all_forest_attributes_byte_identical": true
+        },
+        {
+          "sector": "far_south",
+          "material": "far_field_buildings",
+          "vertices": 90399,
+          "triangles": 45081,
+          "topology_unchanged": true,
+          "horizontal_coordinates_unchanged": true,
+          "bounds_unchanged": true,
+          "changed_y_vertices": 1560,
+          "before_flags": {
+            "panel": 0,
+            "panel_ribbon": 0
+          },
+          "after_flags": {
+            "panel": 88,
+            "panel_ribbon": 96
+          },
+          "changed_color_vertices": 1860
+        },
+        {
+          "sector": "far_south",
+          "material": "forest_edge_mixed",
+          "vertices": 2472,
+          "triangles": 2178,
+          "topology_unchanged": true,
+          "horizontal_coordinates_unchanged": true,
+          "bounds_unchanged": true,
+          "changed_y_vertices": 0,
+          "all_forest_attributes_byte_identical": true
+        },
+        {
+          "sector": "far_west",
+          "material": "far_field_buildings",
+          "vertices": 17711,
+          "triangles": 8537,
+          "topology_unchanged": true,
+          "horizontal_coordinates_unchanged": true,
+          "bounds_unchanged": true,
+          "changed_y_vertices": 224,
+          "before_flags": {
+            "panel": 0,
+            "panel_ribbon": 0
+          },
+          "after_flags": {
+            "panel": 0,
+            "panel_ribbon": 0
+          },
+          "changed_color_vertices": 224
+        },
+        {
+          "sector": "far_west",
+          "material": "forest_edge_mixed",
+          "vertices": 8920,
+          "triangles": 8366,
+          "topology_unchanged": true,
+          "horizontal_coordinates_unchanged": true,
+          "bounds_unchanged": true,
+          "changed_y_vertices": 0,
+          "all_forest_attributes_byte_identical": true
+        }
+      ],
+      "imported_meshes": [
+        {
+          "mesh": "far_south_High",
+          "vertices": 92871,
+          "stride": 28,
+          "vertex_index_buffer_bytes": 3167496,
+          "buffer_sizes_unchanged": true,
+          "topology_unchanged": true,
+          "after_flags": {
+            "panel": 88,
+            "panel_ribbon": 96
+          }
+        },
+        {
+          "mesh": "far_north_High",
+          "vertices": 24418,
+          "stride": 28,
+          "vertex_index_buffer_bytes": 799804,
+          "buffer_sizes_unchanged": true,
+          "topology_unchanged": true,
+          "after_flags": {
+            "panel": 0,
+            "panel_ribbon": 0
+          }
+        },
+        {
+          "mesh": "far_west_High",
+          "vertices": 26631,
+          "stride": 28,
+          "vertex_index_buffer_bytes": 847086,
+          "buffer_sizes_unchanged": true,
+          "topology_unchanged": true,
+          "after_flags": {
+            "panel": 0,
+            "panel_ribbon": 0
+          }
+        },
+        {
+          "mesh": "far_east_High",
+          "vertices": 65292,
+          "stride": 28,
+          "vertex_index_buffer_bytes": 2038248,
+          "buffer_sizes_unchanged": true,
+          "topology_unchanged": true,
+          "after_flags": {
+            "panel": 32,
+            "panel_ribbon": 28
+          }
+        }
+      ],
+      "imported_vertex_index_bytes": 6852634
+    }
+  },
+  "note": "Counts/buffers and source provenance only; not photographic similarity or device GPU timing.",
+  "height_provenance_unchanged": true,
+  "appearance_policy": {
+    "classification": "declared function; height alone does not imply an energy plant",
+    "industrial_panel_min_height_m": 12.0,
+    "not_measured": [
+      "wall_colour",
+      "cladding_modules",
+      "glazing_band",
+      "roof_fascia"
+    ],
+    "panel_alpha": 0.25,
+    "panel_ribbon_alpha": 0.65,
+    "schema": "far-field-appearance/1",
+    "source_hall_counts": {
+      "energy": 5,
+      "industrial": 283,
+      "other": 1314
+    },
+    "source_panel_hall_count": 18,
+    "status": "WORKING_VALUE"
+  },
+  "apron_geometry_unchanged": true
+}

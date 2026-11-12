@@ -1,0 +1,33 @@
+{
+  "status": "PARTIAL",
+  "candidate_geometry_identity_confirmed": true,
+  "photographic_identity_confirmed": false,
+  "photometry": "UNVERIFIED",
+  "device_gpu": "UNVERIFIED",
+  "observed_hall_pairs": [
+    "hall-review/High-clear-pair.jpg",
+    "hall-review/Low-clear-pair.jpg",
+    "hall-review/High-overcast-pair.jpg",
+    "hall-review/Low-overcast-pair.jpg"
+  ],
+  "observed_full_frames": [
+    "hall-review/full-High-clear.jpg",
+    "hall-review/full-Low-overcast.jpg"
+  ],
+  "observations": [
+    "Szeroki pomarańczowy pas zniknął w czterech konfiguracjach; wysokość i obrys wizualnie pozostają zgodne z bazą.",
+    "High pokazuje stonowaną okładzinę z podziałami i górne pasmo szkła na długiej ścianie. Krótka ściana pozostaje bez szkła.",
+    "W Low podziały paneli są słabo widoczne. Korzyść to głównie usunięcie arbitralnego brązu i jaskrawej obróbki oraz subtelne pasmo szkła.",
+    "W obejrzanych pełnych kadrach nie stwierdzono nowej wyraźnej anomalii kolorystycznej lub sylwetki. Nie jest to przegląd każdego piksela całej trasy."
+  ],
+  "estimated_features": ["wall_colour", "cladding_modules", "glazing_band", "roof_fascia"],
+  "budget_and_buffer_audits": "VERIFIED: 472 pairs, 236 Low, all draws/shadow/rounded trisK deltas zero; raw and imported geometry audit passed",
+  "native_photo_review": "100 native-aspect photograph pairs composed; four spot comparisons reviewed",
+  "native_observations": [
+    "303305 High-clear i 320215 Low-clear: panorama bloków przy DK8 nadal jest słabiej czytelna niż na zdjęciu i częściowo zasłonięta lasem. R5 nie zamyka B9.",
+    "397016 High-overcast i 275528 Low-overcast zachowują duże różnice fotografii i renderu, także światła/pozy. Nie zmieniano kamer, światła ani regionalnej geometrii, żeby zaliczyć te pary.",
+    "Te fotografie nie potwierdzają tożsamości ani wykończenia południowej hali. Indeks native-review zapisuje źródła, autorów, licencje, wymiary i SHA."
+  ],
+  "final_gis": "710 passed, 1 xfailed, 0 failed; exit 0; 1154.93 s",
+  "acceptance": "PARTIAL visual improvement, technical checks passed; leader integration and device review pending"
+}
