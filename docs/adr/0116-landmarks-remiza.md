@@ -129,7 +129,7 @@ wieloprzewodowy od60 m. To WORKING_VALUE z dopasowania, nie pomiar budowli.
 Wysokość120 m obu i położenia poziome pozostają bez zmian. Trzon wieloprzewodowy
 8,27 m przy ziemi i u góry jest WORKING_VALUE (OSM obrys + szerokość na zdjęciu),
 zamiast starej roboczej góry4,8 m. Galerie i trzy wyloty mają autorskie wymiary
-robocze. Finalna geometria i PNG zweryfikowane poniżej; końcowe testy całego zestawu w toku.
+robocze. Finalną geometrię, PNG i wyniki końcowych testów podano poniżej.
 
 
 Finalna korekta: jeden/trzy wyloty, białe galerie z pionową fascią 0,25 m,
@@ -157,3 +157,26 @@ stale-fidelity-proof.json potwierdza oba pliki niezmienione od bazy 14ccbaf1;
 nie modyfikowano źródeł ani raportu dróg. Nie deklaruje się pełnego GIS PASS.
 192 pliki cache (64 High, 64 Low, 64 instancje) zgodne z manifestem przed i po
 teście; wszystkie źródła i assety objęte kontrolą niezmienione od finalnego renderu.
+
+
+## r4 — korony iglaków remizy (przygotowanie)
+
+Baza main b23b4df7 włączona przez merge e0fa8a6d. W konfliktach materiałów
+potwierdzono identyczny AST obu helperów podpór; zachowano nowe materiały life
+oraz kolejność bloków main. Dane wygenerowane przyjęto z main do regeneracji.
+Ta runda pozostaje przy trzech iglakach JRG2; nie obejmuje globalnej roślinności.
+
+Zdjęcie CC0 7197 pokazuje przerwy między nieregularnymi poziomymi gałęziami.
+W natywnym zbliżeniu r3 dominują pełne, równe półki szerokiego rdzenia.
+Hipoteza próby: cztery węższe pierścienie zamiast ośmiu szerokich, odzyskane
+trójkąty na mniejsze i liczniejsze karty gałęzi. Liczba kart 12→32 na Low,
+54→86 na High, bez zwiększenia 98/224 trójkątów na każde drzewo.
+W lekkim doświadczeniu na rzeczywistych kluczach spec pole kart wyniosło
+0,829/0,932/0,888 dotychczasowego pola na Low i 0,767/0,759/0,777 na High.
+Pierwszą szerokość Low odrzucono przed wdrożeniem: zwiększała pole do 1,38×.
+To pole powierzchni 3D, nie ekranowe nakładanie alfa ani koszt GPU.
+
+Model produkcyjny nie został jeszcze zmieniony, baseline czeka w kolejce FIFO.
+Próba wymaga renderu i porównania z fotografią; w razie regresji zostanie odrzucona.
+Przygotowany audyt GLB ma ochronić wszystkie trójkąty poza trzema koronami,
+progi i liczbę LOD oraz sylwetkę LOD2. Pigment tynku D48 i atlasy bez zmiany.
