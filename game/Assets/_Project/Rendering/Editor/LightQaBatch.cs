@@ -153,7 +153,10 @@ namespace Game.Rendering.Editor
                     if (job.expectedHeadlamps < 0 || job.expectedHeadlamps > 2 || (job.expectedHeadlamps > 0 && lampProbe == null))
                         throw new ArgumentException("expectedHeadlamps requires lampProbe and a value0..2");
                     Action<ScriptableRenderContext, Camera> filter = (_, camera) => {
-                        gradeProbe?.Apply(camera);
+                        // Scene bootstrap can render its default Clear camera before the runner selects the job's
+                        // preset. Bind/check the experiment on exported QA views, not that unrelated camera.
+                        // Physical captures bypass the entire lookup in the shared shader.
+                        if(camera.GetComponent<ControlCamera>()!=null)gradeProbe?.Apply(camera);
                         if (job.skyOnly) HideWorldForSkyQa();
                         if (job.shadowFilter > 0)
                             foreach (var light in UnityEngine.Object.FindObjectsByType<Light>(FindObjectsSortMode.None))

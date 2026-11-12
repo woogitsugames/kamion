@@ -77,7 +77,7 @@ namespace Game.Rendering.Editor
             var env=EnvironmentLighting.Instance;
             if(env==null || env.Active==null){m_Error="Missing active environment";return;}
             var key=JsonUtility.ToJson(CaptureKey(env.Active));
-            if(key!=m_Key){m_Error="Stale bake key: "+key+" expected "+m_Key;return;}
+            if(key!=m_Key){m_Error="Stale bake key in "+camera.name+" ("+camera.cameraType+"): "+key+" expected "+m_Key;return;}
             Shader.SetGlobalTexture("_KamionOpaqueGradeLut",m_Lut);
             Shader.SetGlobalFloat("_KamionOpaqueGradeSize",m_Lut.width);
             Shader.SetGlobalFloat("_KamionOpaqueGradeEnabled",1);
