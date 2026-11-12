@@ -3,5 +3,6 @@
   "enabled": true,
   "low_atlas_tier": "Low",
   "low_mip_bias": -0.75,
-  "note": "WORKING_VALUE isolated candidate: original 256px Low atlas, mip bias -0.75. Medium/High stay unchanged; 512px experiment gave negligible ROI difference."
+  "note": "WORKING_VALUE isolated candidate: original Low 256px, mip bias -0.75, alpha cutoff 0.4. Compare against bias-only. Decal also includes stitching/grilles: inspect them before acceptance.",
+  "low_alpha_cutoff": 0.4
 }

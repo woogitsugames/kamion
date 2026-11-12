@@ -388,7 +388,7 @@ namespace Game.Editor.Setup
                 dec.SetTexture("_DecalAtlas", decalAtlas);
                 Debug.Log($"CAB_LEGEND_ATLAS_CONFIG: tier={tier} source={decalTier} size={decalAtlas.width}x{decalAtlas.height} mips={decalAtlas.mipmapCount}");
                 dec.SetTexture("_AO", ao);
-                dec.SetFloat("_Cutoff", 0.5f);
+                dec.SetFloat("_Cutoff", tier == "Low" ? CabLowLegendCutoff() : 0.5f);
                 dec.SetFloat("_IsDecal", 1f);
                 dec.EnableKeyword("_KAMION_CAB_DECAL");
                 ConfigureCabBacklight(dec);
@@ -1032,6 +1032,20 @@ namespace Game.Editor.Setup
             return source;
         }
 
+        static float CabLowLegendCutoff()
+        {
+            string path = Path.Combine(EditorTools.RepoRoot, "art-source/truck/interior/cab_legend_atlas.json");
+            if (!File.Exists(path)) return 0.5f;
+            var data = Json.Obj(Json.Parse(File.ReadAllText(path)));
+            if (Json.Num(data["schema"]) != 1) throw new InvalidDataException("Unknown cab legend atlas schema");
+            bool enabled = data.TryGetValue("enabled", out var flag) && flag is bool value && value;
+            if (!enabled || !data.TryGetValue("low_alpha_cutoff", out var raw)) return 0.5f;
+            float cutoff = (float)Json.Num(raw);
+            if (float.IsNaN(cutoff) || float.IsInfinity(cutoff) || cutoff < 0.35f || cutoff > 0.5f)
+                throw new InvalidDataException("Cab Low legend alpha cutoff must be finite in [0.35,0.5]");
+            Debug.Log($"CAB_LEGEND_ALPHA_CUTOFF: Low only, cutoff={cutoff} (WORKING_VALUE)");
+            return cutoff;
+        }
         static float CabLowLegendMipBias()
         {
             // The Low source texture is not shared by Medium/High. Never bias their atlas.
@@ -1399,4 +1413,5 @@ namespace Game.Editor.Setup
         }
     }
 }
+
 

@@ -3,6 +3,7 @@ import argparse, hashlib, json, time
 from pathlib import Path
 from PIL import Image, ImageChops, ImageDraw, ImageFont, ImageStat
 parser = argparse.ArgumentParser()
+parser.add_argument('--before', default='baseline')
 parser.add_argument('--stage', default='result-0112-legend2x')
 parser.add_argument('--label', default='512 candidate')
 parser.add_argument('--tag', default='legend2x')
@@ -14,7 +15,7 @@ start = time.perf_counter()
 root = Path(__file__).resolve().parent
 roi = (440, 840, 680, 1040)
 images = []
-for stage in ('baseline', options.stage):
+for stage in (options.before, options.stage):
     with Image.open(root/stage/('Low-'+options.light)/'cab-dash.png') as im:
         images.append(im.convert('RGB').crop(roi))
 diff = ImageChops.difference(*images)
@@ -23,16 +24,17 @@ sheet = Image.new('RGB', (960, 440), '#dddddd')
 draw = ImageDraw.Draw(sheet)
 font = ImageFont.truetype('C:/Windows/Fonts/arial.ttf', 17)
 for col, im in enumerate(images):
-    draw.text((col*480+8, 6), ('256 baseline' if col == 0 else options.label)+' — nearest 2x', fill='black', font=font)
+    draw.text((col*480+8, 6), (options.before if col == 0 else options.label)+' — nearest 2x', fill='black', font=font)
     sheet.paste(im.resize((480, 400), Image.Resampling.NEAREST), (col*480, 32))
 sheet.save(root/(options.tag+'-Low-'+options.light+'-left-ROI-960.png'))
 record = {'scope': 'Only one 240x200 native ROI from two Low captures; not full-frame photometry',
-          'light': options.light, 'candidate_stage': options.stage, 'roi': roi, 'changed_pixels': changed, 'pixels': images[0].width*images[0].height,
+          'before_stage': options.before, 'light': options.light, 'candidate_stage': options.stage, 'roi': roi, 'changed_pixels': changed, 'pixels': images[0].width*images[0].height,
           'max_channel_delta': max(v[1] for v in diff.getextrema()), 'mean_channel_delta': ImageStat.Stat(diff).mean,
           'crop_sha256': [hashlib.sha256(im.tobytes()).hexdigest() for im in images],
           'elapsed_seconds': time.perf_counter()-start}
 (root/(options.tag+'-roi-check.json')).write_text(json.dumps(record, indent=2), encoding='utf-8')
 print(json.dumps(record, indent=2))
+
 
 
 

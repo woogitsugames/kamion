@@ -18,6 +18,7 @@ namespace Game.Tests
             if (set == null) Assert.Ignore("TRAKT material sets not built");
             var material = set.Get("MI_Cab_Decal");
             Assert.That(material, Is.Not.Null);
+            Assert.That(material.GetFloat("_Cutoff"), Is.EqualTo(tier == "Low" ? 0.4f : 0.5f).Within(1e-5f));
             var texture = material.GetTexture("_DecalAtlas") as Texture2D;
             Assert.That(texture, Is.Not.Null);
             Assert.That(texture.width, Is.EqualTo(size));
@@ -31,3 +32,4 @@ namespace Game.Tests
         }
     }
 }
+
