@@ -163,10 +163,15 @@ namespace Game.Rendering.Editor
                     var preset=PreparePreset(name);
                     Texture3D cube=null;string sourceFormat=null;int copyPasses=0;
                     try{
-                        Color32[] highPixels,highGradient,legacyPixels,legacyGradient;
+                        Color32[] highPixels,highGradient,legacyPixels,legacyGradient,intermediatePixels,intermediateGradient;
                         using(var copy=new LightNativeGradeLutCapture(s_Camera,32)){
                             legacyPixels=Render(inputs,16,12,32,false);
                             legacyGradient=Render(gradients,1024,12,1,false,null,32);
+                            using(var hdr=new LightHdrQaReference(s_Camera)){
+                                intermediatePixels=Render(inputs,16,12,32,false);
+                                intermediateGradient=Render(gradients,1024,12,1,false,null,32);
+                                File.WriteAllText(Path.Combine(folder,name+"-hdr-intermediate-proof.json"),hdr.GetProof(1));
+                            }
                             s_HdrReference=true;
                             try{
                                 highPixels=Render(inputs,16,12,32,false);
@@ -180,6 +185,8 @@ namespace Game.Rendering.Editor
                         SaveImage(Path.Combine(folder,name+"-gradient-High-reference.png"),highGradient,1024,384);imageCount++;
                         SaveImage(Path.Combine(folder,name+"-High-legacy-ARGB32.png"),legacyPixels,512,384);imageCount++;
                         SaveImage(Path.Combine(folder,name+"-gradient-High-legacy-ARGB32.png"),legacyGradient,1024,384);imageCount++;
+                        SaveImage(Path.Combine(folder,name+"-High-HDR-intermediate.png"),intermediatePixels,512,384);imageCount++;
+                        SaveImage(Path.Combine(folder,name+"-gradient-High-HDR-intermediate.png"),intermediateGradient,1024,384);imageCount++;
                         var stack=s_Camera.GetUniversalAdditionalCameraData().volumeStack??VolumeManager.instance.stack;
                         var curves=stack.GetComponent<ColorCurves>();var adjustment=stack.GetComponent<ColorAdjustments>();
                         var volume=s_Environment.GetComponentInChildren<Volume>();
@@ -204,7 +211,8 @@ namespace Game.Rendering.Editor
                             SaveImage(Path.Combine(folder,name+"-Low-shared-native32.png"),sharedPixels,512,384);imageCount++;
                             shared=Measure("Actual shared native LogC path",32,inputs,reference,Centres(sharedPixels,192,16,32));
                             File.WriteAllText(Path.Combine(folder,name+"-native-precheck.json"),JsonUtility.ToJson(new Proof{preset=name,nativeSourceFormat=sourceFormat,nativeCopyPasses=copyPasses,
-                                measurements=new[]{shared,Measure("Legacy ARGB32 High versus HDR reference",0,inputs,reference,Centres(legacyPixels,192,16,32))}},true));
+                                measurements=new[]{shared,Measure("Legacy ARGB32 High versus HDR reference",0,inputs,reference,Centres(legacyPixels,192,16,32)),
+                                    Measure("HDR intermediate + ARGB32 final versus HDR reference",0,inputs,reference,Centres(intermediatePixels,192,16,32))}},true));
                             if(shared.meanAbsoluteRgb>1 || shared.maxRgb>8)throw new InvalidOperationException("Native shared response missing or outside smoke bounds");
                             Shader.SetGlobalFloat("_KamionSkyCapOff",1);
                             try{

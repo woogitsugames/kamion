@@ -49,6 +49,7 @@ namespace Game.Rendering.Editor
             public string opaqueGradeLabFolder; // Editor-only explicit experiment; no preset/player binding.
             public int opaqueGradeLabSize;
             public int opaqueGradeLabDomain;
+            public bool hdrReference; // Explicit High-only Editor reference; existing QA export target stays ARGB32.
         }
 
         static string Arg(string key)
@@ -144,6 +145,8 @@ namespace Game.Rendering.Editor
                     Directory.CreateDirectory(job.output);
                     if (job.shadowFilter < 0 || job.shadowFilter > 3) throw new ArgumentException("shadowFilter must be 0..3");
                     var lampProbe = job.lampProbe ? new LightQaLampProbe() : null;
+                    if(job.hdrReference && job.tier!="High")throw new ArgumentException("HDR reference is High-only");
+                    using var hdrProbe=job.hdrReference?new LightHdrQaReference():null;
                     using var gradeProbe = job.opaqueGradeLabSize>0
                         ? new LightGradeLutWorldProbe(job.opaqueGradeLabFolder,
                             char.ToUpperInvariant(job.lighting[0])+job.lighting.Substring(1),job.opaqueGradeLabSize,job.opaqueGradeLabDomain) : null;
@@ -246,6 +249,7 @@ namespace Game.Rendering.Editor
                         .Select(id => id.Trim()).Where(id => id.Length > 0).Distinct(StringComparer.OrdinalIgnoreCase).Count();
                     if (count != expected) throw new InvalidOperationException($"Incomplete lighting QA: expected={expected}, rendered={count}");
                     gradeProbe?.Write(job.output,expected);
+                    hdrProbe?.Write(job.output,expected);
                     if (job.skyOnly)
                     {
                         var final = HideWorldForSkyQa();
