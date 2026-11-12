@@ -77,9 +77,39 @@ Decision:
   station (OSM node 1847044938 `traffic_signals=emergency`, `signal_head_off`, dark at rest), facing the oncoming
   traffic. The photo's B-23 on the median lamp column (E -368 N -136) is not built: the sign atlas has no B-23 face.
 
-## 4. Portal follow-ups (REVIEW s14-0139)
+## 4. Portal follow-ups (REVIEW s14-0139 P1-1 "tablice ~0,6 m za wysoko")
 
-TODO after the import: bounds of the portal and its boards in `WorldC`; `beam_depth_m` 0.55 -> prototype `_b6` = 0.6 m.
+Cause (found on the r1 probes `p146-portal-*` and in `streetscape_qa.json`): the boards did not hang on the beam.
+ADR 0127 moved the beam to the column feet read off the orthophoto (`columns_en`), the boards stayed at the chain
+station of `distance_m`: board E -262.12 N -210.67 against the beam axis through (-267.0, -212.8) / (-258.6, -202.2)
+= 2.46 m in front of the axis instead of 0.45 m. Seen level from the front (probe `p146-portal-front-level`) the
+board covers the beam as authored (top 0.28 m above the top chord); from the driver's eye 15.2 m away (SBS pose
+275528) the 2.0 m of depth read as 0.8 m of height (board top at 20.3 deg, beam top at 16.4 deg). Heights in the
+generator were right all along (board centres 5.94 / 5.75 m, beam 5.5-6.1 m).
+
+Decision: `streetscape.landmarks` projects every board of a portal onto the beam plane
+(`p - travel * dot(p - ctr, travel) - travel * 0.45`); a cantilever is unchanged (its column is at the board
+station). `beam_depth_m: 0.6` (the name carries decimetres, 0.55 already built `_b6`; frame: 28 px at 42 px/m).
+
+## 5. Second round, found on the r1 pairs (anti-slop pass)
+
+- **Cap coat.** `bridge_fascia_red` on the cap was a flat colour: sRGB R/G 1.89-2.05, cap / asphalt luminance
+  1.14 (clear) / 1.44 (overcast); photo 494288 (cap in the shade of the screen, UNVERIFIED in sun) R/G ~1.4,
+  luminance ~1.2. And it covered the ramp caps too, which are bare light concrete on 810896 (red wedge in the
+  foreground of the r1 pair). New road material `bridge_cap_red` (concrete_precast set, colour 0.19 / 0.04 / 0.032,
+  dark road film `vertex_grime` with `CAP_COAT_GRIME` 0.55 at the kerb -> 0.2), applied by `_emit_strip` only on
+  span stations (`capm` = bridge and not walled). WORKING_VALUE.
+- **Screen posts.** The thin H flange in `barrier_steel` showed diagonal stripes (plan-metre UV of the W-beam set).
+  `screen_post_mat: noise_post` (green-grey paint, 810525 sunlit / 494288 shaded). WORKING_VALUE.
+- **Mapped screen built twice.** OSM / BDOT10k map the screen of the ramp as a noise-barrier line; `noise_barriers`
+  built it again as a ground barrier 0.5 m outside the ramp wall (slab section E -428 N -79: plinth 132.05 m, glass
+  133.5-136.6 m, deck 135.1 m), in front of the wall and its band. `furniture.deck_screen_keepout`: mapped parts
+  within 2.5 m (WORKING_VALUE) of a deck / ramp edge that carries a bridge_style screen are not built.
+- **Mapped retaining wall built twice.** Same for the BDOT10k / OSM retaining-wall line of the ramp: `retaining()`
+  put a 1 m concrete wall with a railing 0.5 m in front of the block wall. `furniture.ramp_wall_keepout` (2.5 m
+  along both edges of walled stations, retaining walls only; fences are not cut).
+- **Red band hidden.** The block facing ran to the cap top 5 mm in front of the painted band (`ramp_wall_blocks`
+  to 135.24 m, `bridge_fascia_red` 134.69-135.26 m behind it). The facing now ends 0.02 m above the band bottom.
 
 ## Validation
 
