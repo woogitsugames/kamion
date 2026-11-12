@@ -3,6 +3,6 @@
   "enabled": true,
   "low_atlas_tier": "Low",
   "low_mip_bias": -0.75,
-  "note": "WORKING_VALUE isolated candidate: original Low 256px, mip bias -0.75, alpha cutoff 0.4. Compare against bias-only. Decal also includes stitching/grilles: inspect them before acceptance.",
-  "low_alpha_cutoff": 0.4
+  "note": "WORKING_VALUE candidate: Low 256px, bias -0.75, icon-band cutoff 0.28 versus legacy 0.16. General stitching/grille cutoff restored to 0.5; Medium/High icons retain 0.16.",
+  "low_legend_cutoff": 0.28
 }

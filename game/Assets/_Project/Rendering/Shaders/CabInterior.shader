@@ -19,6 +19,7 @@ Shader "Kamion/Cab Interior"
         _AO ("AO atlas (uv1)", 2D) = "white" {}
         _DecalAtlas ("Decal atlas (uv0, RGB tint x, A clip)", 2D) = "white" {}
         _Cutoff ("Decal alpha clip", Range(0, 1)) = 0.5
+        _LegendCutoff ("Icon alpha clip (legend band only)", Range(0.1, 0.5)) = 0.16
         _WearBlackAlbedo ("Worn black albedo (linear, neutral)", Range(0, 0.2)) = 0.085
         _WearRoughMin ("Worn roughness floor", Range(0.08, 1)) = 0.08
         [Toggle(_KAMION_CAB_DECAL)] _IsDecal ("Decal slot", Float) = 0
@@ -38,6 +39,7 @@ Shader "Kamion/Cab Interior"
         CBUFFER_START(UnityPerMaterial)
             float4 _Detail_ST;
             float _Cutoff, _IsDecal, _WearBlackAlbedo, _WearRoughMin;
+            float _LegendCutoff;
             float4 _LegendColor;
             float _IsBacklit, _LegendLuminance, _LegendMaxDisplay, _LegendStartSunDeg, _LegendFullSunDeg;
         CBUFFER_END
@@ -129,7 +131,7 @@ Shader "Kamion/Cab Interior"
                 // clip keeps the stroke; printed legends are near-white paint and sit proud of the key, so they take the
                 // key's AO only in part (interior legibility pass, ADR 0044).
                 half legend = i.uv01.y < 0.5 ? 1.0 : 0.0;
-                clip(d.a - lerp(_Cutoff, 0.16, legend));
+                clip(d.a - lerp(_Cutoff, _LegendCutoff, legend));
                 albedo = tint * d.rgb * (1.0 + 0.45 * legend);
                 rough = i.color.a;
                 ao = lerp(ao, max(ao, 0.8), legend);
@@ -290,3 +292,4 @@ Shader "Kamion/Cab Interior"
     }
     Fallback Off
 }
+

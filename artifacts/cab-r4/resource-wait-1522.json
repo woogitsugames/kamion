@@ -1,0 +1,32 @@
+{
+  "at": "2026-11-12T15:22:45.8023560+01:00",
+  "processes": [
+    {
+      "ProcessId": 67820,
+      "ParentProcessId": 79052,
+      "Name": "pwsh.exe"
+    },
+    {
+      "ProcessId": 9628,
+      "ParentProcessId": 67820,
+      "Name": "pwsh.exe"
+    },
+    {
+      "ProcessId": 70268,
+      "ParentProcessId": 9628,
+      "Name": "pwsh.exe"
+    },
+    {
+      "ProcessId": 45068,
+      "ParentProcessId": 71148,
+      "Name": "pwsh.exe"
+    },
+    {
+      "ProcessId": 28908,
+      "ParentProcessId": 45068,
+      "Name": "pwsh.exe"
+    }
+  ],
+  "has_python_or_unity": false,
+  "phone_block": true
+}
