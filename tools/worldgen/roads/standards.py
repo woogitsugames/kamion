@@ -93,9 +93,12 @@ VERGE_SKIRT_SLOPE = 2.0              # WORKING_VALUE (ADR 0110): run per unit fa
 MEDIAN_VERGE_MAX = 3.00             # WORKING_VALUE (ADR 0110): grass strip behind a median kerb (two meet in the middle)
 FLANGE_DEPTH = 0.50                 # vertical skirt under the outer edge (hides terrain/road seams)
 TERRAIN_UNDER_ROAD = 0.35           # terrain pushed this far below the road surface inside footprint
-# Rural profile (outside built-up area), PTB2022 § 23 ust. 10 pkt 3-5: unpaved shoulder
-# 1.25 (G) / 1.00 (Z) / 0.75 (L, D) standard.
-SHOULDER_W = {"A": 1.25, "S": 1.25, "GP": 1.25, "G": 1.25, "Z": 1.00, "L": 0.75, "D": 0.75}
+# Rural profile (outside built-up area), PTB2022 § 23 ust. 10: unpaved shoulder. pkt 1: 1.25 m
+# standard next to a pas awaryjny (A/S); pkt 2: 0.75 m standard (>= 0.50 m in difficult conditions)
+# next to an opaska zewnętrzna (GP, and G/Z with a paved strip); pkt 3-5: 1.25 (G) / 1.00 (Z) /
+# 0.75 (L, D) when no paved part is designed. (Dz.U. 2025 poz. 1352 deletes the "if no paved
+# part" clause in pkt 5 only - values unchanged.)
+SHOULDER_W = {"A": 1.25, "S": 1.25, "GP": 0.75, "G": 1.25, "Z": 1.00, "L": 0.75, "D": 0.75}
 PAVED_SHOULDER = 1.00              # WORKING_VALUE: paved shoulder (pobocze utwardzone) of the rural GP profile
 PAVED_SHOULDER_MEDIAN = 0.50       # WORKING_VALUE: inner paved strip next to a grass median (no kerb)
 RURAL_MIN_SPEED = 70.0             # WORKING_VALUE: GP/G sections at >= 70 km/h without footways get the rural profile
