@@ -1,0 +1,159 @@
+{
+  "actual_activation": {
+    "note": "Actual beginCameraRendering global keyword and assigned QA material. Fixed mask UV multiplier is verified against the logged actual shader asset SHA, not an editable tuning uniform.",
+    "frames": [
+      {
+        "camera": "d_field_p8_turn",
+        "shader": "Hidden/SurfaceWearQA/PackedRoadMask",
+        "shaderSourceSha256": "9f98994df5750599eb018b50d9f9f7b8bd7bd09cf4cae0e59acfc57110571eef",
+        "mask": "Assets/_Generated/SurfaceWearQA/Textures/T_road_asphalt_packed16_MaskMap.png",
+        "worldDetail": false,
+        "actuallyAssigned": true,
+        "maskSize": 2048,
+        "maskMips": 12,
+        "assignedRenderers": 44,
+        "metallicScale": 0.0,
+        "crackStrength": 0.75,
+        "maskUVMultiplier": 0.25,
+        "tile": {
+          "x": 4.0,
+          "y": 4.0,
+          "z": 16.0,
+          "w": 1.0
+        }
+      },
+      {
+        "camera": "d_wear_lane_old",
+        "shader": "Hidden/SurfaceWearQA/PackedRoadMask",
+        "shaderSourceSha256": "9f98994df5750599eb018b50d9f9f7b8bd7bd09cf4cae0e59acfc57110571eef",
+        "mask": "Assets/_Generated/SurfaceWearQA/Textures/T_road_asphalt_packed16_MaskMap.png",
+        "worldDetail": false,
+        "actuallyAssigned": true,
+        "maskSize": 2048,
+        "maskMips": 12,
+        "assignedRenderers": 44,
+        "metallicScale": 0.0,
+        "crackStrength": 0.75,
+        "maskUVMultiplier": 0.25,
+        "tile": {
+          "x": 4.0,
+          "y": 4.0,
+          "z": 16.0,
+          "w": 1.0
+        }
+      },
+      {
+        "camera": "d_wear_missing_uv_2",
+        "shader": "Hidden/SurfaceWearQA/PackedRoadMask",
+        "shaderSourceSha256": "9f98994df5750599eb018b50d9f9f7b8bd7bd09cf4cae0e59acfc57110571eef",
+        "mask": "Assets/_Generated/SurfaceWearQA/Textures/T_road_asphalt_packed16_MaskMap.png",
+        "worldDetail": false,
+        "actuallyAssigned": true,
+        "maskSize": 2048,
+        "maskMips": 12,
+        "assignedRenderers": 44,
+        "metallicScale": 0.0,
+        "crackStrength": 0.75,
+        "maskUVMultiplier": 0.25,
+        "tile": {
+          "x": 4.0,
+          "y": 4.0,
+          "z": 16.0,
+          "w": 1.0
+        }
+      },
+      {
+        "camera": "d_wear_newroad_negative",
+        "shader": "Hidden/SurfaceWearQA/PackedRoadMask",
+        "shaderSourceSha256": "9f98994df5750599eb018b50d9f9f7b8bd7bd09cf4cae0e59acfc57110571eef",
+        "mask": "Assets/_Generated/SurfaceWearQA/Textures/T_road_asphalt_packed16_MaskMap.png",
+        "worldDetail": false,
+        "actuallyAssigned": true,
+        "maskSize": 2048,
+        "maskMips": 12,
+        "assignedRenderers": 44,
+        "metallicScale": 0.0,
+        "crackStrength": 0.75,
+        "maskUVMultiplier": 0.25,
+        "tile": {
+          "x": 4.0,
+          "y": 4.0,
+          "z": 16.0,
+          "w": 1.0
+        }
+      }
+    ]
+  },
+  "GPU_R_readback": {
+    "note": "Actual bound packed texture GPU mip0 R, linear float readback. This is not the per-fragment LOD mask; world-projected coverage is evaluated separately.",
+    "format": "ASTC_8x8",
+    "graphicsFormat": "RGBA_ASTC8X8_UNorm",
+    "sha256": "341b485e1c4843d93d1ebc2bdb5e3abefe4a3415bee4056307291d586852aa32",
+    "size": 2048,
+    "pixels": 4194304,
+    "mean": 0.003630671884357173,
+    "positiveFraction": 0.04363369941711426,
+    "overPoint1Fraction": 0.01264810562133789,
+    "max": 1.0
+  },
+  "source_mask_coverage": [
+    {
+      "camera": "d_wear_lane_old",
+      "source_chunks": [
+        "3_4"
+      ],
+      "roi960": [
+        470,
+        280,
+        610,
+        400
+      ],
+      "road_pixels": 99913,
+      "roi_pixels": 99913,
+      "source_road_fraction": 1.0,
+      "GPU_R_mean": 0.003565838209857474,
+      "GPU_R_positive_fraction": 0.08665539018946483,
+      "GPU_R_over01_fraction": 0.011690170448290012,
+      "GPU_R_max": 0.7274727121570271
+    },
+    {
+      "camera": "d_wear_missing_uv_2",
+      "source_chunks": [
+        "5_4",
+        "6_4"
+      ],
+      "roi960": [
+        300,
+        300,
+        850,
+        415
+      ],
+      "road_pixels": 376821,
+      "roi_pixels": 376821,
+      "source_road_fraction": 1.0,
+      "GPU_R_mean": 0.002891728751075918,
+      "GPU_R_positive_fraction": 0.04784499802293397,
+      "GPU_R_over01_fraction": 0.009293537249781726,
+      "GPU_R_max": 0.9909918767678023
+    }
+  ],
+  "supplemental_same_variant_images": [
+    {
+      "camera": "d_field_p8_turn",
+      "same_pixels": true
+    },
+    {
+      "camera": "d_wear_lane_old",
+      "same_pixels": false
+    },
+    {
+      "camera": "d_wear_missing_uv_2",
+      "same_pixels": true
+    },
+    {
+      "camera": "d_wear_newroad_negative",
+      "same_pixels": true
+    }
+  ],
+  "note": "Actual render callback proves Low detail keyword false and the assigned2kQA mask. Coverage projects actual road triangles into inspected ROIs and bilinearly samples the actual GPU mip0 R at world/16. It is not a per-fragment autoLOD/amount readback or a quality PASS; positive data and branch activation are established without a new tuning variant."
+}

@@ -36,3 +36,11 @@ Ostatni przydzielony ADR: **0116**.
 
 ## Po recenzji 0089 (`docs/reports/visual/REVIEW-2026-11-11-s10-gpt-0089.md`) — NIE scalone
 - **G R4 (ADR 0089, ta sama gałąź `gpt-car-paint`, najpierw `git merge main`):** korekta odcienia lakieru (mnożnik 3,2→12,9 na GPU) i koła — PASS, zostają. **Brud progów FAIL (P0):** rozmyte ciemnoszare plamy w połowie drzwi 0,6–0,8 m (`r10_wheel_02`, `r10_front_04`) — przyczyna: `legacyFilm / expectedFilm` przez obwiednię wysokości + pas wycięty od góry w `_CARPAINT` (`WorldPBR.shader`). Brud monotonicznie od progu i nadkoli w górę, jaśniejszy i cieplejszy (beżowo-szary), także tył auta; rozkład poziomów np. 10/35/35/20 % (dziś 25 % aut sterylnych). Powtórz pomiary słońca po scaleniu main (0098). Kamera `sheet_far`; różne tablice (4× „BIA 1711A”). Cel „czarne drzwi 30–40 overcast” był spełniony już w bazie (38,7) — zamknięty.
+
+## s11 (lider Claude, 2026-11-12 ~01:50) — uwagi do następnych rund
+- **sbs r2 (PRIORYTET bramki 3):** pozy kamer G3-B są teraz blokerem nr 1 (`docs/reports/visual/REVIEW-2026-11-12-s11-0125.md`): 3281350 (GPS ~45 m wzdłuż drogi — render 297817 wygląda jak to zdjęcie), seria grobina 275528/837235 (~12–20 m za daleko w przód), 297817, 1801374, kurs 494288. Bramownica Andersa–Putry stoi teraz w (-260.8,-208.3) (ADR 0125, triangulacja ortofoto + Mapillary) — użyj jej jako kotwicy pozy.
+- **life r2:** auta za czyste po R4 — brud tyłu, felgi płaskie, czerń w słońcu szara (`REVIEW-2026-11-12-s11-gpt-r1-batch.md`).
+- **vegetation r3:** berberys jak bordowe bale; rytm drzew przy Putry; drzewa w pasie dzielącym G3-B (297817).
+- **cab r2:** przód kabiny w lusterku przednim = kremowa plama; prawe szerokokątne częściowo zasłonięte.
+- **edge r2:** biało-czerwone bariery końca mapy na DK8 i wylotach; bloki na horyzoncie zamiast ściany lasu (303305, 320215, 454716).
+- **furniture:** Claude 0125 dodał `streetscape/gate3_landmarks.py` + 2–3 linie w `props.py`/`furniture.py` (noise_wall)/`stage.py` — przy merge main zachowaj obie strony. Czytelność słupa WN i ekranów na Low (szkło alpha 0,10) — do Twojej rundy, jeśli chcesz.

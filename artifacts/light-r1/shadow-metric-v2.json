@@ -1,0 +1,25 @@
+{
+    "jobs":  [
+                 {
+                     "cameras":  "r10_hall_3",
+                     "width":  2340,
+                     "lighting":  "lowsun",
+                     "tier":  "High",
+                     "shadowFilter":  1,
+                     "height":  1080,
+                     "output":  "artifacts/light-r1/shadow-metric-v2/legacy",
+                     "scene":  "WorldC_High",
+                     "shadowWallProbe":  true
+                 },
+                 {
+                     "cameras":  "r10_hall_3",
+                     "lighting":  "lowsun",
+                     "output":  "artifacts/light-r1/shadow-metric-v2/policy",
+                     "width":  2340,
+                     "tier":  "High",
+                     "scene":  "WorldC_High",
+                     "height":  1080,
+                     "shadowWallProbe":  true
+                 }
+             ]
+}

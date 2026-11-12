@@ -1,0 +1,42 @@
+{
+  "schema": "truck-sim-pl/gate3-cameras/1",
+  "region": "bialystok-industrial-c",
+  "cameras": [
+    {
+      "id": "d_field_p8_turn",
+      "type": "persp",
+      "kind": "photo_match",
+      "seat": "file",
+      "pos": [
+        -520.4365743001302,
+        -56.3035831451416,
+        137.6312510172526
+      ],
+      "look_at": [
+        -521.4365743001302,
+        -51.3035831451416,
+        132.6512510172526
+      ],
+      "fov_deg": 48,
+      "note": "ActualP8candidate12/15ringvertices/localarrowUV0 + transverseage +varyinglanefield; imagevalidation required. Geometry from immutablebefore."
+    },
+    {
+      "id": "d_wear_crossing",
+      "type": "persp",
+      "kind": "photo_match",
+      "seat": "road",
+      "pos": [
+        607.187,
+        -611.456,
+        142.967
+      ],
+      "look_at": [
+        603.3523852555344,
+        -618.4770917784577,
+        141.317
+      ],
+      "fov_deg": 48,
+      "note": "DQA only: sourceg3a_eye_s0262, existingpose/bearing, ground-reseated1.7m looking8m ahead atground+.05m; WORKINGcamera notgeometry. Targetvisibilitymustbeinspectedbeforebaseline lock."
+    }
+  ]
+}

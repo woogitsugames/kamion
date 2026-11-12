@@ -1,0 +1,25 @@
+{
+  "material": {
+    "path": "Assets/_Generated/World/bialystok-industrial-c/Materials/M_decal_tyre.mat",
+    "shader": "Kamion/World PBR",
+    "keywords": "_DECAL_TYRE",
+    "fields": [
+      "_WheelPolish=0.5",
+      "_GutterDirt=0.5",
+      "_DripBand=0",
+      "_CrackStrength=0.8",
+      "_DecalAlpha=0.45",
+      "_PaintWear=(0.85, 0.25, 0.3, 0.12)",
+      "_Tint=(0.142825633, 0.142825633, 0.138169885, 1)",
+      "_Tile=(4, 4, 16, 1)",
+      "_Grime=(0.45, 0.62, 0.3, 0.5)",
+      "_BaseMap=Assets/_Project/Rendering/Textures/World/T_World_Paint.png",
+      "_VarMap=",
+      "_MacroMap=Assets/_Generated/World/bialystok-industrial-c/Textures/PBR/macro_variation/T_macro_variation.png",
+      "_CrackMap=",
+      "_CrackNormal="
+    ]
+  },
+  "signed_length_not_consumed_by_UV_MESH1_mapping": true,
+  "note": "Actual first-import material readback; signed value is procedural tyre length, UV0 metre inputs unchanged. Negative branch GPU behavior pending."
+}

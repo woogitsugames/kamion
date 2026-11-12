@@ -1,3 +1,45 @@
+# HANDOVER — kamion, SESJA 12 (start 2026-11-12 09:11, nowe konto)
+
+## Stan na żywo (s12)
+- 09:11 start. Usage: 5 h 0 % (reset 14:10), tydzień 17 %, **Fable 25 %** (reset 13.11 23:00). Trigger godzinny :17 (CronCreate, tylko w sesji lidera).
+- Watchdog (pid 33400), `regen.sh b2` (log `artifacts/logs/s11-regen-b2.log`) i `integration-s11/run.ps1` (czeka na END regeneracji) — żyją od 09:04, nie restartowane.
+- Sesje GPT (Codex) wznowione przez właściciela: life-r3, landmarks-r3, edge-r3, furniture-r2, asphalt-r2, vegetation-r4, light-r3, sbs-r3 … (procesy widoczne).
+- Agenci Claude Fable (3/3), wznowieni 09:13 z STATUS.md (każdy najpierw `git merge main`):
+| zadanie | ADR | worktree / gałąź | STATUS | stan |
+|---|---|---|---|---|
+| węzły r6 bariery + D51 B2/B7 | 0123 | `.claude/worktrees/junctions-r6` / `junctions-r6` | `artifacts/junctions-r6/STATUS.md` | w toku: merge main → b4_all.sh |
+| zabudowa r8 r2 | 0124 | `.claude/worktrees/buildings-r8` / `buildings-r8` | `artifacts/buildings-r16/STATUS.md` | w toku: merge main → full_round r2 |
+| pierzeja handlowa G3-B | 0126 | `.claude/worktrees/g3b-frontage` / `g3b-frontage` | `artifacts/g3b-frontage/STATUS.md` | w toku: merge main → build 2 |
+- Następne: integracja s11 (vqa Low → klin far-field g3-a 2948/303305) → krytyk 0123/0124/0126 → scalenie → regeneracja → nowi Fable na blokery G3-B (wysepka + D-3/D-6 ronda Bieżeństwa, LOD bramownicy, słup WN/ekrany na Low) → sbs na main → APK Low → gate3 A16.
+- Ostatni przydzielony ADR: 0126.
+
+---
+# HANDOVER — kamion, ZAMKNIĘCIE sesji 11 (2026-11-12 09:10) → start s12 na koncie z czystym limitem
+
+## Prawda o stanie (czytaj to; niżej dziennik s11)
+- **main `HEAD` wypchnięty.** Start s12: `docs/owner/START-PROMPT-S12.md`.
+- **03:44 komputer się zrestartował** (bash `fork ... 0xC000026B`, boot 09:01) — zginęły: agenci Claude 0123/0124/0126, 10 sesji GPT, watchdog, trigger. Nic nie zostało utracone poza procesami — wszystko w WIP commitach / STATUS.md.
+- **Scalone w s11 (wszystko po visual-critic):** GPT sbs r1 (narzędzie, 168 renderów), GPT life r1, vegetation r1, cab r1, edge r1 (`REVIEW-2026-11-12-s11-gpt-r1-batch.md`), **Claude 0125 bramownica/znaki/ekrany G3-B** (`REVIEW-…-s11-0125.md`), GPT truck r1, light r1 (chmury CC0), landmarks r1, asphalt r1 (+0099 surface-wear) (`…-gpt-r1-batch2.md`). Fix generatora scenariuszy fizyki (ADR 0082). `unity-slot.ps1 -Priority -PollSeconds 5` dla lidera (rezerwacja `RESERVED.lock`).
+- **Bramka 3 wg D51: FAIL** (`REVIEW-2026-11-11-s11-sbs-r1-D51.md`): G3-A 11/15 rozpoznawalnych (warunkowo OK), G3-B 2/10 po 0125. Blokery G3-B: (1) **pozy kamer SBS** (3281350 ~45 m, grobin 275528/837235 ~12–20 m, 297817, 1801374, kurs 494288 — domena GPT sbs, uwagi w `GPT-FEEDBACK-S10.md`), (2) D-3/D-6 + wysepka z przejściem przy rondzie Bieżeństwa (stale w overrides — geometria węzła), (3) pierzeja handlowa (0126 w toku), (4) filary wiaduktu s≈351–359 (0123 twierdzi, że już są w gałęzi), (5) czytelność słupa WN i ekranów na Low, (6) LOD bramownicy 40–120 m traci kratownicę, (7) nasyp/bariera pod wiaduktem (0123 b4), drzewa w pasie dzielącym (GPT veg), bloki na horyzoncie (GPT edge).
+- **Integracja po scaleniach NIE zrobiona.** O 09:04 lider uruchomił ponownie `bash artifacts/integration-s11/regen.sh b2` (log `artifacts/logs/s11-regen-b2.log`) i `artifacts/integration-s11/run.ps1` (log `run.log`: czeka na END regeneracji → import, Truck/Trailer/Install, EditMode, PlayMode, visual-qa WorldC Low clear+overcast → `artifacts/integration-s11/vqa/`, APK Low). **Jeśli sesja s11 zostanie zamknięta, te procesy giną → s12 sprawdza logi i w razie potrzeby uruchamia je ponownie.** Po integracji: klin far-field na tle chmur w g3-a 2948/303305 (light r1 — warunek scalenia), commit reserializacji ustawień, gate3 A16 Low A+B.
+
+## Agenci Claude przerwani restartem (wznowić w s12 z ich STATUS.md)
+| zadanie | ADR | worktree / gałąź | ostatni commit | NASTĘPNY KROK (z STATUS) |
+|---|---|---|---|---|
+| węzły r6 bariery + D51 B2/B7 (Fable) | 0123 | `.claude/worktrees/junctions-r6` / `junctions-r6` | `310c6437` 02:15 b4 zbudowany (szyny separatora DK8 do barier pomostów, fartuch ronda Bieżeństwa → asfalt) | `bash artifacts/junctions-r6/scripts/b4_all.sh` (import + 4 zestawy + SBS + PlayMode + post full) → pary → ADR → raport → krytyk |
+| zabudowa r8 r2 (Fable) | 0124 | `.claude/worktrees/buildings-r8` / `buildings-r8` | `c294f85c` 00:27 r2 zmierzone (Low +3, najgorsza +1 vs r1) | patrz `artifacts/buildings-r16/STATUS.md`: full_round r2 → budget2 → obejrzeć `r2/extra_hc/960`, `r2/extra_low/960` → ADR → raport → krytyk |
+| pierzeja handlowa G3-B (Fable) | 0126 | `.claude/worktrees/g3b-frontage` / `g3b-frontage` | `b89e4ced` 03:13 build 1 obejrzany (salony, maszty flag, owal) | `pwsh artifacts/g3b-frontage/run-cycle.ps1 -Name after -Tag 2` → `make-pairs.sh after` → `stats-diff.py after` → ADR → raport → krytyk |
+Uwaga: STATUS 0124 i 0126 mają starsze/nowsze wpisy — czytaj cały plik. Wszystkie trzy gałęzie są z main sprzed scaleń s11 → przed scaleniem `git merge main` w worktree (generated → ours + regeneracja).
+
+## GPT 24 h — przerwane o 03:44, właściciel wznawia sam
+Ostatnie gałęzie: landmarks-r3, life-r3, sbs-r3, truck-r3, furniture-r2, vegetation-r4, cab-r3, light-r3, asphalt-r2, edge-r3. Lider sprawdza `artifacts/<dziedzina>-rN/REPORT.md` w worktree `gpt-*` → krytyk zbiorczy → scalenie (generated → ours) → regeneracja.
+
+## Limity na koniec s11 (stare konto)
+5 h reset 13:00; tydzień 49 %, **Fable 92 %**. s12 = nowe konto z czystym limitem → Fable dla geometrii na maksa (właściciel).
+
+- **Ostatni przydzielony ADR: 0126.**
+
+---
 # HANDOVER — kamion, SESJA 11 (start 2026-11-11 23:05)
 
 ## Stan na żywo (s11)
@@ -14,6 +56,11 @@
 - **00:26 trigger:** 5 h 49 % (reset 04:00), tydzień 41 %, Fable 77 %. Watchdog żyje. 0123 → b4 (B2 filary już są w gałęzi — recenzja oglądała main; B7 fartuch kostki → asfalt, szyna separatora DK8). 0124 → full_round r2. 0125 → build 2 (portal G3-B przesunięty do (-260.8,-208.3), A-30, tabliczki ronda), import. GPT gotowe: life r1, vegetation r1, cab r1, edge r1 → **jeden krytyk zbiorczy (Opus, tylko odczyt — 4. agent na krótko, świadomie)** → `docs/reports/visual/REVIEW-2026-11-12-s11-gpt-r1-batch.md`. asphalt r1 kończy walidację. Pytanie sesji GPT 10 o podział ról: odpowiedź „kontynuuj life, scala tylko lider Claude”.
 - **00:35:** recenzja zbiorcza `REVIEW-2026-11-12-s11-gpt-r1-batch.md`: life r1 SCAL (PARTIAL — auta teraz za czyste), vegetation r1 SCAL (PARTIAL), cab r1 SCAL (lusterka bez wnętrza PASS), edge r1 SCAL warunkowo (+792 tris, ≤2 %). **Wszystkie 4 SCALONE** (`206e22b5` veg, potem life/cab/edge). Brudne pliki main (generated/*.json, artifacts/cab-r1) zbackupowane do scratchpadu i cofnięte. Regeneracja `bash artifacts/integration-s11/regen.sh gpt-r1` → `artifacts/logs/s11-regen-gpt-r1.log` (build_all, build_world, export-route, fidelity, pytest gis+physics+gate3; slot heavy). Uwaga: life i vegetation obie zmieniają WorldPBR.shader → po imporcie kamery kontrolne Low/Medium na wspólnym stanie. Uwagi do GPT (następne rundy): life — brud tyłu, felgi, czerń w słońcu; veg — berberys „bale”, rytm drzew Putry; cab — przód kabiny w lusterku przednim kremowa plama, prawe szerokokątne zasłonięte; edge — bariery końca mapy DK8.
 - **01:26 trigger:** 5 h 60 % (reset 04:00), tydzień 43 %, Fable 81 %. Regeneracja lidera (start 00:34) nadal CZEKA na slot heavy (3/3 zajęte przez GPT/agentów). 0125 gotowe do scalenia po pełnym pytest gis (EditMode 261/261, test_gate3_landmarks 12/12; portal G3-B przesunięty, A-30, tabliczki ronda; otwarte D-3/D-6 przy rondzie Bieżeństwa, czytelność ekranów Low). 0123 → b4 build, 0124 → full_round r2. GPT gotowe r1: asphalt, landmarks, light, truck → krytyk zbiorczy batch2 w toku (`REVIEW-2026-11-12-s11-gpt-r1-batch2.md`).
+- **01:50:** krytyk 0125 (`REVIEW-2026-11-12-s11-0125.md`): SCAL; G3-B 2/10 rozpoznawalnych (było 1/10). Nowy bloker nr 1 G3-B = pozy kamer SBS (domena GPT sbs; uwagi dopisane do `docs/owner/GPT-FEEDBACK-S10.md`). P1: LOD bramownicy 40–120 m traci kratownicę, słup WN/ekrany słabo widoczne na Low. Scalenie 0125 PO zakończeniu regeneracji gpt-r1 (trwa build_all) — potem jedna regeneracja dla 0125 + batch2 GPT.
+- **02:05:** batch2 (`REVIEW-2026-11-12-s11-gpt-r1-batch2.md`): asphalt r1 SCAL (PARTIAL; zawiera 0099 surface-wear; Low +próbki tekstur → pomiar A16), landmarks r1 SCAL, light r1 SCAL warunkowo (chmury CC0 na clear; **klin far-field widoczny na tle chmur w g3-a 2948 i 303305 — sprawdzić po integracji, poprawić w tym cyklu**), truck r1 SCAL. Kolejność scalania: truck → light → landmarks → asphalt (konflikty tylko generated/* → ours). **Czeka na koniec regeneracji gpt-r1** (trwa build_all), potem: scal 0125 + 4×GPT → regen → integracja Unity.
+- **02:20:** regeneracja gpt-r1 zielona poza starym testem fizyki (generator scenariuszy nie znał zaostrzenia ADR 0082 → naprawione, `b1c83d58`, gis+physics+gate3 623 passed). **SCALONE: 0125 `efe75dc9`, GPT truck r1, light r1, landmarks r1, asphalt r1 (`92b1dda4`)** — konflikty tylko generated/*.json + street_props.glb → ours. Worktree gate3-signs usunięty (junctiony odpięte, artefakty w main). Regeneracja b2 `artifacts/logs/s11-regen-b2.log` → potem automatycznie `artifacts/integration-s11/run.ps1` (log `run.log`: import, Truck/Trailer/Install, EditMode, PlayMode, visual-qa WorldC Low clear+overcast → `artifacts/integration-s11/vqa/`, APK Low). Po integracji: sprawdzić klin far-field w g3-a 2948/303305 (light r1), commit reserializacji, gate3 A16 A+B.
+- **02:26 trigger:** 5 h 78 % (reset 04:00), tydzień 46 %, **Fable 86 %** tygodniowo. Bez nowych agentów (3 Fable działa: 0123 b4_all, 0124 full_round r2, 0126 frontage after1). Regeneracja b2 czeka na slot heavy (3/3), integracja `run.ps1` czeka na nią. Nowych rund GPT gotowych brak (wszystkie w r2/r3).
+- **03:26 trigger:** 5 h 87 % (reset 04:00), tydzień 47 %, Fable 89 %. ≥85 % → bez nowych agentów (3 Fable działa). **Problem: regeneracja lidera czekała 1 h 20 min — sesje GPT zajmują 3/3 heavy na zmianę.** Dodano `unity-slot.ps1 -Priority` (plik `artifacts/locks/<pool>-slots/RESERVED.lock` — inni czekają) + lider odpytuje co 5 s. UWAGA: worktree GPT/agentów mają starą kopię skryptu (nie znają rezerwacji) do czasu `git merge main` — działa głównie szybsze odpytywanie. Regeneracja b2 i `run.ps1` zrestartowane z `-Priority`.
 - Następne: po krytyku D51 → agenci na blokery (Fable geometria) → krytyk 0123/0124 → scalenie → jedna regeneracja → integracja Unity + czysty APK Low → gate3 A16 A+B.
 - Ostatni przydzielony ADR: 0126.
 

@@ -1,0 +1,192 @@
+{
+  "vehicle_assets": 564,
+  "vehicle_asset_mismatches": [
+    "game/Assets/_Generated/Truck/Tractor4x2_TRAKT.prefab",
+    "game/Assets/_Generated/Trailer/Trailer_Curtainsider_Art.prefab"
+  ],
+  "prefab_transform_comparison": [
+    {
+      "file": "game/Assets/_Generated/Truck/Tractor4x2_TRAKT.prefab",
+      "transform_count_before": 161,
+      "transform_count_after": 161,
+      "differences": {},
+      "added_paths": []
+    },
+    {
+      "file": "game/Assets/_Generated/Trailer/Trailer_Curtainsider_Art.prefab",
+      "transform_count_before": 73,
+      "transform_count_after": 73,
+      "differences": {},
+      "added_paths": []
+    }
+  ],
+  "scenes": [
+    {
+      "scene": "WorldC",
+      "roots_identical": true,
+      "root_before": {
+        "truck": {
+          "m_LocalPosition": {
+            "x": 729.57574,
+            "y": 10.364564,
+            "z": -395.76938
+          },
+          "m_LocalRotation": {
+            "x": 0.0,
+            "y": 0.96733606,
+            "z": 0.0,
+            "w": -0.2534974
+          },
+          "m_LocalScale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          }
+        },
+        "trailer": {
+          "m_LocalPosition": {
+            "x": 729.24225,
+            "y": 10.364564,
+            "z": -396.36197
+          },
+          "m_LocalRotation": {
+            "x": 7.849155e-09,
+            "y": 0.96733606,
+            "z": 2.9952066e-08,
+            "w": -0.2534974
+          },
+          "m_LocalScale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          }
+        }
+      },
+      "root_after": {
+        "trailer": {
+          "m_LocalPosition": {
+            "x": 729.24225,
+            "y": 10.364564,
+            "z": -396.36197
+          },
+          "m_LocalRotation": {
+            "x": 7.849155e-09,
+            "y": 0.96733606,
+            "z": 2.9952066e-08,
+            "w": -0.2534974
+          },
+          "m_LocalScale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          }
+        },
+        "truck": {
+          "m_LocalPosition": {
+            "x": 729.57574,
+            "y": 10.364564,
+            "z": -395.76938
+          },
+          "m_LocalRotation": {
+            "x": 0.0,
+            "y": 0.96733606,
+            "z": 0.0,
+            "w": -0.2534974
+          },
+          "m_LocalScale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          }
+        }
+      },
+      "camera_count_before": 40,
+      "camera_count_after": 40,
+      "camera_differences": {}
+    },
+    {
+      "scene": "WorldC_High",
+      "roots_identical": true,
+      "root_before": {
+        "truck": {
+          "m_LocalPosition": {
+            "x": 729.57574,
+            "y": 10.364564,
+            "z": -395.76938
+          },
+          "m_LocalRotation": {
+            "x": 0.0,
+            "y": 0.96733606,
+            "z": 0.0,
+            "w": -0.2534974
+          },
+          "m_LocalScale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          }
+        },
+        "trailer": {
+          "m_LocalPosition": {
+            "x": 729.24225,
+            "y": 10.364564,
+            "z": -396.36197
+          },
+          "m_LocalRotation": {
+            "x": 7.849155e-09,
+            "y": 0.96733606,
+            "z": 2.9952066e-08,
+            "w": -0.2534974
+          },
+          "m_LocalScale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          }
+        }
+      },
+      "root_after": {
+        "truck": {
+          "m_LocalPosition": {
+            "x": 729.57574,
+            "y": 10.364564,
+            "z": -395.76938
+          },
+          "m_LocalRotation": {
+            "x": 0.0,
+            "y": 0.96733606,
+            "z": 0.0,
+            "w": -0.2534974
+          },
+          "m_LocalScale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          }
+        },
+        "trailer": {
+          "m_LocalPosition": {
+            "x": 729.24225,
+            "y": 10.364564,
+            "z": -396.36197
+          },
+          "m_LocalRotation": {
+            "x": 7.849155e-09,
+            "y": 0.96733606,
+            "z": 2.9952066e-08,
+            "w": -0.2534974
+          },
+          "m_LocalScale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          }
+        }
+      },
+      "camera_count_before": 40,
+      "camera_count_after": 40,
+      "camera_differences": {}
+    }
+  ],
+  "note": "Actualprivatebefore files vs currentbus-onlycanonical import+Install. Serialized proof only; nextplannedrender must dump actual runtime camera/vehicle/trailer poses. No372pixelstable claim."
+}
