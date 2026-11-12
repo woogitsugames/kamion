@@ -48,3 +48,5 @@ potem poprawić największe udokumentowane odstępstwo wiaty. WIP po każdym kro
 2026-11-12T11:26:17.3199219+01:00: import baselineOK,6833payloady przed zmianą zapisane. Low-clear iLow-overcast po59PNG. Obejrzano4zbliżeniaLow-clear(front/corner obu wiat):potwierdzony płaski dach, ciemne nieprzezroczyste panele i osadzenie na trawie obok chodnika. Zlecono niezależną ocenę tych4widoków i referencji450px; nie zmieniać cudzej nawierzchni/budynków. Highbaseline trwa. Modelr3 nadal niezmieniony.
 
 2026-11-12T11:26:32.5077208+01:00: Unity render before High overcast; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
+
+2026-11-12T11:27:10.3131906+01:00: baseline kompletny:236PNG,po59Low/High×clear/overcast,statystyki powiązaneSHA256. Zapisano manifest/props/QA przed zmianąr3 i własne produkty generatora. Efekty uboczne raportówfar-field/wiaduktu przywrócono. Obejrzano4zbliżeniaLowclear; niezależny przegląd w toku. NASTĘPNY KROK:korekta potwierdzonych rodzin wiat, z osobną oceną osadzenia i pełnym budżetem kamer.
