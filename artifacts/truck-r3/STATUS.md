@@ -104,3 +104,4 @@ Krok 65: pełne Low v3 14 kadrów (siedem kamer clear/overcast) i pary960 gotowe
 Zapisano podgląd wheel-probe-candidate-v3-flat, cztery świeże kadry Low/High overcast, materiały przywrócone. Następny krok: obejrzeć kanały w arkuszach 960 px, nie wnioskować z samych liczb.
 Zapisano podgląd wheel-probe-candidate-v3-albedo, cztery świeże kadry Low/High overcast, materiały przywrócone. Następny krok: obejrzeć kanały w arkuszach 960 px, nie wnioskować z samych liczb.
 Zapisano wszystkie kamery: after-all Low overcast. Następny krok: zestawić liczniki rendererów i instancji osobno dla każdej kamery.
+Zapisano wszystkie kamery: after-all High overcast. Następny krok: zestawić liczniki rendererów i instancji osobno dla każdej kamery.
