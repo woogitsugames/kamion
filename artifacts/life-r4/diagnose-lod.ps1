@@ -7,6 +7,11 @@ function Assert-Frozen {
  foreach($p in $proof.source_sha.PSObject.Properties){if((Get-FileHash $p.Name).Hash -ne $p.Value){throw "Baseline source changed: $($p.Name)"}}
  if((Get-FileHash art-source/world/props/street_props.glb).Hash -ne $proof.library_sha){throw 'Baseline GLB changed'}
  if((Get-FileHash art-source/world/props/props_meta.json).Hash -ne $proof.meta_sha){throw 'Baseline metadata changed'}
+ if((Get-FileHash artifacts/life-r4/cameras.json).Hash -ne $proof.cameras_sha){throw 'Baseline camera packet changed'}
+ foreach($scene in $proof.scene_controls.PSObject.Properties){
+  $path="game/Assets/_Generated/World/bialystok-industrial-c/$($scene.Name).unity"
+  if((Get-FileHash $path).Hash -ne $scene.Value.scene_sha){throw "Diagnostic changed saved scene: $path"}
+ }
 }
 Assert-Frozen
 $wanted=@(Get-Content artifacts/life-r2/yard-targets-v2.json -Raw|ConvertFrom-Json)
@@ -27,6 +32,7 @@ if($found.Count -ne $wanted.Count){throw 'Historical yard targets changed; find 
 $targets=@(foreach($item in $wanted){@{prototype=$item.p;localPosition=@{x=$item.e;y=$item.z;z=$item.n}}})
 @{targets=$targets}|ConvertTo-Json -Depth 5|Set-Content artifacts/life-r4/yard-native-targets.json
 Copy-Item artifacts/life-r4/Life4YardLodProbe.cs game/Assets/_Generated/Editor/Life4YardLodProbe.cs
+$probeHash=(Get-FileHash artifacts/life-r4/Life4YardLodProbe.cs).Hash
 $ids=@(foreach($item in $wanted){
  "yard_$($item.p)_side8"
  "yard_$($item.p)_wheel2"
@@ -36,6 +42,7 @@ $selected=$ids -join ','
 $result=@()
 foreach($tier in @('Low','High')) {
  Assert-Frozen
+ if((Get-FileHash game/Assets/_Generated/Editor/Life4YardLodProbe.cs).Hash -ne $probeHash){throw 'Installed diagnostic probe changed'}
  $scene=if($tier -eq 'High'){'WorldC_High'}else{'WorldC'}
  $dir=[IO.Path]::GetFullPath("artifacts/life-r4/baseline-lod/$tier-overcast")
  if(Test-Path $dir){throw 'Diagnostic evidence exists; inspect instead of overwrite'}
@@ -73,4 +80,4 @@ foreach($tier in @('Low','High')) {
  git commit -m "wip(life): potwierdź natywny LOD placu $tier"
  if($LASTEXITCODE){throw 'WIP failed'}
 }
-@{finished=(Get-Date -Format o);rows=$result}|ConvertTo-Json -Depth 8|Set-Content artifacts/life-r4/baseline-lod-result.json
+@{finished=(Get-Date -Format o);rows=$result;probe_sha=$probeHash;saved_scenes_unchanged=$true}|ConvertTo-Json -Depth 8|Set-Content artifacts/life-r4/baseline-lod-result.json

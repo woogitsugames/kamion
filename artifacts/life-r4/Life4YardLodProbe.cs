@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Game.Rendering;
 using Game.World;
 using UnityEditor;
 using UnityEditor.SceneManagement;

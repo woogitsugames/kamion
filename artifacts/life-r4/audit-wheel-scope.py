@@ -76,7 +76,11 @@ class Library:
                      for s in (-1, 1) for y, w in ((3.15, .32), (-.55, .62))]
         result = Counter()
         for tri in indices:
-            xyz = vertices[tri]
+            # streetscape/export.py declares glTF x=-source.x, y=source.z,
+            # z=source.y. Wheel boxes below are in the source (right,front,up)
+            # frame; preserve raw glTF attributes in the protected-face hashes.
+            xyz = vertices[tri][:, [0, 2, 1]].copy()
+            xyz[:, 0] *= -1
             wheel = any(np.all(np.abs(xyz[:, 0] - x) <= w / 2 + .025001)
                         and np.all(np.abs(xyz[:, 1] - y) <= r + .000001)
                         and np.all(np.abs(xyz[:, 2] - z) <= r + .000001)
