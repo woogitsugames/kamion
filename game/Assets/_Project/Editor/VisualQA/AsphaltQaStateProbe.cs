@@ -24,6 +24,7 @@ namespace Game.Editor.VisualQA
             public Vector3 originShift;
             public Vector4 roadWear, paintWear, freshPaintWear;
             public Vector4 kerbWear, pavingGrime, yardGrime;
+            public Vector4 kerbExclusion, pavingExclusion, pavingGrimeBase;
             public bool detailGlobal, paintUnderlay;
         }
         static AsphaltQaStateProbe()
@@ -70,6 +71,9 @@ namespace Game.Editor.VisualQA
                 kerbWear = GroundState("curb_concrete", "_KerbWear"),
                 pavingGrime = GroundState("sidewalk_paving", "_Grime"),
                 yardGrime = GroundState("yard_paving", "_Grime"),
+                kerbExclusion = GroundState("curb_concrete", "_GroundWearExclude"),
+                pavingExclusion = GroundState("sidewalk_paving", "_GroundWearExclude"),
+                pavingGrimeBase = GroundState("sidewalk_paving", "_GroundGrimeBase"),
                 paintUnderlay = paint != null && paint.IsKeywordEnabled("_ROADWEAR"),
                 maskFormat = mask != null ? mask.format.ToString() : "none"
             };
