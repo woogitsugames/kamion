@@ -28,7 +28,6 @@ namespace Game.Rendering.Editor
         readonly Material m_Neutral;
         readonly List<Slot> m_Slots=new List<Slot>();
         readonly Stack<CameraState> m_Stack=new Stack<CameraState>();
-        readonly Dictionary<int,Frame> m_Frames=new Dictionary<int,Frame>();
         readonly Dictionary<string,Frame> m_Exports=new Dictionary<string,Frame>(StringComparer.Ordinal);
         readonly string m_Output;
         readonly int m_Width,m_Height;
@@ -40,10 +39,12 @@ namespace Game.Rendering.Editor
         string m_Error;
         public LightQaGlassIsolation(string output,int width,int height)
         {
-            m_Output=Path.GetFullPath(output);m_Width=width;m_Height=height;
+            m_Output=Path.GetFullPath(output).TrimEnd(Path.DirectorySeparatorChar,Path.AltDirectorySeparatorChar);m_Width=width;m_Height=height;
             var args=Environment.GetCommandLineArgs();int timing=Array.IndexOf(args,"-qaTimeFrames");
             if(timing>=0 && timing+1<args.Length && args[timing+1]!="0")
                 throw new ArgumentException("Pane export proof requires timing renders disabled");
+            if(Array.IndexOf(args,"-qaRenderScale")>=0)
+                throw new ArgumentException("Pane export proof requires tier/rq_scale, not a separate QA render-scale override");
             var shader=Shader.Find(NeutralShader);
             if(shader==null)throw new InvalidOperationException("Missing explicit glass-isolation shader");
             m_Neutral=new Material(shader){hideFlags=HideFlags.HideAndDontSave,name="Editor-only absent pane"};
@@ -108,7 +109,6 @@ namespace Game.Rendering.Editor
                 m_LastControlFrame=new Frame{camera=control.id,replacementSlots=ActualNeutralSlots(),
                     physicalBypass=Shader.GetGlobalFloat("_KamionSkyCapOff"),cloudQuality=Shader.GetGlobalVector("_KamionCloud").y,
                     renderWidth=target!=null?target.width:0,renderHeight=target!=null?target.height:0,renderSequence=++m_Sequence};
-                m_Frames[camera.GetInstanceID()]=m_LastControlFrame;
             }
             if(m_Stack.Count==0 || m_Stack.Peek().camera!=camera){
                 m_Error="Unbalanced nested camera lifetime";m_Stack.Clear();SetActive(false);return;
