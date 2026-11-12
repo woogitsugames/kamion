@@ -1,0 +1,38 @@
+{
+  "prototype": "landmark_ec_chimney_single",
+  "spec_sha256": "f542852787d2e01e61236190036d2b0be841e44560b46f7aaa6284b8e7b52629",
+  "glb_sha256": "271cefa4056c16f5dffd830e2b77861f792fd3c99400cceeee80eef881b9c335",
+  "tris": [
+    1820,
+    300,
+    300
+  ],
+  "materials": [
+    "chimney_concrete",
+    "chimney_red",
+    "chimney_white",
+    "gantry_steel"
+  ],
+  "materials_per_lod": [
+    [
+      "chimney_concrete",
+      "chimney_red",
+      "chimney_white",
+      "gantry_steel"
+    ],
+    [
+      "chimney_concrete",
+      "chimney_red",
+      "chimney_white"
+    ]
+  ],
+  "lod_nodes": 2,
+  "confidence": {
+    "height": "120m both: OSM, ENEA single-flue procurement, EMKA multi-flue project record",
+    "single_diameters": "7.65m base / 4.80m top from ENEA technical notice; single-outlet identity assigned from 2020 Commons photograph, plant nr2 is not override index",
+    "multi_diameters": "8.27m base from OSM outline area, interpretation uncertain; 8.27m top is WORKING_VALUE near photographic resection, not a survey",
+    "bands": "WORKING_VALUE 12m spacing, different lower limits 36m/60m; photographic resection with known 120m and technical single-flue diameter, pose/intrinsics and outlet-height ambiguity remain",
+    "heads": "One outlet versus three outlets and distinct gallery patterns visible on Rakoon 2020 photo; detailed head dimensions/azimuth WORKING_VALUE",
+    "materials": "Existing shared chimney materials, no measured reflectance or new shader path"
+  }
+}
