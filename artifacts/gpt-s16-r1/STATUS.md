@@ -46,3 +46,5 @@ GPUdobór ujawnił błąd samej maski: referencjaLODO porównywana z innym rzecz
 GPUseach zakończony:40pozycji, próg>=0.97względem samotnej maski; kratka chłodni1.00. Maska sprawdza faktycznie renderowanyLOD, działała w scenieHigh. Zwykłe obrazy bezmaski wymagają oględzin przed powtórnym baseline; po nim restore-candidate + pełne testy.
 
 Dodatkowe kamery: after/Low-clear zapisane.
+
+Dodatkowe kamery: after/Low-overcast zapisane.
