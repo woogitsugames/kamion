@@ -13,7 +13,8 @@
 - 22:4x: **Mistral r5** M26–M32 przygotowane (`docs/owner/MISTRAL-TASKS-5.md`; PR bez śledzenia). **Codex 12 h** (`docs/owner/CODEX-S16-12H.md`, worktree `gpt-s16`, gałęzie `gpt-s16-rN`): r1 0153 LOD1/LOD2 aut, r2 0154 zieleń ulic domów, r3 0155 plamy słońca pod wiaduktem; przekazanie `artifacts/gpt-s16/PRZEKAZANIE.md`.
 - Telefony 22:30: Fold odłączony, S24+ RZCX60VE8ZY podłączony (37,8 °C — czekać < 36 °C); A16 online.
 - **23:1x: SCALONE Mistral r4** (`mistral-r4-int` 2b7662946: #21+#23 → KRTG v2, #22 HUD 0 GC.Alloc, #24 znaki (romb = przekątna 0,849), #25 P-11; raport `docs/reports/REVIEW-2026-11-13-s16-mistral-r4.md`); graf tras zregenerowany v2. Otwarte: visual QA znaków po regeneracji świata, pasek pasów na telefonie, testy `ZeroGc_*` nawigacji na `Recorder`, Dz.U. 2021 poz. 438. PR #21–#25 do zamknięcia. **Mistral M33** (jedno duże zadanie: pokrycie pakietu walidacyjnego fizyki + weryfikacja mutacyjna) — `docs/owner/MISTRAL-TASK-33.md`.
-- **Ostatni przydzielony ADR: 0155** (0153–0155 → Codex).
+- 22:5x: **0156 audio-regen04** (Opus, worktree `audio-regen04`, live `artifacts/live/audio-regen04.md`): 8 nowych WAV REGEN-04 (OVERRUN_SWEEP, IDLE_STEADY) → komórki kabina/bez obc. 900–1500. **Mistral r5** PR #26–#29 → agent integracji (`mistral-r5-int`, live `artifacts/live/mistral-r5-int.md`); czekają M26, M29, M30, M33. Pakiet głosu GPS: `docs/owner/ELEVENLABS-GPS-VOICE.md` (właściciel wybiera głos). S24+ niewidoczny w adb (USB).
+- **Ostatni przydzielony ADR: 0156** (0153–0155 → Codex).
 
 # HANDOVER — kamion, SESJA 15 (start 2026-11-12 20:25, nowe konto)
 
