@@ -47,8 +47,27 @@ fragmentów impostora (przebieg głębi z discard + przebieg koloru) jest raster
    Wszystkie tiery (bez przełącznika: zero zmiany obrazu, mniej pracy na każdym GPU).
 2. Bez zmian: skala renderu (D50), dystanse/przerzedzanie drzew, lusterka, cienie (koszty = 0106).
 
-## Wynik
-WYPEŁNIĆ po pomiarze (A16, APK trim, G3-A/G3-B Low, limit 30 + A/B `impostor`).
+## Wynik (A16, APK diag `kamion-0.1.0-0e68ff8c5e-dirty.apk` = gałąź @ 0e68ff8c + bake, Low, `artifacts/a16-perf/final1`)
+Bake: 18 impostorów, średnio 37 % quada (24–52 %). Kamery kontrolne Low overcast WorldC + gate3 (78): PSNR ≥ 58,2 dB, ≤ 0,014 %
+pikseli różni się o > 8 poziomów (pojedyncze piksele A2C) — `artifacts/a16-perf/vqa/psnr.txt`, `vqa/960/*-before-after.jpg`.
+
+| przejazd (limit 30 FPS) | FPS | p50 / p95 / p99 (ms) | >40 | GPU p50 / p95 / p99 | CPU p50 / p95 | PSS MB | T °C |
+|---|---|---|---|---|---|---|---|
+| G3-B s10 (gate3 20261111-154538) | 29,87 | 33,3 / 33,5 / 33,7 | 20 | 29,5 / 33,3 / 37,4 | 21,5 / 28,6 | 826 | 25,8 |
+| G3-B s12 (gate3 20261112-145646, APK 11db0552) | 29,70 | 33,3 / 33,5 / **50,0** | 41 | 31,8 / 35,2 / 37,6 | 21,2 / 28,9 | 910 | 29,2 |
+| **G3-B po (trim)** | 29,88 | 33,3 / 33,5 / **33,7** | **16** | 31,4 / **33,9** / 36,7 | 20,7 / 29,2 | 897 | 28,1 |
+| G3-A s10 (gate3 20261111-154331) | 29,70 | 33,3 / 33,5 / 50,0 | 38 | 29,9 / 31,8 / 33,7 | 22,8 / 30,1 | 835 | 25,6 |
+| G3-A s12 (gate3 20261112-142003) | 29,61 | 33,3 / 33,5 / 50,0 | 42 | 32,3 / 35,5 / 36,7 | 23,2 / 31,8 | 880 | 26,5 |
+| G3-A po (trim) | 29,78 | 33,3 / 33,5 / 50,0 | 26 | 32,4 / 35,5 / 36,7 | 23,1 / 30,9 | 871 | 28,0 |
+
+A/B bez limitu na G3-B (ten sam APK): impostory **1,37 → 0,51 ms** średnio, w oknach lasu **6,6 / 4,8 → 1,9 / 2,3 ms**.
+„Przed” na tym samym APK/dniu nie dało się zmierzyć: release nie instaluje się z niższym versionCode (`INSTALL_FAILED_VERSION_DOWNGRADE`,
+`-d` nie działa) — baza = gate3 s12 z tego samego dnia (ta sama treść). Jeden przejazd na wariant.
+
+Ocena: **G3-B — p99 50 → 33,7 ms (jak s10), klatki > 40 ms 41 → 16, GPU p95 35,2 → 33,9 ms (cel 33,3: brakuje 0,6 ms).**
+**G3-A — bez zmiany GPU** (brak lasu: drzewa/impostory/HLOD na G3-A ≈ 0, `artifacts/a16-perf/diagA`); regresja G3-A
+(GPU p50 +2,5 ms przy limicie) nie jest w lesie: A/B G3-A bez limitu — asfalt Low (pęknięcia + detal, 0118) +0,96 ms (szum okien ±3 ms,
+w G3-B +0,27), far field +0,36, płoty −0,44 (szum), ciężarówka +4,14 (bez zmian). Do dalszej rundy.
 
 ## Otwarte
 - Karty liści LOD0/LOD1 (`leaves_*.png` pokrycie 23–48 %) — ta sama technika na kartach w `trees.glb` (osobna siatka per karta).
