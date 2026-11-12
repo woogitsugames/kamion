@@ -82,31 +82,32 @@ namespace UnityEngine
     public static class Application
     {
         /// <summary>game/Assets of this repo (used by tests that dump artifacts next to the Unity project).</summary>
-        public static string dataPath => RepoRoot() + "/game/Assets";
+        public static string dataPath => RepoRoot.Find() + "/game/Assets";
     }
 
-    internal static class RepoRootCache
+    internal static class RepoRoot
     {
-        public static string Root;
-    }
-
-    public static class Resources
-    {
-        static string RepoRoot()
+        static string s_Root;
+        public static string Find()
         {
-            if (RepoRootCache.Root != null) return RepoRootCache.Root;
+            if (s_Root != null) return s_Root;
             var dir = new DirectoryInfo(AppContext.BaseDirectory);
             while (dir != null)
             {
                 if (Directory.Exists(Path.Combine(dir.FullName, "game", "Assets", "_Project", "UI", "Resources")))
                 {
-                    RepoRootCache.Root = dir.FullName;
-                    return RepoRootCache.Root;
+                    s_Root = dir.FullName;
+                    return s_Root;
                 }
                 dir = dir.Parent;
             }
             throw new DirectoryNotFoundException("repo root (game/Assets/_Project/UI/Resources) not found above " + AppContext.BaseDirectory);
         }
+    }
+
+    public static class Resources
+    {
+        static string RepoRoot() => RepoRoot.Find();
 
         /// <summary>Loads a file from game/Assets/_Project/UI/Resources (e.g. "CabDisplay/Nav/&lt;region&gt;_route" -> .bytes).</summary>
         public static T Load<T>(string path) where T : Object
