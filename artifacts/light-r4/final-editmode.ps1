@@ -23,8 +23,9 @@ finally {
 Get-Content $log -Tail 18
 Add-Content artifacts/light-r4/STATUS.md "EditMode (filtr='$Filter'): kod $code; szczegóły $log i XML artifacts/tests. Następny krok: odczytać liczbę testów i ewentualne porażki."
 git add -f artifacts/light-r4/STATUS.md
-git commit -m 'WIP light r3: record EditMode exit'
+git commit -m 'WIP light r4: record EditMode exit'
 exit $code
+
 
 
 

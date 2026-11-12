@@ -54,10 +54,11 @@ catch { $_ | Out-String | Add-Content "$PSScriptRoot/regeneration-error.log"; Wr
 finally { & pwsh $slot -Release -Pool heavy -Owner $owner }
 Add-Content "$PSScriptRoot/STATUS.md" "Regeneracja i import r4 zakończone kodem $code; build-world.log, fidelity-preimport.log, import-wrapper.log. Baseline dopiero po sukcesie; bez deklaracji jakości z kodu wyjścia."
 git add -f artifacts/light-r4/STATUS.md
-git commit -m 'WIP light r3: record regenerated baseline import result'
+git commit -m 'WIP light r4: record regenerated baseline import result'
 if ($code) { exit $code }
 & pwsh "$PSScriptRoot/run-light-batch.ps1" -Jobs artifacts/light-r4/baseline.json -Gate3 artifacts/light-r4/qa-cameras.json
 exit $LASTEXITCODE
+
 
 
 
