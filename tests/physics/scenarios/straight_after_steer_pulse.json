@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "id": "straight_after_steer_pulse",
+  "description": "35 km/h, the owner's thumb flick replayed through the touch chain (4.4 mm left in 0.66 s, then released; Fold video 2026-11-12 17.57-18.23 s): with the wheel back at centre the combination must run straight again (ADR 0151)",
+  "spec": "docs/adr/0151-fifth-wheel-creep-hud-steer-r3.md",
+  "variants": [
+    "solo",
+    "empty",
+    "laden40"
+  ],
+  "ground": {
+    "gradePercent": 0,
+    "surface": "dry_asphalt"
+  },
+  "initial": {
+    "speedKmh": 35
+  },
+  "duration": 14,
+  "driver": {
+    "type": "touch",
+    "touchMode": "replay",
+    "targetKmh": 35,
+    "fingerKeys": [
+      [0.0, 0, 0],
+      [1.0, 0, 1],
+      [1.66, -4.4, 1],
+      [1.67, -4.4, 0]
+    ]
+  },
+  "checks": [
+    {
+      "metric": "max_articulation_deg",
+      "status": "WORKING_VALUE",
+      "source": "ADR 0151: released wheel -> trailer realigns; ideal-stick plate friction held 0.41 deg (40 t) for 20 s",
+      "max": 0.05,
+      "from": 10,
+      "to": 14
+    },
+    {
+      "metric": "max_yaw_rate_dps",
+      "status": "WORKING_VALUE",
+      "source": "ADR 0151: straight wheels -> no steady turn (was 0.43 deg/s at 40 t)",
+      "max": 0.05,
+      "from": 10,
+      "to": 14
+    },
+    {
+      "metric": "max_articulation_deg",
+      "status": "WORKING_VALUE",
+      "source": "the flick itself stays a mild manoeuvre",
+      "max": 5
+    },
+    {
+      "metric": "wheel_lift",
+      "status": "WORKING_VALUE",
+      "source": "no wheel lift",
+      "max": 0
+    },
+    {
+      "metric": "max_dv_step_ms",
+      "status": "WORKING_VALUE",
+      "source": "no solver explosion / impulse spikes",
+      "max": 0.35
+    },
+    {
+      "metric": "max_fifth_wheel_error_mm",
+      "status": "WORKING_VALUE",
+      "source": "kingpin constraint drift",
+      "max": 5
+    }
+  ]
+}

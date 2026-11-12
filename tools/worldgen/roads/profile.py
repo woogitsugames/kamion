@@ -13,7 +13,6 @@ Nodes where only elevated chains meet get their height from the decks solved fir
 
 from __future__ import annotations
 
-import math
 
 import numpy as np
 import scipy.sparse as sp

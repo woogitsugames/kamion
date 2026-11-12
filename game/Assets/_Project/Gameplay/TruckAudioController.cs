@@ -46,7 +46,10 @@ namespace Game.Gameplay
         [Tooltip("ADR 0145: full-scale squeal / scrub loops (clips at -16 / -18 LUFS ext): squeal ~ -20 LUFS, ~12 dB over the dry " +
                  "road roll at 50 km/h; scrub ~ -30 LUFS, about the loaded engine at 600 rpm (WORKING_VALUE, owner listening test).")]
         [Range(0f, 1f)] public float scrubVolume = 0.25f, cabScrubFactor = 1.0f;
-        [Range(0f, 1f)] public float squealVolume = 0.60f, retarderVolume = 0.50f, compressorVolume = 0.35f, relayVolume = 0.55f;
+        [Tooltip("ADR 0148: compressor 0.35 -> 0.06 (-15.3 dB). At 0.35 the loaded compressor was 4-5 dB LOUDER than the engine at idle " +
+                 "in the cab and 1-3 dB louder on a coast (both sets): its 14 Hz strokes at ~90 Hz replaced the firing harmonics (owner's Fold " +
+                 "video). Now ~10-11 dB under the idling engine in the cab, 7-8 dB outside (WORKING_VALUE, owner listening test).")]
+        [Range(0f, 1f)] public float squealVolume = 0.60f, retarderVolume = 0.50f, compressorVolume = 0.06f, relayVolume = 0.55f;
         [Range(0f, 1f)] public float cabSquealFactor = 1.0f, cabRetarderFactor = 0.85f, cabCompressorFactor = 0.75f, extRelayFactor = 0.25f;
         [Header("ElevenLabs set (ADR 0142). Cabin balance: ADR 0142 table (levels at idle / 50 / 80 km/h)")]
         [Range(0f, 2f)] public float elCabRoadFactor = 1.35f, elCabWindFactor = 1.45f, elCabBedFactor = 0.35f;

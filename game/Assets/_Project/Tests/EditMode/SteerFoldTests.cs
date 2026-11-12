@@ -83,7 +83,9 @@ namespace Game.Tests
                 var w = DragWheel(range);
                 w.PointerDown(Vector2.zero, new Vector2(10f, 15f));
                 Slide(w, 10f, 4f);
-                Assert.AreEqual(4f * f.dragHighSpeedHandwheelDegPerMm, TargetDeg(w, 80f), 0.05f, "4 mm at 80 km/h, range " + range);
+                Assert.AreEqual(4f * f.dragHighSpeedHandwheelDegPerMm, TargetDeg(w, 60f), 0.05f, "4 mm at 60 km/h, range " + range);
+                // ADR 0151: above 60 km/h the lateral acceleration per mm stays at the 60 km/h value (5 x (60/80)^2 deg/mm).
+                Assert.AreEqual(4f * f.dragHighSpeedHandwheelDegPerMm * 0.5625f, TargetDeg(w, 80f), 0.05f, "4 mm at 80 km/h, range " + range);
             }
         }
 
@@ -243,10 +245,12 @@ namespace Game.Tests
         {
             var l = new ScreenOrientationLock();
             Assert.AreEqual(OrientationCommand.Lock, l.Step(0f, 1968, 2184, ScreenOrientation.Portrait, false));
-            // Fold -> cover screen (elongated): landscape only.
-            Assert.AreEqual(OrientationCommand.AllowAuto, l.Step(10f, 1080, 2520, ScreenOrientation.Portrait, false));
+            // Fold -> cover screen (elongated) held upright: forced to landscape (ADR 0147), then L/R auto-rotation.
+            Assert.AreEqual(OrientationCommand.Lock, l.Step(10f, 1080, 2520, ScreenOrientation.Portrait, false));
+            Assert.AreEqual(ScreenOrientation.LandscapeLeft, l.LockTo);
             Assert.IsFalse(l.Allowed.Portrait);
-            Assert.AreEqual(OrientationCommand.None, l.Step(10.5f, 2520, 1080, ScreenOrientation.LandscapeLeft, false));
+            Assert.AreEqual(OrientationCommand.AllowAuto, l.Step(10.5f, 2520, 1080, ScreenOrientation.LandscapeLeft, false));
+            Assert.AreEqual(OrientationCommand.None, l.Step(11f, 2520, 1080, ScreenOrientation.LandscapeLeft, false));
             Assert.AreEqual(OrientationCommand.None, l.Step(13f, 2520, 1080, ScreenOrientation.LandscapeLeft, false));
             Assert.IsFalse(l.Locked, "phone without gyro: landscape L/R rotate as before");
             Assert.AreEqual(OrientationCommand.Lock, l.Step(14f, 2520, 1080, ScreenOrientation.LandscapeRight, true), "gyro on: lock");

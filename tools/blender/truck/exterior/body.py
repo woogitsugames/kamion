@@ -19,7 +19,7 @@ from mathutils import Matrix, Vector
 
 import geom as G
 from geom import (CAB_BACK_Y, CAB_HALF_W, WHEEL_Z, EYE, Loft, V, box, box_mm, cyl, rod, sphere, tube,
-                  lerp_tab, set_group, boolean, bevel, extrude_poly, rrect, arch)
+                  set_group, boolean, bevel, extrude_poly, rrect, arch)
 
 # B2 + owner correction (2026-11-09): the front in side view is ONE line - bumper, grille, windscreen and roof edge
 # in a single, nearly upright plane leaning back at a constant RAKE (2020s cab-overs), no step between the glass
@@ -460,7 +460,6 @@ def doors_and_gaps():
     hx, ht = 0.815, WS_Z0 - 0.085     # B2 v2: the grille is the tilting flap; top under the cowl
     CAB.patch("hatch_gap_top", "gap", "front", ht - 0.0035, ht + 0.0035, -hx, hx, off=0.0012, nz=1, npar=30)
     for s in (-1, 1):
-        lamp = CFG["lamp"]
         z_l = CAB_Z0 + 0.012
         CAB.patch(f"hatch_gap_side_{s}", "gap", "front", z_l, ht, s * hx - 0.0035, s * hx + 0.0035, off=0.0012,
                   nz=4, npar=1)
@@ -1636,7 +1635,7 @@ def interior_proxies():
     import bmesh as _b
     bm = _b.new()
     _b.ops.create_circle(bm, segments=40, radius=0.235)
-    ring = bpy.data.objects.new("ip_wheel_path", None)
+    bpy.data.objects.new("ip_wheel_path", None)
     tube_pts = [V((-0.55 + 0.235 * math.cos(a), 0.875 + 0.235 * math.sin(a) * math.sin(math.radians(38)) * -1,
                    2.12 + 0.235 * math.sin(a) * math.cos(math.radians(38))))
                 for a in [2 * math.pi * i / 40 for i in range(40)]]
@@ -1649,6 +1648,5 @@ def interior_proxies():
     box_mm("ip_shelf", -1.00, 1.00, 0.50, 0.88, 3.05, 3.40, "interior", bev=0.03)   # clear of the flush header
 
 
-import numpy as np  # noqa: E402  (used in front_face)
 
 set_shape(DEFAULT_SHAPE)

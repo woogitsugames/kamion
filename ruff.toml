@@ -1,0 +1,9 @@
+target-version = "py312"
+
+[lint]
+select = [
+    "E4",  # błędy importu
+    "E7",  # błędy instrukcji (E711/E712 porównanie z None/True/False, E722 bare except)
+    "E9",  # błędy wykonania/składni (E999)
+    "F",   # Pyflakes: F401 nieużywany import, F841 nieużywana zmienna, F821 niezdefiniowana nazwa
+]

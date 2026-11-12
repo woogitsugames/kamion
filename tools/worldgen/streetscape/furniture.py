@@ -1299,7 +1299,6 @@ def fences(lin, src, origin, roads_poly, report, styles=None, net=None):
         key = f"osm:way/{f['osm_way']}:{f['part']}"
         for part in cut_by(line, cutter):
             P = lin.dens(part, 2.0)              # 2 m: the Low terrain band is 2 m, posts sample the ground themselves
-            Z = lin.z(P)
             if b in ("fence", "yes"):
                 col = FENCE_COLOURS[_h(key) % 3]
                 if int(f["osm_way"]) in styles:
