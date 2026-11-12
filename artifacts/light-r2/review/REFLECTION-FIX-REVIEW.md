@@ -11,3 +11,11 @@
 4. **Ograniczenia projekcji reflektorów pozostają bez zmian.** Level-eye ON pokazuje niewielką miękką plamę na ciemnym asfalcie i dalszym odbiorniku, bez rozjaśnienia całego tła. To sensowny dowód kierunkowego działania, ale nie occlusion, rozkładu kandeli, odległości widzenia, cutoffu czy prawidłowego20kcd. Nie ma kontrolowanej przeszkody, znanych dystansów10/25/50m ani kosztu A16 ALU. Poprawna kamera nie zastępuje tych danych. Podtrzymuję pozostawienie projectedHeadlamps opt-in/OFF w presetach.
 
 Opinia końcowa: konkretna niespójność ciepłego odbicia została usunięta, a level-eye ma teraz wiarygodny zapis poziomej orientacji. Utrzymać ograniczone twierdzenia o reflektorach i Night; nie przyznaję PASS GPU, urządzenia, geometrii/pozy, occlusion ani całej bramki. Commit obejmuje wyłącznie tę opinię.
+
+## Domknięcie przeglądu całego High Night po poprawce
+
+2026-11-12: obejrzano **wszystkie67nowych obrazów High Night** na dziewięciu arkuszach `native-review/final-route-v2/High-01.jpg`–`High-09.jpg` (8na arkusz, ostatni3). Tym samym wcześniejsze ograniczenie „nie obejrzano ponownie całej galerii High” jest dla Night usunięte. Low pozostaje w osobnej ocenie rodzica.
+
+Nie zauważyłem **nowych szerokich regresji percepcyjnych po przygaszeniu odbić**. G3b-rondo-putry-approach nadal nie ma pomarańczowej smugi; house1 ma spójne ciemne przeszklenie. Kabina zachowuje widoczne ekrany/obrysy, a lusterka nadal pokazują lokalnie oświetlone powierzchnie. Drogi i chodniki zachowują plamy latarni; nie pojawiła się widoczna globalna utrata jasności gruntu ani nowy szeroki szew niebo–mgła. Karoserie, szyby i plandeki w nocy są ciemne, ale nie widzę nowej anomalii wykraczającej poza oczekiwane ograniczenie nocnego odbicia kopuły w tych podglądach.
+
+Pozostają wcześniejsze ograniczenia: słabo eksponowane przejścia `g3a-eye-s0262`/`stretch-03`, ciemne odcinki edge-west/docks/office1/fence2 oraz brak dowodu widoczności przeszkód podczas jazdy. Projektory są OFF. Wyniki276/276 EditMode i przekazane CPU draws/tris+0 są osobnymi danymi autora; nie zastępują pomiaru A16/GPU, kontroli instancji ani testu nocnej jazdy. Ta opinia zamyka kontrolę szerokich regresji High Night w zakresie obejrzanych kontaktówek, **bez PASS GPU, urządzenia, geometrii, pozy lub całej bramki**. Nie uruchamiano generatorów/testów/Unity/Pythona; zmieniono wyłącznie raport.
