@@ -377,7 +377,7 @@ def test_world_has_the_frontage(qa):
     b = qa["buildings"]
     assert b["frontages"] == 3
     pr = b["frontage_props"]
-    assert sorted(p["kind"] for p in pr) == ["flag_row", "sign_mast", "totem"] and all(p["placed"] for p in pr)
+    assert sorted(p["kind"] for p in pr) == ["car_row", "car_row", "flag_row", "sign_mast", "totem"] and all(p["placed"] for p in pr)
     assert all(p["building"] == IDS["cars"] for p in pr)
     assert not any(IDS["furniture"][5:13] in f and "C34A" in f for f in b["dock_facades"])     # showroom: no docks
     assert b["hall_wall_runoff_tris"]["without_uv1"] == 0

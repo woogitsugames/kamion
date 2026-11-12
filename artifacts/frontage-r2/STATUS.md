@@ -27,3 +27,8 @@ Ocena renderu after: owal dwutonowy OK, auta OK, ogrodzenie frontowe ciemne OK; 
 `git merge main` czysto (bb0dce01b; generated nie były commitowane). Stary czekający run-pytest zniknął, zostawił slot heavy `claude-frontage-r2-py` - przejęty.
 W tle: `run-final-heavy.ps1` (build_world -> fidelity -> pytest gis+gate3; status `final-heavy.status`) i `run-final-unity.ps1` (import -> rendery `merged` Low overcast/clear -> EditMode; `final-unity.status`, `cycle-2.done`).
 NASTĘPNY KROK (po `cycle-2.done`): `python artifacts/frontage-r2/make-pairs.py merged Low-overcast ; python artifacts/frontage-r2/make-pairs.py merged Low-clear ; python artifacts/frontage-r2/stats-diff.py merged` ; uzupełnić ADR 0129 (RESULTS_PLACEHOLDER) ; commit generated ; kopia artifacts do main.
+
+## 6. Pierwszy przebieg po merge (17:14)
+build_world OK (518 s), fidelity OK, pytest gis+gate3: 823 passed, 1 xfailed, 2 failed: `test_world_has_the_frontage` (stara lista propów bez car_row - poprawiona) i `test_cars_v4::test_parking_mix_and_neighbours` (2 x van_white obok siebie w rzędzie dealera - drugi to teraz `van_white2`).
+W tle: Unity (import -> rendery `merged` -> EditMode, `cycle-2.done`) oraz `run-final-heavy2.ps1` (rebuild + fidelity + pytest, `final-heavy2.status`).
+NASTĘPNY KROK: po `cycle-2.done` i `heavy2 done`: pary `make-pairs.py merged Low-overcast|Low-clear`, `stats-diff.py merged`, ADR, commit generated, kopia do main.

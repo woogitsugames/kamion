@@ -1623,7 +1623,7 @@ overrides:
           - {kind: totem, facing: NE, u: -0.93, out_m: 7.3, height_m: 6.0, width_m: 1.6, depth_m: 0.4,
              material: plaster_accent_grey}
           - {kind: car_row, facing: NE, u: -0.687, out_m: 2.9, count: 4, spacing_m: 2.8, nose: out,
-             protos: [van_white, van_white, van_silver, van_white]}
+             protos: [van_white, van_white2, van_silver, van_white]}   # no identical direct neighbours (W-N7 test_cars_v4)
           - {kind: car_row, facing: NE, u: -0.63, out_m: -3.2, count: 4, spacing_m: 2.8, nose: out,
              protos: [car_suv_white, car_hatch_silver, car_suv_grey, van_white]}
   - id: g3b-frontage-fence-colour
