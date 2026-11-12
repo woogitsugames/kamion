@@ -167,3 +167,11 @@ def test_missing_hashes_cannot_match_history():
     p={'camera':'sbs-test'}
     version={'assessments':[{'camera':'sbs-test','result':'PARTIAL'}]}
     assert not report.pixel_match(p,report.review_for_pair(p,[version],version))
+
+
+@pytest.mark.parametrize('snapshot',[None,{'assessments':[]}])
+def test_missing_snapshot_or_camera_does_not_attach_future_review(snapshot):
+    p=pair()
+    future={'assessments':[{'camera':'sbs-test','reason':'future scene',
+                           'render_sha256':'f'*64,'comparison_sha256':'a'*64}]}
+    assert report.review_for_pair(p,[future],snapshot) is None

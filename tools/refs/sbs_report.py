@@ -145,14 +145,16 @@ def pixel_match(pair,review):
 
 def review_for_pair(pair,versions,fallback):
     def assessment(version):
+        if version is None:return None
         found=next((row for row in version.get('assessments',[]) if row['camera']==pair['camera']),None)
         if found is None:return None
         return {**found,'reviewed_run':version.get('reviewed_run'),'reviewed_state':version.get('reviewed_state'),
-                'reviewed_at':version.get('reviewed_at'),'source_review':version.get('source_review')}
+                'review_date':version.get('review_date'),'recorded_at':version.get('recorded_at'),
+                'source_review':version.get('source_review')}
     for version in versions:
         row=assessment(version)
         if pixel_match(pair,row):return row
-    return assessment(fallback) or assessment(versions[0])
+    return assessment(fallback)
 
 
 def build_report(run_paths,outdir,recognition_file=None):
@@ -169,7 +171,7 @@ def build_report(run_paths,outdir,recognition_file=None):
     for run in runs:
         for state in run['states'].values():
             for pair in state['pairs']:
-                review=review_for_pair(pair,versions,snapshots.get(run['id'],recognition))
+                review=review_for_pair(pair,versions,snapshots.get(run['id']))
                 pair['last_recognition_review']=review
                 pair['review_matches_current_pixels']=pixel_match(pair,review)
     trends=[]
