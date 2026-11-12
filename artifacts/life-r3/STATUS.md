@@ -26,3 +26,5 @@ Krok 8: materiały ukończone w 519 s, checkpoint cdc1e6b5; generator World nada
 Krok 9: obejrzano zimową miniaturę PD (250 px); opisano zakres informacji i brak dopasowania fotometrycznego. Kamery zapiszą też rzeczywistą odległość pos→look_at, aby przybliżone nazwy rear5/wheel2 nie zastępowały pomiaru. World ma aktywny proces 35436 i narastający CPU, log na tym etapie jeszcze pusty; nie uruchamiać duplikatu. Następny krok: istniejący 2467 → 46468.
 
 Krok 10: przeniesiono generator arkuszy porównawczych do r3 z nowymi life3_/sheet_far_ i oddzielną kontrolą obu draws. Nie został jeszcze uruchomiony, baseline nadal w budowie. Następny krok: terminalny wynik 2467 i post-baseline 46468; po capture miniatury ≤960 px i oględziny.
+
+Krok 11: inspekcja eksportera wykazała próg creasing 38°; zapisano hipotezę wygładzania płytkich grzbietów felgi. Nie zmieniono globalnego eksportera ani produkcji. World przeszedł planowanie działek/placu/furniture; trwa jedna instancja. Następny krok: istniejące 2467 i 46468, potem oględziny baseline.

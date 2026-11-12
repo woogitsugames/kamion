@@ -8,3 +8,5 @@ Nowy baseline powstaje ze złączonego main 14ccbaf1 i life-r2 C. Kadry r2 nie s
 - Wspólne materiały rim mają zastosowania poza autami. Nie przyciemniać ich globalnie. Opona już ma przypisanie tekstury i UV; zdiagnozować natywne przypisanie oraz oglądany bok zamiast dodawać duplikat mapy.
 
 Plan nie jest wykonaniem ani akceptacją. GPU/A16, sezonowe dopasowanie brudu i unikalność wszystkich tablic pozostają UNVERIFIED. Dokładny audyt ma odrzucać niezależnie wzrost draws świata i instancji, a nie sumę znoszącą wzrost jednej kategorii.
+
+Odczyt eksportera: crease_normals domyślnie scala normalne do 38° (globalnie, bez zmiany r3). Dotychczasowe szerokie grzbiety około 12 mm przy szerokości 38–64 mm mogą trafiać poniżej tego progu; sam grzbiet nie gwarantuje czytelnej fazy. Kandydat po baseline powinien mieć lokalny przekrój dający odrębne normalne po tym samym eksporcie; cienkie ramiona dwie powierzchnie. Zweryfikować wyeksportowane normalne i obraz, nie tylko liczbę trójkątów. To hipoteza przyczyny płaskości, nie jeszcze pomiar obrazu.
