@@ -6,6 +6,9 @@ if((git branch --show-current).Trim() -ne 'gpt-light-r3'){throw 'Expected round3
 git diff --cached --quiet HEAD
 if($LASTEXITCODE){throw 'Preflight requires an empty staging area; resolve staged changes explicitly before closing'}
 if($GisExitCode -ne 0){throw 'Final GIS did not pass'}
+$pairs=Get-Content "$PSScriptRoot/reference-pairs/sources.json" -Raw|ConvertFrom-Json
+if($pairs.Count -ne 6){throw 'Required six photo-render evidence pairs missing'}
+foreach($pair in $pairs){if(-not(Test-Path -LiteralPath $pair.pair) -or (Get-FileHash -LiteralPath $pair.pair).Hash -ne $pair.pair_sha256){throw 'Photo-render pair missing or changed'}}
 $summary=[regex]::Match((Get-Content -LiteralPath $GisLog -Raw),'(?m)^(\d+) passed, (\d+) xfailed in ([\d.]+)s')
 if(-not $summary.Success){throw 'No complete GIS summary'}
 $passed=[int]$summary.Groups[1].Value;$xfailed=[int]$summary.Groups[2].Value;$seconds=$summary.Groups[3].Value
@@ -38,6 +41,7 @@ $report=@(
 'Clear ogranicza teraz źródłową elewację mapy do 0,5 stopnia po obrocie. Ablacja 0/0,5/1 na 12 PNG wybrała najmniejszy sprawdzony margines; domyślne zero w innych presetach zachowuje starą ścieżkę. Hasz tekstury niezmieniony, bez nowej próbki lub przebiegu.',
 'Końcowy Clear: 122/122 obrazów, 61 kamer na obu poziomach jakości, obejrzanych przez rodzica i niezależnego krytyka. Dodatkowo 24 kierunki kamery na obu poziomach jakości, czyli 48 obrazów przy słońcu 42 stopnie, i osiem statycznych kostek 64/128 px bez powrotu ostrego klina. Pierwsza błędna seria look_at odrzucona; dowodem jest tylko sky-direction-v2.',
 'Pozostaje miękki szary pas dolnego nieba; inne kąty słońca, ruch, GPU i ekran telefonu niezweryfikowane. Nie deklarujemy zaliczenia bramki lub kalibracji wszystkich zdjęć.',
+'Sześć par zdjęcie|render o szerokości 956 px w reference-pairs: dwa ujęcia horyzontu i mokra referencja na obu poziomach jakości. Pochodzenie i hasze w sources.json; niepewne lub błędne pozy są jawnie opisane, bez pomiaru fotometrii.',
 'Mokry stan bazowy: 36 PNG przy wet 0/0,5/1 pokazuje globalnie jasne wygładzenie bez wiarygodnej lokalnej treści odbić. Zdjęcie cm92458760: Rakoon, 2020-07-11, CC BY 3.0, zgodny SHA; błędna poza klasy C, tylko odniesienie jakościowe, bez fotometrii.',
 'Eksperyment istniejącej kostki pojazdu: 16 PNG z oka kierowcy i daleka oraz 32 bliskie PNG z 32 zrzutami kostek. Dał ciemny owal w zasięgu 8–12 m zamiast przekonującego odbicia. Usunięto cały mechanizm, shader, flagę i styki wspólnych shaderów; patch i opinie zachowano.',
 'Ablacja filmu: 72 PNG, połysk 0,52/0,35/0,2 oraz udział kałuż 0,3/0,08. Krytyk i rodzic odrzucili wszystkie warianty: mniejszy połysk redukuje plastik, lecz nie daje mokrego wyglądu z odbiciem. Usunięto nieprzyjęty parametr; nie wprowadzono presetu mokrej nawierzchni.',
