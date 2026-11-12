@@ -112,3 +112,5 @@ potem poprawić największe udokumentowane odstępstwo wiaty. WIP po każdym kro
 2026-11-12T12:48:55.5349559+01:00: zapisano roboczy PACKET.md ze źródłami, zakresem zmian, dowodami i jawnymi pozycjami OCZEKUJĄCE. Zweryfikowano ponownie SHA256 trzech oryginałów Mapillary; metadane i osobny hash wycinka zapisano w reference/provenance.json. Nie przeniesiono wyników testów r2 jako wyników r3. NASTĘPNY KROK: geometria, pełne kadry i końcowe testy.
 
 2026-11-12T12:52:53.7423734+01:00: uzupełniono ADR 0120 o poprawkę kontaktu dachu, test 10/10, audyt instancji i ograniczony przegląd czterech Low-clear. Wskazano wprost oczekującą geometrię, High, drugi narożnik i pełny budżet. NASTĘPNY KROK: dokończenie istniejącego pipeline, bez ponawiania generatora.
+
+2026-11-12T12:57:44.5538523+01:00: heavy geometry after; sukces=True; slot gpt-furniture-r3 zwolniony. NASTĘPNY KROK: sprawdzić log i kontynuować walidację rundy.
