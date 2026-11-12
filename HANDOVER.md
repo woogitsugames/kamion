@@ -19,7 +19,9 @@
 - **23:3x: SCALONE 0152 fold-flicker** `fbb610dd3` (przegląd lidera: pod-kroki sprężyny głowy ≤1/60 s, max 12; log pozy tylko z camlog=1). A16 Low bez regresji (29,28 FPS, p95 33,6, GPU p95 38,9 vs 39,0); S24+ High/30 29,95 FPS GPU p95 28,7; S24+ Ultra/60 → siatka 30 FPS, skala 0,70, 0 błędów capture, 0 % naprzemiennych klatek. Fold domyślnie High/30. Otwarte: Fold Ultra/60 5 min, Fold High/30 30 min, 60 FPS w menu przy Ultra > 4 Mpx (gameplay-ui). Worktree usunięty. Czysty APK main w tle: `artifacts/lead-s16/build-main.log`.
 - **23:4x: SCALONE Mistral r5** (#26 #28 #29 #30 #31 #32; #27 tylko test; raport `docs/reports/REVIEW-2026-11-13-s16-mistral-r5.md`; M33 = 1 poprawka, najlepszy wynik). Graf tras zregenerowany (osie M28, zasięg M27: 115 krawędzi poza zasięgiem — odcinki Andersa/Maczka/Tysiąclecia przy krawędzi kafla, sprawdzić na telefonie). M30 brak PR. Otwarte: regeneracja świata po #31, zdublowane zapory edge-west w C# `WorldEdgeBuilder`, testy `ZeroGc_*` nawigacji, źródła GRRF-56-3/PoRD art. 20.
 - **APK main (0152+0146+r4): `artifacts/apk/kamion-0.1.0-fbb610dd30.apk`** (225 MB, przed regeneracją świata).
-- **Ostatni przydzielony ADR: 0156** (0153–0155 → Codex).
+- APK `kamion-0.1.0-fbb610dd30.apk` smoke A16 23:20: Low 30 fps p95 33,48 ms, PSS 375 MB, bez wyjątków.
+- **Gemini 4 (Antigravity, lokalnie) próba:** ADR 0157 testy zero-GC na `Recorder("GC.Alloc")` — `docs/owner/GEMINI-TASK-01.md`, worktree `gemini-0157`, live `artifacts/live/gemini-0157.md`.
+- **Ostatni przydzielony ADR: 0157** (0153–0155 → Codex).
 
 # HANDOVER — kamion, SESJA 15 (start 2026-11-12 20:25, nowe konto)
 
