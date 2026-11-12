@@ -1,0 +1,33 @@
+{
+  "created_at": "2026-11-12T14:55:54.9325335+01:00",
+  "figure": "artifacts/asphalt-r3/reference/context-map.svg",
+  "origin_epsg2180": {
+    "x": 777995.0,
+    "y": 596223.0
+  },
+  "bounds_local_en": [
+    230,
+    -590,
+    500,
+    -260
+  ],
+  "sources": [
+    {
+      "file": "Data/Regions/bialystok-industrial-c/buildings.geojson",
+      "sha256": "FC62F0BE4C39546471B2D3EC437EAEBE2BF0C068F12D5E617C89CDAE996D9333"
+    },
+    {
+      "file": "Data/Regions/bialystok-industrial-c/generated/streetscape_sources.json",
+      "sha256": "F4E3D26CFDBC08D5886F5843CE8D615A132E7E7949063DDCC050C0E710394E12"
+    },
+    {
+      "file": "artifacts/asphalt-r2/backlog-r3-references/pcrt-coordinate-precheck.json",
+      "sha256": "064960870F80926284F2116BBB0EF21DB00774354EF45726FC20293AC9121438"
+    }
+  ],
+  "surface_id": "2BE4B432-6D21-1BF0-E053-CC2BA8C0D140:0",
+  "surface_props": {
+    "materialnawierzchni": "masa bitumiczna"
+  },
+  "note": "Direct vector projection of source polygons and declared photo points. No bin geometry, camera fitting, image recoloring or Python workload."
+}

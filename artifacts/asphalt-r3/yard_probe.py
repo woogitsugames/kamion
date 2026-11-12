@@ -1,4 +1,4 @@
-"""Read-only surface inventory near the PCRT reference context, outside the protected site.
+"""Read-only surface inventory near the PCRT reference context.
 
 Run through run-heavy.ps1 -Stage YardProbe after the matching canonical world build.
 This locates surfaces, not the untagged photograph's camera or the whole PCRT site.
@@ -16,8 +16,9 @@ ROOT = OUT.parents[1]
 sys.path.insert(0, str(ROOT / 'artifacts/surface-wear-r1'))
 from bus_world_proof import read
 
-# Deliberately stays west of the conservative Kwadrat E=400 boundary.
-BBOX = (280.0, -560.0, 395.0, -300.0)
+# Read-only context extends across part of the conservative material buffer.
+# This does not change that buffer or authorize material/geometry edits there.
+BBOX = (280.0, -560.0, 480.0, -300.0)
 
 
 def overlaps(bounds):
@@ -51,8 +52,9 @@ def main():
         if (not receipt['complete'] or receipt['world_exit'] != 0 or receipt['resync_merge'] != 'e5eb5902'
                 or receipt['manifest_sha256'].lower() != hashlib.sha256(manifest_path.read_bytes()).hexdigest()):
             raise RuntimeError('Fresh post-0131 producer receipt/manifest mismatch.')
-    points = [{'en': [float(e), float(n)], 'hits': []}
-              for n in range(-550, -309, 20) for e in range(285, 386, 20)]
+    points = [{'en': [float(e), float(n)], 'within_existing_material_exclusion': 400 <= e <= 850 and -700 <= n <= -250,
+               'hits': []}
+              for n in range(-550, -309, 20) for e in range(285, 476, 20)]
     files, inventory, definitions = [], [], {}
     for chunk in manifest['chunks']:
         if not overlaps(chunk['bounds_local_m']):
@@ -129,7 +131,9 @@ def main():
                   manifest_sha256=hashlib.sha256(manifest_path.read_bytes()).hexdigest(),
                   note='Source E/N and absolute elevation U before runtime region-root transform. '
                        'Grid points/top faces only; roof/other occlusion is not resolved. BBox overlap is not clipped area. '
-                       'Does not identify the photo camera, whole site, or authorize geometry/override changes.')
+                       'Read-only context crosses the conservative material exclusion, explicitly marked per point. '
+                       'That exclusion remains unchanged. Does not identify the photo camera, whole site, '
+                       'or authorize material/geometry/override changes.')
     target = OUT / f'yard-probe-{args.label}.json'
     target.write_text(json.dumps(result, indent=2)+'\n', encoding='utf-8')
     print(json.dumps(dict(files=len(files), groups=len(inventory), points=len(points),

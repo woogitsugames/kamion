@@ -61,7 +61,7 @@ Runda rozpoczęta po przekazaniu r2, od gałęzi gpt-asphalt-r3 i merge main0023
 
 Referencja zewnętrznego placu PCRT: Rakoon, 2020-07-11, CC BY3.0, oryginał i SHA w backlog-r3-references odziedziczonego r2. Pokazuje zazębiającą się kostkę i umiarkowane spoiny. Nie ma GPS tej fotografii ani dopasowanej pozy; sąsiednie geotagi i pobliski obrys BDOT z opisem asfaltu wymagają wyjaśnienia. Nie traktujemy tego jako licencji na globalną zmianę asfaltu albo geometrii.
 
-Sonda materiału jest tylko do odczytu, obejmuje lokalne E280–395/N−560 do−300 poza konserwatywną granicą Kwadrat, wymaga świeżego producenta i SHA GLB. Wybór wyglądu nastąpi po odczycie i renderze. Plan capture będzie zawierał rzeczywiste native i pomocnicze ID; audyty muszą sprawdzać cały ten zbiór oraz dziewięć liczników każdej kamery, w tym instancje. Wartości materiału WORKING_VALUE, GPU A16 UNVERIFIED, bez telefonu.
+Sonda materiału jest tylko do odczytu, obejmuje lokalne E280–480/N−560 do−300, wymaga świeżego producenta i SHA GLB. Rozszerzenie odczytu na wschód od E400 służy kontekstowi hali PCRT i nie zmienia konserwatywnego wyłączenia materiału Kwadrat; punkty w tym buforze są jawnie oznaczane. Wybór wyglądu nastąpi po odczycie i renderze. Plan capture będzie zawierał rzeczywiste native i pomocnicze ID; audyty muszą sprawdzać cały ten zbiór oraz dziewięć liczników każdej kamery, w tym instancje. Wartości materiału WORKING_VALUE, GPU A16 UNVERIFIED, bez telefonu.
 
 ### r3a — synchronizacja z naprawą lidera ADR 0131
 
