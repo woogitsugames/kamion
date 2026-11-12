@@ -15,7 +15,7 @@ foreach ($tier in @('Low','High')) { foreach ($lighting in @('overcast','clear')
         pwsh scripts/unity-slot.ps1 -Release -Owner gpt-vegetation
         git restore --worktree -- game/Assets/_Project/Rendering/Settings game/ProjectSettings
     }
-    Add-Content artifacts/vegetation-r4/STATUS.md "Probe $Tag: $tier $lighting zapisany. Obejrzeć arkusze i koszt przed dalszą decyzją; to nie pełna macierz."
+    Add-Content artifacts/vegetation-r4/STATUS.md "Probe ${Tag}: $tier $lighting zapisany. Obejrzeć arkusze i koszt przed dalszą decyzją; to nie pełna macierz."
     Save-VegetationCheckpoint -Message "wip(vegetation): r4 $Tag $tier $lighting"
 } }
 Set-Content "artifacts/vegetation-r4/$Tag.done" 'Four probe groups completed; inspect results before acceptance.'
