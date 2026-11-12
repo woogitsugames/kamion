@@ -189,3 +189,5 @@ NASTĘPNY KROK: przygotować własne skrypty r2 z ownerem heavy gpt-furniture-r2
 2026-11-12T09:47:03.1907625+01:00: Unity editmode final3 Low overcast; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
 
 2026-11-12T09:47:23.3125927+01:00: podsumowanie końcowych liczników:330 wariantów, delta draws mesh/instancji/cieni wszędzie0;165 dokładnych Low, max tris +0,189979830474662%. Nie jest to pomiar GPU. Arkusze będą przygotowane dopiero po zakończeniu procesu geometrii PID49828, kolejno w heavy, żeby ten sam właściciel nie współdzielił slotu przez dwa zadania.
+
+2026-11-12T09:47:59.0867929+01:00: końcowe EditMode340/340 passed,0 failed,0 skipped; skopiowano XML i log do artefaktów rundy. NASTĘPNY KROK: oczekujące geometry/arkusze w heavy, niezależny przegląd wszystkich kamer, końcowy GIS i physics/gate3.
