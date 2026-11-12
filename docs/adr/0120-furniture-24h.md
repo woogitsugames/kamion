@@ -235,3 +235,6 @@ bez pominięć. GIS iphysics/gate3 są osobnymi kontrolami końcowymi w heavy,
 aktualnie oczekującymi; nie przypisano im wyniku na podstawie audytu wejść.
 
 Zamknięcie r2:GIS644passed,1xfailed,1failed (zastane dwa hashe fidelity, niezmienione wejścia względem3fe0c97f); physics/gate3 48passed. EditMode340passed. REPORT iPACKET zachowują ograniczenia nocnej aproksymacji i niepotwierdzone detale konstrukcyjne. Następna runda dotyczy przystanków według Mapillary.
+
+### r3, przygotowanie
+Gałąźgpt-furniture-r3 od zamkniętej r2, merge main889201d5. Produkty generatora z main do regeneracji; dopiski materiałów/licencji zachowano addytywnie. Cel:wiaty/przystanki/kosze/słupki według Mapillary, bez barier. Baseline po merge przed zmianą geometrii.
