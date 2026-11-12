@@ -57,3 +57,5 @@ Krok 14a: przygotowano kolejną kolejkę z dwoma osobnymi wywołaniami pojedyncz
 Krok 14b: obejrzano wszystkie 32 arkusze pierwszego wariantu (244 pary, 123 PNG identyczne). Zmiana czytelna na kominach, bez widocznej regresji remizy/kabiny/podpomostu; powierzchnie kominów nadal zbyt gładkie i szare wobec fotografii, pozostają PARTIAL. Audyt korekty dopuszcza tylko pigment pier_yellow i trzy grupy materiałów w bridge, z obowiązkowym aktualnym dowodem zachowania reszty prymitywów; oś trzonu jest mierzona na pełnych pierścieniach, z wyłączeniem białych galerii.
 
 Krok 14c: przed uzyskaniem slotu (potwierdzony brak własnego heavy) porównano budżet starych prototypów: LOD0 700, LOD1 204 tris każdy. Dalsze uproszczenie drobnych barierek i trzonu (20 stron, galerie 8 boków i 4 słupki) ma utrzymać oba nowe LOD0 poniżej 700 bez usuwania wylotów ani obrzeży galerii. Ostateczne liczby i wygląd po generatorze, bez deklaracji PASS.
+
+Krok 14d: test geometrii EC wymaga LOD0 ≤700 tris, czyli rzeczywistego budżetu poprzedniego komina. Kontrola pionowej fascii sprawdza obecność zamkniętego obrzeża z normalnymi na zewnątrz, bez wymuszania poprzedniej liczby segmentów.

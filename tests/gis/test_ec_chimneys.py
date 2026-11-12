@@ -47,6 +47,7 @@ def test_lods_use_existing_material_budgets_and_have_vertical_axes(index):
             shell=V[np.isclose(V[:,2],z)]
             assert np.max(np.abs((shell[:,:2].min(0)+shell[:,:2].max(0))/2))<1e-8
     assert sum(len(p['T']) for p in lods[1])<sum(len(p['T']) for p in lods[0])
+    assert sum(len(p['T']) for p in lods[0])<=700, 'No LOD0 growth versus the old 700-triangle chimney'
 
 
 @pytest.mark.parametrize('index',[0,1])
@@ -61,7 +62,7 @@ def test_gallery_fascia_survives_a_view_from_below_without_extra_material(index)
             near=np.all((triangles[:,:,2]>=z-.251)&(triangles[:,:,2]<=z+.001),axis=1)
             radial=np.all(np.linalg.norm(triangles[:,:,:2],axis=2)>outer-.01,axis=1)
             fascia=triangles[near&radial]
-            assert len(fascia)>=24
+            assert len(fascia)>=12
             normal=np.cross(fascia[:,1]-fascia[:,0],fascia[:,2]-fascia[:,0])
             assert np.all(np.abs(normal[:,2])<1e-8)
             assert np.all(np.sum(normal[:,:2]*fascia.mean(1)[:,:2],axis=1)>0)
