@@ -31,3 +31,14 @@
 - NASTEPNY KROK: `Get-Content artifacts/buildings-r9/r1/round.log` (czekac na `ROUND DONE`; jesli zginelo:
   `pwsh artifacts/buildings-r9/round.ps1 -Round r1 -SkipWorld`) -> `grep -n "error CS\|Shader error" artifacts/buildings-r9/r1/import.log`
   -> obejrzec `r1/extra_hc/960/*.jpg`.
+
+## krok 3 — r1 obejrzane, r2 w toku (16:28)
+- r1: import 1598 s (maszyna obciazona), brak `Shader error` / `error CS`; rendery `r1/Low-overcast`, `r1/extra_hc`, `r1/extra_low`,
+  arkusze `r1/sheet_{street,fix,garden,low}.jpg`. Widac: drzewa nad dachami, krzewy przy plotach, zywoplot zaokraglony, dwa pasy,
+  skrzynka na slupku. Zle: r1 vs r2c(0124) najgorsza kamera Low +18 draw (`r10_shed_2`, instancje: 15 prototypow drzew),
+  ramki LOD1 7 cm niewidoczne, panel przy bramie `r16_drive_3` nadal (to sciana boczna + szczelina 0,3 m przy slupku bramy).
+- r2 (kod 7ac5589d): brama dosuwana do naroznika (slupek bramy = slupek narozny), 4 gatunki x 1 wariant instancji, ramka LOD1 12 cm.
+- Baza = import main z 14:03 (main z 0124, integracja e) skopiowany 16:28 do `_Generated` -> `base/` (Low + extra_low + 8 kamer hc).
+- NASTEPNY KROK: `Get-Content artifacts/buildings-r9/r2/round.log` (czekac na `CHAIN DONE`; jesli zginelo po `build_world exit 0`:
+  `pwsh artifacts/buildings-r9/round.ps1 -Round r2 -SkipWorld`, potem pytest/fidelity/EditMode jak w `r2_chain.ps1`) ->
+  `python artifacts/buildings-r9/budget2.py artifacts/buildings-r9/base/Low-overcast artifacts/buildings-r9/r2/Low-overcast`
