@@ -17,6 +17,12 @@ namespace PhysicsRunner.Sim
                 // WORKING_VALUE: wet asphalt friction ratio (see docs/VEHICLE_REFERENCE_DATA.md)
                 case "wet_asphalt": return new SurfaceProps { Friction = 0.625, RollingResistance = 1.05, Id = 1 };
                 case "concrete": return new SurfaceProps { Friction = 1.0, RollingResistance = 0.95, Id = 2 };
+                // WORKING_VALUE (runner-only scales of the dry peak mu 0.80, no cited source; typical ranges
+                // for truck tires: cobblestone ~0.7-0.8, gravel ~0.6, grass ~0.5, mud ~0.3-0.4):
+                case "cobblestone": return new SurfaceProps { Friction = 0.9, RollingResistance = 1.2, Id = 3 };
+                case "gravel": return new SurfaceProps { Friction = 0.75, RollingResistance = 1.6, Id = 4 };
+                case "grass": return new SurfaceProps { Friction = 0.6, RollingResistance = 2.2, Id = 5 };
+                case "mud": return new SurfaceProps { Friction = 0.4, RollingResistance = 3.0, Id = 6 };
                 default: throw new ArgumentException($"Unknown surface '{name}'");
             }
         }

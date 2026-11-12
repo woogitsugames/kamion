@@ -68,6 +68,52 @@
       "status": "WORKING_VALUE",
       "source": "kingpin constraint drift (custom fifth-wheel constraint)",
       "max": 5
+    },
+    {
+      "metric": "nan_detected",
+      "status": "WORKING_VALUE",
+      "source": "M34 soak invariant: no NaN/Inf in 30 min (docs/04 s6.14)",
+      "max": 0
+    },
+    {
+      "metric": "max_tire_friction_ratio",
+      "status": "WORKING_VALUE",
+      "source": "M34 soak invariant: sqrt(Fx^2+Fy^2) <= mu*Fz on every loaded wheel, margin 0.001 for float rounding",
+      "max": 1.001
+    },
+    {
+      "metric": "articulation_limit_excess_deg",
+      "status": "WORKING_VALUE",
+      "source": "M34 soak invariant: articulation inside the 90 deg yaw stop (tractor_4x2_generic.vehicle.json:305)",
+      "max": 0
+    },
+    {
+      "metric": "min_air_all_bar",
+      "status": "WORKING_VALUE",
+      "source": "M34 soak invariant: no negative pressure in any reservoir/line",
+      "min": 0
+    },
+    {
+      "metric": "energy_drift_j",
+      "status": "WORKING_VALUE",
+      "source": "M34 soak: E=KE+PE drift over the whole parked soak; measured 0.57 J of 727 kJ (7.8e-7 relative); threshold 5 J",
+      "max": 5,
+      "from": 5
+    },
+    {
+      "metric": "max_pos_jump_m",
+      "status": "WORKING_VALUE",
+      "source": "M34 no-teleport at standstill; measured 2.1e-5 m (suspension settling); threshold 1e-3 m",
+      "max": 0.001,
+      "from": 5
+    },
+    {
+      "metric": "cab_spectrum_peak_amp_dps",
+      "status": "WORKING_VALUE",
+      "source": "M34 soak: cab pitch-rate spectrum amplitude at standstill; measured 3.7e-14 deg/s (no oscillation); threshold 0.01 deg/s",
+      "max": 0.01,
+      "from": 1740,
+      "to": 1800
     }
   ]
 }
