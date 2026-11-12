@@ -51,3 +51,13 @@ for photo, camera in (('curtain-yellow-working','truck-rear34'),('curtain-blue-w
             sheet.paste(pic,(x+(480-pic.width)//2,34+(365-pic.height)//2))
     draw.text((8,412),'Inne pojazdy, pozy, oswietlenie i zuzycie; porownanie jakosciowe, bez kalibracji jasnosci.',fill='white')
     sheet.save(root/f'photo-render-{photo}.jpg',quality=93)
+paths = sorted(out.glob('*.jpg'))
+for start in range(0,len(paths),10):
+    contact = Image.new('RGB',(960,740),(24,24,24))
+    draw = ImageDraw.Draw(contact)
+    for i, path in enumerate(paths[start:start+10]):
+        x, y = (i%2)*480, (i//2)*148
+        draw.text((x+5,y+2),path.stem,fill='white')
+        with Image.open(path) as pic:
+            contact.paste(pic.resize((480,128),Image.Resampling.LANCZOS),(x,y+20))
+    contact.save(root/f'final-contact-{start//10+1}.jpg',quality=93)
