@@ -10,3 +10,5 @@ R3 kończy wybrany C (geometria A, flake_lift czerni B, szerszy rear falloff C).
 6. Palety/kontenery/kosze pozostają dalszym backlogiem; preflight otwartych zdjęć, licencji i wymiarów zapisany w life-r2/refs/PALLET-PREFLIGHT.md. Brak użytecznego Mapillary placu, więc nie dopisywać fikcyjnego rozmieszczenia. Palety już stojące są solidnymi pudełkami — konstrukcja z prześwitami jest osobnym kandydatem do poprawy.
 
 Oryginalny termin doby około 12.11.2026 21:31 Warszawa. Nie zaczynać nowej doby. Lider Claude jedynym integratorem, obecnie S12; bez merge do main/push/telefonów. Unity gpt-life, heavy gpt-life-r4, -StaleHours 1000000 i rezerwacje respektowane. Sekwencyjne batch-e pod jednym heavy ograniczają liczbę kolejek.
+
+R3 ujawniło stare fidelity_qa po merge main (overrides/meshing). W baseline r4, po World, odtworzyć fidelity/run.py w TYM SAMYM heavy przed jego zwolnieniem i zapisać świeże wejścia. Nie czekać do końcowego pełnego GIS, nie pomijać testu stale i nie zmieniać jego progu.
