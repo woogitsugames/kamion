@@ -6,3 +6,4 @@ Na tym etapie nie wybrano zmiany produktu r3. Najpierw aktualizacja wymaganych l
 
 Heavy: bieżący absolutny main scripts/unity-slot.ps1, FIFO, Owner gpt-asphalt-r3, bez Priority. Unity: Owner gpt-asphalt, Acquire/Release i restore ustawień. Pełny GIS dopiero na końcu rundy, w trakcie konkretne pliki testów. Telefony, push i merge do main zabronione. Termin oryginalnej sesji:2026-11-12 21:31:53+01:00.
 2026-11-12T12:30:07.3480992+01:00: Przygotowano runnery baselineFIFO heavy zOwnergpt-asphalt-r3, Materials→World. Nowy main zmienił sets_fire_station.py, więc odświeżamy pełny cache materiałów przed importem; bez zmian cudzych źródeł. Nie zakładamy zgodności poprzednich r2GLB z main po merge.
+2026-11-12T12:30:08.6680250+01:00: Przyrostowo uzupełniono rawCC0 i Megascans z main bez usuwania plików. Następne Materials/World pod heavy; nie kopiowano Library ani nie używano Unity.
