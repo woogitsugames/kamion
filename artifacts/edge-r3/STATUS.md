@@ -65,3 +65,6 @@ Krok 21: pełne EditMode po poprawce: 297/297, 0 failed, 0 skipped, 12,8626 s; k
 Następny krok: ocena par zwykłych kamer i wyników pomiarów, potem pełny GIS tylko na zakończenie rundy.
 Krok 22: ADR 0121 r3 opisuje przyczynę, niezależny Red/Green, bazę 368+368 PNG i EditMode 297/297. Obejrzano zwykłe north Low-overcast oraz east High-clear: efekt wizualny bliski neutralnemu, bez ogłaszania zamknięcia fotograficznej jakości. Pomiary After i końcowy GIS nadal otwarte.
 Następny krok: wyniki geometry-comparison-receipt.json i wszystkich kamer, potem końcowy GIS pod heavy.
+Krok 23: przeczytano aktualny feedback main z 01:50. Dla edge wskazuje ścianę lasu zamiast bloków w 303305/320215/454716; dla sbs nowe problemy pozy G3-B. Obejrzano trzy wskazane pary G3-A w next-round-review/blocks-vs-forest.jpg; rozbieżność sylwetki jest wyraźna, bez oceny światła.
+Do następnej rundy przygotowano maskę całego renderera FarField_far_west. Magenta pokazuje geometrię bez oryginalnej alfy, więc nie jest pomiarem naturalnej widoczności; rozstrzyga właściciela zasłaniającej geometrii. Bez zmiany źródeł, kamer i normalnej macierzy r3.
+Następny krok: mask-city-wall.ps1 pod Unity; równolegle nadal czeka własny odczyt geometryczny w heavy, pełny GIS dopiero po jego wyniku.
