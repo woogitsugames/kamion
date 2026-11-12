@@ -55,3 +55,5 @@ Etap po generatorze (2026-11-12 01:25:47): Pojedynczy test_streetscape.py zakoń
 Etap po generatorze (2026-11-12 01:29:49): Fidelity zakończone kodem 0 pod heavy; raporty odświeżone. Następne: weryfikacja wejść i import Unity. Następne etapy wykonuje run-after-world.ps1; REPORT dopiero po oględzinach autora i końcowych testach.
 
 Etap po generatorze (2026-11-12 01:31:23): PreparedImport zakończony kodem 0; helper zweryfikował wejścia pod heavy, potem osobno importował w Unity gpt-life. Następne: AFTER przy zamrożonych kamerach. Następne etapy wykonuje run-after-world.ps1; REPORT dopiero po oględzinach autora i końcowych testach.
+
+Etap po generatorze (2026-11-12 01:34:19): AFTER zakończony kodem 0, liczby PNG zgodne z baseline (114 × 4); każdy Unity miał osobny slot gpt-life, zwolniony po wywołaniu. Następne: porównanie CPU i plansze. Następne etapy wykonuje run-after-world.ps1; REPORT dopiero po oględzinach autora i końcowych testach.
