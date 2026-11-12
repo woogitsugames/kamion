@@ -1,4 +1,4 @@
-param()
+param([switch]$ResumeAfterScope)
 $ErrorActionPreference='Stop'
 $repo='C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-life'
 Set-Location -LiteralPath $repo
@@ -36,11 +36,23 @@ try {
  $world=Get-Content -LiteralPath $result -Raw | ConvertFrom-Json
  if($world.exit_code -ne 0){throw 'World generation failed'}
  if(Select-String -LiteralPath artifacts/life-r2/world-candidate.log -Pattern 'fallback=True' -Quiet){throw 'World log contains fallback=True; inspect before import'}
- $phase='world-complete'
- Save-Step 'ukończ regenerację świata r2' 'world-candidate zakończony kodem 0; slot heavy zwolniony. Następne: kontrola zakresu GLB i niezmienności 192 produktów raw.' @('artifacts/life-r2/world-candidate-result.json')
- $phase='scope-audit'
- Run-Heavy 'Script' 'nonlife-glb' 'artifacts/life-r2/check-nonlife.py'
- Save-Step 'potwierdź zakres biblioteki i danych świata' 'Audyt rzeczywistego GLB i 192 produktów raw przeszedł; szczegóły w nonlife-glb-audit.json. Nie dowodzi to jeszcze jakości obrazu ani kosztu GPU.' @('artifacts/life-r2/nonlife-glb-audit.json','artifacts/life-r2/nonlife-glb-result.json')
+ if (!$ResumeAfterScope) {
+  $phase='world-complete'
+  Save-Step 'ukończ regenerację świata r2' 'world-candidate zakończony kodem 0; slot heavy zwolniony. Następne: kontrola zakresu GLB i niezmienności 192 produktów raw.' @('artifacts/life-r2/world-candidate-result.json')
+  $phase='scope-audit'
+  Run-Heavy 'Script' 'nonlife-glb' 'artifacts/life-r2/check-nonlife.py'
+  Save-Step 'potwierdź zakres biblioteki i danych świata' 'Audyt rzeczywistego GLB i 192 produktów raw przeszedł; szczegóły w nonlife-glb-audit.json. Nie dowodzi to jeszcze jakości obrazu ani kosztu GPU.' @('artifacts/life-r2/nonlife-glb-audit.json','artifacts/life-r2/nonlife-glb-result.json')
+ } else {
+  $phase='verify-resume'
+  $checkpoint=Get-Content artifacts/life-r2/scope-resume-checkpoint.json -Raw | ConvertFrom-Json
+  foreach($entry in $checkpoint.files.PSObject.Properties) {
+   if((Get-FileHash -LiteralPath $entry.Name).Hash -ne $entry.Value){throw "Changed checkpoint input: $($entry.Name)"}
+  }
+  $scope=Get-Content artifacts/life-r2/nonlife-glb-result.json -Raw | ConvertFrom-Json
+  if($scope.exit_code -ne 0){throw 'Scope audit is not successful'}
+  if(Test-Path artifacts/life-r2/pytest-streetscape.log){throw 'Test already has evidence; inspect instead of restarting it'}
+  Write-Host 'Resuming at the unstarted single-file test; World and scope audit preserved'
+ }
  $phase='streetscape-tests'
  Run-Heavy 'TestFile' 'pytest-streetscape' 'tests/gis/test_streetscape.py'
  Save-Step 'potwierdź pojedynczy test_streetscape r2' 'Pojedynczy test_streetscape.py zakończony 0 na świeżych generatach; liczba testów w pytest-streetscape.log. Pełny GIS pozostaje na koniec rundy.' @('artifacts/life-r2/pytest-streetscape.log','artifacts/life-r2/pytest-streetscape-result.json')
