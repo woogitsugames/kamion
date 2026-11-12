@@ -13,9 +13,10 @@ foreach ($light in @('clear','overcast','dusk')) {
     if ($LASTEXITCODE -ne 0) { throw "Candidate exact counter failed: $light" }
 }
 # This path reads only small statistics/JSON files, and does not compose images.
-& uv run --project tools/worldgen python "$ev/compare_frames.py" --metrics-only --label after1
+& uv run --project tools/worldgen python "$ev/compare_frames.py" --metrics-only --label after3
 if ($LASTEXITCODE -ne 0) { throw 'Counter comparison failed' }
 Add-Content "$ev/STATUS.md" "`n$(Get-Date -Format o): komplet standardowych obrazów po zmianie i dokładne liczniki Low zapisane. NASTĘPNY KROK: odczytać wszystkie delty, kontrolowany night-rig Low/High i arkusze porównawcze w heavy; geometrię raportować osobno według jej wyniku."
 Copy-Item "$ev/STATUS.md" artifacts/furniture-r2/STATUS.md
 git add -f "$ev/STATUS.md" artifacts/furniture-r2/STATUS.md "$ev/frame-budget.json" "$ev/frame-budget.csv" "$ev/frame-coverage.json"
 git commit -m 'wip(furniture): checkpoint complete candidate camera coverage and CPU counters'
+

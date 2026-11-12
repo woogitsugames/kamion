@@ -151,3 +151,5 @@ NASTĘPNY KROK: przygotować własne skrypty r2 z ownerem heavy gpt-furniture-r2
 2026-11-12T09:34:07.4431245+01:00: asymetryczna wiązka przeszła16/16 prób GPU/fabryki, bez pominięć. Sterownik fixture jest editorowym callbackiem przed kamerami, utrzymującym żądany tryb podczas ponownego ładowania sceny; nie dodaje komponentu do produktu ani nowego źródła światła. NASTĘPNY KROK: kontrolowany night-rig after3 Low, po sukcesie High.
 
 2026-11-12T09:35:05.2796608+01:00: Unity night-rig after3 Low overcast; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
+
+2026-11-12T09:41:02.4985295+01:00: night-rig after3 Low OK: 12 pozycji/trybów, 24 obrazy, rzeczywiste źródła potwierdzone w logach. Obejrzano cztery podglądy 25 m; zwrot widoczny, EV5 i gain800 robocze, brak kalibracji i okluzji ścieżki światła. High w toku. Pierwsze 330 obrazów po zmianie i 165 dokładnych liczników zachowano w iteration1; następna seria uwzględni poprawki ekspozycji/asymetrii/cache. Porównanie geometrii nadal czeka na heavy.
