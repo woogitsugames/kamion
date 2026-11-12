@@ -1337,6 +1337,56 @@
    "perspective": "cab",
    "cab_filter": "ambient",
    "target_lufs": -22.157819309337594
+  },
+  {
+   "name": "el_turbo_whine_loop",
+   "file": "game/Assets/_Project/Audio/ElevenLabs/Clips/sfx/el_turbo_whine_loop.wav",
+   "loop": true,
+   "samples": 192000,
+   "source": "procedural turbo2.whine_loop",
+   "gain_db": 0.0,
+   "lufs": -14.0,
+   "source_prompt_id": "PROCEDURAL",
+   "group": "fx",
+   "perspective": "ext"
+  },
+  {
+   "name": "el_turbo_whine_cab_loop",
+   "file": "game/Assets/_Project/Audio/ElevenLabs/Clips/sfx/el_turbo_whine_cab_loop.wav",
+   "loop": true,
+   "samples": 192000,
+   "source": "procedural turbo2.whine_loop",
+   "gain_db": 0.0,
+   "lufs": -29.626736951377136,
+   "source_prompt_id": "PROCEDURAL",
+   "group": "fx",
+   "perspective": "cab",
+   "cab_filter": "mech"
+  },
+  {
+   "name": "el_turbo_rush_loop",
+   "file": "game/Assets/_Project/Audio/ElevenLabs/Clips/sfx/el_turbo_rush_loop.wav",
+   "loop": true,
+   "samples": 192000,
+   "source": "procedural turbo2.rush_loop",
+   "gain_db": 0.0,
+   "lufs": -11.999999999999998,
+   "source_prompt_id": "PROCEDURAL",
+   "group": "fx",
+   "perspective": "ext"
+  },
+  {
+   "name": "el_turbo_rush_cab_loop",
+   "file": "game/Assets/_Project/Audio/ElevenLabs/Clips/sfx/el_turbo_rush_cab_loop.wav",
+   "loop": true,
+   "samples": 192000,
+   "source": "procedural turbo2.rush_loop",
+   "gain_db": 0.0,
+   "lufs": -27.6181901750419,
+   "source_prompt_id": "PROCEDURAL",
+   "group": "fx",
+   "perspective": "cab",
+   "cab_filter": "mech"
   }
  ],
  "prompts": {

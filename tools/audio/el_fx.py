@@ -43,6 +43,7 @@ from el_analyze import MAIN, lufs, seam  # noqa: E402
 from el_prepare import FS, OUT, ROOT, circular_hp, fade, mono, resample_periodic, seam_loop, soft_limit, synth_lufs, write  # noqa: E402
 from el_regen01 import REGEN01, prompt_entry  # noqa: E402
 from sfx_layers import cab_filter  # noqa: E402
+import turbo2  # noqa: E402
 
 ART = ROOT / "artifacts" / "audio-fx"
 
@@ -139,6 +140,12 @@ FX: list[dict] = [
     {"name": "el_ambient_bed_loop", "src": "AMB_INDUSTRIAL_DAY (2).wav", "kind": "loop", "persp": "ext",
      "cab": "ambient", "target": "syn:ambient_bed_loop"},
 ]
+# Turbo layer (ADR 0142, owner feedback on APK 0138): procedural v2 (turbo2.py) until a REGEN-02 recording passes.
+# REGEN-02 swap: put "<ID> (n).wav" instead of None -> the take is prepared like any loop (seam, loudness) into the same
+# runtime slot. LUFS targets: full-boost exterior turbo ~10 dB under the full-load engine cell at the EngineAudio mix
+# (WORKING_VALUE).
+TURBO: dict[str, str | None] = {"whine": None, "rush": None}
+TURBO_LUFS = {"whine": -14.0, "rush": -12.0}
 # Not wired (ADR 0142 table): CAB_WIPERS_LOOP (no take keeps the asked rhythm, ADR 0138), CAB_RAIN_ROOF_LOOP (no weather
 # state), BRAKE_SQUEAL_STOP (no squeal line except (4) faintly at 5.3 kHz), BRAKE_ROLL_LOOP (every take has a burst),
 # TRAILER_RATTLE_LOOP (no trailer load / road roughness signal), AMB_PASSING_CAR (no traffic), AMB_YARD_LOGISTICS
@@ -321,6 +328,29 @@ def main() -> None:
                      else f"edges {chk['edge_start']:.4f}/{chk['edge_end']:.5f}")
             report.append(f"{name:28s} <- {c['src']:30s} {chk['dur_s']:5.2f} s {chk['lufs']:6.1f} LUFS pk {chk['peak_dbfs']:5.1f} "
                           f"{extra}{'' if not lim else f'  gain-limited {lim:.1f} dB'}{'' if not soft else f'  soft-limit {soft:.1f} dB'}  {'OK' if chk['ok'] else 'FAIL'}")
+    for part in ("whine", "rush"):
+        srcf = TURBO[part]
+        if srcf:
+            x, _ = process(src, {"src": srcf, "kind": "loop"})
+        else:
+            x = getattr(turbo2, part + "_loop")()
+        y = x * 10 ** ((TURBO_LUFS[part] - lufs(x, FS)) / 20)
+        y, lim, soft = limit(y, True)
+        z = cab_filter(y, True, "mech")
+        z, _, _ = limit(z, True)
+        for name, w, prof in ((f"el_turbo_{part}_loop", y, None), (f"el_turbo_{part}_cab_loop", z, "mech")):
+            f = write(name, "sfx", w)
+            chk = check(w, True)
+            e = {"name": name, "file": f, "loop": True, "samples": len(w), "source": srcf or f"procedural turbo2.{part}_loop",
+                 "gain_db": 0.0, "lufs": chk["lufs"], "source_prompt_id": (srcf or "PROCEDURAL").split(" (")[0], "group": "fx",
+                 "perspective": "cab" if prof else "ext"}
+            if prof:
+                e["cab_filter"] = prof
+            entries.append(e)
+            rows.append({"name": name, **chk})
+            sheet.append((name, w))
+            report.append(f"{name:28s} <- {e['source']:30s} {chk['dur_s']:5.2f} s {chk['lufs']:6.1f} LUFS pk {chk['peak_dbfs']:5.1f} "
+                          f"seam {chk['seam_jump_ratio']:.2f} hf {chk['seam_hf_spike_db']:+.1f} dB  {'OK' if chk['ok'] else 'FAIL'}")
     # manifest: replace the fx group, keep the engine set from el_prepare.py
     mp = OUT / "el_manifest.json"
     man = json.loads(mp.read_text(encoding="utf-8"))
