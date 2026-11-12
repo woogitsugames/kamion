@@ -29,3 +29,5 @@ Wynik następnej próby `house-road-paving-grime-off`: dopasowano 26 slotów `M_
 Własna ocena wszystkich pięciu właściwych PNG i niezależna ocena krytyka są zgodne co do powyższej atrybucji. Nie przyznano końcowego PASS. Próby używają nieserializowanych MaterialPropertyBlock, więc ich liczników rysowania nie używamy do wykazania budżetu. Materiały na dysku nie zostały zmienione.
 
 Nie wykazano jeszcze zgodności placu przemysłowego ze zdjęciem PCRT. Punktowa sonda GLB czeka w kolejce heavy. Fotografia ma nieustaloną dokładną pozę; nie jest kalibracją albedo ani szorstkości. Po sondażu trzeba ustawić i obejrzeć kamery placu, zapisać pełny plan kamer oraz zebrać baseline w Low/High i clear/overcast przed zmianą produktu.
+
+Niezależna kontrola dodatkowych trzech kadrów domu (stan wyjściowy, sidewalk_paving off, road_paving off) potwierdziła atrybucję publicznej nawierzchni do road_paving: duże plamy znikają, drobny wzór/spoiny/ziarnistość pozostają, podjazd za bramą zachowuje własne zabrudzenia. Krytyk obejrzał także oba logi. Ocena dotyczy pre0131, bez PASS produktu i bez wniosków o placu przemysłowym.
