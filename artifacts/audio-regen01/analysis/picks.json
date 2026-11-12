@@ -224,26 +224,26 @@
   }
  },
  "ENG_EXT_ON_SWEEP": {
-  "pick": "ENG_EXT_ON_SWEEP (2).wav",
-  "score": 29.99,
+  "pick": "ENG_EXT_ON_SWEEP (4).wav",
+  "score": 42.54,
   "meets_prompt": true,
-  "why": "line 1080->2163 rpm over 9.6 s, resid 0.7 %, monotonic 98 %, line 22.9 dB, grid [1200, 1500, 1800, 2100]",
+  "why": "line 904->1772 rpm over 6.4 s, resid 0.8 %, monotonic 91 %, line 22.7 dB, octave-consistent 100 %, grid [900, 1200, 1500, 1800]",
   "ranking": [
    [
+    "ENG_EXT_ON_SWEEP (4).wav",
+    42.54
+   ],
+   [
     "ENG_EXT_ON_SWEEP (2).wav",
-    29.99
+    36.65
    ],
    [
     "ENG_EXT_ON_SWEEP (3).wav",
-    28.7
-   ],
-   [
-    "ENG_EXT_ON_SWEEP (4).wav",
-    27.54
+    31.43
    ],
    [
     "ENG_EXT_ON_SWEEP (1).wav",
-    15.27
+    19.02
    ]
   ],
   "prompt": {
@@ -256,26 +256,26 @@
   }
  },
  "ENG_CAB_ON_SWEEP": {
-  "pick": "ENG_CAB_ON_SWEEP (2).wav",
-  "score": 25.9,
+  "pick": "ENG_CAB_ON_SWEEP (3).wav",
+  "score": 32.47,
   "meets_prompt": false,
-  "why": "line 1180->2752 rpm over 17.0 s, resid 1.1 %, monotonic 77 %, line 15.0 dB, grid [1200, 1500, 1800, 2100]",
+  "why": "line 1382->2424 rpm over 9.5 s, resid 1.0 %, monotonic 66 %, line 22.5 dB, octave-consistent 67 %, grid [1500, 1800, 2100]",
   "ranking": [
    [
-    "ENG_CAB_ON_SWEEP (2).wav",
-    25.9
+    "ENG_CAB_ON_SWEEP (3).wav",
+    32.47
    ],
    [
-    "ENG_CAB_ON_SWEEP (3).wav",
-    22.47
+    "ENG_CAB_ON_SWEEP (2).wav",
+    31.2
    ],
    [
     "ENG_CAB_ON_SWEEP (4).wav",
-    18.22
+    24.65
    ],
    [
     "ENG_CAB_ON_SWEEP (1).wav",
-    14.52
+    16.19
    ]
   ],
   "prompt": {

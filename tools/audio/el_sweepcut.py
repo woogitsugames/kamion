@@ -16,9 +16,9 @@ import numpy as np
 from scipy import signal
 from scipy.interpolate import CubicSpline
 
-MAX_DEV = 0.10     # max |f/f_R - 1| inside a cut segment (the warp never stretches more than this)
-MIN_LEN_S = 0.8
-MAX_LEN_S = 4.0
+MAX_DEV = 0.20     # max |f/f_R - 1| inside a cut segment (local warp 0.83-1.25; the 0137 loops were shifted x0.68-x1.90 whole)
+MIN_LEN_S = 3.4     # output loops must be > 3 s (ElevenLabsEngineAudioTests: not heard as a loop)
+MAX_LEN_S = 5.0
 
 
 def smooth_track(t: np.ndarray, f: np.ndarray, frames: int = 31) -> np.ndarray:
@@ -90,3 +90,27 @@ def flatten_level(y: np.ndarray, fs: int, win_s: float = 0.05, smooth_s: float =
     g = np.exp(np.mean(es) - es)
     gs = np.interp(np.arange(len(y)), (np.arange(n) + 0.5) * w, g)
     return y * gs, float(20 * np.log10(g.max() / g.min()))
+
+
+def stretch_psola(y: np.ndarray, fs: int, f_line: float, out_len: int, grain_s: float = 0.08, seed: int = 138) -> np.ndarray:
+    """Pitch-synchronous overlap-add time stretch of a flattened segment (constant line f_line) to out_len samples.
+    Grains (Hann, 50 % overlap) are read from positions that advance len(y)/out_len slower than they are written, with
+    a seeded jitter of +-1.5 line periods, and every read offset is snapped to a whole number of line periods relative
+    to the write position, so the line keeps its phase across grains (no beating) while the noise texture does not
+    repeat at the source length. Used only where the segment of a fast part of the sweep is shorter than a loop needs."""
+    rng = np.random.default_rng(seed)
+    per = fs / f_line
+    g = int(grain_s * fs) // 2 * 2
+    hop = g // 2
+    win = np.hanning(g)
+    out = np.zeros(out_len + g)
+    norm = np.zeros(out_len + g)
+    rate = (len(y) - g) / max(1, out_len - g)
+    for o in range(0, out_len, hop):
+        s = o * rate + rng.uniform(-1.5, 1.5) * per
+        k = np.round((s - o) / per)
+        s = int(round(o + k * per))
+        s = min(max(s, 0), len(y) - g)
+        out[o:o + g] += y[s:s + g] * win
+        norm[o:o + g] += win
+    return out[:out_len] / np.maximum(norm[:out_len], 1e-3)

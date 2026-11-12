@@ -4,12 +4,12 @@ el_engine_ext_off_1200       <- ENG_EXT_OFF_1500 (4).wav     measured    883 rpm
 el_engine_ext_off_1500       <- ENG_EXT_OFF_1500 (3).wav     measured    933 rpm  x1.607  span 2.1%  -14.6 dB -> -32.3 LUFS  limit 0.0 dB
 el_engine_ext_off_1800       <- ENG_EXT_OFF_900 (4).wav      measured   1108 rpm  x1.625  span 10.3%  +4.5 dB -> -30.4 LUFS  limit 0.0 dB
 el_engine_ext_off_2100       <- ENG_EXT_OFF_900 (4).wav      measured   1108 rpm  x1.896  span 10.3%  +7.4 dB -> -27.2 LUFS  limit 0.0 dB
-el_engine_ext_on_0600        <- ENG_EXT_ON_SWEEP (4).wav     steady  6.00- 8.80 s measured    763 rpm  warp 0.787-0.787  level flat 2.7 dB  +5.4 dB -> -27.9 LUFS  limit 0.0 dB
-el_engine_ext_on_0900        <- ENG_EXT_ON_SWEEP (4).wav     steady  6.00- 8.80 s measured    763 rpm  warp 1.180-1.180  level flat 2.4 dB  +7.7 dB -> -24.3 LUFS  limit 0.0 dB
-el_engine_ext_on_1200        <- ENG_EXT_ON_SWEEP (4).wav     rise    9.85-11.35 s measured   1207 rpm  warp 0.911-1.101  level flat 3.4 dB  +4.1 dB -> -21.3 LUFS  limit 0.0 dB
-el_engine_ext_on_1500        <- ENG_EXT_ON_SWEEP (4).wav     rise   11.90-13.90 s measured   1471 rpm  warp 0.914-1.111  level flat 3.1 dB  +1.5 dB -> -20.1 LUFS  limit 0.0 dB
-el_engine_ext_on_1800        <- ENG_EXT_ON_SWEEP (4).wav     rise   13.85-15.40 s measured   1716 rpm  warp 1.016-1.106  level flat 0.8 dB  +0.7 dB -> -18.1 LUFS  limit 0.0 dB
-el_engine_ext_on_2100        <- ENG_EXT_ON_SWEEP (4).wav     top    13.75-15.40 s measured   1710 rpm  warp 1.185-1.310  level flat 0.8 dB  +3.6 dB -> -15.0 LUFS  limit 0.0 dB
+el_engine_ext_on_0600        <- ENG_EXT_ON_SWEEP (4).wav     steady  5.00- 9.00 s measured    825 rpm  warp 0.631-0.810  level flat 9.0 dB  stretch x1.00  +5.5 dB -> -27.9 LUFS  limit 0.0 dB
+el_engine_ext_on_0900        <- ENG_EXT_ON_SWEEP (4).wav     steady  5.00- 9.00 s measured    825 rpm  warp 0.946-1.215  level flat 8.5 dB  stretch x1.00  +7.8 dB -> -24.3 LUFS  limit 0.0 dB
+el_engine_ext_on_1200        <- ENG_EXT_ON_SWEEP (4).wav     rise    9.25-12.70 s measured   1236 rpm  warp 0.836-1.244  level flat 7.5 dB  stretch x1.01  +3.9 dB -> -21.3 LUFS  limit 0.0 dB
+el_engine_ext_on_1500        <- ENG_EXT_ON_SWEEP (4).wav     rise   10.60-15.40 s measured   1501 rpm  warp 0.846-1.241  level flat 7.6 dB  stretch x1.00  +1.2 dB -> -20.1 LUFS  limit 0.0 dB
+el_engine_ext_on_1800        <- ENG_EXT_ON_SWEEP (4).wav     top    12.65-15.40 s measured   1632 rpm  warp 1.016-1.265  level flat 3.0 dB  stretch x1.44  +2.1 dB -> -18.1 LUFS  limit 0.0 dB
+el_engine_ext_on_2100        <- ENG_EXT_ON_SWEEP (4).wav     top    12.65-15.40 s measured   1632 rpm  warp 1.185-1.476  level flat 3.1 dB  stretch x1.68  +5.0 dB -> -15.0 LUFS  limit 0.0 dB
 el_engine_cab_off_0600       <- ENG_CAB_IDLE_SLOW (4).wav    measured    723 rpm  x0.830  span 9.2%  -2.6 dB -> -38.9 LUFS  limit 0.0 dB
 el_engine_cab_off_0900       <- ENG_CAB_OFF_2100 (2).wav     measured   1045 rpm  x0.861  span 4.6%  +3.4 dB -> -34.0 LUFS  limit 0.0 dB
 el_engine_cab_off_1200       <- ENG_CAB_OFF_1800 (3).wav     measured   1218 rpm  x0.985  span 10.2%  +6.2 dB -> -31.2 LUFS  limit 0.0 dB

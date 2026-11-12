@@ -44,7 +44,7 @@ import soundfile as sf  # noqa: E402
 from scipy import signal  # noqa: E402
 from scipy.ndimage import median_filter  # noqa: E402
 
-from el_analyze import MAIN, NAME_RE, analyse, db, lufs, prominence_db, seam, welch_db  # noqa: E402
+from el_analyze import MAIN, NAME_RE, analyse, db, lufs, prominence_db, seam, welch_db, yin_f0  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -163,9 +163,10 @@ def salience_track(x: np.ndarray, fs: int, fmin: float = 15.0, fmax: float = 140
 
 
 def line_follow(x: np.ndarray, fs: int, t0: float, t1: float, band: tuple[float, float], win_s: float = 0.4,
-                hop_s: float = 0.05, tol: float = 0.06) -> dict:
+                hop_s: float = 0.05, tol: float = 0.06, fixed: bool = False) -> dict:
     """Follow one spectral line from t0 to t1: start at the strongest peak in `band` at t0, then each frame take the
-    strongest peak within +-tol of the previous frequency (parabolic interpolation). Returns t, f0, sal (prominence dB)."""
+    strongest peak within +-tol of the previous frequency (parabolic interpolation); fixed=True searches the whole band
+    every frame (steady windows). Returns t, f0, sal (prominence dB)."""
     w, h = int(win_s * fs), int(hop_s * fs)
     nfft = 1 << 18
     ff = np.fft.rfftfreq(nfft, 1 / fs)
@@ -179,7 +180,7 @@ def line_follow(x: np.ndarray, fs: int, t0: float, t1: float, band: tuple[float,
     for i0 in range(max(0, int(t0 * fs) - w // 2), min(len(x) - w, int(t1 * fs) - w // 2) + 1, h):
         X = 20 * np.log10(np.abs(np.fft.rfft(x[i0:i0 + w] * win, nfft))[:hi_all] + 1e-12)
         prom = X - median_filter(X, medw, mode="nearest")
-        lo, hi = band if f_prev is None else (f_prev * (1 - tol), f_prev * (1 + tol))
+        lo, hi = band if (f_prev is None or fixed) else (f_prev * (1 - tol), f_prev * (1 + tol))
         a, b = max(lo_all, int(lo / df)), int(hi / df)
         j = a + int(np.argmax(X[a:b]))
         y0, y1, y2 = X[j - 1], X[j], X[j + 1]
@@ -220,7 +221,15 @@ def sweep_window_metrics(x: np.ndarray, fs: int, name: str) -> tuple[dict, dict]
          "rise_rate_rpm_s": float(np.median(d[d > 0]) / 0.05) if (d > 0).any() else 0.0,
          "track_resid_pct": float(resid), "monotonic_frac": mono, "line_prom_db": float(np.median(tr["sal"])),
          "grid_covered": grid}
-    r["usable"] = bool(len(grid) >= 3 and resid < 2.0 and mono >= 0.85 and r["line_prom_db"] >= 10)
+    # octave check: in 1 s chunks of the window the period (YIN) must match the followed line / k, otherwise loops cut
+    # here are heard an octave below the grid (a constant partial at half the line runs through ENG_EXT_ON_SWEEP (2)/(3))
+    ok = []
+    for c0 in np.arange(t0, t1 - 1.0 + 1e-6, 1.0):
+        fy, ap = yin_f0(x[int(c0 * fs): int((c0 + 1.0) * fs)], fs)
+        fl = float(np.median(tr["f0"][(tr["t"] >= c0) & (tr["t"] < c0 + 1.0)])) / k
+        ok.append(ap < 0.45 and 0.85 < fy / fl < 1.18)
+    r["octave_ok_frac"] = float(np.mean(ok)) if ok else 0.0
+    r["usable"] = bool(len(grid) >= 3 and resid < 2.0 and mono >= 0.85 and r["line_prom_db"] >= 10 and r["octave_ok_frac"] >= 0.6)
     return r, tr
 
 
@@ -362,7 +371,7 @@ def score(r: dict) -> float:
         return score_engine(r)
     if fid in SWEEPS:
         return (len(r["grid_covered"]) * 3 + r["line_prom_db"] / 3 - 4 * r["track_resid_pct"] + 10 * r["monotonic_frac"]
-                + (r["win_t1"] - r["win_t0"]) / 3)
+                + (r["win_t1"] - r["win_t0"]) / 3 + 15 * r["octave_ok_frac"])
     if fid == "TURBO_WHISTLE_LOOP":
         return r["whistle_prom_db"] - r["whistle_span_pct"] - 0.2 * r["lf_share_pct"]
     if fid == "ENG_STOP_CAB":
@@ -391,7 +400,7 @@ def requirement(fid: str, r: dict) -> tuple[bool, str]:
     if fid in SWEEPS:
         return r["usable"], (f"line {r['rpm_lo']:.0f}->{r['rpm_hi']:.0f} rpm over {r['win_t1'] - r['win_t0']:.1f} s, "
                              f"resid {r['track_resid_pct']:.1f} %, monotonic {100 * r['monotonic_frac']:.0f} %, "
-                             f"line {r['line_prom_db']:.1f} dB, grid {r['grid_covered']}")
+                             f"line {r['line_prom_db']:.1f} dB, octave-consistent {100 * r['octave_ok_frac']:.0f} %, grid {r['grid_covered']}")
     if fid == "TURBO_WHISTLE_LOOP":
         ok = r["whistle_prom_db"] >= 12 and r["whistle_span_pct"] <= 3
         return ok, f"line {r['whistle_hz']:.0f} Hz at {r['whistle_prom_db']:.1f} dB over floor (>= 12), span {r['whistle_span_pct']:.1f} %"

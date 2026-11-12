@@ -32,7 +32,7 @@ from scipy import signal
 
 from el_analyze import MAIN, comb_estimate, lufs, track
 from el_regen01 import REGEN01, line_follow, prompt_entry
-from el_sweepcut import MAX_LEN_S, choose_segment, flatten_level, smooth_track, top_segment, warp_to_constant
+from el_sweepcut import MAX_LEN_S, choose_segment, flatten_level, smooth_track, stretch_psola, top_segment, warp_to_constant
 from sfx_layers import cab_filter
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -58,14 +58,14 @@ ENGINE_PICK: dict[tuple[str, str, int], str | None] = {
 }
 # ADR 0138: rows cut from one REGEN-01 sweep (one machine, consistent timbre across the row) instead of picking loops.
 # rise = (t0, t1, start band Hz, harmonic number of the followed line), steady = windows for targets outside the rise
-# (idle before it). Windows authored from artifacts/audio-regen01/analysis/sheets/ENG_EXT_ON_SWEEP.png. Sweep choice:
-# el_regen01 ranks (2) first (1080->2163 rpm, monotonic 98 %), but its cells at 1500/1800 are periodic an octave below the
-# grid line (YIN ratio 0.49/0.51 at aperiodicity 0.39/0.26: a constant ~46 Hz partial runs through the whole rise);
-# (4) (904->1772 rpm, monotonic 91 %, line 22.7 dB) has YIN ratio 1.00/1.01 at 1200/1500 (artifacts/audio-regen01/sweepcut.txt).
-# ENG_CAB_ON_SWEEP: no variant rises monotonically (66-77 %), the cab/on row keeps picked loops.
+# (idle before it). Windows authored from artifacts/audio-regen01/analysis/sheets/ENG_EXT_ON_SWEEP.png. Sweep = el_regen01
+# rank 1: ENG_EXT_ON_SWEEP (4), 904->1772 rpm, monotonic 91 %, line 22.7 dB, period (YIN) = line in 100 % of 1 s chunks.
+# (2)/(3) rise further but carry a constant ~46 Hz partial: their 1500/1800 cells are periodic an octave low (YIN 0.49/0.51).
+# ENG_CAB_ON_SWEEP: no variant rises monotonically (25-77 %) with a consistent period, the cab/on row keeps picked loops.
+LOOP_MIN_S = 3.6  # output loop length floor (> 3 s asserted by ElevenLabsEngineAudioTests, + seam crossfade margin)
 SWEEP_ROWS: dict[tuple[str, str], dict] = {
     ("ext", "on"): {"file": "ENG_EXT_ON_SWEEP (4).wav", "rise": (9.0, 15.4, (40, 50), 1),
-                    "steady": (6.0, 8.8, (35, 45), 1)},
+                    "steady": (5.0, 9.0, (36, 46), 1)},
 }
 EVENTS = {
     # name in game          : (source file, kind, target)  target = LUFS or "rel:<db>" relative to a synth clip
@@ -215,7 +215,7 @@ def score(c: dict, target: int) -> float:
 
 def sweep_cell(src: Path, cfg: dict, rpm: int) -> tuple[np.ndarray, dict]:
     """One grid cell cut from a sweep (el_sweepcut). Inside the rise: flattened segment around rpm. Above it: the top
-    of the rise, flattened and shifted up. Below it: the authored steady (idle) window, plain pitch shift."""
+    of the rise, flattened and shifted up. Below it: the authored steady (idle) window, flattened and shifted down."""
     sos = signal.butter(2, 25.0, "hp", fs=FS, output="sos")
     x = signal.sosfiltfilt(sos, mono(src / cfg["file"]))
     f_t = rpm / 20.0
@@ -227,13 +227,16 @@ def sweep_cell(src: Path, cfg: dict, rpm: int) -> tuple[np.ndarray, dict]:
         seg, kind = top_segment(t, fsm), "top"
     if seg is None:
         s0, s1, sband, sk = cfg["steady"]
-        st = line_follow(x, FS, s0, s1, sband, tol=0.02)
-        f_idle = float(np.median(st["f0"])) / sk
+        st = line_follow(x, FS, s0, s1, sband, fixed=True)
+        t, fsm = st["t"], smooth_track(st["t"], st["f0"] / sk)
         mid, half = 0.5 * (s0 + s1), min(MAX_LEN_S, s1 - s0) / 2
-        seg, kind = (mid - half, mid + half), "steady"
-        t, fsm = np.array([s0, s1]), np.array([f_idle, f_idle])  # steady: constant ratio
+        seg, kind = (max(mid - half, float(t[0])), min(mid + half, float(t[-1]))), "steady"
     y, info = warp_to_constant(x, FS, t, fsm, seg[0], seg[1], f_t)
     y, info["level_flatten_db"] = flatten_level(y, FS)
+    info["stretch"] = 1.0
+    if len(y) < int(LOOP_MIN_S * FS):  # fast part of the sweep: PSOLA-stretch to a loop that is not heard as a loop
+        info["stretch"] = LOOP_MIN_S * FS / len(y)
+        y = stretch_psola(y, FS, f_t, int(LOOP_MIN_S * FS))
     info["segment_kind"] = kind
     return seam_loop(y), info
 
@@ -273,7 +276,7 @@ def main() -> None:
                                   "sweep_segment": info})
                     report.append(f"{name:28s} <- {cfg['file']:28s} {info['segment_kind']:6s} {info['seg_t0']:5.2f}-{info['seg_t1']:5.2f} s "
                                   f"measured {info['rpm_measured_mean']:6.0f} rpm  warp {info['warp_min']:.3f}-{info['warp_max']:.3f}  "
-                                  f"level flat {info['level_flatten_db']:.1f} dB  "
+                                  f"level flat {info['level_flatten_db']:.1f} dB  stretch x{info['stretch']:.2f}  "
                                   f"{gain:+.1f} dB -> {target:.1f} LUFS  limit {lim:.1f} dB")
                     continue
                 pick = ENGINE_PICK.get((persp, layer, rpm))
