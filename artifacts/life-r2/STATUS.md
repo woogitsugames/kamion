@@ -87,3 +87,5 @@ Krok 35: do porównania B dodano kontrolę SHA pełnych PNG odziedziczonych zbli
 Iteracja B (2026-11-12T02:19:36.3229383+01:00): World B zakończony 0, brak fallback=True. Następna kontrola zakresu i prototypów. Następne etapy w run-b-after-world.ps1, REPORT po oględzinach i testach końcowych.
 
 Krok 36: ADR zaktualizowany do zakończonego World B (424,7 s, 0, brak fallback=True) i rozróżnia wdrożoną ścieżkę od jeszcze niewykonanego dowodu native. Manifest zawiera oczekiwane nowe flagi materiałów; nie twierdzimy, że cały manifest jest bajtowo identyczny. Niezmienność raw/geometrii sprawdzi istniejący scope-b w sesji 36998. Następny krok: odebrać ten proces, następnie import/capture i ocena B.
+
+Iteracja B (2026-11-12T02:22:41.6013101+01:00): Audyt zakresu B i 192 produktów raw zakończony 0. Następne etapy w run-b-after-world.ps1, REPORT po oględzinach i testach końcowych.
