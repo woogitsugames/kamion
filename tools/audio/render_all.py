@@ -26,6 +26,8 @@ from dsp import FS
 
 ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / "art-source" / "audio" / "generated"
+# ADR 0145: clip loudness (LUFS ext, cab) of the tyre slip layers, shared with the REGEN-03 recordings (el_fx.py)
+TYRE_SLIP_LUFS = {"tyre_squeal_loop": (-16.0, -20.0), "tyre_scrub_loop": (-18.0, -22.0)}
 PREV = ROOT / "art-source" / "audio" / "previews"
 
 RPM_GRID = list(range(600, 2101, 100))
@@ -157,8 +159,18 @@ def main() -> None:
         x = limit(x * (ref_rms / dsp.rms(x)))  # equal RMS; per-surface level lives in the game's surface table
         write_sfx(name, x, True, "ext", "tyre")
         write_sfx(name.replace("_loop", "_cab_loop"), limit(sl.cab_filter(x, True, "road")), True, "cab", "tyre")
-    write_sfx("tyre_squeal_loop", norm_peak(sl.tyre_squeal_loop(), True), True, "ext", "tyre")
-    write_sfx("tyre_squeal_cab_loop", limit(sl.cab_filter(norm_peak(sl.tyre_squeal_loop(), True), True, "road")), True, "cab", "tyre")
+    # ADR 0145: squeal v2 (noise, no 930 Hz line) + tyre scrub (trailer axles dragged sideways in tight slow turns),
+    # placeholders for the REGEN-03 recordings. Loudness-normalised (BS.1770) to the same clip LUFS as the recordings
+    # (el_fx.REGEN03_SLOTS), so the runtime volumes mean the same in both sets.
+    from el_analyze import lufs as _lufs
+    for name, fn in (("tyre_squeal_loop", sl.tyre_squeal_loop), ("tyre_scrub_loop", sl.tyre_scrub_loop)):
+        ext_l, cab_l = TYRE_SLIP_LUFS[name]
+        x = fn()
+        x = limit(x * 10 ** ((ext_l - _lufs(x, FS)) / 20))
+        z = sl.cab_filter(x, True, "road")
+        z = limit(z * 10 ** ((cab_l - _lufs(z, FS)) / 20))
+        write_sfx(name, x, True, "ext", "tyre")
+        write_sfx(name.replace("_loop", "_cab_loop"), z, True, "cab", "tyre")
     for name, fn, prof in (("retarder_loop", sl.retarder_loop, "mech"), ("compressor_loop", sl.compressor_loop, "mech"),
                            ("ambient_bed_loop", sl.ambient_industrial_bed_loop, "ambient"),
                            ("forklift_loop", sl.forklift_loop, "ambient")):
