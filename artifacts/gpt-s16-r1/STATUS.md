@@ -14,3 +14,5 @@ Pomiar GPU/telefon: UNVERIFIED, należy do lidera. Limit pracy:12h od22:34, oko�
 Dodatkowe kamery: before/Low-clear zapisane.
 
 Sprzątnięto trzy własne, zastąpione pliki diagnostyki linii widzenia (C#,meta,Python); końcowy dobór pozycji używa GPU. Historia prób i odrzucone obrazy pozostają jawne. Pomiar katalogów: before1.54GB,after1.54GB,clear-rejected0.412GB; kompaktowe456par22.4MB. Bez usuwania danych współdzielonych.
+
+Dodatkowe kamery: before/Low-overcast zapisane.
