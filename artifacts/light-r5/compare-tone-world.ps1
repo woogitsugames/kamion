@@ -1,4 +1,4 @@
-param([string]$Series='tone-world-v3')
+param([string]$Series='tone-world-v3',[switch]$Native)
 $ErrorActionPreference='Stop'
 $repo=[IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..'))
 Set-Location $repo
@@ -28,8 +28,10 @@ foreach($preset in 'clear','overcast','night'){
     $baseline="$root/Low-$preset";$candidate="$root/Low-$preset-lut32";$high="$root/High-$preset"
     $b=ReadBudget "$baseline/stats.txt";$a=ReadBudget "$candidate/stats.txt"
     if($a.Count -ne 12 -or $b.Count -ne 12){throw 'Expected12 route cameras'}
+    $hdr="$root/High-HDR-$preset"
     $proof=Get-Content "$candidate/opaque-grade-proof.json" -Raw|ConvertFrom-Json
     if($proof.frames.Count -ne 12 -or @($proof.frames|Where-Object {$_.enabled -ne 1 -or $_.physicalCaptureBypass -ne 0}).Count){throw 'Incomplete actual LUT proof'}
+    if($Native){$hp=Get-Content "$hdr/hdr-reference-proof.json" -Raw|ConvertFrom-Json;if($hp.frames.Count -ne 12 -or @($hp.frames|Where-Object {$_.colorBeforePostFormat -ne "R16G16B16A16_SFloat"}).Count){throw "Invalid actual HDR proof"}}
     $thumbs=@();$ids=@($a.Keys|Sort-Object)
     foreach($id in $ids){
         if(-not $b.ContainsKey($id)){throw 'Camera mismatch'}
@@ -38,8 +40,10 @@ foreach($preset in 'clear','overcast','night'){
         $tri=100.0*($y.triangles+$y.instancedTriangles-$x.triangles-$x.instancedTriangles)/[Math]::Max(1,$x.triangles+$x.instancedTriangles)
         $budget+=@{preset=$preset;camera=$id;before=$x;after=$y;totalDrawDelta=$draw;totalTriangleDeltaPercent=$tri}
         $pixels+=@{preset=$preset;camera=$id;highVsBaseline=(Difference "$high/$id.png" "$baseline/$id.png");highVsCandidate=(Difference "$high/$id.png" "$candidate/$id.png")}
+        if($Native){$pixels[-1].hdrVsBaseline=Difference "$hdr/$id.png" "$baseline/$id.png";$pixels[-1].hdrVsCandidate=Difference "$hdr/$id.png" "$candidate/$id.png";$pixels[-1].hdrVsLegacy=Difference "$hdr/$id.png" "$high/$id.png"}
         $cube+=@{preset=$preset;camera=$id;difference=(Difference "$baseline/${id}_envcube.png" "$candidate/${id}_envcube.png")}
-        foreach($variant in @(@{name='High';path=$high},@{name='Low baseline';path=$baseline},@{name='Low LUT32';path=$candidate})){
+        $variants=@(@{name='High legacy';path=$high},@{name='Low baseline';path=$baseline},@{name='Low LUT32';path=$candidate});if($Native){$variants=@(@{name='High HDR';path=$hdr})+$variants}
+        foreach($variant in $variants){
             $thumb="$out/thumbs/$preset-$id-$($variant.name.Replace(' ','-')).jpg"
             & magick @limits "$($variant.path)/$id.png" -resize '780x360!' -background '#dddddd' -fill black -gravity south -splice 0x24 -pointsize 16 -annotate +0+3 "$id | $($variant.name)" -quality 94 $thumb
             if($LASTEXITCODE){throw 'Thumbnail failed'}
@@ -48,7 +52,8 @@ foreach($preset in 'clear','overcast','night'){
     }
     for($i=0;$i -lt 4;$i++){
         $sheet="$out/$preset-$($i+1).jpg"
-        & magick montage @limits $thumbs[($i*9)..($i*9+8)] -tile 3x3 -geometry +2+2 -background '#dddddd' $sheet
+        $columns=if($Native){4}else{3};$perSheet=$columns*3
+        & magick montage @limits $thumbs[($i*$perSheet)..($i*$perSheet+$perSheet-1)] -tile "${columns}x3" -geometry +2+2 -background '#dddddd' $sheet
         if($LASTEXITCODE){throw 'Montage failed'}
         $sheets+=@{preset=$preset;sheet=$sheet;cameras=$ids[($i*3)..($i*3+2)]}
     }
@@ -61,4 +66,5 @@ $sheets|ConvertTo-Json -Depth 5|Set-Content "$out/index.json" -Encoding utf8
 if(@($budget|Where-Object {$_.totalDrawDelta -gt 0 -or $_.totalTriangleDeltaPercent -gt 2}).Count){throw 'Budget regression'}
 $budget|Group-Object totalDrawDelta,totalTriangleDeltaPercent|Select-Object Count,Name
 $cube|ForEach-Object {$_.difference}|Measure-Object mean,max -Maximum
+
 
