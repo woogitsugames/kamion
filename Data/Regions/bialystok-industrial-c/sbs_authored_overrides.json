@@ -306,11 +306,16 @@
     "sbs-g3-b-3281350541967811": {
       "horizon_y_fraction": 0.68,
       "pose_status": "WORKING_VALUE",
-      "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose.",
+      "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. ADR 0130: resection: GUGiK/generated portal (-260.8,-208.3) span 16 m, leg bearings + EC chimney bearings (heading = SfM within 0.1 deg); GPS of zsolt 2017 sequence ~73 m ahead along Andersa. Generated road asphalt U 130.2547 m (chunk GLB ray) + eye 1.4 m; rectified horizon 0.77 measured on the rectified photo (supersedes horizon_y_fraction). WORKING_VALUE, not surveyed.",
       "pose_confidence": "B",
-      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "pose_reason": "ADR 0130 (s12): calibrated from diagnostic probe r2 a0; anchors: lattice portal behind, over the left (northbound) carriageway: leg x 0.145/0.434 photo vs 0.14/0.43 render; long low hall at the left edge and low white building block right at the horizon; road vanishing point / horizon 0.77",
       "photometric_use": false,
-      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict",
+      "east_delta_m": -60.9826,
+      "north_delta_m": 40.3995,
+      "eye_height_m": 1.4,
+      "absolute_u_m": 131.6547,
+      "rectified_horizon_y_fraction": 0.77
     },
     "sbs-g3-b-275528677534382": {
       "horizon_y_fraction": 0.52,
@@ -337,11 +342,17 @@
     "sbs-g3-b-297817221966185": {
       "horizon_y_fraction": 0.68,
       "pose_status": "WORKING_VALUE",
-      "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose.",
+      "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. ADR 0130: resection: portal legs + EC chimneys x 0.742/0.762 -> heading +1.15 deg; position ~85 m back from GPS (same sequence offset as 3281350, 2.7 s earlier). Generated road asphalt U 131.4753 m (chunk GLB ray) + eye 1.4 m; rectified horizon 0.75 measured on the rectified photo (supersedes horizon_y_fraction). WORKING_VALUE, not surveyed.",
       "pose_confidence": "B",
-      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "pose_reason": "ADR 0130 (s12): calibrated from diagnostic probe r2 b0; anchors: same portal far ahead in the image centre (x 0.445-0.566 photo / 0.44-0.56 render); blue industrial hall at the left edge x 0-0.2 in both; horizon 0.75",
       "photometric_use": false,
-      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict",
+      "east_delta_m": -68.8763,
+      "north_delta_m": 49.557,
+      "eye_height_m": 1.4,
+      "absolute_u_m": 132.8753,
+      "rectified_horizon_y_fraction": 0.75,
+      "heading_delta_deg": 1.15
     },
     "sbs-g3-b-3678296072299092": {
       "horizon_y_fraction": 0.58,
@@ -454,13 +465,16 @@
     "sbs-g3-b-494288258686575": {
       "horizon_y_fraction": 0.66,
       "pose_status": "WORKING_VALUE",
-      "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R2: photo visibly on Putry deck. Existing generated bridge road asphalt vertical ray at stored EN hits absolute U 140.188m (artifacts/sbs-gate3/deck-ray-heights.json), add nominal eye 1.7m; keep computed GPS because original GPS is outside deck asphalt. Camera only; WORKING_VALUE eye, no world modification.",
-      "absolute_u_m": 141.888,
+      "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R2: photo visibly on Putry deck. Existing generated bridge road asphalt vertical ray at stored EN hits absolute U 140.188m (artifacts/sbs-gate3/deck-ray-heights.json), add nominal eye 1.7m; keep computed GPS because original GPS is outside deck asphalt. Camera only; WORKING_VALUE eye, no world modification. ADR 0130: 3 m right on the Putry deck (right lane, still road_asphalt in the generated deck); deck height from generated chunk GLB ray + 1.7 m. Generated road asphalt U 140.1491 m (chunk GLB ray) + eye 1.7 m; rectified horizon 0.72 measured on the rectified photo (supersedes horizon_y_fraction). WORKING_VALUE, not surveyed.",
+      "absolute_u_m": 141.8491,
       "eye_height_m": 1.7,
       "pose_confidence": "B",
-      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "pose_reason": "ADR 0130 (s12): calibrated from diagnostic probe r2 c1/c2 (between); anchors: dark screen posts close at the right receding to x ~0.2 at the horizon; median barrier and second deck at the left edge; horizon 0.72",
       "photometric_use": false,
-      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict",
+      "east_delta_m": 1.8054,
+      "north_delta_m": 2.3959,
+      "rectified_horizon_y_fraction": 0.72
     },
     "sbs-g3-b-182011943700132": {
       "horizon_y_fraction": 0.62,
@@ -474,11 +488,16 @@
     "sbs-g3-b-1801374876712141": {
       "horizon_y_fraction": 0.62,
       "pose_status": "WORKING_VALUE",
-      "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose.",
+      "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. ADR 0130: forward 20 m along Al. Tysiaclecia (heading 350); horizon from far road/treeline. Generated road asphalt U 135.7268 m (chunk GLB ray) + eye 2.2 m; rectified horizon 0.56 measured on the rectified photo (supersedes horizon_y_fraction). WORKING_VALUE, not surveyed.",
       "pose_confidence": "B",
-      "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+      "pose_reason": "ADR 0130 (s12): calibrated from diagnostic probe r1 d3 / r2 d0; anchors: noise screen starts close at the right edge (x 0.75-1.0, top y ~0.3); wide grass median with the opposite carriageway at x 0-0.3 on the left; horizon 0.56",
       "photometric_use": false,
-      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
+      "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict",
+      "east_delta_m": -3.473,
+      "north_delta_m": 19.6962,
+      "eye_height_m": 2.2,
+      "absolute_u_m": 137.9268,
+      "rectified_horizon_y_fraction": 0.56
     },
     "sbs-g3-a-cm109685822": {
       "pose_confidence": "C",
