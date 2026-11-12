@@ -1,0 +1,4 @@
+Runda 4 — edge, start 12.11 09:42. Gałąź gpt-edge-r4, jeden dotychczasowy worktree. Baza: merge 432d5675 z main c882f81c; poprzednia runda f846fe72 przekazana z REPORT i receipt 1072 plików.
+Priorytet: odtworzyć nowy main z chmurami i rozpoznać szary klin clear w 2948/303305. Najpierw pełne Before i maski Apron/FarField; żadnej korekty wysokości/mgły przed identyfikacją geometrii. 2948 klasa C wyłącznie do diagnostyki. Kod produkcyjny jeszcze bez nowej zmiany r4.
+Zakres pozostaje edge. Regionalnych bloków, roślinności, dróg, barier, SBS i światła nie edytujemy. Bez push, merge do main i telefonów. Deadline pierwotny 21:31, bez przedłużenia o restart.
+Przygotowanie: osobny heavy slot przed build_all i build_world, jeden wątek bibliotek numerycznych, odświeżenie tylko niezmiennych wejść. Następnie pełny import Unity pod centralnym slotem gpt-edge, odtworzenie generowanych prefabów i macierz Before. Obce pochodne zostaną odtworzone po walidacji rundy.
