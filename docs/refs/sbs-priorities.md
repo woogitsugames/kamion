@@ -1,6 +1,6 @@
 # SBS — priorytety odstępstw od zdjęć, r3
 
-Aktualizacja: 12.11.2026 około 02:43, gałąź gpt-sbs-r3. Baza main 9874d98c, merge 31988772. Jest to ranking wejściowy z recenzji i obejrzanych dowodów ADR 0125, przed własnym renderem nowego świata r3. Nie należy czytać go jako nowego wyniku bramki ani dowodu, że stare braki nadal występują po scaleniach. Po renderach każda pozycja otrzyma potwierdzenie albo zmianę statusu.
+Aktualizacja: 12.11.2026 około 09:26, gałąź gpt-sbs-r3. Źródła świata z main 9874d98c; aktualny main 14ccbaf1 dodaje tylko obsługę slotów i integracji. Pełny render 168 raw z HEAD 62d45b92 jest gotowy. Ranking łączy wskazane recenzje z częściową świeżą kontrolą czterech klatek i 18 prób diagnostycznych, które nadal są C. Pozostałe pozycje wymagają przeglądu całego zestawu; nie jest to nowy pełny wynik bramki.
 
 Kryterium D51: rozpoznanie miejsca przez kierowcę znającego trasę. Niebo, ekspozycja, odcień trawy i kosmetyka materiałów nie blokują same w sobie. Nie szeregujemy świata według błędu histogramu. Metryki r2 są porównywalne tylko dla trzech Low-clear i nie zastępują oceny układu.
 
@@ -44,4 +44,5 @@ Kryterium D51: rozpoznanie miejsca przez kierowcę znającego trasę. Niebo, eks
 Pełna seria r3 powstała około 09:06–09:09 na źródłach aktualnego main 14ccbaf1. Własny natywny przegląd potwierdził dotąd A201270 i A139889 Low-overcast oraz A303305 Low/High-clear; pozostałe wiersze oczekują pełnego przeglądu. Nowa poza unieważnia porównywalność trendu; każda nowa ocena D51 wymaga związania z SHA zdjęcia i renderu. C nie są usuwane z historii, ale nie liczą się jako zaliczone pary.
 
 [Dokładny zakres świeżego przeglądu czterech klatek](../../artifacts/sbs-r3/FRESH-SPOT-REVIEW.md) i [SHA](../../artifacts/sbs-r3/fresh-spot-inspection.json). Nie jest to nowy pełny werdykt D51.
+
 
