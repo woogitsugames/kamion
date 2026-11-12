@@ -27,7 +27,11 @@
 - **22:3x: SCALONE Mistral r3** `7d8100d35` (#15 #16 #17 #18 #20; raport `docs/reports/REVIEW-2026-11-12-s15-mistral-r3.md`; audio 46, dotnet 226/226, runner 112/112, gis unit 72). **#19 M20 zamknięty bez scalenia** (brak TMP Essential Resources → NRE w HUD; TextBuffer 0 vs 1003 alokacji — wraca jako nowa runda M20 bez TMP). Worktree usunięty. Otwarte PR: 0. 5 osobnych zadań w raporcie (m.in. P5/P10 bez oparcia w źródłach).
 - **22:4x: SCALONE 0150 gps-map** `bbf601d7d` (mapa z pauzą, cel tapem, „Wyznacz/Wyczyść trasę”, minimapa heading-up lewy górny róg, baner manewru, ekran nawigacji w kabinie; A* 0,24 ms 0 GC; graf 646 krawędzi z `tools/worldgen/navgraph/build_route_graph.py` — NIE wpięty w build_world, komenda w ADR 0150). Głos GPS odłożony (właściciel). Otwarte: kieszeń Olsztyńska/Buska „Brak dojazdu”, pasy ruchu, limity masy/wysokości, pomiar na telefonie. Worktree usunięty.
 - Lider: wspólny APK z main (steer-r2 + GPS) w tle: `artifacts/lead-s15/build-main.ps1` → log `artifacts/lead-s15/build-main.log` (slot unity owner lead-s15).
-- **Ostatni przydzielony ADR: 0150.**
+- **22:5x: SCALONE** 0148 audio-idle `63bf93dc6` („dziwny jałowy” = sprężarka powietrza głośniejsza od silnika; compressorVolume 0,35→0,06; ElevenLabs cab coast nadal szumowy → opcjonalnie `docs/owner/ELEVENLABS-REGEN-04.md`), 0136 r2 a16-perf `f520563e9` (Low: GPU p95 35,9→34,0; skyline 0141 OK na A16 Vulkan, GLES nie sprawdzone; brakuje ~0,7 ms → LOD1/LOD2 aut, otwarte), **0151** steer-r3 `e364975f1` (pełzanie płyty siodła — zestaw wraca do prostej po ~8 s; pasek AWAR. przekazuje przesuw do kierownicy; a_lat/mm stałe >60 km/h). Worktree audio-idle, a16-perf, steer-r2 usunięte. C: 837 GB.
+- Wspólny APK z main (r2+r3 kierowania, GPS, sprężarka, Low A16) w budowie: `artifacts/lead-s15/build-main4.log`. Poprzednie: `kamion-0.1.0-63bf93dc6d-dirty.apk` (bez a16/r3).
+- Agenci aktywni: 0132 buildings-r9, 0144 junctions-r7 (r7d zygzak gotowy wizualnie), 0146 putry-andersa.
+- **Ostatni przydzielony ADR: 0151.**
+
 - Ścieżka bramki 3 bez zmian (patrz KONIEC S14 niżej).
 
 # HANDOVER — kamion, SESJA 14 (start 2026-11-12 18:22, nowe konto)
