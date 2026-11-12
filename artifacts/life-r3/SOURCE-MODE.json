@@ -1,8 +1,8 @@
 {
-  "mode": "candidate-c-shader-applied",
-  "note": "Geometry, all native materials and UV1 unchanged from B; C tail-film shader only",
-  "requires_generation": false,
-  "requires_reimport": false,
+  "mode": "candidate-d-shader-applied",
+  "note": "D changes tail film roof mask, preserves legacy restoration, material B and geometry A",
   "native_library": "candidate-b",
-  "requires_shader_compile": true
+  "requires_shader_compile": true,
+  "requires_reimport": false,
+  "requires_generation": false
 }

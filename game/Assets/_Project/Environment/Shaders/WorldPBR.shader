@@ -299,6 +299,7 @@ Shader "Kamion/World PBR"
                     half deposition = max(max(frontTrail, rearTrail), rearFace);
                     half amount, falloff;
                     half keepUpper = 0.0h;
+                    half filmRoofMask = 0.0h;
                     if (_CarFlake.w < 1.5)
                     {
                         amount = 0.08h + 0.92h * i.carFilm.x;
@@ -320,6 +321,12 @@ Shader "Kamion/World PBR"
                         half3 legacyMultiplier = (1.0h - 0.30h * upperFilm) * half3(1.0h, 1.0h - 0.08h * upperFilm, 1.0h - 0.22h * upperFilm);
                         base.rgb *= lerp(half3(1, 1, 1), legacyMultiplier, keepUpper);
                         mask.a = saturate(mask.a - 0.35h * upperFilm * keepUpper);
+                        // ADR0089 life r3 D: legacy colour restoration also
+                        // covers sloped tail panels. Preserve that restoration,
+                        // but allow road film on the hatch; protect a truly
+                        // horizontal roof. Front/side film uses the old mask.
+                        filmRoofMask = keepUpper * (1.0h - rearFace *
+                            (1.0h - smoothstep(0.80h, 0.95h, abs(n.y))));
                     }
                     else
                     {
@@ -330,7 +337,7 @@ Shader "Kamion/World PBR"
                         falloff = 0.32h + 0.16h * i.carFilm.x;
                     }
                     half vertical = exp2(-max(i.uv.z, 0.0) / falloff * 1.442695h);
-                    carFilmOpacity = 0.5h * amount * vertical * (0.72h + 0.28h * deposition) * (1.0h - keepUpper);
+                    carFilmOpacity = 0.5h * amount * vertical * (0.72h + 0.28h * deposition) * (1.0h - filmRoofMask);
                     mask.a = lerp(mask.a, 0.25h, carFilmOpacity);
                 }
                 #endif
