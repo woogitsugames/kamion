@@ -124,3 +124,5 @@ Zapisano kompletną niezależną ocenę baseline w REVIEW-D51-BASELINE.md: G3-A 
 2026-11-12T11:21:56.8660878+01:00: podczas kolejki GIS wykonałem z niezależnym recenzentem odczyt dwóch typów kotwic B275528 na natywnych obrazach. Zapisane szerokie przedziały VP i portalu oraz SHA dają podstawę do jednej próby−9/h.55/oko1.7 w r4, nadal C. Żadnych nowych renderów ani zmian produkcji r3; GIS11437 nadal czeka na heavy.
 
 2026-11-12T11:28:06.4144439+01:00: własna i niezależna kontrola natywna dwóch kamer mostowych dała oddzielne hipotezy pitch do r4 oraz ważne zastrzeżenie494: wcześniejszy ray trafił tylko kolizję, nie widoczny road_asphalt. Zapisane SHA, przedziały i warunek nowego raycastu rozdzielającego materiały. Nie zmieniam produkcji ani nie promuję pozy. GIS11437 nadal żywy, czeka także na cudzą rezerwację heavy gpt-truck-r3; rezerwacji nie ruszano.
+
+2026-11-12T11:28:35.2948975+01:00: projekt raportu uwzględnia nowe niezależne kontrole kotwic i ograniczenie widocznej powierzchni494. Liczby wykonanych renderów nie zmieniły się; to przygotowanie małych prób C do następnej rundy, bez zmiany zamrożonej produkcji r3.
