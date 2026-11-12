@@ -1,0 +1,19 @@
+{
+  "checked_at": "2026-11-12T15:06:28.1599439+01:00",
+  "file": "artifacts/asphalt-r3/reference/pcrt-20200711-065732-original.jpg",
+  "file_sha256": "65A25B3A205C31D2230064BD877EAD175636CDCC382553FCFA6738CC8951A786",
+  "extractor": "ImageMagick identify, thread limit 2",
+  "profiles": "exif",
+  "exif_gps_fields": 0,
+  "exif_direction_fields": 0,
+  "datetime_original": "exif:DateTimeOriginal=2020:07:11 06:57:32",
+  "focal_length": [
+    "exif:FocalLength=360/100",
+    "exif:FocalLengthIn35mmFilm=27"
+  ],
+  "pixel_dimensions": [
+    "exif:PixelXDimension=4608",
+    "exif:PixelYDimension=2592"
+  ],
+  "note": "No GPS or direction fields in the extracted EXIF; no fitted location/heading. Focal metadata is not a calibrated camera pose or physical material measurement. Full original remains outside Git."
+}
