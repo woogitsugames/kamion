@@ -1,0 +1,192 @@
+{
+  "generated_at": "2026-11-12T13:20:42.6473802+01:00",
+  "scope": "Light text parsing only; editor estimates, not phone or isolated SBS cost",
+  "rows": 168,
+  "input_bytes": 40388.0,
+  "max_low_draws": 810.0,
+  "max_high_draws": 1376.0,
+  "low_draw_increases": 0,
+  "low_tris_increases_over_2pct": 0,
+  "source_logs": [
+    {
+      "path": "artifacts/sbs-r4/evidence/renders/High-clear/stats-16x9.txt",
+      "sha256": "f6ad09213fcf1de0ec3269c1079cf1c217bfa9bb1e27f56cac3953f76854bdfa"
+    },
+    {
+      "path": "artifacts/sbs-r4/evidence/renders/High-clear/stats-4x3.txt",
+      "sha256": "d129e85d7b7b4b4a51f9b453b9dd9746e408c2ef486d5f103073d0282fd08f98"
+    },
+    {
+      "path": "artifacts/sbs-r4/evidence/renders/High-overcast/stats-16x9.txt",
+      "sha256": "328f03d43a9169da1c607fb13f2e86139953de31543acbc774736a746e031d8f"
+    },
+    {
+      "path": "artifacts/sbs-r4/evidence/renders/High-overcast/stats-4x3.txt",
+      "sha256": "b1ea1cc2ac163617a2da1ab7e1cc96232ce466c994d46899c3eb0a72db207e5a"
+    },
+    {
+      "path": "artifacts/sbs-r4/evidence/renders/Low-clear/stats-16x9.txt",
+      "sha256": "863f0e1150637ea1e4a430f81cd4eec2772b4a290cf0e1deba791d4de2d9e967"
+    },
+    {
+      "path": "artifacts/sbs-r4/evidence/renders/Low-clear/stats-4x3.txt",
+      "sha256": "0c3bc974cf6885f2d50d78406846bf068e8577211a95019c78bec65000b1892d"
+    },
+    {
+      "path": "artifacts/sbs-r4/evidence/renders/Low-overcast/stats-16x9.txt",
+      "sha256": "b0880c3f2e6b7172dd3cc26547a84edc94d461350071edf0c0d7823f9549fd11"
+    },
+    {
+      "path": "artifacts/sbs-r4/evidence/renders/Low-overcast/stats-4x3.txt",
+      "sha256": "154c474146efadc22ef4af9fedb14cffcdbbf20db7e1210e7af7dc500962b32a"
+    }
+  ],
+  "parser_sha256": "80c8511282f81041c21c856994e636cf3c0a8af99f0f0d36db853280608e3b82",
+  "comparisons": [
+    {
+      "draw_delta_range": [
+        0.0,
+        0.0
+      ],
+      "tris_k_delta_range": [
+        0.0,
+        9.0
+      ],
+      "tier": "Low",
+      "draw_increases": 0,
+      "camera_state_count": 84,
+      "tris_over_2pct": 0,
+      "baseline": "r3"
+    },
+    {
+      "draw_delta_range": [
+        0.0,
+        0.0
+      ],
+      "tris_k_delta_range": [
+        1.0,
+        19.0
+      ],
+      "tier": "High",
+      "draw_increases": 0,
+      "camera_state_count": 84,
+      "tris_over_2pct": 0,
+      "baseline": "r3"
+    },
+    {
+      "draw_delta_range": [
+        -17.0,
+        29.0
+      ],
+      "tris_k_delta_range": [
+        2.0,
+        13.0
+      ],
+      "tier": "Low",
+      "draw_increases": 38,
+      "camera_state_count": 84,
+      "tris_over_2pct": 34,
+      "baseline": "r2"
+    },
+    {
+      "draw_delta_range": [
+        -33.0,
+        49.0
+      ],
+      "tris_k_delta_range": [
+        5.0,
+        21.0
+      ],
+      "tier": "High",
+      "draw_increases": 48,
+      "camera_state_count": 84,
+      "tris_over_2pct": 26,
+      "baseline": "r2"
+    }
+  ],
+  "camera_input_same_in_r2_r3_r4": true,
+  "baseline_source_logs": [
+    {
+      "path": "artifacts/sbs-r2/evidence/renders/High-clear/stats-16x9.txt",
+      "round": "sbs-r2",
+      "sha256": "1cdd6f0e7a2604c9273762e1cbc046957fadff432055d575399f39b7ae0fd7e2"
+    },
+    {
+      "path": "artifacts/sbs-r2/evidence/renders/High-clear/stats-4x3.txt",
+      "round": "sbs-r2",
+      "sha256": "0c77bb8d24802e580f8e18a48ecd26bc45da139fa0884f3ec4e062ecda1e105c"
+    },
+    {
+      "path": "artifacts/sbs-r2/evidence/renders/High-overcast/stats-16x9.txt",
+      "round": "sbs-r2",
+      "sha256": "32d849a447974d1f6e9f08b503655f5fca12930fd11f18c05d7fca1e4ac1fe44"
+    },
+    {
+      "path": "artifacts/sbs-r2/evidence/renders/High-overcast/stats-4x3.txt",
+      "round": "sbs-r2",
+      "sha256": "fbffa769adff679e6d2f7e73cd864c65f1ff4aa94752d13529496921a19d9ca5"
+    },
+    {
+      "path": "artifacts/sbs-r2/evidence/renders/Low-clear/stats-16x9.txt",
+      "round": "sbs-r2",
+      "sha256": "fdc7fb840c36832152d5d70abcae6fb7637d732de2f9e07e66d0600cbcdca44d"
+    },
+    {
+      "path": "artifacts/sbs-r2/evidence/renders/Low-clear/stats-4x3.txt",
+      "round": "sbs-r2",
+      "sha256": "730de0d3c131addaa87e70c8fb1e3c0be9db92521d5e1b236d14b1d4d311d2b3"
+    },
+    {
+      "path": "artifacts/sbs-r2/evidence/renders/Low-overcast/stats-16x9.txt",
+      "round": "sbs-r2",
+      "sha256": "b66d093abf4d29b7cdacceeda433759296e4200215fe6e07bb1d70852bba61b0"
+    },
+    {
+      "path": "artifacts/sbs-r2/evidence/renders/Low-overcast/stats-4x3.txt",
+      "round": "sbs-r2",
+      "sha256": "e11f4857619575484f87e4d6730e2a1c0b59ea7824eaaf032a92a89aa630fb01"
+    },
+    {
+      "path": "artifacts/sbs-r3/evidence/renders/High-clear/stats-16x9.txt",
+      "round": "sbs-r3",
+      "sha256": "df15bb5f007056f2fdefeeb1cd0c3d9d07e385f33931017a4c0e4f43685c0cbd"
+    },
+    {
+      "path": "artifacts/sbs-r3/evidence/renders/High-clear/stats-4x3.txt",
+      "round": "sbs-r3",
+      "sha256": "f78afa661467201cd2027cf9638b9ac6848d79499d1ad5af3b40fabe8bf5c982"
+    },
+    {
+      "path": "artifacts/sbs-r3/evidence/renders/High-overcast/stats-16x9.txt",
+      "round": "sbs-r3",
+      "sha256": "8eeeaaf0b112345510c1fb1555d29b0550c2deb85d09055fa2c2800def12be28"
+    },
+    {
+      "path": "artifacts/sbs-r3/evidence/renders/High-overcast/stats-4x3.txt",
+      "round": "sbs-r3",
+      "sha256": "b056f1e1fa092339953b99cd9ea0404449e8a89164077000047ddfa0d4d5fabe"
+    },
+    {
+      "path": "artifacts/sbs-r3/evidence/renders/Low-clear/stats-16x9.txt",
+      "round": "sbs-r3",
+      "sha256": "0df646d079fb1fe665b86ad77d28959c19fafef5491f4a1c8f9ef5c2ab85c07d"
+    },
+    {
+      "path": "artifacts/sbs-r3/evidence/renders/Low-clear/stats-4x3.txt",
+      "round": "sbs-r3",
+      "sha256": "9bded068b3ec20c5f39797b22baa05c594debf9906f82c5e503b45f9f286ce3a"
+    },
+    {
+      "path": "artifacts/sbs-r3/evidence/renders/Low-overcast/stats-16x9.txt",
+      "round": "sbs-r3",
+      "sha256": "500395f443525cc8cd6f232cfab4778e8501ae0d1187f2a81771589ad1cff6c1"
+    },
+    {
+      "path": "artifacts/sbs-r3/evidence/renders/Low-overcast/stats-4x3.txt",
+      "round": "sbs-r3",
+      "sha256": "1788b8d28f704801197b502c2dbefe4960a94353c23d38e46963375b98da4cbd"
+    }
+  ],
+  "current_counter_json_sha256": "a75c298a9c4727c88e50c32cc0228b74c2a224b958f81ecb32047a1259097326",
+  "historical_counter_json_sha256": "0842eb55128bc0867e02ecce1a52fcabaa3f1fd62f216db6f858276334d87739"
+}
