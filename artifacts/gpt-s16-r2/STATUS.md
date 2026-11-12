@@ -14,3 +14,5 @@ Dodano recepty importu/renderów i generator12pozna6rzeczywistych ulicach OSM. R
 Dodano audyt semantyczny świata: hashe wszystkich węzłów poza plots, identyczność rekordów instancji nie-high i tożsamości/pozycji drzew ogrodowych. To ma wykrywać uboczne zmiany po generatorze, a nie tylko liczyć przyrost trójkątów.
 
 Zweryfikowano6lokalnych fotografii P07/P08/P10/P12/P14/P17: pełne SHA256 z istniejącym manifestem, autorzy/licencje w reference-provenance.json. Bez kopiowania oryginałów, bez URLdostępowych, bez pikseli w teksturach gry.
+
+Przygotowano niepodłączone szkice algorytmów w artifacts: poszerzenie istniejących koron high bez nowych instancji oraz dodatkowe fronty z twardym limitem geometrii, keepoutami bram i niezmiennymi obwiedniami istniejących rendererów. Baseline ich nie importuje. Kod produktu nadal bez r2; szkice zostaną przeniesione po baseline i usunięte.
