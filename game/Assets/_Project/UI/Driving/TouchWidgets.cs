@@ -72,6 +72,12 @@ namespace Game.UI.Driving
             wheel.PointerDrag(FromCentre(e), Mm(e));
             return true;
         }
+        void LateUpdate()
+        {
+            if (wheel == null) return;
+            if (rotating != null) rotating.localRotation = Quaternion.Euler(0f, 0f, -wheel.WheelDeg); // UI z+ is counter-clockwise
+            if (columnMark != null) columnMark.localRotation = Quaternion.Euler(0f, 0f, -wheel.ColumnScreenDeg);
+        }
     }
 
     /// <summary>
@@ -108,12 +114,6 @@ namespace Game.UI.Driving
             m_Active = false;
         }
 
-        void LateUpdate()
-        {
-            if (wheel == null) return;
-            if (rotating != null) rotating.localRotation = Quaternion.Euler(0f, 0f, -wheel.WheelDeg); // UI z+ is counter-clockwise
-            if (columnMark != null) columnMark.localRotation = Quaternion.Euler(0f, 0f, -wheel.ColumnScreenDeg);
-        }
     }
 
     /// <summary>
