@@ -31,3 +31,4 @@ Import bieżącej bazy zakończony. Zachować patch wygenerowanych danych, lecz 
 Krok 22: world zakończony 542,0 s bez fallback=True, import 0 problems, proces 24949 exit 0. Zachowano patch i siedem świeżych danych wygenerowanych z SHA, pozostają w worktree do GIS. Nie commitujemy tych plików innych dziedzin. Następny krok: baseline-captures.ps1 oraz test-atlas-seams.ps1 w oddzielnych pulach, bez wspólnego Owner heavy między dwoma zadaniami.
 Odświeżono oba prefaby i instalację po zmianach main; sam import regionu używałby starych prefabów. Następny krok: baseline r3, wszystkie kamery i kontrole brudu.
 Zapisano before Low overcast, kod wejściowy zgodny z fingerprintem. Następny krok: pomiary i oględziny par przed/po.
+Zapisano before Low clear, kod wejściowy zgodny z fingerprintem. Następny krok: pomiary i oględziny par przed/po.
