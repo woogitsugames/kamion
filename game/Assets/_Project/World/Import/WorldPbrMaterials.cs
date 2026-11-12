@@ -576,6 +576,7 @@ namespace Game.World.Import
         {
             if (palette.Count != 4) throw new InvalidOperationException("Shelter palette requires four source recipes");
             var values = new Color[4];
+            var skyDown = new Vector4();
             for (int i = 0; i < values.Length; i++)
             {
                 string source = palette[i] as string;
@@ -587,6 +588,12 @@ namespace Game.World.Import
                 var rgb = Arr(recipe.Get("color"));
                 float rough = recipe.Get("rough") != null ? (float)Num(recipe.Get("rough")) : 0.9f;
                 values[i] = new Color((float)Num(rgb[0]), (float)Num(rgb[1]), (float)Num(rgb[2]), Mathf.Clamp01(1f - rough));
+                if (recipe.Get("sky_occ") is List<object> sky)
+                {
+                    if (sky.Count < 2 || Math.Abs(Num(sky[1])) > 1e-9)
+                        throw new InvalidOperationException("Shelter palette requires the shared zero horizon-reflection occlusion");
+                    skyDown[i] = (float)Num(sky[0]);
+                }
             }
             // All supported sources already use this same untextured World Surface style.
             var mat = LookDevAssets.WorldMaterial(path, null, Color.white, 0.5f, 0f, false);
@@ -594,6 +601,8 @@ namespace Game.World.Import
             mat.EnableKeyword("_FURNITURE_SHELTER_PALETTE");
             mat.SetFloat("_GroundMasks", 0f);
             for (int i = 0; i < values.Length; i++) mat.SetColor("_FurnitureShelter" + i, values[i].gamma);
+            mat.SetVector("_FurnitureShelterSkyDown", skyDown);
+            mat.SetVector("_SkyOcc", Vector4.zero);
             EditorUtility.SetDirty(mat);
             return mat;
         }

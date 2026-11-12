@@ -4,7 +4,7 @@ Set-Location (Resolve-Path "$PSScriptRoot/../../..")
 $ev='artifacts/furniture-r3/24h'
 $owner=(& git branch --show-current).Trim()
 if($owner -ne 'gpt-furniture-r3'){throw 'Wrong round branch'}
-if(!(Select-String -LiteralPath "$ev/shelter-material-probe-candidate3.log" -SimpleMatch '14 total, 14 passed, 0 failed, 0 skipped')){throw 'Actual GPU/factory contracts have not passed'}
+if(!(Select-String -LiteralPath "$ev/shelter-material-probe-candidate3sky.log" -SimpleMatch '18 total, 18 passed, 0 failed, 0 skipped')){throw 'Actual GPU/factory/sky contracts have not passed'}
 $sourceFiles=@('tools/worldgen/streetscape/props.py','tools/worldgen/streetscape/materials.py','tools/worldgen/streetscape/furniture.py','tools/worldgen/streetscape/fab_details.py','game/Assets/_Project/Rendering/Shaders/WorldSurface.shader','game/Assets/_Project/World/Import/WorldPbrMaterials.cs','game/Assets/_Project/Editor/Furniture/FurnitureShelterPolicySave.cs')
 $fingerprint=@{}
 foreach($file in $sourceFiles){$fingerprint[$file]=(Get-FileHash -LiteralPath $file -Algorithm SHA256).Hash}

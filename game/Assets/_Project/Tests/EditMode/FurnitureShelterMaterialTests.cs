@@ -19,31 +19,36 @@ namespace Game.Tests
         };
         static readonly string[] Names = {"steel_painted", "shelter_roof", "bench_wood", "shelter_red_frame_0120"};
         static Shader s_Probe;
+        static Shader s_SkyProbe;
+        static readonly Vector4 SkyDown = new Vector4(.5f, .5f, .5f, 0f);
         static Type Importer => Type.GetType("Game.World.Import.WorldPbrMaterials, Game.World.Import.Editor", true);
 
-        static Shader Probe()
+        static Shader Probe(bool sky = false)
         {
-            if (s_Probe != null) return s_Probe;
+            if (sky && s_SkyProbe != null) return s_SkyProbe;
+            if (!sky && s_Probe != null) return s_Probe;
             string text = File.ReadAllText(Path.Combine(Application.dataPath, "_Project/Rendering/Shaders/WorldSurface.shader"));
             StringAssert.Contains("return half4(color, 1.0);", text);
-            text = text.Replace("Shader \"Kamion/World Surface\"", "Shader \"Hidden/Kamion/FurnitureShelterReadback\"")
+            string name = sky ? "FurnitureShelterSkyReadback" : "FurnitureShelterReadback";
+            text = text.Replace("Shader \"Kamion/World Surface\"", "Shader \"Hidden/Kamion/" + name + "\"")
                 .Replace("\"KamionLampPools.hlsl\"", "\"Assets/_Project/Rendering/Shaders/KamionLampPools.hlsl\"")
                 .Replace("\"VegetationGround.hlsl\"", "\"Assets/_Project/Rendering/Shaders/VegetationGround.hlsl\"")
-                .Replace("return half4(color, 1.0);", "return half4(albedo, smooth);");
+                .Replace("return half4(color, 1.0);", sky ? "return half4(skyDown, 0, 0, 1);" : "return half4(albedo, smooth);");
             Directory.CreateDirectory(Path.Combine(Path.GetDirectoryName(Application.dataPath), Dir));
-            string path = Dir + "/FurnitureShelterReadback.shader";
+            string path = Dir + "/" + name + ".shader";
             File.WriteAllText(Path.Combine(Path.GetDirectoryName(Application.dataPath), path), text);
             AssetDatabase.ImportAsset(path, ImportAssetOptions.ForceSynchronousImport | ImportAssetOptions.ForceUpdate);
-            s_Probe = AssetDatabase.LoadAssetAtPath<Shader>(path);
-            Assert.NotNull(s_Probe);
-            Assert.IsFalse(ShaderUtil.ShaderHasError(s_Probe));
-            return s_Probe;
+            var probe = AssetDatabase.LoadAssetAtPath<Shader>(path);
+            Assert.NotNull(probe);
+            Assert.IsFalse(ShaderUtil.ShaderHasError(probe));
+            if (sky) s_SkyProbe = probe; else s_Probe = probe;
+            return probe;
         }
 
-        static Color Read(bool palette, int source, bool detail, int uvSlot = -1)
+        static Color Read(bool palette, int source, bool detail, int uvSlot = -1, bool sky = false)
         {
             if (SystemInfo.graphicsDeviceType == GraphicsDeviceType.Null) Assert.Ignore("GPU readback requires graphics");
-            var mat = new Material(Probe());
+            var mat = new Material(Probe(sky));
             var tex = new Texture2D(1, 1, TextureFormat.RGBAFloat, false, true);
             var mesh = new Mesh();
             var cb = new CommandBuffer {name = "Shelter palette albedo/smoothness readback"};
@@ -60,6 +65,8 @@ namespace Game.Tests
                 mat.SetColor("_MacroTint", Color.white); mat.SetFloat("_GroundMasks", 0);
                 mat.SetFloat("_Cull", (float)CullMode.Off);
                 for (int i = 0; i < Sources.Length; i++) mat.SetColor("_FurnitureShelter" + i, Sources[i].gamma);
+                mat.SetVector("_FurnitureShelterSkyDown", SkyDown);
+                mat.SetVector("_SkyOcc", palette ? Vector4.zero : new Vector4(SkyDown[source],0,0,0));
                 if (palette) mat.EnableKeyword(Keyword);
                 if (detail) mat.EnableKeyword("_KAMION_WORLD_DETAIL");
                 mesh.vertices = new[] {new Vector3(-1,-1,0), new Vector3(1,-1,0), new Vector3(1,1,0), new Vector3(-1,1,0)};
@@ -104,6 +111,15 @@ namespace Game.Tests
             for (int channel = 0; channel < 4; channel++) Assert.That(a[channel], Is.EqualTo(b[channel]).Within(1e-6f));
         }
 
+        [TestCase(0)] [TestCase(1)] [TestCase(2)] [TestCase(3)]
+        public void PaletteRetainsEachSourcesDownwardSkyOcclusionOnGpu(int source)
+        {
+            var original = Read(false, source, false, sky: true);
+            var merged = Read(true, source, false, sky: true);
+            Assert.That(original.r, Is.EqualTo(SkyDown[source]).Within(1e-6f));
+            Assert.That(merged.r, Is.EqualTo(original.r).Within(1e-6f));
+        }
+
         [Test]
         public void PaletteAddsNoShaderPass()
         {
@@ -128,6 +144,8 @@ namespace Game.Tests
                 ["color"] = new List<object>{(double)Sources[i].r,(double)Sources[i].g,(double)Sources[i].b},
                 ["rough"] = (double)(1f - Sources[i].a), ["metal"] = i == 0 ? .5d : 0d
             };
+            for (int i = 0; i < Names.Length; i++) if (i != 3)
+                definitions[Names[i]]["sky_occ"] = new List<object>{.5d, 0d};
             return result;
         }
 
@@ -140,6 +158,7 @@ namespace Game.Tests
             var mat = (Material)create.Invoke(null, new[] {result, (object)"shelter_opaque_0120", def, Dir + "/M_palette.mat"});
             Assert.That(mat.shader.name, Is.EqualTo("Kamion/World Surface"));
             Assert.IsTrue(mat.IsKeywordEnabled(Keyword)); Assert.IsTrue(mat.enableInstancing);
+            Assert.That(mat.GetVector("_FurnitureShelterSkyDown"), Is.EqualTo(SkyDown));
             for (int i = 0; i < Sources.Length; i++)
             {
                 var value = mat.GetColor("_FurnitureShelter" + i).linear;

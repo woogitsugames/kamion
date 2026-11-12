@@ -55,6 +55,7 @@ Shader "Kamion/World Surface"
         _FurnitureShelter1 ("Shelter source 1 colour / smoothness", Color) = (1, 1, 1, 0.5)
         _FurnitureShelter2 ("Shelter source 2 colour / smoothness", Color) = (1, 1, 1, 0.5)
         _FurnitureShelter3 ("Shelter source 3 colour / smoothness", Color) = (1, 1, 1, 0.5)
+        _FurnitureShelterSkyDown ("Shelter source sky occlusion down", Vector) = (0, 0, 0, 0)
     }
     SubShader
     {
@@ -79,6 +80,7 @@ Shader "Kamion/World Surface"
             float _ArchitecturalGlass;
             float4 _FurnitureDetail;
             float4 _FurnitureShelter0, _FurnitureShelter1, _FurnitureShelter2, _FurnitureShelter3;
+            float4 _FurnitureShelterSkyDown;
         CBUFFER_END
         float _KamionStreetLamps, _KamionLampLights, _KamionExposure;
         float _KamionGlassShadowBias;
@@ -132,7 +134,11 @@ Shader "Kamion/World Surface"
             {
                 float4 positionCS : SV_POSITION;
                 float3 positionWS : TEXCOORD0;
+            #if defined(_FURNITURE_SHELTER_PALETTE)
+                half4 normalWS : TEXCOORD1;
+            #else
                 half3 normalWS : TEXCOORD1;
+            #endif
                 half fogFactor : TEXCOORD2;
             #if defined(_FURNITURE_SHELTER_PALETTE)
                 float4 masks : TEXCOORD3;
@@ -155,7 +161,7 @@ Shader "Kamion/World Surface"
                 VertexPositionInputs p = GetVertexPositionInputs(v.positionOS.xyz);
                 o.positionCS = p.positionCS;
                 o.positionWS = p.positionWS;
-                o.normalWS = TransformObjectToWorldNormal(v.normalOS);
+                o.normalWS.xyz = TransformObjectToWorldNormal(v.normalOS);
                 o.fogFactor = KamionFogTau(p.positionWS, p.positionCS.w);
                 o.masks = v.color;
             #if defined(_FURNITURE_SHELTER_PALETTE)
@@ -164,6 +170,8 @@ Shader "Kamion/World Surface"
                 float slot = v.shelterSlot.x;
                 o.masks = slot < 0.5 ? _FurnitureShelter0 : slot < 1.5 ? _FurnitureShelter1
                     : slot < 2.5 ? _FurnitureShelter2 : _FurnitureShelter3;
+                o.normalWS.w = slot < 0.5 ? _FurnitureShelterSkyDown.x : slot < 1.5 ? _FurnitureShelterSkyDown.y
+                    : slot < 2.5 ? _FurnitureShelterSkyDown.z : _FurnitureShelterSkyDown.w;
             #endif
             #if defined(_FAR_FACADE)
                 o.uv1 = v.uv1;
@@ -182,7 +190,7 @@ Shader "Kamion/World Surface"
             half4 frag(Varyings i) : SV_Target
             {
                 UNITY_SETUP_INSTANCE_ID(i);
-                half3 n = normalize(i.normalWS);
+                half3 n = normalize(i.normalWS.xyz);
                 float2 uvm = ProjectUV(i.positionWS, n);
 
                 half det = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, uvm / _TileSize).r;
@@ -300,7 +308,11 @@ Shader "Kamion/World Surface"
 
                 // Ambient: L2 SH (sky + ground) and environment reflection
                 // sky occlusion (ADR 0060) on top of baked sky visibility giK (ADR 0064)
-                half3 ambient = SampleSH(n) * albedo * (_Occlusion * giK) * (1.0 - _SkyOcc.x * saturate(-n.y));
+                half skyDown = _SkyOcc.x;
+            #if defined(_FURNITURE_SHELTER_PALETTE)
+                skyDown = i.normalWS.w;
+            #endif
+                half3 ambient = SampleSH(n) * albedo * (_Occlusion * giK) * (1.0 - skyDown * saturate(-n.y));
                 half3 R = reflect(-V, n);
                 half fresnel = Pow4(1.0 - NoV);
                 half grazing = saturate(smooth + 0.04);

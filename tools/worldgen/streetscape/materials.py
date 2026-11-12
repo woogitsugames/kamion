@@ -605,5 +605,6 @@ M["shelter_red_frame_0120"] = {"color": [0.22, 0.022, 0.016], "rough": 0.50, "me
 M["shelter_clear_glass_0120"] = {"color": [0.12, 0.15, 0.15], "rough": 0.40, "alpha": 0.14, "blend": True}
 M["shelter_opaque_0120"] = {
     "color": [1.0, 1.0, 1.0], "rough": 0.5,
+    "sky_occ": [0.0, 0.0],
     "furniture_shelter_palette": ["steel_painted", "shelter_roof", "bench_wood", "shelter_red_frame_0120"],
 }
