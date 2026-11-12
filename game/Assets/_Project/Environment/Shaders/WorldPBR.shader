@@ -293,12 +293,26 @@ Shader "Kamion/World PBR"
                 {
                     // WORKING_VALUE: source UV1 is height above the actual class sill
                     // and an affine rear=0/front=1 axle coordinate. No film inversion.
+                    half frontTrail = saturate(1.0h - abs(i.uv.w - 0.87h) / 0.28h);
+                    half rearTrail = saturate(1.0h - abs(i.uv.w + 0.13h) / 0.28h);
+                    half rearFace = saturate((-i.uv.w - 0.20h) * 8.0h);
+                    half deposition = max(max(frontTrail, rearTrail), rearFace);
                     half amount, falloff;
                     half keepUpper = 0.0h;
                     if (_CarFlake.w < 1.5)
                     {
                         amount = 0.08h + 0.92h * i.carFilm.x;
                         falloff = 0.16h + 0.06h * i.carFilm.x;
+                        // ADR0089 life r3 A, WORKING_VALUE: broader only behind
+                        // axles and on the rear. Still monotone above the sill,
+                        // bounded by the existing 0.5 opacity, no new sampling.
+                        falloff += deposition * (0.12h + 0.12h * i.carFilm.x)
+                                 + rearFace * 0.10h * (0.25h + 0.75h * i.carFilm.x);
+                        // ADR0089 life r3 C, WORKING_VALUE: the level-2 rear
+                        // still looked freshly washed from 5.7 m. Broaden the
+                        // rear-quarter/tail only, never detach film from the sill.
+                        amount = saturate(amount + rearFace * 0.16h * (0.25h + 0.75h * i.carFilm.x));
+                        falloff += rearFace * (0.18h + 0.18h * i.carFilm.x);
                         // Preserve the existing passenger-car bonnet/roof response.
                         // Static cabs opt out: their previous plain paint had no such layer.
                         keepUpper = smoothstep(0.45h, 0.85h, abs(n.y)) * smoothstep(0.6, 0.8, um.y);
@@ -316,10 +330,6 @@ Shader "Kamion/World PBR"
                         falloff = 0.32h + 0.16h * i.carFilm.x;
                     }
                     half vertical = exp2(-max(i.uv.z, 0.0) / falloff * 1.442695h);
-                    half frontTrail = saturate(1.0h - abs(i.uv.w - 0.87h) / 0.28h);
-                    half rearTrail = saturate(1.0h - abs(i.uv.w + 0.13h) / 0.28h);
-                    half rearFace = saturate((-i.uv.w - 0.20h) * 8.0h);
-                    half deposition = max(max(frontTrail, rearTrail), rearFace);
                     carFilmOpacity = 0.5h * amount * vertical * (0.72h + 0.28h * deposition) * (1.0h - keepUpper);
                     mask.a = lerp(mask.a, 0.25h, carFilmOpacity);
                 }

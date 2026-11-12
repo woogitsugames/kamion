@@ -1,0 +1,70 @@
+{
+  "rois": {
+    "door": "134x61+1199+563",
+    "asphalt": "134x61+1213+862"
+  },
+  "stage": "before",
+  "rows": [
+    {
+      "door_rgb": [
+        90.1215,
+        89.3643,
+        85.7172
+      ],
+      "condition": "Low-clear",
+      "source_sha": "F4FACCEE6ED8939A2450FFECBE70F0A244762D779DAFFE577386A906594A8BB8",
+      "source": "artifacts/life-r3/before/Low-clear/life3_black_side5.png",
+      "asphalt_rgb": [
+        93.4402,
+        91.967,
+        88.0087
+      ]
+    },
+    {
+      "door_rgb": [
+        43.1631,
+        43.0675,
+        42.571
+      ],
+      "condition": "Low-overcast",
+      "source_sha": "CE5C222BC9C8D9FF0EFE209780A2E4972845354E86AA7B171C66460DD2138563",
+      "source": "artifacts/life-r3/before/Low-overcast/life3_black_side5.png",
+      "asphalt_rgb": [
+        60.0219,
+        59.2749,
+        58.2874
+      ]
+    },
+    {
+      "door_rgb": [
+        96.258,
+        95.4484,
+        91.6387
+      ],
+      "condition": "High-clear",
+      "source_sha": "526C840A51ED93426E930413DD9934C5BE551623EADD83EF6B81D2C1FA9FAAE6",
+      "source": "artifacts/life-r3/before/High-clear/life3_black_side5.png",
+      "asphalt_rgb": [
+        98.9757,
+        97.5931,
+        93.6586
+      ]
+    },
+    {
+      "door_rgb": [
+        48.2786,
+        48.173,
+        47.6395
+      ],
+      "condition": "High-overcast",
+      "source_sha": "72FE6B819043388665F7272A6122168F8D80AF6D1FC37B8DCB6000B89AEC50AA",
+      "source": "artifacts/life-r3/before/High-overcast/life3_black_side5.png",
+      "asphalt_rgb": [
+        65.3744,
+        64.7167,
+        63.7486
+      ]
+    }
+  ],
+  "method": "Display-encoded RGB means over the same manually inspected fixed rectangles as the luminance ROI; not albedo or linear photometry."
+}

@@ -285,3 +285,6 @@ Zdjęcia nie wchodzą do builda ani tekstur. Rejestr: [`docs/refs/posesje-bialys
 | brown_leather_ao_2k.jpg | 4ff0006acb807b9ddccd387a093d89b8 |
 
 Pochodne gry: istniejące pary Detail/Normal materiałów `MI_Cab_Leather` oraz `MI_Cab_Plastic`, rozdzielczości High/Medium/Low 1024/512/256. Konwerter `tools/blender/truck/interior/cc0_leather.py` wykonuje kadrowanie, neutralizację wariacji barwy, pakowanie kanałów, normalizację normalnych i łączenie przeciwległych krawędzi. Skóra używa pola około 12 cm. Plastic jest osłabioną i przeskalowaną pochodną tłoczenia skóry (20 cm źródła na kafel 10 cm), **nie skanem tworzywa deski**. Kolor bazowy i dotychczasowa perforacja pozostają projektowe. Oryginały w ignorowanym `art-source/truck/interior/cc0/_raw/brown_leather/`; bez zasobów Fab/Megascans w tym zestawie. Szczegóły przetwarzania i ograniczenia: `art-source/truck/interior/cc0/README.md`.
+
+## Life r3 — referencje analityczne (nie zasoby gry)
+Greg Schechter, 2200 km Later, oraz Nenad Stojkovic, Dirty back car window: CC BY 2.0; strony źródłowe, licencja i miniatury z atrybucją w artifacts/life-r3/refs/REFERENCES.md. Johann H. Addicks: wyłącznie udostępniona jako PD miniatura 250 px Salt coverd car during winter P1020038, bez oryginału. Brak kopiowania znaków/logo/tablic do gry.

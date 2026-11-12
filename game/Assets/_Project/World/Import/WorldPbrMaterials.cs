@@ -225,7 +225,11 @@ namespace Game.World.Import
             {
                 mat.EnableKeyword("_CARPAINT");
                 mat.SetVector("_CarPaint", new Vector4((float)Num(cp[0]), (float)Num(cp[1]), (float)Num(cp[2]), (float)Num(cp[3])));
-                mat.SetVector("_CarFlake", new Vector4(400f, 1f, 0.08f, YardPaint(def, id) ? 2f : 1f)); // w: 1 legacy car, 2 static cab; existing paint pass
+                // ADR0089 life r3 B: optional per-car flake reflectance lift.
+                // Existing paints and static cabs retain their original 0.08.
+                float flakeLift = id.StartsWith("car_paint_") && def.Get("flake_lift") != null
+                    ? Mathf.Clamp((float)Num(def.Get("flake_lift")), 0f, 0.08f) : 0.08f;
+                mat.SetVector("_CarFlake", new Vector4(400f, 1f, flakeLift, YardPaint(def, id) ? 2f : 1f)); // existing paint pass
                 var pt = def.Get("pearl_tint") as List<object>;
                 SetLinearPearlTint(mat, pt != null && pt.Count >= 3
                     ? new Vector3((float)Num(pt[0]), (float)Num(pt[1]), (float)Num(pt[2])) : Vector3.one);
