@@ -1,7 +1,7 @@
 {
   "status": "Topology only: unintegrated prototype, no packed atlas, FBX or appearance PASS",
   "source_sha256": "f8350a8afcb66dcd8b5c906d07a12152686663f58331e6dc2d6e1b3f702e606c",
-  "seconds": 0.04592369999954826,
+  "seconds": 0.06713339999987511,
   "rows": [
     {
       "segments": 8,
@@ -47,5 +47,12 @@
       "volume_m3": 0.0024524021183143707,
       "charts": 14
     }
-  ]
+  ],
+  "parameter_transfer": {
+    "chart_transforms": 42,
+    "matrices_include_reflection_and_anisotropic_scale": true,
+    "non_affine_control_rejected": true,
+    "adapter_sha256": "38bd554df2b0b20af0479e8a42f89b7afc6a181c40661c681945c7a0f024e53d",
+    "note": "Synthetic affine transfer, not actual Blender packing or atlas validation"
+  }
 }

@@ -6,6 +6,7 @@ import hashlib
 import importlib.util
 import json
 import math
+import sys
 import time
 
 ROOT = Path(__file__).resolve().parents[4]
@@ -56,6 +57,44 @@ def check(segments):
                   'volume_m3': volume, 'charts': len(mesh['chart_names'])}
 
 
+def check_transfer():
+    sys.path.insert(0, str(source.parent))
+    try:
+        import wheel_disc_blender as adapter
+    finally:
+        sys.path.pop(0)
+    recipe = dict(inner_radius=.112, outer_radius=.236, hole_ring_radius=.2,
+                  hole_radius=.028, thickness=.022, hole_count=10,
+                  center=[-1, 0, .5], side=-1, offset=.12)
+    high, low = adapter.geometry(recipe, 16), adapter.geometry(recipe, 8)
+    matrices = ((.31, -.12, .12, .31), (-.27, .06, .04, .4), (.5, .05, .02, .1))
+    checks = 0
+    for aa, ab, ba, bb in matrices:
+        def expected(p):
+            return (aa*p[0]+ab*p[1]+.2, ba*p[0]+bb*p[1]+.1)
+        for chart in set(high[3]):
+            points = [p for uv, tag in zip(high[2], high[3]) if tag == chart for p in uv]
+            pairs = [(p, expected(p)) for p in points]
+            transform = adapter.chart_transform(pairs)
+            for uv, tag in zip(low[2], low[3]):
+                if tag == chart:
+                    assert all(math.dist(transform(p), expected(p)) < 1e-10 for p in uv)
+            checks += 1
+    pairs = [(p, (p[0], p[1])) for uv, tag in zip(high[2], high[3]) if tag == 0 for p in uv]
+    point, value = pairs[len(pairs)//2]
+    pairs[len(pairs)//2] = (point, (value[0]+.001, value[1]))
+    try:
+        adapter.chart_transform(pairs)
+    except RuntimeError:
+        pass
+    else:
+        raise AssertionError('Non-affine chart was accepted')
+    return {'chart_transforms': checks, 'matrices_include_reflection_and_anisotropic_scale': True,
+            'non_affine_control_rejected': True,
+            'adapter_sha256': hashlib.sha256(Path(adapter.__file__).read_bytes()).hexdigest(),
+            'note': 'Synthetic affine transfer, not actual Blender packing or atlas validation'}
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--output', required=True)
@@ -65,9 +104,11 @@ def main():
     checked = [check(n) for n in (8, 10, 12, 16)]
     target = ROOT / args.output
     target.parent.mkdir(parents=True, exist_ok=True)
+    transfer = check_transfer()
     packet = {'status': 'Topology only: unintegrated prototype, no packed atlas, FBX or appearance PASS',
               'source_sha256': hashlib.sha256(source.read_bytes()).hexdigest(),
-              'seconds': time.perf_counter()-start, 'rows': [row for _, row in checked]}
+              'seconds': time.perf_counter()-start, 'rows': [row for _, row in checked],
+              'parameter_transfer': transfer}
     target.write_text(json.dumps(packet, indent=2), encoding='utf8')
     if args.preview:
         from PIL import Image, ImageDraw
