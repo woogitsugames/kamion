@@ -14,7 +14,7 @@
   Log: artifacts/logs/ops-watchdog.log. Stop: Ctrl+C or kill the pwsh process; all suspended jobs are resumed on exit.
 #>
 param(
-    [int]$MaxHeavy = 3,
+    [int]$MaxHeavy = 4,
     [int]$ReservedCores = 4,
     [double]$MinFreeGB = 8,
     [double]$ResumeFreeGB = 14,
