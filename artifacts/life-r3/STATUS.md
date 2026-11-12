@@ -154,3 +154,5 @@ Po capture C (2026-11-12T10:49:28.0727242+01:00): potwierdź pełne kadry i bud�
 Po capture C (2026-11-12T10:49:37.2942785+01:00): przygotuj oględziny mocniejszego tyłu C. Następny krok według post-c.ps1, potem oględziny i wybór autora.
 
 Po capture C (2026-11-12T10:50:01.0741034+01:00): potwierdź ograniczoną obwiednię C na GPU. Następny krok według post-c.ps1, potem oględziny i wybór autora.
+
+Krok 42: C kompletne (7159 i 84367 zakończone 0), 492 PNG, budżety jak A/B, fresh GPU 1005 instancji/81 LOD i maks. opacity error 0,00004215. Obejrzano cztery siatki i powiększone before/C tyłu. C nadal zbyt subtelne, nie wybrano go do końcowych testów. Różnice B/C rzeczywiste (max kanału tyłu bieli 29 w High overcast), ale nie dają oczekiwanej czytelności. Inspekcja keepUpper: maska odtworzenia dawnych górnych powierzchni jest też maską osadu i może wycinać nalot pochylonej klapy. Następny krok: D rozdzieli filmRoofMask od starego keepUpper wyłącznie z tyłu; stare odtworzenie legacy bez zmiany, geometria/materiały B zachowane.
