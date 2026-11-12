@@ -37,3 +37,5 @@ Krok 13: podczas PHONE_RUN przygotowano wyłącznie preflight kolejnej rundy po 
 Baseline (2026-11-12T15:38:33.8001836+01:00): wygeneruj świeży World palet r5. Następny etap World/fidelity/kamery; potem świeży import i oględziny przed zmianą palet.
 
 Baseline (2026-11-12T15:42:58.9934350+01:00): potwierdź baseline i rzeczywiste cele palet r5. Następny etap World/fidelity/kamery; potem świeży import i oględziny przed zmianą palet.
+
+Krok 14: baseline-gen complete/0 (4447672c), fidelity 9 passed/1 xfailed, źródła 192/0 mismatch i 15 Fab. Wybrano wszystkie cztery stosy, po 5 ujęć, dwa kontekstowe kontrole: 22 nowe kamery, packet 105 (razem z kontrolami sceny spodziewane 153). Wszystkie linie celów mają 0 przeszkód 2D; teren/widoczność nadal do PNG. Post-baseline czeka na Unity (PHONE_RUN). Przed pierwszym capture skopiuje dokładne własne materiały baseline-native; diagnostyka LOD dostała parametr Stage, aby później potwierdzić też mesh kandydata z jego własnym zamrożonym capture. Oba helpery PS parsują się poprawnie; bez zmiany produkcji. Następny krok: import/capture/oględziny.

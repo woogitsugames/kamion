@@ -1,9 +1,10 @@
-param([ValidateSet('Low','High')][string[]]$Tiers=@('Low','High'),[ValidatePattern('^[a-z0-9-]*$')][string]$Suffix='')
+param([ValidateSet('Low','High')][string[]]$Tiers=@('Low','High'),[ValidatePattern('^[a-z0-9-]*$')][string]$Suffix='', [ValidatePattern('^[a-z0-9-]+$')][string]$Stage='before')
 $ErrorActionPreference='Stop'
 Set-Location ([IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..')))
 if((git branch --show-current).Trim() -ne 'gpt-life-r5'){throw 'Wrong branch'}
 . scripts/env.ps1
-$proof=Get-Content artifacts/life-r5/before-inputs.json -Raw|ConvertFrom-Json
+$proof=Get-Content "artifacts/life-r5/$Stage-inputs.json" -Raw|ConvertFrom-Json
+$prefix=if($Stage -eq 'before'){'baseline'}else{$Stage}
 function Assert-Frozen {
  foreach($p in $proof.source_sha.PSObject.Properties){if((Get-FileHash $p.Name).Hash -ne $p.Value){throw "Baseline source changed: $($p.Name)"}}
  if((Get-FileHash art-source/world/props/street_props.glb).Hash -ne $proof.library_sha){throw 'Baseline GLB changed'}
@@ -44,9 +45,9 @@ foreach($tier in $Tiers) {
  if((Get-FileHash game/Assets/_Generated/Editor/Life5PropLodProbe.cs).Hash -ne $probeHash){throw 'Installed diagnostic probe changed'}
  $scene=if($tier -eq 'High'){'WorldC_High'}else{'WorldC'}
  $extra=if($Suffix){"-$Suffix"}else{''}
- $dir=[IO.Path]::GetFullPath("artifacts/life-r5/baseline-lod/$tier-overcast$extra")
+ $dir=[IO.Path]::GetFullPath("artifacts/life-r5/$prefix-lod/$tier-overcast$extra")
  if(Test-Path $dir){throw 'Diagnostic evidence exists; inspect instead of overwrite'}
- $canonical=Get-Content "artifacts/life-r5/before/$tier-overcast/exact-stats.json" -Raw|ConvertFrom-Json
+ $canonical=Get-Content "artifacts/life-r5/$Stage/$tier-overcast/exact-stats.json" -Raw|ConvertFrom-Json
  New-Item -ItemType Directory -Path $dir|Out-Null
  & pwsh -NoProfile -File scripts/unity-slot.ps1 -Acquire -Owner gpt-life -StaleHours 1000000 -PollSeconds 1
  if($LASTEXITCODE){throw 'Unity acquire failed'}
@@ -82,4 +83,4 @@ foreach($tier in $Tiers) {
  if($LASTEXITCODE){throw 'WIP failed'}
 }
 $extra=if($Suffix){"-$Suffix"}else{''}
-@{finished=(Get-Date -Format o);rows=$result;probe_sha=$probeHash;saved_scenes_unchanged=$true}|ConvertTo-Json -Depth 8|Set-Content "artifacts/life-r5/baseline-lod-result$extra.json"
+@{stage=$Stage;finished=(Get-Date -Format o);rows=$result;probe_sha=$probeHash;saved_scenes_unchanged=$true}|ConvertTo-Json -Depth 8|Set-Content "artifacts/life-r5/$prefix-lod-result$extra.json"

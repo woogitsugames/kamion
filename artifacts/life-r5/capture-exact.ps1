@@ -2,6 +2,10 @@ param([Parameter(Mandatory)][ValidatePattern('^[a-z0-9-]+$')][string]$Stage)
 $ErrorActionPreference='Stop'
 Set-Location ([IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..')))
 . scripts/env.ps1
+if($Stage -eq 'before'){
+ & pwsh -NoProfile -File artifacts/life-r5/snapshot-native-materials.ps1 -Tag baseline-native
+ if($LASTEXITCODE){throw 'Native baseline byte snapshot failed'}
+}
 $library='art-source/world/props/street_props.glb'
 $sceneControls=[ordered]@{}
 foreach($name in @('WorldC','WorldC_High')) {
