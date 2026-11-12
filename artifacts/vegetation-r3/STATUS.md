@@ -58,3 +58,4 @@ Wariant B, migawka zakończone kodem 0. Następny etap zgodnie z run-b.ps1; po p
 Wariant B, import zakończone kodem 0. Następny etap zgodnie z run-b.ps1; po probe konieczna ocena obrazów i kosztów.
 Zapisano próbę B/120 Low-overcast w tych samych 1024x768 i FOV co baseline. Następny krok: obejrzeć i porównać koszt, przed pełną macierzą.
 Wariant B, probe Low B120 zakończone kodem 0. Następny etap zgodnie z run-b.ps1; po probe konieczna ocena obrazów i kosztów.
+Probe B1: Low B/120 bez zmiany kosztów, lecz także bez zmiany policzonych zielonych pikseli. To nie akceptacja wizualna. Wykonujemy oddzielną diagnostykę wejścia renderera: istniejący klon w tej samej komórce ma 8 m, stoi przy kolejnej koronie. Zmieniono wyłącznie jego h na roboczą wartość z deterministycznego ziarna, bez pozycji/p/v/rekordów. Backup w diagnostic-maple-height. To NIE pełny wynik producenta B2. Następny krok: import diagnostyczny i osobny probe.
