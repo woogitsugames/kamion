@@ -16,11 +16,16 @@ if args.stage == 'world':
     meshes = {name: digest(root/name) == sha for name, sha in expected.items() if name.endswith('.glb')}
     inputs = {p.name: json.loads(p.read_text()) == json.loads((raw/p.name).read_text())
               for p in (here/'snapshot-baseline/instances').glob('instances_*.json')}
+    pins = json.loads((here/'baseline-provenance.json').read_text())['exact_source_hashes']
+    source = {name: digest(root/name) == value for name, value in pins.items()}
     result = dict(stage=args.stage, mesh_count=len(meshes), instance_files=len(inputs),
                   all_meshes_match=all(meshes.values()), all_instances_match=all(inputs.values()),
+                  source_file_count=len(source), all_sources_match=all(source.values()),
+                  mismatched_sources=[k for k,v in source.items() if not v],
                   mismatched_meshes=[k for k,v in meshes.items() if not v],
                   mismatched_instance_files=[k for k,v in inputs.items() if not v])
-    passed = len(meshes) == 130 and len(inputs) == 64 and all(meshes.values()) and all(inputs.values())
+    passed = (len(meshes) == 130 and len(inputs) == 64 and len(source) == 7
+              and all(meshes.values()) and all(inputs.values()) and all(source.values()))
 else:
     relative = Path('Low-overcast-photo-2048x1536/sbs-g3-b-297817221966185.png')
     before, after = here/'before'/relative, here/'restored-probe'/relative

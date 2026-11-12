@@ -2,7 +2,9 @@
   "prior_round": "gpt-vegetation-r1",
   "prior_candidate": "B",
   "prior_source_commit": "51bd2559",
-  "merge_commit": "4cc183a030d37d59bfcd954b5e4d4a54c332708d",
+  "merge_commit": "49de5a4e",
+  "verification_commit": "4cc183a030d37d59bfcd954b5e4d4a54c332708d",
+  "commit_label_correction": "Original helper labelled verification HEAD as merge_commit. The real main merge is 49de5a4e; only own artifact files differ between these commits.",
   "reused_control_frames": 268,
   "exact_source_hashes": {
     "tools/worldgen/streetscape/vegetation.py": "884bcf23f746ac6e257fd983e109f2cdb4e3d866a2bb6ff477ac07c9b931aa66",
