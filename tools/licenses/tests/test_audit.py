@@ -85,9 +85,10 @@ def test_no_google_in_model_metadata():
 def test_all_tracked_assets_covered_in_licenses_md():
     rep = A.audit()
     assert not rep["suspicious"], f"podejrzane zasoby: {rep['suspicious']}"
-    n = len(rep["unverified"])
-    if n:
-        pytest.xfail(f"UNVERIFIED: {n} śledzonych zasobów bez potwierdzonego wpisu w docs/LICENSES.md")
+    # Integracja r5: dziś 0 niepokrytych (2383/2383), więc twardy fail zamiast xfail - nowy zasób bez wpisu
+    # w docs/LICENSES.md (albo tylko z wpisem w sekcji UNVERIFIED) ma zatrzymać testy, a nie zniknąć w xfail.
+    assert not rep["unverified"], (f"{len(rep['unverified'])} śledzonych zasobów bez potwierdzonego wpisu w "
+                                   f"docs/LICENSES.md: {rep['unverified'][:20]}")
     assert rep["covered"], "asset list must not be empty"
 
 
