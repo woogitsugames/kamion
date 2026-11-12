@@ -166,3 +166,5 @@ Odczytano main 3ebd95d4 i recenzję REVIEW-2026-11-12-s11-0125.md. Main zawiera 
 Plan wejścia w r3 zapisano w NEXT-ROUND.md po odczycie sześciu pozycji. Nie zmieniono kamer ani kodu w trakcie końcowej walidacji.
 
 Wstępnie skopiowano statyczne evidence/history/counters do main przez robocopy (trzy kody 1). SHA ZIP, kamer, referencji i CSV zgodne; receipt PRESTAGE_NOT_FINAL_DELIVERY. Nie skopiowano REPORT (brak końcowego GIS). Pełna końcowa dostawa nadal wymagana.
+
+Doprecyzowano REPORT-DRAFT: 42 klatki w każdym stanie i jawna granica względem nowych scaleń main. Ponownie odczytano capture-summary, AUDIT i niezależny przegląd: 168 zerowych delt, trend tylko dla trzech Low-clear, bez nowego zaliczenia D51. Źródła nadal zamrożone.

@@ -1,12 +1,12 @@
 ﻿# R2 — wersja robocza, pełny GIS w toku
 
-Gałąź gpt-sbs-r2, worktree .claude/worktrees/gpt-sbs. To jeszcze nie jest końcowy REPORT. Źródła końcowego testu: e386b92996c10ef92022508b8ede0c10c7843863. Pełna seria renderowana na b9b5574e2dd093af3b36b82ff2a84f55643141e3. Po renderach zmieniały się narzędzia raportowania i dokumentacja, a nie kamery ani świat. Main włączono na początku rundy przez merge ce3f1a77.
+Gałąź gpt-sbs-r2, worktree .claude/worktrees/gpt-sbs. To jeszcze nie jest końcowy REPORT. Źródła końcowego testu: e386b92996c10ef92022508b8ede0c10c7843863. Pełna seria renderowana na b9b5574e2dd093af3b36b82ff2a84f55643141e3. Po renderach zmieniały się narzędzia raportowania i dokumentacja, a nie kamery ani świat. Main włączono na początku rundy przez merge ce3f1a77. W czasie końcowej walidacji main doszedł do 3ebd95d4, zawierającego ADR 0125 i kolejne rundy innych dziedzin. Nie włączano tych zmian do zamrożonej r2; niniejsze obrazy nie dowodzą stanu po tych scaleniach. Nowy main będzie bazą renderów r3.
 
 R2 dodaje wersjonowane metryki kontrastu RMS, zakresu percentylowego i gradientu oraz ręczne próbki nieba/asfaltu z wyłączeniami. Próbka jest kwalifikowana tylko dla konkretnych SHA zdjęcia i renderu, zgodnego światła, klasy A/B i notatki przeglądu. Histogram i luma są diagnostyką obrazu, nie pomiarem albedo. Nie przyznają zaliczenia bramki.
 
 [Raport HTML z historią i trendem](../sbs-gate3/latest/index.html) działa lokalnie, bez zasobów sieciowych. Ma wybór rundy, tieru i światła, osobny widok C, źródła i licencje. Trend odrzuca zmienione zdjęcie, pozę, maski, definicję metryk, rozdzielczość, tier, światło i niesprawdzone próbki. R1 przeliczono tym samym algorytmem v2 z pierwotnych bajtów inputs.zip, w jawnym trybie historical. Oryginalnych dowodów r1 nie nadpisano.
 
-Zachowano 42 zdjęcia: 25 B, 17 C, brak A. R2 ma 168 nowych raw, 100 arkuszy B i 168 dodatkowych arkuszy diagnostycznych. Każdy arkusz ma szerokość 960 px. Wszystkie stany mają komplet 42 capture. Rzeczywiste bajty 64 GLB High i 64 Low zgadzają się z manifestem; oba warianty siatek są identyczne z r1. SHA 143/168 PNG są identyczne z r1; pozostałe różnice nie są dowodem poprawy świata.
+Zachowano 42 zdjęcia: 25 B, 17 C, brak A. R2 ma 168 nowych raw, 100 arkuszy B i 168 dodatkowych arkuszy diagnostycznych. Każdy arkusz ma szerokość 960 px. Każdy stan ma komplet 42 klatek. Rzeczywiste bajty 64 GLB High i 64 Low zgadzają się z manifestem; oba warianty siatek są identyczne z r1. SHA 143/168 PNG są identyczne z r1; pozostałe różnice nie są dowodem poprawy świata.
 
 Kwalifikacja obejmuje trzy Low-clear. To te same piksele i te same maski w r1/r2: mediana zmiany błędu histogramu, luma asfaltu i kontrastu wynosi 0. Pozostałe trzy stany jawnie nie mają porównywalnych próbek. Różny kierunek słońca i cień w jednej próbce nadal ograniczają interpretację. Nie agregowano pozostałych obrazów jako wiarygodnej fotometrii.
 
@@ -27,3 +27,4 @@ Dodatkowa diagnostyka 182 obejmuje 16 nowych prób, wszystkie obejrzane; niezale
 Otwarte: kalibracja C i cztery zastrzeżenia B, brak A, brak początku trasy, jedynie trzy próbki fotometryczne i brak pomiaru telefonu. Pliki świata, shaderów i runtime nie są częścią zmiany SBS. Osiem pochodnych plików innych domen pozostaje po generatorze i zostanie przywróconych po końcowym teście. Przewidywane punkty integracji to ADR 0111, rozszerzenia sbs_*.json i narzędzia SBS; nie należy brać pochodnych generatora z tej rundy zamiast aktualnego main.
 
 Dostarczenie do main: JESZCZE NIEWYKONANE. Po końcowym GIS i zapisie REPORT nastąpi robocopy artefaktów r2 oraz latest, bez commitowania na main. Następna runda: nowa gałąź gpt-sbs-r3 od r2, merge aktualnego main i ranking odstępstw w docs/refs/sbs-priorities.md. Cel całej sesji trwa do około 12.11.2026, 21:31 Europe/Warsaw.
+
