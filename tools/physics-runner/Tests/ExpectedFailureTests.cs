@@ -1,6 +1,4 @@
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using PhysicsRunner.Sim;
 using Xunit;
@@ -22,23 +20,22 @@ namespace PhysicsRunner.Tests
 
         static string Dir => Path.Combine(RepoPaths.Root, "tests", "physics", "scenarios_expected_fail");
 
-        public static IEnumerable<object[]> ScenarioIds() =>
-            Directory.Exists(Dir)
-                ? Scenario.LoadAll(Dir).Select(s => new object[] { s.id })
-                : Enumerable.Empty<object[]>();
-
-        [Theory]
-        [MemberData(nameof(ScenarioIds))]
-        public void KnownFailure_StillFails_WithReason(string id)
+        [Fact]
+        public void KnownFailures_StillFail_WithReason()
         {
-            var sc = Scenario.LoadAll(Dir).First(s => s.id == id);
-            var r = ScenarioRunner.Run(sc);
-            var sb = new StringBuilder();
-            sb.AppendLine($"expected failure: {sc.expectedFailReason}");
-            foreach (var c in r.Checks) sb.AppendLine(c.ToString());
-            _out.WriteLine(sb.ToString());
-            Assert.False(string.IsNullOrWhiteSpace(sc.expectedFailReason), $"{id}: expected-fail scenario needs expectedFailReason");
-            Assert.False(r.Passed, $"{id} unexpectedly passes now — move it back to tests/physics/scenarios/:\n{sb}");
+            if (!Directory.Exists(Dir)) return;
+            var scenarios = Scenario.LoadAll(Dir);
+            if (scenarios.Count == 0) { _out.WriteLine("no known-failure scenarios"); return; }
+            foreach (var sc in scenarios)
+            {
+                var r = ScenarioRunner.Run(sc);
+                var sb = new StringBuilder();
+                sb.AppendLine($"{sc.id} — expected failure: {sc.expectedFailReason}");
+                foreach (var c in r.Checks) sb.AppendLine(c.ToString());
+                _out.WriteLine(sb.ToString());
+                Assert.False(string.IsNullOrWhiteSpace(sc.expectedFailReason), $"{sc.id}: expected-fail scenario needs expectedFailReason");
+                Assert.False(r.Passed, $"{sc.id} unexpectedly passes now — move it back to tests/physics/scenarios/:\n{sb}");
+            }
         }
     }
 }
