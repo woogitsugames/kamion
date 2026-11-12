@@ -35,3 +35,5 @@ Baseline (2026-11-12T12:08:10.6769408+01:00): wygeneruj World baseline r4. Nast�
 Baseline (2026-11-12T12:12:01.6074528+01:00): potwierdź World i fidelity baseline r4. Następny etap w baseline-gen.ps1; potem import i oględziny, bez zmiany produkcji przed baseline.
 
 Po baseline (2026-11-12T12:13:29.4782379+01:00): zaimportuj świeży baseline r4. Następny krok: kanoniczny capture, diagnostyka LOD, oględziny; produkcja bez zmian przed oceną.
+
+Po baseline (2026-11-12T12:16:22.6599744+01:00): potwierdź pełny baseline r4 w czterech warunkach. Następny krok: kanoniczny capture, diagnostyka LOD, oględziny; produkcja bez zmian przed oceną.
