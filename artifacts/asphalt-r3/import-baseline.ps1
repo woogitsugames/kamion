@@ -3,7 +3,7 @@ Set-Location (Resolve-Path "$PSScriptRoot/../..")
 if ((& git branch --show-current).Trim() -ne 'gpt-asphalt-r3') { throw 'Wrong round' }
 $status=Get-Content artifacts/asphalt-r3/STATUS.md -Raw
 if($status -notmatch 'heavy World owner=gpt-asphalt-r3 exit=0; log artifacts/asphalt-r3/baseline-World.log'){throw 'Fresh World producer has not completed'}
-if(Select-String artifacts/asphalt-r3/baseline-World.log -SimpleMatch 'fallback=True' -Quiet){throw 'Fallback found'}
+if(Select-String -Path artifacts/asphalt-r3/baseline-World.log -Pattern 'fallback=True' -SimpleMatch -Quiet){throw 'Fallback found'}
 # Lightweight standard-library SHA audit, no NumPy or geometry/image analysis.
 & uv run --project tools/worldgen python artifacts/asphalt-r3/audit_manifest.py *> artifacts/asphalt-r3/baseline-pre-import-audit.log
 if($LASTEXITCODE -ne 0){throw 'Pre-import reference audit failed'}
