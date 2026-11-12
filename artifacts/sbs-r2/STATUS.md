@@ -133,3 +133,6 @@ ComposeOnly obejmuje teraz cztery sekwencyjne stany jedną dzierżawą heavy. Ka
 
 ## Celowana diagnostyka 182 — wynik
 Render 16 hipotez zakończony kodem 0, slot Unity zwolniony. Sprawdzono wszystkie 16 SHA PNG, SHA pliku prób i niezmienność produkcyjnego pliku kamer. Obejrzano wszystkie 16 wariantów i natywne zdjęcie. Niezależny krytyk potwierdził: 12 najlepszy do dalszej pracy, ale C pozostaje z powodu niezgodności dwóch bliższych narożników z dalszą jezdnią, nie z powodu braku sygnalizatorów. Wariant 14 pokazuje niezgodny widok pod pomostem. Zapisano REVIEW-INDEPENDENT-182.md. Nie zmieniono źródeł produkcyjnych, rostra 168 klatek, klasy ani D51. Dalsza kalibracja wymaga pewniejszych kotwic; nie zastępuje zamknięcia pakietu metryk r2.
+
+## Analiza kolejnej nierozwiązanej pozy
+Odczytano i obejrzano źródło 326 oraz istniejący loader kamer. Zapisano w CALIBRATION-NOTES.md potrzebę rozdzielenia roll, pitch i zniekształcenia obiektywu; loader nie ma pola roll. Nie wdrożono nowej rektyfikacji ani nie zmieniono C#, kamer, FOV lub referencji. Nie należy uznawać samego nachylenia słupów za zmierzoną wartość roll.
