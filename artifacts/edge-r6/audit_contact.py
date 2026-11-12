@@ -15,6 +15,7 @@ import shapely
 from shapely import STRtree
 
 from unity_mesh_audit import read_meshes
+from segment_contact import profile, validate_reference_cases
 
 HERE = Path(__file__).resolve().parent
 phase = sys.argv[1]
@@ -24,6 +25,7 @@ marker = 'Baseline.ready' if phase == 'before' else 'After.ready'
 if not (HERE / marker).exists():
     raise RuntimeError(f'Freeze complete {phase} first')
 folder = HERE / f'{phase}-source'
+validate_reference_cases()
 
 
 def sha(path):
@@ -97,6 +99,8 @@ def ground_at(e, n):
 
 
 result = dict(phase=phase, apron_sha256=sha(apron_path), original_ground_triangles=len(ground),
+              audit_sources_sha256={name: sha(HERE/name) for name in
+                                    ('audit_contact.py', 'segment_contact.py', 'unity_mesh_audit.py')},
               numerical_tolerance_m=0.05, tolerance_status='WORKING_VALUE', tiers={},
               note='Actual imported curtain base vertices, not trees. Alpha coverage and photo/road visibility UNVERIFIED.')
 for tier, filename in (('Low', 'far_field.low.glb'), ('High', 'far_field.glb')):
@@ -104,7 +108,7 @@ for tier, filename in (('Low', 'far_field.low.glb'), ('High', 'far_field.glb')):
     mesh_path = folder / f'world_edge_far-{tier}.asset'
     forests = source_forests(raw_path)
     meshes = read_meshes(mesh_path)
-    rows, counts, uncovered = [], [], 0
+    rows, edge_rows, counts, uncovered = [], [], [], 0
     for sector, source in forests.items():
         name = f'{sector}_{tier}'
         mesh = meshes[name]
@@ -135,12 +139,33 @@ for tier, filename in (('Low', 'far_field.low.glb'), ('High', 'far_field.glb')):
             else:
                 rows.append(dict(mesh=name, vertex=int(index), e=e, n=n, base_y=y,
                                  ground_y=actual, clearance_m=y-actual))
+        edges = set()
+        for triangle in mesh['triangles'][source['slot']]:
+            bottom = [int(index) for index in triangle if mesh['uv0'][index, 1] == 0]
+            if len(bottom) not in (1, 2):
+                raise RuntimeError('Unexpected curtain triangle base topology')
+            if len(bottom) == 2:
+                edges.add(tuple(sorted(bottom)))
+        if not edges or set(base_ids) != {index for edge in edges for index in edge}:
+            raise RuntimeError('Base edges do not cover the populated base-vertex inventory')
+        for edge in sorted(edges):
+            measurement = profile(edge, mesh['positions'][list(edge)], ground, en, tree)
+            if measurement is None:
+                raise RuntimeError('Degenerate XZ curtain edge; inspect rather than omit it silently')
+            edge_rows.append(dict(mesh=name, **measurement))
     if not rows or uncovered:
         raise RuntimeError(f'{tier}: missing apron coverage: {uncovered}')
     clearance = np.array([row['clearance_m'] for row in rows])
     result['tiers'][tier] = dict(base_vertices=len(rows), uncovered=uncovered,
         min_clearance_m=float(clearance.min()), max_clearance_m=float(clearance.max()),
         above_0_05m=int((clearance > 0.05).sum()), sectors=counts,
+        bottom_edges=len(edge_rows),
+        bottom_edge_length_m=sum(row['length_m'] for row in edge_rows),
+        max_bottom_edge_clearance_m=max(row['max_clearance_m'] for row in edge_rows),
+        bottom_edges_above_0_05m=sum(row['max_clearance_m'] > 0.05 for row in edge_rows),
+        bottom_edge_length_above_0_05m=sum(row['length_above_tolerance_m'] for row in edge_rows),
+        bottom_edge_method='Exact linear intervals at triangle boundaries and upper-envelope crossings; all edges covered. No alpha visibility claim.',
+        worst_bottom_edges=sorted(edge_rows, key=lambda row: row['max_clearance_m'], reverse=True)[:30],
         worst_vertices=sorted(rows, key=lambda row: row['clearance_m'], reverse=True)[:30],
         raw_sha256=sha(raw_path), unity_sha256=sha(mesh_path))
 (HERE / f'contact-{phase}.json').write_text(json.dumps(result, indent=2), encoding='utf-8')
