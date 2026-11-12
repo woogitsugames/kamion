@@ -223,8 +223,11 @@ SIGN_H_OVERHEAD = 5.00
 # + pkt 5.2.1.1 (printed p. 180 / PDF p. 185) — D-1 side 600 mm (repeats 400 mm). B-20 octagon:
 # pkt 3.1.1 (printed p. 91 / PDF p. 96) + Tabela 3.1 (printed p. 92 / PDF p. 97) — the 800 mm is the
 # diameter of the circle INSCRIBED in the octagon, so the plate corner-to-corner = 800/cos(pi/8) mm.
+# Mesh convention (props.plate, gate3_landmarks._outline, furniture stacking): the value is the plate's bounding size -
+# disc diameter, square side, octagon corner-to-corner and DIAMOND DIAGONAL (vertices on the axes). D-1 side 600 mm
+# -> diagonal 0.60*sqrt(2) = 0.849 m (integration r4: 0.60 here would make the D-1 side 0.42 m).
 SIGN_SIZE = {"triangle": 0.90, "disc": 0.80, "square": 0.60,
-             "octagon": 0.80 / math.cos(math.pi / 8), "diamond": 0.60}
+             "octagon": 0.80 / math.cos(math.pi / 8), "diamond": 0.60 * math.sqrt(2)}
 SIGN_LATERAL = 0.75         # WORKING_VALUE: plate edge 0.5-1.0 m behind the kerb face (never over the kerb)
 SIGN_POST_D = 0.0603        # Ø60.3 mm galvanised tube, standard Polish sign post (catalogue) WORKING_VALUE
 SPEED_SIGN_AFTER_JUNCTION = 30.0  # WORKING_VALUE distance; rule: a B-33 limit ends at the next junction

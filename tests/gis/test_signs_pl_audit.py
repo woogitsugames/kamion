@@ -57,7 +57,8 @@ COLOUR_FIELDS = {
 
 # Udokumentowane rozbieżności repo vs przepis: klucz = nazwa sprawdzenia, wartość = uzasadnienie z cytatem.
 # (Wymiary SIGN_SIZE poprawione w PR mistral/24-signs-sizes: square/diamond 0,60 m — Tabela 1.1 str. 4 /
-# Tabela 5.1 str. 173; octagon 0,80/cos(pi/8) — pkt 3.1.1 str. 91 + Tabela 3.1 str. 92.)
+# Tabela 5.1 str. 173 (diamond: bok 0,60 => przekątna 0,60*sqrt(2), konwencja siatki); octagon 0,80/cos(pi/8) —
+# pkt 3.1.1 str. 91 + Tabela 3.1 str. 92.)
 KNOWN_DEVIATIONS = {
     "GREEN": "xy (0,257; 0,445) poza polem 'zielona' Tabeli 1.3 (str. 6); in-gamut część pola to klin przy narożniku — UNVERIFIED jako wartość nominalna",
     "font": "DejaVu Sans Bold zamiast wzorów liter pkt 1.4.3 [ZNAKI-Z1] — schematyczny stand-in, UNVERIFIED",
@@ -112,6 +113,8 @@ def test_mounting_heights_match_table_1_11():
 def test_sign_size_vs_medium_group(shape):
     expected = SIZE_MEDIUM_M[shape]
     actual = S.SIGN_SIZE[shape]
+    if shape == "diamond":      # SIGN_SIZE["diamond"] = bounding size = diagonal (mesh convention); the rule gives the side
+        actual = actual / math.sqrt(2)
     if math.isclose(actual, expected, abs_tol=1e-9):
         return
     assert f"SIGN_SIZE.{shape}" in KNOWN_DEVIATIONS, \
@@ -155,7 +158,7 @@ def test_face_codes_map_to_regulated_shapes():
 def test_gate3_face_dims():
     # A-30 = bok trójkąta grupy średniej (Tabela 1.1, str. 4)
     assert G3.FACE_DIM["A-30"][1] == S.SIGN_SIZE["triangle"]
-    # D-3/D-6 0,60 m — zgodne z Tabelą 5.1 (str. 173); D-1 idzie przez SIGN_SIZE["diamond"] (rozbieżność jw.)
+    # D-3/D-6 0,60 m — zgodne z Tabelą 5.1 (str. 173); D-1 przez SIGN_SIZE["diamond"] (przekątna, bok 0,60 m)
     assert G3.FACE_DIM["D-3"][1:] == (0.60, 0.60)
     assert G3.FACE_DIM["D-6"][1:] == (0.60, 0.60)
     # U-4a 0,75 x 1,35 m: załącznik nr 4 (poza zał. 1) — UNVERIFIED
