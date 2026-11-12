@@ -1,0 +1,39 @@
+{
+  "sheetSha": "2BD243A4450615A3F5C0AA5789905A5423A12B77325992281658FEDECF3BD21C",
+  "sheet": "artifacts/light-r6/review/night-lens-history/comparison.png",
+  "scope": "Historyczne R5, nie świeża baza R6. Ten sam prostokąt źródłowego kadru; duże obudowy i sky nie są maską soczewki.",
+  "sources": [
+    {
+      "crop": "650x450+1550+0",
+      "outputSha": "DDF8B96C859C738C6F331143F4B8F8B445664F8C74F5551A89E8E1E84AF13FD9",
+      "output": "artifacts/light-r6/review/night-lens-history/Low-production.png",
+      "source": "artifacts/light-r5/baseline/Low-night/r10_office_2.png",
+      "variant": "Low-production",
+      "sourceSha": "41F9C3C0B8EDE0D00113F0920E9A073A563FAD252E95398227569A224473E336"
+    },
+    {
+      "crop": "650x450+1550+0",
+      "outputSha": "CA105471FDABB6CF95AE4A8EDF761DFCBA5428B60CA3A3239AB4ACFCE226E862",
+      "output": "artifacts/light-r6/review/night-lens-history/High-legacy-ARGB32.png",
+      "source": "artifacts/light-r5/baseline/High-night/r10_office_2.png",
+      "variant": "High-legacy-ARGB32",
+      "sourceSha": "64DF4482F44A47788A4D442FD7B28486447A0D5E4E85897CB6B90E235C8F48C2"
+    },
+    {
+      "crop": "650x450+1550+0",
+      "outputSha": "ECC36794BD49A8AD535CBBD7C4D6B9233552B4223C6102C239E397850024ED89",
+      "output": "artifacts/light-r6/review/night-lens-history/Low-native-LUT.png",
+      "source": "artifacts/light-r5/final-native-v2/Low-night/r10_office_2.png",
+      "variant": "Low-native-LUT",
+      "sourceSha": "0D87112F0D1E8B24387FA32DE0A7617C92B4B0D232BBC065C82155FBAD6A0A73"
+    },
+    {
+      "crop": "650x450+1550+0",
+      "outputSha": "E00CCBE9D1514E0CC2612F363EC2C85BC763D010C4BC9704C3D10CFE591722CB",
+      "output": "artifacts/light-r6/review/night-lens-history/High-HDR-reference.png",
+      "source": "artifacts/light-r5/final-native-v2/High-night/r10_office_2.png",
+      "variant": "High-HDR-reference",
+      "sourceSha": "16EBEDC2837B56B988111AF771CAF538A37EAEAC56AA617488C6774320818D9C"
+    }
+  ]
+}
