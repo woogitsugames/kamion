@@ -1,7 +1,9 @@
+param([string]$JobsFile='baseline.json',[string]$Prefix='baseline',[string]$Preset)
 $ErrorActionPreference='Stop'
 $repo=[IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..'))
 Set-Location $repo
-$jobs=(Get-Content "$PSScriptRoot/baseline.json" -Raw|ConvertFrom-Json).jobs
+$jobs=(Get-Content (Join-Path $PSScriptRoot $JobsFile) -Raw|ConvertFrom-Json).jobs
+if($Preset){$jobs=@($jobs|Where-Object lighting -eq $Preset)}
 $out="$PSScriptRoot/native-review"
 New-Item -ItemType Directory -Force $out|Out-Null
 $inventory=@()
@@ -22,12 +24,13 @@ foreach($job in $jobs){
             $args+=@('+append',')')
         }
         $page=1+[int][Math]::Floor($start/12)
-        $contact="$out/baseline-$($job.tier)-$($job.lighting)-$page.jpg"
+        $contact="$out/$Prefix-$($job.tier)-$($job.lighting)-$page.jpg"
         $args+=@('-append','+repage',$contact)
         & magick @args
         if($LASTEXITCODE){throw 'Contact generation failed'}
         $inventory+=@{contact=$contact;tier=$job.tier;preset=$job.lighting;inputs=@($files[$start..($end-1)].FullName)}
     }
 }
-$inventory|ConvertTo-Json -Depth 6|Set-Content "$out/baseline-inventory.json" -Encoding utf8
+$inventory|ConvertTo-Json -Depth 6|Set-Content "$out/$Prefix-inventory.json" -Encoding utf8
 Write-Output "Prepared$($inventory.Count) contacts covering all baseline PNGs. Inspect every page; no visual verdict from this script."
+
