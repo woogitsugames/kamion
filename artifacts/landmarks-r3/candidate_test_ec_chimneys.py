@@ -109,7 +109,7 @@ def test_generated_world_has_exactly_one_authored_instance_per_chimney():
         assert o['id'] in applied
         assert applied[o['id']]['asset']==EC.entry(o,EC.config())['asset']
     instances=[]
-    for p in (REPO/'Data/raw/derived'/REGION_ID/'world').glob('chunk_*.instances.json'):
+    for p in (REPO/'Data/raw/derived'/REGION_ID/'world').glob('instances_*.json'):
         value=json.loads(p.read_text())
         instances.extend(value['instances'] if isinstance(value,dict) else value)
     for o in overrides():
