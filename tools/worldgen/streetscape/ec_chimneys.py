@@ -110,7 +110,7 @@ def meshes(d):
     out=[]
     H=d['height_m']
     radius=lambda z:(d['base_d_m']+(d['top_d_m']-d['base_d_m'])*max(0,z)/H)/2
-    for lod,seg in enumerate((24,12)):
+    for lod,seg in enumerate((20,12)):
         m=Mesh()
         bounds=[-1.,*d['band_boundaries_m']]
         shaft_top=116.8 if d['outlets']==3 else H
@@ -137,7 +137,7 @@ def meshes(d):
         # The photograph's galleries are pale painted structures. Reuse this
         # existing material on both LODs; no fourth material or new shader path.
         gallery_mat='chimney_white'
-        gallery_seg=12
+        gallery_seg=8
         for z in d['galleries_m']:
             outer=radius(z)+.75
             annulus(m,gallery_mat,z,radius(z),outer,gallery_seg)
@@ -151,7 +151,7 @@ def meshes(d):
                         a,b=2*math.pi*k/gallery_seg,2*math.pi*(k+1)/gallery_seg
                         m.tube(gallery_mat,[outer*math.cos(a),outer*math.sin(a),zz],
                                [outer*math.cos(b),outer*math.sin(b),zz],.028,None,3,cap=False)
-                for k in range(gallery_seg):
+                for k in range(0,gallery_seg,2):
                     a=2*math.pi*k/gallery_seg
                     m.tube(gallery_mat,[outer*math.cos(a),outer*math.sin(a),z],
                            [outer*math.cos(a),outer*math.sin(a),z+1.],.028,None,3,cap=False)
