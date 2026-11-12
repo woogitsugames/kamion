@@ -29,6 +29,11 @@ sam nie dowodzi średnicy zwieńczenia ani tego, czy zmapowano podstawę czy kor
 Dotychczasowe top_d 4,5/4,8 pozostają WORKING_VALUE. Przed korektą szerokości
 potrzeba porównania w dopasowanej pozie i sprawdzenia geometrii źródłowej.
 
+Do pary zdjęcia 16:9 w r3 nie ucinać zwieńczenia prawego komina centralnym
+kadrem pionowym (jest blisko górnej krawędzi). Można zachować QA 2340x1080,
+użyć pełnego pionowego FOV zdjęcia i porównywać centralne 1920x1080 renderu
+z całym zdjęciem 3840x2160. Liczby FOV zależą od kalibracji, nie są pomiarem.
+
 Rzeczywisty life_props.chimney ma cztery materiały na High: chimney_concrete,
 chimney_red, chimney_white, gantry_steel; Low ma trzy, bez galerii. Nowe Low
 głowice muszą użyć istniejącej trójki, aby nie dodać draws. Nie edytować life_props.
@@ -54,3 +59,9 @@ roboczy +/-2 m dla pasów nie obejmował systematycznego błędu pozy/GPS i nie 
 wiarygodną granicą. Liczby 14,64/15,08 m zachowano jako ślad odrzuconej hipotezy,
 nie parametry do modelu. Dla r3 rozwiązać pozę na znanych 120 m i położeniach,
 sprawdzić granice pasów i biały dół; nie wprowadzać pełnego malowania od podstawy.
+
+Kontrola chimney-pose-consistency.json: przy pozycji GPS, ogniskowej 27 mm,
+roboczych pikselach głowic i H120 oba zwieńczenia wymagają pitch -1,91 / -4,53
+stopnia, różnica 2,62 stopnia. Tych założeń nie spełnia jedna kamera. NMT w GPS
+wynosi 140,529 m; 1,65 m oczu jest WORKING_VALUE. To diagnoza niewyznaczonej
+pozy/optyki, nie dowód, że trzeba zmienić wysokość albo poszerzyć trzon.
