@@ -26,7 +26,7 @@ foreach($case in $Cases){
     try {
         $log="artifacts/truck-r4/$stage-$(Get-Timestamp).log"
         $code=Invoke-UnityBatch -LogFile $log -Arguments $argsList
-        if($code -ne 0 -or !(Select-String -LiteralPath $log -SimpleMatch 'TRUCK_ROUND: OK' -Quiet)){throw "Nieudana kontrola $case."}
+        if($code -ne 0 -or !(Select-String -LiteralPath $log -SimpleMatch 'TRUCK_ROUND_RESULT: OK' -Quiet)){throw "Nieudana kontrola $case."}
         if((Fingerprint) -ne $fp){throw 'Kod zmieniony podczas kontroli.'}
         if(@(Get-ChildItem $dir -Recurse -Filter '*.png').Count -ne 12){throw 'Niepełne świeże kadry kontroli szkła.'}
         foreach($condition in @('Low-overcast','High-overcast','Low-clear','High-clear')){
@@ -44,3 +44,4 @@ foreach($case in $Cases){
     git commit --only artifacts/truck-r4/STATUS.md -m "wip(truck): kontrola szkla $case"
     if($LASTEXITCODE -ne 0){throw 'Nie zapisano kontroli.'}
 }
+
