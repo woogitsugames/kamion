@@ -31,7 +31,7 @@
     {
       "metric": "mean_speed_kmh",
       "status": "DERIVED",
-      "source": "v = eta P / (m g (sin a + f_r) + aero): 0.92 x 368 kW / (40 t x 9.81 x (0.0599+0.008) + ~0.7 kN) = 12.7 m/s = 46 km/h; pasmo jak w grade_5pct_steady (ok. +/-18%)",
+      "source": "v = eta P / (m g (sin a + f_r) + aero): 0.92 x 368 kW / (40 t x 9.81 x (0.0599+0.008) + ~0.7 kN) = 338.6 kW / 27.34 kN = 12.4 m/s = 44.6 km/h; pasmo jak w grade_5pct_steady (ok. +/-18%)",
       "min": 38,
       "max": 54,
       "from": 150
