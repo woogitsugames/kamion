@@ -1,0 +1,12 @@
+unity: C:\Program Files\Unity\Hub\Editor\6000.3.28f1\Editor\Unity.exe -batchmode -projectPath C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-furniture\game -logFile C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-furniture\artifacts\logs\test-editmode-20261112-023709.log -buildTarget Android -runTests -testPlatform EditMode -testResults C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-furniture\artifacts\tests\editmode-20261112-023709.xml -testFilter Game.Tests.FurnitureSignTests
+VBCSCompilerServerWatchdog: watching VBCSCompiler (PID 27720)
+EditMode: 8 total, 5 passed, 3 failed, 0 skipped (Failed(Child)) -> C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-furniture\artifacts\tests\editmode-20261112-023709.xml
+  FAILED Game.Tests.FurnitureSignTests.ObservationAngleSuppressesReturn:   Expected: greater than 0.00499999989f
+  But was:  0.00283813477f
+
+  FAILED Game.Tests.FurnitureSignTests.ReturnFallsWithDistanceAndEndsBeyondRange:   Expected: greater than 0.00567626953f
+  But was:  0.00374031067f
+
+  FAILED Game.Tests.FurnitureSignTests.SourceBrightensFaceButNotItsBack:   Expected: greater than 0.00499999989f
+  But was:  0.00283813477f
+

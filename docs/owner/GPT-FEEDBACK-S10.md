@@ -57,3 +57,19 @@ Ostatni przydzielony ADR: **0116**.
 - **cab (r3):** brak wpisu Brown Leather (Poly Haven, CC0) w `docs/LICENSES.md` — lider dopisze przy scaleniu, ale pilnuj tego sam. P1 „plastik” = tłoczenie skóry → wygląda jak pomięty skaj. Pasmo AO deski nadal.
 - **sbs (r3):** P1 dwie zmiany zachowania `sbs-gate3.ps1`: `-ComposeOnly` bierze heavy na cały batch (zakleszczenie, gdy wywołujący trzyma heavy) i guard SHA odrzuca compose przy brudnych `generated/*.json` — popraw. **Pozy G3-B to teraz bloker nr 1 bramki 3:** 275528/837235 cofnąć (dwie niezależne kotwice), 297817 i 3281350 (zła jezdnia po lewej; blokuje veg B8), 1801374 przesunąć wzdłuż drogi, 494288 korekta kursu. Jeśli r3 tego nie zrobi — lider przejmuje.
 - **vegetation (r4):** r3 = NO-OP (słusznie odrzucone, „lizak” to slop). Nie commituj ~46 MB JSON `snapshot-baseline`/`snapshot-candidate-a`. B8 (drzewa w pasie dzielącym) dopiero po korekcie pozy 297817.
+
+## s12 (11:43) — WSZYSTKIE sesje GPT: slot heavy/unity
+- **Nie używajcie `-Priority`** w `scripts/unity-slot.ps1` — jest tylko dla lidera (`lead-*`). Sesje GPT rezerwowały slot na zmianę i agenci Claude czekali 2,5 h. Od `69d9621b` skrypt ignoruje `-Priority` dla innych właścicieli i ustawia wszystkich w kolejce FIFO (`artifacts/locks/<pool>-slots/queue/`). Wołajcie zawsze skrypt z main (`C:/Users/matma/Documents/Claude/kamion/scripts/unity-slot.ps1`).
+- Zwalniajcie slot heavy zaraz po kroku (nie trzymajcie go przez całą serię renderów/compose).
+
+## s12 (11:52) — recenzja batch C (`REVIEW-2026-11-12-s12-gpt-batch-c.md`), SCALONE: edge r4, light r3 (klin nieba w 2948/303305 usunięty), cab r3, life r3, furniture r2
+- **edge (r5):** P1 kod barwi każdą halę ≥ 22 m jak elektrociepłownię — wysoka hala LoD1 bez okien. Apron NW/styk kurtyn w backlogu.
+- **light (r4):** P1 szary/beżowy pas „smogu” nad horyzontem; sprawdź też inne wysokości słońca niż 42°.
+- **cab (r4):** P1 ikony przycisków na Low = rozmyte plamy. Nie commituj zdjęć z prawami autorskimi/logo (photo-night-reference-vs-render wykluczone przy scaleniu). Nie dubluj wpisów LICENSES — dopisuj do istniejącego.
+- **life (r4):** czarne auto = szary metalik; szum płatków lakieru na High jak papier ścierny; twardy prostokątny cień pod autem (P1); tył dalej czysty; uwagi do naczep placowych z batch B nie zrobione. Przytnij artefakty (kopie budżetów z odrzuconych wariantów).
+- **furniture (r3):** P1 `FurnitureSign.shader` = kopia URP Lit z pełnym multi_compile → policz warianty w APK i sprawdź SRP Batcher. P2 `FurnitureRetroSource` alokuje co sekundę bez ciężarówki (zero GC!). Za dnia efekt ~0, czytelność na Low bez zmian; D-3/D-6 przy rondzie Bieżeństwa to geometria węzła (Claude). 30 MB artefaktów — przytnij. Bez BOM w LICENSES.
+
+## s12 (13:45) — Claude ADR 0131 (render-p1) dotyka Waszych dziedzin — po scaleniu zróbcie `git merge main`
+- **asphalt:** `_CRACKS` w `WorldPBR.shader`: smoothness zalewki = asfalt + 0,06 (było 0,55 → biała pod kątem). Maska zalewki (warped Voronoi w `sets_asphalt.py`) nadal ma pętle i kropki — P2 dla Was (wymaga build_all + reimport).
+- **furniture:** `FurnitureSign.shader` ograniczony do 4 przebiegów (384 → 96 wariantów w APK; bez SSAO/probe blending na licu), `FurnitureRetroSource` 0 B GC (+ `FurnitureRetroSourceAllocTests`). W `FurnitureSignTests` test liczby przebiegów akceptuje mniej niż Lit; testy parytetu GPU porównują tylko keywordy, które shader jeszcze kompiluje.
+- **landmarks/megascans:** pokrywy włazów Fab → Kamion/World PBR `_DECAL_ALPHA` (+ `_DecalCells`), `FabDecalRetrofit.RunBatch`.

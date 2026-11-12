@@ -1,0 +1,72 @@
+{
+  "checked_at": "2026-11-12T12:24:16.976589+01:00",
+  "branch": "gpt-asphalt-r2",
+  "source_commit": "6832f50b",
+  "base": "4992c434c65bd87648e0b528e4b331fa13d8ca84",
+  "head_before_report_commit": "86416497b401fce7429420bd619c8a40ea70e29e",
+  "ready_for_artifact_delivery": true,
+  "all_tests_green": false,
+  "gis": {
+    "exit": 0,
+    "passed": 604,
+    "xfailed": 1
+  },
+  "physics_gate3": {
+    "unchanged_inputs": "physics-result.json",
+    "known_failure": "test_generator_reproduces_committed_scenarios: top_speed_flat_comb.json",
+    "exit": 1,
+    "passed": 47,
+    "failed": 1
+  },
+  "editmode": {
+    "passed": 312,
+    "skipped": 0,
+    "total": 312,
+    "exit": 0,
+    "failed": 0,
+    "xml": "candidate2-final-editmode.xml"
+  },
+  "fidelity": {
+    "exit": 0,
+    "gate3_approved": false,
+    "elapsed_s": 229.3,
+    "unverified_lane_segments": 4,
+    "route_edge_p95_m": 2.304,
+    "route_axis_p95_m": 0.04,
+    "missing_ortho_islands": 16,
+    "missing_osm_drivable_ways": 102
+  },
+  "final_manifest": {
+    "mismatches": 0,
+    "checked": 196
+  },
+  "visual": {
+    "reviewed_sheet_hashes": 60,
+    "incremental_material_critic": "PASS",
+    "full_realism_approved": false
+  },
+  "geometry": {
+    "exactly_equal": true,
+    "files": 128,
+    "primitives": 7315
+  },
+  "counters": {
+    "changed_rows": 0,
+    "camera_conditions": 328,
+    "rows": 2952
+  },
+  "gpu_A16": "UNVERIFIED",
+  "own_slots": {
+    "heavy": false,
+    "unity": false
+  },
+  "source_changes_since_product_freeze": [],
+  "unity_settings_changes": [],
+  "report_sha256": "6D91BE3864FB5268DD3E7042C101AF7383AC3EEEE7022B1AEC5434AE104A2D48",
+  "note": "Known physics failure disclosed. No phone, push or merge into main. Delivery through robocopy only; next round still requires fresh main merge and baseline.",
+  "whitespace": {
+    "full_artifact_pass": false,
+    "product_source_exit": 0,
+    "note": "Raw XML/log/material snapshot formatting and helper EOF blank lines retained; not a product/test failure."
+  }
+}

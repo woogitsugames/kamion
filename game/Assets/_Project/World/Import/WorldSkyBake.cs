@@ -99,7 +99,7 @@ namespace Game.World.Import
                     Kind nodeKind;
                     if (n == "road") nodeKind = Kind.Road;
                     else if (n == terrain || n == "paved" || n == "plot_ground") nodeKind = Kind.Ground;
-                    else if (n == buildings || n == "bridge" || n == "furniture") nodeKind = Kind.Solid;
+                    else if (n == buildings || n == "bridge" || n == "furniture" || n == "plots") nodeKind = Kind.Solid;   // plots: ADR 0124
                     else continue;   // other terrain LODs, LOD1 when LOD0 exists, markings, wires
                     var mesh = kv.Value.GetComponent<MeshFilter>().sharedMesh;
                     var mats = kv.Value.sharedMaterials;

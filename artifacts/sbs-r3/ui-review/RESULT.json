@@ -1,0 +1,34 @@
+{
+  "checked_at": "2026-11-12T09:44:30.7874383+01:00",
+  "index_sha256": "29a9e5a05da38f7691622a04dea733e4f67368e3b031ecf94b5cc6790a011fe1",
+  "data_sha256": "58a715a8aedd6a7513da8775a7ed365acc7468c1c7a04222d37c11a751d99633",
+  "viewports": [
+    {
+      "height": 960,
+      "width": 1280,
+      "document_width": 1280
+    },
+    {
+      "height": 844,
+      "width": 390,
+      "document_width": 390
+    }
+  ],
+  "runs": [
+    "sbs-r1",
+    "sbs-r2",
+    "sbs-r3"
+  ],
+  "r3_gate_cards": 25,
+  "r3_with_diagnostics": 42,
+  "broken_loaded_images": 0,
+  "console_errors": 0,
+  "console_warnings": 0,
+  "r2_low_clear_qualified": 3,
+  "r3_qualified": 0,
+  "trend_r2_to_r3": "NO_COMPARABLE_SAMPLES",
+  "formal_review_source": "sbs-r1, not a new r3 score",
+  "browser_closed": true,
+  "server_closed": true,
+  "scope": "Run/state controls, C toggle, trend anchor, viewport screenshots and loaded images; not a claim of browser-loading every asset or final world/GIS pass"
+}

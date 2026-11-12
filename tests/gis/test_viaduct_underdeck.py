@@ -186,6 +186,8 @@ def test_generated_specs_have_grounded_stair_flights_and_unchanged_decks():
     flights = 0
     for spec in specs:
         assert spec['params']['stairs_enabled'] is enabled
+        for key in ('unpainted_chamfers','paint_blobs'):
+            assert spec['params'][key] is cfg['set'][key]
         if not enabled:
             assert spec['stairs'] == [[], []]
         for steps in spec['stairs']:
@@ -200,3 +202,13 @@ def test_generated_specs_have_grounded_stair_flights_and_unchanged_decks():
     for report in qa['hero_bridges']['underdeck']:
         assert report['deck_before_sha256'] == report['deck_after_sha256']
         assert report['new_materials'] == []
+
+
+def test_production_columns_have_one_pigment_and_no_unconfirmed_paint_patch():
+    w,hero=fixture()
+    assert hero['spec']['params']['unpainted_chamfers'] is False
+    assert hero['spec']['params']['paint_blobs'] is False
+    H._apply_underdeck(w,hero)
+    columns=[p for p in w.buf.parts if p.src.endswith(':column') and p.layer!='collision']
+    assert columns and {p.mat for p in columns}=={'pier_yellow'}
+    assert not any(p.src.endswith(':paint_WORKING_VALUE') for p in w.buf.parts)

@@ -4,10 +4,10 @@
  "add_grass": false,
  "pier_paint": {
   "enabled": true,
-  "color_linear": [0.46, 0.34, 0.135],
+  "color_linear": [0.46, 0.40, 0.17],
   "splash_h_m": 0.8,
   "runoff_length_scale": 0.35,
-  "confidence": "WORKING_VALUE: warmer R/G and lower blue based on Rakoon 7204 ochre faces; sRGB photo is not a reflectance measurement."
+  "confidence": "WORKING_VALUE: s12 review rejected the brown r2 shift; restore the earlier mustard pigment. Photo sRGB is not a reflectance measurement."
  },
  "grass_budget_note": "Existing Megascans vegetation retained. Additional clumps cost +1 Low draw in paired Unity views; disabled to meet draws +0.",
  "target": {"osm_way": [1101181473, 173956078, 284022563, 606396460]},
@@ -23,18 +23,19 @@
   "cap_h_m": 0.30,
   "wing_len_m": 3.0,
   "stairs_enabled": false,
-  "unpainted_chamfers": true,
+  "unpainted_chamfers": false,
   "paint_weathering": true,
   "stairs_width_m": 0.85,
   "stairs_rise_m": 0.18,
   "stairs_tread_m": 0.32,
   "slab_depth_m": 0.62,
   "drip_depth_m": 0.035,
-  "paint_blobs": true
+  "paint_blobs": false
  },
  "stairs_note": "Disabled: no confirmed landing or pedestrian connection; prior generated flights intersected the noise screen. Screen/deck ownership retained.",
- "chamfer_note": "Bare grey vertical chamfers beside ochre faces visible in Rakoon 7204 CC0. Dimensions remain WORKING_VALUE.",
- "confidence": "WORKING_VALUE: structural dimensions and paint blobs; not a survey",
+ "chamfer_note": "Correction after s12 review: all column faces and chamfers have the same mustard paint; contrast comes from normals and lighting, not bare grey concrete. Dimensions remain WORKING_VALUE.",
+ "paint_blob_note": "Disabled: the abstract unconfirmed patch matched the reported floating parallelogram. Confirm its removal in paired renders; no invented graffiti.",
+ "confidence": "WORKING_VALUE: structural dimensions; not a survey. No unconfirmed abstract paint patches.",
  "references": [
   "docs/REFERENCES.md: 7204_May_2021_in_Białystok.jpg (Rakoon, CC0)",
   "docs/reports/visual/REFS-MAPILLARY-FINDINGS-2026-11-10.md: p42/p45/p47 (reference only)",

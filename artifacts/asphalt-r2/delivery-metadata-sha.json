@@ -1,0 +1,33 @@
+{
+  "checked_at": "2026-11-12T12:26:03.6978277+01:00",
+  "delivery_commit": "66e6eac3",
+  "product_source_whitespace_exit": 0,
+  "hashes": [
+    {
+      "file": "REPORT.md",
+      "sha256": "A567F4E0D524AE31A1CC961D0FC866113342B46F0897D529AC57DAF98166F80B",
+      "main_matches": true
+    },
+    {
+      "file": "STATUS.md",
+      "sha256": "3511D1C3FDCFE872D2C1CBA6B4A08B89F536C59D7185CF11B14E2C0C76B4196B",
+      "main_matches": true
+    },
+    {
+      "file": "DELIVERED.json",
+      "sha256": "A2D6E925BF20ED180B29F43AC2AA52F7A62E35BB42883E398E12352C0010461C",
+      "main_matches": true
+    },
+    {
+      "file": "end-round-checks.json",
+      "sha256": "D02DC8E4C16993DA443F064715B3D67CE32D30A478CDC4BB75FEDF551FE89DA8",
+      "main_matches": true
+    },
+    {
+      "file": "candidate2-final-editmode.xml",
+      "sha256": "4955AFFD41491A3E9E80E3B2B7566751981BE6D6583F973F5ED0DAAD9138A2E5",
+      "main_matches": true
+    }
+  ],
+  "note": "Whole-artifact diff has formatting warnings: unchanged raw XML/log/material snapshots and extra EOF blank lines in helper/report files. No raw evidence normalized; this is not an all-artifact whitespace PASS."
+}

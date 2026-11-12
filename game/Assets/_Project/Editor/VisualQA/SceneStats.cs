@@ -40,6 +40,7 @@ namespace Game.Editor.VisualQA
                 if (!r.enabled || !r.gameObject.activeInHierarchy) continue;
                 if (inLodGroup.Contains(r) && !selected.Contains(r)) continue;
                 if ((cam.cullingMask & (1 << r.gameObject.layer)) == 0) continue;
+                if (Game.World.PlotViewCull.HiddenFor(cam, r)) continue;   // ADR 0124: house plots beyond 70 m in mirror cameras
                 var mf = r.GetComponent<MeshFilter>();
                 if (mf == null || mf.sharedMesh == null) continue;
                 var b = r.bounds;

@@ -1,0 +1,42 @@
+{
+  "rows": [
+    {
+      "source_sha": "94E78937A44594DF4A3D414E9AEE1962CE5E0C17A3A333242BDE632C07E09683",
+      "door_mean": 84.9672,
+      "ratio": 0.9236127416451437,
+      "condition": "Low-clear",
+      "asphalt_mean": 91.9944,
+      "source": "artifacts/life-r3/after-b/Low-clear/life3_black_side5.png"
+    },
+    {
+      "source_sha": "4024C0F8FDBE0902D959637EBC7A44E6DC755B31228E86264A9C459C52AD1EED",
+      "door_mean": 39.8109,
+      "ratio": 0.6706416856461328,
+      "condition": "Low-overcast",
+      "asphalt_mean": 59.3624,
+      "source": "artifacts/life-r3/after-b/Low-overcast/life3_black_side5.png"
+    },
+    {
+      "source_sha": "E29AA6EDD1B5B6630A8620F719B4E9B2B990C8E5DC31033170E4E777B41C314A",
+      "door_mean": 90.851,
+      "ratio": 0.9308217985102918,
+      "condition": "High-clear",
+      "asphalt_mean": 97.603,
+      "source": "artifacts/life-r3/after-b/High-clear/life3_black_side5.png"
+    },
+    {
+      "source_sha": "AA7B4128697AC5D860609400904C8910F191390A1E82D68B486A4F2BEB0BBDE2",
+      "door_mean": 44.7127,
+      "ratio": 0.6901535194006166,
+      "condition": "High-overcast",
+      "asphalt_mean": 64.7866,
+      "source": "artifacts/life-r3/after-b/High-overcast/life3_black_side5.png"
+    }
+  ],
+  "stage": "after-b",
+  "note": "Display-encoded RGB weighted mean, not linear photometry/albedo. New side camera and manually inspected fixed ROIs; no comparison to historical overcast ROI.",
+  "rois": {
+    "door": "134x61+1199+563",
+    "asphalt": "134x61+1213+862"
+  }
+}

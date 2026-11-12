@@ -1,0 +1,18 @@
+﻿{
+    "method":  "ImageMagick channel B: maximum absolute difference between MaskMap.B and 1-Var.B",
+    "rows":  [
+                 {
+                     "set":  "kerb_concrete_1m",
+                     "normalized_max_error":  0,
+                     "mask_map_sha256":  "6638c3f99ba707f585b09bcec8eb75fb2f58193ac683f79d6856509c8d492fb4",
+                     "var_map_sha256":  "785b4339796c795b630eab4dc87ea5fb6b226dc448baca6e12a5f991d2d073d9"
+                 },
+                 {
+                     "set":  "paving_20x10_grey",
+                     "normalized_max_error":  1,
+                     "mask_map_sha256":  "7d3b88707bc306168f4475a5ec719bf575eedb1411e6f6ba8fbf2b2e00bae826",
+                     "var_map_sha256":  "f566d674d69bc9a56ac0305a8bbd93fbd0f0e2bec854ee3c4b5f6936347d79b9"
+                 }
+             ],
+    "scope":  "Medium input PNG values, not compressed GPU samples. ASTC and visible effect need native render verification."
+}
