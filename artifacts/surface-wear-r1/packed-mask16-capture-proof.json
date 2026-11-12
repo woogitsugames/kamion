@@ -1,0 +1,291 @@
+{
+  "frames": 16,
+  "images": [
+    {
+      "condition": "Low-clear",
+      "camera": "d_field_p8_turn",
+      "sha256": "f988e6ada84beb636a58d7ee9d3f34d0427a212641189d41b754e3123e021c54",
+      "runtime_camera_and_vehicle_pose_exact": true
+    },
+    {
+      "condition": "Low-clear",
+      "camera": "d_wear_lane_old",
+      "sha256": "c4a000db2a505fe39a37691e67ea3ebe7342e3abd85fa2526421f20e64e00784",
+      "runtime_camera_and_vehicle_pose_exact": true
+    },
+    {
+      "condition": "Low-clear",
+      "camera": "d_wear_missing_uv_2",
+      "sha256": "42f7c5fe8e134b88764fe9d11936cfdda0c9c4de80acaabfa19158cf14b26ba8",
+      "runtime_camera_and_vehicle_pose_exact": true
+    },
+    {
+      "condition": "Low-clear",
+      "camera": "d_wear_newroad_negative",
+      "sha256": "d722d0dcda33215bb08aea07bb48dfd0578f42530c6d3b1e7734669df0e8f0dc",
+      "runtime_camera_and_vehicle_pose_exact": true
+    },
+    {
+      "condition": "Low-overcast",
+      "camera": "d_field_p8_turn",
+      "sha256": "6a8a2647a9d68f5de2d2180227912e4dd5305f446b22eea4afc033faf4b30a3f",
+      "runtime_camera_and_vehicle_pose_exact": true
+    },
+    {
+      "condition": "Low-overcast",
+      "camera": "d_wear_lane_old",
+      "sha256": "a396dcf3d67487af3bab5e27231f8dd4f262546bf029b4593a6e7651792b9d83",
+      "runtime_camera_and_vehicle_pose_exact": true
+    },
+    {
+      "condition": "Low-overcast",
+      "camera": "d_wear_missing_uv_2",
+      "sha256": "46aaf84060f0809c5fe64019dbadfd4a12e7f656386f882d73c6a3d395ea757d",
+      "runtime_camera_and_vehicle_pose_exact": true
+    },
+    {
+      "condition": "Low-overcast",
+      "camera": "d_wear_newroad_negative",
+      "sha256": "dbe7f12820c3a1e3cdbb0e88df6f751e54a3688226a91ccfee56ac54d6d63674",
+      "runtime_camera_and_vehicle_pose_exact": true
+    },
+    {
+      "condition": "High-clear",
+      "camera": "d_field_p8_turn",
+      "sha256": "96bb193386aa2935179ad43aa5b1a67f4394826a3a6dcd16efc9ee27b78ab3a9",
+      "runtime_camera_and_vehicle_pose_exact": true
+    },
+    {
+      "condition": "High-clear",
+      "camera": "d_wear_lane_old",
+      "sha256": "f456fb5c27d224aa6de550b999379f6480e00aa05ec068bbe42a3e22fdf82642",
+      "runtime_camera_and_vehicle_pose_exact": true
+    },
+    {
+      "condition": "High-clear",
+      "camera": "d_wear_missing_uv_2",
+      "sha256": "6bb73b99aefe11c735400140eb004940c2399064d266922eea62c8b16fecdfa2",
+      "runtime_camera_and_vehicle_pose_exact": true
+    },
+    {
+      "condition": "High-clear",
+      "camera": "d_wear_newroad_negative",
+      "sha256": "79e1b3c8556deeb9202c7b4e738704afefaa032c180f932887a12154c912ca48",
+      "runtime_camera_and_vehicle_pose_exact": true
+    },
+    {
+      "condition": "High-overcast",
+      "camera": "d_field_p8_turn",
+      "sha256": "751c24f23d292480f05b72d43e63209b08280260b0da3d3d196016eb4780b52d",
+      "runtime_camera_and_vehicle_pose_exact": true
+    },
+    {
+      "condition": "High-overcast",
+      "camera": "d_wear_lane_old",
+      "sha256": "40d1b670c5a237345dbb928f3e0f59d741964837c80071dd998169f0c02409a7",
+      "runtime_camera_and_vehicle_pose_exact": true
+    },
+    {
+      "condition": "High-overcast",
+      "camera": "d_wear_missing_uv_2",
+      "sha256": "886953932ed4297bb6e1037d93efac60103c5cf14c697f3bfd4f7c93a7ea74fa",
+      "runtime_camera_and_vehicle_pose_exact": true
+    },
+    {
+      "condition": "High-overcast",
+      "camera": "d_wear_newroad_negative",
+      "sha256": "93a2d0841b93064f53bdac0f7c1a7d4b5147369f1510bd0022ce23e0332931db",
+      "runtime_camera_and_vehicle_pose_exact": true
+    }
+  ],
+  "runs": [
+    {
+      "complete": true,
+      "tier": "Low",
+      "lighting": "clear",
+      "raw_exit_code": -1073741819,
+      "accepted_ADR0083_Mono_cleanup": true,
+      "fresh_frames": 4,
+      "finally_restored": true,
+      "freshness_lower_bound_commit": "98434a3d, before the first launch",
+      "log_sha256": "102a408d6a4a3791535d11bc06069415d9d904e11257507268ee81c63d79fccf",
+      "note": "First strict wrapper correctly halted on nonzero exit. All4freshframes, result, finallyrestore and later Mono cleanup verified before accepting; no rerender.",
+      "expected_stats_and_pose_ids_verified": true,
+      "no_prior_CS_shader_renderer_errors": true,
+      "production_2441_and_raw192_exact": true,
+      "restored_renderer_count": 44,
+      "restored_clone_count": 1
+    },
+    {
+      "raw_exit_code": 0,
+      "finally_restored": true,
+      "complete": true,
+      "log_sha256": "315B75AB394D3A7E9BCE27AD1D1F441E13A25291FDA4210C8F3BFAEFE8A0EE90",
+      "lighting": "overcast",
+      "fresh_frames": 4,
+      "tier": "Low",
+      "accepted_ADR0083_Mono_cleanup": false
+    },
+    {
+      "raw_exit_code": 0,
+      "finally_restored": true,
+      "complete": true,
+      "log_sha256": "A9A56143D4862A13F0F1B75B10D771044EF8F66FD9405704FE5FD47B5A9CD38B",
+      "lighting": "clear",
+      "fresh_frames": 4,
+      "tier": "High",
+      "accepted_ADR0083_Mono_cleanup": false
+    },
+    {
+      "raw_exit_code": 0,
+      "finally_restored": true,
+      "complete": true,
+      "log_sha256": "02CD9F9D67196B19522A88F3965A744FC9E79E787C98597C6E4473AA049502F6",
+      "lighting": "overcast",
+      "fresh_frames": 4,
+      "tier": "High",
+      "accepted_ADR0083_Mono_cleanup": false
+    }
+  ],
+  "actual_signal_bindings": [
+    {
+      "condition": "Low-clear",
+      "actual_instanced_signal_materials": [
+        {
+          "material": "M_signal_green_on",
+          "path": "Assets/_Generated/World/bialystok-industrial-c/Materials/M_signal_green_on.mat",
+          "shader": "Universal Render Pipeline/Lit",
+          "keywords": "",
+          "binding": "WorldInstances.m_Mats (actual batch materials)",
+          "emission": {
+            "r": 0.05000000074505806,
+            "g": 1.25,
+            "b": 0.625,
+            "a": 0.25
+          },
+          "rendererUses": 2
+        },
+        {
+          "material": "M_signal_red_on",
+          "path": "Assets/_Generated/World/bialystok-industrial-c/Materials/M_signal_red_on.mat",
+          "shader": "Universal Render Pipeline/Lit",
+          "keywords": "",
+          "binding": "WorldInstances.m_Mats (actual batch materials)",
+          "emission": {
+            "r": 1.5,
+            "g": 0.07500000298023224,
+            "b": 0.02500000037252903,
+            "a": 0.25
+          },
+          "rendererUses": 2
+        }
+      ]
+    },
+    {
+      "condition": "Low-overcast",
+      "actual_instanced_signal_materials": [
+        {
+          "material": "M_signal_green_on",
+          "path": "Assets/_Generated/World/bialystok-industrial-c/Materials/M_signal_green_on.mat",
+          "shader": "Universal Render Pipeline/Lit",
+          "keywords": "",
+          "binding": "WorldInstances.m_Mats (actual batch materials)",
+          "emission": {
+            "r": 0.05000000074505806,
+            "g": 1.25,
+            "b": 0.625,
+            "a": 0.25
+          },
+          "rendererUses": 2
+        },
+        {
+          "material": "M_signal_red_on",
+          "path": "Assets/_Generated/World/bialystok-industrial-c/Materials/M_signal_red_on.mat",
+          "shader": "Universal Render Pipeline/Lit",
+          "keywords": "",
+          "binding": "WorldInstances.m_Mats (actual batch materials)",
+          "emission": {
+            "r": 1.5,
+            "g": 0.07500000298023224,
+            "b": 0.02500000037252903,
+            "a": 0.25
+          },
+          "rendererUses": 2
+        }
+      ]
+    },
+    {
+      "condition": "High-clear",
+      "actual_instanced_signal_materials": [
+        {
+          "material": "M_signal_green_on",
+          "path": "Assets/_Generated/World/bialystok-industrial-c/Materials/M_signal_green_on.mat",
+          "shader": "Universal Render Pipeline/Lit",
+          "keywords": "",
+          "binding": "WorldInstances.m_Mats (actual batch materials)",
+          "emission": {
+            "r": 0.05000000074505806,
+            "g": 1.25,
+            "b": 0.625,
+            "a": 0.25
+          },
+          "rendererUses": 2
+        },
+        {
+          "material": "M_signal_red_on",
+          "path": "Assets/_Generated/World/bialystok-industrial-c/Materials/M_signal_red_on.mat",
+          "shader": "Universal Render Pipeline/Lit",
+          "keywords": "",
+          "binding": "WorldInstances.m_Mats (actual batch materials)",
+          "emission": {
+            "r": 1.5,
+            "g": 0.07500000298023224,
+            "b": 0.02500000037252903,
+            "a": 0.25
+          },
+          "rendererUses": 2
+        }
+      ]
+    },
+    {
+      "condition": "High-overcast",
+      "actual_instanced_signal_materials": [
+        {
+          "material": "M_signal_green_on",
+          "path": "Assets/_Generated/World/bialystok-industrial-c/Materials/M_signal_green_on.mat",
+          "shader": "Universal Render Pipeline/Lit",
+          "keywords": "",
+          "binding": "WorldInstances.m_Mats (actual batch materials)",
+          "emission": {
+            "r": 0.05000000074505806,
+            "g": 1.25,
+            "b": 0.625,
+            "a": 0.25
+          },
+          "rendererUses": 2
+        },
+        {
+          "material": "M_signal_red_on",
+          "path": "Assets/_Generated/World/bialystok-industrial-c/Materials/M_signal_red_on.mat",
+          "shader": "Universal Render Pipeline/Lit",
+          "keywords": "",
+          "binding": "WorldInstances.m_Mats (actual batch materials)",
+          "emission": {
+            "r": 1.5,
+            "g": 0.07500000298023224,
+            "b": 0.02500000037252903,
+            "a": 0.25
+          },
+          "rendererUses": 2
+        }
+      ]
+    }
+  ],
+  "shipping_cached_files_exact": 2441,
+  "raw_files_exact": 192,
+  "production_shader_sha256": "1dc7db4ea4ec839f4dc8fbd301ba5aedd38a12c3fff892e66818841d125edce4",
+  "QA_shader_sha256": "9f98994df5750599eb018b50d9f9f7b8bd7bd09cf4cae0e59acfc57110571eef",
+  "all16_runtime_poses_and_rounded_counter_rows_equal": true,
+  "additional_QA_asset_scope": "Only ignored SurfaceWearQA shaders/controller/new packed texture; original shipping World/Truck/Trailer files unchanged. Original world materials restored; only M_road_asphalt temporarily cloned.",
+  "note": "QA-only trial, no production binding. GBA compression drift and image quality assessed separately. Actual instanced signal shader/keywords recorded; no historical signal runtime or nonexistent lamp ROI is claimed. Counter equality is not GPU time."
+}

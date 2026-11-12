@@ -59,6 +59,7 @@ Shader "Kamion/Truck Exterior"
         _CurtainAxles ("Curtain soiling: axle z (object space m) x3", Vector) = (-6.39, -7.7, -9.01, 0)
         _CurtainPosts ("Curtain soiling: post pitch, first post from rear, streak strength, overall scale", Vector) = (3.4, 0, 0.22, 0.7)
         [Toggle(_KAMION_TRUCK_LAMPS)] _Lamps ("Lamp emission from uv2 (Lights slot)", Float) = 0
+        _DrlHighlightShoulder ("DRL exposed HDR highlight shoulder (0 = off)", Range(0, 2)) = 0.8
     }
     SubShader
     {
@@ -71,6 +72,7 @@ Shader "Kamion/Truck Exterior"
             float4 _PaintColor, _DecalColor, _DirtColor;
             float _NormalStrength, _IsPaint, _PaintRoughness, _PaintMetallic, _DecalMetallic, _DecalRoughness, _Dirt, _Lamps;
             float _ClearCoat, _ClearCoatRoughness, _Flake, _FlakeScale;
+            float _DrlHighlightShoulder;
             float _CoatedBaseRoughness, _OrangePeel, _GrimeHeight, _GrimeChassis;
             float4 _CurtainGrime, _CurtainAxles, _CurtainPosts;
         CBUFFER_END
@@ -144,6 +146,15 @@ Shader "Kamion/Truck Exterior"
             {
                 // Keep both operations in float; expanding to nits in half would overflow before exposure.
                 return encoded * (_TruckLightNitsScale * _KamionExposure);
+            }
+            // ADR 0115: local display calibration for the DRL guide only. Fixed low nits made the guide look unlit in sun,
+            // while the D23 hard white clip erased the overcast guide. A luminance shoulder retains hue and the existing
+            // emitter mask, before fp16 conversion and MSAA. WORKING_VALUE in exposed scene units, not lamp photometry.
+            float3 TruckDrlHighlight(float3 radiance, float shoulder)
+            {
+                if (shoulder <= 0.0) return radiance;
+                float y = max(dot(radiance, float3(0.2126, 0.7152, 0.0722)), 0.0);
+                return radiance / (1.0 + y / max(shoulder, 1e-5));
             }
             float _KamionClearCoatOff;
             half4 _CabShadowLift;   // cab-view local shadow lift (CabInteriorLighting; 0 outside the cab view)
@@ -397,7 +408,11 @@ Shader "Kamion/Truck Exterior"
                 // 16 x 1 state texture: texel x = light group id (0 = none).
                 float u = (i.uv2.x + 0.5) / 16.0;
                 float3 encoded = SAMPLE_TEXTURE2D_LOD(_TruckLightState, sampler_point_clamp, float2(u, 0.5), 0).rgb;
-                s.emission = (half3)(TruckLampRadiance(encoded) * saturate(i.uv2.y));
+                float3 lampRadiance = TruckLampRadiance(encoded);
+                // Manifest light group 1 = DRL; all other lamp groups keep their original linear radiance.
+                if (abs(i.uv2.x - 1.0) < 0.25)
+                    lampRadiance = TruckDrlHighlight(lampRadiance, _DrlHighlightShoulder);
+                s.emission = (half3)(lampRadiance * saturate(i.uv2.y));
             #endif
                 // Metallic flake: per-cell random normal tilt in the base specular only, faded out where a cell is
                 // smaller than a pixel (no sparkle aliasing at distance).

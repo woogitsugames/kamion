@@ -1,0 +1,114 @@
+{
+  "schema": "truck-sim-pl/gate3-cameras/1",
+  "region": "bialystok-industrial-c",
+  "cameras": [
+    {
+      "id": "d_field_glyph_supported",
+      "type": "persp",
+      "kind": "photo_match",
+      "seat": "file",
+      "pos": [
+        -359.037353515625,
+        -126.22898864746094,
+        140.71620178222656
+      ],
+      "look_at": [
+        -365.037353515625,
+        -116.22898864746094,
+        131.73620178222657
+      ],
+      "fov_deg": 55,
+      "note": "Actual production lane-field sourcecomponent; supported/unknown classification pinned, view before broad/newbus."
+    },
+    {
+      "id": "d_field_glyph_unknown",
+      "type": "persp",
+      "kind": "photo_match",
+      "seat": "file",
+      "pos": [
+        -370.3396301269531,
+        -158.62869262695312,
+        140.43310546875
+      ],
+      "look_at": [
+        -376.3396301269531,
+        -148.62869262695312,
+        131.45310546875
+      ],
+      "fov_deg": 55,
+      "note": "Actual production lane-field sourcecomponent; supported/unknown classification pinned, view before broad/newbus."
+    },
+    {
+      "id": "d_field_bus464_zone",
+      "type": "persp",
+      "kind": "photo_match",
+      "seat": "file",
+      "pos": [
+        137.26,
+        -489.17,
+        146.35186730446983
+      ],
+      "look_at": [
+        133.26,
+        -482.17,
+        141.37186730446984
+      ],
+      "fov_deg": 48,
+      "note": "ExplicitOSM2367445386 stopzone/ref464 matchedphoto1170695487387705; busstainABSENT foundation. WORKINGcamera."
+    },
+    {
+      "id": "d_field_bus464_close",
+      "type": "persp",
+      "kind": "photo_match",
+      "seat": "file",
+      "pos": [
+        134.56,
+        -484.37,
+        143.45186730446983
+      ],
+      "look_at": [
+        133.26,
+        -482.17,
+        141.37186730446984
+      ],
+      "fov_deg": 48,
+      "note": "Exact future9gonzone; busstainABSENT foundation. No arbitrary engineoffset."
+    },
+    {
+      "id": "d_field_glyph_compact",
+      "type": "persp",
+      "kind": "photo_match",
+      "seat": "file",
+      "pos": [
+        -759.553955078125,
+        74.71810150146484,
+        144.23886108398438
+      ],
+      "look_at": [
+        -760.553955078125,
+        78.71810150146484,
+        140.75886108398439
+      ],
+      "fov_deg": 48,
+      "note": "Actual acceptedcompact2.6x1.3m sourcecomponent1_3; shape mustbe inspected, no name-basedP8claim."
+    },
+    {
+      "id": "d_field_p8_turn",
+      "type": "persp",
+      "kind": "photo_match",
+      "seat": "file",
+      "pos": [
+        -520.4365743001302,
+        -56.3035831451416,
+        137.6312510172526
+      ],
+      "look_at": [
+        -521.4365743001302,
+        -51.3035831451416,
+        132.6512510172526
+      ],
+      "fov_deg": 48,
+      "note": "ActualP8candidate12/15ringvertices/localarrowUV0 + transverseage +varyinglanefield; imagevalidation required. Geometry from immutablebefore."
+    }
+  ]
+}
