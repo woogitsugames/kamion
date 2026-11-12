@@ -22,6 +22,8 @@ namespace Game.Rendering.Editor
             public string domain="q=sqrt(c/(1+c)); texel centre=(q*(N-1)+0.5)/N; inverse c=q²/(1-q²), last input clamped at9999";
             public float exposure,dimColour,actualHighMaster,requestedMaster,actualHighSaturation;
             public float sharedPathMeanRgb,sharedPathMaxRgb,captureBypassMaxRgb;
+            public string nativeSourceFormat;
+            public int nativeCopyPasses;
             public Measurement[] measurements;
         }
         static MethodInfo s_Render;
@@ -35,11 +37,12 @@ namespace Game.Rendering.Editor
             QualityTiers.Apply(name);s_Applier.ApplyNow();s_Environment.Apply();
             if(s_Camera.GetUniversalAdditionalCameraData().renderPostProcessing!=(name=="High"))throw new InvalidOperationException("Wrong actual chart camera post state");
         }
-        static Color32[] Render(Color[] values,int columns,int rows,int cellPixels,bool useLut,Texture3D lut=null,int cellHeight=0,bool useShared=false)
+        static Color32[] Render(Color[] values,int columns,int rows,int cellPixels,bool useLut,Texture3D lut=null,int cellHeight=0,bool useShared=false,bool nativeLut=false)
         {
             var map=new Texture2D(columns,rows,TextureFormat.RGBAFloat,false,true){filterMode=FilterMode.Point,wrapMode=TextureWrapMode.Clamp};
             var padded=new Color[columns*rows];Array.Copy(values,padded,values.Length);map.SetPixels(padded);map.Apply();
             s_Material.SetTexture("_LabInput",map);s_Material.SetFloat("_LabUseLut",useShared?2:useLut?1:0);
+            s_Material.SetFloat("_LabNative",nativeLut?1:0);
             s_Material.SetTexture("_LabLut",lut);s_Material.SetFloat("_LabLutSize",lut!=null?lut.width:1);
             int width=columns*cellPixels,height=rows*(cellHeight>0?cellHeight:cellPixels);
             s_Camera.aspect=(float)width/height;
@@ -100,6 +103,102 @@ namespace Game.Rendering.Editor
             for(int row=0;row<12;row++)Array.Copy(pixels,(row*32+16)*1024,result,row*1024,1024);
             return result;
         }
+        static Color[] HoldoutInputs()
+        {
+            var inputs=new Color[192];
+            for(int i=0;i<64;i++){float v=i<32?(i==0?0:Mathf.Pow(10,-4f+(i-1)*3.2552725f/30f)):.18f+(i-32)*1.82f/31f;inputs[i]=new Color(v,v,v,1);}
+            var random=new System.Random(10805);
+            for(int i=64;i<inputs.Length;i++){float range=i<96?.04f:1.8f;inputs[i]=new Color((float)random.NextDouble()*range,(float)random.NextDouble()*range,(float)random.NextDouble()*range,1);}
+            return inputs;
+        }
+        static LightingPreset PreparePreset(string presetName)
+        {
+            EditorSceneManager.NewScene(NewSceneSetup.EmptyScene,NewSceneMode.Single);
+            s_Camera=new GameObject("grade lab view").AddComponent<Camera>();s_Camera.tag="MainCamera";s_Camera.enabled=false;
+            s_Camera.orthographic=true;s_Camera.orthographicSize=1;s_Camera.transform.position=new Vector3(0,0,-10);
+            s_Camera.clearFlags=CameraClearFlags.SolidColor;s_Camera.backgroundColor=Color.black;s_Camera.nearClipPlane=.1f;s_Camera.farClipPlane=20;
+            QualityTiers.Apply("High");s_Applier=new GameObject("actual tier").AddComponent<QualityProfileApplier>();s_Applier.targetCamera=s_Camera;s_Applier.ApplyNow();
+            var preset=AssetDatabase.LoadAssetAtPath<LightingPreset>(LookDevAssets.LightingDir+"/LP_"+presetName+".asset");
+            if(preset==null)throw new InvalidOperationException("Missing real preset");
+            var host=new GameObject("actual environment");host.SetActive(false);s_Environment=host.AddComponent<EnvironmentLighting>();
+            s_Environment.presets=new[]{preset};host.SetActive(true);s_Environment.Apply();
+            var shader=Shader.Find("Hidden/KamionLightQA/GradeLutLab");if(shader==null)throw new InvalidOperationException("Missing lab shader");
+            s_Material=new Material(shader);var plane=GameObject.CreatePrimitive(PrimitiveType.Quad);plane.name="grade lab input plane";plane.GetComponent<Renderer>().sharedMaterial=s_Material;
+            SelectTier("High");return preset;
+        }
+        /// <summary>Compare a half-float copy of the ORIGINAL High LogC LUT with High, not an 8-bit sampled approximation.
+        /// Only the explicit Editor bake adds its temporary copy pass; Low samples the cube in the existing lab fragment.</summary>
+        public static void RunNative()
+        {
+            int exit=1;
+            try{
+                var args=Environment.GetCommandLineArgs();int at=Array.IndexOf(args,"-lightGradeLabOut");
+                if(at<0)throw new ArgumentException("Missing -lightGradeLabOut");string folder=args[at+1];Directory.CreateDirectory(folder);
+                s_Render=Type.GetType("Game.Editor.VisualQA.VisualQaRunner, Game.Editor",true).GetMethod("RenderToPixels",BindingFlags.NonPublic|BindingFlags.Static);
+                if(s_Render==null)throw new MissingMethodException("World QA render path");
+                var inputs=HoldoutInputs();var gradients=GradientInputs();int imageCount=0;
+                foreach(string name in new[]{"Clear","Overcast","Night"}){
+                    var preset=PreparePreset(name);
+                    Texture3D cube=null;string sourceFormat=null;int copyPasses=0;
+                    try{
+                        Color32[] highPixels,highGradient;
+                        using(var copy=new LightNativeGradeLutCapture(s_Camera,32)){
+                            highPixels=Render(inputs,16,12,32,false);
+                            highGradient=Render(gradients,1024,12,1,false,null,32);
+                            cube=copy.ReadCube();sourceFormat=copy.SourceFormat;copyPasses=copy.RecordedCopies;
+                        }
+                        var reference=Centres(highPixels,192,16,32);var gradientReference=GradientCentres(highGradient);
+                        SaveImage(Path.Combine(folder,name+"-High-reference.png"),highPixels,512,384);imageCount++;
+                        SaveImage(Path.Combine(folder,name+"-gradient-High-reference.png"),highGradient,1024,384);imageCount++;
+                        var stack=s_Camera.GetUniversalAdditionalCameraData().volumeStack??VolumeManager.instance.stack;
+                        var curves=stack.GetComponent<ColorCurves>();var adjustment=stack.GetComponent<ColorAdjustments>();
+                        var volume=s_Environment.GetComponentInChildren<Volume>();
+                        if(volume==null || !volume.sharedProfile.TryGet(out ColorCurves requested))throw new InvalidOperationException("No requested look volume");
+                        float actual=curves.master.value.Evaluate(.1f),wanted=requested.master.value.Evaluate(.1f);
+                        if(Mathf.Abs(actual-wanted)>.001f || Mathf.Abs(adjustment.saturation.value-preset.lookSaturation)>.01f ||
+                           Mathf.Abs(adjustment.postExposure.value)>.0001f || stack.GetComponent<ColorLookup>().contribution.value>0)
+                            throw new InvalidOperationException("Native High grading stack not the expected reference");
+                        File.WriteAllText(Path.Combine(folder,name+"-native-key.json"),JsonUtility.ToJson(LightGradeLutWorldProbe.CaptureKey(preset,1),true));
+                        File.WriteAllBytes(Path.Combine(folder,name+"-native32-LogC-RGBAHalf.raw"),cube.GetPixelData<byte>(0).ToArray());
+                        SelectTier("Low");
+                        var low=Render(inputs,16,12,32,false);var lowGradient=Render(gradients,1024,12,1,false,null,32);
+                        SaveImage(Path.Combine(folder,name+"-Low-baseline.png"),low,512,384);imageCount++;
+                        SaveImage(Path.Combine(folder,name+"-gradient-Low-baseline.png"),lowGradient,1024,384);imageCount++;
+                        var native=Render(inputs,16,12,32,true,cube,0,false,true);
+                        var nativeGradient=Render(gradients,1024,12,1,true,cube,32,false,true);
+                        SaveImage(Path.Combine(folder,name+"-Low-native32.png"),native,512,384);imageCount++;
+                        SaveImage(Path.Combine(folder,name+"-gradient-Low-native32.png"),nativeGradient,1024,384);imageCount++;
+                        Measurement shared;float bypassMax;
+                        using(var probe=new LightGradeLutWorldProbe(folder,name,32,1)){
+                            probe.Apply(s_Camera);var sharedPixels=Render(inputs,16,12,32,false,null,0,true);
+                            SaveImage(Path.Combine(folder,name+"-Low-shared-native32.png"),sharedPixels,512,384);imageCount++;
+                            shared=Measure("Actual shared native LogC path",32,inputs,reference,Centres(sharedPixels,192,16,32));
+                            if(shared.meanAbsoluteRgb>1 || shared.maxRgb>8)throw new InvalidOperationException("Native shared response missing or outside smoke bounds");
+                            Shader.SetGlobalFloat("_KamionSkyCapOff",1);
+                            try{
+                                var captureReference=Render(inputs,16,12,32,false);var bypass=Render(inputs,16,12,32,false,null,0,true);
+                                bypassMax=Measure("Native physical bypass all pixels",32,new Color[captureReference.Length],captureReference,bypass).maxRgb;
+                                SaveImage(Path.Combine(folder,name+"-capture-reference.png"),captureReference,512,384);imageCount++;
+                                SaveImage(Path.Combine(folder,name+"-capture-native-bypass.png"),bypass,512,384);imageCount++;
+                                if(bypassMax!=0)throw new InvalidOperationException("Native LUT changed physical capture pixels");
+                            }finally{Shader.SetGlobalFloat("_KamionSkyCapOff",0);}
+                        }
+                        var measurements=new[]{Measure("Low baseline",0,inputs,reference,Centres(low,192,16,32)),
+                            Measure("Low native LogC LUT",32,inputs,reference,Centres(native,192,16,32)),shared};
+                        var gradientMeasurements=new[]{Measure("Low baseline",0,gradients,gradientReference,GradientCentres(lowGradient)),
+                            Measure("Low native LogC LUT",32,gradients,gradientReference,GradientCentres(nativeGradient))};
+                        const string domain="Native High internal LUT, LogC input, RGBAHalf linear output. Dim presentation applied before lookup; toe/master/saturation already in native LUT.";
+                        File.WriteAllText(Path.Combine(folder,name+"-proof.json"),JsonUtility.ToJson(new Proof{preset=name,domain=domain,nativeSourceFormat=sourceFormat,nativeCopyPasses=copyPasses,
+                            exposure=s_Environment.Model.Exposure,dimColour=preset.dimColourDesaturation,actualHighMaster=actual,requestedMaster=wanted,
+                            actualHighSaturation=adjustment.saturation.value,measurements=measurements,sharedPathMeanRgb=shared.meanAbsoluteRgb,sharedPathMaxRgb=shared.maxRgb,captureBypassMaxRgb=bypassMax},true));
+                        File.WriteAllText(Path.Combine(folder,name+"-gradient-proof.json"),JsonUtility.ToJson(new Proof{preset=name,domain=domain,measurements=gradientMeasurements},true));
+                    }finally{if(cube!=null)UnityEngine.Object.DestroyImmediate(cube);if(s_Material!=null)UnityEngine.Object.DestroyImmediate(s_Material);}
+                }
+                Debug.Log($"LIGHT_NATIVE_GRADE_LAB_RESULT: OK images={imageCount} cubes=3 holdoutPerPreset=192 gradientPerPreset=12288 physicalBypassMax=0");exit=0;
+            }catch(Exception ex){Debug.LogException(ex);Debug.Log("LIGHT_NATIVE_GRADE_LAB_RESULT: FAILED");}
+            finally{EditorSceneManager.NewScene(NewSceneSetup.EmptyScene,NewSceneMode.Single);}
+            if(Application.isBatchMode)EditorApplication.Exit(exit);
+        }
         public static void Run()
         {
             int exit=1;
@@ -108,24 +207,10 @@ namespace Game.Rendering.Editor
                 if(at<0)throw new ArgumentException("Missing -lightGradeLabOut");string folder=args[at+1];Directory.CreateDirectory(folder);
                 s_Render=Type.GetType("Game.Editor.VisualQA.VisualQaRunner, Game.Editor",true).GetMethod("RenderToPixels",BindingFlags.NonPublic|BindingFlags.Static);
                 if(s_Render==null)throw new MissingMethodException("World QA render path");
-                var inputs=new Color[192];
-                for(int i=0;i<64;i++){float v=i<32?(i==0?0:Mathf.Pow(10,-4f+(i-1)*3.2552725f/30f)):.18f+(i-32)*1.82f/31f;inputs[i]=new Color(v,v,v,1);}
-                var random=new System.Random(10805);
-                for(int i=64;i<inputs.Length;i++){float range=i<96?.04f:1.8f;inputs[i]=new Color((float)random.NextDouble()*range,(float)random.NextDouble()*range,(float)random.NextDouble()*range,1);}
+                var inputs=HoldoutInputs();
                 int imageCount=0;
                 foreach(string presetName in new[]{"Clear","Overcast","Night"}){
-                    EditorSceneManager.NewScene(NewSceneSetup.EmptyScene,NewSceneMode.Single);
-                    s_Camera=new GameObject("grade lab view").AddComponent<Camera>();s_Camera.tag="MainCamera";s_Camera.enabled=false;
-                    s_Camera.orthographic=true;s_Camera.orthographicSize=1;s_Camera.transform.position=new Vector3(0,0,-10);
-                    s_Camera.clearFlags=CameraClearFlags.SolidColor;s_Camera.backgroundColor=Color.black;s_Camera.nearClipPlane=.1f;s_Camera.farClipPlane=20;
-                    QualityTiers.Apply("High");s_Applier=new GameObject("actual tier").AddComponent<QualityProfileApplier>();s_Applier.targetCamera=s_Camera;s_Applier.ApplyNow();
-                    var preset=AssetDatabase.LoadAssetAtPath<LightingPreset>(LookDevAssets.LightingDir+"/LP_"+presetName+".asset");
-                    if(preset==null)throw new InvalidOperationException("Missing real preset");
-                    var host=new GameObject("actual environment");host.SetActive(false);s_Environment=host.AddComponent<EnvironmentLighting>();
-                    s_Environment.presets=new[]{preset};host.SetActive(true);s_Environment.Apply();
-                    var shader=Shader.Find("Hidden/KamionLightQA/GradeLutLab");if(shader==null)throw new InvalidOperationException("Missing lab shader");
-                    s_Material=new Material(shader);var plane=GameObject.CreatePrimitive(PrimitiveType.Quad);plane.name="grade lab input plane";plane.GetComponent<Renderer>().sharedMaterial=s_Material;
-                    SelectTier("High");
+                    var preset=PreparePreset(presetName);
                     File.WriteAllText(Path.Combine(folder,presetName+"-key.json"),JsonUtility.ToJson(LightGradeLutWorldProbe.CaptureKey(preset),true));
                     if(Shader.GetGlobalFloat("_KamionSkyCapOff")>.5f)throw new InvalidOperationException("Physical capture bypass unexpectedly active");
                     var highPixels=Render(inputs,16,12,32,false);var reference=Centres(highPixels,inputs.Length,16,32);

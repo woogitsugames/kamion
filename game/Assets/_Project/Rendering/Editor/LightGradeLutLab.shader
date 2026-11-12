@@ -12,7 +12,7 @@ Shader "Hidden/KamionLightQA/GradeLutLab"
             #include "../Shaders/KamionAtmosphere.hlsl"
             TEXTURE2D(_LabInput); SAMPLER(sampler_LabInput);
             TEXTURE3D(_LabLut); SAMPLER(sampler_LabLut);
-            float _LabUseLut, _LabLutSize;
+            float _LabUseLut, _LabLutSize, _LabNative;
             struct V {float3 p:POSITION;float2 uv:TEXCOORD0;};
             struct I {float4 p:SV_POSITION;float2 uv:TEXCOORD0;};
             I vert(V v){I o;o.p=TransformObjectToHClip(v.p);o.uv=v.uv;return o;}
@@ -21,7 +21,9 @@ Shader "Hidden/KamionLightQA/GradeLutLab"
                 if(_LabUseLut>1.5)return half4(KamionOpaqueTone(c),1);
                 if(_LabUseLut>.5){
                     // Square-root rational domain: fine sampling near black, finite coverage of HDR values.
-                    float3 q=sqrt(saturate(c/(1.0+c)));
+                    float3 q;
+                    if(_LabNative>.5)q=saturate(LinearToLogC(max((float3)KamionDimColour(c),0.0)));
+                    else q=sqrt(saturate(c/(1.0+c)));
                     q=(q*(_LabLutSize-1.0)+.5)/_LabLutSize;
                     return half4(SAMPLE_TEXTURE3D_LOD(_LabLut,sampler_LabLut,q,0).rgb,1);
                 }

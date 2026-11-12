@@ -14,7 +14,7 @@ namespace Game.Rendering.Editor
         [Serializable] public sealed class Key
         {
             public string unity,urp;
-            public int revision=1,lutSize,gradingMode;
+            public int revision=1,lutSize,gradingMode,domainMode;
             public bool hdr;
             public float black,white,toe,toeP,pivot,saturation,highlightDesaturation,dimColour;
         }
@@ -22,6 +22,7 @@ namespace Game.Rendering.Editor
         {
             public string camera,preset,key;
             public float physicalCaptureBypass,enabled;
+            public float actualDomainMode;
             public Vector4 cabToeParity;
             public Vector4 actualSkyCap;
         }
@@ -33,25 +34,30 @@ namespace Game.Rendering.Editor
         }
         readonly Texture3D m_Lut;
         readonly string m_Key;
+        readonly int m_DomainMode;
         readonly Dictionary<int,Frame> m_Frames=new Dictionary<int,Frame>();
         string m_Error;
         Vector4 m_ParityToRestore;
         bool m_HasSavedParity;
-        public static Key CaptureKey(LightingPreset preset)
+        public static Key CaptureKey(LightingPreset preset,int domainMode=0)
         {
             var pipeline=AssetDatabase.LoadAssetAtPath<UniversalRenderPipelineAsset>("Assets/_Project/Rendering/Settings/URP_High.asset");
             if(preset==null || pipeline==null)throw new InvalidOperationException("Missing look key inputs");
             WorldAtmosphere.ResolveLook(preset,out float toe,out float toeP,out float pivot);
             return new Key{unity=Application.unityVersion,urp=UnityEditor.PackageManager.PackageInfo.FindForAssembly(typeof(UniversalRenderPipelineAsset).Assembly)?.version??"unknown",
-                lutSize=pipeline.colorGradingLutSize,gradingMode=(int)pipeline.colorGradingMode,hdr=pipeline.supportsHDR,
+                lutSize=pipeline.colorGradingLutSize,gradingMode=(int)pipeline.colorGradingMode,hdr=pipeline.supportsHDR,domainMode=domainMode,
                 black=preset.lookBlackLevel,white=preset.lookWhiteClip,toe=toe,toeP=toeP,pivot=pivot,saturation=preset.lookSaturation,
                 highlightDesaturation=preset.lookHighlightDesaturation,dimColour=preset.dimColourDesaturation};
         }
-        public LightGradeLutWorldProbe(string folder,string preset,int size)
+        public LightGradeLutWorldProbe(string folder,string preset,int size,int domainMode=0)
         {
             if(size!=16 && size!=32)throw new ArgumentException("Reviewed sizes16/32 only");
-            m_Key=JsonUtility.ToJson(JsonUtility.FromJson<Key>(File.ReadAllText(Path.Combine(folder,preset+"-key.json"))));
-            var bytes=File.ReadAllBytes(Path.Combine(folder,$"{preset}-lut{size}-RGBAHalf.raw"));
+            if(domainMode<0 || domainMode>1 || (domainMode==1 && size!=32))throw new ArgumentException("Unknown LUT domain");
+            m_DomainMode=domainMode;
+            string keySuffix=domainMode==1?"-native-key.json":"-key.json";
+            m_Key=JsonUtility.ToJson(JsonUtility.FromJson<Key>(File.ReadAllText(Path.Combine(folder,preset+keySuffix))));
+            string rawSuffix=domainMode==1?$"-native{size}-LogC-RGBAHalf.raw":$"-lut{size}-RGBAHalf.raw";
+            var bytes=File.ReadAllBytes(Path.Combine(folder,preset+rawSuffix));
             if(bytes.Length!=size*size*size*8)throw new InvalidDataException("LUT byte count");
             // The QA runner unloads unused assets while opening its scene. This managed diagnostic owner is
             // not a scene component; retain the transient texture explicitly until Dispose releases it.
@@ -66,10 +72,11 @@ namespace Game.Rendering.Editor
             if(!QualityProfileApplier.HasCurrent || QualityProfileApplier.Current.name!="Low" || QualityProfileApplier.Current.postProcessing){m_Error="LUT probe requires actual Low without post";return;}
             var env=EnvironmentLighting.Instance;
             if(env==null || env.Active==null){m_Error="Missing active environment";return;}
-            var key=JsonUtility.ToJson(CaptureKey(env.Active));
+            var key=JsonUtility.ToJson(CaptureKey(env.Active,m_DomainMode));
             if(key!=m_Key){m_Error="Stale bake key in "+camera.name+" ("+camera.cameraType+"): "+key+" expected "+m_Key;return;}
             Shader.SetGlobalTexture("_KamionOpaqueGradeLut",m_Lut);
             Shader.SetGlobalFloat("_KamionOpaqueGradeSize",m_Lut.width);
+            Shader.SetGlobalFloat("_KamionOpaqueGradeDomain",m_DomainMode);
             Shader.SetGlobalFloat("_KamionOpaqueGradeEnabled",1);
             // Cab/exterior already have a Low-only approximate D23 curve before KamionMixFog.
             // Disable that approximation only for this diagnostic display camera, otherwise the full bake applies twice.
@@ -89,15 +96,15 @@ namespace Game.Rendering.Editor
         {
             var env=EnvironmentLighting.Instance;
             if(env!=null && env.Active!=null && camera.GetComponent<ControlCamera>()!=null)
-                m_Frames[camera.GetInstanceID()]=new Frame{camera=camera.name,preset=env.Active.name,key=JsonUtility.ToJson(CaptureKey(env.Active)),
+                m_Frames[camera.GetInstanceID()]=new Frame{camera=camera.name,preset=env.Active.name,key=JsonUtility.ToJson(CaptureKey(env.Active,m_DomainMode)),
                     physicalCaptureBypass=Shader.GetGlobalFloat("_KamionSkyCapOff"),enabled=Shader.GetGlobalFloat("_KamionOpaqueGradeEnabled"),
-                    cabToeParity=Shader.GetGlobalVector("_KamionToeParity"),actualSkyCap=Shader.GetGlobalVector("_KamionSkyCap")};
+                    cabToeParity=Shader.GetGlobalVector("_KamionToeParity"),actualSkyCap=Shader.GetGlobalVector("_KamionSkyCap"),actualDomainMode=Shader.GetGlobalFloat("_KamionOpaqueGradeDomain")};
         }
         public void Write(string folder,int expected)
         {
             if(m_Error!=null)throw new InvalidOperationException(m_Error);
             if(m_Frames.Count!=expected)throw new InvalidOperationException($"Missing grade proof cameras {m_Frames.Count}/{expected}");
-            foreach(var frame in m_Frames.Values)if(frame.enabled!=1 || frame.physicalCaptureBypass!=0 || frame.cabToeParity!=Vector4.zero || frame.key!=m_Key)throw new InvalidOperationException("Grade absent, stale final key, double cab curve or physical capture bypass active in main camera");
+            foreach(var frame in m_Frames.Values)if(frame.enabled!=1 || frame.physicalCaptureBypass!=0 || frame.cabToeParity!=Vector4.zero || frame.key!=m_Key || frame.actualDomainMode!=m_DomainMode)throw new InvalidOperationException("Grade absent, stale final key/domain, double cab curve or physical capture bypass active in main camera");
             var frames=new Frame[m_Frames.Count];m_Frames.Values.CopyTo(frames,0);
             File.WriteAllText(Path.Combine(folder,"opaque-grade-proof.json"),JsonUtility.ToJson(new Proof{size=m_Lut.width,frames=frames},true));
         }
@@ -105,6 +112,7 @@ namespace Game.Rendering.Editor
         {
             Shader.SetGlobalFloat("_KamionOpaqueGradeEnabled",0);
             Shader.SetGlobalFloat("_KamionOpaqueGradeSize",0);
+            Shader.SetGlobalFloat("_KamionOpaqueGradeDomain",0);
             Shader.SetGlobalTexture("_KamionOpaqueGradeLut",null);
             UnityEngine.Object.DestroyImmediate(m_Lut);
             if(EnvironmentLighting.Instance!=null)EnvironmentLighting.Instance.Apply();

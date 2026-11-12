@@ -48,6 +48,7 @@ namespace Game.Rendering.Editor
             public float skyDisplayGain = 1f, skyDisplayDesaturation;
             public string opaqueGradeLabFolder; // Editor-only explicit experiment; no preset/player binding.
             public int opaqueGradeLabSize;
+            public int opaqueGradeLabDomain;
         }
 
         static string Arg(string key)
@@ -145,7 +146,7 @@ namespace Game.Rendering.Editor
                     var lampProbe = job.lampProbe ? new LightQaLampProbe() : null;
                     using var gradeProbe = job.opaqueGradeLabSize>0
                         ? new LightGradeLutWorldProbe(job.opaqueGradeLabFolder,
-                            char.ToUpperInvariant(job.lighting[0])+job.lighting.Substring(1),job.opaqueGradeLabSize) : null;
+                            char.ToUpperInvariant(job.lighting[0])+job.lighting.Substring(1),job.opaqueGradeLabSize,job.opaqueGradeLabDomain) : null;
                     if (job.verifyWetness && (lampProbe == null || job.expectedWetness < 0f || job.expectedWetness > 1f))
                         throw new ArgumentException("Wetness proof requires lampProbe and expectedWetness0..1");
                     if(job.verifyDimColour && (lampProbe==null || job.expectedDimColour<0f || job.expectedDimColour>1f))

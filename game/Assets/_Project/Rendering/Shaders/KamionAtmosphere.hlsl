@@ -12,6 +12,7 @@
 // 3. Wet surfaces: _KamionWet (x wetness 0..1, y puddle share 0..1) for KamionWetSurface (World PBR / World Surface).
 #ifndef KAMION_ATMOSPHERE_INCLUDED
 #define KAMION_ATMOSPHERE_INCLUDED
+#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Color.hlsl"
 
 float4 _KamionHaze;        // x beta (1/m), y ground-layer factor a, z 1 / H (1/m), w layer base height y0 (world)
 float4 _KamionHazeColor;   // rgb exposed in-scatter colour (horizon)
@@ -33,7 +34,7 @@ half KamionFogTau(float3 pw, float viewDepth)
 float _KamionDimColourDesaturation;
 float _KamionSkyCapOff; // Existing physical-capture bypass.
 
-half3 KamionTone(half3 c)
+half3 KamionDimColour(half3 c)
 {
     if (_KamionDimColourDesaturation > 0.0 && _KamionSkyCapOff < 0.5)
     {
@@ -41,6 +42,12 @@ half3 KamionTone(half3 c)
         half amount = (half)_KamionDimColourDesaturation * (1.0h-smoothstep(0.02h,0.25h,y));
         c = lerp(c,y.xxx,amount);
     }
+    return c;
+}
+
+half3 KamionTone(half3 c)
+{
+    c = KamionDimColour(c);
     half3 k = 1.0h - (half)_KamionTone.x * (half)_KamionTone.y / (c + (half)_KamionTone.y + 1e-4h);
     return c * k * (1.0h + (half)_KamionTone.z);
 }
@@ -49,14 +56,20 @@ half3 KamionTone(half3 c)
 // The baked response includes dim presentation + toe + High post, so return before all three.
 // Physical reflection captures bypass the entire lookup. Premultiplied glass keeps KamionTone.
 TEXTURE3D(_KamionOpaqueGradeLut); SAMPLER(sampler_KamionOpaqueGradeLut);
-float _KamionOpaqueGradeEnabled, _KamionOpaqueGradeSize;
+float _KamionOpaqueGradeEnabled, _KamionOpaqueGradeSize, _KamionOpaqueGradeDomain;
 half3 KamionOpaqueTone(half3 c)
 {
     UNITY_BRANCH
     if (_KamionOpaqueGradeEnabled > 0.5 && _KamionSkyCapOff < 0.5)
     {
-        float3 value=max((float3)c,0.0);
-        float3 q=sqrt(saturate(value/(1.0+value)));
+        float3 q;
+        if (_KamionOpaqueGradeDomain > 0.5)
+            q=saturate(LinearToLogC(max((float3)KamionDimColour(c),0.0)));
+        else
+        {
+            float3 value=max((float3)c,0.0);
+            q=sqrt(saturate(value/(1.0+value)));
+        }
         q=(q*(_KamionOpaqueGradeSize-1.0)+0.5)/_KamionOpaqueGradeSize;
         return SAMPLE_TEXTURE3D_LOD(_KamionOpaqueGradeLut,sampler_KamionOpaqueGradeLut,q,0).rgb;
     }
