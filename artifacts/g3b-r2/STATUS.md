@@ -13,7 +13,7 @@ build_world 527 s exit 0; portal Andersa 14 m / H 6,1 m (tablice dolem 5,2-5,5 m
 W TLE: import-1 -> SBS Low overcast -> SBS Low clear do `artifacts/g3b-r2/after/renders` (czeka na slot Unity / PHONE_RUN), znacznik `artifacts/g3b-r2/cycle1.done`.
 NASTEPNY KROK: po `cycle1.done`: `cd artifacts/g3b-r2; BASE=../../../g3b-lowread/artifacts/g3b-lowread/final OUT=pairs-after bash make-pairs.sh after; BASE=../../../g3b-lowread/artifacts/g3b-lowread/final LIGHT=Low-clear OUT=pairs-after-clear bash make-pairs.sh after` -> obejrzec 494288 (duchy!), 810525, 1801374, 275528, 3678296.
 
-## 3. Pary cycle1 obejrzane + diagnoza "duchow" (s14, 18:45)
+## 3. Pary cycle1 obejrzane + diagnoza "duchow" (s14, 18:31)
 Pary `pairs-after(+clear)` (20+20): 494288/810525 szklo czyste z cienkimi liniami, 1801374 slupy ciemne, 275528 tablice nizsze/wezsze jak na zdjeciu, 3678296 ramiona dluzsze (poza bez zmian).
 "Duchy" drzew: `run-ghost.ps1` (ablacje Low overcast 494288): rq_a2c=0 i rq_msaa=1 bez zmiany, rq_hlod=0 usuwa -> to przeswity nieba w sylwetce lesnego HLOD (karty krawedzi) widziane przez szybe, NIE blad kolejnosci/alfy szyby. Przed 0139 mleczny film + grube linie robily z nich jasne plamy; po 0139 czytaja sie jak luki w koronach. Dowod: `crops/ghost-ablation-494288.jpg`.
 NASTEPNY KROK: `git merge main` (generated/glb/meta --ours) -> `pwsh artifacts/g3b-r2/run-all-2.ps1 -Name final -Tag 2`.
