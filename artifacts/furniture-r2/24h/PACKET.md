@@ -1,8 +1,7 @@
-# Pakiet furniture r2 — stan roboczy przed zamknięciem
+# Pakiet furniture r2 — zamknięcie
 
 Gałąź: gpt-furniture-r2. Kontynuacja r1, następnie merge main 522361aa do tej
-gałęzi. Bez merge do main, push, telefonu i zmian barier drogowych. Ostateczny
-SHA kodu i zasobów zostanie wskazany w REPORT po końcowych kontrolach.
+gałęzi. Bez merge do main, push, telefonu i zmian barier drogowych. Zweryfikowany SHA kodu i zasobów:52668015. Końcowe wyniki są w REPORT.
 
 ## Zakres zmiany
 
@@ -79,7 +78,7 @@ wnioskowania o dokładnej dzisiejszej pozycji i kalibracji fotometrycznej.
   strony, kąty, dystans, ekspozycja, asymetria, źródła, GUID i rodzina materiałów.
 - Końcowe EditMode:340/340,0 failed,0 skipped; XML i log w test-results.
 - Chroniona geometria:6833→6833,0 różnic, pełne payloady poza furniture porównane w heavy.
-- Pełny GIS i physics/gate3: PENDING, wykonywać przy zamknięciu rundy w heavy.
+- KońcowyGIS:644passed,1xfailed,1failed (zastane dwa hashe fidelity); physics/gate3:48passed.
 
 Porażki wcześniejszych fixture zachowano. Pierwszy shader probe nie ustawiał
 aktywnego tagu URP, inny mieszał kąt i odległość; poprawiono warunki próby.
@@ -116,3 +115,6 @@ Aktualizacja końcowych kontroli:root i niezależny reviewer obejrzeli330/330 pa
 
 
 KońcowyGIS wykonany raz po zamrożeniu rundy:644passed,1xfailed,1failed w827,24s. Jedyna porażka:test_road_fidelity.py::test_report_not_stale, dokładnieoverrides.yaml iroads/meshing.py. Oba wejścia i raport niezmienione od bazy3fe0c97f potwierdzaexisting-test-input-audit.json. Nie zmieniano cudzych dróg/overrides ani hashy, by uzyskaćPASS. Efekt uboczny wygenerowanej specyfikacji wiaduktu cofnięto po zakończeniu procesu. Physics/gate3 nadal czeka naheavy.
+
+
+Ostateczne physics/gate3:48passed w263,70s. Znana porażka r1 nie wystąpiła w bieżącym uruchomieniu; nie traktować historycznych audytów jako dowodu porażki r2. Wszystkie kontrole końcowe wykonane, ograniczenia wizualne/urządzenia pozostają jawne w REPORT.

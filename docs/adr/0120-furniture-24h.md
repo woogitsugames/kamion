@@ -233,3 +233,5 @@ DrawEst mesh/instancji/cieni wszędzie+0; dokładne165Low max tris+0,18997983%.
 Chronione payloady geometrii6833→6833,0 różnic. Końcowe EditMode340/340,
 bez pominięć. GIS iphysics/gate3 są osobnymi kontrolami końcowymi w heavy,
 aktualnie oczekującymi; nie przypisano im wyniku na podstawie audytu wejść.
+
+Zamknięcie r2:GIS644passed,1xfailed,1failed (zastane dwa hashe fidelity, niezmienione wejścia względem3fe0c97f); physics/gate3 48passed. EditMode340passed. REPORT iPACKET zachowują ograniczenia nocnej aproksymacji i niepotwierdzone detale konstrukcyjne. Następna runda dotyczy przystanków według Mapillary.

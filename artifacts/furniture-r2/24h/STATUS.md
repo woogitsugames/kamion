@@ -249,3 +249,5 @@ NASTĘPNY KROK: przygotować własne skrypty r2 z ownerem heavy gpt-furniture-r2
 2026-11-12T10:58:39.3077237+01:00: heavy physics final3; sukces=True; slot gpt-furniture-r2 zwolniony. NASTĘPNY KROK: sprawdzić log i kontynuować walidację rundy.
 
 2026-11-12T10:58:39.7263818+01:00: końcowe Python zakończone:GIS=1,physics/gate3=0. Wcześniejsze EditMode340/340 pozostaje ważne, kod zamrożony. Odczytać pełne logi i porażki przed REPORT; nie utożsamiać wykonania z PASS.
+
+2026-11-12T10:59:26.8608271+01:00: r2 zakończona:physics/gate3 48PASS, GIS644pass/1xfail/1fail zastany, EditMode340PASS,330 par niezależnie obejrzane,6833 chronione payloady bez różnic. REPORT zapisany normalnym polskim tekstem. NASTĘPNY KROK: robocopy artifacts do main, potemgpt-furniture-r3 i merge main do tej gałęzi, bez push/merge do main.
