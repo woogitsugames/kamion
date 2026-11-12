@@ -43,3 +43,7 @@ Skrypty zachowane w katalogu r4: `candidate-b.ps1` (już wykonany, NIE uruchamia
 ## Wynik bezpiecznego zakończenia
 
 Uzupełniany po naturalnym zakończeniu capture; nie uruchamiać kolejnej rundy.
+
+Capture zakończył się naturalnie 12.11.2026 o16:26CET, exit0. Komplet244 PNG (61×4) w `after-b`, potwierdzony `capture-after-b-result.json` i zgodnością SHA modelu/manifestu/kamer. Nie przeprowadzono analizy ani pełnego przeglądu tych244 obrazów. Wszystkie wcześniejsze8 podglądów B zostały obejrzane. Slot Unity zwolniony, ustawienia Unity przywrócone. Kontrola procesów po zakończeniu: brak aktywnego Unity/Python/Blender/pwsh z tą ścieżką worktree i brak slotu/waitera gpt-landmarks. Nie zatrzymano cudzych ani własnych pracujących zadań; pipeline zakończył się sam. Nie uruchomiono nowych testów ani rundy r5.
+
+Wszystkie pliki r4, w tym fotografie, baseline, wariant A, podglądy B, pełny capture, logi i narzędzia, pozostają w worktree i są skopiowane do `C:\Users\matma\Documents\Claude\kamion\artifacts\landmarks-r4`. Końcowy `COPY-RECEIPT.json` potwierdza hashe244 końcowych PNG oraz REPORT/HANDOFF/STATUS. Stan źródeł zapisano w commitach WIP; brak push, merge do main i commitów w main. R4 przekazana jako PARTIAL do wznowienia, nie jako zakończona walidacja.

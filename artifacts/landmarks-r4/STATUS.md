@@ -79,3 +79,5 @@ Krok 10c: 16:18CET PHONE_RUN zwolniony; podgląd B przesuwa się w kolejce Unity
 `nKrok 11: obejrzano8 PNG B i2 natywne pary; częściowa poprawa obrysu i usunięcie półek. B przechodzi do pełnych244 ujęć, bez końcowej akceptacji. Low nadal zbyt pełny; C niewdrożone. Preview zakończony0, własny marker usunięty i slot zwolniony.
 
 Krok 12: właściciel polecił zakończyć wcześniej z powodu limitu tygodniowego. Nie startuję nowych generatorów/testów/rundy. Trwający capture terminal1460 dokończy się naturalnie; przygotowane HANDOFF.md. R4 pozostaje częściowa, bez finalnej walidacji.
+
+Krok 13: 16:26CET capture zakończony0,244/244 PNG; własny slot zwolniony, ustawienia przywrócone, brak aktywnych procesów zadania/own waiterów. Nie uruchomiono analizy/testów/r5. Praca kończy się wcześniej na polecenie właściciela; HANDOFF i REPORT opisują PARTIAL.
