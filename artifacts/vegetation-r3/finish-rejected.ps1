@@ -10,6 +10,8 @@ pwsh artifacts/vegetation-r3/heavy-task.ps1 -Task World *> artifacts/vegetation-
 Check-Step 'generator przywróconego kodu' $LASTEXITCODE
 uv run --project tools/worldgen python artifacts/vegetation-r3/snapshot.py restored
 Check-Step 'migawka przywróconego świata' $LASTEXITCODE
+uv run --project tools/worldgen python artifacts/vegetation-r3/verify_restored.py world *> artifacts/vegetation-r3/verify-restored-world.log
+Check-Step 'równość instancji i GLB z baseline' $LASTEXITCODE
 pwsh artifacts/vegetation-r3/heavy-task.ps1 -Task GisFinal *> artifacts/vegetation-r3/pytest-final.log
 $gisExit = $LASTEXITCODE
 Add-Content artifacts/vegetation-r3/STATUS.md "Pełny końcowy GIS kod $gisExit; szczegóły pytest-final.log. Znana porażka starego fidelity wymaga osobnej weryfikacji, nie naprawiania cudzej dziedziny."
@@ -18,6 +20,8 @@ pwsh artifacts/vegetation-r3/import-safe.ps1 -Log artifacts/vegetation-r3/import
 Check-Step 'import przywróconego świata' $LASTEXITCODE
 pwsh artifacts/vegetation-r3/probe-restored.ps1 *> artifacts/vegetation-r3/probe-restored-runner.log
 Check-Step 'probe przywróconego świata' $LASTEXITCODE
+uv run --project tools/worldgen python artifacts/vegetation-r3/verify_restored.py probe *> artifacts/vegetation-r3/verify-restored-probe.log
+Check-Step 'równość obrazu docelowego z baseline' $LASTEXITCODE
 pwsh artifacts/vegetation-r3/editmode-safe.ps1 *> artifacts/vegetation-r3/editmode-final.log
 Check-Step 'EditMode' $LASTEXITCODE
 Set-Content artifacts/vegetation-r3/finish-rejected.done 'Done; inspect logs and restored hashes before REPORT.'

@@ -1,7 +1,8 @@
 {
   "status": "REJECTED",
-  "producer_generated": false,
+  "scope": "B1 producer output and separate consumer-input diagnostic",
   "baseline": {
+    "producer_generated": true,
     "stats": {
       "static_draws": 460,
       "shadow_draws": 34,
@@ -16,6 +17,7 @@
     "image_sha256": "958eb031211128d301bc890b41d840ea61d1d7ebda544a11e00f7594a36cce85"
   },
   "B1": {
+    "producer_generated": true,
     "stats": {
       "static_draws": 460,
       "shadow_draws": 34,
@@ -30,6 +32,7 @@
     "image_sha256": "764b522745b5662e32ff4acdfa2c57258ed2d2ff0114831cecbb078addecba43"
   },
   "maple_height_only": {
+    "producer_generated": false,
     "stats": {
       "static_draws": 460,
       "shadow_draws": 34,

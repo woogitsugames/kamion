@@ -10,7 +10,7 @@ here = Path(__file__).resolve().parent
 camera = 'sbs-g3-b-297817221966185'
 group = 'Low-overcast-photo-2048x1536'
 stats = runpy.run_path(str(here / 'review_images.py'))['stats']
-frames, result = [], {'status': 'REJECTED', 'producer_generated': False}
+frames, result = [], {'status': 'REJECTED', 'scope': 'B1 producer output and separate consumer-input diagnostic'}
 before = None
 for label, folder in [('baseline', 'before'), ('B1', 'probe'),
                       ('maple_height_only', 'diagnostic-maple-height')]:
@@ -20,7 +20,8 @@ for label, folder in [('baseline', 'before'), ('B1', 'probe'),
     array = np.array(frame)
     if before is None:
         before = array
-    result[label] = dict(stats=stats(directory / 'stats.txt')[camera],
+    result[label] = dict(producer_generated=(label != 'maple_height_only'),
+                        stats=stats(directory / 'stats.txt')[camera],
                         changed_pixels=int(np.any(array != before, axis=2).sum()),
                         image_sha256=hashlib.sha256(path.read_bytes()).hexdigest())
     frames.append((label, frame))
