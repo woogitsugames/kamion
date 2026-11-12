@@ -30,7 +30,7 @@ namespace Game.Editor.VisualQA
         [Serializable] public class PaintMaterial
         {
             public string name, shader, baseMap;
-            public bool carPaint, carPlate;
+            public bool carPaint, carPlate, motionVectors, xrMotionVectors;
             public int passes;
             public Vector4 flake, tile;
         }
@@ -104,7 +104,8 @@ namespace Game.Editor.VisualQA
                     payloads = p.name.StartsWith("tractor_", StringComparison.Ordinal) ? Enumerable.Range(0, p.lods.Length).Select(l => ReadPayload(set, p, l)).ToArray() : Array.Empty<Payload>() }).ToArray();
             Materials = set.materials.Where(m => m != null && (m.name.Contains("car_paint_") || m.name.Contains("tractor_paint_") || m.name.Contains("trailer_curtain_") || m.name.Contains("car_plate")))
                 .Distinct().OrderBy(m => m.name, StringComparer.Ordinal).Select(m => new PaintMaterial {
-                    name = m.name, shader = m.shader.name, carPaint = m.IsKeywordEnabled("_CARPAINT"), carPlate = m.IsKeywordEnabled("_CARPLATE"), passes = m.passCount,
+                    name = m.name, shader = m.shader.name, carPaint = m.IsKeywordEnabled("_CARPAINT"), carPlate = m.IsKeywordEnabled("_PLATE_LOCAL_CORNERS"), passes = m.passCount,
+                    motionVectors = m.GetShaderPassEnabled("MotionVectors"), xrMotionVectors = m.GetShaderPassEnabled("XRMotionVectors"),
                     flake = m.HasProperty("_CarFlake") ? m.GetVector("_CarFlake") : Vector4.zero,
                     tile = m.HasProperty("_Tile") ? m.GetVector("_Tile") : Vector4.zero,
                     baseMap = m.HasProperty("_BaseMap") && m.GetTexture("_BaseMap") != null ? m.GetTexture("_BaseMap").name : ""
