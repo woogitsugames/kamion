@@ -34,3 +34,5 @@ Dodatkowe kamery: after/Low-overcast zapisane.
 Dodatkowe kamery: after/High-clear zapisane.
 
 Dodatkowe kamery: after/High-overcast zapisane.
+
+Kolizje sceny nie pokrywają wszystkich widocznych ścian, dlatego same promienie nie dały pełnej widoczności — druga próba nie jest zaliczona. Nowe40kamer: prześwity z643obrysami budynków i1488obrysami pozostałych pojazdów, wysokość2.5m nad NMT. Sprawdzenie Low-clear przed resztą warunków. Narzędzie nie zmienia geometrii/rozmieszczenia.

@@ -1,10 +1,10 @@
-param([string]$Stage = 'after')
+param([string]$Stage = 'after', [string]$OnlyTier = '', [string]$OnlyLighting = '')
 $ErrorActionPreference = 'Stop'
 $root = 'C:\Users\matma\Documents\Claude\kamion'
 $slot = Join-Path $root 'scripts/unity-slot.ps1'
 $cameras = (Get-Content artifacts/gpt-s16-r1/clear-cameras.json -Raw | ConvertFrom-Json).cameras.id -join ','
-foreach ($tier in @('Low','High')) {
-    foreach ($light in @('clear','overcast')) {
+foreach ($tier in $(if ($OnlyTier) { @($OnlyTier) } else { @('Low','High') })) {
+    foreach ($light in $(if ($OnlyLighting) { @($OnlyLighting) } else { @('clear','overcast') })) {
         & pwsh $slot -Acquire -Owner gpt-s16
         try {
             if (Test-Path "$root/artifacts/locks/PHONE_RUN") { throw 'PHONE_RUN appeared' }
