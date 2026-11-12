@@ -1,0 +1,28 @@
+{
+  "status": "WORKING_VALUE",
+  "note": "Analytic fixture reference only; neither executed Unity Red/Green nor measured current world.",
+  "raw_ditch_m": 130,
+  "raw_neighbours_m": 140,
+  "smoothed_near_target_m": 139.08076923076922,
+  "rows": [
+    {
+      "distance_m": 220,
+      "proxy_base_y": 138.58076923076922,
+      "old_surface_y": 138.25172219550035,
+      "candidate_surface_y": 139.08076923076922,
+      "old_clearance_m": 0.32904703526887147,
+      "candidate_clearance_m": -0.5
+    },
+    {
+      "distance_m": 232,
+      "proxy_base_y": 138.58076923076922,
+      "old_surface_y": 138.4174870819217,
+      "candidate_surface_y": 139.08061879176944,
+      "old_clearance_m": 0.16328214884751446,
+      "candidate_clearance_m": -0.49984956100021805
+    }
+  ],
+  "predicted_new_test_cases": 8,
+  "predicted_old_assertion_failures": 6,
+  "predicted_budget_controls_passed": 2
+}
