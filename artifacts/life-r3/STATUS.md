@@ -116,4 +116,5 @@ Krok 34: obejrzano komplet 68 stron porównań A poprzez 12 przeglądów (Low/Hi
 
 Krok 35: inspekcja GLB wykazała, że extras materiału zawiera wszystkie dodatkowe pola danych; flake_lift B zmieni więc sygnaturę podsiatki lakieru bez zmiany geometrii. Audyt rozszerzono wyłącznie dla stage b / car_paint_black: usuń dokładnie flake_lift=0,025 i wymagaj pełnej równości reszty podsiatki/materiału z baseline. Wszystkie pozostałe ograniczenia raw/kolizji/nazw i rim zachowane; nie zmieniono produkcji B podczas budowy. Następny krok: 13271 i 42312.
 
-Krok 36: doplněna přesná kontrola SHA všech 492 PNG before/A bez dekódování obrázků; seznam změněných kamer a počty v a-image-identity.json. Neprohlašuje shodnost všech aut ani při změně celého obrázku regresi. Další krok: běžící B 13271 → 42312, po výsledku prohlédnout B a upravit jen podle důkazu.
+Krok 36: dodano dokładną kontrolę SHA wszystkich 492 PNG before/A bez dekodowania obrazów; lista zmienionych kamer i liczby w a-image-identity.json. Nie oznacza to identyczności wszystkich pikseli aut ani regresji przy zmienionym SHA całego obrazu. Identyczne kadry: Low clear 48/123 (trasa 23/59), Low overcast 50/123 (26/59), High clear 48/123 (24/59), High overcast 48/123 (23/59). Następny krok: działający B 13271 → 42312; potem obejrzeć B i poprawiać na podstawie wyników.
+
