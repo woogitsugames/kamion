@@ -18,3 +18,5 @@ Wyszukano40uzupełniającychkamer; każda para progowa18/18niezasłoniętych pr�
 Dodatkowe kamery: after/Low-clear zapisane.
 
 Dodatkowe kamery: after/Low-overcast zapisane.
+
+Dodatkowe kamery: after/High-clear zapisane.
