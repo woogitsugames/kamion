@@ -1,5 +1,5 @@
 # ADR 0136 diag1: A/B sweep of s10->s12 candidates on G3-B (uncapped, fixed scale), A16 only.
-param([string]$Apk, [string]$Only = '')
+param([string]$Apk, [string]$Only = '', [string]$Segment = 'B', [string]$OutTag = 'diag1')
 $d = $PSScriptRoot
 $fix = 'rq_scale=0.75 rq_pacing=0'
 $runs = [ordered]@{
@@ -26,7 +26,7 @@ $runs = [ordered]@{
 }
 $sel = if ($Only) { $Only -split ',' } else { $runs.Keys }
 $spec = ($sel | ForEach-Object { "$_=rq_ab=$($runs[$_]) $fix" }) -join ';'
-$a = @('-NoProfile', '-File', "$d/phone-diag.ps1", '-OutTag', 'diag1', '-Segment', 'B', '-Uncapped', '-Runs', $spec)
+$a = @('-NoProfile', '-File', "$d/phone-diag.ps1", '-OutTag', $OutTag, '-Segment', $Segment, '-Uncapped', '-Runs', $spec)
 if ($Apk) { $a += @('-Apk', $Apk) }
 pwsh @a
-"DIAG1 DONE" | Out-File "$d/diag1.done"
+"DONE $OutTag" | Out-File "$d/$OutTag.done"

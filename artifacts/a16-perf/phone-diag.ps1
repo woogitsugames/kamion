@@ -43,7 +43,7 @@ try {
     & $adb start-server | Out-Null
     $st = (& $adb -s $Serial get-state) 2>&1
     if ("$st" -notmatch 'device') { throw "A16 not online: $st" }
-    if ($Apk) { L "install $Apk"; & $adb -s $Serial install -r $Apk | Out-Null; if ($LASTEXITCODE -ne 0) { throw 'install failed' } }
+    if ($Apk) { L "install $Apk"; & $adb -s $Serial install -r -d $Apk | Out-Null; if ($LASTEXITCODE -ne 0) { throw 'install failed' } }
     $seg = (Get-Content (Join-Path $wt 'Data/Regions/bialystok-industrial-c/gate3_segment.json') -Raw | ConvertFrom-Json).segments | Where-Object { $_.id -eq "G3-$Segment" }
     $dur = 25 + [int][Math]::Ceiling($seg.length_m / (30 / 3.6) * 1.35)
     foreach ($r in ($Runs -split ';' | Where-Object { $_ })) {
