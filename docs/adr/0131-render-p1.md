@@ -58,8 +58,22 @@ reused `List<Transform>`; a missing rig costs `FindAnyObjectByType` once a secon
 complete rig 0 B / 200 frames, incomplete rig with the timer forced every frame 0 B / 200, no truck 0 B / 200, no truck
 with a lookup forced every frame 0 B / 50 (editor Mono; device UNVERIFIED).
 
-## Measurements
-(filled below from the worktree APK builds)
+## Measurements (worktree, default lean APK = Low/Medium content, Android, 2026-11-12)
+
+| | before (main shader) | after |
+|---|---|---|
+| `Kamion/Furniture Sign` variants in the APK (after URP + project stripping, `variants/variants-*.txt`) | 384 | **96** |
+| all shader variants in the APK | 6436 | 6148 |
+| `Kamion/World PBR` variants (new `_DecalCells` uniform, Fab covers on `_DECAL_ALPHA`) | 1832 | 1832 |
+| Furniture Sign passes / editor variant space (`ShaderUtil`) | 9 / 2.67e15 | 4 / 3721 |
+| SRP Batcher (Furniture Sign, World PBR) | compatible | compatible |
+| APK size | 216.32 MB | 214.39 MB |
+| drawsEst, 6 control cameras x Low/High clear | identical | identical |
+| `FurnitureRetroSource.BeginCamera` GC | array + strings per rescan (1/s) | 0 B (4 scenarios) |
+
+EditMode 373/373 (incl. 3 new alloc tests, FurnitureSign parity on the supported keyword subset). Control cameras
+before|after: Low/High x clear/overcast/dusk, 6 cameras (`before/`, `after2/`, `cmp/`); sign faces unchanged (RMSE
+route-putry-entry-signs Low clear 0.0005). Device numbers (A16 frame time, shader compile time) UNVERIFIED: no phone run.
 
 ## Conflicts for the leader
 - GPT asphalt: only the `_CRACKS` sealant smoothness line and the `_DECAL_ALPHA` UV block in `WorldPBR.shader` + one CBUFFER
