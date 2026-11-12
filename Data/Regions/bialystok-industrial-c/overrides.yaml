@@ -539,7 +539,11 @@ overrides:
       # ADR 0067 / REFS-MAPILLARY-FINDINGS #1: Mapillary frames 2818555625124739 and 504348097385466 (richlv, 2020-08-15,
       # CC BY-SA 4.0, reference only) show light crushed stone inside the kerb of the centre island under the viaduct,
       # no shrubs (was: fill soil + berberis_red from the CC0 photo read; world-builder to confirm)
-      - {name: ring-centre, at: [778549.7, 595506.5], fill: gravel}
+      # ADR 0123 b6 (D51 B7): the crushed stone is an embankment, not a flat bed - on Mapillary 2818555625124739,
+      # 201270605169291 and 1398898753813071 (richlv, CC BY-SA 4.0, reference only) it rises from the paved rim behind
+      # the kerb and hides the pier feet from a car-roof camera. Rim 1.6 m, slope 1:5, crest 0.7 m: WORKING_VALUE
+      # (read off the photos, no survey).
+      - {name: ring-centre, at: [778549.7, 595506.5], fill: gravel, mound: {setback_m: 1.6, slope: 0.2, max_m: 0.7}}
   # ---------------------------------------------------------------- road furniture after Mapillary (ADR 0069)
   # Mapillary photos (CC BY-SA 4.0, D42, ADR 0065) are references only: positions and forms read off them, no pixels.
   # `mapillary` lists the image ids (Data/raw/mapillary/<region>/manifest.jsonl: author, date, lat/lon, compass).

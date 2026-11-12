@@ -121,3 +121,17 @@ Uwaga: pełny pytest uruchomiony bez `KAMION_BLENDER` nadpisuje `generated/world
   brak wysepki — poza zakresem 0123). Commit `31b10c65`.
   NASTĘPNY KROK: `bash artifacts/junctions-r6/scripts/b5_all.sh` (import + 4 zestawy + SBS + PlayMode + EditMode + post full; w toku od 12:23)
   → `bash artifacts/junctions-r6/scripts/pairs.sh b5`
+- s12 krok 3 (12:22–13:26, `b5_all.sh`): import b5 rc 0, 4 zestawy renderów + SBS G3-A (`renders_b5_*`, `renders_b5sbs_low_overcast`),
+  **EditMode 317/317, PlayMode 3/3** (`WorldCRouteTests|WorldCBarrierTests`), **pytest gis+physics+gate3 666 passed, 1 xfailed**,
+  fidelity p50 0,36 / p95 2,304 (= main), swept = b3 (RING-B prop 2,41 / 2,28; G3-A lane −1,12, wide −0,10; G3-B −0,14).
+  Budżet b5 vs m0 (stary main 3540bbdf, więc zawiera też scalenia s11): Low clear draws +0 na kamerach z poziomu jezdni, max +10
+  (`r3_e_split_top`, kamera z góry 25 → 35), tris ≤ +3,8 % poza nią. Pary: `pairs_b5/` (24), `pairs_b5sbs/` (20, zdjęcie | render SBS;
+  `scripts/pairs_sbs.sh`). Obejrzane: B2 — rząd filarów + bariera przy wyspie są w kadrach 201270 / 1398898; B7 — asfalt do krawężnika
+  wyspy jest, ale wyspa płaska (na zdjęciach nasyp z kruszywa zasłania stopy filarów); ton kruszywo / asfalt zdjęcie 2,2–2,4, render 2,5–3,4.
+- s12 krok 4 (13:40, W TOKU w tle): b6 = nasyp wyspy (`plantings.py` klucz `mound`, override `ring-centre` rim 1,6 m, 1:5, 0,7 m
+  WORKING_VALUE); uruchomione `build.sh b6 && b6_all.sh` → log `artifacts/junctions-r6/logs/b6_all.out`.
+  NASTĘPNY KROK (gdy `b6_all.out` kończy się „b6_all done”; jeśli przerwane — powtórzyć):
+  `bash artifacts/junctions-r6/scripts/build.sh b6 && bash artifacts/junctions-r6/scripts/b6_all.sh`
+  → `bash artifacts/junctions-r6/scripts/pairs.sh b6 && bash artifacts/junctions-r6/scripts/pairs_sbs.sh b6` → obejrzeć
+  `pairs_b6sbs/photo_{2818555625124739,201270605169291,1398898753813071,178689077481862}.jpg` (nasyp, zakopane znaki / bariera?)
+  → uzupełnić „Wynik” w `docs/adr/0123-junctions-r6-barriers.md` → `robocopy artifacts\junctions-r6 C:\Users\matma\Documents\Claude\kamion\artifacts\junctions-r6 /E /XF *.pkl`
