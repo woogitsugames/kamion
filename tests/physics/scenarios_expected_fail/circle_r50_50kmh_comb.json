@@ -3,6 +3,9 @@
   "id": "circle_r50_50kmh_comb",
   "description": "Combination on R = 50 m at 50 km/h (a_y = 0.39 g): path following, lateral accel and roll of the trailer",
   "spec": "docs/04 s6.7",
+  "expectedFailMetrics": [
+    "radius_error_m"
+  ],
   "expectedFailReason": "docs/04 s6.7, R50 przy 50 km/h (a_y = 0.39 g). Oczekiwana porazka: TYLKO radius_error_m = 1.04 m (laden40) / 0.83 m (empty) vs limit 0.6 m (CI 2026-11-12, run 43262235305) — raczej sledzenie toru przez kierowce-regulator przy 0.39 g niz sama fizyka. Kat przegubu nie jest sprawdzany: w ustalonym luku R50 wynika z geometrii (ok. asin(L_kp-os/R), orientacyjnie 8-9 deg, L UNVERIFIED); zmierzone 8.59/9.12 deg sa wiarygodne, a dawny limit 6 deg pochodzil z lane_change_80 (inny manewr) — usuniety przy scaleniu (recenzja s14). PASS: lat_accel 3.71/3.80 m/s^2 (v^2/R +/-10%), max_trailer_roll 4.98/1.43 deg (<=8), wheel_lift = 0, max_dv_step 0.038/0.042 m/s, fifth wheel 0.13/0.16 mm. Nie strojono fizyki.",
   "variants": [
     "empty",
