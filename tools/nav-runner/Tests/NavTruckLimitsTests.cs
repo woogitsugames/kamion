@@ -71,7 +71,8 @@ namespace NavRunner.Tests
             {
                 var planner = new RoutePlanner(Highway(mw, mal, mh, ml));
                 var p = RoutePath.For(planner.Graph);
-                Assert.Equal(PlanStatus.Ok, planner.Plan(new Vector2(50, 0), float.NaN, new Vector2(550, 0), p), $"limit w={mw} a={mal} h={mh} l={ml}");
+                var st = planner.Plan(new Vector2(50, 0), float.NaN, new Vector2(550, 0), p);
+                Assert.True(st == PlanStatus.Ok, $"limit w={mw} a={mal} h={mh} l={ml}: {st}");
                 Assert.True(p.Length > 700f, $"detour for w={mw} a={mal} h={mh} l={ml}");
             }
         }
@@ -176,7 +177,7 @@ namespace NavRunner.Tests
                 if (g.EdgeMaxWeightC[e] != 0 || g.EdgeMaxAxleLoadC[e] != 0 || g.EdgeMaxHeightCm[e] != 0 || g.EdgeMaxLengthCm[e] != 0) limited++;
                 if ((g.EdgeFlags[e] & RouteGraph.FlagHgvDestination) != 0) hgvDest++;
             }
-            Assert.Equal(0, limited, "no numeric truck limits in this region's OSM data (maxheight=default only)");
+            Assert.True(limited == 0, $"no numeric truck limits in this region's OSM data (maxheight=default only), got {limited}");
             Assert.Equal(0, hgvDest);
             var planner = new RoutePlanner(g);
             var p = RoutePath.For(g);

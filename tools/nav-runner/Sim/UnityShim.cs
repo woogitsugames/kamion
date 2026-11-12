@@ -107,7 +107,7 @@ namespace UnityEngine
 
     public static class Resources
     {
-        static string RepoRoot() => RepoRoot.Find();
+        static string RepoRoot() => UnityEngine.RepoRoot.Find();
 
         /// <summary>Loads a file from game/Assets/_Project/UI/Resources (e.g. "CabDisplay/Nav/&lt;region&gt;_route" -> .bytes).</summary>
         public static T Load<T>(string path) where T : Object
