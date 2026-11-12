@@ -143,3 +143,7 @@ Procesy GPT pozostawione bez ubijania (odczyt 16:30; sprawdzać PID **razem z Cr
 ## s16 (2026-11-12 23:5x, lider)
 - **Codex gpt-s16** (`docs/owner/CODEX-S16-12H.md`): r1 ADR 0153 LOD1/LOD2 aut w toku — baseline 114 kamer × 4 warunki, regeneracja B → import after; sha `0f3b14ef6`; gotowe do recenzji: NIE. Przekazanie: `artifacts/gpt-s16/PRZEKAZANIE.md`.
 - **ChatGPT 6 Pro G1–G10** (`docs/owner/GPT-PRO-RESEARCH-01.md`) zlecone; wyniki: ZIP → `research/gptpro/` albo gałęzie `gptpro/*` (brak na 23:5x).
+
+## s16 :07 (2026-11-13 00:4x)
+- **ChatGPT 6 Pro:** oddane na gałęziach: **G2** `gptpro/2-next-regions` (38 plików), **G3** `gptpro/3-s8-signs` (187 plików). Gałęzie G4, G6, G7, G8, G9 utworzone, ale **puste** (sesje padły z błędem). G1, G5, G10 — brak. Do przeglądu lidera: G2, G3 (licencje, współrzędne, wyrywkowo 20 %). Pozostałe 8 zleceń → rano przydzielić innym (priorytet G10, G1, G7, G5).
+- **Codex gpt-s16 r1** (0153 LOD aut): render after High-overcast, EditMode exit 0; recenzja otwarta; gotowe: NIE.
