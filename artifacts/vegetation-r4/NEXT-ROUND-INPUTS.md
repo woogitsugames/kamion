@@ -1,0 +1,5 @@
+# Świeży odczyt kolejnych problemów, 12 listopada około 13:12
+
+To notatka do następnej rundy, bez rozszerzania obecnej zmiany C. Odczytano aktualne pliki main: docs/owner/GPT-FEEDBACK-S10.md oraz docs/reports/visual/REVIEW-2026-11-12-s12-gpt-batch-d.md. Recenzja batch D nadal ocenia pozę 297817 jako PARTIAL, bez zmiany produkcji: wariant cofnięcia o 75 m nie odtwarza układu jezdni i pasa dzielącego ze zdjęcia. Blokerem pozostają oś kamery i świat pierzei. Samo pojawienie się nowej rundy SBS nie oznacza więc rozwiązania B8. Nie wracać do sadzenia mediany na podstawie tej pozy bez świeżego potwierdzenia dwóch kotwic.
+
+W kolejnej rundzie poboczy obowiązują wcześniejsze ograniczenia VERGES-RESEARCH.md: fotografia 320326319617139 ma niezgodność układu, a QA już raportuje żwirową wyspę 996,9 m². Trzeba najpierw zidentyfikować konkretny obszar w danych i ortofoto. Nie dodawać globalnej beżowej obwódki, nie uznawać soli za fakt ani nie przenosić kęp ze zdjęć C do przypadkowych współrzędnych. Nową rundę zacząć po merge main do własnej gałęzi i sprawdzeniu aktualnych źródeł; nie przenosić PNG r4 jako świeżego baseline po zmianach świata lub światła.
