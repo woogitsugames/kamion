@@ -70,7 +70,7 @@ namespace Game.Tests.EditMode
             Assert.That(shader, Is.Not.Null);
             Assert.That(shader.isSupported, Is.True);
             int quality = QualitySettings.GetQualityLevel();
-            string[] keys = { EnvironmentKey, "_CabFill", "_CabShadowLift", "_KamionToeParity", "_KamionCabToeInv" };
+            string[] keys = { EnvironmentKey, "_CabFill", "_CabShadowLift", "_KamionToeParity", "_KamionCabToeInv", "_KamionHaze", "_KamionHazeColor", "_KamionTone" };
             var saved = new Vector4[keys.Length];
             for (int i = 0; i < keys.Length; i++) saved[i] = Shader.GetGlobalVector(keys[i]);
             float oldGain = Shader.GetGlobalFloat("_CabGain"), oldEnclosure = Shader.GetGlobalFloat("_CabEnclosure");
@@ -137,6 +137,17 @@ namespace Game.Tests.EditMode
                     Debug.Log($"CAB_BACKLIGHT_FIXTURE {name}: icon={result.x:F5} stitch={result.y:F5}, environment={Shader.GetGlobalVector(EnvironmentKey)}, keywords={string.Join(",", material.shaderKeywords)}");
                     return result;
                 }
+                // A separate unlit shader proves camera/mesh/readback before interpreting a black cab-shader image.
+                var controlMaterial = new Material(Shader.Find("Universal Render Pipeline/Unlit"));
+                var firstRenderer = root.GetComponentsInChildren<MeshRenderer>()[0];
+                try
+                {
+                    controlMaterial.SetColor("_BaseColor", Color.white);
+                    firstRenderer.sharedMaterial = controlMaterial;
+                    var control = Draw("positive-control", false, -5f, .01f);
+                    Assert.That(control.x, Is.GreaterThan(.5f), "camera/mesh/readback positive control");
+                }
+                finally { firstRenderer.sharedMaterial = material; Object.DestroyImmediate(controlMaterial); }
                 var off = Draw("night-off", false, -5f, .01f);
                 var day = Draw("day-on", true, 42f, .01f);
                 var night = Draw("night-on", true, -5f, .01f);
