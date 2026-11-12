@@ -24,3 +24,5 @@ Następny krok po zakończeniu prepare-baseline: heavy.ps1 -Task BuildAsphaltDet
 Krok 8: odczyt WorldSceneBuilder potwierdził, że pełny import świata korzysta z istniejącego prefab pojazdu. Do przygotowania bazy po merge cab dodano standardowy WorldTruckInstaller.InstallBatch, z osobnym Acquire/Release Unity i znacznikiem TRUCK_RESULT. Odtwarza wyłącznie generowane zasoby; nie edytujemy źródeł cab/truck ani ich parametrów.
 Następny krok po build_world: pojedyncza warstwa detalu asfaltu pod heavy, potem import bazy i cztery serie Before.
 2026-11-12T01:22:08.8510520+01:00 Zregenerowano pełny świat bazowy r3 bez fallback=True; następnie pełny import Unity i rendery Before.
+Krok 9: źródła bazowe gotowe: build_all kod 0 (644 s), build_world kod 0 (415,4 s), brak fallback=True. Uzupełniono osobno asfaltowy cache fotograficzny po skopiowaniu istniejącego wejścia z main, pod heavy; wynik w build-photo-layer.log. Nie zmieniano kodu materiałów.
+Następny krok: import-baseline.ps1, pełny import + generowane pojazdy + Before; każda sesja Unity we własnym slocie.
