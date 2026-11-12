@@ -128,3 +128,5 @@ Zapisano kompletną niezależną ocenę baseline w REVIEW-D51-BASELINE.md: G3-A 
 2026-11-12T11:28:35.2948975+01:00: projekt raportu uwzględnia nowe niezależne kontrole kotwic i ograniczenie widocznej powierzchni494. Liczby wykonanych renderów nie zmieniły się; to przygotowanie małych prób C do następnej rundy, bez zmiany zamrożonej produkcji r3.
 
 2026-11-12T11:32:43.8070244+01:00: zaktualizowałem ranking wszystkich10 dziedzin o recenzje s12 pakietów A+B, z wyraźnym oddzieleniem cudzych recenzji od własnej bazy renderów. Main ma49a9d332; r3 nie przedstawia tej epoki. Dwie małe migawki recenzji i SHA źródeł zachowałem w swoich artefaktach, bez edycji plików Claude. GIS11437 nadal oczekuje.
+
+2026-11-12T11:33:36.1523553+01:00: zapieczętowałem oryginalne bajty recenzji bazowego D51, rejestru-kandydata i dwóch nowych recenzji s12 w review-evidence.zip. Git zgłasza normalizację końców linii; archiwum i receipt zachowują dokładne SHA źródeł niezależnie od przyszłego checkoutu. To małe archiwum tekstów, bez ciężkiego zadania Python ani nowego wyniku świata.
