@@ -28,3 +28,10 @@ Gałąź `edge-r6c`, worktree `.claude/worktrees/edge-r6c`, baza main 76c88d4fd.
 - git merge main 611f116c9 bez konfliktów; build_world 615 s OK (far_field Low 24548 / High 118588). pytest gis+gate3: 845 passed, 1 xfailed, 1 failed (fidelity_qa.json nieaktualny po fixie CRLF a4cb9995 z main) -> fidelity/run.py w toku.
 - W tle: fidelity/run.py (heavy), run-merged.ps1 (import, EditMode, rendery merged).
 - NASTĘPNY KROK: `bash artifacts/edge-r6c/make-pairs.sh Low-clear baseline merged; python artifacts/edge-r6c/stats-diff.py baseline merged Low-clear`, potem docs/adr/0141.
+
+## 2026-11-12 19:57 — drugi merge main (0139 + 0143), pełna regeneracja w toku
+- Pierwszy merge (611f116c9): build_world 615 s OK; pytest gis+gate3 845 passed + fidelity po run.py 9 passed; import padł na braku pamięci w build_all (maszyna), nie w kodzie.
+- Lider: krytyk 0139 P1-2 — potwierdzić kominy EC na Low w 297817 i 150280 na pozach z main. Scalony main 97996ef6b (konflikty tylko generated -> ours).
+- W tle: `pwsh artifacts/edge-r6c/run-merged.ps1` (PID pwsh 58288; logi *-merged.log).
+- ADR szkic: docs/adr/0141-edge-skyline-closures.md (placeholdery @@...@@).
+- NASTĘPNY KROK: po łańcuchu `bash artifacts/edge-r6c/make-pairs.sh Low-clear baseline merged; python artifacts/edge-r6c/stats-diff.py baseline merged Low-clear | tail -7`, uzupełnić ADR, commit generated, robocopy do main.
