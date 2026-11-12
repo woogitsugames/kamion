@@ -39,17 +39,22 @@ for source, target, cameras in (
                         rows.append({'condition':condition,'roi':roi,'before':values[0],'after':values[1]})
 (root/'final-step-roi.json').write_text(json.dumps({'note':'Display Rec709 Y in percentage points, fixed native ROI including shadows; no physical dirt coverage or phone performance claim.','rows':rows},ensure_ascii=False,indent=2),encoding='utf-8')
 print(json.dumps({'pairs':len(list(out.glob('*.jpg'))),'step_roi':rows},ensure_ascii=False))
-for photo, camera in (('curtain-yellow-working','truck-rear34'),('curtain-blue-working','truck-side'),('tractor-rear-working','truck-34r')):
+for photo, camera in (('curtain-yellow-working','truck-34r'),('curtain-blue-working','truck-side'),('tractor-rear-working','truck-step-detail')):
     sheet = Image.new('RGB',(960,440),(32,32,32))
     draw = ImageDraw.Draw(sheet)
     draw.text((8,8),'ZDJECIE | licencja i autor: references/CREDITS.md',fill='white')
     draw.text((488,8),'RENDER | High-overcast',fill='white')
-    for x, path in ((0,root/'references'/f'{photo}.jpg'),(480,root/'final'/'High-overcast'/f'{camera}.png')):
+    phase = 'detail-final-fleet' if camera == 'truck-step-detail' else 'final'
+    for x, path in ((0,root/'references'/f'{photo}.jpg'),(480,root/phase/'High-overcast'/f'{camera}.png')):
         with Image.open(path) as original:
             pic = original.convert('RGB')
+            if photo == 'tractor-rear-working':
+                # Qualitative comparison of raised metal grids, not a pose or material calibration.
+                pic = pic.crop((280,770,560,885) if x == 0 else (730,770,1160,880))
             pic.thumbnail((480,365),Image.Resampling.LANCZOS)
             sheet.paste(pic,(x+(480-pic.width)//2,34+(365-pic.height)//2))
-    draw.text((8,412),'Inne pojazdy, pozy, oswietlenie i zuzycie; porownanie jakosciowe, bez kalibracji jasnosci.',fill='white')
+    note = 'Detale: tylni pomost ze zdjecia | stopien TRAKT; inne funkcje i swiatlo, bez kalibracji jasnosci.' if photo == 'tractor-rear-working' else 'Inne pojazdy, pozy, oswietlenie i zuzycie; porownanie jakosciowe, bez kalibracji jasnosci.'
+    draw.text((8,412),note,fill='white')
     sheet.save(root/f'photo-render-{photo}.jpg',quality=93)
 paths = sorted(out.glob('*.jpg'))
 for start in range(0,len(paths),10):
