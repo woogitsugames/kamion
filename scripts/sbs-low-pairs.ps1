@@ -34,8 +34,11 @@ try {
             & uv run --project tools/refs python tools/refs/sbs_pairs.py preflight
             if ($LASTEXITCODE -ne 0) { throw 'World on disk is stale against the committed manifest (see STALE lines).' }
         }
-        & pwsh -NoProfile -File scripts/sbs-gate3.ps1 -RenderOnly -Tiers Low -Lighting $Lighting -SlotOwner $SlotOwner -OutputRoot $out
-        if ($LASTEXITCODE -ne 0) { throw "sbs-gate3 render failed ($LASTEXITCODE)" }
+        # One child call per lighting: `pwsh -File` flattens a [string[]] argument, so only the first value would bind.
+        foreach ($light in $Lighting) {
+            & pwsh -NoProfile -File scripts/sbs-gate3.ps1 -RenderOnly -Tiers Low -Lighting $light -SlotOwner $SlotOwner -OutputRoot $out
+            if ($LASTEXITCODE -ne 0) { throw "sbs-gate3 render failed: Low-$light ($LASTEXITCODE)" }
+        }
     }
     foreach ($light in $Lighting) {
         $renders = Join-Path $out "renders/Low-$light"
