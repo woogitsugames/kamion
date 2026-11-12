@@ -1299,6 +1299,19 @@
    "cab_filter": "ambient"
   },
   {
+   "name": "el_engine_stop_cab",
+   "file": "game/Assets/_Project/Audio/ElevenLabs/Clips/sfx/el_engine_stop_cab_r02.wav",
+   "loop": false,
+   "samples": 236150,
+   "source": "ENG_STOP_CAB (7).wav",
+   "gain_db": -13.891098351319435,
+   "lufs": -34.50000000000001,
+   "source_prompt_id": "ENG_STOP_CAB",
+   "group": "fx",
+   "perspective": "both",
+   "target_lufs": -34.5
+  },
+  {
    "name": "el_wind_cab_loop",
    "file": "game/Assets/_Project/Audio/ElevenLabs/Clips/sfx/el_wind_cab_loop.wav",
    "loop": true,
@@ -1342,11 +1355,11 @@
    "name": "el_turbo_whine_loop",
    "file": "game/Assets/_Project/Audio/ElevenLabs/Clips/sfx/el_turbo_whine_loop.wav",
    "loop": true,
-   "samples": 192000,
-   "source": "procedural turbo2.whine_loop",
+   "samples": 252456,
+   "source": "TURBO_WHISTLE_LOOP (6).wav",
    "gain_db": 0.0,
    "lufs": -14.0,
-   "source_prompt_id": "PROCEDURAL",
+   "source_prompt_id": "TURBO_WHISTLE_LOOP",
    "group": "fx",
    "perspective": "ext"
   },
@@ -1354,11 +1367,11 @@
    "name": "el_turbo_whine_cab_loop",
    "file": "game/Assets/_Project/Audio/ElevenLabs/Clips/sfx/el_turbo_whine_cab_loop.wav",
    "loop": true,
-   "samples": 192000,
-   "source": "procedural turbo2.whine_loop",
+   "samples": 252456,
+   "source": "TURBO_WHISTLE_LOOP (6).wav",
    "gain_db": 0.0,
-   "lufs": -29.626736951377136,
-   "source_prompt_id": "PROCEDURAL",
+   "lufs": -29.664406263400753,
+   "source_prompt_id": "TURBO_WHISTLE_LOOP",
    "group": "fx",
    "perspective": "cab",
    "cab_filter": "mech"
@@ -1674,6 +1687,38 @@
    "duration": 20.0,
    "influence": 40,
    "loop": true
+  },
+  "ENG_STOP_CAB": {
+   "id": "ENG_STOP_CAB",
+   "prompt": "Inside a heavy truck cab, the idling diesel engine is switched off, the cab shudders once and the engine runs down to silence, a soft dashboard click at the end, no music, no voices",
+   "duration": 3,
+   "influence": 60,
+   "loop": false,
+   "batch": "REGEN-01"
+  },
+  "TURBO_WHISTLE_LOOP": {
+   "id": "TURBO_WHISTLE_LOOP",
+   "prompt": "Steady high-pitched whistle of a heavy truck turbocharger at constant boost, close to the engine, clean continuous tone with soft air rush, no engine rumble, no pitch change, seamless loop, no music, no voices",
+   "duration": 5,
+   "influence": 80,
+   "loop": true,
+   "batch": "REGEN-01"
+  },
+  "ENG_STOP_CAB REGEN-02": {
+   "id": "ENG_STOP_CAB",
+   "batch": "REGEN-02",
+   "duration": 5,
+   "influence": 70,
+   "loop": false,
+   "prompt": "Inside a heavy truck cab: the idling diesel engine is switched off after half a second, the engine speed sinks quickly, the cab gives one heavy shudder and the engine stops completely within two seconds, then quiet cab with only a faint tick of cooling metal, no music, no voices"
+  },
+  "TURBO_WHISTLE_LOOP REGEN-02": {
+   "id": "TURBO_WHISTLE_LOOP",
+   "batch": "REGEN-02",
+   "duration": 5,
+   "influence": 90,
+   "loop": true,
+   "prompt": "A single pure steady high-pitched whine, like a small turbine spinning at constant speed, one clean tone with almost no noise, no engine, no rumble, no air rush, no pitch change, seamless loop, no music, no voices"
   }
  },
  "fx_generator": "tools/audio/el_fx.py (ADR 0142)"

@@ -33,10 +33,11 @@ el_horn_loop                 <- HORN_AIR (2).wav                0.88 s  -20.0 LU
 el_horn_cab_loop             <- HORN_AIR (2).wav                0.88 s  -21.8 LUFS pk -11.4 seam 0.02 hf +0.4 dB  OK
 el_reverse_beeper_loop       <- REVERSE_BEEPER_LOOP (4).wav     1.00 s  -26.0 LUFS pk -19.2 seam 0.00 hf -0.4 dB  OK
 el_reverse_beeper_cab_loop   <- REVERSE_BEEPER_LOOP (4).wav     1.00 s  -41.8 LUFS pk -32.8 seam 0.03 hf -3.8 dB  OK
+el_engine_stop_cab           <- ENG_STOP_CAB (7).wav            4.92 s  -34.5 LUFS pk -20.0 edges 0.0000/0.00000  OK
 el_wind_cab_loop             <- AMB_WIND_CAB_80 (3).wav         7.96 s  -22.8 LUFS pk  -5.0 seam 0.05 hf +3.2 dB  OK
 el_ambient_bed_loop          <- AMB_INDUSTRIAL_DAY (2).wav     19.96 s  -20.0 LUFS pk  -5.3 seam 0.07 hf +0.4 dB  OK
 el_ambient_bed_cab_loop      <- AMB_INDUSTRIAL_DAY (2).wav     19.96 s  -22.2 LUFS pk  -6.7 seam 0.03 hf +0.9 dB  OK
-el_turbo_whine_loop          <- procedural turbo2.whine_loop    4.00 s  -14.0 LUFS pk  -7.7 seam 0.24 hf +0.4 dB  OK
-el_turbo_whine_cab_loop      <- procedural turbo2.whine_loop    4.00 s  -29.6 LUFS pk -22.8 seam 0.36 hf +3.7 dB  OK
+el_turbo_whine_loop          <- TURBO_WHISTLE_LOOP (6).wav      5.26 s  -14.0 LUFS pk  -2.5 seam 0.17 hf +1.5 dB  OK
+el_turbo_whine_cab_loop      <- TURBO_WHISTLE_LOOP (6).wav      5.26 s  -29.7 LUFS pk -17.6 seam 0.01 hf +3.4 dB  OK
 el_turbo_rush_loop           <- procedural turbo2.rush_loop     4.00 s  -12.0 LUFS pk  -1.6 seam 0.29 hf +1.6 dB  OK
 el_turbo_rush_cab_loop       <- procedural turbo2.rush_loop     4.00 s  -27.6 LUFS pk -14.7 seam 0.10 hf +1.9 dB  OK

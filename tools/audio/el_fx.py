@@ -132,6 +132,11 @@ FX: list[dict] = [
     # REVERSE_BEEPER_LOOP (4): 1.00 s period (ACF 0.70), beeps at 0.82/1.83/2.82/3.84 s; one period, seam in the gap.
     {"name": "el_reverse_beeper_loop", "src": "REVERSE_BEEPER_LOOP (4).wav", "kind": "loop", "persp": "ext",
      "cab": "ambient", "segment": (1.675, 1.000), "target": -26.0},
+    # REGEN-02 ENG_STOP_CAB (7): run-down to silence, tail -33.9 dB vs head (el_regen02.py PASS; ADR 0138 had no take).
+    # Replaces the filtered exterior stop for the cab (runtime slot el_engine_stop_cab; own file so el_prepare.py reruns
+    # cannot overwrite it; the fx entry comes later in the manifest and wins in the importer). Level = previous cab stop.
+    {"name": "el_engine_stop_cab", "file_name": "el_engine_stop_cab_r02", "src": "ENG_STOP_CAB (7).wav", "kind": "oneshot",
+     "persp": "both", "fade_out": 0.3, "target": -34.5},
     # G. ambience -------------------------------------------------------------------------------------------------
     # AMB_WIND_CAB_80 (3): cabin perspective, steady (drift small); (1) is a broadband roar at -17 LUFS.
     {"name": "el_wind_cab_loop", "src": "AMB_WIND_CAB_80 (3).wav", "kind": "loop", "persp": "cab",
@@ -144,13 +149,25 @@ FX: list[dict] = [
 # REGEN-02 swap: put "<ID> (n).wav" instead of None -> the take is prepared like any loop (seam, loudness) into the same
 # runtime slot. LUFS targets: full-boost exterior turbo ~10 dB under the full-load engine cell at the EngineAudio mix
 # (WORKING_VALUE).
-TURBO: dict[str, str | None] = {"whine": None, "rush": None}
+# REGEN-02 (ADR 0142): TURBO_WHISTLE_LOOP (6) PASS - line 2757 Hz, 13.8 dB over the floor, span 1.7 % (el_regen02.py);
+# resampled so the line sits at turbo2.WHINE_REF_HZ (runtime pitch mapping unchanged). Rush stays procedural.
+TURBO: dict[str, str | None] = {"whine": "TURBO_WHISTLE_LOOP (6).wav", "rush": None}
+TURBO_LINE_HZ = {"TURBO_WHISTLE_LOOP (6).wav": 2757.0}
 TURBO_LUFS = {"whine": -14.0, "rush": -12.0}
 # Not wired (ADR 0142 table): CAB_WIPERS_LOOP (no take keeps the asked rhythm, ADR 0138), CAB_RAIN_ROOF_LOOP (no weather
 # state), BRAKE_SQUEAL_STOP (no squeal line except (4) faintly at 5.3 kHz), BRAKE_ROLL_LOOP (every take has a burst),
 # TRAILER_RATTLE_LOOP (no trailer load / road roughness signal), AMB_PASSING_CAR (no traffic), AMB_YARD_LOGISTICS
 # (procedural forklift kept), TURBO_SPOOL / TURBO_WHISTLE_LOOP (no tonal whistle, ADR 0137/0138).
 # ---------------------------------------------------------------------------------------------------------------
+
+# REGEN-02 prompts (docs/owner/ELEVENLABS-REGEN-02.md); provenance key "<ID> REGEN-02" keeps the REGEN-01 entry intact.
+REGEN02 = {
+    "ENG_STOP_CAB REGEN-02": {"id": "ENG_STOP_CAB", "batch": "REGEN-02", "duration": 5, "influence": 70, "loop": False,
+                              "prompt": "Inside a heavy truck cab: the idling diesel engine is switched off after half a second, the engine speed sinks quickly, the cab gives one heavy shudder and the engine stops completely within two seconds, then quiet cab with only a faint tick of cooling metal, no music, no voices"},
+    "TURBO_WHISTLE_LOOP REGEN-02": {"id": "TURBO_WHISTLE_LOOP", "batch": "REGEN-02", "duration": 5, "influence": 90, "loop": True,
+                                    "prompt": "A single pure steady high-pitched whine, like a small turbine spinning at constant speed, one clean tone with almost no noise, no engine, no rumble, no air rush, no pitch change, seamless loop, no music, no voices"},
+}
+REGEN02_FILES = {"ENG_STOP_CAB (7).wav", "TURBO_WHISTLE_LOOP (6).wav"}
 
 HP25 = signal.butter(2, 25, "hp", fs=FS, output="sos")
 
@@ -307,7 +324,7 @@ def main() -> None:
             z, clim, csoft = limit(z, loop)
             outs.append((cab_name, z, c["cab"], ctarget, clim, csoft))
         for name, z, prof, tgt, lim, soft in outs:
-            f = write(name, "sfx", z)
+            f = write(c.get("file_name", name) if prof is None else name, "sfx", z)
             chk = check(z, loop)
             e = {"name": name, "file": f, "loop": loop, "samples": len(z), "source": c["src"], "gain_db": gain,
                  "lufs": chk["lufs"], "source_prompt_id": c["src"].split(" (")[0], "group": "fx",
@@ -332,6 +349,8 @@ def main() -> None:
         srcf = TURBO[part]
         if srcf:
             x, _ = process(src, {"src": srcf, "kind": "loop"})
+            if srcf in TURBO_LINE_HZ:
+                x, _ = resample_periodic(x, turbo2.WHINE_REF_HZ / TURBO_LINE_HZ[srcf])
         else:
             x = getattr(turbo2, part + "_loop")()
         y = x * 10 ** ((TURBO_LUFS[part] - lufs(x, FS)) / 20)
@@ -357,10 +376,12 @@ def main() -> None:
     man["sfx"] = [s for s in man["sfx"] if s.get("group") != "fx"] + entries
     gen = {g["id"]: g for g in json.loads((src / "generation-manifest.json").read_text(encoding="utf-8"))}
     gen.update({k: prompt_entry(k) for k in REGEN01})
+    gen.update(REGEN02)
     for e in entries:
         pid = e["source_prompt_id"]
-        if pid in gen:
-            man["prompts"][pid] = gen[pid]
+        key = pid + " REGEN-02" if e["source"] in REGEN02_FILES else pid
+        if key in gen:
+            man["prompts"][key] = gen[key]
     man["fx_generator"] = "tools/audio/el_fx.py (ADR 0142)"
     mp.write_text(json.dumps(man, indent=1), encoding="utf-8")
     ART.mkdir(parents=True, exist_ok=True)
