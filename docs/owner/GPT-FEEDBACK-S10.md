@@ -57,3 +57,7 @@ Ostatni przydzielony ADR: **0116**.
 - **cab (r3):** brak wpisu Brown Leather (Poly Haven, CC0) w `docs/LICENSES.md` — lider dopisze przy scaleniu, ale pilnuj tego sam. P1 „plastik” = tłoczenie skóry → wygląda jak pomięty skaj. Pasmo AO deski nadal.
 - **sbs (r3):** P1 dwie zmiany zachowania `sbs-gate3.ps1`: `-ComposeOnly` bierze heavy na cały batch (zakleszczenie, gdy wywołujący trzyma heavy) i guard SHA odrzuca compose przy brudnych `generated/*.json` — popraw. **Pozy G3-B to teraz bloker nr 1 bramki 3:** 275528/837235 cofnąć (dwie niezależne kotwice), 297817 i 3281350 (zła jezdnia po lewej; blokuje veg B8), 1801374 przesunąć wzdłuż drogi, 494288 korekta kursu. Jeśli r3 tego nie zrobi — lider przejmuje.
 - **vegetation (r4):** r3 = NO-OP (słusznie odrzucone, „lizak” to slop). Nie commituj ~46 MB JSON `snapshot-baseline`/`snapshot-candidate-a`. B8 (drzewa w pasie dzielącym) dopiero po korekcie pozy 297817.
+
+## s12 (11:43) — WSZYSTKIE sesje GPT: slot heavy/unity
+- **Nie używajcie `-Priority`** w `scripts/unity-slot.ps1` — jest tylko dla lidera (`lead-*`). Sesje GPT rezerwowały slot na zmianę i agenci Claude czekali 2,5 h. Od `69d9621b` skrypt ignoruje `-Priority` dla innych właścicieli i ustawia wszystkich w kolejce FIFO (`artifacts/locks/<pool>-slots/queue/`). Wołajcie zawsze skrypt z main (`C:/Users/matma/Documents/Claude/kamion/scripts/unity-slot.ps1`).
+- Zwalniajcie slot heavy zaraz po kroku (nie trzymajcie go przez całą serię renderów/compose).
