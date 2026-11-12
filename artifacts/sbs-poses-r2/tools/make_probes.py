@@ -71,6 +71,7 @@ def partial(key, tag, right=0.0, eye=None, hd=0.0, hz=None, note=''):
     probes.append(cam)
     plan.append({'probe': pid, 'base': cid, 'right_m': right, 'eye_m': ov.get('eye_height_m'), 'heading_delta_extra_deg': hd,
                  'rectified_horizon': ov.get('rectified_horizon_y_fraction'), 'pos': cam['pos'],
+                 'override': {k: ov[k] for k in ('east_delta_m', 'north_delta_m', 'eye_height_m', 'absolute_u_m', 'heading_delta_deg') if k in ov},
                  'heading_grid_deg': round(inf['heading'], 3), 'note': note})
 
 

@@ -363,6 +363,11 @@
    -214.0732,
    132.4223
   ],
+  "override": {
+   "east_delta_m": 0.0,
+   "north_delta_m": 0.0,
+   "heading_delta_deg": -2.2
+  },
   "heading_grid_deg": 130.52,
   "note": "horizon 0.50 (road VP / far road end on photo vs render), heading -2.2 (VP x)"
  },
@@ -378,6 +383,10 @@
    -214.0732,
    132.4223
   ],
+  "override": {
+   "east_delta_m": 0.0,
+   "north_delta_m": 0.0
+  },
   "heading_grid_deg": 132.72,
   "note": "horizon 0.50 only"
  },
@@ -393,6 +402,10 @@
    -167.5627,
    132.7372
   ],
+  "override": {
+   "east_delta_m": 0.0,
+   "north_delta_m": 0.0
+  },
   "heading_grid_deg": 305.585,
   "note": "horizon 0.559 (near-road VP photo 384 px vs render 403 px)"
  },
@@ -408,6 +421,12 @@
    90.5436,
    137.4945
   ],
+  "override": {
+   "east_delta_m": -1.984,
+   "north_delta_m": 19.8773,
+   "eye_height_m": 1.8,
+   "absolute_u_m": 137.4945
+  },
   "heading_grid_deg": 353.064,
   "note": "1.5 m right, eye 1.8"
  },
@@ -423,6 +442,12 @@
    90.4833,
    137.9066
   ],
+  "override": {
+   "east_delta_m": -2.4803,
+   "north_delta_m": 19.817,
+   "eye_height_m": 2.2,
+   "absolute_u_m": 137.9066
+  },
   "heading_grid_deg": 353.064,
   "note": "1.0 m right"
  },
@@ -438,6 +463,12 @@
    90.6644,
    137.4724
   ],
+  "override": {
+   "east_delta_m": -0.9913,
+   "north_delta_m": 19.9981,
+   "eye_height_m": 1.8,
+   "absolute_u_m": 137.4724
+  },
   "heading_grid_deg": 353.064,
   "note": "2.5 m right, eye 1.8"
  }

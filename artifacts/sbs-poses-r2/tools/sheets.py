@@ -1,4 +1,4 @@
-"""ADR 0130: photo | probe contact sheets (<=960 px wide) for visual pose choice."""
+"""ADR 0140: photo | probe contact sheets (<=960 px wide) for visual pose choice."""
 import json, sys
 from pathlib import Path
 from PIL import Image, ImageDraw
@@ -34,15 +34,11 @@ if __name__ == '__main__':
     groups = {}
     for p in plan:
         groups.setdefault(p['base'].split('-')[-1], []).append(p)
+    rd = base / 'renders' / sub
     for key, ps in groups.items():
-        items = []
+        items = [('PRODUCTION (before)', rd / ('sbs-g3-b-' + key + '.png'))]
         for p in ps:
-            for d in (base / 'renders').glob(sub + '-*'):
-                f = d / (p['probe'] + '.png')
-                if f.exists():
-                    lab = f"{p['probe'][-3:]} f{p['fwd_m']:+} r{p['right_m']:+} eye{p['eye_m']} hd{p['heading_delta_deg']:+} h{p['horizon_y_fraction']}"
-                    items.append((lab, f))
-        prod = P.ROOT / 'artifacts/sbs-poses/before' / sub / ('sbs-g3-b-' + key + '.png')
-        if prod.exists(): items.insert(0, ('PRODUCTION (before)', prod))
+            lab = f"{p['probe'][-2:]}: {p.get('note', '')[:60]}"
+            items.append((lab, rd / (p['probe'] + '.png')))
         sheet(key, items, base / f'sheet-{key[:6]}-{sub}.jpg')
         print('sheet', key, len(items))
