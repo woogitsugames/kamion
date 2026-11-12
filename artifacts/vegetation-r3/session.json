@@ -5,16 +5,17 @@
   "started_at": "2026-11-12T00:08:00+01:00",
   "deadline_at": "2026-11-12T21:30:50+01:00",
   "base_merge_sha": "49de5a4e",
-  "phase": "candidate_b_focused_tests_waiting_heavy",
+  "phase": "candidate_b_pipeline_active",
   "objective": "D51 blocker B8: four orthophoto-confirmed roadside broadleaf crowns, no road edits",
   "baseline_control_frames_reused": 268,
   "baseline_photo_frames_planned": 100,
   "unity_owner": "gpt-vegetation",
   "heavy_owner": "gpt-vegetation-r3",
-  "next_step": "finish pytest-b.log before starting B generation",
+  "next_step": "run-b.ps1: World under heavy then QA/snapshot/import/Low probe; inspect STATUS and run-b.log for current stage",
   "phone_timing": "UNVERIFIED, forbidden in this session",
   "candidate_a": "rejected: Low instanced draws +4; zero ablation confirmed baseline",
   "candidate_b": "replace nearby synthetic broadleaf, retain prototype/variant and 64m cell, no new instance records",
-  "unity_state": "zero-tree ablation imported",
-  "raw_inputs": "candidate A restored; candidate B not generated yet"
+  "unity_state": "zero ablation until B import completes",
+  "raw_inputs": "candidate A restored initially; run-b generator will write B inputs",
+  "focused_tests": "22 passed in 1.60s"
 }
