@@ -40,6 +40,7 @@ namespace Game.Core.Navigation
             int cap = n * 8 + 64;
             m_HeapItem = new int[cap]; m_HeapKey = new float[cap];
             m_EdgeFirstPoint = new int[2 * g.EdgeCount + 8];
+            m_Scratch = RoutePath.For(g);
         }
 
         /// <summary>Effective truck speed on an edge [m/s] for the cost model.</summary>
@@ -115,6 +116,20 @@ namespace Game.Core.Navigation
         /// direction) to <paramref name="goal"/> into <paramref name="path"/>. No allocation.
         /// </summary>
         public PlanStatus Plan(Vector2 start, float headingDeg, Vector2 goal, RoutePath path)
+        {
+            // Planned into a scratch path and copied on success: a failed re-plan keeps the current route.
+            m_Scratch ??= RoutePath.For(m_G);
+            var st = PlanInto(start, headingDeg, goal, m_Scratch);
+            LastFailedDestination = m_Scratch.Destination;
+            if (st == PlanStatus.Ok) path.CopyFrom(m_Scratch);
+            return st;
+        }
+
+        RoutePath m_Scratch;
+        /// <summary>Snapped destination of the last plan (also when it failed with AlreadyThere / NoPath).</summary>
+        public Vector2 LastFailedDestination { get; private set; }
+
+        PlanStatus PlanInto(Vector2 start, float headingDeg, Vector2 goal, RoutePath path)
         {
             var g = m_G;
             path.Clear();

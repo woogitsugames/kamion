@@ -90,7 +90,7 @@ namespace Game.Core.Navigation
             System.Array.Copy(o.ManTurn, ManTurn, o.ManCount); System.Array.Copy(o.ManExit, ManExit, o.ManCount);
             System.Array.Copy(o.ManName, ManName, o.ManCount); ManCount = o.ManCount;
             Destination = o.Destination; DestinationName = o.DestinationName; CostSeconds = o.CostSeconds;
-            Version++;
+            Version = System.Math.Max(Version, o.Version) + 1;
         }
 
         public static Maneuver Classify(float turnDeg)

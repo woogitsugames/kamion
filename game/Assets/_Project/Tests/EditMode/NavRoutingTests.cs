@@ -41,29 +41,56 @@ namespace Game.Tests
             Assert.Contains("Generała Władysława Andersa", g.Names);
         }
 
+        // Known places (region metres): Kombatantów (two-way, south), Andersa = dual carriageway (two one-way edges).
+        static readonly Vector2 k_Kombatantow = new Vector2(-1.7f, -897.8f);
+        static readonly Vector2 k_AndersaSE = new Vector2(-172f, -298f);       // south-east-bound carriageway (edge 307)
+        static readonly Vector2 k_AndersaNW = new Vector2(-457.95f, -55.97f);  // north-west-bound carriageway at Rondo Putry (edge 49)
+
         [Test]
-        public void Region_KnownRoute_KombatantowToAndersa()
+        public void Region_KnownRoute_KombatantowToAndersa_SouthEastCarriageway()
         {
             var g = Region_();
             var planner = new RoutePlanner(g);
             var p = RoutePath.For(g);
-            Vector2 a = new Vector2(-1.7f, -897.8f), b = new Vector2(-457.95f, -55.97f);
-            Assert.AreEqual(PlanStatus.Ok, planner.Plan(a, float.NaN, b, p));
+            Assert.AreEqual(PlanStatus.Ok, planner.Plan(k_Kombatantow, float.NaN, k_AndersaSE, p));
+            Dump(g, p, "route_kombatantow_andersa_se");
             AssertValid(g, p);
-            float straight = Vector2.Distance(a, b);
-            Assert.Greater(p.Length, straight * 0.95f);
-            Assert.Less(p.Length, straight * 2.5f, "no absurd detour");
+            Log(g, p, planner, "Kombatantów -> Andersa SE");
+            Assert.Greater(p.Length, Vector2.Distance(k_Kombatantow, k_AndersaSE));
+            Assert.Less(p.Length, 2000f, "via al. Tysiąclecia and Rondo Putry, no loop");
             Assert.Less(Vector2.Distance(p.Points[p.Count - 1], p.Destination), 0.5f);
             Assert.AreEqual("Generała Władysława Andersa", g.Names[p.DestinationName]);
-            Assert.GreaterOrEqual(p.ManCount, 2, "at least one junction manoeuvre + arrival");
-            Debug.Log($"[NAV] Kombatantów -> Andersa: {p.Length:F0} m, {p.CostSeconds:F0} s, {p.DirectedCount} edges, {p.ManCount} manoeuvres, expanded {planner.LastExpanded}");
+            bool tysiaclecia = false;
+            for (int k = 0; k < p.ManCount; k++) tysiaclecia |= g.Names[p.ManName[k]] == "Aleja Tysiąclecia Państwa Polskiego";
+            Assert.IsTrue(tysiaclecia, "turns onto al. Tysiąclecia");
+
+            var q = RoutePath.For(g);
+            Assert.AreEqual(PlanStatus.Ok, planner.Plan(k_AndersaSE, float.NaN, k_Kombatantow, q));
+            AssertValid(g, q);
+        }
+
+        [Test]
+        public void Region_KnownRoute_OtherCarriageway_TurnsAtRoundabout()
+        {
+            // The goal lies on the opposite (north-west-bound) carriageway: no U-turn across the median, so the route
+            // must turn round at a roundabout (Rondo Pamięci Bieżeństwa) and come back.
+            var g = Region_();
+            var planner = new RoutePlanner(g);
+            var p = RoutePath.For(g);
+            Assert.AreEqual(PlanStatus.Ok, planner.Plan(k_Kombatantow, float.NaN, k_AndersaNW, p));
+            Dump(g, p, "route_kombatantow_andersa_nw");
+            AssertValid(g, p);
+            Log(g, p, planner, "Kombatantów -> Andersa NW");
+            bool turnRound = false;
+            for (int k = 0; k < p.ManCount; k++) turnRound |= p.ManType[k] == Maneuver.Roundabout && Mathf.Abs(p.ManTurn[k]) > 150f;
+            Assert.IsTrue(turnRound, "turns round at a roundabout");
+        }
+
+        static void Log(RouteGraph g, RoutePath p, RoutePlanner planner, string what)
+        {
+            Debug.Log($"[NAV] {what}: {p.Length:F0} m, {p.CostSeconds:F0} s, {p.DirectedCount} edges, {p.ManCount} manoeuvres, expanded {planner.LastExpanded}");
             for (int k = 0; k < p.ManCount; k++)
                 Debug.Log($"[NAV]   {p.ManType[k]} {p.ManTurn[k]:F0}° exit {p.ManExit[k]} at {p.S[p.ManPoint[k]]:F0} m -> {g.Names[p.ManName[k]]}");
-
-            // And back (one-way pairs differ: the way back is a different set of directed edges).
-            var q = RoutePath.For(g);
-            Assert.AreEqual(PlanStatus.Ok, planner.Plan(b, float.NaN, a, q));
-            AssertValid(g, q);
         }
 
         [Test]
@@ -72,18 +99,86 @@ namespace Game.Tests
             var g = Region_();
             var planner = new RoutePlanner(g);
             var p = RoutePath.For(g);
+            // Strongly connected truck core around a node on Andersa: forward and backward reachable (one-way aware node graph
+            // without no-truck edges).
+            // The 2 km clip leaves parts connected only outside the region (e.g. Olsztyńska / Buska, 55 nodes): not routable.
+            int seed = g.EdgeFrom[307];
+            bool[] fwd = Reach(g, seed, true), bwd = Reach(g, seed, false);
             var rnd = new System.Random(150);
-            int ok = 0, tried = 0;
-            for (int i = 0; i < 150; i++)
+            int ok = 0, tried = 0, core = 0, coreOk = 0;
+            var byStatus = new int[8];
+            for (int i = 0; i < 300; i++)
             {
                 int ea = rnd.Next(g.EdgeCount), eb = rnd.Next(g.EdgeCount);
                 if ((g.EdgeFlags[ea] & (RouteGraph.FlagNoTruck | RouteGraph.FlagRestricted)) != 0) continue;
+                // Core test on the edges the points actually snap to (short spurs overlap other edges).
+                int sa = g.Snap(Mid(g, ea), RoutePlanner.SnapStartM, out _, out _, out _);
+                int sb = g.Snap(Mid(g, eb), RoutePlanner.SnapGoalM, out _, out _, out _);
+                bool inCore = sa >= 0 && sb >= 0 && InCore(g, sa, fwd, bwd) && InCore(g, sb, fwd, bwd)
+                              && (g.EdgeFlags[sa] & RouteGraph.FlagNoTruck) == 0;
                 tried++;
                 var st = planner.Plan(Mid(g, ea), float.NaN, Mid(g, eb), p);
+                byStatus[(int)st]++;
                 if (st == PlanStatus.Ok) { ok++; AssertValid(g, p); }
+                if (!inCore) continue;
+                core++;
+                // Node reachability ignores the no-U-turn rule and the OSM turn restrictions, so a few core pairs are
+                // legitimately unreachable (checked by hand in a line-graph model: e.g. 412 -> 141 needs a U-turn).
+                if (st == PlanStatus.Ok || st == PlanStatus.AlreadyThere) coreOk++;
+                else Debug.Log($"[NAV] core pair not planned: {ea} (snapped {sa}) -> {eb} (snapped {sb}): {st}");
             }
-            Debug.Log($"[NAV] random pairs: {ok}/{tried} planned");
-            Assert.GreaterOrEqual(ok, tried * 0.7f, "most of the region is reachable (dead-end boundary stubs are not)");
+            Debug.Log($"[NAV] random pairs: {ok}/{tried} planned, {coreOk}/{core} core pairs planned; by status ok/startOff/goalOff/noPath/already = {byStatus[0]}/{byStatus[1]}/{byStatus[2]}/{byStatus[3]}/{byStatus[4]}");
+            Assert.Greater(core, 100);
+            Assert.GreaterOrEqual(coreOk, core * 0.95f, "nearly every pair of the truck core is routable");
+        }
+
+        static bool InCore(RouteGraph g, int e, bool[] fwd, bool[] bwd) =>
+            fwd[g.EdgeFrom[e]] && bwd[g.EdgeFrom[e]] && fwd[g.EdgeTo[e]] && bwd[g.EdgeTo[e]];
+
+        static bool[] Reach(RouteGraph g, int start, bool forward)
+        {
+            var seen = new bool[g.NodeCount];
+            var stack = new Stack<int>();
+            stack.Push(start); seen[start] = true;
+            while (stack.Count > 0)
+            {
+                int n = stack.Pop();
+                for (int e = 0; e < g.EdgeCount; e++)
+                {
+                    if ((g.EdgeFlags[e] & RouteGraph.FlagNoTruck) != 0) continue;   // trucks may not use it (access / hgv = no)
+                    bool ow = g.IsOneway(e);
+                    int a = g.EdgeFrom[e], b = g.EdgeTo[e];
+                    if (forward)
+                    {
+                        if (a == n && !seen[b]) { seen[b] = true; stack.Push(b); }
+                        if (!ow && b == n && !seen[a]) { seen[a] = true; stack.Push(a); }
+                    }
+                    else
+                    {
+                        if (b == n && !seen[a]) { seen[a] = true; stack.Push(a); }
+                        if (!ow && a == n && !seen[b]) { seen[b] = true; stack.Push(b); }
+                    }
+                }
+            }
+            return seen;
+        }
+
+        /// <summary>Route polyline + manoeuvres as JSON in artifacts/gps-map/ (plotted by tools/worldgen/navgraph/plot_route.py).</summary>
+        static void Dump(RouteGraph g, RoutePath p, string name)
+        {
+            var sb = new System.Text.StringBuilder();
+            var ci = System.Globalization.CultureInfo.InvariantCulture;
+            sb.Append("{\"points\":[");
+            for (int i = 0; i < p.Count; i++) sb.Append(i > 0 ? "," : "").Append('[').Append(p.Points[i].x.ToString("F2", ci)).Append(',').Append(p.Points[i].y.ToString("F2", ci)).Append(']');
+            sb.Append("],\"maneuvers\":[");
+            for (int k = 0; k < p.ManCount; k++)
+                sb.Append(k > 0 ? "," : "").Append("{\"type\":\"").Append(p.ManType[k]).Append("\",\"turn\":").Append(p.ManTurn[k].ToString("F0", ci))
+                  .Append(",\"exit\":").Append(p.ManExit[k]).Append(",\"s\":").Append(p.S[p.ManPoint[k]].ToString("F1", ci))
+                  .Append(",\"name\":\"").Append(g.Names[p.ManName[k]]).Append("\"}");
+            sb.Append("],\"length\":").Append(p.Length.ToString("F1", ci)).Append(",\"cost_s\":").Append(p.CostSeconds.ToString("F1", ci)).Append('}');
+            string dir = System.IO.Path.GetFullPath(System.IO.Path.Combine(Application.dataPath, "..", "..", "artifacts", "gps-map"));
+            System.IO.Directory.CreateDirectory(dir);
+            System.IO.File.WriteAllText(System.IO.Path.Combine(dir, name + ".json"), sb.ToString());
         }
 
         static Vector2 Mid(RouteGraph g, int e) => g.PointAlong(e * 2, g.GeomLength(e) * 0.5f);
@@ -233,7 +328,7 @@ namespace Game.Tests
             var g = Region_();
             var planner = new RoutePlanner(g);
             var p = RoutePath.For(g);
-            Vector2 a = new Vector2(-1.7f, -897.8f), b = new Vector2(-457.95f, -55.97f);
+            Vector2 a = k_Kombatantow, b = k_AndersaSE;
             Assert.AreEqual(PlanStatus.Ok, planner.Plan(a, float.NaN, b, p));
             var tr = new RouteTracker();
             var gd = new NavGuidance();
@@ -247,7 +342,7 @@ namespace Game.Tests
             Assert.Greater(gd.RemainingM, 0f);
             Assert.Less(gd.RemainingM, p.Length);
 
-            Vector2 off = at + new Vector2(dir.y, -dir.x) * 60f;   // 60 m beside the route
+            Vector2 off = at + new Vector2(dir.y, -dir.x) * 40f;   // 40 m beside the route
             for (int i = 0; i < 20; i++) tr.Update(p, off, heading, 10f, 0.1f, ref gd);
             Assert.IsFalse(gd.NeedsReroute, "hold time not over yet (2 s < 2.5 s)");
             for (int i = 0; i < 10; i++) tr.Update(p, off, heading, 10f, 0.1f, ref gd);
@@ -256,6 +351,7 @@ namespace Game.Tests
             int v = p.Version;
             var st = planner.Plan(off, heading, p.Destination, p);
             Assert.That(st == PlanStatus.Ok || st == PlanStatus.StartOffRoad);
+            if (st != PlanStatus.Ok) Assert.IsTrue(p.HasRoute && p.Version == v, "a failed re-plan keeps the current route");
             if (st == PlanStatus.Ok)
             {
                 Assert.AreNotEqual(v, p.Version);
@@ -265,6 +361,7 @@ namespace Game.Tests
             }
 
             // Arrival.
+            Assert.IsTrue(p.HasRoute);
             tr.Update(p, p.Points[p.Count - 1], heading, 1f, 0.1f, ref gd);
             Assert.IsTrue(gd.Arrived);
         }
@@ -277,8 +374,8 @@ namespace Game.Tests
             var p = RoutePath.For(g);
             var tr = new RouteTracker();
             var gd = new NavGuidance();
-            Vector2 a = new Vector2(-1.7f, -897.8f), b = new Vector2(-457.95f, -55.97f);
-            planner.Plan(a, 0f, b, p);   // warm-up (JIT)
+            Vector2 a = k_Kombatantow, b = k_AndersaSE;
+            Assert.AreEqual(PlanStatus.Ok, planner.Plan(a, 0f, b, p), "heading north");   // warm-up (JIT)
             for (int i = 0; i < 50; i++) tr.Update(p, p.Points[i % p.Count], 0f, 10f, 0.02f, ref gd);
             long before = System.GC.GetAllocatedBytesForCurrentThread();
             for (int i = 0; i < 10; i++) planner.Plan(i % 2 == 0 ? a : b, float.NaN, i % 2 == 0 ? b : a, p);
