@@ -27,6 +27,9 @@ namespace Game.World.Import
             foreach (var c in UnityEngine.Object.FindObjectsByType<WorldCollisionCooker>(FindObjectsInactive.Include, FindObjectsSortMode.None)) c.Cook();
             Physics.SyncTransforms();
             var set = AssetDatabase.LoadAssetAtPath<WorldInstanceSet>("Assets/_Generated/World/bialystok-industrial-c/Instances.asset");
+            // Native instance positions retain absolute elevation; scene collision
+            // is translated by -anchorZ. Match WorldInstances.SyncOrigin exactly.
+            Vector3 sceneOffset = UnityEngine.Object.FindAnyObjectByType<WorldInstances>().transform.position;
             var cameras = new List<CameraEntry>();
             var families = new[] { "car_hatch_white", "car_suv_black", "tractor_blue", "trailer_curtain_0", "trailer_reefer_0" };
             foreach (string family in families)
@@ -40,15 +43,18 @@ namespace Game.World.Import
                         : (tier == "Low" ? new[] { 20f, 50f } : new[] { 60f, 150f });
                     foreach (float boundary in boundaries)
                     {
-                        int bestScore = -1, bestIndex = -1; float bestAngle = 0; Vector3 bestLook = default;
+                        int bestScore = -1, bestIndex = -1; float bestAngle = 0, bestAnchorDistance = float.MaxValue; Vector3 bestLook = default;
                         foreach (var run in set.runs.Where(r => r.prototype == proto))
                             for (int index = run.start; index < run.start + run.count; index++)
                             {
                                 var matrix = set.LocalMatrix(index);
+                                var origin = set.LocalPosition(index);
+                                if (Mathf.Abs(origin.x) > 900 || Mathf.Abs(origin.z) > 900) continue;
+                                float anchorDistance = (new Vector2(origin.x - 720, origin.z + 411)).sqrMagnitude;
                                 var bounds = set.prototypes[proto].lods[0].bounds;
                                 Vector3 look = matrix.MultiplyPoint3x4(reefer ? new Vector3(0, 3.32f, 14.025f) : bounds.center);
                                 var selfBounds = bounds; selfBounds.Expand(.15f);
-                                var inverse = matrix.inverse;
+                                var inverse = (Matrix4x4.Translate(sceneOffset) * matrix).inverse;
                                 for (int a = 0; a < 24; a++)
                                 {
                                     float angle = a * Mathf.PI / 12;
@@ -56,7 +62,9 @@ namespace Game.World.Import
                                     int score = 0;
                                     foreach (float distance in new[] { boundary - .1f, boundary + .1f })
                                     {
-                                        Vector3 pos = Position(set, index, angle, distance);
+                                        Vector3 nativePos = Position(set, index, angle, distance);
+                                        if (Mathf.Abs(nativePos.x) > 960 || Mathf.Abs(nativePos.z) > 960) { score = -100; break; }
+                                        Vector3 pos = nativePos + sceneOffset;
                                         for (int sample = 0; sample < 9; sample++)
                                         {
                                             Vector3 point = look;
@@ -66,14 +74,14 @@ namespace Game.World.Import
                                                     new Vector3((sample & 1) == 0 ? -1 : 1, (sample & 2) == 0 ? -1 : 1, (sample & 4) == 0 ? -1 : 1));
                                                 point = reefer ? look + matrix.MultiplyVector(new Vector3((sample % 3 - 1) * .5f, (sample / 3 - 1) * .2f, 0)) : matrix.MultiplyPoint3x4(local);
                                             }
-                                            Vector3 delta = point - pos;
+                                            Vector3 delta = point + sceneOffset - pos;
                                             bool blocked = Physics.RaycastAll(pos, delta.normalized, delta.magnitude - .05f, ~0, QueryTriggerInteraction.Ignore)
                                                 .Any(h => !selfBounds.Contains(inverse.MultiplyPoint3x4(h.point)));
                                             if (!blocked) score++;
                                         }
                                     }
-                                    if (score > bestScore)
-                                    { bestScore = score; bestIndex = index; bestAngle = angle; bestLook = look; }
+                                    if (score > bestScore || score == bestScore && anchorDistance < bestAnchorDistance)
+                                    { bestScore = score; bestIndex = index; bestAngle = angle; bestLook = look; bestAnchorDistance = anchorDistance; }
                                 }
                             }
                         if (bestIndex < 0) throw new InvalidOperationException("No candidate " + family);

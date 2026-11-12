@@ -22,3 +22,5 @@ Dodatkowe kamery: after/Low-overcast zapisane.
 Dodatkowe kamery: after/High-clear zapisane.
 
 Dodatkowe kamery: after/High-overcast zapisane.
+
+Pierwsze40dodatkowychkamer NIEZALICZONE: statyczne raycasty używały wysokości absolutnych bez scenicznego -anchorZ. Obrazy obejrzano, wykryto zasłonięcia/pozycje pod terenem. Poprawiono wyłącznie narzędzie QA: scenaOffset z WorldInstances, centralne instancje i kamery wewnątrz kafla. Fidelity odświeżone254.3s, potrzebna walidacja testów.
