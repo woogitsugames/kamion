@@ -2,7 +2,9 @@ using UnityEngine;
 
 namespace Game.Core.Navigation
 {
-    public enum PlanStatus : byte { Ok = 0, StartOffRoad, GoalOffRoad, NoPath, AlreadyThere }
+    /// <summary>GoalOffReach (M27): the tapped destination is in an off-reach part of the map (outside the main strongly
+    /// connected component); the pin was snapped to the nearest main-component node instead of failing with NoPath.</summary>
+    public enum PlanStatus : byte { Ok = 0, StartOffRoad, GoalOffRoad, NoPath, AlreadyThere, GoalOffReach }
 
     /// <summary>
     /// A* over directed edges of a <see cref="RouteGraph"/> (edge-based, so OSM turn restrictions and the no-U-turn rule
@@ -164,7 +166,12 @@ namespace Game.Core.Navigation
             LastExpanded = 0;
             int se = g.Snap(start, SnapStartM, out float sAlong, out Vector2 sPt, out _);
             if (se < 0) return PlanStatus.StartOffRoad;
-            int ge = g.Snap(goal, SnapGoalM, out float gAlong, out Vector2 gPt, out _, truckOnly: false);
+            // M27: prefer an edge drivable to from the main component; an off-reach goal falls back to the plain snap
+            // and then fails with NoPath (the UI never sends such a goal - SetPin snaps the pin to the reachable part).
+            // Off-reach edges are NOT skipped in the search (integration r5): A* never reaches them from the main part
+            // anyway, and a truck starting on a one-way entry from the tile edge (off-reach) must still route out.
+            int ge = g.Snap(goal, SnapGoalM, out float gAlong, out Vector2 gPt, out _, truckOnly: false, mainComponentOnly: true);
+            if (ge < 0) ge = g.Snap(goal, SnapGoalM, out gAlong, out gPt, out _, truckOnly: false);
             if (ge < 0) return PlanStatus.GoalOffRoad;
 
             int gen = Gen();

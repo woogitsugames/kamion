@@ -1,0 +1,115 @@
+{
+  "schemaVersion": 1,
+  "id": "reverse_dock_s_maneuver_comb",
+  "description": "Reversing the combination into a dock: S-steer at dock speed on flat, selector R",
+  "spec": "docs/04 s6.10",
+  "variants": [
+    "empty",
+    "laden40"
+  ],
+  "ground": {
+    "gradePercent": 0,
+    "surface": "dry_asphalt"
+  },
+  "initial": {},
+  "duration": 30,
+  "driver": {
+    "type": "timeline",
+    "keys": [
+      {
+        "t": 0,
+        "throttle": 0,
+        "brake": 1,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "R"
+      },
+      {
+        "t": 1,
+        "throttle": 0.3,
+        "brake": 0,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "R"
+      },
+      {
+        "t": 6,
+        "throttle": 0.3,
+        "brake": 0,
+        "steer": 0.55,
+        "parkingBrake": false,
+        "selector": "R"
+      },
+      {
+        "t": 12,
+        "throttle": 0.3,
+        "brake": 0,
+        "steer": -0.55,
+        "parkingBrake": false,
+        "selector": "R"
+      },
+      {
+        "t": 18,
+        "throttle": 0.3,
+        "brake": 0,
+        "steer": 0.35,
+        "parkingBrake": false,
+        "selector": "R"
+      },
+      {
+        "t": 24,
+        "throttle": 0.3,
+        "brake": 0,
+        "steer": 0,
+        "parkingBrake": false,
+        "selector": "R"
+      }
+    ]
+  },
+  "checks": [
+    {
+      "metric": "max_articulation_deg",
+      "status": "WORKING_VALUE",
+      "source": "S-manoeuvre folds the trailer but the fifth-wheel stop bounds it: +/-90 deg soft deformable stop (3 Hz critically damped), 95 deg = stop + compliance margin; >=20 deg proves the manoeuvre actually articulated",
+      "min": 20,
+      "max": 95
+    },
+    {
+      "metric": "wheel_lift",
+      "status": "WORKING_VALUE",
+      "source": "all wheels stay loaded while reversing",
+      "max": 0
+    },
+    {
+      "metric": "stalled",
+      "status": "WORKING_VALUE",
+      "source": "engine must not stall",
+      "max": 0
+    },
+    {
+      "metric": "min_speed_kmh",
+      "status": "WORKING_VALUE",
+      "source": "dock reversing speed bounded: SpeedFwd < 0 in reverse, so |v| <= 15 km/h means min_speed_kmh >= -15; <= -2 km/h proves it actually reversed (integration r5: with selector D the S-steer path still ends at z -7.5 m, so final_z alone passed)",
+      "min": -15,
+      "max": -2
+    },
+    {
+      "metric": "final_z_m",
+      "status": "WORKING_VALUE",
+      "source": "vehicle actually reversed (heading 0: forward = +z, so z must decrease by >= 3 m in 30 s)",
+      "max": -3
+    },
+    {
+      "metric": "max_dv_step_ms",
+      "status": "WORKING_VALUE",
+      "source": "no solver explosion / impulse spikes (per-step velocity change of either body)",
+      "max": 0.35
+    },
+    {
+      "metric": "max_fifth_wheel_error_mm",
+      "status": "WORKING_VALUE",
+      "source": "kingpin constraint drift (custom fifth-wheel constraint)",
+      "max": 5
+    }
+  ]
+}

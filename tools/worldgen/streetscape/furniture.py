@@ -1750,10 +1750,69 @@ def _mark_free_deck_ends(queue, m=None):
             m["deck_free_ends"] = m.get("deck_free_ends", 0) + int(sum(flags))
 
 
+ROW_DUP_GAP_M = 0.5       # M29 / ADR 0141 P2 (edge-west): two rail rows running parallel closer than this ...
+ROW_DUP_COMMON_M = 0.5    # ... over a common span longer than this are one doubled row: the shorter is dropped
+ROW_DUP_ANGLE_DEG = 25.0
+ROW_DUP_JOIN_ZONE = 10    # points (1 m) at a run end: a join there (V / Y at a nose, ADR 0117) is not a doubling
+
+
+def _drop_doubled_rows(queue, m=None):
+    """M29 / ADR 0141 P2: remove doubled rail rows - pairs that run parallel (within ROW_DUP_ANGLE_DEG),
+    come closer than ROW_DUP_GAP_M over a common span longer than ROW_DUP_COMMON_M. The shorter run is
+    dropped (authored rails are traced, they stay). Proximity within ROW_DUP_JOIN_ZONE of a run end is an
+    intended join (_join_free_ends), not a doubling."""
+    from scipy.spatial import cKDTree
+    keep = [True] * len(queue)
+    lines = [np.asarray(it["P"], float) for it in queue]
+    lens = [float(np.hypot(*np.diff(P, axis=0).T).sum()) if len(P) > 1 else 0.0 for P in lines]
+    dense = []
+    for P in lines:
+        s = np.concatenate([[0.0], np.cumsum(np.hypot(*np.diff(P, axis=0).T))])
+        u = np.arange(0.0, max(s[-1], 1e-9), 0.5)
+        dense.append(np.column_stack([np.interp(u, s, P[:, 0]), np.interp(u, s, P[:, 1])]))
+    trees = [cKDTree(d) for d in dense]
+    for i in range(len(queue)):
+        if not keep[i]:
+            continue
+        for j in range(i + 1, len(queue)):
+            if not keep[j]:
+                continue
+            A, B = lines[i], lines[j]
+            a, b = A[-1] - A[0], B[-1] - B[0]
+            na, nb = np.hypot(*a), np.hypot(*b)
+            if na < 1e-9 or nb < 1e-9 or abs(float(a @ b) / (na * nb)) < np.cos(np.radians(ROW_DUP_ANGLE_DEG)):
+                continue
+            d, kj = trees[j].query(dense[i])
+            sa = np.concatenate([[0.0], np.cumsum(np.hypot(*np.diff(dense[i], axis=0).T))])
+            sb = np.concatenate([[0.0], np.cumsum(np.hypot(*np.diff(dense[j], axis=0).T))])
+            za = min(ROW_DUP_JOIN_ZONE, 0.3 * sa[-1])      # a join sits at a run end; shorter runs have a shorter zone
+            zb_ = min(ROW_DUP_JOIN_ZONE, 0.3 * sb[-1])
+            inner = ((sa > za) & (sa < sa[-1] - za) & (sb[kj] > zb_) & (sb[kj] < sb[-1] - zb_))
+            if float(np.where(inner, d, np.inf).min()) >= ROW_DUP_GAP_M:
+                continue
+            u = (A[-1] - A[0]) / na
+            t = (dense[j] - A[0]) @ u
+            if float(min(t.max(), na) - max(t.min(), 0.0)) <= ROW_DUP_COMMON_M:
+                continue
+            # the shorter run is the duplicate; an authored (traced) rail is never the one dropped
+            cand = [k for k in (i, j) if not str(queue[k]["key"]).startswith("authored:")]
+            if not cand:
+                continue
+            drop = min(cand, key=lambda k: lens[k])
+            keep[drop] = False
+    removed = [it["key"] for it, kp in zip(queue, keep) if not kp]
+    if removed:
+        queue[:] = [it for it, kp in zip(queue, keep) if kp]
+        if m is not None:
+            m["doubled_rows_removed"] = m.get("doubled_rows_removed", 0) + len(removed)
+            m["doubled_rows_keys"] = removed
+
+
 def _flush_rails(lin, m=None):
     queue = getattr(lin, "rail_queue", None) or []
     if queue and m is not None:
         _join_free_ends(queue, m)
+    _drop_doubled_rows(queue, m)
     _mark_free_deck_ends(queue, m)
     for it in queue:
         guardrail(lin, it["P"], it["Z"], it["key"], it["tall"], it["term"], it.get("term_tall", (False, False)))
@@ -1860,10 +1919,31 @@ def _beside_structure(c, ss, sgn, hw, zg, structs):
     return res
 
 
+def _approach_transition_mask(br, transition_m):
+    """M29 / ADR 0144 pkt 3: bool mask of the ground stations within transition_m past an end of a bridge
+    stretch where the chain continues - the approach the deck barrier is extended onto (przejście z pomostu
+    na dojazd; § 80 rozporządzenia o drogowych obiektach inżynierskich: the barrier of the bridge structure
+    is carried past the structure onto the approach). Stations are 1 m apart."""
+    br = np.asarray(br, bool)
+    n = len(br)
+    t = int(round(transition_m))
+    mask = np.zeros(n, bool)
+    idx = np.where(br)[0]
+    for run in np.split(idx, np.where(np.diff(idx) > 1)[0] + 1):
+        if len(run) < 2:
+            continue
+        a, b = int(run[0]), int(run[-1])
+        if a > 0:
+            mask[max(0, a - t):a] = True
+        if b < n - 1:
+            mask[b + 1:min(n, b + 1 + t)] = True
+    return mask
+
+
 def guardrails(lin, net, zground, report):
     from scipy import ndimage
-    m = {"bridge": 0.0, "median": 0.0, "embankment": 0.0, "structure": 0.0}
-    names = ["", "bridge", "median", "embankment", "structure"]
+    m = {"bridge": 0.0, "median": 0.0, "embankment": 0.0, "structure": 0.0, "approach": 0.0}
+    names = ["", "bridge", "median", "embankment", "structure", "approach"]
     built = []
     drops, runs = [], []
     structs = _structures(net)
@@ -1934,7 +2014,7 @@ def guardrails(lin, net, zground, report):
             kmat = np.array([p[4] for p in prm])
             ext = np.array([side_extent(*p) for p in prm])
             zg = c.crossfall_z(ss, sgn * hw)
-            want = np.zeros(len(ss), int)            # 1 bridge, 2 median, 3 embankment, 4 beside a structure
+            want = np.zeros(len(ss), int)            # 1 bridge, 2 median, 3 embankment, 4 beside a structure, 5 deck->approach transition (M29)
             off = np.zeros(len(ss))
             zb = zg.copy()
             # bridges: barrier-railing on the cap, BRIDGE_BARRIER_EDGE_M in from its outer edge (ADR 0110: the
@@ -1985,6 +2065,16 @@ def guardrails(lin, net, zground, report):
                 off[bs] = np.where(rur[bs], hw[bs] + S.PAVED_SHOULDER + S.GUARDRAIL_OFFSET,
                                    hw[bs] + S.KERB_TOP_W + S.GUARDRAIL_OFFSET)
                 zb[bs] = np.where(rur[bs], zg[bs] - S.CROSSFALL * S.PAVED_SHOULDER, zg[bs] + kh[bs])
+            # M29 / ADR 0144 pkt 3: a deck barrier end where the chain continues on the ground is not a real
+            # end - the barrier is carried past the structure onto the approach (§ 80 rozporządzenia o drogowych
+            # obiektach inżynierskich; DECK_APPROACH_TRANSITION_M is WORKING_VALUE). The approach stations join
+            # the bridge stretch in ONE run (blended offset/height), so the run end - not the deck end - is
+            # where the turned-down ground terminal lands.
+            tr = _approach_transition_mask(br, S.DECK_APPROACH_TRANSITION_M) & (want == 0)
+            want[tr] = 5
+            off[tr] = np.where(rur[tr], hw[tr] + S.PAVED_SHOULDER + S.GUARDRAIL_OFFSET,
+                               hw[tr] + S.KERB_TOP_W + S.GUARDRAIL_OFFSET)
+            zb[tr] = np.where(rur[tr], zg[tr] - S.CROSSFALL * S.PAVED_SHOULDER, zg[tr] + kh[tr])
             # runs: ONE rail per contiguous stretch that wants a barrier, whatever the rule (ADR 0110: the bridge
             # rail, the approach embankment rail and the median rail were separate runs at different offsets and
             # crossed / doubled where they met, REVIEW s10-0100 P1-6); the offset and the foot height blend over 9 m
@@ -2017,7 +2107,7 @@ def guardrails(lin, net, zground, report):
                         runs.append({"chain": c.id, "side": side, "s": [round(float(ss[k]), 1), round(float(ss[kk]), 1)],
                                      "max_drop_m": round(float(drop[sl][w3].max()), 2),
                                      "at": [round(float(v), 1) for v in c.line.offset_point(ss[(k + kk) // 2], 0.0)]})
-                    for q in (1, 2, 3, 4):
+                    for q in (1, 2, 3, 4, 5):
                         m[names[q]] += float((want[sl] == q).sum())
                 k = kk + 1
     deck_flags = _flush_rails(lin, m)

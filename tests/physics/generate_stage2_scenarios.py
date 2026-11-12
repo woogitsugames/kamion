@@ -171,9 +171,9 @@ for surf, mu in [("dry", "dry_asphalt"), ("wet", "wet_asphalt")]:
         ch = list(stable) if abs_on else [stable[0]]
         if abs_on:
             if surf == "dry":
-                ch += [chk("stop_distance_m", mn=35, mx=61.2, status=W,
-                           source="upper bound = 0.15 v + v^2/130 at 80 km/h (believed R13 N3 type-0 formula, UNVERIFIED; the type-0 table did not extract); lower bound ~ v^2/(2 x 0.8 g) + build-up"),
-                       chk("mfdd_ms2", mn=5.0, mx=8.0, source="MFDD (R13 Annex 4 definition); 5.0 = believed N3 type-0 minimum (UNVERIFIED); <= mu g"),
+                ch += [chk("stop_distance_m", mn=35, mx=61.2, status=S,
+                           source="upper bound = 0.15 v + v^2/130 at 80 km/h = 61.2 m: UN R13 Annex 4 type-0 N3 (table confirmed via GRRF-56-3, unece.org TRANS-WP29-GRRF-56-inf03e; cells did not extract from the MLIT PDF S5); lower bound ~ v^2/(2 x 0.8 g) + build-up"),
+                       chk("mfdd_ms2", mn=5.0, mx=8.0, status=S, source="MFDD (R13 Annex 4 definition); 5.0 m/s^2 = N3 type-0 minimum dm (same GRRF-56-3 table); <= mu g"),
                        ]
             else:
                 ch += [chk("stop_distance_m", mn=45, mx=95, source="mu_wet ~0.5 (WORKING): v^2/(2 x 0.45 g) + build-up"),
@@ -316,6 +316,34 @@ for lvl in [0.5, 1.0]:
        [chk("max_articulation_deg", mx=10, source="ABS keeps the combination stable (and cuts the retarder)"),
         chk("rear_lock_time_s", mx=0.1, source="ABS prevents lock"), stable[0]],
        variants=COMB, ground={"gradePercent": 0, "surface": "wet_asphalt"}, initial={"speedKmh": 60})
+
+# ---------------- 10. reversing with the trailer (dock) ----------------
+sc("reverse_dock_s_maneuver_comb",
+   "Reversing the combination into a dock: S-steer at dock speed on flat, selector R",
+   "docs/04 s6.10", 30,
+   {"type": "timeline", "keys": [
+       key(0, brake=1, sel="R"), key(1, throttle=0.3, sel="R"), key(6, throttle=0.3, steer=0.55, sel="R"),
+       key(12, throttle=0.3, steer=-0.55, sel="R"), key(18, throttle=0.3, steer=0.35, sel="R"),
+       key(24, throttle=0.3, sel="R")]},
+   [chk("max_articulation_deg", mn=20, mx=95, source="S-manoeuvre folds the trailer but the fifth-wheel stop bounds it: +/-90 deg soft deformable stop (3 Hz critically damped), 95 deg = stop + compliance margin; >=20 deg proves the manoeuvre actually articulated"),
+    chk("wheel_lift", mx=0, source="all wheels stay loaded while reversing"),
+    chk("stalled", mx=0, source="engine must not stall"),
+    chk("min_speed_kmh", mn=-15, mx=-2, source="dock reversing speed bounded: SpeedFwd < 0 in reverse, so |v| <= 15 km/h means min_speed_kmh >= -15; <= -2 km/h proves it actually reversed (integration r5: with selector D the S-steer path still ends at z -7.5 m, so final_z alone passed)"),
+    chk("final_z_m", mx=-3, source="vehicle actually reversed (heading 0: forward = +z, so z must decrease by >= 3 m in 30 s)")] + stable,
+   variants=COMB)
+
+sc("reverse_grade6pct_comb",
+   "Reversing the combination up a 6% ramp (dock approach) at 4 km/h target",
+   "docs/04 s6.10", 40,
+   {"type": "speedhold", "targetKmh": 4, "steer": 0, "selector": "R"},
+   [chk("min_speed_kmh", mn=-12, source="ramp reversing speed bounded: SpeedFwd < 0 in reverse, |v| <= 12 km/h means min_speed_kmh >= -12"),
+    chk("stalled", mx=0, source="engine must not stall"),
+    chk("min_rpm", mn=550, source="engine stays above idle (idle 600 rpm; bound 550 guards lugging/stall)"),
+    chk("drift_m", mn=8, source="makes progress up the ramp: >= 8 m displacement in 40 s at 4 km/h target (4 km/h x 40 s = 44 m theoretical, minus ramp-up)"),
+    chk("final_z_m", mx=-5, source="heading 0, grade rises towards +z: reversing up the ramp means z decreases by >= 5 m"),
+    chk("max_articulation_deg", mx=20, source="trailer stays aligned in straight reverse: articulation << mechanical stop +/-90 deg"),
+    chk("wheel_lift", mx=0, source="no wheel lift on the ramp")] + stable,
+   variants=COMB, ground={"gradePercent": 6, "surface": "dry_asphalt"}, initial={"parkingBrake": True})
 
 # ---------------- 11. curbs / bump ----------------
 sc("curb_15cm_left_comb", "Left wheels of the whole combination over a 15 cm curb at 8 km/h", "docs/04 s6.11", 18,
