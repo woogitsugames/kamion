@@ -136,10 +136,12 @@ def wheel(m, c, r, w, seg, axis=(1, 0, 0), tyre="tyre", rim="rim", rim_r=0.62, o
         return cc + ax * sgn * depth + directions * radius
 
     def face(material, points):
-        points = list(points)
+        # Reverse winding, not vertex order: reversing the whole quad changes
+        # its diagonal and hence area-weighted crease normals on the other side.
+        triangles = [(0, 1, 2), (0, 2, 3)]
         if sgn < 0:
-            points.reverse()
-        m.quad(material, *points)
+            triangles = [(a, c, b) for a, b, c in triangles]
+        m.add(material, points, triangles, [[0, 0], [1, 0], [1, 1], [0, 1]])
 
     def annulus(outer, inside):
         for i in range(seg):

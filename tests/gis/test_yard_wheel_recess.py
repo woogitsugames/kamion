@@ -34,7 +34,7 @@ def test_near_rim_has_depth_without_expanding_tyre_and_is_mirrored(radius, width
         expected = np.concatenate([pos['V'] * [-1, 1, 1], pos['N'] * [-1, 1, 1]], axis=1)
         actual = np.concatenate([neg['V'], neg['N']], axis=1)
         # Post-crease corner positions/normals, independent of vertex numbering.
-        assert Counter(map(tuple, np.round(expected, 5))) == Counter(map(tuple, np.round(actual, 5)))
+        assert Counter(map(tuple, np.round(expected, 5))) == Counter(map(tuple, np.round(actual, 5))), material
 
 
 @pytest.mark.parametrize('radius,width,segments', CASES)
