@@ -156,3 +156,8 @@ Uwaga: pełny pytest uruchomiony bez `KAMION_BLENDER` nadpisuje `generated/world
   NASTĘPNY KROK (jeśli przerwane): `bash artifacts/junctions-r6/scripts/build.sh b7 && bash artifacts/junctions-r6/scripts/b7_all.sh` → `pairs.sh b7 && pairs_sbs.sh b7` → ADR „Wynik” → robocopy
 - s13 krok 3 (17:25–17:48): build **b7** rc 0 (trasa 2398 m, `overrides_stale` puste, Megascans dostępne), commit `ac0f01d6`; import rc 0 (import-region sam uruchomił build_all 1045 s — w worktree brakowało `asphalt_detail_photo`, skopiowane z main), 4 zestawy renderów; Low clear b7 vs b6: draws max +4, tris ≤ +3,7 % (treść z main). W tle dalej `b7_all.sh` (SBS, PlayMode, EditMode, post full).
   NASTĘPNY KROK: `tail -5 artifacts/junctions-r6/logs/b7_all.out` → po „b7_all done”: `bash artifacts/junctions-r6/scripts/pairs.sh b7 && bash artifacts/junctions-r6/scripts/pairs_sbs.sh b7` → ADR „Wynik” → robocopy. Handover na żywo: `C:\Users\matma\Documents\Claude\kamion\artifacts\live\junctions-r6.md`
+- s13b krok 4 (18:32, wznowienie): `b7_all.sh` dobiegł końca 18:24 — **b7: EditMode 403/403, PlayMode 3/3, pytest gis+physics+gate3 847 passed, 1 xfailed**,
+  fidelity p50 0,36 / p95 2,304; swept b7 powtórzony w slocie heavy (pierwsza próba MemoryError) rc 0 = b6 (G3-A lane −1,12, wide −0,10;
+  G3-B −0,14; RING-B +1,75 / 2,41, +1,61 / 2,28). Pary `pairs_b7/` (24), `pairs_b7sbs/` (20) obejrzane — bez regresji względem b6.
+  ADR 0123 „Wynik” kompletny (brak pól B7_*). **Gotowe do scalenia: TAK.** NASTĘPNY KROK (lider): `visual-critic` na `pairs_b7sbs/`, potem
+  `git merge junctions-r6` (generated/glb → ours + regeneracja `build_region`/`build_world`/`import-region`).
