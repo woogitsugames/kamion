@@ -96,3 +96,4 @@ Analiza tolerancji cap wykazała możliwość zachowania dodatkowego mikrotrójk
 Celowane testy B kod0. World i dekodowanie kolizji dalej sekwencyjnie w tym samym heavy.
 B2:33passed w10,29s po otrzymaniu heavy wFIFO. Testy obejmują wspólny podział capów i pełny prześwit, granice pasów/CDT, UV, Z, bliskie punkty krawędzi i pędy; to nie wizualnyPASS. Job87809 uruchomił World B2 około12:39 wtym samym slocie, potem zapisze kolizję. Nie uruchomiono drugiej kopii ani materiałów. Następny krok po0: candidate-b-probe.ps1.
 World B i dekodowana kolizja zakończone0. Lekkie piny i porównanie potem, bez kolejnego oczekiwania heavy.
+Piny B przeszły: poza jawną zmianą tris nasadzeń reszta kontraktów danych zachowana. Budżet kamer jeszcze niepotwierdzony. Następny import i16prób B.
