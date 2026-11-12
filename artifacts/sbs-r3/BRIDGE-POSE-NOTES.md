@@ -12,3 +12,15 @@ bridge-topology.json zawiera SHA źródłowego grafu i najbliższe segmenty. his
 
 Uwaga do korekty topologii: pierwotne pomocnicze obliczenie PowerShell mogło zaokrąglać parametr projekcji do końca odcinka przez wybór przeciążenia Math.Min. inspect-road-topology.ps1 używa double i jawnego ograniczania zakresu; sanity 0,25/3 m przeszedł. Nowy bridge-topology.json zastępuje dawne odległości. Żadna produkcyjna poza ani 18 renderów nie korzystały z tej pomocniczej projekcji.
 
+
+## Natywna kontrola dwóch kotwic, około 11:28
+
+Własny i niezależny przegląd czterech natywnych obrazów potwierdził przeciwne kierunki potrzebnej zmiany pionowej. Dla 494288 na zdjęciu dalsza jezdnia mieści się orientacyjnie w x250–335/y690–725 (1280×960), a w raw x245–325/y625–665. Obie drogi skręcają w lewo; nie uzasadnia to dużej zmiany yaw. Góra ekranu przy prawym brzegu jest na zdjęciu około y280–315, w raw y400–435. Pitch przesuwający jezdnię w dół przesunie ekran również w dół, więc nie zamknie obu rozbieżności. Wymiary i boczna odległość ekranu oraz poziom kamery wymagają rozdzielenia od pitch.
+
+Dla 180137 zdjęcie daje pasmo x725–785/y375–410, a raw x705–775/y435–470 (1280×720): droga powinna przesunąć się w górę. Odczyty dotyczą dalszych fragmentów zakrzywionej jezdni, nie ścisłego punktu zbiegu ani pomiaru poziomego horyzontu.
+
+Mała następna seria C w r4, przy stałym XY/yaw/FOV i nominalnym oku: 494288 h=0,72/0,75 oraz kontrolny baseline; 180137 h=0,54/0,57 oraz kontrolny baseline. Niezależny recenzent potwierdził zasadność zakresu diagnostycznego, bez akceptacji pozy. Po odświeżeniu świata zapisać zmianę U i zastosować tę samą nową wysokość do kontroli i wariantów.
+
+Ważne ograniczenie starego próbkowania: baseline 494288 miał trafienie wyłącznie road_collision/collision_asphalt U140,188354; nie było trafienia road/road_asphalt. Dla 180137 trafiono oba: road_asphalt U135,413810 i collision_asphalt U135,413445. Nie należy nazywać pierwszego wyniku pomiarem widocznego asfaltu. Lekki odczyt samego JSON GLB chunk_1_3 wykazał w road materiały road_asphalt, road_gravel, road_paving oraz materiały poboczy/kerbów, ale nie road_asphalt_new. To nie rozstrzyga materiału pod dokładnym XY. Następny raycast powinien sklasyfikować wszystkie powierzchnie widoczne i kolizyjne osobno; przy braku potwierdzonej jezdni nie wybierać ślepo kolizji ani NMT.
+
+SHA obrazów i pełne przedziały są w bridge-native-anchor-regions.json. Nie zmieniono żadnej kamery produkcyjnej, świata ani stanu testowanego r3.
