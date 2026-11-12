@@ -5,3 +5,5 @@ Pomiary: jeszcze niewykonane. Gotowe do recenzji: NIE.
 NASTĘPNY KROK: pwsh artifacts/gpt-s16-r1/prepare.ps1
 
 Przygotowano moduł atlasu (jeszcze niewpięty); baseline generuje materiały w tle, PID procesu uruchomiony przez sesję 74025. Bez wyników przed/po.
+
+Atlas: 7/7 testów kontraktowych geometrii i parametrów powierzchni. Nowa fabryka materiału jeszcze niewpięta. Sprzątanie: tylko własny worktree; dowody po weryfikacji ograniczane do potrzebnego zakresu.
