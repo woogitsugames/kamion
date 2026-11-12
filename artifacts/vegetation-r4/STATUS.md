@@ -116,3 +116,4 @@ C uzyskało heavy około 13:48 po kolejce FIFO. Wszystkie 40 celowanych testów 
 World C i dekodowana kolizja zakończone0. Lekkie piny i porównanie potem, bez kolejnego oczekiwania heavy.
 Sekwencja4178 terminalna0:40testow/11.56s, World515.6s, kolizja64Low. Heavy zwolnione. Dalej piny/import/probe C, jeszcze bez akceptacji wizualnej.
 Piny C przeszły: poza jawną zmianą tris nasadzeń reszta kontraktów danych zachowana. Budżet kamer jeszcze niepotwierdzony. Następny import i 16 prób C.
+Sekwencja34215: snapshot/proof C poprawne, tylko plantings.py i chunk6_6 Low/High plus QA/manifest;64instancje/kolizje/farfield bez zmian,15Megascans bez fallback. Import Unity rozpoczal sie13:57:40 po Acquire gpt-vegetation. Po nim16probe C. Nie powtarzac kontrolera, snapshot C juz istnieje.
