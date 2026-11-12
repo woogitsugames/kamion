@@ -5,3 +5,5 @@
   NASTEPNY KROK: pwsh scripts/unity-slot.ps1 -Acquire -Owner claude-audio-regen01 ; import ElevenLabs + testy PlayMode/EditMode
 - krok 2b: petle > 3 s (test PlayMode): segmenty +-20 %, okno idle 5-9 s ze sledzeniem, PSOLA x1.44/x1.68 dla 1800/2100 (szczyt sweepu za krotki). el_verify 0 FAIL, 0 octave-low; krok barwy ext/on 3.93 -> 3.35 dB; Unity import OK.
   NASTEPNY KROK: pwsh scripts/unity-slot.ps1 -Acquire -Owner claude-audio-regen01 ; pwsh scripts/test.ps1 -Platform PlayMode -Filter "ElevenLabsEngineAudioTests|AudioLayersTests|EngineAudio"
+- krok 3-4: Unity import OK, PlayMode 19/19, EditMode audio 20/20 (pelny EditMode 8 FAIL poza audio: CarPaint/Mirror/TruckDoorCrown/LightPost - brak wygenerowanych assetow w worktree). ADR 0138, LICENSES (audio-elevenlabs-sfx-v3-regen01), docs/owner/ELEVENLABS-REGEN-02.md (przejazdy z dluzszym szczytem, przejazdy bez obciazenia, stop kabina, ostatnia proba gwizdu, wycieraczki).
+  NASTEPNY KROK (lider): scalic audio-regen01; APK -> odsluch wlasciciela (DZWIEK/Silnik) + A/B artifacts/audio-regen01/ab; wlasciciel generuje REGEN-02
