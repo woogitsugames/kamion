@@ -24,6 +24,22 @@ namespace Game.Rendering.Editor
             string list = Arg("-auditShaders", "Kamion/Furniture Sign;Kamion/World PBR;Universal Render Pipeline/Lit");
             string output = Arg("-auditOut", null);
             var sb = new StringBuilder();
+            // The compatibility code reads "Not initialized" until the SRP has rendered once in this process.
+            var go = new GameObject("audit cam") { hideFlags = HideFlags.HideAndDontSave };
+            var cam = go.AddComponent<Camera>();
+            var rt = new RenderTexture(64, 64, 24);
+            cam.targetTexture = rt;
+            foreach (var n in list.Split(';'))
+            {
+                var sh = Shader.Find(n.Trim());
+                if (sh == null) continue;
+                var q = GameObject.CreatePrimitive(PrimitiveType.Quad);
+                q.hideFlags = HideFlags.HideAndDontSave;
+                q.transform.position = go.transform.forward * 2f;
+                q.GetComponent<Renderer>().sharedMaterial = new Material(sh);
+            }
+            cam.Render();
+            cam.targetTexture = null; rt.Release();
             const BindingFlags F = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static;
             var compat = typeof(ShaderUtil).GetMethod("GetSRPBatcherCompatibilityCode", F);
             var reason = typeof(ShaderUtil).GetMethod("GetSRPBatcherCompatibilityIssueReason", F);
