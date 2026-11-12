@@ -89,6 +89,9 @@ Brak regresji (różnice w szumie). Logcat bez błędów gry (65 dopasowań = sz
 
 Ciemne klatki: 1 vs 0 zdarzeń — zgodne z hipotezą, za mało zdarzeń na dowód (UNVERIFIED).
 
+**Testy EditMode (po merge `origin/main` 7100140dc)**: 451/453; 2 błędy = znane `CarPaintMaterialTests.DepositionChannel_*` z main
+(`artifacts/tests/editmode-20261112-223107.xml`).
+
 ## Tier domyślny Folda (z liczb powyżej)
 - Ekran wewnętrzny 2256×2504 = 5,65 Mpx (S24+ 1080×2340 = 2,53 Mpx, ×2,2). Przy renderScale 1,0 Ultra (MSAA 4×, SSAO, cienie
   4096/4 kaskady) to GPU p50/p95 29,8/41,9 ms → **60 FPS nieosiągalne** (budżet 16,7 ms; nawet p50 ×1,8 ponad), 30 FPS też nie
