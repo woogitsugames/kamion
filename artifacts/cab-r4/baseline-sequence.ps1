@@ -32,14 +32,14 @@ try {
   $guard=[System.Threading.Mutex]::new($false,'Local\kamion-cab-heavy-gpt-cab-r4')
   if(-not $guard.WaitOne(0)){ $guard.Dispose();throw 'Other own heavy job active' }
   try {
-    pwsh $slot -Acquire -Pool heavy -Owner gpt-cab-r4 -PollSeconds 1 -StaleHours 1000000
+    pwsh $slot -Acquire -Pool heavy -Owner gpt-cab-r4 -PollSeconds 1 -StaleHours 1000000 *> artifacts/cab-r4/acquire-heavy-import.log
     Check-Code 'Heavy acquire';$heavy=$true
     if($PreparePhoto){
       uv run --project tools/worldgen python art-source/world/materials/_src/build_all.py --only asphalt_detail_photo *> artifacts/cab-r4/photo-layer-repair.log
       Check-Code 'Photo layer preparation'
       if(Select-String -LiteralPath artifacts/cab-r4/photo-layer-repair.log -SimpleMatch 'SKIP asphalt_detail_photo' -Quiet){throw 'Photo layer still skipped'}
     }
-    pwsh $slot -Acquire -Owner gpt-cab -PollSeconds 5 -StaleHours 1000000
+    pwsh $slot -Acquire -Owner gpt-cab -PollSeconds 5 -StaleHours 1000000 *> artifacts/cab-r4/acquire-unity-import.log
     Check-Code 'Unity acquire';$unity=$true
     pwsh -NoProfile -ExecutionPolicy Bypass -File scripts/import-region.ps1 -Region bialystok-industrial-c *> artifacts/cab-r4/baseline-import.log
     Check-Code 'Import'
@@ -67,3 +67,4 @@ try {
   $state.failed_phase=$state.status;$state.status='stopped';$state.error=$_.Exception.Message;Save-State
   throw
 }
+
