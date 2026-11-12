@@ -31,6 +31,7 @@
 - **APK dla właściciela (czysty, main e364975f1): `artifacts/apk/kamion-0.1.0-e364975f12.apk`** — kierowanie r2+r3, GPS/mapa, sprężarka, Low A16. Smoke A16 21:29: start OK, 30 fps p95 33,45 ms, PSS 380 MB, brak wyjątków (`artifacts/logs/logcat-RFGL34SJYDZ-20261112-212918.txt`). Właściciel testuje na Foldzie.
 - Agenci aktywni: 0132 buildings-r9, 0144 junctions-r7 (r7d zygzak gotowy wizualnie), 0146 putry-andersa.
 - 21:5x: właściciel o APK r2: „jest spoko, już lepiej się jeździ” (D55); D54 inne pojazdy później. **Nowe zgłoszenie (film `artifacts/owner-feedback/2026-11-12-fold-video2/`): od ~1:40 cienie „późno”, czarne mignięcia na ekranie (niewidoczne na nagraniu), mało FPS** → agent **0152 fold-flicker** (Opus, worktree `fold-flicker`, live `artifacts/live/fold-flicker.md`; telefony A16 + S24+ wg zasad baterii).
+- 22:1x: **Mistral runda 4 zlecona przez właściciela** (M21–M25, `docs/owner/MISTRAL-TASKS-4.md`: GPS limity ciężarówki, pasy ruchu, HUD zero-alloc bez TMP, wymiary znaków + concrete_pole, P-11 + zmiany zał. 2). PR-y `mistral/21..25-*` → recenzja w triggerze :47. Decyzje D54 (inne pojazdy później), D55 (kierowanie OK), D56 (pełny Windows z kierownicami po bramce 3).
 - **Ostatni przydzielony ADR: 0152.**
 
 
