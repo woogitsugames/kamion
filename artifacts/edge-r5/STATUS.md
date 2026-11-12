@@ -65,3 +65,4 @@ Krok 27: obejrzano pierwsze rzeczywiste After Low-clear i High-clear w tym samym
 2026-11-12T12:56:15.0700417+01:00 Native after High-overcast 1280x720: 11 kamer, każdy PNG ma proporcje źródłowej fotografii; diagnostyczna 2948 pozostaje C.
 2026-11-12T12:56:34.2459790+01:00 Native after High-overcast 1280x960: 15 kamer, każdy PNG ma proporcje źródłowej fotografii; diagnostyczna 2948 pozostaje C.
 2026-11-12T12:56:34.7451751+01:00 After ukończone: obrazy telefonu i native oraz rzeczywiste siatki Unity zamrożone z SHA. Wynik wizualny i wszystkie budżety wymagają oceny; nie ogłaszamy jeszcze PASS.
+2026-11-12T12:58:22.1674503+01:00 Zakończono testy EditMode; szczegółowy wynik w artifacts/tests.
