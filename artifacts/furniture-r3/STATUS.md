@@ -28,3 +28,5 @@ potem poprawić największe udokumentowane odstępstwo wiaty. WIP po każdym kro
 2026-11-12T11:06:14.7676534+01:00: obejrzano crop450px referencji2024:potwierdzony czerwony szkielet,szkło i profil dachu; zapisano OBSERVATIONS z ograniczeniami metrycznymi i zakazem globalnego kolorowania wszystkichwiat. Prototyp produkcyjny nadal niezmieniony; czekamy baseline po merge.
 
 2026-11-12T11:09:20.2467484+01:00: dodatkowa referencjaWodociągi983799980108126 obejrzana≤960, odrzucona jako dowód rodziny wiaty z powodu niewystarczającej widoczności. Bez rozszerzania zmian na wszystkie przystanki. Baselineworld nadal oczekuje w heavy; proces65664 potwierdzony.
+
+2026-11-12T11:19:06.9450335+01:00: heavy world before; sukces=True; slot gpt-furniture-r3 zwolniony. NASTĘPNY KROK: sprawdzić log i kontynuować walidację rundy.
