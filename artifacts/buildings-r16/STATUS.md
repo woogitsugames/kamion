@@ -122,3 +122,11 @@ NASTĘPNY KROK (kolejna sesja, slot heavy / unity):
 - W toku: `s12_chain.ps1 -Round r2c` (fidelity + pytest ‖ import + rendery + EditMode).
 - NASTĘPNY KROK: `Get-Content artifacts/buildings-r16/r2c/round.log` (czekać na `CHAIN DONE`; jeśli proces zginął: `pwsh artifacts/buildings-r16/s12_chain.ps1 -Round r2c`)
   → `python artifacts/buildings-r16/budget2.py artifacts/buildings-r16/r1/Low-overcast artifacts/buildings-r16/r2c/Low-overcast`
+
+## s12 — krok 3: runda r2c zmierzona i obejrzana
+- Import 737 s; pytest gis **624 passed, 1 xfailed**; EditMode **317/317**; fidelity exit 0.
+- Budżet r2c vs r1: Low MR +0 (najg. +0), inst. −160 (najg. +9, z main); „High” (treść Low) MR +0, inst. −546 (najg. +9); `extra_hc` MR −296.
+  Własna zmiana (r2b vs r1): +0 / +0 na obu tierach. Pliki `budget_*_r2c_vs_r1.txt`, `budget_*_r2c_vs_r2b.txt`.
+- Obejrzane `r2c/sheets/*.jpg`, `pairs_r2c/`; żywopłot z małymi liśćmi OK; kamery drzwi poprawione (`r2c/extra_hc_door`). ADR 0124 sekcja r2.
+- Otwarte: półka wierzchu żywopłotu, rdzeń tui, jabłonie, wiata, MirrorCostProfiler, zacieki po r2, visual-critic, telefon.
+- NASTĘPNY KROK (lider): visual-critic na `artifacts/buildings-r16/r2c/sheets/*.jpg` + `pairs_r2c/ref_*.jpg`; scalenie `buildings-r8` → main, potem regeneracja.

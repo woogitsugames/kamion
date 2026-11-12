@@ -75,7 +75,7 @@ for p in P:                                       # wicket -> door steps (fence 
     dist = float(np.linalg.norm(v))
     if dist < 4.5:
         continue
-    add(f"r16_door_{k}", dp + v / dist * min(dist - 2.0, 6.0), dp, 1.6, 1.1, 55.0   # s12: 2 m inside the wicket (0.8 m stood in the hedge),
+    add(f"r16_door_{k}", dp + v / dist * min(dist - 2.0, 6.0), dp, 1.6, 1.1, 55.0,   # s12: 2 m inside the wicket (0.8 m stood in the hedge)
         f"ADR 0124: house door / steps of plot {p['id']} ({p['front']}) from inside the wicket, {min(dist - 2.0, 6.0):.1f} m")
     k += 1
 k = 0

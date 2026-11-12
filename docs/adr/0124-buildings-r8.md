@@ -112,3 +112,46 @@ Nie ruszone: `roads/*.py` poza `build_world.py`, `furniture.py`, bariery, krawę
 3. Pomiar zacieków (5 m, 20 m) i lusterek RT; pełny `pytest tests/gis`, `fidelity/run.py`, EditMode.
 4. `visual-critic`, A16 Low; wpis `fir_tree_01` (CC0) dla `plot_kit` w `docs/LICENSES.md` jest dodany — raw poza gitem,
    przy braku pliku atlas spada do rysowanych gałązek (`plot_kit.SOURCE`).
+
+## Runda r2 (s11 / s12) — po scaleniu main `76b3fb76`
+Rundy: `r2`, `r2b` (kod r2 przed scaleniem), `r2c` (po `git merge main`, świat i import od zera). Dowody: `artifacts/buildings-r16/r2c/`.
+
+**Zmiany r2**
+- **Błąd metody r1**: `-Scene WorldC -Tier High` to treść LOW w jakości High (LOD0 budynków tylko ≤ 60 m od trasy). Prawdziwa treść
+  High = `-Scene WorldC_High` (`extra_hc`). Tabela „High” z r1 opisuje więc treść Low w jakości High.
+- LOD1 domów (Low, > 60 m od trasy): okna i drzwi jako ciemne quady 5 cm przed ścianą (`buildings_mesh.LOD1_HOUSE_OPENINGS`),
+  w materiale, który chunk już ma — nigdy własny draw.
+- Klin trawy na zjazdach: pas zjazdu prostokreślny, nie niżej niż grunt w 0,8 m + 3 cm; grunt działki czyta wysokości drogi na śladzie
+  (`plots._verge_overlay`). `r16_drive_0..3`, `r16_kerb_0/1`: klina nie widać.
+- Mur / beton / podmurówka: przęsła poziome, schodkowane na słupkach (P2-r8-d).
+- Żywopłot: stempel liścia 7,5 → 3,6 cm w atlasie (WORKING_VALUE; rząd 1,5 m rozciągany do ~2,1 m dawał liść ~18 cm) — `r2c/sheets/hedge_r2b_vs_r2c.jpg`.
+- Scalenie: `RegionImporter.cs` — unia `car_plate` (`PreserveLitPasses`) + klucz `shader`; generated odtworzone.
+
+**Liczby r2c (edytor, szacunek przed batchingiem SRP; nic z telefonu)**, `budget2.py`, overcast:
+
+| względem r1 | Low (67 kamer) | „High” = treść Low, jakość High (67) | `extra_hc` = treść High (59) |
+|---|---|---|---|
+| draws MeshRendererów, suma / najgorsza | **+0 / +0** | **+0 / +0** | −296 / +217 (`r16_garden_0`, kamera przestawiona) |
+| draws cieni MR, suma | +0 | +0 | −141 |
+| draws instancjonowane, suma / najgorsza | −160 / +9 | −546 / +9 | — |
+| trójkąty siatek (k), suma / najgorsza | +191 / +15 | +315 / +16 | −580 |
+
+Zmiana własna tej gałęzi (r2b względem r1, ten sam main): draws MR i instancjonowane **+0 / +0** na obu tierach. Różnice instancji
+(−160 / −546, najgorsza +9 `r10_block_1`, `driver-andersa-to-putry`) i część trójkątów pochodzą z treści main s11 (r2c względem r2b).
+Kamery `r16_door_*` / `r16_garden_*` w `extra_hc` stoją w innych miejscach niż w r1 — ich delty nie są porównaniem tej samej sceny.
+Region: High 4073 submeshy / 14,184 mln tris, Low 3054 / 4,532 mln (r1: 4073 / 14,167; 3054 / 4,515).
+
+| testy (po regeneracji r2c) | wynik |
+|---|---|
+| `pytest tests/gis` (pełny) | **624 passed, 1 xfailed**, 858 s (testy świeżości zielone) |
+| EditMode | **317 / 317** |
+| `fidelity/run.py` | exit 0 |
+| zacieki, 20 m (r1 na `WorldC_High`, para Runoff on/off) | mediana 9,1 poz. sRGB, p10 5,5 (cel ≥ 6 — o 0,5 poniżej); 5 m: 14,5. Po r2 nie powtórzone |
+
+**Samokrytyka r2c** (obejrzane: `r2c/sheets/*.jpg`, `pairs_r2c/ref_*`)
+- Układ ulicy domów (płot — zjazd z kostki — obniżony krawężnik — dom ze spadzistym dachem — przewody na słupach) czyta się jak na
+  zdjęciach Mapillary P08 / P09 / P24; brakuje tego, co na zdjęciach dominuje: wysokich drzew i gęstej zieleni przy płotach.
+- Żywopłot: liście już w skali, ale płaska „półka” wierzchu wystaje ponad boki (widać ją jako poziomy pasek) — do poprawy w geometrii.
+- LOD1 na Low: otwory czarne, bez ram — z bliska (`extra_low/r16_cab_*`) czytelne jako uproszczenie; z trasy (> 60 m) wystarcza.
+- Tuje: rdzeń nadal z pionowymi smugami; jabłonie nadal jak karty. Wiata w `r16_garden_0` ma zbyt cienkie słupy / dach bez grubości.
+- Kamera `r16_door_2` stoi przy ścianie (do przestawienia). Lusterka RT (MirrorCostProfiler) nadal niezmierzone. Bez telefonu.
