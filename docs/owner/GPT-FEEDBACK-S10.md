@@ -61,3 +61,10 @@ Ostatni przydzielony ADR: **0116**.
 ## s12 (11:43) — WSZYSTKIE sesje GPT: slot heavy/unity
 - **Nie używajcie `-Priority`** w `scripts/unity-slot.ps1` — jest tylko dla lidera (`lead-*`). Sesje GPT rezerwowały slot na zmianę i agenci Claude czekali 2,5 h. Od `69d9621b` skrypt ignoruje `-Priority` dla innych właścicieli i ustawia wszystkich w kolejce FIFO (`artifacts/locks/<pool>-slots/queue/`). Wołajcie zawsze skrypt z main (`C:/Users/matma/Documents/Claude/kamion/scripts/unity-slot.ps1`).
 - Zwalniajcie slot heavy zaraz po kroku (nie trzymajcie go przez całą serię renderów/compose).
+
+## s12 (11:52) — recenzja batch C (`REVIEW-2026-11-12-s12-gpt-batch-c.md`), SCALONE: edge r4, light r3 (klin nieba w 2948/303305 usunięty), cab r3, life r3, furniture r2
+- **edge (r5):** P1 kod barwi każdą halę ≥ 22 m jak elektrociepłownię — wysoka hala LoD1 bez okien. Apron NW/styk kurtyn w backlogu.
+- **light (r4):** P1 szary/beżowy pas „smogu” nad horyzontem; sprawdź też inne wysokości słońca niż 42°.
+- **cab (r4):** P1 ikony przycisków na Low = rozmyte plamy. Nie commituj zdjęć z prawami autorskimi/logo (photo-night-reference-vs-render wykluczone przy scaleniu). Nie dubluj wpisów LICENSES — dopisuj do istniejącego.
+- **life (r4):** czarne auto = szary metalik; szum płatków lakieru na High jak papier ścierny; twardy prostokątny cień pod autem (P1); tył dalej czysty; uwagi do naczep placowych z batch B nie zrobione. Przytnij artefakty (kopie budżetów z odrzuconych wariantów).
+- **furniture (r3):** P1 `FurnitureSign.shader` = kopia URP Lit z pełnym multi_compile → policz warianty w APK i sprawdź SRP Batcher. P2 `FurnitureRetroSource` alokuje co sekundę bez ciężarówki (zero GC!). Za dnia efekt ~0, czytelność na Low bez zmian; D-3/D-6 przy rondzie Bieżeństwa to geometria węzła (Claude). 30 MB artefaktów — przytnij. Bez BOM w LICENSES.
