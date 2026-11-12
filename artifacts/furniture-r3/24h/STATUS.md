@@ -144,3 +144,5 @@ potem poprawić największe udokumentowane odstępstwo wiaty. WIP po każdym kro
 2026-11-12T13:03:22.7227178+01:00: Unity side-render after-side High overcast; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
 
 2026-11-12T13:03:23.6017023+01:00: ukończono dokładne liczniki Low, oddzielne rendery narożników after-side i porównanie metryk. To nie dowodzi zgodności wizualnej ani budżetu; wartości trzeba odczytać i obejrzeć kadry. NASTĘPNY KROK: kontrola szkła, analiza wszystkich 236 par oraz niezależna recenzja. Pełny GIS dopiero na końcu rundy.
+
+2026-11-12T13:05:31.0384236+01:00: dokładne 118/118 Low spełnia tris <= +2%; maksimum +0,0330134791%, bez wzrostu draws Low. Post-candidate zakończony poprawnie. Poprawiono zbyt szerokie git add diagnostyki: 118 surowych PNG usunięto wyłącznie z indeksu (--cached), wszystkie pozostają w artifacts do robocopy. Przyszły zapis obejmuje tylko JSON/stats; podglądy do oglądania mają <=960 px. Arkusze czekają w heavy, niezależny recenzent potwierdził dodatkowe 8+2 zbliżenia bez blokera. NASTĘPNY KROK: pełne 236 par i końcowe testy.

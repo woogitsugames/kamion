@@ -30,5 +30,7 @@ if($LASTEXITCODE -ne 0){throw 'Candidate side diagnostics failed'}
 if($LASTEXITCODE -ne 0){throw 'Exact budget comparison failed'}
 Add-Content "$ev/STATUS.md" "`n$(Get-Date -Format o): ukończono dokładne liczniki Low, oddzielne rendery narożników after-side i porównanie metryk. To nie dowodzi zgodności wizualnej ani budżetu; wartości trzeba odczytać i obejrzeć kadry. NASTĘPNY KROK: kontrola szkła, analiza wszystkich 236 par oraz niezależna recenzja. Pełny GIS dopiero na końcu rundy."
 Copy-Item "$ev/STATUS.md" artifacts/furniture-r3/STATUS.md
-git add -f "$ev/STATUS.md" artifacts/furniture-r3/STATUS.md "$ev/post-candidate.ps1" "$ev/exact-after" "$ev/compare-after1-exact.log" "$ev/frame-budget.json" "$ev/frame-budget.csv" "$ev/frame-coverage.json"
+git add -f "$ev/STATUS.md" artifacts/furniture-r3/STATUS.md "$ev/post-candidate.ps1" "$ev/compare-after1-exact.log" "$ev/frame-budget.json" "$ev/frame-budget.csv" "$ev/frame-coverage.json"
+$counterEvidence=@(Get-ChildItem "$ev/exact-after" -Recurse -File | Where-Object {$_.Extension -eq '.json' -or $_.Name -eq 'stats.txt'} | ForEach-Object FullName)
+git add -f -- $counterEvidence
 git commit -m 'wip(furniture): preserve exact candidate counters before visual review'
