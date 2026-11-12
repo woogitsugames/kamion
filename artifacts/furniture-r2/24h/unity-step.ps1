@@ -1,5 +1,5 @@
 ﻿param(
-    [ValidateSet('import','render','sbs-sign','editmode','plinth-probe','sign-probe')] [string]$Step,
+    [ValidateSet('import','render','sbs-sign','editmode','plinth-probe','sign-probe','night-rig')] [string]$Step,
     [string]$Phase='before',
     [ValidateSet('Low','High')] [string]$Tier='Low',
     [ValidateSet('clear','overcast','dusk')] [string]$Lighting='overcast',
@@ -69,6 +69,15 @@ try {
         }
         'sign-probe' {
             & pwsh scripts/test.ps1 -Platform EditMode -Filter Game.Tests.FurnitureSignTests *> "$ev/sign-probe-$Phase.log"
+        }
+        'night-rig' {
+            . ./scripts/env.ps1
+            $nightOut=[IO.Path]::GetFullPath("$ev/night-rig/$Phase/$Tier",$root)
+            New-Item -ItemType Directory -Force $nightOut | Out-Null
+            $nightCode=Invoke-UnityBatch -LogFile "$nightOut/unity.log" -BuildTarget Android -Arguments @(
+                '-executeMethod','Game.World.Import.FurnitureSignNightQa.Run',
+                '-furnitureQaTier',$Tier,'-furnitureQaOutput',$nightOut)
+            $global:LASTEXITCODE=[int]$nightCode
         }
         'sbs-sign' {
             $scene=if ($Tier -eq 'High') { 'WorldC_High' } else { 'WorldC' }

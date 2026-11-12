@@ -89,3 +89,5 @@ NASTĘPNY KROK: przygotować własne skrypty r2 z ownerem heavy gpt-furniture-r2
 2026-11-12T03:20:59.3065540+01:00: heavy focused candidate1; sukces=True; slot gpt-furniture-r2 zwolniony. NASTĘPNY KROK: sprawdzić log i kontynuować walidację rundy.
 
 2026-11-12T03:30:44.6323440+01:00: heavy world after1; sukces=True; slot gpt-furniture-r2 zwolniony. NASTĘPNY KROK: sprawdzić log i kontynuować walidację rundy.
+
+2026-11-12T03:32:22.9190379+01:00: próba ekspozycji 14/14 passed, 0 skipped. Przygotowano własny nocny fixture w _Generated/FurnitureSignQa: prawdziwe sockety i punkt oka, sprawdzone podłoże asfaltowe i linia do znaku, tryby retro-disabled/low/high/source-disabled, normalne55deg i diagnostyczne15deg, trzy odległości. Zapisuje realne globale i przypisane materiały. Model nieba kończy się przy -8stopniach, więc nie będzie pozorowanego -12 ani deklaracji głębokiej nocy. Helper dopiero do kompilacji/uruchomienia po imporcie kandydata. NASTĘPNY KROK: odczytać sekwencję58010; po geometrii import, a następnie unity-step.ps1 -Step night-rig -Phase after1 -Tier Low.
