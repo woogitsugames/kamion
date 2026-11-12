@@ -11,8 +11,22 @@ ROOT = Path(__file__).resolve().parent
 p = argparse.ArgumentParser()
 p.add_argument('--metrics-only', action='store_true')
 p.add_argument('--label', default='after1')
+p.add_argument('--review-page', help='One small interactive PNG review page, e.g. Low-clear:1; full batch remains heavy')
 args = p.parse_args()
 assert re.fullmatch(r'[A-Za-z0-9_-]+', args.label)
+review = None
+if args.review_page:
+    match = re.fullmatch(r'((?:Low|High)-(?:clear|overcast|dusk)):(10|[1-9])', args.review_page)
+    assert match, 'Expected one variant and page 1..10'
+    review = (match[1], int(match[2]))
+    # Interactive analysis of one <=3 MP input at a time, never a generator/test.
+    # Windows IDLE priority gives the queued heavy jobs precedence over this small review.
+    import ctypes
+    from ctypes import wintypes
+    kernel = ctypes.WinDLL('kernel32', use_last_error=True)
+    kernel.GetCurrentProcess.restype = wintypes.HANDLE
+    kernel.SetPriorityClass.argtypes = (wintypes.HANDLE, wintypes.DWORD)
+    assert kernel.SetPriorityClass(kernel.GetCurrentProcess(), 0x40), 'Could not set IDLE priority'
 
 
 def stats(path):
@@ -79,22 +93,27 @@ for tier in ('Low', 'High'):
                 row.update(before_exact_triangles=total_old, after_exact_triangles=total_new,
                     tris_delta_exact_percent=100 * (total_new / total_old - 1) if total_old else None)
             records.append(row)
-        if not args.metrics_only:
+        if not args.metrics_only and (review is None or key == review[0]):
             out = ROOT / 'compare'
             out.mkdir(exist_ok=True)
             names = sorted(old)
             for start in range(0, len(names), 6):
+                if review is not None and start // 6 + 1 != review[1]:
+                    continue
                 chosen = names[start:start + 6]
                 sheet = Image.new('RGB', (960, 250 * len(chosen)), '#202020')
                 draw = ImageDraw.Draw(sheet)
                 for line, name in enumerate(chosen):
                     draw.text((6, line * 250 + 4), f'{name} | PRZED / PO | {key}', font=font, fill='white')
                     for column, folder in enumerate((before, after)):
-                        with Image.open(folder / (name + '.png')) as image:
-                            image = image.convert('RGB')
-                            image.thumbnail((480, 222))
-                            sheet.paste(image, (480 * column, line * 250 + 25))
+                        with Image.open(folder / (name + '.png')) as source:
+                            if review is not None:
+                                assert source.width * source.height <= 3_000_000, 'Interactive review input exceeds 3 MP'
+                            with source.convert('RGB') as image:
+                                image.thumbnail((480, 222))
+                                sheet.paste(image, (480 * column, line * 250 + 25))
                 sheet.save(out / f'{key}-{start // 6 + 1:02}.jpg', quality=92)
+                sheet.close()
 
 (ROOT / 'frame-budget.json').write_text(json.dumps(records, indent=2) + '\n')
 (ROOT / 'frame-coverage.json').write_text(json.dumps(variants, indent=2) + '\n')
