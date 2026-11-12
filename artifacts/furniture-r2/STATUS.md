@@ -155,3 +155,5 @@ NASTĘPNY KROK: przygotować własne skrypty r2 z ownerem heavy gpt-furniture-r2
 2026-11-12T09:41:02.4985295+01:00: night-rig after3 Low OK: 12 pozycji/trybów, 24 obrazy, rzeczywiste źródła potwierdzone w logach. Obejrzano cztery podglądy 25 m; zwrot widoczny, EV5 i gain800 robocze, brak kalibracji i okluzji ścieżki światła. High w toku. Pierwsze 330 obrazów po zmianie i 165 dokładnych liczników zachowano w iteration1; następna seria uwzględni poprawki ekspozycji/asymetrii/cache. Porównanie geometrii nadal czeka na heavy.
 
 2026-11-12T09:41:27.2752271+01:00: Unity night-rig after3 High overcast; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
+
+2026-11-12T09:41:47.1226030+01:00: night after3 High również zgłosił FURNITURE_NIGHT_QA OK; łącznie48 PNG, źródła dla obu tierów zapisane. ADR uaktualniono do16 prób i aktualnych ograniczeń. NASTĘPNY KROK: końcowa seria330 obrazów standardowych oraz dokładne liczniki Low, a następnie niezależny przegląd.

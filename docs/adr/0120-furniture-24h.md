@@ -191,3 +191,31 @@ stan/sockety high-only, trwały GUID i wycofanie fabryki do Lit oraz komplet
 HDR _EmissionColor wymaga wartości liniowej bez gamma, co potwierdził odczyt GPU;
 kontrakt zwykłego _Tint i SetLinearTint pozostaje bez zmian.
 Dusk ma słońce -5 stopni; sam ten preset nie dowodzi efektu w pełnej nocy.
+
+### r2, bieżący kandydat i diagnostyka po korektach
+
+Włączono flagę danych w materials.py, wygenerowano świat i zaimportowano
+36 lic z biblioteki. Zużycie jest deterministyczne dla klucza znaku,
+zachowuje alfę i wyłącza się przy sile zero. Low otrzymało dwa dystanse
+uchwytów w istniejącym slocie plate_back; brak nowego draw i zmian kolizji.
+To zastępuje wcześniejszą informację o niewłączonej fladze.
+
+Najnowsza seria FurnitureSignTests: 16/16 bez pominięć. Obejmuje dodatkowo
+liniowe skalowanie ekspozycją, asymetryczne prawe odcięcie mijania i wykrycie
+socketów dobudowanych po pierwszej próbie znalezienia źródła. Usunięto błędne
+robocze wzmocnienie 512, po sprawdzeniu rzeczywistej ekspozycji sceny.
+
+Kontrolowany night-rig after3 Low i High zapisał po 24 obrazy: 25/50/100 m,
+mijania, drogowe, wyłączona odpowiedź materiału oraz wyłączony komponent
+źródła. Każdy wariant ma cztery próbki rzeczywistego stanu przed kamerą.
+Fixture używa socketów ciężarówki i oka kierowcy; nie publikuje sztucznych
+pozycji reflektorów. Tryb świateł utrzymuje własny callback editorowy podczas
+ponownego ładowania kopii sceny, bez zmian TruckLights i scen gry.
+
+Diagnostyczne EV100=5, siła 800, loby i prawe wzniesienie są WORKING_VALUE.
+Model nieba kończy się na -8 stopniach; brak dowodu głębokiej nocy,
+kalibracji fotograficznej i przesłaniania ścieżki światła. Obejrzane obrazy
+25 m Low pokazują zmianę czytelności lica, lecz nie dowodzą zgodności fotometrycznej.
+Pierwszą serię 330 obrazów i dokładne liczniki Low zachowano w iteration1;
+po korekcie shadera i cache konieczny jest nowy komplet standardowych kadrów.
+Kontrola chronionej geometrii nadal czeka na heavy, więc nie ma jeszcze wyniku.
