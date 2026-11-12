@@ -1,0 +1,540 @@
+{
+    "scope": "SceneStats CPU estimate, unrounded; no GPU counters",
+    "phase": "after2",
+    "tier": "Low",
+    "lighting": "overcast",
+    "rendered": 59,
+    "cameras": [
+        {
+            "camera": "biezenstwa-above",
+            "mesh_objects": 81,
+            "mesh_draws": 339,
+            "instance_draws": 437,
+            "instances": 480,
+            "mesh_triangles": 272763,
+            "instance_triangles": 46194
+        },
+        {
+            "camera": "cab-dash",
+            "mesh_objects": 69,
+            "mesh_draws": 429,
+            "instance_draws": 445,
+            "instances": 354,
+            "mesh_triangles": 344485,
+            "instance_triangles": 35383
+        },
+        {
+            "camera": "cab-driver",
+            "mesh_objects": 68,
+            "mesh_draws": 436,
+            "instance_draws": 460,
+            "instances": 418,
+            "mesh_triangles": 351198,
+            "instance_triangles": 38713
+        },
+        {
+            "camera": "cab-gate",
+            "mesh_objects": 63,
+            "mesh_draws": 415,
+            "instance_draws": 441,
+            "instances": 405,
+            "mesh_triangles": 360804,
+            "instance_triangles": 35527
+        },
+        {
+            "camera": "cab-grain",
+            "mesh_objects": 18,
+            "mesh_draws": 111,
+            "instance_draws": 99,
+            "instances": 28,
+            "mesh_triangles": 196965,
+            "instance_triangles": 6652
+        },
+        {
+            "camera": "cab-left",
+            "mesh_objects": 39,
+            "mesh_draws": 200,
+            "instance_draws": 352,
+            "instances": 273,
+            "mesh_triangles": 259864,
+            "instance_triangles": 25217
+        },
+        {
+            "camera": "cab-materials",
+            "mesh_objects": 28,
+            "mesh_draws": 118,
+            "instance_draws": 180,
+            "instances": 60,
+            "mesh_triangles": 212013,
+            "instance_triangles": 8208
+        },
+        {
+            "camera": "cab-mirror-front",
+            "mesh_objects": 63,
+            "mesh_draws": 421,
+            "instance_draws": 334,
+            "instances": 120,
+            "mesh_triangles": 479262,
+            "instance_triangles": 18566
+        },
+        {
+            "camera": "cab-mirrors-left",
+            "mesh_objects": 39,
+            "mesh_draws": 208,
+            "instance_draws": 256,
+            "instances": 198,
+            "mesh_triangles": 324567,
+            "instance_triangles": 17521
+        },
+        {
+            "camera": "cab-mirrors-right",
+            "mesh_objects": 59,
+            "mesh_draws": 311,
+            "instance_draws": 302,
+            "instances": 125,
+            "mesh_triangles": 402774,
+            "instance_triangles": 20598
+        },
+        {
+            "camera": "cab-right",
+            "mesh_objects": 64,
+            "mesh_draws": 415,
+            "instance_draws": 477,
+            "instances": 358,
+            "mesh_triangles": 353626,
+            "instance_triangles": 42561
+        },
+        {
+            "camera": "cab-seat",
+            "mesh_objects": 37,
+            "mesh_draws": 156,
+            "instance_draws": 176,
+            "instances": 166,
+            "mesh_triangles": 211911,
+            "instance_triangles": 17800
+        },
+        {
+            "camera": "cab-seat-entry",
+            "mesh_objects": 27,
+            "mesh_draws": 93,
+            "instance_draws": 68,
+            "instances": 18,
+            "mesh_triangles": 196577,
+            "instance_triangles": 6258
+        },
+        {
+            "camera": "chase",
+            "mesh_objects": 92,
+            "mesh_draws": 453,
+            "instance_draws": 378,
+            "instances": 266,
+            "mesh_triangles": 301242,
+            "instance_triangles": 25758
+        },
+        {
+            "camera": "dk8-dk19-exit",
+            "mesh_objects": 27,
+            "mesh_draws": 86,
+            "instance_draws": 76,
+            "instances": 932,
+            "mesh_triangles": 107278,
+            "instance_triangles": 55167
+        },
+        {
+            "camera": "driver-andersa-to-putry",
+            "mesh_objects": 52,
+            "mesh_draws": 341,
+            "instance_draws": 213,
+            "instances": 179,
+            "mesh_triangles": 281686,
+            "instance_triangles": 42154
+        },
+        {
+            "camera": "edge-east",
+            "mesh_objects": 11,
+            "mesh_draws": 48,
+            "instance_draws": 41,
+            "instances": 119,
+            "mesh_triangles": 84885,
+            "instance_triangles": 1242
+        },
+        {
+            "camera": "edge-north",
+            "mesh_objects": 12,
+            "mesh_draws": 45,
+            "instance_draws": 95,
+            "instances": 617,
+            "mesh_triangles": 67775,
+            "instance_triangles": 28925
+        },
+        {
+            "camera": "edge-south",
+            "mesh_objects": 15,
+            "mesh_draws": 108,
+            "instance_draws": 77,
+            "instances": 41,
+            "mesh_triangles": 140106,
+            "instance_triangles": 5427
+        },
+        {
+            "camera": "edge-west",
+            "mesh_objects": 14,
+            "mesh_draws": 47,
+            "instance_draws": 72,
+            "instances": 382,
+            "mesh_triangles": 75304,
+            "instance_triangles": 14074
+        },
+        {
+            "camera": "fire-station-abeam",
+            "mesh_objects": 40,
+            "mesh_draws": 202,
+            "instance_draws": 254,
+            "instances": 289,
+            "mesh_triangles": 198552,
+            "instance_triangles": 52173
+        },
+        {
+            "camera": "fire-station-above",
+            "mesh_objects": 46,
+            "mesh_draws": 279,
+            "instance_draws": 220,
+            "instances": 340,
+            "mesh_triangles": 278619,
+            "instance_triangles": 38549
+        },
+        {
+            "camera": "fire-station-ref7197",
+            "mesh_objects": 27,
+            "mesh_draws": 124,
+            "instance_draws": 184,
+            "instances": 138,
+            "mesh_triangles": 335857,
+            "instance_triangles": 34440
+        },
+        {
+            "camera": "fire-station-route",
+            "mesh_objects": 42,
+            "mesh_draws": 212,
+            "instance_draws": 225,
+            "instances": 165,
+            "mesh_triangles": 215748,
+            "instance_triangles": 52433
+        },
+        {
+            "camera": "furniture-concrete-collars",
+            "mesh_objects": 54,
+            "mesh_draws": 352,
+            "instance_draws": 446,
+            "instances": 1252,
+            "mesh_triangles": 345945,
+            "instance_triangles": 97967
+        },
+        {
+            "camera": "furniture-concrete-foot-close",
+            "mesh_objects": 49,
+            "mesh_draws": 350,
+            "instance_draws": 499,
+            "instances": 1114,
+            "mesh_triangles": 323399,
+            "instance_triangles": 93794
+        },
+        {
+            "camera": "furniture-fence",
+            "mesh_objects": 36,
+            "mesh_draws": 261,
+            "instance_draws": 246,
+            "instances": 250,
+            "mesh_triangles": 224021,
+            "instance_triangles": 65673
+        },
+        {
+            "camera": "furniture-footing-slope",
+            "mesh_objects": 27,
+            "mesh_draws": 136,
+            "instance_draws": 91,
+            "instances": 288,
+            "mesh_triangles": 200219,
+            "instance_triangles": 37297
+        },
+        {
+            "camera": "furniture-old-concrete",
+            "mesh_objects": 51,
+            "mesh_draws": 320,
+            "instance_draws": 399,
+            "instances": 1310,
+            "mesh_triangles": 330870,
+            "instance_triangles": 98957
+        },
+        {
+            "camera": "furniture-old-steel",
+            "mesh_objects": 43,
+            "mesh_draws": 331,
+            "instance_draws": 279,
+            "instances": 262,
+            "mesh_triangles": 320199,
+            "instance_triangles": 37694
+        },
+        {
+            "camera": "furniture-shelter-anders-1000-corner",
+            "mesh_objects": 42,
+            "mesh_draws": 224,
+            "instance_draws": 148,
+            "instances": 161,
+            "mesh_triangles": 253151,
+            "instance_triangles": 25186
+        },
+        {
+            "camera": "furniture-shelter-anders-1000-front",
+            "mesh_objects": 29,
+            "mesh_draws": 113,
+            "instance_draws": 109,
+            "instances": 83,
+            "mesh_triangles": 198213,
+            "instance_triangles": 32072
+        },
+        {
+            "camera": "furniture-shelter-factory-corner",
+            "mesh_objects": 80,
+            "mesh_draws": 364,
+            "instance_draws": 550,
+            "instances": 1256,
+            "mesh_triangles": 306212,
+            "instance_triangles": 104685
+        },
+        {
+            "camera": "furniture-shelter-factory-front",
+            "mesh_objects": 40,
+            "mesh_draws": 213,
+            "instance_draws": 504,
+            "instances": 802,
+            "mesh_triangles": 242457,
+            "instance_triangles": 87222
+        },
+        {
+            "camera": "furniture-sign-back",
+            "mesh_objects": 42,
+            "mesh_draws": 259,
+            "instance_draws": 253,
+            "instances": 242,
+            "mesh_triangles": 256376,
+            "instance_triangles": 32735
+        },
+        {
+            "camera": "g3a-eye-s0262",
+            "mesh_objects": 49,
+            "mesh_draws": 342,
+            "instance_draws": 390,
+            "instances": 227,
+            "mesh_triangles": 290437,
+            "instance_triangles": 31639
+        },
+        {
+            "camera": "g3a-rondo-bie-approach",
+            "mesh_objects": 44,
+            "mesh_draws": 312,
+            "instance_draws": 161,
+            "instances": 157,
+            "mesh_triangles": 281845,
+            "instance_triangles": 15883
+        },
+        {
+            "camera": "g3b-eye-s1482",
+            "mesh_objects": 47,
+            "mesh_draws": 287,
+            "instance_draws": 172,
+            "instances": 252,
+            "mesh_triangles": 268521,
+            "instance_triangles": 37898
+        },
+        {
+            "camera": "g3b-rondo-putry-approach",
+            "mesh_objects": 49,
+            "mesh_draws": 299,
+            "instance_draws": 128,
+            "instances": 110,
+            "mesh_triangles": 282295,
+            "instance_triangles": 24443
+        },
+        {
+            "camera": "kwadrat-park-gate",
+            "mesh_objects": 65,
+            "mesh_draws": 232,
+            "instance_draws": 501,
+            "instances": 259,
+            "mesh_triangles": 193301,
+            "instance_triangles": 48304
+        },
+        {
+            "camera": "photo-biezenstwa-ground",
+            "mesh_objects": 48,
+            "mesh_draws": 341,
+            "instance_draws": 159,
+            "instances": 153,
+            "mesh_triangles": 290865,
+            "instance_triangles": 14933
+        },
+        {
+            "camera": "putry-above",
+            "mesh_objects": 45,
+            "mesh_draws": 302,
+            "instance_draws": 172,
+            "instances": 147,
+            "mesh_triangles": 326004,
+            "instance_triangles": 12806
+        },
+        {
+            "camera": "route-onramp-andersa",
+            "mesh_objects": 48,
+            "mesh_draws": 385,
+            "instance_draws": 379,
+            "instances": 962,
+            "mesh_triangles": 246087,
+            "instance_triangles": 63438
+        },
+        {
+            "camera": "route-onramp-andersa-above",
+            "mesh_objects": 48,
+            "mesh_draws": 301,
+            "instance_draws": 384,
+            "instances": 1159,
+            "mesh_triangles": 249275,
+            "instance_triangles": 82313
+        },
+        {
+            "camera": "route-putry-approach",
+            "mesh_objects": 51,
+            "mesh_draws": 305,
+            "instance_draws": 175,
+            "instances": 111,
+            "mesh_triangles": 288395,
+            "instance_triangles": 29200
+        },
+        {
+            "camera": "route-putry-entry-signs",
+            "mesh_objects": 41,
+            "mesh_draws": 202,
+            "instance_draws": 157,
+            "instances": 174,
+            "mesh_triangles": 187345,
+            "instance_triangles": 22927
+        },
+        {
+            "camera": "stretch-01",
+            "mesh_objects": 54,
+            "mesh_draws": 379,
+            "instance_draws": 461,
+            "instances": 442,
+            "mesh_triangles": 236562,
+            "instance_triangles": 37159
+        },
+        {
+            "camera": "stretch-02",
+            "mesh_objects": 50,
+            "mesh_draws": 360,
+            "instance_draws": 615,
+            "instances": 436,
+            "mesh_triangles": 292258,
+            "instance_triangles": 65354
+        },
+        {
+            "camera": "stretch-03",
+            "mesh_objects": 49,
+            "mesh_draws": 342,
+            "instance_draws": 390,
+            "instances": 231,
+            "mesh_triangles": 290437,
+            "instance_triangles": 31013
+        },
+        {
+            "camera": "stretch-04",
+            "mesh_objects": 53,
+            "mesh_draws": 458,
+            "instance_draws": 372,
+            "instances": 381,
+            "mesh_triangles": 309771,
+            "instance_triangles": 29291
+        },
+        {
+            "camera": "stretch-05-docks",
+            "mesh_objects": 42,
+            "mesh_draws": 252,
+            "instance_draws": 743,
+            "instances": 508,
+            "mesh_triangles": 236935,
+            "instance_triangles": 107654
+        },
+        {
+            "camera": "trailer-34",
+            "mesh_objects": 96,
+            "mesh_draws": 477,
+            "instance_draws": 407,
+            "instances": 268,
+            "mesh_triangles": 328989,
+            "instance_triangles": 32599
+        },
+        {
+            "camera": "trailer-side",
+            "mesh_objects": 60,
+            "mesh_draws": 251,
+            "instance_draws": 329,
+            "instances": 197,
+            "mesh_triangles": 196292,
+            "instance_triangles": 31565
+        },
+        {
+            "camera": "truck-34",
+            "mesh_objects": 86,
+            "mesh_draws": 229,
+            "instance_draws": 267,
+            "instances": 176,
+            "mesh_triangles": 299509,
+            "instance_triangles": 40128
+        },
+        {
+            "camera": "truck-34r",
+            "mesh_objects": 65,
+            "mesh_draws": 148,
+            "instance_draws": 129,
+            "instances": 156,
+            "mesh_triangles": 214524,
+            "instance_triangles": 14757
+        },
+        {
+            "camera": "truck-at-gate",
+            "mesh_objects": 67,
+            "mesh_draws": 150,
+            "instance_draws": 131,
+            "instances": 103,
+            "mesh_triangles": 219132,
+            "instance_triangles": 15954
+        },
+        {
+            "camera": "truck-front",
+            "mesh_objects": 69,
+            "mesh_draws": 188,
+            "instance_draws": 122,
+            "instances": 107,
+            "mesh_triangles": 253351,
+            "instance_triangles": 15730
+        },
+        {
+            "camera": "truck-rear34",
+            "mesh_objects": 91,
+            "mesh_draws": 460,
+            "instance_draws": 417,
+            "instances": 262,
+            "mesh_triangles": 453493,
+            "instance_triangles": 27287
+        },
+        {
+            "camera": "truck-side",
+            "mesh_objects": 87,
+            "mesh_draws": 321,
+            "instance_draws": 314,
+            "instances": 177,
+            "mesh_triangles": 360135,
+            "instance_triangles": 29435
+        }
+    ]
+}

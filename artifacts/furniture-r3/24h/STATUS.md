@@ -184,3 +184,5 @@ potem poprawić największe udokumentowane odstępstwo wiaty. WIP po każdym kro
 2026-11-12T13:28:21.0428320+01:00: Unity side-render after2-side High clear; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
 
 2026-11-12T13:28:43.8345334+01:00: Unity side-render after2-side High overcast; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
+
+2026-11-12T13:28:44.6072354+01:00: ukończono 236 kadrów after2, 118 dokładnych Low i 8 after2-side przy odziedziczonej polityce 60/300 m. Wyniki zapisano osobno w iteration2; nie oznacza to jeszcze spełnienia budżetu ani obejrzenia pełnej serii. NASTĘPNY KROK: odczytać wszystkie delty i przeprowadzić recenzję.
