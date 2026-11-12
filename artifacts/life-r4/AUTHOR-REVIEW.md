@@ -1,0 +1,13 @@
+# Ocena autora — life r4 A2
+
+Wybrano geometrię A2 do testów końcowych. To własna ocena, nie niezależna recenzja lidera ani pomiar telefonu. Obejrzano 32 nowe panele w czterech warunkach baseline i A2 oraz oba zdjęcia referencyjne. Miska, piasta i ciemne zagłębienia są czytelne także na Low. W szerokich kadrach zmiana jest mniejsza, ale koło przestało wyglądać jak pełny jednolity dysk.
+
+Ocena wyglądu pozostaje PARTIAL. Obwód opony i obręczy jest nadal wyraźnie wielokątny, brakuje śrub, drobnego zużycia oraz naturalnego zróżnicowania. Kadłuby/kabiny, plandeki i brud zachowują wcześniejsze ograniczenia. Zdjęcia mają inne modele, miejsce i światło; nie służą kalibracji koloru ani dopasowaniu GPS. Nie skopiowano znaków lub logo do gry. Kadr supports5 chłodni przecina krawędź terenu, więc nie dowodzi detalu podpór. W zbliżeniach nie zawsze mieści się górna część opony; cała felga jest widoczna.
+
+Nie dublowano istniejących podpór lub osprzętu. Rzeczywisty buforowy dowód potwierdził LOD0 na Low i High, więc zmiana wspólnego progu nie byłaby naprawą płaskiej geometrii. Kolizje, contact, odległe LOD, bieżnik i pozostałe obiekty pozostają bez zmian w audycie GLB/raw. Wszystkie 408 natywnych materiałów są identyczne z baseline; większy kontrast wynika z geometrii/normalnych, a nie przyciemnienia współdzielonego materiału.
+
+Pełne 524 rekordy zachowują pozy/projekcję. Trasa: Low maks. +0,365808608%, High +0,585729008% tris, po 59 kamer; draws świata i instancji osobno +0. Wszystkie 131 kamer: Low +3,496473727%, High +2,639701583%, bez ukrywania kadrów spoza trasy. To liczniki CPU przed SRP batching, nie czas GPU/A16. Metadane PS i pełne porównanie Python dają te same maksima trasy. Biblioteka ma łącznie +11424 tris; to inna miara niż koszt klatki.
+
+Zmiana lokalnych sufitów testowych następuje po tych pomiarach: naczepy LOD0 1200→2200 (zmierzone maksimum 2032), ciągniki 1500→1700 (1550). Zapas około 150 trójkątów służy dalszej ochronie złożoności; nie zmieniono limitów ramki, LOD1, kontenerów, aut lub +2% trasy. Dwie kopie oczekiwania ciągnika aktualizuje się razem. Końcowe GIS/EditMode jeszcze przed odbiorem; nie deklarujemy ich PASS.
+
+Zachowano dwa błędy testów przed World i dwa niezerowe zamknięcia osobnej diagnostyki High. Poprawka przekątnej usuwa asymetrię nowej felgi. Niezmieniony bias bieżnika jest potwierdzony na fizycznie zamrożonym baseline, a jego pełne atrybuty są chronione w GLB. Po poprawie cyklu życia adaptera High zakończył się 0; przyczyna wcześniejszych crashy nie jest jednoznacznie udowodniona. Kanoniczne baseline/A2 wykonały wszystkie cztery warunki poprawnie.
