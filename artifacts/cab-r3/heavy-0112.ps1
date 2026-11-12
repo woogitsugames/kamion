@@ -12,9 +12,14 @@ if (-not $Log) { $Log="$PSScriptRoot/heavy-$Job-$(Get-Date -Format yyyyMMdd-HHmm
 $slot='C:/Users/matma/Documents/Claude/kamion/scripts/unity-slot.ps1'
 $guard=[System.Threading.Mutex]::new($false,"Local\kamion-cab-heavy-$owner")
 if (-not $guard.WaitOne(0)) { $guard.Dispose(); throw 'Inne własne zadanie heavy jest już aktywne. Nie pozyskuj ani nie zwalniaj jego slotu.' }
+$receipt=Join-Path $PSScriptRoot ("job-{0}-{1}-{2}.json" -f $Job,(Get-Date -Format yyyyMMdd-HHmmss),$PID)
+$run=@{schema=1;owner=$owner;job=$Job;pid=$PID;source_sha=(git rev-parse HEAD).Trim();status='waiting';queued_at=(Get-Date -Format o);log=$Log;exit_code=$null}
+$run | ConvertTo-Json | Set-Content -LiteralPath $receipt -Encoding utf8
 try {
   pwsh $slot -Acquire -Pool heavy -Owner $owner -PollSeconds 5 -StaleHours 1000000
   if ($LASTEXITCODE -ne 0) { throw 'Nie uzyskano slotu heavy.' }
+  $run.status='running'; $run.started_at=Get-Date -Format o
+  $run | ConvertTo-Json | Set-Content -LiteralPath $receipt -Encoding utf8
   try {
     $env:UV_PROJECT_ENVIRONMENT='.venv-cab'
     switch ($Job) {
@@ -25,8 +30,15 @@ try {
         'GisFinal' { uv run --project tools/worldgen python -m pytest tests/gis -q *> $Log }
     }
     $code=$LASTEXITCODE
+    $run.exit_code=$code; $run.status='finished'; $run.finished_at=Get-Date -Format o
+    $run | ConvertTo-Json | Set-Content -LiteralPath $receipt -Encoding utf8
   }
   finally { pwsh $slot -Release -Pool heavy -Owner $owner }
+}
+catch {
+  $run.status='wrapper-error'; $run.error=$_.Exception.Message; $run.finished_at=Get-Date -Format o
+  $run | ConvertTo-Json | Set-Content -LiteralPath $receipt -Encoding utf8
+  throw
 }
 finally { $guard.ReleaseMutex(); $guard.Dispose() }
 exit $code
