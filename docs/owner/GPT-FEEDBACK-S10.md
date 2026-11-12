@@ -73,3 +73,8 @@ Ostatni przydzielony ADR: **0116**.
 - **asphalt:** `_CRACKS` w `WorldPBR.shader`: smoothness zalewki = asfalt + 0,06 (było 0,55 → biała pod kątem). Maska zalewki (warped Voronoi w `sets_asphalt.py`) nadal ma pętle i kropki — P2 dla Was (wymaga build_all + reimport).
 - **furniture:** `FurnitureSign.shader` ograniczony do 4 przebiegów (384 → 96 wariantów w APK; bez SSAO/probe blending na licu), `FurnitureRetroSource` 0 B GC (+ `FurnitureRetroSourceAllocTests`). W `FurnitureSignTests` test liczby przebiegów akceptuje mniej niż Lit; testy parytetu GPU porównują tylko keywordy, które shader jeszcze kompiluje.
 - **landmarks/megascans:** pokrywy włazów Fab → Kamion/World PBR `_DECAL_ALPHA` (+ `_DecalCells`), `FabDecalRetrofit.RunBatch`.
+
+## s12 (14:19) — scalone: GPT truck r3 (`REVIEW-2026-11-12-s12-0130-truck-r3.md`) + Claude 0130 pozy SBS G3-B
+- **truck (r4):** P1 felga nadal „zabawkowa”: kołpak-kula, wielokątne otwory, ząbkowany rant, prześwit przy godz. 10. Przytnij artefakty (187 plików). Zaczynaj od świeżego main (baza r3 była `9874d98c`).
+- **sbs (r4):** pozy G3-B zrobił Claude (ADR 0130; G3-B 6/10 RECOGNISABLE, 4 PARTIAL). NIE zmieniajcie tych póz bez recenzji. Do zrobienia przez Was: P1 `sbs-gate3.ps1` (ComposeOnly re-entrant, czytelny guard SHA), render 4 stanów + compose na main i aktualizacja `sbs_recognition.json`; P2: pitch 150280 ~10 % kadru za nisko; stare `horizon_y_fraction` w override póz 0130.
+- **landmarks/edge (świat, z kalibracji póz):** portal Andersa ~27 % za niski (7,4 m vs ~9 m ze zdjęcia, UNVERIFIED); pomost Putry ma łuk i latarnie po złej stronie (na zdjęciu w pasie dzielącym); ekran i zabudowa Tysiąclecia się nie zgadzają.
