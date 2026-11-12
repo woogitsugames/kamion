@@ -38,9 +38,15 @@ new_steps = sum(len(flight) for spec in new_specs for flight in spec["stairs"])
 assert old_steps > 0 and new_steps == 0
 roads_before, roads_after = baseline / "roads_qa.json", generated / "roads_qa.json"
 assert load(roads_before) == load(roads_after), "Road QA changed relative to the fresh baseline"
+cfg = load(root / "Data/Regions/bialystok-industrial-c/viaduct_underdeck.json")
+scale = cfg["pier_paint"]["runoff_length_scale"]
+max_payload = max(1 + (pier["top"] - spec["params"]["bearing_gap_m"] - spec["params"]["cap_h_m"] - (col[2] - .5)) / scale
+                  for spec in new_specs for deck in spec["decks"] for pier in deck["piers"] for col in pier["cols"])
+assert max_payload < 48, "underdeck runoff must not enter reserved sill UV modes"
+assert all(spec["params"]["paint_weathering"] is True for spec in new_specs)
 result = dict(stair_treads_before=old_steps, stair_treads_after=new_steps,
               stair_flights_before=sum(bool(flight) for spec in old_specs for flight in spec["stairs"]),
-              all_decks_identical=True, road_qa_identical=True,
+              all_decks_identical=True, road_qa_identical=True, max_runoff_uv1_v=max_payload,
               road_qa_sha256_after=hashlib.sha256(roads_after.read_bytes()).hexdigest(), rows=rows,
               scope="Generated deck V/UV/T hashes plus exact deck specs; UV1/COL preservation additionally covered by unit test")
 (out / "geometry-audit.json").write_text(json.dumps(result, indent=2), encoding="utf-8")

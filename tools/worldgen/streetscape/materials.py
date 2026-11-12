@@ -534,3 +534,24 @@ def _underdeck_pier_paint(default):
 
 
 M["pier_yellow"]["color"] = _underdeck_pier_paint(M["pier_yellow"]["color"])
+
+
+def _underdeck_pier_weather():
+    """ADR 0119: reuse existing concrete modulation/splash/runoff behind a data flag."""
+    import json
+    import math
+    from pathlib import Path
+    path = Path(__file__).resolve().parents[3] / "Data/Regions/bialystok-industrial-c/viaduct_underdeck.json"
+    try:
+        cfg = json.loads(path.read_text(encoding="utf-8"))
+        paint = cfg.get("pier_paint", {})
+        if cfg.get("set", {}).get("paint_weathering") is True and paint.get("enabled") is True:
+            height = float(paint.get("splash_h_m", .8))
+            if math.isfinite(height) and .1 <= height <= 1.5:
+                return {"texture_set": "concrete_precast", "splash_h": height, "runoff": True}
+    except (OSError, ValueError, TypeError):
+        pass
+    return {}
+
+
+M["pier_yellow"].update(_underdeck_pier_weather())

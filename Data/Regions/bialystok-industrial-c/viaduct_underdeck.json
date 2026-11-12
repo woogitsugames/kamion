@@ -5,6 +5,8 @@
  "pier_paint": {
   "enabled": true,
   "color_linear": [0.46, 0.34, 0.135],
+  "splash_h_m": 0.8,
+  "runoff_length_scale": 0.35,
   "confidence": "WORKING_VALUE: warmer R/G and lower blue based on Rakoon 7204 ochre faces; sRGB photo is not a reflectance measurement."
  },
  "grass_budget_note": "Existing Megascans vegetation retained. Additional clumps cost +1 Low draw in paired Unity views; disabled to meet draws +0.",
@@ -22,6 +24,7 @@
   "wing_len_m": 3.0,
   "stairs_enabled": false,
   "unpainted_chamfers": true,
+  "paint_weathering": true,
   "stairs_width_m": 0.85,
   "stairs_rise_m": 0.18,
   "stairs_tread_m": 0.32,

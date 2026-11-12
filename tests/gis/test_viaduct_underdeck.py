@@ -124,6 +124,33 @@ def test_confirmed_stairs_require_both_flags():
     assert any(p.src.endswith(":stairs") for p in w.buf.parts)
 
 
+def test_pier_weather_coordinates_follow_ground_and_head_without_changing_collision():
+    old, new = M.MeshBuf(), M.MeshBuf()
+    args = ([8, -2], [1, 0], .5, .6, .25, 2.5, 8.8, "pier_yellow", "column")
+    H._prism(old, *args, collision=True)
+    H._prism(new, *args, collision=True, bevel_mat="bridge_concrete",
+             paint_weather={"ground_z": 3., "runoff_scale": .35})
+    painted = next(p for p in new.parts if p.mat == "pier_yellow")
+    np.testing.assert_allclose(painted.UV[:, 1], painted.V[:, 2] - 3.)
+    np.testing.assert_allclose(painted.UV1[:, 1], 1 + (8.8 - painted.V[:, 2]) / .35)
+    assert painted.UV1[:, 1].max() < 48, "ordinary runoff must not enter reserved sill encodings"
+    assert next(p for p in new.parts if p.mat == "bridge_concrete").UV1 is None
+    for attr in ("V", "T", "UV"):
+        np.testing.assert_array_equal(getattr(old.parts[-1], attr), getattr(new.parts[-1], attr))
+
+
+def test_weather_flag_replaces_geometric_column_streaks_only():
+    w, hero = fixture()
+    H._apply_underdeck(w, hero)
+    assert not any(p.src.endswith(":runoff") for p in w.buf.parts)
+    assert any(p.src.endswith(":joint_runoff") for p in w.buf.parts)
+    assert any(p.UV1 is not None for p in w.buf.parts if p.mat == "pier_yellow")
+    w, hero = fixture()
+    hero["override"]["set"]["paint_weathering"] = False
+    H._apply_underdeck(w, hero)
+    assert any(p.src.endswith(":runoff") for p in w.buf.parts)
+
+
 def test_vegetation_uses_only_an_existing_megascans_prototype():
     w, hero = fixture()
     hero["override"]["add_grass"] = True
