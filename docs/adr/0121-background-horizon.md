@@ -119,7 +119,7 @@ Pełny GIS pod heavy: 632 passed, 1 failed, 1 xfailed w 752,59 s. Jedyna porażk
 
 Przeczytano nową recenzję s12 batchA: po diagnozie klina ważniejszą poprawką obrazu edge jest płaska, brązowo-pomarańczowa wysoka hala panoramy południowej (P1). Bieżące edge-south High-clear potwierdza artefakt. Własny far_field.py traktuje każdą halęh≥22m jak elektrociepłownię niezależnie od funkcji, nadając brąz, a losowy pas zajmuje16%wysokości. Kandydat C061 o measuredHeight23,91m ma funkcję produkcyjny; projekcja jest zgodna z ogólnym położeniem bryły, ale wymaga potwierdzenia przez rzeczywistą geometrię i nie jest identyfikacją fotograficzną. R5 nada mu priorytet przed resztkowym stykiem kurtyn; źródeł budynków regionu nie zmieniamy.
 
-## Runda r5 — przemysłowa hala południowej panoramy (walidacja w toku)
+## Runda r5 — przemysłowa hala południowej panoramy
 
 Baza main 889201d5, merge cc53055a. Pełna budowa bazowa trwała 515,4 s, bez fallback=True. Materiały ponownie wykorzystano po sprawdzeniu niezmiennych wejść, kompletu plików i cache; szczegóły w material-baseline-reuse.json. Ukończono Before: 368 ujęć telefonu i 104 native z proporcjami 25 fotografii B oraz diagnostycznej C2948. Nie zmieniano kamer ani referencji.
 
@@ -137,4 +137,12 @@ Pomiar pod heavy obejmuje wszystkie 472 pary Before/After, w tym 236 Low. Delty 
 
 Niezależny od metadanych odczyt surowych GLB oraz zapisanych siatek Unity potwierdził niezmienny cache GIS i pochodzenie wysokości, układ kanałów, indeksy, XZ oraz obwiednie sektorów. Wszystkie atrybuty czterech prymitywów lasu w każdej jakości są bajtowo identyczne. Zachowano po cztery importowane siatki; łączne bufory wierzchołków i indeksów nadal mają 1411032 bajty Low i 6852634 High. Nowe znaczniki fasady przetrwały import (92 wierzchołki Low i 244 High). Wewnętrzne podziały ściany/obróbki przesuwają Y 564 wierzchołków surowego GLB Low i 3416 High; nie twierdzimy, że wszystkie pozycje lub UV zostały niezmienione. Wysokości całych brył i topologia pozostają zachowane.
 
-Apron ma identyczne pozycje i indeksy przed/po: 6572 wierzchołki, 10128 trójkątów gruntu i 840 asfaltu, 35 kontynuacji. Ponowny odczyt środków wszystkich trójkątów asfaltu daje minimum 0,0403 m nad oryginalną powierzchnią apron. Pojedynczy plik testów wygenerowanych far-field zaliczył 5/5 w 1,04 s. Końcowy pełny GIS jest w kolejce; tej sekcji nie traktować jako końcowego raportu przyjęcia.
+Apron ma identyczne pozycje i indeksy przed/po: 6572 wierzchołki, 10128 trójkątów gruntu i 840 asfaltu, 35 kontynuacji. Ponowny odczyt środków wszystkich trójkątów asfaltu daje minimum 0,0403 m nad oryginalną powierzchnią apron. Pojedynczy plik testów wygenerowanych far-field zaliczył 5/5 w 1,04 s.
+
+### Końcowa walidacja i zakres r5
+
+Jedyny pełny GIS tej rundy uruchomiono po przeglądzie obrazów i pomiarach, pod heavy, z ograniczeniem bibliotek numerycznych do jednego wątku: 710 passed, 1 xfailed, 0 failed w 1154,93 s. Oryginalny log, JUnit i kod 0 są zachowane. Raport fidelity z bazy r5 jest aktualny dla wszystkich 23 wejść; nie przenosimy porażki fidelity z r4 na nową bazę i nie regenerujemy cudzych raportów.
+
+Po teście sześć SHA własnych GLB, profilu apron, cache GIS, QA i manifestu źródłowego jest zgodnych z zamrożonym After. Dopiero wtedy ograniczono world_manifest do własnych świeżych pól far_field i materials.far_field_buildings, odtwarzając metadane dróg, wiaduktu i props. Odczyt zapisanej struktury potwierdził poprawne zachowanie nowych pól. Wszystkie 64 SHA chunków w ograniczonym manifeście są identyczne ze świeżym pełnym manifestem po GIS; to porównanie metadanych, nie drugi niezależny pomiar plików testowych. Po scope ponownie potwierdzono sześć własnych SHA i brak obcych zmian tracked.
+
+R5 przekazuje częściową poprawę wyglądu hali oraz zaliczoną walidację techniczną. Nie zamyka B9, styku kurtyn ani szarego apron NW. Scena i światło w parach pochodzą z bazy cc53055a sprzed light r3; jego późniejsza poprawka klina zostanie pobrana z main dopiero w kolejnej rundzie. WorldSurface jest wspólnym plikiem, a nowa ścieżka jest addytywna za istniejącym _FAR_FACADE i nowymi flagami danych. Przy integracji zachować pozostałe warstwy shadera i zregenerować far-field z gałęzi. Review lidera, GPU A16, Android na urządzeniu i zgodność konkretnej elewacji ze zdjęciem pozostają otwarte.
