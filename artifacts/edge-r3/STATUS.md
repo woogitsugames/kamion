@@ -26,3 +26,5 @@ Następny krok po build_world: pojedyncza warstwa detalu asfaltu pod heavy, pote
 2026-11-12T01:22:08.8510520+01:00 Zregenerowano pełny świat bazowy r3 bez fallback=True; następnie pełny import Unity i rendery Before.
 Krok 9: źródła bazowe gotowe: build_all kod 0 (644 s), build_world kod 0 (415,4 s), brak fallback=True. Uzupełniono osobno asfaltowy cache fotograficzny po skopiowaniu istniejącego wejścia z main, pod heavy; wynik w build-photo-layer.log. Nie zmieniano kodu materiałów.
 Następny krok: import-baseline.ps1, pełny import + generowane pojazdy + Before; każda sesja Unity we własnym slocie.
+Krok 10: pełny import świata zakończony IMPORT_RESULT: OK. Instalator pojazdu zwrócił 1 przez brak wygenerowanego poza gitem SM_CabInterior_LOD0.fbx; slot zwolniono. Plik skopiowano z istniejącego cache main i potwierdzono SHA, bez Blendera i bez edycji źródeł kabiny. Pierwszy log błędu zachowano.
+Dodano ResumeVehicle, wymagający udanego wcześniejszego importu świata. Następna komenda: pwsh artifacts/edge-r3/import-baseline.ps1 -ResumeVehicle; potem Before.

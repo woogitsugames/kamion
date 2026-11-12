@@ -1,3 +1,4 @@
+param([switch]$ResumeVehicle)
 $ErrorActionPreference = 'Stop'
 $root = (Resolve-Path "$PSScriptRoot/../..").Path
 Set-Location $root
@@ -26,18 +27,22 @@ foreach ($set in $spec.sets.PSObject.Properties) {
     }
 }
 $slot = 'C:/Users/matma/Documents/Claude/kamion/scripts/unity-slot.ps1'
-& pwsh $slot -Acquire -Pool unity -Owner gpt-edge -PollSeconds 2 -StaleHours 100000
-if ($LASTEXITCODE -ne 0) { throw 'Unity slot failed' }
-try {
-    $code = Invoke-UnityBatch -LogFile "$PSScriptRoot/import-baseline.log" -Arguments @(
-        '-executeMethod','Game.World.Import.RegionImporter.ImportBatch',
-        '-region','bialystok-industrial-c','-tiers','Low,High','-materialTier','Medium')
-    if ($code -ne 0 -or -not (Select-String -LiteralPath "$PSScriptRoot/import-baseline.log" -Pattern 'IMPORT_RESULT: OK' -SimpleMatch -Quiet)) {
-        throw "Full baseline import failed: $code"
+if (-not $ResumeVehicle) {
+    & pwsh $slot -Acquire -Pool unity -Owner gpt-edge -PollSeconds 2 -StaleHours 100000
+    if ($LASTEXITCODE -ne 0) { throw 'Unity slot failed' }
+    try {
+        $code = Invoke-UnityBatch -LogFile "$PSScriptRoot/import-baseline.log" -Arguments @(
+            '-executeMethod','Game.World.Import.RegionImporter.ImportBatch',
+            '-region','bialystok-industrial-c','-tiers','Low,High','-materialTier','Medium')
+        if ($code -ne 0 -or -not (Select-String -LiteralPath "$PSScriptRoot/import-baseline.log" -Pattern 'IMPORT_RESULT: OK' -SimpleMatch -Quiet)) {
+            throw "Full baseline import failed: $code"
+        }
+    } finally {
+        git restore -- game/Assets/_Project/Rendering/Settings game/ProjectSettings
+        & pwsh $slot -Release -Pool unity -Owner gpt-edge -StaleHours 100000
     }
-} finally {
-    git restore -- game/Assets/_Project/Rendering/Settings game/ProjectSettings
-    & pwsh $slot -Release -Pool unity -Owner gpt-edge -StaleHours 100000
+} elseif (-not (Select-String -LiteralPath "$PSScriptRoot/import-baseline.log" -Pattern 'IMPORT_RESULT: OK' -SimpleMatch -Quiet)) {
+    throw 'Cannot resume the vehicle step without a successful full world import'
 }
 # The merged cab source needs its generated prefab rebuilt as well; importing the
 # world alone reuses an existing prefab. This is baseline preparation, not a cab edit.
