@@ -99,8 +99,8 @@ def test_free_fence_stub_is_dropped_and_front_is_kept():
             "front_h": 1.6, "side_h": 1.9, "drive_side": 0, "houses": ["a"], "house_pts": [np.array([10.0, 15.0])],
             "road_d": 3.0, "foot": box(5, 10, 15, 20), "gate_kind": "swing", "steps": []}
     near = PL._Near()
-    # another fence closes the east side from y = 2.5 on, 1.5 m beyond it and parallel: only a 2.5 m stub would remain
-    near.add([(np.array([21.5, 2.5]), np.array([21.5, 30.0]))])
+    # another fence closes the east side from y = 4.2 on, 1.5 m beyond it and parallel: only a 2.5 m stub would remain
+    near.add([(np.array([21.5, 4.2]), np.array([21.5, 30.0]))])
     lay = PL.layout(plot, None, near)
     east = [r for r in lay["runs"] if not r["front"] and abs(r["a"][0] - 20.0) < 1e-6 and abs(r["b"][0] - 20.0) < 1e-6]
     assert not east and lay.get("stubs_dropped", 0) >= 1

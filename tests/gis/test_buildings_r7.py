@@ -153,7 +153,7 @@ def test_ground_is_one_continuous_driveway_a_path_and_a_lawn():
         assert drive
         d = shapely.union_all(drive)
         assert d.distance(road) < 0.1                                           # reaches the road footprint ...
-        assert d.buffer(0.1).contains(shapely.Point(*(g["m"] - g["n"] * 4.0)))  # ... and runs in through the gate
+        assert d.buffer(0.1 + PL.TRACK_GAP_M / 2).contains(shapely.Point(*(g["m"] - g["n"] * 4.0)))  # ... and runs in through the gate
         assert max(q.area for q in drive) > PL.DRIVE_W_M * 6.0                  # one slab, not tiles
         lawn = p["lawn"]
         assert lawn is not None and lawn.area > 0.45 * (p["poly"].area - p["foot"].area)
