@@ -22,7 +22,7 @@ try {
     $code=Invoke-UnityBatch -LogFile $log -Arguments @('-executeMethod','Game.FurnitureQA.FurnitureExactStats.Run',
         '-qaScene',$scene,'-qaTier',$Tier,'-qaLighting',$Lighting,'-qaOutput',$out,
         '-qaGate3',"$root/$ev/cameras.json",'-furniturePhase',$Phase)
-    if ($code -ne 0 -or !(Select-String $log -SimpleMatch 'FURNITURE_EXACT_STATS_OK cameras=')) { throw 'Counter capture failed' }
+    if ($code -ne 0 -or !(Select-String -LiteralPath $log -SimpleMatch 'FURNITURE_EXACT_STATS_OK cameras=')) { throw 'Counter capture failed' }
     # Small JSON-only verifier, not a heavy generator/test/image job.
     & uv run --project tools/worldgen python "$ev/verify_exact_stats.py" $Phase $Tier $Lighting *> "$ev/exact-$Phase-$Tier-$Lighting-validation.log"
     if ($LASTEXITCODE -ne 0) { throw 'Exact counters did not match frozen output' }
