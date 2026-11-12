@@ -18,3 +18,5 @@ Krok 2b: lekkie doświadczenie crown_proposal.py bez Blender/world: rzeczywiste 
 Krok 2c: przygotowano (jeszcze niewykonany) crown_asset_audit.py: porównanie bajtowe wszystkich atrybutów trójkątów z zachowaniem orientacji, niezależnie od indeksów; każdy zmieniony trójkąt musi mieścić się w jednej z3 obwiedni iglaków, maksymalnie672 High/294 Low, LOD2 identyczny, całe limity9584/2818/164 i anchor/ground zachowane. Dodatkowo obejrzano istniejący atlas gałęzi CC0. Model nadal bez zmian, baseline wFIFO.
 
 Krok 2d: ADR0116 ma sekcję r4 z hipotezą, policzonym polem kart i jawnym brakiem renderu; poprawiono nieaktualną wzmiankę o oczekujących testach r3. Bez zmiany źródeł modelu. Kolejka FIFO przesunęła się z5 do4 właścicieli przede mną.
+
+Krok 2e: przygotowano baseline_snapshot.py do uruchomienia dopiero po zakończeniu capture. Uzupełni rzeczywisty inwentarz czterech warunków, sprawdzi192 hashe runtime i zachowa GLB/spec/meta/dims/builder sprzed zmiany. Narzędzia porównań przeniesione z r3, bez stałej liczby kamer. Snapshot jeszcze niewykonany; baseline wciąż kolejkuje.
