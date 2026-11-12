@@ -35,3 +35,5 @@ Krok 12: lekka kontrola AST siedmiu helperów Python oraz parser wszystkich PS r
 Krok 13: podczas PHONE_RUN przygotowano wyłącznie preflight kolejnej rundy po paletach: źródło globalnych odbić sky/ground, wyłączone lokalne probe w WorldInstances, komórki płatków 400/m oraz osobny węzeł contact. Fakty z odczytu kodu, bez zmian produkcji ani uruchamiania eksperymentu. R5 nadal dotyczy palet; nie podszywać lokalnych odbić szumem lub obniżeniem albedo. Następny krok: ten sam baseline po zwolnieniu blokady pomiaru.
 
 Baseline (2026-11-12T15:38:33.8001836+01:00): wygeneruj świeży World palet r5. Następny etap World/fidelity/kamery; potem świeży import i oględziny przed zmianą palet.
+
+Baseline (2026-11-12T15:42:58.9934350+01:00): potwierdź baseline i rzeczywiste cele palet r5. Następny etap World/fidelity/kamery; potem świeży import i oględziny przed zmianą palet.
