@@ -102,3 +102,5 @@ potem poprawić największe udokumentowane odstępstwo wiaty. WIP po każdym kro
 2026-11-12T12:41:12.9344817+01:00: Unity import early-after1 Low overcast; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
 
 2026-11-12T12:41:32.6640117+01:00: Unity side-render early-after1 Low clear; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
+
+2026-11-12T12:41:33.1944102+01:00: wczesny import i 4 diagnostyczne kadry wiat Low-clear; sukces=True. Każdy krok pobierał i zwalniał slot Unity; standardowy pipeline czekał na własny marker. Ten dodatkowy podgląd nie zastępuje 236 kadrów budżetowych ani oczekującej kontroli geometrii. NASTĘPNY KROK: obejrzeć podglądy i kontynuować pełną walidację.
