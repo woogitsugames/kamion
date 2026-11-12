@@ -48,3 +48,4 @@ Dowody odrzuconego A skopiowano do candidate-a-rejected (probe, logi, QA i patch
 Testy wariantu B: kod 1. Log pytest-b.log.
 Przerwano wyłącznie własny acquirer PID 39420, po sprawdzeniu braku własnego slotu i zgodności dokładnych argumentów. Proces nadrzędny zakończył się kodem 1 z błędu nabycia slotu, bez uruchomienia pytest; to nie wynik testów B. Własny slot nadal nie istnieje, cudzych procesów/slotów nie dotknięto. Log zachowano jako pytest-b-acquire-cancelled.log. Ponowne oczekiwanie użyje obecnych 2 s.
 Niezależny krytyk odrzucił A także wizualnie i potwierdził źródłową zasadność korekty, z zastrzeżeniem cieni oraz niepewnych pni. VISUAL-CRITIC-A.md: jeden dojrzały zastępnik nie zamknie B8; ewentualny wynik B trzeba raportować jako częściowy, dopóki zespół koron nie zostanie odtworzony. Nie ma jeszcze PASS B. Następny krok: testy B, potem generacja i pomiar.
+Ponowione testy B po kolejce heavy: kod 0. Log pytest-b.log.
