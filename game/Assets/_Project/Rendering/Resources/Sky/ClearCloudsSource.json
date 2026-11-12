@@ -23,5 +23,6 @@
   "cloud_white_linear": 1.8082187175750732,
   "source_cloud_pixels": 986549,
   "processing": "Linear HDRI; chromatic blue-gap matte; sun removed within 1.5 degrees; R opacity, G relative luminance^0.7; lower hemisphere opacity zero",
-  "checked_utc": "2026-11-11T22:02:45.192435+00:00"
+  "checked_utc": "2026-11-11T23:02:45.192435+01:00",
+  "sampler_note": "ADR 0108 r3: Clear clamps source latitude to +0.5 degrees after sun-alignment rotation, extending valid horizon data into the cut lower hemisphere. Texture and source hashes unchanged. Default other presets 0 retains legacy sampling."
 }

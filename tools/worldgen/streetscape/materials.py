@@ -217,19 +217,20 @@ M = {
     # metallic 0 (WORKING_VALUE, judged on the dock renders: no horizon line on a tarp in the shade of the hall).
     # ADR0086: explicit working pigments preserve ADR0092/s9 accepted matte curtain appearance.
     # Previous values were tuned through Unity Color double-gamma; these are their linear GPU values.
-    "trailer_curtain_grey": {"color": [0.03310477, 0.03630648, 0.03630648], "rough": 0.82, "texture_set": "curtain_folds"},
-    "trailer_curtain_blue": {"color": [0.00232198, 0.00489631, 0.0173891], "rough": 0.82, "texture_set": "curtain_folds"},
-    "trailer_curtain_white": {"color": [0.26327341, 0.27383842, 0.26327341], "rough": 0.82, "texture_set": "curtain_folds"},
-    "trailer_curtain_red": {"color": [0.02721178, 0.00350102, 0.00270898], "rough": 0.82, "texture_set": "curtain_folds"},
-    "trailer_curtain_green": {"color": [0.00350102, 0.00719441, 0.00489631], "rough": 0.82, "texture_set": "curtain_folds"},
-    "trailer_curtain_silver": {"color": [0.10653922, 0.11280479, 0.11280479], "rough": 0.72, "texture_set": "curtain_folds"},
+    "trailer_curtain_grey": {"color": [0.03310477, 0.03630648, 0.03630648], "rough": 0.82, "texture_set": "curtain_folds", "set_tile": True},
+    "trailer_curtain_blue": {"color": [0.00232198, 0.00489631, 0.0173891], "rough": 0.82, "texture_set": "curtain_folds", "set_tile": True},
+    "trailer_curtain_white": {"color": [0.26327341, 0.27383842, 0.26327341], "rough": 0.82, "texture_set": "curtain_folds", "set_tile": True},
+    "trailer_curtain_red": {"color": [0.02721178, 0.00350102, 0.00270898], "rough": 0.82, "texture_set": "curtain_folds", "set_tile": True},
+    "trailer_curtain_green": {"color": [0.00350102, 0.00719441, 0.00489631], "rough": 0.82, "texture_set": "curtain_folds", "set_tile": True},
+    "trailer_curtain_silver": {"color": [0.10653922, 0.11280479, 0.11280479], "rough": 0.72, "texture_set": "curtain_folds", "set_tile": True},
     "trailer_box_white": {"color": [0.31854678, 0.33034371, 0.31854678], "rough": 0.45, "texture_set": "box_panel"},
-    "tractor_paint_white": {"color": [0.66, 0.66, 0.64], "rough": 0.3},
-    "tractor_paint_silver": {"color": [0.40, 0.41, 0.42], "rough": 0.3, "metal": 0.6},
-    "tractor_paint_blue": {"color": [0.025, 0.06, 0.16], "rough": 0.3, "metal": 0.3},
-    "tractor_paint_red": {"color": [0.30, 0.025, 0.02], "rough": 0.3, "metal": 0.2},
-    "tractor_paint_green": {"color": [0.03, 0.08, 0.05], "rough": 0.3, "metal": 0.3},
-    "tractor_paint_black": {"color": [0.02, 0.02, 0.022], "rough": 0.3, "metal": 0.3},
+    # ADR 0122: opt-in static cab film; reuse the prepared maps and existing paint pass.
+    "tractor_paint_white": {"color": [0.66, 0.66, 0.64], "rough": 0.3, "texture_set": "car_grime_clean", "yard_paint": True, "paint": [0.0, 0.0, 0.0, 0.5]},
+    "tractor_paint_silver": {"color": [0.40, 0.41, 0.42], "rough": 0.3, "metal": 0.6, "texture_set": "car_grime_clean", "yard_paint": True, "paint": [0.6, 0.0, 0.0, 0.5]},
+    "tractor_paint_blue": {"color": [0.025, 0.06, 0.16], "rough": 0.3, "metal": 0.3, "texture_set": "car_grime_clean", "yard_paint": True, "paint": [0.3, 0.0, 0.0, 0.5]},
+    "tractor_paint_red": {"color": [0.30, 0.025, 0.02], "rough": 0.3, "metal": 0.2, "texture_set": "car_grime_clean", "yard_paint": True, "paint": [0.2, 0.0, 0.0, 0.5]},
+    "tractor_paint_green": {"color": [0.03, 0.08, 0.05], "rough": 0.3, "metal": 0.3, "texture_set": "car_grime_clean", "yard_paint": True, "paint": [0.3, 0.0, 0.0, 0.5]},
+    "tractor_paint_black": {"color": [0.02, 0.02, 0.022], "rough": 0.3, "metal": 0.3, "texture_set": "car_grime_clean", "yard_paint": True, "paint": [0.3, 0.0, 0.0, 0.5]},
     "container_rust": {"color": [0.17, 0.06, 0.04], "rough": 0.75, "texture_set": "container_corrugation"},
     "container_blue": {"color": [0.05, 0.09, 0.16], "rough": 0.7, "texture_set": "container_corrugation"},
     "container_grey": {"color": [0.22, 0.23, 0.23], "rough": 0.7, "texture_set": "container_corrugation"},
@@ -516,6 +517,34 @@ M["plot_kit"] = {"color": [1.0, 1.0, 1.0], "rough": 0.85, "texture": "plot_kit",
 M["plot_lawn"] = {"color": [0.150, 0.200, 0.060], "rough": 0.95, "surface": "grass", "texture_set": "grass_verge"}
 
 
+# ADR0118 r1: asphalt-only overrides of the road material table (MATERIALS.update(M)).
+# WORKING_VALUE: judged against local photo wheel/centre ratio 0.67, not measured physical albedo.
+# No road generator/geometry change; fresh SMA deliberately has no old-road damage opt-in.
+M["road_asphalt"] = {"color": [0.081, 0.08, 0.079], "rough": 0.9, "surface": "asphalt",
+                     "texture_set": "asphalt_worn",
+                     "asphalt_wear": {"tone": 0.90, "wheel_darkening": 0.45, "low_cracks": 1.0,
+                                      "low_photo_detail": 0.75}}
+# WORKING_VALUE: a 25 mm bituminous saw-cut seal, fresh darker fill and aged lighter aggregate.
+# UV0 is normalised by yard_wear before chunking; base/normal textures still use world metres.
+M["decal_patch"]["asphalt_patch_seam"] = {"width_m": 0.025, "darkening": 0.65,
+                                         "fresh_tone": 0.88, "aged_tone": 1.08}
+M["decal_patch"]["asphalt_wear"] = {"low_photo_detail": 0.75}
+# Restore authored wheel wear (0099 halved it in C#). Keep all coefficients visible here.
+# Glyphs share the transverse encoding: their readability is an explicit visual control, not a claimed fix.
+from roads.standards import MARKING_LIFT as _ASPHALT_PAINT_LIFT
+M["marking_white"] = {"color": [0.55, 0.55, 0.54], "rough": 0.65, "surface": "paint",
+                      "texture_set": "asphalt_worn", "decal": True, "depth_offset_m": _ASPHALT_PAINT_LIFT,
+                      "paint": {"wheel_wear": 0.85, "age_wear": 0.25, "dirt": 0.38, "line_w_m": 0.12,
+                                "fresh_surface_from_road": True, "asphalt_underlay": True,
+                                "fresh_wheel_scale": 0.0, "fresh_age_scale": 0.0,
+                                "fresh_dirt_scale": 1.0, "fresh_underlay_scale": 0.9375},
+                      "asphalt_wear": {"tone": 0.90, "wheel_darkening": 0.45, "low_cracks": 1.0,
+                                       "low_photo_detail": 0.75, "wheel_polish": 0.6, "drip_band": 0.22}}
+# WORKING_VALUE: 0.85 legacy opacity × 1.15 = 0.9775, only for roads.decals traffic-stop stains.
+# Private-yard/gate/bus oil retains UV1.x=0 and the previous material response.
+M["decal_oil"]["traffic_opacity_scale"] = 1.15
+
+
 def _underdeck_pier_paint(default):
     """ADR 0119: opt-in pigment for the existing DK8 pier material only."""
     import json
@@ -555,29 +584,3 @@ def _underdeck_pier_weather():
 
 
 M["pier_yellow"].update(_underdeck_pier_weather())
-# ADR0118 r1: asphalt-only overrides of the road material table (MATERIALS.update(M)).
-# WORKING_VALUE: judged against local photo wheel/centre ratio 0.67, not measured physical albedo.
-# No road generator/geometry change; fresh SMA deliberately has no old-road damage opt-in.
-M["road_asphalt"] = {"color": [0.081, 0.08, 0.079], "rough": 0.9, "surface": "asphalt",
-                     "texture_set": "asphalt_worn",
-                     "asphalt_wear": {"tone": 0.90, "wheel_darkening": 0.45, "low_cracks": 1.0,
-                                      "low_photo_detail": 0.75}}
-# WORKING_VALUE: a 25 mm bituminous saw-cut seal, fresh darker fill and aged lighter aggregate.
-# UV0 is normalised by yard_wear before chunking; base/normal textures still use world metres.
-M["decal_patch"]["asphalt_patch_seam"] = {"width_m": 0.025, "darkening": 0.65,
-                                         "fresh_tone": 0.88, "aged_tone": 1.08}
-M["decal_patch"]["asphalt_wear"] = {"low_photo_detail": 0.75}
-# Restore authored wheel wear (0099 halved it in C#). Keep all coefficients visible here.
-# Glyphs share the transverse encoding: their readability is an explicit visual control, not a claimed fix.
-from roads.standards import MARKING_LIFT as _ASPHALT_PAINT_LIFT
-M["marking_white"] = {"color": [0.55, 0.55, 0.54], "rough": 0.65, "surface": "paint",
-                      "texture_set": "asphalt_worn", "decal": True, "depth_offset_m": _ASPHALT_PAINT_LIFT,
-                      "paint": {"wheel_wear": 0.85, "age_wear": 0.25, "dirt": 0.38, "line_w_m": 0.12,
-                                "fresh_surface_from_road": True, "asphalt_underlay": True,
-                                "fresh_wheel_scale": 0.0, "fresh_age_scale": 0.0,
-                                "fresh_dirt_scale": 1.0, "fresh_underlay_scale": 0.9375},
-                      "asphalt_wear": {"tone": 0.90, "wheel_darkening": 0.45, "low_cracks": 1.0,
-                                       "low_photo_detail": 0.75, "wheel_polish": 0.6, "drip_band": 0.22}}
-# WORKING_VALUE: 0.85 legacy opacity × 1.15 = 0.9775, only for roads.decals traffic-stop stains.
-# Private-yard/gate/bus oil retains UV1.x=0 and the previous material response.
-M["decal_oil"]["traffic_opacity_scale"] = 1.15

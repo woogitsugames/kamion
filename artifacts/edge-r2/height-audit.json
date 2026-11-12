@@ -1,0 +1,38 @@
+{
+  "before_buildings": 8447,
+  "after_buildings": 8447,
+  "footprints_unchanged": true,
+  "other_gis_feature_groups_unchanged": true,
+  "changed_heights": 5384,
+  "changed_by_typology": {
+    "house": 502,
+    "office": 1564,
+    "block": 2253,
+    "hall": 1065
+  },
+  "source_counts": {
+    "gugik-lod1-measuredHeight": 5390,
+    "WORKING_VALUE-bdot-storeys-typology": 97,
+    "WORKING_VALUE-osm-storeys-typology": 2921,
+    "osm-height-tag-UNVERIFIED": 39
+  },
+  "lod1_audit": {
+    "buildings": 36971,
+    "conflicting_ids": 0,
+    "duplicate_records": 0,
+    "invalid_or_missing": 0,
+    "members": 31,
+    "usable_ids": 36971
+  },
+  "tiers": {
+    "Low": {
+      "before_triangles": 24508,
+      "after_triangles": 24500
+    },
+    "High": {
+      "before_triangles": 118524,
+      "after_triangles": 118524
+    }
+  },
+  "note": "Source heights before foreshortening; no claim of full-scale height in rendered backdrop."
+}

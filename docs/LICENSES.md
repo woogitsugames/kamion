@@ -290,3 +290,7 @@ Położenia i obrysy: © OpenStreetMap contributors, ODbL; wysokości gruntu: is
 Wymiary techniczne jednoprzewodowego komina pochodzą z opisu zamówienia ENEA2025,
 H120m wieloprzewodowego potwierdza tekstowy rekord EMKA. Zamknięta fotografia EMKA
 nie jest dystrybuowanym assetem ani otwartą referencją obrazową D43.
+## Kabina — skan skóry CC0 (Poly Haven), GPT cab r2 (s12)
+| ID | Zasób (rozmiar fizyczny) | URL | Autor | Licencja | Mapy (MD5 w `art-source/truck/interior/cab_material_scans.json`) | Użycie w grze |
+|---|---|---|---|---|---|---|
+| `brown_leather` | Brown Leather (0,40 × 0,40 m; kafel 0,12 m, wieniec kierownicy 0,05 m) | https://polyhaven.com/a/brown_leather | Rob Tuytel | CC0 1.0 (https://polyhaven.com/license) | diffuse/normal GL/roughness/AO 2k | faktura skóry i tłoczenia tworzyw kabiny (ADR cab r2) |
