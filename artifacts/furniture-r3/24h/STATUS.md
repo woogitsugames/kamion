@@ -134,3 +134,5 @@ potem poprawić największe udokumentowane odstępstwo wiaty. WIP po każdym kro
 2026-11-12T13:02:03.3222650+01:00: dokładny licznik CPU after Low overcast; sukces=True, slot Unity zwolniony. NASTĘPNY KROK: pozostałe warianty i porównanie przed/po, bez deklaracji czasu GPU.
 
 2026-11-12T13:02:20.1765646+01:00: Unity side-render after-side Low clear; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
+
+2026-11-12T13:02:41.1165723+01:00: Unity side-render after-side Low overcast; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
