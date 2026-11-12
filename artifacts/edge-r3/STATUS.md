@@ -11,3 +11,5 @@ Następny krok: pwsh artifacts/edge-r3/prepare-baseline.ps1; potem bezpośredni 
 2026-11-12T01:02:01.3096909+01:00 Odświeżono niezmienne cache CC0/Megascans; nie kopiowano aktywnie regenerowanych derived ani scen main.
 Krok 3: przygotowano import-baseline.ps1. Przed Unity wymaga kodów 0 build_all/build_world i kompletności/świeżości map Medium; uruchamia bezpośrednio ImportBatch, więc nie ma niejawnego ciężkiego Pythona bez heavy. Każdy Unity ma osobny Acquire/Release, cofanie Settings i ProjectSettings oraz znacznik sukcesu. Po imporcie od razu cztery serie Before, nadal przed zmianą C#.
 Następny krok po prepare-baseline: pwsh artifacts/edge-r3/import-baseline.ps1.
+Krok 4: zapisano PLAN z hipotezą 528 vs 512 próbek oraz niezależnym wzorcem analitycznym testu stoku N (nie E). Plan przewiduje test red/green przez rzeczywisty BuildApron dopiero po Before. Nie zmieniono produkcyjnego C# ani kodu mgły; nadal przygotowujemy bazę po nowym main.
+Następny krok: koniec przygotowania źródeł, import-baseline.ps1 i kontrola nowej siatki przed poprawką.
