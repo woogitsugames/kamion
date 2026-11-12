@@ -100,3 +100,5 @@ Zapisano kompletną niezależną ocenę baseline w REVIEW-D51-BASELINE.md: G3-A 
 2026-11-12T10:42:33.1801662+01:00: audyt pokazał 38/84 Low ze wzrostem draws i22/84 z delta tris>2% versus r2. Zapisałem BUDGET-LIMITATIONS.md; r3 nie deklaruje PASS budżetu wspólnego świata. Kamer produkcyjnych ani runtime SBS nie zmieniono, wzrost dotyczy nowej zintegrowanej bazy. Nie przypisuję go bez analizy konkretnej domenie ani nie poprawiam cudzych plików.
 
 2026-11-12T10:44:15.4802484+01:00: przygotowałem REPORT-DRAFT.md jako konkretny projekt do kontroli przed zamknięciem. Wprost oznacza brak wyników fidelity/końcowego GIS i niewykonaną końcową dostawę, więc nie zastępuje REPORT.md. Utrwala koszty, porównania, zero akceptacji C oraz brak pokrycia pierwszych300m.
+
+2026-11-12T10:45:02.1137527+01:00: niezależny recenzent dał warunkowy PASS projektowi raportu i audit_sheets.py, bez deklaracji oczekujących wyników. Zgłosił nieaktualny opis walidacji w ADR0111; poprawiłem go: Data już z rejestrem, 34PASS, główny audyt wykonany, uzupełniający/fidelity/GIS nadal oczekują. ADR jawnie podaje też38/84 i22/84 przekroczeń Low.
