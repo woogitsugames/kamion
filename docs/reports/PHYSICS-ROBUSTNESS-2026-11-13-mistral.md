@@ -138,6 +138,11 @@ ciśnienia, błąd siodła ≤ 5 mm we wszystkich.
 - Podejrzana przyczyna: miękki jednostronny ogranicznik sprężyna-tłumik penetruje proporcjonalnie do
   prędkości zbliżania — `game/Assets/_Project/Vehicle/Physics/Components/FifthWheel.cs:223`
   (wywołanie `Limit(...)` dla yaw) i `FifthWheel.cs:280-290` (`err = c - limit`, brak twardego clampa).
+- **Uwaga integracji r6:** repro odtwarza się (91,418°, `articulation_limit_excess_deg` 1,4175 — sprawdzone), ale
+  ogranicznik jest miękki **z założenia** — komentarz `Limit` w `FifthWheel.cs`: kontakt z ogranicznikiem „spread over a
+  few steps instead of a single-step impulse (deformable cab / plate contact)”. Nadmiar 0,6–3,3° to więc pytanie
+  o dopuszczalną podatność (`yawStopFrequencyHz`), nie dowód błędu; niezmiennik fuzza z tolerancją 0° jest ostrzejszy
+  niż projekt. Decyzja lidera: tolerancja (np. ≤ 3°) albo sztywniejszy ogranicznik.
 
 ### F2 — runaway prędkości podczas wywrotki (energia wstrzykiwana numerycznie)
 - Fuzz seed 105 (i 10 innych z 40): przy stałym gazie 0.378 + pełny skręt od 30 km/h zestaw przewraca się
@@ -147,9 +152,12 @@ ciśnienia, błąd siodła ≤ 5 mm we wszystkich.
   od 30 km/h, cargo24, suche, 30 s → **275.4 km/h** (limit 90 + 0.5), `max_dv_step_ms` 0.678, przegub 92.23°.
 - Podejrzana przyczyna: więz siodła wykonuje pracę, gdy oba ciała koziołkują bez kontaktu kół —
   człon bias w `lam = Kinv * (-(cdot + bias + P*gammaP))`,
-  `game/Assets/_Project/Vehicle/Physics/Components/FifthWheel.cs:214-216`; oraz te same miękkie ograniczniki
+  `game/Assets/_Project/Vehicle/Physics/Components/FifthWheel.cs:210` [r6: w PR „214-216” — tam jest sprężyna przechyłu]; oraz te same miękkie ograniczniki
   jak w F1 (`FifthWheel.cs:223, 280-290`). Hipoteza alternatywna do sprawdzenia przez lidera: samo wywracanie
   się przy 30 km/h i pełnym skręcie też wygląda na zbyt agresywne (roll −78° w 0.5 s).
+- **Uwaga integracji r6:** repro odtwarza się (275,37 km/h, `max_dv_step_ms` 0,678, przegub 92,2° — sprawdzone);
+  przyspieszanie po płaskim terenie bez kontaktu kół i bez napędu jest niefizyczne — prawdziwy błąd (wstrzykiwanie
+  energii). Przyczyna (więz siodła vs. sama wywrotka) niepotwierdzona.
 
 ## 6. Rozszerzenia
 
