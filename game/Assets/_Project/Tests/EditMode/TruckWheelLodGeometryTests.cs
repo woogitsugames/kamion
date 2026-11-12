@@ -29,6 +29,7 @@ namespace Game.Tests
 
         static Dictionary<string, object> s_Manifest;
         static readonly Dictionary<int, GameObject> s_Imported = new Dictionary<int, GameObject>();
+        static readonly Dictionary<int, GameObject> s_TrailerImported = new Dictionary<int, GameObject>();
 
         static Dictionary<string, object> Lods => Json.Obj((s_Manifest ??= Json.Obj(Json.Parse(
             File.ReadAllText(Path.Combine(EditorTools.RepoRoot, Manifest)))))["lods"]);
@@ -61,6 +62,7 @@ namespace Game.Tests
         public void Cleanup()
         {
             s_Imported.Clear();
+            s_TrailerImported.Clear();
             if (AssetDatabase.IsValidFolder(TmpDir)) AssetDatabase.DeleteAsset(TmpDir);
         }
 
@@ -113,6 +115,50 @@ namespace Game.Tests
         }
 
         static float Cross2(Vector2 a, Vector2 b) => a.x * b.y - a.y * b.x;
+
+        [TestCase(0), TestCase(1), TestCase(2)]
+        public void TrailerAxleCentres_AreCoveredByOutwardFaces(int lod)
+        {
+            if (!s_TrailerImported.TryGetValue(lod, out var root) || root == null)
+            {
+                string source = Path.Combine(EditorTools.RepoRoot,
+                    $"art-source/truck/trailer/export/SM_Trailer_LOD{lod}.fbx");
+                Assert.That(File.Exists(source), Is.True, source);
+                Assert.That(new FileInfo(source).Length, Is.GreaterThan(1024), "LFS pointer instead of FBX");
+                Directory.CreateDirectory(Path.Combine(EditorTools.ProjectRoot, TmpDir));
+                string destination = $"{TmpDir}/TrailerLOD{lod}.fbx";
+                File.Copy(source, Path.Combine(EditorTools.ProjectRoot, destination), true);
+                AssetDatabase.ImportAsset(destination, ImportAssetOptions.ForceSynchronousImport);
+                var importer = (ModelImporter)AssetImporter.GetAtPath(destination);
+                TruckAssetBuilder.ApplyModelSettings(importer);
+                importer.materialImportMode = ModelImporterMaterialImportMode.None;
+                importer.SaveAndReimport();
+                root = AssetDatabase.LoadAssetAtPath<GameObject>(destination);
+                Assert.That(root, Is.Not.Null, destination);
+                s_TrailerImported[lod] = root;
+            }
+            var failures = new List<string>();
+            foreach (string role in new[] { "1L", "1R", "2L", "2R", "3L", "3R" })
+            {
+                var node = root.GetComponentsInChildren<Transform>(true)
+                    .First(x => x.name == $"WHEEL_{role}_LOD{lod}");
+                var mesh = node.GetComponent<MeshFilter>().sharedMesh;
+                var matrix = root.transform.worldToLocalMatrix * node.localToWorldMatrix;
+                Vector3 centre = root.transform.InverseTransformPoint(node.position);
+                var points = mesh.vertices.Select(v => matrix.MultiplyPoint3x4(v) - centre).ToArray();
+                var indices = mesh.triangles;
+                float outward = role.EndsWith("L", System.StringComparison.Ordinal) ? -1f : 1f;
+                int missing = 0;
+                if (!HasFrontCover(Vector2.zero, points, indices, outward)) missing++;
+                for (int i = 0; i < 16; i++)
+                {
+                    var sample = new Vector2(Mathf.Cos(i * Mathf.PI / 8), Mathf.Sin(i * Mathf.PI / 8)) * 0.06f;
+                    if (!HasFrontCover(sample, points, indices, outward)) missing++;
+                }
+                if (missing != 0) failures.Add($"WHEEL_{role}_LOD{lod}: {missing}/17 uncovered axle samples");
+            }
+            Assert.That(failures, Is.Empty, string.Join("\n", failures));
+        }
 
         static bool HasFrontCover(Vector2 sample, Vector3[] points, int[] indices, float outward)
         {
