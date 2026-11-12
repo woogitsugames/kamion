@@ -75,3 +75,4 @@ Zapisano final High overcast, kod wejściowy zgodny z fingerprintem. Następny k
 Zapisano final High clear, kod wejściowy zgodny z fingerprintem. Następny krok: pomiary i oględziny par przed/po.
 Zapisano detail-final-fleet, ilość brudu 0.5, 12 świeżych kadrów. Materiały przywrócone. Następny krok: porównać pas zabrudzenia, błotniki i plandekę ze zdjęciami.
 Krok 30: ADR 0115 uzupełniony o decyzję r2, dowód diagnostyczny, odrzucone próby i korektę założenia o Low. Bez deklaracji rozwiązania błotników/plandeki i bez niezmierzonego PASS telefonu. Końcowe kontrole trwają.
+Zapisano wszystkie kamery: after-all Low overcast. Następny krok: zestawić liczniki rendererów i instancji osobno dla każdej kamery.
