@@ -38,6 +38,10 @@ namespace PhysicsRunner
                 else if (args[i] == "--bench") bench = true;
             }
             if (bench) { Bench(); return 0; }
+            // ADR 0149: finger-in-the-loop evidence (touch drag gesture -> column -> physics), before/after CSVs + summary.
+            for (int i = 0; i < args.Length; i++)
+                if (args[i] == "--touch-evidence")
+                    return TouchEvidence.WriteAll(Path.GetFullPath(i + 1 < args.Length ? args[i + 1] : Path.Combine(RepoPaths.Root, "artifacts", "steer-r2", "evidence"), RepoPaths.Root));
             string commit = GitSha();
             outDir ??= Path.Combine(RepoPaths.ArtifactsDir, DateTime.Now.ToString("yyyyMMdd-HHmmss"));
             outDir = Path.GetFullPath(outDir, RepoPaths.Root);
