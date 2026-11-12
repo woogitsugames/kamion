@@ -3,7 +3,7 @@
        synth road_roll_cab_loop           tonal  21.1%  f   2555 Hz  sweep  32.8 st  env ACF 0.21 @ 1.7 s
        synth wind_loop                    tonal  12.4%  f   1430 Hz  sweep  55.2 st  env ACF 0.15 @ 2.2 s
        synth wind_cab_loop                tonal  14.9%  f   2338 Hz  sweep  55.2 st  env ACF 0.17 @ 1.9 s
-SIREN? synth gear_whine_loop              tonal 100.0%  f    996 Hz  sweep  23.9 st  env ACF 0.00 @ 0.0 s
+       synth gear_whine_loop              tonal 100.0%  f    996 Hz  sweep  23.9 st  env ACF 0.00 @ 0.0 s
        synth tyre_wet_loop                tonal  18.0%  f   1641 Hz  sweep  54.7 st  env ACF 0.21 @ 1.6 s
        synth tyre_wet_cab_loop            tonal  18.6%  f   1020 Hz  sweep  54.1 st  env ACF 0.31 @ 1.6 s
        synth tyre_concrete_loop           tonal  11.2%  f   3199 Hz  sweep  55.2 st  env ACF 0.29 @ 1.6 s
@@ -26,9 +26,9 @@ SIREN? synth forklift_loop                tonal 100.0%  f    457 Hz  sweep  23.3
 SIREN? synth forklift_cab_loop            tonal 100.0%  f    457 Hz  sweep  23.3 st  env ACF 0.67 @ 5.6 s
        el    el_idle_clatter_loop         tonal  27.5%  f    809 Hz  sweep  52.9 st  env ACF 0.24 @ 3.5 s
        el    el_idle_clatter_cab_loop     tonal  29.0%  f    814 Hz  sweep  54.0 st  env ACF 0.26 @ 3.5 s
-SIREN? el    el_retarder_loop             tonal  57.5%  f    633 Hz  sweep  52.7 st  env ACF 0.33 @ 4.2 s
-SIREN? el    el_retarder_cab_loop         tonal  55.8%  f    633 Hz  sweep  52.6 st  env ACF 0.38 @ 4.2 s
-SIREN? el    el_gear_whine_cab_loop       tonal  37.9%  f   1078 Hz  sweep  51.4 st  env ACF 0.23 @ 3.3 s
+       el    el_retarder_loop             tonal  57.5%  f    633 Hz  sweep  52.7 st  env ACF 0.33 @ 4.2 s
+       el    el_retarder_cab_loop         tonal  55.8%  f    633 Hz  sweep  52.6 st  env ACF 0.38 @ 4.2 s
+       el    el_gear_whine_cab_loop       tonal  37.9%  f   1078 Hz  sweep  51.4 st  env ACF 0.23 @ 3.3 s
        el    el_compressor_loop           tonal  28.5%  f   2484 Hz  sweep  34.0 st  env ACF 0.17 @ 3.0 s
        el    el_compressor_cab_loop       tonal  29.5%  f   2496 Hz  sweep  41.2 st  env ACF 0.13 @ 2.2 s
        el    el_tyre_dry_cab_loop         tonal  30.0%  f   1172 Hz  sweep  49.8 st  env ACF 0.30 @ 4.6 s
@@ -38,14 +38,14 @@ SIREN? el    el_gear_whine_cab_loop       tonal  37.9%  f   1078 Hz  sweep  51.4
        el    el_tyre_concrete_cab_loop    tonal  17.9%  f   1658 Hz  sweep  43.7 st  env ACF 0.15 @ 3.3 s
        el    el_tyre_gravel_loop          tonal  17.6%  f   1670 Hz  sweep  55.2 st  env ACF 0.12 @ 3.5 s
        el    el_tyre_gravel_cab_loop      tonal  19.1%  f   2191 Hz  sweep  47.3 st  env ACF 0.13 @ 3.5 s
-SIREN? el    el_horn_loop                 tonal  99.3%  f    633 Hz  sweep  12.0 st  env ACF 0.30 @ 1.9 s
-SIREN? el    el_horn_cab_loop             tonal  99.3%  f    633 Hz  sweep  12.0 st  env ACF 0.26 @ 1.9 s
+       el    el_horn_loop                 tonal  99.3%  f    633 Hz  sweep  12.0 st  env ACF 0.30 @ 1.9 s
+       el    el_horn_cab_loop             tonal  99.3%  f    633 Hz  sweep  12.0 st  env ACF 0.26 @ 1.9 s
 SIREN? el    el_reverse_beeper_loop       tonal  69.4%  f   1266 Hz  sweep  12.1 st  env ACF 0.57 @ 2.1 s
 SIREN? el    el_reverse_beeper_cab_loop   tonal  69.4%  f   1266 Hz  sweep  12.1 st  env ACF 0.52 @ 2.1 s
        el    el_wind_cab_loop             tonal  23.1%  f   2156 Hz  sweep  50.8 st  env ACF 0.20 @ 5.6 s
        el    el_ambient_bed_loop          tonal  25.8%  f   2068 Hz  sweep  54.0 st  env ACF 0.09 @ 5.6 s
        el    el_ambient_bed_cab_loop      tonal  24.8%  f   2150 Hz  sweep  54.1 st  env ACF 0.08 @ 7.2 s
-SIREN? el    el_turbo_whine_loop          tonal  54.2%  f   1898 Hz  sweep  52.8 st  env ACF 0.20 @ 3.7 s
-SIREN? el    el_turbo_whine_cab_loop      tonal  57.5%  f   1887 Hz  sweep  52.8 st  env ACF 0.16 @ 3.7 s
+       el    el_turbo_whine_loop          tonal  54.2%  f   1898 Hz  sweep  52.8 st  env ACF 0.20 @ 3.7 s
+       el    el_turbo_whine_cab_loop      tonal  57.5%  f   1887 Hz  sweep  52.8 st  env ACF 0.16 @ 3.7 s
        el    el_turbo_rush_loop           tonal  18.0%  f   2836 Hz  sweep  54.0 st  env ACF 0.18 @ 2.5 s
        el    el_turbo_rush_cab_loop       tonal  19.3%  f   2812 Hz  sweep  54.0 st  env ACF 0.16 @ 2.5 s

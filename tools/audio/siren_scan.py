@@ -7,8 +7,8 @@ For every loop of the procedural set (main art-source/audio/generated) and the E
   - tonal salience track: per 50 ms frame the strongest peak 150-4000 Hz over the median spectrum (dB) and its frequency
   - pitch sweep: (p95 - p5) of that frequency in semitones where the peak is salient (> 12 dB)
   - periodicity of the tonal level envelope: max autocorrelation for lags 1.5-8 s (the loop wraps, circular ACF)
-A loop is flagged when it carries a salient tone (> 12 dB in > 30 % of frames) that sweeps > 3 semitones or whose level
-envelope repeats with ACF > 0.5 at a multi-second period. Output: artifacts/audio-fx/siren_scan.txt
+A loop is flagged when it carries a salient tone (> 12 dB in > 30 % of frames) whose level envelope repeats with
+ACF > 0.45 at a period >= 1.5 s (the sweep is reported, not used: in noisy loops the peak jumps between partials). Output: artifacts/audio-fx/siren_scan.txt
 """
 
 from __future__ import annotations
@@ -82,7 +82,8 @@ def main() -> None:
         if len(x) < 2 * FS:
             x = np.tile(x, int(math.ceil(2 * FS / len(x))) + 1)
         r = scan(np.tile(x, 2))  # two wraps: periods up to the loop length are visible
-        flag = r["tonal_share"] > 0.3 and (r["sweep_st"] > 3 or (r["env_acf"] > 0.5 and r["env_period_s"] >= 1.5))
+        # the peak-picked pitch jumps between partials in noisy loops, so the sweep alone is not a criterion
+        flag = r["tonal_share"] > 0.3 and r["env_acf"] > 0.45 and r["env_period_s"] >= 1.5
         lines.append(f"{'SIREN?' if flag else '      '} {setname:5s} {name:28s} tonal {100 * r['tonal_share']:5.1f}%  f {r['f_median']:6.0f} Hz  "
                      f"sweep {r['sweep_st']:5.1f} st  env ACF {r['env_acf']:.2f} @ {r['env_period_s']:.1f} s")
     out = ROOT / "artifacts" / "audio-fx" / "siren_scan.txt"
