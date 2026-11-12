@@ -50,3 +50,4 @@ Zapisano runoff-trails-044 High clear, kod wejściowy zgodny z fingerprintem. Na
 Krok 18: niezależna ocena trails-044 nie potwierdza jeszcze poprawy; zaleca pojedynczą próbę większego lokalnego kontrastu. W runoff-trails-088 podwojono tylko miejscowe ślady, bez zwiększenia cienkiego pasa przy szynie ani całego górnego pola. Pozostałe parametry, Low/High i geometria bez zmian. Następny krok: render-phase.ps1 -Stage runoff-trails-088 -Lighting overcast,clear -Cameras truck-side,truck-34r,truck-rear34, następnie porównania i ocena.
 Zapisano runoff-trails-088 Low overcast, kod wejściowy zgodny z fingerprintem. Następny krok: pomiary i oględziny par przed/po.
 Zapisano runoff-trails-088 Low clear, kod wejściowy zgodny z fingerprintem. Następny krok: pomiary i oględziny par przed/po.
+Zapisano runoff-trails-088 High overcast, kod wejściowy zgodny z fingerprintem. Następny krok: pomiary i oględziny par przed/po.
