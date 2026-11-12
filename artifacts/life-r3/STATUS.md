@@ -46,3 +46,5 @@ Krok 16: przygotowano review-focus.py do jawnie opisanych miniatur ≤960 px i s
 Krok 17: przyszłe importy mogą użyć PreparedVerified z proof utworzonym w tym samym heavy co World/testy. Tryb ponownie sprawdza wszystkie SHA źródeł, map, raw, fixtures i manifestu strumieniowo w PowerShell, po czym nadal nabywa slot Unity. Ogranicza dodatkowe kolejki krótkiego Pythona; bieżący proces 46468 nadal wykonuje dotychczasowy PreparedImport bez restartu. Następny krok: istniejący import/capture baseline; potem oględziny.
 
 Krok 18: candidate-build.ps1 zapisany, NIE uruchomiony. World → audyt GLB/192 raw → pięć pojedynczych plików testów → source-proof sekwencyjnie w jednym heavy, WIP po każdym etapie. Osobny tag chroni stare logi; pełny GIS nadal tylko na końcu rundy. Następny krok: ukończenie istniejącego 46468 i oględziny baseline, dopiero potem aplikacja/uruchomienie kandydata.
+
+Przed zmianą (2026-11-12T09:38:56.1022191+01:00): zapisz przerwany baseline przed zmianą r3 na etapie import. Następny krok według post-baseline.ps1; po capture obejrzeć kadry i dopiero zmienić produkcję.
