@@ -45,6 +45,11 @@ def test_lods_use_existing_material_budgets_and_have_vertical_axes(index):
         # The shaft's opposite vertices have the same centre at every paint seam.
         for z in d['band_boundaries_m'][:-1]:
             shell=V[np.isclose(V[:,2],z)]
+            radius=(d['base_d_m']+(d['top_d_m']-d['base_d_m'])*z/120)/2
+            # White rail tubes share the shaft material and may meet a paint
+            # seam. Their 3-sided cross-section is not a shaft axis sample.
+            shell=shell[np.linalg.norm(shell[:,:2],axis=1)<=radius+.001]
+            assert len(shell)>=12
             assert np.max(np.abs((shell[:,:2].min(0)+shell[:,:2].max(0))/2))<1e-8
     assert sum(len(p['T']) for p in lods[1])<sum(len(p['T']) for p in lods[0])
     assert sum(len(p['T']) for p in lods[0])<=700, 'No LOD0 growth versus the old 700-triangle chimney'
