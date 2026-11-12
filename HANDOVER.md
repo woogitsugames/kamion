@@ -1,3 +1,32 @@
+# HANDOVER — kamion, SESJA 15 (start 2026-11-12 20:25, nowe konto)
+
+## Stan na żywo (s15) — najświeższe: `artifacts/live/<gałąź>.md`
+- 20:28 usage: 5 h 0 % (reset 01:20), tydzień 24 %, **Fable 46 %** (reset 14.11 17:00) → agenci Fable s14 kontynuują na Fable. Dysk C: 590 → 647 GB wolnego. Watchdog żyje (pid 73848). PHONE_RUN brak.
+- Triggery CronCreate (sesja lidera): **:17** agenci/scalenia/HANDOVER, **:47** Mistral r3, **:07** GPT.
+- Sesja GPT (Codex) sprząta dysk: usuwa tylko worktree `gpt-*` (z kopią do `artifacts/_disk-rescue-2026-11-12`, ochrona zajętych i commitów < 2 h). Nasze worktree nietknięte.
+- 20:3x: worktree `mistral-r2-int` usunięty (scalone w s14 `fc500083`).
+- Agenci (wszyscy w tle, każdy nadpisuje live po kroku):
+| ADR | zadanie | model | worktree / gałąź | live | stan 20:35 |
+|---|---|---|---|---|---|
+| 0132 | zabudowa r9 r4 (decyzja B) | Fable | `buildings-r9` | `artifacts/live/buildings-r9.md` | czeka na `r4_chain` (PID 59260) |
+| 0136 r2 | GPU A16 G3-A (brakuje ~0,6 ms) + 0147 na A16; jedyny telefonowy | Opus | `a16-perf` | `artifacts/live/a16-perf.md` | vqa/testy w tle |
+| 0141 | krawędź/tło far_skyline | Fable | `edge-r6c` | `artifacts/live/edge-r6c.md` | łańcuch merged skończony → pary, ADR |
+| 0144 | węzły r7 | Fable | `junctions-r7` | `artifacts/live/junctions-r7.md` | chain r7c + pytest w tle |
+| 0146 | Putry/Andersa | Fable | `putry-andersa` | `artifacts/live/putry-andersa.md` | rendery + pytest w tle |
+| — | **Mistral r3 #15–#20** recenzja + integracja | Opus | `mistral-r3-int` | `artifacts/live/mistral-r3-int.md` | start 20:33 |
+| 0148 | **dźwięk jałowy / niskie obroty** (film właściciela z Folda 20:03) | Opus | `audio-idle` | `artifacts/live/audio-idle.md` | start 20:40 |
+| 0149 | **kierowanie r2: „ciężko, szybko traci się kontrolę”** (ten sam film) | Opus | `steer-r2` | `artifacts/live/steer-r2.md` | start 20:40 |
+- Film właściciela: `artifacts/owner-feedback/2026-11-12-fold-video/` (mp4, audio.wav, spec.png, contact.jpg). Obserwacje lidera: od 15 s (gaz puszczony, D9, ~900–1000 obr/min) widmo szumowe z trzepotaniem; stałe wycięcie ~110 Hz (podejrzenie filtra grzebieniowego); przy 34–38 km/h zjazd na wyspę z kreskowaniem.
+| 0150 | **mapa + minimapa + GPS** (polecenie właściciela 20:5x; zakres etapu 5 przyspieszony decyzją właściciela) | Opus | `gps-map` | `artifacts/live/gps-map.md` | start 20:55 |
+- **21:0x: SCALONE 0141 edge-r6c** `ca0bc16e0` (critic SCAL warunkowo, `REVIEW-2026-11-12-s15-0141.md`: 297817 PARTIAL→RECOGNISABLE, 150280 trafione). Dalej: r6d (gałąź `edge-r6d`, ten sam worktree `edge-r6c`): B-1 zdublowane edge-west, szara biel U-20/B-1, las przy kominach. Test głębi skyline na A16 → agent a16-perf (`artifacts/a16-perf/skyline-0141/`). Worktree edge-r6c usunąć po r6d.
+- Zygzak krawędzi zjazdu (film t≈17–19 s, przed bramownicą Warszawa/Ełk/Augustów) → dopisany do 0144 junctions-r7 (r7c albo r7d).
+- 21:5x: 0136 r2 (a16-perf @7ebb18cf1): r2e na A16 — żaden kandydat nie domyka (cull 100 m −0,17 ms, cienie 25 m/512 px w szumie); Low zostaje r2, GPU p95 34,0 vs 33,3 (brak ~0,7 ms). **Otwarte bez agenta: LOD1/LOD2 aut z 1–2 submeshami (world-builder)** — start, gdy zwolnią się sloty Unity. Agent czeka na `prep-r2f` (import Low z 0141 + EditMode po fixie MirrorCostTests + APK) → skyline 0141 na A16. Uwaga: lokalna niezacommitowana zmiana `gate3_cameras.json` w worktree a16-perf — nie commitować.
+- 21:5x usage: 5 h 38 %, tydzień 30 %, Fable 54 %. Mistral r3: #15 #16 #17 #18 #20 na gałęzi, #19 czeka na Unity (HudTextAllocTests).
+- **22:0x: SCALONE 0141 r6d** `3fbf7eee8` (jeden B-1 na jezdnię, biel 0,80 lin.; EditMode 423/423). Sprawdzenie lidera: duplikaty zniknęły; P2: dwa rzędy zapór nachodzą ~2 m w środku edge-west. Worktree edge-r6c usunięty. Otwarte: NMPT GUGiK dla wysokości lasu (P2), `test_report_not_stale` → `fidelity/run.py` w integracji.
+- **22:1x: SCALONE 0149 steer-r2** `34940850f` (przegląd lidera: `DragGain` ogranicza °/mm gestu przesuwu 24–60 km/h do 5×(60/v)², obrót/gyro bez zmian; runner 226/226, walidacja 112/112, EditMode 418/420 znane CarPaint). **APK do testu na Foldzie: `artifacts/steer-r2/kamion-0.1.0-113d72834f-dirty.apk`** (kod 113d72834; „dirty” = przywrócone ustawienia Rendering/ProjectSettings). Dalej **steer-r3** (ten sam worktree `steer-r2`, gałąź `steer-r3`, live `artifacts/live/steer-r3.md`): dryf przegubu/odchylenia przy prostych kołach (tarcie siodła μ 0,08 bez źródła), pasek AWAR. przechwytuje kciuk, a_lat/mm powyżej 60 km/h.
+- **Ostatni przydzielony ADR: 0150.**
+- Ścieżka bramki 3 bez zmian (patrz KONIEC S14 niżej).
+
 # HANDOVER — kamion, SESJA 14 (start 2026-11-12 18:22, nowe konto)
 
 ## KONIEC S14 (20:00, limit 5 h 79 %, tydzień 63 %, Fable ~90 %) — prompt dla s15: `docs/owner/START-PROMPT-S15.md`

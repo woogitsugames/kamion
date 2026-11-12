@@ -54,6 +54,18 @@ FORESHORTEN_SPAN_M = 520.0
 FORESHORTEN_TAU_M = 950.0
 
 SECTORS = ("far_north", "far_east", "far_south", "far_west")
+# ADR 0141 skyline node: the tall ring objects (and far stand-ins of landmark stacks that the region itself draws) live
+# in one extra mesh whose vertices carry a flag in TEXCOORD_1.x. Kamion/World Surface (_FAR_FACADE) keeps flagged
+# vertices just in front of the camera far plane instead of clipping them, so the Low tier (far clip 900 m) still shows
+# the EC chimneys and tower blocks from the middle of the tile. No new material, texture, keyword or vertex channel.
+# Flag encoding: ordinary far-field TEXCOORD_1.x is >= 0 (window bay index); a flagged vertex stores -(x + FLAG).
+# Unity packs TEXCOORD_1 as float16, so the offset stays small where the window grid needs its precision.
+SKYLINE = "far_skyline"
+SKYLINE_FLAG_CLAMP = 16.0      # visible at any distance (objects that exist only in the far-field ring)
+SKYLINE_FLAG_BEYOND = 4096.0   # visible only beyond the far plane (stand-in for an object the region draws itself)
+SKYLINE_MIN_BUILDING_H_M = 24.0   # WORKING_VALUE: >= 8 storeys reads above the tree line from >= 900 m (1.5 deg)
+SKYLINE_MIN_CHIMNEY_H_M = 40.0    # WORKING_VALUE
+SKYLINE_PROXY_MERGE_M = 25.0      # a ring chimney this close to a region landmark stack is the same object
 GIS_CACHE_SCHEMA = "far-field-gis-cache/11"
 
 # Linear RGB albedos calibrated to docs/06 §3 and streetscape/materials.py
@@ -799,8 +811,9 @@ def extract_ring_gis(region_id: str, ox: float, oy: float, half: float = 1024.0)
 class SectorBuilder:
     """Accumulates Submesh 0 (far_field_buildings) and Submesh 1 (forest_edge_mixed) for one sector."""
 
-    def __init__(self, name: str):
+    def __init__(self, name: str, uv1_flag: float = 0.0):
         self.name = name
+        self.uv1_flag = float(uv1_flag)   # ADR 0141: TEXCOORD_1.x of submesh 0 becomes -(x + flag); 0 = ordinary geometry
         self.v0, self.n0, self.uv0, self.uv1_0, self.col0, self.t0 = [], [], [], [], [], []
         self.count0 = 0
         self.v1, self.n1, self.uv1, self.t1 = [], [], [], []
@@ -824,6 +837,8 @@ class SectorBuilder:
             uv1_arr = np.full((4, 2), [0.0, -2.0], dtype=np.float64)
         else:
             uv1_arr = np.asarray(uv1, dtype=np.float64)
+        if self.uv1_flag:
+            uv1_arr = np.column_stack([-(np.maximum(uv1_arr[:, 0], 0.0) + self.uv1_flag), uv1_arr[:, 1]])
         c4 = np.tile(np.asarray(col_rgba, dtype=np.float64), (4, 1))
         n4 = np.tile(normal, (4, 1))
         base = self.count0
@@ -845,6 +860,8 @@ class SectorBuilder:
             normal = np.asarray(normal, dtype=np.float64)
         uv = va[:, :2].copy()
         uv1_arr = np.full((3, 2), [0.0, -2.0], dtype=np.float64) if uv1 is None else np.asarray(uv1, dtype=np.float64)
+        if self.uv1_flag:
+            uv1_arr = np.column_stack([-(np.maximum(uv1_arr[:, 0], 0.0) + self.uv1_flag), uv1_arr[:, 1]])
         c3 = np.tile(np.asarray(col_rgba, dtype=np.float64), (3, 1))
         n3 = np.tile(normal, (3, 1))
         base = self.count0
@@ -900,6 +917,21 @@ class SectorBuilder:
         self.uv1.append(UV)
         self.t1.append(np.asarray(tris, dtype=np.int64))
         self.count1 += 2 * k
+
+    def sort_far_to_near(self):
+        """ADR 0141: beyond the far plane the skyline shares (almost) one depth, so the index order decides what is
+        in front. Order the faces by distance from the tile centre, farthest first (stable, deterministic)."""
+        if self.count0 == 0:
+            return
+        order = sorted(range(len(self.v0)), key=lambda i: -float(np.hypot(*self.v0[i][:, :2].mean(axis=0))))
+        base = 0
+        tris = []
+        for i in order:
+            tris.append(self.t0[i] - int(self.t0[i].min()) + base)
+            base += len(self.v0[i])
+        for name in ("v0", "n0", "uv0", "uv1_0", "col0"):
+            setattr(self, name, [getattr(self, name)[i] for i in order])
+        self.t0 = tris
 
     def primitives(self) -> list[dict]:
         prims = []
@@ -1145,7 +1177,8 @@ def _hall_appearance_class(b: dict) -> str:
     return "other"
 
 
-def _add_building(sectors: dict[str, SectorBuilder], b: dict, elev: BorderElevation, half: float, tier: str, exclusion=None):
+def _add_building(sectors: dict[str, SectorBuilder], b: dict, elev: BorderElevation, half: float, tier: str, exclusion=None,
+                  skyline: SectorBuilder | None = None):
     rc = np.asarray(b["rect"], dtype=np.float64)
     if len(rc) < 4 or not building_outside_region(Polygon(rc), half, exclusion):
         return
@@ -1179,6 +1212,8 @@ def _add_building(sectors: dict[str, SectorBuilder], b: dict, elev: BorderElevat
     if not building_outside_region(Polygon(pts), half, exclusion):
         return
     sec = sectors[sector_of(ce, cn, half)]
+    if skyline is not None and h_raw >= SKYLINE_MIN_BUILDING_H_M and typ in ("block", "office", "hall"):
+        sec = skyline   # ADR 0141: same geometry, kept visible beyond the camera far plane
 
     z_ref = elev.z_at_eff(ce, cn)
     z_bot = z_ref - 0.8
@@ -1345,12 +1380,15 @@ def _add_building(sectors: dict[str, SectorBuilder], b: dict, elev: BorderElevat
                   (*roof_rgb, 0.0))
 
 
-def _add_chimney(sectors: dict[str, SectorBuilder], ch: dict, elev: BorderElevation, half: float, tier: str):
+def _add_chimney(sectors: dict[str, SectorBuilder], ch: dict, elev: BorderElevation, half: float, tier: str,
+                 skyline: SectorBuilder | None = None):
     e_raw, n_raw = float(ch["e"]), float(ch["n"])
     h_raw = float(ch["h"])
     ce, cn, d_raw, _ = foreshorten_point(e_raw, n_raw, half)
     _, s_h = foreshorten_scales(d_raw)
     sec = sectors[sector_of(ce, cn, half)]
+    if skyline is not None and h_raw >= SKYLINE_MIN_CHIMNEY_H_M:
+        sec = skyline   # ADR 0141
     z_ref = elev.z_at_eff(ce, cn)
     z_bot = z_ref - 1.0
     # Tall chimneys are key skyline landmarks (EC Białystok 113 m / 102 m, Fast/Bacieczki 73 m, etc.)
@@ -1385,6 +1423,78 @@ def _add_chimney(sectors: dict[str, SectorBuilder], ch: dict, elev: BorderElevat
             p11 = [ce + r1 * c1, cn + r1 * s1, z1]
             p01 = [ce + r1 * c0, cn + r1 * s0, z1]
             sec.add_quad0(p00, p10, p11, p01, (*col, 0.0))
+
+
+def region_landmark_stacks(region_id: str, ox: float, oy: float) -> list[dict]:
+    """Landmark chimneys the region itself draws (overrides.yaml kind=landmark; EC Bialystok, ADR 0116). Their hero
+    meshes end at the camera far plane, so the skyline carries a plain stand-in that is drawn only beyond it."""
+    import yaml
+
+    out = []
+    try:
+        ov = yaml.safe_load((pipeline.REGIONS / region_id / "overrides.yaml").read_text(encoding="utf-8")) or {}
+    except OSError:
+        return out
+    try:
+        cfg = json.loads((pipeline.REGIONS / region_id / "ec_chimneys.json").read_text(encoding="utf-8"))
+        stacks = cfg.get("stacks", {}) if cfg.get("enabled") is True else {}
+    except (OSError, ValueError):
+        stacks = {}
+
+    def walk(node):
+        if isinstance(node, dict):
+            if node.get("kind") == "landmark" and "epsg2180" in node and "height_m" in node:
+                yield node
+            for v in node.values():
+                yield from walk(v)
+        elif isinstance(node, list):
+            for v in node:
+                yield from walk(v)
+
+    for o in walk(ov):
+        st = stacks.get(str(o.get("osm_way")), {})
+        h = float(st.get("height_m", o["height_m"]))
+        bounds = [float(x) for x in st.get("band_boundaries_m", [])]
+        if len(bounds) < 2:
+            bounds = [round(h * f, 2) for f in (0.72, 0.79, 0.86, 0.93, 1.0)]   # generic top marking, as _add_chimney
+        out.append({
+            "id": str(o["id"]),
+            "e": float(o["epsg2180"][0]) - ox,
+            "n": float(o["epsg2180"][1]) - oy,
+            "h": h,
+            "base_d": float(st.get("base_d_m", o.get("base_d_m", 7.5))),
+            "top_d": float(st.get("top_d_m", o.get("top_d_m", 4.5))),
+            "band_boundaries": bounds,
+        })
+    return out
+
+
+def _add_landmark_stack_proxy(skyline: SectorBuilder, st: dict, elev: BorderElevation, tier: str):
+    """Plain banded cone with the stack's source height, diameters and band limits, flagged BEYOND: the vertex shader
+    clips it wherever the hero mesh is inside the far plane, so the two never overlap."""
+    ce, cn, h = st["e"], st["n"], st["h"]
+    z_ref = elev.z_at_eff(ce, cn)
+    sides = 8 if tier == "High" else 6
+    cs = [(math.cos(2.0 * math.pi * k / sides), math.sin(2.0 * math.pi * k / sides)) for k in range(sides)]
+    limits = [0.0] + list(st["band_boundaries"])
+    prev = skyline.uv1_flag
+    skyline.uv1_flag = SKYLINE_FLAG_BEYOND
+    try:
+        for i in range(len(limits) - 1):
+            z0h, z1h = limits[i], limits[i + 1]
+            # Bare concrete shaft, then alternating red / white bands starting with red (ec_chimneys.json limits).
+            col = COL_CHIMNEY_CONCRETE if i == 0 else (COL_CHIMNEY_RED if i % 2 == 1 else COL_CHIMNEY_WHITE)
+            r0 = 0.5 * (st["base_d"] + (st["top_d"] - st["base_d"]) * z0h / h)
+            r1 = 0.5 * (st["base_d"] + (st["top_d"] - st["base_d"]) * z1h / h)
+            z0 = z_ref - 1.0 if i == 0 else z_ref + z0h
+            z1 = z_ref + z1h
+            for k in range(sides):
+                c0, s0 = cs[k]
+                c1, s1 = cs[(k + 1) % sides]
+                skyline.add_quad0([ce + r0 * c0, cn + r0 * s0, z0], [ce + r0 * c1, cn + r0 * s1, z0],
+                                  [ce + r1 * c1, cn + r1 * s1, z1], [ce + r1 * c0, cn + r1 * s0, z1], (*col, 0.0))
+    finally:
+        skyline.uv1_flag = prev
 
 
 def _add_pylon(sectors: dict[str, SectorBuilder], py: dict, elev: BorderElevation, half: float, tier: str, yaw: float = 0.0):
@@ -1522,18 +1632,25 @@ def build_far_field(region_id: str, out_root: Path | None = None) -> dict:
 
     all_materials = {**SM.M, **FH.materials()}
     qa_tiers = {}
+    landmark_stacks = region_landmark_stacks(region_id, ox, oy)
 
     for tier, fn, compact in (("High", "far_field.glb", False), ("Low", "far_field.low.glb", True)):
         sectors = {name: SectorBuilder(name) for name in SECTORS}
+        skyline = SectorBuilder(SKYLINE, uv1_flag=SKYLINE_FLAG_CLAMP)
 
         for f in gis["forests"] + _corridor_treelines(half):
             _add_forest_stand(sectors, f["coords"], f.get("mix", "mixed"), elev, half, tier)
 
         for b in gis["buildings"]:
-            _add_building(sectors, b, elev, half, tier, exclusion=building_exclusion)
+            _add_building(sectors, b, elev, half, tier, exclusion=building_exclusion, skyline=skyline)
 
         for ch in gis["chimneys"]:
-            _add_chimney(sectors, ch, elev, half, tier)
+            if any(math.hypot(ch["e"] - st["e"], ch["n"] - st["n"]) < SKYLINE_PROXY_MERGE_M for st in landmark_stacks):
+                continue   # the region draws this stack (hero mesh); the skyline carries its far stand-in
+            _add_chimney(sectors, ch, elev, half, tier, skyline=skyline)
+        for st in landmark_stacks:
+            _add_landmark_stack_proxy(skyline, st, elev, tier)
+        skyline.sort_far_to_near()
 
         for py in gis["pylons"]:
             _add_pylon(sectors, py, elev, half, tier, yaw=float(py.get("yaw", 0.4)))
@@ -1557,6 +1674,12 @@ def build_far_field(region_id: str, out_root: Path | None = None) -> dict:
                 "by_material": {p["mat"]: int(len(p["T"])) for p in prims},
             }
             glb.add_mesh(name, prims, {"layer": "far_field", "sector": name, "tier": tier})
+        sky_prims = skyline.primitives()
+        sky_tris = int(sum(len(p["T"]) for p in sky_prims))
+        total_tris += sky_tris
+        total_verts += int(sum(len(p["V"]) for p in sky_prims))
+        if sky_prims:
+            glb.add_mesh(SKYLINE, sky_prims, {"layer": "far_field", "sector": SKYLINE, "tier": tier})
 
         data = glb.bytes({
             "region": region_id,
@@ -1575,6 +1698,14 @@ def build_far_field(region_id: str, out_root: Path | None = None) -> dict:
             "total_triangles": total_tris,
             "total_vertices": total_verts,
             "sectors": sector_stats,
+            "skyline": {
+                "node": SKYLINE,
+                "submeshes": len(sky_prims),
+                "triangles": sky_tris,
+                "landmark_stack_proxies": [st["id"] for st in landmark_stacks],
+                "min_building_h_m": SKYLINE_MIN_BUILDING_H_M,
+                "min_chimney_h_m": SKYLINE_MIN_CHIMNEY_H_M,
+            },
         }
 
     # Write apron JSON (border height profile for WorldEdgeBuilder)

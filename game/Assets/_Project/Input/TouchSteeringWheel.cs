@@ -143,7 +143,10 @@ namespace Game.Controls
         public void Sample(float dt, in VehicleFeedback fb, ref DriverIntent intent)
         {
             float lockDeg = fb.HandwheelLockDeg > 0f ? fb.HandwheelLockDeg : Feel.fallbackLockDeg;
-            LastGain = SpeedSensitive ? Feel.WheelGain(fb.ForwardSpeed * 3.6f, HalfRangeDeg, lockDeg, HighSpeedScreenToHandwheel) : 1f;
+            float kmh = fb.ForwardSpeed * 3.6f;
+            LastGain = !SpeedSensitive ? 1f
+                : Grab == WheelGrab.Drag ? Feel.DragGain(kmh, HalfRangeDeg, lockDeg, HighSpeedScreenToHandwheel) // ADR 0149
+                : Feel.WheelGain(kmh, HalfRangeDeg, lockDeg, HighSpeedScreenToHandwheel);
             Output = Target(WheelDeg, LastGain);
             intent.Steer = Output;
             intent.SteerActive = true;

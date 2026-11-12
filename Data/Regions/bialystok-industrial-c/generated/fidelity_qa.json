@@ -1230,28 +1230,28 @@
   "osm_drivable_ways_in_tile": 553
  },
  "inputs_sha256": {
-  "overrides.yaml": "a2015aa4fcb7dc953d1a8956f93a252777c9997a4b0d124fcf51ff19cdd65902",
+  "overrides.yaml": "4c3100109444c2bc32ea13640e102cd738ff7998ce8e2af01cdcec45639d4298",
   "roads.graph.json": "a18a4ceab78f91d41516eaef33122521a083d3f150ce3a3bff915f564431984f",
   "route_start.json": "82501495eef51d93bd92b13de8edb7a9c40b74809262ef6e37b54a8702931600",
   "tools/worldgen/roads/__init__.py": "0c26fa3038394a956286b47576ce1d6a0725f8dc0a2e7682901a055d264a6e40",
   "tools/worldgen/roads/aprons.py": "790b409e810cb5a80c9d2525eb34c80e994b9d7dc229ccb18983ee6a18736729",
   "tools/worldgen/roads/authored_paint.py": "e93fe9fbe14978adb222deca064bcb01c43b6550a122e713a3be0ac7625248a4",
-  "tools/worldgen/roads/build_world.py": "2e07cbe564d6881567dcd45594e7b8eef01e7dd873d043aa6af78dad1b64e31a",
+  "tools/worldgen/roads/build_world.py": "673fdef6bd2f336bdce84c1a0190250a052da6e8f4dfb322cef70d53b34a37aa",
   "tools/worldgen/roads/consistency.py": "3fc1fe60e0680a728e7bee551f609520a4b54a962bf872d4c02314287fb0e7db",
   "tools/worldgen/roads/context.py": "90f3a943cc21d0be5c46f4346c01c02dfa52ef7abb3d850c0fbe20f31fe37aa2",
   "tools/worldgen/roads/decals.py": "2e3a058461a0554b1213496a4a8e41272e483cf470182e079de7600e206784fd",
   "tools/worldgen/roads/geom.py": "8f9f732d90273b92cf23f00f65c6a2c7eed6d1f9a0b3cc211679a908f2788e21",
-  "tools/worldgen/roads/gores.py": "65f88ccd5794b0f1eaa77d12fe2297d36ca1a4a172339405b78bc5a82abb4aba",
+  "tools/worldgen/roads/gores.py": "77ee7089c6d85dc593ec8258db48487327b07c5e4d1b24dcedc512403955cb06",
   "tools/worldgen/roads/junctions.py": "1a883a6f7ed26d16c060c421efeec1022fb60206441fc999b572b2d07e0eb997",
   "tools/worldgen/roads/markings.py": "40d90c97314afc44677cdf80dce48140240fec3062949adffb974b63a7a8a8f1",
-  "tools/worldgen/roads/meshing.py": "7bfc7c5fedf715887a4490cf314e0ce6e455720481371675371ab91dd9782aad",
-  "tools/worldgen/roads/network.py": "65c7bca8cfa2eb04916b3dec1203eb3009a2a4fbcdcffcb753e253218ae6192c",
+  "tools/worldgen/roads/meshing.py": "834f6a91ab1fad15b1afd6aee2c7d9dc6cec8cd0606b7a7bd2ca02c3708e7448",
+  "tools/worldgen/roads/network.py": "b5fb2a949a242d14424f0e1760a0ffc6779acae30e71528e39b0521bda563f04",
   "tools/worldgen/roads/p21_hatch.py": "f6d6fedc2efd1ae6bb8acb390ac44e8a50ccff02b6c6b7dba5d30029d2e2bddb",
   "tools/worldgen/roads/pipeline.py": "860b538a8725c7ea24663b3f3123a0fe9c7d68ff6a5f36a79db00940e1d92aae",
   "tools/worldgen/roads/profile.py": "6074c694f878f886457c4fad28b2cf5979b2fcf7cebf5dadb07086b1a885a756",
   "tools/worldgen/roads/qa_ortho.py": "6e32d52950954922afceae3ee2f0aa379b8d42467c2d294b7e951750d39f3e6b",
   "tools/worldgen/roads/route.py": "909e2f61e3353083c8d55ceca15fc9d65dfd9157e63aac2c027da74ded5d6b02",
-  "tools/worldgen/roads/standards.py": "298401ad16c15a59ae3bedaf907541de012f02385e4f1cdf90f26c41b5d2a078",
+  "tools/worldgen/roads/standards.py": "bffe234c4b2a6b5f6d26e3ff3226a254a0d4c2379959b974b5197675e2966959",
   "tools/worldgen/roads/through_lines.py": "be22b6b67118b50577e67ae1520287dcd5831b39400e7f2b805fde1b6e2795c5"
  },
  "lane_into_island": [
@@ -8087,7 +8087,7 @@
      "area_m2": 225.6,
      "half_width_m": 2.8,
      "ortho_green_frac": 0.129,
-     "ortho_road_frac": 0.171,
+     "ortho_road_frac": 0.086,
      "route_dist_m": 8.1,
      "verdict": "present",
      "xy": [
@@ -8328,8 +8328,8 @@
    "id": "10_rondo_putry",
    "iou": {
     "gen_m2": 16596.7,
-    "iou": 0.715,
-    "ortho_m2": 16763.6
+    "iou": 0.716,
+    "ortho_m2": 16744.5
    },
    "lane_into_island": [],
    "name": "Rondo Putry (dwupoziomowe)",
@@ -8705,7 +8705,7 @@
      "area_m2": 582.3,
      "half_width_m": 2.76,
      "ortho_green_frac": 0.004,
-     "ortho_road_frac": 0.448,
+     "ortho_road_frac": 0.435,
      "route_dist_m": 8.0,
      "verdict": "partial",
      "xy": [
@@ -8766,8 +8766,8 @@
    "id": "11_dk8",
    "iou": {
     "gen_m2": 5359.8,
-    "iou": 0.667,
-    "ortho_m2": 6945.8
+    "iou": 0.668,
+    "ortho_m2": 6930.6
    },
    "lane_into_island": [],
    "name": "DK8/DK19 za Rondem Putry (s 1780-1950)",
@@ -8844,8 +8844,8 @@
     "07_s1270": 0.843,
     "08_signals": 0.824,
     "09_s1600": 0.765,
-    "10_rondo_putry": 0.715,
-    "11_dk8": 0.667
+    "10_rondo_putry": 0.716,
+    "11_dk8": 0.668
    },
    "stop_lines_checked": 16,
    "stop_lines_not_on_ortho": 12
