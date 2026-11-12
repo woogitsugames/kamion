@@ -112,3 +112,9 @@ Kolizja, teren, budynki i reszta materiałów pomostowych nie są wyłączone z 
 roads_qa i125468 instancji poza dwoma nowymi EC identyczne. To nie jest deklaracja
 identycznych pełnych chunków po zmianie materiału/koloru; pełne SHA zmieniają się.
 Budżety kamer, ocena PNG i pełne testy końca rundy pozostają do wykonania.
+
+Oględziny finalnego after-corrected: wszystkie32 arkusze/244 pary przejrzane.
+W natywnych wycinkach fazy mają tę samą farbę, ukośny czworokąt zniknął;
+faktura i ciemniejsza stopa pozostały. P1/P2 skorygowane, fotograficzny wynik PARTIAL
+(do niezależnej recenzji, m.in. lokalizacja istniejącego kolektora/rury spustowej).
+Low draws+0 w122 pomiarach, tris całej sceny−0,3185..+0,3718%; brak telefonu.

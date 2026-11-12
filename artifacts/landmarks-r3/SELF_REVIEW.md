@@ -51,3 +51,12 @@ jedną musztardową farbę na całym filarze. Przywrócono pigment sprzed brązo
 wyłączono unpainted_chamfers oraz niepotwierdzoną plamę paint_blobs.
 Nie ma jeszcze PNG nowego wariantu: nie deklarować zamknięcia P1 ani P2.
 Collector/downpipe istnieją w generatorze; nie dodano drugiej rury bez pomiaru położenia.
+
+Finalne oględziny r3: wszystkie32 arkusze korekty obejrzane,244 pary/95 identycznych.
+Budżet Low122 pomiary PASS: mesh/inst draws+0, tris−0,3185..+0,3718%.
+Nowe galerie Low są widoczne od dołu; materiały EC nadal zbyt płaskie/szare, PARTIAL.
+Korekta filarów: szare fazy i ukośna plama zniknęły, całość musztardowa z kontrastem
+światła i zachowaną fakturą dołu. P1/P2 usunięte w kodzie i w obejrzanym renderze;
+nie zastępuje to niezależnej recenzji lidera ani kontroli lokalizacji downpipe.
+Runtime finalny: dwie osie0°, LOD po3 submeshe; nie prostowano kominów na podstawie obrazu.
+Końcowe GIS/physics/gate3 i EditMode uruchomiono z wymaganymi slotami, wyniki w toku.

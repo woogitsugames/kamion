@@ -79,3 +79,5 @@ Krok 17: audyt poprawionego wariantu gotowy. 7283 niepodpomostowe prymitywy zach
 Krok 17a: ADR0119 ma osobną sekcję r3 z korektą P1/P2 i zmierzonym -16 tris bez deklaracji wyniku nieobejrzanych PNG. Kontrola cache przed/po końcowymi testami obejmie także config i test podpomostu oraz hero_bridge.py, poza wszystkimi źródłami/assetami EC.
 
 Krok 18: obejrzano wszystkie 32 arkusze finalnej korekty, 244 pary / 95 PNG identycznych. Low: 122 pomiary, draw mesh i instanced +0, zmiana tris -0,3185% do +0,3718%, cały budżet PASS. Runtime obu kominów: oś 0 stopni, po 3 submeshe na obu LOD. Fazy i ukośna plama zniknęły; materiał kominów nadal zbyt płaski/szary względem zdjęcia, PARTIAL. Zapis finalnych własnych wyjść przed końcowym GIS/physics/gate3 i EditMode; model pozostaje zamrożony na czas testów.
+
+Krok 19: ADR0116/0119 i SELF_REVIEW uaktualnione o finalne obrazy, budżet i jawne ograniczenia. EditMode ma aktywny slot Unity gpt-landmarks; końcowy Python czeka na heavy gpt-landmarks-r3. Bez zmiany modelu podczas testów.
