@@ -1,0 +1,16 @@
+F....                                                                    [100%]
+================================== FAILURES ===================================
+_____ test_berberis_has_leaf_cover_instead_of_an_opaque_full_height_core ______
+
+    def test_berberis_has_leaf_cover_instead_of_an_opaque_full_height_core():
+        core, shell, sprig = plantings.hedge_mats('berberis_red')
+        parts = capture('berberis_red')
+        materials = {part[1] for part in parts}
+>       assert core not in materials, 'the flat opaque mass still fills the leaf gaps'
+E       AssertionError: the flat opaque mass still fills the leaf gaps
+E       assert 'hedge_berberis' not in {'hedge_berberis', 'hedge_shell_berberis', 'hedge_sprig_berberis'}
+
+tests\gis\test_berberis_0109_leaf_core.py:28: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/gis/test_berberis_0109_leaf_core.py::test_berberis_has_leaf_cover_instead_of_an_opaque_full_height_core
+1 failed, 4 passed in 0.66s
