@@ -77,3 +77,7 @@ Zawsze używać aktualnego skryptu C:/Users/matma/Documents/Claude/kamion/script
 Nie używać telefonu/adb, nie pushować, nie scalać do main, nie edytować innych dziedzin ani kodu Claude. Materiały wnętrza i lusterka to jedyny zakres. Zdjęcia z copyright/logo i ich pochodne panele pozostają lokalnie poza Git. Nie dublować wpisu Brown Leather w LICENSES. W robocopy do main mogą być prywatne referencje QA; nie są materiałem gry ani publiczną publikacją.
 
 Kopia artefaktów wykonana przy przekazaniu jest opisana w COPY-ON-STOP.json. Jeśli istniejący MaterialFine zakończy się później, jego nowszy receipt/log/wynik trzeba odczytać z worktree i ewentualnie skopiować przy wznowieniu. Nie ma automatycznej kolejnej rundy ani automatycznego uruchomienia Unity.
+
+## Końcowy zapis przy zatrzymaniu
+
+Kopia do main: 769 plików, FAILED 0, robocopy exit 1 (udane kopiowanie), 12 listopada 16:28. Końcowa kontrola procesu: 2026-11-12T16:29:36.1557191+01:00, status finished, root żywy: False. Pełne dane w handoff-final-state.json. Nie uruchomiono nowych buildów, testów ani renderów po poleceniu zatrzymania. Istniejącego zadania nie przerywano.
