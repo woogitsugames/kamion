@@ -44,7 +44,7 @@ def accessor(doc,binary,index):
     offset = view.get('byteOffset',0)+value.get('byteOffset',0)
     return np.frombuffer(binary,dtype,count=value['count']*width,offset=offset).reshape(value['count'],width)
 
-records = {}
+records,buffers = {},{}
 for path in sorted(world.glob('chunk_*.low.glb')):
     doc,binary = read_glb(path)
     parents = {child:i for i,node in enumerate(doc['nodes']) for child in node.get('children',[])}
@@ -63,7 +63,7 @@ for path in sorted(world.glob('chunk_*.low.glb')):
         digest.update(json.dumps(chain,sort_keys=True).encode())
         digest.update(json.dumps(manifest['origin_epsg2180'],sort_keys=True).encode())
         triangles,primitives = 0,[]
-        for primitive in doc['meshes'][node['mesh']]['primitives']:
+        for pi,primitive in enumerate(doc['meshes'][node['mesh']]['primitives']):
             if primitive.get('mode',4)!=4:
                 raise ValueError('Non-triangle collision primitive')
             position_accessor = doc['accessors'][primitive['attributes']['POSITION']]
@@ -75,7 +75,12 @@ for path in sorted(world.glob('chunk_*.low.glb')):
                 raise ValueError('Invalid collision positions/indices')
             material = doc['materials'][primitive['material']]['name']
             surface = materials.get(material,{}).get('surface')
-            metadata = dict(material=material,surface=surface,vertices=len(positions),triangles=indices.size//3)
+            prefix = path.stem.replace('.','_')+'__'+node['name']+'__'+str(pi)
+            position_key,index_key = prefix+'_positions',prefix+'_indices'
+            buffers[position_key] = positions.copy()
+            buffers[index_key] = indices.copy()
+            metadata = dict(material=material,surface=surface,vertices=len(positions),triangles=indices.size//3,
+                            position_array=position_key,index_array=index_key)
             digest.update(json.dumps(metadata,sort_keys=True).encode())
             digest.update(positions.tobytes())
             digest.update(indices.tobytes())
@@ -90,4 +95,5 @@ if len(records)!=64:
 result = dict(chunk_count=len(records),chunks=records,
     method='Exact decoded float32 positions, uint32 triangle indices, material/surface names, transform ancestry and region origin for road_collision and terrain_lod2. Includes referenced buffers as exported; conservative about vertex ordering. Not a hash of Unity files or a PhysX/runtime test.')
 (here/'collision-current.json').write_text(json.dumps(result,indent=2)+'\n',encoding='utf-8')
+np.savez_compressed(here/'collision-current.npz',**buffers)
 print('Collision input geometry digests:',len(records),'Low chunks')

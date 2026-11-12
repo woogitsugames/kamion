@@ -38,5 +38,6 @@ for path in sorted((ROOT/'Data/raw/derived/bialystok-industrial-c/world').glob('
     shutil.copyfile(path,instance_dest/path.name)
     report['instance_files'][path.name] = hashlib.sha256(path.read_bytes()).hexdigest()
 shutil.copyfile(HERE/'collision-current.json',dest/'collision-geometry.json')
+shutil.copyfile(HERE/'collision-current.npz',dest/'collision-geometry.npz')
 (dest/"sha256.json").write_text(json.dumps(report, indent=2)+"\n", encoding="utf-8")
 print("Snapshot", args.label, "files", len(files))
