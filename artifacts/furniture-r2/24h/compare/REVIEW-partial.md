@@ -38,3 +38,5 @@ Root obejrzał Low-clear01–10, wszystkie55 par. Bez oczywistej nowej regresji
 sylwetek, znikających obiektów ani halo tarcz. Drobne zużycie i mocowania są
 za małe do potwierdzenia wierności konstrukcyjnej. Rootłącznie165/330:całyLow.
 Low-clear przekazano niezależnemu reviewerowi. Trzy wariantyHigh jeszcze nieocenione.
+
+Niezależny reviewer zakończył Low-clear55/55. Łącznie165/330 (wszystkieLow) bez nowego widocznego blokera, bez halo/przypadkowej emisji i znikających mebli. Drobne zużycie nie potwierdza poprawy czytelności legendy. WszystkieHigh nadal otwarte, podobnie szczegóły mocowań, zdjęciowa zgodność konstrukcyjna, fotometria, okluzja, ruch/urządzenie/GPU.
