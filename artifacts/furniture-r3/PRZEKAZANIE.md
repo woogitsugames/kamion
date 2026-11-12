@@ -60,4 +60,10 @@ Kandydatura r4 jest tylko notatką w `24h/next-round-observations.md`: zakrzywio
 
 ## Końcowy potwierdzony stan
 
-W trakcie przygotowania przekazania oczekiwano wyłącznie na naturalny koniec już uruchomionego generatora i audytów. Wynik zostanie dopisany przed końcową odpowiedzią.
+Potwierdzono 12 listopada około 16:29: generator after3 zakończył się poprawnie w **644,4 s**, eksportując **64 GLB, 479 MiB High / 150 MiB Low**, bez `fallback=True`. Audyt chronionej geometrii: **6833 → 6833, zero zmian**. Audyt instancji: **64 JSON, 23 wiaty, dokładnie 2 czerwone warianty**, zero zmian znormalizowanych multizbiorów; wszystkie pozostałe pola wiat zachowane.
+
+Produkty własnej dziedziny i dowody zapisano w commicie **`816d1c55f`**. Cofnięto wyłącznie uboczne produkty far-field/wiaduktu oraz ustawienia Unity poza zakresem. Własne źródła, manifest, streetscape QA i street_props zachowano w WIP. Pliki pośrednie świata pozostają na dysku worktree w `Data/raw/derived`; nie usuwano worktree ani cache.
+
+Wszystkie trzy sesje producenta/odbiorców są terminalne. **Brak własnych aktywnych slotów Unity/heavy i procesów tej kolejki.** `candidate3b-chain.log` potwierdza zwolnienie heavy, a następnie komunikat STOP przed jakimkolwiek nowym Unity. Parent zwrócił exit1 z historycznym tekstem „Candidate3 import failed”, ponieważ helper zakończył się umyślnym kodem 75. **Import nie został uruchomiony; generator nie zawiódł.** Odbiorcy arkuszy/fotokamer zakończyli się po wykryciu brakujących renderów, bez uruchamiania kolejnych zadań. Dowód: `24h/safe-stop-proof.json`.
+
+Pierwsza kopia artifacts do main objęła 1319 plików / 3,266 GiB, robocopy exit1 (sukces kopiowania). Po dopisaniu końcowego stanu wykonano synchronizację uzupełniającą; jej wynik jest w `24h/final-copy-proof.json`. **Nie utworzono REPORT.md ani oznaczenia gotowości r3 do integracji.** WIP pozostaje lokalnie na `gpt-furniture-r3`; bez push i merge do main. Dalsza praca jest wstrzymana na polecenie właściciela.
