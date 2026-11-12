@@ -1,5 +1,5 @@
 param(
-    [Parameter(Mandatory)][ValidateSet('PrepareControls','ComposeControls','TestFile','Fidelity','FinalGis')][string]$Task,
+    [Parameter(Mandatory)][ValidateSet('PrepareControls','ComposeControls','TestFile','Audit','Fidelity','FinalGis')][string]$Task,
     [string]$TestFile,
     [switch]$EndOfRound
 )
@@ -27,6 +27,7 @@ try {
             PrepareControls {uv run --project tools/refs python artifacts/sbs-r4/make-controlled-probes.py}
             ComposeControls {uv run --project tools/refs python artifacts/sbs-r4/compose-controlled.py}
             TestFile {uv run --project tools/worldgen python -m pytest $TestFile -q}
+            Audit {uv run --project tools/refs python artifacts/sbs-r4/audit_baseline.py}
             Fidelity {uv run --project tools/worldgen python tools/worldgen/fidelity/run.py --region bialystok-industrial-c --art artifacts/sbs-r4/fidelity}
             FinalGis {uv run --project tools/worldgen python -m pytest tests/gis -q}
         }
