@@ -50,6 +50,13 @@ namespace Game.Tests
                 var after = night.CreateModel();
                 Assert.AreEqual(before.Exposure, after.Exposure);
                 Assert.AreEqual(before.HorizontalIlluminanceLux, after.HorizontalIlluminanceLux);
+                Assert.AreEqual(before.SunNormalIlluminanceLux, after.SunNormalIlluminanceLux);
+                Assert.AreEqual(before.SunColor, after.SunColor);
+                var shBefore = before.AmbientProbe(night.groundAlbedo, 24, night.ambientSkySaturation, night.lowSunAmbientCool);
+                var shAfter = after.AmbientProbe(night.groundAlbedo, 24, night.ambientSkySaturation, night.lowSunAmbientCool);
+                for (int channel = 0; channel < 3; channel++)
+                    for (int coefficient = 0; coefficient < 9; coefficient++)
+                        Assert.AreEqual(shBefore[channel, coefficient], shAfter[channel, coefficient], "sky appearance must not alter ambient SH");
                 var fog = before.HorizonColorExposed();
                 var display = WorldAtmosphere.DisplaySkyFog(night, fog);
                 Assert.Less(display.maxColorComponent, fog.maxColorComponent);
