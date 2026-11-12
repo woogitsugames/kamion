@@ -196,8 +196,9 @@ Shader "Kamion/Truck Exterior"
                         arch = max(arch, ring * A.w);
                     }
                     g = max(g, arch);
-                    // Vertical streaks / splatter (8 cm across, 0.7 m tall), faded to its mean below a pixel.
-                    float2 q = float2((lp.z + lp.x) * 12.0, h * 1.4);
+                    // Road splash breaks into short rearward-biased patches (~8 x 17 cm), not 0.7 m rain curtains.
+                    // Same two filtered noise evaluations; macro coverage still comes from the wheel/height model.
+                    float2 q = float2((lp.z + lp.x) * 12.0, h * 6.0 + lp.z * 1.8);
                     half fw = saturate(1.5 - 24.0 * max(fwidth(lp.z), fwidth(lp.x)));
                     half n = 0.65 * KNoise(q) + 0.35 * KNoise(q * 2.7 + 5.3);
                     g *= lerp(1.0, 0.55 + 0.9 * n, fw);
