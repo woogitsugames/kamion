@@ -50,7 +50,7 @@ Low 121.0 MB / High 263.1 MB world memory).
 
 - `streetscape_qa.json` `furniture.lamp_rows.dk8-putry-median-double-lamps`: placed 14 / 14, on deck consoles 11,
   ground columns 3, skipped on carriageway 0, rule lamps removed 23.
-- `tests/gis/test_lamp_rows.py` 4/4; `pytest tests/gis tests/gate3`: 825 passed, 1 xfailed (heavy slot, 17 min).
+- `tests/gis/test_lamp_rows.py` 4/4; `pytest tests/gis tests/gate3`: 825 passed, 1 xfailed (heavy slot, 17 min); EditMode 403/403.
 - SBS G3-B, Low, overcast + clear, 10 frames each (`artifacts/putry-deck/{before,after}/Low-*`, sheets
   `artifacts/putry-deck/pairs/*.jpg`; "before" = base main 29f5cf85, so deltas also contain unrelated main changes):
   instanced props draws per frame -7 .. +6 (494288: 88 -> 81; 209622 / 810525 / 810896: +6), instances -14 .. +1,

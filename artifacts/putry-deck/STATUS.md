@@ -15,3 +15,4 @@
 - step 8: pytest gis+gate3 825 passed 1 xfailed (17 min, heavy). import2 OK. Render after in progress.
 - step 9: after renders 20 frames + pairs/*.jpg; instanced draws delta -1..+6 per frame, instances -7..+1. NEXT: EditMode (unity slot), ADR Validation, visual-critic
 - step 10: ADR 0133 Validation + D51 filled. EditMode running (log artifacts/putry-deck/logs/editmode.log).
+- step 11 DONE: EditMode 403/403. Ready for lead: visual-critic on artifacts/putry-deck/pairs, then merge putry-deck. Open: SBS pose 494288 (curve), right strip.
