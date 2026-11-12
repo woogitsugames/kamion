@@ -48,11 +48,20 @@ Właściciel wygenerował 248 plików WAV (62 ID × 4 warianty, 48 kHz stereo 16
    Ustawienia importu: pętle ADPCM Compressed In Memory, jak ADR 0007, bo dekodowanie ~12 głosów na Helio G99 jest
    tanie. Zdarzenia jednorazowe: Vorbis q 0,7 Decompress On Load, czyli dekodowanie raz przy ładowaniu. Wszystko mono.
 
+9. **Kontrola krzyżowa z niezależną analizą GPT** (`artifacts/audio-el/COMPARE-GPT.md`). Obie analizy zgadzają się,
+   że **etykiety obrotów nie odpowiadają nagraniom**. Test drabiny R6 daje ≥ 3/6 harmonicznych przy obrotach z promptu
+   w 2 z 96 plików. Obie też nie widzą alarmów szwów. Ranking stabilności GPT zmienił źródło komórek kabina/bez
+   obciążenia 1200/1500: `CAB_OFF_1800 (3)` zamiast najmniej stabilnego `CAB_OFF_1200 (4)`. Zamiana zewnątrz/bez
+   obciążenia 1800/2100 na wybór GPT została odrzucona (brak linii do strojenia, `el_verify` FAIL). Zdarzenia: tak
+   samo jak GPT dla start zewn., klekotu i braku spool. Inaczej dla start kab., stopu, wastegate, hamulca wydechowego
+   i retardera (powody w tabeli: chime/tick z promptu, drabina 72,5 Hz do strojenia, flutter) — do odsłuchu
+   właściciela. Pozycje C–F do przegenerowania z analizy GPT: REGEN-01 R6.
+
 ## Konsekwencje
 - Przy 1800–2100 obr/min przestrojenie wynosi ×1,4–1,9, przy 600 ×0,68. Szum spalania zmienia wtedy barwę
   i to może być słychać. Prośba o pętle opisane słowami (bez liczb), gwizd jako pętlę, przejazd przez obroty
-  i stop z kabiny: `docs/owner/ELEVENLABS-REGEN-01.md` (40 generacji ≈ 8 000 kredytów).
-- Barwa skacze między komórkami z różnych nagrań: 13 źródeł na 24 komórki. Ocenić może tylko ucho właściciela.
+  i stop z kabiny, plus 4 pozycje C–F: `docs/owner/ELEVENLABS-REGEN-01.md` (56 generacji ≈ 11 200 kredytów).
+- Barwa skacze między komórkami z różnych nagrań: 14 źródeł na 24 komórki (sweep przez runtime: brak skoków na punktach siatki, wahania 100 ms ±2–4 dB to tekstura nagrań, `verify/sweep.png`). Ocenić może tylko ucho właściciela.
   Przejazd R4 z REGEN-01 da siatkę z jednego nagrania.
 - RAM (szacunek z liczby próbek): pętle ElevenLabs 10,0 M próbek → ADPCM (4 bit) ≈ 4,8 MB, zdarzenia 0,9 M próbek → PCM ≈ 1,7 MB. Oba zestawy są w bibliotece,
   aktywny jest jeden (Resources ładuje oba, ok. +6,5 MB). Do zmierzenia na A16 (PSS).

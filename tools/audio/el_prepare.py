@@ -43,7 +43,15 @@ SEAM_S = 0.040
 
 # ---------------------------------------------------------------------------------------------------------------
 # Authored choices (after reviewing artifacts/audio-el/analysis/sheets/*.png). None = automatic ranking.
-ENGINE_PICK: dict[tuple[str, str, int], str | None] = {}
+# Overrides after the cross-check with the independent GPT review (artifacts/audio-el/COMPARE-GPT.md): the two sources
+# it ranked least stable within their prompt ID (EXT_OFF_900 (4), CAB_OFF_1200 (4)) are replaced where a source it ranked
+# first/steady exists at a usable pitch; CAB_OFF_1200 (4) stays only where its high pitch (1426 rpm) is needed.
+ENGINE_PICK: dict[tuple[str, str, int], str | None] = {
+    # ext/off 1800-2100 keep EXT_OFF_900 (4): the GPT pick EXT_OFF_1200 (2) has no usable firing line (its 20-120 Hz line
+    # wanders 18.8 %, the strong 133 Hz line is ambiguous k=2/k=3) and failed el_verify pitch (> 4 %) when tried.
+    ("cab", "off", 1200): "ENG_CAB_OFF_1800 (3).wav",   # GPT: best of its ID; measured 1218 rpm
+    ("cab", "off", 1500): "ENG_CAB_OFF_1800 (3).wav",
+}
 EVENTS = {
     # name in game          : (source file, kind, target)  target = LUFS or "rel:<db>" relative to a synth clip
     "el_engine_start_ext": ("ENG_START_EXT (3).wav", "oneshot", -30.0),
@@ -186,6 +194,7 @@ def main() -> None:
                 pick = ENGINE_PICK.get((persp, layer, rpm))
                 if pick:
                     c = next(r for r in rows if r["file"] == pick)
+                    c = dict(c, span=(c["rpm_max"] - c["rpm_min"]) / c["rpm_med"])
                 else:
                     ranked = sorted(cands, key=lambda c: score(c, rpm) - (3 if prev and c["file"] == prev else 0), reverse=True)
                     c = ranked[0]

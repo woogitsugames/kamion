@@ -308,17 +308,17 @@
    "rpm": 1200,
    "layer": "off",
    "load": 0.0,
-   "rpm_exact": 1200.00094597269,
-   "cycles": 71,
-   "samples": 339879,
-   "source": "ENG_CAB_OFF_1200 (4).wav",
-   "source_rpm_measured": 1425.6680701770551,
-   "pitch_ratio": 0.8417113149091294,
-   "gain_db": 6.444935198475829,
+   "rpm_exact": 1199.997959233476,
+   "cycles": 60,
+   "samples": 290312,
+   "source": "ENG_CAB_OFF_1800 (3).wav",
+   "source_rpm_measured": 1217.7496068966334,
+   "pitch_ratio": 0.9854225798451322,
+   "gain_db": 6.225450163398197,
    "target_lufs": -31.238249396183658,
    "limit_db": 0.0,
-   "lufs": -31.23824939618363,
-   "source_prompt_id": "ENG_CAB_OFF_1200"
+   "lufs": -31.238249396183658,
+   "source_prompt_id": "ENG_CAB_OFF_1800"
   },
   {
    "name": "el_engine_cab_off_1500",
@@ -328,17 +328,17 @@
    "rpm": 1500,
    "layer": "off",
    "load": 0.0,
-   "rpm_exact": 1500.0022858013774,
-   "cycles": 71,
-   "samples": 271903,
-   "source": "ENG_CAB_OFF_1200 (4).wav",
-   "source_rpm_measured": 1425.6680701770551,
-   "pitch_ratio": 1.0521399175441242,
-   "gain_db": 6.317542424805488,
+   "rpm_exact": 1500.0013241864933,
+   "cycles": 60,
+   "samples": 232249,
+   "source": "ENG_CAB_OFF_1800 (3).wav",
+   "source_rpm_measured": 1217.7496068966334,
+   "pitch_ratio": 1.2317814070243576,
+   "gain_db": 6.307612907795765,
    "target_lufs": -30.861144144904237,
    "limit_db": 0.0,
-   "lufs": -30.86114414490419,
-   "source_prompt_id": "ENG_CAB_OFF_1200"
+   "lufs": -30.861144144904234,
+   "source_prompt_id": "ENG_CAB_OFF_1800"
   },
   {
    "name": "el_engine_cab_off_1800",
@@ -755,6 +755,13 @@
   "ENG_CAB_OFF_1200": {
    "id": "ENG_CAB_OFF_1200",
    "prompt": "Interior of a heavy truck cab, inline-six diesel engine heard through the floor, steady constant 1200 rpm with no load while coasting, quiet muffled low rumble, light mechanical ticking, no road noise, no revving, no pitch change, seamless loop, no music, no voices",
+   "duration": 6,
+   "influence": 70,
+   "loop": true
+  },
+  "ENG_CAB_OFF_1800": {
+   "id": "ENG_CAB_OFF_1800",
+   "prompt": "Interior of a heavy truck cab, inline-six diesel engine heard through the floor, steady constant 1800 rpm with no load while coasting, quiet muffled low rumble, light mechanical ticking, no road noise, no revving, no pitch change, seamless loop, no music, no voices",
    "duration": 6,
    "influence": 70,
    "loop": true

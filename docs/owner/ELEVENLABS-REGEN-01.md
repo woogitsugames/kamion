@@ -8,11 +8,11 @@ Analiza wszystkich 248 plików: `artifacts/audio-el/analysis/` (tabela `analysis
 - **Pętle silnika (A, 96 plików):** obroty są **stałe** w pliku (mediana wahania linii dominującej 9 % w oknach 1 s, czyli mniej więcej szum pomiaru; na spektrogramach są poziome linie, bez wkręcania). **ElevenLabs nie rozumie jednak liczby obrotów z promptu.** Dominująca linia w 67 plikach z wyraźnym tonem leży przy 36–72 Hz. Daje to ok. 700–1450 obr/min, mediana **933 obr/min**, i tak samo dla promptów 600 i 2100 obr/min. Korelacja „obroty w prompcie → obroty zmierzone” wynosi r = 0,24. Mediany zmierzone dla promptów 600/900/1200/1500/1800/2100: 876/928/953/960/1236/912 obr/min.
 - Gra i tak ich używa: brałem najlepsze stabilne pętle z całej puli danej perspektywy i obciążenia i przestroiłem je offline do 600…2100 obr/min. Przy 1800–2100 obr/min oznacza to podwyższenie tonu ×1,4–1,9, a przy 600 obniżenie ×0,68. Przy dużym przestrojeniu szum spalania też zmienia barwę (wyżej brzmi „cieniej”, niżej „mętniej”). Dlatego proszę o pętle wysokich obrotów i wolnego biegu jałowego **opisane słowami, bez liczb**.
 - **B:** `TURBO_SPOOL`: na spektrogramie nie ma rosnącego gwizdu (żadnej linii tonalnej 2–8 kHz), jest tylko narastający szum. Nie jest użyty. Gwizd zostaje z syntezy i jest sterowany doładowaniem z fizyki. Prośba R3 dotyczy stałego gwizdu jako pętli. Pozostałe pliki B są w grze: start zewn./kabina, stop, klekot, wastegate, hamulec wydechowy, retarder.
-- **C–G:** wszystkie pętle mają szew bez klika (skok < 1 × p99,9, z wyjątkiem `REVERSE_BEEPER_LOOP (4)`), nic nie jest przesterowane (0 próbek ≥ 0,999). Nie trzeba ich przegenerowywać; wpięcie w osobnym zadaniu.
+- **C–G:** wszystkie pętle mają szew bez klika (skok < 1 × p99,9, z wyjątkiem `REVERSE_BEEPER_LOOP (4)`), nic nie jest przesterowane (0 próbek ≥ 0,999). Niezależna analiza GPT wskazała 4 pozycje, w których żaden wariant nie ma pełnej sekwencji z promptu (R6 niżej). Porównanie ID po ID: `artifacts/audio-el/COMPARE-GPT.md`.
 
 ## Koszt
 
-Według `elevenlabs.io/pricing` (stan 2026-11-12) efekt dźwiękowy kosztuje **200 kredytów za generację**. `UNVERIFIED`: przy ręcznie ustawionym czasie licznik może liczyć za sekundę, sprawdź na koncie po pierwszej generacji. Ta lista to **10 promptów × 4 warianty = 40 generacji ≈ 8 000 kredytów** (1,3 % z 600 tys. miesięcznie).
+Według `elevenlabs.io/pricing` (stan 2026-11-12) efekt dźwiękowy kosztuje **200 kredytów za generację**. `UNVERIFIED`: przy ręcznie ustawionym czasie licznik może liczyć za sekundę, sprawdź na koncie po pierwszej generacji. Ta lista to **14 promptów × 4 warianty = 56 generacji ≈ 11 200 kredytów** (1,9 % z 600 tys. miesięcznie). Najpierw R1–R3 (silnik), potem reszta.
 
 ## Ustawienia (wszystkie poniżej, o ile nie napisano inaczej)
 | Ustawienie | Wartość |
@@ -88,6 +88,27 @@ Powód: dziś `ENG_STOP_CAB` to `ENG_STOP_EXT (3)` przepuszczony przez filtr kab
 **R5. `ENG_STOP_CAB`**
 ```
 Inside a heavy truck cab, the idling diesel engine is switched off, the cab shudders once and the engine runs down to silence, a soft dashboard click at the end, no music, no voices
+```
+
+## R6. Sekcje C–D–F: pozycje bez pełnej sekwencji (z analizy GPT, potwierdzone w metrykach)
+
+Ustawienia: Pętla **Wyłączona** (R6c **Włączona**), czas jak przy pozycji, wpływ **70 %**, 4 warianty.
+
+**R6a. `GEAR_UPSHIFT_CAB`** · 2,5 s · Powód: we wszystkich 4 wariantach po impulsach zmiany dźwięk spada niemal do ciszy, a silnik nie ciągnie dalej (GPT).
+```
+Inside a heavy truck cab while accelerating: the diesel engine drones steadily, then drops in pitch as the automated gearbox shifts up with a short pneumatic click and a soft clunk, and immediately keeps pulling at a lower engine speed until the end, engine audible the whole time, no music, no voices
+```
+**R6b. `BRAKE_SERVICE_HISS`** · 1 s · Powód: tylko v4 ma pasmo szumu > 2 kHz, ale z podwójną aktywnością i głośnym tłem (GPT); v1/v4 są przy −50 LUFS.
+```
+Single short sharp hiss of compressed air released from a heavy truck brake valve right after the brake pedal is let go, starts immediately, clean, nothing else, no music, no voices
+```
+**R6c. `CAB_WIPERS_LOOP`** · Pętla · 6 s · Powód: nierówny odstęp ruchów (~0,52 s w środku, ~0,79 s na granicy pętli; GPT).
+```
+Truck windscreen wipers sweeping at a perfectly even slow rhythm, exactly one sweep every second, rubber squeak on wet glass and soft motor hum, steady, seamless loop, no music, no voices
+```
+**R6d. `CAB_DOOR_OPEN`** · 2 s · Powód: główny impuls dopiero ok. 0,92 s, brak warstwy powietrza z zewnątrz (GPT).
+```
+Heavy truck cab door opened from inside: the metal latch clunks immediately at the start, the door swings open and outside air and distant traffic become audible, no music, no voices
 ```
 
 ## Co z nimi zrobię

@@ -8,3 +8,5 @@
   NASTEPNY KROK: pwsh scripts/unity-slot.ps1 -Acquire -Owner claude-audio-el ; import + testy PlayMode -Filter ElevenLabs
 - krok 4-5: ADR 0137, LICENSES (audio-elevenlabs-sfx-v3, Pro 99 USD), docs/owner/ELEVENLABS-REGEN-01.md (10 promptow x4), demo A/B artifacts/audio-el/demo/{el,synth}_{cab,ext}.mp3 (tools/audio/el_demo.py). Unity czeka na PHONE_RUN.
   NASTEPNY KROK: pwsh scripts/unity-slot.ps1 -Acquire -Owner claude-audio-el ; Unity -executeMethod Game.Editor.Audio.VehicleAudioImporter.ImportBatch ; pwsh scripts/test.ps1 -Platform PlayMode -Filter "ElevenLabsEngineAudioTests|AudioLayersTests"
+- krok 6: porownanie z analiza GPT -> artifacts/audio-el/COMPARE-GPT.md (tools/audio/el_rpmtest.py: drabina R6 przy rpm z promptu 2/96). Zmiana zrodel cab_off 1200/1500 -> CAB_OFF_1800 (3). REGEN-01 + R6 (4 pozycje C-F), 56 generacji.
+  NASTEPNY KROK: czekam na slot Unity (PHONE_RUN): import + testy PlayMode
