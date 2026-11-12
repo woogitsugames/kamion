@@ -12,9 +12,16 @@ namespace TruckSim.Audio
     public sealed class PerspectiveLoop
     {
         readonly AudioSource m_Ext, m_Cab;
-        readonly float m_CabFallbackGain;
+        float m_CabFallbackGain, m_ExtGain = 1f, m_CabGain = 1f;
 
-        public bool Valid { get; }
+        public bool Valid { get; private set; }
+
+        /// <summary>Clip currently on the exterior / cabin source (tests, diagnostics).</summary>
+        public AudioClip ExtClip => m_Ext.clip;
+        public AudioClip CabClip => m_Cab.clip;
+        /// <summary>Current output volume of the cabin source (tests).</summary>
+        public float CabVolume => m_Cab.volume;
+        public float ExtVolume => m_Ext.volume;
 
         public PerspectiveLoop(Transform parent, string name, AudioClip ext, AudioClip cab, Vector3 localPos,
             int priority, float cabFallbackGain = 0.5f)
@@ -52,6 +59,37 @@ namespace TruckSim.Audio
             return s;
         }
 
+        /// <summary>
+        /// Swaps the clips (sound-set switch in the settings, ADR 0142). Restarts both sources at a random offset; call only
+        /// on a change, never per frame. <paramref name="extGain"/> scales the exterior source (a cabin-only recording paired
+        /// with a procedural exterior). Without a cabin clip the exterior clip plays in the cab at the fallback gain.
+        /// </summary>
+        public void SetClips(AudioClip ext, AudioClip cab, float cabFallbackGain = 0.5f, float extGain = 1f)
+        {
+            Valid = ext != null;
+            m_CabFallbackGain = cab != null ? 1f : cabFallbackGain;
+            m_ExtGain = extGain;
+            Restart(m_Ext, ext);
+            Restart(m_Cab, cab != null ? cab : ext);
+        }
+
+        /// <summary>Per-perspective gain factors applied by <see cref="Set"/> (exterior source, cabin source).</summary>
+        public void SetMix(float ext, float cab)
+        {
+            m_ExtGain = ext;
+            m_CabGain = cab;
+        }
+
+        static void Restart(AudioSource s, AudioClip clip)
+        {
+            if (s.clip == clip) return;
+            s.Stop();
+            s.clip = clip;
+            if (clip == null) return;
+            s.Play();
+            s.time = Random.value * clip.length * 0.99f;
+        }
+
         /// <param name="gain">linear gain at the exterior (0 = silent).</param>
         /// <param name="pitch">playback pitch.</param>
         /// <param name="interior">0 = outside, 1 = cab.</param>
@@ -59,8 +97,8 @@ namespace TruckSim.Audio
         {
             if (!Valid) return;
             float a = interior * 1.5707964f;
-            m_Ext.volume = gain * Mathf.Cos(a);
-            m_Cab.volume = gain * m_CabFallbackGain * Mathf.Sin(a);
+            m_Ext.volume = gain * m_ExtGain * Mathf.Cos(a);
+            m_Cab.volume = gain * m_CabFallbackGain * m_CabGain * Mathf.Sin(a);
             m_Ext.pitch = pitch;
             m_Cab.pitch = pitch;
         }

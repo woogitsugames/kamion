@@ -57,6 +57,15 @@ namespace TruckSim.Audio
             m_PanPhase = Random.value * 6.28f;
         }
 
+        /// <summary>Bed loop of the active sound set (ADR 0142: ElevenLabs AMB_INDUSTRIAL_DAY or the procedural bed).</summary>
+        public void SetBed(VehicleAudioLibrary.PerspectivePair bed)
+        {
+            if (m_Bed != null && bed.IsValid) m_Bed.SetClips(bed.ext, bed.cab);
+        }
+
+        /// <summary>Exterior clip of the bed now playing (tests).</summary>
+        public AudioClip BedClip => m_Bed?.ExtClip;
+
         void Update()
         {
             if (!Ready) return;
