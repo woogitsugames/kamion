@@ -82,6 +82,9 @@ Zestaw 40 t (`laden40`), zmiana pasa 3,5 m na 4 s jazdy. Komenda:
 - **Margines wzmocnienia kciuka** (najmniejsze wzmocnienie, przy którym pętla kołysze; wyżej = łatwiej):
   30/35/40/45/50 km/h **4/3/3/4/4 → 5/5/5/5/6 mm/m**; 20 i 60 km/h bez zmian (6 i 8). Przed zmianą minimum całej
   skali leżało dokładnie w paśmie z nagrania.
+- **Koszt (uczciwie):** przy bardzo delikatnym kciuku auto reaguje wolniej — 35 km/h, 1/2/3 mm/m: przestrzał po zmianie
+  pasa 1,42/0,83/0,52 m → 1,82/1,12/0,82 m (`sweep35.png`). Ten sam ruch kciuka skręca o 37 % mniej, więc przy
+  30–45 km/h trzeba przesunąć kciuk ~1,6× dalej niż dotąd (tyle co przy 60 km/h w przeliczeniu na a_y).
 - Testy: `tools/physics-runner` **226/226** (w tym nowe `TouchSteeringTests` ×5), walidacja **112/112 scenariuszy,
   589 sprawdzeń**; EditMode `SteerFoldR2Tests` ×4 (krzywa 1/v², bez zmian < 24 i ≥ 60 km/h, obrót bez zmian, JSON).
 
