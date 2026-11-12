@@ -29,7 +29,8 @@ for condition in ('Low-clear', 'Low-overcast', 'High-clear', 'High-overcast'):
         max_route_tris_percent=max(r['total_tris_percent'] for r in selected),
         max_world_draw_delta=max(r['delta']['worldDraws'] for r in rows),
         max_instance_draw_delta=max(r['delta']['instanceDraws'] for r in rows),
-        route_over_budget=[r['camera'] for r in selected if r['total_draw_delta'] > 0 or r['total_tris_percent'] > 2])
+        route_over_budget=[r['camera'] for r in selected if r['delta']['worldDraws'] > 0
+                          or r['delta']['instanceDraws'] > 0 or r['total_tris_percent'] > 2])
 note = 'Exact integers for the existing CPU estimate contract. World uses post-capture SceneStats frustum; instances use render-time snapshot. No GPU or phone measurement.'
 (ROOT / f'{tag}-all-camera-budget.json').write_text(json.dumps(dict(note=note, conditions=result), indent=2), encoding='utf-8')
 (ROOT / f'{tag}-budget-summary.json').write_text(json.dumps(dict(note=note, conditions=summary), indent=2), encoding='utf-8')
