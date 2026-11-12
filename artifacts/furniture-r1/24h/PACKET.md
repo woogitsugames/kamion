@@ -1,4 +1,4 @@
-# Materiały do integracji rundy 1
+﻿# Materiały do integracji rundy 1
 
 Gałąź: `gpt-furniture-r1`. Zweryfikowany kod i zasoby: `7adbe982`.
 Późniejsze commity zapisują diagnostykę, referencje i wyniki testów.
@@ -71,10 +71,11 @@ nie zastępują pomiaru kosztu GPU na urządzeniu.
 
 Końcowy GIS: 509 passed, 1 xfailed, 1 failed w 599,84 s.
 Porażka: `test_road_fidelity.py::test_report_not_stale`. Niezmieniony od bazy
-raport fidelity_qa.json nie zgadza się z ośmioma hashami wejść spoza furniture.
+raport fidelity_qa.json nie zgadza się z siedmioma hashami wejść spoza furniture.
 Audyt `fidelity-input-audit.json` i `fidelity-baseline-audit.json` dowodzi,
 że wszystkie 23 wejścia oraz raport zachowały bloby Git z bazy sesji;
 normalizacja LF nie usuwa niezgodności. Nie poprawiano źródeł dróg ani
 overrides i nie aktualizowano samych hashy w celu uzyskania PASS.
 Wyniki physics/gate3 i końcowego EditMode należy odczytać z
 `closing-test-exits.json` i ich logów po zakończeniu bieżącej sekwencji.
+
