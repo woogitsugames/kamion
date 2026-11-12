@@ -11,12 +11,13 @@ phase = sys.argv[1] if len(sys.argv) > 1 else "before"
 out = root / "review" / f"pier-{phase}"
 out.mkdir(parents=True, exist_ok=True)
 rois = {"ochre_broad": [1544, 540, 1560, 590], "bare_chamfer": [1517, 540, 1527, 590],
-        "ochre_side": [1496, 540, 1505, 590], "mixed_face_band": [1496, 520, 1560, 590]}
+        "ochre_side": [1496, 540, 1505, 590], "mixed_face_band": [1496, 520, 1560, 590],
+        "ochre_lower": [1545, 674, 1560, 689]}
 rows = []
 for condition in ("Low-overcast", "Low-clear", "High-overcast", "High-clear"):
     with Image.open(root / phase / condition / "dk8-under-span.png") as source:
         image = source.convert("RGB")
-    image.crop((1490, 470, 1590, 680)).save(out / f"{condition}-column.png")
+    image.crop((1490, 470, 1590, 740)).save(out / f"{condition}-column.png")
     for name, box in rois.items():
         values = np.asarray(image.crop(box), dtype=float)
         y = values @ np.array([.2126, .7152, .0722])
