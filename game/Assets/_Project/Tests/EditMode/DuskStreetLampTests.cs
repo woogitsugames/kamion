@@ -45,8 +45,10 @@ namespace Game.Tests
             {
                 // Compare genuinely different input grades even after Night's factory defaults were selected.
                 night.skyDisplayGain = 1f; night.skyDisplayDesaturation = 0f;
+                night.dimColourDesaturation = 0f;
                 var before = night.CreateModel();
                 night.skyDisplayGain = 0.125f; night.skyDisplayDesaturation = 0.85f;
+                night.dimColourDesaturation = 0.65f;
                 var after = night.CreateModel();
                 Assert.AreEqual(before.Exposure, after.Exposure);
                 Assert.AreEqual(before.HorizontalIlluminanceLux, after.HorizontalIlluminanceLux);
