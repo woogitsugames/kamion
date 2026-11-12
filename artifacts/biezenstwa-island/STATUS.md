@@ -59,3 +59,8 @@
   `bash artifacts/biezenstwa-island/scripts/all.sh i2 > artifacts/biezenstwa-island/logs/i2_all.out 2>&1`
 - krok 10 (17:13): build i2 rc 0 na drzewie scalonym (main bedc52d1 + junctions-r6 61f8eda5), consistency 65 (= b5/i1), 64 GLB. W tle dalej all.sh i2 (PID 44241): fidelity/swept/pytest + import/SBS/EditMode.
   NASTĘPNY KROK: `tail -20 artifacts/biezenstwa-island/logs/i2_all.out` — po „all done”: pary, ADR Result, robocopy do main.
+- krok 11 (17:50): `all.sh i2` „all done” 17:45 na drzewie scalonym: fidelity p50 0,36 / p95 2,304, swept rc 0, pytest 849 passed 1 xfailed,
+  import rc 0 (64 chunki), EditMode 402/402, Low overcast draws max +3 / tris max +2,7 % vs b5 (zawiera zmiany main). Pary `pairs_i2/` (82),
+  ADR 0128 „Result” uzupełniony. Dowody skopiowane do main `artifacts/biezenstwa-island`.
+  NASTĘPNY KROK (lider): scalić po 0123; jeśli junctions-r6 doda commity wejściowe → `git merge junctions-r6` (generated → ours) +
+  `bash artifacts/biezenstwa-island/scripts/all.sh i3 > artifacts/biezenstwa-island/logs/i3_all.out 2>&1`. Decyzja: U-4a świat 2024 vs zdjęcia 2017–2019.

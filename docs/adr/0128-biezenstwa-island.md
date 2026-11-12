@@ -1,6 +1,6 @@
 # ADR 0128 — kerbed nose with the crossing landing and D-3 / D-6 at the northern slip of Rondo Bieżeństwa; U-4a on the Andersa island nose
 
-Status: implemented on branch `biezenstwa-island` (base `junctions-r6` 21aef33f, 2026-11-12); not merged. Gate 3 is NOT
+Status: implemented on branch `biezenstwa-island` (base `junctions-r6`, merged with `junctions-r6` 61f8eda5 and `main` bedc52d1 on 2026-11-12); not merged to main. Gate 3 is NOT
 re-judged here (visual-critic).
 Source: `docs/reports/visual/REVIEW-2026-11-11-s11-sbs-r1-D51.md` (#11: no D-3 / D-6, no crossing landing, "grass
 island"), `REVIEW-2026-11-12-s11-0125.md` (open blocker 2; P2: chevron board ~5 m off), owner decision D51.
@@ -36,7 +36,25 @@ Two different places were mixed under "island at the roundabout":
 
 ## Result
 
-RESULTS_PENDING
+Build i2 = this branch merged with `junctions-r6` 61f8eda5 and `main` bedc52d1 (2026-11-12, tree 0d412990); "before" =
+b5 (`junctions-r6` 21aef33f, before the main merge), so the deltas below also contain what main brought in.
+
+| Check | Result (measured) |
+|---|---|
+| `build_world` | rc 0, 64 GLB; `gate3_landmarks.stale == []`; D-6 and D-3 report `island: biezenstwa-n-slip-nose`, U-4a `island: n10015785253-island`, all `snapped_m 0.0`; road consistency 65 (b5: 65) |
+| Fidelity vs orthophoto | edge p50 0.36 m, p95 2.304 m, n 595 (b5: 0.36 / 2.304); `lane_into_island` 0 |
+| Swept path (gate-3 route) | rc 0; minima unchanged vs b5 class: G3-A wide tyre -0.10 m / prop 0.70 m, G3-B tyre -0.14 m / prop 0.86 m, RING-B tyre +1.56 m |
+| pytest `tests/gis tests/physics tests/gate3` | 849 passed, 1 xfailed (22 min) |
+| Unity import | rc 0, 64 chunks, Low 122.2 MB / High 264.3 MB |
+| EditMode | 402 / 402 passed |
+| Budget, Low overcast, 43 SBS cameras + control set | draws max +3 (381800: 366 -> 369), tris max +2.7 % vs b5; probe frame 457 -> 457 draws, 317k -> 320k tris (`logs/i2_stats_low_overcast_vs_b5.txt`); i1 alone (same base): draws max +1, tris max +0.3 % |
+| Frame 320326 with the probe pose | D-3 left and D-6 right of the landing on a kerbed nose under the viaduct, as on the photo (`pairs_i2/sbs-g3-a-p0128-320326319617139_low_*.jpg`, `pairs_i2/probe_i2_low_clear_960.jpg`). With the registered SBS pose both signs are still outside the frame (pose ~4 m off, see Findings) |
+| Frames 381800 / 837235 (U-4a) | board on the island nose of the 2024 orthophoto, on the correct side of the slip lane; it reads 18 / 39 m from the camera, on the 2017-2019 photos ~6.5 m (the island was longer then). Layout matches 2024, not the photo year |
+
+D51 self-assessment (layout / signs roughly like the photo; not a visual-critic verdict): blocker #11 (no D-3 / D-6, no
+landing, grass island) is closed for the probe pose. Remaining visible differences: the gravel part of the nose reads
+almost like the paving on Low (photo: gravel with weeds, clearly darker than the slabs), no tactile slab, no W-beam
+behind the nose, pier rows differ. No phone measurement.
 
 ## Not done / open
 
