@@ -1,0 +1,82 @@
+{
+  "jobs": [
+    {
+      "width": 2340,
+      "lighting": "clear",
+      "tier": "Low",
+      "output": "artifacts/light-r4/final-v1/Low-clear",
+      "lampProbe": true,
+      "rq": "rq_headlamps=0,rq_wet=0",
+      "scene": "WorldC",
+      "height": 1080,
+      "expectedHeadlamps": 1,
+      "verifyWetness": true,
+      "expectedWetness": 0
+    },
+    {
+      "width": 2340,
+      "lighting": "clear",
+      "tier": "High",
+      "output": "artifacts/light-r4/final-v1/High-clear",
+      "lampProbe": true,
+      "rq": "rq_headlamps=0,rq_wet=0",
+      "scene": "WorldC_High",
+      "height": 1080,
+      "expectedHeadlamps": 1,
+      "verifyWetness": true,
+      "expectedWetness": 0
+    },
+    {
+      "width": 2340,
+      "lighting": "overcast",
+      "tier": "Low",
+      "output": "artifacts/light-r4/final-v1/Low-overcast",
+      "lampProbe": true,
+      "rq": "rq_headlamps=0,rq_wet=0",
+      "scene": "WorldC",
+      "height": 1080,
+      "expectedHeadlamps": 1,
+      "verifyWetness": true,
+      "expectedWetness": 0
+    },
+    {
+      "width": 2340,
+      "lighting": "overcast",
+      "tier": "High",
+      "output": "artifacts/light-r4/final-v1/High-overcast",
+      "lampProbe": true,
+      "rq": "rq_headlamps=0,rq_wet=0",
+      "scene": "WorldC_High",
+      "height": 1080,
+      "expectedHeadlamps": 1,
+      "verifyWetness": true,
+      "expectedWetness": 0
+    },
+    {
+      "width": 2340,
+      "lighting": "night",
+      "tier": "Low",
+      "output": "artifacts/light-r4/final-v1/Low-night",
+      "lampProbe": true,
+      "rq": "rq_headlamps=0,rq_wet=0",
+      "scene": "WorldC",
+      "height": 1080,
+      "expectedHeadlamps": 1,
+      "verifyWetness": true,
+      "expectedWetness": 0
+    },
+    {
+      "width": 2340,
+      "lighting": "night",
+      "tier": "High",
+      "output": "artifacts/light-r4/final-v1/High-night",
+      "lampProbe": true,
+      "rq": "rq_headlamps=0,rq_wet=0",
+      "scene": "WorldC_High",
+      "height": 1080,
+      "expectedHeadlamps": 1,
+      "verifyWetness": true,
+      "expectedWetness": 0
+    }
+  ]
+}

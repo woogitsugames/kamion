@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="8" result="Passed" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-11-12 09:59:07Z" end-time="2026-11-12 09:59:09Z" duration="1,9795607">
+  <test-suite type="TestSuite" id="1000" name="Kamion" fullname="Kamion" runstate="Runnable" testcasecount="332" result="Passed" start-time="2026-11-12 09:59:07Z" end-time="2026-11-12 09:59:09Z" duration="1.979561" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1414" name="Game.Tests.EditMode.dll" fullname="C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-light/game/Library/ScriptAssemblies/Game.Tests.EditMode.dll" runstate="Runnable" testcasecount="332" result="Passed" start-time="2026-11-12 09:59:07Z" end-time="2026-11-12 09:59:09Z" duration="1.974776" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="56208" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1415" name="Game" fullname="Game" runstate="Runnable" testcasecount="332" result="Passed" start-time="2026-11-12 09:59:07Z" end-time="2026-11-12 09:59:09Z" duration="1.974023" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1416" name="Tests" fullname="Game.Tests" runstate="Runnable" testcasecount="332" result="Passed" start-time="2026-11-12 09:59:07Z" end-time="2026-11-12 09:59:09Z" duration="1.973540" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1068" name="DuskStreetLampTests" fullname="Game.Tests.DuskStreetLampTests" classname="Game.Tests.DuskStreetLampTests" runstate="Runnable" testcasecount="8" result="Passed" start-time="2026-11-12 09:59:07Z" end-time="2026-11-12 09:59:09Z" duration="1.969616" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1076" name="DuskExposure_FollowsTheTwilight_ScreenBrightnessContinuous" fullname="Game.Tests.DuskStreetLampTests.DuskExposure_FollowsTheTwilight_ScreenBrightnessContinuous" methodname="DuskExposure_FollowsTheTwilight_ScreenBrightnessContinuous" classname="Game.Tests.DuskStreetLampTests" runstate="Runnable" seed="1557673552" result="Passed" start-time="2026-11-12 09:59:07Z" end-time="2026-11-12 09:59:07Z" duration="0.187855" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1075" name="DuskPreset_IsCivilTwilight_LampsOn_PoolsReadOnTheRoad" fullname="Game.Tests.DuskStreetLampTests.DuskPreset_IsCivilTwilight_LampsOn_PoolsReadOnTheRoad" methodname="DuskPreset_IsCivilTwilight_LampsOn_PoolsReadOnTheRoad" classname="Game.Tests.DuskStreetLampTests" runstate="Runnable" seed="298510122" result="Passed" start-time="2026-11-12 09:59:07Z" end-time="2026-11-12 09:59:07Z" duration="0.266338" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1072" name="LegacyPresetsKeepTheirSkyAndFogPresentation" fullname="Game.Tests.DuskStreetLampTests.LegacyPresetsKeepTheirSkyAndFogPresentation" methodname="LegacyPresetsKeepTheirSkyAndFogPresentation" classname="Game.Tests.DuskStreetLampTests" runstate="Runnable" seed="1163269422" result="Passed" start-time="2026-11-12 09:59:07Z" end-time="2026-11-12 09:59:08Z" duration="0.533787" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1070" name="NightReflectionUsesMappedSkyButPreservesGroundRadiance" fullname="Game.Tests.DuskStreetLampTests.NightReflectionUsesMappedSkyButPreservesGroundRadiance" methodname="NightReflectionUsesMappedSkyButPreservesGroundRadiance" classname="Game.Tests.DuskStreetLampTests" runstate="Runnable" seed="1242719060" result="Passed" start-time="2026-11-12 09:59:08Z" end-time="2026-11-12 09:59:08Z" duration="0.177778" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1073" name="NightSeparatesDarkAmbientFromFixedLampPhotometryWithoutChangingDusk" fullname="Game.Tests.DuskStreetLampTests.NightSeparatesDarkAmbientFromFixedLampPhotometryWithoutChangingDusk" methodname="NightSeparatesDarkAmbientFromFixedLampPhotometryWithoutChangingDusk" classname="Game.Tests.DuskStreetLampTests" runstate="Runnable" seed="1665235898" result="Passed" start-time="2026-11-12 09:59:08Z" end-time="2026-11-12 09:59:09Z" duration="0.352297" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1071" name="NightSkyPresentationChangesFogColourWithoutChangingScenePhotometry" fullname="Game.Tests.DuskStreetLampTests.NightSkyPresentationChangesFogColourWithoutChangingScenePhotometry" methodname="NightSkyPresentationChangesFogColourWithoutChangingScenePhotometry" classname="Game.Tests.DuskStreetLampTests" runstate="Runnable" seed="1243804988" result="Passed" start-time="2026-11-12 09:59:09Z" end-time="2026-11-12 09:59:09Z" duration="0.354556" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1069" name="SerializedNightPresetKeepsReviewedPresentationFactoryValues" fullname="Game.Tests.DuskStreetLampTests.SerializedNightPresetKeepsReviewedPresentationFactoryValues" methodname="SerializedNightPresetKeepsReviewedPresentationFactoryValues" classname="Game.Tests.DuskStreetLampTests" runstate="Runnable" seed="20566434" result="Passed" start-time="2026-11-12 09:59:09Z" end-time="2026-11-12 09:59:09Z" duration="0.001747" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1074" name="TwilightFactor_IsOneAboveHalfDegree_MonotoneAndEndsAtCivilTwilight" fullname="Game.Tests.DuskStreetLampTests.TwilightFactor_IsOneAboveHalfDegree_MonotoneAndEndsAtCivilTwilight" methodname="TwilightFactor_IsOneAboveHalfDegree_MonotoneAndEndsAtCivilTwilight" classname="Game.Tests.DuskStreetLampTests" runstate="Runnable" seed="1929645796" result="Passed" start-time="2026-11-12 09:59:09Z" end-time="2026-11-12 09:59:09Z" duration="0.087606" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[Saving results to: C:/Users/matma/AppData/LocalLow/woogitsugames/Kamion\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

@@ -1,0 +1,9 @@
+== artifacts/buildings-r16/r1/High-overcast vs artifacts/buildings-r16/base/High-overcast: 67 cameras
+  MeshRenderer draws             30825 ->   30776 (-49); worst: trailer-34 997->1000 (+3), cab-mirrors-right 827->829 (+2), g3b-eye-s1482 447->449 (+2), cab-dash 786->787 (+1)
+  shadow draws (MeshRenderer)    23958 ->   23835 (-123); worst: biezenstwa-above 429->429 (+0), cab-dash 480->480 (+0), cab-driver 480->480 (+0), cab-gate 480->480 (+0)
+  instanced draws                28677 ->   28670 (-7); worst: r10_block_2 439->440 (+1), r10_block_3 457->458 (+1), biezenstwa-above 572->572 (+0), cab-dash 693->693 (+0)
+  instances                      46728 ->   46645 (-83); worst: truck-at-gate 680->690 (+10), truck-34r 907->915 (+8), r10_shed_1 913->920 (+7), truck-front 517->524 (+7)
+  mesh tris k                    39567 ->   39521 (-46); worst: g3b-eye-s1482 545->547 (+2), cab-mirror-front 1264->1265 (+1), cab-mirrors-right 1138->1139 (+1), cab-right 1156->1157 (+1)
+  instanced tris k                4683 ->    4679 (-4); worst: biezenstwa-above 70->70 (+0), cab-dash 76->76 (+0), cab-driver 77->77 (+0), cab-gate 74->74 (+0)
+  MeshRenderer + instanced     sum -56; worst: trailer-34 +3, cab-mirrors-right +2, g3b-eye-s1482 +2, r10_block_3 +2, cab-dash +1, cab-right +1
+                               best: edge-north -9, r10_fence_1 -9, r10_block_1 -6

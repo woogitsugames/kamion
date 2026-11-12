@@ -70,6 +70,7 @@ namespace Game.Rendering
             k_ClearCloudPhoto = Shader.PropertyToID("_KamionClearCloudPhoto"),
             k_ClearCloudTex = Shader.PropertyToID("_KamionClearCloudTex"),
             k_ClearCloudRotation = Shader.PropertyToID("_KamionClearCloudRotation"),
+            k_ClearCloudSourceLimits = Shader.PropertyToID("_KamionClearCloudSourceLimits"),
             k_LeafAmb = Shader.PropertyToID("_KamionLeafAmbient");
 
         /// <summary>Ground haze: extinction at height y = beta (1 + a exp(-(y - y0) / H)). Mirror of KamionFogTau.</summary>
@@ -101,6 +102,7 @@ namespace Game.Rendering
         {
             var p = env.Active;
             if (p == null) { KamionHeadlamps.Reset(); return; }
+            Shader.SetGlobalFloat("_KamionDimColourDesaturation",Mathf.Clamp01(p.dimColourDesaturation));
             bool hasTier = QualityProfileApplier.HasCurrent;
             var t = hasTier ? QualityProfileApplier.Current : default;
             KamionHeadlamps.Push(env.Model, HeadlampsOverride ?? p.projectedHeadlamps, p.projectedHeadlampPeakCd, env.gameObject.scene);
@@ -139,6 +141,9 @@ namespace Game.Rendering
             Shader.SetGlobalFloat(k_ClearSkySaturation, Mathf.Clamp(p.clearSkySaturation, 1f, 4f));
             bool photo = clearCover > 0f && PhotographicClouds.TryGet(out _, out _);
             Shader.SetGlobalFloat(k_ClearCloudPhoto, photo ? 1f : 0f);
+            float sourceMinElevation = Mathf.Clamp(p.clearCloudSourceMinElevationDeg, 0f, 5f);
+            Shader.SetGlobalVector(k_ClearCloudSourceLimits,
+                new Vector4(0.5f + sourceMinElevation/180f, sourceMinElevation > 0f ? 1f : 0f, 0f, 0f));
             if (photo && PhotographicClouds.TryGet(out var texture, out var sourceSun))
             {
                 Shader.SetGlobalTexture(k_ClearCloudTex, texture);

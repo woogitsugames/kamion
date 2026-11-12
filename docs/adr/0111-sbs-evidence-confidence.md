@@ -1,4 +1,4 @@
-﻿# ADR 0111 — dowody porównań zdjęcie | render bramki 3
+# ADR 0111 — dowody porównań zdjęcie | render bramki 3
 
 ## Zakres
 Sesja 4, dziedzina sbs: narzędzie, pozy kamer, rejestr źródeł, adnotacje i artefakty. Bez zmian kodu świata, shaderów i runtime.
@@ -39,3 +39,20 @@ Raport HTML jest lokalny, bez zasobów sieciowych; zawiera źródła, licencje, 
 Walidacja r2: generator kod 0, 457 s, bez fallback=True; import 64 chunków Low+High; EditMode 261/261; testy SBS 78/78; pełny GIS 561 passed, 1 xfailed, 620,06 s. Audyt sprawdził rzeczywiste bajty 128 GLB, 168 raw, 100 B, 168 arkuszy diagnostycznych, ZIP wejść i 168 wierszy liczników. Własny przegląd objął 100 B; niezależny przegląd narzędzia/kompletności PASS, bez nowego zaliczenia świata. Kod GIS e386b929, render b9b5574e. Oba warianty siatek zgodne z r1; wszystkie delty liczników Low/High równe 0, bez pomiaru GPU/telefonu.
 
 Trend r2 obejmuje trzy zgodne Low-clear, mediany zmiany błędu 0; pozostałe stany bez porównywalnych próbek. Ostatnia formalna ocena pozostaje r1 FAIL 12/11/2. Diagnostyka 182: 16 hipotez, nadal C; zapytanie początku trasy nie dostarczyło nowego kandydata do 300 m. Produkcyjne pozy nie zmieniły się. Osiem pochodnych generatora przywrócono po końcowym GIS; wejścia dowodów zachowano w migawce. Main otrzymał w trakcie walidacji nowe scalenia (w tym 0125), których obrazy r2 nie przedstawiają. R3 zaczyna od aktualnego main: świeży świat, ranking i diagnostyka wskazanych pozy G3-B.
+
+## r3 — aktualna baza świata, ranking i historia ocen
+
+Baza świata main 9874d98c zawiera 0125 i scalone domeny r1. Późniejszy merge main 14ccbaf1 zmienił wyłącznie obsługę integracji i slotów. PBR i świat wygenerowano ponownie bez fallback=True, import obejmuje 64 chunki Low+High, EditMode 317/317. Pełna nowa seria 168 raw pochodzi z jednego HEAD 62d45b92, z kamerami i zdjęciami takimi samymi jak w r2. Przerwa w wykonaniu 03:42–09:04 oznaczała pominięcie planowanego odświeżenia około 06:19; uzupełniono je pełną serią 09:06–09:09. Przyczyna przerwy nie została ustalona.
+
+Niezależny pełny przegląd 25 B Low-overcast dał FAIL: 13 rozpoznawalnych, 11 częściowych, 1 nierozpoznawalny. Własny przegląd obejmuje pozostałe 75 B (Low-clear i oba High), z zapisanymi SHA. Ranking docs/refs/sbs-priorities.md odróżnia brakujące najbliższe podpory od istniejących dalszych, obecne tablice/ekrany od niewłaściwej projekcji oraz LOD portalu od błędu kamery. Nie przypisuje przyszłych poprawek innych domen do naszej bazy.
+
+Przeprowadzono 18 pierwszych prób oraz drugą serię 30 zaplanowanych prób, z czego 28 wyrenderowano, a dwie odrzucono przed renderem z braku bezpiecznie ustalonej powierzchni. Dla dwóch kamer zastosowano połączoną oś jezdni i ciągłość wysokości rzeczywistego asfaltu GLB, zamiast cofania po kierunku spojrzenia na pobocze. Wszystkie próby nadal C: żadna nie ma dwóch jednoznacznych, niezależnych kotwic. Portal ma wymiary robocze modelu; jego skala nie jest pomiarem pozy. Konflikt pionowej projekcji dalszej drogi i portalu zapisano do minimalnej kolejnej próby pitch przy stałym XY.
+
+Raport obsługuje wersjonowany rejestr ocen D51. Dokładne przypisanie wymaga obu SHA zdjęcia i renderu; w przeciwnym razie wolno pokazać tylko ocenę ze snapshotu danej rundy z jawnym zastrzeżeniem. Przy braku snapshotu lub kamery pokazuje brak oceny. Starsze piksele nie dziedziczą przyszłego uzasadnienia. Niezależny przegląd kodu bafa7544 PASS. Podgląd z nową oceną sprawdzono na 12 kombinacjach runda/stan i szerokościach 1280/390 px, bez przepełnienia; konsola bez błędów/ostrzeżeń, C=42. Po pojedynczym teście raportu (34/34 PASS) wprowadzono rejestr z historią do Data. Własny latest ma dane i szablon zgodne ze sprawdzonym podglądem, poza czasem generacji i niewyświetlaną notatką.
+
+Nowe rendery unieważniły wcześniejsze maski: r3 ma zero kwalifikowanych próbek fotometrycznych. Trend r2→r3 jest NO_COMPARABLE_SAMPLES, nie zerową zmianą. Estymacje wszystkich 168 kamer zapisano osobno od pomiarów telefonu, których nie wykonywano. Maksimum Low wynosi 810 draws (445 statycznych + 365 instancji), High 1376 (945 + 431). Delty versus r2 obejmują zintegrowane zmiany świata, nie izolowany koszt narzędzia SBS: Low −17…+29, High −33…+49.
+
+Walidacja r3 zakończona. Pojedynczy pytest raportu: 34/34 PASS. Audyt główny zakończony exit0: 168 raw, ZIP wejść, 128 rzeczywistych GLB i 168 liczników. Uzupełniający audyt 268 dekodowanych arkuszy i unikalności rosterów zakończony poprawnie; fidelity exit0, pełne wyniki zachowano. Końcowy pełny GIS na zamrożonym kodzie produkcyjnym bcc65bbb: 665 passed, 1 xfailed, 726,22 s, exit0. Slot heavy zwolniony. Wykonano jeden faktyczny pełny przebieg; wcześniejsze zatrzymanie dotyczyło tylko zweryfikowanego oczekiwania Acquire przed testami i przełączenia na oficjalną rezerwację następnego slotu po około 45 minutach kolejki. Wspólna baza ma 38/84 wierszy Low ze wzrostem draws i 22/84 ze wzrostem tris ponad 2% względem r2, więc nie deklarujemy PASS budżetu zintegrowanego świata. Wcześniejsze dostawy robocze są oznaczone PRESTAGE_NOT_FINAL_DELIVERY. Końcowy REPORT.md i skrypt dostawy są gotowe; wynik kopiowania zapisuje delivery-receipt.json. Przywrócono osiem znanych pochodnych generatorów do HEAD; dane capture pozostają w ZIP wejść. Nie wykonano merge do main ani push. Następna runda od bieżącego main, z nową serią i małymi próbami C.
+
+
+

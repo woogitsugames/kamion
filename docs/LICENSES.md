@@ -146,12 +146,14 @@ Wszystkie zasoby poniżej są **wygenerowane naszym kodem**. Nie korzystają z c
 | `world-street-props` | `tools/worldgen/streetscape/props.py` + `export.py` → `art-source/world/props/street_props.glb` | własna (projekt) | tak | latarnie, słupki, tablice znaków, sygnalizatory S-1, wiaty, szlabany, bramy, słupki U-12, słupy, kratownice, ławki, kosze, szafki; generyczne auta osobowe (hatch, sedan, kombi, SUV) i lekki dostawczy bez marek, fikcyjne tablice rejestracyjne w formacie PL z ziarna, nie z rejestrów (`art-source/world/textures/car_plates.png`, `life_cars.plate_atlas`, font DejaVu Sans Bold) (3 LOD, `life_cars.py`); film brudu drogowego `art-source/world/textures/car_dirt.png` (generowany, `export.car_dirt_png`) |
 | `world-sign-faces` | `tools/worldgen/streetscape/signs.py` → `art-source/world/signs/*.png` | własna; wzory znaków wg rozporządzenia (Dz.U. 2019 poz. 2311, zał. 1), narysowane od zera z prymitywów | tak | A-7, B-20, B-33, C-12, D-1, D-6, D-15, schematyczne E-2 |
 | `world-gate3-sign-assemblies` | `tools/worldgen/streetscape/gate3_landmarks.py` → `art-source/world/signs/G3*.png` + prototypy `sign_g3_*` w `street_props.glb` (ADR 0125) | własna; wzory znaków wg rozporządzenia (Dz.U. 2019 poz. 2311), narysowane od zera z prymitywów; teksty: nazwa ronda (nazwa urzędowa, OSM) i ogólna tabliczka „wyjazd straży”; font DejaVu Sans Bold | tak | A-30 z tabliczką, tablica U-4a, D-3, D-6, D-1, tabliczka z nazwą ulicy (turkusowa, jak w Białymstoku); zdjęcia Mapillary (CC BY-SA 4.0) tylko jako wzór położenia, bez pikseli |
+| `world-g3b-frontage` | `tools/worldgen/streetscape/frontage.py` + wpisy `g3b-frontage-*` w `overrides.yaml` (ADR 0126) | własna; geometria proceduralna z istniejących materiałów, bez nowych tekstur | tak | fasady salonów, maszty flag, totem, maszt kratowy z owalem: gładkie pola koloru, bez nazw, logo i napisów firmowych (jedynie funkcyjny szyld SERWIS z istniejącego prototypu); zdjęcia Mapillary (CC BY-SA 4.0) i ortofoto GUGiK tylko jako wzór położenia i proporcji, bez pikseli |
 | `font-dejavu-sans` | DejaVu Sans Bold (dołączony do matplotlib, `mpl-data/fonts/ttf`) | Bitstream Vera License + public domain (DejaVu): wolno osadzać i rasteryzować, z zakazem sprzedaży samego fontu | rasteryzowany w PNG | cyfry B-33, „STOP”, napisy na schematycznych E-2, numery ramp, znaki fikcyjnych tablic rejestracyjnych aut. Nie jest to krój „Drogowskaz” z rozporządzenia: tablice E są schematyczne |
 | `world-trees` | `tools/blender/world/make_trees.py` → `art-source/world/vegetation/trees.glb`, `trees_lod2.glb`, `impostor_*.png` | własna (projekt) | tak | sosna, brzoza, olsza, klon, lipa, krzew (3 warianty, LOD0/LOD1/impostor) |
 | `world-forest-hlod` | `tools/blender/world/make_trees.py` → `art-source/world/vegetation/forest_edge_{conifer,mixed,broadleaf}.png`, `forest_canopy_*.png` | własna (projekt; wypieczone z naszych drzew LOD0) | tak | tekstury HLOD lasu (ściana brzegu, korona), ADR 0013 |
 | `world-foliage-textures` | `tools/worldgen/streetscape/leaf_textures.py` → `art-source/world/vegetation/{leaves,bark}_*.png`, `grass_tuft.png` | własna (projekt) | tak | karty liści, kora, kępy trawy |
 | `world-misc-textures` | `streetscape/export.py` (+ `streetscape/hedge_textures.py`) → `art-source/world/textures/{fence_mesh,dock_digits,hedge_shell_*,hedge_sprig_*}.png` | własna (projekt) | tak | siatka panelu ogrodzeniowego 3D, atlas numerów ramp; warstwa liści i pędy żywopłotów (berberys, ligustr, grab, żywotnik) rysowane z prymitywów, bez zdjęć (ADR 0049 addendum) |
 | `world-plot-kit` | `streetscape/plot_kit.py` → `art-source/world/textures/plot_kit.png` | własna (projekt) | tak | atlas działek domów (ADR 0114): ogrodzenia, cegła, próbki, tuja, świerk, karty jabłoni / krzewu / bylin rysowane z prymitywów; klatki Mapillary (CC BY-SA) i Commons z `docs/refs/posesje-bialystok.md` tylko oglądane (wzór, proporcje, barwa), żaden piksel nie jest użyty |
+| `world-plot-kit-conifer-r8` | [Poly Haven Fir Tree 01](https://polyhaven.com/a/fir_tree_01) `twig_diff` + `twig_alpha` (1k PNG, `art-source/world/cc0/_raw/fir_tree_01/`, poza gitem) → gałązki wycięte po składowych, sprowadzone do luminancji i zabarwione, stemplowane w rzędzie `thuja` i kartach `tall` atlasu `plot_kit.png` (`streetscape/plot_kit.py`, ADR 0124) | **CC0 1.0** ([licencja](https://polyhaven.com/license)); przetwarzanie własne | pochodna w atlasie (w gicie), raw ignorowany | tuje i świerki działek; bez pliku raw generator rysuje gałązki sam (`plot_kit.SOURCE`) |
 | `world-ground-pbr` | `art-source/world/materials/_src/build_all.py` (numpy/scipy, proceduralnie, stałe ziarna) → `art-source/world/materials/<zestaw>/{High,Medium,Low}/*.png`, `materials_spec.json` | własna (projekt) | nie (generowane, `art-source/world/materials/README.md`) | zestawy PBR nawierzchni: asfalt SMA, asfalt zużyty, łaty, warstwa spękań 16 m, atlas plam oleju, beton 5 m, płyty JOMB 3×1,5, krawężnik, behaton, kostka 20×10, trawa pobocza (lato + późna jesień), żwir, makrowariacja |
 | `world-ground-asphalt-detail` | pochodna zdjęcia `Worn_cracked_asphalt_pavement.jpg` (John Harvey, Wikimedia Commons, **domena publiczna**; `docs/REFERENCES.md`): wycinek bez spękań, filtr górnoprzepustowy luminancji, kafelkowanie → `art-source/world/materials/asphalt_detail_photo/` | domena publiczna (źródło) + własna obróbka | nie (generowane; zdjęcie źródłowe poza repo) | warstwa detalu 1 m na asfaltach (High/Medium) |
 | `world-viaduct-concrete` | atlas `viaduct_concrete` (`art-source/world/materials/_src/sets_viaduct.py`) na bazie skanu **Poly Haven „Concrete Wall 008”** (autorzy: Charlotte Baglioni, Dario Barresi; https://polyhaven.com/a/concrete_wall_008; pliki 2k diff/disp/rough, md5 w `sets_viaduct.py`, pobierane do `Data/raw/cc0/polyhaven/`) + własne warstwy (szalunki, zacieki, farba); `art-source/world/textures/viaduct_steel.png`, `art-source/world/landmarks/viaduct_biezenstwa/*.glb` w całości z naszego kodu (`tools/blender/world/landmarks/make_viaduct.py`) | **CC0 1.0** (skan) + własna (projekt) | GLB, układ atlasu i `viaduct_steel.png` tak; PNG zestawu i skan nie (generowane / pobierane) | wiadukt nad Rondem Pamięci Bieżeństwa (ADR 0067). Kadry Mapillary (CC BY-SA 4.0) tylko jako referencja wizualna, bez pikseli w grze |
@@ -266,6 +268,15 @@ Zdjęcia nie wchodzą do builda ani tekstur. Rejestr: [`docs/refs/posesje-bialys
 - Odrzucone: `Wysoki stoczek 58 Bialystok.jpg` (wygląd jak zrzut z panoramy Google; usunięty z dysku i manifestu).
 - Google Maps/Street View/Earth/3D Tiles: nie użyte.
 
+## ADR 0120 — pochodne tekstury mebli ulicznych (2026-11-11)
+
+`furniture_concrete`, `furniture_footing` i `furniture_plinth` korzystają z istniejącego
+skanu `brushed_concrete`, Poly Haven, CC0 1.0 (Dario Barresi / Dimitrios Savva;
+źródło i hash w tabeli ADR 0063 oraz `cc0_manifest.json`). Generator pozostaje
+w `streetscape/furniture_textures.py`. `plate_back` to własna tekstura proceduralna.
+Nie dodano nowego źródła ani pikseli Fab. Fotografie użyte w porównaniach tej rundy
+służą wyłącznie jako referencje; atrybucje z istniejących rejestrów zapisano też
+w `artifacts/furniture-r1/24h/reference-selection.json`. Nie trafiają do tekstur gry.
 ## Niebo fotograficzne — ADR 0108, light r1
 - Zasób: Kloofendal 48d Partly Cloudy (Pure Sky), Poly Haven: https://polyhaven.com/a/kloofendal_48d_partly_cloudy_puresky
 - Autorzy: Greg Zaal (oryginał), Jarod Guest (edycja czystego nieba). Licencja CC0 1.0: https://polyhaven.com/license (sprawdzono 2026-11-11).
@@ -273,7 +284,48 @@ Zdjęcia nie wchodzą do builda ani tekstur. Rejestr: [`docs/refs/posesje-bialys
 - Pochodna: game/Assets/_Project/Rendering/Resources/Sky/T_ClearClouds.png, R = fotograficzna maska chmur, G = względna luminancja; usunięto tarczę słońca, zachowano kształt i cienie chmur. Dokładne metadane i oś słońca: ClearCloudsSource.json. Reprodukcja: artifacts/light-r1/build-photo-clouds.py przez pulę heavy.
 - To tekstura nieba, nie zdjęcie referencyjne Białegostoku. Nie zawiera zabudowy ani oznaczeń; nie jest zasobem Fab/Megascans.
 
-## Kabina — skan skóry CC0 (Poly Haven), GPT cab r2 (s12)
-| ID | Zasób (rozmiar fizyczny) | URL | Autor | Licencja | Mapy (MD5 w `art-source/truck/interior/cab_material_scans.json`) | Użycie w grze |
-|---|---|---|---|---|---|---|
-| `brown_leather` | Brown Leather (0,40 × 0,40 m; kafel 0,12 m, wieniec kierownicy 0,05 m) | https://polyhaven.com/a/brown_leather | Rob Tuytel | CC0 1.0 (https://polyhaven.com/license) | diffuse/normal GL/roughness/AO 2k | faktura skóry i tłoczenia tworzyw kabiny (ADR cab r2) |
+## ADR 0112 — Brown Leather we wnętrzu kabiny (2026-11-12)
+
+[Brown Leather](https://polyhaven.com/a/brown_leather), autor Rob Tuytel, dostawca Poly Haven, [CC0 1.0](https://polyhaven.com/license). Pole źródłowe 40 × 40 cm. Użyte mapy 2K: albedo, normal OpenGL, roughness i AO. Źródłowe adresy pobierania, rozmiary plików i MD5 są zapisane w `art-source/truck/interior/cab_material_scans.json`:
+
+| Mapa źródłowa | MD5 |
+|---|---|
+| brown_leather_albedo_2k.jpg | 1bd381c43817743a2affdd1ce2d193c7 |
+| brown_leather_nor_gl_2k.png | 79e5a78506947a412d2b739a4bec34b4 |
+| brown_leather_rough_2k.jpg | 95b48a5c95b02d87dadee46c26f1cfb5 |
+| brown_leather_ao_2k.jpg | 4ff0006acb807b9ddccd387a093d89b8 |
+
+Pochodne gry: istniejące pary Detail/Normal materiałów `MI_Cab_Leather` oraz `MI_Cab_Plastic`, rozdzielczości High/Medium/Low 1024/512/256. Konwerter `tools/blender/truck/interior/cc0_leather.py` wykonuje kadrowanie, neutralizację wariacji barwy, pakowanie kanałów, normalizację normalnych i łączenie przeciwległych krawędzi. Skóra używa pola około 12 cm. Plastic jest osłabioną i przeskalowaną pochodną tłoczenia skóry (20 cm źródła na kafel 10 cm), **nie skanem tworzywa deski**. Kolor bazowy i dotychczasowa perforacja pozostają projektowe. Oryginały w ignorowanym `art-source/truck/interior/cc0/_raw/brown_leather/`; bez zasobów Fab/Megascans w tym zestawie. Szczegóły przetwarzania i ograniczenia: `art-source/truck/interior/cc0/README.md`.
+
+## Life r3 — referencje analityczne (nie zasoby gry)
+Greg Schechter, 2200 km Later, oraz Nenad Stojkovic, Dirty back car window: CC BY 2.0; strony źródłowe, licencja i miniatury z atrybucją w artifacts/life-r3/refs/REFERENCES.md. Johann H. Addicks: wyłącznie udostępniona jako PD miniatura 250 px Salt coverd car during winter P1020038, bez oryginału. Brak kopiowania znaków/logo/tablic do gry.
+
+## ADR 0120 r2 — wariant materiału znaków oparty o URP Lit
+
+Szkielet `FurnitureSign.shader` oraz część funkcji Forward w
+`FurnitureSignForward.hlsl` pochodzą z zainstalowanego pakietu Unity URP:
+com.unity.render-pipelines.universal, copyright © 2020 Unity Technologies ApS,
+[Unity Companion License](https://unity.com/legal/licenses/unity-companion-license).
+Pozostałe przebiegi i funkcje są używane bezpośrednio z pakietu.
+Własny dodatek to analityczny odblask i czytnik stanu istniejących reflektorów.
+Wersja źródeł, hashe i skrypt odtworzenia są w
+`artifacts/furniture-r2/24h/candidate-src/provenance.json` oraz
+`artifacts/furniture-r2/24h/prepare-sign-prototype.ps1`. Nie użyto grafiki producentów folii.
+
+### Kominy EC — uzupełnienie referencji ADR 0116 r3
+
+`20200711 073128 Elektrociepłownia Białystok` — Rakoon, [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:20200711_073128_Elektrociep%C5%82ownia_Bia%C5%82ystok.jpg), [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/).
+Lokalna referencja jest pomniejszoną kopią 3840×2160; pary w artifacts/landmarks-r3
+jawnie opisują kadrowanie, zmianę rozmiaru i autora. Oryginał 4608×2592 nie został
+lokalnie zweryfikowany. Starsze `EC_Białystok.jpg` — Hiuppo, CC BY-SA 2.5
+([strona pliku](https://commons.wikimedia.org/wiki/File:EC_Bia%C5%82ystok.jpg)) —
+pozostaje osobną referencją z 2007 r.; jej szachownicy i logo nie przeniesiono do modelu.
+
+`art-source/world/landmarks/ec_chimney_single/` i `ec_chimney_multi/` powstają
+z własnego kodu `tools/worldgen/streetscape/ec_chimneys.py` i danych
+`Data/Regions/bialystok-industrial-c/ec_chimneys.json`. Nie zawierają pikseli zdjęć,
+logo ani cudzej geometrii. Odwołania do źródeł i robocze wymiary są w konfiguracji.
+Położenia i obrysy: © OpenStreetMap contributors, ODbL; wysokości gruntu: istniejący NMT GUGiK.
+Wymiary techniczne jednoprzewodowego komina pochodzą z opisu zamówienia ENEA 2025,
+H 120 m wieloprzewodowego potwierdza tekstowy rekord EMKA. Zamknięta fotografia EMKA
+nie jest dystrybuowanym assetem ani otwartą referencją obrazową D43.

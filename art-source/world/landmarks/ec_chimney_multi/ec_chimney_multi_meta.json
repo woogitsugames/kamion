@@ -1,0 +1,37 @@
+{
+  "prototype": "landmark_ec_chimney_multi",
+  "spec_sha256": "74f70370fd231ceccf98ccdd4e2b3ee28d4b4e656e94041f518f572377e50a30",
+  "glb_sha256": "75a73c6494189d907712f195f87cb0f4f6b8065cc132eb3d618ccf9bd14c3ce1",
+  "tris": [
+    636,
+    274,
+    274
+  ],
+  "materials": [
+    "chimney_concrete",
+    "chimney_red",
+    "chimney_white"
+  ],
+  "materials_per_lod": [
+    [
+      "chimney_concrete",
+      "chimney_red",
+      "chimney_white"
+    ],
+    [
+      "chimney_concrete",
+      "chimney_red",
+      "chimney_white"
+    ]
+  ],
+  "lod_nodes": 2,
+  "confidence": {
+    "height": "120m both: OSM, ENEA single-flue procurement, EMKA multi-flue project record",
+    "single_diameters": "7.65m base / 4.80m top from ENEA technical notice; single-outlet identity assigned from 2020 Commons photograph, plant nr2 is not override index",
+    "multi_diameters": "8.27m base from OSM outline area, interpretation uncertain; 8.27m top is WORKING_VALUE near photographic resection, not a survey",
+    "bands": "WORKING_VALUE 12m spacing, different lower limits 36m/60m; photographic resection with known 120m and technical single-flue diameter, pose/intrinsics and outlet-height ambiguity remain",
+    "heads": "One outlet versus three outlets and distinct gallery patterns visible on Rakoon 2020 photo; detailed head dimensions/azimuth WORKING_VALUE",
+    "materials": "Existing shared chimney materials, three on both LODs; pale galleries reuse chimney_white. No measured reflectance or new shader path",
+    "lower_body": "Long white lower body supported by open Hiuppo 2007 photo; its old checkerboard marking is not applied to the 2020 reference epoch"
+  }
+}

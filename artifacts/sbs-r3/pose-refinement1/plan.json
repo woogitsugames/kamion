@@ -1,0 +1,4444 @@
+{
+  "diagnostic_only": true,
+  "all_pose_confidence": "C",
+  "attempted_count": 30,
+  "accepted_for_render_count": 28,
+  "rejected": [
+    {
+      "probe": "sbs-refine1-3281350541967811-20",
+      "camera": "sbs-g3-b-3281350541967811",
+      "reason": "No rendered asphalt on road-profile sample",
+      "en": [
+        -295.71037771190606,
+        -196.11547040726416
+      ]
+    },
+    {
+      "probe": "sbs-refine1-3281350541967811-23",
+      "camera": "sbs-g3-b-3281350541967811",
+      "reason": "No rendered asphalt on road-profile sample",
+      "en": [
+        -307.4640637626307,
+        -186.79424434644682
+      ]
+    }
+  ],
+  "preparation_script_sha256": "4bf30f4f1292ae407c29634cffacd84a91d284c583b6dc8d2ff8d1fd5d1c3dff",
+  "probe_cameras_sha256": "6889859a2120d33e21c672fb6213efd0583b570b90f58e88acb43fd7eb4b8c8f",
+  "production_source_sha256": {
+    "Data/Regions/bialystok-industrial-c/sbs_cameras.json": "41686dd5d9a9ef0969ab9d7772e359b150a6f1783b67538d9d8f875880f1ae2e",
+    "Data/Regions/bialystok-industrial-c/sbs_references.json": "f7991691c5868e67658ff9879c6b736c372b4ac02f1be9b84cebca4cd51b40af"
+  },
+  "world_manifest_sha256": "2d486ac202829ca711b2d72fabc2299b6c637f1059f7adc9c42e1ad6b8aba489",
+  "road_graph_sha256": "0bd625e041a6a2ca90a74f1652336c731182c234985352de4d377110f1d42cf6",
+  "helper_sha256": "dd53f5fbf5f6fe52a64cf95711c5881856ef5a2fd04b0f0e460944b0ae357116",
+  "road_path": {
+    "edge_ids": [
+      "w606396460:5749429982-1847044938",
+      "w560802655:1847044938-12620261936",
+      "w560802655:12620261936-1946476472"
+    ],
+    "local_en": [
+      [
+        -373.0690000000177,
+        -140.6350000000093
+      ],
+      [
+        -348.6160000000382,
+        -160.420999999973
+      ],
+      [
+        -302.32700000004843,
+        -197.125
+      ],
+      [
+        -276.0699999999488,
+        -217.9549999999581
+      ],
+      [
+        -239.625,
+        -243.6119999999646
+      ],
+      [
+        -227.67299999995157,
+        -252.7510000000475
+      ]
+    ],
+    "length_m": 183.6622738077077
+  },
+  "verified_low_chunks": [
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_2_4.low.glb",
+      "sha256": "d1a5fbb11d300d21aafb791e1c412493ef6bd7096603012a305d2b0204b78282"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_2_5.low.glb",
+      "sha256": "f2d2cabcb004825b0e148c6a0736fa7380d32b86689fac0bcb59afbf55647186"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_3_4.low.glb",
+      "sha256": "d399e59e611dd596508273d78a79bc060070a8036e74ae6f34c93626dc834e47"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_3_5.low.glb",
+      "sha256": "15322e64d0ef769b47103427fa6af8f7f4570e8ba1327183217bb928af883517"
+    }
+  ],
+  "probes": [
+    {
+      "probe": "sbs-refine1-275528677534382-00",
+      "base_camera": "sbs-g3-b-275528677534382",
+      "offset_m": -8,
+      "translation_axis": "view",
+      "left_delta_m": 0,
+      "nominal_eye_m": 1.7,
+      "horizon_y_fraction": 0.52,
+      "photo": "artifacts/sbs-gate3/rectified/275528677534382.png",
+      "photo_sha256": "07f8aceba89a22f0d8ef678b4962d89d6b39715000eb3bf0dd00057ce3159007",
+      "author": "grobin",
+      "license": "CC BY-SA 4.0",
+      "page_url": "https://www.mapillary.com/app/?pKey=275528677534382",
+      "width": 1280,
+      "height": 720,
+      "pos": [
+        -248.9224,
+        -219.1073,
+        131.8175
+      ],
+      "look_at": [
+        -280.9325,
+        -195.1377,
+        132.7173
+      ],
+      "fov_deg": 58.71551,
+      "road_station_m": null,
+      "baseline_road_station_m": 138.91152202680212,
+      "baseline_left_of_road_m": 14.920009729549207,
+      "surface_trace": [
+        {
+          "en": [
+            -248.92235639802166,
+            -219.10733801874795
+          ],
+          "levels_u_m": [
+            130.117502
+          ],
+          "chosen_u_m": 130.117502
+        }
+      ]
+    },
+    {
+      "probe": "sbs-refine1-275528677534382-01",
+      "base_camera": "sbs-g3-b-275528677534382",
+      "offset_m": -8,
+      "translation_axis": "view",
+      "left_delta_m": 0,
+      "nominal_eye_m": 2.2,
+      "horizon_y_fraction": 0.52,
+      "photo": "artifacts/sbs-gate3/rectified/275528677534382.png",
+      "photo_sha256": "07f8aceba89a22f0d8ef678b4962d89d6b39715000eb3bf0dd00057ce3159007",
+      "author": "grobin",
+      "license": "CC BY-SA 4.0",
+      "page_url": "https://www.mapillary.com/app/?pKey=275528677534382",
+      "width": 1280,
+      "height": 720,
+      "pos": [
+        -248.9224,
+        -219.1073,
+        132.3175
+      ],
+      "look_at": [
+        -280.9325,
+        -195.1377,
+        133.2173
+      ],
+      "fov_deg": 58.71551,
+      "road_station_m": null,
+      "baseline_road_station_m": 138.91152202680212,
+      "baseline_left_of_road_m": 14.920009729549207,
+      "surface_trace": [
+        {
+          "en": [
+            -248.92235639802166,
+            -219.10733801874795
+          ],
+          "levels_u_m": [
+            130.117502
+          ],
+          "chosen_u_m": 130.117502
+        }
+      ]
+    },
+    {
+      "probe": "sbs-refine1-275528677534382-02",
+      "base_camera": "sbs-g3-b-275528677534382",
+      "offset_m": -8,
+      "translation_axis": "view",
+      "left_delta_m": 0,
+      "nominal_eye_m": 1.7,
+      "horizon_y_fraction": 0.55,
+      "photo": "artifacts/sbs-gate3/rectified/275528677534382.png",
+      "photo_sha256": "07f8aceba89a22f0d8ef678b4962d89d6b39715000eb3bf0dd00057ce3159007",
+      "author": "grobin",
+      "license": "CC BY-SA 4.0",
+      "page_url": "https://www.mapillary.com/app/?pKey=275528677534382",
+      "width": 1280,
+      "height": 720,
+      "pos": [
+        -248.9224,
+        -219.1073,
+        131.8175
+      ],
+      "look_at": [
+        -280.89,
+        -195.1695,
+        134.064
+      ],
+      "fov_deg": 58.71551,
+      "road_station_m": null,
+      "baseline_road_station_m": 138.91152202680212,
+      "baseline_left_of_road_m": 14.920009729549207,
+      "surface_trace": [
+        {
+          "en": [
+            -248.92235639802166,
+            -219.10733801874795
+          ],
+          "levels_u_m": [
+            130.117502
+          ],
+          "chosen_u_m": 130.117502
+        }
+      ]
+    },
+    {
+      "probe": "sbs-refine1-275528677534382-03",
+      "base_camera": "sbs-g3-b-275528677534382",
+      "offset_m": -8,
+      "translation_axis": "view",
+      "left_delta_m": 0,
+      "nominal_eye_m": 2.2,
+      "horizon_y_fraction": 0.55,
+      "photo": "artifacts/sbs-gate3/rectified/275528677534382.png",
+      "photo_sha256": "07f8aceba89a22f0d8ef678b4962d89d6b39715000eb3bf0dd00057ce3159007",
+      "author": "grobin",
+      "license": "CC BY-SA 4.0",
+      "page_url": "https://www.mapillary.com/app/?pKey=275528677534382",
+      "width": 1280,
+      "height": 720,
+      "pos": [
+        -248.9224,
+        -219.1073,
+        132.3175
+      ],
+      "look_at": [
+        -280.89,
+        -195.1695,
+        134.564
+      ],
+      "fov_deg": 58.71551,
+      "road_station_m": null,
+      "baseline_road_station_m": 138.91152202680212,
+      "baseline_left_of_road_m": 14.920009729549207,
+      "surface_trace": [
+        {
+          "en": [
+            -248.92235639802166,
+            -219.10733801874795
+          ],
+          "levels_u_m": [
+            130.117502
+          ],
+          "chosen_u_m": 130.117502
+        }
+      ]
+    },
+    {
+      "probe": "sbs-refine1-275528677534382-04",
+      "base_camera": "sbs-g3-b-275528677534382",
+      "offset_m": -10,
+      "translation_axis": "view",
+      "left_delta_m": 0,
+      "nominal_eye_m": 1.7,
+      "horizon_y_fraction": 0.52,
+      "photo": "artifacts/sbs-gate3/rectified/275528677534382.png",
+      "photo_sha256": "07f8aceba89a22f0d8ef678b4962d89d6b39715000eb3bf0dd00057ce3159007",
+      "author": "grobin",
+      "license": "CC BY-SA 4.0",
+      "page_url": "https://www.mapillary.com/app/?pKey=275528677534382",
+      "width": 1280,
+      "height": 720,
+      "pos": [
+        -247.3214,
+        -220.3061,
+        131.8291
+      ],
+      "look_at": [
+        -279.3316,
+        -196.3365,
+        132.7289
+      ],
+      "fov_deg": 58.71551,
+      "road_station_m": null,
+      "baseline_road_station_m": 138.91152202680212,
+      "baseline_left_of_road_m": 14.920009729549207,
+      "surface_trace": [
+        {
+          "en": [
+            -247.3214454975271,
+            -220.30612252343494
+          ],
+          "levels_u_m": [
+            130.129136
+          ],
+          "chosen_u_m": 130.129136
+        }
+      ]
+    },
+    {
+      "probe": "sbs-refine1-275528677534382-05",
+      "base_camera": "sbs-g3-b-275528677534382",
+      "offset_m": -10,
+      "translation_axis": "view",
+      "left_delta_m": 0,
+      "nominal_eye_m": 2.2,
+      "horizon_y_fraction": 0.52,
+      "photo": "artifacts/sbs-gate3/rectified/275528677534382.png",
+      "photo_sha256": "07f8aceba89a22f0d8ef678b4962d89d6b39715000eb3bf0dd00057ce3159007",
+      "author": "grobin",
+      "license": "CC BY-SA 4.0",
+      "page_url": "https://www.mapillary.com/app/?pKey=275528677534382",
+      "width": 1280,
+      "height": 720,
+      "pos": [
+        -247.3214,
+        -220.3061,
+        132.3291
+      ],
+      "look_at": [
+        -279.3316,
+        -196.3365,
+        133.2289
+      ],
+      "fov_deg": 58.71551,
+      "road_station_m": null,
+      "baseline_road_station_m": 138.91152202680212,
+      "baseline_left_of_road_m": 14.920009729549207,
+      "surface_trace": [
+        {
+          "en": [
+            -247.3214454975271,
+            -220.30612252343494
+          ],
+          "levels_u_m": [
+            130.129136
+          ],
+          "chosen_u_m": 130.129136
+        }
+      ]
+    },
+    {
+      "probe": "sbs-refine1-275528677534382-06",
+      "base_camera": "sbs-g3-b-275528677534382",
+      "offset_m": -10,
+      "translation_axis": "view",
+      "left_delta_m": 0,
+      "nominal_eye_m": 1.7,
+      "horizon_y_fraction": 0.55,
+      "photo": "artifacts/sbs-gate3/rectified/275528677534382.png",
+      "photo_sha256": "07f8aceba89a22f0d8ef678b4962d89d6b39715000eb3bf0dd00057ce3159007",
+      "author": "grobin",
+      "license": "CC BY-SA 4.0",
+      "page_url": "https://www.mapillary.com/app/?pKey=275528677534382",
+      "width": 1280,
+      "height": 720,
+      "pos": [
+        -247.3214,
+        -220.3061,
+        131.8291
+      ],
+      "look_at": [
+        -279.2891,
+        -196.3683,
+        134.0756
+      ],
+      "fov_deg": 58.71551,
+      "road_station_m": null,
+      "baseline_road_station_m": 138.91152202680212,
+      "baseline_left_of_road_m": 14.920009729549207,
+      "surface_trace": [
+        {
+          "en": [
+            -247.3214454975271,
+            -220.30612252343494
+          ],
+          "levels_u_m": [
+            130.129136
+          ],
+          "chosen_u_m": 130.129136
+        }
+      ]
+    },
+    {
+      "probe": "sbs-refine1-275528677534382-07",
+      "base_camera": "sbs-g3-b-275528677534382",
+      "offset_m": -10,
+      "translation_axis": "view",
+      "left_delta_m": 0,
+      "nominal_eye_m": 2.2,
+      "horizon_y_fraction": 0.55,
+      "photo": "artifacts/sbs-gate3/rectified/275528677534382.png",
+      "photo_sha256": "07f8aceba89a22f0d8ef678b4962d89d6b39715000eb3bf0dd00057ce3159007",
+      "author": "grobin",
+      "license": "CC BY-SA 4.0",
+      "page_url": "https://www.mapillary.com/app/?pKey=275528677534382",
+      "width": 1280,
+      "height": 720,
+      "pos": [
+        -247.3214,
+        -220.3061,
+        132.3291
+      ],
+      "look_at": [
+        -279.2891,
+        -196.3683,
+        134.5756
+      ],
+      "fov_deg": 58.71551,
+      "road_station_m": null,
+      "baseline_road_station_m": 138.91152202680212,
+      "baseline_left_of_road_m": 14.920009729549207,
+      "surface_trace": [
+        {
+          "en": [
+            -247.3214454975271,
+            -220.30612252343494
+          ],
+          "levels_u_m": [
+            130.129136
+          ],
+          "chosen_u_m": 130.129136
+        }
+      ]
+    },
+    {
+      "probe": "sbs-refine1-275528677534382-08",
+      "base_camera": "sbs-g3-b-275528677534382",
+      "offset_m": -12,
+      "translation_axis": "view",
+      "left_delta_m": 0,
+      "nominal_eye_m": 1.7,
+      "horizon_y_fraction": 0.52,
+      "photo": "artifacts/sbs-gate3/rectified/275528677534382.png",
+      "photo_sha256": "07f8aceba89a22f0d8ef678b4962d89d6b39715000eb3bf0dd00057ce3159007",
+      "author": "grobin",
+      "license": "CC BY-SA 4.0",
+      "page_url": "https://www.mapillary.com/app/?pKey=275528677534382",
+      "width": 1280,
+      "height": 720,
+      "pos": [
+        -245.7205,
+        -221.5049,
+        131.8422
+      ],
+      "look_at": [
+        -277.7307,
+        -197.5353,
+        132.742
+      ],
+      "fov_deg": 58.71551,
+      "road_station_m": null,
+      "baseline_road_station_m": 138.91152202680212,
+      "baseline_left_of_road_m": 14.920009729549207,
+      "surface_trace": [
+        {
+          "en": [
+            -245.72053459703253,
+            -221.50490702812192
+          ],
+          "levels_u_m": [
+            130.142226
+          ],
+          "chosen_u_m": 130.142226
+        }
+      ]
+    },
+    {
+      "probe": "sbs-refine1-275528677534382-09",
+      "base_camera": "sbs-g3-b-275528677534382",
+      "offset_m": -12,
+      "translation_axis": "view",
+      "left_delta_m": 0,
+      "nominal_eye_m": 2.2,
+      "horizon_y_fraction": 0.52,
+      "photo": "artifacts/sbs-gate3/rectified/275528677534382.png",
+      "photo_sha256": "07f8aceba89a22f0d8ef678b4962d89d6b39715000eb3bf0dd00057ce3159007",
+      "author": "grobin",
+      "license": "CC BY-SA 4.0",
+      "page_url": "https://www.mapillary.com/app/?pKey=275528677534382",
+      "width": 1280,
+      "height": 720,
+      "pos": [
+        -245.7205,
+        -221.5049,
+        132.3422
+      ],
+      "look_at": [
+        -277.7307,
+        -197.5353,
+        133.242
+      ],
+      "fov_deg": 58.71551,
+      "road_station_m": null,
+      "baseline_road_station_m": 138.91152202680212,
+      "baseline_left_of_road_m": 14.920009729549207,
+      "surface_trace": [
+        {
+          "en": [
+            -245.72053459703253,
+            -221.50490702812192
+          ],
+          "levels_u_m": [
+            130.142226
+          ],
+          "chosen_u_m": 130.142226
+        }
+      ]
+    },
+    {
+      "probe": "sbs-refine1-275528677534382-10",
+      "base_camera": "sbs-g3-b-275528677534382",
+      "offset_m": -12,
+      "translation_axis": "view",
+      "left_delta_m": 0,
+      "nominal_eye_m": 1.7,
+      "horizon_y_fraction": 0.55,
+      "photo": "artifacts/sbs-gate3/rectified/275528677534382.png",
+      "photo_sha256": "07f8aceba89a22f0d8ef678b4962d89d6b39715000eb3bf0dd00057ce3159007",
+      "author": "grobin",
+      "license": "CC BY-SA 4.0",
+      "page_url": "https://www.mapillary.com/app/?pKey=275528677534382",
+      "width": 1280,
+      "height": 720,
+      "pos": [
+        -245.7205,
+        -221.5049,
+        131.8422
+      ],
+      "look_at": [
+        -277.6882,
+        -197.5671,
+        134.0887
+      ],
+      "fov_deg": 58.71551,
+      "road_station_m": null,
+      "baseline_road_station_m": 138.91152202680212,
+      "baseline_left_of_road_m": 14.920009729549207,
+      "surface_trace": [
+        {
+          "en": [
+            -245.72053459703253,
+            -221.50490702812192
+          ],
+          "levels_u_m": [
+            130.142226
+          ],
+          "chosen_u_m": 130.142226
+        }
+      ]
+    },
+    {
+      "probe": "sbs-refine1-275528677534382-11",
+      "base_camera": "sbs-g3-b-275528677534382",
+      "offset_m": -12,
+      "translation_axis": "view",
+      "left_delta_m": 0,
+      "nominal_eye_m": 2.2,
+      "horizon_y_fraction": 0.55,
+      "photo": "artifacts/sbs-gate3/rectified/275528677534382.png",
+      "photo_sha256": "07f8aceba89a22f0d8ef678b4962d89d6b39715000eb3bf0dd00057ce3159007",
+      "author": "grobin",
+      "license": "CC BY-SA 4.0",
+      "page_url": "https://www.mapillary.com/app/?pKey=275528677534382",
+      "width": 1280,
+      "height": 720,
+      "pos": [
+        -245.7205,
+        -221.5049,
+        132.3422
+      ],
+      "look_at": [
+        -277.6882,
+        -197.5671,
+        134.5887
+      ],
+      "fov_deg": 58.71551,
+      "road_station_m": null,
+      "baseline_road_station_m": 138.91152202680212,
+      "baseline_left_of_road_m": 14.920009729549207,
+      "surface_trace": [
+        {
+          "en": [
+            -245.72053459703253,
+            -221.50490702812192
+          ],
+          "levels_u_m": [
+            130.142226
+          ],
+          "chosen_u_m": 130.142226
+        }
+      ]
+    },
+    {
+      "probe": "sbs-refine1-837235577143499-12",
+      "base_camera": "sbs-g3-b-837235577143499",
+      "offset_m": -16,
+      "translation_axis": "view",
+      "left_delta_m": -2,
+      "nominal_eye_m": 2.2,
+      "horizon_y_fraction": 0.52,
+      "photo": "artifacts/sbs-gate3/rectified/837235577143499.png",
+      "photo_sha256": "8676ada6ab9b0582d015f708cdc62ee28cb31dfe02dc0db2993d5bd2f093bb3d",
+      "author": "grobin",
+      "license": "CC BY-SA 4.0",
+      "page_url": "https://www.mapillary.com/app/?pKey=837235577143499",
+      "width": 1280,
+      "height": 720,
+      "pos": [
+        -208.4264,
+        -248.6641,
+        132.9656
+      ],
+      "look_at": [
+        -240.433,
+        -224.6898,
+        133.8654
+      ],
+      "fov_deg": 58.71551,
+      "road_station_m": null,
+      "baseline_road_station_m": 180.4896105481948,
+      "baseline_left_of_road_m": 12.77869154578735,
+      "surface_trace": [
+        {
+          "en": [
+            -208.4263894622346,
+            -248.66410042978623
+          ],
+          "levels_u_m": [
+            130.765637
+          ],
+          "chosen_u_m": 130.765637
+        }
+      ]
+    },
+    {
+      "probe": "sbs-refine1-837235577143499-13",
+      "base_camera": "sbs-g3-b-837235577143499",
+      "offset_m": -16,
+      "translation_axis": "view",
+      "left_delta_m": 0,
+      "nominal_eye_m": 2.2,
+      "horizon_y_fraction": 0.52,
+      "photo": "artifacts/sbs-gate3/rectified/837235577143499.png",
+      "photo_sha256": "8676ada6ab9b0582d015f708cdc62ee28cb31dfe02dc0db2993d5bd2f093bb3d",
+      "author": "grobin",
+      "license": "CC BY-SA 4.0",
+      "page_url": "https://www.mapillary.com/app/?pKey=837235577143499",
+      "width": 1280,
+      "height": 720,
+      "pos": [
+        -209.6254,
+        -250.2648,
+        133.0064
+      ],
+      "look_at": [
+        -241.632,
+        -226.2906,
+        133.9062
+      ],
+      "fov_deg": 58.71551,
+      "road_station_m": null,
+      "baseline_road_station_m": 180.4896105481948,
+      "baseline_left_of_road_m": 12.77869154578735,
+      "surface_trace": [
+        {
+          "en": [
+            -209.62540660032775,
+            -250.26483710474525
+          ],
+          "levels_u_m": [
+            130.806427
+          ],
+          "chosen_u_m": 130.806427
+        }
+      ]
+    },
+    {
+      "probe": "sbs-refine1-837235577143499-14",
+      "base_camera": "sbs-g3-b-837235577143499",
+      "offset_m": -16,
+      "translation_axis": "view",
+      "left_delta_m": 2,
+      "nominal_eye_m": 2.2,
+      "horizon_y_fraction": 0.52,
+      "photo": "artifacts/sbs-gate3/rectified/837235577143499.png",
+      "photo_sha256": "8676ada6ab9b0582d015f708cdc62ee28cb31dfe02dc0db2993d5bd2f093bb3d",
+      "author": "grobin",
+      "license": "CC BY-SA 4.0",
+      "page_url": "https://www.mapillary.com/app/?pKey=837235577143499",
+      "width": 1280,
+      "height": 720,
+      "pos": [
+        -210.8244,
+        -251.8656,
+        133.0475
+      ],
+      "look_at": [
+        -242.8311,
+        -227.8913,
+        133.9472
+      ],
+      "fov_deg": 58.71551,
+      "road_station_m": null,
+      "baseline_road_station_m": 180.4896105481948,
+      "baseline_left_of_road_m": 12.77869154578735,
+      "surface_trace": [
+        {
+          "en": [
+            -210.8244237384209,
+            -251.86557377970428
+          ],
+          "levels_u_m": [
+            130.847468
+          ],
+          "chosen_u_m": 130.847468
+        }
+      ]
+    },
+    {
+      "probe": "sbs-refine1-837235577143499-15",
+      "base_camera": "sbs-g3-b-837235577143499",
+      "offset_m": -20,
+      "translation_axis": "view",
+      "left_delta_m": -2,
+      "nominal_eye_m": 2.2,
+      "horizon_y_fraction": 0.52,
+      "photo": "artifacts/sbs-gate3/rectified/837235577143499.png",
+      "photo_sha256": "8676ada6ab9b0582d015f708cdc62ee28cb31dfe02dc0db2993d5bd2f093bb3d",
+      "author": "grobin",
+      "license": "CC BY-SA 4.0",
+      "page_url": "https://www.mapillary.com/app/?pKey=837235577143499",
+      "width": 1280,
+      "height": 720,
+      "pos": [
+        -205.2249,
+        -251.0621,
+        133.0453
+      ],
+      "look_at": [
+        -237.2315,
+        -227.0879,
+        133.9451
+      ],
+      "fov_deg": 58.71551,
+      "road_station_m": null,
+      "baseline_road_station_m": 180.4896105481948,
+      "baseline_left_of_road_m": 12.77869154578735,
+      "surface_trace": [
+        {
+          "en": [
+            -205.22491611231655,
+            -251.06213470597257
+          ],
+          "levels_u_m": [
+            130.845306
+          ],
+          "chosen_u_m": 130.845306
+        }
+      ]
+    },
+    {
+      "probe": "sbs-refine1-837235577143499-16",
+      "base_camera": "sbs-g3-b-837235577143499",
+      "offset_m": -20,
+      "translation_axis": "view",
+      "left_delta_m": 0,
+      "nominal_eye_m": 2.2,
+      "horizon_y_fraction": 0.52,
+      "photo": "artifacts/sbs-gate3/rectified/837235577143499.png",
+      "photo_sha256": "8676ada6ab9b0582d015f708cdc62ee28cb31dfe02dc0db2993d5bd2f093bb3d",
+      "author": "grobin",
+      "license": "CC BY-SA 4.0",
+      "page_url": "https://www.mapillary.com/app/?pKey=837235577143499",
+      "width": 1280,
+      "height": 720,
+      "pos": [
+        -206.4239,
+        -252.6629,
+        133.0863
+      ],
+      "look_at": [
+        -238.4306,
+        -228.6886,
+        133.9861
+      ],
+      "fov_deg": 58.71551,
+      "road_station_m": null,
+      "baseline_road_station_m": 180.4896105481948,
+      "baseline_left_of_road_m": 12.77869154578735,
+      "surface_trace": [
+        {
+          "en": [
+            -206.4239332504097,
+            -252.6628713809316
+          ],
+          "levels_u_m": [
+            130.886319
+          ],
+          "chosen_u_m": 130.886319
+        }
+      ]
+    },
+    {
+      "probe": "sbs-refine1-837235577143499-17",
+      "base_camera": "sbs-g3-b-837235577143499",
+      "offset_m": -20,
+      "translation_axis": "view",
+      "left_delta_m": 2,
+      "nominal_eye_m": 2.2,
+      "horizon_y_fraction": 0.52,
+      "photo": "artifacts/sbs-gate3/rectified/837235577143499.png",
+      "photo_sha256": "8676ada6ab9b0582d015f708cdc62ee28cb31dfe02dc0db2993d5bd2f093bb3d",
+      "author": "grobin",
+      "license": "CC BY-SA 4.0",
+      "page_url": "https://www.mapillary.com/app/?pKey=837235577143499",
+      "width": 1280,
+      "height": 720,
+      "pos": [
+        -207.623,
+        -254.2636,
+        133.1278
+      ],
+      "look_at": [
+        -239.6296,
+        -230.2893,
+        134.0275
+      ],
+      "fov_deg": 58.71551,
+      "road_station_m": null,
+      "baseline_road_station_m": 180.4896105481948,
+      "baseline_left_of_road_m": 12.77869154578735,
+      "surface_trace": [
+        {
+          "en": [
+            -207.62295038850286,
+            -254.26360805589061
+          ],
+          "levels_u_m": [
+            130.927759
+          ],
+          "chosen_u_m": 130.927759
+        }
+      ]
+    },
+    {
+      "probe": "sbs-refine1-3281350541967811-18",
+      "base_camera": "sbs-g3-b-3281350541967811",
+      "offset_m": -60,
+      "translation_axis": "road",
+      "left_delta_m": -2,
+      "nominal_eye_m": 2.2,
+      "horizon_y_fraction": 0.6851061399740858,
+      "photo": "artifacts/sbs-gate3/rectified/3281350541967811.png",
+      "photo_sha256": "6cf1e2a6f02736e4d48f9d75809ab4242cccdb7ad017258068eed9ecba078912",
+      "author": "zsolt",
+      "license": "CC BY-SA 4.0",
+      "page_url": "https://www.mapillary.com/app/?pKey=3281350541967811",
+      "width": 1280,
+      "height": 960,
+      "pos": [
+        -298.1964,
+        -199.2491,
+        132.3815
+      ],
+      "look_at": [
+        -263.9344,
+        -219.0452,
+        138.2328
+      ],
+      "fov_deg": 43.54635,
+      "road_station_m": 95.08644514105694,
+      "baseline_road_station_m": 155.08644514105694,
+      "baseline_left_of_road_m": 2.903082189701708,
+      "surface_trace": [
+        {
+          "station_m": 155.08644514105694,
+          "en": [
+            -250.16870246517058,
+            -235.08489066699434
+          ],
+          "levels_u_m": [
+            130.326169
+          ],
+          "chosen_u_m": 130.326169
+        },
+        {
+          "station_m": 152.58644514105694,
+          "en": [
+            -252.2129407989135,
+            -233.64576258553106
+          ],
+          "levels_u_m": [
+            130.304924
+          ],
+          "chosen_u_m": 130.304924
+        },
+        {
+          "station_m": 150.08644514105694,
+          "en": [
+            -254.2571791326564,
+            -232.2066345040678
+          ],
+          "levels_u_m": [
+            130.283668
+          ],
+          "chosen_u_m": 130.283668
+        },
+        {
+          "station_m": 147.58644514105694,
+          "en": [
+            -256.3014174663993,
+            -230.76750642260453
+          ],
+          "levels_u_m": [
+            130.26131
+          ],
+          "chosen_u_m": 130.26131
+        },
+        {
+          "station_m": 145.08644514105694,
+          "en": [
+            -258.34565580014214,
+            -229.32837834114125
+          ],
+          "levels_u_m": [
+            130.236015
+          ],
+          "chosen_u_m": 130.236015
+        },
+        {
+          "station_m": 142.58644514105694,
+          "en": [
+            -260.389894133885,
+            -227.88925025967805
+          ],
+          "levels_u_m": [
+            130.209772
+          ],
+          "chosen_u_m": 130.209772
+        },
+        {
+          "station_m": 140.08644514105694,
+          "en": [
+            -262.43413246762793,
+            -226.4501221782148
+          ],
+          "levels_u_m": [
+            130.183509
+          ],
+          "chosen_u_m": 130.183509
+        },
+        {
+          "station_m": 137.58644514105694,
+          "en": [
+            -264.47837080137083,
+            -225.01099409675155
+          ],
+          "levels_u_m": [
+            130.159452
+          ],
+          "chosen_u_m": 130.159452
+        },
+        {
+          "station_m": 135.08644514105694,
+          "en": [
+            -266.5226091351137,
+            -223.5718660152883
+          ],
+          "levels_u_m": [
+            130.140891
+          ],
+          "chosen_u_m": 130.140891
+        },
+        {
+          "station_m": 132.58644514105694,
+          "en": [
+            -268.56684746885657,
+            -222.13273793382498
+          ],
+          "levels_u_m": [
+            130.128705
+          ],
+          "chosen_u_m": 130.128705
+        },
+        {
+          "station_m": 130.08644514105694,
+          "en": [
+            -270.61108580259946,
+            -220.69360985236173
+          ],
+          "levels_u_m": [
+            130.121715
+          ],
+          "chosen_u_m": 130.121715
+        },
+        {
+          "station_m": 127.58644514105694,
+          "en": [
+            -272.65532413634236,
+            -219.25448177089854
+          ],
+          "levels_u_m": [
+            130.117369
+          ],
+          "chosen_u_m": 130.117369
+        },
+        {
+          "station_m": 125.08644514105694,
+          "en": [
+            -274.69956247008525,
+            -217.81535368943528
+          ],
+          "levels_u_m": [
+            130.112687
+          ],
+          "chosen_u_m": 130.112687
+        },
+        {
+          "station_m": 122.58644514105694,
+          "en": [
+            -276.652362428965,
+            -216.3402585019561
+          ],
+          "levels_u_m": [
+            130.109163
+          ],
+          "chosen_u_m": 130.109163
+        },
+        {
+          "station_m": 120.08644514105694,
+          "en": [
+            -278.61090750070224,
+            -214.78652068560044
+          ],
+          "levels_u_m": [
+            130.107776
+          ],
+          "chosen_u_m": 130.107776
+        },
+        {
+          "station_m": 117.58644514105694,
+          "en": [
+            -280.5694525724395,
+            -213.23278286924474
+          ],
+          "levels_u_m": [
+            130.109139
+          ],
+          "chosen_u_m": 130.109139
+        },
+        {
+          "station_m": 115.08644514105694,
+          "en": [
+            -282.5279976441768,
+            -211.6790450528891
+          ],
+          "levels_u_m": [
+            130.113637
+          ],
+          "chosen_u_m": 130.113637
+        },
+        {
+          "station_m": 112.58644514105694,
+          "en": [
+            -284.4865427159141,
+            -210.12530723653347
+          ],
+          "levels_u_m": [
+            130.119925
+          ],
+          "chosen_u_m": 130.119925
+        },
+        {
+          "station_m": 110.08644514105694,
+          "en": [
+            -286.4450877876514,
+            -208.57156942017775
+          ],
+          "levels_u_m": [
+            130.127827
+          ],
+          "chosen_u_m": 130.127827
+        },
+        {
+          "station_m": 107.58644514105694,
+          "en": [
+            -288.4036328593886,
+            -207.01783160382215
+          ],
+          "levels_u_m": [
+            130.136495
+          ],
+          "chosen_u_m": 130.136495
+        },
+        {
+          "station_m": 105.08644514105694,
+          "en": [
+            -290.36217793112587,
+            -205.4640937874665
+          ],
+          "levels_u_m": [
+            130.140684
+          ],
+          "chosen_u_m": 130.140684
+        },
+        {
+          "station_m": 102.58644514105694,
+          "en": [
+            -292.3207230028632,
+            -203.91035597111085
+          ],
+          "levels_u_m": [
+            130.144178
+          ],
+          "chosen_u_m": 130.144178
+        },
+        {
+          "station_m": 100.08644514105694,
+          "en": [
+            -294.27926807460045,
+            -202.35661815475515
+          ],
+          "levels_u_m": [
+            130.142015
+          ],
+          "chosen_u_m": 130.142015
+        },
+        {
+          "station_m": 97.58644514105694,
+          "en": [
+            -296.23781314633777,
+            -200.8028803383995
+          ],
+          "levels_u_m": [
+            130.159891
+          ],
+          "chosen_u_m": 130.159891
+        },
+        {
+          "station_m": 95.08644514105694,
+          "en": [
+            -298.19635821807503,
+            -199.24914252204383
+          ],
+          "levels_u_m": [
+            130.18146
+          ],
+          "chosen_u_m": 130.18146
+        }
+      ]
+    },
+    {
+      "probe": "sbs-refine1-3281350541967811-19",
+      "base_camera": "sbs-g3-b-3281350541967811",
+      "offset_m": -60,
+      "translation_axis": "road",
+      "left_delta_m": 0,
+      "nominal_eye_m": 2.2,
+      "horizon_y_fraction": 0.6851061399740858,
+      "photo": "artifacts/sbs-gate3/rectified/3281350541967811.png",
+      "photo_sha256": "6cf1e2a6f02736e4d48f9d75809ab4242cccdb7ad017258068eed9ecba078912",
+      "author": "zsolt",
+      "license": "CC BY-SA 4.0",
+      "page_url": "https://www.mapillary.com/app/?pKey=3281350541967811",
+      "width": 1280,
+      "height": 960,
+      "pos": [
+        -296.9534,
+        -197.6823,
+        132.4196
+      ],
+      "look_at": [
+        -262.6914,
+        -217.4783,
+        138.2709
+      ],
+      "fov_deg": 43.54635,
+      "road_station_m": 95.08644514105694,
+      "baseline_road_station_m": 155.08644514105694,
+      "baseline_left_of_road_m": 2.903082189701708,
+      "surface_trace": [
+        {
+          "station_m": 155.08644514105694,
+          "en": [
+            -249.01739999999995,
+            -233.44950000000006
+          ],
+          "levels_u_m": [
+            130.366163
+          ],
+          "chosen_u_m": 130.366163
+        },
+        {
+          "station_m": 152.58644514105694,
+          "en": [
+            -251.06163833374293,
+            -232.01037191853675
+          ],
+          "levels_u_m": [
+            130.344923
+          ],
+          "chosen_u_m": 130.344923
+        },
+        {
+          "station_m": 150.08644514105694,
+          "en": [
+            -253.10587666748583,
+            -230.5712438370735
+          ],
+          "levels_u_m": [
+            130.323685
+          ],
+          "chosen_u_m": 130.323685
+        },
+        {
+          "station_m": 147.58644514105694,
+          "en": [
+            -255.15011500122878,
+            -229.1321157556102
+          ],
+          "levels_u_m": [
+            130.301304
+          ],
+          "chosen_u_m": 130.301304
+        },
+        {
+          "station_m": 145.08644514105694,
+          "en": [
+            -257.19435333497165,
+            -227.6929876741469
+          ],
+          "levels_u_m": [
+            130.276013
+          ],
+          "chosen_u_m": 130.276013
+        },
+        {
+          "station_m": 142.58644514105694,
+          "en": [
+            -259.23859166871426,
+            -226.25385959268382
+          ],
+          "levels_u_m": [
+            130.249771
+          ],
+          "chosen_u_m": 130.249771
+        },
+        {
+          "station_m": 140.08644514105694,
+          "en": [
+            -261.2828300024573,
+            -224.81473151122051
+          ],
+          "levels_u_m": [
+            130.223519
+          ],
+          "chosen_u_m": 130.223519
+        },
+        {
+          "station_m": 137.58644514105694,
+          "en": [
+            -263.32706833620017,
+            -223.37560342975726
+          ],
+          "levels_u_m": [
+            130.199458
+          ],
+          "chosen_u_m": 130.199458
+        },
+        {
+          "station_m": 135.08644514105694,
+          "en": [
+            -265.37130666994307,
+            -221.936475348294
+          ],
+          "levels_u_m": [
+            130.180893
+          ],
+          "chosen_u_m": 130.180893
+        },
+        {
+          "station_m": 132.58644514105694,
+          "en": [
+            -267.4155450036861,
+            -220.49734726683064
+          ],
+          "levels_u_m": [
+            130.168688
+          ],
+          "chosen_u_m": 130.168688
+        },
+        {
+          "station_m": 130.08644514105694,
+          "en": [
+            -269.459783337429,
+            -219.0582191853674
+          ],
+          "levels_u_m": [
+            130.161696
+          ],
+          "chosen_u_m": 130.161696
+        },
+        {
+          "station_m": 127.58644514105694,
+          "en": [
+            -271.5040216711717,
+            -217.61909110390425
+          ],
+          "levels_u_m": [
+            130.157328
+          ],
+          "chosen_u_m": 130.157328
+        },
+        {
+          "station_m": 125.08644514105694,
+          "en": [
+            -273.5482600049146,
+            -216.179963022441
+          ],
+          "levels_u_m": [
+            130.152603
+          ],
+          "chosen_u_m": 130.152603
+        },
+        {
+          "station_m": 122.58644514105694,
+          "en": [
+            -275.4093721758804,
+            -214.77342244456634
+          ],
+          "levels_u_m": [
+            130.149213
+          ],
+          "chosen_u_m": 130.149213
+        },
+        {
+          "station_m": 120.08644514105694,
+          "en": [
+            -277.36791724761764,
+            -213.21968462821067
+          ],
+          "levels_u_m": [
+            130.147787
+          ],
+          "chosen_u_m": 130.147787
+        },
+        {
+          "station_m": 117.58644514105694,
+          "en": [
+            -279.326462319355,
+            -211.66594681185492
+          ],
+          "levels_u_m": [
+            130.149129
+          ],
+          "chosen_u_m": 130.149129
+        },
+        {
+          "station_m": 115.08644514105694,
+          "en": [
+            -281.28500739109234,
+            -210.1122089954993
+          ],
+          "levels_u_m": [
+            130.153629
+          ],
+          "chosen_u_m": 130.153629
+        },
+        {
+          "station_m": 112.58644514105694,
+          "en": [
+            -283.2435524628295,
+            -208.5584711791437
+          ],
+          "levels_u_m": [
+            130.159916
+          ],
+          "chosen_u_m": 130.159916
+        },
+        {
+          "station_m": 110.08644514105694,
+          "en": [
+            -285.202097534567,
+            -207.00473336278785
+          ],
+          "levels_u_m": [
+            130.167822
+          ],
+          "chosen_u_m": 130.167822
+        },
+        {
+          "station_m": 107.58644514105694,
+          "en": [
+            -287.1606426063041,
+            -205.45099554643232
+          ],
+          "levels_u_m": [
+            130.176491
+          ],
+          "chosen_u_m": 130.176491
+        },
+        {
+          "station_m": 105.08644514105694,
+          "en": [
+            -289.11918767804127,
+            -203.89725773007675
+          ],
+          "levels_u_m": [
+            130.17286
+          ],
+          "chosen_u_m": 130.17286
+        },
+        {
+          "station_m": 102.58644514105694,
+          "en": [
+            -291.0777327497786,
+            -202.34351991372108
+          ],
+          "levels_u_m": [
+            130.178678
+          ],
+          "chosen_u_m": 130.178678
+        },
+        {
+          "station_m": 100.08644514105694,
+          "en": [
+            -293.03627782151597,
+            -200.78978209736533
+          ],
+          "levels_u_m": [
+            130.176467
+          ],
+          "chosen_u_m": 130.176467
+        },
+        {
+          "station_m": 97.58644514105694,
+          "en": [
+            -294.99482289325334,
+            -199.23604428100958
+          ],
+          "levels_u_m": [
+            130.198037
+          ],
+          "chosen_u_m": 130.198037
+        },
+        {
+          "station_m": 95.08644514105694,
+          "en": [
+            -296.95336796499055,
+            -197.682306464654
+          ],
+          "levels_u_m": [
+            130.219606
+          ],
+          "chosen_u_m": 130.219606
+        }
+      ]
+    },
+    {
+      "probe": "sbs-refine1-3281350541967811-21",
+      "base_camera": "sbs-g3-b-3281350541967811",
+      "offset_m": -75,
+      "translation_axis": "road",
+      "left_delta_m": -2,
+      "nominal_eye_m": 2.2,
+      "horizon_y_fraction": 0.6851061399740858,
+      "photo": "artifacts/sbs-gate3/rectified/3281350541967811.png",
+      "photo_sha256": "6cf1e2a6f02736e4d48f9d75809ab4242cccdb7ad017258068eed9ecba078912",
+      "author": "zsolt",
+      "license": "CC BY-SA 4.0",
+      "page_url": "https://www.mapillary.com/app/?pKey=3281350541967811",
+      "width": 1280,
+      "height": 960,
+      "pos": [
+        -309.9493,
+        -189.9285,
+        132.5278
+      ],
+      "look_at": [
+        -275.6874,
+        -209.7245,
+        138.3792
+      ],
+      "fov_deg": 43.54635,
+      "road_station_m": 80.08644514105694,
+      "baseline_road_station_m": 155.08644514105694,
+      "baseline_left_of_road_m": 2.903082189701708,
+      "surface_trace": [
+        {
+          "station_m": 155.08644514105694,
+          "en": [
+            -250.16870246517058,
+            -235.08489066699434
+          ],
+          "levels_u_m": [
+            130.326169
+          ],
+          "chosen_u_m": 130.326169
+        },
+        {
+          "station_m": 152.58644514105694,
+          "en": [
+            -252.2129407989135,
+            -233.64576258553106
+          ],
+          "levels_u_m": [
+            130.304924
+          ],
+          "chosen_u_m": 130.304924
+        },
+        {
+          "station_m": 150.08644514105694,
+          "en": [
+            -254.2571791326564,
+            -232.2066345040678
+          ],
+          "levels_u_m": [
+            130.283668
+          ],
+          "chosen_u_m": 130.283668
+        },
+        {
+          "station_m": 147.58644514105694,
+          "en": [
+            -256.3014174663993,
+            -230.76750642260453
+          ],
+          "levels_u_m": [
+            130.26131
+          ],
+          "chosen_u_m": 130.26131
+        },
+        {
+          "station_m": 145.08644514105694,
+          "en": [
+            -258.34565580014214,
+            -229.32837834114125
+          ],
+          "levels_u_m": [
+            130.236015
+          ],
+          "chosen_u_m": 130.236015
+        },
+        {
+          "station_m": 142.58644514105694,
+          "en": [
+            -260.389894133885,
+            -227.88925025967805
+          ],
+          "levels_u_m": [
+            130.209772
+          ],
+          "chosen_u_m": 130.209772
+        },
+        {
+          "station_m": 140.08644514105694,
+          "en": [
+            -262.43413246762793,
+            -226.4501221782148
+          ],
+          "levels_u_m": [
+            130.183509
+          ],
+          "chosen_u_m": 130.183509
+        },
+        {
+          "station_m": 137.58644514105694,
+          "en": [
+            -264.47837080137083,
+            -225.01099409675155
+          ],
+          "levels_u_m": [
+            130.159452
+          ],
+          "chosen_u_m": 130.159452
+        },
+        {
+          "station_m": 135.08644514105694,
+          "en": [
+            -266.5226091351137,
+            -223.5718660152883
+          ],
+          "levels_u_m": [
+            130.140891
+          ],
+          "chosen_u_m": 130.140891
+        },
+        {
+          "station_m": 132.58644514105694,
+          "en": [
+            -268.56684746885657,
+            -222.13273793382498
+          ],
+          "levels_u_m": [
+            130.128705
+          ],
+          "chosen_u_m": 130.128705
+        },
+        {
+          "station_m": 130.08644514105694,
+          "en": [
+            -270.61108580259946,
+            -220.69360985236173
+          ],
+          "levels_u_m": [
+            130.121715
+          ],
+          "chosen_u_m": 130.121715
+        },
+        {
+          "station_m": 127.58644514105694,
+          "en": [
+            -272.65532413634236,
+            -219.25448177089854
+          ],
+          "levels_u_m": [
+            130.117369
+          ],
+          "chosen_u_m": 130.117369
+        },
+        {
+          "station_m": 125.08644514105694,
+          "en": [
+            -274.69956247008525,
+            -217.81535368943528
+          ],
+          "levels_u_m": [
+            130.112687
+          ],
+          "chosen_u_m": 130.112687
+        },
+        {
+          "station_m": 122.58644514105694,
+          "en": [
+            -276.652362428965,
+            -216.3402585019561
+          ],
+          "levels_u_m": [
+            130.109163
+          ],
+          "chosen_u_m": 130.109163
+        },
+        {
+          "station_m": 120.08644514105694,
+          "en": [
+            -278.61090750070224,
+            -214.78652068560044
+          ],
+          "levels_u_m": [
+            130.107776
+          ],
+          "chosen_u_m": 130.107776
+        },
+        {
+          "station_m": 117.58644514105694,
+          "en": [
+            -280.5694525724395,
+            -213.23278286924474
+          ],
+          "levels_u_m": [
+            130.109139
+          ],
+          "chosen_u_m": 130.109139
+        },
+        {
+          "station_m": 115.08644514105694,
+          "en": [
+            -282.5279976441768,
+            -211.6790450528891
+          ],
+          "levels_u_m": [
+            130.113637
+          ],
+          "chosen_u_m": 130.113637
+        },
+        {
+          "station_m": 112.58644514105694,
+          "en": [
+            -284.4865427159141,
+            -210.12530723653347
+          ],
+          "levels_u_m": [
+            130.119925
+          ],
+          "chosen_u_m": 130.119925
+        },
+        {
+          "station_m": 110.08644514105694,
+          "en": [
+            -286.4450877876514,
+            -208.57156942017775
+          ],
+          "levels_u_m": [
+            130.127827
+          ],
+          "chosen_u_m": 130.127827
+        },
+        {
+          "station_m": 107.58644514105694,
+          "en": [
+            -288.4036328593886,
+            -207.01783160382215
+          ],
+          "levels_u_m": [
+            130.136495
+          ],
+          "chosen_u_m": 130.136495
+        },
+        {
+          "station_m": 105.08644514105694,
+          "en": [
+            -290.36217793112587,
+            -205.4640937874665
+          ],
+          "levels_u_m": [
+            130.140684
+          ],
+          "chosen_u_m": 130.140684
+        },
+        {
+          "station_m": 102.58644514105694,
+          "en": [
+            -292.3207230028632,
+            -203.91035597111085
+          ],
+          "levels_u_m": [
+            130.144178
+          ],
+          "chosen_u_m": 130.144178
+        },
+        {
+          "station_m": 100.08644514105694,
+          "en": [
+            -294.27926807460045,
+            -202.35661815475515
+          ],
+          "levels_u_m": [
+            130.142015
+          ],
+          "chosen_u_m": 130.142015
+        },
+        {
+          "station_m": 97.58644514105694,
+          "en": [
+            -296.23781314633777,
+            -200.8028803383995
+          ],
+          "levels_u_m": [
+            130.159891
+          ],
+          "chosen_u_m": 130.159891
+        },
+        {
+          "station_m": 95.08644514105694,
+          "en": [
+            -298.19635821807503,
+            -199.24914252204383
+          ],
+          "levels_u_m": [
+            130.18146
+          ],
+          "chosen_u_m": 130.18146
+        },
+        {
+          "station_m": 92.58644514105694,
+          "en": [
+            -300.15490328981224,
+            -197.69540470568822
+          ],
+          "levels_u_m": [
+            130.20303
+          ],
+          "chosen_u_m": 130.20303
+        },
+        {
+          "station_m": 90.08644514105694,
+          "en": [
+            -302.1136782848707,
+            -196.1416169847541
+          ],
+          "levels_u_m": [
+            130.224599
+          ],
+          "chosen_u_m": 130.224599
+        },
+        {
+          "station_m": 87.58644514105694,
+          "en": [
+            -304.0725865894144,
+            -194.58833714699475
+          ],
+          "levels_u_m": [
+            130.246158
+          ],
+          "chosen_u_m": 130.246158
+        },
+        {
+          "station_m": 85.08644514105694,
+          "en": [
+            -306.0314948939581,
+            -193.03505730923544
+          ],
+          "levels_u_m": [
+            130.267897
+          ],
+          "chosen_u_m": 130.267897
+        },
+        {
+          "station_m": 82.58644514105694,
+          "en": [
+            -307.99040319850184,
+            -191.4817774714761
+          ],
+          "levels_u_m": [
+            130.297544
+          ],
+          "chosen_u_m": 130.297544
+        },
+        {
+          "station_m": 80.08644514105694,
+          "en": [
+            -309.9493115030456,
+            -189.92849763371677
+          ],
+          "levels_u_m": [
+            130.327849
+          ],
+          "chosen_u_m": 130.327849
+        }
+      ]
+    },
+    {
+      "probe": "sbs-refine1-3281350541967811-22",
+      "base_camera": "sbs-g3-b-3281350541967811",
+      "offset_m": -75,
+      "translation_axis": "road",
+      "left_delta_m": 0,
+      "nominal_eye_m": 2.2,
+      "horizon_y_fraction": 0.6851061399740858,
+      "photo": "artifacts/sbs-gate3/rectified/3281350541967811.png",
+      "photo_sha256": "6cf1e2a6f02736e4d48f9d75809ab4242cccdb7ad017258068eed9ecba078912",
+      "author": "zsolt",
+      "license": "CC BY-SA 4.0",
+      "page_url": "https://www.mapillary.com/app/?pKey=3281350541967811",
+      "width": 1280,
+      "height": 960,
+      "pos": [
+        -308.7067,
+        -188.3614,
+        132.568
+      ],
+      "look_at": [
+        -274.4448,
+        -208.1574,
+        138.4193
+      ],
+      "fov_deg": 43.54635,
+      "road_station_m": 80.08644514105694,
+      "baseline_road_station_m": 155.08644514105694,
+      "baseline_left_of_road_m": 2.903082189701708,
+      "surface_trace": [
+        {
+          "station_m": 155.08644514105694,
+          "en": [
+            -249.01739999999995,
+            -233.44950000000006
+          ],
+          "levels_u_m": [
+            130.366163
+          ],
+          "chosen_u_m": 130.366163
+        },
+        {
+          "station_m": 152.58644514105694,
+          "en": [
+            -251.06163833374293,
+            -232.01037191853675
+          ],
+          "levels_u_m": [
+            130.344923
+          ],
+          "chosen_u_m": 130.344923
+        },
+        {
+          "station_m": 150.08644514105694,
+          "en": [
+            -253.10587666748583,
+            -230.5712438370735
+          ],
+          "levels_u_m": [
+            130.323685
+          ],
+          "chosen_u_m": 130.323685
+        },
+        {
+          "station_m": 147.58644514105694,
+          "en": [
+            -255.15011500122878,
+            -229.1321157556102
+          ],
+          "levels_u_m": [
+            130.301304
+          ],
+          "chosen_u_m": 130.301304
+        },
+        {
+          "station_m": 145.08644514105694,
+          "en": [
+            -257.19435333497165,
+            -227.6929876741469
+          ],
+          "levels_u_m": [
+            130.276013
+          ],
+          "chosen_u_m": 130.276013
+        },
+        {
+          "station_m": 142.58644514105694,
+          "en": [
+            -259.23859166871426,
+            -226.25385959268382
+          ],
+          "levels_u_m": [
+            130.249771
+          ],
+          "chosen_u_m": 130.249771
+        },
+        {
+          "station_m": 140.08644514105694,
+          "en": [
+            -261.2828300024573,
+            -224.81473151122051
+          ],
+          "levels_u_m": [
+            130.223519
+          ],
+          "chosen_u_m": 130.223519
+        },
+        {
+          "station_m": 137.58644514105694,
+          "en": [
+            -263.32706833620017,
+            -223.37560342975726
+          ],
+          "levels_u_m": [
+            130.199458
+          ],
+          "chosen_u_m": 130.199458
+        },
+        {
+          "station_m": 135.08644514105694,
+          "en": [
+            -265.37130666994307,
+            -221.936475348294
+          ],
+          "levels_u_m": [
+            130.180893
+          ],
+          "chosen_u_m": 130.180893
+        },
+        {
+          "station_m": 132.58644514105694,
+          "en": [
+            -267.4155450036861,
+            -220.49734726683064
+          ],
+          "levels_u_m": [
+            130.168688
+          ],
+          "chosen_u_m": 130.168688
+        },
+        {
+          "station_m": 130.08644514105694,
+          "en": [
+            -269.459783337429,
+            -219.0582191853674
+          ],
+          "levels_u_m": [
+            130.161696
+          ],
+          "chosen_u_m": 130.161696
+        },
+        {
+          "station_m": 127.58644514105694,
+          "en": [
+            -271.5040216711717,
+            -217.61909110390425
+          ],
+          "levels_u_m": [
+            130.157328
+          ],
+          "chosen_u_m": 130.157328
+        },
+        {
+          "station_m": 125.08644514105694,
+          "en": [
+            -273.5482600049146,
+            -216.179963022441
+          ],
+          "levels_u_m": [
+            130.152603
+          ],
+          "chosen_u_m": 130.152603
+        },
+        {
+          "station_m": 122.58644514105694,
+          "en": [
+            -275.4093721758804,
+            -214.77342244456634
+          ],
+          "levels_u_m": [
+            130.149213
+          ],
+          "chosen_u_m": 130.149213
+        },
+        {
+          "station_m": 120.08644514105694,
+          "en": [
+            -277.36791724761764,
+            -213.21968462821067
+          ],
+          "levels_u_m": [
+            130.147787
+          ],
+          "chosen_u_m": 130.147787
+        },
+        {
+          "station_m": 117.58644514105694,
+          "en": [
+            -279.326462319355,
+            -211.66594681185492
+          ],
+          "levels_u_m": [
+            130.149129
+          ],
+          "chosen_u_m": 130.149129
+        },
+        {
+          "station_m": 115.08644514105694,
+          "en": [
+            -281.28500739109234,
+            -210.1122089954993
+          ],
+          "levels_u_m": [
+            130.153629
+          ],
+          "chosen_u_m": 130.153629
+        },
+        {
+          "station_m": 112.58644514105694,
+          "en": [
+            -283.2435524628295,
+            -208.5584711791437
+          ],
+          "levels_u_m": [
+            130.159916
+          ],
+          "chosen_u_m": 130.159916
+        },
+        {
+          "station_m": 110.08644514105694,
+          "en": [
+            -285.202097534567,
+            -207.00473336278785
+          ],
+          "levels_u_m": [
+            130.167822
+          ],
+          "chosen_u_m": 130.167822
+        },
+        {
+          "station_m": 107.58644514105694,
+          "en": [
+            -287.1606426063041,
+            -205.45099554643232
+          ],
+          "levels_u_m": [
+            130.176491
+          ],
+          "chosen_u_m": 130.176491
+        },
+        {
+          "station_m": 105.08644514105694,
+          "en": [
+            -289.11918767804127,
+            -203.89725773007675
+          ],
+          "levels_u_m": [
+            130.17286
+          ],
+          "chosen_u_m": 130.17286
+        },
+        {
+          "station_m": 102.58644514105694,
+          "en": [
+            -291.0777327497786,
+            -202.34351991372108
+          ],
+          "levels_u_m": [
+            130.178678
+          ],
+          "chosen_u_m": 130.178678
+        },
+        {
+          "station_m": 100.08644514105694,
+          "en": [
+            -293.03627782151597,
+            -200.78978209736533
+          ],
+          "levels_u_m": [
+            130.176467
+          ],
+          "chosen_u_m": 130.176467
+        },
+        {
+          "station_m": 97.58644514105694,
+          "en": [
+            -294.99482289325334,
+            -199.23604428100958
+          ],
+          "levels_u_m": [
+            130.198037
+          ],
+          "chosen_u_m": 130.198037
+        },
+        {
+          "station_m": 95.08644514105694,
+          "en": [
+            -296.95336796499055,
+            -197.682306464654
+          ],
+          "levels_u_m": [
+            130.219606
+          ],
+          "chosen_u_m": 130.219606
+        },
+        {
+          "station_m": 92.58644514105694,
+          "en": [
+            -298.91191303672764,
+            -196.12856864829845
+          ],
+          "levels_u_m": [
+            130.241176
+          ],
+          "chosen_u_m": 130.241176
+        },
+        {
+          "station_m": 90.08644514105694,
+          "en": [
+            -300.87105441466315,
+            -194.5744903411192
+          ],
+          "levels_u_m": [
+            130.262754
+          ],
+          "chosen_u_m": 130.262754
+        },
+        {
+          "station_m": 87.58644514105694,
+          "en": [
+            -302.829962719207,
+            -193.02121050335978
+          ],
+          "levels_u_m": [
+            130.28466
+          ],
+          "chosen_u_m": 130.28466
+        },
+        {
+          "station_m": 85.08644514105694,
+          "en": [
+            -304.7888710237507,
+            -191.46793066560048
+          ],
+          "levels_u_m": [
+            130.307807
+          ],
+          "chosen_u_m": 130.307807
+        },
+        {
+          "station_m": 82.58644514105694,
+          "en": [
+            -306.7477793282944,
+            -189.91465082784114
+          ],
+          "levels_u_m": [
+            130.337791
+          ],
+          "chosen_u_m": 130.337791
+        },
+        {
+          "station_m": 80.08644514105694,
+          "en": [
+            -308.70668763283817,
+            -188.3613709900818
+          ],
+          "levels_u_m": [
+            130.368013
+          ],
+          "chosen_u_m": 130.368013
+        }
+      ]
+    },
+    {
+      "probe": "sbs-refine1-297817221966185-24",
+      "base_camera": "sbs-g3-b-297817221966185",
+      "offset_m": -60,
+      "translation_axis": "road",
+      "left_delta_m": 0,
+      "nominal_eye_m": 2.2,
+      "horizon_y_fraction": 0.6851062165673607,
+      "photo": "artifacts/sbs-gate3/rectified/297817221966185.png",
+      "photo_sha256": "0db1fb1dc739f82198c4f6f488b74725fd9793bbc4c77fd80191d5a3052464cd",
+      "author": "zsolt",
+      "license": "CC BY-SA 4.0",
+      "page_url": "https://www.mapillary.com/app/?pKey=297817221966185",
+      "width": 1280,
+      "height": 960,
+      "pos": [
+        -345.3369,
+        -162.3773,
+        133.2781
+      ],
+      "look_at": [
+        -310.1576,
+        -180.493,
+        139.1294
+      ],
+      "fov_deg": 43.54635,
+      "road_station_m": 35.24016472816436,
+      "baseline_road_station_m": 95.24016472816436,
+      "baseline_left_of_road_m": 0.5044169914612603,
+      "surface_trace": [
+        {
+          "station_m": 95.24016472816436,
+          "en": [
+            -298.3237,
+            -199.657
+          ],
+          "levels_u_m": [
+            130.17253
+          ],
+          "chosen_u_m": 130.17253
+        },
+        {
+          "station_m": 92.74016472816436,
+          "en": [
+            -300.28224507173724,
+            -198.10326218364435
+          ],
+          "levels_u_m": [
+            130.1941
+          ],
+          "chosen_u_m": 130.1941
+        },
+        {
+          "station_m": 90.24016472816436,
+          "en": [
+            -302.24092470034566,
+            -196.54950422590946
+          ],
+          "levels_u_m": [
+            130.215669
+          ],
+          "chosen_u_m": 130.215669
+        },
+        {
+          "station_m": 87.74016472816436,
+          "en": [
+            -304.1998330048894,
+            -194.99622438815015
+          ],
+          "levels_u_m": [
+            130.237227
+          ],
+          "chosen_u_m": 130.237227
+        },
+        {
+          "station_m": 85.24016472816436,
+          "en": [
+            -306.15874130943314,
+            -193.4429445503908
+          ],
+          "levels_u_m": [
+            130.257992
+          ],
+          "chosen_u_m": 130.257992
+        },
+        {
+          "station_m": 82.74016472816436,
+          "en": [
+            -308.1176496139768,
+            -191.88966471263146
+          ],
+          "levels_u_m": [
+            130.287545
+          ],
+          "chosen_u_m": 130.287545
+        },
+        {
+          "station_m": 80.24016472816436,
+          "en": [
+            -310.0765579185205,
+            -190.33638487487218
+          ],
+          "levels_u_m": [
+            130.317913
+          ],
+          "chosen_u_m": 130.317913
+        },
+        {
+          "station_m": 77.74016472816436,
+          "en": [
+            -312.0354662230643,
+            -188.78310503711282
+          ],
+          "levels_u_m": [
+            130.347291
+          ],
+          "chosen_u_m": 130.347291
+        },
+        {
+          "station_m": 75.24016472816436,
+          "en": [
+            -313.994374527608,
+            -187.22982519935348
+          ],
+          "levels_u_m": [
+            130.377552
+          ],
+          "chosen_u_m": 130.377552
+        },
+        {
+          "station_m": 72.74016472816436,
+          "en": [
+            -315.9532828321517,
+            -185.67654536159418
+          ],
+          "levels_u_m": [
+            130.409015
+          ],
+          "chosen_u_m": 130.409015
+        },
+        {
+          "station_m": 70.24016472816436,
+          "en": [
+            -317.91219113669547,
+            -184.12326552383482
+          ],
+          "levels_u_m": [
+            130.441676
+          ],
+          "chosen_u_m": 130.441676
+        },
+        {
+          "station_m": 67.74016472816436,
+          "en": [
+            -319.87109944123915,
+            -182.5699856860755
+          ],
+          "levels_u_m": [
+            130.475656
+          ],
+          "chosen_u_m": 130.475656
+        },
+        {
+          "station_m": 65.24016472816436,
+          "en": [
+            -321.83000774578284,
+            -181.0167058483162
+          ],
+          "levels_u_m": [
+            130.510839
+          ],
+          "chosen_u_m": 130.510839
+        },
+        {
+          "station_m": 62.74016472816436,
+          "en": [
+            -323.78891605032663,
+            -179.46342601055684
+          ],
+          "levels_u_m": [
+            130.547991
+          ],
+          "chosen_u_m": 130.547991
+        },
+        {
+          "station_m": 60.24016472816436,
+          "en": [
+            -325.7478243548703,
+            -177.91014617279754
+          ],
+          "levels_u_m": [
+            130.589184
+          ],
+          "chosen_u_m": 130.589184
+        },
+        {
+          "station_m": 57.74016472816436,
+          "en": [
+            -327.706732659414,
+            -176.3568663350382
+          ],
+          "levels_u_m": [
+            130.634794
+          ],
+          "chosen_u_m": 130.634794
+        },
+        {
+          "station_m": 55.24016472816436,
+          "en": [
+            -329.6656409639578,
+            -174.80358649727884
+          ],
+          "levels_u_m": [
+            130.684543
+          ],
+          "chosen_u_m": 130.684543
+        },
+        {
+          "station_m": 52.74016472816436,
+          "en": [
+            -331.6245492685015,
+            -173.25030665951954
+          ],
+          "levels_u_m": [
+            130.733945
+          ],
+          "chosen_u_m": 130.733945
+        },
+        {
+          "station_m": 50.24016472816436,
+          "en": [
+            -333.5834575730452,
+            -171.6970268217602
+          ],
+          "levels_u_m": [
+            130.780366
+          ],
+          "chosen_u_m": 130.780366
+        },
+        {
+          "station_m": 47.74016472816436,
+          "en": [
+            -335.54236587758896,
+            -170.14374698400087
+          ],
+          "levels_u_m": [
+            130.824654
+          ],
+          "chosen_u_m": 130.824654
+        },
+        {
+          "station_m": 45.24016472816436,
+          "en": [
+            -337.50127418213265,
+            -168.59046714624154
+          ],
+          "levels_u_m": [
+            130.869836
+          ],
+          "chosen_u_m": 130.869836
+        },
+        {
+          "station_m": 42.74016472816436,
+          "en": [
+            -339.4601824866764,
+            -167.0371873084822
+          ],
+          "levels_u_m": [
+            130.916686
+          ],
+          "chosen_u_m": 130.916686
+        },
+        {
+          "station_m": 40.24016472816436,
+          "en": [
+            -341.4190907912201,
+            -165.4839074707229
+          ],
+          "levels_u_m": [
+            130.9668
+          ],
+          "chosen_u_m": 130.9668
+        },
+        {
+          "station_m": 37.74016472816436,
+          "en": [
+            -343.3779990957638,
+            -163.93062763296356
+          ],
+          "levels_u_m": [
+            131.02051
+          ],
+          "chosen_u_m": 131.02051
+        },
+        {
+          "station_m": 35.24016472816436,
+          "en": [
+            -345.33690740030755,
+            -162.37734779520423
+          ],
+          "levels_u_m": [
+            131.078068
+          ],
+          "chosen_u_m": 131.078068
+        }
+      ]
+    },
+    {
+      "probe": "sbs-refine1-297817221966185-25",
+      "base_camera": "sbs-g3-b-297817221966185",
+      "offset_m": -60,
+      "translation_axis": "road",
+      "left_delta_m": 2,
+      "nominal_eye_m": 2.2,
+      "horizon_y_fraction": 0.6851062165673607,
+      "photo": "artifacts/sbs-gate3/rectified/297817221966185.png",
+      "photo_sha256": "0db1fb1dc739f82198c4f6f488b74725fd9793bbc4c77fd80191d5a3052464cd",
+      "author": "zsolt",
+      "license": "CC BY-SA 4.0",
+      "page_url": "https://www.mapillary.com/app/?pKey=297817221966185",
+      "width": 1280,
+      "height": 960,
+      "pos": [
+        -344.0943,
+        -160.8102,
+        133.3188
+      ],
+      "look_at": [
+        -308.9149,
+        -178.9258,
+        139.1701
+      ],
+      "fov_deg": 43.54635,
+      "road_station_m": 35.24016472816436,
+      "baseline_road_station_m": 95.24016472816436,
+      "baseline_left_of_road_m": 0.5044169914612603,
+      "surface_trace": [
+        {
+          "station_m": 95.24016472816436,
+          "en": [
+            -297.08070974691543,
+            -198.0901639426102
+          ],
+          "levels_u_m": [
+            130.210676
+          ],
+          "chosen_u_m": 130.210676
+        },
+        {
+          "station_m": 92.74016472816436,
+          "en": [
+            -299.0392548186527,
+            -196.53642612625453
+          ],
+          "levels_u_m": [
+            130.232246
+          ],
+          "chosen_u_m": 130.232246
+        },
+        {
+          "station_m": 90.24016472816436,
+          "en": [
+            -300.9983008301382,
+            -194.9823775822745
+          ],
+          "levels_u_m": [
+            130.253819
+          ],
+          "chosen_u_m": 130.253819
+        },
+        {
+          "station_m": 87.74016472816436,
+          "en": [
+            -302.9572091346819,
+            -193.4290977445152
+          ],
+          "levels_u_m": [
+            130.27549
+          ],
+          "chosen_u_m": 130.27549
+        },
+        {
+          "station_m": 85.24016472816436,
+          "en": [
+            -304.9161174392257,
+            -191.87581790675583
+          ],
+          "levels_u_m": [
+            130.298165
+          ],
+          "chosen_u_m": 130.298165
+        },
+        {
+          "station_m": 82.74016472816436,
+          "en": [
+            -306.87502574376936,
+            -190.3225380689965
+          ],
+          "levels_u_m": [
+            130.327814
+          ],
+          "chosen_u_m": 130.327814
+        },
+        {
+          "station_m": 80.24016472816436,
+          "en": [
+            -308.833934048313,
+            -188.7692582312373
+          ],
+          "levels_u_m": [
+            130.358087
+          ],
+          "chosen_u_m": 130.358087
+        },
+        {
+          "station_m": 77.74016472816436,
+          "en": [
+            -310.79284235285684,
+            -187.21597839347785
+          ],
+          "levels_u_m": [
+            130.388053
+          ],
+          "chosen_u_m": 130.388053
+        },
+        {
+          "station_m": 75.24016472816436,
+          "en": [
+            -312.7517506574005,
+            -185.66269855571852
+          ],
+          "levels_u_m": [
+            130.418311
+          ],
+          "chosen_u_m": 130.418311
+        },
+        {
+          "station_m": 72.74016472816436,
+          "en": [
+            -314.71065896194415,
+            -184.1094187179593
+          ],
+          "levels_u_m": [
+            130.449297
+          ],
+          "chosen_u_m": 130.449297
+        },
+        {
+          "station_m": 70.24016472816436,
+          "en": [
+            -316.669567266488,
+            -182.55613888019985
+          ],
+          "levels_u_m": [
+            130.482617
+          ],
+          "chosen_u_m": 130.482617
+        },
+        {
+          "station_m": 67.74016472816436,
+          "en": [
+            -318.6284755710317,
+            -181.00285904244055
+          ],
+          "levels_u_m": [
+            130.516415
+          ],
+          "chosen_u_m": 130.516415
+        },
+        {
+          "station_m": 65.24016472816436,
+          "en": [
+            -320.5873838755753,
+            -179.44957920468133
+          ],
+          "levels_u_m": [
+            130.551691
+          ],
+          "chosen_u_m": 130.551691
+        },
+        {
+          "station_m": 62.74016472816436,
+          "en": [
+            -322.54629218011917,
+            -177.89629936692188
+          ],
+          "levels_u_m": [
+            130.588868
+          ],
+          "chosen_u_m": 130.588868
+        },
+        {
+          "station_m": 60.24016472816436,
+          "en": [
+            -324.5052004846628,
+            -176.3430195291626
+          ],
+          "levels_u_m": [
+            130.629675
+          ],
+          "chosen_u_m": 130.629675
+        },
+        {
+          "station_m": 57.74016472816436,
+          "en": [
+            -326.4641087892065,
+            -174.78973969140333
+          ],
+          "levels_u_m": [
+            130.67586
+          ],
+          "chosen_u_m": 130.67586
+        },
+        {
+          "station_m": 55.24016472816436,
+          "en": [
+            -328.42301709375033,
+            -173.23645985364388
+          ],
+          "levels_u_m": [
+            130.725621
+          ],
+          "chosen_u_m": 130.725621
+        },
+        {
+          "station_m": 52.74016472816436,
+          "en": [
+            -330.381925398294,
+            -171.68318001588457
+          ],
+          "levels_u_m": [
+            130.774122
+          ],
+          "chosen_u_m": 130.774122
+        },
+        {
+          "station_m": 50.24016472816436,
+          "en": [
+            -332.34083370283776,
+            -170.12990017812524
+          ],
+          "levels_u_m": [
+            130.821117
+          ],
+          "chosen_u_m": 130.821117
+        },
+        {
+          "station_m": 47.74016472816436,
+          "en": [
+            -334.2997420073815,
+            -168.5766203403659
+          ],
+          "levels_u_m": [
+            130.865731
+          ],
+          "chosen_u_m": 130.865731
+        },
+        {
+          "station_m": 45.24016472816436,
+          "en": [
+            -336.2586503119252,
+            -167.02334050260657
+          ],
+          "levels_u_m": [
+            130.910846
+          ],
+          "chosen_u_m": 130.910846
+        },
+        {
+          "station_m": 42.74016472816436,
+          "en": [
+            -338.2175586164689,
+            -165.47006066484724
+          ],
+          "levels_u_m": [
+            130.957151
+          ],
+          "chosen_u_m": 130.957151
+        },
+        {
+          "station_m": 40.24016472816436,
+          "en": [
+            -340.17646692101266,
+            -163.91678082708793
+          ],
+          "levels_u_m": [
+            131.007397
+          ],
+          "chosen_u_m": 131.007397
+        },
+        {
+          "station_m": 37.74016472816436,
+          "en": [
+            -342.13537522555634,
+            -162.3635009893286
+          ],
+          "levels_u_m": [
+            131.061576
+          ],
+          "chosen_u_m": 131.061576
+        },
+        {
+          "station_m": 35.24016472816436,
+          "en": [
+            -344.0942835301001,
+            -160.81022115156927
+          ],
+          "levels_u_m": [
+            131.118827
+          ],
+          "chosen_u_m": 131.118827
+        }
+      ]
+    },
+    {
+      "probe": "sbs-refine1-297817221966185-26",
+      "base_camera": "sbs-g3-b-297817221966185",
+      "offset_m": -75,
+      "translation_axis": "road",
+      "left_delta_m": 0,
+      "nominal_eye_m": 2.2,
+      "horizon_y_fraction": 0.6851062165673607,
+      "photo": "artifacts/sbs-gate3/rectified/297817221966185.png",
+      "photo_sha256": "0db1fb1dc739f82198c4f6f488b74725fd9793bbc4c77fd80191d5a3052464cd",
+      "author": "zsolt",
+      "license": "CC BY-SA 4.0",
+      "page_url": "https://www.mapillary.com/app/?pKey=297817221966185",
+      "width": 1280,
+      "height": 960,
+      "pos": [
+        -357.0172,
+        -152.9743,
+        133.608
+      ],
+      "look_at": [
+        -321.8379,
+        -171.09,
+        139.4593
+      ],
+      "fov_deg": 43.54635,
+      "road_station_m": 20.24016472816436,
+      "baseline_road_station_m": 95.24016472816436,
+      "baseline_left_of_road_m": 0.5044169914612603,
+      "surface_trace": [
+        {
+          "station_m": 95.24016472816436,
+          "en": [
+            -298.3237,
+            -199.657
+          ],
+          "levels_u_m": [
+            130.17253
+          ],
+          "chosen_u_m": 130.17253
+        },
+        {
+          "station_m": 92.74016472816436,
+          "en": [
+            -300.28224507173724,
+            -198.10326218364435
+          ],
+          "levels_u_m": [
+            130.1941
+          ],
+          "chosen_u_m": 130.1941
+        },
+        {
+          "station_m": 90.24016472816436,
+          "en": [
+            -302.24092470034566,
+            -196.54950422590946
+          ],
+          "levels_u_m": [
+            130.215669
+          ],
+          "chosen_u_m": 130.215669
+        },
+        {
+          "station_m": 87.74016472816436,
+          "en": [
+            -304.1998330048894,
+            -194.99622438815015
+          ],
+          "levels_u_m": [
+            130.237227
+          ],
+          "chosen_u_m": 130.237227
+        },
+        {
+          "station_m": 85.24016472816436,
+          "en": [
+            -306.15874130943314,
+            -193.4429445503908
+          ],
+          "levels_u_m": [
+            130.257992
+          ],
+          "chosen_u_m": 130.257992
+        },
+        {
+          "station_m": 82.74016472816436,
+          "en": [
+            -308.1176496139768,
+            -191.88966471263146
+          ],
+          "levels_u_m": [
+            130.287545
+          ],
+          "chosen_u_m": 130.287545
+        },
+        {
+          "station_m": 80.24016472816436,
+          "en": [
+            -310.0765579185205,
+            -190.33638487487218
+          ],
+          "levels_u_m": [
+            130.317913
+          ],
+          "chosen_u_m": 130.317913
+        },
+        {
+          "station_m": 77.74016472816436,
+          "en": [
+            -312.0354662230643,
+            -188.78310503711282
+          ],
+          "levels_u_m": [
+            130.347291
+          ],
+          "chosen_u_m": 130.347291
+        },
+        {
+          "station_m": 75.24016472816436,
+          "en": [
+            -313.994374527608,
+            -187.22982519935348
+          ],
+          "levels_u_m": [
+            130.377552
+          ],
+          "chosen_u_m": 130.377552
+        },
+        {
+          "station_m": 72.74016472816436,
+          "en": [
+            -315.9532828321517,
+            -185.67654536159418
+          ],
+          "levels_u_m": [
+            130.409015
+          ],
+          "chosen_u_m": 130.409015
+        },
+        {
+          "station_m": 70.24016472816436,
+          "en": [
+            -317.91219113669547,
+            -184.12326552383482
+          ],
+          "levels_u_m": [
+            130.441676
+          ],
+          "chosen_u_m": 130.441676
+        },
+        {
+          "station_m": 67.74016472816436,
+          "en": [
+            -319.87109944123915,
+            -182.5699856860755
+          ],
+          "levels_u_m": [
+            130.475656
+          ],
+          "chosen_u_m": 130.475656
+        },
+        {
+          "station_m": 65.24016472816436,
+          "en": [
+            -321.83000774578284,
+            -181.0167058483162
+          ],
+          "levels_u_m": [
+            130.510839
+          ],
+          "chosen_u_m": 130.510839
+        },
+        {
+          "station_m": 62.74016472816436,
+          "en": [
+            -323.78891605032663,
+            -179.46342601055684
+          ],
+          "levels_u_m": [
+            130.547991
+          ],
+          "chosen_u_m": 130.547991
+        },
+        {
+          "station_m": 60.24016472816436,
+          "en": [
+            -325.7478243548703,
+            -177.91014617279754
+          ],
+          "levels_u_m": [
+            130.589184
+          ],
+          "chosen_u_m": 130.589184
+        },
+        {
+          "station_m": 57.74016472816436,
+          "en": [
+            -327.706732659414,
+            -176.3568663350382
+          ],
+          "levels_u_m": [
+            130.634794
+          ],
+          "chosen_u_m": 130.634794
+        },
+        {
+          "station_m": 55.24016472816436,
+          "en": [
+            -329.6656409639578,
+            -174.80358649727884
+          ],
+          "levels_u_m": [
+            130.684543
+          ],
+          "chosen_u_m": 130.684543
+        },
+        {
+          "station_m": 52.74016472816436,
+          "en": [
+            -331.6245492685015,
+            -173.25030665951954
+          ],
+          "levels_u_m": [
+            130.733945
+          ],
+          "chosen_u_m": 130.733945
+        },
+        {
+          "station_m": 50.24016472816436,
+          "en": [
+            -333.5834575730452,
+            -171.6970268217602
+          ],
+          "levels_u_m": [
+            130.780366
+          ],
+          "chosen_u_m": 130.780366
+        },
+        {
+          "station_m": 47.74016472816436,
+          "en": [
+            -335.54236587758896,
+            -170.14374698400087
+          ],
+          "levels_u_m": [
+            130.824654
+          ],
+          "chosen_u_m": 130.824654
+        },
+        {
+          "station_m": 45.24016472816436,
+          "en": [
+            -337.50127418213265,
+            -168.59046714624154
+          ],
+          "levels_u_m": [
+            130.869836
+          ],
+          "chosen_u_m": 130.869836
+        },
+        {
+          "station_m": 42.74016472816436,
+          "en": [
+            -339.4601824866764,
+            -167.0371873084822
+          ],
+          "levels_u_m": [
+            130.916686
+          ],
+          "chosen_u_m": 130.916686
+        },
+        {
+          "station_m": 40.24016472816436,
+          "en": [
+            -341.4190907912201,
+            -165.4839074707229
+          ],
+          "levels_u_m": [
+            130.9668
+          ],
+          "chosen_u_m": 130.9668
+        },
+        {
+          "station_m": 37.74016472816436,
+          "en": [
+            -343.3779990957638,
+            -163.93062763296356
+          ],
+          "levels_u_m": [
+            131.02051
+          ],
+          "chosen_u_m": 131.02051
+        },
+        {
+          "station_m": 35.24016472816436,
+          "en": [
+            -345.33690740030755,
+            -162.37734779520423
+          ],
+          "levels_u_m": [
+            131.078068
+          ],
+          "chosen_u_m": 131.078068
+        },
+        {
+          "station_m": 32.74016472816436,
+          "en": [
+            -347.29581570485124,
+            -160.8240679574449
+          ],
+          "levels_u_m": [
+            131.137112
+          ],
+          "chosen_u_m": 131.137112
+        },
+        {
+          "station_m": 30.24016472816436,
+          "en": [
+            -349.24333370770483,
+            -159.26453636072253
+          ],
+          "levels_u_m": [
+            131.196006
+          ],
+          "chosen_u_m": 131.196006
+        },
+        {
+          "station_m": 27.74016472816436,
+          "en": [
+            -351.18680675008295,
+            -157.69198666880519
+          ],
+          "levels_u_m": [
+            131.253976
+          ],
+          "chosen_u_m": 131.253976
+        },
+        {
+          "station_m": 25.24016472816436,
+          "en": [
+            -353.1302797924611,
+            -156.1194369768878
+          ],
+          "levels_u_m": [
+            131.308756
+          ],
+          "chosen_u_m": 131.308756
+        },
+        {
+          "station_m": 22.74016472816436,
+          "en": [
+            -355.07375283483924,
+            -154.54688728497044
+          ],
+          "levels_u_m": [
+            131.359808
+          ],
+          "chosen_u_m": 131.359808
+        },
+        {
+          "station_m": 20.24016472816436,
+          "en": [
+            -357.0172258772174,
+            -152.97433759305306
+          ],
+          "levels_u_m": [
+            131.408014
+          ],
+          "chosen_u_m": 131.408014
+        }
+      ]
+    },
+    {
+      "probe": "sbs-refine1-297817221966185-27",
+      "base_camera": "sbs-g3-b-297817221966185",
+      "offset_m": -75,
+      "translation_axis": "road",
+      "left_delta_m": 2,
+      "nominal_eye_m": 2.2,
+      "horizon_y_fraction": 0.6851062165673607,
+      "photo": "artifacts/sbs-gate3/rectified/297817221966185.png",
+      "photo_sha256": "0db1fb1dc739f82198c4f6f488b74725fd9793bbc4c77fd80191d5a3052464cd",
+      "author": "zsolt",
+      "license": "CC BY-SA 4.0",
+      "page_url": "https://www.mapillary.com/app/?pKey=297817221966185",
+      "width": 1280,
+      "height": 960,
+      "pos": [
+        -355.7592,
+        -151.4196,
+        133.6475
+      ],
+      "look_at": [
+        -320.5798,
+        -169.5352,
+        139.4988
+      ],
+      "fov_deg": 43.54635,
+      "road_station_m": 20.24016472816436,
+      "baseline_road_station_m": 95.24016472816436,
+      "baseline_left_of_road_m": 0.5044169914612603,
+      "surface_trace": [
+        {
+          "station_m": 95.24016472816436,
+          "en": [
+            -297.08070974691543,
+            -198.0901639426102
+          ],
+          "levels_u_m": [
+            130.210676
+          ],
+          "chosen_u_m": 130.210676
+        },
+        {
+          "station_m": 92.74016472816436,
+          "en": [
+            -299.0392548186527,
+            -196.53642612625453
+          ],
+          "levels_u_m": [
+            130.232246
+          ],
+          "chosen_u_m": 130.232246
+        },
+        {
+          "station_m": 90.24016472816436,
+          "en": [
+            -300.9983008301382,
+            -194.9823775822745
+          ],
+          "levels_u_m": [
+            130.253819
+          ],
+          "chosen_u_m": 130.253819
+        },
+        {
+          "station_m": 87.74016472816436,
+          "en": [
+            -302.9572091346819,
+            -193.4290977445152
+          ],
+          "levels_u_m": [
+            130.27549
+          ],
+          "chosen_u_m": 130.27549
+        },
+        {
+          "station_m": 85.24016472816436,
+          "en": [
+            -304.9161174392257,
+            -191.87581790675583
+          ],
+          "levels_u_m": [
+            130.298165
+          ],
+          "chosen_u_m": 130.298165
+        },
+        {
+          "station_m": 82.74016472816436,
+          "en": [
+            -306.87502574376936,
+            -190.3225380689965
+          ],
+          "levels_u_m": [
+            130.327814
+          ],
+          "chosen_u_m": 130.327814
+        },
+        {
+          "station_m": 80.24016472816436,
+          "en": [
+            -308.833934048313,
+            -188.7692582312373
+          ],
+          "levels_u_m": [
+            130.358087
+          ],
+          "chosen_u_m": 130.358087
+        },
+        {
+          "station_m": 77.74016472816436,
+          "en": [
+            -310.79284235285684,
+            -187.21597839347785
+          ],
+          "levels_u_m": [
+            130.388053
+          ],
+          "chosen_u_m": 130.388053
+        },
+        {
+          "station_m": 75.24016472816436,
+          "en": [
+            -312.7517506574005,
+            -185.66269855571852
+          ],
+          "levels_u_m": [
+            130.418311
+          ],
+          "chosen_u_m": 130.418311
+        },
+        {
+          "station_m": 72.74016472816436,
+          "en": [
+            -314.71065896194415,
+            -184.1094187179593
+          ],
+          "levels_u_m": [
+            130.449297
+          ],
+          "chosen_u_m": 130.449297
+        },
+        {
+          "station_m": 70.24016472816436,
+          "en": [
+            -316.669567266488,
+            -182.55613888019985
+          ],
+          "levels_u_m": [
+            130.482617
+          ],
+          "chosen_u_m": 130.482617
+        },
+        {
+          "station_m": 67.74016472816436,
+          "en": [
+            -318.6284755710317,
+            -181.00285904244055
+          ],
+          "levels_u_m": [
+            130.516415
+          ],
+          "chosen_u_m": 130.516415
+        },
+        {
+          "station_m": 65.24016472816436,
+          "en": [
+            -320.5873838755753,
+            -179.44957920468133
+          ],
+          "levels_u_m": [
+            130.551691
+          ],
+          "chosen_u_m": 130.551691
+        },
+        {
+          "station_m": 62.74016472816436,
+          "en": [
+            -322.54629218011917,
+            -177.89629936692188
+          ],
+          "levels_u_m": [
+            130.588868
+          ],
+          "chosen_u_m": 130.588868
+        },
+        {
+          "station_m": 60.24016472816436,
+          "en": [
+            -324.5052004846628,
+            -176.3430195291626
+          ],
+          "levels_u_m": [
+            130.629675
+          ],
+          "chosen_u_m": 130.629675
+        },
+        {
+          "station_m": 57.74016472816436,
+          "en": [
+            -326.4641087892065,
+            -174.78973969140333
+          ],
+          "levels_u_m": [
+            130.67586
+          ],
+          "chosen_u_m": 130.67586
+        },
+        {
+          "station_m": 55.24016472816436,
+          "en": [
+            -328.42301709375033,
+            -173.23645985364388
+          ],
+          "levels_u_m": [
+            130.725621
+          ],
+          "chosen_u_m": 130.725621
+        },
+        {
+          "station_m": 52.74016472816436,
+          "en": [
+            -330.381925398294,
+            -171.68318001588457
+          ],
+          "levels_u_m": [
+            130.774122
+          ],
+          "chosen_u_m": 130.774122
+        },
+        {
+          "station_m": 50.24016472816436,
+          "en": [
+            -332.34083370283776,
+            -170.12990017812524
+          ],
+          "levels_u_m": [
+            130.821117
+          ],
+          "chosen_u_m": 130.821117
+        },
+        {
+          "station_m": 47.74016472816436,
+          "en": [
+            -334.2997420073815,
+            -168.5766203403659
+          ],
+          "levels_u_m": [
+            130.865731
+          ],
+          "chosen_u_m": 130.865731
+        },
+        {
+          "station_m": 45.24016472816436,
+          "en": [
+            -336.2586503119252,
+            -167.02334050260657
+          ],
+          "levels_u_m": [
+            130.910846
+          ],
+          "chosen_u_m": 130.910846
+        },
+        {
+          "station_m": 42.74016472816436,
+          "en": [
+            -338.2175586164689,
+            -165.47006066484724
+          ],
+          "levels_u_m": [
+            130.957151
+          ],
+          "chosen_u_m": 130.957151
+        },
+        {
+          "station_m": 40.24016472816436,
+          "en": [
+            -340.17646692101266,
+            -163.91678082708793
+          ],
+          "levels_u_m": [
+            131.007397
+          ],
+          "chosen_u_m": 131.007397
+        },
+        {
+          "station_m": 37.74016472816436,
+          "en": [
+            -342.13537522555634,
+            -162.3635009893286
+          ],
+          "levels_u_m": [
+            131.061576
+          ],
+          "chosen_u_m": 131.061576
+        },
+        {
+          "station_m": 35.24016472816436,
+          "en": [
+            -344.0942835301001,
+            -160.81022115156927
+          ],
+          "levels_u_m": [
+            131.118827
+          ],
+          "chosen_u_m": 131.118827
+        },
+        {
+          "station_m": 32.74016472816436,
+          "en": [
+            -346.05319183464377,
+            -159.25694131380993
+          ],
+          "levels_u_m": [
+            131.177992
+          ],
+          "chosen_u_m": 131.177992
+        },
+        {
+          "station_m": 30.24016472816436,
+          "en": [
+            -347.985293954171,
+            -157.70975792681995
+          ],
+          "levels_u_m": [
+            131.236184
+          ],
+          "chosen_u_m": 131.236184
+        },
+        {
+          "station_m": 27.74016472816436,
+          "en": [
+            -349.92876699654903,
+            -156.1372082349027
+          ],
+          "levels_u_m": [
+            131.293792
+          ],
+          "chosen_u_m": 131.293792
+        },
+        {
+          "station_m": 25.24016472816436,
+          "en": [
+            -351.8722400389272,
+            -154.56465854298526
+          ],
+          "levels_u_m": [
+            131.34855
+          ],
+          "chosen_u_m": 131.34855
+        },
+        {
+          "station_m": 22.74016472816436,
+          "en": [
+            -353.81571308130526,
+            -152.992108851068
+          ],
+          "levels_u_m": [
+            131.399843
+          ],
+          "chosen_u_m": 131.399843
+        },
+        {
+          "station_m": 20.24016472816436,
+          "en": [
+            -355.7591861236835,
+            -151.4195591591505
+          ],
+          "levels_u_m": [
+            131.447478
+          ],
+          "chosen_u_m": 131.447478
+        }
+      ]
+    },
+    {
+      "probe": "sbs-refine1-297817221966185-28",
+      "base_camera": "sbs-g3-b-297817221966185",
+      "offset_m": -90,
+      "translation_axis": "road",
+      "left_delta_m": 0,
+      "nominal_eye_m": 2.2,
+      "horizon_y_fraction": 0.6851062165673607,
+      "photo": "artifacts/sbs-gate3/rectified/297817221966185.png",
+      "photo_sha256": "0db1fb1dc739f82198c4f6f488b74725fd9793bbc4c77fd80191d5a3052464cd",
+      "author": "zsolt",
+      "license": "CC BY-SA 4.0",
+      "page_url": "https://www.mapillary.com/app/?pKey=297817221966185",
+      "width": 1280,
+      "height": 960,
+      "pos": [
+        -368.6781,
+        -143.539,
+        133.8432
+      ],
+      "look_at": [
+        -333.4987,
+        -161.6547,
+        139.6945
+      ],
+      "fov_deg": 43.54635,
+      "road_station_m": 5.240164728164359,
+      "baseline_road_station_m": 95.24016472816436,
+      "baseline_left_of_road_m": 0.5044169914612603,
+      "surface_trace": [
+        {
+          "station_m": 95.24016472816436,
+          "en": [
+            -298.3237,
+            -199.657
+          ],
+          "levels_u_m": [
+            130.17253
+          ],
+          "chosen_u_m": 130.17253
+        },
+        {
+          "station_m": 92.74016472816436,
+          "en": [
+            -300.28224507173724,
+            -198.10326218364435
+          ],
+          "levels_u_m": [
+            130.1941
+          ],
+          "chosen_u_m": 130.1941
+        },
+        {
+          "station_m": 90.24016472816436,
+          "en": [
+            -302.24092470034566,
+            -196.54950422590946
+          ],
+          "levels_u_m": [
+            130.215669
+          ],
+          "chosen_u_m": 130.215669
+        },
+        {
+          "station_m": 87.74016472816436,
+          "en": [
+            -304.1998330048894,
+            -194.99622438815015
+          ],
+          "levels_u_m": [
+            130.237227
+          ],
+          "chosen_u_m": 130.237227
+        },
+        {
+          "station_m": 85.24016472816436,
+          "en": [
+            -306.15874130943314,
+            -193.4429445503908
+          ],
+          "levels_u_m": [
+            130.257992
+          ],
+          "chosen_u_m": 130.257992
+        },
+        {
+          "station_m": 82.74016472816436,
+          "en": [
+            -308.1176496139768,
+            -191.88966471263146
+          ],
+          "levels_u_m": [
+            130.287545
+          ],
+          "chosen_u_m": 130.287545
+        },
+        {
+          "station_m": 80.24016472816436,
+          "en": [
+            -310.0765579185205,
+            -190.33638487487218
+          ],
+          "levels_u_m": [
+            130.317913
+          ],
+          "chosen_u_m": 130.317913
+        },
+        {
+          "station_m": 77.74016472816436,
+          "en": [
+            -312.0354662230643,
+            -188.78310503711282
+          ],
+          "levels_u_m": [
+            130.347291
+          ],
+          "chosen_u_m": 130.347291
+        },
+        {
+          "station_m": 75.24016472816436,
+          "en": [
+            -313.994374527608,
+            -187.22982519935348
+          ],
+          "levels_u_m": [
+            130.377552
+          ],
+          "chosen_u_m": 130.377552
+        },
+        {
+          "station_m": 72.74016472816436,
+          "en": [
+            -315.9532828321517,
+            -185.67654536159418
+          ],
+          "levels_u_m": [
+            130.409015
+          ],
+          "chosen_u_m": 130.409015
+        },
+        {
+          "station_m": 70.24016472816436,
+          "en": [
+            -317.91219113669547,
+            -184.12326552383482
+          ],
+          "levels_u_m": [
+            130.441676
+          ],
+          "chosen_u_m": 130.441676
+        },
+        {
+          "station_m": 67.74016472816436,
+          "en": [
+            -319.87109944123915,
+            -182.5699856860755
+          ],
+          "levels_u_m": [
+            130.475656
+          ],
+          "chosen_u_m": 130.475656
+        },
+        {
+          "station_m": 65.24016472816436,
+          "en": [
+            -321.83000774578284,
+            -181.0167058483162
+          ],
+          "levels_u_m": [
+            130.510839
+          ],
+          "chosen_u_m": 130.510839
+        },
+        {
+          "station_m": 62.74016472816436,
+          "en": [
+            -323.78891605032663,
+            -179.46342601055684
+          ],
+          "levels_u_m": [
+            130.547991
+          ],
+          "chosen_u_m": 130.547991
+        },
+        {
+          "station_m": 60.24016472816436,
+          "en": [
+            -325.7478243548703,
+            -177.91014617279754
+          ],
+          "levels_u_m": [
+            130.589184
+          ],
+          "chosen_u_m": 130.589184
+        },
+        {
+          "station_m": 57.74016472816436,
+          "en": [
+            -327.706732659414,
+            -176.3568663350382
+          ],
+          "levels_u_m": [
+            130.634794
+          ],
+          "chosen_u_m": 130.634794
+        },
+        {
+          "station_m": 55.24016472816436,
+          "en": [
+            -329.6656409639578,
+            -174.80358649727884
+          ],
+          "levels_u_m": [
+            130.684543
+          ],
+          "chosen_u_m": 130.684543
+        },
+        {
+          "station_m": 52.74016472816436,
+          "en": [
+            -331.6245492685015,
+            -173.25030665951954
+          ],
+          "levels_u_m": [
+            130.733945
+          ],
+          "chosen_u_m": 130.733945
+        },
+        {
+          "station_m": 50.24016472816436,
+          "en": [
+            -333.5834575730452,
+            -171.6970268217602
+          ],
+          "levels_u_m": [
+            130.780366
+          ],
+          "chosen_u_m": 130.780366
+        },
+        {
+          "station_m": 47.74016472816436,
+          "en": [
+            -335.54236587758896,
+            -170.14374698400087
+          ],
+          "levels_u_m": [
+            130.824654
+          ],
+          "chosen_u_m": 130.824654
+        },
+        {
+          "station_m": 45.24016472816436,
+          "en": [
+            -337.50127418213265,
+            -168.59046714624154
+          ],
+          "levels_u_m": [
+            130.869836
+          ],
+          "chosen_u_m": 130.869836
+        },
+        {
+          "station_m": 42.74016472816436,
+          "en": [
+            -339.4601824866764,
+            -167.0371873084822
+          ],
+          "levels_u_m": [
+            130.916686
+          ],
+          "chosen_u_m": 130.916686
+        },
+        {
+          "station_m": 40.24016472816436,
+          "en": [
+            -341.4190907912201,
+            -165.4839074707229
+          ],
+          "levels_u_m": [
+            130.9668
+          ],
+          "chosen_u_m": 130.9668
+        },
+        {
+          "station_m": 37.74016472816436,
+          "en": [
+            -343.3779990957638,
+            -163.93062763296356
+          ],
+          "levels_u_m": [
+            131.02051
+          ],
+          "chosen_u_m": 131.02051
+        },
+        {
+          "station_m": 35.24016472816436,
+          "en": [
+            -345.33690740030755,
+            -162.37734779520423
+          ],
+          "levels_u_m": [
+            131.078068
+          ],
+          "chosen_u_m": 131.078068
+        },
+        {
+          "station_m": 32.74016472816436,
+          "en": [
+            -347.29581570485124,
+            -160.8240679574449
+          ],
+          "levels_u_m": [
+            131.137112
+          ],
+          "chosen_u_m": 131.137112
+        },
+        {
+          "station_m": 30.24016472816436,
+          "en": [
+            -349.24333370770483,
+            -159.26453636072253
+          ],
+          "levels_u_m": [
+            131.196006
+          ],
+          "chosen_u_m": 131.196006
+        },
+        {
+          "station_m": 27.74016472816436,
+          "en": [
+            -351.18680675008295,
+            -157.69198666880519
+          ],
+          "levels_u_m": [
+            131.253976
+          ],
+          "chosen_u_m": 131.253976
+        },
+        {
+          "station_m": 25.24016472816436,
+          "en": [
+            -353.1302797924611,
+            -156.1194369768878
+          ],
+          "levels_u_m": [
+            131.308756
+          ],
+          "chosen_u_m": 131.308756
+        },
+        {
+          "station_m": 22.74016472816436,
+          "en": [
+            -355.07375283483924,
+            -154.54688728497044
+          ],
+          "levels_u_m": [
+            131.359808
+          ],
+          "chosen_u_m": 131.359808
+        },
+        {
+          "station_m": 20.24016472816436,
+          "en": [
+            -357.0172258772174,
+            -152.97433759305306
+          ],
+          "levels_u_m": [
+            131.408014
+          ],
+          "chosen_u_m": 131.408014
+        },
+        {
+          "station_m": 17.74016472816436,
+          "en": [
+            -358.96069891959553,
+            -151.4017879011357
+          ],
+          "levels_u_m": [
+            131.450897
+          ],
+          "chosen_u_m": 131.450897
+        },
+        {
+          "station_m": 15.240164728164359,
+          "en": [
+            -360.90417196197376,
+            -149.82923820921832
+          ],
+          "levels_u_m": [
+            131.490196
+          ],
+          "chosen_u_m": 131.490196
+        },
+        {
+          "station_m": 12.740164728164359,
+          "en": [
+            -362.8476450043518,
+            -148.25668851730094
+          ],
+          "levels_u_m": [
+            131.527775
+          ],
+          "chosen_u_m": 131.527775
+        },
+        {
+          "station_m": 10.240164728164359,
+          "en": [
+            -364.79111804673,
+            -146.68413882538357
+          ],
+          "levels_u_m": [
+            131.563403
+          ],
+          "chosen_u_m": 131.563403
+        },
+        {
+          "station_m": 7.740164728164359,
+          "en": [
+            -366.7345910891081,
+            -145.1115891334662
+          ],
+          "levels_u_m": [
+            131.601123
+          ],
+          "chosen_u_m": 131.601123
+        },
+        {
+          "station_m": 5.240164728164359,
+          "en": [
+            -368.67806413148634,
+            -143.53903944154877
+          ],
+          "levels_u_m": [
+            131.643211
+          ],
+          "chosen_u_m": 131.643211
+        }
+      ]
+    },
+    {
+      "probe": "sbs-refine1-297817221966185-29",
+      "base_camera": "sbs-g3-b-297817221966185",
+      "offset_m": -90,
+      "translation_axis": "road",
+      "left_delta_m": 2,
+      "nominal_eye_m": 2.2,
+      "horizon_y_fraction": 0.6851062165673607,
+      "photo": "artifacts/sbs-gate3/rectified/297817221966185.png",
+      "photo_sha256": "0db1fb1dc739f82198c4f6f488b74725fd9793bbc4c77fd80191d5a3052464cd",
+      "author": "zsolt",
+      "license": "CC BY-SA 4.0",
+      "page_url": "https://www.mapillary.com/app/?pKey=297817221966185",
+      "width": 1280,
+      "height": 960,
+      "pos": [
+        -367.42,
+        -141.9843,
+        133.8842
+      ],
+      "look_at": [
+        -332.2407,
+        -160.0999,
+        139.7355
+      ],
+      "fov_deg": 43.54635,
+      "road_station_m": 5.240164728164359,
+      "baseline_road_station_m": 95.24016472816436,
+      "baseline_left_of_road_m": 0.5044169914612603,
+      "surface_trace": [
+        {
+          "station_m": 95.24016472816436,
+          "en": [
+            -297.08070974691543,
+            -198.0901639426102
+          ],
+          "levels_u_m": [
+            130.210676
+          ],
+          "chosen_u_m": 130.210676
+        },
+        {
+          "station_m": 92.74016472816436,
+          "en": [
+            -299.0392548186527,
+            -196.53642612625453
+          ],
+          "levels_u_m": [
+            130.232246
+          ],
+          "chosen_u_m": 130.232246
+        },
+        {
+          "station_m": 90.24016472816436,
+          "en": [
+            -300.9983008301382,
+            -194.9823775822745
+          ],
+          "levels_u_m": [
+            130.253819
+          ],
+          "chosen_u_m": 130.253819
+        },
+        {
+          "station_m": 87.74016472816436,
+          "en": [
+            -302.9572091346819,
+            -193.4290977445152
+          ],
+          "levels_u_m": [
+            130.27549
+          ],
+          "chosen_u_m": 130.27549
+        },
+        {
+          "station_m": 85.24016472816436,
+          "en": [
+            -304.9161174392257,
+            -191.87581790675583
+          ],
+          "levels_u_m": [
+            130.298165
+          ],
+          "chosen_u_m": 130.298165
+        },
+        {
+          "station_m": 82.74016472816436,
+          "en": [
+            -306.87502574376936,
+            -190.3225380689965
+          ],
+          "levels_u_m": [
+            130.327814
+          ],
+          "chosen_u_m": 130.327814
+        },
+        {
+          "station_m": 80.24016472816436,
+          "en": [
+            -308.833934048313,
+            -188.7692582312373
+          ],
+          "levels_u_m": [
+            130.358087
+          ],
+          "chosen_u_m": 130.358087
+        },
+        {
+          "station_m": 77.74016472816436,
+          "en": [
+            -310.79284235285684,
+            -187.21597839347785
+          ],
+          "levels_u_m": [
+            130.388053
+          ],
+          "chosen_u_m": 130.388053
+        },
+        {
+          "station_m": 75.24016472816436,
+          "en": [
+            -312.7517506574005,
+            -185.66269855571852
+          ],
+          "levels_u_m": [
+            130.418311
+          ],
+          "chosen_u_m": 130.418311
+        },
+        {
+          "station_m": 72.74016472816436,
+          "en": [
+            -314.71065896194415,
+            -184.1094187179593
+          ],
+          "levels_u_m": [
+            130.449297
+          ],
+          "chosen_u_m": 130.449297
+        },
+        {
+          "station_m": 70.24016472816436,
+          "en": [
+            -316.669567266488,
+            -182.55613888019985
+          ],
+          "levels_u_m": [
+            130.482617
+          ],
+          "chosen_u_m": 130.482617
+        },
+        {
+          "station_m": 67.74016472816436,
+          "en": [
+            -318.6284755710317,
+            -181.00285904244055
+          ],
+          "levels_u_m": [
+            130.516415
+          ],
+          "chosen_u_m": 130.516415
+        },
+        {
+          "station_m": 65.24016472816436,
+          "en": [
+            -320.5873838755753,
+            -179.44957920468133
+          ],
+          "levels_u_m": [
+            130.551691
+          ],
+          "chosen_u_m": 130.551691
+        },
+        {
+          "station_m": 62.74016472816436,
+          "en": [
+            -322.54629218011917,
+            -177.89629936692188
+          ],
+          "levels_u_m": [
+            130.588868
+          ],
+          "chosen_u_m": 130.588868
+        },
+        {
+          "station_m": 60.24016472816436,
+          "en": [
+            -324.5052004846628,
+            -176.3430195291626
+          ],
+          "levels_u_m": [
+            130.629675
+          ],
+          "chosen_u_m": 130.629675
+        },
+        {
+          "station_m": 57.74016472816436,
+          "en": [
+            -326.4641087892065,
+            -174.78973969140333
+          ],
+          "levels_u_m": [
+            130.67586
+          ],
+          "chosen_u_m": 130.67586
+        },
+        {
+          "station_m": 55.24016472816436,
+          "en": [
+            -328.42301709375033,
+            -173.23645985364388
+          ],
+          "levels_u_m": [
+            130.725621
+          ],
+          "chosen_u_m": 130.725621
+        },
+        {
+          "station_m": 52.74016472816436,
+          "en": [
+            -330.381925398294,
+            -171.68318001588457
+          ],
+          "levels_u_m": [
+            130.774122
+          ],
+          "chosen_u_m": 130.774122
+        },
+        {
+          "station_m": 50.24016472816436,
+          "en": [
+            -332.34083370283776,
+            -170.12990017812524
+          ],
+          "levels_u_m": [
+            130.821117
+          ],
+          "chosen_u_m": 130.821117
+        },
+        {
+          "station_m": 47.74016472816436,
+          "en": [
+            -334.2997420073815,
+            -168.5766203403659
+          ],
+          "levels_u_m": [
+            130.865731
+          ],
+          "chosen_u_m": 130.865731
+        },
+        {
+          "station_m": 45.24016472816436,
+          "en": [
+            -336.2586503119252,
+            -167.02334050260657
+          ],
+          "levels_u_m": [
+            130.910846
+          ],
+          "chosen_u_m": 130.910846
+        },
+        {
+          "station_m": 42.74016472816436,
+          "en": [
+            -338.2175586164689,
+            -165.47006066484724
+          ],
+          "levels_u_m": [
+            130.957151
+          ],
+          "chosen_u_m": 130.957151
+        },
+        {
+          "station_m": 40.24016472816436,
+          "en": [
+            -340.17646692101266,
+            -163.91678082708793
+          ],
+          "levels_u_m": [
+            131.007397
+          ],
+          "chosen_u_m": 131.007397
+        },
+        {
+          "station_m": 37.74016472816436,
+          "en": [
+            -342.13537522555634,
+            -162.3635009893286
+          ],
+          "levels_u_m": [
+            131.061576
+          ],
+          "chosen_u_m": 131.061576
+        },
+        {
+          "station_m": 35.24016472816436,
+          "en": [
+            -344.0942835301001,
+            -160.81022115156927
+          ],
+          "levels_u_m": [
+            131.118827
+          ],
+          "chosen_u_m": 131.118827
+        },
+        {
+          "station_m": 32.74016472816436,
+          "en": [
+            -346.05319183464377,
+            -159.25694131380993
+          ],
+          "levels_u_m": [
+            131.177992
+          ],
+          "chosen_u_m": 131.177992
+        },
+        {
+          "station_m": 30.24016472816436,
+          "en": [
+            -347.985293954171,
+            -157.70975792681995
+          ],
+          "levels_u_m": [
+            131.236184
+          ],
+          "chosen_u_m": 131.236184
+        },
+        {
+          "station_m": 27.74016472816436,
+          "en": [
+            -349.92876699654903,
+            -156.1372082349027
+          ],
+          "levels_u_m": [
+            131.293792
+          ],
+          "chosen_u_m": 131.293792
+        },
+        {
+          "station_m": 25.24016472816436,
+          "en": [
+            -351.8722400389272,
+            -154.56465854298526
+          ],
+          "levels_u_m": [
+            131.34855
+          ],
+          "chosen_u_m": 131.34855
+        },
+        {
+          "station_m": 22.74016472816436,
+          "en": [
+            -353.81571308130526,
+            -152.992108851068
+          ],
+          "levels_u_m": [
+            131.399843
+          ],
+          "chosen_u_m": 131.399843
+        },
+        {
+          "station_m": 20.24016472816436,
+          "en": [
+            -355.7591861236835,
+            -151.4195591591505
+          ],
+          "levels_u_m": [
+            131.447478
+          ],
+          "chosen_u_m": 131.447478
+        },
+        {
+          "station_m": 17.74016472816436,
+          "en": [
+            -357.70265916606155,
+            -149.84700946723325
+          ],
+          "levels_u_m": [
+            131.490931
+          ],
+          "chosen_u_m": 131.490931
+        },
+        {
+          "station_m": 15.240164728164359,
+          "en": [
+            -359.64613220843984,
+            -148.27445977531576
+          ],
+          "levels_u_m": [
+            131.530767
+          ],
+          "chosen_u_m": 131.530767
+        },
+        {
+          "station_m": 12.740164728164359,
+          "en": [
+            -361.58960525081784,
+            -146.7019100833985
+          ],
+          "levels_u_m": [
+            131.567348
+          ],
+          "chosen_u_m": 131.567348
+        },
+        {
+          "station_m": 10.240164728164359,
+          "en": [
+            -363.53307829319607,
+            -145.12936039148101
+          ],
+          "levels_u_m": [
+            131.603211
+          ],
+          "chosen_u_m": 131.603211
+        },
+        {
+          "station_m": 7.740164728164359,
+          "en": [
+            -365.4765513355742,
+            -143.5568106995637
+          ],
+          "levels_u_m": [
+            131.640408
+          ],
+          "chosen_u_m": 131.640408
+        },
+        {
+          "station_m": 5.240164728164359,
+          "en": [
+            -367.42002437795253,
+            -141.98426100764618
+          ],
+          "levels_u_m": [
+            131.684165
+          ],
+          "chosen_u_m": 131.684165
+        }
+      ]
+    }
+  ],
+  "note": "Road continuity only selects diagnostic model height, not photographic pose. Every candidate remains C; no production writes."
+}

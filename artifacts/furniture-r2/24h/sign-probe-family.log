@@ -1,0 +1,6 @@
+unity: C:\Program Files\Unity\Hub\Editor\6000.3.28f1\Editor\Unity.exe -batchmode -projectPath C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-furniture\game -logFile C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-furniture\artifacts\logs\test-editmode-20261112-024742.log -buildTarget Android -runTests -testPlatform EditMode -testResults C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-furniture\artifacts\tests\editmode-20261112-024742.xml -testFilter Game.Tests.FurnitureSignTests
+VBCSCompilerServerWatchdog: watching VBCSCompiler (PID 46308)
+EditMode: 13 total, 12 passed, 1 failed, 0 skipped (Failed(Child)) -> C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-furniture\artifacts\tests\editmode-20261112-024742.xml
+  FAILED Game.Tests.FurnitureSignTests.AssemblyFlagCoversCurrentRoadFrontsWithoutOverridingAuthoredMaterials:   Expected: 43
+  But was:  36
+

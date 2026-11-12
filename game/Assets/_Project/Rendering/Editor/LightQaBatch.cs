@@ -28,8 +28,21 @@ namespace Game.Rendering.Editor
             public int shadowFilter; // 0 keeps the light's state; 1/2/3 = URP Low/Medium/High.
             public bool shadowWallProbe; // hall3: establish a physical 10 m span for the PNG edge measurement.
             public float clearSkySaturation; // 0 leaves preset unchanged; diagnostic display-only chroma.
+            public bool overrideDimColour;
+            public float dimColourDesaturation;
+            public bool verifyDimColour;
+            public float expectedDimColour;
             public bool lampProbe;
             public bool actualDriverEye; // QA only: cab-dash eye, horizontal actual cab forward. Never a light source.
+            public bool wetRoadViews; // QA only: two external near-road views anchored to the real truck.
+            public bool verifyWetness;
+            public float expectedWetness;
+            public bool skyOnly; // Diagnostic only: disable scene renderers and the custom world instancer, retain lighting.
+            public bool overrideCloudSourceMin;
+            public float cloudSourceMinElevationDeg;
+            public bool overrideWetLocalReflections, wetLocalReflections;
+            public bool overrideWetFilm;
+            public float wetFilmSmoothness, puddleShare;
             public int expectedHeadlamps; // 0 unchecked, 1 off, 2 on. Requires per-camera probes.
             public bool overrideSkyDisplay;
             public float skyDisplayGain = 1f, skyDisplayDesaturation;
@@ -58,7 +71,10 @@ namespace Game.Rendering.Editor
                 if (profile == null) throw new InvalidOperationException("Missing QualityProfile");
                 originalTiers = (QualityProfile.Tier[])profile.tiers.Clone();
                 foreach (var preset in LookDevAssets.Presets())
-                    if (preset != null) presetSnapshots[preset] = EditorJsonUtility.ToJson(preset);
+                    if (preset != null) {
+                        presetSnapshots[preset] = EditorJsonUtility.ToJson(preset);
+                        Debug.Log($"LIGHT_QA_PRESET: {preset.name} path={AssetDatabase.GetAssetPath(preset)} dim={preset.dimColourDesaturation}");
+                    }
                 foreach (var t in originalTiers)
                 {
                     var pipeline = AssetDatabase.LoadAssetAtPath<UniversalRenderPipelineAsset>(
@@ -93,6 +109,11 @@ namespace Game.Rendering.Editor
                         var preset = presetSnapshots.Keys.Single(p => string.Equals(p.name, "LP_" + job.lighting, StringComparison.OrdinalIgnoreCase));
                         preset.clearSkySaturation = job.clearSkySaturation;
                     }
+                    if(job.overrideDimColour)
+                    {
+                        if(job.dimColourDesaturation<0f || job.dimColourDesaturation>1f)throw new ArgumentException("Dim colour outside0..1");
+                        presetSnapshots.Keys.Single(p=>string.Equals(p.name,"LP_"+job.lighting,StringComparison.OrdinalIgnoreCase)).dimColourDesaturation=job.dimColourDesaturation;
+                    }
                     if (job.overrideSkyDisplay)
                     {
                         if (job.skyDisplayGain < 0.001f || job.skyDisplayGain > 1f || job.skyDisplayDesaturation < 0f || job.skyDisplayDesaturation > 1f)
@@ -101,6 +122,17 @@ namespace Game.Rendering.Editor
                         preset.skyDisplayGain = job.skyDisplayGain;
                         preset.skyDisplayDesaturation = job.skyDisplayDesaturation;
                     }
+                    if (job.overrideCloudSourceMin)
+                    {
+                        if (job.cloudSourceMinElevationDeg < 0f || job.cloudSourceMinElevationDeg > 5f)
+                            throw new ArgumentException("cloud source minimum outside0..5 degrees");
+                        var preset = presetSnapshots.Keys.Single(p => string.Equals(p.name, "LP_" + job.lighting, StringComparison.OrdinalIgnoreCase));
+                        preset.clearCloudSourceMinElevationDeg = job.cloudSourceMinElevationDeg;
+                    }
+                    if (job.overrideWetLocalReflections && job.wetLocalReflections)
+                        throw new ArgumentException("Rejected wet-local experiment removed; see light-r3 archived patch and review. ON jobs require explicitly restoring that experiment.");
+                    if (job.overrideWetFilm)
+                        throw new ArgumentException("Rejected film-only experiment removed; restore the archived light-r3 patch explicitly to replay its jobs.");
                     profile.tiers = (QualityProfile.Tier[])originalTiers.Clone();
                     var overrides = (job.rq ?? "").Split(',').Where(s => !string.IsNullOrWhiteSpace(s))
                         .Select(s => s.Split('=')).ToDictionary(p => p[0].Trim(), p => p[1].Trim());
@@ -109,16 +141,26 @@ namespace Game.Rendering.Editor
                     Directory.CreateDirectory(job.output);
                     if (job.shadowFilter < 0 || job.shadowFilter > 3) throw new ArgumentException("shadowFilter must be 0..3");
                     var lampProbe = job.lampProbe ? new LightQaLampProbe() : null;
+                    if (job.verifyWetness && (lampProbe == null || job.expectedWetness < 0f || job.expectedWetness > 1f))
+                        throw new ArgumentException("Wetness proof requires lampProbe and expectedWetness0..1");
+                    if(job.verifyDimColour && (lampProbe==null || job.expectedDimColour<0f || job.expectedDimColour>1f))
+                        throw new ArgumentException("Dim-colour proof requires lampProbe and expectedDimColour0..1");
                     if (job.expectedHeadlamps < 0 || job.expectedHeadlamps > 2 || (job.expectedHeadlamps > 0 && lampProbe == null))
                         throw new ArgumentException("expectedHeadlamps requires lampProbe and a value0..2");
                     Action<ScriptableRenderContext, Camera> filter = (_, camera) => {
+                        if (job.skyOnly) HideWorldForSkyQa();
                         if (job.shadowFilter > 0)
                             foreach (var light in UnityEngine.Object.FindObjectsByType<Light>(FindObjectsSortMode.None))
                                 if (light.type == LightType.Directional)
                                     light.GetUniversalAdditionalLightData().softShadowQuality = (SoftShadowQuality)job.shadowFilter;
                         lampProbe?.Capture(camera);
+                        if(job.verifyDimColour && camera.GetComponent<ControlCamera>()!=null &&
+                            Mathf.Abs(Shader.GetGlobalFloat("_KamionDimColourDesaturation")-job.expectedDimColour)>.0001f)
+                            throw new InvalidOperationException($"Actual per-camera dim colour mismatch: requested{job.expectedDimColour}, global{Shader.GetGlobalFloat("_KamionDimColourDesaturation")}, preset{EnvironmentLighting.Instance?.Active?.dimColourDesaturation}, path{AssetDatabase.GetAssetPath(EnvironmentLighting.Instance?.Active)}");
                     };
                     int count;
+                    SkyOnlyProof skyProof = null;
+                    void PrepareSkyOnly(Scene scene, OpenSceneMode mode) { skyProof = HideWorldForSkyQa(); }
                     void AddDriverEye(Scene scene, OpenSceneMode mode)
                     {
                         var eye = UnityEngine.Object.FindObjectsByType<ControlCamera>(FindObjectsInactive.Include, FindObjectsSortMode.None)
@@ -144,8 +186,30 @@ namespace Game.Rendering.Editor
                             position = go.transform.position, forward = go.transform.forward, up = go.transform.up,
                             source = "cab-dash.position + CabInteriorLighting.cab.forward/up", fieldOfView = camera.fieldOfView
                         }, true));
+                        if (job.wetRoadViews)
+                        {
+                            var source = UnityEngine.Object.FindObjectsByType<VehicleReflectionCapture>(FindObjectsInactive.Exclude, FindObjectsSortMode.None)
+                                .Single(c => c.gameObject.scene == scene);
+                            Vector3 origin = source.transform.TransformPoint(source.captureOffset);
+                            foreach (int side in new[] { -1, 1 })
+                            {
+                                var roadGo = new GameObject("Light QA near wet road " + side);
+                                SceneManager.MoveGameObjectToScene(roadGo, scene);
+                                var roadCamera = roadGo.AddComponent<Camera>();
+                                roadCamera.CopyFrom(camera);
+                                Vector3 position = origin + cab.forward*4f + cab.right*(side*3.5f) - Vector3.up*0.7f;
+                                Vector3 target = origin + cab.forward*10f + cab.right*(side*3.5f) - Vector3.up*2.2f;
+                                roadGo.transform.SetPositionAndRotation(position, Quaternion.LookRotation(target-position, Vector3.up));
+                                roadCamera.fieldOfView = 65f; roadCamera.enabled = false;
+                                var roadControl = roadGo.AddComponent<ControlCamera>();
+                                roadControl.id = side < 0 ? "light-wet-left" : "light-wet-right";
+                                roadControl.note = "QA-only near-road view from actual truck capture origin; no matched photograph or driver-eye claim.";
+                                roadGo.SetActive(false);
+                            }
+                        }
                     }
                     if (job.actualDriverEye) EditorSceneManager.sceneOpened += AddDriverEye;
+                    if (job.skyOnly) EditorSceneManager.sceneOpened += PrepareSkyOnly;
                     RenderPipelineManager.beginCameraRendering += filter;
                     try
                     {
@@ -155,12 +219,23 @@ namespace Game.Rendering.Editor
                     finally {
                         RenderPipelineManager.beginCameraRendering -= filter;
                         if (job.actualDriverEye) EditorSceneManager.sceneOpened -= AddDriverEye;
+                        if (job.skyOnly) EditorSceneManager.sceneOpened -= PrepareSkyOnly;
                     }
                     if (count <= 0) throw new InvalidOperationException("Job rendered no cameras: " + job.output);
                     int expected = string.IsNullOrEmpty(job.cameras) ? count : job.cameras.Split(',')
                         .Select(id => id.Trim()).Where(id => id.Length > 0).Distinct(StringComparer.OrdinalIgnoreCase).Count();
                     if (count != expected) throw new InvalidOperationException($"Incomplete lighting QA: expected={expected}, rendered={count}");
-                    lampProbe?.Write(job.output, expected, job.expectedHeadlamps);
+                    if (job.skyOnly)
+                    {
+                        var final = HideWorldForSkyQa();
+                        if (skyProof == null || skyProof.sceneRenderers == 0 || skyProof.worldInstancers == 0 ||
+                            final.remainingEnabledRenderers != 0 || final.remainingEnabledInstancers != 0)
+                            throw new InvalidOperationException("Sky-only QA did not disable the expected world drawing paths");
+                        File.WriteAllText(Path.Combine(job.output, "sky-only-proof.json"), JsonUtility.ToJson(final, true));
+                    }
+                    lampProbe?.Write(job.output, expected, job.expectedHeadlamps,
+                        job.verifyWetness ? job.expectedWetness : (float?)null,
+                        job.verifyDimColour ? job.expectedDimColour : (float?)null);
                     var environment = UnityEngine.Object.FindAnyObjectByType<EnvironmentLighting>();
                     if (environment == null || environment.Active == null || environment.Model == null)
                         throw new InvalidOperationException("Lighting QA requires a configured EnvironmentLighting");
@@ -174,6 +249,8 @@ namespace Game.Rendering.Editor
                     if (job.overrideSkyDisplay && (Mathf.Abs(environment.Active.skyDisplayGain-job.skyDisplayGain) > 0.0001f ||
                         Mathf.Abs(environment.Active.skyDisplayDesaturation-job.skyDisplayDesaturation) > 0.0001f))
                         throw new InvalidOperationException("Requested sky presentation grade was not retained");
+                    if (job.overrideCloudSourceMin && Mathf.Abs(environment.Active.clearCloudSourceMinElevationDeg-job.cloudSourceMinElevationDeg) > 0.0001f)
+                        throw new InvalidOperationException("Requested photo source horizon clamp was not retained");
                     var actualFilter = environment.sun.GetUniversalAdditionalLightData().softShadowQuality;
                     if (job.shadowFilter > 0 && (int)actualFilter != job.shadowFilter)
                         throw new InvalidOperationException("Requested shadow filter was not retained: " + actualFilter);
@@ -197,6 +274,28 @@ namespace Game.Rendering.Editor
                 RenderOverrides.Parse(_ => null);
             }
             if (Application.isBatchMode) EditorApplication.Exit(exit);
+        }
+
+        [Serializable] sealed class SkyOnlyProof
+        {
+            public string scope = "QA only: scene Renderer.enabled=false and Game.World.WorldInstances.enabled=false; lighting and preset retained; no scene saved";
+            public int sceneRenderers, worldInstancers, remainingEnabledRenderers, remainingEnabledInstancers;
+        }
+
+        static SkyOnlyProof HideWorldForSkyQa()
+        {
+            var scene = SceneManager.GetActiveScene();
+            var renderers = UnityEngine.Object.FindObjectsByType<Renderer>(FindObjectsInactive.Include, FindObjectsSortMode.None)
+                .Where(r => r.gameObject.scene == scene).ToArray();
+            var instancers = UnityEngine.Object.FindObjectsByType<MonoBehaviour>(FindObjectsInactive.Include, FindObjectsSortMode.None)
+                .Where(b => b.gameObject.scene == scene && b.GetType().FullName == "Game.World.WorldInstances").ToArray();
+            foreach (var renderer in renderers) renderer.enabled = false;
+            foreach (var instancer in instancers) instancer.enabled = false;
+            return new SkyOnlyProof {
+                sceneRenderers = renderers.Length, worldInstancers = instancers.Length,
+                remainingEnabledRenderers = renderers.Count(r => r.enabled),
+                remainingEnabledInstancers = instancers.Count(b => b.enabled)
+            };
         }
 
         [Serializable] sealed class EyeProof

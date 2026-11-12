@@ -187,7 +187,7 @@ def test_plot_is_one_material_and_no_instances():
     PL.paved_items(rp, road, shapely.union_all([h["poly"] for h in houses]), [])
     buf, rep = _Buf(), {}
     PL.build(buf, rp, lambda q: 100.0, None, rep)
-    assert {(p.layer, p.mat) for p in buf.parts} == {("furniture", "plot_kit"), ("collision", "collision_fence")}
+    assert {(p.layer, p.mat) for p in buf.parts} == {(PL.KIT_LAYER, "plot_kit"), ("collision", "collision_fence")}
     r = rep["plots"]
     assert r["instances"] == 0 and r["gates"] == 4 and r["wickets"] == 4
     kit = [p for p in buf.parts if p.mat == "plot_kit"]
@@ -220,17 +220,22 @@ def test_plot_kit_atlas_rows_and_matt_colours():
     im = np.asarray(PK.atlas()).astype(float)
     assert im.shape == (PK.N, PK.N, 4)
     last = 0
-    for name, (y0, h) in PK.ROW_Y.items():
-        assert y0 >= last and y0 + h <= PK.N
-        last = y0 + h
-        v0, v1 = PK.row(name)
-        assert 0.0 < v0 < v1 < 1.0
+    for names, hb in PK._BANDS:                     # ADR 0124: fence rows share a band in pairs (half width each)
+        y0 = PK.ROW_Y[names[0]][0]
+        assert y0 >= last and y0 + hb <= PK.N
+        last = y0 + hb
+        xs = sorted(PK.ROW_X[n] for n in names)
+        assert xs[0][0] == 0 and sum(w for _, w in xs) == PK.N and all(PK.ROW_Y[n] == (y0, hb) for n in names)
+        for name in names:
+            v0, v1 = PK.row(name)
+            assert 0.0 < v0 < v1 < 1.0
     cov = PK.coverage()
     assert cov["concrete"] == 1.0 and cov["wall"] == 1.0 and cov["brick"] == 1.0
     assert 0.25 < cov["chainlink"] < 0.6 and 0.1 < cov["bars"] < 0.35 and cov["picket"] > 0.5
     # review 0107 P1-r7-b: the mesh must not glow - opaque chain-link texels are dark green, far from white
     y0, h = PK.ROW_Y["chainlink"]
-    row = im[y0:y0 + h]
+    x0, wpx = PK.ROW_X["chainlink"]
+    row = im[y0:y0 + h, x0:x0 + wpx]
     on = row[..., 3] > 200
     rgb = row[on][:, :3]
     assert rgb.max() < 140 and rgb[:, 1].mean() > rgb[:, 0].mean() + 20

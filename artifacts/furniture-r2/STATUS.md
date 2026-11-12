@@ -1,0 +1,253 @@
+﻿# Furniture r2 — stan pracy
+Runda rozpoczęta 2026-11-12 około 02:10, po r1 6b48088b. Skopiowano artefakty r1 do main przez robocopy /E /XJ (kod 1, bez błędów).
+Scalanie main 522361aa do własnej gałęzi: generated/world_manifest, streetscape_qa oraz street_props.glb przyjęto z main do regeneracji; materiały i licencje połączono addytywnie. Automatycznie scalone furniture/props i wspólne C#/shader przejrzano; zachowują zmiany obu stron.
+Budżet, zasoby i obrazy r1 nie są baseline nowego main. Najpierw potrzebna spójna regeneracja i import, następnie bazowe obrazy r2.
+NASTĘPNY KROK: przygotować własne skrypty r2 z ownerem heavy gpt-furniture-r2, uruchomić generator w slocie heavy, sprawdzić brak fallback=True; później Unity w slocie gpt-furniture.
+
+2026-11-12T02:11:50.7024067+01:00: przygotowano sekwencyjny baseline.ps1 i skrypty bramek r2. PBR oraz world osobno w heavy gpt-furniture-r2; import i każdy render w Unity gpt-furniture, z przywróceniem ustawień. NASTĘPNY KROK: pwsh artifacts/furniture-r2/24h/baseline.ps1.
+
+2026-11-12T02:22:39.3876622+01:00: heavy pbr before; sukces=True; slot gpt-furniture-r2 zwolniony. NASTĘPNY KROK: sprawdzić log i kontynuować walidację rundy.
+
+2026-11-12T02:23:20.1485209+01:00: PBR po scaleniu zakończony w452s; world czeka na osobny slot heavy. Przygotowano poza Assets prototyp materiału znaku zgodnego z URP Lit (9→9 przebiegów) i czytnik istniejącego TruckLights oraz prawdziwych socketów. Zapisano źródła zasad kątów, licencję szkieletu, hashe i ograniczenia (brak kalibracji folii/occlusion). To nie jest wdrożony ani zweryfikowany efekt. NASTĘPNY KROK: dokończyć bazowy world/import/render; przed zmianą wykonać także Low/High dusk, potem przenieść i sprawdzić prototyp GPU oraz rzeczywistym riggiem.
+
+2026-11-12T02:29:09.6966270+01:00: prototyp uzupełniono o osobne pozycje i stany świateł mijania/drogowych oraz projekt testów GPU: zgodność off z URP Lit, brak źródła, alpha, przód/tył, kąt i dystans; testy jeszcze nieuruchomione. Prototyp fabryki zachowuje bazową teksturę/UV po wyłączeniu opcjonalnego odblasku. Bieżące renderery mają m_RenderingMode=0 (Forward). NASTĘPNY KROK: odczytać żywy baseline (sesja 72293); nie uruchamiać duplikatu, dokończyć bazowe obrazy i dusk przed przenoszeniem prototypu do Assets.
+
+2026-11-12T02:34:08.7719984+01:00: nowe pliki prototypu przeniesiono do Assets wyłącznie do izolowanej próby GPU. Żaden materiał świata nie używa nowego shadera, a nowe globale nie są czytane przez dotychczasowe shadery. Python i fabryka materiałów świata bez zmian. Własny PAUSE_UNITY wstrzymuje przyszły import/render bazowy do zakończenia próby; nie dotyka cudzych blokad. NASTĘPNY KROK: pwsh artifacts/furniture-r2/24h/sign-probe.ps1.
+
+2026-11-12T02:34:36.6274164+01:00: Unity sign-probe first Low overcast; sukces=False. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
+
+2026-11-12T02:34:37.1771192+01:00: próba znaków nie przeszła (exit=1). Własny import/render pozostaje wstrzymany przez PAUSE_UNITY do odczytu logu i naprawy. NASTĘPNY KROK: odczytać sign-probe-first.log oraz XML, usunąć marker dopiero po usunięciu błędu kompilacji.
+
+2026-11-12T02:37:07.1255554+01:00: pierwsza próba: 2 passed, 6 failed; ForwardLit niedostępny w fixture bez aktywnego tagu pipeline, licznik passCount sam nie wystarczał. Wzmocniono sprawdzenie obecności ForwardLit i dodano jawny tag URP tylko na czas testu, z przywróceniem globali. Oryginalne nieudane wyniki zachowane w probe-first. NASTĘPNY KROK: ponowić wyłącznie FurnitureSignTests w slocie Unity i sprawdzić rzeczywiste wyniki, PAUSE_UNITY nadal własny.
+
+2026-11-12T02:37:30.7972782+01:00: Unity sign-probe second Low overcast; sukces=False. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
+
+2026-11-12T02:37:31.3893840+01:00: próba znaków nie przeszła (exit=1). Własny import/render pozostaje wstrzymany przez PAUSE_UNITY do odczytu logu i naprawy. NASTĘPNY KROK: odczytać sign-probe-first.log oraz XML, usunąć marker dopiero po usunięciu błędu kompilacji.
+
+2026-11-12T02:39:03.5433794+01:00: druga próba: 5 passed, 3 failed. Potwierdzono poprzedni pusty tag pipeline; po ustawieniu URP oba shadery mają rzeczywiście po 9 przebiegów. Off/no-source/alpha/publisher przeszły. Zbadano za słaby zwrot: dodano pomiar GPU samego współczynnika HDR bez kodowania gamma. Test dystansu teraz utrzymuje stały kąt obserwacji zamiast mieszać oba zjawiska. UsePass zapisano wielkimi literami zgodnie z dokumentacją Unity. NASTĘPNY KROK: ponowić wyłącznie próbę znaków, z zachowaniem nieudanych XML.
+
+2026-11-12T02:39:27.5426397+01:00: Unity sign-probe third Low overcast; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
+
+2026-11-12T02:42:39.6920904+01:00: trzecia próba GPU 10/10 passed, bez pominięć. Potwierdzono liniowy HDR współczynnika 1 i 800, zgodność off/no-source z URP Lit, alpha, przód/tył, kąt, dystans i 9→9 przebiegów. Generator bazowy zdobył slot heavy i działa. Dodano nieaktywną bez flagi fabrykę znaków do wspólnego C# oraz test jej trwałości i wycofania do Lit; manifest świata nadal bez flag znaku. NASTĘPNY KROK: izolowana próba fabryki i socketów high-only; własny import/render czeka na markerze.
+
+2026-11-12T02:43:01.4134427+01:00: Unity sign-probe factory Low overcast; sukces=False. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
+
+2026-11-12T02:43:01.9909113+01:00: próba znaków nie przeszła (exit=1). Własny import/render pozostaje wstrzymany przez PAUSE_UNITY do odczytu logu i naprawy. NASTĘPNY KROK: odczytać sign-probe-first.log oraz XML, usunąć marker dopiero po usunięciu błędu kompilacji.
+
+2026-11-12T02:46:40.3169847+01:00: próba fabryki: 11 passed, 1 failed na zbyt silnej tożsamości managed wrappera po AssetDatabase reimport. Test teraz kontroluje trwały GUID materiału i tekstury, shader oraz flagi. Przygotowano obsługę całej rodziny znaków przez jawną flagę plate_back: tylko aktualne identyfikatory z props_meta, bez etykiet fasad i bez nadpisywania cudzych jawnych definicji. Pozwala objąć tablice kierunkowe bez listy hashy; flaga nadal nieaktywna w bazowym świecie. NASTĘPNY KROK: dokończyć testy fabryki/rodziny w slocie Unity, sprawdzić bazowy generator.
+
+2026-11-12T02:47:40.1495412+01:00: test rozszerzono na faktyczne lica całej biblioteki props_meta: tablice kierunkowe, komplet tekstur, zachowanie cudzej jawnej definicji i brak rejestracji po usunięciu flagi rodziny. Wciąż brak aktywacji w świecie bazowym. NASTĘPNY KROK: pwsh artifacts/furniture-r2/24h/sign-probe.ps1 -Phase family.
+
+2026-11-12T02:48:08.1939883+01:00: Unity sign-probe family Low overcast; sukces=False. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
+
+2026-11-12T02:48:08.8948054+01:00: próba znaków nie przeszła (exit=1). Własny import/render pozostaje wstrzymany przez PAUSE_UNITY do odczytu logu i naprawy. NASTĘPNY KROK: odczytać sign-probe-first.log oraz XML, usunąć marker dopiero po usunięciu błędu kompilacji.
+
+2026-11-12T02:50:55.7468006+01:00: próba rodziny 12 passed, 1 failed. Niezależny odczyt danych wyjaśnił 43 vs36: regex testu liczył 7 nazw prototypów (sign_post, gantry i g3), nie materiały. Fabryka poprawnie czytała wyłącznie listy materials. Poprawiono parser oczekiwanego zestawu, bez osłabiania wymogu pokrycia wszystkich rzeczywistych lic. Test GUID/wycofania do Lit i high-only przeszedł. NASTĘPNY KROK: ponowić FurnitureSignTests -Phase family-final.
+
+2026-11-12T02:51:18.2860778+01:00: Unity sign-probe family-final Low overcast; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
+
+2026-11-12T02:51:40.9599394+01:00: heavy world before; sukces=True; slot gpt-furniture-r2 zwolniony. NASTĘPNY KROK: sprawdzić log i kontynuować walidację rundy.
+
+2026-11-12T02:52:44.8504475+01:00: końcowa próba znaków 13/13 passed, 0 skipped. Biblioteka ma 36 rzeczywistych lic drogowych; rejestracja obejmuje kierunkowe i pomija fasadowe oraz zachowuje jawne cudze definicje. Generator bazowy zakończył 64 GLB w715,7s, zapisano manifest/QA/props przed zmianami. Własny PAUSE_UNITY usunięty po sukcesie; sekwencja bazowa kontynuuje import i cztery rendery. NASTĘPNY KROK: odczytać sesję72293, po jej zakończeniu dodać baseline Low/High dusk; nie aktywować flagi świata przed kompletem before.
+
+2026-11-12T02:53:06.4803513+01:00: Unity import before Low overcast; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
+
+2026-11-12T02:53:36.9446836+01:00: Unity render before Low overcast; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
+
+2026-11-12T02:54:02.7360427+01:00: Unity render before Low clear; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
+
+2026-11-12T02:54:42.3795780+01:00: Unity render before High overcast; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
+
+2026-11-12T02:54:43.2256959+01:00: zapisano ADR i licencję wariantu URP oraz skrypt dodatkowego baseline dusk po zakończeniu dziennej sekwencji. Wyraźnie rozdzielono zmierzch (-5 stopni), pełną noc i kalibrację folii. NASTĘPNY KROK: odczytać zakończenie sesji72293; dopiero potem pwsh artifacts/furniture-r2/24h/baseline-dusk.ps1.
+
+2026-11-12T02:55:12.5530885+01:00: Unity render before High clear; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
+
+2026-11-12T02:55:13.0653759+01:00: bazowe obrazy po scaleniu main gotowe. NASTĘPNY KROK: policzyć kompletność kamer i obejrzeć znaki przed zmianą.
+
+2026-11-12T02:56:56.8954010+01:00: sekwencja72293 zakończyła się exit0. Cztery dzienne warianty mają po55 PNG (razem220). Przygotowano finish-baseline.ps1: dwa rendery zmierzchu, potem hashe chronionej geometrii w heavy. NASTĘPNY KROK: pwsh artifacts/furniture-r2/24h/finish-baseline.ps1; po sukcesie wdrożyć flagę/materiale, zużycie i Low mocowania z kandydatów.
+
+2026-11-12T02:57:23.9113856+01:00: Unity render before Low dusk; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
+
+2026-11-12T02:57:52.5156759+01:00: Unity render before High dusk; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
+
+2026-11-12T02:57:52.9274336+01:00: bazowy zmierzch Low/High ukończony. Preset dusk ma słońce -5 stopni: to zmierzch, nie dowód pełnej nocy ani kalibracji folii. NASTĘPNY KROK: snapshot geometrii w heavy, wdrożenie własnego zużycia/mocowań/flagi i pojedyncze testy; potem generator kandydata.
+
+2026-11-12T02:58:54.8758979+01:00: heavy geometry before; sukces=True; slot gpt-furniture-r2 zwolniony. NASTĘPNY KROK: sprawdzić log i kontynuować walidację rundy.
+
+2026-11-12T03:02:04.5385767+01:00: baseline kompletny: 330 PNG w sześciu wariantach i zapisane hashe chronionej geometrii. Obejrzano własne miniatury 960px: tył znaku Low, wjazd na rondo Low i High dusk; zmierzch nie jest pełną nocą. Włączono jawną flagę rodziny, przygotowano delikatne zużycie z zachowaniem alpha/legendy i dwa mocowania Low w istniejącym plate_back (do24 dodatkowych tris, bez nowego slotu). Dodano osobny plik regresji. NASTĘPNY KROK: pwsh artifacts/furniture-r2/24h/candidate-build.ps1 — pojedyncze testy w heavy, generator i porównanie chronionych payloadów, jeszcze bez importu.
+
+2026-11-12T03:05:57.2174735+01:00: heavy focused candidate1; sukces=True; slot gpt-furniture-r2 zwolniony. NASTĘPNY KROK: sprawdzić log i kontynuować walidację rundy.
+
+2026-11-12T03:06:01.5819075+01:00: heavy focused candidate1; sukces=True; slot gpt-furniture-r2 zwolniony. NASTĘPNY KROK: sprawdzić log i kontynuować walidację rundy.
+
+2026-11-12T03:06:01.7257508+01:00: zapisano NEXT.md z bramkami rzeczywistego importu, kompletu330 par oraz kontrolowanego kadru z prawdziwym riggiem. Test rodziny sam nie dowodzi przypisania wszystkich36 lic w scenie, a kamery kontrolne nie dowodzą pozycji reflektorów. Sekwencja58010 nadal żyje i czeka na heavy; bez duplikatu. NASTĘPNY KROK: odczytać candidate-build.log i przejść do importu dopiero po testach/generatorze/porównaniu geometrii.
+
+2026-11-12T03:19:32.6416962+01:00: poprawiono skalowanie zwrotu względem _KamionExposure; gain800 jest współczynnikiem wyświetlania przy roboczej ekspozycji1/512, nie zmierzoną tabeląRA. Dodano test GPU proporcjonalnego zaniku przy połowie i zerowej ekspozycji. Nie zmieniono geometrii ani danych czytanych przez bieżącą sekwencję Python. NASTĘPNY KROK: próba FurnitureSignTests -Phase exposure, osobny slot Unity; sekwencja58010 kończy się przed importem, więc nie uruchomi własnego Unity równolegle.
+
+2026-11-12T03:19:56.9569012+01:00: Unity sign-probe exposure Low overcast; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
+
+2026-11-12T03:20:59.3065540+01:00: heavy focused candidate1; sukces=True; slot gpt-furniture-r2 zwolniony. NASTĘPNY KROK: sprawdzić log i kontynuować walidację rundy.
+
+2026-11-12T03:30:44.6323440+01:00: heavy world after1; sukces=True; slot gpt-furniture-r2 zwolniony. NASTĘPNY KROK: sprawdzić log i kontynuować walidację rundy.
+
+2026-11-12T03:32:22.9190379+01:00: próba ekspozycji 14/14 passed, 0 skipped. Przygotowano własny nocny fixture w _Generated/FurnitureSignQa: prawdziwe sockety i punkt oka, sprawdzone podłoże asfaltowe i linia do znaku, tryby retro-disabled/low/high/source-disabled, normalne55deg i diagnostyczne15deg, trzy odległości. Zapisuje realne globale i przypisane materiały. Model nieba kończy się przy -8stopniach, więc nie będzie pozorowanego -12 ani deklaracji głębokiej nocy. Helper dopiero do kompilacji/uruchomienia po imporcie kandydata. NASTĘPNY KROK: odczytać sekwencję58010; po geometrii import, a następnie unity-step.ps1 -Step night-rig -Phase after1 -Tier Low.
+
+2026-11-12T03:37:17.7395030+01:00: wszystkie pojedyncze pliki przeszły (10,17,9); generator after1 zakończony w406,8s. Sekwencja58010 czeka na heavy dla hasherów, bez własnego Unity. Import nie nastąpił, więc przed nim zbieramy dokładne liczniki Low ze starej sceny dla clear/overcast/dusk i weryfikujemy je z zamrożonymi165 wariantami. Kompiluje to także nowy, jeszcze nieuruchomiony helper nocny. NASTĘPNY KROK: pwsh artifacts/furniture-r2/24h/exact-before-chain.ps1; nie importować kandydata do końca tego pomiaru.
+
+2026-11-12T03:37:47.7083725+01:00: dokładny licznik CPU before Low clear; sukces=False, slot Unity zwolniony. NASTĘPNY KROK: pozostałe warianty i porównanie przed/po, bez deklaracji czasu GPU.
+
+2026-11-12T03:41:17.8313083+01:00: Unity poprawnie zapisało dokładny baseline Low-clear (55 kamer). Błąd skryptu sprawdzającego polegał na pozycyjnych argumentach Select-String; poprawiono LiteralPath. Osobny lekki weryfikator potwierdził zgodność całego zapisu z zamrożonym baseline. Nie powtarzamy udanego renderu; sekwencja -Resume zweryfikuje i pominie gotowy clear, zbierze dwa brakujące warianty. Nowy helper nocny skompilował się w tej próbie, jego działania jeszcze nie potwierdzono. NASTĘPNY KROK: exact-before-chain.ps1 -Resume, bez importu przed końcem.
+
+2026-11-12T03:41:43.3521740+01:00: dokładny licznik CPU before Low overcast; sukces=True, slot Unity zwolniony. NASTĘPNY KROK: pozostałe warianty i porównanie przed/po, bez deklaracji czasu GPU.
+
+2026-11-12T03:42:08.5800792+01:00: dokładny licznik CPU before Low dusk; sukces=True, slot Unity zwolniony. NASTĘPNY KROK: pozostałe warianty i porównanie przed/po, bez deklaracji czasu GPU.
+
+2026-11-12T09:04:48.5540917+01:00: po wznowieniu potwierdzono brak procesów starej sekwencji (log zatrzymany03:44). Generator i testy są zakończone; brakuje wyłącznie hasherów after. Trzy cudze sloty heavy pozostają zajęte — nie usuwamy ich. Ponownie zweryfikowano165 dokładnych liczników baseline i powiązano dowody hashami plików. Import może działać niezależnie od czytających GLB hasherów; raport nie uzna geometrii za potwierdzoną przed ich wynikiem. NASTĘPNY KROK: wznowić tylko heavy geometry after oraz import w oddzielnym pool Unity.
+
+2026-11-12T09:07:35.1182723+01:00: Unity import after1 Low overcast; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
+
+2026-11-12T09:08:20.0061936+01:00: import kandydata exit0, 64 chunki Low/High. Dane render/instancje/kolizje: Low120,7→120,8 MB, High262,8→262,9 MB (nie PSS). Przywrócono efekty uboczne ustawień przez wrapper. Rozpoczyna się sekwencyjny komplet330 obrazów,165 dokładnych liczników Low i kontrolowany night-rig obu poziomów. Hashe geometrii osobno nadal oczekują na heavy; nie traktujemy ich jako PASS. NASTĘPNY KROK: pwsh artifacts/furniture-r2/24h/after-evidence.ps1.
+
+2026-11-12T09:08:50.3132895+01:00: Unity render after Low clear; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
+
+2026-11-12T09:09:16.9785914+01:00: Unity render after Low overcast; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
+
+2026-11-12T09:09:43.2404232+01:00: Unity render after Low dusk; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
+
+2026-11-12T09:10:12.9600048+01:00: Unity render after High clear; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
+
+2026-11-12T09:10:40.4544449+01:00: Unity render after High overcast; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
+
+2026-11-12T09:11:08.3151055+01:00: Unity render after High dusk; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
+
+2026-11-12T09:11:34.5732799+01:00: dokładny licznik CPU after Low clear; sukces=True, slot Unity zwolniony. NASTĘPNY KROK: pozostałe warianty i porównanie przed/po, bez deklaracji czasu GPU.
+
+2026-11-12T09:12:01.2235844+01:00: dokładny licznik CPU after Low overcast; sukces=True, slot Unity zwolniony. NASTĘPNY KROK: pozostałe warianty i porównanie przed/po, bez deklaracji czasu GPU.
+
+2026-11-12T09:12:37.1135472+01:00: dokładny licznik CPU after Low dusk; sukces=True, slot Unity zwolniony. NASTĘPNY KROK: pozostałe warianty i porównanie przed/po, bez deklaracji czasu GPU.
+
+2026-11-12T09:12:37.8482646+01:00: komplet standardowych obrazów po zmianie i dokładne liczniki Low zapisane. NASTĘPNY KROK: odczytać wszystkie delty, kontrolowany night-rig Low/High i arkusze porównawcze w heavy; geometrię raportować osobno według jej wyniku.
+
+2026-11-12T09:13:02.8850630+01:00: Unity night-rig after1 Low overcast; sukces=False. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
+
+2026-11-12T09:20:01.7701223+01:00: komplet330 kadrów i dokładnych165 liczników Low: draws mesh0, instancje0; maksymalna delta tris0,18998%. Nocny fixture wykrył źródło0 po przeładowaniu sceny. Poprawiono unieważnianie cache przy zmianie sceny/riggu oraz szybkie rozpoznanie dobudowanych socketów, dodano regresję automatycznego hooka. Rzeczywista ekspozycja nocnego modelu wyniosła1,4167; usunięto nieuzasadniony mnożnik512, współczynnik jest teraz odniesiony do ekspozycji1. Geometria bez zmian; wymagany ponowny obraz po korekcie shadera. NASTĘPNY KROK: FurnitureSignTests -Phase cache2, potem ponowna walidacja nocnego źródła i obrazów.
+
+2026-11-12T09:20:10.4568734+01:00: Unity sign-probe cache2 Low overcast; sukces=False. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
+
+2026-11-12T09:20:11.0381226+01:00: próba znaków nie przeszła (exit=1). Własny import/render pozostaje wstrzymany przez PAUSE_UNITY do odczytu logu i naprawy. NASTĘPNY KROK: odczytać sign-probe-first.log oraz XML, usunąć marker dopiero po usunięciu błędu kompilacji.
+
+2026-11-12T09:20:28.7516724+01:00: nowa regresja miała niejednoznaczne Object w sprzątaniu; poprawiono pełną nazwę UnityEngine.Object. Próba nie przeszła kompilacji, nie uznano testów za wykonane. NASTĘPNY KROK: ponowić tylko FurnitureSignTests -Phase cache2-fixed.
+
+2026-11-12T09:20:55.9119220+01:00: Unity sign-probe cache2-fixed Low overcast; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
+
+2026-11-12T09:24:05.1412882+01:00: poprawione próby15/15 passed, bez pominięć; nowa regresja automatycznego hooka wykrywa sockety dobudowane po pierwszym wyszukaniu mimo odległego terminu ponowienia. Zapisano diagnostykę faktycznego komponentu świateł przy każdej nocnej próbce. Przed ponownym pełnym renderem sprawdzamy kontrolowany night-rig Low; porażka poprzedniego after1 pozostaje zachowana. NASTĘPNY KROK: unity-step.ps1 -Step night-rig -Phase after2 -Tier Low.
+
+2026-11-12T09:24:33.0941407+01:00: Unity night-rig after2 Low overcast; sukces=False. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
+
+2026-11-12T09:29:51.0652504+01:00: night after2 Low potwierdził automatyczne źródło dla low, lecz high pozostało false po ponownym wczytaniu sceny testowej. Dodano trwały własny sterownik fixture, ustawiający prawdziwy TruckLights przed kontekstem renderowania (bez sztucznej lampy). Zbliżenia25m ujawniły zbyt niskie prawe odcięcie; dodano robocze asymetryczne wzniesienie wiązki i regresję GPU prawa/lewa. Źródło jakościowe HELLA light-distribution, nie kalibracja konkretnej oprawy. Fixture ma teraz jawne manualne EV100=5, by nie mylić adaptacji jasności nieba z nocnym odblaskiem; presety gry niezmienione. NASTĘPNY KROK: FurnitureSignTests -Phase asymmetric, potem night-rig after3.
+
+2026-11-12T09:30:16.8561505+01:00: Unity sign-probe asymmetric Low overcast; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
+
+2026-11-12T09:34:07.4431245+01:00: asymetryczna wiązka przeszła16/16 prób GPU/fabryki, bez pominięć. Sterownik fixture jest editorowym callbackiem przed kamerami, utrzymującym żądany tryb podczas ponownego ładowania sceny; nie dodaje komponentu do produktu ani nowego źródła światła. NASTĘPNY KROK: kontrolowany night-rig after3 Low, po sukcesie High.
+
+2026-11-12T09:35:05.2796608+01:00: Unity night-rig after3 Low overcast; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
+
+2026-11-12T09:41:02.4985295+01:00: night-rig after3 Low OK: 12 pozycji/trybów, 24 obrazy, rzeczywiste źródła potwierdzone w logach. Obejrzano cztery podglądy 25 m; zwrot widoczny, EV5 i gain800 robocze, brak kalibracji i okluzji ścieżki światła. High w toku. Pierwsze 330 obrazów po zmianie i 165 dokładnych liczników zachowano w iteration1; następna seria uwzględni poprawki ekspozycji/asymetrii/cache. Porównanie geometrii nadal czeka na heavy.
+
+2026-11-12T09:41:27.2752271+01:00: Unity night-rig after3 High overcast; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
+
+2026-11-12T09:41:47.1226030+01:00: night after3 High również zgłosił FURNITURE_NIGHT_QA OK; łącznie48 PNG, źródła dla obu tierów zapisane. ADR uaktualniono do16 prób i aktualnych ograniczeń. NASTĘPNY KROK: końcowa seria330 obrazów standardowych oraz dokładne liczniki Low, a następnie niezależny przegląd.
+
+2026-11-12T09:42:14.0251183+01:00: niezależny przegląd czterech podglądów Low25m potwierdził miejscową reakcję znaku i jej wyłączenie, bez oczywistego halo. Realizm i praktyczna czytelność pozostają niepotwierdzone. Rozpoczęto nową serię standardowych kadrów po wszystkich korektach.
+
+2026-11-12T09:42:32.6570918+01:00: Unity render after Low clear; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
+
+2026-11-12T09:42:58.8232029+01:00: Unity render after Low overcast; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
+
+2026-11-12T09:43:11.8401280+01:00: doprecyzowano bibliotekę36 versus35 materiałów rzeczywiście przypisanych w scenie. Przygotowano closing-tests.ps1, bez uruchamiania pełnego GIS w trakcie iteracji. Testy końcowe ruszą po przeglądzie końcowej serii i zakończeniu oczekującego porównania geometrii.
+
+2026-11-12T09:43:23.4418196+01:00: Unity render after Low dusk; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
+
+2026-11-12T09:43:53.9226907+01:00: Unity render after High clear; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
+
+2026-11-12T09:44:22.3177302+01:00: Unity render after High overcast; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
+
+2026-11-12T09:44:49.8645636+01:00: Unity render after High dusk; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
+
+2026-11-12T09:44:56.6240852+01:00: podczas renderu przygotowano małą analizę metadanych do backlogu r3:20 przystanków OSM,400 istniejących zdjęć Mapillary, po3 najbliższe referencje z autorem/licencją/hash. Bliskość nie dowodzi widoczności ani obecności wiaty. Kod obecnie dodaje wiatę i kosz przy każdym dopasowanym przystanku, niezależnie od tagów; to kandydat do weryfikacji zdjęciowej w r3, bez zmian implementacji teraz.
+
+2026-11-12T09:45:15.1809502+01:00: dokładny licznik CPU after Low clear; sukces=True, slot Unity zwolniony. NASTĘPNY KROK: pozostałe warianty i porównanie przed/po, bez deklaracji czasu GPU.
+
+2026-11-12T09:45:40.3446783+01:00: dokładny licznik CPU after Low overcast; sukces=True, slot Unity zwolniony. NASTĘPNY KROK: pozostałe warianty i porównanie przed/po, bez deklaracji czasu GPU.
+
+2026-11-12T09:46:04.0743319+01:00: dokładny licznik CPU after Low dusk; sukces=True, slot Unity zwolniony. NASTĘPNY KROK: pozostałe warianty i porównanie przed/po, bez deklaracji czasu GPU.
+
+2026-11-12T09:46:04.7305971+01:00: komplet standardowych obrazów po zmianie i dokładne liczniki Low zapisane. NASTĘPNY KROK: odczytać wszystkie delty, kontrolowany night-rig Low/High i arkusze porównawcze w heavy; geometrię raportować osobno według jej wyniku.
+
+2026-11-12T09:46:31.4002977+01:00: finalne330 obrazów standardowych i165 dokładnych liczników Low zapisane, walidacja SHA/statystyk wszystkich trzech wariantów oświetlenia zakończona. Rozpoczęto końcowe EditMode. Przygotowując r3 obejrzano5 referencji≤960; najbliższe zdjęcie często patrzy za przystanek, dlatego shortlistę uzupełniono o kierunek patrzenia. Zdjęcie214816220453640 pokazuje czerwoną wiatę przy OSM5802408812; pozostałe nocne referencje nie dowodzą braku wiaty.
+
+2026-11-12T09:47:03.1907625+01:00: Unity editmode final3 Low overcast; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
+
+2026-11-12T09:47:23.3125927+01:00: podsumowanie końcowych liczników:330 wariantów, delta draws mesh/instancji/cieni wszędzie0;165 dokładnych Low, max tris +0,189979830474662%. Nie jest to pomiar GPU. Arkusze będą przygotowane dopiero po zakończeniu procesu geometrii PID49828, kolejno w heavy, żeby ten sam właściciel nie współdzielił slotu przez dwa zadania.
+
+2026-11-12T09:47:59.0867929+01:00: końcowe EditMode340/340 passed,0 failed,0 skipped; skopiowano XML i log do artefaktów rundy. NASTĘPNY KROK: oczekujące geometry/arkusze w heavy, niezależny przegląd wszystkich kamer, końcowy GIS i physics/gate3.
+
+2026-11-12T09:48:35.9196099+01:00: zapisano opis pięciu obejrzanych referencji przystanków i pełne istniejące metadane autor/licencja/hash. Czerwona rodzina wiaty potwierdzona tylko zdjęciem214816220453640; bez wymiarów i bez wnioskowania o nieobecności obiektów z nocnych ujęć.
+
+2026-11-12T09:50:23.8703616+01:00: uzupełniam r2 o bezpośredni kadr zdjęcie/render znaku i uchwytów: istniejąca kamera sbs-g3-b-297817221966185, Low/High clear. Rektyfikowaną referencję skopiowano z main po potwierdzeniu SHA256. Poza roboczą pozą B, historyczne zdjęcie z2017, bez kalibracji fotometrycznej; nie zmieniano kamer wspólnej dziedziny.
+
+2026-11-12T09:50:32.0600270+01:00: Unity sbs-sign after3 Low clear; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
+
+2026-11-12T09:50:49.3750270+01:00: Unity sbs-sign after3 High clear; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
+
+2026-11-12T09:51:15.8423874+01:00: zapisano roboczy PACKET.md z zakresem, rzeczywistymi pomiarami i ograniczeniami. Wyniki geometrii/GIS/physics oraz pełny przegląd obrazów nadal PENDING; pakiet nie jest raportem zamknięcia. NASTĘPNY KROK: dokończyć SBS i kolejkę heavy.
+
+2026-11-12T09:52:51.2521521+01:00: obejrzano parę SBS Low clear i zbliżenie tyłu znaku Low overcast. Para SBS ma duże rozbieżności układu sceny; nie jest dowodem wiernego odtworzenia znaku/uchwytów. Wysłano oba obrazy do niezależnego przeglądu. Zapisano w git małe dokładne liczniki/walidacje oraz rzeczywiste metadane źródeł after3, bez surowych PNG.
+
+2026-11-12T09:53:28.5631635+01:00: niezależny przegląd potwierdził ograniczenie pary SBS i brak oczywistego artefaktu mocowań; wierność konstrukcyjna nadal UNVERIFIED. Zapisuję własne produkty generatora r2 i lica znaków; efekty uboczne raportów far-field/wiaduktu cofnięto do wersji gałęzi. Kod pozostaje zamrożony. Ciężkie porównanie nadal oczekuje, bez omijania slotu.
+
+2026-11-12T09:56:49.2930884+01:00: dodatkowe referencje r3 obejrzane pojedynczo≤960. Ujęcie2024 potwierdza czerwoną rodzinę wiaty przy5802408812 i identyfikuje osobny czerwony obiekt jako hydrant. Częściowo ucięte zdjęcia Fabryki Dywanów nie dowodzą jeszcze pełnego profilu. Heurystyka godzinyUTC pomaga ominąć nocne kadry, bez deklaracji jasności z samych metadanych. Kod r2 bez zmian.
+
+2026-11-12T09:59:27.5855160+01:00: audyt małych JSON night-rig after3:24 przypadki,96 rzeczywistych próbek; aktywne pary mijania, drogowe, wyłączenie komponentu, ekspozycja i granica modelu nieba zgodne. Zapisano SHA256 każdego pliku. To kontrola stanów, nie kalibracja jasności ani dowód okluzji. NASTĘPNY KROK: wciąż oczekujące geometry/arkusze, później testy końcowe.
+
+2026-11-12T10:05:52.5626782+01:00: mały audyt przed testami końcowymi:23 wejścia fidelity oraz raport bez zmian od bazy r2 po merge main3fe0c97f;2 raw SHA nie pasują do raportu. Nie kopiować7 niezgodności z r1. Test/generator/scenariusz znanej porażki physics również bez zmian. To audyt wejść, nie wykonanie testów; pełny GIS nadal tylko przy zamknięciu w heavy.
+
+2026-11-12T10:13:40.0014691+01:00: w oczekiwaniu wykonano interaktywną analizę PNG dozwoloną przez protokół:pojedyncze arkusze Low-overcast04/05/06,18 par,≤960px. Tryb --review-page wymusza jeden mały arkusz,≤3MP wejścia, pojedyncze dekodowanie i priorytet IDLE; każde wykonanie<1s. Brak oczywistej regresji w tych18 parach; pozostałe312 jeszcze nieocenione. Pełny batch porównań nadal w kolejce heavy; ciężkie testy/generatory nie były uruchamiane poza slotem.
+
+2026-11-12T10:14:55.1239140+01:00: root obejrzał dalsze12 par Low-overcast (strony07/08), łącznie30/330; bez nowego oczywistego artefaktu furniture. Niezależna ocena18/330 potwierdziła brak nowego blokera tylko dla04–06. Pełny przegląd i geometrię nadal oznaczamy jako nieukończone.
+
+2026-11-12T10:16:01.4383740+01:00: zakończono interaktywne oględziny root wszystkich55 Low-overcast (10 pojedynczych małych arkuszy, bez batcha/generatora). Bez nowej oczywistej regresji; łącznie55/330, nie cała seria. Reviewer uzupełnia37 par do własnego kompletu55 Low-overcast. Geometria/full-batch i końcowe Python nadal czekają na heavy.
+
+2026-11-12T10:18:25.3144973+01:00: niezależny Low-overcast55/55 bez nowego blokera. Root zakończył Low-dusk55/55 bez oczywistej regresji; łącznie110/330. Dusk nie dowodzi pełnej nocy. Wariant przekazano reviewerowi. Nadal brak wyników geometrii/GIS/physics; proces oczekujący zachowany.
+
+2026-11-12T10:22:14.2481367+01:00: root zakończył kompletLow165/165 (clear/overcast/dusk). Bez nowego oczywistego artefaktu w tej połowie serii. Reviewer110/330 potwierdzone, Low-clear w toku. High165 i ciężkie kontrole nadal otwarte. Kod produktu bez zmian od52668015.
+
+2026-11-12T10:22:33.4160782+01:00: niezależny przegląd potwierdził kompletLow165/165 bez nowego widocznego blokera. NASTĘPNY KROK: High165; geometria/GIS/physics nadal oczekują na heavy, bez deklaracji PASS.
+
+2026-11-12T10:24:23.5876905+01:00: root220/330 (Low165 iHigh-overcast55), bez nowego oczywistego blokera. Reviewer sprawdza High-overcast. Wszystkie ciężkie kontrole nadal oczekują w heavy; nie uruchamiano dodatkowej pełnej partii ani testów poza slotem.
+
+2026-11-12T10:24:54.1070899+01:00: niezależne pokrycie wzrosło do220/330; High-overcast55/55 bez nowego blokera. NASTĘPNY KROK: High-clear iHigh-dusk, potem domknięcie ciężkich kontroli według kolejki.
+
+2026-11-12T10:26:57.0168747+01:00: root275/330; High-dusk55/55 bez nowego oczywistego blokera. Reviewer uzupełnia wariant. Pozostał High-clear55 oraz ciężkie kontrole. Kod i zasoby bez zmian.
+
+2026-11-12T10:30:06.7596085+01:00: root330/330 obejrzane; niezależny High-clear w toku. Wszystkie60 małych arkuszy istnieje, dlatego anulowano własny zbędny waiter compare PID69076 (bez dzieci), aby nie powtarzać całej partii po geometrii. Geometry PID49828 nadal oczekuje w heavy. NASTĘPNY KROK: końcowy GIS iphysics kolejno po geometrii; EditMode340/340 bez powtarzania.
+
+2026-11-12T10:30:25.1417083+01:00: heavy geometry after; sukces=True; slot gpt-furniture-r2 zwolniony. NASTĘPNY KROK: sprawdzić log i kontynuować walidację rundy.
+
+2026-11-12T10:30:43.9523199+01:00: uruchomiono własny serialny waiter closing-after-geometry.ps1. Po terminalnym PID49828 wykona po jednym końcowym GIS iphysics/gate3 w heavy pod gpt-furniture-r2, zapisując kody i zachowując porażki. Nie powtarza EditMode ani generatora. Procesy tego samego właściciela nie wykonają ciężkiej pracy równolegle.
+
+2026-11-12T10:31:15.7463014+01:00: geometry6833→6833,0 różnic, heavy zwolniony. Niezależny pełny przegląd330/330 par,60/60 arkuszy, bez nowego widocznego blokera furniture, jawne ograniczenia w compare/REVIEW.md. KońcowyGIS oczekuje w heavy, po nim physics/gate3. NASTĘPNY KROK: odczyt wyników końcowych, REPORT≤20 linii i kopia artifacts do main.
+
+2026-11-12T10:31:57.4179342+01:00: ADR i bieżące sekcje PACKET ujednolicono ze stanem330 par/6833 geometrii, usuwając nieaktualnePENDING tych dwóch kontroli. GIS/physics pozostająPENDING. NASTĘPNY KROK: końcowe logi i raport rundy.
+
+2026-11-12T10:34:03.6311797+01:00: GIS otrzymał heavy i rozpoczął testy(11% według logu); nie ma jeszcze wyniku. Uzupełniono dwie obejrzane referencje≤960 do r3:2019 potwierdza kolejną czerwoną wiatę,2024 nie daje porównywalnego kadru. Kod r2 pozostaje zamrożony. NASTĘPNY KROK: odczytać GIS i kolejnyphysics, zachowując każdą porażkę.
+
+2026-11-12T10:46:31.5373690+01:00: heavy gis final3; sukces=False; slot gpt-furniture-r2 zwolniony. NASTĘPNY KROK: sprawdzić log i kontynuować walidację rundy.
+
+2026-11-12T10:46:55.1656976+01:00: GIS zakończony:644passed,1xfailed,1failed827,24s. Jedyna porażka zastany stale-report dlaoverrides.yaml/roads/meshing.py, audyt potwierdza niezmienność wejść. Cofnięto efekt uboczny specyfikacji wiaduktu. Slot zwolniony. Physics/gate3 oczekuje naheavy/rezerwację lidera, bez omijania.
+
+2026-11-12T10:58:39.3077237+01:00: heavy physics final3; sukces=True; slot gpt-furniture-r2 zwolniony. NASTĘPNY KROK: sprawdzić log i kontynuować walidację rundy.
+
+2026-11-12T10:58:39.7263818+01:00: końcowe Python zakończone:GIS=1,physics/gate3=0. Wcześniejsze EditMode340/340 pozostaje ważne, kod zamrożony. Odczytać pełne logi i porażki przed REPORT; nie utożsamiać wykonania z PASS.
+
+2026-11-12T10:59:26.8608271+01:00: r2 zakończona:physics/gate3 48PASS, GIS644pass/1xfail/1fail zastany, EditMode340PASS,330 par niezależnie obejrzane,6833 chronione payloady bez różnic. REPORT zapisany normalnym polskim tekstem. NASTĘPNY KROK: robocopy artifacts do main, potemgpt-furniture-r3 i merge main do tej gałęzi, bez push/merge do main.

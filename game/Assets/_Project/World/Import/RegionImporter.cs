@@ -392,7 +392,16 @@ namespace Game.World.Import
                 if (id == "car_plate")
                     return WorldCarPlateMaterials.PreserveLitPasses(path,
                         () => LitMaterial(path, albedo, rough, metal, t, clip, clip ? (float)Num(m.Get("alpha_cutoff")) : 0.5f, clip, emission));
-                return LitMaterial(path, albedo, rough, metal, t, clip, clip ? (float)Num(m.Get("alpha_cutoff")) : 0.5f, clip, emission);
+                var lit = LitMaterial(path, albedo, rough, metal, t, clip, clip ? (float)Num(m.Get("alpha_cutoff")) : 0.5f, clip, emission);
+                // ADR 0124: a material may name its own shader with URP Lit's property names (plot_kit ->
+                // Kamion/World PlotKit: two-sided panels and plant cards lit by COLOR_0, see the shader header).
+                if (m.Get("shader") is string shaderName)
+                {
+                    var custom = Shader.Find(shaderName);
+                    if (custom != null) { lit.shader = custom; EditorUtility.SetDirty(lit); }
+                    else Debug.LogWarning($"[IMPORT] material '{id}': shader '{shaderName}' not found, URP Lit kept");
+                }
+                return lit;
             }
             bool decal = m.Get("decal") is bool dc && dc;
             Color? bg = null;
@@ -538,8 +547,8 @@ namespace Game.World.Import
         }
 
         // ------------------------------------------------------------------------------------------------- meshes
-        static readonly string[] k_LowLayers = { "road", "bridge", "markings", "paved", "plot_ground", "buildings_lod1", "furniture", "wires" };   // plot_ground: ADR 0114
-        static readonly string[] k_HighLayers = { "road", "bridge", "markings", "paved", "plot_ground", "buildings", "buildings_lod1", "furniture", "wires" };
+        static readonly string[] k_LowLayers = { "road", "bridge", "markings", "paved", "plot_ground", "buildings_lod1", "furniture", "plots", "wires" };   // plot_ground: ADR 0114
+        static readonly string[] k_HighLayers = { "road", "bridge", "markings", "paved", "plot_ground", "buildings", "buildings_lod1", "furniture", "plots", "wires" };   // plots: ADR 0124
 
         static void BakeVisual(Result r, Chunk ch, GlbReader g, string tier, GlbReader.MeshNode extraBuildingsLod0 = null)
         {

@@ -122,3 +122,56 @@ def test_gradient_resolution_must_be_known():
     a=pair();b=pair()
     del a['photo']['gradient_width_px'];del b['photo']['gradient_width_px']
     assert report.compatibility(a,b)=='MISSING_RESOLUTION'
+
+
+def test_history_keeps_old_pixels_attached_to_old_verdict(tmp_path):
+    run=fixture_run(tmp_path);review=tmp_path/'review.json'
+    old={'reviewed_run':'sbs-r1','assessments':[{'camera':'sbs-test','result':'PARTIAL',
+         'render_sha256':'b'*64,'comparison_sha256':'a'*64}]}
+    latest={'reviewed_run':'sbs-r3','assessments':[{'camera':'sbs-test','result':'RECOGNISABLE',
+            'render_sha256':'f'*64,'comparison_sha256':'a'*64}],'history':[old]}
+    review.write_text(json.dumps(latest))
+    data=report.build_report([run],tmp_path/'out',review)
+    row=data['runs'][0]['states']['Low-clear']['pairs'][0]
+    assert row['review_matches_current_pixels']
+    assert row['last_recognition_review']['result']=='PARTIAL'
+    assert row['last_recognition_review']['reviewed_run']=='sbs-r1'
+    latest['assessments'][0]['render_sha256']='b'*64
+    review.write_text(json.dumps(latest))
+    data=report.build_report([run],tmp_path/'out',review)
+    assert data['runs'][0]['states']['Low-clear']['pairs'][0]['last_recognition_review']['reviewed_run']=='sbs-r3'
+
+
+def test_unreviewed_pixels_use_run_snapshot_not_future_reason(tmp_path):
+    run=fixture_run(tmp_path);review=tmp_path/'review.json'
+    old={'reviewed_run':'sbs-r1','assessments':[{'camera':'sbs-test','reason':'old scene',
+         'render_sha256':'c'*64,'comparison_sha256':'a'*64}]}
+    (run/'inputs/sbs_recognition.json').write_text(json.dumps(old))
+    latest={'reviewed_run':'sbs-r3','assessments':[{'camera':'sbs-test','reason':'future scene',
+            'render_sha256':'f'*64,'comparison_sha256':'a'*64}]}
+    review.write_text(json.dumps(latest))
+    data=report.build_report([run],tmp_path/'out',review)
+    row=data['runs'][0]['states']['Low-clear']['pairs'][0]
+    assert not row['review_matches_current_pixels']
+    assert row['last_recognition_review']['reason']=='old scene'
+    assert row['last_recognition_review']['reviewed_run']=='sbs-r1'
+
+
+@pytest.mark.parametrize('history',[None,{},[None],['bad']])
+def test_malformed_recognition_history_is_rejected(history):
+    with pytest.raises(ValueError,match='recognition history'):
+        report.recognition_versions({'history':history})
+
+
+def test_missing_hashes_cannot_match_history():
+    p={'camera':'sbs-test'}
+    version={'assessments':[{'camera':'sbs-test','result':'PARTIAL'}]}
+    assert not report.pixel_match(p,report.review_for_pair(p,[version],version))
+
+
+@pytest.mark.parametrize('snapshot',[None,{'assessments':[]}])
+def test_missing_snapshot_or_camera_does_not_attach_future_review(snapshot):
+    p=pair()
+    future={'assessments':[{'camera':'sbs-test','reason':'future scene',
+                           'render_sha256':'f'*64,'comparison_sha256':'a'*64}]}
+    assert report.review_for_pair(p,[future],snapshot) is None

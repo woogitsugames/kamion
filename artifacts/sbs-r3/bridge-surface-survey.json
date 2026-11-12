@@ -1,0 +1,504 @@
+{
+  "world_manifest_sha256": "2d486ac202829ca711b2d72fabc2299b6c637f1059f7adc9c42e1ad6b8aba489",
+  "production_cameras_sha256": "41686dd5d9a9ef0969ab9d7772e359b150a6f1783b67538d9d8f875880f1ae2e",
+  "intrinsics_sha256": "3becbc9e737e3ac0ead357ac831ad5b6cdfa4ae02bdaaf8914292ab165dd551b",
+  "helper_sha256": "dd53f5fbf5f6fe52a64cf95711c5881856ef5a2fd04b0f0e460944b0ae357116",
+  "coordinate_contract": "Exporter glTF (-E,U,N), helper converts to local(E,N,absolute U).",
+  "scope": "Actual matching Low GLB road_asphalt and collision_asphalt only. No terrain, kerb, photo pose approval or world write.",
+  "sample_count": 21,
+  "verified_chunks": [
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_1_3.low.glb",
+      "sha256": "8d058d967eb2ee60fd6171dffaced5a4dd360e3daadf285e160bc313ba199294"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_1_4.low.glb",
+      "sha256": "177c51741f50f86ee02e81a7e7ab5f71016b21429da11ac04c38aba097b50540"
+    },
+    {
+      "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_2_4.low.glb",
+      "sha256": "d1a5fbb11d300d21aafb791e1c412493ef6bd7096603012a305d2b0204b78282"
+    }
+  ],
+  "samples": [
+    {
+      "camera": "sbs-g3-b-494288258686575",
+      "along_view_m": -30,
+      "left_m": -4,
+      "e": -502.3974481749617,
+      "n": -13.449614590371034,
+      "baseline_road_target_u": 140.18800000000002,
+      "nominal_eye_m": 1.7,
+      "hits": [
+        {
+          "u_m": 139.554243,
+          "node": "road_collision",
+          "material": "collision_asphalt",
+          "chunk": "2_4"
+        }
+      ],
+      "road_surface_u_m": [
+        139.554243
+      ],
+      "nearest_to_old_road_target_u": 139.554243,
+      "target_difference_m": -0.6337570000000028,
+      "note": "No automatic pose choice. Multiple levels may exist; closest to old height is a diagnostic, not proof of the photographed deck."
+    },
+    {
+      "camera": "sbs-g3-b-494288258686575",
+      "along_view_m": -30,
+      "left_m": 0,
+      "e": -504.93477588243456,
+      "n": -16.541857806046433,
+      "baseline_road_target_u": 140.18800000000002,
+      "nominal_eye_m": 1.7,
+      "hits": [
+        {
+          "u_m": 139.633773,
+          "node": "road_collision",
+          "material": "collision_asphalt",
+          "chunk": "2_4"
+        }
+      ],
+      "road_surface_u_m": [
+        139.633773
+      ],
+      "nearest_to_old_road_target_u": 139.633773,
+      "target_difference_m": -0.5542270000000258,
+      "note": "No automatic pose choice. Multiple levels may exist; closest to old height is a diagnostic, not proof of the photographed deck."
+    },
+    {
+      "camera": "sbs-g3-b-494288258686575",
+      "along_view_m": -30,
+      "left_m": 4,
+      "e": -507.4721035899074,
+      "n": -19.634101021721833,
+      "baseline_road_target_u": 140.18800000000002,
+      "nominal_eye_m": 1.7,
+      "hits": [],
+      "road_surface_u_m": [],
+      "nearest_to_old_road_target_u": null,
+      "target_difference_m": null,
+      "note": "No automatic pose choice. Multiple levels may exist; closest to old height is a diagnostic, not proof of the photographed deck."
+    },
+    {
+      "camera": "sbs-g3-b-494288258686575",
+      "along_view_m": -15,
+      "left_m": -4,
+      "e": -513.9933602337445,
+      "n": -3.9346356873478174,
+      "baseline_road_target_u": 140.18800000000002,
+      "nominal_eye_m": 1.7,
+      "hits": [
+        {
+          "u_m": 139.861242,
+          "node": "road_collision",
+          "material": "collision_asphalt",
+          "chunk": "1_4"
+        }
+      ],
+      "road_surface_u_m": [
+        139.861242
+      ],
+      "nearest_to_old_road_target_u": 139.861242,
+      "target_difference_m": -0.3267580000000123,
+      "note": "No automatic pose choice. Multiple levels may exist; closest to old height is a diagnostic, not proof of the photographed deck."
+    },
+    {
+      "camera": "sbs-g3-b-494288258686575",
+      "along_view_m": -15,
+      "left_m": 0,
+      "e": -516.5306879412174,
+      "n": -7.026878903023216,
+      "baseline_road_target_u": 140.18800000000002,
+      "nominal_eye_m": 1.7,
+      "hits": [
+        {
+          "u_m": 139.942298,
+          "node": "road_collision",
+          "material": "collision_asphalt",
+          "chunk": "1_4"
+        }
+      ],
+      "road_surface_u_m": [
+        139.942298
+      ],
+      "nearest_to_old_road_target_u": 139.942298,
+      "target_difference_m": -0.24570200000002274,
+      "note": "No automatic pose choice. Multiple levels may exist; closest to old height is a diagnostic, not proof of the photographed deck."
+    },
+    {
+      "camera": "sbs-g3-b-494288258686575",
+      "along_view_m": -15,
+      "left_m": 4,
+      "e": -519.0680156486902,
+      "n": -10.119122118698614,
+      "baseline_road_target_u": 140.18800000000002,
+      "nominal_eye_m": 1.7,
+      "hits": [],
+      "road_surface_u_m": [],
+      "nearest_to_old_road_target_u": null,
+      "target_difference_m": null,
+      "note": "No automatic pose choice. Multiple levels may exist; closest to old height is a diagnostic, not proof of the photographed deck."
+    },
+    {
+      "camera": "sbs-g3-b-494288258686575",
+      "along_view_m": 0,
+      "left_m": -4,
+      "e": -525.5892722925272,
+      "n": 5.5803432156753985,
+      "baseline_road_target_u": 140.18800000000002,
+      "nominal_eye_m": 1.7,
+      "hits": [],
+      "road_surface_u_m": [],
+      "nearest_to_old_road_target_u": null,
+      "target_difference_m": null,
+      "note": "No automatic pose choice. Multiple levels may exist; closest to old height is a diagnostic, not proof of the photographed deck."
+    },
+    {
+      "camera": "sbs-g3-b-494288258686575",
+      "along_view_m": 0,
+      "left_m": 0,
+      "e": -528.1266,
+      "n": 2.4881,
+      "baseline_road_target_u": 140.18800000000002,
+      "nominal_eye_m": 1.7,
+      "hits": [
+        {
+          "u_m": 140.188354,
+          "node": "road_collision",
+          "material": "collision_asphalt",
+          "chunk": "1_3"
+        }
+      ],
+      "road_surface_u_m": [
+        140.188354
+      ],
+      "nearest_to_old_road_target_u": 140.188354,
+      "target_difference_m": 0.0003539999999873089,
+      "note": "No automatic pose choice. Multiple levels may exist; closest to old height is a diagnostic, not proof of the photographed deck."
+    },
+    {
+      "camera": "sbs-g3-b-494288258686575",
+      "along_view_m": 0,
+      "left_m": 4,
+      "e": -530.6639277074729,
+      "n": -0.6041432156753985,
+      "baseline_road_target_u": 140.18800000000002,
+      "nominal_eye_m": 1.7,
+      "hits": [
+        {
+          "u_m": 133.93245,
+          "node": "road",
+          "material": "road_asphalt",
+          "chunk": "1_4"
+        }
+      ],
+      "road_surface_u_m": [
+        133.93245
+      ],
+      "nearest_to_old_road_target_u": 133.93245,
+      "target_difference_m": -6.255550000000028,
+      "note": "No automatic pose choice. Multiple levels may exist; closest to old height is a diagnostic, not proof of the photographed deck."
+    },
+    {
+      "camera": "sbs-g3-b-494288258686575",
+      "along_view_m": 15,
+      "left_m": -4,
+      "e": -537.1851843513099,
+      "n": 15.095322118698615,
+      "baseline_road_target_u": 140.18800000000002,
+      "nominal_eye_m": 1.7,
+      "hits": [
+        {
+          "u_m": 134.351752,
+          "node": "road",
+          "material": "road_asphalt",
+          "chunk": "1_3"
+        },
+        {
+          "u_m": 134.351474,
+          "node": "road_collision",
+          "material": "collision_asphalt",
+          "chunk": "1_3"
+        }
+      ],
+      "road_surface_u_m": [
+        134.351474,
+        134.351752
+      ],
+      "nearest_to_old_road_target_u": 134.351752,
+      "target_difference_m": -5.836248000000012,
+      "note": "No automatic pose choice. Multiple levels may exist; closest to old height is a diagnostic, not proof of the photographed deck."
+    },
+    {
+      "camera": "sbs-g3-b-494288258686575",
+      "along_view_m": 15,
+      "left_m": 0,
+      "e": -539.7225120587827,
+      "n": 12.003078903023216,
+      "baseline_road_target_u": 140.18800000000002,
+      "nominal_eye_m": 1.7,
+      "hits": [
+        {
+          "u_m": 140.386039,
+          "node": "road_collision",
+          "material": "collision_asphalt",
+          "chunk": "1_3"
+        }
+      ],
+      "road_surface_u_m": [
+        140.386039
+      ],
+      "nearest_to_old_road_target_u": 140.386039,
+      "target_difference_m": 0.1980389999999943,
+      "note": "No automatic pose choice. Multiple levels may exist; closest to old height is a diagnostic, not proof of the photographed deck."
+    },
+    {
+      "camera": "sbs-g3-b-494288258686575",
+      "along_view_m": 15,
+      "left_m": 4,
+      "e": -542.2598397662556,
+      "n": 8.910835687347817,
+      "baseline_road_target_u": 140.18800000000002,
+      "nominal_eye_m": 1.7,
+      "hits": [
+        {
+          "u_m": 140.345558,
+          "node": "road_collision",
+          "material": "collision_asphalt",
+          "chunk": "1_3"
+        }
+      ],
+      "road_surface_u_m": [
+        140.345558
+      ],
+      "nearest_to_old_road_target_u": 140.345558,
+      "target_difference_m": 0.15755799999999454,
+      "note": "No automatic pose choice. Multiple levels may exist; closest to old height is a diagnostic, not proof of the photographed deck."
+    },
+    {
+      "camera": "sbs-g3-b-494288258686575",
+      "along_view_m": 30,
+      "left_m": -4,
+      "e": -548.7810964100927,
+      "n": 24.61030102172183,
+      "baseline_road_target_u": 140.18800000000002,
+      "nominal_eye_m": 1.7,
+      "hits": [],
+      "road_surface_u_m": [],
+      "nearest_to_old_road_target_u": null,
+      "target_difference_m": null,
+      "note": "No automatic pose choice. Multiple levels may exist; closest to old height is a diagnostic, not proof of the photographed deck."
+    },
+    {
+      "camera": "sbs-g3-b-494288258686575",
+      "along_view_m": 30,
+      "left_m": 0,
+      "e": -551.3184241175655,
+      "n": 21.518057806046432,
+      "baseline_road_target_u": 140.18800000000002,
+      "nominal_eye_m": 1.7,
+      "hits": [
+        {
+          "u_m": 140.708171,
+          "node": "road_collision",
+          "material": "collision_asphalt",
+          "chunk": "1_3"
+        }
+      ],
+      "road_surface_u_m": [
+        140.708171
+      ],
+      "nearest_to_old_road_target_u": 140.708171,
+      "target_difference_m": 0.5201709999999764,
+      "note": "No automatic pose choice. Multiple levels may exist; closest to old height is a diagnostic, not proof of the photographed deck."
+    },
+    {
+      "camera": "sbs-g3-b-494288258686575",
+      "along_view_m": 30,
+      "left_m": 4,
+      "e": -553.8557518250384,
+      "n": 18.425814590371033,
+      "baseline_road_target_u": 140.18800000000002,
+      "nominal_eye_m": 1.7,
+      "hits": [
+        {
+          "u_m": 140.62661,
+          "node": "road_collision",
+          "material": "collision_asphalt",
+          "chunk": "1_3"
+        }
+      ],
+      "road_surface_u_m": [
+        140.62661
+      ],
+      "nearest_to_old_road_target_u": 140.62661,
+      "target_difference_m": 0.43860999999998285,
+      "note": "No automatic pose choice. Multiple levels may exist; closest to old height is a diagnostic, not proof of the photographed deck."
+    },
+    {
+      "camera": "sbs-g3-b-1801374876712141",
+      "along_view_m": 0,
+      "left_m": 0,
+      "e": -545.1538,
+      "n": 70.6663,
+      "baseline_road_target_u": 135.4178,
+      "nominal_eye_m": 2.2,
+      "hits": [
+        {
+          "u_m": 135.41381,
+          "node": "road",
+          "material": "road_asphalt",
+          "chunk": "1_3"
+        },
+        {
+          "u_m": 135.413445,
+          "node": "road_collision",
+          "material": "collision_asphalt",
+          "chunk": "1_3"
+        }
+      ],
+      "road_surface_u_m": [
+        135.413445,
+        135.41381
+      ],
+      "nearest_to_old_road_target_u": 135.41381,
+      "target_difference_m": -0.0039899999999875035,
+      "note": "No automatic pose choice. Multiple levels may exist; closest to old height is a diagnostic, not proof of the photographed deck."
+    },
+    {
+      "camera": "sbs-g3-b-1801374876712141",
+      "along_view_m": 10,
+      "left_m": 0,
+      "e": -546.3613934015747,
+      "n": 80.59311812951529,
+      "baseline_road_target_u": 135.4178,
+      "nominal_eye_m": 2.2,
+      "hits": [
+        {
+          "u_m": 135.573359,
+          "node": "road",
+          "material": "road_asphalt",
+          "chunk": "1_3"
+        },
+        {
+          "u_m": 135.573323,
+          "node": "road_collision",
+          "material": "collision_asphalt",
+          "chunk": "1_3"
+        }
+      ],
+      "road_surface_u_m": [
+        135.573323,
+        135.573359
+      ],
+      "nearest_to_old_road_target_u": 135.573323,
+      "target_difference_m": 0.1555229999999881,
+      "note": "No automatic pose choice. Multiple levels may exist; closest to old height is a diagnostic, not proof of the photographed deck."
+    },
+    {
+      "camera": "sbs-g3-b-1801374876712141",
+      "along_view_m": 15,
+      "left_m": 0,
+      "e": -546.965190102362,
+      "n": 85.55652719427293,
+      "baseline_road_target_u": 135.4178,
+      "nominal_eye_m": 2.2,
+      "hits": [
+        {
+          "u_m": 135.642054,
+          "node": "road",
+          "material": "road_asphalt",
+          "chunk": "1_3"
+        },
+        {
+          "u_m": 135.64209,
+          "node": "road_collision",
+          "material": "collision_asphalt",
+          "chunk": "1_3"
+        }
+      ],
+      "road_surface_u_m": [
+        135.642054,
+        135.64209
+      ],
+      "nearest_to_old_road_target_u": 135.642054,
+      "target_difference_m": 0.22425400000000195,
+      "note": "No automatic pose choice. Multiple levels may exist; closest to old height is a diagnostic, not proof of the photographed deck."
+    },
+    {
+      "camera": "sbs-g3-b-1801374876712141",
+      "along_view_m": 20,
+      "left_m": 0,
+      "e": -547.5689868031494,
+      "n": 90.51993625903057,
+      "baseline_road_target_u": 135.4178,
+      "nominal_eye_m": 2.2,
+      "hits": [
+        {
+          "u_m": 135.705552,
+          "node": "road",
+          "material": "road_asphalt",
+          "chunk": "1_3"
+        },
+        {
+          "u_m": 135.704908,
+          "node": "road_collision",
+          "material": "collision_asphalt",
+          "chunk": "1_3"
+        }
+      ],
+      "road_surface_u_m": [
+        135.704908,
+        135.705552
+      ],
+      "nearest_to_old_road_target_u": 135.704908,
+      "target_difference_m": 0.28710799999998926,
+      "note": "No automatic pose choice. Multiple levels may exist; closest to old height is a diagnostic, not proof of the photographed deck."
+    },
+    {
+      "camera": "sbs-g3-b-1801374876712141",
+      "along_view_m": 30,
+      "left_m": 0,
+      "e": -548.776580204724,
+      "n": 100.44675438854586,
+      "baseline_road_target_u": 135.4178,
+      "nominal_eye_m": 2.2,
+      "hits": [
+        {
+          "u_m": 135.832961,
+          "node": "road",
+          "material": "road_asphalt",
+          "chunk": "1_3"
+        },
+        {
+          "u_m": 135.833287,
+          "node": "road_collision",
+          "material": "collision_asphalt",
+          "chunk": "1_3"
+        }
+      ],
+      "road_surface_u_m": [
+        135.832961,
+        135.833287
+      ],
+      "nearest_to_old_road_target_u": 135.832961,
+      "target_difference_m": 0.4151610000000119,
+      "note": "No automatic pose choice. Multiple levels may exist; closest to old height is a diagnostic, not proof of the photographed deck."
+    },
+    {
+      "camera": "sbs-g3-b-494288258686575",
+      "hypothesis": "original GPS, not SfM",
+      "e": -516.1777876969427,
+      "n": 0.4813094809651375,
+      "baseline_road_target_u": 140.18800000000002,
+      "nominal_eye_m": 1.7,
+      "hits": [],
+      "road_surface_u_m": [],
+      "nearest_to_old_road_target_u": null,
+      "target_difference_m": null,
+      "note": "No automatic pose choice. Multiple levels may exist; closest to old height is a diagnostic, not proof of the photographed deck."
+    }
+  ]
+}

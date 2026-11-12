@@ -1,0 +1,23 @@
+{
+  "label": "candidate2",
+  "exit": 0,
+  "tests": 605,
+  "passed": 604,
+  "failed": 0,
+  "errors": 0,
+  "skipped": [
+    {
+      "type": "pytest.xfail",
+      "message": "owner target edge_p95 not met yet (ADR 0075, artifacts/fidelity-r9/DIFFS.md)"
+    }
+  ],
+  "pytest_summary": "604 passed, 1 xfailed in 1224.78s",
+  "junit_seconds": "1224.364",
+  "producer_metadata_restored": true,
+  "post_gis_manifest_audit": {
+    "checked": 196,
+    "mismatches": []
+  },
+  "xml": "candidate2-final-gis.xml",
+  "note": "Physics/gate3, fidelity and final EditMode not completed yet."
+}

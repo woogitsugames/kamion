@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="14" result="Passed" total="14" passed="14" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-11-12 02:19:51Z" end-time="2026-11-12 02:19:53Z" duration="1,9313881">
+  <test-suite type="TestSuite" id="1000" name="Kamion" fullname="Kamion" runstate="Runnable" testcasecount="338" result="Passed" start-time="2026-11-12 02:19:51Z" end-time="2026-11-12 02:19:53Z" duration="1.931388" total="14" passed="14" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1422" name="Game.Tests.EditMode.dll" fullname="C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-furniture/game/Library/ScriptAssemblies/Game.Tests.EditMode.dll" runstate="Runnable" testcasecount="338" result="Passed" start-time="2026-11-12 02:19:51Z" end-time="2026-11-12 02:19:53Z" duration="1.925474" total="14" passed="14" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="58552" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1423" name="Game" fullname="Game" runstate="Runnable" testcasecount="338" result="Passed" start-time="2026-11-12 02:19:51Z" end-time="2026-11-12 02:19:53Z" duration="1.923930" total="14" passed="14" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1424" name="Tests" fullname="Game.Tests" runstate="Runnable" testcasecount="338" result="Passed" start-time="2026-11-12 02:19:51Z" end-time="2026-11-12 02:19:53Z" duration="1.922557" total="14" passed="14" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1114" name="FurnitureSignTests" fullname="Game.Tests.FurnitureSignTests" classname="Game.Tests.FurnitureSignTests" runstate="Runnable" testcasecount="14" result="Passed" start-time="2026-11-12 02:19:51Z" end-time="2026-11-12 02:19:53Z" duration="1.918765" total="14" passed="14" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <output><![CDATA[[FurnitureSignProbe] previous pipeline='', maximumLOD=2147483647
+]]></output>
+            <test-case id="1117" name="AlphaCutoutRemainsEmptyWithHeadlights" fullname="Game.Tests.FurnitureSignTests.AlphaCutoutRemainsEmptyWithHeadlights" methodname="AlphaCutoutRemainsEmptyWithHeadlights" classname="Game.Tests.FurnitureSignTests" runstate="Runnable" seed="1540291412" result="Passed" start-time="2026-11-12 02:19:51Z" end-time="2026-11-12 02:19:51Z" duration="0.195458" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1129" name="AssemblyFlagCoversCurrentRoadFrontsWithoutOverridingAuthoredMaterials" fullname="Game.Tests.FurnitureSignTests.AssemblyFlagCoversCurrentRoadFrontsWithoutOverridingAuthoredMaterials" methodname="AssemblyFlagCoversCurrentRoadFrontsWithoutOverridingAuthoredMaterials" classname="Game.Tests.FurnitureSignTests" runstate="Runnable" seed="2046652017" result="Passed" start-time="2026-11-12 02:19:51Z" end-time="2026-11-12 02:19:52Z" duration="1.051901" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[FurnitureSignProbe] current road fronts=36; facade labels excluded; authored definition retained
+]]></output>
+            </test-case>
+            <test-case id="1116" name="EnabledKeywordWithNoSourceMatchesInstalledUrpLit" fullname="Game.Tests.FurnitureSignTests.EnabledKeywordWithNoSourceMatchesInstalledUrpLit" methodname="EnabledKeywordWithNoSourceMatchesInstalledUrpLit" classname="Game.Tests.FurnitureSignTests" runstate="Runnable" seed="1305357866" result="Passed" start-time="2026-11-12 02:19:52Z" end-time="2026-11-12 02:19:52Z" duration="0.004891" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1127" name="FactoryKeepsFaceUvAndRestoresOrdinaryLitWhenRetroIsRemoved" fullname="Game.Tests.FurnitureSignTests.FactoryKeepsFaceUvAndRestoresOrdinaryLitWhenRetroIsRemoved" methodname="FactoryKeepsFaceUvAndRestoresOrdinaryLitWhenRetroIsRemoved" classname="Game.Tests.FurnitureSignTests" runstate="Runnable" seed="1043548883" result="Passed" start-time="2026-11-12 02:19:52Z" end-time="2026-11-12 02:19:52Z" duration="0.203476" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1120" name="HdrReturnCoefficientReachesGpuWithoutGammaEncoding" fullname="Game.Tests.FurnitureSignTests.HdrReturnCoefficientReachesGpuWithoutGammaEncoding" classname="Game.Tests.FurnitureSignTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-11-12 02:19:52Z" end-time="2026-11-12 02:19:53Z" duration="0.360774" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1118" name="HdrReturnCoefficientReachesGpuWithoutGammaEncoding(1.0f)" fullname="Game.Tests.FurnitureSignTests.HdrReturnCoefficientReachesGpuWithoutGammaEncoding(1.0f)" methodname="HdrReturnCoefficientReachesGpuWithoutGammaEncoding" classname="Game.Tests.FurnitureSignTests" runstate="Runnable" seed="909709636" result="Passed" start-time="2026-11-12 02:19:52Z" end-time="2026-11-12 02:19:53Z" duration="0.356390" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Import Error Code:(4)
+Message: Build asset version error: assets/_generated/furnituresignprobe/furniturecoefficient.shader in SourceAssetDB has modification time of '2026-11-12T01:51:14.2060472Z' while content on disk has modification time of '2026-11-12T02:19:52.7192911Z'
+
+]]></output>
+              </test-case>
+              <test-case id="1119" name="HdrReturnCoefficientReachesGpuWithoutGammaEncoding(800.0f)" fullname="Game.Tests.FurnitureSignTests.HdrReturnCoefficientReachesGpuWithoutGammaEncoding(800.0f)" methodname="HdrReturnCoefficientReachesGpuWithoutGammaEncoding" classname="Game.Tests.FurnitureSignTests" runstate="Runnable" seed="1248847486" result="Passed" start-time="2026-11-12 02:19:53Z" end-time="2026-11-12 02:19:53Z" duration="0.001124" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1115" name="KeywordOffMatchesInstalledUrpLitOnGpu" fullname="Game.Tests.FurnitureSignTests.KeywordOffMatchesInstalledUrpLitOnGpu" methodname="KeywordOffMatchesInstalledUrpLitOnGpu" classname="Game.Tests.FurnitureSignTests" runstate="Runnable" seed="668979579" result="Passed" start-time="2026-11-12 02:19:53Z" end-time="2026-11-12 02:19:53Z" duration="0.063680" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1123" name="ObservationAngleSuppressesReturn" fullname="Game.Tests.FurnitureSignTests.ObservationAngleSuppressesReturn" methodname="ObservationAngleSuppressesReturn" classname="Game.Tests.FurnitureSignTests" runstate="Runnable" seed="888785717" result="Passed" start-time="2026-11-12 02:19:53Z" end-time="2026-11-12 02:19:53Z" duration="0.004997" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1126" name="PublisherClearsSourceWhenMissingOffOrDisabled" fullname="Game.Tests.FurnitureSignTests.PublisherClearsSourceWhenMissingOffOrDisabled" methodname="PublisherClearsSourceWhenMissingOffOrDisabled" classname="Game.Tests.FurnitureSignTests" runstate="Runnable" seed="1440787386" result="Passed" start-time="2026-11-12 02:19:53Z" end-time="2026-11-12 02:19:53Z" duration="0.004287" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1128" name="PublisherUsesHighBeamSocketsWhenLowBeamIsOff" fullname="Game.Tests.FurnitureSignTests.PublisherUsesHighBeamSocketsWhenLowBeamIsOff" methodname="PublisherUsesHighBeamSocketsWhenLowBeamIsOff" classname="Game.Tests.FurnitureSignTests" runstate="Runnable" seed="1050283011" result="Passed" start-time="2026-11-12 02:19:53Z" end-time="2026-11-12 02:19:53Z" duration="0.000882" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1121" name="ReturnDoesNotCreateAdditionalPasses" fullname="Game.Tests.FurnitureSignTests.ReturnDoesNotCreateAdditionalPasses" methodname="ReturnDoesNotCreateAdditionalPasses" classname="Game.Tests.FurnitureSignTests" runstate="Runnable" seed="1313226684" result="Passed" start-time="2026-11-12 02:19:53Z" end-time="2026-11-12 02:19:53Z" duration="0.000629" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[FurnitureSignProbe] actual passes URP=9, furniture=9
+]]></output>
+            </test-case>
+            <test-case id="1125" name="ReturnFallsWithDistanceAndEndsBeyondRange" fullname="Game.Tests.FurnitureSignTests.ReturnFallsWithDistanceAndEndsBeyondRange" methodname="ReturnFallsWithDistanceAndEndsBeyondRange" classname="Game.Tests.FurnitureSignTests" runstate="Runnable" seed="1554507041" result="Passed" start-time="2026-11-12 02:19:53Z" end-time="2026-11-12 02:19:53Z" duration="0.005768" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1124" name="ReturnTracksTheScenesExposedLightUnits" fullname="Game.Tests.FurnitureSignTests.ReturnTracksTheScenesExposedLightUnits" methodname="ReturnTracksTheScenesExposedLightUnits" classname="Game.Tests.FurnitureSignTests" runstate="Runnable" seed="1210311845" result="Passed" start-time="2026-11-12 02:19:53Z" end-time="2026-11-12 02:19:53Z" duration="0.005885" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1122" name="SourceBrightensFaceButNotItsBack" fullname="Game.Tests.FurnitureSignTests.SourceBrightensFaceButNotItsBack" methodname="SourceBrightensFaceButNotItsBack" classname="Game.Tests.FurnitureSignTests" runstate="Runnable" seed="89651951" result="Passed" start-time="2026-11-12 02:19:53Z" end-time="2026-11-12 02:19:53Z" duration="0.003734" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[Saving results to: C:/Users/matma/AppData/LocalLow/woogitsugames/Kamion\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

@@ -1,0 +1,28 @@
+{
+  "complete": true,
+  "baseline_spec_verified_against_fresh_qa": true,
+  "all_deck_buffers_identical": true,
+  "deck_specs_identical": true,
+  "stairs_disabled": true,
+  "bare_chamfers_disabled": true,
+  "abstract_paint_patch_disabled": true,
+  "weather_retained": true,
+  "new_materials": [],
+  "rows": [
+    {
+      "chain": "c:w1101181473:10076968415-1847263305",
+      "deck_sha256": "2b50a3a98ed638b10363c678fdcfe2a972e49d00172f0ea9a1d758dd023087b5",
+      "net_tris_before": 1664,
+      "net_tris_after": 1654,
+      "delta_net_tris": -10
+    },
+    {
+      "chain": "c:w173956078:1847263293-5749429982",
+      "deck_sha256": "0557f66031d5d9b1656c829dff63c513445003bb0ae43b27731e8782c224f078",
+      "net_tris_before": 1364,
+      "net_tris_after": 1358,
+      "delta_net_tris": -6
+    }
+  ],
+  "scope": "Exact generator deck V/T/UV hashes and full deck specs; preservation of UV1/COL and collision additionally covered by focused tests and GLB primitive audit"
+}

@@ -1,0 +1,106 @@
+{
+  "schema": "kamion/sbs-diagnostic-anchor-regions/1",
+  "recorded_at": "2026-11-12T11:21:56.8435462+01:00",
+  "base_camera": "sbs-g3-b-275528677534382",
+  "reviewers": [
+    "parent native visual review",
+    "sbs_visual_review independent native visual review"
+  ],
+  "production_acceptance": false,
+  "pose_confidence": "C",
+  "images": [
+    {
+      "label": "photo",
+      "path": "artifacts/sbs-gate3/rectified/275528677534382.png",
+      "sha256": "07f8aceba89a22f0d8ef678b4962d89d6b39715000eb3bf0dd00057ce3159007",
+      "size_px": [
+        1280,
+        720
+      ],
+      "road_vanishing_region_px": {
+        "y": [
+          365,
+          390
+        ],
+        "x": [
+          635,
+          665
+        ]
+      },
+      "outer_portal_leg_span_x_px": [
+        360,
+        980
+      ],
+      "upper_beam_band_y_px": [
+        160,
+        190
+      ],
+      "measurement_status": "WORKING_VALUE broad visual interval, not line intersection or surveyed horizon"
+    },
+    {
+      "label": "probe02",
+      "path": "artifacts/sbs-r3/pose-refinement1/renders/1280x720/sbs-refine1-275528677534382-02.png",
+      "sha256": "682d3cb9b217077b6e5ae70e3eab22a03432681c7e3d696f09de1c779c977a84",
+      "size_px": [
+        1280,
+        720
+      ],
+      "road_vanishing_region_px": {
+        "y": [
+          365,
+          390
+        ],
+        "x": [
+          635,
+          665
+        ]
+      },
+      "outer_portal_leg_span_x_px": [
+        365,
+        1050
+      ],
+      "upper_beam_band_y_px": [
+        165,
+        215
+      ],
+      "measurement_status": "WORKING_VALUE broad visual interval, not line intersection or surveyed horizon"
+    },
+    {
+      "label": "probe04",
+      "path": "artifacts/sbs-r3/pose-refinement1/renders/1280x720/sbs-refine1-275528677534382-04.png",
+      "sha256": "44344d3c3be084285361fa19a67accaf94ef0aa67de6d520b0c2529f8dd4299a",
+      "size_px": [
+        1280,
+        720
+      ],
+      "road_vanishing_region_px": {
+        "y": [
+          340,
+          365
+        ],
+        "x": [
+          630,
+          660
+        ]
+      },
+      "outer_portal_leg_span_x_px": [
+        395,
+        1005
+      ],
+      "upper_beam_band_y_px": [
+        170,
+        210
+      ],
+      "measurement_status": "WORKING_VALUE broad visual interval, not line intersection or surveyed horizon"
+    }
+  ],
+  "next_single_trial": {
+    "status": "C only; recheck actual asphalt on refreshed r4 world before render",
+    "horizon_y_fraction": 0.55,
+    "offset_m": -9,
+    "nominal_eye_m": 1.7,
+    "translation_axis": "view",
+    "left_delta_m": 0
+  },
+  "note": "Road VP is not a level horizon. Portal model dimensions and sign placement unverified. No automatic camera fit or promotion."
+}

@@ -21,6 +21,11 @@ namespace Game.Editor.Build
             Counts[shader.name] = n + data.Count;
         }
 
+        /// <summary>ADR 0131: every shader with its variant count, descending (the top-12 summary hid new shaders).</summary>
+        public static string Full() =>
+            string.Join(System.Environment.NewLine, Counts.OrderByDescending(k => k.Value).ThenBy(k => k.Key)
+                .Select(k => k.Value + " " + k.Key));
+
         public static string Summary()
         {
             int total = Counts.Values.Sum();
