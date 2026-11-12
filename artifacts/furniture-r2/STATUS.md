@@ -25,3 +25,5 @@ NASTĘPNY KROK: przygotować własne skrypty r2 z ownerem heavy gpt-furniture-r2
 2026-11-12T02:37:31.3893840+01:00: próba znaków nie przeszła (exit=1). Własny import/render pozostaje wstrzymany przez PAUSE_UNITY do odczytu logu i naprawy. NASTĘPNY KROK: odczytać sign-probe-first.log oraz XML, usunąć marker dopiero po usunięciu błędu kompilacji.
 
 2026-11-12T02:39:03.5433794+01:00: druga próba: 5 passed, 3 failed. Potwierdzono poprzedni pusty tag pipeline; po ustawieniu URP oba shadery mają rzeczywiście po 9 przebiegów. Off/no-source/alpha/publisher przeszły. Zbadano za słaby zwrot: dodano pomiar GPU samego współczynnika HDR bez kodowania gamma. Test dystansu teraz utrzymuje stały kąt obserwacji zamiast mieszać oba zjawiska. UsePass zapisano wielkimi literami zgodnie z dokumentacją Unity. NASTĘPNY KROK: ponowić wyłącznie próbę znaków, z zachowaniem nieudanych XML.
+
+2026-11-12T02:39:27.5426397+01:00: Unity sign-probe third Low overcast; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
