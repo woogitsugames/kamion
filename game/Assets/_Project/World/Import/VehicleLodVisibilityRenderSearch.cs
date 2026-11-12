@@ -42,6 +42,9 @@ namespace Game.World.Import
             var camera = cameraGo.AddComponent<Camera>(); camera.enabled = false;
             camera.fieldOfView = 60; camera.aspect = 640f / 296; camera.nearClipPlane = .03f; camera.farClipPlane = 2500;
             camera.GetUniversalAdditionalCameraData().renderPostProcessing = false;
+            QualityProfile.Load().TryGet("High", out var searchTier);
+            Tonemapping tonemapping = null;
+            QualityProfileApplier.Apply(searchTier, camera, UnityEngine.Object.FindAnyObjectByType<Volume>(), null, ref tonemapping);
             var rt = new RenderTexture(640, 296, 24, RenderTextureFormat.ARGB32, RenderTextureReadWrite.sRGB);
             camera.targetTexture = rt;
             var pixels = new Texture2D(640, 296, TextureFormat.RGBA32, false);
@@ -78,6 +81,15 @@ namespace Game.World.Import
                         float[] boundaries = car ? (tier == "Low" ? new[] {16f,42.5f} : new[] {37.5f,127.5f}) : (tier == "Low" ? new[] {20f,50f} : new[] {60f,150f});
                         foreach (float boundary in boundaries)
                         {
+                            float probeDistance = boundary + .2f; // stay clear of float rounding exactly on a switch
+                            if (!reefer)
+                            {
+                                int actual = WorldInstances.LodAt(p.lodEndM, probeDistance, searchTier.lodBias,
+                                    (searchTier.vehicleCullM > 0 ? searchTier.vehicleCullM : WorldInstances.VehicleCullM) / WorldInstances.VehicleCullM,
+                                    WorldInstances.VehicleLod0MinM);
+                                filter.sharedMesh = p.lods[Mathf.Max(0, actual)];
+                                renderer.sharedMaterials = Enumerable.Repeat(magenta, filter.sharedMesh.subMeshCount).ToArray();
+                            }
                             Entry best = null;
                             foreach (int index in indices)
                             {
@@ -93,7 +105,7 @@ namespace Game.World.Import
                                     foreach (float height in new[] {2.5f,6f,12f})
                                     {
                                         if (height >= boundary-.1f) continue;
-                                        Vector3 pos = origin + direction * Mathf.Sqrt(boundary*boundary-height*height) + Vector3.up*height;
+                                        Vector3 pos = origin + direction * Mathf.Sqrt(probeDistance*probeDistance-height*height) + Vector3.up*height;
                                         if (Mathf.Abs(pos.x)>950 || Mathf.Abs(pos.z)>950) continue;
                                         camera.transform.SetPositionAndRotation(pos+offset, Quaternion.LookRotation(look-pos));
                                         // 1 cm camera-facing mask offset avoids self z-fighting; never used by final QA renders.
@@ -113,7 +125,7 @@ namespace Game.World.Import
                                 }
                                 if (best!=null && best.visibleFraction>=.97f) break;
                             }
-                            if (best==null || best.visibleFraction<.9f) throw new InvalidOperationException("No visible target: "+family+" "+tier+" "+boundary);
+                            if (best==null || best.visibleFraction<.9f) throw new InvalidOperationException("No visible target: "+family+" "+tier+" "+boundary+" best="+(best==null?-1:best.visibleFraction));
                             var anchor = set.LocalPosition(best.nativeIndex); var center = new Vector3(best.pos[0],best.pos[2],best.pos[1]);
                             Vector3 axis = (center-anchor).normalized;
                             foreach (float distance in new[] {boundary-.1f,boundary+.1f})

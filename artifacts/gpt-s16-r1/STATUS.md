@@ -40,3 +40,5 @@ Kolizje sceny nie pokrywają wszystkich widocznych ścian, dlatego same promieni
 Dodatkowe kamery: after/Low-clear zapisane.
 
 Dalsze kadry z obrysów nadal miejscami zasłonięte przez złożone obiekty sceny. Dodano docelowe GPUsprawdzenie widoczności: maska tego samego natywnego modelu/grilla solo i z rzeczywistą głębią świata, próg>=90%, bez zapisywania sceny/assetów. Maska służy tylko do szukania pozy, nie jest dowodem końcowego wyglądu. Pozycje końcowe będą zwykłym VQA bez maski.
+
+GPUdobór ujawnił błąd samej maski: referencjaLODO porównywana z innym rzeczywistymLOD świata dawała samo-zasłanianie. Poprawiono wyłącznie diagnostykę: maska używa faktycznie wybranegoLOD dla profiluHigh, mierzy minimalnie poza granicą zaokrągleń. Zwykłe rendery i kod produktu bez zmian.
