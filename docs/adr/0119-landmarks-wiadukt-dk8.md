@@ -27,4 +27,23 @@ Budżet: draws Low +0, instancje osobno, suma trójkątów najwyżej +2% w każd
 Testy pojedynczego pliku w trakcie, pełny GIS na końcu. Python heavy i Unity
 mają oddzielne wymagane sloty; nie uruchamia się generatora po cichu z importu.
 
-Stan: przygotowanie baseline. Wyniki wyglądu, testów i budżetu po zmianie UNVERIFIED.
+Baseline wykonany: 58 kamer w każdej z czterech kombinacji, 232 PNG. Świat
+415,5 s, bez fallback=True; przygotowanie brakujących map po merge main odbyło się
+osobno pod heavy. Import Low+High zakończony OK. Dziesiąta kamera korzysta z GPS
+i ogniskowej fotografii 7204. Po próbach 295/305/315 stopni wybrano 295, zachowując
+wcześniejsze PNG/statystyki 280 stopni i rejestr podmiany jednej kamery. Poza
+pozostaje UNVERIFIED: kierunek, pitch i wysokość oczu są WORKING_VALUE; różnice
+ekranów i geometrii drogowej pozostają poza własnością tej sesji.
+
+Wdrożony kandydat: `stairs_enabled=false` w konfiguracji, warunek także na bieżącej
+konfiguracji przy emisji starego spec; brak potwierdzonego dojścia nie tworzy biegu.
+`unpainted_chamfers=true` rozdziela istniejące 8 trójkątów pionowych faz na istniejący
+bridge_concrete; wierzch i szerokie płaszczyzny zachowują pier_yellow. Kolizja
+pozostaje jedną pełną bryłą, a domyślne wywołanie _prism nie zmienia zachowania.
+Addytywny blok materials.py jest sterowany pier_paint.enabled; liniowy pigment
+[0,46;0,34;0,135] jest WORKING_VALUE. Nie dodano materiału, shadera ani przebiegu.
+
+Test ochrony pomostu rozszerzono o UV1 i COL oraz sprzeczne flagi starego spec;
+osobny test porównuje komplet kolizji i podział istniejących trójkątów.
+Stan: generator kandydata uruchomiony. Wyniki testów, wyglądu i budżetu po zmianie
+pozostają UNVERIFIED do zakończenia walidacji i obejrzenia wszystkich porównań.
