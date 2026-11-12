@@ -114,3 +114,5 @@ Zapisano kompletną niezależną ocenę baseline w REVIEW-D51-BASELINE.md: G3-A 
 2026-11-12T10:52:36.6570671+01:00: uzgodniłem projekt raportu i ADR z zakończonym fidelity oraz uzupełniającym audytem. Pozostała końcowa walidacja GIS; kod testowany zamrożony w bcc65bbb, późniejsze commity dotyczą dokumentacji i pomocnika dostawy. Zweryfikowany parser PowerShell helpera deliver.ps1 bez błędów składni.
 
 2026-11-12T10:53:16.0882771+01:00: sprawdziłem brak zmian produkcyjnych po zamrożeniu bcc65bbb w tools/scripts/Data/game/tests/art-source. Zmieniały się wyłącznie dokumenty i artefakty pomocnicze. Pochodne generatorów nadal pozostają lokalnie do końca GIS i nie są commitowane.
+
+2026-11-12T10:58:35.6433604+01:00: niezależny przegląd pomocnika dostawy znalazł dwie luki: stare receipty bez związania ze stanem i pominięcie stagingu generatów. Poprawiłem je: porównanie źródeł produkcyjnych z commitami GIS/fidelity, git diff HEAD obejmujący indeks i worktree, kontrola receipt głównego audytu oraz SHA wejść,268 arkuszy, fidelity i rejestru. Późniejsze zmiany dokumentów/artefaktów są dopuszczone jawnie. ParserPS bez błędów; faktycznej dostawy nie wykonano.
