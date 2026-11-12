@@ -90,7 +90,7 @@ namespace Game.Editor.VisualQA
             }
             GroundSnapshot[] GroundRecords()
             {
-                string[] ids = { "yard_asphalt", "yard_behaton", "yard_paving", "yard_concrete",
+                string[] ids = { "road_paving", "yard_asphalt", "yard_behaton", "yard_paving", "yard_concrete",
                     "yard_concrete_worn", "yard_slabs", "decal_yard_patch_light", "decal_yard_patch_dark" };
                 var records = new GroundSnapshot[ids.Length];
                 for (int i = 0; i < ids.Length; i++)

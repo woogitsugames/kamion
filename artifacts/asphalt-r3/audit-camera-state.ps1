@@ -9,6 +9,7 @@ $expect=Get-Content $expectPath -Raw|ConvertFrom-Json -AsHashtable
 $changes=$expect.ground_changes
 if($null -eq $changes){throw 'Explicit ground_changes declaration required, even if empty'}
 $rootChanges=if($expect.ContainsKey('root_changes')){$expect.root_changes}else{@{}}
+$groundIds=@('road_paving','yard_asphalt','yard_behaton','yard_paving','yard_concrete','yard_concrete_worn','yard_slabs','decal_yard_patch_light','decal_yard_patch_dark')
 $rows=@();$poses=@();$materials=@()
 function Json-Same($A,$B){return ($A|ConvertTo-Json -Compress -Depth 8) -eq ($B|ConvertTo-Json -Compress -Depth 8)}
 function Expected-Value($Actual,$Value){
@@ -60,7 +61,7 @@ foreach($series in 'Low-overcast','Low-clear','High-overcast','High-clear'){
   $beforeGround=@{};$afterGround=@{}
   foreach($record in @($b.grounds)){if($beforeGround.ContainsKey($record.id)){throw 'Duplicate baseline material'};$beforeGround[$record.id]=$record}
   foreach($record in @($a.grounds)){if($afterGround.ContainsKey($record.id)){throw 'Duplicate candidate material'};$afterGround[$record.id]=$record}
-  if($beforeGround.Count -ne 8 -or $afterGround.Count -ne 8 -or @(Compare-Object @($beforeGround.Keys) @($afterGround.Keys)).Count){throw 'Incomplete yard material snapshots'}
+  if(@(Compare-Object $groundIds @($beforeGround.Keys)).Count -or @(Compare-Object $groundIds @($afterGround.Keys)).Count){throw 'Incomplete ground material snapshots'}
   foreach($groundId in $changes.Keys){if(-not $afterGround.ContainsKey($groundId) -or -not $afterGround[$groundId].exists -or -not $beforeGround[$groundId].exists){throw "Declared material absent: $groundId"}}
   foreach($groundId in $beforeGround.Keys){
    $beforeRecord=$beforeGround[$groundId];$afterRecord=$afterGround[$groundId]
