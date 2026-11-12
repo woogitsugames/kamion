@@ -52,7 +52,7 @@ def main():
         if (not receipt['complete'] or receipt['world_exit'] != 0 or receipt['resync_merge'] != 'e5eb5902'
                 or receipt['manifest_sha256'].lower() != hashlib.sha256(manifest_path.read_bytes()).hexdigest()):
             raise RuntimeError('Fresh post-0131 producer receipt/manifest mismatch.')
-    points = [{'en': [float(e), float(n)], 'within_existing_material_exclusion': 400 <= e <= 850 and -700 <= n <= -250,
+    points = [{'en': [float(e), float(n)], 'within_r2_scope_envelope': 400 <= e <= 850 and -700 <= n <= -250,
                'hits': []}
               for n in range(-550, -309, 20) for e in range(285, 476, 20)]
     files, inventory, definitions = [], [], {}
@@ -131,7 +131,7 @@ def main():
                   manifest_sha256=hashlib.sha256(manifest_path.read_bytes()).hexdigest(),
                   note='Source E/N and absolute elevation U before runtime region-root transform. '
                        'Grid points/top faces only; roof/other occlusion is not resolved. BBox overlap is not clipped area. '
-                       'Read-only context crosses the conservative material exclusion, explicitly marked per point. '
+                       'Read-only context crosses the conservative r2 scope envelope used by curb_concrete/sidewalk_paving; this is marked per point and does not imply every material has an active exclusion. '
                        'That exclusion remains unchanged. Does not identify the photo camera, whole site, '
                        'or authorize material/geometry/override changes.')
     target = OUT / f'yard-probe-{args.label}.json'
