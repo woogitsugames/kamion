@@ -26,5 +26,16 @@ source_sha = subprocess.check_output(
 report = dict(source_sha=source_sha, source_note=(
     "Fresh R4 baseline after main merge; no frame reuse from previous rounds."
     if args.label == "baseline" else "Snapshot of generated outputs; inspect dirty state separately."), files=hashes)
+tracked = subprocess.check_output(['git','ls-files','-z','--','tools/worldgen','game/Assets/_Project',
+    'art-source/world/materials/_src','Data/Regions/bialystok-industrial-c'],cwd=ROOT).decode('utf-8').split('\0')
+extensions = {'.py','.cs','.shader','.hlsl','.asset','.mat','.json','.yaml','.yml','.unity'}
+report['source_files'] = {name: hashlib.sha256((ROOT/name).read_bytes()).hexdigest()
+    for name in tracked if name and (ROOT/name).is_file() and Path(name).suffix in extensions}
+instance_dest = dest/'instances'
+instance_dest.mkdir(exist_ok=True)
+report['instance_files'] = {}
+for path in sorted((ROOT/'Data/raw/derived/bialystok-industrial-c/world').glob('instances_*.json')):
+    shutil.copyfile(path,instance_dest/path.name)
+    report['instance_files'][path.name] = hashlib.sha256(path.read_bytes()).hexdigest()
 (dest/"sha256.json").write_text(json.dumps(report, indent=2)+"\n", encoding="utf-8")
 print("Snapshot", args.label, "files", len(files))
