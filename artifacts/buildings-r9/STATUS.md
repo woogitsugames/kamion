@@ -127,3 +127,12 @@
   (`r10_shed_2` +14, `r10_house_2` +10, reszta <= +3), instancje +126, tris siatek -9 k, tris instancji +12 k.
 - W TLE nadal lancuch: pytest gis -> 8 kamer hc + kamery Low -> EditMode -> `CHAIN DONE`.
 - NASTEPNY KROK: `Get-Content artifacts/buildings-r9/r4/round.log` (po `CHAIN DONE`: pary r4 vs base2, ADR Liczby r4, `git merge origin/main`, robocopy do main).
+
+## krok 10 — sesja 15 (21:50): r4 ZAKONCZONE, `CHAIN DONE`, merge origin/main
+- pytest `tests/gis` 837 passed / 1 xfailed (exit 0, oba testy budzetu High zielone); EditMode 408/408; pary `pairs_r4/` obejrzane
+  (sheet_base_hc, sheet_base_low, sheet_low, sheet_ref). ADR 0132: pkt 16, Liczby r4, budzet High zamkniety (a54f187ab).
+- `git merge origin/main` 41e6fd89f -> 0bd13512c (konflikty 3x generated json -> ours; regeneracja w integracji lidera). Po merge:
+  pytest gis `-k "plots or r7 or r8 or r9 or determinism"` 63 passed. Estymata High w main = base2 (1 987 612 / 1 982 699), wiec
+  zapas r4 (4 704 / 13 010) obowiazuje po regeneracji, o ile integracja nie doda innych tresci.
+- NASTEPNY KROK (lider): `git merge buildings-r9` (generated -> regeneracja: build_all, build_world, export-route, fidelity, import-region),
+  potem `uv run --project tools/worldgen python -m pytest tests/gis -q -p no:cacheprovider`.
