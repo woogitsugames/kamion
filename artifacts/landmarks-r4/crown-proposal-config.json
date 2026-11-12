@@ -1,0 +1,69 @@
+{
+  "items": [
+    [
+      51.6,
+      -21.0,
+      7.6,
+      1.9
+    ],
+    [
+      54.4,
+      -19.5,
+      6.2,
+      1.55
+    ],
+    [
+      31.0,
+      -19.0,
+      4.8,
+      1.5
+    ]
+  ],
+  "note": "r7: first two foreground conifers shifted+4u m screen-right in ref7197; wing conifer unchanged. Tiered root-connected boughs, CC0 short-needle fir/conifer proxy (not verified Picea). Placement WORKING_VALUE?3m from one photo; ground re-sampled by planner.",
+  "inner_core_fill_r_WORKING_VALUE": 0.55,
+  "core_profile_WORKING_VALUE": [
+    [
+      0.045,
+      0.5
+    ],
+    [
+      0.27,
+      1.0
+    ],
+    [
+      0.6,
+      0.58
+    ],
+    [
+      0.975,
+      0.025
+    ]
+  ],
+  "low_bough_counts": [
+    5,
+    4,
+    4,
+    4,
+    4,
+    3,
+    3,
+    3,
+    2
+  ],
+  "low_core_sides": 5,
+  "low_core_budget_note": "ADR 0116 r1: five smooth-normal sides retain all twelve Low bough cards and all eight crown tiers; 42 triangles saved across three trees pay for the 32-triangle curved gable runoff strip. Whole Low hero remains below the original 2828 triangles. Authored WORKING_VALUE.",
+  "core_shape_note": "ADR 0116 r1 variant 2: tiered crown from photograph 7197. On Low, 24 fewer bough quads pay for four extra six-sided core segments, keeping plant triangles unchanged. Authored WORKING_VALUE, not scanned geometry.",
+  "inner_core_note": "ADR 0116 r1: dense opaque inner canopy remains readable when sparse needle cards disappear in Low mips. First two crown radii broadened to a height-to-width envelope near 2:1. Tiered core and fewer Low cards preserve the original Low plant triangle budget and material counts; authored WORKING_VALUE, not scanned tree geometry.",
+  "bough_uv_revision": "r7-bundle2-root-content-16px",
+  "high_bough_counts_WORKING_VALUE": [
+    12,
+    11,
+    10,
+    10,
+    10,
+    9,
+    9,
+    8,
+    7
+  ]
+}

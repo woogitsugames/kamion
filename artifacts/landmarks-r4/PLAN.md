@@ -14,3 +14,11 @@ Rdzeń bez pełnych naprzemiennych półek; obwiednia i wysokości drzew zachowa
 Liczby są projektem, do potwierdzenia na rzeczywistym GLB i renderze.
 Nie ruszać globalnej roślinności, materiałów innych dziedzin ani tynku D48.
 Jeżeli próba daje cienkie palmy/lizaki albo jasne karty, odrzucić i zachować dowody.
+
+Próba geometrii bez Blender/world: crown_proposal.py wywołał funkcję na faktycznych
+kluczach trzech drzew ze spec. Pierwsza szerokość kart0,24 na obu LOD naruszyła
+własny limit pola alfa Low (1,24/1,38/1,28 starego pola), została odrzucona przed modelem.
+Po zwężeniu Low do0,16 (High0,24): 98/224 tris na każde drzewo zachowane;
+pole kart Low0,829/0,932/0,888 starego, High0,767/0,759/0,777.
+To pole powierzchni3D, nie pomiar nakładania ekranowego ani GPU; wygląd niezweryfikowany.
+Nie zmieniano źródeł produkcyjnych ani konfiguracji remizy podczas kolejki baseline.
