@@ -82,7 +82,8 @@ SPECIES = {
     "berberis_red": dict(tex="berberis", h=HEDGE_H, plant=(0.55, 0.85), bulge=0.025, dome=0.10, gap_p=0.09, sigma=0.5,
                          sprig=0.13, sprig_wh=((0.16, 0.28), (0.10, 0.20)), prof="clipped", band=BAND_M,
                          local_top=True, leaf_core=True, offset_rings=True, ring_step=0.45,
-                         cover_spacing=0.28, cover_wh=((0.12, 0.22), (0.07, 0.14))),
+                         cover_spacing=0.28, cover_wh=((0.16, 0.28), (0.12, 0.22)),
+                         cover_tilt=(1.10, 1.45), cover_bury=0.45),
     "privet": dict(tex="privet", h=(1.2, 1.7), plant=(0.45, 0.65), bulge=0.08, dome=0.12, gap_p=0.10, sigma=0.36,
                    sprig=0.30, sprig_wh=((0.14, 0.24), (0.10, 0.18))),
     "hornbeam": dict(tex="hornbeam", h=(1.4, 2.0), plant=(0.5, 0.7), bulge=0.08, dome=0.10, gap_p=0.09, sigma=0.38,
@@ -132,8 +133,11 @@ def _plants(per, P, key, S):
     return (w * amp).sum(1) * S["bulge"], (w * top).sum(1)
 
 
-def _sprig_cards(buf, mat, B, N, z, key, S, src, tilt=(0.15, 0.7), share=1.0):
-    """loose shoots: double-sided alpha cards rooted 25 % inside the shell, leaning outward (N), random yaw"""
+def _sprig_cards(buf, mat, B, N, z, key, S, src, tilt=(0.15, 0.7), share=1.0, bury=0.25):
+    """Double-sided alpha cards rooted inside the shell, leaning outward (N), random yaw.
+
+    Legacy shoots bury 25% of their length; low surface cover has its own data.
+    """
     V, UV, T = [], [], []
     for j in range(len(B)):
         if _h(key, "su", j) > share:
@@ -149,7 +153,7 @@ def _sprig_cards(buf, mat, B, N, z, key, S, src, tilt=(0.15, 0.7), share=1.0):
         a = t * math.cos(yaw) + n * math.sin(yaw)
         a[2] = 0.0
         a /= max(np.linalg.norm(a), 1e-9)
-        base = np.array([B[j][0], B[j][1], z[j]]) - up * 0.25 * hh
+        base = np.array([B[j][0], B[j][1], z[j]]) - up * bury * hh
         q = [base - a * w / 2, base + a * w / 2, base + a * w / 2 + up * hh, base - a * w / 2 + up * hh]
         cell = int(_h(key, "sc", j) * 4) % 4
         u0, v0 = (cell % 2) * 0.5, 0.5 - (cell // 2) * 0.5      # UV v up (image row 0 = top cells)
@@ -454,7 +458,8 @@ def _offset_hedge_mass(buf, poly, zground, key, h, src, plant, stats):
         angles = np.array([_h(key, 'ca', j)*math.tau for j in range(len(roots))])
         cover = dict(S, sprig_wh=S['cover_wh'])
         nt += _sprig_cards(buf, sprig_m, roots, np.column_stack([np.cos(angles), np.sin(angles)]),
-                           heights, (*key, 'cover'), cover, src, tilt=(.15, .65))
+                           heights, (*key, 'cover'), cover, src,
+                           tilt=S.get('cover_tilt', (.15, .65)), bury=S.get('cover_bury', .25))
     elif len(points) > n:
         selected = np.array([j for j in range(len(points)-n) if _h(key, 'tc', j)<.45], dtype=int)
         if len(selected):

@@ -246,3 +246,32 @@ def test_cover_height_selects_actual_face_across_fold():
     triangles=np.array([[0,1,2],[0,2,3]])
     roots=np.array([[1.7,.3],[.2,1.8],[1.,1.]])
     np.testing.assert_allclose(pt._cap_surface_height(roots,vertices,triangles),[.3,.2,1.])
+
+
+def test_low_cover_overlaps_in_plan_without_more_cards_or_tall_shoots():
+    class Capture:
+        def add(self,layer,material,vertices,uv,triangles,**kwargs):
+            self.vertices=np.asarray(vertices)
+            self.uv=np.asarray(uv)
+            self.triangles=np.asarray(triangles)
+    angles=np.arange(32)*.73
+    normals=np.column_stack([np.cos(angles),np.sin(angles)])
+    roots=np.column_stack([np.arange(32)*.3,np.zeros(32)])
+    preset=pt.species('berberis_red')
+    old=Capture()
+    new=Capture()
+    legacy=dict(preset,sprig_wh=((.12,.22),(.07,.14)))
+    cover=dict(preset,sprig_wh=preset['cover_wh'])
+    pt._sprig_cards(old,'hedge_sprig_berberis',roots,normals,np.ones(32),('cover-ablation',),
+                    legacy,'test',tilt=(.15,.65))
+    pt._sprig_cards(new,'hedge_sprig_berberis',roots,normals,np.ones(32),('cover-ablation',),
+                    cover,'test',tilt=preset['cover_tilt'],bury=preset['cover_bury'])
+    np.testing.assert_array_equal(old.triangles,new.triangles)
+    np.testing.assert_array_equal(old.uv,new.uv)
+    before=old.vertices.reshape(-1,4,3)-[0.,0.,1.]
+    after=new.vertices.reshape(-1,4,3)-[0.,0.,1.]
+    assert after[:,:,2].max()<=.055
+    assert (after[:,:,2].min(axis=1)<0.).all(), 'Bases must be buried in the flat cap'
+    assert after[:,:,2].max()<before[:,:,2].max()
+    projected=lambda cards: abs(np.cross(cards[:,1]-cards[:,0],cards[:,3]-cards[:,0])[:,2])
+    assert (projected(after)>2.*projected(before)).all(), 'More leaf surface must face upward'
