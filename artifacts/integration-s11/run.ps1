@@ -6,7 +6,7 @@ $L = 'artifacts/integration-s11/logs'; New-Item -ItemType Directory -Force $L | 
 "START $(Get-Date -Format o) $(git rev-parse --short HEAD)"
 while (-not (Select-String -Path artifacts/logs/s11-regen-b2.log -Pattern '^END ' -Quiet)) { Start-Sleep 60 }
 "REGEN DONE $(Get-Date -Format o)"; Select-String -Path artifacts/logs/s11-regen-b2.log -Pattern 'rc=|passed|failed' | Select-Object -Last 8 | ForEach-Object { $_.Line }
-pwsh -NoProfile -File scripts/unity-slot.ps1 -Acquire -Owner lead-s11-integration
+pwsh -NoProfile -File scripts/unity-slot.ps1 -Acquire -Priority -PollSeconds 5 -Owner lead-s11-integration
 pwsh scripts/import-region.ps1 -Region bialystok-industrial-c; "IMPORT EXIT $LASTEXITCODE"
 foreach ($m in 'Game.Editor.Setup.TruckAssetBuilder.BuildBatch','Game.Editor.Setup.TrailerAssetBuilder.BuildBatch','Game.World.Import.WorldTruckInstaller.InstallBatch') {
   $c = Invoke-UnityBatch -LogFile "$PWD/$L/$($m.Split('.')[-2]).log" -Arguments @('-executeMethod', $m); "$m EXIT $c"
