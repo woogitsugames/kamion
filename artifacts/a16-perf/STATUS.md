@@ -56,3 +56,5 @@
   before (rq_vehcull=300 rq_mirror_res=1 rq_grime=1) GPU p50/p95 32.43/35.70, 32.54/36.14; after 31.71/34.20, 31.44/33.73, 31.59/33.92 (śr. p95 35.9 -> 33.95, -2.0 ms).
   frame p99 50/50 -> 49.9/33.9/49.9; >40 30/50 -> 22/19/23; CPU p50 22.8 -> 21.9. Cel 33.3 nieosiągnięty o ~0.6 ms.
   NASTĘPNY KROK: `pwsh artifacts/a16-perf/vqa-r2.ps1 -Before 'rq_vehcull=300,rq_mirror_res=1,rq_grime=1'` ; `pwsh scripts/test.ps1 -Platform EditMode` (pod unity-slot)
+- 20:54 r2e (APK 2080745dd4, G3-A capped, 12 przeplatanych): GPU p95 śr. Low r2 34.00, cull 100 33.83, cienie 25 m 34.08, 25 m+512 33.94 -> żaden nie zamyka 0.6 ms, Low bez zmian (ADR 0136 Runda 2c). Merge origin/main 6efbb76c1 (0141; generated/art-source = main). MirrorCostTests naprawiony.
+  NASTĘPNY KROK: (w tle) `pwsh artifacts/a16-perf/prep-r2f.ps1` (import 0141 + EditMode + APK Low), potem skyline 0141 na A16 (qacam=sbs-g3-b-297817221966185 qacam_set=gate3).

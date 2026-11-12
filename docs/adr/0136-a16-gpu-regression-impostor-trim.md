@@ -123,8 +123,23 @@ znikają zaparkowane ciągniki/naczepy/auta na placach > 150 m od kamery; widoki
 czytelność bez zmian. Ciężarówka (`truck-side` 39,8 dB): bez rozbryzgu przy nadkolach, reszta materiału bez zmian.
 `artifacts/a16-perf/vqa-r2/psnr.txt`, pary `vqa-r2/960/*-before-after.jpg`.
 
+**Runda 2c — kandydaci na brakujące ~0,6 ms** (A16, G3-A, limit 30 FPS, landscape, 12 przejazdów przeplatanych w jednym APK
+`2080745dd4` = Low r2, kolejność base / cull 100 / cienie 25 / cienie 25 + 512 ×3; `artifacts/a16-perf/r2e`, `r2e/summary.txt`):
+
+| wariant (launch arg) | GPU p95 ×3 (ms) | śr. | GPU p50 śr. | GPU p99 | p99 klatki | >40 ms |
+|---|---|---|---|---|---|---|
+| Low r2 (bez zmian) | 34,03 / 33,93 / 34,05 | **34,00** | 31,49 | 35,7–35,8 | 33,6 / 49,9 / 33,9 | 16 / 21 / 17 |
+| cull aut 100 m (`rq_vehcull=100`) | 33,84 / 33,79 / 33,86 | **33,83** (−0,17) | 31,49 | 35,4–35,7 | 33,7 / 33,8 / 33,7 | 18 / 18 / 15 |
+| cienie 25 m (`rq_shadow=25`) | 33,91 / 33,87 / 34,45 | 34,08 (+0,08) | 31,52 | 35,3–43,8 | 33,7 / 33,7 / 50,0 | 16 / 18 / 26 |
+| cienie 25 m + 512 px (`rq_shadowres=512`) | 33,76 / 34,19 / 33,88 | 33,94 (−0,06) | 31,48 | 35,3–41,5 | 33,9 / 50,0 / 33,7 | 17 / 29 / 15 |
+
+Wynik: żaden kandydat nie zamyka luki. Cienie 25 m / 512 px = szum (±0,3 ms). Cull 100 m daje powtarzalne, ale tylko −0,17 ms
+(bez limitu w `diagA4` +1,29 ms; przy limicie 30 FPS governor Mali zjada większość zysku), a kosztuje auta na placach 100–150 m.
+**Low bez dalszych zmian.** Low r2 w tej sesji: GPU p95 34,0 ms (cel 33,3, brakuje 0,7 ms), klatka p50/p95 33,3/33,5 ms, FPS 29,8–29,9,
+p99 klatki 33,6–33,9 w 2 z 3 przejazdów, PSS 875–906 MB, bateria 29–30 °C. Kolejne ~0,7 ms wymaga zmiany treści, nie cięcia profilu (Otwarte).
+
 ## Otwarte
-- **G3-A: brakuje ~0,6 ms do GPU p95 33,3** (r2). Kandydaci zmierzeni A/B: cull aut Low 100 m (+1,29 GPU w `diagA4`, szum ±0,7), cienie Low 25 m (+0,39) / 512 px (+0,31).
+- **G3-A: brakuje ~0,6–0,7 ms do GPU p95 33,3** (r2, r2c). Cull aut 100 m i cienie 25 m / 512 px zmierzone przy limicie 30 FPS (r2c): −0,17 ms / szum — odrzucone.
   Trwała poprawka zamiast cięcia: **LOD1/LOD2 aut z 1–2 submeshami** (atlas/kolor wierzchołka) w generatorze (`build_world.py`/`InstanceImporter`, world-builder) —
   7–12 submeshy × 24 prototypy to źródło kosztu CPU; wtedy Low może wrócić do 300 m.
 - Blokada obrotu (rotation lock) przy ADR 0147 na A16 nie sprawdzona w r2 (wymaga zmiany ustawienia telefonu).
