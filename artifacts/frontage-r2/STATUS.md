@@ -20,3 +20,10 @@ NASTĘPNY KROK (po `artifacts/frontage-r2/cycle-0.done`): `pwsh artifacts/fronta
 ## 4. Build after (15:4x)
 build_world z kodem rundy 2 OK (653 s). Unity (import + rendery after) czeka na slot / PHONE_RUN w tle (cycle-1).
 NASTĘPNY KROK (po `artifacts/frontage-r2/cycle-1.done`): `python artifacts/frontage-r2/make-pairs.py after Low-overcast ; python artifacts/frontage-r2/make-pairs.py after Low-clear ; python artifacts/frontage-r2/stats-diff.py after`
+
+## 5. Sesja 13: wznowienie, merge main, poprawka szkła (16:5x)
+cycle-1 (import + rendery after, przed merge) ukończony 16:40; pary `pairs-after-Low-{overcast,clear}`, `pairs-2024-after-Low-overcast`; draws G3-B: delta 0..+39 (mediana 0; +31..+39 w 4 kadrach z placem aut = instancje car_row).
+Ocena renderu after: owal dwutonowy OK, auta OK, ogrodzenie frontowe ciemne OK; szkło NADAL czarne (env=0 przy patrzeniu na wprost) -> `showroom_glass` albedo 0.26/0.31/0.37 (odbicie nieba niesie człon dyfuzyjny); poza kontrolna 1020363345994649 poprawiona resekcją (E -227 N -256.5).
+`git merge main` czysto (bb0dce01b; generated nie były commitowane). Stary czekający run-pytest zniknął, zostawił slot heavy `claude-frontage-r2-py` - przejęty.
+W tle: `run-final-heavy.ps1` (build_world -> fidelity -> pytest gis+gate3; status `final-heavy.status`) i `run-final-unity.ps1` (import -> rendery `merged` Low overcast/clear -> EditMode; `final-unity.status`, `cycle-2.done`).
+NASTĘPNY KROK (po `cycle-2.done`): `python artifacts/frontage-r2/make-pairs.py merged Low-overcast ; python artifacts/frontage-r2/make-pairs.py merged Low-clear ; python artifacts/frontage-r2/stats-diff.py merged` ; uzupełnić ADR 0129 (RESULTS_PLACEHOLDER) ; commit generated ; kopia artifacts do main.

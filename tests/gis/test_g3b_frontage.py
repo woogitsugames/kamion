@@ -255,6 +255,8 @@ def test_fence_style_override_and_frontage_materials():
     g, w = MT.M["showroom_glass"], MT.M["glass"]
     assert g["sky_occ"][0] == 0.0 and 0.3 <= g["sky_occ"][1] < w["sky_occ"][1]      # mirrors more sky than a window
     assert g["rough"] == w["rough"] and "texture" not in g and "texture_set" not in g
+    # lighter than the fascia over it and the grey wall beside it (review 0126: "czarne pudło")
+    assert g["color"][1] > MT.M["plaster_accent_grey"]["color"][1] > MT.M["hall_flashing"]["color"][1]
     m = MT.M["frontage_galv"]
     assert not m.get("metal") and 0.2 < m["color"][1] < 0.35                        # matt: no white clip at overcast
 

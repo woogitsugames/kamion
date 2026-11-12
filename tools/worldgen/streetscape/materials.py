@@ -633,5 +633,10 @@ for _asphalt_ground_id in ("curb_concrete", "sidewalk_paving"):
 #   (469512365899192, 1020363345994649): glazing clearly lighter than the black fascia over it.
 # - `frontage_galv`: hot-dip galvanised lattice / flag masts, matt: `downpipe` (metal 0.7) and `steel_galv`
 #   (metal 0.9) mirror the overcast sky to white (review: "nogi jasnobiałe", same finding as ADR 0114 plot_kit).
-M["showroom_glass"] = {"color": [0.045, 0.055, 0.07], "rough": 0.05, "sky_occ": [0.0, 0.70]}
+# s13 (first render of round 2): at 0.045 albedo the pane still read black on Low-overcast - seen square-on the
+# reflected ray is horizontal (R.y ~ 0, fresnel ~ 0), so the environment term adds nothing whatever the horizon cut.
+# The sky mirrored in the pane is therefore carried by the diffuse term: a light blue-grey base that follows the
+# ambient probe (grey under overcast, blue under a clear sky). Photo strudel 1020363345994649 (2024): glazing
+# about as light as the low sky, far lighter than the fascia (0.05) and the grey walls (0.20). WORKING_VALUE.
+M["showroom_glass"] = {"color": [0.26, 0.31, 0.37], "rough": 0.05, "sky_occ": [0.0, 0.70]}
 M["frontage_galv"] = {"color": [0.27, 0.28, 0.285], "rough": 0.7, "sky_occ": [0.0, 0.0]}
