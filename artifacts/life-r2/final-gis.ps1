@@ -24,6 +24,9 @@ try {
   & uv run --project tools/worldgen python artifacts/life-r2/validate-native-b.py c *> artifacts/life-r2/native-c-post-tests.log
   if($LASTEXITCODE -ne 0){$code=$LASTEXITCODE}
  }
+} catch {
+ $code=1
+ throw
 } finally {
  & pwsh -NoProfile -File scripts/unity-slot.ps1 -Release -Pool heavy -Owner $owner
  @{exit_code=$code;owner=$owner;pool='heavy';finished=(Get-Date -Format o);selection='C';source_capture='after-c-exact-inputs.json'}|ConvertTo-Json|Set-Content artifacts/life-r2/pytest-gis-final-result.json
