@@ -1,6 +1,7 @@
 """pytest: routing graph generator (ADR 0150). Run: uv run --project tools/worldgen pytest tools/worldgen/navgraph/tests"""
 import json
 import os
+import struct
 import sys
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
@@ -71,10 +72,105 @@ def _region():
 
 
 def test_region_file_is_reproducible():
-    """The committed game file equals a fresh build (no hand edits)."""
+    """The committed game file equals a fresh build (no hand edits), at its own format version (v1 until the
+    leader regenerates the .bytes with the v2 generator)."""
     _, t = _region()
     committed = open(os.path.join(brg.OUT_DIR, REGION + "_route.bytes"), "rb").read()
-    assert brg.serialize(t) == committed
+    (ver,) = struct.unpack_from("<H", committed, 4)
+    assert ver in brg.SUPPORTED_VERSIONS
+    assert brg.serialize(t, version=ver) == committed
+
+
+# ------------------------------------------------------------------ lanes (OSM Key:turn:lanes)
+
+def test_parse_turn_lanes_values():
+    L, SL, T, SR, R = 1, 2, 4, 8, 16
+    ML, MR, REV = 32, 64, 128
+    assert brg.parse_turn_lanes(None) is None
+    assert brg.parse_turn_lanes("left|through|right") == [L, T, R]
+    assert brg.parse_turn_lanes("left;through|through|right") == [L | T, T, R]
+    assert brg.parse_turn_lanes("slight_left|slight_right") == [SL, SR]
+    assert brg.parse_turn_lanes("merge_to_left|merge_to_right") == [ML, MR]
+    assert brg.parse_turn_lanes("reverse") == [REV]
+    assert brg.parse_turn_lanes("none") == [0]
+    assert brg.parse_turn_lanes("") == [0]
+    assert brg.parse_turn_lanes("left||right") == [L, 0, R]          # empty slot = no data
+    assert brg.parse_turn_lanes("left;none|through") == [L, T]
+    assert brg.parse_turn_lanes("left;bogus_token|right") == [L, R]  # unknown tokens ignored
+    assert brg.parse_turn_lanes("left; through |right") == [L | T, R]  # whitespace tolerated
+
+
+def lanes_graph():
+    nodes = [{"id": "nA", "x": 0.0, "y": 0.0, "osm_node": 1}, {"id": "nB", "x": 100.0, "y": 0.0, "osm_node": 2}]
+    edges = [
+        edge("w1", "nA", "nB", [[0, 0], [100, 0]], 1, highway="secondary", oneway="no",
+             **{"turn:lanes": "left|through|right"}),
+        edge("w2", "nA", "nB", [[0, 0], [100, 0]], 2, highway="secondary", oneway="-1",
+             **{"turn:lanes:forward": "through|right", "turn:lanes:backward": "left;through"}),
+        edge("w3", "nA", "nB", [[0, 0], [100, 0]], 3, highway="secondary", oneway="yes",
+             **{"turn:lanes": "through"}),
+        edge("w4", "nA", "nB", [[0, 0], [100, 0]], 4, highway="secondary", oneway="no", lanes="3"),
+    ]
+    return {"nodes": nodes, "edges": edges}
+
+
+def test_lanes_directions_and_oneway_reverse():
+    t = brg.build(lanes_graph(), (0.0, 0.0), [])
+    by_way = {e["osm_way"]: e["lanes"] for e in t["edges"]}
+    # Two-way: turn:lanes applies to both stored directions.
+    assert by_way[1] == ([1, 4, 16], [1, 4, 16])
+    # oneway=-1 reverses the geometry: way-forward lanes land in the stored backward slot and vice versa;
+    # the backward direction is never driven on a one-way edge.
+    assert by_way[2] == ([1 | 4], [])
+    assert by_way[2][0] == [brg.LANE_BITS["left"] | brg.LANE_BITS["through"]]
+    # oneway=yes: forward only.
+    assert by_way[3] == ([4], [])
+    # lanes count only: masks 0 (direction unknown), both directions on a two-way edge.
+    assert by_way[4] == ([0, 0, 0], [0, 0, 0])
+
+
+def test_lanes_forward_backward_without_reverse():
+    nodes = [{"id": "nA", "x": 0.0, "y": 0.0, "osm_node": 1}, {"id": "nB", "x": 100.0, "y": 0.0, "osm_node": 2}]
+    edges = [edge("w9", "nA", "nB", [[0, 0], [100, 0]], 9, highway="secondary", oneway="no",
+                  **{"turn:lanes:forward": "through", "turn:lanes:backward": "left|right",
+                     "lanes:forward": "1", "lanes:backward": "2"})]
+    t = brg.build({"nodes": nodes, "edges": edges}, (0.0, 0.0), [])
+    assert t["edges"][0]["lanes"] == ([4], [1, 16])
+
+
+def test_serialize_v2_lanes_roundtrip_and_v1_compat():
+    t = brg.build(lanes_graph(), (0.0, 0.0), [])
+    v2 = brg.serialize(t)                      # default = VERSION 2
+    assert struct.unpack_from("<H", v2, 4)[0] == 2
+    p = brg.parse(v2)
+    assert p["version"] == 2 and len(p["lanes"]) == 4
+    assert p["lanes"][0] == ([1, 4, 16], [1, 4, 16])
+    assert p["lanes"][1] == ([1 | 4], [])
+    assert brg.serialize(brg.parse(v2)) == v2  # deterministic
+    v1 = brg.serialize(t, version=1)
+    assert struct.unpack_from("<H", v1, 4)[0] == 1
+    p1 = brg.parse(v1)
+    assert p1["version"] == 1 and p1["lanes"] == {}
+    try:
+        bad = bytearray(v2)
+        struct.pack_into("<H", bad, 4, 3)
+        brg.parse(bytes(bad))
+        assert False, "version 3 must be rejected"
+    except ValueError:
+        pass
+
+
+def test_region_lanes():
+    graph, t = _region()
+    blocks = {i for i, e in enumerate(t["edges"]) if e["lanes"][0] or e["lanes"][1]}
+    with_dir = {i for i, e in enumerate(t["edges"]) if any(e["lanes"][0]) or any(e["lanes"][1])}
+    # 174 edges of the region carry the turn:lanes key (ADR 0150), 78 of them with actual direction values
+    # (77 turn:lanes + 1 turn:lanes:forward); all 646 carry a lane count.
+    assert len(with_dir) == 78
+    assert len(blocks) == 646
+    # A known value survives into the v2 build: al. Tysiaclecia way 236107504 has left|through|right.
+    i = next(i for i, e in enumerate(t["edges"]) if e["osm_way"] == 236107504)
+    assert t["edges"][i]["lanes"][0] == [1, 4, 16]
 
 
 def test_region_graph_sane():

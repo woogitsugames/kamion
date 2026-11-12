@@ -15,14 +15,21 @@ Output:
   u32 nEdges, nEdges x (u32 from, u32 to, f32 length_m, u8 class, u8 flags, u16 name, u8 maxspeed_kmh,
                         u8 maxspeed_src, u16 nPts, nPts x (f32 e, f32 n))
   u16 nRestr, nRestr x (u32 fromEdge, u32 viaNode, u32 toEdge, u8 kind)   kind 0 = no_*, 1 = only_*
+  version >= 2, lanes (only edges with a turn:lanes* / lanes* tag):
+  u32 nLanes, nLanes x (u32 edge, u8 nFwd, u8 nBwd, nFwd + nBwd x u8 laneMask)   edges in ascending order;
+    masks of the stored forward direction (from -> to, after any oneway=-1 reversal) first, then backward.
 
 Edge flags: bit0 oneway (travel only from -> to; oneway=-1 is reversed here), bit1 roundabout, bit2 no trucks
 (access=no, hgv=no, service=emergency_access), bit3 restricted access (private / destination / customers / delivery,
 service=driveway: allowed only as first / last edge), bit4 *_link.
 Classes: 0 service / living_street / track, 1 residential / unclassified / tertiary, 2 secondary, 3 trunk / primary.
 maxspeed_src: 0 default (pipeline default, UNVERIFIED), 1 OSM.
-Turn restrictions not tagged in OSM are not known: the game treats every other turn as allowed except U-turns
-(a 16.5 m combination) - UNVERIFIED against the street.
+Lane mask bits (OSM Key:turn:lanes, one u8 per lane, leftmost lane first): bit0 left, bit1 slight_left, bit2 through,
+bit3 slight_right, bit4 right, bit5 merge_to_left, bit6 merge_to_right, bit7 reverse; 0 = none / empty / no data.
+turn:lanes applies to both travel directions of a way; turn:lanes:forward / :backward override one direction
+(they swap when oneway=-1 reverses the stored geometry). lanes / lanes:forward / :backward give only the lane
+count (masks 0). Turn restrictions not tagged in OSM are not known: the game treats every other turn as allowed
+except U-turns (a 16.5 m combination) - UNVERIFIED against the street.
 
 Usage:
   python tools/worldgen/navgraph/build_route_graph.py --region bialystok-industrial-c
@@ -41,7 +48,74 @@ import sys
 REPO = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
 OUT_DIR = os.path.join(REPO, "game", "Assets", "_Project", "UI", "Resources", "CabDisplay", "Nav")
 MAGIC = b"KRTG"
-VERSION = 1
+VERSION = 2
+SUPPORTED_VERSIONS = (1, 2)
+
+# OSM Key:turn:lanes direction bits (wiki OSM "Key:turn"), one u8 mask per lane, leftmost lane first.
+LANE_BITS = {
+    "left": 1, "slight_left": 2, "through": 4, "slight_right": 8, "right": 16,
+    "merge_to_left": 32, "merge_to_right": 64, "reverse": 128,
+}
+
+
+def parse_turn_lanes(value):
+    """OSM turn:lanes value -> list of per-lane direction bitmasks (leftmost lane first), or None when untagged.
+
+    Lanes are '|'-separated, directions within a lane ';'-separated (e.g. "left;through|through|right").
+    "none" and empty slots = mask 0 (no direction); unknown tokens are ignored (only the wiki values are defined).
+    """
+    if value is None:
+        return None
+    lanes = []
+    for lane in str(value).split("|"):
+        mask = 0
+        for tok in lane.split(";"):
+            tok = tok.strip()
+            if not tok or tok == "none":
+                continue
+            bit = LANE_BITS.get(tok)
+            if bit is not None:
+                mask |= bit
+        lanes.append(mask)
+    return lanes
+
+
+def _lane_count(value):
+    if value is None or value == "":
+        return None
+    try:
+        return max(0, min(255, int(float(value))))
+    except (TypeError, ValueError):
+        return None
+
+
+def edge_lanes(e: dict, reversed_way: bool):
+    """(fwdMasks, bwdMasks) for the stored edge direction (fwd = from -> to after any oneway=-1 reversal).
+
+    turn:lanes applies to both travel directions of the OSM way; turn:lanes:forward / :backward override one
+    direction of the way - they swap when oneway=-1 reversed the stored geometry. lanes / lanes:forward /
+    :backward carry only the lane count (masks 0, direction unknown).
+    """
+    base = parse_turn_lanes(attr(e, "turn:lanes"))
+    f = parse_turn_lanes(attr(e, "turn:lanes:forward"))
+    b = parse_turn_lanes(attr(e, "turn:lanes:backward"))
+    fwd_way = f if f is not None else base
+    bwd_way = b if b is not None else base
+    n_base = _lane_count(attr(e, "lanes"))
+    n_f = _lane_count(attr(e, "lanes:forward"))
+    if n_f is None:
+        n_f = n_base
+    n_b = _lane_count(attr(e, "lanes:backward"))
+    if n_b is None:
+        n_b = n_base
+    if fwd_way is None and n_f:
+        fwd_way = [0] * n_f
+    if bwd_way is None and n_b:
+        bwd_way = [0] * n_b
+    fwd, bwd = fwd_way or [], bwd_way or []
+    if reversed_way:
+        return bwd, fwd
+    return fwd, bwd
 
 CLASS = {
     "service": 0, "living_street": 0, "track": 0,
@@ -129,6 +203,9 @@ def build(graph: dict, origin: tuple[float, float], restrictions: list[dict]) ->
         if ow == "-1":
             pts.reverse()
             a, b = b, a
+        fwd_lanes, bwd_lanes = edge_lanes(e, ow == "-1")
+        if ow in ("yes", "true", "1", "-1"):
+            bwd_lanes = []   # the backward direction of a one-way edge is never driven
         if attr(e, "junction") in ("roundabout", "circular"):
             flags |= F_ROUNDABOUT | F_ONEWAY   # OSM: roundabouts imply oneway
         access = str(attr(e, "access", "") or "")
@@ -148,7 +225,7 @@ def build(graph: dict, origin: tuple[float, float], restrictions: list[dict]) ->
         edges.append({
             "id": e["id"], "osm_way": e.get("osm_way"), "from": a, "to": b, "length": length, "class": cls,
             "flags": flags, "name": name_id(attr(e, "name", "") or ""), "maxspeed": max(0, min(255, ms)),
-            "maxspeed_src": ms_src, "pts": pts,
+            "maxspeed_src": ms_src, "pts": pts, "lanes": (fwd_lanes, bwd_lanes),
         })
 
     # Turn restrictions: OSM (from way, via node, to way) -> (from edge, via node, to edge) on the split edges.
@@ -175,9 +252,12 @@ def build(graph: dict, origin: tuple[float, float], restrictions: list[dict]) ->
             "skipped_edges": skipped}
 
 
-def serialize(t: dict) -> bytes:
+def serialize(t: dict, version: int = VERSION) -> bytes:
+    """version 1 omits the lane section (kept to compare against the committed v1 file before regeneration)."""
+    if version not in SUPPORTED_VERSIONS:
+        raise SystemExit(f"unsupported version {version}")
     out = bytearray()
-    out += MAGIC + struct.pack("<H", VERSION)
+    out += MAGIC + struct.pack("<H", version)
     if len(t["names"]) > 65535 or len(t["restrictions"]) > 65535:
         raise SystemExit("too many names / restrictions for u16 counts")
     out += struct.pack("<H", len(t["names"]))
@@ -196,6 +276,15 @@ def serialize(t: dict) -> bytes:
     out += struct.pack("<H", len(t["restrictions"]))
     for f, v, to, k in t["restrictions"]:
         out += struct.pack("<IIIB", f, v, to, k)
+    if version >= 2:
+        blocks = [(i, e["lanes"]) for i, e in enumerate(t["edges"]) if e["lanes"][0] or e["lanes"][1]]
+        out += struct.pack("<I", len(blocks))
+        for i, (fwd, bwd) in blocks:
+            out += struct.pack("<IBB", i, len(fwd), len(bwd))
+            for m in fwd:
+                out += struct.pack("<B", m)
+            for m in bwd:
+                out += struct.pack("<B", m)
     return bytes(out)
 
 
@@ -213,7 +302,7 @@ def parse(data: bytes) -> dict:
         raise ValueError("not KRTG")
     o = 4
     (ver,) = take("<H")
-    if ver != VERSION:
+    if ver not in SUPPORTED_VERSIONS:
         raise ValueError(f"version {ver}")
     (nn,) = take("<H")
     names = []
@@ -232,9 +321,21 @@ def parse(data: bytes) -> dict:
                       "maxspeed": ms, "maxspeed_src": mss, "pts": pts})
     (nr,) = take("<H")
     restr = [take("<IIIB") for _ in range(nr)]
+    lanes = {}
+    if ver >= 2:
+        (nl,) = take("<I")
+        for _ in range(nl):
+            ei, nf, nb = take("<IBB")
+            if ei >= len(edges):
+                raise ValueError("lane block edge out of range")
+            fwd = [take("<B")[0] for _ in range(nf)]
+            bwd = [take("<B")[0] for _ in range(nb)]
+            lanes[ei] = (fwd, bwd)
     if o != len(data):
         raise ValueError("trailing bytes")
-    return {"names": names, "nodes": nodes, "edges": edges, "restrictions": restr}
+    for i, e in enumerate(edges):
+        e["lanes"] = lanes.get(i, ([], []))
+    return {"names": names, "nodes": nodes, "edges": edges, "restrictions": restr, "lanes": lanes, "version": ver}
 
 
 def refresh_restrictions(region_dir: str, graph: dict, pbf: str | None = None) -> list[dict]:
@@ -302,9 +403,12 @@ def main(argv=None) -> int:
     with open(path, "wb") as f:
         f.write(data)
     oneway = sum(1 for e in t["edges"] if e["flags"] & F_ONEWAY)
-    print(f"KRTG {path}: {len(data) / 1024:.1f} KB, nodes {len(t['nodes'])}, edges {len(t['edges'])} "
+    lane_blocks = sum(1 for e in t["edges"] if e["lanes"][0] or e["lanes"][1])
+    lane_dir = sum(1 for e in t["edges"] if any(e["lanes"][0]) or any(e["lanes"][1]))
+    print(f"KRTG v{VERSION} {path}: {len(data) / 1024:.1f} KB, nodes {len(t['nodes'])}, edges {len(t['edges'])} "
           f"(oneway {oneway}, skipped {t['skipped_edges']}), names {len(t['names'])}, "
-          f"restrictions {len(t['restrictions'])} (OSM relations {len(rows)}, unmapped {len(t['unmapped_restrictions'])})")
+          f"restrictions {len(t['restrictions'])} (OSM relations {len(rows)}, unmapped {len(t['unmapped_restrictions'])}), "
+          f"lane blocks {lane_blocks} (with turn directions {lane_dir})")
     return 0
 
 
