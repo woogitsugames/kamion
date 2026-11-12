@@ -115,3 +115,6 @@
   potem `pwsh artifacts/buildings-r9/r4_chain.ps1 -Round r4 -SkipBase`. Po `CHAIN DONE`:
   `python artifacts/buildings-r9/budget2.py artifacts/buildings-r9/base2/Low-overcast artifacts/buildings-r9/r4/Low-overcast`, zapas testow High
   (stretch_04, route_onramp_andersa_above w `generated/streetscape_qa.json`), pary r4, ADR, commit, robocopy do main.
+- [2026-11-12 19:57] WIP na polecenie lidera (limit 79 %): lancuch r4 zyje (PID 59260), etap base2. UWAGA dla przejmujacego: dopoki w
+  `r4/round.log` nie ma `BASE2 DONE`, indeks/worktree ma chwilowo sciezki z main - commitowac TYLKO przez
+  `git commit --only <plik>`, nigdy `git add -A` / `git commit -a`.
