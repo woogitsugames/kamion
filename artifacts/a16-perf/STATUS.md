@@ -58,3 +58,5 @@
   NASTĘPNY KROK: `pwsh artifacts/a16-perf/vqa-r2.ps1 -Before 'rq_vehcull=300,rq_mirror_res=1,rq_grime=1'` ; `pwsh scripts/test.ps1 -Platform EditMode` (pod unity-slot)
 - 20:54 r2e (APK 2080745dd4, G3-A capped, 12 przeplatanych): GPU p95 śr. Low r2 34.00, cull 100 33.83, cienie 25 m 34.08, 25 m+512 33.94 -> żaden nie zamyka 0.6 ms, Low bez zmian (ADR 0136 Runda 2c). Merge origin/main 6efbb76c1 (0141; generated/art-source = main). MirrorCostTests naprawiony.
   NASTĘPNY KROK: (w tle) `pwsh artifacts/a16-perf/prep-r2f.ps1` (import 0141 + EditMode + APK Low), potem skyline 0141 na A16 (qacam=sbs-g3-b-297817221966185 qacam_set=gate3).
+- 21:26 prep-r2f: import (0141) OK, EditMode 420/420 (po fixie MirrorCostTests 0640f9077), APK Low 7ebb18cf1b. Skyline 0141 na A16 (qacam sbs-g3-b-297817221966185, statyczna kamera): kominy EC widoczne, brak migotania (100 klatek wideo); A16 = Vulkan (reversed-Z), ścieżka GLES nie sprawdzona. artifacts/a16-perf/skyline-0141/verdict.txt.
+  NASTĘPNY KROK: brak w a16-perf; LOD1/LOD2 aut z 1–2 submeshami -> world-builder (lider).
