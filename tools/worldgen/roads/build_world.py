@@ -3,6 +3,7 @@
 Usage (repo root, after build_region.py):
     uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c
     [--context]   re-extract generated/osm_context.json from the OSM cache first
+    [--no-route-graph]   skip the GPS routing-graph rebuild (KRTG, ADR 0150 / M27) after the road export
 
 Inputs : Data/Regions/<id>/{region.yaml, roads.graph.json, terrain.json, overrides.yaml,
          generated/osm_context.json}, Data/raw/derived/<id>/heightmap_2049.r16
@@ -577,7 +578,19 @@ def preview_trees(region_id, w, zc, mask, out: Path):
 
 
 # --------------------------------------------------------------------------------------------
-def build(region_id: str, out_root: Path | None = None, verbose=True):
+def _route_graph_step(region_id: str, enabled: bool, log) -> None:
+    """GPS routing graph (KRTG v2) as a build_world step, right after the road export (ADR 0150 / M27):
+    rebuilds game/Assets/_Project/UI/Resources/CabDisplay/Nav/<region>_route.bytes from roads.graph.json,
+    incl. the reachability flags (off-reach components of the directed graph). Disabled by --no-route-graph."""
+    if not enabled:
+        log("route graph: skipped (--no-route-graph)")
+        return
+    from navgraph import build_route_graph as BRG
+    BRG.main(["--region", region_id])
+    log("route graph: rebuilt (KRTG, reachability flags) -> game/Assets/_Project/UI/Resources/CabDisplay/Nav/")
+
+
+def build(region_id: str, out_root: Path | None = None, verbose=True, route_graph: bool = True):
     t0 = time.time()
     log = (lambda *a: print(f"[world {time.time() - t0:6.1f}s]", *a)) if verbose else (lambda *a: None)
     # pass 1: geometry with the raw NMT -> bridge decks -> remove deck-contaminated NMT under them
@@ -762,6 +775,7 @@ def build(region_id: str, out_root: Path | None = None, verbose=True):
         })
     log("exported", len(chunks_meta), "GLB,", sum(c["bytes"] for c in chunks_meta) // 2**20, "MiB (High), ",
         sum(c["low"]["bytes"] for c in chunks_meta) // 2**20, "MiB (Low)")
+    _route_graph_step(region_id, route_graph, log)   # ADR 0150 / M27: after the road export
 
     gen = pipeline.REGIONS / region_id / "generated"
     srcs = {}
@@ -1110,6 +1124,8 @@ def main():
     ap.add_argument("--context", action="store_true", help="re-extract generated/osm_context.json first")
     ap.add_argument("--budget-only", action="store_true",
                     help="recompute mesh_budget in streetscape_qa.json from the exported files (no rebuild)")
+    ap.add_argument("--no-route-graph", action="store_true",
+                    help="skip the GPS routing-graph rebuild (KRTG, ADR 0150) after the road export")
     a = ap.parse_args()
     if a.budget_only:
         gen = pipeline.REGIONS / a.region / "generated"
@@ -1128,7 +1144,7 @@ def main():
         p.parent.mkdir(parents=True, exist_ok=True)
         p.write_text(json.dumps(ctx, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n",
                      encoding="utf-8", newline="\n")
-    build(a.region)
+    build(a.region, route_graph=not a.no_route_graph)
 
 
 if __name__ == "__main__":
