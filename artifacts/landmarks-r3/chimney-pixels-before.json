@@ -1,0 +1,292 @@
+{
+  "phase": "before",
+  "status": "Measured sRGB red/non-red classification at fixed photo-centreline windows; pose WORKING_VALUE, not physical reflectance",
+  "red_threshold": "R-G>25 and R-B>25; non-red is not proof of a white material",
+  "excluded": "Head/galleries and occluded shaft base are outside the row windows",
+  "windows": [
+    {
+      "name": "multi",
+      "ranges": [
+        [
+          420,
+          475
+        ],
+        [
+          505,
+          545
+        ],
+        [
+          590,
+          635
+        ],
+        [
+          675,
+          725
+        ]
+      ],
+      "red": [
+        505,
+        545
+      ],
+      "white": [
+        590,
+        635
+      ]
+    },
+    {
+      "name": "single",
+      "ranges": [
+        [
+          165,
+          240
+        ],
+        [
+          280,
+          330
+        ],
+        [
+          445,
+          465
+        ],
+        [
+          500,
+          555
+        ]
+      ],
+      "red": [
+        280,
+        330
+      ],
+      "white": [
+        445,
+        465
+      ]
+    }
+  ],
+  "rows": [
+    {
+      "condition": "Low-overcast",
+      "stack": "multi",
+      "sampled_rows": 190,
+      "red_white_disagreement_fraction": 0.48947368421052634,
+      "photo_red_rows": 90,
+      "render_red_rows": 15,
+      "red_photo_median_rgb": [
+        163.0,
+        106.0,
+        110.0
+      ],
+      "red_render_median_rgb": [
+        137.0,
+        139.0,
+        140.0
+      ],
+      "white_photo_median_rgb": [
+        205.0,
+        201.0,
+        198.0
+      ],
+      "white_render_median_rgb": [
+        119.0,
+        122.0,
+        122.0
+      ]
+    },
+    {
+      "condition": "Low-overcast",
+      "stack": "single",
+      "sampled_rows": 200,
+      "red_white_disagreement_fraction": 0.675,
+      "photo_red_rows": 153,
+      "render_red_rows": 26,
+      "red_photo_median_rgb": [
+        140.0,
+        100.0,
+        102.0
+      ],
+      "red_render_median_rgb": [
+        133.0,
+        136.0,
+        137.0
+      ],
+      "white_photo_median_rgb": [
+        179.5,
+        170.5,
+        163.5
+      ],
+      "white_render_median_rgb": [
+        115.0,
+        118.0,
+        118.0
+      ]
+    },
+    {
+      "condition": "Low-clear",
+      "stack": "multi",
+      "sampled_rows": 190,
+      "red_white_disagreement_fraction": 0.48947368421052634,
+      "photo_red_rows": 90,
+      "render_red_rows": 15,
+      "red_photo_median_rgb": [
+        163.0,
+        106.0,
+        110.0
+      ],
+      "red_render_median_rgb": [
+        103.0,
+        108.0,
+        109.0
+      ],
+      "white_photo_median_rgb": [
+        205.0,
+        201.0,
+        198.0
+      ],
+      "white_render_median_rgb": [
+        88.0,
+        92.0,
+        92.0
+      ]
+    },
+    {
+      "condition": "Low-clear",
+      "stack": "single",
+      "sampled_rows": 200,
+      "red_white_disagreement_fraction": 0.685,
+      "photo_red_rows": 153,
+      "render_red_rows": 24,
+      "red_photo_median_rgb": [
+        140.0,
+        100.0,
+        102.0
+      ],
+      "red_render_median_rgb": [
+        100.0,
+        106.0,
+        107.0
+      ],
+      "white_photo_median_rgb": [
+        179.5,
+        170.5,
+        163.5
+      ],
+      "white_render_median_rgb": [
+        86.0,
+        91.0,
+        91.0
+      ]
+    },
+    {
+      "condition": "High-overcast",
+      "stack": "multi",
+      "sampled_rows": 190,
+      "red_white_disagreement_fraction": 0.5263157894736842,
+      "photo_red_rows": 90,
+      "render_red_rows": 24,
+      "red_photo_median_rgb": [
+        163.0,
+        106.0,
+        110.0
+      ],
+      "red_render_median_rgb": [
+        141.0,
+        144.0,
+        146.0
+      ],
+      "white_photo_median_rgb": [
+        205.0,
+        201.0,
+        198.0
+      ],
+      "white_render_median_rgb": [
+        125.0,
+        128.0,
+        129.0
+      ]
+    },
+    {
+      "condition": "High-overcast",
+      "stack": "single",
+      "sampled_rows": 200,
+      "red_white_disagreement_fraction": 0.655,
+      "photo_red_rows": 153,
+      "render_red_rows": 30,
+      "red_photo_median_rgb": [
+        140.0,
+        100.0,
+        102.0
+      ],
+      "red_render_median_rgb": [
+        138.0,
+        140.0,
+        140.0
+      ],
+      "white_photo_median_rgb": [
+        179.5,
+        170.5,
+        163.5
+      ],
+      "white_render_median_rgb": [
+        120.0,
+        123.0,
+        123.0
+      ]
+    },
+    {
+      "condition": "High-clear",
+      "stack": "multi",
+      "sampled_rows": 190,
+      "red_white_disagreement_fraction": 0.5210526315789473,
+      "photo_red_rows": 90,
+      "render_red_rows": 23,
+      "red_photo_median_rgb": [
+        163.0,
+        106.0,
+        110.0
+      ],
+      "red_render_median_rgb": [
+        110.0,
+        115.0,
+        116.0
+      ],
+      "white_photo_median_rgb": [
+        205.0,
+        201.0,
+        198.0
+      ],
+      "white_render_median_rgb": [
+        94.0,
+        100.0,
+        100.0
+      ]
+    },
+    {
+      "condition": "High-clear",
+      "stack": "single",
+      "sampled_rows": 200,
+      "red_white_disagreement_fraction": 0.66,
+      "photo_red_rows": 153,
+      "render_red_rows": 29,
+      "red_photo_median_rgb": [
+        140.0,
+        100.0,
+        102.0
+      ],
+      "red_render_median_rgb": [
+        107.0,
+        113.0,
+        114.0
+      ],
+      "white_photo_median_rgb": [
+        179.5,
+        170.5,
+        163.5
+      ],
+      "white_render_median_rgb": [
+        92.0,
+        97.0,
+        98.0
+      ]
+    }
+  ]
+}
