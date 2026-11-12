@@ -43,3 +43,4 @@
 2026-11-12T02:24:10.9144959+01:00: zapisano artifacts/asphalt-r2/candidate/Low-overcast. Następny krok: pozostałe serie lub porównanie wariantu.
 2026-11-12T02:24:23.9556955+01:00: Import porównany: wszystkie 22 kategorie bajtów delta 0, ASTC 40 910 657 bez zmiany, instancje 126 992 i collidery 2674 bez zmiany. Snapshot Low potwierdza kerbWear i ground_grime zgodne z kandydatem; yardGrime zachowuje baseline. Trwa capture, audyt geometrii czeka na heavy.
 2026-11-12T02:24:40.3620957+01:00: zapisano artifacts/asphalt-r2/candidate/Low-clear. Następny krok: pozostałe serie lub porównanie wariantu.
+2026-11-12T02:25:23.3027369+01:00: zapisano artifacts/asphalt-r2/candidate/High-overcast. Następny krok: pozostałe serie lub porównanie wariantu.
