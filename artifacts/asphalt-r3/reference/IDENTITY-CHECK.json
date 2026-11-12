@@ -1,0 +1,48 @@
+{
+  "read_at": "2026-11-12T14:42:56.6477002+01:00",
+  "catalog": {
+    "note": "Historical map candidate catalog; not a current footprint/material mapping.",
+    "sha256": "2EB73329CF85C800262EEF0EE1F8DD80187420B5AABD8FBD8F8F6FBA73AA051E",
+    "building": "retail",
+    "name": "Podlaskie Centrum Rolno-Towarowe S.A.",
+    "area_m2": 11429,
+    "dist_from_start_m": 297,
+    "osm_way": 219260052,
+    "file": "docs/reports/map/candidates.json"
+  },
+  "native_camera": {
+    "conclusion": "Rondo reference 20201102_152339, not the PCRT yard photograph.",
+    "camera": {
+      "fov_deg": 62.0,
+      "id": "photo_biezenstwa_ground",
+      "look_at": [
+        542.607,
+        -738.329,
+        148.815
+      ],
+      "note": "photo match: CC0 20201102_152339 Rondo Pamięci Bieżeństwa (approximate viewpoint)",
+      "pos": [
+        576.9,
+        -676.204,
+        141.313
+      ],
+      "type": "persp"
+    },
+    "file": "Data/Regions/bialystok-industrial-c/generated/control_cameras.json",
+    "sha256": "AC1AC555012C652FF70D20DAEC50CDF161016F63FE6889D99030900634290459"
+  },
+  "osm_context": {
+    "root_fields": [
+      "bbox",
+      "crs",
+      "footways",
+      "license",
+      "points"
+    ],
+    "includes_way_219260052": false,
+    "note": "Limited extracted context, absence does not disprove the building.",
+    "file": "Data/Regions/bialystok-industrial-c/generated/osm_context.json",
+    "sha256": "27B824F9303BE887C054D527E1E9E80A423CD3ECF719C628FF51B775EE6B672B"
+  },
+  "next_evidence": "Fresh geometry-point probe and an inspected new yard camera. Photo3 still has no proven GPS/pose."
+}
