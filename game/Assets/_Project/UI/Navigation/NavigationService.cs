@@ -180,6 +180,14 @@ namespace Game.UI.Navigation
             int any = m_Graph.Snap(p, RoutePlanner.SnapGoalM, out _, out _, out _);
             if (any >= 0 && m_Graph.EdgeOffReach(any))
             {
+                // Integration r5: a reachable road within the snap radius beats the nearest reachable node.
+                int me = m_Graph.Snap(p, RoutePlanner.SnapGoalM, out _, out Vector2 mOn, out _, mainComponentOnly: true);
+                if (me >= 0)
+                {
+                    HasPin = true; Pin = p; PinOnRoad = mOn; PinName = m_Graph.EdgeName[me];
+                    LastStatus = PlanStatus.GoalOffReach;
+                    return true;
+                }
                 int n = m_Graph.NearestMainNode(p);
                 if (n < 0) { LastStatus = PlanStatus.GoalOffRoad; return false; }
                 HasPin = true; Pin = p; PinOnRoad = m_Graph.NodePos[n]; PinName = m_Graph.MainNameAt(n);

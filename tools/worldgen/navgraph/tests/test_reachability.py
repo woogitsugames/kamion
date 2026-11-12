@@ -48,20 +48,33 @@ def test_scc_directed_oneway_respected():
 def test_off_reach_flags_marked_and_roundtrip():
     t = brg.build(scc_graph(), (0.0, 0.0), [])
     r = t["reachability"]
-    assert r["components"] == 3 and r["main_nodes"] == 4 and r["off_nodes"] == 3
-    # node flags: nE, nF, nG off-reach (bit1); edge flags: w5, w6, w7 off-reach (bit6); main edges untouched
+    assert r["components"] == 3 and r["main_nodes"] == 4 and r["scc_off_nodes"] == 3
+    # Integration r5: off-reach = not drivable to from the main SCC. The one-way spur nB -> nE is its own SCC but
+    # reachable (a valid destination); only the pair nF <-> nG is off-reach.
     off_nodes = [i for i, nd in enumerate(t["nodes"]) if nd[2] & brg.NF_OFF_REACH]
-    assert off_nodes == [4, 5, 6]
+    assert off_nodes == [5, 6] and r["off_nodes"] == 2
     off_edges = [e["osm_way"] for e in t["edges"] if e["flags"] & brg.F_OFF_REACH]
-    assert off_edges == [5, 6, 7]
-    assert all(not (e["flags"] & brg.F_OFF_REACH) for e in t["edges"] if e["osm_way"] in (1, 2, 3, 4))
-    assert r["off_streets"] == ["Buska", "Slepa"]
+    assert off_edges == [6, 7]
+    assert all(not (e["flags"] & brg.F_OFF_REACH) for e in t["edges"] if e["osm_way"] in (1, 2, 3, 4, 5))
+    assert r["off_streets"] == ["Buska"]
     # flags survive the serialize/parse round-trip in both format versions (plain flag bits, no version change)
     for ver in brg.SUPPORTED_VERSIONS:
         p = brg.parse(brg.serialize(t, version=ver))
         assert ver == p["version"]
-        assert [i for i, nd in enumerate(p["nodes"]) if nd[2] & brg.NF_OFF_REACH] == [4, 5, 6]
+        assert [i for i, nd in enumerate(p["nodes"]) if nd[2] & brg.NF_OFF_REACH] == [5, 6]
         assert [bool(e["flags"] & brg.F_OFF_REACH) for e in p["edges"]] == [bool(e["flags"] & brg.F_OFF_REACH) for e in t["edges"]]
+
+
+def test_one_way_entry_from_outside_is_not_off_reach_target_but_start_ok():
+    """One-way entry nX -> nA from outside the tile: nX is not drivable to (off-reach node), the entry edge cannot be
+    entered from the main component (off-reach edge) - but a one-way exit nB -> nE stays a valid destination."""
+    g = scc_graph()
+    g["nodes"].append({"id": "nX", "x": -100.0, "y": 0.0})
+    g["edges"].append(edge("w8", "nX", "nA", [[-100, 0], [0, 0]], 8, highway="residential", name="Wjazd", oneway="yes"))
+    t = brg.build(g, (0.0, 0.0), [])
+    by_way = {e["osm_way"]: e for e in t["edges"]}
+    assert by_way[8]["flags"] & brg.F_OFF_REACH
+    assert not by_way[5]["flags"] & brg.F_OFF_REACH
 
 
 def test_region_reachability_readonly():
@@ -72,11 +85,10 @@ def test_region_reachability_readonly():
     r = t["reachability"]
     assert r["components"] == 64
     assert r["main_nodes"] == 411 and r["main_edges"] == 502
-    assert r["off_nodes"] == 139 and r["off_edges"] == 144
+    assert r["scc_off_nodes"] == 139                      # outside the main SCC (PR #29 flagged all of them)
+    assert r["off_nodes"] == 113 and r["off_edges"] == 115   # not drivable to from the main SCC
     # ADR 0150: the part connected only outside the 2 km tile (Olsztyńska / Buska) is off-reach.
     for street in ("Olsztyńska", "Buska", "Brzeska", "Białostoczek", "Sitarska"):
         assert street in r["off_streets"]
-    # every flagged edge really touches an off-reach node and vice versa
-    comps, comp = brg.strongly_connected_components(len(t["nodes"]), t["edges"])
-    assert all((comp[e["from"]] != 0 or comp[e["to"]] != 0) == bool(e["flags"] & brg.F_OFF_REACH) for e in t["edges"])
-    assert sum(1 for nd in t["nodes"] if nd[2] & brg.NF_OFF_REACH) == 139
+    # every flagged node really has no directed path from the main SCC
+    assert sum(1 for nd in t["nodes"] if nd[2] & brg.NF_OFF_REACH) == 113

@@ -12,8 +12,8 @@ Output:
   "KRTG" u16 version (2; 1 = no limit fields, no lane section)
   u16 nNames, nNames x (u16 len, utf8)                     street names (index 0 = "")
   u32 nNodes, nNodes x (f32 e, f32 n, u8 flags)            flags bit0 boundary (edge leaves the region data),
-                                                          bit1 off-reach (node outside the main strongly connected
-                                                          component of the directed graph - M27, ADR 0150)
+                                                          bit1 off-reach (no directed path to it from the main
+                                                          strongly connected component - M27, ADR 0150)
   u32 nEdges, nEdges x (u32 from, u32 to, f32 length_m, u8 class, u8 flags, u16 name, u8 maxspeed_kmh,
                         u8 maxspeed_src, u16 nPts, nPts x (f32 e, f32 n))
   v2 only, per edge, before nPts: u16 maxweight (0.01 t), u16 maxaxleload (0.01 t), u16 maxheight (cm),
@@ -28,8 +28,8 @@ Output:
 Edge flags: bit0 oneway (travel only from -> to; oneway=-1 is reversed here), bit1 roundabout, bit2 no trucks
 (access=no, hgv=no, service=emergency_access), bit3 restricted access (private / destination / customers / delivery,
 service=driveway: allowed only as first / last edge), bit4 *_link, bit5 (v2) hgv=destination (trucks only as the
-destination edge), bit6 (M27) off-reach (an endpoint is outside the main strongly connected component of the directed
-graph - the region clip can cut the only connection, e.g. Olsztyńska/Buska; such edges are not routed to). Both new
+destination edge), bit6 (M27) off-reach (cannot be entered from the main strongly connected component in any allowed
+direction - the region clip can cut the only connection, e.g. Olsztyńska/Buska; destinations there are snapped). Both new
 flags are plain bits of the existing flag bytes: no format version change, readers that mask only their own bits
 (v1/v2) are unaffected. hgv:conditional is not encoded (no such tags in the region data; UNVERIFIED).
 Classes: 0 service / living_street / track, 1 residential / unclassified / tertiary, 2 secondary, 3 trunk / primary.
@@ -146,8 +146,8 @@ CLASS = {
     "primary": 3, "primary_link": 3, "trunk": 3, "trunk_link": 3, "motorway": 3, "motorway_link": 3,
 }
 F_ONEWAY, F_ROUNDABOUT, F_NO_TRUCK, F_RESTRICTED, F_LINK, F_HGV_DESTINATION = 1, 2, 4, 8, 16, 32
-F_OFF_REACH = 64      # edge flag bit6: an endpoint is outside the main strongly connected component (M27)
-NF_OFF_REACH = 2      # node flag bit1 (bit0 = boundary): node outside the main SCC - "poza zasięgiem"
+F_OFF_REACH = 64      # edge flag bit6: cannot be entered from the main SCC in any allowed direction (M27)
+NF_OFF_REACH = 2      # node flag bit1 (bit0 = boundary): no directed path from the main SCC - "poza zasięgiem"
 NO_TRUCK_ACCESS = {"no"}
 RESTRICTED_ACCESS = {"private", "destination", "customers", "delivery", "permissive"}
 
@@ -394,29 +394,53 @@ def strongly_connected_components(n_nodes: int, edges: list) -> tuple[list, list
 
 
 def mark_reachability(t: dict) -> dict:
-    """SCCs of the directed graph; nodes/edges outside the main (largest) component are marked off-reach
-    (node flag bit1, edge flag bit6 - plain bits of the existing flag bytes, no format version change).
+    """Off-reach marks: nodes / edges the truck cannot DRIVE TO from the main (largest) strongly connected component
+    of the directed graph (node flag bit1, edge flag bit6 - plain bits of the existing flag bytes, no format change).
 
     The 2 km region clip can cut the only connection of a part (ADR 0150: Olsztyńska/Buska) - such parts got
-    "Brak dojazdu"; flagged, the game can snap the destination to the main component instead.
+    "Brak dojazdu"; flagged, the game snaps the destination to the reachable part instead.
+    Integration r5: "outside the main SCC" alone (PR #29) also flagged every one-way carriageway that leaves the tile
+    (reachable, just no way back inside the clip - 144 edges incl. al. Tysiąclecia / Andersa / Maczka) and every
+    one-way entry from the tile edge (where the truck may start). Off-reach is therefore the complement of the
+    FORWARD closure of the main SCC: a node is off-reach when no directed path leads to it from the main SCC; an
+    edge when it cannot be entered in any allowed direction (one-way: from-node unreachable; two-way: both ends).
     Returns the report dict (also stored as t["reachability"])."""
-    comps, comp = strongly_connected_components(len(t["nodes"]), t["edges"])
-    t["nodes"] = [(e, n, f | (NF_OFF_REACH if comp[i] != 0 else 0)) for i, (e, n, f) in enumerate(t["nodes"])]
+    n = len(t["nodes"])
+    comps, comp = strongly_connected_components(n, t["edges"])
+    adj = [[] for _ in range(n)]
     for e in t["edges"]:
-        if comp[e["from"]] != 0 or comp[e["to"]] != 0:
-            e["flags"] |= F_OFF_REACH
+        adj[e["from"]].append(e["to"])
+        if not (e["flags"] & F_ONEWAY):
+            adj[e["to"]].append(e["from"])
+    reach = [False] * n
+    stack = list(comps[0])
+    for v in stack:
+        reach[v] = True
+    while stack:
+        v = stack.pop()
+        for w in adj[v]:
+            if not reach[w]:
+                reach[w] = True
+                stack.append(w)
 
     def off(e):
-        return comp[e["from"]] != 0 or comp[e["to"]] != 0
+        if e["flags"] & F_ONEWAY:
+            return not reach[e["from"]]
+        return not reach[e["from"]] and not reach[e["to"]]
 
+    t["nodes"] = [(x, y, f | (NF_OFF_REACH if not reach[i] else 0)) for i, (x, y, f) in enumerate(t["nodes"])]
+    for e in t["edges"]:
+        if off(e):
+            e["flags"] |= F_OFF_REACH
     return {
         "components": len(comps),
         "component_sizes": [len(c) for c in comps],
         "main_nodes": len(comps[0]),
         "main_edges": sum(1 for e in t["edges"] if comp[e["from"]] == 0 and comp[e["to"]] == 0),
-        "off_nodes": sum(len(c) for c in comps[1:]),
-        "off_edges": sum(1 for e in t["edges"] if off(e)),
-        "off_streets": sorted({t["names"][e["name"]] for e in t["edges"] if off(e) and e["name"]}),
+        "scc_off_nodes": n - len(comps[0]),
+        "off_nodes": sum(1 for r in reach if not r),
+        "off_edges": sum(1 for e in t["edges"] if e["flags"] & F_OFF_REACH),
+        "off_streets": sorted({t["names"][e["name"]] for e in t["edges"] if (e["flags"] & F_OFF_REACH) and e["name"]}),
     }
 
 
@@ -587,7 +611,7 @@ def main(argv=None) -> int:
     r = t["reachability"]
     print(f"reachability: {r['components']} strongly connected components (directed, one-way respected); "
           f"main component {r['main_nodes']} nodes / {r['main_edges']} edges; "
-          f"off-reach {r['off_nodes']} nodes / {r['off_edges']} edges "
+          f"off-reach (not drivable to from the main component) {r['off_nodes']} nodes / {r['off_edges']} edges "
           f"(sizes: {', '.join(str(s) for s in r['component_sizes'][:8])}{'...' if len(r['component_sizes']) > 8 else ''})")
     if r["off_streets"]:
         print("off-reach streets: " + ", ".join(r["off_streets"]))

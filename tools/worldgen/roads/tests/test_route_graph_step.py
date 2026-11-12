@@ -31,7 +31,6 @@ def test_build_invokes_step_after_road_export():
     src = inspect.getsource(bw.build)
     assert "_route_graph_step(region_id, route_graph, log)" in src
     assert src.index('log("exported"') < src.index("_route_graph_step(region_id, route_graph, log)")
-    assert "route_graph: bool = True" in inspect.getsource(bw.build).split("def build")[1].split("):")[0] or True
     sig = inspect.signature(bw.build)
     assert sig.parameters["route_graph"].default is True
 
