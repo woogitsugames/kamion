@@ -17,3 +17,4 @@ foreach($tier in @('Low','High')){
         if($LASTEXITCODE -ne 0){throw "Baseline capture failed:$tier $light"}
     }
 }
+
