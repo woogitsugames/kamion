@@ -102,7 +102,7 @@ namespace Game.World.Import
                 if (RoadY(root, inside, out float ey))
                 {
                     var cand = new Vector3(ex.edgeEN.x, ey, ex.edgeEN.y);
-                    int nearIdx = stubs.FindIndex(s => Vector2.Distance(new Vector2(s.start.x, s.start.z), ex.edgeEN) < 30f);
+                    int nearIdx = stubs.FindIndex(s => SameRoadContinuation(s.start, s.dir, ex.edgeEN, ex.edgeDir));
                     if (nearIdx >= 0)
                     {
                         if (ex.width > stubs[nearIdx].width) stubs[nearIdx] = (cand, ex.edgeDir, ex.width);
@@ -225,6 +225,12 @@ namespace Game.World.Import
             EditorUtility.SetDirty(farHost);
             return totalTris;
         }
+
+        // ADR 0121: the old 30 m radius erased one carriageway at the Andersa and Tysiąclecia exits
+        // (measured centreline gaps 12–15 m). Merge only near-coincident source ends with matching headings.
+        static bool SameRoadContinuation(Vector3 start, Vector2 direction, Vector2 next, Vector2 nextDirection) =>
+            Vector2.Distance(new Vector2(start.x, start.z), next) < 3f &&
+            Vector2.Dot(direction.normalized, nextDirection.normalized) > 0.95f; // WORKING_VALUE source-end tolerance
 
         static float ClosureSpan(float roadWidth) => roadWidth + 5f;   // carriageway + shoulders / kerbs on both sides
 
@@ -470,6 +476,27 @@ namespace Game.World.Import
                 }
             }
 
+            // ADR 0121: a diagonal exit crosses several perimeter height profiles. Sampling only the
+            // profile at its starting point buried the southbound road under the adjacent apron.
+            // Interpolate the actual already-triangulated apron, before adding any road shoulders.
+            int apronIndexCount = grass.Count;
+            float ApronSurfaceAt(Vector2 p, float fallback)
+            {
+                for (int t = 0; t < apronIndexCount; t += 3)
+                {
+                    Vector3 a = pos[grass[t]], b = pos[grass[t + 1]], c = pos[grass[t + 2]];
+                    float bx = b.x - a.x, bz = b.z - a.z, cx = c.x - a.x, cz = c.z - a.z;
+                    float det = bx * cz - bz * cx;
+                    if (Mathf.Abs(det) < 1e-6f) continue;
+                    float px = p.x - a.x, pz = p.y - a.z;
+                    float u = (px * cz - pz * cx) / det;
+                    float v = (bx * pz - bz * px) / det;
+                    if (u >= -1e-5f && v >= -1e-5f && u + v <= 1.00001f)
+                        return a.y + u * (b.y - a.y) + v * (c.y - a.y);
+                }
+                return fallback;
+            }
+
             // Road stubs: asphalt strip on a low embankment graded smoothly onto the local apron surface.
             foreach (var (start, dir, width) in stubs)
             {
@@ -489,8 +516,11 @@ namespace Game.World.Import
                 {
                     float d = StubLengthM * s / seg;
                     Vector2 c = new Vector2(start.x, start.z) + dir * d;
-                    float apronY = ApronHeightAt(start.y, stubZSm, d);
+                    float profileY = ApronHeightAt(start.y, stubZSm, d);
+                    float apronY = Mathf.Max(ApronSurfaceAt(c - side * hw, profileY),
+                                             ApronSurfaceAt(c + side * hw, profileY));
                     float crownY = Mathf.Lerp(start.y + 0.03f, apronY + 0.14f, Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(d / 120f)));
+                    crownY = Mathf.Max(crownY, apronY + 0.04f);
                     float toeY = apronY - 0.35f;
                     // cross-section: toe left, edge left, edge right, toe right
                     float[] off = { -hw - 4.5f, -hw, hw, hw + 4.5f };
@@ -504,6 +534,24 @@ namespace Game.World.Import
                         col.Add(ApronMask(p, d, shoulder: q == 1 || q == 2));
                     }
                 }
+                // A coarse asphalt segment can cross a break in the apron slope between its stations.
+                // Lift its two station edges just enough to clear that break, retaining the same topology.
+                for (int s = 0; s < seg; s++)
+                {
+                    int a = v0 + s * 4, b = a + 4;
+                    float lift = 0f;
+                    for (int step = 0; step <= 8; step++)
+                        for (int lane = 0; lane <= 2; lane++)
+                        {
+                            float t = step / 8f, across = lane / 2f;
+                            Vector3 p = Vector3.Lerp(Vector3.Lerp(pos[a + 1], pos[a + 2], across),
+                                                     Vector3.Lerp(pos[b + 1], pos[b + 2], across), t);
+                            lift = Mathf.Max(lift, ApronSurfaceAt(new Vector2(p.x, p.z), p.y - 0.04f) + 0.04f - p.y);
+                        }
+                    if (lift > 0f)
+                        foreach (int index in new[] { a + 1, a + 2, b + 1, b + 2 })
+                            pos[index] += Vector3.up * lift;
+                }
                 for (int s = 0; s < seg; s++)
                 {
                     int a = v0 + s * 4, b = v0 + (s + 1) * 4;
@@ -516,6 +564,9 @@ namespace Game.World.Import
             mesh.Clear();
             mesh.indexFormat = pos.Count > 65000 ? IndexFormat.UInt32 : IndexFormat.UInt16;
             mesh.SetVertices(pos); mesh.SetNormals(nrm); mesh.SetUVs(0, uv); mesh.SetColors(col);
+            // WorldPBR _ROADWEAR contract: (-1, 5) means no measured lane-wear data.
+            // Missing UV1 becomes (0, 0), incorrectly treating the entire continuation as a dirty gutter.
+            mesh.SetUVs(1, Enumerable.Repeat(new Vector2(-1f, 5f), pos.Count).ToList());
             mesh.subMeshCount = 2;
             mesh.SetTriangles(grass, 0); mesh.SetTriangles(asphalt, 1);
             mesh.RecalculateNormals();

@@ -24,6 +24,7 @@ from . import depot_yard as DY
 from . import hero_building as HBD
 from . import hero_depot as HD
 from . import landmarks as LM
+from . import gate3_landmarks as G3
 from . import life as LF
 from . import paved as PV
 from . import plantings as PT
@@ -220,6 +221,7 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     YW.apply(w.buf, overrides, origin, docks, paved, roads_poly, zsurf, frep)     # authored yard wear (ADR 0071 r11)
     FD.apply(w, pl, roads_poly, bpoly, paved, park_polys, route_P, frep, log, overrides=overrides, deck_at=deck_at)   # Fab Megascans (ADR 0084)
     carriage = PV.road_footprint_polygon([p for p in road_parts if p.mat.startswith("road_")])
+    G3.build(pl, w.net, graph, overrides, origin, boards, frep, carriage=carriage)   # ADR 0125 gate 3 signs
     FU.clear_carriageway(pl, carriage, zsurf, frep)
     FU.clear_narrow_islands(pl, w.buf.parts, w.net, frep)        # ADR 0093: no lamp on a separation < ~2 m
     FU.clear_under_decks(pl, w.buf.parts, frep)

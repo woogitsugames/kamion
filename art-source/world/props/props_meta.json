@@ -72,20 +72,32 @@
    0.852,
    0.309
   ],
+  "G33c600842": [
+   1.057,
+   0.25
+  ],
+  "G3518e7fb6": [
+   0.807,
+   1.35
+  ],
+  "G3ae1e4f1d": [
+   0.957,
+   1.229
+  ],
+  "OB_0a31f00e": [
+   4.025,
+   2.038
+  ],
   "OB_0bfe6830": [
    4.062,
    2.038
-  ],
-  "OB_26fd429a": [
-   3.4,
-   1.419
   ],
   "OB_6bbf26a1": [
    4.794,
    3.275
   ],
-  "OB_8a02c9de": [
-   4.025,
+  "OB_b7134a83": [
+   4.062,
    1.419
   ],
   "OB_f99035fb": [
@@ -345,19 +357,46 @@
    "tris_lod0": 28,
    "tris_lod1": 28
   },
-  "board_OB_0bfe6830": {
+  "board_G33c600842": {
    "materials": [
     "plate_back",
-    "sign_OB_0bfe6830",
+    "sign_G33c600842",
     "steel_galv"
    ],
    "tris_lod0": 28,
    "tris_lod1": 28
   },
-  "board_OB_26fd429a": {
+  "board_G3518e7fb6": {
    "materials": [
     "plate_back",
-    "sign_OB_26fd429a",
+    "sign_G3518e7fb6",
+    "steel_galv"
+   ],
+   "tris_lod0": 28,
+   "tris_lod1": 28
+  },
+  "board_G3ae1e4f1d": {
+   "materials": [
+    "plate_back",
+    "sign_G3ae1e4f1d",
+    "steel_galv"
+   ],
+   "tris_lod0": 28,
+   "tris_lod1": 28
+  },
+  "board_OB_0a31f00e": {
+   "materials": [
+    "plate_back",
+    "sign_OB_0a31f00e",
+    "steel_galv"
+   ],
+   "tris_lod0": 28,
+   "tris_lod1": 28
+  },
+  "board_OB_0bfe6830": {
+   "materials": [
+    "plate_back",
+    "sign_OB_0bfe6830",
     "steel_galv"
    ],
    "tris_lod0": 28,
@@ -372,10 +411,10 @@
    "tris_lod0": 28,
    "tris_lod1": 28
   },
-  "board_OB_8a02c9de": {
+  "board_OB_b7134a83": {
    "materials": [
     "plate_back",
-    "sign_OB_8a02c9de",
+    "sign_OB_b7134a83",
     "steel_galv"
    ],
    "tris_lod0": 28,
@@ -427,7 +466,6 @@
   },
   "car_estate_black": {
    "materials": [
-    "car_dirt_3",
     "car_glass",
     "car_glass_tint",
     "car_interior",
@@ -442,13 +480,12 @@
     "rim_dark",
     "rim_dusty"
    ],
-   "tris_lod0": 4078,
-   "tris_lod1": 878,
+   "tris_lod0": 4014,
+   "tris_lod1": 834,
    "tris_lod2": 86
   },
   "car_estate_blue": {
    "materials": [
-    "car_dirt_2",
     "car_glass",
     "car_glass_tint",
     "car_interior",
@@ -463,13 +500,12 @@
     "rim_dark",
     "rim_dusty"
    ],
-   "tris_lod0": 4078,
-   "tris_lod1": 878,
+   "tris_lod0": 4014,
+   "tris_lod1": 834,
    "tris_lod2": 86
   },
   "car_estate_grey": {
    "materials": [
-    "car_dirt_3",
     "car_glass",
     "car_glass_tint",
     "car_interior",
@@ -483,13 +519,12 @@
     "car_tyre_dusty",
     "rim_dark"
    ],
-   "tris_lod0": 4078,
-   "tris_lod1": 878,
+   "tris_lod0": 4014,
+   "tris_lod1": 834,
    "tris_lod2": 86
   },
   "car_estate_red": {
    "materials": [
-    "car_dirt_3",
     "car_glass",
     "car_glass_tint",
     "car_interior",
@@ -504,13 +539,12 @@
     "rim_dark",
     "rim_dusty"
    ],
-   "tris_lod0": 4078,
-   "tris_lod1": 878,
+   "tris_lod0": 4014,
+   "tris_lod1": 834,
    "tris_lod2": 86
   },
   "car_estate_silver": {
    "materials": [
-    "car_dirt_1",
     "car_glass",
     "car_glass_tint",
     "car_interior",
@@ -525,13 +559,12 @@
     "rim",
     "rim_dark"
    ],
-   "tris_lod0": 4070,
-   "tris_lod1": 886,
+   "tris_lod0": 4046,
+   "tris_lod1": 842,
    "tris_lod2": 86
   },
   "car_estate_white": {
    "materials": [
-    "car_dirt_1",
     "car_glass",
     "car_glass_tint",
     "car_interior",
@@ -547,13 +580,12 @@
     "rim_dark",
     "rim_steel"
    ],
-   "tris_lod0": 4114,
-   "tris_lod1": 874,
+   "tris_lod0": 4170,
+   "tris_lod1": 830,
    "tris_lod2": 86
   },
   "car_hatch_black": {
    "materials": [
-    "car_dirt_3",
     "car_glass",
     "car_glass_tint",
     "car_interior",
@@ -568,13 +600,12 @@
     "rim_dark",
     "rim_dusty"
    ],
-   "tris_lod0": 3976,
-   "tris_lod1": 864,
+   "tris_lod0": 3936,
+   "tris_lod1": 820,
    "tris_lod2": 86
   },
   "car_hatch_blue": {
    "materials": [
-    "car_dirt_2",
     "car_glass",
     "car_glass_tint",
     "car_interior",
@@ -588,13 +619,12 @@
     "car_tyre_dusty",
     "rim_dark"
    ],
-   "tris_lod0": 3976,
-   "tris_lod1": 864,
+   "tris_lod0": 3936,
+   "tris_lod1": 820,
    "tris_lod2": 86
   },
   "car_hatch_grey": {
    "materials": [
-    "car_dirt_3",
     "car_glass",
     "car_glass_tint",
     "car_interior",
@@ -608,13 +638,12 @@
     "car_tyre_dusty",
     "rim_dark"
    ],
-   "tris_lod0": 3976,
-   "tris_lod1": 864,
+   "tris_lod0": 3936,
+   "tris_lod1": 820,
    "tris_lod2": 86
   },
   "car_hatch_red": {
    "materials": [
-    "car_dirt_1",
     "car_glass",
     "car_glass_tint",
     "car_interior",
@@ -630,12 +659,11 @@
     "rim_dark"
    ],
    "tris_lod0": 3936,
-   "tris_lod1": 864,
+   "tris_lod1": 820,
    "tris_lod2": 86
   },
   "car_hatch_silver": {
    "materials": [
-    "car_dirt_1",
     "car_glass",
     "car_glass_tint",
     "car_interior",
@@ -650,12 +678,11 @@
     "rim_dark"
    ],
    "tris_lod0": 3936,
-   "tris_lod1": 864,
+   "tris_lod1": 820,
    "tris_lod2": 86
   },
   "car_hatch_white": {
    "materials": [
-    "car_dirt_1",
     "car_glass",
     "car_glass_tint",
     "car_interior",
@@ -671,13 +698,12 @@
     "rim_dark",
     "rim_steel"
    ],
-   "tris_lod0": 4012,
-   "tris_lod1": 860,
+   "tris_lod0": 4092,
+   "tris_lod1": 816,
    "tris_lod2": 86
   },
   "car_sedan_black": {
    "materials": [
-    "car_dirt_1",
     "car_glass",
     "car_glass_tint",
     "car_interior",
@@ -692,13 +718,12 @@
     "rim",
     "rim_dark"
    ],
-   "tris_lod0": 4118,
-   "tris_lod1": 890,
+   "tris_lod0": 4070,
+   "tris_lod1": 846,
    "tris_lod2": 90
   },
   "car_sedan_blue": {
    "materials": [
-    "car_dirt_2",
     "car_glass",
     "car_glass_tint",
     "car_interior",
@@ -713,13 +738,12 @@
     "rim_dark",
     "rim_dusty"
    ],
-   "tris_lod0": 4158,
-   "tris_lod1": 890,
+   "tris_lod0": 4070,
+   "tris_lod1": 846,
    "tris_lod2": 90
   },
   "car_sedan_grey": {
    "materials": [
-    "car_dirt_3",
     "car_glass",
     "car_glass_tint",
     "car_interior",
@@ -734,13 +758,12 @@
     "rim_dark",
     "rim_dusty"
    ],
-   "tris_lod0": 4158,
-   "tris_lod1": 890,
+   "tris_lod0": 4070,
+   "tris_lod1": 846,
    "tris_lod2": 90
   },
   "car_sedan_red": {
    "materials": [
-    "car_dirt_1",
     "car_glass",
     "car_glass_tint",
     "car_interior",
@@ -755,13 +778,12 @@
     "rim",
     "rim_dark"
    ],
-   "tris_lod0": 4150,
-   "tris_lod1": 898,
+   "tris_lod0": 4102,
+   "tris_lod1": 854,
    "tris_lod2": 90
   },
   "car_sedan_silver": {
    "materials": [
-    "car_dirt_3",
     "car_glass",
     "car_glass_tint",
     "car_interior",
@@ -776,13 +798,12 @@
     "rim_dark",
     "rim_dusty"
    ],
-   "tris_lod0": 4158,
-   "tris_lod1": 890,
+   "tris_lod0": 4070,
+   "tris_lod1": 846,
    "tris_lod2": 90
   },
   "car_sedan_white": {
    "materials": [
-    "car_dirt_2",
     "car_glass",
     "car_glass_tint",
     "car_interior",
@@ -797,13 +818,12 @@
     "rim_dark",
     "rim_dusty"
    ],
-   "tris_lod0": 4158,
-   "tris_lod1": 890,
+   "tris_lod0": 4070,
+   "tris_lod1": 846,
    "tris_lod2": 90
   },
   "car_suv_black": {
    "materials": [
-    "car_dirt_1",
     "car_glass",
     "car_glass_tint",
     "car_interior",
@@ -817,13 +837,12 @@
     "car_tyre",
     "rim_dark"
    ],
-   "tris_lod0": 4005,
-   "tris_lod1": 886,
+   "tris_lod0": 3989,
+   "tris_lod1": 842,
    "tris_lod2": 86
   },
   "car_suv_blue": {
    "materials": [
-    "car_dirt_3",
     "car_glass",
     "car_glass_tint",
     "car_interior",
@@ -838,13 +857,12 @@
     "rim_dark",
     "rim_dusty"
    ],
-   "tris_lod0": 4045,
-   "tris_lod1": 886,
+   "tris_lod0": 3989,
+   "tris_lod1": 842,
    "tris_lod2": 86
   },
   "car_suv_grey": {
    "materials": [
-    "car_dirt_3",
     "car_glass",
     "car_glass_tint",
     "car_interior",
@@ -859,13 +877,12 @@
     "rim_dark",
     "rim_dusty"
    ],
-   "tris_lod0": 4077,
-   "tris_lod1": 894,
+   "tris_lod0": 4021,
+   "tris_lod1": 850,
    "tris_lod2": 86
   },
   "car_suv_red": {
    "materials": [
-    "car_dirt_3",
     "car_glass",
     "car_glass_tint",
     "car_interior",
@@ -880,13 +897,12 @@
     "rim_dark",
     "rim_dusty"
    ],
-   "tris_lod0": 4045,
-   "tris_lod1": 886,
+   "tris_lod0": 3989,
+   "tris_lod1": 842,
    "tris_lod2": 86
   },
   "car_suv_silver": {
    "materials": [
-    "car_dirt_3",
     "car_glass",
     "car_glass_tint",
     "car_interior",
@@ -901,13 +917,12 @@
     "rim_dark",
     "rim_dusty"
    ],
-   "tris_lod0": 4045,
-   "tris_lod1": 886,
+   "tris_lod0": 3989,
+   "tris_lod1": 842,
    "tris_lod2": 86
   },
   "car_suv_white": {
    "materials": [
-    "car_dirt_3",
     "car_glass",
     "car_glass_tint",
     "car_interior",
@@ -922,8 +937,8 @@
     "rim_dark",
     "rim_dusty"
    ],
-   "tris_lod0": 4045,
-   "tris_lod1": 886,
+   "tris_lod0": 3989,
+   "tris_lod1": 842,
    "tris_lod2": 86
   },
   "cone": {
@@ -1404,6 +1419,27 @@
    "tris_lod0": 528,
    "tris_lod1": 24
   },
+  "sign_g3_G33c600842": {
+   "materials": [
+    "sign_G33c600842"
+   ],
+   "tris_lod0": 28,
+   "tris_lod1": 16
+  },
+  "sign_g3_G3518e7fb6": {
+   "materials": [
+    "sign_G3518e7fb6"
+   ],
+   "tris_lod0": 28,
+   "tris_lod1": 16
+  },
+  "sign_g3_G3ae1e4f1d": {
+   "materials": [
+    "sign_G3ae1e4f1d"
+   ],
+   "tris_lod0": 30,
+   "tris_lod1": 18
+  },
   "sign_gantry_10_74": {
    "materials": [
     "gantry_steel"
@@ -1411,11 +1447,11 @@
    "tris_lod0": 688,
    "tris_lod1": 36
   },
-  "sign_gantry_17_68": {
+  "sign_gantry_16_74": {
    "materials": [
     "gantry_steel"
    ],
-   "tris_lod0": 736,
+   "tris_lod0": 784,
    "tris_lod1": 36
   },
   "sign_post": {
@@ -1766,7 +1802,6 @@
   },
   "van_silver": {
    "materials": [
-    "car_dirt_2",
     "car_glass",
     "car_glass_tint",
     "car_interior",
@@ -1781,13 +1816,12 @@
     "rim_dark",
     "rim_steel"
    ],
-   "tris_lod0": 3849,
-   "tris_lod1": 884,
+   "tris_lod0": 3817,
+   "tris_lod1": 840,
    "tris_lod2": 88
   },
   "van_white": {
    "materials": [
-    "car_dirt_3",
     "car_glass",
     "car_glass_tint",
     "car_interior",
@@ -1803,13 +1837,12 @@
     "rim_dusty",
     "rim_steel"
    ],
-   "tris_lod0": 4005,
-   "tris_lod1": 884,
+   "tris_lod0": 4053,
+   "tris_lod1": 840,
    "tris_lod2": 88
   },
   "van_white2": {
    "materials": [
-    "car_dirt_1",
     "car_glass",
     "car_glass_tint",
     "car_interior",
@@ -1824,8 +1857,8 @@
     "rim_dark",
     "rim_steel"
    ],
-   "tris_lod0": 3809,
-   "tris_lod1": 884,
+   "tris_lod0": 3817,
+   "tris_lod1": 840,
    "tris_lod2": 88
   },
   "waste_bin": {

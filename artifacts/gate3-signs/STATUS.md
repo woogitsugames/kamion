@@ -1,0 +1,34 @@
+# STATUS gate3-signs (ADR 0125)
+
+## 1. Worktree + baseline (2026-11-11)
+Worktree `.claude/worktrees/gate3-signs` (gałąź `gate3-signs` z main ce3f1a77), dane skopiowane, junctiony Data/raw/{gugik,osm,refs,mapillary,fab}.
+Baseline Low-overcast: 40 par SBS w `artifacts/gate3-signs/baseline/` (rendery + stats-*.txt + sheets).
+Triangulacja bramownicy G3-B: ortofoto 2024 + Mapillary richlv 2020 (468708117568850 / 143559297695026), grobin 2019, kino 2024 -> portal przy E,N = (-261,-208) +-3 m; w świecie stał w (-306.8,-171.3), czyli 59 m za daleko. Kadr 3281350 pokazuje TĘ SAMĄ bramownicę od tyłu (GPS zsolt przesunięty ~45 m) - błąd pozy, nie brak obiektu.
+Ekran i słup WN w 3678296 ISTNIEJĄ w renderze (słabo widoczne na Low-overcast): poprawka = czytelność, nie strona.
+NASTĘPNY KROK: `uv run --project tools/worldgen pytest tests/gis/test_gate3_landmarks.py -q` (po napisaniu modułu streetscape/gate3_landmarks.py)
+
+## 2. Generator (kod + dane)
+Nowy moduł `tools/worldgen/streetscape/gate3_landmarks.py` (kind: gate3_sign; 1 prototyp = 1 materiał = 1 draw), haki: 1 linia w props.build_all, 1 wywołanie w stage.run. overrides.yaml: portal Andersa distance_m 40 -> 99, 7 znaków gate3_sign, wiadukt Putry screen_side: travel_right, pas pełny ekranu 1.0 -> 1.8 m (strefy 4-6). meshing.screen_sides + szyna pośrednia ekranu przeszklonego. Testy: tests/gis/test_gate3_landmarks.py 8 passed, 2 skipped (QA po przebudowie).
+NASTĘPNY KROK: `pwsh scripts/unity-slot.ps1 -Acquire -Pool heavy -Owner claude-gate3-signs; uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c; pwsh scripts/unity-slot.ps1 -Release -Pool heavy -Owner claude-gate3-signs`
+
+## 3. Budowa świata 1-2
+Build 2 OK (510 s): portal w (-260.8,-208.3) (cel -261,-208), 2 znaki A-30 przed portalem, 2 tabliczki nazwy ronda postawione. Stale (raportowane, nie gubione): U-4a, D-3, D-6 - punkt na jezdni generowanej > 4 m od krawędzi; tabliczki nazw stanęły na pomoście (z=139.9) -> poprawka kodu (grunt pod wiaduktem), wymaga builda 3.
+Import Unity builda 2 w toku (log artifacts/gate3-signs/import-1.log).
+NASTĘPNY KROK: `pwsh artifacts/gate3-signs/run-sbs.ps1 -Name after1` potem `bash artifacts/gate3-signs/make-pairs.sh after1`
+
+## 4. Build 3 + after1
+after1 (build 2) obejrzane: portal w 275528/837235/2279/381800 na miejscu, wiadukt Putry bez ekranu po lewej (494288). Draws Low-overcast G3-B (stats-diff.py after1): delta -10..+16, mediana 0 (baseline = import main, nie w pełni izolowany).
+Build 3 OK (522 s): U-4a postawione po przyciągnięciu 5.4 m na nos wyspy; D-3/D-6 przy rondzie Bieżeństwa nadal stale (jezdnia generowana > 8 m) - OTWARTE, udokumentowane w teście i ADR.
+W toku: import-2 + render `after` (Low overcast+clear) oraz pełne `pytest tests/gis` (heavy).
+NASTĘPNY KROK: `bash artifacts/gate3-signs/make-pairs.sh after; python artifacts/gate3-signs/stats-diff.py after`
+
+## 5. Finał (build 3 zaimportowany)
+Rendery `after/` (Low-overcast) i `after-clear/` (Low-clear), pary przed/po `pairs-after/*.jpg` (40), wycinki `crop-837235-portal.jpg`, `crop-381800-u4a.jpg`. Obejrzane: portal + 2 tablice + 2x A-30 z tabliczką (275528/837235/2279/381800), U-4a na nosie wyspy (381800, 2279), ekran tylko po prawej na wiadukcie (494288), tabliczki nazwy ronda (2818, 5043).
+Draws Low-overcast G3-B (20 kamer, szacunek edytora przed batchingiem, `stats-diff-after.txt`): delta razem -10..+15, mediana 0; tris statyczne -3..-23k (dryf baseline), instancje +0..+2k.
+EditMode 261/261. tests/gis/test_gate3_landmarks.py 12 passed. Pełne `pytest tests/gis` - czeka na slot heavy (log `pytest-gis.log`).
+OTWARTE: D-3/D-6 przy rondzie Bieżeństwa (stale: jezdnia generowana), pozy kamer SBS (3281350 ~45 m, grobin ~12 m), czytelność szkła ekranów na Low-overcast.
+NASTĘPNY KROK: `Get-Content artifacts/gate3-signs/pytest-gis.log -Tail 15` ; scalenie: `git merge gate3-signs` + `uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-industrial-c` + import
+
+## 6. Testy końcowe
+`pytest tests/gis -q` (heavy, 701 s): 504 passed, 1 xfailed, 1 failed = test_road_fidelity::test_report_not_stale (fidelity_qa.json nieaktualny względem overrides.yaml, meshing.py ORAZ plików nietkniętych przez to zadanie: network.py, pipeline.py, profile.py, build_world.py -> stan zastany + zmiana overrides; wymaga `tools/worldgen/fidelity/run.py` po scaleniu). EditMode 261/261.
+NASTĘPNY KROK (lider): `git merge gate3-signs` -> `pwsh scripts/unity-slot.ps1 -Acquire -Pool heavy -Owner lead; uv run --project tools/worldgen python tools/worldgen/fidelity/run.py --region bialystok-industrial-c` -> build_world + import

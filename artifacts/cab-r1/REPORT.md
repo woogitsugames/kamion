@@ -1,18 +1,11 @@
-# K / ADR 0104 — ready for leader review
-Branch gpt-cab-r1; base 9e6e9fde; tested checkout 1a9e2fdc (final production code 9f51fea8); no push/merge.
-Fixed double horizontal flip for TRAKT; trailer-side projection tests verify own vehicle at inner mirror edges.
-Recessed LOD0 housing backing:107 moved vertices; 28500 vertices /110904 indices unchanged; Low/Medium mesh unchanged.
-Audited plastic/seams/wear/instruments; added four inactive inspection cameras; interior materials/shader unchanged.
-GIS:370 passed,1 xfailed (643.87s); export+instrument sightlines PASS (103285/44190/21479 interior tris).
-Final EditMode:230/230,0 skipped (validation/tests/editmode-20261111-121652.xml), Android-target compilation.
-TruckAssetBuilder.BuildBatch + WorldTruckInstaller.InstallBatch OK; final-*.log. No new APK/phone run by K.
-Evidence:before/ +after/ 72 matched PNG;48 native mirror PNG;after-details/8 final inspection PNG;all inspected.
-Pairs/previews:review/after/*/*-pair.jpg;SELF-REVIEW.md;image-metrics.json;budget-comparison.json;logs/.
-All36 scene-stat rows delta0 (draws/shadows/triangles);all4 mirror configuration tables identical;phone GPU UNVERIFIED.
-Source ray study High WideL84.1->97.5%,WideR74.9->88.3%;not pixel counts or R46 certification.
-OPEN:right-wide door/channel occlusion,small text/seat wear on clean phone,owner-cab material calibration.
-Independent visual review and clean A16/S24+ checks remain with leader;no Gate3 PASS claimed.
-Expected conflicts:TruckAssetBuilder.cs(additive cameras/import),RenderTextureMirror.cs(presentation flag);generated->rebuild.
-After leader merge,run Unity executeMethods Game.Editor.Setup.TruckAssetBuilder.BuildBatch then Game.World.Import.WorldTruckInstaller.InstallBatch.
-ADR:docs/adr/0104-cab-interior-mirrors-r1.md. Evidence scripts contain WIP commits and guard against execution on main.
-Evidence copied to main artifacts/cab-r1 without committing main;worktree retained for review.
+# Raport rundy cab r1 — zakończona, dalsza praca w cab r2
+Gałąź: gpt-cab-r1. Stan przed końcowym raportem: 5ee9201b. Sprawdzony checkpoint K1/K2: 1284e35e. K3 z testami i budżetami: d1c3d863. Późniejsze commity zawierają diagnostykę deski i przygotowanie CC0, bez zmiany materiału gry.
+W worktree gpt-cab pracuje wyłącznie sesja 5. K1: kamery V/VI mają near clip 0,1 m i pomijają wnętrze. K2: końce podpór cofnięto za szkła, bez zmiany indeksów, UV, materiałów i bounds źródłowych siatek LOD0/1/2.
+W Low clear piksele wnętrza Kerb spadły 3366→0, Front 5364→0. W czterech stanach Low/High i clear/overcast test identyfikatora wnętrza daje zero po zmianie. Zwykłe draws Kerb 83→77, Front 120→100; instancje odpowiednio 79 i 102 bez zmian. Są to estymaty widoczności edytora, nie pomiary GPU telefonu.
+Wszystkie 78 kamer Low/Gate3 mają dla checkpointu K1/K2 dokładnie zerowe delty zwykłych drawów, drawów instancji i trójkątów. Pełne dane: comparison-0112.json. Testy EditMode lusterek: 35/35. Generator świata: exit 0, 491,1 s, brak fallback=True.
+Wstępny GIS przed nową zasadą heavy: 488 zaliczonych, 5 błędów świata, 1 xfailed. Pełny GIS końcowy pod heavy gpt-cab-r1: 491 zaliczonych, 2 błędy, 1 xfailed, 673,09 s, exit 1. Pozostały test_road_fidelity::test_report_not_stale (hashe overrides i kodu dróg) oraz test_world_roads::test_export_is_deterministic (chunk 0_0); oba przypadki zawodziły także w pomiarze bazowym. Log gis-final-0112.log. Nie naprawiano plików świata poza zakresem sesji. Po zakończeniu przywrócono sześć śledzonych produktów testów do stanu gałęzi, slot zwolniony.
+Pary przed/po do 960 px: native-K1-before-after-960.jpg i left-K2-before-after-960.jpg. Rzeczywista referencja mocowania: reference-real-cab-mirrors-960.jpg, pochodzenie w REFERENCES-0112.md; nie jest dokładnym dopasowaniem pozy wnętrza.
+K3: zaokrąglona ramka czterech szkieł w istniejącym submeshu Trim (+480 tris na LOD, pięć slotów i bounds zachowane). Obejrzano pary pełnych obudów z oka kierowcy: bezel-inspection-left-960.jpg i bezel-inspection-right-960.jpg. comparison-0112-p2.json: PASS, 78 kamer trasy bez wzrostu zwykłych drawów i drawów instancji; największa raportowana delta zwykłych tris wynosi 1000 (statystyki zaokrąglone), maksymalny wzrost sumy tris to 0,498%, limit +2% zachowany. Testy lusterek 36/36. Pełne EditMode na koniec rundy: 276/276, exit 0 (editmode-20261111-234613.xml).
+Smuga deski i odczyt zużycia przechodzą do rundy CC0; K5 wymaga dalszej oceny wyglądu, bez arbitralnego przesunięcia geometrii. Audyt źródłowych powierzchni nie wykrył ich przecięć; nie utożsamiamy go z oceną obrazu gry. UV głównej deski w źródle: mediana anizotropii 1,01, p95 1,34; skrajne rozciągnięcie przy bocznym końcu. Rzeczywisty FBX: 992 centroidy trójkątów w odległości ≤0,2 mm od źródłowej powierzchni miękkiej deski, mediana 1,008, p95 1,269, maksimum 4,734 przy bocznym końcu. Centralny ROI: 707 trójkątów o gęstości UV >1, maksimum 1,453. Dopasowanie nie obejmuje wszystkich uproszczonych fragmentów i może zawierać geometrię współpłaszczyznową. Nie potwierdzono szerokiego rozciągnięcia jako przyczyny smugi.
+Diagnostyka materiału zapisuje wyłącznie tymczasowe siatki w pamięci; audyt High clear zapisał wszystkie 12 PNG i marker OK, ale Unity zakończyło się awarią D3D12 podczas zamykania, więc proces miał exit 1. Galeria index.html pokazuje warianty oraz ograniczenia. Siedem map CC0 do następnej rundy pobrano z oficjalnego serwera i zweryfikowano według MD5 oraz rozmiaru; nie są jeszcze zintegrowane. Prototyp konwersji ma sprawdzoną składnię, bez wykonania obróbki i bez integracji. Szczegóły następnych kroków: R2-PLAN.md.
+Nie używano telefonów, nie scalano do main i nie pushowano. Ostatni STATUS.md podaje komendę następnego kroku. Przewidywany konflikt: addytywne fragmenty TruckAssetBuilder.cs i RenderTextureMirror.cs; brak zmian shaderów zewnętrza, szyb i świata.

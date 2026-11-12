@@ -1,0 +1,29 @@
+{
+  "read_only_source_hashes": [
+    {
+      "file": "art-source/world/materials/materials_spec.json",
+      "sha256": "3df3e43f8b41e44ba3f3690a102ea75954398d2a47f11efaa67bc68efa422e7a"
+    },
+    {
+      "file": "art-source/world/materials/_src/sets_asphalt.py",
+      "sha256": "d26ff93db82abae93a111a33c445bc4c3f5a87dea013d0b70f6030363267dd84"
+    },
+    {
+      "file": "art-source/world/materials/_src/sets_scan.py",
+      "sha256": "abe3d4327867efa1d14b12a01b09592d6e01fd52f5e0a9a32e7254a224db14b4"
+    },
+    {
+      "file": "game/Assets/_Project/World/Import/WorldPbrMaterials.cs",
+      "sha256": "0afd196c949a530d6f96d7fa1d4876b74bdac6a03e91341ad3fb8e24a628f93b"
+    },
+    {
+      "file": "game/Assets/_Project/Environment/Shaders/WorldPBR.shader",
+      "sha256": "1dc7db4ea4ec839f4dc8fbd301ba5aedd38a12c3fff892e66818841d125edce4"
+    }
+  ],
+  "shader_mask_r_read_sites": [
+    "half metal = mask.r * _MetallicScale;"
+  ],
+  "shipping_shader_unmodified": true,
+  "future_Runtime_ASTC_GBA_parity_is_required": true
+}

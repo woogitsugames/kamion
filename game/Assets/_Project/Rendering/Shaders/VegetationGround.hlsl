@@ -2,6 +2,18 @@
 // R = road/yard distance /20m; G forest; B mowing/dryness; A mapped exposed ground.
 #ifndef KAMION_VEGETATION_GROUND_INCLUDED
 #define KAMION_VEGETATION_GROUND_INCLUDED
+half3 KamionGrassDryMatter(half3 green, half4 ground, half strength)
+{
+    // ADR0109 candidate B: retain every photographed blade and existing tint.
+    // A constant straw fill flattened the source texture (candidate A rejected).
+    // B now modulates colour and brightness multiplicatively at metre scale.
+    // Ratios/range are WORKING_VALUE; no added texture fetch, pass or _Tint.
+    half dry = smoothstep(0.05h, 0.95h, ground.b);
+    half amount = dry * 0.65h * saturate(strength);
+    half3 pigment = lerp(half3(1.0h, 1.0h, 1.0h), half3(1.50h, 1.08h, 1.40h), amount);
+    half gain = lerp(1.0h, 0.70h + 0.60h * dry, saturate(strength));
+    return green * pigment * gain;
+}
 half KamionGrassExposure(half4 ground)
 {
     // No invented sand/salt band around maintained lawns or every paved edge.

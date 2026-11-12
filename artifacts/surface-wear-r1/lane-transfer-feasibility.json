@@ -1,0 +1,170 @@
+{
+  "note": "Feasibility only, NOT production transfer. Uses actual road lane field only; no nearest-road extrapolation.7samples/triangle,3.5cm height tolerance WORKING, overlap disagreement>.02lane rejected, midpoint nonlinearity>.025lane rejected. Shared vertices/component closure still must be enforced in production, so accepted area is upper bound.",
+  "chunks": [
+    {
+      "chunk": "0_0",
+      "constant_triangles": 492,
+      "accepted_triangles": 0,
+      "accepted_area_m2": 0.0,
+      "rejected": {
+        "outside_or_height": 492
+      }
+    },
+    {
+      "chunk": "0_3",
+      "constant_triangles": 1532,
+      "accepted_triangles": 99,
+      "accepted_area_m2": 15.428683893458581,
+      "rejected": {
+        "outside_or_height": 1366,
+        "nonlinear_or_lane_discontinuity": 67
+      }
+    },
+    {
+      "chunk": "1_2",
+      "constant_triangles": 314,
+      "accepted_triangles": 0,
+      "accepted_area_m2": 0.0,
+      "rejected": {
+        "outside_or_height": 314
+      }
+    },
+    {
+      "chunk": "1_3",
+      "constant_triangles": 577,
+      "accepted_triangles": 53,
+      "accepted_area_m2": 9.842129456951337,
+      "rejected": {
+        "outside_or_height": 524
+      }
+    },
+    {
+      "chunk": "1_4",
+      "constant_triangles": 165,
+      "accepted_triangles": 0,
+      "accepted_area_m2": 0.0,
+      "rejected": {
+        "outside_or_height": 165
+      }
+    },
+    {
+      "chunk": "1_5",
+      "constant_triangles": 48,
+      "accepted_triangles": 0,
+      "accepted_area_m2": 0.0,
+      "rejected": {
+        "outside_or_height": 48
+      }
+    },
+    {
+      "chunk": "2_4",
+      "constant_triangles": 1419,
+      "accepted_triangles": 258,
+      "accepted_area_m2": 52.742674036530495,
+      "rejected": {
+        "outside_or_height": 1161
+      }
+    },
+    {
+      "chunk": "2_6",
+      "constant_triangles": 160,
+      "accepted_triangles": 0,
+      "accepted_area_m2": 0.0,
+      "rejected": {
+        "outside_or_height": 160
+      }
+    },
+    {
+      "chunk": "2_7",
+      "constant_triangles": 40,
+      "accepted_triangles": 0,
+      "accepted_area_m2": 0.0,
+      "rejected": {
+        "outside_or_height": 40
+      }
+    },
+    {
+      "chunk": "3_4",
+      "constant_triangles": 354,
+      "accepted_triangles": 65,
+      "accepted_area_m2": 7.761510270538211,
+      "rejected": {
+        "outside_or_height": 289
+      }
+    },
+    {
+      "chunk": "3_5",
+      "constant_triangles": 397,
+      "accepted_triangles": 138,
+      "accepted_area_m2": 13.512329055544525,
+      "rejected": {
+        "outside_or_height": 161,
+        "nonlinear_or_lane_discontinuity": 98
+      }
+    },
+    {
+      "chunk": "3_7",
+      "constant_triangles": 144,
+      "accepted_triangles": 0,
+      "accepted_area_m2": 0.0,
+      "rejected": {
+        "outside_or_height": 144
+      }
+    },
+    {
+      "chunk": "4_5",
+      "constant_triangles": 104,
+      "accepted_triangles": 0,
+      "accepted_area_m2": 0.0,
+      "rejected": {
+        "outside_or_height": 104
+      }
+    },
+    {
+      "chunk": "5_6",
+      "constant_triangles": 849,
+      "accepted_triangles": 242,
+      "accepted_area_m2": 32.54423292061623,
+      "rejected": {
+        "outside_or_height": 577,
+        "nonlinear_or_lane_discontinuity": 30
+      }
+    },
+    {
+      "chunk": "5_7",
+      "constant_triangles": 150,
+      "accepted_triangles": 0,
+      "accepted_area_m2": 0.0,
+      "rejected": {
+        "outside_or_height": 150
+      }
+    },
+    {
+      "chunk": "6_6",
+      "constant_triangles": 184,
+      "accepted_triangles": 0,
+      "accepted_area_m2": 0.0,
+      "rejected": {
+        "outside_or_height": 184
+      }
+    },
+    {
+      "chunk": "6_7",
+      "constant_triangles": 8,
+      "accepted_triangles": 0,
+      "accepted_area_m2": 0.0,
+      "rejected": {
+        "outside_or_height": 8
+      }
+    },
+    {
+      "chunk": "7_7",
+      "constant_triangles": 310,
+      "accepted_triangles": 0,
+      "accepted_area_m2": 0.0,
+      "rejected": {
+        "outside_or_height": 310
+      }
+    }
+  ]
+}

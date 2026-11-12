@@ -1,0 +1,29 @@
+{
+  "scenes": [
+    {
+      "scene": "WorldC",
+      "serialized_native_control_cameras": 40,
+      "actor_roots_exact": true,
+      "effective_camera_matrices_FOV_clips_exact": true
+    },
+    {
+      "scene": "WorldC_High",
+      "serialized_native_control_cameras": 40,
+      "actor_roots_exact": true,
+      "effective_camera_matrices_FOV_clips_exact": true
+    }
+  ],
+  "prefabs": [
+    {
+      "file": "game/Assets/_Generated/Truck/Tractor4x2_TRAKT.prefab",
+      "hierarchical_transforms": 161,
+      "exact": true
+    },
+    {
+      "file": "game/Assets/_Generated/Trailer/Trailer_Curtainsider_Art.prefab",
+      "hierarchical_transforms": 73,
+      "exact": true
+    }
+  ],
+  "note": "Actual original canonical scene/prefab files versus final chosen state. This proves serialized pose/intrinsics inputs, not retroactive runtime packets for all372originalimages. Current runtime packets and existing field comparisons are separate."
+}

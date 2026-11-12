@@ -1,0 +1,78 @@
+{
+  "schema": "truck-sim-pl/gate3-cameras/1",
+  "region": "bialystok-industrial-c",
+  "cameras": [
+    {
+      "id": "d_wear_lane_old",
+      "type": "persp",
+      "kind": "photo_match",
+      "seat": "road",
+      "pos": [
+        -203.625,
+        -250.453,
+        133.334
+      ],
+      "look_at": [
+        -210.08989828439493,
+        -245.7407722707378,
+        131.684
+      ],
+      "fov_deg": 48,
+      "note": "DQA only: sourcedriver_andersa_to_putry, existingpose/bearing, ground-reseated1.7m looking8m ahead atground+.05m; WORKINGcamera notgeometry. Targetvisibilitymustbeinspectedbeforebaseline lock."
+    },
+    {
+      "id": "d_wear_newroad_negative",
+      "type": "persp",
+      "kind": "photo_match",
+      "seat": "file",
+      "pos": [
+        -826.8126831054688,
+        876.5203247070312,
+        149.43065490722657
+      ],
+      "look_at": [
+        -829.8126831054688,
+        880.5203247070312,
+        147.08065490722657
+      ],
+      "fov_deg": 48,
+      "note": "DQA actualsourceasphalttriangletarget fromData/raw/derived/bialystok-industrial-c/world/chunk_0_0.glb; fixed5moffset/2.4mheight WORKINGcamera. Notnewwearplacement. Sourceframeverified: glTF(-E,U,N) convertedENU(-x,z,y)."
+    },
+    {
+      "id": "d_wear_missing_uv_2",
+      "type": "persp",
+      "kind": "photo_match",
+      "seat": "file",
+      "pos": [
+        512.6336669921875,
+        -247.97601318359375,
+        139.05432739257813
+      ],
+      "look_at": [
+        509.6336669921875,
+        -243.97601318359375,
+        136.70432739257814
+      ],
+      "fov_deg": 48,
+      "note": "DQA actualsourceasphalttriangletarget fromData/raw/derived/bialystok-industrial-c/world/chunk_5_4.glb; fixed5moffset/2.4mheight WORKINGcamera. Notnewwearplacement. Sourceframeverified: glTF(-E,U,N) convertedENU(-x,z,y)."
+    },
+    {
+      "id": "d_field_p8_turn",
+      "type": "persp",
+      "kind": "photo_match",
+      "seat": "file",
+      "pos": [
+        -520.4365743001302,
+        -56.3035831451416,
+        137.6312510172526
+      ],
+      "look_at": [
+        -521.4365743001302,
+        -51.3035831451416,
+        132.6512510172526
+      ],
+      "fov_deg": 48,
+      "note": "ActualP8candidate12/15ringvertices/localarrowUV0 + transverseage +varyinglanefield; imagevalidation required. Geometry from immutablebefore."
+    }
+  ]
+}
