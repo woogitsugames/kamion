@@ -8,6 +8,18 @@ $repo = (Resolve-Path "$PSScriptRoot/../..").Path
 Set-Location $repo
 $env:KAMION_ARTIFACTS_DIR = Join-Path $repo 'artifacts'
 $slotScript = 'C:\Users\matma\Documents\Claude\kamion\scripts\unity-slot.ps1'
+$importStatePath='artifacts/asphalt-r3/current-import-state.json'
+if($Stage -in @('Probe','Capture')){
+    if(-not(Test-Path $importStatePath)){throw 'No recorded fresh import; run Import first.'}
+    $importState=Get-Content $importStatePath -Raw|ConvertFrom-Json
+    if(-not $importState.complete){throw 'Import is incomplete; do not render the old scene.'}
+    foreach($entry in @(
+        @('manifest_sha256','Data/Regions/bialystok-industrial-c/generated/world_manifest.json'),
+        @('factory_sha256','game/Assets/_Project/World/Import/WorldPbrMaterials.cs'),
+        @('materials_spec_sha256','art-source/world/materials/materials_spec.json'))){
+        if($importState.($entry[0]) -ne (Get-FileHash $entry[1]).Hash){throw "Import/source mismatch: $($entry[1])"}
+    }
+}
 if ($Stage -ne 'Probe' -and ($Ablation -ne 'none' -or $env:KAMION_ASPHALT_QA_ABLATION)) {
     throw 'Ablations are permitted only for explicit Probe captures, never import/test/full capture.'
 }
@@ -41,7 +53,19 @@ if ($Stage -eq 'Import') {
             }
         }
     }
+    $importStarted=Get-Date
+    $importState=[ordered]@{complete=$false;started_at=$importStarted.ToString('o');label=$Label;
+        manifest_sha256=(Get-FileHash Data/Regions/bialystok-industrial-c/generated/world_manifest.json).Hash;
+        factory_sha256=(Get-FileHash game/Assets/_Project/World/Import/WorldPbrMaterials.cs).Hash;
+        materials_spec_sha256=(Get-FileHash art-source/world/materials/materials_spec.json).Hash}
+    $importState|ConvertTo-Json|Set-Content $importStatePath
     Invoke-Slotted { & pwsh scripts/import-region.ps1 -Region bialystok-industrial-c }
+    $report='artifacts/world/bialystok-industrial-c-import.json'
+    if(-not(Test-Path $report) -or (Get-Item $report).LastWriteTime -lt $importStarted){throw 'Fresh import report missing'}
+    $importState.complete=$true
+    $importState.finished_at=Get-Date -Format o
+    $importState.report_sha256=(Get-FileHash $report).Hash
+    $importState|ConvertTo-Json|Set-Content $importStatePath
 } elseif ($Stage -eq 'Test') {
     Invoke-Slotted { & pwsh scripts/test.ps1 -Platform EditMode }
 } elseif ($Stage -eq 'Probe') {
