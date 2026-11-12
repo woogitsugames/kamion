@@ -1,0 +1,2934 @@
+{
+  "regressed": 0,
+  "scope": "CPU estimates before SRP batching; rounded triangle counts; instancing separately included; not measured GPU or A16",
+  "entries": [
+    {
+      "camera": "r10_block_1",
+      "tier": "Low",
+      "after": {
+        "draws": 463,
+        "objects": 61,
+        "triangles": 338000,
+        "instancedDraws": 231,
+        "shadow": 79,
+        "instances": 151,
+        "instancedTriangles": 16000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 463,
+        "objects": 61,
+        "triangles": 338000,
+        "instancedDraws": 231,
+        "shadow": 79,
+        "instances": 151,
+        "instancedTriangles": 16000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "r10_block_2",
+      "tier": "Low",
+      "after": {
+        "draws": 383,
+        "objects": 51,
+        "triangles": 404000,
+        "instancedDraws": 309,
+        "shadow": 37,
+        "instances": 313,
+        "instancedTriangles": 19000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 383,
+        "objects": 51,
+        "triangles": 404000,
+        "instancedDraws": 309,
+        "shadow": 37,
+        "instances": 313,
+        "instancedTriangles": 19000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "r10_block_3",
+      "tier": "Low",
+      "after": {
+        "draws": 387,
+        "objects": 51,
+        "triangles": 395000,
+        "instancedDraws": 311,
+        "shadow": 59,
+        "instances": 337,
+        "instancedTriangles": 19000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 387,
+        "objects": 51,
+        "triangles": 395000,
+        "instancedDraws": 311,
+        "shadow": 59,
+        "instances": 337,
+        "instancedTriangles": 19000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "r10_block_4",
+      "tier": "Low",
+      "after": {
+        "draws": 353,
+        "objects": 48,
+        "triangles": 399000,
+        "instancedDraws": 296,
+        "shadow": 37,
+        "instances": 260,
+        "instancedTriangles": 15000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 353,
+        "objects": 48,
+        "triangles": 399000,
+        "instancedDraws": 296,
+        "shadow": 37,
+        "instances": 260,
+        "instancedTriangles": 15000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "r10_block_5",
+      "tier": "Low",
+      "after": {
+        "draws": 386,
+        "objects": 51,
+        "triangles": 423000,
+        "instancedDraws": 320,
+        "shadow": 71,
+        "instances": 392,
+        "instancedTriangles": 18000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 386,
+        "objects": 51,
+        "triangles": 423000,
+        "instancedDraws": 320,
+        "shadow": 71,
+        "instances": 392,
+        "instancedTriangles": 18000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "r10_fence_1",
+      "tier": "Low",
+      "after": {
+        "draws": 316,
+        "objects": 45,
+        "triangles": 300000,
+        "instancedDraws": 255,
+        "shadow": 82,
+        "instances": 224,
+        "instancedTriangles": 21000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 316,
+        "objects": 45,
+        "triangles": 300000,
+        "instancedDraws": 255,
+        "shadow": 82,
+        "instances": 224,
+        "instancedTriangles": 21000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "r10_fence_2",
+      "tier": "Low",
+      "after": {
+        "draws": 384,
+        "objects": 52,
+        "triangles": 310000,
+        "instancedDraws": 216,
+        "shadow": 39,
+        "instances": 161,
+        "instancedTriangles": 21000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 384,
+        "objects": 52,
+        "triangles": 310000,
+        "instancedDraws": 216,
+        "shadow": 39,
+        "instances": 161,
+        "instancedTriangles": 21000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "r10_fence_3",
+      "tier": "Low",
+      "after": {
+        "draws": 244,
+        "objects": 41,
+        "triangles": 364000,
+        "instancedDraws": 231,
+        "shadow": 37,
+        "instances": 167,
+        "instancedTriangles": 25000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 244,
+        "objects": 41,
+        "triangles": 364000,
+        "instancedDraws": 231,
+        "shadow": 37,
+        "instances": 167,
+        "instancedTriangles": 25000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "r10_hall_1",
+      "tier": "Low",
+      "after": {
+        "draws": 164,
+        "objects": 25,
+        "triangles": 191000,
+        "instancedDraws": 446,
+        "shadow": 64,
+        "instances": 239,
+        "instancedTriangles": 32000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 164,
+        "objects": 25,
+        "triangles": 191000,
+        "instancedDraws": 446,
+        "shadow": 64,
+        "instances": 239,
+        "instancedTriangles": 32000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "r10_hall_2",
+      "tier": "Low",
+      "after": {
+        "draws": 160,
+        "objects": 25,
+        "triangles": 184000,
+        "instancedDraws": 381,
+        "shadow": 51,
+        "instances": 260,
+        "instancedTriangles": 30000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 160,
+        "objects": 25,
+        "triangles": 184000,
+        "instancedDraws": 381,
+        "shadow": 51,
+        "instances": 260,
+        "instancedTriangles": 30000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "r10_hall_3",
+      "tier": "Low",
+      "after": {
+        "draws": 345,
+        "objects": 48,
+        "triangles": 215000,
+        "instancedDraws": 384,
+        "shadow": 34,
+        "instances": 243,
+        "instancedTriangles": 27000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 345,
+        "objects": 48,
+        "triangles": 215000,
+        "instancedDraws": 384,
+        "shadow": 34,
+        "instances": 243,
+        "instancedTriangles": 27000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "r10_hall_4",
+      "tier": "Low",
+      "after": {
+        "draws": 224,
+        "objects": 74,
+        "triangles": 181000,
+        "instancedDraws": 406,
+        "shadow": 49,
+        "instances": 202,
+        "instancedTriangles": 51000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 224,
+        "objects": 74,
+        "triangles": 181000,
+        "instancedDraws": 406,
+        "shadow": 49,
+        "instances": 202,
+        "instancedTriangles": 51000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "r10_house_1",
+      "tier": "Low",
+      "after": {
+        "draws": 154,
+        "objects": 38,
+        "triangles": 174000,
+        "instancedDraws": 140,
+        "shadow": 71,
+        "instances": 65,
+        "instancedTriangles": 36000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 154,
+        "objects": 38,
+        "triangles": 174000,
+        "instancedDraws": 140,
+        "shadow": 71,
+        "instances": 65,
+        "instancedTriangles": 36000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "r10_house_2",
+      "tier": "Low",
+      "after": {
+        "draws": 154,
+        "objects": 38,
+        "triangles": 189000,
+        "instancedDraws": 91,
+        "shadow": 59,
+        "instances": 40,
+        "instancedTriangles": 33000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 154,
+        "objects": 38,
+        "triangles": 189000,
+        "instancedDraws": 91,
+        "shadow": 59,
+        "instances": 40,
+        "instancedTriangles": 33000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "r10_office_1",
+      "tier": "Low",
+      "after": {
+        "draws": 114,
+        "objects": 20,
+        "triangles": 102000,
+        "instancedDraws": 178,
+        "shadow": 87,
+        "instances": 149,
+        "instancedTriangles": 14000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 114,
+        "objects": 20,
+        "triangles": 102000,
+        "instancedDraws": 178,
+        "shadow": 87,
+        "instances": 149,
+        "instancedTriangles": 14000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "r10_office_2",
+      "tier": "Low",
+      "after": {
+        "draws": 160,
+        "objects": 25,
+        "triangles": 184000,
+        "instancedDraws": 565,
+        "shadow": 65,
+        "instances": 349,
+        "instancedTriangles": 64000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 160,
+        "objects": 25,
+        "triangles": 184000,
+        "instancedDraws": 565,
+        "shadow": 65,
+        "instances": 349,
+        "instancedTriangles": 64000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "r10_shed_1",
+      "tier": "Low",
+      "after": {
+        "draws": 110,
+        "objects": 19,
+        "triangles": 100000,
+        "instancedDraws": 178,
+        "shadow": 108,
+        "instances": 172,
+        "instancedTriangles": 14000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 110,
+        "objects": 19,
+        "triangles": 100000,
+        "instancedDraws": 178,
+        "shadow": 108,
+        "instances": 172,
+        "instancedTriangles": 14000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "r10_shed_2",
+      "tier": "Low",
+      "after": {
+        "draws": 513,
+        "objects": 56,
+        "triangles": 329000,
+        "instancedDraws": 172,
+        "shadow": 59,
+        "instances": 115,
+        "instancedTriangles": 12000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 513,
+        "objects": 56,
+        "triangles": 329000,
+        "instancedDraws": 172,
+        "shadow": 59,
+        "instances": 115,
+        "instancedTriangles": 12000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "r10_shed_3",
+      "tier": "Low",
+      "after": {
+        "draws": 375,
+        "objects": 54,
+        "triangles": 272000,
+        "instancedDraws": 416,
+        "shadow": 39,
+        "instances": 695,
+        "instancedTriangles": 38000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 375,
+        "objects": 54,
+        "triangles": 272000,
+        "instancedDraws": 416,
+        "shadow": 39,
+        "instances": 695,
+        "instancedTriangles": 38000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-a-1259231227807789",
+      "tier": "Low",
+      "after": {
+        "draws": 371,
+        "objects": 47,
+        "triangles": 240000,
+        "instancedDraws": 115,
+        "shadow": 43,
+        "instances": 93,
+        "instancedTriangles": 10000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 371,
+        "objects": 47,
+        "triangles": 240000,
+        "instancedDraws": 115,
+        "shadow": 43,
+        "instances": 93,
+        "instancedTriangles": 10000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-a-1398898753813071",
+      "tier": "Low",
+      "after": {
+        "draws": 414,
+        "objects": 54,
+        "triangles": 300000,
+        "instancedDraws": 138,
+        "shadow": 55,
+        "instances": 132,
+        "instancedTriangles": 15000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 414,
+        "objects": 54,
+        "triangles": 300000,
+        "instancedDraws": 138,
+        "shadow": 55,
+        "instances": 132,
+        "instancedTriangles": 15000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-a-1406533339711789",
+      "tier": "Low",
+      "after": {
+        "draws": 380,
+        "objects": 45,
+        "triangles": 334000,
+        "instancedDraws": 226,
+        "shadow": 48,
+        "instances": 157,
+        "instancedTriangles": 16000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 380,
+        "objects": 45,
+        "triangles": 334000,
+        "instancedDraws": 226,
+        "shadow": 48,
+        "instances": 157,
+        "instancedTriangles": 16000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-a-149248627179406",
+      "tier": "Low",
+      "after": {
+        "draws": 465,
+        "objects": 53,
+        "triangles": 283000,
+        "instancedDraws": 275,
+        "shadow": 48,
+        "instances": 220,
+        "instancedTriangles": 20000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 465,
+        "objects": 53,
+        "triangles": 283000,
+        "instancedDraws": 275,
+        "shadow": 48,
+        "instances": 220,
+        "instancedTriangles": 20000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-a-177786140912399",
+      "tier": "Low",
+      "after": {
+        "draws": 403,
+        "objects": 47,
+        "triangles": 250000,
+        "instancedDraws": 341,
+        "shadow": 48,
+        "instances": 230,
+        "instancedTriangles": 23000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 403,
+        "objects": 47,
+        "triangles": 250000,
+        "instancedDraws": 341,
+        "shadow": 48,
+        "instances": 230,
+        "instancedTriangles": 23000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-a-178689077481862",
+      "tier": "Low",
+      "after": {
+        "draws": 387,
+        "objects": 45,
+        "triangles": 236000,
+        "instancedDraws": 434,
+        "shadow": 48,
+        "instances": 322,
+        "instancedTriangles": 31000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 387,
+        "objects": 45,
+        "triangles": 236000,
+        "instancedDraws": 434,
+        "shadow": 48,
+        "instances": 322,
+        "instancedTriangles": 31000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-a-201270605169291",
+      "tier": "Low",
+      "after": {
+        "draws": 446,
+        "objects": 57,
+        "triangles": 314000,
+        "instancedDraws": 137,
+        "shadow": 48,
+        "instances": 131,
+        "instancedTriangles": 15000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 446,
+        "objects": 57,
+        "triangles": 314000,
+        "instancedDraws": 137,
+        "shadow": 48,
+        "instances": 131,
+        "instancedTriangles": 15000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-a-223210302566110",
+      "tier": "Low",
+      "after": {
+        "draws": 468,
+        "objects": 55,
+        "triangles": 340000,
+        "instancedDraws": 238,
+        "shadow": 48,
+        "instances": 162,
+        "instancedTriangles": 17000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 468,
+        "objects": 55,
+        "triangles": 340000,
+        "instancedDraws": 238,
+        "shadow": 48,
+        "instances": 162,
+        "instancedTriangles": 17000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-a-2818555625124739",
+      "tier": "Low",
+      "after": {
+        "draws": 489,
+        "objects": 59,
+        "triangles": 312000,
+        "instancedDraws": 304,
+        "shadow": 48,
+        "instances": 238,
+        "instancedTriangles": 21000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 489,
+        "objects": 59,
+        "triangles": 312000,
+        "instancedDraws": 304,
+        "shadow": 48,
+        "instances": 238,
+        "instancedTriangles": 21000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-a-2948595898752384",
+      "tier": "Low",
+      "after": {
+        "draws": 388,
+        "objects": 52,
+        "triangles": 388000,
+        "instancedDraws": 337,
+        "shadow": 80,
+        "instances": 412,
+        "instancedTriangles": 28000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 388,
+        "objects": 52,
+        "triangles": 388000,
+        "instancedDraws": 337,
+        "shadow": 80,
+        "instances": 412,
+        "instancedTriangles": 28000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-a-303305168125936",
+      "tier": "Low",
+      "after": {
+        "draws": 384,
+        "objects": 47,
+        "triangles": 259000,
+        "instancedDraws": 369,
+        "shadow": 32,
+        "instances": 560,
+        "instancedTriangles": 37000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 384,
+        "objects": 47,
+        "triangles": 259000,
+        "instancedDraws": 369,
+        "shadow": 32,
+        "instances": 560,
+        "instancedTriangles": 37000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-a-309664504075286",
+      "tier": "Low",
+      "after": {
+        "draws": 468,
+        "objects": 55,
+        "triangles": 340000,
+        "instancedDraws": 212,
+        "shadow": 48,
+        "instances": 145,
+        "instancedTriangles": 14000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 468,
+        "objects": 55,
+        "triangles": 340000,
+        "instancedDraws": 212,
+        "shadow": 48,
+        "instances": 145,
+        "instancedTriangles": 14000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-a-320215796381417",
+      "tier": "Low",
+      "after": {
+        "draws": 423,
+        "objects": 53,
+        "triangles": 347000,
+        "instancedDraws": 373,
+        "shadow": 43,
+        "instances": 564,
+        "instancedTriangles": 37000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 423,
+        "objects": 53,
+        "triangles": 347000,
+        "instancedDraws": 373,
+        "shadow": 43,
+        "instances": 564,
+        "instancedTriangles": 37000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-a-320326319617139",
+      "tier": "Low",
+      "after": {
+        "draws": 458,
+        "objects": 58,
+        "triangles": 317000,
+        "instancedDraws": 146,
+        "shadow": 62,
+        "instances": 142,
+        "instancedTriangles": 14000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 458,
+        "objects": 58,
+        "triangles": 317000,
+        "instancedDraws": 146,
+        "shadow": 62,
+        "instances": 142,
+        "instancedTriangles": 14000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-a-3970163613102941",
+      "tier": "Low",
+      "after": {
+        "draws": 459,
+        "objects": 56,
+        "triangles": 304000,
+        "instancedDraws": 250,
+        "shadow": 48,
+        "instances": 190,
+        "instancedTriangles": 19000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 459,
+        "objects": 56,
+        "triangles": 304000,
+        "instancedDraws": 250,
+        "shadow": 48,
+        "instances": 190,
+        "instancedTriangles": 19000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-a-454716650857984",
+      "tier": "Low",
+      "after": {
+        "draws": 445,
+        "objects": 51,
+        "triangles": 338000,
+        "instancedDraws": 368,
+        "shadow": 43,
+        "instances": 685,
+        "instancedTriangles": 43000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 445,
+        "objects": 51,
+        "triangles": 338000,
+        "instancedDraws": 368,
+        "shadow": 43,
+        "instances": 685,
+        "instancedTriangles": 43000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-a-482392746429891",
+      "tier": "Low",
+      "after": {
+        "draws": 426,
+        "objects": 53,
+        "triangles": 246000,
+        "instancedDraws": 143,
+        "shadow": 60,
+        "instances": 138,
+        "instancedTriangles": 16000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 426,
+        "objects": 53,
+        "triangles": 246000,
+        "instancedDraws": 143,
+        "shadow": 60,
+        "instances": 138,
+        "instancedTriangles": 16000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-a-500263111404933",
+      "tier": "Low",
+      "after": {
+        "draws": 425,
+        "objects": 52,
+        "triangles": 246000,
+        "instancedDraws": 146,
+        "shadow": 60,
+        "instances": 146,
+        "instancedTriangles": 16000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 425,
+        "objects": 52,
+        "triangles": 246000,
+        "instancedDraws": 146,
+        "shadow": 60,
+        "instances": 146,
+        "instancedTriangles": 16000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-a-504348097385466",
+      "tier": "Low",
+      "after": {
+        "draws": 453,
+        "objects": 53,
+        "triangles": 291000,
+        "instancedDraws": 276,
+        "shadow": 48,
+        "instances": 194,
+        "instancedTriangles": 18000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 453,
+        "objects": 53,
+        "triangles": 291000,
+        "instancedDraws": 276,
+        "shadow": 48,
+        "instances": 194,
+        "instancedTriangles": 18000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-a-751431972202262",
+      "tier": "Low",
+      "after": {
+        "draws": 337,
+        "objects": 42,
+        "triangles": 177000,
+        "instancedDraws": 115,
+        "shadow": 32,
+        "instances": 95,
+        "instancedTriangles": 10000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 337,
+        "objects": 42,
+        "triangles": 177000,
+        "instancedDraws": 115,
+        "shadow": 32,
+        "instances": 95,
+        "instancedTriangles": 10000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-a-cm109685822",
+      "tier": "Low",
+      "after": {
+        "draws": 230,
+        "objects": 67,
+        "triangles": 248000,
+        "instancedDraws": 526,
+        "shadow": 51,
+        "instances": 243,
+        "instancedTriangles": 54000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 230,
+        "objects": 67,
+        "triangles": 248000,
+        "instancedDraws": 526,
+        "shadow": 51,
+        "instances": 243,
+        "instancedTriangles": 54000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-a-cm92458760",
+      "tier": "Low",
+      "after": {
+        "draws": 191,
+        "objects": 31,
+        "triangles": 234000,
+        "instancedDraws": 418,
+        "shadow": 51,
+        "instances": 305,
+        "instancedTriangles": 33000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 191,
+        "objects": 31,
+        "triangles": 234000,
+        "instancedDraws": 418,
+        "shadow": 51,
+        "instances": 305,
+        "instancedTriangles": 33000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-b-150280503737744",
+      "tier": "Low",
+      "after": {
+        "draws": 482,
+        "objects": 63,
+        "triangles": 578000,
+        "instancedDraws": 255,
+        "shadow": 39,
+        "instances": 177,
+        "instancedTriangles": 26000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 482,
+        "objects": 63,
+        "triangles": 578000,
+        "instancedDraws": 255,
+        "shadow": 39,
+        "instances": 177,
+        "instancedTriangles": 26000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-b-1528935774382039",
+      "tier": "Low",
+      "after": {
+        "draws": 433,
+        "objects": 57,
+        "triangles": 369000,
+        "instancedDraws": 274,
+        "shadow": 45,
+        "instances": 479,
+        "instancedTriangles": 46000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 433,
+        "objects": 57,
+        "triangles": 369000,
+        "instancedDraws": 274,
+        "shadow": 45,
+        "instances": 479,
+        "instancedTriangles": 46000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-b-1801374876712141",
+      "tier": "Low",
+      "after": {
+        "draws": 201,
+        "objects": 39,
+        "triangles": 204000,
+        "instancedDraws": 157,
+        "shadow": 71,
+        "instances": 137,
+        "instancedTriangles": 35000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 201,
+        "objects": 39,
+        "triangles": 204000,
+        "instancedDraws": 157,
+        "shadow": 71,
+        "instances": 137,
+        "instancedTriangles": 35000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-b-182011943700132",
+      "tier": "Low",
+      "after": {
+        "draws": 201,
+        "objects": 40,
+        "triangles": 205000,
+        "instancedDraws": 157,
+        "shadow": 130,
+        "instances": 136,
+        "instancedTriangles": 34000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 201,
+        "objects": 40,
+        "triangles": 205000,
+        "instancedDraws": 157,
+        "shadow": 130,
+        "instances": 136,
+        "instancedTriangles": 34000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-b-209622370971977",
+      "tier": "Low",
+      "after": {
+        "draws": 268,
+        "objects": 41,
+        "triangles": 249000,
+        "instancedDraws": 200,
+        "shadow": 45,
+        "instances": 152,
+        "instancedTriangles": 16000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 268,
+        "objects": 41,
+        "triangles": 249000,
+        "instancedDraws": 200,
+        "shadow": 45,
+        "instances": 152,
+        "instancedTriangles": 16000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-b-2279538078845158",
+      "tier": "Low",
+      "after": {
+        "draws": 302,
+        "objects": 47,
+        "triangles": 258000,
+        "instancedDraws": 177,
+        "shadow": 41,
+        "instances": 153,
+        "instancedTriangles": 31000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 302,
+        "objects": 47,
+        "triangles": 258000,
+        "instancedDraws": 177,
+        "shadow": 41,
+        "instances": 153,
+        "instancedTriangles": 31000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-b-275528677534382",
+      "tier": "Low",
+      "after": {
+        "draws": 269,
+        "objects": 46,
+        "triangles": 232000,
+        "instancedDraws": 211,
+        "shadow": 36,
+        "instances": 203,
+        "instancedTriangles": 34000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 269,
+        "objects": 46,
+        "triangles": 232000,
+        "instancedDraws": 211,
+        "shadow": 36,
+        "instances": 203,
+        "instancedTriangles": 34000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-b-297817221966185",
+      "tier": "Low",
+      "after": {
+        "draws": 460,
+        "objects": 62,
+        "triangles": 548000,
+        "instancedDraws": 253,
+        "shadow": 34,
+        "instances": 189,
+        "instancedTriangles": 35000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 460,
+        "objects": 62,
+        "triangles": 548000,
+        "instancedDraws": 253,
+        "shadow": 34,
+        "instances": 189,
+        "instancedTriangles": 35000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-b-326454015490067",
+      "tier": "Low",
+      "after": {
+        "draws": 278,
+        "objects": 46,
+        "triangles": 256000,
+        "instancedDraws": 135,
+        "shadow": 45,
+        "instances": 84,
+        "instancedTriangles": 24000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 278,
+        "objects": 46,
+        "triangles": 256000,
+        "instancedDraws": 135,
+        "shadow": 45,
+        "instances": 84,
+        "instancedTriangles": 24000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-b-3281350541967811",
+      "tier": "Low",
+      "after": {
+        "draws": 376,
+        "objects": 53,
+        "triangles": 389000,
+        "instancedDraws": 266,
+        "shadow": 100,
+        "instances": 170,
+        "instancedTriangles": 18000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 376,
+        "objects": 53,
+        "triangles": 389000,
+        "instancedDraws": 266,
+        "shadow": 100,
+        "instances": 170,
+        "instancedTriangles": 18000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-b-339463879238809",
+      "tier": "Low",
+      "after": {
+        "draws": 330,
+        "objects": 57,
+        "triangles": 348000,
+        "instancedDraws": 125,
+        "shadow": 73,
+        "instances": 100,
+        "instancedTriangles": 19000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 330,
+        "objects": 57,
+        "triangles": 348000,
+        "instancedDraws": 125,
+        "shadow": 73,
+        "instances": 100,
+        "instancedTriangles": 19000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-b-3678296072299092",
+      "tier": "Low",
+      "after": {
+        "draws": 275,
+        "objects": 43,
+        "triangles": 249000,
+        "instancedDraws": 199,
+        "shadow": 34,
+        "instances": 436,
+        "instancedTriangles": 34000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 275,
+        "objects": 43,
+        "triangles": 249000,
+        "instancedDraws": 199,
+        "shadow": 34,
+        "instances": 436,
+        "instancedTriangles": 34000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-b-381800493259507",
+      "tier": "Low",
+      "after": {
+        "draws": 366,
+        "objects": 55,
+        "triangles": 355000,
+        "instancedDraws": 169,
+        "shadow": 43,
+        "instances": 142,
+        "instancedTriangles": 32000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 366,
+        "objects": 55,
+        "triangles": 355000,
+        "instancedDraws": 169,
+        "shadow": 43,
+        "instances": 142,
+        "instancedTriangles": 32000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-b-4312632558767412",
+      "tier": "Low",
+      "after": {
+        "draws": 248,
+        "objects": 40,
+        "triangles": 218000,
+        "instancedDraws": 144,
+        "shadow": 120,
+        "instances": 163,
+        "instancedTriangles": 17000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 248,
+        "objects": 40,
+        "triangles": 218000,
+        "instancedDraws": 144,
+        "shadow": 120,
+        "instances": 163,
+        "instancedTriangles": 17000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-b-468026894483428",
+      "tier": "Low",
+      "after": {
+        "draws": 254,
+        "objects": 42,
+        "triangles": 224000,
+        "instancedDraws": 162,
+        "shadow": 70,
+        "instances": 162,
+        "instancedTriangles": 15000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 254,
+        "objects": 42,
+        "triangles": 224000,
+        "instancedDraws": 162,
+        "shadow": 70,
+        "instances": 162,
+        "instancedTriangles": 15000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-b-494288258686575",
+      "tier": "Low",
+      "after": {
+        "draws": 218,
+        "objects": 35,
+        "triangles": 294000,
+        "instancedDraws": 101,
+        "shadow": 142,
+        "instances": 104,
+        "instancedTriangles": 13000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 218,
+        "objects": 35,
+        "triangles": 294000,
+        "instancedDraws": 101,
+        "shadow": 142,
+        "instances": 104,
+        "instancedTriangles": 13000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-b-810525063224609",
+      "tier": "Low",
+      "after": {
+        "draws": 250,
+        "objects": 38,
+        "triangles": 244000,
+        "instancedDraws": 176,
+        "shadow": 45,
+        "instances": 183,
+        "instancedTriangles": 18000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 250,
+        "objects": 38,
+        "triangles": 244000,
+        "instancedDraws": 176,
+        "shadow": 45,
+        "instances": 183,
+        "instancedTriangles": 18000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-b-810896133189484",
+      "tier": "Low",
+      "after": {
+        "draws": 233,
+        "objects": 40,
+        "triangles": 200000,
+        "instancedDraws": 220,
+        "shadow": 45,
+        "instances": 504,
+        "instancedTriangles": 37000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 233,
+        "objects": 40,
+        "triangles": 200000,
+        "instancedDraws": 220,
+        "shadow": 45,
+        "instances": 504,
+        "instancedTriangles": 37000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-b-837235577143499",
+      "tier": "Low",
+      "after": {
+        "draws": 266,
+        "objects": 44,
+        "triangles": 247000,
+        "instancedDraws": 231,
+        "shadow": 68,
+        "instances": 180,
+        "instancedTriangles": 32000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 266,
+        "objects": 44,
+        "triangles": 247000,
+        "instancedDraws": 231,
+        "shadow": 68,
+        "instances": 180,
+        "instancedTriangles": 32000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-b-962702164479831",
+      "tier": "Low",
+      "after": {
+        "draws": 260,
+        "objects": 46,
+        "triangles": 221000,
+        "instancedDraws": 265,
+        "shadow": 45,
+        "instances": 479,
+        "instancedTriangles": 45000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 260,
+        "objects": 46,
+        "triangles": 221000,
+        "instancedDraws": 265,
+        "shadow": 45,
+        "instances": 479,
+        "instancedTriangles": 45000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "r10_block_1",
+      "tier": "High",
+      "after": {
+        "draws": 605,
+        "objects": 93,
+        "triangles": 1743000,
+        "instancedDraws": 355,
+        "shadow": 342,
+        "instances": 457,
+        "instancedTriangles": 34000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 605,
+        "objects": 93,
+        "triangles": 1743000,
+        "instancedDraws": 355,
+        "shadow": 342,
+        "instances": 457,
+        "instancedTriangles": 34000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "r10_block_2",
+      "tier": "High",
+      "after": {
+        "draws": 523,
+        "objects": 86,
+        "triangles": 1722000,
+        "instancedDraws": 431,
+        "shadow": 300,
+        "instances": 603,
+        "instancedTriangles": 40000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 523,
+        "objects": 86,
+        "triangles": 1722000,
+        "instancedDraws": 431,
+        "shadow": 300,
+        "instances": 603,
+        "instancedTriangles": 40000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "r10_block_3",
+      "tier": "High",
+      "after": {
+        "draws": 528,
+        "objects": 85,
+        "triangles": 1486000,
+        "instancedDraws": 449,
+        "shadow": 300,
+        "instances": 625,
+        "instancedTriangles": 45000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 528,
+        "objects": 85,
+        "triangles": 1486000,
+        "instancedDraws": 449,
+        "shadow": 300,
+        "instances": 625,
+        "instancedTriangles": 45000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "r10_block_4",
+      "tier": "High",
+      "after": {
+        "draws": 486,
+        "objects": 80,
+        "triangles": 1584000,
+        "instancedDraws": 396,
+        "shadow": 213,
+        "instances": 551,
+        "instancedTriangles": 34000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 486,
+        "objects": 80,
+        "triangles": 1584000,
+        "instancedDraws": 396,
+        "shadow": 213,
+        "instances": 551,
+        "instancedTriangles": 34000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "r10_block_5",
+      "tier": "High",
+      "after": {
+        "draws": 522,
+        "objects": 85,
+        "triangles": 1517000,
+        "instancedDraws": 364,
+        "shadow": 213,
+        "instances": 840,
+        "instancedTriangles": 36000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 522,
+        "objects": 85,
+        "triangles": 1517000,
+        "instancedDraws": 364,
+        "shadow": 213,
+        "instances": 840,
+        "instancedTriangles": 36000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "r10_fence_1",
+      "tier": "High",
+      "after": {
+        "draws": 416,
+        "objects": 78,
+        "triangles": 1459000,
+        "instancedDraws": 387,
+        "shadow": 342,
+        "instances": 839,
+        "instancedTriangles": 45000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 416,
+        "objects": 78,
+        "triangles": 1459000,
+        "instancedDraws": 387,
+        "shadow": 342,
+        "instances": 839,
+        "instancedTriangles": 45000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "r10_fence_2",
+      "tier": "High",
+      "after": {
+        "draws": 884,
+        "objects": 177,
+        "triangles": 1684000,
+        "instancedDraws": 474,
+        "shadow": 342,
+        "instances": 675,
+        "instancedTriangles": 72000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 884,
+        "objects": 177,
+        "triangles": 1684000,
+        "instancedDraws": 474,
+        "shadow": 342,
+        "instances": 675,
+        "instancedTriangles": 72000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "r10_fence_3",
+      "tier": "High",
+      "after": {
+        "draws": 517,
+        "objects": 130,
+        "triangles": 1305000,
+        "instancedDraws": 397,
+        "shadow": 204,
+        "instances": 776,
+        "instancedTriangles": 83000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 517,
+        "objects": 130,
+        "triangles": 1305000,
+        "instancedDraws": 397,
+        "shadow": 204,
+        "instances": 776,
+        "instancedTriangles": 83000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "r10_hall_1",
+      "tier": "High",
+      "after": {
+        "draws": 205,
+        "objects": 31,
+        "triangles": 594000,
+        "instancedDraws": 624,
+        "shadow": 297,
+        "instances": 452,
+        "instancedTriangles": 94000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 205,
+        "objects": 31,
+        "triangles": 594000,
+        "instancedDraws": 624,
+        "shadow": 297,
+        "instances": 452,
+        "instancedTriangles": 94000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "r10_hall_2",
+      "tier": "High",
+      "after": {
+        "draws": 201,
+        "objects": 28,
+        "triangles": 631000,
+        "instancedDraws": 537,
+        "shadow": 249,
+        "instances": 368,
+        "instancedTriangles": 69000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 201,
+        "objects": 28,
+        "triangles": 631000,
+        "instancedDraws": 537,
+        "shadow": 249,
+        "instances": 368,
+        "instancedTriangles": 69000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "r10_hall_3",
+      "tier": "High",
+      "after": {
+        "draws": 949,
+        "objects": 131,
+        "triangles": 1464000,
+        "instancedDraws": 488,
+        "shadow": 417,
+        "instances": 620,
+        "instancedTriangles": 67000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 949,
+        "objects": 131,
+        "triangles": 1464000,
+        "instancedDraws": 488,
+        "shadow": 417,
+        "instances": 620,
+        "instancedTriangles": 67000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "r10_hall_4",
+      "tier": "High",
+      "after": {
+        "draws": 365,
+        "objects": 113,
+        "triangles": 915000,
+        "instancedDraws": 578,
+        "shadow": 486,
+        "instances": 512,
+        "instancedTriangles": 126000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 365,
+        "objects": 113,
+        "triangles": 915000,
+        "instancedDraws": 578,
+        "shadow": 486,
+        "instances": 512,
+        "instancedTriangles": 126000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "r10_house_1",
+      "tier": "High",
+      "after": {
+        "draws": 253,
+        "objects": 70,
+        "triangles": 768000,
+        "instancedDraws": 201,
+        "shadow": 489,
+        "instances": 534,
+        "instancedTriangles": 65000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 253,
+        "objects": 70,
+        "triangles": 768000,
+        "instancedDraws": 201,
+        "shadow": 489,
+        "instances": 534,
+        "instancedTriangles": 65000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "r10_house_2",
+      "tier": "High",
+      "after": {
+        "draws": 254,
+        "objects": 71,
+        "triangles": 796000,
+        "instancedDraws": 180,
+        "shadow": 213,
+        "instances": 676,
+        "instancedTriangles": 62000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 254,
+        "objects": 71,
+        "triangles": 796000,
+        "instancedDraws": 180,
+        "shadow": 213,
+        "instances": 676,
+        "instancedTriangles": 62000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "r10_office_1",
+      "tier": "High",
+      "after": {
+        "draws": 152,
+        "objects": 21,
+        "triangles": 355000,
+        "instancedDraws": 207,
+        "shadow": 504,
+        "instances": 679,
+        "instancedTriangles": 38000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 152,
+        "objects": 21,
+        "triangles": 355000,
+        "instancedDraws": 207,
+        "shadow": 504,
+        "instances": 679,
+        "instancedTriangles": 38000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "r10_office_2",
+      "tier": "High",
+      "after": {
+        "draws": 201,
+        "objects": 28,
+        "triangles": 631000,
+        "instancedDraws": 841,
+        "shadow": 321,
+        "instances": 454,
+        "instancedTriangles": 190000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 201,
+        "objects": 28,
+        "triangles": 631000,
+        "instancedDraws": 841,
+        "shadow": 321,
+        "instances": 454,
+        "instancedTriangles": 190000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "r10_shed_1",
+      "tier": "High",
+      "after": {
+        "draws": 144,
+        "objects": 19,
+        "triangles": 352000,
+        "instancedDraws": 195,
+        "shadow": 480,
+        "instances": 895,
+        "instancedTriangles": 35000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 144,
+        "objects": 19,
+        "triangles": 352000,
+        "instancedDraws": 195,
+        "shadow": 480,
+        "instances": 895,
+        "instancedTriangles": 35000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "r10_shed_2",
+      "tier": "High",
+      "after": {
+        "draws": 1070,
+        "objects": 178,
+        "triangles": 1586000,
+        "instancedDraws": 349,
+        "shadow": 213,
+        "instances": 888,
+        "instancedTriangles": 43000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 1070,
+        "objects": 178,
+        "triangles": 1586000,
+        "instancedDraws": 349,
+        "shadow": 213,
+        "instances": 888,
+        "instancedTriangles": 43000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "r10_shed_3",
+      "tier": "High",
+      "after": {
+        "draws": 578,
+        "objects": 86,
+        "triangles": 1181000,
+        "instancedDraws": 638,
+        "shadow": 321,
+        "instances": 1194,
+        "instancedTriangles": 72000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 578,
+        "objects": 86,
+        "triangles": 1181000,
+        "instancedDraws": 638,
+        "shadow": 321,
+        "instances": 1194,
+        "instancedTriangles": 72000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-a-1259231227807789",
+      "tier": "High",
+      "after": {
+        "draws": 611,
+        "objects": 85,
+        "triangles": 966000,
+        "instancedDraws": 163,
+        "shadow": 363,
+        "instances": 362,
+        "instancedTriangles": 24000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 611,
+        "objects": 85,
+        "triangles": 966000,
+        "instancedDraws": 163,
+        "shadow": 363,
+        "instances": 362,
+        "instancedTriangles": 24000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-a-1398898753813071",
+      "tier": "High",
+      "after": {
+        "draws": 647,
+        "objects": 91,
+        "triangles": 1125000,
+        "instancedDraws": 213,
+        "shadow": 498,
+        "instances": 364,
+        "instancedTriangles": 27000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 647,
+        "objects": 91,
+        "triangles": 1125000,
+        "instancedDraws": 213,
+        "shadow": 498,
+        "instances": 364,
+        "instancedTriangles": 27000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-a-1406533339711789",
+      "tier": "High",
+      "after": {
+        "draws": 828,
+        "objects": 120,
+        "triangles": 1608000,
+        "instancedDraws": 311,
+        "shadow": 498,
+        "instances": 423,
+        "instancedTriangles": 46000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 828,
+        "objects": 120,
+        "triangles": 1608000,
+        "instancedDraws": 311,
+        "shadow": 498,
+        "instances": 423,
+        "instancedTriangles": 46000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-a-149248627179406",
+      "tier": "High",
+      "after": {
+        "draws": 942,
+        "objects": 124,
+        "triangles": 1313000,
+        "instancedDraws": 345,
+        "shadow": 498,
+        "instances": 527,
+        "instancedTriangles": 49000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 942,
+        "objects": 124,
+        "triangles": 1313000,
+        "instancedDraws": 345,
+        "shadow": 498,
+        "instances": 527,
+        "instancedTriangles": 49000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-a-177786140912399",
+      "tier": "High",
+      "after": {
+        "draws": 775,
+        "objects": 114,
+        "triangles": 1049000,
+        "instancedDraws": 554,
+        "shadow": 498,
+        "instances": 620,
+        "instancedTriangles": 83000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 775,
+        "objects": 114,
+        "triangles": 1049000,
+        "instancedDraws": 554,
+        "shadow": 498,
+        "instances": 620,
+        "instancedTriangles": 83000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-a-178689077481862",
+      "tier": "High",
+      "after": {
+        "draws": 738,
+        "objects": 111,
+        "triangles": 1028000,
+        "instancedDraws": 678,
+        "shadow": 498,
+        "instances": 735,
+        "instancedTriangles": 95000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 738,
+        "objects": 111,
+        "triangles": 1028000,
+        "instancedDraws": 678,
+        "shadow": 498,
+        "instances": 735,
+        "instancedTriangles": 95000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-a-201270605169291",
+      "tier": "High",
+      "after": {
+        "draws": 712,
+        "objects": 98,
+        "triangles": 1219000,
+        "instancedDraws": 215,
+        "shadow": 498,
+        "instances": 380,
+        "instancedTriangles": 29000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 712,
+        "objects": 98,
+        "triangles": 1219000,
+        "instancedDraws": 215,
+        "shadow": 498,
+        "instances": 380,
+        "instancedTriangles": 29000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-a-223210302566110",
+      "tier": "High",
+      "after": {
+        "draws": 1009,
+        "objects": 144,
+        "triangles": 1809000,
+        "instancedDraws": 337,
+        "shadow": 498,
+        "instances": 473,
+        "instancedTriangles": 53000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 1009,
+        "objects": 144,
+        "triangles": 1809000,
+        "instancedDraws": 337,
+        "shadow": 498,
+        "instances": 473,
+        "instancedTriangles": 53000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-a-2818555625124739",
+      "tier": "High",
+      "after": {
+        "draws": 963,
+        "objects": 128,
+        "triangles": 1440000,
+        "instancedDraws": 365,
+        "shadow": 498,
+        "instances": 552,
+        "instancedTriangles": 45000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 963,
+        "objects": 128,
+        "triangles": 1440000,
+        "instancedDraws": 365,
+        "shadow": 498,
+        "instances": 552,
+        "instancedTriangles": 45000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-a-2948595898752384",
+      "tier": "High",
+      "after": {
+        "draws": 846,
+        "objects": 123,
+        "triangles": 2078000,
+        "instancedDraws": 422,
+        "shadow": 477,
+        "instances": 666,
+        "instancedTriangles": 60000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 846,
+        "objects": 123,
+        "triangles": 2078000,
+        "instancedDraws": 422,
+        "shadow": 477,
+        "instances": 666,
+        "instancedTriangles": 60000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-a-303305168125936",
+      "tier": "High",
+      "after": {
+        "draws": 922,
+        "objects": 136,
+        "triangles": 1636000,
+        "instancedDraws": 425,
+        "shadow": 240,
+        "instances": 855,
+        "instancedTriangles": 63000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 922,
+        "objects": 136,
+        "triangles": 1636000,
+        "instancedDraws": 425,
+        "shadow": 240,
+        "instances": 855,
+        "instancedTriangles": 63000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-a-309664504075286",
+      "tier": "High",
+      "after": {
+        "draws": 1014,
+        "objects": 145,
+        "triangles": 1812000,
+        "instancedDraws": 310,
+        "shadow": 498,
+        "instances": 458,
+        "instancedTriangles": 53000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 1014,
+        "objects": 145,
+        "triangles": 1812000,
+        "instancedDraws": 310,
+        "shadow": 498,
+        "instances": 458,
+        "instancedTriangles": 53000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-a-320215796381417",
+      "tier": "High",
+      "after": {
+        "draws": 960,
+        "objects": 141,
+        "triangles": 1819000,
+        "instancedDraws": 431,
+        "shadow": 435,
+        "instances": 871,
+        "instancedTriangles": 65000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 960,
+        "objects": 141,
+        "triangles": 1819000,
+        "instancedDraws": 431,
+        "shadow": 435,
+        "instances": 871,
+        "instancedTriangles": 65000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-a-320326319617139",
+      "tier": "High",
+      "after": {
+        "draws": 731,
+        "objects": 101,
+        "triangles": 1233000,
+        "instancedDraws": 218,
+        "shadow": 477,
+        "instances": 397,
+        "instancedTriangles": 32000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 731,
+        "objects": 101,
+        "triangles": 1233000,
+        "instancedDraws": 218,
+        "shadow": 477,
+        "instances": 397,
+        "instancedTriangles": 32000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-a-3970163613102941",
+      "tier": "High",
+      "after": {
+        "draws": 814,
+        "objects": 111,
+        "triangles": 1302000,
+        "instancedDraws": 331,
+        "shadow": 498,
+        "instances": 483,
+        "instancedTriangles": 37000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 814,
+        "objects": 111,
+        "triangles": 1302000,
+        "instancedDraws": 331,
+        "shadow": 498,
+        "instances": 483,
+        "instancedTriangles": 37000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-a-454716650857984",
+      "tier": "High",
+      "after": {
+        "draws": 954,
+        "objects": 136,
+        "triangles": 1701000,
+        "instancedDraws": 436,
+        "shadow": 477,
+        "instances": 980,
+        "instancedTriangles": 77000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 954,
+        "objects": 136,
+        "triangles": 1701000,
+        "instancedDraws": 436,
+        "shadow": 477,
+        "instances": 980,
+        "instancedTriangles": 77000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-a-482392746429891",
+      "tier": "High",
+      "after": {
+        "draws": 704,
+        "objects": 95,
+        "triangles": 1086000,
+        "instancedDraws": 221,
+        "shadow": 477,
+        "instances": 406,
+        "instancedTriangles": 34000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 704,
+        "objects": 95,
+        "triangles": 1086000,
+        "instancedDraws": 221,
+        "shadow": 477,
+        "instances": 406,
+        "instancedTriangles": 34000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-a-500263111404933",
+      "tier": "High",
+      "after": {
+        "draws": 702,
+        "objects": 93,
+        "triangles": 1084000,
+        "instancedDraws": 223,
+        "shadow": 477,
+        "instances": 410,
+        "instancedTriangles": 38000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 702,
+        "objects": 93,
+        "triangles": 1084000,
+        "instancedDraws": 223,
+        "shadow": 477,
+        "instances": 410,
+        "instancedTriangles": 38000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-a-504348097385466",
+      "tier": "High",
+      "after": {
+        "draws": 944,
+        "objects": 132,
+        "triangles": 1352000,
+        "instancedDraws": 370,
+        "shadow": 498,
+        "instances": 521,
+        "instancedTriangles": 54000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 944,
+        "objects": 132,
+        "triangles": 1352000,
+        "instancedDraws": 370,
+        "shadow": 498,
+        "instances": 521,
+        "instancedTriangles": 54000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-a-751431972202262",
+      "tier": "High",
+      "after": {
+        "draws": 584,
+        "objects": 80,
+        "triangles": 851000,
+        "instancedDraws": 163,
+        "shadow": 240,
+        "instances": 385,
+        "instancedTriangles": 23000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 584,
+        "objects": 80,
+        "triangles": 851000,
+        "instancedDraws": 163,
+        "shadow": 240,
+        "instances": 385,
+        "instancedTriangles": 23000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-a-cm109685822",
+      "tier": "High",
+      "after": {
+        "draws": 279,
+        "objects": 73,
+        "triangles": 812000,
+        "instancedDraws": 719,
+        "shadow": 249,
+        "instances": 419,
+        "instancedTriangles": 141000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 279,
+        "objects": 73,
+        "triangles": 812000,
+        "instancedDraws": 719,
+        "shadow": 249,
+        "instances": 419,
+        "instancedTriangles": 141000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-a-cm92458760",
+      "tier": "High",
+      "after": {
+        "draws": 226,
+        "objects": 33,
+        "triangles": 717000,
+        "instancedDraws": 613,
+        "shadow": 345,
+        "instances": 424,
+        "instancedTriangles": 91000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 226,
+        "objects": 33,
+        "triangles": 717000,
+        "instancedDraws": 613,
+        "shadow": 345,
+        "instances": 424,
+        "instancedTriangles": 91000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-b-150280503737744",
+      "tier": "High",
+      "after": {
+        "draws": 897,
+        "objects": 128,
+        "triangles": 2286000,
+        "instancedDraws": 332,
+        "shadow": 342,
+        "instances": 404,
+        "instancedTriangles": 48000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 897,
+        "objects": 128,
+        "triangles": 2286000,
+        "instancedDraws": 332,
+        "shadow": 342,
+        "instances": 404,
+        "instancedTriangles": 48000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-b-1528935774382039",
+      "tier": "High",
+      "after": {
+        "draws": 926,
+        "objects": 167,
+        "triangles": 1996000,
+        "instancedDraws": 385,
+        "shadow": 135,
+        "instances": 939,
+        "instancedTriangles": 81000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 926,
+        "objects": 167,
+        "triangles": 1996000,
+        "instancedDraws": 385,
+        "shadow": 135,
+        "instances": 939,
+        "instancedTriangles": 81000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-b-1801374876712141",
+      "tier": "High",
+      "after": {
+        "draws": 276,
+        "objects": 63,
+        "triangles": 715000,
+        "instancedDraws": 166,
+        "shadow": 489,
+        "instances": 800,
+        "instancedTriangles": 40000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 276,
+        "objects": 63,
+        "triangles": 715000,
+        "instancedDraws": 166,
+        "shadow": 489,
+        "instances": 800,
+        "instancedTriangles": 40000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-b-182011943700132",
+      "tier": "High",
+      "after": {
+        "draws": 281,
+        "objects": 66,
+        "triangles": 742000,
+        "instancedDraws": 205,
+        "shadow": 489,
+        "instances": 776,
+        "instancedTriangles": 43000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 281,
+        "objects": 66,
+        "triangles": 742000,
+        "instancedDraws": 205,
+        "shadow": 489,
+        "instances": 776,
+        "instancedTriangles": 43000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-b-209622370971977",
+      "tier": "High",
+      "after": {
+        "draws": 376,
+        "objects": 68,
+        "triangles": 976000,
+        "instancedDraws": 286,
+        "shadow": 426,
+        "instances": 459,
+        "instancedTriangles": 34000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 376,
+        "objects": 68,
+        "triangles": 976000,
+        "instancedDraws": 286,
+        "shadow": 426,
+        "instances": 459,
+        "instancedTriangles": 34000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-b-2279538078845158",
+      "tier": "High",
+      "after": {
+        "draws": 471,
+        "objects": 92,
+        "triangles": 1045000,
+        "instancedDraws": 238,
+        "shadow": 342,
+        "instances": 838,
+        "instancedTriangles": 65000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 471,
+        "objects": 92,
+        "triangles": 1045000,
+        "instancedDraws": 238,
+        "shadow": 342,
+        "instances": 838,
+        "instancedTriangles": 65000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-b-275528677534382",
+      "tier": "High",
+      "after": {
+        "draws": 461,
+        "objects": 93,
+        "triangles": 1053000,
+        "instancedDraws": 303,
+        "shadow": 342,
+        "instances": 1086,
+        "instancedTriangles": 57000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 461,
+        "objects": 93,
+        "triangles": 1053000,
+        "instancedDraws": 303,
+        "shadow": 342,
+        "instances": 1086,
+        "instancedTriangles": 57000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-b-297817221966185",
+      "tier": "High",
+      "after": {
+        "draws": 934,
+        "objects": 170,
+        "triangles": 2181000,
+        "instancedDraws": 359,
+        "shadow": 375,
+        "instances": 449,
+        "instancedTriangles": 55000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 934,
+        "objects": 170,
+        "triangles": 2181000,
+        "instancedDraws": 359,
+        "shadow": 375,
+        "instances": 449,
+        "instancedTriangles": 55000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-b-326454015490067",
+      "tier": "High",
+      "after": {
+        "draws": 431,
+        "objects": 84,
+        "triangles": 966000,
+        "instancedDraws": 257,
+        "shadow": 219,
+        "instances": 573,
+        "instancedTriangles": 38000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 431,
+        "objects": 84,
+        "triangles": 966000,
+        "instancedDraws": 257,
+        "shadow": 219,
+        "instances": 573,
+        "instancedTriangles": 38000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-b-3281350541967811",
+      "tier": "High",
+      "after": {
+        "draws": 817,
+        "objects": 154,
+        "triangles": 1901000,
+        "instancedDraws": 341,
+        "shadow": 342,
+        "instances": 429,
+        "instancedTriangles": 36000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 817,
+        "objects": 154,
+        "triangles": 1901000,
+        "instancedDraws": 341,
+        "shadow": 342,
+        "instances": 429,
+        "instancedTriangles": 36000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-b-339463879238809",
+      "tier": "High",
+      "after": {
+        "draws": 451,
+        "objects": 88,
+        "triangles": 1063000,
+        "instancedDraws": 160,
+        "shadow": 426,
+        "instances": 586,
+        "instancedTriangles": 29000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 451,
+        "objects": 88,
+        "triangles": 1063000,
+        "instancedDraws": 160,
+        "shadow": 426,
+        "instances": 586,
+        "instancedTriangles": 29000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-b-3678296072299092",
+      "tier": "High",
+      "after": {
+        "draws": 441,
+        "objects": 87,
+        "triangles": 972000,
+        "instancedDraws": 305,
+        "shadow": 312,
+        "instances": 1348,
+        "instancedTriangles": 53000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 441,
+        "objects": 87,
+        "triangles": 972000,
+        "instancedDraws": 305,
+        "shadow": 312,
+        "instances": 1348,
+        "instancedTriangles": 53000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-b-381800493259507",
+      "tier": "High",
+      "after": {
+        "draws": 558,
+        "objects": 104,
+        "triangles": 1462000,
+        "instancedDraws": 226,
+        "shadow": 342,
+        "instances": 798,
+        "instancedTriangles": 59000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 558,
+        "objects": 104,
+        "triangles": 1462000,
+        "instancedDraws": 226,
+        "shadow": 342,
+        "instances": 798,
+        "instancedTriangles": 59000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-b-4312632558767412",
+      "tier": "High",
+      "after": {
+        "draws": 324,
+        "objects": 60,
+        "triangles": 887000,
+        "instancedDraws": 204,
+        "shadow": 489,
+        "instances": 380,
+        "instancedTriangles": 23000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 324,
+        "objects": 60,
+        "triangles": 887000,
+        "instancedDraws": 204,
+        "shadow": 489,
+        "instances": 380,
+        "instancedTriangles": 23000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-b-468026894483428",
+      "tier": "High",
+      "after": {
+        "draws": 337,
+        "objects": 63,
+        "triangles": 929000,
+        "instancedDraws": 245,
+        "shadow": 426,
+        "instances": 425,
+        "instancedTriangles": 25000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 337,
+        "objects": 63,
+        "triangles": 929000,
+        "instancedDraws": 245,
+        "shadow": 426,
+        "instances": 425,
+        "instancedTriangles": 25000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-b-494288258686575",
+      "tier": "High",
+      "after": {
+        "draws": 261,
+        "objects": 45,
+        "triangles": 845000,
+        "instancedDraws": 128,
+        "shadow": 489,
+        "instances": 311,
+        "instancedTriangles": 15000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 261,
+        "objects": 45,
+        "triangles": 845000,
+        "instancedDraws": 128,
+        "shadow": 489,
+        "instances": 311,
+        "instancedTriangles": 15000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-b-810525063224609",
+      "tier": "High",
+      "after": {
+        "draws": 349,
+        "objects": 65,
+        "triangles": 934000,
+        "instancedDraws": 296,
+        "shadow": 219,
+        "instances": 643,
+        "instancedTriangles": 38000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 349,
+        "objects": 65,
+        "triangles": 934000,
+        "instancedDraws": 296,
+        "shadow": 219,
+        "instances": 643,
+        "instancedTriangles": 38000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-b-810896133189484",
+      "tier": "High",
+      "after": {
+        "draws": 531,
+        "objects": 123,
+        "triangles": 914000,
+        "instancedDraws": 382,
+        "shadow": 135,
+        "instances": 1599,
+        "instancedTriangles": 93000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 531,
+        "objects": 123,
+        "triangles": 914000,
+        "instancedDraws": 382,
+        "shadow": 135,
+        "instances": 1599,
+        "instancedTriangles": 93000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-b-837235577143499",
+      "tier": "High",
+      "after": {
+        "draws": 431,
+        "objects": 87,
+        "triangles": 979000,
+        "instancedDraws": 313,
+        "shadow": 342,
+        "instances": 974,
+        "instancedTriangles": 63000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 431,
+        "objects": 87,
+        "triangles": 979000,
+        "instancedDraws": 313,
+        "shadow": 342,
+        "instances": 974,
+        "instancedTriangles": 63000
+      },
+      "totalDrawDelta": 0
+    },
+    {
+      "camera": "sbs-g3-b-962702164479831",
+      "tier": "High",
+      "after": {
+        "draws": 548,
+        "objects": 126,
+        "triangles": 1030000,
+        "instancedDraws": 383,
+        "shadow": 261,
+        "instances": 1333,
+        "instancedTriangles": 99000
+      },
+      "totalTriangleDeltaPercent": 0.0,
+      "before": {
+        "draws": 548,
+        "objects": 126,
+        "triangles": 1030000,
+        "instancedDraws": 383,
+        "shadow": 261,
+        "instances": 1333,
+        "instancedTriangles": 99000
+      },
+      "totalDrawDelta": 0
+    }
+  ]
+}
