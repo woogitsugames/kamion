@@ -1,0 +1,58 @@
+﻿{
+    "published_at":  "2026-11-12T01:58:54.6293935+01:00",
+    "branch":  "gpt-asphalt-r2",
+    "correction_commit":  "1ce620a3bd29e23fe6f74789f2505185bf0fcd2c",
+    "original_r1_delivery_commit":  "2c921825",
+    "robocopy_exit":  1,
+    "files":  [
+                  {
+                      "file":  "CORRECTION-2026-11-12.md",
+                      "sha256":  "2dcc6536edd2393e274f56184be2808ec70a721d54d929d9f0e9b268ad571e5b"
+                  },
+                  {
+                      "file":  "MEASUREMENT-STATUS.json",
+                      "sha256":  "31b83c3389d403f96c4fc39b18be5a212055f414a0580c1098235172603afc07"
+                  },
+                  {
+                      "file":  "REPORT.md",
+                      "sha256":  "eb8cd0debf7f10f2cb1e975e31175fab675a75871517dbd37b10b3b3a1cc32e7"
+                  },
+                  {
+                      "file":  "SELF-REVIEW.md",
+                      "sha256":  "1c03adeeb3e042201d9c83bd46c8e940dd297bf75d897ce6ca010df296202654"
+                  },
+                  {
+                      "file":  "STATUS.md",
+                      "sha256":  "9c677e875311d5cb35b20a50b606c54908280823dff0e80e8401fc0247770a2d"
+                  },
+                  {
+                      "file":  "wheel-contrast-candidate2.json",
+                      "sha256":  "3537b1d123a84817ca83a993effe7ec6a3b937447ecd126f436d28796346ea77"
+                  },
+                  {
+                      "file":  "wheel-contrast-candidate2.csv",
+                      "sha256":  "86903fa74c9373d76256aee9f3e4fa19ca97008aad94fbe8968e1059eb4fcd76"
+                  },
+                  {
+                      "file":  "wheel_contrast.py",
+                      "sha256":  "0cd770cc7f2e8bf1b67a4d7860a3d71615e2a06a10207dc209c6d48501843780"
+                  },
+                  {
+                      "file":  "wheel-mask-candidate2-Low-overcast.jpg",
+                      "sha256":  "e50d44eaca2ef79e9e558f2ec4b83049895bf2e59f1f807f81e229d30d69e2ff"
+                  },
+                  {
+                      "file":  "wheel-mask-candidate2-Low-clear.jpg",
+                      "sha256":  "88f1443c453bd2754ebfa12d7130e584c40fd9672063c249e5c2a61eb7e30803"
+                  },
+                  {
+                      "file":  "wheel-mask-candidate2-High-overcast.jpg",
+                      "sha256":  "7ae8f61955e70c393ca1f6d5d8148c90750317bdb1e69d0524a96f4c7910cc5b"
+                  },
+                  {
+                      "file":  "wheel-mask-candidate2-High-clear.jpg",
+                      "sha256":  "07a680404b7332ebcf3b0d6850f7644795a94643ece3e902a9b5a038a934a8ff"
+                  }
+              ],
+    "note":  "Correction of invalid projected contrast only; original round delivery history is retained. No main git command."
+}
