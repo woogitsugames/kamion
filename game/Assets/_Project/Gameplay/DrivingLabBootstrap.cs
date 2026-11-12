@@ -29,6 +29,15 @@ namespace Game.Gameplay
         /// <summary>Spawn presets of the lab menu. Solo = tractor in the coupling bay, trailer parked behind it.</summary>
         public enum LabSpawn { Solo = 0, Empty = 1, Cargo24t = 2, Gross40t = 3 }
         const string PrefSpawn = "lab.spawn";
+        /// <summary>
+        /// Load at the first start / for players who never picked one (owner decision, ADR 0134, 2026-11-12): 24 t payload,
+        /// ~40 t combination. "lab.spawn" is written only by an explicit choice in the spawn menu, so a stored value is kept.
+        /// </summary>
+        public const LabSpawn DefaultSpawn = LabSpawn.Cargo24t;
+
+        /// <summary>Stored spawn choice (explicit menu pick) or <see cref="DefaultSpawn"/> when none is stored.</summary>
+        public static LabSpawn StoredOrDefaultSpawn(bool hasStored, int stored) =>
+            hasStored ? (LabSpawn)Mathf.Clamp(stored, 0, 3) : DefaultSpawn;
 
         public VehicleBody vehicle;
         public TrailerBody trailer;
@@ -59,7 +68,7 @@ namespace Game.Gameplay
         DiagnosticsSampler m_Sampler;
         TruckAudioController m_Audio;
         SteerMode m_SteerMode;
-        LabSpawn m_Spawn = LabSpawn.Empty;
+        LabSpawn m_Spawn = DefaultSpawn;
         GearSelector m_Selector = GearSelector.Drive;
         bool m_Manual, m_Parking = true, m_AbsFault, m_ReverseCamForced;
         int m_Lever, m_LeverMax = 5, m_CouplingEvents;
@@ -187,7 +196,7 @@ namespace Game.Gameplay
             // World route runs default to the 40 t combination (a solo run would leave the trailer parked at the spawn);
             // trailer=solo still gives a solo tractor. Lab circle runs stay solo (Stage 1 measurement).
             var apDefault = ap == "route" ? LabSpawn.Gross40t : LabSpawn.Solo;
-            m_Spawn = ParseSpawn(tr, !string.IsNullOrEmpty(ap) ? apDefault : (LabSpawn)Mathf.Clamp(PlayerPrefs.GetInt(PrefSpawn, (int)LabSpawn.Empty), 0, 3));
+            m_Spawn = ParseSpawn(tr, !string.IsNullOrEmpty(ap) ? apDefault : StoredOrDefaultSpawn(PlayerPrefs.HasKey(PrefSpawn), PlayerPrefs.GetInt(PrefSpawn, (int)DefaultSpawn)));
             // World scenes (spawn point): a Solo preference saved in the lab would leave the trailer parked behind the tractor
             // (device run 2026-11-09), so without an explicit trailer= argument the world start is always a coupled combination.
             if (spawnPoint != null && string.IsNullOrEmpty(tr) && m_Spawn == LabSpawn.Solo) m_Spawn = LabSpawn.Empty;

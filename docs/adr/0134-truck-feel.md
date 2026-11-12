@@ -83,7 +83,7 @@ Other movers: launch_6pct_uphill_comb@laden40 0-15 km/h 4.59 -> 4.84 s (check 4.
 event in 6 of them); every scenario check of those brake, lane-change and jackknife events still passes.
 
 ## Open items / owner decisions
-- **Default load (owner decision).** The free-drive default is the empty trailer. A real 40 t combination feels heavy and
+- ~~Default load~~ decided, see the addendum below. Original note: The free-drive default is the empty trailer. A real 40 t combination feels heavy and
   slow (0-50 km/h ~20 s at full pedal, ~34 s at 60 %); the empty one is nearly twice as quick. Proposal: default the
   first start to `Cargo24t` (typical payload) or show the current load more prominently on spawn; the spawn menu
   (`Zestaw...`) already offers empty / 24 t / 40 t. Not changed here (UI/gameplay, owner's call).
@@ -94,3 +94,13 @@ event in 6 of them); every scenario check of those brake, lane-change and jackkn
   pitch peak (~3°). A slower, jerk-limited launch is plausible for production AMTs but would move the hill-start reference;
   left for a follow-up with the owner's feel input.
 - Phone check by the leader: APK with this branch, cab view, empty and 40 t launches on the yard.
+
+## Addendum 2026-11-12 - owner decision: default load 24 t (D-number assigned by the leader)
+The owner decided that the game starts with the **24 t payload** (`LabSpawn.Cargo24t`, combination ~40 t) instead of the
+empty trailer. `DrivingLabBootstrap.DefaultSpawn = Cargo24t`; `StoredOrDefaultSpawn` uses the stored `lab.spawn` value only
+when the key exists. That key is written only by an explicit pick in the spawn menu (`Spawn(..., persist: true)`), so no
+migration step is needed: players who never picked a load (the owner's Fold included) get 24 t on the next start, explicit
+picks (empty / 40 t / solo) are kept. Unchanged: `trailer=` launch argument, `autopilot=route` (40 t), lab autopilot runs
+(solo), and a stored Solo in a world scene still falls back to the empty coupled trailer. EditMode test `DefaultSpawnTests`.
+With 24 t the free-drive launch is the "laden40" row of the table above: 0-50 km/h ~20 s at full pedal, ~34 s at 60 %,
+sequential shifts, per-shift eye nod max 3.4 / 2.3 deg.
