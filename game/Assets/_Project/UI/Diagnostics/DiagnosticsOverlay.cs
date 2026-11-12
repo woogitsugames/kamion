@@ -1,4 +1,3 @@
-using System.Globalization;
 using System.Text;
 using Game.Core;
 using Game.Platform;
@@ -40,6 +39,9 @@ namespace Game.UI
         float m_NextRefresh;
         string m_Header;
         readonly TextBuffer m_Buf = new TextBuffer(1024);
+        int m_LastFpsTarget = int.MinValue;
+        string m_LastTier;
+        bool? m_LastHideLabel;
 
         public static DiagnosticsOverlay Create(Camera camera, IPlatformServices platform, DiagnosticsSampler sampler)
         {
@@ -189,11 +191,25 @@ namespace Game.UI
             m_NextRefresh = Time.unscaledTime + RefreshInterval;
             if (m_Body == null) return;
             m_View.Refresh();
-            var ci = CultureInfo.InvariantCulture;
             int targetFps = Application.targetFrameRate;
-            m_FpsButtonLabel.text = targetFps > 0 ? $"Cel: {targetFps} FPS" : "Cel: auto";
-            m_TierButtonLabel.text = "Jakość: " + QualityTiers.Current;
-            m_HideButtonLabel.text = m_Panel.activeSelf ? "Ukryj" : "Diagnostyka";
+            // Button labels update only when the displayed value changes (they allocated a formatted string every 0.5 s before, even with the panel hidden).
+            if (targetFps != m_LastFpsTarget)
+            {
+                m_LastFpsTarget = targetFps;
+                m_FpsButtonLabel.text = targetFps > 0 ? "Cel: " + targetFps + " FPS" : "Cel: auto";
+            }
+            string tier = QualityTiers.Current;
+            if (m_LastTier != tier)
+            {
+                m_LastTier = tier;
+                m_TierButtonLabel.text = "Jakość: " + tier;
+            }
+            bool hidden = !m_Panel.activeSelf;
+            if (m_LastHideLabel != hidden)
+            {
+                m_LastHideLabel = hidden;
+                m_HideButtonLabel.text = hidden ? "Diagnostyka" : "Ukryj";
+            }
             if (!m_Panel.activeSelf) return;
 
             var snap = m_Sampler != null ? m_Sampler.Snapshot : default;
