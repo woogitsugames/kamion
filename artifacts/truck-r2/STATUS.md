@@ -36,3 +36,4 @@ Krok 12: wszystkie kontrole zbliżeń washed/fleet/dirty zakończone. Pierwszy w
 Zapisano runoff-macro-044 Low overcast, kod wejściowy zgodny z fingerprintem. Następny krok: pomiary i oględziny par przed/po.
 Zapisano runoff-macro-044 Low clear, kod wejściowy zgodny z fingerprintem. Następny krok: pomiary i oględziny par przed/po.
 Zapisano runoff-macro-044 High overcast, kod wejściowy zgodny z fingerprintem. Następny krok: pomiary i oględziny par przed/po.
+Krok 13: przygotowano zestawienie stałych ROI przed/po i arkusze całego boku oraz górnej plandeki o szerokości 960 px. Narzędzie nie zmienia renderów natywnych. Następny krok: po ukończeniu runoff-macro-044 uruchomić compare_grime.py runoff-macro-044 z OPENBLAS_NUM_THREADS=1 i obejrzeć pary.
