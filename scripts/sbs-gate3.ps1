@@ -156,6 +156,11 @@ $borrowedHeavyLease=$false
 $borrowedHeavyRecord=$null
 $heavyOwner=(& git -C $taskRoot branch --show-current).Trim()
 $heavySlot=Join-Path $mainRoot ('artifacts/locks/heavy-slots/'+($heavyOwner -replace '[^A-Za-z0-9._-]','_')+'.slot')
+$heavyTicket=Join-Path $mainRoot ('artifacts/locks/heavy-slots/queue/'+($heavyOwner -replace '[^A-Za-z0-9._-]','_')+'.wait')
+function Assert-NewHeavyLease {
+    if(Test-Path -LiteralPath $heavySlot){throw 'Heavy lease already held by this branch; pass HeavyLeaseOwner explicitly for one ComposeOnly state'}
+    if(Test-Path -LiteralPath $heavyTicket){throw 'Heavy task already queued for this branch; wait for that job before starting composition'}
+}
 function Assert-BorrowedHeavyLease {
     if(!(Test-Path -LiteralPath $heavySlot -PathType Leaf)){throw 'Borrowed heavy lease is no longer held'}
     $record=(Get-Content -LiteralPath $heavySlot -Raw).Trim()
@@ -170,8 +175,8 @@ try {
         $borrowedHeavyRecord=(Get-Content -LiteralPath $heavySlot -Raw).Trim()
         Assert-BorrowedHeavyLease
         $borrowedHeavyLease=$true
-    } elseif(!$RenderOnly -and (Test-Path -LiteralPath $heavySlot)){
-        throw 'Heavy lease already held by this branch; pass HeavyLeaseOwner explicitly for one ComposeOnly state'
+    } elseif(!$RenderOnly){
+        Assert-NewHeavyLease
     }
     if ($EditMode -and !$ComposeOnly) {
         & pwsh -NoProfile -File $slotScript -Acquire -Owner $SlotOwner -PollSeconds 7 -StaleHours 87600
@@ -247,6 +252,7 @@ try {
             $stateLeaseHeld=$false
             if($borrowedHeavyLease){Assert-BorrowedHeavyLease}
             else {
+                Assert-NewHeavyLease
                 & pwsh -NoProfile -File $slotScript -Acquire -Pool heavy -Owner $heavyOwner -PollSeconds 7 -StaleHours 87600
                 if ($LASTEXITCODE -ne 0) { throw 'Heavy slot acquisition failed' }
                 $stateLeaseHeld=$true

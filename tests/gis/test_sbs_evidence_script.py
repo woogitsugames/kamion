@@ -46,6 +46,10 @@ $operation=if($Acquire){'Acquire'}else{'Release'}
 @{operation=$operation;owner=$Owner;pool=$Pool} | ConvertTo-Json -Compress | Add-Content (Join-Path $root 'slot-calls.jsonl')
 if($Acquire){($Owner+' original-lease') | Set-Content $slot}
 if($Release){Remove-Item -LiteralPath $slot -ErrorAction Stop}
+if($Release -and $Pool -eq 'heavy' -and $env:SBS_TEST_QUEUE_AFTER_RELEASE -eq '1'){
+    $queue=Join-Path $dir 'queue';New-Item -ItemType Directory -Force $queue | Out-Null
+    'queued-job-original-ticket' | Set-Content (Join-Path $queue ($Owner+'.wait'))
+}
 if($Release -and $Pool -eq 'unity'){
     $capture=Join-Path $root 'out/renders/Low-overcast/capture-4x3.json'
     switch($env:SBS_TEST_CAPTURE_TAMPER){
@@ -60,6 +64,16 @@ if($Release -and $Pool -eq 'unity'){
             $c=Get-Content $capture -Raw | ConvertFrom-Json
             $c.render_sha256.'sbs-test'=(Get-FileHash $raw).Hash.ToLower()
             $c | ConvertTo-Json -Depth 8 | Set-Content $capture
+        }
+    }
+    if($env:SBS_TEST_OTHER_HEAVY_DURING_UNITY){
+        $heavy=Join-Path $root 'artifacts/locks/heavy-slots'
+        New-Item -ItemType Directory -Force $heavy | Out-Null
+        if($env:SBS_TEST_OTHER_HEAVY_DURING_UNITY -eq 'slot'){
+            'other-job-original-lease' | Set-Content (Join-Path $heavy 'gpt-sbs-test.slot')
+        }else{
+            $queue=Join-Path $heavy 'queue';New-Item -ItemType Directory -Force $queue | Out-Null
+            'queued-job-original-ticket' | Set-Content (Join-Path $queue 'gpt-sbs-test.wait')
         }
     }
 }
@@ -109,10 +123,10 @@ $global:LASTEXITCODE=0
     return root,env
 
 
-def invoke(root,env,states=('overcast',),borrow=False,render_only=False,output='out'):
+def invoke(root,env,states=('overcast',),borrow=False,render_only=False,output='out',combined=False):
     quote=lambda value:"'"+str(value).replace("'","''")+"'"
     lights=','.join(quote(state) for state in states)
-    mode='-RenderOnly' if render_only else '-ComposeOnly'
+    mode='' if combined else ('-RenderOnly' if render_only else '-ComposeOnly')
     command=f"$ErrorActionPreference='Stop'\n& {quote(root/'scripts/sbs-gate3.ps1')} {mode} -OutputRoot {quote(output)} -Tiers @('Low') -Lighting @({lights})"
     if borrow:command+=' -HeavyLeaseOwner gpt-sbs-test'
     command+="\nif($LASTEXITCODE -ne 0){exit $LASTEXITCODE}\n"
@@ -126,6 +140,51 @@ def held_lease(root):
     path.parent.mkdir(parents=True,exist_ok=True)
     path.write_text('gpt-sbs-test original-lease',encoding='utf-8')
     return path
+
+
+def queued_lease(root):
+    path=root/'artifacts/locks/heavy-slots/queue/gpt-sbs-test.wait'
+    path.parent.mkdir(parents=True,exist_ok=True)
+    path.write_text('queued-job-original-ticket',encoding='utf-8')
+    return path
+
+
+def test_existing_queued_owner_cannot_start_second_composition(tmp_path):
+    root,env=fixture_repo(tmp_path);ticket=queued_lease(root);original=ticket.read_bytes()
+    result=invoke(root,env)
+    assert result.returncode!=0 and 'already queued' in result.stderr
+    assert ticket.read_bytes()==original
+    assert not lines(root/'slot-calls.jsonl') and not lines(root/'uv-calls.jsonl')
+
+
+@pytest.mark.parametrize('kind',['slot','queue'])
+def test_combined_render_rechecks_other_heavy_job_before_acquire(tmp_path,kind):
+    root,env=fixture_repo(tmp_path);env['SBS_TEST_OTHER_HEAVY_DURING_UNITY']=kind
+    result=invoke(root,env,combined=True)
+    assert result.returncode!=0 and ('already held' if kind=='slot' else 'already queued') in result.stderr
+    path=root/'artifacts/locks/heavy-slots'/('gpt-sbs-test.slot' if kind=='slot' else 'queue/gpt-sbs-test.wait')
+    assert ('other-job-original-lease' if kind=='slot' else 'queued-job-original-ticket') in path.read_text(encoding='utf-8-sig')
+    assert [(r['operation'],r['pool']) for r in lines(root/'slot-calls.jsonl')]==[('Acquire','unity'),('Release','unity')]
+    assert not lines(root/'uv-calls.jsonl')
+
+
+def test_ticket_appearing_between_states_is_preserved_without_second_acquire(tmp_path):
+    root,env=fixture_repo(tmp_path,('overcast','clear'));env['SBS_TEST_QUEUE_AFTER_RELEASE']='1'
+    result=invoke(root,env,('overcast','clear'))
+    assert result.returncode!=0 and 'already queued' in result.stderr
+    ticket=root/'artifacts/locks/heavy-slots/queue/gpt-sbs-test.wait'
+    assert 'queued-job-original-ticket' in ticket.read_text(encoding='utf-8-sig')
+    assert [r['operation'] for r in lines(root/'slot-calls.jsonl')]==['Acquire','Release']
+    assert len(lines(root/'uv-calls.jsonl'))==1
+
+
+def test_render_only_does_not_touch_existing_heavy_ticket(tmp_path):
+    root,env=fixture_repo(tmp_path);ticket=queued_lease(root);original=ticket.read_bytes()
+    result=invoke(root,env,render_only=True)
+    assert result.returncode==0,result.stdout+result.stderr
+    assert ticket.read_bytes()==original
+    assert [(r['operation'],r['pool']) for r in lines(root/'slot-calls.jsonl')]==[('Acquire','unity'),('Release','unity')]
+    assert not lines(root/'uv-calls.jsonl')
 
 
 def test_compose_uses_snapshot_and_releases_between_states(tmp_path):
