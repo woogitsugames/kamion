@@ -19,3 +19,6 @@ NEXT: uv run --project tools/refs python artifacts/sbs-poses-r3/tools/sheets.py 
 19:10 sha f8412e9c5. r1 rendered (sheets r1/sheet-*.jpg): 494288 f0-f3 straight road + left bend as photo, but generated dash ~0.85 m right of the graph centreline; 810896 l0/r0: in the world the NW-bound carriageway stands on a ~3-4 m retaining wall next to SE-bound (photo: at grade, grass median + guardrail) = world; 482392 sa kerb line matches the photo, guardrail starts later in the world; 320326 p128 ok vs photo (piers ~0.1 off, piers low-confidence spec).
 - r2 render waiting for PHONE_RUN (bg, log r2-render.log).
 NEXT: uv run --project tools/refs python artifacts/sbs-poses-r3/tools/sheets.py r2 Low-overcast
+19:14 poses written (6b220afb): 494288 g0, 810896 m0, 482392 sa, 320326 p128 promoted; 837235 unchanged (world epoch). ADR 0143 draft.
+- Evidence running bg (artifacts/sbs-poses-r3/evidence.log): r1 clear (old prod), then sbs-low-pairs full Low set -> artifacts/sbs-poses-r3/after.
+NEXT: compose before/after pairs (sbs_pairs.py pairs --before artifacts/sbs-poses-r3/before/renders/Low-x --cameras ...), pytest heavy, robocopy evidence to main.
