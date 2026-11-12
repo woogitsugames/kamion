@@ -13,7 +13,7 @@ if ($owner -notmatch '^gpt-furniture-r\d+$') { throw 'Not an owned furniture rou
 $slotScript='C:/Users/matma/Documents/Claude/kamion/scripts/unity-slot.ps1'
 $acquired=$false
 for($attempt=1;$attempt -le 3;$attempt++){
-    & pwsh $slotScript -Acquire -Pool heavy -Owner $owner -StaleHours 876000 -PollSeconds 1
+    & pwsh $slotScript -Acquire -Pool heavy -Owner $owner -StaleHours 876000 -PollSeconds 10
     if($LASTEXITCODE -eq 0){$acquired=$true;break}
     if($attempt -lt 3){Start-Sleep -Seconds 1}
 }

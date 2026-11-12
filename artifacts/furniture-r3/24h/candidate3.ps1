@@ -12,7 +12,7 @@ $fingerprint|ConvertTo-Json|Set-Content "$ev/candidate3-source-fingerprint.json"
 $slot='C:/Users/matma/Documents/Claude/kamion/scripts/unity-slot.ps1'
 $acquired=$false
 for($attempt=1;$attempt -le 3;$attempt++){
-    & pwsh $slot -Acquire -Pool heavy -Owner $owner -StaleHours 876000 -PollSeconds 1
+    & pwsh $slot -Acquire -Pool heavy -Owner $owner -StaleHours 876000 -PollSeconds 10
     if($LASTEXITCODE -eq 0){$acquired=$true;break}
     # Retry only after a terminal Acquire error, e.g. the observed queue-file sharing race.
     if($attempt -lt 3){Start-Sleep -Seconds 1}
