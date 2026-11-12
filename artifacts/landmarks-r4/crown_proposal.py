@@ -11,12 +11,12 @@ import numpy as np
 root = Path(__file__).resolve().parents[2]
 out = Path(__file__).resolve().parent
 landmark = root / "art-source/world/landmarks/fire_station_jrg2"
-source = (root / "tools/blender/world/landmarks/make_fire_station.py").read_text(encoding="utf-8")
+source = (out / "baseline-generated/make_fire_station.py").read_text(encoding="utf-8")
 tree = ast.parse(source)
 names = {"h01", "conifer_core_uv", "build_conifer"}
 functions = "\n\n".join(ast.get_source_segment(source, n) for n in tree.body if isinstance(n, ast.FunctionDef) and n.name in names)
 assert all(f"def {name}(" in functions for name in names)
-dims = json.loads((landmark / "dims.json").read_text(encoding="utf-8"))
+dims = json.loads((out / "baseline-generated/dims.json").read_text(encoding="utf-8"))
 layout = json.loads((landmark / "atlas_layout.json").read_text(encoding="utf-8"))
 
 class Collector:
@@ -56,7 +56,7 @@ for phase, code, config in (("baseline", functions, dims), ("proposal", candidat
     for index, (_, _, height, radius) in enumerate(dims["spruce"]["items"]):
         for lod in (0, 1):
             mesh = Collector()
-            spec = json.loads((root / "Data/Regions/bialystok-industrial-c/generated/landmarks/fire_station_jrg2.spec.json").read_text(encoding="utf-8"))
+            spec = json.loads((out / "baseline-generated/fire_station_jrg2.spec.json").read_text(encoding="utf-8"))
             key = spec["ground"]["spruce"][index][-1]
             namespace["build_conifer"](mesh, np.zeros(3), height, radius, key, lod)
             rows.append(dict(phase=phase, tree=index, lod=lod, **mesh.summary()))
@@ -72,3 +72,4 @@ for row in rows:
 (out / "crown-proposal-config.json").write_text(json.dumps(proposed["spruce"], indent=2), encoding="utf-8")
 print(json.dumps([r for r in rows if r["phase"] == "proposal"], indent=2))
 assert all(r.get("alpha_area_ratio", 0) <= 1.0 for r in rows)
+
