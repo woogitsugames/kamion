@@ -178,3 +178,5 @@ Końcowy GIS uzyskał slot gpt-sbs-r2 (3/3) i wystartował; o 02:30 log osiągn�
 Podczas GIS obejrzano sześć gotowych par ADR 0125 oraz dwa natywne źródła 328135/297817, bez dodatkowego Pythona. PRE-R3-VISUAL.md i ledger zachowują wynik: 297817 ma portal daleko w tle, kolejność źródłowa zgadza się ze zbliżaniem do portalu; brak dowodu zamiany ID. Wspólne cofnięcie pozostaje hipotezą do renderów r3. Źródeł produkcyjnych nie zmieniono.
 
 R2 końcowy GIS zakończony kodem 0: 561 passed, 1 xfailed, 620,06 s; slot zwolniony. Receipt gis-completed.json. Przywrócono dokładnie osiem pochodnych plików generatora poza SBS. Zapisano końcowy REPORT.md i sekcję r2 ADR 0111; brak zmian produkcyjnych po zamrożeniu. Następny krok: końcowe robocopy i receipt, potem od razu gpt-sbs-r3 + merge main.
+
+Końcowe robocopy r2 i latest: oba kod 1, zero błędów, około 02:40. REPORT.md uzupełniono potwierdzeniem dostawy. Kontrola pokrycia plików i wybranych SHA w artifact-copy-receipt.json. Następny krok natychmiast: gpt-sbs-r3 od r2 i merge aktualnego main.

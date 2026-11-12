@@ -29,3 +29,5 @@ Otwarte: kalibracja C i cztery zastrzeżenia B, brak A, brak początku trasy, je
 Dostawa obejmuje robocopy całych artefaktów r2 oraz latest do main, bez commitowania na main. Wynik kopiowania i sprawdzone SHA zapisuje artifact-copy-receipt.json; wcześniejszy prestage-receipt.json dotyczy tylko wstępnej kopii statycznych dowodów. Następna runda: nowa gałąź gpt-sbs-r3 od r2, merge aktualnego main i ranking odstępstw w docs/refs/sbs-priorities.md. Cel całej sesji trwa do około 12.11.2026, 21:31 Europe/Warsaw.
 
 
+
+Końcowe robocopy wykonano 12.11 około 02:40: r2 (1047 plików, 452,40 MB w podsumowaniu robocopy) oraz latest (338 plików, 119,49 MB). Oba kody 1, bez błędów kopiowania. Dokładny zakres kontroli plików i kluczowe SHA zapisano w artifact-copy-receipt.json. Nie scalano do main i nie pushowano. Zmiany r3 nie należą do tego pakietu.
