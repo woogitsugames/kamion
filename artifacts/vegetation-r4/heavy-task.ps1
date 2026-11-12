@@ -17,7 +17,12 @@ if ($LASTEXITCODE -ne 0) { throw 'Heavy slot acquisition failed' }
 $jobExit = 1
 try {
     switch ($Task) {
-        'World' { uv run --project tools/worldgen python -u tools/worldgen/roads/build_world.py --region bialystok-industrial-c @TaskArgs }
+        'World' {
+            uv run --project tools/worldgen python -u tools/worldgen/roads/build_world.py --region bialystok-industrial-c @TaskArgs
+            if ($LASTEXITCODE -eq 0) {
+                uv run --project tools/worldgen python artifacts/vegetation-r4/collision_digest.py
+            }
+        }
         'Materials' { uv run --project tools/worldgen python -u art-source/world/materials/_src/build_all.py @TaskArgs }
         'GisFinal' { uv run --project tools/worldgen python -m pytest tests/gis -q @TaskArgs }
         'GisFocused' { uv run --project tools/worldgen python -m pytest @TaskArgs -q }
