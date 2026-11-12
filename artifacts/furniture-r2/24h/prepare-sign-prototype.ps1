@@ -23,7 +23,7 @@ foreach ($pass in @('ShadowCaster','GBuffer','DepthOnly','DepthNormals','Meta','
     $shader+="`n        UsePass `"Universal Render Pipeline/Lit/$($pass.ToUpperInvariant())`""
 }
 $shader+="`n    }`n    FallBack `"Hidden/Universal Render Pipeline/FallbackError`"`n}`n"
-Set-Content "$out/FurnitureSign.shader" $shader -Encoding utf8
+[IO.File]::WriteAllText("$out/FurnitureSign.shader", $shader.Replace("`r`n","`n"), [Text.UTF8Encoding]::new($false))
 $forward=Get-Content "$($urp.FullName)/Shaders/LitForwardPass.hlsl" -Raw
 $start=$forward.IndexOf('void LitPassFragment(')
 if ($start -lt 0) { throw 'Installed Lit fragment signature changed' }
@@ -34,7 +34,8 @@ $fragment=$fragment.Replace('    color.rgb = MixFog(color.rgb, inputData.fogCoor
     '    color.rgb += FurnitureReturnedLight(inputData.positionWS, inputData.normalWS, inputData.viewDirectionWS) * surfaceData.albedo;'+"`n"+
     '    #endif'+"`n"+'    color.rgb = MixFog(color.rgb, inputData.fogCoord);')
 $header=Get-Content "$out/FurnitureSignReturn.hlsl" -Raw
-Set-Content "$out/FurnitureSignForward.hlsl" ($header+"`n"+$fragment) -Encoding utf8
+$combined='// URP Lit fragment scaffold: copyright Unity Technologies ApS, Unity Companion License.'+"`n"+$header+"`n"+$fragment
+[IO.File]::WriteAllText("$out/FurnitureSignForward.hlsl", $combined.Replace("`r`n","`n"), [Text.UTF8Encoding]::new($false))
 [pscustomobject]@{urp=$urp.Name;source_shader_sha256=(Get-FileHash "$($urp.FullName)/Shaders/Lit.shader").Hash;
     source_fragment_sha256=(Get-FileHash "$($urp.FullName)/Shaders/LitForwardPass.hlsl").Hash;
     baseline_passes=([regex]::Matches($lit, '(?m)^\s*Name "').Count);candidate_passes=([regex]::Matches($shader, '(?m)^\s*(Name|UsePass) "').Count);status='PROTOTYPE, not imported or validated'} |

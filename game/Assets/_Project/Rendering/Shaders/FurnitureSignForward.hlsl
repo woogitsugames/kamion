@@ -1,9 +1,11 @@
+// URP Lit fragment scaffold: copyright Unity Technologies ApS, Unity Companion License.
 // ADR0120 r2: additive analytic return, no URP lights, texture samples or new passes.
 // Angle response is an uncalibrated WORKING_VALUE, not a specified sheeting class.
 // The Lit UnityPerMaterial buffer remains unchanged in EVERY pass, including UsePass.
 // _EmissionColor is the existing coefficient slot; _EMISSION is never compiled in our forward pass.
 float4 _FurnitureRetroHead0, _FurnitureRetroHead1, _FurnitureRetroHead2, _FurnitureRetroHead3;
 float4 _FurnitureRetroForward, _FurnitureRetroUp, _FurnitureRetroState;
+float _KamionExposure;
 
 float FurnitureHeadReturn(float4 source, float3 positionWS, float3 normalWS, float3 viewWS, float highBeam)
 {
@@ -39,7 +41,9 @@ half3 FurnitureReturnedLight(float3 positionWS, half3 normalWS, half3 viewWS)
                          + FurnitureHeadReturn(_FurnitureRetroHead1, positionWS, normalWS, viewWS, 0.0)
                          + FurnitureHeadReturn(_FurnitureRetroHead2, positionWS, normalWS, viewWS, 1.0)
                          + FurnitureHeadReturn(_FurnitureRetroHead3, positionWS, normalWS, viewWS, 1.0));
-    return (half3)(_EmissionColor.rgb * response);
+    // The display coefficient is authored at reference exposure 1/512 (WORKING_VALUE),
+    // not as a measured RA table. Follow the SAME exposed scene units as the world's sun/lamp light.
+    return (half3)(_EmissionColor.rgb * response * max(_KamionExposure, 0.0) * 512.0);
 }
 
 void FurnitureSignFragment(
@@ -93,5 +97,4 @@ void FurnitureSignFragment(
     outRenderingLayers = EncodeMeshRenderingLayer();
 #endif
 }
-
 

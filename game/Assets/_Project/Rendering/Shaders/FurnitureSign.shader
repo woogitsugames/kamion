@@ -192,4 +192,3 @@ Shader "Kamion/Furniture Sign"
     }
     FallBack "Hidden/Universal Render Pipeline/FallbackError"
 }
-

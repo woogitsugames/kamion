@@ -56,7 +56,7 @@ namespace Game.Tests
 
         static Color Draw(bool candidate, bool keyword, bool sourceOn, float distance = 50,
             float eyeOffset = 0, bool back = false, bool transparent = false,
-            float gain = 800, bool coefficientOnly = false, float lampHalfWidth = 1)
+            float gain = 800, bool coefficientOnly = false, float lampHalfWidth = 1, float exposureScale = 1)
         {
             if (SystemInfo.graphicsDeviceType == GraphicsDeviceType.Null) Assert.Ignore("GPU required");
             var shader = coefficientOnly ? CoefficientProbe() : Shader.Find(candidate ? "Kamion/Furniture Sign" : "Universal Render Pipeline/Lit");
@@ -69,6 +69,7 @@ namespace Game.Tests
             var rt = RenderTexture.GetTemporary(16, 16, 24, RenderTextureFormat.ARGBFloat, RenderTextureReadWrite.Linear);
             var pixel = new Texture2D(1, 1, TextureFormat.RGBAFloat, false, true);
             var previous = RenderTexture.active;
+            float savedExposure = Shader.GetGlobalFloat("_KamionExposure");
             var globals = new[] { "_WorldSpaceCameraPos", "_MainLightPosition", "_MainLightColor", "_FurnitureRetroHead0",
                 "_FurnitureRetroHead1", "_FurnitureRetroHead2", "_FurnitureRetroHead3", "_FurnitureRetroForward", "_FurnitureRetroUp", "_FurnitureRetroState" };
             var savedGlobals = new Vector4[globals.Length];
@@ -103,6 +104,7 @@ namespace Game.Tests
                 cb.SetGlobalVector("_FurnitureRetroForward", new Vector4(0, 0, 1, 0));
                 cb.SetGlobalVector("_FurnitureRetroUp", new Vector4(0, 1, 0, 0));
                 cb.SetGlobalVector("_FurnitureRetroState", new Vector4(sourceOn ? 1 : 0, 0, 0, 0));
+                cb.SetGlobalFloat("_KamionExposure", exposureScale / 512f);
                 int pass = mat.FindPass("ForwardLit"); Assert.GreaterOrEqual(pass, 0, shader.name + " has no ForwardLit pass");
                 cb.DrawMesh(mesh, Matrix4x4.identity, mat, 0, pass);
                 Graphics.ExecuteCommandBuffer(cb);
@@ -115,6 +117,7 @@ namespace Game.Tests
             finally
             {
                 for (int k = 0; k < globals.Length; k++) Shader.SetGlobalVector(globals[k], savedGlobals[k]);
+                Shader.SetGlobalFloat("_KamionExposure",savedExposure);
                 RenderTexture.active = previous; cb.Release(); RenderTexture.ReleaseTemporary(rt);
                 UnityEngine.Object.DestroyImmediate(pixel); UnityEngine.Object.DestroyImmediate(mesh);
                 UnityEngine.Object.DestroyImmediate(tex); UnityEngine.Object.DestroyImmediate(mat);
@@ -161,6 +164,14 @@ namespace Game.Tests
             float aligned = Draw(true,true,true).r - Draw(true,true,false).r;
             float side = Draw(true,true,true,eyeOffset:40).r - Draw(true,true,false,eyeOffset:40).r;
             Assert.Greater(aligned, .005f); Assert.Less(side, aligned * .01f);
+        }
+        [Test] public void ReturnTracksTheScenesExposedLightUnits()
+        {
+            float full = Draw(true,true,true).r - Draw(true,true,false).r;
+            float half = Draw(true,true,true,exposureScale:.5f).r - Draw(true,true,false,exposureScale:.5f).r;
+            Assert.Greater(full,.005f);
+            Assert.That(half,Is.EqualTo(full * .5f).Within(.0003f));
+            Same(Draw(true,true,false,exposureScale:0),Draw(true,true,true,exposureScale:0));
         }
         [Test] public void ReturnFallsWithDistanceAndEndsBeyondRange()
         {
