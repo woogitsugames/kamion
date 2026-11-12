@@ -108,3 +108,5 @@ Zapisano kompletną niezależną ocenę baseline w REVIEW-D51-BASELINE.md: G3-A 
 2026-11-12T10:50:32.1546348+01:00: task37462 zakończony exit0; uzupełniający audyt i fidelity gotowe, heavy zwolniony. Zachowałem fidelity_summary.json oraz dokładną kopię wygenerowanego fidelity_qa.json. Wynik narzędzia nie stanowi PASS D51; m.in.34 kandydatów lane-into-island pozostaje w raporcie. Zamrażam zmiany produkcyjne r3 i uruchamiam wymagany pełny GIS wyłącznie na końcu rundy.
 
 2026-11-12T10:51:31.5874281+01:00: przygotowałem deliver.ps1 do końcowej dostawy, z wymaganiem gotowego REPORT.md, potwierdzonego GIS, zakończonego fidelity i przywróconych pochodnych. Robocopy nie usuwa plików celu; sprawdzi długość wszystkich kopii, SHA PNG i krytycznych wejść/raportów. Nie uruchamiam go przed spełnieniem warunków. Pełny GIS (sesja11437) na razie oczekuje na heavy.
+
+2026-11-12T10:51:46.8869922+01:00: warunek dostawy sprawdza także treść receipt fidelity (exit0 i Release) oraz wynik uzupełniającego audytu268 arkuszy, nie tylko istnienie plików. To zmiana pomocnika dostawy, bez zmiany testowanego kodu produkcyjnego.

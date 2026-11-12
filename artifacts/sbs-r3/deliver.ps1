@@ -12,6 +12,9 @@ try {
     foreach($name in @('REPORT.md','AUDIT.json','SHEET-AUDIT.json','fidelity-completed.json')) {
         if(!(Test-Path -LiteralPath (Join-Path $art $name) -PathType Leaf)){throw "Missing closure file $name"}
     }
+    $fidelity=Get-Content (Join-Path $art 'fidelity-completed.json') -Raw | ConvertFrom-Json
+    $sheets=Get-Content (Join-Path $art 'SHEET-AUDIT.json') -Raw | ConvertFrom-Json
+    if($fidelity.exit_code -ne 0 -or !$fidelity.heavy_released -or $sheets.status -ne 'VERIFIED' -or $sheets.sheet_count -ne 268){throw 'Fidelity or sheet audit incomplete'}
     $generated=@(& git diff --name-only -- Data/Regions/bialystok-industrial-c/generated Data/SourceManifests/bialystok-industrial-c-far-field.manifest.json art-source/world/props)
     if($generated.Count){throw 'Generated side effects must be restored before delivery'}
     $main='C:\Users\matma\Documents\Claude\kamion'
