@@ -14,8 +14,13 @@ from streetscape import far_field as ff
 
 def building(function='produkcyjny', height=23.91, typ='hall'):
     # Actual pinned candidate footprint/height; no raw archive is required here.
+    rect = [[-36.2,-1169.4],[-6.0,-1229.4],[-45.3,-1249.2],[-75.5,-1189.2]]
+    if typ == 'house':
+        # Low deliberately prunes houses farther than 140 m; this control must
+        # exercise surviving house geometry rather than fail on an empty mesh.
+        rect = [[e,n+140] for e,n in rect]
     return dict(id='2BE4B431-C061-1BF0-E053-CC2BA8C0D140',
-                rect=[[-36.2,-1169.4],[-6.0,-1229.4],[-45.3,-1249.2],[-75.5,-1189.2]],
+                rect=rect,
                 area=1526.4, h=height, typ=typ, func=function, storeys=None,
                 height_source='gugik-lod1-measuredHeight', src='bdot10k+lod1')
 
