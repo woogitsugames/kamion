@@ -350,5 +350,95 @@
   ],
   "heading_grid_deg": 117.853,
   "note": "horizon +0.03 (chimney tops say ~+0.04)"
+ },
+ {
+  "probe": "sbs-p140-150280-s0",
+  "base": "sbs-g3-b-150280503737744",
+  "right_m": 0.0,
+  "eye_m": null,
+  "heading_delta_extra_deg": -2.2,
+  "rectified_horizon": 0.5,
+  "pos": [
+   -275.2184,
+   -214.0732,
+   132.4223
+  ],
+  "heading_grid_deg": 130.52,
+  "note": "horizon 0.50 (road VP / far road end on photo vs render), heading -2.2 (VP x)"
+ },
+ {
+  "probe": "sbs-p140-150280-z0",
+  "base": "sbs-g3-b-150280503737744",
+  "right_m": 0.0,
+  "eye_m": null,
+  "heading_delta_extra_deg": 0.0,
+  "rectified_horizon": 0.5,
+  "pos": [
+   -275.2184,
+   -214.0732,
+   132.4223
+  ],
+  "heading_grid_deg": 132.72,
+  "note": "horizon 0.50 only"
+ },
+ {
+  "probe": "sbs-p140-367829-s0",
+  "base": "sbs-g3-b-3678296072299092",
+  "right_m": 0.0,
+  "eye_m": null,
+  "heading_delta_extra_deg": 0.0,
+  "rectified_horizon": 0.559,
+  "pos": [
+   -315.5019,
+   -167.5627,
+   132.7372
+  ],
+  "heading_grid_deg": 305.585,
+  "note": "horizon 0.559 (near-road VP photo 384 px vs render 403 px)"
+ },
+ {
+  "probe": "sbs-p140-180137-l1",
+  "base": "sbs-g3-b-1801374876712141",
+  "right_m": 1.5,
+  "eye_m": 1.8,
+  "heading_delta_extra_deg": 0.0,
+  "rectified_horizon": 0.56,
+  "pos": [
+   -547.1378,
+   90.5436,
+   137.4945
+  ],
+  "heading_grid_deg": 353.064,
+  "note": "1.5 m right, eye 1.8"
+ },
+ {
+  "probe": "sbs-p140-180137-l2",
+  "base": "sbs-g3-b-1801374876712141",
+  "right_m": 1.0,
+  "eye_m": 2.2,
+  "heading_delta_extra_deg": 0.0,
+  "rectified_horizon": 0.56,
+  "pos": [
+   -547.6341,
+   90.4833,
+   137.9066
+  ],
+  "heading_grid_deg": 353.064,
+  "note": "1.0 m right"
+ },
+ {
+  "probe": "sbs-p140-180137-l3",
+  "base": "sbs-g3-b-1801374876712141",
+  "right_m": 2.5,
+  "eye_m": 1.8,
+  "heading_delta_extra_deg": 0.0,
+  "rectified_horizon": 0.56,
+  "pos": [
+   -546.1451,
+   90.6644,
+   137.4724
+  ],
+  "heading_grid_deg": 353.064,
+  "note": "2.5 m right, eye 1.8"
  }
 ]
