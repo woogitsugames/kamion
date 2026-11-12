@@ -118,3 +118,5 @@ potem poprawić największe udokumentowane odstępstwo wiaty. WIP po każdym kro
 2026-11-12T12:58:56.7582574+01:00: skan chronionej geometrii after zakończył się powodzeniem: 6833 przed, 6833 po, changed=[]; slot heavy zwolniony. Standardowy import after1 już działa w wymaganym slocie Unity. Uzupełniono PACKET i ADR o rzeczywisty wynik, bez przenoszenia go na jeszcze niezmierzony budżet. NASTĘPNY KROK: cztery serie 59 kamer, dokładne Low i oba narożniki.
 
 2026-11-12T12:59:13.5324475+01:00: Unity import after1 Low overcast; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
+
+2026-11-12T12:59:39.8523150+01:00: Unity render after Low clear; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
