@@ -45,14 +45,14 @@ namespace Game.Tests
         [Test]
         public void SidewaysSlideFromTheBar_SteersFromThePressPoint_AndCancelsTheButton()
         {
-            var e = Drag(new Vector2(150f, 520f), new Vector2(250f, 530f));
+            var e = Drag(new Vector2(150f, 520f), new Vector2(180f, 525f));   // 30 px: below the 270 deg stop at any DPI
             m_Relay.OnBeginDrag(e);
             Assert.IsTrue(m_Wheel.Held, "wheel grabbed");
             Assert.IsFalse(e.eligibleForClick, "turn signal must not fire on release");
-            Assert.AreEqual(Mm(100f) * m_Wheel.DragDegPerMm, m_Wheel.WheelDeg, 0.05f, "travel counted from the press point");
-            e.position = new Vector2(300f, 530f);
+            Assert.AreEqual(Mm(30f) * m_Wheel.DragDegPerMm, m_Wheel.WheelDeg, 0.05f, "travel counted from the press point");
+            e.position = new Vector2(200f, 525f);
             m_Relay.OnDrag(e);
-            Assert.AreEqual(Mm(150f) * m_Wheel.DragDegPerMm, m_Wheel.WheelDeg, 0.05f);
+            Assert.AreEqual(Mm(50f) * m_Wheel.DragDegPerMm, m_Wheel.WheelDeg, 0.05f);
             m_Relay.OnEndDrag(e);
             Assert.IsFalse(m_Wheel.Held, "released with the thumb");
         }
