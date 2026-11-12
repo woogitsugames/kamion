@@ -162,3 +162,5 @@ Krok 43: D zastosowany tylko w CARPAINT: osobny filmRoofMask zerowany dla kabin;
 Krok 44: przygotowano GPU diagnostyki D. Oczekiwana opacity nadal oparta o zwrócony rzeczywisty końcowy filmRoofMask (nie dawny keepUpper); kod klona dodatkowo przechwytuje go bezpośrednio przed obliczeniem carFilmOpacity. Pozostały contract 81 LOD/1005 instancji zachowany. Oddzielne klasy/ścieżki gpu-d nie nadpisują A/C. Następny krok: post-d.ps1 poczeka na obecny capture 10790 i wykona dowody D, potem oględziny.
 
 Krok 45: skorygowano w post-d.ps1 literę dysku w dodatkowym strażniku own-slot po kopiowaniu helpera C→D (ma wskazywać C:, nie D:). Obecny proces 8662 wczytał poprzednią wersję przed czekaniem; jego serializacja nadal opiera się na Wait-Process jedynego capture 10790, a późniejszy gpu-proof-d ma niezależny prawidłowy own-slot guard. Nie restartowano capture ani Unity. Po terminalnym capture potwierdzić zwolnienie własnego slotu przed odbiorem GPU. Następny krok: istniejące 10790/8662, oględziny D.
+
+Po capture D (2026-11-12T10:54:29.0595903+01:00): potwierdź pełne kadry i budżet D. Następny krok według post-d.ps1, potem oględziny i wybór autora.
