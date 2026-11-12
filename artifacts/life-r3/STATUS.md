@@ -30,3 +30,5 @@ Krok 10: przeniesiono generator arkuszy porównawczych do r3 z nowymi life3_/she
 Krok 11: inspekcja eksportera wykazała próg creasing 38°; zapisano hipotezę wygładzania płytkich grzbietów felgi. Nie zmieniono globalnego eksportera ani produkcji. World przeszedł planowanie działek/placu/furniture; trwa jedna instancja. Następny krok: istniejące 2467 i 46468, potem oględziny baseline.
 
 Baseline (2026-11-12T09:22:19.5697821+01:00): wygeneruj i potwierdź świeży baseline r3. Następny etap w baseline-gen.ps1; po generacji nowe kamery i PreparedImport.
+
+Krok 12: World ukończony 0 (552,1 s), raw 192/192 zgodne, 15 Fab ready, 151 map. Zapisano lekki odczyt nagłówka GLB baseline (liczby trójkątów/grup aut) bez budowania modeli. Następny krok: istniejący post-baseline 46468 czeka na heavy dla wyboru kamer; nie duplikować pracy, później guarded import/capture.
