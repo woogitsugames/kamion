@@ -1,0 +1,51 @@
+........................................................................ [ 14%]
+........................................................................ [ 29%]
+........................................................................ [ 43%]
+..............................................................F......x.. [ 58%]
+........................................................................ [ 72%]
+................................................................F....... [ 87%]
+..............................................................           [100%]
+================================== FAILURES ===================================
+____________________________ test_report_not_stale ____________________________
+
+qa = {'adr': '0075', 'connectivity': {'missing_in_graph': [{'access': None, 'highway': 'service', 'length_in_tile_m': 33.1,...948309:1883101800-1883101801', 'dist_m': 10.5, 'junction': 'j:n1883101800', 'lane_index_from_left': 0, ...}, ...], ...}
+
+    def test_report_not_stale(qa):
+        """The report must describe the current graph, overrides, route and road generator."""
+        stale = []
+        for k, v in qa["inputs_sha256"].items():
+            p = (REGION_DIR / k) if "/" not in k else (REPO / k)
+            if not p.exists() or _sha(p) != v:
+                stale.append(k)
+>       assert not stale, f"fidelity_qa.json is stale for {stale}: rerun tools/worldgen/fidelity/run.py"
+E       AssertionError: fidelity_qa.json is stale for ['overrides.yaml', 'tools/worldgen/roads/build_world.py', 'tools/worldgen/roads/meshing.py', 'tools/worldgen/roads/network.py', 'tools/worldgen/roads/pipeline.py', 'tools/worldgen/roads/profile.py', 'tools/worldgen/roads/standards.py']: rerun tools/worldgen/fidelity/run.py
+E       assert not ['overrides.yaml', 'tools/worldgen/roads/build_world.py', 'tools/worldgen/roads/meshing.py', 'tools/worldgen/roads/network.py', 'tools/worldgen/roads/pipeline.py', 'tools/worldgen/roads/profile.py', ...]
+
+tests\gis\test_road_fidelity.py:51: AssertionError
+________________________ test_export_is_deterministic _________________________
+
+world = {'w': World(region={'id': 'bialystok-industrial-c', 'title': 'Białystok — Kwadrat Park / Andersa / Rondo Putry → DK8/D...e split)'], ...}, ...}, 'out': WindowsPath('C:/Users/matma/AppData/Local/Temp/pytest-of-matma/pytest-396/world0'), ...}
+
+    @needs_heightmap
+    def test_export_is_deterministic(world):
+        """Same inputs -> byte-identical GLBs: the in-process build equals the committed manifest (written
+        by an earlier CLI run, different process / hash seed). The manifest is read BEFORE the in-process build, which
+        rewrites it (reading it afterwards compared the build with itself and hid the hash-seed dependence, ADR 0096).
+        A failure after a generator change means: regenerate the region (build_world.py), then run the tests."""
+        committed = world["manifest_before"]
+        assert committed is not None, "generated/world_manifest.json missing: run build_world.py first"
+        built = world["manifest"]
+        assert [c["id"] for c in committed["chunks"]] == [c["id"] for c in built["chunks"]]
+        for a, b in zip(committed["chunks"], built["chunks"]):
+>           assert a["sha256"] == b["sha256"], a["id"]
+E           AssertionError: 0_0
+E           assert '0ac5092c74f1...f5fd01d331d7c' == 'e8fb94290912...92dcdfdaf0a5e'
+E             
+E             - e8fb94290912fb3e28bf6d615446294b4d9c6ab4e66d674292292dcdfdaf0a5e
+E             + 0ac5092c74f15670f859c620b8ca768b1b66e2189d8d8ba5279f5fd01d331d7c
+
+tests\gis\test_world_roads.py:206: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/gis/test_road_fidelity.py::test_report_not_stale - AssertionErro...
+FAILED tests/gis/test_world_roads.py::test_export_is_deterministic - Assertio...
+2 failed, 491 passed, 1 xfailed in 673.09s (0:11:13)
