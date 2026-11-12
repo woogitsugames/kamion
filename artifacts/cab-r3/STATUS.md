@@ -1,0 +1,9 @@
+﻿# Kabina r3 — nocne podświetlenie
+
+Start od zamkniętej r2 d04feba0, następnie merge main bez konfliktów. R2 artifacts skopiowane do main: 565 plików, 582,68 MB, failed 0. Bez merge do main i push.
+
+Cel: ocenić i poprawić podświetlenie legend przycisków względem rzeczywistego zdjęcia nocnego, zachowując działające nocne palety ekranów, czytelność dnia i budżety Low. Źródło i ograniczenia zdjęcia: artifacts/cab-r2/NIGHT-REFERENCE.md. Nie kopiować oznaczeń marki. Wstępne kadry r2 nie zastępują baseline r3 po merge.
+
+Nowy backlog recenzji: okluzja prawego wide-angle kanałem drzwi wymaga pomiaru z DriverEyePoint; kremowa powierzchnia przodu w Front należy do zewnętrza poza własnością cab. K4 szerokie pasmo AO i K6 macro zużycia pozostają otwarte.
+
+Następny krok: świeże baseline Low/High clear/overcast/dusk, inspekcja nocna z odciętym otoczeniem wyłącznie w QA; dopiero potem flaga danych i wariant podświetlenia. Każde Unity owner gpt-cab, heavy owner gpt-cab-r3. Pojedynczy własny heavy, mutex wrappera; pełny GIS dopiero na końcu rundy.

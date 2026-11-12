@@ -36,3 +36,7 @@ Tryb eksportera --textures-only odtwarza wyłącznie Plastic/Leather. Reprodukcj
 
 K4: UV centralnej deski bez potwierdzonego szerokiego rozciągnięcia, wariant AO bez mipów i eksperyment diffuse fill nie usunęły pasma. Eksperyment shaderowy wycofany. K5 nie odtworzono w poprawionych przekrojach zaimportowanego modelu; bez przesuwania geometrii. K6 poprawia mikroziarno, nie dodaje zużycia kontaktowego. Materiał Plastic nie zastępuje brakującego skanu konkretnego tworzywa. Otwarte ograniczenia i arkusze opisuje REPORT r2; następny backlog to nocne zegary.
 
+
+## r3 — Nocne legendy przycisków
+
+Stan: rozpoznanie i baseline. Od r2 d04feba0, merge main bez konfliktów. Nocne palety ekranów istnieją i działają; legendy przycisków mają albedo/AO, bez osobnego podświetlenia. Zdjęcie Volvo Trucks (Jonatan Fernström, 2017) jest odniesieniem jakościowym, nie CC0 ani pomiarem intensywności. Zmiana będzie ograniczona do wnętrza, za flagą danych, bez nowych draw/pass i bez zmiany świata. Najpierw świeży baseline po merge; zachować dzień oraz alarmy zegarów.
