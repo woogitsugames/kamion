@@ -128,6 +128,19 @@ def test_generated_far_field_qa_and_manifests():
     assert qa["lod1_height_audit"]["usable_ids"] > 0
     assert qa["building_height_sources"]["gugik-lod1-measuredHeight"] > 0
 
+    # Height provenance and an estimated facade finish are different claims.
+    appearance = qa["appearance_policy"]
+    assert appearance == src_man["appearance_policy"]
+    assert appearance["status"] == "WORKING_VALUE"
+    assert {"wall_colour", "cladding_modules", "glazing_band", "roof_fascia"} <= set(appearance["not_measured"])
+    hall_counts = appearance["source_hall_counts"]
+    assert set(hall_counts) == {"industrial", "energy", "other"}
+    assert all(isinstance(count, int) and count >= 0 for count in hall_counts.values())
+    assert sum(hall_counts.values()) == fc["buildings_by_typology"]["hall"]
+    assert 0 < appearance["source_panel_hall_count"] <= hall_counts["industrial"]
+    assert appearance["panel_alpha"] == 0.25
+    assert appearance["panel_ribbon_alpha"] == 0.65
+
     # Performance budget & sector structure checks
     low = qa["tiers"]["Low"]
     high = qa["tiers"]["High"]

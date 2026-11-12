@@ -22,7 +22,8 @@ base['materials']['far_field_buildings']=fresh['materials']['far_field_buildings
 restore=[f'Data/Regions/{REGION}/generated/landmarks/viaduct_putry_underdeck.spec.json',
          f'Data/Regions/{REGION}/generated/roads_qa.json',
          f'Data/Regions/{REGION}/generated/streetscape_qa.json',
-         'art-source/world/props/props_meta.json']
+         'art-source/world/props/props_meta.json',
+         'art-source/world/props/street_props.glb']
 subprocess.run(['git','restore','--',*restore],cwd=ROOT,check=True)
 receipt=dict(retained_world_manifest_fields=['far_field','materials.far_field_buildings'],
              restored_unrelated_generated_files=restore,verified_raw_far_field_hashes=2,
