@@ -1,4 +1,4 @@
-﻿"""Prepare 20 C-only gantry pose hypotheses after the r3 world baseline. Run under heavy."""
+﻿"""Prepare 18 C-only gantry pose hypotheses after the r3 world baseline. Run under heavy."""
 from pathlib import Path
 import copy, hashlib, json, math, sys
 ROOT=Path(__file__).resolve().parents[2]
@@ -14,8 +14,8 @@ camera_path=sbs.REGION/'sbs_cameras.json'; refs_path=sbs.REGION/'sbs_references.
 source_hashes={str(p.relative_to(ROOT)):sha(p) for p in (camera_path,refs_path)}
 cameras=sbs.read(camera_path)['cameras']; refs=sbs.read(refs_path)['references']
 origin=sbs.read(world)['origin_epsg2180']; ground=sbs.ground_sampler()
-variants={'837235577143499':[0,-8,-12,-16,-20,-28],
-          '275528677534382':[0,-8,-12,-16,-20,-28],
+variants={'837235577143499':[0,-12,-16,-20,-28],
+          '275528677534382':[0,-12,-16,-20,-28],
           '3281350541967811':[0,-30,-45,-60],
           '297817221966185':[0,-30,-45,-60]}
 result=[]; plan=[]
@@ -46,7 +46,7 @@ for sid, offsets in variants.items():
                      'width':1280,'height':round(1280*ref['height']/ref['width']),
                      'pos':c['pos'],'look_at':c['look_at'],'fov_deg':c['fov_deg'],
                      'eye_height_note':'Baseline zero preserves exact original camera; shifted variants use NMT+2.2m. No bridge cameras in this batch.'})
-assert len(result)==20 and len({c['id'] for c in result})==20
+assert len(result)==18 and len({c['id'] for c in result})==18
 for relative,expected in source_hashes.items():
     if sha(ROOT/relative)!=expected: raise RuntimeError('Production source changed')
 OUT.mkdir(exist_ok=True)
@@ -55,6 +55,5 @@ sbs.write(OUT/'plan.json',{'diagnostic_only':True,'all_pose_confidence':'C','bas
     'probe_cameras_sha256':sha(OUT/'cameras.json'),
     'production_source_sha256':source_hashes,'world_manifest_sha256':sha(world),'probes':plan,
     'acceptance':'Portal plus independent durable road corner; visual and independent review before any production pose. Offsets are hypotheses, no automatic promotion.'})
-print('Prepared 20 C-only probes; production sources unchanged')
-
+print('Prepared 18 C-only probes; production sources unchanged')
 
