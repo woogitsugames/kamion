@@ -1,5 +1,5 @@
 ﻿param(
-    [ValidateSet('import','render','sbs-sign','editmode','plinth-probe')] [string]$Step,
+    [ValidateSet('import','render','sbs-sign','editmode','plinth-probe','sign-probe')] [string]$Step,
     [string]$Phase='before',
     [ValidateSet('Low','High')] [string]$Tier='Low',
     [ValidateSet('clear','overcast','dusk')] [string]$Lighting='overcast',
@@ -10,6 +10,10 @@ $root=(Resolve-Path "$PSScriptRoot/../../..").Path
 Set-Location $root
 $ev='artifacts/furniture-r2/24h'
 $slotScript='C:/Users/matma/Documents/Claude/kamion/scripts/unity-slot.ps1'
+# Owned scheduling marker: serialize the baseline with a separate, explicitly invoked shader probe.
+if ($Step -in @('import','render','sbs-sign')) {
+    while (Test-Path "$ev/PAUSE_UNITY") { Start-Sleep -Seconds 2 }
+}
 if ($Step -eq 'import') {
     # import-region can otherwise launch heavy generators implicitly, outside their pool.
     $region='Data/raw/derived/bialystok-industrial-c/world/chunk_0_0.glb'
@@ -62,6 +66,9 @@ try {
         }
         'plinth-probe' {
             & pwsh scripts/test.ps1 -Platform EditMode -Filter Game.Tests.FurniturePlinthTests *> "$ev/plinth-probe.log"
+        }
+        'sign-probe' {
+            & pwsh scripts/test.ps1 -Platform EditMode -Filter Game.Tests.FurnitureSignTests *> "$ev/sign-probe-$Phase.log"
         }
         'sbs-sign' {
             $scene=if ($Tier -eq 'High') { 'WorldC_High' } else { 'WorldC' }

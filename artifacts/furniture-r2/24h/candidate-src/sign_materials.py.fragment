@@ -1,0 +1,11 @@
+# Intended additive block in streetscape/materials.py after baseline is frozen.
+# Explicit current plate coverage from the merged props_meta.json. Direction boards and the
+# separate ADR0125 sign assemblies are not silently assigned a different material.
+FURNITURE_SIGN_FACES = ("A-7", "B-33_20", "B-33_30", "B-33_40", "B-33_70",
+                        "C-12", "C-9", "D-1", "D-15", "D-6")
+for _face in FURNITURE_SIGN_FACES:
+    M["sign_" + _face] = {
+        "color": [1, 1, 1], "rough": 0.45,
+        "furniture_sign_face": _face,
+        "furniture_sign_retro": {"gain": 800.0},  # uncalibrated display coefficient, WORKING_VALUE
+    }
