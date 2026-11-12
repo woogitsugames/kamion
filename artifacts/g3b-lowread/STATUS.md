@@ -16,3 +16,11 @@ Import 1 OK po ponowieniu; SBS Low-overcast after1 (40 kadrów), pary `pairs-aft
 Obejrzane: 837235 / 297817 / 275528 - portal czyta się jako kratownica (297817: było pełna rama), tablice na belce, tyły gładkie; 3678296 - słup WN ciemny, 3 poprzeczniki, przewody; 494288 - ekran = jasna płaszczyzna z grubymi ciemnymi słupami i liniami. 1801374 bez zmiany (strefa glazed dopiero w buildzie 2).
 W tle: `run-all-2.ps1 -Name after -Tag 2` (build 2 -> fidelity -> pytest gis+gate3 || import -> SBS overcast+clear -> EditMode), znacznik `all-2.done`.
 NASTĘPNY KROK: po `all-2.done`: `bash artifacts/g3b-lowread/make-pairs.sh after; python artifacts/g3b-lowread/stats-diff.py after > artifacts/g3b-lowread/stats-diff-after.txt; tail artifacts/g3b-lowread/pytest-gis.log artifacts/g3b-lowread/editmode.log` -> ADR Results, LICENSES, kopia dowodów do main.
+
+## 4. Rozszerzenie zakresu (recenzja s12-0130) + merge main (~14:45)
+Scalono main (552257d4; konflikt tylko LICENSES - unia). Cykl 2 sprzed merge'a zatrzymany w kolejce (nie wystartował).
+(1) Wysokość portalu: ortofoto hi-res GUGiK (`crops/ortho-gantry-hr.jpg`): belka 14,0 m (reguła dawała 16 m), cień słupa 6,1 m; zdjęcie 275528: (wierzch nad horyzontem)/rozpiętość = 0,354 -> ~6,2-6,5 m przy 14 m. Teza "8,5-9 m" NIE potwierdzona; proporcja H/rozpiętość była dobra, portal był o 14 % za szeroki -> `columns_en` (rozpiętość 14 m), H z reguły 7,0 m.
+(2) Ekran Tysiąclecia (1801374): strefy glazed z `height_m: 5.2`, pas 2,2 m (odczyt ze zdjęcia wzgl. cokołu 0,6 m), odsunięty ekran przeszklony od narożnika.
+Baseline dla nowych póz: `baseline-newpose/` = kopia `artifacts/sbs-poses/final/renders` (main przed 0127).
+W tle: `run-all-2.ps1 -Name after -Tag 2`, znacznik `all-2.done`.
+NASTĘPNY KROK: po `all-2.done`: `cd artifacts/g3b-lowread; BASE=baseline-newpose OUT=pairs-after bash make-pairs.sh after; BASE=baseline-newpose LIGHT=Low-clear OUT=pairs-after-clear bash make-pairs.sh after; BASE=baseline-newpose python stats-diff.py after > stats-diff-after.txt; tail pytest-gis.log editmode.log`

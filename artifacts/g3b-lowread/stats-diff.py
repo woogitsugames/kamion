@@ -13,7 +13,7 @@ def load(name):
             if m:
                 out[m.group(1)].update(idraws=int(m.group(2)), inst=int(m.group(3)), itrisK=int(m.group(4)))
     return out
-a, b = load('baseline'), load(sys.argv[1])
+a, b = load(os.environ.get('BASE', 'baseline')), load(sys.argv[1])
 print(f"{'camera':34} draws b->a (d)   inst.draws b->a (d)   trisK b->a   inst.trisK b->a")
 tot = []
 for cam in sorted(b):
