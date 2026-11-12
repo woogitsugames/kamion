@@ -60,6 +60,9 @@ namespace Game.Vehicle.Physics
             return Math.Max(drag, eb);
         }
 
+        /// <summary>Releases the engine brake at once (AMT up-shift sync finished, clutch about to close; ADR 0134).</summary>
+        public void CutEngineBrake() => EngineBrakeState = 0;
+
         /// <summary>Updates the engine-brake actuator (once per fixed step). Command 0..1.</summary>
         public void UpdateEngineBrake(double command, double dt)
         {
@@ -105,9 +108,9 @@ namespace Game.Vehicle.Physics
             if (Omega >= _maxOmega) effLoad = 0;
 
             double retard = drag;
-            if (EngineBrakeState > 0 && effLoad < 0.02 && targetOmega <= 0)
+            if (EngineBrakeState > 0 && effLoad < 0.02 && (targetOmega <= 0 || Omega > targetOmega))
             {
-                // Fuel cut while the engine brake is active.
+                // Fuel cut while the engine brake is active (also above a rev-matching target: AMT up-shift sync, ADR 0134).
                 double total = EngineBrakeTotal(Omega);
                 retard = drag + EngineBrakeState * (total - drag);
                 EngineBrakeTorque = retard - drag;

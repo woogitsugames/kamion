@@ -91,6 +91,24 @@ sc("launch_flat_comb", "Standstill on flat, release brake, full throttle, AMT au
         source="owner feel test 2026-11-10: no wheel brake / retarder / engine brake torque during an up-shift unless commanded (ADR 0004 addendum 2026-11-10)"),
     chk("min_accel_shift_gap_ms2", mn=-0.3, frm=1, status=D,
         source="per-gap mean dv/dt with the clutch open: only rolling (cr 0.005-0.0055 x g = 0.05 m/s2) + aero (~0.05 laden / ~0.15 empty at 88 km/h) may decelerate; limit ~1.5x the worst case"),
+    chk("max_shift_eye_pitch_swing_deg", arg=1.5, mx=4.0, frm=1, to=30,
+        source="ADR 0134 owner feel test 2026-11-12 (pitch 'like a sports car'): regression guard on the per-shift eye nod; before ADR 0134 5.4 deg empty / 4.6 deg laden"),
+    chk("max_clutch_temp_c", mx=250, source="clutch below the warning temperature on a flat start")] + stable,
+   variants=COMB)
+
+sc("launch_flat_comb_part60", "Standstill on flat, release brake, 60 % pedal (owner-style launch, feel test 2026-11-12), AMT auto",
+   "docs/04 s6.2, s6.3; ADR 0134", 60,
+   {"type": "timeline", "keys": [key(0, brake=1), key(1.0, throttle=0.6)]},
+   [chk("rollback_m", mx=0.02, source="no rollback on flat"),
+    chk("stalled", mx=0, source="engine must not stall"),
+    chk("min_rpm", mn=550, frm=1, source="engine stays near idle or above"),
+    chk("time_to_kmh", arg=50, mn=8, mx=30, variant="empty", status=D,
+        source="part load: plausibility around the Proctor/Grimes SAE 950136 traffic averages (bobtail 0.138 g, box 0.106 g over the first 50 ft)"),
+    chk("time_to_kmh", arg=50, mn=15, mx=45, variant="laden40", status=D,
+        source="part load 40 t: ~3.5 ft/s2 max from rest for 27-36 t trucks (Washburn freight curriculum 4.1, engineering estimate) -> >= 13 s to 50 km/h"),
+    chk("max_shift_retard_torque_nm", mx=1, frm=1, source="ADR 0004 addendum 2026-11-10: no vehicle braking during an up-shift"),
+    chk("max_shift_eye_pitch_swing_deg", arg=1.5, mx=3.8, frm=1, to=30,
+        source="ADR 0134 regression guard (WORKING_VALUE): per-shift eye nod at 60 % pedal; before ADR 0134 4.5 deg empty / 3.2 deg laden"),
     chk("max_clutch_temp_c", mx=250, source="clutch below the warning temperature on a flat start")] + stable,
    variants=COMB)
 

@@ -31,6 +31,14 @@ namespace Game.Vehicle.Physics
         /// <summary>Engine speed target for rev matching (rad/s), 0 = none.</summary>
         public double EngineTargetOmega { get; private set; }
         public int TargetGear { get; private set; }
+        /// <summary>Up-shift in progress with the clutch open and the engine above the new gear's speed: the vehicle applies
+        /// the engine brake to synchronise faster (ADR 0134, gearbox upshiftEngineBrakeSync).</summary>
+        public bool SyncBrakeRequest { get; private set; }
+        /// <summary>The engine brake used for the up-shift sync must be off before the clutch transmits torque again
+        /// (true during ShiftEngage after a sync-braked up-shift; the vehicle releases the brake at once).</summary>
+        public bool SyncBrakeCut { get; private set; }
+        int _shiftFromGear;
+        bool _syncBraked;
         public int ShiftCount { get; private set; }
         public int RejectedShiftCount { get; private set; }
         public bool Manual { get; private set; }
@@ -124,6 +132,7 @@ namespace Game.Vehicle.Physics
             double rpm = engOmega * MathUtil.RadSToRpm;
             double idle = engine.IdleOmega;
             _sinceUpshift += dt; _sinceShift += dt;
+            SyncBrakeRequest = false; SyncBrakeCut = false;
             if (!_rpmRateValid) { _prevRpm = rpm; _rpmRate = 0; _rpmRateValid = true; }
             double rr = (rpm - _prevRpm) / dt;
             _rpmRate += (rr - _rpmRate) * Math.Min(1.0, dt / 0.15);
@@ -266,29 +275,56 @@ namespace Game.Vehicle.Physics
                 }
                 case AmtState.ShiftTorqueRamp:
                     _timer += dt;
-                    TorqueScale = 1 - MathUtil.Clamp01(_timer / Def.shiftTorqueRampTime);
+                    if (Def.shiftTorqueRampInTime > Def.shiftClutchCloseTime)
+                    {
+                        // ADR 0134: smooth (smoothstep) torque fade-out, no jerk step at the start or end of the fade.
+                        double u = MathUtil.Clamp01(_timer / Def.shiftTorqueRampTime);
+                        TorqueScale = 1 - u * u * (3 - 2 * u);
+                    }
+                    else TorqueScale = 1 - MathUtil.Clamp01(_timer / Def.shiftTorqueRampTime);
                     if (_timer >= Def.shiftTorqueRampTime) { State = AmtState.ShiftNeutral; _timer = 0; }
                     break;
                 case AmtState.ShiftNeutral:
                     _timer += dt;
                     TorqueScale = 0;
                     ClutchCommand = MathUtil.MoveTowards(ClutchCommand, 0, dt / Math.Max(0.02, Def.shiftNeutralTime * 0.5));
+                    // Up-shift: the engine brake pulls the engine down towards the new gear's speed once the clutch is open.
+                    SyncBrakeRequest = Def.upshiftEngineBrakeSync && TargetGear > _shiftFromGear && ClutchCommand <= 0;
+                    _syncBraked |= SyncBrakeRequest;
                     if (_timer >= Def.shiftNeutralTime) { Gear = 0; State = AmtState.ShiftSync; _timer = 0; }
                     break;
                 case AmtState.ShiftSync:
+                {
                     _timer += dt;
                     ClutchCommand = 0;
                     TorqueScale = 0;
                     EngineTargetOmega = Math.Max(idle, Math.Abs(GearRatio(TargetGear) * _finalDrive * drivelineOmega));
-                    if (_timer >= Def.shiftSyncTime) { Gear = TargetGear; State = AmtState.ShiftEngage; _timer = 0; }
+                    double syncErrRpm = (engOmega - EngineTargetOmega) * MathUtil.RadSToRpm;
+                    SyncBrakeRequest = Def.upshiftEngineBrakeSync && TargetGear > _shiftFromGear && syncErrRpm > 20;
+                    _syncBraked |= SyncBrakeRequest;
+                    // ADR 0134: with engine-brake sync the clutch closes only once the engine is near the new gear's speed
+                    // (or after shiftSyncMaxExtraTime): closing on a 200-300 rpm overspeed dumps the engine inertia into the
+                    // driveline as a jolt that rocks the chassis, the trailer and the cab.
+                    bool synced = !Def.upshiftEngineBrakeSync || Math.Abs(syncErrRpm) < Def.shiftSyncToleranceRpm || _timer >= Def.shiftSyncTime + Def.shiftSyncMaxExtraTime;
+                    if (_timer >= Def.shiftSyncTime && synced) { Gear = TargetGear; State = AmtState.ShiftEngage; _timer = 0; SyncBrakeRequest = false; }
                     break;
+                }
                 case AmtState.ShiftEngage:
                     _timer += dt;
+                    SyncBrakeCut = _syncBraked;
                     EngineTargetOmega = 0;
                     double f = MathUtil.Clamp01(_timer / Def.shiftClutchCloseTime);
                     ClutchCommand = f;
-                    TorqueScale = f;
-                    if (_timer >= Def.shiftClutchCloseTime)
+                    // ADR 0134: the engine torque comes back on a smoothstep over shiftTorqueRampInTime (no jerk step at
+                    // either end), so the chassis and the sprung cab are not kicked into a pitch oscillation on every shift.
+                    double rampIn = Math.Max(Def.shiftTorqueRampInTime, Def.shiftClutchCloseTime);
+                    if (Def.shiftTorqueRampInTime > Def.shiftClutchCloseTime)
+                    {
+                        double u = MathUtil.Clamp01(_timer / rampIn);
+                        TorqueScale = u * u * (3 - 2 * u);
+                    }
+                    else TorqueScale = f;
+                    if (_timer >= rampIn)
                     {
                         State = AmtState.Drive; TorqueScale = 1; ClutchCommand = 1;
                     }
@@ -313,7 +349,7 @@ namespace Game.Vehicle.Physics
             double downLine = MathUtil.Lerp(Def.downshiftRpmLight, Def.downshiftRpmFull, throttle);
             if (gradeSin > Def.gradeDownshiftThreshold && throttle > 0.5) downLine += Def.gradeDownshiftBonusRpm;
             // Speed lost during the torque interruption (resistance only, no drive) -> rpm after the shift is lower.
-            double totalShift = Def.shiftTorqueRampTime + Def.shiftNeutralTime + Def.shiftSyncTime + Def.shiftClutchCloseTime * 0.5;
+            double totalShift = Def.shiftTorqueRampTime + Def.shiftNeutralTime + Def.shiftSyncTime + Math.Max(Def.shiftClutchCloseTime, Def.shiftTorqueRampInTime) * 0.5;
             double dv = Math.Max(0, resistance) / Math.Max(massKg, 1) * totalShift;
             double speedFactor = speed > 0.5 ? Math.Max(0.5, 1 - dv / speed) : 1;
             if (Gear < Def.ForwardGearCount && (rpmPred > upRpm || overRev || ebOverRev))
@@ -323,7 +359,15 @@ namespace Game.Vehicle.Physics
                 for (int k = 1; k <= Def.maxSkip && Gear + k <= Def.ForwardGearCount; k++)
                 {
                     double after = rpm * GearRatio(Gear + k) / GearRatio(Gear) * (ebMode ? 1 : speedFactor);
-                    if (after < minAfter && !(k == 1 && (overRev || ebOverRev))) continue;
+                    // Light-load skip shift (ADR 0134): a light combination with a firm pedal skips a gear when the engine
+                    // still lands in the full-torque plateau and the truck keeps accelerating strongly in the target gear.
+                    bool lightSkip = false;
+                    if (k == 2 && !ebMode && throttle > 0.5 && Def.skipShiftMinRpmAfter > 0 && after < minAfter && after >= Def.skipShiftMinRpmAfter)
+                    {
+                        double fSkip = Tractive(engine, Gear + k, after * MathUtil.RpmToRadS, throttle, wheelRadius, fdEff);
+                        lightSkip = (fSkip - resistance) / Math.Max(massKg, 1) >= Def.skipShiftMinAccel * throttle;
+                    }
+                    if (after < minAfter && !lightSkip && !(k == 1 && (overRev || ebOverRev))) continue;
                     if (!ebMode && throttle > 0.3)
                     {
                         // Mass/grade awareness: the truck must still accelerate in the new gear.
@@ -429,6 +473,8 @@ namespace Game.Vehicle.Physics
         {
             if (target > Gear) _sinceUpshift = 0;
             _sinceShift = 0;
+            _shiftFromGear = Gear;
+            _syncBraked = false;
             TargetGear = target;
             State = AmtState.ShiftTorqueRamp;
             _timer = 0;

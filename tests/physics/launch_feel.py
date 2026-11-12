@@ -11,7 +11,7 @@ Eye/camera pitch in the world (nose up) = chassis - cab (the cab-view camera rid
 import csv, sys
 from pathlib import Path
 
-KEYS = ("t", "speed_kmh", "a_long", "pitch_deg", "cab_pitch_deg", "gear", "rpm", "throttle_in")
+KEYS = ("t", "speed_kmh", "a_long", "pitch_deg", "cab_pitch_deg", "gear", "rpm", "throttle_in", "amt_state")
 
 def load(p):
     with open(p, newline="") as f:
@@ -40,6 +40,15 @@ def metrics(rows):
     eye = [(r["pitch_deg"] - base) - r["cab_pitch_deg"] for r in win]
     out["max_eye_pitch_deg"] = round(max(abs(e) for e in eye), 3)
     out["eye_pitch_p2p_deg"] = round(max(eye) - min(eye), 3)
+    # Per-shift nod: eye pitch peak-to-peak within 1.5 s of each shift start (same as runner max_shift_eye_pitch_swing_deg).
+    sw = []
+    for i in range(1, len(rows)):
+        if rows[i]["amt_state"] == 3 and rows[i - 1]["amt_state"] != 3 and rows[i]["t"] - t0 <= 30:
+            e = [r["pitch_deg"] - r["cab_pitch_deg"] for r in rows[i:] if r["t"] <= rows[i]["t"] + 1.5]
+            sw.append(max(e) - min(e))
+    out["shift_nod_p2p_deg_max"] = round(max(sw), 3) if sw else 0
+    out["shift_nod_p2p_deg_mean"] = round(sum(sw) / len(sw), 3) if sw else 0
+    out["shifts_0_30s"] = len(sw)
     out["max_a_long"] = round(max(r["a_long"] for r in win), 3)
     out["mean_a_0_50"] = round((50 / 3.6) / t50, 3) if out["t0_50_s"] else None
     return out, t0, base

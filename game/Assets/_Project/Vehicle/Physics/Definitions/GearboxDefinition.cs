@@ -28,6 +28,26 @@ namespace Game.Vehicle.Physics
         public double shiftNeutralTime = 0.15;
         public double shiftSyncTime = 0.20;
         public double shiftClutchCloseTime = 0.15;
+        /// <summary>
+        /// Engine torque re-application after the clutch closes, smoothstep from 0 to the driver demand [s] (ADR 0134).
+        /// 0 or below shiftClutchCloseTime = torque follows the clutch (linear over shiftClutchCloseTime, pre-ADR 0134).
+        /// </summary>
+        public double shiftTorqueRampInTime = 0;
+        /// <summary>
+        /// Light-load skip shift (ADR 0134): a two-gear up-shift is taken when the truck still accelerates by at least
+        /// skipShiftMinAccel x pedal in the target gear and the engine lands at or above skipShiftMinRpmAfter.
+        /// 0 = disabled (sequential up-shifts unless the normal min-rpm-after rule allows the skip).
+        /// </summary>
+        public double skipShiftMinRpmAfter = 0;
+        public double skipShiftMinAccel = 1.5;
+        /// <summary>
+        /// Up-shift synchronisation with the engine brake (ADR 0134): with the clutch open the engine brake pulls the
+        /// engine down to the new gear's speed, and the clutch closes only within shiftSyncToleranceRpm of it (or after
+        /// shiftSyncTime + shiftSyncMaxExtraTime). false = pre-ADR 0134 (clutch closes after shiftSyncTime regardless).
+        /// </summary>
+        public bool upshiftEngineBrakeSync = false;
+        public double shiftSyncToleranceRpm = 40;
+        public double shiftSyncMaxExtraTime = 0.3;
         public double upshiftRpmLight = 1250;
         public double upshiftRpmFull = 1750;
         public double downshiftRpmLight = 850;

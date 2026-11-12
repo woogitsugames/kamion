@@ -119,6 +119,15 @@
       "from": 1
     },
     {
+      "metric": "max_shift_eye_pitch_swing_deg",
+      "status": "WORKING_VALUE",
+      "source": "ADR 0134 owner feel test 2026-11-12 (pitch 'like a sports car'): regression guard on the per-shift eye nod; before ADR 0134 5.4 deg empty / 4.6 deg laden",
+      "max": 4.0,
+      "arg": 1.5,
+      "from": 1,
+      "to": 30
+    },
+    {
       "metric": "max_clutch_temp_c",
       "status": "WORKING_VALUE",
       "source": "clutch below the warning temperature on a flat start",
