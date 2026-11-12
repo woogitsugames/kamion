@@ -11,6 +11,7 @@ Shader "Hidden/KamionLightQA/WetCubeLab"
             TEXTURECUBE(_KamionVehicleEnvCube); SAMPLER(sampler_KamionVehicleEnvCube);
             float _Mode;
             float4 _LabCaptureOrigin;
+            float4 _LabBackground;
             struct V { float3 p:POSITION; float3 n:NORMAL; };
             struct I { float4 p:SV_POSITION; float3 w:TEXCOORD0; float3 n:TEXCOORD1; };
             I vert(V v) { I o; o.w=TransformObjectToWorld(v.p); o.p=TransformWorldToHClip(o.w); o.n=TransformObjectToWorldNormal(v.n); return o; }
@@ -19,7 +20,7 @@ Shader "Hidden/KamionLightQA/WetCubeLab"
                 float t=(8.0-i.w.z)/max(R.z,0.0001);
                 float3 hit=i.w+R*t;
                 if (_Mode<0.5) {
-                    half3 c=half3(0.08,0.12,0.18);
+                    half3 c=_LabBackground.rgb;
                     if(R.z>0 && t>0 && abs(hit.x)<2 && hit.y>0 && hit.y<4) {
                         c=half3(1,0,0);
                         if(abs(hit.y-3.25)<0.125 && abs(hit.x)<1.5) c=1;
@@ -34,7 +35,10 @@ Shader "Hidden/KamionLightQA/WetCubeLab"
                     float exit=-b+sqrt(max(b*b+400-dot(offset,offset),0));
                     direction=normalize(offset+R*exit);
                 }
-                if(_Mode>2.5 && R.z>0 && t>0) direction=normalize(hit-_LabCaptureOrigin.xyz);
+                if(_Mode>2.5) {
+                    if(R.z<=0 || t<=0) return half4(_LabBackground.rgb,1);
+                    direction=normalize(hit-_LabCaptureOrigin.xyz);
+                }
                 return half4(SAMPLE_TEXTURECUBE_LOD(_KamionVehicleEnvCube,sampler_KamionVehicleEnvCube,direction,0).rgb,1);
             }
             ENDHLSL

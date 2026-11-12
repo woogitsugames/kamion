@@ -1,10 +1,11 @@
+param([ValidatePattern('^wet-cube-lab(?:-v\d+)?$')][string]$OutputName='wet-cube-lab')
 $ErrorActionPreference='Stop'
 $repo=[IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..'))
 Set-Location $repo
 . "$repo/scripts/env.ps1"
 $slot='C:/Users/matma/Documents/Claude/kamion/scripts/unity-slot.ps1'
-$output="$PSScriptRoot/wet-cube-lab"
-$log="$PSScriptRoot/wet-cube-lab.$(Get-Timestamp).log"
+$output="$PSScriptRoot/$OutputName"
+$log="$PSScriptRoot/$OutputName.$(Get-Timestamp).log"
 & pwsh $slot -Acquire -Owner gpt-light -PollSeconds 1 -StaleHours 87600
 if($LASTEXITCODE){throw 'No Unity slot'}
 try {
