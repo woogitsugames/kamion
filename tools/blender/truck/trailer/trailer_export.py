@@ -152,10 +152,17 @@ def game_materials():
 def to_game_piece(o, gm):
     me = o.data
     names = [m.name if m else "" for m in me.materials]
+    cylindrical = A.is_round_wheel_piece(o)
+    keep_uv = [tuple(value.uv) for value in me.uv_layers[0].data] if cylindrical else None
+    if cylindrical:
+        o["cylindrical_atlas"] = True
     for uvl in list(me.uv_layers):
         me.uv_layers.remove(uvl)
     for nm in ("Atlas", "Decal", "Data"):
         me.uv_layers.new(name=nm)
+    if keep_uv:
+        for value,uv in zip(me.uv_layers["Atlas"].data,keep_uv):
+            value.uv = uv
     col = me.color_attributes.new("Col", "BYTE_COLOR", "CORNER")
     prio = me.attributes.new("prio", "FLOAT", "FACE")
     grp = light_group(o.name)
@@ -239,19 +246,21 @@ def unwrap_atlases(pieces):
         for o in objs:
             o.data.uv_layers.active = o.data.uv_layers["Atlas"]
 
-        def sel_faces():
+        def sel_faces(project=False):
             A.select(objs)
             bpy.ops.object.mode_set(mode="EDIT")
             for o in objs:
                 bm = bmesh.from_edit_mesh(o.data)
                 mi = [m.name for m in o.data.materials].index(mname)
                 for f in bm.faces:
-                    f.select = f.material_index == mi
+                    f.select = f.material_index == mi and (not project or not o.get("cylindrical_atlas",False))
                 bmesh.update_edit_mesh(o.data)
-        sel_faces()
-        bpy.ops.uv.smart_project(angle_limit=math.radians(62), island_margin=0.0, area_weight=0.0,
-                                 correct_aspect=True, scale_to_bounds=False)
-        bpy.ops.object.mode_set(mode="OBJECT")
+        if any(not o.get("cylindrical_atlas",False) for o in objs):
+            sel_faces(project=True)
+            bpy.ops.uv.smart_project(angle_limit=math.radians(62), island_margin=0.0, area_weight=0.0,
+                                     correct_aspect=True, scale_to_bounds=False)
+            bpy.ops.object.mode_set(mode="OBJECT")
+        A.normalize_cylindrical_atlas_density(objs,mname)
         for o in objs:
             me = o.data
             mi = [m.name for m in me.materials].index(mname)
