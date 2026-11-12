@@ -41,3 +41,5 @@ Krok 10d: zachowano i zweryfikowano SHA wszystkich 64 plików instancji baseline
 Krok 10e: przygotowano NIEURUCHOMIONE skrypty końca rundy: pełny GIS raz, physics/gate3, EditMode oraz strumieniowe porównanie 192 plików runtime i własnych źródeł/assetów przed i po testach. Nie rozpoczynam pełnego GIS w trakcie iteracji. audit_ec.py także hashuje pliki w blokach 1 MB.
 
 Krok 11: jednostkowe testy pojedynczego pliku test_ec_chimneys.py zakończyły się powodzeniem (wynik artifacts/landmarks-r3/silhouette-world.log.units); celowo wyłączony test wyjścia generatora. Pod tym samym heavy rozpoczyna się kolejno generator, bez równoległego Pythona tej sesji.
+
+Krok 11a: recenzja s12 zaakceptowała/scaliła r2, lecz zgłosiła P1 błędnych szarych faz i zbrązowienia pigmentu oraz P2 ciemnego równoległoboku. Plan korekty w P1-FEEDBACK-PLAN.md, do wykonania po bieżącym izolowanym przebiegu EC. Próba anulowania kolejki nie wykonała Stop-Process (waiter już nie istniał); slot był już przydzielony. Jednostki EC 15 PASS, 1 deselected, 1.92 s; działa generator. Kandydat równoległoboku w kodzie to paint_blobs, wymaga potwierdzenia PNG.
