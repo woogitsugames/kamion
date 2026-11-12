@@ -8,7 +8,7 @@ $summary=[regex]::Match((Get-Content -LiteralPath $GisLog -Raw),'(?m)^(\d+) pass
 if(-not $summary.Success){throw 'No complete GIS summary'}
 $passed=[int]$summary.Groups[1].Value;$xfailed=[int]$summary.Groups[2].Value;$seconds=$summary.Groups[3].Value
 $xml=[xml](Get-Content "$PSScriptRoot/tests/editmode-final.xml" -Raw)
-if($xml.'test-run'.result -ne 'Passed' -or [int]$xml.'test-run'.failed -ne 0 -or [int]$xml.'test-run'.passed -lt 276){throw 'Incomplete full EditMode'}
+if($xml.'test-run'.result -ne 'Passed' -or [int]$xml.'test-run'.failed -ne 0 -or [int]$xml.'test-run'.passed -ne 310){throw 'Incomplete full EditMode'}
 $editPassed=[int]$xml.'test-run'.passed
 $budget=Get-Content "$PSScriptRoot/clear-budget-all.json" -Raw|ConvertFrom-Json
 if($budget.entries.Count -ne 122 -or @($budget.entries|Where-Object {$_.totalDrawDelta -ne 0 -or $_.totalTriangleDeltaPercent -ne 0}).Count){throw 'All122 budgets must be unchanged'}
@@ -69,3 +69,4 @@ git switch -c gpt-light-r4
 if($LASTEXITCODE){throw 'Round4 branch failed'}
 git merge main
 if($LASTEXITCODE){throw 'Resolve round4 merge explicitly'}
+
