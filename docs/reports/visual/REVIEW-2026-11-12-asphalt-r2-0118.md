@@ -1,16 +1,13 @@
-# Niezależna ocena r2 / candidate
+# Niezależna ocena R2 / candidate2
 
-PASS dla ograniczonego przyrostu materiałowego R2. Kostka wygląda bardziej sucho i spójnie, krawężnik zyskuje czytelniejsze łączenia. Brak regresji wymagającej odrzucenia zmiany.
+PASS wizualny dla ograniczonej zmiany materiałów. Poprawa publicznego chodnika pozostała, a w obejrzanym otoczeniu bramy Kwadratu nie ma widocznej zmiany lokalnego materiału ani nowego szwu.
 
-Obejrzano wszystkie osiem *-crop-pair.jpg i osiem *-pair.jpg w material-review-960: dwa zbliżenia razy Low/High i clear/overcast. Mapowanie źródeł w sources.json. Referencje: obie fotografie rectified-960 oraz pavement-04-albedo-960, obejrzane przy prereview.
+Obejrzano wszystkie osiem crop-pair i osiem pair w material-review-candidate2-960, cztery pary kwadrat-park-gate w scope-review-candidate2-960, High-clear-cab-gate i High-clear-stretch-05-docks oraz wszystkie cztery zestawienia candidate2-reference-960. Przy wcześniejszej ocenie obejrzano także fotografie źródłowe i albedo.
 
-Kostka ma mniej dużych ciemnych plam przechodzących przez wiele elementów. Zachowane spoiny, kruszywo i drobna zmienność. Obrzeże ma wyraźniejsze połączenia segmentów, zwłaszcza przednia listwa High; przyciemnienie skupione przy podziałach, bez szerokiego brudnego pasa. Mineralna powierzchnia zmienia się subtelnie, bez podstaw do deklaracji dużego skoku realizmu.
+Publiczna kostka ma mniej dużych ciemnych plam sugerujących wilgoć. Spoiny i kruszywo pozostają czytelne. Podziały krawężnika są mocniejsze, bez rozlania brudu w szeroki pas. Low i High zachowują wspólny kierunek poprawy; Low bardziej wygładza detal.
 
-Kierunek poprawy jest zgodny w czterech warunkach. Low bardziej wygładza drobny detal, High pozostaje ziarnisty i miejscami wyraźnie błyszczący. Brak nowego statycznego moiré w obejrzanych kadrach.
+Wysepka z urządzeniami bramy, jej obrzeże i sąsiednia nawierzchnia zachowują wizualny wygląd baseline. Widoki kabinowy i doków również nie pokazują oczywistej lokalnej regresji. Brak zauważonej ostrej granicy materiałów, lecz kadry nie obejmują szczegółowo całego obwodu wyłączenia. Oględziny JPG nie dowodzą zerowej różnicy pikselowej.
 
-Pozostałe kwestie P2: powtarzalny układ i podobieństwo kostek stały się bardziej zauważalne, High-overcast ma intensywne jasne punkty, a przednia listwa krawężnika pozostaje dość gładka. Bez wyraźnego pogorszenia przez R2.
+Pozostałe P2: regularność kostek, intensywne jasne punkty High-overcast i dość gładka przednia listwa krawężnika. Nie są nową regresją candidate2.
 
-PASS dotyczy tej zmiany kostki i krawężnika, nie pełnego fotorealizmu, stabilności w ruchu ani Gate3. Bez kalibracji jasności z niedopasowanych fotografii; wycofane proporcje R1 nieużywane. Liczniki i 128 GLB nie były częścią niezależnej oceny. Źródło: niezależny agent asphalt_visual_critic, 2026-11-12, read-only.
-
-Aktualizacja autora sesji: ocena powyżej dotyczy candidate1. Przed publikacją wykryto współdzielony sidewalk_paving na wysepce Kwadrat i dodano candidate2 z wykluczeniem obszaru. Candidate2 wymaga własnego renderu/oceny; PASS nie jest automatycznie przeniesiony.
-
+Ocena dotyczy przyrostu materiałowego, bez zatwierdzenia pełnego realizmu, ruchu ani Gate3. Fotografie mają niedopasowane pozy i nie służą kalibracji jasności. Pełny Pixel Compare i audyt GLB nie były częścią niezależnej oceny. Źródło: agent asphalt_visual_critic, read-only, 2026-11-12.
