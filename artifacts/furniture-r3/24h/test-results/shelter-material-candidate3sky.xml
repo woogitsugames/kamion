@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="18" result="Passed" total="18" passed="18" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-11-12 12:55:30Z" end-time="2026-11-12 12:55:31Z" duration="1,183597">
+  <test-suite type="TestSuite" id="1000" name="Kamion" fullname="Kamion" runstate="Runnable" testcasecount="388" result="Passed" start-time="2026-11-12 12:55:30Z" end-time="2026-11-12 12:55:31Z" duration="1.183597" total="18" passed="18" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1482" name="Game.Tests.EditMode.dll" fullname="C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-furniture/game/Library/ScriptAssemblies/Game.Tests.EditMode.dll" runstate="Runnable" testcasecount="388" result="Passed" start-time="2026-11-12 12:55:30Z" end-time="2026-11-12 12:55:31Z" duration="1.176429" total="18" passed="18" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="72944" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1483" name="Game" fullname="Game" runstate="Runnable" testcasecount="388" result="Passed" start-time="2026-11-12 12:55:30Z" end-time="2026-11-12 12:55:31Z" duration="1.174558" total="18" passed="18" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1484" name="Tests" fullname="Game.Tests" runstate="Runnable" testcasecount="388" result="Passed" start-time="2026-11-12 12:55:30Z" end-time="2026-11-12 12:55:31Z" duration="1.172740" total="18" passed="18" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1125" name="FurnitureShelterMaterialTests" fullname="Game.Tests.FurnitureShelterMaterialTests" classname="Game.Tests.FurnitureShelterMaterialTests" runstate="Runnable" testcasecount="18" result="Passed" start-time="2026-11-12 12:55:30Z" end-time="2026-11-12 12:55:31Z" duration="1.167757" total="18" passed="18" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1135" name="DisabledKeywordIgnoresThePaletteUv" fullname="Game.Tests.FurnitureShelterMaterialTests.DisabledKeywordIgnoresThePaletteUv" methodname="DisabledKeywordIgnoresThePaletteUv" classname="Game.Tests.FurnitureShelterMaterialTests" runstate="Runnable" seed="11108863" result="Passed" start-time="2026-11-12 12:55:30Z" end-time="2026-11-12 12:55:31Z" duration="0.297405" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1142" name="FactoryKeepsUvAndLinearRecipesAndDisablesRemovedFlag" fullname="Game.Tests.FurnitureShelterMaterialTests.FactoryKeepsUvAndLinearRecipesAndDisablesRemovedFlag" methodname="FactoryKeepsUvAndLinearRecipesAndDisablesRemovedFlag" classname="Game.Tests.FurnitureShelterMaterialTests" runstate="Runnable" seed="489881886" result="Passed" start-time="2026-11-12 12:55:31Z" end-time="2026-11-12 12:55:31Z" duration="0.025626" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1146" name="FactoryRejectsRecipesWithDifferentRenderingContracts" fullname="Game.Tests.FurnitureShelterMaterialTests.FactoryRejectsRecipesWithDifferentRenderingContracts" classname="Game.Tests.FurnitureShelterMaterialTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-11-12 12:55:31Z" end-time="2026-11-12 12:55:31Z" duration="0.005369" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1143" name="FactoryRejectsRecipesWithDifferentRenderingContracts(&quot;texture&quot;)" fullname="Game.Tests.FurnitureShelterMaterialTests.FactoryRejectsRecipesWithDifferentRenderingContracts(&quot;texture&quot;)" methodname="FactoryRejectsRecipesWithDifferentRenderingContracts" classname="Game.Tests.FurnitureShelterMaterialTests" runstate="Runnable" seed="132531581" result="Passed" start-time="2026-11-12 12:55:31Z" end-time="2026-11-12 12:55:31Z" duration="0.001373" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1144" name="FactoryRejectsRecipesWithDifferentRenderingContracts(&quot;emissive&quot;)" fullname="Game.Tests.FurnitureShelterMaterialTests.FactoryRejectsRecipesWithDifferentRenderingContracts(&quot;emissive&quot;)" methodname="FactoryRejectsRecipesWithDifferentRenderingContracts" classname="Game.Tests.FurnitureShelterMaterialTests" runstate="Runnable" seed="1293041584" result="Passed" start-time="2026-11-12 12:55:31Z" end-time="2026-11-12 12:55:31Z" duration="0.000126" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1145" name="FactoryRejectsRecipesWithDifferentRenderingContracts(&quot;metal&quot;)" fullname="Game.Tests.FurnitureShelterMaterialTests.FactoryRejectsRecipesWithDifferentRenderingContracts(&quot;metal&quot;)" methodname="FactoryRejectsRecipesWithDifferentRenderingContracts" classname="Game.Tests.FurnitureShelterMaterialTests" runstate="Runnable" seed="1250716720" result="Passed" start-time="2026-11-12 12:55:31Z" end-time="2026-11-12 12:55:31Z" duration="0.000069" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1141" name="PaletteAddsNoShaderPass" fullname="Game.Tests.FurnitureShelterMaterialTests.PaletteAddsNoShaderPass" methodname="PaletteAddsNoShaderPass" classname="Game.Tests.FurnitureShelterMaterialTests" runstate="Runnable" seed="476468428" result="Passed" start-time="2026-11-12 12:55:31Z" end-time="2026-11-12 12:55:31Z" duration="0.000526" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1134" name="PaletteMatchesOriginalSurfaceInputsOnActualGpu" fullname="Game.Tests.FurnitureShelterMaterialTests.PaletteMatchesOriginalSurfaceInputsOnActualGpu" classname="Game.Tests.FurnitureShelterMaterialTests" runstate="Runnable" testcasecount="8" result="Passed" start-time="2026-11-12 12:55:31Z" end-time="2026-11-12 12:55:31Z" duration="0.463624" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1126" name="PaletteMatchesOriginalSurfaceInputsOnActualGpu(0,False)" fullname="Game.Tests.FurnitureShelterMaterialTests.PaletteMatchesOriginalSurfaceInputsOnActualGpu(0,False)" methodname="PaletteMatchesOriginalSurfaceInputsOnActualGpu" classname="Game.Tests.FurnitureShelterMaterialTests" runstate="Runnable" seed="654786793" result="Passed" start-time="2026-11-12 12:55:31Z" end-time="2026-11-12 12:55:31Z" duration="0.185112" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1127" name="PaletteMatchesOriginalSurfaceInputsOnActualGpu(1,False)" fullname="Game.Tests.FurnitureShelterMaterialTests.PaletteMatchesOriginalSurfaceInputsOnActualGpu(1,False)" methodname="PaletteMatchesOriginalSurfaceInputsOnActualGpu" classname="Game.Tests.FurnitureShelterMaterialTests" runstate="Runnable" seed="285531782" result="Passed" start-time="2026-11-12 12:55:31Z" end-time="2026-11-12 12:55:31Z" duration="0.001282" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1128" name="PaletteMatchesOriginalSurfaceInputsOnActualGpu(2,False)" fullname="Game.Tests.FurnitureShelterMaterialTests.PaletteMatchesOriginalSurfaceInputsOnActualGpu(2,False)" methodname="PaletteMatchesOriginalSurfaceInputsOnActualGpu" classname="Game.Tests.FurnitureShelterMaterialTests" runstate="Runnable" seed="962205597" result="Passed" start-time="2026-11-12 12:55:31Z" end-time="2026-11-12 12:55:31Z" duration="0.001123" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1129" name="PaletteMatchesOriginalSurfaceInputsOnActualGpu(3,False)" fullname="Game.Tests.FurnitureShelterMaterialTests.PaletteMatchesOriginalSurfaceInputsOnActualGpu(3,False)" methodname="PaletteMatchesOriginalSurfaceInputsOnActualGpu" classname="Game.Tests.FurnitureShelterMaterialTests" runstate="Runnable" seed="1290679123" result="Passed" start-time="2026-11-12 12:55:31Z" end-time="2026-11-12 12:55:31Z" duration="0.001111" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1130" name="PaletteMatchesOriginalSurfaceInputsOnActualGpu(0,True)" fullname="Game.Tests.FurnitureShelterMaterialTests.PaletteMatchesOriginalSurfaceInputsOnActualGpu(0,True)" methodname="PaletteMatchesOriginalSurfaceInputsOnActualGpu" classname="Game.Tests.FurnitureShelterMaterialTests" runstate="Runnable" seed="865461667" result="Passed" start-time="2026-11-12 12:55:31Z" end-time="2026-11-12 12:55:31Z" duration="0.270436" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1131" name="PaletteMatchesOriginalSurfaceInputsOnActualGpu(1,True)" fullname="Game.Tests.FurnitureShelterMaterialTests.PaletteMatchesOriginalSurfaceInputsOnActualGpu(1,True)" methodname="PaletteMatchesOriginalSurfaceInputsOnActualGpu" classname="Game.Tests.FurnitureShelterMaterialTests" runstate="Runnable" seed="1367153987" result="Passed" start-time="2026-11-12 12:55:31Z" end-time="2026-11-12 12:55:31Z" duration="0.001269" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1132" name="PaletteMatchesOriginalSurfaceInputsOnActualGpu(2,True)" fullname="Game.Tests.FurnitureShelterMaterialTests.PaletteMatchesOriginalSurfaceInputsOnActualGpu(2,True)" methodname="PaletteMatchesOriginalSurfaceInputsOnActualGpu" classname="Game.Tests.FurnitureShelterMaterialTests" runstate="Runnable" seed="474649368" result="Passed" start-time="2026-11-12 12:55:31Z" end-time="2026-11-12 12:55:31Z" duration="0.001136" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1133" name="PaletteMatchesOriginalSurfaceInputsOnActualGpu(3,True)" fullname="Game.Tests.FurnitureShelterMaterialTests.PaletteMatchesOriginalSurfaceInputsOnActualGpu(3,True)" methodname="PaletteMatchesOriginalSurfaceInputsOnActualGpu" classname="Game.Tests.FurnitureShelterMaterialTests" runstate="Runnable" seed="655268626" result="Passed" start-time="2026-11-12 12:55:31Z" end-time="2026-11-12 12:55:31Z" duration="0.001132" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="ParameterizedMethod" id="1140" name="PaletteRetainsEachSourcesDownwardSkyOcclusionOnGpu" fullname="Game.Tests.FurnitureShelterMaterialTests.PaletteRetainsEachSourcesDownwardSkyOcclusionOnGpu" classname="Game.Tests.FurnitureShelterMaterialTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-11-12 12:55:31Z" end-time="2026-11-12 12:55:31Z" duration="0.366952" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1136" name="PaletteRetainsEachSourcesDownwardSkyOcclusionOnGpu(0)" fullname="Game.Tests.FurnitureShelterMaterialTests.PaletteRetainsEachSourcesDownwardSkyOcclusionOnGpu(0)" methodname="PaletteRetainsEachSourcesDownwardSkyOcclusionOnGpu" classname="Game.Tests.FurnitureShelterMaterialTests" runstate="Runnable" seed="1743949801" result="Passed" start-time="2026-11-12 12:55:31Z" end-time="2026-11-12 12:55:31Z" duration="0.361399" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1137" name="PaletteRetainsEachSourcesDownwardSkyOcclusionOnGpu(1)" fullname="Game.Tests.FurnitureShelterMaterialTests.PaletteRetainsEachSourcesDownwardSkyOcclusionOnGpu(1)" methodname="PaletteRetainsEachSourcesDownwardSkyOcclusionOnGpu" classname="Game.Tests.FurnitureShelterMaterialTests" runstate="Runnable" seed="1569472871" result="Passed" start-time="2026-11-12 12:55:31Z" end-time="2026-11-12 12:55:31Z" duration="0.001272" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1138" name="PaletteRetainsEachSourcesDownwardSkyOcclusionOnGpu(2)" fullname="Game.Tests.FurnitureShelterMaterialTests.PaletteRetainsEachSourcesDownwardSkyOcclusionOnGpu(2)" methodname="PaletteRetainsEachSourcesDownwardSkyOcclusionOnGpu" classname="Game.Tests.FurnitureShelterMaterialTests" runstate="Runnable" seed="362604656" result="Passed" start-time="2026-11-12 12:55:31Z" end-time="2026-11-12 12:55:31Z" duration="0.000967" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1139" name="PaletteRetainsEachSourcesDownwardSkyOcclusionOnGpu(3)" fullname="Game.Tests.FurnitureShelterMaterialTests.PaletteRetainsEachSourcesDownwardSkyOcclusionOnGpu(3)" methodname="PaletteRetainsEachSourcesDownwardSkyOcclusionOnGpu" classname="Game.Tests.FurnitureShelterMaterialTests" runstate="Runnable" seed="882373498" result="Passed" start-time="2026-11-12 12:55:31Z" end-time="2026-11-12 12:55:31Z" duration="0.000892" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Saving results to: C:/Users/matma/AppData/LocalLow/woogitsugames/Kamion\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>
