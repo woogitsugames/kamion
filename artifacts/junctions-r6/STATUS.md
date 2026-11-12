@@ -135,3 +135,10 @@ Uwaga: pełny pytest uruchomiony bez `KAMION_BLENDER` nadpisuje `generated/world
   → `bash artifacts/junctions-r6/scripts/pairs.sh b6 && bash artifacts/junctions-r6/scripts/pairs_sbs.sh b6` → obejrzeć
   `pairs_b6sbs/photo_{2818555625124739,201270605169291,1398898753813071,178689077481862}.jpg` (nasyp, zakopane znaki / bariera?)
   → uzupełnić „Wynik” w `docs/adr/0123-junctions-r6-barriers.md` → `robocopy artifacts\junctions-r6 C:\Users\matma\Documents\Claude\kamion\artifacts\junctions-r6 /E /XF *.pkl`
+- s12 STOP (16:39, polecenie lidera — koniec limitu): zadanie w tle `build.sh b6 && b6_all.sh` DZIAŁA (nie zabite), slot heavy od 14:02;
+  log `artifacts/junctions-r6/logs/b6_all.out` (ostatnia linia: "EditMode: 317 total, 317 passed, 0 failed, 0 skipped (Passed) -> C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\junctions-r6\artifacts\tests\editmode-20261112-153012.xml"), szczegóły `logs/b6_{build,import,qa_*,playmode,editmode,fidelity,swept,pytest}.log`.
+  b6 NIE obejrzany, ADR 0123 „Wynik” nieuzupełniony (liczby b5 w kroku 3 wyżej), dowody nieskopiowane do main.
+  NASTĘPNY KROK: `tail -3 artifacts/junctions-r6/logs/b6_all.out` — jeśli jest „b6_all done”:
+  `bash artifacts/junctions-r6/scripts/pairs.sh b6 && bash artifacts/junctions-r6/scripts/pairs_sbs.sh b6` → obejrzeć pary (krok 4) → ADR → robocopy;
+  jeśli brak „b6_all done” i proces nie żyje: `bash artifacts/junctions-r6/scripts/build.sh b6 && bash artifacts/junctions-r6/scripts/b6_all.sh`
+  (jeśli jest „world ready”, wystarczy samo `b6_all.sh`). Po buildzie zacommitować `Data/Regions/*/generated`, `art-source`.
