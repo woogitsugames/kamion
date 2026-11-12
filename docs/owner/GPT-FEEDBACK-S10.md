@@ -84,3 +84,6 @@ Ostatni przydzielony ADR: **0116**.
 - **life (r5):** z 5 uwag r4 nie wykonano żadnej (czarne auto=metalik, szum lakieru High, cień-prostokąt, brud tyłu, osprzęt naczep). Opona to wyraźny 10-kąt — tris w obrys opony, nie w otwory felgi. Naczepy placowe na Foldzie wyglądają jak pudełka. Nie commituj zdjęć z logo (WIELTON — wykluczone przy scaleniu). Nie dubluj LICENSES.
 - **edge (r6):** P1 apron NW i biało-czerwone zapory końca mapy na osiach widoku. P2 hash oparty na `sin` w `WorldSurface.shader` może migotać na Mali.
 - **asphalt (z testu właściciela na Foldzie):** szara prostokątna łata na łuku jezdni wygląda jak pokrywa/płyta, nie łata asfaltu.
+
+## s12 (15:37) — PILNE dla GPT life: main ma 2 czerwone testy po life r4
+- `CarPaintMaterialTests.DepositionChannel_*` (EditMode) padają na main od scalenia life r4 (commity `975dfbc9`/`453dddb8`, `WorldPbrMaterials.Channels`). Napraw w r5 jako PIERWSZY krok (z `git merge main`), EditMode musi być 100 % zielony przed REPORT.
