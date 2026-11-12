@@ -56,3 +56,4 @@ Krok 20: zamrożono 25 zaakceptowanych fotografii B w reference-photos, każdą 
 Następny krok: koniec build_world po poprawce → After; potem odczyty geometrii i porównania pod heavy, EditMode oraz końcowy GIS.
 Krok 18: build_world po poprawce zakończony kodem 0 bez fallback=True; wynik w build-world-after.log. Następna komenda: validate.ps1 -Phase After pod Unity.
 2026-11-12T02:15:17.6743141+01:00 Przebudowano wyłącznie WorldEdge w scenach Low i High; wynik wizualny do sprawdzenia.
+2026-11-12T02:15:50.5676848+01:00 Zapisano rendery after/Low-clear wszystkich kamer; ocena PNG i budżetu nadal w toku.
