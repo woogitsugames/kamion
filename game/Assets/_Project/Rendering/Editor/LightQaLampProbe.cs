@@ -22,10 +22,19 @@ namespace Game.Rendering.Editor
             public Vector4 cloudSourceLimits;
             public int pools, enabledPointLights;
             public Vector4[] headsAndWeights;
+            public Vector4[] poolGroundPoints, poolGroundViewport;
+            public float[] nominalRoadLuxNoOcclusion;
+            public LampSurface[] lampSurfaces;
             public Vector4 exposedPoolColor;
             public bool projectedHeadlamps;
             public string headlampDiagnostics;
             public Vector4 headlampLeft, headlampRight, exposedHeadlampColor;
+        }
+        [Serializable] sealed class LampSurface
+        {
+            public string name, shader;
+            public Vector4 emission;
+            public float cull;
         }
         [Serializable] sealed class Document
         {
@@ -33,6 +42,7 @@ namespace Game.Rendering.Editor
             public Snapshot[] cameras;
         }
         readonly Dictionary<string, Snapshot> m_Cameras = new Dictionary<string, Snapshot>();
+        LampSurface[] m_LampSurfaces;
 
         public void Capture(Camera camera)
         {
@@ -43,6 +53,26 @@ namespace Game.Rendering.Editor
             int count = StreetLamps.PoolCount;
             var positions = new Vector4[count];
             Array.Copy(StreetLamps.PoolPositions, positions, count);
+            var ground=new Vector4[count];var viewport=new Vector4[count];var nominalLux=new float[count];
+            for(int i=0;i<count;i++)
+            {
+                Vector3 head=new Vector3(positions[i].x,positions[i].y,positions[i].z);
+                if(Physics.Raycast(head-Vector3.up*.15f,Vector3.down,out var hit,80f,~(1<<8),QueryTriggerInteraction.Ignore) &&
+                    hit.normal.y>.7f && head.y-hit.point.y>1f)
+                {
+                    ground[i]=new Vector4(hit.point.x,hit.point.y,hit.point.z,1);
+                    Vector3 projected=camera.WorldToViewportPoint(hit.point);
+                    viewport[i]=new Vector4(projected.x,projected.y,projected.z,positions[i].w);
+                    // Nominal luminaire directly below its head: inverse square * incidence, without occlusion.
+                    nominalLux[i]=StreetLamps.DownIntensityCd*Mathf.Clamp01(hit.normal.y)/Mathf.Max((head-hit.point).sqrMagnitude,1f)*positions[i].w;
+                }
+            }
+            if(m_LampSurfaces==null)
+                m_LampSurfaces=Resources.FindObjectsOfTypeAll<Material>()
+                    .Where(m=>StreetLamps.IsLampGlass(m) && (m.hideFlags&HideFlags.DontSave)!=0)
+                    .Select(m=>new LampSurface{name=m.name,shader=m.shader!=null?m.shader.name:"missing",
+                        emission=m.HasProperty("_Emission")?m.GetVector("_Emission"):Vector4.zero,cull=m.HasProperty("_Cull")?m.GetFloat("_Cull"):-1})
+                    .ToArray();
             m_Cameras[qa.id] = new Snapshot {
                 camera = qa.id, diagnostics = StreetLamps.Diagnostics,
                 position = camera.transform.position, forward = camera.transform.forward,
@@ -56,6 +86,7 @@ namespace Game.Rendering.Editor
                 clearCloudSourceMinElevationDeg = environment.Active.clearCloudSourceMinElevationDeg,
                 cloudSourceLimits = Shader.GetGlobalVector("_KamionClearCloudSourceLimits"),
                 pools = count, headsAndWeights = positions,
+                poolGroundPoints=ground,poolGroundViewport=viewport,nominalRoadLuxNoOcclusion=nominalLux,lampSurfaces=m_LampSurfaces,
                 projectedHeadlamps = KamionHeadlamps.Enabled, headlampDiagnostics = KamionHeadlamps.Diagnostics,
                 headlampLeft = Shader.GetGlobalVector("_KamionHeadlampLeft"),
                 headlampRight = Shader.GetGlobalVector("_KamionHeadlampRight"),
