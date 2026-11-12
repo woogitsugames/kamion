@@ -303,7 +303,7 @@ overrides:
     # ADR 0139 (review s13-0127 P2): sizes read off the frontal frame 275528677534382 (2048 px wide, column axes
     # 797 px apart = the 14 m beam): left board 214 x 46 px -> 3.75 x 0.82 m, right board 216 x 67 px -> 3.8 x 1.2 m,
     # beam chords 30 px apart -> 0.55 m, board tops ~0.3 m above the top chord, bottoms at the bottom chord.
-    # The rule gave 4.06 x 1.42 m and 4.03 x 2.04 m on a 1.0 m beam. With the 5.2 m clearance the portal top comes
+    # The rule gave 4.06 x 1.42 m and 4.03 x 2.04 m on a 1.0 m beam. With the 5.0 + 0.2 m clearance the portal top comes
     # to 6.1 m, board bottoms 5.2-5.5 m (ADR 0127 read 6.2-6.5 m / ~5.5 m off the same frame; the rule gave 7.0 m). WORKING_VALUE (+-5 %).
     beam_depth_m: 0.55
     boards:

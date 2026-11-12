@@ -84,10 +84,6 @@
    0.957,
    1.229
   ],
-  "OB_0a31f00e": [
-   4.025,
-   2.038
-  ],
   "OB_0bfe6830": [
    4.062,
    2.038
@@ -96,9 +92,13 @@
    4.794,
    3.275
   ],
-  "OB_b7134a83": [
-   4.062,
-   1.419
+  "OB_7c1f064e": [
+   3.75,
+   0.819
+  ],
+  "OB_a8034096": [
+   3.8,
+   1.194
   ],
   "OB_f99035fb": [
    4.794,
@@ -384,15 +384,6 @@
    "tris_lod0": 28,
    "tris_lod1": 28
   },
-  "board_OB_0a31f00e": {
-   "materials": [
-    "board_back",
-    "sign_OB_0a31f00e",
-    "steel_galv"
-   ],
-   "tris_lod0": 28,
-   "tris_lod1": 28
-  },
   "board_OB_0bfe6830": {
    "materials": [
     "board_back",
@@ -411,10 +402,19 @@
    "tris_lod0": 28,
    "tris_lod1": 28
   },
-  "board_OB_b7134a83": {
+  "board_OB_7c1f064e": {
    "materials": [
     "board_back",
-    "sign_OB_b7134a83",
+    "sign_OB_7c1f064e",
+    "steel_galv"
+   ],
+   "tris_lod0": 28,
+   "tris_lod1": 28
+  },
+  "board_OB_a8034096": {
+   "materials": [
+    "board_back",
+    "sign_OB_a8034096",
     "steel_galv"
    ],
    "tris_lod0": 28,
@@ -1428,12 +1428,12 @@
    "tris_lod0": 1072,
    "tris_lod1": 480
   },
-  "sign_gantry_14_70": {
+  "sign_gantry_14_61_b6": {
    "materials": [
     "gantry_steel"
    ],
-   "tris_lod0": 1136,
-   "tris_lod1": 528
+   "tris_lod0": 1008,
+   "tris_lod1": 480
   },
   "sign_post": {
    "materials": [
