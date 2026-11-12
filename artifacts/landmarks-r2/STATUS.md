@@ -26,3 +26,5 @@ Krok 3: świeży baseline świata po merge main wygenerowany pod heavy, bez fall
 Krok 3a: zapisano CANDIDATE.md z dokładnym planem flag schodów, podziału ścięć bez dodatkowych trójkątów i testów zachowania kolizji oraz UV1/COL pomostu. To plan, nie wdrożona zmiana. Przygotowanie map nadal oczekuje heavy; Unity nie zostało uruchomione.
 
 Krok 4: brakujące nowe cache PBR po merge main przygotowano osobno pod heavy i zweryfikowano PNG. Zachowano własny fire_station. Własny marker zwalnia import; żaden generator nie startował po cichu z Unity.
+
+Krok 4a: import Low+High zakończony IMPORT_RESULT OK; baseline 58 kamer rozpoczęty w Low-overcast pod Unity. Przygotowano photo_pair.py, zapisujące pary 960 px i jawny status pozy UNVERIFIED, z opisem centralnego kadrowania referencji. Nie twierdzę jeszcze, że kadr odpowiada fotografii.
