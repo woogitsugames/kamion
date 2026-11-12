@@ -158,3 +158,5 @@ potem poprawić największe udokumentowane odstępstwo wiaty. WIP po każdym kro
 2026-11-12T13:18:11.1310372+01:00: Unity shelter-policy-probe candidate2b Low overcast; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
 
 2026-11-12T13:20:41.3141475+01:00: focused FurnitureShelterPolicyTests 7/7 passed, 0 failed/skipped. Test rzeczywistego SaveAssets + unload/reload potwierdził trwałość. Niezależny przegląd kodu nie znalazł blokera dla obecnego importu, wskazał ograniczenia hooka przy zapisie, wymóg obecności generic i nieobsługiwany estymator roads. Zapisano bazę polityk wszystkich prototypów oraz XML/logi. PACKET jawnie wycofuje iterację 1 jako dowód końcowego budżetu. NASTĘPNY KROK: normalny import candidate2 i audyt wszystkich polityk.
+
+2026-11-12T13:22:12.4833337+01:00: Unity import candidate2 Low overcast; sukces=True. Slot zwolniony. NASTĘPNY KROK: sprawdzić logi i obejrzeć PNG.
