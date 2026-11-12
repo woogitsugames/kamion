@@ -95,3 +95,4 @@ Końcowy GIS: 525 passed, 1 xfailed, 1 failed w 1390,34 s (czas zawiera pauzę w
 Pierwszy restored-probe zatrzymał się przed uruchomieniem Unity: brak katalogu restored-probe dla przekierowania probe.log. Slot zwolniono w finally. Poprawiono mkdir w helperze, log błędu zachowany osobno; generatora i GIS nie powtarzamy, import już zaliczony. finish-rejected-tail.ps1 ponowi probe, porówna PNG i uruchomi EditMode, każde Unity ze slotem.
 Dokończenie r3: ponowiony probe przywróconego świata kod 0. Produkcja przywrócona do r1, brak zaakceptowanej korekty B8.
 Dokończenie r3: zgodność obrazu z baseline kod 0. Produkcja przywrócona do r1, brak zaakceptowanej korekty B8.
+Dokończenie r3: EditMode kod 0. Produkcja przywrócona do r1, brak zaakceptowanej korekty B8.
