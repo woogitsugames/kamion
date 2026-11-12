@@ -74,3 +74,9 @@ Sprężarka − silnik po zmianie (lustro runtime, stała praca, sprężarka ła
 ## Konsekwencje
 - Sprężarka jest dalej słyszalna na postoju z bliska (zewnątrz), w kabinie ledwo.
 - Do sprawdzenia przez właściciela: Ustawienia → DŹWIĘK → Zestaw dźwięków (nagranie było w trybie synteza).
+
+## Wyniki testów
+Unity 6000.3.28f1, worktree `audio-idle`: PlayMode 31/31 (`Audio|TyreScrub|IdleAudio|DrivingLabScene|ControlSettingsPanel`,
+w tym nowe `IdleAudioCaptureTests` 4/4: toczenie D9 przy obciążeniu 0,000). EditMode 414/416: 2× znana cudza porażka
+`CarPaintMaterialTests.DepositionChannel`. pytest `tools/audio/tests` 36 passed, 1 skipped.
+APK: `artifacts/audio-idle/kamion-0.1.0-9ffd0f2d95.apk` (bez instalacji; telefonów nie dotykano).
