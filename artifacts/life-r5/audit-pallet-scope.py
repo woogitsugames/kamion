@@ -105,7 +105,11 @@ def main():
     (OUT / f'{tag}-pallet-scope.json').write_text(json.dumps(result, indent=2), encoding='utf-8')
     print(json.dumps(result, indent=2))
     assert not protected and not raw_changed
-    assert {r['node'] for r in changed} == allowed, 'Expected all eight pallet LODs to change'
+    expected = {r['node'] for r in changed}
+    if tag.endswith('-prebuild'):
+        assert not expected, 'Prebuild must still hold the exact baseline GLB'
+    else:
+        assert expected == allowed, 'Expected all eight pallet LODs to change'
 
 
 if __name__ == '__main__':
