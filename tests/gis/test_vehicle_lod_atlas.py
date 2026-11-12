@@ -48,3 +48,27 @@ def test_atlas_keeps_linear_albedo_metallic_and_smoothness(tmp_path):
         np.testing.assert_allclose(linear, M[name]["color"], atol=.004)
         assert mask[y, x, 0] == pytest.approx(M[name].get("metal", 0), abs=1/255)
         assert mask[y, x, 3] == pytest.approx(1 - M[name]["rough"], abs=1/255)
+
+
+@pytest.mark.parametrize("name,mesh", [
+    ("tractor_white", lambda: yard.tractor("white")[1]),
+    ("trailer_curtain_0", lambda: yard.trailer("curtain", "grey")[1]),
+    ("trailer_reefer_0", lambda: yard.trailer("reefer", None)[1]),
+])
+def test_far_yard_keeps_shell_and_all_large_or_long_triangles(name, mesh):
+    before = crease_normals(mesh().out())
+    after = atlas.far_yard(before, name)
+    keep = atlas.primary(name)
+    assert next(p for p in after if p['mat'] == keep) is next(p for p in before if p['mat'] == keep)
+    assert sum(len(p['T']) for p in after) <= sum(len(p['T']) for p in before)
+    for old in before:
+        if old['mat'] == keep:
+            continue
+        new = next((p for p in after if p['mat'] == old['mat']), None)
+        kept = set(map(tuple, new['T'])) if new is not None else set()
+        removed = np.array([t for t in old['T'] if tuple(t) not in kept], dtype=int)
+        if not len(removed):
+            continue
+        xyz = old['V'][removed]
+        assert (np.linalg.norm(xyz-np.roll(xyz, 1, axis=1), axis=2) < .12).all()
+        assert (np.linalg.norm(np.cross(xyz[:,1]-xyz[:,0], xyz[:,2]-xyz[:,0]), axis=1)/2 < .003).all()
