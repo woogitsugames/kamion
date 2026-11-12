@@ -140,3 +140,5 @@ Zapisano kompletną niezależną ocenę baseline w REVIEW-D51-BASELINE.md: G3-A 
 2026-11-12T11:42:31.2053813+01:00: projekt raportu zawiera teraz cztery konkretne, wcześniej obejrzane i audytowane pary960px, z rozdzieleniem bazowej oceny od diagnostykiC i ich epok renderu. Pełny GIS działa w sesji80208; brak jeszcze końcowego wyniku.
 
 2026-11-12T11:44:16.1526907+01:00: zweryfikowałem odczyt pięciu wpisów małego archiwum review-evidence.zip: wszystkieSHA zgodne z receiptem i SHA całegoZIPzgodne. Oryginalne bajty recenzji pozostają odtwarzalne mimo normalizacjiGit. GIS80208 doszedł do86%, nadal bez wyniku końcowego.
+
+2026-11-12T11:52:41.8597261+01:00: końcowy pełny GIS80208 zakończony exit0:665 passed,1 xfailed w726.22s. Heavy zwolniony i własny slot nie istnieje. Receipt wiąże zamrożony kod bcc65bbb, HEAD obserwowany po Acquire i SHA logu. Dokładnie jeden faktyczny pełny przebieg; poprzednia sesja zakończyła samo oczekiwanie przed uruchomieniem pytest.
