@@ -11,3 +11,4 @@ Wartość −0,75 jest WORKING_VALUE. Dane wybierają oddzielny Low atlas, impor
 Ostrzejsze filtrowanie wymaga dalszej oceny migotania w ruchu na urządzeniu; statyczne PNG nie rozstrzygają tego. Sesja nie używa telefonu. Wariant pozostaje wybranym kandydatem do pełnej macierzy i kontroli budżetu, nie niezależnie zaakceptowaną naprawą.
 
 Wyniki i hashe: legend2x-roi-check.json, legendbias-roi-check.json, legendbias-clear-roi-check.json, legendbias-dusk-roi-check.json. Artefakty materiału Plastic nadal oddzielne; przy tych renderach jego mapy były niezmienione.
+Ważne doprecyzowanie rozdzielczości: źródłowe PNG mają 1920×1080, ale stats Low potwierdza renderScale=0,75 i MSAA=2 (wewnętrzny render około 1440×810, następnie upscale). „Natywny ROI” oznacza nieprzeskalowany wycinek zapisanego PNG, nie 1:1 piksele wewnętrznego RT. Baseline i oba warianty mają identyczne ustawienia. Nie podnoszono skali ani rozdzielczości Low; High ma renderScale=1.
