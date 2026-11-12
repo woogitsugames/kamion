@@ -3,8 +3,6 @@ $PSNativeCommandUseErrorActionPreference=$false
 Set-Location (Resolve-Path "$PSScriptRoot/../../..")
 $ev='artifacts/furniture-r3/24h'
 # Baseline generated after the main merge, before any r3 furniture implementation.
-& pwsh "$ev/heavy-step.ps1" -Step pbr -Phase before
-if($LASTEXITCODE -ne 0){throw 'Baseline PBR failed'}
 & pwsh "$ev/heavy-step.ps1" -Step world -Phase before
 if($LASTEXITCODE -ne 0){throw 'Baseline world failed'}
 & pwsh "$ev/heavy-step.ps1" -Step geometry -Phase before

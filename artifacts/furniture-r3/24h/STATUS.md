@@ -20,3 +20,5 @@ potem poprawić największe udokumentowane odstępstwo wiaty. WIP po każdym kro
 2026-11-12T11:01:04.0365756+01:00: przygotowano helpery r3 z identyfikatorem artefaktówr3 i właścicielemheavy bieżącej gałęzi. Przed baseline sprawdzeniecachePBR:nieaktualnychplikówMedium=0. Baseline kolejnoPBR,world,snapshot,import,220 kadrówclear/overcast. Brak nowych zmian geometrii przed baseline.
 
 2026-11-12T11:02:26.9638208+01:00: korekta pipeline:cachePBRMedium aktualny(0stale), więc wycofano wyłącznie własny oczekujący etapPBR przed rozpoczęciem (PID68624/72788/49776, brak dzieci pracyPython). Nie przebudowywać bez potrzeby. Baseline wznowiony odworld; żaden generator nie był przerwany. Sloty cudzych właścicieli nietknięte.
+
+2026-11-12T11:03:05.7729976+01:00: oprava usunięcia etapuPBR:poprzednia zamiana tekstowa nie pasowała do końców linii. Ponownie zatrzymano tylko własne procesy oczekujące, bez pracyPython, usunięto obie linie etapupbr i jawnie sprawdzono ich brak. Właściwe wznowienie odworld następuje teraz.
