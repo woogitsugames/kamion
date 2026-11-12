@@ -111,3 +111,4 @@ Stan C zapisany: kod zawiera pokrywę B3, a wygenerowany i zaimportowany świat 
 Zapisano recenzje kodu C i pomyslne parsowanie pomocniczych PS1. Analiza siatki C:21697tris wobec20347B2, bez deklaracji budzetu kamer. Kolejka4178 nadal aktywna, ostatnio5przed nami.
 Swiezy odczyt recenzji main batchD:297817 nadal PARTIAL, B8 nieodblokowane. Wnioski zapisane w NEXT-ROUND-INPUTS, bez zmian innych dziedzin ani sadzenia z niezgodnej pozy. Wlasne4178 nadal potwierdzone zywe w FIFO.
 Helper arkuszy przyjmuje teraz jawne before-root. Po probie C powstana osobno porownania do swiezego baseline oraz do B2, aby wyizolowac wplyw pokrywy. Nazwy wynikow z -vs-probe-b zapobiegaja nadpisaniu dowodow. Koszt wzgledem B2 nie zastapi budzetu wzgledem baseline. AST helpera sprawdzone; bez dodatkowego renderu i bez testow GIS poza heavy.
+Celowane testy C kod0. World i dekodowanie kolizji dalej sekwencyjnie w tym samym heavy.
