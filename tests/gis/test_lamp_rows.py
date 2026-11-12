@@ -18,7 +18,7 @@ def _deck(y0, y1, z, x0=-50.0, x1=50.0):
 
 def _row(tmp_path, pts, snap=2.6):
     f = tmp_path / "lamp_rows.json"
-    f.write_text(json.dumps({"rows": [{"id": "t", "proto": "lamp_double_11m", "proto_console": "lamp_console_test_11m",
+    f.write_text(json.dumps({"rows": [{"id": "t", "proto": "lamp_double_10m", "proto_console": "lamp_console_test_10m",
                                        "suppress_rule_lamps": {"osm_way": [1], "within_m": 18.0},
                                        "deck_snap_m": snap, "points_en": pts}]}), encoding="utf-8")
     return f
@@ -38,7 +38,7 @@ def test_console_on_the_nearest_deck_edge_rule_lamps_replaced(tmp_path):
     assert r["rule_lamps_removed"] == 1 and r["placed"] == 2 and r["console"] == 2
     new = [it for it in pl.items if it["src"].startswith("authored:")]
     for it in new:
-        assert it["p"] == "lamp_console_test_11m"
+        assert it["p"] == "lamp_console_test_10m"
         assert it["n"] == pytest.approx(4.2 - F.CONSOLE_OUT_M, abs=0.03)      # gap side of the nearer deck
         assert it["z"] == pytest.approx(8.0, abs=1e-6)                        # cap top, not the ground under the gap
         # +y (console, arm) points across the road toward that deck
@@ -52,7 +52,7 @@ def test_ground_column_where_no_deck_is_near(tmp_path):
     pl = F.Placer(flat, flat)
     rep = {}
     F.lamp_rows(pl, [_deck(20.0, 30.0, 8.0)], _row(tmp_path, [[-20.0, 0.0], [20.0, 0.0]]), rep)
-    assert {it["p"] for it in pl.items} == {"lamp_double_11m"}
+    assert {it["p"] for it in pl.items} == {"lamp_double_10m"}
     assert all(it["z"] == 0.0 for it in pl.items)
 
 
@@ -63,23 +63,23 @@ def test_mast_stays_at_the_measured_point_at_deck_level(tmp_path):
     pl = F.Placer(flat, flat)
     parts = [_deck(-10.0, 0.0, 8.0), _deck(4.2, 14.2, 8.0)]
     f = tmp_path / "lamp_rows.json"
-    f.write_text(json.dumps({"rows": [{"id": "t", "proto": "lamp_double_11m", "proto_mast": "lamp_double_mast_11m",
+    f.write_text(json.dumps({"rows": [{"id": "t", "proto": "lamp_double_10m", "proto_mast": "lamp_double_mast_10m",
                                        "deck_snap_m": 2.6, "points_en": [[-20.0, 2.8], [20.0, 2.8]]}]}), encoding="utf-8")
     rep = {}
     F.lamp_rows(pl, parts, f, rep)
     assert rep["lamp_rows"]["t"]["mast"] == 2 and rep["lamp_rows"]["t"]["console"] == 0
     for it in pl.items:
-        assert it["p"] == "lamp_double_mast_11m"
+        assert it["p"] == "lamp_double_mast_10m"
         assert (it["e"], it["n"]) == (pytest.approx(abs(it["e"]) * np.sign(it["e"])), pytest.approx(2.8))
         assert it["z"] == pytest.approx(8.0, abs=1e-6)
 
 
 def test_double_arm_prototype():
     for kw in ({}, {"console": True}, {"sink": P.LAMP_MAST_SINK_M}):
-        lods = P.lamp_y(11.0, **kw)
+        lods = P.lamp_y(**kw)
         m = lods[0].out()
         V = np.concatenate([p["V"] for p in m])
-        assert V[:, 2].max() == pytest.approx(11.0, abs=0.06)
+        assert V[:, 2].max() == pytest.approx(P.LAMP_Y_H_M, abs=0.06)
         assert V[:, 1].max() == pytest.approx(-V[:, 1].min(), abs=0.4)       # symmetric arms (console only adds y > 0)
         assert 1.85 < V[:, 1].max() < 2.1               # orthophoto: arm tips 3.8-4.0 m apart incl. housings
         mats = {p["mat"] for p in m}
@@ -87,12 +87,12 @@ def test_double_arm_prototype():
         assert V[:, 2].min() == pytest.approx(-kw.get("sink", 0.0), abs=0.35)
         # arms are arcs: some arm vertex lies clearly above the straight line fork -> arm end
         arm = V[(np.abs(V[:, 1]) > 0.3) & (np.abs(V[:, 1]) < 1.0)]
-        chord = 10.0 + np.abs(arm[:, 1]) / 1.3
+        chord = P.LAMP_Y_H_M - 1.0 + np.abs(arm[:, 1]) / 1.3
         assert (arm[:, 2] - chord).max() > 0.15
         # Low mesh: no arm tube thinner than 2 x LAMP_Y_ARM_R_LOD1 (it aliased away, REVIEW s14-0133 P2-5)
         l1 = [p for p in lods[1].out() if p["mat"].startswith("furniture_galv")]
         V1 = np.concatenate([p["V"] for p in l1])
-        tip = V1[(np.abs(V1[:, 1]) > 1.2) & (V1[:, 2] > 10.5)]
+        tip = V1[(np.abs(V1[:, 1]) > 1.2) & (V1[:, 2] > P.LAMP_Y_H_M - 0.5)]
         assert np.ptp(tip[:, 0]) >= 2 * P.LAMP_Y_ARM_R_LOD1 * 0.85
 
 
@@ -102,7 +102,7 @@ def test_authored_row_file():
     P_ = np.asarray(row["points_en"], float)
     gaps = np.hypot(*np.diff(P_, axis=0).T)
     assert len(P_) == 18 and 28.0 < gaps.min() and gaps.max() < 38.0           # measured spacing 28-37 m
-    assert row["proto"] == "lamp_double_11m" and row["proto_mast"] == "lamp_double_mast_11m"
+    assert row["proto"] == "lamp_double_10m" and row["proto_mast"] == "lamp_double_mast_10m"
 
 
 def test_profile_tie_file():

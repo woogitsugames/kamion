@@ -102,11 +102,16 @@ def lamp(h, bracket, double=False):
     return m, l1, col
 
 
+# Luminaire height of the DK8 median columns above the road (ADR 0146), WORKING_VALUE 9.4-11.3 m: Mapillary
+# 494288258686575 with the focal length measured in the frame (1900 px of 2048: 5.57 m lane-dash module of the 0.08 m
+# orthophoto, eye 1.0 m from the 3.5 m lane) -> head 9.0 m above the eye = 10.0 m above the deck; orthophoto shadows:
+# luminaire shadow on the NE deck 11.3 m, fork shadow of ground column 1 10.8 m at 1.05-1.13 m of shadow per metre.
+LAMP_Y_H_M = 10.3
 LAMP_MAST_SINK_M = 7.5        # WORKING_VALUE: deepest gap floor under the Putry decks is 6.2 m below the deck (NMT)
 LAMP_Y_ARM_R_LOD1 = 0.06     # WORKING_VALUE (ADR 0146): arm radius of the Low mesh, so a 7-9 cm tube does not alias away
 
 
-def lamp_y(h=11.0, reach=1.3, rise=1.0, console=False, sink=0.0):
+def lamp_y(h=10.3, reach=1.3, rise=1.0, console=False, sink=0.0):
     """Median double-arm column of DK8 / Andersa at Rondo Putry (ADR 0133, reshaped in ADR 0146): tapered galvanised
     column, two arms leaving the column top steeply and bending out in an arc to a flat LED housing on each side
     (+y and -y, across both carriageways). Luminaires at `h` above the origin.
@@ -529,11 +534,10 @@ def build_all(sign_codes, boards):
         P[f"lamp_old_{kind}_{hh}m"] = lamp_old(float(hh), kind)
     P["lamp_arc_9m"] = lamp_arc(9.0)
     P["lamp_arc_9m_double"] = lamp_arc(9.0, double=True)
-    # ADR 0133 / 0146: DK8 median row (authored lamp_rows.json). Heads 11 m above the road (orthophoto shadows and
-    # Mapillary 494288258686575 at the phone's native focal length: 10.7-11.5 m, WORKING_VALUE); in the gap between
-    # the decks the mast stands on the ground under the viaduct (LAMP_MAST_SINK_M of shaft below deck level).
-    P["lamp_double_11m"] = lamp_y(11.0)
-    P["lamp_double_mast_11m"] = lamp_y(11.0, sink=LAMP_MAST_SINK_M)
+    # ADR 0133 / 0146: DK8 median row (authored lamp_rows.json). Luminaires LAMP_Y_H_M above the road; in the gap
+    # between the decks the mast stands on the ground under the viaduct (LAMP_MAST_SINK_M of shaft below deck level).
+    P["lamp_double_10m"] = lamp_y(LAMP_Y_H_M)
+    P["lamp_double_mast_10m"] = lamp_y(LAMP_Y_H_M, sink=LAMP_MAST_SINK_M)
     P["sign_post"] = sign_post()
     for c in sorted(sign_codes):
         P[f"plate_{c}"] = plate(c)

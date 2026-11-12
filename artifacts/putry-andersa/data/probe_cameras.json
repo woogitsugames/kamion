@@ -1,0 +1,27 @@
+{
+ "schema": "kamion/sbs-cameras/1",
+ "frame": "E,N,absolute U",
+ "cameras": [
+  {
+   "id": "sbs-p146-494288-native",
+   "kind": "photo_match",
+   "seat": "file",
+   "type": "persp",
+   "pos": [
+    -486.2645,
+    -30.6583,
+    140.0177
+   ],
+   "look_at": [
+    -513.4152,
+    -1.733,
+    146.9331
+   ],
+   "fov_deg": 44.01815,
+   "segment": "G3-B",
+   "pose_confidence": "B",
+   "pose_reason": "ADR 0146 probe: ADR 0143 station and heading; focal length measured in the frame 1900 px of 2048 (vfov 44.0 deg) instead of the SfM 1.27; eye 1.0 m",
+   "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+  }
+ ]
+}

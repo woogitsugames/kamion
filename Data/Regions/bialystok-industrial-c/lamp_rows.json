@@ -5,11 +5,11 @@
   "rows": [
     {
       "id": "dk8-putry-median-double-lamps",
-      "reason": "DK8 / Andersa dual carriageway over Rondo Putry: one row of double-arm (Y) columns in the median, arms across both carriageways; no lamps on the outer edges. Photo Mapillary 494288258686575 (szurek 2017, CC BY-SA 4.0, reference only): Y-columns behind the left (median) barrier of the NW-bound deck, screen on the right. GUGiK WMS HighResolution 0.08 m (cells c_02..c_04 x c_07..c_08): 14 double-arm heads in the grass median and in the 4.2 m gap between the two decks, spacing 32-37 m. ADR 0146: the columns in the gap between the decks stand on the ground under the viaduct (0.08 m orthophoto: the pole shadow starts at the base on the gravel of the gap floor and runs 7.7 m on it to the NE deck, e.g. column 9 at E -502.2 N -27.3), so they are masts of deck height + ~11 m; luminaires ~11 m above the road (luminaire shadow on the NE deck 11.3 m from its image with a sun of ~1.05 m shadow per m, calibrated on a car; ground column 1: fork shadow 10.8 m; photo 494288 with the phone's native focal length: head 10.3 m above the eye). Row continued south-east on the grass median to the median opening at the fire station (4 columns, same orthophoto, cells c_04_07..c_05_06).",
+      "reason": "DK8 / Andersa dual carriageway over Rondo Putry: one row of double-arm (Y) columns in the median, arms across both carriageways; no lamps on the outer edges. Photo Mapillary 494288258686575 (szurek 2017, CC BY-SA 4.0, reference only): Y-columns behind the left (median) barrier of the NW-bound deck, screen on the right. GUGiK WMS HighResolution 0.08 m (cells c_02..c_04 x c_07..c_08): 14 double-arm heads in the grass median and in the 4.2 m gap between the two decks, spacing 32-37 m. ADR 0146: the columns in the gap between the decks stand on the ground under the viaduct (0.08 m orthophoto: the pole shadow starts at the base on the gravel of the gap floor and runs 7.7 m on it to the NE deck, e.g. column 9 at E -502.2 N -27.3), so they are masts of deck height + ~10 m. Luminaires 10.3 m above the road, WORKING_VALUE 9.4-11.3 m: photo 494288 with the focal length measured in the frame (1900 px of 2048 from the 5.57 m lane-dash module and eye height 1.0 m; the Mapillary SfM value 1.27 = 2602 px gave the 6 m of ADR 0143): head 9.0 m above the eye; luminaire shadow on the NE deck 11.3 m and fork shadow of ground column 1 10.8 m at 1.05-1.13 m of shadow per m of height. Arm tips 3.4-4.0 m apart (orthophoto), 3.6 m on the photo. Row continued south-east on the grass median to the median opening at the fire station (4 columns, same orthophoto, cells c_04_07..c_05_06).",
       "source": "GUGiK ortho 0.08 m, base = start of the pole shadow (top leans away from the nadir); read on 2x crops, artifacts/putry-deck/data/sheet1.jpg, sheet2.jpg. Lateral accuracy ~1 m (WORKING_VALUE)",
       "confidence": "medium",
       "verify": "mast footing and exact height (no drawings), column type south-east of E -282 (rule lamps there)",
-      "proto": "lamp_double_11m",
+      "proto": "lamp_double_10m",
       "suppress_rule_lamps": {
         "osm_way": [
           1101181473,
@@ -96,7 +96,7 @@
           -201.7
         ]
       ],
-      "proto_mast": "lamp_double_mast_11m"
+      "proto_mast": "lamp_double_mast_10m"
     }
   ]
 }
