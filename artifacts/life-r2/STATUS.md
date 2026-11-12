@@ -95,3 +95,5 @@ Krok 37: preflight palet ukończony: obejrzano dwie fotografie W.carter (Commons
 Iteracja B (2026-11-12T02:39:42.5993684+01:00): Audyt prototypów B zakończony 0, grupy i kolizje zgodne z baseline. Następne etapy w run-b-after-world.ps1, REPORT po oględzinach i testach końcowych.
 
 Krok 38: zapisano preflight materiału palet: brak deklarowanego zestawu euro_pallet_side w spec; natywny materiał jest WorldSurface z przypisaną BaseMap. Nie twierdzimy, że jest całkiem bez tekstury. Wygląd pozostaje UNVERIFIED do właściwych kamer r3. Geometria B przeszła: 14 prototypów ma identyczne tris/grupy/kolizje jak A. Następny krok: istniejący 36998 → test streetscape B → import/capture B.
+
+Iteracja B (2026-11-12T02:43:50.2747314+01:00): Test_streetscape zakończony 0. Pełny GIS nadal dopiero po końcowych oględzinach. Następne etapy w run-b-after-world.ps1, REPORT po oględzinach i testach końcowych.
