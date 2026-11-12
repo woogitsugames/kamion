@@ -7,3 +7,5 @@ Cel r5: zaległy backlog istniejących stosów palet. LOD0 obecnie pełne pudeł
 Oryginalny termin doby około 12.11.2026 21:31 Warszawa. Jedyny integrator main: lider Claude (S11→S12 i jego handoff). Nie przejmować roli lidera, triggera/watchdoga/Fable. Bez merge do main, push i telefonów. Każde Unity przez gpt-life, ciężki Python przez heavy gpt-life-r5; StaleHours 1000000 i respektowanie rezerwacji/PHONE_RUN. WIP + STATUS po krokach, REPORT i kopia na koniec, następna runda od razu.
 
 Następny krok: zakończyć merge, przygotować aktualne źródła/fixture i helpery rundy, kanoniczny World/fidelity (materiały tylko jeśli wejścia się zmieniły), kamery rzeczywistych palet, import i baseline czterech warunków. Nie używać kadrów starego main z r4 do budżetu r5.
+
+Krok 2: odświeżono raw CC0, źródła CC0/Megascans i natywne Truck/Trailer z main; źródła fixture przed/po kopiowaniu oraz wszystkie kopie zgodne SHA. Nie kopiowano świata z aktywnego main. Następny krok: baseline-gen.ps1 pod jednym heavy.
