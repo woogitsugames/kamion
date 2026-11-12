@@ -146,6 +146,7 @@ Shader "Kamion/World PBR"
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
             #include "Assets/_Project/Rendering/Shaders/KamionAtmosphere.hlsl"   // ADR 0080 height haze, Low tone toe, wetness
+            #include "Assets/_Project/Rendering/Shaders/KamionWetReflections.hlsl" // ADR 0108 optional existing-cube wet response
             #include "Assets/_Project/Rendering/Shaders/KamionWorldGI.hlsl"   // ADR 0064 baked sky visibility + far ground shadows
 
             TEXTURE2D(_BaseMap); SAMPLER(sampler_BaseMap);
@@ -786,7 +787,7 @@ Shader "Kamion/World PBR"
                 half3 R = reflect(-V, nw);
                 half fresnel = Pow4(1.0 - NoV);
                 half grazing = saturate(smooth + max(metal, 0.04));
-                half3 env = GlossyEnvironmentReflection(R, perceptualRoughness, ao * giK) * lerp(specColor, grazing.xxx, fresnel) / (r2 + 1.0);
+                half3 env = KamionWetEnvironment(R, pw, n, perceptualRoughness, ao * giK) * lerp(specColor, grazing.xxx, fresnel) / (r2 + 1.0);
             #if defined(_CARPAINT)
                 {
                     // clear coat: mirror of the sky / street at the coat's roughness, Schlick F0 0.04; under it the base

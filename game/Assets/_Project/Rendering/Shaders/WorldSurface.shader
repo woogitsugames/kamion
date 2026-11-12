@@ -99,6 +99,7 @@ Shader "Kamion/World Surface"
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
             #include "Assets/_Project/Rendering/Shaders/KamionAtmosphere.hlsl"   // ADR 0080 height haze, Low tone toe, wetness
+            #include "Assets/_Project/Rendering/Shaders/KamionWetReflections.hlsl" // ADR 0108 optional existing-cube wet response
             #include "Assets/_Project/Rendering/Shaders/KamionWorldGI.hlsl"   // ADR 0064 baked sky visibility + far ground shadows
 
             TEXTURE2D(_BaseMap); SAMPLER(sampler_BaseMap);
@@ -259,7 +260,7 @@ Shader "Kamion/World Surface"
                 half3 R = reflect(-V, n);
                 half fresnel = Pow4(1.0 - NoV);
                 half grazing = saturate(smooth + 0.04);
-                half3 env = GlossyEnvironmentReflection(R, perceptualRoughness, _Occlusion * giK) * lerp(specColor, grazing.xxx, fresnel) / (r2 + 1.0);
+                half3 env = KamionWetEnvironment(R, i.positionWS, n, perceptualRoughness, _Occlusion * giK) * lerp(specColor, grazing.xxx, fresnel) / (r2 + 1.0);
                 env *= 1.0 - _SkyOcc.y * (1.0 - smoothstep(0.05, 0.45, R.y));
                 color += ambient + env;
                 color += albedo * KamionLampPools(i.positionWS, n);   // ADR 0062

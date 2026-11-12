@@ -35,6 +35,7 @@ namespace Game.Rendering.Editor
             public bool skyOnly; // Diagnostic only: disable scene renderers and the custom world instancer, retain lighting.
             public bool overrideCloudSourceMin;
             public float cloudSourceMinElevationDeg;
+            public bool overrideWetLocalReflections, wetLocalReflections;
             public int expectedHeadlamps; // 0 unchecked, 1 off, 2 on. Requires per-camera probes.
             public bool overrideSkyDisplay;
             public float skyDisplayGain = 1f, skyDisplayDesaturation;
@@ -113,6 +114,9 @@ namespace Game.Rendering.Editor
                         var preset = presetSnapshots.Keys.Single(p => string.Equals(p.name, "LP_" + job.lighting, StringComparison.OrdinalIgnoreCase));
                         preset.clearCloudSourceMinElevationDeg = job.cloudSourceMinElevationDeg;
                     }
+                    if (job.overrideWetLocalReflections)
+                        presetSnapshots.Keys.Single(p => string.Equals(p.name, "LP_" + job.lighting, StringComparison.OrdinalIgnoreCase))
+                            .wetLocalReflections = job.wetLocalReflections;
                     profile.tiers = (QualityProfile.Tier[])originalTiers.Clone();
                     var overrides = (job.rq ?? "").Split(',').Where(s => !string.IsNullOrWhiteSpace(s))
                         .Select(s => s.Split('=')).ToDictionary(p => p[0].Trim(), p => p[1].Trim());
@@ -131,6 +135,8 @@ namespace Game.Rendering.Editor
                             foreach (var light in UnityEngine.Object.FindObjectsByType<Light>(FindObjectsSortMode.None))
                                 if (light.type == LightType.Directional)
                                     light.GetUniversalAdditionalLightData().softShadowQuality = (SoftShadowQuality)job.shadowFilter;
+                        if (EnvironmentLighting.Instance != null && EnvironmentLighting.Instance.Active != null)
+                            KamionWetReflections.Push(EnvironmentLighting.Instance.Active.wetLocalReflections);
                         lampProbe?.Capture(camera);
                     };
                     int count;

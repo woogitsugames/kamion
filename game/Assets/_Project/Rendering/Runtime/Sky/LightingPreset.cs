@@ -52,6 +52,8 @@ namespace Game.Rendering
         [Range(1f, 4f)] public float clearSkySaturation = 1f;
         [Tooltip("Photographic source horizon clamp in degrees after rotation. 0 keeps legacy sampling; positive values extend a valid upper-hemisphere row instead of sampling the cut lower hemisphere.")]
         [Range(0f, 5f)] public float clearCloudSourceMinElevationDeg;
+        [Tooltip("ADR 0108 r3 experimental wet-world reflections from the existing stable truck cube, within 12m. No extra capture. Default off.")]
+        public bool wetLocalReflections;
         [Tooltip("ADR 0108 r2: opt-in diffuse low-beam projection on world surfaces, in the existing pass. No occlusion.")]
         public bool projectedHeadlamps;
         [Tooltip("WORKING_VALUE beam peak cd per head; independent of emissive lens nits. Used only when projection is enabled.")]
