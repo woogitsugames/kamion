@@ -1,0 +1,22 @@
+{
+  "scope": "Read-only preparation for r3; no chimney mesh or override changes",
+  "single_flue": {
+    "issuer": "Enea Ciepło, Oddział Elektrociepłownia Białystok",
+    "publication": "Procurement request for technical assessment of chimney number 2, May 2025",
+    "url": "https://oneplace.marketplanet.pl/zapytania-ofertowe-przetargi/-/rfp/view/3057683/wykonanie-ekspertyzy-technicznej-komina-nr-2-w-enea-cieplo-sp-z-o-o-oddzial-elektrocieplownia-bialystok-znak-sprawy-",
+    "height_m": 120,
+    "external_top_diameter_m": 4.8,
+    "external_base_diameter_m": 7.65,
+    "built_year": 1974,
+    "osm_assignment": "Candidate w628899553 from single-outlet photo identity; plant numbering is not the repository override index"
+  },
+  "multi_flue": {
+    "issuer": "P.B.P. EMKA, contractor's own project record",
+    "url": "https://www.emka.krakow.pl/realizacje/enea-wytwarzanie-elektrocieplownia-bialystok-komin-wieloprzewodowy-h120m/",
+    "height_m": 120,
+    "photo_url_view_only": "https://www.emka.krakow.pl/wp-content/uploads/2021/06/Bialystok-IMG_5353.jpg",
+    "photo_observation": "Long white lower shaft; alternating bands occupy an upper portion. Photo does not support full-height red/white paint.",
+    "photo_handling": "Viewed through temporary local cache outside artifacts. Not copied into artifacts, git, or report images; no reproduction license claimed."
+  },
+  "decision": "Preserve 120 m. Do not enlarge shafts to fit the unsolved GPS camera. Reject the full-height 15 m phase proposal pending photographic pose solving. Use technical single-flue diameters as a source in r3 after identity confirmation; multi-flue top diameter remains unverified."
+}

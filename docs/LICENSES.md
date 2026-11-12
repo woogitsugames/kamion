@@ -266,9 +266,46 @@ Zdjęcia nie wchodzą do builda ani tekstur. Rejestr: [`docs/refs/posesje-bialys
 - Odrzucone: `Wysoki stoczek 58 Bialystok.jpg` (wygląd jak zrzut z panoramy Google; usunięty z dysku i manifestu).
 - Google Maps/Street View/Earth/3D Tiles: nie użyte.
 
+## ADR 0120 — pochodne tekstury mebli ulicznych (2026-11-11)
+
+`furniture_concrete`, `furniture_footing` i `furniture_plinth` korzystają z istniejącego
+skanu `brushed_concrete`, Poly Haven, CC0 1.0 (Dario Barresi / Dimitrios Savva;
+źródło i hash w tabeli ADR 0063 oraz `cc0_manifest.json`). Generator pozostaje
+w `streetscape/furniture_textures.py`. `plate_back` to własna tekstura proceduralna.
+Nie dodano nowego źródła ani pikseli Fab. Fotografie użyte w porównaniach tej rundy
+służą wyłącznie jako referencje; atrybucje z istniejących rejestrów zapisano też
+w `artifacts/furniture-r1/24h/reference-selection.json`. Nie trafiają do tekstur gry.
 ## Niebo fotograficzne — ADR 0108, light r1
 - Zasób: Kloofendal 48d Partly Cloudy (Pure Sky), Poly Haven: https://polyhaven.com/a/kloofendal_48d_partly_cloudy_puresky
 - Autorzy: Greg Zaal (oryginał), Jarod Guest (edycja czystego nieba). Licencja CC0 1.0: https://polyhaven.com/license (sprawdzono 2026-11-11).
 - Oryginał 4K HDR poza gitem w Data/raw/cc0/sky/kloofendal_48d_partly_cloudy_puresky/; 20 674 857 B, MD5 816340c969d2e60d659051d13ac3c4dc, SHA256 3061c00a16ecae748e84fd6c44c04804f539c118bb66325db858bad87b11bf88.
 - Pochodna: game/Assets/_Project/Rendering/Resources/Sky/T_ClearClouds.png, R = fotograficzna maska chmur, G = względna luminancja; usunięto tarczę słońca, zachowano kształt i cienie chmur. Dokładne metadane i oś słońca: ClearCloudsSource.json. Reprodukcja: artifacts/light-r1/build-photo-clouds.py przez pulę heavy.
 - To tekstura nieba, nie zdjęcie referencyjne Białegostoku. Nie zawiera zabudowy ani oznaczeń; nie jest zasobem Fab/Megascans.
+
+## ADR 0112 — Brown Leather we wnętrzu kabiny (2026-11-12)
+
+[Brown Leather](https://polyhaven.com/a/brown_leather), autor Rob Tuytel, dostawca Poly Haven, [CC0 1.0](https://polyhaven.com/license). Pole źródłowe 40 × 40 cm. Użyte mapy 2K: albedo, normal OpenGL, roughness i AO. Źródłowe adresy pobierania, rozmiary plików i MD5 są zapisane w `art-source/truck/interior/cab_material_scans.json`:
+
+| Mapa źródłowa | MD5 |
+|---|---|
+| brown_leather_albedo_2k.jpg | 1bd381c43817743a2affdd1ce2d193c7 |
+| brown_leather_nor_gl_2k.png | 79e5a78506947a412d2b739a4bec34b4 |
+| brown_leather_rough_2k.jpg | 95b48a5c95b02d87dadee46c26f1cfb5 |
+| brown_leather_ao_2k.jpg | 4ff0006acb807b9ddccd387a093d89b8 |
+
+Pochodne gry: istniejące pary Detail/Normal materiałów `MI_Cab_Leather` oraz `MI_Cab_Plastic`, rozdzielczości High/Medium/Low 1024/512/256. Konwerter `tools/blender/truck/interior/cc0_leather.py` wykonuje kadrowanie, neutralizację wariacji barwy, pakowanie kanałów, normalizację normalnych i łączenie przeciwległych krawędzi. Skóra używa pola około 12 cm. Plastic jest osłabioną i przeskalowaną pochodną tłoczenia skóry (20 cm źródła na kafel 10 cm), **nie skanem tworzywa deski**. Kolor bazowy i dotychczasowa perforacja pozostają projektowe. Oryginały w ignorowanym `art-source/truck/interior/cc0/_raw/brown_leather/`; bez zasobów Fab/Megascans w tym zestawie. Szczegóły przetwarzania i ograniczenia: `art-source/truck/interior/cc0/README.md`.
+
+## Life r3 — referencje analityczne (nie zasoby gry)
+Greg Schechter, 2200 km Later, oraz Nenad Stojkovic, Dirty back car window: CC BY 2.0; strony źródłowe, licencja i miniatury z atrybucją w artifacts/life-r3/refs/REFERENCES.md. Johann H. Addicks: wyłącznie udostępniona jako PD miniatura 250 px Salt coverd car during winter P1020038, bez oryginału. Brak kopiowania znaków/logo/tablic do gry.
+
+## ADR 0120 r2 — wariant materiału znaków oparty o URP Lit
+
+Szkielet `FurnitureSign.shader` oraz część funkcji Forward w
+`FurnitureSignForward.hlsl` pochodzą z zainstalowanego pakietu Unity URP:
+com.unity.render-pipelines.universal, copyright © 2020 Unity Technologies ApS,
+[Unity Companion License](https://unity.com/legal/licenses/unity-companion-license).
+Pozostałe przebiegi i funkcje są używane bezpośrednio z pakietu.
+Własny dodatek to analityczny odblask i czytnik stanu istniejących reflektorów.
+Wersja źródeł, hashe i skrypt odtworzenia są w
+`artifacts/furniture-r2/24h/candidate-src/provenance.json` oraz
+`artifacts/furniture-r2/24h/prepare-sign-prototype.ps1`. Nie użyto grafiki producentów folii.

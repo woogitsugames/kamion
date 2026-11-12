@@ -1,0 +1,342 @@
+diff --git a/game/Assets/_Project/Environment/Shaders/WorldPBR.shader b/game/Assets/_Project/Environment/Shaders/WorldPBR.shader
+index b7fa1490..b3e22385 100644
+--- a/game/Assets/_Project/Environment/Shaders/WorldPBR.shader
++++ b/game/Assets/_Project/Environment/Shaders/WorldPBR.shader
+@@ -146,6 +146,7 @@ Shader "Kamion/World PBR"
+ 
+             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
+             #include "Assets/_Project/Rendering/Shaders/KamionAtmosphere.hlsl"   // ADR 0080 height haze, Low tone toe, wetness
++            #include "Assets/_Project/Rendering/Shaders/KamionWetReflections.hlsl" // ADR 0108 optional existing-cube wet response
+             #include "Assets/_Project/Rendering/Shaders/KamionWorldGI.hlsl"   // ADR 0064 baked sky visibility + far ground shadows
+ 
+             TEXTURE2D(_BaseMap); SAMPLER(sampler_BaseMap);
+@@ -786,7 +787,7 @@ Shader "Kamion/World PBR"
+                 half3 R = reflect(-V, nw);
+                 half fresnel = Pow4(1.0 - NoV);
+                 half grazing = saturate(smooth + max(metal, 0.04));
+-                half3 env = GlossyEnvironmentReflection(R, perceptualRoughness, ao * giK) * lerp(specColor, grazing.xxx, fresnel) / (r2 + 1.0);
++                half3 env = KamionWetEnvironment(R, pw, n, perceptualRoughness, ao * giK) * lerp(specColor, grazing.xxx, fresnel) / (r2 + 1.0);
+             #if defined(_CARPAINT)
+                 {
+                     // clear coat: mirror of the sky / street at the coat's roughness, Schlick F0 0.04; under it the base
+diff --git a/game/Assets/_Project/Rendering/Editor/LightQaBatch.cs b/game/Assets/_Project/Rendering/Editor/LightQaBatch.cs
+index 43341ab4..842770a9 100644
+--- a/game/Assets/_Project/Rendering/Editor/LightQaBatch.cs
++++ b/game/Assets/_Project/Rendering/Editor/LightQaBatch.cs
+@@ -30,11 +30,15 @@ namespace Game.Rendering.Editor
+             public float clearSkySaturation; // 0 leaves preset unchanged; diagnostic display-only chroma.
+             public bool lampProbe;
+             public bool actualDriverEye; // QA only: cab-dash eye, horizontal actual cab forward. Never a light source.
++            public bool wetRoadViews; // QA only: two external near-road views anchored to the real truck.
+             public bool verifyWetness;
+             public float expectedWetness;
+             public bool skyOnly; // Diagnostic only: disable scene renderers and the custom world instancer, retain lighting.
+             public bool overrideCloudSourceMin;
+             public float cloudSourceMinElevationDeg;
++            public bool overrideWetLocalReflections, wetLocalReflections;
++            public bool overrideWetFilm;
++            public float wetFilmSmoothness, puddleShare;
+             public int expectedHeadlamps; // 0 unchecked, 1 off, 2 on. Requires per-camera probes.
+             public bool overrideSkyDisplay;
+             public float skyDisplayGain = 1f, skyDisplayDesaturation;
+@@ -113,6 +117,17 @@ namespace Game.Rendering.Editor
+                         var preset = presetSnapshots.Keys.Single(p => string.Equals(p.name, "LP_" + job.lighting, StringComparison.OrdinalIgnoreCase));
+                         preset.clearCloudSourceMinElevationDeg = job.cloudSourceMinElevationDeg;
+                     }
++                    if (job.overrideWetLocalReflections)
++                        presetSnapshots.Keys.Single(p => string.Equals(p.name, "LP_" + job.lighting, StringComparison.OrdinalIgnoreCase))
++                            .wetLocalReflections = job.wetLocalReflections;
++                    if (job.overrideWetFilm)
++                    {
++                        if (job.wetFilmSmoothness < 0f || job.wetFilmSmoothness > 0.8f || job.puddleShare < 0f || job.puddleShare > 1f)
++                            throw new ArgumentException("wet film outside0..0.8 or puddles outside0..1");
++                        var preset = presetSnapshots.Keys.Single(p => string.Equals(p.name, "LP_" + job.lighting, StringComparison.OrdinalIgnoreCase));
++                        preset.wetFilmSmoothness = job.wetFilmSmoothness;
++                        preset.puddles = job.puddleShare;
++                    }
+                     profile.tiers = (QualityProfile.Tier[])originalTiers.Clone();
+                     var overrides = (job.rq ?? "").Split(',').Where(s => !string.IsNullOrWhiteSpace(s))
+                         .Select(s => s.Split('=')).ToDictionary(p => p[0].Trim(), p => p[1].Trim());
+@@ -131,6 +146,8 @@ namespace Game.Rendering.Editor
+                             foreach (var light in UnityEngine.Object.FindObjectsByType<Light>(FindObjectsSortMode.None))
+                                 if (light.type == LightType.Directional)
+                                     light.GetUniversalAdditionalLightData().softShadowQuality = (SoftShadowQuality)job.shadowFilter;
++                        if (EnvironmentLighting.Instance != null && EnvironmentLighting.Instance.Active != null)
++                            KamionWetReflections.Push(EnvironmentLighting.Instance.Active.wetLocalReflections);
+                         lampProbe?.Capture(camera);
+                     };
+                     int count;
+@@ -161,6 +178,27 @@ namespace Game.Rendering.Editor
+                             position = go.transform.position, forward = go.transform.forward, up = go.transform.up,
+                             source = "cab-dash.position + CabInteriorLighting.cab.forward/up", fieldOfView = camera.fieldOfView
+                         }, true));
++                        if (job.wetRoadViews)
++                        {
++                            var source = UnityEngine.Object.FindObjectsByType<VehicleReflectionCapture>(FindObjectsInactive.Exclude, FindObjectsSortMode.None)
++                                .Single(c => c.gameObject.scene == scene);
++                            Vector3 origin = source.transform.TransformPoint(source.captureOffset);
++                            foreach (int side in new[] { -1, 1 })
++                            {
++                                var roadGo = new GameObject("Light QA near wet road " + side);
++                                SceneManager.MoveGameObjectToScene(roadGo, scene);
++                                var roadCamera = roadGo.AddComponent<Camera>();
++                                roadCamera.CopyFrom(camera);
++                                Vector3 position = origin + cab.forward*4f + cab.right*(side*3.5f) - Vector3.up*0.7f;
++                                Vector3 target = origin + cab.forward*10f + cab.right*(side*3.5f) - Vector3.up*2.2f;
++                                roadGo.transform.SetPositionAndRotation(position, Quaternion.LookRotation(target-position, Vector3.up));
++                                roadCamera.fieldOfView = 65f; roadCamera.enabled = false;
++                                var roadControl = roadGo.AddComponent<ControlCamera>();
++                                roadControl.id = side < 0 ? "light-wet-left" : "light-wet-right";
++                                roadControl.note = "QA-only near-road view from actual truck capture origin; no matched photograph or driver-eye claim.";
++                                roadGo.SetActive(false);
++                            }
++                        }
+                     }
+                     if (job.actualDriverEye) EditorSceneManager.sceneOpened += AddDriverEye;
+                     if (job.skyOnly) EditorSceneManager.sceneOpened += PrepareSkyOnly;
+diff --git a/game/Assets/_Project/Rendering/Editor/LightQaLampProbe.cs b/game/Assets/_Project/Rendering/Editor/LightQaLampProbe.cs
+index fc4d8991..77c56439 100644
+--- a/game/Assets/_Project/Rendering/Editor/LightQaLampProbe.cs
++++ b/game/Assets/_Project/Rendering/Editor/LightQaLampProbe.cs
+@@ -17,8 +17,13 @@ namespace Game.Rendering.Editor
+             public float sunElevation, skyHorizontalLux, exposure, lampsOn;
+             public float presetExposureCompensation, skyDisplayGain, skyDisplayDesaturation;
+             public float actualWetness, actualPuddleShare;
++            public float actualWetFilmSmoothness;
+             public float clearCloudSourceMinElevationDeg;
+             public Vector4 cloudSourceLimits;
++            public bool wetLocalReflections;
++            public Vector4 wetCaptureOrigin;
++            public int captureFacesRendered;
++            public string wetReflectionDiagnostics;
+             public int pools, enabledPointLights;
+             public Vector4[] headsAndWeights;
+             public Vector4 exposedPoolColor;
+@@ -51,8 +56,13 @@ namespace Game.Rendering.Editor
+                 skyDisplayGain = environment.Active.skyDisplayGain, skyDisplayDesaturation = environment.Active.skyDisplayDesaturation,
+                 actualWetness = Shader.GetGlobalVector("_KamionWet").x,
+                 actualPuddleShare = Shader.GetGlobalVector("_KamionWet").y,
++                actualWetFilmSmoothness = Shader.GetGlobalVector("_KamionWet").w > 0f ? Shader.GetGlobalVector("_KamionWet").w : 0.52f,
+                 clearCloudSourceMinElevationDeg = environment.Active.clearCloudSourceMinElevationDeg,
+                 cloudSourceLimits = Shader.GetGlobalVector("_KamionClearCloudSourceLimits"),
++                wetLocalReflections = environment.Active.wetLocalReflections,
++                wetCaptureOrigin = Shader.GetGlobalVector("_KamionWetCaptureOrigin"),
++                captureFacesRendered = VehicleReflectionCapture.Active != null ? VehicleReflectionCapture.Active.FacesRendered : 0,
++                wetReflectionDiagnostics = KamionWetReflections.Diagnostics,
+                 pools = count, headsAndWeights = positions,
+                 projectedHeadlamps = KamionHeadlamps.Enabled, headlampDiagnostics = KamionHeadlamps.Diagnostics,
+                 headlampLeft = Shader.GetGlobalVector("_KamionHeadlampLeft"),
+diff --git a/game/Assets/_Project/Rendering/Runtime/Sky/EnvironmentLighting.cs b/game/Assets/_Project/Rendering/Runtime/Sky/EnvironmentLighting.cs
+index 34c5e0ce..26ebbaa6 100644
+--- a/game/Assets/_Project/Rendering/Runtime/Sky/EnvironmentLighting.cs
++++ b/game/Assets/_Project/Rendering/Runtime/Sky/EnvironmentLighting.cs
+@@ -69,6 +69,7 @@ namespace Game.Rendering
+         void OnDisable()
+         {
+             KamionHeadlamps.Reset();
++            KamionWetReflections.Reset();
+             QualityProfileApplier.Applied -= OnTierApplied;
+             RenderPipelineManager.beginContextRendering -= OnBeginRendering;
+             if (Instance == this) Instance = null;
+diff --git a/game/Assets/_Project/Rendering/Runtime/Sky/KamionWetReflections.cs b/game/Assets/_Project/Rendering/Runtime/Sky/KamionWetReflections.cs
+new file mode 100644
+index 00000000..ab5e5c5f
+--- /dev/null
++++ b/game/Assets/_Project/Rendering/Runtime/Sky/KamionWetReflections.cs
+@@ -0,0 +1,65 @@
++using UnityEngine;
++
++namespace Game.Rendering
++{
++    /// <summary>Optional wet-road use of the existing truck cube. Creates no cameras or captures.
++    /// The sampled origin is the existing reflection camera's last rendered position, never the view camera.
++    /// Moving / mixed-origin cubes fail closed until a complete stable six-face window is observed.</summary>
++    public static class KamionWetReflections
++    {
++        static readonly int k_Origin = Shader.PropertyToID("_KamionWetCaptureOrigin");
++        static VehicleReflectionCapture s_Source;
++        static RenderTexture s_Cube;
++        static Camera s_Camera;
++        static Vector3 s_Origin;
++        static int s_StableFaces;
++        static bool s_Valid;
++        public static string Diagnostics { get; private set; } = "off";
++
++        public static void Reset()
++        {
++            Shader.SetGlobalVector(k_Origin, Vector4.zero);
++            s_Source = null; s_Cube = null; s_Camera = null; s_Valid = false;
++            Diagnostics = "off";
++        }
++
++        public static void Push(bool enabled)
++        {
++            var source = VehicleReflectionCapture.Active;
++            if (!enabled || source == null || !source.Enabled || source.Cube == null)
++            { Reset(); return; }
++            if (source != s_Source || source.Cube != s_Cube)
++            {
++                Reset(); s_Source = source; s_Cube = source.Cube;
++                // CaptureCamera is a disabled DontSave camera, outside the truck hierarchy.
++                // Resolve once per source/cube, require its exact runtime identity and scene.
++                foreach (var candidate in Resources.FindObjectsOfTypeAll<Camera>())
++                    if (candidate.name == "CaptureCamera" && candidate.cameraType == CameraType.Reflection &&
++                        candidate.transform.parent != null && candidate.transform.parent.name == "VehicleReflectionCapture (runtime)" &&
++                        candidate.gameObject.scene == source.gameObject.scene)
++                    {
++                        if (s_Camera != null) { Reset(); Diagnostics = "ambiguous capture camera"; return; }
++                        s_Camera = candidate;
++                    }
++                if (s_Camera != null)
++                {
++                    s_Origin = s_Camera.transform.position;
++                    s_StableFaces = source.FacesRendered;
++                    // A newly allocated cube starts with RenderAllNow's six co-located faces.
++                    s_Valid = source.FacesRendered == 6;
++                }
++            }
++            if (s_Camera == null)
++            { Shader.SetGlobalVector(k_Origin, Vector4.zero); Diagnostics = "no unique capture camera"; return; }
++            Vector3 actual = s_Camera.transform.position;
++            if ((actual - s_Origin).sqrMagnitude > 0.25f)
++            { s_Origin = actual; s_StableFaces = source.FacesRendered; s_Valid = false; }
++            if (source.FacesRendered - s_StableFaces >= 6) s_Valid = true;
++            // A paused/stale camera does not follow a moving truck. Never re-label that old cube with a new origin.
++            bool nearSource = (source.transform.TransformPoint(source.captureOffset) - s_Origin).sqrMagnitude <= 0.25f;
++            bool valid = s_Valid && nearSource;
++            Shader.SetGlobalVector(k_Origin, new Vector4(s_Origin.x, s_Origin.y, s_Origin.z, valid ? 1f : 0f));
++            Diagnostics = valid ? "stable existing cube; local radius 12m; sphere parallax 20m WORKING_VALUE" : "moving/incomplete cube: analytic fallback";
++        }
++    }
++}
+diff --git a/game/Assets/_Project/Rendering/Runtime/Sky/KamionWetReflections.cs.meta b/game/Assets/_Project/Rendering/Runtime/Sky/KamionWetReflections.cs.meta
+new file mode 100644
+index 00000000..e3102fd3
+--- /dev/null
++++ b/game/Assets/_Project/Rendering/Runtime/Sky/KamionWetReflections.cs.meta
+@@ -0,0 +1,2 @@
++fileFormatVersion: 2
++guid: 634f26b4ee6547a0a4253b7eb2d2e4ba
+diff --git a/game/Assets/_Project/Rendering/Runtime/Sky/LightingPreset.cs b/game/Assets/_Project/Rendering/Runtime/Sky/LightingPreset.cs
+index eb6712cb..32707ca7 100644
+--- a/game/Assets/_Project/Rendering/Runtime/Sky/LightingPreset.cs
++++ b/game/Assets/_Project/Rendering/Runtime/Sky/LightingPreset.cs
+@@ -52,6 +52,10 @@ namespace Game.Rendering
+         [Range(1f, 4f)] public float clearSkySaturation = 1f;
+         [Tooltip("Photographic source horizon clamp in degrees after rotation. 0 keeps legacy sampling; positive values extend a valid upper-hemisphere row instead of sampling the cut lower hemisphere.")]
+         [Range(0f, 5f)] public float clearCloudSourceMinElevationDeg;
++        [Tooltip("ADR 0108 r3 experimental wet-world reflections from the existing stable truck cube, within 12m. No extra capture. Default off.")]
++        public bool wetLocalReflections;
++        [Tooltip("Optional wet-film smoothness floor. 0 retains the legacy 0.52 floor; standing-water smoothness is separate. WORKING_VALUE, not a material albedo override.")]
++        [Range(0f, 0.8f)] public float wetFilmSmoothness;
+         [Tooltip("ADR 0108 r2: opt-in diffuse low-beam projection on world surfaces, in the existing pass. No occlusion.")]
+         public bool projectedHeadlamps;
+         [Tooltip("WORKING_VALUE beam peak cd per head; independent of emissive lens nits. Used only when projection is enabled.")]
+diff --git a/game/Assets/_Project/Rendering/Runtime/Sky/WorldAtmosphere.cs b/game/Assets/_Project/Rendering/Runtime/Sky/WorldAtmosphere.cs
+index 787114f9..d6a42710 100644
+--- a/game/Assets/_Project/Rendering/Runtime/Sky/WorldAtmosphere.cs
++++ b/game/Assets/_Project/Rendering/Runtime/Sky/WorldAtmosphere.cs
+@@ -101,7 +101,7 @@ namespace Game.Rendering
+         public static void Push(EnvironmentLighting env, Color fogExposed)
+         {
+             var p = env.Active;
+-            if (p == null) { KamionHeadlamps.Reset(); return; }
++            if (p == null) { KamionHeadlamps.Reset(); KamionWetReflections.Reset(); return; }
+             bool hasTier = QualityProfileApplier.HasCurrent;
+             var t = hasTier ? QualityProfileApplier.Current : default;
+             KamionHeadlamps.Push(env.Model, HeadlampsOverride ?? p.projectedHeadlamps, p.projectedHeadlampPeakCd, env.gameObject.scene);
+@@ -129,7 +129,9 @@ namespace Game.Rendering
+             Shader.SetGlobalVector(k_Tone, post || toe <= 0f ? Vector4.zero : new Vector4(toe, toeP, LookGrading.ToeGain(toe, toeP, pivot) - 1f, 0f));
+ 
+             // ---- wet surfaces, lawn variation
+-            Shader.SetGlobalVector(k_Wet, new Vector4(Mathf.Clamp01(WetOverride ?? p.wetness), p.puddles, Mathf.Clamp01(GrassOverride ?? p.grassVariation), 0f));
++            Shader.SetGlobalVector(k_Wet, new Vector4(Mathf.Clamp01(WetOverride ?? p.wetness), p.puddles, Mathf.Clamp01(GrassOverride ?? p.grassVariation),
++                p.wetFilmSmoothness > 0f ? Mathf.Clamp(p.wetFilmSmoothness, 0.01f, 0.8f) : 0f));
++            KamionWetReflections.Push(p.wetLocalReflections);
+ 
+             // ---- cloud deck
+             int q = CloudOverride ?? (hasTier ? (t.cloudsOff ? -1 : t.cloudQuality) : 1);
+diff --git a/game/Assets/_Project/Rendering/Shaders/KamionAtmosphere.hlsl b/game/Assets/_Project/Rendering/Shaders/KamionAtmosphere.hlsl
+index 15dbc3a0..c8ac7b65 100644
+--- a/game/Assets/_Project/Rendering/Shaders/KamionAtmosphere.hlsl
++++ b/game/Assets/_Project/Rendering/Shaders/KamionAtmosphere.hlsl
+@@ -16,7 +16,7 @@
+ float4 _KamionHaze;        // x beta (1/m), y ground-layer factor a, z 1 / H (1/m), w layer base height y0 (world)
+ float4 _KamionHazeColor;   // rgb exposed in-scatter colour (horizon)
+ float4 _KamionTone;        // x toe strength s (0 = off), y p, z g - 1
+-float4 _KamionWet;         // x wetness, y puddle share, z grass variation strength (ADR 0080), w unused
++float4 _KamionWet;         // x wetness, y puddle share, z grass variation strength; w optional film floor (0 = legacy 0.52)
+ 
+ // Optical depth from the camera to a world position; viewDepth = positionCS.w of a perspective camera.
+ half KamionFogTau(float3 pw, float viewDepth)
+@@ -54,7 +54,8 @@ void KamionWetSurface(half3 n, half pool, half puddles, half film, inout half3 a
+     half w = (half)_KamionWet.x * lerp(0.33h, 1.0h, up);
+     half porous = saturate(1.0h - smooth * 1.6h);
+     albedo *= lerp(1.0h, lerp(0.82h, 0.58h, porous), w * lerp(0.4h, 1.0h, film));
+-    smooth = lerp(smooth, max(smooth, 0.52h), w * up * film);   // film: 1 paved, ~0.15 grass / soil (no water sheet)
++    half filmFloor = _KamionWet.w > 0.0 ? (half)_KamionWet.w : 0.52h;
++    smooth = lerp(smooth, max(smooth, filmFloor), w * up * film);   // film: 1 paved, ~0.15 grass / soil (no water sheet)
+     half t = 1.0h - (half)_KamionWet.y * (half)_KamionWet.x;
+     half pud = smoothstep(t, t + 0.05h, pool) * up * puddles;
+     smooth = lerp(smooth, 0.96h, pud);
+diff --git a/game/Assets/_Project/Rendering/Shaders/KamionWetReflections.hlsl b/game/Assets/_Project/Rendering/Shaders/KamionWetReflections.hlsl
+new file mode 100644
+index 00000000..0816fadc
+--- /dev/null
++++ b/game/Assets/_Project/Rendering/Shaders/KamionWetReflections.hlsl
+@@ -0,0 +1,26 @@
++#ifndef KAMION_WET_REFLECTIONS_INCLUDED
++#define KAMION_WET_REFLECTIONS_INCLUDED
++#include "KamionVehicleEnv.hlsl"
++float4 _KamionWetCaptureOrigin; // xyz last actual capture point, w stable/valid and preset opt-in
++
++// Existing environment term only. No new capture/pass. The transition shell needs two environment reads;
++// the near region substitutes the existing cube read. Box-filter mips and sphere parallax are approximations.
++half3 KamionWetEnvironment(half3 R, float3 positionWS, half3 n, half roughness, half occlusion)
++{
++    if (_KamionWetCaptureOrigin.w < 0.5 || _KamionVehicleCapture < 0.5 || _KamionWet.x <= 0.001 || n.y < 0.95 || roughness > 0.5)
++        return GlossyEnvironmentReflection(R, roughness, occlusion);
++    float3 offset = positionWS - _KamionWetCaptureOrigin.xyz;
++    float distanceSq = dot(offset, offset);
++    if (distanceSq >= 144.0) return GlossyEnvironmentReflection(R, roughness, occlusion);
++    half weight = (1.0h - smoothstep(64.0, 144.0, distanceSq)) * saturate((half)_KamionWet.x * 2.0h);
++    // Intersect a fixed local sphere, then look back from the actual source. No invented planar reflection.
++    float b = dot(offset, R);
++    float t = -b + sqrt(max(b*b + 400.0 - distanceSq, 0.0));
++    half3 direction = normalize(offset + R*t);
++    float alpha = (float)roughness * roughness;
++    half mip = clamp(log2(max(alpha * max(_KamionVehicleEnvParams.y, 1.0) * 0.5, 1.0)), 0.0, _KamionVehicleEnvParams.x);
++    half3 local = SAMPLE_TEXTURECUBE_LOD(_KamionVehicleEnvCube, sampler_KamionVehicleEnvCube, direction, mip).rgb * occlusion;
++    if (weight >= 0.999h) return local;
++    return lerp(GlossyEnvironmentReflection(R, roughness, occlusion), local, weight);
++}
++#endif
+diff --git a/game/Assets/_Project/Rendering/Shaders/KamionWetReflections.hlsl.meta b/game/Assets/_Project/Rendering/Shaders/KamionWetReflections.hlsl.meta
+new file mode 100644
+index 00000000..9c3cda1b
+--- /dev/null
++++ b/game/Assets/_Project/Rendering/Shaders/KamionWetReflections.hlsl.meta
+@@ -0,0 +1,2 @@
++fileFormatVersion: 2
++guid: 8832a4eb533e41d1a2eb47f6794c6895
+diff --git a/game/Assets/_Project/Rendering/Shaders/WorldSurface.shader b/game/Assets/_Project/Rendering/Shaders/WorldSurface.shader
+index faddd9f9..32acb161 100644
+--- a/game/Assets/_Project/Rendering/Shaders/WorldSurface.shader
++++ b/game/Assets/_Project/Rendering/Shaders/WorldSurface.shader
+@@ -99,6 +99,7 @@ Shader "Kamion/World Surface"
+ 
+             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
+             #include "Assets/_Project/Rendering/Shaders/KamionAtmosphere.hlsl"   // ADR 0080 height haze, Low tone toe, wetness
++            #include "Assets/_Project/Rendering/Shaders/KamionWetReflections.hlsl" // ADR 0108 optional existing-cube wet response
+             #include "Assets/_Project/Rendering/Shaders/KamionWorldGI.hlsl"   // ADR 0064 baked sky visibility + far ground shadows
+ 
+             TEXTURE2D(_BaseMap); SAMPLER(sampler_BaseMap);
+@@ -259,7 +260,7 @@ Shader "Kamion/World Surface"
+                 half3 R = reflect(-V, n);
+                 half fresnel = Pow4(1.0 - NoV);
+                 half grazing = saturate(smooth + 0.04);
+-                half3 env = GlossyEnvironmentReflection(R, perceptualRoughness, _Occlusion * giK) * lerp(specColor, grazing.xxx, fresnel) / (r2 + 1.0);
++                half3 env = KamionWetEnvironment(R, i.positionWS, n, perceptualRoughness, _Occlusion * giK) * lerp(specColor, grazing.xxx, fresnel) / (r2 + 1.0);
+                 env *= 1.0 - _SkyOcc.y * (1.0 - smoothstep(0.05, 0.45, R.y));
+                 color += ambient + env;
+                 color += albedo * KamionLampPools(i.positionWS, n);   // ADR 0062

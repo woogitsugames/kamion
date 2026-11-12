@@ -22,6 +22,12 @@ Shader "Kamion/Cab Interior"
         _WearBlackAlbedo ("Worn black albedo (linear, neutral)", Range(0, 0.2)) = 0.085
         _WearRoughMin ("Worn roughness floor", Range(0.08, 1)) = 0.08
         [Toggle(_KAMION_CAB_DECAL)] _IsDecal ("Decal slot", Float) = 0
+        [Toggle(_KAMION_CAB_BACKLIGHT)] _IsBacklit ("Icon backlight (ADR 0112 data)", Float) = 0
+        _LegendLuminance ("Icon luminance (cd/m2, working value)", Float) = 0
+        _LegendMaxDisplay ("Icon cap (exposed linear)", Float) = 0.06
+        _LegendColor ("Icon backlight colour (linear)", Color) = (1, 1, 1, 1)
+        _LegendStartSunDeg ("Backlight starts below sun elevation", Float) = 6
+        _LegendFullSunDeg ("Full backlight below sun elevation", Float) = 0
     }
     SubShader
     {
@@ -32,6 +38,8 @@ Shader "Kamion/Cab Interior"
         CBUFFER_START(UnityPerMaterial)
             float4 _Detail_ST;
             float _Cutoff, _IsDecal, _WearBlackAlbedo, _WearRoughMin;
+            float4 _LegendColor;
+            float _IsBacklit, _LegendLuminance, _LegendMaxDisplay, _LegendStartSunDeg, _LegendFullSunDeg;
         CBUFFER_END
         ENDHLSL
 
@@ -49,6 +57,7 @@ Shader "Kamion/Cab Interior"
             // Hard shadows in the cab (no soft-shadow variants): the sun patches come through the glass edges and the
             // frit, soft filtering on a full-screen interior cost ~3 ms GPU on the S24+ High (A7 measurement, throttled).
             #pragma shader_feature_local _KAMION_CAB_DECAL
+            #pragma shader_feature_local _KAMION_CAB_BACKLIGHT
             #pragma multi_compile_fog
             #define _NORMALMAP 1
 
@@ -64,6 +73,7 @@ Shader "Kamion/Cab Interior"
             half _CabEnclosure; // share of the open-sky SH the closed cab blocks (roof, walls); 0 = open sky (unset global)
             half _CabGain;      // cab-view tone-mapping gain (1 = off)
             half4 _CabShadowLift; // x: strength k, y: knee k0 (exposed linear); gain = 1 + k (k0 / (Y + k0))^3, cab view only
+            float4 _CabBacklightEnvironment; // true sun elevation, camera exposure, validity, unused
 
             struct Attributes
             {
@@ -191,6 +201,13 @@ Shader "Kamion/Cab Interior"
                 // The lifted share is neutral (review r5 L2: black plastics turned brown under the warm low-sun fill); a
                 // phone's local tone mapping lifts luminance, not the chroma of deep shade. z = desaturation of that share.
                 col.rgb = lerp(col.rgb * g, (yl * g).xxx, _CabShadowLift.z * (1.0 - 1.0 / g));
+            #if defined(_KAMION_CAB_DECAL) && defined(_KAMION_CAB_BACKLIGHT)
+                // Existing atlas bands: icons < 0.5; grilles/stitching above. No extra sample/pass.
+                // Add after the local ambient lift: backlighting is not amplified by cab metering or shadow lift.
+                half night = 1.0 - smoothstep(_LegendFullSunDeg, _LegendStartSunDeg, _CabBacklightEnvironment.x);
+                half panel = min(max(0.0, _LegendLuminance * _CabBacklightEnvironment.y), max(0.0, _LegendMaxDisplay));
+                col.rgb += tint * d.rgb * _LegendColor.rgb * panel * night * legend * _CabBacklightEnvironment.z;
+            #endif
                 col.rgb = KamionToeParity(col.rgb);   // D23 toe on the tiers without the LUT (cab view only)
                 col.rgb = KamionCabToeInverse(col.rgb, _KamionCabToeInv);   // ADR 0080: world contrast toe compensated in the cab view
                 col.rgb = KamionMixFog(col.rgb, i.fogFactor);

@@ -66,6 +66,7 @@ namespace Game.Rendering
         static float s_RefKey = -1f;
 
         static readonly int k_Fill = Shader.PropertyToID("_CabFill"), k_Gain = Shader.PropertyToID("_CabGain"),
+            k_BacklightEnvironment = Shader.PropertyToID("_CabBacklightEnvironment"),
             k_Lift = Shader.PropertyToID("_CabShadowLift"), k_Enclosure = Shader.PropertyToID("_CabEnclosure"),
             k_Parity = Shader.PropertyToID("_KamionToeParity"),
             k_CamOutside = Shader.PropertyToID("_KamionCamOutside"),
@@ -117,6 +118,7 @@ namespace Game.Rendering
 
         void OnDisable()
         {
+            Shader.SetGlobalVector(k_BacklightEnvironment, Vector4.zero);
             Shader.SetGlobalVector(k_Fill, Vector4.zero);
             Shader.SetGlobalFloat(k_Gain, 1f);
             Shader.SetGlobalVector(k_Lift, Vector4.zero);
@@ -156,6 +158,10 @@ namespace Game.Rendering
             var env = EnvironmentLighting.Instance;
             if (env == null) env = FindAnyObjectByType<EnvironmentLighting>();
             var m = env != null ? env.Model : null;
+            // ADR 0112 r3: physical panel emission follows exposure, independently of ambient/AO and cab-view lift.
+            // z is validity: an unset/missing environment must never turn legends on accidentally.
+            Shader.SetGlobalVector(k_BacklightEnvironment, m != null
+                ? new Vector4(m.TrueSunElevationDeg, m.Exposure, 1f, 0f) : Vector4.zero);
             Transform t = cab != null ? cab : transform;
             Vector3 fill = Vector3.zero;
             if (m != null)

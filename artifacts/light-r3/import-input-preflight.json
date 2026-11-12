@@ -1,0 +1,15 @@
+﻿{
+    "tier":  "Medium",
+    "materialSpecSha256":  "8AB1E1763D79EBA84914D9182F2C81D2B98B8AFCE7AF5500CD28FBD0AE5C22AF",
+    "filesChecked":  151,
+    "sourceLastWriteUtc":  "2026-11-12T01:06:29.7285860Z",
+    "missingCount":  4,
+    "missing":  [
+                    "art-source\\world\\materials\\car_grime_clean\\Medium\\T_car_grime_clean_BaseColor.png",
+                    "art-source\\world\\materials\\car_grime_clean\\Medium\\T_car_grime_clean_MaskMap.png",
+                    "art-source\\world\\materials\\car_grime_clean\\Medium\\T_car_grime_clean_Normal.png",
+                    "art-source\\world\\materials\\car_grime_clean\\Medium\\T_car_grime_clean_Var.png"
+                ],
+    "importerBehavior":  "scripts/import-region.ps1 rebuilds all PBR sets when missingCount or staleCount is positive; nested Python remains under outer heavy slot",
+    "staleCount":  147
+}

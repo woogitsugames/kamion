@@ -1,5 +1,11 @@
 {
   "adr": "0085-far-field-backdrop",
+  "building_height_sources": {
+    "WORKING_VALUE-bdot-storeys-typology": 97,
+    "WORKING_VALUE-osm-storeys-typology": 2921,
+    "gugik-lod1-measuredHeight": 5390,
+    "osm-height-tag-UNVERIFIED": 39
+  },
   "feature_counts": {
     "buildings": 8447,
     "buildings_by_typology": {
@@ -14,6 +20,14 @@
     "pylons": 302
   },
   "id": "bialystok-industrial-c-far-field",
+  "lod1_height_audit": {
+    "buildings": 36971,
+    "conflicting_ids": 0,
+    "duplicate_records": 0,
+    "invalid_or_missing": 0,
+    "members": 31,
+    "usable_ids": 36971
+  },
   "region": "bialystok-industrial-c",
   "region_inputs_sha256": {
     "region/buildings.geojson": "fc62f0be4c39546471b2d3ec437eaebe2bf0c068f12d5e617c89cdae996d9333"

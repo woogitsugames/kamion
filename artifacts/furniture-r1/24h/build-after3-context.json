@@ -1,0 +1,39 @@
+﻿{
+    "observed_at":  "2026-11-12T00:12:54.7233860+01:00",
+    "branch":  "gpt-furniture-r1",
+    "head":  "98b3febe3ec6de75f300f24348b47a1f4fc00677",
+    "generation_python_pid":  67868,
+    "pool":  "heavy",
+    "owner":  "gpt-furniture-r1",
+    "source_files":  [
+                         {
+                             "file":  "tools/worldgen/streetscape/furniture.py",
+                             "sha256":  "247b90baf4a466b294d396a523c0c659ebd853a92736793f6e8e9bd4cc3d884b"
+                         },
+                         {
+                             "file":  "tools/worldgen/streetscape/props.py",
+                             "sha256":  "7b79822e16d318ca97e2f63b9ef4fb38fbe8465c4cef4aa0e69371f1ed10402d"
+                         },
+                         {
+                             "file":  "tools/worldgen/streetscape/signs.py",
+                             "sha256":  "ddf4bcc346d1ca2b9f1537e3ed683f73cee39c5c4cdb7f532a061b4c03a11a12"
+                         },
+                         {
+                             "file":  "tools/worldgen/streetscape/furniture_textures.py",
+                             "sha256":  "2d2c5e7a64c8390c173dcb9882e3a34876ae8a983ddab82cc1957186d1460cf4"
+                         },
+                         {
+                             "file":  "tools/worldgen/streetscape/materials.py",
+                             "sha256":  "7fefaf23133f9d03db7fc27c2950a3878a67f7cc2a5c0008fcf3ca73b276e18d"
+                         },
+                         {
+                             "file":  "game/Assets/_Project/World/Import/WorldPbrMaterials.cs",
+                             "sha256":  "5b7cf53a747552e1aaf78120c98f89d4fdddf521a583fbcbf062a8209af409ae"
+                         },
+                         {
+                             "file":  "game/Assets/_Project/Rendering/Shaders/WorldSurface.shader",
+                             "sha256":  "2640d3944726c7bf7fbaa2d657ff720edbf18e34f5d34bbec1e8c33222753279"
+                         }
+                     ],
+    "note":  "Stan źródeł podczas uruchomienia after3; pliki wynikowe mogą być jeszcze w trakcie zapisu."
+}

@@ -172,7 +172,7 @@ M = {
     "car_paint_grey": {"color": [0.16, 0.165, 0.17], "rough": 0.26, "metal": 0.5, "texture_set": "car_grime_clean",
                        "paint": [0.75, 0.28, 0.0, 0.50]},
     "car_paint_black": {"color": [0.035, 0.035, 0.038], "rough": 0.2, "metal": 0.3, "texture_set": "car_grime_clean",
-                        "paint": [0.55, 0.22, 0.8, 0.45], "pearl_tint": [1.6, 1.9, 3.2]},
+                        "paint": [0.55, 0.22, 0.8, 0.45], "pearl_tint": [1.6, 1.9, 3.2], "flake_lift": 0.025},
     "car_paint_white": {"color": [0.68, 0.68, 0.66], "rough": 0.3, "texture_set": "car_grime_clean",
                         "paint": [0.0, 0.0, 0.0, 0.5]},
     "car_paint_white2": {"color": [0.62, 0.63, 0.62], "rough": 0.36, "texture_set": "car_grime_clean",
@@ -217,19 +217,20 @@ M = {
     # metallic 0 (WORKING_VALUE, judged on the dock renders: no horizon line on a tarp in the shade of the hall).
     # ADR0086: explicit working pigments preserve ADR0092/s9 accepted matte curtain appearance.
     # Previous values were tuned through Unity Color double-gamma; these are their linear GPU values.
-    "trailer_curtain_grey": {"color": [0.03310477, 0.03630648, 0.03630648], "rough": 0.82, "texture_set": "curtain_folds"},
-    "trailer_curtain_blue": {"color": [0.00232198, 0.00489631, 0.0173891], "rough": 0.82, "texture_set": "curtain_folds"},
-    "trailer_curtain_white": {"color": [0.26327341, 0.27383842, 0.26327341], "rough": 0.82, "texture_set": "curtain_folds"},
-    "trailer_curtain_red": {"color": [0.02721178, 0.00350102, 0.00270898], "rough": 0.82, "texture_set": "curtain_folds"},
-    "trailer_curtain_green": {"color": [0.00350102, 0.00719441, 0.00489631], "rough": 0.82, "texture_set": "curtain_folds"},
-    "trailer_curtain_silver": {"color": [0.10653922, 0.11280479, 0.11280479], "rough": 0.72, "texture_set": "curtain_folds"},
+    "trailer_curtain_grey": {"color": [0.03310477, 0.03630648, 0.03630648], "rough": 0.82, "texture_set": "curtain_folds", "set_tile": True},
+    "trailer_curtain_blue": {"color": [0.00232198, 0.00489631, 0.0173891], "rough": 0.82, "texture_set": "curtain_folds", "set_tile": True},
+    "trailer_curtain_white": {"color": [0.26327341, 0.27383842, 0.26327341], "rough": 0.82, "texture_set": "curtain_folds", "set_tile": True},
+    "trailer_curtain_red": {"color": [0.02721178, 0.00350102, 0.00270898], "rough": 0.82, "texture_set": "curtain_folds", "set_tile": True},
+    "trailer_curtain_green": {"color": [0.00350102, 0.00719441, 0.00489631], "rough": 0.82, "texture_set": "curtain_folds", "set_tile": True},
+    "trailer_curtain_silver": {"color": [0.10653922, 0.11280479, 0.11280479], "rough": 0.72, "texture_set": "curtain_folds", "set_tile": True},
     "trailer_box_white": {"color": [0.31854678, 0.33034371, 0.31854678], "rough": 0.45, "texture_set": "box_panel"},
-    "tractor_paint_white": {"color": [0.66, 0.66, 0.64], "rough": 0.3},
-    "tractor_paint_silver": {"color": [0.40, 0.41, 0.42], "rough": 0.3, "metal": 0.6},
-    "tractor_paint_blue": {"color": [0.025, 0.06, 0.16], "rough": 0.3, "metal": 0.3},
-    "tractor_paint_red": {"color": [0.30, 0.025, 0.02], "rough": 0.3, "metal": 0.2},
-    "tractor_paint_green": {"color": [0.03, 0.08, 0.05], "rough": 0.3, "metal": 0.3},
-    "tractor_paint_black": {"color": [0.02, 0.02, 0.022], "rough": 0.3, "metal": 0.3},
+    # ADR 0122: opt-in static cab film; reuse the prepared maps and existing paint pass.
+    "tractor_paint_white": {"color": [0.66, 0.66, 0.64], "rough": 0.3, "texture_set": "car_grime_clean", "yard_paint": True, "paint": [0.0, 0.0, 0.0, 0.5]},
+    "tractor_paint_silver": {"color": [0.40, 0.41, 0.42], "rough": 0.3, "metal": 0.6, "texture_set": "car_grime_clean", "yard_paint": True, "paint": [0.6, 0.0, 0.0, 0.5]},
+    "tractor_paint_blue": {"color": [0.025, 0.06, 0.16], "rough": 0.3, "metal": 0.3, "texture_set": "car_grime_clean", "yard_paint": True, "paint": [0.3, 0.0, 0.0, 0.5]},
+    "tractor_paint_red": {"color": [0.30, 0.025, 0.02], "rough": 0.3, "metal": 0.2, "texture_set": "car_grime_clean", "yard_paint": True, "paint": [0.2, 0.0, 0.0, 0.5]},
+    "tractor_paint_green": {"color": [0.03, 0.08, 0.05], "rough": 0.3, "metal": 0.3, "texture_set": "car_grime_clean", "yard_paint": True, "paint": [0.3, 0.0, 0.0, 0.5]},
+    "tractor_paint_black": {"color": [0.02, 0.02, 0.022], "rough": 0.3, "metal": 0.3, "texture_set": "car_grime_clean", "yard_paint": True, "paint": [0.3, 0.0, 0.0, 0.5]},
     "container_rust": {"color": [0.17, 0.06, 0.04], "rough": 0.75, "texture_set": "container_corrugation"},
     "container_blue": {"color": [0.05, 0.09, 0.16], "rough": 0.7, "texture_set": "container_corrugation"},
     "container_grey": {"color": [0.22, 0.23, 0.23], "rough": 0.7, "texture_set": "container_corrugation"},
@@ -515,6 +516,15 @@ for _k in ("roof_tiles_red", "roof_tiles_brown"):
 M["plot_kit"] = {"color": [1.0, 1.0, 1.0], "rough": 0.85, "texture": "plot_kit", "alpha_cutoff": 0.5}
 M["plot_lawn"] = {"color": [0.150, 0.200, 0.060], "rough": 0.95, "surface": "grass", "texture_set": "grass_verge"}
 
+# ADR 0120, furniture-only alias: the shallow lamp footing keeps the concrete-base pigment,
+# but no longer samples the dirty ground line of the entire concrete pole atlas (review I3).
+# Existing material identity/slot count, linear tint and tiling rules stay unchanged.
+M["furniture_footing"] = {**M["furniture_footing"], "texture": "furniture_footing"}
+
+# ADR 0120: one existing material identity. Only panel_fence COLOR_0 markers activate this detail;
+# gates and noise-wall plinths retain the unmarked path. No texture_set/_Tile/_Tint contract changes.
+M["concrete_plinth"] = {**M["concrete_plinth"], "furniture_plinth_detail": {
+    "texture": "furniture_plinth", "tile_m": 1.0, "dirt_h": 0.25, "dirt_strength": 0.55}}
 
 # ADR0118 r1: asphalt-only overrides of the road material table (MATERIALS.update(M)).
 # WORKING_VALUE: judged against local photo wheel/centre ratio 0.67, not measured physical albedo.
@@ -542,3 +552,49 @@ M["marking_white"] = {"color": [0.55, 0.55, 0.54], "rough": 0.65, "surface": "pa
 # WORKING_VALUE: 0.85 legacy opacity × 1.15 = 0.9775, only for roads.decals traffic-stop stains.
 # Private-yard/gate/bus oil retains UV1.x=0 and the previous material response.
 M["decal_oil"]["traffic_opacity_scale"] = 1.15
+
+
+def _underdeck_pier_paint(default):
+    """ADR 0119: opt-in pigment for the existing DK8 pier material only."""
+    import json
+    import math
+    from pathlib import Path
+    path = Path(__file__).resolve().parents[3] / "Data/Regions/bialystok-industrial-c/viaduct_underdeck.json"
+    try:
+        paint = json.loads(path.read_text(encoding="utf-8")).get("pier_paint", {})
+        color = paint.get("color_linear")
+        if paint.get("enabled") is True and isinstance(color, list) and len(color) == 3:
+            if all(isinstance(c, (int, float)) and not isinstance(c, bool) and math.isfinite(c) and 0 <= c <= 1 for c in color):
+                return list(color)
+    except (OSError, ValueError, TypeError):
+        pass
+    return default
+
+
+M["pier_yellow"]["color"] = _underdeck_pier_paint(M["pier_yellow"]["color"])
+
+
+def _underdeck_pier_weather():
+    """ADR 0119: reuse existing concrete modulation/splash/runoff behind a data flag."""
+    import json
+    import math
+    from pathlib import Path
+    path = Path(__file__).resolve().parents[3] / "Data/Regions/bialystok-industrial-c/viaduct_underdeck.json"
+    try:
+        cfg = json.loads(path.read_text(encoding="utf-8"))
+        paint = cfg.get("pier_paint", {})
+        if cfg.get("set", {}).get("paint_weathering") is True and paint.get("enabled") is True:
+            height = float(paint.get("splash_h_m", .8))
+            if math.isfinite(height) and .1 <= height <= 1.5:
+                return {"texture_set": "concrete_precast", "splash_h": height, "runoff": True}
+    except (OSError, ValueError, TypeError):
+        pass
+    return {}
+
+
+M["pier_yellow"].update(_underdeck_pier_weather())
+
+# ADR0120 r2: explicit road-sign assembly recipe; face IDs come from current props metadata.
+M["plate_back"] = {**M["plate_back"], "furniture_sign_fronts": {
+    "gain": 800.0,  # uncalibrated display coefficient, WORKING_VALUE
+}}

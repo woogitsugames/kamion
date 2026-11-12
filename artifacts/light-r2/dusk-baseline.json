@@ -1,0 +1,48 @@
+{
+    "jobs":  [
+                 {
+                     "width":  2340,
+                     "lighting":  "dusk",
+                     "cameras":  "driver-andersa-to-putry,cab-dash,r10_hall_3,r10_block_3,r10_house_2,stretch-05-docks",
+                     "tier":  "Low",
+                     "output":  "artifacts/light-r2/baseline/Low-off",
+                     "lampProbe":  true,
+                     "rq":  "rq_lamppools=0",
+                     "scene":  "WorldC",
+                     "height":  1080
+                 },
+                 {
+                     "width":  2340,
+                     "lighting":  "dusk",
+                     "cameras":  "driver-andersa-to-putry,cab-dash,r10_hall_3,r10_block_3,r10_house_2,stretch-05-docks",
+                     "tier":  "Low",
+                     "output":  "artifacts/light-r2/baseline/Low-on",
+                     "lampProbe":  true,
+                     "rq":  "",
+                     "scene":  "WorldC",
+                     "height":  1080
+                 },
+                 {
+                     "width":  2340,
+                     "lighting":  "dusk",
+                     "cameras":  "driver-andersa-to-putry,cab-dash,r10_hall_3,r10_block_3,r10_house_2,stretch-05-docks",
+                     "tier":  "High",
+                     "output":  "artifacts/light-r2/baseline/High-off",
+                     "lampProbe":  true,
+                     "rq":  "rq_lamppools=0",
+                     "scene":  "WorldC_High",
+                     "height":  1080
+                 },
+                 {
+                     "width":  2340,
+                     "lighting":  "dusk",
+                     "cameras":  "driver-andersa-to-putry,cab-dash,r10_hall_3,r10_block_3,r10_house_2,stretch-05-docks",
+                     "tier":  "High",
+                     "output":  "artifacts/light-r2/baseline/High-on",
+                     "lampProbe":  true,
+                     "rq":  "",
+                     "scene":  "WorldC_High",
+                     "height":  1080
+                 }
+             ]
+}

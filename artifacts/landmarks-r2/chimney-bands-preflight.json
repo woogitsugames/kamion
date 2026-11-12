@@ -1,0 +1,65 @@
+{
+  "source_page": "https://commons.wikimedia.org/wiki/File:20200711_073128_Elektrociep%C5%82ownia_Bia%C5%82ystok.jpg",
+  "author": "Rakoon",
+  "license": "CC BY 3.0",
+  "attribution": "20200711 073128 Elektrociep\u0142ownia Bia\u0142ystok \u2014 Rakoon, CC BY 3.0, Wikimedia Commons. Reference crops/resizing indicated separately.",
+  "source_size_used": [
+    3840,
+    2160
+  ],
+  "source_status": "Resized reference; original download HTTP 429 twice, no local original claimed",
+  "heading_WORKING_VALUE_deg": 147.07754451999938,
+  "focal_pixels_assuming_36mm_equivalent_width": 2880.0,
+  "assumptions": "Rectilinear projection, small camera pitch, same stripe height; GPS rounded and equivalent focal/crop uncertain",
+  "uncertainty": "Not bounded until pose is solved. Initial +/-2 m estimate omitted systematic GPS/focal/pose uncertainty.",
+  "observations": {
+    "left": {
+      "osm_way": "628899554",
+      "source_x_measured": 2969.75,
+      "boundaries_y_source_WORKING_VALUE": [
+        400,
+        482,
+        567,
+        650,
+        735
+      ],
+      "clean_spacings_px": [
+        82,
+        85,
+        83,
+        85
+      ],
+      "visible_head": "three separate outlets, two close head galleries",
+      "depth_at_inferred_heading_m": 503.51148942664355,
+      "mean_clean_spacing_px": 83.75,
+      "estimated_pitch_m_WORKING_VALUE": 14.642044180375485
+    },
+    "right": {
+      "osm_way": "628899553",
+      "source_x_measured": 3630.25,
+      "boundaries_y_source_WORKING_VALUE": [
+        150,
+        256,
+        478,
+        584,
+        689
+      ],
+      "clean_spacings_px": [
+        106,
+        106,
+        105
+      ],
+      "visible_head": "one large outlet, head gallery and a lower shaft gallery",
+      "depth_at_inferred_heading_m": 411.008784591897,
+      "mean_clean_spacing_px": 105.66666666666667,
+      "estimated_pitch_m_WORKING_VALUE": 15.079836193938814
+    }
+  },
+  "candidate_only": {
+    "gps_based_pitch_hypothesis_m": 15.0,
+    "height_m_retained_from_OSM": 120,
+    "rejected_phase_assumption": "full-height white/red bands at 15 m spacing",
+    "status": "DO NOT APPLY. Contractor photo shows a long white base; technical dimensions require solving the photographic pose instead of scaling the shaft or painting from this GPS estimate.",
+    "further_evidence_file": "chimney-technical-sources.json"
+  }
+}

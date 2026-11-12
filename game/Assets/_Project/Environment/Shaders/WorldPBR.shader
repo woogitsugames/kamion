@@ -77,7 +77,7 @@ Shader "Kamion/World PBR"
         _PaintWear ("Paint wear: x wheel-path, y age, z dirt film, w line width m", Vector) = (0.85, 0.25, 0.3, 0.12)
         _PaintFreshWear ("Fresh road paint: wheel, weather, dirt, substrate multipliers (ADR0118)", Vector) = (1, 1, 1, 1)
         _CarPaint ("Car paint (_CARPAINT): x base metal, y flake tilt, z pearl, w base-coat roughness", Vector) = (0, 0, 0, 0.5)
-        _CarFlake ("Car flake: x cells per m, y fade scale (1 = gone when a pixel covers a cell)", Vector) = (400, 1, 0, 0)
+        _CarFlake ("Car flake: x cells/m, y fade, w film mode (0 off, 1 car, 2 yard)", Vector) = (400, 1, 0, 0)
         _PearlTint ("Pearl grazing tint (linear)", Color) = (1, 1, 1, 1)
         _PanelTone ("Panel tone (_PANELTONE): xy cladding module in UV0 m (length, course), z per-panel hash share, w butt-joint line", Vector) = (6, 1, 0.35, 0.3)
         _OffsetFactor ("Depth offset factor", Float) = 0
@@ -293,21 +293,43 @@ Shader "Kamion/World PBR"
                 {
                     // WORKING_VALUE: source UV1 is height above the actual class sill
                     // and an affine rear=0/front=1 axle coordinate. No film inversion.
-                    half amount = 0.08h + 0.92h * i.carFilm.x;
-                    half falloff = 0.16h + 0.06h * i.carFilm.x;
-                    half vertical = exp2(-max(i.uv.z, 0.0) / falloff * 1.442695h);
-                    half keepUpper = smoothstep(0.45h, 0.85h, abs(n.y)) * smoothstep(0.6, 0.8, um.y);
-                    // Clean-map Mask.R carries removed legacy film, not metal.
-                    // Preserve the existing bonnet/roof response by forward application;
-                    // the monotone sill layer below remains independent of that coverage.
-                    half upperFilm = saturate(mask.r);
-                    half3 legacyMultiplier = (1.0h - 0.30h * upperFilm) * half3(1.0h, 1.0h - 0.08h * upperFilm, 1.0h - 0.22h * upperFilm);
-                    base.rgb *= lerp(half3(1, 1, 1), legacyMultiplier, keepUpper);
-                    mask.a = saturate(mask.a - 0.35h * upperFilm * keepUpper);
                     half frontTrail = saturate(1.0h - abs(i.uv.w - 0.87h) / 0.28h);
                     half rearTrail = saturate(1.0h - abs(i.uv.w + 0.13h) / 0.28h);
                     half rearFace = saturate((-i.uv.w - 0.20h) * 8.0h);
                     half deposition = max(max(frontTrail, rearTrail), rearFace);
+                    half amount, falloff;
+                    half keepUpper = 0.0h;
+                    if (_CarFlake.w < 1.5)
+                    {
+                        amount = 0.08h + 0.92h * i.carFilm.x;
+                        falloff = 0.16h + 0.06h * i.carFilm.x;
+                        // ADR0089 life r3 A, WORKING_VALUE: broader only behind
+                        // axles and on the rear. Still monotone above the sill,
+                        // bounded by the existing 0.5 opacity, no new sampling.
+                        falloff += deposition * (0.12h + 0.12h * i.carFilm.x)
+                                 + rearFace * 0.10h * (0.25h + 0.75h * i.carFilm.x);
+                        // ADR0089 life r3 C, WORKING_VALUE: the level-2 rear
+                        // still looked freshly washed from 5.7 m. Broaden the
+                        // rear-quarter/tail only, never detach film from the sill.
+                        amount = saturate(amount + rearFace * 0.16h * (0.25h + 0.75h * i.carFilm.x));
+                        falloff += rearFace * (0.18h + 0.18h * i.carFilm.x);
+                        // Preserve the existing passenger-car bonnet/roof response.
+                        // Static cabs opt out: their previous plain paint had no such layer.
+                        keepUpper = smoothstep(0.45h, 0.85h, abs(n.y)) * smoothstep(0.6, 0.8, um.y);
+                        half upperFilm = saturate(mask.r);
+                        half3 legacyMultiplier = (1.0h - 0.30h * upperFilm) * half3(1.0h, 1.0h - 0.08h * upperFilm, 1.0h - 0.22h * upperFilm);
+                        base.rgb *= lerp(half3(1, 1, 1), legacyMultiplier, keepUpper);
+                        mask.a = saturate(mask.a - 0.35h * upperFilm * keepUpper);
+                    }
+                    else
+                    {
+                        // ADR 0122 C, WORKING_VALUE: yard-cab film was almost
+                        // invisible with the passenger-car sill envelope.
+                        // Keep the four instance levels, broaden only static cabs.
+                        amount = 0.25h + 0.75h * i.carFilm.x;
+                        falloff = 0.32h + 0.16h * i.carFilm.x;
+                    }
+                    half vertical = exp2(-max(i.uv.z, 0.0) / falloff * 1.442695h);
                     carFilmOpacity = 0.5h * amount * vertical * (0.72h + 0.28h * deposition) * (1.0h - keepUpper);
                     mask.a = lerp(mask.a, 0.25h, carFilmOpacity);
                 }

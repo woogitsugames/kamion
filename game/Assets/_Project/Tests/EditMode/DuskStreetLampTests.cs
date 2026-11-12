@@ -11,6 +11,94 @@ namespace Game.Tests
     /// </summary>
     public class DuskStreetLampTests
     {
+        [Test]
+        public void NightReflectionUsesMappedSkyButPreservesGroundRadiance()
+        {
+            var night = LightingPreset.CreateNight();
+            Cubemap raw = null, mapped = null;
+            try
+            {
+                var model = night.CreateModel();
+                raw = model.ReflectionCubemap(night.groundAlbedo, 8);
+                mapped = model.ReflectionCubemap(night.groundAlbedo, 8, c => WorldAtmosphere.DisplaySkyFog(night, c));
+                var beforeSky = raw.GetPixel(CubemapFace.PositiveY, 4, 4);
+                var afterSky = mapped.GetPixel(CubemapFace.PositiveY, 4, 4);
+                Assert.Less(afterSky.maxColorComponent, beforeSky.maxColorComponent*0.3f,
+                    "Night reflection must not retain the bright twilight sky");
+                var beforeGround = raw.GetPixel(CubemapFace.NegativeY, 4, 4);
+                var afterGround = mapped.GetPixel(CubemapFace.NegativeY, 4, 4);
+                Assert.AreEqual(beforeGround, afterGround, "sky appearance must not dim reflected diffuse ground");
+            }
+            finally
+            {
+                if (raw != null) Object.DestroyImmediate(raw);
+                if (mapped != null) Object.DestroyImmediate(mapped);
+                Object.DestroyImmediate(night);
+            }
+        }
+
+        [Test]
+        public void NightSkyPresentationChangesFogColourWithoutChangingScenePhotometry()
+        {
+            var night = LightingPreset.CreateNight();
+            try
+            {
+                // Compare genuinely different input grades even after Night's factory defaults were selected.
+                night.skyDisplayGain = 1f; night.skyDisplayDesaturation = 0f;
+                var before = night.CreateModel();
+                night.skyDisplayGain = 0.125f; night.skyDisplayDesaturation = 0.85f;
+                var after = night.CreateModel();
+                Assert.AreEqual(before.Exposure, after.Exposure);
+                Assert.AreEqual(before.HorizontalIlluminanceLux, after.HorizontalIlluminanceLux);
+                Assert.AreEqual(before.SunNormalIlluminanceLux, after.SunNormalIlluminanceLux);
+                Assert.AreEqual(before.SunColor, after.SunColor);
+                var shBefore = before.AmbientProbe(night.groundAlbedo, 24, night.ambientSkySaturation, night.lowSunAmbientCool);
+                var shAfter = after.AmbientProbe(night.groundAlbedo, 24, night.ambientSkySaturation, night.lowSunAmbientCool);
+                for (int channel = 0; channel < 3; channel++)
+                    for (int coefficient = 0; coefficient < 9; coefficient++)
+                        Assert.AreEqual(shBefore[channel, coefficient], shAfter[channel, coefficient], "sky appearance must not alter ambient SH");
+                var fog = before.HorizonColorExposed();
+                var display = WorldAtmosphere.DisplaySkyFog(night, fog);
+                Assert.Less(display.maxColorComponent, fog.maxColorComponent);
+                Assert.AreEqual(fog.a, display.a);
+            }
+            finally { Object.DestroyImmediate(night); }
+        }
+
+        [Test]
+        public void LegacyPresetsKeepTheirSkyAndFogPresentation()
+        {
+            foreach (var preset in new[] { LightingPreset.CreateClear(), LightingPreset.CreateOvercast(), LightingPreset.CreateLowSun(), LightingPreset.CreateDusk() })
+                try
+                {
+                    var fog = preset.CreateModel().HorizonColorExposed();
+                    Assert.AreEqual(fog, WorldAtmosphere.DisplaySkyFog(preset, fog));
+                    preset.skyDisplayGain = 0f; // missing legacy serialized field
+                    Assert.AreEqual(fog, WorldAtmosphere.DisplaySkyFog(preset, fog));
+                }
+                finally { Object.DestroyImmediate(preset); }
+        }
+
+        [Test]
+        public void NightSeparatesDarkAmbientFromFixedLampPhotometryWithoutChangingDusk()
+        {
+            var dusk = LightingPreset.CreateDusk();
+            var night = LightingPreset.CreateNight();
+            try
+            {
+                var d = dusk.CreateModel(); var n = night.CreateModel();
+                Assert.AreEqual(-5f, dusk.sunElevationDeg, "existing dusk stays intact");
+                Assert.AreEqual(0f, dusk.exposureCompensation);
+                Assert.AreEqual(0f, n.SunNormalIlluminanceLux);
+                Assert.Less(n.SkyHorizontalIlluminanceLux, d.SkyHorizontalIlluminanceLux);
+                float ambientRatio = n.HorizontalIlluminanceLux*n.Exposure/(d.HorizontalIlluminanceLux*d.Exposure);
+                Assert.That(ambientRatio, Is.InRange(1f/32f, 1f/8f), "night ambient must be clearly darker, not just a renamed dusk");
+                Assert.Greater(StreetLamps.DownIntensityCd/n.HorizontalIlluminanceLux,
+                    StreetLamps.DownIntensityCd/d.HorizontalIlluminanceLux, "fixed lamp gains contrast against darker sky");
+            }
+            finally { Object.DestroyImmediate(dusk); Object.DestroyImmediate(night); }
+        }
+
         const float LampHeightM = 8f;   // typical urban road luminaire mounting height (WORKING_VALUE)
 
         [Test]

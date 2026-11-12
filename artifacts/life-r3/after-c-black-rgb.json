@@ -1,0 +1,70 @@
+{
+  "rows": [
+    {
+      "source": "artifacts/life-r3/after-c/Low-clear/life3_black_side5.png",
+      "condition": "Low-clear",
+      "door_rgb": [
+        85.9386,
+        85.0377,
+        81.4086
+      ],
+      "asphalt_rgb": [
+        93.4402,
+        91.967,
+        88.0087
+      ],
+      "source_sha": "83D06BDC9249F10180FD3FF7006CE72D965CEDAFA2F7B410F1ED8E2851692CB9"
+    },
+    {
+      "source": "artifacts/life-r3/after-c/Low-overcast/life3_black_side5.png",
+      "condition": "Low-overcast",
+      "door_rgb": [
+        39.9774,
+        39.815,
+        39.2805
+      ],
+      "asphalt_rgb": [
+        60.0219,
+        59.2749,
+        58.2874
+      ],
+      "source_sha": "06DBFFE5C1F08A0F0649B09917CB7F84FADCA4CA142260D97E6C6E3FEE2F64F8"
+    },
+    {
+      "source": "artifacts/life-r3/after-c/High-clear/life3_black_side5.png",
+      "condition": "High-clear",
+      "door_rgb": [
+        91.8518,
+        90.9149,
+        87.271
+      ],
+      "asphalt_rgb": [
+        98.9757,
+        97.5931,
+        93.6586
+      ],
+      "source_sha": "801DD79C86D6B5155A88306286E08B277910B535E91D8D4832F832ED134226E3"
+    },
+    {
+      "source": "artifacts/life-r3/after-c/High-overcast/life3_black_side5.png",
+      "condition": "High-overcast",
+      "door_rgb": [
+        44.8992,
+        44.7135,
+        44.156
+      ],
+      "asphalt_rgb": [
+        65.3744,
+        64.7167,
+        63.7486
+      ],
+      "source_sha": "665EF5EF8BA95AD94655E7A818D21DBD412334A6BC6667BF9DB140D6DCF0D19B"
+    }
+  ],
+  "stage": "after-c",
+  "method": "Display-encoded RGB means over the same manually inspected fixed rectangles as the luminance ROI; not albedo or linear photometry.",
+  "rois": {
+    "door": "134x61+1199+563",
+    "asphalt": "134x61+1213+862"
+  }
+}

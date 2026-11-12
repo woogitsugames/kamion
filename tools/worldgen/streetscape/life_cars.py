@@ -329,6 +329,19 @@ def longitudinal_weight(axle_coordinate):
 
 def paint_deposition(primitives, prototype):
     """R4 data-only adapter after normal splitting; leave every existing array intact."""
+    if prototype.startswith('tractor_'):
+        # Lazy import: life_props builds its meshes using this module. Export
+        # calls the adapter only after both modules have finished initialising.
+        from .life_props import TRACTOR, TRACTOR_SILL_Z
+        result = []
+        for primitive in primitives:
+            if primitive['mat'].startswith('tractor_paint_'):
+                v = np.asarray(primitive['V'])
+                uv1 = np.column_stack([v[:, 2] - TRACTOR_SILL_Z,
+                                       (v[:, 1] + TRACTOR['fw_ahead']) / TRACTOR['wb']])
+                primitive = dict(primitive, UV1=uv1)
+            result.append(primitive)
+        return result
     name = prototype.removeprefix('car_')
     body = name.split('_')[0]
     dimensions = VAN if body == 'van' else CARS.get(body)
@@ -353,10 +366,10 @@ def paint_deposition(primitives, prototype):
     return result
 
 def _paint_uv(m):
-    """UV of every car_paint_* primitive = (y, z) in metres (side projection), so the car_grime set puts road
+    """UV of vehicle paint = (y, z) in metres (side projection), so the car_grime set puts road
     film on the sills and bumpers and dust on the roof whatever helper built the part."""
     for mat, p in m.prims.items():
-        if mat.startswith("car_paint_"):
+        if mat.startswith(("car_paint_", "tractor_paint_")):
             p[2] = [np.asarray(V, float)[:, [1, 2]] for V in p[0]]
     return m
 
@@ -945,12 +958,16 @@ def _wheel2(m, x_out, yc, r, sx, seg, steel, lod, wst=0, rimm="rim", tyre="tyre"
                     r1 = rr - 0.004
                     ia, ib_ = c0 + u * 0.05 - v * wi, c0 + u * 0.05 + v * wi
                     oa, ob = c0 + u1 * r1 - v1 * wo + X * 0.012, c0 + u1 * r1 + v1 * wo + X * 0.012
-                    if ns * (2 if twin else 1) > 7:               # thin spokes: one face
-                        _quad(m, face, ia, oa, ob, ib_, X)
-                    else:
-                        im, om = c0 + u * 0.05 + X * 0.012, c0 + u1 * r1 + X * 0.022
-                        _quad(m, face, ia, oa, om, im, X - v * 0.6)
-                        _quad(m, face, im, om, ob, ib_, X + v * 0.6)
+                    # ADR0089 life r3, WORKING_VALUE: two faces also on thin
+                    # spokes. The wide section survives the existing 38-degree
+                    # exporter crease; no global normal-policy change.
+                    thin = ns * (2 if twin else 1) > 7
+                    rise_inner, rise_outer = ((0.010, 0.020) if thin else
+                        (max(0.020, min(0.026, wi * 0.40)), 0.012 + max(0.014, min(0.018, wo * 0.40))))
+                    im = c0 + u * 0.05 + X * rise_inner
+                    om = c0 + u1 * r1 + X * rise_outer
+                    _quad(m, face, ia, oa, om, im, X - v * 0.6)
+                    _quad(m, face, im, om, ob, ib_, X + v * 0.6)
             fan(face, ring(0.22 * r, 0.026 - 0.010, 8), X)
             fan("rim_dark", ring(0.085 * r, 0.012, 6), X)
     else:
