@@ -1,0 +1,12 @@
+{
+  "xfailed": 1,
+  "owner": "gpt-light-r3",
+  "pool": "heavy",
+  "command": "uv run --project tools/worldgen python -m pytest tests/gis -q",
+  "editmode_passed": 310,
+  "exit_code": 0,
+  "source_sha": "8da3d700b08613556173322f034c87ee0d9de48a",
+  "passed": 576,
+  "log": "heavy-GisFinal-20261112-093403.log",
+  "pytest_elapsed_seconds": "813.62"
+}

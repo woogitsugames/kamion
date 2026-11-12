@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="3" result="Passed" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-11-11 23:24:40Z" end-time="2026-11-11 23:24:41Z" duration="0,0406904">
+  <test-suite type="TestSuite" id="1000" name="Kamion" fullname="Kamion" runstate="Runnable" testcasecount="279" result="Passed" start-time="2026-11-11 23:24:40Z" end-time="2026-11-11 23:24:41Z" duration="0.040690" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1351" name="Game.Tests.EditMode.dll" fullname="C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/gpt-cab/game/Library/ScriptAssemblies/Game.Tests.EditMode.dll" runstate="Runnable" testcasecount="279" result="Passed" start-time="2026-11-11 23:24:40Z" end-time="2026-11-11 23:24:41Z" duration="0.035226" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="38908" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1352" name="Game" fullname="Game" runstate="Runnable" testcasecount="279" result="Passed" start-time="2026-11-11 23:24:40Z" end-time="2026-11-11 23:24:41Z" duration="0.034512" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1353" name="Tests" fullname="Game.Tests" runstate="Runnable" testcasecount="279" result="Passed" start-time="2026-11-11 23:24:40Z" end-time="2026-11-11 23:24:41Z" duration="0.033945" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1354" name="EditMode" fullname="Game.Tests.EditMode" runstate="Runnable" testcasecount="81" result="Passed" start-time="2026-11-11 23:24:40Z" end-time="2026-11-11 23:24:41Z" duration="0.031251" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1265" name="CabLeatherMappingTests" fullname="Game.Tests.EditMode.CabLeatherMappingTests" classname="Game.Tests.EditMode.CabLeatherMappingTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-11-11 23:24:40Z" end-time="2026-11-11 23:24:41Z" duration="0.029646" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-suite type="ParameterizedMethod" id="1269" name="AmbiguousRimRegionFailsInsteadOfScalingOtherParts" fullname="Game.Tests.EditMode.CabLeatherMappingTests.AmbiguousRimRegionFailsInsteadOfScalingOtherParts" classname="Game.Tests.EditMode.CabLeatherMappingTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-11-11 23:24:40Z" end-time="2026-11-11 23:24:41Z" duration="0.018214" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1267" name="AmbiguousRimRegionFailsInsteadOfScalingOtherParts(True)" fullname="Game.Tests.EditMode.CabLeatherMappingTests.AmbiguousRimRegionFailsInsteadOfScalingOtherParts(True)" methodname="AmbiguousRimRegionFailsInsteadOfScalingOtherParts" classname="Game.Tests.EditMode.CabLeatherMappingTests" runstate="Runnable" seed="498790180" result="Passed" start-time="2026-11-11 23:24:40Z" end-time="2026-11-11 23:24:41Z" duration="0.014124" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1268" name="AmbiguousRimRegionFailsInsteadOfScalingOtherParts(False)" fullname="Game.Tests.EditMode.CabLeatherMappingTests.AmbiguousRimRegionFailsInsteadOfScalingOtherParts(False)" methodname="AmbiguousRimRegionFailsInsteadOfScalingOtherParts" classname="Game.Tests.EditMode.CabLeatherMappingTests" runstate="Runnable" seed="383257447" result="Passed" start-time="2026-11-11 23:24:41Z" end-time="2026-11-11 23:24:41Z" duration="0.000214" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+              </test-suite>
+              <test-case id="1266" name="PhysicalRimScale_LeavesHubOtherMaterialsAndAoUntouched" fullname="Game.Tests.EditMode.CabLeatherMappingTests.PhysicalRimScale_LeavesHubOtherMaterialsAndAoUntouched" methodname="PhysicalRimScale_LeavesHubOtherMaterialsAndAoUntouched" classname="Game.Tests.EditMode.CabLeatherMappingTests" runstate="Runnable" seed="1114513030" result="Passed" start-time="2026-11-11 23:24:41Z" end-time="2026-11-11 23:24:41Z" duration="0.006897" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Saving results to: C:/Users/matma/AppData/LocalLow/woogitsugames/Kamion\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

@@ -1,0 +1,44 @@
+{
+  "stage": "PRESTAGE_NOT_FINAL_DELIVERY",
+  "delivered_at": "2026-11-12T09:30:18.7374977+01:00",
+  "render_head": "62d45b92",
+  "destination_png_sha_verified": 168,
+  "critical_files": [
+    {
+      "path": "counters/camera-counters.csv",
+      "sha256": "04e6f3073bb0dc73ab2f1c0f4b9d715570c747d4aea00296c2745349255f11f2"
+    },
+    {
+      "path": "counters/summary.json",
+      "sha256": "1596b38452076f66800d983bd8c6c9f25ffa84fa0625e2b4071bb4d38ea84701"
+    },
+    {
+      "path": "prestage-source-bindings/sbs_cameras.json",
+      "sha256": "41686dd5d9a9ef0969ab9d7772e359b150a6f1783b67538d9d8f875880f1ae2e"
+    },
+    {
+      "path": "prestage-source-bindings/sbs_references.json",
+      "sha256": "f7991691c5868e67658ff9879c6b736c372b4ac02f1be9b84cebca4cd51b40af"
+    },
+    {
+      "path": "prestage-source-bindings/world_manifest.json",
+      "sha256": "2d486ac202829ca711b2d72fabc2299b6c637f1059f7adc9c42e1ad6b8aba489"
+    },
+    {
+      "path": "prestage-source-bindings/materials_spec.json",
+      "sha256": "c552a473f4e2849cd6aedcd839210f39416292ca16c422aecc46517e23d60afb"
+    },
+    {
+      "path": "full-capture-audit.json",
+      "sha256": "4bce700304689411f4ea1c657675a07f83caa64a4d367c2286da047f57f16870"
+    }
+  ],
+  "robocopy_exit_codes": [
+    1,
+    1,
+    1
+  ],
+  "final_report_delivered": false,
+  "final_gis_completed": false,
+  "note": "Fresh raw and counters available before round closure; final report/HTML delivery remains pending. STATUS copied separately as progress data."
+}

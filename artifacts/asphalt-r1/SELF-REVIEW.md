@@ -18,3 +18,6 @@ Obejrzano wszystkie 28 contact sheets comparison-candidate2-960: po 7 stron dla 
 
 Obejrzano próbę siły 0,80 i porównano ją z candidate2 0,45 w tym samym kadrze Low overcast. Wzmocnienie daje mocne równoległe pasma, uwydatnia też drobny falisty wzór po prawej. Wariant nie jest wybrany. Do dalszej poprawy potrzebna jest zmienność zależna od lokalnej nawierzchni, nie tylko większa globalna wartość. Materiał przywrócony do źródłowej wartości 0,45; kolejne testy nadal dotyczą candidate2.
 
+
+Korekta 2026-11-12: wcześniejsza akceptacja masek i pomiarów proporcji pól jest wycofana. Odtwarzanie anchor z wejściowej wysokości kamery było niepoprawne przy seat=road. Patrz CORRECTION-2026-11-12.md. Ocena oglądanych obrazów i liczniki są zachowane, wielkość kontrastu renderu pozostaje UNVERIFIED.
+

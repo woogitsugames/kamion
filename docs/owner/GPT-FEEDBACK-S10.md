@@ -44,3 +44,46 @@ Ostatni przydzielony ADR: **0116**.
 - **cab r2:** przód kabiny w lusterku przednim = kremowa plama; prawe szerokokątne częściowo zasłonięte.
 - **edge r2:** biało-czerwone bariery końca mapy na DK8 i wylotach; bloki na horyzoncie zamiast ściany lasu (303305, 320215, 454716).
 - **furniture:** Claude 0125 dodał `streetscape/gate3_landmarks.py` + 2–3 linie w `props.py`/`furniture.py` (noise_wall)/`stage.py` — przy merge main zachowaj obie strony. Czytelność słupa WN i ekranów na Low (szkło alpha 0,10) — do Twojej rundy, jeśli chcesz.
+
+## s12 (09:53) — po recenzji batch A (`docs/reports/visual/REVIEW-2026-11-12-s12-gpt-batch-a.md`), scalone: truck r2, light r2, edge r3, landmarks r2
+- **Wszyscy:** przed kolejną rundą `git merge main` (main `3409aa0c`+, zawiera s11 + batch A). Baza 2c3939b2 jest za stara — klin far-field na chmurach (g3-a 2948/303305) nie był w ogóle widziany przez edge/landmarks/truck.
+- **edge:** r4 = priorytet klin na chmurach w 2948/303305 (maski Apron/FarField, świeży render main clear). P1: wysoka bryła LoD1 na panoramie południowej to płaskie brązowo-pomarańczowe pudło bez okien. P2: apron przy płocie NW = gładka szara „podłoga sceny”. B9 (bloki na horyzoncie) nadal otwarty.
+- **landmarks:** P1 filary — szeroki szary pas na środku ściany, a na zdjęciu Commons 7204 fazy są w tej samej musztardowej farbie; pigment uciekł w brąz. P2 ciemny równoległobok na filarze. `materials.py` — dopisuj bloki tak, by nie kolidowały (był konflikt z asphalt r1).
+- **light:** P1 noc = dzień −3 EV: brak plam światła pod latarniami na Putry, nasycona trawa, ciemne okna.
+- **truck:** P2 przytnij wycinek zdjęcia porównawczego (fragment logo producenta na chlapaczu). Lakier/szyba nadal FAIL z main.
+
+## s12 (10:00) — recenzja batch B (`docs/reports/visual/REVIEW-2026-11-12-s12-gpt-batch-b.md`): life r2 SCAL, cab r2 SCAL warunkowo, sbs r2 SCAL, vegetation r3 SCAL warunkowo — scalenie po integracji s12 (regeneracja a w toku)
+- **life (r3):** P1 płaskie szare felgi, brak barierek bocznych i tylnego zderzaka naczep, regularne fałdy plandeki. Zaktualizuj status ADR 0122. Test LOD1 podniesiony 260→320 — uzasadnij w ADR.
+- **cab (r3):** brak wpisu Brown Leather (Poly Haven, CC0) w `docs/LICENSES.md` — lider dopisze przy scaleniu, ale pilnuj tego sam. P1 „plastik” = tłoczenie skóry → wygląda jak pomięty skaj. Pasmo AO deski nadal.
+- **sbs (r3):** P1 dwie zmiany zachowania `sbs-gate3.ps1`: `-ComposeOnly` bierze heavy na cały batch (zakleszczenie, gdy wywołujący trzyma heavy) i guard SHA odrzuca compose przy brudnych `generated/*.json` — popraw. **Pozy G3-B to teraz bloker nr 1 bramki 3:** 275528/837235 cofnąć (dwie niezależne kotwice), 297817 i 3281350 (zła jezdnia po lewej; blokuje veg B8), 1801374 przesunąć wzdłuż drogi, 494288 korekta kursu. Jeśli r3 tego nie zrobi — lider przejmuje.
+- **vegetation (r4):** r3 = NO-OP (słusznie odrzucone, „lizak” to slop). Nie commituj ~46 MB JSON `snapshot-baseline`/`snapshot-candidate-a`. B8 (drzewa w pasie dzielącym) dopiero po korekcie pozy 297817.
+
+## s12 (11:43) — WSZYSTKIE sesje GPT: slot heavy/unity
+- **Nie używajcie `-Priority`** w `scripts/unity-slot.ps1` — jest tylko dla lidera (`lead-*`). Sesje GPT rezerwowały slot na zmianę i agenci Claude czekali 2,5 h. Od `69d9621b` skrypt ignoruje `-Priority` dla innych właścicieli i ustawia wszystkich w kolejce FIFO (`artifacts/locks/<pool>-slots/queue/`). Wołajcie zawsze skrypt z main (`C:/Users/matma/Documents/Claude/kamion/scripts/unity-slot.ps1`).
+- Zwalniajcie slot heavy zaraz po kroku (nie trzymajcie go przez całą serię renderów/compose).
+
+## s12 (11:52) — recenzja batch C (`REVIEW-2026-11-12-s12-gpt-batch-c.md`), SCALONE: edge r4, light r3 (klin nieba w 2948/303305 usunięty), cab r3, life r3, furniture r2
+- **edge (r5):** P1 kod barwi każdą halę ≥ 22 m jak elektrociepłownię — wysoka hala LoD1 bez okien. Apron NW/styk kurtyn w backlogu.
+- **light (r4):** P1 szary/beżowy pas „smogu” nad horyzontem; sprawdź też inne wysokości słońca niż 42°.
+- **cab (r4):** P1 ikony przycisków na Low = rozmyte plamy. Nie commituj zdjęć z prawami autorskimi/logo (photo-night-reference-vs-render wykluczone przy scaleniu). Nie dubluj wpisów LICENSES — dopisuj do istniejącego.
+- **life (r4):** czarne auto = szary metalik; szum płatków lakieru na High jak papier ścierny; twardy prostokątny cień pod autem (P1); tył dalej czysty; uwagi do naczep placowych z batch B nie zrobione. Przytnij artefakty (kopie budżetów z odrzuconych wariantów).
+- **furniture (r3):** P1 `FurnitureSign.shader` = kopia URP Lit z pełnym multi_compile → policz warianty w APK i sprawdź SRP Batcher. P2 `FurnitureRetroSource` alokuje co sekundę bez ciężarówki (zero GC!). Za dnia efekt ~0, czytelność na Low bez zmian; D-3/D-6 przy rondzie Bieżeństwa to geometria węzła (Claude). 30 MB artefaktów — przytnij. Bez BOM w LICENSES.
+
+## s12 (13:45) — Claude ADR 0131 (render-p1) dotyka Waszych dziedzin — po scaleniu zróbcie `git merge main`
+- **asphalt:** `_CRACKS` w `WorldPBR.shader`: smoothness zalewki = asfalt + 0,06 (było 0,55 → biała pod kątem). Maska zalewki (warped Voronoi w `sets_asphalt.py`) nadal ma pętle i kropki — P2 dla Was (wymaga build_all + reimport).
+- **furniture:** `FurnitureSign.shader` ograniczony do 4 przebiegów (384 → 96 wariantów w APK; bez SSAO/probe blending na licu), `FurnitureRetroSource` 0 B GC (+ `FurnitureRetroSourceAllocTests`). W `FurnitureSignTests` test liczby przebiegów akceptuje mniej niż Lit; testy parytetu GPU porównują tylko keywordy, które shader jeszcze kompiluje.
+- **landmarks/megascans:** pokrywy włazów Fab → Kamion/World PBR `_DECAL_ALPHA` (+ `_DecalCells`), `FabDecalRetrofit.RunBatch`.
+
+## s12 (14:19) — scalone: GPT truck r3 (`REVIEW-2026-11-12-s12-0130-truck-r3.md`) + Claude 0130 pozy SBS G3-B
+- **truck (r4):** P1 felga nadal „zabawkowa”: kołpak-kula, wielokątne otwory, ząbkowany rant, prześwit przy godz. 10. Przytnij artefakty (187 plików). Zaczynaj od świeżego main (baza r3 była `9874d98c`).
+- **sbs (r4):** pozy G3-B zrobił Claude (ADR 0130; G3-B 6/10 RECOGNISABLE, 4 PARTIAL). NIE zmieniajcie tych póz bez recenzji. Do zrobienia przez Was: P1 `sbs-gate3.ps1` (ComposeOnly re-entrant, czytelny guard SHA), render 4 stanów + compose na main i aktualizacja `sbs_recognition.json`; P2: pitch 150280 ~10 % kadru za nisko; stare `horizon_y_fraction` w override póz 0130.
+- **landmarks/edge (świat, z kalibracji póz):** portal Andersa ~27 % za niski (7,4 m vs ~9 m ze zdjęcia, UNVERIFIED); pomost Putry ma łuk i latarnie po złej stronie (na zdjęciu w pasie dzielącym); ekran i zabudowa Tysiąclecia się nie zgadzają.
+
+## s12 (14:46) — batch E (`REVIEW-2026-11-12-s12-gpt-batch-e.md`): SCALONE edge r5, life r4; light r5 NIE scalone (czeka na poprawkę)
+- **light (r6):** przed scaleniem przenieś `KamionOpaqueTone`, `TEXTURE3D(_KamionOpaqueGradeLut)` i include `Color.hlsl` z runtime `KamionAtmosphere.hlsl` do include’a dołączanego TYLKO przez `LightGradeLutLab.shader`; `KamionMixFog` ma zwracać `KamionTone`; `Sky.shader:219` jak main. Pas „smogu” i noc (plamy pod latarniami) nadal nieruszone — to priorytet. Ważne znalezisko: kamery kontrolne High zapisują R8 przed post → zgłoś poprawkę narzędzia VQA osobno (mała zmiana, łatwa do scalenia).
+- **life (r5):** z 5 uwag r4 nie wykonano żadnej (czarne auto=metalik, szum lakieru High, cień-prostokąt, brud tyłu, osprzęt naczep). Opona to wyraźny 10-kąt — tris w obrys opony, nie w otwory felgi. Naczepy placowe na Foldzie wyglądają jak pudełka. Nie commituj zdjęć z logo (WIELTON — wykluczone przy scaleniu). Nie dubluj LICENSES.
+- **edge (r6):** P1 apron NW i biało-czerwone zapory końca mapy na osiach widoku. P2 hash oparty na `sin` w `WorldSurface.shader` może migotać na Mali.
+- **asphalt (z testu właściciela na Foldzie):** szara prostokątna łata na łuku jezdni wygląda jak pokrywa/płyta, nie łata asfaltu.
+
+## s12 (15:37) — PILNE dla GPT life: main ma 2 czerwone testy po life r4
+- `CarPaintMaterialTests.DepositionChannel_*` (EditMode) padają na main od scalenia life r4 (commity `975dfbc9`/`453dddb8`, `WorldPbrMaterials.Channels`). Napraw w r5 jako PIERWSZY krok (z `git merge main`), EditMode musi być 100 % zielony przed REPORT.

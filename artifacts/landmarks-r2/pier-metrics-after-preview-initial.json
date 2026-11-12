@@ -1,0 +1,143 @@
+{
+  "camera": "dk8-under-span",
+  "coordinate_status": "Fixed pixel boxes; inspect crops to validate face selection",
+  "note": "sRGB pixels under QA lighting, not measured material reflectance",
+  "rows": [
+    {
+      "condition": "Low-overcast",
+      "roi": "broad_face",
+      "box": [
+        1522,
+        540,
+        1545,
+        590
+      ],
+      "RGB_p50": [
+        80.5,
+        71.5,
+        54.0
+      ],
+      "Y_p50": 72.0797,
+      "Y_std": 9.723765201387975
+    },
+    {
+      "condition": "Low-overcast",
+      "roi": "left_strip",
+      "box": [
+        1496,
+        540,
+        1505,
+        590
+      ],
+      "RGB_p50": [
+        102.0,
+        86.0,
+        50.0
+      ],
+      "Y_p50": 86.80239999999999,
+      "Y_std": 2.2482327700553193
+    },
+    {
+      "condition": "Low-clear",
+      "roi": "broad_face",
+      "box": [
+        1522,
+        540,
+        1545,
+        590
+      ],
+      "RGB_p50": [
+        69.0,
+        67.0,
+        58.0
+      ],
+      "Y_p50": 67.0442,
+      "Y_std": 1.947468070247851
+    },
+    {
+      "condition": "Low-clear",
+      "roi": "left_strip",
+      "box": [
+        1496,
+        540,
+        1505,
+        590
+      ],
+      "RGB_p50": [
+        92.0,
+        84.0,
+        57.0
+      ],
+      "Y_p50": 83.6792,
+      "Y_std": 1.2455407723471186
+    },
+    {
+      "condition": "High-overcast",
+      "roi": "broad_face",
+      "box": [
+        1522,
+        540,
+        1545,
+        590
+      ],
+      "RGB_p50": [
+        84.5,
+        75.0,
+        57.0
+      ],
+      "Y_p50": 75.78229999999999,
+      "Y_std": 10.969033339340184
+    },
+    {
+      "condition": "High-overcast",
+      "roi": "left_strip",
+      "box": [
+        1496,
+        540,
+        1505,
+        590
+      ],
+      "RGB_p50": [
+        97.0,
+        84.0,
+        50.0
+      ],
+      "Y_p50": 84.309,
+      "Y_std": 3.2631605640226145
+    },
+    {
+      "condition": "High-clear",
+      "roi": "broad_face",
+      "box": [
+        1522,
+        540,
+        1545,
+        590
+      ],
+      "RGB_p50": [
+        75.5,
+        73.0,
+        64.0
+      ],
+      "Y_p50": 72.7594,
+      "Y_std": 2.7849894475186416
+    },
+    {
+      "condition": "High-clear",
+      "roi": "left_strip",
+      "box": [
+        1496,
+        540,
+        1505,
+        590
+      ],
+      "RGB_p50": [
+        91.0,
+        84.0,
+        58.0
+      ],
+      "Y_p50": 83.5749,
+      "Y_std": 1.871036186164182
+    }
+  ]
+}

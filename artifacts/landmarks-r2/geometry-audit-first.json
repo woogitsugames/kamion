@@ -1,0 +1,25 @@
+{
+  "stair_treads_before": 69,
+  "stair_treads_after": 0,
+  "stair_flights_before": 4,
+  "all_decks_identical": true,
+  "road_qa_identical": true,
+  "road_qa_sha256_after": "4f66f53c5f9cecfcdf658283525dd422f2b17d894725dc1c7f85d638db174af7",
+  "rows": [
+    {
+      "chain": "c:w1101181473:10076968415-1847263305",
+      "preserved_deck_sha256": "f887f124f6d823e65c0a97f5825ca4d693385c6f82823255a4a184e289082162",
+      "added_net_tris_before": 2128,
+      "added_net_tris_after": 1788,
+      "delta_net_tris": -340
+    },
+    {
+      "chain": "c:w173956078:1847263293-5749429982",
+      "preserved_deck_sha256": "584d18f74b95427dd71dc89c46da704a02b9f49caa764f9dec6e855d9bfe644d",
+      "added_net_tris_before": 1806,
+      "added_net_tris_after": 1456,
+      "delta_net_tris": -350
+    }
+  ],
+  "scope": "Generated deck V/UV/T hashes plus exact deck specs; UV1/COL preservation additionally covered by unit test"
+}

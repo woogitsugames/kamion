@@ -1,0 +1,59 @@
+{
+    "branch":  "gpt-edge-r2",
+    "validated_commit":  "048111421a5938236f0dbce9eaec0e64d6e093d0",
+    "round_base":  "54bb70ca",
+    "last_parser_change":  "037e470c",
+    "build_world_seconds":  459.9,
+    "fallback_true_in_build_log":  0,
+    "source_height_audit":  "height-audit.json",
+    "captured_before":  364,
+    "captured_after":  364,
+    "camera_pairs":  364,
+    "low_pairs":  182,
+    "low_budget_failures":  0,
+    "low_draw_delta_min":  0,
+    "low_draw_delta_max":  0,
+    "low_rounded_tris_k_delta_min":  -1,
+    "low_rounded_tris_k_delta_max":  0,
+    "photo_pairs":  100,
+    "photo_pose_B":  25,
+    "excluded_C":  17,
+    "photometry":  "UNVERIFIED",
+    "photo_quality":  "PARTIAL",
+    "parser_tests":  {
+                         "passed":  15,
+                         "failed":  0
+                     },
+    "far_field_tests":  {
+                            "passed":  5,
+                            "failed":  0
+                        },
+    "editmode":  {
+                     "duration_seconds":  12.0271804,
+                     "skipped":  0,
+                     "failed":  0,
+                     "passed":  267
+                 },
+    "gis":  {
+                "passed":  536,
+                "failed":  2,
+                "xfailed":  1,
+                "duration_seconds":  749.35,
+                "all_passed":  false,
+                "failures":  [
+                                 "tests/gis/test_road_fidelity.py::test_report_not_stale",
+                                 "tests/gis/test_world_roads.py::test_export_is_deterministic"
+                             ]
+            },
+    "cli_vs_pytest_chunks_identical":  64,
+    "retained_base_chunk_metadata_different":  54,
+    "post_gis_far_hashes_verified":  2,
+    "apron_and_closures_unchanged":  true,
+    "device_gpu":  "UNVERIFIED",
+    "phones_used":  false,
+    "merged_into_main":  false,
+    "pushed":  false,
+    "heavy_pool_limit":  3,
+    "unity_pool_limit":  4,
+    "next_round":  "Investigate NW apron alignment, confirm visual seam and shared ground profile."
+}

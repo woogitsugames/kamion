@@ -1,0 +1,20 @@
+{
+  "jobs": [
+    {
+      "width": 2340,
+      "lighting": "night",
+      "tier": "Low",
+      "output": "artifacts/light-r4/night-preset-diagnostic/Low",
+      "lampProbe": true,
+      "rq": "rq_headlamps=0,rq_wet=0",
+      "scene": "WorldC",
+      "height": 1080,
+      "expectedHeadlamps": 1,
+      "verifyWetness": true,
+      "expectedWetness": 0,
+      "cameras": "route-putry-approach",
+      "verifyDimColour": true,
+      "expectedDimColour": 0.65
+    }
+  ]
+}

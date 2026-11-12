@@ -1,0 +1,52 @@
+{
+    "jobs":  [
+                 {
+                     "width":  2340,
+                     "lighting":  "night",
+                     "cameras":  "cab-dash,truck-front,truck-34r",
+                     "tier":  "Low",
+                     "output":  "artifacts/light-r2/headlamp-smoke/Low-off",
+                     "lampProbe":  true,
+                     "rq":  "rq_headlamps=0",
+                     "scene":  "WorldC",
+                     "height":  1080,
+                     "expectedHeadlamps":  1
+                 },
+                 {
+                     "width":  2340,
+                     "lighting":  "night",
+                     "cameras":  "cab-dash,truck-front,truck-34r",
+                     "tier":  "Low",
+                     "output":  "artifacts/light-r2/headlamp-smoke/Low-on",
+                     "lampProbe":  true,
+                     "rq":  "rq_headlamps=1",
+                     "scene":  "WorldC",
+                     "height":  1080,
+                     "expectedHeadlamps":  2
+                 },
+                 {
+                     "width":  2340,
+                     "lighting":  "night",
+                     "cameras":  "cab-dash,truck-front,truck-34r",
+                     "tier":  "High",
+                     "output":  "artifacts/light-r2/headlamp-smoke/High-off",
+                     "lampProbe":  true,
+                     "rq":  "rq_headlamps=0",
+                     "scene":  "WorldC_High",
+                     "height":  1080,
+                     "expectedHeadlamps":  1
+                 },
+                 {
+                     "width":  2340,
+                     "lighting":  "night",
+                     "cameras":  "cab-dash,truck-front,truck-34r",
+                     "tier":  "High",
+                     "output":  "artifacts/light-r2/headlamp-smoke/High-on",
+                     "lampProbe":  true,
+                     "rq":  "rq_headlamps=1",
+                     "scene":  "WorldC_High",
+                     "height":  1080,
+                     "expectedHeadlamps":  2
+                 }
+             ]
+}

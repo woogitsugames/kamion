@@ -113,7 +113,12 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     pmask = PV.rasterize_polys([p["poly"] for p in paved + plot_paved], hf) & ~rmask
     pz = PV.paved_heights(hf, road_z, rmask, pmask)
     shapely.prepare(roads_poly)
-    PV.build_meshes(w.buf, paved + plot_paved, np.where(np.isfinite(pz), pz, sm), hf, walls=bpoly.boundary, roads_poly=roads_poly)
+    PV.build_meshes(w.buf, paved, np.where(np.isfinite(pz), pz, sm), hf, walls=bpoly.boundary, roads_poly=roads_poly)
+    # ADR 0124 r2: the ground of the house plots reads the ROAD height on the nodes of the road footprint (the yards
+    # above read the smoothed terrain there). A driveway that comes down from a plot 0.3-0.5 m above the street ended
+    # 15-20 cm over the lowered kerb, and the terrain showed under that lip as a wedge of grass (`r16_kerb_0`).
+    PV.build_meshes(w.buf, plot_paved, np.where(np.isfinite(pz), pz, np.where(rmask, road_z, sm)), hf,
+                    walls=bpoly.boundary, roads_poly=roads_poly)
     mats = {}
     for p in paved:
         mats[p["mat"]] = round(mats.get(p["mat"], 0) + p["poly"].area)
@@ -232,7 +237,8 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     # house plots (ADR 0107 / 0114): fences, gates and garden as chunk geometry in one material (`plot_kit`)
     def zplot(q):
         return float(np.asarray(zsurf(np.array([q[0]]), np.array([q[1]]))).ravel()[0])
-    plots = PLT.build(w.buf, plot_plan, zplot, FU.SurfaceTop([p_ for p_ in w.buf.parts if p_.layer == "road"]), rep)
+    plots = PLT.build(w.buf, plot_plan, zplot, FU.SurfaceTop([p_ for p_ in w.buf.parts if p_.layer == "road"]), rep,
+                      items=pl.items)       # ADR 0124: the lamp poles of the house streets carry the overhead line
     log("plots", {k: v for k, v in rep["plots"].items() if k != "list"})
 
     # vegetation

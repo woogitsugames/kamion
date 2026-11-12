@@ -233,11 +233,13 @@ namespace Game.Tests
                 if (double.IsNaN(t15) && ForwardKmh >= 15) t15 = (i + 1) * Dt;
             }
             int shifts = m_Body.Model.Amt.ShiftCount - shifts0;
-            Debug.Log($"[TEST] hill start 6 % 40 t: rollback {-rollback * 1000:F1} mm, 0-15 km/h {t15:F2} s (runner 4.5 s), speed after 30 s {ForwardKmh:F1} km/h, " +
+            Debug.Log($"[TEST] hill start 6 % 40 t: rollback {-rollback * 1000:F1} mm, 0-15 km/h {t15:F2} s (runner 4.84 s, ADR 0134), speed after 30 s {ForwardKmh:F1} km/h, " +
                       $"gear {m_Body.Model.Amt.Gear}, shifts {shifts}, clutch {m_Body.Model.Amt.ClutchTempC:F0} °C");
             Assert.Less(-rollback, 0.05, "rollback < 5 cm (runner 2.3 mm)");
             Assert.IsFalse(double.IsNaN(t15), "reaches 15 km/h within 30 s");
-            Assert.AreEqual(4.5, t15, 4.5 * 0.10, "0-15 km/h within ±10 % of the runner (4.5 s)");
+            // Reference = runner launch_6pct_uphill_comb@laden40 after ADR 0134 (4.84 s; was 4.5 s). Tolerance kept at the old
+            // absolute ±0.45 s (not widened).
+            Assert.AreEqual(4.84, t15, 0.45, "0-15 km/h within ±0.45 s of the runner (4.84 s, ADR 0134)");
             Assert.LessOrEqual(shifts, 14, "no gear hunting (runner limit 14 shifts)");
         }
 

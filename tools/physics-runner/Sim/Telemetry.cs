@@ -37,6 +37,7 @@ namespace PhysicsRunner.Sim
         public double RetarderTorque, EngineBrakeTorque, BrakeDemand;
         public double ClutchTemp;
         public int AmtState;
+        public double ClutchCmd;
         public double CabPitch, CabRoll, CabHeave;
         public double LandingGearLoad;
         public double ParkingState;

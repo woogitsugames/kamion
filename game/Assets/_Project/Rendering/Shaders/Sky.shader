@@ -45,7 +45,7 @@ Shader "Kamion/Sky"
             // while the vehicle reflection capture renders (reflections keep the physical sky radiance).
             float4 _KamionSkyCap;
             float _KamionSkyDitherOff; // ADR0098 A/B; zero preserves existing sky dither.
-            float _KamionSkyCapOff;
+            // _KamionSkyCapOff is declared by the shared atmosphere include above.
             TEXTURE2D(_SkyChroma); SAMPLER(sampler_SkyChroma);   // u = γ/π, v = sqrt(cos θ); rgb of luminance 1
             TEXTURE2D(_KamionCloudTex); SAMPLER(sampler_KamionCloudTex);   // R billows, G medium, B fine, A sheets; mean 0.5 each
             float4 _KamionCloud;       // x contrast (0 = off), y quality 0..2, z uv per plane unit, w horizon fade rate
@@ -53,9 +53,11 @@ Shader "Kamion/Sky"
             float4 _KamionCloudSun;    // xy unit XZ towards the sun's azimuth, z relief strength, w relief step (uv)
             float _KamionClearCloudCover; // ADR 0108: zero retains the original clear dome.
             float _KamionClearSkySaturation;
+            float4 _KamionSkyDisplay; // gain, desaturation, active (Night opt-in); sky/fog presentation only.
             float _KamionClearCloudPhoto;
             float4x4 _KamionClearCloudRotation;
             TEXTURE2D(_KamionClearCloudTex); SAMPLER(sampler_KamionClearCloudTex); // R opacity, G photographic relative luminance.
+            float4 _KamionClearCloudSourceLimits; // x minimum valid source V, y opt-in. Source lower hemisphere has no cloud data.
 
             struct Attributes { float4 positionOS : POSITION; UNITY_VERTEX_INPUT_INSTANCE_ID };
             struct Varyings { float4 positionCS : SV_POSITION; float3 dir : TEXCOORD0; UNITY_VERTEX_OUTPUT_STEREO };
@@ -115,6 +117,10 @@ Shader "Kamion/Sky"
                 {
                     float3 ray = normalize(mul((float3x3)_KamionClearCloudRotation, d));
                     float2 uv = float2(frac(atan2(ray.x, ray.z) / (2.0 * PI) + 0.5), asin(clamp(ray.y, -1.0, 1.0)) / PI + 0.5);
+                    // Pitch alignment can expose the HDRI's hard lower-hemisphere cut above the world horizon.
+                    // Extend a valid horizon row there; world-horizon fading below still uses d.y.
+                    if (_KamionClearCloudSourceLimits.y > 0.5)
+                        uv.y = max(uv.y, _KamionClearCloudSourceLimits.x);
                     // A longitude wrap is not a one-texture-wide pixel footprint. Correct the implicit U
                     // derivative across that boundary, or mip selection draws a vertical dashed seam.
                     float2 dx = ddx(uv), dy = ddy(uv);
@@ -203,6 +209,13 @@ Shader "Kamion/Sky"
                 // Below the horizon: distant ground seen through the full aerial perspective = fog colour.
                 float below = smoothstep(0.0, 0.03, -d.y);
                 c = lerp(c, _SkyFogColor.rgb, below);
+                // Night's appearance must also be present in the captured sky, or glass reflects an orange sunset.
+                // This is independent of the display-only compression cap (which captures still bypass).
+                if (_KamionSkyDisplay.z > 0.5)
+                {
+                    float y = dot(c, float3(0.2126, 0.7152, 0.0722));
+                    c = lerp(c, y.xxx, _KamionSkyDisplay.y)*_KamionSkyDisplay.x;
+                }
                 c = KamionTone(c);
                 // Banding: ±0.5 LSB of 8-bit sRGB in linear space (interleaved gradient noise, Jimenez 2014).
                 float n = frac(52.9829189 * frac(dot(i.positionCS.xy, float2(0.06711056, 0.00583715)))) - 0.5;

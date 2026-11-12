@@ -12,6 +12,8 @@ Builds 4 sector nodes (`far_north`, `far_east`, `far_south`, `far_west`), each w
     albedo, COLOR_0.a = window mode: 1.0 block/office grid, 0.75 ribbon glazing, 0.0 windowless) and UV1 window
     bays/storeys for residential blocks, offices, industrial halls, pitched-roof houses, tapered red/white-banded
     chimneys, HV lattice pylons, and dark under-canopy forest mounds.
+    Industrial cladding (ADR 0121 r5) reserves alpha 0.25 for opaque panels and 0.65 for panels with an upper ribbon;
+    these WORKING_VALUE appearance markers use the existing UV1 and do not change measured height or footprint.
   - Submesh 1 (`forest_edge_mixed`, Kamion/Vegetation _HLOD_EDGE): alpha-tested tree-crown silhouette curtains along
     stand edges and stepped interior forest ridges.
 
@@ -53,7 +55,7 @@ FORESHORTEN_SPAN_M = 520.0
 FORESHORTEN_TAU_M = 950.0
 
 SECTORS = ("far_north", "far_east", "far_south", "far_west")
-GIS_CACHE_SCHEMA = "far-field-gis-cache/10"
+GIS_CACHE_SCHEMA = "far-field-gis-cache/11"
 
 # Linear RGB albedos calibrated to docs/06 §3 and streetscape/materials.py
 PALETTE_BLOCK = [
@@ -287,19 +289,61 @@ def _parse_poslist(text: str, ox: float, oy: float) -> np.ndarray:
     return pts
 
 
-def _extract_lod1_heights(zip_path: Path) -> dict[str, float]:
+def _extract_lod1_heights(zip_path: Path, audit: dict | None = None) -> dict[str, float]:
+    """Read building-scoped heights from every CityGML member without loading the ZIP in RAM.
+
+    GUGiK stores buildingId as a generic stringAttribute. Older exports may use a
+    buildingId element. Prefixes and child order are irrelevant; missing values
+    must never borrow the following building's height. Conflicting duplicate IDs
+    are excluded rather than silently choosing a height from ZIP ordering.
+    """
+    stats = {"members": 0, "buildings": 0, "invalid_or_missing": 0,
+             "duplicate_records": 0, "conflicting_ids": 0, "usable_ids": 0}
+    heights: dict[str, float] = {}
+    conflicts: set[str] = set()
     if not zip_path.exists():
-        return {}
-    pat = re.compile(
-        r"<bldg:buildingId>([^<]+)</bldg:buildingId>.*?<bldg:measuredHeight[^>]*>([^<]+)</bldg:measuredHeight>",
-        re.DOTALL,
-    )
+        if audit is not None:
+            audit.update(stats)
+        return heights
+    local = lambda tag: tag.rsplit("}", 1)[-1]
     with zipfile.ZipFile(zip_path) as zf:
-        xml_names = [n for n in zf.namelist() if n.endswith(".xml")]
-        if not xml_names:
-            return {}
-        raw = zf.read(xml_names[0]).decode("utf-8", errors="ignore")
-    return {m.group(1): float(m.group(2)) for m in pat.finditer(raw)}
+        for name in sorted(zf.namelist()):
+            if not name.lower().endswith((".gml", ".xml")):
+                continue
+            stats["members"] += 1
+            with zf.open(name) as stream:
+                for _, element in ET.iterparse(stream, events=("end",)):
+                    if local(element.tag) != "Building":
+                        continue
+                    stats["buildings"] += 1
+                    bid, height = "", None
+                    for child in element:
+                        tag = local(child.tag)
+                        if tag == "buildingId":
+                            bid = (child.text or "").strip()
+                        elif tag == "stringAttribute" and child.get("name") == "buildingId":
+                            bid = next(((v.text or "").strip() for v in child if local(v.tag) == "value"), "")
+                        elif tag == "measuredHeight" and child.get("uom", "m") in ("m", "#m", "meter", "metre"):
+                            try:
+                                height = float(child.text or "")
+                            except ValueError:
+                                pass
+                    if not bid or height is None or not math.isfinite(height) or height <= 0:
+                        stats["invalid_or_missing"] += 1
+                    elif bid not in conflicts:
+                        if bid in heights:
+                            stats["duplicate_records"] += 1
+                            if heights[bid] != height:
+                                conflicts.add(bid)
+                                del heights[bid]
+                        else:
+                            heights[bid] = height
+                    element.clear()
+    stats["conflicting_ids"] = len(conflicts)
+    stats["usable_ids"] = len(heights)
+    if audit is not None:
+        audit.update(stats)
+    return heights
 
 
 def _road_exit_corridors(half: float = 1024.0) -> shapely.Geometry:
@@ -400,7 +444,8 @@ def extract_ring_gis(region_id: str, ox: float, oy: float, half: float = 1024.0)
     shapely.prepare(forest_ring_zone)
     bbox_2180 = (ox - RING_MAX_M, oy - RING_MAX_M, ox + RING_MAX_M, oy + RING_MAX_M)
 
-    lod1_h = _extract_lod1_heights(lod1_zip)
+    lod1_audit = {}
+    lod1_h = _extract_lod1_heights(lod1_zip, lod1_audit)
 
     forests = []
     buildings = []
@@ -453,6 +498,7 @@ def extract_ring_gis(region_id: str, ox: float, oy: float, half: float = 1024.0)
             st_raw = row.get("LICZBAKONDYGNACJI") if "LICZBAKONDYGNACJI" in row else row.get("liczbaKondygnacji")
             storeys = int(float(st_raw)) if st_raw is not None and not (isinstance(st_raw, float) and math.isnan(st_raw)) else None
             h_m = lod1_h.get(bid)
+            height_source = "gugik-lod1-measuredHeight" if h_m and h_m > 2.0 else "WORKING_VALUE-bdot-storeys-typology"
             f_str = (pfunc + " " + func).lower()
             if "wielorodzinny" in f_str or "zbiorowego" in f_str or "hotel" in f_str or (storeys and storeys >= 4):
                 typ = "block"
@@ -504,7 +550,8 @@ def extract_ring_gis(region_id: str, ox: float, oy: float, half: float = 1024.0)
                 "h": round(float(h_m), 2),
                 "storeys": storeys,
                 "func": pfunc or func,
-                "src": "bdot10k+lod1" if bid in lod1_h else "bdot10k",
+                "src": "bdot10k+lod1" if height_source == "gugik-lod1-measuredHeight" else "bdot10k",
+                "height_source": height_source,
             })
 
     # 3. BDOT10k OT_BUWT_P (chimneys, HV pylons, towers)
@@ -693,7 +740,8 @@ def extract_ring_gis(region_id: str, ox: float, oy: float, half: float = 1024.0)
                         typ = "house"
                     if typ == "house" and d > 650.0:
                         return
-                    if not hm or hm <= 2.0:
+                    height_source = "osm-height-tag-UNVERIFIED" if hm and math.isfinite(hm) and hm > 2.0 else "WORKING_VALUE-osm-storeys-typology"
+                    if height_source != "osm-height-tag-UNVERIFIED":
                         if typ == "block":
                             hm = (st or 5) * 2.9 + 1.5
                         elif typ == "hall":
@@ -718,6 +766,7 @@ def extract_ring_gis(region_id: str, ox: float, oy: float, half: float = 1024.0)
                         "storeys": st,
                         "func": btag,
                         "src": "osm",
+                        "height_source": height_source,
                     })
 
         RingHandler().apply_file(str(osm_pbf), locations=True)
@@ -732,6 +781,11 @@ def extract_ring_gis(region_id: str, ox: float, oy: float, half: float = 1024.0)
         "extracted_in_s": round(time.time() - t0, 2),
         "forests": forests,
         "buildings": buildings,
+        "lod1_height_audit": lod1_audit,
+        "building_height_sources": {
+            source: sum(b["height_source"] == source for b in buildings)
+            for source in sorted({b["height_source"] for b in buildings})
+        },
         "boundary_exclusions": boundary_exclusions,
         "chimneys": chimneys,
         "pylons": pylons,
@@ -1076,6 +1130,22 @@ def _wall_visible_from_tile(a: np.ndarray, c: np.ndarray, half: float = 1024.0) 
     return False
 
 
+def _hall_appearance_class(b: dict) -> str:
+    """WORKING_VALUE surface typology from declared use, never measured height.
+
+    Function is GIS data; cladding, colours and glazing below are estimates.
+    A large hall-shaped footprint alone does not establish an industrial use.
+    """
+    function = str(b.get("func") or "").casefold()
+    if any(word in function for word in ("elektrociepł", "elektrown", "ciepłown", "kotłown")):
+        return "energy"
+    if any(word in function for word in (
+            "przemysł", "produkc", "magazyn", "składow", "warsztat", "fabryk", "spalarn",
+            "industrial", "warehouse", "manufactur", "factory", "storage", "workshop")):
+        return "industrial"
+    return "other"
+
+
 def _add_building(sectors: dict[str, SectorBuilder], b: dict, elev: BorderElevation, half: float, tier: str, exclusion=None):
     rc = np.asarray(b["rect"], dtype=np.float64)
     if len(rc) < 4 or not building_outside_region(Polygon(rc), half, exclusion):
@@ -1182,12 +1252,16 @@ def _add_building(sectors: dict[str, SectorBuilder], b: dict, elev: BorderElevat
         return
 
     if typ == "hall":
-        is_power_plant = "elektrociepł" in b.get("func", "").lower() or h_raw >= 22.0
-        wall_rgb = (0.24, 0.10, 0.07) if is_power_plant else _hpick(bid, PALETTE_HALL, "wall")
-        acc_rgb = _hpick(bid, PALETTE_HALL_ACCENT, "acc")
+        appearance = _hall_appearance_class(b)
+        industrial = appearance == "industrial"
+        panel_hall = industrial and h_raw >= 12.0  # WORKING_VALUE appearance, not a measured facade
+        wall_rgb = (0.24, 0.10, 0.07) if appearance == "energy" else _hpick(bid, PALETTE_HALL, "wall")
+        # Unknown branding is not a reason for a bright 16%-height coloured stripe.
+        acc_rgb = tuple(c * 0.72 for c in wall_rgb) if industrial else _hpick(bid, PALETTE_HALL_ACCENT, "acc")
         use_fascia = tier == "High" or d_raw < 700.0
-        z_fascia = (z_top - max(1.1 * s_h, h_eff * 0.16)) if use_fascia else z_top
-        has_clerestory = _hfloat(bid, "clere") < 0.55
+        fascia_h = min(max(0.35 * s_h, 0.10), h_eff * 0.04) if industrial else max(1.1 * s_h, h_eff * 0.16)
+        z_fascia = z_top - fascia_h if use_fascia else z_top
+        has_clerestory = panel_hall or _hfloat(bid, "clere") < 0.55
 
         for i in range(4):
             a, c = pts[i], pts[(i + 1) % 4]
@@ -1197,12 +1271,23 @@ def _add_building(sectors: dict[str, SectorBuilder], b: dict, elev: BorderElevat
             is_long = (i % 2) == (long_idx % 2)
             if is_long and has_clerestory and L_raw >= 16.0:
                 bays = max(3, int(round(L_raw / 4.0)))
-                uv1 = [[0.0, -1.2], [float(bays), -1.2], [float(bays), 1.0], [0.0, 1.0]]
+                # Only the top row is positive: do not invent a storey count.
+                # The 4 m source-height module gives an estimated ~1.8 m upper
+                # glazing band. Preserve the legacy contract for other halls.
+                bottom_v = 1.0 - (z_fascia - z_bot) / max(4.0 * s_h, 0.1) if panel_hall else -1.2
+                uv1 = [[0.0, bottom_v], [float(bays), bottom_v], [float(bays), 1.0], [0.0, 1.0]]
                 sec.add_quad0([a[0], a[1], z_bot], [c[0], c[1], z_bot], [c[0], c[1], z_fascia], [a[0], a[1], z_fascia],
-                              (*wall_rgb, 0.75), uv1=uv1)
+                              (*wall_rgb, 0.65 if panel_hall else 0.75), uv1=uv1)
             else:
+                panel_uv = None
+                if panel_hall:
+                    # Explicit opaque-cladding payload: 1.2 m wide / 3 m high
+                    # source modules, carried in the already-existing UV1.
+                    columns = L_raw / 1.2
+                    rows = (z_fascia - z_bot) / max(3.0 * s_h, 0.1)
+                    panel_uv = [[0.0, 0.0], [columns, 0.0], [columns, rows], [0.0, rows]]
                 sec.add_quad0([a[0], a[1], z_bot], [c[0], c[1], z_bot], [c[0], c[1], z_fascia], [a[0], a[1], z_fascia],
-                              (*wall_rgb, 0.0))
+                              (*wall_rgb, 0.25 if panel_hall else 0.0), uv1=panel_uv)
             if use_fascia:
                 sec.add_quad0([a[0], a[1], z_fascia], [c[0], c[1], z_fascia], [c[0], c[1], z_top], [a[0], a[1], z_top],
                               (*acc_rgb, 0.0))
@@ -1502,13 +1587,31 @@ def build_far_field(region_id: str, out_root: Path | None = None) -> dict:
     # Write SourceManifest in Data/SourceManifests/
     manifest_dir = REPO / "Data" / "SourceManifests"
     manifest_dir.mkdir(parents=True, exist_ok=True)
+    appearance_policy = {
+        "schema": "far-field-appearance/1",
+        "status": "WORKING_VALUE",
+        "not_measured": ["wall_colour", "cladding_modules", "glazing_band", "roof_fascia"],
+        "classification": "declared function; height alone does not imply an energy plant",
+        "industrial_panel_min_height_m": 12.0,
+        "panel_alpha": 0.25,
+        "panel_ribbon_alpha": 0.65,
+        "source_hall_counts": {
+            kind: sum(1 for b in gis["buildings"] if b["typ"] == "hall" and _hall_appearance_class(b) == kind)
+            for kind in ("industrial", "energy", "other")
+        },
+        "source_panel_hall_count": sum(1 for b in gis["buildings"] if b["typ"] == "hall"
+                                       and b["h"] >= 12.0 and _hall_appearance_class(b) == "industrial"),
+    }
     src_manifest = {
         "schema": "truck-sim-pl/source-manifest/1",
         "id": f"{region_id}-far-field",
         "region": region_id,
         "adr": "0085-far-field-backdrop",
+        "appearance_policy": appearance_policy,
         "ring_bounds_local_m": {"inner_half_m": half, "outer_half_m": RING_MAX_M},
         "region_inputs_sha256": {k: v for k, v in gis["sources_sha256"].items() if k.startswith("region/")},
+        "lod1_height_audit": gis["lod1_height_audit"],
+        "building_height_sources": gis["building_height_sources"],
         "sources": [
             {
                 "id": "gugik-bdot10k-2061",
@@ -1555,7 +1658,10 @@ def build_far_field(region_id: str, out_root: Path | None = None) -> dict:
         "schema": "truck-sim-pl/far-field-qa/1",
         "region": region_id,
         "feature_counts": src_manifest["feature_counts"],
+        "appearance_policy": appearance_policy,
         "boundary_exclusions": gis["boundary_exclusions"],
+        "lod1_height_audit": gis["lod1_height_audit"],
+        "building_height_sources": gis["building_height_sources"],
         "tiers": qa_tiers,
     }
     gen_dir = pipeline.REGIONS / region_id / "generated"

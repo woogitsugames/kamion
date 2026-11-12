@@ -1,0 +1,18 @@
+# Geometric rays on imported near LODs; not GPU pixels. Alpha decals and transparent glazing excluded. Central region: UV 0.05..0.95.
+tier	mirror	backfaces	samples	centralSamples	blocked	centralBlocked	exteriorLod	interiorLod
+Low	MIRROR_MainL_Camera	False	2400	1944	64	0	2	0
+Low	MIRROR_MainL_Camera	True	2400	1944	64	0	2	0
+Low	MIRROR_MainR_Camera	False	2400	1944	64	0	2	0
+Low	MIRROR_MainR_Camera	True	2400	1944	64	0	2	0
+Low	MIRROR_WideL_Camera	False	2400	1944	105	0	2	0
+Low	MIRROR_WideL_Camera	True	2400	1944	105	0	2	0
+Low	MIRROR_WideR_Camera	False	2400	1944	127	0	2	0
+Low	MIRROR_WideR_Camera	True	2400	1944	238	47	2	0
+High	MIRROR_MainL_Camera	False	2400	1944	64	0	0	0
+High	MIRROR_MainL_Camera	True	2400	1944	64	0	0	0
+High	MIRROR_MainR_Camera	False	2400	1944	64	0	0	0
+High	MIRROR_MainR_Camera	True	2400	1944	64	0	0	0
+High	MIRROR_WideL_Camera	False	2400	1944	105	0	0	0
+High	MIRROR_WideL_Camera	True	2400	1944	105	0	0	0
+High	MIRROR_WideR_Camera	False	2400	1944	127	0	0	0
+High	MIRROR_WideR_Camera	True	2400	1944	238	47	0	0

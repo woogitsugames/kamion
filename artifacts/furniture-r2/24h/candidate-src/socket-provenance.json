@@ -1,0 +1,42 @@
+﻿{
+    "source":  "art-source/truck/exterior/export/truck_exterior_manifest.json",
+    "sha256":  "0A5F3AF9833A072C60CA81502C03CCD044C929446060982A05738CD2ECE3DFF3",
+    "sockets":  [
+                    {
+                        "name":  "LIGHT_LowBeam_L",
+                        "position":  [
+                                         -1.02669,
+                                         1.398,
+                                         4.95925
+                                     ],
+                        "rig_parent":  "CAB_Body_LOD0"
+                    },
+                    {
+                        "name":  "LIGHT_LowBeam_R",
+                        "position":  [
+                                         1.02669,
+                                         1.398,
+                                         4.95925
+                                     ],
+                        "rig_parent":  "CAB_Body_LOD0"
+                    },
+                    {
+                        "name":  "LIGHT_HighBeam_L",
+                        "position":  [
+                                         -1.16231,
+                                         1.4395,
+                                         4.84495
+                                     ],
+                        "rig_parent":  "CAB_Body_LOD0"
+                    },
+                    {
+                        "name":  "LIGHT_HighBeam_R",
+                        "position":  [
+                                         1.16231,
+                                         1.4395,
+                                         4.84495
+                                     ],
+                        "rig_parent":  "CAB_Body_LOD0"
+                    }
+                ]
+}

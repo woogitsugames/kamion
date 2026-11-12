@@ -1,0 +1,565 @@
+{
+  "schema": "kamion/sbs-recognition/1",
+  "criterion": "D51",
+  "gate_result": "FAIL",
+  "reviewed_run": "sbs-r3",
+  "reviewed_stage": "baseline before production pose corrections",
+  "reviewed_state": "Low-overcast",
+  "review_date": "2026-11-12",
+  "recorded_at": "2026-11-12T10:07:18.8545915+01:00",
+  "source_review": "artifacts/sbs-r3/REVIEW-D51-BASELINE.md",
+  "source_review_sha256": "59addaf39083d3adf211e123114e2ef64888098f3fc509b130b0eef2deb3fe71",
+  "reviewer": "sbs_visual_review, independent read-only",
+  "render_git_sha": "62d45b92a59ba78f7e3ec44b65a014baa3bf6b00",
+  "counts": {
+    "PARTIAL": 11,
+    "NOT_RECOGNISABLE": 1,
+    "RECOGNISABLE": 13
+  },
+  "assessments": [
+    {
+      "camera": "sbs-g3-a-2818555625124739",
+      "index": 1,
+      "station": "A/340",
+      "result": "RECOGNISABLE",
+      "reason": "Pomost z czerwonym pasem, podpory i łuk są rozpoznawalne. Nasyp i zabezpieczenie odmienne. Tablica jest, jej położenie wymaga kontroli.",
+      "render_sha256": "4e0793aea14264e3231d6151d5eacdc51b98533b2223a5b1223aa7260554684f",
+      "comparison_sha256": "a749eb65cd4a38889d419d4f137ef162b12f781302597b536726a0d2ae611256",
+      "sheet_sha256": "e88f5a13d65ccf84af875824892eb60cd28933bf76295402b0b1aac71ec4a548",
+      "pose_warning": null
+    },
+    {
+      "camera": "sbs-g3-a-3970163613102941",
+      "index": 2,
+      "station": "A/341",
+      "result": "RECOGNISABLE",
+      "reason": "Pomost, podpory i łuk identyfikują miejsce. Brak odpowiadającej bariery na nasypie, położenie tablicy niezgodne.",
+      "render_sha256": "8b8e16fb0a1904be5f4824de41424fc858bd3d9eea521fc46a4ca92b3e862b6a",
+      "comparison_sha256": "2655985ab39cd8e6b74d893fbfd74b0a0a548e56d8fbe62acec2e295ff88a70d",
+      "sheet_sha256": "6368461c6de3102a5d091a6564bba6d5f965cad83d3c3728f29a18fe39461621",
+      "pose_warning": null
+    },
+    {
+      "camera": "sbs-g3-a-149248627179406",
+      "index": 3,
+      "station": "A/342",
+      "result": "RECOGNISABLE",
+      "reason": "Charakterystyczna relacja wiaduktu i zakrętu. Tablica bliższa i większa; sam arkusz nie rozstrzyga błędu kamery albo obiektu.",
+      "render_sha256": "5d32bd9f3fce7eb4f16b1758a5e26e29979441dda33aa23a5dfa36ae0ec35a2b",
+      "comparison_sha256": "6f92ec21d233062320d4819caffb33d14416f5a8e526057b017f8a26eb4dfb8d",
+      "sheet_sha256": "4ec9a9b4a055310fd8b816d5a1c3704045bec6939e40603a3e2ebe24aeac2dc0",
+      "pose_warning": null
+    },
+    {
+      "camera": "sbs-g3-a-177786140912399",
+      "index": 4,
+      "station": "A/343",
+      "result": "PARTIAL",
+      "reason": "Wieżowiec, wiadukt i wysepka pozwalają kojarzyć miejsce. C-9 dominuje przy kamerze, najbliższy filar nie odpowiada zdjęciu. Rozdzielić pozę i położenie znaku.",
+      "render_sha256": "5ebb5c651bad188140c3af96331d3a32c73c2ded6942574d8be20980989ec79a",
+      "comparison_sha256": "090fc0ee15ab8cb46afcdd14f1d3bcfee30a22eec535aa1e4e47930800f89105",
+      "sheet_sha256": "1233fda52f2cd19249f88cfccd0e1a90bcaddc5b2525895ea71b4933c3b5f71a",
+      "pose_warning": "Along-road position or C-9 placement requires anchors."
+    },
+    {
+      "camera": "sbs-g3-a-178689077481862",
+      "index": 5,
+      "station": "A/343",
+      "result": "RECOGNISABLE",
+      "reason": "Wieżowiec, przejazd i wysepka tworzą rozpoznawalny układ. Projekcje bliskich podpór/C-9 są odmienne, brak bariery nasypu.",
+      "render_sha256": "501e7f4a5dedb1587046dbd95b7bc4a713b29799e9b53e084bb006f8a47b67c0",
+      "comparison_sha256": "109b11aedb75f1a1346fb5243913b2e5985c9746b6a1744631db8c1e6d04f7c2",
+      "sheet_sha256": "6ef6ca9f0621d77047bd61df670b982bbc1e89edc6fa45bc141b5fc1635ae641",
+      "pose_warning": null
+    },
+    {
+      "camera": "sbs-g3-a-223210302566110",
+      "index": 6,
+      "station": "A/343",
+      "result": "RECOGNISABLE",
+      "reason": "Pomost, dwa pasy i bariery zgodne. Zdjęcie pod słońce ogranicza szczegóły. Inne rodziny i rozmieszczenie latarni.",
+      "render_sha256": "a517d354de0b6dfbc9ff889660bb9816e61ba5895aaa04c2299c395ad37dc317",
+      "comparison_sha256": "be3bc9a41296027e0b9f04847c28f8570f03e9596885737d5ed605e83e0bb63c",
+      "sheet_sha256": "4e4be6cf1ce061bba9e0519edde0de5b3e941964f3bff2242ddf4b34f91e3ffb",
+      "pose_warning": null
+    },
+    {
+      "camera": "sbs-g3-a-309664504075286",
+      "index": 7,
+      "station": "A/343",
+      "result": "RECOGNISABLE",
+      "reason": "Rozpoznawalny pomost i bariery. Zdjęcie pod słońce ogranicza szczegóły; bliska prawa latarnia wymaga kontroli położenia.",
+      "render_sha256": "6b86c7e50c0efcd3a3e2b3aa4c2f95117f45135a927d1a2c8359dd3a0ae30a46",
+      "comparison_sha256": "438ddde2184888ff3c54ccf48fd7b3e036c0df36bb35d805a8ce2391e4d028a3",
+      "sheet_sha256": "623d1ea575c021a9d6139bd0c043a2a6f63fa7d964f129e5e336b4ebcf8ba548",
+      "pose_warning": null
+    },
+    {
+      "camera": "sbs-g3-a-504348097385466",
+      "index": 8,
+      "station": "A/343",
+      "result": "RECOGNISABLE",
+      "reason": "Profil wiaduktu, podpory i łuk czytelne. Tablica w innej części kadru i skali — poza albo obiekt.",
+      "render_sha256": "e33754bc5feca11afc8816b806265c5458419a7b7f4e82a78847b40255ecd5ac",
+      "comparison_sha256": "81b6841f0b1a4067f161c5211d89529e08588762871dd9d941a3c070d86a644c",
+      "sheet_sha256": "61e2c02953195f2135ed629eb2afe3cdd2d8667a21c125c9d326f22edd161efe",
+      "pose_warning": null
+    },
+    {
+      "camera": "sbs-g3-a-201270605169291",
+      "index": 9,
+      "station": "A/351",
+      "result": "PARTIAL",
+      "reason": "Ogólnie rozpoznawalny wiadukt i zakręt, ale w miejscu bliskich podpór jest szeroki prześwit. Układ podpór, nasyp i bariera pozostają problemem. Poza może zwiększać różnicę, nie wyjaśnia jej sama.",
+      "render_sha256": "4395c968412065168f2e3d9000dbc92c0e993f2e7bfac6a743df820077f6af6b",
+      "comparison_sha256": "9d6455ab20f8bfe4d581d50c3832e266878a24c40195921b7bb3e3cc344d2782",
+      "sheet_sha256": "c5f9ef392c273c5c7b3dfcb8dca4e9195354f134b420bd1e71bcd15d56b34389",
+      "pose_warning": null
+    },
+    {
+      "camera": "sbs-g3-a-1398898753813071",
+      "index": 10,
+      "station": "A/359",
+      "result": "PARTIAL",
+      "reason": "Brak zgodnej projekcji dużego najbliższego filara i relacji do bariery/łuku. Dalsze podpory są; nie zgłaszać braku wszystkich filarów. Rozdzielić geometrię bliskiej podpory i pozę.",
+      "render_sha256": "c8badeb7abee6308146b62d540119440162e9f56b8f15ad3ce0444db18f8a892",
+      "comparison_sha256": "f323ab061cdbd1f4bfb9abb4c312dbf1dcafc6d2a1108308ed9cc376d614eeea",
+      "sheet_sha256": "4cffb4022e9829ea97260f7913bec4c711036cdabf18dd29910f9e39d2786e41",
+      "pose_warning": null
+    },
+    {
+      "camera": "sbs-g3-a-320326319617139",
+      "index": 11,
+      "station": "A/379",
+      "result": "PARTIAL",
+      "reason": "Wiadukt identyfikuje okolicę. Chodnik, przejście i D-3/D-6 ze zdjęcia zastępuje trawiasta wyspa o innym obrysie. Możliwy dodatkowy boczny błąd kamery.",
+      "render_sha256": "6a10072cf189531013060509ae0615604b85e6ba2322a75a717072fe51423328",
+      "comparison_sha256": "3015576aeeea68797c66d0689793b32d17affb27c991a9fa6ddf9f952711aff8",
+      "sheet_sha256": "fd1d76561b46fcd17ca53d400c96424e9023ce8a24a0ea9367a6e3e4709b950f",
+      "pose_warning": null
+    },
+    {
+      "camera": "sbs-g3-a-482392746429891",
+      "index": 12,
+      "station": "A/394",
+      "result": "RECOGNISABLE",
+      "reason": "Bariera, wiadukt i podpory pozwalają rozpoznać miejsce. Odmienny rytm/kształt bliskich podpór i brak odpowiadającego niebieskiego znaku.",
+      "render_sha256": "361c36dd91cede35cbef08bd45f09ffa64e8cd5c4982fae84f6067bf7ce55193",
+      "comparison_sha256": "a4bd6fd6fac72eaff9125b21402b065436071f0863f2430a2222947e64338e57",
+      "sheet_sha256": "216cc096362f33e80f821e582a28a170aa172de9c02e03180a3f19d9c9a42082",
+      "pose_warning": null
+    },
+    {
+      "camera": "sbs-g3-a-454716650857984",
+      "index": 13,
+      "station": "A/400",
+      "result": "RECOGNISABLE",
+      "reason": "Dwa pasy i charakterystyczne bariery zgodne. Odmienne latarnie oraz zadrzewienie zamiast panoramy bloków.",
+      "render_sha256": "6d4b58726e8becdf5d2b791e2afef5a1c0d48cb5fb3425f1032d65cc29bc6223",
+      "comparison_sha256": "f1c89052fe31a413f87b240f573ed5b33b7d797343b1248cb435905cef501cb9",
+      "sheet_sha256": "4ffa0c84437f684782e44c98a0ba5e5d757153cfde49bd081088351ec6e01933",
+      "pose_warning": null
+    },
+    {
+      "camera": "sbs-g3-a-303305168125936",
+      "index": 14,
+      "station": "A/437",
+      "result": "RECOGNISABLE",
+      "reason": "Zjazd z pomostu, pasy i bariery zgodne. Odmienna lewa panorama i rodziny latarni.",
+      "render_sha256": "3da45b08118d022d445ab32d652c8ff14a346f0ab0a94f422ab9074feecdae28",
+      "comparison_sha256": "a8bb7d37739164759a15b2193b811d50c4aa7890a528195f0dec9c2bfb1a7efc",
+      "sheet_sha256": "24590f567572af03bc8bc89f23beb5a75c4e6c4222c0f09282310918b7457683",
+      "pose_warning": null
+    },
+    {
+      "camera": "sbs-g3-a-320215796381417",
+      "index": 15,
+      "station": "A/437",
+      "result": "RECOGNISABLE",
+      "reason": "Układ pomostu i perspektywa rozpoznawalne. Zadrzewienie zamiast części panoramy miejskiej, inne latarnie.",
+      "render_sha256": "a89ebb0fcadaca880c4bf98f9f645cdd4b6945be37820398f4bdd62c899eb741",
+      "comparison_sha256": "4cdbe7483c84e7e96f4b9c6f294753e510c49dd5433337d0ccf64c50ab1a8586",
+      "sheet_sha256": "2a376923fc6e5d95d879305b1b198b82493666e9598d245e40814c491aaba175",
+      "pose_warning": null
+    },
+    {
+      "camera": "sbs-g3-b-381800493259507",
+      "index": 16,
+      "station": "B/0",
+      "result": "RECOGNISABLE",
+      "reason": "Portal, rozdział jezdni i prawy nos ze szewronem tworzą charakterystyczny zestaw. Szewron mniejszy i dalszy, stacja niepotwierdzona.",
+      "render_sha256": "18d6283b2f3362edab3e979153375d003bde5d3bb1e8e2bbc8bc9d8f4f22b346",
+      "comparison_sha256": "bb8686f2fe7465ba42ea971dda6547a304768aeaacf82ae9a24b949dcfcd77d3",
+      "sheet_sha256": "216ef0ef49806bb8393e7e42f967d437d9242ffcf5db92e349eef48e9cb6d6ae",
+      "pose_warning": null
+    },
+    {
+      "camera": "sbs-g3-b-2279538078845158",
+      "index": 17,
+      "station": "B/16",
+      "result": "RECOGNISABLE",
+      "reason": "Biały blok, prawe odgałęzienie/przejście i portal w oddali identyfikują układ. Drobniejsze różnice nosa i wyposażenia nie przekreślają rozpoznania.",
+      "render_sha256": "44e9dc54397a0068f39008cd5db1b9f80480e51b244a5397a91d9aefcab51162",
+      "comparison_sha256": "d7a0c29ce47125e3f1bcc19370906ce2ed7e433302e45887f9568e23aaefb2bf",
+      "sheet_sha256": "b7391f9dcd8b42f8f6de1ae68da471aaf5948451466985df7dbef7ac0d6cdb60",
+      "pose_warning": null
+    },
+    {
+      "camera": "sbs-g3-b-837235577143499",
+      "index": 18,
+      "station": "B/35",
+      "result": "PARTIAL",
+      "reason": "Portal jest, lecz dominujący bliski szewron nie odpowiada zdjęciu. Niepewna stacja oraz możliwe niezgodne osadzenie na nosie.",
+      "render_sha256": "0508a3f7a9be7a8af9fd7fb2391de643dcdf0e3e69aac30ba95104c398738f7c",
+      "comparison_sha256": "8676ada6ab9b0582d015f708cdc62ee28cb31dfe02dc0db2993d5bd2f093bb3d",
+      "sheet_sha256": "e04b90e116ca07aca40865d4a39fedaa693e181d3ebb2698359ef6f4c2491485",
+      "pose_warning": null
+    },
+    {
+      "camera": "sbs-g3-b-3281350541967811",
+      "index": 19,
+      "station": "B/60",
+      "result": "NOT_RECOGNISABLE",
+      "reason": "Brak odpowiadającego bliskiego tyłu portalu po lewej, otoczenie zbyt ogólne. Główna wada to stacja/położenie kamery; arkusz nie dowodzi braku portalu w świecie.",
+      "render_sha256": "eea66c70483d7341de7064d95b0dd4481b777022146d234314784ebe3de3ed15",
+      "comparison_sha256": "6cf1e2a6f02736e4d48f9d75809ab4242cccdb7ad017258068eed9ecba078912",
+      "sheet_sha256": "554afd51bd984cac49da27ca913b7002820d33459bd8fa129b345ad380c9d3bb",
+      "pose_warning": "Carriageway and lateral position require verification."
+    },
+    {
+      "camera": "sbs-g3-b-275528677534382",
+      "index": 20,
+      "station": "B/77",
+      "result": "PARTIAL",
+      "reason": "Rodzaj portalu i jezdnia pozwalają kojarzyć miejsce, ale portal ogromny i ucięty. Stacja jest główną niewiadomą, znaki nie dają zgodnych kotwic.",
+      "render_sha256": "2faea89901c3d929029519aa96099dd2695510cc296e545be33491f02c338d0f",
+      "comparison_sha256": "07f8aceba89a22f0d8ef678b4962d89d6b39715000eb3bf0dd00057ce3159007",
+      "sheet_sha256": "e4ecc0e79ed80f580333ef624ee3e538af56c2128ce2e7f385b8a7ca3f9bfe71",
+      "pose_warning": "Dashcam station may lag GPS; triangulation required."
+    },
+    {
+      "camera": "sbs-g3-b-150280503737744",
+      "index": 21,
+      "station": "B/93",
+      "result": "PARTIAL",
+      "reason": "Pasy i pas dzielący zbliżone. Jasne hale i blok nie zastępują czerwonej pierzei usługowej/pylonów. Nie jest to całkowicie pusty teren.",
+      "render_sha256": "bfd238f6169f03bc901d69e2e8c771da2ec8adcde2013b89d5d9b26a6d9eadf6",
+      "comparison_sha256": "087e595a45f7654b6b01c9f95790edfcd04512ce8b18fb382bb71b2e3c3ab668",
+      "sheet_sha256": "70d085a6a18be18915df470a041fb4e429036a7c6857d1b923f636b921b0b71b",
+      "pose_warning": null
+    },
+    {
+      "camera": "sbs-g3-b-297817221966185",
+      "index": 22,
+      "station": "B/120",
+      "result": "PARTIAL",
+      "reason": "Ogólny przebieg podobny, portal dużo bliższy/większy niż w tle zdjęcia. Poza wymaga korekty; świat nie ma odpowiadającego rytmu drzew i pierzei. Brak podstaw do zamiany ID albo kursu o 180°.",
+      "render_sha256": "b11cf58fdb1e377d1d2717557976c10e8c9c2d35eb54c603bda201f71636fd78",
+      "comparison_sha256": "0db1fb1dc739f82198c4f6f488b74725fd9793bbc4c77fd80191d5a3052464cd",
+      "sheet_sha256": "dcdfbe737c0b29eba2dbb3b964a9a0f4a77bc8c468ae3d7d79b390dd67557244",
+      "pose_warning": null
+    },
+    {
+      "camera": "sbs-g3-b-3678296072299092",
+      "index": 23,
+      "station": "B/153",
+      "result": "PARTIAL",
+      "reason": "Ekran i infrastruktura linii są obecne. Sylwetka słupa WN oraz ciągłość/masywność ekranu nie tworzą takich dominant. Nie zgłaszać całkowitego braku obiektów.",
+      "render_sha256": "27a151c03cd7ae7a859d3c48ae6510aaec35e14487a82ade990aeac552c71f3a",
+      "comparison_sha256": "d543e0ab31a4482c075c44b8bd6382a9c9cd7802c16fd892a820ae47a03f8afa",
+      "sheet_sha256": "746ea0cbe9ed51347238427d8b391b3248915bafb8dcac5aa75830a13fd8b86c",
+      "pose_warning": null
+    },
+    {
+      "camera": "sbs-g3-b-494288258686575",
+      "index": 24,
+      "station": "B/428",
+      "result": "PARTIAL",
+      "reason": "Prawy ekran i otwarcie po lewej są. Wyraźniejszy łuk i inna relacja kamery do bariery/ekranu. Sprawdzić yaw, bok i poziom kamery; osobno sylwetkę ekranu.",
+      "render_sha256": "346e711092f6022b7196decb3167cba7bd7e1c8e1085784dd6382fda78dc3791",
+      "comparison_sha256": "4943df7b00e9a99e18e3487548285155f50e2e1dc6daa19391e24e05cf4e2ced",
+      "sheet_sha256": "f001b52189ec37c0b92b73ee8bc68611cc62879bb9eaae82bdb2dbd22bd6594f",
+      "pose_warning": "Heading requires verification against both carriageways."
+    },
+    {
+      "camera": "sbs-g3-b-1801374876712141",
+      "index": 25,
+      "station": "B/486",
+      "result": "PARTIAL",
+      "reason": "Prawy ekran jest, lecz jego początek, bliskość i relacja do włączenia drogi są niezgodne. Poza wymaga kotwic; domowa zabudowa i brak lewego billboardu osłabiają identyfikację.",
+      "render_sha256": "ceabdf0b29e8c820f0d976fd5ca551c781d85e04f702a7ee86eb74410bece86c",
+      "comparison_sha256": "ce07076f1c2f18dc6b8ebcc94b17b79e6be18aa28c9345ae29f5e7a5b6f903e7",
+      "sheet_sha256": "81d1efcff535bcf35cb976f1206838d566d7d4dfdfff678a255b564ada02d2cc",
+      "pose_warning": null
+    }
+  ],
+  "history": [
+    {
+      "schema": "kamion/sbs-recognition/1",
+      "criterion": "D51",
+      "gate_result": "FAIL",
+      "reviewed_run": "sbs-r1",
+      "reviewed_state": "Low-overcast",
+      "review_date": "2026-11-11",
+      "source_review": "docs/reports/visual/REVIEW-2026-11-11-s11-sbs-r1-D51.md",
+      "counts": {
+        "RECOGNISABLE": 12,
+        "PARTIAL": 11,
+        "NOT_RECOGNISABLE": 2
+      },
+      "assessments": [
+        {
+          "camera": "sbs-g3-a-2818555625124739",
+          "index": 1,
+          "station": "A/340",
+          "result": "RECOGNISABLE",
+          "reason": "Wiadukt z czerwonym pasem, balustrada, rząd filarów i łuk łącznicy są zgodne. Świat: brak tablicy z nazwą ulicy, a nasyp z kruszywa zastąpiono kostką.",
+          "render_sha256": "96de33c566c32e69b3ccf3763e43a25769b8b810f7e1719cf8a931acbfe8ae99",
+          "comparison_sha256": "a749eb65cd4a38889d419d4f137ef162b12f781302597b536726a0d2ae611256",
+          "pose_warning": null
+        },
+        {
+          "camera": "sbs-g3-a-3970163613102941",
+          "index": 2,
+          "station": "A/341",
+          "result": "RECOGNISABLE",
+          "reason": "Tak samo jak #1.",
+          "render_sha256": "9d842ee25fc23f33c2eac29fe7f212d8a873821c7ed2dd5fd15028a1d4bf4d1c",
+          "comparison_sha256": "2655985ab39cd8e6b74d893fbfd74b0a0a548e56d8fbe62acec2e295ff88a70d",
+          "pose_warning": null
+        },
+        {
+          "camera": "sbs-g3-a-149248627179406",
+          "index": 3,
+          "station": "A/342",
+          "result": "RECOGNISABLE",
+          "reason": "Linia pomostu, filary i łuk są zgodne.",
+          "render_sha256": "fade2946ca1671085ce31d605376622c9c369669f06659f40e50901942127d10",
+          "comparison_sha256": "6f92ec21d233062320d4819caffb33d14416f5a8e526057b017f8a26eb4dfb8d",
+          "pose_warning": null
+        },
+        {
+          "camera": "sbs-g3-a-177786140912399",
+          "index": 4,
+          "station": "A/343",
+          "result": "PARTIAL",
+          "reason": "Wieżowiec i filar z czerwonym pasem są na miejscu. W renderze znak C-9 stoi tuż przed kamerą, a na zdjęciu dalej na wysepce: raczej poza (ok. 3-5 m) albo źle ustawiony znak. Świat: brak bariery na kruszywie.",
+          "render_sha256": "49de10929f5b871b80db91a802c6f56bdeda9f020ca1528aceae07ce82718205",
+          "comparison_sha256": "090fc0ee15ab8cb46afcdd14f1d3bcfee30a22eec535aa1e4e47930800f89105",
+          "pose_warning": "Along-road position or C-9 placement requires anchors."
+        },
+        {
+          "camera": "sbs-g3-a-178689077481862",
+          "index": 5,
+          "station": "A/343",
+          "result": "RECOGNISABLE",
+          "reason": "Wieżowiec, filary i wysepka z C-9 się zgadzają. Świat: brak bariery stalowej na nasypie.",
+          "render_sha256": "38f2f19926fc89e1079ea84ebc99124257754424c4e8849ff9a1e40b3cb7b8d9",
+          "comparison_sha256": "109b11aedb75f1a1346fb5243913b2e5985c9746b6a1744631db8c1e6d04f7c2",
+          "pose_warning": null
+        },
+        {
+          "camera": "sbs-g3-a-223210302566110",
+          "index": 6,
+          "station": "A/343",
+          "result": "RECOGNISABLE",
+          "reason": "Na wiadukcie: 2 pasy, bariery i latarnie się zgadzają. Zdjęcie jest pod słońce, więc mało informacji.",
+          "render_sha256": "34135b905a861c7773b3ec11f3945bf348b87e00b3492d20fe203efaa3511771",
+          "comparison_sha256": "be3bc9a41296027e0b9f04847c28f8570f03e9596885737d5ed605e83e0bb63c",
+          "pose_warning": null
+        },
+        {
+          "camera": "sbs-g3-a-309664504075286",
+          "index": 7,
+          "station": "A/343",
+          "result": "RECOGNISABLE",
+          "reason": "Tak samo jak #6.",
+          "render_sha256": "d4f22245a6a16c7fb4b953b5e4b914347b24933dde8be8596523c4fe23af1d1e",
+          "comparison_sha256": "438ddde2184888ff3c54ccf48fd7b3e036c0df36bb35d805a8ce2391e4d028a3",
+          "pose_warning": null
+        },
+        {
+          "camera": "sbs-g3-a-504348097385466",
+          "index": 8,
+          "station": "A/343",
+          "result": "RECOGNISABLE",
+          "reason": "Pomost i filary są zgodne. Świat: brak tablicy z nazwą ulicy i krótkich kresek poziomych na łącznicy.",
+          "render_sha256": "b131c2ddd9af7e25b3252411ce5d2b43e96fedd5cad6c1c4c3c971d2f2f86a69",
+          "comparison_sha256": "81b6841f0b1a4067f161c5211d89529e08588762871dd9d941a3c070d86a644c",
+          "pose_warning": null
+        },
+        {
+          "camera": "sbs-g3-a-201270605169291",
+          "index": 9,
+          "station": "A/351",
+          "result": "PARTIAL",
+          "reason": "Świat: na zdjęciu w środku kadru stoją 3-4 filary, w renderze jest tam pusty prześwit. Brak też bariery na łuku i tablicy z nazwą.",
+          "render_sha256": "5c2a4e62057542f5a4cd6c9b26c455a35e329c866f01cd69e8c90f95229192ed",
+          "comparison_sha256": "9d6455ab20f8bfe4d581d50c3832e266878a24c40195921b7bb3e3cc344d2782",
+          "pose_warning": null
+        },
+        {
+          "camera": "sbs-g3-a-1398898753813071",
+          "index": 10,
+          "station": "A/359",
+          "result": "PARTIAL",
+          "reason": "Świat: brak najbliższej podpory (duży filar w lewej części zdjęcia), pod pomostem pusto. Brak bariery na nasypie. Potwierdzone także w High-clear.",
+          "render_sha256": "16b82bf323c8c0b0386e2711139bec2b27d90736954f7cfed4fbb1f964da14e8",
+          "comparison_sha256": "f323ab061cdbd1f4bfb9abb4c312dbf1dcafc6d2a1108308ed9cc376d614eeea",
+          "pose_warning": null
+        },
+        {
+          "camera": "sbs-g3-a-320326319617139",
+          "index": 11,
+          "station": "A/379",
+          "result": "PARTIAL",
+          "reason": "Świat: brak znaków D-3 i D-6, przejścia i chodnika z kostki, w ich miejscu trawiasta wysepka. Może się do tego dokładać przesunięcie pozy w bok.",
+          "render_sha256": "5e1e0baf7862af216b06e2f1e7b4fbe7a8462d3131c81ae2d609e2b241771307",
+          "comparison_sha256": "3015576aeeea68797c66d0689793b32d17affb27c991a9fa6ddf9f952711aff8",
+          "pose_warning": null
+        },
+        {
+          "camera": "sbs-g3-a-482392746429891",
+          "index": 12,
+          "station": "A/394",
+          "result": "RECOGNISABLE",
+          "reason": "Bariera, filary i skarpa się zgadzają. Brak niebieskiego znaku ze strzałką.",
+          "render_sha256": "3fbf4beee528e1e8a325ee8da75f785260ce214921a322ced7f3da37c6f062ef",
+          "comparison_sha256": "a4bd6fd6fac72eaff9125b21402b065436071f0863f2430a2222947e64338e57",
+          "pose_warning": null
+        },
+        {
+          "camera": "sbs-g3-a-454716650857984",
+          "index": 13,
+          "station": "A/400",
+          "result": "RECOGNISABLE",
+          "reason": "Pomost: pasy, bariery i latarnie są zgodne. Na lewym horyzoncie jest mniej bloków.",
+          "render_sha256": "483d97b327db2bbd413dede1c852bca5f9947f394c78c38a5076be93ac4c2448",
+          "comparison_sha256": "f1c89052fe31a413f87b240f573ed5b33b7d797343b1248cb435905cef501cb9",
+          "pose_warning": null
+        },
+        {
+          "camera": "sbs-g3-a-303305168125936",
+          "index": 14,
+          "station": "A/437",
+          "result": "RECOGNISABLE",
+          "reason": "Układ jest zgodny. Na horyzoncie stoi ściana lasu zamiast bloków mieszkalnych.",
+          "render_sha256": "613bebb399a1f195ae9ec948b5e51c53cda815263432770fe22022dc84ad61dc",
+          "comparison_sha256": "a8bb7d37739164759a15b2193b811d50c4aa7890a528195f0dec9c2bfb1a7efc",
+          "pose_warning": null
+        },
+        {
+          "camera": "sbs-g3-a-320215796381417",
+          "index": 15,
+          "station": "A/437",
+          "result": "RECOGNISABLE",
+          "reason": "Tak samo jak #14.",
+          "render_sha256": "d85b35d44b0150a81430e83033f5732e8b5784254d51f209bbfaa0ea2d688dfe",
+          "comparison_sha256": "4cdbe7483c84e7e96f4b9c6f294753e510c49dd5433337d0ccf64c50ab1a8586",
+          "pose_warning": null
+        },
+        {
+          "camera": "sbs-g3-b-381800493259507",
+          "index": 16,
+          "station": "B/0",
+          "result": "PARTIAL",
+          "reason": "Świat: brak drogowskazów nad jezdnią i tablicy U-3 (czerwono-biała) przy wysepce. Zdjęcie z 2017 r.",
+          "render_sha256": "2e74375ef79a6ac159d88288d1b9e3d73393236d2e637d49ece493af413c44c8",
+          "comparison_sha256": "bb8686f2fe7465ba42ea971dda6547a304768aeaacf82ae9a24b949dcfcd77d3",
+          "pose_warning": null
+        },
+        {
+          "camera": "sbs-g3-b-2279538078845158",
+          "index": 17,
+          "station": "B/16",
+          "result": "RECOGNISABLE",
+          "reason": "Biały budynek po lewej, latarnie, przejście i daleka bramownica się zgadzają.",
+          "render_sha256": "70f00fdacf5b49717ac78694a6bae2b900d7643f2c1550de151b68190671099c",
+          "comparison_sha256": "d7a0c29ce47125e3f1bcc19370906ce2ed7e433302e45887f9568e23aaefb2bf",
+          "pose_warning": null
+        },
+        {
+          "camera": "sbs-g3-b-837235577143499",
+          "index": 18,
+          "station": "B/35",
+          "result": "PARTIAL",
+          "reason": "Świat: brak tablicy U-3 na nosie wysepki po prawej, która jest głównym punktem orientacyjnym w tym kadrze.",
+          "render_sha256": "26b390f76aad4903b1606a627a3f60ef247fcc24ab6599cf99cd24c40ed48b61",
+          "comparison_sha256": "8676ada6ab9b0582d015f708cdc62ee28cb31dfe02dc0db2993d5bd2f093bb3d",
+          "pose_warning": null
+        },
+        {
+          "camera": "sbs-g3-b-3281350541967811",
+          "index": 19,
+          "station": "B/60",
+          "result": "NOT_RECOGNISABLE",
+          "reason": "Świat: brak kratownicowej bramownicy z tablicą (lewa część zdjęcia) i pawilonu handlowego. Poza: kamera stoi raczej na złej jezdni, bo pas zieleni jest po prawej, a na zdjęciu po lewej jest pobocze z drogą serwisową.",
+          "render_sha256": "a2be4c20816979a897d385518d4bc361b065ae04fabe2786ce54faefd0bc21cf",
+          "comparison_sha256": "6cf1e2a6f02736e4d48f9d75809ab4242cccdb7ad017258068eed9ecba078912",
+          "pose_warning": "Carriageway and lateral position require verification."
+        },
+        {
+          "camera": "sbs-g3-b-275528677534382",
+          "index": 20,
+          "station": "B/77",
+          "result": "NOT_RECOGNISABLE",
+          "reason": "Na zdjęciu tuż przed kamerą stoi kratownicowa bramownica z 2 zielonymi tablicami i znakami D-1 po obu stronach. W renderze bramownica jest mała, ok. 200 m dalej, i nie ma D-1. W renderach z s=16/35/77 bramownica ma stałą, dużą odległość, więc to świat (pozycja wzdłuż drogi). Stacja z kamery samochodowej jest jednak niepewna.",
+          "render_sha256": "ef31e757b53b514cd7ea4781d68c98a589de8252fe664d5126c24e4a52106a15",
+          "comparison_sha256": "07f8aceba89a22f0d8ef678b4962d89d6b39715000eb3bf0dd00057ce3159007",
+          "pose_warning": "Dashcam station may lag GPS; triangulation required."
+        },
+        {
+          "camera": "sbs-g3-b-150280503737744",
+          "index": 21,
+          "station": "B/93",
+          "result": "PARTIAL",
+          "reason": "Układ jezdni się zgadza. Świat: brak pierzei handlowo-usługowej po prawej (czerwone fasady, pylony reklamowe), w renderze pusty teren i blok.",
+          "render_sha256": "ba6002c48313fd50c0e77352893a15e6467efe0f50de380eb23ea7fc20118438",
+          "comparison_sha256": "087e595a45f7654b6b01c9f95790edfcd04512ce8b18fb382bb71b2e3c3ab668",
+          "pose_warning": null
+        },
+        {
+          "camera": "sbs-g3-b-297817221966185",
+          "index": 22,
+          "station": "B/120",
+          "result": "PARTIAL",
+          "reason": "Świat: brak dużych drzew liściastych w pasie po lewej i obiektu handlowego po prawej. Render ma po lewej hale, których zdjęcie nie pokazuje.",
+          "render_sha256": "8c4b922c7f71ee7b24dbdf37c04d78fe6f101314de81e70344b7226d8e103b86",
+          "comparison_sha256": "0db1fb1dc739f82198c4f6f488b74725fd9793bbc4c77fd80191d5a3052464cd",
+          "pose_warning": null
+        },
+        {
+          "camera": "sbs-g3-b-3678296072299092",
+          "index": 23,
+          "station": "B/153",
+          "result": "PARTIAL",
+          "reason": "Świat: brak kratownicowego słupa linii WN i ekranu akustycznego po prawej. W osi renderu stoi sygnalizator, którego na zdjęciu nie widać (do sprawdzenia).",
+          "render_sha256": "84aabcd653c4a6738119e8448e9a59e775f99f5cf4114f99a96e751ddc35000c",
+          "comparison_sha256": "d543e0ab31a4482c075c44b8bd6382a9c9cd7802c16fd892a820ae47a03f8afa",
+          "pose_warning": null
+        },
+        {
+          "camera": "sbs-g3-b-494288258686575",
+          "index": 24,
+          "station": "B/428",
+          "result": "PARTIAL",
+          "reason": "Ekran na estakadzie jest obecny (dobrze), ale w renderze stoi też po lewej, a na zdjęciu po lewej jest otwarty widok na drugą jezdnię i latarnie. Łuk w lewo kontra prosta: możliwy błąd kursu pozy.",
+          "render_sha256": "99dbbb51b727181863c3d60ffe964cabc5cac97a8c96397fab932390092ea3e8",
+          "comparison_sha256": "4943df7b00e9a99e18e3487548285155f50e2e1dc6daa19391e24e05cf4e2ced",
+          "pose_warning": "Heading requires verification against both carriageways."
+        },
+        {
+          "camera": "sbs-g3-b-1801374876712141",
+          "index": 25,
+          "station": "B/486",
+          "result": "PARTIAL",
+          "reason": "Świat: brak przezroczystego ekranu akustycznego po prawej, czyli najbardziej charakterystycznego elementu kadru. Brak też billboardu po lewej.",
+          "render_sha256": "9424ddfe39a4befa89738f306eb741a4e05519e731fe9dbb3cbf3b802f8e9975",
+          "comparison_sha256": "ce07076f1c2f18dc6b8ebcc94b17b79e6be18aa28c9345ae29f5e7a5b6f903e7",
+          "pose_warning": null
+        }
+      ]
+    }
+  ],
+  "note": "Versioned review registry: current r3 baseline FAIL13/11/1 and historical r1 review, bound to exact photo/render SHA. Refinement C probes remain unaccepted."
+}

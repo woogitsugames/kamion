@@ -1,0 +1,38 @@
+{
+  "bbox_local": [
+    -440.0,
+    -340.0,
+    -60.0,
+    -110.0
+  ],
+  "origin_epsg2180": [
+    777995.0,
+    596223.0
+  ],
+  "camera": {
+    "id": "sbs-g3-b-297817221966185",
+    "kind": "photo_match",
+    "seat": "file",
+    "type": "persp",
+    "pos": [
+      -298.3237,
+      -199.657,
+      132.3836
+    ],
+    "look_at": [
+      -263.1444,
+      -217.7726,
+      138.2349
+    ],
+    "fov_deg": 43.54635,
+    "segment": "G3-B",
+    "pose_confidence": "B",
+    "pose_reason": "Approximate pose; prior visual review did not reject it; fresh review required",
+    "note": "ADR0103 photo GPS/heading; NMT+eye/FOV/pitch WORKING_VALUE; see sbs_references.json"
+  },
+  "photo_date": "2017-07-29",
+  "photo_source": "https://www.mapillary.com/app/?pKey=297817221966185",
+  "photo_author": "zsolt",
+  "ortho": "Data\\raw\\derived\\bialystok-industrial-c\\ortho_0p25m.tif",
+  "note": "Red points are generated tree centres, not detected crowns; cyan fan is an approximate guide, not pose calibration."
+}

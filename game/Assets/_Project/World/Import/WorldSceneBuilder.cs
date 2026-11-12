@@ -71,6 +71,12 @@ namespace Game.World.Import
                 infos.Add(new WorldRegionRoot.ChunkInfo { id = ch.Id, minEN = ch.Min, maxEN = ch.Max, corridor = ch.Corridor, sha256 = ch.Sha256 });
             }
             root.chunks = infos.ToArray();
+            // ADR 0124 (review 0114 P1-r8-h): the house plots of chunks further than 70 m are not drawn in mirror cameras.
+            var plotNodes = new List<Renderer>();
+            foreach (Transform chunk in rootGo.transform)
+                foreach (Transform node in chunk)
+                    if ((node.name == "plots" || node.name == "plot_ground") && node.TryGetComponent(out MeshRenderer pmr)) plotNodes.Add(pmr);
+            if (plotNodes.Count > 0) rootGo.AddComponent<PlotViewCull>().renderers = plotNodes.ToArray();
             // GPU-instanced props and trees (ADR 0012) - in region-root space, like the chunks.
             // Reload by path: NewScene(Single) unloads unreferenced assets, which turns the in-memory reference fake-null.
             var instances = AssetDatabase.LoadAssetAtPath<WorldInstanceSet>($"{r.Dir}/Instances.asset");
@@ -274,19 +280,21 @@ namespace Game.World.Import
         // Layers per LOD (ADR 0012). Distances: manifest switch distances (camera to near chunk edge) + 0.7 chunk.
         static readonly string[][] k_LowLods =
         {
-            new[] { "terrain_band", "road", "bridge", "markings", "paved", "buildings", "furniture", "wires", "plot_ground" },
-            new[] { "terrain_lod2", "road", "bridge", "markings", "paved", "buildings_lod1", "furniture", "wires", "plot_ground" },
+            new[] { "terrain_band", "road", "bridge", "markings", "paved", "buildings", "furniture", "wires", "plot_ground", "plots" },
+            new[] { "terrain_lod2", "road", "bridge", "markings", "paved", "buildings_lod1", "furniture", "wires", "plot_ground", "plots" },
             new[] { "terrain_lod2", "road", "bridge", "paved", "buildings_lod1", "wires" },
             new[] { "terrain_lod3", "bridge", "buildings_lod1" },
         };
         static readonly string[][] k_HighLods =
         {
-            new[] { "terrain_band", "road", "bridge", "markings", "paved", "buildings", "furniture", "wires", "plot_ground" },
-            new[] { "terrain_lod1", "road", "bridge", "markings", "paved", "buildings_lod1", "furniture", "wires", "plot_ground" },
+            new[] { "terrain_band", "road", "bridge", "markings", "paved", "buildings", "furniture", "wires", "plot_ground", "plots" },
+            new[] { "terrain_lod1", "road", "bridge", "markings", "paved", "buildings_lod1", "furniture", "wires", "plot_ground", "plots" },
             new[] { "terrain_lod2", "road", "bridge", "paved", "buildings_lod1", "wires" },
             new[] { "terrain_lod3", "bridge", "buildings_lod1" },
         };
-        static readonly HashSet<string> k_ShadowCasters = new HashSet<string> { "bridge", "buildings", "buildings_lod1", "furniture" };
+        static readonly HashSet<string> k_ShadowCasters = new HashSet<string> { "bridge", "buildings", "buildings_lod1", "furniture", "plots" };
+        // plots (ADR 0124): kit geometry of the house plots (fences, gates, plants) - LOD0 / LOD1, shadow caster; with
+        // plot_ground it is listed in PlotViewCull (shorter range in mirror cameras).
 
         static void BuildChunk(RegionImporter.Chunk ch, Transform parent, RegionImporter.Result r, string tier, ref int colliders)
         {
