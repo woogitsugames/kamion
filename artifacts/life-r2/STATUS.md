@@ -91,3 +91,5 @@ Krok 36: ADR zaktualizowany do zakończonego World B (424,7 s, 0, brak fallback=
 Iteracja B (2026-11-12T02:22:41.6013101+01:00): Audyt zakresu B i 192 produktów raw zakończony 0. Następne etapy w run-b-after-world.ps1, REPORT po oględzinach i testach końcowych.
 
 Krok 37: preflight palet ukończony: obejrzano dwie fotografie W.carter (Commons, CC0), zapisano miniatury ≤960 px, SHA, źródła i ograniczenia w refs/PALLET-PREFLIGHT.md. Pokazują otwarte wejścia na widły i zróżnicowanie drewna; obecny model to pełne bloki. Oficjalna strona EPAL potwierdza obrys 800×1200×144 mm, 11 desek i 9 klocków. To podstawa bryły do r3, nie dowód rozmieszczenia w Białymstoku. W r2 nie zmieniono palet. Pipeline B nadal 36998, scope 0/raw 192 bez zmian, kolejny audyt prototypów czeka na heavy. Następny krok: odebrać 36998 do AFTER B i oględzin.
+
+Iteracja B (2026-11-12T02:39:42.5993684+01:00): Audyt prototypów B zakończony 0, grupy i kolizje zgodne z baseline. Następne etapy w run-b-after-world.ps1, REPORT po oględzinach i testach końcowych.
