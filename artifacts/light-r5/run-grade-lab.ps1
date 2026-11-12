@@ -6,7 +6,7 @@ Set-Location $repo
 $slot='C:/Users/matma/Documents/Claude/kamion/scripts/unity-slot.ps1'
 $folder="$PSScriptRoot/$OutputName";$log="$PSScriptRoot/$OutputName.$(Get-Timestamp).log"
 $source=(git rev-parse HEAD).Trim()
-$sourcePaths=@('game/Assets/_Project/Rendering/Editor/LightGradeLutLab.cs','game/Assets/_Project/Rendering/Editor/LightGradeLutLab.shader','game/Assets/_Project/Rendering/Editor/LightGradeLutWorldProbe.cs','game/Assets/_Project/Rendering/Shaders/KamionAtmosphere.hlsl','game/Assets/_Project/Rendering/Shaders/KamionOpaqueGradeLabVariants.hlsl')
+$sourcePaths=@('game/Assets/_Project/Rendering/Editor/LightGradeLutLab.cs','game/Assets/_Project/Rendering/Editor/LightGradeLutLab.shader','game/Assets/_Project/Rendering/Editor/LightGradeLutWorldProbe.cs','game/Assets/_Project/Rendering/Shaders/KamionAtmosphere.hlsl')
 $sourceHashes=@($sourcePaths|ForEach-Object {@{path=$_;sha256=(Get-FileHash -LiteralPath $_).Hash}})
 & pwsh $slot -Acquire -Owner gpt-light -PollSeconds 1 -StaleHours 87600
 if($LASTEXITCODE){throw 'No Unity slot'}
@@ -18,6 +18,7 @@ try{
     $result=Select-String -Path $log -SimpleMatch 'LIGHT_GRADE_LAB_RESULT: OK images=33 cubes=6 holdoutPerPreset=192 gradientPerPreset=12288 physicalBypassMax=0'|Select-Object -Last 1
     $files=@(Get-ChildItem -LiteralPath $folder -Filter '*.png' -ErrorAction SilentlyContinue|Where-Object {$_.LastWriteTime -ge $start -and $_.Length -gt 0})
     $complete=$result -and $files.Count -eq 33
+    if(-not $complete){Show-UnityLogErrors $log;throw "Incomplete lab before proof reading: exit=$code, freshPNG=$($files.Count), log=$log"}
     foreach($preset in @('Clear','Overcast','Night')){
         $proof=Get-Content "$folder/$preset-proof.json" -Raw|ConvertFrom-Json
         if($proof.captureBypassMaxRgb -ne 0 -or $proof.measurements.Count -ne 3 -or @($proof.measurements|Where-Object {$_.samples.Count -ne 192}).Count){$complete=$false}
@@ -47,6 +48,7 @@ finally{git restore -- game/Assets/_Project/Rendering/Settings game/ProjectSetti
 Add-Content "$PSScriptRoot/STATUS.md" "Lab gradingu33PNG+6kostek,192holdout+12288gradientnaPreset zakończony; log=$log. To diagnostyka, bez wdrożenia lub GPU PASS."
 git add -f artifacts/light-r5/STATUS.md
 git commit -m 'WIP light r5: record actual High-baked LUT laboratory evidence'
+
 
 
 

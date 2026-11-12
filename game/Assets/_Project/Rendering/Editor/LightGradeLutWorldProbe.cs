@@ -48,7 +48,6 @@ namespace Game.Rendering.Editor
         }
         public LightGradeLutWorldProbe(string folder,string preset,int size)
         {
-            if(Shader.IsKeywordEnabled("_KAMION_OPAQUE_GRADE_LAB"))throw new InvalidOperationException("Prior grade probe keyword still enabled");
             if(size!=16 && size!=32)throw new ArgumentException("Reviewed sizes16/32 only");
             m_Key=JsonUtility.ToJson(JsonUtility.FromJson<Key>(File.ReadAllText(Path.Combine(folder,preset+"-key.json"))));
             var bytes=File.ReadAllBytes(Path.Combine(folder,$"{preset}-lut{size}-RGBAHalf.raw"));
@@ -76,7 +75,6 @@ namespace Game.Rendering.Editor
             var key=JsonUtility.ToJson(CaptureKey(env.Active));
             if(key!=m_Key){m_Error="Stale bake key: "+key+" expected "+m_Key;return;}
             Shader.SetGlobalTexture("_KamionOpaqueGradeLut",m_Lut);
-            Shader.EnableKeyword("_KAMION_OPAQUE_GRADE_LAB");
             Shader.SetGlobalFloat("_KamionOpaqueGradeSize",m_Lut.width);
             Shader.SetGlobalFloat("_KamionOpaqueGradeEnabled",1);
             // Cab/exterior already have a Low-only approximate D23 curve before KamionMixFog.
@@ -110,7 +108,6 @@ namespace Game.Rendering.Editor
         public void Dispose()
         {
             Shader.SetGlobalFloat("_KamionOpaqueGradeEnabled",0);
-            Shader.DisableKeyword("_KAMION_OPAQUE_GRADE_LAB");
             Shader.SetGlobalFloat("_KamionOpaqueGradeSize",0);
             Shader.SetGlobalTexture("_KamionOpaqueGradeLut",null);
             UnityEngine.Object.DestroyImmediate(m_Lut);
