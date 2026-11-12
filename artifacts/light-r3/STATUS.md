@@ -23,3 +23,4 @@ Krok 16: istniejący test różnych wariantów prezentacji porównuje teraz rów
 Regeneracja i import r3 zakończone kodem 0; build-world.log, fidelity-preimport.log, import-wrapper.log. Baseline dopiero po sukcesie; bez deklaracji jakości z kodu wyjścia.
 Batch światła zakończony: artifacts/light-r3/baseline.json; log C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-light\artifacts\light-r3\baseline.20261112-032012.log. Następny krok: obejrzeć PNG i policzyć metryki, nie deklarować PASS z samego kodu wyjścia.
 Baseline ma komplet 40 PNG i sprawdzone stany. Kontaktówki przygotowane po faktycznym końcu pipeline, bez dodatkowego Pythona lub Unity. Następny krok: obejrzeć wszystkie 36 wet0/0,5/1 i cztery clear; nie deklarować poprawy przed oględzinami.
+EditMode (filtr='Game.Tests.DuskStreetLampTests'): kod 0; szczegóły artifacts/light-r3/targeted-editmode.log i XML artifacts/tests. Następny krok: odczytać liczbę testów i ewentualne porażki.
