@@ -143,7 +143,7 @@ namespace Game.Tests
         public void LogLine_ContainsAllChoices()
         {
             string l = Custom().LogLine("saved");
-            StringAssert.StartsWith("[CONTROLS] saved v3", l);
+            StringAssert.StartsWith("[CONTROLS] saved v4", l);
             foreach (string part in new[] { "steer=gyro", "wheelRange=540", "wheelSens=1.40", "centre=0.60", "deadZone=0.040", "gyroInvert=on", "gyroSens=1.50", "throttle=linear", "brake=progressive", "lookSens=1.00", "cabFov=55", "headMotion=on", "speedSteer=on", "grab=drag" })
                 StringAssert.Contains(part, l);
         }
