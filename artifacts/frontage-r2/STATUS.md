@@ -12,3 +12,7 @@ NASTĘPNY KROK: po `cycle-0.done`: skopiować zmiany (frontage.py, materials.py,
 Baseline `run-cycle.ps1 -Name baseline -Tag 0` nadal czeka w kolejce heavy (2 przed nami); działa w tle - nie przerywać.
 Kod rundy 2 (testy 12 passed w kopii roboczej) leży w `artifacts/frontage-r2/pending/` (NIE w drzewie, żeby baseline był czysty). ADR szkic: `docs/adr/0129-frontage-r2.md` (RESULTS_PLACEHOLDER do uzupełnienia). Skrypt par: `artifacts/frontage-r2/make-pairs.py <after> <Tier-Lighting>`.
 NASTĘPNY KROK (po linii `build exit=` w `artifacts/frontage-r2/cycle-0.log`): `cp -r artifacts/frontage-r2/pending/* . ; uv run --project tools/worldgen pytest tests/gis/test_g3b_frontage.py -q ; git add -A tools tests Data/Regions ; git commit -m "wip(frontage-r2): round-2 code" ; pwsh artifacts/frontage-r2/run-cycle.ps1 -Name after -Tag 1 ; python artifacts/frontage-r2/make-pairs.py after Low-overcast ; python artifacts/frontage-r2/stats-diff.py after`
+
+## 3. Kod rundy 2 w drzewie (14:0x)
+Baseline build OK (597 s), import + rendery baseline lecą w tle (cycle-0). Kod rundy 2 skopiowany do drzewa: test_g3b_frontage 13 passed. Pliki generated/ i glb z builda baseline NIE są commitowane.
+NASTĘPNY KROK (po `artifacts/frontage-r2/cycle-0.done`): `pwsh artifacts/frontage-r2/run-cycle.ps1 -Name after -Tag 1 ; python artifacts/frontage-r2/make-pairs.py after Low-overcast ; python artifacts/frontage-r2/make-pairs.py after Low-clear ; python artifacts/frontage-r2/stats-diff.py after`

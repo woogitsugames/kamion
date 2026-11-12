@@ -84,12 +84,14 @@ def test_pavilion_walls_glazing_and_lods():
     assert rep["frontages"] == 1 and rep["typologies"] == {"office": 1}
     for layer in ("buildings", "buildings_low"):
         m = buf.mats(layer)
-        assert {"brick_red", "plaster_grey", "glass", "hall_flashing", "plinth_dark", "plaster_accent_terracotta"} <= m, m
+        assert {"brick_red", "plaster_grey", "showroom_glass", "hall_flashing", "plinth_dark",
+                "plaster_accent_terracotta"} <= m, m
+        assert "glass" not in m
         assert not any("__far_" in x or x == "facade_atlas" or x.startswith("hall_wall") for x in m), m
-        assert buf.tris(layer, "glass") == 4                       # one pane per glazed run (S and E)
+        assert buf.tris(layer, "showroom_glass") == 4              # one pane per glazed run (S and E)
     assert not any(p.mat in ("plaster_light", "plaster_beige", "plaster_white") for p in buf.parts)
     # glass: S wall 0.6...29.4 m at y = 0.1 (recessed), z 100.3...103.5; E wall first half only
-    g = np.concatenate([p.V for p in buf.parts if p.layer == "buildings" and p.mat == "glass"])
+    g = np.concatenate([p.V for p in buf.parts if p.layer == "buildings" and p.mat == "showroom_glass"])
     s = g[np.abs(g[:, 1] - 0.10) < 1e-6]
     assert abs(s[:, 0].min() - 0.6) < 1e-6 and abs(s[:, 0].max() - 29.4) < 1e-6
     assert abs(s[:, 2].min() - 100.3) < 1e-6 and abs(s[:, 2].max() - 103.5) < 1e-6
@@ -102,7 +104,7 @@ def test_pavilion_walls_glazing_and_lods():
     assert np.allclose(t[:, 0], 0.0) and abs(t[:, 1].min() - 10.0) < 1e-6 and abs(t[:, 1].max() - 20.0) < 1e-6
     assert abs(t[:, 2].min() - 103.6) < 1e-6 and abs(t[:, 2].max() - 105.0) < 1e-6
     # LOD1 is cheaper than LOD0 but not a plain box
-    assert 60 < buf.tris("buildings_low") < buf.tris("buildings") < 900, (buf.tris("buildings_low"), buf.tris("buildings"))
+    assert 60 < buf.tris("buildings_low") < buf.tris("buildings") < 1500, (buf.tris("buildings_low"), buf.tris("buildings"))
     assert buf.tris("collision") >= 8
     assert [s_["p"] for s_ in signs] == ["facade_sign_serwis"] and abs(signs[0]["z"] - 105.4) < 1e-6
 
@@ -126,17 +128,135 @@ def test_props_stand_where_authored():
     assert (pr["sign_mast"]["e"], pr["sign_mast"]["n"]) == (33.0, -6.0)
     for layer in ("buildings", "buildings_low"):
         y = np.concatenate([p.V for p in buf.parts if p.layer == layer and p.mat == "paint_yellow"])
-        assert buf.tris(layer, "paint_yellow") == 12 and y[:, 2].max() < 108.0 and y[:, 2].min() > 103.0   # 3 banners x 2 sides
-        o = np.concatenate([p.V for p in buf.parts if p.layer == layer and p.mat == "bin_plastic_blue"])
+        # 3 banners x 2 sides; ADR 0129: a bowed mesh (6 x 2 cells on LOD0, 3 x 1 on LOD1), not a rigid quad
+        assert buf.tris(layer, "paint_yellow") == (3 * 2 * 2 * 3 if layer == "buildings_low" else 3 * 2 * 2 * 12)
+        assert y[:, 2].max() < 108.0 and y[:, 2].min() > 103.0
+        o = np.concatenate([p.V for p in buf.parts if p.layer == layer and p.mat == "window_frame"])
         assert abs(o[:, 2].max() - 109.0) < 1e-6 and o[:, 0].max() - o[:, 0].min() > 4.5      # oval board on top, 4.6 m wide
     # rotate_deg turns the row clockwise from the wall direction: 90 deg = masts in a line towards the wall
     b2, _, _ = _build({"frontage": dict(SPEC, props=[dict(SPEC["props"][0], rotate_deg=90, spacing_m=4.0)])})
-    y = np.concatenate([p.V for p in b2.parts if p.layer == "buildings" and p.mat == "downpipe"])
-    y = y[(np.abs(y[:, 0] - 15.0) < 0.1) & (y[:, 1] < -1.0)]       # masts only (not the downpipes on the walls)
+    y = np.concatenate([p.V for p in b2.parts if p.layer == "buildings" and p.mat == "frontage_galv"])
+    y = y[(np.abs(y[:, 0] - 15.0) < 0.1) & (y[:, 1] < -1.0) & (y[:, 2] < 107.0)]     # masts only (not the top arms)
     assert abs(y[:, 1].min() + 12.04) < 1e-6 and abs(y[:, 1].max() + 3.96) < 1e-6
     spec = dict(SPEC, props=[{"kind": "totem", "facing": "NE"}])
     _, rep, _ = _build({"frontage": spec})
     assert rep["frontage_props"] == [{"kind": "totem", "placed": False, "reason": "no wall faces NE", "building": "t:1"}]
+
+
+class _Acc:
+    """Triangle soup per (layer, material) of the frontage prop functions (same calls as buildings_mesh.Acc)."""
+
+    def __init__(self):
+        from streetscape import buildings_mesh as BM
+        self.acc = BM.Acc()
+
+    def tris(self, layer, mat):
+        return [it[0][t] for it in self.acc.d.get((layer, mat), []) for t in it[1]]
+
+
+def _area(tri):
+    return 0.5 * float(np.linalg.norm(np.cross(tri[1] - tri[0], tri[2] - tri[0])))
+
+
+def test_oval_board_is_two_tone_without_overlap():
+    """ADR 0129 (review 0126 P1 "owal czytany jako dysk"): rim + blank light field + colour field, one coplanar
+    tessellation per side whose areas add up to the ellipse exactly (no overlap = no z-fighting), a board edge on
+    LOD0, no degenerate triangle. No lettering: the light material is two plain fields."""
+    import math
+    from streetscape import frontage as FR
+    a = _Acc()
+    q, d, nout = np.array([0.0, 0.0]), np.array([1.0, 0.0]), np.array([0.0, -1.0])
+    FR.sign_mast(a.acc, {"kind": "sign_mast", "height_m": 10.0, "board_w_m": 4.6, "board_h_m": 1.3,
+                         "board_dir": "along", "material": "bin_plastic_blue"}, q, d, nout, 100.0)
+    for layer, seg in (("buildings", 14), ("buildings_low", 8)):
+        blue, light = a.tris(layer, "bin_plastic_blue"), a.tris(layer, "window_frame")
+        mid = [t for t in a.tris(layer, "frontage_galv") if t[:, 2].min() > 108.9 and np.allclose(np.abs(t[:, 1]), 0.09)]      # the two blank blocks
+        assert blue and light and mid
+        blue = blue + mid
+        ab, al = sum(_area(t) for t in blue), sum(_area(t) for t in light)
+        assert min(_area(t) for t in blue + light) > 1e-5
+        full = 2 * math.pi * 2.3 * 0.65                                    # both sides
+        assert 0.93 * full < ab + al < full, (layer, ab + al, full)        # polygonal outline: a little under
+        assert 0.10 < al / (ab + al) < 0.25, al / (ab + al)                # light rim, the field dominates
+        # two sides, 0.18 m apart, every face in one of the two planes (y = +-0.09)
+        ys = np.concatenate(blue + light)[:, 1]
+        assert np.allclose(np.abs(ys), 0.09)
+        z = np.concatenate(light)[:, 2]
+        assert abs(z.max() - 110.0) < 1e-6 and abs(z.min() - 108.7) < 1e-6
+        # two blank blocks (greeking of the two words), inside the colour field, a gap between them
+        assert abs(sum(_area(t) for t in mid) - 2 * ((0.64 - 0.03) * 4.6) * (0.30 * 1.3)) < 1e-6
+        mv = np.concatenate(mid)
+        assert np.abs(mv[:, 0]).min() == pytest.approx(0.03 * 2.3) and np.abs(mv[:, 0]).max() == pytest.approx(0.64 * 2.3)
+    assert a.tris("buildings", "hall_flashing") and not a.tris("buildings_low", "hall_flashing")    # board edge: LOD0
+    assert not a.tris("buildings", "downpipe") and a.tris("buildings", "frontage_galv")
+    n0, n1 = (len(a.tris(l_, "frontage_galv")) for l_ in ("buildings", "buildings_low"))
+    assert n1 < n0 < 700, (n0, n1)
+    for l_, cap in (("buildings", 900), ("buildings_low", 500)):                # whole mast + board
+        assert sum(len(it[1]) for (l2, _), its in a.acc.d.items() if l2 == l_ for it in its) < cap
+
+
+def test_banners_are_bowed_not_rigid():
+    """ADR 0129 (review 0126 P2 "flagi: sztywne płyty"): the free edge leaves the banner plane towards the hem, each
+    banner a little differently; a top arm holds the head."""
+    from streetscape import frontage as FR
+    a = _Acc()
+    FR.flag_row(a.acc, {"kind": "flag_row", "count": 3, "spacing_m": 3.0, "height_m": 8.5, "banner_w_m": 0.8,
+                        "banner_h_m": 4.0, "banner_dir": "out", "material": "paint_yellow"},
+                np.array([0.0, 0.0]), np.array([1.0, 0.0]), np.array([0.0, -1.0]), 100.0)
+    for layer in ("buildings", "buildings_low"):
+        V = np.concatenate(a.tris(layer, "paint_yellow"))
+        bows = []
+        for x0 in (-3.0, 0.0, 3.0):                                   # banner plane: x = mast, banner hangs towards -y
+            v = V[np.abs(V[:, 0] - x0) < 0.6]
+            off = np.abs(v[:, 0] - x0)
+            assert off[v[:, 2] > 108.3].max() < 1e-6                  # head: on the arm
+            assert 0.08 < off.max() < 0.40, off.max()                 # hem: bowed, but still a banner
+            assert v[:, 1].min() > -0.95 and v[:, 1].max() < -0.05
+            bows.append(round(float(off.max()), 3))
+        assert len(set(bows)) == 3, bows
+
+
+def test_car_row_and_placement():
+    from streetscape import frontage as FR
+    from streetscape import materials as MT
+    spec = dict(SPEC, props=[{"kind": "car_row", "facing": "S", "u": 0.5, "out_m": 6.0, "count": 4, "spacing_m": 2.8,
+                             "protos": ["van_white", "car_suv_silver"]}])
+    assert FR.plan(spec, MT.M)
+    for bad in ("truck_red", "car_suv_pink", "van_blue", "car_coupe_red"):
+        with pytest.raises(ValueError):
+            FR.plan(dict(SPEC, props=[{"kind": "car_row", "facing": "S", "protos": [bad]}]), MT.M)
+    buf, rep, _ = _build({"frontage": spec})
+    (pr,) = rep["frontage_props"]
+    cars = pr["cars"]
+    assert pr["placed"] and [c["p"] for c in cars] == ["van_white", "car_suv_silver"] * 2
+    e, n = np.array([c["e"] for c in cars]), np.array([c["n"] for c in cars])
+    assert np.allclose(np.diff(e), 2.8, atol=1e-3) and abs(e.mean() - 15.0) < 1e-3 and np.abs(n + 6.0).max() <= 0.121
+    # nose out = away from the S wall = towards -y: life.yaw_of((0, -1)) = -pi
+    assert all(abs(c["yaw"] + np.pi) < np.radians(1.3) for c in cars)
+
+    class _Pl:
+        def __init__(self):
+            self.items = [{"p": "car_hatch_red", "e": float(e[0]) - 1.0, "n": -6.0}]
+
+        def add(self, proto, p_, yaw, src=""):
+            self.items.append({"p": proto, "e": float(p_[0]), "n": float(p_[1]), "yaw": yaw, "src": src})
+    pl, frep = _Pl(), {}
+    assert FR.place_cars(pl, rep["frontage_props"], frep) == 3 and frep["frontage_cars"] == {"placed": 3, "skipped": 1}
+    assert all(it["src"] == "frontage:t:1:car_row" for it in pl.items[1:])
+
+
+def test_fence_style_override_and_frontage_materials():
+    from streetscape import furniture as FU
+    from streetscape import materials as MT
+    assert FU.fence_styles([{"kind": "fence_style", "osm_way": [5, 7], "colour": "anthracite"}, {"kind": "landmark"}]) == {
+        5: "fence_anthracite", 7: "fence_anthracite"}
+    with pytest.raises(ValueError):
+        FU.fence_styles([{"id": "x", "kind": "fence_style", "osm_way": [5], "colour": "white"}])
+    g, w = MT.M["showroom_glass"], MT.M["glass"]
+    assert g["sky_occ"][0] == 0.0 and 0.3 <= g["sky_occ"][1] < w["sky_occ"][1]      # mirrors more sky than a window
+    assert g["rough"] == w["rough"] and "texture" not in g and "texture_set" not in g
+    m = MT.M["frontage_galv"]
+    assert not m.get("metal") and 0.2 < m["color"][1] < 0.35                        # matt: no white clip at overcast
 
 
 def test_block_overrides_wall_balconies_bands():
@@ -166,6 +286,9 @@ def test_overrides_target_real_buildings_and_valid_specs(region_blds):
     from streetscape import materials as MT
     blds, ov = region_blds
     mine = [o for o in ov if str(o.get("id", "")).startswith("g3b-frontage-")]
+    style = [o for o in mine if o.get("kind") == "fence_style"]
+    mine = [o for o in mine if "target" in o]
+    assert len(style) == 1 and style[0]["colour"] == "anthracite" and 344253283 in style[0]["osm_way"]
     assert len(mine) == 4 and {o["target"]["building"] for o in mine} == set(IDS.values())
     for o in mine:
         assert o.get("reason") and o.get("confidence") in ("low", "medium", "high")
@@ -213,14 +336,27 @@ def test_props_clear_of_buildings_and_at_the_orthophoto_spots(region_blds):
     spec = FR.plan(b["ovr"]["frontage"], MT.M)
     edges = BM.ring_edges(b["poly"].exterior)
     want = {"sign_mast": (-204.5, -300.0), "flag_row": (-168.2, -332.8), "totem": (-162.0, -338.8)}
-    seen = set()
+    rows = [(-170.0, -337.5), (-175.3, -340.8)]                   # ADR 0129: van / car rows on the orthophoto
+    seen, cars = set(), []
     for p in spec["props"]:
-        q, _, _ = FR._anchor(p, edges)
+        q, d, nout = FR._anchor(p, edges)
+        if p["kind"] == "car_row":
+            assert np.hypot(*(q - np.array(rows[len(cars) // 4]))) < 2.0, (p["kind"], q)
+            row = FR.car_row(p, q, d, nout)
+            assert len(row) == 4 and all(FR.bearing(nout) == pytest.approx(42.0, abs=1.0) for _ in row)
+            for c in row:                                         # noses to the road (NE), clear of every building
+                assert abs((np.degrees(c["yaw"]) + 90.0 - 48.0 + 180.0) % 360.0 - 180.0) < 3.0, c
+                assert all(x["poly"].distance(Point(c["e"], c["n"])) > 3.0 for x in blds.values()), c
+            cars += row
+            continue
         assert np.hypot(*(q - np.array(want[p["kind"]]))) < 2.0, (p["kind"], q)
         assert all(x["poly"].distance(Point(*q)) > 1.5 for x in blds.values()), p["kind"]
         assert not p.get("text") and not p.get("label")           # no lettering on advertising structures
         seen.add(p["kind"])
-    assert seen == set(want)
+    assert seen == set(want) and len(cars) == 8
+    P = np.array([[c["e"], c["n"]] for c in cars])                # no two display vehicles overlap
+    dd = np.hypot(*(P[:, None, :] - P[None, :, :]).transpose(2, 0, 1)) + np.eye(len(P)) * 99
+    assert dd.min() > 2.5, dd.min()
 
 
 # ------------------------------------------------------------------------------------------ generated world

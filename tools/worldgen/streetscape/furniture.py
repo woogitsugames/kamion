@@ -1080,8 +1080,30 @@ def panel_fence(lin, line, col, key, flexible=False):
     lin.posts(col,P,None,.06,.04,S.FENCE_H+.05,zb=Z,src=key,ground_feet=True)
 
 
-def fences(lin, src, origin, roads_poly, report):
+FENCE_COLOURS = ("fence_green", "fence_anthracite", "fence_galv")
+
+
+def fence_styles(overrides):
+    """kind: fence_style -> {osm way id: panel fence colour} (authored: the colour of an OSM fence is not in the data,
+    the rule hashes it; ADR 0129)."""
+    out = {}
+    for o in overrides or []:
+        if o.get("kind") != "fence_style":
+            continue
+        col = f"fence_{o['colour']}"
+        if col not in FENCE_COLOURS:
+            raise ValueError(f"override {o.get('id')}: fence colour {o['colour']!r}, expected one of "
+                             f"{[c[6:] for c in FENCE_COLOURS]}")
+        for w in o["osm_way"]:
+            out[int(w)] = col
+    return out
+
+
+def fences(lin, src, origin, roads_poly, report, styles=None):
+    """styles: {osm way id: colour material} of the authored fence_style overrides (fence_styles)."""
     n = {"panel_m": 0.0, "concrete_m": 0.0, "retaining_m": 0.0}
+    styles = styles or {}
+    seen = set()
     cutter = roads_poly.buffer(0.3) if roads_poly is not None else None
     for f in src["osm"]["ways"]:
         b = f["tags"].get("barrier")
@@ -1093,7 +1115,10 @@ def fences(lin, src, origin, roads_poly, report):
             P = lin.dens(part, 2.0)              # 2 m: the Low terrain band is 2 m, posts sample the ground themselves
             Z = lin.z(P)
             if b in ("fence", "yes"):
-                col = ["fence_green", "fence_anthracite", "fence_galv"][_h(key) % 3]
+                col = FENCE_COLOURS[_h(key) % 3]
+                if int(f["osm_way"]) in styles:
+                    col = styles[int(f["osm_way"])]
+                    seen.add(int(f["osm_way"]))
                 panel_fence(lin, part, col, key, flexible=f["tags"].get("fence_type") in ("chain_link", "wire"))
                 n["panel_m"] += part.length
             elif b == "wall":
@@ -1112,6 +1137,9 @@ def fences(lin, src, origin, roads_poly, report):
             retaining(lin, lin.dens(part, 1.0), f"bdot:{f['id']}")
             n["retaining_m"] += part.length
     report["fences"] = {k: round(v) for k, v in n.items()}
+    if styles:      # a styled way that is no longer in the data is reported, never silently dropped
+        report["fences"]["styled_ways"] = sorted(seen)
+        report["fences"]["style_stale"] = sorted(set(styles) - seen)
 
 
 def retaining(lin, P, key):
