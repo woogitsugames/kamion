@@ -77,3 +77,7 @@ Dodatkowo gotowe, na dalszą diagnozę: `prepare_glass_0115.py` i `artifacts/tru
 - P1 naczepy, kanciastość opony, lakier/dach, mleczność szyby i pełny brud pozostają otwarte. Żaden częściowy test nie oznacza PASS całej grafiki.
 - Bieżący feedback lidera wspomina ograniczenie VQA High: zapis R8 przed post. Pomiary obrazu nie są fizycznym HDR ani pomiarem GPU telefonu.
 - Nie używano telefonów/adb. Nie używano Google Maps/Street View/Earth. Referencje wyłącznie z dostarczonych zdjęć i repozytoryjnych metadanych, bez przenoszenia logo do gry.
+
+## Ostatnia aktualizacja
+
+Aktualizacja przy zamykaniu sesji: generator świata zakończył się poprawnie, zwolnił heavy i zapisał commit 78a2d19f5. Istniejący skrypt czeka na slot Unity przed importem; nie został przerwany. Wygenerowane pliki innych dziedzin pozostawiono na dysku bez commitowania; ich diff zapisano w generated-at-stop.patch. Nie odtwarzać ich podczas trwającego przygotowania.
