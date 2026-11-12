@@ -38,3 +38,12 @@ jobs:
         run: uv run --project tools/worldgen pytest tests/gis -q -m unit
       - name: GIS tests (raw-data tests auto-skip)
         run: uv run --project tools/worldgen pytest tests/gis -q
+
+  audio-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { lfs: false }
+      - uses: astral-sh/setup-uv@v6
+      - name: Audio tools tests (synthetic signals only, no repo audio files)
+        run: uv run --project tools/audio --with pytest pytest tools/audio/tests -q
