@@ -21,18 +21,40 @@ origin=json.loads((here/'snapshot-candidate-a/world_manifest.json').read_text())
 origin=np.array([origin['x'],origin['y']])
 plans=yaml.safe_load((root/'Data/Regions/bialystok-industrial-c/overrides.yaml').read_text(encoding='utf-8'))['overrides']
 original=pt._fill
+original_annulus=pt._annulus_triangles
+original_strip=pt._hedge_ring_strip
 records=[]
 triangle_counts={}
 footprints=[]
 strip_metrics=[]
 active=None
+ring_sets=[]
+annuli=[]
+def capture_annulus(lower,upper):
+    triangles=original_annulus(lower,upper)
+    points=np.vstack([lower,upper])
+    faces=shapely.polygons(points[triangles])
+    union=shapely.union_all(faces)
+    target=Polygon(lower).symmetric_difference(Polygon(upper))
+    annuli.append(dict(triangles=len(triangles),invalid_triangles=int((~shapely.is_valid(faces)).sum()),
+        overlap_m2=float(shapely.area(faces).sum()-union.area),
+        annulus_difference_m2=union.symmetric_difference(target).area))
+    return triangles
+def capture_strip(rings,*args,**kwargs):
+    ring_sets.append(rings)
+    return original_strip(rings,*args,**kwargs)
 def capture_fill(ring,spacing):
     vertices,triangles=original(ring,spacing)
     edges=vertices[triangles[:,[1,2,0]]]-vertices[triangles]
+    faces=shapely.polygons(vertices[triangles])
+    union=shapely.union_all(faces)
     records.append(dict(bed=active,spacing_m=spacing,boundary_vertices=len(ring),
         interior_vertices=len(vertices)-len(ring),triangles=len(triangles),
         ring_valid=Polygon(ring).is_valid,ring_reason=shapely.is_valid_reason(Polygon(ring)),
         ring_area_m2=Polygon(ring).area,
+        overlap_m2=float(shapely.area(faces).sum()-union.area),
+        outside_m2=union.difference(Polygon(ring)).area,
+        coverage_difference_m2=union.symmetric_difference(Polygon(ring)).area,
         maximum_triangle_edge_m=float(np.linalg.norm(edges,axis=2).max())))
     return vertices,triangles
 class Capture:
@@ -41,6 +63,8 @@ class Capture:
         triangle_counts[active]=triangle_counts.get(active,0)+len(triangles)
         self.parts.append(np.asarray(vertices))
 pt._fill=capture_fill
+pt._annulus_triangles=capture_annulus
+pt._hedge_ring_strip=capture_strip
 try:
     for plan in plans:
         if plan.get('kind')!='plantings': continue
@@ -57,35 +81,24 @@ try:
                 if width: g=pt.band_of(g,float(width))
                 if g.geom_type!='Polygon' or g.area<.5: continue
                 active=bed.get('name',str(bi))
-                count=max(16,int(np.ceil(g.length/.3)))
-                sampled=Polygon(pt._offset_ring(g,0.0,count,np.asarray(g.exterior.coords)[0]))
+                sampled=Polygon(pt._offset_ring(g,0.0,step=.3,anchor=np.asarray(g.exterior.coords)[0]))
                 footprints.append(dict(bed=active,authored_band_area_m2=g.area,
                     sampled_area_m2=sampled.area,area_difference_percent=100*(sampled.area/g.area-1),
                     boundary_hausdorff_m=g.boundary.hausdorff_distance(sampled.boundary)))
                 capture=Capture()
+                ring_sets.clear()
+                annuli.clear()
                 pt.hedge_mass(capture,g,lambda x,y:np.zeros_like(x),key,
                     h=bed.get('height_m'),plant=bed.get('plant','berberis_red'))
-                cr=capture.parts[0][:,:2].reshape(6,-1,2)
-                sr=capture.parts[2][:,:2].reshape(6,-1,2)
+                cr=[p for p,z in ring_sets[0]]
+                sr=[p for p,z in ring_sets[1]]
                 outside=[Polygon(c).difference(Polygon(s)).area for c,s in zip(cr,sr)]
-                strips=[]
-                for name,rings in [('core',cr),('shell',sr)]:
-                    for i,(lo,hi) in enumerate(zip(rings,rings[1:])):
-                        quad_points=np.stack([lo,np.roll(lo,-1,axis=0),np.roll(hi,-1,axis=0),hi],axis=1)
-                        quads=shapely.polygons(quad_points)
-                        invalid=int((~shapely.is_valid(quads)).sum())
-                        lp,hp=Polygon(lo),Polygon(hi)
-                        row=dict(layer=name,band=i,invalid_quads=invalid,
-                            one_ring_contains_other=lp.covers(hp) or hp.covers(lp),
-                            smaller_outside_larger_m2=(lp.difference(hp).area if lp.area<hp.area else hp.difference(lp).area))
-                        if not invalid:
-                            union=shapely.union_all(quads)
-                            row.update(overlap_m2=float(shapely.area(quads).sum()-union.area),
-                                annulus_difference_m2=union.symmetric_difference(Polygon(lo).symmetric_difference(Polygon(hi))).area)
-                        strips.append(row)
-                strip_metrics.append(dict(bed=active,core_outside_shell_m2=outside,strips=strips))
+                strip_metrics.append(dict(bed=active,core_outside_shell_m2=outside,
+                    core_ring_sizes=[len(p) for p in cr],shell_ring_sizes=[len(p) for p in sr],strips=list(annuli)))
 finally:
     pt._fill=original
+    pt._annulus_triangles=original_annulus
+    pt._hedge_ring_strip=original_strip
 result=dict(source_sha256=hashlib.sha256((root/'tools/worldgen/streetscape/plantings.py').read_bytes()).hexdigest(),
     caps=records,footprints=footprints,strip_metrics=strip_metrics,
     triangles_by_bed=triangle_counts,total_triangles=sum(triangle_counts.values()),

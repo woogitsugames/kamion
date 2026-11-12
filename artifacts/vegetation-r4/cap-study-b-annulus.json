@@ -1,0 +1,489 @@
+{
+  "source_sha256": "e5800ccdcbf1120959c4b39a73a33a4451d620090e7e5e1c2e0476f0222cdd66",
+  "caps": [
+    {
+      "bed": "E1",
+      "spacing_m": 1.0,
+      "boundary_vertices": 197,
+      "interior_vertices": 0,
+      "triangles": 202,
+      "ring_valid": true,
+      "ring_reason": "Valid Geometry",
+      "ring_area_m2": 8.997472692095604,
+      "maximum_triangle_edge_m": 0.81029966150232
+    },
+    {
+      "bed": "E1",
+      "spacing_m": 0.6,
+      "boundary_vertices": 201,
+      "interior_vertices": 0,
+      "triangles": 207,
+      "ring_valid": true,
+      "ring_reason": "Valid Geometry",
+      "ring_area_m2": 11.308364373090537,
+      "maximum_triangle_edge_m": 0.7948960854426538
+    },
+    {
+      "bed": "E2",
+      "spacing_m": 1.0,
+      "boundary_vertices": 232,
+      "interior_vertices": 0,
+      "triangles": 243,
+      "ring_valid": true,
+      "ring_reason": "Valid Geometry",
+      "ring_area_m2": 12.42351831765715,
+      "maximum_triangle_edge_m": 0.975958357562628
+    },
+    {
+      "bed": "E2",
+      "spacing_m": 0.6,
+      "boundary_vertices": 232,
+      "interior_vertices": 4,
+      "triangles": 246,
+      "ring_valid": true,
+      "ring_reason": "Valid Geometry",
+      "ring_area_m2": 15.078474111328932,
+      "maximum_triangle_edge_m": 0.8466548734020941
+    },
+    {
+      "bed": "A",
+      "spacing_m": 1.0,
+      "boundary_vertices": 245,
+      "interior_vertices": 0,
+      "triangles": 251,
+      "ring_valid": true,
+      "ring_reason": "Valid Geometry",
+      "ring_area_m2": 15.215740455356999,
+      "maximum_triangle_edge_m": 1.013165191037972
+    },
+    {
+      "bed": "A",
+      "spacing_m": 0.6,
+      "boundary_vertices": 247,
+      "interior_vertices": 4,
+      "triangles": 263,
+      "ring_valid": true,
+      "ring_reason": "Valid Geometry",
+      "ring_area_m2": 17.87139284729103,
+      "maximum_triangle_edge_m": 1.0954490492977313
+    },
+    {
+      "bed": "C",
+      "spacing_m": 1.0,
+      "boundary_vertices": 189,
+      "interior_vertices": 0,
+      "triangles": 202,
+      "ring_valid": true,
+      "ring_reason": "Valid Geometry",
+      "ring_area_m2": 10.512112455902962,
+      "maximum_triangle_edge_m": 0.7998483242407413
+    },
+    {
+      "bed": "C",
+      "spacing_m": 0.6,
+      "boundary_vertices": 190,
+      "interior_vertices": 0,
+      "triangles": 194,
+      "ring_valid": true,
+      "ring_reason": "Valid Geometry",
+      "ring_area_m2": 12.711532621332347,
+      "maximum_triangle_edge_m": 0.8243434318246265
+    }
+  ],
+  "footprints": [
+    {
+      "bed": "E1",
+      "authored_band_area_m2": 20.121470580259835,
+      "sampled_area_m2": 20.121470580259853,
+      "area_difference_percent": 8.881784197001252e-14,
+      "boundary_hausdorff_m": 0.0
+    },
+    {
+      "bed": "E2",
+      "authored_band_area_m2": 25.141210747652064,
+      "sampled_area_m2": 25.141210747652092,
+      "area_difference_percent": 1.1102230246251565e-13,
+      "boundary_hausdorff_m": 0.0
+    },
+    {
+      "bed": "A",
+      "authored_band_area_m2": 27.932527791307063,
+      "sampled_area_m2": 27.93252779130708,
+      "area_difference_percent": 6.661338147750939e-14,
+      "boundary_hausdorff_m": 0.0
+    },
+    {
+      "bed": "C",
+      "authored_band_area_m2": 21.08903967023534,
+      "sampled_area_m2": 21.089039670235326,
+      "area_difference_percent": -6.661338147750939e-14,
+      "boundary_hausdorff_m": 0.0
+    }
+  ],
+  "strip_metrics": [
+    {
+      "bed": "E1",
+      "core_outside_shell_m2": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "core_ring_sizes": [
+        248,
+        244,
+        244,
+        231,
+        204,
+        197
+      ],
+      "shell_ring_sizes": [
+        254,
+        221,
+        250,
+        244,
+        227,
+        201
+      ],
+      "strips": [
+        {
+          "triangles": 492,
+          "invalid_triangles": 0,
+          "overlap_m2": -2.4091839634365897e-14,
+          "annulus_difference_m2": 0.0
+        },
+        {
+          "triangles": 488,
+          "invalid_triangles": 0,
+          "overlap_m2": 1.7763568394002505e-15,
+          "annulus_difference_m2": 0.0
+        },
+        {
+          "triangles": 475,
+          "invalid_triangles": 0,
+          "overlap_m2": -1.887379141862766e-14,
+          "annulus_difference_m2": 0.0
+        },
+        {
+          "triangles": 435,
+          "invalid_triangles": 0,
+          "overlap_m2": 3.774758283725532e-14,
+          "annulus_difference_m2": 0.0
+        },
+        {
+          "triangles": 401,
+          "invalid_triangles": 0,
+          "overlap_m2": 1.687538997430238e-14,
+          "annulus_difference_m2": 0.0
+        },
+        {
+          "triangles": 475,
+          "invalid_triangles": 0,
+          "overlap_m2": -1.7541523789077473e-14,
+          "annulus_difference_m2": 0.0
+        },
+        {
+          "triangles": 471,
+          "invalid_triangles": 0,
+          "overlap_m2": -9.992007221626409e-15,
+          "annulus_difference_m2": 0.0
+        },
+        {
+          "triangles": 494,
+          "invalid_triangles": 0,
+          "overlap_m2": 6.439293542825908e-15,
+          "annulus_difference_m2": 0.0
+        },
+        {
+          "triangles": 471,
+          "invalid_triangles": 0,
+          "overlap_m2": 2.930988785010413e-14,
+          "annulus_difference_m2": 0.0
+        },
+        {
+          "triangles": 428,
+          "invalid_triangles": 0,
+          "overlap_m2": -5.3290705182007514e-14,
+          "annulus_difference_m2": 0.0
+        }
+      ]
+    },
+    {
+      "bed": "E2",
+      "core_outside_shell_m2": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "core_ring_sizes": [
+        286,
+        280,
+        277,
+        261,
+        233,
+        232
+      ],
+      "shell_ring_sizes": [
+        290,
+        251,
+        288,
+        279,
+        261,
+        232
+      ],
+      "strips": [
+        {
+          "triangles": 566,
+          "invalid_triangles": 0,
+          "overlap_m2": -3.6637359812630166e-15,
+          "annulus_difference_m2": 0.0
+        },
+        {
+          "triangles": 557,
+          "invalid_triangles": 0,
+          "overlap_m2": -1.9761969838327786e-14,
+          "annulus_difference_m2": 0.0
+        },
+        {
+          "triangles": 538,
+          "invalid_triangles": 0,
+          "overlap_m2": -9.325873406851315e-15,
+          "annulus_difference_m2": 0.0
+        },
+        {
+          "triangles": 494,
+          "invalid_triangles": 0,
+          "overlap_m2": -2.0872192862952943e-14,
+          "annulus_difference_m2": 0.0
+        },
+        {
+          "triangles": 465,
+          "invalid_triangles": 0,
+          "overlap_m2": -1.0658141036401503e-14,
+          "annulus_difference_m2": 0.0
+        },
+        {
+          "triangles": 541,
+          "invalid_triangles": 0,
+          "overlap_m2": -6.661338147750939e-16,
+          "annulus_difference_m2": 0.0
+        },
+        {
+          "triangles": 539,
+          "invalid_triangles": 0,
+          "overlap_m2": 6.8833827526759706e-15,
+          "annulus_difference_m2": 0.0
+        },
+        {
+          "triangles": 567,
+          "invalid_triangles": 0,
+          "overlap_m2": 2.5091040356528538e-14,
+          "annulus_difference_m2": 0.0
+        },
+        {
+          "triangles": 540,
+          "invalid_triangles": 0,
+          "overlap_m2": -3.907985046680551e-14,
+          "annulus_difference_m2": 0.0
+        },
+        {
+          "triangles": 493,
+          "invalid_triangles": 0,
+          "overlap_m2": 7.105427357601002e-15,
+          "annulus_difference_m2": 0.0
+        }
+      ]
+    },
+    {
+      "bed": "A",
+      "core_outside_shell_m2": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "core_ring_sizes": [
+        309,
+        307,
+        304,
+        281,
+        250,
+        245
+      ],
+      "shell_ring_sizes": [
+        309,
+        265,
+        309,
+        307,
+        281,
+        247
+      ],
+      "strips": [
+        {
+          "triangles": 616,
+          "invalid_triangles": 0,
+          "overlap_m2": -8.659739592076221e-15,
+          "annulus_difference_m2": 0.0
+        },
+        {
+          "triangles": 611,
+          "invalid_triangles": 0,
+          "overlap_m2": -1.2434497875801753e-14,
+          "annulus_difference_m2": 0.0
+        },
+        {
+          "triangles": 585,
+          "invalid_triangles": 0,
+          "overlap_m2": 6.661338147750939e-16,
+          "annulus_difference_m2": 0.0
+        },
+        {
+          "triangles": 531,
+          "invalid_triangles": 0,
+          "overlap_m2": 3.552713678800501e-15,
+          "annulus_difference_m2": 0.0
+        },
+        {
+          "triangles": 495,
+          "invalid_triangles": 0,
+          "overlap_m2": 3.4638958368304884e-14,
+          "annulus_difference_m2": 0.0
+        },
+        {
+          "triangles": 574,
+          "invalid_triangles": 0,
+          "overlap_m2": 2.0872192862952943e-14,
+          "annulus_difference_m2": 0.0
+        },
+        {
+          "triangles": 574,
+          "invalid_triangles": 0,
+          "overlap_m2": -3.552713678800501e-15,
+          "annulus_difference_m2": 0.0
+        },
+        {
+          "triangles": 616,
+          "invalid_triangles": 0,
+          "overlap_m2": -5.773159728050814e-15,
+          "annulus_difference_m2": 0.0
+        },
+        {
+          "triangles": 588,
+          "invalid_triangles": 0,
+          "overlap_m2": -1.6431300764452317e-14,
+          "annulus_difference_m2": 0.0
+        },
+        {
+          "triangles": 528,
+          "invalid_triangles": 0,
+          "overlap_m2": -6.217248937900877e-15,
+          "annulus_difference_m2": 0.0
+        }
+      ]
+    },
+    {
+      "bed": "C",
+      "core_outside_shell_m2": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "core_ring_sizes": [
+        242,
+        238,
+        238,
+        217,
+        193,
+        189
+      ],
+      "shell_ring_sizes": [
+        242,
+        210,
+        242,
+        238,
+        215,
+        190
+      ],
+      "strips": [
+        {
+          "triangles": 480,
+          "invalid_triangles": 0,
+          "overlap_m2": -1.6431300764452317e-14,
+          "annulus_difference_m2": 0.0
+        },
+        {
+          "triangles": 476,
+          "invalid_triangles": 0,
+          "overlap_m2": -1.0436096431476471e-14,
+          "annulus_difference_m2": 0.0
+        },
+        {
+          "triangles": 455,
+          "invalid_triangles": 0,
+          "overlap_m2": 1.4654943925052066e-14,
+          "annulus_difference_m2": 0.0
+        },
+        {
+          "triangles": 410,
+          "invalid_triangles": 0,
+          "overlap_m2": 0.0,
+          "annulus_difference_m2": 0.0
+        },
+        {
+          "triangles": 382,
+          "invalid_triangles": 0,
+          "overlap_m2": -8.881784197001252e-15,
+          "annulus_difference_m2": 0.0
+        },
+        {
+          "triangles": 452,
+          "invalid_triangles": 0,
+          "overlap_m2": -3.774758283725532e-15,
+          "annulus_difference_m2": 0.0
+        },
+        {
+          "triangles": 452,
+          "invalid_triangles": 0,
+          "overlap_m2": 2.9753977059954195e-14,
+          "annulus_difference_m2": 0.0
+        },
+        {
+          "triangles": 480,
+          "invalid_triangles": 0,
+          "overlap_m2": 6.439293542825908e-15,
+          "annulus_difference_m2": 0.0
+        },
+        {
+          "triangles": 453,
+          "invalid_triangles": 0,
+          "overlap_m2": 2.6645352591003757e-15,
+          "annulus_difference_m2": 0.0
+        },
+        {
+          "triangles": 405,
+          "invalid_triangles": 0,
+          "overlap_m2": 1.7763568394002505e-14,
+          "annulus_difference_m2": 0.0
+        }
+      ]
+    }
+  ],
+  "triangles_by_bed": {
+    "E1": 5699,
+    "E2": 6513,
+    "A": 6972,
+    "C": 5439
+  },
+  "total_triangles": 24623,
+  "note": "Four authored footprints, flat z=0; no World, GIS pytest, Unity, or production write. Internal fill observation only; no visual acceptance."
+}

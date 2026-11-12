@@ -184,41 +184,187 @@ def _local_top_height(points, boundary, heights):
     return (weights @ heights) / weights.sum(1)
 
 
-def _offset_ring(poly, inset, count, anchor):
-    """Sample a real polygon offset with stable CCW winding and start point.
-
-    Normal displacement can cross itself at the small corners of a traced bed.
-    Do not repair such a ring after the fact or silently discard polygon pieces.
-    """
-    from shapely.geometry import LineString
+def _offset_ring(poly, inset, step=0.3, anchor=None):
+    """Exact polygon offset corners plus short collinear edges; no discarded pieces."""
     offset = poly.buffer(-inset, quad_segs=4)
-    if offset.geom_type != "Polygon" or offset.is_empty or not offset.is_valid or len(offset.interiors):
+    if (offset.geom_type != "Polygon" or offset.is_empty or not offset.is_valid
+            or len(offset.interiors)):
         raise ValueError(f"Hedge offset {inset:.4f} m is not one valid polygon")
-    boundary = _ccw_ring(offset, max(offset.length, 1.0))
-    line = LineString(np.vstack([boundary, boundary[:1]]))
-    start = line.project(Point(anchor))
-    at = (start + np.arange(count) * line.length / count) % line.length
-    result = shapely.get_coordinates(shapely.line_interpolate_point(line, at))
-    if not Polygon(result).is_valid:
-        raise ValueError("Sampled hedge offset self-intersects")
-    return result
+    # Remove numerical near-collinearity, far below the source's metre accuracy.
+    # This is an explicit 0.1 micrometre tolerance, not a topology repair.
+    offset = offset.simplify(1e-7, preserve_topology=True)
+    ring = _ccw_ring(offset, step)
+    if anchor is not None:
+        start = int(np.argmin(((ring - anchor) ** 2).sum(1)))
+        ring = np.roll(ring, -start, axis=0)
+    return ring
+
+
+def _annulus_triangles(lower, upper):
+    """Boundary-indexed CDT of the actual ring between two nested cross-sections."""
+    p0, p1 = Polygon(lower), Polygon(upper)
+    if not p0.is_valid or not p1.is_valid:
+        raise ValueError("Invalid hedge cross-section")
+    outer, inner = (p0, p1) if p0.area > p1.area else (p1, p0)
+    if not outer.contains(inner):
+        raise ValueError("Hedge cross-sections are not strictly nested")
+    annulus = Polygon(outer.exterior.coords, [inner.exterior.coords])
+    if not annulus.is_valid:
+        raise ValueError("Invalid hedge annulus")
+    points = np.vstack([lower, upper])
+    lookup = {tuple(p): i for i, p in enumerate(points)}
+    faces = []
+    for face in shapely.constrained_delaunay_triangles(annulus).geoms:
+        ids = [lookup.get(tuple(p)) for p in np.asarray(face.exterior.coords)[:3]]
+        if None in ids:
+            raise ValueError("Hedge CDT inserted an unassigned boundary vertex")
+        faces.append(ids)
+    triangles = np.asarray(faces, dtype=int)
+    if not len(triangles):
+        raise ValueError("Empty hedge annulus triangulation")
+    a, b, c = (points[triangles[:, i]] for i in range(3))
+    cross = (b[:, 0]-a[:, 0])*(c[:, 1]-a[:, 1])-(b[:, 1]-a[:, 1])*(c[:, 0]-a[:, 0])
+    if np.any(abs(cross) < 1e-12):
+        raise ValueError("Degenerate hedge annulus triangle")
+    # A section widening upwards is the underside of the outward-flaring foot.
+    reverse = cross > 0 if p1.area > p0.area else cross < 0
+    triangles[reverse] = triangles[reverse][:, [0, 2, 1]]
+    edges = {tuple(sorted((int(i), int(j)))) for tri in triangles
+             for i, j in zip(tri, np.roll(tri, -1))}
+    for start, count in ((0, len(lower)), (len(lower), len(upper))):
+        if any(tuple(sorted((start+i, start+(i+1) % count))) not in edges for i in range(count)):
+            raise ValueError("Hedge CDT failed to recover a boundary edge")
+    return triangles
+
+
+def _hedge_ring_strip(rings, zground, tile, phase=(0., 0.)):
+    """Loft by annulus CDT, keeping boundary heights and splitting periodic UV seams."""
+    positions, coords, periods = [], [], []
+    offsets = np.cumsum([0] + [len(p) for p, _ in rings])
+    for points, heights in rings:
+        distances = np.linalg.norm(np.roll(points, -1, axis=0)-points, axis=1)
+        arc = np.r_[0., np.cumsum(distances)[:-1]]
+        ground = zground(points[:, 0], points[:, 1])
+        positions.append(np.column_stack([points, heights]))
+        coords.append(np.column_stack([arc/tile+phase[0], (heights-ground)/tile+phase[1]]))
+        periods.append(np.full(len(points), distances.sum()/tile))
+    positions, coords, periods = np.vstack(positions), np.vstack(coords), np.concatenate(periods)
+    vertices, uv, faces, cache = [], [], [], {}
+    for band, ((lower, _), (upper, _)) in enumerate(zip(rings, rings[1:])):
+        triangles = _annulus_triangles(lower, upper) + offsets[band]
+        for tri in triangles:
+            triangle_uv = coords[tri].copy()
+            high = float(triangle_uv[:, 0].max())
+            seam = triangle_uv[:, 0] < high - .5 * float(periods[tri].min())
+            triangle_uv[seam, 0] += periods[tri][seam]
+            face = []
+            for source, cut, value in zip(tri, seam, triangle_uv):
+                token = (int(source), bool(cut))
+                if token not in cache:
+                    cache[token] = len(vertices)
+                    vertices.append(positions[source])
+                    uv.append(value)
+                face.append(cache[token])
+            faces.append(face)
+    return np.asarray(vertices), np.asarray(uv), np.asarray(faces, dtype=int)
+
+
+def _offset_hedge_mass(buf, poly, zground, key, h, src, plant, stats):
+    """ADR0109: photographed berberis; exact offsets, no XY bulge, closed ring strips."""
+    from .hedge_textures import HEDGE_TILE_M
+    S = species(plant)
+    core_m, shell_m, sprig_m = hedge_mats(plant)
+    h = h if h is not None else S['h'][0]+_h(key, 'h')*(S['h'][1]-S['h'][0])
+    base = _offset_ring(poly, 0.)
+    per = np.r_[0., np.cumsum(np.linalg.norm(np.roll(base, -1, axis=0)-base, axis=1))[:-1]]
+    perimeter = float(np.linalg.norm(np.roll(base, -1, axis=0)-base, axis=1).sum())
+    _, topm = _plants(per, perimeter, key, S)
+    heights = np.maximum(h*(1.+S['dome']*(topm-.8)), .45*h)
+    prof = PROFILES[S.get('prof', 'box')]
+    k = min(1., .8*(2.*poly.area/max(poly.length, 1e-6))/max(d for d, _, _ in prof))
+    def make_rings(extra, profile, lower=0.):
+        out = []
+        for d, fraction, _ in profile:
+            points = _offset_ring(poly, extra+d*k, anchor=base[0])
+            local = _local_top_height(points, base, heights-lower)
+            out.append((points, zground(points[:, 0], points[:, 1])+fraction*local))
+        return out
+    core = make_rings(1.3*SHELL_D, prof, SHELL_D)
+    shell = make_rings(0., [(0.02, SHELL_FOOT, .6)]+prof[1:])
+    stop, shell_z = shell[-1]
+    top_h = shell_z-zground(stop[:, 0], stop[:, 1])
+    leaf_core = S.get('leaf_core', False)
+    core_draw = shell_m if leaf_core else core_m
+    phase = (.37, .61) if leaf_core else (0., 0.)
+    vertices, uv, triangles = _hedge_ring_strip(core, zground, HEDGE_TILE_M if leaf_core else 1., phase)
+    buf.add('furniture', core_draw, vertices, uv, triangles, src=src)
+    nt = len(triangles)
+    points, triangles = _fill(core[-1][0], 1.)
+    ncore = len(core[-1][0])
+    z = zground(points[:, 0], points[:, 1])+_local_top_height(points, stop, top_h)-.5*S['dome']*h-SHELL_D
+    z[:ncore] = core[-1][1]
+    uv = points/HEDGE_TILE_M+np.array(phase) if leaf_core else points.copy()
+    buf.add('furniture', core_draw, np.column_stack([points, z]), uv, triangles, src=src)
+    nt += len(triangles)
+    vertices, uv, triangles = _hedge_ring_strip(shell, zground, HEDGE_TILE_M, (_h(key, 'uo'), _h(key, 'vo')))
+    buf.add('furniture', shell_m, vertices, uv, triangles, src=src)
+    nt += len(triangles)
+    points, triangles = _fill(stop, .6)
+    n = len(stop)
+    ground = zground(points[:, 0], points[:, 1])
+    z = np.empty(len(points))
+    z[:n] = shell_z
+    ph = tuple(_h(key, f'p{i}')*6.283 for i in (1, 2, 3))
+    if len(points) > n:
+        inner = points[n:]
+        distance = np.sqrt(((inner[:, None, :]-stop[None, :, :])**2).sum(-1).min(1))
+        lam = .65*(S['plant'][0]+S['plant'][1])
+        z[n:] = (ground[n:]+_local_top_height(inner, stop, top_h)+.035*np.minimum(distance/.5, 1.)
+                 +.5*S['dome']*h*_crown(inner, ph, lam))
+    angle = _h(key, 'ua')*6.283
+    c, s = math.cos(angle), math.sin(angle)
+    uv = np.column_stack([c*points[:, 0]-s*points[:, 1], s*points[:, 0]+c*points[:, 1]])/HEDGE_TILE_M
+    buf.add('furniture', shell_m, np.column_stack([points, z]), uv, triangles, src=src)
+    nt += len(triangles)
+    if len(points) > n:
+        selected = np.array([j for j in range(len(points)-n) if _h(key, 'tc', j)<.45], dtype=int)
+        if len(selected):
+            angles = np.array([_h(key, 'ta', j)*6.283 for j in selected])
+            nt += _sprig_cards(buf, sprig_m, points[n:][selected], np.column_stack([np.cos(angles), np.sin(angles)]),
+                               z[n:][selected], (*key, 'top'), S, src, tilt=(0., .35))
+    for row, label, tilt, share in ((-2, 'edge', (.5, 1.1), 1.), (-3, 'side', (1., 1.35), .12)):
+        ring, ring_z = shell[row]
+        lengths = np.linalg.norm(np.roll(ring, -1, axis=0)-ring, axis=1)
+        arc = np.r_[0., np.cumsum(lengths)[:-1]]
+        indices, station, j = [], 0., 0
+        while station < lengths.sum():
+            indices.append(int(np.searchsorted(arc, station)) % len(ring))
+            station += S['sprig']*(.5+_h(key, 'ss', j))
+            j += 1
+        indices = np.asarray(indices, dtype=int)
+        normals = _ring_normals(ring)[indices]
+        positions = ring[indices]+normals*(.02 if label=='side' else 0.)
+        card_z = ring_z[indices]-(.12*h if label=='side' else 0.)
+        nt += _sprig_cards(buf, sprig_m, positions, normals, card_z, (*key, label), S, src, tilt=tilt, share=share)
+    if stats is not None:
+        stats['tris'] = stats.get('tris', 0)+nt
+    return 1
 
 
 def hedge_mass(buf, poly, zground, key, h=None, src="", plant="berberis_red", stats=None):
     """Clipped hedge over plan polygon `poly` (local metres) standing on zground (review r6 W-N12, ADR 0049 addendum):
-    an inner layer (opaque for most species, leaf alpha for berberis), an alpha leaf shell SHELL_D outside it (silhouette
+    an opaque dark core (interior shade, stems visible at the foot), an alpha leaf shell SHELL_D outside it (silhouette
     and surface broken into leaves, open below SHELL_FOOT so the base reads dark), per-plant lumps and dips along the
     perimeter (thin / missing plants), a lumpy crown and loose shoot cards on the top edge, sides and top."""
     from .hedge_textures import HEDGE_TILE_M
     S = species(plant)
+    if S.get("offset_rings", False):
+        return _offset_hedge_mass(buf, poly, zground, key, h, src, plant, stats)
     core_m, shell_m, sprig_m = hedge_mats(plant)
     leaf_core = S.get("leaf_core", False)
     core_draw_m = shell_m if leaf_core else core_m
     h = h if h is not None else S["h"][0] + _h(key, "h") * (S["h"][1] - S["h"][0])
-    offset_rings = S.get("offset_rings", False)
-    R = (_offset_ring(poly, 0.0, max(16, math.ceil(poly.length / 0.3)),
-                      np.asarray(poly.exterior.coords)[0]) if offset_rings
-         else _ccw_ring(poly.buffer(0), 0.3))
+    R = _ccw_ring(poly.buffer(0), 0.3)
     if len(R) < 3:
         return 0
     N = _ring_normals(R)
@@ -236,23 +382,8 @@ def hedge_mass(buf, poly, zground, key, h=None, src="", plant="berberis_red", st
     n = len(R)
     nt = 0
 
-    def rings(R0, hh, prof_, sel=slice(None), inset=0.0):
-        if not offset_rings:
-            return [(R0[sel] + N[sel] * (b * bulge[sel] - d * k)[:, None], zg[sel] + f * hh[sel]) for d, f, b in prof_]
-        result = []
-        for d, f, b in prof_:
-            base = _offset_ring(poly, inset + d * k, len(R), R[0])[sel]
-            normals = _ring_normals(base)
-            # Keep small per-plant variation only while the outline stays valid.
-            for scale in (1.0, 0.5, 0.0):
-                points = base + normals * (scale * b * bulge[sel])[:, None]
-                if Polygon(points).is_valid:
-                    break
-            else:
-                raise ValueError("Hedge plant variation self-intersects")
-            ground = zground(points[:, 0], points[:, 1])
-            result.append((points, ground + f * hh[sel]))
-        return result
+    def rings(R0, hh, prof_, sel=slice(None)):
+        return [(R0[sel] + N[sel] * (b * bulge[sel] - d * k)[:, None], zg[sel] + f * hh[sel]) for d, f, b in prof_]
 
     def strip(rg, mat, UV):
         n = len(rg[0][0])
@@ -275,7 +406,7 @@ def hedge_mass(buf, poly, zground, key, h=None, src="", plant="berberis_red", st
     # core: inset and lowered by SHELL_D, dark interior material (modulation set hedge_foliage)
     # (half the perimeter vertices: it only shows through the leaf gaps; 1.3 x SHELL_D keeps the chords inside)
     cs = slice(None, None, 2) if n >= 16 else slice(None)
-    core = rings(R - N * 1.3 * SHELL_D, hl - SHELL_D, prof, cs, inset=1.3 * SHELL_D)
+    core = rings(R - N * 1.3 * SHELL_D, hl - SHELL_D, prof, cs)
     nc = len(core[0][0])
     core_uv = np.column_stack([np.tile(per[cs], len(core)),
                                np.concatenate([np.full(nc, f * h) for _, f, _ in prof])])
@@ -293,8 +424,7 @@ def hedge_mass(buf, poly, zground, key, h=None, src="", plant="berberis_red", st
         buf.add("furniture", core_draw_m, np.column_stack([P2, z2]), core_top_uv, Tt, src=src)
         nt += len(Tt)
     except Exception:
-        if offset_rings:
-            raise  # a photographed bed must not silently lose its inner cap
+        pass
     # shell: open foot; UV in shell tiles with a per-hedge offset / rotation (no aligned repeats between beds)
     sprof = [(0.02, SHELL_FOOT, 0.6)] + prof[1:]
     shell = rings(R, hl, sprof)
@@ -327,8 +457,7 @@ def hedge_mass(buf, poly, zground, key, h=None, src="", plant="berberis_red", st
                 nt += _sprig_cards(buf, sprig_m, P2[n:][sel], np.column_stack([np.cos(a2), np.sin(a2)]),
                                    z2[n:][sel], (*key, "top"), S, src, tilt=(0.0, 0.35))
     except Exception:
-        if offset_rings:
-            raise  # retain the original failure-tolerant path for other species
+        pass
     # loose shoots along the top edge (shoulder ring) and a few on the upper sides: ragged silhouette
     idx, s, j = [], 0.0, 0
     while s < P:
