@@ -1,0 +1,5 @@
+﻿Runda 3 light — mokra nawierzchnia po deszczu. Start 2026-11-12T02:08:47.0357351+01:00.
+Gałąź gpt-light-r3 od zakończonego r2; main 522361aa scalony bez konfliktów, merge b36e36b2a4c591aa28524a09c13fd31005b2933d. R2 dostarczona: 962 pliki, REPORT17 wierszy, EditMode276/276 i GIS523 passed / 1 xfailed.
+Najpierw regeneracja aktualnego wspólnego świata i import w slotach. Baseline36 ujęć overcast wet0/0,5/1, Low/High, ze sprawdzeniem faktycznej wartości shadera w każdej kamerze. Dodatkowo4 clear dla zgłoszonego przez krytyka klina far-field (2948/303305), po nowym edge z main.
+Referencja mokrego asfaltu: cm92458760, Rakoon, CC BY3.0; hash sprawdzony w r2. Poza C/WORKING_VALUE, photometric_use=false. Nie zmieniamy pozy, materiałów należących do asphalt ani geometrii edge/Claude. Zmiany produkcji dopiero po baseline.
+Następny krok: uzupełnić kopię nowych surowych wejść, uruchomić pipeline generator → fidelity → import → baseline. Własny Python jeden naraz, heavy owner gpt-light-r3; Unity owner gpt-light.

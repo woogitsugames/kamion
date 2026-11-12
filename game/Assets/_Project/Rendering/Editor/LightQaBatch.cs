@@ -30,6 +30,8 @@ namespace Game.Rendering.Editor
             public float clearSkySaturation; // 0 leaves preset unchanged; diagnostic display-only chroma.
             public bool lampProbe;
             public bool actualDriverEye; // QA only: cab-dash eye, horizontal actual cab forward. Never a light source.
+            public bool verifyWetness;
+            public float expectedWetness;
             public int expectedHeadlamps; // 0 unchecked, 1 off, 2 on. Requires per-camera probes.
             public bool overrideSkyDisplay;
             public float skyDisplayGain = 1f, skyDisplayDesaturation;
@@ -109,6 +111,8 @@ namespace Game.Rendering.Editor
                     Directory.CreateDirectory(job.output);
                     if (job.shadowFilter < 0 || job.shadowFilter > 3) throw new ArgumentException("shadowFilter must be 0..3");
                     var lampProbe = job.lampProbe ? new LightQaLampProbe() : null;
+                    if (job.verifyWetness && (lampProbe == null || job.expectedWetness < 0f || job.expectedWetness > 1f))
+                        throw new ArgumentException("Wetness proof requires lampProbe and expectedWetness0..1");
                     if (job.expectedHeadlamps < 0 || job.expectedHeadlamps > 2 || (job.expectedHeadlamps > 0 && lampProbe == null))
                         throw new ArgumentException("expectedHeadlamps requires lampProbe and a value0..2");
                     Action<ScriptableRenderContext, Camera> filter = (_, camera) => {
@@ -160,7 +164,8 @@ namespace Game.Rendering.Editor
                     int expected = string.IsNullOrEmpty(job.cameras) ? count : job.cameras.Split(',')
                         .Select(id => id.Trim()).Where(id => id.Length > 0).Distinct(StringComparer.OrdinalIgnoreCase).Count();
                     if (count != expected) throw new InvalidOperationException($"Incomplete lighting QA: expected={expected}, rendered={count}");
-                    lampProbe?.Write(job.output, expected, job.expectedHeadlamps);
+                    lampProbe?.Write(job.output, expected, job.expectedHeadlamps,
+                        job.verifyWetness ? job.expectedWetness : (float?)null);
                     var environment = UnityEngine.Object.FindAnyObjectByType<EnvironmentLighting>();
                     if (environment == null || environment.Active == null || environment.Model == null)
                         throw new InvalidOperationException("Lighting QA requires a configured EnvironmentLighting");
