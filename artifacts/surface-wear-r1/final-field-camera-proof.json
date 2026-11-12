@@ -1,0 +1,60 @@
+{
+  "glyphs": [
+    {
+      "camera": "d_field_glyph_supported",
+      "source_component": {
+        "file": "chunk_2_4.glb",
+        "material": "marking_white",
+        "changed": true,
+        "unsupported": false,
+        "vertices": 201,
+        "triangles": 200,
+        "area": 43.36798095703125,
+        "centerENU": {
+          "x": -365.037353515625,
+          "y": -116.22898864746094,
+          "z": 131.71620178222656
+        },
+        "boundsMinENU": {
+          "x": -386.6000061035156,
+          "y": -136.39999389648438,
+          "z": 131.322998046875
+        },
+        "boundsMaxENU": {
+          "x": -344.6000061035156,
+          "y": -98.0999984741211,
+          "z": 131.96099853515625
+        }
+      }
+    },
+    {
+      "camera": "d_field_glyph_unknown",
+      "source_component": {
+        "file": "chunk_2_4.glb",
+        "material": "marking_white",
+        "changed": false,
+        "unsupported": true,
+        "vertices": 258,
+        "triangles": 305,
+        "area": 56.742835998535156,
+        "centerENU": {
+          "x": -376.3396301269531,
+          "y": -148.62869262695312,
+          "z": 131.43310546875
+        },
+        "boundsMinENU": {
+          "x": -401.3450012207031,
+          "y": -162.5,
+          "z": 131.22300720214844
+        },
+        "boundsMaxENU": {
+          "x": -354.5,
+          "y": -131.1909942626953,
+          "z": 131.7760009765625
+        }
+      }
+    }
+  ],
+  "bus_raw_preflight": "busstop-actual-preflight.json",
+  "sourceState": "lane-final, busabsent, broadinactive"
+}

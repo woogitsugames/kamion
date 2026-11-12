@@ -1,0 +1,55 @@
+{
+  "frames": [
+    {
+      "condition": "Low-clear",
+      "id": "d_gate_pair_entry",
+      "sha256": "303a898251b8331019c157cc461597cba431f4ba3b111de580d51e2e1373f10f",
+      "runtime_camera_and_vehicle_poses_exact": true
+    },
+    {
+      "condition": "Low-clear",
+      "id": "d_gate_pair_exit",
+      "sha256": "54ab65cc9a234cc5f04b964bdac28a3de4cd9c3cea1e5b4eb26c0c7eba0a5cb1",
+      "runtime_camera_and_vehicle_poses_exact": true
+    },
+    {
+      "condition": "Low-overcast",
+      "id": "d_gate_pair_entry",
+      "sha256": "dccd706c3d9b256511d3741c077d03c45006abf32a70f821012c65b4cb63b9be",
+      "runtime_camera_and_vehicle_poses_exact": true
+    },
+    {
+      "condition": "Low-overcast",
+      "id": "d_gate_pair_exit",
+      "sha256": "aaa24c4f73ee5899fba4dd5403c67e598196a193e49357536c567fb3407220ca",
+      "runtime_camera_and_vehicle_poses_exact": true
+    },
+    {
+      "condition": "High-clear",
+      "id": "d_gate_pair_entry",
+      "sha256": "4243f6ffe937eff97287f2773addc5bd44cf68c6685c2580ebeedde5107e8639",
+      "runtime_camera_and_vehicle_poses_exact": true
+    },
+    {
+      "condition": "High-clear",
+      "id": "d_gate_pair_exit",
+      "sha256": "db6db7f4ce1e138f32141891b14ed0474e24bc5143379feb3d45bfd89d8ce472",
+      "runtime_camera_and_vehicle_poses_exact": true
+    },
+    {
+      "condition": "High-overcast",
+      "id": "d_gate_pair_entry",
+      "sha256": "77fdca41c1a21af0b0284d9ba075a7f61d9bb91951ac3d234543bf5ca1ad9d13",
+      "runtime_camera_and_vehicle_poses_exact": true
+    },
+    {
+      "condition": "High-overcast",
+      "id": "d_gate_pair_exit",
+      "sha256": "cd9a87ccef0a7864008f3050027f697479c5df3a2051e00de2b127b2e2fc86c9",
+      "runtime_camera_and_vehicle_poses_exact": true
+    }
+  ],
+  "count": 8,
+  "rounded_preSRP_estimates_equal": true,
+  "note": "Actual matched runtime poses for these8frames only. Counters are rounded preSRP estimates, not GPU measurements. Source adds64triangles per tier despite unchanged rounded trisK. No paired-visibility PASS."
+}

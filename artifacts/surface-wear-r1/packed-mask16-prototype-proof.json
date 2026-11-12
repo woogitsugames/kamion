@@ -1,0 +1,215 @@
+{
+  "status": "ARTIFACT_ONLY_NOT_BOUND_OR_RENDERED",
+  "source_head": "5cbbd928e1c057e8b11859ea5016a92e673231bd",
+  "recipe_sha256": "378f752f67f9b062a976d3f89a120cd6161b8c8f2a8878cb86deca4d0c86f430",
+  "pillow_version": "13.0.0",
+  "inputs": [
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Textures/PBR/asphalt_worn/T_asphalt_worn_MaskMap.png",
+      "sha256": "f1309027dc74df76e3aaac21c6cf4bfd79a9a4d3fe8451b71352cee128c28fd7"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Textures/PBR/asphalt_cracks_layer/T_asphalt_cracks_layer_Mask.png",
+      "sha256": "2294d365beb6ed28e2636c6368f6ce95d40f6e8431a6ed7c0691146222dec8ec"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Materials/M_road_asphalt.mat",
+      "sha256": "bd11c5674cf81aadfaf0e589a2462407c60b18e68be5061559d0a9909f004dbc"
+    },
+    {
+      "file": "game/Assets/_Generated/World/bialystok-industrial-c/Textures/PBR/asphalt_worn/T_asphalt_worn_MaskMap.png.meta",
+      "sha256": "ddec25d21fa609208fcfd5b90835e7e14921a6522e6292b583045affc2e73637"
+    }
+  ],
+  "native_material": {
+    "path": "Assets/_Generated/World/bialystok-industrial-c/Materials/M_road_asphalt.mat",
+    "shader": "Kamion/World PBR",
+    "keywords": "_CRACKS,_PHOTO_DETAIL,_ROADWEAR",
+    "fields": [
+      "_WheelPolish=0.6",
+      "_GutterDirt=0.55",
+      "_DripBand=0.22",
+      "_CrackStrength=0.75",
+      "_DecalAlpha=1",
+      "_PaintWear=(0.85, 0.25, 0.3, 0.12)",
+      "_Tint=(1.00135541, 1.00135541, 1.00135541, 1)",
+      "_Tile=(4, 4, 16, 1)",
+      "_Grime=(0.45, 0.62, 0.3, 0.5)",
+      "_BaseMap=Assets/_Generated/World/bialystok-industrial-c/Textures/PBR/asphalt_worn/T_asphalt_worn_BaseColor.png",
+      "_VarMap=Assets/_Generated/World/bialystok-industrial-c/Textures/PBR/asphalt_worn/T_asphalt_worn_Var.png",
+      "_MacroMap=Assets/_Generated/World/bialystok-industrial-c/Textures/PBR/macro_variation/T_macro_variation.png",
+      "_CrackMap=Assets/_Generated/World/bialystok-industrial-c/Textures/PBR/asphalt_cracks_layer/T_asphalt_cracks_layer_Mask.png",
+      "_CrackNormal=Assets/_Generated/World/bialystok-industrial-c/Textures/PBR/asphalt_cracks_layer/T_asphalt_cracks_layer_Normal.png"
+    ]
+  },
+  "actual_tile": [
+    4,
+    4,
+    16,
+    1
+  ],
+  "metallic_scale": 0,
+  "original_mask_R_all_zero": true,
+  "output": {
+    "file": "packed-mask16-private/T_road_asphalt_packed16_MaskMap.png",
+    "sha256": "604496bfd5b3d9f208a6a32df1fc1bdeef67076f8f83d3af212b12fd4f40e070",
+    "size": [
+      4096,
+      4096
+    ],
+    "mode": "RGBA",
+    "png_chunks": [
+      "IDAT",
+      "IEND",
+      "IHDR"
+    ],
+    "importer_MaskMap_suffix": true,
+    "integer_copy_no_gamma": true,
+    "planned_import_sRGB": false,
+    "GBA_tile_sha256": "9dc53e4b62189947313029ba82e3987216618ba0ea87d3f53d322eb4bd0c5b14",
+    "GBA_exact_tiles": 16,
+    "red_source_channel": "existing16m open crack R only; nearest4x replication; no sealant/no random generation",
+    "red_mean_source": 0.933781623840332,
+    "red_mean_packed": 0.933781623840332
+  },
+  "metric_phase": {
+    "base_and_normal_tile_m": 4,
+    "mask_tile_m": 16,
+    "planned_mask_uv_scale": 0.25,
+    "source_GBA_texel_m": 0.00390625,
+    "packed_GBA_texel_m": 0.00390625,
+    "original_Android_GBA_texel_m": 0.0078125,
+    "planned_Android_GBA_texel_m": 0.0078125,
+    "negative_and_boundary_coordinates_verified": true
+  },
+  "ideal_CPU_box_mip_parity": [
+    {
+      "old_tile_pixels": 512,
+      "packed_pixels": 2048,
+      "GBA_byte_exact": true
+    },
+    {
+      "old_tile_pixels": 256,
+      "packed_pixels": 1024,
+      "GBA_byte_exact": true
+    },
+    {
+      "old_tile_pixels": 128,
+      "packed_pixels": 512,
+      "GBA_byte_exact": true
+    },
+    {
+      "old_tile_pixels": 64,
+      "packed_pixels": 256,
+      "GBA_byte_exact": true
+    },
+    {
+      "old_tile_pixels": 32,
+      "packed_pixels": 128,
+      "GBA_byte_exact": true
+    },
+    {
+      "old_tile_pixels": 16,
+      "packed_pixels": 64,
+      "GBA_byte_exact": true
+    },
+    {
+      "old_tile_pixels": 8,
+      "packed_pixels": 32,
+      "GBA_byte_exact": true
+    },
+    {
+      "old_tile_pixels": 4,
+      "packed_pixels": 16,
+      "GBA_byte_exact": true
+    },
+    {
+      "old_tile_pixels": 2,
+      "packed_pixels": 8,
+      "GBA_byte_exact": true
+    },
+    {
+      "old_tile_pixels": 1,
+      "packed_pixels": 4,
+      "GBA_byte_exact": true
+    }
+  ],
+  "planned_Android": {
+    "size": 2048,
+    "format": "ASTC8x8 linear with alpha and mipmaps",
+    "bytes_with_mips": 1398144,
+    "MiB": 1.3333740234375,
+    "levels": [
+      {
+        "size": 2048,
+        "bytes": 1048576
+      },
+      {
+        "size": 1024,
+        "bytes": 262144
+      },
+      {
+        "size": 512,
+        "bytes": 65536
+      },
+      {
+        "size": 256,
+        "bytes": 16384
+      },
+      {
+        "size": 128,
+        "bytes": 4096
+      },
+      {
+        "size": 64,
+        "bytes": 1024
+      },
+      {
+        "size": 32,
+        "bytes": 256
+      },
+      {
+        "size": 16,
+        "bytes": 64
+      },
+      {
+        "size": 8,
+        "bytes": 16
+      },
+      {
+        "size": 4,
+        "bytes": 16
+      },
+      {
+        "size": 2,
+        "bytes": 16
+      },
+      {
+        "size": 1,
+        "bytes": 16
+      }
+    ],
+    "added_bytes_if_original_stays_resident": 1398144
+  },
+  "scope": {
+    "proposed_binding_only": "M_road_asphalt",
+    "road_new_unchanged": true,
+    "base_normal_tile_unchanged": true,
+    "High_ignores_packed_R": true,
+    "Low_open_R_from_existing_mask_fetch": true,
+    "proposed_additional_texture_fetches": 0,
+    "actual_shipping_cached_files_unchanged": 2441,
+    "actual_raw_files_unchanged": 192,
+    "shader_and_bindings_untouched": true
+  },
+  "required_gates": [
+    "ROOT/E approval before activation",
+    "Actual Unity resize and ASTC G/B/A drift readback; CPU parity is not runtime proof",
+    "High source/mask parity and no second crack layer",
+    "Fresh-road negative unchanged",
+    "Visible Low contrast with metric scale; no arbitrary width/gain",
+    "Matched material mean within1displayRGBlevel",
+    "Budget ledger including original resident texture and importer cap override"
+  ],
+  "provenance": "CrackMap is existing authored procedural WORKING_VALUE data, not surveyed damage. G/B/A derive from existing CC0 asphalt processing. Local PNG is private and not committed; this recipe/proof carries source hashes."
+}

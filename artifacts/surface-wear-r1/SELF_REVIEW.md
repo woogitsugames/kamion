@@ -1,0 +1,16 @@
+# Implementation self-review and remaining handoff
+
+I inspected all 32 final before/after contact pages, covering the 93-ID scope in four conditions. I also inspected full 960 pairs for missing UV1/2, crossing, truck-at-gate, cab-driver and fire-station reference, plus the earlier genuine P8, source-supported bus and actual-barrier gate controls. Contact pages establish broad comparison coverage; they are not individual native-texel inspections of all 372 frames.
+
+The missing-data correction removes the false wheel/edge interpretation in the affected asphalt pieces. Markings read as more connected and cleaner; this restores a damaged P8 shape but also reduces visible P10 wear. That tradeoff is explicit. Small oil is tied to one verified bay, not all 20 stops. Gate R2 is a modest improvement, with an insufficiently distinct second clear-exit strip. The old named gate-track route camera was not the actual barrier entry; separate actual-barrier controls establish that feature.
+
+The whole route still contains smooth-looking, repetitive expanses. Existing patches and stains are locally present but do not achieve the requested photographic richness everywhere. Low still disables its crack/photo-detail branch. Both broader experiments were genuinely exercised, measured and rejected; the packed variant's activation and positive mask were verified, so an inactive test is not offered as an excuse. More random grime or another amplitude sweep is not a justified next step.
+
+No new unrelated building, vehicle, vegetation or overall palette regression stood out in the reviewed comparisons. These inherited systems retain existing limitations. High has dither-level pixel variation, and one identical Low activation replay differed on 905 distant background pixels while its road ROI stayed exact. I do not claim full-frame pixel stability or recover historical runtime information that was never captured.
+
+Precise upstream handoff:
+
+1. Authored paint generation still supplies constant-half lane fields in unsupported/ambiguous areas. The conservative importer accepted 11 components and rejected 507; do not invent lane coordinates across junctions, overlapping levels or discontinuities. Future owner work in the protected roads emitters can provide real fields and appropriate component topology. This branch did not modify those emitters.
+2. Low visible wear needs reference-backed localized repair/crack content with an explicit texture, sampling and device budget. The current 4 m base omits distinctive cracks by design; its skipped 16 m layer cannot be repaired through smoothness alone. The +1.333 MiB packed prototype did not earn its cost in this trial. Any new proposal must protect metric scale, fresh road, High parity and readable paint, and demonstrate meaningful improvement before broader generation.
+3. Gate R2 remains bounded, not a promise of two strong tracks in every weather/view. Source dimensions and fades are working values, not measured tyre marks.
+4. APK/A16 cost and integration with concurrently advancing main remain unverified. Preserve the explicit source geometry addition, counter estimates and shared-file union conflicts. Rejected private PNGs and cached fixtures are not shipping inputs.

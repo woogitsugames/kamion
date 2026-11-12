@@ -715,6 +715,13 @@ def signals(pl, net, juncs, report):
 # ------------------------------------------------------------------------------------------- misc points
 def misc_points(pl, net, src, origin, report, codes):
     cnt = {}
+    # JSON-safe source metadata only. Actual road/whole-footprint validation happens before decal emission.
+    report["bus_stop_wear_candidates"] = [
+        {"osm_node": nd["osm_node"], "ref": nd["tags"].get("ref"), "bus": nd["tags"].get("bus"),
+         "local_en": (np.asarray(nd["geometry"]["coordinates"], float) - origin).tolist(),
+         "half_m": (src["bbox"][2] - src["bbox"][0]) * .5}
+        for nd in src["osm"]["nodes"] if nd["tags"].get("public_transport") == "stop_position"
+    ]
     stops = [np.asarray(nd["geometry"]["coordinates"]) - origin for nd in src["osm"]["nodes"]
              if nd["tags"].get("highway") == "bus_stop"]
     for f in src["bdot10k"]["OT_OIKM_P"]:
