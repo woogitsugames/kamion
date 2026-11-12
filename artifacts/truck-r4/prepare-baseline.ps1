@@ -18,6 +18,20 @@ if ($SkipMaterials) {
 }
 if ($SkipGenerators -and (!(Select-String -LiteralPath artifacts/truck-r4/STATUS.md -SimpleMatch 'Generator materials zakończony pod heavy' -Quiet) -or !(Select-String -LiteralPath artifacts/truck-r4/STATUS.md -SimpleMatch 'Generator world zakończony pod heavy' -Quiet))) { throw 'Brak potwierdzenia ukończenia obu generatorów przed wznowieniem.' }
 $slotScript = 'C:/Users/matma/Documents/Claude/kamion/scripts/unity-slot.ps1'
+function Acquire-TruckSlot([string]$Pool) {
+    for ($attempt=1; $attempt -le 3; $attempt++) {
+        $acquireLog="artifacts/truck-r4/acquire-$Pool-$((Get-Date).ToString('yyyyMMdd-HHmmss'))-$attempt.log"
+        # Retry only a terminal ticket-file sharing error, before any consumer has started.
+        $ErrorActionPreference='Continue'
+        pwsh $slotScript -Acquire -Pool $Pool -Owner $(if($Pool -eq 'heavy'){'gpt-truck-r4'}else{'gpt-truck'}) -StaleHours 100000 -PollSeconds 60 2>&1 | Tee-Object -FilePath $acquireLog
+        $slotCode=$LASTEXITCODE
+        $ErrorActionPreference='Stop'
+        if($slotCode -eq 0){return}
+        if(!(Select-String -LiteralPath $acquireLog -Pattern 'used by another process|cannot access the file' -Quiet) -or $attempt -eq 3){throw "Acquire $Pool exit $slotCode; sprawdź $acquireLog"}
+        Write-Output "Terminalny błąd udostępniania biletu; ponawiam zwykłe Acquire, próba $($attempt+1)."
+        Start-Sleep -Seconds 2
+    }
+}
 $env:OPENBLAS_NUM_THREADS = '1'
 $env:OMP_NUM_THREADS = '1'
 $env:MKL_NUM_THREADS = '1'
@@ -28,8 +42,8 @@ foreach ($job in @(
 )) {
     if ($SkipGenerators) { continue }
     if ($SkipMaterials -and $job.id -eq 'materials') { continue }
-    pwsh $slotScript -Acquire -Pool heavy -Owner gpt-truck-r4 -StaleHours 100000 -PollSeconds 5
-    if ($LASTEXITCODE -ne 0) { throw 'Nie uzyskano slotu heavy.' }
+    Acquire-TruckSlot 'heavy'
+
     try {
         $arguments = $job.args
         uv @arguments *> "artifacts/truck-r4/baseline-$($job.id).log"
@@ -53,8 +67,8 @@ foreach ($tier in $spec.sets.asphalt_detail_photo.files.PSObject.Properties) {
 }
 if ($photoNeedsBuild) {
     if (!(Test-Path Data/photos/nowe/Worn_cracked_asphalt_pavement.jpg)) { throw 'Brak lokalnej kopii dostarczonego zdjęcia detalu asfaltu.' }
-    pwsh $slotScript -Acquire -Pool heavy -Owner gpt-truck-r4 -StaleHours 100000 -PollSeconds 5
-    if ($LASTEXITCODE -ne 0) { throw 'Nie uzyskano slotu heavy dla brakującej warstwy.' }
+    Acquire-TruckSlot 'heavy'
+
     try {
         uv run --project tools/worldgen python art-source/world/materials/_src/build_all.py --only asphalt_detail_photo *> artifacts/truck-r4/baseline-photo-layer.log
         if ($LASTEXITCODE -ne 0) { throw 'Nie wygenerowano brakującej warstwy zdjęciowej.' }
@@ -73,8 +87,8 @@ foreach ($set in $spec.sets.PSObject.Properties) {
     }
 }
 if (!(Test-Path Data/raw/derived/bialystok-industrial-c/world/chunk_0_0.glb) -or !(Test-Path Data/Regions/bialystok-industrial-c/route_start.json)) { throw 'Brak wejść; import uruchomiłby dodatkowego Pythona.' }
-pwsh $slotScript -Acquire -Owner gpt-truck -StaleHours 100000 -PollSeconds 5
-if ($LASTEXITCODE -ne 0) { throw 'Nie uzyskano slotu Unity.' }
+Acquire-TruckSlot 'unity'
+
 try {
     pwsh scripts/import-region.ps1 -Region bialystok-industrial-c
     if ($LASTEXITCODE -ne 0) { throw 'Nieudany import nowej bazy.' }
@@ -86,5 +100,6 @@ finally {
 Add-Content -Encoding utf8 artifacts/truck-r4/STATUS.md 'Import bieżącej bazy zakończony. Zachować patch wygenerowanych danych, lecz nie przywracać starego world_manifest przed końcowym GIS: test deterministyczności musi porównać świeżą regenerację z tą samą wersją źródeł. Plików innych dziedzin nie commitować; przywrócić je dopiero po konsumentach i testach. Następny krok: baseline-captures.ps1.'
 git add -f artifacts/truck-r4/STATUS.md
 git commit --only artifacts/truck-r4/STATUS.md -m 'wip(truck): import aktualnej bazy r4'
+
 
 
