@@ -37,6 +37,11 @@ if ($LASTEXITCODE -ne 0) { throw 'Nie uzyskano slotu heavy' }
 $code = 1
 try {
     $env:PYTHONUNBUFFERED = '1'
+    # Each slot is one task, not an unrestricted BLAS/OpenMP worker pool on top of the other sessions.
+    $env:OMP_NUM_THREADS = '1'
+    $env:OPENBLAS_NUM_THREADS = '1'
+    $env:MKL_NUM_THREADS = '1'
+    $env:NUMEXPR_NUM_THREADS = '1'
     & uv @uvArguments *> $log
     $code = $LASTEXITCODE
     Get-Content $log -Tail 18
