@@ -53,16 +53,22 @@ Run on the branch after `git merge main` (`611f116c9`, no conflicts) and a full 
   `test_road_fidelity::test_report_not_stale` (the report on main is stale after the CRLF hash fix `a4cb9995`);
   after `fidelity/run.py` (exit 0, report committed) `tests/gis/test_road_fidelity.py`: 9 passed, 1 xfailed.
   New: `tests/gis/test_far_field.py` skyline cases (55 passed in the far-field files).
-- EditMode: @@EDITMODE@@
-- import-region: @@IMPORT@@
+- EditMode: 412 total, 412 passed, 0 failed (`editmode-merged.log`, after the second merge of main `97996ef6b`; includes the 4 `WorldEdgeClosureSkylineTests`).
+- import-region: `IMPORT_RESULT: OK`, 64 chunks, corridor 41, tiers Low+High; WORLD_MEMORY Low 122.7 MB (far_field 1.3 MB), High 264.8 MB (far_field 6.5 MB) (`import-merged.log`).
 - Budget, Low, 120 cameras (control + gate3 + 42 SBS), `artifacts/edge-r6c/stats-diff.py`:
 
 | Run | draws (min / median / max) | shadow casters (sum) | trisK (sum) |
 |---|---|---|---|
 | after vs baseline (same base main `76c88d4fd`, clean A/B) | -51 / -13 / +3 | 0 | +116 of 33055 (+0.35 %) |
-| merged vs baseline (also contains main `76c88d4fd..611f116c9`) | @@MERGED@@ |
+| merged vs baseline (also contains main `76c88d4fd..97996ef6b`: ADR 0139, 0140, 0143) | -51 / -13 / +140 | -28 | +434 of 33055 (+1.3 %) |
+| merged vs after (= what main `76c88d4fd..97996ef6b` added, not this ADR) | -21 / 0 / +139 | -28 | +318 of 33171 |
 
-  The +1..+3 draws are the skyline renderer; the savings are the closure groups. Budget not worsened.
+  The +1..+3 draws are the skyline renderer; the savings are the closure groups. Budget not worsened. The +140
+  draws / +191 trisK outlier of the merged run is one camera, `sbs-g3-b-494288258686575`, whose pose ADR 0143 moved
+  41 m back (main, not this ADR); edge, g3a and g3b route cameras are identical between after and merged.
+- Second merge of main (`97996ef6b`, generated conflicts -> ours) + full regeneration chain
+  (`artifacts/edge-r6c/run-merged.ps1`): build_all, build_world, fidelity, pytest, import, EditMode, visual-qa all
+  exit 0; `pytest tests/gis tests/gate3`: 853 passed, 1 xfailed (879 s).
 - Pairs (photo | before | after for SBS frames, before over after for control cameras), 960 px:
   `artifacts/edge-r6c/pairs/{Low-clear,Low-overcast}/*.jpg` (101 + 101), merged run:
   `artifacts/edge-r6c/pairs-merged/`; full-resolution horizon crops `artifacts/edge-r6c/crops/`.
@@ -72,7 +78,12 @@ Run on the branch after `git merge main` (`611f116c9`, no conflicts) and a full 
 - 297817, 3281350, 150280, 1528935 (Low, clear and overcast): both EC stacks now stand on the horizon behind the
   frontage, red/white bands readable, in the direction where the photos show them; before: empty sky. This closes
   the open point of ADR 0129 on Low.
-- 150280: the stacks in the render are visibly smaller and further left than on the photo (crop
+- P1-2 of `REVIEW-2026-11-12-s14-0139` (stacks on Low in 297817 and 150280 on the poses of main, ADR 0140 / 0143):
+  merged run, Low-clear and Low-overcast, both stacks visible in both frames, lower part correctly hidden behind
+  the pine belt, no flicker pattern in the 4x crop (`crops/ec-chimneys-merged-4x-297817-150280.jpg`,
+  `crops/ec-297817-merged-b-vs-m-clear-overcast.jpg`, `crops/ec-150280-merged-b-vs-m-clear-overcast.jpg`). In
+  overcast they are faint (tier fog) but readable. Editor render only; phone is risk 1.
+- 150280 (pre-0143 pose): the stacks in the render are visibly smaller and further left than on the photo (crop
   `crops/z150280.jpg`). Position and height come from source data, so this is the SBS pose / FOV of that frame, not
   the skyline; not corrected here.
 - `edge-*`, `dk8-dk19-exit`: closures read as a closed road (double board + B-1) instead of a bare striped plank.

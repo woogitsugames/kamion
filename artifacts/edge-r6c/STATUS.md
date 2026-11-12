@@ -35,3 +35,10 @@ Gałąź `edge-r6c`, worktree `.claude/worktrees/edge-r6c`, baza main 76c88d4fd.
 - W tle: `pwsh artifacts/edge-r6c/run-merged.ps1` (PID pwsh 58288; logi *-merged.log).
 - ADR szkic: docs/adr/0141-edge-skyline-closures.md (placeholdery @@...@@).
 - NASTĘPNY KROK: po łańcuchu `bash artifacts/edge-r6c/make-pairs.sh Low-clear baseline merged; python artifacts/edge-r6c/stats-diff.py baseline merged Low-clear | tail -7`, uzupełnić ADR, commit generated, robocopy do main.
+
+## 2026-11-12 20:45 — wznowienie: łańcuch merged zielony, pary obejrzane, ADR uzupełniony
+- run-merged.log: build_all/build_world/fidelity/pytest/import/editmode/vqa exit=0. pytest 853 passed 1 xfailed; EditMode 412/412; IMPORT_RESULT OK.
+- Pary merged Low clear+overcast 101+101 (pairs-merged). Kominy EC widoczne w 297817 i 150280 na pozach z main (0140/0143), clear i overcast; dół zasłonięty lasem (poprawna głębia w edytorze). Cropy: crops/ec-*.jpg.
+- Budżet merged vs baseline: draws -51/-13/+140, shadow -28, trisK +434/33055; outlier +140 = 494288 (poza z 0143, main). merged vs after na edge/route: 0.
+- Otwarte: głębia skyline na GLES/A16 UNVERIFIED (ADR ryzyko 1).
+- NASTĘPNY KROK: `git fetch origin; git merge origin/main` (generated -> ours), commit, robocopy dowodów do main artifacts/edge-r6c.
