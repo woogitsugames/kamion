@@ -89,3 +89,4 @@ Rozszerzono małą analizę propozycji na cztery istniejące obrysy grządek: 18
 Watchdog sam wznowił GIS root 11512 o 02:39:38 (dwa wpisy RESUME). W logu pytest jest już 13%, CPU procesu rośnie. Nie ingerowano ręcznie; wcześniejszy brak postępu był kontrolowanym wstrzymaniem, nie wynikiem testów. Wycinek watchdog-observation.log zawiera teraz własne SUSPEND i RESUME.
 Wznowiony stan GIS przekopiowano także do własnego katalogu artefaktów na main: STATUS i wycinek watchdog, robocopy bez błędu i zgodny hash STATUS przed dopisaniem tej notatki. Nadal bez REPORT.md i bez commita na main.
 Pełny końcowy GIS kod 1; szczegóły pytest-final.log. Znana porażka starego fidelity wymaga osobnej weryfikacji, nie naprawiania cudzej dziedziny.
+Zamknięcie odrzuconej r3: import przywróconego świata kod 0. Kod produkcyjny przywrócony do r1; brak akceptowanej korekty B8.
