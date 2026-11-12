@@ -14,13 +14,20 @@ Output:
   u32 nNodes, nNodes x (f32 e, f32 n, u8 flags)            flags bit0 boundary (edge leaves the region data)
   u32 nEdges, nEdges x (u32 from, u32 to, f32 length_m, u8 class, u8 flags, u16 name, u8 maxspeed_kmh,
                         u8 maxspeed_src, u16 nPts, nPts x (f32 e, f32 n))
+  v2 only, per edge, before nPts: u16 maxweight (0.01 t), u16 maxaxleload (0.01 t), u16 maxheight (cm),
+                        u16 maxlength (cm); 0 = no limit. Normalised from the OSM tags maxweight:hgv (else
+                        maxweight), maxaxleload, maxheight, maxlength ("3.5", "3.5 t", "3500 kg", "4 m",
+                        "12'6\""; "none" / "default" / unparsable = no limit).
   u16 nRestr, nRestr x (u32 fromEdge, u32 viaNode, u32 toEdge, u8 kind)   kind 0 = no_*, 1 = only_*
 
 Edge flags: bit0 oneway (travel only from -> to; oneway=-1 is reversed here), bit1 roundabout, bit2 no trucks
 (access=no, hgv=no, service=emergency_access), bit3 restricted access (private / destination / customers / delivery,
-service=driveway: allowed only as first / last edge), bit4 *_link.
+service=driveway: allowed only as first / last edge), bit4 *_link, bit5 (v2) hgv=destination (trucks only as the
+destination edge). hgv:conditional is not encoded (no such tags in the region data; UNVERIFIED).
 Classes: 0 service / living_street / track, 1 residential / unclassified / tertiary, 2 secondary, 3 trunk / primary.
 maxspeed_src: 0 default (pipeline default, UNVERIFIED), 1 OSM.
+
+The reader (parse here and RouteGraph.Parse in C#) accepts both version 1 (no limit fields) and version 2.
 Turn restrictions not tagged in OSM are not known: the game treats every other turn as allowed except U-turns
 (a 16.5 m combination) - UNVERIFIED against the street.
 
@@ -35,13 +42,15 @@ import hashlib
 import json
 import math
 import os
+import re
 import struct
 import sys
 
 REPO = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
 OUT_DIR = os.path.join(REPO, "game", "Assets", "_Project", "UI", "Resources", "CabDisplay", "Nav")
 MAGIC = b"KRTG"
-VERSION = 1
+VERSION = 2
+VERSION_V1 = 1
 
 CLASS = {
     "service": 0, "living_street": 0, "track": 0,
@@ -49,9 +58,54 @@ CLASS = {
     "secondary": 2, "secondary_link": 2,
     "primary": 3, "primary_link": 3, "trunk": 3, "trunk_link": 3, "motorway": 3, "motorway_link": 3,
 }
-F_ONEWAY, F_ROUNDABOUT, F_NO_TRUCK, F_RESTRICTED, F_LINK = 1, 2, 4, 8, 16
+F_ONEWAY, F_ROUNDABOUT, F_NO_TRUCK, F_RESTRICTED, F_LINK, F_HGV_DESTINATION = 1, 2, 4, 8, 16, 32
 NO_TRUCK_ACCESS = {"no"}
 RESTRICTED_ACCESS = {"private", "destination", "customers", "delivery", "permissive"}
+
+NO_LIMIT = ("", "none", "default", "national")
+
+
+def parse_weight_t(v) -> float | None:
+    """OSM maxweight / maxaxleload value -> tonnes, or None when there is no usable limit.
+
+    Accepts "3.5", "3,5 t", "3.5t", "3500 kg"; "none" / "default" / unparsable -> None.
+    """
+    if v is None:
+        return None
+    s = str(v).strip().lower()
+    if s in NO_LIMIT:
+        return None
+    m = re.fullmatch(r"(\d+(?:[.,]\d+)?)\s*(kg|kilograms?|t|tonnes?|tons?)?", s)
+    if not m:
+        return None
+    x = float(m.group(1).replace(",", "."))
+    return x / 1000.0 if m.group(2) and m.group(2).startswith("k") else x
+
+
+def parse_length_m(v) -> float | None:
+    """OSM maxheight / maxlength value -> metres, or None when there is no usable limit.
+
+    Accepts "4", "4.0 m", "12'6\"" (feet'inches); "none" / "default" / unparsable -> None.
+    """
+    if v is None:
+        return None
+    s = str(v).strip().lower()
+    if s in NO_LIMIT:
+        return None
+    m = re.fullmatch(r"(\d+(?:[.,]\d+)?)\s*(m|metres?|meters?)?", s)
+    if m:
+        return float(m.group(1).replace(",", "."))
+    m = re.fullmatch(r"(\d+(?:[.,]\d+)?)\s*'\s*(?:(\d+(?:[.,]\d+)?)\s*\")?", s)
+    if m:
+        ft = float(m.group(1).replace(",", "."))
+        inch = float(m.group(2).replace(",", ".")) if m.group(2) else 0.0
+        return ft * 0.3048 + inch * 0.0254
+    return None
+
+
+def to_c(v: float | None, scale: float) -> int:
+    """Float in SI units -> stored integer (0 = no limit), clamped to u16."""
+    return 0 if v is None else max(0, min(65535, round(v * scale)))
 
 
 def read_origin(region_dir: str) -> tuple[float, float]:
@@ -132,10 +186,13 @@ def build(graph: dict, origin: tuple[float, float], restrictions: list[dict]) ->
         if attr(e, "junction") in ("roundabout", "circular"):
             flags |= F_ROUNDABOUT | F_ONEWAY   # OSM: roundabouts imply oneway
         access = str(attr(e, "access", "") or "")
-        if access in NO_TRUCK_ACCESS or str(attr(e, "hgv", "") or "") == "no" or attr(e, "service") == "emergency_access":
+        hgv = str(attr(e, "hgv", "") or "")
+        if access in NO_TRUCK_ACCESS or hgv == "no" or attr(e, "service") == "emergency_access":
             flags |= F_NO_TRUCK
         elif access in RESTRICTED_ACCESS or attr(e, "service") == "driveway":
             flags |= F_RESTRICTED
+        if hgv == "destination":
+            flags |= F_HGV_DESTINATION   # trucks may enter only to reach a destination on this edge
         if hw.endswith("_link"):
             flags |= F_LINK
         ms = attr(e, "maxspeed", 0) or 0
@@ -144,11 +201,17 @@ def build(graph: dict, origin: tuple[float, float], restrictions: list[dict]) ->
         except (TypeError, ValueError):
             ms = 0
         ms_src = 1 if attr_src(e, "maxspeed") == "osm" else 0
+        mw = parse_weight_t(attr(e, "maxweight:hgv"))
+        if mw is None:
+            mw = parse_weight_t(attr(e, "maxweight"))
         length = round(polyline_length(pts), 3)
         edges.append({
             "id": e["id"], "osm_way": e.get("osm_way"), "from": a, "to": b, "length": length, "class": cls,
             "flags": flags, "name": name_id(attr(e, "name", "") or ""), "maxspeed": max(0, min(255, ms)),
             "maxspeed_src": ms_src, "pts": pts,
+            "maxweight_c": to_c(mw, 100.0), "maxaxleload_c": to_c(parse_weight_t(attr(e, "maxaxleload")), 100.0),
+            "maxheight_cm": to_c(parse_length_m(attr(e, "maxheight")), 100.0),
+            "maxlength_cm": to_c(parse_length_m(attr(e, "maxlength")), 100.0),
         })
 
     # Turn restrictions: OSM (from way, via node, to way) -> (from edge, via node, to edge) on the split edges.
@@ -175,9 +238,12 @@ def build(graph: dict, origin: tuple[float, float], restrictions: list[dict]) ->
             "skipped_edges": skipped}
 
 
-def serialize(t: dict) -> bytes:
+def serialize(t: dict, version: int = VERSION) -> bytes:
+    """version=2 (default) appends the four limit fields per edge; version=1 writes the old layout (limits dropped)."""
+    if version not in (VERSION_V1, VERSION):
+        raise ValueError(f"version {version}")
     out = bytearray()
-    out += MAGIC + struct.pack("<H", VERSION)
+    out += MAGIC + struct.pack("<H", version)
     if len(t["names"]) > 65535 or len(t["restrictions"]) > 65535:
         raise SystemExit("too many names / restrictions for u16 counts")
     out += struct.pack("<H", len(t["names"]))
@@ -191,6 +257,8 @@ def serialize(t: dict) -> bytes:
     for e in t["edges"]:
         out += struct.pack("<IIfBBHBBH", e["from"], e["to"], e["length"], e["class"], e["flags"], e["name"],
                            e["maxspeed"], e["maxspeed_src"], len(e["pts"]))
+        if version >= 2:
+            out += struct.pack("<HHHH", e["maxweight_c"], e["maxaxleload_c"], e["maxheight_cm"], e["maxlength_cm"])
         for x, y in e["pts"]:
             out += struct.pack("<ff", x, y)
     out += struct.pack("<H", len(t["restrictions"]))
@@ -213,7 +281,7 @@ def parse(data: bytes) -> dict:
         raise ValueError("not KRTG")
     o = 4
     (ver,) = take("<H")
-    if ver != VERSION:
+    if ver not in (VERSION_V1, VERSION):
         raise ValueError(f"version {ver}")
     (nn,) = take("<H")
     names = []
@@ -227,14 +295,16 @@ def parse(data: bytes) -> dict:
     edges = []
     for _ in range(ne):
         a, b, length, cls, flags, name, ms, mss, npts = take("<IIfBBHBBH")
+        mw, mal, mh, ml = (take("<HHHH") if ver >= 2 else (0, 0, 0, 0))
         pts = [take("<ff") for _ in range(npts)]
         edges.append({"from": a, "to": b, "length": length, "class": cls, "flags": flags, "name": name,
-                      "maxspeed": ms, "maxspeed_src": mss, "pts": pts})
+                      "maxspeed": ms, "maxspeed_src": mss, "pts": pts, "maxweight_c": mw, "maxaxleload_c": mal,
+                      "maxheight_cm": mh, "maxlength_cm": ml})
     (nr,) = take("<H")
     restr = [take("<IIIB") for _ in range(nr)]
     if o != len(data):
         raise ValueError("trailing bytes")
-    return {"names": names, "nodes": nodes, "edges": edges, "restrictions": restr}
+    return {"version": ver, "names": names, "nodes": nodes, "edges": edges, "restrictions": restr}
 
 
 def refresh_restrictions(region_dir: str, graph: dict, pbf: str | None = None) -> list[dict]:
@@ -302,9 +372,12 @@ def main(argv=None) -> int:
     with open(path, "wb") as f:
         f.write(data)
     oneway = sum(1 for e in t["edges"] if e["flags"] & F_ONEWAY)
-    print(f"KRTG {path}: {len(data) / 1024:.1f} KB, nodes {len(t['nodes'])}, edges {len(t['edges'])} "
+    limited = sum(1 for e in t["edges"] if e["maxweight_c"] or e["maxaxleload_c"] or e["maxheight_cm"] or e["maxlength_cm"])
+    hgv_dest = sum(1 for e in t["edges"] if e["flags"] & F_HGV_DESTINATION)
+    print(f"KRTG v{VERSION} {path}: {len(data) / 1024:.1f} KB, nodes {len(t['nodes'])}, edges {len(t['edges'])} "
           f"(oneway {oneway}, skipped {t['skipped_edges']}), names {len(t['names'])}, "
-          f"restrictions {len(t['restrictions'])} (OSM relations {len(rows)}, unmapped {len(t['unmapped_restrictions'])})")
+          f"restrictions {len(t['restrictions'])} (OSM relations {len(rows)}, unmapped {len(t['unmapped_restrictions'])}), "
+          f"limit-tagged edges {limited}, hgv=destination {hgv_dest}")
     return 0
 
 
