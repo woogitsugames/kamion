@@ -192,3 +192,5 @@ Krok 53: zapisano AUTHOR-REVIEW.md z dokładnym zakresem oględzin, PARTIAL i ot
 Końcowy heavy (2026-11-12T11:10:05.5903194+01:00): zapisz końcowy GIS osobówek C. Następny krok: odczyt wyników, oględziny pełnych plansz, EditMode, REPORT/kopia, potem r4.
 
 Końcowy heavy (2026-11-12T11:10:05.9875981+01:00): zapisz przerwany końcowy heavy gis. Następny krok: odczyt wyników, oględziny pełnych plansz, EditMode, REPORT/kopia, potem r4.
+
+Krok 54: pierwszy końcowy GIS zakończony 1: 639 passed, 1 xfailed, 1 failed w 709,86 s. Jedyna porażka test_road_fidelity::test_report_not_stale potwierdza stare SHA overrides.yaml i roads/meshing.py dołączonych z main; zgodne z readonly precheck. Źródła C i GLB zamrożone, heavy zwolniony (42276 zakończony). Nie zmieniamy testów ani kodu dróg. Następny krok: pwsh -NoProfile -File artifacts/life-r3/final-heavy.ps1 -Tag final-rerun -SkipImages -RefreshFidelity — jedna pula na regenerację raportu, pojedynczy test i pełny GIS; dowód pierwszej porażki zachowany.
