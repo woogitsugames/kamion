@@ -40,3 +40,4 @@
 2026-11-12T02:22:01.7626284+01:00: heavy World owner=gpt-asphalt-r2 exit=0; log artifacts/asphalt-r2/candidate-World.log. Slot zwolniony po zakończeniu procesu.
 2026-11-12T02:22:15.8222997+01:00: Producent świata kandydata exit 0, 424,1 s, brak fallback=True. Audyt odwołań przed importem exit 0. Następny krok: import i 4 serie obrazów kandydata.
 2026-11-12T02:23:36.3822084+01:00: Import kandydata exit 0; zachowano raport pamięci. Następny krok: 4 serie capture.
+2026-11-12T02:24:10.9144959+01:00: zapisano artifacts/asphalt-r2/candidate/Low-overcast. Następny krok: pozostałe serie lub porównanie wariantu.
