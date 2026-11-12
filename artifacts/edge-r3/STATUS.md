@@ -37,3 +37,5 @@ Dla kolejnych wywołań pwsh z przekierowaniem zewnętrzna powłoka używa Conti
 2026-11-12T01:35:58.3200504+01:00 Zapisano rendery before/Low-overcast wszystkich kamer; ocena PNG i budżetu nadal w toku.
 2026-11-12T01:36:45.5224903+01:00 Zapisano rendery before/High-clear wszystkich kamer; ocena PNG i budżetu nadal w toku.
 2026-11-12T01:37:23.0215331+01:00 Zapisano rendery before/High-overcast wszystkich kamer; ocena PNG i budżetu nadal w toku.
+Krok 13: ukończono Before: 92 kamery × 4 = 368 PNG; wszystkie 44 ID dowodowe oraz 92 statystyki na serię spełniły kontrolę kompletności. Zamrożono siatkę apron i profil źródłowy w before-source; pomiar before korzysta z tej kopii, więc kolejka heavy nie zagrozi bazie.
+Następny krok: AuditGround before pod heavy oraz dodanie/uruchomienie dwóch testów starego C#. Kod produkcyjny nadal bez zmian.

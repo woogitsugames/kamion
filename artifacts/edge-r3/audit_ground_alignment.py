@@ -19,6 +19,8 @@ phase = sys.argv[1] if len(sys.argv) > 1 else 'after'
 if phase not in ('before', 'after', 'prototype'):
     raise ValueError('Expected before, after or prototype')
 mesh_path = ROOT / f'game/Assets/_Generated/World/{REGION}/Meshes/world_edge.asset'
+if phase == 'before' and (HERE/'before-source/world_edge.asset').exists():
+    mesh_path = HERE/'before-source/world_edge.asset'
 source = mesh_path.read_text()
 vertex_count = int(re.search(r'm_VertexCount: (\d+)', source)[1])
 data = bytes.fromhex(re.search(r'_typelessdata: ([0-9a-fA-F]+)', source)[1])
@@ -64,6 +66,8 @@ def ground_at(e, n):
 
 
 apron_path = ROOT / f'Data/raw/derived/{REGION}/world/far_field_apron.json'
+if phase == 'before' and (HERE/'before-source/far_field_apron.json').exists():
+    apron_path = HERE/'before-source/far_field_apron.json'
 apron = json.loads(apron_path.read_text())
 border = apron['border_z']
 elev = FF.BorderElevation(1024.0, border['south'], border['east'], border['north'], border['west'])
