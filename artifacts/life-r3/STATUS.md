@@ -174,3 +174,5 @@ Krok 46: capture i GPU D zakończone 0. Obejrzano cztery siatki nowych kamer ora
 Krok 47: przygotowano final-editmode.ps1; wymaga wybranego C, kontroluje siedem SHA/GLB i natywne materiały przed/po, kopiuje dokładnie jeden nowy XML/log z własnego worktree. Każde Unity przez gpt-life, ustawienia przywracane w finally. Następny krok: uruchomić raz final-editmode.ps1 równolegle do oczekiwania heavy 42276 (osobne pule, jeden Unity w projekcie).
 
 Końcowy EditMode (2026-11-12T10:58:00.8051137+01:00) zakończony kodem 0; slot zwolniony, ustawienia przywrócone. Liczby w final-editmode-result.json. Następny krok: wynik końcowego heavy, oględziny pełnych plansz, ADR/REPORT/kopia i r4.
+
+Końcowy heavy (2026-11-12T10:58:14.3985963+01:00): przygotuj wszystkie pary obrazów C do kontroli. Następny krok: odczyt wyników, oględziny pełnych plansz, EditMode, REPORT/kopia, potem r4.
