@@ -85,3 +85,5 @@ Krok 19: ADR0116/0119 i SELF_REVIEW uaktualnione o finalne obrazy, budżet i jaw
 Krok 20: EditMode 317/317 PASS, slot Unity zwolniony. Natywna para filarów czterech warunków obejrzana i zapisana w review/pier-final-native-pair.jpg (840 px). Python wciąż czeka w żywej kolejce heavy; przygotowano notatkę następnej rundy remizy, bez mutowania modelu r3.
 
 Krok 21: przygotowano REPORT-DRAFT.md z jednoznacznym statusem szkicu i polami W TOKU. Finalny REPORT powstanie dopiero po odczycie wyników Pythona i cache; nie kopiuje się szkicu jako zamknięcia rundy. Kolejka heavy nadal żywa, bez trzymania dodatkowego slotu.
+
+Krok 22: przygotowano copy-main.ps1 (jeszcze niewykonany): tylko własny katalog artifacts/landmarks-r3, robocopy /E bez /MIR, weryfikacja wszystkich244 końcowych PNG i REPORT SHA, receipt bez commitu main. Cache przed testami:192/192 zgodne z manifestem. Pełny GIS działa w przydzielonym heavy.
