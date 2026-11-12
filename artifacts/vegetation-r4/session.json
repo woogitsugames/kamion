@@ -4,13 +4,15 @@
   "round_in_session": 3,
   "started_at": "2026-11-12T03:05:53.123339+01:00",
   "deadline_at": "2026-11-12T21:30:50+01:00",
-  "base_merge_sha": "7c9b4ca6",
-  "phase": "fresh_baseline_pipeline_active",
+  "base_merge_sha": "c3cf303d",
+  "phase": "fresh_baseline_resumed_world_wait",
   "production_changed": false,
   "unity_owner": "gpt-vegetation",
   "heavy_owner": "gpt-vegetation-r4",
   "next_step": "World under heavy, collision buffers, snapshot, QA, import and all fresh frames; keep production unchanged until baseline.done and image review",
   "materials": "completed exit0,446s",
-  "pipeline_log": "baseline.log",
-  "state_authority": "STATUS.md and baseline.log; baseline.done only after fresh captures"
+  "pipeline_log": "baseline-resume.log",
+  "state_authority": "Live resumed process, STATUS.md and baseline-resume.log; baseline.done only after fresh captures",
+  "initial_base_merge_sha": "7c9b4ca6",
+  "interruption": "Old execution handle missing and own process absent; old World log stopped waiting at03:44:51. Resumed09:06 after source-only checks; no World had run."
 }
