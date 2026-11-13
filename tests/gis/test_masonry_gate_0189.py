@@ -108,3 +108,29 @@ def test_brick_is_grey_sand_lime_not_red():
     b = MG.brick_band()
     m = b.reshape(-1, 3).mean(0)
     assert abs(m[0] - m[2]) < 0.08 and 0.40 < m.mean() < 0.72            # near neutral, mid albedo (sRGB)
+
+
+def test_generated_report_places_the_kit_off_the_carriageway():
+    import json
+    rep = json.loads((DOJ / "generated" / "streetscape_qa.json").read_text(encoding="utf-8"))["furniture"]["masonry_gates"]
+    assert rep["stale"] == []
+    (kit_,) = rep["kits"]
+    assert kit_["id"] == "zurawia-hospital-gate" and kit_["on_carriageway"] == []
+    assert kit_["lift_gates_replaced"] == 1                              # the OSM lift gate became the kit's boom
+    assert kit_["levels_m"][1] - kit_["levels_m"][0] < 1.0               # elements follow the ground, no cliff
+
+
+def test_kit_follows_the_ground():
+    """Every element stands on the ground under it: on a 10 % cross fall the porch stays level and no brick face
+    starts above the ground line."""
+    from streetscape import masonry_gate as MG
+    k = MG.plan(_ov(DOJ))[0]
+    lod0, _, col, _, _ = MG.build_kit(k, lambda p: 0.1 * float(p[0]))
+    V = lod0.out()[0]["V"]
+    lo, hi = k["levels"]
+    assert hi - lo > 0.5
+    # lowest vertex above each sampled ground point is never above the ground there
+    for x in np.linspace(V[:, 0].min() + 0.5, V[:, 0].max() - 0.5, 12):
+        near = V[abs(V[:, 0] - x) < 0.6]
+        if len(near):
+            assert near[:, 2].min() <= 0.1 * x + 0.12
