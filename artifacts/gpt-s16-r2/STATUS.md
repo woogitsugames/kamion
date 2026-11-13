@@ -54,3 +54,5 @@ Dodano test integracji natywnego importu: każdy zserializowany opt-in korony mu
 Import focus-baseline zakończony.
 
 Rebaselineoff590.4s: audyt zgadza się z pierwotną bazą w2151chronionychwęzłach,grupach/trianglesplots,rekordachLow i116drzewogrodowych. ImportOK. Pierwszy render zatrzymał błąd kompilacji nowego testu integracji (Compactjestprywatne); poprawiono test na publiczne matrices/positions/rotations/scales. Nie zaliczono nieudanej próby. NASTĘPNY KROK: powtórzyćbefore4warunki,bez ponownej generacji bazy.
+
+Zapisano before/Low-clear; każda kamera w stats.txt. Oględziny pozostają wymagane.
