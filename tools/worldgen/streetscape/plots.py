@@ -88,6 +88,11 @@ DROP_RAMP_M = 1.0             # kerb ramps down over this length on either side 
 DROP_REACH_M = 14.0           # a gate further than this from the carriageway gets no access
 DITCH_FILL_M = 0.06           # roadside ditch depth left over a driveway (culvert), m
 STUB_M = 3.2                  # a fence stretch shorter than this with a free end is not built (ADR 0132)
+SKEW_DROP_DEG = 15.0          # a run shorter than STUB_M whose direction deviates from BOTH frame axes (front and
+                              # side) by more than this is a clipped-corner tooth (the plot polygon was cut by an
+                              # obstacle and simplified), not a fence line: not built even when both its ends join
+                              # other runs (WORKING_VALUE: below 15 deg a <= 3.2 m panel still reads as a front /
+                              # side line - it offsets < 0.9 m; the teeth that read as a torn-out wing are > 15 deg)
 SEG_M = 2 * PK.BAY_M          # fence panels follow the ground in steps of two post pitches of the atlas (5.12 m)
 STEP_ZONE_M = (1.6, 2.1)      # door steps of a house: width, depth from the wall (facade_kit.door_steps: landing 1.0 m
                               # + up to 3 goings of 0.3 m), m - no fence, no plant and no bin stands in it
@@ -524,13 +529,31 @@ def layout(plot, cut=None, near=None, garages=(), gate_s=None, no_gate=False, ga
     # ADR 0132 (review 0124 P1-d, `r16_drive_3`: a lone panel of the side fence stood at an angle beside the gate, the
     # rest of that edge being closed by the neighbour's fence): a stretch shorter than STUB_M that joins nothing at one
     # of its ends - no other run, no gate post, no wall / road edge that cut it, no existing fence - is not built.
+    # M30 (`r16_drive_3` still showed a ~30 deg free-standing panel behind the gate wing, built by the plot on the other
+    # side of the shared zigzag edge): a stretch shorter than STUB_M whose direction deviates from BOTH frame axes
+    # (front and side) by more than SKEW_DROP_DEG is a clipped-corner tooth of the plot polygon, not a fence line - it is
+    # not built even when both its ends join other runs. Longer skewed runs follow a real boundary (a road clearance
+    # line) and stay; aligned front stretches stay closed up to the corner as before.
+    side_ax = ev if abs(float(front @ eu)) > 0.5 else eu
+
+    def _diag_deg(r):
+        # deviation of the run direction from the NEAREST frame axis (front edge direction or side edge direction)
+        t = (r["b"] - r["a"]) / max(float(np.hypot(*(r["b"] - r["a"]))), 1e-9)
+        return float(np.degrees(np.arccos(np.clip(max(abs(float(t @ front)), abs(float(t @ side_ax))), 0.0, 1.0))))
+
     posts = [g["m"] + g["t"] * (sx * (g["w"] / 2 + 2 * g["ph"])) for g in
              ([out["gate"]] if out["gate"] is not None else []) + ([out["wicket"]] if out["wicket"] is not None else []) + out["wickets"]
              for sx in (-1.0, 1.0)]
     while True:
         drop = None
         for i, r in enumerate(out["runs"]):
-            if r["front"] or np.hypot(*(r["b"] - r["a"])) >= STUB_M:      # the street front stays closed up to its corner
+            if np.hypot(*(r["b"] - r["a"])) >= STUB_M:
+                continue
+            if _diag_deg(r) > SKEW_DROP_DEG:                                # a clipped-corner tooth: no panel at an angle,
+                if not any(np.hypot(*(e - q)) < 0.9 for e in (r["a"], r["b"]) for q in posts):   # unless it starts on a gate post
+                    drop = i
+                    break
+            if r["front"]:                                                  # the street front stays closed up to its corner
                 continue
             for e in (r["a"], r["b"]):
                 joined = any(np.hypot(*(e - q)) < 0.7 for j, o in enumerate(out["runs"]) if j != i for q in (o["a"], o["b"]))                     or any(np.hypot(*(e - q)) < 0.9 for q in posts)                     or (cut is not None and cut.distance(Point(*e)) < 0.8)                     or (near is not None and near.touches(e))
