@@ -111,4 +111,13 @@ Rendery, budżet edytora, testy: patrz sekcja „Rendery i budżet” (uzupełni
 - Prototypy biblioteki drzew (`make_trees.py`: korony-kępy na gołym pniu) zostają dla lasów i drzew przydrożnych —
   poza zakresem tego ADR; to one są źródłem „pinii”.
 - Kit nie ma wiatru (`WorldPlotKit`); drzewa ogrodowe są statyczne jak reszta zieleni posesji.
+- **P10 (`research/_incoming/p10-street-greenery-2`, przegląd `docs/reports/REVIEW-2026-11-13-s16-research-pack-02.md` §5):
+  WORKING_VALUE, nie cel generatora.** Pokrycie osi ulic domów (próbki co 5 m, ≥ 1 korona ≤ 8 m) przeliczone
+  niezależnie na naszej detekcji koron (`plot_canopy.json`, r ≥ 0,7 m; `artifacts/veg-0163/p10_coverage.py`, 12 ulic,
+  3290 m osi): 61 % = średnia P10 61 % (na odcinkach liczby P10 są niereprodukowalne — nie używamy ich per odcinek).
+  Same drzewa (r ≥ 1,25 m): ortofoto 51 %, gra (pnie drzew ogrodowych + iglaków) 38 % — pnie stoją za płotami, korony
+  nie są przesunięte nad chodnik, żywopłotów metryka nie liczy. Otwarte: asymetryczna korona nad płotem.
+- Młode drzewa Al. Tysiąclecia (P10-301…313, średnio ~5 / 100 m, 74 drzewa Strabag) i mieszanka przydrożna Andersa
+  (Łaska 2015: klon jesionolistny, klon zwyczajny, głóg) — poza zakresem (drzewa przydrożne biblioteki, nie ulice domów);
+  otwarte dla zadania drzew przydrożnych.
 - Telefon (A16 Low): nie mierzony.
