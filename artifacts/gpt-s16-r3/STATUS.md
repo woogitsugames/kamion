@@ -79,3 +79,5 @@ Fidelity odświeżone dla końcowego generatora r2; pełny GIS może sprawdzić 
 EditMode zakończony: exit 0; szczegóły EDITMODE-STATUS.md i final-editmode.xml.
 
 FAIL kandydata A: wyłącznie M_viaduct_concrete nie usuwa plam w produkcyjnym Low-clear. Autor i critic potwierdzili obraz inspection/candidate/sbs2818-Low-clear.jpg. Nie zgłaszać PASS. Przygotowano izolowane natywne próby M_bridge_concrete i M_road_asphalt; po wyborze konieczne ponowne źródło/generator/import/QA/testy. NASTĘPNY KROK po zakończeniu EditMode A: pwsh artifacts/gpt-s16-r3/material-ablate.ps1
+
+Natywna izolacja materiału M_bridge_concrete zapisana; to ablacją cache, nie finalny import. NASTĘPNY KROK: porównać ze starym baseline i wybrać właściwy caster.
