@@ -31,19 +31,55 @@ from scipy import ndimage
 from . import paved as PV
 from .foliage_policy import metric_patch_field, osm_tree_species
 
-SPECIES = ["pine", "birch", "alder", "maple", "linden", "shrub"]
-MIX = {"iglasty": [0.82, 0.12, 0.02, 0.02, 0.02, 0.0], "mieszany": [0.45, 0.25, 0.10, 0.10, 0.10, 0.0],
+# ADR 0187: "spruce" (Norway spruce) joins the canopy species. Pine / spruce stands (bor mieszany swiezy) are the
+# stands of Puszcza Knyszynska and of the forests south of Krywlany; shares WORKING_VALUE (pine clearly dominant,
+# spruce the second conifer; not read from a forest inventory). make_trees.py FOREST_MIX bakes the same mixes.
+SPECIES = ["pine", "birch", "alder", "maple", "linden", "shrub", "spruce"]
+MIX = {"iglasty": [0.64, 0.10, 0.02, 0.02, 0.02, 0.0, 0.20], "mieszany": [0.36, 0.24, 0.10, 0.08, 0.08, 0.0, 0.14],
        # ADR 0170: no Scots pine in "liściasty" stands. The 8 % pines of 14-24 m stood above every broadleaf stand
        # as flat "stone pine" crowns (review s17 0163 P1 / P2); same weights in make_trees.py FOREST_MIX (HLOD bake).
-       "liściasty": [0.0, 0.36, 0.26, 0.22, 0.16, 0.0], None: [0.4, 0.3, 0.1, 0.1, 0.1, 0.0]}
-HEIGHT = {"pine": (14, 24), "birch": (9, 19), "alder": (9, 17), "maple": (8, 16), "linden": (9, 18), "shrub": (1.5, 4.0)}
+       "liściasty": [0.0, 0.36, 0.26, 0.22, 0.16, 0.0, 0.0], None: [0.4, 0.3, 0.1, 0.1, 0.1, 0.0, 0.0]}
+HEIGHT = {"pine": (14, 24), "birch": (9, 19), "alder": (9, 17), "maple": (8, 16), "linden": (9, 18), "shrub": (1.5, 4.0),
+          "spruce": (14, 25), "pineyoung": (1.5, 5.0), "birchyoung": (2.0, 6.5), "floor": (0.45, 0.9)}
+# Prototype variants per species (make_trees.py NVAR; 3 when not listed). The variant is drawn from 0..2 for every
+# tree (unchanged random stream) and folded: spruce canopy trees take the stand forms 0 / 1, young spruce and the
+# open side of a stand take variant 2 (boughs to the ground).
+NVAR = {"pineyoung": 2, "birchyoung": 2, "floor": 2}
+SPRUCE_OPEN = 2
 SPACING = {"las": 4.5, "zagajnik": 3.2, "zadrzewienie": 6.0}
 # Understorey of a Podlasie pine / mixed stand (v3.4, review r3 X4 "trunks like a fence", r4 W-H8): hazel and
 # young pine / birch under the canopy, so the boles do not stand in an empty, swept hall. species -> (h min, h max,
 # weight), one plant per UNDER_SPACING^2 (~60 m2). WORKING_VALUE (forest-inventory classes, not measured here);
 # tools/blender/world/make_trees.py UNDER_SPECIES bakes the same mix into the HLOD edge texture.
-UNDERSTOREY = {"shrub": (1.2, 3.5, 0.55), "pine": (3.0, 7.0, 0.2), "birch": (3.0, 7.5, 0.25)}
-UNDER_SPACING = 7.75
+# ADR 0187: the young trees are their own prototypes (a mature pine scaled to 5 m was a bare pole with a tuft: the
+# "trunks with detached balls of leaves" of review s19 0179), spruce regeneration under the pines is the commonest
+# second storey of these stands, and the storey is twice as dense (one plant per ~30 m2).
+UNDERSTOREY = {"shrub": (1.2, 3.5, 0.38), "spruce": (1.5, 8.0, 0.30), "birchyoung": (2.5, 7.0, 0.16),
+               "pineyoung": (1.5, 5.0, 0.16)}
+UNDER_SPACING = 5.5
+CANOPY_SPECIES = ("pine", "birch", "alder", "maple", "linden", "spruce")
+# Stand edge (mantle): three bands with rising height instead of one row, so a stand does not end in a vertical cut
+# of bare boles (review s19 0179 "like a theatre flat"). (band inner offset, outer offset [m, + = outside the BDOT
+# outline], grid step, {species: (weight, h lo, h hi)}); "canopy" = the stand's own mix at 0.55-0.8 of its height.
+# WORKING_VALUE (typical okrajek: shrubs, young birch / pine, then the lower side crowns of the edge trees).
+MANTLE = {
+    "conifer": [(0.0, 4.0, 2.6, {"shrub": (0.55, 1.2, 3.0), "birchyoung": (0.20, 1.5, 3.5), "pineyoung": (0.25, 1.0, 3.0)}),
+                (-5.0, 0.0, 2.8, {"birchyoung": (0.30, 3.0, 7.0), "pineyoung": (0.28, 2.5, 6.0), "spruce": (0.24, 3.0, 9.0),
+                                  "shrub": (0.18, 2.0, 3.8)}),
+                (-11.0, -5.0, 4.6, {"spruce": (0.45, 8.0, 15.0), "birch": (0.35, 8.0, 13.0), "pine": (0.20, 9.0, 14.0)})],
+    "broadleaf": [(0.0, 4.0, 2.6, {"shrub": (0.70, 1.2, 3.2), "birchyoung": (0.30, 1.5, 3.5)}),
+                  (-5.0, 0.0, 2.8, {"birchyoung": (0.42, 3.0, 7.0), "shrub": (0.28, 2.0, 3.8), "alder": (0.15, 4.5, 8.0),
+                                    "maple": (0.15, 4.0, 7.5)}),
+                  (-11.0, -5.0, 4.6, {"birch": (0.5, 7.0, 12.0), "alder": (0.25, 7.0, 11.0), "maple": (0.25, 6.0, 10.0)})],
+}
+MANTLE["mixed"] = MANTLE["conifer"]
+# Forest floor plants (bilberry / fern / seedlings, prototype tree_floor): only where a driver can see the floor -
+# within FLOOR_ROAD_M of a road / yard - and only on the High tier ("tier": "high"), one per FLOOR_SPACING^2.
+FLOOR_ROAD_M = 45.0
+FLOOR_SPACING = 3.4
+# Self-seeded land (OT_PTNZ_A / OT_PTTR_A): species of the old rule -> young prototypes (same positions and draws).
+SELF_SEEDED = {"pine": "pineyoung", "birch": "birchyoung", "alder": "birchyoung", "maple": "shrub", "linden": "shrub",
+               "shrub": "shrub", "spruce": "pineyoung"}
 
 
 def _seed(key):
@@ -159,7 +195,7 @@ def place(src, origin, hf, zc, blocked, report, overrides=None):
         j = np.clip(np.rint(hf.y1 - P[:, 1]).astype(int), 0, H - 1)
         return ~blocked[j, i], zc[j, i]
 
-    def emit(P, species, rng, src_id, hscale=1.0, fk=None, hrange=None):
+    def emit(P, species, rng, src_id, hscale=1.0, fk=None, hrange=None, spruce_v=None, tier=None):
         if not len(P):
             return
         good, z = ok(P)
@@ -168,9 +204,13 @@ def place(src, origin, hf, zc, blocked, report, overrides=None):
         # skipped its draws and shifted the random stream of every later tree of the same BDOT feature or group
         # (trees changed far outside an edited spot). Features with no dropped candidate keep their exact stream.
         for (x, y), zz, sp, g in zip(P, z, species, good):
-            lo, hi = hrange if hrange and sp != "shrub" else HEIGHT[sp]
+            lo, hi = hrange if hrange and sp in CANOPY_SPECIES else HEIGHT[sp]
             h = rng.uniform(lo, hi) * hscale
             v = int(rng.integers(0, 3))
+            if sp == "spruce":
+                v = SPRUCE_OPEN if spruce_v == "open" else v % 2
+            else:
+                v %= NVAR.get(sp, 3)
             yaw = float(rng.uniform(0, 6.2832))
             lean = float(rng.uniform(0, 0.05))
             if not g:
@@ -180,12 +220,29 @@ def place(src, origin, hf, zc, blocked, report, overrides=None):
                         "lean": round(lean, 3), "src": src_id})
             if fk:
                 out[-1]["fk"] = fk          # forest stand tree (texture mix of the forest HLOD, forest_hlod.py)
+            if tier:
+                out[-1]["tier"] = tier
 
     def pick(rng, mix, n):
-        return rng.choice(SPECIES, size=n, p=np.asarray(mix) / np.sum(mix))
+        return rng.choice(SPECIES[:len(mix)], size=n, p=np.asarray(mix) / np.sum(mix))   # 6-weight mixes: no spruce
+
+    def ranged(n0, table):
+        """Heights of out[n0:] from table {species: (.., lo, hi)}: position hash, not the stream (like the understorey)."""
+        for t in out[n0:]:
+            lo, hi = table[t["p"][5:]][-2:]
+            t["h"] = round(float(lo + (hi - lo) * ((_seed(f"{t['e']},{t['n']}") % 1000) / 999.0)), 1)
+
+    from scipy import ndimage as _ndi
+    road_dist = _ndi.distance_transform_edt(~blocked)       # metres to the nearest road / yard / building (1 m nodes)
+
+    def near_road(P, lim):
+        i = np.clip(np.rint(P[:, 0] - hf.x0).astype(int), 0, W - 1)
+        j = np.clip(np.rint(hf.y1 - P[:, 1]).astype(int), 0, H - 1)
+        return road_dist[j, i] <= lim
 
     forests = []
     forest_mix = []
+    n_floor = 0
     clear = forest_clearings(overrides, origin)
     crep = {"applied": [], "stale": []}
     hit = set()
@@ -240,16 +297,32 @@ def place(src, origin, hf, zc, blocked, report, overrides=None):
             names = list(UNDERSTOREY)
             w = np.array([UNDERSTOREY[k][2] for k in names])
             sp = rng.choice(names, size=len(P), p=w / w.sum())
+            if fk == "broadleaf":           # no conifer regeneration under a broadleaf stand
+                sp = np.array([{"spruce": "birchyoung", "pineyoung": "shrub"}.get(k, k) for k in sp])
             n0 = len(out)
-            emit(P, sp, rng, f"bdot:{f['id']}:under", 1.0, fk=fk)
-            for t in out[n0:]:
-                lo, hi = UNDERSTOREY[t["p"][5:]][:2]
-                t["h"] = round(float(lo + (hi - lo) * ((_seed(f"{t['e']},{t['n']}") % 1000) / 999.0)), 1)
-        # edge: shrubs + young deciduous along the outline
-        edge = full.buffer(3.0).difference(full.buffer(-5.0))
-        P = _scatter(edge, 3.0, rng)
-        sp = pick(rng, [0.0, 0.25, 0.15, 0.05, 0.0, 0.55], len(P))
-        emit(P, sp, rng, f"bdot:{f['id']}:edge", 0.6, fk=fk, hrange=hr)
+            emit(P, sp, rng, f"bdot:{f['id']}:under", 1.0, fk=fk, spruce_v="open")
+            ranged(n0, {k: v[:2] for k, v in UNDERSTOREY.items()})
+            # forest floor plants where the floor is seen from a road (High tier only)
+            P = _scatter(full.buffer(-1.0), FLOOR_SPACING, rng)
+            if len(P):
+                P = P[near_road(P, FLOOR_ROAD_M)]
+            n0 = len(out)
+            emit(P, ["floor"] * len(P), rng, f"bdot:{f['id']}:floor", 1.0, tier="high")
+            n_floor += len(out) - n0
+        # edge (ADR 0187): mantle of three bands with rising height along the outline
+        for bi, (d_in, d_out, step, table) in enumerate(MANTLE[fk]):
+            band = full.buffer(d_out).difference(full.buffer(d_in))
+            P = _scatter(band, step, rng)
+            names = list(table)
+            w = np.array([table[k][0] for k in names])
+            sp = rng.choice(names, size=len(P), p=w / w.sum()) if len(P) else []
+            n0 = len(out)
+            emit(P, sp, rng, f"bdot:{f['id']}:edge", 1.0, fk=fk, spruce_v="open")
+            ranged(n0, table)
+            if hr:                          # measured stand (ADR 0170): the mantle stays under 0.6 of its canopy
+                for t in out[n0:]:
+                    if t["p"] != "tree_shrub":
+                        t["h"] = round(min(t["h"], hr[1] * 0.6 * (0.5 + 0.25 * bi)), 1)
         if cut is not None and len(out) > n_stand:
             Q = np.array([[t["e"], t["n"]] for t in out[n_stand:]])
             gone = shapely.contains_xy(cut, Q[:, 0], Q[:, 1])
@@ -322,7 +395,7 @@ def place(src, origin, hf, zc, blocked, report, overrides=None):
             P = _scatter(poly, 14.0, rng)
             P = P[rng.uniform(0, 1, len(P)) < 0.45]
             sp = pick(rng, [0.2, 0.35, 0.05, 0.05, 0.0, 0.35], len(P))
-            emit(P, sp, rng, f"bdot:{f['id']}:self", 0.5)
+            emit(P, [SELF_SEEDED[k] for k in sp], rng, f"bdot:{f['id']}:self", 1.0)
     # ADR 0179: authored open ground (override `kind: open_ground`, `polygons_en`: region-local E/N rings) - land the
     # orthophoto / photos show mown or bare (an airfield meadow) where the BDOT grass layers self-seed trees. Rule
     # trees inside are dropped after generation (the random streams of the features are untouched, ADR 0173);
@@ -345,8 +418,9 @@ def place(src, origin, hf, zc, blocked, report, overrides=None):
         from scipy.spatial import cKDTree
         tree = cKDTree(P)
         keep = np.ones(len(P), bool)
+        floor = np.array([t["p"] == "tree_floor" for t in out])    # floor plants grow between the trunks (ADR 0187)
         for i, j in sorted(tree.query_pairs(1.8)):
-            if keep[i] and keep[j]:
+            if keep[i] and keep[j] and not floor[i] and not floor[j]:
                 keep[j] = False
         out = [t for t, k in zip(out, keep) if k]
     cnt = {}
@@ -354,6 +428,8 @@ def place(src, origin, hf, zc, blocked, report, overrides=None):
         cnt[t["p"]] = cnt.get(t["p"], 0) + 1
     report["trees"] = cnt
     report["understorey"] = sum(1 for t in out if t["src"].endswith(":under"))
+    report["forest_floor"] = sum(1 for t in out if t["src"].endswith(":floor"))
+    report["forest_mantle"] = sum(1 for t in out if t["src"].endswith(":edge"))
     report["_forest_mix"] = forest_mix
     return out, forests
 
