@@ -21,7 +21,6 @@ foreach($tier in $(if($OnlyTier){@($OnlyTier)}else{@('Low','High')})) {
   Add-Content artifacts/gpt-s16-r3/STATUS.md "`nZapisano $Stage/$tier-$light; każda kamera w stats.txt. Oględziny pozostają wymagane."
   git add -f artifacts/gpt-s16-r3/STATUS.md "artifacts/gpt-s16-r3/$Stage/$tier-$light/stats.txt"
   git commit -q -m "wip(s16): render putry-shadow $Stage $tier $light"
-  Copy-Item artifacts/gpt-s16-r3/STATUS.md "$root/artifacts/gpt-s16/PRZEKAZANIE.md"
-  Add-Content "$root/artifacts/gpt-s16/PRZEKAZANIE.md" "SHA: $(git rev-parse HEAD)"
+  & pwsh artifacts/gpt-s16-r3/handoff.ps1 -Step "render.ps1 completed step"
  }
 }

@@ -19,7 +19,6 @@ Copy-Item $xml.FullName artifacts/gpt-s16-r3/final-editmode.xml
 Add-Content artifacts/gpt-s16-r3/STATUS.md "`nEditMode zakończony: exit $result; szczegóły EDITMODE-STATUS.md i final-editmode.xml."
 git add -f artifacts/gpt-s16-r3/STATUS.md artifacts/gpt-s16-r3/EDITMODE-STATUS.md artifacts/gpt-s16-r3/test-editmode.ps1 artifacts/gpt-s16-r3/final-editmode.xml
 git commit -m "wip(s16): record full EditMode result exit $result"
-Copy-Item artifacts/gpt-s16-r3/STATUS.md "$root/artifacts/gpt-s16/PRZEKAZANIE.md"
-Add-Content "$root/artifacts/gpt-s16/PRZEKAZANIE.md" "SHA: $(git rev-parse HEAD)"
+  & pwsh artifacts/gpt-s16-r3/handoff.ps1 -Step "test-editmode.ps1 completed step"
 exit $result
 

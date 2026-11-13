@@ -14,7 +14,6 @@ $timer.Stop()
 Add-Content artifacts/gpt-s16-r3/STATUS.md "`nPełny GIS zakończony: exit $result; szczegóły GIS-STATUS.md oraz final-gis.log."
 git add -f artifacts/gpt-s16-r3/STATUS.md artifacts/gpt-s16-r3/GIS-STATUS.md artifacts/gpt-s16-r3/test-gis.ps1
 git commit -m "wip(s16): record full GIS result exit $result"
-Copy-Item artifacts/gpt-s16-r3/STATUS.md "$root/artifacts/gpt-s16/PRZEKAZANIE.md"
-Add-Content "$root/artifacts/gpt-s16/PRZEKAZANIE.md" "SHA: $(git rev-parse HEAD)"
+  & pwsh artifacts/gpt-s16-r3/handoff.ps1 -Step "test-gis.ps1 completed step"
 exit $result
 

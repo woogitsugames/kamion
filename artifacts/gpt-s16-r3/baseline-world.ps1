@@ -15,5 +15,4 @@ Copy-Item Data/Regions/bialystok-industrial-c/generated/world_manifest.json "art
 Add-Content artifacts/gpt-s16-r3/STATUS.md "`nŚwiat $Stage wygenerowany: $($timer.Elapsed.TotalSeconds) s, bez fallback=True. NASTĘPNY KROK: import i kamery $Stage."
 git add -f artifacts/gpt-s16-r3/STATUS.md artifacts/gpt-s16-r3/baseline-world.ps1 "artifacts/gpt-s16-r3/$Stage-streetscape-qa.json" "artifacts/gpt-s16-r3/$Stage-world-manifest.json"
 git commit -q -m "wip(s16): generate $Stage world for Putry shadow round"
-Copy-Item artifacts/gpt-s16-r3/STATUS.md "$root/artifacts/gpt-s16/PRZEKAZANIE.md"
-Add-Content "$root/artifacts/gpt-s16/PRZEKAZANIE.md" "SHA: $(git rev-parse HEAD)"
+  & pwsh artifacts/gpt-s16-r3/handoff.ps1 -Step "baseline-world.ps1 completed step"
