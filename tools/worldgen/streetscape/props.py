@@ -410,7 +410,7 @@ SHELTER_BAR = 0.04                  # WORKING_VALUE
 D15_RACK_W_M, D15_RACK_H_M = 0.55, 0.805
 SHELTER_MODULES = {"bus_shelter_5m": 2, "bus_shelter": 3, "bus_shelter_9m": 4}
 # shelter atlas (furniture_textures.shelter_atlas, 512 x 512, v up): uv of the flat swatches and the picture regions
-SHELTER_UV = {"red": (0.125, 0.94), "black": (0.375, 0.94), "wood": (0.625, 0.94), "grey": (0.875, 0.94)}
+SHELTER_UV = {"red": (0.125, 0.94), "black": (0.375, 0.94), "wood": (0.625, 0.94), "roof": (0.875, 0.94)}
 SHELTER_UV_BAND = (0.0, 0.76, 1.0, 0.86)          # blue information board on the road-side roof edge
 SHELTER_UV_TIMETABLE = (0.02, 0.27, 0.48, 0.73)   # timetable poster behind the case glass
 SHELTER_UV_D15 = (0.53, 0.25, 0.87, 0.75)         # D-15 rack face (0.55 x 0.805 m)
@@ -433,9 +433,9 @@ def _uv_quad(mm, mat, a, b, c, d, reg):
 
 def bus_shelter_bkm(modules=3, colour="red"):
     """BKM shelter (constants above). Local frame: +y = the road side (the open front and the high roof edge), origin
-    on the pavement in the middle of the wall depth. Materials: shelter_paint (one atlas for the frame, bench,
-    timetable posters, information board and D-15 rack), shelter_glass_clear, shelter_roof_pc - three slots (the old
-    generic shelter had four)."""
+    on the pavement in the middle of the wall depth. Materials: shelter_paint (one atlas for the frame, roof sheet,
+    bench, timetable posters, information board and D-15 rack) and shelter_glass_clear - two slots (the old generic
+    shelter had four): every slot is a draw per prototype on Low."""
     paint = SHELTER_UV[colour]
     L = modules * SHELTER_MODULE_M
     RL = L + 2 * SHELTER_SIDE_OVERHANG_M
@@ -540,8 +540,9 @@ def bus_shelter_bkm(modules=3, colour="red"):
         bq = [-RL / 2, y_back_edge, z0 + 0.06]
         c = [-RL / 2, y_front_edge, zr(y_front_edge) + 0.06]
         d = [RL / 2, y_front_edge, zr(y_front_edge) + 0.06]
-        mm.quad("shelter_roof_pc", d, c, bq, a, uv=((0, 1), (RL, 1), (RL, 0), (0, 0)))
-        mm.quad("shelter_roof_pc", a, bq, c, d, uv=((0, 0), (RL, 0), (RL, 1), (0, 1)))
+        ru = (SHELTER_UV["roof"],) * 4                  # smoked polycarbonate swatch of the atlas (one slot less)
+        mm.quad("shelter_paint", d, c, bq, a, uv=ru)
+        mm.quad("shelter_paint", a, bq, c, d, uv=ru)
     # collision: the walled part up to the roof, the roof slab (a truck mirror reaches 2.6-2.9 m)
     col.box("collision_steel", [0, 0, z0 / 2], L / 2 + 0.05, SHELTER_WALL_D_M / 2 + 0.05, z0 / 2)
     col.box("collision_steel", [0, (y_back_edge + y_front_edge) / 2, (z0 + zr(y_front_edge)) / 2 + 0.05], RL / 2,

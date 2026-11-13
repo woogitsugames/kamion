@@ -128,11 +128,12 @@ RAL3020_SRGB = (204, 6, 5)
 RAL1012_SRGB = (199, 180, 70)
 SHELTER_GRAPHITE_SRGB = (38, 40, 42)
 SHELTER_WOOD_SRGB = (150, 104, 62)
+SHELTER_ROOF_SRGB = (74, 62, 52)          # smoked multiwall polycarbonate seen in daylight, WORKING_VALUE
 
 
 def shelter_atlas():
     """512 x 512 sRGB atlas of the BKM shelter (props.SHELTER_UV*; v up = image rows from the bottom):
-    top band: flat swatches red / graphite / wood / grey with low-contrast powder-coat grain; below it the blue
+    top band: flat swatches red / graphite / wood / smoked roof with low-contrast powder-coat grain; below it the blue
     information board (a plain field with a white keyline - no operator logo, no invented stop text); left middle a
     printed timetable sheet (columns of fine grey rows, our own pattern); right middle the D-15 rack face after BKM
     zał. 07c typ A/B (white name field, D-15 bus symbol, number slots) - our own drawing."""
@@ -143,7 +144,7 @@ def shelter_atlas():
     im = Image.new("RGB", (n, n), RAL3020_SRGB)
     a = np.asarray(im, float).copy()
     grain = gaussian_filter(rng.normal(0, 1, (n, n)), 1.2)
-    for k, c in enumerate((RAL3020_SRGB, SHELTER_GRAPHITE_SRGB, SHELTER_WOOD_SRGB, (150, 152, 152))):
+    for k, c in enumerate((RAL3020_SRGB, SHELTER_GRAPHITE_SRGB, SHELTER_WOOD_SRGB, SHELTER_ROOF_SRGB)):
         x0, x1 = k * n // 4, (k + 1) * n // 4
         amp = 10.0 if k == 2 else 4.0
         a[: n // 8, x0:x1] = np.clip(np.array(c, float)[None, None, :] * (1 + grain[: n // 8, x0:x1, None] * amp / 255 * 3),

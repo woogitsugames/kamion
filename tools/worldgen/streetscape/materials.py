@@ -701,15 +701,14 @@ M["vehicle_lod_details"] = {"color": [1.0, 1.0, 1.0], "rough": 0.6, "vehicle_lod
 #   wood, timetable sheet, information board, D-15 rack) - one opaque slot for the whole frame. Powder coat: matt-satin.
 # - shelter_glass_clear: tempered glass panes are clear (G5-001: "szyby ze szkła bezpiecznego"; the old shelter_glass
 #   was an opaque near-black sheet) - the noise-screen clear-sheet model, little haze, no printed lines. WORKING_VALUE.
-# - shelter_roof_pc: smoked multiwall polycarbonate ("poliwęglan komórkowy dymiony"), opaque brown-grey. WORKING_VALUE.
+#   The smoked multiwall polycarbonate roof ("poliwęglan komórkowy dymiony") is a swatch of the same atlas.
 # - paint_ral1012 / paint_ral3020: U-12a / U-12 / U-5a (ZDM standard 2018, G5-010); linear values of the public sRGB
 #   conversions in furniture_textures (RAL1012_SRGB, RAL3020_SRGB), slightly weathered. WORKING_VALUE.
 M["shelter_paint"] = {"color": [1.0, 1.0, 1.0], "rough": 0.55, "texture": "bus_shelter_atlas"}
 M["shelter_glass_clear"] = {"color": [0.030, 0.040, 0.040], "rough": 0.04, "alpha": 0.10, "blend": True,
                             "shader": "car_glass", "dust": 0.5, "screen": {"horizon_sky": 0.85, "haze": 0.03}}
-M["shelter_roof_pc"] = {"color": [0.085, 0.065, 0.05], "rough": 0.35}
 M["paint_ral1012"] = {"color": [0.52, 0.42, 0.06], "rough": 0.5}
 M["paint_ral3020"] = {"color": [0.55, 0.012, 0.009], "rough": 0.5}
-for _k in ("shelter_paint", "shelter_roof_pc", "paint_ral1012", "paint_ral3020"):
+for _k in ("shelter_paint", "paint_ral1012", "paint_ral3020"):
     M[_k].setdefault("sky_occ", SKY_OCC_STRUCT)
 M["shelter_glass_clear"].setdefault("sky_occ", SKY_OCC_GLASS)

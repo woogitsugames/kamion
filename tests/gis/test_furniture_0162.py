@@ -28,6 +28,10 @@ from streetscape import signs as SG  # noqa: E402
 
 
 def _verts(mesh, mat=None):
+    if mat == "roof":                                   # the roof sheet: atlas swatch "roof" of shelter_paint
+        u = PP.SHELTER_UV["roof"]
+        return np.concatenate([p["V"][np.all(np.isclose(p["UV"], u), axis=1)] for p in mesh.out()
+                               if p["mat"] == "shelter_paint"])
     return np.concatenate([p["V"] for p in mesh.out() if mat is None or p["mat"] == mat])
 
 
@@ -35,7 +39,7 @@ def _verts(mesh, mat=None):
 def test_shelter_roof_length_is_modules_plus_two_overhangs(modules, roof):
     """'n x 2 m' + 'dwa występy boczne zadaszenia po min 0,5 m' -> 5 / 7 / 9 m."""
     m, _, _ = PP.bus_shelter_bkm(modules)
-    R = _verts(m, "shelter_roof_pc")
+    R = _verts(m, "roof")
     assert R[:, 0].max() - R[:, 0].min() == pytest.approx(roof, abs=1e-6)
     posts = modules * PP.SHELTER_MODULE_M
     assert (R[:, 0].max() - posts / 2) >= 0.5 - 1e-9
@@ -45,7 +49,7 @@ def test_standard_shelter_is_three_modules_7m_red():
     """'wiatę standardową ... 3 modułów po 2 m (długość zadaszenia 7 m)', 'kolor czerwony - RAL 3020'."""
     assert PP.SHELTER_MODULES["bus_shelter"] == 3
     m, _, _ = PP.bus_shelter()
-    R = _verts(m, "shelter_roof_pc")
+    R = _verts(m, "roof")
     assert np.ptp(R[:, 0]) == pytest.approx(7.0)
     atlas = np.asarray(FT.shelter_atlas(), float)
     u, v = PP.SHELTER_UV["red"]
@@ -56,7 +60,7 @@ def test_standard_shelter_is_three_modules_7m_red():
 def test_shelter_height_wall_glass_seat():
     """'2,6 m' to the roof, wall '1,07 m', glass '0,6 m x 0,99 m' from '0,15 m', seat '0,4 m'."""
     m, l1, col = PP.bus_shelter()
-    R = _verts(m, "shelter_roof_pc")
+    R = _verts(m, "roof")
     assert R[:, 2].min() - 0.06 == pytest.approx(2.6)           # underside of the low edge (sheet sits 6 cm up)
     G = _verts(m, "shelter_glass_clear")
     assert G[:, 2].min() == pytest.approx(0.15)
@@ -72,11 +76,11 @@ def test_shelter_height_wall_glass_seat():
 
 
 def test_shelter_material_slots_and_lod():
-    """Three slots (one atlas for frame / bench / boards), LOD1 lighter than LOD0, collision covers the roof."""
+    """Two slots (one atlas for frame / roof / bench / boards), LOD1 lighter than LOD0, collision covers the roof."""
     for name in ("bus_shelter", "bus_shelter_5m", "bus_shelter_9m", "bus_shelter_black"):
         P = PP.build_all(set(), {})[name]
         m, l1, col = P[:3]
-        assert {p["mat"] for p in m.out()} == {"shelter_paint", "shelter_glass_clear", "shelter_roof_pc"}
+        assert {p["mat"] for p in m.out()} == {"shelter_paint", "shelter_glass_clear"}
         t0 = sum(len(p["T"]) for p in m.out())
         t1 = sum(len(p["T"]) for p in l1.out())
         assert t1 < 0.4 * t0 and t0 < 800

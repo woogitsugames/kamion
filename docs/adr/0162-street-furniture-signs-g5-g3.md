@@ -19,9 +19,9 @@ tablic 2024 dla Putry i al. Tysiąclecia, której gra nie miała. Zakres: tylko 
 - Odczyt z rysunków, WORKING_VALUE: spadek dachu 0,25 m ku tyłowi (2019: 0,26/1,7 m; 2020: 0,21/1,95 m), profil
   słupa 80 × 60, pręty 40 mm, gablota 0,92 × 0,78 m od 1,1 m. Strona jezdni = wysoka krawędź (stelaż typ A/C/F „od
   strony jezdni” jest na wysokim końcu rzutu bocznego 2020).
-- Materiały (3 sloty zamiast 4): `shelter_paint` = jeden atlas (`furniture_textures.shelter_atlas`: RAL 3020, grafit,
+- Materiały: `shelter_paint` = jeden atlas (`furniture_textures.shelter_atlas`: RAL 3020, grafit,
   drewno, rozkład, tablica, stelaż), `shelter_glass_clear` (przezroczyste szkło hartowane — model `car_glass/screen`
-  jak ekrany; stare `shelter_glass` było prawie czarną płytą), `shelter_roof_pc` (poliwęglan dymiony). LOD1 ≈ 1/3 trójkątów.
+  jak ekrany; stare `shelter_glass` było prawie czarną płytą), dach z poliwęglanu dymionego jako pole tego samego atlasu (2 sloty zamiast 4). LOD1 ≈ 1/3 trójkątów.
 - Warianty: `bus_shelter` (3 moduły, standard), `bus_shelter_5m`, `bus_shelter_9m` w proporcji zamówienia 2020
   (44 / 29 / 7 z 80 — SOURCED); `bus_shelter_black` (starsze grafitowe, G5-020) 15 % — WORKING_VALUE. Wybór
   deterministyczny z położenia przystanku (przeżywa reimport). D-15 jest na stelażu wiaty — osobny słupek D-15 przy
