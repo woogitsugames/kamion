@@ -577,8 +577,10 @@ def _apply_underdeck(w, hero, instances=None):
                    "pier_yellow", src + ":column", collision=True,
                    bevel_mat="bridge_concrete" if prm.get("unpainted_chamfers", False) else None,
                    paint_weather=paint_weather)
+            # ADR 0161 (REVIEW s16b P2): the head carries the paint of the column (CC0 7204_May_2021: ochre up to
+            # the bearing); bare concrete read as a pale collar on a dark pier
             _prism(buf, q[:2], t, .66, .75, .13, cap_bottom, cap_top,
-                   "bridge_concrete", src + ":head", collision=True)
+                   "pier_yellow", src + ":head", collision=True)
             M.box(buf, "bridge", "bridge_soffit", q[:2], t, .30, .36,
                   cap_top, pr["top"], src + ":bearing")
             # The opt-in PBR path replaces these short geometric streaks rather

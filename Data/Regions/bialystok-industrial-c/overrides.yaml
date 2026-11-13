@@ -433,8 +433,20 @@ overrides:
     verify: sign on site, distance to the merge
   - id: andersa-link-median-d1
     kind: gate3_sign
-    along: {osm_way: 173956083, before_node: n2629251371, distance_m: 71.6, side: L, offset_m: 0.6}
-    parts: [{face: D-1}]
+    # ADR 0161: post foot read off the GUGiK hi-res orthophoto (WMS ORTO HighResolution, crop
+    # artifacts/p1-0161/td/hr_d1.png: yellow plate at E -487.6 N -3.7, its triangular shadow 2.7 m to the NNW; +-0.4 m)
+    # instead of the station derived from the ADR 0160 probe pose (it stood 1.5-2 m away). The plate is turned ~18 deg
+    # towards the carriageway: on Mapillary 4312632558767412 the diamond is ~0.45 as wide as high from a camera that
+    # sees the post at bearing ~231 (60-65 deg off the plate normal); square to the link (312.8) it was edge-on.
+    # travel_bearing_deg WORKING_VALUE (+-10 deg).
+    at_en: [-487.8, -3.8]
+    travel_bearing_deg: 295
+    # ADR 0161: the A-7 under the diamond (same post; ADR 0160 left it out as "turned to another flow"). On the
+    # frame both plates show their yellow faces at about the same angle, and the diamond sits ~3.7-4.2 m above the
+    # road (centre 28.8 deg above the horizon from ~7 m, eye 0.9) - with a plate under it, not at 2.0 m. The real
+    # diamond also reads ~1.5 x the 0.6 m medium plate (large group?): size UNVERIFIED, not changed.
+    lower_edge_m: 2.2
+    parts: [{face: D-1}, {face: A-7}]
     mapillary: ["4312632558767412"]
     reason: >-
       ADR 0160 (REVIEW s16 G3-B P1): main-road diamond on the median kerb of the trunk_link under the Andersa
@@ -682,7 +694,13 @@ overrides:
     kind: sign_gantry
     osm_way: 173956083
     before_node: n2629251371
-    distance_m: 55.0
+    # ADR 0161 (REVIEW s16b P1, 4312632: "portal on the right edge that the photo does not have"): the portal stands
+    # 31 m further from the ring than the 55 m read off the kino frames against the lamp spacing. GUGiK hi-res
+    # orthophoto (WMS ORTO HighResolution, crop artifacts/p1-0161/td/hr_gantry.png): lattice beam from E -480.0
+    # N -12.3 to E -471.0 N -5.4, i.e. just after the gore nose of the ramp split and before the first arrow pair;
+    # the generated portal stood at E -497.5 N 12.3. Column feet +-1 m (the beam top leans on the orthophoto).
+    distance_m: 86.0
+    columns_en: [[-479.8, -12.0], [-471.6, -5.6]]
     boards:
       - lanes: [0]
         from_osm:
@@ -695,7 +713,8 @@ overrides:
     reason: >-
       Mapillary 1783751488818497 and 1911352299378570 (kino, 2024-07-26) show a two-column lattice portal before the
       Rondo Putry entry with a board over each lane: left Warszawa / Ełk + Centrum (675), right Augustów / Kuźnica.
-      Station 55 m before the ring node, WORKING_VALUE (read off the photo against the lamp spacing).
+      Station 55 m before the ring node, WORKING_VALUE (read off the photo against the lamp spacing); ADR 0161: 86 m,
+      from the orthophoto.
     confidence: low
     verify: station and board layout on site
   - id: andersa-ne-noise-barrier-glazed
@@ -1973,3 +1992,224 @@ overrides:
     confidence: medium
     verify: owner photo session (frontage of the G3-B stretch)
     set: {wall_material: plaster_light, balconies: false, bands: false}
+  # ---------------------------------------------------------------- ADR 0161: P1 of the gate 3 frames after s16b
+  # Everything below is read off the GUGiK hi-res orthophoto (WMS ORTO HighResolution, ~0.05-0.08 m; crops with a
+  # 5 / 10 m grid in artifacts/p1-0161/td/hr_*.png) unless a photo is named. Region-local E, N.
+  - id: putry-link-p8-0l
+    kind: painted_arrow
+    at_en: [-459.50, -25.45]
+    heading_deg: 136.2
+    turns: [through, left]
+    long: false
+    reason: >-
+      ADR 0161 (REVIEW s16b P1, 339463 / 4312632: "no arrows on the carriageway"). The link to Rondo Putry
+      (w173956083) carries six pairs of P-8 arrows before the stop line, 14.9 m apart (15 m = pkt 3.2.1 for <= 70 km/h),
+      5.1 m long (the short arrow, 5.0 m): through + left in the left lane, through + right in the right lane. Head
+      tips of pairs 0, 1 and 2 measured on the crops hr_arrows.png / hr_gantry.png (left E -463.1 N -22.0, right
+      E -460.9 N -19.9; pair spacing -10.75 E / +10.35 N, checked on the right arrows of pairs 3, 4, 5 within 0.4 m);
+      `at_en` = tail = tip - 5.0 m along the lane. The generator paints P-8 only at the downstream end of a section
+      and painted none here. The left arrow of pair 5 is under a car on the orthophoto: not painted.
+    confidence: high
+    verify: owner drive
+  - id: putry-link-p8-0r
+    kind: painted_arrow
+    at_en: [-457.30, -23.35]
+    heading_deg: 136.2
+    turns: [through, right]
+    long: false
+    reason: "P-8 pair 0 of the link to Rondo Putry, see putry-link-p8-0l."
+    confidence: high
+    verify: owner drive
+  - id: putry-link-p8-1l
+    kind: painted_arrow
+    at_en: [-470.25, -15.10]
+    heading_deg: 136.2
+    turns: [through, left]
+    long: false
+    reason: "P-8 pair 1 of the link to Rondo Putry, see putry-link-p8-0l."
+    confidence: high
+    verify: owner drive
+  - id: putry-link-p8-1r
+    kind: painted_arrow
+    at_en: [-468.05, -13.00]
+    heading_deg: 136.2
+    turns: [through, right]
+    long: false
+    reason: "P-8 pair 1 of the link to Rondo Putry, see putry-link-p8-0l."
+    confidence: high
+    verify: owner drive
+  - id: putry-link-p8-2l
+    kind: painted_arrow
+    at_en: [-481.00, -4.75]
+    heading_deg: 136.2
+    turns: [through, left]
+    long: false
+    reason: "P-8 pair 2 of the link to Rondo Putry, see putry-link-p8-0l."
+    confidence: high
+    verify: owner drive
+  - id: putry-link-p8-2r
+    kind: painted_arrow
+    at_en: [-478.80, -2.65]
+    heading_deg: 136.2
+    turns: [through, right]
+    long: false
+    reason: "P-8 pair 2 of the link to Rondo Putry, see putry-link-p8-0l."
+    confidence: high
+    verify: owner drive
+  - id: putry-link-p8-3l
+    kind: painted_arrow
+    at_en: [-491.75, 5.60]
+    heading_deg: 136.2
+    turns: [through, left]
+    long: false
+    reason: "P-8 pair 3 of the link to Rondo Putry, see putry-link-p8-0l."
+    confidence: high
+    verify: owner drive
+  - id: putry-link-p8-3r
+    kind: painted_arrow
+    at_en: [-489.55, 7.70]
+    heading_deg: 136.2
+    turns: [through, right]
+    long: false
+    reason: "P-8 pair 3 of the link to Rondo Putry, see putry-link-p8-0l."
+    confidence: high
+    verify: owner drive
+  - id: putry-link-p8-4l
+    kind: painted_arrow
+    at_en: [-502.50, 15.95]
+    heading_deg: 136.2
+    turns: [through, left]
+    long: false
+    reason: "P-8 pair 4 of the link to Rondo Putry, see putry-link-p8-0l."
+    confidence: high
+    verify: owner drive
+  - id: putry-link-p8-4r
+    kind: painted_arrow
+    at_en: [-500.30, 18.05]
+    heading_deg: 136.2
+    turns: [through, right]
+    long: false
+    reason: "P-8 pair 4 of the link to Rondo Putry, see putry-link-p8-0l."
+    confidence: high
+    verify: owner drive
+  - id: putry-link-p8-5r
+    kind: painted_arrow
+    at_en: [-511.05, 28.40]
+    heading_deg: 136.2
+    turns: [through, right]
+    long: false
+    reason: "P-8 pair 5 of the link to Rondo Putry, see putry-link-p8-0l."
+    confidence: high
+    verify: owner drive
+  - id: putry-ring-s-approach-signal-mast
+    kind: gate3_signal
+    # real pole E -532.5 N 37.9; the generated northbound carriageway is ~1 m wider and the link ~3 m further SW
+    # than on the orthophoto, so that point lies in the right lane. The pole stands 2.2 m from it, on the nose
+    # island putry-ring-s-nose-island (the wedge the generated lanes leave).
+    at_en: [-530.4, 37.1]
+    travel_bearing_deg: 350
+    arm_bearing_deg: 292
+    lit: red
+    mapillary: ["182011943700132"]
+    reason: >-
+      ADR 0161 (REVIEW s16b P1, 182011: "no signals on cantilevers, the anchor of the junction"). The northbound
+      carriageway of the Rondo Putry ring under the Andersa viaduct has a stop line at N 36 and signals; the junction
+      rule builds none there because it skips ring arms. Orthophoto (crop hr_182a.png): pole on the east kerb at
+      E -532.5 N 37.9, arched arm 7.5 m to the WNW with the head over the lane line at E -539.4 N 40.7 (its shadow is
+      the long curved line to E -546 N 50). The prototype arm is 6.0 m with the head 5.0 m out (WORKING_VALUE of
+      ADR 0069), so the head hangs 2.5 m short of the real one. Mapillary 182011943700132 (gpsmapper 2019) shows the
+      state before a rebuild: two masts with short arms, one on the island and one on the east kerb; the world follows
+      the orthophoto (2024 epoch, as every other object of the region).
+    confidence: medium
+    verify: owner drive (arm length, number of heads)
+  - id: putry-ring-s-nose-island
+    kind: traffic_island
+    surface: sidewalk_paving
+    polygon_en: [[-530.8, 38.4], [-529.4, 37.3], [-527.2, 34.6], [-525.3, 32.2], [-523.0, 29.6], [-521.6, 27.6],
+                 [-520.9, 26.5], [-522.5, 26.3], [-524.5, 25.9], [-526.6, 25.1], [-528.4, 23.9], [-529.6, 27.5],
+                 [-530.3, 31.0], [-530.9, 35.0], [-531.3, 37.4]]
+    reason: >-
+      ADR 0161: kerbed nose between the northbound ring carriageway and the link from Andersa. On the orthophoto
+      (crop hr_182a.png) its tip is at E -533.1 N 40.2 and the signal mast stands on it; the generator closes the
+      junction patch 15 m further south (rounded nose top at N 25.7) and leaves one sheet of asphalt. The polygon is
+      NOT the real outline: it fills the wedge between the generated lanes (0.4-0.5 m clear of the right edge of the
+      northbound lanes and of the zebra ends of the link, read off the generated meshes), so nothing stands in a
+      lane. Paved tip as on the orthophoto; the grass and the cycle path behind it are not modelled.
+    confidence: low
+    verify: owner drive; replace when the junction geometry is rebuilt
+  - id: putry-ring-s-approach-signal-island
+    kind: gate3_signal
+    at_en: [-545.0, 40.0]
+    travel_bearing_deg: 350
+    lit: red
+    mapillary: ["182011943700132"]
+    reason: >-
+      Repeater on the gravel island left of the same stop line: a plain post on the orthophoto (straight 3.6 m shadow
+      from E -545.0 N 40.0, no arm). See putry-ring-s-approach-signal-mast.
+    confidence: medium
+    verify: owner drive
+  - id: ec-access-plantings
+    kind: plantings
+    reason: >-
+      ADR 0161 (REVIEW s16b P1, cm92458760: "no island with a flower bed, no crossing foreground"). South arm of
+      Rondo Pamięci Bieżeństwa at the EC access road. CC BY 3.0 photo cm92458760 (Rakoon 2020-07-11, Commons,
+      reference only) and the orthophoto (crops hr_cm924.png, hr_klomb.png, hr_refuge.png): (1) a lens-shaped kerbed
+      lawn island between the slip road and the footway with one mass of low red-brown shrubs in its middle
+      (traced, +-0.4 m; on the photo flowering, ~0.5 m high - the berberis band of the other beds of this roundabout
+      is the nearest existing plant, WORKING_VALUE); (2) the refuge between the two carriageways of the south arm,
+      which both zebras and the red cycle crossing run over, is paved with grey blocks - the generator left it as
+      lawn inside a kerb ring.
+    confidence: medium
+    verify: owner photo session (roundabout islands)
+    beds:
+      - {name: EC1, plant: berberis_red, rim_m: 0.3, ring: [[778544.5, 595474.2], [778547.0, 595475.3], [778551.0, 595475.5], [778555.0, 595474.8], [778558.0, 595473.2], [778560.5, 595471.4], [778558.0, 595470.8], [778554.0, 595470.1], [778550.0, 595469.7], [778546.5, 595470.2], [778544.8, 595472.0]]}
+    # islands: [{name: ec-refuge, at: [778531.5, 595479.0], fill: paving}] - OFF (visual-critic s17 0161, P1): the paved
+    # refuge read as a podium (flat, too large, vertical sides, no dropped kerb or crossing). Back on with a dropped-kerb
+    # outline traced from the orthophoto, when a pose of confidence B exists.
+  - id: kwadrat-exit-carriageway-width
+    target: {edge: "w194536287:1882887381-1882954023"}
+    reason: >-
+      ADR 0161 (REVIEW s16b P1, cm109685822). OSM maps the SW-bound carriageway of the Kwadrat Park access as a
+      one-lane service way without a width, so the generator built 3.9 m. Orthophoto (crop hr_cm109.png, 17 px/m):
+      asphalt from the kerb of the brick footway to the median islands is 8.7 m along E at N -620 (E 595.7-604.4)
+      = 7.7 m square to the way (one running lane + a strip where cars park along the kerb). Kerb of the footway:
+      E = 597.5 + 0.5 (N + 620) for N -628 ... -589 (crop hr_cm109z.png, 46 px/m), median edge E 606.1 at N -620.
+      Width 7.7 m, centre 0.75 m to the right of the way (edge direction SW, so center_offset -0.75; the first
+      build with -1.9 put the kerb 1.2 m west of the orthophoto). WORKING_VALUE +-0.4 m.
+      Evidence: artifacts/p1-0161/xsec/hr_cm109.png, xsec/hr_cm109z.png (GUGiK orthophoto 0.25 m crops).
+    confidence: medium
+    verify: owner photo session item 1 (access road)
+    # The first 36 % of the edge (22 m from the depot node: the two booms of kwadrat-park-gate-kit, their side strips
+    # and closure lines, a gameplay anchor laid on the generated 4.0 m lanes) keeps the generated section; the
+    # carriageway widens over the next 9 m. With the full length at 7.7 m the exit boom no longer reached its side
+    # strip (tests/gis/test_depot_yard.py::test_region_gate_cannot_be_driven_round). The real road is as wide at the
+    # gate too; that part waits for the owner's photos of the gate (D-list item 1).
+    # lane_edges (s17): with a width profile alone the one-lane layout used the widest value (lane_w 7.7 - 2 x edge
+    # strip), so at the 4.0 m gate section the lane centre sat 1.85 m right of the carriageway centre and the lane
+    # from the yard ran into the kerb (road_consistency lane_blind_end at E 621.85 N -588.83, on the route). The
+    # running lane is measured from the LEFT (median) edge, 0.25 ... 3.75 m: at the 4.0 m gate it is centred exactly
+    # as the generated lane was (hw 2.0 - 2.0 = 0); past the widening it keeps to the median and leaves the
+    # 3.95 m kerb-side strip where cars park (orthophoto hr_cm109.png). WORKING_VALUE.
+    set: {center_offset: [[0.0, 0.0], [0.36, 0.0], [0.5, -0.75], [1.0, -0.75]],
+          width: [[0.0, 4.0], [0.36, 4.0], [0.5, 7.7], [1.0, 7.7]],
+          lane_edges: [0.25, 3.75]}
+  - id: kwadrat-exit-verge-lawn
+    kind: unpaved_area
+    polygon_en: [[586.35, -627.5], [605.6, -589.0], [610.0, -589.0], [590.75, -627.5]]
+    reason: >-
+      ADR 0161 (cm109685822: "half of the frame is a block-paved car park with stall lines; the photo has a footway
+      and a lawn"). BDOT10k OT_PTPL_A draws one "plac" from the hall to the carriageway. CC0 photo cm109685822
+      (Rakoon 2021-09-04, Commons) and the orthophoto: a 4.1-5.0 m lawn strip between the car park and the footway.
+      Straight strip 3.0 ... 7.4 m west of the kerb line E = 597.5 + 0.5 (N + 620) (hr_cm109z.png), +-0.4 m.
+    confidence: high
+    verify: owner photo session item 1
+  - id: kwadrat-exit-footway
+    kind: paved_area
+    material: sidewalk_paving
+    polygon_epsg2180: [[778585.75, 595595.5], [778605.0, 595634.0], [778608.6, 595634.0], [778589.35, 595595.5]]
+    reason: >-
+      Brick footway (2.6-2.8 m, yellow blocks on the photo cm109685822; the nearest existing set is sidewalk_paving)
+      between that lawn and the kerb of the SW-bound carriageway: 3.0 m west of the kerb line (see the lawn) to
+      0.6 m past it, so that the generated carriageway cuts it (no sliver of yard between footway and kerb).
+    confidence: high
+    verify: owner photo session item 1
