@@ -5,4 +5,5 @@
 - dryer v2 przestrojony (4 L/6 mm, tłumik fpk≤5.2 kHz, -40 dB/dek² nad pikiem): profil czasowy i centroid ≈ P5-006 (±1-2 dB, 5.3 vs 5.3 kHz)
 - render_all.py: dopisane 10 warstw 0176 (+cab) → art-source/audio/generated/sfx (OK, 41 s)
 - C#: LayerMath (prawa 0176: ShaftRpm, RetarderTone/FlowGain, TonePitch, EngineBrakeReleaseLevel) + DrivelineSfx (struct, zdarzenia AMT/hamulec silnikowy)
-- NASTĘPNY KROK: VehicleAudioLibrary pola 0176 + VehicleAudioImporter + hook TruckAudioController
+- biblioteka (pola 0176) + importer + hook TruckAudioController (retarder tone/flow, zdarzenia AMT/hamulec silnikowy, dryer v2) + DrivelineSfxTests (11 testów, PlayMode asm — EditMode asm nie referuje Game.Audio, asmdef = lider)
+- NASTĘPNY KROK: kompilacja + testy w Unity (slot unity-slot.ps1, bez PHONE_RUN): pwsh scripts/test.ps1 -Platform PlayMode
