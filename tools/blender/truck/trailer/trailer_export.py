@@ -81,13 +81,22 @@ LOD2_DROP = LOD1_DROP + ("_nut", "lockcam", "hinge_strap", "buckle_", "strap_", 
                          "air_line", "doc_tube", "coupling", "palm_", "socket_", "kingpin", "mudguard_lip",
                          "leg_xbrace", "leg_brace", "cross_shaft", "crank_shaft", "crank_holder", "leg_collar",
                          "dock_buffer", "lamp_panel_side", "plate_lamp", "tension_", "curtain_rear_wrap",
-                         "curtain_front_strip", "stalk_", "side_reflector", "sideguard_post", "lockbar",
-                         "door_frame", "beam_flange", "rup_brace", "tri_reflector", "contour_rear", "contour_corner",
-                         "side_marker_reflex", "front_reflex", "toolbox",
+                         "curtain_front_strip", "stalk_", "sideguard_post", "lockbar",
+                         "door_frame", "beam_flange", "rup_brace", "toolbox",
                          "leg_gearbox", "front_lamp", "rear_marker", "door_centre_seal", "rear_sill_face",
                          "coupler_plate", "front_cross", "crank_hub", "crank_grip", "pallet_rib",
                          "pallet_strap", "spare_hanger", "spare_clamp", "spare_rod", "spare_carrier", "spare_disc",
                          "chock")
+# ADR 0175 (review s17 P0 Low): the Low tier renders LOD2 at every distance (manifest "tiers"), so the R48 / R104 rear
+# contour, the upper corner marks, the R70-adjacent triangles (R3 class III), the side / front retro-reflectors and the
+# plate are NOT dropped and NOT decimated there - they were missing on the phone tier since the trailer's first LOD2
+# (base 3a60019ff dropped contour_rear / tri_reflector too). ~400 triangles, paid for by the area-weighted collapse.
+REGS_KEEP = ("contour_", "tri_reflector", "side_marker_reflex", "front_reflex", "side_reflector", "plate_rear",
+             "plate_holder", "r70_plate")
+_REGS_SAMPLES = ("contour_rear_post_L", "contour_rear_header", "contour_rear_sill_0", "contour_corner_L_rh", "contour_side_-1_0",
+                 "tri_reflector_L", "side_marker_reflex_-1_0", "front_reflex_-1", "side_reflector_-1", "plate_rear",
+                 "plate_holder", "r70_plate_-1")
+assert not [n for n in _REGS_SAMPLES if any(d in n for d in LOD2_DROP)], "regulatory part dropped at LOD2"
 
 
 def a2u(v):
@@ -117,6 +126,8 @@ def slot_of(mname):
 
 def light_group(oname):
     n = oname
+    if n.startswith(A.REFLEX_PREFIXES):
+        return "REFLEX"      # ADR 0175: retro-reflectors + conspicuity tape, id 15, emission mask 0 (never lit)
     if not n.startswith(("rear_lens_", "rear_led_", "side_marker_lens", "front_lamp_lens", "stalk_lens",
                          "rear_marker_lens", "plate_lamp_lens")):
         return "NONE"
@@ -177,9 +188,9 @@ def to_game_piece(o, gm):
         if o.get("group") == "frame" and p.normal.z < -0.6:
             pr *= 0.6
         prio.data[p.index].value = pr
-        emit = gi if sl == "Lights" else 0
+        emit = gi if sl == "Lights" or grp == "REFLEX" else 0
         for li in p.loop_indices:
-            me.uv_layers["Data"].data[li].uv = (emit, 1.0 if emit else 0.0)
+            me.uv_layers["Data"].data[li].uv = (emit, 1.0 if emit and grp != "REFLEX" else 0.0)
             me.uv_layers["Decal"].data[li].uv = (0.002, 0.002)
             col.data[li].color = (1.0, 1.0, 1.0, 1.0)
     slots = []
@@ -683,7 +694,8 @@ def export_lod(lod, master, a, manifest, coll):
     k = 0.0
     if raw > TRI_TARGET[lod]:
         k = A.decimate_pieces(pieces, TRI_TARGET[lod], floor_tris={0: 60, 1: 24, 2: 8}[lod],
-                              lights_min={0: 0.9, 1: 0.5, 2: 0.2}[lod], keep_wheel_centres=lod >= 2)
+                              lights_min={0: 0.9, 1: 0.5, 2: 0.2}[lod], keep_wheel_centres=lod >= 2,
+                              keep=REGS_KEEP)
     fr = frames()
     parts = join_parts(pieces)
     sfx = f"_LOD{lod}"
