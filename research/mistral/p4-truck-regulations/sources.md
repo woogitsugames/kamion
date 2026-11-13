@@ -1,0 +1,57 @@
+# Źródła — M44/P4 (data dostępu: 2026-11-13)
+
+Wszystkie dokumenty pobrano 2026-11-13 z adresów poniżej. PDF-y zarchiwizowano lokalnie w środowisku badawczym; w repozytorium nie załączono plików binarnych (konektor GitHub App przesyła wyłącznie treść tekstową — binarne pliki uległyby uszkodzeniu), dlatego kolumna „Plik lokalny" opisuje archiwum robocze, a każdy dokument dostępny jest pod URL w kolumnie „URL".
+
+## Dokumenty UE (EUR-Lex / Publikacje UE)
+
+| Dokument | Wersja | URL | Plik lokalny | Licencja |
+|---|---|---|---|---|
+| Rozporządzenie ramowe (UE) 2019/2144 (GSR2) | oryginał PL (Dz.U. UE L 305 z 28.11.2019, s. 1) | https://eur-lex.europa.eu/legal-content/PL/TXT/PDF/?uri=CELEX:32019R2144 | `files/GSR2_2019_2144_PL.pdf` (799 KB) | decyzja Komisji 2011/833/UE (ponowne wykorzystanie) |
+| GSR2 — wersja skonsolidowana 07.07.2024 (02019R2144-20240707) | tekst skonsolidowany | https://eur-lex.europa.eu/legal-content/PL/TXT/PDF/?uri=CELEX:02019R2144-20240707 | PDF niedostępny do archiwizacji (EUR-Lex HTTP 202; Cellar HTTP 500) — tekst wyekstrahowano w sesji 2026-11-13 i zweryfikowano; w archiwum oryginał, w którym zał. II wskazuje serię 06 (aktualizacja do serii 07 wynika z konsolidacji) | decyzja 2011/833/UE |
+| Dyrektywa (UE) 2019/1161 (zmienia 2009/33/WE — pojazdy czyste) — sprawdzona negatywnie wobec 96/53/WE | oryginał PL | https://eur-lex.europa.eu/legal-content/PL/TXT/PDF/?uri=CELEX:32019L1161 | `files/EU_2019_1161_PL.pdf` (484 KB) | decyzja 2011/833/UE |
+| Dyrektywa (UE) 2022/1393 (poziomy THC w konopiach) — sprawdzona negatywnie wobec 96/53/WE | oryginał PL | https://eur-lex.europa.eu/legal-content/PL/TXT/PDF/?uri=CELEX:32022L1393 | `files/EU_2022_1393_PL.pdf` (384 KB) | decyzja 2011/833/UE |
+| Regulamin EKG ONZ nr 48 | seria poprawek 07 + Suplement 1 (Dz.U. UE L 347 z 30.9.2021, s. 1) | https://eur-lex.europa.eu/legal-content/PL/TXT/PDF/?uri=CELEX:42021X1718 | > 5 MB (7,4 MB) — tylko link | decyzja 2011/833/UE |
+| Regulamin EKG ONZ nr 46 | seria poprawek 04 + Suplement 1 (Dz.U. UE L 237 z 8.8.2014, s. 24) | https://eur-lex.europa.eu/legal-content/PL/TXT/PDF/?uri=CELEX:42014X0808(02) | > 5 MB (7,6 MB) — tylko link | decyzja 2011/833/UE |
+| Dyrektywa 96/53/WE | oryginał (Dz.U. WE L 235 z 17.9.1996, s. 59; skan → OCR) | https://eur-lex.europa.eu/legal-content/PL/TXT/PDF/?uri=CELEX:31996L0053 | `files/EU_96_53_PL.pdf` (269 KB) | decyzja 2011/833/UE |
+| Dyrektywa (UE) 2015/719 | oryginał (Dz.U. UE L 115 z 6.5.2015, s. 10) | https://eur-lex.europa.eu/legal-content/PL/TXT/PDF/?uri=CELEX:32015L0719 | `files/EU_2015_719_PL.pdf` (592 KB) | decyzja 2011/833/UE |
+| Rozporządzenie (WE) nr 561/2006 | konsolidowane | https://eur-lex.europa.eu/legal-content/PL/TXT/PDF/?uri=CELEX:32006R0561 | `files/EU_561_2006_PL.pdf` (464 KB) | decyzja 2011/833/UE |
+
+Uwagi metodyczne:
+- EUR-Lex (`legal-content`) ograniczał żądania (HTTP 202); dokumenty pobierano przez Cellar (Publications Office): `https://publications.europa.eu/resource/celex/<CELEX>` z nagłówkami `Accept: application/pdf`, `Accept-Language: pol`. Nawiasy w CELEX wymagają kodowania URL (%28 %29).
+- Wersja skonsolidowana 96/53/WE (01996L0053-20190814): Cellar zwraca HTTP 500 — użyto oryginału 1996 + 2015/719.
+- Dyrektywy 2019/1161 (zmienia 2009/33/WE — pojazdy czyste) i 2022/1393 (poziomy THC w konopiach) pobrano i sprawdzono pełnotekstowo: **nie nowelizują 96/53/WE**.
+
+## Dokumenty UNECE
+
+Bezpośrednie URL-e unece.org zwracały HTTP 403 (Cloudflare) dla klientów automatycznych; dokumenty pobrano przez Wayback Machine (web.archive.org) w sesji 2026-11-13 i zarchiwizowano w `files/`. Oficjalne adresy (te same pliki):
+
+| Dokument | Wersja | URL oficjalny | Plik lokalny | Licencja |
+|---|---|---|---|---|
+| Regulamin EKG ONZ nr 58 (RUPD) | seria poprawek 03 (E/ECE/324/Rev.1/Add.57/Rev.3; publikacja OJ L 49 z 20.2.2019) | https://unece.org/DAM/trans/main/wp29/wp29regs/2017/R058r3e.pdf | `files/UNECE_R058r3.pdf` (303 KB) | © UNECE/ONZ — publikacja z atrybucją dozwolona |
+| Regulamin EKG ONZ nr 70 (tablice tylne) | seria poprawek 01 (E/ECE/324/Rev.1/Add.69/Rev.1) | https://unece.org/fileadmin/DAM/trans/main/wp29/wp29regs/r070r1e.pdf | `files/UNECE_R070r1.pdf` (340 KB) | © UNECE/ONZ |
+| Regulamin EKG ONZ nr 73 (LPD) | seria poprawek 01 (E/ECE/324/Rev.1/Add.72/Rev.1) | https://unece.org/fileadmin/DAM/trans/main/wp29/wp29regs/r073r1e.pdf | `files/UNECE_R073r1e.pdf` (264 KB) | © UNECE/ONZ |
+| Regulamin EKG ONZ nr 104 (oznakowania odblaskowe) | Rev.2/Add.103/Rev.1 (seria poprawek 01) | https://unece.org/fileadmin/DAM/trans/main/wp29/wp29regs/r104rev.1.e.pdf | `files/UNECE_R104r1.pdf` (148 KB) | © UNECE/ONZ |
+| Konwencja wiedeńska o ruchu drogowym (1968) | tekst 2006 z załącznikami 1–9 | https://unece.org/fileadmin/DAM/trans/conventn/crt1968e.pdf | `files/UNECE_crt1968.pdf` (167 KB) | © UNECE/ONZ |
+
+Serie poprawek R48/46/58/73/104 jako obowiązujące w UE potwierdza załącznik II rozporządzenia ramowego 2019/2144 (wiersze 46, 48, 58, 73, 104; konsolidacja 07.07.2024).
+
+## Akty polskie (Dziennik Ustaw)
+
+| Akt | Wersja | URL | Plik lokalny | Licencja |
+|---|---|---|---|---|
+| Rozporządzenie Ministra Infrastruktury w sprawie warunków technicznych pojazdów oraz zakresu ich niezbędnego wyposażenia | t.j. Dz.U. 2024 poz. 502 (akt obowiązuje) | https://www.dziennikustaw.gov.pl/D2024000050201.pdf | `files/PL_warunki_techniczne_2024.pdf` (4,2 MB) | materiał publiczny — ustawa o ponownym wykorzystywaniu informacji sektora publicznego |
+| Rozporządzenie w sprawie rejestracji i zabezpieczeń pojazdów | t.j. Dz.U. 2024 poz. 1709 (akt obowiązuje) | https://www.dziennikustaw.gov.pl/D2024000170901.pdf | > 5 MB (10 MB) — tylko link | materiał publiczny |
+
+Status „akt obowiązuje" zweryfikowano 2026-11-13: pobrane teksty jednolite z 2024 r. są najnowszymi ogłoszonymi t.j. (Dziennik Ustaw — serwis oficjalny); akty nie figurowały jako uchylone na dzień dostępu.
+
+## Licencje
+
+- **Dokumenty UE:** Komisja Europejska / Urząd Publikacji — ponowne wykorzystanie dozwolone zgodnie z decyzją Komisji 2011/833/UE (komunikat prawny EUR-Lex).
+- **Dokumenty UNECE:** © ONZ/UNECE — powielanie fragmentów z atrybucją dozwolone zgodnie z polityką praw autorskich UNECE.
+- **Dziennik Ustaw:** materiał publiczny; ponowne wykorzystanie informacji sektora publicznego — ustawa z 25 sierpnia 2006 r. o ponownym wykorzystywaniu informacji sektora publicznego.
+
+## Zakres poszanowania ograniczeń
+
+- Nie użyto Google Maps / Street View / Earth / 3D Tiles ani jakichkolwiek danych komercyjnych dostawców map.
+- Nie użyto źródeł wtórnych (blogi, fora, Wikipedie) do potwierdzania treści przepisów — wyłącznie pełne teksty aktów.
+- Wszystkie cytaty w `manifest.csv` mają ≤ 25 słów i numer punktu; ekstrakcję tekstu wykonano autorskim parserem PDF (licznik głębokości nawiasów strumienia treści + mapy ToUnicode), bez narzędzi zewnętrznych.
