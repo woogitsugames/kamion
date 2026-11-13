@@ -457,6 +457,8 @@ namespace Game.World.Import
                     mat.EnableKeyword("_DECAL_ALPHA");
                     mat.SetFloat("_DecalAlpha", 0.85f);
                     SetLinearTint(mat, Vector3.one);
+                    // ADR 0194: matt absorbed oil (KamionRoadStains.hlsl); reset first so removing the block is idempotent
+                    mat.SetVector("_OilLook", OilLook(def));
                     SetBlend(mat, true);
                     mat.renderQueue = (int)RenderQueue.Geometry + 20;
                 }
@@ -491,6 +493,16 @@ namespace Game.World.Import
             }
             EditorUtility.SetDirty(mat);
             return mat;
+        }
+
+        /// <summary>ADR 0194: manifest block "oil_look" -> _OilLook (x aged smoothness, y fresh smoothness, z coverage
+        /// gamma, w 1 = on). No block -> (0, 0, 1, 0) = the legacy oil response, exactly.</summary>
+        public static Vector4 OilLook(Dictionary<string, object> def)
+        {
+            if (!(def.Get("oil_look") is Dictionary<string, object> ol)) return new Vector4(0f, 0f, 1f, 0f);
+            float O(string key, float fallback) => ol.Get(key) != null ? (float)Num(ol.Get(key)) : fallback;
+            return new Vector4(Mathf.Clamp01(O("smooth_aged", 0.1f)), Mathf.Clamp01(O("smooth_fresh", 0.22f)),
+                Mathf.Clamp(O("coverage_gamma", 1f), 0.25f, 4f), 1f);
         }
 
         static void SetBlend(Material mat, bool alpha)
