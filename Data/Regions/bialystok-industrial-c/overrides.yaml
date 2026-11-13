@@ -2481,7 +2481,10 @@ overrides:
     kind: gate3_sign
     photo: ["commons:cm92458760"]
     at_en: [539.1, -741.6]
-    travel_bearing_deg: 200
+    # r5: 200 -> 190. r4 beside the photo at equal scale: plate 0.28 m wide in the view against 0.42 m on the photo
+    # (0.80 m plate -> 21 deg / 32 deg between the line of sight, bearing 131, and the plate line); the post feet give
+    # the same plate line (bearing ~100: feet 7.02 / 6.46 m away, 0.64 / 0.25 m left of the axis) -> faces bearing ~10
+    travel_bearing_deg: 190
     lower_edge_m: 2.2
     parts: [{face: F-10-ls}]
     reason: >-
