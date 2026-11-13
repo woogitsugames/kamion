@@ -41,7 +41,7 @@ namespace Game.World.Import
         {
             var nodes = library.Nodes.Where(n => Vehicle.IsMatch(n.Name)).ToArray();
             if (nodes.Length != 81 || nodes.Select(n => n.Name).Distinct().Count() != 81) return false;
-            int plateCount = 0;
+            int plateCount = 0, atlasLod1 = 0;
             foreach (var node in nodes)
             {
                 var plates = node.Primitives.Where(p => p.Material == "car_plate").ToArray();
@@ -50,10 +50,25 @@ namespace Game.World.Import
                     if (plates.Length != 0) return false;
                     continue;
                 }
+                // ADR0153: only explicitly migrated LOD1 may move its plate into
+                // the two-submesh atlas. Every LOD0 still requires exact local corners.
+                if (node.Name.EndsWith(".lod1", StringComparison.Ordinal))
+                {
+                    string rootName = node.Name.Substring(0, node.Name.Length - ".lod1".Length);
+                    var root = nodes.FirstOrDefault(n => n.Name == rootName);
+                    if (root?.Extras != null && root.Extras.TryGetValue("vehicle_lod_atlas", out var flag) && flag is bool atlas && atlas)
+                    {
+                        if (plates.Length != 0 || node.Primitives.Count != 2
+                            || node.Primitives.Count(p => p.Material == "vehicle_lod_details") != 1
+                            || node.Primitives.Count(p => p.Material != null && p.Material.StartsWith("car_paint_", StringComparison.Ordinal)) != 1)
+                            return false;
+                        atlasLod1++; continue;
+                    }
+                }
                 if (plates.Length != 1 || plates[0].Indices?.Length != 12 || !ValidCorners(plates[0].Uv0, plates[0].Uv1)) return false;
                 plateCount++;
             }
-            return plateCount == 54;
+            return plateCount >= 27 && plateCount + atlasLod1 == 54;
         }
 
         public static bool ForwardOnly(RenderPipelineAsset asset)
@@ -103,13 +118,21 @@ namespace Game.World.Import
         {
             var native = set.prototypes.Where(p => Vehicle.IsMatch(p.name)).ToArray();
             if (native.Length != 27) return false;
-            int count = 0;
+            int count = 0, atlasLod1 = 0;
             foreach (var prototype in native)
             {
                 if (prototype.lods.Length != 3) return false;
                 for (int lod = 0; lod < prototype.lods.Length; lod++)
                 {
                     var mesh = prototype.lods[lod];
+                    bool atlas = lod == 1 && mesh.subMeshCount == 2 && Enumerable.Range(0, mesh.subMeshCount)
+                        .Count(sub =>
+                        {
+                            var material = set.materials[prototype.materialStart[lod] + sub];
+                            return material != null && material.shader != null && material.shader.name == "Kamion/World PBR"
+                                && material.GetTag("KamionVehicleLodAtlas", false, "") == "1";
+                        }) == 1;
+                    if (atlas) atlasLod1++;
                     int seen = 0;
                     for (int sub = 0; sub < mesh.subMeshCount; sub++)
                         if (set.materials[prototype.materialStart[lod] + sub] == plate)
@@ -117,10 +140,10 @@ namespace Game.World.Import
                             if (!ValidNativePlate(mesh, sub)) return false;
                             seen++; count++;
                         }
-                    if (seen != (lod == 2 ? 0 : 1)) return false;
+                    if (seen != (lod == 2 || atlas ? 0 : 1)) return false;
                 }
             }
-            return count == 54;
+            return count >= 27 && count + atlasLod1 == 54;
         }
 
         public static bool EligibleMaterial(string id, Material material)
@@ -174,7 +197,7 @@ namespace Game.World.Import
                 plate.EnableKeyword(Keyword);
             }
             EditorUtility.SetDirty(plate);
-            Debug.Log($"[IMPORT] car_plate local-corner remap: {(eligible ? "enabled (54 plates, Forward only)" : "UV0 fallback (eligibility failed)")}");
+            Debug.Log($"[IMPORT] car_plate local-corner remap: {(eligible ? "enabled (complete LOD0 migration validated, Forward only)" : "UV0 fallback (eligibility failed)")}");
         }
     }
 }

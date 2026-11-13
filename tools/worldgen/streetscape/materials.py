@@ -690,3 +690,7 @@ for _asphalt_ground_id in ("curb_concrete", "sidewalk_paving"):
 # about as light as the low sky, far lighter than the fascia (0.05) and the grey walls (0.20). WORKING_VALUE.
 M["showroom_glass"] = {"color": [0.26, 0.31, 0.37], "rough": 0.05, "sky_occ": [0.0, 0.70]}
 M["frontage_galv"] = {"color": [0.27, 0.28, 0.285], "rough": 0.7, "sky_occ": [0.0, 0.0]}
+
+# ADR0153: opt-in only, preserving every existing material definition and shader.
+# The palette stores source linear colours + metal/smoothness; no new Low pass.
+M["vehicle_lod_details"] = {"color": [1.0, 1.0, 1.0], "rough": 0.6, "vehicle_lod_atlas": True}
