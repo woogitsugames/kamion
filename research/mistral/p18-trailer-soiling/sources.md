@@ -63,11 +63,11 @@ Zakazane źródła (Google Maps/Street View/Earth/3D Tiles): **nie użyto w żad
 
 ## 2. Regulacje (przywołane, treści nie cytowano liczbowo)
 
-15. **Dyrektywa Radywy 91/226/EWG** — systemy ograniczające rozbryzg (spray-suppression systems) dla pojazdów ciężarowych/przyczep (kategorie N2, N3, O2, O3, O4).
+15. **Dyrektywa Rady WE 91/226/EWG** — systemy ograniczające rozbryzg (spray-suppression systems) dla pojazdów ciężarowych/przyczep (kategorie N2, N3, O2, O3, O4).
     URL: https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:01991L0226-20070101
     Status: URL publiczny; strona zablokowała automatyczne pobranie (2026-11-13) — treści nie cytowano.
 
-16. **Dyrektywa 78/549/EWG** — osłony kół (wheel guards) pojazdów silnikkowych.
+16. **Dyrektywa 78/549/EWG** — osłony kół (wheel guards) pojazdów silnikowych.
     URL: https://eur-lex.europa.eu/eli/dir/1978/549/oj/eng/pdf
     Status: URL publiczny; nie pobrano treści — przywołana.
 
