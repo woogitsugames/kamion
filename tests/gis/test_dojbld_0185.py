@@ -113,5 +113,3 @@ def test_materials_and_sets():
 def test_fence_mesh_mips_do_not_preserve_coverage():
     src = (REPO / "game/Assets/_Project/World/Import/InstanceImporter.cs").read_text(encoding="utf-8")
     assert 'ti.mipMapsPreserveCoverage = alpha && !file.StartsWith("fence_");' in src
-    rsrc = (REPO / "game/Assets/_Project/World/Import/RegionImporter.cs").read_text(encoding="utf-8")
-    assert 'if (tex == "fence_mesh") cutoff = 0.25f;' in rsrc

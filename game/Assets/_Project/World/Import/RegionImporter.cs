@@ -437,11 +437,6 @@ namespace Game.World.Import
                 Texture2D t = null;
                 if (tex != null) t = InstanceImporter.ImportTexture(r, WorldLibrary.Resolve(r.Region, "textures", tex + ".png"), clamp: false);
                 bool clip = m.Get("alpha_cutoff") != null;
-                float cutoff = clip ? (float)Num(m.Get("alpha_cutoff")) : 0.5f;
-                // ADR 0185: the welded fence mesh has plain box mips (InstanceImporter.ImportTexture), so its wires fade
-                // with distance. At 0.5 the whole mesh was gone ~12 m away (posts without infill); at 0.25 the
-                // horizontal wires (200 mm apart) stay to ~50 m and the 50 mm verticals drop out first - no moire.
-                if (tex == "fence_mesh") cutoff = 0.25f;
                 Color? emission = null;
                 if (m.Get("emissive") is List<object> e)
                     // Exposed units (ADR 0010): emissive in the manifest is relative radiance; ×0.25 keeps a lit signal
@@ -449,8 +444,8 @@ namespace Game.World.Import
                     emission = new Color((float)Num(e[0]), (float)Num(e[1]), (float)Num(e[2])) * 0.25f;
                 if (id == "car_plate")
                     return WorldCarPlateMaterials.PreserveLitPasses(path,
-                        () => LitMaterial(path, albedo, rough, metal, t, clip, cutoff, clip, emission));
-                var lit = LitMaterial(path, albedo, rough, metal, t, clip, cutoff, clip, emission);
+                        () => LitMaterial(path, albedo, rough, metal, t, clip, clip ? (float)Num(m.Get("alpha_cutoff")) : 0.5f, clip, emission));
+                var lit = LitMaterial(path, albedo, rough, metal, t, clip, clip ? (float)Num(m.Get("alpha_cutoff")) : 0.5f, clip, emission);
                 // ADR 0124: a material may name its own shader with URP Lit's property names (plot_kit ->
                 // Kamion/World PlotKit: two-sided panels and plant cards lit by COLOR_0, see the shader header).
                 if (m.Get("shader") is string shaderName)

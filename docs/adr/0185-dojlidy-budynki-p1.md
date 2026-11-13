@@ -39,7 +39,9 @@ zieleń: ADR 0186.
    - `target_sets`: kilka wpisów `target: {building}` na ten sam budynek = suma `set` w kolejności pliku (było: ostatni
      wpis zastępował poprzednie w całości). Region C nie ma budynku z dwoma wpisami (test). `override:<id>` celuje
      w `building_part`.
-   - `set.storeys`, `set.hall_windows: false` (bez losowanego rzędu okienek hali), `ground_z_evrf2007` w `building_part`.
+   - `set.storeys`, `set.hall_windows: false` (bez losowanego rzędu okienek hali), `set.hall_sign: false` (bez
+     tablicy reguły — w r1 ciemna pusta płyta pod attyką w miejscu prawdziwego szyldu), `ground_z_evrf2007`
+     w `building_part`.
 2. **Materiały** (`streetscape/materials.py`, blok addytywny) i sety (`art-source/world/materials/_src/sets_facade.py`):
    - `sandwich_smooth` (kafel 3,45 m = 3 pasy 1,15 m, gładkie lico, fugi cieniowe, bez wpieczonych zacieków) →
      `hall_wall_smooth` z `panel_m: [6.0, 1.15]` (styk pionowy co 6 m i ton na panel — shader ADR 0092), kolor
@@ -52,13 +54,43 @@ zieleń: ADR 0186.
    Dotyczy wszystkich regionów (importer, nie dane generowane).
 4. **Dane Dojlid** (`overrides.yaml`, 4 nowe bloki, stare nietknięte): `dojlidy-lod1-base-datum`; `rosti-west-wing`
    (`building_part`, 3234 m², 13,4 m nad podstawą LoD1 152,06, WORKING_VALUE ±1 m; granica 13,8 m ±2 m);
-   `rosti-hall-cladding` (`hall_wall_smooth`, `hall_windows: false`); `kuronia3-office-block-facades` (`storeys: 3`,
+   `rosti-hall-cladding` (`hall_wall_smooth`, `hall_windows: false`, `hall_sign: false`); `kuronia3-office-block-facades` (`storeys: 3`,
    `cladding_vertical_grey`, `facades`: szczyt W — kolumna okien klatki, długie ściany — pasma 2,3–3,6 m nad
    posadzką kondygnacji od 12 % długości, krótkie — ślepe).
    Hala główna zachowuje id BDOT (`bdot:2BE4B431-BC59…`); jej ściana północna ma teraz 69,6 m od narożnika NE.
 
 ## Wyniki
-WYNIKI_PLACEHOLDER
+- **Iteracje:** r1 (build + import + 5 kadrów) → oględziny → r2 (bez tablicy hali, blok K3 ciemniejszy 0,47 → 0,33,
+  próba progu alfa siatki 0,25) → oględziny → r3 (próg 0,25 odrzucony: poziome druty rozpadały się w kropki przy 40 m;
+  zostaje sam brak `PreserveCoverage`).
+- **Wizualnie** (Low, overcast, 1920×1080; `artifacts/dojbld-0185/sbs-r3/`, przed: `artifacts/dojlidy-vis-0179/sbs/`):
+  | Para | Jest | Rozbieżne |
+  |---|---|---|
+  | `sbs-P11-094.jpg` | schodek dachu i niższy segment na prawym końcu, długie poziome panele ze stykami co 6 m, brak okienek i tablicy, ogrodzenie = słupki bez białej kraty | hala nadal ~10 % wyższa w kadrze (było ~17 %): dach jest teraz na rzędnej LoD1, reszta mieści się w niepewności pozycji kamery (EXIF ±3 m z 42 m = ±7 %) — nie obniżam poniżej danych; zacieki pod attyką mocniejsze niż na zdjęciu (nowy budynek); cokół wysoki na skarpie; brak bram (ADR 0196) |
+  | `sbs-P11-001.jpg` | blok srebrnoszary z pionowymi panelami, trzy wąskie pasma okien na ścianie długiej, szczyt z jedną kolumną okien przy narożniku, budynek badawczy w tle niższy (rzędna LoD1) | okna szczytu to okna biurowe z atlasu (na zdjęciu ciemny pas przeszklenia + dwa krótkie pasma), brak doku z wiatą, brama/DDR/płot (poza zakresem: 0188/0189) |
+- **Budżet statyczny A/B** (`budget_ab.py HEAD`, klin 120°, 13 kamer; `budget_ab.txt`): materiały w kadrze +0…+4 (max
+  118 → 122), trójkąty Low −0,06…+0,07 % (max 700 901), High −0,75…+0,13 % (max 1 714 412). Nowe materiały tylko
+  w chunkach 5_1, 5_2 (blok: `cladding_vertical_grey` + 2 far) i 5_3, 6_2, 6_3 (`hall_wall_smooth`).
+- **Unity, kadry foto Low** (`*/stats.txt`, szacunek edytora przed batchingiem; przed = 0179 build #4):
+  drawsEst 001 335 → 336, 056 125 → 124, 063 317 → 325, 094 195 → 199, 129b 320 → 318; trójkąty 462 860 → 455 900,
+  158 580 → 158 524, 333 897 → 331 193, 288 046 → 289 457, 426 238 → 423 007.
+- **Pamięć tekstur:** 2 nowe sety po 4 mapy 1024² (High) / 512² (Medium) / 256² (Low); wg `materials_spec.json`
+  GPU ASTC z mipami: High 4.98 MB, Medium 0.97 MB, Low 0.17 MB (oba razem).
+- **Region C:** żaden nowy klucz nie występuje w jego danych, żaden budynek nie ma dwóch wpisów `target`
+  (`test_region_c_cannot_change`); materiały są dopisywane do GLB tylko gdy użyte. Zmiana importera płotu dotyczy też C
+  (bez A/B w C — patrz „Otwarte”).
+- **Testy:** TESTY_PLACEHOLDER
 
 ## Otwarte
-OTWARTE_PLACEHOLDER
+- Wysokość hali zakładu: LoD1 (18,92 m nad najniższym terenem; 16 pasów × 1,15 m) wobec kadru P11-094 (~10 % niżej,
+  recenzja proponowała 16,5–17 m) — do rozstrzygnięcia zdjęciem właściciela z miarą (np. brama) albo NMPT.
+- Skrzydło zachodnie: wysokość 13,4 m i granica 13,8 m to WORKING_VALUE; przybudówka za nim dostała tę samą wysokość;
+  południowa część zakładu (ten sam obrys BDOT) zostaje na wysokości LoD1 całego obrysu.
+- Ogrodzenie: siatka znika już ~12 m od kamery (zostają słupki i cokół). Docelowo daleki LOD siatki jako półprzezroczysta
+  „mgiełka” (blend) — zadanie renderingu; zmiana importera nie była renderowana w regionie C (lider: kadr z płotem przy
+  jednej regeneracji).
+- Zacieki pod attyką na `hall_wall_smooth` (siła liczona z jasności, wspólna dla hal) — za mocne dla nowej hali (P2).
+- Blok Kuronia 3: szczyt z pasem przeszklenia i krótkimi pasmami, dok z wiatą, ściany N/E nieznane (zdjęcie właściciela).
+- Reguła `lod1_base_datum` jest włączona tylko w Dojlidach; w regionie C ten sam błąd poziomu istnieje (decyzja lidera,
+  zmienia bajty C).
+- `set` hali głównej: ADR 0196 (bramy) celuje w ten sam budynek — po scaleniu sety się sumują (`target_sets`).
