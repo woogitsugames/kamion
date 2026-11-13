@@ -100,7 +100,7 @@ render sondy r4 e35a (ta sama poza co produkcja, różnica < 2 mm, `finalize.py`
 | D-1 (4312632) w kadrze | tak: x 0,33 (zdjęcie 0,33); tarcza prawie z boku — Open |
 | `test_gate3_landmarks.py` | 13 passed (w tym `test_every_gate3_sign_is_placed`) |
 | `tests/gis/test_sbs_*.py` po 504348 | 91 passed |
-| `tests/gis` całość | PYTEST_GIS |
+| `tests/gis` całość | 982 passed, 1 failed (`test_report_not_stale`: fidelity_qa po zmianie overrides) → po `fidelity/run.py` `test_road_fidelity.py` 9 passed; razem 983 passed, 3 xfailed |
 | EditMode | 467 / 467 passed |
 | Budżet Low-clear, kamery kontrolne vs main (world-int-s16) | max +2 draws (route-putry-approach), max +1,0 % tris (route-putry-entry-signs); vs 0159 after3: +3 draws, +0,3 % tris |
 
@@ -108,6 +108,9 @@ Samoocena agenta, nie `visual-critic`. G3-B: 339463 P (bez zmian względem regen
 4312632 P (znaki są, układ jezdni / roślinność odbiegają).
 
 ## Open
+- `barriers-0159` dostał po moim merge'u commity after4 (2fb49762f, bfa46b141: nowy zestaw tekstur `concrete_panels_wall`,
+  ściana z płyt ramp Bieżeństwa, bariery 482392 / 297817). Nie wmergowane: tekstura niezbudowana, 0159 jeszcze ich nie
+  przebudował; 751431 / 1259231 / 482392 (G3-A) zmienią wygląd po after4 — świat przebudować raz, na main po obu gałęziach.
 - Ocena niezależna (`visual-critic`) 22 + 1 par z `pairs-final/`.
 - Pozy C: 1259231 (podpora poza lewą krawędzią), 182011 (sygnalizatory na wysięgnikach — w świecie, poza kadrem).
 - 149248: tablica ok. 3x za duża; 4312632: obrót tarczy D-1; cm109685822 plac `yard_behaton` zamiast trawnika
