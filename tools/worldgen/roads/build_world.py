@@ -1153,6 +1153,11 @@ def main():
         p.parent.mkdir(parents=True, exist_ok=True)
         p.write_text(json.dumps(ctx, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n",
                      encoding="utf-8", newline="\n")
+        # ADR 0166: a new region has no streetscape_sources.json yet (the C file was written once by hand);
+        # extract it only when missing, so an existing committed file is never rewritten here.
+        from streetscape import sources as SSRC
+        if not (pipeline.REGIONS / a.region / "generated" / "streetscape_sources.json").exists():
+            SSRC.write(a.region, SSRC.extract(reg))
     build(a.region, route_graph=not a.no_route_graph)
 
 
