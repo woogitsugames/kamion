@@ -1,0 +1,11 @@
+unity: C:\Program Files\Unity\Hub\Editor\6000.3.28f1\Editor\Unity.exe -batchmode -projectPath C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-s16\game -logFile C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-s16\artifacts\logs\visual-qa-WorldC-20261113-024943.log -buildTarget Android -quit -executeMethod Game.Editor.VisualQA.VisualQaRunner.RenderControlCameras -qaScene WorldC -qaWidth 2340 -qaHeight 1080 -qaTier High -qaOutput C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-s16\artifacts\gpt-s16-r3\ablations\High-zero-depth -qaLighting clear -qaCameras sbs-g3-a-2818555625124739,sbs-g3-a-3970163613102941,putry-island-1,putry-island-2,putry-island-near -qaRq rq_shadowbias=0 -qaGate3 C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-s16\artifacts\gpt-s16-r3\diagnostic-cameras.json
+VBCSCompilerServerWatchdog: watching VBCSCompiler (PID 39612)
+shutdown crash NOT accepted: signature=False freshPng=5 expected=5
+WARNING: Unity exited with code -1073741819 during mono cleanup (abort_threads, no crash stack) AFTER writing all 5 frames; accepted (ADR 0083).
+VISUALQA_RESULT: OK rendered=5 dir=C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-s16\artifacts\gpt-s16-r3\ablations\High-zero-depth
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-s16\artifacts\gpt-s16-r3\ablations\High-zero-depth\putry-island-1.png  4 234 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-s16\artifacts\gpt-s16-r3\ablations\High-zero-depth\putry-island-2.png  4 335 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-s16\artifacts\gpt-s16-r3\ablations\High-zero-depth\putry-island-near.png  3 870 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-s16\artifacts\gpt-s16-r3\ablations\High-zero-depth\sbs-g3-a-2818555625124739.png  3 292 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-s16\artifacts\gpt-s16-r3\ablations\High-zero-depth\sbs-g3-a-3970163613102941.png  3 257 KB
+log: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-s16\artifacts\logs\visual-qa-WorldC-20261113-024943.log

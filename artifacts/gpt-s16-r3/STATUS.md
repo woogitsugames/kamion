@@ -55,3 +55,5 @@ Zapisano ablacją Low/zero-normal (rq_shadownormal=0). To diagnostyka, nie wynik
 Zapisano ablacją High/zero-normal (rq_shadownormal=0). To diagnostyka, nie wynik produkcyjnego after. NASTĘPNY KROK: obejrzeć cztery kadry i porównać z bazą.
 
 Zapisano ablacją Low/zero-depth (rq_shadowbias=0). To diagnostyka, nie wynik produkcyjnego after. NASTĘPNY KROK: obejrzeć cztery kadry i porównać z bazą.
+
+Zapisano ablacją High/zero-depth (rq_shadowbias=0). To diagnostyka, nie wynik produkcyjnego after. NASTĘPNY KROK: obejrzeć cztery kadry i porównać z bazą.
