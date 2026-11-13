@@ -32,3 +32,5 @@ Zapisano before/High-clear; każda kamera w stats.txt. Oględziny pozostają wym
 Zapisano before/Low-clear; każda kamera w stats.txt. Oględziny pozostają wymagane.
 
 Zapisano before/Low-overcast; każda kamera w stats.txt. Oględziny pozostają wymagane.
+
+Zapisano before/High-overcast; każda kamera w stats.txt. Oględziny pozostają wymagane.
