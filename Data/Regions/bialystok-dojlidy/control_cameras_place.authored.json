@@ -1,0 +1,18 @@
+{
+ "schema": "truck-sim-pl/place-cameras/1",
+ "provenance": "authored_override (ADR 0196): control cameras at named places that match no photo. Position region-local E/N, height = terrain (NMT) + eye_m, heading_deg compass, fov_deg vertical, pitch_deg up.",
+ "cameras": [
+  {
+   "id": "krywlany_runway",
+   "pos_en": [
+    21.1,
+    -121.0
+   ],
+   "heading_deg": 261.0,
+   "eye_m": 1.7,
+   "fov_deg": 30.0,
+   "pitch_deg": -0.6,
+   "note": "pedestrian eye 1.7 m at the aerodrome fence of Krywlany (0.6 m inside the OSM fence line, 6 m from its corner local 24.4 -126.0), looking west along asphalt runway 09R/27L; the turn pad is 133 m away, the far end of the tile 1045 m. Line of sight over the NMT checked (terrain 3-10 cm under the ray). 30 deg lens: the runway is 0.56 deg high from here (review s19-0179: proof of the 30 153 m2 of runway)"
+  }
+ ]
+}

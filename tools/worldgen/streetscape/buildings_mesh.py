@@ -249,6 +249,67 @@ def runoff_uv1(runoff, ua, ub, za, zb):
     return [[a, ka], [b, ka], [b, kb], [a, kb]]
 
 
+# ADR 0196 (review s19-0179 P2 "zacieki pod attyka to ten sam wzor powtarzany co modul"): the run-off layer tiles every
+# RUNOFF_PERIOD_M, so a 133 m wall showed the same streak group 5.5 times. Opt-in per region (override
+# `kind: facade_rules`, `runoff_shuffle: true`): the wall top is cut into the blocks of the layer between its QUIET
+# columns (texture u where nothing but the drip band is drawn within +-0.25 m: a seam there cuts no streak) and the
+# blocks are laid along the wall in a hashed order, half of them mirrored, each with its own streak length - no two
+# stretches of a wall repeat in step, and a fifth of the blocks carry short streaks only. Mesh only (TEXCOORD_1), no
+# shader or texture change. Quiet columns measured on T_parapet_runoff.png (High, 1024 px; sets_facade.parapet_runoff
+# seed 521): column mean of R + G below the drip band, max over +-0.25 m <= 0.004 (layer mean 0.017).
+RUNOFF_QUIET_U = (0.98, 2.60, 4.27, 6.61, 8.91, 10.88, 14.44, 16.20, 20.55, 23.25)
+RUNOFF_BLOCKS = tuple((a, (b - a) % RUNOFF_PERIOD_M) for a, b in zip(RUNOFF_QUIET_U, RUNOFF_QUIET_U[1:] + RUNOFF_QUIET_U[:1]))
+RUNOFF_SHUFFLE_DEPTH_M = 4.0   # the layer is 4 m deep (x length scale); below it the wall needs no cuts
+RUNOFF_SHORT_SHARE = 0.2       # blocks with short streaks only (length scale x 0.3)
+RUNOFF_LEN_MUL = (0.65, 1.25)  # streak length factor of the other blocks
+
+
+def runoff_blocks(key, length):
+    """Hashed block sequence covering [0, length] of a building's wall perimeter:
+    [(u0, u1, tex_u0, tex_u1, length_scale_factor)] - tex_u0 > tex_u1 for a mirrored block. Never the same block twice
+    in a row; deterministic per building key."""
+    out, u, prev, i = [], 0.0, -1, 0
+    nb = len(RUNOFF_BLOCKS)
+    while u < length:
+        k = int(hfloat(key, f"rob{i}") * nb) % nb
+        if k == prev:
+            k = (k + 1 + int(hfloat(key, f"rob2{i}") * (nb - 1)) % (nb - 1)) % nb
+        a, w = RUNOFF_BLOCKS[k]
+        mirror = hfloat(key, f"rom{i}") < 0.5
+        mul = (0.3 if hfloat(key, f"ros{i}") < RUNOFF_SHORT_SHARE
+               else RUNOFF_LEN_MUL[0] + (RUNOFF_LEN_MUL[1] - RUNOFF_LEN_MUL[0]) * hfloat(key, f"rol{i}"))
+        out.append((u, u + w, a + w if mirror else a, a if mirror else a + w, mul))
+        u += w
+        prev = k
+        i += 1
+    return out
+
+
+def runoff_cells(runoff, ua, ub, za, zb):
+    """Sub-quads of a wall quad [ua, ub] (absolute perimeter u) x [za, zb] with their run-off TEXCOORD_1:
+    [(u0, u1, z0, z1, uv1)]. Without a block table (runoff of 3 values, or None) the quad itself (runoff_uv1)."""
+    if runoff is None or len(runoff) < 4 or not runoff[3]:
+        return [(ua, ub, za, zb, runoff_uv1(runoff, ua, ub, za, zb))]
+    zt_r, _uo, ls, blocks = runoff[:4]
+    zs = zt_r - RUNOFF_SHUFFLE_DEPTH_M * ls * RUNOFF_LEN_MUL[1] - 0.05
+    out = []
+    if za < zs - 0.05:                         # below the layer: one quad; depth beyond the layer samples its empty row
+        zc = min(zs, zb)
+        out.append((ua, ub, za, zc, [[0.0, 9.0], [ub - ua, 9.0], [ub - ua, 9.0], [0.0, 9.0]]))
+        if zc >= zb - 1e-6:
+            return out
+        za = zc
+    for b0, b1, t0, t1, mul in blocks:
+        c0, c1 = max(ua, b0), min(ub, b1)
+        if c1 - c0 < 1e-4:
+            continue
+        f0, f1 = (c0 - b0) / (b1 - b0), (c1 - b0) / (b1 - b0)
+        a, b = t0 + (t1 - t0) * f0, t0 + (t1 - t0) * f1
+        ka, kb = 1 + (zt_r - za) / (ls * mul), 1 + (zt_r - zb) / (ls * mul)
+        out.append((c0, c1, za, zb, [[a, ka], [b, ka], [b, kb], [a, kb]]))
+    return out
+
+
 LOD1_HOUSE_OPENINGS = True     # ADR 0124 r2: windows / door of houses on the LOD1 prism (dark quads, no new material)
 LOD1_HOUSE_FRAME_M = 0.0                       # ADR 0132: frame round a LOD1 opening of a house, m. OFF (0): r2 measured +31 k
                                                # triangles in the Low variant (worst house-street camera +29 k) while A16 Low
@@ -389,12 +450,14 @@ def wall_with_openings(acc, layer, mat, p0, d, nout, L, zb, zt, openings, u0=0.0
             marks = None
             if sills is not None and kd in ("window", "ribbon") and zb2 - za > 0.15 and not str(mat).startswith("plinth"):
                 marks = sill_marks(sills, ua, ub, za, zb2, oa, ob, (zb2 - zb) / max(zt - zb, 1e-6))
-            if marks is None:
-                marks = [(ua, ub, runoff_uv1(runoff, u0 + ua, u0 + ub, za, zb2))]
-            for c0, c1, uv1 in marks:
+            if marks is None:             # ADR 0196: the run-off block table may cut the quad (runoff_cells)
+                marks = [(q0 - u0, q1 - u0, uv1, z0_, z1_)
+                         for q0, q1, z0_, z1_, uv1 in runoff_cells(runoff, u0 + ua, u0 + ub, za, zb2)]
+            for c0, c1, uv1, *zz in marks:
+                z0_, z1_ = zz if zz else (za, zb2)
                 va_, vb_ = (gnd(u0 + c0), gnd(u0 + c1)) if gnd else (vref, vref)
-                acc.quad(layer, mat, P(c0, za), P(c1, za), P(c1, zb2), P(c0, zb2),
-                         uv=[[u0 + c0, za - va_], [u0 + c1, za - vb_], [u0 + c1, zb2 - vb_], [u0 + c0, zb2 - va_]], uv1=uv1)
+                acc.quad(layer, mat, P(c0, z0_), P(c1, z0_), P(c1, z1_), P(c0, z1_),
+                         uv=[[u0 + c0, z0_ - va_], [u0 + c1, z0_ - vb_], [u0 + c1, z1_ - vb_], [u0 + c0, z1_ - va_]], uv1=uv1)
     n3 = np.append(nout[:2], 0.0)
     d3 = np.append(d[:2], 0.0)
     for (ua, ub, va, vb, depth, kind, mat_in) in [o[:7] for o in ops]:
@@ -891,7 +954,58 @@ def load(fc, origin, overrides, hero=None):
                 p = {**p, "height_m": float(o["height_m"])}
             out.append({"id": bid, "poly": pl, "props": p, "ovr": o, "typ": "roof" if p.get("is_roof_only") else
                         classify(p, pl.area, o)})
-    return out + building_parts(out, overrides)
+    out = out + building_parts(out, overrides)
+    wall_gates(out, overrides)
+    if any(o.get("kind") == "facade_rules" and o.get("runoff_shuffle") for o in overrides):
+        for b in out:
+            b["runoff_shuffle"] = True
+    return out
+
+
+GATE_SNAP_M = 2.0              # an authored gate point may lie this far from the wall line it belongs to
+
+
+def wall_gates(blds, overrides):
+    """ADR 0196: authored sectional gates on hall walls (override `kind: wall_gates`, `gates: [{at_en: [E, N], width_m,
+    height_m}]`). A gate is positional - it goes to the hall wall nearest to its point (within GATE_SNAP_M), so it
+    survives a re-cut of the footprint by `building_part` overrides. Plain sectional door, no lettering. A gate with
+    no hall wall in reach is an authoring error (never silently dropped)."""
+    for o in overrides:
+        if o.get("kind") != "wall_gates":
+            continue
+        for k, g in enumerate(o.get("gates") or []):
+            pt = shapely.Point(*[float(x) for x in g["at_en"]])
+            best = None
+            for b in blds:
+                if b["typ"] != "hall" or b["ovr"].get("hero_asset") or b["ovr"].get("frontage"):
+                    continue
+                dd = b["poly"].exterior.distance(pt)
+                if dd <= GATE_SNAP_M and (best is None or dd < best[0]):
+                    best = (dd, b)
+            if best is None:
+                raise ValueError(f"wall_gates {o['id']} gate {k}: no hall wall within {GATE_SNAP_M} m of {g['at_en']}")
+            best[1].setdefault("gates", []).append({"p": np.array(pt.coords[0]), "w": float(g.get("width_m", 4.0)),
+                                                    "h": float(g.get("height_m", 4.5)), "id": f"{o['id']}:{k}"})
+
+
+def gate_openings(gates, a, d, L, zref, zt, ops):
+    """Openings of the authored gates that sit on the wall edge a + d * [0, L] (kind `gate`, the dock door material:
+    LOD1 of a hall chunk draws it already where there are docks). Rule openings a gate overlaps are dropped."""
+    nout = np.array([d[1], -d[0]])
+    for g in gates or ():
+        if g.get("done"):
+            continue
+        rel = g["p"] - a
+        u, off = float(rel @ d), abs(float(rel @ nout))
+        w = g["w"]
+        if off > GATE_SNAP_M + 1e-6 or not (w / 2 + 0.6 <= u <= L - w / 2 - 0.6):
+            continue
+        h = min(g["h"], zt - zref - 1.2)
+        if h < 2.5:
+            continue
+        ops[:] = [o_ for o_ in ops if o_[1] < u - w / 2 - 0.8 or o_[0] > u + w / 2 + 0.8]
+        ops.append((u - w / 2, u + w / 2, zref + 0.02, zref + h, 0.2, "gate", "dock_door"))
+        g["done"] = True
 
 
 def building_parts(blds, overrides):
@@ -1169,6 +1283,8 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
         if wooden:
             wall = "wood_planks" if FK.hfloat(key, "woodc") < 0.6 else "wood_planks_green"
         u_acc = 0.0
+        ro_blocks = (runoff_blocks(key, float(sum(lens)) + 1.0)
+                     if b.get("runoff_shuffle") and typ == "hall" and not front else None)
         dock_edges = {tuple(np.round(dk["edge"][0], 2)): dk for dk in docks}
         nouts = []
         signed = laddered = False
@@ -1201,6 +1317,8 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
                 ops = facade_openings(typ, L, zref, zt, storeys, f"{key}:{ei}", is_main, dk is not None,
                                       dict(variant, balcony=bal_group if ei in bal_edges else False, main=ei == main,
                                            door_z=door_z), sh=sh, zbase=zbase)
+            if typ == "hall" and not front and b.get("gates"):       # ADR 0196: authored sectional gates
+                gate_openings(b["gates"], a, d, L, zref, zt, ops)
             if dk:
                 zf = dk["yard_z"] + S.DOCK_FLOOR_H
                 for dock in dk["docks"]:
@@ -1238,6 +1356,8 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
                 ro = (zt - 0.4, RUNOFF_PERIOD_M * FK.hfloat(key, "runoff_u"),
                       (0.55 if scheme["gutter"] else 0.8) + 0.7 * FK.hfloat(key, "runoff_l"))
                 lod1_ro = (zt - 0.25, ro[1], ro[2])                  # LOD1: coping ledge over the top 0.25 m
+                if ro_blocks is not None:                            # ADR 0196: shuffled run-off blocks, both LODs
+                    ro, lod1_ro = (*ro, ro_blocks), (*lod1_ro, ro_blocks)
                 FK.wall_pieces(wall_with_openings, acc, a, d, nout, L, zbot, zt - 0.4, ops, u_acc, zref,
                                [zpl, zlow, ztopb], [], hall_mat, runoff=ro)
 
@@ -1246,7 +1366,7 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
                 # detail), so Low and High show the same hall. Before: one ivory band, the red top band of this
                 # hall and every dock existed on High only.
                 def lod1_pieces(lay, a=a, d=d, nout=nout, L=L, zt=zt, hall_mat=hall_mat, zs=[zpl, zlow, ztopb],
-                                dock_ops=[o for o in ops if o[5] == "dock"], ro=lod1_ro):
+                                dock_ops=[o for o in ops if o[5] in ("dock", "gate")], ro=lod1_ro):
                     FK.wall_pieces(wall_with_openings, acc, a, d, nout, L, zbot, zt, dock_ops, u_acc, zref, zs, [],
                                    hall_mat, layer=lay, runoff=ro, reveal=FK.L1_MAT["reveal_hall"])
                 P3 = lambda q, z: [q[0], q[1], z]
@@ -1450,6 +1570,9 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
         if front:
             frontage_props += [dict(q_, building=key) for q_ in FR.props(
                 acc, front, edges, lambda e_, n_: float(hf.sample(np.array([e_]), np.array([n_]))[0]))]
+        for g_ in b.get("gates") or ():
+            if not g_.get("done"):
+                raise ValueError(f"wall gate {g_['id']}: does not fit the wall it snaps to (building {key})")
         if typ == "hall" and not front and len(edges) >= 3:         # corner flashings
             for i, (a, c_) in enumerate(edges):
                 FK.corner_trim(acc, a, nouts[i - 1], nouts[i], zref + 0.6, zeave - 0.4)

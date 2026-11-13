@@ -36,25 +36,8 @@ overrides:
     confidence: medium
     verify: owner photo session (Kuronia 3)
     set: {wall_material: hall_wall_white}
-  - id: kuronia2-hall-dark-band
-    target: {building: "bdot:941cfc23-bd8b-40d5-a49b-d1bba751d5bd"}
-    reason: >-
-      Hall at Kuronia 2 (LoD1 2024 12.72 m), the background of photo P11-063 (Rakoon 2024-06-23, from the Mickiewicza
-      crossing): light grey cladding with a dark graphite band under the roof edge on the street-corner end (the
-      band carries the company lettering, which is not reproduced). Band on the short WSW wall and on the western
-      third of the long NNW wall; heights read off the photo proportions (band ~ the upper quarter of the wall),
-      WORKING_VALUE.
-    confidence: low
-    verify: owner photo session (Kuronia / Mickiewicza corner); band extent on the Kuronia side
-    # frontage walls cannot use hall_wall_* (runoff UV1 of the hall cladding): plaster_grey = the light grey of the
-    # office set; the hall loses the cladding ribs and roof lights of the rule hall (not seen from the street)
-    set:
-      frontage:
-        wall: plaster_grey
-        plinth_m: 0.6
-        accents:
-          - {facing: SW, span: [0.0, 1.0], material: hall_flashing, z: [8.6, 11.8], min_len_m: 20.0}
-          - {facing: NW, span: [0.65, 1.0], material: hall_flashing, z: [8.6, 11.8], min_len_m: 20.0}
+  # ADR 0196 replaced the 0179 entry `kuronia2-hall-dark-band` (one light hall with a graphite band) by the block
+  # `ADR 0196` at the end of this file: the plant at Kuronia 2 is a dark hall with low light annexes in front.
   - id: rosti-hall-colour
     target: {building: "bdot:2BE4B431-BC59-1BF0-E053-CC2BA8C0D140"}
     reason: >-
@@ -162,3 +145,180 @@ overrides:
       (the reference region C keeps its output byte for byte).
     confidence: high
     verify: none
+  # ================================================================ ADR 0196 (dojind-0196): plant at Kuronia 2, gates,
+  # run-off, runway paint. Sources: CC0 photos P11-005 / P11-059 / P11-063 (Rakoon, Commons; frames looked at in full
+  # resolution), GUGiK orthophoto 2024 0.25 m, BDOT10k outline, LoD1 2024, OSM aeroway. No lettering, no brands.
+  # Heights of the parts and gate sizes are UNVERIFIED (read off photo proportions) until research pack M63 returns.
+  - id: kuronia2-main-hall
+    target: {building: "bdot:941cfc23-bd8b-40d5-a49b-d1bba751d5bd"}
+    reason: >-
+      Plant at Kuronia 2 (BDOT10k one outline 11 215 m2, LoD1 2024 12.72 m). Photos P11-059 (from the NE, local
+      211.6 453.0) and P11-005 (from the W, local 15.0 360.1): the hall proper is clad in dark graphite panels up to
+      the roof edge on every side seen (NE end wall, NW wall above the annex); the light walls of the street views
+      belong to the low annexes in front of it (parts below). ADR 0179 drew the whole outline as one light hall with
+      a graphite band - review s19-0179 P2 (P11-063: "dark taller front part + long low white part"). The hall keeps
+      the LoD1 height; hall_wall_graphite = the existing graphite sheet; hall_bands false = one colour.
+    confidence: high
+    verify: M63 (cladding module); owner photo session
+    set: {wall_material: hall_wall_graphite, hall_bands: false}
+  - id: kuronia2-corner-portal
+    kind: building_part
+    name: dark corner block of the front of the plant at Kuronia 2 (west corner)
+    polygon_en: [[63.9, 337.0], [60.7, 343.6], [59.4, 342.9], [59.2, 343.4], [58.2, 342.9], [58.4, 342.4], [48.6, 337.6],
+                 [48.3, 338.0], [47.4, 337.6], [50.7, 330.7]]
+    cut_from: ["bdot:941cfc23-bd8b-40d5-a49b-d1bba751d5bd"]
+    height_m: 9.0
+    function: produkcyjny
+    reason: >-
+      Photos P11-005 and P11-063: the west corner of the plant is a dark graphite block taller than the annexes on
+      both sides of it (it carries the company board, which is not reproduced). Orthophoto 2024: a lighter roof
+      square at the corner, 14 m along the NW (Kuronia) wall and 7 m along the SW wall (BDOT10k corner local
+      47.8 337.4), its shadow on the annex roof to the NE. Outline = that rectangle cut out of the BDOT10k outline
+      and pushed 0.3 m proud of the annex walls. Height: P11-005, top of the block 222 px against 190 px of the
+      annex beside it (same distance) = 1.17 x the annex -> 9.0 m, UNVERIFIED +-1 m.
+    confidence: medium
+    verify: M63; owner photo session (Kuronia 2 from the Mickiewicza crossing)
+    set: {typology: hall, wall_material: hall_wall_graphite, hall_bands: false}
+  - id: kuronia2-front-portal
+    kind: building_part
+    name: second dark block of the front of the plant at Kuronia 2 (SW wall)
+    polygon_en: [[62.6, 330.5], [53.1, 325.8], [56.8, 318.1], [66.4, 322.8]]
+    cut_from: ["bdot:941cfc23-bd8b-40d5-a49b-d1bba751d5bd"]
+    height_m: 9.0
+    function: produkcyjny
+    reason: >-
+      Photos P11-005 and P11-063: a second dark graphite block of the same height stands on the SW front, separated
+      from the corner block by a light bay (the frame of P11-063 reads dark - light - dark - long low light).
+      Orthophoto 2024: dark roof patch 13-21 m from the west corner along the SW wall, 10 m deep. Position +-2 m,
+      height as the corner block (UNVERIFIED).
+    confidence: low
+    verify: M63; owner photo session
+    set: {typology: hall, wall_material: hall_wall_graphite, hall_bands: false}
+  - id: kuronia2-front-bay
+    kind: building_part
+    name: light bay between the two dark blocks of the front at Kuronia 2
+    polygon_en: [[51.4, 329.9], [53.3, 326.0], [62.4, 330.4], [60.0, 335.2], [51.0, 330.8]]
+    cut_from: ["bdot:941cfc23-bd8b-40d5-a49b-d1bba751d5bd"]
+    height_m: 7.2
+    storeys: 2
+    function: biurowiec
+    reason: >-
+      Photos P11-005 / P11-063: between the two dark blocks the front is a light rendered bay of two storeys (dark
+      ground floor, light upper floor with two windows), lower than the blocks. Same wall build as the office wing.
+    confidence: medium
+    verify: M63
+    set: &k2_wing
+      typology: office
+      frontage:
+        wall: plaster_white
+        plinth_m: 0.3
+        glass_lod1: hall_flashing
+        accents:
+          - {facing: [N, NE, E, SE, S, SW, W, NW], span: [0.0, 1.0], material: plaster_accent_grey, z: [0.3, 3.3], min_len_m: 1.0}
+        glazing:
+          - {facing: SW, span: [0.03, 0.97], z: [4.2, 5.9], pitch_m: 1.5, min_len_m: 5.0, margin_m: 0.8}
+          - {facing: SW, span: [0.03, 0.97], z: [1.0, 2.8], window_m: [2.4, 2.2], min_len_m: 5.0, margin_m: 0.8}
+  - id: kuronia2-office-wing
+    kind: building_part
+    name: long low office wing along the SW front of the plant at Kuronia 2
+    polygon_en: [[87.7, 278.3], [66.1, 322.6], [57.1, 318.2], [78.5, 274.4], [79.4, 274.2], [85.7, 277.3], [86.2, 277.5]]
+    cut_from: ["bdot:941cfc23-bd8b-40d5-a49b-d1bba751d5bd"]
+    height_m: 7.2
+    storeys: 2
+    function: biurowiec
+    reason: >-
+      Photos P11-005 and P11-063 (the "long low white" part of the frame): a two-storey office wing runs along the SW
+      wall from the dark block to the south corner - dark ground floor, light upper floor with a ribbon of windows.
+      Orthophoto 2024: roof strip 10.1 m deep along the SW wall (inner edge measured 104.7 px at 10.4 px/m), lower
+      than the hall roof behind it. Height: P11-059, the annex end wall is 120 px against 195 px of the hall corner
+      (12.72 m) at about the same distance = 7.8 m with the roof screen -> 7.2 m to the wall top, UNVERIFIED +-1 m.
+      plaster_white upper floor, plaster_accent_grey ground floor (the thin red line between them and the red
+      canopy are not drawn: open).
+    confidence: medium
+    verify: M63; owner photo session
+    set: *k2_wing
+  - id: kuronia2-street-annex
+    kind: building_part
+    name: low annex along the NW (Kuronia) wall of the plant at Kuronia 2
+    polygon_en: [[63.6, 336.9], [64.1, 335.8], [187.7, 394.8], [184.0, 402.5], [183.5, 402.9], [182.7, 402.7], [60.8, 343.3],
+                 [63.9, 337.0]]
+    cut_from: ["bdot:941cfc23-bd8b-40d5-a49b-d1bba751d5bd"]
+    height_m: 7.2
+    storeys: 2
+    function: biurowiec
+    reason: >-
+      Photos P11-005 (left half of the frame) and P11-059: a low annex runs along the whole Kuronia side of the hall,
+      light band above a dark ground floor with doors and small windows, plant on its roof; the graphite hall rises
+      behind it. Orthophoto 2024: roof strip 8.3-8.5 m deep along the NW wall with roof plant (inner edge 86.6 px at
+      10.4 px/m). Height as the office wing (the light band runs round the corner at one level in P11-005),
+      UNVERIFIED +-1 m. Roof plant and the red entrance canopy are not drawn (open).
+    confidence: medium
+    verify: M63; owner photo session
+    set:
+      typology: office
+      frontage:
+        wall: plaster_white
+        plinth_m: 0.3
+        glass_lod1: hall_flashing
+        accents:
+          - {facing: [N, NE, E, SE, S, SW, W, NW], span: [0.0, 1.0], material: plaster_accent_grey, z: [0.3, 3.3], min_len_m: 1.0}
+        glazing:
+          - {facing: NW, span: [0.02, 0.98], z: [1.2, 2.6], window_m: [1.6, 6.4], min_len_m: 20.0, margin_m: 2.0}
+  - id: rosti-north-wall-gates
+    kind: wall_gates
+    gates:
+      - {at_en: [733.7, 362.4], width_m: 4.5, height_m: 5.0}
+      - {at_en: [697.8, 377.8], width_m: 4.5, height_m: 5.0}
+    reason: >-
+      Photo P11-094 (camera local 776.6 387.2): two sectional gates in the north wall of the north hall, the second
+      identity mark of that wall after the board (review s19-0179 P2). Bearings from the frame (f = 753 px at
+      960 px, NE corner at x 205 = 224 deg): gate centres at x 427 and x 742 -> 240 deg and 263 deg -> 14.7 m and
+      53.8 m from the NE corner (BDOT10k vertex 747.2 356.6) along the wall, +-2 m. Size: the first gate is 85 px
+      high against 245 px of wall (~17 m) = 5.9 m; a sectional gate of that kind is 4-5 m -> 4.5 x 5.0 m
+      UNVERIFIED. Plain sectional doors (the dock door material), no lettering. Positional: the gates go to the
+      hall wall nearest to the points, whatever building_part cuts the outline.
+    confidence: medium
+    verify: M63 (gate size and position)
+  - id: hall-runoff-no-repeat
+    kind: facade_rules
+    runoff_shuffle: true
+    reason: >-
+      Review s19-0179 P2 (P11-094): the streaks under the attic were the same group repeated every 24 m (the period
+      of the run-off layer) - 5.5 times along the 133 m east wall. The wall top is now laid from the blocks of the
+      layer between its quiet columns in a hashed order (ADR 0196). Opt-in per region: the reference region C keeps
+      its output until the lead turns it on with the next regeneration.
+    confidence: high
+    verify: none
+  - id: krywlany-runway-paint
+    kind: runway_markings
+    axis_en: [[-1024.0, -217.0], [-105.0, -192.75]]
+    edge_lines: {offset_m: 14.05, width_m: 0.9, s_m: [0.0, 918.0]}
+    centre_w_m: 0.45
+    centre_dashes:
+      - {s_m: [54.7, 84.5]}
+      - {s_m: [113.3, 143.1]}
+      - {s_m: [171.5, 201.3]}
+      - {s_m: [228.6, 258.4]}
+    bars:
+      - {s_m: 18.4, width_m: 1.0, half_span_m: 13.6}
+      - {s_m: 207.4, width_m: 1.0, half_span_m: 13.6}
+    chevrons:
+      - {s_m: [15.0, 5.5], rows_lat_m: [-11.2, -5.6, 0.0, 5.6, 11.2], width_m: 3.3}
+      - {s_m: [211.4, 221.4], rows_lat_m: [-11.2, -5.6, 0.0, 5.6, 11.2], width_m: 3.3}
+    arrows:
+      tips_s_m: [278.3, 335.5, 392.6, 449.8, 508.0, 566.6, 623.8, 680.9, 739.1, 796.2]
+      length_m: 40.0
+      head_m: [10.0, 3.3]
+      shaft_w_m: 0.45
+      towards: low
+    reason: >-
+      Paint of runway 09R/27L (OSM way 958211700: asphalt, 1350 x 30 m, axis local -1446.3 -227.2 -> -115.7 -192.3;
+      the tile holds its eastern 919 m) traced on the 2024 orthophoto 0.25 m: white side stripes 1.0 m wide with
+      their outer edges 29 m apart; ten displaced-threshold arrows 40 m long every 57.7 m pointing west (heads
+      10 x 3.3 m); threshold bars at E -816.7 and E -1005.6 with five arrow heads before each; four centre line
+      pieces of 30 m. Stations +-1.5 m, widths +-0.25 m (one orthophoto pixel); shaft / centre line width 0.45 m
+      WORKING_VALUE (under two pixels). Not drawn: the designator "27 L", the faded grey crosses of the old paint,
+      the taxi line on the turn pad. The grass runway 09L/27R (OSM way 303368859, east half inside the tile) has no
+      paint or markers on the orthophoto and stays meadow.
+    confidence: high
+    verify: owner photo session (aerodrome fence)
