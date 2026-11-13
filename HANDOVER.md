@@ -1,3 +1,17 @@
+# SESJA 19 (start 2026-11-13 20:2x lokalnie; nowe konto: 5 h 0 % — reset 01:20; tydzień 0 %, Fable 0 %) — nowa sesja: czytaj TEN blok, potem „STOP S18”
+- **main** `d6a1bb8a1`. C: 733 GB. adb: S24+ RZCX60VE8ZY online, A16 RFGL34SJYDZ **offline** (USB). PHONE_RUN brak. Crony :17/:47/:07.
+- Na starcie działały jeszcze zadania w tle z s18 (regen r3 0172, import Dojlid 0179 + pytest, full.ps1 r2 0180) — nowi agenci mają na nie poczekać, nie dublować.
+- **Agenci s19 (wznowieni z live, 6):**
+| ADR | model | worktree / gałąź | live (w worktree) |
+|---|---|---|---|
+| 0170 | Fable | `horizon-0170` | `artifacts/live/horizon-0170.md` — base3 → budżet → pary after4 → testy |
+| 0172 | Fable | `p1b-0172` | `artifacts/live/p1b-0172.md` — czeka na regen r3 → after r3 → ADR §4 |
+| 0179 | Fable | `dojlidy-vis-0179` | `artifacts/live/dojlidy-vis-0179.md` — czeka na import → SBS → ADR |
+| 0180 | Fable | `tower-0180` | `artifacts/live/tower-0180.md` — czeka na full r2 → budżet → pary r2 |
+| 0181 | Fable | `lamplens-0181` | `artifacts/live/lamplens-0181.md` — before → soczewki/tablica |
+| 0182 | Opus | `dusk-0182` | `artifacts/live/dusk-0182.md` — rebuild → after3 → ADR |
+- Kolejność integracji bez zmian (patrz STOP S18). **Ostatni przydzielony ADR: 0182.**
+
 # STOP S18 (2026-11-13 ~21:3x; 5 h ~80 %, reset 23:20; tydzień 28 %, Fable 20 %) — prompt s19: `docs/owner/START-PROMPT-S19.md`
 - **main** `1d66bab2e` = origin/main. Scalone w s18: 0171, 0173, 0175, 0177, 0178, Mistral M44 r2, M52 r2. Świat w main NIE przebudowany od s17 (`93842a609`).
 - **Gałęzie w toku (wznawiać z live jako NOWYCH agentów):**
