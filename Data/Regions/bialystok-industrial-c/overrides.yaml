@@ -2182,8 +2182,15 @@ overrides:
     # carriageway widens over the next 9 m. With the full length at 7.7 m the exit boom no longer reached its side
     # strip (tests/gis/test_depot_yard.py::test_region_gate_cannot_be_driven_round). The real road is as wide at the
     # gate too; that part waits for the owner's photos of the gate (D-list item 1).
+    # lane_edges (s17): with a width profile alone the one-lane layout used the widest value (lane_w 7.7 - 2 x edge
+    # strip), so at the 4.0 m gate section the lane centre sat 1.85 m right of the carriageway centre and the lane
+    # from the yard ran into the kerb (road_consistency lane_blind_end at E 621.85 N -588.83, on the route). The
+    # running lane is measured from the LEFT (median) edge, 0.25 ... 3.75 m: at the 4.0 m gate it is centred exactly
+    # as the generated lane was (hw 2.0 - 2.0 = 0); past the widening it keeps to the median and leaves the
+    # 3.95 m kerb-side strip where cars park (orthophoto hr_cm109.png). WORKING_VALUE.
     set: {center_offset: [[0.0, 0.0], [0.36, 0.0], [0.5, -0.75], [1.0, -0.75]],
-          width: [[0.0, 4.0], [0.36, 4.0], [0.5, 7.7], [1.0, 7.7]]}
+          width: [[0.0, 4.0], [0.36, 4.0], [0.5, 7.7], [1.0, 7.7]],
+          lane_edges: [0.25, 3.75]}
   - id: kwadrat-exit-verge-lawn
     kind: unpaved_area
     polygon_en: [[586.35, -627.5], [605.6, -589.0], [610.0, -589.0], [590.75, -627.5]]
