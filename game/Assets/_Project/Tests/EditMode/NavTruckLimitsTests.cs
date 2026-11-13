@@ -178,6 +178,30 @@ namespace Game.Tests
         }
 
         [Test]
+        public void Synthetic_AxleLoad10Blocks_11_5Allowed_ADR0164()
+        {
+            var blocked = new RoutePlanner(Highway(mal: 1000));
+            var p = RoutePath.For(blocked.Graph);
+            Assert.AreEqual(PlanStatus.Ok, blocked.Plan(new Vector2(50, 0), float.NaN, new Vector2(550, 0), p));
+            Assert.Greater(p.Length, 700f, "detour around the 10 t axle limit");
+            var ok = new RoutePlanner(Highway(mal: 1150));
+            var q = RoutePath.For(ok.Graph);
+            Assert.AreEqual(PlanStatus.Ok, ok.Plan(new Vector2(50, 0), float.NaN, new Vector2(550, 0), q));
+            Assert.Less(q.Length, 700f, "11.5 t axle limit equals the truck: straight");
+        }
+
+        [Test]
+        public void Synthetic_HgvTimedFlag_IsInformationalOnly_ADR0164()
+        {
+            Assert.AreEqual(128, RouteGraph.FlagHgvTimed);
+            var planner = new RoutePlanner(Highway(extraFlags: RouteGraph.FlagHgvTimed));
+            var p = RoutePath.For(planner.Graph);
+            Assert.AreEqual(PlanStatus.Ok, planner.Plan(new Vector2(50, 0), float.NaN, new Vector2(550, 0), p));
+            Assert.Less(p.Length, 700f, "a timed hgv ban is not a block (no clock in the planner)");
+            Assert.IsTrue(RoutePlanner.EdgeAllowed(planner.Graph, 1, false));
+        }
+
+        [Test]
         public void Region_LimitsLoadedAndEmptyForCurrentData()
         {
             // The region graph has no maxweight/maxaxleload/maxlength tags and only maxheight=default (= no limit),
@@ -195,7 +219,14 @@ namespace Game.Tests
                 if (g.EdgeMaxWeightC[e] != 0 || g.EdgeMaxAxleLoadC[e] != 0 || g.EdgeMaxHeightCm[e] != 0 || g.EdgeMaxLengthCm[e] != 0) limited++;
                 if ((g.EdgeFlags[e] & RouteGraph.FlagHgvDestination) != 0) hgvDest++;
             }
-            Assert.AreEqual(0, limited, "no numeric truck limits in this region's OSM data (maxheight=default only)");
+            // ADR 0164: the only numeric limit is maxaxleload=11.5 (= the truck's own axle limit, no route effect) once the
+            // regenerated v2 file is in; none in the older file. No weight / height / length limits in this region.
+            for (int e = 0; e < g.EdgeCount; e++)
+            {
+                Assert.AreEqual(0, g.EdgeMaxWeightC[e]); Assert.AreEqual(0, g.EdgeMaxHeightCm[e]); Assert.AreEqual(0, g.EdgeMaxLengthCm[e]);
+                Assert.IsTrue(g.EdgeMaxAxleLoadC[e] == 0 || g.EdgeMaxAxleLoadC[e] == RoutePlanner.TruckMaxAxleLoadCt, "edge " + e + " axle " + g.EdgeMaxAxleLoadC[e]);
+            }
+            Assert.IsTrue(limited == 0 || limited == 89, "limit-tagged edges: 0 (old data) or 89 (maxaxleload=11.5), got " + limited);
             Assert.AreEqual(0, hgvDest, "no hgv=destination in this region's OSM data");
             // hgv=no edges (6) plus access=no / emergency_access are no-truck; routing still works on the rest.
             var planner = new RoutePlanner(g);

@@ -24,6 +24,9 @@ namespace Game.Core.Navigation
         /// <summary>Edge flag bit6 (M27): the edge cannot be entered from the main strongly connected component in any
         /// allowed direction (the region clip cut the only connection, ADR 0150) - "poza zasięgiem"; not a destination.</summary>
         public const byte FlagOffReach = 64;
+        /// <summary>Edge flag bit7 (ADR 0164): OSM hgv:conditional with plain hour windows only (e.g. "no @ (22:00-06:00)").
+        /// Informational: the planner has no clock and never blocks on it. Other conditional values are not encoded.</summary>
+        public const byte FlagHgvTimed = 128;
         /// <summary>Node flag bit0 = boundary (edge leaves the region data), bit1 (M27) = off-reach (no directed path to
         /// the node from the main strongly connected component).</summary>
         public const byte FlagNodeBoundary = 1, FlagNodeOffReach = 2;
