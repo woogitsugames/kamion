@@ -61,34 +61,39 @@ lampka tablicy zostaje na LOD2 — `REGS_KEEP`). Gęstość atlasu Lights ciągn
   stabilnymi plamami barwy (bez mory). Piksel tablicy (góra, High dusk, sRGB): 85 → 208.
 
 ## r2 — poprawki po recenzji visual-critic s20 (`docs/reports/REVIEW-2026-11-13-s20-0181.md`)
-- **P1-1 aliasing:** `KamionLensFade = saturate(p/(2·fw) − 1)` (0 przy ≤ 2 px/okres, pełny wzór od 4 px), `fw = length(fwidth)`;
-  krawędzie kubków i uszczelki poszerzone o `fw`; kropki LED (1,5–1,6 mm) gasną własnym fade (okres 6 mm), środek Fresnela
-  gaśnie z pierścieniami; pierścienie = fala trójkątna (piłokształtna dawała morę mimo rozdzielonego okresu). Test
-  `Shader_LensFade_IsZeroAtNyquist_AndFullFromFourPixelsPerPeriod`. Dowód: `after3/High-*/lamp-trailer.png` — szachownica
-  i mora pierścieni znikły (High 2 m: poduszki 3,5 mm i pierścienie 3 mm wygaszone, zostają kubki i punkty LED).
-- **P1-2 Low:** diagnoza — Low = LOD2 (manifest `tiers`), a decymacja collapse przesuwa wierzchołki soczewki w płaszczyźnie
-  i interpoluje uv1 i uv0 (atlas rozwijany na LOD0 przed kopiami LOD) → nieafiniczna ramka (jajowate kubki) i trójkąty
-  sięgające sąsiedniej komory atlasu (czerwony klin). Poprawka: `a6_export.store_lens_frame` / `fit_lens_atlas`
-  (afiniczne uv0 = A·(u,v,1) na soczewce, tylko gdy residuum < 4e-4) / `refit_lens_uv1` po decymacji (oba eksportery) —
-  uv1 i uv0 soczewek LOD1–2 liczone od nowa z pozycji. Dodatkowo shader: lookup atlasu przycięty do komory
-  (`KamionLensInsetUV`, Jakobian uv0/q z pochodnych ekranowych, wcięcie 1,5 texela mipa). Re-eksport w toku przy STOP s20 —
-  **render Low po re-eksporcie (after4) jeszcze niezrobiony**; after3 Low pokazuje stan bez refitu (artefakty zostały).
-- **P1-3:** kamery `plate-trailer` (4,2 m) i `plate-truck-bobtail` (3,5 m; `VisualQaRunner` chowa naczepę dla id `*-bobtail`).
-  `after3/{High,Low}-dusk/plate-*.png`: obie tablice oświetlone i czytelne, lampka ciągnika nad tablicą widoczna.
-- **P2-4 klosz:** dla stylów 1–4 normalna płaska i `rough ≤ 0,08` (relief tylko w albedo), soczewka wyłączona z członu
-  gloss-trim (jego przesłonięcie 0,3 czerniło cofania/przeciwmgłowe o zmierzchu), brud na kloszu = mgiełka (rough 0,4,
-  nie 0,88 — twarde plamy). Ostatnie dwie zmiany nie mają jeszcze renderu (after4).
-- **P2-5 pomiar** (`after3`, komora czerwona x 735–795, y 510–610, średnie R): High dusk 200 vs stop 202, Low 192 vs 193 —
-  pozycyjne i stop **nierozróżnialne** o zmierzchu (limiter 0178). Zgłoszone do 0178.
+Wynik = **jeden spójny przebieg `after6`** (finalny shader i eksport, High + Low × dusk / dusk+stop+awaryjne / overcast /
+overcast+mijania+stop+awaryjne, kamery `lamp-trailer`, `lamp-truck`, `plate-trailer`, `plate-truck-bobtail`, `trailer-34`,
+`truck-rear34`, `chase`): `artifacts/lamplens-0181/after6/`, wycinki `crops6/`. `after3`–`after5` = przebiegi diagnostyczne.
+- **P1-1 aliasing:** `KamionLensFade = saturate(p/(2·fw) − 1)` (0 przy ≤ 2 px/okres, pełny od 4 px), `fw = length(fwidth)`;
+  krawędzie kubków / uszczelki poszerzone o `fw`; kropki LED (1,5–1,6 mm) gasną własnym fade (6 mm), środek Fresnela z
+  pierścieniami; pierścienie = fala trójkątna. Test `Shader_LensFade_IsZeroAtNyquist_AndFullFromFourPixelsPerPeriod`.
+  after6 High 2 m: szachownica poduszek i mora pierścieni znikły; zostają okrągłe kubki i punkty LED (zgaszone i zapalone).
+- **P1-2 Low — diagnoza i poprawki** (trzy przyczyny, każda sprawdzona renderem):
+  (a) **z-fight**: arkusz lica soczewki naczepy (`rear_lens_*_face`, wypukłość 4 mm) leżał 0,2 mm przed licem pudełka
+  soczewki — przy krawędziach dwa obiekty z własną ramką uv1 przeplatały się (garbate kubki), a faza sąsiedniej komory
+  prześwitywała. Arkusz wysunięty na 1,5 mm (`trailer_build.py`).
+  (b) **osad 0182 na kloszu**: model brudu tyłu (ADR 0182, przyszedł z merge main) kładł plamy-bloby także na soczewki —
+  „kamuflaż” na cofania i plamy pod kubkami. Na kloszu teraz równy film, gęstszy ku dołowi (0,45–0,8 × pokrycie soczewki,
+  WORKING_VALUE), szorstkość filmu 0,4 zamiast 0,88.
+  (c) **decymacja LOD** przesuwa wierzchołki i interpoluje uv1/uv0 (przesunięcie ramki do 0,094 szerokości soczewki na
+  LOD2): `a6_export.store_lens_frame` / `fit_lens_atlas` (afiniczne uv0 na soczewce, gdy residuum < 4e-4: naczepa 10/48,
+  ciągnik 1/25) / `refit_lens_uv1` po decymacji w obu eksporterach. Shader: lookup atlasu przycięty do komory
+  (`KamionLensInsetUV`, Jakobian uv0/q, wcięcie 1,5 texela mipa).
+  after6 Low-overcast `lamp-trailer`: kubki okrągłe, cofania równa (927,549 = 109,111,111; jasna kropka zgasła), mora znikła.
+- **P1-3:** kamery `plate-trailer` (4,2 m) i `plate-truck-bobtail` (3,5 m; `VisualQaRunner` chowa naczepę dla id
+  `*-bobtail`). after6 `{High,Low}-dusk/plate-*.png`: obie tablice oświetlone i czytelne, lampka ciągnika nad tablicą.
+- **P2-4 klosz:** style 1–4: płaska normalna, `rough ≤ 0,2` (0,08 lustrzało sondę w plamy), relief tylko w albedo; soczewka
+  poza członem gloss-trim (jego przesłonięcie 0,3 czerniło klosze o zmierzchu).
+- **P2-5 pomiar** (after6, komora czerwona x 735–795, y 510–610, średnie R): High dusk 201 vs stop 202, Low 193 vs 194 —
+  pozycyjne i stop **nierozróżnialne** o zmierzchu (limiter 0178 spłaszcza oba do sufitu). Zdanie z „Weryfikacji” było błędne.
+- Testy: lampy (`TruckLampEncodingTests`, `TruckRegulationLampTests`, `TruckLampLensTests`) 46/46 (after3–after6).
+  `check_export` PASS: naczepa LOD2 7 850 / 8 000, ciągnik LOD2 17 838 / 17 900 (bez zmian).
 
 ## Otwarte
-- **after4** (po re-eksporcie): `pwsh -NoProfile -File art-source/truck/exterior/qa/run_lamplens_0181.ps1 -Tag after4 -Tests
-  -Cams 'lamp-trailer,lamp-truck,plate-trailer,plate-truck-bobtail'` + obejrzenie Low-overcast lamp-trailer i klosza High;
-  ponowna recenzja visual-critic.
-- Stop vs pozycyjne (P2-5) — limiter ADR 0178 spłaszcza oba do sufitu; do 0178.
+- Low: zostały ślady na rogach komór — czerwonawy róg dolny-prawy komory żółtej (712,612 = 116,48,12), beżowa łata w
+  lewym górnym rogu cofania (890,500), pomarańczowa w prawym dolnym przeciwmgłowego. Najpewniej fazy pudełek soczewek
+  (osobne wyspy atlasu, niedopasowane afinicznie) widoczne przy krawędzi arkusza; kandydat: fazy pudełka do Trim/uszczelki.
+- Niezapalona cofania / przeciwmgłowa o zmierzchu = ciemna szyba (gładki klosz odbija ciemną ulicę) — do oceny krytyka.
+- Stop vs pozycyjne (P2-5) — do ADR 0178.
 - P2-6 rozlew światła tablicy na ramkę, P2-7 pomarańczowe kreski krawędzi obudowy (sprzed 0181) — nie ruszane.
-- Brak profilu oświetlenia „noc” w `visual-qa` (jest clear / overcast / lowsun / dusk) — noc nieoceniona.
-- Zdjęć referencyjnych lamp w `research/` nie ma; wzór oceniany z opisu typowej lampy LED — do oceny `visual-critic`.
-- Lampy przednie (DRL, projektory, kierunkowskazy `led_amber`) bez zmian — osobne zadanie, jeśli recenzja uzna je za płaskie.
-- Lampy nie oświetlają otoczenia (rama, błotnik) — poza zakresem (brak świateł punktowych na Low).
-- Odblask REFLEX: wzór powierzchni jest, człon retroodbicia (światła pojazdu z tyłu) — nie.
+- Brak profilu „noc”; brak zdjęć referencyjnych lamp; czas GPU na telefonie UNVERIFIED.
