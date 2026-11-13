@@ -1,0 +1,15 @@
+{
+  "schema": "kamion/shadow-caster-bias/1",
+  "materials": {
+    "bridge_concrete": 0.0,
+    "bridge_kerb": 0.0,
+    "road_asphalt": 0.0
+  },
+  "scope": "Existing materials throughout this region; road layer is not a caster, bridge layer is. Hero viaduct_concrete retains normal bias. No geometry or global quality change.",
+  "evidence": "ADR0155 matched editor ablations: individual materials and deck-pair insufficient; deck-triple removes the periodic light holes while retaining the large cast shadow and lit island edge.",
+  "references": [
+    "docs/adr/0144-junctions-r7.md: open item 7; original source photos 2818555625124739 and 3970163613102941",
+    "artifacts/gpt-s16-r3/REVIEW-PREFLIGHT.md",
+    "artifacts/gpt-s16-r3/material-ablation-sheets/"
+  ]
+}

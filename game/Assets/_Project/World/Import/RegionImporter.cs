@@ -284,6 +284,7 @@ namespace Game.World.Import
         static Material CreateMaterial(Result r, string id, Dictionary<string, object> m, Dictionary<string, object> roadAsphalt)
         {
             var mat = CreateMaterialCore(r, id, m, roadAsphalt);
+            WorldShadowCasterBias.ApplyRegionPolicy(mat, m, r.Region, id); // ADR0155: optional region data, no global bias change.
             // ADR0098: explicit hero glazing semantic for receiver-depth bias; other materials stay off.
             if (mat != null && mat.HasProperty("_ArchitecturalGlass"))
             {
