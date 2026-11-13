@@ -298,8 +298,12 @@ def route_polyline(region_id, w):
     import networkx as nx
     import roadgraph
     graph = json.loads((pipeline.REGIONS / region_id / "roads.graph.json").read_text(encoding="utf-8"))
-    cand = json.loads((REPO / "docs/reports/map/candidates.json").read_text(encoding="utf-8"))
-    route = next(c for c in cand["candidates"] if c["id"] == w.region["candidate"])["route"]
+    re_f = pipeline.REGIONS / region_id / "route_endpoints.json"   # ADR 0166: per-region authored route ends
+    if re_f.exists():
+        route = json.loads(re_f.read_text(encoding="utf-8"))
+    else:
+        cand = json.loads((REPO / "docs/reports/map/candidates.json").read_text(encoding="utf-8"))
+        route = next(c for c in cand["candidates"] if c["id"] == w.region["candidate"])["route"]
 
     def nearest(xy):
         return min(graph["nodes"], key=lambda n: math.hypot(n["x"] - xy[0], n["y"] - xy[1]))["id"]
