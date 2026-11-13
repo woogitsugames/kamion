@@ -44,10 +44,11 @@ Pobranie bezpośrednie z API 0.6 (api.openstreetmap.org), 2026-11-13; pełne geo
   https://etoll.mf.gov.pl/media/pmlhwkrm/pe%C5%82na-lista-odcink%C3%B3w-dr%C3%B3g-p%C5%82atnych-od-1022026-r.pdf — dostęp 2026-11-13, HTTP 200.
   Kopia: `files/full_list_2026-02-01.pdf.b64` — **SHA256:** `57f2cd6b20b824f9c5839e48cc0259e32d0819edd3fa31edc1af97585f7c4f4c`, 715 477 B.
   Strona nadrzędna: https://etoll.mf.gov.pl/system-e-toll/siec-drog-platnych („Sieć dróg płatnych").
-  Odczyt sekcji (S8 Rzędziany–Tykocin 5470 m; Tykocin–Choroszcz 3490 m; węzeł Choroszcz 960 m; DK8 tylko Augustów; DK19/65: brak) — cyt. za **P8-2** (dekodowanie tekstu; fonty CID w ObjStm — tekst nieekstraktowalny standardowo).
+  Odczyt **własny** (poprawka PR; tekst listy **ekstraktowalny** — `pdftotext -layout` potwierdzone w recenzji, w sesji własny ekstraktor strumieni PDF/ObjStm z ToUnicode). **Str. 31:** „Węzeł Jeżewo – Węzeł Rzędziany 8290 | Węzeł Rzędziany – Węzeł Tykocin 5470 | Węzeł Tykocin – Węzeł Choroszcz 3490 (S8)”; **str. 32:** „Węzeł Choroszcz – Choroszcz (skrzyżowanie z drogą powiatową nr 2287B) 960 (S8)”. DK19 i DK65: **0 wystąpień** w całym dokumencie (33 str.); DK8: tylko Augustów (str. 9–10: 1748/7419/10548 m) i Łaziska Górne (str. 10, woj. śląskie) — poza promieniem 40 km. Zgodne z odczytem P8-2 (M54-025).
 - **Lista nowych odcinków dróg płatnych w e-TOLL od 10.02.2026 r.** (PDF):
-  https://etoll.mf.gov.pl/media/skpplztd/lista-nowych-odcink%C3%B3w-dr%C3%B3g-p%C5%82atnych-w-e-toll-od-1022026-r.pdf — dostęp 2026-11-13, HTTP 200.
+  https://etoll.mf.gov.pl/media/skpplztd/lista-nowych-odcink%C3%B3w-dr%C3%B3w-p%C5%82atnych-w-e-toll-od-1022026-r.pdf — dostęp 2026-11-13, HTTP 200.
   Kopia: `files/new_sections_2026-02-01.pdf.b64` — **SHA256:** `657c97d334666be19dbc9574f716e1535de081534e5bc368ec287dbfc17604f7`, 200 877 B.
+  Odczyt **własny** (poprawka PR): 6 stron; **S8 — 0 sekcji** w całym dokumencie; DK8 wyłącznie odcinek Augustów – Augustów Borki – Janówka – Raczki (**str. 1**) — poza promieniem 40 km (M54-026).
 - **Artykuł:** „Zmiany w systemie e-TOLL od 1 lutego 2026 r.", 19.01.2026:
   https://etoll.mf.gov.pl/artykuly/zmiany-w-systemie-e-toll-od-1-lutego-2026-r — dostęp 2026-11-13, HTTP 200. PDF rozporządzenia linkowany z tego artykułu.
 - **Lista artykułów (84 karty, daty):** https://etoll.mf.gov.pl/artykuly/ — dostęp 2026-11-13. Kluczowe pozycje: „Złóż wniosek o zwrot niewykorzystanych środków…" (10.11.2026 — najnowszy), „Zmiana adresu serwisu IKK" (21.10.2026), „Zmiany w systemie e-TOLL od 1 lutego 2026 r." (19.01.2026 — ostatni dot. sieci). 16 artykułów nowszych niż 19.01.2026 — 0 dot. sieci/odcinków (kontrola programowa w audycie).
@@ -83,16 +84,15 @@ Pobranie bezpośrednie z API 0.6 (api.openstreetmap.org), 2026-11-13; pełne geo
 
 Interfejs: https://panoramax.openstreetmap.fr/ ; API: https://api.panoramax.openstreetmap.fr/ — dostęp 2026-11-13.
 
-- **Rondo Putry — 10 kadrów** (id, dystans od centrum ronda, data):
-  35224dcb-99e7-472f-8b41-9fff1f150fdd (15 m, 2019-08-15T15:32); 6fc62548-c122-4cba-9e9c-aadceb92e266 (18 m); 3eba62ce-2ff5-4256-974b-050dc4eff3e0 (20 m); 07820d85-61df-4880-8a82-914cb24b3574 (31 m); 844e35c7-bcd0-43e7-a8ac-16931cf7e96b (60 m); 6ded8ec0-a24e-45d0-a6a0-ff0e4ab164a5 (63 m); 239c71e8-1f79-4c72-8bb2-fef6d8be3120 (80 m, 2019-09-01T10:22); 3717771d-33ba-4abd-8c92-1b2b0208d5b3 (92 m); f16bbe61-0a2c-44ef-9fb3-e6303faa34c0 (97 m); 03ec4841-1311-4c3c-95ec-4a52ba4b2184.
+- **Rondo Putry — 10 kadrów** (16–90 m od pkt manifestu M54-007; pełne dane — id, dystans, azymut `view:azimuth`, opis — w `photos.csv`): 35224dcb, 844e35c7, 6fc62548, 3eba62ce, 07820d85, 239c71e8, 6ded8ec0, f16bbe61, 3717771d, 03ec4841 (pełne UUID w photos.csv; daty 2019-08-15 / 2019-09-01).
   Przykład kadru: https://panoramax.openstreetmap.fr/#focus=map&zoom=17&picture=35224dcb-99e7-472f-8b41-9fff1f150fdd
-- **Al. Tysiąclecia — 4 najbliższe kadry** (z 10 pobranych w rejonie):
-  412f2d02-8d4b-4b61-a3ba-09c25f3b3b5f (14 m); b294cf11 (38 m); 1bbb5f28 (47 m); 86106e2b (73 m) — daty 2019-08-15 / 2019-09-01.
+- **Al. Tysiąclecia — 10 kadrów** (24–154 m od pkt manifestu M54-008; pełne dane w `photos.csv`): 412f2d02, b294cf11, 1bbb5f28, 86106e2b, ab1ecf0b, 4a01dd03, 128187d5, 518fd5e7, 088fed3f, 56c91e4d; 7 z nich — kamera jedzie po jezdni wiaduktu (droga na obiekcie), nad jezdnią nic nie wisi (poprawka opisu M54-008); 3 bez mostu w kadrze: 86106e2b, 518fd5e7, 128187d5 (opis 128187d5 skorygowany w audycie kadrów).
   Przykład: https://panoramax.openstreetmap.fr/#focus=map&zoom=17&picture=412f2d02-8d4b-4b61-a3ba-09c25f3b3b5f
-- **S8/Choroszcz — 10 kadrów** (165–190 m od mostu): 94dd9f98 (165 m), 671cb8f5 (169 m), 25c37bd1 (173 m), 151afdbb (185 m), 95b3a736, 3e661f95, 3c44481e, 6ac337cc, 8d4b7a85, 0a2121ca — daty 2019-08-15 / 2019-09-01. Analiza wizyjna niewykonana (limit narzędzia) — pliki w ZIP.
-- **Rondo Wolnej Ukrainy — 10 kadrów, wszystkie ≥576 m od ronda** (brak obserwacji): 061c603a, 2173e4fe, 24999ac7, 4ac8cbd1 i in.
+- **S8/Choroszcz — 10 kadrów** (6–343 m od pkt manifestu M54-006 53.159539/22.996835 — odległości przeliczone haversine, pełne dane w `photos.csv`): 671cb8f5, 94dd9f98, 25c37bd1, 95b3a736, 151afdbb, 6ac337cc, 0a2121ca, 3c44481e, 3e661f95, 8d4b7a85 — daty 2019-08-15 / 2019-09-01. Analiza 10 kadrów (photos.csv): 671cb8f5 — kamera na wschodnim moście nad al. Niepodległości (pozycja = punkt przecięcia), most w kadrze niewidoczny; pozostałe kadry z jezdni S8 przed/za mostami — mosty poza kadrem; brak kadrów z al. Niepodległości pod mostami (brak materiału w Panoramax); na 6ac337cc w głębi widoczny wiadukt ul. Podleśnej nad S8 (way 183641838, 53.1571/23.0104 — dokładnie na azymucie kamery 107°) — obiekt niebadany; brak B-16 w kadrach (M54-006).
+- **Rondo Wolnej Ukrainy — 10 kadrów, wszystkie 593–608 m od ronda** (pełne dane w `photos.csv`): 061c603a, f165cd10, a6a8e17f, 2173e4fe, 24999ac7, 4ac8cbd1, 50a7f906, ff75abc7, 8f7b12f7, 37e27a2e. Analiza 10 kadrów (photos.csv): rondo i wiadukty al. JP2 poza kadrem we wszystkich (kadry 593–608 m od ronda, droga wielkomiejska); brak B-16 (M54-004).
 - **0 kadrów** w rejonach: rondo Żołnierzy Wyklętych, Starosielce, Bitwy Białostockiej, Sokólska, Warszawska, Branickiego, Zwierzyniecka (odpytania API — wyniki puste, udokumentowane w sesji).
-- Metadane wszystkich pobrań (id, lat/lon, datetime, licencja, URL sd.jpg) w ZIP: `pano/*.json`.
+- Metadane wszystkich pobrań (id, lat/lon, datetime, licencja, URL sd.jpg) w ZIP: `pano_meta.json`.
+- **Azymuty kamery** (`view:azimuth`, 0° = północ) pobrano z endpointu search API Panoramax — w pierwszej turze metadanych pole było `null` (niepobrane); poprawka uzupełnia je dla wszystkich 40 kadrów (`photos.csv`).
 
 ## 7. Wikimedia Commons
 
@@ -105,7 +105,7 @@ Interfejs: https://panoramax.openstreetmap.fr/ ; API: https://api.panoramax.open
 
 ## 8. KartaView — ograniczenie techniczne
 
-Metadane serii przy badanych obiektach dostępne (katalog `kv/` w ZIP), ale pobranie zdjęć niemożliwe w sesji: storage `*.kartaview.org` — NXDOMAIN / CDN HTTP 502 (kontrola 2026-11-13). Zdjęcia KartaView: **NIEDOSTĘPNE** — udokumentowane jako ograniczenie, nie wpływa na wartości manifestu (żadna pozycja nie cytuje KartaView).
+Kontrola ponowna (poprawka PR, 2026-11-13): API `api.kartaview.org` odpowiada (HTTP 200), ale zapytania o zdjęcia (`/2.0/photo/?lat1=…&lng1=…`) zwracają HTTP 400 „Restricted access!” — dostęp publiczny ograniczony; stara domena `api.openstreetcam.org` resolwuje do tego samego frontu, ale serwuje **niedopasowany certyfikat TLS** (błąd weryfikacji). Zdjęcia KartaView: **NIEDOSTĘPNE** — udokumentowane jako ograniczenie, nie wpływa na wartości manifestu (żadna pozycja nie cytuje KartaView). Wyniki kontroli w ZIP: `kv/`.
 
 ## 9. Cytowania wewnętrzne projektu
 
