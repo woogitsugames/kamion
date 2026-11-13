@@ -68,6 +68,7 @@
 | 0176 | synteza audio: retarder, hamulec silnikowy, AMT, osuszacz | Opus | `audio-synth-0176` |
 (live: `artifacts/live/<worktree>.md`; wszystkie z main 3a60019ff, pushują gałęzie.)
 - **Ostatni przydzielony ADR: 0176.**
+- 16:0x: Mistral oddał poprawki: M44 (#41), M47 (#39, ZIP v2), M48 (#40 — już PRZYJĘTY), M49 (#46, ZIP v2), M52 (#48), M54 (#44, ZIP v2) — ZIP-y v2 w `research/_incoming/mistral-*-v2/`. Ponowne przeglądy w toku: #39, #41, #44, #46. **#48: NADAL DO POPRAWY w 2 punktach (P-3b kreska 1,00/przerwa 1,00 m; P-13 trójkąt podstawa 0,50, wysokość 0,70, odstęp 0,25 — odczytane z rysunków przez nasz przegląd)** → lider scala z erratą `research/mistral/p2-surfaces-2/REVIEW-NOTE.md` (bez kolejnej rundy). Scalanie PR po pomiarze A16.
 - **Przejęcie przez nową sesję/konto:** przeczytaj ten blok → każdy wiersz tabeli: `artifacts/live/<live>.md` ma NASTĘPNY KROK; wznów jako NOWYCH agentów (nie SendMessage), gałęzie są na origin.
 - Następne: scalenia (0161 → 0162 → 0163, `generated/*` `--ours`, JEDNA regeneracja + `import-region.ps1` w main) → APK → krytyk → A16 gate3 A/B → S24+ High/30; 0165, 0166 osobno.
 

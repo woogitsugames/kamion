@@ -136,3 +136,25 @@ M52-FIX dopisany do `docs/owner/MISTRAL-FIXES-8.md`.
 Wzorzec rundy r8 potwierdzony: Mistral rzetelnie obsługuje API/teksty/licencje, ale **nie ogląda obrazów** (zdjęcia, rysunki) i deklaruje wizję, której nie było. Przy kolejnych zleceniach wymagać w samokontroli zdania „co widać” per obraz.
 
 KONIEC PRZEGLĄDU (wszystkie 5 PR). NASTĘPNY KROK dla lidera: przekazać M49/M54/M50/M55/M52-FIX Mistralowi; niczego nie scalono.
+
+## Ponowny przegląd po M52-FIX (s17)
+
+PR #48, commit `2e1ed8c`; `gh pr diff --name-only` = 5 plików, wszystkie w `research/mistral/p2-surfaces-2/` (OK). Sprawdzone na źródle: Dz.U. 2019/2311 zał. 2 wyrenderowane PyMuPDF 150 dpi i obejrzane strony 539 (P-3b), 540 (P-4/P-5), 571 (P-12), 572 (P-13), 573 (P-14); kadry jar-03/10/16/24 obejrzane; seed samokontroli odtworzony w `python -I`. Mistral sam przyznaje w komentarzu PR, że w sesji FIX **nie renderował PDF i nie oglądał rysunków ani kadrów** (oparł się na tym przeglądzie + arytmetyce).
+
+| Punkt M52-FIX | Stan | Uwagi |
+|---|---|---|
+| (1) P-3a/P-5/P-6 kreska 4,00 / przerwa 2,00, linia 0,12, podwójne 0,12+0,12+0,12 | **zrobione** | M52-003…015 SOURCED, ESTIMATED z pikseli usunięte; osobna kolumna „zużycie m²/mb” w README |
+| (1) kolumna zużycia farby | **zrobione** | 0,20/0,24/0,32/0,08 m²/mb poprawnie jako zużycie. Wątpliwość „P-5 0,32 vs 0,16” rozstrzygnięta oględziną s. 540: rysunek pokazuje **dwie** linie P-5 (obie krawędzie pasa zmiennego) → 2×0,16 = 0,32; Mistral zostawił otwarte |
+| (1) „obejrzyj każdy rysunek, usuń szacunki tam, gdzie jest etykieta” | **nie** | rysunków nie oglądano; patrz P-3b i P-13 niżej |
+| (2) P-3b | **częściowo — błąd** | „0,18” = m²/mb poprawnie, ale kreska/przerwa wpisane UNVERIFIED, a rys. 2.2.1.9 ma etykiety **kreska 1,00 m / przerwa 1,00 m** (pominięte; brak wiersza) |
+| (2) P-12 | zrobione (proweniencja zła) | szerokość 0,50 m poprawna, ale to **etykieta „0,5”** na rys. 4.2.3.1, nie „arytmetyka podpisu”; tramwaj ≥ 1,5 m OK |
+| (2) P-13 | **błąd** | etykiety czytelne: **podstawa trójkąta 0,50**, odstęp 0,25, **wysokość 0,70**; Mistral: „0,50 niepewny, arytmetyka wskazuje 0,75” — hipoteza 0,75 FAŁSZYWA (README l. 110, M52-019). „0,2625” (nie 0,2825) poprawnie |
+| (2) P-14 | zrobione (proweniencja zła) | 0,75 długość / 0,25 odstęp / **0,5 głębokość — etykieta**, nie arytmetyka; odległości 2,0/0,5/8,0/2,0/1,5 m z tekstu OK |
+| (3) Jaroszówka = estakada Andersa, ring negatywnie M52-117 | **zrobione** | jar-03/10/16/24: bariery mostowe estakady, kominy/zbiornik EC, latarnie dwuramienne; jar-24 = koniec estakady z ostrzegawczym znakiem włączania się pasa — opis zgodny. M52-117 BRAK KADRÓW (Panoramax bbox 0, KartaView 24/24 estakada) — przyjąć jako negatyw (nie weryfikowałem API) |
+| (4) kolor_srgb | **zrobione** | wartości usunięte z M52-029…105 i 116; zostały tylko Rynek 106–108 (inna metoda, środek kadru). Zad. 4 przez obejrzenie kadrów **niewykonane** — jawnie UNVERIFIED (akceptowalne) |
+| (5) `.gitignore` | **zrobione** | `files/`, `*.zip` |
+| (6) samokontrola 20 % z seedem | **zrobione** | seed 20261113, `random.Random(20261113).sample(ids,24)` odtworzone 1:1 (24/117); kadry jawnie „nie obejrzano w sesji FIX” — uczciwie, ale samokontrola znów nie wykryła P-3b/P-13 |
+
+**Werdykt: NADAL DO POPRAWY** (drobne, 1 runda): (a) P-3b dodać wiersz kreska **1,00** / przerwa **1,00** m (rys. 2.2.1.9, s. 539) SOURCED; (b) P-13 podstawa **0,50**, wysokość **0,70**, odstęp 0,25 (rys. 4.2.4.1, s. 572) SOURCED — usunąć hipotezę 0,75; (c) P-12 0,5 i P-14 głębokość 0,5 — proweniencja „etykieta”, nie arytmetyka; (d) P-5 0,32 = dwie linie na rysunku — zamknąć wątpliwość. Alternatywa dla lidera: scalić z erratą (a)–(d) wpisaną przez lidera — reszta paczki (zad. 1 linie, 2 negatyw, 3/6 wymogi, 4 UNVERIFIED) jest już poprawna. Nie scalono, nie skomentowano.
+
+**Fakty dla agentów (uzupełnienie):** P-3b kreska 1,00 / przerwa 1,00 m; P-12 szerokość 0,50 m; P-13 trójkąt podstawa 0,50 × wysokość 0,70 m, odstęp 0,25 m; P-14 prostokąt 0,75 × 0,50 m, odstęp 0,25 m (Dz.U. 2019/2311 zał. 2, s. 539/571–573).
