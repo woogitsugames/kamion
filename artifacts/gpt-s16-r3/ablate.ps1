@@ -1,11 +1,11 @@
-param([ValidateSet('','Low','High')][string]$OnlyTier='', [ValidateSet('','baseline','zero-bias','baked-only','no-baked','no-shadows')][string]$OnlyMode='')
+param([ValidateSet('','Low','High')][string]$OnlyTier='', [ValidateSet('','baseline','zero-bias','zero-normal','zero-depth','baked-only','no-baked','no-shadows')][string]$OnlyMode='')
 $ErrorActionPreference='Stop'
 $root='C:\Users\matma\Documents\Claude\kamion'
 $slot=Join-Path $root 'scripts/unity-slot.ps1'
-$modes=@{ 'baseline'=''; 'zero-bias'='rq_shadowbias=0,rq_shadownormal=0'; 'baked-only'='rq_shadow=0'; 'no-baked'='rq_worldsun=0'; 'no-shadows'='rq_shadow=0,rq_worldsun=0' }
+$modes=@{ 'baseline'=''; 'zero-bias'='rq_shadowbias=0,rq_shadownormal=0'; 'zero-normal'='rq_shadownormal=0'; 'zero-depth'='rq_shadowbias=0'; 'baked-only'='rq_shadow=0'; 'no-baked'='rq_worldsun=0'; 'no-shadows'='rq_shadow=0,rq_worldsun=0' }
 $cameras='sbs-g3-a-2818555625124739,sbs-g3-a-3970163613102941,putry-island-1,putry-island-2,putry-island-near'
 foreach($tier in $(if($OnlyTier){@($OnlyTier)}else{@('Low','High')})) {
- foreach($mode in $(if($OnlyMode){@($OnlyMode)}else{@('baseline','zero-bias','baked-only','no-baked','no-shadows')})) {
+ foreach($mode in $(if($OnlyMode){@($OnlyMode)}else{@('baseline','zero-bias','zero-normal','zero-depth','baked-only','no-baked','no-shadows')})) {
   $dest="artifacts/gpt-s16-r3/ablations/$tier-$mode"
   New-Item -ItemType Directory -Path $dest -Force | Out-Null
   & pwsh $slot -Acquire -Owner gpt-s16

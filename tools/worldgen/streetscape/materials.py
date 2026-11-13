@@ -341,6 +341,7 @@ M = {
     # ratio of the photo pairs (ADR 0144 table).
     "viaduct_concrete": {"color": _set_mean("viaduct_concrete", [0.369, 0.324, 0.276]), "rough": 0.85,
                          "surface": "concrete", "texture_set": "viaduct_concrete", "set_tile": True,
+                         "shadow_normal_bias_scale": 0.0,  # ADR0155 paired bias ablations; depth bias retained.
                          "ground_bounce": [0.42, 0.41, 0.39], "sky_occ": [0.0, 0.0]},
     # ADR 0123: cast_shadows false - the six alpha-tested bars of the deck railing drew a checkerboard on the cap at the
     # Low shadow resolution (REVIEW s10-0117 P1-1); real 12 mm bars throw hairline shadows the road barrier covers

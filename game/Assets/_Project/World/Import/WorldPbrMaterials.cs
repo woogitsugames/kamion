@@ -268,6 +268,7 @@ namespace Game.World.Import
             mat.SetFloat("_OffsetFactor", 0f);
             mat.SetFloat("_OffsetUnits", 0f);
             mat.SetFloat("_Cull", (float)CullMode.Back);
+            WorldShadowCasterBias.Apply(mat, def); // ADR0155: explicit material opt-in; legacy materials unchanged.
             mat.renderQueue = -1;
 
             string uv = set != null ? Str(set.Get("uv")) ?? "" : "";
