@@ -62,7 +62,7 @@ try {
     if ($Apk) {
         L "install $Apk"
         & $adb -s $Serial install -r $Apk | Out-Null
-        if ($LASTEXITCODE -ne 0) { Wait-Device; & $adb -s $Serial install -r $Apk | Out-Null; if ($LASTEXITCODE -ne 0) { throw 'install failed' } }
+        if ($LASTEXITCODE -ne 0) { Wait-Device; L 'install -r failed (signature/downgrade?) -> uninstall + install'; & $adb -s $Serial uninstall $pkg | Out-Null; & $adb -s $Serial install $Apk | Out-Null; if ($LASTEXITCODE -ne 0) { throw 'install failed' } }
     }
     $segs = (Get-Content (Join-Path $wt 'Data/Regions/bialystok-industrial-c/gate3_segment.json') -Raw | ConvertFrom-Json).segments
     foreach ($r in ($Runs -split ';' | Where-Object { $_ })) {
