@@ -10,6 +10,7 @@
 | 0180 | Fable | `tower-0180` | `artifacts/live/tower-0180.md` — czeka na full r2 → budżet → pary r2 |
 | 0181 | Fable | `lamplens-0181` | `artifacts/live/lamplens-0181.md` — before → soczewki/tablica |
 | 0182 | Opus | `dusk-0182` | `artifacts/live/dusk-0182.md` — rebuild → after3 → ADR |
+- 20:4x: ZIP-y Mistrala od właściciela → `research/_incoming/mistral-p3-buildings-2-files-v2` (M53 #50), `mistral-p10-greenery-3-files-v2` (M51 #49), `mistral-p9-furniture-3-files-v2` (M50, #45 scalony). #49/#50 mają komplet FIX → agent Opus: przegląd → `docs/reports/REVIEW-2026-11-13-s19-mistral-m51-m53-m50v2.md` (+ ew. `docs/owner/MISTRAL-FIXES-10.md`); potem lider scala.
 - Kolejność integracji bez zmian (patrz STOP S18). **Ostatni przydzielony ADR: 0182.**
 
 # STOP S18 (2026-11-13 ~21:3x; 5 h ~80 %, reset 23:20; tydzień 28 %, Fable 20 %) — prompt s19: `docs/owner/START-PROMPT-S19.md`
