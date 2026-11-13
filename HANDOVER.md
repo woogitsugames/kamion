@@ -1,3 +1,9 @@
+# SESJA 20 (start 2026-11-13 22:3x lokalnie; 5 h 0 % — reset 03:20; tydzień wszystkie modele 79 %, Fable 16 %, reset 16.11 05:00)
+- **main** `f48317146`. C: 723 GB. adb: A16 RFGL34SJYDZ + S24+ RZCX60VE8ZY online. Nic nie działało w tle (stare tail.exe zabite). PHONE_RUN brak.
+- Właściciel: „weź jednorazowo 20 agentów”; „M52-FIX-3 gotowe” (26aeb871f na `research/mistral-p2-surfaces-2`).
+- atlas-0184: worktree ma niezacommitowaną TYMCZASOWĄ zmianę `facade_atlas.py` (łańcuch BEFORE przerwany) — agent close-0184 przywraca.
+- **Agenci s20 (20):** tabela poniżej, aktualizowana przy starcie/końcu. **Ostatni przydzielony ADR: 0196.**
+
 # STOP S19 (2026-11-13 ~23:2x; 5 h ~85 %, reset 01:20; tydzień ~15 %, Fable ~22 %, reset 19.11 05:00) — prompt s20: `docs/owner/START-PROMPT-S20.md`
 - **main** `526daa8d2`+ (= origin/main). Scalone w s19: **0180** (wieżowiec r2), **0182** (zmierzch + brud drzwi naczepy r5), **0179** (Dojlidy), Mistral **M50** (furniture-3 3b34a98df), **M51** #49 i **M53** #50 (z erratą), FIX-9 **M54-FIX-2, M49-FIX-2, M48-FIX-2**. **Świat w main NIE przebudowany** (ostatnio `93842a609`, s17).
 - **Gałęzie w toku (agenci s19 pracują do końca sesji; wznawiać jako NOWYCH z live w worktree):**
