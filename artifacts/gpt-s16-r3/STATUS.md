@@ -101,3 +101,5 @@ Natywna izolacja materiału deck-triple zapisana; to ablacją cache, nie finalny
 Deck-triple usuwa wzór we wszystkich5diag kadrach Low, critic potwierdza bez oczywistego nowego acne. B: jawny shadow_caster_bias.json regionu dla bridge_concrete/bridge_kerb/road_asphalt, hero flaga usunięta. Polityka odczytywana po centralnym CreateMaterialCore, obsługuje także niestandardowe fabryki PBR, reset po usunięciu pliku/wpisu.9testów łącznie, w tym policy reset/schema i natywne3materiały. NASTĘPNY KROK: odtworzyć cache eksperymentów, generator B i pełny import/QA/testy.
 
 Guard cache wykrył dodatkowe nieaktywne _RECEIVESHADOWS_ON/_ZWRITE_ON dodane do m_InvalidKeywords przez import shadera. Po obejrzeniu diff dopuszczono usunięcie wyłącznie tych dwóch wpisów; reszta nadal wymaga pełnej zgodności tekstu i SHA. Eksperymenty cofnięte, 458 bazowych SHA przywrócone.
+
+Świat after wygenerowany: 543.6574765 s, bez fallback=True. NASTĘPNY KROK: import i kamery after.
