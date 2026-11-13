@@ -209,7 +209,7 @@ Shader "Kamion/World Surface"
             #if defined(_FAR_FACADE)
                 o.uv1 = v.uv1;
                 o.posOS = v.positionOS.xyz;
-                o.posRel = p.positionWS - _WorldSpaceCameraPos;
+                o.posRel = v.positionOS.xyz - TransformWorldToObject(_WorldSpaceCameraPos);   // object space, camera relative
                 if (v.uv1.x <= -15.5)   // ADR 0141 skyline flag: restore the window-grid coordinate, keep it in view
                 {
                     o.uv1.x = -v.uv1.x - (v.uv1.x <= -4000.0 ? 4096.0 : 16.0);
@@ -330,8 +330,9 @@ Shader "Kamion/World Surface"
                     smooth = lerp(smooth, 0.9, pane * (1.0 - sub * 0.5));
                     // ADR 0192: lit windows (anchor = bay centre via the uv1 -> position derivatives); below ~1.5 px per bay
                     // the mean of the lit share, as for the pane tone
-                    float3x3 w2o = (float3x3)GetWorldToObjectMatrix();
-                    float3 dRx = mul(w2o, ddx(i.posRel)), dRy = mul(w2o, ddy(i.posRel));
+                    // no matrix here: an instanced world-to-object fetch in the fragment (int index, target 3.0) hit
+                    // D3D11 X8000; posRel is already object space
+                    float3 dRx = ddx(i.posRel), dRy = ddy(i.posRel);
                     float2 dGx = ddx(g), dGy = ddy(g);
                     [branch] if (_KamionWindowsLum.y > 0.5 && (float)row > 0.5)
                     {
