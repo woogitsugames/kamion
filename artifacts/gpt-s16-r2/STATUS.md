@@ -28,3 +28,5 @@ Baseline:597.2s bezfallback; audyt2151chronionych węzłów,32grupplots,116drzew
 Import baseline zakończony.
 
 Zapisano before/High-clear; każda kamera w stats.txt. Oględziny pozostają wymagane.
+
+Zapisano before/Low-clear; każda kamera w stats.txt. Oględziny pozostają wymagane.
