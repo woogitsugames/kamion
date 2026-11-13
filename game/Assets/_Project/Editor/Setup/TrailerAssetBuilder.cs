@@ -214,6 +214,15 @@ namespace Game.Editor.Setup
                     m.SetVector("_CurtainGrime", slot == "Curtain" ? new Vector4(1f, 1.31f, 3.88f, -12.0f) : Vector4.zero);
                     m.SetVector("_CurtainAxles", new Vector4(-6.39f, -7.70f, -9.01f, 0f));
                     m.SetVector("_CurtainPosts", new Vector4(3.4f, 0f, 0.22f, 0.7f));
+                    // ADR 0182 (review s18 0175 P2): the rear doors, portal posts and contour tapes take their dirt from the
+                    // rear-face soiling model (wake film, hinge posts / centre seal, header and hinge runoff, per-leaf seeds)
+                    // instead of the baked mask (one noise cloud, identical on both leaves; Low atlas 4x smaller = paler).
+                    // Vehicle grime frame: origin = mean wheel contact (axles -6.39 / -7.70 / -9.01 -> -7.70), so the rear
+                    // face (object z -12.0) sits at z = -4.30; doors 1.335-3.865 m, half width = portal post inner edge
+                    // 1.135 m (trailer_build.py). Amount 0.85, non-paint (tapes, posts, lamps) x0.6. WORKING_VALUE.
+                    m.SetVector("_RearGrime", slot == "Curtain" ? Vector4.zero
+                        : new Vector4(1f, -12.0f - (-6.39f - 7.70f - 9.01f) / 3f, 1.335f, 3.865f));
+                    m.SetVector("_RearGrime2", new Vector4(1.135f, 0.85f, 0.6f, 0f));
                     m.SetFloat("_Lamps", slot == "Lights" ? 1f : 0f);
                     if (slot == "Lights") m.EnableKeyword("_KAMION_TRUCK_LAMPS");
                     EditorUtility.SetDirty(m);

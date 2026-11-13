@@ -103,12 +103,15 @@ namespace Game.Tests
             try
             {
                 var d = dusk.CreateModel(); var n = night.CreateModel();
-                Assert.AreEqual(-5f, dusk.sunElevationDeg, "existing dusk stays intact");
+                Assert.AreEqual(LightingPreset.DuskSunElevationDeg, dusk.sunElevationDeg, "dusk = end of civil twilight (ADR 0182)");
                 Assert.AreEqual(0f, dusk.exposureCompensation);
+                Assert.IsTrue(night.autoExposure, "night keeps the twilight-following exposure table (ADR 0182)");
                 Assert.AreEqual(0f, n.SunNormalIlluminanceLux);
                 Assert.Less(n.SkyHorizontalIlluminanceLux, d.SkyHorizontalIlluminanceLux);
+                // ADR 0182 darkened dusk by ~1.1 EV (lamp-anchored exposure); night stays as reviewed, so the gap is now
+                // ~1.6 EV on the ambient (plus night's 8x dimmer displayed sky) instead of 3-5 EV.
                 float ambientRatio = n.HorizontalIlluminanceLux*n.Exposure/(d.HorizontalIlluminanceLux*d.Exposure);
-                Assert.That(ambientRatio, Is.InRange(1f/32f, 1f/8f), "night ambient must be clearly darker, not just a renamed dusk");
+                Assert.That(ambientRatio, Is.InRange(1f/32f, 1f/2.5f), "night ambient must be clearly darker, not just a renamed dusk");
                 Assert.Greater(StreetLamps.DownIntensityCd/n.HorizontalIlluminanceLux,
                     StreetLamps.DownIntensityCd/d.HorizontalIlluminanceLux, "fixed lamp gains contrast against darker sky");
             }
@@ -142,15 +145,44 @@ namespace Game.Tests
             {
                 var m = dusk.CreateModel();
                 Assert.Less(m.TrueSunElevationDeg, 0f, "dusk = after sunset");
-                Assert.That(m.HorizontalIlluminanceLux, Is.InRange(3.4f, 40f), "civil twilight: 3.4 lx at -6°, ~8 lx at -5°");
+                Assert.That(m.HorizontalIlluminanceLux, Is.InRange(3.0f, 40f), "civil twilight: 3.4 lx at -6°, ~8 lx at -5°");
                 float pool = StreetLamps.DownIntensityCd / (LampHeightM * LampHeightM);
                 float ratio = (m.HorizontalIlluminanceLux + pool) / m.HorizontalIlluminanceLux;
                 Assert.GreaterOrEqual(ratio, 1.5f, $"pool under the lamp {pool:F0} lx on {m.HorizontalIlluminanceLux:F0} lx (r8 acceptance >= 1.5x)");
                 StreetLamps.SetSunElevation(m.TrueSunElevationDeg);
                 Assert.AreEqual(1f, StreetLamps.On, 1e-6f, "lamps fully on");
+                // ADR 0182: the lamps dominate - pool at least 8x the twilight on the road, and the exposure puts lit asphalt
+                // (albedo 0.1) in the mid-tones and twilight-lit asphalt in the shadows.
+                Assert.GreaterOrEqual(ratio, 8f, "pool vs twilight (ADR 0182)");
+                float litAsphalt = 0.1f * (m.HorizontalIlluminanceLux + pool) / Mathf.PI * m.Exposure;
+                float darkAsphalt = 0.1f * m.HorizontalIlluminanceLux / Mathf.PI * m.Exposure;
+                Assert.That(litAsphalt, Is.InRange(0.05f, 0.15f), "asphalt under a lamp ~35-45 % display");
+                Assert.That(darkAsphalt, Is.InRange(0.004f, 0.015f), "twilight-lit asphalt ~6-13 % display");
                 // The old preset (+1°): the cause of N-20.
                 var old = new SkyModel(1f, 300f, 4f, 0.2f, 11f);
                 Assert.Less((old.HorizontalIlluminanceLux + pool) / old.HorizontalIlluminanceLux, 1.05f, "+1° sun: pool invisible");
+            }
+            finally { Object.DestroyImmediate(dusk); }
+        }
+
+        [Test]
+        public void DuskSky_IsBlueAtTheZenith_WarmLowTowardTheSun()
+        {
+            var dusk = LightingPreset.CreateDusk();
+            try
+            {
+                var m = dusk.CreateModel();
+                float az = dusk.sunAzimuthDeg * Mathf.Deg2Rad;
+                var towardSun = new Vector3(Mathf.Sin(az), 0.05f, Mathf.Cos(az)).normalized;
+                Color zen = m.Radiance(Vector3.up), glow = m.Radiance(towardSun);
+                Assert.Greater(zen.b / zen.r, 1.6f, "twilight zenith is blue (ozone), not the 0.5° sunset palette");
+                Assert.Greater(glow.r, glow.b, "the afterglow low toward the sun stays warm");
+                // Daytime sky colour is untouched by the twilight term.
+                var day = new SkyModel(42f, 200f, 2.5f, 0f, 14.5f);
+                var day2 = new SkyModel(0.5f, 300f, 4f, 0f, 11f);
+                Color z1 = day2.Radiance(Vector3.up);
+                Assert.Greater(day.Radiance(Vector3.up).b, day.Radiance(Vector3.up).r);
+                Assert.Less(z1.b / z1.r, zen.b / zen.r, "below the horizon the zenith is bluer than at sunset");
             }
             finally { Object.DestroyImmediate(dusk); }
         }

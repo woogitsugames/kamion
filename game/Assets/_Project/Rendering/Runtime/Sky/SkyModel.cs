@@ -152,7 +152,7 @@ namespace Game.Rendering
             SunColor = SunColorFromTurbidity(T, m);
             // r11: the overcast share of the "neutral" radiance (dome, the ground it lights, fog) takes the dome's colour.
             AdaptedWhite = OvercastCctK > 0f ? NormaliseLum(Color.LerpUnclamped(Color.white, DaylightRgb(OvercastCctK), Overcast)) : Color.white;
-            if (Overcast < 1f) BuildChroma();
+            if (Overcast < 1f) { BuildChroma(); ApplyTwilightChroma(); }
             WhiteBalanceAdaptation = Mathf.Clamp01(wbAdaptation);
             if (WhiteBalanceAdaptation > 0f)
             {
@@ -672,6 +672,42 @@ namespace Game.Rendering
             }
             return f;
         }
+
+        /// <summary>
+        /// ADR 0182: twilight colour of the clear dome for a sun below the horizon. The chroma LUT is computed for the sun at
+        /// 0.5° (shape kept, ADR 0062), which gives a sunset palette (warm, pale) over the whole dome. After sunset the sky
+        /// away from the low glow is lit by sunlight that grazed the upper atmosphere through the ozone layer; Chappuis-band
+        /// absorption removes the yellow-red and the zenith turns deep blue ("blue hour"; Hulburt 1953, J. Opt. Soc. Am.
+        /// 43, 113). The warm glow stays only low toward the sun's azimuth. Strength ramps from 0 at 0.5° to full at -3.5°.
+        /// Target colour: the CIE daylight locus at 25 000 K pushed 1.8× further from white (deeper than any daylight
+        /// CCT, as twilight zenith colours are). Luminance unchanged. WORKING_VALUE (to be compared with owner photos).
+        /// </summary>
+        void ApplyTwilightChroma()
+        {
+            float t = Mathf.Clamp01((0.5f - TrueSunElevationDeg) / 4f);
+            if (t <= 0f) return;
+            Color w = Color.white, blue = NormaliseLum(w + (DaylightRgb(25000f) - w) * TwilightBlueStretch);
+            blue.a = 1f;
+            for (int j = 0; j < ChromaHeight; j++)
+            {
+                float v = j / (float)(ChromaHeight - 1);                 // sqrt(cos θ): 0 horizon, 1 zenith
+                for (int i = 0; i < ChromaWidth; i++)
+                {
+                    float gammaDeg = i / (float)(ChromaWidth - 1) * 180f;
+                    float glow = (1f - Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(15f, 75f, gammaDeg)))
+                               * (1f - Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(0.15f, 0.6f, v)));
+                    float k = t * TwilightBlueAmount * (1f - glow);
+                    int idx = j * ChromaWidth + i;
+                    var c = NormaliseLum(Color.LerpUnclamped(m_Chroma[idx], blue, k));
+                    c.a = 1f;
+                    m_Chroma[idx] = c;
+                }
+            }
+        }
+
+        /// <summary>ADR 0182 twilight chroma: how far past the 25 000 K daylight colour the blue target sits, and the
+        /// share of the dome colour it replaces away from the glow. WORKING_VALUE.</summary>
+        public const float TwilightBlueStretch = 1.8f, TwilightBlueAmount = 0.85f;
 
         /// <summary>Clear-sky colour of luminance 1 (linear Rec.709) for a view direction (y = cos θ) and angle to the sun.</summary>
         public Color ChromaAt(float cosTheta, float gamma)
