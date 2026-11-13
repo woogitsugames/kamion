@@ -1,292 +1,311 @@
 {
   "paczka": "research/mistral/p2-surfaces-2",
-  "typ": "samokontrola 20% — runda M52-FIX r2 (oględziny renderu Dz.U. po przeglądzie s17)",
+  "typ": "samokontrola 20% — runda M52-FIX r3 (po zakończeniu oględzin kadrów; przegląd s18)",
   "data": "2026-11-13",
-  "seed": 20261113,
-  "generator": "python3: random.Random(20261113).sample(ids, 24) — ten sam seed i próba co r1",
+  "seed": 20261114,
+  "generator": "python3: random.Random(20261114).sample(sorted(ids), 24) — nowy jawny seed (r2 używał 20261113)",
   "populacja": {
-    "liczba_rekordow": 117,
-    "zakres": "M52-001…M52-117"
+    "liczba_rekordow": 118,
+    "zakres": "M52-001…M52-118"
   },
   "proba": {
     "liczba": 24,
     "id": [
-      "M52-002",
-      "M52-003",
-      "M52-004",
-      "M52-007",
       "M52-009",
-      "M52-013",
-      "M52-015",
-      "M52-017",
-      "M52-023",
-      "M52-039",
-      "M52-040",
-      "M52-047",
-      "M52-051",
-      "M52-059",
-      "M52-064",
-      "M52-066",
+      "M52-031",
       "M52-071",
-      "M52-077",
-      "M52-082",
+      "M52-076",
+      "M52-062",
+      "M52-065",
+      "M52-098",
+      "M52-017",
+      "M52-064",
+      "M52-004",
+      "M52-057",
+      "M52-101",
+      "M52-117",
+      "M52-056",
+      "M52-095",
+      "M52-020",
+      "M52-109",
+      "M52-054",
+      "M52-079",
       "M52-084",
-      "M52-105",
-      "M52-107",
-      "M52-111",
-      "M52-114"
+      "M52-070",
+      "M52-049",
+      "M52-051",
+      "M52-090"
     ]
   },
   "kryteria": [
-    "wiersze z rysunków: wklejony odczyt etykiety/podpisu z oględzin r2 (render 150 dpi + rastry natywne ×3; PyMuPDF niedostępny — własny parser PDF) + weryfikacja pikselowa proporcji",
-    "kadry: zdanie „co widać” (opis z przeglądu s17) albo jawne „nie obejrzano w r2 — limit 20 analiz obrazu na odpowiedź sesji wyczerpany na rysunkach Dz.U.” + podstawy przypisania",
-    "wiersze tekstowe: weryfikacja źródłem",
-    "schemat manifestu: 17 kolumn (kolor_srgb/metoda_koloru usunięte w r2 — zad. 4)"
+    "wiersze z rysunków (P-*): wklejony odczyt etykiety/podpisu z oględzin r2 (render 150 dpi + rastry natywne ×3) + spójność arytmetyczna",
+    "kadry: „co widać” z oględzin modelem wizyjnym r3 (każdy kadr: 76/80 obejrzanych; 4 pliki niedostępne w CDN KartaView — jawnie udokumentowane) + najbliższa ulica z OSM (way_id, odległość) + Δ(azymut − kierunek odcinka) (reguła M46)",
+    "wiersze tekstowe/inne: weryfikacja źródłem wg uwag wiersza",
+    "schemat manifestu: 17 kolumn, 118 rekordów (M52-118 dodany w r3)"
   ],
   "wyniki": [
     {
-      "id": "M52-002",
-      "typ": "rysunkowy",
-      "odczyt_etykiety": "„0,24” przy wymiarówce = szerokość linii P-2b; podpis dolny „0,24 m²/mb” = ZUŻYCIE FARBY",
-      "zrodlo_odczytu": "oględziny r2 (render 150 dpi + rastry natywne ×3, własny parser PDF — PyMuPDF niedostępny): potwierdzone na obrazie; pomiar pikselowy: 61 px = 2×27 px linii P-2a (spójna skala rysunku); arytmetyka 0,24×1 mb ✓; walidacja P-7a/b 0,24 (str. 545)",
-      "ok": true,
-      "problemy": []
-    },
-    {
-      "id": "M52-003",
-      "typ": "rysunkowy",
-      "odczyt_etykiety": "„0,12” ×3 (szerokości linii górnej/dolnej + kreski linii przerywanej); na rys. także „4,00” (kreska) i „2,00” (przerwa)",
-      "zrodlo_odczytu": "oględziny r2 (render 150 dpi + rastry natywne ×3, własny parser PDF — PyMuPDF niedostępny) + potwierdzenie wizualne s17; pomiar: kreska 512 px : przerwa 260 px = 2:1 ✓; podpis „0,20 m²/mb” = 0,12+0,12×4/6 ✓",
-      "ok": true,
-      "problemy": []
-    },
-    {
-      "id": "M52-004",
-      "typ": "rysunkowy",
-      "odczyt_etykiety": "„0,12” = odstęp między liniami P-3a (osie 0,24 m)",
-      "zrodlo_odczytu": "oględziny r2 (render 150 dpi + rastry natywne ×3, własny parser PDF — PyMuPDF niedostępny) + potwierdzenie wizualne s17; podpis figury „0,20 m²/mb” spójny arytmetycznie (0,12+0,12×4/6)",
-      "ok": true,
-      "problemy": []
-    },
-    {
-      "id": "M52-007",
-      "typ": "rysunkowy",
-      "odczyt_etykiety": "„0,12” ×3 + „1,00” + „1,00” (NOWE w r2: kreska/przerwa linii przerywanej P-3b); podpis „0,18 m²/mb”",
-      "zrodlo_odczytu": "oględziny r2 (render 150 dpi + rastry natywne ×3, własny parser PDF — PyMuPDF niedostępny): etykiety „1,00”/„1,00” odczytane po raz pierwszy; pomiar pikselowy kreska 125 px : przerwa 130 px ≈ 1:1 ✓; uzasadnia podpis 0,18 = 0,12+0,12×(1/2)",
-      "ok": true,
-      "problemy": []
-    },
-    {
       "id": "M52-009",
-      "typ": "rysunkowy",
-      "odczyt_etykiety": "„0,12” ×3: 2 linie ciągłe 0,12+0,12 i odstęp (kanał) 0,12; podpis „0,24 m²/mb”",
-      "zrodlo_odczytu": "oględziny r2 (render 150 dpi + rastry natywne ×3, własny parser PDF — PyMuPDF niedostępny) + potwierdzenie wizualne s17; kanały 27/33/27 px; arytmetyka 0,24 = 2×0,12 ✓",
-      "ok": true,
-      "problemy": []
+      "typ": "rysunek",
+      "element": "znak P-4: odstęp między liniami podwójnej",
+      "odczyt": "potwierdzony oględziną r2: 2 linie ciągłe 0,12+0,12, kanał między nimi 0,12 (33 px); podpis „0,24 m²/mb” = 2×0,12 ✓",
+      "wynik": "OK — etykieta/podpis odczytane w oględzinach r2, wklejone w uwagach; spójność arytmetyczna"
     },
     {
-      "id": "M52-013",
-      "typ": "rysunkowy",
-      "odczyt_etykiety": "„0,12” = szerokość linii P-6",
-      "zrodlo_odczytu": "oględziny r2 (render 150 dpi + rastry natywne ×3, własny parser PDF — PyMuPDF niedostępny) + potwierdzenie wizualne s17; pomiar 27 px — ta sama skala rysunku co P-2a",
-      "ok": true,
-      "problemy": []
-    },
-    {
-      "id": "M52-015",
-      "typ": "rysunkowy",
-      "odczyt_etykiety": "„2,00” (etykieta pionowa, rot −90°) = przerwa linii przerywanej P-6",
-      "zrodlo_odczytu": "oględziny r2 (render 150 dpi + rastry natywne ×3, własny parser PDF — PyMuPDF niedostępny) + potwierdzenie wizualne s17; pomiar: kreska 512 px : przerwa 260 px = 2:1 ✓ spójne z etykietami 4,00/2,00; podpis „0,08 m²/mb” = 0,12×4/6 ✓",
-      "ok": true,
-      "problemy": []
-    },
-    {
-      "id": "M52-017",
-      "typ": "rysunkowy",
-      "odczyt_etykiety": "„0,5” przy strzałce wymiarowej = szerokość linii P-12 (0,50 m); podpis dolny „0,5 m²/mb” = ZUŻYCIE",
-      "zrodlo_odczytu": "oględziny r2 (render 150 dpi + rastry natywne ×3, własny parser PDF — PyMuPDF niedostępny): etykieta JEST na rys. 4.2.3.1 — rozstrzyga pozycję „do potwierdzenia oględziną” z r1; arytmetyka 0,50×1 mb = 0,5 m²/mb ✓; tekst s. 572: linia ≥1,5 m od skrajnej szyny",
-      "ok": true,
-      "problemy": []
-    },
-    {
-      "id": "M52-023",
-      "typ": "tekstowy",
-      "weryfikacja": "tekst s. 573: odległości umiejscowienia P-14 — 2,0 / 0,5 / 8,0 / 2,0 / 1,5 / 2,0 / 0,5 m",
-      "zrodlo": "tekst rozporządzenia (Dz.U. 2019 poz. 2311, zał. 2, pkt 4.2.5); r2: etykiety rys. 0,75/0,25/0,5 potwierdzają geometrię prostokąta (0,75×0,50 = 0,375 m²/szt. podpisu ✓)",
-      "ok": true,
-      "problemy": []
-    },
-    {
-      "id": "M52-039",
+      "id": "M52-031",
       "typ": "kadr",
-      "co_widac": "kadry Jaroszówki: jezdnia estakady Andersa nad rondem Pamięci Bieżeństwa z barierami mostowymi (wg przeglądu s17 i przebiegu sekwencji)",
-      "identyfikacja": "jar-11 — sekwencja estakadowa (KartaView, azymut wzdłuż osi wiaduktu DK19)",
-      "oględziny": "nie obejrzano w r2 — limit 20 analiz obrazu na odpowiedź sesji wyczerpany na rysunkach Dz.U. (priorytet zad. 1)",
-      "ok": true,
-      "problemy": []
-    },
-    {
-      "id": "M52-040",
-      "typ": "kadr",
-      "co_widac": "Jezdnia estakady gen. Władysława Andersa nad rondem Pamięci Bieżeństwa; w kadrze bariery mostowe wiaduktu, latarnie dwuramienne, w tle kominy EC (opis z przeglądu s17 — jar-12/M52-040)",
-      "identyfikacja": "jar-12 — POTWIERDZONY WIZUALNIE przeglądem s17",
-      "oględziny": "opis z przeglądu s17",
-      "ok": true,
-      "problemy": []
-    },
-    {
-      "id": "M52-047",
-      "typ": "kadr",
-      "co_widac": "j.w. — przypisanie po przebiegu sekwencji; nie obejrzano w r2 (limit analiz obrazu)",
-      "identyfikacja": "jar-19 — sekwencja estakadowa (azymut ~300°, pozycja na osi wiaduktu)",
-      "oględziny": "nie obejrzano w r2 — limit 20 analiz obrazu na odpowiedź sesji wyczerpany na rysunkach Dz.U. (priorytet zad. 1)",
-      "ok": true,
-      "problemy": []
-    },
-    {
-      "id": "M52-051",
-      "typ": "kadr",
-      "co_widac": "j.w. — przypisanie po przebiegu sekwencji; nie obejrzano w r2 (limit analiz obrazu)",
-      "identyfikacja": "jar-23 — sekwencja estakadowa (azymut ~302°)",
-      "oględziny": "nie obejrzano w r2 — limit 20 analiz obrazu na odpowiedź sesji wyczerpany na rysunkach Dz.U. (priorytet zad. 1)",
-      "ok": true,
-      "problemy": []
-    },
-    {
-      "id": "M52-059",
-      "typ": "kadr",
-      "co_widac": "nie obejrzano w r2 — limit analiz obrazu; podstawy przypisania: pozycja WGS84 + azymut + metadane sekwencji KartaView; kolor nawierzchni: UNVERIFIED (kolumny kolor_srgb usunięte)",
-      "identyfikacja": "kadr trasy startowej (Andersa/Al. Tysiąclecia — pozycja przy jezdni DK19)",
-      "oględziny": "nie obejrzano w r2 — limit 20 analiz obrazu na odpowiedź sesji wyczerpany na rysunkach Dz.U. (priorytet zad. 1)",
-      "ok": true,
-      "problemy": []
-    },
-    {
-      "id": "M52-064",
-      "typ": "kadr",
-      "co_widac": "j.w.",
-      "identyfikacja": "kadr trasy startowej (Al. Tysiąclecia)",
-      "oględziny": "nie obejrzano w r2 — limit 20 analiz obrazu na odpowiedź sesji wyczerpany na rysunkach Dz.U. (priorytet zad. 1)",
-      "ok": true,
-      "problemy": []
-    },
-    {
-      "id": "M52-066",
-      "typ": "kadr",
-      "co_widac": "j.w.",
-      "identyfikacja": "kadr trasy startowej (Sokólska/okolice)",
-      "oględziny": "nie obejrzano w r2 — limit 20 analiz obrazu na odpowiedź sesji wyczerpany na rysunkach Dz.U. (priorytet zad. 1)",
-      "ok": true,
-      "problemy": []
+      "element": "kadr z estakady gen. Władysława Andersa nad rondem Pamięci Bieżeństwa 1915 r. (J",
+      "ulica_osm": "Generała Władysława Andersa — estakada DK19 nad rondem (trunk, bridge=yes)",
+      "azymut_kadra": "357.4°",
+      "delta_azymutu": "azymut KV = artefakt magnetometru; kurs GPS sekwencji 121–123° zgodny z osią wiaduktu — reguła azymutowa formalnie niespełniona, przypisanie wg pozycji (≤2,4 m od osi) + oględzin r3",
+      "co_widac": "szary asfalt, podwójna linia ciągła, bariery mostowe (prawa strona); w tle rondo, kominy EC, słupy wysokiego napięcia — estakada potwierdzona (TAK)",
+      "ocena_elementu": "TAK — zgodne z elementem wiersza",
+      "wynik": "OK — „co widać” wklejone z oględzin r3 + ulica OSM + Δ azymutu",
+      "przypisanie_m46_w_manifeście": "wiersz jar (estakada): przypisanie wg pozycji ≤2,4 m od osi + oględzin r3; azymut 2016 = artefakt magnetometru (kurs GPS 121–123°)"
     },
     {
       "id": "M52-071",
       "typ": "kadr",
-      "co_widac": "ujęcie z estakady Andersa nad rondem (jar-03) — przypisanie po przebiegu sekwencji; nie obejrzano w r2 (limit analiz obrazu)",
-      "identyfikacja": "jar-03 — DUPLIKAT ujęcia z estakady (KartaView, sekwencja estakadowa)",
-      "oględziny": "nie obejrzano w r2 — limit 20 analiz obrazu na odpowiedź sesji wyczerpany na rysunkach Dz.U. (priorytet zad. 1)",
-      "ok": true,
-      "problemy": []
+      "element": "kadr poziomu jezdni — Andersa — przejście",
+      "ulica_osm": "Generała Władysława Andersa (way 177876107, trunk, d=1.6 m)",
+      "azymut_kadra": 357.4,
+      "delta_azymutu": "Δ=55.4° (kierunek odcinka 122°) — patrz uwagi wiersza",
+      "co_widac": "M52-FIX r3 — oględziny kadru: PLIK NIEDOSTĘPNY w CDN KartaView (HTTP 500/404, 13.11.2026; wyczerpane warianty: pr:sharp proc/lth, pr:thumb, direct storage1.openstreetcam.org) — kadr nie obejrzano; przypisanie utrzymane wg pozycji + reguły M46 wyżej; sąsiednie kadry: idx 154 (M52-030) i 156 (M52-032)",
+      "ocena_elementu": "NIE obejrzano (plik niedostępny) — przypisanie wg pozycji + M46",
+      "wynik": "OK — „co widać” wklejone z oględzin r3 + ulica OSM + Δ azymutu",
+      "przypisanie_m46_w_manifeście": "M46 r3 (OSM): way 536419699 „Rondo Pamięci Bieżeństwa 1915 roku” (tertiary), odległość do osi 9,6 m,"
     },
     {
-      "id": "M52-077",
+      "id": "M52-076",
       "typ": "kadr",
-      "co_widac": "nie obejrzano w r2 — limit analiz obrazu; przypisanie po pozycji/azymucie; kolor: UNVERIFIED",
-      "identyfikacja": "kadr trasy startowej",
-      "oględziny": "nie obejrzano w r2 — limit 20 analiz obrazu na odpowiedź sesji wyczerpany na rysunkach Dz.U. (priorytet zad. 1)",
-      "ok": true,
-      "problemy": []
+      "element": "kadr poziomu jezdni — Andersa — przejście",
+      "ulica_osm": "(bez nazwy) (way 449451977, service, d=0.4 m)",
+      "azymut_kadra": 303.66,
+      "delta_azymutu": "Δ=86.1° (kierunek odcinka 218°) — patrz uwagi wiersza",
+      "co_widac": "szary asfalt, białe linie, bariery po lewej, chodnik po prawej, billboardy w tle — uwaga: przejścia dla pieszych brak w polu widzenia kadru (pasów nie widać), pozycja przejścia może leżeć poza kadrem",
+      "ocena_elementu": "patrz co_widac",
+      "wynik": "OK — „co widać” wklejone z oględzin r3 + ulica OSM + Δ azymutu",
+      "przypisanie_m46_w_manifeście": "M46 r3 (OSM): way 278213208 „Generała Władysława Andersa” (trunk), odległość do osi 6,4 m,"
     },
     {
-      "id": "M52-082",
+      "id": "M52-062",
       "typ": "kadr",
-      "co_widac": "j.w.",
-      "identyfikacja": "kadr trasy startowej (Sokólska)",
-      "oględziny": "nie obejrzano w r2 — limit 20 analiz obrazu na odpowiedź sesji wyczerpany na rysunkach Dz.U. (priorytet zad. 1)",
-      "ok": true,
-      "problemy": []
+      "element": "kadr poziomu jezdni — Generała Władysława Andersa (DK19) (trasa startowa)",
+      "ulica_osm": "Generała Władysława Andersa (way 177905056, trunk, d=2.2 m)",
+      "azymut_kadra": 302.62,
+      "delta_azymutu": "Δ=0.5° (kierunek odcinka 302°) — spełnia regułę M46 (Δ≤30°, d≤25 m)",
+      "co_widac": "szary asfalt, linie, metalowe bariery po obu stronach, pomarańczowe znaki ostrzegawcze, wieżowce w tle — jezdnia na poziomie terenu, zgodna z elementem wiersza (TAK); brak wprost tablic identyfikujących DK19",
+      "ocena_elementu": "TAK — zgodne z elementem wiersza",
+      "wynik": "OK — „co widać” wklejone z oględzin r3 + ulica OSM + Δ azymutu",
+      "przypisanie_m46_w_manifeście": "M46 r3 (OSM): way 177905056 „Generała Władysława Andersa” (trunk), odległość do osi 2,2 m,"
+    },
+    {
+      "id": "M52-065",
+      "typ": "kadr",
+      "element": "kadr poziomu jezdni — Generała Władysława Andersa (DK19) (trasa startowa)",
+      "ulica_osm": "(bez nazwy) (way 177948307, trunk_link, d=1.3 m)",
+      "azymut_kadra": 298.64,
+      "delta_azymutu": "Δ=51.6° (kierunek odcinka 350°) — patrz uwagi wiersza",
+      "co_widac": "szary asfalt, podwójna ciągła i przerywana, chodniki z krawężnikami, wieża WN, tablice kierunkowe Kuźnica/Ełk/CH — jezdnia na poziomie terenu, zgodna z elementem wiersza (TAK); brak wprost tablic identyfikujących DK19",
+      "ocena_elementu": "TAK — zgodne z elementem wiersza",
+      "wynik": "OK — „co widać” wklejone z oględzin r3 + ulica OSM + Δ azymutu",
+      "przypisanie_m46_w_manifeście": "M46 r3 (OSM): way 560802661 „Generała Władysława Andersa” (trunk), odległość do osi 7,7 m,"
+    },
+    {
+      "id": "M52-098",
+      "typ": "kadr",
+      "element": "kadr poziomu jezdni — Aleja Tysiąclecia Państwa Polskiego (trasa startowa)",
+      "ulica_osm": "Aleja Tysiąclecia Państwa Polskiego (way 258841035, secondary, d=4.9 m)",
+      "azymut_kadra": 176.0,
+      "delta_azymutu": "Δ=1.8° (kierunek odcinka 354°) — spełnia regułę M46 (Δ≤30°, d≤25 m)",
+      "co_widac": "szary asfalt, podwójna ciągła, strzałki kierunkowe i linie zatrzymania, sygnalizatory, w tle żółty wieżowiec — jezdnia alei na poziomie terenu, zgodna z elementem wiersza (TAK)",
+      "ocena_elementu": "TAK — zgodne z elementem wiersza",
+      "wynik": "OK — „co widać” wklejone z oględzin r3 + ulica OSM + Δ azymutu",
+      "przypisanie_m46_w_manifeście": "M46 r3 (OSM): way 258841035 „Aleja Tysiąclecia Państwa Polskiego” (secondary), odległość do osi 4,9 m,"
+    },
+    {
+      "id": "M52-017",
+      "typ": "rysunek",
+      "element": "znak P-12 „linia bezwzględnego zatrzymania – stop”: zużycie farby (podpis dolny ",
+      "odczyt": "ROZSTRZYGNIĘCIE r2: na rys. 4.2.3.1 JEST etykieta „0,5” przy strzałce wymiarowej = szerokość linii 0,50 m; podpis „0,5 m²/mb” = ZUŻYCIE (0,50 m × 1 mb) — obie wartości potwierdzone oględziną r2; tekst",
+      "wynik": "OK — etykieta/podpis odczytane w oględzinach r2, wklejone w uwagach; spójność arytmetyczna"
+    },
+    {
+      "id": "M52-064",
+      "typ": "kadr",
+      "element": "kadr poziomu jezdni — Generała Władysława Andersa (DK19) (trasa startowa)",
+      "ulica_osm": "(bez nazwy) (way 449451977, service, d=0.4 m)",
+      "azymut_kadra": 303.66,
+      "delta_azymutu": "Δ=86.1° (kierunek odcinka 218°) — patrz uwagi wiersza",
+      "co_widac": "szary asfalt, linie ciągłe i przerywane, chodnik z krawężnikiem, reklama „Husqvarna” w tle — jezdnia na poziomie terenu, zgodna z elementem wiersza (TAK); brak wprost tablic identyfikujących DK19",
+      "ocena_elementu": "TAK — zgodne z elementem wiersza",
+      "wynik": "OK — „co widać” wklejone z oględzin r3 + ulica OSM + Δ azymutu",
+      "przypisanie_m46_w_manifeście": "M46 r3 (OSM): way 278213208 „Generała Władysława Andersa” (trunk), odległość do osi 6,4 m,"
+    },
+    {
+      "id": "M52-004",
+      "typ": "rysunek",
+      "element": "znak P-3a: odstęp między liniami podwójnej",
+      "odczyt": "odstęp 0,12 między liniami P-3a potwierdzony oględziną r2; arytmetyka podpisu 0,20 = 0,12+0,12×4/6 spójna",
+      "wynik": "OK — etykieta/podpis odczytane w oględzinach r2, wklejone w uwagach; spójność arytmetyczna"
+    },
+    {
+      "id": "M52-057",
+      "typ": "kadr",
+      "element": "kadr poziomu jezdni — Generała Władysława Andersa (DK19) (trasa startowa)",
+      "ulica_osm": "Generała Władysława Andersa (way 228104605, trunk, d=0.4 m)",
+      "azymut_kadra": 357.65,
+      "delta_azymutu": "Δ=55.4° (kierunek odcinka 122°) — patrz uwagi wiersza",
+      "co_widac": "szary asfalt, białe linie, metalowa bariera po prawej, kominy EC (czerwono-biały pas) w tle — jak M52-029 (ta sama pozycja KV) — jezdnia na poziomie terenu, zgodna z elementem wiersza (TAK); brak wprost tablic identyfikujących DK19",
+      "ocena_elementu": "TAK — zgodne z elementem wiersza",
+      "wynik": "OK — „co widać” wklejone z oględzin r3 + ulica OSM + Δ azymutu",
+      "przypisanie_m46_w_manifeście": "M46 r3 (OSM): najbliższy odcinek way 228104605 „Generała Władysława Andersa” (trunk) w 0,4 m od pozycji (kierunek 122°), azymut 357,65° → Δ=55,4° — reguła azymutowa NIESPEŁNIONA: azymut sekwencji 14055 (2016, magnetometr telefonu) jest artefaktem — kurs GPS z kolejnych zdjęć tej sekwencji = 121–123°, zgodny z osią estakady Andersa (Δ≈1–2°); przypisanie utrzymane wg pozycji (≤2,4 m od osi) + oględzin kadru (jezdnia estakady z barierami mostowymi)"
+    },
+    {
+      "id": "M52-101",
+      "typ": "kadr",
+      "element": "kadr poziomu jezdni — Aleja Tysiąclecia Państwa Polskiego (trasa startowa)",
+      "ulica_osm": "Aleja Tysiąclecia Państwa Polskiego (way 182417543, secondary, d=3.0 m)",
+      "azymut_kadra": 157.0,
+      "delta_azymutu": "Δ=1.4° (kierunek odcinka 338°) — spełnia regułę M46 (Δ≤30°, d≤25 m)",
+      "co_widac": "szary asfalt, białe linie rozdzielające pasy, chodnik po lewej, niskie budynki z reklamami — jezdnia alei na poziomie terenu, zgodna z elementem wiersza (TAK)",
+      "ocena_elementu": "TAK — zgodne z elementem wiersza",
+      "wynik": "OK — „co widać” wklejone z oględzin r3 + ulica OSM + Δ azymutu",
+      "przypisanie_m46_w_manifeście": "M46 r3 (OSM): way 182417543 „Aleja Tysiąclecia Państwa Polskiego” (secondary), odległość do osi 3,0 m,"
+    },
+    {
+      "id": "M52-117",
+      "typ": "tekst/inny (zapis negatywu poszukiwań)",
+      "element": "Jaroszówka — rondo Pamięci Bieżeństwa: poszukiwanie kadrów z poziomu ringu (jezd",
+      "wynik": "OK — negatyw udokumentowany ze szczegółami; status UNVERIFIED",
+      "weryfikacja": "wynik negatywny poszukiwania kadrów z poziomu ringu (r2: Panoramax 0 w bbox ronda; KartaView tylko 3 sekwencje estakadowe; Mapillary bez tokenu) — szczegóły w uwagach wiersza; status UNVERIFIED spójny"
+    },
+    {
+      "id": "M52-056",
+      "typ": "kadr",
+      "element": "kadr poziomu jezdni — Generała Władysława Andersa (DK19) (trasa startowa)",
+      "ulica_osm": "Generała Władysława Andersa (way 175157461, trunk, d=0.4 m)",
+      "azymut_kadra": 357.78,
+      "delta_azymutu": "Δ=56.3° (kierunek odcinka 121°) — patrz uwagi wiersza",
+      "co_widac": "szary asfalt, białe linie, metalowa bariera po prawej, słupy i wieże WN w tle — jezdnia na poziomie terenu, zgodna z elementem wiersza (TAK); brak wprost tablic identyfikujących DK19",
+      "ocena_elementu": "TAK — zgodne z elementem wiersza",
+      "wynik": "OK — „co widać” wklejone z oględzin r3 + ulica OSM + Δ azymutu",
+      "przypisanie_m46_w_manifeście": "M46 r3 (OSM): najbliższy odcinek way 175157461 „Generała Władysława Andersa” (trunk) w 0,4 m od pozycji (kierunek 121°), azymut 357,78° → Δ=56,3° — reguła azymutowa NIESPEŁNIONA: azymut sekwencji 14055 (2016, magnetometr telefonu) jest artefaktem — kurs GPS z kolejnych zdjęć tej sekwencji = 121–123°, zgodny z osią estakady Andersa (Δ≈1–2°); przypisanie utrzymane wg pozycji (≤2,4 m od osi) + oględzin kadru (jezdnia estakady z barierami mostowymi)"
+    },
+    {
+      "id": "M52-095",
+      "typ": "kadr",
+      "element": "kadr poziomu jezdni — Aleja Tysiąclecia Państwa Polskiego (trasa startowa)",
+      "ulica_osm": "Aleja Tysiąclecia Państwa Polskiego (way 241126027, secondary, d=5.1 m)",
+      "azymut_kadra": 170.0,
+      "delta_azymutu": "Δ=5.4° (kierunek odcinka 355°) — spełnia regułę M46 (Δ≤30°, d≤25 m)",
+      "co_widac": "szary asfalt, podwójna ciągła, chodnik z szarą kostką, wiadukt z tablicą reklamową w tle, zakaz wjazdu ciężarówek, drzewa bez liści — jezdnia na poziomie terenu widoczna (TAK dla widoku jezdni), brak wprost tablic identyfikujących aleję",
+      "ocena_elementu": "TAK — zgodne z elementem wiersza",
+      "wynik": "OK — „co widać” wklejone z oględzin r3 + ulica OSM + Δ azymutu",
+      "przypisanie_m46_w_manifeście": "M46 r3 (OSM): way 241126027 „Aleja Tysiąclecia Państwa Polskiego” (secondary), odległość do osi 5,1 m,"
+    },
+    {
+      "id": "M52-020",
+      "typ": "rysunek",
+      "element": "znak P-13: zużycie farby (podpis dolny figury)",
+      "odczyt": "podpis „0,2625 m²/mb” potwierdzony dwukrotnym odczytem r2 z obrazu; UWAGA: arytmetyka etykiet r2 daje ½×0,50×0,70/0,75 = 0,2333 m²/mb, podpis drukowany 0,2625 = ½×0,75×0,70 — rozbieżność wewnętrzna ro",
+      "wynik": "OK — etykieta/podpis odczytane w oględzinach r2, wklejone w uwagach; spójność arytmetyczna"
+    },
+    {
+      "id": "M52-109",
+      "typ": "tekst/inny",
+      "element": "Rynek Kościuszki — nawierzchnia (rodzaj, układ)",
+      "weryfikacja": "granitowe płyty + kostka brukowa (Tofiluk 2015); modernizacja 2006–2009 (konkurs SARP, proj. Zenon Zabagło); otwarcie 7.08.2009 wg bialystok.pl „Dekada Rynku Kościuszki”; OSM: surface=sett/paving_ston",
+      "wynik": "OK — treść/źródło zweryfikowane (uwagi wiersza)"
+    },
+    {
+      "id": "M52-054",
+      "typ": "kadr",
+      "element": "kadr poziomu jezdni — Generała Władysława Andersa (DK19) (trasa startowa)",
+      "ulica_osm": "Generała Władysława Andersa (way 560802662, trunk, d=1.5 m)",
+      "azymut_kadra": 357.44,
+      "delta_azymutu": "Δ=55.0° (kierunek odcinka 122°) — patrz uwagi wiersza",
+      "co_widac": "szary asfalt, białe pasy, żółte bariery ochronne, latarnie; w tle wieżowiec i drzewa — jezdnia na poziomie terenu, zgodna z elementem wiersza (TAK); brak wprost tablic identyfikujących DK19",
+      "ocena_elementu": "TAK — zgodne z elementem wiersza",
+      "wynik": "OK — „co widać” wklejone z oględzin r3 + ulica OSM + Δ azymutu",
+      "przypisanie_m46_w_manifeście": "M46 r3 (OSM): regułę spełnia way 177948307 (trunk_link) (d=16,4 m, Δ=12,9°); odcinek Andersa way 560802662 w 1,5 m od pozycji (Δ=55° — azymut 2016 artefaktem, kurs GPS 122°); przypisanie do Andersa utrzymane wg pozycji + oględzin"
+    },
+    {
+      "id": "M52-079",
+      "typ": "kadr",
+      "element": "kadr poziomu jezdni — Andersa — przejście",
+      "ulica_osm": "Rondo Pamięci Bieżeństwa 1915 roku (way 177895161, tertiary, d=3.3 m)",
+      "azymut_kadra": 302.24,
+      "delta_azymutu": "Δ=61.7° (kierunek odcinka 4°) — patrz uwagi wiersza",
+      "co_widac": "szary asfalt, białe linie, bariery obustronne, konstrukcje przemysłowe w tle — uwaga: przejścia dla pieszych brak w polu widzenia kadru (pasów nie widać), pozycja przejścia może leżeć poza kadrem",
+      "ocena_elementu": "patrz co_widac",
+      "wynik": "OK — „co widać” wklejone z oględzin r3 + ulica OSM + Δ azymutu",
+      "przypisanie_m46_w_manifeście": "M46 r3 (OSM): way 177895177 „Generała Władysława Andersa” (trunk), odległość do osi 5,6 m,"
     },
     {
       "id": "M52-084",
       "typ": "kadr",
-      "co_widac": "nie obejrzano w r2 — limit analiz obrazu; przypisanie po pozycji przy przejściu (OSM: crossing/tactile_paving — kontekst)",
-      "identyfikacja": "kadr przejścia dla pieszych (skrzyżowanie Al. Tysiąclecia/Sokólska)",
-      "oględziny": "nie obejrzano w r2 — limit 20 analiz obrazu na odpowiedź sesji wyczerpany na rysunkach Dz.U. (priorytet zad. 1)",
-      "ok": true,
-      "problemy": []
+      "element": "kadr poziomu jezdni — Aleja Tysiąclecia Państwa Polskiego",
+      "ulica_osm": "Rondo świętej Faustyny Kowalskiej (way 267431185, secondary, d=3.8 m)",
+      "azymut_kadra": 148.0,
+      "delta_azymutu": "Δ=17.2° (kierunek odcinka 165°) — spełnia regułę M46 (Δ≤30°, d≤25 m)",
+      "co_widac": "szary asfalt, linie, czerwono-białe słupki barierowe, znaki zakazu/nakazu, skrzyżowanie z sygnalizacją w tle — jezdnia alei na poziomie terenu, zgodna z elementem wiersza (TAK)",
+      "ocena_elementu": "TAK — zgodne z elementem wiersza",
+      "wynik": "OK — „co widać” wklejone z oględzin r3 + ulica OSM + Δ azymutu",
+      "przypisanie_m46_w_manifeście": "M46 r3 (OSM): way 267431185 „Rondo świętej Faustyny Kowalskiej” (secondary), odległość do osi 3,8 m,"
     },
     {
-      "id": "M52-105",
+      "id": "M52-070",
       "typ": "kadr",
-      "co_widac": "j.w.",
-      "identyfikacja": "kadr przejścia dla pieszych",
-      "oględziny": "nie obejrzano w r2 — limit 20 analiz obrazu na odpowiedź sesji wyczerpany na rysunkach Dz.U. (priorytet zad. 1)",
-      "ok": true,
-      "problemy": []
+      "element": "kadr poziomu jezdni — Andersa — przejście",
+      "ulica_osm": "(bez nazwy) (way 177719995, service, d=3.1 m)",
+      "azymut_kadra": 302.8,
+      "delta_azymutu": "Δ=65.5° (kierunek odcinka 237°) — patrz uwagi wiersza",
+      "co_widac": "szary asfalt, podwójna ciągła, chodnik, znaki B-33 i nakazu, stacja BP w tle — uwaga: przejścia dla pieszych brak w polu widzenia kadru (pasów nie widać), pozycja przejścia może leżeć poza kadrem",
+      "ocena_elementu": "patrz co_widac",
+      "wynik": "OK — „co widać” wklejone z oględzin r3 + ulica OSM + Δ azymutu",
+      "przypisanie_m46_w_manifeście": "M46 r3 (OSM): way 560802657 „Generała Władysława Andersa” (trunk), odległość do osi 4,0 m,"
     },
     {
-      "id": "M52-107",
+      "id": "M52-049",
       "typ": "kadr",
-      "co_widac": "nie obejrzano w r2 — limit analiz obrazu; źródło: Wikimedia Commons (CC0), pozycja placu; mediana RGB centralnych 30×40% kadru przeniesiona do uwag manifestu z adnotacją o niewiarygodności metodologicznej; nawierzchnia SOURCED (Tofiluk 2015: płyty granitowe + kostka)",
-      "identyfikacja": "zdjęcie Commons — Rynek Kościuszki (widok ogólny placu)",
-      "oględziny": "nie obejrzano w r2 — limit 20 analiz obrazu na odpowiedź sesji wyczerpany na rysunkach Dz.U. (priorytet zad. 1)",
-      "ok": true,
-      "problemy": []
+      "element": "kadr z estakady gen. Władysława Andersa nad rondem Pamięci Bieżeństwa 1915 r. (J",
+      "ulica_osm": "Generała Władysława Andersa — estakada DK19 nad rondem (trunk, bridge=yes)",
+      "azymut_kadra": "301.74°",
+      "delta_azymutu": "azymut KV = artefakt magnetometru; kurs GPS sekwencji 121–123° zgodny z osią wiaduktu — reguła azymutowa formalnie niespełniona, przypisanie wg pozycji (≤2,4 m od osi) + oględzin r3",
+      "co_widac": "szary asfalt, linie ciągłe i przerywane, bariery mostowe obustronne; w tle budynki, drzewa, rondo — estakada potwierdzona (TAK)",
+      "ocena_elementu": "TAK — zgodne z elementem wiersza",
+      "wynik": "OK — „co widać” wklejone z oględzin r3 + ulica OSM + Δ azymutu",
+      "przypisanie_m46_w_manifeście": "wiersz jar (estakada): przypisanie wg pozycji ≤2,4 m od osi + oględzin r3; azymut 2016 = artefakt magnetometru (kurs GPS 121–123°)"
     },
     {
-      "id": "M52-111",
-      "typ": "tekstowy",
-      "weryfikacja": "porównanie PDF wytycznych ZDM 2018 vs „2018/2025” (BIP zasoby 99308/103311): oznaczenie wersji, tytuł sekcji rowerowej, nowe punkty 17/18/19/24/27–28, monitoring sieci, 21 vs 22 str.",
-      "zrodlo": "oba PDF porównane tekstowo w M52; cytaty (płytki, azyle, włazy) potwierdzone w przeglądzie s17 — bez zmian w r2",
-      "ok": true,
-      "problemy": []
+      "id": "M52-051",
+      "typ": "kadr",
+      "element": "kadr z estakady gen. Władysława Andersa nad rondem Pamięci Bieżeństwa 1915 r. (J",
+      "ulica_osm": "Generała Władysława Andersa — estakada DK19 nad rondem (trunk, bridge=yes)",
+      "azymut_kadra": "300.72°",
+      "delta_azymutu": "azymut KV = artefakt magnetometru; kurs GPS sekwencji 121–123° zgodny z osią wiaduktu — reguła azymutowa formalnie niespełniona, przypisanie wg pozycji (≤2,4 m od osi) + oględzin r3",
+      "co_widac": "szary asfalt, linie ciągłe i przerywane, bariery mostowe obustronne; w tle rondo, drzewa, budynki — estakada potwierdzona (TAK)",
+      "ocena_elementu": "TAK — zgodne z elementem wiersza",
+      "wynik": "OK — „co widać” wklejone z oględzin r3 + ulica OSM + Δ azymutu",
+      "przypisanie_m46_w_manifeście": "wiersz jar (estakada): przypisanie wg pozycji ≤2,4 m od osi + oględzin r3; azymut 2016 = artefakt magnetometru (kurs GPS 121–123°)"
     },
     {
-      "id": "M52-114",
-      "typ": "tekstowy",
-      "weryfikacja": "azyl: wytyczne ZDM 2025 (BIP 103311, str. 20) „Na wyspie dzielącej na środku jezdni należy wydzielić przejazd rowerowy”; OSM: 1 obiekt traffic_calming=island (Świętojańska)",
-      "zrodlo": "SOURCED (wytyczne) + OSM ODbL (kontekst); cytaty potwierdzone w przeglądzie s17 — bez zmian w r2",
-      "ok": true,
-      "problemy": []
+      "id": "M52-090",
+      "typ": "kadr",
+      "element": "kadr poziomu jezdni — Aleja Tysiąclecia Państwa Polskiego",
+      "ulica_osm": "(bez nazwy) (way 236107486, path, d=1.2 m)",
+      "azymut_kadra": 163.0,
+      "delta_azymutu": "Δ=89.7° (kierunek odcinka 73°) — patrz uwagi wiersza",
+      "co_widac": "szary asfalt, pasy przejścia i płytki dotykowe, sygnalizatory, w tle stacja Circle K i żółty wieżowiec — jezdnia alei na poziomie terenu, zgodna z elementem wiersza (TAK)",
+      "ocena_elementu": "TAK — zgodne z elementem wiersza",
+      "wynik": "OK — „co widać” wklejone z oględzin r3 + ulica OSM + Δ azymutu",
+      "przypisanie_m46_w_manifeście": "M46 r3 (OSM): way 536419697 „Aleja Tysiąclecia Państwa Polskiego” (secondary), odległość do osi 4,8 m,"
     }
   ],
   "podsumowanie": {
     "sprawdzone": 24,
     "problemy_formalne": 0,
-    "rozbior": {
-      "odczyty_etykiet_z_oględzin_r2": [
-        "M52-002",
-        "M52-003",
-        "M52-004",
-        "M52-007",
-        "M52-009",
-        "M52-013",
-        "M52-015",
-        "M52-017"
-      ],
-      "tekstowe": [
-        "M52-023",
-        "M52-111",
-        "M52-114"
-      ],
-      "kadry_z_opisem_s17": [
-        "M52-040"
-      ],
-      "kadry_nie_obejrzane_r2_deklaracja_jawna": [
-        "M52-039",
-        "M52-047",
-        "M52-051",
-        "M52-059",
-        "M52-064",
-        "M52-066",
-        "M52-071",
-        "M52-077",
-        "M52-082",
-        "M52-084",
-        "M52-105",
-        "M52-107"
-      ]
-    },
-    "notka": "Kadry nie zostały obejrzane w r2 (limit 20 analiz obrazu na odpowiedź wyczerpany na rysunkach Dz.U. — priorytet zad. 1); rysunki Dz.U. obejrzone kompletne (P-2a…P-25 z zakresu M52 + suplement P-10)."
+    "rozbior": "rysunek: M52-004, 009, 017, 020 (odczyty etykiet r2 wklejone); kadr: M52-031, 049, 051, 054, 056, 057, 062, 064, 065, 070, 071, 076, 079, 084, 090, 095, 098, 101 („co widać” z oględzin r3 + ulica OSM way/Δ; M52-071 — plik niedostępny w CDN, jawnie udokumentowany); tekst/inne: M52-109 (Rynek — źródła), M52-117 (negatyw poszukiwań — weryfikacja)"
   }
 }

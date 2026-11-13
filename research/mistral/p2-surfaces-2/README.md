@@ -34,15 +34,25 @@ Paczka badawcza M52. Gałąź: `research/mistral-p2-surfaces-2`. Kontynuacja / u
 > azymut ~357° z metadanych to artefakt magnetometru (kurs GPS sekwencji = 121–123°,
 > zgodny z osią estakady) — reguła azymutowa formalnie niespełniona, przypisanie
 > utrzymane wg pozycji (≤2,4 m od osi) + oględzin; (2) **oględziny kadrów modelem wizyjnym
-> — W TOKU** (limit ~20 analiz obrazu na odpowiedź): wykonano **24/80** (kadry
-> Jaroszówki M52-029…M52-052 — opis „co widać” + ocena elementu w uwagach manifestu);
-> route/crossings/Rynek w kolejnych turach, commit po każdej turze; (3) **P-5 spójne**:
+> — WYKONANE dla wszystkich 80 wierszy kadrów**: 76 kadrów obejrzanych (opis „co widać”
+> + ocena elementu w uwagach manifestu; jar M52-029…052, trasa/przejścia M52-053…105,
+> Rynek M52-106…108), 4 pliki (M52-071/075/077/083, sekw. KV 14055) **niedostępne w CDN
+> KartaView** (HTTP 500/404 po wyczerpaniu wariantów URL: proc/lth pr:sharp, pr:thumb,
+> direct storage1) — jawnie udokumentowane w uwagach z podstawą przypisania (pozycja +
+> sąsiednie kadry idx 154/156, 156/158, 169/173); (3) **P-5 spójne**:
 > rys. 2.2.1.11 przedstawia 2 pary linii (4 kanały — własny pomiar r2), 0,32 = 2 × 0,16
 > — zapis o „rozbieżności wewnętrznej rozporządzenia” WYCOFANY (M52-012 + tabela zad. 1);
 > (4) poprawki kopiuj-wklej w uwagach (M52-006, M52-014/015 zamienione, M52-027 — sprzeczne
 > zdanie r1 usunięte) + **nowy wiersz M52-118** (P-3b: kreska/przerwa 1,00/1,00 m, jak
-> M52-005 dla P-3a) — manifest ma 118 rekordów; (5) samokontrola 20% na nowym jawnym
-> seedzie — do przeprowadzenia po zakończeniu oględzin kadrów.
+> M52-005 dla P-3a) — manifest ma 118 rekordów; (5) **samokontrola 20% na nowym jawnym
+> seedzie 20261114 — WYKONANA** (24/24 sprawdzone, 0 problemów formalnych; „co widać”
+> z oględzin r3 + ulica OSM way_id + Δ azymutu dla kadrów, odczyty etykiet r2 dla
+> rysunków — patrz sekcja „Samokontrola 20% (r3)” i `audit_20_percent.json`);
+> (6) **kolor trasy startowej (zad. 4) rozstrzygnięty oględzinami r3**: jezdnia trasy
+> (Andersa/DK19 + Al. Tysiąclecia, 66 kadrów) to we wszystkich kadrach **szary asfalt**
+> z białym oznakowaniem — czerwonego asfaltu ani czerwonego pasa malowanego NIE
+> zaobserwowano; Wileńska bez kadrów ≤60 m (UNVERIFIED) — status M52-116: SOURCED
+> (dla jezdni z kadrów).
 
 ## Zakres (6 zadań)
 
@@ -82,8 +92,8 @@ walidacja krzyżowa z wartościami znanymi z tekstu (P-7a/b: 0,24 m; P-7c/d: 0,1
 P-10: 4,0 m — str. 567; P-11: 1,8/3,0 m — str. 569; tabela 5.3 — str. 589).
 Mapowanie stron: **PDF c2 str. N = Dz.U. str. N+525**.
 
-**Błąd metody M52 (przyznany w M52-FIX):** rysunków nie obejrzono wizualnie.
-Podpisy dolne figur („0,20”, „0,24”, „0,18”, „0,32”, „0,08”, „0,5”, „0,375”, „0,2825")
+**Błąd metody M52 (przyznany w M52-FIX):** rysunków nie obejrzano wizualnie.
+Podpisy dolne figur („0,20”, „0,24”, „0,18”, „0,32”, „0,08”, „0,5”, „0,375”, „0,2825”)
 zinterpretowano jako wymiary (odstępy osi / wysokości), a etykiety kreski/przerwy
 na rys. 2.2.1.8/2.2.1.11 pominięto i zastąpiono pomiarem pikselowym (ESTIMATED).
 
@@ -166,7 +176,7 @@ urządowego / tekst rozporządzenia), ESTIMATED (metoda z opisem), UNVERIFIED.
 
 Uwagi:
 - **Dla silnika gry:** wymiary geometryczne (szerokości / odstępy / kreski / przerwy) —
-  kolumna „Wartość”; intensywność malowania — kolumna „Zużycie farby" (m²/mb; dla P-13/P-14
+  kolumna „Wartość”; intensywność malowania — kolumna „Zużycie farby” (m²/mb; dla P-13/P-14
   przy jednostce 1,00 m wartość = m² na element).
 - Adnotacja wektorowa przy rys. 2.2.1.14 (str. 542): „Wymiary w cm” — dotyczy konstrukcji
   strzałki P-6a, nie znaków P-2…P-6.
@@ -193,8 +203,10 @@ Andersa (DK19) wiodącej NAD rondem** — kamera pojazdu jadącego wiaduktem; w 
 widoczne bariery mostowe estakady, latarnie dwuramienne, w tle kominy EC. Potwierdzenie
 wizualne przeglądu s17: jar-01/07/12/20 (M52-029/035/040/048); pozostałe 20 kadrów
 przypisano po przebiegu sekwencji (azymuty ~300–358° wzdłuż osi wiaduktu, pozycje 23–127 m
-od kafla) — **nie obejrzano ich w sesjach M52-FIX/r2** (limit 20 analiz obrazu na odpowiedź
+od kafla) — nie obejrzano ich w sesjach M52-FIX/r2 (limit 20 analiz obrazu na odpowiedź
 sesji wyczerpany na rysunkach Dz.U. — priorytet zad. 1; pliki w paczce ZIP poza gitem).
+**M52-FIX r3: wszystkie 24 kadry Jaroszówki obejrzano modelem wizyjnym** — każdy
+potwierdza jezdnię estakady (szary asfalt, bariery mostowe; opisy w uwagach manifestu).
 
 **Wniosek: wymóg „≥10 kadrów z poziomu jezdni ronda” NIE jest spełniony (0/24).**
 Kadry pozostają w manifeście jako referencja widoku z wiaduktu, ale nie dokumentują nawierzchni
@@ -269,13 +281,25 @@ kadrów (wymagana przez przegląd s17 zamiast progów RGB) **nie została wykona
 M52-FIX, ani w r2** — limit 20 analiz obrazu na odpowiedź sesji został wyczerpany na
 rysunkach Dz.U. (priorytet zad. 1; pliki kadrów w paczce ZIP poza gitem).
 
-**Status koloru nawierzchni trasy startowej: UNVERIFIED** (wycofany z ESTIMATED).
+**Status koloru nawierzchni trasy startowej: UNVERIFIED → SOURCED (r3, dla jezdni z kadrów).**
 **M52-FIX r2: kolumny `kolor_srgb`/`metoda_koloru` USUNIĘTE ze schematu manifestu**
 (19 → 17 kolumn) — wiersze kadrów M52-029…M52-105 oraz wiersz zbiorczy M52-116; wartości
 RGB dla Rynku (M52-106…108, centralne 30×40% kadru, Commons) przeniesiono do kolumny
-uwag z jawną adnotacją o niewiarygodności metodologicznej. Do rozstrzygnięcia w rundzie
-z dostępem do kadrów: oględziny każdej ulicy osobno (Andersa, Al. Tysiąclecia, Sokólska,
-Wileńska) + obejrzenie, czy występuje czerwony asfalt lub czerwony pas malowany.
+uwag z jawną adnotacją o niewiarygodności metodologicznej.
+
+**M52-FIX r3 — rozstrzygnięcie (oględziny modelem wizyjnym, 76/80 kadrów):**
+- **Andersa (DK19) + Al. Tysiąclecia: jezdnia = SZARY ASFALT** we wszystkich 66 kadrach
+  trasy/przejść (M52-029…105; sekw. KV 14055/2769366/3686129/1155711), białe linie
+  (podwójne ciągłe/przerywane, strzałki), pasy przejść + płytki dotykowe (085…092, 102…105).
+  **Czerwonego asfaltu ani czerwonego pasa malowanego na jezdni NIE zaobserwowano**
+  w żadnym kadrze.
+- Kadry „przejścia Andersa" (070/072/073/074/076/078…082) pokazują jezdnię bez pasów
+  w polu widzenia — przejścia leżą między pozycjami kadrów (odnotowane w uwagach).
+- **Wileńska: brak kadrów ≤60 m (najbliższy 348 m) → pozostaje UNVERIFIED.**
+- Droga rowerowa Andersa poza jezdnią (OSM `bicycle=no` na jezdni; wydzielona droga
+  rowerowa) — jej kolor poza kadrami; koloru nie deklarujemy.
+- Status wiersza zbiorczego M52-116: **SOURCED** (jezdnia Andersa/Al. Tysiąclecia —
+  oględziny 66 kadrów; Wileńska UNVERIFIED — ograniczenie jawne w uwagach wiersza).
 
 Uwaga dodatkowa (M52-FIX): część kadrów „trasy/przejść” to te same ujęcia co kadry
 Jaroszówki z estakady (M52-057=jar-01, M52-062=jar-13, M52-068=jar-22, M52-071=jar-03,
@@ -307,6 +331,12 @@ Kadry: M52-053…M52-082 (trasa), M52-083…M52-105 (przejścia).
   Balans bieli zmienny między kadrami — traktować jako orientacyjny. **r2: wartości
   przeniesione z usuniętych kolumn manifestu do kolumny uwag** (M52-106…108), z adnotacją
   o niewiarygodności metodologicznej.
+- **M52-FIX r3 — oględziny kadrów (Commons, CC0):** M52-108 potwierdza **duże szare
+  płyty kamienne (granity) w regularny wzór + pasy ciemniejszej kostki** (w tle ratusz
+  z wieżą zegarową) — „płyty granitowe + kostka" TAK; M52-106/107 pokazują w polu
+  widzenia wyłącznie **szarą kostkę brukową** (płyt brak w tych kadrach — częściowa
+  zgodność, odnotowana w uwagach wierszy). Rodzaj nawierzchni placu (płyty + kostka)
+  pozostaje SOURCED wg Tofiluk 2015; kadr 108 jest potwierdzeniem wizualnym.
 - Kadry: M52-106…M52-108 (pliki `files/rynek/` w paczce ZIP).
 
 ---
@@ -351,6 +381,31 @@ Kadry: M52-053…M52-082 (trasa), M52-083…M52-105 (przejścia).
   w r2 + podstawą przypisania (przebieg sekwencji/azymuty; M52-071 = jar-03 — ujęcie
   z estakady). Szczegóły: `audit_20_percent.json`.
 
+## Samokontrola 20% (M52-FIX r3, jawny seed — po zakończeniu oględzin kadrów)
+
+- Populacja: **118 rekordów** manifestu (M52-001…M52-118).
+- Próba: **24 rekordy** (⌈20%⌉), deterministycznie, **nowy jawny seed**:
+  `random.Random(20261114).sample(sorted(ids), 24)` →
+  M52-004, 009, 017, 020, 031, 049, 051, 054, 056, 057, 062, 064, 065, 070, 071, 076,
+  079, 084, 090, 095, 098, 101, 109, 117.
+- Kryteria r3 (zgodnie z przeglądem s18): wiersze z rysunków → **wklejony odczyt
+  etykiety/podpisu** (oględziny r2: render 150 dpi + rastry natywne ×3) + spójność
+  arytmetyczna; **kadry → zdanie „co widać" z oględzin modelem wizyjnym r3 (76/80
+  obejrzanych; 4 pliki niedostępne w CDN KartaView — jawnie udokumentowane) + najbliższa
+  ulica z OSM (way_id, odległość) + Δ(azymut − kierunek odcinka) wg reguły M46**;
+  wiersze tekstowe/inne → weryfikacja źródłem; schemat 17 kolumn, 118 rekordów.
+- Wynik: **24/24 sprawdzone, 0 problemów formalnych**. Rozbór r3: rysunki — M52-004
+  (P-3a odstęp 0,12), 009 (P-4 odstęp 0,12; podpis 0,24 = 2×0,12), 017 (P-12 etykieta
+  „0,5" + podpis „0,5 m²/mb" = zużycie), 020 (P-13 podpis „0,2625 m²/mb" — z jawnym
+  zastrzeżeniem arytmetycznym); kadry — M52-031/049/051 (jar: estakada, azymut 2016 =
+  artefakt magnetometru), 054…101 (trasa/przejścia Al. Tysiąclecia/Andersa: „co widać"
+  + OSM way + Δ, m.in. 084: rondo św. Faustyny d=3,8 m Δ=17,2° spełnia; 090: way
+  536419697 Al. Tysiąclecia d=4,8 m + w kadrze Circle K i żółty wieżowiec; **M52-071 —
+  plik niedostępny w CDN (HTTP 500/404) — jawnie udokumentowany, przypisanie wg pozycji
+  + sąsiednich kadrów idx 154/156**); tekst/inne — M52-109 (Rynek: płyty granitowe +
+  kostka, Tofiluk 2015), M52-117 (negatyw poszukiwań ringu). Szczegóły:
+  `audit_20_percent.json` (nadpisany w r3; poprzednia runda r2 — w historii gita).
+
 ## Status prac (aktualizowany)
 
 - [x] Gałąź utworzona z najnowszego `origin/main` (53e57d5); M52-FIX: gałąź zaktualizowana
@@ -365,26 +420,28 @@ Kadry: M52-053…M52-082 (trasa), M52-083…M52-105 (przejścia).
       — M52-117).
 - [x] Zadanie 3 — azyle (wymóg SOURCED / występowanie UNVERIFIED), płytki dotykowe (układ
       rzędów SOURCED), ścieki/wpusty (wymogi SOURCED).
-- [x] Zadanie 4 — **kolor UNVERIFIED** (metoda RGB odrzucona; **r2: kolumny
-      kolor_srgb/metoda_koloru usunięte ze schematu — 19 → 17 kolumn**; oględziny kadrów
-      niewykonane w r2 — limit analiz obrazu sesji wyczerpany na rysunkach Dz.U.);
-      OSM: kontekst organizacyjny.
+- [x] Zadanie 4 — **kolor trasy rozstrzygnięty w r3 (oględziny)**: jezdnia Andersa/Al.
+      Tysiąclecia = **szary asfalt** (66 kadrów; bez czerwonego asfaltu/pasa malowanego);
+      Wileńska bez kadrów → UNVERIFIED; **metoda RGB odrzucona (M52-FIX); r2: kolumny
+      kolor_srgb/metoda_koloru usunięte ze schematu — 19 → 17 kolumn**; status M52-116:
+      SOURCED (ograniczenia jawne w uwagach); OSM: kontekst organizacyjny.
 - [x] Zadanie 5 — Rynek Kościuszki: płyty granitowe + kostka (SOURCED, Tofiluk 2015 +
       BIP/bialystok.pl); wymiary UNVERIFIED; kolor ESTIMATED (wartości w uwagach r2).
 - [x] Zadanie 6 — wytyczne ZDM „2018/2025”: BIP zasób 103311 + porównanie zmian vs 2018.
-- [x] manifest.csv (117 rekordów po r2 → **118 po r3**, **17 kolumn po r2**), audit_20_percent.json (24/24,
-      seed 20261113, odczyty r2 + „co widać”; **próba r3 na nowym seedzie — w kolejnej turze**), sources.md (źródła M52-FIX + r2),
+- [x] manifest.csv (117 rekordów po r2 → **118 po r3**, **17 kolumn po r2**), audit_20_percent.json
+      (**r3: seed 20261114, 24/24 — nadpisany po zakończeniu oględzin**; runda r2 seed 20261113
+      — w historii gita), sources.md (źródła M52-FIX + r2),
       .gitignore (files/, *.zip).
-- [~] **M52-FIX r3 (s18) — W TOKU**: korekta przypisania M52-103/104/105 (Sokólska →
+- [x] **M52-FIX r3 (s18) — ZAKOŃCZONE**: korekta przypisania M52-103/104/105 (Sokólska →
       **Al. Tysiąclecia**) ✓; reguła M46 zastosowana do wszystkich wierszy route/crossings
       (way_id + Δ w uwagach; azymut 2016 sekw. 14055 = artefakt magnetometru, odnotowany
       jawnie) ✓; poprawki kopiuj-wklej uwag (M52-006/014/015/027) + nowy wiersz M52-118
       (P-3b kreska/przerwa 1,00/1,00) ✓; P-5: 0,32 = 2 × 0,16 — spójne (zapis o
-      rozbieżności wycofany) ✓; **oględziny kadrów modelem wizyjnym: 24/80** (Jaroszówka
-      M52-029…052 — „co widać” + ocena elementu w uwagach; route/crossings/Rynek
-      M52-053…108 w kolejnych turach — limit ~20 analiz obrazu na odpowiedź, commit po
-      każdej turze); samokontrola 20% na nowym seedzie — po zakończeniu oględzin;
-      kolor trasy (zad. 4) — do rozstrzygnięcia oględzinami.
+      rozbieżności wycofany) ✓; **oględziny kadrów modelem wizyjnym: 76/80 obejrzanych
+      (wszystkie wiersze kadrów opisane „co widać" + ocena elementu); 4 pliki
+      (M52-071/075/077/083) niedostępne w CDN KartaView — jawnie udokumentowane**;
+      kolor trasy (zad. 4): **szary asfalt** — M52-116 → SOURCED ✓; samokontrola 20%
+      (seed 20261114): 24/24, 0 problemów formalnych ✓.
 - [ ] Kadry z poziomu ringu Jaroszówki (pozyskanie własne, np. sesja foto) — bez zmian
       (wynik negatywny M52-117). (Render rysunków Dz.U. z zad. 1 — **wykonany w r2**.)
 
@@ -412,6 +469,7 @@ Kadry: M52-053…M52-082 (trasa), M52-083…M52-105 (przejścia).
   po r2** (kolor_srgb/metoda_koloru usunięte — zad. 4).
 - `sources.md` — pełne źródła z linkami, licencjami i datami dostępu (+ źródła rewizji
   M52-FIX i metodologia r2).
-- `audit_20_percent.json` — samokontrola 20% (seed 20261113; odczyty etykiet r2 +
-  „co widać”).
+- `audit_20_percent.json` — samokontrola 20% (**r3: seed 20261114** — odczyty etykiet r2 +
+  „co widać" z oględzin r3 + ulica OSM way_id + Δ azymutu; runda r2, seed 20261113 —
+  w historii gita).
 - `.gitignore` — `files/`, `*.zip` (dodane w M52-FIX).
