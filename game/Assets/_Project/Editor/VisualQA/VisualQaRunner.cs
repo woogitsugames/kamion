@@ -190,6 +190,13 @@ namespace Game.Editor.VisualQA
                     if (lampSet.Contains("hazard")) { tl.indicatorLever = 2; tl.flasherLit = true; }
                     tl.Refresh();
                 }
+                // ADR 0181 r2 (review s20 P1-3): camera ids ending in "-bobtail" show the tractor without its trailer (the
+                // tractor's rear plate and plate lamp sit under the coupled trailer); its renderers are restored after the frame.
+                var bobtailHidden = new System.Collections.Generic.List<Renderer>();
+                if (qa.id.EndsWith("-bobtail", StringComparison.Ordinal))
+                    foreach (var tb in UnityEngine.Object.FindObjectsByType<TrailerBody>(FindObjectsSortMode.None))
+                        foreach (var r in tb.GetComponentsInChildren<Renderer>())
+                            if (r.enabled) { r.enabled = false; bobtailHidden.Add(r); }
                 // Live cab screens (cluster, navigation, DIN) drawn from the (parked) vehicle state for this light.
                 foreach (var vb in UnityEngine.Object.FindObjectsByType<VehicleBody>(FindObjectsSortMode.None))
                 {
@@ -410,6 +417,7 @@ namespace Game.Editor.VisualQA
 
                 cam.targetTexture = prevTarget;
                 cam.enabled = wasEnabled;
+                foreach (var r in bobtailHidden) r.enabled = true;
                 cam.cullingMask = prevMask;
                 if (uiCam != null) UnityEngine.Object.DestroyImmediate(uiCam.gameObject);
                 qa.gameObject.SetActive(wasActive);

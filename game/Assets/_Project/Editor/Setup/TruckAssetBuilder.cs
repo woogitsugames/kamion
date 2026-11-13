@@ -109,6 +109,19 @@ namespace Game.Editor.Setup
             AssetDatabase.SaveAssets();
         }
 
+        /// <summary>ADR 0181: number-plate luminance as a fraction of the plate lamp's lens luminance at the plate's top
+        /// edge (2 000 cd/m2 lens -> ~8 cd/m2 on a white plate; UN R4 asks for >= 2.5 cd/m2 - quoted from memory,
+        /// UNVERIFIED). WORKING_VALUE, tuned on the dusk control cameras.</summary>
+        public const float PlateIllum = 0.005f;
+
+        /// <summary>ADR 0181: lens optics parameters of a Kamion/Truck Exterior material (tractor and trailer). Set here on
+        /// every rebuild: an existing material asset keeps its serialized values when the shader default changes.</summary>
+        public static void ApplyLensSettings(Material m)
+        {
+            m.SetFloat("_LensDetail", 1f);
+            m.SetFloat("_PlateIllum", PlateIllum);
+        }
+
         // ------------------------------------------------------------------ 1. sources
 
         static void CopySources(Dictionary<string, object> ext, Dictionary<string, object> inn)
@@ -310,6 +323,7 @@ namespace Game.Editor.Setup
                     }
                     m.SetFloat("_Lamps", slot == "Lights" ? 1f : 0f);
                     if (slot == "Lights") m.EnableKeyword("_KAMION_TRUCK_LAMPS");
+                    ApplyLensSettings(m);
                     Add("MI_Ext_" + slot, m);
                 }
                 var g = Mat(dir, "MI_Ext_Glass", glass);
@@ -1289,6 +1303,15 @@ namespace Game.Editor.Setup
             QL("truck-side", new Vector3(-9.5f, 1.7f, 1.9f), new Vector3(0f, 1.6f, 1.9f), 42f, "r10: tractor driver side, square on (door, steps, arch, tank, skirt, rear wheels, gap to the trailer).");
             QL("truck-rear34", new Vector3(-5.2f, 2.0f, -3.6f), new Vector3(-0.4f, 1.3f, 2.2f), 45f, "r10: tractor from behind the cab, driver side (tank, rear mudguard, cab back, coiled lines, trailer front).");
             QL("trailer-side", new Vector3(-11.5f, 1.8f, -6.2f), new Vector3(0f, 1.7f, -6.2f), 55f, "r10: curtainsider driver side (curtain, straps, rail, side guards, pallet box, tridem).");
+            // ADR 0181: lamp close-ups (lens structure, plate illumination). Trailer rear lamps sit 12.0 m behind the kingpin
+            // (truck frame z -11.33), the tractor combination lamp at the frame end under the trailer front.
+            QL("lamp-trailer", new Vector3(-1.75f, 1.20f, -13.2f), new Vector3(-0.50f, 0.90f, -11.33f), 30f, "0181: trailer left combination lamp + number plate, 2 m (lens structure, plate lamp).");
+            QL("lamp-truck", new Vector3(-1.75f, 1.05f, -2.75f), new Vector3(-0.90f, 0.82f, -0.85f), 30f, "0181: tractor left combination lamp + rear fog lamp, 2 m (lens structure).");
+            // ADR 0181 r2 (review s20 P1-3): plate evidence at 3-6 m. The trailer plate from behind the trailer; the tractor plate
+            // (right of the frame end, under the trailer when coupled) on a bobtail tractor - VisualQaRunner hides the trailer
+            // for ids ending in "-bobtail".
+            QL("plate-trailer", new Vector3(0.70f, 1.35f, -15.6f), new Vector3(0f, 0.85f, -11.45f), 35f, "0181 r2: trailer rear, number plate + plate lamp, 4.2 m.");
+            QL("plate-truck-bobtail", new Vector3(0.25f, 1.05f, -4.3f), new Vector3(0.20f, 0.75f, -0.85f), 40f, "0181 r2: tractor without trailer from behind, rear plate + plate lamp + both combination lamps, 3.5 m.");
             QL("truck-34r", new Vector3(6.4f, 1.9f, 10.2f), new Vector3(0f, 1.6f, 1.8f), 45f, "r10: TRAKT front 3/4, passenger side (exhaust stack, aftertreatment, battery box, kerb mirror).");
         }
 
