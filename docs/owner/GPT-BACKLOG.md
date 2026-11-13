@@ -157,3 +157,7 @@ Procesy GPT pozostawione bez ubijania (odczyt 16:30; sprawdzać PID **razem z Cr
 
 ## s16 :07 (2026-11-13 05:1x)
 - **Codex gpt-s16 ZAKOŃCZONY** (04:11, po r3 wg polecenia). R1 0153 i R2 0154 — scalone do main (recenzja Claude). **R3 0155 plamy słońca** `gpt-s16-r3` @ `677a02407` (przyczyna: normal bias cieni realtime) → recenzja Claude `review-0155`.
+
+## s16 :07 (2026-11-13 06:4x)
+- **Codex:** wszystkie 3 rundy (0153, 0154, 0155) scalone do main po recenzji Claude. Worktree `gpt-s16` zostawiony (sesja Codexa zakończona) — usunąć rano po potwierdzeniu właściciela, że Codex go nie używa.
+- **GPT Pro → przejęte przez agentów Claude (Sonnet, research):** G10 gotowe (`research/g10-truck-restrictions/`), **G7** zieleń i **G5** meble uliczne w toku (`research/g7-street-greenery/`, `research/g5-street-furniture/`). Nowych gałęzi `gptpro/*` brak od 00:09.
