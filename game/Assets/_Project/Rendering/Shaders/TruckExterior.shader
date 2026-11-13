@@ -31,7 +31,7 @@
 // - r6 (ADR 0038 addendum): coat env through KamionVehicleEnv.hlsl (analytic ground below the horizon on Low/Medium),
 //   orange-peel lobe added in alpha, fp16-safe coat GGX, curtain soiling model (_CurtainGrime, trailer object frame).
 // - ADR 0182: rear-face soiling model (_RearGrime, trailer vehicle frame) replaces the baked mask on the rear doors, the
-//   portal posts and the contour tapes: wake film densest at the bottom, dirt held at the hinge posts and the centre seal,
+//   portal posts and the contour tapes (trailer object frame; door leaves = rendering layer bit 11): wake film densest at the bottom, dirt held at the hinge posts and the centre seal,
 //   gravity runoff from the header and below the hinges, per-leaf seeds (the two leaves differ). Same on every tier.
 Shader "Kamion/Truck Exterior"
 {
@@ -62,8 +62,9 @@ Shader "Kamion/Truck Exterior"
         _CurtainGrime ("Curtain soiling model: on, bottom y, top y, rear z (object space m; 0 = off)", Vector) = (0, 1.31, 3.88, -12)
         _CurtainAxles ("Curtain soiling: axle z (object space m) x3", Vector) = (-6.39, -7.7, -9.01, 0)
         _CurtainPosts ("Curtain soiling: post pitch, first post from rear, streak strength, overall scale", Vector) = (3.4, 0, 0.22, 0.7)
-        _RearGrime ("Rear-face soiling (ADR 0182): on, rear z, door bottom y, door top y (vehicle grime frame m; 0 = off)", Vector) = (0, -4.3, 1.335, 3.865)
+        _RearGrime ("Rear-face soiling (ADR 0182): on, rear z, door bottom y, door top y (trailer object frame m; 0 = off)", Vector) = (0, -12, 1.335, 3.865)
         _RearGrime2 ("Rear-face soiling: door half width, amount, non-paint scale, -", Vector) = (1.135, 0.85, 0.6, 0)
+        _RearGrime3 ("Rear-face soiling: door hinge pivot |x|, y, z in the trailer frame (leaves: rendering layer bit 11)", Vector) = (1.147, 2.6, -12.014, 0)
         [Toggle(_KAMION_TRUCK_LAMPS)] _Lamps ("Lamp emission from uv2 (Lights slot)", Float) = 0
         _DrlHighlightShoulder ("DRL exposed HDR highlight shoulder (0 = off)", Range(0, 2)) = 0.8
         _LampHueKnee ("Signal lamps: hue-preserving shoulder knee (max channel, exposed units)", Range(0, 2)) = 0.4
@@ -83,7 +84,7 @@ Shader "Kamion/Truck Exterior"
             float _DrlHighlightShoulder;
             float _LampHueKnee, _LampHueCeiling;
             float _CoatedBaseRoughness, _OrangePeel, _GrimeHeight, _GrimeChassis;
-            float4 _CurtainGrime, _CurtainAxles, _CurtainPosts, _RearGrime, _RearGrime2;
+            float4 _CurtainGrime, _CurtainAxles, _CurtainPosts, _RearGrime, _RearGrime2, _RearGrime3;
         CBUFFER_END
         float _KamionTyreFlatRadius;          // global (TruckVisualRig: tractor physics rolling radius 0.51 m), 0 = off
         float _KamionTrailerTyreFlatRadius;   // global (TrailerVisualRig: trailer physics rolling radius 0.515 m), 0 = off
@@ -264,7 +265,7 @@ Shader "Kamion/Truck Exterior"
 
             // ADR 0182 (review s18 0175 P2: the baked door dirt was one noise cloud, identical on both leaves, with a hard
             // upper edge; the tapes were spotless; Low was paler than High). Rear-face soiling in the vehicle frame lp
-            // (x right, y above the wheel contact, z forward; trailer: rear face at _RearGrime.y). Sources, as on photos of
+            // (trailer object frame: x right, y above the ground, z forward; rear face at _RearGrime.y). Sources, as on photos of
             // box / curtain trailers: (1) the wake behind the box pulls the tyre spray onto the rear face - a film densest at
             // the sill, fading up with an undulating edge; (2) dirt held along the hinge posts and the centre seal (edge
             // vortices, rubber); (3) cavities (baked AO) under the grooves, guides and straps; (4) gravity runoff - streaks
@@ -428,17 +429,23 @@ Shader "Kamion/Truck Exterior"
                     proc *= lerp(1.4, 0.85, m.r) * lerp(1.0, 0.25, exposedMetalTop);
                     grime = max(grime * 0.8, proc);
                 }
-                if (_RearGrime.x > 0.5 && hasFrame && isTyre < 0.5)
+                if (_RearGrime.x > 0.5 && isTyre < 0.5)
                 {
-                    // Rear-facing surfaces of the trailer's rear end (doors, posts, header, sill and their tapes).
-                    float3 fwd = _KamionGrimeFwd[slot - 1u].xyz;
-                    half facing = smoothstep(0.5, 0.8, -dot(normalize(float3(i.normalWS)), fwd));
-                    half zone = facing * (1.0 - smoothstep(0.15, 0.35, lp.z - _RearGrime.y))
-                              * (1.0 - smoothstep(_RearGrime2.x + 0.15, _RearGrime2.x + 0.3, abs(lp.x)))
-                              * smoothstep(0.25, 0.45, lp.y) * (1.0 - smoothstep(_RearGrime.w + 0.15, _RearGrime.w + 0.3, lp.y));
+                    // Trailer object frame (origin on the ground below the kingpin, +Z forward), as CurtainGrime. The rear
+                    // door leaves (rendering layer bit 11) have their origin on the hinge: shift back to the trailer frame in
+                    // the closed pose (the leaf extends from its hinge toward the centre), so the dirt stays on the door
+                    // when it swings open.
+                    float3 os = TransformWorldToObject(i.positionWS);
+                    float3 nos = TransformWorldToObjectDir(float3(i.normalWS));
+                    if ((renderingLayer & (1u << 11)) != 0u)
+                        os += float3(os.x < 0.0 ? _RearGrime3.x : -_RearGrime3.x, _RearGrime3.y, _RearGrime3.z);
+                    half facing = smoothstep(0.5, 0.8, -nos.z);
+                    half zone = facing * (1.0 - smoothstep(0.15, 0.35, os.z - _RearGrime.y))
+                              * (1.0 - smoothstep(_RearGrime2.x + 0.15, _RearGrime2.x + 0.3, abs(os.x)))
+                              * smoothstep(0.25, 0.45, os.y) * (1.0 - smoothstep(_RearGrime.w + 0.15, _RearGrime.w + 0.3, os.y));
                     if (zone > 0.001)
                     {
-                        half rg = RearGrime(lp, m.r) * (_IsPaint > 0.5 ? 1.0 : _RearGrime2.z);
+                        half rg = RearGrime(os, m.r) * (_IsPaint > 0.5 ? 1.0 : _RearGrime2.z);
                         grime = lerp(grime, rg, zone);
                     }
                 }

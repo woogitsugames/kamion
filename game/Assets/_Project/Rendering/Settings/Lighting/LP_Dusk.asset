@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebb5f2c9cd8fb448904925716220ba2, type: 3}
   m_Name: LP_Dusk
   m_EditorClassIdentifier: Game.Rendering::Game.Rendering.LightingPreset
-  sunElevationDeg: -5
+  sunElevationDeg: -6
   sunAzimuthDeg: 300
   turbidity: 4
   overcast: 0.2
@@ -40,8 +40,8 @@ MonoBehaviour:
   wetness: 0
   puddles: 0.3
   grassVariation: 1
-  autoExposure: 1
-  ev100: 15
+  autoExposure: 0
+  ev100: 3.5
   exposureCompensation: 0
   lookSaturation: -3
   whiteBalanceAdaptation: 0

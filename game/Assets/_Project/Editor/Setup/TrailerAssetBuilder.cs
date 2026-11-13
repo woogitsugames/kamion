@@ -217,12 +217,12 @@ namespace Game.Editor.Setup
                     // ADR 0182 (review s18 0175 P2): the rear doors, portal posts and contour tapes take their dirt from the
                     // rear-face soiling model (wake film, hinge posts / centre seal, header and hinge runoff, per-leaf seeds)
                     // instead of the baked mask (one noise cloud, identical on both leaves; Low atlas 4x smaller = paler).
-                    // Vehicle grime frame: origin = mean wheel contact (axles -6.39 / -7.70 / -9.01 -> -7.70), so the rear
-                    // face (object z -12.0) sits at z = -4.30; doors 1.335-3.865 m, half width = portal post inner edge
-                    // 1.135 m (trailer_build.py). Amount 0.85, non-paint (tapes, posts, lamps) x0.6. WORKING_VALUE.
-                    m.SetVector("_RearGrime", slot == "Curtain" ? Vector4.zero
-                        : new Vector4(1f, -12.0f - (-6.39f - 7.70f - 9.01f) / 3f, 1.335f, 3.865f));
+                    // Trailer object frame (trailer_build.py): rear face z -12.0, doors 1.335-3.865 m, half width = portal post
+                    // inner edge 1.135 m; door leaves (rendering layer bit 11) pivot on the hinge at |x| 1.147, y 2.6,
+                    // z -12.014. Amount 0.85, non-paint (tapes, posts, lamps) x0.6. WORKING_VALUE.
+                    m.SetVector("_RearGrime", slot == "Curtain" ? Vector4.zero : new Vector4(1f, -12.0f, 1.335f, 3.865f));
                     m.SetVector("_RearGrime2", new Vector4(1.135f, 0.85f, 0.6f, 0f));
+                    m.SetVector("_RearGrime3", new Vector4(1.147f, 2.6f, -12.014f, 0f));
                     m.SetFloat("_Lamps", slot == "Lights" ? 1f : 0f);
                     if (slot == "Lights") m.EnableKeyword("_KAMION_TRUCK_LAMPS");
                     EditorUtility.SetDirty(m);
@@ -344,6 +344,9 @@ namespace Game.Editor.Setup
                         r.shadowCastingMode = ShadowCastingMode.On;
                         r.receiveShadows = true;
                         if (wheel) r.renderingLayerMask |= TrailerVisualRig.TyreRenderingLayer;
+                        // ADR 0182: rear door leaves - Kamion/Truck Exterior maps their hinge-origin object space back to the
+                        // trailer frame for the rear-face soiling model.
+                        if (role == "DOOR_RL" || role == "DOOR_RR") r.renderingLayerMask |= TrailerVisualRig.RearDoorRenderingLayer;
                         lodRenderers[lod].Add(r);
                     }
                     if (lod == 0)
