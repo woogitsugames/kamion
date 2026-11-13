@@ -2,7 +2,7 @@ from pathlib import Path
 import json,hashlib,difflib
 r=Path(__file__).resolve().parent;root=r.parents[1]
 base=json.loads((r/'baseline-native-materials.json').read_text());folder=root/'game/Assets/_Generated/World/bialystok-industrial-c/Materials'
-now={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in folder.glob('*.mat')}
+now={p.relative_to(folder).as_posix():hashlib.sha256(p.read_bytes()).hexdigest() for p in folder.rglob('*.mat')}
 changed=[f for f in base if now.get(f)!=base[f]];added=sorted(set(now)-set(base));unexpected=[f for f in changed if f!='M_viaduct_concrete.mat']
 p=folder/'M_viaduct_concrete.mat';old=(r/'private-native-baseline'/p.name).read_text();new=p.read_text()
 clean='\n'.join(line for line in new.splitlines() if line.strip() not in ('- _SHADOW_NORMAL_BIAS_SCALE','- _ShadowNormalBiasScale: 0'))+'\n'

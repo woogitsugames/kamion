@@ -57,3 +57,18 @@ To mocny dowód, że obserwowany wzór w tych kadrach zależy od **normal bias r
 Na pokazanym żwirze, jezdni, podporach i widocznym spodzie pomostu nie zauważyłem nowego oczywistego acne w zero-normal. Crop split obejmuje przede wszystkim odbiornik; pełne island-1 uzupełnia widok spodu. Nie certyfikuje to górnej jezdni pomostu, wszystkich kątów ani zachowania w ruchu.
 
 Propozycja lokalnego `shadow_normal_bias_scale=0` wyłącznie dla istniejącego M_viaduct_concrete, przy zachowanym depth bias i bez zmiany globalnego QualityProfile, jest sensowną hipotezą minimalnej korekty. Przy ocenie implementacji należy sprawdzić: rzeczywisty caster i materiał, nietkniętą gałąź domyślną, reset opt-in po usunięciu flagi oraz wszystkie powierzchnie współdzielące materiał. Końcowy PASS pozostaje otwarty do produkcyjnych after, przeglądu regresji i testów.
+
+## Uzupełnienie — przegląd kandydata produkcyjnego
+
+Przeczytano WorldShadowCasterBias.cs, miejsce wywołania w WorldPbrMaterials.cs, flagę w materials.py, nowy wariant ShadowCaster w WorldPBR.shader oraz WorldShadowCasterBiasTests.cs. Bez uruchamiania testów.
+
+**Nie znalazłem błędu kontraktu, resetu ani doboru keyword w tej implementacji.**
+
+- Jawne liczby w zakresie [0; 1] są akceptowane; NaN, Infinity, wartości spoza zakresu, brak flagi i nieobsługiwane typy wracają do skali 1 oraz wyłączonego keyword. Usunięcie wcześniej aktywnej flagi zerowej resetuje skalę z 0 do 1.
+- Dla niezmienianego materiału z domyślną właściwością 1 helper nie wykonuje SetFloat; nie dopisuje zatem nowej wartości domyślnej do każdej istniejącej instancji materiału. To rozumowanie wymaga jeszcze porównania natywnej serializacji po imporcie; test jednostkowy i planowany audyt mają właściwy cel.
+- Wywołanie znajduje się po przypisaniu World PBR i po zbudowaniu podstawowych właściwości, przed końcowym oznaczeniem materiału do zapisu. Wcześniejsze wyczyszczenie keyword jest uwzględnione: helper ponownie włącza wyłącznie potrzebny opt-in.
+- Keyword jest deklarowany lokalnie i tylko dla etapu vertex istniejącego ShadowCaster. Gałąź bez niego zachowuje ApplyShadowBias; Forward nie dostaje nowej operacji. Zmienia się układ CBUFFER i powstaje wariant shadera, ale nie nowy pass, materiał lub draw.
+- Sprawdziłem wzór w zainstalowanym URP `Shadows.hlsl:533–541`: ApplyShadowBias dodaje `lightDirection * _ShadowBias.x` oraz osobny inset normalnej. `depthOnly = pw + ld * _ShadowBias.x`, a następnie lerp do zwykłego wyniku, zachowuje depth bias i skaluje wyłącznie składnik normalnej. Kod jest z tym kontraktem zgodny.
+- Flaga w materials.py występuje wyłącznie w viaduct_concrete. To zakres materiałowy, nie punktowy: wszystkie powierzchnie i instancje współdzielące ten materiał otrzymają wariant. Produkcyjne after powinno zatem obejrzeć także pozostałe ujęcia hero, litą górę pomostu i podpory, a nie wyłącznie żwir pod Putrą.
+
+Siedem przypadków testowych obejmuje brak zmiany legacy, opt-in/removal, nieprawidłowe liczby i natywny zakres materiałów. Nie zastępują obrazu acne ani dowodu obecności wariantu w buildzie urządzenia. Końcowy PASS nadal nie jest wydany: audyt, natywny import, produkcyjne after i testy są w toku.
