@@ -5,26 +5,27 @@
  "manifest_rows": 49,
  "sample_size": 10,
  "sample_ids": [
-  "M50-001",
-  "M50-002",
-  "M50-005",
-  "M50-009",
   "M50-012",
+  "M50-002",
+  "M50-009",
   "M50-024",
-  "M50-030",
-  "M50-033",
   "M50-041",
+  "M50-001",
+  "M50-030",
+  "M50-005",
+  "M50-033",
   "M50-047"
  ],
+ "data_audytu": "2026-11-13 (powtórny, po domknięciu wszystkich TO_VERIFY)",
  "reguly": {
   "wiersze_foto": [
    "url http(s)",
    "licencja",
-   "status w słowniku",
+   "status w słowniku (VERIFIED/VERIFIED_WIZJA/TO_VERIFY/NOT_FOUND/UNVERIFIED/ESTIMATED)",
    "WGS84 6 miejsc",
    "sezon+pora_dnia",
    "kierunek_deg",
-   "azymut+odległość w uwagach"
+   "azymut(± formy fleksyjne)+odległość w uwagach"
   ],
   "wiersze_dokumentowe": [
    "url http(s)",
@@ -35,361 +36,133 @@
  },
  "wyniki": [
   {
-   "id": "M50-001",
+   "id": "M50-012",
+   "typ": "foto",
    "checks": {
-    "url_zrodla_obecny": {
-     "ok": true,
-     "note": ""
-    },
-    "licencja_obecna": {
-     "ok": true,
-     "note": ""
-    },
-    "status_w_slowniku": {
-     "ok": true,
-     "note": "VERIFIED_WIZJA"
-    },
-    "data_dostepu": {
-     "ok": true,
-     "note": ""
-    },
-    "wgs84_6miejsc": {
-     "ok": true,
-     "note": ""
-    },
-    "sezon_i_pora": {
-     "ok": true,
-     "note": ""
-    },
-    "data_zdjecia": {
-     "ok": true,
-     "note": ""
-    },
-    "kierunek_deg": {
-     "ok": true,
-     "note": ""
-    },
-    "azymut_odleglosc_w_uwagach": {
-     "ok": true,
-     "note": ""
-    }
+    "url_zrodla_obecny": true,
+    "licencja": true,
+    "status_slownik": true,
+    "wgs84_6": true,
+    "sezon_pora": true,
+    "kierunek_deg": true,
+    "azymut_odleglosc_w_uwagach": true
    },
    "pass": true
   },
   {
    "id": "M50-002",
+   "typ": "foto",
    "checks": {
-    "url_zrodla_obecny": {
-     "ok": true,
-     "note": ""
-    },
-    "licencja_obecna": {
-     "ok": true,
-     "note": ""
-    },
-    "status_w_slowniku": {
-     "ok": true,
-     "note": "VERIFIED_WIZJA"
-    },
-    "data_dostepu": {
-     "ok": true,
-     "note": ""
-    },
-    "wgs84_6miejsc": {
-     "ok": true,
-     "note": ""
-    },
-    "sezon_i_pora": {
-     "ok": true,
-     "note": ""
-    },
-    "data_zdjecia": {
-     "ok": true,
-     "note": ""
-    },
-    "kierunek_deg": {
-     "ok": true,
-     "note": ""
-    },
-    "azymut_odleglosc_w_uwagach": {
-     "ok": true,
-     "note": ""
-    }
-   },
-   "pass": true
-  },
-  {
-   "id": "M50-005",
-   "checks": {
-    "url_zrodla_obecny": {
-     "ok": true,
-     "note": ""
-    },
-    "licencja_obecna": {
-     "ok": true,
-     "note": ""
-    },
-    "status_w_slowniku": {
-     "ok": true,
-     "note": "VERIFIED_WIZJA"
-    },
-    "data_dostepu": {
-     "ok": true,
-     "note": ""
-    },
-    "wgs84_6miejsc": {
-     "ok": true,
-     "note": ""
-    },
-    "sezon_i_pora": {
-     "ok": true,
-     "note": ""
-    },
-    "data_zdjecia": {
-     "ok": true,
-     "note": ""
-    },
-    "kierunek_deg": {
-     "ok": true,
-     "note": ""
-    },
-    "azymut_odleglosc_w_uwagach": {
-     "ok": true,
-     "note": ""
-    }
+    "url_zrodla_obecny": true,
+    "licencja": true,
+    "status_slownik": true,
+    "wgs84_6": true,
+    "sezon_pora": true,
+    "kierunek_deg": true,
+    "azymut_odleglosc_w_uwagach": true
    },
    "pass": true
   },
   {
    "id": "M50-009",
+   "typ": "foto",
    "checks": {
-    "url_zrodla_obecny": {
-     "ok": true,
-     "note": ""
-    },
-    "licencja_obecna": {
-     "ok": true,
-     "note": ""
-    },
-    "status_w_slowniku": {
-     "ok": true,
-     "note": "VERIFIED_WIZJA"
-    },
-    "data_dostepu": {
-     "ok": true,
-     "note": ""
-    },
-    "wgs84_6miejsc": {
-     "ok": true,
-     "note": ""
-    },
-    "sezon_i_pora": {
-     "ok": true,
-     "note": ""
-    },
-    "data_zdjecia": {
-     "ok": true,
-     "note": ""
-    },
-    "kierunek_deg": {
-     "ok": true,
-     "note": ""
-    },
-    "azymut_odleglosc_w_uwagach": {
-     "ok": true,
-     "note": ""
-    }
-   },
-   "pass": true
-  },
-  {
-   "id": "M50-012",
-   "checks": {
-    "url_zrodla_obecny": {
-     "ok": true,
-     "note": ""
-    },
-    "licencja_obecna": {
-     "ok": true,
-     "note": ""
-    },
-    "status_w_slowniku": {
-     "ok": true,
-     "note": "TO_VERIFY"
-    },
-    "data_dostepu": {
-     "ok": true,
-     "note": ""
-    },
-    "wgs84_6miejsc": {
-     "ok": true,
-     "note": ""
-    },
-    "sezon_i_pora": {
-     "ok": true,
-     "note": ""
-    },
-    "data_zdjecia": {
-     "ok": true,
-     "note": ""
-    },
-    "kierunek_deg": {
-     "ok": true,
-     "note": ""
-    },
-    "azymut_odleglosc_w_uwagach": {
-     "ok": true,
-     "note": ""
-    }
+    "url_zrodla_obecny": true,
+    "licencja": true,
+    "status_slownik": true,
+    "wgs84_6": true,
+    "sezon_pora": true,
+    "kierunek_deg": true,
+    "azymut_odleglosc_w_uwagach": true
    },
    "pass": true
   },
   {
    "id": "M50-024",
+   "typ": "foto",
    "checks": {
-    "url_zrodla_obecny": {
-     "ok": true,
-     "note": ""
-    },
-    "licencja_obecna": {
-     "ok": true,
-     "note": ""
-    },
-    "status_w_slowniku": {
-     "ok": true,
-     "note": "TO_VERIFY"
-    },
-    "data_dostepu": {
-     "ok": true,
-     "note": ""
-    },
-    "wgs84_6miejsc": {
-     "ok": true,
-     "note": ""
-    },
-    "sezon_i_pora": {
-     "ok": true,
-     "note": ""
-    },
-    "data_zdjecia": {
-     "ok": true,
-     "note": ""
-    },
-    "kierunek_deg": {
-     "ok": true,
-     "note": ""
-    },
-    "azymut_odleglosc_w_uwagach": {
-     "ok": true,
-     "note": ""
-    }
-   },
-   "pass": true
-  },
-  {
-   "id": "M50-030",
-   "checks": {
-    "url_zrodla_obecny": {
-     "ok": true,
-     "note": ""
-    },
-    "licencja_obecna": {
-     "ok": true,
-     "note": ""
-    },
-    "status_w_slowniku": {
-     "ok": true,
-     "note": "VERIFIED"
-    },
-    "data_dostepu": {
-     "ok": true,
-     "note": ""
-    },
-    "dokument_strona_identyfikowalny": {
-     "ok": true,
-     "note": "STO ZDM TOS_1 v03/2020, rozdz. 3 (DOCX)"
-    }
-   },
-   "pass": true
-  },
-  {
-   "id": "M50-033",
-   "checks": {
-    "url_zrodla_obecny": {
-     "ok": true,
-     "note": ""
-    },
-    "licencja_obecna": {
-     "ok": true,
-     "note": ""
-    },
-    "status_w_slowniku": {
-     "ok": true,
-     "note": "VERIFIED"
-    },
-    "data_dostepu": {
-     "ok": true,
-     "note": ""
-    },
-    "dokument_strona_identyfikowalny": {
-     "ok": true,
-     "note": "Dz.U. 2019 poz. 2311 cz. 2, zał. 3, s. 754"
-    }
+    "url_zrodla_obecny": true,
+    "licencja": true,
+    "status_slownik": true,
+    "wgs84_6": true,
+    "sezon_pora": true,
+    "kierunek_deg": true,
+    "azymut_odleglosc_w_uwagach": true
    },
    "pass": true
   },
   {
    "id": "M50-041",
+   "typ": "dokument",
    "checks": {
-    "url_zrodla_obecny": {
-     "ok": true,
-     "note": ""
-    },
-    "licencja_obecna": {
-     "ok": true,
-     "note": ""
-    },
-    "status_w_slowniku": {
-     "ok": true,
-     "note": "VERIFIED"
-    },
-    "data_dostepu": {
-     "ok": true,
-     "note": ""
-    },
-    "dokument_strona_identyfikowalny": {
-     "ok": true,
-     "note": "Dz.U. 2019 poz. 2311 cz. 2, zał. 4, s. 843"
-    }
+    "url_zrodla_obecny": true,
+    "licencja": true,
+    "status_slownik": true,
+    "dokument_strona_identyfikowalny": true
+   },
+   "pass": true
+  },
+  {
+   "id": "M50-001",
+   "typ": "foto",
+   "checks": {
+    "url_zrodla_obecny": true,
+    "licencja": true,
+    "status_slownik": true,
+    "wgs84_6": true,
+    "sezon_pora": true,
+    "kierunek_deg": true,
+    "azymut_odleglosc_w_uwagach": true
+   },
+   "pass": true
+  },
+  {
+   "id": "M50-030",
+   "typ": "dokument",
+   "checks": {
+    "url_zrodla_obecny": true,
+    "licencja": true,
+    "status_slownik": true,
+    "dokument_strona_identyfikowalny": true
+   },
+   "pass": true
+  },
+  {
+   "id": "M50-005",
+   "typ": "foto",
+   "checks": {
+    "url_zrodla_obecny": true,
+    "licencja": true,
+    "status_slownik": true,
+    "wgs84_6": true,
+    "sezon_pora": true,
+    "kierunek_deg": true,
+    "azymut_odleglosc_w_uwagach": true
+   },
+   "pass": true
+  },
+  {
+   "id": "M50-033",
+   "typ": "dokument",
+   "checks": {
+    "url_zrodla_obecny": true,
+    "licencja": true,
+    "status_slownik": true,
+    "dokument_strona_identyfikowalny": true
    },
    "pass": true
   },
   {
    "id": "M50-047",
+   "typ": "dokument",
    "checks": {
-    "url_zrodla_obecny": {
-     "ok": true,
-     "note": ""
-    },
-    "licencja_obecna": {
-     "ok": true,
-     "note": ""
-    },
-    "status_w_slowniku": {
-     "ok": true,
-     "note": "VERIFIED"
-    },
-    "data_dostepu": {
-     "ok": true,
-     "note": ""
-    },
-    "dokument_strona_identyfikowalny": {
-     "ok": true,
-     "note": "karta producenta bez paginacji — oznaczenie sekcji: karta „STRUNOBETONOWE WIROWANE ŻERDZIE E"
-    }
+    "url_zrodla_obecny": true,
+    "licencja": true,
+    "status_slownik": true,
+    "dokument_strona_identyfikowalny": true
    },
    "pass": true
   }
  ],
- "wszystkie_przedmioty_zaliczone": true
+ "all_pass": true
 }

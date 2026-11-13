@@ -8,9 +8,11 @@ pliki niepobrane.
 ## Archiwum plików (zdjęcia + skany)
 
 - `mistral-p9-furniture-3-files.zip` — karta pobrania (artefakt) podlinkowana w PR.
-- SHA-256: `cfc9c258b02f15296e4f88ce10e260930f2ef9629b879297607d0f396820670b`
-- Zawartość: `files/frames/` (65 kadrów KartaView, wariant lth, 1280×720 ≤ 1600 px),
-  `files/docs/` (skany urzędowe ≤ 5 MB).
+- SHA-256: `1b4e23a359c9dbd00bd5c3bc5249d6ecf99018592febda6f82eb0bff2f4c4b1c`
+- Zawartość: `files/frames/` (66 kadrów KartaView, wariant lth, 1280×720 ≤ 1600 px),
+  `files/docs/` (skany urzędowe ≤ 5 MB + pochodne PNG odczytów: zawiadomienie Glasdon,
+  kompozyt stopek STO, siatki stron STO, rys. 7.2.1 Dz.U., skan s. 1 OPZ; oraz DOCX STO
+  v03/2020 z warstwą tekstową).
 - Celowo poza archiwum (tylko linki poniżej): Dz.U. 2019 poz. 2311 cz. 2 (41 MB),
   Dz.U. cz. 1 (39,7 MB), opis PAB Al. Tysiąclecia (11,7 MB).
 

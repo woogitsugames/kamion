@@ -46,7 +46,14 @@ Konwencje:
 - `VERIFIED_WIZJA` — obecność obiektu w kadrze potwierdzona analizą wizyjną modelu (OCR/VA).
 - `TO_VERIFY` — pozycja kandydacka (wartość z OCR indeksu wyszukiwarki albo kadr do
   potwierdzenia wizją) — jawnie oznaczona, nigdy nie podawana jako fakt.
+- `NOT_FOUND` — kadr kandydacki przeanalizowany wizyjnie, **obiektu nie ma w FOV** (w uwagach
+  przyczyna: geometria FOV — odchyłka azymutu od osi kamery — albo brak obiektu w kadrze);
+  typ może być potwierdzony w innym wierszu.
 - `UNVERIFIED` / `ESTIMATED` — brak źródła liczbowego; w uwagach metoda/oszacowanie.
+
+Wszystkie pozycje TO_VERIFY zostały domknięte w turze finalnej (2026-11-13, odczyty wizyjne
+20 wywołań: skany dokumentów + kadry kandydackie). Wynik statusów: 25 × VERIFIED,
+14 × VERIFIED_WIZJA, 10 × NOT_FOUND.
 
 ## Zdjęcia (zadanie 1) — metodologia
 
@@ -63,41 +70,48 @@ Konwencje:
   `mistral-p9-furniture-3-files.zip` (kadry + skany dokumentów ≤ 5 MB) — karta pobrania
   (artefakt) podlinkowana w PR i w `sources.md` (SHA-256).
 
-### Pokrycie typów (zdjęcia)
+### Pokrycie typów (zdjęcia) — stan po weryfikacji wizyjnej 2026-11-13
 | Typ | Kadry (id KartaView) | Status |
 |---|---|---|
-| ławka | 1326673717, 219382277 (przystanki BKM) | TO_VERIFY |
-| kosz | 993065622, 219382231 (przystanki BKM) | TO_VERIFY |
-| stojak rowerowy | najbliższe kadry do OSM amenity=bicycle_parking | TO_VERIFY |
-| osłona drzewa | 219382233 (23 m), 1326673433 (75 m) do natural=tree | TO_VERIFY |
-| bariera U-12/U-12b | 993066622 (panele — wizja), 993066706 | VERIFIED_WIZJA / TO_VERIFY |
-| słupek U-5a | 219381941 (wizja), 219382163 (pylon) | VERIFIED_WIZJA / TO_VERIFY |
+| ławka | 1326673717 (wizja: potwierdzona), 219382277 (brak w FOV) | VERIFIED_WIZJA / NOT_FOUND |
+| kosz | 993065622, 219382231 — oba kadry bez kosza w FOV | NOT_FOUND (typ bez potwierdzonego kadru) |
+| stojak rowerowy | 219382025, 993065846 (zastępczy za martwy 7119785) — bez stojaka w FOV | NOT_FOUND (typ bez potwierdzonego kadru) |
+| osłona drzewa | 219382233 (drzewa bez osłon), 1326673433 (brak w FOV) | NOT_FOUND (typ bez potwierdzonego kadru) |
+| bariera U-12/U-12b | 993066622 (panele — wizja), 993066706 (brak w FOV) | VERIFIED_WIZJA / NOT_FOUND |
+| słupek U-5a | 219381941 (wizja), 219382161 (poza FOV: odchyłka 123°) | VERIFIED_WIZJA / NOT_FOUND |
 | sygnalizator na maszcie | 5062571, 219381879, 993066622 | VERIFIED_WIZJA |
 | latarnia | 1326673445, 993040942, 219382073 | VERIFIED_WIZJA |
-| żerdź energetyczna | 1326673805 (wizja: słup betonowy/żerdź), 1326673801 | VERIFIED_WIZJA / TO_VERIFY |
+| żerdź energetyczna | 1326673805 (wizja: słup betonowy/żerdź), 1326673801 (brak w FOV) | VERIFIED_WIZJA / NOT_FOUND |
 | hydrant nadziemny | 5062587, 1326673829, 1326673477 | VERIFIED_WIZJA |
 | szafka gazowa/telekom | 219382225 (szafka ~35 m od kamery) | VERIFIED_WIZJA |
 
-Uczciwe zastrzeżenie: w klastrze Andersa-północ analizą wizyjną poprzednich tur **nie
-potwierdzono** ławek/koszy/stojaków w FOV (obiekty stoją poza kadrem) — dlatego te typy mają
-kadry kandydackie przy przystankach (wiaty BKM) ze statusem TO_VERIFY. Świadomie nie
-podano fałszywych potwierdzeń.
+Uczciwe zastrzeżenie: dla koszy, stojaków rowerowych i osłon drzew **żaden kadr
+kandydacki nie potwierdził obiektu w FOV** — sekwencje KartaView w kaflu nie patrzą na te
+obiekty (odchyłki azymutu od osi kamery 91–123°, patrz uwagi w manifeście), a ławki/bariery/
+słupki/żerdzie mają po jednym potwierdzonym kadrze zamiast dwóch. Mapillary niedostępne (brak
+tokenu), Panoramax w kaflu nie pokazuje tych obiektów z jezdni. Wymiarowo typy bez kadrów są
+udokumentowane wierszami dokumentowymi: stojaki (M50-025/026, OPZ ZMK — VERIFIED), kosze i
+ławki (M50-044…046, BIP Glasdon — VERIFIED). Świadomie nie podano fałszywych potwierdzeń.
 
 ## Dokumenty (zadania 2–5) — kluczowe fakty
 
 ### OPZ ZMK Białystok DZ.26.2.8.2026.JO — stojaki rowerowe (M50-025/026)
-Skan 1-stronicowy (PDF 331 KB, w archiwum). Wymiary wg OCR indeksu wyszukiwarki (status
-TO_VERIFY do czasu odczytu wizyjnego s. 1): stojak U 80x80, stal nierdzewna, wys. całk.
-1,10 m (0,80 m nad gruntem), szer. 0,80 m, rura 48,3×2 mm, 2 stanowiska, wbetonowanie,
-54 szt. (Barszczańska/Klepacka/Fabryczna).
+Skan 1-stronicowy (PDF 331 KB, w archiwum). **Odczyt wizyjny skanu s. 1 (2026-11-13) —
+VERIFIED:** stojak **U 80x80 ze stali nierdzewnej**, wys. całk. **110 cm w wersji do
+zabetonowania (80 cm nad gruntem)**, szer. **80 cm**, rura **48,3 mm**, grubość ścianki
+**2 mm**, **2 stanowiska** (parkowanie dwustronne), montaż: **wbetonowanie**, **54 szt.**
+(lokalizacje: Barszczańska/Klepacka/Fabryczna); nagłówek strony: „Załącznik nr 1".
 
 ### STO ZDM Warszawa TOS_1 — słupy oświetleniowe (M50-027…030)
 Wersja obowiązująca v09/2024 to skan 12 stron (bez warstwy tekstowej; wydruk „Strona X z 12";
-plik w archiwum — numery stron skanu do odczytu wizyjnego). Wersja v03/2020 (DOCX, tekst —
-URL w `sources.md`) potwierdza wymagania: stal obustronnie ocynkowana, przekrój okrągły,
-ścianka min. 4 mm; słupy aluminiowe anodowane z warstwą elastomeru; „antyplakat" do 2,0 m
-przy przystankach/przejściach; fundamenty prefabrykowane; uchwyt Zhaga Ø wewn. 60–72 mm,
-pochylenie ±10°. **STO nie specyfikuje wysokości słupów (8/10 m) — tylko wymagania
+plik w archiwum). **Próba odczytu numeracji stron skanu (2026-11-13, wizja — kompozyt stopek
+12 stron + strona 7 osobno): stopki skanu nie zawierają numerów „Strona X z 12", a str. 7
+bez sekcji o słupach — numeracja skanu NIECZYTELNA/NIEOBECNA.** Dlatego wymogi cytowane są z
+warstwy tekstowej DOCX v03/2020 (sekcja „Wymagania stawiane słupom i masztom
+oświetleniowym", akapity 91–100 pliku) i potwierdza: stal obustronnie ocynkowana, przekrój
+okrągły, ścianka min. 4 mm; słupy aluminiowe anodowane z warstwą elastomeru; „antyplakat"
+do 2,0 m przy przystankach/przejściach; fundamenty prefabrykowane; uchwyt Zhaga Ø wewn.
+60–72 mm, pochylenie ±10°. **STO nie specyfikuje wysokości słupów (8/10 m) — tylko wymagania
 materiałowo-konstrukcyjne.**
 
 ### Dz.U. 2019 poz. 2311 — sygnalizatory i urządzenia (M50-031…040)
@@ -122,20 +136,32 @@ Fakty (VERIFIED, z warstwy tekstowej):
   blokujące: **0,6–0,8 m** (s. 847).
 
 Rys. 7.2.1 (s. 756) złożony z 3 pasów rastra (2129×422 każdy) do pojedynczego PNG
-(`files/docs/du_p756_rys721.png`) — odczyt wizyjny wymiarów z rysunku: w toku (M50-036,
-TO_VERIFY). Plik Dz.U. cz. 2 ma 41 MB — **nie jest w archiwum**, tylko link w `sources.md`.
+(`files/docs/du_p756_rys721.png`) — **odczyt wizyjny 2026-11-13 (M50-039, VERIFIED)**:
+wysokości montażu nad jezdnią 4,5–5,5 m — zgodne z warstwą tekstową (s. 754); wartości
+skrajni odczytane z rysunku (pion. 2,2–2,7 m, poziom. 0,5–2,0 m) pozostają **UNVERIFIED**
+(liczby występują wyłącznie w grafice, nie w tekście — nie zgadujemy). Plik Dz.U. cz. 2
+ma 41 MB — **nie jest w archiwum**, tylko link w `sources.md`.
 
-### Glasdon Europe AB — Białystok 2019 (M50-041…043)
+### Glasdon Europe AB — Białystok 2019 (M50-041…046)
 Zamówienie **DGK-IV.271.58.2019** „Dostawa wandaloodpornych ławek i koszy na śmieci"
 (UM Białystok, Departament Gospodarki Komunalnej): wykonawca **Glasdon Europe AB** (August
 Barks Gata 25, SE-421 32 Västra Frölunda, Szwecja), cena brutto **17 146,20 zł**, jedyna
 oferta (art. 4 pkt 8 PZP). Dostawa: **4 ławki + 3 kosze**, montaż na zieleńcu przy pomniku
 ks. Popiełuszki (aktualizacja miejska 30.07.2019); wcześniejsze zamówienie 2018:
-10 ławek + 5 koszy na Skwerze Armii Krajowej (DGK-IV.271.76.2018). Modele ławki/kosza nie
-są nazwane w tekście BIP — zał. nr 1 („przykładowy wygląd") to skan-obraz; identyfikacja
-modelu (porównanie z kartami Glasdon, np. rodzina Nexus) i wymiary z karty produktu —
-**tylko fakty, bez pobierania plików** — oznaczone TO_VERIFY do porównania wizyjnego.
-Zawiadomienie o wyborze (skan, 240 KB) w archiwum.
+10 ławek + 5 koszy na Skwerze Armii Krajowej (DGK-IV.271.76.2018).
+
+**Odczyty wizyjne 2026-11-13 (VERIFIED):**
+- **Zawiadomienie o wyborze** (skan 240 KB w archiwum, wyekstrahowany z PDF obj. 23):
+  wykonawca **Glasdon Europe AB**, cena **17 146,20 zł brutto**, **Białystok, 26.06.2019**,
+  nr **DGK-IV.271.58.2019**, przedmiot „Dostawa wandaloodpornych ławek i koszy na śmieci"
+  (cena przekracza kwotę przeznaczoną 17 145,40 zł — tryb poza konkurencyjny).
+- **Zał. nr 1 „Przykładowy wygląd"** (skan-obraz): ławka — proste siedzisko i oparcie z
+  listew drewnopodobnych (wg BIP: materiał z recyklingu), nogi/podparcia boczne **odlewane
+  stalowe czarne z elementami ozdobnymi**; kosz — **walec metalowy czarny**, okrągły otwór
+  wrzutowy, mocowany do podłoża; na koszu emblematy (orzeł biały na czerwonym polu + herb
+  żółto-czerwony). **Brak oznaczeń modelu i wymiarów na wzorze** — identyfikacja konkretnego
+  modelu Glasdon **UNVERIFIED** (nie zgadujemy; karty produktów bez pobierania plików nie
+  pozwoliły na jednoznaczne dopasowanie). Zdjęcia z załącznika — referencja, nie tekstura.
 
 ### Latarnie — Białystok (M50-031/032, kolumna latarnia: M50-027…030)
 - Projekt „Rozbudowa Al. Tysiąclecia PP od ul. Wileńskiej do terenu kolejowego przy ul.
