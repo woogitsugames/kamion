@@ -1,0 +1,11 @@
+{
+  "schema": "kamion.gate3_cameras.v1",
+  "region": "bialystok-industrial-c",
+  "frame": "local E,N,U (E,N = EPSG:2180 minus region origin; U absolute EVRF2007)",
+  "cameras": [
+    {"id": "edge-corner-east-batorego", "type": "persp", "kind": "driver_eye", "pos": [993.3, -890.4, 142.2], "look_at": [1015.2, -892.5, 140.5], "fov_deg": 60.0,
+     "note": "ADR 0169: eye 2.5 m, 22 m before the corner of the Batorego / service road closures at the east edge"},
+    {"id": "edge-corner-south-kombatantow", "type": "persp", "kind": "driver_eye", "pos": [206.3, -992.9, 138.1], "look_at": [212.5, -1014.0, 136.4], "fov_deg": 60.0,
+     "note": "ADR 0169: eye 2.5 m, 22 m before the corner of the Kombatantow / service road closures at the south edge"}
+  ]
+}

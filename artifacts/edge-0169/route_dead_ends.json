@@ -1,0 +1,110 @@
+{
+ "nodes": 550,
+ "edges": 646,
+ "main_scc_nodes": 411,
+ "off_reach_nodes": 113,
+ "entry_only_nodes": 22,
+ "trap_nodes": 26,
+ "trap_nodes_on_boundary": 6,
+ "trap_edges": 30,
+ "trap_edges_length_m": 2729.8,
+ "trap_edges_two_way": 1,
+ "trap_edges_flagged_off_reach": 1,
+ "trap_by_street": {
+  "Generała Władysława Andersa": [
+   8,
+   1085.4
+  ],
+  "(unnamed)": [
+   11,
+   838.8
+  ],
+  "Generała Stanisława Maczka": [
+   6,
+   494.2
+  ],
+  "Aleja Tysiąclecia Państwa Polskiego": [
+   5,
+   311.4
+  ]
+ },
+ "points_of_no_return": [
+  {
+   "street": "Aleja Tysiąclecia Państwa Polskiego",
+   "e": -821.7,
+   "n": 861.1
+  },
+  {
+   "street": "",
+   "e": -574.5,
+   "n": 63.5
+  },
+  {
+   "street": "",
+   "e": -569.2,
+   "n": 92.4
+  },
+  {
+   "street": "Generała Władysława Andersa",
+   "e": -340.0,
+   "n": -148.8
+  },
+  {
+   "street": "Aleja Tysiąclecia Państwa Polskiego",
+   "e": -298.5,
+   "n": -892.8
+  },
+  {
+   "street": "",
+   "e": -238.3,
+   "n": -994.4
+  },
+  {
+   "street": "Generała Władysława Andersa",
+   "e": 297.6,
+   "n": -583.7
+  },
+  {
+   "street": "",
+   "e": 557.2,
+   "n": -739.8
+  },
+  {
+   "street": "",
+   "e": 1014.6,
+   "n": -892.7
+  }
+ ],
+ "trap_edge_index": [
+  49,
+  87,
+  91,
+  93,
+  107,
+  125,
+  158,
+  167,
+  216,
+  240,
+  249,
+  268,
+  275,
+  282,
+  283,
+  291,
+  336,
+  432,
+  437,
+  438,
+  493,
+  495,
+  510,
+  514,
+  594,
+  595,
+  639,
+  641,
+  642,
+  643
+ ]
+}

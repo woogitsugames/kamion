@@ -2,8 +2,8 @@
 
 Unit tests run on synthetic geometry (no raw data). The region tests audit the data committed in the
 repo via `roads.barrier_audit` (guardrail_runs of the generated streetscape_qa.json once the leader
-regenerates the world; until then a reconstruction from roads.graph.json + overrides.yaml) and are
-xfail with the current numbers - the leader regenerates the world with the fix and removes the xfail.
+regenerates the world; until then a reconstruction from roads.graph.json + overrides.yaml). No xfail left
+(ADR 0159 free ends, ADR 0169 region-edge closures moved to the EditMode test of the importer).
 """
 
 from __future__ import annotations
@@ -102,13 +102,8 @@ def test_no_free_deck_ends(audit):
     assert audit["deck_run_ends_free"] == 0, audit["free_ends"][:10]
 
 
-@pytest.mark.xfail(strict=False,
-                    reason="M29: nakładające się rzędy z danych repo - aktualnie 1 para zapór na edge-west "
-                           "wg kryterium <0,5 m (Maczka w257367422 x trunk_link w606396469, odstęp 0,20 m, "
-                           "wspólny odcinek 7,0 m przy E -998,5 N 58,5) + 1 para w paśmie 0,5-1,0 m (0,58 m). "
-                           "Integracja r5: zapory buduje C# WorldEdgeBuilder.ReadExits, którego PR #31 NIE zmienia "
-                           "(_drop_doubled_rows działa tylko na biegach W-beam) - po regeneracji para zapór "
-                           "zostanie; osobne zadanie.")
+# ADR 0169: xfail removed. The pair it documented (Maczka w257367422 x trunk_link w606396469, 0.20 m apart at
+# E -998.5 N 58.5) were region-edge closures recomputed here by a Python copy of WorldEdgeBuilder.ReadExits; the
+# importer is their only source now and merges them (EditMode WorldEdgeClosureDuplicateTests). Rail rows: 0.
 def test_no_overlapping_barrier_rows(audit):
-    assert audit["rail_row_overlaps"] == 0 and audit["closure_overlaps_lt_0_5m"] == 0, (
-        audit["rail_overlaps"], audit["closure_overlaps"])
+    assert audit["rail_row_overlaps"] == 0, audit["rail_overlaps"]
