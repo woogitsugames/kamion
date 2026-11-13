@@ -34,3 +34,5 @@ Zapisano before/Low-clear; każda kamera w stats.txt. Oględziny pozostają wyma
 Zapisano before/Low-overcast; każda kamera w stats.txt. Oględziny pozostają wymagane.
 
 Zapisano before/High-overcast; każda kamera w stats.txt. Oględziny pozostają wymagane.
+
+Baseline90kamer×4warunki zapisany przed zmianą produktu;458natywnych materiałów zahashowanych. Podłączono szkice do plantings/vegetation przez2addytywne hooki stage.py. Importer obsługuje garden_canopy_width wyłącznie za jawnym polem i tierhigh; nie zmienia shaderów. Dodano8przypadków EditMode, w tym zachowanie compactTRS. Sprawdzenie sztucznej posesji na prawdziwych modułach przechodzi:2segmenty,33.2m,420trisLow,bramaotwarta,deterministyczność.

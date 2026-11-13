@@ -247,6 +247,8 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
         return float(np.asarray(zsurf(np.array([q[0]]), np.array([q[1]]))).ravel()[0])
     plots = PLT.build(w.buf, plot_plan, zplot, FU.SurfaceTop([p_ for p_ in w.buf.parts if p_.layer == "road"]), rep,
                       items=pl.items)       # ADR 0124: the lamp poles of the house streets carry the overhead line
+    PT.front_gardens(w.buf, plot_plan, zplot, rep, half=float(w.region["bbox"]["width_m"]) / 2)
+    log("garden fronts", rep["garden_fronts"])
     log("plots", {k: v for k, v in rep["plots"].items() if k != "list"})
 
     # vegetation
@@ -278,6 +280,7 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
         kd = cKDTree(np.array([[t_["e"], t_["n"]] for t_ in trees]))
         dd, _ = kd.query(np.array([[t_["e"], t_["n"]] for t_ in ptrees]))
         ptrees = [t_ for t_, d_ in zip(ptrees, dd) if d_ >= 2.5]
+    ptrees = VG.garden_canopies(ptrees, plot_plan, rep)
     rep["plots"]["inst_trees_kept"] = len(ptrees)
     for t_ in ptrees:
         vrep["trees"][t_["p"]] = vrep["trees"].get(t_["p"], 0) + 1

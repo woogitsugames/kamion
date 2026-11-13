@@ -6,8 +6,8 @@ from shapely.geometry import Polygon
 root=Path(__file__).resolve().parents[2];sys.path.insert(0,str(root/'tools/worldgen'))
 from streetscape import plots as PLT
 from roads.meshing import MeshBuf
-from garden_fronts_draft import front_gardens
-from garden_canopies_draft import garden_canopies
+from streetscape.plantings import front_gardens
+from streetscape.vegetation import garden_canopies
 
 def fixture():
  key=next(f'qa-{i}' for i in range(1000) if PLT.hfloat(f'qa-{i}','hedge')>.60 and PLT.hfloat(f'qa-{i}','adr0154-front')<.70)
