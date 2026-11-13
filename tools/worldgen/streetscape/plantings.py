@@ -644,7 +644,8 @@ def thuja_hedge(kit, a, b, n, zf, h, key, thick=1.0, low=False, raise_ends=(0.0,
     row_m = PLT.PK.ROW_H_M["thuja"]
     ulo, uhi = 0.02, PLT.PK.THUJA_GREEN_U - 0.03             # the live stretch of the row
     ph0, ph1 = PLT.hfloat(key, "tp0") * 6.2832, PLT.hfloat(key, "tp1") * 6.2832
-    pts = [(thick / 2 * kw, h * kh) for kw, kh, *_ in prof] + [(0.0, h)]
+    hb = h - THUJA_TIP_LOW_M[0]                              # the body under the tip cards: its twig row is drawn ~1 : 1
+    pts = [(thick / 2 * kw, hb * kh) for kw, kh, *_ in prof] + [(0.0, hb)]
     vs, vv, dd = [0.04], 0.04, 1
     for i in range(1, len(pts)):
         arc = math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1])

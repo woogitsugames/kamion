@@ -80,34 +80,36 @@ def test_front_plan_is_the_g7_quota():
 def test_thuja_wall_has_the_g7_size_and_stays_in_the_live_row():
     """G7 # 19: 2.0-2.5 m high, 0.8-1.2 m wide, behind the fence; Low is the same wall with fewer triangles."""
     a, b, n = np.array([0.0, 0.0]), np.array([24.0, 0.0]), np.array([0.0, -1.0])
-    out = {}
+    out, body = {}, {}
     for low in (False, True):
         kit = PLT.Kit()
         assert PT.thuja_hedge(kit, a, b, n, lambda q: 100.0, 2.3, "h", thick=1.0, low=low) == pytest.approx(24.0)
-        out[low] = kit.out()
+        out[low], body[low] = kit.out(), len(kit.V[0])                          # the wall body, then the tip cards
     V, UV, T, C = out[False]
     inner = (V[:, 0] > 2.0) & (V[:, 0] < 22.0)
-    assert 2.3 - 0.25 <= V[inner][:, 2].max() - 100.0 <= 2.3 + 0.25                 # wanders +-0.25 m about the nominal height
+    # ADR 0170: the body's crest stands 0.5-0.6 m under the nominal height, the plants' tip cards rise to it (+ <= 0.45 m)
+    assert 2.3 - 0.25 <= V[inner][:, 2].max() - 100.0 <= 2.3 + 0.45
     assert 0.8 <= np.ptp(V[inner][:, 1]) <= 1.25
     assert (C[:, 3] > 0.5).all()                                                 # foliage vertices (normal + occlusion)
     occ = np.linalg.norm(C[:, :3] * 2 - 1, axis=1)
     assert occ[V[:, 2] < 100.1].max() < 0.5 < occ[V[:, 2] > 102.0].min()         # dark foot, lit shoulders
     v0, v1 = PK.row("thuja")
-    assert UV[:, 1].min() >= v0 and UV[:, 1].max() <= v1
-    assert UV[:, 0].min() >= 0.0 and UV[:, 0].max() <= PK.THUJA_GREEN_U          # never the browned stretch of the row
+    ub = UV[:body[False]]
+    assert ub[:, 1].min() >= v0 and ub[:, 1].max() <= v1
+    assert ub[:, 0].min() >= 0.0 and ub[:, 0].max() <= PK.THUJA_GREEN_U          # never the browned stretch of the row
     # drawn 1 : 1 on High: v advances by the arc length of the cross-section (1 m of twigs per row)
     side = np.argsort(V[:5, 2])
     dz = np.hypot(np.diff(V[:5][side][:, 2]), np.diff(V[:5][side][:, 1]))
     dvv = np.abs(np.diff(UV[:5][side][:, 1])) / (v1 - v0)
     assert np.allclose(dvv[:3], np.minimum(dz[:3], 0.9), atol=0.12)
-    # review s17 0170 P2: a row of plants, not a ruled box - on High the top drops 0.3-0.55 m between two plants
-    crest = V[inner & (np.abs(V[:, 1]) < 0.06)]
-    crest = crest[np.unique(np.round(crest[:, 0], 3), return_index=True)[1]]      # both sides share the crest: one per station
-    zc = crest[:, 2] - 100.0
-    dips = sum(1 for i in range(1, len(zc) - 1) if zc[i] < zc[i - 1] - 0.2 and zc[i] < zc[i + 1] - 0.2)
-    assert 16 <= dips <= 24                                                       # one gap per plant, plants ~1 m apart
+    # review s17 0170 P2: a row of plants, not a ruled box - one tip card per plant (~1 m) on High too. Build 4 drew the
+    # plants as stations (61 triangles / m) and broke the stretch_04 2 M frame cap: High <= 17 triangles per metre
+    kit = PLT.Kit()
+    PT.thuja_hedge(kit, a, b, n, lambda q: 100.0, 2.3, "h", thick=1.0)
+    assert 20 <= len(kit.V) - 1 <= 26 and all(len(v) == 4 for v in kit.V[1:])       # body + a quad per plant
+    assert len(T) <= 17.0 * 24
     # Low (ADR 0132 budget; was <= 4.6 / m): the sparse wall + one tip card per plant, <= 8 triangles per metre
-    assert len(out[True][2]) <= 0.2 * len(T) and len(out[True][2]) <= 8.0 * 24
+    assert len(out[True][2]) <= 0.6 * len(T) and len(out[True][2]) <= 8.0 * 24
     assert out[True][0][:, 2].max() == pytest.approx(V[:, 2].max(), abs=0.35)
     # Low: the twig row is no longer stretched ~2.8x over the wall's side (four rows, each <= 1.3 m of wall per row)
     Vl, UVl = out[True][0], out[True][1]
@@ -123,7 +125,7 @@ def test_corner_plants_are_taller_but_never_above_three_metres():
     PT.thuja_hedge(kit, a, b, n, lambda q: 0.0, 2.2, "c", thick=1.0, raise_ends=(0.8, 0.0))
     V = kit.out()[0]
     assert 2.6 < V[V[:, 0] < 1.9][:, 2].max() <= 3.0 + 0.15
-    assert V[V[:, 0] > 8.0][:, 2].max() < 2.2 + 0.2
+    assert V[V[:, 0] > 8.0][:, 2].max() < 2.2 + 0.45                              # the plants' tip cards (ADR 0170)
 
 
 def test_front_hedge_keeps_gate_free_stays_in_the_plot_and_is_on_low_too():
