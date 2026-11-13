@@ -4,6 +4,7 @@ must recognise the route). Everything is data in Data/Regions/<id>/overrides.yam
   kind: gate3_sign    one vertical sign assembly = ONE prototype with ONE material (post, plates and backs share a small
                       texture: one draw per sign on every tier). `parts` are listed top first:
                         {face: A-30, plate: "text"}       warning triangle (upright) + yellow plate with a short text
+                        {face: A-7}                       give way (triangle point down), ADR 0160
                         {face: U-4a}                      red / white chevron board on a traffic-island nose
                         {face: D-3} / {face: D-6} / {face: D-1}
                         {face: F-10}                      lane directions before a junction (straight | right), two posts
@@ -48,6 +49,9 @@ FLUO = (238, 208, 0)          # yellow of warning signs / T plates
 # and the street-name plate 1.0 x 0.25 m are WORKING_VALUE read off the photos against the Ø60 mm post.
 FACE_DIM = {
     "A-30": ("tri_up", S.SIGN_SIZE["triangle"], S.SIGN_SIZE["triangle"] * math.sqrt(3) / 2),
+    # ADR 0160: give-way where a slip merges without an acceleration lane (no OSM give_way node, so the junction rule
+    # does not see it). Same medium triangle, point down.
+    "A-7": ("tri_down", S.SIGN_SIZE["triangle"], S.SIGN_SIZE["triangle"] * math.sqrt(3) / 2),
     "D-1": ("diamond", S.SIGN_SIZE["diamond"], S.SIGN_SIZE["diamond"]),
     "D-3": ("rect", 0.60, 0.60),
     "D-6": ("rect", 0.60, 0.60),
@@ -93,6 +97,13 @@ def draw_face(code, w_px, h_px, text=None):
         d.polygon(inner, fill=FLUO)
         d.rounded_rectangle([cx - 0.035 * w_px, 0.40 * h_px, cx + 0.035 * w_px, 0.74 * h_px], radius=3, fill=SG.BLACK)
         d.ellipse([cx - 0.045 * w_px, 0.79 * h_px, cx + 0.045 * w_px, 0.79 * h_px + 0.09 * w_px], fill=SG.BLACK)
+        return im
+    if code == "A-7":                                    # give way: yellow triangle point down, red border, no symbol
+        im = Image.new("RGB", (w_px, h_px), SG.RED)
+        d = ImageDraw.Draw(im)
+        b = 0.105 * w_px
+        cx = w_px / 2
+        d.polygon([(b * math.sqrt(3), b), (w_px - b * math.sqrt(3), b), (cx, h_px - 2 * b)], fill=FLUO)
         return im
     if code == "plate":                                  # T plate under a warning sign: black text on yellow
         im = Image.new("RGB", (w_px, h_px), SG.BLACK)
@@ -199,6 +210,8 @@ def _outline(shape, w, h):
     = facing +y (same rule as props.board)."""
     if shape == "tri_up":
         return [(-w / 2, -h / 2), (0.0, h / 2), (w / 2, -h / 2)]
+    if shape == "tri_down":
+        return [(-w / 2, h / 2), (w / 2, h / 2), (0.0, -h / 2)]
     if shape == "diamond":
         return [(-w / 2, 0.0), (0.0, h / 2), (w / 2, 0.0), (0.0, -h / 2)]
     return [(-w / 2, -h / 2), (-w / 2, h / 2), (w / 2, h / 2), (w / 2, -h / 2)]

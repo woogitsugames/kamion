@@ -405,6 +405,30 @@ overrides:
     reason: Same sign repeated on the median side (both photos). ADR 0125.
     confidence: low
     verify: sign code and plate on site
+  - id: andersa-slip-merge-a7
+    kind: gate3_sign
+    along: {osm_way: 268473388, before_node: n1847044938, distance_m: 11.0, side: R, offset_m: 2.0}
+    parts: [{face: A-7}]
+    mapillary: ["1528935774382039"]
+    reason: >-
+      ADR 0160 (REVIEW s16 G3-B P1): give-way triangle on the right verge where the slip w268473388 merges into
+      Andersa; OSM has no give_way node there, so the junction rule does not place it. Read off strudel 2024 with
+      the ADR 0160 pose (slip right lane): triangle 0.033 of the width at x 0.61 -> 23.6 m at 7.4 deg right of the
+      axis -> 11 m before the merge node, ~2.6 m behind the kerb (offset 2.0 m, WORKING_VALUE).
+    confidence: low
+    verify: sign on site, distance to the merge
+  - id: andersa-link-median-d1
+    kind: gate3_sign
+    along: {osm_way: 173956083, before_node: n2629251371, distance_m: 71.6, side: L, offset_m: 0.6}
+    parts: [{face: D-1}]
+    mapillary: ["4312632558767412"]
+    reason: >-
+      ADR 0160 (REVIEW s16 G3-B P1): main-road diamond on the median kerb of the trunk_link under the Andersa
+      viaduct (richlv 2020; the same post carries an A-7 turned to another flow, not modelled). Post foot x 0.295 /
+      y 0.828 of the rectified frame with the ADR 0160 probe pose (eye 0.9, heading tangent - 63) -> 23.9 m along
+      the link from node 1852129066; the post stands ~0.5 m behind the median kerb (offset 0.6 m). WORKING_VALUE.
+    confidence: low
+    verify: sign on site
   - id: andersa-elewatorska-island-u4a
     kind: gate3_sign
     at_en: [-219.9, -234.75]

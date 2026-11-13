@@ -2229,15 +2229,15 @@
         "computed_altitude": 4.6809502989054
       },
       "rectified_focal": 0.86200933731979,
-      "heading_grid_deg": 117.72564101278026,
+      "heading_grid_deg": 120.36564101278026,
       "heading_true_deg": 121.0522092388,
       "route_distance_m": 33.732,
       "heading_original_deg": 128.63209372032,
       "segment_station_m": 215.302,
       "horizon_y_fraction": 0.6599999995727285,
       "pose_status": "WORKING_VALUE",
-      "pose_confidence": "C",
-      "pose_reason": "J2: lateral offset unresolved; excluded pending calibration",
+      "pose_confidence": "B",
+      "pose_reason": "ADR 0160 (s16): probe sbs-p160-15289357-s16r3; anchors: hatched gore on the left (x 0-0.35, photo 0-0.45), single slip lane curving right, signal head and lane boards ahead",
       "photometric_use": false,
       "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict",
       "photo_vs_data_age": "data epoch UNVERIFIED",
@@ -2245,11 +2245,15 @@
       "authored_overrides": {
         "horizon_y_fraction": 0.66,
         "pose_status": "WORKING_VALUE",
-        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose.",
-        "pose_confidence": "C",
-        "pose_reason": "J2: lateral offset unresolved; excluded pending calibration",
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. ADR 0160: car in the slip w268473388 (3 m right of its axis, 16 m past vertex -393.8,-141.3), heading = lane tangent 120.4, eye 1.3; the old pose was on the Andersa side of the gore. WORKING_VALUE, not surveyed.",
+        "pose_confidence": "B",
+        "pose_reason": "ADR 0160 (s16): probe sbs-p160-15289357-s16r3; anchors: hatched gore on the left (x 0-0.35, photo 0-0.45), single slip lane curving right, signal head and lane boards ahead",
         "photometric_use": false,
-        "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
+        "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict",
+        "east_delta_m": -2.2995,
+        "north_delta_m": -4.1503,
+        "eye_height_m": 1.3,
+        "heading_delta_deg": 2.64
       }
     },
     {
@@ -2737,15 +2741,15 @@
         "computed_altitude": 2.4788191290572
       },
       "rectified_focal": 0.5,
-      "heading_grid_deg": 268.1419070934887,
+      "heading_grid_deg": 249.78890709348872,
       "heading_true_deg": 271.4673859536,
       "route_distance_m": 5.411,
       "heading_original_deg": 317.14399912502,
       "segment_station_m": 399.514,
-      "horizon_y_fraction": 0.736125531589907,
+      "horizon_y_fraction": 0.73,
       "pose_status": "WORKING_VALUE",
-      "pose_confidence": "C",
-      "pose_reason": "J2: lateral offset unresolved; excluded pending calibration",
+      "pose_confidence": "B",
+      "pose_reason": "ADR 0160 (s16): probe sbs-p160-43126325-a; anchors: viaduct deck with noise wall from (0,0.45) to (0.97,0.66) as on the photo, median kerb, D-1 post at x 0.30",
       "photometric_use": false,
       "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict",
       "photo_vs_data_age": "data epoch UNVERIFIED",
@@ -2753,14 +2757,16 @@
       "authored_overrides": {
         "horizon_y_fraction": 0.7,
         "pose_status": "WORKING_VALUE",
-        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE.",
-        "east_delta_m": -0.7042,
-        "north_delta_m": -8.5967,
-        "eye_height_m": 1.7,
-        "pose_confidence": "C",
-        "pose_reason": "J2: lateral offset unresolved; excluded pending calibration",
+        "note": "Manual vanishing-point/horizon estimate from contact sheet, fraction from top; +/-0.04. FOV, eye height, lens distortion and roll need photo/render calibration. Not a verified pose. R1: use original GPS rather than SfM-translated coordinates; representative original/computed pose probes in artifacts/sbs-gate3/probe-sheet-*.jpg. Keep SfM optical heading: original compass is travel bearing and differs for oblique richlv views. Position uncertainty remains WORKING_VALUE. ADR 0160: richlv low camera in the trunk_link w173956083 (1.5 m right of axis, 23 m from node 1852129066), heading tangent - 63 (oblique view as ADR 0143), eye 0.9, rectified horizon 0.73. WORKING_VALUE, not surveyed.",
+        "east_delta_m": 1.0582,
+        "north_delta_m": -6.3019,
+        "eye_height_m": 0.9,
+        "pose_confidence": "B",
+        "pose_reason": "ADR 0160 (s16): probe sbs-p160-43126325-a; anchors: viaduct deck with noise wall from (0,0.45) to (0.97,0.66) as on the photo, median kerb, D-1 post at x 0.30",
         "photometric_use": false,
-        "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict"
+        "photometric_reason": "Vehicle hood/semantic masks not yet validated; no aggregate photometric verdict",
+        "heading_delta_deg": -18.353,
+        "rectified_horizon_y_fraction": 0.73
       }
     },
     {
