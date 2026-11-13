@@ -17,7 +17,7 @@ Zawartość: [Zakres i bbox](#zakres-i-bbox) · [Metoda i źródła](#metoda-i-�
 
 Transformacja EPSG:2180 zaimplementowana w `tools/epsg2180.py` (TM, GRS80, k0=0,9993, λ0=19°E) i skalibrowana na istniejący kafel `bialystok-industrial-c` (zgodność ~1 m).
 
-**Obiekty poza kaflem, świadomie w katalogu** (bramka D51 działa z jezdni, nie od linii działki): browar Dojlidy (~650 m na wschód), BIAFORM z kominami (~240–1100 m), BIAWAR (~560 m), BISON (~210 m), Odlewnia, kościół NSM (~900 m), pałace Hasbacha i Lubomirskich (~600 m). Każdy taki wpis ma jawną flagę `poza_kaflem` w `manifest.csv` i `data/landmarks.json`.
+Flaga `poza_kaflem` liczona jest względem **kafla referencyjnego `bialystok-dojlidy`** — EPSG:2180 **[779019, 589055, 781067, 591103]** (`region.yaml`, gałąź `region-0166`; patrz `docs/reports/REVIEW-2026-11-13-s17-mistral-r8-p11-p12.md` §1) — a nie względem bbox badawczego powyżej (bbox służy zbieraniu danych z buforem ~300 m). **Obiekty poza kaflem referencyjnym, świadomie w katalogu** (bramka D51 działa z jezdni, nie od linii działki): browar Dojlidy (~650 m na wschód), BIAFORM z kominami (~240–1100 m), BIAWAR (~560 m), kościół NSM (~900 m), pałace Hasbacha i Lubomirskich (~600 m), zachodni skraj lotniska (hangar Aeroklubu ~360 m na zachód od krawędzi, płyta postojowa, hala modelarska, zrzutowisko), hale Hake 9/11 oraz północny skraj osiedla (dom zakonny, bloki, hotelik, maszty). **BISON i Odlewnia leżą w kaflu referencyjnym** (~0,2 km od wschodniej krawędzi). Każdy wpis ma jawną flagę `poza_kaflem` w `data/landmarks.json`, `data/landmark-colors.json` i w uwagach `manifest.csv`.
 
 ## Metoda i źródła
 
@@ -32,17 +32,17 @@ Transformacja EPSG:2180 zaimplementowana w `tools/epsg2180.py` (TM, GRS80, k0=0,
 
 ## 1. Landmarki (39)
 
-Pełne dane (WSG84, wysokość + źródło, kolor/materiał, droga i odległość widoczności, URL, licencja, uwagi) — w `manifest.csv` (P12-001…039). Poniżej skrót; „poza kaflem" = obiekt poza bbox, widoczny z dróg kafla.
+Pełne dane (WSG84, wysokość + źródło, kolor/materiał, droga i odległość widoczności, URL, licencja, uwagi) — w `manifest.csv` (P12-001…039). Poniżej skrót; „poza kaflem" = obiekt poza kaflem referencyjnym bialystok-dojlidy [779019, 589055, 781067, 591103], widoczny z dróg kafla.
 
 | ID | Obiekt | WGS84 (lat, lon) | h [m] (źródło) | Dach (ESTIMATED z ortofoto) | Widoczny z drogi (odl.) |
 |---|---|---|---|---|---|
 | P12-001 | Pas startowy asfaltowy 09R/27L lotniska Krywlany (1350×30 m) | 53.100906, 23.173246 | 0 (nawierzchnia; ele. ~153 m n.p.m. — Wikipedia) | asfaltobeton | Dywizjonu 303 (150 m) |
 | P12-002 | Pas startowy trawiasty 09L/27R (860×160 m) | 53.102241, 23.171011 | 0 (trawa) | trawa | Dywizjonu 303 (145 m) |
-| P12-003 | Płyta postojowa (apron) — cz. trawiasta | 53.104152, 23.164840 | 0 | trawa | Krywlany (55 m) |
-| P12-004 | Hangar Aeroklubu Białostockiego | 53.104534, 23.164520 | UNVERIFIED | ocynk | Krywlany (40 m) |
+| P12-003 | Płyta postojowa (apron) — cz. trawiasta (poza kaflem) | 53.104152, 23.164840 | 0 | trawa | Krywlany (55 m) |
+| P12-004 | Hangar Aeroklubu Białostockiego (poza kaflem) | 53.104534, 23.164520 | UNVERIFIED | ocynk | Krywlany (40 m) |
 | P12-005 | Silo/wieża przy płycie | 53.104809, 23.170474 | UNVERIFIED | jasna/biała | Krywlany (60 m) |
-| P12-006 | Hala Sekcji Modelarskiej Aeroklubu | 53.104922, 23.165101 | 3,4 (LoD1) | jasna/biała | Krywlany (45 m) |
-| P12-007 | Zrzutowisko (13 994 m²) | 53.103317, 23.166141 | 0 (trawa) | trawa | Krywlany (160 m) |
+| P12-006 | Hala Sekcji Modelarskiej Aeroklubu (poza kaflem) | 53.104922, 23.165101 | 3,4 (LoD1) | jasna/biała | Krywlany (45 m) |
+| P12-007 | Zrzutowisko (13 994 m²; poza kaflem) | 53.103317, 23.166141 | 0 (trawa) | trawa | Krywlany (160 m) |
 | P12-008 | Magazyn logistyczno-produkcyjny KAN (28 212 m²) | 53.104351, 23.190790 | 15,05 (LoD1) | ocynk | Karpińskiego (50 m) |
 | P12-009 | Hala Masterpress (druk przemysłowy) | 53.105609, 23.191144 | 12,17 (LoD1) | jasnoszara | Kuronia (60 m) |
 | P12-010 | Hala Bravilor (wyposażenie gastronomiczne) | 53.105330, 23.187331 | 12,72 (LoD1) | jasna/biała | Kuronia (45 m) |
@@ -50,7 +50,7 @@ Pełne dane (WSG84, wysokość + źródło, kolor/materiał, droga i odległoś�
 | P12-012 | Inkubator Technologiczny BPN-T (5 kond.) | 53.106874, 23.193275 | 18,09 (LoD1) | ocynk | Żurawia (60 m) |
 | P12-013 | Hala Kuronia 3 (tekstylia — Kontri) | 53.106752, 23.191379 | 6,01 (LoD1) | jasna/biała | Kuronia (30 m) |
 | P12-014 | Hale hurtowni PSS „Społem" (D303 8) | 53.105347, 23.171971 | UNVERIFIED | jasna/biała | Dywizjonu 303 (95 m) |
-| P12-015 | Hale magazynowe Hake 9/11 | 53.105761, 23.169482 | UNVERIFIED | jasna/biała | Hake (50 m) |
+| P12-015 | Hale magazynowe Hake 9/11 (poza kaflem) | 53.105761, 23.169482 | UNVERIFIED | jasna/biała | Hake (50 m) |
 | P12-016 | Hala w budowie — Spadochroniarzy 2 (19 420 m²) | 53.106974, 23.173746 | UNVERIFIED (budowa) | szara | Spadochroniarzy (95 m) |
 | P12-017 | Stacja RPZ11 110/15 kV (słupy 110 kV) | 53.107141, 23.189694 | UNVERIFIED | ocynk | Kuronia (80 m) |
 | P12-018 | Sąd Rejonowy (Mickiewicza 103) | 53.106828, 23.185689 | **24,44** (LoD1; najwyższy kafel) | szara (płyta/papa) | Mickiewicza (45 m) |
@@ -59,19 +59,19 @@ Pełne dane (WSG84, wysokość + źródło, kolor/materiał, droga i odległoś�
 | P12-021 | WORD — plac manewrowy (Wiewiórcza 64) | 53.109778, 23.192799 | 5,27 (LoD1) | ocynk | Wiewiórcza (15 m) |
 | P12-022 | Delegatura ABW (Żurawia 69; strefa ogrodzona) | 53.109132, 23.192011 | 11,67 (LoD1) | szara | Żurawia (60 m) |
 | P12-023 | Społeczne LO im. Jana Pawła II (Mickiewicza 95) | 53.109891, 23.182440 | 13,23 (LoD1) | ocynk | Mickiewicza (30 m) |
-| P12-024 | Dom zakonny przy rondzie (Ciołkowskiego 11/1) | 53.114142, 23.177087 | 11,64 (LoD1) | czerwonorudawa dachówka | Ciołkowskiego (20 m) |
+| P12-024 | Dom zakonny przy rondzie (Ciołkowskiego 11/1; poza kaflem) | 53.114142, 23.177087 | 11,64 (LoD1) | czerwonorudawa dachówka | Ciołkowskiego (20 m) |
 | P12-025 | Hala sklepowo-dyskontowa (Wiewiórcza 51) | 53.110733, 23.191520 | 6,69 (LoD1) | ocynk | Wiewiórcza (30 m) |
-| P12-026 | Pawilon handlowy na osiedlu (Niedźwiedzia 26) | 53.114620, 23.190051 | 6,39 (LoD1) | czerwonorudawa dachówka | Sokola (15 m) |
-| P12-027 | Zespół bloków osiedla Dojlidy (Żubrów/Niedźwiedzia) | 53.113143, 23.191491 | 9,9–16,3 (LoD1, 3 kond.) | szara (płyta/papa) | Niedźwiedzia (25 m) |
-| P12-028 | Blok Mickiewicza 83 (przy rondzie) | 53.106206, 23.168883* | 15,31 (LoD1) | szara | Mickiewicza (20 m) |
-| P12-029 | Hotelik Żwirki i Wigury 26 | 53.115067, 23.170296 | 11,24 (LoD1) | szara | Żwirki i Wigury (35 m) |
-| P12-030 | Maszty telekomunikacyjne (2 szt.) | 53.115871, 23.177037 | UNVERIFIED | — (trójnogi) | Zwierzyniecka/Żurawia (15 m) |
+| P12-026 | Pawilon handlowy na osiedlu (Niedźwiedzia 26; poza kaflem) | 53.114620, 23.190051 | 6,39 (LoD1) | czerwonorudawa dachówka | Sokola (15 m) |
+| P12-027 | Zespół bloków osiedla Dojlidy (Żubrów/Niedźwiedzia; poza kaflem) | 53.113143, 23.191491 | 9,9–16,3 (LoD1, 3 kond.) | szara (płyta/papa) | Niedźwiedzia (25 m) |
+| P12-028 | Blok Mickiewicza 83 (przy rondzie; poza kaflem) | 53.115976, 23.177822* | 15,31 (LoD1) | szara | Mickiewicza (20 m) |
+| P12-029 | Hotelik Żwirki i Wigury 26 (poza kaflem) | 53.115067, 23.170296 | 11,24 (LoD1) | szara | Żwirki i Wigury (35 m) |
+| P12-030 | Maszty telekomunikacyjne (2 szt.; poza kaflem) | 53.115871, 23.177037 | UNVERIFIED | — (trójnogi) | Zwierzyniecka/Żurawia (15 m) |
 | P12-031 | **Browar Dojlidy** — hala warzelni (poza kaflem) | 53.106122, 23.203755 | UNVERIFIED | jasna/biała; fasada: ceglana czerwona (ESTIMATED ze zdjęcia) | D303 z kafla, sylwetka (600 m) |
 | P12-032 | Zbiorniki fermentacyjne browaru (~30 cylindrów, poza kaflem) | 53.107450, 23.204940 | UNVERIFIED | jasna/biała | D303 z kafla (650 m) |
 | P12-033 | BIAFORM — hala + 2 kominy (poza kaflem) | 53.113602, 23.201396 | UNVERIFIED | szara | sylweta kominów z Kuronia/Żurawia (400 m) |
-| P12-034 | Zakład BISON (poza kaflem) | 53.103528, 23.197561 | UNVERIFIED | jasna/biała | Kuronia południowa (250 m) |
+| P12-034 | Zakład BISON (w kaflu) | 53.103528, 23.197561 | UNVERIFIED | jasna/biała | Kuronia południowa (250 m) |
 | P12-035 | Zakład BIAWAR (poza kaflem) | 53.103364, 23.202254 | UNVERIFIED | jasna/biała | Dojlidy Fabryczne (550 m) |
-| P12-036 | Odlewnia Białystok (poza kaflem) | 53.104296, 23.197727 | UNVERIFIED | jasnoszara | Kuronia/Karpińskiego (300 m) |
+| P12-036 | Odlewnia Białystok (w kaflu) | 53.104296, 23.197727 | UNVERIFIED | jasnoszara | Kuronia/Karpińskiego (300 m) |
 | P12-037 | Kościół NSM w Dojlidach (1980; poza kaflem) | 53.110592, 23.209624 | UNVERIFIED (wieża) | szara | Dojlidy Fabryczne (360 m) |
 | P12-038 | ROD ×3 (Mickiewicza, Ekologiczny, Relaks — 352 891 m² łącznie) | 53.113951, 23.183098 | 6,69 (mediana altan, LoD1) | szara | Mickiewicza (30 m) |
 | P12-039 | Pałac Hasbacha + Pałac Lubomirskich (poza kaflem) | 53.113753, 23.202591 | UNVERIFIED | ocynk | Dojlidy Fabryczne od Ronda Hasbacha (65 m) |
@@ -98,7 +98,7 @@ Region to w ~81% zabudowa jednorodzinna przy drogach — ale **sygnał rozpoznaw
 ## 3. Wyposażenie dróg
 
 - **Przystanki**: 25 (19 z wiatą `shelter=yes`, 6 tylko słupek) — pełna lista z pozycjami w `manifest.csv` (P12-046…070). **Wiaty — typ i kolor**: wg ZDiT/Radio Białystok w regionie stoją stare wiaty oszklone z czerwonymi elementami (typ „modern"); od 2026 trwa wymiana **90 szt. w mieście** na antracytowe aluminium z półokrągłym dachem (typ „Stare Miasto", 4,1 mln zł). Który wariant stoi na danym przystanku — **UNVERIFIED** (brak pokrycia zdjęciowego). Źródło: Radio Białystok (id 262755) + OSM.
-- **Znaki PL:A-11a** (przystanek na żądanie): 8 szt. przy progach zwalniających (traffic_calming=bump) — pozycje w manifest (P12-072).
+- **Znaki PL:A-11a** (próg zwalniający): 8 szt. przy progach zwalniających (traffic_calming=bump) — pozycje w manifest (P12-072).
 - **Bollardy**: grupa 4 szt. przy zatoczce Żurawia/Wiewiórcza (53.11034–358, 23.189876–936).
 - **Latarnie**: **LUKA** — w OSM kafla tylko 1 street_lamp (Prusa 1, 53.11564, 23.176561); oświetlenie sieci głównej nie ma pokrycia w OSM (typ/wysokość UNVERIFIED; do Mapillary/KartaView — obecnie niedostępne).
 - **Bariery drogowe**: brak barier ochronnych w OSM kafla; zabezpieczenie wlotów realizują bollardy i wyspa ronda Ciołkowskiego/Mickiewicza.
@@ -122,8 +122,8 @@ Region to w ~81% zabudowa jednorodzinna przy drogach — ale **sygnał rozpoznaw
 | Hale Hake 9/11 | magazyny; operator UNVERIFIED (katalogi: tekstylia) | wjazd z Hake UNVERIFIED | UNVERIFIED |
 | Kontri (Kuronia 3) | tekstylia techniczne | 53.107292, 23.192212 (OSM) | SOURCED |
 | Hala w budowie (Spadochroniarzy 2) | przyszły magazyn; inwestor UNVERIFIED | UNVERIFIED | UNVERIFIED |
-| Art-Glas (Wiewiórcza 4) | hurtownia szkła (dostawy płaskiego szkła) | 53.110652, 23.185712 (OSM) | SOURCED |
-| Zintronic (Modzelewskiego 2) | produkcja kamer/monitoringu | 53.110652, 23.185712 (OSM) | SOURCED |
+| Art-Glas (Wiewiórcza 4) | hurtownia szkła (dostawy płaskiego szkła) | 53.110652, 23.185712 (OSM; wspólna brama placu) | SOURCED |
+| Zintronic (Modzelewskiego 2) | produkcja kamer/monitoringu | 53.110652, 23.185712 (OSM; wspólna brama placu) | SOURCED |
 | Lotnisko Krywlany (Aeroklub Białostocki) | paliwo lotnicze, hangary | najbliższa brama OSM 53.099362, 23.177153 (mapa bram niepełna) | SOURCED |
 | Browar Dojlidy (poza kaflem) | dostawy słodu/piwa | UNVERIFIED (od Dojlidy Fabryczne) | SOURCED (obiekt) |
 | Biaform (poza kaflem) | sklejka — dostawy drewna | UNVERIFIED | SOURCED |
@@ -149,10 +149,10 @@ Ten ciąg jest osią odczuwalności „ciężarówkowej" regionu: wzdłuż niego
 2. **Latarnie** — pokrycie OSM zerowe (1 obiekt); typ i rozstaw UNVERIFIED.
 3. **Data nalotu ortofoto UNVERIFIED** — skorowidz WMS PZGiK zwraca HTTP 401; kadry mogą pochodzić z różnych sesji (widoczna budowa hali Spadochroniarzy 2 → sesja ≥ 2024/2025).
 4. **Inwestor hali Spadochroniarzy 2 UNVERIFIED** (kontekst SSSE niepotwierdzony); operator hal Hake 9/11 UNVERIFIED (katalogi firm).
-5. **Wysokości**: maszty, silo, kominy browaru/BIAFORM, obiekty poza kaflem (browar, BIAFORM, BISON, BIAWAR, Odlewnia, kościół, pałace) — bez LoD1/height w OSM → UNVERIFIED (świadomie nie ekstrapolowano).
+5. **Wysokości**: maszty, silo, kominy browaru/BIAFORM, obiekty poza kaflem (browar, BIAFORM, BIAWAR, kościół, pałace) oraz BISON i Odlewnia (w kaflu, ale poza zasięgiem wyciągu LoD1 badania) — bez LoD1/height w OSM → UNVERIFIED (świadomie nie ekstrapolowano).
 6. **Wiaty przystankowe** — nie wiadomo, które przystanki dostały już nowe antracytowe (wymiana od 2026 trwa).
 7. **Treść drogowskazów E-\* na wlotach UNVERIFIED** (komunikat ZDM potwierdza lokalizacje, nie treść tablic).
-8. **Bramy zakładów poza kaflem** — niedomapowane w OSM → UNVERIFIED.
+8. **Bramy zakładów poza kaflem** — niedomapowane w OSM → UNVERIFIED. Art-Glas i Zintronic: jeden ogrodzony plac (fence way 653263665) z jedną bramą OSM (node 2999785151) — osobne bramy zakładów UNVERIFIED (brak w OSM).
 9. **Ekrany akustyczne**: brak (potwierdzone negatywnie OSM + ortofoto; ryzyko planowych przy hali sportowej — UNVERIFIED).
 10. Overpass (maps.mail.ru) niestabilny (504) — wyciągi wschodnie wykonane z retry; wyniki spójne z API głównym.
 
@@ -168,9 +168,14 @@ research/mistral/p12-dojlidy-landmarks/
 ├── tools/               ← epsg2180.py, parse_osm.py, parse_lod1.py, match_buildings.py,
 │                          frames_colors.py, typologia_colors.py, gen_manifest.py, gen_audit.py
 └── data/                ← landmarks.json (39), landmark-colors.json, matched-with-roads.json,
-                           road-geom.json, region-summary.json, osm-pois.json, typologia.json,
-                           typologia-colors.json, osm-east-strip.json, osm-hasbach.json, area-geom.json
+                           road-geom.json, region-summary.json, typologia.json, typologia-colors.json
 ```
+
+Surowe zrzuty OSM — `data/osm-pois.json`, `data/osm-east-strip.json`, `data/osm-hasbach.json`, `data/area-geom.json` — **nie są w gałęzi** (usunięte na żądanie przeglądu s17 §3: ~0,9 MB surowych danych ODbL zduplikowanych w worldgenie). Odtworzenie:
+
+1. `data/osm-pois.json` (+ `osm-buildings/lines/areas`): `curl -o osm-map.osm "https://api.openstreetmap.org/api/0.6/map?bbox=23.1600,53.0955,23.1980,53.1180"` → `python3 tools/parse_osm.py osm-map.osm` (wyciąg API OSM, ODbL; wymaga `tools/epsg2180.py`). Uwaga: `osm-pois.json` jest wejściem `tools/gen_manifest.py` — odtworzyć przed regeneracją `manifest.csv`.
+2. `data/osm-east-strip.json` / `data/osm-hasbach.json`: zapytanie Overpass o obiekty na wschód od kafla (browar, BIAFORM, kościół NSM, pałace, kominy), np. końcówka `https://maps.mail.ru/osm/tools/overpass/api/interpreter` z ciałem `[out:json][timeout:60]; ( nwr["building"](23.1950,53.0950,23.2300,53.1200); nwr["man_made"~"chimney|works|storage_tank|silo"](23.1950,53.0950,23.2300,53.1200); nwr["historic"](23.1900,53.1050,23.2150,53.1200); nwr["amenity"="place_of_worship"](23.1900,53.1050,23.2150,53.1200); ); out center tags;` (ODbL; serwer bywa niestabilny — retry).
+3. `data/area-geom.json`: wieloboki obszarów (landuse/ogrodzenia) z tego samego wyciągu `/api/0.6/map` (bbox jak w pkt 1; obiekty `way` z tagami landuse/barrier).
 
 Zdjęcia (25 kadrów ortofoto P12-A01…A26 (bez A20) + 5 zdjęć Commons) **nie trafiają do gita** (`files/` w .gitignore); paczka `mistral-p12-dojlidy-landmarks-files.zip` (SHA-256 w opisie PR) jest dostarczana poza repozytorium — patrz opis PR.
 

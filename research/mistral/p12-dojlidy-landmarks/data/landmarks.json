@@ -34,7 +34,7 @@
   "area_m2": 12167,
   "frame": "P12-A02",
   "sample_roof": true,
-  "poza_kaflem": false,
+  "poza_kaflem": true,
   "osm_way": 234838629,
   "uwagi": "przy hangarach; zapis koloru = nawierzchnia (trawa)"
  },
@@ -47,7 +47,7 @@
   "area_m2": 887,
   "frame": "P12-A02",
   "sample_roof": true,
-  "poza_kaflem": false,
+  "poza_kaflem": true,
   "osm_way": 304300294,
   "uwagi": "hala hangarowa przy płycie postojowej; dach = kolor dominujący z ortofoto"
  },
@@ -73,7 +73,7 @@
   "area_m2": 250,
   "frame": "P12-A02",
   "sample_roof": true,
-  "poza_kaflem": false,
+  "poza_kaflem": true,
   "osm_way": 304300297,
   "uwagi": "h=3,4 m wg LoD1"
  },
@@ -86,7 +86,7 @@
   "area_m2": 13994,
   "frame": "P12-A03",
   "sample_roof": true,
-  "poza_kaflem": false,
+  "poza_kaflem": true,
   "uwagi": "leisure=pitch; trawiasta strefa z nazwą w OSM; rozpoznawalny układ pasów zrzutowiska z lotu"
  },
  {
@@ -189,7 +189,7 @@
   "area_m2": 8053,
   "frame": "P12-A06",
   "sample_roof": true,
-  "poza_kaflem": false,
+  "poza_kaflem": true,
   "osm_way": 1329697012,
   "uwagi": "dwa budynki (3 734 + 8 053 m2), h UNVERIFIED (brak LoD1 dla tych obiektów); operator UNVERIFIED"
  },
@@ -305,7 +305,7 @@
   "area_m2": 127,
   "frame": "P12-A17",
   "sample_roof": true,
-  "poza_kaflem": false,
+  "poza_kaflem": true,
   "osm_way": 236884720,
   "uwagi": "h=11,64 m wg LoD1; BDOT: budynek jednorodzinny — kamienica przy rondzie"
  },
@@ -331,7 +331,7 @@
   "area_m2": 247,
   "frame": "P12-A16",
   "sample_roof": true,
-  "poza_kaflem": false,
+  "poza_kaflem": true,
   "osm_way": 296190375,
   "uwagi": "h=6,39 m wg LoD1; parterowy pawilon na osiedlu Dojlidy"
  },
@@ -344,7 +344,7 @@
   "area_m2": 4000,
   "frame": "P12-A15",
   "sample_roof": true,
-  "poza_kaflem": false,
+  "poza_kaflem": true,
   "osm_way": 466164076,
   "uwagi": "bloki 3-kondygnacyjne h 9,9-16,3 m wg LoD1; układ wokół Niedźwiedziej/Zubrowej"
  },
@@ -357,7 +357,7 @@
   "area_m2": 2500,
   "frame": "P12-A17",
   "sample_roof": true,
-  "poza_kaflem": false,
+  "poza_kaflem": true,
   "osm_way": 210885240,
   "uwagi": "h=15,31 m wg LoD1; dominant wysokościowy północnego wlotu Mickiewicza"
  },
@@ -370,7 +370,7 @@
   "area_m2": 602,
   "frame": "P12-A18",
   "sample_roof": true,
-  "poza_kaflem": false,
+  "poza_kaflem": true,
   "osm_way": 229863130,
   "uwagi": "h=11,24 m wg LoD1; 2 kondygnacje wg BDOT10k"
  },
@@ -383,7 +383,7 @@
   "area_m2": 25,
   "frame": "P12-A17",
   "sample_roof": false,
-  "poza_kaflem": false,
+  "poza_kaflem": true,
   "uwagi": "maszt 1: 53.115871, 23.177037 (przy Zwierzynieckiej, trójnóg widoczny z Mickiewicza); maszt 2: 53.108915, 23.191592 (ogrodzona strefa przy obiekcie ABW, Żurawia); wysokość UNVERIFIED (brak w OSM tag height / LoD1)"
  },
  {
@@ -431,13 +431,13 @@
  {
   "id": "P12-034",
   "kategoria": "landmark",
-  "nazwa": "Zakład BISON (poza kaflem, ~0,2 km na wschód)",
+  "nazwa": "Zakład BISON (w kaflu, ~0,2 km od wschodniej krawędzi)",
   "lat": 53.103528,
   "lon": 23.197561,
   "area_m2": 9000,
   "frame": "P12-A23",
   "sample_roof": true,
-  "poza_kaflem": true,
+  "poza_kaflem": false,
   "osm_way": 658448323,
   "uwagi": "man_made=works; produkcja noży/tarcz (wg strony firmy); widoczny z Kuronia południowego odcinka"
  },
@@ -457,13 +457,13 @@
  {
   "id": "P12-036",
   "kategoria": "landmark",
-  "nazwa": "Odlewnia Białystok (poza kaflem, na skraju wschodnim)",
+  "nazwa": "Odlewnia Białystok (w kaflu, na skraju wschodnim)",
   "lat": 53.104296,
   "lon": 23.197727,
   "area_m2": 7000,
   "frame": "P12-A23",
   "sample_roof": true,
-  "poza_kaflem": true,
+  "poza_kaflem": false,
   "osm_way": 315456645,
   "uwagi": "man_made=works; odlewnia metali; h UNVERIFIED; widoczna z Kuronia/Karpinskiego"
  },

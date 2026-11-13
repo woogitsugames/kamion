@@ -60,11 +60,11 @@ Zakazane źródła (Google Maps / Street View / Earth / 3D Tiles) **nie były u�
 
 | Plik | Źródło | Autor | Licencja | URL |
 |---|---|---|---|---|
-| P12-P01-browar-panorama.jpg | Wikimedia Commons (curid 30474259) | Henryk Borawski | CC BY-SA 3.0 | https://commons.wikimedia.org/wiki/File:Browar_Dojlidy_panorama.jpg |
-| P12-P02-browar-fasada.jpg | Wikimedia Commons (curid 52199842) | Kompania Piwowarska | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:Dojlidy_Browar_06.JPG |
-| P12-P03-lotnisko.jpg | Wikimedia Commons (curid 20463837) | SilverTree | CC BY-SA 3.0 | https://commons.wikimedia.org/wiki/File:Bialystok_Krywlany_Airfield.jpg |
-| P12-P04-sad.jpg | Wikimedia Commons (curid 30730935) | Henryk Borawski | CC BY-SA 3.0 | https://commons.wikimedia.org/wiki/File:Bialystok_Sad_Rejonowy.jpg |
-| P12-P05-palac-hasbacha.jpg | Wikimedia Commons (curid 21441453) | Mariag36 | CC BY-SA 3.0 | https://commons.wikimedia.org/wiki/File:Pa%C5%82ac_Hasbacha_w_Bia%C5%82ymstoku.jpg |
+| P12-P01-browar-panorama.jpg | Wikimedia Commons (curid 30474259) | Henryk Borawski | CC BY-SA 3.0 | https://commons.wikimedia.org/wiki/File:Browar_Dojlidy_w_Bia%C5%82ymstoku_panorama_1.jpg |
+| P12-P02-browar-fasada.jpg | Wikimedia Commons (curid 52199842) | Kompania Piwowarska | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:Browar_Dojlidy_fasada_budynku.jpg |
+| P12-P03-lotnisko.jpg | Wikimedia Commons (curid 20463837) | SilverTree | CC BY-SA 3.0 | https://commons.wikimedia.org/wiki/File:Lotnisko_na_Krywlanach.jpg |
+| P12-P04-sad.jpg | Wikimedia Commons (curid 30730935) | Henryk Borawski | CC BY-SA 3.0 | https://commons.wikimedia.org/wiki/File:S%C4%85d_Rejonowy_w_Bia%C5%82ymstoku_(Mickiewicza_103)_1.jpg |
+| P12-P05-palac-hasbacha.jpg | Wikimedia Commons (curid 21441453) | Mariag36 | CC BY-SA 3.0 | https://commons.wikimedia.org/wiki/File:Bia%C5%82ystok_Dojlidy_Fabryczne_23,_Pa%C5%82ac_Hasbacha.jpg |
 | P12-A01..P12-A26.jpg | ortofoto GUGiK (WMS) | GUGiK | otwarte dane (komercyjne OK) | https://mapy.geoportal.gov.pl/wss/service/PZGiK/ORTO/WMS/StandardResolution |
 
 Kadry ortofoto: 25 szt. (P12-A01…A26 bez A20), 800×800 px (0,5 m/px, obszar 400×400 m), JPEG. Zdjęcia Commons przeskalowane do ≤ 1600 px przy pobieraniu (Openverse/Commons API, 2026-11-13; Commons API ograniczał liczbę zapytań — HTTP 429).

@@ -107,9 +107,9 @@ H = {
  31:('U','UNVERIFIED (poza kaflem — brak LoD1; hala warzelni bez height w OSM)','UNVERIFIED','kominy browaru widoczne z Dywizjonu 303 (z kafla) i z Dojlidy Fabryczne; zdjęcia: files/P12-A21.jpg (ortofoto), files/P12-P01-browar-panorama.jpg i files/P12-P02-browar-fasada.jpg (Commons CC BY-SA 3.0/4.0); fasada ceglana czerwona (ESTIMATED ze zdjęcia P12-P02)'),
  32:('U','UNVERIFIED (storage_tank ×30; brak height w OSM)','UNVERIFIED','rozpoznawalny "las" cylindrów; zdjęcie: files/P12-A21.jpg (ortofoto GUGiK)'),
  33:('U','UNVERIFIED (poza kaflem — brak LoD1; building:levels=1 w OSM)','UNVERIFIED','hala producenta sklejki (strona firmy — patrz sources.md); kominy: 53.113289, 23.198542 i 53.114204, 23.201536 (wys. UNVERIFIED); zdjęcie: files/P12-A22.jpg (ortofoto GUGiK)'),
- 34:('U','UNVERIFIED (poza kaflem — brak LoD1; man_made=works bez height w OSM)','UNVERIFIED','produkcja przyrządów i uchwytów (katalog firm — patrz sources.md); zdjęcie: files/P12-A23.jpg (ortofoto GUGiK)'),
+ 34:('U','UNVERIFIED (w kaflu — brak LoD1; man_made=works bez height w OSM)','UNVERIFIED','produkcja przyrządów i uchwytów (katalog firm — patrz sources.md); zdjęcie: files/P12-A23.jpg (ortofoto GUGiK)'),
  35:('U','UNVERIFIED (poza kaflem — brak LoD1; man_made=works bez height w OSM)','UNVERIFIED','produkcja armatury i kotłów (strona firmy — patrz sources.md); zdjęcie: files/P12-A24.jpg (ortofoto GUGiK)'),
- 36:('U','UNVERIFIED (poza kaflem — brak LoD1; man_made=works bez height w OSM)','UNVERIFIED','odlewnia metali (katalog firm — patrz sources.md); zdjęcie: files/P12-A23.jpg (ortofoto GUGiK)'),
+ 36:('U','UNVERIFIED (w kaflu — brak LoD1; man_made=works bez height w OSM)','UNVERIFIED','odlewnia metali (katalog firm — patrz sources.md); zdjęcie: files/P12-A23.jpg (ortofoto GUGiK)'),
  37:('U','UNVERIFIED (poza kaflem — brak LoD1; wieża kościoła bez height w OSM)','UNVERIFIED','parafia Dojlidy, start budowy 1980 (OSM start_date); zdjęcie: files/P12-A25.jpg (ortofoto GUGiK)'),
  38:('6.69','GUGiK LoD1 2024 (mediana wysokości altan w N=9 z próby LoD1)','ESTIMATED','trzy ROD: im. Adama Mickiewicza (156 739 m2), Ekologiczny (61 820 m2), Relaks (134 332 m2); zadrzewione osiedla altan; zdjęcie: files/P12-A19.jpg (ortofoto GUGiK)'),
  39:('U','UNVERIFIED (poza kaflem — brak LoD1; castle_type=palace bez height w OSM)','UNVERIFIED','pałac fabrykanta z pocz. XX w. (Dojlidy Fabryczne 23); Pałac Lubomirskich (Suchowolca 26, 53.109637, 23.204708) ok. 480 m na S; zdjęcia: files/P12-A26.jpg (ortofoto GUGiK), files/P12-P05-palac-hasbacha.jpg (Commons CC BY-SA 3.0)'),
@@ -269,10 +269,10 @@ add(id='P12-%03d' % wid, kategoria='wyposażenie',
     uwagi='pozycje: ' + '; '.join('%s,%s' % (b['lat'], b['lon']) for b in bol) + ' (barrier=bollard, bollard=fixed)')
 wid += 1
 
-# znaki PL:A-11a (przystanek na żądanie)
+# znaki PL:A-11a (próg zwalniający)
 a11 = [p for p in POIS if 'PL:A-11a' in (p.get('tags', {}).get('traffic_sign') or '') and p.get('in_tile')]
 add(id='P12-%03d' % wid, kategoria='wyposażenie',
-    nazwa_opisowa='Znaki PL:A-11a (przystanek na żądanie) — 8 szt. przy progach zwalniających',
+    nazwa_opisowa='Znaki PL:A-11a (próg zwalniający) — 8 szt. przy progach zwalniających',
     lat=a11[0]['lat'], lon=a11[0]['lon'], wysokość_m='n/d (znak na pionie progu)',
     źródło_wysokości='n/d', kolor='UNVERIFIED (tabliczka biała/czarna wg wzoru znaku)', materiał='n/d',
     widoczny_z_drogi='ul. Żurawia / ul. Wiewiórcza', odległość_m=0,
@@ -378,11 +378,11 @@ GEN = [
   53.106974, 23.173746, 1535030699, '', 'UNVERIFIED',
   'landuse=construction 52 150 m2; najbliższa brama OSM 208 m — wjazd UNVERIFIED; kontekst: przetargi SSSE na działki przy BPN-T wygrały firmy logistyczna i gastronomiczna (jartom.com — tylko referencja); od 2028 w sąsiedztwie hala sportowa przy Ciołkowskiego'),
  ('Art-Glas (hurtownia szkła budowlanego)', 'hurtownia szkła — dostawy płaskiego szkła ciężarówkami',
-  53.110372, 23.185822, 210878360, 'https://artglas.com.pl/', 'SOURCED',
-  'brama OSM (gate 53.110652, 23.185712, ~30 m); adres Wiewiórcza 4'),
+  53.110372, 23.185822, 210878360, 'https://artglas.com.pl/ ; https://www.openstreetmap.org/node/2999785151', 'SOURCED',
+  'brama OSM (gate 53.110652, 23.185712, ~30 m — wspólna brama ogrodzonego placu Art-Glas/Zintronic: node 2999785151, ogrodzenie way 653263665; osobne bramy zakładów UNVERIFIED — brak w OSM); adres Wiewiórcza 4'),
  ('Zintronic (producent systemów kamer i monitoringu)', 'budynek produkcyjno-biurowy, Modzelewskiego 2',
-  53.110368, 23.186025, 1192357612, 'https://zintronic.com/monitoring-bialystok', 'SOURCED',
-  'brama OSM (gate 53.110652, 23.185712, ~40 m)'),
+  53.110368, 23.186025, 1192357612, 'https://zintronic.com/monitoring-bialystok ; https://www.openstreetmap.org/node/2999785151', 'SOURCED',
+  'brama OSM (gate 53.110652, 23.185712, ~40 m — wspólna brama ogrodzonego placu Art-Glas/Zintronic: node 2999785151, ogrodzenie way 653263665; osobne bramy zakładów UNVERIFIED — brak w OSM)'),
  ('Lotnisko Białystok-Krywlany (baza Aeroklubu Białostockiego)', 'lotnisko sportowe — paliwo lotnicze, hangary, szkolenia; zarządca Aero Partner',
   53.101615, 23.172908, None, 'https://pl.wikipedia.org/wiki/Port_lotniczy_Bia%C5%82ystok-Krywlany', 'SOURCED',
   'właściciel: Aeroklub Białostocki (Wikipedia PL); bramy ogrodzenia lotniska: najbliższa OSM 53.099362, 23.177153 (378 m — mapa bram niepełna); plany lotniska pasażerskiego (investmap 29.10.2026) — patrz README'),
@@ -392,15 +392,15 @@ GEN = [
  ('Biaform S.A. (producent sklejki, Dojlidy Fabryczne 24)', 'hala produkcyjna z suszarniami — dostawy drewna; poza kaflem',
   53.113602, 23.201396, 221209538, 'https://biaform.com.pl/kontakt/', 'SOURCED',
   'brama UNVERIFIED (poza kaflem; wjazd od Dojlidy Fabryczne); 2 kominy man_made=chimney'),
- ('Zakład produkcji przyrządów i uchwytów (BISON-BIAL, Myśliwska 13)', 'fabryka uchwytów tokarskich; poza kaflem',
+ ('Zakład produkcji przyrządów i uchwytów (BISON-BIAL, Myśliwska 13)', 'fabryka uchwytów tokarskich; w kaflu (skraj wschodni)',
   53.103528, 23.197561, 658448323, 'https://e-podlasie.pl (katalog — tylko referencja)', 'UNVERIFIED',
-  'brama UNVERIFIED (poza kaflem; wjazd od Myśliwska/Dojlidy Fabryczne); man_made=works w OSM bez nazwy operatora'),
+  'brama UNVERIFIED (w kaflu; wjazd od Myśliwska/Dojlidy Fabryczne); man_made=works w OSM bez nazwy operatora'),
  ('NIBE-BIAWAR (producent armatury i kotłów, ul. Prof. Andrzeja Kalicińskiego 1)', 'zakład produkcyjny; poza kaflem',
   53.103364, 23.202254, 674071951, 'https://biawar.com.pl/kontakt-2/', 'SOURCED',
   'brama UNVERIFIED (poza kaflem; wjazd od Dojlidy Fabryczne/Kalicińskiego); man_made=works w OSM'),
- ('Odlewnia Białystok S.A. (Myśliwska 11)', 'odlewnia metali — dostawy złomu i wyrobów; poza kaflem',
+ ('Odlewnia Białystok S.A. (Myśliwska 11)', 'odlewnia metali — dostawy złomu i wyrobów; w kaflu (skraj wschodni)',
   53.104296, 23.197727, 315456645, 'https://www.cylex-polska.pl/ (katalog — tylko referencja)', 'UNVERIFIED',
-  'brama UNVERIFIED (poza kaflem); man_made=works w OSM bez height/nazwy'),
+  'brama UNVERIFIED (w kaflu); man_made=works w OSM bez height/nazwy'),
 ]
 for nazwa, opis, lat, lon, way, strona, st, uw in GEN:
     wid += 1
