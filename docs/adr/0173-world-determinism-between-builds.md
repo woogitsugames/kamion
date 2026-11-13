@@ -27,8 +27,9 @@ się między buildami, 1–3 % pikseli", +7,5 % triangles in `stretch-05-docks`)
 - `build_world` and `far_field._sha256` hash text inputs (`.json/.geojson/.yaml/.yml`) with CRLF normalised to LF:
   the world manifest and the far-field cache key no longer depend on the checkout.
 - No wall-clock time in derived data: `extracted_in_s` removed from the far-field GIS cache (printed instead).
-- `vegetation.emit` draws the four attributes for **every candidate point** up front, in point order; the clearance
-  test only drops trees. A local edit now removes the trees on it and leaves every other tree as it was.
+- `vegetation.emit` draws the four attributes (same calls, same order as before) for **every candidate point**;
+  the clearance test only drops the tree afterwards. A local edit now removes the trees on it and leaves every other
+  tree as it was; a BDOT feature with no dropped candidate keeps its exact old stream.
 - Tests (`tools/worldgen/tests/test_determinism_0173.py`, ~1 s): CRLF/LF hash equality; two `vegetation.place`
   runs identical; a 10 × 10 m blocked patch changes no tree further than 3 m from it (fails on the old code);
   classification of `compare_world.py` (identical / order only / content).
@@ -37,15 +38,25 @@ się między buildami, 1–3 % pikseli", +7,5 % triangles in `stretch-05-docks`)
 
 ## Consequences
 
-- One-time change of the look: tree attributes are drawn from the stream in a different order, so the same tree
-  positions (main pass) get new height / variant / yaw / lean once, and the understorey and edge passes of forest
-  stands (positions drawn after the main pass) get new positions. Species and tree counts per polygon are
-  unchanged by construction except where the new streams differ (numbers below). After this, edits stay local.
+- One-time change of the look, only in features where the clearance test dropped a candidate: their later trees
+  get new height / variant / yaw / lean, and the understorey and edge passes of such forest stands (positions drawn
+  after the main pass) get new positions. Features untouched by roads / paving / buildings are bit-identical.
+  After this, edits stay local. Chunk GLBs change slightly (forest HLOD / canopies derived from the trees).
 - Unity side (instance order, LOD/impostor choice) reviewed in code: import order follows the manifest chunk list,
   landmark GLBs are sorted, no RNG in the importer. NOT verified by a render pair; if a residual 0,5–1 % pixel
   difference between two imports of identical data remains, the next suspect is the capture timing of LOD
   crossfade / streaming in `VisualQaRunner`.
 
-## Numbers of the one-time change (run1 = main code, run3 = this ADR)
+## Numbers of the one-time change (run1 = main code `3a60019ff`, run4 = this ADR; whole region)
 
-(filled from `tree_stats.py` on the two derived worlds)
+| | run1 | run4 |
+|---|---|---|
+| trees + shrubs (instances_*.json) | 121 628 | 121 616 (−12) |
+| same position | — | 100 626 (82,7 %) |
+| fully identical record (position, species, h, v, yaw, lean) | — | 50 027 (41 %) |
+| per prototype delta | — | shrub −131, birch +90, pine +30, maple +26, alder −22, linden −5 |
+| derived files differing (of 199) | — | 152 (instances + chunk GLB / HLOD bytes, sizes within ±30 B) |
+
+Two runs of the same code: 199/199 derived files byte-identical (after removing `extracted_in_s`).
+Not measured: Unity tris of `stretch-05-docks` and the render pairs — needs `scripts/import-region.ps1` +
+`visual-qa.ps1 -Scene WorldC` twice on the same data (blocked by PHONE_RUN during this work).
