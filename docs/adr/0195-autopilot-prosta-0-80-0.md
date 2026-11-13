@@ -39,7 +39,19 @@ Runner .NET, dt 0,01 s, 4 sub-kroki (`artifacts/autopilot-0195/runner/`, wykresy
 Pasma: 0–80 solo 12–32 s / pusty 20–55 s / 40 t 40–95 s (WORKING_VALUE/DERIVED jak `launch_*`); 80→0 solo 32–55 m, zestaw 35–61,2 m (R13 typ 0 N3, SOURCED); MFDD 5–8 m/s² — wszystko w tolerancji.
 Powtarzalność runnera 0–80 ×3 (kursy 0/37/113°): 0,00 %; dt 1/50…1/120: ≤ 5 %. Testy .NET 274/274 (w tym nowe `StraightRunTests`).
 
-Unity (edytor, PlayMode `StraightRunAutopilotTests`, PhysX + model gry): UNITY_RESULTS
+Unity — **EDYTOR, nie telefon** (Unity 6000.3.28f1 batchmode, scena DrivingLab po regeneracji, PhysX + model gry, timeScale 8, fixedDt 0,01 s;
+PlayMode `StraightRunAutopilotTests` 3/3 + `DrivingLabSceneTests` 5/5, EditMode `StraightRunPilotTests` 4/4; CSV + PNG `artifacts/autopilot-0195/playmode/`):
+
+| wariant | 0–60 | 0–80 | droga 0–80 | v przy hamowaniu | droga 80→0 | MFDD | max opóźn. | odchyłka | Δ 0–80 / Δ drogi vs runner |
+|---|---|---|---|---|---|---|---|---|---|
+| solo ×3 | 10,01 s | 13,67 / 13,67 / 13,67 s | 157 m | 80,6 km/h | 35,62 m | 7,45 m/s² | 7,98 m/s² | < 1 mm | +0,5 % / −0,2 % |
+| pusty 14,5 t | 13,24 s | 20,68 s | 272 m | 80,4 km/h | 39,45 m | 7,47 m/s² | 7,69 m/s² | < 1 mm | +0,7 % / −0,1 % |
+| 40 t | 28,25 s | 47,80 s | 673 m | 79,8 km/h | 40,78 m | 6,91 m/s² | 7,31 m/s² | 4 mm | +0,6 % / +0,6 % |
+
+Powtarzalność 0–80 ×3 w edytorze: 0,00 % (granica bramki 1: ±3 %). Ten sam CSV z Unity przez `gate12_telemetry.py`: wszystkie kontrole PASS
+(max |poślizg| koła w hamowaniu 0,23 solo / 0,17 pusty / 0,21 40 t, czas blokady 0 s, max |dv|/krok 0,08 m/s, błąd siodła ≤ 0,17 mm). 40 t staje na x = 183 m (prosta do 650 m).
+Wykresy obejrzane: zmiany biegów 4→12 jak w runnerze, AMT redukuje 12→10 przy utrzymaniu 40 t (gaz PI ~0,37), ABS cykluje poślizg −0,05…−0,15 bez blokady,
+nurkowanie kabiny ~3° przy hamowaniu, odbicie przy zatrzymaniu. `tools/telemetry/plot.py`: kolumny tylko-runnera (np. `trailer_a_lat`) jako puste serie, żeby CSV z Unity/telefonu się rysowały.
 
 ## Otwarte
 - **Pomiar na telefonie** (lider): APK z tej gałęzi + `pwsh scripts/gate12-phone.ps1 -Apk <apk> -UseExistingLock -Only s080_solo_1,s080_solo_2,s080_solo_3,s080_empty,s080_40t`,
