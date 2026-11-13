@@ -15,3 +15,4 @@ Następny krok: `cd C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\reg
 - Następny krok: `Get-Content artifacts\region-0166\build_world2.log -Tail 30`
 - 24719c964: build_world dojlidy OK; QA (qa_report + landmarks D51 + ADR 0166 draft). Shared GUGiK 2061 manifests restored (sources.py nie przepisuje). Megascans/cc0 _raw skopiowane z main. W tle: rebuild dojlidy z Megascans + pytest C (artifacts/region-0166/rerun.log).
 - Następny krok: `Get-Content artifacts\region-0166\rerun.log -Tail 30`; potem `git status` (testy C przepisują pliki C -> `git checkout -- Data/Regions/bialystok-industrial-c`).
+- KONIEC agent #3: build_world dojlidy z Megascans OK; C bez różnic vs main; ADR 0166 gotowy (Proposed). Gotowe do scalenia: TAK (lider: fidelity/run.py C po scaleniu; import regionu = osobny krok).

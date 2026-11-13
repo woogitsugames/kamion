@@ -59,6 +59,17 @@ założenia prawdziwe wyłącznie dla C, które wyszły przy pierwszym przebiegu
 - Budynki: 406 (BDOT10k 351, OSM 55); wysokość LoD1 2024 329, LoD2 2017 4, BDOT kondygnacje 8, OSM 1, domyślna 64.
 - Teren: NMT 137,7–160,9 m EVRF2007, brak dziur; ściany terenu > 0,15 m: 9 (max 0,33 m).
 
+## Testy (worktree, 2026-11-13)
+- `tests/gis` pełny przebieg: 999 passed, 5 failed, 3 xfailed (worktree bez Megascans/cc0 `_raw`). Po skopiowaniu ich z
+  main: `test_world_roads::test_export_is_deterministic` zielony (region C bajt w bajt jak w main), nowe
+  `test_region_generic_0166.py` 3/3. Pozostałe 4 czerwone to środowisko/aktualizacja raportu, nie zmiana wyniku C:
+  `test_road_fidelity::test_report_not_stale` (sha256 `build_world.py` — lider: rerun `fidelity/run.py` po scaleniu);
+  `test_hero_bridge::test_instances_emitted`, `test_streetscape::test_instances_reference_existing_prototypes`,
+  `test_far_field::test_generated_far_field_qa_and_manifests` czytają współdzielony (junction) `Data/raw/derived/
+  bialystok-industrial-c/world` z innego przebiegu (instancje z 2026-11-12 13:37) — do potwierdzenia w main.
+- Testy C przepisują pliki C w drzewie roboczym (in-process build) — przywrócone `git checkout`; `git diff origin/main`
+  dla `Data/Regions/bialystok-industrial-c`, `art-source` i manifestów GUGiK 2061 pusty.
+
 ## Konsekwencje
 - Region C: wynik bez zmian (te same funkcje kamer i ścieżka biblioteki; `git diff origin/main` dla
   `Data/Regions/bialystok-industrial-c`, wspólnych manifestów i `art-source` pusty).
