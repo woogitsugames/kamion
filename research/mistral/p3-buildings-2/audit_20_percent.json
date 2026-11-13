@@ -1,0 +1,424 @@
+{
+ "seed": 20261113,
+ "procent": 20,
+ "n_zestawu": 43,
+ "n_audytowane": 9,
+ "probkowanie": "random.Random(20261113).sample(ids, ceil(0.2*N))",
+ "kryteria": {
+  "A_dopasowanie": "FH/opis-autora/wizja → PASS-DIRECT; stożek/az-zawodny → PASS-POŚREDNIE; ODRZUCONE → PASS z uzasadnieniem",
+  "B_IoU_LoD1_OSM": "IoU>=0.5 PASS; <0.5 UWAGA; brak w LoD1 → NIE DOTYCZY",
+  "C_mh_vs_kond": "|mh - kond*2.9| <= 2.0 PASS; 2.0-4.0 UWAGA; > 4.0 FAIL; brak mh/kond → NIE DOTYCZY",
+  "D_licencja": "CC0/CC BY 3.0 PASS; CC BY-SA → PASS (oznaczone 'tylko referencja')",
+  "E_jpg": "plik JPG zdjęcia <= 1600 px",
+  "F_adres": "adres manifestu zgodny z addr:* way OSM",
+  "G_wizja": "analiza wizyjna niedostępna w tej sesji (limit) → NIE DOTYCZY (wizje 13.11 zachowane w README/uwagach)"
+ },
+ "pary": [
+  {
+   "id": "M53-001",
+   "adres": "ul. Generała Władysława Andersa 38 (stacja paliw, wiata)",
+   "status_manifestu": "OK",
+   "A_dopasowanie": {
+    "werdykt": "PASS-DIRECT",
+    "uzasadnienie": "wizja 13.11 (zachowana)",
+    "ev": {
+     "az": null,
+     "dev": null,
+     "pos": null,
+     "d": 52.4,
+     "fh": null,
+     "fh_addr": null,
+     "cam_in_own": false,
+     "az_v1": null,
+     "pos_v1": null
+    }
+   },
+   "B_IoU_LoD1_OSM": {
+    "werdykt": "NIE DOTYCZY (brak w LoD1)",
+    "lod1_id": null,
+    "IoU": null
+   },
+   "C_mh_vs_kond": {
+    "werdykt": "NIE DOTYCZY (kondyg. nieoznaczona)",
+    "mh": "4.5 (ESTIMATED)",
+    "kond": "NIE DOTYCZY (wiata)"
+   },
+   "D_licencja": {
+    "werdykt": "PASS",
+    "licencja": "CC0"
+   },
+   "E_jpg": {
+    "werdykt": "PASS (1280x720 px, kopia ZIP)"
+   },
+   "F_adres": {
+    "werdykt": "PASS (adres stacji wg OSM: Andersa 38; way bez addr:* → przypisanie posesjonalne)"
+   },
+   "G_wizja": {
+    "werdykt": "NIE DOTYCZY (limit analizy wizyjnej w sesji odbudowy)"
+   },
+   "werdykt": "PASS"
+  },
+  {
+   "id": "M53-002",
+   "adres": "ul. Generała Władysława Andersa 38 (stacja paliw, kiosk — bez odrębnego numeru w OSM)",
+   "status_manifestu": "OK",
+   "A_dopasowanie": {
+    "werdykt": "PASS-DIRECT",
+    "uzasadnienie": "wizja 13.11 (zachowana)",
+    "ev": {
+     "az": null,
+     "dev": null,
+     "pos": null,
+     "d": 56.3,
+     "fh": null,
+     "fh_addr": null,
+     "cam_in_own": false,
+     "az_v1": null,
+     "pos_v1": null
+    }
+   },
+   "B_IoU_LoD1_OSM": {
+    "werdykt": "NIE DOTYCZY (brak w LoD1)",
+    "lod1_id": null,
+    "IoU": null
+   },
+   "C_mh_vs_kond": {
+    "werdykt": "NIE DOTYCZY (brak mh w LoD1)",
+    "mh": "UNVERIFIED",
+    "kond": "1 (parterowy; wizja 13.11)"
+   },
+   "D_licencja": {
+    "werdykt": "PASS",
+    "licencja": "CC0"
+   },
+   "E_jpg": {
+    "werdykt": "PASS (1280x720 px, kopia ZIP)"
+   },
+   "F_adres": {
+    "werdykt": "PASS (adres stacji wg OSM: Andersa 38; way bez addr:* → przypisanie posesjonalne)"
+   },
+   "G_wizja": {
+    "werdykt": "NIE DOTYCZY (limit analizy wizyjnej w sesji odbudowy)"
+   },
+   "werdykt": "PASS"
+  },
+  {
+   "id": "M53-005",
+   "adres": "ul. Generała Władysława Andersa — posesja przy stacji paliw (bez numeru w OSM)",
+   "status_manifestu": "OK",
+   "A_dopasowanie": {
+    "werdykt": "PASS-DIRECT",
+    "uzasadnienie": "wizja 13.11 (zachowana)",
+    "ev": {
+     "az": null,
+     "dev": null,
+     "pos": null,
+     "d": 208.7,
+     "fh": null,
+     "fh_addr": null,
+     "cam_in_own": false,
+     "az_v1": null,
+     "pos_v1": null
+    }
+   },
+   "B_IoU_LoD1_OSM": {
+    "werdykt": "PASS",
+    "lod1_id": "2BE4B431-CA0E-1BF0-E053-CC2BA8C0D140",
+    "IoU": 0.997
+   },
+   "C_mh_vs_kond": {
+    "werdykt": "PASS",
+    "mh": "4.45",
+    "kond": "1 (parterowy; OSM building:levels=1)"
+   },
+   "D_licencja": {
+    "werdykt": "PASS",
+    "licencja": "CC0"
+   },
+   "E_jpg": {
+    "werdykt": "PASS (1280x720 px, kopia ZIP)"
+   },
+   "F_adres": {
+    "werdykt": "PASS (adres stacji wg OSM: Andersa 38; way bez addr:* → przypisanie posesjonalne)"
+   },
+   "G_wizja": {
+    "werdykt": "NIE DOTYCZY (limit analizy wizyjnej w sesji odbudowy)"
+   },
+   "werdykt": "PASS"
+  },
+  {
+   "id": "M53-009",
+   "adres": "ul. Olsztyńska 2",
+   "status_manifestu": "ODRZUCONY",
+   "A_dopasowanie": {
+    "werdykt": "PASS-DIRECT",
+    "uzasadnienie": "ODRZUCONY z uzasadnieniem geometrycznym/wizyjnym",
+    "ev": {
+     "az": 54.0,
+     "dev": -11.5,
+     "pos": 33.6,
+     "d": 59.4,
+     "fh": "way/219256749",
+     "fh_addr": "Olsztyńska 1A",
+     "cam_in_own": false,
+     "az_v1": null,
+     "pos_v1": null
+    }
+   },
+   "B_IoU_LoD1_OSM": {
+    "werdykt": "PASS",
+    "lod1_id": "2BE4B431-AE99-1BF0-E053-CC2BA8C0D140",
+    "IoU": 0.99
+   },
+   "C_mh_vs_kond": {
+    "werdykt": "PASS",
+    "mh": "10.61",
+    "kond": "4 (ESTIMATED: mh/2,9 m)"
+   },
+   "D_licencja": {
+    "werdykt": "PASS",
+    "licencja": "CC0"
+   },
+   "E_jpg": {
+    "werdykt": "PASS (1280x720 px, kopia ZIP)"
+   },
+   "F_adres": {
+    "werdykt": "PASS"
+   },
+   "G_wizja": {
+    "werdykt": "NIE DOTYCZY (limit analizy wizyjnej w sesji odbudowy)"
+   },
+   "werdykt": "PASS"
+  },
+  {
+   "id": "M53-012",
+   "adres": "ul. Białostoczek 27",
+   "status_manifestu": "OK-POŚREDNIE",
+   "A_dopasowanie": {
+    "werdykt": "PASS-POŚREDNIE",
+    "uzasadnienie": "dopasowanie pośrednie (stożek+pozycja w kadrze)",
+    "ev": {
+     "az": 15.1,
+     "dev": -2.4,
+     "pos": 46.6,
+     "d": 85.1,
+     "fh": "way/211766124",
+     "fh_addr": "Sokólska 9",
+     "cam_in_own": false,
+     "az_v1": null,
+     "pos_v1": null
+    }
+   },
+   "B_IoU_LoD1_OSM": {
+    "werdykt": "PASS",
+    "lod1_id": "2BE4B431-B197-1BF0-E053-CC2BA8C0D140",
+    "IoU": 0.997
+   },
+   "C_mh_vs_kond": {
+    "werdykt": "PASS",
+    "mh": "15.02",
+    "kond": "5 (ESTIMATED: mh/2,9 m)"
+   },
+   "D_licencja": {
+    "werdykt": "PASS",
+    "licencja": "CC0"
+   },
+   "E_jpg": {
+    "werdykt": "PASS (1280x720 px, kopia ZIP)"
+   },
+   "F_adres": {
+    "werdykt": "PASS"
+   },
+   "G_wizja": {
+    "werdykt": "NIE DOTYCZY (limit analizy wizyjnej w sesji odbudowy)"
+   },
+   "werdykt": "PASS"
+  },
+  {
+   "id": "M53-024",
+   "adres": "ul. Białostoczek 14",
+   "status_manifestu": "ODRZUCONY",
+   "A_dopasowanie": {
+    "werdykt": "PASS-DIRECT",
+    "uzasadnienie": "ODRZUCONY z uzasadnieniem geometrycznym/wizyjnym",
+    "ev": {
+     "az": 154.4,
+     "dev": -1.6,
+     "pos": 47.7,
+     "d": 199.5,
+     "fh": "way/676765806",
+     "fh_addr": "Radzymińska 14",
+     "cam_in_own": false,
+     "az_v1": null,
+     "pos_v1": null
+    }
+   },
+   "B_IoU_LoD1_OSM": {
+    "werdykt": "PASS",
+    "lod1_id": "2BE4B431-C88B-1BF0-E053-CC2BA8C0D140",
+    "IoU": 0.993
+   },
+   "C_mh_vs_kond": {
+    "werdykt": "PASS",
+    "mh": "15.95",
+    "kond": "6 (ESTIMATED: mh/2,9 m)"
+   },
+   "D_licencja": {
+    "werdykt": "PASS",
+    "licencja": "CC0"
+   },
+   "E_jpg": {
+    "werdykt": "PASS (900x1600 px, kopia ZIP)"
+   },
+   "F_adres": {
+    "werdykt": "PASS"
+   },
+   "G_wizja": {
+    "werdykt": "NIE DOTYCZY (limit analizy wizyjnej w sesji odbudowy)"
+   },
+   "werdykt": "PASS"
+  },
+  {
+   "id": "M53-030",
+   "adres": "ul. Aleja Tysiąclecia Państwa Polskiego 54A",
+   "status_manifestu": "OK",
+   "A_dopasowanie": {
+    "werdykt": "PASS-DIRECT",
+    "uzasadnienie": "ray-first-hit = obiekt",
+    "ev": {
+     "az": 212.1,
+     "dev": 23.7,
+     "pos": 83.8,
+     "d": 71.2,
+     "fh": "way/435369081",
+     "fh_addr": "Aleja Tysiąclecia Państwa Polskiego 54A",
+     "cam_in_own": false,
+     "az_v1": null,
+     "pos_v1": null
+    }
+   },
+   "B_IoU_LoD1_OSM": {
+    "werdykt": "PASS",
+    "lod1_id": "D0F4DD2C-C040-439E-AECE-8FE13F9D3046",
+    "IoU": 0.833
+   },
+   "C_mh_vs_kond": {
+    "werdykt": "PASS",
+    "mh": "14.35",
+    "kond": "5 (ESTIMATED: mh/2,9 m)"
+   },
+   "D_licencja": {
+    "werdykt": "PASS",
+    "licencja": "CC0"
+   },
+   "E_jpg": {
+    "werdykt": "PASS (1280x720 px, kopia ZIP)"
+   },
+   "F_adres": {
+    "werdykt": "PASS"
+   },
+   "G_wizja": {
+    "werdykt": "NIE DOTYCZY (limit analizy wizyjnej w sesji odbudowy)"
+   },
+   "werdykt": "PASS"
+  },
+  {
+   "id": "M53-033",
+   "adres": "ul. Aleja Tysiąclecia Państwa Polskiego 50",
+   "status_manifestu": "OK-POŚREDNIE",
+   "A_dopasowanie": {
+    "werdykt": "PASS-POŚREDNIE",
+    "uzasadnienie": "dopasowanie pośrednie (stożek+pozycja w kadrze)",
+    "ev": {
+     "az": 133.1,
+     "dev": -12.3,
+     "pos": 32.5,
+     "d": 139.0,
+     "fh": "way/236129046",
+     "fh_addr": "Aleja Tysiąclecia Państwa Polskiego 31/2",
+     "cam_in_own": false,
+     "az_v1": null,
+     "pos_v1": null
+    }
+   },
+   "B_IoU_LoD1_OSM": {
+    "werdykt": "PASS",
+    "lod1_id": "2BE4B431-C726-1BF0-E053-CC2BA8C0D140",
+    "IoU": 0.824
+   },
+   "C_mh_vs_kond": {
+    "werdykt": "UWAGA (3.3 m od kond*2.9)",
+    "mh": "14.86",
+    "kond": "4 (OSM building:levels)"
+   },
+   "D_licencja": {
+    "werdykt": "PASS",
+    "licencja": "CC0"
+   },
+   "E_jpg": {
+    "werdykt": "PASS (899x1600 px, kopia ZIP)"
+   },
+   "F_adres": {
+    "werdykt": "PASS"
+   },
+   "G_wizja": {
+    "werdykt": "NIE DOTYCZY (limit analizy wizyjnej w sesji odbudowy)"
+   },
+   "werdykt": "PASS"
+  },
+  {
+   "id": "M53-041",
+   "adres": "ul. Skidelska 6",
+   "status_manifestu": "OK-POŚREDNIE",
+   "A_dopasowanie": {
+    "werdykt": "PASS-POŚREDNIE",
+    "uzasadnienie": "dopasowanie pośrednie (stożek+pozycja w kadrze)",
+    "ev": {
+     "az": 242.7,
+     "dev": -4.4,
+     "pos": 43.7,
+     "d": 58.2,
+     "fh": "way/236129044",
+     "fh_addr": "Aleja Tysiąclecia Państwa Polskiego 29",
+     "cam_in_own": false,
+     "az_v1": null,
+     "pos_v1": null
+    }
+   },
+   "B_IoU_LoD1_OSM": {
+    "werdykt": "PASS",
+    "lod1_id": "2BE4B431-AC09-1BF0-E053-CC2BA8C0D140",
+    "IoU": 0.89
+   },
+   "C_mh_vs_kond": {
+    "werdykt": "PASS",
+    "mh": "8.10",
+    "kond": "3 (ESTIMATED: mh/2,9 m)"
+   },
+   "D_licencja": {
+    "werdykt": "PASS",
+    "licencja": "CC0"
+   },
+   "E_jpg": {
+    "werdykt": "PASS (1280x720 px, kopia ZIP)"
+   },
+   "F_adres": {
+    "werdykt": "PASS"
+   },
+   "G_wizja": {
+    "werdykt": "NIE DOTYCZY (limit analizy wizyjnej w sesji odbudowy)"
+   },
+   "werdykt": "PASS"
+  }
+ ],
+ "podsumowanie": {
+  "PASS (lacznie z PASS-DIRECT/POŚREDNIE/UWAGA/NIE DOTYCZY)": 9,
+  "FAIL": 0,
+  "UWAGI_kryterialne": [
+   [
+    "M53-033",
+    "C_mh_vs_kond"
+   ]
+  ]
+ }
+}

@@ -73,7 +73,7 @@ Nazwa konkretnego systemu (OWT-75?) dla bloków Wysokiego Stoczka — **UNVERIFI
 
 Wpis „PRZYDWORCOWE" (grudzień 2021): https://osiedlownik.blogspot.com/2021/12/przydworcowe.html
 
-> „Podawała, że na osiedlu powstanie **dwanaście bloków w technologii OWT-67 (czyli wielka płyta)**, trzy przedszkola, pięć pawilonów handlowo-usługowych i dom kultury. Wizja drugiej części Przydworcowego powstała w białostockim Inwestprojekcie. Głównym projektantem był Jan Prochowski, a z zespołu znaleźli się Józef Matwiejuk, Wacław Pacuk, Mirosław Poznysz, Waldemar Tumiel, Wincenty Szkudlarek, Jerzy Sadowski, Wanda Staniewicz, Bożena Sac oraz Michał Bałasz."
+> „Podawała, że na osiedlu powstanie **dwanaście bloków w technologii OWT-67 (czyli wielka płyta)**, trzy przedszkola, pięć pawilonów handlowo-usługowych i dom kultury. Wizja drugiej części Przydworcowego powstała w białostockim Inwestprojekcie. Głównym projektantem był Jan Prochowski, a z zespołu znaleźli się Józef Matwiejuk, Wacław Pacuk, Mirosław Poznysz, Waldemar Tumiel, Wincent Szkudlarek, Jerzy Sadowski, Wanda Staniewicz, Bożena Sac oraz Michał Bałasz."
 
 > „W 1976 roku ekipy montażowe z Białostockiego Przedsiębiorstwa Budownictwa Mieszkaniowego miały rozpocząć składanie **jedenastopiętrowców z wielkiej płyty**."
 
@@ -97,19 +97,21 @@ Bibliografia wpisów „Osiedlownika" wskazuje m.in.: prof. Adam Dobroński, „
 
 ## Zadanie 5 — stacja paliw przy Andersa (Circle K)
 
-- OSM: way 236606116 (building=roof, amenity=fuel, brand=Circle K, surface 119 m²), kiosk way 957256518, biurowiec Biazet way 219260018 (LoD1 mh 41,81 m; height=41; 11 kondygnacji; Andersa 38). Adres wg OSM: **Andersa 38** (zespół biurowo-usługowy Biazet; stacja na terenie posesji). Wysokość wiaty — **ESTIMATED** ze zdjęcia KartaView (patrz manifest; metoda: skala względem samochodu osobowego h≈1,45–1,55 m i słupków wiaty).
-- Zdjęcie: KartaView (CC BY-SA 4.0) id 7119873 — referencja, nie tekstura.
+- OSM: way 236606116 (building=roof, amenity=fuel, brand=Circle K, surface 119 m²), kiosk way 957256518, biurowiec Biazet way/219260018 (LoD1 mh 41,81 m; height=41; 11 kondygnacji; Andersa 38), biurowiec parterowy way/392226320 (LoD1 mh 4,45 m, IoU 0,997). Adres wg OSM: **Andersa 38** (zespół biurowo-usługowy Biazet; stacja na terenie posesji).
+- Wysokość wiaty — **ESTIMATED 4,5 m** (zakres 4,2–4,8 m) ze zdjęcia **Wikimedia Commons** (20201229 150935, Rakoon, CC0): metoda skali — samochód osobowy h≈1,45–1,55 m, van h≈2,5–2,7 m, proporcje kolumn wiaty; potwierdzenie wizyjne 13.11 (wiata czerwona, rozpiętość ponad stanowiska). Wiata poza modelem LoD1 GUGiK.
+- KartaView id 7119873 (CC BY-SA 4.0) — wyłącznie pomocnicza referencja kształtu (niewykorzystana do wysokości).
 
 ## Dane geoprzestrzenne
 
-- **GUGiK LoD1 2024 (K2)**: https://opendata.geoportal.gov.pl/InneDane/Budynki3D/LOD1/2024/20/2061.zip — CityGML, buildingId=BDOT10k, measuredHeight, roofType; licencja: dane publiczne bez ograniczeń (ustawa ODGI+rozporządzenie).
+- **GUGiK LoD1 2024 (K2)**: https://opendata.geoportal.gov.pl/InneDane/Budynki3D/LOD1/2024/20/2061.zip — CityGML, buildingId=BDOT10k, measuredHeight (roofType w pliku stały=1000, nieużyty); licencja: dane publiczne bez ograniczeń (ustawa ODGI + rozporządzenie). Walidacja: Biazet mh 41,81 m; Tysiąclecia 56 mh 20,06 m; salon Andersa 71 mh 6,11 m; biurowiec parterowy 4,45 m — zgodność z OSM height.
 - **BDOT10k**: warstwa Budynki (BUI_A) — identyfikatory obrysów w LoD1.
-- **OSM (ODbL)**: zrzut API 0.6 bbox 23.12–23.20 × 53.135–53.175 (api.openstreetmap.org).
-- **Ortofotomapa WMS GUGiK**: https://mapy.geoportal.gov.pl/wss/service/PZGIK/ORTO/WMS/HighResolution (wycinki do audytu obrysów).
-- **KartaView**: cdn.kartaview.org (CC BY-SA 4.0) — zdjęcia 2016–2021; heading kamera filtrowane spójnością z torem jazdy (patrz README, metoda).
-- **Panoramax**: api.panoramax.xyz (CC BY-SA 4.0) — zdjęcia 2023–2024.
-- **Wikimedia Commons**: commons.wikimedia.org (CC0/CC BY/CC BY-SA) — zdjęcia 2022–2025.
+- **OSM (ODbL)**: zrzut API 0.6 bbox 23.12–23.20 × 53.135–53.175 (api.openstreetmap.org); 10 791 budynków; tagi addr:*, building, building:levels, height.
+- **Ortofotomapa WMS GUGiK** — użyta usługa: https://mapy.geoportal.gov.pl/wss/service/PZGIK/ORTO/WMS/StandardResolution (warstwa **„Raster"**, WMS 1.1.1, SRS EPSG:4326, format image/jpeg; wycinki 256 px wokół obrysów +6 m — analiza dachów, pliki `files/orto/` w ZIP). Usługa HighResolution — rezerwowa.
+- **Wikimedia Commons** (API imageinfo; dostęp 2026-11-13/14): 69 zdjęć z GPS EXIF w obszarze: **Rakoon** (CC0 oraz CC BY 3.0; sesje 2020-07-11, 2020-11-02, 2020-12-29, 2022-07-25, 2022-11-19, 2022-12-03, 2023-07-29, 2024-04-01, 2024-05-30, 2024-06-26, 2024-12-29) — wykorzystane jako referencja identyfikacyjna i podstawa ESTIMATED kolorów; **Henryk Borawski** (CC BY-SA 3.0, 2013: „LO nr XVI i ZSO nr 10", „Tysiąclecia 10 Białystok 3", „Tysiąclecia 10A Białystok 1", „PKO BP Białystok (Tysiąclecia) 1", „Andersa, Maczka streets 2") — **tylko referencja** (tytuły autorskie potwierdzają obiekty; fakt koloru niepodlegający licencji oznaczony w metodzie).
+- **KartaView**: cdn.kartaview.org (CC BY-SA 4.0) — zdjęcia 2016–2021; tylko referencja (stacja Circle K).
+- **Panoramax**: api.panoramax.xyz (CC BY-SA 4.0) — zdjęcia 2023–2024; tylko referencja.
+- **Mapillary** — bez tokenu: UNVERIFIED (niewykorzystany).
 
 ## Zdjęcia — licencje i użycie
 
-Wszystkie zdjęcia w paczce służą jako **referencja** (identyfikacja budynku, kolor elewacji ESTIMATED); tekstur do odtworzenia z nich nie dostarczamy. NC/ND — link „tylko referencja". KartaView/Panoramax/Commons CC BY-SA — „referencja, nie tekstura". Mapillary — bez tokenu: UNVERIFIED (niewykorzystany).
+Wszystkie zdjęcia w paczce służą jako **referencja** (identyfikacja budynku, kolor elewacji ESTIMATED); tekstur do odtworzenia z nich nie dostarczamy. NC/ND — link „tylko referencja". CC BY-SA (Commons/Borawski, KartaView, Panoramax, OSM) — „referencja, nie tekstura". Licencje komercyjnie czyste w ZIP: miniatury Commons Rakoon CC0/CC BY 3.0 (przeskalowane do ≤1600 px) oraz wycinki ortofoto GUGiK (dane publiczne).
