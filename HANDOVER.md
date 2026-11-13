@@ -1,3 +1,16 @@
+# HANDOVER — kamion, STOP S17 (2026-11-13 18:1x; 5 h 93 % — reset 20:10 lokalnie; tydzień 69 %, Fable 95 % — reset 14.11 17:00) — prompt s18: `docs/owner/START-PROMPT-S18.md`
+
+## STOP S17 — co dalej (nowa sesja/konto zaczyna TUTAJ)
+- **main** = `origin/main` (wypchnięty). Scalone w s17: 0161, 0162, 0163, 0165, 0166, 0167, 0168, 0169, 0174 (Dojlidy — import techniczny, wizualnie NIE gotowy), 0176 (audio), PR-y Mistrala r8 #39–#41, #43–#48; JEDNA regeneracja świata C `93842a609`; pytest gis 1060/2 xfail.
+- **Bramka 3 A16 Low (czysty APK `artifacts/apk/kamion-0.1.0-3a60019ff1.apk`, valid):** p95 33,46/33,48, **p99 ~50 ms OVER** (s16: 33,6) → zadanie 0177. Kamery 57/57, 46/46. PSS 900/926 MB.
+- **Gałęzie GOTOWE do scalenia (worktree + live `artifacts/live/<wt>.md`):** `horizon-0170` (krytyk w toku/zrobiony → `docs/reports/visual/REVIEW-2026-11-13-s17-0170.md`), `bldg2-0171` (→ `...-0171.md`), `determ-0173` (generator deterministyczny; ~21 tys. drzew podszytu przestawionych jednorazowo), `truck-regs-0175` (krytyk SCAL warunkowo; P0 Low: znikający kontur/tablica naczepy — sprawdzić regresję, stan w live).
+- **W toku (zatrzymane WIP z NASTĘPNYM KROKIEM w live):** `p1b-0172` (P1 bramki 3: 182011, cm924, P2 filary/kapa), `perf-p99-0177` (regresja p99), `lamps-0178` (białe lampy o zmierzchu), `dojlidy-vis-0179` (Fable; Dojlidy wizualnie). Wznawiać jako NOWYCH agentów z plików live.
+- **Kolejność po resecie:** krytycy 0170/0171 (jeśli brak raportów) → merge 0170 → 0171 → 0173 → 0175 (generated/* `--ours`; overrides.yaml = suma bloków) → JEDNA regeneracja (`pwsh -File artifacts/lead-s17/regen.ps1` — build_region, build_world, fidelity, export_route, import) → pytest gis → commit generated → czysty APK (drzewo CZYSTE przed buildem!) → visual-critic SBS → gate3 A16 (załóż `artifacts/locks/PHONE_RUN` ręcznie — gate3-run.ps1 go nie zakłada; agenci z Unity zrywają adb) → S24+ High/30 (bateria ≥ 40 %, < 36 °C).
+- **Mistral:** otwarte PR #42 M45 (nie scalamy), #49 M51 (M51-FIX), #50 M53 (M53-FIX) — **właściciel ma wkleić M51-FIX i M53-FIX** z `docs/owner/MISTRAL-FIXES-8.md`; r7 M40–M43 niezlecone (M39 pominąć — zrobione w 0168). Wzorzec: Mistral nie ogląda obrazów — przegląd zawsze z obejrzeniem próby.
+- **Właściciel:** odsłuch A/B audio 0176 (`artifacts/audio-synth-0176/ab/`, pytania w ADR 0176); decyzje D62 przyjęte.
+- **Uwagi:** incydent Anthropic (zawieszenia agentów, watchdog 600 s) — zapisywać WIP po każdym kroku, wznawiać z live; pusty nieśledzony `RouteGraph.cs` w katalogu głównym (do usunięcia przez właściciela).
+- **Ostatni przydzielony ADR: 0179.**
+
 # HANDOVER — kamion, SESJA 17 (start 2026-11-13 10:15; 5 h 0 %, reset 15:10 lokalnie; tydzień 39 %, Fable 63 % → agenci Opus/Sonnet, Fable oszczędnie)
 
 ## STAN S17 (lider) — main `1fab6ba82`
