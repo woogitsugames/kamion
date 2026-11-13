@@ -38,21 +38,23 @@ namespace PhysicsRunner.Sim
         /// collider without a material use. Physical value for a steel/painted body sliding on asphalt: UNVERIFIED.
         /// </summary>
         public double Friction = 0.6;
-        /// <summary>Contact stiffness per collider corner [N/m] — WORKING_VALUE, see <see cref="DefaultStiffness"/>.</summary>
-        public double Stiffness = DefaultStiffness;
-        /// <summary>Contact damping per collider corner [N s/m] — WORKING_VALUE, see <see cref="DefaultDamping"/>.</summary>
-        public double Damping = DefaultDamping;
         /// <summary>
-        /// Defaults for new instances — WORKING_VALUE (ADR 0165; the runner CLI --body-k/--body-c changes them for a sweep;
-        /// sweep table in the ADR). No measured crush stiffness exists for this fictional truck, so the values are set by:
-        /// k = 1e6 N/m: the largest static corner load of the suite (laden trailer lying on its side, ~80 kN per corner)
-        /// crushes ~8 cm into body panels / curtain frame — the order of real sheet-metal deformation, no rigid "floor".
-        /// c = 5e4 N s/m: for the front bumper corner (effective mass ~1.5 t) that is damping ratio
-        /// c / (2 sqrt(k m)) ~ 0.65, restitution exp(-pi z / sqrt(1-z^2)) ~ 0.07 (crushing plastic + brackets do not
-        /// bounce, like the PhysX default restitution 0). Bounded above by the jerk limit of the 27 cm kerb
-        /// (max_dv_step 0.35 m/s, D58): k 4e6 or c 1e5 exceed or touch it.
+        /// Contact natural frequency [Hz] and damping ratio [-] per collider corner (ADR 0165) — WORKING_VALUE, see
+        /// <see cref="DefaultHertz"/>. Each corner spring is scaled by that corner's effective mass along the normal,
+        /// k = m_eff (2 pi f)^2, c = 2 zeta m_eff (2 pi f) (the "soft contact" parameterisation of Box2D v3:
+        /// b2_contactHertz / contactDampingRatio; E. Catto, Solver2D, 2024). A fixed k in N/m cannot serve both the
+        /// light bumper corner hitting the road (needs soft: jerk limit) and a 30 t trailer lying on two corners
+        /// (needs stiff: no sinking); a fixed frequency gives every corner the same static sink ~ a/(2 pi f)^2.
         /// </summary>
-        public static double DefaultStiffness = 1.0e6, DefaultDamping = 5.0e4;
+        public double Hertz = DefaultHertz, DampingRatio = DefaultDampingRatio;
+        /// <summary>
+        /// Defaults for new instances — WORKING_VALUE (ADR 0165; runner CLI --body-hz / --body-zeta for a sweep, table
+        /// in the ADR). No measured crush stiffness exists for this fictional truck. Bounds: the 27 cm kerb bumper
+        /// strike (corner ~3.5 m/s into the road, m_eff ~1.5 t) must stay under the jerk limit max_dv_step 0.35 m/s
+        /// (D58), which caps f; the lying laden trailer (corner load ~2 g of its m_eff) must not visibly sink, which
+        /// floors f. zeta: crushing plastic covers, brackets and panels do not bounce (PhysX default restitution 0).
+        /// </summary>
+        public static double DefaultHertz = 4.0, DefaultDampingRatio = 1.0;
         /// <summary>PGS iterations — WORKING_VALUE (PhysX default solverIterations is 6; 10 here, the system is tiny).</summary>
         public int Iterations = 10;
         /// <summary>Ray start above the corner [m] (= deepest penetration that is still resolved) and reach below it [m].</summary>
@@ -60,7 +62,7 @@ namespace PhysicsRunner.Sim
 
         readonly Vec3[] _cornersLocal;
         readonly Vec3[] _r, _n, _t1, _t2;
-        readonly double[] _rhs, _soft, _mn, _mt1, _mt2, _jn, _jt1, _jt2;
+        readonly double[] _rhs, _soft, _sc, _mn, _mt1, _mt2, _jn, _jt1, _jt2;
         int _count;
 
         /// <summary>Extra force / torque about the CoM (world) for this step = contact impulse / dt. Valid after <see cref="Solve"/>.</summary>
@@ -87,7 +89,7 @@ namespace PhysicsRunner.Sim
                             _cornersLocal[k++] = b.Center + new Vec3(sx * 0.5 * b.Size.x, sy * 0.5 * b.Size.y, sz * 0.5 * b.Size.z);
             int n = _cornersLocal.Length;
             _r = new Vec3[n]; _n = new Vec3[n]; _t1 = new Vec3[n]; _t2 = new Vec3[n];
-            _rhs = new double[n]; _soft = new double[n]; _mn = new double[n]; _mt1 = new double[n]; _mt2 = new double[n];
+            _rhs = new double[n]; _soft = new double[n]; _sc = new double[n]; _mn = new double[n]; _mt1 = new double[n]; _mt2 = new double[n];
             _jn = new double[n]; _jt1 = new double[n]; _jt2 = new double[n];
         }
 
@@ -105,11 +107,10 @@ namespace PhysicsRunner.Sim
             Quat q = b.Rotation;
             Vec3 com = b.CenterOfMassWorld;
             Vec3 down = new Vec3(0, -1, 0);
-            // Implicit spring-damper: normal impulse j = dt (k pen_end + c rate_end), pen_end = pen + dt rate_end,
+            // Implicit spring-damper per corner: normal impulse j = dt (k pen_end + c rate_end), pen_end = pen + dt rate_end,
             // rate_end = -vn_end  =>  j = dt k pen - dt (k dt + c) vn_end.  PGS form on the accumulated j:
-            //   dj = (pen k/(k dt + c) - vn - soft j) / (1/m_eff + soft),  soft = 1 / (dt (k dt + c)).
-            double kc = Stiffness * dt + Damping;
-            double soft = 1.0 / (dt * kc), erp = Stiffness / kc;
+            //   dj = (pen k/(k dt + c) - vn - sc j) / (1/m_eff + sc),  sc = 1 / (dt (k dt + c)).
+            double omega = 2 * Math.PI * Hertz;
             for (int i = 0; i < _cornersLocal.Length; i++)
             {
                 Vec3 p = b.Position + q * _cornersLocal[i];
@@ -124,12 +125,14 @@ namespace PhysicsRunner.Sim
                 // pen >= 0: implicit spring-damper target.  pen < 0 (above): free approach up to the gap this step
                 // (speculative, no tunnelling); only the predicted part below the surface feels the soft contact, so
                 // the damper never pushes a corner that is still above the road.
-                _rhs[c] = pen >= 0 ? pen * erp : pen / dt;
                 _mn[c] = EffMass(b, q, _r[c], nrm); _mt1[c] = EffMass(b, q, _r[c], t1); _mt2[c] = EffMass(b, q, _r[c], _t2[c]);
-                _soft[c] = 1.0 / (1.0 / _mn[c] + soft);
+                double k = _mn[c] * omega * omega, kc = k * dt + 2 * DampingRatio * _mn[c] * omega;
+                _rhs[c] = pen >= 0 ? pen * k / kc : pen / dt;
+                _sc[c] = 1.0 / (dt * kc);
+                _soft[c] = 1.0 / (1.0 / _mn[c] + _sc[c]);
                 _jn[c] = 0; _jt1[c] = 0; _jt2[c] = 0;
                 if (pen > MaxPenetration) MaxPenetration = pen;
-                if (pen > 0) SpringEnergy += 0.5 * Stiffness * pen * pen;
+                if (pen > 0) SpringEnergy += 0.5 * k * pen * pen;
             }
             if (_count == 0) return;
 
@@ -145,7 +148,7 @@ namespace PhysicsRunner.Sim
                     Vec3 r = _r[c];
                     // normal: implicit spring-damper, unilateral (j >= 0: the road only pushes)
                     double vn = Vec3.Dot(v + Vec3.Cross(w, r), _n[c]);
-                    double dj = _soft[c] * (_rhs[c] - vn - soft * _jn[c]);
+                    double dj = _soft[c] * (_rhs[c] - vn - _sc[c] * _jn[c]);
                     double jOld = _jn[c];
                     _jn[c] = Math.Max(0, jOld + dj);
                     dj = _jn[c] - jOld;
