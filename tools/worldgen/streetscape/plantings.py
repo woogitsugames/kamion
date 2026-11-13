@@ -921,7 +921,9 @@ def garden_tree(kit, p, z, r, H, cb, species, key, lite=False, cards=3, sprite=N
     dense = DENSE[species]
     occ = 0.86 + 0.14 * PLT.hfloat(key, "to")
     if lite and core and dense > 0.0:
-        PLT._core(kit, cc, z + cb + hc * 0.16, r * 0.46, hc * 0.62, key, sides=4, occ=0.26 * occ, rings=2)
+        # occlusion 0.42 (full variant: 0.26 under seven sprays): with two sprays the core shows, so it is shaded
+        # foliage, not a black box (build 1 of ADR 0170, g7_p07_b Low)
+        PLT._core(kit, cc, z + cb + hc * 0.16, r * 0.46, hc * 0.62, key, sides=4, occ=0.42 * occ, rings=2)
         for i in range(2):
             az = a0 + 0.8 + math.pi * i
             c = cc + np.array([math.cos(az), math.sin(az)]) * r * 0.30

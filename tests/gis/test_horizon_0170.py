@@ -60,9 +60,9 @@ def test_spruce_has_a_dark_core_inside_the_cards():
     assert sum(len(t) for t in kit.T) == 4 * 2 + 3 * 2 + 12, "trunk + three cards + the 12-triangle core"
     core = kit.V[-1]
     W = 0.40 * h + 0.9
-    assert np.hypot(core[:, 0], core[:, 1]).max() <= 0.25 * W + 1e-6, "core stays well inside the silhouette cards"
+    assert np.hypot(core[:, 0], core[:, 1]).max() <= 0.18 * W + 1e-6, "core stays well inside the silhouette cards"
     occ = np.linalg.norm(kit.C[-1][:, :3] * 2 - 1, axis=1)
-    assert occ.max() <= 0.36, "core is in the tree's own shade"
+    assert occ.max() <= 0.5, "core is in the tree's own shade"
 
 
 def test_near_lite_garden_tree_gets_core_and_shoulders():

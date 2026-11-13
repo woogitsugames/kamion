@@ -891,7 +891,8 @@ overrides:
     height_m: [6.5, 11.0]
     spacing_m: 4.5
     mix: {birch: 0.40, maple: 0.28, alder: 0.24, linden: 0.08}
-    emergent: {share: 0.02, height_m: [14.0, 19.0]}
+    # no `emergent`: a lone 14-19 m tree lifts the HLOD canopy into a tent (render 303305, build 1 of ADR 0170); the
+    # poplars of the photo stand in the roadside row, not in this stand
   # ---------------------------------------------------------------- gaps between carriageways (roads/gores.py, ADR 0077)
   # Rule: a gap between carriageways is a kerbed island only where OSM or the orthophoto shows one. OSM has no
   # area:highway / traffic_island objects in this tile, so places the GUGiK orthophoto (WMS HighResolution 0.08 m,

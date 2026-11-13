@@ -162,8 +162,8 @@ def test_one_card_per_fence_panel_and_foliage_normals():
     assert fol.sum() > 40
     nrm = C[fol][:, :3] * 2 - 1
     ln = np.linalg.norm(nrm, axis=1)
-    core = ln < 0.5                                     # ADR 0170: the spruce's dark core (occlusion 0.30-0.34)
-    assert core.sum() == 11 and (ln[core] <= 0.36).all() and (nrm[core][:, 2] > 0.0).all()
+    core = ln < 0.6                                     # ADR 0170: the spruce's dark core (occlusion 0.44-0.48)
+    assert core.sum() == 11 and (ln[core] <= 0.5).all() and (nrm[core][:, 2] > 0.0).all()
     assert np.allclose(ln[~core], 1.0, atol=0.02) and (nrm[~core][:, 2] > 0.2).all()                  # outward AND up
     th = V[:, 0] < 2.5
     assert len([t for t in T if th[t].all()]) <= 40                             # thuja: core + two cards (ADR 0114: 36-60)
