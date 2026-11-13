@@ -35,3 +35,5 @@ Zapisano ablacją Low/baseline (). To diagnostyka, nie wynik produkcyjnego after
 Zapisano ablacją Low/zero-bias (rq_shadowbias=0,rq_shadownormal=0). To diagnostyka, nie wynik produkcyjnego after. NASTĘPNY KROK: obejrzeć cztery kadry i porównać z bazą.
 
 Zapisano ablacją Low/baked-only (rq_shadow=0). To diagnostyka, nie wynik produkcyjnego after. NASTĘPNY KROK: obejrzeć cztery kadry i porównać z bazą.
+
+Zapisano ablacją Low/no-baked (rq_worldsun=0). To diagnostyka, nie wynik produkcyjnego after. NASTĘPNY KROK: obejrzeć cztery kadry i porównać z bazą.
