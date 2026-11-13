@@ -393,7 +393,8 @@ def _signals(pl, overrides, rep, carriage, islands):
             continue
         try:
             p = np.asarray(o["at_en"], float)
-            face = _bearing_vec(o["travel_bearing_deg"])
+            # prototype +y = the lens side: it looks back along the travel direction, at the drivers
+            face = -_bearing_vec(o["travel_bearing_deg"])
         except KeyError as e:
             rep["stale"].append(f"{o['id']}: {e}")
             continue

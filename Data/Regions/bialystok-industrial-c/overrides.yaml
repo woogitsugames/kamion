@@ -441,7 +441,12 @@ overrides:
     # travel_bearing_deg WORKING_VALUE (+-10 deg).
     at_en: [-487.8, -3.8]
     travel_bearing_deg: 295
-    parts: [{face: D-1}]
+    # ADR 0161: the A-7 under the diamond (same post; ADR 0160 left it out as "turned to another flow"). On the
+    # frame both plates show their yellow faces at about the same angle, and the diamond sits ~3.7-4.2 m above the
+    # road (centre 28.8 deg above the horizon from ~7 m, eye 0.9) - with a plate under it, not at 2.0 m. The real
+    # diamond also reads ~1.5 x the 0.6 m medium plate (large group?): size UNVERIFIED, not changed.
+    lower_edge_m: 2.2
+    parts: [{face: D-1}, {face: A-7}]
     mapillary: ["4312632558767412"]
     reason: >-
       ADR 0160 (REVIEW s16 G3-B P1): main-road diamond on the median kerb of the trunk_link under the Andersa
@@ -2172,7 +2177,13 @@ overrides:
       build with -1.9 put the kerb 1.2 m west of the orthophoto). WORKING_VALUE +-0.4 m.
     confidence: medium
     verify: owner photo session item 1 (access road)
-    set: {center_offset: -0.75, width: 7.7}
+    # The first 36 % of the edge (22 m from the depot node: the two booms of kwadrat-park-gate-kit, their side strips
+    # and closure lines, a gameplay anchor laid on the generated 4.0 m lanes) keeps the generated section; the
+    # carriageway widens over the next 9 m. With the full length at 7.7 m the exit boom no longer reached its side
+    # strip (tests/gis/test_depot_yard.py::test_region_gate_cannot_be_driven_round). The real road is as wide at the
+    # gate too; that part waits for the owner's photos of the gate (D-list item 1).
+    set: {center_offset: [[0.0, 0.0], [0.36, 0.0], [0.5, -0.75], [1.0, -0.75]],
+          width: [[0.0, 4.0], [0.36, 4.0], [0.5, 7.7], [1.0, 7.7]]}
   - id: kwadrat-exit-verge-lawn
     kind: unpaved_area
     polygon_en: [[586.35, -627.5], [605.6, -589.0], [610.0, -589.0], [590.75, -627.5]]

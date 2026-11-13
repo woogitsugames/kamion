@@ -82,7 +82,8 @@ def test_gate3_signal_mast_and_post():
     assert high[1] == [5.0, 0.0]                                       # 5 m along the arm (west)
     assert high[3] == pytest.approx(140.0 + G3.S.SIGNAL_MAST_H - 1.25) and low[3] == pytest.approx(142.9)
     assert mast[2] == pytest.approx(G3.PP_yaw(G3._bearing_vec(270)), abs=1e-3)
-    assert high[2] == low[2] == pytest.approx(G3.PP_yaw(G3._bearing_vec(0)), abs=1e-3)
+    assert high[2] == low[2] == pytest.approx(G3.PP_yaw(-G3._bearing_vec(0)), abs=1e-3)   # lenses face the drivers
+    assert low[1] == [10.0, -0.15]
     g = rep["gate3_landmarks"]
     assert [s["id"] for s in g["signals"]] == ["m", "p"] and g["stale"][0].startswith("bad:")
 
