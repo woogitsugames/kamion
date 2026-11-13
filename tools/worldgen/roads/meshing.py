@@ -975,7 +975,7 @@ def build_patch(buf, net, j, coarse=False, stats=None):
                 T.append((b0 + i, b1 + i, b1 + i1))
                 T.append((b0 + i, b1 + i1, b0 + i1))
         buf.add(layer, mat, V, V[:, :2].copy(), np.array(T), footprint=(layer == "road" and not coarse), src=j.id,
-                UV1=None if coarse else _patch_uv1(net, j, V))
+                UV1=None if coarse else _patch_uv1(net, j, V, poly))
         if stats is not None:
             stats["polar"] = stats.get("polar", 0) + 1
     else:
@@ -985,7 +985,7 @@ def build_patch(buf, net, j, coarse=False, stats=None):
             if res is not None:
                 V, T = res
                 buf.add(layer, mat, V, V[:, :2].copy(), T, footprint=(layer == "road" and not coarse), src=j.id,
-                UV1=None if coarse else _patch_uv1(net, j, V))
+                UV1=None if coarse else _patch_uv1(net, j, V, poly))
                 if stats is not None:
                     stats["repaired"] = stats.get("repaired", 0) + 1
                     stats.setdefault("repaired_ids", []).append(j.id)
@@ -1010,7 +1010,7 @@ def build_patch(buf, net, j, coarse=False, stats=None):
                 kind = "earclip"
             V = np.column_stack([poly, zb])
         buf.add(layer, mat, V, V[:, :2].copy(), T, footprint=(layer == "road" and not coarse), src=j.id,
-                UV1=None if coarse else _patch_uv1(net, j, V))
+                UV1=None if coarse else _patch_uv1(net, j, V, poly))
         if stats is not None:
             stats[kind] = stats.get(kind, 0) + 1
             if kind == "earclip":
@@ -1129,10 +1129,16 @@ def _repair_fill(poly, zb, ph, spacing):
 # paths of the arms smear out; drawn at full strength they read as dense parallel streaks across an unmarked plate.
 # UV1.y (distance to the carriageway edge) of plate vertices with lane data carries this offset; the shader subtracts it
 # (KamionRoadStains.hlsl, KamionPlateWear). Plate edges are <= ~12 m, so > 15 m is unambiguous.
+# The smear grows from the plate outline (where the arms' lanes enter: no seam against the arm, ADR 0110) to full over
+# PLATE_SPREAD_M inwards; linear in UV1.y so it interpolates smoothly across triangles:
+#   UV1.y = PLATE_EDGE_FLAG + PLATE_SPREAD_SCALE * spread + min(edge, 1 m)
+# (the shader's gutter / damp strip only reads edge < 0.65 m, and at the outline spread = 0, so the kerb edge survives).
 PLATE_EDGE_FLAG = 20.0
+PLATE_SPREAD_SCALE = 100.0
+PLATE_SPREAD_M = 8.0          # WORKING_VALUE: ~two lane widths into the box
 
 
-def _patch_uv1(net, j, V):
+def _patch_uv1(net, j, V, poly=None):
     """UV1 = (lane coordinate, distance to the carriageway edge) of a junction plate, in the frame of its through
     road: the widest arm and the arm opposite to it (ADR 0110, REVIEW s10-0100 P1-2). Plates had no UV1 (the exporter
     default -1 / 5 m = no wheel paths, no gutter dirt), so every plate in a weathered carriageway read as a cleaner,
@@ -1142,6 +1148,7 @@ def _patch_uv1(net, j, V):
     lane = np.full(len(P), -1.0)
     edge = np.full(len(P), 5.0)
     score = np.full(len(P), np.inf)
+    flagged = np.zeros(len(P), bool)
     if not j.arms:
         return np.column_stack([lane, edge])
     hws = [float(a.chain.hw_at(float(a.s(j.trims[i])))) for i, a in enumerate(j.arms)]
@@ -1188,8 +1195,17 @@ def _patch_uv1(net, j, V):
         better = (dist < score) & (dist <= hw + 0.3)
         lane[better] = np.asarray(lc, float)[better]
         # ADR 0194: +PLATE_EDGE_FLAG marks a junction plate (Kamion/World PBR: wheel paths spread by turning traffic)
-        edge[better] = (np.maximum(hw - dist, 0.0) + PLATE_EDGE_FLAG)[better]
+        edge[better] = np.maximum(hw - dist, 0.0)[better]
+        flagged[better] = True
         score[better] = dist[better]
+    if poly is not None and flagged.any():
+        import shapely
+        ring = shapely.LinearRing(np.asarray(poly, float)[:, :2])
+        d_out = shapely.distance(shapely.points(P), ring)
+        t = np.clip(d_out / PLATE_SPREAD_M, 0.0, 1.0)
+        spread = t * t * (3.0 - 2.0 * t)
+        enc = PLATE_EDGE_FLAG + PLATE_SPREAD_SCALE * spread + np.minimum(edge, 1.0)
+        edge[flagged] = enc[flagged]
     return np.column_stack([lane, edge])
 
 

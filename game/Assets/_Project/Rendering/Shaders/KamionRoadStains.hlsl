@@ -20,16 +20,21 @@ void KamionOilStain(float4 look, half atlasSmooth, inout half smooth, inout half
     alpha = pow(saturate(alpha), (half)look.z);
 }
 
-// ---- junction plates (_ROADWEAR). roads.meshing._patch_uv1 adds PLATE_EDGE_FLAG (20 m) to UV1.y of plate vertices
-// that carry lane data; legacy data (edge <= ~12 m) is unaffected. Returns 1 on a plate and restores the edge distance.
+// ---- junction plates (_ROADWEAR). roads.meshing._patch_uv1 encodes UV1.y = 20 + 100 * spread + min(edge, 1 m) on plate
+// vertices with lane data; spread 0 at the outline (where the arms' lanes enter: no seam, ADR 0110) .. 1 at >= 8 m inside
+// the box. Linear, so it interpolates smoothly across triangles. Legacy data (edge <= ~12 m) decodes as "not a plate".
+// Returns the smear weight 0..1 and restores the edge distance (exact below 1 m, where the gutter strip reads it).
 #define KAMION_PLATE_EDGE_FLAG 20.0
-#define KAMION_PLATE_WHEEL_KEEP 0.35     // WORKING_VALUE: share of the lane-locked wheel-path contrast left on a plate
-#define KAMION_PLATE_DRIP_KEEP 0.4      // WORKING_VALUE: share of the lane-centre drip band left on a plate
+#define KAMION_PLATE_SPREAD_SCALE 100.0
+#define KAMION_PLATE_WHEEL_KEEP 0.3      // WORKING_VALUE: share of the wheel-path contrast left deep inside a plate
+#define KAMION_PLATE_DRIP_KEEP 0.4      // WORKING_VALUE: share of the lane-centre drip band left deep inside a plate
 half KamionPlateWear(inout float2 w)
 {
     half plate = step(15.0, w.y);
-    w.y -= KAMION_PLATE_EDGE_FLAG * plate;
-    return plate;
+    float v = w.y - KAMION_PLATE_EDGE_FLAG;
+    half spread = (half)saturate((v - 1.0) / KAMION_PLATE_SPREAD_SCALE) * plate;
+    if (plate > 0.5) w.y = clamp(v, 0.0, 1.0);   // edge, exact below 1 m; the box interior reads as > 0.65 m
+    return spread;
 }
 
 // ---- yard grime follows the traffic (_GRIME on paved yards; manifest "grime_traffic"). The damp / oily pools of

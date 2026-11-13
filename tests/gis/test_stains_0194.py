@@ -39,3 +39,18 @@ def test_oil_look_is_matt_dark_and_opt_in():
     assert 0.4 <= look["coverage_gamma"] < 1.0
     # manhole / drain covers share _DECAL_ALPHA; they must not get the oil look
     assert all("oil_look" not in v for k, v in M.items() if k != "decal_oil")
+
+
+def test_plate_uv1_spread_encoding_round_trips():
+    """ADR 0194: plate UV1.y = 20 + 100 * spread + min(edge, 1); decode like KamionPlateWear."""
+    from roads import meshing as MS
+    for spread in (0.0, 0.3, 1.0):
+        for edge in (0.0, 0.2, 0.64, 3.0):
+            enc = MS.PLATE_EDGE_FLAG + MS.PLATE_SPREAD_SCALE * spread + min(edge, 1.0)
+            assert enc > 15.0
+            v = enc - MS.PLATE_EDGE_FLAG
+            dec_spread = min(max((v - 1.0) / MS.PLATE_SPREAD_SCALE, 0.0), 1.0)
+            if spread == 0.0:
+                assert dec_spread == 0.0 and abs(min(max(v, 0.0), 1.0) - min(edge, 1.0)) < 1e-9
+            else:
+                assert abs(dec_spread - spread) <= 1.0 / MS.PLATE_SPREAD_SCALE + 1e-9
