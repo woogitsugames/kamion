@@ -181,7 +181,7 @@ numbers and the SBS renders (`artifacts/world-int-s16`), main with 0153 / 0154 f
 | rule barrier removed by `no_guardrail`, m | - | 69 (2 zones: 40 + 29) |
 | runs joined onto another rail (`joined_ends`) | 9 | 12 |
 | pytest `tests/gis` | 986 passed, 4 xfailed (review of 0154) | 1001 passed, 3 xfailed (+15 passed: 12 tests of `test_barriers_0159.py`, 2 of PR #38 in `test_buildings_r9.py`, the former xfail of the free deck ends) |
-| Unity EditMode | 484 / 484 (review of 0154) | 484 / 484 |
+| Unity EditMode | 484 / 484 (review of 0154) | 484 / 484; 493 / 493 after the merge of main 222b5e9a7 (ADR 0155) |
 | Unity import | - | OK, 64 chunks, corridor 41 |
 
 Low budget, 48 control cameras, clear (`artifacts/barriers-0159/budget-low.txt`; draws = renderer + shadow +
@@ -219,6 +219,12 @@ Renders looked at (Low, editor; no phone run on this branch - CLAUDE.md rule 2 s
   NE rail shows its beam, not its posts, to the NW-bound carriageway.
 - Copies <= 960 px in the main checkout: `artifacts/barriers-0159/pairs/` (`Low-clear`, `Low-overcast`: 42 + 42 SBS
   pairs of after6; `probe`: 19 probe frames + 3 sheets).
+
+After the merge of main 222b5e9a7 (ADR 0155: shadow bias of three materials in the importer and the shader, no generator
+change) the world was imported and rendered again without a regeneration (`after7`): per-camera Low statistics
+identical to after6, SBS frames differ only under the Bieżeństwa viaduct (the sun patches of 0155; MAE <= 0.0013).
+The copies in `artifacts/barriers-0159/pairs/` and `after7/probe/` are that state; the probe names above are the
+same.
 
 Not done: an independent visual-critic review (a subagent may not start one); a phone build.
 
