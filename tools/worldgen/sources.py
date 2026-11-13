@@ -139,8 +139,11 @@ def ingest_dataset(dl: Downloader, meta: dict, files: list[dict]) -> dict:
             rec.update(res)
         out_files.append(rec)
     manifest = {**{k: v for k, v in meta.items() if k != "raw_subdir"}, "in_git": False, "files": out_files}
-    if "used_by" in manifest:  # shared (per-powiat) datasets keep every consumer region (ADR 0166)
-        manifest["used_by"] = sorted(set(old.get("used_by", [])) | set(manifest["used_by"]))
+    # ADR 0166: a shared (per-powiat) dataset already ingested for another region with identical content is NOT
+    # rewritten: its sha256 is pinned in that region's region.yaml (rewriting only "used_by" would invalidate region C).
+    # The new consumer records the manifest (and its sha256) in its own region.yaml.
+    if old and {k: v for k, v in old.items() if k != "used_by"} == {k: v for k, v in manifest.items() if k != "used_by"}:
+        return old
     if out_files:
         save_manifest(manifest)
     return manifest
