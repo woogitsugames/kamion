@@ -136,3 +136,50 @@ M52-FIX dopisany do `docs/owner/MISTRAL-FIXES-8.md`.
 Wzorzec rundy r8 potwierdzony: Mistral rzetelnie obsługuje API/teksty/licencje, ale **nie ogląda obrazów** (zdjęcia, rysunki) i deklaruje wizję, której nie było. Przy kolejnych zleceniach wymagać w samokontroli zdania „co widać” per obraz.
 
 KONIEC PRZEGLĄDU (wszystkie 5 PR). NASTĘPNY KROK dla lidera: przekazać M49/M54/M50/M55/M52-FIX Mistralowi; niczego nie scalono.
+
+## Ponowny przegląd po M52-FIX (s17)
+
+PR #48, commit `2e1ed8c`; `gh pr diff --name-only` = 5 plików, wszystkie w `research/mistral/p2-surfaces-2/` (OK). Sprawdzone na źródle: Dz.U. 2019/2311 zał. 2 wyrenderowane PyMuPDF 150 dpi i obejrzane strony 539 (P-3b), 540 (P-4/P-5), 571 (P-12), 572 (P-13), 573 (P-14); kadry jar-03/10/16/24 obejrzane; seed samokontroli odtworzony w `python -I`. Mistral sam przyznaje w komentarzu PR, że w sesji FIX **nie renderował PDF i nie oglądał rysunków ani kadrów** (oparł się na tym przeglądzie + arytmetyce).
+
+| Punkt M52-FIX | Stan | Uwagi |
+|---|---|---|
+| (1) P-3a/P-5/P-6 kreska 4,00 / przerwa 2,00, linia 0,12, podwójne 0,12+0,12+0,12 | **zrobione** | M52-003…015 SOURCED, ESTIMATED z pikseli usunięte; osobna kolumna „zużycie m²/mb” w README |
+| (1) kolumna zużycia farby | **zrobione** | 0,20/0,24/0,32/0,08 m²/mb poprawnie jako zużycie. Wątpliwość „P-5 0,32 vs 0,16” rozstrzygnięta oględziną s. 540: rysunek pokazuje **dwie** linie P-5 (obie krawędzie pasa zmiennego) → 2×0,16 = 0,32; Mistral zostawił otwarte |
+| (1) „obejrzyj każdy rysunek, usuń szacunki tam, gdzie jest etykieta” | **nie** | rysunków nie oglądano; patrz P-3b i P-13 niżej |
+| (2) P-3b | **częściowo — błąd** | „0,18” = m²/mb poprawnie, ale kreska/przerwa wpisane UNVERIFIED, a rys. 2.2.1.9 ma etykiety **kreska 1,00 m / przerwa 1,00 m** (pominięte; brak wiersza) |
+| (2) P-12 | zrobione (proweniencja zła) | szerokość 0,50 m poprawna, ale to **etykieta „0,5”** na rys. 4.2.3.1, nie „arytmetyka podpisu”; tramwaj ≥ 1,5 m OK |
+| (2) P-13 | **błąd** | etykiety czytelne: **podstawa trójkąta 0,50**, odstęp 0,25, **wysokość 0,70**; Mistral: „0,50 niepewny, arytmetyka wskazuje 0,75” — hipoteza 0,75 FAŁSZYWA (README l. 110, M52-019). „0,2625” (nie 0,2825) poprawnie |
+| (2) P-14 | zrobione (proweniencja zła) | 0,75 długość / 0,25 odstęp / **0,5 głębokość — etykieta**, nie arytmetyka; odległości 2,0/0,5/8,0/2,0/1,5 m z tekstu OK |
+| (3) Jaroszówka = estakada Andersa, ring negatywnie M52-117 | **zrobione** | jar-03/10/16/24: bariery mostowe estakady, kominy/zbiornik EC, latarnie dwuramienne; jar-24 = koniec estakady z ostrzegawczym znakiem włączania się pasa — opis zgodny. M52-117 BRAK KADRÓW (Panoramax bbox 0, KartaView 24/24 estakada) — przyjąć jako negatyw (nie weryfikowałem API) |
+| (4) kolor_srgb | **zrobione** | wartości usunięte z M52-029…105 i 116; zostały tylko Rynek 106–108 (inna metoda, środek kadru). Zad. 4 przez obejrzenie kadrów **niewykonane** — jawnie UNVERIFIED (akceptowalne) |
+| (5) `.gitignore` | **zrobione** | `files/`, `*.zip` |
+| (6) samokontrola 20 % z seedem | **zrobione** | seed 20261113, `random.Random(20261113).sample(ids,24)` odtworzone 1:1 (24/117); kadry jawnie „nie obejrzano w sesji FIX” — uczciwie, ale samokontrola znów nie wykryła P-3b/P-13 |
+
+**Werdykt: NADAL DO POPRAWY** (drobne, 1 runda): (a) P-3b dodać wiersz kreska **1,00** / przerwa **1,00** m (rys. 2.2.1.9, s. 539) SOURCED; (b) P-13 podstawa **0,50**, wysokość **0,70**, odstęp 0,25 (rys. 4.2.4.1, s. 572) SOURCED — usunąć hipotezę 0,75; (c) P-12 0,5 i P-14 głębokość 0,5 — proweniencja „etykieta”, nie arytmetyka; (d) P-5 0,32 = dwie linie na rysunku — zamknąć wątpliwość. Alternatywa dla lidera: scalić z erratą (a)–(d) wpisaną przez lidera — reszta paczki (zad. 1 linie, 2 negatyw, 3/6 wymogi, 4 UNVERIFIED) jest już poprawna. Nie scalono, nie skomentowano.
+
+**Fakty dla agentów (uzupełnienie):** P-3b kreska 1,00 / przerwa 1,00 m; P-12 szerokość 0,50 m; P-13 trójkąt podstawa 0,50 × wysokość 0,70 m, odstęp 0,25 m; P-14 prostokąt 0,75 × 0,50 m, odstęp 0,25 m (Dz.U. 2019/2311 zał. 2, s. 539/571–573).
+
+## Ponowny przegląd po M49-FIX (s17, lider; agent przeglądu zawiesił się)
+PR #46 @ f7a4f289f, diff tylko w `research/mistral/p6-dojlidy-gates/` (0 plików poza). Manifest (35 wierszy): M49-010 i M49-024 — pomiar wycofany, way 248109974 opisany jako `service=parking_aisle`, brama drogowa PZZ nieustalona ✔; M49-012 — teza „brama ciężarówek” UNVERIFIED ✔; M49-029 — RS16 pas wjazdowy do Miasta, odniesienie do stałego punktu kontroli z PFU 2020 ✔; M49-035 — Karpińskiego bez ograniczeń hgv wg OSM ✔. **Werdykt: PRZYJĘTA (do scalenia).** Fakty dla 0166 — bez zmian względem sekcji powyżej.
+
+## Ponowny przegląd po M54-FIX (s17)
+PR #44, diff: 10 plików, wszystkie w `research/mistral/p8-restrictions-3/` (0 poza). ZIP v2 (`research/_incoming/mistral-p8-restrictions-3-v2/`): **44/44 JPG ≤ 1600 px** (sprawdzone `magick identify`; wcześniej 2048×1536) ✔.
+Dwa błędnie opisane kadry — poprawione: `putry_6ded8ec0` (M54-007/002 + photos.csv): teraz B-26 + B-33 „70” + tablice 8/19, E67 (nie B-19) — zgodne z obrazem ✔; `tysiac_412f2d02` (M54-008): kamera jedzie po jezdni obiektu, nad jezdnią nic nie wisi, znaki 70 + ostrzegawczy — zgodne z obrazem ✔. Wnioski (brak B-16, brak ograniczenia skrajni na Al. Tysiąclecia nad linią 6) bez zmian.
+Próba 4 losowych kadrów (opis vs obraz): `tysiac_1bbb5f28` (OK, „na obiekcie” nieweryfikowalne z samego kadru), `s8_25c37bd1` (OK co do barier/latarni, „bez znaków” — w tle mały żółty znak, bez znaczenia dla B-16) oraz **2 błędne opisy w photos.csv**: `s8_0a2121ca` — „znaki ostrzegawcze o nierównościach (100 m)”, a to znaki A-? łączenia/zwężenia pasów („wlot/połączenie pasów”, tabliczka 100 m); `wolukrainy_4ac8cbd1` — „znak B-1”, brak znaku B-1 w kadrze (są słupki U-23 i roboty drogowe). Obie pomyłki nie dotyczą B-16/skrajni ani żadnej tezy manifestu.
+**Werdykt: Z ERRATĄ** (do scalenia). Erratum: opisy `s8_0a2121ca` i `wolukrainy_4ac8cbd1` w photos.csv (ZIP, poza gitem) — nie używać jako źródła znaków; reszta opisów kadrów niesprawdzona w 100 % (próba 6 z 44).
+
+## Ponowny przegląd po M50-FIX (s17, PR #45, commit `dfb0a68c9`)
+**Werdykt: Z ERRATĄ** (lider scala + REVIEW-NOTE). Główny błąd (VERIFIED_WIZJA bez oglądania) naprawiony: 7 fałszywych kadrów z przeglądu (hydranty 5062587/1326673477/1326673829, U-5a, żerdź, bariera 993066622, szafka) → NOT_FOUND z opisem „co widać”; dodano kadry z kotwicą OSM (odchyłka ≤ 30°, ≤ 25 m) i 3 kadry Panoramax z `view:azimuth`; uczciwa tabela pokrycia typów (3 typy ≥ 2 kadry, hydrant 1, ławka 1, 6 typów 0 — wynik negatywny z odległością najbliższego węzła).
+- **Zakres:** `git diff --stat origin/main...` = 5 plików, tylko `research/mistral/p9-furniture-3/`, 703 linie. Manifest 65 wierszy: 25 VERIFIED (dokumenty) / 16 VERIFIED_WIZJA / 24 NOT_FOUND. ZIP v2 (`research/_incoming/mistral-p9-furniture-3-v2/`): 40 kadrów + 7 dokumentów; kadr 1326673717 (M50-017) jest ✓.
+- **Obejrzane wszystkie 16 VERIFIED_WIZJA** (arkusze 2×2, zbliżenia 050/056/017/059): zgodne 13/16 — latarnie 001/002/056/057/058 (058 noc, świecąca oprawa), sygnalizatory 004/005/006/052/053/054/055, **hydrant M50-050 potwierdzony** (czerwony hydrant nadziemny przy ekranie akustycznym, środek-prawo za przejściem).
+- **Erratum (3 wiersze → NOT_FOUND):** **M50-059, M50-060** „bariera U-12” — na kadrach jest **prywatne ogrodzenie prętowe posesji** (sklep „Części do samochodów ciężarowych”, kotwica OSM `barrier=fence`), nie drogowa bariera U-12 → typ U-12 = **0 kadrów**. **M50-017** „ławka” — widać długą przeszkloną wiatę/pawilon przy BP i pieszego; ławki nie widać → ławka = **0 kadrów** (pozostaje dokument Glasdon).
+- **Formalnie:** brak komentarza w PR z surowym `git diff --stat` i licznikami per typ (wymóg FIX) — liczniki są w README; nie blokuje.
+- **Dla następcy 0162:** na M50-056/057 widać **biało-czerwone słupki blokujące przy krawędzi chodnika** (~1 m) — lepszy kandydat na słupek drogowy niż wszystkie wiersze U-5a (niezakotwiczone w OSM, UNVERIFIED typu).
+
+## Ponowny przegląd po M55-FIX (s17, PR #47, commit `3b5ee5156`)
+**Werdykt: PRZYJĘTA (do scalenia).**
+- **Integralność (praca bez gita):** `git diff --stat origin/main...` = 6 plików, tylko `research/mistral/p5-audio-3/`, 242 linie; commity FIX `c47fc403c` (README 12, manifest 26, sources 2 linie) i `3b5ee5156` (README 2 linie) — wyłącznie zamiany tekstu bitrate/uwag, żadnych usuniętych pozycji ani plików spoza katalogu.
+- **(1) Bitrate:** `ffprobe` 8/8 podglądów: 174,1 / 180,3 / 184,2 / 186,7 / 182,7 / 192,8 / 185,3 / 179,0 kb/s — zgodne z deklaracją 174–191 (jeden plik, `fs_659586`, 192,8 vs „191” — pomijalne).
+- **(2) Atrybucje:** 5 wierszy Commons CC BY-SA (009–013) z „Tylko referencja — licencja ShareAlike, nie do buildu gry” ✓; M55-003 gotowy tekst CC BY 4.0 (tytuł, autor, URL, licencja) ✓.
+- **(3) M55-002 Volvo B8R — sprawdzone 0:31, 1:51 i 2:26** (ffmpeg → 4 kHz mono, FFT 4096, krok 0,25 s, `python -I`): za każdym razem ten sam wzorzec — narastanie składnika 70–100 Hz (szczyt ~85 Hz ≈ zapłon 6-cyl. ~1700 obr/min), potem **nagły spadek RMS o ~13–16 dB we wszystkich pasmach na 0,75–1,0 s** (0:31,25–0:32,0; 1:50,25–1:51,0; 2:26,0–2:26,75) i powrót przy niższym tonie (~66 Hz; stosunek 85/66 ≈ 1,29 = typowy krok biegu). Sygnatura zgodna ze zmianą biegu w górę z przerwą momentu → twierdzenie „przerwa momentu słyszalna” **potwierdzone dla 3 sprawdzonych znaczników**. Typ skrzyni (I-Shift/AMT) słusznie pozostaje UNVERIFIED. „Podwójna” przy 1:51 — w oknie 1:46–1:58 widzę jedno zdarzenie (drobiazg).
+- **Fakt dla `audio`:** wzorzec przerwy momentu B8R (do syntezy AMT): ~0,3–0,5 s narastania obrotów, przerwa 0,75–1,0 s z −13…−16 dB, powrót ze spadkiem f0 o ~22 %.
