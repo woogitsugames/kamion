@@ -1,0 +1,38 @@
+{
+  "zadanie": "P14 - samokontrola >=20% wpisow manifest.csv (ponowna obserwacja kadrow i porownanie z opisem)",
+  "manifest": "research/mistral/p14-office-tower/manifest.csv",
+  "manifest_wierszy": 18,
+  "wymagana_proba": 4,
+  "seed": 14,
+  "metoda_losowania": "random.Random(14).sample(range(1, 19), 4)",
+  "wylosowane_wpisy": [
+    {
+      "id": "P14-004",
+      "element": "ściana_SW",
+      "plik": "files/kartaview/kv_7119874_seq14055_lth_2016-08-24.jpg",
+      "url": "https://storage2.openstreetcam.org/files/photo/2016/8/24/lth/14055_7967e_57bd4ca5eaeec.jpg"
+    },
+    {
+      "id": "P14-005",
+      "element": "ściana_SW",
+      "plik": "files/kartaview/kv_7119875_seq14055_lth_2016-08-24.jpg",
+      "url": "https://storage2.openstreetcam.org/files/photo/2016/8/24/lth/14055_e71d3_57bd4ca6d5e7a.jpg"
+    },
+    {
+      "id": "P14-008",
+      "element": "ściana_NW",
+      "plik": "files/commons/20210328_105711_March_2021_in_Białystok_Podlaskie_Centrum_Rolno–Towarowe_(ul._Andersa).jpg",
+      "url": "https://commons.wikimedia.org/wiki/File:20210328_105711_March_2021_in_Bia%C5%82ystok_Podlaskie_Centrum_Rolno%E2%80%93Toworowe_(ul._Andersa).jpg"
+    },
+    {
+      "id": "P14-017",
+      "element": "ściana_SE",
+      "plik": "files/kartaview/kv_993062122_seq2769366_lth_2019-08-25.jpg",
+      "url": "https://storage13.openstreetcam.org/files/photo/2020/7/17/lth/2769366_79b96_5f11bae63918c.jpg"
+    }
+  ],
+  "status_audytu": "BLOCKED",
+  "opis_blokady": "Narzędzie analizy obrazów (uploads.analyze_image) ma twardy limit 20 wywołań na odpowiedź. Limit wyczerpany w sesji po obejrzeniu kadrów kluczowych (Commons 20200711 073045, 20210328 105711, 20210328 115626) oraz kadrów rozstrzygnięć adresowych i kontekstowych. Ponowna obserwacja wylosowanych kadrów była niemożliwa - zgodnie z zasadą 'nie zmyślaj' nie twierdzono weryfikacji, której nie wykonano.",
+  "dokończenie": "Kadry wylosowanej próby znajdują się w mistral-p14-office-tower-files.zip (przekazywanym liderowi poza gitem). Audyt dokończyć przy pierwszym dostępie do analizy obrazów: ponownie obejrzeć 4 kadry, porównać z opisami w manifest.csv (P14-008: siatka/kolumny na NW, witryny, nadbudówka, attyka; P14-004/005/017: obecność wieży w kadrze, ściana, układ okien), wynik zapisać w tym pliku i w README.",
+  "data": "2026-11-13"
+}
