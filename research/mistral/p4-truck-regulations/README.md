@@ -13,7 +13,7 @@ Zebranie wymaganych przepisów, które determinują **wygląd zewnętrzny cięż
 2. **Pozyskanie:** oficjalne PDF-y pobrane 2026-11-13 (EUR-Lex bezpośrednio lub przez Cellar — `publications.europa.eu/resource/celex/...` z `Accept: application/pdf`, `Accept-Language: pol`; dokumenty UNECE przez web.archive.org, ponieważ unece.org zwraca 403 dla klientów automatycznych; Dz.U. bezpośrednio z dziennikustaw.gov.pl).
 3. **Ekstrakcja tekstu:** własny parser PDF (parser obiektów PDF + lekser strumienia treści z mapami ToUnicode, bez zależności zewnętrznych). Dla oryginału 96/53/WE z 1996 r. (skan Dz.U. WE) — OCR i sklejony tekst; spacje w cytatach odtworzone, co odnotowano w uwagach wierszy.
 4. **Weryfikacja:** każda liczba w `manifest.csv` ma cytat ≤ 25 słów + numer punktu + URL. Status: SOURCED / ESTIMATED / UNVERIFIED. Żadnych źródeł wtórnych (blogi/fora) do potwierdzania przepisów.
-5. **Samokontrola:** deterministyczna próba losowa 25 % wierszy (seed jawny: 20261113) z ponowną weryfikacją cytatu wobec pełnego tekstu źródła, limitu 25 słów i aktualności aktu — wynik w `audit_20_percent.json`. **Dodatkowo wykonano pełną weryfikację wszystkich 171 wierszy: 0 niezgodności.** Wcześniejsze iteracje audytu wyłapały 6 niezgodności (m.in. błędne brzmienie pkt 2.2.2 lit. a dyrektywy 96/53/WE, „nienapędzane"/„nienapędowe", twarda spacja w § 2 zał. 10 WT) — wszystkie poprawione przed oddaniem.
+5. **Samokontrola:** deterministyczna próba losowa 25 % wierszy (seed jawny: 20261113) z ponowną weryfikacją cytatu wobec pełnego tekstu źródła, limitu 25 słów i aktualności aktu — wynik w `audit_20_percent.json`. **Korekta po przeglądzie s17 (2026-11-13):** pierwotna deklaracja pełnej weryfikacji 171 wierszy (0 niezgodności) była zawyżona — przegląd zewnętrzny (próba 35 wierszy, seed 4417) wykazał odrzucony cytat w P4-134 („22,5 t/oś” — wartość nieobecna w 96/53/WE) i błędny numer punktu w P4-133 (3.4.2 zamiast 3.4.1); obie pozycje poprawiono w tej rewizji (patrz sekcja „Korekty po przeglądzie s17”). Wcześniejsze iteracje audytu wyłapały 6 niezgodności (m.in. błędne brzmienie pkt 2.2.2 lit. a dyrektywy 96/53/WE, „nienapędzane"/„nienapędowe", twarda spacja w § 2 zał. 10 WT) — wszystkie poprawione przed oddaniem.
 6. Środowisko wykonawcze ulegało resetom; po każdym resecie odtwarzano stan z zarchiwizowanych PDF-ów i ponawiano pełną weryfikację.
 
 ## Ustalenia — podsumowanie
@@ -30,15 +30,16 @@ Zebranie wymaganych przepisów, które determinują **wygląd zewnętrzny cięż
 - Pełna tabela poniżej.
 
 ### 2. Oznakowanie odblaskowe i tablice tylne — R104, R70
-- **R104 (pierwotna wersja):** materiał kl. C (kontur/pasy), kl. D (<2 m² powierzchni odblaskowej) / E (≥2 m²) dla grafik; fotometria kl. C wg zał. 7 tab. 1 (m.in. żółty R′ 300/450/120, biały 130/200/60, czerwony 75/90/30 przy β=0/5/30°); znak „TOP" co 0,5 m na pasach.
+- **R104 (wersja pierwotna regulaminu; Rev.2/Add.103/Rev.1, 2010 — korekta etykiety po przeglądzie s17; zał. II GSR2 przywołuje „pierwotną wersję regulaminu”, nie serię poprawek):** materiał kl. C (kontur/pasy), kl. D (<2 m² powierzchni odblaskowej) / E (≥2 m²) dla grafik; fotometria kl. C wg zał. 7 tab. 1 (m.in. żółty R′ 300/450/120, biały 130/200/60, czerwony 75/90/30 przy β=0/5/30°); znak „TOP" co 0,5 m na pasach — **tylko na materiale nieomnirotacyjnym (pkt 4.1.2; korekta po przeglądzie s17 — wcześniej warunek pominięto)**.
 - **R70 (seria 01):** klasa 1 — pojazdy ciężkie (czerwone pasy fluorescencyjne na przemian z żółtymi odblaskowymi), klasa 2 — przyczepy/naczepy (czerwone obrzeże + żółte tło). Zakres: N3 **z wyłączeniem ciągników siodłowych**; O1–O3 >8,0 m; **wszystkie O4**. Wymiary (zał. 12): długość zestawu 1130–2300 mm, szerokość 140 ±10 mm (ciągniki/ciężarowe) / 200 +30/−5 mm (przyczepy i naczepy); „TOP" u góry; klasy oznaczane RF/RR. Montaż (zał. 15 — wytyczne): dolna ≥250, górna ≤2100 mm; ±5°; widoczność 30°/15°; 1, 2 lub 4 tablice. **W PL obowiązek montażu wynika wprost z § 42 WT + zał. 10** (R70 definiuje wygląd tablic).
 
 ### 3. Lusterka — R46 (seria poprawek 04, Dz.U. UE L 237 z 8.8.2014)
-Dla ciągnika N3 (tabela 15.2.1) — wszystkie cztery klasy obowiązkowe:
+Dla ciągnika N3 (tabela obowiązkowych klas — pkt 15.2.1.1.1, wiersz N3; korekta numeracji po przeglądzie s17): klasy II i IV obowiązkowe, V obowiązkowe po stronie pasażera, VI obowiązkowe:
 - **kl. II (główne):** 1 po stronie kierowcy + 1 po stronie pasażera. Pole: płaski poziomy fragment drogi szer. ≥5 m, od 30 m za punktami ocznymi po horyzont; dodatkowo fragment szer. >1 m od 4 m za punktami ocznymi.
 - **kl. IV (boczne „wide"):** 1+1. Pole: fragment drogi szer. ≥15 m, odcinek 10–25 m za punktami ocznymi; dodatkowo szer. 4,5 m od 1,5 m za punktami ocznymi.
-- **kl. V (zbliżeniowe, przód):** 1 po stronie pasażera (obowiązkowe) + opcjonalne po stronie kierowcy; montaż ≥2 m. Pole: bok kabiny; płaszczyzna 2 m przed nią; 1,75 m za punktami ocznymi; 1 m przed punktami ocznymi (wariant montaż ≥2,4 m: do 3 m przed punktami ocznymi — 15.2.4.5.9).
+- **kl. V (zbliżeniowe, przód):** 1 po stronie pasażera (obowiązkowe) + 1 opcjonalne po stronie kierowcy — pkt 15.2.1.1.1, wiersz N3 (i N2 >7,5 t), kolumna klasy V: „Obowiązkowe (zob. pkt 15.2.2.7 i 15.2.4.5.5) 1 lusterko po stronie pasażera; Opcjonalne 1 lusterko po stronie kierowcy (oba lusterka zamontowane na wysokości co najmniej 2 m od podłoża)”. Pole: bok kabiny; płaszczyzna 2 m przed nią; 1,75 m za punktami ocznymi; 1 m przed punktami ocznymi (wariant montaż ≥2,4 m: do 3 m przed punktami ocznymi — 15.2.4.5.9).
 - **kl. VI (przednie):** 1 lusterko przednie na wysokości ≥2 m. Pole: od najdalszego punktu przodu do 2000 mm przed płaszczyzną przegrody; do 2000 mm na zewnątrz od boku kierowcy; krzywizna przedniej części promień 2000 mm.
+- **Urządzenie typu kamera-monitor (CMS):** w serii 04 może zastąpić lusterka kl. V i VI (pkt 15.2.1.1.2), ale **nie klasy II i IV** — patrz „Punkty otwarte z przeglądu s17 — wyniki”, punkt (a).
 - Wymiary kl. II: a = 170/(1+1000/r), b = 200 mm (r — promień krzywizny); kl. I: prostokąt 40 mm × „a". Montaż: ≤55° od wzdłużnej płaszczyzny (przez środek lusterka i linię ocznu 65 mm); wystawanie ≤250 mm poza obrys bez lusterek gdy dolna krawędź <2 m.
 - Dla naczepy O4 — brak wymogów lusterkowych (R46 dotyczy pojazdów silnikowych).
 
@@ -53,8 +54,8 @@ Nasz zestaw: ciągnik 4×2 + naczepa 3-osie (zespół 5-osiowy):
 - **Masa całkowita zespołu: 40 t** (zał. I pkt 2.2.2 lit. a — „pojazdy silnikowe dwuosiowe z naczepami trzyosiowymi 40 ton"; odpowiednik PL: § 3 ust. 1 pkt 2 WT: zespół ≥5 osi z pojazdem samochodowym jako ciągnącym — 40 t).
 - Wyjątki intermodalne (nie dotyczą zwykłego zestawu firankowego): 42 t (2-osie ciągnik + kontenery ≤45 stóp; 2015/719 lit. c; WT § 3 ust. 1 pkt 2 lit. a i c) i 44 t (3-osie ciągnik; 2015/719 lit. d; WT lit. b i d).
 - Ciągnik dwuosiowy: 18 t (pkt 2.3.1; od 2015/719 — „inne niż autobusy"; dopłata maks. +1 t dla paliw alternatywnych); naczepa 3-osie: 24 t (pkt 2.1.2; w PL § 3 ust. 1 pkt 1 lit. c dotyczy przyczep „z wyjątkiem naczepy" — masa naczepy limitowana DMC zespołu).
-- **Naciski osi:** pojedyncza oś nienapędowa 10 t (pkt 3.1); oś napędowa 11,5 t (pkt 3.4.2); oś trójosiowa naczepy (dystanse 1,3–1,4 m): 24 t na zespół osi, tj. maks. 22,5 t/oś przy zestawie 38 t wg pkt 3.3.2 (tabela dystansów w akcie).
-- Ostatnia nowelizacja merytoryczna 96/53/WE: **2015/719** (dyrektywy 2019/1161 — czyste pojazdy, zmienia 2009/33/WE; 2022/1393 — poziomy THC w konopiach — **nie dotyczą** 96/53/WE; sprawdzono pełne teksty obu aktów).
+- **Naciski osi:** pojedyncza oś nienapędzana 10 t (pkt 3.1); oś napędowa 11,5 t (pkt **3.4.1** — „Oś napędowa pojazdów ... 11,5 tony”; korekta numeru punktu po przeglądzie s17: było 3.4.2); zespół osi trójosiowej naczepy przy dystansach osi 1,3 m < d ≤ 1,4 m: **24 t na zespół osi** (pkt 3.3.2: „1,3 < d ≤ 1,4 — 24 tony”). **Korekta po przeglądzie s17:** usunięto sformułowanie „wyj. do 22,5 t/oś przy 38 t” — takiej wartości nie ma w 96/53/WE; limit dotyczy sumy nacisków na zespół osi, nie pojedynczej osi (tabela dystansów w akcie).
+- Nowelizacje 96/53/WE — pełna lista (**korekta po przeglądzie s17**; wcześniejsze sformułowanie „ostatnia nowelizacja 2015/719” było nieprawdziwe): **2002/7/WE**; **(UE) 2015/719** (z sprostowaniem — Dz.U. UE L 277 z 27.10.2022, s. 314); **Decyzja (UE) 2019/984** (art. 10a — homologacja kabin; nie zmienia zał. I); **Rozporządzenie (UE) 2019/1242** (art. 10b + adnotacje do zał. I pkt 2.2 i 2.2.2 — masa maksymalna zespołu **+1 t** dla pojazdów na paliwa alternatywne, **+2 t** dla pojazdów bezemisyjnych). Ostatnia konsolidacja: **14.08.2019** (01996L0053-20190814). **Wpływ na nasz zestaw: 40 t bez zmian** (napęd diesel — dopłaty z 2019/1242 nie mają zastosowania). Dyrektywy 2019/1161 (czyste pojazdy, zmienia 2009/33/WE) i 2022/1393 (poziomy THC w konopiach) — **nie dotyczą** 96/53/WE; sprawdzono pełne teksty obu aktów.
 - Tachograf: zakres z rozporządzenia (WE) nr 561/2006 (art. 2 ust. 1 lit. a — przewóz rzeczy przy DMC zespołu >3,5 t); montaż rejestratora wg rozporządzenia (UE) 165/2014 (poza zakresem wyglądu).
 
 ### 6. Polska — wyposażenie i tablice
@@ -63,9 +64,9 @@ Nasz zestaw: ciągnik 4×2 + naczepa 3-osie (zespół 5-osiowy):
   - **Apteczka — brak wymogu dla N3/O4** (wymóg tylko dla autobusów § 19–20 i pojazdów nauki jazdy § 43–44); **kliny pod koła — brak w całym akcie** (0 wystąpień; praktyka/ADR, nie obowiązek WT); tachograf w WT tylko dla pojazdów nauki jazdy (§ 43).
   - **Tablice wyróżniające (§ 42 + zał. 10):** OBOWIĄZKOWE z tyłu naczepy >8 m (nasza 13,6 m — tak); samochody ciężarowe DMC >7,5 t **z wyłączeniem ciągnika siodłowego** (nasz ciągnik — nie). Zał. 10: z tyłu, prostopadle i symetrycznie; pasy 45° ±5°, szer. 100 ±2,5 mm, żółty odblaskowy + czerwony fluorescencyjny (poj. samochodowy); naczepa: żółte tło odblaskowe + czerwone obrzeże fluorescencyjne; dolna ≥250, górna ≤2100 mm; ≤400 mm od obrysu; odstęp między tablicami 200–300 mm; wymiary w rysunkach 1–2 (grafika → UNVERIFIED liczbowo; por. R70 zał. 12: 1130–2300 mm).
   - Miejsce tablicy rejestracyjnej (zał. 5 § 2): tylne 520×120 lub 340×240 mm; wysokość dolnej ≥0,30 m, górnej ≤1,20 m (absolutnie ≤2,00 m); pochylenie 5–30° od pionu.
-- **Rozporządzenie w sprawie rejestracji i zabezpieczeń pojazdów (t.j. Dz.U. 2024 poz. 1709 — akt obowiązuje):**
+- **Rozporządzenie w sprawie rejestracji i zabezpieczeń pojazdów (Dz.U. 2024 poz. 1709 — akt pierwotny z 8.11.2024, nie tekst jednolity; korekta po przeglądzie s17; zmieniony Dz.U. 2025 poz. 939 (§ 27, 31, 32, zał. 13 — wyróżniki powiatów) i Dz.U. 2026 poz. 891 (§ 2, 6, 7, 18, 19) — **żadna z tych zmian nie dotyka zał. 12 (tablice rejestracyjne) ani rysunku 1**):**
   - § 33 ust. 1: pojazd — tablice z przodu i z tyłu; **przyczepy (naczepy) — tylko z tyłu**.
-  - Zał. 12: płyta z taśmy aluminiowej 1 mm; kształty wg rysunku 1, odchyłki głównych wymiarów ±1 mm (**wymiary 520×114 mm tylko w rysunku — UNVERIFIED w tekście**).
+  - Zał. 12: płyta z taśmy aluminiowej 1 mm; kształty wg rysunku 1, odchyłki wymiarów głównych ±1 mm, promień naroży −0,5/+1,5 mm (pkt 2.2). **Wymiary 520×114 mm potwierdzone pomiarem rysunku 1** (tablica jednorzędowa; dwurzędowa: 305×214 mm) — patrz „Punkty otwarte z przeglądu s17 — wyniki”, punkt (b).
   - § 28: niebieskie pole z 12 gwiazdkami UE i literami „PL"; § 39: znak „PL" z tyłu nadwozia w ruchu międzynarodowym; § 38 + zał. 15: tarcza prędkości — **tylko autobus albo prędkość indywidualna** (dla N3/O4 brak obowiązku); § 37: numery na burcie — tylko pojazdy samowyładowcze.
 
 ### 7. Tablice spotykane w PL — obowiązek vs zwyczaj
@@ -99,18 +100,65 @@ Nasz zestaw: ciągnik 4×2 + naczepa 3-osie (zespół 5-osiowy):
 
 ## Braki / ograniczenia
 
-- **UNVERIFIED:** wymiary tablicy rejestracyjnej 520×114 mm (tylko rysunek w zał. 12 — grafika bez warstwy tekstowej); liczbowe wymiary tablic wyróżniających z zał. 10 WT rys. 1–2 (grafika; por. wartości R70 zał. 12).
+- **UNVERIFIED:** liczbowe wymiary tablic wyróżniających z zał. 10 WT rys. 1–2 (grafika; por. wartości R70 zał. 12). Wymiary tablicy rejestracyjnej 520×114 mm z zał. 12 rys. 1 **rozstrzygnięte pomiarem rysunku** — patrz „Punkty otwarte z przeglądu s17 — wyniki”, punkt (b).
 - **OCR (96/53/WE, skan 1996):** spacje w cytatach odtworzone; brzmienie pkt 2.2.2 lit. a potwierdzone paralelnie § 3 ust. 1 pkt 2 WT (Dz.U. 2024 poz. 502). Nie udało się pobrać wersji skonsolidowanej 01996L0053-20190814 (Cellar HTTP 500) — oryginał + 2015/719 wystarczają do pełnej rekonstrukcji brzmienia.
 - **ESTIMATED:** brak pozycji ESTIMATED — wszystkie wartości liczbowe pochodzą z aktów prawnych.
 - R48 punkt 6.21 (kontur) i R70 zał. 15 — wymagania montażowe „miejsc przewidzianych przez producenta"; dla modelu 3D wystarczą wartości minimalne/maksymalne z manifestu.
-- Tachograf cyfrowy: wymogi montażowe w rozporządzeniu (UE) 165/2014 (poza zakresem zadania — nie wpływa na wygląd zewnętrzny poza samym urządzeniem w kabinie).
+- Tachograf cyfrowy: rozporządzenie (UE) 165/2014 + akt wykonawczy (UE) 2016/799 (zał. IC) **nie wskazują miejsca montażu w kabinie** — tylko wymagania dostępności i widoczności dla kierowcy (patrz „Punkty otwarte z przeglądu s17 — wyniki”, punkt (c)); miejsce w modelu 3D = praktyka producentów (ESTIMATED).
+
+## Punkty otwarte z przeglądu s17 — wyniki
+
+Przegląd s17 (`docs/reports/REVIEW-2026-11-13-s17-mistral-r8-p4.md` w main) zostawił trzy punkty otwarte; poniżej wyniki (wszystkie źródła pobrano i sprawdzono 2026-11-13; pełna lista w `sources.md` — „Dokumenty dodane po przeglądzie s17”).
+
+### (a) R46 — czy CMS może zastąpić lusterka klas II i IV (N3)?
+
+**Wynik: NEGATYWNY dla klas II i IV.** W serii 04 (obowiązującej w UE) urządzenie typu kamera-monitor może zastąpić tylko lusterka kl. V (bliskiego zasięgu) i VI (przednie) — dla klas II i IV brak podstawy prawnej.
+
+- Seria obowiązująca w UE: **04** — potwierdzona w konsolidacie GSR2 z 02.08.2026 (02019R2144), zał. II poz. 46: „Urządzenia widzenia pośredniego i ich instalacja — Seria poprawek 04 — Dz.U. L 237 z 8.8.2014, s. 24”. Rozporządzenie delegowane (UE) 2025/1122 (nowelizacja GSR2, Dz.U. UE L z 12.8.2025) dotyczy regulaminów 25/34/79/100/117/127/152/167/169/171 — **nie R46**.
+- R46 04, pkt 15.2.1.1.2: „Jeżeli pole widzenia lusterka przedniego opisane poniżej w pkt 15.2.4.6 lub lusterka bliskiego zasięgu opisane poniżej w pkt 15.2.4.5 można uzyskać za pomocą innego urządzenia widzenia pośredniego homologowanego zgodnie z pkt 6.2 niniejszego regulaminu i zainstalowanego zgodnie z powyższym pkt 15 — urządzenie to może być stosowane zamiast wspomnianego lusterka lub lusterek.” — podstawą zastąpienia są **wyłącznie klasy V i VI**.
+- Serie 05–07 istnieją na poziomie ONZ (ECE/TRANS/WP.29/GRSG/2025/8 — propozycja serii 07; przyjęcie serii 07 odnotowane w raporcie sesji ECE/TRANS/WP.29/2025/103; seria 08 w toku w GRSG-131), ale **nie zostały włączone do zał. II GSR2** — w UE bez skutków prawnych.
+- Źródła sprawdzone: OJ L 237 z 8.8.2014, s. 24 (R46 04 PL — CELEX 42014X0808(02)); konsolidat GSR2 02.08.2026 (02019R2144 — pobrano z Cellar); DR (UE) 2025/1122 (CELEX 32025R1122); dokumenty ONZ ECE/TRANS/WP.29/GRSG/2025/8 i ECE/TRANS/WP.29/2025/103 (web.archive.org — unece.org odrzuca klientów automatycznych).
+- **Dla modelu:** klasyczne lusterka kl. II i IV; cyfrowe lusterka ewentualnie jako opcja wizualna bez podstawy w serii 04.
+
+### (b) Rysunek tablicy rejestracyjnej 520×114 mm (rozporządzenie z 8.11.2024, Dz.U. 2024 poz. 1709, zał. 12)
+
+**Wynik: POTWIERDZONY — tablica samochodowa jednorzędowa ma wymiary 520 × 114 mm** (rysunek 1 zał. 12).
+
+- Tekst (zał. 12 pkt 2.2): „Kształty tablic powinny być zgodne z rysunkiem 1. Wymiary na rysunku podano w mm, maksymalne odchyłki wymiarów głównych (długości i szerokość) wynoszą ±1 mm. Odchyłka promienia zaokrąglenia naroży tablic powinna wynosić od –0,5 do +1,5 mm.”
+- Rysunek 1 nie ma warstwy tekstowej; wymiary odczytano **pomiarem pikselowym osadzonych obrazów rastrowych** w PDF (obrazy FlateDecode RGB): obrys tablicy jednorzędowej 1173×257 px przy skali 0,4433 mm/px → 520,1 × 114,0 mm; etykiety wymiarowe „520” (pozioma, pod tablicą) i „114” (obrócona 90°, przy pionowej linii wymiarowej). Walidacja krzyżowa na tablicy dwurzędowej z tego samego rysunku: etykiety „305” i „214” przy tej samej skali pikselowej (0,4446/0,4440 mm/px) → 305×214 mm; zgodność proporcji i etykiet w granicach 1 %.
+- Zmiany aktu (ELI, api.sejm.gov.pl; pełne teksty sprawdzono): Dz.U. 2025 poz. 939 (w życie 30.07.2025 — § 27, 31, 32, zał. 13: wyróżniki powiatów) i Dz.U. 2026 poz. 891 (w życie 4.07.2026 — § 2, 6, 7, 18, 19) — **nie dotykają zał. 12 ani rys. 1** (wymiary, kształty i miejsce montażu tablic bez zmian).
+- Źródła sprawdzone: Dz.U. 2024 poz. 1709 (D2024000170901.pdf); Dz.U. 2025 poz. 939; Dz.U. 2026 poz. 891 (dziennikustaw.gov.pl); ELI api.sejm.gov.pl.
+
+### (c) Miejsce montażu tachografu w kabinie (rozporządzenie (UE) 165/2014; akt wykonawczy (UE) 2016/799, zał. IC)
+
+**Wynik: NEGATYWNY — przepis nie wskazuje miejsca montażu w kabinie.** Prawo wymaga tylko dostępności i widoczności dla kierowcy; konkretne miejsce w kabinie to praktyka producentów.
+
+- Zał. IC pkt 5.1, wym. (394): „Urządzenie rejestrujące musi być umieszczone w pojeździe w taki sposób, aby kierowca miał ze swojego siedzenia dostęp do niezbędnych funkcji.”
+- Zał. IC, wym. (186): „Ostrzeżenia wizualne muszą być łatwo rozpoznawalne przez użytkownika, znajdować się w polu widzenia kierowcy i być łatwe do odczytania tak w dzień, jak i w nocy.”
+- Zał. IC pkt 5.2, wym. (395): tabliczka instalacyjna „dobrze widoczna i łatwo dostępna” na urządzeniu, a gdy to niemożliwe — słupek „B” lub framuga drzwi po stronie kierowcy.
+- Cytaty wg tekstu skonsolidowanego PL 02016R0799 (konsolidacja z 21.08.2023, seria 003.002; pobrano z Cellar — publications.europa.eu/resource/celex/02016R0799).
+- Źródła sprawdzone: 02016R0799 PL (Cellar, XHTML); rozporządzenie (UE) 165/2014 (CELEX 32014R0165).
+- **Dla modelu 3D:** tachograf w typowym miejscu deski rozdzielczej (np. gniazdo DIN) — ESTIMATED (praktyka), nie wymóg prawny.
+
+## Korekty po przeglądzie s17
+
+Zgodnie z §4 przeglądu (`docs/reports/REVIEW-2026-11-13-s17-mistral-r8-p4.md`) naniesiono:
+
+1. **P4-134:** usunięto „22,5 t/oś przy 38 t” (wartość nieobecna w 96/53/WE); właściwy limit dla zespołu osi trójosiowej naczepy przy 1,3 < d ≤ 1,4 m: **24 t na zespół osi** (zał. I pkt 3.3.2: „1,3 < d ≤ 1,4 — 24 tony”).
+2. **P4-133 / README §5:** oś napędowa 11,5 t — poprawiony numer punktu **3.4.2 → 3.4.1** („Oś napędowa pojazdów ... 11,5 tony”).
+3. **README §5 / P4-137:** pełna lista nowelizacji 96/53/WE (2002/7/WE; 2015/719; Decyzja (UE) 2019/984; Rozporządzenie (UE) 2019/1242 — do +2 t dla pojazdów bezemisyjnych); wpływ na nasz zestaw: **40 t bez zmian** (diesel).
+4. **P4-160…167, P4-170 / sources.md:** Dz.U. 2024 poz. 1709 opisany jako **akt pierwotny** z 8.11.2024 (nie t.j.), zmieniony Dz.U. 2025 poz. 939 i Dz.U. 2026 poz. 891 — bez zmian zał. 12.
+5. **P4-073–076 / README §2:** etykieta R104: **wersja pierwotna regulaminu** (Rev.2/Add.103/Rev.1, 2010), nie „seria poprawek 01”; znak „TOP” — warunek materiału nieomnirotacyjnego (pkt 4.1.2).
+6. **P4-093 / README §3:** lusterko kl. V dla N3 pozostaje w wersji pierwotnej (1 obowiązkowe po stronie pasażera + 1 opcjonalne po stronie kierowcy, montaż ≥2 m) — doprecyzowano punkt tabeli: **15.2.1.1.1, wiersz N3**.
+
+Uwaga numeracyjna: przegląd podaje tabelę jako „15.2.1.1.2”; w pobranym pełnym tekście OJ L 237 z 8.8.2014 (PL) tabela obowiązkowych klas lusterzek to pkt 15.2.1.1.1 (str. L 237/43), a pkt 15.2.1.1.2 (str. L 237/44) zawiera postanowienie o zastępowaniu lusterzek kl. V/VI urządzeniami typu kamera-monitor — użyto numeracji z OJ.
 
 ## Samokontrola (audyt)
 
 - **Seed:** 20261113 · **Populacja:** 171 · **Próba:** 43 (25,1 % ≥ wymagane 20 %)
 - **Wynik:** 42 PASS, 0 FAIL, 1 SKIPPED (wiersz weryfikacji negatywnej — bez cytatu; adnotacja w JSON)
 - **Metoda:** porównanie znormalizowane (lowercase, bez diakrytyków, tylko znaki alfanumeryczne — eliminuje wpływ twardych spacji U+00A0, łamania wierszy i sklejonego OCR) każdego segmentu cytatu (separator „…") z pełnym tekstem oficjalnego dokumentu; limit ≤25 słów; potwierdzenie aktualności aktu (t.j./seria poprawek przywołana w GSR2 z 07.07.2024).
-- **Dodatkowo:** pełna weryfikacja wszystkich 171 wierszy — 0 niezgodności. Szczegóły: `audit_20_percent.json`.
+- **Korekta po przeglądzie s17 (2026-11-13):** pierwotna deklaracja „pełna weryfikacja 171/171 — 0 niezgodności” była **zawyżona** (przegląd: próba 35 wierszy — 32 potwierdzone, 1 odrzucony [P4-134], 2 niesprawdzone [P4-148, P4-168]). Poprawki opisano w polu `korekty_po_przegladzie_s17` w `audit_20_percent.json` i w sekcji „Korekty po przeglądzie s17” w README.
 
 ## Struktura
 

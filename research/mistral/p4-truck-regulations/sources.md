@@ -33,16 +33,32 @@ Bezpośrednie URL-e unece.org zwracały HTTP 403 (Cloudflare) dla klientów auto
 | Regulamin EKG ONZ nr 104 (oznakowania odblaskowe) | Rev.2/Add.103/Rev.1 (seria poprawek 01) | https://unece.org/fileadmin/DAM/trans/main/wp29/wp29regs/r104rev.1.e.pdf | `files/UNECE_R104r1.pdf` (148 KB) | © UNECE/ONZ |
 | Konwencja wiedeńska o ruchu drogowym (1968) | tekst 2006 z załącznikami 1–9 | https://unece.org/fileadmin/DAM/trans/conventn/crt1968e.pdf | `files/UNECE_crt1968.pdf` (167 KB) | © UNECE/ONZ |
 
-Serie poprawek R48/46/58/73/104 jako obowiązujące w UE potwierdza załącznik II rozporządzenia ramowego 2019/2144 (wiersze 46, 48, 58, 73, 104; konsolidacja 07.07.2024).
+Serie poprawek R48/46/58/73/104 jako obowiązujące w UE potwierdza załącznik II rozporządzenia ramowego 2019/2144 (wiersze 46, 48, 58, 73, 104; konsolidacja 07.07.2024) — potwierdzone ponownie w konsolidacji z 02.08.2026 (zał. II bez zmian dla tych regulaminów; rozporządzenie delegowane (UE) 2025/1122 nie dotyczy żadnego z nich).
+
+## Dokumenty dodane po przeglądzie s17 (korekty 1–5 i punkty otwarte a–c)
+
+| Dokument | Wersja | URL | Plik lokalny | Licencja |
+|---|---|---|---|---|
+| Dyrektywa 2002/7/WE (zmienia 96/53/WE) | oryginał PL | https://eur-lex.europa.eu/legal-content/PL/TXT/PDF/?uri=CELEX:32002L0007 | pobrano 2026-11-13 (Cellar) | decyzja 2011/833/UE |
+| Decyzja (UE) 2019/984 (zmienia 96/53/WE — art. 10a, homologacja kabin) | oryginał PL | https://eur-lex.europa.eu/legal-content/PL/TXT/PDF/?uri=CELEX:32019D0984 | pobrano 2026-11-13 (Cellar) | decyzja 2011/833/UE |
+| Rozporządzenie (UE) 2019/1242 (zmienia 96/53/WE — art. 10b; +1 t paliwa alternatywne / +2 t bezemisyjne) | oryginał PL | https://eur-lex.europa.eu/legal-content/PL/TXT/PDF/?uri=CELEX:32019R1242 | pobrano 2026-11-13 (Cellar) | decyzja 2011/833/UE |
+| Dyrektywa 96/53/WE — tekst skonsolidowany 14.08.2019 (01996L0053-20190814) | skonsolidowany PL | https://eur-lex.europa.eu/legal-content/PL/TXT/PDF/?uri=CELEX:01996L0053-20190814 | > 5 MB — tylko link | decyzja 2011/833/UE |
+| GSR2 — wersja skonsolidowana 02.08.2026 (02019R2144-20260802) | skonsolidowany PL | https://eur-lex.europa.eu/legal-content/PL/TXT/?uri=CELEX:02019R2144-20260802 | pobrano 2026-11-13 (Cellar — XHTML: publications.europa.eu/resource/celex/02019R2144) | decyzja 2011/833/UE |
+| Rozporządzenie delegowane (UE) 2025/1122 (nowelizuje GSR2; nie dotyczy R46/48/58/73/104) | oryginał | https://eur-lex.europa.eu/legal-content/PL/TXT/?uri=CELEX:32025R1122 | pobrano 2026-11-13 (Cellar) | decyzja 2011/833/UE |
+| Akt wykonawczy (UE) 2016/799 (do rozporządzenia (UE) 165/2014; zał. IC — tachograf) — tekst skonsolidowany PL 02016R0799, seria 003.002 z 21.08.2023 | skonsolidowany PL | https://eur-lex.europa.eu/legal-content/PL/TXT/?uri=CELEX:02016R0799 | pobrano 2026-11-13 (Cellar — XHTML, ~90 MB) | decyzja 2011/833/UE |
+| ECE/TRANS/WP.29/GRSG/2025/8 — propozycja serii poprawek 07 do R46 (poziom ONZ; nie włączona do GSR2) | dokument roboczy ONZ (EN) | symbol ECE/TRANS/WP.29/GRSG/2025/8 — pobrano 2026-11-13 przez web.archive.org (unece.org odrzuca klientów automatycznych) | tylko link | © UNECE/ONZ |
+| ECE/TRANS/WP.29/2025/103 — raport sesji WP.29 (m.in. przyjęcie serii 07 do R46) | dokument ONZ (EN) | symbol ECE/TRANS/WP.29/2025/103 — pobrano 2026-11-13 przez web.archive.org | tylko link | © UNECE/ONZ |
 
 ## Akty polskie (Dziennik Ustaw)
 
 | Akt | Wersja | URL | Plik lokalny | Licencja |
 |---|---|---|---|---|
 | Rozporządzenie Ministra Infrastruktury w sprawie warunków technicznych pojazdów oraz zakresu ich niezbędnego wyposażenia | t.j. Dz.U. 2024 poz. 502 (akt obowiązuje) | https://www.dziennikustaw.gov.pl/D2024000050201.pdf | `files/PL_warunki_techniczne_2024.pdf` (4,2 MB) | materiał publiczny — ustawa o ponownym wykorzystywaniu informacji sektora publicznego |
-| Rozporządzenie w sprawie rejestracji i zabezpieczeń pojazdów | t.j. Dz.U. 2024 poz. 1709 (akt obowiązuje) | https://www.dziennikustaw.gov.pl/D2024000170901.pdf | > 5 MB (10 MB) — tylko link | materiał publiczny |
+| Rozporządzenie w sprawie rejestracji i zabezpieczeń pojazdów | **akt pierwotny** z 8.11.2024 (Dz.U. 2024 poz. 1709; nie tekst jednolity — korekta po przeglądzie s17) | https://www.dziennikustaw.gov.pl/D2024000170901.pdf | > 5 MB (10 MB) — tylko link | materiał publiczny |
+| Zmiana ww. aktu: Dz.U. 2025 poz. 939 (§ 27, 31, 32, zał. 13 — wyróżniki powiatów; w życie 30.07.2025) | oryginał | https://www.dziennikustaw.gov.pl/D2025000093901.pdf | pobrano i sprawdzono pełnotekstowo 2026-11-13 — zał. 12 bez zmian (ELI: api.sejm.gov.pl/eli/DU/2025/939) | materiał publiczny |
+| Zmiana ww. aktu: Dz.U. 2026 poz. 891 (§ 2, 6, 7, 18, 19; w życie 4.07.2026) | oryginał | https://www.dziennikustaw.gov.pl/D2026000089101.pdf | pobrano i sprawdzono pełnotekstowo 2026-11-13 — zał. 12 bez zmian (ELI: api.sejm.gov.pl/eli/DU/2026/891) | materiał publiczny |
 
-Status „akt obowiązuje" zweryfikowano 2026-11-13: pobrane teksty jednolite z 2024 r. są najnowszymi ogłoszonymi t.j. (Dziennik Ustaw — serwis oficjalny); akty nie figurowały jako uchylone na dzień dostępu.
+Status „akt obowiązuje” zweryfikowano 2026-11-13 (ELI — api.sejm.gov.pl; Dziennik Ustaw — serwis oficjalny): Dz.U. 2024 poz. 502 to najnowszy ogłoszony t.j. (zmiany Dz.U. 2024 poz. 983 i 1417 nie dotykają § 12, § 42 ani zał. 10); **Dz.U. 2024 poz. 1709 to akt pierwotny z 8.11.2024 (nie t.j. — korekta po przeglądzie s17)**, zmieniony przez Dz.U. 2025 poz. 939 i Dz.U. 2026 poz. 891 — żadna z tych zmian nie dotyka zał. 12 (tablice rejestracyjne) ani rys. 1.
 
 ## Licencje
 
