@@ -64,3 +64,5 @@ Zapisano before/High-clear; każda kamera w stats.txt. Oględziny pozostają wym
 Zapisano before/High-overcast; każda kamera w stats.txt. Oględziny pozostają wymagane.
 
 Świat after wygenerowany: 594.7261546 s, bez fallback=True. NASTĘPNY KROK: import i kamery after.
+
+Import roof-aware-after zakończony.
