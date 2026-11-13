@@ -108,7 +108,25 @@ P2 tuja jako rząd roślin (High stacje, Low karty czubków), świerk ciemnoziel
 - **Zostaje (P3, do oceny `visual-critic`)**: w `g7_p03_a` (kamera ~2 m od świerka) karta ustawiona krawędzią do
   kamery daje cienką jaśniejszą pionową smugę na osi, a dół kart ma prostą poziomą krawędź; korona 2 m od kamery
   (`g7_p07_b`, lewa strona) pokazuje rozciągnięte teksele. To ograniczenie kart z bliska (patrz „Otwarte”).
-- **Testy**: @@TESTS@@
+- **Testy (build 4)**: pytest `tests/gis` 1072 pass / 4 fail (`artifacts/horizon-0170/logs/pytest-gis.log`); EditMode zielone.
+  Przyczyny faili:
+  - `test_world_v31::test_frame_budget_with_forest_hlod` i `test_hero_bridge::test_asset_lods_and_budget` — **regresja
+    0170**: ten sam limit klatki `stretch_04` ≤ 2 M trójkątów High; build 4 dawał 2 013 640 (main 1 998 632), bo tuja High
+    była rysowana stacjami na roślinę (dwa barki + rowek na przerwę, 61 trójkątów / m): `garden_fronts` High 12 058 → 27 558.
+  - `test_buildings_r8::test_one_card_per_fence_panel_and_foliage_normals` — test pisany pod stożek-rdzeń świerka z build 2
+    (11 ciemnych wierzchołków); build 4 ma 3 wierzchołki osi kart (`occ_mid`) — test zaktualizowany pod build 4.
+  - `test_road_fidelity::test_report_not_stale` — **raport nieaktualny**: `fidelity_qa.json` stale względem
+    `overrides.yaml` (drzewostan 6BC0 z 0170) i `build_world.py` (zmiana z main). Ten sam fail w `tower-0180`
+    (`pytest-gis.log`) i w logach furniture-r1/r2; rozwiązuje go `tools/worldgen/fidelity/run.py` przy regeneracji lidera po
+    scaleniu (nie zmienia geometrii).
+- **Poprawka budżetu (build 6, s19)**: tuja High = projekt Low — korpus ściany ze stacjami co 2,0 m (Low 3,2 m) i grzbietem
+  0,5–0,6 m pod wysokością nominalną + jedna karta czubka (górna część sprite'a tui) na roślinę co ~1 m; wiersz gałązek
+  korpusu liczony na jego obniżonej wysokości (~1 : 1). 20 m ściany: High 1218 → 258 trójkątów (przed 0170 ~286), Low 146.
+  `garden_fronts` High 11 756 (main 12 058), Low 6430; `stretch_04` High **1 998 856** (main 1 998 632, +224; build 5 ze
+  stacjami co 1,5 m: 1 999 916 — za mały zapas). Testy plików tui (`test_house_greenery_0163`, `test_horizon_0170`,
+  `test_buildings_r7/r8/r9`, `test_fire_station_r7`, `test_hero_building`): 78 pass (`logs/pytest-thuja5.log`).
+- **Testy (build 6)**: @@TESTS6@@
+- **Pętla wizualna build 6**: @@VIS6@@
 
 ## Otwarte / WORKING_VALUE
 
