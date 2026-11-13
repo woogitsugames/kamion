@@ -125,3 +125,5 @@ Docelowy B: pełny EditMode493/493,0failed/skipped. Wszystkie122kamery×4 mają 
 Fidelity odświeżone dla końcowego generatora r3 B; pełny GIS może sprawdzić świeży raport.
 
 Autor obejrzał wszystkie24author-overviews(488par),26crops i8foto. Critic końcowy PASS zakresu statycznego B; brak nowej konkretnej regresji do poprawy. FIDexit0, pełnyGIS już działa w slocieheavy. Usunięto2zastąpione duplikaty arkuszy materiałowych; dowody diagnostyczne i końcowe pozostają. NASTĘPNY KROK: Get-Content artifacts/gpt-s16-r3/final-gis.log -Tail 5
+
+Pełny GIS zakończony: exit 0; szczegóły GIS-STATUS.md oraz final-gis.log.
