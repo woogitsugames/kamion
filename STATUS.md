@@ -6,3 +6,6 @@
 - W skokach CPU main zwykle 15–25 ms, GPU 29–35 ms -> nie wąskie gardło main thread; GPU p50 ~32 ms przy budżecie 33,3 (margines ~1 ms).
 - Stałe w s16 i s17: skok 83–117 ms przy ~41,2 s (B) i okresowe skoki z gpu=0 co ~2,02/4,03 s w drugiej połowie.
 - Następny krok: logcat (logcat-run.txt/diag-logcat.txt) wokół 25–36 s — streaming/GC/ładowanie; potem przegląd kodu 0168/0165.
+## Hipoteza główna (krok 1b)
+- Kolekcje PSO (`Rendering/Resources/Pso/pso_Vulkan_Low_g3{a,b}`, ADR 0113) nagrane 2026-11-11 — ten sam stan w s16 i s17 (78/140, 67/134). ADR 0113 „Otwarte 3”: po nowych treściach nagrać ponownie. 0161–0169 dodały materiały/obiekty (meble, tablice, drzewa ogrodów, budynki) -> pierwsze użycie stanów w pierwszych ~10 s okna = pojedyncze 50 ms. Zgodne z rozkładem.
+- Następny krok: przegląd kodu 0168/0165 (alokacje), potem A16: `spike_probe 1` na czystym APK (gc/pos), build Development z `pso_trace` -> nowe kolekcje -> pomiar przed/po ×2.
