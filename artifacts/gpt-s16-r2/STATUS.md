@@ -26,3 +26,5 @@ W świecie po zmianie przyjęto19posesji/34odcinki nowych żywopłotów:257.37m,
 Audyt after:2151chronionych siatek i wszystkie rekordy nie-high identyczne,116drzewogrodowych zachowuje tożsamość/pozycje/tier;6bibliotek/atlasówbez zmian;32grupyposesjibeznowychmateriałów;0błędów. Delta bufórówplots High+Low łącznie7160tris, czyli3580na wariant. Generator595.7s.
 
 Import after zakończony.
+
+Przygotowano24arkusze zdjęcie|przed|po dla6ulic×4warunki (po2pozy na ulicę), z podpisami niezgodnej lokalizacji/pozy i autorami/licencjami. Recepty użyją oryginałów w repo bez ich kopiowania; czekają na afterPNG.
