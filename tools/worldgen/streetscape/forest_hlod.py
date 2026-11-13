@@ -118,7 +118,16 @@ def build(trees, forests, no_forest, zground, half, report):
     hlod = {c for c, lst in by_cell.items() if len(lst) >= MIN_TREES}
     # canopy / wall heights from the stand trees only: edge-band shrubs and saplings (< 8 m) pulled the canopy
     # down to 2-3 m at the stand edge and it showed as a sloping green sheet (v3.1 render r4)
-    tall = np.array([t["h"] >= 8.0 for t in ft])
+    # ADR 0187: "stand trees" by role, not by height (a low stand - young wood, allotment gardens - has canopy trees
+    # under 8 m; with the height test its cells fell back to ground + 10 m)
+    from .vegetation import CANOPY_SPECIES
+    tall = np.array([t["p"][5:] in CANOPY_SPECIES and not str(t.get("src", "")).endswith((":edge", ":under", ":floor"))
+                     and (t["h"] >= 8.0 or str(t.get("src", "")).startswith("override:")) for t in ft])
+    if not tall.any():
+        tall = np.array([t["h"] >= 8.0 for t in ft])
+    if not tall.any():
+        report["forest_hlod"] = {"cells": 0}
+        return {}
     Pc = P[tall]
     top = np.array([t["z"] + t["h"] for t in ft])[tall]
     H = np.array([t["h"] for t in ft])[tall]

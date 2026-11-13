@@ -127,3 +127,27 @@ def test_skirt_wall_reuses_the_edge_primitive():
             if p["mat"].startswith("forest_edge_"):
                 v_seen |= set(np.round(p["UV"][:, 1], 3))
     assert 1.0 in v_seen and 0.75 in v_seen and 0.0 in v_seen
+
+
+def test_tree_stand_override_is_a_low_stand_with_hlod_cells():
+    """Authored wooded land outside the BDOT forest layer (allotment gardens): trees in the polygon, kept by
+    open_ground, merged into forest HLOD cells at the stand's own height."""
+    src = _forest_src("F1:0", [[900, 900], [901, 900], [901, 901]])           # no real forest
+    ring = [[0, 0], [200, 0], [200, 200], [0, 200]]
+    ov = [{"id": "rod", "kind": "tree_stand", "height_m": [4.0, 8.0], "spacing_m": 6.0,
+           "mix": {"maple": 0.5, "spruce": 0.2, "shrub": 0.3}, "polygons_en": [ring]},
+          {"id": "open", "kind": "open_ground", "polygons_en": [[[0, 0], [200, 0], [200, 60], [0, 60]]]}]
+    hf = SimpleNamespace(x0=-10.0, y1=210.0)
+    zc = np.zeros((221, 221))
+    rep = {}
+    trees, forests = VG.place(src, (0.0, 0.0), hf, zc, np.zeros_like(zc, bool), rep, ov)
+    mine = [t for t in trees if t["src"].startswith("override:rod")]
+    assert rep["tree_stands"] == [{"id": "rod", "area_m2": 40000.0, "trees": rep["tree_stands"][0]["trees"]}]
+    assert len(mine) > 900 and any(t["n"] < 55 for t in mine), "open_ground keeps authored stands"
+    canopy = [t["h"] for t in mine if t["p"] in ("tree_maple", "tree_spruce") and not t["src"].endswith(":edge")]
+    assert 4.0 <= min(canopy) and max(canopy) <= 8.0
+    assert all(shapely.Polygon(ring).area != f.area for f in forests), "ground mask stays grass"
+    cells = FH.build(trees, rep["_forest_mix"], shapely.Polygon(), lambda e, n: np.zeros(len(np.atleast_1d(e))), 1024.0, {})
+    assert len(cells) >= 6
+    top = max(float(p["V"][:, 2].max()) for c in cells.values() for p in c["prims"] if p["mat"].startswith("forest_canopy"))
+    assert 3.0 < top < 9.0, top

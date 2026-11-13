@@ -87,6 +87,8 @@ def _seed(key):
 
 
 def _scatter(poly, spacing, rng):
+    if poly.is_empty:                       # a band of a sliver polygon (no draws, like an empty grid before)
+        return np.zeros((0, 2))
     x0, y0, x1, y1 = poly.bounds
     gx, gy = np.meshgrid(np.arange(x0, x1, spacing), np.arange(y0, y1, spacing))
     P = np.column_stack([gx.ravel(), gy.ravel()]) + rng.uniform(-spacing * 0.45, spacing * 0.45, (gx.size, 2))
@@ -351,6 +353,46 @@ def place(src, origin, hf, zc, blocked, report, overrides=None):
     report["forest_clearings"] = crep
     srep["stale"] = [{"id": st["id"], "bdot": bid} for bid, st in stands.items() if bid not in shit]
     report["forest_stands"] = srep
+    # ADR 0187: authored `kind: tree_stand` - wooded land that is no BDOT10k forest (allotment gardens, a park
+    # wood) but closes the horizon on the photos. `polygons_en` (region-local E/N rings, like open_ground),
+    # `height_m` [lo, hi] of its trees, `mix` {species: weight}, `spacing_m`, `category` (HLOD texture mix, default
+    # broadleaf). Laid out like a forest stand (canopy grid + the two outer mantle bands, no understorey, no forest
+    # floor) and merged into forest HLOD cells far away, so it is a continuous line at any distance. Source ids start
+    # with "override:" (open_ground keeps them); the ground mask stays grass.
+    trep = []
+    for o in overrides or []:
+        if o.get("kind") != "tree_stand":
+            continue
+        hr = tuple(float(v) for v in o["height_m"])
+        unknown = set(o["mix"]) - set(SPECIES)
+        if unknown or hr[0] <= 0 or hr[1] < hr[0]:
+            raise ValueError(f"tree_stand {o['id']}: bad height_m or unknown species {sorted(unknown)}")
+        mix = [float(o["mix"].get(k, 0.0)) for k in SPECIES]
+        fk = o.get("category", "broadleaf")
+        n_before = len(out)
+        area = 0.0
+        for k, ring in enumerate(o["polygons_en"]):
+            poly = shapely.make_valid(shapely.Polygon(np.asarray(ring, float)))
+            key = f"override:{o['id']}:{k}"
+            rng = np.random.default_rng(_seed(key))
+            P = _scatter(poly, float(o.get("spacing_m", 6.0)), rng)
+            emit(P, pick(rng, mix, len(P)), rng, key, 1.0, fk=fk, hrange=hr, spruce_v="open")
+            for bi, (d_in, d_out, step, table) in enumerate(MANTLE[fk][:2]):
+                band = poly.buffer(d_out).difference(poly.buffer(d_in))
+                P = _scatter(band, step, rng)
+                names = list(table)
+                w = np.array([table[n_][0] for n_ in names])
+                sp = rng.choice(names, size=len(P), p=w / w.sum()) if len(P) else []
+                n0 = len(out)
+                emit(P, sp, rng, f"{key}:edge", 1.0, fk=fk, spruce_v="open")
+                ranged(n0, table)
+                for t in out[n0:]:
+                    if t["p"] != "tree_shrub":
+                        t["h"] = round(min(t["h"], hr[1] * 0.6 * (0.5 + 0.25 * bi)), 1)
+            forest_mix.append((poly, fk))
+            area += poly.area
+        trep.append({"id": o["id"], "area_m2": round(area, 1), "trees": len(out) - n_before})
+    report["tree_stands"] = trep
     report["_forest_cleared"] = cleared
     groups = _tree_group_overrides(overrides, np.asarray(origin, float))
     grep = {"lines": len(groups), "trees": 0, "groups": 0, "rows_grouped": 0}
