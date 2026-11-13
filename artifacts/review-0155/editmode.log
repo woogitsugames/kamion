@@ -1,0 +1,23 @@
+unity: C:\Program Files\Unity\Hub\Editor\6000.3.28f1\Editor\Unity.exe -batchmode -projectPath C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\review-0155\game -logFile C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\review-0155\artifacts\logs\test-editmode-20261113-050759.log -buildTarget Android -runTests -testPlatform EditMode -testResults C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\review-0155\artifacts\tests\editmode-20261113-050759.xml
+VBCSCompilerServerWatchdog: watching VBCSCompiler (PID 52752)
+EditMode: 493 total, 476 passed, 5 failed, 7 skipped (Failed(Child)) -> C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\review-0155\artifacts\tests\editmode-20261113-050759.xml
+  FAILED Game.Tests.EditMode.MirrorPresentationTests.OwnTrailerSide_AppearsAtInnerGlassEdge(0,-1.0f):   build TRAKT before testing mirror presentation
+  Expected: not null
+  But was:  null
+
+  FAILED Game.Tests.EditMode.MirrorPresentationTests.OwnTrailerSide_AppearsAtInnerGlassEdge(1,1.0f):   build TRAKT before testing mirror presentation
+  Expected: not null
+  But was:  null
+
+  FAILED Game.Tests.EditMode.TruckDoorCrownTests.ActualCanonicalMeshesAndRendererLayerDataReachGpuWithLightLayersDefinitionOffAndOn(False):   Build canonical truck before fixture tests
+  Expected: not null
+  But was:  null
+
+  FAILED Game.Tests.EditMode.TruckDoorCrownTests.ActualCanonicalMeshesAndRendererLayerDataReachGpuWithLightLayersDefinitionOffAndOn(True):   Build canonical truck before fixture tests
+  Expected: not null
+  But was:  null
+
+  FAILED Game.Tests.EditMode.TruckDoorCrownTests.CanonicalPrefabTagsExactlyBothDoorsAllThreeLods:   Build canonical truck before fixture tests
+  Expected: not null
+  But was:  null
+
