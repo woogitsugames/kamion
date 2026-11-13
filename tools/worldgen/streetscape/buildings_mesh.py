@@ -721,17 +721,21 @@ def authored_openings(rule, wins, L, zref, key, door):
     if door:
         um = FR.facade_door_u(rule, L)
         ops.append((um - 0.8, um + 0.8, zref + 0.15, zref + 2.4, 0.15, "door", cells("door_block", 1 + FA.hint(key, "db") % 2)))
-    for u0, u1, z0, z1, g, row, off in wins:
+    rv = rule["reveal_m"]
+    for u0, u1, z0, z1, g, row, off, lights in wins:
         if g == "ribbon":
             n = FR.ribbon_lights(u1 - u0)                           # one `off` cell per light, two lights per bay
             vs = [FA.far_entry(g, row, off, i // 2)[1] for i in range(n)]
-            ops.append((u0, u1, z0, z1, 0.12, "ribbon", cells("off", *vs)))
-        elif rule["windows"] == "ribbon":                           # light band: one office-row window per light
-            n = FR.ribbon_lights(u1 - u0)
-            ops.append((u0, u1, z0, z1, 0.12, "ribbon", cells("off", *[FA.far_entry(g, row, off, i)[1] for i in range(n)])))
+            ops.append((u0, u1, z0, z1, rv, "ribbon", cells("off", *vs)))
+        elif lights:                                                # light band (ADR 0190): one office-row window
+            rects = []                                              # per light, cropped as on LOD1 (FR.band_lights)
+            for lrow, lbay, crop in lights:
+                cu, cv_, cw, ch = FA.cell(*FA.FAR_ROWS[g][lrow][lbay])
+                rects.append((cu, cv_ + ch * crop, cw, ch * (1.0 - crop)))
+            ops.append((u0, u1, z0, z1, rv, "ribbon", ("atlas", rects, 0.0, 1.0, 0.0, 1.0)))
         else:
             ck, cv = FA.far_entry(g, row, off, 0)
-            ops.append((u0, u1, z0, z1, 0.12, "window", cells(ck, cv)))
+            ops.append((u0, u1, z0, z1, rv, "window", cells(ck, cv)))
     return ops
 
 
@@ -1025,6 +1029,7 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
     bal_count = 0
     frontages = 0
     frontage_props = []
+    roof_masts_report = []
     btree = shapely.STRtree([b["poly"] for b in blds])
     house_pal = house_palette(blds)
     Acc.runoff_tris = {"with_uv1": 0, "without_uv1": 0}
@@ -1198,6 +1203,16 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
             if rule:                                 # authored facade: the same rectangles on both LODs
                 lod1_wins = FR.facade_windows(rule, L, zref, zbase, sh, zt, storeys, f"{key}:{ei}", door=ei == main)
                 ops = authored_openings(rule, lod1_wins, L, zref, f"{key}:{ei}", ei == main)
+                n3_ = np.array([nout[0], nout[1], 0.0])
+                for lu0, lu1, lz0, lz1 in FR.facade_lintels(rule, lod1_wins):       # ADR 0190: dark lintel line
+                    lu0, lu1 = max(lu0, 0.0), min(lu1, L)
+                    c0_, c1_ = np.array([*(a + d * lu0), lz0]), np.array([*(a + d * lu1), lz0])
+                    p0_, p1_ = (n3_ * x_ for x_ in FR.LINTEL_PROUD_M)
+                    up_ = np.array([0.0, 0.0, lz1 - lz0])
+                    acc.quad("buildings", FR.LINTEL_MAT, c0_ + p0_, c1_ + p0_, c1_ + p0_ + up_, c0_ + p0_ + up_)
+                    acc.quad("buildings", FR.LINTEL_MAT, c0_, c1_, c1_ + p0_, c0_ + p0_)                 # soffit
+                    acc.quad("buildings", FR.LINTEL_MAT, c0_ + p0_ + up_, c1_ + p0_ + up_, c1_ + up_, c0_ + up_)
+                    acc.quad("buildings_low", FR.LINTEL_MAT, c0_ + p1_, c1_ + p1_, c1_ + p1_ + up_, c0_ + p1_ + up_)
             else:
                 ops = facade_openings(typ, L, zref, zt, storeys, f"{key}:{ei}", is_main, dk is not None,
                                       dict(variant, balcony=bal_group if ei in bal_edges else False, main=ei == main,
@@ -1513,6 +1528,9 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
                 FK.roof_vents(acc, poly, zeave - 0.3, key, "block")
             elif tall_office:
                 FK.machine_rooms(acc, poly, zeave - 0.3, "buildings")
+            masts = FR.roof_mast_specs(b["ovr"].get("roof_masts"))       # ADR 0190: authored antenna masts
+            if masts:
+                roof_masts_report += [dict(q_, building=key) for q_ in FR.roof_masts(acc, masts, edges, zeave - 0.3)]
         hero_h = (heroes or {}).get(key)
         if hero_h and hero_h["meta"] is not None:       # the authored asset replaces the visible hall
             acc.d = {k: v for k, v in acc.d.items() if k[0] not in ("buildings", "buildings_low")}
@@ -1563,7 +1581,7 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
                    "house_canopies_under_eave_skipped": canopy_skipped, "balconies": bal_count,
                    "lod1_house_openings": lod1_house_openings, "lod1_house_openings_fallback_mat": int(l1_fallback),
                    "lod1_house_openings_framed": int(l1_framed),
-                   "frontages": frontages, "frontage_props": frontage_props})
+                   "frontages": frontages, "frontage_props": frontage_props, "roof_masts": roof_masts_report})
     if sign_out is not None:
         sign_out.extend(signs)
     return all_docks
