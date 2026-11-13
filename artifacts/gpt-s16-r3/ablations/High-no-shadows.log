@@ -1,0 +1,9 @@
+unity: C:\Program Files\Unity\Hub\Editor\6000.3.28f1\Editor\Unity.exe -batchmode -projectPath C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-s16\game -logFile C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-s16\artifacts\logs\visual-qa-WorldC-20261113-024800.log -buildTarget Android -quit -executeMethod Game.Editor.VisualQA.VisualQaRunner.RenderControlCameras -qaScene WorldC -qaWidth 2340 -qaHeight 1080 -qaTier High -qaOutput C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-s16\artifacts\gpt-s16-r3\ablations\High-no-shadows -qaLighting clear -qaCameras sbs-g3-a-2818555625124739,sbs-g3-a-3970163613102941,putry-island-1,putry-island-2,putry-island-near -qaRq rq_shadow=0,rq_worldsun=0 -qaGate3 C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-s16\artifacts\gpt-s16-r3\diagnostic-cameras.json
+VBCSCompilerServerWatchdog: watching VBCSCompiler (PID 42932)
+VISUALQA_RESULT: OK rendered=5 dir=C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-s16\artifacts\gpt-s16-r3\ablations\High-no-shadows
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-s16\artifacts\gpt-s16-r3\ablations\High-no-shadows\putry-island-1.png  4 761 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-s16\artifacts\gpt-s16-r3\ablations\High-no-shadows\putry-island-2.png  4 826 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-s16\artifacts\gpt-s16-r3\ablations\High-no-shadows\putry-island-near.png  4 510 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-s16\artifacts\gpt-s16-r3\ablations\High-no-shadows\sbs-g3-a-2818555625124739.png  3 511 KB
+  C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-s16\artifacts\gpt-s16-r3\ablations\High-no-shadows\sbs-g3-a-3970163613102941.png  3 505 KB
+log: C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\gpt-s16\artifacts\logs\visual-qa-WorldC-20261113-024800.log
