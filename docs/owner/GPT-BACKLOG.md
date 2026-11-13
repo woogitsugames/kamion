@@ -147,3 +147,10 @@ Procesy GPT pozostawione bez ubijania (odczyt 16:30; sprawdzać PID **razem z Cr
 ## s16 :07 (2026-11-13 00:4x)
 - **ChatGPT 6 Pro:** oddane na gałęziach: **G2** `gptpro/2-next-regions` (38 plików), **G3** `gptpro/3-s8-signs` (187 plików). Gałęzie G4, G6, G7, G8, G9 utworzone, ale **puste** (sesje padły z błędem). G1, G5, G10 — brak. Do przeglądu lidera: G2, G3 (licencje, współrzędne, wyrywkowo 20 %). Pozostałe 8 zleceń → rano przydzielić innym (priorytet G10, G1, G7, G5).
 - **Codex gpt-s16 r1** (0153 LOD aut): render after High-overcast, EditMode exit 0; recenzja otwarta; gotowe: NIE.
+
+## s16 :07 (2026-11-13 02:0x)
+- **Codex r1 0153 LOD aut: GOTOWE do recenzji** (`gpt-s16-r1` @ `eb718b7f8`; Codex: GIS 927/3 xfail, EditMode 452/452, 616 par, critic PASS) → recenzja agenta Claude `review-0153` (rendering-perf, Opus). Codex r2 0154 zieleń ulic domów w toku (baseline 90 kamer × 4, żywopłoty w plot_kit, limit 3600 tris Low).
+- **GPT Pro:** `gptpro/9-audio-refs` dostał nowy commit (`88eaf0790`) — do sprawdzenia rano obok G2/G3.
+
+## s16 :07 (2026-11-13 03:1x)
+- **Codex** przeszedł do r3 (ADR 0155 plamy słońca pod wiaduktem), gałąź `gpt-s16-r3` @ `b8f6bbaa7`. R1 (0153) gotowa do recenzji — recenzja Claude wstrzymana limitem, wznowienie po 03:20. Stan r2 (0154) — w PRZEKAZANIE.md.
