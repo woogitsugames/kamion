@@ -76,15 +76,15 @@ namespace NavRunner.Tests
             var gd = new NavGuidance();
             // warm-up (JIT)
             tr.Update(p, p.Points[0], 0f, 10f, 0.02f, ref gd);
-            long before = System.GC.GetAllocatedBytesForCurrentThread();
             byte seen = 0;
-            for (int i = 0; i < p.Count && seen == 0; i++)
+            GcAllocCounter.AssertZero(() =>
             {
-                tr.Update(p, p.Points[i], 0f, 10f, 0.02f, ref gd);
-                if (gd.Next == k) seen = gd.NextExit;
-            }
-            long bytes = System.GC.GetAllocatedBytesForCurrentThread() - before;
-            Assert.Equal(0, bytes);
+                for (int i = 0; i < p.Count && seen == 0; i++)
+                {
+                    tr.Update(p, p.Points[i], 0f, 10f, 0.02f, ref gd);
+                    if (gd.Next == k) seen = gd.NextExit;
+                }
+            }, message: "guidance with the exit number allocates nothing");
             Assert.Equal(2, seen);
         }
     }

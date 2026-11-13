@@ -6,6 +6,16 @@ namespace Game.Core.Navigation
     /// connected component); the pin was snapped to the nearest main-component node instead of failing with NoPath.</summary>
     public enum PlanStatus : byte { Ok = 0, StartOffRoad, GoalOffRoad, NoPath, AlreadyThere, GoalOffReach }
 
+    /// <summary>Which roads leaving a roundabout count for the exit number (ADR 0168). One-way entries never count.</summary>
+    public enum ExitCountPolicy : byte
+    {
+        /// <summary>Every road a motor vehicle may legally drive out on (incl. exits closed to trucks: hgv=no, weight limits).</summary>
+        AnyMotorVehicle = 0,
+        /// <summary>Only exits the player's truck may use (no hgv=no / access=no, no weight / axle / height / length limit
+        /// below the combination, no hgv=destination).</summary>
+        ThisTruck = 1,
+    }
+
     /// <summary>
     /// A* over directed edges of a <see cref="RouteGraph"/> (edge-based, so OSM turn restrictions and the no-U-turn rule
     /// of a 16.5 m combination are exact). Cost = travel time of a truck; all buffers are allocated once per graph, so a
@@ -49,6 +59,11 @@ namespace Game.Core.Navigation
             if (g.EdgeMaxLengthCm[e] != 0 && g.EdgeMaxLengthCm[e] < TruckMaxLengthCm) return false;
             return true;
         }
+
+        /// <summary>How roundabout exits are counted for the exit number (ADR 0168). Default: every exit a motor vehicle may
+        /// legally drive out on, including exits closed to trucks (what the driver sees and counts).</summary>
+        public const ExitCountPolicy DefaultExitCounting = ExitCountPolicy.AnyMotorVehicle;
+        public ExitCountPolicy ExitCounting = DefaultExitCounting;
 
         readonly RouteGraph m_G;
         readonly float[] m_Cost;
@@ -344,7 +359,7 @@ namespace Game.Core.Navigation
                     int exits = 0;
                     while (j < m && g.IsRoundabout(p.Directed[j] >> 1))
                     {
-                        if (j > i && HasExit(g, g.StartNode(p.Directed[j]))) exits++;
+                        if (j > i && HasExit(g, g.StartNode(p.Directed[j]), ExitCounting)) exits++;
                         j++;
                     }
                     float turn = 0f; ushort nm = g.EdgeName[ec];
@@ -396,13 +411,28 @@ namespace Game.Core.Navigation
             p.AddManeuver(p.Count - 1, Maneuver.Arrive, 0f, 0, p.DestinationName);
         }
 
-        /// <summary>A roundabout node with a road leaving the roundabout (any vehicle may count it as an exit).</summary>
-        static bool HasExit(RouteGraph g, int node)
+        /// <summary>
+        /// Is there an exit at roundabout node <paramref name="node"/> that counts for the exit number (ADR 0168)?
+        /// Only roads that can legally be driven OUT of the ring count (<see cref="RouteGraph.OutDirected"/> holds only the
+        /// allowed directions, so a one-way entry is never an exit). <see cref="ExitCountPolicy.AnyMotorVehicle"/> (default)
+        /// also counts exits closed to this truck (hgv=no / access=no, maxweight / maxaxleload / height / length below the
+        /// combination, hgv=destination) - the driver counts the exits he sees; <see cref="ExitCountPolicy.ThisTruck"/> skips them.
+        /// </summary>
+        public static bool HasExit(RouteGraph g, int node, ExitCountPolicy policy)
         {
             for (int k = g.OutStart[node]; k < g.OutStart[node + 1]; k++)
-                if (!g.IsRoundabout(g.OutDirected[k] >> 1)) return true;
+            {
+                int e = g.OutDirected[k] >> 1;
+                if (g.IsRoundabout(e)) continue;
+                if (policy == ExitCountPolicy.ThisTruck && !TruckMayExit(g, e)) continue;
+                return true;
+            }
             return false;
         }
+
+        /// <summary>The player's truck may leave the ring onto edge <paramref name="e"/> (not as the goal edge).</summary>
+        public static bool TruckMayExit(RouteGraph g, int e) =>
+            (g.EdgeFlags[e] & RouteGraph.FlagNoTruck) == 0 && EdgeAllowed(g, e, false);
 
         /// <summary>First street name on the route from directed edge <paramref name="i"/> on (within the next 4 edges).</summary>
         static ushort NameFrom(RouteGraph g, RoutePath p, int i)
