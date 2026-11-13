@@ -222,5 +222,137 @@
   "M53-041": "OK-POŚREDNIE — dom 2-kond. z użytkowym poddaszem (okna połaciowe), środek, az 230 d 60; rect w niebo → UNVERIFIED",
   "M53-042": "OK-POŚREDNIE — domy 2-3-kond., cel prawo, az 287 d 37; rect za ciemny → UNVERIFIED",
   "M53-043": "OK-POŚREDNIE — dom 2-kond. biało-czerwony, dwuspadowy, środek, d 8,6; rect ciemnoszary (cień) → UNVERIFIED"
+ },
+ "etap_3_13_11": {
+  "_uwagi": "Cykl 3 (13.11): budżet analyze_image 20/20 wykorzystany (10 kandydatów nowych zdjęć + 10 wtórnych: 011-dual, PKO, Luxmed, 7 cropów kolorów). Każde obejrzane zdjęcie dostało wiersz (044-055).",
+  "rows": {
+   "M53-044": {
+    "foto": "Tysiąclecia 10A Białystok 1.jpg",
+    "status": "OK",
+    "co_widac": "Wieżowiec centralnie, 15 rzędów okien, biała elewacja, fragmentaryczne napisy „Rog”/„t owsk”",
+    "kond_zdj": 15,
+    "pozycja": "środek",
+    "rect": [
+     250,
+     120,
+     450,
+     400
+    ],
+    "kolor": "biała (dekoder: szaroniebieskawy w cieniu — UNVERIFIED)"
+   },
+   "M53-045": {
+    "foto": "Cukiernia U Lecha w Białymstoku (Zagumienna).jpg",
+    "status": "OK",
+    "co_widac": "Parterowy pawilon: szyld „CUKIERNIA u Lecha”, numer „20”",
+    "kond_zdj": 1,
+    "pozycja": "środek",
+    "rect": [
+     250,
+     250,
+     600,
+     350
+    ],
+    "kolor": "żółta (dekoder sky-like — UNVERIFIED)"
+   },
+   "M53-046": {
+    "foto": "20200711 073045 Generała Władysława Andersa 38, Białystok.jpg",
+    "status": "OK",
+    "co_widac": "Wieżowiec biurowy, napis „BIAZET”, 12 rzędów okien, beżowa elewacja",
+    "kond_zdj": 12,
+    "pozycja": "środek",
+    "rect": [
+     350,
+     120,
+     450,
+     480
+    ],
+    "kolor": "beżowa (dekoder: chłodna jasnoszara — UNVERIFIED)"
+   },
+   "M53-047": {
+    "foto": "20201102 152422 38A Generala Andersa Street in Białystok.jpg",
+    "status": "OK",
+    "co_widac": "2-kond. budynek biurowo-usługowy, parking, brak napisów",
+    "kond_zdj": 2,
+    "pozycja": "lewo",
+    "rect": [
+     50,
+     200,
+     400,
+     400
+    ],
+    "kolor": "szara (dekoder: ciepła szarobrunatna, niejednorodna — UNVERIFIED)"
+   },
+   "M53-048": {
+    "foto": "20200711 074108 Białostoczek district of Białystok July 2020.jpg",
+    "status": "OK-POŚREDNIE",
+    "co_widac": "Blok centralnie: 6 rzędów okien, elewacja w folii remontowej (reklamy BAU/ATLAS/LIFE)",
+    "kond_zdj": 6,
+    "pozycja": "środek",
+    "kolor": "UNVERIFIED — folia remontowa"
+   },
+   "M53-049": {
+    "foto": "Biedronka in Białystok (Radzymińska 12).jpg",
+    "status": "OK",
+    "co_widac": "Parterowy pawilon supermarketu: szyldy „Biedronka”/„APTEKA”, parking",
+    "kond_zdj": 1,
+    "pozycja": "środek",
+    "rect": [
+     120,
+     250,
+     700,
+     320
+    ],
+    "kolor": "zielona (dekoder sky-like — UNVERIFIED)"
+   },
+   "M53-050": {
+    "foto": "20201229 144625 Tysiąclecia Państwa Polskiego Street in Białystok.jpg",
+    "status": "ODRZUCONY",
+    "co_widac": "Parking, pawilon centralnie, kominy EC w tle; blok Tysiąclecia 4 niewidoczny"
+   },
+   "M53-051": {
+    "foto": "20201223 143208 Aleja Tysiąclecia Państwa Polskiego.jpg",
+    "status": "ODRZUCONY",
+    "co_widac": "Drewniane domy (Przytorowa) + bloki w tle; BZG Tysiąclecia 2 niewidoczne"
+   },
+   "M53-052": {
+    "foto": "20210130 123910 Tysiąclecia Państwa Polskiego Street in Białystok.jpg",
+    "status": "ODRZUCONY",
+    "co_widac": "Śnieg, bloki, kościół z wieżą w tle; cel (Przytorowa 3) niejednoznaczny"
+   },
+   "M53-053": {
+    "foto": "20191224 Białostoczek Bialystok ul. Kombanantow December 2019.jpg",
+    "status": "ODRZUCONY",
+    "co_widac": "Pawilon 2-kond. biało-zielony z apteką/LUXMED centralnie; brak jednoznacznego way w OSM"
+   },
+   "M53-054": {
+    "foto": "PKO BP Białystok (Tysiąclecia) 1.jpg",
+    "status": "ODRZUCONY",
+    "co_widac": "Biały biurowiec 3-kond. centralnie za parkingiem, brak napisów; bryła niezgodna z Tysiąclecia 6 (mh 23,91 → 8,2 kond.)"
+   },
+   "M53-055": {
+    "foto": "20201116 170222 Luxmed.jpg",
+    "status": "ODRZUCONY",
+    "co_widac": "Wnętrze placówki (szyld LUXMED, wejście) — brak elewacji zewnętrznej"
+   }
+  },
+  "kolory_sanity_check": {
+   "zweryfikowane": {
+    "M53-014": "[232,228,228] rect 355,304,445,504 (crop 10,250,100,450 + off 345,54) σ=17,7",
+    "M53-035": "[163,194,126] rect 1299,154,1379,404 (crop 570,100,650,350 + off 729,54) σ=2,6"
+   },
+   "odrzucone": {
+    "M53-011": "[144,165,188] sky-like (rect 1729,354,1779,404)",
+    "M53-012": "[116,153,192] sky-like (rect 795,354,895,504)",
+    "M53-027": "niejednorodny σ=33 (rect 445,312,545,462)",
+    "M53-029": "[117,165,202] sky-like (rect 445,344,645,544)",
+    "M53-030": "[132,138,140] szara, niejednorodny σ=31 (rect 825,254,995,334)",
+    "M53-044": "[141,145,151] cienie — niespójny z „biała”",
+    "M53-045": "[178,195,209] sky-like",
+    "M53-046": "[196,197,202] chłodna jasnoszara ≠ „beżowa”",
+    "M53-047": "[122,110,99] niejednorodna σ=14",
+    "M53-049": "[190,221,248] sky-like"
+   }
+  },
+  "kondygnacje_M53-011": "druga wizja na wycinku potwierdziła 6 rzędów okien (poprzednio „4 lub 6”); mh/2,9 = 5,5"
  }
 }

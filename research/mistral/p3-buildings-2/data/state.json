@@ -1,6 +1,6 @@
 {
  "task": "M53-FIX v2 (przegląd r8) — przebudowa manifestu p3-buildings-2",
- "updated": "2026-11-13 (etap 2 — 015, 017-026, 028-043)",
+ "updated": "2026-11-13 (etap 3 — wiersze 044-055, kolory po sanity-checku, 30 przyjętych)",
  "commit_1": "50fcc60 — wiersze 001-016+027 (co_widac, rekasygnacje 010/011/012/014, typ 037-043)",
  "etap_1_statusy": {
   "M53-001": "OK",
@@ -173,5 +173,69 @@
   "audit_20_percent.json: losowanie 20% seedem jawnym (20261114); co_widac + kamera_d_m + kamera_kat_deg; audyt C = zliczenie ze zdjęcia vs LoD1 mh/2,9; kryterium wizji OBOWIĄZKOWE",
   "ZIP mistral-p3-buildings-2-files-v2.zip (zdjęcia ≤1600 px + wycinki ortofoto + INDEX.csv) przez artifacts",
   "komentarz w PR #50: SUROWY git diff --stat origin/main + liczniki OK/ODRZUCONY; NIE SCALAĆ"
- ]
+ ],
+ "etap_3": {
+  "wiersze_nowe": [
+   "M53-044",
+   "M53-045",
+   "M53-046",
+   "M53-047",
+   "M53-048",
+   "M53-049",
+   "M53-050",
+   "M53-051",
+   "M53-052",
+   "M53-053",
+   "M53-054",
+   "M53-055"
+  ],
+  "statusy": {
+   "M53-044": "OK",
+   "M53-045": "OK",
+   "M53-046": "OK",
+   "M53-047": "OK",
+   "M53-048": "OK-POŚREDNIE",
+   "M53-049": "OK",
+   "M53-050": "ODRZUCONY",
+   "M53-051": "ODRZUCONY",
+   "M53-052": "ODRZUCONY",
+   "M53-053": "ODRZUCONY",
+   "M53-054": "ODRZUCONY",
+   "M53-055": "ODRZUCONY"
+  },
+  "liczniki_koncowe": {
+   "wiersze": 55,
+   "OK": 17,
+   "OK-POŚREDNIE": 13,
+   "ODRZUCONY": 25,
+   "przyjęte": 30
+  },
+  "kolory_zweryfikowane_dekoderem": {
+   "M53-013": "[155,160,162]",
+   "M53-021": "[159,159,156]",
+   "M53-014": "[232,228,228]",
+   "M53-035": "[163,194,126]"
+  },
+  "kolory_unverified_po_sanity": [
+   "M53-011",
+   "M53-012",
+   "M53-027",
+   "M53-029",
+   "M53-030",
+   "M53-044",
+   "M53-045",
+   "M53-046",
+   "M53-047",
+   "M53-049"
+  ],
+  "kondygnacje_rozstrzygniete": {
+   "M53-011": "6 rzędów (druga wizja na wycinku 13.11)"
+  },
+  "pozostale_kroki": [
+   "audyt_20_percent.json (seed 20261114)",
+   "wycinki ortofoto files/orto/",
+   "ZIP mistral-p3-buildings-2-files-v2.zip",
+   "komentarz w PR #50 z diff --stat"
+  ]
+ }
 }
