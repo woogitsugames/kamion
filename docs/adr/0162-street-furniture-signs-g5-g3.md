@@ -62,8 +62,30 @@ Balustrada na murach oporowych zostaje ocynkowana (to nie panel U-12a; poprawion
 - 297817 (duże drzewa z lewej): roślinność — zgłoszone do 0163, bez zmian.
 - 1801374 (brak dwuramiennej latarni x 0,68): WYNIK — patrz sekcja „Dowody”.
 
+### 6. Budżet: tablica nad jezdnią = 1 materiał
+Każda tablica `board_OB_*` miała 3 submesze (lico, szary tył `board_back`, szyny `steel_galv`) = 3 instancjonowane
+draw calle; 5 nowych tablic al. Tysiąclecia dawało +15. `export.py` dokleja pod lico w teksturze tablicy pas 16 px
+w kolorze `board_back` (0,21/0,22/0,22 lin. → sRGB 126/128/128), `props.board` mapuje tył i szyny na środek pasa
+(`BOARD_BAND`). Tył zostaje gładki i szary (ADR 0127), lico nie próbkuje pasu (test). Dotyczy też istniejących tablic
+Andersa/Putry (−2 draw na tablicę).
+
 ## Dowody
-(uzupełniane w trakcie: build_world, fidelity, import, kamery kontrolne Low/High, sondy, pary sbs, budżet Low)
+- Czysty A/B (`artifacts/furn-0162/tools/ab_run.ps1`, `ab_b2.ps1`): A = origin/main (kod + dane) → build_world →
+  import → kamery; B = gałąź. Budżet Low (clear, 48 kamer, `budget-low.txt`, draws = zwykłe + instancjonowane):
+  przed redukcją max +24 (g3b-rondo-putry-approach), po redukcji max **+10** (g3b-rondo-putry-approach: 3 nowe
+  konstrukcje + 5 tablic z G3 2024), g3a-rondo-bie-approach +3, putry-above +1, route-putry-entry-signs +1,
+  route-putry-approach −5, driver-andersa-to-putry −10, stretch-01..05 0…−4; tris max +1,0 % (edge-north,
+  route-putry-approach).
+- pytest `tests/gis` (po poprawce testu listy bramownic) — patrz STATUS; EditMode 498/498 (w tym
+  `InstancePolicyShelterTests`, prefiks `bus_shelter` w `InstanceImporter.Policy`).
+- Pary (zdjęcie / przed Low / po Low / po High): `artifacts/furn-0162/pairs/` — wiaty BKM czerwone (sondy), portal
+  P005–P008, E-1 P009, VMS P010, p40 wg 2024 czytelne; tył bramownic gładki szary.
+- Kadry P1 (Panoramax CC BY-SA, tylko referencja): P1-110 (Tysiąclecia, 2019) i P1-096 / P1-132 (Maczka) — latarnie
+  dwuramienne „Y” w pasie dzielącym, białe/jasnoszare; zgodne z `lamp_double_10m` i rzędem z ortofoto. Wiat ani
+  tablic w tych kadrach brak. P9-401 (OSM↔GTFS przystanki, ≤ 30 m) — przystanki 1000-lecia PP są w danych OSM
+  regionu; nieużyte do zmian (UNVERIFIED paczka).
+- 1801374: rząd latarni z ortofoto jest w świecie, ale kamera sbs ma inną pozę/odchylenie niż zdjęcie i latarnia
+  z x ≈ 0,68 zdjęcia nie trafia w ten sam punkt kadru gry — do sprawdzenia po korekcie póz kamer (0161), OTWARTE.
 
 ## Konsekwencje
 - Nowe prototypy i tablice = nowe siatki/tekstury; budżet Low mierzony na kamerach trasy (sekcja „Dowody”).
