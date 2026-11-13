@@ -5,3 +5,5 @@ R3: diagnoza plam pod Putrą. Kod produkcyjny jeszcze bez zmian; przedmiotem kon
 Przygotowano te same kontrolne/G3 kamery, wszystkie SBS i dwa zbliżenia wyspy; wartości poz klasy B / WORKING_VALUE, bez udawanej kalibracji.
 NASTĘPNY KROK: pwsh artifacts/gpt-s16-r3/baseline-world.ps1 -Stage baseline
 Sprzątanie: kopie całego świata zastępują hashe; dowody tylko zwarte, pełne PNG lokalne. Usuwanie r1 clear-rejected zablokowane przez automatyczny przegląd — bez obchodzenia.
+
+Dodano diagnostykę Editor-only natywnych casterów/bias/kaskad oraz odwracalną ablacją TwoSided (bez produkcyjnego ustawienia). NASTĘPNY KROK po generatorze: import.ps1 -Label baseline, probe.ps1 -Mode report.
