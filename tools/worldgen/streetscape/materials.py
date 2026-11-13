@@ -731,10 +731,12 @@ M["shelter_glass_clear"].setdefault("sky_occ", SKY_OCC_GLASS)
 #   Colour = hall_wall_white (accepted in ADR 0179). `hall_wall_` prefix: wall-top TEXCOORD_1, run-off, splash zone.
 # - cladding_vertical_grey: flat panels laid vertically, 1.0 m wide (set cladding_vertical), the light silver grey
 #   office block at Kuronia 3 (CC0 photo P11-001). Not a hall_wall_* name: an office wall has no wall-top UV1 on
-#   LOD1, so the run-off layer is switched on by `runoff` like on the plaster walls. Colours WORKING_VALUE.
+#   LOD1, so the run-off layer is switched on by `runoff` like on the plaster walls. Colour: on the photo the block
+#   is ~150 sRGB beside the white hall at ~205 (linear ratio 0.5) -> 0.33 against hall_wall_white 0.55 (r1 at 0.47
+#   read white). WORKING_VALUE.
 M["hall_wall_smooth"] = {"color": [0.55, 0.56, 0.55], "rough": 0.45, "metal": 0.2, "texture_set": "sandwich_smooth",
                          "set_tile": True, "tint_linear": True, "panel_m": [6.0, 1.15], "sky_occ": SKY_OCC_STRUCT}
-M["cladding_vertical_grey"] = {"color": [0.47, 0.48, 0.48], "rough": 0.45, "metal": 0.2,
+M["cladding_vertical_grey"] = {"color": [0.33, 0.335, 0.34], "rough": 0.45, "metal": 0.2,
                                "texture_set": "cladding_vertical", "set_tile": True, "tint_linear": True,
                                "runoff": True, "splash_h": 0.6, "sky_occ": SKY_OCC_STRUCT}
 for _k in ("office", "ribbon"):

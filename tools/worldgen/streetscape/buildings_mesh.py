@@ -1343,7 +1343,9 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
                                     np.append(nout * 1.0, 0), [0, 0, 0.08], skip=sk_)
                         signs.append(FK.sign_instance("dostawy", a, d, nout, u0d - 3.0 if u0d > 6 else u1d + 3.0,
                                                       cz + 1.2, f"{key}:{ei}"))
-                if is_main and not signed and L > 25 and (hero or FK.hfloat(key, "sign") < 0.6):
+                # ADR 0185: `hall_sign: false` - no rule board on a photographed hall (its real sign is a brand)
+                if is_main and not signed and L > 25 and (hero or FK.hfloat(key, "sign") < 0.6) and b["ovr"].get(
+                        "hall_sign", True):
                     code = "hala_a" if hero else FK.hpick(["hala_b", "hala_c", "hala_d", "magazyn"], key, "code")
                     u = FK.safe_u(L * (0.18 if FK.hfloat(key, "su") < 0.5 else 0.82), ops, L)
                     if u is not None and zt - zref > 6.5:
