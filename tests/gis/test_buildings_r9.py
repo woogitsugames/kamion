@@ -265,11 +265,15 @@ def test_canopy_product_is_current_and_sane():
 
 def test_plots_report_of_the_built_region():
     """The generated report of the region (after build_world): data-driven trees are there, the kit stays in budget."""
-    qa = json.loads((REGION / "generated" / "streetscape_qa.json").read_text(encoding="utf-8"))["plots"]
+    root = json.loads((REGION / "generated" / "streetscape_qa.json").read_text(encoding="utf-8"))
+    qa = root["plots"]
     if "inst_trees" not in qa:
         pytest.skip("region not rebuilt with ADR 0132 yet")
     assert qa["canopy"] is True
-    assert qa["inst_trees_kept"] >= 0.3 * qa["plots"]          # review P1-a: grown trees, >= 0.3 per plot on average
+    # review P1-a: grown trees, >= 0.3 per plot on average. ADR 0163: the grown garden trees are kit trees of
+    # streetscape.plantings.garden_trees (every tier), no longer instances of the tree library (High / Medium only).
+    grown = root["garden_trees"]["trees"] if "garden_trees" in root else qa["inst_trees_kept"]
+    assert grown >= 0.3 * qa["plots"]
     assert qa["overgrowth"] >= 0.5 * qa["plots"] and qa["bushes"] + qa["shrubs"] >= 2 * qa["plots"]
     assert qa["fence_step_zone_hits"] == 0
     assert qa["tris"] <= 120_000 and qa["inst_trees_kept"] <= 3 * qa["plots"]                               # kit triangles of the whole region (ADR 0124: 52 k)
