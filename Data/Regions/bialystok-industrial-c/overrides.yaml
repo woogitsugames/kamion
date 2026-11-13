@@ -331,7 +331,10 @@ overrides:
           cap_w: 1.2, cap_mat: bridge_cap_red, barrier_face_m: 0.70, ramp_fascia: red,
           # ADR 0146 r2: green-grey painted posts (Mapillary 810525063224609 sunlit, 494288258686575 in shade); the
           # default barrier_steel printed diagonal stripes on the thin H flange (plan-metre UV of the W-beam set)
-          screen_post_mat: noise_post}
+          screen_post_mat: noise_post,
+          # ADR 0159 (REVIEW s14-0146 / s16 P1, 494288): painted dark deck barrier with rails under the beam instead
+          # of the galvanised W-beam with an open view under it. Rail count / heights WORKING_VALUE.
+          barrier: dark_rails}
     reason: >-
       Andersa viaduct at Rondo Putry (DK8/DK19/DK65): green deck edge, yellow-painted round piers in pairs,
       transparent noise screens on posts along the deck (CC0 photo 7204_May_2021, Rakoon; consistent with the

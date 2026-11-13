@@ -1389,7 +1389,7 @@ def _quads(lin, layer, mat, quads, src, both=True):
         lin.buf.add(layer, mat, np.array(V), np.array(UV, float), np.array(T), src=src)
 
 
-def _rail_posts(lin, Q, Zq, Tq, top, deck, key):
+def _rail_posts(lin, Q, Zq, Tq, top, deck, key, mat=None):
     """C posts at Q (n, 2) with the open side downstream, a spacer block between post and beam, and on a deck a foot
     plate. `top` = top of the W-beam above Zq per post; deck posts carry on to BRIDGE_BARRIER_H (upper beam)."""
     quads, flanges = [], []
@@ -1416,7 +1416,8 @@ def _rail_posts(lin, Q, Zq, Tq, top, deck, key):
         flanges.append(([P3(f, fl / 2, z0), P3(f, -fl / 2, z0), P3(f, -fl / 2, z1), P3(f, fl / 2, z1)], uv(0.0, fl, h)))
         flanges.append(([P3(bk, -fl / 2, z0), P3(bk, fl / 2, z0), P3(bk, fl / 2, z1), P3(bk, -fl / 2, z1)],
                         uv(0.3, 0.3 + fl, h)))
-    _quads(lin, "furniture", POST_MAT, quads, key, both=True)
+    mat = mat or POST_MAT
+    _quads(lin, "furniture", mat, quads, key, both=True)
     solid = flanges
     u = POST_U0 + 0.5
     for q, z, t, tp in zip(Q, Zq, Tq, top):
@@ -1429,7 +1430,7 @@ def _rail_posts(lin, Q, Zq, Tq, top, deck, key):
             solid.append((pts if sg > 0 else pts[::-1], ((u, 0.20), (u + 0.1, 0.20), (u + 0.1, 0.36), (u, 0.36))))
         # ADR 0144 (REVIEW s14-0123 P1-1): no foot plate under a deck post - the up-facing galvanised quad mirrored
         # the sky and read as a white square on the cap / paving (p0_kerb_merge_eye); 2 triangles per post saved
-    _quads(lin, "furniture", POST_MAT, solid, key, both=False)
+    _quads(lin, "furniture", mat, solid, key, both=False)
 
 
 def _stations(P, Z, top, spacing, lo, hi):
@@ -1447,7 +1448,7 @@ def _stations(P, Z, top, spacing, lo, hi):
     return Q, np.interp(u, s, Z[lo:hi + 1]), Tq, np.interp(u, s, top[lo:hi + 1])
 
 
-def guardrail(lin, P, Z, key, tall=None, term=(False, False), term_tall=(False, False), dense=None):
+def guardrail(lin, P, Z, key, tall=None, term=(False, False), term_tall=(False, False), dense=None, dark=None):
     """Steel W-beam on posts (top GUARDRAIL_H), Z = ground/surface height along P (points ~1 m apart). P is the post
     line; the road is on its LEFT normal side (beam face W_BACK + 0.083 in front of it).
 
@@ -1460,11 +1461,15 @@ def guardrail(lin, P, Z, key, tall=None, term=(False, False), term_tall=(False, 
     hero asset / roads.meshing.build_bridge_extras).
     ADR 0144: `term_tall` = (start, end): that end of a DECK run is free (no other rail carries on from it,
     _mark_free_deck_ends) - it is turned down like a ground end instead of stopping in the air.
-    ADR 0159: `dense` (bool per point) = ground posts every GUARDRAIL_POST_SPACING (2 m) instead of 4 m there."""
+    ADR 0159: `dense` (bool per point) = ground posts every GUARDRAIL_POST_SPACING (2 m) instead of 4 m there.
+    `dark` (bool per point, deck points only) = painted bridge barrier of bridge_style `barrier: dark_rails`
+    (Mapillary 494288258686575): beam, posts and upper beam in DARK_BARRIER_MAT plus DARK_BARRIER_RAILS flat rails
+    under the W-beam, so the barrier is no longer a galvanised W-beam with an open view under it."""
     n = len(P)
     tall = np.zeros(n, bool) if tall is None else np.asarray(tall, bool)
     dense = np.zeros(n, bool) if dense is None else np.asarray(dense, bool)
-    cls = tall.astype(int) * 2 + (dense & ~tall)
+    dark = np.zeros(n, bool) if dark is None else (np.asarray(dark, bool) & tall)
+    cls = tall.astype(int) * 2 + (dense & ~tall) + dark.astype(int) * 4
     first = len(lin.buf.parts)
     top = np.full(n, S.GUARDRAIL_H)
     tl = int(S.GUARDRAIL_TERMINAL_M)
@@ -1504,8 +1509,9 @@ def guardrail(lin, P, Z, key, tall=None, term=(False, False), term_tall=(False, 
                                       else S.GUARDRAIL_POST_SPACING_GROUND, k, kk)
             if k > lo and (cls[k - 1] > cls[k]):
                 Q, Zq, Tq, tq = Q[1:], Zq[1:], Tq[1:], tq[1:]          # the boundary post is the deck (denser) post
+            dk = bool(dark[k])
             if len(Q):
-                _rail_posts(lin, Q, Zq, Tq, tq, deck, key)
+                _rail_posts(lin, Q, Zq, Tq, tq, deck, key, DARK_BARRIER_MAT if dk else POST_MAT)
             if deck:
                 # upper box beam (100 x 80) on the road face of the posts; at an end where the W-beam carries on
                 # along the ground it slopes down behind the W-beam over 2 m instead of stopping in the air
@@ -1524,7 +1530,19 @@ def guardrail(lin, P, Z, key, tall=None, term=(False, False), term_tall=(False, 
                     V = np.concatenate([A, B])
                     UV = np.column_stack([np.tile(st, 2), np.repeat([v0, v0 + 0.06], m_)])
                     T = [(i, i + 1, m_ + i + 1) for i in range(m_ - 1)] + [(i, m_ + i + 1, m_ + i) for i in range(m_ - 1)]
-                    lin.buf.add("furniture", "barrier_steel", V, UV, np.array(T), src=key)
+                    lin.buf.add("furniture", DARK_BARRIER_MAT if dk else "barrier_steel", V, UV, np.array(T), src=key)
+                if dk:
+                    # flat rails between the cap and the W-beam (both windings: the median-side barrier of the other
+                    # deck is seen from behind)
+                    for r0, r1 in DARK_BARRIER_RAILS:
+                        A = np.column_stack([Pt + nt * (W_BACK + 0.02), zz - zt[kp] + r0])
+                        B = np.column_stack([Pt + nt * (W_BACK + 0.02), zz - zt[kp] + r1])
+                        m_ = len(Pt)
+                        V = np.concatenate([A, B])
+                        UV = np.column_stack([np.tile(st, 2), np.repeat([0.34, 0.34 + (r1 - r0)], m_)])
+                        T = [(i, i + 1, m_ + i + 1) for i in range(m_ - 1)] + [(i, m_ + i + 1, m_ + i) for i in range(m_ - 1)]
+                        T = np.array(T)
+                        lin.buf.add("furniture", DARK_BARRIER_MAT, V, UV, np.concatenate([T, T[:, [0, 2, 1]]]), src=key)
         k = kk + 1
     if term_posts:                    # ADR 0159: short post in the middle of each turned-down terminal
         ti = np.array(term_posts)
@@ -1547,7 +1565,15 @@ def guardrail(lin, P, Z, key, tall=None, term=(False, False), term_tall=(False, 
         a, b = r * n, (r + 1) * n
         T += [(a + k, a + k + 1, b + k + 1) for k in range(n - 1)] + [(a + k, b + k + 1, b + k) for k in range(n - 1)]
     T = np.array(T)
-    lin.buf.add("furniture", "barrier_steel", V, UV, T, src=key)
+    dkp = dark[kp]
+    if dkp.any():
+        seg_dark = (dkp[:-1] & dkp[1:])
+        td = seg_dark[(T[:, 0] % n)]
+        if (~td).any():
+            lin.buf.add("furniture", "barrier_steel", V, UV, T[~td], src=key)
+        lin.buf.add("furniture", DARK_BARRIER_MAT, V, UV, T[td], src=key)
+    else:
+        lin.buf.add("furniture", "barrier_steel", V, UV, T, src=key)
     # back of the sheet: two facets (top edge - valley - bottom edge); the folds are a road-side thing (budget)
     bi = [0, 5, 6, 11]
     Vb = np.concatenate([rows[i] for i in bi])
@@ -1556,7 +1582,14 @@ def guardrail(lin, P, Z, key, tall=None, term=(False, False), term_tall=(False, 
     for r in (0, 2):
         a, b = r * n, (r + 1) * n
         Tb += [(a + k, b + k + 1, a + k + 1) for k in range(n - 1)] + [(a + k, b + k, b + k + 1) for k in range(n - 1)]
-    lin.buf.add("furniture", "barrier_steel", Vb, UVb, np.array(Tb), src=key)
+    Tb = np.array(Tb)
+    if dkp.any():
+        tdb = (dkp[:-1] & dkp[1:])[(Tb[:, 0] % n)]
+        if (~tdb).any():
+            lin.buf.add("furniture", "barrier_steel", Vb, UVb, Tb[~tdb], src=key)
+        lin.buf.add("furniture", DARK_BARRIER_MAT, Vb, UVb, Tb[tdb], src=key)
+    else:
+        lin.buf.add("furniture", "barrier_steel", Vb, UVb, Tb, src=key)
     if tall.any() or key.endswith(":structure"):
         # ADR 0110: a run on a deck, and a run beside a viaduct, belong to the bridge mesh of their chunk (drawn with
         # the deck; one barrier_steel primitive for both), not to the furniture mesh (fences, hedges: its bounds grew
@@ -1578,6 +1611,10 @@ def guardrail(lin, P, Z, key, tall=None, term=(False, False), term_tall=(False, 
 # ADR 0110: posts share the material of the beam (galvanised steel both): one draw call per furniture chunk instead of two
 # (the decks of the hero viaduct got barriers in three chunks that had none; draw budget of the A16)
 POST_MAT = "barrier_steel"
+# ADR 0159: painted deck barrier (bridge_style `barrier: dark_rails`). The material is the paint of the screen posts
+# of the same deck (no new material = no new draw call in the bridge chunk). Rails: (bottom, top) above the cap, m.
+DARK_BARRIER_MAT = "noise_post"
+DARK_BARRIER_RAILS = ((0.08, 0.20), (0.25, 0.37))     # WORKING_VALUE: closes the 0.44 m under the W-beam to 5-8 cm slots
 GUARDRAIL_DEDUP_M = 1.0     # ADR 0100 (REVIEW s10-0095 P1-10): a run within this of an already built rail is not built twice
 GUARDRAIL_DEDUP_GROUND_M = 2.5   # ADR 0110 (REVIEW s10-0100 P1-6): ground runs - one rail per separator also when the
 #                                  two edges that want it are 1-2.5 m apart (decks keep 1 m: two decks, two rails)
@@ -1619,7 +1656,7 @@ GUARDRAIL_JOIN_M = 4.0      # ADR 0117: a run cut by the dedup is led onto the r
 GUARDRAIL_JOIN_BLEND = 8    # points (1 m) over which the cut end swings onto the other rail
 
 
-def _dedup_guardrail(lin, P, Z, key, built, m, tall=None, term=(True, True), dense=None):
+def _dedup_guardrail(lin, P, Z, key, built, m, tall=None, term=(True, True), dense=None, dark=None):
     """Build the parts of run P that are not within the dedup distance of a rail built before (two chains / a chain
     and an authored rail on the same separator crossed and overlapped at E -782 and on the viaduct approaches).
 
@@ -1681,11 +1718,12 @@ def _dedup_guardrail(lin, P, Z, key, built, m, tall=None, term=(True, True), den
                 if kk < len(P) - 1:
                     join(Ps, -1)
             it = {"P": Ps, "Z": Z[k:kk + 1], "key": key, "tall": tall[k:kk + 1], "term": (t0, t1),
-                  "dense": None if dense is None else np.asarray(dense, bool)[k:kk + 1]}
+                  "dense": None if dense is None else np.asarray(dense, bool)[k:kk + 1],
+                  "dark": None if dark is None else np.asarray(dark, bool)[k:kk + 1]}
             if queue is not None:
                 queue.append(it)
             else:
-                guardrail(lin, it["P"], it["Z"], key, it["tall"], it["term"], dense=it["dense"])
+                guardrail(lin, it["P"], it["Z"], key, it["tall"], it["term"], dense=it["dense"], dark=it["dark"])
             built.append(LineString(Ps))
         else:
             m["dedup_dropped_pts"] = m.get("dedup_dropped_pts", 0) + (kk - k + 1)
@@ -1835,7 +1873,7 @@ def _flush_rails(lin, m=None):
     _mark_free_deck_ends(queue, m)
     for it in queue:
         guardrail(lin, it["P"], it["Z"], it["key"], it["tall"], it["term"], it.get("term_tall", (False, False)),
-                  dense=it.get("dense"))
+                  dense=it.get("dense"), dark=it.get("dark"))
     lin.rail_queue = None
     lin.rail_runs = [{"key": it["key"], "P": np.asarray(it["P"], float), "Z": np.asarray(it["Z"], float),
                       "tall": np.zeros(len(it["P"]), bool) if it["tall"] is None else np.asarray(it["tall"], bool),
@@ -2040,6 +2078,8 @@ def guardrails(lin, net, zground, report):
         ss = np.arange(s0, s1, 1.0)
         hw = c.hw_at(ss)
         br = c.bridge[c.idx(ss)]
+        # ADR 0159: bridge_style `barrier: dark_rails` - painted deck barrier with rails under the W-beam
+        dark_style = bridge_style(c).get("barrier") == "dark_rails"
         for side, sgn in (("L", 1.0), ("R", -1.0)):
             prm = [side_params(c, side, s) for s in ss]
             kinds = np.array([p[0] for p in prm])
@@ -2146,10 +2186,12 @@ def guardrails(lin, net, zground, report):
                     P = c.line.offset_point(ss[sl], sgn * o_)
                     tall = (want[sl] == 1) & ~gnd[sl]
                     dn = gnd[sl].copy()
+                    dk = tall & dark_style
                     if sgn > 0:                          # beam faces the road: road is on the right of travel
-                        P, z_, tall, dn = P[::-1], z_[::-1], tall[::-1], dn[::-1]
+                        P, z_, tall, dn, dk = P[::-1], z_[::-1], tall[::-1], dn[::-1], dk[::-1]
                     kind = names[int(np.bincount(want[sl]).argmax())]
-                    _dedup_guardrail(lin, P, z_, f"{c.id}:{side}:{kind}", built, m, tall, dense=dn if dn.any() else None)
+                    _dedup_guardrail(lin, P, z_, f"{c.id}:{side}:{kind}", built, m, tall, dense=dn if dn.any() else None,
+                                     dark=dk if dk.any() else None)
                     w3 = want[sl] == 3
                     if w3.any():
                         runs.append({"chain": c.id, "side": side, "s": [round(float(ss[k]), 1), round(float(ss[kk]), 1)],
