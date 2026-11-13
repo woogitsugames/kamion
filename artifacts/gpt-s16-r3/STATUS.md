@@ -91,3 +91,5 @@ Natywna izolacja materiału deck-pair zapisana; to ablacją cache, nie finalny i
 Deck-pair nadal nie odtwarza globalnego normal=0. Próba all-pbr sprawdzi równoważność lokalnej ścieżki shaderowej wobec globalnego biasu; dopiero wynik uzasadni dalszy dobór materiałów lub poprawkę implementacji. NASTĘPNY KROK: material-ablate.ps1 -Materials all-pbr
 
 Natywna izolacja materiału all-pbr zapisana; to ablacją cache, nie finalny import. NASTĘPNY KROK: porównać ze starym baseline i wybrać właściwy caster.
+
+All-PBR0 odtwarza globalne normal0 w obrazie wyspy — lokalna ścieżka shaderowa działa. Diagnostykę poprawiono tak, by każda kolejna próba resetowała WSZYSTKIE wspierane PBR do1, unikając skażenia po szerokiej ablacji. Testujemy bridge_kerb osobno i deck-triple. NASTĘPNY KROK: material-ablate.ps1 -Materials M_bridge_kerb,deck-triple
