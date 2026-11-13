@@ -270,7 +270,7 @@ def blowdown(volume_l: float, p0_bar_g: float, d_mm: float, cd: float = 0.75, t0
 
 def _jet_noise(rng, n: int, t_s: np.ndarray, amp: np.ndarray, fpeak: np.ndarray) -> np.ndarray:
     """Noise whose short-time spectrum follows a jet-noise similarity shape around fpeak(t)
-    (log-normal-ish: -24 dB/decade^2 below the peak, -14 dB/decade^2 above), scaled by amp(t)."""
+    (log-normal-ish: -24 dB/decade^2 below the peak, -40 dB/decade^2 above: sintered-silencer outlet, WORKING_VALUE), scaled by amp(t)."""
     nper = 1024
     hop = nper // 4
     w = rng.standard_normal(n + nper)
@@ -278,14 +278,19 @@ def _jet_noise(rng, n: int, t_s: np.ndarray, amp: np.ndarray, fpeak: np.ndarray)
     a_t = np.interp(tt, t_s, amp, right=0.0)
     fp_t = np.interp(tt, t_s, fpeak, right=fpeak[-1])
     lf = np.log10(np.maximum(f, 20.0))[:, None] - np.log10(fp_t)[None, :]
-    k = np.where(lf < 0, 24.0, 14.0)
+    k = np.where(lf < 0, 24.0, 40.0)
     shape_db = -k * lf ** 2
     z *= 10 ** (shape_db / 20) * a_t[None, :]
     _, y = signal.istft(z, FS, nperseg=nper, noverlap=nper - hop)
     return y[:n]
 
 
-def air_dryer_purge_v2(seed: int = 1791, volume_l: float = 2.0, d_mm: float = 8.0, p0_bar_g: float = 12.5,
+# Purge silencer: the sintered insert breaks the single jet into many small ones and limits the radiated peak
+# frequency (WORKING_VALUE, tuned against the spectral centroid ~5 kHz of the P5-006 comparison file).
+SILENCER_FPEAK_MAX = 5200.0
+
+
+def air_dryer_purge_v2(seed: int = 1791, volume_l: float = 4.0, d_mm: float = 6.0, p0_bar_g: float = 12.5,
                        regen_s: float = 6.0) -> np.ndarray:
     """Governor cut-out: purge valve snaps open, the dryer volume blows down (physical envelope),
     then the regeneration air trickles back out through the desiccant (quiet hiss)."""
@@ -297,23 +302,27 @@ def air_dryer_purge_v2(seed: int = 1791, volume_l: float = 2.0, d_mm: float = 8.
     pw = bd["mdot"] * np.maximum(bd["u"], 1.0) ** 5
     amp = np.sqrt(pw / pw[0])
     d_j = d_mm * 1e-3 * np.maximum(1.0, (bd["p"] / P_AMB)) ** 0.25    # rough fully-expanded jet diameter
-    fpk = np.clip(0.2 * bd["u"] / d_j, 900.0, 9000.0)
+    fpk = np.clip(0.2 * bd["u"] / d_j, 900.0, SILENCER_FPEAK_MAX)
     jet = _jet_noise(rng, n, bd["t"], amp, fpk)
     jet /= np.max(np.abs(jet)) + 1e-12
+    # silencer housing / dryer canister body: low band-passed rush that follows the jet envelope
+    body_env = np.interp(t, bd["t"], amp, right=0.0)
+    body = signal.sosfilt(chain(hp(140.0, 0.7), peak(260.0, 1.2, 5.0), lp(700.0, 0.7)), rng.standard_normal(n)) * body_env
+    body /= np.max(np.abs(body)) + 1e-12
     # regeneration: small orifice (~1.5 mm) from the regeneration volume, slow decay, much quieter
-    reg_env = np.clip((t - 0.35) / 0.4, 0, 1) * np.exp(-np.maximum(t - 0.75, 0) / (regen_s / 3.0))
+    reg_env = np.clip((t - 0.6) / 0.5, 0, 1) * np.exp(-np.maximum(t - 0.75, 0) / (regen_s / 3.0))
     reg = _jet_noise(rng, n, t, reg_env, np.full(n, 5200.0))
     reg /= np.max(np.abs(reg)) + 1e-12
     # purge valve piston snap + silencer body knock
     snap = _modes(n, 0.0, [(95.0, 0.05, 0.9), (610.0, 0.012, 0.45), (2100.0, 0.003, 0.25)], rng, 0.02)
-    x = jet + 0.045 * reg + 0.55 * snap
-    x = signal.sosfilt(chain(hp(40.0), highshelf(7000.0, -4.0)), x)   # purge silencer (sintered insert)
+    x = jet + 0.12 * body + 0.06 * reg + 0.3 * snap
+    x = signal.sosfilt(chain(hp(40.0), highshelf(7000.0, -4.0), lp(12000.0, 0.7)), x)   # purge silencer (sintered insert)
     return _finish(x, 0.6)
 
 
 def air_dryer_purge_v2b(seed: int = 1792) -> np.ndarray:
     """Variant: smaller purge volume / orifice (shorter, a bit higher), no repetition between cycles."""
-    return air_dryer_purge_v2(seed=seed, volume_l=1.6, d_mm=7.0, p0_bar_g=12.3, regen_s=5.0)
+    return air_dryer_purge_v2(seed=seed, volume_l=3.4, d_mm=5.5, p0_bar_g=12.3, regen_s=5.0)
 
 
 # --------------------------------------------------------------------------- registry
