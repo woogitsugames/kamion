@@ -171,7 +171,7 @@ research/mistral/p12-dojlidy-landmarks/
                            road-geom.json, region-summary.json, typologia.json, typologia-colors.json
 ```
 
-Surowe zrzuty OSM — `data/osm-pois.json`, `data/osm-east-strip.json`, `data/osm-hasbach.json`, `data/area-geom.json` — **nie są w gałęzi** (usunięte na żądanie przeglądu s17 §3: ~0,9 MB surowych danych ODbL zduplikowanych w worldgenie). Odtworzenie:
+Surowe zrzuty OSM — `data/osm-pois.json`, `data/osm-east-strip.json`, `data/osm-hasbach.json`, `data/area-geom.json` — **nie są w gałęzi** (usunięte na żądanie przeglądu s17 §3: ~0,44 MB (448 760 B) surowych danych ODbL zduplikowanych w worldgenie). Odtworzenie:
 
 1. `data/osm-pois.json` (+ `osm-buildings/lines/areas`): `curl -o osm-map.osm "https://api.openstreetmap.org/api/0.6/map?bbox=23.1600,53.0955,23.1980,53.1180"` → `python3 tools/parse_osm.py osm-map.osm` (wyciąg API OSM, ODbL; wymaga `tools/epsg2180.py`). Uwaga: `osm-pois.json` jest wejściem `tools/gen_manifest.py` — odtworzyć przed regeneracją `manifest.csv`.
 2. `data/osm-east-strip.json` / `data/osm-hasbach.json`: zapytanie Overpass o obiekty na wschód od kafla (browar, BIAFORM, kościół NSM, pałace, kominy), np. końcówka `https://maps.mail.ru/osm/tools/overpass/api/interpreter` z ciałem `[out:json][timeout:60]; ( nwr["building"](23.1950,53.0950,23.2300,53.1200); nwr["man_made"~"chimney|works|storage_tank|silo"](23.1950,53.0950,23.2300,53.1200); nwr["historic"](23.1900,53.1050,23.2150,53.1200); nwr["amenity"="place_of_worship"](23.1900,53.1050,23.2150,53.1200); ); out center tags;` (ODbL; serwer bywa niestabilny — retry).
