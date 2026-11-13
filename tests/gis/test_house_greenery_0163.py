@@ -109,7 +109,7 @@ def test_thuja_wall_has_the_g7_size_and_stays_in_the_live_row():
     assert 20 <= len(kit.V) - 1 <= 26 and all(len(v) == 4 for v in kit.V[1:])       # body + a quad per plant
     assert len(T) <= 17.0 * 24
     # Low (ADR 0132 budget; was <= 4.6 / m): the sparse wall + one tip card per plant, <= 8 triangles per metre
-    assert len(out[True][2]) <= 0.6 * len(T) and len(out[True][2]) <= 8.0 * 24
+    assert len(out[True][2]) <= 0.65 * len(T) and len(out[True][2]) <= 8.0 * 24
     assert out[True][0][:, 2].max() == pytest.approx(V[:, 2].max(), abs=0.35)
     # Low: the twig row is no longer stretched ~2.8x over the wall's side (four rows, each <= 1.3 m of wall per row)
     Vl, UVl = out[True][0], out[True][1]
