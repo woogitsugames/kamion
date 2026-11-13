@@ -103,3 +103,5 @@ Deck-triple usuwa wzór we wszystkich5diag kadrach Low, critic potwierdza bez oc
 Guard cache wykrył dodatkowe nieaktywne _RECEIVESHADOWS_ON/_ZWRITE_ON dodane do m_InvalidKeywords przez import shadera. Po obejrzeniu diff dopuszczono usunięcie wyłącznie tych dwóch wpisów; reszta nadal wymaga pełnej zgodności tekstu i SHA. Eksperymenty cofnięte, 458 bazowych SHA przywrócone.
 
 Świat after wygenerowany: 543.6574765 s, bez fallback=True. NASTĘPNY KROK: import i kamery after.
+
+Import after zakończony.
