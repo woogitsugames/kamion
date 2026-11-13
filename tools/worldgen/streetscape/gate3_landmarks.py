@@ -17,6 +17,15 @@ must recognise the route). Everything is data in Data/Regions/<id>/overrides.yam
                       other way) is required with at_en and optional with along (default: the chain's travel).
                       `lower_edge_m` (default 2.0 m, Tabl. 1.11 [ZNAKI-Z1]; U-4a boards stand lower), `mapillary` ids.
 
+  kind: gate3_signal  traffic signals that the junction rule does not produce (ADR 0161: the rule skips ring arms, so
+                      the signalised approaches inside the Rondo Putry ring had none). Existing prototypes only
+                      (signal_mast / signal_pole / signal_head_<lit>), no new mesh or material:
+                        at_en: [E, N]             pole foot (GUGiK orthophoto)
+                        travel_bearing_deg        compass bearing of the traffic that reads the heads
+                        arm_bearing_deg           optional: cantilever mast, arm from the pole in this direction
+                                                  (the prototype arm is 6.0 m, head 5.0 m out, as the rule builds it)
+                        lit: red | green | off    (default red)
+
 Faces are our own schematic drawings (PIL), never pixels of a photo. Sizes are WORKING_VALUE unless a source is named.
 Stale entries (way / node not found, sign on a carriageway) are reported in streetscape QA `gate3_landmarks`, never
 dropped silently. Why a separate module: streetscape.{furniture,props,signs,signs_route} belong to a parallel session;
@@ -38,6 +47,7 @@ from . import props as PP
 from . import signs as SG
 
 KIND = "gate3_sign"
+KIND_SIGNAL = "gate3_signal"      # ADR 0161
 PX_M = 420                    # texture resolution of a face, px per metre (before export resamples to 512 px width)
 SWATCH_PX = 24                # post / back colour swatches, right of the faces
 TEAL = (0, 126, 122)          # Białystok street-name plates and their posts (Mapillary 504348097385466, read by eye)
@@ -370,8 +380,44 @@ def build(pl, net, graph, overrides, origin, boards, report, carriage=None, isla
                              **({"island": isl.id} if isl is not None else {}),
                              "travel_bearing_deg": round(math.degrees(math.atan2(travel[0], travel[1])) % 360, 1),
                              "mapillary": o.get("mapillary", [])})
+    _signals(pl, overrides, rep, carriage, islands)
     report["gate3_landmarks"] = rep
     return rep
+
+
+def _signals(pl, overrides, rep, carriage, islands):
+    """ADR 0161: `gate3_signal` overrides, placed exactly as furniture.signals places a rule signal."""
+    from shapely.geometry import Point
+    for o in overrides:
+        if o.get("kind") != KIND_SIGNAL:
+            continue
+        try:
+            p = np.asarray(o["at_en"], float)
+            face = _bearing_vec(o["travel_bearing_deg"])
+        except KeyError as e:
+            rep["stale"].append(f"{o['id']}: {e}")
+            continue
+        moved = 0.0
+        isl = next((i for i in islands if i.poly.contains(Point(float(p[0]), float(p[1])))), None)
+        if isl is None and carriage is not None:
+            q = off_carriageway(carriage, p)
+            if q is None:
+                rep["stale"].append(f"{o['id']}: on a carriageway at {[round(float(v), 1) for v in p]}")
+                continue
+            moved, p = float(np.hypot(*(q - p))), q
+        lit = str(o.get("lit", "red"))
+        src = f"override:{o['id']}"
+        zkw = {"z": isl.top_z(p)} if isl is not None else {}
+        mast = "arm_bearing_deg" in o
+        if mast:
+            arm = _bearing_vec(o["arm_bearing_deg"])
+            z = pl.add("signal_mast", p, PP_yaw(arm), src=src, **zkw)
+            pl.add(f"signal_head_{lit}", p + arm * 5.0, PP_yaw(face), z=z + S.SIGNAL_MAST_H - 1.25, src=src)
+        else:
+            z = pl.add("signal_pole", p, PP_yaw(face), src=src, **zkw)
+        pl.add(f"signal_head_{lit}", p + face * 0.15, PP_yaw(face), z=z + 2.9, src=src)
+        rep.setdefault("signals", []).append({"id": o["id"], "at": [round(float(v), 1) for v in p], "mast": mast,
+                                              "snapped_m": round(moved, 2), "lit": lit})
 
 
 def PP_yaw(f):
