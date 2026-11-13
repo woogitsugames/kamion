@@ -592,7 +592,15 @@ TREE_H_MIN_M = 4.0
 OVATE_SHARE = 0.3                 # share of the round-habit species drawn with the ovate card (W: no two neighbours alike)
 FRUIT_R_MAX_M = 2.3               # orchard trees are the small crowns (W)
 CARD_STRETCH = (0.80, 1.30)       # a crown card is drawn at most this far off its painted width / height
-THUJA_PITCH_M = (1.2, 3.2)        # station pitch of a thuja wall: High, Low
+# plant pitch of a thuja wall: High, Low. Review s17 0170 P2 (the wall was one green box with a flat top; G7-P11 is a
+# row of separate columns with round tips): High - every plant is two shoulder stations (a round, uneven top) and every gap
+# between two plants a trough station - lower, narrower, darker; Low - the wall keeps its sparse stations (ADR 0132
+# budget) and every plant's tip is one card of the thuja sprite's top standing out of the crest. WORKING_VALUE
+# (G7 # 19: plants 0.8-1.2 m wide)
+THUJA_PITCH_M = (1.0, 1.1)
+THUJA_WALL_PITCH_LOW_M = 3.2      # station pitch of the Low wall (as before ADR 0170)
+THUJA_TIP_LOW_M = (0.50, 0.60)    # Low: the wall's crest stands this far below the nominal height; the tips rise this far above it + 0.25
+THUJA_GAP_DIP_M = (0.30, 0.55)    # how far the top drops between two plants (G7-P11: 0.3-0.6 m, WORKING_VALUE)
 # cross-section of a clipped thuja wall per side, foot -> shoulder: (half-thickness factor, height factor, normal out,
 # normal up, occlusion); the crest (centre line, full height) closes it. Photos G7-P11 / P12: battered sides, a
 # rounded top, a dark foot.
@@ -600,7 +608,9 @@ THUJA_PITCH_M = (1.2, 3.2)        # station pitch of a thuja wall: High, Low
 _THUJA_PROFILE = ((0.84, 0.00, 0.95, 0.05, 0.42), (0.95, 0.21, 0.98, 0.07, 0.62), (1.00, 0.42, 1.00, 0.10, 0.80),
                   (0.97, 0.80, 0.90, 0.35, 0.95),
                   (0.60, 0.955, 0.50, 0.80, 1.0))
-_THUJA_PROFILE_LOW = ((0.86, 0.00, 0.95, 0.05, 0.45), (1.00, 0.70, 1.00, 0.20, 0.90), (0.60, 0.955, 0.50, 0.80, 1.0))
+# Low: one more row at 0.36 h (review s17 0170 P2: the twig row was stretched ~2.8x over a 3 m wall; now ~1.2x)
+_THUJA_PROFILE_LOW = ((0.86, 0.00, 0.95, 0.05, 0.45), (0.99, 0.36, 1.00, 0.08, 0.74), (1.00, 0.70, 1.00, 0.20, 0.90),
+                      (0.60, 0.955, 0.50, 0.80, 1.0))
 
 
 def _fold(v, step, lo, hi, d):
@@ -621,7 +631,23 @@ def thuja_hedge(kit, a, b, n, zf, h, key, thick=1.0, low=False, raise_ends=(0.0,
         return 0.0
     t = (b - a) / L
     prof = _THUJA_PROFILE_LOW if low else _THUJA_PROFILE
-    nb = max(2, int(round(L / THUJA_PITCH_M[1 if low else 0])))
+    npl = max(1, int(round(L / THUJA_PITCH_M[1 if low else 0])))              # plants
+    pitch = L / npl
+    if low:                                                  # stations (s, noise index, kind)
+        nw = max(2, int(round(L / THUJA_WALL_PITCH_LOW_M)))
+        st = [(L * k / nw, k, "end" if k in (0, nw) else "wall") for k in range(nw + 1)]
+    else:                                                    # end, (shoulder, shoulder), gap, (shoulder, shoulder), ..., end
+        st = [(0.0, 0, "end")]
+        for i in range(npl):
+            if i:
+                st.append((i * pitch, i, "gap"))
+            for j, f in enumerate((0.30, 0.70)):
+                st.append(((i + f + 0.10 * (PLT.hfloat(key, "ts", i, j) - 0.5)) * pitch, i, "plant"))
+        st.append((L, npl - 1, "end"))
+    nb = len(st) - 1
+
+    def crest(s):                                            # nominal top of the wall at s, without the per-plant noise
+        return h + raise_ends[0] * max(0.0, 1.0 - s / 4.0) ** 0.7 + raise_ends[1] * max(0.0, 1.0 - (L - s) / 4.0) ** 0.7             + 0.07 * math.sin(ph0 + s * 0.8) - (THUJA_TIP_LOW_M[0] if low else 0.0)
     v0, v1 = PLT.PK.row("thuja")
     dv = v1 - v0
     row_m = PLT.PK.ROW_H_M["thuja"]
@@ -631,32 +657,39 @@ def thuja_hedge(kit, a, b, n, zf, h, key, thick=1.0, low=False, raise_ends=(0.0,
     vs, vv, dd = [0.04], 0.04, 1
     for i in range(1, len(pts)):
         arc = math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1])
-        vv, dd = _fold(vv, min(arc / row_m / (1.9 if low else 1.0), 0.90), 0.04, 0.96, dd)
+        vv, dd = _fold(vv, min(arc / row_m, 0.90), 0.04, 0.96, dd)
         vs.append(vv)
     mp = len(pts)                                            # vertices per side and station
     V, UV, C = [], [], []
     us = [[ulo + (uhi - ulo) * PLT.hfloat(key, "tu", sd), 1] for sd in range(2)]
-    for k in range(nb + 1):
-        s = L * k / nb
-        endf = 0.62 if k in (0, nb) else 1.0
+    s_prev = 0.0
+    for k, (s, ip, kind) in enumerate(st):
+        endf = 0.62 if kind == "end" else 1.0
         c = a + t * s + n * (0.05 * (PLT.hfloat(key, "to", k) * 2 - 1))
         zz = zf(a + t * s) - 0.03
-        up = raise_ends[0] * max(0.0, 1.0 - s / 4.0) ** 0.7 + raise_ends[1] * max(0.0, 1.0 - (L - s) / 4.0) ** 0.7
-        hh = (h + up + 0.07 * math.sin(ph0 + s * 0.8) + (0.06 if low else 0.09) * (PLT.hfloat(key, "th", k) * 2 - 1)) \
-            * (0.94 if k in (0, nb) else 1.0)
+        # height: the wall's slow wander + the plant's own + a little per shoulder (no flat tops)
+        hh = (crest(s) + (0.06 if low else 0.11) * (PLT.hfloat(key, "th", ip) * 2 - 1)
+              + (0.07 * (PLT.hfloat(key, "tk", k) * 2 - 1) if kind == "plant" else 0.0)) * (0.94 if kind == "end" else 1.0)
         w = thick / 2 * (1.0 + 0.08 * math.sin(ph1 + s * 1.1) + 0.06 * (PLT.hfloat(key, "tw", k) * 2 - 1)) * endf
+        dip, og = 0.0, 1.0
+        if kind == "gap":
+            dip = THUJA_GAP_DIP_M[0] + (THUJA_GAP_DIP_M[1] - THUJA_GAP_DIP_M[0]) * PLT.hfloat(key, "tg", k)
+            w *= 0.80 + 0.08 * PLT.hfloat(key, "tgw", k)
+            og = 0.66                                        # the groove between two plants is in their shade
+        du, s_prev = (s - s_prev) / PLT.PK.KIT_M, s
         for sd, sg in enumerate((1.0, -1.0)):
             if k:
-                us[sd][0], us[sd][1] = _fold(us[sd][0], L / nb / PLT.PK.KIT_M, ulo, uhi, us[sd][1])
+                us[sd][0], us[sd][1] = _fold(us[sd][0], du, ulo, uhi, us[sd][1])
             for i in range(mp):
                 if i < len(prof):
                     kw, kh, no, nu, occ = prof[i]
                 else:
                     kw, kh, no, nu, occ = 0.0, 1.0, 0.0, 1.0, 1.0
                 q = c + n * (sg * w * kw)
-                V.append([q[0], q[1], zz + hh * kh])
+                # the dip takes the top of the wall down (shoulder and crest), not its foot
+                V.append([q[0], q[1], zz + hh * kh - dip * min(kh / 0.7, 1.0)])
                 UV.append([us[sd][0], v0 + dv * vs[i]])
-                C.append(PLT._fol([n[0] * sg * no, n[1] * sg * no, nu], occ))
+                C.append(PLT._fol([n[0] * sg * no, n[1] * sg * no, nu], occ * og))
     m = 2 * mp
     T = []
     for k in range(nb):
@@ -670,6 +703,23 @@ def thuja_hedge(kit, a, b, n, zf, h, key, thick=1.0, low=False, raise_ends=(0.0,
         for i in range(1, len(ring) - 1):
             T.append((ring[0], ring[i + 1], ring[i]) if not flip else (ring[0], ring[i], ring[i + 1]))
     kit.tris(V, UV, T, C)
+    if low:
+        # the plants' tips: the top of a thuja silhouette card per plant, standing in the wall's axis with its cut
+        # lower edge inside the body - a scalloped line of round, ragged tips instead of a ruled top (2 triangles a plant)
+        for i in range(npl):
+            s = (i + 0.5 + 0.2 * (PLT.hfloat(key, "cs", i) - 0.5)) * pitch
+            wc = pitch * (1.38 + 0.14 * PLT.hfloat(key, "cw", i))       # the card's column is 0.72 of its width: tips touch
+            hc_ = 0.45 + THUJA_TIP_LOW_M[1] + 0.25 * PLT.hfloat(key, "ch", i)
+            c = a + t * s + n * (0.10 * (PLT.hfloat(key, "cn", i) * 2 - 1))
+            z0 = zf(a + t * s) - 0.03 + crest(s) - 0.45                # the cut edge: 0.45 m under the wall's crest
+            u0, u1, sv0, sv1 = PLT.PK.sprite("thuja_a" if PLT.hfloat(key, "cp", i) < 0.5 else "thuja_b")
+            if PLT.hfloat(key, "cf", i) < 0.5:
+                u0, u1 = u1, u0
+            vb = sv1 - (sv1 - sv0) * 0.42                    # the round top of the card (squashed to ~0.75 : 1)
+            A, B = c - t * (wc / 2), c + t * (wc / 2)
+            kit.quad([[*A, z0], [*B, z0], [*B, z0 + hc_], [*A, z0 + hc_]], [[u0, vb], [u1, vb], [u1, sv1], [u0, sv1]],
+                     [PLT._fol([-t[0] * 0.5, -t[1] * 0.5, 0.7], 0.92), PLT._fol([t[0] * 0.5, t[1] * 0.5, 0.7], 0.92),
+                      PLT._fol([t[0] * 0.3, t[1] * 0.3, 0.9]), PLT._fol([-t[0] * 0.3, -t[1] * 0.3, 0.9])])
     return L
 
 
@@ -889,13 +939,30 @@ def tree_dims(r, species, key, in_plot=True):
     return round(H, 2), round(min(cb, 0.45 * H), 2), sprite
 
 
+def _shaded_card(kit, p, z, sprite, W, H, ang, occ_mid):
+    """PLT.card() as a fan of four triangles around a centre vertex whose occlusion is occ_mid: the crown card darkens
+    smoothly towards the axis of the crown (the leaves there stand in the crown's own shade) - a shaded middle with no
+    edge of its own, where a separate dark body shows its outline (review s17 0170 P1)."""
+    u0, u1, v0, v1 = PLT.PK.sprite(sprite)
+    r = np.array([math.cos(ang), math.sin(ang)])
+    d = r * (W / 2)
+    A, B = np.asarray(p) - d, np.asarray(p) + d
+    fm = 0.46                                                # the middle sits a little below half height
+    kit.tris([[*A, z], [*B, z], [*B, z + H], [*A, z + H], [p[0], p[1], z + H * fm]],
+             [[u0, v0], [u1, v0], [u1, v1], [u0, v1], [(u0 + u1) / 2, v0 + (v1 - v0) * fm]],
+             [(0, 1, 4), (1, 2, 4), (2, 3, 4), (3, 0, 4)],
+             [PLT._fol([-r[0] * 0.9, -r[1] * 0.9, 0.35]), PLT._fol([r[0] * 0.9, r[1] * 0.9, 0.35]),
+              PLT._fol([r[0] * 0.6, r[1] * 0.6, 0.8]), PLT._fol([-r[0] * 0.6, -r[1] * 0.6, 0.8]), PLT._fol([0.0, 0.0, 1.0], occ_mid)])
+
+
 def garden_tree(kit, p, z, r, H, cb, species, key, lite=False, cards=3, sprite=None, core=False):
     """A broadleaf garden tree in the plot kit (ADR 0163), habit by species: the stem to the crown base, crossed whole-
     crown cards (the habit's silhouette with its limbs), and - full variant of the dense habits - the crown's dark
     core and leaf sprays lying on its skin, so it is a volume from every side and from above, not a paper cross.
     lite: two stem strips + `cards` crossed cards (8-10 triangles) - Low / Medium and the trees away from the street;
-    core (ADR 0170, lite trees near the street): + the dark core and two shoulder sprays (16 triangles), so a crown a
-    few metres from the camera is a body with a shaded middle, not a flat wall of one card (review s17 0163 P1)."""
+    core (ADR 0170, lite trees near the street): the crown cards darken towards the axis (_shaded_card, + 2 triangles
+    per card) and two shoulder sprays stand in front of them (+ 4) - 10 triangles more than the plain lite tree. No
+    separate dark core: build 2 had one and it showed as a box under the cards (review s17 0170 P1)."""
     p = np.asarray(p, float)
     sprite = sprite or HABIT[species]
     hc = H - cb
@@ -917,13 +984,19 @@ def garden_tree(kit, p, z, r, H, cb, species, key, lite=False, cards=3, sprite=N
         wj = 0.90 + 0.20 * PLT.hfloat(key, "cw", i)          # the crown is not a ball from any side (same in full / lite)
         hj = 0.97 + 0.10 * PLT.hfloat(key, "ch", i)
         off = (np.array([PLT.hfloat(key, "cx", i), PLT.hfloat(key, "cy", i)]) - 0.5) * 0.24 * r
-        PLT.card(kit, cc + off, z + cb - 0.02 * hc, sprite, W * wj, hc * hj, a0 + 0.4 + i * math.pi / cards)
+        if lite and core and DENSE[species] > 0.0:
+            _shaded_card(kit, cc + off, z + cb - 0.02 * hc, sprite, W * wj, hc * hj, a0 + 0.4 + i * math.pi / cards,
+                         0.50 + 0.10 * PLT.hfloat(key, "co", i))
+        else:
+            PLT.card(kit, cc + off, z + cb - 0.02 * hc, sprite, W * wj, hc * hj, a0 + 0.4 + i * math.pi / cards)
     dense = DENSE[species]
     occ = 0.86 + 0.14 * PLT.hfloat(key, "to")
     if lite and core and dense > 0.0:
-        # occlusion 0.42 (full variant: 0.26 under seven sprays): with two sprays the core shows, so it is shaded
-        # foliage, not a black box (build 1 of ADR 0170, g7_p07_b Low)
-        PLT._core(kit, cc, z + cb + hc * 0.16, r * 0.46, hc * 0.62, key, sides=4, occ=0.42 * occ, rings=2)
+        # review s17 0170 P1 (g7_p07_b: the 4-sided dark core of build 2 hung under the cards as a black box with a
+        # straight lower edge; tried next in the offline preview, tools/worldgen/streetscape/preview_kit.py: dark leaf sprays
+        # and smaller dark crown cards inside - every dark plane that crosses a lit card shows the straight line of
+        # the crossing). No dark geometry in the lite crown: its shaded middle is the occlusion gradient of the crown
+        # cards themselves (_shaded_card above). Two lit shoulder sprays as before.
         for i in range(2):
             az = a0 + 0.8 + math.pi * i
             c = cc + np.array([math.cos(az), math.sin(az)]) * r * 0.30

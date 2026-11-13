@@ -4,6 +4,7 @@ import numpy as np
 import pytest
 
 from streetscape import plantings as PG
+from streetscape import plot_kit as PK
 from streetscape import plots as PLT
 from streetscape import vegetation as VG
 from test_house_greenery_0163 import _forest_src, _place
@@ -65,12 +66,50 @@ def test_spruce_has_a_dark_core_inside_the_cards():
     assert occ.max() <= 0.5, "core is in the tree's own shade"
 
 
-def test_near_lite_garden_tree_gets_core_and_shoulders():
-    def tris(**kw):
+def test_near_lite_garden_tree_has_a_shaded_middle_and_no_core_body():
+    """review s17 0170 P1: the dark core body of build 2 showed as a box under the cards. The lite crown near the street
+    darkens its own cards towards the axis instead (+ 2 triangles per card) and keeps the two shoulder sprays (+ 4)."""
+    def build(species="maple", **kw):
         kit = PLT.Kit()
-        PG.garden_tree(kit, np.array([0.0, 0.0]), 0.0, 2.5, 7.0, 1.3, "maple", "k", lite=True, cards=3, **kw)
-        return sum(len(t) for t in kit.T)
-    assert tris(core=True) - tris() == 16
+        PG.garden_tree(kit, np.array([0.0, 0.0]), 0.0, 2.5, 7.0, 1.3, species, "k", lite=True, cards=3, **kw)
+        return kit
+    plain, near = build(), build(core=True)
+    tris = lambda k: sum(len(t) for t in k.T)                               # noqa: E731
+    assert tris(near) - tris(plain) == 10
+    hedge_v = PK.row("hedge")
+    for V, UV, C in zip(near.V, near.UV, near.C):
+        fol = C[:, 3] > 0.5
+        if not fol.any():
+            continue
+        assert not ((UV[:, 1] > hedge_v[0]) & (UV[:, 1] < hedge_v[1])).all(), "no body of the hedge row inside the crown"
+        occ = np.linalg.norm(C[:, :3] * 2 - 1, axis=1)
+        if len(V) == 5:                                                       # a crown card: lit rim, shaded middle
+            assert occ[:4].min() > 0.9 and 0.45 <= occ[4] <= 0.65
+            assert np.hypot(V[4, 0], V[4, 1]) < 0.4, "the dark vertex is on the crown's axis"
+    assert sum(1 for V in near.V if len(V) == 5) == 3
+    assert tris(build("birch", core=True)) == tris(build("birch")), "open habit: no shaded middle"
+
+
+def test_thuja_wall_low_has_a_tip_card_per_plant():
+    """review s17 0170 P2: on Low the wall keeps its sparse stations and every plant's round tip is a silhouette card."""
     kit = PLT.Kit()
-    PG.garden_tree(kit, np.array([0.0, 0.0]), 0.0, 2.5, 7.0, 1.3, "birch", "k", lite=True, cards=3, core=True)
-    assert sum(len(t) for t in kit.T) == 10, "open habit (birch) keeps the light lite crown"
+    PG.thuja_hedge(kit, np.array([0.0, 0.0]), np.array([22.0, 0.0]), np.array([0.0, -1.0]), lambda q: 0.0, 3.0, "h", low=True)
+    cards = [(V, UV) for V, UV in zip(kit.V[1:], kit.UV[1:])]
+    assert len(cards) == 20                                                   # 22 m at 1.1 m
+    wall_top = kit.V[0][:, 2].max()
+    assert 3.0 - 0.75 <= wall_top <= 3.0 - 0.3
+    u0, u1, v0, v1 = PK.sprite("thuja_a")
+    for V, UV in cards:
+        assert V[:, 2].min() < wall_top - 0.2 and 3.0 <= V[:, 2].max() <= 3.0 + 0.45
+        assert UV[:, 1].max() == pytest.approx(v1) and UV[:, 1].min() > v0 + 0.5 * (v1 - v0)   # the top of the sprite
+
+
+def test_spruce_card_is_green_not_turquoise():
+    """review s17 0170 P2: B <= 0.8 G over the spruce cards (the 0170 build 2 palette read turquoise under the sky)."""
+    N = PK.N
+    for name in ("spruce_a", "spruce_b"):
+        u0, u1, v0, v1 = PK.sprite(name)
+        a = np.asarray(PK.atlas().crop((int(u0 * N), int((1 - v1) * N), int(u1 * N), int((1 - v0) * N))), float)
+        m = a[..., 3] > 128
+        r, g, b = (a[..., i][m].mean() for i in range(3))
+        assert b <= 0.72 * g and r <= 0.8 * g and g < 75, (r, g, b)

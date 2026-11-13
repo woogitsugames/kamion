@@ -597,10 +597,12 @@ def _spruce_card(rng, h, w):
     # (a blue spruce among garden trees is a dark cone, not a cyan one). WORKING_VALUE
     # ADR 0170 (review s17 0163 P2 "blady, sinawy swierk"): G7-P11 / P12 spruces are dark, saturated blue-green
     # (shade ~ 25 / 40 / 38, lit ~ 55 / 80 / 70 on the photos, WORKING_VALUE); the 0159 palette was greyer and lighter
-    c[body, :3] = (13, 24, 19)
+    # review s17 0170 P2 ("paleta wpada w turkus", B <= 0.8 G asked): the 0170 palette had B = 0.78-0.83 G and the sky
+    # ambient pushed it to cyan. Dark green with B ~ 0.6 G, as the spruces of G7-P11 / P12 read. WORKING_VALUE
+    c[body, :3] = (14, 24, 15)
     c[body, 3] = 1.0
     S = _Stamper(c, st)
-    pal = [(15, 28, 22), (22, 40, 31), (32, 54, 43), (46, 70, 58)]
+    pal = [(17, 29, 17), (25, 41, 24), (36, 55, 32), (50, 71, 42)]
     n = 2600
     tl = 0.42 * w / 3.4
     for i in range(n):

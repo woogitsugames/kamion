@@ -87,7 +87,7 @@ def test_thuja_wall_has_the_g7_size_and_stays_in_the_live_row():
         out[low] = kit.out()
     V, UV, T, C = out[False]
     inner = (V[:, 0] > 2.0) & (V[:, 0] < 22.0)
-    assert 2.3 - 0.2 <= V[inner][:, 2].max() - 100.0 <= 2.3 + 0.2                   # wanders +-0.16 m about the nominal height
+    assert 2.3 - 0.25 <= V[inner][:, 2].max() - 100.0 <= 2.3 + 0.25                 # wanders +-0.25 m about the nominal height
     assert 0.8 <= np.ptp(V[inner][:, 1]) <= 1.25
     assert (C[:, 3] > 0.5).all()                                                 # foliage vertices (normal + occlusion)
     occ = np.linalg.norm(C[:, :3] * 2 - 1, axis=1)
@@ -100,8 +100,21 @@ def test_thuja_wall_has_the_g7_size_and_stays_in_the_live_row():
     dz = np.hypot(np.diff(V[:5][side][:, 2]), np.diff(V[:5][side][:, 1]))
     dvv = np.abs(np.diff(UV[:5][side][:, 1])) / (v1 - v0)
     assert np.allclose(dvv[:3], np.minimum(dz[:3], 0.9), atol=0.12)
-    assert len(out[True][2]) <= 0.55 * len(T) and len(out[True][2]) <= 4.6 * 24   # Low: <= 4.6 triangles per metre
-    assert out[True][0][:, 2].max() == pytest.approx(V[:, 2].max(), abs=0.25)
+    # review s17 0170 P2: a row of plants, not a ruled box - on High the top drops 0.3-0.55 m between two plants
+    crest = V[inner & (np.abs(V[:, 1]) < 0.06)]
+    crest = crest[np.unique(np.round(crest[:, 0], 3), return_index=True)[1]]      # both sides share the crest: one per station
+    zc = crest[:, 2] - 100.0
+    dips = sum(1 for i in range(1, len(zc) - 1) if zc[i] < zc[i - 1] - 0.2 and zc[i] < zc[i + 1] - 0.2)
+    assert 16 <= dips <= 24                                                       # one gap per plant, plants ~1 m apart
+    # Low (ADR 0132 budget; was <= 4.6 / m): the sparse wall + one tip card per plant, <= 8 triangles per metre
+    assert len(out[True][2]) <= 0.2 * len(T) and len(out[True][2]) <= 8.0 * 24
+    assert out[True][0][:, 2].max() == pytest.approx(V[:, 2].max(), abs=0.35)
+    # Low: the twig row is no longer stretched ~2.8x over the wall's side (four rows, each <= 1.3 m of wall per row)
+    Vl, UVl = out[True][0], out[True][1]
+    side = np.argsort(Vl[:5, 2])
+    dzl = np.hypot(np.diff(Vl[:5][side][:, 2]), np.diff(Vl[:5][side][:, 1]))
+    dvl = np.abs(np.diff(UVl[:5][side][:, 1])) / (v1 - v0)
+    assert (dzl[:3] / np.maximum(dvl[:3], 1e-6) <= 1.3).all()
 
 
 def test_corner_plants_are_taller_but_never_above_three_metres():
