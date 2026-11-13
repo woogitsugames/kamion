@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "id": "fuzz_shrink_articulation_stop_fulllock",
+  "description": "M34 shrunk repro: full steering lock at 15 km/h on wet asphalt, empty trailer - articulation overshoots the 90 deg yaw stop",
+  "spec": "docs/04 s6.9/s6.14 (M34 fuzz shrink)",
+  "combination": "empty",
+  "ground": {
+    "gradePercent": 0,
+    "surface": "wet_asphalt"
+  },
+  "initial": {
+    "speedKmh": 15
+  },
+  "duration": 12,
+  "dt": 0.01,
+  "substeps": 4,
+  "driver": {
+    "type": "timeline",
+    "keys": [
+      {
+        "t": 0,
+        "throttle": 0.3,
+        "brake": 0,
+        "steer": -1,
+        "selector": "D"
+      }
+    ]
+  },
+  "checks": [
+    {
+      "metric": "articulation_limit_excess_deg",
+      "status": "WORKING_VALUE",
+      "source": "D59 (owner, 2026-11-13) / ADR 0158 F1, ADR 0165: articulation may exceed the fifth-wheel soft yaw stop (yawLimitDeg = 90, yawStopFrequencyHz 3, tractor_4x2_generic.vehicle.json) by <= 3.5 deg; a stiffer stop (>= 4.5 Hz) breaks the 0.35 m/s jerk limit (ADR 0158 table). Measured max 3.33 deg (M34 hunt)",
+      "max": 3.5
+    },
+    {
+      "metric": "max_articulation_deg",
+      "status": "WORKING_VALUE",
+      "source": "observed value",
+      "min": 0
+    },
+    {
+      "metric": "nan_detected",
+      "status": "WORKING_VALUE",
+      "source": "no NaN",
+      "max": 0
+    },
+    {
+      "metric": "max_dv_step_ms",
+      "status": "WORKING_VALUE",
+      "source": "no impulse spikes",
+      "max": 0.35
+    }
+  ]
+}

@@ -85,19 +85,17 @@ namespace Game.World.Import
             edge.SetParent(root, false);
             Physics.SyncTransforms();
 
-            var exits = ReadExits(r, min, max);
-            var closures = new List<WorldBoundary.Closure>();
+            var exits = ReadExits(GraphPath(r.Region), r.AnchorX, r.AnchorY, min, max);
+            var planned = PlanClosures(exits);
+            var raw = new List<WorldBoundary.Closure>();
             var stubs = new List<(Vector3 start, Vector2 dir, float width)>();
-            foreach (var ex in exits)
+            for (int k = 0; k < exits.Count; k++)
             {
+                var ex = exits[k];
                 if (!RoadY(root, ex.closureEN, out float cy)) continue;
-                closures.Add(new WorldBoundary.Closure
-                {
-                    localPos = new Vector3(ex.closureEN.x, cy, ex.closureEN.y),
-                    headingDeg = Mathf.Atan2(ex.closureEN == ex.edgeEN ? ex.edgeDir.x : ex.closureDir.x,
-                                             ex.closureEN == ex.edgeEN ? ex.edgeDir.y : ex.closureDir.y) * Mathf.Rad2Deg,
-                    widthM = ex.width, road = ex.road,
-                });
+                var pc = planned[k];
+                pc.localPos.y = cy;
+                raw.Add(pc);
                 Vector2 inside = ex.edgeEN - ex.edgeDir * 1.5f;
                 if (RoadY(root, inside, out float ey))
                 {
@@ -110,6 +108,13 @@ namespace Game.World.Import
                     else stubs.Add((cand, ex.edgeDir, ex.width));
                 }
             }
+            // ADR 0169: ONE list of closures for the runtime data, the colliders and the visible meshes. A carriageway
+            // and its slip lane, crossing roads at a junction next to the edge and neighbouring carriageways are
+            // resolved here, once, so nothing is built twice at the same place.
+            var closures = ResolveClosures(raw);
+            var conflicts = FindClosureConflicts(closures);
+            if (conflicts.Count > 0)
+                throw new InvalidDataException($"world edge: {conflicts.Count} closure rows overlap after ResolveClosures (first: {closures[conflicts[0].a].road} x {closures[conflicts[0].b].road}, {conflicts[0].gapM:F2} m)");
             boundary.closures = closures.ToArray();
 
             // ---- apron + road stubs (one mesh asset per region, updated in place so both tier scenes keep the reference) ----
@@ -142,7 +147,7 @@ namespace Game.World.Import
                 go.transform.localRotation = Quaternion.Euler(0f, c.headingDeg, 0f);
                 var bc = go.AddComponent<BoxCollider>();
                 bc.center = new Vector3(0f, 1.25f, 0f);
-                bc.size = new Vector3(ClosureSpan(c.widthM), 2.5f, 0.6f);
+                bc.size = new Vector3(ClosureSpan(c), 2.5f, 0.6f);
                 go.AddComponent<GroundSurface>().kind = SurfaceKind.Concrete;
                 go.isStatic = true;
             }
@@ -158,9 +163,7 @@ namespace Game.World.Import
                 Mat(r, "concrete_wall", "concrete_plinth", "road_concrete", "bridge_concrete"),
                 Mat(r, "far_field_buildings"),
             };
-            // One visible closure per carriageway: a main line and its slip lane reach the edge side by side and the
-            // graph closes each of them (colliders above stay per road); their boards and B-1 discs would overlap.
-            var visible = MergeOverlappingClosures(closures);
+            var visible = closures;
             var groups = ClusterClosures(visible, ClosureGroupLinkM);
             var keep = new HashSet<string>();
             int closureTris = 0;
@@ -190,7 +193,7 @@ namespace Game.World.Import
                 if (!keep.Contains(kv.Key)) UnityEngine.Object.DestroyImmediate(kv.Value, true);   // meshes of the per-closure layout
             EditorUtility.SetDirty(host);
             Debug.Log($"[IMPORT] world edge (tier {tier}): bounds E {min.x:F0}..{max.x:F0} N {min.y:F0}..{max.y:F0}, {exits.Count} roads leave the region, " +
-                      $"{closures.Count} closures {ClosureSetbackM:F0} m inside, {visible.Count} visible after merging overlaps, in {groups.Count} render groups ({closureTris} tris), {stubs.Count} road stubs, apron {mesh.vertexCount} verts to {ApronReachM:F0} m, far-field {farTris} tris");
+                      $"{raw.Count} graph closures {ClosureSetbackM:F0} m inside resolved to {closures.Count} (one list: colliders = boards), in {groups.Count} render groups ({closureTris} tris), {stubs.Count} road stubs, apron {mesh.vertexCount} verts to {ApronReachM:F0} m, far-field {farTris} tris");
         }
 
         /// <summary>Node of the far-field GLB with the tall ring objects kept visible beyond the far plane (ADR 0141).</summary>
@@ -291,6 +294,12 @@ namespace Game.World.Import
 
         static float ClosureSpan(float roadWidth) => roadWidth + 5f;   // carriageway + shoulders / kerbs on both sides
 
+        /// <summary>Length of the barrier row of a closure [m]: the resolved span when set (ADR 0169), else road width + 5 m.</summary>
+        public static float ClosureSpan(WorldBoundary.Closure c) => c.spanM > 0f ? c.spanM : ClosureSpan(c.widthM);
+
+        public static string GraphPath(string region) =>
+            Path.Combine(Game.Editor.Build.EditorTools.RepoRoot, "Data", "Regions", region, "roads.graph.json");
+
         static Material Mat(RegionImporter.Result r, params string[] ids)
         {
             foreach (var id in ids) if (r.Materials.TryGetValue(id, out var m) && m != null) return m;
@@ -298,7 +307,7 @@ namespace Game.World.Import
         }
 
         // ------------------------------------------------------------------------------------------------ road exits
-        struct Exit
+        public struct RoadExit
         {
             public Vector2 edgeEN, edgeDir;        // point on the region edge, unit direction of the road leaving the region
             public Vector2 closureEN, closureDir;  // closure centre and the road direction there (towards the edge)
@@ -306,11 +315,12 @@ namespace Game.World.Import
             public string road;
         }
 
-        /// <summary>Roads cut by the region bbox: edges of roads.graph.json with a boundary node (build_region clips them there).</summary>
-        static List<Exit> ReadExits(RegionImporter.Result r, Vector2 min, Vector2 max)
+        /// <summary>Roads cut by the region bbox: edges of roads.graph.json with a boundary node (build_region clips them there).
+        /// The ONLY place that derives closures from the graph (ADR 0169; the Python copy in roads.barrier_audit is gone).
+        /// Pure: no scene, no assets - public for the EditMode test on the committed graph.</summary>
+        public static List<RoadExit> ReadExits(string path, double anchorX, double anchorY, Vector2 min, Vector2 max)
         {
-            var exits = new List<Exit>();
-            string path = Path.Combine(Game.Editor.Build.EditorTools.RepoRoot, "Data", "Regions", r.Region, "roads.graph.json");
+            var exits = new List<RoadExit>();
             if (!File.Exists(path)) { Debug.LogWarning("[IMPORT] world edge: roads.graph.json missing - no closures"); return exits; }
             var g = Obj(Parse(File.ReadAllText(path)));
             var boundaryNodes = new HashSet<string>();
@@ -330,7 +340,7 @@ namespace Game.World.Import
                     l.Add(e);
                 }
             List<Vector2> Points(Dictionary<string, object> e) =>
-                Arr(e.Get("geometry")).Select(p => new Vector2((float)(Num(Arr(p)[0]) - r.AnchorX), (float)(Num(Arr(p)[1]) - r.AnchorY))).ToList();
+                Arr(e.Get("geometry")).Select(p => new Vector2((float)(Num(Arr(p)[0]) - anchorX), (float)(Num(Arr(p)[1]) - anchorY))).ToList();
             foreach (var e in edgeList)
             {
                 bool fromB = boundaryNodes.Contains(Str(e.Get("from"))), toB = boundaryNodes.Contains(Str(e.Get("to")));
@@ -383,9 +393,41 @@ namespace Game.World.Import
                     }
                     acc += seg;
                 }
-                exits.Add(new Exit { edgeEN = edgePt, edgeDir = edgeDir, closureEN = cp, closureDir = cd, width = Mathf.Clamp(width, 3f, 16f), road = Sanitize(nm ?? hw) });
+                exits.Add(new RoadExit { edgeEN = edgePt, edgeDir = edgeDir, closureEN = cp, closureDir = cd, width = Mathf.Clamp(width, 3f, 16f), road = Sanitize(nm ?? hw) });
             }
             return exits;
+        }
+
+        /// <summary>One closure per road exit, on the road axis at the setback point, y = 0 (the caller sets the road height).</summary>
+        public static List<WorldBoundary.Closure> PlanClosures(IList<RoadExit> exits)
+        {
+            var list = new List<WorldBoundary.Closure>(exits.Count);
+            foreach (var ex in exits)
+            {
+                Vector2 d = ex.closureEN == ex.edgeEN ? ex.edgeDir : ex.closureDir;
+                list.Add(new WorldBoundary.Closure
+                {
+                    localPos = new Vector3(ex.closureEN.x, 0f, ex.closureEN.y),
+                    headingDeg = Mathf.Atan2(d.x, d.y) * Mathf.Rad2Deg,
+                    widthM = ex.width, road = ex.road,
+                });
+            }
+            return list;
+        }
+
+        /// <summary>
+        /// Graph closures of a committed region without a scene (y = 0, not yet resolved): anchor from region.yaml, edge
+        /// rectangle from the bbox of roads.graph.json (the same rectangle as the union of the chunks). For the
+        /// EditMode duplicate test (ADR 0169).
+        /// </summary>
+        public static List<WorldBoundary.Closure> PlanRegionClosures(string region)
+        {
+            string path = GraphPath(region);
+            RegionImporter.ReadAnchor(File.ReadAllLines(Path.Combine(Path.GetDirectoryName(path), "region.yaml")), out double ax, out double ay, out _);
+            var bbox = Arr(Obj(Parse(File.ReadAllText(path))).Get("bbox"));
+            var min = new Vector2((float)(Num(bbox[0]) - ax), (float)(Num(bbox[1]) - ay));
+            var max = new Vector2((float)(Num(bbox[2]) - ax), (float)(Num(bbox[3]) - ay));
+            return PlanClosures(ReadExits(path, ax, ay, min, max));
         }
 
         static float AttrNum(Dictionary<string, object> attrs, string key)
@@ -670,12 +712,16 @@ namespace Game.World.Import
         /// <summary>Carriageways at least this wide get the B-1 sign on the barrier [m]; narrower service roads only the boards.</summary>
         public const float ClosureSignMinWidthM = 5.5f;
 
-        // Linear albedos (COLOR_0 of Kamion/World Surface _FAR_FACADE; alpha 0 = no window grid), all WORKING_VALUE.
-        // Sign sheeting, not weathered chimney paint: the first version reused the far-field chimney bands (linear
-        // 0.62 = sRGB 0.81 white, 0.38 red) and on the shaded side of a board the white fell to the tone of the concrete
-        // barrier behind it (review s15-0141 P1). White 0.80 linear (sRGB 0.91), red 0.52 linear (sRGB 0.75).
-        static readonly Color32 k_Red = Lin(0.52f, 0.035f, 0.030f), k_White = Lin(0.80f, 0.80f, 0.78f);
+        // Linear albedos (COLOR_0 of Kamion/World Surface _FAR_FACADE; alpha 0 = no window grid).
+        // ADR 0169: the boards and the B-1 face are the same retroreflective sheeting as every other sign of the world,
+        // so they take the sign atlas colours of tools/worldgen/streetscape/signs.py (WHITE 245/245/242, RED 196/30/36
+        // sRGB = linear 0.913/0.913/0.888 and 0.552/0.013/0.018) instead of their own guess (r6d: 0.80 and 0.52/0.035/0.030,
+        // before that the chimney paint 0.62). The legal colour boxes of the sheeting (zalacznik nr 1 / nr 4 to the
+        // regulation of 3 July 2003, Dz.U. 2019 poz. 2311) were not read for this change: UNVERIFIED.
+        static readonly Color32 k_Red = Srgb(196, 30, 36), k_White = Srgb(245, 245, 242);
         static readonly Color32 k_Steel = Lin(0.40f, 0.41f, 0.42f), k_SignBack = Lin(0.30f, 0.31f, 0.32f);
+        static Color32 Srgb(int r, int g, int b) =>
+            Lin(Mathf.GammaToLinearSpace(r / 255f), Mathf.GammaToLinearSpace(g / 255f), Mathf.GammaToLinearSpace(b / 255f));
         static Color32 Lin(float r, float g, float b) =>
             new Color32((byte)Mathf.RoundToInt(r * 255f), (byte)Mathf.RoundToInt(g * 255f), (byte)Mathf.RoundToInt(b * 255f), 0);
 
@@ -707,12 +753,126 @@ namespace Game.World.Import
         /// <summary>... and whose centres are no further apart than this along the road [m]. WORKING_VALUE.</summary>
         public const float ClosureMergeAlongM = 8f;
 
+        /// <summary>Parallel closures no further apart than this along the road keep their rows out of each other's
+        /// span (neighbouring carriageways closed a few metres apart) [m]. WORKING_VALUE.</summary>
+        public const float ClosureTrimAlongM = 40f;
+        /// <summary>Rows that meet at a corner end this far before the meeting point, so the boards 0.75 m in front of
+        /// one row do not run through the other row [m]. WORKING_VALUE.</summary>
+        public const float ClosureCornerClearM = 0.9f;
+        /// <summary>Two barrier rows closer than this are the same object built twice [m] (task ADR 0169: +/- 0.5 m).</summary>
+        public const float ClosureConflictM = 0.5f;
+
+        static void Frame(WorldBoundary.Closure c, out Vector2 p, out Vector2 fwd, out Vector2 right)
+        {
+            float h = c.headingDeg * Mathf.Deg2Rad;
+            p = new Vector2(c.localPos.x, c.localPos.z);
+            fwd = new Vector2(Mathf.Sin(h), Mathf.Cos(h));
+            right = new Vector2(fwd.y, -fwd.x);
+        }
+
+        /// <summary>The closure with its row cut to [lo, hi] (metres along its own row, 0 = current centre).</summary>
+        static WorldBoundary.Closure WithRow(WorldBoundary.Closure c, float lo, float hi)
+        {
+            Frame(c, out _, out _, out Vector2 right);
+            float mid = (lo + hi) * 0.5f;
+            c.localPos += new Vector3(right.x, 0f, right.y) * mid;
+            c.spanM = Mathf.Max(hi - lo, 1f);
+            return c;
+        }
+
         /// <summary>
-        /// Visible closures (ADR 0141 r6d): parallel closures whose barrier spans overlap - a carriageway and its slip
-        /// lane, both cut by the region edge - become one closure over the union of the two spans, in the frame of the
-        /// wider road. One barrier row, one pair of boards and one B-1 per carriageway instead of two overlapping sets.
-        /// Carriageways separated by a median (spans do not overlap) and crossing roads stay separate. The input list
-        /// is not modified. Public for the EditMode test.
+        /// The one list of closures of a region (ADR 0169) - runtime data, colliders and visible meshes all use it:
+        /// 1. <see cref="MergeOverlappingClosures"/>: a carriageway and its slip lane become one closure;
+        /// 2. parallel closures a few metres further along (the two carriageways of one road, closed
+        ///    <see cref="ClosureTrimAlongM"/> or less apart): where the rows would reach into each other's span across
+        ///    the median, both end at the middle of the overlap;
+        /// 3. crossing closures (two roads leaving one junction next to the edge): the rows are cut where they cross and
+        ///    each keeps the part with its own road, so they meet in a corner instead of running through each other.
+        ///    Only when each road axis is in front of the other row - then the two kept parts are exactly the border
+        ///    of the area the driver can be in. Otherwise nothing is cut (and <see cref="FindClosureConflicts"/> reports it).
+        /// The input list is not modified. Public for the EditMode test.
+        /// </summary>
+        public static List<WorldBoundary.Closure> ResolveClosures(IList<WorldBoundary.Closure> closures)
+        {
+            var list = MergeOverlappingClosures(closures);
+            for (int i = 0; i < list.Count; i++)
+                for (int j = i + 1; j < list.Count; j++)
+                {
+                    WorldBoundary.Closure a = list[i], b = list[j];
+                    Frame(a, out Vector2 pa, out Vector2 fa, out Vector2 ra);
+                    Frame(b, out Vector2 pb, out Vector2 fb, out Vector2 rb);
+                    float ha = ClosureSpan(a) * 0.5f, hb = ClosureSpan(b) * 0.5f;
+                    Vector2 d = pb - pa;
+                    if (Mathf.Abs(Mathf.DeltaAngle(a.headingDeg, b.headingDeg)) <= ClosureMergeHeadingDeg)
+                    {
+                        float lat = Vector2.Dot(d, ra), along = Vector2.Dot(d, fa);
+                        float over = ha + hb - Mathf.Abs(lat);
+                        if (Mathf.Abs(along) > ClosureTrimAlongM || over <= 0f) continue;
+                        float cut = Mathf.Min(over * 0.5f, Mathf.Min(ha, hb));
+                        // b lies on the +right side of a when lat > 0: a loses its +right end, b its end towards a.
+                        list[i] = lat > 0f ? WithRow(a, -ha, ha - cut) : WithRow(a, -ha + cut, ha);
+                        list[j] = Vector2.Dot(-d, rb) > 0f ? WithRow(b, -hb, hb - cut) : WithRow(b, -hb + cut, hb);
+                        continue;
+                    }
+                    // Crossing rows: pa + ra * s = pb + rb * t.
+                    float den = ra.x * rb.y - ra.y * rb.x;
+                    if (Mathf.Abs(den) < 1e-4f) continue;
+                    float s = (d.x * rb.y - d.y * rb.x) / den, t = (d.x * ra.y - d.y * ra.x) / den;
+                    if (Mathf.Abs(s) > ha + ClosureConflictM || Mathf.Abs(t) > hb + ClosureConflictM) continue;   // rows do not meet
+                    bool bBeforeA = Vector2.Dot(d, fa) < 0f, aBeforeB = Vector2.Dot(-d, fb) < 0f;
+                    if (!bBeforeA || !aBeforeB) continue;
+                    list[i] = s > 0f ? WithRow(a, -ha, Mathf.Max(s - ClosureCornerClearM, -ha + 1f)) : WithRow(a, Mathf.Min(s + ClosureCornerClearM, ha - 1f), ha);
+                    list[j] = t > 0f ? WithRow(b, -hb, Mathf.Max(t - ClosureCornerClearM, -hb + 1f)) : WithRow(b, Mathf.Min(t + ClosureCornerClearM, hb - 1f), hb);
+                }
+            return list;
+        }
+
+        /// <summary>
+        /// Duplicate detector (ADR 0169): pairs of closures whose barrier rows (segments of <see cref="ClosureSpan(WorldBoundary.Closure)"/>
+        /// across the road) come closer than <see cref="ClosureConflictM"/> - the same kind of object at the same place.
+        /// Empty for a resolved list. Public for the EditMode test.
+        /// </summary>
+        public static List<(int a, int b, float gapM)> FindClosureConflicts(IList<WorldBoundary.Closure> closures)
+        {
+            var found = new List<(int, int, float)>();
+            for (int i = 0; i < closures.Count; i++)
+                for (int j = i + 1; j < closures.Count; j++)
+                {
+                    Frame(closures[i], out Vector2 pa, out _, out Vector2 ra);
+                    Frame(closures[j], out Vector2 pb, out _, out Vector2 rb);
+                    float ha = ClosureSpan(closures[i]) * 0.5f, hb = ClosureSpan(closures[j]) * 0.5f;
+                    float gap = SegmentDistance(pa - ra * ha, pa + ra * ha, pb - rb * hb, pb + rb * hb);
+                    if (gap < ClosureConflictM) found.Add((i, j, gap));
+                }
+            return found;
+        }
+
+        static float PointSegment(Vector2 p, Vector2 a, Vector2 b)
+        {
+            Vector2 ab = b - a;
+            float t = ab.sqrMagnitude > 1e-9f ? Mathf.Clamp01(Vector2.Dot(p - a, ab) / ab.sqrMagnitude) : 0f;
+            return Vector2.Distance(p, a + ab * t);
+        }
+
+        static float SegmentDistance(Vector2 a0, Vector2 a1, Vector2 b0, Vector2 b1)
+        {
+            Vector2 r = a1 - a0, q = b1 - b0;
+            float den = r.x * q.y - r.y * q.x;
+            if (Mathf.Abs(den) > 1e-9f)
+            {
+                Vector2 d = b0 - a0;
+                float s = (d.x * q.y - d.y * q.x) / den, t = (d.x * r.y - d.y * r.x) / den;
+                if (s >= 0f && s <= 1f && t >= 0f && t <= 1f) return 0f;
+            }
+            return Mathf.Min(Mathf.Min(PointSegment(a0, b0, b1), PointSegment(a1, b0, b1)), Mathf.Min(PointSegment(b0, a0, a1), PointSegment(b1, a0, a1)));
+        }
+
+        /// <summary>
+        /// Parallel closures whose barrier spans overlap (ADR 0141 r6d) - a carriageway and its slip lane, both cut by
+        /// the region edge - become one closure over the union of the two spans, in the frame of the wider road, with
+        /// the road width of the wider one. One barrier row, one collider, one pair of boards and one B-1 per
+        /// carriageway. Carriageways separated by a median (spans do not overlap) and crossing roads stay separate.
+        /// The input list is not modified. Public for the EditMode test.
         /// </summary>
         public static List<WorldBoundary.Closure> MergeOverlappingClosures(IList<WorldBoundary.Closure> closures)
         {
@@ -723,21 +883,16 @@ namespace Game.World.Import
                 for (int i = 0; i < list.Count && !merged; i++)
                     for (int j = i + 1; j < list.Count && !merged; j++)
                     {
-                        // a = the wider road: its frame, name and height are kept.
+                        // a = the wider road: its frame, name, width and height are kept.
                         WorldBoundary.Closure a = list[i].widthM >= list[j].widthM ? list[i] : list[j];
                         WorldBoundary.Closure b = list[i].widthM >= list[j].widthM ? list[j] : list[i];
                         if (Mathf.Abs(Mathf.DeltaAngle(a.headingDeg, b.headingDeg)) > ClosureMergeHeadingDeg) continue;
-                        float h = a.headingDeg * Mathf.Deg2Rad;
-                        Vector2 fwd = new Vector2(Mathf.Sin(h), Mathf.Cos(h)), right = new Vector2(fwd.y, -fwd.x);
-                        Vector2 d = new Vector2(b.localPos.x - a.localPos.x, b.localPos.z - a.localPos.z);
+                        Frame(a, out Vector2 pa, out Vector2 fwd, out Vector2 right);
+                        Vector2 d = new Vector2(b.localPos.x, b.localPos.z) - pa;
                         float lat = Vector2.Dot(d, right), along = Vector2.Dot(d, fwd);
-                        float ha = ClosureSpan(a.widthM) * 0.5f, hb = ClosureSpan(b.widthM) * 0.5f;
+                        float ha = ClosureSpan(a) * 0.5f, hb = ClosureSpan(b) * 0.5f;
                         if (Mathf.Abs(along) > ClosureMergeAlongM || Mathf.Abs(lat) >= ha + hb) continue;
-                        float lo = Mathf.Min(-ha, lat - hb), hi = Mathf.Max(ha, lat + hb), mid = (lo + hi) * 0.5f;
-                        var m = a;
-                        m.localPos = a.localPos + new Vector3(right.x, 0f, right.y) * mid;
-                        m.widthM = (hi - lo) - ClosureSpan(0f);
-                        list[i] = m;
+                        list[i] = WithRow(a, Mathf.Min(-ha, lat - hb), Mathf.Max(ha, lat + hb));
                         list.RemoveAt(j);
                         merged = true;
                     }
@@ -764,7 +919,7 @@ namespace Game.World.Import
             foreach (var c in closures)
             {
                 int first = pos.Count;
-                float span = ClosureSpan(c.widthM);
+                float span = ClosureSpan(c);
                 int n = Mathf.Max(1, Mathf.CeilToInt(span / 2.0f));
                 float len = span / n;
                 for (int i = 0; i < n; i++)

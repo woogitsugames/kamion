@@ -401,6 +401,8 @@ namespace PhysicsRunner.Sim
                 f += s.TractorContact.Force; tq += s.TractorContact.Torque;
             }
             s.Body.Integrate(dt, f, tq);
+            // ADR 0165: the next coupling solve anticipates this step's body contact (one-step lag, like PhysX impulses in Unity).
+            if (s.TractorContact != null) { s.Combo.ExternalTractorForce = s.TractorContact.Force; s.Combo.ExternalTractorTorque = s.TractorContact.Torque; }
             if (s.TrailerBody == null) return;
             f = s.Combo.TrailerForce; tq = s.Combo.TrailerTorque;
             if (s.TrailerContact != null)
@@ -409,6 +411,7 @@ namespace PhysicsRunner.Sim
                 f += s.TrailerContact.Force; tq += s.TrailerContact.Torque;
             }
             s.TrailerBody.Integrate(dt, f, tq);
+            if (s.TrailerContact != null) { s.Combo.ExternalTrailerForce = s.TrailerContact.Force; s.Combo.ExternalTrailerTorque = s.TrailerContact.Torque; }
         }
 
         static double AxleMeanZ(TrailerModel tr)

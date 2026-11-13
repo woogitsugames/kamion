@@ -1,0 +1,399 @@
+{
+ "seed": 20261113,
+ "total_positions": 144,
+ "sample_required_min": 29,
+ "sample_size": 29,
+ "sample_ids": [
+  "P1-002",
+  "P1-003",
+  "P1-005",
+  "P1-008",
+  "P1-013",
+  "P1-014",
+  "P1-017",
+  "P1-025",
+  "P1-029",
+  "P1-034",
+  "P1-039",
+  "P1-046",
+  "P1-056",
+  "P1-064",
+  "P1-065",
+  "P1-077",
+  "P1-079",
+  "P1-084",
+  "P1-087",
+  "P1-088",
+  "P1-090",
+  "P1-094",
+  "P1-096",
+  "P1-101",
+  "P1-111",
+  "P1-114",
+  "P1-118",
+  "P1-132",
+  "P1-142"
+ ],
+ "method": "losowanie random.sample(seed=20261113) z wszystkich pozycji manifestu; sprawdzenie: (1) plik files/<id>.jpg istnieje i >20 KB, (2) url_źródła odpowiada HTTP 200, (3) licencja z API zgodna z manifestem, (4) współrzędne: dystans do osi ulicy <120 m (OSM) oraz dla Panoramax zgodność z API (<0.0005 st.)",
+ "checked": [
+  {
+   "id": "P1-002",
+   "ulica": "rondo Pamięci Bieżeństwa 1915 roku",
+   "checks": {
+    "plik": "OK (295 KB)",
+    "url_źródła": "HTTP 200",
+    "licencja_API": "CC BY 3.0",
+    "autor_API": "Rakoon",
+    "licencja_zgodność": "OK"
+   },
+   "result": "OK"
+  },
+  {
+   "id": "P1-003",
+   "ulica": "rondo Pamięci Bieżeństwa 1915 roku",
+   "checks": {
+    "plik": "OK (225 KB)",
+    "url_źródła": "HTTP 200",
+    "licencja_API": "CC BY 3.0",
+    "autor_API": "Rakoon",
+    "licencja_zgodność": "OK"
+   },
+   "result": "OK"
+  },
+  {
+   "id": "P1-005",
+   "ulica": "rondo Pamięci Bieżeństwa 1915 roku",
+   "checks": {
+    "plik": "OK (298 KB)",
+    "url_źródła": "HTTP 200",
+    "licencja_API": "CC0",
+    "autor_API": "Rakoon",
+    "licencja_zgodność": "OK"
+   },
+   "result": "OK"
+  },
+  {
+   "id": "P1-008",
+   "ulica": "Racławicka",
+   "checks": {
+    "plik": "OK (479 KB)",
+    "url_źródła": "HTTP 200",
+    "dystans_do_way_ulicy_m": 18.3,
+    "licencja_API": "CC0",
+    "autor_API": "Rakoon",
+    "licencja_zgodność": "OK"
+   },
+   "result": "OK"
+  },
+  {
+   "id": "P1-013",
+   "ulica": "Generała Stanisława Maczka",
+   "checks": {
+    "plik": "OK (272 KB)",
+    "url_źródła": "HTTP 200",
+    "dystans_do_way_ulicy_m": 19.4,
+    "licencja_API": "CC0",
+    "autor_API": "Rakoon",
+    "licencja_zgodność": "OK"
+   },
+   "result": "OK"
+  },
+  {
+   "id": "P1-014",
+   "ulica": "Sitarska",
+   "checks": {
+    "plik": "OK (273 KB)",
+    "url_źródła": "HTTP 200",
+    "dystans_do_way_ulicy_m": 5.4,
+    "licencja_API": "CC0",
+    "autor_API": "Rakoon",
+    "licencja_zgodność": "OK"
+   },
+   "result": "OK"
+  },
+  {
+   "id": "P1-017",
+   "ulica": "Sitarska",
+   "checks": {
+    "plik": "OK (328 KB)",
+    "url_źródła": "HTTP 200",
+    "dystans_do_way_ulicy_m": 2.9,
+    "licencja_API": "CC0",
+    "autor_API": "Rakoon",
+    "licencja_zgodność": "OK"
+   },
+   "result": "OK"
+  },
+  {
+   "id": "P1-025",
+   "ulica": "Michała Motoszko",
+   "checks": {
+    "plik": "OK (426 KB)",
+    "url_źródła": "HTTP 200",
+    "dystans_do_way_ulicy_m": 47.9,
+    "licencja_API": "CC0",
+    "autor_API": "Rakoon",
+    "licencja_zgodność": "OK"
+   },
+   "result": "OK"
+  },
+  {
+   "id": "P1-029",
+   "ulica": "Białostoczek",
+   "checks": {
+    "plik": "OK (289 KB)",
+    "url_źródła": "HTTP 200",
+    "dystans_do_way_ulicy_m": 1.0,
+    "licencja_API": "CC0",
+    "autor_API": "Rakoon",
+    "licencja_zgodność": "OK"
+   },
+   "result": "OK"
+  },
+  {
+   "id": "P1-034",
+   "ulica": "Generała Stanisława Maczka",
+   "checks": {
+    "plik": "OK (193 KB)",
+    "url_źródła": "HTTP 200",
+    "dystans_do_way_ulicy_m": 8.9,
+    "licencja_API": "CC0",
+    "autor_API": "Rakoon",
+    "licencja_zgodność": "OK"
+   },
+   "result": "OK"
+  },
+  {
+   "id": "P1-039",
+   "ulica": "Kombatantów",
+   "checks": {
+    "plik": "OK (345 KB)",
+    "url_źródła": "HTTP 200",
+    "dystans_do_way_ulicy_m": 2.2,
+    "licencja_API": "CC0",
+    "autor_API": "Rakoon",
+    "licencja_zgodność": "OK"
+   },
+   "result": "OK"
+  },
+  {
+   "id": "P1-046",
+   "ulica": "Generała Władysława Andersa",
+   "checks": {
+    "plik": "OK (339 KB)",
+    "url_źródła": "HTTP 200",
+    "dystans_do_way_ulicy_m": 26.6,
+    "licencja_API": "CC0",
+    "autor_API": "Rakoon",
+    "licencja_zgodność": "OK"
+   },
+   "result": "OK"
+  },
+  {
+   "id": "P1-056",
+   "ulica": "Białostoczek",
+   "checks": {
+    "plik": "OK (461 KB)",
+    "url_źródła": "HTTP 200",
+    "dystans_do_way_ulicy_m": 20.9,
+    "licencja_API": "CC0",
+    "autor_API": "Rakoon",
+    "licencja_zgodność": "OK"
+   },
+   "result": "OK"
+  },
+  {
+   "id": "P1-064",
+   "ulica": "Sokólska",
+   "checks": {
+    "plik": "OK (516 KB)",
+    "url_źródła": "HTTP 200",
+    "dystans_do_way_ulicy_m": 8.0,
+    "licencja_API": "CC0",
+    "autor_API": "Rakoon",
+    "licencja_zgodność": "OK"
+   },
+   "result": "OK"
+  },
+  {
+   "id": "P1-065",
+   "ulica": "Sokólska",
+   "checks": {
+    "plik": "OK (704 KB)",
+    "url_źródła": "HTTP 200",
+    "dystans_do_way_ulicy_m": 2.3,
+    "licencja_API": "CC0",
+    "autor_API": "Rakoon",
+    "licencja_zgodność": "OK"
+   },
+   "result": "OK"
+  },
+  {
+   "id": "P1-077",
+   "ulica": "Generała Władysława Andersa",
+   "checks": {
+    "plik": "OK (244 KB)",
+    "url_źródła": "HTTP 200",
+    "dystans_do_way_ulicy_m": 52.4,
+    "licencja_API": "CC0",
+    "autor_API": "Rakoon",
+    "licencja_zgodność": "OK"
+   },
+   "result": "OK"
+  },
+  {
+   "id": "P1-079",
+   "ulica": "Bitwy Białostockiej",
+   "checks": {
+    "plik": "OK (257 KB)",
+    "url_źródła": "HTTP 200",
+    "dystans_do_way_ulicy_m": 3.6,
+    "licencja_API": "CC0",
+    "autor_API": "Rakoon",
+    "licencja_zgodność": "OK"
+   },
+   "result": "OK"
+  },
+  {
+   "id": "P1-084",
+   "ulica": "Kombatantów",
+   "checks": {
+    "plik": "OK (337 KB)",
+    "url_źródła": "HTTP 200",
+    "dystans_do_way_ulicy_m": 2.2,
+    "licencja_API": "CC0",
+    "autor_API": "Rakoon",
+    "licencja_zgodność": "OK"
+   },
+   "result": "OK"
+  },
+  {
+   "id": "P1-087",
+   "ulica": "obiekt inżynierski (OSM way 173956083, ref 19)",
+   "checks": {
+    "plik": "OK (340 KB)",
+    "url_źródła": "HTTP 200",
+    "licencja_API": "CC0",
+    "autor_API": "Rakoon",
+    "licencja_zgodność": "OK"
+   },
+   "result": "OK"
+  },
+  {
+   "id": "P1-088",
+   "ulica": "rondo Krzysztofa Jakuba Putry",
+   "checks": {
+    "plik": "OK (404 KB)",
+    "url_źródła": "HTTP 200",
+    "licencja_API": "CC BY-SA 3.0",
+    "autor_API": "Henryk Borawski",
+    "licencja_zgodność": "OK"
+   },
+   "result": "OK"
+  },
+  {
+   "id": "P1-090",
+   "ulica": "Bitwy Białostockiej",
+   "checks": {
+    "plik": "OK (526 KB)",
+    "url_źródła": "HTTP 200",
+    "dystans_do_way_ulicy_m": 22.7,
+    "licencja_API": "CC BY-SA 4.0",
+    "autor_API": "Zala",
+    "licencja_zgodność": "OK"
+   },
+   "result": "OK"
+  },
+  {
+   "id": "P1-094",
+   "ulica": "wiadukt ul. Gen. S. Maczka (DK8/DK65) nad torowiskiem kolejowym – jezdnia zachodnia",
+   "checks": {
+    "plik": "OK (297 KB)",
+    "url_źródła": "HTTP 200",
+    "współrzędne_API": "OK (api 53.159524,23.140944)",
+    "licencja_API": "CC-BY-SA-4.0"
+   },
+   "result": "OK"
+  },
+  {
+   "id": "P1-096",
+   "ulica": "Generała Stanisława Maczka",
+   "checks": {
+    "plik": "OK (305 KB)",
+    "url_źródła": "HTTP 200",
+    "współrzędne_API": "OK (api 53.159179,23.132233)",
+    "licencja_API": "CC-BY-SA-4.0",
+    "dystans_do_way_ulicy_m": 1.9
+   },
+   "result": "OK"
+  },
+  {
+   "id": "P1-101",
+   "ulica": "Generała Władysława Andersa",
+   "checks": {
+    "plik": "OK (302 KB)",
+    "url_źródła": "HTTP 200",
+    "współrzędne_API": "OK (api 53.158866,23.151440)",
+    "licencja_API": "CC-BY-SA-4.0",
+    "dystans_do_way_ulicy_m": 13.9
+   },
+   "result": "OK"
+  },
+  {
+   "id": "P1-111",
+   "ulica": "łącznica DK8 (węzeł Gen. Andersa/Maczka)",
+   "checks": {
+    "plik": "OK (265 KB)",
+    "url_źródła": "HTTP 200",
+    "współrzędne_API": "OK (api 53.159407,23.148605)",
+    "licencja_API": "CC-BY-SA-4.0"
+   },
+   "result": "OK"
+  },
+  {
+   "id": "P1-114",
+   "ulica": "rondo Krzysztofa Jakuba Putry",
+   "checks": {
+    "plik": "OK (261 KB)",
+    "url_źródła": "HTTP 200",
+    "współrzędne_API": "OK (api 53.159413,23.151885)",
+    "licencja_API": "CC-BY-SA-4.0"
+   },
+   "result": "OK"
+  },
+  {
+   "id": "P1-118",
+   "ulica": "Generała Stanisława Maczka",
+   "checks": {
+    "plik": "OK (160 KB)",
+    "url_źródła": "HTTP 200",
+    "współrzędne_API": "OK (api 53.159087,23.097115)",
+    "licencja_API": "CC-BY-SA-4.0",
+    "dystans_do_way_ulicy_m": 4.3
+   },
+   "result": "OK"
+  },
+  {
+   "id": "P1-132",
+   "ulica": "Generała Stanisława Maczka",
+   "checks": {
+    "plik": "OK (287 KB)",
+    "url_źródła": "HTTP 200",
+    "współrzędne_API": "OK (api 53.159232,23.129625)",
+    "licencja_API": "CC-BY-SA-4.0",
+    "dystans_do_way_ulicy_m": 2.2
+   },
+   "result": "OK"
+  },
+  {
+   "id": "P1-142",
+   "ulica": "Stefana Batorego",
+   "checks": {},
+   "result": "OK"
+  }
+ ],
+ "summary": {
+  "ok": 29,
+  "fail": 0
+ }
+}

@@ -46,10 +46,20 @@ namespace Game.Core.Navigation
         /// <summary>Arrival radius [m] along the route. WORKING_VALUE.</summary>
         public const float ArriveM = 20f;
 
+        /// <summary>ETA refresh period [s] (ADR 0168): NavEta is O(route points), so it is recomputed at 1 Hz instead of
+        /// every frame; immediately on a new / changed route and after a re-acquire jump. The HUD shows minutes. WORKING_VALUE.</summary>
+        public const float EtaPeriodS = 1f;
+
         int m_Seg = -1, m_Version = -1;
         float m_OffT;
+        RoutePath m_Path;
+        float m_EtaT, m_Eta;
+        bool m_EtaValid;
 
-        public void Reset() { m_Seg = -1; m_OffT = 0f; m_Version = -1; }
+        /// <summary>Number of full ETA computations since construction (diagnostics / throttling test).</summary>
+        public int EtaComputations { get; private set; }
+
+        public void Reset() { m_Seg = -1; m_OffT = 0f; m_Version = -1; m_Path = null; m_EtaValid = false; m_EtaT = 0f; }
 
         /// <param name="headingDeg">Truck heading clockwise from north.</param>
         /// <param name="speedMs">Forward speed (driving against the route counts only when moving).</param>
@@ -58,18 +68,26 @@ namespace Game.Core.Navigation
             g.Next = -1; g.Then = -1; g.NeedsReroute = false; g.NextExit = 0; g.RemainingSeconds = 0f;
             g.NextLaneCount = 0; g.NextLaneCls = 0; g.NextLanesAllowed = 0; g.NextLanesRec = 0; g.NextLaneSrc = -1;
             g.HasRoute = p != null && p.HasRoute;
-            if (!g.HasRoute) { g.OnRoute = false; g.Arrived = false; g.RemainingM = 0f; g.NextM = float.NaN; m_Seg = -1; return; }
-            if (p.Version != m_Version) { m_Version = p.Version; m_Seg = -1; m_OffT = 0f; }
+            if (!g.HasRoute) { g.OnRoute = false; g.Arrived = false; g.RemainingM = 0f; g.NextM = float.NaN; m_Seg = -1; m_EtaValid = false; return; }
+            if (p.Version != m_Version || !ReferenceEquals(p, m_Path))
+            { m_Version = p.Version; m_Path = p; m_Seg = -1; m_OffT = 0f; m_EtaValid = false; }
 
             int n = p.Count;
             int a = 1, b = n - 1;
             if (m_Seg >= 1) { a = Mathf.Max(1, m_Seg - 8); b = Mathf.Min(n - 1, m_Seg + 40); }
             float off = Project(p, pos, a, b, out int seg, out float s);
-            if (m_Seg >= 1 && off > 40f) off = Project(p, pos, 1, n - 1, out seg, out s);   // re-acquire after a jump / reset
+            if (m_Seg >= 1 && off > 40f) { off = Project(p, pos, 1, n - 1, out seg, out s); m_EtaValid = false; }   // re-acquire after a jump / reset
             m_Seg = seg;
             g.Segment = seg; g.RouteS = s; g.OffRouteM = off;
             g.RemainingM = Mathf.Max(0f, p.Length - s);
-            g.RemainingSeconds = NavEta.RemainingSeconds(p, s);
+            m_EtaT += dt;
+            if (!m_EtaValid || m_EtaT >= EtaPeriodS)
+            {
+                m_Eta = NavEta.RemainingSeconds(p, s);
+                m_EtaT = 0f; m_EtaValid = true;
+                EtaComputations++;
+            }
+            g.RemainingSeconds = m_Eta;
             g.CurrentName = p.Name[seg - 1]; g.CurrentLimit = p.Limit[seg - 1];
 
             Vector2 segDir = (p.Points[seg] - p.Points[seg - 1]);

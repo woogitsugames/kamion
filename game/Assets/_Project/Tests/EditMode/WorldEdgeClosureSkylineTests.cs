@@ -69,14 +69,16 @@ namespace Game.Tests.EditMode
             };
             var visible = Call<List<WorldBoundary.Closure>>("MergeOverlappingClosures", closures);
             Assert.AreEqual(4, visible.Count, "two carriageways + two crossing service roads");
-            Assert.AreEqual(6, closures.Count, "input (colliders, WorldBoundary) untouched");
+            Assert.AreEqual(6, closures.Count, "input untouched");
             // No two parallel visible closures (so no two B-1 discs) closer than 2 m.
             for (int i = 0; i < visible.Count; i++)
                 for (int j = i + 1; j < visible.Count; j++)
                     if (Mathf.Abs(Mathf.DeltaAngle(visible[i].headingDeg, visible[j].headingDeg)) < 25f)
                         Assert.Greater(Vector3.Distance(visible[i].localPos, visible[j].localPos), 2f);
-            // The merged span covers both originals: 10 m carriageway widened by the lateral offset (< 1 m here).
-            Assert.That(visible[0].widthM, Is.InRange(10f, 11.5f));
+            // The merged row covers both originals: 10 m carriageway + 5 m, widened by the lateral offset (< 1 m here);
+            // the road width stays the width of the carriageway (ADR 0169: the row length is spanM).
+            Assert.That(visible[0].widthM, Is.EqualTo(10f));
+            Assert.That(visible[0].spanM, Is.InRange(15f, 16.5f));
             Assert.That(visible[0].headingDeg, Is.EqualTo(-95.40f).Within(0.01f), "frame of the wider road");
             var mesh = new Mesh();
             try
