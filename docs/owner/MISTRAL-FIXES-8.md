@@ -40,3 +40,13 @@ ZADANIE:
 (6) Samokontrola: nowe losowanie 20 % z seedem; dla każdego wylosowanego wklej w audit_20_percent.json jedno zdanie „co widać” + nazwę ulicy z OSM i deltę azymutu — sprawdzaj przypisanie, nie tylko zgodność z API.
 Nowy ZIP: mistral-p1-route-photos-2-files-v2.zip. W PR komentarz z SUROWYM wyjściem `git diff --stat origin/main` i licznikami (OK/REFERENCJA/ODRZUCONE/DUPLIKAT). NIE scalaj. Na końcu „M46-FIX gotowe” i koniec.
 ```
+
+## M44-FIX — PR #41 (przepisy ciężarówki): poprawki przed scaleniem + 3 otwarte punkty
+
+```
+Repo woogitsugames/kamion. Popraw istniejący PR #41 (gałąź research/mistral-p4-truck-regulations) — commity do TEJ gałęzi, nie nowy PR. Najpierw `git fetch && git rebase origin/main`. Zmieniaj tylko research/mistral/p4-truck-regulations/.
+Przegląd (docs/reports/REVIEW-2026-11-13-s17-mistral-r8-p4.md w origin/main — przeczytaj): próba 35/171 → 32 potwierdzone, 1 odrzucony, 2 niesprawdzone; deklaracja „171/171 bez niezgodności” była zawyżona.
+POPRAW: (1) P4-134 „22,5 t/oś” — tego cytatu nie ma w 96/53/WE; właściwa wartość dla osi potrójnej naczepy: 24 t (podaj punkt załącznika I i cytat). (2) README: lista zmian 96/53/WE NIE kończy się na 2015/719 — są też 2019/984 i 2019/1242 (do +2 t dla napędów alternatywnych/bezemisyjnych); opisz wpływ na nasz zestaw (40 t bez zmian). (3) Dz.U. 2024 poz. 1709 to akt pierwotny, nie tekst jednolity; sprawdź zmiany 2025/939 i 2026/891 (ELI Sejmu) i opisz, czy dotykają wymiarów/położenia tablic. (4) Etykieta wersji R104 — popraw zgodnie z przeglądem. (5) Lusterko klasy V dla N3: zostaw swoją wersję (obowiązkowe po stronie pasażera), dopisz punkt tabeli R46 i cytat.
+OTWARTE (dodaj sekcję z wynikiem albo negatywnym wynikiem i listą sprawdzonych źródeł): (a) R46 — czy system kamera-monitor (CMS) może zastąpić lusterka klas II i IV dla N3 w UE (seria obowiązująca w UE: 04 — potwierdź); (b) rysunek tablicy rejestracyjnej 520×114 mm (rozporządzenie 8.11.2024 i zmiany) — wymiar z rysunku; (c) miejsce montażu tachografu w kabinie (rozp. 165/2014, wykonawcze 2016/799 zał. IC — tylko wymagania widoczności/dostępu dla kierowcy).
+W PR komentarz z SUROWYM wyjściem `git diff --stat origin/main` i listą poprawek 1–5 + a–c. NIE scalaj. Na końcu „M44-FIX gotowe” i koniec.
+```
