@@ -1,3 +1,20 @@
+# HANDOVER — kamion, KONIEC S16 (2026-11-13 ~10:3x, limit 5 h) — prompt dla s17: `docs/owner/START-PROMPT-S17.md`
+
+## KONIEC S16
+- **BRAMKA 3: PASS (D57)** — właściciel rozpoznaje miejsca w pakiecie 12 par (`artifacts/owner-package-s16`); krytyk 27 R / 15 P / 0 N; **A16 gate3 Low: G3-A i G3-B 30 FPS, p95 33,4 ms, p99 33,6, GPU p95 34,15/34,02, PSS 880/894 MB, kamery 57/57 i 46/46** (APK `artifacts/apk/kamion-0.1.0-3ffbf13881.apk`, wyniki `artifacts/gate3/20261113-081528`, `-085052`). Decyzje D58 podatny kontakt nadwozia, D59 F1 ≤ 3,5°, D60 następny region Dojlidy/Krywlany, D61 Mistral r7.
+- **Scalone w s16:** 0152, 0146, 0156, 0157 (Gemini), 0158, 0159 (+M30), 0160, 0153/0154/0155 (Codex), 0164, Mistral r4/r5/r6, integracje świata s16 i s16b. Research w `research/` (G2, G3, G5, G7, G9-meta, G10).
+- **W toku (zatrzymani limitem — wznowić jako NOWI z plików live):**
+| ADR | zadanie | worktree / gałąź | live |
+|---|---|---|---|
+| 0161 | P1 kadrów bramki 3 (cm*, D-1, sygnalizatory, 962702, 1259231, 482392, 494288, 339463, horyzont) | `p1-0161` | `artifacts/live/p1-0161.md` |
+| 0162 | meble wg G5 (wiaty BKM czerwone, U-12a żółte, latarnie 11 m) + tablice G3 2024 | `furn-0162` | `artifacts/live/furn-0162.md` |
+| 0163 | zieleń ulic domów wg G7 | `veg-0163` | `artifacts/live/veg-0163.md` |
+| 0165 | podatny kontakt nadwozia (D58), F1 ≤ 3,5° (D59) | `phys-0165` | `artifacts/live/phys-0165.md` |
+| 0166 | region Dojlidy/Krywlany (D60) | `region-0166` | `artifacts/live/region-0166.md` |
+| — | przegląd ZIP-ów paczki 2 (P2,P3,P5,P6,P8,P9,P10; brak P1,P4,P7) | `research/_incoming` | `docs/reports/REVIEW-2026-11-13-s16-research-pack-02.md` |
+- Mistral r7 przygotowany: `docs/owner/MISTRAL-TASKS-7.md` (M39–M43). S24+ High/30 na końcowym APK — nie zrobione.
+- **Ostatni przydzielony ADR: 0166.**
+
 # HANDOVER — kamion, SESJA 16 (start 2026-11-12 22:23, nowe konto: 5 h 0 %, tydzień 0 %, Fable 0 %; reset 5 h 13.11 03:20)
 
 ## STAN S16 (lider) — main `700517b22`
