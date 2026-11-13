@@ -39,11 +39,11 @@ float3 KamionNwAnchor(float3 base, float3 dRelX, float3 dRelY, float2 uv, float2
     return base + dRelX * a + dRelY * b;
 }
 
-half3 KamionNwColour(float cls, float u)
+float3 KamionNwColour(float cls, float u)
 {
     // linear Rec.709, luminance 1: 2700 K, 3200 K, 4000 K, 4500 K (CIE daylight / Planck locus, rounded)
-    const half3 k2700 = half3(1.35, 0.93, 0.52), k3200 = half3(1.25, 0.96, 0.66), k4000 = half3(1.12, 0.99, 0.85),
-                k4500 = half3(1.07, 1.0, 0.92);
+    const float3 k2700 = float3(1.35, 0.93, 0.52), k3200 = float3(1.25, 0.96, 0.66), k4000 = float3(1.12, 0.99, 0.85),
+                k4500 = float3(1.07, 1.0, 0.92);
     if (cls < 1.5) return u < 0.62 ? k2700 : (u < 0.88 ? k3200 : k4000);
     if (cls < 2.5) return u < 0.5 ? k4000 : k2700;
     if (cls < 3.5) return u < 0.8 ? k4000 : k3200;
@@ -52,9 +52,9 @@ half3 KamionNwColour(float cls, float u)
 
 // Emitted display colour of one window pixel. anchor: window centre (object space); cls 1 flat, 2 stairwell,
 // 3 office, 4 hall (float); trn: pane transmission (0 frame / wall); cov: fabric coverage (tints by the albedo there).
-half3 KamionNightWindow(float3 anchor, float cls, half trn, half cov, half3 albedo)
+float3 KamionNightWindow(float3 anchor, float cls, float trn, float cov, float3 albedo)
 {
-    if (cls < 0.5 || trn <= 0.004h) return 0;   // cls is a float: an int next to half math hits D3D11 X8000 (min-precision int)
+    if (cls < 0.5 || trn <= 0.004) return 0;   // cls is a float: an int next to float math hits D3D11 X8000 (min-precision int)
     float3 w = floor(anchor);
     float hw = KamionNwHash(w, 1.0);
     float p, inLit = 0.75, stray = 0.06;
@@ -68,12 +68,12 @@ half3 KamionNightWindow(float3 anchor, float cls, half trn, half cov, half3 albe
     float hg = KamionNwHash(floor(anchor / group), 2.0 + cls);
     bool lit = hg < q ? hw < inLit : hw < stray * saturate(p * 4.0);
     if (!lit) return 0;
-    half3 c = KamionNwColour(cls, KamionNwHash(w, 7.0));
-    half k = 0.55h + 0.9h * (half)KamionNwHash(w, 9.0);
+    float3 c = KamionNwColour(cls, KamionNwHash(w, 7.0));
+    float k = 0.55 + 0.9 * KamionNwHash(w, 9.0);
     // fabric in front of the lamp passes its own colour (red drapes glow red), normalised to luminance 1
-    half la = max(dot(albedo, half3(0.2126h, 0.7152h, 0.0722h)), 0.02h);
-    half3 tint = lerp(half3(1, 1, 1), clamp(albedo / la, 0.0h, 2.5h), cov * 0.8h);
-    return c * tint * (trn * k * (half)_KamionWindowsLum.x);
+    float la = max(dot(albedo, float3(0.2126, 0.7152, 0.0722)), 0.02);
+    float3 tint = lerp(float3(1, 1, 1), clamp(albedo / la, 0.0, 2.5), cov * 0.8);
+    return c * tint * (trn * k * _KamionWindowsLum.x);
 }
 
 #endif

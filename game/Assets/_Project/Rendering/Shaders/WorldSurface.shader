@@ -333,15 +333,15 @@ Shader "Kamion/World Surface"
                     float3x3 w2o = (float3x3)GetWorldToObjectMatrix();
                     float3 dRx = mul(w2o, ddx(i.posRel)), dRy = mul(w2o, ddy(i.posRel));
                     float2 dGx = ddx(g), dGy = ddy(g);
-                    [branch] if (_KamionWindowsLum.y > 0.5 && row > 0.5)
+                    [branch] if (_KamionWindowsLum.y > 0.5 && (float)row > 0.5)
                     {
-                        float cls = (float)isRibbon > 0.5 ? 3.0 : 1.0;  // flats; ribbon offices (float: see KamionNightWindow)
-                        half trn = (h > 0.84 ? 0.72h : 0.62h);
+                        float cls = (float)isRibbon > 0.5 ? 3.0 : 1.0;  // flats; ribbon offices (float-only path: see ADR 0192)
+                        float trn = h > 0.84 ? 0.72 : 0.62;
                         float3 anchor = KamionNwAnchor(i.posOS, dRx, dRy, g, dGx, dGy, bay + 0.5);
-                        half3 em = KamionNightWindow(anchor, cls, trn, 0.0h, albedo);
-                        half pm = cls > 2.5 ? (half)_KamionWindows.y : (half)_KamionWindows.x;
-                        half3 meanEm = half3(1.3h, 0.95h, 0.6h) * (trn * pm * (half)_KamionWindowsLum.x);
-                        nightEm = lerp(em, meanEm, sub) * pane;
+                        float3 em = KamionNightWindow(anchor, cls, trn, 0.0, (float3)albedo);
+                        float pm = cls > 2.5 ? _KamionWindows.y : _KamionWindows.x;
+                        float3 meanEm = float3(1.3, 0.95, 0.6) * (trn * pm * _KamionWindowsLum.x);
+                        nightEm = (half3)(lerp(em, meanEm, (float)sub) * (float)pane);
                     }
                 }
             #endif
