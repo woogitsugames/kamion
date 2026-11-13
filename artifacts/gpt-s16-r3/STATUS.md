@@ -93,3 +93,5 @@ Deck-pair nadal nie odtwarza globalnego normal=0. Próba all-pbr sprawdzi równo
 Natywna izolacja materiału all-pbr zapisana; to ablacją cache, nie finalny import. NASTĘPNY KROK: porównać ze starym baseline i wybrać właściwy caster.
 
 All-PBR0 odtwarza globalne normal0 w obrazie wyspy — lokalna ścieżka shaderowa działa. Diagnostykę poprawiono tak, by każda kolejna próba resetowała WSZYSTKIE wspierane PBR do1, unikając skażenia po szerokiej ablacji. Testujemy bridge_kerb osobno i deck-triple. NASTĘPNY KROK: material-ablate.ps1 -Materials M_bridge_kerb,deck-triple
+
+Natywna izolacja materiału M_bridge_kerb zapisana; to ablacją cache, nie finalny import. NASTĘPNY KROK: porównać ze starym baseline i wybrać właściwy caster.
