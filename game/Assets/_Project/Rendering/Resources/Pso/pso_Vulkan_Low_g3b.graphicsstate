@@ -59,6 +59,39 @@
         {
             "first": {
                 "serializedVersion": "2",
+                "Hash": "20281a1d627927f23bc512c4e66b5429"
+            },
+            "second": {
+                "shaderName": "Kamion/Furniture Sign",
+                "shaderAssetGUID": "c719bcb9168cc4e448ece4c1a8942147",
+                "shaderAssetLocalIdentifierInFile": 4800000,
+                "keywordNames": "EVALUATE_SH_VERTEX FOG_EXP INSTANCING_ON _ADDITIONAL_LIGHTS _ALPHATEST_ON _FURNITURE_RETRO",
+                "subShaderIndex": 0,
+                "passIndex": 1,
+                "graphicsStateInfoSet": [
+                    {
+                        "vertexLayout": 8094642658859981569,
+                        "renderPass": 11294987102597378144,
+                        "renderState": 17259535550629827284,
+                        "subPassIndex": 0,
+                        "topology": 0,
+                        "forceCullMode": -1,
+                        "shadingRateCombinerPrimitive": 0,
+                        "shadingRateCombinerFragment": 0,
+                        "baseShadingRate": 0,
+                        "depthBias": 1.0,
+                        "slopeDepthBias": 2.5,
+                        "userBackface": false,
+                        "appBackface": false,
+                        "wireframe": false,
+                        "invertProjectionMatrix": true
+                    }
+                ]
+            }
+        },
+        {
+            "first": {
+                "serializedVersion": "2",
                 "Hash": "293ce3c4f077e011a08800712819777b"
             },
             "second": {
@@ -99,6 +132,21 @@
                 "shaderAssetGUID": "de9193ec2f1709a4bb381733288e82e9",
                 "shaderAssetLocalIdentifierInFile": 4800000,
                 "keywordNames": "FOG_EXP _UV_MESH0",
+                "subShaderIndex": 0,
+                "passIndex": 1,
+                "graphicsStateInfoSet": []
+            }
+        },
+        {
+            "first": {
+                "serializedVersion": "2",
+                "Hash": "5d606b6aab2eb11103e4cccb4a85d026"
+            },
+            "second": {
+                "shaderName": "Kamion/World Surface",
+                "shaderAssetGUID": "3bdc254b264039f44854f125dcb313b3",
+                "shaderAssetLocalIdentifierInFile": 4800000,
+                "keywordNames": "FOG_EXP _FURNITURE_PLINTH",
                 "subShaderIndex": 0,
                 "passIndex": 1,
                 "graphicsStateInfoSet": []
@@ -258,6 +306,21 @@
         {
             "first": {
                 "serializedVersion": "2",
+                "Hash": "821852eedec418054c6e714b162d1641"
+            },
+            "second": {
+                "shaderName": "Kamion/World PBR",
+                "shaderAssetGUID": "de9193ec2f1709a4bb381733288e82e9",
+                "shaderAssetLocalIdentifierInFile": 4800000,
+                "keywordNames": "FOG_EXP _MAIN_LIGHT_SHADOWS _SHADOW_NORMAL_BIAS_SCALE _UV_MESH0",
+                "subShaderIndex": 0,
+                "passIndex": 0,
+                "graphicsStateInfoSet": []
+            }
+        },
+        {
+            "first": {
+                "serializedVersion": "2",
                 "Hash": "8e70a5d67b6f79fc0b76e0c1a3b8d986"
             },
             "second": {
@@ -269,8 +332,8 @@
                 "passIndex": 0,
                 "graphicsStateInfoSet": [
                     {
-                        "vertexLayout": 5654929207520116622,
-                        "renderPass": 1555455587692101970,
+                        "vertexLayout": 11496587231008340218,
+                        "renderPass": 6268087623796494772,
                         "renderState": 15649462741326987297,
                         "subPassIndex": 0,
                         "topology": 0,
@@ -286,8 +349,8 @@
                         "invertProjectionMatrix": true
                     },
                     {
-                        "vertexLayout": 5654929207520116622,
-                        "renderPass": 6268087623796494772,
+                        "vertexLayout": 11496587231008340218,
+                        "renderPass": 1555455587692101970,
                         "renderState": 15649462741326987297,
                         "subPassIndex": 0,
                         "topology": 0,
@@ -367,34 +430,36 @@
                 "keywordNames": "FOG_EXP _MAIN_LIGHT_SHADOWS _PHOTO_DETAIL _ROADWEAR",
                 "subShaderIndex": 0,
                 "passIndex": 0,
-                "graphicsStateInfoSet": []
-            }
-        },
-        {
-            "first": {
-                "serializedVersion": "2",
-                "Hash": "a204c33bd5b463f53bdea5567748bd02"
-            },
-            "second": {
-                "shaderName": "Kamion/Cab Interior",
-                "shaderAssetGUID": "b2fe194ef13a48a44bde5dda866adb29",
-                "shaderAssetLocalIdentifierInFile": 4800000,
-                "keywordNames": "FOG_EXP _KAMION_CAB_DECAL",
-                "subShaderIndex": 0,
-                "passIndex": 1,
                 "graphicsStateInfoSet": [
                     {
-                        "vertexLayout": 2147397982791341030,
-                        "renderPass": 11294987102597378144,
-                        "renderState": 17259535550629827284,
+                        "vertexLayout": 11496587231008340218,
+                        "renderPass": 6268087623796494772,
+                        "renderState": 15649462741326987297,
                         "subPassIndex": 0,
                         "topology": 0,
                         "forceCullMode": -1,
                         "shadingRateCombinerPrimitive": 0,
                         "shadingRateCombinerFragment": 0,
                         "baseShadingRate": 0,
-                        "depthBias": 1.0,
-                        "slopeDepthBias": 2.5,
+                        "depthBias": 0.0,
+                        "slopeDepthBias": 0.0,
+                        "userBackface": false,
+                        "appBackface": false,
+                        "wireframe": false,
+                        "invertProjectionMatrix": true
+                    },
+                    {
+                        "vertexLayout": 11496587231008340218,
+                        "renderPass": 1555455587692101970,
+                        "renderState": 15649462741326987297,
+                        "subPassIndex": 0,
+                        "topology": 0,
+                        "forceCullMode": -1,
+                        "shadingRateCombinerPrimitive": 0,
+                        "shadingRateCombinerFragment": 0,
+                        "baseShadingRate": 0,
+                        "depthBias": 0.0,
+                        "slopeDepthBias": 0.0,
                         "userBackface": false,
                         "appBackface": false,
                         "wireframe": false,
@@ -417,7 +482,7 @@
                 "passIndex": 1,
                 "graphicsStateInfoSet": [
                     {
-                        "vertexLayout": 8094642658859981569,
+                        "vertexLayout": 13862169363310410145,
                         "renderPass": 11294987102597378144,
                         "renderState": 17259535550629827284,
                         "subPassIndex": 0,
@@ -481,7 +546,25 @@
                 "keywordNames": "FOG_EXP INSTANCING_ON _UV_MESH0",
                 "subShaderIndex": 0,
                 "passIndex": 1,
-                "graphicsStateInfoSet": []
+                "graphicsStateInfoSet": [
+                    {
+                        "vertexLayout": 8094642658859981569,
+                        "renderPass": 11294987102597378144,
+                        "renderState": 17259535550629827284,
+                        "subPassIndex": 0,
+                        "topology": 0,
+                        "forceCullMode": -1,
+                        "shadingRateCombinerPrimitive": 0,
+                        "shadingRateCombinerFragment": 0,
+                        "baseShadingRate": 0,
+                        "depthBias": 1.0,
+                        "slopeDepthBias": 2.5,
+                        "userBackface": false,
+                        "appBackface": false,
+                        "wireframe": false,
+                        "invertProjectionMatrix": true
+                    }
+                ]
             }
         },
         {
@@ -513,73 +596,6 @@
                         "appBackface": false,
                         "wireframe": false,
                         "invertProjectionMatrix": false
-                    }
-                ]
-            }
-        },
-        {
-            "first": {
-                "serializedVersion": "2",
-                "Hash": "dfd8b04db2d1ef7fe490ce0a74676d07"
-            },
-            "second": {
-                "shaderName": "Kamion/World PBR",
-                "shaderAssetGUID": "de9193ec2f1709a4bb381733288e82e9",
-                "shaderAssetLocalIdentifierInFile": 4800000,
-                "keywordNames": "FOG_EXP _CRACKS _DECAL_PAINT _GRIME _MAIN_LIGHT_SHADOWS _PHOTO_DETAIL",
-                "subShaderIndex": 0,
-                "passIndex": 0,
-                "graphicsStateInfoSet": [
-                    {
-                        "vertexLayout": 11496587231008340218,
-                        "renderPass": 14294710416514936304,
-                        "renderState": 1920525509800749428,
-                        "subPassIndex": 0,
-                        "topology": 0,
-                        "forceCullMode": -1,
-                        "shadingRateCombinerPrimitive": 0,
-                        "shadingRateCombinerFragment": 0,
-                        "baseShadingRate": 0,
-                        "depthBias": 0.0,
-                        "slopeDepthBias": 0.0,
-                        "userBackface": false,
-                        "appBackface": false,
-                        "wireframe": false,
-                        "invertProjectionMatrix": false
-                    },
-                    {
-                        "vertexLayout": 11496587231008340218,
-                        "renderPass": 6268087623796494772,
-                        "renderState": 1920525509800749428,
-                        "subPassIndex": 0,
-                        "topology": 0,
-                        "forceCullMode": -1,
-                        "shadingRateCombinerPrimitive": 0,
-                        "shadingRateCombinerFragment": 0,
-                        "baseShadingRate": 0,
-                        "depthBias": 0.0,
-                        "slopeDepthBias": 0.0,
-                        "userBackface": false,
-                        "appBackface": false,
-                        "wireframe": false,
-                        "invertProjectionMatrix": true
-                    },
-                    {
-                        "vertexLayout": 11496587231008340218,
-                        "renderPass": 1555455587692101970,
-                        "renderState": 1920525509800749428,
-                        "subPassIndex": 0,
-                        "topology": 0,
-                        "forceCullMode": -1,
-                        "shadingRateCombinerPrimitive": 0,
-                        "shadingRateCombinerFragment": 0,
-                        "baseShadingRate": 0,
-                        "depthBias": 0.0,
-                        "slopeDepthBias": 0.0,
-                        "userBackface": false,
-                        "appBackface": false,
-                        "wireframe": false,
-                        "invertProjectionMatrix": true
                     }
                 ]
             }
@@ -632,23 +648,6 @@
                 "graphicsStateInfoSet": [
                     {
                         "vertexLayout": 11496587231008340218,
-                        "renderPass": 14294710416514936304,
-                        "renderState": 15649462741326987297,
-                        "subPassIndex": 0,
-                        "topology": 0,
-                        "forceCullMode": -1,
-                        "shadingRateCombinerPrimitive": 0,
-                        "shadingRateCombinerFragment": 0,
-                        "baseShadingRate": 0,
-                        "depthBias": 0.0,
-                        "slopeDepthBias": 0.0,
-                        "userBackface": false,
-                        "appBackface": false,
-                        "wireframe": false,
-                        "invertProjectionMatrix": false
-                    },
-                    {
-                        "vertexLayout": 11496587231008340218,
                         "renderPass": 6268087623796494772,
                         "renderState": 15649462741326987297,
                         "subPassIndex": 0,
@@ -663,6 +662,23 @@
                         "appBackface": false,
                         "wireframe": false,
                         "invertProjectionMatrix": true
+                    },
+                    {
+                        "vertexLayout": 14355360307497054792,
+                        "renderPass": 14294710416514936304,
+                        "renderState": 15649462741326987297,
+                        "subPassIndex": 0,
+                        "topology": 0,
+                        "forceCullMode": -1,
+                        "shadingRateCombinerPrimitive": 0,
+                        "shadingRateCombinerFragment": 0,
+                        "baseShadingRate": 0,
+                        "depthBias": 0.0,
+                        "slopeDepthBias": 0.0,
+                        "userBackface": false,
+                        "appBackface": false,
+                        "wireframe": false,
+                        "invertProjectionMatrix": false
                     },
                     {
                         "vertexLayout": 11496587231008340218,
@@ -687,18 +703,51 @@
         {
             "first": {
                 "serializedVersion": "2",
-                "Hash": "1051109f6badc2e4b126e9f2d38a0f4f"
+                "Hash": "ee20bcb5213ee4e7f2841366980d676c"
             },
             "second": {
                 "shaderName": "Kamion/World PBR",
                 "shaderAssetGUID": "de9193ec2f1709a4bb381733288e82e9",
                 "shaderAssetLocalIdentifierInFile": 4800000,
-                "keywordNames": "FOG_EXP _CRACKS _MAIN_LIGHT_SHADOWS _PHOTO_DETAIL _ROADWEAR",
+                "keywordNames": "FOG_EXP _SHADOW_NORMAL_BIAS_SCALE _VERTEX_GRIME",
+                "subShaderIndex": 0,
+                "passIndex": 1,
+                "graphicsStateInfoSet": [
+                    {
+                        "vertexLayout": 14355360307497054792,
+                        "renderPass": 11294987102597378144,
+                        "renderState": 17259535550629827284,
+                        "subPassIndex": 0,
+                        "topology": 0,
+                        "forceCullMode": -1,
+                        "shadingRateCombinerPrimitive": 0,
+                        "shadingRateCombinerFragment": 0,
+                        "baseShadingRate": 0,
+                        "depthBias": 1.0,
+                        "slopeDepthBias": 2.5,
+                        "userBackface": false,
+                        "appBackface": false,
+                        "wireframe": false,
+                        "invertProjectionMatrix": true
+                    }
+                ]
+            }
+        },
+        {
+            "first": {
+                "serializedVersion": "2",
+                "Hash": "e8606bf53e3f1fe5e0042865eb4e561f"
+            },
+            "second": {
+                "shaderName": "Universal Render Pipeline/Lit",
+                "shaderAssetGUID": "933532a4fcc9baf4fa0491de14d08ed7",
+                "shaderAssetLocalIdentifierInFile": 4800000,
+                "keywordNames": "EVALUATE_SH_VERTEX FOG_EXP INSTANCING_ON _ADDITIONAL_LIGHTS _EMISSION _LIGHT_LAYERS _MAIN_LIGHT_SHADOWS _REFLECTION_PROBE_BLENDING _REFLECTION_PROBE_BOX_PROJECTION",
                 "subShaderIndex": 0,
                 "passIndex": 0,
                 "graphicsStateInfoSet": [
                     {
-                        "vertexLayout": 11496587231008340218,
+                        "vertexLayout": 799511872847711629,
                         "renderPass": 6268087623796494772,
                         "renderState": 15649462741326987297,
                         "subPassIndex": 0,
@@ -715,24 +764,7 @@
                         "invertProjectionMatrix": true
                     },
                     {
-                        "vertexLayout": 4334786086607807567,
-                        "renderPass": 14294710416514936304,
-                        "renderState": 15649462741326987297,
-                        "subPassIndex": 0,
-                        "topology": 0,
-                        "forceCullMode": -1,
-                        "shadingRateCombinerPrimitive": 0,
-                        "shadingRateCombinerFragment": 0,
-                        "baseShadingRate": 0,
-                        "depthBias": 0.0,
-                        "slopeDepthBias": 0.0,
-                        "userBackface": false,
-                        "appBackface": false,
-                        "wireframe": false,
-                        "invertProjectionMatrix": false
-                    },
-                    {
-                        "vertexLayout": 11496587231008340218,
+                        "vertexLayout": 799511872847711629,
                         "renderPass": 1555455587692101970,
                         "renderState": 15649462741326987297,
                         "subPassIndex": 0,
@@ -804,73 +836,6 @@
         {
             "first": {
                 "serializedVersion": "2",
-                "Hash": "2281208aced7ce67ae4dbb22137dd89c"
-            },
-            "second": {
-                "shaderName": "Kamion/World Car Glass",
-                "shaderAssetGUID": "baa43fbff0fea1749bd040c58e161bdb",
-                "shaderAssetLocalIdentifierInFile": 4800000,
-                "keywordNames": "FOG_EXP",
-                "subShaderIndex": 0,
-                "passIndex": 0,
-                "graphicsStateInfoSet": [
-                    {
-                        "vertexLayout": 13862169363310410145,
-                        "renderPass": 14294710416514936304,
-                        "renderState": 4161966877222828655,
-                        "subPassIndex": 0,
-                        "topology": 0,
-                        "forceCullMode": -1,
-                        "shadingRateCombinerPrimitive": 0,
-                        "shadingRateCombinerFragment": 0,
-                        "baseShadingRate": 0,
-                        "depthBias": 0.0,
-                        "slopeDepthBias": 0.0,
-                        "userBackface": false,
-                        "appBackface": false,
-                        "wireframe": false,
-                        "invertProjectionMatrix": false
-                    },
-                    {
-                        "vertexLayout": 8094642658859981569,
-                        "renderPass": 6268087623796494772,
-                        "renderState": 4161966877222828655,
-                        "subPassIndex": 0,
-                        "topology": 0,
-                        "forceCullMode": -1,
-                        "shadingRateCombinerPrimitive": 0,
-                        "shadingRateCombinerFragment": 0,
-                        "baseShadingRate": 0,
-                        "depthBias": 0.0,
-                        "slopeDepthBias": 0.0,
-                        "userBackface": false,
-                        "appBackface": false,
-                        "wireframe": false,
-                        "invertProjectionMatrix": true
-                    },
-                    {
-                        "vertexLayout": 13862169363310410145,
-                        "renderPass": 1555455587692101970,
-                        "renderState": 4161966877222828655,
-                        "subPassIndex": 0,
-                        "topology": 0,
-                        "forceCullMode": -1,
-                        "shadingRateCombinerPrimitive": 0,
-                        "shadingRateCombinerFragment": 0,
-                        "baseShadingRate": 0,
-                        "depthBias": 0.0,
-                        "slopeDepthBias": 0.0,
-                        "userBackface": false,
-                        "appBackface": false,
-                        "wireframe": false,
-                        "invertProjectionMatrix": true
-                    }
-                ]
-            }
-        },
-        {
-            "first": {
-                "serializedVersion": "2",
                 "Hash": "15f57e53c9520ef5d91e3144b70461b3"
             },
             "second": {
@@ -901,6 +866,106 @@
                     {
                         "vertexLayout": 5654929207520116622,
                         "renderPass": 6268087623796494772,
+                        "renderState": 15649462741326987297,
+                        "subPassIndex": 0,
+                        "topology": 0,
+                        "forceCullMode": -1,
+                        "shadingRateCombinerPrimitive": 0,
+                        "shadingRateCombinerFragment": 0,
+                        "baseShadingRate": 0,
+                        "depthBias": 0.0,
+                        "slopeDepthBias": 0.0,
+                        "userBackface": false,
+                        "appBackface": false,
+                        "wireframe": false,
+                        "invertProjectionMatrix": true
+                    }
+                ]
+            }
+        },
+        {
+            "first": {
+                "serializedVersion": "2",
+                "Hash": "2f7d3ea3685ac2f8421c5bbab16dad4e"
+            },
+            "second": {
+                "shaderName": "Kamion/World PlotKit",
+                "shaderAssetGUID": "44338ff7cd03b154b923931f451cc118",
+                "shaderAssetLocalIdentifierInFile": 4800000,
+                "keywordNames": "FOG_EXP",
+                "subShaderIndex": 0,
+                "passIndex": 2,
+                "graphicsStateInfoSet": [
+                    {
+                        "vertexLayout": 11673344174591679451,
+                        "renderPass": 11294987102597378144,
+                        "renderState": 5139698867707353204,
+                        "subPassIndex": 0,
+                        "topology": 0,
+                        "forceCullMode": -1,
+                        "shadingRateCombinerPrimitive": 0,
+                        "shadingRateCombinerFragment": 0,
+                        "baseShadingRate": 0,
+                        "depthBias": 1.0,
+                        "slopeDepthBias": 2.5,
+                        "userBackface": false,
+                        "appBackface": false,
+                        "wireframe": false,
+                        "invertProjectionMatrix": true
+                    }
+                ]
+            }
+        },
+        {
+            "first": {
+                "serializedVersion": "2",
+                "Hash": "3cf56c1bad442708eefbc028701d4de7"
+            },
+            "second": {
+                "shaderName": "Kamion/World PBR",
+                "shaderAssetGUID": "de9193ec2f1709a4bb381733288e82e9",
+                "shaderAssetLocalIdentifierInFile": 4800000,
+                "keywordNames": "FOG_EXP _CRACKS _MAIN_LIGHT_SHADOWS _PHOTO_DETAIL _ROADWEAR _SHADOW_NORMAL_BIAS_SCALE",
+                "subShaderIndex": 0,
+                "passIndex": 0,
+                "graphicsStateInfoSet": [
+                    {
+                        "vertexLayout": 11496587231008340218,
+                        "renderPass": 6268087623796494772,
+                        "renderState": 15649462741326987297,
+                        "subPassIndex": 0,
+                        "topology": 0,
+                        "forceCullMode": -1,
+                        "shadingRateCombinerPrimitive": 0,
+                        "shadingRateCombinerFragment": 0,
+                        "baseShadingRate": 0,
+                        "depthBias": 0.0,
+                        "slopeDepthBias": 0.0,
+                        "userBackface": false,
+                        "appBackface": false,
+                        "wireframe": false,
+                        "invertProjectionMatrix": true
+                    },
+                    {
+                        "vertexLayout": 7317643961676635007,
+                        "renderPass": 14294710416514936304,
+                        "renderState": 15649462741326987297,
+                        "subPassIndex": 0,
+                        "topology": 0,
+                        "forceCullMode": -1,
+                        "shadingRateCombinerPrimitive": 0,
+                        "shadingRateCombinerFragment": 0,
+                        "baseShadingRate": 0,
+                        "depthBias": 0.0,
+                        "slopeDepthBias": 0.0,
+                        "userBackface": false,
+                        "appBackface": false,
+                        "wireframe": false,
+                        "invertProjectionMatrix": false
+                    },
+                    {
+                        "vertexLayout": 11496587231008340218,
+                        "renderPass": 1555455587692101970,
                         "renderState": 15649462741326987297,
                         "subPassIndex": 0,
                         "topology": 0,
@@ -988,16 +1053,84 @@
         {
             "first": {
                 "serializedVersion": "2",
-                "Hash": "57914b86a99c6984e8222e83e5367b7a"
+                "Hash": "522d3d0339d2477a8735e6a657f55edf"
             },
             "second": {
-                "shaderName": "Kamion/World PBR",
-                "shaderAssetGUID": "de9193ec2f1709a4bb381733288e82e9",
+                "shaderName": "Kamion/Cab Interior",
+                "shaderAssetGUID": "b2fe194ef13a48a44bde5dda866adb29",
                 "shaderAssetLocalIdentifierInFile": 4800000,
-                "keywordNames": "FOG_EXP",
+                "keywordNames": "FOG_EXP _KAMION_CAB_BACKLIGHT _KAMION_CAB_DECAL _MAIN_LIGHT_SHADOWS",
                 "subShaderIndex": 0,
-                "passIndex": 1,
-                "graphicsStateInfoSet": []
+                "passIndex": 0,
+                "graphicsStateInfoSet": [
+                    {
+                        "vertexLayout": 2147397982791341030,
+                        "renderPass": 1555455587692101970,
+                        "renderState": 15649462741326987297,
+                        "subPassIndex": 0,
+                        "topology": 0,
+                        "forceCullMode": -1,
+                        "shadingRateCombinerPrimitive": 0,
+                        "shadingRateCombinerFragment": 0,
+                        "baseShadingRate": 0,
+                        "depthBias": 0.0,
+                        "slopeDepthBias": 0.0,
+                        "userBackface": false,
+                        "appBackface": false,
+                        "wireframe": false,
+                        "invertProjectionMatrix": true
+                    }
+                ]
+            }
+        },
+        {
+            "first": {
+                "serializedVersion": "2",
+                "Hash": "60cde19dc613da2f80fb9c2d76e7d827"
+            },
+            "second": {
+                "shaderName": "Kamion/Furniture Sign",
+                "shaderAssetGUID": "c719bcb9168cc4e448ece4c1a8942147",
+                "shaderAssetLocalIdentifierInFile": 4800000,
+                "keywordNames": "EVALUATE_SH_VERTEX FOG_EXP INSTANCING_ON _ADDITIONAL_LIGHTS _ALPHATEST_ON _FURNITURE_RETRO _MAIN_LIGHT_SHADOWS",
+                "subShaderIndex": 0,
+                "passIndex": 0,
+                "graphicsStateInfoSet": [
+                    {
+                        "vertexLayout": 8094642658859981569,
+                        "renderPass": 6268087623796494772,
+                        "renderState": 9547542180124217855,
+                        "subPassIndex": 0,
+                        "topology": 0,
+                        "forceCullMode": -1,
+                        "shadingRateCombinerPrimitive": 0,
+                        "shadingRateCombinerFragment": 0,
+                        "baseShadingRate": 0,
+                        "depthBias": 0.0,
+                        "slopeDepthBias": 0.0,
+                        "userBackface": false,
+                        "appBackface": false,
+                        "wireframe": false,
+                        "invertProjectionMatrix": true
+                    },
+                    {
+                        "vertexLayout": 8094642658859981569,
+                        "renderPass": 1555455587692101970,
+                        "renderState": 9547542180124217855,
+                        "subPassIndex": 0,
+                        "topology": 0,
+                        "forceCullMode": -1,
+                        "shadingRateCombinerPrimitive": 0,
+                        "shadingRateCombinerFragment": 0,
+                        "baseShadingRate": 0,
+                        "depthBias": 0.0,
+                        "slopeDepthBias": 0.0,
+                        "userBackface": false,
+                        "appBackface": false,
+                        "wireframe": false,
+                        "invertProjectionMatrix": true
+                    }
+                ]
             }
         },
         {
@@ -1187,37 +1320,20 @@
         {
             "first": {
                 "serializedVersion": "2",
-                "Hash": "88e1eed4e1aebf3d44a8100b1c7fa0c2"
+                "Hash": "883587560a5e6031148eae53b65b8df4"
             },
             "second": {
-                "shaderName": "Universal Render Pipeline/Lit",
-                "shaderAssetGUID": "933532a4fcc9baf4fa0491de14d08ed7",
+                "shaderName": "Kamion/Forest Canopy",
+                "shaderAssetGUID": "8b02af0f08f24bfd9969607426dcc9b6",
                 "shaderAssetLocalIdentifierInFile": 4800000,
-                "keywordNames": "EVALUATE_SH_VERTEX FOG_EXP _ADDITIONAL_LIGHTS _ALPHATEST_ON _LIGHT_LAYERS _MAIN_LIGHT_SHADOWS _METALLICSPECGLOSSMAP _OCCLUSIONMAP _REFLECTION_PROBE_BLENDING _REFLECTION_PROBE_BOX_PROJECTION",
+                "keywordNames": "FOG_EXP",
                 "subShaderIndex": 0,
                 "passIndex": 0,
                 "graphicsStateInfoSet": [
                     {
-                        "vertexLayout": 13862169363310410145,
-                        "renderPass": 14294710416514936304,
-                        "renderState": 9547542180124217855,
-                        "subPassIndex": 0,
-                        "topology": 0,
-                        "forceCullMode": -1,
-                        "shadingRateCombinerPrimitive": 0,
-                        "shadingRateCombinerFragment": 0,
-                        "baseShadingRate": 0,
-                        "depthBias": 0.0,
-                        "slopeDepthBias": 0.0,
-                        "userBackface": false,
-                        "appBackface": false,
-                        "wireframe": false,
-                        "invertProjectionMatrix": false
-                    },
-                    {
-                        "vertexLayout": 13862169363310410145,
-                        "renderPass": 1555455587692101970,
-                        "renderState": 9547542180124217855,
+                        "vertexLayout": 8094642658859981569,
+                        "renderPass": 6268087623796494772,
+                        "renderState": 15649462741326987297,
                         "subPassIndex": 0,
                         "topology": 0,
                         "forceCullMode": -1,
@@ -1232,9 +1348,9 @@
                         "invertProjectionMatrix": true
                     },
                     {
-                        "vertexLayout": 13862169363310410145,
-                        "renderPass": 6268087623796494772,
-                        "renderState": 9547542180124217855,
+                        "vertexLayout": 8094642658859981569,
+                        "renderPass": 1555455587692101970,
+                        "renderState": 15649462741326987297,
                         "subPassIndex": 0,
                         "topology": 0,
                         "forceCullMode": -1,
@@ -1287,45 +1403,28 @@
         {
             "first": {
                 "serializedVersion": "2",
-                "Hash": "883587560a5e6031148eae53b65b8df4"
+                "Hash": "a7ed4fa11597ae6097b9ce993848e472"
             },
             "second": {
-                "shaderName": "Kamion/Forest Canopy",
-                "shaderAssetGUID": "8b02af0f08f24bfd9969607426dcc9b6",
+                "shaderName": "Kamion/World PBR",
+                "shaderAssetGUID": "de9193ec2f1709a4bb381733288e82e9",
                 "shaderAssetLocalIdentifierInFile": 4800000,
-                "keywordNames": "FOG_EXP",
+                "keywordNames": "FOG_EXP _SPLASH _UV_MESH0",
                 "subShaderIndex": 0,
-                "passIndex": 0,
+                "passIndex": 1,
                 "graphicsStateInfoSet": [
                     {
-                        "vertexLayout": 8094642658859981569,
-                        "renderPass": 6268087623796494772,
-                        "renderState": 15649462741326987297,
+                        "vertexLayout": 13862169363310410145,
+                        "renderPass": 11294987102597378144,
+                        "renderState": 17259535550629827284,
                         "subPassIndex": 0,
                         "topology": 0,
                         "forceCullMode": -1,
                         "shadingRateCombinerPrimitive": 0,
                         "shadingRateCombinerFragment": 0,
                         "baseShadingRate": 0,
-                        "depthBias": 0.0,
-                        "slopeDepthBias": 0.0,
-                        "userBackface": false,
-                        "appBackface": false,
-                        "wireframe": false,
-                        "invertProjectionMatrix": true
-                    },
-                    {
-                        "vertexLayout": 8094642658859981569,
-                        "renderPass": 1555455587692101970,
-                        "renderState": 15649462741326987297,
-                        "subPassIndex": 0,
-                        "topology": 0,
-                        "forceCullMode": -1,
-                        "shadingRateCombinerPrimitive": 0,
-                        "shadingRateCombinerFragment": 0,
-                        "baseShadingRate": 0,
-                        "depthBias": 0.0,
-                        "slopeDepthBias": 0.0,
+                        "depthBias": 1.0,
+                        "slopeDepthBias": 2.5,
                         "userBackface": false,
                         "appBackface": false,
                         "wireframe": false,
@@ -1415,7 +1514,7 @@
                 "passIndex": 1,
                 "graphicsStateInfoSet": [
                     {
-                        "vertexLayout": 8094642658859981569,
+                        "vertexLayout": 11673344174591679451,
                         "renderPass": 11294987102597378144,
                         "renderState": 5139698867707353204,
                         "subPassIndex": 0,
@@ -1567,23 +1666,6 @@
                     {
                         "vertexLayout": 8094642658859981569,
                         "renderPass": 11294987102597378144,
-                        "renderState": 17259535550629827284,
-                        "subPassIndex": 0,
-                        "topology": 0,
-                        "forceCullMode": -1,
-                        "shadingRateCombinerPrimitive": 0,
-                        "shadingRateCombinerFragment": 0,
-                        "baseShadingRate": 0,
-                        "depthBias": 1.0,
-                        "slopeDepthBias": 2.5,
-                        "userBackface": false,
-                        "appBackface": false,
-                        "wireframe": false,
-                        "invertProjectionMatrix": true
-                    },
-                    {
-                        "vertexLayout": 8094642658859981569,
-                        "renderPass": 11294987102597378144,
                         "renderState": 5139698867707353204,
                         "subPassIndex": 0,
                         "topology": 0,
@@ -1615,7 +1697,7 @@
                 "passIndex": 0,
                 "graphicsStateInfoSet": [
                     {
-                        "vertexLayout": 8094642658859981569,
+                        "vertexLayout": 48144718831037730,
                         "renderPass": 1555455587692101970,
                         "renderState": 14930056833929915623,
                         "subPassIndex": 0,
@@ -1632,7 +1714,7 @@
                         "invertProjectionMatrix": true
                     },
                     {
-                        "vertexLayout": 8094642658859981569,
+                        "vertexLayout": 48144718831037730,
                         "renderPass": 6268087623796494772,
                         "renderState": 14930056833929915623,
                         "subPassIndex": 0,
@@ -1863,11 +1945,61 @@
                         "appBackface": false,
                         "wireframe": false,
                         "invertProjectionMatrix": true
+                    }
+                ]
+            }
+        },
+        {
+            "first": {
+                "serializedVersion": "2",
+                "Hash": "4fce7dbd7c49ff7efaace41665bf1a82"
+            },
+            "second": {
+                "shaderName": "Kamion/World Car Glass",
+                "shaderAssetGUID": "baa43fbff0fea1749bd040c58e161bdb",
+                "shaderAssetLocalIdentifierInFile": 4800000,
+                "keywordNames": "FOG_EXP _SCREEN_SHEET",
+                "subShaderIndex": 0,
+                "passIndex": 0,
+                "graphicsStateInfoSet": [
+                    {
+                        "vertexLayout": 11673344174591679451,
+                        "renderPass": 6268087623796494772,
+                        "renderState": 4161966877222828655,
+                        "subPassIndex": 0,
+                        "topology": 0,
+                        "forceCullMode": -1,
+                        "shadingRateCombinerPrimitive": 0,
+                        "shadingRateCombinerFragment": 0,
+                        "baseShadingRate": 0,
+                        "depthBias": 0.0,
+                        "slopeDepthBias": 0.0,
+                        "userBackface": false,
+                        "appBackface": false,
+                        "wireframe": false,
+                        "invertProjectionMatrix": true
                     },
                     {
-                        "vertexLayout": 5654929207520116622,
-                        "renderPass": 6268087623796494772,
-                        "renderState": 15649462741326987297,
+                        "vertexLayout": 14355360307497054792,
+                        "renderPass": 14294710416514936304,
+                        "renderState": 4161966877222828655,
+                        "subPassIndex": 0,
+                        "topology": 0,
+                        "forceCullMode": -1,
+                        "shadingRateCombinerPrimitive": 0,
+                        "shadingRateCombinerFragment": 0,
+                        "baseShadingRate": 0,
+                        "depthBias": 0.0,
+                        "slopeDepthBias": 0.0,
+                        "userBackface": false,
+                        "appBackface": false,
+                        "wireframe": false,
+                        "invertProjectionMatrix": false
+                    },
+                    {
+                        "vertexLayout": 14355360307497054792,
+                        "renderPass": 1555455587692101970,
+                        "renderState": 4161966877222828655,
                         "subPassIndex": 0,
                         "topology": 0,
                         "forceCullMode": -1,
@@ -2099,8 +2231,8 @@
                 "passIndex": 1,
                 "graphicsStateInfoSet": [
                     {
-                        "vertexLayout": 8094642658859981569,
-                        "renderPass": 1555455587692101970,
+                        "vertexLayout": 48144718831037730,
+                        "renderPass": 6268087623796494772,
                         "renderState": 7396373862984744873,
                         "subPassIndex": 0,
                         "topology": 0,
@@ -2116,8 +2248,8 @@
                         "invertProjectionMatrix": true
                     },
                     {
-                        "vertexLayout": 8094642658859981569,
-                        "renderPass": 6268087623796494772,
+                        "vertexLayout": 48144718831037730,
+                        "renderPass": 1555455587692101970,
                         "renderState": 7396373862984744873,
                         "subPassIndex": 0,
                         "topology": 0,
@@ -2355,20 +2487,104 @@
         {
             "first": {
                 "serializedVersion": "2",
-                "Hash": "9b1a2e636579e2d35d73ae13f1f375d7"
+                "Hash": "b5522fbc8b7c9230eed4e11e241b4560"
             },
             "second": {
-                "shaderName": "Kamion/Cab Interior",
-                "shaderAssetGUID": "b2fe194ef13a48a44bde5dda866adb29",
+                "shaderName": "Kamion/World PBR",
+                "shaderAssetGUID": "de9193ec2f1709a4bb381733288e82e9",
                 "shaderAssetLocalIdentifierInFile": 4800000,
-                "keywordNames": "FOG_EXP _KAMION_CAB_DECAL _MAIN_LIGHT_SHADOWS",
+                "keywordNames": "FOG_EXP _CRACKS _DECAL_PAINT _GRIME _MAIN_LIGHT_SHADOWS _PHOTO_DETAIL _ROADWEAR",
                 "subShaderIndex": 0,
                 "passIndex": 0,
                 "graphicsStateInfoSet": [
                     {
-                        "vertexLayout": 2147397982791341030,
+                        "vertexLayout": 11496587231008340218,
+                        "renderPass": 14294710416514936304,
+                        "renderState": 1920525509800749428,
+                        "subPassIndex": 0,
+                        "topology": 0,
+                        "forceCullMode": -1,
+                        "shadingRateCombinerPrimitive": 0,
+                        "shadingRateCombinerFragment": 0,
+                        "baseShadingRate": 0,
+                        "depthBias": 0.0,
+                        "slopeDepthBias": 0.0,
+                        "userBackface": false,
+                        "appBackface": false,
+                        "wireframe": false,
+                        "invertProjectionMatrix": false
+                    },
+                    {
+                        "vertexLayout": 11496587231008340218,
+                        "renderPass": 6268087623796494772,
+                        "renderState": 1920525509800749428,
+                        "subPassIndex": 0,
+                        "topology": 0,
+                        "forceCullMode": -1,
+                        "shadingRateCombinerPrimitive": 0,
+                        "shadingRateCombinerFragment": 0,
+                        "baseShadingRate": 0,
+                        "depthBias": 0.0,
+                        "slopeDepthBias": 0.0,
+                        "userBackface": false,
+                        "appBackface": false,
+                        "wireframe": false,
+                        "invertProjectionMatrix": true
+                    },
+                    {
+                        "vertexLayout": 11496587231008340218,
                         "renderPass": 1555455587692101970,
-                        "renderState": 15649462741326987297,
+                        "renderState": 1920525509800749428,
+                        "subPassIndex": 0,
+                        "topology": 0,
+                        "forceCullMode": -1,
+                        "shadingRateCombinerPrimitive": 0,
+                        "shadingRateCombinerFragment": 0,
+                        "baseShadingRate": 0,
+                        "depthBias": 0.0,
+                        "slopeDepthBias": 0.0,
+                        "userBackface": false,
+                        "appBackface": false,
+                        "wireframe": false,
+                        "invertProjectionMatrix": true
+                    }
+                ]
+            }
+        },
+        {
+            "first": {
+                "serializedVersion": "2",
+                "Hash": "b636583d06a21befdd8061ef64d7c27e"
+            },
+            "second": {
+                "shaderName": "Kamion/World PlotKit",
+                "shaderAssetGUID": "44338ff7cd03b154b923931f451cc118",
+                "shaderAssetLocalIdentifierInFile": 4800000,
+                "keywordNames": "FOG_EXP _MAIN_LIGHT_SHADOWS",
+                "subShaderIndex": 0,
+                "passIndex": 0,
+                "graphicsStateInfoSet": [
+                    {
+                        "vertexLayout": 11673344174591679451,
+                        "renderPass": 6268087623796494772,
+                        "renderState": 14930056833929915623,
+                        "subPassIndex": 0,
+                        "topology": 0,
+                        "forceCullMode": -1,
+                        "shadingRateCombinerPrimitive": 0,
+                        "shadingRateCombinerFragment": 0,
+                        "baseShadingRate": 0,
+                        "depthBias": 0.0,
+                        "slopeDepthBias": 0.0,
+                        "userBackface": false,
+                        "appBackface": false,
+                        "wireframe": false,
+                        "invertProjectionMatrix": true
+                    },
+                    {
+                        "vertexLayout": 11673344174591679451,
+                        "renderPass": 1555455587692101970,
+                        "renderState": 14930056833929915623,
                         "subPassIndex": 0,
                         "topology": 0,
                         "forceCullMode": -1,
@@ -2465,7 +2681,7 @@
                 "passIndex": 0,
                 "graphicsStateInfoSet": [
                     {
-                        "vertexLayout": 8094642658859981569,
+                        "vertexLayout": 11673344174591679451,
                         "renderPass": 14294710416514936304,
                         "renderState": 6529901834342106286,
                         "subPassIndex": 0,
@@ -2482,7 +2698,7 @@
                         "invertProjectionMatrix": false
                     },
                     {
-                        "vertexLayout": 8094642658859981569,
+                        "vertexLayout": 11673344174591679451,
                         "renderPass": 1555455587692101970,
                         "renderState": 6529901834342106286,
                         "subPassIndex": 0,
@@ -2499,7 +2715,7 @@
                         "invertProjectionMatrix": true
                     },
                     {
-                        "vertexLayout": 8094642658859981569,
+                        "vertexLayout": 11673344174591679451,
                         "renderPass": 6268087623796494772,
                         "renderState": 6529901834342106286,
                         "subPassIndex": 0,
@@ -2622,18 +2838,35 @@
         {
             "first": {
                 "serializedVersion": "2",
-                "Hash": "c0b64d97e5c3798d5f8b3fc1f70132e5"
+                "Hash": "f0fa2398ad598020bd27eb1b06ab3ac1"
             },
             "second": {
                 "shaderName": "Kamion/World PBR",
                 "shaderAssetGUID": "de9193ec2f1709a4bb381733288e82e9",
                 "shaderAssetLocalIdentifierInFile": 4800000,
-                "keywordNames": "FOG_EXP _GRIME _MAIN_LIGHT_SHADOWS",
+                "keywordNames": "FOG_EXP _MAIN_LIGHT_SHADOWS _SHADOW_NORMAL_BIAS_SCALE _VERTEX_GRIME",
                 "subShaderIndex": 0,
                 "passIndex": 0,
                 "graphicsStateInfoSet": [
                     {
-                        "vertexLayout": 5654929207520116622,
+                        "vertexLayout": 14355360307497054792,
+                        "renderPass": 6268087623796494772,
+                        "renderState": 15649462741326987297,
+                        "subPassIndex": 0,
+                        "topology": 0,
+                        "forceCullMode": -1,
+                        "shadingRateCombinerPrimitive": 0,
+                        "shadingRateCombinerFragment": 0,
+                        "baseShadingRate": 0,
+                        "depthBias": 0.0,
+                        "slopeDepthBias": 0.0,
+                        "userBackface": false,
+                        "appBackface": false,
+                        "wireframe": false,
+                        "invertProjectionMatrix": true
+                    },
+                    {
+                        "vertexLayout": 14355360307497054792,
                         "renderPass": 14294710416514936304,
                         "renderState": 15649462741326987297,
                         "subPassIndex": 0,
@@ -2648,6 +2881,23 @@
                         "appBackface": false,
                         "wireframe": false,
                         "invertProjectionMatrix": false
+                    },
+                    {
+                        "vertexLayout": 14355360307497054792,
+                        "renderPass": 1555455587692101970,
+                        "renderState": 15649462741326987297,
+                        "subPassIndex": 0,
+                        "topology": 0,
+                        "forceCullMode": -1,
+                        "shadingRateCombinerPrimitive": 0,
+                        "shadingRateCombinerFragment": 0,
+                        "baseShadingRate": 0,
+                        "depthBias": 0.0,
+                        "slopeDepthBias": 0.0,
+                        "userBackface": false,
+                        "appBackface": false,
+                        "wireframe": false,
+                        "invertProjectionMatrix": true
                     }
                 ]
             }
@@ -2722,32 +2972,66 @@
         {
             "first": {
                 "serializedVersion": "2",
-                "Hash": "c59283eb13ba3548eee6f36fc1e4c0ca"
+                "Hash": "c0b64d97e5c3798d5f8b3fc1f70132e5"
             },
             "second": {
-                "shaderName": "Universal Render Pipeline/Lit",
-                "shaderAssetGUID": "933532a4fcc9baf4fa0491de14d08ed7",
+                "shaderName": "Kamion/World PBR",
+                "shaderAssetGUID": "de9193ec2f1709a4bb381733288e82e9",
                 "shaderAssetLocalIdentifierInFile": 4800000,
-                "keywordNames": "EVALUATE_SH_VERTEX FOG_EXP INSTANCING_ON _ADDITIONAL_LIGHTS _LIGHT_LAYERS _REFLECTION_PROBE_BLENDING _REFLECTION_PROBE_BOX_PROJECTION",
+                "keywordNames": "FOG_EXP _GRIME _MAIN_LIGHT_SHADOWS",
                 "subShaderIndex": 0,
-                "passIndex": 1,
+                "passIndex": 0,
                 "graphicsStateInfoSet": [
                     {
-                        "vertexLayout": 8094642658859981569,
-                        "renderPass": 11294987102597378144,
-                        "renderState": 17259535550629827284,
+                        "vertexLayout": 5654929207520116622,
+                        "renderPass": 1555455587692101970,
+                        "renderState": 15649462741326987297,
                         "subPassIndex": 0,
                         "topology": 0,
                         "forceCullMode": -1,
                         "shadingRateCombinerPrimitive": 0,
                         "shadingRateCombinerFragment": 0,
                         "baseShadingRate": 0,
-                        "depthBias": 1.0,
-                        "slopeDepthBias": 2.5,
+                        "depthBias": 0.0,
+                        "slopeDepthBias": 0.0,
                         "userBackface": false,
                         "appBackface": false,
                         "wireframe": false,
                         "invertProjectionMatrix": true
+                    },
+                    {
+                        "vertexLayout": 5654929207520116622,
+                        "renderPass": 6268087623796494772,
+                        "renderState": 15649462741326987297,
+                        "subPassIndex": 0,
+                        "topology": 0,
+                        "forceCullMode": -1,
+                        "shadingRateCombinerPrimitive": 0,
+                        "shadingRateCombinerFragment": 0,
+                        "baseShadingRate": 0,
+                        "depthBias": 0.0,
+                        "slopeDepthBias": 0.0,
+                        "userBackface": false,
+                        "appBackface": false,
+                        "wireframe": false,
+                        "invertProjectionMatrix": true
+                    },
+                    {
+                        "vertexLayout": 5654929207520116622,
+                        "renderPass": 14294710416514936304,
+                        "renderState": 15649462741326987297,
+                        "subPassIndex": 0,
+                        "topology": 0,
+                        "forceCullMode": -1,
+                        "shadingRateCombinerPrimitive": 0,
+                        "shadingRateCombinerFragment": 0,
+                        "baseShadingRate": 0,
+                        "depthBias": 0.0,
+                        "slopeDepthBias": 0.0,
+                        "userBackface": false,
+                        "appBackface": false,
+                        "wireframe": false,
+                        "invertProjectionMatrix": false
                     }
                 ]
             }
@@ -2755,13 +3039,13 @@
         {
             "first": {
                 "serializedVersion": "2",
-                "Hash": "0d5b89cd101c8e9f34f82ef3c9ed1cb9"
+                "Hash": "270b5a64818922951ff0032ee8aa428c"
             },
             "second": {
                 "shaderName": "Kamion/Cab Interior",
                 "shaderAssetGUID": "b2fe194ef13a48a44bde5dda866adb29",
                 "shaderAssetLocalIdentifierInFile": 4800000,
-                "keywordNames": "FOG_EXP",
+                "keywordNames": "FOG_EXP _KAMION_CAB_BACKLIGHT _KAMION_CAB_DECAL",
                 "subShaderIndex": 0,
                 "passIndex": 1,
                 "graphicsStateInfoSet": [
@@ -2821,19 +3105,19 @@
         {
             "first": {
                 "serializedVersion": "2",
-                "Hash": "c5d6b050f8bf08186680d8979bdf11d4"
+                "Hash": "36d743c9996db472a30e0abdf56fea95"
             },
             "second": {
-                "shaderName": "Universal Render Pipeline/Lit",
-                "shaderAssetGUID": "933532a4fcc9baf4fa0491de14d08ed7",
+                "shaderName": "Kamion/World Surface",
+                "shaderAssetGUID": "3bdc254b264039f44854f125dcb313b3",
                 "shaderAssetLocalIdentifierInFile": 4800000,
-                "keywordNames": "EVALUATE_SH_VERTEX FOG_EXP INSTANCING_ON _ADDITIONAL_LIGHTS _LIGHT_LAYERS _MAIN_LIGHT_SHADOWS _METALLICSPECGLOSSMAP _OCCLUSIONMAP _REFLECTION_PROBE_BLENDING _REFLECTION_PROBE_BOX_PROJECTION",
+                "keywordNames": "FOG_EXP _FURNITURE_PLINTH _MAIN_LIGHT_SHADOWS",
                 "subShaderIndex": 0,
                 "passIndex": 0,
                 "graphicsStateInfoSet": [
                     {
-                        "vertexLayout": 8094642658859981569,
-                        "renderPass": 6268087623796494772,
+                        "vertexLayout": 11673344174591679451,
+                        "renderPass": 1555455587692101970,
                         "renderState": 15649462741326987297,
                         "subPassIndex": 0,
                         "topology": 0,
@@ -2849,9 +3133,109 @@
                         "invertProjectionMatrix": true
                     },
                     {
-                        "vertexLayout": 8094642658859981569,
-                        "renderPass": 1555455587692101970,
+                        "vertexLayout": 11673344174591679451,
+                        "renderPass": 14294710416514936304,
                         "renderState": 15649462741326987297,
+                        "subPassIndex": 0,
+                        "topology": 0,
+                        "forceCullMode": -1,
+                        "shadingRateCombinerPrimitive": 0,
+                        "shadingRateCombinerFragment": 0,
+                        "baseShadingRate": 0,
+                        "depthBias": 0.0,
+                        "slopeDepthBias": 0.0,
+                        "userBackface": false,
+                        "appBackface": false,
+                        "wireframe": false,
+                        "invertProjectionMatrix": false
+                    },
+                    {
+                        "vertexLayout": 11673344174591679451,
+                        "renderPass": 6268087623796494772,
+                        "renderState": 15649462741326987297,
+                        "subPassIndex": 0,
+                        "topology": 0,
+                        "forceCullMode": -1,
+                        "shadingRateCombinerPrimitive": 0,
+                        "shadingRateCombinerFragment": 0,
+                        "baseShadingRate": 0,
+                        "depthBias": 0.0,
+                        "slopeDepthBias": 0.0,
+                        "userBackface": false,
+                        "appBackface": false,
+                        "wireframe": false,
+                        "invertProjectionMatrix": true
+                    }
+                ]
+            }
+        },
+        {
+            "first": {
+                "serializedVersion": "2",
+                "Hash": "c59283eb13ba3548eee6f36fc1e4c0ca"
+            },
+            "second": {
+                "shaderName": "Universal Render Pipeline/Lit",
+                "shaderAssetGUID": "933532a4fcc9baf4fa0491de14d08ed7",
+                "shaderAssetLocalIdentifierInFile": 4800000,
+                "keywordNames": "EVALUATE_SH_VERTEX FOG_EXP INSTANCING_ON _ADDITIONAL_LIGHTS _LIGHT_LAYERS _REFLECTION_PROBE_BLENDING _REFLECTION_PROBE_BOX_PROJECTION",
+                "subShaderIndex": 0,
+                "passIndex": 1,
+                "graphicsStateInfoSet": [
+                    {
+                        "vertexLayout": 8094642658859981569,
+                        "renderPass": 11294987102597378144,
+                        "renderState": 17259535550629827284,
+                        "subPassIndex": 0,
+                        "topology": 0,
+                        "forceCullMode": -1,
+                        "shadingRateCombinerPrimitive": 0,
+                        "shadingRateCombinerFragment": 0,
+                        "baseShadingRate": 0,
+                        "depthBias": 1.0,
+                        "slopeDepthBias": 2.5,
+                        "userBackface": false,
+                        "appBackface": false,
+                        "wireframe": false,
+                        "invertProjectionMatrix": true
+                    }
+                ]
+            }
+        },
+        {
+            "first": {
+                "serializedVersion": "2",
+                "Hash": "29c2ddf2179428a570fb9fd3b0e0eb93"
+            },
+            "second": {
+                "shaderName": "Kamion/World PlotKit",
+                "shaderAssetGUID": "44338ff7cd03b154b923931f451cc118",
+                "shaderAssetLocalIdentifierInFile": 4800000,
+                "keywordNames": "FOG_EXP _MAIN_LIGHT_SHADOWS",
+                "subShaderIndex": 0,
+                "passIndex": 1,
+                "graphicsStateInfoSet": [
+                    {
+                        "vertexLayout": 11673344174591679451,
+                        "renderPass": 6268087623796494772,
+                        "renderState": 7396373862984744873,
+                        "subPassIndex": 0,
+                        "topology": 0,
+                        "forceCullMode": -1,
+                        "shadingRateCombinerPrimitive": 0,
+                        "shadingRateCombinerFragment": 0,
+                        "baseShadingRate": 0,
+                        "depthBias": 0.0,
+                        "slopeDepthBias": 0.0,
+                        "userBackface": false,
+                        "appBackface": false,
+                        "wireframe": false,
+                        "invertProjectionMatrix": true
+                    },
+                    {
+                        "vertexLayout": 11673344174591679451,
+                        "renderPass": 1555455587692101970,
+                        "renderState": 7396373862984744873,
                         "subPassIndex": 0,
                         "topology": 0,
                         "forceCullMode": -1,
@@ -2949,6 +3333,23 @@
                 "graphicsStateInfoSet": [
                     {
                         "vertexLayout": 11496587231008340218,
+                        "renderPass": 6268087623796494772,
+                        "renderState": 15649462741326987297,
+                        "subPassIndex": 0,
+                        "topology": 0,
+                        "forceCullMode": -1,
+                        "shadingRateCombinerPrimitive": 0,
+                        "shadingRateCombinerFragment": 0,
+                        "baseShadingRate": 0,
+                        "depthBias": 0.0,
+                        "slopeDepthBias": 0.0,
+                        "userBackface": false,
+                        "appBackface": false,
+                        "wireframe": false,
+                        "invertProjectionMatrix": true
+                    },
+                    {
+                        "vertexLayout": 14355360307497054792,
                         "renderPass": 14294710416514936304,
                         "renderState": 15649462741326987297,
                         "subPassIndex": 0,
@@ -2966,8 +3367,41 @@
                     },
                     {
                         "vertexLayout": 11496587231008340218,
-                        "renderPass": 6268087623796494772,
+                        "renderPass": 1555455587692101970,
                         "renderState": 15649462741326987297,
+                        "subPassIndex": 0,
+                        "topology": 0,
+                        "forceCullMode": -1,
+                        "shadingRateCombinerPrimitive": 0,
+                        "shadingRateCombinerFragment": 0,
+                        "baseShadingRate": 0,
+                        "depthBias": 0.0,
+                        "slopeDepthBias": 0.0,
+                        "userBackface": false,
+                        "appBackface": false,
+                        "wireframe": false,
+                        "invertProjectionMatrix": true
+                    }
+                ]
+            }
+        },
+        {
+            "first": {
+                "serializedVersion": "2",
+                "Hash": "5c1f4ccf62599cb1b46f5cadef2390da"
+            },
+            "second": {
+                "shaderName": "Kamion/World Car Glass",
+                "shaderAssetGUID": "baa43fbff0fea1749bd040c58e161bdb",
+                "shaderAssetLocalIdentifierInFile": 4800000,
+                "keywordNames": "FOG_EXP INSTANCING_ON _SCREEN_SHEET",
+                "subShaderIndex": 0,
+                "passIndex": 0,
+                "graphicsStateInfoSet": [
+                    {
+                        "vertexLayout": 8094642658859981569,
+                        "renderPass": 6268087623796494772,
+                        "renderState": 4161966877222828655,
                         "subPassIndex": 0,
                         "topology": 0,
                         "forceCullMode": -1,
@@ -2982,9 +3416,9 @@
                         "invertProjectionMatrix": true
                     },
                     {
-                        "vertexLayout": 11496587231008340218,
+                        "vertexLayout": 8094642658859981569,
                         "renderPass": 1555455587692101970,
-                        "renderState": 15649462741326987297,
+                        "renderState": 4161966877222828655,
                         "subPassIndex": 0,
                         "topology": 0,
                         "forceCullMode": -1,
@@ -2993,6 +3427,39 @@
                         "baseShadingRate": 0,
                         "depthBias": 0.0,
                         "slopeDepthBias": 0.0,
+                        "userBackface": false,
+                        "appBackface": false,
+                        "wireframe": false,
+                        "invertProjectionMatrix": true
+                    }
+                ]
+            }
+        },
+        {
+            "first": {
+                "serializedVersion": "2",
+                "Hash": "0d5b89cd101c8e9f34f82ef3c9ed1cb9"
+            },
+            "second": {
+                "shaderName": "Kamion/Cab Interior",
+                "shaderAssetGUID": "b2fe194ef13a48a44bde5dda866adb29",
+                "shaderAssetLocalIdentifierInFile": 4800000,
+                "keywordNames": "FOG_EXP",
+                "subShaderIndex": 0,
+                "passIndex": 1,
+                "graphicsStateInfoSet": [
+                    {
+                        "vertexLayout": 2147397982791341030,
+                        "renderPass": 11294987102597378144,
+                        "renderState": 17259535550629827284,
+                        "subPassIndex": 0,
+                        "topology": 0,
+                        "forceCullMode": -1,
+                        "shadingRateCombinerPrimitive": 0,
+                        "shadingRateCombinerFragment": 0,
+                        "baseShadingRate": 0,
+                        "depthBias": 1.0,
+                        "slopeDepthBias": 2.5,
                         "userBackface": false,
                         "appBackface": false,
                         "wireframe": false,
@@ -3047,6 +3514,56 @@
                         "appBackface": false,
                         "wireframe": false,
                         "invertProjectionMatrix": false
+                    }
+                ]
+            }
+        },
+        {
+            "first": {
+                "serializedVersion": "2",
+                "Hash": "c5d6b050f8bf08186680d8979bdf11d4"
+            },
+            "second": {
+                "shaderName": "Universal Render Pipeline/Lit",
+                "shaderAssetGUID": "933532a4fcc9baf4fa0491de14d08ed7",
+                "shaderAssetLocalIdentifierInFile": 4800000,
+                "keywordNames": "EVALUATE_SH_VERTEX FOG_EXP INSTANCING_ON _ADDITIONAL_LIGHTS _LIGHT_LAYERS _MAIN_LIGHT_SHADOWS _METALLICSPECGLOSSMAP _OCCLUSIONMAP _REFLECTION_PROBE_BLENDING _REFLECTION_PROBE_BOX_PROJECTION",
+                "subShaderIndex": 0,
+                "passIndex": 0,
+                "graphicsStateInfoSet": [
+                    {
+                        "vertexLayout": 8094642658859981569,
+                        "renderPass": 6268087623796494772,
+                        "renderState": 15649462741326987297,
+                        "subPassIndex": 0,
+                        "topology": 0,
+                        "forceCullMode": -1,
+                        "shadingRateCombinerPrimitive": 0,
+                        "shadingRateCombinerFragment": 0,
+                        "baseShadingRate": 0,
+                        "depthBias": 0.0,
+                        "slopeDepthBias": 0.0,
+                        "userBackface": false,
+                        "appBackface": false,
+                        "wireframe": false,
+                        "invertProjectionMatrix": true
+                    },
+                    {
+                        "vertexLayout": 8094642658859981569,
+                        "renderPass": 1555455587692101970,
+                        "renderState": 15649462741326987297,
+                        "subPassIndex": 0,
+                        "topology": 0,
+                        "forceCullMode": -1,
+                        "shadingRateCombinerPrimitive": 0,
+                        "shadingRateCombinerFragment": 0,
+                        "baseShadingRate": 0,
+                        "depthBias": 0.0,
+                        "slopeDepthBias": 0.0,
+                        "userBackface": false,
+                        "appBackface": false,
+                        "wireframe": false,
+                        "invertProjectionMatrix": true
                     }
                 ]
             }
@@ -4680,6 +5197,210 @@
             }
         },
         {
+            "first": 7317643961676635007,
+            "second": {
+                "vertexChannelsInfo": [
+                    {
+                        "stream": 0,
+                        "offset": 0,
+                        "format": 0,
+                        "dimension": 3
+                    },
+                    {
+                        "stream": 0,
+                        "offset": 12,
+                        "format": 0,
+                        "dimension": 3
+                    },
+                    {
+                        "stream": 0,
+                        "offset": 24,
+                        "format": 0,
+                        "dimension": 4
+                    },
+                    {
+                        "stream": 0,
+                        "offset": 40,
+                        "format": 2,
+                        "dimension": 4
+                    },
+                    {
+                        "stream": 0,
+                        "offset": 44,
+                        "format": 0,
+                        "dimension": 2
+                    },
+                    {
+                        "stream": 0,
+                        "offset": 52,
+                        "format": 0,
+                        "dimension": 2
+                    },
+                    {
+                        "stream": 0,
+                        "offset": 0,
+                        "format": 0,
+                        "dimension": 0
+                    },
+                    {
+                        "stream": 0,
+                        "offset": 0,
+                        "format": 0,
+                        "dimension": 0
+                    },
+                    {
+                        "stream": 0,
+                        "offset": 0,
+                        "format": 0,
+                        "dimension": 0
+                    },
+                    {
+                        "stream": 0,
+                        "offset": 0,
+                        "format": 0,
+                        "dimension": 0
+                    },
+                    {
+                        "stream": 0,
+                        "offset": 0,
+                        "format": 0,
+                        "dimension": 0
+                    },
+                    {
+                        "stream": 0,
+                        "offset": 0,
+                        "format": 0,
+                        "dimension": 0
+                    },
+                    {
+                        "stream": 0,
+                        "offset": 0,
+                        "format": 0,
+                        "dimension": 0
+                    },
+                    {
+                        "stream": 0,
+                        "offset": 0,
+                        "format": 0,
+                        "dimension": 0
+                    }
+                ],
+                "vertexStrides": [
+                    60,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "vertexStreamCount": 1
+            }
+        },
+        {
+            "first": 48144718831037730,
+            "second": {
+                "vertexChannelsInfo": [
+                    {
+                        "stream": 0,
+                        "offset": 0,
+                        "format": 0,
+                        "dimension": 3
+                    },
+                    {
+                        "stream": 0,
+                        "offset": 12,
+                        "format": 1,
+                        "dimension": 52
+                    },
+                    {
+                        "stream": 0,
+                        "offset": 0,
+                        "format": 0,
+                        "dimension": 0
+                    },
+                    {
+                        "stream": 0,
+                        "offset": 0,
+                        "format": 0,
+                        "dimension": 0
+                    },
+                    {
+                        "stream": 0,
+                        "offset": 20,
+                        "format": 1,
+                        "dimension": 2
+                    },
+                    {
+                        "stream": 0,
+                        "offset": 0,
+                        "format": 0,
+                        "dimension": 0
+                    },
+                    {
+                        "stream": 0,
+                        "offset": 0,
+                        "format": 0,
+                        "dimension": 0
+                    },
+                    {
+                        "stream": 0,
+                        "offset": 0,
+                        "format": 0,
+                        "dimension": 0
+                    },
+                    {
+                        "stream": 0,
+                        "offset": 0,
+                        "format": 0,
+                        "dimension": 0
+                    },
+                    {
+                        "stream": 0,
+                        "offset": 0,
+                        "format": 0,
+                        "dimension": 0
+                    },
+                    {
+                        "stream": 0,
+                        "offset": 0,
+                        "format": 0,
+                        "dimension": 0
+                    },
+                    {
+                        "stream": 0,
+                        "offset": 0,
+                        "format": 0,
+                        "dimension": 0
+                    },
+                    {
+                        "stream": 0,
+                        "offset": 0,
+                        "format": 0,
+                        "dimension": 0
+                    },
+                    {
+                        "stream": 0,
+                        "offset": 0,
+                        "format": 0,
+                        "dimension": 0
+                    }
+                ],
+                "vertexStrides": [
+                    24,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "vertexStreamCount": 1
+            }
+        },
+        {
             "first": 11496587231008340218,
             "second": {
                 "vertexChannelsInfo": [
@@ -5088,6 +5809,108 @@
             }
         },
         {
+            "first": 799511872847711629,
+            "second": {
+                "vertexChannelsInfo": [
+                    {
+                        "stream": 0,
+                        "offset": 0,
+                        "format": 0,
+                        "dimension": 3
+                    },
+                    {
+                        "stream": 0,
+                        "offset": 12,
+                        "format": 3,
+                        "dimension": 4
+                    },
+                    {
+                        "stream": 0,
+                        "offset": 0,
+                        "format": 0,
+                        "dimension": 0
+                    },
+                    {
+                        "stream": 0,
+                        "offset": 0,
+                        "format": 0,
+                        "dimension": 0
+                    },
+                    {
+                        "stream": 1,
+                        "offset": 0,
+                        "format": 2,
+                        "dimension": 4
+                    },
+                    {
+                        "stream": 1,
+                        "offset": 0,
+                        "format": 2,
+                        "dimension": 4
+                    },
+                    {
+                        "stream": 0,
+                        "offset": 0,
+                        "format": 0,
+                        "dimension": 0
+                    },
+                    {
+                        "stream": 0,
+                        "offset": 0,
+                        "format": 0,
+                        "dimension": 0
+                    },
+                    {
+                        "stream": 0,
+                        "offset": 0,
+                        "format": 0,
+                        "dimension": 0
+                    },
+                    {
+                        "stream": 0,
+                        "offset": 0,
+                        "format": 0,
+                        "dimension": 0
+                    },
+                    {
+                        "stream": 0,
+                        "offset": 0,
+                        "format": 0,
+                        "dimension": 0
+                    },
+                    {
+                        "stream": 0,
+                        "offset": 0,
+                        "format": 0,
+                        "dimension": 0
+                    },
+                    {
+                        "stream": 0,
+                        "offset": 0,
+                        "format": 0,
+                        "dimension": 0
+                    },
+                    {
+                        "stream": 0,
+                        "offset": 0,
+                        "format": 0,
+                        "dimension": 0
+                    }
+                ],
+                "vertexStrides": [
+                    16,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "vertexStreamCount": 2
+            }
+        },
+        {
             "first": 3301052605332383824,
             "second": {
                 "vertexChannelsInfo": [
@@ -5187,108 +6010,6 @@
                     0
                 ],
                 "vertexStreamCount": 2
-            }
-        },
-        {
-            "first": 4334786086607807567,
-            "second": {
-                "vertexChannelsInfo": [
-                    {
-                        "stream": 0,
-                        "offset": 0,
-                        "format": 0,
-                        "dimension": 3
-                    },
-                    {
-                        "stream": 0,
-                        "offset": 12,
-                        "format": 0,
-                        "dimension": 3
-                    },
-                    {
-                        "stream": 0,
-                        "offset": 24,
-                        "format": 0,
-                        "dimension": 4
-                    },
-                    {
-                        "stream": 0,
-                        "offset": 40,
-                        "format": 2,
-                        "dimension": 4
-                    },
-                    {
-                        "stream": 0,
-                        "offset": 44,
-                        "format": 0,
-                        "dimension": 2
-                    },
-                    {
-                        "stream": 0,
-                        "offset": 44,
-                        "format": 0,
-                        "dimension": 2
-                    },
-                    {
-                        "stream": 0,
-                        "offset": 0,
-                        "format": 0,
-                        "dimension": 0
-                    },
-                    {
-                        "stream": 0,
-                        "offset": 0,
-                        "format": 0,
-                        "dimension": 0
-                    },
-                    {
-                        "stream": 0,
-                        "offset": 0,
-                        "format": 0,
-                        "dimension": 0
-                    },
-                    {
-                        "stream": 0,
-                        "offset": 0,
-                        "format": 0,
-                        "dimension": 0
-                    },
-                    {
-                        "stream": 0,
-                        "offset": 0,
-                        "format": 0,
-                        "dimension": 0
-                    },
-                    {
-                        "stream": 0,
-                        "offset": 0,
-                        "format": 0,
-                        "dimension": 0
-                    },
-                    {
-                        "stream": 0,
-                        "offset": 0,
-                        "format": 0,
-                        "dimension": 0
-                    },
-                    {
-                        "stream": 0,
-                        "offset": 0,
-                        "format": 0,
-                        "dimension": 0
-                    }
-                ],
-                "vertexStrides": [
-                    52,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0
-                ],
-                "vertexStreamCount": 1
             }
         },
         {
