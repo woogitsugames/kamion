@@ -28,3 +28,5 @@ Audyt after:2151chronionych siatek i wszystkie rekordy nie-high identyczne,116dr
 Import after zakończony.
 
 Przygotowano24arkusze zdjęcie|przed|po dla6ulic×4warunki (po2pozy na ulicę), z podpisami niezgodnej lokalizacji/pozy i autorami/licencjami. Recepty użyją oryginałów w repo bez ich kopiowania; czekają na afterPNG.
+
+Zapisano after/High-clear; każda kamera w stats.txt. Oględziny pozostają wymagane.
