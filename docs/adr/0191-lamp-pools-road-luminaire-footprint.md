@@ -40,7 +40,7 @@ sąsiad p50 28,9 m, `standards.LAMP` 30–36 m przy h 8–11 m; 698 słupów w r
   `refs/mapillary-night-2019-10-18.jpg`, zestawienie `ref-sbs-night.jpg`): wydłużone plamy wzdłuż jezdni, ciemniejsze doły między
   słupami, pobocza szybko gasną — po zmianie zgodne; barwa: na zdjęciach 2019 sód, w świecie DK8 LED (stan dzisiejszy UNVERIFIED).
 - EditMode: `StreetLampOpticsTests` (nadir 1/h², asymetria, kształt okrągły post-top, doły przy rozstawie z danych, bat-wing + odcięcie,
-  strumień numeryczny vs wzór, wysięgnik pojedynczy/podwójny/post-top, lustro stałych HLSL↔C#, luminancja sodu, flaga tylko High/Ultra).
+  strumień numeryczny vs wzór, wysięgnik pojedynczy/podwójny/post-top, lustro stałych HLSL↔C#, luminancja sodu, flaga tylko High/Ultra) — 10/10 OK. Pełny EditMode: 546, 543 OK, 1 pominięty, 2 porażki `CarPaintMaterialTests.DepositionChannel_*` istniejące w bazie (jak w ADR 0182, poza zakresem).
 
 ## Otwarte
 - **kwadrat-park-yard (override)**: dwie latarnie łukowe przy `chase` (E 712,5 / 731,7) mają wysięgniki skierowane do siebie
