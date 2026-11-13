@@ -45,9 +45,13 @@ M = {
     # road_asphalt [0.081, 0.08, 0.079] (linear): P11-001 Kuronia track 1.57 / 1.29 / 1.07 (weathered, nearly grey -
     # no saturated red), P11-056 Dywizjonu 303 crossing 2.65 / 1.71 / 1.71 (thin red surfacing, small distant sample,
     # taken 10 % lower). WORKING_VALUE (two photos, uncalibrated camera).
-    "cycle_asphalt_red": {"color": [0.127, 0.103, 0.085], "rough": 0.9, "surface": "asphalt",
-                          "texture_set": "asphalt_tint", "uv": "planar"},
-    "cycle_crossing_red": {"color": [0.193, 0.123, 0.121], "rough": 0.88, "surface": "asphalt",
+    # The manifest colours are those ratios CALIBRATED IN THE RENDER (r1, Low overcast, same frames photo_P11-001 /
+    # photo_P11-056: the surface / carriageway ratio measured in the PNG, colour scaled until it equals the photo's):
+    # the nominal [0.127, 0.103, 0.085] rendered 0.84 / 0.65 / 0.49 of the carriageway (a paved strip is darkened by
+    # the ground layers a carriageway does not have), the decal [0.193, 0.123, 0.121] 3.43 / 2.04 / 1.99.
+    "cycle_asphalt_red": {"color": [0.238, 0.206, 0.184], "rough": 0.9, "surface": "asphalt",
+                          "texture_set": "asphalt_tint", "uv": "planar", "ground_grime": {"damp_darkening": 0.22}},
+    "cycle_crossing_red": {"color": [0.134, 0.093, 0.093], "rough": 0.88, "surface": "asphalt",
                            "texture_set": "asphalt_tint", "uv": "planar", "decal": True, "depth_offset_m": 0.003},
     # buildings
     "hall_wall_grey": {"color": [0.46, 0.47, 0.46], "rough": 0.5, "metal": 0.2, "texture_set": "sandwich_ribbed"},

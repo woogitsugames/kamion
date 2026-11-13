@@ -132,5 +132,5 @@ def test_region_files_and_materials():
         assert m["texture_set"] == "asphalt_tint" and m["uv"] == "planar" and m["rough"] >= 0.85    # no plastic
         r, g, b = m["color"]
         assert r > g >= b and r / max(b, 1e-6) < 1.8                  # weathered red-brown, not a saturated red
-        assert 1.2 < (0.2126 * r + 0.7152 * g + 0.0722 * b) / grey["color"][1] < 2.2
+        assert 1.2 < (0.2126 * r + 0.7152 * g + 0.0722 * b) / grey["color"][1] < 3.0     # render-calibrated
     assert xr.get("decal") is True and "decal" not in red
