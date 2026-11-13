@@ -1,0 +1,126 @@
+{
+  "seed": 20261113,
+  "data": "2026-11-13",
+  "zakres": "kadry (kategoria kadr, status OK) w manifest.csv + 5 cytatów literaturowych",
+  "populacja_kadr_ok": [
+    "P18-101",
+    "P18-102",
+    "P18-103",
+    "P18-104",
+    "P18-107",
+    "P18-108",
+    "P18-109",
+    "P18-110",
+    "P18-111",
+    "P18-112",
+    "P18-116",
+    "P18-117",
+    "P18-118",
+    "P18-119",
+    "P18-120",
+    "P18-121",
+    "P18-122"
+  ],
+  "wymagana_proba_pct": 20,
+  "losowana_proba": [
+    "P18-108",
+    "P18-101",
+    "P18-119",
+    "P18-103"
+  ],
+  "metoda_losowania": "random.Random(20261113).sample(sorted(ids), 4)",
+  "metoda_ponownej_weryfikacji": "UWAGA: budżet analyze_image (20 wywołań na odpowiedź) wyczerpany w tej iteracji — pełna ponowna analiza wizyjna wylosowanych kadrów odroczona do kolejnej iteracji (świeży budżet). Zastępczo wykonano niezależne porównanie wierszy manifest.csv z surowymi zapisami analiz (analysis_P18-1NN.json): zgodność flagi kwalifikacji, tytułu/pliku, sezonu oraz wartości liczbowych (zacieki, granica filmu).",
+  "weryfikacja_kadr": [
+    {
+      "id": "P18-108",
+      "porownanie_z": "analysis_P18-108.json",
+      "kontrole": {
+        "kwalifikacja_zgodna": true,
+        "plik_zgodny": true,
+        "sezon_zgodny_lub_oznaczony_nieoznaczony": true
+      },
+      "wynik": "SPOJNY"
+    },
+    {
+      "id": "P18-101",
+      "porownanie_z": "analysis_P18-101.json",
+      "kontrole": {
+        "kwalifikacja_zgodna": true,
+        "plik_zgodny": true,
+        "sezon_zgodny_lub_oznaczony_nieoznaczony": true
+      },
+      "wynik": "SPOJNY"
+    },
+    {
+      "id": "P18-119",
+      "porownanie_z": "analysis_P18-119.json",
+      "kontrole": {
+        "kwalifikacja_zgodna": true,
+        "plik_zgodny": true,
+        "sezon_zgodny_lub_oznaczony_nieoznaczony": true
+      },
+      "wynik": "SPOJNY"
+    },
+    {
+      "id": "P18-103",
+      "porownanie_z": "analysis_P18-103.json",
+      "kontrole": {
+        "kwalifikacja_zgodna": true,
+        "plik_zgodny": true,
+        "sezon_zgodny_lub_oznaczony_nieoznaczony": true
+      },
+      "wynik": "SPOJNY"
+    }
+  ],
+  "weryfikacja_cytatow": [
+    {
+      "id": "P18-001",
+      "cytat": "The rear tyres are seen to be the dominant source...",
+      "url": "https://saemobilus.sae.org/articles/insights-rear-surface-contamination-using-simulation-road-spray-aerodynamics-2014-01-0610",
+      "wynik": "POTWIERDZONY (fragment w treści strony, pobór 2026-11-13)"
+    },
+    {
+      "id": "P18-002/003",
+      "cytat": "Large particles are found to take on a ballistic trajectory and penetrate the wake.",
+      "url": "https://www.scilit.com/publications/b5815268e2193b06891526d5f0b87bb6",
+      "wynik": "POTWIERDZONY (abstrakt na stronie, pobór 2026-11-13)"
+    },
+    {
+      "id": "P18-012",
+      "cytat": "primarily composed of quartz, but also of muscovite, albite, kaolinite...",
+      "url": "https://www.mdpi.com/1660-4601/17/5/1563",
+      "wynik": "POTWIERDZONY (pełny tekst open access, pobór 2026-11-13)"
+    },
+    {
+      "id": "P18-014",
+      "cytat": "chlorek sodu (NaCl) o czystości min. 90% (najczęściej 94-97%)",
+      "url": "https://surowceprzemyslowe.pl/sol-drogowa/",
+      "wynik": "CZĘŚCIOWO — strona serwuje obecnie 'Wersja MINI' (aktualizacja 2026-05-22) bez frazy '94-97%'; potwierdzone: NaCl, gatunki DA/DR, antyzbrylacz, granica -7°C. Liczby 90-97% pozostają w manifeście z zastrzeżeniem 'orientacyjne'."
+    },
+    {
+      "id": "P18-018",
+      "cytat": "reached up to 0.13, 0.21, and 0.25 for red algal blooms, mineral dust, and dark particles respectively.",
+      "url": "https://tc.copernicus.org/articles/19/1527/2025/index.html",
+      "wynik": "POTWIERDZONY (abstrakt open access, pobór 2026-11-13)"
+    }
+  ],
+  "statystyki_kadr": {
+    "kwalifikowane_kadry": 17,
+    "kandydaci_przeanalizowani": 24,
+    "odrzucone": 7,
+    "zimowe_kwalifikowane": 4,
+    "granica_filmu": {
+      "n_z_filmem": 11,
+      "median": 0.3,
+      "min": 0.1,
+      "max": 0.8,
+      "w_metrach_przy_drzwiach_2m6_2m7": [
+        0.78,
+        0.81
+      ],
+      "metoda": "ułamek wysokości drzwi widocznej w kadrze (ESTIMATE z analizy wizyjnej)",
+      "zima_median": 0.3,
+      "zima_n": 4
+    }
+  }
+}
