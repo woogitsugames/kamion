@@ -1,13 +1,25 @@
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Reflection;
 using Game.World;
 using NUnit.Framework;
+using UnityEditor;
 using UnityEngine;
 
 namespace Game.Tests
 {
     public class GardenCanopyWidthTests
     {
+        [Serializable] class InstanceRows { public GardenRecord[] instances; }
+        [Serializable] class GardenRecord
+        {
+            public string p, tier;
+            public int v;
+            public float e, n, z, garden_canopy_width;
+        }
+
         static Matrix4x4 Apply(Matrix4x4 source, bool highOnly, float width)
         {
             var type = Type.GetType("Game.World.Import.InstanceImporter, Game.World.Import.Editor", true);
@@ -48,6 +60,38 @@ namespace Game.Tests
                 Assert.That(WorldInstances.DrawsHighOnly(true, "Low"), Is.False);
             }
             finally { UnityEngine.Object.DestroyImmediate(set); }
+        }
+
+        [Test]
+        public void ImportedGardenWidthMatchesEverySerializedOptInRecord()
+        {
+            var set = AssetDatabase.LoadAssetAtPath<WorldInstanceSet>("Assets/_Generated/World/bialystok-industrial-c/Instances.asset");
+            string repo = Path.GetFullPath(Path.Combine(Application.dataPath, "../.."));
+            string folder = Path.Combine(repo, "Data/raw/derived/bialystok-industrial-c/world");
+            if (set == null || !Directory.Exists(folder)) Assert.Ignore("Import the generated candidate world for this integration check");
+            var records = new List<GardenRecord>();
+            foreach (string file in Directory.GetFiles(folder, "instances_*.json"))
+                records.AddRange(JsonUtility.FromJson<InstanceRows>(File.ReadAllText(file)).instances
+                    .Where(r => r.tier == "high" && r.garden_canopy_width > 0f));
+            if (records.Count == 0) Assert.Ignore("Baseline has no garden width opt-in; candidate integration check requires ADR 0154 enabled");
+            Assert.That(set.Compact, Is.True, "new garden shapes must keep compact storage for every instance");
+            foreach (var record in records)
+            {
+                int prototype = Array.FindIndex(set.prototypes, p => p.name == record.p + "_" + record.v);
+                Assert.That(prototype, Is.GreaterThanOrEqualTo(0), record.p);
+                var expected = new Vector3(record.e, record.z - 0.15f, record.n);
+                int found = -1;
+                foreach (var run in set.runs.Where(r => r.highOnly && r.prototype == prototype))
+                    for (int i = run.start; i < run.start + run.count; i++)
+                        if ((set.LocalPosition(i) - expected).sqrMagnitude < 0.0004f) found = i;
+                Assert.That(found, Is.GreaterThanOrEqualTo(0), record.p + " at " + expected);
+                var matrix = set.LocalMatrix(found);
+                float height = ((Vector3)matrix.GetColumn(1)).magnitude;
+                Assert.That(((Vector3)matrix.GetColumn(0)).magnitude / height,
+                    Is.EqualTo(record.garden_canopy_width).Within(0.003f), record.p + " native width X");
+                Assert.That(((Vector3)matrix.GetColumn(2)).magnitude / height,
+                    Is.EqualTo(record.garden_canopy_width).Within(0.003f), record.p + " native width Z");
+            }
         }
     }
 }
