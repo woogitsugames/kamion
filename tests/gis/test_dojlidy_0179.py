@@ -81,3 +81,16 @@ def test_lamp_row_points_inside_tile():
     for r in rows:
         assert r["proto"] == "lamp_double_10m"
         assert all(abs(e) <= 1024 and abs(n) <= 1024 for e, n in r["points_en"])
+
+
+def test_hall_bands_and_camera_pitch_are_opt_in():
+    """s19: `hall_bands: false` (one-colour hall) and photo camera `pitch_deg` exist only in dojlidy data."""
+    assert not [o["id"] for o in _ov(C) if "hall_bands" in (o.get("set") or {})]
+    assert not (C / "control_cameras_photo.authored.json").exists()
+    ov = {o["id"]: o for o in _ov(DOJ)}
+    assert ov["rosti-hall-colour"]["set"] == {"wall_material": "hall_wall_white", "hall_bands": False}
+    cams = {c["id"]: c for c in json.loads((DOJ / "control_cameras_photo.authored.json").read_text(encoding="utf-8"))["cameras"]}
+    assert cams["photo_P11-094"]["pitch_deg"] > 0 and "pitch_deg" not in cams["photo_P11-129b"]
+    gen = {c["id"]: c for c in json.loads((DOJ / "generated" / "control_cameras.json").read_text(encoding="utf-8"))["cameras"]}
+    lvl, up = gen["photo_P11-129b"], gen["photo_P11-094"]
+    assert lvl["look_at"][2] == lvl["pos"][2] and up["look_at"][2] > up["pos"][2] + 5.0
