@@ -39,5 +39,16 @@ długość muru wzdłuż ulicy (6,8 m za łukiem); ogniskowa zdjęcia (hFOV 50°
 Ganek stoi 3,4 m bliżej ulicy niż w rzeczywistości: droga z OSM biegnie ~20° obok prawdziwej osi wjazdu, więc
 prawdziwe miejsce ganku wypada w obrysie BDOT portierni.
 
+## Wskazówki z M62 (PR #53, `research/mistral-p19-hospital-gate`, nieprzejrzane) — porównane z kadrem
+| M62 | Kadr 1600 px / ortofoto / graf | Przyjęto |
+|---|---|---|
+| mur: cegła ceramiczna czerwono-brązowa | cegła jasnoszara (silikatowa), czerwone są tylko tablice | kadr |
+| wysokość muru 1,7–2,0 m | 23 warstwy ≈ 1,75 m + rolka | zgodne |
+| 4 tablice | 5 tablic (2 × 2 + 1) | kadr |
+| znaki na wspólnym słupku | B-20 na filarze, C-2 + B-33 na słupie latarni | kadr |
+| B-20 800/900 mm, B-33 i C 600 mm | — | zgodne (0,8 / 0,6 m) |
+| światło wjazdu 6,6 m (cięciwa OSM) | w grze 7,2 m między słupem a filarem | zbliżone; z kadru 4,4 m odrzucam |
+| wjazd od SW (azymut 62°), Żurawia na SW | ortofoto: jezdnia Żurawiej leży na wschód od bramy; węzeł 874174701 to skrzyżowanie dróg wewnętrznych | ortofoto: wjazd z NE na SW (242°) |
+
 ## Budżet, walidacja, otwarte
 Uzupełniane po renderze (sekcje niżej).
