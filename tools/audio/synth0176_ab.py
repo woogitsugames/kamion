@@ -38,8 +38,8 @@ from el_analyze import lufs  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[2]
 CLIPS = ROOT / "game" / "Assets" / "_Project" / "Audio" / "Generated" / "Clips"
-OUT = ROOT / "artifacts" / "audio-synth-0176"
 MAIN_ROOT = Path(r"C:\Users\matma\Documents\Claude\kamion")
+OUT = MAIN_ROOT / "artifacts" / "audio-synth-0176"  # evidence in the main checkout (owner A/B)
 REFS = [  # (label, path, start s, dur s, licence) -- comparison only
     ("ref M55-002 autokar, zmiany biegow (CC0)", "research/_incoming/mistral-p5-audio-3/files/fs_846043_volvo-b8r-bus-ride-highway-HQ.mp3", 60.0, 20.0, "CC0"),
     ("ref M55-001 spust powietrza + przejazd (CC0)", "research/_incoming/mistral-p5-audio-3/files/fs_637922_kyles_truck-air-release-pass.mp3", 0.0, 12.0, "CC0"),
