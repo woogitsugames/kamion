@@ -1,0 +1,169 @@
+{
+ "schema": "truck-sim-pl/gate3-cameras/1",
+ "region": "bialystok-industrial-c",
+ "frame": "local E,N,U (E,N = EPSG:2180 minus region origin; U = EVRF2007)",
+ "cameras": [
+  {
+   "id": "r16_drive_3",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    -411.9,
+    -699.88,
+    128.2
+   ],
+   "look_at": [
+    -415.98,
+    -700.34,
+    126.75
+   ],
+   "fov_deg": 62.0,
+   "note": "ADR 0124: kerb drop of plot bdot:2BE4B431-AD81-1BF0-E053-CC2BA8C0D140 (wall, d_cw 3.19) from 3 m, eye 1.5 m"
+  },
+  {
+   "id": "p159-link-eye",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    -380.26,
+    -99.5,
+    133.4
+   ],
+   "look_at": [
+    -409.0,
+    -72.0,
+    132.9
+   ],
+   "fov_deg": 60.0,
+   "note": "ADR 0159: link road way 173956083 at the g3b-eye-s1482 station, looking NW along the ramp wall (no guardrail zone)"
+  },
+  {
+   "id": "p159-median-nose",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    -322.0,
+    -178.5,
+    132.6
+   ],
+   "look_at": [
+    -352.0,
+    -152.5,
+    131.6
+   ],
+   "fov_deg": 60.0,
+   "note": "ADR 0159: NW-bound carriageway beside the median nose, looking NW along the median rail"
+  },
+  {
+   "id": "p159-median-up",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    -372.0,
+    -137.0,
+    137.5
+   ],
+   "look_at": [
+    -392.0,
+    -118.0,
+    132.5
+   ],
+   "fov_deg": 60.0,
+   "note": "ADR 0159: median fill end and both median edges from 5 m above the SE-bound carriageway"
+  },
+  {
+   "id": "p159-deck-join-e",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    660.0,
+    -772.0,
+    146.5
+   ],
+   "look_at": [
+    671.0,
+    -783.0,
+    143.8
+   ],
+   "fov_deg": 55.0,
+   "note": "ADR 0159: deck barrier c:w177895177 L led onto c:w175157461 L (E 669.4 N -781.9)"
+  },
+  {
+   "id": "p159-deck-join-w",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    -733.0,
+    70.5,
+    143.0
+   ],
+   "look_at": [
+    -741.0,
+    74.3,
+    141.3
+   ],
+   "fov_deg": 55.0,
+   "note": "ADR 0159: deck barrier c:w240542867 R led onto c:w1101181473 L (E -739.6 N 74.1)"
+  },
+  {
+   "id": "p159-putry-deck",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    -486.26,
+    -30.66,
+    140.37
+   ],
+   "look_at": [
+    -513.4,
+    -1.73,
+    140.6
+   ],
+   "fov_deg": 44.0,
+   "note": "ADR 0159: 494288 station at the native focal (ADR 0146 section 1), eye 1.0 m - deck barrier and screen"
+  },
+  {
+   "id": "p159-wall",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    -399.16,
+    -83.52,
+    133.75
+   ],
+   "look_at": [
+    -430.0,
+    -86.0,
+    135.5
+   ],
+   "fov_deg": 60.0,
+   "note": "ADR 0159: ramp block wall from the 810525 station"
+  },
+  {
+   "id": "p159-spruce",
+   "type": "persp",
+   "kind": "photo_match",
+   "seat": "file",
+   "pos": [
+    -548.63,
+    90.36,
+    137.93
+   ],
+   "look_at": [
+    -553.45,
+    129.98,
+    140.62
+   ],
+   "fov_deg": 58.7,
+   "note": "ADR 0159: 1801374 pose (garden spruces)"
+  }
+ ]
+}
