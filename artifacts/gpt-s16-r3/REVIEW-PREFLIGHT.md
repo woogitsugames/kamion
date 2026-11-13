@@ -72,3 +72,35 @@ Przeczytano WorldShadowCasterBias.cs, miejsce wywołania w WorldPbrMaterials.cs,
 - Flaga w materials.py występuje wyłącznie w viaduct_concrete. To zakres materiałowy, nie punktowy: wszystkie powierzchnie i instancje współdzielące ten materiał otrzymają wariant. Produkcyjne after powinno zatem obejrzeć także pozostałe ujęcia hero, litą górę pomostu i podpory, a nie wyłącznie żwir pod Putrą.
 
 Siedem przypadków testowych obejmuje brak zmiany legacy, opt-in/removal, nieprawidłowe liczby i natywny zakres materiałów. Nie zastępują obrazu acne ani dowodu obecności wariantu w buildzie urządzenia. Końcowy PASS nadal nie jest wydany: audyt, natywny import, produkcyjne after i testy są w toku.
+
+## Odrzucona pierwsza lokalizacja opt-in
+
+Obejrzano `inspection/candidate/sbs2818-Low-clear.jpg`: przed/po regularny szereg jasnych plam na żwirze pozostaje praktycznie bez zmian. **FAIL dla próby ograniczonej wyłącznie do M_viaduct_concrete.** Ta lokalizacja nie spełnia celu naprawy, mimo poprawnego kontraktu helpera/shadera i mocnego wyniku globalnego zero-normal.
+
+Nie należy utożsamiać materiału widocznego spodu hero z materiałem faktycznie rysującym problematyczny cień. Następny test powinien rozdzielić caster M_bridge_concrete od M_road_asphalt na chunk bridge; pojedyncze ablacje są rozstrzygające, połączenie obu naraz na początku utrudni lokalizację. Czekam na wyniki. Nie wydano końcowego PASS.
+
+## Uzupełnienie — pojedyncze materiały chunk bridge
+
+Obejrzano `material-ablation-sheets/M_bridge_concrete.jpg` oraz `M_road_asphalt.jpg` (baseline / pojedynczy materiał / global normal=0). Bridge-concrete-only tworzy dodatkowy wyraźny szereg jasnych plam, więc pogarsza badany wzór. Road-asphalt-only zmienia i częściowo ogranicza pierwotny szereg, ale nadal pozostawia plamy. Żadna pojedyncza izolacja nie spełnia celu.
+
+Wynik uzasadnia kolejny test obu sąsiednich materiałów z tym samym offsetem; sam nie dowodzi jeszcze, że kombinacja wystarczy ani że wymagany jest region-wide override. Jeśli wygra kombinacja, polityka regionu powinna jawnie wymieniać oba istniejące materiały i wszystkie ich zastosowania, usuwać odrzucony opt-in hero oraz resetować stan po usunięciu wpisu/pliku. Niezależnie należy obejrzeć pozostałe mosty, podpory i górne powierzchnie. Czekam na combined; końcowy PASS nadal otwarty.
+
+## Uzupełnienie — deck-triple Low
+
+Obejrzano wszystkie pięć `material-ablation-sheets/deck-triple-{kamera}.jpg` oraz pełne natywne PNG island-1 i near z `material-ablations/deck-triple-Low`.
+
+W subsetcie bridge_concrete + road_asphalt + bridge_kerb, przy pozostałych materiałach z dotychczasowym normal bias, regularny szereg plam znika we wszystkich pięciu ujęciach. Duży cień pomostu i jasny skraj przy krawężniku pozostają. Nie zauważyłem nowego oczywistego acne na widocznym żwirze, jezdni, podporach i spodzie pomostu. Wynik odpowiada lokalnie pożądanemu fragmentowi global normal=0.
+
+To pozytywne potwierdzenie kierunku korekty dla pięciu diagnostycznych kamer Low. Nie jest jeszcze PASS dla polityki regionu, High, wszystkich mostów ani urządzenia. Po implementacji resetu i trzech jawnych wpisów nadal wymagane są rzeczywiste produkcyjne after, zakres natywnych materiałów, przegląd regresji i testy. Odrzucona flaga hero nie powinna pozostawać aktywna w kandydacie końcowym.
+
+## Uzupełnienie — regionowa polityka B
+
+Przeczytano aktualne ApplyRegionPolicy/ApplyPolicy w WorldShadowCasterBias.cs, wywołanie po CreateMaterialCore w RegionImporter oraz `Data/Regions/bialystok-industrial-c/shadow_caster_bias.json`. Potwierdzono brak pozostałej flagi hero w SC i zerowy diff WorldPbrMaterials/materials.py względem r2 w tym zakresie.
+
+**Nie znalazłem nowego blokera kodu dla obecnego pliku polityki.** Wywołanie po centralnej fabryce obejmuje istniejące trzy materiały niezależnie od ich źródła, bez kopiowania definicji dróg do streetscape. Ścieżka wskazuje Data/Regions względem rzeczywistego projektu Unity w tym worktree. Odczyt nie ma cache, więc następny import widzi usunięty plik lub wpis. Przy obecnych definicjach bez źródłowej flagi brak wpisu wraca do skali 1 i keyword off; helper oznacza zmieniony materiał jako dirty.
+
+Schemat jest sprawdzany, a nieprawidłowa wartość dopasowanego materiału zatrzymuje import. Drobna granica tego kontraktu: parser sprawdza wartość wpisu dopiero podczas obsługi danego materiału wspierającego właściwość. Nie należy więc opisywać go jako pełnego walidatora wszystkich nieużywanych/nieznanych kluczy polityki. Obecny JSON zawiera trzy prawidłowo nazwane istniejące materiały, więc nie jest to wykazany błąd kandydata B.
+
+Zakres polityki jest jawnie regionowy i materiałowy: bridge_concrete, bridge_kerb i road_asphalt. Nie oznacza to automatycznie zmiany wyglądu całej nawierzchni, ponieważ helper dotyczy ShadowCaster, a zwykła warstwa road nie rzuca cieni; nadal trzeba obejrzeć wszystkie zastosowania tych materiałów, które rzeczywiście są casterami. Hero viaduct_concrete pozostaje poza opt-in.
+
+Testy usunięcia pliku/wpisu i natywny exact-three zakres mają właściwy cel. Nie uruchamiałem ich. Produkcyjny import, natywne SHA, pełne after i testy nadal pozostają wymagane przed końcowym PASS.

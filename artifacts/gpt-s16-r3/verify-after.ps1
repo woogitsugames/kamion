@@ -10,5 +10,7 @@ pwsh artifacts/gpt-s16-r3/import.ps1 -Label after
 if($LASTEXITCODE -ne 0){throw 'After import failed'}
 pwsh artifacts/gpt-s16-r3/render.ps1 -Stage after
 if($LASTEXITCODE -ne 0){throw 'After renders failed'}
+pwsh artifacts/gpt-s16-r3/render-near.ps1
+if($LASTEXITCODE -ne 0){throw 'Final near render failed'}
 pwsh artifacts/gpt-s16-r3/test-editmode.ps1
 if($LASTEXITCODE -ne 0){throw 'Full EditMode failed'}
