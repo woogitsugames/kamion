@@ -80,3 +80,7 @@ Wszystkie360parB mają pasujące kamery. Końcowe porównanie używa dokładnych
 EditMode zakończony: exit 0; szczegóły EDITMODE-STATUS.md i final-editmode.xml.
 
 Fidelity odświeżone dla końcowego generatora r2; pełny GIS może sprawdzić świeży raport.
+
+Autor obejrzał wszystkie360par w16zbiorczych arkuszach oraz24arkusze foto|przed|po i duże kadry03a/04a. Recenzent:PASSkonkretnej poprawykoron/frontów,PARTIALfotograficznyD51/Gate3; brak nowej blokującej regresji. PełnyEditMode484/484,0failed/skipped, w tym integracja104zapisanychskalznatywnymimportem. Natywne458materiałówidentyczneSHA,0nowych;416obrazówrecenzji≤960px.
+
+Korekta poprzedniego wpisu audytu: po pełnym EditMode wykryto2uboczne serializacje _SrcBlend nieużywanych legacy M_car_dirt_1/2; pierwszy assert zatrzymał audyt, więc poprzednia liczba458identycznych nie była jeszcze końcowym wynikiem. Przywrócono tylko2pliki z własnej kopii r1 po sprawdzeniu pełnego SHA256 z baząr2. Teraz458/458identycznych,0nowych. Różnice jawne w native-cleanup-ledger.json. 416obrazów≤960px,autorobejrzał360par+24foto,criticPASSzakresu/PARTIALD51.

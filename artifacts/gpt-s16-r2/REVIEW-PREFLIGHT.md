@@ -1,6 +1,6 @@
 # ADR 0154 — niezależny preflight
 
-Status: **PARTIAL — przegląd źródeł zakończony, ocena pełnego zestawu obrazów otwarta.** Nie znalazłem wykazanego błędu P1/P2 w przejrzanym kodzie. Audyt integralności i przejście testów nie są podstawą akceptacji wyglądu.
+Status: **Przegląd źródeł A oraz aktualizacji B zakończony; osobny końcowy werdykt obrazu znajduje się w REVIEW-VISUAL.md.** Nie znalazłem wykazanego błędu P1/P2 w przejrzanym kodzie. Audyt integralności i przejście testów nie są podstawą akceptacji wyglądu.
 
 ## Przejrzany zakres
 
@@ -20,3 +20,10 @@ Status: **PARTIAL — przegląd źródeł zakończony, ocena pełnego zestawu ob
 3. **Pierwsze arkusze nie dowodzą większej poprawy pierzei.** garden_03_a/b oraz garden_06_a/b nadal pokazują dużo otwartej przestrzeni nad płotami i małe, oddzielone korony. garden_02_b jest zdominowany ślepą ścianą i narożnikiem domu; słabo pokazuje frontowe nasadzenia. To luka doboru kadrów lub ograniczenie efektu, nie dowód błędnych współrzędnych nasadzeń.
 
 Referencje są prawidłowo oznaczone jako typologiczne i z innej lokalizacji/pozy. Nie należy dopasowywać do nich konkretnej liczby drzew ani ogłaszać zgodności ulic z fotografią. Wstępna ocena obrazu i dalsze pary należą do REVIEW-VISUAL.md.
+
+## Uzupełnienie po iteracji B
+
+Ponownie odczytano `garden_canopies` oraz podłączenia w stage.py. B wyznacza maksymalny Z z istniejących części budynków i łączy go z identyfikatorami domów danej posesji; uwzględnia dachy w odległości do 25 m od drzewa. Odejmowanie `tree.z` daje wysokość względem podłoża drzewa. Dodatkowe 4,5 m i limity 22–24 m pozostają WORKING_VALUE, a nie pomiarem konkretnego drzewa. Dotychczas wyższe drzewa nie są skracane. Nadal skalowana jest cała instancja wraz z pniem i konarami; wcześniejsze ryzyka jakościowe pozostają właściwe, ale pasujące obrazy B pokazują teraz rzeczywistą poprawę lokalną.
+
+`KAMION_GARDENS_0154=0` wyłącza oba nowe etapy jako jawny przełącznik odtwarzania baseline. Domyślna ścieżka pozostaje włączona. Nie znalazłem nowego wykazanego błędu integralności w tym rozszerzeniu. Werdykt wizualny B jest zapisany osobno w REVIEW-VISUAL.md; nie należy traktować wstępnej oceny wariantu A jako końcowej oceny B.
+
