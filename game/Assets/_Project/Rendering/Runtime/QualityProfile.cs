@@ -74,6 +74,11 @@ namespace Game.Rendering
             [Tooltip("Real point lights at the nearest street lamps at dusk (0 = emission only); they light vehicles and props")] public int streetLights;
             [Tooltip("ADR 0062: analytic light pools of the N lamps nearest the view on Kamion/World Surface at dusk (no lights, " +
                      "a uniform-branch loop in the world shader; 0 = off, max 8)")] public int lampPools;
+            [Tooltip("ADR 0192: Off = no lit windows at dusk / night (facade atlas, LOD1 rows, far facades). Inverted so tiers saved " +
+                     "before ADR 0192 keep them; cost: a uniform branch by day, one point load + one sample on window pixels by night")]
+            public bool nightWindowsOff;
+            [Tooltip("ADR 0192: Off = no glare halo around the street-lamp lenses at dusk (one additive billboard per lamp head, one draw)")]
+            public bool lampGlareOff;
             [Header("Baked world lighting (ADR 0064)")]
             [Tooltip("Off = no baked sky visibility (ambient / reflection occlusion) on the world surfaces. Inverted so tiers saved before ADR 0064 keep it on")]
             public bool worldSkyVisOff;
