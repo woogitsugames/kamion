@@ -1,70 +1,71 @@
 {
- "zadanie": "M51 (p10-greenery-3) — samokontrola 20% manifestu",
+ "zadanie": "M51-FIX — samokontrola 20% manifestu (nowe losowanie po naprawach)",
  "data": "2026-11-13",
- "seed": 20261113,
- "generator": "random.Random(20261113).sample(ids, ceil(0.2*n)); sort()",
- "n_wierszy": 41,
- "n_probek": 9,
+ "seed": 20261114,
+ "generator": "random.Random(20261114).sample(ids, ceil(0.2*n)); sort()",
+ "poprzedni_seed": 20261113,
+ "n_wierszy": 60,
+ "n_probek": 12,
  "probki": [
-  "M51-001",
   "M51-002",
   "M51-102",
   "M51-106",
-  "M51-109",
-  "M51-203",
-  "M51-209",
-  "M51-212",
-  "M51-218"
+  "M51-113",
+  "M51-126",
+  "M51-128",
+  "M51-129",
+  "M51-130",
+  "M51-133",
+  "M51-205",
+  "M51-224",
+  "M51-301"
+ ],
+ "korony_3_okna": [
+  {
+   "okno": "w1_skarpa",
+   "srodek_wgs84": [
+    23.1525,
+    53.1555
+   ],
+   "korony_w_oknie": 68,
+   "pct_srodkow_na_zieleni_ExG>0.06": 100.0,
+   "pokrycie_zieleni_okna_ExG>0.06_pct": 13.8,
+   "zwarta_zielen_poligony_przecinajace_okno": 27
+  },
+  {
+   "okno": "w2_max_korony",
+   "srodek_wgs84": [
+    23.146425,
+    53.154755
+   ],
+   "korony_w_oknie": 439,
+   "pct_srodkow_na_zieleni_ExG>0.06": 99.8,
+   "pokrycie_zieleni_okna_ExG>0.06_pct": 44.3,
+   "zwarta_zielen_poligony_przecinajace_okno": 7
+  },
+  {
+   "okno": "w3_max_zwarta",
+   "srodek_wgs84": [
+    23.15414,
+    53.166034
+   ],
+   "korony_w_oknie": 28,
+   "pct_srodkow_na_zieleni_ExG>0.06": 100.0,
+   "pokrycie_zieleni_okna_ExG>0.06_pct": 39.3,
+   "zwarta_zielen_poligony_przecinajace_okno": 5
+  }
  ],
  "wyniki": [
   {
-   "id": "M51-001",
+   "id": "M51-002",
    "checks": {
-    "bbox": {
-     "ok": true,
-     "info": "lat/lon w bbox osiedla"
-    },
-    "kierunek": {
-     "ok": true,
-     "info": "nie dotyczy"
-    },
-    "plik_kadru": {
-     "ok": true,
-     "info": "wiersz bez kadru (BIP/korony)"
-    },
-    "licencja": {
-     "ok": true,
-     "info": "BIP (urzędowe, art. 4 pr. aut.)"
-    },
     "status": {
      "ok": true,
      "info": "SOURCED"
-    }
-   },
-   "pass": true
-  },
-  {
-   "id": "M51-002",
-   "checks": {
-    "bbox": {
-     "ok": true,
-     "info": "lat/lon w bbox osiedla"
-    },
-    "kierunek": {
-     "ok": true,
-     "info": "nie dotyczy"
-    },
-    "plik_kadru": {
-     "ok": true,
-     "info": "wiersz bez kadru (BIP/korony)"
     },
     "licencja": {
      "ok": true,
      "info": "urzędowe (komunikat prasowy UM)"
-    },
-    "status": {
-     "ok": true,
-     "info": "SOURCED"
     }
    },
    "pass": true
@@ -72,33 +73,25 @@
   {
    "id": "M51-102",
    "checks": {
-    "bbox": {
+    "status": {
      "ok": true,
-     "info": "lat/lon w bbox osiedla"
-    },
-    "kierunek": {
-     "ok": true,
-     "info": "0-359; metoda w kolumnie metoda (ESTIMATED do osi ulicy)"
-    },
-    "plik_kadru": {
-     "ok": true,
-     "info": "files/c_20220725_132604.jpg istnieje"
-    },
-    "data_zdjecia": {
-     "ok": true,
-     "info": "zgodna z metadanymi Commons: 2022-07-25"
-    },
-    "sezon_pora": {
-     "ok": true,
-     "info": "sezon+pora_dnia obecne"
+     "info": "SOURCED"
     },
     "licencja": {
      "ok": true,
      "info": "CC0"
     },
-    "status": {
+    "co_widac": {
      "ok": true,
-     "info": "ESTIMATED"
+     "info": "jezdnia alei z metalowymi barierami, kamrzyste/trawiaste skarpy, betonowy rów odwadniający, billboard BNP PARI…"
+    },
+    "ulica_osm": {
+     "ok": true,
+     "info": "Aleja Tysiąclecia Państwa Polskiego: geotag 2.7 m od osi (reguła <=25 m)"
+    },
+    "kierunek": {
+     "ok": true,
+     "info": "UNVERIFIED"
     }
    },
    "pass": true
@@ -106,210 +99,279 @@
   {
    "id": "M51-106",
    "checks": {
-    "bbox": {
+    "status": {
      "ok": true,
-     "info": "lat/lon w bbox osiedla"
-    },
-    "kierunek": {
-     "ok": true,
-     "info": "0-359; metoda w kolumnie metoda (ESTIMATED do osi ulicy)"
-    },
-    "plik_kadru": {
-     "ok": true,
-     "info": "files/c_20220725_132659.jpg istnieje"
-    },
-    "data_zdjecia": {
-     "ok": true,
-     "info": "zgodna z metadanymi Commons: 2022-07-25"
-    },
-    "sezon_pora": {
-     "ok": true,
-     "info": "sezon+pora_dnia obecne"
+     "info": "SOURCED"
     },
     "licencja": {
      "ok": true,
      "info": "CC0"
     },
-    "status": {
+    "co_widac": {
      "ok": true,
-     "info": "ESTIMATED"
+     "info": "ogrodzenie z drewnianych paneli i siatki przy alei, budynki mieszkalne; brak żywopłotu. Geotag 2,4 m od osi al…"
+    },
+    "ulica_osm": {
+     "ok": true,
+     "info": "Aleja Tysiąclecia Państwa Polskiego: geotag 2.4 m od osi (reguła <=25 m)"
+    },
+    "kierunek": {
+     "ok": true,
+     "info": "UNVERIFIED"
     }
    },
    "pass": true
   },
   {
-   "id": "M51-109",
+   "id": "M51-113",
    "checks": {
-    "bbox": {
+    "status": {
      "ok": true,
-     "info": "lat/lon w bbox osiedla"
-    },
-    "kierunek": {
-     "ok": true,
-     "info": "0-359; metoda w kolumnie metoda (ESTIMATED do osi ulicy)"
-    },
-    "plik_kadru": {
-     "ok": true,
-     "info": "files/c_20220725_132342.jpg istnieje"
-    },
-    "data_zdjecia": {
-     "ok": true,
-     "info": "zgodna z metadanymi Commons: 2022-07-25"
-    },
-    "sezon_pora": {
-     "ok": true,
-     "info": "sezon+pora_dnia obecne"
+     "info": "SOURCED"
     },
     "licencja": {
      "ok": true,
-     "info": "CC0"
+     "info": "CC BY 3.0 (referencja, nie tekstura)"
     },
-    "status": {
+    "co_widac": {
      "ok": true,
-     "info": "ESTIMATED"
+     "info": "jezdnia z autobusem, stacja Circle K, budynki handlowe (GAZ PROM), krzyż na trawniku, drzewa i krzewy w tle; b…"
+    },
+    "ulica_osm": {
+     "ok": true,
+     "info": "Sokólska: geotag 0.5 m od osi (reguła <=25 m)"
+    },
+    "kierunek": {
+     "ok": true,
+     "info": "UNVERIFIED"
     }
    },
    "pass": true
   },
   {
-   "id": "M51-203",
+   "id": "M51-126",
    "checks": {
-    "bbox": {
+    "status": {
      "ok": true,
-     "info": "lat/lon w bbox osiedla"
-    },
-    "kierunek": {
-     "ok": true,
-     "info": "0-359; metoda w kolumnie metoda (ESTIMATED do osi ulicy)"
-    },
-    "plik_kadru": {
-     "ok": true,
-     "info": "files/c_20220725_132604.jpg istnieje"
-    },
-    "data_zdjecia": {
-     "ok": true,
-     "info": "zgodna z metadanymi Commons: 2022-07-25"
-    },
-    "sezon_pora": {
-     "ok": true,
-     "info": "sezon+pora_dnia obecne"
+     "info": "SOURCED"
     },
     "licencja": {
      "ok": true,
-     "info": "CC0"
+     "info": "CC0 1.0 (domena publiczna)"
     },
-    "status": {
+    "co_widac": {
      "ok": true,
-     "info": "ESTIMATED"
+     "info": "strumień z betonową konstrukcją, zieleń nadrzeczna; brak żywopłotu. Geotag 20,7 m od osi Andersa. Plik w paczc…"
+    },
+    "ulica_osm": {
+     "ok": true,
+     "info": "Generała Władysława Andersa: geotag 20.7 m od osi (reguła <=25 m)"
+    },
+    "kierunek": {
+     "ok": true,
+     "info": "UNVERIFIED"
     }
    },
    "pass": true
   },
   {
-   "id": "M51-209",
+   "id": "M51-128",
    "checks": {
-    "bbox": {
+    "status": {
      "ok": true,
-     "info": "lat/lon w bbox osiedla"
-    },
-    "kierunek": {
-     "ok": true,
-     "info": "0-359; metoda w kolumnie metoda (ESTIMATED do osi ulicy)"
-    },
-    "plik_kadru": {
-     "ok": true,
-     "info": "files/c_20220725_132614.jpg istnieje"
-    },
-    "data_zdjecia": {
-     "ok": true,
-     "info": "zgodna z metadanymi Commons: 2022-07-25"
-    },
-    "sezon_pora": {
-     "ok": true,
-     "info": "sezon+pora_dnia obecne"
+     "info": "SOURCED"
     },
     "licencja": {
      "ok": true,
      "info": "CC0"
     },
-    "status": {
+    "co_widac": {
      "ok": true,
-     "info": "ESTIMATED"
+     "info": "droga do zamkniętej bramy przy Sokólskiej, drzewa i budynek w tle; ciągły iglasty żywopłot ~1,5 m po prawej (o…"
+    },
+    "ulica_osm": {
+     "ok": true,
+     "info": "Sokólska: geotag 2.9 m od osi (reguła <=25 m)"
+    },
+    "kierunek": {
+     "ok": true,
+     "info": "UNVERIFIED"
     }
    },
    "pass": true
   },
   {
-   "id": "M51-212",
+   "id": "M51-129",
    "checks": {
-    "bbox": {
+    "status": {
      "ok": true,
-     "info": "lat/lon w bbox osiedla"
-    },
-    "kierunek": {
-     "ok": true,
-     "info": "0-359; metoda w kolumnie metoda (ESTIMATED do osi ulicy)"
-    },
-    "plik_kadru": {
-     "ok": true,
-     "info": "files/c_20220725_132426.jpg istnieje"
-    },
-    "data_zdjecia": {
-     "ok": true,
-     "info": "zgodna z metadanymi Commons: 2022-07-25"
-    },
-    "sezon_pora": {
-     "ok": true,
-     "info": "sezon+pora_dnia obecne"
+     "info": "SOURCED"
     },
     "licencja": {
      "ok": true,
      "info": "CC0"
     },
-    "status": {
+    "co_widac": {
      "ok": true,
-     "info": "ESTIMATED"
+     "info": "park przy Sokólskiej (graffiti WRC TAKSEA na betonowej konstrukcji); ciągły liściasty pas ~1,2 m po lewej (odc…"
+    },
+    "ulica_osm": {
+     "ok": true,
+     "info": "Sokólska: geotag 3.4 m od osi (reguła <=25 m)"
+    },
+    "kierunek": {
+     "ok": true,
+     "info": "UNVERIFIED"
     }
    },
    "pass": true
   },
   {
-   "id": "M51-218",
+   "id": "M51-130",
    "checks": {
-    "bbox": {
+    "status": {
      "ok": true,
-     "info": "lat/lon w bbox osiedla"
-    },
-    "kierunek": {
-     "ok": true,
-     "info": "0-359; metoda w kolumnie metoda (ESTIMATED do osi ulicy)"
-    },
-    "plik_kadru": {
-     "ok": true,
-     "info": "files/c_20230729_105222.jpg istnieje"
-    },
-    "data_zdjecia": {
-     "ok": true,
-     "info": "zgodna z metadanymi Commons: 2023-07-29"
-    },
-    "sezon_pora": {
-     "ok": true,
-     "info": "sezon+pora_dnia obecne"
+     "info": "SOURCED"
     },
     "licencja": {
      "ok": true,
      "info": "CC0"
     },
+    "co_widac": {
+     "ok": true,
+     "info": "parking przy Kombatantów (Roto Okna Dachowe, ROCKWOOL), ogrodzenie z siatki; ciągły liściasty żywopłot 2,5-3 m…"
+    },
+    "ulica_osm": {
+     "ok": true,
+     "info": "Kombatantów: geotag 0.1 m od osi (reguła <=25 m)"
+    },
+    "kierunek": {
+     "ok": true,
+     "info": "UNVERIFIED"
+    }
+   },
+   "pass": true
+  },
+  {
+   "id": "M51-133",
+   "checks": {
+    "status": {
+     "ok": true,
+     "info": "SOURCED"
+    },
+    "licencja": {
+     "ok": true,
+     "info": "CC BY 3.0 (referencja, nie tekstura)"
+    },
+    "co_widac": {
+     "ok": true,
+     "info": "budynek z reklamą ODZIEŻ ROBOCZA ARTYKUŁY BHP; brak żywopłotu. Geotag 3,3 m od osi Kombatantów."
+    },
+    "ulica_osm": {
+     "ok": true,
+     "info": "Kombatantów: geotag 3.3 m od osi (reguła <=25 m)"
+    },
+    "kierunek": {
+     "ok": true,
+     "info": "UNVERIFIED"
+    }
+   },
+   "pass": true
+  },
+  {
+   "id": "M51-205",
+   "checks": {
     "status": {
      "ok": true,
      "info": "ESTIMATED"
+    },
+    "licencja": {
+     "ok": true,
+     "info": "CC0"
+    },
+    "co_widac": {
+     "ok": true,
+     "info": "prawa strona kadru (front posesji z domem); niski żywopłot, niższy od płotu ~1,2 m; id zdjęcia: M51-104.jpg; g…"
+    },
+    "ulica_osm": {
+     "ok": true,
+     "info": "Michała Motoszko: geotag 27.8 m od osi (>25 m); ujawnione w uwagach (POZA progiem, atrybucja ESTIMATED)"
+    },
+    "kierunek": {
+     "ok": true,
+     "info": "UNVERIFIED (segment przy osi ulicy)"
+    },
+    "typ_gatunek": {
+     "ok": true,
+     "info": "liściasty (gatunek nieoznaczony z kadru)"
+    },
+    "wysokosc_estimated": {
+     "ok": true,
+     "info": "1.0±0.3"
+    },
+    "id_zdjecia": {
+     "ok": true,
+     "info": "w uwagach"
+    }
+   },
+   "pass": true
+  },
+  {
+   "id": "M51-224",
+   "checks": {
+    "status": {
+     "ok": true,
+     "info": "ESTIMATED"
+    },
+    "licencja": {
+     "ok": true,
+     "info": "CC0"
+    },
+    "co_widac": {
+     "ok": true,
+     "info": "prawa strona kadru; ciągły iglasty pas ~1,5 m przy drodze do bramy posesji; id zdjęcia: files/extra_20240626_1…"
+    },
+    "ulica_osm": {
+     "ok": true,
+     "info": "Sokólska: geotag 2.9 m od osi (reguła <=25 m)"
+    },
+    "kierunek": {
+     "ok": true,
+     "info": "UNVERIFIED (segment przy osi drogi)"
+    },
+    "typ_gatunek": {
+     "ok": true,
+     "info": "iglasty (żywotnik/tuja)"
+    },
+    "wysokosc_estimated": {
+     "ok": true,
+     "info": "1.5±0.3"
+    },
+    "id_zdjecia": {
+     "ok": true,
+     "info": "w uwagach"
+    }
+   },
+   "pass": true
+  },
+  {
+   "id": "M51-301",
+   "checks": {
+    "status": {
+     "ok": true,
+     "info": "ESTIMATED"
+    },
+    "licencja": {
+     "ok": true,
+     "info": "CC BY 4.0 (ortofoto GUGiK)"
+    },
+    "korony_3_okna": {
+     "ok": true,
+     "info": "w1_skarpa: 100.0%, w2_max_korony: 99.8%, w3_max_zwarta: 100.0% (próg >80%)"
     }
    },
    "pass": true
   }
  ],
- "podsumowanie": {
-  "pass": 9,
-  "fail": 0
- }
+ "pass_all": true
 }
