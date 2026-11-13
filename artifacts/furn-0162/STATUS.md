@@ -22,3 +22,8 @@
 - NASTĘPNY KROK (wznowienie): jeśli brak "== done" w logu -> `pwsh -File artifacts/furn-0162/tools/ab_run.ps1`; potem `uv run --project tools/worldgen python artifacts/furn-0162/tools/budget.py artifacts/furn-0162/base-Low-clear artifacts/furn-0162/after-Low-clear artifacts/furn-0162/budget-low.txt` i `pwsh -File artifacts/furn-0162/tools/pairs.ps1`, obejrzeć pary, uzupełnić sekcję „Dowody” ADR 0162, `pytest tests/gis` (heavy slot) + EditMode, skopiować pary do `C:\Users\matma\Documents\Claude\kamion\artifacts\furn-0162\pairs\`.
 - Run1 (nieczysty baseline z kopii _Generated main): Low draws +36 max (Putry), tris +2.2 % max — liczby niewiarygodne, do zastąpienia czystym A/B. Wizualnie run1: wiaty czerwone BKM OK, p40 na właściwej stacji, tablice czytelne.
 - Zgłoszenia: krawężnik przystankowy 16 cm -> 0161; drzewa 297817 -> 0163; zmiana poza zakresem: `InstanceImporter.cs` + `build_world.instance_ends` StartsWith("bus_shelter") — do akceptacji lidera.
+
+## WZNOWIENIE (nowy agent) 2026-11-13 10:20
+- ab_run przerwany po build_furn (exit 0) w fazie B. Bazowe rendery A kompletne (base-Low-clear 49, base-probes-Low, base-sbs-Low-clear). Drzewo = HEAD + świeże wyjście build B (dach w atlasie -> 2 sloty; commit regen).
+- W TLE: `artifacts/furn-0162/tools/ab_resume_b.ps1` (tylko import + rendery B), log `artifacts/furn-0162/logs/ab_run.log`.
+- NASTĘPNY KROK: po "== done" w logu: `uv run --project tools/worldgen python artifacts/furn-0162/tools/budget.py artifacts/furn-0162/base-Low-clear artifacts/furn-0162/after-Low-clear artifacts/furn-0162/budget-low.txt`; `pwsh -File artifacts/furn-0162/tools/pairs.ps1`. Jeśli przerwane przed "== done": zwolnij slot i `pwsh -File artifacts/furn-0162/tools/ab_resume_b.ps1`.
