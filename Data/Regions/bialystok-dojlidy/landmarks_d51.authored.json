@@ -1,0 +1,153 @@
+{
+ "schema": "kamion/region-landmarks-authored/1",
+ "provenance": "authored_override (ADR 0166): landmark choice for D51 recognisability from research P6 (research/_incoming/p6-next-regions-2, 2026-11-13); OSM ids verified there against api.openstreetmap.org; geometry derived by tools/worldgen/qa/region_landmarks.py",
+ "landmarks": [
+  {
+   "id": "L1-rosti",
+   "name": "Rosti, Myśliwska 18",
+   "kind": "factory (truck target)",
+   "osm_way": 252332077,
+   "gate_node": 6596800253,
+   "source_research": "P6-K04, P6-R03, P6-G03",
+   "references": [
+    "research/_incoming/p6-next-regions-2/files/P6-G03.jpg (GUGiK orto 10 cm, gate)",
+    "research/_incoming/mistral-p11-dojlidy-photos/files/P11-094 (CC0 Rakoon, IX 2023; hala przy jezdni)"
+   ]
+  },
+  {
+   "id": "L2-kan",
+   "name": "KAN, Karpińskiego 5",
+   "kind": "factory (truck target)",
+   "osm_way": 471492581,
+   "gate_node": 4656499172,
+   "source_research": "P6-K04, P6-R04, P6-G04",
+   "references": [
+    "research/_incoming/p6-next-regions-2/files/P6-G04.jpg (GUGiK orto 10 cm, gate)"
+   ]
+  },
+  {
+   "id": "L3-odlewnia",
+   "name": "Odlewnia Białystok, Myśliwska 11",
+   "kind": "foundry (truck target)",
+   "osm_way": 315456645,
+   "source_research": "P6-C04",
+   "references": []
+  },
+  {
+   "id": "L4-bravilor",
+   "name": "Bravilor Bonamat, Kuronia 2",
+   "kind": "factory SSSE (truck target)",
+   "osm_way": 513010463,
+   "gate_node": 6539179208,
+   "source_research": "P6-C05, P6-G14",
+   "references": [
+    "research/_incoming/p6-next-regions-2/files/P6-G14.jpg (GUGiK orto 10 cm, gate)",
+    "research/_incoming/mistral-p11-dojlidy-photos/files/P11-063 (CC0 Rakoon, VI 2024)"
+   ]
+  },
+  {
+   "id": "L5-pss-dc",
+   "name": "PSS Społem DC (Wiosenna/Ciołkowskiego)",
+   "kind": "distribution centre (truck target)",
+   "osm_way": 1317072247,
+   "source_research": "P6-C06",
+   "references": []
+  },
+  {
+   "id": "L6-masterpress",
+   "name": "Masterpress, Kuronia 4",
+   "kind": "factory (UNVERIFIED target)",
+   "osm_way": 234838499,
+   "gate_node": 2999986083,
+   "source_research": "P6-K04, P6-G11",
+   "references": [
+    "research/_incoming/p6-next-regions-2/files/P6-G11.jpg (GUGiK orto 10 cm, gate)"
+   ]
+  },
+  {
+   "id": "L7-bison",
+   "name": "BISON",
+   "kind": "factory (UNVERIFIED target)",
+   "osm_way": 658448323,
+   "source_research": "P6-K04",
+   "references": []
+  },
+  {
+   "id": "L8-krywlany",
+   "name": "Lotnisko Białystok-Krywlany (EPBK)",
+   "kind": "orientation landmark (airfield, east part)",
+   "osm_way": 234838628,
+   "source_research": "P6-K03/K04",
+   "references": []
+  },
+  {
+   "id": "L9-runway",
+   "name": "Krywlany pas asfaltowy 09R/27L",
+   "kind": "orientation landmark (runway)",
+   "osm_way": 958211700,
+   "source_research": "Mistral P12-001; potwierdzone w REVIEW-2026-11-13-s17-mistral-r8-p11-p12 §4 (OSM API)",
+   "references": [
+    "research/_incoming/mistral-p12-*/P12-A01 (ortofoto pasów)"
+   ]
+  },
+  {
+   "id": "L11-sad",
+   "name": "Sąd Rejonowy, Mickiewicza 103 (najwyższy w kaflu, LoD1 24,44 m)",
+   "kind": "orientation landmark (tallest building)",
+   "osm_way": 484566822,
+   "source_research": "REVIEW-2026-11-13-s17-mistral-r8-p11-p12 §4 (M48/P12-P04)",
+   "references": [
+    "P12-P04 (CC BY-SA, tylko referencja)"
+   ]
+  }
+ ],
+ "out_of_tile_background": [
+  {
+   "name": "Hangar Aeroklubu",
+   "osm_way": 304300294,
+   "note": "~360 m W od kafla (przegląd s17 §4) - tylko tło/sylwetka; usunięty z listy landmarków"
+  },
+  {
+   "name": "browar Dojlidy",
+   "note": "X ~781140-781300, poza kaflem (E)"
+  }
+ ],
+ "control_photos": [
+  {
+   "id": "P11-001",
+   "note": "Kuronia na wschód, wzorcowy kadr SSSE (VI 2024)",
+   "license": "CC0 (Rakoon, Commons)",
+   "path": "research/_incoming/mistral-p11-dojlidy-photos/files/"
+  },
+  {
+   "id": "P11-063",
+   "note": "skrzyżowanie w SSSE (VI 2024)",
+   "license": "CC0 (Rakoon, Commons)",
+   "path": "research/_incoming/mistral-p11-dojlidy-photos/files/"
+  },
+  {
+   "id": "P11-094",
+   "note": "hala przy jezdni, latarnia Y (IX 2023)",
+   "license": "CC0 (Rakoon, Commons)",
+   "path": "research/_incoming/mistral-p11-dojlidy-photos/files/"
+  },
+  {
+   "id": "P11-056",
+   "note": "Dywizjonu 303, krawędź lotniska (VIII 2023)",
+   "license": "CC0 (Rakoon, Commons)",
+   "path": "research/_incoming/mistral-p11-dojlidy-photos/files/"
+  },
+  {
+   "id": "P11-129",
+   "note": "brama szpitala Żurawia 14 (XI 2019)",
+   "license": "CC0 (Rakoon, Commons)",
+   "path": "research/_incoming/mistral-p11-dojlidy-photos/files/"
+  }
+ ],
+ "control_photos_rejected": [
+  "P11-084",
+  "P11-091",
+  "P11-092",
+  "P11-064"
+ ]
+}

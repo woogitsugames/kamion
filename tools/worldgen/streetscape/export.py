@@ -173,7 +173,14 @@ def export(codes, boards, out_dir=None):
     for c, (w, h, im) in sorted(boards.items()):
         ww = 512
         hh = max(32, int(round(ww * im.size[1] / im.size[0])))
-        sign_png[c] = SG.png_bytes(SG.weather(im.resize((ww, hh), SG.Image.LANCZOS), c, 0.7))
+        face = SG.weather(im.resize((ww, hh), SG.Image.LANCZOS), c, 0.7)
+        if c.startswith("OB_"):        # ADR 0162: plain grey back band under the face -> 1 material per board
+            bpx = PP.BOARD_BAND_PX
+            full = SG.Image.new("RGB", (ww, hh + bpx), PP.BOARD_BACK_SRGB)
+            full.paste(face.convert("RGB"), (0, 0))
+            face = full
+            PP.BOARD_BAND[c] = bpx / (hh + bpx)
+        sign_png[c] = SG.png_bytes(face)
         mats[f"sign_{c}"] = {"color": [1, 1, 1], "rough": 0.45, "texture_png": sign_png[c]}
     from . import life_props as LP
     for c in sorted(LP.SIGNS):

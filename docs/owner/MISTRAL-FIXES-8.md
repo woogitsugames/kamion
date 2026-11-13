@@ -40,3 +40,80 @@ ZADANIE:
 (6) Samokontrola: nowe losowanie 20 % z seedem; dla każdego wylosowanego wklej w audit_20_percent.json jedno zdanie „co widać” + nazwę ulicy z OSM i deltę azymutu — sprawdzaj przypisanie, nie tylko zgodność z API.
 Nowy ZIP: mistral-p1-route-photos-2-files-v2.zip. W PR komentarz z SUROWYM wyjściem `git diff --stat origin/main` i licznikami (OK/REFERENCJA/ODRZUCONE/DUPLIKAT). NIE scalaj. Na końcu „M46-FIX gotowe” i koniec.
 ```
+
+## M44-FIX — PR #41 (przepisy ciężarówki): poprawki przed scaleniem + 3 otwarte punkty
+
+```
+Repo woogitsugames/kamion. Popraw istniejący PR #41 (gałąź research/mistral-p4-truck-regulations) — commity do TEJ gałęzi, nie nowy PR. Najpierw `git fetch && git rebase origin/main`. Zmieniaj tylko research/mistral/p4-truck-regulations/.
+Przegląd (docs/reports/REVIEW-2026-11-13-s17-mistral-r8-p4.md w origin/main — przeczytaj): próba 35/171 → 32 potwierdzone, 1 odrzucony, 2 niesprawdzone; deklaracja „171/171 bez niezgodności” była zawyżona.
+POPRAW: (1) P4-134 „22,5 t/oś” — tego cytatu nie ma w 96/53/WE; właściwa wartość dla osi potrójnej naczepy: 24 t (podaj punkt załącznika I i cytat). (2) README: lista zmian 96/53/WE NIE kończy się na 2015/719 — są też 2019/984 i 2019/1242 (do +2 t dla napędów alternatywnych/bezemisyjnych); opisz wpływ na nasz zestaw (40 t bez zmian). (3) Dz.U. 2024 poz. 1709 to akt pierwotny, nie tekst jednolity; sprawdź zmiany 2025/939 i 2026/891 (ELI Sejmu) i opisz, czy dotykają wymiarów/położenia tablic. (4) Etykieta wersji R104 — popraw zgodnie z przeglądem. (5) Lusterko klasy V dla N3: zostaw swoją wersję (obowiązkowe po stronie pasażera), dopisz punkt tabeli R46 i cytat.
+OTWARTE (dodaj sekcję z wynikiem albo negatywnym wynikiem i listą sprawdzonych źródeł): (a) R46 — czy system kamera-monitor (CMS) może zastąpić lusterka klas II i IV dla N3 w UE (seria obowiązująca w UE: 04 — potwierdź); (b) rysunek tablicy rejestracyjnej 520×114 mm (rozporządzenie 8.11.2024 i zmiany) — wymiar z rysunku; (c) miejsce montażu tachografu w kabinie (rozp. 165/2014, wykonawcze 2016/799 zał. IC — tylko wymagania widoczności/dostępu dla kierowcy).
+W PR komentarz z SUROWYM wyjściem `git diff --stat origin/main` i listą poprawek 1–5 + a–c. NIE scalaj. Na końcu „M44-FIX gotowe” i koniec.
+```
+
+## M49-FIX — PR #46 (bramy Dojlidy/Krywlany): PZZ, EC, RS16
+
+```
+Repo woogitsugames/kamion. Popraw istniejący PR #46 (gałąź research/mistral-p6-dojlidy-gates) — commity do TEJ gałęzi, nie nowy PR. Najpierw `git fetch && git rebase origin/main`. Zmieniaj tylko research/mistral/p6-dojlidy-gates/.
+Przegląd (docs/reports/REVIEW-2026-11-13-s17-mistral-r8-p6p8p9p5.md w origin/main — przeczytaj): pomiary bram G03–G08, G11, G13, G14 i ustalenia org. ruchu potwierdzone w próbie. Do poprawy:
+(1) G10 PZZ (M49-010, M49-024): way 248109974 to `service=parking_aisle`, a na ortofoto jego koniec to pusty piaszczysty plac przy biurowcu — to NIE jest wjazd na teren PZZ. Znajdź rzeczywistą bramę drogową PZZ (OSM: barrier=gate/lift_gate na granicy landuse way 339398420 i highway; ortofoto) albo oznacz UNVERIFIED; usuń wartości 11 m / 8,3 m, jeśli nie dotyczą bramy.
+(2) G12 EC (M49-012, M49-026): node 3954799626 ma access=no i leży ~400 m od celu P6 — teza „brama dla ciężarówek” wymaga źródła (strona Enea Ciepło: dostawy/wjazd, BIP, ortofoto z widocznymi śladami ciężarówek/wagą). Dołącz do ZIP wycinek ortofoto obejmujący tę bramę (obecny M49-G12.jpg ma bbox P6 i bramy nie pokazuje). Bez źródła: status UNVERIFIED.
+(3) RS16 (M49-029): PFU 2020 mówi „oddalona jest od stałego punktu kontroli… ok. 1295m” i „obsługuje ruch… na kierunku do Miasta”. Mierzyłeś od skrzyżowania ze Stoczni Gdańskiej i wpisałeś „kier. Zabłudów” — popraw: pas wjazdowy do miasta; punkt odniesienia = stały punkt kontroli (ustal jego położenie: PFU 2015 „parking przy DK 19”); pobierz/odczytaj „załącznik nr 5” PFU (mapa lokalizacji) z BIP. Status ESTIMATED, dopóki nie ma mapy.
+(4) M49-031: cytat TVP3 jest nieweryfikowalny (strona pokazuje tylko tytuł) — cytuj tylko tytuł; datę wejścia w życie oznacz „styczeń 2026 wg tytułu TVP3; komunikat 19.11.2025 daty nie podaje”.
+(5) M49-035: Karpińskiego to highway=unclassified (nie tertiary).
+(6) Do ZIP dołącz wycinki narożników R-* użyte do promieni (bez nich promieni nie da się sprawdzić).
+W PR komentarz z SUROWYM wyjściem `git diff --stat origin/main` i listą zmian 1–6. NIE scalaj. Na końcu „M49-FIX gotowe” i koniec.
+```
+
+## M54-FIX — PR #44 (ograniczenia ciężarówek): opisy kadrów i rozmiar zdjęć
+
+```
+Repo woogitsugames/kamion. Popraw istniejący PR #44 (gałąź research/mistral-p8-restrictions-3) — commity do TEJ gałęzi, nie nowy PR. Najpierw `git fetch && git rebase origin/main`. Zmieniaj tylko research/mistral/p8-restrictions-3/.
+Przegląd (docs/reports/REVIEW-2026-11-13-s17-mistral-r8-p6p8p9p5.md w origin/main): dane OSM (historie tagów), S19 (komunikat MI) i e-TOLL potwierdzone. Do poprawy:
+(1) M54-008: tysiac_412f2d02 pokazuje jazdę PO wiadukcie Al. Tysiąclecia (droga nad linią nr 6, bridge=yes layer=1) — nic nie ma nad jezdnią. Przepisz opis; dopisz wniosek „Al. Tysiąclecia nad linią 6: brak ograniczenia skrajni (droga na obiekcie)”.
+(2) M54-007: na 6ded8ec0 widać B-26 (zakaz wyprzedzania przez samochody ciężarowe) i B-33 70, nie B-19 — popraw.
+(3) OBEJRZYJ wszystkie 40 kadrów (także 10 kadrów S8/Choroszcz, M54-006 — nieprzeanalizowane) i dla każdego zapisz w nowym pliku photos.csv: id, plik, odległość, azymut kamery (z EXIF/sekwencji; Panoramax API daje `view:azimuth`/heading — `az: null` w Twoich metadanych oznacza, że nie pobrano), co widać (1 zdanie), czy obiekt badany jest w kadrze.
+(4) Zdjęcia w ZIP mają 2048×1536 — zmniejsz do ≤ 1600 px (nowy ZIP mistral-p8-restrictions-3-files-v2.zip).
+(5) README „Ograniczenia” pkt 4: `pdftotext -layout` wyciąga tekst z list MF (sprawdzone) — usuń tezę o nieekstraktowalności i potwierdź M54-025/026 własnym odczytem (cytaty z numerami stron).
+(6) Samokontrola: nowe losowanie z seedem obejmujące zgodność opisu kadru z obrazem (nie tylko HTTP/API).
+W PR komentarz z SUROWYM wyjściem `git diff --stat origin/main` i listą zmian 1–6. NIE scalaj. Na końcu „M54-FIX gotowe” i koniec.
+```
+
+## M50-FIX — PR #45 (meble uliczne): kadry „VERIFIED_WIZJA” niezgodne z obrazem
+
+```
+Repo woogitsugames/kamion. Popraw istniejący PR #45 (gałąź research/mistral-p9-furniture-3) — commity do TEJ gałęzi, nie nowy PR. Najpierw `git fetch && git rebase origin/main`. Zmieniaj tylko research/mistral/p9-furniture-3/.
+Przegląd (docs/reports/REVIEW-2026-11-13-s17-mistral-r8-p6p8p9p5.md w origin/main): dokumenty (OPZ ZMK, Glasdon, Dz.U. 2019/2311) potwierdzone 1:1 — dobra robota. Zdjęcia NIE: na kadrach 5062587, 1326673477, 1326673829 (hydranty) nie ma hydrantu; 219381941 (U-5a), 1326673805 (żerdź), 993066622 (bariera U-12), 219382225 (szafka) — obiektu nie widać; kadr 1326673717 (ławka) nie jest w ZIP.
+ZADANIE:
+(1) OBEJRZYJ każdy kadr z wierszy VERIFIED_WIZJA i NOT_FOUND (model wizyjny, po jednym kadrze na wywołanie — jeśli masz limit, rozłóż na kilka tur i commituj po każdej). Dla każdego zapisz w uwagach jedno zdanie „co widać” i pozycję obiektu w kadrze (lewo/środek/prawo, przybliżona odległość). Kadry bez obiektu → NOT_FOUND.
+(2) Dla 11 typów znajdź prawdziwe kadry z jezdni (≥ 2 na typ): KartaView — sąsiednie klatki tych samych sekwencji co 5–10 m, kamera skierowana na obiekt (|azymut kamery − azymut do obiektu| ≤ 30°, odległość ≤ 25 m); Panoramax (`view:azimuth`, 23 kadry w kaflu — sprawdź je). Obiekt potwierdzaj z węzłem OSM (emergency=fire_hydrant, barrier=bollard, power=pole, man_made=street_cabinet, amenity=bench/waste_basket/bicycle_parking).
+(3) Dołącz do ZIP wszystkie kadry z manifestu (brakuje m.in. 1326673717).
+(4) Samokontrola: nowe losowanie 20 % z seedem — dla wierszy zdjęciowych wklej „co widać” i porównaj z kolumną obiekt; dla dokumentów cytat ze strony.
+Nowy ZIP: mistral-p9-furniture-3-files-v2.zip. W PR komentarz z SUROWYM wyjściem `git diff --stat origin/main` i licznikami (VERIFIED_WIZJA/NOT_FOUND per typ). NIE scalaj. Na końcu „M50-FIX gotowe” i koniec.
+```
+
+## M55-FIX — PR #47 (audio): drobne poprawki przed scaleniem
+
+```
+Repo woogitsugames/kamion. Popraw istniejący PR #47 (gałąź research/mistral-p5-audio-3) — commity do TEJ gałęzi. Najpierw `git fetch && git rebase origin/main`. Zmieniaj tylko research/mistral/p5-audio-3/.
+Przegląd (docs/reports/REVIEW-2026-11-13-s17-mistral-r8-p6p8p9p5.md w origin/main): licencje, długości (ffprobe 13/13) i opisy autorów potwierdzone; wyniki negatywne dobrze udokumentowane. Popraw:
+(1) README/manifest: podglądy MP3 Freesound mają ~175–190 kb/s (VBR), nie „128 kbps” — podaj zmierzony bitrate.
+(2) Kolumna atrybucja/uwagi: dla 5 plików Commons CC BY-SA dopisz „tylko referencja — ShareAlike, nie do buildu gry”; dla M55-003 (CC BY 4.0) gotowy tekst atrybucji.
+(3) M55-002 (Volvo B8R): wypisz znaczniki czasu 3–5 zmian biegów słyszalnych w nagraniu (mm:ss) i czy słychać przerwę momentu — to jedyny kandydat na AMT.
+W PR komentarz z SUROWYM wyjściem `git diff --stat origin/main`. NIE scalaj. Na końcu „M55-FIX gotowe” i koniec.
+```
+
+## M52-FIX — PR #48 (nawierzchnie): wymiary P-* z rysunków odczytane błędnie
+
+```
+Repo woogitsugames/kamion. Popraw istniejący PR #48 (gałąź research/mistral-p2-surfaces-2) — commity do TEJ gałęzi, nie nowy PR. Najpierw `git fetch && git rebase origin/main`. Zmieniaj tylko research/mistral/p2-surfaces-2/.
+Przegląd (docs/reports/REVIEW-2026-11-13-s17-mistral-r8-p6p8p9p5.md w origin/main): wytyczne ZDM 2025 i wymogi (płytki, wyspy) potwierdzone. Zadanie 1 ma błąd metody: podpis pod rysunkiem („0,20 m²/mb”, „0,24 m²/mb”, „0,32 m²/mb”, „0,08 m²/mb”) to ZUŻYCIE FARBY na metr bieżący, nie wymiar. Na rys. 2.2.1.8 (P-3a), 2.2.1.11 (P-5), 2.2.1.12 (P-6) są etykiety „4,00” (kreska) i „2,00” (przerwa) — pominięte, a w ich miejsce podano ESTIMATED z pikseli (2,0–2,4/0,56; 1,77/0,91).
+ZADANIE:
+(1) Wyrenderuj strony Dz.U. (np. PyMuPDF, 150 dpi) i OBEJRZYJ każdy rysunek P-2a…P-25; przepisz tabelę: każda etykieta wymiarowa z tym, czego dotyczy (szerokość linii / odstęp / kreska / przerwa), osobno kolumna „zużycie m²/mb” (lub m²/szt.). Usuń wszystkie ESTIMATED z pikseli tam, gdzie rysunek ma etykietę.
+(2) Ponownie zinterpretuj P-3b („0,18”), P-12 („0,5”), P-13 („0,2825”), P-14 („0,375”) — czy to m²/mb / m², czy wymiar; dla P-12/P-13/P-14 podaj wymiary z etykiet i tekstu (s. 571–573).
+(3) Jaroszówka: 24 kadry są z estakady Andersa nad rondem Pamięci Bieżeństwa (bariery mostowe) — opisz je tak; dla ronda (ring pod estakadą) i chodników/krawężników przy nim znajdź kadry z poziomu ringu (KartaView/Panoramax, inne sekwencje) albo wynik negatywny z liczbą sprawdzonych kadrów.
+(4) Usuń kolumnę kolor_srgb liczoną z dolnych 45 % kadru (maska auta, różne kamery) albo oznacz „niewiarygodne”; zad. 4 (czerwony asfalt) — oceń przez obejrzenie kadrów, nie progiem RGB.
+(5) Dodaj .gitignore (files/, *.zip) w katalogu.
+(6) Samokontrola: losuj 20 % z seedem; dla wierszy z rysunków wklej odczyt etykiety, dla kadrów — „co widać”.
+W PR komentarz z SUROWYM wyjściem `git diff --stat origin/main` i listą zmian 1–6. NIE scalaj. Na końcu „M52-FIX gotowe” i koniec.
+```

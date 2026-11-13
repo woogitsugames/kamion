@@ -21,6 +21,7 @@ class Mesh:
     def __init__(self, pole_height=None):
         self.prims = {}
         self.pole_height = pole_height
+        self.ground_z = 0.0          # ADR 0162: atlas v counts metres above this (a mast sunk under a viaduct)
 
     def add(self, mat, V, T, UV=None):
         V = np.asarray(V, float)
@@ -75,7 +76,7 @@ class Mesh:
                        "concrete_pole": "furniture_concrete", "steel_painted": "furniture_bollard",
                        "concrete_base": "furniture_footing"}[mat]
                 atlas_height = 0.9 if self.pole_height <= 1 else 9.0
-                UV = np.column_stack([UV[:, 0], np.clip(V[:, 2] / atlas_height, 0.002, 0.998)])
+                UV = np.column_stack([UV[:, 0], np.clip((V[:, 2] - self.ground_z) / atlas_height, 0.002, 0.998)])
             res.append({"V": V, "T": np.concatenate(Ts), "UV": UV, "mat": mat})
         return res
 
@@ -83,6 +84,14 @@ class Mesh:
 LAMP_OLD = (("concrete", 9), ("steel", 8))     # (kind, height m) of the older side-street family
 
 # ------------------------------------------------------------------------------------------- builders
+# ZDM Białystok PFU (research G5-010 / G5-011 rows, SOURCED): galvanised tapered steel columns, luminaires "do 11 m",
+# a door recess of at least 600 x 130 mm, the lowest ~0.3 m of the column painted grey (the paint band is drawn in
+# the furniture_galv atlas, furniture_textures.pole_texture: no extra material). Door position UNVERIFIED: lower edge
+# 0.5 m (WORKING_VALUE), on the side away from the road.
+LAMP_DOOR = (0.60, 0.13)
+LAMP_DOOR_Z = 0.5
+
+
 def lamp(h, bracket, double=False):
     m, l1, col = Mesh(), Mesh(), Mesh()
     m.pole_height = l1.pole_height = h
@@ -90,6 +99,10 @@ def lamp(h, bracket, double=False):
         # ADR 0102: buried footing, 8 cm cap above the local surface. Same primitive/material budget.
         mm.box("concrete_base", [0, 0, -0.01], 0.25, 0.25, 0.09)
         mm.tube("steel_galv", [0, 0, 0.06], [0, 0, h - 0.3], 0.085, 0.040, seg)
+        if seg > 6:                     # ADR 0162: door of the cable recess (same galv material, LOD0 only)
+            r_door = 0.085 - 0.045 * (LAMP_DOOR_Z + LAMP_DOOR[0] / 2 - 0.06) / (h - 0.36)
+            mm.box("steel_galv", [0, -r_door + 0.004, LAMP_DOOR_Z + LAMP_DOOR[0] / 2], LAMP_DOOR[1] / 2, 0.008,
+                   LAMP_DOOR[0] / 2)
         for sgn in ((1, -1) if double else (1,)):
             top = np.array([0, 0, h - 0.4])
             end = np.array([0, sgn * bracket, h])
@@ -122,6 +135,8 @@ def lamp_y(h=10.3, reach=1.3, rise=1.0, console=False, sink=0.0):
     rows): column on a steel console bolted to the deck fascia on its +y side."""
     m, l1, col = Mesh(), Mesh(), Mesh()
     m.pole_height = l1.pole_height = h
+    if sink > 0:                     # ADR 0162: the grey foot band of the galv atlas belongs on the real ground
+        m.ground_z = l1.ground_z = -sink
     hj = h - rise
     for mm, seg, bends, r_arm in ((m, 12, 5, None), (l1, 6, 3, LAMP_Y_ARM_R_LOD1)):
         if console:
@@ -308,13 +323,34 @@ def plate(code):
     return m, l1, None
 
 
+# ADR 0162 (budget): OB code -> v height of the plain grey back band that export.py appends under the board face in
+# the board's own texture. Face, back sheet and rails then share ONE material: 1 instanced draw per board, not 3
+# (the 3 new al. Tysiąclecia portals added 5 boards = +15 draws on the Putry approach cameras).
+BOARD_BAND = {}
+BOARD_BAND_PX = 16
+BOARD_BACK_SRGB = (126, 128, 128)        # = materials "board_back" colour 0.21/0.22/0.22 linear (ADR 0127 plain back)
+
+
 def board(code, w, h):
     m = Mesh()
     y = 0.06
+    band = BOARD_BAND.get(code) if code.startswith("OB_") else None
+    v0 = band or 0.0
     # face normal +y like the plates (the old winding showed every E-2 / gantry board's grey back to the driver)
     m.quad(f"sign_{code}", [-w / 2, y, -h / 2], [-w / 2, y, h / 2], [w / 2, y, h / 2], [w / 2, y, -h / 2],
-           uv=((1, 0), (1, 1), (0, 1), (0, 0)))   # u mirrored as on the plates
-    # overhead boards (gantries, "OB_"): plain grey sheet back (ADR 0127), other boards the plate back texture
+           uv=((1, v0), (1, 1), (0, 1), (0, v0)))   # u mirrored as on the plates
+    if band:
+        # overhead board with a back band: back sheet + rails sample the band centre (plain grey, ADR 0127)
+        buv = (0.5, band / 2)
+        m.quad(f"sign_{code}", [w / 2, y - 0.01, -h / 2], [w / 2, y - 0.01, h / 2], [-w / 2, y - 0.01, h / 2],
+               [-w / 2, y - 0.01, -h / 2], uv=(buv,) * 4)
+        tmp = Mesh()
+        for sx in (-1, 1):
+            tmp.box("rail", [sx * w / 2 * 0.7, 0.02, 0], 0.03, 0.03, h / 2)
+        for V, T, _ in zip(*tmp.prims["rail"]):
+            m.add(f"sign_{code}", V, T - T.min(), np.tile(buv, (len(V), 1)))
+        return m, m, None
+    # overhead boards (gantries, "OB_") without a band: plain grey sheet back (ADR 0127), other boards the plate back
     m.quad("board_back" if code.startswith("OB_") else "plate_back",
            [w / 2, y - 0.01, -h / 2], [w / 2, y - 0.01, h / 2], [-w / 2, y - 0.01, h / 2],
            [-w / 2, y - 0.01, -h / 2],
@@ -368,23 +404,259 @@ def signal_pole(h=S.SIGNAL_POLE_H, arm=0.0):
     return m, l1, col
 
 
+# ---------------------------------------------------------------- BKM bus shelter (ADR 0162, research G5)
+# Białystok city shelters, BKM "Wzór plastyczny wiaty przystankowej" (SIWZ 2019 zał. 1 / 2020 zał. 6, research
+# G5-001 / G5-005, SOURCED): modular steel frame, module 2 m; roof length n x 2 m + "dwa występy boczne zadaszenia po
+# min 0,5 m" -> 5 / 7 / 9 m for 2 / 3 / 4 modules (3 modules = the standard shelter); 2.6 m from the pavement to the
+# roof; wall 1.07 m deep, roof 0.55 m beyond the back posts and 1.4 m from the back posts to the road-side edge; glass
+# 0.6 x 0.99 m, lowest edge 0.15 m above the pavement; bench seat 0.4 m, 2 seat slats + 3 back slats; two lit
+# timetable cases in the back wall of the module opposite the bench; gutter along the low edge with a downpipe; frame
+# powder-coated RAL 3020 (traffic red); roof smoked multiwall polycarbonate. D-15 rack (zał. 07c, G5-004, typ B over
+# the roof): panel 0.55 x 0.805 m. Read off the drawings, WORKING_VALUE: roof rise 0.25 m toward the road (2019 side
+# view: 0.26 m over 1.7 m; 2020: 0.21 m over 1.95 m), post section 80 x 60 mm, frame bars 40 mm, timetable case
+# 0.92 x 0.78 m with its lower edge at 1.1 m (2020 elevation "1,1 m"). The older black shelters (Commons, ul. Lipowa,
+# G5-020) are the same frame in graphite - their share is WORKING_VALUE (furniture.SHELTER_BLACK_SHARE).
+SHELTER_MODULE_M = 2.0
+SHELTER_SIDE_OVERHANG_M = 0.5
+SHELTER_H_M = 2.6
+SHELTER_WALL_D_M = 1.07
+SHELTER_BACK_OVERHANG_M = 0.55
+SHELTER_ROOF_FROM_BACK_M = 1.4
+SHELTER_PANE_W_M, SHELTER_PANE_H_M = 0.99, 0.6
+SHELTER_PANE_BOTTOM_M = 0.15
+SHELTER_SEAT_H_M = 0.4
+SHELTER_ROOF_RISE_M = 0.25          # WORKING_VALUE
+SHELTER_POST = (0.08, 0.06)         # WORKING_VALUE (profile zamknięte o przekroju prostokątnym)
+SHELTER_BAR = 0.04                  # WORKING_VALUE
+D15_RACK_W_M, D15_RACK_H_M = 0.55, 0.805
+SHELTER_MODULES = {"bus_shelter_5m": 2, "bus_shelter": 3, "bus_shelter_9m": 4}
+# shelter atlas (furniture_textures.shelter_atlas, 512 x 512, v up): uv of the flat swatches and the picture regions
+SHELTER_UV = {"red": (0.125, 0.94), "black": (0.375, 0.94), "wood": (0.625, 0.94), "roof": (0.875, 0.94)}
+SHELTER_UV_BAND = (0.0, 0.76, 1.0, 0.86)          # blue information board on the road-side roof edge
+SHELTER_UV_TIMETABLE = (0.02, 0.27, 0.48, 0.73)   # timetable poster behind the case glass
+SHELTER_UV_D15 = (0.53, 0.25, 0.87, 0.75)         # D-15 rack face (0.55 x 0.805 m)
+
+
+def _flat_copy(dst, mat, uv, src):
+    """Copy every primitive of `src` into `dst` as `mat` with one constant uv (a flat atlas swatch)."""
+    for _, (Vs, Ts, _) in sorted(src.prims.items()):
+        V = np.concatenate(Vs)
+        dst.add(mat, V, np.concatenate(Ts), np.tile(np.asarray(uv, float), (len(V), 1)))
+
+
+def _uv_quad(mm, mat, a, b, c, d, reg):
+    """Quad a-b-c-d mapped to the atlas rectangle reg = (u0, v0, u1, v1): a -> (u0, v0), b -> (u1, v0), c -> (u1, v1),
+    d -> (u0, v1). Seen from the front, local +x is on the viewer's left (props.plate), so a is the bottom corner on
+    +x when the image must read left to right."""
+    u0, v0, u1, v1 = reg
+    mm.quad(mat, a, b, c, d, uv=((u0, v0), (u1, v0), (u1, v1), (u0, v1)))
+
+
+def bus_shelter_bkm(modules=3, colour="red"):
+    """BKM shelter (constants above). Local frame: +y = the road side (the open front and the high roof edge), origin
+    on the pavement in the middle of the wall depth. Materials: shelter_paint (one atlas for the frame, roof sheet,
+    bench, timetable posters, information board and D-15 rack) and shelter_glass_clear - two slots (the old generic
+    shelter had four): every slot is a draw per prototype on Low."""
+    paint = SHELTER_UV[colour]
+    L = modules * SHELTER_MODULE_M
+    RL = L + 2 * SHELTER_SIDE_OVERHANG_M
+    yb, yf = -SHELTER_WALL_D_M / 2, SHELTER_WALL_D_M / 2              # back / front post lines
+    y_back_edge = yb - SHELTER_BACK_OVERHANG_M
+    y_front_edge = yb + SHELTER_ROOF_FROM_BACK_M
+    z0 = SHELTER_H_M                                                   # roof underside at the low (back) edge
+
+    def zr(y):                                                         # roof underside above the pavement at y
+        return z0 + SHELTER_ROOF_RISE_M * (y - y_back_edge) / (y_front_edge - y_back_edge)
+
+    m, l1, col = Mesh(), Mesh(), Mesh()
+    fr, fr1 = Mesh(), Mesh()                                           # frame (flat paint), LOD0 / LOD1
+    px, py = SHELTER_POST[0] / 2, SHELTER_POST[1] / 2
+    xs = [-L / 2 + k * SHELTER_MODULE_M for k in range(modules + 1)]
+    for x in xs:
+        for y in (yb, yf):
+            fr.box("p", [x, y, zr(y) / 2], px, py, zr(y) / 2)
+            fr1.box("p", [x, y, zr(y) / 2], px, py, zr(y) / 2)
+    b = SHELTER_BAR / 2
+    z_rows = [SHELTER_PANE_BOTTOM_M + k * SHELTER_PANE_H_M for k in range(4)]   # 0.15 / 0.75 / 1.35 / 1.95
+    for z in z_rows:                                                   # back wall rails and the side wall rails
+        fr.box("p", [0, yb, z], L / 2, b, b)
+        for x in (-L / 2, L / 2):
+            fr.box("p", [x, 0, z], b, SHELTER_WALL_D_M / 2, b)
+    fr1.box("p", [0, yb, z_rows[-1]], L / 2, b, b)
+    for k in range(modules):                                           # one mullion per module: 2 panes of 0.99 m
+        xm = -L / 2 + (k + 0.5) * SHELTER_MODULE_M
+        fr.box("p", [xm, yb, (z_rows[0] + z_rows[-1]) / 2], b, b, (z_rows[-1] - z_rows[0]) / 2)
+    # roof frame: low back edge, high road-side fascia, end rafters and one rafter per post pair, Y brackets at the
+    # back posts carrying the 0.55 m overhang (2019 / 2020 side views)
+    for mm in (fr, fr1):
+        mm.box("p", [0, y_back_edge + 0.03, z0 + 0.03], RL / 2, 0.03, 0.04)
+        mm.box("p", [0, y_front_edge - 0.03, zr(y_front_edge) + 0.04], RL / 2, 0.03, 0.06)
+    for x in [-RL / 2 + 0.03] + xs + [RL / 2 - 0.03]:
+        fr.tube("p", [x, y_back_edge, z0 + 0.04], [x, y_front_edge, zr(y_front_edge) + 0.04], 0.03, None, 4, cap=False)
+    for x in xs:
+        fr.tube("p", [x, yb, z0 - 0.42], [x, y_back_edge + 0.08, z0 + 0.02], 0.025, None, 4, cap=False)
+        fr.tube("p", [x, yb, z0 - 0.42], [x, yb + 0.25, zr(yb + 0.25) + 0.02], 0.025, None, 4, cap=False)
+    # gutter along the low edge and the downpipe to the pavement at the -x end
+    fr.tube("p", [-RL / 2, y_back_edge - 0.04, z0 - 0.02], [RL / 2, y_back_edge - 0.04, z0 - 0.02], 0.045, None, 6)
+    fr.tube("p", [-L / 2 - 0.12, y_back_edge - 0.04, z0 - 0.06], [-L / 2 - 0.12, yb - 0.1, 0.05], 0.035, None, 6)
+    # D-15 rack over the roof (typ B) at the +x end, panel across the road direction, readable from both sides
+    xr, yr = L / 2 - 0.2, y_front_edge - 0.45
+    zr0 = zr(yr) + 0.15
+    for mm in (fr, fr1):
+        mm.box("p", [xr, yr - D15_RACK_W_M / 2 - 0.03, (zr0 + D15_RACK_H_M + zr(yr)) / 2], 0.03, 0.03,
+               (zr0 + D15_RACK_H_M - zr(yr)) / 2)
+    _flat_copy(m, "shelter_paint", paint, fr)
+    _flat_copy(l1, "shelter_paint", paint, fr1)
+    for mm in (m, l1):
+        for sx in (1, -1):                                             # D-15 faces, back to back
+            x = xr + sx * 0.012
+            a = [x, yr + sx * D15_RACK_W_M / 2, zr0]
+            bb = [x, yr - sx * D15_RACK_W_M / 2, zr0]
+            _uv_quad(mm, "shelter_paint", a, bb, [bb[0], bb[1], zr0 + D15_RACK_H_M],
+                     [a[0], a[1], zr0 + D15_RACK_H_M], SHELTER_UV_D15)
+        # blue information board along the road-side roof edge (no logo, no text of a real operator); the older
+        # graphite shelters have none (G5-020 Lipowa photo, review s17-0162)
+        if colour == "black":
+            continue
+        yf_b = y_front_edge + 0.005
+        zb0 = zr(y_front_edge) - 0.02
+        _uv_quad(mm, "shelter_paint", [L / 2 + 0.3, yf_b, zb0], [-L / 2 - 0.3, yf_b, zb0],
+                 [-L / 2 - 0.3, yf_b, zb0 + 0.24], [L / 2 + 0.3, yf_b, zb0 + 0.24], SHELTER_UV_BAND)
+    # timetable cases: two in the back wall of the +x module (the viewer's left seen from the road), faces +y
+    for mm in (m, l1):
+        for k in range(2 if mm is m else 1):
+            xc = L / 2 - SHELTER_MODULE_M * (0.27 + 0.48 * k)
+            tmp = Mesh()
+            tmp.box("p", [xc, yb + 0.045, 1.1 + 0.39], 0.46, 0.03, 0.39)
+            _flat_copy(mm, "shelter_paint", paint, tmp)
+            y = yb + 0.077
+            _uv_quad(mm, "shelter_paint", [xc + 0.42, y, 1.14], [xc - 0.42, y, 1.14], [xc - 0.42, y, 1.84],
+                     [xc + 0.42, y, 1.84], SHELTER_UV_TIMETABLE)
+    # bench in the -x module: 2 seat slats 160 x 45 mm at 0.4 m, 3 back slats 80 x 30 mm, two brackets on the wall
+    tw, t1 = Mesh(), Mesh()
+    xb = -L / 2 + SHELTER_MODULE_M / 2
+    for k in range(2):
+        tw.box("p", [xb, yb + 0.12 + k * 0.175, SHELTER_SEAT_H_M - 0.0225], 0.92, 0.08, 0.0225)
+    for k in range(3):
+        tw.box("p", [xb, yb + 0.05, SHELTER_SEAT_H_M + 0.2 + k * 0.13], 0.92, 0.015, 0.04)
+    t1.box("p", [xb, yb + 0.2, SHELTER_SEAT_H_M - 0.0225], 0.92, 0.17, 0.0225)
+    _flat_copy(m, "shelter_paint", SHELTER_UV["wood"], tw)
+    _flat_copy(l1, "shelter_paint", SHELTER_UV["wood"], t1)
+    br = Mesh()
+    for x in (xb - 0.75, xb + 0.75):
+        br.box("p", [x, yb + 0.2, SHELTER_SEAT_H_M / 2], 0.02, 0.02, SHELTER_SEAT_H_M / 2)
+        br.box("p", [x, yb + 0.18, SHELTER_SEAT_H_M - 0.06], 0.02, 0.16, 0.015)
+    _flat_copy(m, "shelter_paint", paint, br)
+    # glass: back wall and both side walls, one double-sided sheet each between the lowest and the highest rail;
+    # UV0 v = 1 at the foot -> 0 at the top (road film of the clear-sheet shader, as the noise screens)
+    zg0, zg1 = z_rows[0], z_rows[-1]
+    for mm in (m, l1):
+        sheets = [([L / 2, yb, zg0], [-L / 2, yb, zg0], [-L / 2, yb, zg1], [L / 2, yb, zg1])]
+        for x in (-L / 2, L / 2):
+            sheets.append(([x, yf, zg0], [x, yb, zg0], [x, yb, zg1], [x, yf, zg1]))
+        for a, bq, c, d in sheets:
+            uv = ((0, 1), (1, 1), (1, 0), (0, 0))
+            mm.quad("shelter_glass_clear", a, bq, c, d, uv=uv)
+            mm.quad("shelter_glass_clear", bq, a, d, c, uv=((1, 1), (0, 1), (0, 0), (1, 0)))
+    # roof sheet (double sided: seen from under the shelter and from a truck cab above)
+    for mm in (m, l1):
+        a = [RL / 2, y_back_edge, z0 + 0.06]
+        bq = [-RL / 2, y_back_edge, z0 + 0.06]
+        c = [-RL / 2, y_front_edge, zr(y_front_edge) + 0.06]
+        d = [RL / 2, y_front_edge, zr(y_front_edge) + 0.06]
+        ru = (SHELTER_UV["roof"],) * 4                  # smoked polycarbonate swatch of the atlas (one slot less)
+        mm.quad("shelter_paint", d, c, bq, a, uv=ru)
+        mm.quad("shelter_paint", a, bq, c, d, uv=ru)
+    # collision: the walled part up to the roof, the roof slab (a truck mirror reaches 2.6-2.9 m)
+    col.box("collision_steel", [0, 0, z0 / 2], L / 2 + 0.05, SHELTER_WALL_D_M / 2 + 0.05, z0 / 2)
+    col.box("collision_steel", [0, (y_back_edge + y_front_edge) / 2, (z0 + zr(y_front_edge)) / 2 + 0.05], RL / 2,
+            (y_front_edge - y_back_edge) / 2, (zr(y_front_edge) - z0) / 2 + 0.1)
+    return m, l1, col
+
+
 def bus_shelter():
-    m, col = Mesh(), Mesh()
-    W, D, H = 4.0, 1.5, 2.5
-    for x in (-W / 2, 0, W / 2):
-        for y in (-D / 2, D / 2):
-            m.box("steel_painted", [x, y, H / 2], 0.04, 0.04, H / 2)
-    m.box("shelter_roof", [0, 0.05, H + 0.05], W / 2 + 0.1, D / 2 + 0.2, 0.05)
-    # glass back wall and side walls
-    m.quad("shelter_glass", [W / 2, -D / 2, 0.15], [-W / 2, -D / 2, 0.15], [-W / 2, -D / 2, H - 0.1], [W / 2, -D / 2, H - 0.1])
-    m.quad("shelter_glass", [-W / 2, -D / 2, 0.15], [W / 2, -D / 2, 0.15], [W / 2, -D / 2, H - 0.1], [-W / 2, -D / 2, H - 0.1])
-    for x in (-W / 2, W / 2):
-        m.quad("shelter_glass", [x, -D / 2, 0.15], [x, D / 2 - 0.3, 0.15], [x, D / 2 - 0.3, H - 0.1], [x, -D / 2, H - 0.1])
-        m.quad("shelter_glass", [x, D / 2 - 0.3, 0.15], [x, -D / 2, 0.15], [x, -D / 2, H - 0.1], [x, D / 2 - 0.3, H - 0.1])
-    m.box("bench_wood", [0, -D / 2 + 0.3, 0.45], 1.2, 0.2, 0.03)
-    m.box("steel_painted", [0, -D / 2 + 0.3, 0.22], 1.0, 0.03, 0.22)
-    col.box("collision_steel", [0, 0, H / 2], W / 2, D / 2, H / 2)
-    return m, m, col
+    """Default prototype "bus_shelter": the standard BKM shelter of 3 modules (7 m roof), red RAL 3020."""
+    return bus_shelter_bkm(3, "red")
+
+
+# ---------------------------------------------------------------- road barriers of the ZDM standard (ADR 0162, G5)
+# ZDM Białystok, standard 2018 (research G5-010, SOURCED): panel U-12a "olsztyński": two posts of Ø60.3 mm galvanised
+# tube 2.0 m apart, 1.10 m above the ground (1.50 m long), a loop of Ø48.3 mm tube between them, 0.64 m high (G5
+# manifest), painted yellow RAL 1012. Segment fence U-12: 2.50 x 0.83 m (5 flat horizontal wires 15 x 6 mm, verticals
+# every 5 cm), yellow RAL 1012, posts 60 x 40 mm red RAL 3020 (post height WORKING_VALUE). Pylon U-5a: polyethylene,
+# yellow RAL 1012 with retroreflective foil, 0.90 m high, Ø0.20 m, base 0.30 m. Placed only where data shows them:
+# the region's OSM / BDOT10k carry none (no barrier=guard_rail / handrail / bollard=U-5a), so ADR 0162 builds the
+# prototypes and places none; a placement needs a photo-read authored run first (backlog in the ADR).
+U12A_POST_D = 0.0603
+U12A_RAIL_D = 0.0483
+U12A_BAY_M = 2.0
+U12A_H_M = 1.10
+U12A_LOOP_H_M = 0.64
+U12_PANEL = (2.50, 0.83)
+U5A_H_M, U5A_D_M, U5A_BASE_M = 0.90, 0.20, 0.30
+
+
+def railing_u12a():
+    """One 2.0 m bay of U-12a, post at local x = -1.0 (a run adds the closing post as `railing_u12a_post`); the bay
+    runs along local x, origin at the ground under the bay centre."""
+    m, l1, col = Mesh(), Mesh(), Mesh()
+    for mm, seg, bends in ((m, 8, 5), (l1, 4, 2)):
+        mm.tube("paint_ral1012", [-U12A_BAY_M / 2, 0, -0.05], [-U12A_BAY_M / 2, 0, U12A_H_M], U12A_POST_D / 2, None, seg)
+        r = U12A_LOOP_H_M / 2
+        ztop = U12A_H_M - 0.03
+        zc = ztop - r
+        xa, xb = -U12A_BAY_M / 2 + U12A_POST_D / 2 + r, U12A_BAY_M / 2 - U12A_POST_D / 2 - r
+        loop = []
+        for k in range(bends + 1):                                    # right end: half circle, top -> bottom
+            a = math.pi / 2 - math.pi * k / bends
+            loop.append([xb + r * math.cos(a), 0, zc + r * math.sin(a)])
+        for k in range(bends + 1):                                    # left end: bottom -> top
+            a = -math.pi / 2 - math.pi * k / bends
+            loop.append([xa + r * math.cos(a), 0, zc + r * math.sin(a)])
+        loop.append(loop[0])
+        for p0, p1 in zip(loop[:-1], loop[1:]):
+            mm.tube("paint_ral1012", p0, p1, U12A_RAIL_D / 2, None, max(4, seg - 2), cap=False)
+    col.box("collision_steel", [0, 0, U12A_H_M / 2], U12A_BAY_M / 2, 0.04, U12A_H_M / 2)
+    return m, l1, col
+
+
+def railing_u12a_post():
+    m, l1 = Mesh(), Mesh()
+    m.tube("paint_ral1012", [0, 0, -0.05], [0, 0, U12A_H_M], U12A_POST_D / 2, None, 8)
+    l1.tube("paint_ral1012", [0, 0, -0.05], [0, 0, U12A_H_M], U12A_POST_D / 2, None, 4)
+    return m, l1, None
+
+
+def fence_u12():
+    """One U-12 segment (2.50 x 0.83 m) between two red posts; origin at the ground under the segment centre."""
+    m, l1, col = Mesh(), Mesh(), Mesh()
+    w, h = U12_PANEL
+    z0 = 0.12                                                         # WORKING_VALUE: clearance under the segment
+    for mm, verticals in ((m, True), (l1, False)):
+        for x in (-w / 2, w / 2):
+            mm.box("paint_ral3020", [x, 0, (z0 + h + 0.05) / 2 - 0.02], 0.02, 0.03, (z0 + h + 0.05) / 2)
+        for k in range(5):
+            mm.box("paint_ral1012", [0, 0, z0 + k * h / 4], w / 2 - 0.02, 0.003, 0.0075)
+        if verticals:
+            for x in np.arange(-w / 2 + 0.05, w / 2 - 0.01, 0.05):
+                mm.box("paint_ral1012", [x, 0, z0 + h / 2], 0.0025, 0.0025, h / 2)
+        else:
+            mm.quad("paint_ral1012", [w / 2, 0, z0], [-w / 2, 0, z0], [-w / 2, 0, z0 + h], [w / 2, 0, z0 + h])
+            mm.quad("paint_ral1012", [-w / 2, 0, z0], [w / 2, 0, z0], [w / 2, 0, z0 + h], [-w / 2, 0, z0 + h])
+    col.box("collision_steel", [0, 0, (z0 + h) / 2], w / 2, 0.04, (z0 + h) / 2)
+    return m, l1, col
+
+
+def pylon_u5a():
+    m, l1, col = Mesh(), Mesh(), Mesh()
+    for mm, seg in ((m, 12), (l1, 6)):
+        mm.tube("paint_ral1012", [0, 0, 0], [0, 0, 0.06], U5A_BASE_M / 2, U5A_BASE_M / 2, seg)
+        mm.tube("paint_ral1012", [0, 0, 0.06], [0, 0, U5A_H_M - 0.15], U5A_D_M / 2, U5A_D_M / 2 * 0.85, seg, cap=False)
+        mm.tube("paint_white_reflective", [0, 0, U5A_H_M - 0.15], [0, 0, U5A_H_M - 0.04], U5A_D_M / 2 * 0.85,
+                U5A_D_M / 2 * 0.8, seg, cap=False)
+        mm.tube("paint_ral1012", [0, 0, U5A_H_M - 0.04], [0, 0, U5A_H_M], U5A_D_M / 2 * 0.8, U5A_D_M / 2 * 0.6, seg)
+    col.tube("collision_steel", [0, 0, 0], [0, 0, U5A_H_M], U5A_D_M / 2, None, 6)
+    return m, l1, col
 
 
 def lift_gate():
@@ -432,13 +704,17 @@ def hoop_bollard():
 
 
 def power_pole():
+    """Spun-concrete distribution pole. ADR 0162: ONE height for the mesh, the wire attachment (furniture.power_lines)
+    and the deck-clearance check (standards.GROUND_PROP_H["power_pole"], was 10 m against this 12 m mesh). No source
+    gives the pole series of the region (research G5: UNVERIFIED); 12.0 m above the ground stays WORKING_VALUE."""
+    H = S.GROUND_PROP_H["power_pole"]
     m, l1, col = Mesh(), Mesh(), Mesh()
     for mm, seg in ((m, 8), (l1, 4)):
-        mm.tube("concrete_pole", [0, 0, -0.5], [0, 0, 12.0], 0.16, 0.09, seg)
-        mm.box("steel_galv", [0, 0, 11.5], 0.9, 0.05, 0.05)
+        mm.tube("concrete_pole", [0, 0, -0.5], [0, 0, H], 0.16, 0.09, seg)
+        mm.box("steel_galv", [0, 0, H - 0.5], 0.9, 0.05, 0.05)
         for x in (-0.8, 0, 0.8):
-            mm.tube("insulator", [x, 0, 11.55], [x, 0, 11.85], 0.04, 0.04, 6)
-    col.tube("collision_steel", [0, 0, 0], [0, 0, 12.0], 0.2, None, 6)
+            mm.tube("insulator", [x, 0, H - 0.45], [x, 0, H - 0.15], 0.04, 0.04, 6)
+    col.tube("collision_steel", [0, 0, 0], [0, 0, H], 0.2, None, 6)
     return m, l1, col
 
 
@@ -546,7 +822,13 @@ def build_all(sign_codes, boards):
         P[f"signal_head_{lit}"] = signal_head(lit)
     P["signal_pole"] = signal_pole()
     P["signal_mast"] = signal_pole(S.SIGNAL_MAST_H, 6.0)
-    P["bus_shelter"] = bus_shelter()
+    for name, n in SHELTER_MODULES.items():          # ADR 0162: BKM 5 / 7 / 9 m red, older 7 m graphite
+        P[name] = bus_shelter_bkm(n, "red")
+    P["bus_shelter_black"] = bus_shelter_bkm(3, "black")
+    P["railing_u12a"] = railing_u12a()
+    P["railing_u12a_post"] = railing_u12a_post()
+    P["fence_u12"] = fence_u12()
+    P["pylon_u5a"] = pylon_u5a()
     P["lift_gate"] = lift_gate()
     P["sliding_gate"] = sliding_gate()
     P["bollard"] = bollard()

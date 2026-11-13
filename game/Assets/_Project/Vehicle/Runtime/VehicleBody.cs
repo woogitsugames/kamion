@@ -131,6 +131,12 @@ namespace Game.Vehicle.Runtime
         public void ConnectTrailer(TrailerBody trailer, bool coupled)
         {
             if (Model == null) Initialize(data);
+            // ADR 0165: the solver couples the bodies (fifth wheel), so PhysX must not also push tractor and trailer
+            // colliders apart (cab / frame vs trailer body near the kingpin at full articulation): restore the pair for
+            // the previous trailer, ignore it for the new one. Parity with the .NET runner, which has no
+            // tractor-trailer contact. Allocates (collider lists) only on connect, never per step.
+            if (Trailer != null && Trailer != trailer) SetCollisionIgnored(Trailer, false);
+            if (trailer != null) SetCollisionIgnored(trailer, true);
             Trailer = trailer;
             // R7: swap the trailer inside the existing combination (no rebuild of the tractor model / combination).
             Combination.SetTrailer(trailer != null ? trailer.Model : null, coupled && trailer != null);
@@ -139,6 +145,28 @@ namespace Game.Vehicle.Runtime
                 trailer.ApplyMassProps();
                 trailer.Model.Brakes.InitSpringChambers(trailer.Model.Group);
             }
+        }
+
+        /// <summary>Ignores (or restores) PhysX contacts between every tractor collider and every collider of <paramref name="trailer"/>.</summary>
+        void SetCollisionIgnored(TrailerBody trailer, bool ignore)
+        {
+            var mine = GetComponentsInChildren<Collider>(true);
+            var theirs = trailer.GetComponentsInChildren<Collider>(true);
+            foreach (var a in mine)
+                foreach (var b in theirs)
+                    UnityEngine.Physics.IgnoreCollision(a, b, ignore);
+        }
+
+        /// <summary>True when PhysX contacts between every tractor collider and every collider of <paramref name="trailer"/> are ignored.</summary>
+        public bool IsCollisionIgnored(TrailerBody trailer)
+        {
+            var mine = GetComponentsInChildren<Collider>(true);
+            var theirs = trailer.GetComponentsInChildren<Collider>(true);
+            if (mine.Length == 0 || theirs.Length == 0) return false;
+            foreach (var a in mine)
+                foreach (var b in theirs)
+                    if (!UnityEngine.Physics.GetIgnoreCollision(a, b)) return false;
+            return true;
         }
 
         /// <summary>Gives the tractor (and a coupled trailer) a forward speed with the drivetrain engaged (scripted starts, tests).</summary>
