@@ -1,3 +1,22 @@
+# HANDOVER — kamion, SESJA 18 (start 2026-11-13 18:2x; 5 h 0 % — reset 23:20 lokalnie; tydzień 16 %, Fable 0 % — reset 16.11 19:00) — nowa sesja: czytaj TEN blok, potem „STOP S17” niżej
+
+## STAN S18 (lider) — main `b880fc6a1`
+- 18:2x: C: ~690 GB; A16 RFGL34SJYDZ i S24+ RZCX60VE8ZY online; PHONE_RUN brak. Crony :17/:47/:07.
+- **SCALONE:** 0171 (budynki follow-up), 0173 (determinizm generatora; jednorazowa zmiana ~21 tys. drzew podszytu). Świat w main NIE przebudowany — jedna regeneracja po 0170/0175 (+0172/0180 jeśli zdążą).
+- Usunięte worktree: audio-synth-0176, dojlidy-import-0174, bldg2-0171, determ-0173 (skrypt `artifacts/lead-s17/remove-wt.ps1` — odłącza junctiony pod Data).
+- **Agenci (7; każdy: WIP commit + push gałęzi + live po każdym kroku):**
+| ADR | zadanie | model | worktree / gałąź | live |
+|---|---|---|---|---|
+| 0170 | P1 rdzeń korony przy kamerze (czarna skrzynka p07_b) + P2 tuja/świerk | Fable | `horizon-0170` | `artifacts/live/horizon-0170.md` |
+| 0175 | P0 Low kontur/tablica naczepy (regresja?) + odblaski bez emisji | Opus | `truck-regs-0175` | `artifacts/live/truck-regs-0175.md` |
+| 0178 | lampy białe o zmierzchu — ograniczenie max(r,g,b) wszystkich grup | Opus | `lamps-0178` | `artifacts/live/lamps-0178.md` |
+| 0179 | Dojlidy wizualnie (plan 1–8 w live) | Fable | `dojlidy-vis-0179` | `artifacts/live/dojlidy-vis-0179.md` |
+| 0172 | 182011 wg ortofoto 2024 (rekomendacja; decyzja właściciela otwarta) + znaki cm924 + P2 | Fable | `p1b-0172` | `artifacts/live/p1b-0172.md` |
+| 0180 | NOWE: wieżowiec — jedna kolumna okien na szczycie, długa elewacja pasma okien (P1 z recenzji 0171) | Fable | `tower-0180` | `artifacts/live/tower-0180.md` |
+| 0177 | p99: przegląd kodu → A16 spike_probe (JEDYNY z prawem do telefonu, sam zakłada PHONE_RUN) → procedura PSO do uruchomienia PO regeneracji | Opus | `perf-p99-0177` | `artifacts/live/perf-p99-0177.md` |
+- **Kolejność integracji:** 0170 (po krytyku) → 0175 (po P0) → [0172, 0180 jeśli gotowe] → JEDNA regeneracja (`pwsh -File artifacts/lead-s17/regen.ps1`) → pytest gis → commit generated → czysty APK → nagranie PSO (skrypt 0177) → APK → visual-critic SBS → gate3 A16 (PHONE_RUN ręcznie) → S24+ High/30.
+- **Ostatni przydzielony ADR: 0180.**
+
 # HANDOVER — kamion, STOP S17 (2026-11-13 18:1x; 5 h 93 % — reset 20:10 lokalnie; tydzień 69 %, Fable 95 % — reset 14.11 17:00) — prompt s18: `docs/owner/START-PROMPT-S18.md`
 
 ## STOP S17 — co dalej (nowa sesja/konto zaczyna TUTAJ)
