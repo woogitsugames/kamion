@@ -1,6 +1,6 @@
 # ADR 0171 — follow-up budynków po 0167: kolory okładzin (cm109685822, EC cm92458760, wieżowiec 177786/178689)
 
-Status: WIP na gałęzi `bldg2-0171` (2026-11-13, s17); nie scalone.
+Status: PROPOSED na gałęzi `bldg2-0171` (2026-11-13, s17); nie scalone; ocena `visual-critic` wymagana.
 Źródło: `docs/reports/visual/REVIEW-2026-11-13-s17-0167.md` (P1 cm109 ściana boczna, P2 EC za ciemny / okna bez
 białych ram, P2 wieżowiec szary zamiast bladożółtego).
 
@@ -41,6 +41,37 @@ Mapillary richlv 177786140912399 / 178689077481862 CC BY-SA 4.0).
 Odrzucone: nowy bladożółty materiał wieżowca z wariantem dalekiej elewacji (+2 draw w 6_6); osobny biały materiał
 ram w LOD1 (`window_frame` nie jest rysowany przez LOD1 chunku 6_7: +1 draw).
 
-## 3. Walidacja
+## 3. Walidacja (runda r2, zmierzone)
 
-(w toku — runda r1)
+`build_world` exit 0, import exit 0, vqa Low-clear exit 0, SBS Low clear + overcast 42 + 42 pary. Dowody (poza gitem):
+`artifacts/bldg2-0171/` w katalogu głównym — `pairs/Low-clear|Low-overcast`, `four-frames-r2-Low-clear.jpg`,
+`r2/budget-vs-base.txt`, `r2/stats.txt`, `base-stats-Low-clear.txt`, `tools/`, `logs/`. Runda r1: `pairs-r1/`.
+
+| Wielkość | Wynik |
+|---|---|
+| draws, tier Low, 48 kamer kontrolnych, baza = ta gałąź przed zmianą | **+0 we wszystkich 48** (r1: +2 w 8 kamerach G3-A — LOD0 chunku 6_6 rysowany z bliska dostał `plaster_slate_blue`, a `plaster_band_grey` został na 8 trójkątach biurowca `bdot:…C926`; override `g3a-small-office-no-band`, powód budżetowy, confidence low) |
+| trójkąty | maks. +1,95 % (cab-grain; LOD0 wieżowca z oknami punktowymi +3500), mediana ok. +0,1 % |
+| prymitywy LOD1 budynków (65 chunków) | netto 0; trójkąty LOD1 94 604 → 94 938 (+0,35 %) |
+| kamery kontrolne baza → r2, piksele z |Δ| > 25 | stretch-02 4,3 %, kwadrat-park-gate 3,2 %, pozostałe 46 ≤ 0,53 % (mediana 0,0 %) |
+| testy `tests/gis` 0167 / 0171 / g3b_frontage | 29 zielonych (pełny `tests/gis` nie uruchomiony w tej rundzie) |
+
+Kolory (średni sRGB wycinka, Low): budynek EC overcast (50,75,105) wobec ciemnego członu na zdjęciu (59–64,81,98–100)
+— było (40,61,82); długie jasne skrzydło na zdjęciu (101,133,143) pozostaje jaśniejsze i bardziej cyjanowe. Pawilon:
+ściana boczna w słońcu (112,129,145) — było (172,168,155); overcast (69,81,97). Wieżowiec: ściana w słońcu
+(160,157,145), ciepła, z oknami punktowymi — zdjęcie (214,209,190) jest nadal jaśniejsze.
+
+## 4. Otwarte
+
+- Ocena `visual-critic` (subagent nie uruchamia subagentów) i zrzuty z telefonu (APK Low na A16).
+- Wieżowiec jaśniejszy / bledszy: wymaga nowego materiału z wariantem dalekiej elewacji (+2 draw w 6_6) albo
+  rozjaśnienia sceny (ekspozycja / światło — poza zakresem). Długa elewacja na zdjęciu jest prawie biała, szczyt
+  piaskowy — dwa tony = kolejny draw.
+- Jasne skrzydło budynku EC (drugi odcień błękitu) — odrzucone w 0167 z powodu draw; bez zmian.
+- Szyby LOD1 pawilonu na ścianie SW odbijają niebo jasnobłękitnie (materiał ramy `hall_flashing`, metal 0,3).
+- `generated/` nie jest commitowane — przebudowa świata po scaleniu + powtórka SBS Low.
+- Fakty z przeglądu M53 (`docs/reports/REVIEW-2026-11-13-s17-mistral-r8-p3.md`; kolory ESTIMATED ze zdjęć), poza
+  zakresem 0171 (żaden z tych budynków nie leży w kadrach cm109 / cm924 / 177786 / 178689) — do osobnego zadania:
+  bloki Białostoczka kremowobiałe z czerwonobrązowymi / pomarańczowymi balkonami i pastelowymi szczytami; punktowce
+  białe z żółtymi / czerwonymi / pomarańczowymi panelami; Tysiąclecia 6 żółtozielony, Tysiąclecia 10 biały; MPZP
+  XXVII/451/26 (nowa zabudowa): elewacje maks. 3 kolory z zakresu biel / beż / brąz / szarość. Kolumny `kolor_srgb`
+  z PR #50 ani przypisań budynków z tamtego manifestu NIE używać (błędna w 4 z 5).
