@@ -41,10 +41,24 @@ listwa lampki), tylna tablica ciągnika nie miała lampki wcale (R48 6.8: obowi�
 
 ## Koszt
 Tylko piksele materiału Lights. Soczewka: 1–2 `exp`, kilka `frac` / `smoothstep`, 2× `fwidth`; brak tekstur.
-Trójkąty: WYNIK_TRIS. Draw calle bez zmian (te same sloty). Czas GPU na telefonie: UNVERIFIED (pomiar — lider).
+Trójkąty (`check_export` PASS dla obu): ciągnik LOD0 105 356 / 140 000, LOD1 42 999 / 45 000, LOD2 17 838 / 17 900
+(było 17 812; +26 = lampka tablicy); naczepa LOD0 89 000 / 90 000, LOD1 24 499 / 25 000, LOD2 7 850 / 8 000 (było 7 847;
+lampka tablicy zostaje na LOD2 — `REGS_KEEP`). Gęstość atlasu Lights ciągnika 1 353 → 1 295 px/m (High; doszła tablica). Draw calle bez zmian (te same sloty). Czas GPU na telefonie: UNVERIFIED (pomiar — lider).
 
 ## Weryfikacja
-WYNIK_WERYFIKACJA
+- EditMode `TruckLampLensTests` (nowe, 18 przypadków): ramka soczewki poprawna na LOD0–2 obu pojazdów (styl 1–5,
+  W 1–1023, H 1–255, u'/v' w 0,015–0,985; REFLEX tylko na nieemitujących odblaskach), tablice = PLATE 520 × 114 mm z
+  lampką nad górną krawędzią (LOD0 i LOD2), odczyt GPU `KamionLensEval`: brak ramki = tożsamość, `hdr`/`disp` ≤ 1,
+  uszczelka ciemniejsza od emitera, REFLEX nie emituje, zanik tablicy ograniczony. Razem z `TruckLampEncodingTests`
+  i `TruckRegulationLampTests`: 45/45. Pełny EditMode: 552 — 549 passed, 1 skipped, 2 failed (`CarPaintMaterialTests.DepositionChannel_*`, znane z bazy: padają w świeżych worktree, HANDOVER).
+- Visual QA WorldC (edytor RTX 5070, nie telefon), High i Low, `dusk` / `dusk + stop + awaryjne` / `overcast` /
+  `overcast + mijania + stop + awaryjne`, kamery `lamp-trailer`, `lamp-truck` (2 m), `trailer-34`, `truck-rear34`,
+  `chase`: `artifacts/lamplens-0181/{before,after}/<Tier>-<wariant>/`, zestawienia `sheet-trailer-lamps.jpg`,
+  `sheet-tractor-lamps.jpg`, wycinki `view/`. Regresja przodu / boków: `after/High-dusk-regress/`.
+- Obejrzane: komory rozdzielone uszczelką, widoczne odbłyśniki i punkty LED (zgaszone w dzień i zapalone), pierścienie
+  Fresnela na cofania / przeciwmgłowym, pryzmaty na odblasku i trójkącie; pozycyjne vs stop różnią się poziomem tła
+  między diodami; tablica oświetlona z zanikiem od góry, czytelna także na Low (LOD2); z kamery `chase` lampy są
+  stabilnymi plamami barwy (bez mory). Piksel tablicy (góra, High dusk, sRGB): 85 → 208.
 
 ## Otwarte
 - Brak profilu oświetlenia „noc” w `visual-qa` (jest clear / overcast / lowsun / dusk) — noc nieoceniona.
