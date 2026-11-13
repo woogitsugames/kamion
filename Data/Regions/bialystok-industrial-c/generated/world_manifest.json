@@ -9280,19 +9280,19 @@
     "z_max_evrf2007": 185.5,
     "z_min_evrf2007": 137.09
    },
-   "bytes": 10069900,
+   "bytes": 9963864,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_6_6.glb",
    "forest_cells": [],
    "id": "6_6",
    "instances": {
-    "count": 329,
+    "count": 328,
     "file": "Data/raw/derived/bialystok-industrial-c/world/instances_6_6.json",
-    "sha256": "2337c7ccf7d58bc57370fb06243caafcadcb1478c3d52b97c1c1e6e505081930"
+    "sha256": "3135d964558d28bcc4e0b1f56c8e2dee4bbfeaf503e8bb99e7d65ffeab0a24f9"
    },
    "low": {
-    "bytes": 3770556,
+    "bytes": 3782000,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_6_6.low.glb",
-    "sha256": "ddf0af3c59389fdeea21625c90ed999092d6e14d7bc72e3141e309dab73344a0"
+    "sha256": "d68594434bb6abe87b283f5cfce13dacf16babd2550d28d98196792a29a4ad36"
    },
    "materials": [
     "balcony_slab",
@@ -9345,11 +9345,12 @@
     "plaster_band_grey",
     "plaster_beige",
     "plaster_beige__far_office",
+    "plaster_beige__far_ribbon",
+    "plaster_blue",
     "plaster_grey",
     "plaster_grey__far_office",
     "plaster_light",
     "plaster_light__far_office",
-    "plaster_light__far_ribbon",
     "plaster_white",
     "plaster_white__far_ribbon",
     "plate_white",
@@ -9362,6 +9363,7 @@
     "roof_membrane",
     "roof_vent",
     "rubber_black",
+    "showroom_glass",
     "sidewalk_paving",
     "skylight",
     "steel_checker",
@@ -9377,11 +9379,11 @@
     "yard_concrete_worn",
     "yard_slabs"
    ],
-   "sha256": "cdfc7b8cdcada54158257dd0eb8ce8d292681943a6bb60c780d78b4c6a41e890",
+   "sha256": "189946b25cb89e916a9a7de704a7ae81e2630545d9f488eb66cdf80575ef74d8",
    "triangles": {
     "bridge": 9686,
-    "buildings": 21101,
-    "buildings_lod1": 2644,
+    "buildings": 19511,
+    "buildings_lod1": 2817,
     "furniture": 19441,
     "markings": 7437,
     "paved": 11827,
@@ -9400,10 +9402,10 @@
     "e_min": 512.0,
     "n_max": -768.0,
     "n_min": -1024.0,
-    "z_max_evrf2007": 172.81,
+    "z_max_evrf2007": 176.46,
     "z_min_evrf2007": 133.2
    },
-   "bytes": 9670172,
+   "bytes": 9611776,
    "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_6_7.glb",
    "forest_cells": [],
    "id": "6_7",
@@ -9413,9 +9415,9 @@
     "sha256": "93318868691e66928a7a666d971a10bf2a2b240bad2fb869e1d14df534d73533"
    },
    "low": {
-    "bytes": 2385028,
+    "bytes": 2419456,
     "file": "Data/raw/derived/bialystok-industrial-c/world/chunk_6_7.low.glb",
-    "sha256": "606956f65ef2f369c878a5b2b41979f605bc7c5f756cc734594716c6cd6c317e"
+    "sha256": "6026c27cd91a5979d79a3f04ce4166c4fb2c813a28beb862c75ab507c74dcca7"
    },
    "materials": [
     "barrier_steel",
@@ -9455,6 +9457,7 @@
     "hall_wall_silver",
     "hall_wall_white",
     "marking_white",
+    "plaster_blue",
     "plaster_grey",
     "plaster_grey__far_ribbon",
     "plaster_light",
@@ -9470,6 +9473,7 @@
     "roof_membrane",
     "roof_vent",
     "shoulder_gravel",
+    "showroom_glass",
     "sidewalk_paving",
     "skylight",
     "terrain_grass",
@@ -9478,11 +9482,11 @@
     "wire",
     "yard_asphalt"
    ],
-   "sha256": "8ffdb60692031d30acb120b687d94146d842c914bea915367e66395b55585cf9",
+   "sha256": "a79cc16ab0c9a98d6efb158dc18ce7bbae122993b296ce4eee96ece4cbc54ca2",
    "triangles": {
     "bridge": 2611,
-    "buildings": 36540,
-    "buildings_lod1": 3816,
+    "buildings": 35130,
+    "buildings_lod1": 4445,
     "furniture": 3888,
     "markings": 1516,
     "paved": 2376,
@@ -13989,6 +13993,23 @@
    "texture_set": "facade_far",
    "tint_linear": true
   },
+  "plaster_blue": {
+   "color": [
+    0.09,
+    0.19,
+    0.31
+   ],
+   "rough": 0.9,
+   "runoff": true,
+   "set_tile": true,
+   "sky_occ": [
+    0.5,
+    0.0
+   ],
+   "splash_h": 1.2,
+   "texture_set": "plaster",
+   "tint_linear": true
+  },
   "plaster_cream": {
    "color": [
     0.506,
@@ -16138,7 +16159,7 @@
  "sources_sha256": {
   "generated/osm_context.json": "27b824f9303be887c054d527e1e9e80a423cd3ecf719c628ff51b775ee6b672b",
   "heightmap.r16 (Data/raw)": "37b2d3c033a215e4ba17361ffe571088f8181feef6078ac316e75d683bcca091",
-  "overrides.yaml": "854efa87632b571ca6fd46e717ebd760f84d5cca71e908f6541cf95e3a7ddc95",
+  "overrides.yaml": "884d39b4bc36a47362b1b867aded8e354d495c603866f1f8962461f082226d1a",
   "roads.graph.json": "0bd625e041a6a2ca90a74f1652336c731182c234985352de4d377110f1d42cf6",
   "terrain.json": "52ee459e40fa0aaf59ac6d53223d604c3a01dbeb7099e84c77e02d27dbb1f234"
  },
