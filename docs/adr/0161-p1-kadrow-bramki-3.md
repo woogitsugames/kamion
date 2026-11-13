@@ -45,7 +45,7 @@ b5: road consistency **65**, na trasie `lane_blind_end` **1** (bez regresji wobe
 ## Weryfikacja
 - Świat b5 (= b6 po zmianie samego `reason`): road consistency 65, `lane_blind_end` na trasie 1 (jak main).
 - Import Low 122,3 MB / High 264,8 MB (`WORLD_MEMORY`), 64 chunki; ImpostorTrimBake 18 impostorów; EditMode 493/493.
-- pytest `tests/gis`: PYTEST_FILL. Po drodze `test_measured_sections_have_evidence` wymagał ścieżki `xsec/` w
+- pytest `tests/gis`: **1010 passed, 3 xfailed** (b6, 16 min, `artifacts/p1-0161/logs/pytest-gis-final2.log`). Po drodze `test_measured_sections_have_evidence` wymagał ścieżki `xsec/` w
   `reason` — dowody (wycinki ortofoto `hr_cm109*.png`) skopiowane do `artifacts/p1-0161/xsec/`.
 - Budżet Low (48 kamer kontrolnych, `visual-qa -Tier Low -Lighting clear`) wobec `artifacts/world-int-s16/after`:
   draws −252 … +6 (instancing z main), trójkąty −1,47 … +2,73 %, wyjątek `stretch-05-docks` +7,51 % (instancje
