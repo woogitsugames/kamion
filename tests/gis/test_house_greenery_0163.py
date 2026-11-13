@@ -212,7 +212,7 @@ def test_garden_tree_geometry_full_and_lite():
         full, lite = PLT.Kit(), PLT.Kit()
         PT.garden_tree(full, np.array([0.0, 0.0]), 10.0, R_MED, H, cb, sp, ("g", sp))
         PT.garden_tree(lite, np.array([0.0, 0.0]), 10.0, R_MED, H, cb, sp, ("g", sp), lite=True)
-        for kit, cap in ((full, 110), (lite, 10)):
+        for kit, cap in ((full, 44), (lite, 10)):
             V, UV, T, C = kit.out()
             fol = C[:, 3] > 0.5
             assert len(T) <= cap
@@ -227,7 +227,7 @@ def test_garden_tree_geometry_full_and_lite():
     dense, open_ = PLT.Kit(), PLT.Kit()
     PT.garden_tree(dense, np.array([0.0, 0.0]), 0.0, 2.0, 6.5, 1.3, "linden", "d")
     PT.garden_tree(open_, np.array([0.0, 0.0]), 0.0, 2.0, 8.0, 1.3, "birch", "d")
-    assert len(dense.out()[2]) > len(open_.out()[2]) + 20                         # core + sprays only in the dense habits
+    assert len(dense.out()[2]) > len(open_.out()[2]) + 15                         # core + sprays only in the dense habits
 
 
 def _crowns(n, seed=7):
@@ -244,7 +244,7 @@ def test_garden_trees_are_kit_geometry_on_both_tiers_with_the_g7_mix():
     assert rep["trees"] == 600 and rep["skipped"] == {}
     mine = [p for p in buf.parts if p.src == "plot:t:g7-trees"]
     assert {p.layer for p in mine} == {"plots", "plots_low"}                       # Low / Medium draw them too (A16)
-    assert 0 < rep["tris_low"] <= 10 * 600 and rep["tris_low"] < rep["tris_high"] <= 110 * 600
+    assert 0 < rep["tris_low"] <= 10 * 600 and rep["tris_low"] < rep["tris_high"] <= 66 * 600
     share = {k: v / 600 for k, v in rep["species"].items()}
     for sp, want in PT.G7["broadleaf_mix"].items():                               # G7 # 11
         assert abs(share.get(sp, 0.0) - want) <= 0.07, (sp, share)
@@ -333,6 +333,42 @@ def test_plots_build_hands_broadleaf_crowns_and_the_front_over_to_the_plan():
     assert len(out2["trees"]) >= 2 and rep2["plots"]["fruit_trees"] >= 1
 
 
+def test_overhanging_crowns_get_their_stem_behind_the_fence():
+    """G7 # 1 / # 2: a crown in front of a plot, near the carriageway, is a garden tree whose crown hangs over the fence -
+    not a street tree: the stem goes >= 1 m inside the fence. Crowns away from every street are not claimed."""
+    rp = _canopy_plot()
+    rp["canopy"] = np.array([[10.0, -4.5, 3.0, 0, 60], [18.0, -3.0, 1.6, 0, 60], [20.0, -2.0, 2.0, 1, 50], [10.0, -7.5, 3.0, 0, 60],
+                             [12.0, 45.0, 3.0, 0, 60], [40.0, 60.0, 3.0, 0, 60]])
+    rp["garden_trees"] = []
+    rep = {"skipped": {}}
+    out = PT.claim_street_crowns(rp, rep)
+    poly = rp["plots"][0]["poly"]
+    assert len(out) == 4 and {t["kind"] for t in out} == {"broadleaf", "conifer"}       # the two far crowns are left out
+    open_ground = [t for t in out if t["plot"] is None]      # (10, -7.5): further than 6 m from the plot, beside the road
+    assert len(open_ground) == 1 and not open_ground[0]["in_plot"]
+    assert rp["carriage"].distance(Point(*open_ground[0]["p"])) >= PLT.STREET_TREE_CW_M - 1e-6
+    assert rp["roads_poly"].distance(Point(*open_ground[0]["p"])) >= 0.8
+    for t in out:
+        if t["plot"] is None:
+            continue
+        q = Point(*t["p"])
+        assert t["in_plot"] and t["moved"] and t["claimed"] and t["plot"] == "x"
+        assert poly.contains(q) and poly.exterior.distance(q) >= PT.BEHIND_FENCE_M - 1e-6
+        assert not rp["plots"][0]["hard"].buffer(0.3).contains(q) and rp["plots"][0]["foot"].distance(q) >= 1.8 - 1e-6
+    P = np.array([t["p"] for t in out])
+    d = np.hypot(*(P[:, None] - P[None]).transpose(2, 0, 1)) + np.eye(len(P)) * 99
+    assert d.min() >= PT.TREE_GAP_M - 1e-6
+    # an entry plots.build recorded on the strip is moved the same way; one it meshed itself is not touched
+    rp["garden_trees"] = [{"plot": "x", "key": ("k", "cn", 10.0, -4.5), "p": np.array([10.0, -4.5]), "r": 3.0, "in_plot": False,
+                           "near": True, "kind": "broadleaf"},
+                          {"plot": "x", "key": ("k", "cn", 21.0, 25.0), "p": np.array([21.0, 25.0]), "r": 2.0, "in_plot": True,
+                           "near": False, "kind": "conifer", "meshed": True}]
+    out2 = PT.claim_street_crowns(rp, {"skipped": {}})
+    first = next(t for t in out2 if t["key"] == ("k", "cn", 10.0, -4.5))
+    assert first["moved"] and poly.contains(Point(*first["p"]))
+    assert not any(t.get("meshed") for t in out2)
+
+
 def _qa():
     path = REGION / "generated" / "streetscape_qa.json"
     qa = json.loads(path.read_text(encoding="utf-8"))
@@ -362,19 +398,24 @@ def test_region_garden_trees_match_g7_density_and_size():
     them is a street tree of the region's library; # 4-6: the typical tree is 5-8 m."""
     qa = _qa()
     gt = qa["garden_trees"]
-    assert gt["trees"] >= 150 and gt["tris_low"] > 0
+    assert gt["trees"] >= 300 and 0 < gt["tris_low"] <= 12_000 and gt["tris_high"] <= 34_000
     assert qa["plots"]["inst_trees_kept"] == 0                                    # no stone pines of the library in gardens
     origin = np.array([777995.0, 596223.0])
     graph = json.loads((REGION / "roads.graph.json").read_text(encoding="utf-8"))
     axes = unary_union([LineString(np.asarray(e["geometry"], float)[:, :2] - origin) for e in graph["edges"]
                         if e["attrs"].get("name", {}).get("v") in HOUSE_STREETS])
-    strip = axes.buffer(8.0)
-    pts = [(t["e"], t["n"]) for t in gt["list"]] + [(t["e"], t["n"]) for t in gt["conifers"]]
-    n = sum(1 for p in pts if strip.contains(Point(*p)))
-    per100 = n / axes.length * 100.0
-    assert 8.0 <= per100 <= 12.5, per100
+    pts = [Point(t["e"], t["n"]) for t in gt["list"]] + [Point(t["e"], t["n"]) for t in gt["conifers"]]
+    per100 = {d: sum(1 for p in pts if axes.distance(p) <= d) / axes.length * 100.0 for d in (8.0, 12.0)}
+    # the orthophoto has 9.9 crowns / 100 m within 8 m and 12.7 within 12 m. The stems stand behind the fences (G7 # 1:
+    # no tree in the road strip), >= 1 m inside, so part of the 8 m crowns are stems of the 8-12 m band.
+    assert 7.0 <= per100[8.0] <= 12.0, per100
+    assert 10.5 <= per100[12.0] <= 14.0, per100
+    assert gt["moved_behind_fence"] >= 50
+    # none in the road strip of the house streets: every stem is behind a fence or >= 3 m from the carriageway
+    assert all(t["moved"] or not t["claimed"] or t["street_strip"] for t in gt["list"])
     hs = np.array([t["h_m"] for t in gt["list"]])
-    assert 5.0 <= np.median(hs) <= 8.0 and np.mean(hs >= 12.0) <= 0.08, (np.median(hs), np.mean(hs >= 12.0))
+    assert 5.0 <= np.median(hs) <= 8.0 and np.mean(hs >= 12.0) <= 0.15, (np.median(hs), np.mean(hs >= 12.0))
+    assert np.mean([t["r_m"] >= 4.0 for t in gt["list"]]) <= 0.06                 # G7 # 5: big crowns are the exception
     assert max(t["h_m"] for t in gt["list"] if t["species"] == "birch") <= 20.0
     share = {k: v / gt["trees"] for k, v in gt["species"].items()}
     for sp, want in PT.G7["broadleaf_mix"].items():

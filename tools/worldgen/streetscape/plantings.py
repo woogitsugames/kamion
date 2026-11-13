@@ -892,8 +892,8 @@ def garden_tree(kit, p, z, r, H, cb, species, key, lite=False, cards=3):
     occ = 0.86 + 0.14 * PLT.hfloat(key, "to")
     # the sprays sit INSIDE the habit's silhouette (the crossed cards own the outline; sprays that reached it gave the
     # crown a flat, boxy skirt): they close the gaps between the cards from oblique views and from above
-    PLT._core(kit, cc, z + cb + hc * 0.16, r * 0.46, hc * 0.62, key, sides=5, occ=0.26 * occ, rings=3)
-    n_lo, n_hi = (5, 4) if dense >= 1.0 else (3, 2)
+    PLT._core(kit, cc, z + cb + hc * 0.16, r * 0.46, hc * 0.62, key, sides=4, occ=0.26 * occ, rings=2)
+    n_lo, n_hi = (4, 3) if dense >= 1.0 else (3, 2)
     for i in range(n_lo):                                    # lower tier of sprays
         az = a0 + 2 * math.pi * (i + 0.4 * (PLT.hfloat(key, "sj", i) - 0.5)) / n_lo
         c = cc + np.array([math.cos(az), math.sin(az)]) * r * (0.40 + 0.08 * PLT.hfloat(key, "sd", i))
@@ -907,6 +907,141 @@ def garden_tree(kit, p, z, r, H, cb, species, key, lite=False, cards=3):
                        flip=i % 2 == 1)
 
 
+STRIP_REACH_M = 6.0              # a crown up to this far outside a plot belongs to a tree of that garden (plots.STREET_STRIP_M)
+BEHIND_FENCE_M = 1.0             # ... whose stem stands at least this far inside the fence
+MOVE_MAX_M = 7.5                 # a stem is never put further than this from the crown centre the orthophoto shows
+TREE_GAP_M = 1.6                 # smallest distance between two stems
+STREET_REACH_M = 10.0            # only crowns this close to a carriageway are claimed: the strip seen from the street
+
+
+def _tree_room(plot):
+    """where a stem may stand in a plot: inside the fence, off the house, the driveway, the door zones and the gate"""
+    room = plot["poly"].buffer(-BEHIND_FENCE_M).difference(plot["foot"].buffer(1.8))
+    hard = plot.get("hard")
+    if hard is not None and not hard.is_empty:
+        room = room.difference(hard.buffer(0.35))
+    for z in plot.get("door_zones") or []:
+        room = room.difference(z.buffer(0.3))
+    lay = plot["lay"]
+    for g in ([lay["gate"]] if lay.get("gate") is not None else []) + ([lay["wicket"]] if lay.get("wicket") is not None else []) \
+            + list(lay.get("wickets") or []):
+        m, n = np.asarray(g["m"], float), np.asarray(g["n"], float)
+        room = room.difference(LineString([m + n * 1.0, m - n * 8.0]).buffer(g["w"] / 2 + 0.8, cap_style="flat"))
+    return room
+
+
+def claim_street_crowns(rp, rep):
+    """ADR 0163, G7 # 1 / # 2: the house streets have NO trees in the road strip, yet 10 crowns per 100 m of axis stand
+    within 8 m of it - garden trees whose crowns hang over the fence and the footway. plots.build plants a crown that
+    lies in front of a plot where the orthophoto shows its centre (on the verge: a street tree that is not there) or
+    drops it (near the carriageway, conifers, small crowns). Here every crown of a tree (r >= 1.25 m) that no plot
+    claimed gets its stem: behind the fence of the plot it overhangs (nearest admissible point, at most MOVE_MAX_M
+    from the crown centre), or - beside a house without a generated plot - where it is, pushed clear of the roads.
+    Returns the plan entries (the recorded street-strip entries of plots.build are moved behind their fence too)."""
+    from shapely.ops import nearest_points
+    plots = rp.get("plots", [])
+    plan = rp.get("garden_trees") or []
+    canopy = rp.get("canopy")
+    by_id = {p["id"]: p for p in plots}
+    rooms = {}
+    out, stems = [], []
+
+    def room(pid):
+        if pid not in rooms:
+            rooms[pid] = _tree_room(by_id[pid])
+        return rooms[pid]
+
+    def free(p):
+        return all(np.hypot(*(p - q)) >= TREE_GAP_M for q in stems)
+
+    def take(entry, p):
+        stems.append(p)
+        out.append(dict(entry, p=p))
+
+    def behind_fence(pid, c):
+        """the admissible point of the plot nearest to the crown centre c that keeps TREE_GAP_M to the other stems"""
+        reg = room(pid) if pid in by_id else None
+        if reg is None or reg.is_empty:
+            return None, "no_room_behind_fence"
+        q = np.asarray(nearest_points(reg, Point(*c))[0].coords[0])
+        if np.hypot(*(q - c)) > MOVE_MAX_M:
+            return None, "no_room_behind_fence"
+        if free(q):
+            return q, None
+        ring = reg.boundary.intersection(Point(*c).buffer(MOVE_MAX_M))
+        cands = []
+        for ln in getattr(ring, "geoms", [ring]):
+            if ln.geom_type != "LineString":
+                continue
+            cands += [np.asarray(ln.interpolate(d).coords[0]) for d in np.arange(0.0, ln.length, 0.8)]
+        for q in sorted(cands, key=lambda v: float(np.hypot(*(v - c)))):
+            if free(q):
+                return q, None
+        return None, "stem_too_close"
+    for t in plan:                                           # stems plots.build placed: in the plot as they are
+        if t["in_plot"]:
+            stems.append(np.asarray(t["p"], float))
+            if not t.get("meshed"):
+                out.append(t)
+    for t in plan:                                           # its street-strip trees: behind the fence
+        if t["in_plot"] or t.get("meshed"):
+            continue
+        q, why = behind_fence(t["plot"], np.asarray(t["p"], float))
+        if q is None:
+            rep["skipped"][why] = rep["skipped"].get(why, 0) + 1
+            continue
+        take(dict(t, in_plot=True, near=True, moved=True), q)
+    if canopy is None or not len(canopy) or not plots:
+        return out
+    seen = {(k["key"][2], k["key"][3]) for k in plan if len(k.get("key", ())) >= 4}
+    polys = [p["poly"] for p in plots]
+    tree = shapely.STRtree(polys)
+    all_plots = shapely.unary_union(polys)
+    shapely.prepare(all_plots)
+    roads, carriage, bpoly = rp.get("roads_poly"), rp.get("carriage"), rp.get("bpoly")
+    for ci in np.argsort(-canopy[:, 2], kind="stable"):
+        cx, cy, r, con = float(canopy[ci, 0]), float(canopy[ci, 1]), float(canopy[ci, 2]), canopy[ci, 3] > 0.5
+        if r < PLT.PC_R_TREE or (round(cx, 1), round(cy, 1)) in seen:
+            continue
+        c = np.array([cx, cy])
+        pt = Point(cx, cy)
+        if all_plots.contains(pt):
+            continue                                         # the plot had its say (cap per plot, no free spot)
+        if carriage is None or carriage.is_empty or carriage.distance(pt) > STREET_REACH_M:
+            continue                                         # not a crown of the street strip (G7 # 2: <= 8-12 m of the axis)
+        entry = {"key": ("g7c", round(cx, 1), round(cy, 1)), "r": r, "near": True, "kind": "conifer" if con else "broadleaf",
+                 "claimed": True}
+        j = int(tree.nearest(pt))
+        if polys[j].distance(pt) <= STRIP_REACH_M:
+            pid = plots[j]["id"]
+            q, why = behind_fence(pid, c)
+            if q is None:
+                rep["skipped"][why] = rep["skipped"].get(why, 0) + 1
+                continue
+            take(dict(entry, plot=pid, in_plot=True, moved=True), q)
+            continue
+        # a garden without a generated plot: the stem where the crown is, pushed away from the carriageway / footway
+        q = c
+        if carriage is not None and not carriage.is_empty and carriage.distance(pt) < PLT.STREET_TREE_CW_M + 0.2:
+            n0 = np.asarray(nearest_points(carriage, pt)[0].coords[0])
+            d = c - n0
+            if np.hypot(*d) < 1e-6:
+                rep["skipped"]["crown_over_carriageway"] = rep["skipped"].get("crown_over_carriageway", 0) + 1
+                continue
+            q = n0 + d / np.hypot(*d) * (PLT.STREET_TREE_CW_M + 0.3)
+        qp = Point(*q)
+        if not free(q):
+            rep["skipped"]["stem_too_close"] = rep["skipped"].get("stem_too_close", 0) + 1
+            continue
+        if (roads is not None and roads.distance(qp) < 0.8) or (bpoly is not None and bpoly.distance(qp) < 1.8) \
+                or all_plots.distance(qp) < 0.6 or np.hypot(*(q - c)) > MOVE_MAX_M \
+                or (carriage is not None and not carriage.is_empty and carriage.distance(qp) < PLT.STREET_TREE_CW_M):
+            rep["skipped"]["no_free_ground"] = rep["skipped"].get("no_free_ground", 0) + 1
+            continue
+        take(dict(entry, plot=None, in_plot=False, moved=bool(np.hypot(*(q - c)) > 0.05)), q)
+    return out
+
+
 def garden_trees(buf, rp, zf, report, half=1024.0, region_trees=None):
     """ADR 0163: mesh the broadleaf garden trees plots.build recorded from the orthophoto crowns (rp["garden_trees"])
     into the plot kit - on every tier (ADR 0132 r4b drew them as instances of the region's tree library, High / Medium
@@ -917,7 +1052,9 @@ def garden_trees(buf, rp, zf, report, half=1024.0, region_trees=None):
     groups = _garden_groups(buf, half)
     rep = {"source": "crowns: GUGiK orthophoto 2024 (plot_canopy.json); habit / height: G7 # 6-7, 11-14",
            "trees": 0, "street_strip": 0, "species": {}, "tris_high": 0, "tris_low": 0, "skipped": {}, "list": []}
-    todo = [t for t in plan if t.get("kind") == "broadleaf"]
+    claimed = claim_street_crowns(rp, rep)
+    todo = [t for t in claimed if t.get("kind") == "broadleaf"]
+    extra_conifers = [t for t in claimed if t.get("kind") == "conifer"]
     kd = None
     if region_trees:
         from scipy.spatial import cKDTree
@@ -961,8 +1098,22 @@ def garden_trees(buf, rp, zf, report, half=1024.0, region_trees=None):
         rep["species"][sp] = rep["species"].get(sp, 0) + 1
         rep["list"].append({"plot": t["plot"], "e": round(float(p[0]), 2), "n": round(float(p[1]), 2), "r_m": round(r, 2),
                             "species": sp, "h_m": H, "crown_base_m": cb if sp != "fruit" else None,
-                            "street_strip": not t["in_plot"], "near": bool(t["near"])})
+                            "street_strip": not t["in_plot"], "near": bool(t["near"]), "moved": bool(t.get("moved")),
+                            "claimed": bool(t.get("claimed"))})
     rep["conifers"] = [{"e": round(float(t["p"][0]), 2), "n": round(float(t["p"][1]), 2), "r_m": round(float(t["r"]), 2)}
                        for t in plan if t.get("kind") == "conifer"]
+    for t in extra_conifers:                                 # spruces whose crowns hang over the fence (G7 # 8-10)
+        p, r, key = np.asarray(t["p"], float), float(t["r"]), t["key"]
+        if kd is not None and kd.query(p)[0] < 2.5:
+            continue
+        kit = PLT.Kit()
+        kit.tag = "g7_spruce"
+        h = min(3.2 + 3.4 * r, 14.0) * (0.9 + 0.2 * PLT.hfloat(key, "h"))
+        PLT.spruce(kit, p, zf(p), h, key)
+        if _emit(buf, kit, groups, half, f"plot:{t['plot']}:g7-trees", rep):
+            rep["conifers"].append({"e": round(float(p[0]), 2), "n": round(float(p[1]), 2), "r_m": round(r, 2), "h_m": round(h, 1),
+                                    "claimed": True})
+    rep["claimed_crowns"] = sum(1 for t in rep["list"] if t.get("claimed")) + sum(1 for t in rep["conifers"] if t.get("claimed"))
+    rep["moved_behind_fence"] = sum(1 for t in rep["list"] if t.get("moved"))
     report["garden_trees"] = rep
     return rep
