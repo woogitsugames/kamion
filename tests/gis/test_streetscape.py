@@ -318,7 +318,8 @@ def test_yards_have_trucks_and_containers(qa):
 def test_second_lamp_family_on_side_streets(qa):
     fam = qa["furniture"]["lamps"]["by_family"]
     old = sum(v for k, v in fam.items() if k.startswith("lamp_old_"))
-    assert old >= 50 and fam.get("lamp_12m", 0) > 0          # older family exists, main roads keep the modern one
+    # older family exists, main roads keep the modern one (GP 11 m since ADR 0162, ZDM PFU "do 11 m")
+    assert old >= 50 and fam.get("lamp_11m", 0) > 0
 
 
 def test_vehicle_prototypes_are_plain():

@@ -76,7 +76,7 @@ Andersa/Putry (−2 draw na tablicę).
   konstrukcje + 5 tablic z G3 2024), g3a-rondo-bie-approach +3, putry-above +1, route-putry-entry-signs +1,
   route-putry-approach −5, driver-andersa-to-putry −10, stretch-01..05 0…−4; tris max +1,0 % (edge-north,
   route-putry-approach).
-- pytest `tests/gis` (po poprawce testu listy bramownic) — patrz STATUS; EditMode 498/498 (w tym
+- pytest `tests/gis`: 1016 passed / 1 failed / 3 xfailed (18,6 min); jedyny błąd = test oczekujący `lamp_12m` (GP 12 → 11 m) — poprawiony, `test_streetscape.py` 59/59; wcześniej poprawiona lista bramownic (+3 z G3). EditMode 498/498 (w tym
   `InstancePolicyShelterTests`, prefiks `bus_shelter` w `InstanceImporter.Policy`).
 - Pary (zdjęcie / przed Low / po Low / po High): `artifacts/furn-0162/pairs/` — wiaty BKM czerwone (sondy), portal
   P005–P008, E-1 P009, VMS P010, p40 wg 2024 czytelne; tył bramownic gładki szary.

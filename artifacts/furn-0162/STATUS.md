@@ -31,3 +31,7 @@
 - Redukcja: tablica OB = 1 materiał (lico + szary pas tyłu w teksturze tablicy; tył i szyny próbkują pas) -> 1 draw zamiast 3.
 - W TLE: `pwsh -File artifacts/furn-0162/tools/ab_b2.ps1` (build + import + rendery after*), log ab_run.log.
 - NASTĘPNY KROK: po "== done": `python artifacts/furn-0162/tools/budget.py artifacts/furn-0162/base-Low-clear artifacts/furn-0162/after-Low-clear artifacts/furn-0162/budget-low.txt`; pairs.ps1; EditMode testy.
+- 11:45 B2 (tablica OB = 1 materiał) Low: max draws +10 g3b-rondo-putry-approach (3 nowe konstrukcje + 5 tablic G3 2024), g3a-rondo-bie-approach +3, reszta trasy -10..+1; tris max +1,0 %. pytest gis 1016/1 fail (lamp_12m -> lamp_11m, poprawione; streetscape 59/59), EditMode 498/498. Pary w C:\Users\matma\Documents\Claude\kamion\artifacts\furn-0162\pairs\ (18). ADR 0162 Dowody uzupełnione.
+- DECYZJA WŁAŚCICIELA: +10 draws Low na g3b-rondo-putry-approach (421 -> 431) za 3 prawdziwe konstrukcje 2024 al. Tysiąclecia; para: pairs\probe-f162-tys-portal-g3p005.jpg. Dalsza redukcja = scalić tablice z bramownicą w jeden mesh (zmiana QA/walidatora tablic) — nie robione.
+- Gotowe do scalenia: TAK (z decyzją właściciela o +10 draws na jednej kamerze gate3 i akceptacją InstanceImporter.cs).
+- NASTĘPNY KROK (lider): `git merge furn-0162` (bez konfliktów z main w tools/tests), potem `pwsh scripts/import-region.ps1 -Region bialystok-industrial-c` i kamery WorldC.
