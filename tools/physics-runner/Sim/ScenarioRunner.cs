@@ -30,6 +30,8 @@ namespace PhysicsRunner.Sim
 
     public sealed class RunResult
     {
+        /// <summary>The driver that produced the run (e.g. StraightRunDriver: online pilot results, ADR 0195).</summary>
+        public IDriver Driver;
         public Scenario Scenario = null!;
         public List<Sample> Samples = new List<Sample>();
         public List<CheckResult> Checks = new List<CheckResult>();
@@ -331,7 +333,7 @@ namespace PhysicsRunner.Sim
             int every = Math.Max(1, sc.sampleEvery);
             var res = new RunResult
             {
-                Scenario = sc, CircleCenter = center, CircleRadius = sc.driver.radius, Dt = dt, SampleDt = dt * every,
+                Scenario = sc, Driver = driver, CircleCenter = center, CircleRadius = sc.driver.radius, Dt = dt, SampleDt = dt * every,
                 StaticKingpinLoad = s.Trailer != null ? s.Trailer.StaticNoseLoad(true) : 0, TotalMass = s.Tractor.MassProps.Mass + (s.Trailer?.Mass ?? 0),
             };
             res.Samples.Capacity = steps / every + 2;
