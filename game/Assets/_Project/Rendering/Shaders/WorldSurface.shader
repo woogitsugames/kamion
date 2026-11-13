@@ -362,7 +362,7 @@ Shader "Kamion/World Surface"
                 half3 env = GlossyEnvironmentReflection(R, perceptualRoughness, _Occlusion * giK) * lerp(specColor, grazing.xxx, fresnel) / (r2 + 1.0);
                 env *= 1.0 - _SkyOcc.y * (1.0 - smoothstep(0.05, 0.45, R.y));
                 color += ambient + env;
-                color += albedo * KamionLampPools(i.positionWS, n);   // ADR 0062
+                color += KamionLampPoolsLit(i.positionWS, n, V, r, r2, albedo * (1.0 - 0.04), specColor);   // ADR 0062, 0191
                 color += _Emission.rgb * (_KamionStreetLamps * _KamionExposure);
 
                 color = KamionMixFog(color, i.fogFactor);

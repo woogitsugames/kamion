@@ -24,6 +24,7 @@ namespace Game.Rendering.Editor
             public Vector4 cloudSourceLimits;
             public int pools, enabledPointLights;
             public Vector4[] headsAndWeights;
+            public Vector4[] axes;   // ADR 0191: arm x, arm z, sodium, road optic
             public Vector4[] poolGroundPoints, poolGroundViewport;
             public float[] nominalRoadLuxNoOcclusion;
             public LampSurface[] lampSurfaces;
@@ -55,6 +56,8 @@ namespace Game.Rendering.Editor
             int count = StreetLamps.PoolCount;
             var positions = new Vector4[count];
             Array.Copy(StreetLamps.PoolPositions, positions, count);
+            var axes = new Vector4[count];
+            Array.Copy(StreetLamps.PoolAxes, axes, count);
             var ground=new Vector4[count];var viewport=new Vector4[count];var nominalLux=new float[count];
             for(int i=0;i<count;i++)
             {
@@ -88,7 +91,7 @@ namespace Game.Rendering.Editor
                 actualWetFilmSmoothness = Shader.GetGlobalVector("_KamionWet").w > 0f ? Shader.GetGlobalVector("_KamionWet").w : 0.52f,
                 clearCloudSourceMinElevationDeg = environment.Active.clearCloudSourceMinElevationDeg,
                 cloudSourceLimits = Shader.GetGlobalVector("_KamionClearCloudSourceLimits"),
-                pools = count, headsAndWeights = positions,
+                pools = count, headsAndWeights = positions, axes = axes,
                 poolGroundPoints=ground,poolGroundViewport=viewport,nominalRoadLuxNoOcclusion=nominalLux,lampSurfaces=lampSurfaces,
                 projectedHeadlamps = KamionHeadlamps.Enabled, headlampDiagnostics = KamionHeadlamps.Diagnostics,
                 headlampLeft = Shader.GetGlobalVector("_KamionHeadlampLeft"),

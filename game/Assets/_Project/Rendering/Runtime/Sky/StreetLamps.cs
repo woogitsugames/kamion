@@ -18,6 +18,11 @@ namespace Game.Rendering
     ///   nadir, zero at 75°) - the pools on the road at no light / shadow / per-object cost (Low has no point lights).
     ///   A lamp near the edge of the chosen set fades out over the last 25 % of the distance to the first lamp left out,
     ///   so re-choosing does not pop.
+    /// - ADR 0191: each pool is one luminaire (not one column): its position on the arm, the arm direction and LED / sodium
+    ///   come from the lamp prototypes (WorldInstances, <see cref="StreetLampOptics.LuminairesFromGlass"/>), and the shader
+    ///   draws the asymmetric road-luminaire footprint of <see cref="StreetLampOptics"/> (long along the road, short
+    ///   behind the column) instead of a round 60° disc; sodium luminaires tint their pool. Tiers with
+    ///   <see cref="QualityProfile.Tier.lampPoolSpecular"/> add the GGX highlight of each lamp (the streak on asphalt).
     /// Photometry (WORKING_VALUE, typical LED road luminaire 8–12 klm): lens luminance 2·10⁵ cd/m² (clips to white, as on a
     /// phone), downward intensity ~2500 cd → Unity intensity = I·k/π in exposed units, range 30 m. Sodium (old
     /// luminaires, "_sodium" materials) 2000 K tint.
@@ -31,20 +36,40 @@ namespace Game.Rendering
 
         static readonly List<Material> s_Glass = new List<Material>();
         static Vector3[] s_Heads = new Vector3[0];
+        static Vector4[] s_Axes = new Vector4[0];
         static int s_HeadCount;
         static float s_On;
         static readonly int k_On = Shader.PropertyToID("_KamionStreetLamps"), k_LightsOn = Shader.PropertyToID("_KamionLampLights"),
             k_Emission = Shader.PropertyToID("_Emission"), k_PoolPos = Shader.PropertyToID("_KamionLampPos"),
-            k_PoolCount = Shader.PropertyToID("_KamionLampCount"), k_PoolColor = Shader.PropertyToID("_KamionLampColor");
+            k_PoolCount = Shader.PropertyToID("_KamionLampCount"), k_PoolColor = Shader.PropertyToID("_KamionLampColor"),
+            k_PoolAxis = Shader.PropertyToID("_KamionLampAxis"), k_PoolSodium = Shader.PropertyToID("_KamionLampSodium"),
+            k_PoolSpec = Shader.PropertyToID("_KamionLampSpec");
         /// <summary>Upper limit of the analytic pools (size of the shader array).</summary>
         public const int MaxPools = 8;
         /// <summary>The pool focus sits this far ahead of the camera (horizontal), where the visible road is.</summary>
         public const float PoolFocusAheadM = 30f;
         static readonly Vector4[] s_PoolPos = new Vector4[MaxPools];
+        static readonly Vector4[] s_PoolAxis = new Vector4[MaxPools];
         /// <summary>Number of analytic pools sent to the world shader in the last refresh (diagnostics / tests).</summary>
         public static int PoolCount { get; private set; }
         /// <summary>The pool array of the last refresh (xyz head, w fade weight); read-only use.</summary>
         public static Vector4[] PoolPositions => s_PoolPos;
+        /// <summary>ADR 0191: the pool axes of the last refresh (arm x, arm z, sodium 0/1, road optic 0/1); read-only use.</summary>
+        public static Vector4[] PoolAxes => s_PoolAxis;
+        /// <summary>
+        /// ADR 0191: sodium tint relative to the LED pool colour at equal luminance (Rec.709 Y) - the intensity in cd is
+        /// photometric, so a sodium pool is as bright as an LED one, only orange. Applied per pool in the shader.
+        /// </summary>
+        public static Color SodiumTintRatio
+        {
+            get
+            {
+                float yl = 0.2126f * k_Led.r + 0.7152f * k_Led.g + 0.0722f * k_Led.b;
+                float ys = 0.2126f * k_Sodium.r + 0.7152f * k_Sodium.g + 0.0722f * k_Sodium.b;
+                float k = yl / ys;
+                return new Color(k_Sodium.r * k / k_Led.r, k_Sodium.g * k / k_Led.g, k_Sodium.b * k / k_Led.b, 0f);
+            }
+        }
 
         /// <summary>0..1: lamps on (from the sun elevation of the active lighting preset).</summary>
         public static float On => s_On;
@@ -68,11 +93,16 @@ namespace Game.Rendering
 
         public static void UnregisterGlass(Material m) => s_Glass.Remove(m);
 
-        /// <summary>Lamp head positions in world space (the world re-sends them after a floating-origin shift).</summary>
-        public static void SetHeads(Vector3[] heads, int count)
+        /// <summary>Lamp head positions in world space (the world re-sends them after a floating-origin shift).
+        /// Without axes every head is a symmetric LED luminaire.</summary>
+        public static void SetHeads(Vector3[] heads, int count) => SetHeads(heads, null, count);
+
+        /// <summary>ADR 0191: luminaire positions + axes (arm x, arm z, sodium 0/1, road optic 0/1) in world space.</summary>
+        public static void SetHeads(Vector3[] heads, Vector4[] axes, int count)
         {
             s_Heads = heads ?? new Vector3[0];
             s_HeadCount = Mathf.Min(count, s_Heads.Length);
+            s_Axes = axes ?? new Vector4[0];
         }
 
         /// <summary>EnvironmentLighting: lamps follow the sun elevation.</summary>
@@ -138,6 +168,7 @@ namespace Game.Rendering
                 return;
             }
             Vector3 fwd = cam.transform.forward; fwd.y = 0f;
+            bool spec = QualityProfileApplier.HasCurrent && QualityProfileApplier.Current.lampPoolSpecular;
             Vector3 focus = cam.transform.position + (fwd.sqrMagnitude > 1e-6f ? fwd.normalized * PoolFocusAheadM : Vector3.zero);
             // n + 1 nearest: the first lamp left out sets the fade-out distance of the chosen ones.
             int n = Mathf.Min(want + 1, s_HeadCount);
@@ -147,14 +178,18 @@ namespace Game.Rendering
             float edge = n > want ? Mathf.Sqrt(m_Dist[want]) : float.MaxValue;
             for (int i = 0; i < MaxPools; i++)
             {
-                if (i >= used || m_Pick[i] < 0) { s_PoolPos[i] = Vector4.zero; continue; }
+                if (i >= used || m_Pick[i] < 0) { s_PoolPos[i] = Vector4.zero; s_PoolAxis[i] = Vector4.zero; continue; }
                 Vector3 h = s_Heads[m_Pick[i]];
+                s_PoolAxis[i] = m_Pick[i] < s_Axes.Length ? s_Axes[m_Pick[i]] : Vector4.zero;
                 float d = Mathf.Sqrt(m_Dist[i]);
                 float w = edge < float.MaxValue ? Mathf.Clamp01((edge - d) / (0.25f * edge)) : 1f;
                 s_PoolPos[i] = new Vector4(h.x, h.y, h.z, w);
             }
             PoolCount = used;
             Shader.SetGlobalVectorArray(k_PoolPos, s_PoolPos);
+            Shader.SetGlobalVectorArray(k_PoolAxis, s_PoolAxis);
+            Shader.SetGlobalVector(k_PoolSodium, SodiumTintRatio);
+            Shader.SetGlobalFloat(k_PoolSpec, spec ? 1f : 0f);
             Shader.SetGlobalFloat(k_PoolCount, used);
             // Same photometry as the point lights: E = I cos / d², Unity display units I·k/π (Lambert without 1/π).
             Color c = k_Led * (DownIntensityCd * exposure / Mathf.PI * s_On);
