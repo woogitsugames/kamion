@@ -258,6 +258,7 @@ GUARDRAIL_H = 0.75          # top of W-beam (typical SP-05 system) WORKING_VALUE
 GUARDRAIL_POST_SPACING = 2.0
 GUARDRAIL_OFFSET = 0.60     # behind the kerb face / edge WORKING_VALUE
 GUARDRAIL_TERMINAL_M = 4    # WORKING_VALUE (ADR 0110): free ground end of a W-beam turned down to the ground over this length
+GUARDRAIL_TERMINAL_END_TOP = 0.12   # WORKING_VALUE (ADR 0159): beam top at the very end of a turned-down terminal (section 0.31 m: buried)
 # M29 / ADR 0144 pkt 3: a deck barrier end where the road continues on the ground is not a real end. Rozporządzenie
 # w sprawie warunków technicznych, jakim powinny odpowiadać drogowe obiekty inżynierskie i ich usytuowanie, § 80:
 # "Bariery umieszczone na obiektach mostowych powinny stanowić przedłużenie barier na drodze. Jeżeli na drodze nie

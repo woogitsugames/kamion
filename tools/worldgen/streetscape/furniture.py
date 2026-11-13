@@ -1466,13 +1466,25 @@ def guardrail(lin, P, Z, key, tall=None, term=(False, False), term_tall=(False, 
     top = np.full(n, S.GUARDRAIL_H)
     tl = int(S.GUARDRAIL_TERMINAL_M)
     lo, hi = 0, n
-    if n > 2 * tl + 4:
+    # ADR 0159 (REVIEW s16-world-int P1 "bariery zaczynajace sie w powietrzu", g3b-eye-s1482): a turned-down end
+    # used to stop with the beam top 0.33 m above the foot line (bottom edge 0.02 m above it - over grass that lies
+    # lower than the kerb the run stands on it hung in the air) and carried no post over its 4 m. Now the end is
+    # sunk (beam top GUARDRAIL_TERMINAL_END_TOP, the whole section below the foot line), a short post stands in the
+    # middle of the terminal, and runs too short for two 4 m terminals get 2 m ones instead of none.
+    if n <= 2 * tl + 4:
+        tl = 2 if n >= 8 else 0
+    term_posts = []
+    if tl:
         if term[0] and (term_tall[0] or not tall[:tl + 1].any()):
-            top[:tl + 1] = np.linspace(0.33, S.GUARDRAIL_H, tl + 1)
+            top[:tl + 1] = np.linspace(S.GUARDRAIL_TERMINAL_END_TOP, S.GUARDRAIL_H, tl + 1)
             lo = tl
+            if tl >= 4:
+                term_posts.append(tl // 2)
         if term[1] and (term_tall[1] or not tall[-tl - 1:].any()):
-            top[-tl - 1:] = np.linspace(S.GUARDRAIL_H, 0.33, tl + 1)
+            top[-tl - 1:] = np.linspace(S.GUARDRAIL_H, S.GUARDRAIL_TERMINAL_END_TOP, tl + 1)
             hi = n - tl
+            if tl >= 4:
+                term_posts.append(n - 1 - tl // 2)
     d = np.gradient(P, axis=0)
     d /= np.maximum(np.hypot(d[:, 0], d[:, 1]), 1e-9)[:, None]
     nrm = np.column_stack([-d[:, 1], d[:, 0]])
@@ -1511,6 +1523,9 @@ def guardrail(lin, P, Z, key, tall=None, term=(False, False), term_tall=(False, 
                     T = [(i, i + 1, m_ + i + 1) for i in range(m_ - 1)] + [(i, m_ + i + 1, m_ + i) for i in range(m_ - 1)]
                     lin.buf.add("furniture", "barrier_steel", V, UV, np.array(T), src=key)
         k = kk + 1
+    if term_posts:                    # ADR 0159: short post in the middle of each turned-down terminal
+        ti = np.array(term_posts)
+        _rail_posts(lin, P[ti], Z[ti], d[ti], top[ti], False, key)
     # ADR 0110: the beam keeps only the points a 1 cm Douglas-Peucker needs (it was meshed every metre: 16 triangles
     # per metre also on straights; the posts above keep their spacing)
     kp = dp_keep(np.column_stack([P, Z + top]), RAIL_DP_M)
