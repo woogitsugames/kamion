@@ -4,4 +4,7 @@
 - Uzasadnienie (OSM 2026-11-08): w kaflu KAN, Rosti x2, Bravilor, Masterpress, Odlewnia, Bison, PSS Społem DC, BPN-T; lotnisko Krywlany wsch. (aerodrome x 778298–780302). Browar/Biawar w (+2,-3), hangary w (0,-3).
 - Data/raw = junction do main (NIE kasować zawartości; przed usunięciem worktree: `cmd /c rmdir Data\raw`).
 
-Następny krok: `cd C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\region-0166; uv run --project tools/worldgen tools/worldgen/ingest.py --region bialystok-dojlidy --dry-run`
+- ingest OK (8 plików, 325.9 MB w main Data/raw), build_region OK: 355 węzłów, 421 krawędzi, 406 budynków (58a5dc1fc).
+
+Następny krok: `cd C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\region-0166; pwsh C:\Users\matma\Documents\Claude\kamion\scripts\unity-slot.ps1 -Acquire -Pool heavy -Owner region-0166; uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region bialystok-dojlidy`
+
