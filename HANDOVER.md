@@ -16,6 +16,7 @@
 - 21:2x: właściciel zlecił Mistralowi bloki `MISTRAL-FIXES-9.md` (M52-FIX-3, M47-FIX-2, M54-FIX-2, M49-FIX-2, M48-FIX-2) — :47 sprawdza nowe commity na tych gałęziach (PR-y scalone → lider scala gałęzie ręcznie po krótkim przeglądzie).
 - 21:3x: `docs/owner/MISTRAL-TASKS-9.md` gotowe — M56 estakady Andersa, M57 wieżowiec NE/NW+maszty, M58 Dojlidy słupki/pas Krywlany, M59 lampy R148/R150 + tablica, M60 zmierzch/oświetlenie/okna, M61 brud tyłu naczepy; kolejność M61 → M59 → M58 → M56 → M57 → M60. Do przekazania właścicielowi.
 - 21:4x: **0180** 2. agent też zawieszony → lider: sbs r2 OK, budżet draws +0 / tris −1,7…+0,2 %; krytyk r2 → `REVIEW-2026-11-13-s19-0180-r2.md`. Właściciel: „M50-FIX gotowe” (39e679e1d na `research/mistral-p9-furniture-3`) — w przeglądzie Opus razem z #49/#50.
+- 21:5x :47: **SCALONE FIX-9** M54-FIX-2 (p8, 2 opisy kadrów), M49-FIX-2 (p6, M49-030), M48-FIX-2 (p12, road-geom.json → skrypt odtwarzania; PR #52 zamknąć jako scalony ręcznie) — zgodne z blokami. Czekamy: M52-FIX-3, M47-FIX-2. Otwarte #49 M51, #50 M53 (+ M50 3b34a98df) — w przeglądzie Opus; #42 nie scalamy. **0170**: agent zawieszony → Opus domyka 4 faile pytest (hero_bridge, world_v31 forest_hlod, buildings_r8 foliage, road_fidelity stale) + ADR.
 - Kolejność integracji bez zmian (patrz STOP S18). **Ostatni przydzielony ADR: 0184.**
 
 # STOP S18 (2026-11-13 ~21:3x; 5 h ~80 %, reset 23:20; tydzień 28 %, Fable 20 %) — prompt s19: `docs/owner/START-PROMPT-S19.md`
