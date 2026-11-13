@@ -11,3 +11,5 @@ Dodano diagnostykę Editor-only natywnych casterów/bias/kaskad oraz odwracalną
 2026-11-13T02:33:42.8504662+01:00 — Zweryfikowano SHA obu lokalnych zdjęć richlv i obejrzano arkusz: zdjęcia mają bezchmurne niebo i szeroki cień pod pomostem. Kierunku/czasu światła nie kalibrowano. Przekazanie lidera uaktualnione, R1/R2 wypchnięte.
 
 Korekta zakresu wstępnego ray testu: mały nos gravel E534–540/N−700…−690, nie główna wyspa E558/N−734; test nie obejmuje hero instancji. Nie dowodzi przyczyny plam na głównej wyspie. Detale kamer poprawiono przed baseline, probe rozszerzono o hero LOD/maski/material flags. NASTĘPNY KROK: końcowy generator baseline, import i natywne obrazy.
+
+Świat baseline wygenerowany: 546.121204 s, bez fallback=True. NASTĘPNY KROK: import i kamery baseline.
