@@ -5,7 +5,7 @@
 **Data:** 2026-11-13
 
 Paczka uzupełnia **wyłącznie luki** paczki P1 (141 kadrów, rejon Białostoczek/Jaroszówka/Pietrasze, Białystok 1:1).
-Zdjęcia NIE są w repo: katalog `files/` jest ignorowany (patrz `.gitignore`); archiwum `mistral-p1-route-photos-2-files.zip` (37 plików JPG ≤1600 px) dostarczono poza git — lokalizacja w opisie PR.
+Zdjęcia NIE są w repo: katalog `files/` jest ignorowany (patrz `.gitignore`); archiwum `mistral-p1-route-photos-2-files.zip` (36 plików JPG ≤1600 px; kadr P1B-016 chwilowo niedostępny w CDN KartaView — patrz §5) dostarczono poza git — lokalizacja w opisie PR.
 
 ## 0. Ważne ustalenia wstępne
 - **Manifest P1 (`research/gptpro/p1-route-photos/manifest.csv`) nie istnieje w repo** — sprawdzono drzewo main, gałęzie, PR i wyszukiwanie kodu. Deduplikację wykonano **wewnątrz zbioru P1B** po id źródła (KartaView/Commons) i URL; dla Panoramax porównywano po `panoramax_id` i URL (zbiór pusty — patrz sources.md §3).
@@ -18,7 +18,7 @@ Zdjęcia NIE są w repo: katalog `files/` jest ignorowany (patrz `.gitignore`); 
 `id, ulica, punkt_opis, lat, lon, kierunek_deg, data_zdjęcia, sezon, pora_dnia, panoramax_id, jakość_1_5, odrzucone_powód, url_źródła, licencja, autor, data_dostępu, status, uwagi`.
 - **Pozycje WGS84** z 6 miejscami po przecinku (KartaView 2.0 API / EXIF Commons).
 - **Kierunek_deg**: z pola `heading` KartaView (azymut kamery, stopnie) albo `UNVERIFIED` (Commons bez EXIF GPSImgDirection).
-- **Sezon**: liście / bez liści / śnieg (data + weryfikacja wizualna — model wizyjny na miniaturach; 18/37 plików sprawdzonych wizualnie, reszta: sesje jednorodne, patrz §5).
+- **Sezon**: liście / bez liści / śnieg (data + weryfikacja wizualna — model wizyjny na miniaturach; 36/37 plików sprawdzonych wizualnie (nie sprawdzono jedynie odrzuconego kandydata P1B-038), patrz §5).
 - **Licencje**: KartaView = CC BY-SA 4.0 (referencja, nie tekstura; atrybucja autora w kolumnie `autor`); Commons = CC0. Żadnych licencji NC/ND w zbiorze.
 - **Przypisanie do ulicy**: dystans equirectangular (R=6371000) do lokalnego XY, punkt–odcinek z clampem t∈[0,1]; próg **≤25 m do osi way OSM** (ways z OSM API map.json, 45 kafli; dla dwujezdniowych struktur osobne ways). Kadry ≤25 m od osi dwóch ulic (wspólna jezdnia Kombatantów/Sokólska) przypisano do najbliższej osi z adnotacją.
 
@@ -90,8 +90,10 @@ Zdjęcia NIE są w repo: katalog `files/` jest ignorowany (patrz `.gitignore`); 
 | 10 | P1B-030 | Wileńska | telenavdrives 2018-03-23 | 156° | kierowca, bez liści |
 
 ## 5. Kontrola jakości i ograniczenia
-- **Priorytet selekcji**: 2023+ → spełnione tylko częściowo (najnowsze dostępne kadry kierowcy w rejonie: 2021-06, 2019-08, 2018-03; jedyny materiał 2023+ to piesze serie Commons 2022-12 i 2024-04). Wszystkie wybrane: **dzień, bez dużych pojazdów zasłaniających**; jakość 3–4/5 (drobne rozmycia/brudy obiektywu odnotowane w uwagach: P1B-005, 006, 018).
-- **Weryfikacja wizualna**: 18/37 plików sprawdzonych modelem wizyjnym w sesji badania (wszystkie luki 1–3 + próbka luki 4); pozostałe kadry pochodzą z tych samych sekwencji (sesja telenavdrives 2018-03-23, kadry co ~1 s, warunki jednorodne — zweryfikowane kadry sąsiadujące) albo z dat EXIF (Commons). Wyniki w `audit_20_percent.json`.
+- **Priorytet selekcji**: 2023+ → spełnione tylko częściowo (najnowsze dostępne kadry kierowcy w rejonie: 2021-06, 2019-08, 2018-03; jedyny materiał 2023+ to piesze serie Commons 2022-12 i 2024-04). Wszystkie wybrane: **dzień, bez dużych pojazdów zasłaniających**; jakość 3–4/5 (drobne rozmycia/brudy obiektywu odnotowane w uwagach: P1B-005, 006, 018, 020).
+- **Weryfikacja wizualna**: 36/37 plików sprawdzonych modelem wizyjnym w sesji badania (wszystkie luki 1–3, wszystkie kadry luki 4 i wszystkie referencje Commons; nie sprawdzono jedynie odrzuconego kandydata P1B-038). Wyniki w `audit_20_percent.json`.
+- **Dostępność źródeł (2026-11-13)**: kadr P1B-016 (KartaView 2016-08) pobrano i zweryfikowano wizualnie wcześniej w sesji, lecz przy przygotowaniu archiwum CDN KartaView trwale zwraca błąd back-endu (azure download error) — pliku brak w ZIP; metadane i URL źródła pozostają ważne (kadr może wrócić po naprawie po stronie KartaView).
+- **Ograniczenie P1B-035**: kadr Commons przedstawia fragment elewacji budynku przy Sitarskiej (bez perspektywy ulicy) — wartość referencyjna ograniczona; odnotowane w manifeście (status pozostaje REFERENCJA, lokalizacja potwierdzona EXIF i nazwą pliku).
 - **Samokontrola 20%**: jawnie zasiadowany wybór (LCG, seed 20261113, Fisher-Yates, 10 z 47 wierszy = 21,3%) — ponowna weryfikacja pozycji/azymutu/daty wobec API źródła + sprawdzenie obrazu tam, gdzie plik pobrano. Wynik: `audit_20_percent.json`.
 - **Wymogi formalne**: JPG ≤1600 px (KartaView lth 1280×720, Commons thumb 1280×720) ✓; pozycje 6 dp ✓; licencje komercyjne ✓ (CC BY-SA 4.0 = referencja/tekstura z atrybucją; CC0 bez ograniczeń).
 
@@ -103,5 +105,5 @@ research/mistral/p1-route-photos-2/
 ├── manifest.csv          (47 wierszy: OK/REFERENCJA/ODRZUCONE)
 ├── sources.md           (źródła, licencje, metody, endpointy)
 ├── audit_20_percent.json (samokontrola 20%, seed 20261113)
-└── files/               (NIE w repo — 37× JPG w ZIP poza gitem)
+└── files/               (NIE w repo — 36× JPG w ZIP poza gitem)
 ```

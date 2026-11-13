@@ -6,7 +6,7 @@
   "procedura": [
     "1. Odtworzenie losowania z jawnym seedem (reprodukowalne).",
     "2. Dla każdego wylosowanego wiersza: ponowne pobranie metadanych ze źródła (KartaView 2.0 API photo?id=... / Wikimedia Commons extmetadata) w sesji 2026-11-13 i porównanie: lat/lon (6 dp), kierunek_deg, data_zdjęcia, autor, licencja, URL.",
-    "3. Weryfikacja obrazu modelem wizyjnym (dzień/sezon/flare/rozmycie/pojazdy/jakość) tam, gdzie plik pobrano w sesji badania."
+    "3. Weryfikacja obrazu modelem wizyjnym (dzień/sezon/flare/rozmycie/pojazdy/jakość) tam, gdzie plik pobrano."
   ],
   "wylosowane_wiersze": [
     "P1B-035",
@@ -32,7 +32,7 @@
         "autor": "TMishaaa"
       },
       "zgodnosc_metadanych": "PASS",
-      "weryfikacja_obrazu": "wykonana (model wizyjny): dzień, liście, poziom kierowcy, bez flar, jakość 4"
+      "weryfikacja_obrazu": "wykonana: dzień, liście, poziom kierowcy, bez flar, jakość 4"
     },
     {
       "id": "P1B-005",
@@ -97,7 +97,7 @@
         "autor": "telenavdrives"
       },
       "zgodnosc_metadanych": "PASS",
-      "weryfikacja_obrazu": "do potwierdzenia (limit wywołań modelu wizyjnego w sesji); kadr z jednorodnej sekwencji telenavdrives 2018-03-23 - sąsiednie kadry 017/018 zweryfikowane wizualnie (bez liści, dzień, kierowca)"
+      "weryfikacja_obrazu": "wykonana: bez liści, dzień, poziom kierowcy, jakość 4; pojazdy parkowane w tle (niezasłaniające jezdni)"
     },
     {
       "id": "P1B-034",
@@ -110,7 +110,7 @@
         "lng": "23.168056"
       },
       "zgodnosc_metadanych": "PASS",
-      "weryfikacja_obrazu": "do potwierdzenia (limit wywołań modelu wizyjnego w sesji); status REFERENCJA"
+      "weryfikacja_obrazu": "wykonana: bez liści, dzień, perspektywa piesza, jakość 4"
     },
     {
       "id": "P1B-035",
@@ -123,7 +123,7 @@
         "lng": "23.149722"
       },
       "zgodnosc_metadanych": "PASS",
-      "weryfikacja_obrazu": "do potwierdzenia (limit wywołań modelu wizyjnego w sesji); status REFERENCJA"
+      "weryfikacja_obrazu": "wykonana: UWAGA - kadr przedstawia fragment elewacji budynku przy Sitarskiej (bez perspektywy ulicy); jakość obrazu 3, wartość referencyjna ograniczona (odnotowane w manifeście i README)"
     },
     {
       "id": "P1B-043",
@@ -152,6 +152,6 @@
       "weryfikacja_obrazu": "nie dotyczy - wiersz ODRZUCONY (sezon liściowy), plik celowo niepobierany"
     }
   ],
-  "podsumowanie": "Zgodność metadanych: 10/10 PASS. Weryfikacja obrazu: 5/10 wykonana w sesji badania; 3/10 do potwierdzenia przy pierwszym dostępnym limicie wywołań modelu wizyjnego (022, 034, 035); 2/10 nie dotyczy (wiersze odrzucone, plik celowo niepobierany). Znaleziono 0 rozbieżności wymagających korekty manifestu.",
-  "uwagi": "Wszystkie pliki obrazów (37 JPG) pobrano do katalogu poza repo (files/ ignorowane przez .gitignore); lokalizacja archiwum mistral-p1-route-photos-2-files.zip podana w opisie PR."
+  "podsumowanie": "Zgodność metadanych: 10/10 PASS (0 rozbieżności). Weryfikacja obrazu: 8/10 wykonana (001, 005, 006, 008, 017, 022, 034, 035); 2/10 nie dotyczy (wiersze odrzucone, pliki celowo niepobierane). Jedno spostrzeżenie treściowe: P1B-035 to fragment elewacji budynku (bez widoku ulicy) — wartość referencyjna ograniczona, odnotowana w manifeście i README.",
+  "uwagi": "Archiwum mistral-p1-route-photos-2-files.zip zawiera 36 JPG (33 OK + 3 REFERENCJA + odrzucony kandydat P1B-038 do wglądu); kadr P1B-016 (OK) chwilowo niedostępny w CDN KartaView (azure download error, 2026-11-13) — poza archiwum, patrz README §5."
 }
