@@ -40,7 +40,7 @@ Mistral p9, M50-056), więc reguła generatora nie ma z czego ich postawić.
    | pasy od ziemi | biały 22 %, czerwony 21 %, biały 25 %, czerwony 21 %, biały 11 % | P11-063 (kadr 4×: 60/60/70/60/30 px z 280) |
    | ucha łańcuchów | 0,94 i 0,46 wysokości | P11-063, WORKING_VALUE |
    | zwis łańcucha | 0,18 i 0,16 wysokości (krzywa łańcuchowa) | P11-063 (50 i 45 px z 280), WORKING_VALUE |
-   | łańcuch | drut 6 mm, podziałka 42 mm, szer. 24 mm | UNVERIFIED (klasa łańcucha długoogniwowego z pamięci; na zdjęciu 1–2 px) |
+   | łańcuch (r3) | tworzywo, drut 8 mm, podziałka 42 mm, szer. 30 mm; taśma LOD1 22 mm | szerokość pozorna z P11-063: 2–3 px przy ~13 m, f ≈ 1230 px (ASSUMED) → 0,021–0,032 m; materiał i ogniwa UNVERIFIED (r1/r2: stal 6 mm, 24 mm — w r2 łańcuchy znikały od ~10 m, na zdjęciu czytają się jak liny) |
    | malowanie łańcucha | odcinki czerwone i białe ~pół przęsła, niezgrane ze słupkami | P11-063, jeden stały wzór na przęsło — WORKING_VALUE |
 4. **Override** `kind: chain_bollards` w `Data/Regions/<id>/overrides.yaml` (przeżywa każdą regenerację):
    `line_epsg2180: [[x, y], ...]` albo `lines: [{line_epsg2180: [...]}, ...]`, opcjonalnie `chain: false`.

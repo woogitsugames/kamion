@@ -62,13 +62,15 @@ BANDS = tuple((round(a * POST_H_M, 4), round(b * POST_H_M, 4), r) for a, b, r in
 # height (50 and 45 px of a 280 px post). WORKING_VALUE
 CHAIN_Z_M = (round(0.94 * POST_H_M, 3), round(0.46 * POST_H_M, 3))
 CHAIN_SAG_M = (round(0.18 * POST_H_M, 3), round(0.16 * POST_H_M, 3))
-# Chain: 6 mm long-link steel chain class, pitch 42 mm, outer width 24 mm. UNVERIFIED (catalogue values from memory,
-# no document in the repository); in the photo the chain is 1-2 px wide, which only bounds it to 1-3 cm.
-LINK_WIRE_M = 0.006
+# Chain (r3): render r2 lost both chains beyond ~10 m while in P11-063 they read as solid ropes. Measured there: the
+# chains are 2-3 px wide on the nearest bays (~13 m, f ~ 1230 px ASSUMED) -> 0.021-0.032 m apparent width, which fits
+# the light red-white plastic chains common on such posts better than a 6 mm steel one. Plastic chain class, wire
+# 8 mm, pitch 42 mm, outer width 30 mm: UNVERIFIED (no catalogue in the repository; the photo bounds only the width).
+LINK_WIRE_M = 0.008
 LINK_PITCH_M = 0.042
-LINK_W_M = 0.024
-CARD_W_M = 0.028           # LOD0 card (link width + alpha margin)
-STRIP_W_M = 0.012          # LOD1 opaque strip = mean covered width of the link pattern
+LINK_W_M = 0.030
+CARD_W_M = 0.034           # LOD0 card (link width + alpha margin)
+STRIP_W_M = 0.022          # LOD1 opaque strip: the apparent width in P11-063 (0.021-0.032 m), lower bound
 EYELET_M = (0.014, 0.008, 0.020)
 # colour of the chain along a bay (start fraction -> red?), upper / lower. P11-063: red and white stretches of about
 # 1-2 m that do not line up with the posts; one fixed pattern per bay is WORKING_VALUE
@@ -256,9 +258,9 @@ def _link_texture(base, w, h, ss=4):
     a = ((ring <= 1) | (bar <= 1)).astype(float)
     dist = np.where(bar <= 1, bar, ring)
     shade = np.where(bar <= 1, 0.86, 1.0) * (1 - 0.38 * np.clip(dist, 0, 1) ** 2)       # round wire
-    worn = np.clip((np.abs(yf) - (half - 2.2 * d)) / d, 0, 1) * (ring <= 1) * (bar > 1)   # paint rubbed off in the crowns
+    worn = np.clip((np.abs(yf) - (half - 2.2 * d)) / d, 0, 1) * (ring <= 1) * (bar > 1)   # scuffed crowns (r3: plastic chain, no zinc under it)
     rgb = np.asarray(base, float) * shade[..., None]
-    rgb = rgb * (1 - 0.4 * worn[..., None]) + np.array(STEEL_SRGB, float) * 0.8 * (0.4 * worn[..., None])   # r2: 0.6 -> 0.4
+    rgb = rgb * (1 - 0.25 * worn[..., None])          # r3: darker, dull plastic where links rub (was: steel showing)
     rgb = (rgb * a[..., None]).reshape(h, ss, w, ss, 3).sum((1, 3))
     asum = a.reshape(h, ss, w, ss).sum((1, 3))
     rgb = np.where(asum[..., None] > 0, rgb / np.maximum(asum, 1)[..., None], np.asarray(base, float) * 0.8)
