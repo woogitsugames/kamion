@@ -983,7 +983,8 @@ def lod1_wall(acc, typ, wall, a, c_, nout, L, zbot, zref, zt, u_acc, storeys, sh
 
             def fq(u0, u1, z0, z1, uv):
                 acc.quad(lay, far, P(a + d_ * u0, z0), P(a + d_ * u1, z0), P(a + d_ * u1, z1), P(a + d_ * u0, z1), uv=uv)
-            plain = [[0.2, pv0], [1.2, pv0], [1.2, pv1], [0.2, pv1]]
+            pu0, pu1 = FA.FAR_PLAIN_U          # ADR 0184: a bay without a balcony slab edge
+            plain = [[pu0, pv0], [pu1, pv0], [pu1, pv1], [pu0, pv1]]
             kk = sh / FA.FAR_ROW_H
             plan = FA.far_plan(groups[:ns], fkey)
             # the wall above the last storey (attic band) rides on the last chunk when the atlas is plain above its row
